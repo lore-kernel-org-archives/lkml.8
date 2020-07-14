@@ -7,82 +7,87 @@ X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C714C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 02:20:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ADDF8C433E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 02:21:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2B82A20890
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 02:20:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F4E22073E
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 02:21:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594693217;
-	bh=3ySII6FkCuz4cLbbXIp5+9EKl+h3ww/gcYLLfRISV8I=;
+	s=default; t=1594693313;
+	bh=G0iEwjdw5aEJ62RiyfLc6luWUQJ1iS+i8d65qsjwg8Q=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=SUbcTw2L0xD0hXwCJmIpUuWhvxalmQSxuIUz55d9QYepfyvECLvsPLPpilig2O7up
-	 8YOlKP4XxvudyGWwPsKwReH8qCsd+jJW3nvcVwV9jVxpDPc8ONKsL3IZ82/nsNbVsO
-	 WhcIjaL61ABcEQg3x5QvNZYb0vs2gfDmhlHD6al0=
+	b=0R3t6WVgwHzQCrymx0prCSnLkEyxXYZpVJ+yLyb0+4tE6Q97KVwebxlf8JjwLqga6
+	 GjaXeftxL3VlXJTl8+JzYSU/56dbwxKBsoykw901BGr7W/6bH8qv+gyCxWDFGOc7mr
+	 nEtx5d+tjfe27N74n72sNfigJqkgrX3OWRpPWOXU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726629AbgGNCUQ (ORCPT
+        id S1726660AbgGNCVw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 22:20:16 -0400
-Received: from mail-il1-f193.google.com ([209.85.166.193]:40291 "EHLO
-        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726150AbgGNCUP (ORCPT
+        Mon, 13 Jul 2020 22:21:52 -0400
+Received: from mail-il1-f195.google.com ([209.85.166.195]:39688 "EHLO
+        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726150AbgGNCVv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 22:20:15 -0400
-Received: by mail-il1-f193.google.com with SMTP id e18so12961752ilr.7;
-        Mon, 13 Jul 2020 19:20:14 -0700 (PDT)
+        Mon, 13 Jul 2020 22:21:51 -0400
+Received: by mail-il1-f195.google.com with SMTP id k6so12988972ili.6;
+        Mon, 13 Jul 2020 19:21:51 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=r7PiSLbR0yDU/UxvKmyvxt7HuEegflfFTjLVeqeVxAY=;
-        b=V2emm/nZW2hEiShLCeKiz0HuDgdHDvLjUkhsglWgNoN4RBDGp3tVakpdclKguhcuBz
-         Qfe0s+4SR36oxF8LafdNl5P0Wmx9pCLLbOLYM9Gft+bCDEYCMxEscA+ysuhkedZts3R4
-         ldL69P9Goelz6fsoPbWMM87nV80jSKBJ0Y14mnYaCGryRRFWAPvqEySNIax1g6o4xOvV
-         0gzrr8kqMaYLQjBXIfX66aisp0veFGhywikEKcfQ7ViYy1oui97PsXMjJP5DIMKnjOg9
-         1GNTXcT7NmiZU2ScCJhODxQpgNE5J20LMK7kiGCaJyo+4SvuAjt2aNCHcLB6J8IKpgZn
-         tRCQ==
-X-Gm-Message-State: AOAM532aZk2eEjM6hp/ejBF0S8QgZ4IIvIHFWF54TuFyrQOHow71XPjg
-        Wr9k1x9BicBoii65AdGUmw==
-X-Google-Smtp-Source: ABdhPJw0Lv4684sxepX0eSzs1TiV14fkOvxN0JoEUu2uXnLgoU1oCCukVCG6J6+DKCy8gIu8ICUirg==
-X-Received: by 2002:a92:c689:: with SMTP id o9mr2763722ilg.302.1594693214175;
-        Mon, 13 Jul 2020 19:20:14 -0700 (PDT)
+        bh=V3FbKAVk6JJr3uR3Bza87ijOzpykZ/ht1Tqwf65b3KI=;
+        b=ZKQkEnsqCJvzt4tvofwn4Wx/VfNDnpQAu1H6PydxkBpaNR9EtrmmCoHBHErAQ4ryD2
+         Y3MqOAeO0gVecfhwlcflkBWxrgfC6sHREJ4Oqn+aw+gsbmmdUptiCZnio6GMg3X3iWae
+         SVRVEo66L9Th78f3dibaZHrKOZ9EWo2loyxrztdLmREJx7ETFH9BMD+kzcd0YsGr+R0y
+         iNcuX9rjUbSgJqjI6Gj6jqlffx+XZG7CR+tGrwsVkBCHoWuckR1IEyuj/CdhNrxDDahq
+         bojTqEOn69FQm7rcqCf9bb29v6QT1LE5TdnlFZ1FT8QszL5krDcmeOU9FTUzDoidoa/Y
+         FuMA==
+X-Gm-Message-State: AOAM532100pRDUTogFMhmLxuXFgIGuzQu5sZHLdAyhCmFTxUruatShrH
+        D09lmt/uw6j1w4wZeaCKrA==
+X-Google-Smtp-Source: ABdhPJzNWhuGWWKx+6Cf5B07q0XeaVK35FXAFTq+PO3QiZ3qQJW25KSE03/NCtBcUoJnPLSKpkgQsg==
+X-Received: by 2002:a92:5ecf:: with SMTP id f76mr2561312ilg.281.1594693310705;
+        Mon, 13 Jul 2020 19:21:50 -0700 (PDT)
 Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id n1sm9276124ilo.68.2020.07.13.19.20.12
+        by smtp.gmail.com with ESMTPSA id w5sm9143558ilm.46.2020.07.13.19.21.48
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 Jul 2020 19:20:13 -0700 (PDT)
-Received: (nullmailer pid 1147782 invoked by uid 1000);
-        Tue, 14 Jul 2020 02:20:12 -0000
-Date:   Mon, 13 Jul 2020 20:20:12 -0600
+        Mon, 13 Jul 2020 19:21:50 -0700 (PDT)
+Received: (nullmailer pid 1150001 invoked by uid 1000);
+        Tue, 14 Jul 2020 02:21:48 -0000
+Date:   Mon, 13 Jul 2020 20:21:48 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Kathiravan T <kathirav@codeaurora.org>
-Cc:     sivaprak@codeaurora.org, linux-kernel@vger.kernel.org,
-        broonie@kernel.org, robh+dt@kernel.org, agross@kernel.org,
-        bjorn.andersson@linaro.org, devicetree@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, lgirdwood@gmail.com
-Subject: Re: [PATCH V2 6/6] dt-bindings: regulator: convert QCOM SMD-RPM
- regulator document to YAML schema
-Message-ID: <20200714022012.GA1147729@bogus>
-References: <1592889472-6843-1-git-send-email-kathirav@codeaurora.org>
- <1592889472-6843-7-git-send-email-kathirav@codeaurora.org>
+To:     Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc:     Liam Girdwood <lgirdwood@gmail.com>, devicetree@vger.kernel.org,
+        Rob Herring <robh+dt@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Katsuhiro Suzuki <katsuhiro@katsuster.net>,
+        Frank Rowand <frowand.list@gmail.com>,
+        - <alsa-devel@alsa-project.org>, Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v2] dt-bindings: ASoC: Convert UniPhier AIO audio system
+ to json-schema
+Message-ID: <20200714022148.GA1149971@bogus>
+References: <20200623113915.791386-1-yamada.masahiro@socionext.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1592889472-6843-7-git-send-email-kathirav@codeaurora.org>
+In-Reply-To: <20200623113915.791386-1-yamada.masahiro@socionext.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 23 Jun 2020 10:47:52 +0530, Kathiravan T wrote:
-> Convert qcom,smd-rpm-regulator.txt document to YAML schema
+On Tue, 23 Jun 2020 20:39:15 +0900, Masahiro Yamada wrote:
+> Convert the UniPhier AIO audio system binding to DT schema format.
 > 
-> Signed-off-by: Kathiravan T <kathirav@codeaurora.org>
+> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
 > ---
->  .../bindings/regulator/qcom,smd-rpm-regulator.txt  | 321 ---------------------
->  .../bindings/regulator/qcom,smd-rpm-regulator.yaml | 106 +++++++
->  2 files changed, 106 insertions(+), 321 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/regulator/qcom,smd-rpm-regulator.txt
->  create mode 100644 Documentation/devicetree/bindings/regulator/qcom,smd-rpm-regulator.yaml
+> 
+> Changes in v2:
+>   - Add schema for subnode 'port'
+> 
+>  .../sound/socionext,uniphier-aio.yaml         | 81 +++++++++++++++++++
+>  .../bindings/sound/uniphier,aio.txt           | 45 -----------
+>  2 files changed, 81 insertions(+), 45 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/sound/socionext,uniphier-aio.yaml
+>  delete mode 100644 Documentation/devicetree/bindings/sound/uniphier,aio.txt
 > 
 
 Reviewed-by: Rob Herring <robh@kernel.org>
