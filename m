@@ -2,124 +2,125 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-16.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90318C433E4
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 17:54:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C199DC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 17:54:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6D98A2256C
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 17:54:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Rw2Ooa/4"
+	by mail.kernel.org (Postfix) with ESMTP id 9FAF7225AB
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 17:54:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729046AbgGNRyS (ORCPT
+        id S1729064AbgGNRyi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 13:54:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57816 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729019AbgGNRyO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 13:54:14 -0400
-Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 70106C08C5C1
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 10:54:14 -0700 (PDT)
-Received: by mail-pl1-x641.google.com with SMTP id m16so6132387pls.5
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 10:54:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=45xI8rEeWi7QXFwrqKcRbpSWjjoJSS/Qt/Ikgj5NGNk=;
-        b=Rw2Ooa/4ydY2kuipZY7t3EHXuDLvDsaolNVYTbOw/NHk5Jj0yTma+nZMIhm0RimdW1
-         4JfbmJtFIImxCLNF7Likd5JJ75qLUq1nUBH2EITFJdGdoeazyFh1iNO8AUdKQSjKGvkb
-         vWPL6G0Ys/dM88zsh00Mm3C64zTOwNylvBlKCSCyQZmVrKUl2gs/OaYNb00wcMR4DAe7
-         HqLTQu9936MuMSL6GVU2YNVrqJKkGAGTgtOqKFRzuK+QyPeCSCgh+hD/dBEIkV1NTSF1
-         di8HEi1g5AXgcdN3uU8s7dqxHfQFyrPIIaOX6UfyK+tDEjX6rN6ML4r7djGwSQ0peH3h
-         HIsw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=45xI8rEeWi7QXFwrqKcRbpSWjjoJSS/Qt/Ikgj5NGNk=;
-        b=OsgRxMrTHRzI/LCpfxv34E3R4jFWXoqYyVjUZIR2pEORyOVCJIrgOYISHhglP66/GO
-         ZCgxGW9Xhcombn83xviV9R/E+u0EDkQ5uJM972kV12fEU9PDZAD0u4Hz2JRw15rIOE0/
-         kbP/H80np2zOiPQOfU9zMH0FurErq2kZrVtOoBXqC0/9dyRvdDT2FMHgKBGzQs6hcFEM
-         h3DczQq96gw+779+Zm9eWhjnFMWM26wMtG5HxjCGQ6GQK/nvgVj5WEgl/MKV7L2VhkW6
-         dYh6tqkrF6cCG7cpy/ocJwN9X9tbZPGJOibEq6q52U0x9bfSKpbnBkGMoFWLM1zozKye
-         0KJw==
-X-Gm-Message-State: AOAM531XBjYtRRkQa4vN6CGj9vec/nRzQVrPpSySBgINZE14M7vUHVjS
-        MaDXL9EYvHVIhTDAhyrgmen8u6uYGFqS1zgpWrw4jg==
-X-Google-Smtp-Source: ABdhPJwcIBhuWQSJnb22Hu6ykmJZrRn50yho0jiA1jzvQkDPRjZ5DnsFPHJW6iYaLbzuW2WylixGSW07GgQyW7nvEuA=
-X-Received: by 2002:a17:90a:21ef:: with SMTP id q102mr6056117pjc.101.1594749253773;
- Tue, 14 Jul 2020 10:54:13 -0700 (PDT)
+        Tue, 14 Jul 2020 13:54:38 -0400
+Received: from mga06.intel.com ([134.134.136.31]:13340 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728169AbgGNRyh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 13:54:37 -0400
+IronPort-SDR: wM+WtKBTeCIuFxqDUDF4mLZxvxW6DgWczpiHO7+8EOI0QbvOcYzb0s8Dc4LNEIQTuoU2k2AoYz
+ D+wOytbIoBdA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9682"; a="210533039"
+X-IronPort-AV: E=Sophos;i="5.75,352,1589266800"; 
+   d="scan'208";a="210533039"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jul 2020 10:54:36 -0700
+IronPort-SDR: iZk/rxCC3rzNRoOB4NzHwKAoWtZZirYPJJ85/rxtl+w8AWIRasKY2q/gY0XU5opM1Zo8Rd965/
+ 22gf/F2nqZIQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,352,1589266800"; 
+   d="scan'208";a="285834839"
+Received: from fmsmsx103.amr.corp.intel.com ([10.18.124.201])
+  by orsmga006.jf.intel.com with ESMTP; 14 Jul 2020 10:54:36 -0700
+Received: from hasmsx601.ger.corp.intel.com (10.184.107.141) by
+ FMSMSX103.amr.corp.intel.com (10.18.124.201) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Tue, 14 Jul 2020 10:54:34 -0700
+Received: from hasmsx602.ger.corp.intel.com (10.184.107.142) by
+ HASMSX601.ger.corp.intel.com (10.184.107.141) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Tue, 14 Jul 2020 20:54:32 +0300
+Received: from hasmsx602.ger.corp.intel.com ([10.184.107.142]) by
+ HASMSX602.ger.corp.intel.com ([10.184.107.142]) with mapi id 15.01.1713.004;
+ Tue, 14 Jul 2020 20:54:32 +0300
+From:   "Winkler, Tomas" <tomas.winkler@intel.com>
+To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH][next] mei: Avoid the use of one-element arrays
+Thread-Topic: [PATCH][next] mei: Avoid the use of one-element arrays
+Thread-Index: AQHWWgYBVMvTEO76bk+MJBte9XQfr6kHWu4Q
+Date:   Tue, 14 Jul 2020 17:54:32 +0000
+Message-ID: <fe3b8d4a4eb04ead83ffcefe12fd218e@intel.com>
+References: <20200714174644.GA30158@embeddedor>
+In-Reply-To: <20200714174644.GA30158@embeddedor>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+dlp-product: dlpe-windows
+dlp-reaction: no-action
+dlp-version: 11.2.0.6
+x-originating-ip: [10.184.70.1]
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-References: <20200624203200.78870-1-samitolvanen@google.com>
- <671d8923-ed43-4600-2628-33ae7cb82ccb@molgen.mpg.de> <CA+icZUXPB_C1bjA13zi3OLFCpiZh+GsgHT0y6kumzVRavs4LkQ@mail.gmail.com>
- <20200712184041.GA1838@Ryzen-9-3900X.localdomain> <CA+icZUWyqb8jdzTAophvBKuX3e2NvG7vQPnMW+SRW5v0PmU7TA@mail.gmail.com>
-In-Reply-To: <CA+icZUWyqb8jdzTAophvBKuX3e2NvG7vQPnMW+SRW5v0PmU7TA@mail.gmail.com>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Tue, 14 Jul 2020 10:54:02 -0700
-Message-ID: <CAKwvOdnFxihNnGYTsowzEbtMvb-pwv9pHNo-tihD2h74LX+H+g@mail.gmail.com>
-Subject: Re: [PATCH 00/22] add support for Clang LTO
-To:     Sedat Dilek <sedat.dilek@gmail.com>
-Cc:     Nathan Chancellor <natechancellor@gmail.com>,
-        Paul Menzel <pmenzel@molgen.mpg.de>,
-        Sami Tolvanen <samitolvanen@google.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Will Deacon <will@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Clang-Built-Linux ML <clang-built-linux@googlegroups.com>,
-        Kernel Hardening <kernel-hardening@lists.openwall.com>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, linux-pci@vger.kernel.org,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 14, 2020 at 2:44 AM Sedat Dilek <sedat.dilek@gmail.com> wrote:
->
-> On Sun, Jul 12, 2020 at 8:40 PM Nathan Chancellor
-> <natechancellor@gmail.com> wrote:
-> >
-> > Lastly, for the future, I would recommend grabbing b4 to easily apply
-> > patches (specifically full series) from lore.kernel.org.
-> >
-> > https://git.kernel.org/pub/scm/utils/b4/b4.git/
-> > https://git.kernel.org/pub/scm/utils/b4/b4.git/tree/README.rst
-> >
-> > You could grab this series and apply it easily by either downloading the
-> > mbox file and following the instructions it gives for applying the mbox
-> > file:
-> >
-> > $ b4 am 20200624203200.78870-1-samitolvanen@google.com
-> >
-> > or I prefer piping so that I don't have to clean up later:
-> >
-> > $ b4 am -o - 20200624203200.78870-1-samitolvanen@google.com | git am
-> >
->
-> It is always a pleasure to read your replies and enrich my know-how
-> beyond Linux-kernel hacking :-).
->
-> Thanks for the tip with "b4" tool.
-> Might add this to our ClangBuiltLinux wiki "Command line tips and tricks"?
->
-> - Sedat -
->
-> [1] https://github.com/ClangBuiltLinux/linux/wiki/Command-line-tips-and-tricks
-
-Good idea, done.
-
--- 
-Thanks,
-~Nick Desaulniers
+PiANCj4gVGhlcmUgaXMgYSByZWd1bGFyIG5lZWQgaW4gdGhlIGtlcm5lbCB0byBwcm92aWRlIGEg
+d2F5IHRvIGRlY2xhcmUgaGF2aW5nIGENCj4gZHluYW1pY2FsbHkgc2l6ZWQgc2V0IG9mIHRyYWls
+aW5nIGVsZW1lbnRzIGluIGEgc3RydWN0dXJlLg0KPiBLZXJuZWwgY29kZSBzaG91bGQgYWx3YXlz
+IHVzZSDigJxmbGV4aWJsZSBhcnJheSBtZW1iZXJz4oCdWzFdIGZvciB0aGVzZSBjYXNlcw0KPiBv
+ciwgYXMgaW4gdGhpcyBwYXJ0aWN1bGFyIGNhc2UsIHJlcGxhY2UgdGhlIG9uZS1lbGVtZW50IGFy
+cmF5IHdpdGggYSBzaW1wbGUNCj4gdmFsdWUgdHlwZSB1OCByZXNlcnZlZCBvbmNlIHRoaXMgaXMg
+anVzdCBhIHBsYWNlaG9sZGVyIGZvciBhbGlnbm1lbnQuIFRoZSBvbGRlcg0KPiBzdHlsZSBvZiBv
+bmUtZWxlbWVudCBvciB6ZXJvLWxlbmd0aCBhcnJheXMgc2hvdWxkIG5vIGxvbmdlciBiZSB1c2Vk
+WzJdLg0KPiANCj4gQWxzbywgd2hpbGUgdGhlcmUsIHVzZSB0aGUgcHJlZmVycmVkIGZvcm0gZm9y
+IHBhc3NpbmcgYSBzaXplIG9mIGEgc3RydWN0Lg0KPiBUaGUgYWx0ZXJuYXRpdmUgZm9ybSB3aGVy
+ZSBzdHJ1Y3QgbmFtZSBpcyBzcGVsbGVkIG91dCBodXJ0cyByZWFkYWJpbGl0eSBhbmQNCj4gaW50
+cm9kdWNlcyBhbiBvcHBvcnR1bml0eSBmb3IgYSBidWcgd2hlbiB0aGUgdmFyaWFibGUgdHlwZSBp
+cyBjaGFuZ2VkIGJ1dA0KPiB0aGUgY29ycmVzcG9uZGluZyBzaXplb2YgdGhhdCBpcyBwYXNzZWQg
+YXMgYXJndW1lbnQgaXMgbm90Lg0KPiANCj4gWzFdIGh0dHBzOi8vZW4ud2lraXBlZGlhLm9yZy93
+aWtpL0ZsZXhpYmxlX2FycmF5X21lbWJlcg0KPiBbMl0gaHR0cHM6Ly9naXRodWIuY29tL0tTUFAv
+bGludXgvaXNzdWVzLzc5DQo+IA0KPiBTaWduZWQtb2ZmLWJ5OiBHdXN0YXZvIEEuIFIuIFNpbHZh
+IDxndXN0YXZvYXJzQGtlcm5lbC5vcmc+DQpJJ20gb2theSB3aXRoIHRoZSBwYXRjaCBidXQgaW4g
+dGhpcyBjYXNlIHRoZSBkZXNjcmlwdGlvbiBpcyBhIGJpdCBvZmYuIA0KSW4gdGhpcyBjYXNlIHRo
+ZXJlIHdhcyBubyBpbnRlbnRpb24gZm9yIGEgZmxleGlibGUgYXJyYXlzIGl0cyBqdXN0IGEgcmVz
+ZXJ2ZWQgZmllbGQuIA0KDQo+IC0tLQ0KPiAgZHJpdmVycy9taXNjL21laS9oYm0uYyB8IDQgKyst
+LQ0KPiAgZHJpdmVycy9taXNjL21laS9ody5oICB8IDYgKysrLS0tDQo+ICAyIGZpbGVzIGNoYW5n
+ZWQsIDUgaW5zZXJ0aW9ucygrKSwgNSBkZWxldGlvbnMoLSkNCj4gDQo+IGRpZmYgLS1naXQgYS9k
+cml2ZXJzL21pc2MvbWVpL2hibS5jIGIvZHJpdmVycy9taXNjL21laS9oYm0uYyBpbmRleA0KPiBh
+NDQwOTRjZGJjMzYuLmYwMjBkNTU5NDE1NCAxMDA2NDQNCj4gLS0tIGEvZHJpdmVycy9taXNjL21l
+aS9oYm0uYw0KPiArKysgYi9kcml2ZXJzL21pc2MvbWVpL2hibS5jDQo+IEBAIC00MDgsMTQgKzQw
+OCwxNCBAQCBzdGF0aWMgaW50IG1laV9oYm1fYWRkX2NsX3Jlc3Aoc3RydWN0IG1laV9kZXZpY2UN
+Cj4gKmRldiwgdTggYWRkciwgdTggc3RhdHVzKSAgew0KPiAgCXN0cnVjdCBtZWlfbXNnX2hkciBt
+ZWlfaGRyOw0KPiAgCXN0cnVjdCBoYm1fYWRkX2NsaWVudF9yZXNwb25zZSByZXNwOw0KPiAtCWNv
+bnN0IHNpemVfdCBsZW4gPSBzaXplb2Yoc3RydWN0IGhibV9hZGRfY2xpZW50X3Jlc3BvbnNlKTsN
+Cj4gKwljb25zdCBzaXplX3QgbGVuID0gc2l6ZW9mKHJlc3ApOw0KPiAgCWludCByZXQ7DQo+IA0K
+PiAgCWRldl9kYmcoZGV2LT5kZXYsICJhZGRpbmcgY2xpZW50IHJlc3BvbnNlXG4iKTsNCj4gDQo+
+ICAJbWVpX2hibV9oZHIoJm1laV9oZHIsIGxlbik7DQo+IA0KPiAtCW1lbXNldCgmcmVzcCwgMCwg
+c2l6ZW9mKHN0cnVjdCBoYm1fYWRkX2NsaWVudF9yZXNwb25zZSkpOw0KPiArCW1lbXNldCgmcmVz
+cCwgMCwgbGVuKTsNCj4gIAlyZXNwLmhibV9jbWQgPSBNRUlfSEJNX0FERF9DTElFTlRfUkVTX0NN
+RDsNCj4gIAlyZXNwLm1lX2FkZHIgPSBhZGRyOw0KPiAgCXJlc3Auc3RhdHVzICA9IHN0YXR1czsN
+Cj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvbWlzYy9tZWkvaHcuaCBiL2RyaXZlcnMvbWlzYy9tZWkv
+aHcuaCBpbmRleA0KPiBiMWE4ZDVlYzg4YjMuLjhjMDI5N2YwZTdmMyAxMDA2NDQNCj4gLS0tIGEv
+ZHJpdmVycy9taXNjL21laS9ody5oDQo+ICsrKyBiL2RyaXZlcnMvbWlzYy9tZWkvaHcuaA0KPiBA
+QCAtMzQ2LDEzICszNDYsMTMgQEAgc3RydWN0IGhibV9hZGRfY2xpZW50X3JlcXVlc3Qgew0KPiAg
+ICogQGhibV9jbWQ6IGJ1cyBtZXNzYWdlIGNvbW1hbmQgaGVhZGVyDQo+ICAgKiBAbWVfYWRkcjog
+YWRkcmVzcyBvZiB0aGUgY2xpZW50IGluIE1FDQo+ICAgKiBAc3RhdHVzOiBpZiBIQk1TX1NVQ0NF
+U1MgdGhlbiB0aGUgY2xpZW50IGNhbiBub3cgYWNjZXB0IGNvbm5lY3Rpb25zLg0KPiAtICogQHJl
+c2VydmVkOiByZXNlcnZlZA0KPiArICogQHJlc2VydmVkOiByZXNlcnZlZCBmb3IgYWxpZ25tZW50
+Lg0KPiAgICovDQo+ICBzdHJ1Y3QgaGJtX2FkZF9jbGllbnRfcmVzcG9uc2Ugew0KPiAgCXU4IGhi
+bV9jbWQ7DQo+ICAJdTggbWVfYWRkcjsNCj4gIAl1OCBzdGF0dXM7DQo+IC0JdTggcmVzZXJ2ZWRb
+MV07DQo+ICsJdTggcmVzZXJ2ZWQ7DQo+ICB9IF9fcGFja2VkOw0KPiANCj4gIC8qKg0KPiBAQCAt
+NDYxLDcgKzQ2MSw3IEBAIHN0cnVjdCBoYm1fbm90aWZpY2F0aW9uIHsNCj4gIAl1OCBoYm1fY21k
+Ow0KPiAgCXU4IG1lX2FkZHI7DQo+ICAJdTggaG9zdF9hZGRyOw0KPiAtCXU4IHJlc2VydmVkWzFd
+Ow0KPiArCXU4IHJlc2VydmVkOw0KPiAgfSBfX3BhY2tlZDsNCj4gDQo+ICAvKioNCj4gLS0NCj4g
+Mi4yNy4wDQoNCg==
