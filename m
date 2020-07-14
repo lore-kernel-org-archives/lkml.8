@@ -2,74 +2,76 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 295C7C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 04:12:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1891C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 04:17:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E8BB321883
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 04:12:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D32D207BB
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 04:17:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="feIbzblS"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="bhEFOsr0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726384AbgGNEMd (ORCPT
+        id S1725853AbgGNERO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 00:12:33 -0400
-Received: from mail29.static.mailgun.info ([104.130.122.29]:32884 "EHLO
+        Tue, 14 Jul 2020 00:17:14 -0400
+Received: from mail29.static.mailgun.info ([104.130.122.29]:11704 "EHLO
         mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725497AbgGNEMd (ORCPT
+        by vger.kernel.org with ESMTP id S1725780AbgGNERO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 00:12:33 -0400
+        Tue, 14 Jul 2020 00:17:14 -0400
 DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1594699952; h=Message-ID: References: In-Reply-To: Subject:
+ s=smtp; t=1594700233; h=Message-ID: References: In-Reply-To: Subject:
  Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=XBcjJwlLi5e8UJxwpFLfDWxhorCwwJpmtJ41g/1puLk=;
- b=feIbzblSDq8/CX392uiqXd2eQpyWwt8u7Thd81mKBf2Fxf9OL9DdYao0sUjeqvHCbI3Qmlah
- e9oGptnrjgk3SHbvXMYea/25g0m/FKfNH76aZgAIZXrf42gRVClHMEoVnIn4FXnsxgPtsil4
- jUUO3r26r9Z7RO1Z2opzSWuRcro=
+ MIME-Version: Sender; bh=Foat0KbYY6EOSlt1z9mAx4zGSNaBw/U4YiW8LDumGYA=;
+ b=bhEFOsr0Fe4f/2LJPdXGt/zx5QxZhIPSdvEILXT/MIsZavUDk+Yl9jIKlicBKQ9KlvTM5bNS
+ RxcvR6H4yLzwVe77vnMSrFCVCOXBmWHhteVqh4+Qmw+UJMcWZcpM1Dp4H+fPqLEs0XxvhZNj
+ NaxBYtqp13XuUAdjihV9LvoDbos=
 X-Mailgun-Sending-Ip: 104.130.122.29
 X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
 Received: from smtp.codeaurora.org
  (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n08.prod.us-west-2.postgun.com with SMTP id
- 5f0d308b1012768490038564 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 14 Jul 2020 04:11:55
+ smtp-out-n05.prod.us-west-2.postgun.com with SMTP id
+ 5f0d31c9ee6926bb4fb3cd9a (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 14 Jul 2020 04:17:13
  GMT
 Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id B7FCEC433CB; Tue, 14 Jul 2020 04:11:54 +0000 (UTC)
+        id 981F3C433A1; Tue, 14 Jul 2020 04:17:12 +0000 (UTC)
 Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
         (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
         (No client certificate requested)
         (Authenticated sender: cang)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id F30ECC433CA;
-        Tue, 14 Jul 2020 04:11:53 +0000 (UTC)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 9DEABC433CA;
+        Tue, 14 Jul 2020 04:17:11 +0000 (UTC)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII;
  format=flowed
 Content-Transfer-Encoding: 7bit
-Date:   Tue, 14 Jul 2020 12:11:53 +0800
+Date:   Tue, 14 Jul 2020 12:17:11 +0800
 From:   Can Guo <cang@codeaurora.org>
 To:     Bart Van Assche <bvanassche@acm.org>
 Cc:     asutoshd@codeaurora.org, nguyenb@codeaurora.org,
         hongwus@codeaurora.org, rnayak@codeaurora.org,
         linux-scsi@vger.kernel.org, kernel-team@android.com,
         saravanak@google.com, salyzyn@google.com,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
         Alim Akhtar <alim.akhtar@samsung.com>,
         Avri Altman <avri.altman@wdc.com>,
         "James E.J. Bottomley" <jejb@linux.ibm.com>,
         "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Stanley Chu <stanley.chu@mediatek.com>,
-        Bean Huo <beanhuo@micron.com>,
+        "open list:ARM/QUALCOMM SUPPORT" <linux-arm-msm@vger.kernel.org>,
         open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 1/4] scsi: ufs: Add checks before setting clk-gating
- states
-In-Reply-To: <31ef233b-2562-2f61-d899-587092b5c033@acm.org>
+Subject: Re: [PATCH v2 3/4] ufs: ufs-qcom: Fix a few BUGs in func
+ ufs_qcom_dump_dbg_regs()
+In-Reply-To: <7b0f8a73-d49d-eb7d-defe-8e77a49064ae@acm.org>
 References: <1594693693-22466-1-git-send-email-cang@codeaurora.org>
- <1594693693-22466-2-git-send-email-cang@codeaurora.org>
- <31ef233b-2562-2f61-d899-587092b5c033@acm.org>
-Message-ID: <f598fd46a548d86b7dd363351920341e@codeaurora.org>
+ <1594693693-22466-4-git-send-email-cang@codeaurora.org>
+ <7b0f8a73-d49d-eb7d-defe-8e77a49064ae@acm.org>
+Message-ID: <365144280b854f1130c0c3259198fc0b@codeaurora.org>
 X-Sender: cang@codeaurora.org
 User-Agent: Roundcube Webmail/1.3.9
 Sender: linux-kernel-owner@vger.kernel.org
@@ -79,28 +81,84 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 Hi Bart,
 
-On 2020-07-14 11:38, Bart Van Assche wrote:
+On 2020-07-14 11:47, Bart Van Assche wrote:
 > On 2020-07-13 19:28, Can Guo wrote:
->> @@ -2538,7 +2540,8 @@ static int ufshcd_queuecommand(struct Scsi_Host 
->> *host, struct scsi_cmnd *cmd)
->>  		err = SCSI_MLQUEUE_HOST_BUSY;
->>  		goto out;
+>> Dumping testbus registers needs to sleep a bit intermittently as there 
+>> are
+>> too many of them. Skip them for those contexts where sleep is not 
+>> allowed.
+>> 
+>> Meanwhile, if ufs_qcom_dump_dbg_regs() calls ufs_qcom_testbus_config() 
+>> from
+>> ufshcd_suspend/resume and/or clk gate/ungate context, 
+>> pm_runtime_get_sync()
+>> and ufshcd_hold() will cause racing problems. Fix it by removing the
+>> unnecessary calls of pm_runtime_get_sync() and ufshcd_hold().
+>> 
+>> Signed-off-by: Can Guo <cang@codeaurora.org>
+>> ---
+>>  drivers/scsi/ufs/ufs-qcom.c | 17 +++++++----------
+>>  1 file changed, 7 insertions(+), 10 deletions(-)
+>> 
+>> diff --git a/drivers/scsi/ufs/ufs-qcom.c b/drivers/scsi/ufs/ufs-qcom.c
+>> index 2e6ddb5..3743c17 100644
+>> --- a/drivers/scsi/ufs/ufs-qcom.c
+>> +++ b/drivers/scsi/ufs/ufs-qcom.c
+>> @@ -1604,9 +1604,6 @@ int ufs_qcom_testbus_config(struct ufs_qcom_host 
+>> *host)
+>>  	 */
 >>  	}
->> -	WARN_ON(hba->clk_gating.state != CLKS_ON);
->> +	if (ufshcd_is_clkgating_allowed(hba))
->> +		WARN_ON(hba->clk_gating.state != CLKS_ON);
+>>  	mask <<= offset;
+>> -
+>> -	pm_runtime_get_sync(host->hba->dev);
+>> -	ufshcd_hold(host->hba, false);
+>>  	ufshcd_rmwl(host->hba, TEST_BUS_SEL,
+>>  		    (u32)host->testbus.select_major << 19,
+>>  		    REG_UFS_CFG1);
+>> @@ -1619,8 +1616,6 @@ int ufs_qcom_testbus_config(struct ufs_qcom_host 
+>> *host)
+>>  	 * committed before returning.
+>>  	 */
+>>  	mb();
+>> -	ufshcd_release(host->hba);
+>> -	pm_runtime_put_sync(host->hba->dev);
+>> 
+>>  	return 0;
+>>  }
+>> @@ -1658,11 +1653,13 @@ static void ufs_qcom_dump_dbg_regs(struct 
+>> ufs_hba *hba)
+>> 
+>>  	/* sleep a bit intermittently as we are dumping too much data */
+>>  	ufs_qcom_print_hw_debug_reg_all(hba, NULL, 
+>> ufs_qcom_dump_regs_wrapper);
+>> -	udelay(1000);
+>> -	ufs_qcom_testbus_read(hba);
+>> -	udelay(1000);
+>> -	ufs_qcom_print_unipro_testbus(hba);
+>> -	udelay(1000);
+>> +	if (in_task()) {
+>> +		udelay(1000);
+>> +		ufs_qcom_testbus_read(hba);
+>> +		udelay(1000);
+>> +		ufs_qcom_print_unipro_testbus(hba);
+>> +		udelay(1000);
+>> +	}
+>>  }
 > 
-> A minor comment: has it been considered to change this into the
-> following?
-> 
-> 	WARN_ON(ufshcd_is_clkgating_allowed(hba) &&
-> 		hba->clk_gating.state != CLKS_ON);
+> It is not clear to me how udelay() calls can help in code that takes 
+> long
+> since these functions use busy-waiting? Should the udelay() calls 
+> perhaps
+> be changed into cond_resched() calls?
 > 
 > Thanks,
 > 
 > Bart.
 
-Sure, will do that.
+Maybe you are right, but this is not the purpose of this change. I am 
+just
+trying to make sure this func can be invoked from any contexts without
+making troubles like schedule while atomic and/or race conditions.
 
 Thanks,
 
