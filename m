@@ -2,157 +2,242 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE8FBC433E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 05:04:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF56AC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 05:09:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B8AD32193E
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 05:04:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oEKPAwx4"
+	by mail.kernel.org (Postfix) with ESMTP id CE802217D9
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 05:09:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726384AbgGNFEH (ORCPT
+        id S1725925AbgGNFJT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 01:04:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51398 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725283AbgGNFEE (ORCPT
+        Tue, 14 Jul 2020 01:09:19 -0400
+Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:30656 "EHLO
+        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725283AbgGNFJT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 01:04:04 -0400
-Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AEABEC061755;
-        Mon, 13 Jul 2020 22:04:04 -0700 (PDT)
-Received: by mail-pl1-x642.google.com with SMTP id 72so6531341ple.0;
-        Mon, 13 Jul 2020 22:04:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:autocrypt:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=J6fZwVk24XGfgBxPoL5crYI+N5PiWwTfHFA65MPMVZk=;
-        b=oEKPAwx4GyHC6xmDBAEPl6V7mNhsZsNcvI9zHN/ZTgEo/LqxmLpwrn73AKk2A1y76c
-         /dm58xfAMsBh4IBI0KKN0Hsbz3t3etJSzmk2nmG515ZKQmCoc+dUDK9CSooz6oyZzIKx
-         SXzbCSAagmBmPbfsCh1Kb7bMbpZ6/KcFKiupzPkacvdsS5DBMCg+ybo08ZLetp8vFidL
-         h7YBjdths6Os4zgbxQv18jWVNzOnbxr9Dq5QP5jFMS2HOO5DPdn7tu+AVQil6ySZFxHu
-         YoFLxFl2oO8iABtiukBcY8N7l4HKhBB3wILLJ74Si8sARPDPVs/XJuOKgqXzRbvQ4tws
-         Qemg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=J6fZwVk24XGfgBxPoL5crYI+N5PiWwTfHFA65MPMVZk=;
-        b=qoDK4XwTQKoQrYYo8Fs9bsmJC5KEfyxsVepvv+hRQ/zrTulB6tm/0k7UksQVYnrXbk
-         iNS/M9vV9wtCW59HIz+Z6WBrjWiYLkJcYKdiQjz1Eu4ZUf2ySqfOK+t5+5PW26Tlkstx
-         koWloNASXaMlSRHao+Vgw7DI7IFdahg2yURaQ8WMRryGsGrWK+soxh1M20iKvRPEC1j2
-         WGiV3j12Afby0FHzuFpop0LwZJyr5OnjgfqyczjXk3upKDKjwxjBJZHlgieCaxLtQ9w+
-         d/4fvmFYgPhcpAgXSk1YrQ7uyRXr6vmm+Mt2EtjAo9dwsQ41x2eK3rXaLuCH8XEXLAeu
-         fbyg==
-X-Gm-Message-State: AOAM532zCGzV7rL3T+tljlxSkPYb3fWhBITbSGHxtqWmbryfrKJRCPN7
-        7/IGnVq9nqzCTMPOSvtuCPvbQl81KEA=
-X-Google-Smtp-Source: ABdhPJzY/MjIIbiXdL5kEjKrtA00P/bfZOiwaxsQkBIHvxJ7WssS5XHHgxxZ9rY5a3OSey7GPywAHw==
-X-Received: by 2002:a17:90a:158f:: with SMTP id m15mr2719045pja.93.1594703044144;
-        Mon, 13 Jul 2020 22:04:04 -0700 (PDT)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id z11sm4887461pfr.71.2020.07.13.22.04.02
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 13 Jul 2020 22:04:03 -0700 (PDT)
-Subject: Re: [RFC PATCH 17/35] hwmon: (sis5595) Tidy Success/Failure checks
-To:     "Saheed O. Bolarinwa" <refactormyself@gmail.com>,
-        helgaas@kernel.org, Jean Delvare <jdelvare@suse.com>
-Cc:     bjorn@helgaas.com, skhan@linuxfoundation.org,
-        linux-pci@vger.kernel.org,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org
-References: <20200713122247.10985-1-refactormyself@gmail.com>
- <20200713122247.10985-18-refactormyself@gmail.com>
-From:   Guenter Roeck <linux@roeck-us.net>
-Autocrypt: addr=linux@roeck-us.net; keydata=
- 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
- mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
-Message-ID: <33cc25df-b34f-6bd1-5fc4-872b42369672@roeck-us.net>
-Date:   Mon, 13 Jul 2020 22:04:01 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Tue, 14 Jul 2020 01:09:19 -0400
+Received: from pps.filterd (m0167088.ppops.net [127.0.0.1])
+        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06E504GT028763;
+        Tue, 14 Jul 2020 01:09:17 -0400
+Received: from nwd2mta4.analog.com ([137.71.173.58])
+        by mx0a-00128a01.pphosted.com with ESMTP id 3279gmfcsv-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 14 Jul 2020 01:09:17 -0400
+Received: from ASHBMBX8.ad.analog.com (ashbmbx8.ad.analog.com [10.64.17.5])
+        by nwd2mta4.analog.com (8.14.7/8.14.7) with ESMTP id 06E59GZ8044566
+        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=FAIL);
+        Tue, 14 Jul 2020 01:09:16 -0400
+Received: from ASHBMBX8.ad.analog.com (10.64.17.5) by ASHBMBX8.ad.analog.com
+ (10.64.17.5) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1779.2; Tue, 14 Jul
+ 2020 01:09:15 -0400
+Received: from zeus.spd.analog.com (10.64.82.11) by ASHBMBX8.ad.analog.com
+ (10.64.17.5) with Microsoft SMTP Server id 15.1.1779.2 via Frontend
+ Transport; Tue, 14 Jul 2020 01:09:14 -0400
+Received: from localhost.localdomain ([10.48.65.12])
+        by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 06E59AnP023590;
+        Tue, 14 Jul 2020 01:09:12 -0400
+From:   Alexandru Ardelean <alexandru.ardelean@analog.com>
+To:     <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+CC:     <jic23@kernel.org>,
+        Alexandru Ardelean <alexandru.ardelean@analog.com>
+Subject: [PATCH] iio: adc: ad7124: move chip ID & name on the chip_info table
+Date:   Tue, 14 Jul 2020 08:11:11 +0300
+Message-ID: <20200714051111.17892-1-alexandru.ardelean@analog.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-In-Reply-To: <20200713122247.10985-18-refactormyself@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-ADIRoutedOnPrem: True
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-07-14_01:2020-07-13,2020-07-14 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0
+ lowpriorityscore=0 spamscore=0 impostorscore=0 clxscore=1015
+ suspectscore=0 priorityscore=1501 mlxscore=0 bulkscore=0 adultscore=0
+ mlxlogscore=867 phishscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2006250000 definitions=main-2007140038
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/13/20 5:22 AM, Saheed O. Bolarinwa wrote:
-> Remove unnecessary check for 0.
-> 
-> Signed-off-by: "Saheed O. Bolarinwa" <refactormyself@gmail.com>
-> ---
-> This patch depends on PATCH 16/35
-> 
->  drivers/hwmon/sis5595.c | 13 ++++---------
->  drivers/hwmon/via686a.c | 13 ++++---------
->  drivers/hwmon/vt8231.c  | 13 ++++---------
->  3 files changed, 12 insertions(+), 27 deletions(-)
-> 
-> diff --git a/drivers/hwmon/sis5595.c b/drivers/hwmon/sis5595.c
-> index 0ea174fb3048..91fdddaa4136 100644
-> --- a/drivers/hwmon/sis5595.c
-> +++ b/drivers/hwmon/sis5595.c
-> @@ -825,8 +825,7 @@ static int sis5595_pci_probe(struct pci_dev *dev,
->  		pci_write_config_word(dev, SIS5595_BASE_REG, force_addr);
->  	}
->  
-> -	if (0 !=
-> -	    pci_read_config_word(dev, SIS5595_BASE_REG, &address)) {
-> +	if (pci_read_config_word(dev, SIS5595_BASE_REG, &address)) {
+This change does the following:
+* removes the SPI device table in favor of the OF device table
+* adds 'name' && 'chip_id' fields to chip_info
+* implements chip ID & silicon revision checking; the device ID for
+  AD7124-4 is 0x0, so just checking that value can be useless;
+  but at least the silicon revision isn't 0, so a non-zero value can be
+  used to check that "a" device is on the SPI bus; it's probably the best
+  way to narrow it down to one of the 2 AD7124 chip IDs
 
-Ah, there is is, and I see that others commented on it.
-Single patch, please.
+Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+---
+ drivers/iio/adc/ad7124.c | 73 ++++++++++++++++++++++++++++++++--------
+ 1 file changed, 59 insertions(+), 14 deletions(-)
 
-Guenter
+diff --git a/drivers/iio/adc/ad7124.c b/drivers/iio/adc/ad7124.c
+index bb53ab265b64..8dce06e9e69c 100644
+--- a/drivers/iio/adc/ad7124.c
++++ b/drivers/iio/adc/ad7124.c
+@@ -12,6 +12,7 @@
+ #include <linux/interrupt.h>
+ #include <linux/kernel.h>
+ #include <linux/module.h>
++#include <linux/of_device.h>
+ #include <linux/regulator/consumer.h>
+ #include <linux/spi/spi.h>
+ 
+@@ -47,6 +48,15 @@
+ #define AD7124_ADC_CTRL_MODE_MSK	GENMASK(5, 2)
+ #define AD7124_ADC_CTRL_MODE(x)	FIELD_PREP(AD7124_ADC_CTRL_MODE_MSK, x)
+ 
++/* AD7124 ID */
++#define AD7124_DEVICE_ID_MSK		GENMASK(7, 4)
++#define AD7124_DEVICE_ID_GET(x)		FIELD_GET(AD7124_DEVICE_ID_MSK, x)
++#define AD7124_SILICON_REV_MSK		GENMASK(3, 0)
++#define AD7124_SILICON_REV_GET(x)	FIELD_GET(AD7124_SILICON_REV_MSK, x)
++
++#define CHIPID_AD7124_4			0x0
++#define CHIPID_AD7124_8			0x1
++
+ /* AD7124_CHANNEL_X */
+ #define AD7124_CHANNEL_EN_MSK		BIT(15)
+ #define AD7124_CHANNEL_EN(x)		FIELD_PREP(AD7124_CHANNEL_EN_MSK, x)
+@@ -120,6 +130,8 @@ static const char * const ad7124_ref_names[] = {
+ };
+ 
+ struct ad7124_chip_info {
++	const char *name;
++	unsigned int chip_id;
+ 	unsigned int num_inputs;
+ };
+ 
+@@ -165,9 +177,13 @@ static const struct iio_chan_spec ad7124_channel_template = {
+ 
+ static struct ad7124_chip_info ad7124_chip_info_tbl[] = {
+ 	[ID_AD7124_4] = {
++		.name = "ad7127-4",
++		.chip_id = CHIPID_AD7124_4,
+ 		.num_inputs = 8,
+ 	},
+ 	[ID_AD7124_8] = {
++		.name = "ad7127-8",
++		.chip_id = CHIPID_AD7124_8,
+ 		.num_inputs = 16,
+ 	},
+ };
+@@ -503,6 +519,34 @@ static int ad7124_soft_reset(struct ad7124_state *st)
+ 	return -EIO;
+ }
+ 
++static int ad7124_check_chip_id(struct ad7124_state *st)
++{
++	unsigned int readval, chip_id, silicon_rev;
++	int ret;
++
++	ret = ad_sd_read_reg(&st->sd, AD7124_ID, 1, &readval);
++	if (ret < 0)
++		return ret;
++
++	chip_id = AD7124_DEVICE_ID_GET(readval);
++	silicon_rev = AD7124_SILICON_REV_GET(readval);
++
++	if (chip_id != st->chip_info->chip_id) {
++		dev_err(&st->sd.spi->dev,
++			"Chip ID mismatch: expected %u, got %u\n",
++			st->chip_info->chip_id, chip_id);
++		return -ENODEV;
++	}
++
++	if (silicon_rev == 0) {
++		dev_err(&st->sd.spi->dev,
++			"Silicon revision empty. Chip may not be present\n");
++		return -ENODEV;
++	}
++
++	return 0;
++}
++
+ static int ad7124_init_channel_vref(struct ad7124_state *st,
+ 				    unsigned int channel_number)
+ {
+@@ -665,25 +709,28 @@ static int ad7124_setup(struct ad7124_state *st)
+ 
+ static int ad7124_probe(struct spi_device *spi)
+ {
+-	const struct spi_device_id *id;
++	const struct ad7124_chip_info *info;
+ 	struct ad7124_state *st;
+ 	struct iio_dev *indio_dev;
+ 	int i, ret;
+ 
++	info = of_device_get_match_data(&spi->dev);
++	if (!info)
++		return -ENODEV;
++
+ 	indio_dev = devm_iio_device_alloc(&spi->dev, sizeof(*st));
+ 	if (!indio_dev)
+ 		return -ENOMEM;
+ 
+ 	st = iio_priv(indio_dev);
+ 
+-	id = spi_get_device_id(spi);
+-	st->chip_info = &ad7124_chip_info_tbl[id->driver_data];
++	st->chip_info = info;
+ 
+ 	ad_sd_init(&st->sd, indio_dev, spi, &ad7124_sigma_delta_info);
+ 
+ 	spi_set_drvdata(spi, indio_dev);
+ 
+-	indio_dev->name = spi_get_device_id(spi)->name;
++	indio_dev->name = st->chip_info->name;
+ 	indio_dev->modes = INDIO_DIRECT_MODE;
+ 	indio_dev->info = &ad7124_info;
+ 
+@@ -721,6 +768,10 @@ static int ad7124_probe(struct spi_device *spi)
+ 	if (ret < 0)
+ 		goto error_clk_disable_unprepare;
+ 
++	ret = ad7124_check_chip_id(st);
++	if (ret)
++		goto error_clk_disable_unprepare;
++
+ 	ret = ad7124_setup(st);
+ 	if (ret < 0)
+ 		goto error_clk_disable_unprepare;
+@@ -768,16 +819,11 @@ static int ad7124_remove(struct spi_device *spi)
+ 	return 0;
+ }
+ 
+-static const struct spi_device_id ad7124_id_table[] = {
+-	{ "ad7124-4", ID_AD7124_4 },
+-	{ "ad7124-8", ID_AD7124_8 },
+-	{}
+-};
+-MODULE_DEVICE_TABLE(spi, ad7124_id_table);
+-
+ static const struct of_device_id ad7124_of_match[] = {
+-	{ .compatible = "adi,ad7124-4" },
+-	{ .compatible = "adi,ad7124-8" },
++	{ .compatible = "adi,ad7124-4",
++		.data = &ad7124_chip_info_tbl[ID_AD7124_4], },
++	{ .compatible = "adi,ad7124-8",
++		.data = &ad7124_chip_info_tbl[ID_AD7124_8], },
+ 	{ },
+ };
+ MODULE_DEVICE_TABLE(of, ad7124_of_match);
+@@ -789,7 +835,6 @@ static struct spi_driver ad71124_driver = {
+ 	},
+ 	.probe = ad7124_probe,
+ 	.remove	= ad7124_remove,
+-	.id_table = ad7124_id_table,
+ };
+ module_spi_driver(ad71124_driver);
+ 
+-- 
+2.17.1
+
