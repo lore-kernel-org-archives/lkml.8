@@ -2,212 +2,131 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-16.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 668C2C433E4
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 21:39:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA234C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 21:39:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3D262206F0
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 21:39:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="WjEYpxVM"
+	by mail.kernel.org (Postfix) with ESMTP id A3374206D9
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 21:39:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594762787;
+	bh=IcwyAgDmrYiZARCGLD0f3MGzv0IuApQzk4+xUcZdmu0=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=QfolwHmDaxmK6tCDZ7cq2ewYDPJlQNjXfEN0Io0+y6wc0uL9e8w+F9ImwLYyN1xjt
+	 f8tUKB0GS1bzZa9siI1qsMoP+8AuD1tj1b/HhPiXsTH+U1f7oZ6EeeY/0mgdi5DHVh
+	 Y/5yUtHFTED3s9gVCdf73i3gJAwQCia4nb7yivug=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728274AbgGNVjc (ORCPT
+        id S1728315AbgGNVjq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 17:39:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37142 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728164AbgGNVjb (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 17:39:31 -0400
-Received: from mail-qv1-xf43.google.com (mail-qv1-xf43.google.com [IPv6:2607:f8b0:4864:20::f43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B9370C08C5C1
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 14:39:31 -0700 (PDT)
-Received: by mail-qv1-xf43.google.com with SMTP id h17so4942qvr.0
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 14:39:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=ivtV/tA+b1A/Jafm7GfFZzd+iRi0WOOxKuOfikxY7+k=;
-        b=WjEYpxVM3mq/vbkRqdXSLdC7YbDXYAN/KzVub+tuD6Pj/BjXgN6ubrURsurRWz5Zju
-         XVL/1DkXIqEXvbjBtcHthBS/cpgE68ii8m0B8NWdlp+0ZsEERD+qlrbrswcvQL9nhoIo
-         pCyLIufdlyvYT5fREkPjqmbjxcHYRExuBahHXDsu+u5fsocUIz2jZtMM7zgDTCDJwsfA
-         /1fopVeOCIW7EaL0irp4bqfk5vXgkSZWjqjB2wZB/J7Xl0goI+lxCGzOO6THyQk5vTAL
-         aZDdX27Ci77hxUKb2q5WbtCT6O3L+8RDEwzsI97kA0s9VZqAsrwcs845rOZpQMrZDIzv
-         tYXA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=ivtV/tA+b1A/Jafm7GfFZzd+iRi0WOOxKuOfikxY7+k=;
-        b=W/fKWrZKe/7VxtKG/GKkatkZd4/c+p3xhQgQRMvT3kph2R3e0zfgHtUKHVs2xE585w
-         YyKrSIPCvurjj3wBcneK90cHmJ28V0/i72U1PzRVZ7WdLviUskCp0T2UbzRL0T//VfoE
-         cjezlBFa7JXsdD1iSiPC9zeyRJQkVIbWsGHxV32ysU199XFE2r5u1pM++eskUJmXf5DM
-         YgtP1e3nZsI73B46LXYHOl6Xg6OC/HBxQHyN9RvdQC8mRKVde7eIBB/Z5DLauo4LG5hn
-         4zljsKV82Cm10nrdgtynp0gfk0Ja0Qui5XIAksyTdZGuFBa2PTFB6aiY9kWtaxv9NNOn
-         MVlg==
-X-Gm-Message-State: AOAM5329BvqXpKFSaXEV+GmdssjUJltJzyZmRbf+5S8p/QFF0gbkzM0H
-        rVzVK2w/NFgD+C+QvR9lhXk6p+ZE/eY=
-X-Google-Smtp-Source: ABdhPJwe07rWmBLjDl+TNx93m7uxFpH0gw52e9HYRNc/1T0+JhOUVFNF4wo6TGY89wzmBv3Wnssccw==
-X-Received: by 2002:ad4:42a7:: with SMTP id e7mr6694798qvr.212.1594762770573;
-        Tue, 14 Jul 2020 14:39:30 -0700 (PDT)
-Received: from [192.168.1.92] (pool-71-255-246-27.washdc.fios.verizon.net. [71.255.246.27])
-        by smtp.gmail.com with ESMTPSA id r185sm740qkb.39.2020.07.14.14.39.29
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 14 Jul 2020 14:39:30 -0700 (PDT)
-Subject: Re: [RFC PATCH 0/4] thermal: Introduce support for monitoring falling
- temperature
-To:     Zhang Rui <rui.zhang@intel.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>, robh+dt@kernel.org
-Cc:     linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20200710135154.181454-1-thara.gopinath@linaro.org>
- <7437ee89-e76d-0c82-9860-5c6076ad8a30@linaro.org>
- <b25d54d35cec777f0dcc5b2bcacce27321d9bd45.camel@intel.com>
-From:   Thara Gopinath <thara.gopinath@linaro.org>
-Message-ID: <5861acec-c49a-47cc-d7c6-ccef11dc1d58@linaro.org>
-Date:   Tue, 14 Jul 2020 17:39:29 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Tue, 14 Jul 2020 17:39:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37684 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727098AbgGNVjp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 17:39:45 -0400
+Received: from embeddedor (unknown [201.162.240.73])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 152C42064C;
+        Tue, 14 Jul 2020 21:39:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594762785;
+        bh=IcwyAgDmrYiZARCGLD0f3MGzv0IuApQzk4+xUcZdmu0=;
+        h=Date:From:To:Cc:Subject:From;
+        b=lB4VlDnlygA2pEVWgQoeFBVs0Gq0vzvLeL7QBNhohPHcraW3FQgK7esV7tOgziQKn
+         5ekZKIUFUVyMYnWn7klTRrDzQuGH8B8Lwa7T2dXERXRgyepqbLLpsPGIfnGSIZ5acv
+         YODa6H7SsGMysRWWHHfp6+/yx5o5+W0VIaQGPqUQ=
+Date:   Tue, 14 Jul 2020 16:45:16 -0500
+From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To:     Tomas Winkler <tomas.winkler@intel.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Subject: [PATCH v2] mei: Avoid the use of one-element arrays
+Message-ID: <20200714214516.GA1040@embeddedor>
 MIME-Version: 1.0
-In-Reply-To: <b25d54d35cec777f0dcc5b2bcacce27321d9bd45.camel@intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+One-element arrays are being deprecated[1]. Replace the one-element
+arrays with a simple value type u8 reserved, once this is just a
+placeholder for alignment.
 
+Also, while there, use the preferred form for passing a size of a struct.
+The alternative form where struct name is spelled out hurts readability
+and introduces an opportunity for a bug when the variable type is changed
+but the corresponding sizeof that is passed as argument is not.
 
-On 7/14/20 9:49 AM, Zhang Rui wrote:
-> On Mon, 2020-07-13 at 17:03 +0200, Daniel Lezcano wrote:
->> On 10/07/2020 15:51, Thara Gopinath wrote:
->>> Thermal framework today supports monitoring for rising temperatures
->>> and
->>> subsequently initiating cooling action in case of a thermal trip
->>> point
->>> being crossed. There are scenarios where a SoC need some warming
->>> action to
->>> be activated if the temperature falls below a cetain permissible
->>> limit.
->>> Since warming action can be considered mirror opposite of cooling
->>> action,
->>> most of the thermal framework can be re-used to achieve this.
->>>
->>> This patch series is yet another attempt to add support for
->>> monitoring
->>> falling temperature in thermal framework. Unlike the first
->>> attempt[1]
->>> (where a new property was added to thermal trip point binding to
->>> indicate
->>> direction of temperature monitoring), this series introduces a new
->>> trip
->>> point type (THERMAL_TRIP_COLD) to indicate a trip point at which
->>> falling
->>> temperature monitoring must be triggered. This patch series uses
->>> Daniel
->>> Lezcano's recently added thermal genetlink interface[2] to notify
->>> userspace
->>> of falling temperature and rising temperature at the cold trip
->>> point. This
->>> will enable a user space engine to trigger the relevant mitigation
->>> for
->>> falling temperature. At present, no support is added to any of the
->>> thermal
->>> governors to monitor and mitigate falling temperature at the cold
->>> trip
->>> point;rather all governors return doing nothing if triggered for a
->>> cold
->>> trip point. As future extension, monitoring of falling temperature
->>> can be
->>> added to the relevant thermal governor.
->>
->> I agree we need a cold trip point in order to introduce the
->> functioning
->> temperature range in the thermal framework.
->>
->> Rui, what is your opinion ?
-> 
-> I agree with the concept of "cold" trip point.
-> In this patch set, the cold trip point is defined with only netlink
-> event support. But there are still quite a lot of things unclear,
-> especially what we should do in thermal framework?
-Hi Rui,
+[1] https://github.com/KSPP/linux/issues/79
 
-Thanks for the comments.
+Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+---
+Changes in v2:
+ - Use a more concise changelog text.
 
-You are right that cold trip points are dealt with only by netlink 
-events in this patch series. Eventually IMHO, governors should handle 
-them with a logic opposite to what is being currently done for non-cold 
-trip points.
+ drivers/misc/mei/hbm.c | 4 ++--
+ drivers/misc/mei/hw.h  | 6 +++---
+ 2 files changed, 5 insertions(+), 5 deletions(-)
 
-> 
-> For example, to support this, we can
-> either
-> introduce both "cold" trip points and "warming devices", and introduce
-> new logic in thermal framework and governors to handle them,
-> Or
-> introduce "cold" trip point and "warming" device, but only
-> semantically, and treat them just like normal trip points and cooling
-> devices. And strictly define cooling state 0 as the state that
-> generates most heat, and define max cooling state as the state that
-> generates least heat. Then, say, we have a trip point at -10C, the
-> "warming" device is set to cooling state 0 when the temperature is
-> lower than -10C, and in most cases, this thermal zone is always in a
-> "overheating" state (temperature higher than -10C), and the "warming"
-> device for this thermal zone is "throttled" to generate as least heat
-> as possible. And this is pretty much what the current code has always
-> been doing, right?
-
-
-IMHO, thermal framework should move to a direction where the term 
-"mitigation" is used rather than cooling or warming. In this case 
-"cooling dev" and "warming dev" should will become 
-"temp-mitigating-dev". So going by this, I think what you mention as 
-option 1 is more suitable where new logic is introduced into the 
-framework and governors to handle the trip points marked as "cold".
-
-Also in the current set of requirements, we have a few power domain 
-rails and other resources that are used exclusively in the thermal 
-framework for warming alone as in they are not used ever for cooling 
-down a zone. But then one of the requirements we have discussed is for 
-cpufreq and gpu scaling to be behave as warming devices where the 
-minimum operating point/ voltage of the relevant cpu/gpu is restricted.
-So in this case, Daniel had this suggestion of introducing negative 
-states for presently what is defined as cooling devices. So cooling dev 
-/ temp-mitigation-dev states can range from say -3 to 5 with 0 as the 
-good state where no mitigation is happening. This is an interesting idea 
-though I have not proto-typed it yet.
-
-> 
-> I can not say which one is better for now as I don't have the
-> background of this requirement. It's nice that Thara sent this RFC
-> series for discussion, but from upstream point of view, I'd prefer to
-> see a full stack solution, before taking any code.
-
-We had done a session at ELC on this requirement. Here is the link to 
-the presentation. Hopefully it gives you some back ground on this.
-
-https://elinux.org/images/f/f7/ELC-2020-Thara-Ram-Linux-Kernel-Thermal-Warming.pdf
-
-I have sent across some patches for introducing a generic power domain 
-warming device which is under review by Daniel.
-
-So how do you want to proceed on this? Can you elaborate a bit more on 
-what you mean by a full stack solution.
-
-> 
-> thanks,
-> Rui
-> 
-
+diff --git a/drivers/misc/mei/hbm.c b/drivers/misc/mei/hbm.c
+index a44094cdbc36..f020d5594154 100644
+--- a/drivers/misc/mei/hbm.c
++++ b/drivers/misc/mei/hbm.c
+@@ -408,14 +408,14 @@ static int mei_hbm_add_cl_resp(struct mei_device *dev, u8 addr, u8 status)
+ {
+ 	struct mei_msg_hdr mei_hdr;
+ 	struct hbm_add_client_response resp;
+-	const size_t len = sizeof(struct hbm_add_client_response);
++	const size_t len = sizeof(resp);
+ 	int ret;
+ 
+ 	dev_dbg(dev->dev, "adding client response\n");
+ 
+ 	mei_hbm_hdr(&mei_hdr, len);
+ 
+-	memset(&resp, 0, sizeof(struct hbm_add_client_response));
++	memset(&resp, 0, len);
+ 	resp.hbm_cmd = MEI_HBM_ADD_CLIENT_RES_CMD;
+ 	resp.me_addr = addr;
+ 	resp.status  = status;
+diff --git a/drivers/misc/mei/hw.h b/drivers/misc/mei/hw.h
+index b1a8d5ec88b3..8c0297f0e7f3 100644
+--- a/drivers/misc/mei/hw.h
++++ b/drivers/misc/mei/hw.h
+@@ -346,13 +346,13 @@ struct hbm_add_client_request {
+  * @hbm_cmd: bus message command header
+  * @me_addr: address of the client in ME
+  * @status: if HBMS_SUCCESS then the client can now accept connections.
+- * @reserved: reserved
++ * @reserved: reserved for alignment.
+  */
+ struct hbm_add_client_response {
+ 	u8 hbm_cmd;
+ 	u8 me_addr;
+ 	u8 status;
+-	u8 reserved[1];
++	u8 reserved;
+ } __packed;
+ 
+ /**
+@@ -461,7 +461,7 @@ struct hbm_notification {
+ 	u8 hbm_cmd;
+ 	u8 me_addr;
+ 	u8 host_addr;
+-	u8 reserved[1];
++	u8 reserved;
+ } __packed;
+ 
+ /**
 -- 
-Warm Regards
-Thara
+2.27.0
+
