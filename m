@@ -2,157 +2,196 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UPPERCASE_50_75,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E545C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 12:24:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F0BBC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 12:25:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 665FE22447
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 12:24:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 06CC722453
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 12:25:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b="WKLDC2c2"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="AK6fOcm5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728158AbgGNMYr (ORCPT
+        id S1728172AbgGNMZh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 08:24:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34798 "EHLO
+        Tue, 14 Jul 2020 08:25:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34930 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726630AbgGNMYq (ORCPT
+        with ESMTP id S1726889AbgGNMZh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 08:24:46 -0400
-Received: from mail-ed1-x542.google.com (mail-ed1-x542.google.com [IPv6:2a00:1450:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5E397C061794
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 05:24:46 -0700 (PDT)
-Received: by mail-ed1-x542.google.com with SMTP id b15so16851577edy.7
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 05:24:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=szeredi.hu; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=1LYBEaBRyuis0Be1SFDt4HqJhBIwOXUUG3MSMkOQOUw=;
-        b=WKLDC2c2K9TBZmX1yD7Ch61moUX9XE7uQLZbiA0XH83CyWX2rU1lhfEbJNw2sRMkH4
-         vuAHn/GIfe2Xxuht0ijB7Xzn97EbdR3Uru40Vb2ME+UaSXw/KyxQ1fRn+F6F65LZSc//
-         3qqlEhWJArc2JNZNkjIsHValY5kzEUhLFKlw0=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=1LYBEaBRyuis0Be1SFDt4HqJhBIwOXUUG3MSMkOQOUw=;
-        b=EgO/hMRHsH/SSihZSX/chVPG+BJ9LKthlR9fEvcA9PExc4puqjdsNX1u9JyIdXEhg1
-         Q4NmhUD5z7+PH8CDwiEnBGVhR3Oisl9LmJ5xAxulIJQCDjoRJvM94iIwW1EE7t32QitD
-         ylZpWzJhMeuADW30DCbwW8zsxXchSRLb7iCQNfM1ZpFfO7XQHweVkgGxQIzLgyO4BZTc
-         cobsFcj13DntngKIDMdbUxAxmxFeGkvgdZ1+AmzLDZtRy/+DZPUWlsViXQ4yi5Xc0LV/
-         NEOiv4jKfTuubGRtVCq1AJW31lJnvogOPqwDTIRgv2jiyMG5R0Ow2MZtEaK6x3XPb0VZ
-         xCBw==
-X-Gm-Message-State: AOAM533MCE2FX9iSLMirEQP3rdzD751boUgEGkSwPaPBPOzXgA7F7JuP
-        R9UUSoMNVUzbIOe2u7dwT9HNwk4RWeVvp/SF9SoOtg==
-X-Google-Smtp-Source: ABdhPJyKH+QSIc5w/1NGLSwn4aMd/CRFVqmigbjqowt8jjhQfJmOU38cH62fqr5t/gMCVtTKnlsu4sHosTiwWzvAcIA=
-X-Received: by 2002:a50:cd1e:: with SMTP id z30mr4076057edi.364.1594729485027;
- Tue, 14 Jul 2020 05:24:45 -0700 (PDT)
+        Tue, 14 Jul 2020 08:25:37 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0015BC061755;
+        Tue, 14 Jul 2020 05:25:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
+        References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
+        Content-Type:Content-ID:Content-Description;
+        bh=mUMC34ZPtgkcffgbeSJReQnIQf4f75wbAsLK1lVyoQE=; b=AK6fOcm5fCuuyhCRwNkqA7pBU6
+        Qy4jBsGEH0JugxFzWi43nFWbl+SffIL4/on9bBc2DihdGGDMsUQNOMlbtIH9hXAIlEFEr6UGiErwv
+        VNjhKi5B1NGP9RG1UN18MvOcOuX7lDQpB7qfw1KVPuJA3OfmoYM4Bx7rubQ8ffXPLYuEG6I6bnlo1
+        98HnZAIVU9THUoGr1T7xyOVOviG2Af7inxOHqEE3JWRM+lKr8MG2thxJPc0zICSnwUYJ5nrnu7ucZ
+        +En8inzuJ9QCkBv1Wq6IdKz+T1R1JH19PX2/bg2aoMTRHwzgeiXxGQJrHKcVMSj1CH1+HLvHj4rjf
+        gcBSQKSw==;
+Received: from 089144201169.atnat0010.highway.a1.net ([89.144.201.169] helo=localhost)
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jvK02-0001OI-9J; Tue, 14 Jul 2020 12:25:30 +0000
+From:   Christoph Hellwig <hch@lst.de>
+To:     Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Rich Felker <dalias@libc.org>
+Cc:     linux-sh@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 02/10] sh: sort the selects for SUPERH alphabetically
+Date:   Tue, 14 Jul 2020 14:18:48 +0200
+Message-Id: <20200714121856.955680-3-hch@lst.de>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200714121856.955680-1-hch@lst.de>
+References: <20200714121856.955680-1-hch@lst.de>
 MIME-Version: 1.0
-References: <2733b41a-b4c6-be94-0118-a1a8d6f26eec@virtuozzo.com> <446f0df5-798d-ab3a-e773-39d9f202c092@virtuozzo.com>
-In-Reply-To: <446f0df5-798d-ab3a-e773-39d9f202c092@virtuozzo.com>
-From:   Miklos Szeredi <miklos@szeredi.hu>
-Date:   Tue, 14 Jul 2020 14:24:33 +0200
-Message-ID: <CAJfpegv_7nvWoigY-eCX0ny+phWYOz3kEZvYsuGb=u65yMLGHg@mail.gmail.com>
-Subject: Re: [PATCH] fuse_writepages_fill: simplified "if-else if" constuction
-To:     Vasily Averin <vvs@virtuozzo.com>
-Cc:     linux-fsdevel@vger.kernel.org, Maxim Patlasov <maximvp@gmail.com>,
-        Kirill Tkhai <ktkhai@virtuozzo.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: multipart/mixed; boundary="00000000000077f70505aa65e488"
+Content-Transfer-Encoding: 8bit
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---00000000000077f70505aa65e488
-Content-Type: text/plain; charset="UTF-8"
+Ensure there is an order for the selects.  Also remove a duplicate
+one.
 
-On Thu, Jun 25, 2020 at 11:30 AM Vasily Averin <vvs@virtuozzo.com> wrote:
->
-> fuse_writepages_fill uses following construction:
-> if (wpa && ap->num_pages &&
->     (A || B || C)) {
->         action;
-> } else if (wpa && D) {
->         if (E) {
->                 the same action;
->         }
-> }
->
-> - ap->num_pages check is always true and can be removed
-> - "if" and "else if" calls the same action and can be merged.
+Signed-off-by: Christoph Hellwig <hch@lst.de>
+---
+ arch/sh/Kconfig | 95 ++++++++++++++++++++++++-------------------------
+ 1 file changed, 47 insertions(+), 48 deletions(-)
 
-Makes sense.  Attached patch goes further and moves checking the
-conditions to a separate helper for clarity.
+diff --git a/arch/sh/Kconfig b/arch/sh/Kconfig
+index 9fc2b010e938c9..f8027eee08edae 100644
+--- a/arch/sh/Kconfig
++++ b/arch/sh/Kconfig
+@@ -1,75 +1,74 @@
+ # SPDX-License-Identifier: GPL-2.0
+ config SUPERH
+ 	def_bool y
++	select ARCH_32BIT_OFF_T
++	select ARCH_HAVE_CUSTOM_GPIO_H
++	select ARCH_HAVE_NMI_SAFE_CMPXCHG if (GUSA_RB || CPU_SH4A)
+ 	select ARCH_HAS_BINFMT_FLAT if !MMU
++	select ARCH_HAS_GIGANTIC_PAGE
++	select ARCH_HAS_GCOV_PROFILE_ALL
+ 	select ARCH_HAS_PTE_SPECIAL
+ 	select ARCH_HAS_TICK_BROADCAST if GENERIC_CLOCKEVENTS_BROADCAST
++	select ARCH_HIBERNATION_POSSIBLE if MMU
+ 	select ARCH_MIGHT_HAVE_PC_PARPORT
+-	select HAVE_PATA_PLATFORM
++	select ARCH_WANT_IPC_PARSE_VERSION
+ 	select CLKDEV_LOOKUP
++	select CPU_NO_EFFICIENT_FFS
+ 	select DMA_DECLARE_COHERENT
+-	select HAVE_IDE if HAS_IOPORT_MAP
+-	select HAVE_OPROFILE
++	select GENERIC_ATOMIC64
++	select GENERIC_CLOCKEVENTS
++	select GENERIC_CMOS_UPDATE if SH_SH03 || SH_DREAMCAST
++	select GENERIC_IDLE_POLL_SETUP
++	select GENERIC_IRQ_SHOW
++	select GENERIC_PCI_IOMAP if PCI
++	select GENERIC_SCHED_CLOCK
++	select GENERIC_STRNCPY_FROM_USER
++	select GENERIC_STRNLEN_USER
++	select GENERIC_SMP_IDLE_THREAD
++	select GUP_GET_PTE_LOW_HIGH if X2TLB
++	select HAVE_ARCH_AUDITSYSCALL
++	select HAVE_ARCH_KGDB
+ 	select HAVE_ARCH_TRACEHOOK
+-	select HAVE_PERF_EVENTS
+ 	select HAVE_DEBUG_BUGVERBOSE
+-	select HAVE_FAST_GUP if MMU
+-	select ARCH_HAVE_CUSTOM_GPIO_H
+-	select ARCH_HAVE_NMI_SAFE_CMPXCHG if (GUSA_RB || CPU_SH4A)
+-	select ARCH_HAS_GCOV_PROFILE_ALL
+-	select PERF_USE_VMALLOC
+ 	select HAVE_DEBUG_KMEMLEAK
+-	select HAVE_KERNEL_GZIP
+-	select CPU_NO_EFFICIENT_FFS
++	select HAVE_DYNAMIC_FTRACE
++	select HAVE_FAST_GUP if MMU
++	select HAVE_FUNCTION_GRAPH_TRACER
++	select HAVE_FUNCTION_TRACER
++	select HAVE_FUTEX_CMPXCHG if FUTEX
++	select HAVE_FTRACE_MCOUNT_RECORD
++	select HAVE_HW_BREAKPOINT
++	select HAVE_IDE if HAS_IOPORT_MAP
++	select HAVE_IOREMAP_PROT if MMU && !X2TLB
+ 	select HAVE_KERNEL_BZIP2
++	select HAVE_KERNEL_GZIP
+ 	select HAVE_KERNEL_LZMA
+-	select HAVE_KERNEL_XZ
+ 	select HAVE_KERNEL_LZO
++	select HAVE_KERNEL_XZ
++	select HAVE_KPROBES
++	select HAVE_KRETPROBES
++	select HAVE_MIXED_BREAKPOINTS_REGS
++	select HAVE_MOD_ARCH_SPECIFIC if DWARF_UNWINDER
++	select HAVE_NMI
++	select HAVE_OPROFILE
++	select HAVE_PATA_PLATFORM
++	select HAVE_PERF_EVENTS
++	select HAVE_REGS_AND_STACK_ACCESS_API
+ 	select HAVE_UID16
+-	select ARCH_WANT_IPC_PARSE_VERSION
++	select HAVE_STACKPROTECTOR
+ 	select HAVE_SYSCALL_TRACEPOINTS
+-	select HAVE_REGS_AND_STACK_ACCESS_API
+-	select MAY_HAVE_SPARSE_IRQ
+ 	select IRQ_FORCED_THREADING
+-	select RTC_LIB
+-	select GENERIC_ATOMIC64
+-	select GENERIC_IRQ_SHOW
+-	select GENERIC_SMP_IDLE_THREAD
+-	select GENERIC_IDLE_POLL_SETUP
+-	select GENERIC_CLOCKEVENTS
+-	select GENERIC_CMOS_UPDATE if SH_SH03 || SH_DREAMCAST
+-	select GENERIC_PCI_IOMAP if PCI
+-	select GENERIC_SCHED_CLOCK
+-	select GENERIC_STRNCPY_FROM_USER
+-	select GENERIC_STRNLEN_USER
+-	select HAVE_MOD_ARCH_SPECIFIC if DWARF_UNWINDER
++	select MAY_HAVE_SPARSE_IRQ
+ 	select MODULES_USE_ELF_RELA
++	select NEED_SG_DMA_LENGTH
+ 	select NO_GENERIC_PCI_IOPORT_MAP if PCI
+-	select OLD_SIGSUSPEND
+ 	select OLD_SIGACTION
++	select OLD_SIGSUSPEND
+ 	select PCI_DOMAINS if PCI
+-	select HAVE_ARCH_AUDITSYSCALL
+-	select HAVE_FUTEX_CMPXCHG if FUTEX
+-	select HAVE_NMI
+-	select NEED_SG_DMA_LENGTH
+-	select ARCH_HAS_GIGANTIC_PAGE
+-	select ARCH_32BIT_OFF_T
+-	select GUP_GET_PTE_LOW_HIGH if X2TLB
+-	select HAVE_KPROBES
+-	select HAVE_KRETPROBES
+-	select HAVE_IOREMAP_PROT if MMU && !X2TLB
+-	select HAVE_FUNCTION_TRACER
+-	select HAVE_FTRACE_MCOUNT_RECORD
+-	select HAVE_DYNAMIC_FTRACE
+-	select ARCH_WANT_IPC_PARSE_VERSION
+-	select HAVE_FUNCTION_GRAPH_TRACER
+-	select HAVE_ARCH_KGDB
+-	select HAVE_HW_BREAKPOINT
+-	select HAVE_MIXED_BREAKPOINTS_REGS
+ 	select PERF_EVENTS
+-	select ARCH_HIBERNATION_POSSIBLE if MMU
++	select PERF_USE_VMALLOC
++	select RTC_LIB
+ 	select SPARSE_IRQ
+-	select HAVE_STACKPROTECTOR
+ 	help
+ 	  The SuperH is a RISC processor targeted for use in embedded systems
+ 	  and consumer electronics; it was also used in the Sega Dreamcast
+-- 
+2.26.2
 
-Thanks,
-Miklos
-
---00000000000077f70505aa65e488
-Content-Type: text/x-patch; charset="US-ASCII"; name="fuse-clean-up-writepage-sending.patch"
-Content-Disposition: attachment; 
-	filename="fuse-clean-up-writepage-sending.patch"
-Content-Transfer-Encoding: base64
-Content-ID: <f_kclwpq8b0>
-X-Attachment-Id: f_kclwpq8b0
-
-RnJvbTogTWlrbG9zIFN6ZXJlZGkgPG1zemVyZWRpQHJlZGhhdC5jb20+ClN1YmplY3Q6IGZ1c2U6
-IGNsZWFuIHVwIGNvbmRpdGlvbiBmb3Igd3JpdGVwYWdlIHNlbmRpbmcKCmZ1c2Vfd3JpdGVwYWdl
-c19maWxsIHVzZXMgZm9sbG93aW5nIGNvbnN0cnVjdGlvbjoKCmlmICh3cGEgJiYgYXAtPm51bV9w
-YWdlcyAmJgogICAgKEEgfHwgQiB8fCBDKSkgewogICAgICAgIGFjdGlvbjsKfSBlbHNlIGlmICh3
-cGEgJiYgRCkgewogICAgICAgIGlmIChFKSB7CiAgICAgICAgICAgICAgICB0aGUgc2FtZSBhY3Rp
-b247CiAgICAgICAgfQp9CgogLSBhcC0+bnVtX3BhZ2VzIGNoZWNrIGlzIGFsd2F5cyB0cnVlIGFu
-ZCBjYW4gYmUgcmVtb3ZlZAoKIC0gImlmIiBhbmQgImVsc2UgaWYiIGNhbGxzIHRoZSBzYW1lIGFj
-dGlvbiBhbmQgY2FuIGJlIG1lcmdlZC4KCk1vdmUgY2hlY2tpbmcgQSwgQiwgQywgRCwgRSBjb25k
-aXRpb25zIHRvIGEgaGVscGVyLCBhZGQgY29tbWVudHMuCgpPcmlnaW5hbC1wYXRjaC1ieTogVmFz
-aWx5IEF2ZXJpbiA8dnZzQHZpcnR1b3p6by5jb20+ClNpZ25lZC1vZmYtYnk6IE1pa2xvcyBTemVy
-ZWRpIDxtc3plcmVkaUByZWRoYXQuY29tPgotLS0KIGZzL2Z1c2UvZmlsZS5jIHwgICA1MSArKysr
-KysrKysrKysrKysrKysrKysrKysrKysrKysrKystLS0tLS0tLS0tLS0tLS0tLS0KIDEgZmlsZSBj
-aGFuZ2VkLCAzMyBpbnNlcnRpb25zKCspLCAxOCBkZWxldGlvbnMoLSkKCi0tLSBhL2ZzL2Z1c2Uv
-ZmlsZS5jCisrKyBiL2ZzL2Z1c2UvZmlsZS5jCkBAIC0yMDE1LDYgKzIwMTUsMzggQEAgc3RhdGlj
-IGJvb2wgZnVzZV93cml0ZXBhZ2VfYWRkKHN0cnVjdCBmdQogCXJldHVybiBmYWxzZTsKIH0KIAor
-c3RhdGljIGJvb2wgZnVzZV93cml0ZXBhZ2VfbmVlZF9zZW5kKHN0cnVjdCBmdXNlX2Nvbm4gKmZj
-LCBzdHJ1Y3QgcGFnZSAqcGFnZSwKKwkJCQkgICAgIHN0cnVjdCBmdXNlX2FyZ3NfcGFnZXMgKmFw
-LAorCQkJCSAgICAgc3RydWN0IGZ1c2VfZmlsbF93Yl9kYXRhICpkYXRhKQoreworCS8qCisJICog
-QmVpbmcgdW5kZXIgd3JpdGViYWNrIGlzIHVubGlrZWx5IGJ1dCBwb3NzaWJsZS4gIEZvciBleGFt
-cGxlIGRpcmVjdAorCSAqIHJlYWQgdG8gYW4gbW1hcGVkIGZ1c2UgZmlsZSB3aWxsIHNldCB0aGUg
-cGFnZSBkaXJ0eSB0d2ljZTsgb25jZSB3aGVuCisJICogdGhlIHBhZ2VzIGFyZSBmYXVsdGVkIHdp
-dGggZ2V0X3VzZXJfcGFnZXMoKSwgYW5kIHRoZW4gYWZ0ZXIgdGhlIHJlYWQKKwkgKiBjb21wbGV0
-ZWQuCisJICovCisJaWYgKGZ1c2VfcGFnZV9pc193cml0ZWJhY2soZGF0YS0+aW5vZGUsIHBhZ2Ut
-PmluZGV4KSkKKwkJcmV0dXJuIHRydWU7CisKKwkvKiBSZWFjaGVkIG1heCBwYWdlcyAqLworCWlm
-IChhcC0+bnVtX3BhZ2VzID09IGZjLT5tYXhfcGFnZXMpCisJCXJldHVybiB0cnVlOworCisJLyog
-UmVhY2hlZCBtYXggd3JpdGUgYnl0ZXMgKi8KKwlpZiAoKGFwLT5udW1fcGFnZXMgKyAxKSAqIFBB
-R0VfU0laRSA+IGZjLT5tYXhfd3JpdGUpCisJCXJldHVybiB0cnVlOworCisJLyogRGlzY29udGlu
-dWl0eSAqLworCWlmIChkYXRhLT5vcmlnX3BhZ2VzW2FwLT5udW1fcGFnZXMgLSAxXS0+aW5kZXgg
-KyAxICE9IHBhZ2UtPmluZGV4KQorCQlyZXR1cm4gdHJ1ZTsKKworCS8qIE5lZWQgdG8gZ3JvdyB0
-aGUgcGFnZXMgYXJyYXk/ICBJZiBzbywgZGlkIHRoZSBleHBhbnNpb24gZmFpbD8gKi8KKwlpZiAo
-YXAtPm51bV9wYWdlcyA9PSBkYXRhLT5tYXhfcGFnZXMgJiYgIWZ1c2VfcGFnZXNfcmVhbGxvYyhk
-YXRhKSkKKwkJcmV0dXJuIHRydWU7CisKKwlyZXR1cm4gZmFsc2U7Cit9CisKIHN0YXRpYyBpbnQg
-ZnVzZV93cml0ZXBhZ2VzX2ZpbGwoc3RydWN0IHBhZ2UgKnBhZ2UsCiAJCXN0cnVjdCB3cml0ZWJh
-Y2tfY29udHJvbCAqd2JjLCB2b2lkICpfZGF0YSkKIHsKQEAgLTIwMjUsNyArMjA1Nyw2IEBAIHN0
-YXRpYyBpbnQgZnVzZV93cml0ZXBhZ2VzX2ZpbGwoc3RydWN0IHAKIAlzdHJ1Y3QgZnVzZV9pbm9k
-ZSAqZmkgPSBnZXRfZnVzZV9pbm9kZShpbm9kZSk7CiAJc3RydWN0IGZ1c2VfY29ubiAqZmMgPSBn
-ZXRfZnVzZV9jb25uKGlub2RlKTsKIAlzdHJ1Y3QgcGFnZSAqdG1wX3BhZ2U7Ci0JYm9vbCBpc193
-cml0ZWJhY2s7CiAJaW50IGVycjsKIAogCWlmICghZGF0YS0+ZmYpIHsKQEAgLTIwMzUsMjUgKzIw
-NjYsOSBAQCBzdGF0aWMgaW50IGZ1c2Vfd3JpdGVwYWdlc19maWxsKHN0cnVjdCBwCiAJCQlnb3Rv
-IG91dF91bmxvY2s7CiAJfQogCi0JLyoKLQkgKiBCZWluZyB1bmRlciB3cml0ZWJhY2sgaXMgdW5s
-aWtlbHkgYnV0IHBvc3NpYmxlLiAgRm9yIGV4YW1wbGUgZGlyZWN0Ci0JICogcmVhZCB0byBhbiBt
-bWFwZWQgZnVzZSBmaWxlIHdpbGwgc2V0IHRoZSBwYWdlIGRpcnR5IHR3aWNlOyBvbmNlIHdoZW4K
-LQkgKiB0aGUgcGFnZXMgYXJlIGZhdWx0ZWQgd2l0aCBnZXRfdXNlcl9wYWdlcygpLCBhbmQgdGhl
-biBhZnRlciB0aGUgcmVhZAotCSAqIGNvbXBsZXRlZC4KLQkgKi8KLQlpc193cml0ZWJhY2sgPSBm
-dXNlX3BhZ2VfaXNfd3JpdGViYWNrKGlub2RlLCBwYWdlLT5pbmRleCk7Ci0KLQlpZiAod3BhICYm
-IGFwLT5udW1fcGFnZXMgJiYKLQkgICAgKGlzX3dyaXRlYmFjayB8fCBhcC0+bnVtX3BhZ2VzID09
-IGZjLT5tYXhfcGFnZXMgfHwKLQkgICAgIChhcC0+bnVtX3BhZ2VzICsgMSkgKiBQQUdFX1NJWkUg
-PiBmYy0+bWF4X3dyaXRlIHx8Ci0JICAgICBkYXRhLT5vcmlnX3BhZ2VzW2FwLT5udW1fcGFnZXMg
-LSAxXS0+aW5kZXggKyAxICE9IHBhZ2UtPmluZGV4KSkgeworCWlmICh3cGEgJiYgZnVzZV93cml0
-ZXBhZ2VfbmVlZF9zZW5kKGZjLCBwYWdlLCBhcCwgZGF0YSkpIHsKIAkJZnVzZV93cml0ZXBhZ2Vz
-X3NlbmQoZGF0YSk7CiAJCWRhdGEtPndwYSA9IE5VTEw7Ci0JfSBlbHNlIGlmICh3cGEgJiYgYXAt
-Pm51bV9wYWdlcyA9PSBkYXRhLT5tYXhfcGFnZXMpIHsKLQkJaWYgKCFmdXNlX3BhZ2VzX3JlYWxs
-b2MoZGF0YSkpIHsKLQkJCWZ1c2Vfd3JpdGVwYWdlc19zZW5kKGRhdGEpOwotCQkJZGF0YS0+d3Bh
-ID0gTlVMTDsKLQkJfQogCX0KIAogCWVyciA9IC1FTk9NRU07Cg==
---00000000000077f70505aa65e488--
