@@ -7,24 +7,24 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02789C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 12:17:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2B14C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 12:17:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DB6B3217A0
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 12:17:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 81B952068F
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 12:17:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729009AbgGNMRM (ORCPT
+        id S1729034AbgGNMRd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 08:17:12 -0400
+        Tue, 14 Jul 2020 08:17:33 -0400
 Received: from 8bytes.org ([81.169.241.247]:52886 "EHLO theia.8bytes.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728224AbgGNMKn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 08:10:43 -0400
+        id S1728172AbgGNMKk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 08:10:40 -0400
 Received: from cap.home.8bytes.org (p5b006776.dip0.t-ipconnect.de [91.0.103.118])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
         (No client certificate requested)
-        by theia.8bytes.org (Postfix) with ESMTPSA id 0628F6A7;
-        Tue, 14 Jul 2020 14:10:41 +0200 (CEST)
+        by theia.8bytes.org (Postfix) with ESMTPSA id 6248250C;
+        Tue, 14 Jul 2020 14:10:38 +0200 (CEST)
 From:   Joerg Roedel <joro@8bytes.org>
 To:     x86@kernel.org
 Cc:     Joerg Roedel <joro@8bytes.org>, Joerg Roedel <jroedel@suse.de>,
@@ -45,9 +45,9 @@ Cc:     Joerg Roedel <joro@8bytes.org>, Joerg Roedel <jroedel@suse.de>,
         Martin Radev <martin.b.radev@gmail.com>,
         linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
         virtualization@lists.linux-foundation.org
-Subject: [PATCH v4 15/75] x86/boot/compressed/64: Always switch to own page-table
-Date:   Tue, 14 Jul 2020 14:08:17 +0200
-Message-Id: <20200714120917.11253-16-joro@8bytes.org>
+Subject: [PATCH v4 10/75] x86/insn: Add insn_has_rep_prefix() helper
+Date:   Tue, 14 Jul 2020 14:08:12 +0200
+Message-Id: <20200714120917.11253-11-joro@8bytes.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200714120917.11253-1-joro@8bytes.org>
 References: <20200714120917.11253-1-joro@8bytes.org>
@@ -60,138 +60,61 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Joerg Roedel <jroedel@suse.de>
 
-When booted through startup_64 the kernel keeps running on the EFI
-page-table until the KASLR code sets up its own page-table. Without
-KASLR the pre-decompression boot code never switches off the EFI
-page-table. Change that by unconditionally switching to a kernel
-controlled page-table after relocation.
-
-This makes sure we can make changes to the mapping when necessary, for
-example map pages unencrypted in SEV and SEV-ES guests.
-
-Also remove the debug_putstr() calls in initialize_identity_maps()
-because the function now runs before console_init() is called.
+Add a function to check whether an instruction has a REP prefix.
 
 Signed-off-by: Joerg Roedel <jroedel@suse.de>
 ---
- arch/x86/boot/compressed/head_64.S      |  3 +-
- arch/x86/boot/compressed/ident_map_64.c | 51 +++++++++++++++----------
- arch/x86/boot/compressed/kaslr.c        |  3 --
- 3 files changed, 32 insertions(+), 25 deletions(-)
+ arch/x86/include/asm/insn-eval.h |  1 +
+ arch/x86/lib/insn-eval.c         | 24 ++++++++++++++++++++++++
+ 2 files changed, 25 insertions(+)
 
-diff --git a/arch/x86/boot/compressed/head_64.S b/arch/x86/boot/compressed/head_64.S
-index 4174d2f97b29..36f18d5592f4 100644
---- a/arch/x86/boot/compressed/head_64.S
-+++ b/arch/x86/boot/compressed/head_64.S
-@@ -543,10 +543,11 @@ SYM_FUNC_START_LOCAL_NOALIGN(.Lrelocated)
- 	rep	stosq
+diff --git a/arch/x86/include/asm/insn-eval.h b/arch/x86/include/asm/insn-eval.h
+index f748f57f1491..a0f839aa144d 100644
+--- a/arch/x86/include/asm/insn-eval.h
++++ b/arch/x86/include/asm/insn-eval.h
+@@ -15,6 +15,7 @@
+ #define INSN_CODE_SEG_OPND_SZ(params) (params & 0xf)
+ #define INSN_CODE_SEG_PARAMS(oper_sz, addr_sz) (oper_sz | (addr_sz << 4))
  
- /*
-- * Load stage2 IDT
-+ * Load stage2 IDT and switch to our own page-table
-  */
- 	pushq	%rsi
- 	call	load_stage2_idt
-+	call	initialize_identity_maps
- 	popq	%rsi
- 
- /*
-diff --git a/arch/x86/boot/compressed/ident_map_64.c b/arch/x86/boot/compressed/ident_map_64.c
-index e3d980ae9c2b..ecf9353b064d 100644
---- a/arch/x86/boot/compressed/ident_map_64.c
-+++ b/arch/x86/boot/compressed/ident_map_64.c
-@@ -86,9 +86,31 @@ phys_addr_t physical_mask = (1ULL << __PHYSICAL_MASK_SHIFT) - 1;
-  */
- static struct x86_mapping_info mapping_info;
- 
-+/*
-+ * Adds the specified range to what will become the new identity mappings.
-+ * Once all ranges have been added, the new mapping is activated by calling
-+ * finalize_identity_maps() below.
-+ */
-+void add_identity_map(unsigned long start, unsigned long size)
-+{
-+	unsigned long end = start + size;
-+
-+	/* Align boundary to 2M. */
-+	start = round_down(start, PMD_SIZE);
-+	end = round_up(end, PMD_SIZE);
-+	if (start >= end)
-+		return;
-+
-+	/* Build the mapping. */
-+	kernel_ident_mapping_init(&mapping_info, (pgd_t *)top_level_pgt,
-+				  start, end);
-+}
-+
- /* Locates and clears a region for a new top level page table. */
- void initialize_identity_maps(void)
- {
-+	unsigned long start, size;
-+
- 	/* If running as an SEV guest, the encryption mask is required. */
- 	set_sev_encryption_mask();
- 
-@@ -121,37 +143,24 @@ void initialize_identity_maps(void)
- 	 */
- 	top_level_pgt = read_cr3_pa();
- 	if (p4d_offset((pgd_t *)top_level_pgt, 0) == (p4d_t *)_pgtable) {
--		debug_putstr("booted via startup_32()\n");
- 		pgt_data.pgt_buf = _pgtable + BOOT_INIT_PGT_SIZE;
- 		pgt_data.pgt_buf_size = BOOT_PGT_SIZE - BOOT_INIT_PGT_SIZE;
- 		memset(pgt_data.pgt_buf, 0, pgt_data.pgt_buf_size);
- 	} else {
--		debug_putstr("booted via startup_64()\n");
- 		pgt_data.pgt_buf = _pgtable;
- 		pgt_data.pgt_buf_size = BOOT_PGT_SIZE;
- 		memset(pgt_data.pgt_buf, 0, pgt_data.pgt_buf_size);
- 		top_level_pgt = (unsigned long)alloc_pgt_page(&pgt_data);
++bool insn_has_rep_prefix(struct insn *insn);
+ void __user *insn_get_addr_ref(struct insn *insn, struct pt_regs *regs);
+ int insn_get_modrm_rm_off(struct insn *insn, struct pt_regs *regs);
+ int insn_get_modrm_reg_off(struct insn *insn, struct pt_regs *regs);
+diff --git a/arch/x86/lib/insn-eval.c b/arch/x86/lib/insn-eval.c
+index a8ac5c5e94f0..8ed9d645259c 100644
+--- a/arch/x86/lib/insn-eval.c
++++ b/arch/x86/lib/insn-eval.c
+@@ -53,6 +53,30 @@ static bool is_string_insn(struct insn *insn)
  	}
--}
- 
--/*
-- * Adds the specified range to what will become the new identity mappings.
-- * Once all ranges have been added, the new mapping is activated by calling
-- * finalize_identity_maps() below.
-- */
--void add_identity_map(unsigned long start, unsigned long size)
--{
--	unsigned long end = start + size;
--
--	/* Align boundary to 2M. */
--	start = round_down(start, PMD_SIZE);
--	end = round_up(end, PMD_SIZE);
--	if (start >= end)
--		return;
--
--	/* Build the mapping. */
--	kernel_ident_mapping_init(&mapping_info, (pgd_t *)top_level_pgt,
--				  start, end);
-+	/*
-+	 * New page-table is set up - map the kernel image and load it
-+	 * into cr3.
-+	 */
-+	start = (unsigned long)_head;
-+	size  = _end - _head;
-+	add_identity_map(start, size);
-+	write_cr3(top_level_pgt);
  }
  
- /*
-diff --git a/arch/x86/boot/compressed/kaslr.c b/arch/x86/boot/compressed/kaslr.c
-index 7c61a8c5b9cf..856dc1c9bb0d 100644
---- a/arch/x86/boot/compressed/kaslr.c
-+++ b/arch/x86/boot/compressed/kaslr.c
-@@ -903,9 +903,6 @@ void choose_random_location(unsigned long input,
- 
- 	boot_params->hdr.loadflags |= KASLR_FLAG;
- 
--	/* Prepare to add new identity pagetables on demand. */
--	initialize_identity_maps();
--
- 	/* Record the various known unsafe memory ranges. */
- 	mem_avoid_init(input, input_size, *output);
- 
++/**
++ * insn_has_rep_prefix() - Determine if instruction has a REP prefix
++ * @insn:	Instruction containing the prefix to inspect
++ *
++ * Returns:
++ *
++ * true if the instruction has a REP prefix, false if not.
++ */
++bool insn_has_rep_prefix(struct insn *insn)
++{
++	int i;
++
++	insn_get_prefixes(insn);
++
++	for (i = 0; i < insn->prefixes.nbytes; i++) {
++		insn_byte_t p = insn->prefixes.bytes[i];
++
++		if (p == 0xf2 || p == 0xf3)
++			return true;
++	}
++
++	return false;
++}
++
+ /**
+  * get_seg_reg_override_idx() - obtain segment register override index
+  * @insn:	Valid instruction with segment override prefixes
 -- 
 2.27.0
 
