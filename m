@@ -2,162 +2,96 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-18.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73AEBC433FC
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 14:45:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56822C433E8
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 14:45:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4A91F22205
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 14:45:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1872B217A0
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 14:45:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594737909;
-	bh=LWaLMwzvuoFyZldcrj7VKEFScyM7rT9jYz4eGj0RDXg=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rZshuSeZRhfumBNhsoU3+egITCHcE73VtxtLJfnt79LXVz9tPdtLewFc9tPwdNePY
-	 I8cheXoQNgVQTtQjoPHjWFmS7BoX78w4ggNBesGRXVhXrY2soIUzzs2UkTzUH45Dlx
-	 NhScuuyIkR/urw34BTqE2XTLEMGq90sqZq0a6G2k=
+	s=default; t=1594737931;
+	bh=2HMwBWKfuibfivhw2EEUQyPibobh2jV2edHTtMRWpi4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=gJXPSgmf5NTkIx5FLowDNnuib7ApRL559irZJmMzm+9dcBYmZs3VscDPBxNodQmuT
+	 xuu/8HSmBFh6uCN44SAN+OrXZ2FlhN41Q5dCreHK1tW0dhlo448FHSd6JTI++rDJnb
+	 8kSvu4GmxX1gEQSZL0yKrsnLYLJVcm39i1+ZbVWE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728140AbgGNOpH (ORCPT
+        id S1729497AbgGNOp3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 10:45:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54304 "EHLO mail.kernel.org"
+        Tue, 14 Jul 2020 10:45:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60824 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728743AbgGNOjF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 10:39:05 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1728573AbgGNOp1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 10:45:27 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E96DE22519;
-        Tue, 14 Jul 2020 14:39:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4C3C42082F;
+        Tue, 14 Jul 2020 14:45:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594737544;
-        bh=LWaLMwzvuoFyZldcrj7VKEFScyM7rT9jYz4eGj0RDXg=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HKpWBk3vt6vyKLv1x31n2Qwb9eEhuG/Ch4t8kGoHhZx3BntP+IezjHrYM3OvglSK4
-         2JzJP4rX3uPsPuVnQc0hpuY3LcRVwNKdpCFE02CcsGAkL1Q5a8yP+ql2tBkmVebYhM
-         zVZnF8OL7Mv0Gpz+fUje4zHqH/aa78L7G6GUoeYg=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Kai Vehmanen <kai.vehmanen@linux.intel.com>,
-        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>,
-        alsa-devel@alsa-project.org
-Subject: [PATCH AUTOSEL 5.7 12/19] ALSA: hda/hdmi: fix failures at PCM open on Intel ICL and later
-Date:   Tue, 14 Jul 2020 10:38:42 -0400
-Message-Id: <20200714143849.4035283-12-sashal@kernel.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200714143849.4035283-1-sashal@kernel.org>
-References: <20200714143849.4035283-1-sashal@kernel.org>
+        s=default; t=1594737926;
+        bh=2HMwBWKfuibfivhw2EEUQyPibobh2jV2edHTtMRWpi4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=b5V+WwDPUEuUkdqEsN9NzyYu3TWmKLZnUCKxVKQquFPPzDfiFie7GzFbvI5NAFpGh
+         r7yckDYP6Yfaben+GiUh78V7tlFtgFp0+GSpMpaRxHjDg/ZU2wqGBb9pQS9BO+dIvH
+         jdOV2K9VTQOF+e8DvfTJTY2nVMElE2TnX8l7V5KM=
+Date:   Tue, 14 Jul 2020 15:45:17 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     xingxing qiao <mnlife@foxmail.com>
+Cc:     lgirdwood <lgirdwood@gmail.com>, perex <perex@perex.cz>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        alsa-devel <alsa-devel@alsa-project.org>
+Subject: Re: [PATCH] When snd_soc_card_jack_new is not called or the call
+ fails, calling this function causes a null pointer access
+Message-ID: <20200714144517.GF4900@sirena.org.uk>
+References: <tencent_AA2F5D7A5EDC40E7E806D0CA5877CE8AB308@qq.com>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="bGR76rFJjkSxVeRa"
+Content-Disposition: inline
+In-Reply-To: <tencent_AA2F5D7A5EDC40E7E806D0CA5877CE8AB308@qq.com>
+X-Cookie: Your password is pitifully obvious.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kai Vehmanen <kai.vehmanen@linux.intel.com>
 
-[ Upstream commit 56275036d8185f92eceac7479d48b858ee3dab84 ]
+--bGR76rFJjkSxVeRa
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-When HDMI PCM devices are opened in a specific order, with at least one
-HDMI/DP receiver connected, ALSA PCM open fails to -EBUSY on the
-connected monitor, on recent Intel platforms (ICL/JSL and newer). While
-this is not a typical sequence, at least Pulseaudio does this every time
-when it is started, to discover the available PCMs.
+On Tue, Jul 14, 2020 at 10:30:36PM +0800, xingxing qiao wrote:
 
-The rootcause is an invalid assumption in hdmi_add_pin(), where the
-total number of converters is assumed to be known at the time the
-function is called. On older Intel platforms this held true, but after
-ICL/JSL, the order how pins and converters are in the subnode list as
-returned by snd_hda_get_sub_nodes(), was changed. As a result,
-information for some converters was not stored to per_pin->mux_nids.
-And this means some pins cannot be connected to all converters, and
-application instead gets -EBUSY instead at open.
+> &nbsp;unsigned int sync = 0;
+> &nbsp;int enable;
+> &nbsp;
+> -if (!jack)
 
-The assumption that converters are always before pins in the subnode
-list, is not really a valid one. Fix the problem in hdmi_parse_codec()
-by introducing separate loops for discovering converters and pins.
+This is actually worse than your previous posting - it's got HTML all
+through it :(  git send-email is typically the easiest way to send
+things.
 
-BugLink: https://github.com/thesofproject/linux/issues/1978
-BugLink: https://github.com/thesofproject/linux/issues/2216
-BugLink: https://github.com/thesofproject/linux/issues/2217
-Reviewed-by: Ranjani Sridharan <ranjani.sridharan@linux.intel.com>
-Reviewed-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Signed-off-by: Kai Vehmanen <kai.vehmanen@linux.intel.com>
-Link: https://lore.kernel.org/r/20200703153818.2808592-1-kai.vehmanen@linux.intel.com
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- sound/pci/hda/patch_hdmi.c | 36 +++++++++++++++++++++++-------------
- 1 file changed, 23 insertions(+), 13 deletions(-)
+Also please note my comment about needing a subject line in a similar
+style to those in existing commits you can see in git.
 
-diff --git a/sound/pci/hda/patch_hdmi.c b/sound/pci/hda/patch_hdmi.c
-index 137d655fed8f8..e821c9df81070 100644
---- a/sound/pci/hda/patch_hdmi.c
-+++ b/sound/pci/hda/patch_hdmi.c
-@@ -1804,33 +1804,43 @@ static int hdmi_add_cvt(struct hda_codec *codec, hda_nid_t cvt_nid)
- 
- static int hdmi_parse_codec(struct hda_codec *codec)
- {
--	hda_nid_t nid;
-+	hda_nid_t start_nid;
-+	unsigned int caps;
- 	int i, nodes;
- 
--	nodes = snd_hda_get_sub_nodes(codec, codec->core.afg, &nid);
--	if (!nid || nodes < 0) {
-+	nodes = snd_hda_get_sub_nodes(codec, codec->core.afg, &start_nid);
-+	if (!start_nid || nodes < 0) {
- 		codec_warn(codec, "HDMI: failed to get afg sub nodes\n");
- 		return -EINVAL;
- 	}
- 
--	for (i = 0; i < nodes; i++, nid++) {
--		unsigned int caps;
--		unsigned int type;
-+	/*
-+	 * hdmi_add_pin() assumes total amount of converters to
-+	 * be known, so first discover all converters
-+	 */
-+	for (i = 0; i < nodes; i++) {
-+		hda_nid_t nid = start_nid + i;
- 
- 		caps = get_wcaps(codec, nid);
--		type = get_wcaps_type(caps);
- 
- 		if (!(caps & AC_WCAP_DIGITAL))
- 			continue;
- 
--		switch (type) {
--		case AC_WID_AUD_OUT:
-+		if (get_wcaps_type(caps) == AC_WID_AUD_OUT)
- 			hdmi_add_cvt(codec, nid);
--			break;
--		case AC_WID_PIN:
-+	}
-+
-+	/* discover audio pins */
-+	for (i = 0; i < nodes; i++) {
-+		hda_nid_t nid = start_nid + i;
-+
-+		caps = get_wcaps(codec, nid);
-+
-+		if (!(caps & AC_WCAP_DIGITAL))
-+			continue;
-+
-+		if (get_wcaps_type(caps) == AC_WID_PIN)
- 			hdmi_add_pin(codec, nid);
--			break;
--		}
- 	}
- 
- 	return 0;
--- 
-2.25.1
+--bGR76rFJjkSxVeRa
+Content-Type: application/pgp-signature; name="signature.asc"
 
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl8NxPwACgkQJNaLcl1U
+h9AM4Qf/daXJ1X3aWCVvpubYHVhttn9yFHKfs4sRxrKLLl40i4ysYQWZB5P7doEk
+1sohzwXmgJxxDz4j8MIoKtTClsCG2uH5aGj060gGwkhN1++b5lW4jpF+mKUWvwim
+wraN7JLZUr8yW8nHlVxscbXimUXHlb1apb3/KjvS3fL5EgPLpZ3cLRCQepJEorno
+EW/9+hJrKewpM1oCT9E0Fwsurv6BakMAEdsa7+557T20xOv+OFpFObZjz0E8fmtx
+hv7VM838yUwuPrwdA/WUj96Sa+pHVbIyX/mKqIPOj7ppLNHwiKdMS0v5BookoPfc
+u8i9TV4N4MuBuVrk7R70fqvPTmvBnw==
+=pZ+i
+-----END PGP SIGNATURE-----
+
+--bGR76rFJjkSxVeRa--
