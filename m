@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB921C433EA
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 19:09:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E218C433EC
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 19:09:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B07D82240B
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 19:09:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5ADE62240B
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 19:09:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="X5kDtG7t"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="crhQAYps"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731413AbgGNTJ0 (ORCPT
+        id S1731441AbgGNTJk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 15:09:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41902 "EHLO
+        Tue, 14 Jul 2020 15:09:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41952 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731336AbgGNTJJ (ORCPT
+        with ESMTP id S1731402AbgGNTJW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 15:09:09 -0400
+        Tue, 14 Jul 2020 15:09:22 -0400
 Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B5A21C08C5DB;
-        Tue, 14 Jul 2020 12:09:09 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 49E35C08C5DE;
+        Tue, 14 Jul 2020 12:09:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
         References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
         Content-Type:Content-ID:Content-Description;
-        bh=yJQCyMU4QC5CM8QEcB7EPBUPjYJdK3zPx0qGOqwbmg8=; b=X5kDtG7t0cVUXd3x+ntU2rSZaQ
-        nRa8O3DwFc0O1+fz/SUO41onJfg43Fj19YkdOtYRdFPV1uaLLoSmJwQzemuooBpOMFNf7nJUpHg5Q
-        GxVKJthb5kcEW/ScCD4aHS05dpTrkIPoqe4Qk4Z73VbgLD+V0il0Sa9R0h2Inx/0y0ETD4LyEkiqV
-        MYDEm9yhHgA+Ons2x8A2D4jt2467P4MO5mf77u/0kbQ0EhMn8UOxtNTPKmqdiFlem4CcPpvklpjct
-        AEQnGc24snjitsGVl1ERiAxKQ/4x/gwZhCxSZGun0bMw1Eu+5f507p7h1RH4emYoMcVHXfAkatwmU
-        VqLgrocw==;
+        bh=OlVLWFib6FtnZCFxbnvi/3T2WDZ4jfVYULPs6vsSQuo=; b=crhQAYpsKdjX291gbV28QcA/Nx
+        sJx9XT4L9omZ3HkZpZ7FtuxJZahDQv+cFISe8Nx6Zgy5qThex3aUMCjRfLw9+xw9jMcJr/kpwJpLn
+        p6dhGvF1kO0hesjGm+Ke3tHJf+7ySRKJdyFkcUsIQjD5LJdNRxjOf4fAJKaBy+/BeONWT3VBmOk4Q
+        +oTJpFpVPFZgAf0UKKOIOUPULCP6GEDCpx8HJVgwtzkh1P04embpPMfhGLqp0EQ5q3VOziIcPTiC3
+        serKq1W7fn52fpZxZL4fYWr8nevFDvQceR5UDI3RF8/R16UBGH0wQ8VoYNyM4MgYOvJFya1P452Bu
+        12M905uA==;
 Received: from [2001:4bb8:188:5f50:f037:8cfe:627e:7028] (helo=localhost)
         by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jvQId-0005sM-Hf; Tue, 14 Jul 2020 19:09:08 +0000
+        id 1jvQIq-0005ui-6o; Tue, 14 Jul 2020 19:09:20 +0000
 From:   Christoph Hellwig <hch@lst.de>
 To:     linux-kernel@vger.kernel.org
 Cc:     "H. Peter Anvin" <hpa@zytor.com>, Song Liu <song@kernel.org>,
         Al Viro <viro@zeniv.linux.org.uk>,
         Linus Torvalds <torvalds@linux-foundation.org>,
         linux-raid@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Subject: [PATCH 13/23] initrd: mark init_linuxrc as __init
-Date:   Tue, 14 Jul 2020 21:04:17 +0200
-Message-Id: <20200714190427.4332-14-hch@lst.de>
+Subject: [PATCH 22/23] fs: remove ksys_fchmod
+Date:   Tue, 14 Jul 2020 21:04:26 +0200
+Message-Id: <20200714190427.4332-23-hch@lst.de>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200714190427.4332-1-hch@lst.de>
 References: <20200714190427.4332-1-hch@lst.de>
@@ -59,24 +59,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Fold it into the only remaining caller.
+
 Signed-off-by: Christoph Hellwig <hch@lst.de>
 ---
- init/do_mounts_initrd.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/open.c                | 7 +------
+ include/linux/syscalls.h | 1 -
+ 2 files changed, 1 insertion(+), 7 deletions(-)
 
-diff --git a/init/do_mounts_initrd.c b/init/do_mounts_initrd.c
-index e4f88e9e1c0839..57ad5b2da8f5f5 100644
---- a/init/do_mounts_initrd.c
-+++ b/init/do_mounts_initrd.c
-@@ -56,7 +56,7 @@ static int __init early_initrd(char *p)
+diff --git a/fs/open.c b/fs/open.c
+index ab3671af8a9705..b316dd6a86a8b9 100644
+--- a/fs/open.c
++++ b/fs/open.c
+@@ -608,7 +608,7 @@ int vfs_fchmod(struct file *file, umode_t mode)
+ 	return chmod_common(&file->f_path, mode);
  }
- early_param("initrd", early_initrd);
  
--static int init_linuxrc(struct subprocess_info *info, struct cred *new)
-+static int __init init_linuxrc(struct subprocess_info *info, struct cred *new)
+-int ksys_fchmod(unsigned int fd, umode_t mode)
++SYSCALL_DEFINE2(fchmod, unsigned int, fd, umode_t, mode)
  {
- 	ksys_unshare(CLONE_FS | CLONE_FILES);
- 	console_on_rootfs();
+ 	struct fd f = fdget(fd);
+ 	int err = -EBADF;
+@@ -620,11 +620,6 @@ int ksys_fchmod(unsigned int fd, umode_t mode)
+ 	return err;
+ }
+ 
+-SYSCALL_DEFINE2(fchmod, unsigned int, fd, umode_t, mode)
+-{
+-	return ksys_fchmod(fd, mode);
+-}
+-
+ int do_fchmodat(int dfd, const char __user *filename, umode_t mode)
+ {
+ 	struct path path;
+diff --git a/include/linux/syscalls.h b/include/linux/syscalls.h
+index b6d90057476260..39ff738997a172 100644
+--- a/include/linux/syscalls.h
++++ b/include/linux/syscalls.h
+@@ -1240,7 +1240,6 @@ int ksys_umount(char __user *name, int flags);
+ int ksys_chroot(const char __user *filename);
+ ssize_t ksys_write(unsigned int fd, const char __user *buf, size_t count);
+ int ksys_chdir(const char __user *filename);
+-int ksys_fchmod(unsigned int fd, umode_t mode);
+ int ksys_fchown(unsigned int fd, uid_t user, gid_t group);
+ int ksys_ioctl(unsigned int fd, unsigned int cmd, unsigned long arg);
+ ssize_t ksys_read(unsigned int fd, char __user *buf, size_t count);
 -- 
 2.27.0
 
