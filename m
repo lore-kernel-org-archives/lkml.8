@@ -2,98 +2,89 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EFA0C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 06:05:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC1CBC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 06:06:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0D69B21927
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 06:05:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594706724;
-	bh=bHbsEQUe++Lcee6QxGMLVV8KWlmKwrS5KtkVW9rfyeU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Ey4O3njsTMdXhhqaan7ACXDbq4iC1T0OaMR1v+G6UQkTdRKH6C7x17BhQpQPFF9yV
-	 hEG/uhTKcx9Uw44qKUiYD9T5RZOoVtSB/b2BMHUoUqSKUJsIb5L7WdU54VQN2flaUk
-	 RmoKok6RumOIZEC1IDv9dzy2p3sSYqhkY4Noh2Oo=
+	by mail.kernel.org (Postfix) with ESMTP id 93CB6221EA
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 06:06:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="JMzCTAEt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726698AbgGNGFX (ORCPT
+        id S1726767AbgGNGG0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 02:05:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52644 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725283AbgGNGFW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 02:05:22 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 597C520890;
-        Tue, 14 Jul 2020 06:05:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594706721;
-        bh=bHbsEQUe++Lcee6QxGMLVV8KWlmKwrS5KtkVW9rfyeU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=jm/Djc8vK56LTCq+jDsDw1QyMassDPWu10If0CuiGPm0/PC8lzLTMMbPDOFNnpA8l
-         xoxzZnzJxfUTfZ3ADn9XomKui/y9YscOQSFMsbHd99EVRT5Hre1d3T6iQznH7bANQQ
-         cZFO10EHHHvWRF/nqHybpFMZv240jmXo/r3Uex14=
-Date:   Tue, 14 Jul 2020 08:05:20 +0200
-From:   reg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Badhri Jagan Sridharan <badhri@google.com>
-Cc:     Guenter Roeck <linux@roeck-us.net>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] usb: typec: tcpm: Move to high priority workqueue for
- processing events
-Message-ID: <20200714060520.GB657428@kroah.com>
-References: <20200713204300.345975-1-badhri@google.com>
+        Tue, 14 Jul 2020 02:06:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60906 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725306AbgGNGG0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 02:06:26 -0400
+Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CFBC2C061755;
+        Mon, 13 Jul 2020 23:06:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
+        :Reply-To:Content-ID:Content-Description;
+        bh=UIXDCXwJB/3NeMqMWfWT3V3jqZ15kLhlWyDghMyaIz0=; b=JMzCTAEtA44frARh4Fspuz2L0T
+        LccTR8Ea95W2ZujXKz28LnB2wK0cgNkGXSUFT+Az8bsG2vQ9Zjqg7OYeQLqmOwvmWWBjz6rO2Nwfy
+        7mNzELT3rwdoF6BY1R/7GzwAbyetPecUoa9kHiE35jnSfpPERVE8o08NA4wsj8ZSPFWf6D1kZUl19
+        r/DYvFiIqkHF4SaCtikLURLQEdcarDG51WagosW6HLAaFh9c4S+cdvdrGkyUT9w0D2oNPE04B0e4a
+        6u2Ccqd8TuhQJ9gBXv4ofE+r6nQn7/Ut0AmgNirCcA0Hd4YWNa1Q5e9JM4J1cBcsvYORWE18JLITP
+        MD5J27Uw==;
+Received: from [2601:1c0:6280:3f0::19c2]
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jvE56-0003wr-27; Tue, 14 Jul 2020 06:06:20 +0000
+Subject: Re: procfs VmFlags table missing from online docs
+To:     Chris Packham <Chris.Packham@alliedtelesis.co.nz>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Cc:     "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>
+References: <8abafee9-e34b-45f6-19a7-3f043ceb5537@alliedtelesis.co.nz>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <6ee41c18-934e-26c2-a875-3d9e4c700c6c@infradead.org>
+Date:   Mon, 13 Jul 2020 23:06:14 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
+In-Reply-To: <8abafee9-e34b-45f6-19a7-3f043ceb5537@alliedtelesis.co.nz>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200713204300.345975-1-badhri@google.com>
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 13, 2020 at 01:43:00PM -0700, Badhri Jagan Sridharan wrote:
-> "tReceiverResponse 15 ms Section 6.6.2
-> The receiver of a Message requiring a response Shall respond
-> within tReceiverResponse in order to ensure that the
-> sender’s SenderResponseTimer does not expire."
+On 7/13/20 10:11 PM, Chris Packham wrote:
+> Hi,
 > 
-> When the cpu complex is busy running other lower priority
-> work items, TCPM's work queue sometimes does not get scheduled
-> on time to meet the above requirement from the spec.
-> Elevating the TCPM's work queue to higher priority allows
-> TCPM to meet tReceiverResponse in a busy system.
+> I was just browsing 
+> https://www.kernel.org/doc/html/latest/filesystems/proc.html
 > 
-> Signed-off-by: Badhri Jagan Sridharan <badhri@google.com>
-> ---
->  drivers/usb/typec/tcpm/tcpm.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/usb/typec/tcpm/tcpm.c b/drivers/usb/typec/tcpm/tcpm.c
-> index 82b19ebd7838e0..088b6f1fa1ff89 100644
-> --- a/drivers/usb/typec/tcpm/tcpm.c
-> +++ b/drivers/usb/typec/tcpm/tcpm.c
-> @@ -4747,7 +4747,7 @@ struct tcpm_port *tcpm_register_port(struct device *dev, struct tcpc_dev *tcpc)
->  	mutex_init(&port->lock);
->  	mutex_init(&port->swap_lock);
->  
-> -	port->wq = create_singlethread_workqueue(dev_name(dev));
-> +	port->wq = alloc_ordered_workqueue("%s", WQ_HIGHPRI, dev_name(dev));
+> The "VmFlags" description seems to be missing a table. It's there in 
+> Documentation/filesystems/proc.rst so I assume it's some sphinx/rst 
+> problem. Possibly the table is over indented?
 
-How are you "guaranteeing" that this is really going to change anything
-on a highly loaded machine?
+Wow. It skips the table completely.
 
-Yes, it might make things better, but if you have a hard deadline like
-this, you need to do things a bit differently to always ensure that you
-meet it.  I do not think this change is that fix, do you?
+I tried a couple of things that did not help.
 
-thanks,
+> Anyway I thought I'd let someone know.
 
-greg k-h
+Thanks.
+
+> Regards,
+> Chris
+
+
+-- 
+~Randy
+
