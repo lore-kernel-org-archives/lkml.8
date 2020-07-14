@@ -2,132 +2,258 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8989C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 07:26:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2971BC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 07:29:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AD8F0206F0
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 07:26:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F2CF2206F0
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 07:29:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="cYd9/1x8"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="rX67Vgh0";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="XMCfF7dO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726062AbgGNH0o (ORCPT
+        id S1725884AbgGNH3q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 03:26:44 -0400
-Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:13527 "EHLO
-        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725306AbgGNH0o (ORCPT
+        Tue, 14 Jul 2020 03:29:46 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:41372 "EHLO
+        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725306AbgGNH3p (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 03:26:44 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5f0d5dc30000>; Tue, 14 Jul 2020 00:24:51 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Tue, 14 Jul 2020 00:26:43 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Tue, 14 Jul 2020 00:26:43 -0700
-Received: from [10.26.72.103] (172.20.13.39) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 14 Jul
- 2020 07:26:42 +0000
-Subject: Re: [PATCH 1/2] cpufreq: tegra186: Fix initial frequency
-To:     Viresh Kumar <viresh.kumar@linaro.org>
-CC:     Thierry Reding <thierry.reding@gmail.com>,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20200712100645.13927-1-jonathanh@nvidia.com>
- <20200713032554.cykywnygxln6ukrl@vireshk-i7>
- <3d6091f2-6b04-185f-6c23-e39a34b87877@nvidia.com>
- <20200714034635.2zdv3wzmftjg2t4a@vireshk-i7>
-From:   Jon Hunter <jonathanh@nvidia.com>
-Message-ID: <aa941c67-1dec-5363-7bd7-5e9d8d324110@nvidia.com>
-Date:   Tue, 14 Jul 2020 08:26:39 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Tue, 14 Jul 2020 03:29:45 -0400
+From:   Anna-Maria Behnsen <anna-maria@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1594711782;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=mlL5584kIhAsLhQOkXkzeSm+I2iOX4QZVPHz9iptvuc=;
+        b=rX67Vgh0uFIEv46UIS0+JvJd4vkRYRksGVd59kgnv813iH9vgbpvkn/5L24cPweaAlBgCB
+        bZNylyVIkBI0efW+rGGd2iVJU12yt5klxg/rD03sbMoTzJ8mozUGDxACyB5F6b1JvpBths
+        j9Yp/hEotIrj3efXuRdjCVeawrL++GPl49avaswjz0BLbcMSjnhlWXY9Grwoo8D6aCx+QE
+        QGN2DsrQegIxzgfroAiPSSNedg+fYxMCOOs4+0iFKptICB7Yh2x4TwtyouAmDjOMXSbvvO
+        WEpfnqckMKwGcgLPeS2kNx/WUB16GUCcpEmBUvuQVYyByric6G53c8DILLJT/w==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1594711782;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=mlL5584kIhAsLhQOkXkzeSm+I2iOX4QZVPHz9iptvuc=;
+        b=XMCfF7dOvHGY/M6t/QQaGSbV9YjCg5CzrRs8a8rb9vk6H7SqdkN33KtbeJuuFCUBHp/5NR
+        /PQFnHbH0mUGqPBg==
+To:     linux-kernel@vger.kernel.org
+Cc:     Anna-Maria Behnsen <anna-maria@linutronix.de>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: [PATCH v2] timers: Use only bucket expiry for base->next_expiry value
+Date:   Tue, 14 Jul 2020 09:29:24 +0200
+Message-Id: <20200714072924.6810-1-anna-maria@linutronix.de>
 MIME-Version: 1.0
-In-Reply-To: <20200714034635.2zdv3wzmftjg2t4a@vireshk-i7>
-X-Originating-IP: [172.20.13.39]
-X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1594711491; bh=tZth7Y/1Zt4r7X56D1QfoSroo5wy+uKCt1xfia33abs=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=cYd9/1x8IOG/7Cbt/2SBVThW3A52KXxB0rGRifWa+q/f1NG4Vl5MRGjv3vcqslarC
-         kZ1TvM16r/bLO8bh3vch4uDH2Dq5/GiCzud04FF94egLOdDh5/UyUhwU5c0QwTq11d
-         lVc0vK1WeATMF4hKm54eJ572bLOcJjrI0Qna/jpVNlS0l7D5Zg82j4h8km0GZODnep
-         w2UNwqhWiEZZjXaps7ldudd+1VjjURM3TT/g3cRjKvQHQZtE+qsWiliG+kMpDiZZ2H
-         CztIWOx58saq5uk1XvM+mvpFNnZAYnJklKcVj/tRjuNk9oisIhdwNySDiqB3v4F3Ts
-         UpKgmip/O2B6w==
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+The bucket expiry time is the effective expriy time of timers and is
+greater than or equal to the requested timer expiry time. This is due
+to the guarantee that timers never expire early and the reduced expiry
+granularity in the secondary wheel levels.
 
-On 14/07/2020 04:46, Viresh Kumar wrote:
-> On 13-07-20, 17:37, Jon Hunter wrote:
->>
->> On 13/07/2020 04:25, Viresh Kumar wrote:
->>> On 12-07-20, 11:06, Jon Hunter wrote:
->>>> Commit 6cc3d0e9a097 ("cpufreq: tegra186: add
->>>> CPUFREQ_NEED_INITIAL_FREQ_CHECK flag") fixed CPUFREQ support for
->>>> Tegra186 but as a consequence the following warnings are now seen on
->>>> boot ...
->>>>
->>>>  cpufreq: cpufreq_online: CPU0: Running at unlisted freq: 0 KHz
->>>>  cpufreq: cpufreq_online: CPU0: Unlisted initial frequency changed to: 2035200 KHz
->>>>  cpufreq: cpufreq_online: CPU1: Running at unlisted freq: 0 KHz
->>>>  cpufreq: cpufreq_online: CPU1: Unlisted initial frequency changed to: 2035200 KHz
->>>>  cpufreq: cpufreq_online: CPU2: Running at unlisted freq: 0 KHz
->>>>  cpufreq: cpufreq_online: CPU2: Unlisted initial frequency changed to: 2035200 KHz
->>>>  cpufreq: cpufreq_online: CPU3: Running at unlisted freq: 0 KHz
->>>>  cpufreq: cpufreq_online: CPU3: Unlisted initial frequency changed to: 2035200 KHz
->>>>  cpufreq: cpufreq_online: CPU4: Running at unlisted freq: 0 KHz
->>>>  cpufreq: cpufreq_online: CPU4: Unlisted initial frequency changed to: 2035200 KHz
->>>>  cpufreq: cpufreq_online: CPU5: Running at unlisted freq: 0 KHz
->>>>  cpufreq: cpufreq_online: CPU5: Unlisted initial frequency changed to: 2035200 KHz
->>>>
->>>> Although we could fix this by adding a 'get' operator for the Tegra186
->>>> CPUFREQ driver, there is really little point because the CPUFREQ on
->>>> Tegra186 is set by writing a value stored in the frequency table to a
->>>> register and we just need to set the initial frequency.
->>>
->>> The hardware still runs at the frequency requested by cpufreq core here, right ?
->>
->> Yes.
->>
->>> It is better to provide the get() callback as it is also used to show the
->>> current frequency in userspace.
->>
->> I looked at that and I saw that if the get() callback is not provided,
->> the current frequency showed by userspace is policy->cur. For this
->> device, policy->cur is accurate and so if we added the get() callback we
->> essentially just going to return policy->cur. Therefore, given that we
->> already know policy->cur, I did not see the point in adding a device
->> specific handler to do the same thing.
-> 
-> The get() callback is supposed to read the frequency from hardware and
-> return it, no cached value here. policy->cur may end up being wrong in
-> case there is a bug.
+When a timer is enqueued, trigger_dyntick_cpu() checks whether the
+timer is the new first timer. This check compares next_expiry with
+the requested timer expiry value and not with the effective expiry
+value of the bucket into which the timer was queued.
 
-OK, I can add a get callback. However, there are a few other drivers
-that set the current frequency in the init() and don't implement a get()
-callback ...
+Storing the requested timer expiry value in base->next_expiry can lead
+to base->clk going backwards if the requested timer expiry value is
+smaller than base->clk. Commit 30c66fc30ee7 ("timer: Prevent base->clk
+from moving backward") worked around this by preventing the store when
+timer->expiry is before base->clk, but did not fix the underlying
+problem.
 
-drivers/cpufreq/pasemi-cpufreq.c
-drivers/cpufreq/ppc_cbe_cpufreq.c
-drivers/cpufreq/intel_pstate.c
+Use the expiry value of the bucket into which the timer is queued to
+do the new first timer check. This fixes the base->clk going backward
+problem.
 
-Jon
+The workaround of commit 30c66fc30ee7 ("timer: Prevent base->clk from
+moving backward") in trigger_dyntick_cpu() is not longer necessary as the
+timers bucket expiry is guaranteed to be greater than or equal base->clk.
 
+Signed-off-by: Anna-Maria Behnsen <anna-maria@linutronix.de>
+Cc: Frederic Weisbecker <frederic@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Juri Lelli <juri.lelli@redhat.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+---
+
+The patch applies on top of tip: timers/urgent
+
+ kernel/time/timer.c | 64 ++++++++++++++++++++++++---------------------
+ 1 file changed, 34 insertions(+), 30 deletions(-)
+
+diff --git a/kernel/time/timer.c b/kernel/time/timer.c
+index 9a838d38dbe6..f29e84c0b9fc 100644
+--- a/kernel/time/timer.c
++++ b/kernel/time/timer.c
+@@ -487,35 +487,39 @@ static inline void timer_set_idx(struct timer_list *timer, unsigned int idx)
+  * Helper function to calculate the array index for a given expiry
+  * time.
+  */
+-static inline unsigned calc_index(unsigned expires, unsigned lvl)
++static inline unsigned calc_index(unsigned expires, unsigned lvl,
++				  unsigned long *bucket_expiry)
+ {
+ 	expires = (expires + LVL_GRAN(lvl)) >> LVL_SHIFT(lvl);
++	*bucket_expiry = expires << LVL_SHIFT(lvl);
+ 	return LVL_OFFS(lvl) + (expires & LVL_MASK);
+ }
+ 
+-static int calc_wheel_index(unsigned long expires, unsigned long clk)
++static int calc_wheel_index(unsigned long expires, unsigned long clk,
++			    unsigned long *bucket_expiry)
+ {
+ 	unsigned long delta = expires - clk;
+ 	unsigned int idx;
+ 
+ 	if (delta < LVL_START(1)) {
+-		idx = calc_index(expires, 0);
++		idx = calc_index(expires, 0, bucket_expiry);
+ 	} else if (delta < LVL_START(2)) {
+-		idx = calc_index(expires, 1);
++		idx = calc_index(expires, 1, bucket_expiry);
+ 	} else if (delta < LVL_START(3)) {
+-		idx = calc_index(expires, 2);
++		idx = calc_index(expires, 2, bucket_expiry);
+ 	} else if (delta < LVL_START(4)) {
+-		idx = calc_index(expires, 3);
++		idx = calc_index(expires, 3, bucket_expiry);
+ 	} else if (delta < LVL_START(5)) {
+-		idx = calc_index(expires, 4);
++		idx = calc_index(expires, 4, bucket_expiry);
+ 	} else if (delta < LVL_START(6)) {
+-		idx = calc_index(expires, 5);
++		idx = calc_index(expires, 5, bucket_expiry);
+ 	} else if (delta < LVL_START(7)) {
+-		idx = calc_index(expires, 6);
++		idx = calc_index(expires, 6, bucket_expiry);
+ 	} else if (LVL_DEPTH > 8 && delta < LVL_START(8)) {
+-		idx = calc_index(expires, 7);
++		idx = calc_index(expires, 7, bucket_expiry);
+ 	} else if ((long) delta < 0) {
+ 		idx = clk & LVL_MASK;
++		*bucket_expiry = clk;
+ 	} else {
+ 		/*
+ 		 * Force expire obscene large timeouts to expire at the
+@@ -524,7 +528,7 @@ static int calc_wheel_index(unsigned long expires, unsigned long clk)
+ 		if (expires >= WHEEL_TIMEOUT_CUTOFF)
+ 			expires = WHEEL_TIMEOUT_MAX;
+ 
+-		idx = calc_index(expires, LVL_DEPTH - 1);
++		idx = calc_index(expires, LVL_DEPTH - 1, bucket_expiry);
+ 	}
+ 	return idx;
+ }
+@@ -544,16 +548,18 @@ static void enqueue_timer(struct timer_base *base, struct timer_list *timer,
+ }
+ 
+ static void
+-__internal_add_timer(struct timer_base *base, struct timer_list *timer)
++__internal_add_timer(struct timer_base *base, struct timer_list *timer,
++		     unsigned long *bucket_expiry)
+ {
+ 	unsigned int idx;
+ 
+-	idx = calc_wheel_index(timer->expires, base->clk);
++	idx = calc_wheel_index(timer->expires, base->clk, bucket_expiry);
+ 	enqueue_timer(base, timer, idx);
+ }
+ 
+ static void
+-trigger_dyntick_cpu(struct timer_base *base, struct timer_list *timer)
++trigger_dyntick_cpu(struct timer_base *base, struct timer_list *timer,
++		    unsigned long bucket_expiry)
+ {
+ 	if (!is_timers_nohz_active())
+ 		return;
+@@ -576,31 +582,29 @@ trigger_dyntick_cpu(struct timer_base *base, struct timer_list *timer)
+ 	if (!base->is_idle)
+ 		return;
+ 
+-	/* Check whether this is the new first expiring timer: */
+-	if (time_after_eq(timer->expires, base->next_expiry))
++	/*
++	 * Check whether this is the new first expiring timer. The
++	 * effective expiry time of the timer is required here
++	 * (bucket_expiry) instead of timer->expires.
++	 */
++	if (time_after_eq(bucket_expiry, base->next_expiry))
+ 		return;
+ 
+ 	/*
+ 	 * Set the next expiry time and kick the CPU so it can reevaluate the
+ 	 * wheel:
+ 	 */
+-	if (time_before(timer->expires, base->clk)) {
+-		/*
+-		 * Prevent from forward_timer_base() moving the base->clk
+-		 * backward
+-		 */
+-		base->next_expiry = base->clk;
+-	} else {
+-		base->next_expiry = timer->expires;
+-	}
++	base->next_expiry = bucket_expiry;
+ 	wake_up_nohz_cpu(base->cpu);
+ }
+ 
+ static void
+ internal_add_timer(struct timer_base *base, struct timer_list *timer)
+ {
+-	__internal_add_timer(base, timer);
+-	trigger_dyntick_cpu(base, timer);
++	unsigned long bucket_expiry;
++
++	__internal_add_timer(base, timer, &bucket_expiry);
++	trigger_dyntick_cpu(base, timer, bucket_expiry);
+ }
+ 
+ #ifdef CONFIG_DEBUG_OBJECTS_TIMERS
+@@ -959,9 +963,9 @@ static struct timer_base *lock_timer_base(struct timer_list *timer,
+ static inline int
+ __mod_timer(struct timer_list *timer, unsigned long expires, unsigned int options)
+ {
++	unsigned long clk = 0, flags, bucket_expiry;
+ 	struct timer_base *base, *new_base;
+ 	unsigned int idx = UINT_MAX;
+-	unsigned long clk = 0, flags;
+ 	int ret = 0;
+ 
+ 	BUG_ON(!timer->function);
+@@ -1000,7 +1004,7 @@ __mod_timer(struct timer_list *timer, unsigned long expires, unsigned int option
+ 		}
+ 
+ 		clk = base->clk;
+-		idx = calc_wheel_index(expires, clk);
++		idx = calc_wheel_index(expires, clk, &bucket_expiry);
+ 
+ 		/*
+ 		 * Retrieve and compare the array index of the pending
+@@ -1059,7 +1063,7 @@ __mod_timer(struct timer_list *timer, unsigned long expires, unsigned int option
+ 	 */
+ 	if (idx != UINT_MAX && clk == base->clk) {
+ 		enqueue_timer(base, timer, idx);
+-		trigger_dyntick_cpu(base, timer);
++		trigger_dyntick_cpu(base, timer, bucket_expiry);
+ 	} else {
+ 		internal_add_timer(base, timer);
+ 	}
 -- 
-nvpublic
+2.20.1
+
