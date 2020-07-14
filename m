@@ -8,70 +8,67 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80C18C433E6
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 10:04:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6488CC433ED
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 10:04:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5617F21D7A
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 10:04:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3241D221FD
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 10:04:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VhMkyJCc"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XktoSDHv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727120AbgGNKEj (ORCPT
+        id S1727813AbgGNKEq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 06:04:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41080 "EHLO
+        Tue, 14 Jul 2020 06:04:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41088 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725906AbgGNKEf (ORCPT
+        with ESMTP id S1726788AbgGNKEh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 06:04:35 -0400
-Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 86E82C061755;
-        Tue, 14 Jul 2020 03:04:35 -0700 (PDT)
-Received: by mail-ej1-x644.google.com with SMTP id a21so728223ejj.10;
-        Tue, 14 Jul 2020 03:04:35 -0700 (PDT)
+        Tue, 14 Jul 2020 06:04:37 -0400
+Received: from mail-ed1-x544.google.com (mail-ed1-x544.google.com [IPv6:2a00:1450:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C77C2C061755;
+        Tue, 14 Jul 2020 03:04:36 -0700 (PDT)
+Received: by mail-ed1-x544.google.com with SMTP id z17so16406616edr.9;
+        Tue, 14 Jul 2020 03:04:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=aMKbSEl+TSwwECHcG9VnO2R6z/5zU0sZpPUGSBe9CVI=;
-        b=VhMkyJCc+Ub0Mlz/veOdOjCD70CzW+qNp9KM0xawUl4zbqa4ZnNKGxddnev15er0ru
-         Su7pl3xeo8u1djqLQfWwT+CefBtYCAyvY14CgksDgSXDqSIj/8PH4HUgqp9ViEDKF+kK
-         bHYUTq+xQcdBaljJ40HNq71TKiTqJ/3GB0euhCsxmeiWFKvBy29FnZUc62aJ9+Zu3GJj
-         25iqFmUnXxhK3AexMaqjMUttk9KzZKKvqUW0cB3cc/MQeN9DL3uFn0Xg5ll6xyysHm9C
-         HNtvnPq4pVlVKl4bfERgc9XXMieiWWlYK1VFx08RIkVcfY1GD06438NPaqbMsKJMNMmi
-         dPGg==
+        bh=AjG9ZXkNlThAdSsdCQVBfTOrnZyMZnOrLKfSK8ObxrE=;
+        b=XktoSDHvwVEyA2qSIGNOe+27lD8+It+w/oscI06k1+IugxY4fNo2iArgZd7tJ3tb5O
+         RZLCpZitcssWbDWunZax7lwh9Ub95pp+os7YmA1wVFQDvEkawcTNqADWbZKkp6tPST+L
+         0s2KtGLEv1ioVe3n135P1Uxczafk+qydGAZ3fXM6ExjpuPgazhaCAFxHSbqeWtQhQZYJ
+         UaXEnOhyR07Hvudk1fhTt6QO6f57G7Lu9TsSqwH+516GePqs2elh6vuHaWvsBRyfb9vL
+         ijKUVWQqPdfzp/6LgoJCP0wzjZ1REOKByf9BIwseFbU07cEx/bPJr7KvC+/n6vjQqGQ/
+         0zJA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=aMKbSEl+TSwwECHcG9VnO2R6z/5zU0sZpPUGSBe9CVI=;
-        b=BwnFmXN4xhMUgxmLbz4gy4ccBK7EgDE9YpJdSl9C/XqlJs2kf2+ohmhtgn0CeYKrbB
-         1cFloI/MKM5e++xoUGlXHOcu2X8l15+ERDQsa/EsneaQ2LPWIPGc9B0jpGNIUPENQ3cn
-         QdE1YP6uhPRhTCB8WNaucaD/kWHgkQKArIBlvdyVrnZzDusGN3thBlfIhuQlDbS6Ufnq
-         qQG6wHLKoWdJFcr1ilxo+FAuKYrXs792us1WfPV93wnMRCjlf+HE3paaKni7nn8iIpp7
-         Uh47B5wEnNGXIA5PL3E3S/bZkNH4QjLiZvZRL1kYP/RUpNENFlPiPFtuKca9JpBheLtv
-         Bjhw==
-X-Gm-Message-State: AOAM530n+R3LID3rU3G/WvcKkSMhesfGHgqT650YBYRU7jCpSKV695e2
-        dVLdqqPvmV1zEloBM1cn7iU=
-X-Google-Smtp-Source: ABdhPJwucgF3GRDOzOtGpASqDtOayCAxkkAolx9Zcs/9pzfdhZ8Vr81ft8NDuUFEr7wkKLkv2Z7gJQ==
-X-Received: by 2002:a17:906:38da:: with SMTP id r26mr3618268ejd.120.1594721074231;
-        Tue, 14 Jul 2020 03:04:34 -0700 (PDT)
+        bh=AjG9ZXkNlThAdSsdCQVBfTOrnZyMZnOrLKfSK8ObxrE=;
+        b=ku0vuYgkIqG0JhqPOvabSObs2wT4DAd71DoCBCpIKflyVWwPYK1RnJN4TPr3MLVBi9
+         3d5tNvapVs1tcu93AZl6OwicBAnxs15ajElKK5FhCxR9/nR+9eCy2RDu6bQxn6pQjJ/c
+         afDIrx2Vz9RphrgaY13qCczdNmyRjXHY8J8lvFXnMMYl6gEYf331NakZgF4mF1HWnGQv
+         WNY0efN6o8p5ilnLOob2InpzAnIMpYDTNXTQqtSu5q+UGz6hIumDGuevcw2OcVkRcjeo
+         JW5YDuG2/gQO6NWePoFmC6jaYE/DiFOAv5+lBsUHdlrMwU3tnWSs+jcwYBWSNikkVyRr
+         xXMw==
+X-Gm-Message-State: AOAM532axULvVGz09qzDcibd+MQX2Ef8FX0jNEym2me4HDJkDrcKrDG/
+        8i3X6baKGy+dIi+iX1vWCs4=
+X-Google-Smtp-Source: ABdhPJw4d+6fAHfArS6YVCLKVPm4T/c8KMuzMlKt/TwrMSjQlmp+/J9pYfzHKZouoVLK/LJ5+omnQQ==
+X-Received: by 2002:aa7:c305:: with SMTP id l5mr3754952edq.163.1594721075471;
+        Tue, 14 Jul 2020 03:04:35 -0700 (PDT)
 Received: from net.saheed (54007186.dsl.pool.telekom.hu. [84.0.113.134])
-        by smtp.gmail.com with ESMTPSA id bs18sm14137672edb.38.2020.07.14.03.04.32
+        by smtp.gmail.com with ESMTPSA id bs18sm14137672edb.38.2020.07.14.03.04.34
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 Jul 2020 03:04:33 -0700 (PDT)
+        Tue, 14 Jul 2020 03:04:35 -0700 (PDT)
 From:   Saheed Olayemi Bolarinwa <refactormyself@gmail.com>
-To:     helgaas@kernel.org, Mike Marciniszyn <mike.marciniszyn@intel.com>,
-        Dennis Dalessandro <dennis.dalessandro@intel.com>,
-        Doug Ledford <dledford@redhat.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>
+To:     helgaas@kernel.org
 Cc:     Bolarinwa Olayemi Saheed <refactormyself@gmail.com>,
         bjorn@helgaas.com, skhan@linuxfoundation.org,
-        linux-rdma@vger.kernel.org,
+        linux-pci@vger.kernel.org,
         linux-kernel-mentees@lists.linuxfoundation.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 1/14 v4] IB/hfi1: Check the return value of pcie_capability_read_*()
-Date:   Tue, 14 Jul 2020 13:04:43 +0200
-Message-Id: <20200714110445.32605-2-refactormyself@gmail.com>
+Subject: [PATCH 10/14 v4] PCI: Check return value of pcie_capability_read_*()
+Date:   Tue, 14 Jul 2020 13:04:44 +0200
+Message-Id: <20200714110445.32605-3-refactormyself@gmail.com>
 X-Mailer: git-send-email 2.18.2
 In-Reply-To: <20200714110445.32605-1-refactormyself@gmail.com>
 References: <20200714110445.32605-1-refactormyself@gmail.com>
@@ -83,18 +80,14 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 From: Bolarinwa Olayemi Saheed <refactormyself@gmail.com>
 
 On failure pcie_capability_read_dword() sets it's last parameter,
-val to 0. In this case dn and up will be 0, so aspm_hw_l1_supported()
-will return false.
+val to 0.
 However, with Patch 14/14, it is possible that val is set to ~0 on
-failure. This would introduce a bug because (x & x) == (~0 & x). So with
-dn and up being 0x02, a true value is return when the read has actually
-failed.
+failure. This would introduce a bug because (x & x) == (~0 & x).
 
-This bug can be avoided if the return value of pcie_capability_read_dword
-is checked to confirm success. The behaviour of the function remains
-intact.
+This bug can be avoided if the return value of pcie_capability_read_word
+is checked to confirm success.
 
-Check the return value of pcie_capability_read_dword() to ensure success.
+Check the return value of pcie_capability_read_word() to ensure success.
 
 Suggested-by: Bjorn Helgaas <bjorn@helgaas.com>
 Signed-off-by: Bolarinwa Olayemi Saheed <refactormyself@gmail.com>
@@ -102,39 +95,92 @@ Signed-off-by: Bolarinwa Olayemi Saheed <refactormyself@gmail.com>
 v4 changes:
 Remove unnecessary boolean conversion.
 
- drivers/infiniband/hw/hfi1/aspm.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ drivers/pci/probe.c | 29 +++++++++++++++++------------
+ 1 file changed, 17 insertions(+), 12 deletions(-)
 
-diff --git a/drivers/infiniband/hw/hfi1/aspm.c b/drivers/infiniband/hw/hfi1/aspm.c
-index a3c53be4072c..80d0b3edd983 100644
---- a/drivers/infiniband/hw/hfi1/aspm.c
-+++ b/drivers/infiniband/hw/hfi1/aspm.c
-@@ -24,6 +24,7 @@ static bool aspm_hw_l1_supported(struct hfi1_devdata *dd)
+diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
+index 2f66988cea25..3c87a8a1d4b5 100644
+--- a/drivers/pci/probe.c
++++ b/drivers/pci/probe.c
+@@ -1121,10 +1121,11 @@ EXPORT_SYMBOL(pci_add_new_bus);
+ static void pci_enable_crs(struct pci_dev *pdev)
  {
- 	struct pci_dev *parent = dd->pcidev->bus->self;
- 	u32 up, dn;
-+	int ret_up, ret_dn;
+ 	u16 root_cap = 0;
++	int ret;
  
- 	/*
- 	 * If the driver does not have access to the upstream component,
-@@ -32,14 +33,14 @@ static bool aspm_hw_l1_supported(struct hfi1_devdata *dd)
- 	if (!parent)
- 		return false;
+ 	/* Enable CRS Software Visibility if supported */
+-	pcie_capability_read_word(pdev, PCI_EXP_RTCAP, &root_cap);
+-	if (root_cap & PCI_EXP_RTCAP_CRSVIS)
++	ret = pcie_capability_read_word(pdev, PCI_EXP_RTCAP, &root_cap);
++	if (!ret && (root_cap & PCI_EXP_RTCAP_CRSVIS))
+ 		pcie_capability_set_word(pdev, PCI_EXP_RTCTL,
+ 					 PCI_EXP_RTCTL_CRSSVE);
+ }
+@@ -1519,9 +1520,10 @@ void set_pcie_port_type(struct pci_dev *pdev)
+ void set_pcie_hotplug_bridge(struct pci_dev *pdev)
+ {
+ 	u32 reg32;
++	int ret;
  
--	pcie_capability_read_dword(dd->pcidev, PCI_EXP_LNKCAP, &dn);
-+	ret_dn = pcie_capability_read_dword(dd->pcidev, PCI_EXP_LNKCAP, &dn);
- 	dn = ASPM_L1_SUPPORTED(dn);
- 
--	pcie_capability_read_dword(parent, PCI_EXP_LNKCAP, &up);
-+	ret_up = pcie_capability_read_dword(parent, PCI_EXP_LNKCAP, &up);
- 	up = ASPM_L1_SUPPORTED(up);
- 
- 	/* ASPM works on A-step but is reported as not supported */
--	return (!!dn || is_ax(dd)) && !!up;
-+	return ret_dn && ret_up && (dn || is_ax(dd)) && up;
+-	pcie_capability_read_dword(pdev, PCI_EXP_SLTCAP, &reg32);
+-	if (reg32 & PCI_EXP_SLTCAP_HPC)
++	ret = pcie_capability_read_dword(pdev, PCI_EXP_SLTCAP, &reg32);
++	if (!ret && (reg32 & PCI_EXP_SLTCAP_HPC))
+ 		pdev->is_hotplug_bridge = 1;
  }
  
- /* Set L1 entrance latency for slower entry to L1 */
+@@ -2057,10 +2059,11 @@ int pci_configure_extended_tags(struct pci_dev *dev, void *ign)
+ bool pcie_relaxed_ordering_enabled(struct pci_dev *dev)
+ {
+ 	u16 v;
++	int ret;
+ 
+-	pcie_capability_read_word(dev, PCI_EXP_DEVCTL, &v);
++	ret = pcie_capability_read_word(dev, PCI_EXP_DEVCTL, &v);
+ 
+-	return !!(v & PCI_EXP_DEVCTL_RELAX_EN);
++	return (!ret && (v & PCI_EXP_DEVCTL_RELAX_EN));
+ }
+ EXPORT_SYMBOL(pcie_relaxed_ordering_enabled);
+ 
+@@ -2096,16 +2099,17 @@ static void pci_configure_ltr(struct pci_dev *dev)
+ 	struct pci_host_bridge *host = pci_find_host_bridge(dev->bus);
+ 	struct pci_dev *bridge;
+ 	u32 cap, ctl;
++	int ret;
+ 
+ 	if (!pci_is_pcie(dev))
+ 		return;
+ 
+-	pcie_capability_read_dword(dev, PCI_EXP_DEVCAP2, &cap);
+-	if (!(cap & PCI_EXP_DEVCAP2_LTR))
++	ret = pcie_capability_read_dword(dev, PCI_EXP_DEVCAP2, &cap);
++	if (ret || !(cap & PCI_EXP_DEVCAP2_LTR))
+ 		return;
+ 
+-	pcie_capability_read_dword(dev, PCI_EXP_DEVCTL2, &ctl);
+-	if (ctl & PCI_EXP_DEVCTL2_LTR_EN) {
++	ret = pcie_capability_read_dword(dev, PCI_EXP_DEVCTL2, &ctl);
++	if (!ret && (ctl & PCI_EXP_DEVCTL2_LTR_EN)) {
+ 		if (pci_pcie_type(dev) == PCI_EXP_TYPE_ROOT_PORT) {
+ 			dev->ltr_path = 1;
+ 			return;
+@@ -2142,12 +2146,13 @@ static void pci_configure_eetlp_prefix(struct pci_dev *dev)
+ 	struct pci_dev *bridge;
+ 	int pcie_type;
+ 	u32 cap;
++	int ret;
+ 
+ 	if (!pci_is_pcie(dev))
+ 		return;
+ 
+-	pcie_capability_read_dword(dev, PCI_EXP_DEVCAP2, &cap);
+-	if (!(cap & PCI_EXP_DEVCAP2_EE_PREFIX))
++	ret = pcie_capability_read_dword(dev, PCI_EXP_DEVCAP2, &cap);
++	if (ret || !(cap & PCI_EXP_DEVCAP2_EE_PREFIX))
+ 		return;
+ 
+ 	pcie_type = pci_pcie_type(dev);
 -- 
 2.18.2
 
