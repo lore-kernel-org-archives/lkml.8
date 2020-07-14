@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BCCCC433E6
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 19:07:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51F25C433FE
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 19:07:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7D3682240B
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 19:07:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 232B721D79
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 19:07:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594753641;
-	bh=tCp7H6IQ6awAcxjZgyvE466kamCwmbdlMnXhiotoLUs=;
+	s=default; t=1594753645;
+	bh=UX1Wegt7Ui0ykQnZ5X64GWQ6m2Lm9rwaN7IFfHvRiWM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KsCBURgLpDaU1lHU0+ip+pgxOj1ZsbWYy3JcZ/yXHyCfCzV85ibp2xVC/8UuOKgQS
-	 aVchR1Xuoz+px5mABR1B5uzNzKbyUbM8tMdM8RlbSwBPEje+8QnaiAvpurNJiX4eon
-	 APu5GalYLqlSpvBDQq3bIClMScjZWNE8zxlFwHpk=
+	b=ZFCheIA/8BvdxM705tvW9DlIelRdCgBBMkoguj2XMI5IIMuLi4+Uv3yBwcxUy/RRg
+	 fAW72/qVPJZeAh6t4y4tLOLvkJHUfsKvbc6yrq3W8XLqH0iBoyPz+5nYdtBfdU4/f+
+	 Y9qWjAa5BFTQ5XFEW2qdgtmKp/gHyvdJn69t7FmQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729742AbgGNSwZ (ORCPT
+        id S1730490AbgGNSwO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 14:52:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49012 "EHLO mail.kernel.org"
+        Tue, 14 Jul 2020 14:52:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48844 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730489AbgGNSwT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 14:52:19 -0400
+        id S1730476AbgGNSwM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 14:52:12 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 620C922B3F;
-        Tue, 14 Jul 2020 18:52:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EF5E122B3B;
+        Tue, 14 Jul 2020 18:52:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594752738;
-        bh=tCp7H6IQ6awAcxjZgyvE466kamCwmbdlMnXhiotoLUs=;
+        s=default; t=1594752731;
+        bh=UX1Wegt7Ui0ykQnZ5X64GWQ6m2Lm9rwaN7IFfHvRiWM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=t9zQsuygfIDk9a2kL2BHfQK8Hxok5bGZ6/9K06SEBXsStBU4fyNCnxgXvIGXSgnHJ
-         r9qPDbSYDMI65AwwmdPu0IT5WBZpUgZEQDo/BCmoLidRbC0kc1MgwXaN7ny0PRE4Ga
-         hQANLjZ+OOYnWKqhBYE4Ay/KbiNAm+FRV4jsNqa0=
+        b=cC0RS27jxtWt4DP3hrQMTvM8gpHWJ96ApOXfExlWhX9ZDM/O+ruppNmi4ECB2VtWP
+         upvl6KPK6X6qeVqTVhJNPglgiygh/RNLmupZE8v1kk9lIZnxAM1FvxMCEks2W0cMgg
+         2v8UASkq0MER2hTcLgtTbI0xh4Q6E/S0aIApWl10=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>,
-        Qiujun Huang <hqjagain@gmail.com>,
-        Kalle Valo <kvalo@codeaurora.org>
-Subject: [PATCH 5.4 092/109] Revert "ath9k: Fix general protection fault in ath9k_hif_usb_rx_cb"
-Date:   Tue, 14 Jul 2020 20:44:35 +0200
-Message-Id: <20200714184109.952563904@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Dominik Czarnota <dominik.czarnota@trailofbits.com>,
+        Jessica Yu <jeyu@kernel.org>, Kees Cook <keescook@chromium.org>
+Subject: [PATCH 5.4 089/109] module: Do not expose section addresses to non-CAP_SYSLOG
+Date:   Tue, 14 Jul 2020 20:44:32 +0200
+Message-Id: <20200714184109.811303236@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200714184105.507384017@linuxfoundation.org>
 References: <20200714184105.507384017@linuxfoundation.org>
@@ -60,184 +60,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+From: Kees Cook <keescook@chromium.org>
 
-This reverts commit b5c8896bc14f54e5c4dd5a6e42879f125b8abd2d which is
-commit 2bbcaaee1fcbd83272e29f31e2bb7e70d8c49e05 upstream.
+commit b25a7c5af9051850d4f3d93ca500056ab6ec724b upstream.
 
-It is being reverted upstream, just hasn't made it there yet and is
-causing lots of problems.
+The printing of section addresses in /sys/module/*/sections/* was not
+using the correct credentials to evaluate visibility.
 
-Reported-by: Hans de Goede <hdegoede@redhat.com>
-Cc: Qiujun Huang <hqjagain@gmail.com>
-Cc: Kalle Valo <kvalo@codeaurora.org>
+Before:
+
+ # cat /sys/module/*/sections/.*text
+ 0xffffffffc0458000
+ ...
+ # capsh --drop=CAP_SYSLOG -- -c "cat /sys/module/*/sections/.*text"
+ 0xffffffffc0458000
+ ...
+
+After:
+
+ # cat /sys/module/*/sections/*.text
+ 0xffffffffc0458000
+ ...
+ # capsh --drop=CAP_SYSLOG -- -c "cat /sys/module/*/sections/.*text"
+ 0x0000000000000000
+ ...
+
+Additionally replaces the existing (safe) /proc/modules check with
+file->f_cred for consistency.
+
+Reported-by: Dominik Czarnota <dominik.czarnota@trailofbits.com>
+Fixes: be71eda5383f ("module: Fix display of wrong module .text address")
+Cc: stable@vger.kernel.org
+Tested-by: Jessica Yu <jeyu@kernel.org>
+Acked-by: Jessica Yu <jeyu@kernel.org>
+Signed-off-by: Kees Cook <keescook@chromium.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- drivers/net/wireless/ath/ath9k/hif_usb.c |   48 +++++++------------------------
- drivers/net/wireless/ath/ath9k/hif_usb.h |    5 ---
- 2 files changed, 11 insertions(+), 42 deletions(-)
 
---- a/drivers/net/wireless/ath/ath9k/hif_usb.c
-+++ b/drivers/net/wireless/ath/ath9k/hif_usb.c
-@@ -643,9 +643,9 @@ err:
+---
+ kernel/module.c |    6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+--- a/kernel/module.c
++++ b/kernel/module.c
+@@ -1527,8 +1527,8 @@ static ssize_t module_sect_read(struct f
+ 	if (pos != 0)
+ 		return -EINVAL;
  
- static void ath9k_hif_usb_rx_cb(struct urb *urb)
- {
--	struct rx_buf *rx_buf = (struct rx_buf *)urb->context;
--	struct hif_device_usb *hif_dev = rx_buf->hif_dev;
--	struct sk_buff *skb = rx_buf->skb;
-+	struct sk_buff *skb = (struct sk_buff *) urb->context;
-+	struct hif_device_usb *hif_dev =
-+		usb_get_intfdata(usb_ifnum_to_if(urb->dev, 0));
- 	int ret;
- 
- 	if (!skb)
-@@ -685,15 +685,14 @@ resubmit:
- 	return;
- free:
- 	kfree_skb(skb);
--	kfree(rx_buf);
+-	return sprintf(buf, "0x%px\n", kptr_restrict < 2 ?
+-		       (void *)sattr->address : NULL);
++	return sprintf(buf, "0x%px\n",
++		       kallsyms_show_value(file->f_cred) ? (void *)sattr->address : NULL);
  }
  
- static void ath9k_hif_usb_reg_in_cb(struct urb *urb)
- {
--	struct rx_buf *rx_buf = (struct rx_buf *)urb->context;
--	struct hif_device_usb *hif_dev = rx_buf->hif_dev;
--	struct sk_buff *skb = rx_buf->skb;
-+	struct sk_buff *skb = (struct sk_buff *) urb->context;
- 	struct sk_buff *nskb;
-+	struct hif_device_usb *hif_dev =
-+		usb_get_intfdata(usb_ifnum_to_if(urb->dev, 0));
- 	int ret;
+ static void free_sect_attrs(struct module_sect_attrs *sect_attrs)
+@@ -4394,7 +4394,7 @@ static int modules_open(struct inode *in
  
- 	if (!skb)
-@@ -751,7 +750,6 @@ resubmit:
- 	return;
- free:
- 	kfree_skb(skb);
--	kfree(rx_buf);
- 	urb->context = NULL;
- }
+ 	if (!err) {
+ 		struct seq_file *m = file->private_data;
+-		m->private = kallsyms_show_value(current_cred()) ? NULL : (void *)8ul;
++		m->private = kallsyms_show_value(file->f_cred) ? NULL : (void *)8ul;
+ 	}
  
-@@ -797,7 +795,7 @@ static int ath9k_hif_usb_alloc_tx_urbs(s
- 	init_usb_anchor(&hif_dev->mgmt_submitted);
- 
- 	for (i = 0; i < MAX_TX_URB_NUM; i++) {
--		tx_buf = kzalloc(sizeof(*tx_buf), GFP_KERNEL);
-+		tx_buf = kzalloc(sizeof(struct tx_buf), GFP_KERNEL);
- 		if (!tx_buf)
- 			goto err;
- 
-@@ -834,9 +832,8 @@ static void ath9k_hif_usb_dealloc_rx_urb
- 
- static int ath9k_hif_usb_alloc_rx_urbs(struct hif_device_usb *hif_dev)
- {
--	struct rx_buf *rx_buf = NULL;
--	struct sk_buff *skb = NULL;
- 	struct urb *urb = NULL;
-+	struct sk_buff *skb = NULL;
- 	int i, ret;
- 
- 	init_usb_anchor(&hif_dev->rx_submitted);
-@@ -844,12 +841,6 @@ static int ath9k_hif_usb_alloc_rx_urbs(s
- 
- 	for (i = 0; i < MAX_RX_URB_NUM; i++) {
- 
--		rx_buf = kzalloc(sizeof(*rx_buf), GFP_KERNEL);
--		if (!rx_buf) {
--			ret = -ENOMEM;
--			goto err_rxb;
--		}
--
- 		/* Allocate URB */
- 		urb = usb_alloc_urb(0, GFP_KERNEL);
- 		if (urb == NULL) {
-@@ -864,14 +855,11 @@ static int ath9k_hif_usb_alloc_rx_urbs(s
- 			goto err_skb;
- 		}
- 
--		rx_buf->hif_dev = hif_dev;
--		rx_buf->skb = skb;
--
- 		usb_fill_bulk_urb(urb, hif_dev->udev,
- 				  usb_rcvbulkpipe(hif_dev->udev,
- 						  USB_WLAN_RX_PIPE),
- 				  skb->data, MAX_RX_BUF_SIZE,
--				  ath9k_hif_usb_rx_cb, rx_buf);
-+				  ath9k_hif_usb_rx_cb, skb);
- 
- 		/* Anchor URB */
- 		usb_anchor_urb(urb, &hif_dev->rx_submitted);
-@@ -897,8 +885,6 @@ err_submit:
- err_skb:
- 	usb_free_urb(urb);
- err_urb:
--	kfree(rx_buf);
--err_rxb:
- 	ath9k_hif_usb_dealloc_rx_urbs(hif_dev);
- 	return ret;
- }
-@@ -910,21 +896,14 @@ static void ath9k_hif_usb_dealloc_reg_in
- 
- static int ath9k_hif_usb_alloc_reg_in_urbs(struct hif_device_usb *hif_dev)
- {
--	struct rx_buf *rx_buf = NULL;
--	struct sk_buff *skb = NULL;
- 	struct urb *urb = NULL;
-+	struct sk_buff *skb = NULL;
- 	int i, ret;
- 
- 	init_usb_anchor(&hif_dev->reg_in_submitted);
- 
- 	for (i = 0; i < MAX_REG_IN_URB_NUM; i++) {
- 
--		rx_buf = kzalloc(sizeof(*rx_buf), GFP_KERNEL);
--		if (!rx_buf) {
--			ret = -ENOMEM;
--			goto err_rxb;
--		}
--
- 		/* Allocate URB */
- 		urb = usb_alloc_urb(0, GFP_KERNEL);
- 		if (urb == NULL) {
-@@ -939,14 +918,11 @@ static int ath9k_hif_usb_alloc_reg_in_ur
- 			goto err_skb;
- 		}
- 
--		rx_buf->hif_dev = hif_dev;
--		rx_buf->skb = skb;
--
- 		usb_fill_int_urb(urb, hif_dev->udev,
- 				  usb_rcvintpipe(hif_dev->udev,
- 						  USB_REG_IN_PIPE),
- 				  skb->data, MAX_REG_IN_BUF_SIZE,
--				  ath9k_hif_usb_reg_in_cb, rx_buf, 1);
-+				  ath9k_hif_usb_reg_in_cb, skb, 1);
- 
- 		/* Anchor URB */
- 		usb_anchor_urb(urb, &hif_dev->reg_in_submitted);
-@@ -972,8 +948,6 @@ err_submit:
- err_skb:
- 	usb_free_urb(urb);
- err_urb:
--	kfree(rx_buf);
--err_rxb:
- 	ath9k_hif_usb_dealloc_reg_in_urbs(hif_dev);
- 	return ret;
- }
---- a/drivers/net/wireless/ath/ath9k/hif_usb.h
-+++ b/drivers/net/wireless/ath/ath9k/hif_usb.h
-@@ -86,11 +86,6 @@ struct tx_buf {
- 	struct list_head list;
- };
- 
--struct rx_buf {
--	struct sk_buff *skb;
--	struct hif_device_usb *hif_dev;
--};
--
- #define HIF_USB_TX_STOP  BIT(0)
- #define HIF_USB_TX_FLUSH BIT(1)
- 
+ 	return err;
 
 
