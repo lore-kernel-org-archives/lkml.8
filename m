@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82817C43464
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 14:43:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 887A7C433EB
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 14:43:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5532A206F5
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 14:43:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 582E52064B
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 14:43:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594737811;
-	bh=6Hipu7uWNfRUtHM/Af23/Iw1ZjSCu359/UrYQ+9V0vY=;
+	s=default; t=1594737815;
+	bh=gR1bXnNYeHlVk4gK9+JxbsaS8Ek93pSFC0CbCYM3/4Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sjLm5fxDIhxe4WvZz0e6mqPVnN+SbVzC+cBo4HugEMpgfGi5wmL122FDuxizVWUyR
-	 ohc8u+kAwSbGgifoxmAsNfIWIN9stY+0kXaAMM+TbXtVPy4Cw+/HOD3rcPBHGJMLHd
-	 ynAnxUvJfh6+oi21OvYCfpiMo7XvOW0foAsbKwg0=
+	b=TOTuvXU8+08hVkG4h5KhTp1SFPGpHSgqjRnPoFHd88TaZwIluU9l9hTkFNXwesAMb
+	 0D+IbSrpNyI1OlgxnyVs2rShNPojdaSh4eZ0+h52hZsOP0wpArLTTe6QD0HaizvAc6
+	 15oEy4ski0mVpZpqzmmzDPUs0GDFy3BU2zgGlsfc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729014AbgGNOjf (ORCPT
+        id S1729000AbgGNOje (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 10:39:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54922 "EHLO mail.kernel.org"
+        Tue, 14 Jul 2020 10:39:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54818 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728987AbgGNOjd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 10:39:33 -0400
+        id S1728967AbgGNOjb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 10:39:31 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6785F22525;
-        Tue, 14 Jul 2020 14:39:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EC3C72251E;
+        Tue, 14 Jul 2020 14:39:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594737573;
-        bh=6Hipu7uWNfRUtHM/Af23/Iw1ZjSCu359/UrYQ+9V0vY=;
+        s=default; t=1594737570;
+        bh=gR1bXnNYeHlVk4gK9+JxbsaS8Ek93pSFC0CbCYM3/4Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=i4RP6hQvBOffpW8nQ72ssP4qrvnPXpv8uAJxFdr+R1FLDkExnpYkJsMZq9SBmVVvO
-         KzCXgNS0s0yfbvW7hk2TzP2ynYEpOCwv92GClDaBsbNtzIuN5CglWAGCc/kO9nuCH4
-         jFC+XX5EXm8x5+GRxvAVRm524zV3CLomAQzKcBhs=
+        b=M8tjx12GvzHT53r9Kc8mq8UAVKiMMP+Px9lBPv6ZZT3qdwwmZV2hqms9Qe0FZVu4m
+         ZuodYa3todDoYVmstGwRTgMbABVVw1OL/2O86jB4Mk9zihENRWTxdzg5UABSpmS1Iv
+         ENz8jbcbEvqryiA8PxWUsECn+eOyrQN0D2D7PJk4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Johannes Thumshirn <johannes.thumshirn@wdc.com>,
-        Damien Le Moal <damien.lemoal@wdc.com>,
-        Sreekanth Reddy <sreekanth.reddy@broadcom.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>,
-        MPT-FusionLinux.pdl@broadcom.com, linux-scsi@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 15/18] scsi: mpt3sas: Fix error returns in BRM_status_show
-Date:   Tue, 14 Jul 2020 10:39:11 -0400
-Message-Id: <20200714143914.4035489-15-sashal@kernel.org>
+Cc:     Tom Rix <trix@redhat.com>, Andrew Lunn <andrew@lunn.ch>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
+        clang-built-linux@googlegroups.com
+Subject: [PATCH AUTOSEL 5.4 13/18] net: sky2: initialize return of gm_phy_read
+Date:   Tue, 14 Jul 2020 10:39:09 -0400
+Message-Id: <20200714143914.4035489-13-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200714143914.4035489-1-sashal@kernel.org>
 References: <20200714143914.4035489-1-sashal@kernel.org>
@@ -62,78 +60,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Johannes Thumshirn <johannes.thumshirn@wdc.com>
+From: Tom Rix <trix@redhat.com>
 
-[ Upstream commit 0fd181456aa0826057adbfb6c79c40f4083cfd75 ]
+[ Upstream commit 28b18e4eb515af7c6661c3995c6e3c34412c2874 ]
 
-BRM_status_show() has several error branches, but none of them record the
-error in the error return.
+clang static analysis flags this garbage return
 
-Also while at it remove the manual mutex_unlock() of the pci_access_mutex
-in case of an ongoing pci error recovery or host removal and jump to the
-cleanup label instead.
+drivers/net/ethernet/marvell/sky2.c:208:2: warning: Undefined or garbage value returned to caller [core.uninitialized.UndefReturn]
+        return v;
+        ^~~~~~~~
 
-Note: We can safely jump to out from here as io_unit_pg3 is initialized to
-NULL and if it hasn't been allocated, kfree() skips the NULL pointer.
+static inline u16 gm_phy_read( ...
+{
+	u16 v;
+	__gm_phy_read(hw, port, reg, &v);
+	return v;
+}
 
-[mkp: compilation warning]
+__gm_phy_read can return without setting v.
 
-Link: https://lore.kernel.org/r/20200701131454.5255-1-johannes.thumshirn@wdc.com
-Reviewed-by: Damien Le Moal <damien.lemoal@wdc.com>
-Acked-by: Sreekanth Reddy <sreekanth.reddy@broadcom.com>
-Signed-off-by: Johannes Thumshirn <johannes.thumshirn@wdc.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+So handle similar to skge.c's gm_phy_read, initialize v.
+
+Signed-off-by: Tom Rix <trix@redhat.com>
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/mpt3sas/mpt3sas_ctl.c | 10 ++++++----
- 1 file changed, 6 insertions(+), 4 deletions(-)
+ drivers/net/ethernet/marvell/sky2.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/scsi/mpt3sas/mpt3sas_ctl.c b/drivers/scsi/mpt3sas/mpt3sas_ctl.c
-index 82c4ecc16f191..d5a62fea8fe3e 100644
---- a/drivers/scsi/mpt3sas/mpt3sas_ctl.c
-+++ b/drivers/scsi/mpt3sas/mpt3sas_ctl.c
-@@ -2925,15 +2925,14 @@ BRM_status_show(struct device *cdev, struct device_attribute *attr,
- 	}
- 	/* pci_access_mutex lock acquired by sysfs show path */
- 	mutex_lock(&ioc->pci_access_mutex);
--	if (ioc->pci_error_recovery || ioc->remove_host) {
--		mutex_unlock(&ioc->pci_access_mutex);
--		return 0;
--	}
-+	if (ioc->pci_error_recovery || ioc->remove_host)
-+		goto out;
+diff --git a/drivers/net/ethernet/marvell/sky2.c b/drivers/net/ethernet/marvell/sky2.c
+index 5f56ee83e3b10..df7c23cd33600 100644
+--- a/drivers/net/ethernet/marvell/sky2.c
++++ b/drivers/net/ethernet/marvell/sky2.c
+@@ -203,7 +203,7 @@ static int __gm_phy_read(struct sky2_hw *hw, unsigned port, u16 reg, u16 *val)
  
- 	/* allocate upto GPIOVal 36 entries */
- 	sz = offsetof(Mpi2IOUnitPage3_t, GPIOVal) + (sizeof(u16) * 36);
- 	io_unit_pg3 = kzalloc(sz, GFP_KERNEL);
- 	if (!io_unit_pg3) {
-+		rc = -ENOMEM;
- 		ioc_err(ioc, "%s: failed allocating memory for iounit_pg3: (%d) bytes\n",
- 			__func__, sz);
- 		goto out;
-@@ -2943,6 +2942,7 @@ BRM_status_show(struct device *cdev, struct device_attribute *attr,
- 	    0) {
- 		ioc_err(ioc, "%s: failed reading iounit_pg3\n",
- 			__func__);
-+		rc = -EINVAL;
- 		goto out;
- 	}
- 
-@@ -2950,12 +2950,14 @@ BRM_status_show(struct device *cdev, struct device_attribute *attr,
- 	if (ioc_status != MPI2_IOCSTATUS_SUCCESS) {
- 		ioc_err(ioc, "%s: iounit_pg3 failed with ioc_status(0x%04x)\n",
- 			__func__, ioc_status);
-+		rc = -EINVAL;
- 		goto out;
- 	}
- 
- 	if (io_unit_pg3->GPIOCount < 25) {
- 		ioc_err(ioc, "%s: iounit_pg3->GPIOCount less than 25 entries, detected (%d) entries\n",
- 			__func__, io_unit_pg3->GPIOCount);
-+		rc = -EINVAL;
- 		goto out;
- 	}
- 
+ static inline u16 gm_phy_read(struct sky2_hw *hw, unsigned port, u16 reg)
+ {
+-	u16 v;
++	u16 v = 0;
+ 	__gm_phy_read(hw, port, reg, &v);
+ 	return v;
+ }
 -- 
 2.25.1
 
