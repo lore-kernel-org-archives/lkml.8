@@ -2,221 +2,230 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C347C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 08:14:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 336ECC433E2
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 08:19:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EF7C6217D8
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 08:14:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B62A21841
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 08:19:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="hRaITEAB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726545AbgGNIOV (ORCPT
+        id S1726050AbgGNITL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 04:14:21 -0400
-Received: from mx2.suse.de ([195.135.220.15]:53142 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725816AbgGNIOU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 04:14:20 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 5D8D7AD76;
-        Tue, 14 Jul 2020 08:14:19 +0000 (UTC)
-Subject: Re: [PATCH v2 04/29] scsi: fcoe: fcoe: Fix various kernel-doc
- infringements
-To:     Lee Jones <lee.jones@linaro.org>
-Cc:     jejb@linux.ibm.com, martin.petersen@oracle.com,
-        linux-kernel@vger.kernel.org, linux-scsi@vger.kernel.org
-References: <20200713074645.126138-1-lee.jones@linaro.org>
- <20200713074645.126138-5-lee.jones@linaro.org>
- <06bc5e03-04b0-7e09-18f4-d9fd536b714b@suse.de> <20200714075833.GI3500@dell>
-From:   Hannes Reinecke <hare@suse.de>
-Openpgp: preference=signencrypt
-Autocrypt: addr=hare@suse.de; prefer-encrypt=mutual; keydata=
- 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
- azzYF4VRJsdl+d0MCaSy8mUh
-Message-ID: <554896dd-2e8f-33be-61e8-7e442af19d1a@suse.de>
-Date:   Tue, 14 Jul 2020 10:14:16 +0200
+        Tue, 14 Jul 2020 04:19:11 -0400
+Received: from mailout1.w1.samsung.com ([210.118.77.11]:56916 "EHLO
+        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725793AbgGNITK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 04:19:10 -0400
+Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
+        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20200714081907euoutp017f5f7628846aa179090d2e19f13b5743~hkJ0koa--3155031550euoutp01F
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 08:19:07 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20200714081907euoutp017f5f7628846aa179090d2e19f13b5743~hkJ0koa--3155031550euoutp01F
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1594714747;
+        bh=3W48R5JZdOlotY4kDUq6GDCqsDBg3zDBeQZwRffH5cQ=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=hRaITEABU3SBPZEGubCdXFsCDoUyWDD7rOB02/zLfRreB8ulARj898kR7N2NpM323
+         A/10w0hCCieJgnIcQlR/VMZj7YUKvoT18f+6MheJsmIdX40Odqy42AvwQkKMHtsVxU
+         NDTn9lADp4CDjKbIJWus38iTd1uKTHzKfluajA/E=
+Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20200714081907eucas1p282d94245ef1c7790fa31b2383110eb27~hkJ0WjwWm2453224532eucas1p2T;
+        Tue, 14 Jul 2020 08:19:07 +0000 (GMT)
+Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
+        eusmges3new.samsung.com (EUCPMTA) with SMTP id D2.29.06318.B7A6D0F5; Tue, 14
+        Jul 2020 09:19:07 +0100 (BST)
+Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
+        20200714081906eucas1p2da1533c2e4e8983bb42b20199dc1f977~hkJz17urA2902729027eucas1p2I;
+        Tue, 14 Jul 2020 08:19:06 +0000 (GMT)
+Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
+        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20200714081906eusmtrp1546fb7b152d27cdb0d5186fda9460044~hkJz1S4Oo2221422214eusmtrp10;
+        Tue, 14 Jul 2020 08:19:06 +0000 (GMT)
+X-AuditID: cbfec7f5-38bff700000018ae-4c-5f0d6a7b0c0a
+Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
+        eusmgms2.samsung.com (EUCPMTA) with SMTP id 31.A4.06017.A7A6D0F5; Tue, 14
+        Jul 2020 09:19:06 +0100 (BST)
+Received: from [106.120.51.71] (unknown [106.120.51.71]) by
+        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20200714081906eusmtip2f23c200b846080fe8f5e3023cef37df5~hkJzT_jxK0594905949eusmtip2X;
+        Tue, 14 Jul 2020 08:19:06 +0000 (GMT)
+Subject: Re: [PATCH v3 0/3] drivers: ide: use generic power management
+To:     Vaibhav Gupta <vaibhav.varodek@gmail.com>
+Cc:     Vaibhav Gupta <vaibhavgupta40@gmail.com>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>, bjorn@helgaas.com,
+        "David S. Miller" <davem@davemloft.net>,
+        linux-kernel@vger.kernel.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        skhan@linuxfoundation.org, linux-ide@vger.kernel.org
+From:   Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Message-ID: <834eb293-bd4f-626c-4558-fbf71a5999f0@samsung.com>
+Date:   Tue, 14 Jul 2020 10:19:06 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <20200714075833.GI3500@dell>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <20200714075247.GA4859@gmail.com>
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA02SbUhTYRTHeXbv7q7LK4/T2Kkka9A7aWXIpUIqQuaX3ijSyGzlbZabxa6z
+        rC+lsekQ1CyspWUyX0krMVtWFlOUnJlSiG5qokKmDiWN3pbmdpX89nvO+f+f/zlwaELWIl5O
+        n0tK5nRJKo2CkpJ1zb/aN189z8RtGRtbylrSEtjrnzsRW/DhBsmOtlVRbLN1UMSahkZI9mN9
+        AcW+zi8Vs9beTBFreTUh3i1V1lb0iJQvzH0SZVGNXlln6yKVNZWZlPJN4SOJ8s/PPKScqll5
+        kD4u3RXPac6lcLrQiFPShJHqenRxaPXl8ZxJ8hrqXmZCPjTg7WCdzBeZkJSW4XIEPSUPkfCY
+        RtBidFAelQxPIRjrWL/g6CvsnXeUIchyOQhB5EJw+1eqhwNwJLRVu0kPB+LNYGgwUh4Dgd+I
+        wP20C3kaFN4BucZKLzM4Atx3Z71pJF4Dt2ayvbwUR8O3gUaxoPGHd3eHvZ/64BBwPP3i1RBY
+        Do7hByKBg+G5q4DwhAHul4CpJE8sjL0PqiyDlMABMNpSKxE4COx5WaRgqEbwN2Nk3v0cQVne
+        zLxjJ/S2/55jei5iAzyuDxXKe8Da1El6yoD9oNvlLwzhBzfr8gmhzECGQSao18KT0ifUQqzp
+        RQWRgxTmRauZF61jXrSO+X9uESIrkZzT81o1x4clcZdCeJWW1yepQ85c0NagufOyz7R8t6IG
+        92kbwjRS+DJwwDdOJlal8KlaGwKaUAQye9/bT8qYeFXqFU53IU6n13C8Da2gSYWcCSv+GivD
+        alUyl8hxFzndQldE+yy/hsio0Y1tTK5huin2mPOM5qzTog2I2ZG76YdO1Kp5qQ78FG6UdhYP
+        hO9fdfjjifTrz97Z+3lmnQylMZsae6LlvdsiO8TliTiKG7edLg82SCpnj6odfUtKf7e1y20d
+        XHx7R8WdTqdvq4KauA87LxdONZiy+w+9jTlyL3FwOsiZriD5BNXWjYSOV/0DK4o4sFoDAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrJIsWRmVeSWpSXmKPExsVy+t/xe7pVWbzxBl+PGlssacqwaLx/kdFi
+        zvkWFotXZ9ayWRzb8YjJouvxCxaLy7vmsFnsnb6M1WLHnU4miyV73rM6cHlsWXmTyWPnrLvs
+        Hgs2lXpsO3SNxWPTqk42j/1z17B7/P4xmdHj8ya5AI4oPZui/NKSVIWM/OISW6VoQwsjPUNL
+        Cz0jE0s9Q2PzWCsjUyV9O5uU1JzMstQifbsEvYwX63YxFjxWrHgz4QNLA+MNyS5GTg4JAROJ
+        u3PvMHUxcnEICSxllDjwugfI4QBKyEgcX18GUSMs8edaFxtEzWtGiTdfW9lBEsICbhJn1v1h
+        AbFFBHQl2va1gxUxC+xnkng67x8zSEJI4CWjRNsDBRCbTcBKYmL7KkYQm1fATuLPzP9sIDaL
+        gKrElH/9YLaoQITE4R2zoGoEJU7OfAK2gFNAT+LWxudgNcwC6hJ/5l1ihrDFJW49mc8EYctL
+        bH87h3kCo9AsJO2zkLTMQtIyC0nLAkaWVYwiqaXFuem5xUZ6xYm5xaV56XrJ+bmbGIHRuu3Y
+        zy07GLveBR9iFOBgVOLhlfDniRdiTSwrrsw9xCjBwawkwut09nScEG9KYmVValF+fFFpTmrx
+        IUZToOcmMkuJJucDE0leSbyhqaG5haWhubG5sZmFkjhvh8DBGCGB9MSS1OzU1ILUIpg+Jg5O
+        qQbGvYt4i63iCxtUzJfocCrzuVyS+2C8duNVvzP2Wr+nPVumuVtG8O0F3g3Wn7Z2v1/4maO1
+        2aA4RGJ+FiffhEU2Nysc23dlNbU8mhpo/YBlr1tkE/Mel+ioq99eGFbWHj29ne/W28U/Mk0v
+        FApuOLfqXIOxXPyaM8+7tpXHlOzpkTe4FqpYW5GmxFKckWioxVxUnAgA/LvsgewCAAA=
+X-CMS-MailID: 20200714081906eucas1p2da1533c2e4e8983bb42b20199dc1f977
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20200714073256eucas1p13ebe9585c29b766e48506400ba91a8ed
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20200714073256eucas1p13ebe9585c29b766e48506400ba91a8ed
+References: <20200713173613.2095-1-vaibhavgupta40@gmail.com>
+        <CGME20200714073256eucas1p13ebe9585c29b766e48506400ba91a8ed@eucas1p1.samsung.com>
+        <3b26bfff-7a42-7bbe-2050-51fe1ce96d4e@samsung.com>
+        <20200714075247.GA4859@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/14/20 9:58 AM, Lee Jones wrote:
-> On Tue, 14 Jul 2020, Hannes Reinecke wrote:
-> 
->> On 7/13/20 9:46 AM, Lee Jones wrote:
->>> A couple of headers make no attempt to document their associated function
->>> parameters.  Others looks as if they are suffering with a little bitrot.
->>>
->>> Fixes the following W=1 kernel build warning(s):
->>>
->>>   drivers/scsi/fcoe/fcoe.c:654: warning: Function parameter or member 'lport' not described in 'fcoe_netdev_features_change'
->>>   drivers/scsi/fcoe/fcoe.c:654: warning: Function parameter or member 'netdev' not described in 'fcoe_netdev_features_change'
->>>   drivers/scsi/fcoe/fcoe.c:2039: warning: Function parameter or member 'ctlr_dev' not described in 'fcoe_ctlr_mode'
->>>   drivers/scsi/fcoe/fcoe.c:2039: warning: Excess function parameter 'cdev' description in 'fcoe_ctlr_mode'
->>>   drivers/scsi/fcoe/fcoe.c:2144: warning: Function parameter or member 'fcoe' not described in 'fcoe_dcb_create'
->>>   drivers/scsi/fcoe/fcoe.c:2144: warning: Excess function parameter 'netdev' description in 'fcoe_dcb_create'
->>>   drivers/scsi/fcoe/fcoe.c:2144: warning: Excess function parameter 'port' description in 'fcoe_dcb_create'
->>>   drivers/scsi/fcoe/fcoe.c:2627: warning: Function parameter or member 'lport' not described in 'fcoe_elsct_send'
->>>   drivers/scsi/fcoe/fcoe.c:2627: warning: Function parameter or member 'did' not described in 'fcoe_elsct_send'
->>>   drivers/scsi/fcoe/fcoe.c:2627: warning: Function parameter or member 'fp' not described in 'fcoe_elsct_send'
->>>   drivers/scsi/fcoe/fcoe.c:2627: warning: Function parameter or member 'op' not described in 'fcoe_elsct_send'
->>>   drivers/scsi/fcoe/fcoe.c:2627: warning: Function parameter or member 'resp' not described in 'fcoe_elsct_send'
->>>   drivers/scsi/fcoe/fcoe.c:2627: warning: Function parameter or member 'arg' not described in 'fcoe_elsct_send'
->>>   drivers/scsi/fcoe/fcoe.c:2627: warning: Function parameter or member 'timeout' not described in 'fcoe_elsct_send'
->>>
->>> Cc: Hannes Reinecke <hare@suse.de>
->>> Signed-off-by: Lee Jones <lee.jones@linaro.org>
->>> ---
->>>   drivers/scsi/fcoe/fcoe.c | 10 ++++------
->>>   1 file changed, 4 insertions(+), 6 deletions(-)
->>>
->>> diff --git a/drivers/scsi/fcoe/fcoe.c b/drivers/scsi/fcoe/fcoe.c
->>> index cb41d166e0c0f..0f9274960dc6b 100644
->>> --- a/drivers/scsi/fcoe/fcoe.c
->>> +++ b/drivers/scsi/fcoe/fcoe.c
->>> @@ -645,7 +645,7 @@ static int fcoe_lport_config(struct fc_lport *lport)
->>>   	return 0;
->>>   }
->>> -/**
->>> +/*
->>>    * fcoe_netdev_features_change - Updates the lport's offload flags based
->>>    * on the LLD netdev's FCoE feature flags
->>>    */
->>> @@ -2029,7 +2029,7 @@ static int fcoe_ctlr_enabled(struct fcoe_ctlr_device *cdev)
->>>   /**
->>>    * fcoe_ctlr_mode() - Switch FIP mode
->>> - * @cdev: The FCoE Controller that is being modified
->>> + * @ctlr_dev: The FCoE Controller that is being modified
->>>    *
->>>    * When the FIP mode has been changed we need to update
->>>    * the multicast addresses to ensure we get the correct
->>> @@ -2136,9 +2136,7 @@ static bool fcoe_match(struct net_device *netdev)
->>>   /**
->>>    * fcoe_dcb_create() - Initialize DCB attributes and hooks
->>> - * @netdev: The net_device object of the L2 link that should be queried
->>> - * @port: The fcoe_port to bind FCoE APP priority with
->>> - * @
->>> + * @fcoe:   The new FCoE interface
->>>    */
->>>   static void fcoe_dcb_create(struct fcoe_interface *fcoe)
->>>   {
->>> @@ -2609,7 +2607,7 @@ static void fcoe_logo_resp(struct fc_seq *seq, struct fc_frame *fp, void *arg)
->>>   	fc_lport_logo_resp(seq, fp, lport);
->>>   }
->>> -/**
->>> +/*
->>>    * fcoe_elsct_send - FCoE specific ELS handler
->>>    *
->>>    * This does special case handling of FIP encapsualted ELS exchanges for FCoE,
->>>
->> I'd rather convert this and the fcoe_netdev_features_change to proper
->> kerneldocs:
+
+On 7/14/20 9:52 AM, Vaibhav Gupta wrote:
+> On Tue, Jul 14, 2020 at 09:32:56AM +0200, Bartlomiej Zolnierkiewicz wrote:
 >>
->> diff --git a/drivers/scsi/fcoe/fcoe.c b/drivers/scsi/fcoe/fcoe.c
->> index cb41d166e0c0..151fe4c53b07 100644
->> --- a/drivers/scsi/fcoe/fcoe.c
->> +++ b/drivers/scsi/fcoe/fcoe.c
->> @@ -646,8 +646,12 @@ static int fcoe_lport_config(struct fc_lport *lport)
->>  }
+>> Hi,
 >>
->>  /**
->> - * fcoe_netdev_features_change - Updates the lport's offload flags based
->> - * on the LLD netdev's FCoE feature flags
->> + * fcoe_netdev_features_change - Updates the lport's offload flags
->> + * @lport:  The local port that is associated with the net device
->> + * @netdev: The associated net device
->> + *
->> + * Update the @lport offload flags based on the FCoE feature flags
->> + * from the LLD @netdev.
->>   */
->>  static void fcoe_netdev_features_change(struct fc_lport *lport,
->>                                         struct net_device *netdev)
->> @@ -2611,6 +2615,13 @@ static void fcoe_logo_resp(struct fc_seq *seq, struct
->> fc_frame *fp, void *arg)
+>> On 7/13/20 7:36 PM, Vaibhav Gupta wrote:
+>>> Linux Kernel Mentee: Remove Legacy Power Management.
+>>>
+>>> The purpose of this patch series is to remove legacy power management callbacks
+>>> from ide drivers.
+>>>
+>>> The suspend() and resume() callbacks operations are still invoking
+>>> pci_save/restore_state(), pci_set_power_state(), pci_enable/disable_state(),
+>>> etc. and handling the power management themselves, which is not recommended.
+>>>
+>>> The conversion requires the removal of the those function calls and change the
+>>> callback definition accordingly and make use of dev_pm_ops structure.
 >>
->>  /**
->>   * fcoe_elsct_send - FCoE specific ELS handler
->> + * @lport: Local port
->> + * @did: Destination ID
->> + * @fp: FCoE frame
->> + * @op: ELS operation
->> + * @resp: Response callback
->> + * @arg: Argument for the response callback
->> + * @timeout: Timeout for the ELS response
->>   *
->>   * This does special case handling of FIP encapsualted ELS exchanges for
->> FCoE,
->>   * using FCoE specific response handlers and passing the FIP controller as
-> 
-> I don't want to steal your work.
-> 
-> Why don't you send this and a follow-up to fix the broken header for
-> fcoe_ctlr_disc_start() as follow-ups?
-> 
-> It also saves me from having to submit a v3 of this entire set.
-> 
-Okay, not a problem.
+>> IDE subsystem (drivers/ide/) is deprecated and has been superseded by libata
+>> subsystem (drivers/ata/).
+>>
+>> libata drivers have the same issue so please concentrate on fixing them
+>> first. Later (if desirable) changes can be back-ported to drivers/ide/.
+>>
+> Hello, (drivers/ide) and (drivers/ata) are the two major families, I am working
+> on, for generic PM upgradation. I was bit unaware about priority, and also in
+> the last, both ide and ata drivers have to be upgraded.
 
-So you can add:
+Well, drivers/ide/ is scheduled for removal in 2021
+(it even prints the warning during initialization of
+every host driver)..
 
-Reviewed-by: Hannes Reinecke <hare@suse.de>
+Best regards,
+--
+Bartlomiej Zolnierkiewicz
+Samsung R&D Institute Poland
+Samsung Electronics
 
-Cheers,
+>>> All patches are compile-tested only.
+>>
+>> This patchset needs (at least) some basic testing. It should be easier with
+>> libata subsystem as it also support SATA controllers and devices.
+> To upgrade PM in (drivers/ide) I have made .suspend() and .resume() static. Then
+> bind them in "struct dev_pm_ops" variable (ide_pci_pm_ops) and expose it using
+> EXPORT_SYMBOL_GPL(). This has affected 30 drivers. I was hoping if ide changes
+> can be tested/verified, specially [PATCH 1/3]. As then, I will be sure about
+> similar change in ata, as it also requires similar alteration.
+> 
+> Thanks
+> Vaibhav Gupta
+> 
+>>
+>> Best regards,
+>> --
+>> Bartlomiej Zolnierkiewicz
+>> Samsung R&D Institute Poland
+>> Samsung Electronics
+>>
+>>> v3:
+>>>     - Modpost error for undefined reference by Kbuild in v1.
+>>>     - Another approach to disable PM in drivers/ide/triflex.c suggested by
+>>>       Bjorn Helgaas in v2.
+>>>
+>>> Test tools:
+>>>     - Compiler: gcc (GCC) 10.1.0
+>>>     - allmodconfig build: make -j$(nproc) W=1 all
+>>>
+>>> Vaibhav Gupta (3):
+>>>   ide: use generic power management
+>>>   ide: sc1200: use generic power management
+>>>   ide: delkin_cb: use generic power management
+>>>
+>>>  drivers/ide/aec62xx.c         |  3 +--
+>>>  drivers/ide/alim15x3.c        |  3 +--
+>>>  drivers/ide/amd74xx.c         |  3 +--
+>>>  drivers/ide/atiixp.c          |  3 +--
+>>>  drivers/ide/cmd64x.c          |  3 +--
+>>>  drivers/ide/cs5520.c          |  3 +--
+>>>  drivers/ide/cs5530.c          |  3 +--
+>>>  drivers/ide/cs5535.c          |  3 +--
+>>>  drivers/ide/cs5536.c          |  3 +--
+>>>  drivers/ide/cy82c693.c        |  3 +--
+>>>  drivers/ide/delkin_cb.c       | 32 +++++---------------------
+>>>  drivers/ide/hpt366.c          |  3 +--
+>>>  drivers/ide/ide-pci-generic.c |  3 +--
+>>>  drivers/ide/it8172.c          |  3 +--
+>>>  drivers/ide/it8213.c          |  3 +--
+>>>  drivers/ide/it821x.c          |  3 +--
+>>>  drivers/ide/jmicron.c         |  3 +--
+>>>  drivers/ide/ns87415.c         |  3 +--
+>>>  drivers/ide/opti621.c         |  3 +--
+>>>  drivers/ide/pdc202xx_new.c    |  3 +--
+>>>  drivers/ide/pdc202xx_old.c    |  3 +--
+>>>  drivers/ide/piix.c            |  3 +--
+>>>  drivers/ide/sc1200.c          | 43 ++++++++++++-----------------------
+>>>  drivers/ide/serverworks.c     |  3 +--
+>>>  drivers/ide/setup-pci.c       | 29 +++++------------------
+>>>  drivers/ide/siimage.c         |  3 +--
+>>>  drivers/ide/sis5513.c         |  3 +--
+>>>  drivers/ide/sl82c105.c        |  3 +--
+>>>  drivers/ide/slc90e66.c        |  3 +--
+>>>  drivers/ide/triflex.c         | 24 +++++++------------
+>>>  drivers/ide/via82cxxx.c       |  3 +--
+>>>  include/linux/ide.h           |  8 +------
+>>>  32 files changed, 62 insertions(+), 155 deletions(-)
+>>>
+>>
+> 
+> 
 
-Hannes
--- 
-Dr. Hannes Reinecke		           Kernel Storage Architect
-hare@suse.de			                  +49 911 74053 688
-SUSE Software Solutions Germany GmbH, Maxfeldstr. 5, 90409 Nürnberg
-HRB 36809 (AG Nürnberg), GF: Felix Imendörffer
