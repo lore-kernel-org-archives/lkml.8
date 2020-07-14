@@ -2,92 +2,90 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82A83C433E4
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 09:01:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 235E4C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 09:02:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 64FC921D79
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 09:01:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F27F221D7B
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 09:01:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="iR8qyw0J"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726187AbgGNJBz (ORCPT
+        id S1726859AbgGNJB6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 05:01:55 -0400
-Received: from mout.kundenserver.de ([212.227.17.10]:41519 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725816AbgGNJBy (ORCPT
+        Tue, 14 Jul 2020 05:01:58 -0400
+Received: from gate2.alliedtelesis.co.nz ([202.36.163.20]:35646 "EHLO
+        gate2.alliedtelesis.co.nz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726794AbgGNJB4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 05:01:54 -0400
-Received: from mail-qk1-f180.google.com ([209.85.222.180]) by
- mrelayeu.kundenserver.de (mreue108 [212.227.15.145]) with ESMTPSA (Nemesis)
- id 1MZl1l-1kP7ep3Vw7-00WrAn for <linux-kernel@vger.kernel.org>; Tue, 14 Jul
- 2020 11:01:53 +0200
-Received: by mail-qk1-f180.google.com with SMTP id k18so14891315qke.4
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 02:01:52 -0700 (PDT)
-X-Gm-Message-State: AOAM533XDGawA3VyGa5j8TwmpHStcOIFd+k7Gj7b4IYxkXdXn7wLOIpN
-        5pXn1asUrDNGfrs6WzIs1JUxbYWXwzYdx8zVEbg=
-X-Google-Smtp-Source: ABdhPJxkrMxvJdjvUYRY5fiC0GTtBxjfbZiL+yUHXJNjoR52VcliI2+SPKZmoDOY77LuQlmc2P4+CLfJAhZaf6U+1/E=
-X-Received: by 2002:a37:a496:: with SMTP id n144mr3539985qke.286.1594717311729;
- Tue, 14 Jul 2020 02:01:51 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200714083259.1313267-1-lee.jones@linaro.org>
-In-Reply-To: <20200714083259.1313267-1-lee.jones@linaro.org>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Tue, 14 Jul 2020 11:01:35 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a07SOgW0rKPcv2wjqUShtnO_rrRYbTC=FCuiGTDtkdPvw@mail.gmail.com>
-Message-ID: <CAK8P3a07SOgW0rKPcv2wjqUShtnO_rrRYbTC=FCuiGTDtkdPvw@mail.gmail.com>
-Subject: Re: [PATCH 1/1] misc: c2port: core: Make copying name from userspace
- more secure
-To:     Lee Jones <lee.jones@linaro.org>
-Cc:     gregkh <gregkh@linuxfoundation.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Tue, 14 Jul 2020 05:01:56 -0400
+Received: from mmarshal3.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id 14F9E8011F;
+        Tue, 14 Jul 2020 21:01:53 +1200 (NZST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
+        s=mail181024; t=1594717313;
+        bh=QZhAokAJFsC6uIiQS0wezeU8N66XgeQ4QescCeZU9us=;
+        h=From:To:CC:Subject:Date:References:In-Reply-To;
+        b=iR8qyw0JVnHCYF0qT+HKOSZVqQ+bwMjPzy253eF1XtD2w4+5qL+5BBN4vQsfFCK8x
+         EBtIVCjwT0faaUxDL8EQgayYEo4soJeTeqOXQD3y20JcrG/l1HkAIkd4N7Y3QoO1A/
+         pm61enhuUIbpEqj6+jddx+PwJbuWrJNoeRO3vc9FuV1JEnekELWBzYyviBNoAIOcKi
+         MYY/Ln0D4K4suz6nnze2bXQIOp8eSFIAGSFZoshBki0/mdpKsAnPtyjcICy7vXrS5I
+         mxb0K+97RRNFnT89JojqsymFJVgw6K/QFTFGbc6Xg/REIbgHesAQD1wMgcn3ve+3kO
+         zOvwvXSbGUEew==
+Received: from svr-chch-ex1.atlnz.lc (Not Verified[10.32.16.77]) by mmarshal3.atlnz.lc with Trustwave SEG (v7,5,8,10121)
+        id <B5f0d74720002>; Tue, 14 Jul 2020 21:01:38 +1200
+Received: from svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8::77) by
+ svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8::77) with Microsoft SMTP Server
+ (TLS) id 15.0.1497.2; Tue, 14 Jul 2020 20:45:25 +1200
+Received: from svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8]) by
+ svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8%12]) with mapi id
+ 15.00.1497.006; Tue, 14 Jul 2020 20:45:25 +1200
+From:   Chris Packham <Chris.Packham@alliedtelesis.co.nz>
+To:     Randy Dunlap <rdunlap@infradead.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+CC:     "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Rodolfo Giometti <giometti@enneenne.com>,
-        "Eurotech S.p.A" <info@eurotech.it>,
-        Geert Uytterhoeven <geert+renesas@glider.be>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:ozpfs08w3ZMFf93rHLIhJY2o0x5EydZCYTnNVZ7mgZhxgDtyxJc
- GwJB7wMeGLCWHOGGWwg3X2jeYxipIn1+yrLUK8QB4blMDIlccjOc0CUlOEFwH7h3UtD5xKy
- OsBCAvWAt12mxz6Rht/ehrStMlDxoZM4NGTHxTAbgXfxXGwsJjAt1cuMfmKd+gv6YPSisI2
- BQA592z9bHBw3LOWzb2Iw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:eMf2L3RiKQs=:3FtUDn/h9UTybaMWAwq2re
- MiC4/TjTcxTXxAYP5BYxUr2saqQ665JZt6IU4RBVBc/u9YCjUKB5vKVuCIv+e0YiOPDDy1Efj
- JJk/OoiH4gS5l7cQUgjjR9lTr89Mek70jgDSD0uMPeb42CbmKG3DP6t8NMZ50qtVP2W7SB3Tk
- Tou10byKAPd7tIKRF7xpa4zmX6P9NVoMwnp7ZzCexqVTvby9j44Z1PevOYUjTBuapWNZfiW0E
- OJHKrPOwb/25cL/sspLgrhfVs6TcU2WxpdBXvuHeTdkY29a8z/rXuP3n6ngle/T4sc+Lay5/O
- I9d64wT8ci1m6Mbr9wUzTx6GQ/2Yi/0oY4iGD/fciCPHW2YhGGFJQxVMKHRf0zmYthkoh8Cbm
- yG6OX2afTydvBfcnpnNf55akkDXHomkc2juCMiOlJIAo6scubyAwiTi1t0eONdLgubGfCeM0W
- 2XEkXMTQkB17ueBtN8n/fyjZNSEyNrm/XUTqPwULQZ+PcnMN6jaUGcQfTK+TSIPpKtHROOBuK
- CEGzzp3HbnS0CCm+nLucbmKtkuF1mu7/uriS9mCwzMkvjIpo161MoEE+KvhUTHnIp5RzdKCx5
- 1ZQjqE6BfjO/sr45DkIQX9jNX7gFQDZVkq6oHkmY57ZCen+isdqEzIjLiQ0PKyU3L9Bf/DxXD
- 2vbfBVluDWTjpTAAnuAqzcLP/ccFPmJi4Jtq9HEoUieJ9q9RTge8g1K6AQFfebtz+CGDyC5AM
- t8kzdXceSD0q3XV5ETNaixZv2J5+tPyBZU8B6m8TWwOhsAyjcF4Ow9V4k2T+Tc5Q9F7dSmqv9
- b5auEjB8N5UAs1THZYO4dv1ZxWXN34FaHfbmx4m54z7tfYvl+bSBdEFEiuIBzyE6x4qoTWL2k
- 9XhIDbH9oT2XsOZhOC/1n5+DpAmXpi9NBcaCgp2xpzQF6JpUmLdtYCTYLu8quFMxhlqkIoWK/
- v3alya5zhtSJ2XDPO/hBR7tRCah9Y0ahHGZ0I7Xq0/VvtSpPWBWKm
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>
+Subject: Re: procfs VmFlags table missing from online docs
+Thread-Topic: procfs VmFlags table missing from online docs
+Thread-Index: AQHWWZ04Axuc9KTu2km08OQff6fL16kFzV0AgAAseoA=
+Date:   Tue, 14 Jul 2020 08:45:25 +0000
+Message-ID: <a8747dde-32d8-bbfd-fe73-662827abd60e@alliedtelesis.co.nz>
+References: <8abafee9-e34b-45f6-19a7-3f043ceb5537@alliedtelesis.co.nz>
+ <6ee41c18-934e-26c2-a875-3d9e4c700c6c@infradead.org>
+In-Reply-To: <6ee41c18-934e-26c2-a875-3d9e4c700c6c@infradead.org>
+Accept-Language: en-NZ, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.32.1.11]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <171F16C1FB480043918082C088BBED02@atlnz.lc>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 14, 2020 at 10:33 AM Lee Jones <lee.jones@linaro.org> wrote:
->
-> Currently the 'c2dev' device data is not zeroed when its allocated.
-> Coupled with the fact strncpy() *may not* provide a NUL terminator
-> means that a 1-byte leak would be possible *if* this was ever copied
-> to userspace.
->
-> To prevent such a failing, let's first ensure the 'c2dev' device data
-> area is fully zeroed out and ensure the buffer will always be NUL
-> terminated by using the kernel's strscpy() which a) uses the
-> destination (instead of the source) size as the bytes to copy and b)
-> is *always* NUL terminated.
->
-> Cc: Rodolfo Giometti <giometti@enneenne.com>
-> Cc: "Eurotech S.p.A" <info@eurotech.it>
-> Reported-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> Signed-off-by: Lee Jones <lee.jones@linaro.org>
-
-Acked-by: Arnd Bergmann <arnd@arndb.de>
+DQpPbiAxNC8wNy8yMCA2OjA2IHBtLCBSYW5keSBEdW5sYXAgd3JvdGU6DQo+IE9uIDcvMTMvMjAg
+MTA6MTEgUE0sIENocmlzIFBhY2toYW0gd3JvdGU6DQo+PiBIaSwNCj4+DQo+PiBJIHdhcyBqdXN0
+IGJyb3dzaW5nDQo+PiBodHRwczovL3d3dy5rZXJuZWwub3JnL2RvYy9odG1sL2xhdGVzdC9maWxl
+c3lzdGVtcy9wcm9jLmh0bWwNCj4+DQo+PiBUaGUgIlZtRmxhZ3MiIGRlc2NyaXB0aW9uIHNlZW1z
+IHRvIGJlIG1pc3NpbmcgYSB0YWJsZS4gSXQncyB0aGVyZSBpbg0KPj4gRG9jdW1lbnRhdGlvbi9m
+aWxlc3lzdGVtcy9wcm9jLnJzdCBzbyBJIGFzc3VtZSBpdCdzIHNvbWUgc3BoaW54L3JzdA0KPj4g
+cHJvYmxlbS4gUG9zc2libHkgdGhlIHRhYmxlIGlzIG92ZXIgaW5kZW50ZWQ/DQo+IFdvdy4gSXQg
+c2tpcHMgdGhlIHRhYmxlIGNvbXBsZXRlbHkuDQo+DQo+IEkgdHJpZWQgYSBjb3VwbGUgb2YgdGhp
+bmdzIHRoYXQgZGlkIG5vdCBoZWxwLg0KSSB0aGluayBpdCdzIGp1c3QgdGhlIHN0cmF5IC0gaW4g
+dGhlICJidCAtIGFybTY0IiBsaW5lIHBhdGNoIGluY29taW5nLg0KPj4gQW55d2F5IEkgdGhvdWdo
+dCBJJ2QgbGV0IHNvbWVvbmUga25vdy4NCj4gVGhhbmtzLg0KPg0KPj4gUmVnYXJkcywNCj4+IENo
+cmlzDQo+
