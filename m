@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE7B5C433EA
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:55:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02219C433F2
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:55:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8042321D79
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:55:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CCE5322AB9
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:55:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594752955;
-	bh=ONj7aKbHlOlgWW2rGPQ0J/OhBHcYbrSt/+Ss/muTSBQ=;
+	s=default; t=1594752956;
+	bh=YTaFIXKUgmcdP1e9IE1EuXcT+y6FsRB2iZKzwevw40I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WAvNgJ7X4Gfc/LdHCs2+NzzC45y4kYZC9HxIbBPa11WIxlebCWKcoLaWf4xzyY+5a
-	 mZ8PdI9XBKiXCDcRrXwFPu4oT+peFHZZYfCX8dtLHUzHQsB3hoyk7sK4UCPUdcsXFh
-	 nIwsFwO98Qv5fVGRGaqMfXa3NXLDaFISh4ur6RE8=
+	b=tozUYh4/15zTHXoZUOoFZTBJVjnaFlzhstoj9dGPsSCWyxSSiqDLZnlTrGnmTHS+P
+	 CWFA6O1N7PYV9c/G6fe2ZOqpKYG9MNy1GAyjnwiGXcf7V5v82uC3IimTL5mctIjA0/
+	 BwxYcfR+D5StGbRPcoQDglEpNrGiatT1eBvCGrqk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730292AbgGNSzx (ORCPT
+        id S1730916AbgGNSzv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 14:55:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53576 "EHLO mail.kernel.org"
+        Tue, 14 Jul 2020 14:55:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53516 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730895AbgGNSzt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 14:55:49 -0400
+        id S1730518AbgGNSzq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 14:55:46 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5BC4321D79;
-        Tue, 14 Jul 2020 18:55:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AE52822282;
+        Tue, 14 Jul 2020 18:55:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594752948;
-        bh=ONj7aKbHlOlgWW2rGPQ0J/OhBHcYbrSt/+Ss/muTSBQ=;
+        s=default; t=1594752946;
+        bh=YTaFIXKUgmcdP1e9IE1EuXcT+y6FsRB2iZKzwevw40I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Pllvgva5P8cG0dc2ov9uJHIzlRgL/p85VJWi+6ULeH/v39D7sf2OzrOmVE1qs+ytU
-         ARlKIUP+MBWnW+bmjhHRIFu0Dt1V8PKs1m9fL+lxeT9+ScqUA36c9kwhS3VYXkBDy4
-         LuLgBADwlSMjNluWjLI/26wR/hzzxRF5A85lY/lw=
+        b=tmPqKLLF9u4lhhIwVZjmkuXow/VwsRlJBpul0Ibiagx3Zw9ujavz3LZ2CpIo2npqW
+         aRxdIL4vYRpe1QbFK1vYCGF3350EkLt2iySxGi161WltlPEIkg+K0BMy1gQ0RZXK+0
+         W5frmfyWw18CsYEYGNrqpHpVUCvgzaDqhfOdZ5EA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Sasha Levin <sashal@kernel.org>,
-        Alexander Egorenkov <egorenar@linux.ibm.com>
-Subject: [PATCH 5.7 031/166] s390/kasan: fix early pgm check handler execution
-Date:   Tue, 14 Jul 2020 20:43:16 +0200
-Message-Id: <20200714184117.367925529@linuxfoundation.org>
+        stable@vger.kernel.org, Emil Velikov <emil.l.velikov@gmail.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.7 030/166] drm: panel-orientation-quirks: Use generic orientation-data for Acer S1003
+Date:   Tue, 14 Jul 2020 20:43:15 +0200
+Message-Id: <20200714184117.326544442@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200714184115.844176932@linuxfoundation.org>
 References: <20200714184115.844176932@linuxfoundation.org>
@@ -61,40 +60,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vasily Gorbik <gor@linux.ibm.com>
+From: Hans de Goede <hdegoede@redhat.com>
 
-[ Upstream commit 998f5bbe3dbdab81c1cfb1aef7c3892f5d24f6c7 ]
+[ Upstream commit a05caf9e62a85d12da27e814ac13195f4683f21c ]
 
-Currently if early_pgm_check_handler is called it ends up in pgm check
-loop. The problem is that early_pgm_check_handler is instrumented by
-KASAN but executed without DAT flag enabled which leads to addressing
-exception when KASAN checks try to access shadow memory.
+The Acer S1003 has proper DMI strings for sys-vendor and product-name,
+so we do not need to match by BIOS-date.
 
-Fix that by executing early handlers with DAT flag on under KASAN as
-expected.
+This means that the Acer S1003 can use the generic lcd800x1280_rightside_up
+drm_dmi_panel_orientation_data struct which is also used by other quirks.
 
-Reported-and-tested-by: Alexander Egorenkov <egorenar@linux.ibm.com>
-Reviewed-by: Heiko Carstens <heiko.carstens@de.ibm.com>
-Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
-Signed-off-by: Heiko Carstens <heiko.carstens@de.ibm.com>
+Reviewed-by: Emil Velikov <emil.l.velikov@gmail.com>
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20200531093025.28050-2-hdegoede@redhat.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/s390/kernel/early.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/gpu/drm/drm_panel_orientation_quirks.c | 8 +-------
+ 1 file changed, 1 insertion(+), 7 deletions(-)
 
-diff --git a/arch/s390/kernel/early.c b/arch/s390/kernel/early.c
-index cd241ee66eff4..0782772318580 100644
---- a/arch/s390/kernel/early.c
-+++ b/arch/s390/kernel/early.c
-@@ -170,6 +170,8 @@ static noinline __init void setup_lowcore_early(void)
- 	psw_t psw;
+diff --git a/drivers/gpu/drm/drm_panel_orientation_quirks.c b/drivers/gpu/drm/drm_panel_orientation_quirks.c
+index d11d83703931e..d00ea384dcbfe 100644
+--- a/drivers/gpu/drm/drm_panel_orientation_quirks.c
++++ b/drivers/gpu/drm/drm_panel_orientation_quirks.c
+@@ -30,12 +30,6 @@ struct drm_dmi_panel_orientation_data {
+ 	int orientation;
+ };
  
- 	psw.mask = PSW_MASK_BASE | PSW_DEFAULT_KEY | PSW_MASK_EA | PSW_MASK_BA;
-+	if (IS_ENABLED(CONFIG_KASAN))
-+		psw.mask |= PSW_MASK_DAT;
- 	psw.addr = (unsigned long) s390_base_ext_handler;
- 	S390_lowcore.external_new_psw = psw;
- 	psw.addr = (unsigned long) s390_base_pgm_handler;
+-static const struct drm_dmi_panel_orientation_data acer_s1003 = {
+-	.width = 800,
+-	.height = 1280,
+-	.orientation = DRM_MODE_PANEL_ORIENTATION_RIGHT_UP,
+-};
+-
+ static const struct drm_dmi_panel_orientation_data asus_t100ha = {
+ 	.width = 800,
+ 	.height = 1280,
+@@ -114,7 +108,7 @@ static const struct dmi_system_id orientation_data[] = {
+ 		  DMI_EXACT_MATCH(DMI_SYS_VENDOR, "Acer"),
+ 		  DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "One S1003"),
+ 		},
+-		.driver_data = (void *)&acer_s1003,
++		.driver_data = (void *)&lcd800x1280_rightside_up,
+ 	}, {	/* Asus T100HA */
+ 		.matches = {
+ 		  DMI_EXACT_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
 -- 
 2.25.1
 
