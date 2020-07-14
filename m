@@ -2,97 +2,105 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E06A1C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 10:02:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C4E5C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 10:02:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BC961221FD
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 10:02:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 03FB621D7A
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 10:02:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726782AbgGNKCk (ORCPT
+        id S1726848AbgGNKCu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 06:02:40 -0400
-Received: from mx2.suse.de ([195.135.220.15]:54808 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725906AbgGNKCk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 06:02:40 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 39D44AD12;
-        Tue, 14 Jul 2020 10:02:41 +0000 (UTC)
-Subject: Re: [PATCH] mm/hugetlb: hide nr_nodes in the internal of
- for_each_node_mask_to_[alloc|free]
-To:     Wei Yang <richard.weiyang@linux.alibaba.com>
-Cc:     mike.kravetz@oracle.com, akpm@linux-foundation.org,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org
-References: <20200714073404.84863-1-richard.weiyang@linux.alibaba.com>
- <cd1651a0-35c6-7535-5782-ce7e31cc26e8@suse.cz>
- <807a1e32-926b-2882-740b-6484b8dca2b6@suse.cz>
- <20200714095713.GA86690@L-31X9LVDL-1304.local>
-From:   Vlastimil Babka <vbabka@suse.cz>
-Message-ID: <e0d384a7-34bc-43ce-dc20-db4808b0f736@suse.cz>
-Date:   Tue, 14 Jul 2020 12:02:38 +0200
+        Tue, 14 Jul 2020 06:02:50 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:54684 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725906AbgGNKCu (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 06:02:50 -0400
+Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06E9VaZL139060;
+        Tue, 14 Jul 2020 05:59:43 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 328s1he621-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 14 Jul 2020 05:59:43 -0400
+Received: from m0098419.ppops.net (m0098419.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 06E9VqAC140386;
+        Tue, 14 Jul 2020 05:59:42 -0400
+Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 328s1he60u-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 14 Jul 2020 05:59:42 -0400
+Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
+        by ppma03ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 06E9stK5031001;
+        Tue, 14 Jul 2020 09:57:40 GMT
+Received: from b06cxnps4074.portsmouth.uk.ibm.com (d06relay11.portsmouth.uk.ibm.com [9.149.109.196])
+        by ppma03ams.nl.ibm.com with ESMTP id 327527u6qs-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 14 Jul 2020 09:57:39 +0000
+Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
+        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 06E9vbtP45154344
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 14 Jul 2020 09:57:37 GMT
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id A5149A4053;
+        Tue, 14 Jul 2020 09:57:37 +0000 (GMT)
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 983AEA4051;
+        Tue, 14 Jul 2020 09:57:35 +0000 (GMT)
+Received: from JAVRIS.in.ibm.com (unknown [9.199.51.67])
+        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Tue, 14 Jul 2020 09:57:35 +0000 (GMT)
+Subject: Re: [PATCH v2] selftests/livepatch: adopt to newer sysctl error
+ format
+To:     Petr Mladek <pmladek@suse.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Jiri Kosina <jikos@kernel.org>, Miroslav Benes <mbenes@suse.cz>
+Cc:     Joe Lawrence <joe.lawrence@redhat.com>,
+        Shuah Khan <shuah@kernel.org>, live-patching@vger.kernel.org,
+        linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200714091030.1611-1-pmladek@suse.com>
+From:   Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>
+Message-ID: <d71ffba0-87ab-0a31-d7cc-c476f5748c57@linux.vnet.ibm.com>
+Date:   Tue, 14 Jul 2020 15:27:33 +0530
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.10.0
 MIME-Version: 1.0
-In-Reply-To: <20200714095713.GA86690@L-31X9LVDL-1304.local>
+In-Reply-To: <20200714091030.1611-1-pmladek@suse.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-07-14_02:2020-07-13,2020-07-14 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999 bulkscore=0
+ lowpriorityscore=0 impostorscore=0 spamscore=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 mlxscore=0 clxscore=1015 adultscore=0
+ phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2007140070
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/14/20 11:57 AM, Wei Yang wrote:
-> On Tue, Jul 14, 2020 at 11:22:03AM +0200, Vlastimil Babka wrote:
->>On 7/14/20 11:13 AM, Vlastimil Babka wrote:
->>> On 7/14/20 9:34 AM, Wei Yang wrote:
->>>> The second parameter of for_each_node_mask_to_[alloc|free] is a loop
->>>> variant, which is not used outside of loop iteration.
->>>> 
->>>> Let's hide this.
->>>> 
->>>> Signed-off-by: Wei Yang <richard.weiyang@linux.alibaba.com>
->>>> ---
->>>>  mm/hugetlb.c | 38 ++++++++++++++++++++------------------
->>>>  1 file changed, 20 insertions(+), 18 deletions(-)
->>>> 
->>>> diff --git a/mm/hugetlb.c b/mm/hugetlb.c
->>>> index 57ece74e3aae..9c3d15fb317e 100644
->>>> --- a/mm/hugetlb.c
->>>> +++ b/mm/hugetlb.c
->>>> @@ -1196,17 +1196,19 @@ static int hstate_next_node_to_free(struct hstate *h, nodemask_t *nodes_allowed)
->>>>  	return nid;
->>>>  }
->>>>  
->>>> -#define for_each_node_mask_to_alloc(hs, nr_nodes, node, mask)		\
->>>> -	for (nr_nodes = nodes_weight(*mask);				\
->>>> -		nr_nodes > 0 &&						\
->>>> +#define for_each_node_mask_to_alloc(hs, node, mask)			\
->>>> +	int __nr_nodes;							\
->>>> +	for (__nr_nodes = nodes_weight(*mask);				\
->>> 
->>> The problem with this is that if I use the macro twice in the same block, this
->>> will redefine __nr_nodes and fail to compile, no?
->>> In that case it's better to avoid setting up this trap, IMHO.
->>
->>Ah, and it will also generate the following warning, if the use of for_each*
->>macro is not the first thing after variable declarations, but there's another
->>statement before:
->>
->>warning: ISO C90 forbids mixed declarations and code [-Wdeclaration-after-statement]
->>
->>Instead we should switch to C99 and declare it as "for (int __nr_nodes" :P
+On 14/07/20 2:40 pm, Petr Mladek wrote:
+> With procfs v3.3.16, the sysctl command doesn't print the set key and
+> value on error.  This change breaks livepatch selftest test-ftrace.sh,
+> that tests the interaction of sysctl ftrace_enabled:
 > 
-> Hmm... I tried what you suggested, but compiler complains.
+> Make it work with all sysctl versions using '-q' option.
 > 
-> 'for' loop initial declarations are only allowed in C99 or C11 mode
+> Explicitly print the final status on success so that it can be verified
+> in the log. The error message is enough on failure.
+> 
+> Reported-by: Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>
+> Signed-off-by: Petr Mladek <pmladek@suse.com>
 
-Yes, by "we should switch to C99" I meant that the kernel kbuild system would
-need to switch. Not a trivial change...
-Without that, I don't see how your patch is possible to do safely.
+Reviewed-by: Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>
+
+-- 
+Kamalesh
