@@ -2,149 +2,157 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C0C3C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 13:12:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83237C433E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 13:12:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6179A224B0
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 13:12:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E794224B0
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 13:12:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="G6GpWyDB"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="JwMXQp6K"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728248AbgGNNMo (ORCPT
+        id S1728432AbgGNNMz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 09:12:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42184 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727975AbgGNNMo (ORCPT
+        Tue, 14 Jul 2020 09:12:55 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:53068 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727975AbgGNNMy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 09:12:44 -0400
-Received: from mail-ed1-x541.google.com (mail-ed1-x541.google.com [IPv6:2a00:1450:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B037CC061755
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 06:12:43 -0700 (PDT)
-Received: by mail-ed1-x541.google.com with SMTP id b15so17050436edy.7
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 06:12:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=viQtz8QsLsT9ah5/ms0xuhd7skme7zVZF+wsTnfPPnw=;
-        b=G6GpWyDBJyFPZDTdR4U6SKf781zmijoV8LskQQD1PafanxCLMpkbBjH7OJ6E0WNLNL
-         YLaU5NJfe4mRam8x+IKbkhL4i1u6s+nK894Q/nPpzKqvxtu6fHaNkNNS8LVKqHFV4Mqc
-         gvD0NXj+VByxVKku9mPRah8Jpy006+Nv7wOF6fHt8m/D+O6QEBFC9z8eoszQvUrrFW7R
-         NCHLvOwkOk6ekJwsB413Tq7aX1tawhwfj17h3W6qUmTGVd62a85gfO/wxuEpa5IpYnKw
-         brlTL107sp5Ol2vTMcEXh5m8UQsyKHfmD4kt4UDgVUpyGlYEzh0KyEp8j+7RUOFpAfa1
-         /atQ==
+        Tue, 14 Jul 2020 09:12:54 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1594732372;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=tcXLN2aOM5HyVPvW2nX/ENf3RMB6pm0tLQoN1DTr1NI=;
+        b=JwMXQp6K5DrdVCVg3cKYHS0SvxmOveUmSRlyqRSP4zYPIL8jm5Fo2tOc+kaD6SHiFwd5jJ
+        8lv3B/Z693dp4QtrxbQNvFy5nviQNThYfE3N3VODAnYemLoSmZ215KBir9HpOONgC7nQqZ
+        GXHnCdfkuxrQ/Lv/WYQq4sOJS400824=
+Received: from mail-qt1-f197.google.com (mail-qt1-f197.google.com
+ [209.85.160.197]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-351-rtI98Ls7NHGfFYlomvuigg-1; Tue, 14 Jul 2020 09:12:51 -0400
+X-MC-Unique: rtI98Ls7NHGfFYlomvuigg-1
+Received: by mail-qt1-f197.google.com with SMTP id e6so12509655qtb.19
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 06:12:51 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=viQtz8QsLsT9ah5/ms0xuhd7skme7zVZF+wsTnfPPnw=;
-        b=J3+2jbfMW/mm7L47y6bFG9oGEAABuV2g9iSJyCtqJ6mx46M+Et1vhiKtIpO0YoYIhs
-         D6+KWmm55l7VC1il6d7a1KsgWWAbyLazzAgxMLsbWEGSVAhpqlIdilZJXFAIrnZidoke
-         pVxmAJPySwdcQD76xBw6jg2kx2+mhgr5ltTdV9ie8PUVsyEoG9Nxx22OMO+DT9Lr4hwn
-         /yTozqPQ1Cm7uYjsl7jGCvkrzOm/jQM2lYCayjU/vgLmzyLNK4IFHfaZ/uJqRFnfIEUe
-         GRBQITiXMLhRI0EE7yCDcAjPO6h2+jpFC+RrsIEoVLlFPgVqXWEqs+2PS0dKT/S3GLj6
-         pvhA==
-X-Gm-Message-State: AOAM531MGWLTx/OdwnZzQYLosLM8z0D83VJjxtRHRGzO/NsTxQbzUiE1
-        XSHYwgDo0mmzLqvQ7siwl1I=
-X-Google-Smtp-Source: ABdhPJxdba5lelv6zuTYUu8kztSW2dzIFW26yc/78uIoNRI7jBYKkTDuEZT2F4bvk8Czv6BvkbSAXA==
-X-Received: by 2002:a05:6402:13d0:: with SMTP id a16mr4420774edx.269.1594732362444;
-        Tue, 14 Jul 2020 06:12:42 -0700 (PDT)
-Received: from localhost ([62.96.65.119])
-        by smtp.gmail.com with ESMTPSA id b17sm12124031ejc.82.2020.07.14.06.12.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 Jul 2020 06:12:41 -0700 (PDT)
-Date:   Tue, 14 Jul 2020 15:12:39 +0200
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Joe Perches <joe@perches.com>
-Cc:     Andy Whitcroft <apw@canonical.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] checkpatch.pl: Allow '+' in compatible strings
-Message-ID: <20200714131239.GA162337@ulmo>
-References: <20200714094141.147418-1-thierry.reding@gmail.com>
- <cd892c33922c477622ede83d80592e71098c4dc2.camel@perches.com>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=tcXLN2aOM5HyVPvW2nX/ENf3RMB6pm0tLQoN1DTr1NI=;
+        b=DJvk+gxnrE6TYVMb9fHduG8HVzvp/hZBrAnkCdRm3+HIwoyLxeu5KucpfESNHDArYM
+         TDVXHGUdPY0wE2VrLsRnIWI1RZtd47h6SD62kc24mIueSp8Wq2a8VfSHdZRALIiwwC27
+         2w2kA/Qn2A3XkYQW41IAX4eHOyZe0Ut98cSKBZ+8f1wfcVdDqOv+p9HPhPYvHBLQNhHJ
+         J7565goTrtwFMzEaHkICgDpJ9NtJnbksfu4jTvqPsg6vWnGeKnus5ubK6CRQLzCTjn7n
+         v++hM+J3VumLjUnCp7fXXJTAmxACDB+SDDGTW/EsB+qVMBC+EHVZ+jdDXo2/08evEqOv
+         VQ2g==
+X-Gm-Message-State: AOAM5314U3wTO9m51vl8q17wXKpio9sMY6FbFJWyD+iE5LkRM0nnR1hs
+        mDV8hh2JjPsvhjr/Cli8xPApmEwP1M4tx5rZDywDIaSsAFyS2y2TE9gTX9kkFXiMBdopGW5sb7T
+        K45MLD1U8oczxVA3cY754x2GM
+X-Received: by 2002:ae9:eb0a:: with SMTP id b10mr4469347qkg.198.1594732370432;
+        Tue, 14 Jul 2020 06:12:50 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJxh7X3vh+e+aHk60ZVCRSIpZ+BjjvNryuzMuxMW7pfPiWEymFwrJuXp8EZHHg1lea0OTP2jpQ==
+X-Received: by 2002:ae9:eb0a:: with SMTP id b10mr4469327qkg.198.1594732370187;
+        Tue, 14 Jul 2020 06:12:50 -0700 (PDT)
+Received: from trix.remote.csb (075-142-250-213.res.spectrum.com. [75.142.250.213])
+        by smtp.gmail.com with ESMTPSA id x36sm23396153qtb.78.2020.07.14.06.12.48
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 14 Jul 2020 06:12:49 -0700 (PDT)
+Subject: Re: [PATCH] reiserfs : fix improper free in reiserfs_get_block
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     jack@suse.cz, william.kucharski@oracle.com, jeffm@suse.com,
+        joseph.qi@linux.alibaba.com, liao.pingfang@zte.com.cn,
+        reiserfs-devel@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200714130509.11791-1-trix@redhat.com>
+ <20200714131043.GB12769@casper.infradead.org>
+From:   Tom Rix <trix@redhat.com>
+Message-ID: <bc5a13bd-54c4-509d-7202-20c93f43e2f6@redhat.com>
+Date:   Tue, 14 Jul 2020 06:12:47 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="lrZ03NoBR/3+SXJZ"
-Content-Disposition: inline
-In-Reply-To: <cd892c33922c477622ede83d80592e71098c4dc2.camel@perches.com>
-User-Agent: Mutt/1.14.4 (2020-06-18)
+In-Reply-To: <20200714131043.GB12769@casper.infradead.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---lrZ03NoBR/3+SXJZ
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On 7/14/20 6:10 AM, Matthew Wilcox wrote:
+> On Tue, Jul 14, 2020 at 06:05:09AM -0700, trix@redhat.com wrote:
+>> From: Tom Rix <trix@redhat.com>
+>>
+>> clang static analysis flags this error
+>>
+>> inode.c:1083:5: warning: Argument to kfree() is the address of the
+>>   local variable 'unf_single', which is not memory allocated by
+>>   malloc() [unix.Malloc]
+>>                                 kfree(un);
+>>                                 ^~~~~~~~~
+>> Assignment of 'un'
+>>
+>> 	/*
+>> 	 * We use this in case we need to allocate
+>> 	 * only one block which is a fastpath
+>> 	 */
+>> 	unp_t unf_single = 0;
+>>
+>> 	...
+>>
+>> 	if (blocks_needed == 1) {
+>> 		un = &unf_single;
+>> 	} else {
+>> 		un = kcalloc(min(blocks_needed, max_to_insert),
+>> 			     UNFM_P_SIZE, GFP_NOFS);
+>> 		if (!un) {
+>> 			un = &unf_single;
+>> 			blocks_needed = 1;
+>> 			max_to_insert = 0;
+>> 		}
+>> 	}
+>>
+>> The logic to free 'un'
+>>
+>> 	if (blocks_needed != 1)
+>> 		kfree(un);
+>>
+>> Because the kcalloc failure falls back to using unf_single,
+>> the if-check for the free is wrong.
+> I think you mean "Because clang's static analysis is limited, it
+> warns incorrectly about this".  There's no path to get to the
+> kfree with blocks_needed != 1 and un being equal to &unf_single.
 
-On Tue, Jul 14, 2020 at 04:14:36AM -0700, Joe Perches wrote:
-> On Tue, 2020-07-14 at 11:41 +0200, Thierry Reding wrote:
-> > From: Thierry Reding <treding@nvidia.com>
-> >=20
-> > The current checks will interpret a '+' character as special because
-> > they use regular expression matching. Escape the '+' character if it
-> > appears in a compatible string.
-> >=20
-> > Signed-off-by: Thierry Reding <treding@nvidia.com>
->=20
-> Thanks
->=20
-> > ---
-> >  scripts/checkpatch.pl | 1 +
-> >  1 file changed, 1 insertion(+)
-> >=20
-> > diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
-> > index 4c820607540b..8104d0736e7f 100755
-> > --- a/scripts/checkpatch.pl
-> > +++ b/scripts/checkpatch.pl
-> > @@ -3145,6 +3145,7 @@ sub process {
-> >  			my $vp_file =3D $dt_path . "vendor-prefixes.yaml";
-> > =20
-> >  			foreach my $compat (@compats) {
-> > +				$compat =3D~ s/\+/\\+/;
->=20
-> This changes the @compats array for each line
+Ok.
 
-I'm not overly familiar with the internals of Perl. I was assuming that
-$compat would be a copy of each of the strings in @compats. From what
-you're saying it sounds like it's more like a pointer to them instead.
 
-Irrespective, does that do any harm, though? I suppose we could add an
-extra local variable like we do for compat2 and compat3 and modify that
-instead. That way the contents would perhaps remain unmodified.
+>> So improve the check.
+>>
+>> Signed-off-by: Tom Rix <trix@redhat.com>
+>> ---
+>>  fs/reiserfs/inode.c | 2 +-
+>>  1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/fs/reiserfs/inode.c b/fs/reiserfs/inode.c
+>> index 1509775da040..4d62148e43e6 100644
+>> --- a/fs/reiserfs/inode.c
+>> +++ b/fs/reiserfs/inode.c
+>> @@ -1079,7 +1079,7 @@ int reiserfs_get_block(struct inode *inode, sector_t block,
+>>  						     UNFM_P_SIZE *
+>>  						     blocks_needed);
+>>  
+>> -			if (blocks_needed != 1)
+>> +			if (un != &unf_single)
+>>  				kfree(un);
+> I don't actually object to this patch, but your analysis of clang's
+> analysis is wrong.
+>
 
-Is that what you were suggesting?
-
-Thierry
-
---lrZ03NoBR/3+SXJZ
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl8Nr0UACgkQ3SOs138+
-s6FAsA/9GTh6tcM2IIBSctHuCvmXckubRzVGzlV+AqitZCSRGkpjSVyKMr9V/KoD
-TSA4yynwNxxUfUOZycXW5oTNygkwo+cl9gkGDrRRXcfg0qg9ek+q5pfBZnNluPPg
-BB0tMwp7dKbl8XYPJSk//XiImrnTzrVvMPO/wcq4PS/hYXWOzC0HlR2s44Asw1xP
-Pxlk0n0XDCKvd1OzFQ93gziYvDtMFGt4YeYrTYEGapHeP71o6p9XZf/H9VE4EIRv
-v6iOiJp06aXNLo/Wll4Oi8WV8k2s0blvpQoXgclmpasZ8deGw/qSZWsV8QIK7X6m
-7nMUcIRk509O1AgBnJ2tCkpBOC78pixbAJWYAxb3khDWSGVhEQiX1R8V1qGZW6kJ
-rMM0M5t1KIib7xyz8hDC+cSOVb7HNKk1Eb1t5vQHvjIZZSe9NvDq4idXiv4gpVce
-nmcSRTvyLHn9NF8GU+ZYiO24okxKWocjMHlLTvLTpnjifs+SzlGcnWICsKupeMhz
-Y4D66EBu0wAvs8mwILWesE5rXeImVKWMkcde/z3W4gB0IPaKep8wu497YC4qxqmr
-NQGfcfJ8e1pHaNEhVN2Xzt/0M6EoR5d/KcvWnUL7X2Qzk5HnnisOafCxBuxkqTaJ
-WxbLGoao0uiTQxxTIx6dkeZtuEqi4+6NeOXOLjhNS8XlUUMym5U=
-=HDxT
------END PGP SIGNATURE-----
-
---lrZ03NoBR/3+SXJZ--
