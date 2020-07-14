@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08AC6C433E6
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:50:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19761C433E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:50:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D4D0121D7B
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:50:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA93A22AAA
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:50:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594752629;
-	bh=tdynT2JV7a0+gxRc6IFSgh5pZhbM6pNqj5JJ3tzCOCs=;
+	s=default; t=1594752634;
+	bh=D3i3S5j44fiC1IDgMasI5b1YhvYLYdQs/3us46NgZYw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cYZMtCx7+KdStJ+7zZVyRbdY+SIK8uZQDb6HMFNumt25NrGQ9MsaKQTntVDYUF4nW
-	 braImcdlkjCu9e0Bzn+MyG36tuA5ujDUjHonw7ZTylfZokv2j1IOAxV72Pu9G3FTEf
-	 evigGL0wgsussTBRMj++JNfip2sXANx2U2Kh18wE=
+	b=fZKXdPpMAGOqt5ER09MHu+I/QI4hKEnsTOgjsQcDRHjOlKAfehFGxNEu3dhAcCI3h
+	 pliFV3b8MlGXp4UgIwC7kWeFcPFHyHwi4Sbm4a8qI/Gbvx1nSJnww7pbyFnaL7kU6J
+	 DndXQYkxYrhLmCFMU9PVk1sO1kqZ3IO0XxzLjyLk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730299AbgGNSu2 (ORCPT
+        id S1729671AbgGNSud (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 14:50:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46454 "EHLO mail.kernel.org"
+        Tue, 14 Jul 2020 14:50:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46698 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729728AbgGNSuV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 14:50:21 -0400
+        id S1729603AbgGNSua (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 14:50:30 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5EADE208C3;
-        Tue, 14 Jul 2020 18:50:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 29DC6207F5;
+        Tue, 14 Jul 2020 18:50:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594752621;
-        bh=tdynT2JV7a0+gxRc6IFSgh5pZhbM6pNqj5JJ3tzCOCs=;
+        s=default; t=1594752630;
+        bh=D3i3S5j44fiC1IDgMasI5b1YhvYLYdQs/3us46NgZYw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=b873GxQdZ0zJBe44dzwG6bDftHftplueN2/cx+oJ2xUbpB1C75NMqh2JRSVY1TTzv
-         tdvlqCk3D2k9pCWRTT9KpgWurAqUftdI79GCLvdG1Wd6i6i3C43BU7a//AMd1Kjh9J
-         Djny2vjiwCxJ0sI5eFJeU/Nx/9hHhXwFkHvME/Lk=
+        b=lcCNyMwTfWaBfTPywkMNL0J6cVP0j4qSKIgUTPAsqDcUpDLTSALW2/GK9EolBk9hj
+         tWcQol13ZMTPZHaHvDXR3xkdTZ8SB89MvuK6OTdyN2EAWx0RbJzVTVOUY0UAeKUHEN
+         0hH+UGd0OH+DGkc5jT5Ddkr5IaplcUQzeFmBOzU0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sascha Hauer <s.hauer@pengutronix.de>,
+        stable@vger.kernel.org, Andre Edich <andre.edich@microchip.com>,
+        Parthiban Veerasooran <Parthiban.Veerasooran@microchip.com>,
         "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 017/109] net: ethernet: mvneta: Add 2500BaseX support for SoCs without comphy
-Date:   Tue, 14 Jul 2020 20:43:20 +0200
-Message-Id: <20200714184106.347160297@linuxfoundation.org>
+Subject: [PATCH 5.4 052/109] smsc95xx: avoid memory leak in smsc95xx_bind
+Date:   Tue, 14 Jul 2020 20:43:55 +0200
+Message-Id: <20200714184108.011739687@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200714184105.507384017@linuxfoundation.org>
 References: <20200714184105.507384017@linuxfoundation.org>
@@ -60,48 +61,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sascha Hauer <s.hauer@pengutronix.de>
+From: Andre Edich <andre.edich@microchip.com>
 
-[ Upstream commit 1a642ca7f38992b086101fe204a1ae3c90ed8016 ]
+[ Upstream commit 3ed58f96a70b85ef646d5427258f677f1395b62f ]
 
-The older SoCs like Armada XP support a 2500BaseX mode in the datasheets
-referred to as DR-SGMII (Double rated SGMII) or HS-SGMII (High Speed
-SGMII). This is an upclocked 1000BaseX mode, thus
-PHY_INTERFACE_MODE_2500BASEX is the appropriate mode define for it.
-adding support for it merely means writing the correct magic value into
-the MVNETA_SERDES_CFG register.
+In a case where the ID_REV register read is failed, the memory for a
+private data structure has to be freed before returning error from the
+function smsc95xx_bind.
 
-Signed-off-by: Sascha Hauer <s.hauer@pengutronix.de>
+Fixes: bbd9f9ee69242 ("smsc95xx: add wol support for more frame types")
+Signed-off-by: Andre Edich <andre.edich@microchip.com>
+Signed-off-by: Parthiban Veerasooran <Parthiban.Veerasooran@microchip.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/marvell/mvneta.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ drivers/net/usb/smsc95xx.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/marvell/mvneta.c b/drivers/net/ethernet/marvell/mvneta.c
-index b0599b205b36e..9799253948281 100644
---- a/drivers/net/ethernet/marvell/mvneta.c
-+++ b/drivers/net/ethernet/marvell/mvneta.c
-@@ -108,6 +108,7 @@
- #define MVNETA_SERDES_CFG			 0x24A0
- #define      MVNETA_SGMII_SERDES_PROTO		 0x0cc7
- #define      MVNETA_QSGMII_SERDES_PROTO		 0x0667
-+#define      MVNETA_HSGMII_SERDES_PROTO		 0x1107
- #define MVNETA_TYPE_PRIO                         0x24bc
- #define      MVNETA_FORCE_UNI                    BIT(21)
- #define MVNETA_TXQ_CMD_1                         0x24e4
-@@ -3199,6 +3200,11 @@ static int mvneta_config_interface(struct mvneta_port *pp,
- 			mvreg_write(pp, MVNETA_SERDES_CFG,
- 				    MVNETA_SGMII_SERDES_PROTO);
- 			break;
+diff --git a/drivers/net/usb/smsc95xx.c b/drivers/net/usb/smsc95xx.c
+index eb404bb74e18e..bb4ccbda031ab 100644
+--- a/drivers/net/usb/smsc95xx.c
++++ b/drivers/net/usb/smsc95xx.c
+@@ -1293,7 +1293,8 @@ static int smsc95xx_bind(struct usbnet *dev, struct usb_interface *intf)
+ 	/* detect device revision as different features may be available */
+ 	ret = smsc95xx_read_reg(dev, ID_REV, &val);
+ 	if (ret < 0)
+-		return ret;
++		goto free_pdata;
 +
-+		case PHY_INTERFACE_MODE_2500BASEX:
-+			mvreg_write(pp, MVNETA_SERDES_CFG,
-+				    MVNETA_HSGMII_SERDES_PROTO);
-+			break;
- 		default:
- 			return -EINVAL;
- 		}
+ 	val >>= 16;
+ 	pdata->chip_id = val;
+ 	pdata->mdix_ctrl = get_mdix_status(dev->net);
 -- 
 2.25.1
 
