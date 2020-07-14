@@ -7,24 +7,24 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53DD6C433EB
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 12:11:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95045C433E5
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 12:16:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 38D0722286
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 12:11:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6DB7F22370
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 12:16:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728425AbgGNMLD (ORCPT
+        id S1728761AbgGNMP7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 08:11:03 -0400
-Received: from 8bytes.org ([81.169.241.247]:53376 "EHLO theia.8bytes.org"
+        Tue, 14 Jul 2020 08:15:59 -0400
+Received: from 8bytes.org ([81.169.241.247]:52918 "EHLO theia.8bytes.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728298AbgGNMKw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 08:10:52 -0400
+        id S1728284AbgGNMKv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 08:10:51 -0400
 Received: from cap.home.8bytes.org (p5b006776.dip0.t-ipconnect.de [91.0.103.118])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
         (No client certificate requested)
-        by theia.8bytes.org (Postfix) with ESMTPSA id A10D1D16;
-        Tue, 14 Jul 2020 14:10:49 +0200 (CEST)
+        by theia.8bytes.org (Postfix) with ESMTPSA id 233E6B70;
+        Tue, 14 Jul 2020 14:10:48 +0200 (CEST)
 From:   Joerg Roedel <joro@8bytes.org>
 To:     x86@kernel.org
 Cc:     Joerg Roedel <joro@8bytes.org>, Joerg Roedel <jroedel@suse.de>,
@@ -45,9 +45,9 @@ Cc:     Joerg Roedel <joro@8bytes.org>, Joerg Roedel <jroedel@suse.de>,
         Martin Radev <martin.b.radev@gmail.com>,
         linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
         virtualization@lists.linux-foundation.org
-Subject: [PATCH v4 31/75] x86/head/64: Reload GDT after switch to virtual addresses
-Date:   Tue, 14 Jul 2020 14:08:33 +0200
-Message-Id: <20200714120917.11253-32-joro@8bytes.org>
+Subject: [PATCH v4 28/75] x86/idt: Split idt_data setup out of set_intr_gate()
+Date:   Tue, 14 Jul 2020 14:08:30 +0200
+Message-Id: <20200714120917.11253-29-joro@8bytes.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200714120917.11253-1-joro@8bytes.org>
 References: <20200714120917.11253-1-joro@8bytes.org>
@@ -60,32 +60,55 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Joerg Roedel <jroedel@suse.de>
 
-Reload the GDT after switching to virtual addresses to make sure it will
-not go away when the lower mappings are removed. This will also reload
-the GDT for booting APs, which will need a working GDT too to handle #VC
-exceptions.
+The code to setup idt_data is needed for early exception handling, but
+set_intr_gate() can't be used that early because it has pv-ops in its
+code path, which don't work that early.
+
+Split out the idt_data initialization part from set_intr_gate() so
+that it can be used separatly.
 
 Signed-off-by: Joerg Roedel <jroedel@suse.de>
 ---
- arch/x86/kernel/head_64.S | 5 +++++
- 1 file changed, 5 insertions(+)
+ arch/x86/kernel/idt.c | 22 ++++++++++++++--------
+ 1 file changed, 14 insertions(+), 8 deletions(-)
 
-diff --git a/arch/x86/kernel/head_64.S b/arch/x86/kernel/head_64.S
-index 473e60a12e2f..87ea9f540608 100644
---- a/arch/x86/kernel/head_64.S
-+++ b/arch/x86/kernel/head_64.S
-@@ -164,6 +164,11 @@ SYM_CODE_START(secondary_startup_64)
- 1:
- 	UNWIND_HINT_EMPTY
+diff --git a/arch/x86/kernel/idt.c b/arch/x86/kernel/idt.c
+index b920f2352df5..367eb6a593dd 100644
+--- a/arch/x86/kernel/idt.c
++++ b/arch/x86/kernel/idt.c
+@@ -205,18 +205,24 @@ idt_setup_from_table(gate_desc *idt, const struct idt_data *t, int size, bool sy
+ 	}
+ }
  
-+	/* Setup boot GDT descriptor and load boot GDT */
-+	leaq	boot_gdt(%rip), %rax
-+	movq	%rax, boot_gdt_descr+2(%rip)
-+	lgdt	boot_gdt_descr(%rip)
++static void init_idt_data(struct idt_data *data, unsigned int n,
++			  const void *addr)
++{
++	BUG_ON(n > 0xFF);
 +
- 	/* Check if nx is implemented */
- 	movl	$0x80000001, %eax
- 	cpuid
++	memset(data, 0, sizeof(*data));
++	data->vector	= n;
++	data->addr	= addr;
++	data->segment	= __KERNEL_CS;
++	data->bits.type	= GATE_INTERRUPT;
++	data->bits.p	= 1;
++}
++
+ static __init void set_intr_gate(unsigned int n, const void *addr)
+ {
+ 	struct idt_data data;
+ 
+-	BUG_ON(n > 0xFF);
+-
+-	memset(&data, 0, sizeof(data));
+-	data.vector	= n;
+-	data.addr	= addr;
+-	data.segment	= __KERNEL_CS;
+-	data.bits.type	= GATE_INTERRUPT;
+-	data.bits.p	= 1;
++	init_idt_data(&data, n, addr);
+ 
+ 	idt_setup_from_table(idt_table, &data, 1, false);
+ }
 -- 
 2.27.0
 
