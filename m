@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7291C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:58:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C24A5C433EB
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:58:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ADB9222AAB
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:58:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A6DA22B37
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:58:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594753086;
-	bh=LEm6qLaFUGYEBOM3tsUktJ9zfuWVzPIUFUl8ws+gysI=;
+	s=default; t=1594753089;
+	bh=sBNdJl4w5KzMHk76Q+hkYXFrJJggdaSJ9oZroUN7ooM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wBpquZtdzCv4UyXkhDe2S/UNGSGRgn/vO9kt2w4i4KvEAFCnVVuWCjR5yhrhc7KdA
-	 jZwSf9l3psBvJpRwqF3oSQKc72R1TAoGXbjE0L2q3iqIggvwqTUiRUsCEQwYr5EnWv
-	 HpHQZ3fQU2PzwA/Zs6Vi5gAkuKzJ0pE1+vC5Bh8w=
+	b=ONfnXSabEcZieZLIWijShMVaWfPehnZRR780RUzg5iWbOx1ddl59aH7DpMr2p6N/+
+	 ++/Xi51+lLxOD29fMU+6SwWV3aD/HzV3WMcBtgeiXEyLT4V19wmADybMHnJSiCvg2U
+	 kM2iZaw/Vxi/XXRdYl1vfMy5frx/CKHklcyFt0ss=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731173AbgGNS6F (ORCPT
+        id S1730664AbgGNS6I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 14:58:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56354 "EHLO mail.kernel.org"
+        Tue, 14 Jul 2020 14:58:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56402 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731163AbgGNS6A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 14:58:00 -0400
+        id S1730806AbgGNS6D (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 14:58:03 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6DB3D22B4E;
-        Tue, 14 Jul 2020 18:57:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 584F8229CA;
+        Tue, 14 Jul 2020 18:58:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594753080;
-        bh=LEm6qLaFUGYEBOM3tsUktJ9zfuWVzPIUFUl8ws+gysI=;
+        s=default; t=1594753082;
+        bh=sBNdJl4w5KzMHk76Q+hkYXFrJJggdaSJ9oZroUN7ooM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=b36bvhxj7hP5BrOMtV+kpt/oWUjvW2G/ymmXfTHq6cMwNnsM5ET84UMPX3Tkd9VUw
-         wTD0ByuxzzzdYhm1fsd4JLe1xWq7Jkzw6U/pHTZSal4CKKCh7leiU1Z3hN9DrtbymE
-         VHFgxGpBDqp7NvKJ788C+EDgY1bbHjiArHaCr+oI=
+        b=ACjJABMusfg0j6jzYo0iSh3dOxx63fVaDa91ERRR1lw36vTXTfy1HsCNZXwUI46oO
+         JTdro4axfJC8QgNx4Yn0t+Z0vf43jZxZB6V748DJ1NEtDNhz+2P/iaTEuOPvbDR9MM
+         TZtWcxY+NmrnBUuQXf3az664gQPs5aVB7vY23GYI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hector Martin <marcan@marcan.st>,
+        stable@vger.kernel.org, Pavel Hofman <pavel.hofman@ivitera.com>,
         Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 5.7 111/166] ALSA: usb-audio: add quirk for MacroSilicon MS2109
-Date:   Tue, 14 Jul 2020 20:44:36 +0200
-Message-Id: <20200714184121.153270017@linuxfoundation.org>
+Subject: [PATCH 5.7 112/166] ALSA: usb-audio: Add implicit feedback quirk for RTX6001
+Date:   Tue, 14 Jul 2020 20:44:37 +0200
+Message-Id: <20200714184121.200567985@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200714184115.844176932@linuxfoundation.org>
 References: <20200714184115.844176932@linuxfoundation.org>
@@ -59,81 +59,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hector Martin <marcan@marcan.st>
+From: Pavel Hofman <pavel.hofman@ivitera.com>
 
-commit e337bf19f6af38d5c3fa6d06cd594e0f890ca1ac upstream.
+commit b6a1e78b96a5d7f312f08b3a470eb911ab5feec0 upstream.
 
-These devices claim to be 96kHz mono, but actually are 48kHz stereo with
-swapped channels and unaligned transfers.
+USB Audio analyzer RTX6001 uses the same implicit feedback quirk
+as other XMOS-based devices.
 
-Cc: stable@vger.kernel.org
-Signed-off-by: Hector Martin <marcan@marcan.st>
-Link: https://lore.kernel.org/r/20200702071433.237843-1-marcan@marcan.st
+Signed-off-by: Pavel Hofman <pavel.hofman@ivitera.com>
+Tested-by: Pavel Hofman <pavel.hofman@ivitera.com>
+Cc: <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/822f0f20-1886-6884-a6b2-d11c685cbafa@ivitera.com
 Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/usb/quirks-table.h |   52 +++++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 52 insertions(+)
+ sound/usb/pcm.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/sound/usb/quirks-table.h
-+++ b/sound/usb/quirks-table.h
-@@ -3611,4 +3611,56 @@ ALC1220_VB_DESKTOP(0x26ce, 0x0a01), /* A
- 	}
- },
- 
-+/*
-+ * MacroSilicon MS2109 based HDMI capture cards
-+ *
-+ * These claim 96kHz 1ch in the descriptors, but are actually 48kHz 2ch.
-+ * They also need QUIRK_AUDIO_ALIGN_TRANSFER, which makes one wonder if
-+ * they pretend to be 96kHz mono as a workaround for stereo being broken
-+ * by that...
-+ *
-+ * They also have swapped L-R channels, but that's for userspace to deal
-+ * with.
-+ */
-+{
-+	USB_DEVICE(0x534d, 0x2109),
-+	.driver_info = (unsigned long) &(const struct snd_usb_audio_quirk) {
-+		.vendor_name = "MacroSilicon",
-+		.product_name = "MS2109",
-+		.ifnum = QUIRK_ANY_INTERFACE,
-+		.type = QUIRK_COMPOSITE,
-+		.data = &(const struct snd_usb_audio_quirk[]) {
-+			{
-+				.ifnum = 2,
-+				.type = QUIRK_AUDIO_ALIGN_TRANSFER,
-+			},
-+			{
-+				.ifnum = 2,
-+				.type = QUIRK_AUDIO_STANDARD_MIXER,
-+			},
-+			{
-+				.ifnum = 3,
-+				.type = QUIRK_AUDIO_FIXED_ENDPOINT,
-+				.data = &(const struct audioformat) {
-+					.formats = SNDRV_PCM_FMTBIT_S16_LE,
-+					.channels = 2,
-+					.iface = 3,
-+					.altsetting = 1,
-+					.altset_idx = 1,
-+					.attributes = 0,
-+					.endpoint = 0x82,
-+					.ep_attr = USB_ENDPOINT_XFER_ISOC |
-+						USB_ENDPOINT_SYNC_ASYNC,
-+					.rates = SNDRV_PCM_RATE_CONTINUOUS,
-+					.rate_min = 48000,
-+					.rate_max = 48000,
-+				}
-+			},
-+			{
-+				.ifnum = -1
-+			}
-+		}
-+	}
-+},
-+
- #undef USB_DEVICE_VENDOR_SPEC
+--- a/sound/usb/pcm.c
++++ b/sound/usb/pcm.c
+@@ -368,6 +368,7 @@ static int set_sync_ep_implicit_fb_quirk
+ 		goto add_sync_ep_from_ifnum;
+ 	case USB_ID(0x07fd, 0x0008): /* MOTU M Series */
+ 	case USB_ID(0x31e9, 0x0002): /* Solid State Logic SSL2+ */
++	case USB_ID(0x0d9a, 0x00df): /* RTX6001 */
+ 		ep = 0x81;
+ 		ifnum = 2;
+ 		goto add_sync_ep_from_ifnum;
 
 
