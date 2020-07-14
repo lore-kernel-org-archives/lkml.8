@@ -2,182 +2,115 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27386C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 09:16:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E100C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 09:19:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 06D1321D7B
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 09:16:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B9A0221F2
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 09:19:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="NynHg/+h"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726736AbgGNJP7 (ORCPT
+        id S1726398AbgGNJTd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 05:15:59 -0400
-Received: from hostingweb31-40.netsons.net ([89.40.174.40]:53085 "EHLO
-        hostingweb31-40.netsons.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725833AbgGNJP7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 05:15:59 -0400
-Received: from [78.134.114.177] (port=53704 helo=[192.168.77.62])
-        by hostingweb31.netsons.net with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-        (Exim 4.93)
-        (envelope-from <luca@lucaceresoli.net>)
-        id 1jvH2Z-000H1H-17; Tue, 14 Jul 2020 11:15:55 +0200
-Subject: Re: [PATCH v2 4/4] dt-bindings: clk: versaclock5: convert to yaml
-To:     Rob Herring <robh@kernel.org>
-Cc:     linux-clk@vger.kernel.org,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Marek Vasut <marek.vasut@gmail.com>,
-        Adam Ford <aford173@gmail.com>
-References: <20200708074035.31595-1-luca@lucaceresoli.net>
- <20200708074035.31595-4-luca@lucaceresoli.net>
- <20200714031109.GA1210492@bogus>
-From:   Luca Ceresoli <luca@lucaceresoli.net>
-Message-ID: <6177ebd1-b39a-3b53-3f5b-92f8d1f9881b@lucaceresoli.net>
-Date:   Tue, 14 Jul 2020 11:15:52 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Tue, 14 Jul 2020 05:19:33 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:31978 "EHLO m43-7.mailgun.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725833AbgGNJTc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 05:19:32 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1594718372; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=G34pH1+jGv/zjZdCgkbH+kOlOPxiBnKrDKaAW/Rs6CE=;
+ b=NynHg/+hQgS8PHZ9z2LCqGYjaW/nEsQbyYaZSO3/bTb8hr12V0P7YHIgNj5zlACHwKx7i7/c
+ ed/FCLx3wCYMGVMLpbUCieF3HJAtsE04HrUlBLlgt/gqIEcy5FZeMTGFAfFzjwU4LJeetVH8
+ Rz4/SXGzrKGQ4di007qZZCu/FME=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n13.prod.us-west-2.postgun.com with SMTP id
+ 5f0d7882ee86618575b7d3fd (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 14 Jul 2020 09:18:58
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 5EDC4C4339C; Tue, 14 Jul 2020 09:18:57 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: cang)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 82595C433C8;
+        Tue, 14 Jul 2020 09:18:56 +0000 (UTC)
 MIME-Version: 1.0
-In-Reply-To: <20200714031109.GA1210492@bogus>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
 Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - hostingweb31.netsons.net
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - lucaceresoli.net
-X-Get-Message-Sender-Via: hostingweb31.netsons.net: authenticated_id: luca@lucaceresoli.net
-X-Authenticated-Sender: hostingweb31.netsons.net: luca@lucaceresoli.net
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
+Date:   Tue, 14 Jul 2020 17:18:56 +0800
+From:   Can Guo <cang@codeaurora.org>
+To:     Stanley Chu <stanley.chu@mediatek.com>
+Cc:     linux-scsi@vger.kernel.org, martin.petersen@oracle.com,
+        avri.altman@wdc.com, alim.akhtar@samsung.com, jejb@linux.ibm.com,
+        bvanassche@acm.org, beanhuo@micron.com, asutoshd@codeaurora.org,
+        matthias.bgg@gmail.com, linux-mediatek@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        kuohong.wang@mediatek.com, peter.wang@mediatek.com,
+        chun-hung.wu@mediatek.com, andy.teng@mediatek.com,
+        chaotian.jing@mediatek.com, cc.chou@mediatek.com
+Subject: Re: [PATCH v1 1/2] scsi: ufs: Simplify completion timestamp for SCSI
+ and query commands
+In-Reply-To: <20200706060707.32608-2-stanley.chu@mediatek.com>
+References: <20200706060707.32608-1-stanley.chu@mediatek.com>
+ <20200706060707.32608-2-stanley.chu@mediatek.com>
+Message-ID: <57a4128b5f620c2bac7c55a73074a6a7@codeaurora.org>
+X-Sender: cang@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Rob,
-
-thanks for you review!
-
-On 14/07/20 05:11, Rob Herring wrote:
-> On Wed, Jul 08, 2020 at 09:40:35AM +0200, Luca Ceresoli wrote:
->> Convert to yaml the VersaClock bindings document. The mapping between
->> clock specifier and physical pins cannot be described formally in yaml
->> schema, then keep it verbatim in the description field.
->>
->> Signed-off-by: Luca Ceresoli <luca@lucaceresoli.net>
-
-[...]
-
->> +  reg:
->> +    maxItems: 1
->> +    description: I2C device address, shall be 0x68 or 0x6a.
+On 2020-07-06 14:07, Stanley Chu wrote:
+> Simplify recording command completion time in
+> __ufshcd_transfer_req_compl() by assigning lrbp->compl_time_stamp
+> in an unified location.
 > 
-> Can be a schema:
+> Signed-off-by: Stanley Chu <stanley.chu@mediatek.com>
+
+Reviewed-by: Can Guo <cang@codeaurora.org>
+
+> ---
+>  drivers/scsi/ufs/ufshcd.c | 3 +--
+>  1 file changed, 1 insertion(+), 2 deletions(-)
 > 
-> enum: [ 0x68, 0x6a ]
-
-Nice, will fix.
-
->> +
->> +  '#clock-cells':
->> +    const: 1
->> +
->> +patternProperties:
->> +  "^OUT[1-4]$":
->> +    type: object
->> +    description:
->> +      Description of one of the outputs (OUT1..OUT4). See "Clock1 Output
->> +      Configuration" in the Versaclock 5/6/6E Family Register Description
->> +      and Programming Guide.
->> +    properties:
->> +      idt,mode:
->> +        description:
->> +          The output drive mode. Values defined in dt-bindings/clk/versaclock.h
->> +        enum:
->> +          - VC5_LVPECL
+> diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
+> index 18da2d64f9fa..71e8d7c782bd 100644
+> --- a/drivers/scsi/ufs/ufshcd.c
+> +++ b/drivers/scsi/ufs/ufshcd.c
+> @@ -4881,6 +4881,7 @@ static void __ufshcd_transfer_req_compl(struct
+> ufs_hba *hba,
 > 
-> This is defining a string. Can't use defines here.
-
-How do I use the defines from include/dt-bindings then? Or should I just
-use the numeric values then, like:
-
-  idt,mode:
-    description:
-      The output drive mode. Values defined in
-      dt-bindings/clk/versaclock.h
-    minimum: 0
-    maximum: 6
-
-?
-
->> +      idt,voltage-microvolts:
->> +        description: The output drive voltage.
->> +        $ref: /schemas/types.yaml#/definitions/uint32
-> 
-> Standard unit suffixes have a type already, so drop.
-
-Ok.
-
->> +allOf:
->> +  - if:
->> +      properties:
->> +        compatible:
->> +          contains:
->> +            enum:
->> +              - idt,5p49v5933
->> +              - idt,5p49v5935
->> +    then:
->> +      # Devices with builtin crystal, optional external input
->> +      properties:
->> +        clock-names:
->> +          const: clkin
->> +        clocks:
->> +          maxItems: 1
->> +    else:
->> +      # Devices without builtin crystal
->> +      properties:
->> +        clock-names:
->> +          anyOf:
->> +            - required: [ xin ]
->> +            - required: [ clkin ]
-> 
-> This isn't valid. I think you want:
-> 
-> clock-names:
->   minItems: 1
->   items:
->     - const: xin
->     - const: clkin
-> 
-> This would mean 'xin' is always required, clkin is optional.
-
-No, what I wanted to mean is that allowed cases are:
- * for idt,5p49v5933 and idt,5p49v5935:
-   - only 'xin' (required)
- * for the other parts one of these:
-   - only 'xin'
-   - only 'clkin'
-   - both 'xin' and 'clkin'
-
-How do I express that?
-
-
-A general note: as a newcomer to yaml bindings I found a steep learning
-curve. Finding a correct construct (not to mention the best one) for
-each situation is time consuming and frustrating. I've been looking at
-existing files for suitable examples but it doesn't work very well.
-
-Is there any guide to yaml bindings for beginners with examples of
-typical cases? It would greatly help in producing better patches and
-saving time for everybody.
-
-Thanks,
--- 
-Luca
+>  	for_each_set_bit(index, &completed_reqs, hba->nutrs) {
+>  		lrbp = &hba->lrb[index];
+> +		lrbp->compl_time_stamp = ktime_get();
+>  		cmd = lrbp->cmd;
+>  		if (cmd) {
+>  			ufshcd_add_command_trace(hba, index, "complete");
+> @@ -4889,13 +4890,11 @@ static void __ufshcd_transfer_req_compl(struct
+> ufs_hba *hba,
+>  			cmd->result = result;
+>  			/* Mark completed command as NULL in LRB */
+>  			lrbp->cmd = NULL;
+> -			lrbp->compl_time_stamp = ktime_get();
+>  			/* Do not touch lrbp after scsi done */
+>  			cmd->scsi_done(cmd);
+>  			__ufshcd_release(hba);
+>  		} else if (lrbp->command_type == UTP_CMD_TYPE_DEV_MANAGE ||
+>  			lrbp->command_type == UTP_CMD_TYPE_UFS_STORAGE) {
+> -			lrbp->compl_time_stamp = ktime_get();
+>  			if (hba->dev_cmd.complete) {
+>  				ufshcd_add_command_trace(hba, index,
+>  						"dev_complete");
