@@ -2,128 +2,166 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D849CC433E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 17:44:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B241FC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 17:44:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BAD5222518
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 17:44:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594748642;
-	bh=4rEJm/Ce30QXd1yeOCmleO98pu2pNVI0jXXJXHT+Mxs=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=G9snFgRSWr/0Prt1gdBRCn2dXxbe8iV0DXbZ0BnaDfoUfvuFSmvk39Gsjfk5toLi9
-	 oWFje8cu7lnjkgOKdg7bNyQCflQo0qKcnBgHYy/irME+IuYqN9no8ayJ5aQHuYxNSZ
-	 AjizMVF0B2Gn0upWn6cN7oA4MisT10pD+lAqWkrQ=
+	by mail.kernel.org (Postfix) with ESMTP id 969B822519
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 17:44:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="A371v1AQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729052AbgGNRoB convert rfc822-to-8bit (ORCPT
+        id S1729076AbgGNRoP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 13:44:01 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:37795 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725951AbgGNRoB (ORCPT
+        Tue, 14 Jul 2020 13:44:15 -0400
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:58202 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727028AbgGNRoO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 13:44:01 -0400
-Received: by mail-ot1-f68.google.com with SMTP id w17so13677380otl.4;
-        Tue, 14 Jul 2020 10:44:00 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=mCgUl/KQDaKe/GhwnSeh5pmlX/T9coOehcI2bZOS1Jk=;
-        b=uOrjmiE7wKSscSIAz0B1PlVuyP292iewqUn/98o00Nw502tLFFnpykONG6yRwY50O7
-         EgSiNus9o84/U5We/DwdpgI+I8MUCQq8gRHHlmTSl0kRD+inxAi8/sC4HpVQTU10W2mb
-         T2R7+tyaaXLgtWIwYH8Lq4tt0KrMe2SGXlcXxILZKnj8hIhc2hqQuhY/xf376RgQB/KR
-         2LiwC+zuceAVS+iOM6NqCVTZPJrCrXSo2dKqwIcuBAI3bMV5rlgWZmxp2smCJpKCfm1p
-         K81L95qJZfyJ7ld9W0ieyhpQefLMHo7FomCDJq0QiSq84OjauQmubiY1ub/9pZrTNiSl
-         0Asw==
-X-Gm-Message-State: AOAM532qtHPDAqjVPhZnQbSH7XbeQ73ffui6b0KY+sCh8c0bddkOyXw9
-        sxIfvJBtRxWKWlMnHAJ8/tQdw+WqfkbQB8KvZAE=
-X-Google-Smtp-Source: ABdhPJxVUqvpDTkyR25LySONRyXttnQKmWkzj+1B6BBCOjjV6Zu5+Jw6fDpJzP4RA3e63VtM/WPK0rpvrBWxEO0usQM=
-X-Received: by 2002:a05:6830:30ba:: with SMTP id g26mr4975216ots.118.1594748640032;
- Tue, 14 Jul 2020 10:44:00 -0700 (PDT)
+        Tue, 14 Jul 2020 13:44:14 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1594748652;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=fRu/5iacxmutQ7kMDS7dLLg3NGipwsCDb2mhidsZLDQ=;
+        b=A371v1AQk+HsL23DwZqr9lLNT8usudt7CFEVpM1I8eH52Ay+zND5Ivl4gFAWMFwSQO5OBV
+        XHL91w/UvmgdN+V6xpd4ACT6ii7L/V0YmpW5vBC4CJmWCQ0cvtnY4AMqBgoN0JlFxVWvIX
+        QlsbkqUMqEmcnLVpnfhWHZzN0tHIits=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-164--oAd_irlPMmMGcwJY665gQ-1; Tue, 14 Jul 2020 13:44:05 -0400
+X-MC-Unique: -oAd_irlPMmMGcwJY665gQ-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 741CF100CCC4;
+        Tue, 14 Jul 2020 17:44:04 +0000 (UTC)
+Received: from madcap2.tricolour.ca (unknown [10.10.110.3])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id B9E786FEDF;
+        Tue, 14 Jul 2020 17:43:56 +0000 (UTC)
+Date:   Tue, 14 Jul 2020 13:43:53 -0400
+From:   Richard Guy Briggs <rgb@redhat.com>
+To:     Paul Moore <paul@paul-moore.com>
+Cc:     Linux-Audit Mailing List <linux-audit@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux Security Module list 
+        <linux-security-module@vger.kernel.org>,
+        Eric Paris <eparis@parisplace.org>, john.johansen@canonical.com
+Subject: Re: [PATCH ghak84 v4] audit: purge audit_log_string from the
+ intra-kernel audit API
+Message-ID: <20200714174353.ds7lj3iisy67t2zu@madcap2.tricolour.ca>
+References: <6effbbd4574407d6af21162e57d9102d5f8b02ed.1594664015.git.rgb@redhat.com>
+ <CAHC9VhSyq7yKQqwvHL5syU9+TFki6-__WfCrvqewbnU3xpND4Q@mail.gmail.com>
 MIME-Version: 1.0
-References: <20200714145049.2496163-1-lee.jones@linaro.org> <20200714145049.2496163-11-lee.jones@linaro.org>
-In-Reply-To: <20200714145049.2496163-11-lee.jones@linaro.org>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Tue, 14 Jul 2020 19:43:48 +0200
-Message-ID: <CAJZ5v0jXjtZ0=ZnOZm2LNR32TwWSrq4C4bwhNh5tOOChfpWZxw@mail.gmail.com>
-Subject: Re: [PATCH 10/13] cpufreq: powernow-k8: Make use of known set but not
- used variables
-To:     Lee Jones <lee.jones@linaro.org>
-Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Andreas Herrmann <herrmann.der.user@googlemail.com>,
-        Dominik Brodowski <linux@brodo.de>,
-        Pavel Machek <pavel@ucw.cz>,
-        Paul Devriendt <paul.devriendt@amd.com>,
-        Mark Langsdorf <mark.langsdorf@amd.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHC9VhSyq7yKQqwvHL5syU9+TFki6-__WfCrvqewbnU3xpND4Q@mail.gmail.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 14, 2020 at 4:51 PM Lee Jones <lee.jones@linaro.org> wrote:
->
-> If we fail to use a variable, even a 'dummy' one, then the compiler
-> complains that it is set but not used.  We know this is fine, so we
-> set it to its own value here.
->
-> Fixes the following W=1 kernel build warning(s):
->
->  drivers/cpufreq/powernow-k8.c: In function ‘pending_bit_stuck’:
->  drivers/cpufreq/powernow-k8.c:89:10: warning: variable ‘hi’ set but not used [-Wunused-but-set-variable]
->  89 | u32 lo, hi;
->  | ^~
->  drivers/cpufreq/powernow-k8.c: In function ‘core_voltage_pre_transition’:
->  drivers/cpufreq/powernow-k8.c:285:14: warning: variable ‘lo’ set but not used [-Wunused-but-set-variable]
->  285 | u32 maxvid, lo, rvomult = 1;
->  | ^~
->
-> Cc: Andreas Herrmann <herrmann.der.user@googlemail.com>
-> Cc: Dominik Brodowski <linux@brodo.de>
-> Cc: Pavel Machek <pavel@ucw.cz>
-> Cc: Paul Devriendt <paul.devriendt@amd.com>
-> Cc: Mark Langsdorf <mark.langsdorf@amd.com>
-> Signed-off-by: Lee Jones <lee.jones@linaro.org>
-> ---
->  drivers/cpufreq/powernow-k8.c | 2 ++
->  1 file changed, 2 insertions(+)
->
-> diff --git a/drivers/cpufreq/powernow-k8.c b/drivers/cpufreq/powernow-k8.c
-> index 3984959eed1d5..b76df81044c4f 100644
-> --- a/drivers/cpufreq/powernow-k8.c
-> +++ b/drivers/cpufreq/powernow-k8.c
-> @@ -89,6 +89,7 @@ static int pending_bit_stuck(void)
->         u32 lo, hi;
->
->         rdmsr(MSR_FIDVID_STATUS, lo, hi);
-> +       hi &= hi; /* Silence set but not used warning */
+On 2020-07-14 12:21, Paul Moore wrote:
+> On Mon, Jul 13, 2020 at 3:52 PM Richard Guy Briggs <rgb@redhat.com> wrote:
+> >
+> > audit_log_string() was inteded to be an internal audit function and
+> > since there are only two internal uses, remove them.  Purge all external
+> > uses of it by restructuring code to use an existing audit_log_format()
+> > or using audit_log_format().
+> >
+> > Please see the upstream issue
+> > https://github.com/linux-audit/audit-kernel/issues/84
+> >
+> > Signed-off-by: Richard Guy Briggs <rgb@redhat.com>
+> > ---
+> > Passes audit-testsuite.
+> >
+> > Changelog:
+> > v4
+> > - use double quotes in all replaced audit_log_string() calls
+> >
+> > v3
+> > - fix two warning: non-void function does not return a value in all control paths
+> >         Reported-by: kernel test robot <lkp@intel.com>
+> >
+> > v2
+> > - restructure to piggyback on existing audit_log_format() calls, checking quoting needs for each.
+> >
+> > v1 Vlad Dronov
+> > - https://github.com/nefigtut/audit-kernel/commit/dbbcba46335a002f44b05874153a85b9cc18aebf
+> >
+> >  include/linux/audit.h     |  5 -----
+> >  kernel/audit.c            |  4 ++--
+> >  security/apparmor/audit.c | 10 ++++------
+> >  security/apparmor/file.c  | 25 +++++++------------------
+> >  security/apparmor/ipc.c   | 46 +++++++++++++++++++++++-----------------------
+> >  security/apparmor/net.c   | 14 ++++++++------
+> >  security/lsm_audit.c      |  4 ++--
+> >  7 files changed, 46 insertions(+), 62 deletions(-)
+> 
+> Thanks for restoring the quotes, just one question below ...
+> 
+> > diff --git a/security/apparmor/ipc.c b/security/apparmor/ipc.c
+> > index 4ecedffbdd33..fe36d112aad9 100644
+> > --- a/security/apparmor/ipc.c
+> > +++ b/security/apparmor/ipc.c
+> > @@ -20,25 +20,23 @@
+> >
+> >  /**
+> >   * audit_ptrace_mask - convert mask to permission string
+> > - * @buffer: buffer to write string to (NOT NULL)
+> >   * @mask: permission mask to convert
+> > + *
+> > + * Returns: pointer to static string
+> >   */
+> > -static void audit_ptrace_mask(struct audit_buffer *ab, u32 mask)
+> > +static const char *audit_ptrace_mask(u32 mask)
+> >  {
+> >         switch (mask) {
+> >         case MAY_READ:
+> > -               audit_log_string(ab, "read");
+> > -               break;
+> > +               return "read";
+> >         case MAY_WRITE:
+> > -               audit_log_string(ab, "trace");
+> > -               break;
+> > +               return "trace";
+> >         case AA_MAY_BE_READ:
+> > -               audit_log_string(ab, "readby");
+> > -               break;
+> > +               return "readby";
+> >         case AA_MAY_BE_TRACED:
+> > -               audit_log_string(ab, "tracedby");
+> > -               break;
+> > +               return "tracedby";
+> >         }
+> > +       return "";
+> 
+> Are we okay with this returning an empty string ("") in this case?
+> Should it be a question mark ("?")?
+> 
+> My guess is that userspace parsing should be okay since it still has
+> quotes, I'm just not sure if we wanted to use a question mark as we do
+> in other cases where the field value is empty/unknown.
 
-Hmm.
+Previously, it would have been an empty value, not even double quotes.
+"?" might be an improvement.
 
-What about using __always_unused for this?
+> paul moore
 
->         return lo & MSR_S_LO_CHANGE_PENDING ? 1 : 0;
->  }
->
-> @@ -292,6 +293,7 @@ static int core_voltage_pre_transition(struct powernow_k8_data *data,
->                 rvomult = 2;
->         rvosteps *= rvomult;
->         rdmsr(MSR_FIDVID_STATUS, lo, maxvid);
-> +       lo &= lo; /* Silence set but not used warning */
->         maxvid = 0x1f & (maxvid >> 16);
->         pr_debug("ph1 maxvid=0x%x\n", maxvid);
->         if (reqvid < maxvid) /* lower numbers are higher voltages */
-> --
-> 2.25.1
->
+- RGB
+
+--
+Richard Guy Briggs <rgb@redhat.com>
+Sr. S/W Engineer, Kernel Security, Base Operating Systems
+Remote, Ottawa, Red Hat Canada
+IRC: rgb, SunRaycer
+Voice: +1.647.777.2635, Internal: (81) 32635
+
