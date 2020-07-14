@@ -2,189 +2,199 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9896FC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 23:18:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D50F3C433E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 23:20:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6BCFA2071B
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 23:18:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594768712;
-	bh=WbHcOuCS+rj4obHCGdLyDlzJy258Ll6RBipsjc9gqhs=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=VU2Jhz0ZpR85NxYT/9E3cIqQjc3QXiXsU1Ez552PQAZK9q5aliixyGYK3yWCaJPTP
-	 KgEg3uwgdLREiE6AVBPZ8gvGlzh4nBtQR5sCdWYRES7pndGjPCqyXtAz9VUTfhCCI0
-	 qNNsq+Ad+N8NHt/COuV1W4HX+YINZ9s8N0QSwfNE=
+	by mail.kernel.org (Postfix) with ESMTP id AA76A20658
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 23:20:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="I78DT92r"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727108AbgGNXSb (ORCPT
+        id S1726974AbgGNXUc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 19:18:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49946 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726187AbgGNXS2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 19:18:28 -0400
-Received: from mail-ot1-f47.google.com (mail-ot1-f47.google.com [209.85.210.47])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8583D2074B;
-        Tue, 14 Jul 2020 23:18:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594768707;
-        bh=WbHcOuCS+rj4obHCGdLyDlzJy258Ll6RBipsjc9gqhs=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=OTYv7SW64RJ7rcBLNLixgDhz1BOtm1ZlPfGu0RW7CKMz/+ee2kQZnsPya33XRsqSZ
-         NSY9JKrQ2FHqtYIo/G1nklBOWhlXLpB3Bb80i2eXAScH3Qkvmz4gkSVFZ3xyOmHSB2
-         fS1zjaVyGJOhZPsVcQWQD09xHBVeLAHPlnAO/7HE=
-Received: by mail-ot1-f47.google.com with SMTP id h13so68081otr.0;
-        Tue, 14 Jul 2020 16:18:27 -0700 (PDT)
-X-Gm-Message-State: AOAM531sTp1Rzu6UUNRYLmVqQbl0CpurZMh5yerLiQhkx5Ucm1Hde/hl
-        nUGH9qkEQoMlwdLXNKEmpqSFXENueBn9VUlgcQ==
-X-Google-Smtp-Source: ABdhPJzamyUgo6UiqW59FuZ+b+pvPCuOFw/T+vorF7nM8Yc7QjaPRAdppkgkTdGO/rge6EQOKevq7Mn09VhM3JKnhr0=
-X-Received: by 2002:a9d:4002:: with SMTP id m2mr6332092ote.129.1594768706856;
- Tue, 14 Jul 2020 16:18:26 -0700 (PDT)
+        Tue, 14 Jul 2020 19:20:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52620 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725977AbgGNXUb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 19:20:31 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 731B9C061755
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 16:20:31 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id f7so506312wrw.1
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 16:20:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:from:to:cc:references:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=/KMagfkLbbir5XD2E7V8iMKOu/nE7qe0ZSxVTJVsu5Y=;
+        b=I78DT92rk2oGUJNey+cMiJ+dT1q2neBqqRdkKk5hQk+kaMkXt5Z1hTIWtXtbl4f7TQ
+         +64sPRnnKCWYuoKMDmbwoLXqYPWi7TGwNfnvKe3IHbtwhAKKJh+iwZT2L810KyMya/0z
+         Yx6hgnbaUUDMqeBJM3KSFjEcHLQvA2q8adZbLlPJO7Cxljyddd53TCFO2C7eDHSEyd/K
+         ++teAkTGOI2b1PKFHB22OwLkFNjzWerwFPA1tZZa+4xErRTS0g5912aXv0xpH2bdtVcr
+         nicBCEGRDD7LNFyYq4YuSv4JMYTiDvG+4ll3/KQkUG02RSHHDW1eqhmanwJXqLyAz1QS
+         ZKGg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=/KMagfkLbbir5XD2E7V8iMKOu/nE7qe0ZSxVTJVsu5Y=;
+        b=T5FnXC59OdubmEHhdQJYJkqTG17My2+4lMBal29dil7IxRksLO8JE9j9RuVCvL/0As
+         +U7pLXTBuR7ZxIYlDStNC55J6OMswRe4nv3I1Fs2iZFopaggLJvzTNNfz3pYXGKi8Pc0
+         n6pM9HRPG7GfboojDMcQFEaHeZOshxwoL5TG5KFe8iVPOZwXuP7/ovxMXmkMZFnyELCe
+         6oK5VKngoEt2deB9tEg1AlOEwCKsgOhiLr00iRKjRN4tHe3EhRCopXfX29MRhhwzkOl5
+         FETd7DSwDuGk+FVhwpv5uACmRNC5JU2ZKQduRF9/3/46fDtG/IvcwE+fRzkA855BWb7G
+         /BVw==
+X-Gm-Message-State: AOAM530UIthcHJF6F82mQcTqIwzvnSPjnSHCIpDXG9ZSeujvx5hoatns
+        dtZku5E5Cl8Vu3IvDQJbN7QGeg==
+X-Google-Smtp-Source: ABdhPJxg5ZRUMNL70rPOM9WunXXtcwFJTQMTcUcvKt8QOZqVA17b3C0Soo2dTi99b+nuQY2xrpeCTQ==
+X-Received: by 2002:adf:f4d1:: with SMTP id h17mr8189076wrp.227.1594768829794;
+        Tue, 14 Jul 2020 16:20:29 -0700 (PDT)
+Received: from ?IPv6:2a01:e34:ed2f:f020:814b:c0b2:8c76:b6a9? ([2a01:e34:ed2f:f020:814b:c0b2:8c76:b6a9])
+        by smtp.googlemail.com with ESMTPSA id w128sm587809wmb.19.2020.07.14.16.20.28
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 14 Jul 2020 16:20:29 -0700 (PDT)
+Subject: Re: [PATCH v4 4/4] thermal: core: Add notifications call in the
+ framework
+From:   Daniel Lezcano <daniel.lezcano@linaro.org>
+To:     Marek Szyprowski <m.szyprowski@samsung.com>, rui.zhang@intel.com
+Cc:     srinivas.pandruvada@linux.intel.com, rkumbako@codeaurora.org,
+        amit.kucheria@linaro.org, linux-kernel@vger.kernel.org,
+        linux-pm@vger.kernel.org,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Arnd Bergmann <arnd.bergmann@linaro.org>
+References: <20200706105538.2159-1-daniel.lezcano@linaro.org>
+ <20200706105538.2159-4-daniel.lezcano@linaro.org>
+ <CGME20200706131708eucas1p1487955a7632584c17df724399f48825a@eucas1p1.samsung.com>
+ <c7ed6c63-cbb5-07dc-c292-2c473af8c4fb@samsung.com>
+ <23c5830d-0a7c-9e87-e859-821d2dccb200@linaro.org>
+ <8a34e9c4-6457-cfd2-3d05-05f80a630a0d@samsung.com>
+ <41466d5a-24fb-b861-93ae-3ed190af7174@samsung.com>
+ <75683b75-6e1b-6e4e-2354-477c487a5f5f@linaro.org>
+Message-ID: <4cfb15f6-2801-3386-c7cf-6296a54571a1@linaro.org>
+Date:   Wed, 15 Jul 2020 01:20:28 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-References: <20200612171334.26385-1-nsaenzjulienne@suse.de>
- <20200612171334.26385-2-nsaenzjulienne@suse.de> <20200713182356.GA413630@bogus>
- <ed42e27eaf48fd19cc8ccccd15b0b25ba1d836ae.camel@suse.de> <20200714210708.GA2897216@bogus>
- <925bab2c-91e0-bf60-9ec4-286eb53f72ab@gmail.com>
-In-Reply-To: <925bab2c-91e0-bf60-9ec4-286eb53f72ab@gmail.com>
-From:   Rob Herring <robh@kernel.org>
-Date:   Tue, 14 Jul 2020 17:18:15 -0600
-X-Gmail-Original-Message-ID: <CAL_Jsq+BvM+Z_QNkB47_8AQzZ6R3LOCjNWd5MA-9avxp0HHG2w@mail.gmail.com>
-Message-ID: <CAL_Jsq+BvM+Z_QNkB47_8AQzZ6R3LOCjNWd5MA-9avxp0HHG2w@mail.gmail.com>
-Subject: Re: [PATCH v3 1/9] dt-bindings: reset: Add a binding for the RPi
- Firmware reset controller
-To:     Florian Fainelli <f.fainelli@gmail.com>
-Cc:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Stefan Wahren <wahrenst@gmx.net>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        "maintainer:BROADCOM BCM7XXX ARM ARCHITECTURE" 
-        <bcm-kernel-feedback-list@broadcom.com>,
-        Eric Anholt <eric@anholt.net>,
-        Linux USB List <linux-usb@vger.kernel.org>,
-        "moderated list:BROADCOM BCM2835 ARM ARCHITECTURE" 
-        <linux-rpi-kernel@lists.infradead.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>, tim.gover@raspberrypi.org,
-        PCI <linux-pci@vger.kernel.org>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Mathias Nyman <mathias.nyman@linux.intel.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        devicetree@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <75683b75-6e1b-6e4e-2354-477c487a5f5f@linaro.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 14, 2020 at 3:18 PM Florian Fainelli <f.fainelli@gmail.com> wrote:
->
->
->
-> On 7/14/2020 2:07 PM, Rob Herring wrote:
-> > On Tue, Jul 14, 2020 at 01:59:21PM +0200, Nicolas Saenz Julienne wrote:
-> >> On Mon, 2020-07-13 at 12:23 -0600, Rob Herring wrote:
-> >>> On Fri, Jun 12, 2020 at 07:13:25PM +0200, Nicolas Saenz Julienne wrote:
-> >>>> The firmware running on the RPi VideoCore can be used to reset and
-> >>>> initialize HW controlled by the firmware.
-> >>>>
-> >>>> Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-> >>>> Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
-> >>>>
-> >>>> ---
-> >>>> Changes since v2:
-> >>>>  - Add include file for reset IDs
-> >>>>
-> >>>> Changes since v1:
-> >>>>  - Correct cells binding as per Florian's comment
-> >>>>  - Change compatible string to be more generic
-> >>>>
-> >>>>  .../arm/bcm/raspberrypi,bcm2835-firmware.yaml | 21 +++++++++++++++++++
-> >>>>  .../reset/raspberrypi,firmware-reset.h        | 13 ++++++++++++
-> >>>>  2 files changed, 34 insertions(+)
-> >>>>  create mode 100644 include/dt-bindings/reset/raspberrypi,firmware-reset.h
-> >>>>
-> >>>> diff --git a/Documentation/devicetree/bindings/arm/bcm/raspberrypi,bcm2835-
-> >>>> firmware.yaml
-> >>>> b/Documentation/devicetree/bindings/arm/bcm/raspberrypi,bcm2835-
-> >>>> firmware.yaml
-> >>>> index b48ed875eb8e..23a885af3a28 100644
-> >>>> --- a/Documentation/devicetree/bindings/arm/bcm/raspberrypi,bcm2835-
-> >>>> firmware.yaml
-> >>>> +++ b/Documentation/devicetree/bindings/arm/bcm/raspberrypi,bcm2835-
-> >>>> firmware.yaml
-> >>>> @@ -39,6 +39,22 @@ properties:
-> >>>>        - compatible
-> >>>>        - "#clock-cells"
-> >>>>
-> >>>> +  reset:
-> >>>
-> >>> I'm not really thrilled how this is evolving with a node per provider.
-> >>> There's no reason you can't just add #clock-cells and #reset-cells to
-> >>> the parent firmware node.
-> >>
-> >> What are the downsides? The way I see it there is not much difference. And this
-> >> way of handling things is feels more intuitive and flexible (overlays can
-> >> control what to enable easily, we can take advantage of the platform device
-> >> core).
-> >
-> > What the OS wants can evolve, so designing around the current needs of
-> > the OS is not how bindings should be done.
-> >
-> > Using overlays to add clocks or resets wouldn't really work given they
-> > are spread out over the tree. And with clocks in particular, you'd have
-> > to replace dummy fixed clocks with actual firmware clocks. Sounds
-> > fragile and messy...
-> >
-> >>> I probably should have complained with the clocks node, but that's only
-> >>> pending for 5.9.
-> >>
-> >> Note that there are more users for this pattern: "raspberrypi,firmware-ts" and
-> >> "raspberrypi,firmware-gpio". Actually you were the one to originally propose
-> >> this it[1]. :P
-> >
-> > Sigh, this is why I dislike incomplete examples...
-> >
-> > Based on that,
-> >
-> > Acked-by: Rob Herring <robh@kernel.org>
-> >
-> > And please get gpio and ts converted to schema and referenced here
-> > before the next time I look at this.
-> >
-> >> There already is a fair amount of churn in these drivers because of all the DT
-> >> changes we did in the past, and if we need to change how we integrate these
-> >> again, I'd really like it to be for good.
-> >>
-> >>> The bigger issue is this stuff is just trickling in one bit at a time
-> >>> which gives no context for review. What's next? Is it really a mystery
-> >>> as to what functions the firmware provides?
-> >>
-> >> We have no control over it, RPi engineers integrate new designs and new
-> >> firmware interfaces show up. This is a good example of it.
-> >>
-> >> I proposed them to use SCMI as it covers most of what they are already
-> >> providing here. But no luck so far.
-> >
-> > Once we get tired of supporting all the different firmware interfaces
-> > and the mess they become, we'll just have to start refusing custom ones.
-> > Worked for PSCI.
->
-> In this particular case, the Raspberry Pi Foundation VPU firmware should
-> just implement SCMI and that would avoid having to write new client
-> drivers for Linux, it is not clear to me why this has not been done yet.
+On 13/07/2020 22:32, Daniel Lezcano wrote:
+> On 13/07/2020 11:31, Marek Szyprowski wrote:
+>> Hi
+>>
+>> On 07.07.2020 11:15, Marek Szyprowski wrote:
+>>> On 06.07.2020 15:46, Daniel Lezcano wrote:
+>>>> On 06/07/2020 15:17, Marek Szyprowski wrote:
+>>>>> On 06.07.2020 12:55, Daniel Lezcano wrote:
+>>>>>> The generic netlink protocol is implemented but the different
+>>>>>> notification functions are not yet connected to the core code.
+>>>>>>
+>>>>>> These changes add the notification calls in the different
+>>>>>> corresponding places.
+>>>>>>
+>>>>>> Reviewed-by: Amit Kucheria <amit.kucheria@linaro.org>
+>>>>>> Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+>>>>> This patch landed in today's linux-next 20200706 as commit 5df786e46560
+>>>>> ("thermal: core: Add notifications call in the framework"). Sadly it
+>>>>> breaks booting various Samsung Exynos based boards. Here is an example
+>>>>> log from Odroid U3 board:
+>>>>>
+>>>>> Unable to handle kernel NULL pointer dereference at virtual address 
+>>>>> 00000010
+>>>>> pgd = (ptrval)
+>>>>> [00000010] *pgd=00000000
+>>>>> Internal error: Oops: 5 [#1] PREEMPT SMP ARM
+>>>>> Modules linked in:
+>>>>> CPU: 0 PID: 1 Comm: swapper/0 Not tainted 5.8.0-rc3-00015-g5df786e46560
+>>>>> #1146
+>>>>> Hardware name: Samsung Exynos (Flattened Device Tree)
+>>>>> PC is at kmem_cache_alloc+0x13c/0x418
+>>>>> LR is at kmem_cache_alloc+0x48/0x418
+>>>>> pc : [<c02b5cac>]    lr : [<c02b5bb8>]    psr: 20000053
+>>>>> ...
+>>>>> Flags: nzCv  IRQs on  FIQs off  Mode SVC_32  ISA ARM  Segment none
+>>>>> Control: 10c5387d  Table: 4000404a  DAC: 00000051
+>>>>> Process swapper/0 (pid: 1, stack limit = 0x(ptrval))
+>>>>> Stack: (0xee8f1cf8 to 0xee8f2000)
+>>>>> ...
+>>>>> [<c02b5cac>] (kmem_cache_alloc) from [<c08cd170>] 
+>>>>> (__alloc_skb+0x5c/0x170)
+>>>>> [<c08cd170>] (__alloc_skb) from [<c07ec19c>]
+>>>>> (thermal_genl_send_event+0x24/0x174)
+>>>>> [<c07ec19c>] (thermal_genl_send_event) from [<c07ec648>]
+>>>>> (thermal_notify_tz_create+0x58/0x74)
+>>>>> [<c07ec648>] (thermal_notify_tz_create) from [<c07e9058>]
+>>>>> (thermal_zone_device_register+0x358/0x650)
+>>>>> [<c07e9058>] (thermal_zone_device_register) from [<c1028d34>]
+>>>>> (of_parse_thermal_zones+0x304/0x7a4)
+>>>>> [<c1028d34>] (of_parse_thermal_zones) from [<c1028964>]
+>>>>> (thermal_init+0xdc/0x154)
+>>>>> [<c1028964>] (thermal_init) from [<c0102378>] 
+>>>>> (do_one_initcall+0x8c/0x424)
+>>>>> [<c0102378>] (do_one_initcall) from [<c1001158>]
+>>>>> (kernel_init_freeable+0x190/0x204)
+>>>>> [<c1001158>] (kernel_init_freeable) from [<c0ab85f4>]
+>>>>> (kernel_init+0x8/0x118)
+>>>>> [<c0ab85f4>] (kernel_init) from [<c0100114>] (ret_from_fork+0x14/0x20)
+>>>>>
+>>>>> Reverting it on top of linux-next fixes the boot issue. I will
+>>>>> investigate it further soon.
+>>>> Thanks for reporting this.
+>>>>
+>>>> Can you send the addr2line result and code it points to ?
+>>>
+>>> addr2line of c02b5cac (kmem_cache_alloc+0x13c/0x418) points to 
+>>> mm/slub.c +2839, but I'm not sure if we can trust it. imho it looks 
+>>> like some trashed memory somewhere, but I don't have time right now to 
+>>> analyze it further now...
+>>
+>> Just one more thing I've noticed. The crash happens only if the kernel 
+>> is compiled with old GCC (tested with arm-linux-gnueabi-gcc (Linaro GCC 
+>> 4.9-2017.01) 4.9.4). If I compile kernel with newed GCC (like 
+>> arm-linux-gnueabi-gcc (Linaro GCC 6.4-2017.11) 6.4.1 20171012), it works 
+>> fine...
+>>
+>> This happens also with Linux next-20200710, which again got this commit.
+> 
+> So I finally succeed to reproduce on an ARM64 with a recent compiler,
+> earlycon, and the option CONFIG_INIT_ON_ALLOC_DEFAULT_ON.
 
-Writing drivers is fun?
 
-Perhaps we should start refusing new firmware interfaces now.
+Finally, narrowed down the issue.
 
-Rob
+ - genetlink initialization is done at subsys initcall.
+ - thermal netlink init is done at core initcall
+ - netlink is done at core initcall
+
+By changing the order:
+
+ - netlink and genetlink at core initcall
+ - thermal init at postcore initcall
+
+That fixes the problem. The genetlink initcall order is from 2005 and
+IMO it makes sense to come right after the netlink initialization.
+
+It is acceptable to have the thermal init at the postcore initcall. It
+is very recently we moved from fs_initcall to core_initcall.
+
+Thanks to Arnd who give me a direction to look at.
+
+-- 
+<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
