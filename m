@@ -7,52 +7,49 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA8C7C433E8
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 14:44:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 018A4C433E4
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 14:44:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C8866206F5
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 14:44:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C683D2082F
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 14:44:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594737879;
-	bh=GAFcz6VMhCl4x1qHq3sS9k3Cf5CjbBVOHTbT3FSCZ9s=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=D4wPeTMLr1JSsTsagkwS1nJVAtX0FVic3CqbvmVIh+HBgjfyOhKksZoaj8d9ar8k8
-	 a5SOBSkbesIry94T4vXmPXvGQ9iIgnHC8wEmIvdkvlcdYSciWMSnnKgu4neeYcXKNe
-	 saWV/UcjvpZWj+KzmGdhTS2vci3RHb1JaEFh89Xk=
+	s=default; t=1594737883;
+	bh=ePzMsZXUTslGkSsNhaVZcjTY3pwqZrmfziQBGeiOnbY=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=iJGxLB1O39p+m0+Dedygq85LF++yzP374CAzMdOdX32+BfdQvf7Sj8pXOAJipYhMr
+	 MdpYuV0P1DAK9pnif5iULzftqLaBOEZk0mJzD7NhnCFOX0lCSscnrVDnQ2rRdOOgOH
+	 WroHaO0AJcnRuLAJfCW/37sDIEWVbl/pHUif3bPQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728881AbgGNOjR (ORCPT
+        id S1729530AbgGNOol (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 10:39:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54404 "EHLO mail.kernel.org"
+        Tue, 14 Jul 2020 10:44:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54546 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728798AbgGNOjK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 10:39:10 -0400
+        id S1728879AbgGNOjQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 10:39:16 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EE5C622527;
-        Tue, 14 Jul 2020 14:39:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5B612222C8;
+        Tue, 14 Jul 2020 14:39:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594737549;
-        bh=GAFcz6VMhCl4x1qHq3sS9k3Cf5CjbBVOHTbT3FSCZ9s=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ePr7SY9VMpffNn9QlDsz/b2dcsC5UdQOmQJJiD/wFTL/fmlY1FfMiHc/OTehBsi/5
-         yYhPw28FoYSwiYqY8zl9ufXwC8TO0MEZa3oWVcX2VQv5BT2Uf/XzORnbojiZVYOJUy
-         As+9UvGIOauQmJB/TI0KYLTTGFT/0gQXVwmKlpec=
+        s=default; t=1594737556;
+        bh=ePzMsZXUTslGkSsNhaVZcjTY3pwqZrmfziQBGeiOnbY=;
+        h=From:To:Cc:Subject:Date:From;
+        b=D0OKB/yCxw49myf5J7ZmM+DR/msFBRLXQYJ8CcbbaUEnY7jKzo6+JNTZN0Olqg3As
+         e5SmYx3AXVISI0Nos+mlZaaeAPstlApsD3nQ204iibqGcscPJQmWTaXmyNNwOhxHLP
+         QAWIi029t7v4mp9zS8zmsh4CD5Nz3Zq8ir54Esgc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Johannes Thumshirn <johannes.thumshirn@wdc.com>,
-        Damien Le Moal <damien.lemoal@wdc.com>,
-        Sreekanth Reddy <sreekanth.reddy@broadcom.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>,
-        MPT-FusionLinux.pdl@broadcom.com, linux-scsi@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.7 16/19] scsi: mpt3sas: Fix error returns in BRM_status_show
-Date:   Tue, 14 Jul 2020 10:38:46 -0400
-Message-Id: <20200714143849.4035283-16-sashal@kernel.org>
+Cc:     Navid Emamdoost <navid.emamdoost@gmail.com>,
+        Charles Keepax <ckeepax@opensource.cirrus.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Sasha Levin <sashal@kernel.org>, patches@opensource.cirrus.com,
+        linux-gpio@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 01/18] gpio: arizona: handle pm_runtime_get_sync failure case
+Date:   Tue, 14 Jul 2020 10:38:57 -0400
+Message-Id: <20200714143914.4035489-1-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200714143849.4035283-1-sashal@kernel.org>
-References: <20200714143849.4035283-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -62,78 +59,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Johannes Thumshirn <johannes.thumshirn@wdc.com>
+From: Navid Emamdoost <navid.emamdoost@gmail.com>
 
-[ Upstream commit 0fd181456aa0826057adbfb6c79c40f4083cfd75 ]
+[ Upstream commit e6f390a834b56583e6fc0949822644ce92fbb107 ]
 
-BRM_status_show() has several error branches, but none of them record the
-error in the error return.
+Calling pm_runtime_get_sync increments the counter even in case of
+failure, causing incorrect ref count. Call pm_runtime_put if
+pm_runtime_get_sync fails.
 
-Also while at it remove the manual mutex_unlock() of the pci_access_mutex
-in case of an ongoing pci error recovery or host removal and jump to the
-cleanup label instead.
-
-Note: We can safely jump to out from here as io_unit_pg3 is initialized to
-NULL and if it hasn't been allocated, kfree() skips the NULL pointer.
-
-[mkp: compilation warning]
-
-Link: https://lore.kernel.org/r/20200701131454.5255-1-johannes.thumshirn@wdc.com
-Reviewed-by: Damien Le Moal <damien.lemoal@wdc.com>
-Acked-by: Sreekanth Reddy <sreekanth.reddy@broadcom.com>
-Signed-off-by: Johannes Thumshirn <johannes.thumshirn@wdc.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
+Acked-by: Charles Keepax <ckeepax@opensource.cirrus.com>
+Link: https://lore.kernel.org/r/20200605025207.65719-1-navid.emamdoost@gmail.com
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/mpt3sas/mpt3sas_ctl.c | 10 ++++++----
- 1 file changed, 6 insertions(+), 4 deletions(-)
+ drivers/gpio/gpio-arizona.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/scsi/mpt3sas/mpt3sas_ctl.c b/drivers/scsi/mpt3sas/mpt3sas_ctl.c
-index e94e72de2fc68..983e568ff2317 100644
---- a/drivers/scsi/mpt3sas/mpt3sas_ctl.c
-+++ b/drivers/scsi/mpt3sas/mpt3sas_ctl.c
-@@ -3149,15 +3149,14 @@ BRM_status_show(struct device *cdev, struct device_attribute *attr,
+diff --git a/drivers/gpio/gpio-arizona.c b/drivers/gpio/gpio-arizona.c
+index 5640efe5e7504..7520a13b4c7ca 100644
+--- a/drivers/gpio/gpio-arizona.c
++++ b/drivers/gpio/gpio-arizona.c
+@@ -106,6 +106,7 @@ static int arizona_gpio_direction_out(struct gpio_chip *chip,
+ 		ret = pm_runtime_get_sync(chip->parent);
+ 		if (ret < 0) {
+ 			dev_err(chip->parent, "Failed to resume: %d\n", ret);
++			pm_runtime_put(chip->parent);
+ 			return ret;
+ 		}
  	}
- 	/* pci_access_mutex lock acquired by sysfs show path */
- 	mutex_lock(&ioc->pci_access_mutex);
--	if (ioc->pci_error_recovery || ioc->remove_host) {
--		mutex_unlock(&ioc->pci_access_mutex);
--		return 0;
--	}
-+	if (ioc->pci_error_recovery || ioc->remove_host)
-+		goto out;
- 
- 	/* allocate upto GPIOVal 36 entries */
- 	sz = offsetof(Mpi2IOUnitPage3_t, GPIOVal) + (sizeof(u16) * 36);
- 	io_unit_pg3 = kzalloc(sz, GFP_KERNEL);
- 	if (!io_unit_pg3) {
-+		rc = -ENOMEM;
- 		ioc_err(ioc, "%s: failed allocating memory for iounit_pg3: (%d) bytes\n",
- 			__func__, sz);
- 		goto out;
-@@ -3167,6 +3166,7 @@ BRM_status_show(struct device *cdev, struct device_attribute *attr,
- 	    0) {
- 		ioc_err(ioc, "%s: failed reading iounit_pg3\n",
- 			__func__);
-+		rc = -EINVAL;
- 		goto out;
- 	}
- 
-@@ -3174,12 +3174,14 @@ BRM_status_show(struct device *cdev, struct device_attribute *attr,
- 	if (ioc_status != MPI2_IOCSTATUS_SUCCESS) {
- 		ioc_err(ioc, "%s: iounit_pg3 failed with ioc_status(0x%04x)\n",
- 			__func__, ioc_status);
-+		rc = -EINVAL;
- 		goto out;
- 	}
- 
- 	if (io_unit_pg3->GPIOCount < 25) {
- 		ioc_err(ioc, "%s: iounit_pg3->GPIOCount less than 25 entries, detected (%d) entries\n",
- 			__func__, io_unit_pg3->GPIOCount);
-+		rc = -EINVAL;
- 		goto out;
- 	}
- 
 -- 
 2.25.1
 
