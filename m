@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C3FFC433FC
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 19:12:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E537C433FE
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 19:12:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 545C2221ED
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 19:12:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 23104221ED
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 19:12:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594753933;
-	bh=lHoFsJHhdG2dbnh2ce7yjRas4/oHkqce+YQiHAMMOGo=;
+	s=default; t=1594753941;
+	bh=eybEVYZ0H2G8SQhFRuRRNr1i0BUSzfEQItUdB7NkyYo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LztuZNtWeLTzVxdaGLaOSQn4l/nJv3CpxeUhNbSL2Nh5GdiDXb7Jbs5GY/N+5Lil+
-	 M6BLlMyze0Gt4DawaG4RalRFHHdU10bEHTabmA4qrf2k8WDyB9b0hRU6JjGdTUIpHV
-	 iY0ibazxOXMV87NhewqnsGBmvbxI8kddl7xwYQDI=
+	b=NpFkYo+9ON1iFyXAAPjgaP0TmQ+bl8DiYO/HbSDsqFWs763Io6cK2fNiDD0hqT7dB
+	 qer6H4QLkavoUiQWmGW7MIsHjrre9GOwxf9KjGap3wmcv6RO4fAe1HpSgkWiMmIBu0
+	 NsrbTqd/iwBx9ybq5/sGHSOsT060jcq6jR0yGlRU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730474AbgGNTML (ORCPT
+        id S1730593AbgGNTMT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 15:12:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42730 "EHLO mail.kernel.org"
+        Tue, 14 Jul 2020 15:12:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42230 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729738AbgGNSrf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 14:47:35 -0400
+        id S1729696AbgGNSrO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 14:47:14 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 788DB22AAE;
-        Tue, 14 Jul 2020 18:47:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 64E8C22AAE;
+        Tue, 14 Jul 2020 18:47:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594752455;
-        bh=lHoFsJHhdG2dbnh2ce7yjRas4/oHkqce+YQiHAMMOGo=;
+        s=default; t=1594752434;
+        bh=eybEVYZ0H2G8SQhFRuRRNr1i0BUSzfEQItUdB7NkyYo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bODN6zQpyX9qAwvAUsXaFLcpd040evA0KX1PTpTIW34ePsD+VSlh+46Yco7zCwXYz
-         8FBQ6lXpDhahAcu/1RQFkMLJYIEJ6rghfV08UtjjM713fi9LMGmkeiVBJ5PdXnywVp
-         /dn5+5+wJwXkdfO4ofa9kTCW/8SSy+XdwwmLdu3w=
+        b=xysHCSUv1M3HPKvzGp2hshq7Toks8SczF0DgUYnaq8ST9yXmiLGRRlxXWG+89eacy
+         BpIjHGkkD3hP+ja/tp/kFp8aums04bYEHQExyoAZgw6whtFw5i7IbUESjBQrI1SI2v
+         Z+qXYdxg1hgw4cUcJNCKZZWqo9RmOFmvS/1NwT78=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jessica Yu <jeyu@kernel.org>,
-        Kees Cook <keescook@chromium.org>
-Subject: [PATCH 4.19 48/58] module: Refactor section attr into bin attribute
-Date:   Tue, 14 Jul 2020 20:44:21 +0200
-Message-Id: <20200714184058.548988651@linuxfoundation.org>
+        stable@vger.kernel.org, Marc Zyngier <maz@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        James Morse <james.morse@arm.com>,
+        Will Deacon <will@kernel.org>
+Subject: [PATCH 4.19 41/58] KVM: arm64: Fix definition of PAGE_HYP_DEVICE
+Date:   Tue, 14 Jul 2020 20:44:14 +0200
+Message-Id: <20200714184058.162642865@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200714184056.149119318@linuxfoundation.org>
 References: <20200714184056.149119318@linuxfoundation.org>
@@ -59,131 +61,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kees Cook <keescook@chromium.org>
+From: Will Deacon <will@kernel.org>
 
-commit ed66f991bb19d94cae5d38f77de81f96aac7813f upstream.
+commit 68cf617309b5f6f3a651165f49f20af1494753ae upstream.
 
-In order to gain access to the open file's f_cred for kallsym visibility
-permission checks, refactor the module section attributes to use the
-bin_attribute instead of attribute interface. Additionally removes the
-redundant "name" struct member.
+PAGE_HYP_DEVICE is intended to encode attribute bits for an EL2 stage-1
+pte mapping a device. Unfortunately, it includes PROT_DEVICE_nGnRE which
+encodes attributes for EL1 stage-1 mappings such as UXN and nG, which are
+RES0 for EL2, and DBM which is meaningless as TCR_EL2.HD is not set.
 
-Cc: stable@vger.kernel.org
-Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Tested-by: Jessica Yu <jeyu@kernel.org>
-Acked-by: Jessica Yu <jeyu@kernel.org>
-Signed-off-by: Kees Cook <keescook@chromium.org>
+Fix the definition of PAGE_HYP_DEVICE so that it doesn't set RES0 bits
+at EL2.
+
+Acked-by: Marc Zyngier <maz@kernel.org>
+Cc: Marc Zyngier <maz@kernel.org>
+Cc: Catalin Marinas <catalin.marinas@arm.com>
+Cc: James Morse <james.morse@arm.com>
+Cc: <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20200708162546.26176-1-will@kernel.org
+Signed-off-by: Will Deacon <will@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- kernel/module.c |   45 ++++++++++++++++++++++++---------------------
- 1 file changed, 24 insertions(+), 21 deletions(-)
+ arch/arm64/include/asm/pgtable-prot.h |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/kernel/module.c
-+++ b/kernel/module.c
-@@ -1451,8 +1451,7 @@ static inline bool sect_empty(const Elf_
- }
+--- a/arch/arm64/include/asm/pgtable-prot.h
++++ b/arch/arm64/include/asm/pgtable-prot.h
+@@ -65,7 +65,7 @@
+ #define PAGE_HYP		__pgprot(_HYP_PAGE_DEFAULT | PTE_HYP | PTE_HYP_XN)
+ #define PAGE_HYP_EXEC		__pgprot(_HYP_PAGE_DEFAULT | PTE_HYP | PTE_RDONLY)
+ #define PAGE_HYP_RO		__pgprot(_HYP_PAGE_DEFAULT | PTE_HYP | PTE_RDONLY | PTE_HYP_XN)
+-#define PAGE_HYP_DEVICE		__pgprot(PROT_DEVICE_nGnRE | PTE_HYP)
++#define PAGE_HYP_DEVICE		__pgprot(_PROT_DEFAULT | PTE_ATTRINDX(MT_DEVICE_nGnRE) | PTE_HYP | PTE_HYP_XN)
  
- struct module_sect_attr {
--	struct module_attribute mattr;
--	char *name;
-+	struct bin_attribute battr;
- 	unsigned long address;
- };
- 
-@@ -1462,11 +1461,16 @@ struct module_sect_attrs {
- 	struct module_sect_attr attrs[0];
- };
- 
--static ssize_t module_sect_show(struct module_attribute *mattr,
--				struct module_kobject *mk, char *buf)
-+static ssize_t module_sect_read(struct file *file, struct kobject *kobj,
-+				struct bin_attribute *battr,
-+				char *buf, loff_t pos, size_t count)
- {
- 	struct module_sect_attr *sattr =
--		container_of(mattr, struct module_sect_attr, mattr);
-+		container_of(battr, struct module_sect_attr, battr);
-+
-+	if (pos != 0)
-+		return -EINVAL;
-+
- 	return sprintf(buf, "0x%px\n", kptr_restrict < 2 ?
- 		       (void *)sattr->address : NULL);
- }
-@@ -1476,7 +1480,7 @@ static void free_sect_attrs(struct modul
- 	unsigned int section;
- 
- 	for (section = 0; section < sect_attrs->nsections; section++)
--		kfree(sect_attrs->attrs[section].name);
-+		kfree(sect_attrs->attrs[section].battr.attr.name);
- 	kfree(sect_attrs);
- }
- 
-@@ -1485,42 +1489,41 @@ static void add_sect_attrs(struct module
- 	unsigned int nloaded = 0, i, size[2];
- 	struct module_sect_attrs *sect_attrs;
- 	struct module_sect_attr *sattr;
--	struct attribute **gattr;
-+	struct bin_attribute **gattr;
- 
- 	/* Count loaded sections and allocate structures */
- 	for (i = 0; i < info->hdr->e_shnum; i++)
- 		if (!sect_empty(&info->sechdrs[i]))
- 			nloaded++;
- 	size[0] = ALIGN(struct_size(sect_attrs, attrs, nloaded),
--			sizeof(sect_attrs->grp.attrs[0]));
--	size[1] = (nloaded + 1) * sizeof(sect_attrs->grp.attrs[0]);
-+			sizeof(sect_attrs->grp.bin_attrs[0]));
-+	size[1] = (nloaded + 1) * sizeof(sect_attrs->grp.bin_attrs[0]);
- 	sect_attrs = kzalloc(size[0] + size[1], GFP_KERNEL);
- 	if (sect_attrs == NULL)
- 		return;
- 
- 	/* Setup section attributes. */
- 	sect_attrs->grp.name = "sections";
--	sect_attrs->grp.attrs = (void *)sect_attrs + size[0];
-+	sect_attrs->grp.bin_attrs = (void *)sect_attrs + size[0];
- 
- 	sect_attrs->nsections = 0;
- 	sattr = &sect_attrs->attrs[0];
--	gattr = &sect_attrs->grp.attrs[0];
-+	gattr = &sect_attrs->grp.bin_attrs[0];
- 	for (i = 0; i < info->hdr->e_shnum; i++) {
- 		Elf_Shdr *sec = &info->sechdrs[i];
- 		if (sect_empty(sec))
- 			continue;
-+		sysfs_bin_attr_init(&sattr->battr);
- 		sattr->address = sec->sh_addr;
--		sattr->name = kstrdup(info->secstrings + sec->sh_name,
--					GFP_KERNEL);
--		if (sattr->name == NULL)
-+		sattr->battr.attr.name =
-+			kstrdup(info->secstrings + sec->sh_name, GFP_KERNEL);
-+		if (sattr->battr.attr.name == NULL)
- 			goto out;
- 		sect_attrs->nsections++;
--		sysfs_attr_init(&sattr->mattr.attr);
--		sattr->mattr.show = module_sect_show;
--		sattr->mattr.store = NULL;
--		sattr->mattr.attr.name = sattr->name;
--		sattr->mattr.attr.mode = S_IRUSR;
--		*(gattr++) = &(sattr++)->mattr.attr;
-+		sattr->battr.read = module_sect_read;
-+		sattr->battr.size = 3 /* "0x", "\n" */ + (BITS_PER_LONG / 4);
-+		sattr->battr.attr.mode = 0400;
-+		*(gattr++) = &(sattr++)->battr;
- 	}
- 	*gattr = NULL;
- 
-@@ -1610,7 +1613,7 @@ static void add_notes_attrs(struct modul
- 			continue;
- 		if (info->sechdrs[i].sh_type == SHT_NOTE) {
- 			sysfs_bin_attr_init(nattr);
--			nattr->attr.name = mod->sect_attrs->attrs[loaded].name;
-+			nattr->attr.name = mod->sect_attrs->attrs[loaded].battr.attr.name;
- 			nattr->attr.mode = S_IRUGO;
- 			nattr->size = info->sechdrs[i].sh_size;
- 			nattr->private = (void *) info->sechdrs[i].sh_addr;
+ #define PAGE_S2_MEMATTR(attr)						\
+ 	({								\
 
 
