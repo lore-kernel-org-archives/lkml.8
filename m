@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 863DBC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 19:07:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CE0BC433E5
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 19:07:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5C3DB22AAB
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 19:07:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 78E9021D79
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 19:07:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594753620;
-	bh=3/Q1jaPtpTUlQgW8NkxVr5NTJaMr/ySX7hLpClT93mc=;
+	s=default; t=1594753629;
+	bh=HEQ2DkIcAt86D6WbZyOZZgN0wHV2ZQGAnvZq5QuT0FE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JjtmUNHFcNyCdvNFIc9+kRbjYlJYBHh/7wvsU654gOFnYbSB+Z02IPUaTxmQIW+Ae
-	 X3EeO7SkNVzC6vY50uX12GPEvrkDUYGa11nkTOIUq8F9wj1YxnFDueIDD+6HBLHMG3
-	 Df355Ov4aZRymcFvHdr7lMegFjVrIwhNq5O4j5f8=
+	b=eXbEkj2GAyxaVWOSQsYS14QBj5mJZln9svoiztDwizMbENEKpnLzoVEhGp/SzWdyN
+	 8IzElLdaemiYGaHNjrEmSUx/cEiI+2+yfeNCdSQMHMSsaJNkhHu80nWYvWCSUYjXLQ
+	 sRY66nZXqlei4Bc+wm+ceNqJFz3AcDFU0q08G8wg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729904AbgGNTG6 (ORCPT
+        id S1730881AbgGNTHI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 15:06:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49926 "EHLO mail.kernel.org"
+        Tue, 14 Jul 2020 15:07:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49200 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730576AbgGNSxB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 14:53:01 -0400
+        id S1730525AbgGNSw3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 14:52:29 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 73DAF22B4B;
-        Tue, 14 Jul 2020 18:53:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 99FAF223B0;
+        Tue, 14 Jul 2020 18:52:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594752781;
-        bh=3/Q1jaPtpTUlQgW8NkxVr5NTJaMr/ySX7hLpClT93mc=;
+        s=default; t=1594752749;
+        bh=HEQ2DkIcAt86D6WbZyOZZgN0wHV2ZQGAnvZq5QuT0FE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZE4I61517Iyn3RrOp1ZidWELFpehIJxR7kW5lNe0x38avsXCAJTR+rY8p3zZk2kgk
-         Kq94dJI0oGN5FbtUUx68vrzJS8K4D7HMKaT4mggoh1ijSyWRc0vIRMwD0vo/LF6000
-         PbojoiH95WxnUk8Gw9tI++oYPV65Jut0BkURt+QU=
+        b=u757Ug/IFObLAaeC7vYNavmN5wkA7To2RauKa3jS2ulez5Q/rVZcW4YXhOW+7m8JD
+         S1sebR1oLPO4U6Vo1JcbuH35uO0rTrCwjUaZZxjsd+rPgKxqr653pjuOG9WPJtq/UF
+         fPOamh2hgIBzIjyQ+KrkSUujoz+ShCmvQ9k6TBVg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Adrian Hunter <adrian.hunter@intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH 5.4 106/109] perf scripts python: exported-sql-viewer.py: Fix zero id in call graph Find result
-Date:   Tue, 14 Jul 2020 20:44:49 +0200
-Message-Id: <20200714184110.642174452@linuxfoundation.org>
+        stable@vger.kernel.org, Tom Rix <trix@redhat.com>,
+        Alex Deucher <alexander.deucher@amd.com>
+Subject: [PATCH 5.4 095/109] drm/radeon: fix double free
+Date:   Tue, 14 Jul 2020 20:44:38 +0200
+Message-Id: <20200714184110.119761774@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200714184105.507384017@linuxfoundation.org>
 References: <20200714184105.507384017@linuxfoundation.org>
@@ -60,58 +59,81 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Adrian Hunter <adrian.hunter@intel.com>
+From: Tom Rix <trix@redhat.com>
 
-commit 7ff520b0a71dd2db695b52ad117d81b7eaf6ff9d upstream.
+commit 41855a898650803e24b284173354cc3e44d07725 upstream.
 
-Using ctrl-F ('Find') would not find 'unknown' because it matches id zero.
-Fix by excluding id zero from selection.
+clang static analysis flags this error
 
-Example:
+drivers/gpu/drm/radeon/ci_dpm.c:5652:9: warning: Use of memory after it is freed [unix.Malloc]
+                kfree(rdev->pm.dpm.ps[i].ps_priv);
+                      ^~~~~~~~~~~~~~~~~~~~~~~~~~
+drivers/gpu/drm/radeon/ci_dpm.c:5654:2: warning: Attempt to free released memory [unix.Malloc]
+        kfree(rdev->pm.dpm.ps);
+        ^~~~~~~~~~~~~~~~~~~~~~
 
-  $ perf record -e intel_pt//u uname
-  Linux
-  [ perf record: Woken up 1 times to write data ]
-  [ perf record: Captured and wrote 0.034 MB perf.data ]
-  $ perf script --itrace=bep -s ~/libexec/perf-core/scripts/python/export-to-sqlite.py perf.data.db branches calls
-  2020-06-26 15:32:14.928997 Creating database ...
-  2020-06-26 15:32:14.933971 Writing records...
-  2020-06-26 15:32:15.535251 Adding indexes
-  2020-06-26 15:32:15.542993 Dropping unused tables
-  2020-06-26 15:32:15.549716 Done
-  $ python3 ~/libexec/perf-core/scripts/python/exported-sql-viewer.py perf.data.db
+problem is reported in ci_dpm_fini, with these code blocks.
 
-  Select: Reports -> Context-Sensitive Call Graph
-  Press: Ctrl-F
-  Enter: unknown
-  Press: Enter
+	for (i = 0; i < rdev->pm.dpm.num_ps; i++) {
+		kfree(rdev->pm.dpm.ps[i].ps_priv);
+	}
+	kfree(rdev->pm.dpm.ps);
 
-Before: gets stuck
-After: tree is expanded to line showing 'unknown'
+The first free happens in ci_parse_power_table where it cleans up locally
+on a failure.  ci_dpm_fini also does a cleanup.
 
-Fixes: 254c0d820b86d ("perf scripts python: exported-sql-viewer.py: Factor out CallGraphModelBase")
-Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
+	ret = ci_parse_power_table(rdev);
+	if (ret) {
+		ci_dpm_fini(rdev);
+		return ret;
+	}
+
+So remove the cleanup in ci_parse_power_table and
+move the num_ps calculation to inside the loop so ci_dpm_fini
+will know how many array elements to free.
+
+Fixes: cc8dbbb4f62a ("drm/radeon: add dpm support for CI dGPUs (v2)")
+
+Signed-off-by: Tom Rix <trix@redhat.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Cc: stable@vger.kernel.org
-Link: http://lore.kernel.org/lkml/20200629091955.17090-5-adrian.hunter@intel.com
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- tools/perf/scripts/python/exported-sql-viewer.py |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/gpu/drm/radeon/ci_dpm.c |    7 +++----
+ 1 file changed, 3 insertions(+), 4 deletions(-)
 
---- a/tools/perf/scripts/python/exported-sql-viewer.py
-+++ b/tools/perf/scripts/python/exported-sql-viewer.py
-@@ -756,7 +756,8 @@ class CallGraphModel(CallGraphModelBase)
- 						" FROM calls"
- 						" INNER JOIN call_paths ON calls.call_path_id = call_paths.id"
- 						" INNER JOIN symbols ON call_paths.symbol_id = symbols.id"
--						" WHERE symbols.name" + match +
-+						" WHERE calls.id <> 0"
-+						" AND symbols.name" + match +
- 						" GROUP BY comm_id, thread_id, call_path_id"
- 						" ORDER BY comm_id, thread_id, call_path_id")
+--- a/drivers/gpu/drm/radeon/ci_dpm.c
++++ b/drivers/gpu/drm/radeon/ci_dpm.c
+@@ -5578,6 +5578,7 @@ static int ci_parse_power_table(struct r
+ 	if (!rdev->pm.dpm.ps)
+ 		return -ENOMEM;
+ 	power_state_offset = (u8 *)state_array->states;
++	rdev->pm.dpm.num_ps = 0;
+ 	for (i = 0; i < state_array->ucNumEntries; i++) {
+ 		u8 *idx;
+ 		power_state = (union pplib_power_state *)power_state_offset;
+@@ -5587,10 +5588,8 @@ static int ci_parse_power_table(struct r
+ 		if (!rdev->pm.power_state[i].clock_info)
+ 			return -EINVAL;
+ 		ps = kzalloc(sizeof(struct ci_ps), GFP_KERNEL);
+-		if (ps == NULL) {
+-			kfree(rdev->pm.dpm.ps);
++		if (ps == NULL)
+ 			return -ENOMEM;
+-		}
+ 		rdev->pm.dpm.ps[i].ps_priv = ps;
+ 		ci_parse_pplib_non_clock_info(rdev, &rdev->pm.dpm.ps[i],
+ 					      non_clock_info,
+@@ -5612,8 +5611,8 @@ static int ci_parse_power_table(struct r
+ 			k++;
+ 		}
+ 		power_state_offset += 2 + power_state->v2.ucNumDPMLevels;
++		rdev->pm.dpm.num_ps = i + 1;
+ 	}
+-	rdev->pm.dpm.num_ps = state_array->ucNumEntries;
  
+ 	/* fill in the vce power states */
+ 	for (i = 0; i < RADEON_MAX_VCE_LEVELS; i++) {
 
 
