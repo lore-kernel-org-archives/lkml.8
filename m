@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EAA68C433EB
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 14:39:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82E20C433EC
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 14:39:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BAE1F222C8
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 14:39:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B38422516
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 14:39:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594737541;
-	bh=YQI3JFO0/IRGd0ndbGFLjzwEN80zHIU6ULPZ524xL9A=;
+	s=default; t=1594737545;
+	bh=10DbsIHggpfnX/L/cuS6NGvTsPwVjqJzSZhttOZm9R8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QvDkXfu6zwfEsaPQJPrc6uMHDtREvayBI2uQgxdJ/OYGw9ZA/4SbbDc/oeI/Ard6Y
-	 CNGaadKGvVmZPxnCUeIP7Rv4blV0d1fBCsWJTkDVQIBnEcV8tEDz3MKsGhwY7QELxW
-	 A6E22ddbQnfED1SdXlMQONX15zKleHV/6RmfFbAU=
+	b=quDhRBZOHY8J4wRagX0+mpFwJh89srMo05OWn9cG6/9PY1p0cxjKnuKOLYT+63j6B
+	 LKAXwCt45SIyAhIBOwb809++VNnP8LZ0Xy3uzzeCNpFPV5hrKcqmiEkEcRVnw+YTzw
+	 HTxArsqaxux8ugtmqCHx333mMAECFeJk5/JU3qNw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728664AbgGNOjA (ORCPT
+        id S1728706AbgGNOjD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 10:39:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54104 "EHLO mail.kernel.org"
+        Tue, 14 Jul 2020 10:39:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54182 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726964AbgGNOiz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 10:38:55 -0400
+        id S1728552AbgGNOi6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 10:38:58 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4560F22519;
-        Tue, 14 Jul 2020 14:38:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DD03C2067D;
+        Tue, 14 Jul 2020 14:38:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594737534;
-        bh=YQI3JFO0/IRGd0ndbGFLjzwEN80zHIU6ULPZ524xL9A=;
+        s=default; t=1594737537;
+        bh=10DbsIHggpfnX/L/cuS6NGvTsPwVjqJzSZhttOZm9R8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LQLAynTjldbvw/BddaWMNMxoExHdd4te8/t9qxpSuNhImyyAXyj3UzNiM4Ns7v1cP
-         MaMynGSQrFRVdaAga6yElO3pd7W9wb6DnmyeXKD5clNo2Zb4f1KgMwKHhAj8X07owE
-         cZAqFvKCX659wtGKyhlr609MOx8zO1TZw9q4Eqa8=
+        b=sRWSbPsKZNW+q+17x8ivS09UJScGmg9x83avVYpt77UQzMILywW6DkiLDAPTuQEpz
+         umor4d1+rBip/5C9NJI7D6njsV/WeXusWiuojlocSB6JCeg71AlNZXAT42mRHvGDeD
+         e4KKjR2ALuIpPlj/mlSVLepWxatyavXnmQzAH+7I=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Christian Borntraeger <borntraeger@de.ibm.com>,
-        Cornelia Huck <cohuck@redhat.com>,
-        David Hildenbrand <david@redhat.com>,
-        Sasha Levin <sashal@kernel.org>, kvm@vger.kernel.org,
-        linux-s390@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.7 03/19] KVM: s390: reduce number of IO pins to 1
-Date:   Tue, 14 Jul 2020 10:38:33 -0400
-Message-Id: <20200714143849.4035283-3-sashal@kernel.org>
+Cc:     Markus Theil <markus.theil@tu-ilmenau.de>,
+        Johannes Berg <johannes.berg@intel.com>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.7 06/19] mac80211: allow rx of mesh eapol frames with default rx key
+Date:   Tue, 14 Jul 2020 10:38:36 -0400
+Message-Id: <20200714143849.4035283-6-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200714143849.4035283-1-sashal@kernel.org>
 References: <20200714143849.4035283-1-sashal@kernel.org>
@@ -61,71 +60,78 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christian Borntraeger <borntraeger@de.ibm.com>
+From: Markus Theil <markus.theil@tu-ilmenau.de>
 
-[ Upstream commit 774911290c589e98e3638e73b24b0a4d4530e97c ]
+[ Upstream commit 0b467b63870d9c05c81456aa9bfee894ab2db3b6 ]
 
-The current number of KVM_IRQCHIP_NUM_PINS results in an order 3
-allocation (32kb) for each guest start/restart. This can result in OOM
-killer activity even with free swap when the memory is fragmented
-enough:
+Without this patch, eapol frames cannot be received in mesh
+mode, when 802.1X should be used. Initially only a MGTK is
+defined, which is found and set as rx->key, when there are
+no other keys set. ieee80211_drop_unencrypted would then
+drop these eapol frames, as they are data frames without
+encryption and there exists some rx->key.
 
-kernel: qemu-system-s39 invoked oom-killer: gfp_mask=0x440dc0(GFP_KERNEL_ACCOUNT|__GFP_COMP|__GFP_ZERO), order=3, oom_score_adj=0
-kernel: CPU: 1 PID: 357274 Comm: qemu-system-s39 Kdump: loaded Not tainted 5.4.0-29-generic #33-Ubuntu
-kernel: Hardware name: IBM 8562 T02 Z06 (LPAR)
-kernel: Call Trace:
-kernel: ([<00000001f848fe2a>] show_stack+0x7a/0xc0)
-kernel:  [<00000001f8d3437a>] dump_stack+0x8a/0xc0
-kernel:  [<00000001f8687032>] dump_header+0x62/0x258
-kernel:  [<00000001f8686122>] oom_kill_process+0x172/0x180
-kernel:  [<00000001f8686abe>] out_of_memory+0xee/0x580
-kernel:  [<00000001f86e66b8>] __alloc_pages_slowpath+0xd18/0xe90
-kernel:  [<00000001f86e6ad4>] __alloc_pages_nodemask+0x2a4/0x320
-kernel:  [<00000001f86b1ab4>] kmalloc_order+0x34/0xb0
-kernel:  [<00000001f86b1b62>] kmalloc_order_trace+0x32/0xe0
-kernel:  [<00000001f84bb806>] kvm_set_irq_routing+0xa6/0x2e0
-kernel:  [<00000001f84c99a4>] kvm_arch_vm_ioctl+0x544/0x9e0
-kernel:  [<00000001f84b8936>] kvm_vm_ioctl+0x396/0x760
-kernel:  [<00000001f875df66>] do_vfs_ioctl+0x376/0x690
-kernel:  [<00000001f875e304>] ksys_ioctl+0x84/0xb0
-kernel:  [<00000001f875e39a>] __s390x_sys_ioctl+0x2a/0x40
-kernel:  [<00000001f8d55424>] system_call+0xd8/0x2c8
+Fix this by differentiating between mesh eapol frames and
+other data frames with existing rx->key. Allow mesh mesh
+eapol frames only if they are for our vif address.
 
-As far as I can tell s390x does not use the iopins as we bail our for
-anything other than KVM_IRQ_ROUTING_S390_ADAPTER and the chip/pin is
-only used for KVM_IRQ_ROUTING_IRQCHIP. So let us use a small number to
-reduce the memory footprint.
+With this patch in-place, ieee80211_rx_h_mesh_fwding continues
+after the ieee80211_drop_unencrypted check and notices, that
+these eapol frames have to be delivered locally, as they should.
 
-Signed-off-by: Christian Borntraeger <borntraeger@de.ibm.com>
-Reviewed-by: Cornelia Huck <cohuck@redhat.com>
-Reviewed-by: David Hildenbrand <david@redhat.com>
-Link: https://lore.kernel.org/r/20200617083620.5409-1-borntraeger@de.ibm.com
+Signed-off-by: Markus Theil <markus.theil@tu-ilmenau.de>
+Link: https://lore.kernel.org/r/20200625104214.50319-1-markus.theil@tu-ilmenau.de
+[small code cleanups]
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/s390/include/asm/kvm_host.h | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ net/mac80211/rx.c | 26 ++++++++++++++++++++++++++
+ 1 file changed, 26 insertions(+)
 
-diff --git a/arch/s390/include/asm/kvm_host.h b/arch/s390/include/asm/kvm_host.h
-index d6bcd34f3ec32..ec65bc2bd084e 100644
---- a/arch/s390/include/asm/kvm_host.h
-+++ b/arch/s390/include/asm/kvm_host.h
-@@ -31,12 +31,12 @@
- #define KVM_USER_MEM_SLOTS 32
+diff --git a/net/mac80211/rx.c b/net/mac80211/rx.c
+index 91a13aee43784..961f37c0701bc 100644
+--- a/net/mac80211/rx.c
++++ b/net/mac80211/rx.c
+@@ -2357,6 +2357,7 @@ static int ieee80211_802_1x_port_control(struct ieee80211_rx_data *rx)
  
- /*
-- * These seem to be used for allocating ->chip in the routing table,
-- * which we don't use. 4096 is an out-of-thin-air value. If we need
-- * to look at ->chip later on, we'll need to revisit this.
-+ * These seem to be used for allocating ->chip in the routing table, which we
-+ * don't use. 1 is as small as we can get to reduce the needed memory. If we
-+ * need to look at ->chip later on, we'll need to revisit this.
-  */
- #define KVM_NR_IRQCHIPS 1
--#define KVM_IRQCHIP_NUM_PINS 4096
-+#define KVM_IRQCHIP_NUM_PINS 1
- #define KVM_HALT_POLL_NS_DEFAULT 50000
+ static int ieee80211_drop_unencrypted(struct ieee80211_rx_data *rx, __le16 fc)
+ {
++	struct ieee80211_hdr *hdr = (void *)rx->skb->data;
+ 	struct sk_buff *skb = rx->skb;
+ 	struct ieee80211_rx_status *status = IEEE80211_SKB_RXCB(skb);
  
- /* s390-specific vcpu->requests bit members */
+@@ -2367,6 +2368,31 @@ static int ieee80211_drop_unencrypted(struct ieee80211_rx_data *rx, __le16 fc)
+ 	if (status->flag & RX_FLAG_DECRYPTED)
+ 		return 0;
+ 
++	/* check mesh EAPOL frames first */
++	if (unlikely(rx->sta && ieee80211_vif_is_mesh(&rx->sdata->vif) &&
++		     ieee80211_is_data(fc))) {
++		struct ieee80211s_hdr *mesh_hdr;
++		u16 hdr_len = ieee80211_hdrlen(fc);
++		u16 ethertype_offset;
++		__be16 ethertype;
++
++		if (!ether_addr_equal(hdr->addr1, rx->sdata->vif.addr))
++			goto drop_check;
++
++		/* make sure fixed part of mesh header is there, also checks skb len */
++		if (!pskb_may_pull(rx->skb, hdr_len + 6))
++			goto drop_check;
++
++		mesh_hdr = (struct ieee80211s_hdr *)(skb->data + hdr_len);
++		ethertype_offset = hdr_len + ieee80211_get_mesh_hdrlen(mesh_hdr) +
++				   sizeof(rfc1042_header);
++
++		if (skb_copy_bits(rx->skb, ethertype_offset, &ethertype, 2) == 0 &&
++		    ethertype == rx->sdata->control_port_protocol)
++			return 0;
++	}
++
++drop_check:
+ 	/* Drop unencrypted frames if key is set. */
+ 	if (unlikely(!ieee80211_has_protected(fc) &&
+ 		     !ieee80211_is_any_nullfunc(fc) &&
 -- 
 2.25.1
 
