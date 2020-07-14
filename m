@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB01CC433EC
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 19:05:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A6E9C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 19:05:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BC2FB2084C
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 19:05:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 35DF920773
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 19:05:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594753517;
-	bh=sj7Mgy53uvCuBJN5AxCbcIf+Ao8fcs55/4IY3bzKD68=;
+	s=default; t=1594753522;
+	bh=gT5drgVkggJ7IsVykwTuD9LohfHoV0Is9KZ7YA3lFi4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qbMjA4vDN9iE1SjkoWWRq4/sXcpdLVTbm32QIl+1wGkiFqxjryf5x7mPXI3ZKRCBd
-	 vbltJlkoGot3GIU4FinWx96z6SdLwR9yPXYPFarhMWoRAmFj0R7DtYZb9P3VhaUId8
-	 vtNd5v/3FVwh846kdX+qD+ru2IV/DyP+KSSVytu4=
+	b=RpCCYEZ32ZHdRBMGJRMfj6wTEYzzGclql/hyaPJe+f/ABiHg/02eVm0RuqysiG8a7
+	 LeHUD7ZrGomHTPF5UfK5fqLP7Vh8vKBq5v4sRwOktPmOwm7QQHgi7ySgLLspv9xq9V
+	 kmOLXgyd8IbHnwT6sW4uMKbbXasNXR18Ad2TbYi4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730903AbgGNTFQ (ORCPT
+        id S1731030AbgGNTFU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 15:05:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52584 "EHLO mail.kernel.org"
+        Tue, 14 Jul 2020 15:05:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52478 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729554AbgGNSzB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 14:55:01 -0400
+        id S1730422AbgGNSy4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 14:54:56 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 87BE322BF3;
-        Tue, 14 Jul 2020 18:55:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7452622B4E;
+        Tue, 14 Jul 2020 18:54:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594752901;
-        bh=sj7Mgy53uvCuBJN5AxCbcIf+Ao8fcs55/4IY3bzKD68=;
+        s=default; t=1594752896;
+        bh=gT5drgVkggJ7IsVykwTuD9LohfHoV0Is9KZ7YA3lFi4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KABGEfNkMwcFlZZAjPTzoqFKhxezYb914OoGcmVe7mYkpCueCFe8RmEFa5M4JHJ2O
-         Cfu7ym5gpd/cLQOS5WWqv6GSjhUOBhJSBYaEMHgR8Pfojl98NheaKqJ2ICAxACtZUx
-         XT0P5UXA7+OH9Zzjge/0LnCD3w5/9Dc5PdcRqfTs=
+        b=SJs7fFJtwkhz+ESIecY/pjP1a0tTUOTlGi8xVBV+GW4dqX8hZSUqjJ968igo6pox0
+         sRFQVee8KUqBLlZYMAec+Y/i1eBS0dSk4CZvs5RGQjTlZ4uJsFoiKdJ2lME2qhXYFB
+         +yKtk1Op2I67jZ8kl06MBbHuxMktPZ920CaaFuDo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tom Rix <trix@redhat.com>,
-        Anna Schumaker <Anna.Schumaker@Netapp.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 043/166] nfs: Fix memory leak of export_path
-Date:   Tue, 14 Jul 2020 20:43:28 +0200
-Message-Id: <20200714184117.942167644@linuxfoundation.org>
+        stable@vger.kernel.org, Stephen Boyd <swboyd@chromium.org>,
+        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
+        Douglas Anderson <dianders@chromium.org>,
+        Will Deacon <will@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.7 042/166] arm64: Add KRYO{3,4}XX silver CPU cores to SSB safelist
+Date:   Tue, 14 Jul 2020 20:43:27 +0200
+Message-Id: <20200714184117.893655849@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200714184115.844176932@linuxfoundation.org>
 References: <20200714184115.844176932@linuxfoundation.org>
@@ -60,39 +61,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tom Rix <trix@redhat.com>
+From: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
 
-[ Upstream commit 4659ed7cc8514369043053463514408ca16ad6f3 ]
+[ Upstream commit 108447fd0d1a34b0929cd26dc637c917a734ebab ]
 
-The try_location function is called within a loop by nfs_follow_referral.
-try_location calls nfs4_pathname_string to created the export_path.
-nfs4_pathname_string allocates the memory. export_path is stored in the
-nfs_fs_context/fs_context structure similarly as hostname and source.
-But whereas the ctx hostname and source are freed before assignment,
-export_path is not.  So if there are multiple loops, the new export_path
-will overwrite the old without the old being freed.
+QCOM KRYO{3,4}XX silver/LITTLE CPU cores are based on
+Cortex-A55 and are SSB safe, hence add them to SSB
+safelist -> arm64_ssb_cpus[].
 
-So call kfree for export_path.
-
-Signed-off-by: Tom Rix <trix@redhat.com>
-Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
+Reported-by: Stephen Boyd <swboyd@chromium.org>
+Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+Reviewed-by: Douglas Anderson <dianders@chromium.org>
+Link: https://lore.kernel.org/r/20200625103123.7240-1-saiprakash.ranjan@codeaurora.org
+Signed-off-by: Will Deacon <will@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/nfs/nfs4namespace.c | 1 +
- 1 file changed, 1 insertion(+)
+ arch/arm64/kernel/cpu_errata.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/fs/nfs/nfs4namespace.c b/fs/nfs/nfs4namespace.c
-index a3ab6e219061b..873342308dc0d 100644
---- a/fs/nfs/nfs4namespace.c
-+++ b/fs/nfs/nfs4namespace.c
-@@ -308,6 +308,7 @@ static int try_location(struct fs_context *fc,
- 	if (IS_ERR(export_path))
- 		return PTR_ERR(export_path);
+diff --git a/arch/arm64/kernel/cpu_errata.c b/arch/arm64/kernel/cpu_errata.c
+index df56d2295d165..0f37045fafab3 100644
+--- a/arch/arm64/kernel/cpu_errata.c
++++ b/arch/arm64/kernel/cpu_errata.c
+@@ -460,6 +460,8 @@ static const struct midr_range arm64_ssb_cpus[] = {
+ 	MIDR_ALL_VERSIONS(MIDR_CORTEX_A53),
+ 	MIDR_ALL_VERSIONS(MIDR_CORTEX_A55),
+ 	MIDR_ALL_VERSIONS(MIDR_BRAHMA_B53),
++	MIDR_ALL_VERSIONS(MIDR_QCOM_KRYO_3XX_SILVER),
++	MIDR_ALL_VERSIONS(MIDR_QCOM_KRYO_4XX_SILVER),
+ 	{},
+ };
  
-+	kfree(ctx->nfs_server.export_path);
- 	ctx->nfs_server.export_path = export_path;
- 
- 	source = kmalloc(len + 1 + ctx->nfs_server.export_path_len + 1,
 -- 
 2.25.1
 
