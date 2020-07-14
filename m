@@ -2,122 +2,124 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 778C9C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 15:58:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26E57C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 15:58:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 55B13223C6
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 15:58:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594742295;
-	bh=4IhECytbsME944uPD5AnX3JFR+am0KHJWRGX2bRhK1s=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=qj2CwG2xq40q4JkII4xcBE7rJxTByE/FeXadAsoXqF5rLYmhG+qZ9SWfh6UddFmUJ
-	 N5iH+d+vV3xm76RkaWGUwsFzrbH+lOOWGxt4X30ByOMZrfJFlzxeGPMvEc2sc/Rxd7
-	 WYMWnJUBuCoUKxhyUu4O7JB8cSS3rTdKUH2zFtkE=
+	by mail.kernel.org (Postfix) with ESMTP id 013A722509
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 15:58:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727972AbgGNP6O convert rfc822-to-8bit (ORCPT
+        id S1728051AbgGNP6q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 11:58:14 -0400
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:36593 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725890AbgGNP6N (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 11:58:13 -0400
-Received: by mail-oi1-f193.google.com with SMTP id h17so14328489oie.3;
-        Tue, 14 Jul 2020 08:58:12 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=qvEysgJYfCAug8jVBcrbyiiBEEw40SucgK7wjiV/k08=;
-        b=Z0Rtv5btpLrfFcNqmpAVRXlrC828HElFNUiJpt70GgQhhG2Ncpt7yWAH6/0vHNvm2j
-         I3G6nuOAs2lbXNVtQtsmt4p2gpPgu7pTCAbQuL9SzlXlfLs2Uf272T6oRcX9FeXYctPF
-         /lSvPXMy2cruNlVi/B1yCt4v6dToYOdmv0g6IPcVQkSIXE8AqrPk0IlQftWCj8Ro29Gk
-         YDwnWQgAz6MxUncyR6sSrGQN4cHv/fTBeL3clEo7ky33pVGRXiL5Mrm8J7RQRy2xSrwC
-         bKkW1i4FbffOmp4jJ6+nGN6NlreRp9d71L/Si0j4oPlmBfJgVkDY/x1XKRFZ11TlrpGd
-         b6UA==
-X-Gm-Message-State: AOAM530EFUlfdAjzLpYhmBvoJAM1M/Os9PRfcLGWzpUlb6miDla4qtty
-        TeFfWCcBd0mjfKiJP1quwEans4L9wJeXFME6g2E=
-X-Google-Smtp-Source: ABdhPJx3F5Gi+qjW3wd97TexweWn1i7SVIu1JsmkDLtvkyWQmXrxdacZYE66yGenmJOtuuP/TNv58mMUgzRQ1viiQ4w=
-X-Received: by 2002:aca:4a89:: with SMTP id x131mr4403423oia.103.1594742292442;
- Tue, 14 Jul 2020 08:58:12 -0700 (PDT)
+        Tue, 14 Jul 2020 11:58:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33482 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725890AbgGNP6q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 11:58:46 -0400
+Received: from gaia (unknown [95.146.230.158])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 93708223C6;
+        Tue, 14 Jul 2020 15:58:43 +0000 (UTC)
+Date:   Tue, 14 Jul 2020 16:58:41 +0100
+From:   Catalin Marinas <catalin.marinas@arm.com>
+To:     Zhenyu Ye <yezhenyu2@huawei.com>
+Cc:     maz@kernel.org, steven.price@arm.com, guohanjun@huawei.com,
+        will@kernel.org, olof@lixom.net, suzuki.poulose@arm.com,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        zhangshaokun@hisilicon.com, prime.zeng@hisilicon.com,
+        linux-arch@vger.kernel.org, kuhn.chenqun@huawei.com,
+        xiexiangyou@huawei.com, linux-mm@kvack.org, arm@kernel.org
+Subject: Re: [PATCH v2 0/2] arm64: tlb: add support for TLBI RANGE
+ instructions
+Message-ID: <20200714155840.GE18793@gaia>
+References: <20200710094420.517-1-yezhenyu2@huawei.com>
+ <159440712962.27784.4664678472466095995.b4-ty@arm.com>
+ <20200713122123.GC15829@gaia>
+ <2edcf1ce-38d4-82b2-e500-51f742cae357@huawei.com>
+ <20200713165903.GD15829@gaia>
+ <b0c1ae56-3c22-dafe-a145-305714b211eb@huawei.com>
 MIME-Version: 1.0
-References: <20200714145049.2496163-1-lee.jones@linaro.org> <20200714145049.2496163-10-lee.jones@linaro.org>
-In-Reply-To: <20200714145049.2496163-10-lee.jones@linaro.org>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Tue, 14 Jul 2020 17:58:01 +0200
-Message-ID: <CAJZ5v0iB0K6H28DSDQj9T7k_kV10THxV6-HwN9qfmkLsYNHfiA@mail.gmail.com>
-Subject: Re: [PATCH 09/13] cpufreq: acpi-cpufreq: Remove unused ID structs
-To:     Lee Jones <lee.jones@linaro.org>
-Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Andy Grover <andrew.grover@intel.com>,
-        Paul Diefenbaugh <paul.s.diefenbaugh@intel.com>,
-        Dominik Brodowski <linux@brodo.de>,
-        Denis Sadykov <denis.m.sadykov@intel.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <b0c1ae56-3c22-dafe-a145-305714b211eb@huawei.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 14, 2020 at 4:51 PM Lee Jones <lee.jones@linaro.org> wrote:
->
-> Can't see them being used anywhere and the compiler doesn't complain
-> that they're missing, so ...
+On Tue, Jul 14, 2020 at 11:17:01PM +0800, Zhenyu Ye wrote:
+> On 2020/7/14 0:59, Catalin Marinas wrote:
+> >> +config ARM64_TLBI_RANGE
+> >> +	bool "Enable support for tlbi range feature"
+> >> +	default y
+> >> +	depends on AS_HAS_TLBI_RANGE
+> >> +	help
+> >> +	  ARMv8.4-TLBI provides TLBI invalidation instruction that apply to a
+> >> +	  range of input addresses.
+> >> +
+> >> +	  The feature introduces new assembly instructions, and they were
+> >> +	  support when binutils >= 2.30.
+> > 
+> > It looks like 2.30. I tracked it down to this commit:
+> > 
+> > https://sourceware.org/git/?p=binutils-gdb.git;a=commitdiff;h=793a194839bc8add71fdc7429c58b10f0667a6f6;hp=1a7ed57c840dcb0401f1a67c6763a89f7d2686d2
+> > 
+> >> +config AS_HAS_TLBI_RANGE
+> >> +	def_bool $(as-option, -Wa$(comma)-march=armv8.4-a)
 
-Aren't they needed for automatic module loading in certain configurations?
+You could make this more generic like AS_HAS_ARMV8_4.
 
-> Fixes the following W=1 kernel build warning(s):
->
->  drivers/cpufreq/acpi-cpufreq.c:1004:36: warning: ‘processor_device_ids’ defined but not used [-Wunused-const-variable=]
->  997 | static const struct x86_cpu_id acpi_cpufreq_ids[] = {
->  | ^~~~~~~~~~~~~~~~
->  drivers/cpufreq/acpi-cpufreq.c:997:32: warning: ‘acpi_cpufreq_ids’ defined but not used [-Wunused-const-variable=]
->  619 | static const struct acpi_device_id processor_device_ids[] = {
->  | ^~~~~~~~~~~~~~~~~~~~
->
-> Cc: Andy Grover <andrew.grover@intel.com>
-> Cc: Paul Diefenbaugh <paul.s.diefenbaugh@intel.com>
-> Cc: Dominik Brodowski <linux@brodo.de>
-> Cc: Denis Sadykov <denis.m.sadykov@intel.com>
-> Signed-off-by: Lee Jones <lee.jones@linaro.org>
-> ---
->  drivers/cpufreq/acpi-cpufreq.c | 14 --------------
->  1 file changed, 14 deletions(-)
->
-> diff --git a/drivers/cpufreq/acpi-cpufreq.c b/drivers/cpufreq/acpi-cpufreq.c
-> index d38a693b48e03..fc68f13352695 100644
-> --- a/drivers/cpufreq/acpi-cpufreq.c
-> +++ b/drivers/cpufreq/acpi-cpufreq.c
-> @@ -995,18 +995,4 @@ MODULE_PARM_DESC(acpi_pstate_strict,
->  late_initcall(acpi_cpufreq_init);
->  module_exit(acpi_cpufreq_exit);
->
-> -static const struct x86_cpu_id acpi_cpufreq_ids[] = {
-> -       X86_MATCH_FEATURE(X86_FEATURE_ACPI, NULL),
-> -       X86_MATCH_FEATURE(X86_FEATURE_HW_PSTATE, NULL),
-> -       {}
-> -};
-> -MODULE_DEVICE_TABLE(x86cpu, acpi_cpufreq_ids);
-> -
-> -static const struct acpi_device_id processor_device_ids[] = {
-> -       {ACPI_PROCESSOR_OBJECT_HID, },
-> -       {ACPI_PROCESSOR_DEVICE_HID, },
-> -       {},
-> -};
-> -MODULE_DEVICE_TABLE(acpi, processor_device_ids);
-> -
->  MODULE_ALIAS("acpi");
-> --
-> 2.25.1
->
+> > The problem is that we don't pass -Wa,-march=armv8.4-a to gas. AFAICT,
+> > we only set an 8.3 for PAC but I'm not sure how passing two such options
+> > goes.
+> 
+> Pass the -march twice may not have bad impact.  Test in my toolchains
+> and the newer one will be chosen.  Anyway, we can add judgment to avoid
+> them be passed at the same time.
+
+I think the last one always overrides the previous (same with the .arch
+statements in asm files). For example:
+
+echo "paciasp" | aarch64-none-linux-gnu-as -march=armv8.2-a -march=armv8.3-a
+
+succeeds but the one below fails:
+
+echo "paciasp" | aarch64-none-linux-gnu-as -march=armv8.3-a -march=armv8.2-a
+
+> > A safer bet may be to simply encode the instructions by hand:
+> > 
+> > #define SYS_TLBI_RVAE1IS(Rt) \
+> > 	__emit_inst(0xd5000000 | sys_insn(1, 0, 8, 2, 1) | ((Rt) & 0x1f))
+> > #define SYS_TLBI_RVALE1IS(Rt) \
+> > 	__emit_inst(0xd5000000 | sys_insn(1, 0, 8, 2, 5) | ((Rt) & 0x1f))
+> > 
+> > (please check that they are correct)
+> 
+> Currently in kernel, all tlbi instructions are passed through __tlbi()
+> and __tlbi_user(). If we encode the range instructions by hand, we may
+> should have to add a new mechanism for this:
+> 
+> 1. choose a register and save it;
+> 2. put the operations for tlbi range to the register;
+> 3. do tlbi range by asm(SYS_TLBI_RVAE1IS(x0));
+> 4. restore the value of the register.
+> 
+> It's complicated and will only be used with tlbi range instructions.
+> (Am I understand something wrong? )
+> 
+> So I am prefer to pass -march=armv8.4-a to toolschains to support tlbi
+> range instruction, just like what PAC does.
+
+It will indeed get more complicated than necessary. So please go with
+the -Wa,-march=armv8.4-a check in Kconfig and update the
+arch/arm64/Makefile to pass this option (after the 8.3 one).
+
+Thanks.
+
+-- 
+Catalin
