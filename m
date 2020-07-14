@@ -7,29 +7,28 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57455C433E4
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 12:10:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C0A2C433ED
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 12:11:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3DA3C22224
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 12:10:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0FCED222B7
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 12:11:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728223AbgGNMKm (ORCPT
+        id S1728441AbgGNMLE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 08:10:42 -0400
-Received: from 8bytes.org ([81.169.241.247]:52864 "EHLO theia.8bytes.org"
+        Tue, 14 Jul 2020 08:11:04 -0400
+Received: from 8bytes.org ([81.169.241.247]:52886 "EHLO theia.8bytes.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728168AbgGNMKj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 08:10:39 -0400
+        id S1728362AbgGNMK7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 08:10:59 -0400
 Received: from cap.home.8bytes.org (p5b006776.dip0.t-ipconnect.de [91.0.103.118])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
         (No client certificate requested)
-        by theia.8bytes.org (Postfix) with ESMTPSA id E052E4CA;
-        Tue, 14 Jul 2020 14:10:37 +0200 (CEST)
+        by theia.8bytes.org (Postfix) with ESMTPSA id 596E1F79;
+        Tue, 14 Jul 2020 14:10:55 +0200 (CEST)
 From:   Joerg Roedel <joro@8bytes.org>
 To:     x86@kernel.org
 Cc:     Joerg Roedel <joro@8bytes.org>, Joerg Roedel <jroedel@suse.de>,
-        Masami Hiramatsu <mhiramat@kernel.org>, hpa@zytor.com,
-        Andy Lutomirski <luto@kernel.org>,
+        hpa@zytor.com, Andy Lutomirski <luto@kernel.org>,
         Dave Hansen <dave.hansen@linux.intel.com>,
         Peter Zijlstra <peterz@infradead.org>,
         Jiri Slaby <jslaby@suse.cz>,
@@ -40,14 +39,15 @@ Cc:     Joerg Roedel <joro@8bytes.org>, Joerg Roedel <jroedel@suse.de>,
         David Rientjes <rientjes@google.com>,
         Cfir Cohen <cfir@google.com>,
         Erdem Aktas <erdemaktas@google.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
         Mike Stunes <mstunes@vmware.com>,
         Sean Christopherson <sean.j.christopherson@intel.com>,
         Martin Radev <martin.b.radev@gmail.com>,
         linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
         virtualization@lists.linux-foundation.org
-Subject: [PATCH v4 09/75] x86/insn: Add insn_get_modrm_reg_off()
-Date:   Tue, 14 Jul 2020 14:08:11 +0200
-Message-Id: <20200714120917.11253-10-joro@8bytes.org>
+Subject: [PATCH v4 41/75] x86/sev-es: Setup GHCB based boot #VC handler
+Date:   Tue, 14 Jul 2020 14:08:43 +0200
+Message-Id: <20200714120917.11253-42-joro@8bytes.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200714120917.11253-1-joro@8bytes.org>
 References: <20200714120917.11253-1-joro@8bytes.org>
@@ -60,76 +60,265 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Joerg Roedel <jroedel@suse.de>
 
-Add a function to the instruction decoder which returns the pt_regs
-offset of the register specified in the reg field of the modrm byte.
+Add the infrastructure to handle #VC exceptions when the kernel runs
+on virtual addresses and has a GHCB mapped. This handler will be used
+until the runtime #VC handler takes over.
 
 Signed-off-by: Joerg Roedel <jroedel@suse.de>
-Acked-by: Masami Hiramatsu <mhiramat@kernel.org>
 ---
- arch/x86/include/asm/insn-eval.h |  1 +
- arch/x86/lib/insn-eval.c         | 23 +++++++++++++++++++++++
- 2 files changed, 24 insertions(+)
+ arch/x86/include/asm/segment.h  |   2 +-
+ arch/x86/include/asm/sev-es.h   |   1 +
+ arch/x86/kernel/head64.c        |   6 ++
+ arch/x86/kernel/sev-es-shared.c |  14 ++--
+ arch/x86/kernel/sev-es.c        | 116 ++++++++++++++++++++++++++++++++
+ arch/x86/mm/extable.c           |   1 +
+ 6 files changed, 132 insertions(+), 8 deletions(-)
 
-diff --git a/arch/x86/include/asm/insn-eval.h b/arch/x86/include/asm/insn-eval.h
-index 392b4fe377f9..f748f57f1491 100644
---- a/arch/x86/include/asm/insn-eval.h
-+++ b/arch/x86/include/asm/insn-eval.h
-@@ -17,6 +17,7 @@
+diff --git a/arch/x86/include/asm/segment.h b/arch/x86/include/asm/segment.h
+index 6669164abadc..5b648066504c 100644
+--- a/arch/x86/include/asm/segment.h
++++ b/arch/x86/include/asm/segment.h
+@@ -230,7 +230,7 @@
+ #define NUM_EXCEPTION_VECTORS		32
  
- void __user *insn_get_addr_ref(struct insn *insn, struct pt_regs *regs);
- int insn_get_modrm_rm_off(struct insn *insn, struct pt_regs *regs);
-+int insn_get_modrm_reg_off(struct insn *insn, struct pt_regs *regs);
- unsigned long insn_get_seg_base(struct pt_regs *regs, int seg_reg_idx);
- int insn_get_code_seg_params(struct pt_regs *regs);
- int insn_fetch_from_user(struct pt_regs *regs,
-diff --git a/arch/x86/lib/insn-eval.c b/arch/x86/lib/insn-eval.c
-index f52046f90dd3..a8ac5c5e94f0 100644
---- a/arch/x86/lib/insn-eval.c
-+++ b/arch/x86/lib/insn-eval.c
-@@ -20,6 +20,7 @@
+ /* Bitmask of exception vectors which push an error code on the stack: */
+-#define EXCEPTION_ERRCODE_MASK		0x00027d00
++#define EXCEPTION_ERRCODE_MASK		0x20027d00
  
- enum reg_type {
- 	REG_TYPE_RM = 0,
-+	REG_TYPE_REG,
- 	REG_TYPE_INDEX,
- 	REG_TYPE_BASE,
- };
-@@ -441,6 +442,13 @@ static int get_reg_offset(struct insn *insn, struct pt_regs *regs,
- 			regno += 8;
- 		break;
+ #define GDT_SIZE			(GDT_ENTRIES*8)
+ #define GDT_ENTRY_TLS_ENTRIES		3
+diff --git a/arch/x86/include/asm/sev-es.h b/arch/x86/include/asm/sev-es.h
+index ec0e112a742b..824e9e6b067c 100644
+--- a/arch/x86/include/asm/sev-es.h
++++ b/arch/x86/include/asm/sev-es.h
+@@ -75,5 +75,6 @@ static inline u64 lower_bits(u64 val, unsigned int bits)
  
-+	case REG_TYPE_REG:
-+		regno = X86_MODRM_REG(insn->modrm.value);
+ /* Early IDT entry points for #VC handler */
+ extern void vc_no_ghcb(void);
++extern bool handle_vc_boot_ghcb(struct pt_regs *regs);
+ 
+ #endif
+diff --git a/arch/x86/kernel/head64.c b/arch/x86/kernel/head64.c
+index 9ea8a0437b66..23d492091f3b 100644
+--- a/arch/x86/kernel/head64.c
++++ b/arch/x86/kernel/head64.c
+@@ -405,6 +405,12 @@ void __init do_early_exception(struct pt_regs *regs, int trapnr)
+ 	    early_make_pgtable(native_read_cr2()))
+ 		return;
+ 
++#ifdef CONFIG_AMD_MEM_ENCRYPT
++	if (trapnr == X86_TRAP_VC &&
++	    handle_vc_boot_ghcb(regs))
++		return;
++#endif
 +
-+		if (X86_REX_R(insn->rex_prefix.value))
-+			regno += 8;
-+		break;
-+
- 	case REG_TYPE_INDEX:
- 		regno = X86_SIB_INDEX(insn->sib.value);
- 		if (X86_REX_X(insn->rex_prefix.value))
-@@ -809,6 +817,21 @@ int insn_get_modrm_rm_off(struct insn *insn, struct pt_regs *regs)
- 	return get_reg_offset(insn, regs, REG_TYPE_RM);
+ 	early_fixup_exception(regs, trapnr);
  }
  
-+/**
-+ * insn_get_modrm_reg_off() - Obtain register in reg part of the ModRM byte
-+ * @insn:	Instruction containing the ModRM byte
-+ * @regs:	Register values as seen when entering kernel mode
-+ *
-+ * Returns:
-+ *
-+ * The register indicated by the reg part of the ModRM byte. The
-+ * register is obtained as an offset from the base of pt_regs.
+diff --git a/arch/x86/kernel/sev-es-shared.c b/arch/x86/kernel/sev-es-shared.c
+index df6750aef3c8..4153b1b1048f 100644
+--- a/arch/x86/kernel/sev-es-shared.c
++++ b/arch/x86/kernel/sev-es-shared.c
+@@ -9,7 +9,7 @@
+  * and is included directly into both code-bases.
+  */
+ 
+-static void __maybe_unused sev_es_terminate(unsigned int reason)
++static void sev_es_terminate(unsigned int reason)
+ {
+ 	u64 val = GHCB_SEV_TERMINATE;
+ 
+@@ -27,7 +27,7 @@ static void __maybe_unused sev_es_terminate(unsigned int reason)
+ 		asm volatile("hlt\n" : : : "memory");
+ }
+ 
+-static bool __maybe_unused sev_es_negotiate_protocol(void)
++static bool sev_es_negotiate_protocol(void)
+ {
+ 	u64 val;
+ 
+@@ -46,7 +46,7 @@ static bool __maybe_unused sev_es_negotiate_protocol(void)
+ 	return true;
+ }
+ 
+-static void __maybe_unused vc_ghcb_invalidate(struct ghcb *ghcb)
++static void vc_ghcb_invalidate(struct ghcb *ghcb)
+ {
+ 	memset(ghcb->save.valid_bitmap, 0, sizeof(ghcb->save.valid_bitmap));
+ }
+@@ -58,9 +58,9 @@ static bool vc_decoding_needed(unsigned long exit_code)
+ 		 exit_code <= SVM_EXIT_LAST_EXCP);
+ }
+ 
+-static enum es_result __maybe_unused vc_init_em_ctxt(struct es_em_ctxt *ctxt,
+-						     struct pt_regs *regs,
+-						     unsigned long exit_code)
++static enum es_result vc_init_em_ctxt(struct es_em_ctxt *ctxt,
++				      struct pt_regs *regs,
++				      unsigned long exit_code)
+ {
+ 	enum es_result ret = ES_OK;
+ 
+@@ -73,7 +73,7 @@ static enum es_result __maybe_unused vc_init_em_ctxt(struct es_em_ctxt *ctxt,
+ 	return ret;
+ }
+ 
+-static void __maybe_unused vc_finish_insn(struct es_em_ctxt *ctxt)
++static void vc_finish_insn(struct es_em_ctxt *ctxt)
+ {
+ 	ctxt->regs->ip += ctxt->insn.length;
+ }
+diff --git a/arch/x86/kernel/sev-es.c b/arch/x86/kernel/sev-es.c
+index 0b698b653c0b..bb3e702a71eb 100644
+--- a/arch/x86/kernel/sev-es.c
++++ b/arch/x86/kernel/sev-es.c
+@@ -7,7 +7,9 @@
+  * Author: Joerg Roedel <jroedel@suse.de>
+  */
+ 
++#include <linux/sched/debug.h>	/* For show_regs() */
+ #include <linux/kernel.h>
++#include <linux/printk.h>
+ #include <linux/mm.h>
+ 
+ #include <asm/sev-es.h>
+@@ -18,6 +20,18 @@
+ #include <asm/trapnr.h>
+ #include <asm/svm.h>
+ 
++/* For early boot hypervisor communication in SEV-ES enabled guests */
++static struct ghcb boot_ghcb_page __bss_decrypted __aligned(PAGE_SIZE);
++
++/*
++ * Needs to be in the .data section because we need it NULL before bss is
++ * cleared
 + */
-+int insn_get_modrm_reg_off(struct insn *insn, struct pt_regs *regs)
++static struct ghcb __initdata *boot_ghcb;
++
++/* Needed in vc_early_forward_exception */
++void do_early_exception(struct pt_regs *regs, int trapnr);
++
+ static inline u64 sev_es_rd_ghcb_msr(void)
+ {
+ 	return native_read_msr(MSR_AMD64_SEV_ES_GHCB);
+@@ -161,3 +175,105 @@ static enum es_result vc_read_mem(struct es_em_ctxt *ctxt,
+ 
+ /* Include code shared with pre-decompression boot stage */
+ #include "sev-es-shared.c"
++
++/*
++ * This function runs on the first #VC exception after the kernel
++ * switched to virtual addresses.
++ */
++static bool __init sev_es_setup_ghcb(void)
 +{
-+	return get_reg_offset(insn, regs, REG_TYPE_REG);
++	/* First make sure the hypervisor talks a supported protocol. */
++	if (!sev_es_negotiate_protocol())
++		return false;
++
++	/*
++	 * Clear the boot_ghcb. The first exception comes in before the bss
++	 * section is cleared.
++	 */
++	memset(&boot_ghcb_page, 0, PAGE_SIZE);
++
++	/* Alright - Make the boot-ghcb public */
++	boot_ghcb = &boot_ghcb_page;
++
++	return true;
 +}
 +
- /**
-  * get_seg_base_limit() - obtain base address and limit of a segment
-  * @insn:	Instruction. Must be valid.
++static void __init vc_early_forward_exception(struct es_em_ctxt *ctxt)
++{
++	int trapnr = ctxt->fi.vector;
++
++	if (trapnr == X86_TRAP_PF)
++		native_write_cr2(ctxt->fi.cr2);
++
++	ctxt->regs->orig_ax = ctxt->fi.error_code;
++	do_early_exception(ctxt->regs, trapnr);
++}
++
++static enum es_result vc_handle_exitcode(struct es_em_ctxt *ctxt,
++					 struct ghcb *ghcb,
++					 unsigned long exit_code)
++{
++	enum es_result result;
++
++	switch (exit_code) {
++	default:
++		/*
++		 * Unexpected #VC exception
++		 */
++		result = ES_UNSUPPORTED;
++	}
++
++	return result;
++}
++
++bool __init handle_vc_boot_ghcb(struct pt_regs *regs)
++{
++	unsigned long exit_code = regs->orig_ax;
++	struct es_em_ctxt ctxt;
++	enum es_result result;
++
++	/* Do initial setup or terminate the guest */
++	if (unlikely(boot_ghcb == NULL && !sev_es_setup_ghcb()))
++		sev_es_terminate(GHCB_SEV_ES_REASON_GENERAL_REQUEST);
++
++	vc_ghcb_invalidate(boot_ghcb);
++
++	result = vc_init_em_ctxt(&ctxt, regs, exit_code);
++	if (result == ES_OK)
++		result = vc_handle_exitcode(&ctxt, boot_ghcb, exit_code);
++
++	/* Done - now check the result */
++	switch (result) {
++	case ES_OK:
++		vc_finish_insn(&ctxt);
++		break;
++	case ES_UNSUPPORTED:
++		early_printk("PANIC: Unsupported exit-code 0x%02lx in early #VC exception (IP: 0x%lx)\n",
++				exit_code, regs->ip);
++		goto fail;
++	case ES_VMM_ERROR:
++		early_printk("PANIC: Failure in communication with VMM (exit-code 0x%02lx IP: 0x%lx)\n",
++				exit_code, regs->ip);
++		goto fail;
++	case ES_DECODE_FAILED:
++		early_printk("PANIC: Failed to decode instruction (exit-code 0x%02lx IP: 0x%lx)\n",
++				exit_code, regs->ip);
++		goto fail;
++	case ES_EXCEPTION:
++		vc_early_forward_exception(&ctxt);
++		break;
++	case ES_RETRY:
++		/* Nothing to do */
++		break;
++	default:
++		BUG();
++	}
++
++	return true;
++
++fail:
++	show_regs(regs);
++
++	while (true)
++		halt();
++}
+diff --git a/arch/x86/mm/extable.c b/arch/x86/mm/extable.c
+index 1d6cb07f4f86..3966749d07ac 100644
+--- a/arch/x86/mm/extable.c
++++ b/arch/x86/mm/extable.c
+@@ -5,6 +5,7 @@
+ #include <xen/xen.h>
+ 
+ #include <asm/fpu/internal.h>
++#include <asm/sev-es.h>
+ #include <asm/traps.h>
+ #include <asm/kdebug.h>
+ 
 -- 
 2.27.0
 
