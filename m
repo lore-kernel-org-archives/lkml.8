@@ -2,87 +2,86 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A890AC433E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 06:17:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0900AC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 06:17:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 672BD221E8
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 06:17:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="bZhD9PH7"
+	by mail.kernel.org (Postfix) with ESMTP id D86EE221E8
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 06:17:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594707463;
+	bh=tVvKmkDwjOWKtYnQwCdwRPJ1H7o5sE4gOhRBkFToH/s=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=wFIpzMPVsDV1KkFPbJedkppbq3m3ZablsynyGZ1eP7LKOwQv5Wf3fXiA/7VwbnOvi
+	 qW861DpNh29Si9h0nI4Y5BKp243tjpMCMYHd5SamErjzMGSLBASNlO+ed+1f4KEbta
+	 6dQlqS4GxDDNyuAmImkeYH75kT7k3orl7le+UNSI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726375AbgGNGRL (ORCPT
+        id S1726582AbgGNGRm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 02:17:11 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:30119 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725945AbgGNGRI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 02:17:08 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1594707427;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=5237IuvMgTeLcciR2WRdBusDhcq3/u6O0nS/R7VQZtk=;
-        b=bZhD9PH7vr7RglaJgsRsHzMOAD/cDpIaRmi7JF8mSHHKQ2I+fRiYnJ/AbyffOJCTuf8u5X
-        J8MPG8eJ9Qt5P9JB6Yq3vogvvAbinUgMol2bxQBv3k7ny875u5qYarsXmm8h1q9JvhRAUA
-        47lz2sEG3blnFAuDvXQGz4RHz4fDHig=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-60-8l_nubbtMx6PjXy50fqnoA-1; Tue, 14 Jul 2020 02:16:59 -0400
-X-MC-Unique: 8l_nubbtMx6PjXy50fqnoA-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Tue, 14 Jul 2020 02:17:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57612 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725931AbgGNGRm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 02:17:42 -0400
+Received: from mail-lj1-f173.google.com (mail-lj1-f173.google.com [209.85.208.173])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 76D2F184C5E1;
-        Tue, 14 Jul 2020 06:16:57 +0000 (UTC)
-Received: from krava (unknown [10.40.193.14])
-        by smtp.corp.redhat.com (Postfix) with SMTP id 69B0272E4D;
-        Tue, 14 Jul 2020 06:16:55 +0000 (UTC)
-Date:   Tue, 14 Jul 2020 08:16:54 +0200
-From:   Jiri Olsa <jolsa@redhat.com>
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     Daniel Borkmann <daniel@iogearbox.net>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Networking <netdev@vger.kernel.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Jiri Olsa <jolsa@kernel.org>
-Subject: Re: linux-next: build failure after merge of the bpf-next tree
-Message-ID: <20200714061654.GE183694@krava>
-References: <20200714122247.797cf01e@canb.auug.org.au>
+        by mail.kernel.org (Postfix) with ESMTPSA id 9D298221E8;
+        Tue, 14 Jul 2020 06:17:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594707462;
+        bh=tVvKmkDwjOWKtYnQwCdwRPJ1H7o5sE4gOhRBkFToH/s=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=WfVe7njjv/NJVNeTtgJF6Chu9iGzDgGhqNUuWquFDX04G+wo3URpGw9idKUe2iOFk
+         dAVoRPjub6IUhayrU7OKVvdPGnAbJtiSnWnDZu8txQ/L7cYg5IczBpigZ/fD0yQ+Lo
+         Y9G+iEVpcHlUr0hp7OgqhLgiFfM0vL/hx/Kem6Ok=
+Received: by mail-lj1-f173.google.com with SMTP id s9so21048428ljm.11;
+        Mon, 13 Jul 2020 23:17:41 -0700 (PDT)
+X-Gm-Message-State: AOAM5330kN63P33JNNGohXr4FOIAe4FEvSgdCUsqH+9aXSKbx7K2fpBS
+        VPSNhLr45C3L9Z9nNQm2yWHTyN7Da08Nj7EQqs0=
+X-Google-Smtp-Source: ABdhPJyISwHb0fKgxvB/jlGkf85k8l8fFNQJWx/3voQzIJIOPbXVRcr5u3p9BejqhSR0xuHCwr93duRGf6IOlFiQ7j4=
+X-Received: by 2002:a2e:9996:: with SMTP id w22mr1661469lji.446.1594707460008;
+ Mon, 13 Jul 2020 23:17:40 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200714122247.797cf01e@canb.auug.org.au>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+References: <20200709233545.67954-1-junxiao.bi@oracle.com>
+In-Reply-To: <20200709233545.67954-1-junxiao.bi@oracle.com>
+From:   Song Liu <song@kernel.org>
+Date:   Mon, 13 Jul 2020 23:17:28 -0700
+X-Gmail-Original-Message-ID: <CAPhsuW7seCUnt3zt6A_fjTS2diB7qiTE+SZkM6Vh=G26hdwGtg@mail.gmail.com>
+Message-ID: <CAPhsuW7seCUnt3zt6A_fjTS2diB7qiTE+SZkM6Vh=G26hdwGtg@mail.gmail.com>
+Subject: Re: [PATCH] md: fix deadlock causing by sysfs_notify
+To:     Junxiao Bi <junxiao.bi@oracle.com>
+Cc:     linux-raid <linux-raid@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 14, 2020 at 12:22:47PM +1000, Stephen Rothwell wrote:
-> Hi all,
-> 
-> After merging the bpf-next tree, today's linux-next build (arm
-> multi_v7_defconfig) failed like this:
-> 
-> tmp/ccsqpVCY.s: Assembler messages:
-> tmp/ccsqpVCY.s:78: Error: unrecognized symbol type ""
-> tmp/ccsqpVCY.s:91: Error: unrecognized symbol type ""
-> 
-> I don't know what has caused this (I guess maybe the resolve_btfids
-> branch).
-> 
-> I have used the bpf-next tree from next-20200713 for today.
+On Thu, Jul 9, 2020 at 4:36 PM Junxiao Bi <junxiao.bi@oracle.com> wrote:
+>
+> The following deadlock was captured. The first process is holding 'kernfs_mutex'
+> and hung by io. The io was staging in 'r1conf.pending_bio_list' of raid1 device,
+> this pending bio list would be flushed by second process 'md127_raid1', but
+> it was hung by 'kernfs_mutex'. Using sysfs_notify_dirent_safe() to replace
+> sysfs_notify() can fix it. There were other sysfs_notify() invoked from io
+> path, removed all of them.
+>
+[...]
+>
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Junxiao Bi <junxiao.bi@oracle.com>
 
-ok, trying to reproduce
+Thanks for the patch. It looks good in general. One question though, do we
+need the same change the following line in md.c:level_store()?
 
-thanks,
-jirka
+    sysfs_notify(&mddev->kobj, NULL, "level");
 
+Thanks,
+Song
+
+[...]
