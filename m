@@ -2,55 +2,51 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 655E1C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:57:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4A9EC433EA
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:58:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 39271207F5
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:57:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 85EA522AAB
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:58:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594753079;
-	bh=iAix+odTu5gBFd40uh7vpisp2QYBWz+szMkM3yv+AcE=;
+	s=default; t=1594753082;
+	bh=qiFM/BxMOjkslEgFa0Oc0P/NOeX/xVHdll8hGt151nA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=syJVsBxQB/mf8Tds3eSJNRLi0M66HMtLxuLX9IIh1SjaQZBdCcluLhjRXpqOA7Fbm
-	 g1bTYch87ttf2TvZPFfZIraC14Ndwr/u1IohUiGC6IS9ULh8gOxCgyFnN2Ib3G8C86
-	 3CjEdtdGkjnsT0xtqcY8dHtxJOe3W6H5lqy+sL+M=
+	b=V+w8VAfaP2goivHtclVEn/gGKdxiWPXwkAW6yDmgYSxAk+ilP0ET+c8J/H+yRt89T
+	 dUJukatrFZs3Pzo3+asIQULqdehgAaaLxUud5YnjUCNItCI7iuv5ggw0HiL750eae1
+	 desOxMOA8eLaSEvMr7ZV0Y1N0dEfqi02tWltlypg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730793AbgGNS55 (ORCPT
+        id S1731161AbgGNS6A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 14:57:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56176 "EHLO mail.kernel.org"
+        Tue, 14 Jul 2020 14:58:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56288 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731105AbgGNS5w (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 14:57:52 -0400
+        id S1731157AbgGNS55 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 14:57:57 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 704E0207F5;
-        Tue, 14 Jul 2020 18:57:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DB7DD207F5;
+        Tue, 14 Jul 2020 18:57:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594753072;
-        bh=iAix+odTu5gBFd40uh7vpisp2QYBWz+szMkM3yv+AcE=;
+        s=default; t=1594753077;
+        bh=qiFM/BxMOjkslEgFa0Oc0P/NOeX/xVHdll8hGt151nA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JswMJrsYEBPirwtSrgDUL6M9n++eICTZvPLE8codxXE2ujeMHwbXtBYgb0zDClyqW
-         1iQV6dPRvSZ8n2yDELs3Jk/MRPukHK06U4iG/SbfwRwaGkeLN6UvOQ0TH4xwLcD8Da
-         Y2AHrDQTf1FQ+3zeG2vgiw3x6V2MtHLqhONrAo0A=
+        b=GYRtcnT3oNVG/1ApbN9dHfApHQB8o9++YISoNswQcIXbzX6Z/dDelSnWoR1NT8aAS
+         Jjvb572zZpDvBAGDhOmKf26d03+I/cTVgEtE5cHLrupc9wSfOYSLjQkADQ3UbJc2Wz
+         9UweGvE1K5bkt9JRhr/tcoTcqOc8ekBiARi86jPA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Aya Levin <ayal@mellanox.com>,
-        Eran Ben Elisha <eranbe@mellanox.com>,
-        Saeed Mahameed <saeedm@mellanox.com>,
-        Leon Romanovsky <leonro@mellanox.com>,
-        Jason Gunthorpe <jgg@nvidia.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 091/166] IB/mlx5: Fix 50G per lane indication
-Date:   Tue, 14 Jul 2020 20:44:16 +0200
-Message-Id: <20200714184120.200773750@linuxfoundation.org>
+        stable@vger.kernel.org, Hui Wang <hui.wang@canonical.com>,
+        Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 5.7 110/166] ALSA: hda - let hs_mic be picked ahead of hp_mic
+Date:   Tue, 14 Jul 2020 20:44:35 +0200
+Message-Id: <20200714184121.103197976@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200714184115.844176932@linuxfoundation.org>
 References: <20200714184115.844176932@linuxfoundation.org>
@@ -63,47 +59,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Aya Levin <ayal@mellanox.com>
+From: Hui Wang <hui.wang@canonical.com>
 
-[ Upstream commit 530c8632b547ff72f11ff83654b22462a73f1f7b ]
+commit 6a6ca7881b1ab1c13fe0d70bae29211a65dd90de upstream.
 
-Some released FW versions mistakenly don't set the capability that 50G per
-lane link-modes are supported for VFs (ptys_extended_ethernet capability
-bit).
+We have a Dell AIO, there is neither internal speaker nor internal
+mic, only a multi-function audio jack on it.
 
-Use PTYS.ext_eth_proto_capability instead, as this indication is always
-accurate. If PTYS.ext_eth_proto_capability is valid
-(has a non-zero value) conclude that the HCA supports 50G per lane.
+Users reported that after freshly installing the OS and plug
+a headset to the audio jack, the headset can't output sound. I
+reproduced this bug, at that moment, the Input Source is as below:
+Simple mixer control 'Input Source',0
+  Capabilities: cenum
+  Items: 'Headphone Mic' 'Headset Mic'
+  Item0: 'Headphone Mic'
 
-Otherwise, conclude that the HCA doesn't support 50G per lane.
+That is because the patch_realtek will set this audio jack as mic_in
+mode if Input Source's value is hp_mic.
 
-Fixes: 08e8676f1607 ("IB/mlx5: Add support for 50Gbps per lane link modes")
-Link: https://lore.kernel.org/r/20200707110612.882962-3-leon@kernel.org
-Signed-off-by: Aya Levin <ayal@mellanox.com>
-Reviewed-by: Eran Ben Elisha <eranbe@mellanox.com>
-Reviewed-by: Saeed Mahameed <saeedm@mellanox.com>
-Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
-Signed-off-by: Jason Gunthorpe <jgg@nvidia.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+If it is not fresh installing, this issue will not happen since the
+systemd will run alsactl restore -f /var/lib/alsa/asound.state, this
+will set the 'Input Source' according to history value.
+
+If there is internal speaker or internal mic, this issue will not
+happen since there is valid sink/source in the pulseaudio, the PA will
+set the 'Input Source' according to active_port.
+
+To fix this issue, change the parser function to let the hs_mic be
+stored ahead of hp_mic.
+
+Cc: stable@vger.kernel.org
+Signed-off-by: Hui Wang <hui.wang@canonical.com>
+Link: https://lore.kernel.org/r/20200625083833.11264-1-hui.wang@canonical.com
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/infiniband/hw/mlx5/main.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ sound/pci/hda/hda_auto_parser.c |    6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/drivers/infiniband/hw/mlx5/main.c b/drivers/infiniband/hw/mlx5/main.c
-index 6679756506e60..820e407b3e260 100644
---- a/drivers/infiniband/hw/mlx5/main.c
-+++ b/drivers/infiniband/hw/mlx5/main.c
-@@ -515,7 +515,7 @@ static int mlx5_query_port_roce(struct ib_device *device, u8 port_num,
- 					   mdev_port_num);
- 	if (err)
- 		goto out;
--	ext = MLX5_CAP_PCAM_FEATURE(dev->mdev, ptys_extended_ethernet);
-+	ext = !!MLX5_GET_ETH_PROTO(ptys_reg, out, true, eth_proto_capability);
- 	eth_prot_oper = MLX5_GET_ETH_PROTO(ptys_reg, out, ext, eth_proto_oper);
+--- a/sound/pci/hda/hda_auto_parser.c
++++ b/sound/pci/hda/hda_auto_parser.c
+@@ -72,6 +72,12 @@ static int compare_input_type(const void
+ 	if (a->type != b->type)
+ 		return (int)(a->type - b->type);
  
- 	props->active_width     = IB_WIDTH_4X;
--- 
-2.25.1
-
++	/* If has both hs_mic and hp_mic, pick the hs_mic ahead of hp_mic. */
++	if (a->is_headset_mic && b->is_headphone_mic)
++		return -1; /* don't swap */
++	else if (a->is_headphone_mic && b->is_headset_mic)
++		return 1; /* swap */
++
+ 	/* In case one has boost and the other one has not,
+ 	   pick the one with boost first. */
+ 	return (int)(b->has_boost_on_pin - a->has_boost_on_pin);
 
 
