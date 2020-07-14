@@ -7,65 +7,67 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09D18C433EC
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 11:18:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 970F9C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 11:18:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D0B332220C
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 11:18:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 75CE022208
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 11:18:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="QMwhtxDa"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="raat87E0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728179AbgGNLS4 (ORCPT
+        id S1727826AbgGNLSs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 07:18:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52260 "EHLO
+        Tue, 14 Jul 2020 07:18:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52262 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727869AbgGNLQt (ORCPT
+        with ESMTP id S1727873AbgGNLQm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 07:16:49 -0400
+        Tue, 14 Jul 2020 07:16:42 -0400
 Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8537AC08E6DC
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 04:16:04 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id j4so20883956wrp.10
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 04:16:04 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 57AE6C08C5EE
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 04:15:56 -0700 (PDT)
+Received: by mail-wr1-x441.google.com with SMTP id r12so20829153wrj.13
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 04:15:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=NG9Wo5yoqPGjiyqodzKSv+oNiGoDZQc2LrtiOZLw/AM=;
-        b=QMwhtxDa+JsIYLGkUIZnWg3AJTpgFH0ficDCJzPtKLoaZCg8YduENGKsRoTzfb0QTz
-         Gyu3Cqsat4DTRiNwff9MhhGJxWAsooiZxVz2Yp/6x0RpBecs9ejTuRPUEpJUZG75fi3X
-         +P6gjwJGwpRpgD6jnp7+9mxe0EtP29RHfFxLUFtSXHH/C+je3VQ7E40NHqdEoGoiuWAD
-         bIbdmUhQEcsv+lomE5TNhgItLBYNn65TwW9BP3v2Bw4Ie4p4y+BC0M4QzjX5NB01jxyG
-         VlD9mWRFwKCxJVSb/6HyXNPrS6UmSuXj9Ya3O8ddMBXpU5Ree0hlB8zVke5Id4lo3q6n
-         u0Vg==
+        bh=271JiKK80FLwolRF6spciLtpgZEz0e7WX3q5gXVxSzM=;
+        b=raat87E0F+i5FkKKSfcO3L2BJ5q4wOj/rW3ptZDMlqpAJZ9MaUq1eZax/zYLu3u1ge
+         +ZyWI3fFRpkmoWUgc+bymQ9frEC7/F/B8Q1NHD3kAgIQ/7Z1kiTsvp4eMiHBIuvmPQ/d
+         FEknbe7lLIOAsbdIS5yrDLkZrtppZzfTEMJFXUnasPMvnauSITv7zvkVKwj2/0xVFxMh
+         SXs6P9KeDUBqrH8rP7LfVq+F0db6vfdk3Z/uJilq1e5+7TGTLUh8dK55PbTqHpBb3gjg
+         1gwM6YZOar952H6zAlL5fSktswLL5YpeaAWDTx727Q9tMQRM0EP1u+hCI2Gfs35Ni1K8
+         6PRQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=NG9Wo5yoqPGjiyqodzKSv+oNiGoDZQc2LrtiOZLw/AM=;
-        b=RZ95E4IiSspYm3ZO57h6ib67huLwFQ/tZLXWByCrwrnKnb2jI9XaGtIVL5vePwHrgy
-         P2PiPrOt4pbvXNgdY4CkSulFRpOKPMfSQZ94oQYT67ei/pCoM0qiu9oU7GFyZTyKrBXM
-         S2rf2eQzhYoFliDBCR2CDDLfAGRqRfj0Hr0u8gc0sQBopI3UKQwXjhJ6qRYcFFSVEzEQ
-         7kFiGu8VhGxGLNloTC322z7D7GPBquqb7XmlNfN7ubj20NxzIuPetDuhQ5uOcYv24Xj0
-         DjbSfFAKNHFHcUTxpxD1htUDejHXhOrPDHYkhZr9ZstunG1W/DDi5hY0HZwS+zMWI7H8
-         OFtQ==
-X-Gm-Message-State: AOAM5334CTlg3i/wzo4ocQpiNzKzYf6Ip4MsQ+gLacKBydrTKefwhoa5
-        7GK3bI0OMunf3P9QgcdUnPqN/A==
-X-Google-Smtp-Source: ABdhPJzQhzUPxkgJqMX4nrpyi4zj2gxa+lDyykGrb8nrWKpjpsCsNGmOs+AiZhWEbBSh2KpnpmRSug==
-X-Received: by 2002:adf:f388:: with SMTP id m8mr4801297wro.338.1594725363325;
-        Tue, 14 Jul 2020 04:16:03 -0700 (PDT)
+        bh=271JiKK80FLwolRF6spciLtpgZEz0e7WX3q5gXVxSzM=;
+        b=Xa3AH++eaqCWXRMPr7FZX0xftI2E2HGvhhVlGmcE3JDnTn92/1FcwMy9R7JogoPloM
+         +o7k44G3YjcSxZyybybTUbeElbAC4ts2WecJuQivALwUsPHn/3GTlGSDYWI2QOPZChNU
+         1M70EfFBajXnKHhr1p+UYX+L6GLI90lWOf/U7khWTpDu8bDGUFHYfGV7qVvlQDUEgn50
+         VnxlEc73EsyIDpicyHbdXiVw5RYhMb++zEbCXLkJ6eRBKIwvv80BtVGjpzEw91DFrdOa
+         arxWDZbCt1K3QnW04fFryCSvEDIg29qLqS7aq+VnMYn/K++wEwiiiu+2bB7j2QxsyfuX
+         hVgA==
+X-Gm-Message-State: AOAM5314AA+pLSe9U6xZuPB9RByyacqAljl890qLEXjx9gWm3CJnWJVv
+        qJ2w7fcMQqQ4wkFT5j1FMY5Lkw==
+X-Google-Smtp-Source: ABdhPJxHSXSpUZXfp2uA6lo+uRLlOTalaig2KsNnaQ+tQtCBvn+WX9e2f1GMQPSpjVH56EMB/KpxqA==
+X-Received: by 2002:a5d:4710:: with SMTP id y16mr4774395wrq.189.1594725355155;
+        Tue, 14 Jul 2020 04:15:55 -0700 (PDT)
 Received: from localhost.localdomain ([2.31.163.61])
-        by smtp.gmail.com with ESMTPSA id l8sm28566052wrq.15.2020.07.14.04.16.02
+        by smtp.gmail.com with ESMTPSA id l8sm28566052wrq.15.2020.07.14.04.15.54
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 Jul 2020 04:16:02 -0700 (PDT)
+        Tue, 14 Jul 2020 04:15:54 -0700 (PDT)
 From:   Lee Jones <lee.jones@linaro.org>
 To:     dan.j.williams@intel.com, vkoul@kernel.org
 Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        dmaengine@vger.kernel.org, Lee Jones <lee.jones@linaro.org>
-Subject: [PATCH 12/17] dma: iop-adma: Function parameter documentation must adhere to correct formatting
-Date:   Tue, 14 Jul 2020 12:15:41 +0100
-Message-Id: <20200714111546.1755231-13-lee.jones@linaro.org>
+        dmaengine@vger.kernel.org, Lee Jones <lee.jones@linaro.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Jaswinder Singh <jassi.brar@samsung.com>
+Subject: [PATCH 05/17] dma: pl330: Demote obvious misuse of kerneldoc to standard comment block
+Date:   Tue, 14 Jul 2020 12:15:34 +0100
+Message-Id: <20200714111546.1755231-6-lee.jones@linaro.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200714111546.1755231-1-lee.jones@linaro.org>
 References: <20200714111546.1755231-1-lee.jones@linaro.org>
@@ -76,31 +78,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Also remove superfluous entry.
+No 'struct' title is provided.  Nor are any attribute descriptions.
 
 Fixes the following W=1 kernel build warning(s):
 
- drivers/dma/iop-adma.c:418: warning: Function parameter or member 'chan' not described in 'iop_adma_alloc_chan_resources'
+ drivers/dma/pl330.c:295: warning: cannot understand function prototype: 'struct pl330_reqcfg '
 
+Cc: Philipp Zabel <p.zabel@pengutronix.de>
+Cc: Jaswinder Singh <jassi.brar@samsung.com>
 Signed-off-by: Lee Jones <lee.jones@linaro.org>
 ---
- drivers/dma/iop-adma.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ drivers/dma/pl330.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/dma/iop-adma.c b/drivers/dma/iop-adma.c
-index db0e274126fb7..3350bffb2e937 100644
---- a/drivers/dma/iop-adma.c
-+++ b/drivers/dma/iop-adma.c
-@@ -406,8 +406,7 @@ static void iop_chan_start_null_xor(struct iop_adma_chan *iop_chan);
+diff --git a/drivers/dma/pl330.c b/drivers/dma/pl330.c
+index 6a158eef6b8ad..4fc7aeec70a81 100644
+--- a/drivers/dma/pl330.c
++++ b/drivers/dma/pl330.c
+@@ -284,7 +284,7 @@ struct pl330_config {
+ 	u32		irq_ns;
+ };
  
- /**
-  * iop_adma_alloc_chan_resources -  returns the number of allocated descriptors
-- * @chan - allocate descriptor resources for this channel
-- * @client - current client requesting the channel be ready for requests
-+ * @chan: allocate descriptor resources for this channel
-  *
-  * Note: We keep the slots for 1 operation on iop_chan->chain at all times.  To
-  * avoid deadlock, via async_xor, num_descs_in_pool must at a minimum be
+-/**
++/*
+  * Request Configuration.
+  * The PL330 core does not modify this and uses the last
+  * working configuration if the request doesn't provide any.
 -- 
 2.25.1
 
