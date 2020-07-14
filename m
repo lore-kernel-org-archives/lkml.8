@@ -2,205 +2,104 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC487C433EB
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 20:16:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11975C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 20:17:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 95C5020773
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 20:16:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DEDFC20890
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 20:17:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="fO88FZTn"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AbXeRrFa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730425AbgGNUQV (ORCPT
+        id S1729902AbgGNURj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 16:16:21 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:57984 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730057AbgGNUQJ (ORCPT
+        Tue, 14 Jul 2020 16:17:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52672 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726400AbgGNURi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 16:16:09 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06EKC7lH097128;
-        Tue, 14 Jul 2020 20:16:04 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id : in-reply-to : references : mime-version :
- content-transfer-encoding; s=corp-2020-01-29;
- bh=VKtfSGs57quI8GvMfrjEl4/gJY9j9e0LVcZIEfEMCkY=;
- b=fO88FZTnC0d6D7+mH8OdoN+MPYDj+gRBBoXCnwZqLeG/WV9rN5rmCa51mcmqCrgvQGA4
- UDCytqrhaLMKwQUnjk/+OB3QzHv+Di9AYMDC/oCKquYAliHLeCqAcZp6/OEgR1SD9qN8
- QP+FUZPB9NLdyK7zhtg3UMkyXlSNi7ZqPebyQXryqlFHJ+fzNuzHvcyVf97seNdufCu9
- JqsS3acDIrlQA5h1sPiLB5GK9OPf1iDTdq90qSnh9VW0BxZR6yY/Nt4j3nvGWcIB4qbu
- 2iXm6sg7xRV83yAu17D69m/yFCO/jCkQ0kwMJToAOz7g/GnQvoaHiHyrVaq7DvbPhuca dA== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2130.oracle.com with ESMTP id 3274ur7q69-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 14 Jul 2020 20:16:04 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06EKDbge025130;
-        Tue, 14 Jul 2020 20:14:03 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by aserp3030.oracle.com with ESMTP id 327q0pvn9q-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 14 Jul 2020 20:14:03 +0000
-Received: from abhmp0003.oracle.com (abhmp0003.oracle.com [141.146.116.9])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 06EKE2Ep003960;
-        Tue, 14 Jul 2020 20:14:02 GMT
-Received: from localhost.localdomain (/98.229.125.203)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 14 Jul 2020 13:14:02 -0700
-From:   Daniel Jordan <daniel.m.jordan@oracle.com>
-To:     Herbert Xu <herbert@gondor.apana.org.au>,
-        Steffen Klassert <steffen.klassert@secunet.com>
-Cc:     linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Daniel Jordan <daniel.m.jordan@oracle.com>
-Subject: [PATCH 5/6] padata: fold padata_alloc_possible() into padata_alloc()
-Date:   Tue, 14 Jul 2020 16:13:55 -0400
-Message-Id: <20200714201356.889176-6-daniel.m.jordan@oracle.com>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200714201356.889176-1-daniel.m.jordan@oracle.com>
-References: <20200714201356.889176-1-daniel.m.jordan@oracle.com>
+        Tue, 14 Jul 2020 16:17:38 -0400
+Received: from mail-lf1-x135.google.com (mail-lf1-x135.google.com [IPv6:2a00:1450:4864:20::135])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 800BDC061755;
+        Tue, 14 Jul 2020 13:17:38 -0700 (PDT)
+Received: by mail-lf1-x135.google.com with SMTP id t9so13181181lfl.5;
+        Tue, 14 Jul 2020 13:17:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=7gM/D7X4Px1PAJl5nZi9KE2EoEB12I2kmkXvzNOm5Jw=;
+        b=AbXeRrFaDICon3lRQAXfYLh7Hl05VoMmEY2Dy22Yf8PFbFOhYKUsTpN67w0rCzM6J4
+         FdfHDJIj1UaB0jGHBM9Yzbs4O9SFmDWAi1K7YaIjNlEz5qRjj41OGR/HR6n6IlMCvLR3
+         FogO5OZ3j+cZOx/Fe9IMH48Io914hJckTDPxBPq9svbls9fbvboJQiG7mjQydOp5hlGv
+         H0In9HwqcOWZxyg3oet2edGlnTIdAUrLtpv+tNdIKDeJTyJRNhWpRYqPUNbTylffT3RO
+         gT16yqa+LHIZlbde4D43p8szOTSmPDXZ9gJ1BWxRBzT+q5lRIJUL8E+IUMl3Le8UU5w8
+         Dc+w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=7gM/D7X4Px1PAJl5nZi9KE2EoEB12I2kmkXvzNOm5Jw=;
+        b=pqgERy2hvC4daGGYmtYmO5bo/7ESTVDDuvjEOd/Pa8xhV3N/07FIBOi+T3XtITQa/n
+         /oc31mJJMHJ114UmXn1Hi62n0f8YrmkfHKUSJaXpKyAf0f/NClzyy7+eYxf75Si9p2M8
+         6WOyz+bMrw4zEHOf+p898wkXrFEQ+EeMI71HaAvbPgVwhqb+DJCJw5jaiBuyfGbJo5JB
+         mt4++NnNn6FcbA7DrfgskuE3gkB8qbl5InV9YRM1FdfK8Owxk8JV+MvyUG2SyD5g5mPE
+         v8mAPKe6G32prF1rZQ+cSSeF1fDxL3rF8hrajONDaGPaAjtG6MUcTGrbrtvn9TuIlCn1
+         8P1Q==
+X-Gm-Message-State: AOAM5317bXYEdNI6uOF7k1Aua7Bn/lfiRcYZeOkvc2BognlI/jw1CJ4y
+        5AUyNYmcC70SSLiFgTBTLg+D1eigpOU=
+X-Google-Smtp-Source: ABdhPJxCvRcgWHPWRkgmSbgrAPiuA3JK9vDWtjQABAUY3+2sJeRI0ycFLQ7eYQ9oIwbpwolmtFljJg==
+X-Received: by 2002:ac2:5f6d:: with SMTP id c13mr2936834lfc.53.1594757856974;
+        Tue, 14 Jul 2020 13:17:36 -0700 (PDT)
+Received: from pc636 (h5ef52e31.seluork.dyn.perspektivbredband.net. [94.245.46.49])
+        by smtp.gmail.com with ESMTPSA id x17sm6702lfr.63.2020.07.14.13.17.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 14 Jul 2020 13:17:36 -0700 (PDT)
+From:   Uladzislau Rezki <urezki@gmail.com>
+X-Google-Original-From: Uladzislau Rezki <urezki@pc636>
+Date:   Tue, 14 Jul 2020 22:17:34 +0200
+To:     "Paul E. McKenney" <paulmck@kernel.org>
+Cc:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        mingo@kernel.org, linux-kernel@vger.kernel.org,
+        rcu@vger.kernel.org, arnd@arndb.de, elver@google.com, ethp@qq.com,
+        frederic@kernel.org, jbi.octave@gmail.com, joel@joelfernandes.org,
+        lihaoliang@google.com, madhuparnabhowmik10@gmail.com,
+        mchehab+huawei@kernel.org, peter.enderborg@sony.com,
+        rdunlap@infradead.org, richard.weiyang@linux.alibaba.com,
+        urezki@gmail.com, zou_wei@huawei.com, tglx@linutronix.de
+Subject: Re: [GIT PULL tip/core/rcu] RCU commits for v5.9
+Message-ID: <20200714201734.GA20470@pc636>
+References: <20200714172701.GA31369@paulmck-ThinkPad-P72>
+ <20200714181426.hhguqzrcqdubyvae@linutronix.de>
+ <20200714182732.GU9247@paulmck-ThinkPad-P72>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9682 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 malwarescore=0 spamscore=0
- mlxlogscore=999 bulkscore=0 adultscore=0 phishscore=0 suspectscore=2
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2007140141
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9682 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 lowpriorityscore=0 impostorscore=0
- suspectscore=2 phishscore=0 spamscore=0 mlxlogscore=999 malwarescore=0
- mlxscore=0 priorityscore=1501 adultscore=0 bulkscore=0 clxscore=1015
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2007140141
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200714182732.GU9247@paulmck-ThinkPad-P72>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There's no reason to have two interfaces when there's only one caller.
-Removing _possible saves text and simplifies future changes.
+On Tue, Jul 14, 2020 at 11:27:32AM -0700, Paul E. McKenney wrote:
+> On Tue, Jul 14, 2020 at 08:14:26PM +0200, Sebastian Andrzej Siewior wrote:
+> > On 2020-07-14 10:27:01 [-0700], Paul E. McKenney wrote:
+> > > Joel Fernandes (Google) (5):
+> > >       rcu/tree: Skip entry into the page allocator for PREEMPT_RT
+> > 
+> > If it is too late to drop this then I am going send a revert okay?
+> 
+> I believe that Ulad and Joel are working on an update.
+> 
+> Now that you mention it Ulad and Joel, how is this coming along?
+> 
+Yes. I have made a proposal with dropping the lock. I do not see
+any issues by doing that. I will upload a patch soon.
 
-Signed-off-by: Daniel Jordan <daniel.m.jordan@oracle.com>
-Cc: Herbert Xu <herbert@gondor.apana.org.au>
-Cc: Steffen Klassert <steffen.klassert@secunet.com>
-Cc: linux-crypto@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
----
- Documentation/core-api/padata.rst |  2 +-
- crypto/pcrypt.c                   |  2 +-
- include/linux/padata.h            |  2 +-
- kernel/padata.c                   | 33 +++++--------------------------
- 4 files changed, 8 insertions(+), 31 deletions(-)
-
-diff --git a/Documentation/core-api/padata.rst b/Documentation/core-api/padata.rst
-index 771d50330e5b5..35175710b43cc 100644
---- a/Documentation/core-api/padata.rst
-+++ b/Documentation/core-api/padata.rst
-@@ -27,7 +27,7 @@ padata_instance structure for overall control of how jobs are to be run::
- 
-     #include <linux/padata.h>
- 
--    struct padata_instance *padata_alloc_possible(const char *name);
-+    struct padata_instance *padata_alloc(const char *name);
- 
- 'name' simply identifies the instance.
- 
-diff --git a/crypto/pcrypt.c b/crypto/pcrypt.c
-index 7374dfecaf70f..812892732a5e5 100644
---- a/crypto/pcrypt.c
-+++ b/crypto/pcrypt.c
-@@ -320,7 +320,7 @@ static int pcrypt_init_padata(struct padata_instance **pinst, const char *name)
- {
- 	int ret = -ENOMEM;
- 
--	*pinst = padata_alloc_possible(name);
-+	*pinst = padata_alloc(name);
- 	if (!*pinst)
- 		return ret;
- 
-diff --git a/include/linux/padata.h b/include/linux/padata.h
-index a941b96b7119e..070a7d43e8af8 100644
---- a/include/linux/padata.h
-+++ b/include/linux/padata.h
-@@ -192,7 +192,7 @@ extern void __init padata_init(void);
- static inline void __init padata_init(void) {}
- #endif
- 
--extern struct padata_instance *padata_alloc_possible(const char *name);
-+extern struct padata_instance *padata_alloc(const char *name);
- extern void padata_free(struct padata_instance *pinst);
- extern struct padata_shell *padata_alloc_shell(struct padata_instance *pinst);
- extern void padata_free_shell(struct padata_shell *ps);
-diff --git a/kernel/padata.c b/kernel/padata.c
-index 4f0a57e5738c9..1c0b97891edb8 100644
---- a/kernel/padata.c
-+++ b/kernel/padata.c
-@@ -979,18 +979,12 @@ static struct kobj_type padata_attr_type = {
- };
- 
- /**
-- * padata_alloc - allocate and initialize a padata instance and specify
-- *                cpumasks for serial and parallel workers.
-- *
-+ * padata_alloc - allocate and initialize a padata instance
-  * @name: used to identify the instance
-- * @pcpumask: cpumask that will be used for padata parallelization
-- * @cbcpumask: cpumask that will be used for padata serialization
-  *
-  * Return: new instance on success, NULL on error
-  */
--static struct padata_instance *padata_alloc(const char *name,
--					    const struct cpumask *pcpumask,
--					    const struct cpumask *cbcpumask)
-+struct padata_instance *padata_alloc(const char *name)
- {
- 	struct padata_instance *pinst;
- 
-@@ -1016,14 +1010,11 @@ static struct padata_instance *padata_alloc(const char *name,
- 		free_cpumask_var(pinst->cpumask.pcpu);
- 		goto err_free_serial_wq;
- 	}
--	if (!padata_validate_cpumask(pinst, pcpumask) ||
--	    !padata_validate_cpumask(pinst, cbcpumask))
--		goto err_free_masks;
- 
- 	INIT_LIST_HEAD(&pinst->pslist);
- 
--	cpumask_copy(pinst->cpumask.pcpu, pcpumask);
--	cpumask_copy(pinst->cpumask.cbcpu, cbcpumask);
-+	cpumask_copy(pinst->cpumask.pcpu, cpu_possible_mask);
-+	cpumask_copy(pinst->cpumask.cbcpu, cpu_possible_mask);
- 
- 	if (padata_setup_cpumasks(pinst))
- 		goto err_free_masks;
-@@ -1057,21 +1048,7 @@ static struct padata_instance *padata_alloc(const char *name,
- err:
- 	return NULL;
- }
--
--/**
-- * padata_alloc_possible - Allocate and initialize padata instance.
-- *                         Use the cpu_possible_mask for serial and
-- *                         parallel workers.
-- *
-- * @name: used to identify the instance
-- *
-- * Return: new instance on success, NULL on error
-- */
--struct padata_instance *padata_alloc_possible(const char *name)
--{
--	return padata_alloc(name, cpu_possible_mask, cpu_possible_mask);
--}
--EXPORT_SYMBOL(padata_alloc_possible);
-+EXPORT_SYMBOL(padata_alloc);
- 
- /**
-  * padata_free - free a padata instance
--- 
-2.27.0
-
+--
+Vlad Rezki
