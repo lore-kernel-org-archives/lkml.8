@@ -2,117 +2,75 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91F8FC433E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 13:34:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1D9FC433E2
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 13:35:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7C98B22280
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 13:34:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F7332065D
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 13:35:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728531AbgGNNet (ORCPT
+        id S1728581AbgGNNfT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 09:34:49 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:7307 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726624AbgGNNer (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 09:34:47 -0400
-Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id EEBE7B5AE868C3BC6A28;
-        Tue, 14 Jul 2020 21:34:42 +0800 (CST)
-Received: from [127.0.0.1] (10.174.179.238) by DGGEMS407-HUB.china.huawei.com
- (10.3.19.207) with Microsoft SMTP Server id 14.3.487.0; Tue, 14 Jul 2020
- 21:34:34 +0800
-Subject: [PATCH v2] mm/percpu: fix 'defined but not used' warning
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-CC:     <akpm@linux-foundation.org>, <linux-mm@kvack.org>,
-        <linux-kernel@vger.kernel.org>, <linux-next@vger.kernel.org>,
-        <john.wanghui@huawei.com>, Roman Gushchin <guro@fb.com>
-References: <20200714134101.80534-1-cuibixuan@huawei.com>
- <20200714225311.7aeffffd@canb.auug.org.au>
-From:   Bixuan Cui <cuibixuan@huawei.com>
-Message-ID: <7c871406-4f27-64c0-edca-8f5cee1ea605@huawei.com>
-Date:   Tue, 14 Jul 2020 21:34:33 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
-MIME-Version: 1.0
-In-Reply-To: <20200714225311.7aeffffd@canb.auug.org.au>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.174.179.238]
-X-CFilter-Loop: Reflected
+        Tue, 14 Jul 2020 09:35:19 -0400
+Received: from inva021.nxp.com ([92.121.34.21]:48250 "EHLO inva021.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728049AbgGNNfR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 09:35:17 -0400
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id BE765201014;
+        Tue, 14 Jul 2020 15:35:15 +0200 (CEST)
+Received: from inva024.eu-rdc02.nxp.com (inva024.eu-rdc02.nxp.com [134.27.226.22])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id B298B2001B2;
+        Tue, 14 Jul 2020 15:35:15 +0200 (CEST)
+Received: from fsr-ub1864-126.ea.freescale.net (fsr-ub1864-126.ea.freescale.net [10.171.82.212])
+        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id 747FE205A4;
+        Tue, 14 Jul 2020 15:35:15 +0200 (CEST)
+From:   Ioana Ciornei <ioana.ciornei@nxp.com>
+To:     gregkh@linuxfoundation.org
+Cc:     linux-kernel@vger.kernel.org, devel@driverdev.osuosl.org,
+        Ioana Ciornei <ioana.ciornei@nxp.com>
+Subject: [PATCH 2/6] staging: dpaa2-ethsw: ignore state interrupts when the interface is not running
+Date:   Tue, 14 Jul 2020 16:34:27 +0300
+Message-Id: <20200714133431.17532-3-ioana.ciornei@nxp.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200714133431.17532-1-ioana.ciornei@nxp.com>
+References: <20200714133431.17532-1-ioana.ciornei@nxp.com>
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Gcc report the following warning without CONFIG_MEMCG_KMEM:
+Link state interrupts will be transmitted to the DPSW object even though
+the user has not yet issued a 'ifconfig up' on a switch interface. Don't
+act on those interrupts since there are of no interrest.
 
-mm/percpu-internal.h:145:29: warning: â€˜pcpu_chunk_typeâ€™ defined
-but not used [-Wunused-function]
- static enum pcpu_chunk_type pcpu_chunk_type(struct pcpu_chunk *chunk)
-                             ^~~~~~~~~~~~~~~
-
-Add 'inline' to pcpu_chunk_type(),pcpu_is_memcg_chunk() and
-pcpu_chunk_list() to clear warning.
-
-Fixes: 26c99879ef01 ("mm: memcg/percpu: account percpu memory to memory cgroups")
-Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
-Signed-off-by: Bixuan Cui <cuibixuan@huawei.com>
+Signed-off-by: Ioana Ciornei <ioana.ciornei@nxp.com>
 ---
- mm/percpu-internal.h | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+ drivers/staging/fsl-dpaa2/ethsw/ethsw.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/mm/percpu-internal.h b/mm/percpu-internal.h
-index 7983455842ff..18b768ac7dca 100644
---- a/mm/percpu-internal.h
-+++ b/mm/percpu-internal.h
-@@ -129,31 +129,31 @@ static inline int pcpu_chunk_map_bits(struct pcpu_chunk *chunk)
- }
-
- #ifdef CONFIG_MEMCG_KMEM
--static enum pcpu_chunk_type pcpu_chunk_type(struct pcpu_chunk *chunk)
-+static inline enum pcpu_chunk_type pcpu_chunk_type(struct pcpu_chunk *chunk)
- {
- 	if (chunk->obj_cgroups)
- 		return PCPU_CHUNK_MEMCG;
- 	return PCPU_CHUNK_ROOT;
- }
-
--static bool pcpu_is_memcg_chunk(enum pcpu_chunk_type chunk_type)
-+static inline bool pcpu_is_memcg_chunk(enum pcpu_chunk_type chunk_type)
- {
- 	return chunk_type == PCPU_CHUNK_MEMCG;
- }
-
- #else
--static enum pcpu_chunk_type pcpu_chunk_type(struct pcpu_chunk *chunk)
-+static inline enum pcpu_chunk_type pcpu_chunk_type(struct pcpu_chunk *chunk)
- {
- 	return PCPU_CHUNK_ROOT;
- }
-
--static bool pcpu_is_memcg_chunk(enum pcpu_chunk_type chunk_type)
-+static inline bool pcpu_is_memcg_chunk(enum pcpu_chunk_type chunk_type)
- {
- 	return false;
- }
- #endif
-
--static struct list_head *pcpu_chunk_list(enum pcpu_chunk_type chunk_type)
-+static inline struct list_head *pcpu_chunk_list(enum pcpu_chunk_type chunk_type)
- {
- 	return &pcpu_chunk_lists[pcpu_nr_slots *
- 				 pcpu_is_memcg_chunk(chunk_type)];
+diff --git a/drivers/staging/fsl-dpaa2/ethsw/ethsw.c b/drivers/staging/fsl-dpaa2/ethsw/ethsw.c
+index 46aa37093e86..b57bc705c2ee 100644
+--- a/drivers/staging/fsl-dpaa2/ethsw/ethsw.c
++++ b/drivers/staging/fsl-dpaa2/ethsw/ethsw.c
+@@ -445,6 +445,12 @@ static int port_carrier_state_sync(struct net_device *netdev)
+ 	struct dpsw_link_state state;
+ 	int err;
+ 
++	/* Interrupts are received even though no one issued an 'ifconfig up'
++	 * on the switch interface. Ignore these link state update interrupts
++	 */
++	if (!netif_running(netdev))
++		return 0;
++
+ 	err = dpsw_if_get_link_state(port_priv->ethsw_data->mc_io, 0,
+ 				     port_priv->ethsw_data->dpsw_handle,
+ 				     port_priv->idx, &state);
 -- 
-2.17.1
-
-
-.
-
-
+2.25.1
 
