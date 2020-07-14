@@ -2,129 +2,91 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FE2AC433E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 02:32:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 164B0C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 02:33:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7F5BD207BB
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 02:32:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594693937;
-	bh=4nGR7877OCdvepm+wVfIknTL0sovtu+QqLBubPH8TJA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=CoVmgOtcx2CAzejBnIqy/sKCsfZikN/PU9Mpt5eZmRmbuwCjBNYBbY9N4wlQmngJ5
-	 5xSzQH0vh+Ps6swt1K12Ij0ayUoUNeNoo7yPR7WHvVWr1/SnDrzBk3lAMGuqd7lxfG
-	 F7HFGGFD5hAmXf3wsU+fzwuXMtiH3s9AWdJpUGlQ=
+	by mail.kernel.org (Postfix) with ESMTP id EC07F207BB
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 02:33:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726661AbgGNCcQ (ORCPT
+        id S1726752AbgGNCdp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 22:32:16 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:43147 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726150AbgGNCcP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 22:32:15 -0400
-Received: by mail-io1-f67.google.com with SMTP id k23so15707754iom.10;
-        Mon, 13 Jul 2020 19:32:14 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=vuZsgMdLWQO/ahKQ1C/JJlufkzXzbLL7H9cb+d1HU9k=;
-        b=rqifzt8TD6Mil1azgM6lu7g9q2pS1UiUptIHj2ucwHXY7ZEMkJtypqevom+AVMDkot
-         gnA6HneVk+i2O63rwfhH8tr4uk9G7VQEzhGzCAJaSP224L13gWAjOqD0orBkf1w59x9+
-         gpK6CVFsoaT2YL46qK8MtlaKOx+lvbsDLo1lD+RX6zoKNuMFbs5MdUoJAwU0UQbYE03C
-         EJbCFeQUn6/rKOoWWYsdAvCYMxeOHLRt8SmKUGREVeonsfS2msAEAZhv8gqiHO4aEmRa
-         Sj3qGaksA+Teo3pvmb/BzVell+Z3RcAsqWqIBAjZKr5PkvFYzjOIBhTNVmKIdwqA1iAw
-         W4eg==
-X-Gm-Message-State: AOAM533OBg8A6Kv3imDiScRuY0fPW/McygZzuPvR0/4/xrc5Gffev5R/
-        lGdyO9JJ2Ft/534SYn3sLMS5KOwFr4x1
-X-Google-Smtp-Source: ABdhPJzSiwbxk0e5azgvPYsuI4yurNtqRdxZNnQgVDbStBikimwSnWmtqDpMJgj/pWf09alzKiI/tw==
-X-Received: by 2002:a05:6638:2493:: with SMTP id x19mr3577157jat.53.1594693934506;
-        Mon, 13 Jul 2020 19:32:14 -0700 (PDT)
-Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id v5sm8522890ios.54.2020.07.13.19.32.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 Jul 2020 19:32:13 -0700 (PDT)
-Received: (nullmailer pid 1163897 invoked by uid 1000);
-        Tue, 14 Jul 2020 02:32:12 -0000
-Date:   Mon, 13 Jul 2020 20:32:12 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     =?utf-8?B?5ZGo55Cw5p2wIChaaG91IFlhbmppZSk=?= 
-        <zhouyanjie@wanyeetech.com>
-Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, paul.burton@mips.com,
-        paul@crapouillou.net, tsbogend@alpha.franken.de,
-        ak@linux.intel.com, ebiederm@xmission.com,
-        dongsheng.qiu@ingenic.com, aric.pzqi@ingenic.com,
-        rick.tyliu@ingenic.com, yanfei.li@ingenic.com,
-        sernia.zhou@foxmail.com, zhenwenjin@gmail.com
-Subject: Re: [PATCH v2 2/3] dt-bindings: MIPS: Add Ingenic X1830 based boards.
-Message-ID: <20200714023212.GA1162143@bogus>
-References: <20200625173716.56146-1-zhouyanjie@wanyeetech.com>
- <20200625173716.56146-3-zhouyanjie@wanyeetech.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200625173716.56146-3-zhouyanjie@wanyeetech.com>
+        Mon, 13 Jul 2020 22:33:45 -0400
+Received: from smtp23.cstnet.cn ([159.226.251.23]:42736 "EHLO cstnet.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726150AbgGNCdp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jul 2020 22:33:45 -0400
+Received: from localhost (unknown [159.226.5.99])
+        by APP-03 (Coremail) with SMTP id rQCowAC3vwMJFw1fLmaPAA--.28728S2;
+        Tue, 14 Jul 2020 10:23:06 +0800 (CST)
+From:   Xu Wang <vulab@iscas.ac.cn>
+To:     davem@davemloft.net, kuba@kernel.org, michal.simek@xilinx.com,
+        esben@geanix.com, hkallweit1@gmail.com, f.fainelli@gmail.com,
+        vulab@iscas.ac.cn, weiyongjun1@huawei.com, netdev@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Cc:     linux-kernel@vger.kernel.org
+Subject: [PATCH] net: xilinx: fix potential NULL dereference in temac_probe()
+Date:   Tue, 14 Jul 2020 02:23:04 +0000
+Message-Id: <20200714022304.4003-1-vulab@iscas.ac.cn>
+X-Mailer: git-send-email 2.17.1
+X-CM-TRANSID: rQCowAC3vwMJFw1fLmaPAA--.28728S2
+X-Coremail-Antispam: 1UD129KBjvdXoW7GFy7Jr4kAr48AFW7Wr47XFb_yoWkZFgEq3
+        Wj9r4fGrs5ur1FkF48Kr13AayY9Fs29r97Ww47KFWavaykWw1293yUuw4fXFy7Ww1xCFyD
+        JrnrJr4fua4UZjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+        9fnUUIcSsGvfJTRUUUba8FF20E14v26r4j6ryUM7CY07I20VC2zVCF04k26cxKx2IYs7xG
+        6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
+        A2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr1j
+        6F4UJwA2z4x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v26F
+        4UJVW0owAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv
+        7VC0I7IYx2IY67AKxVWUtVWrXwAv7VC2z280aVAFwI0_Gr1j6F4UJwAm72CE4IkC6x0Yz7
+        v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7M4IIrI8v6xkF
+        7I0E8cxan2IY04v7MxkIecxEwVAFwVW8JwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7x
+        kEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E
+        67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCw
+        CI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6rW3Jr0E
+        3s1lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcS
+        sGvfC2KfnxnUUI43ZEXa7VUbZ2-5UUUUU==
+X-Originating-IP: [159.226.5.99]
+X-CM-SenderInfo: pyxotu46lvutnvoduhdfq/1tbiCAsQA18J9fBAqAABsq
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 26, 2020 at 01:37:15AM +0800, 周琰杰 (Zhou Yanjie) wrote:
-> Add bindings for Ingenic X1830 based board, prepare for later dts.
-> 
-> Tested-by: 周正 (Zhou Zheng) <sernia.zhou@foxmail.com>
-> Signed-off-by: 周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>
-> ---
-> 
-> Notes:
->     v1->v2:
->     No change.
-> 
->  Documentation/devicetree/bindings/mips/ingenic/devices.yaml | 12 +++++++++---
->  1 file changed, 9 insertions(+), 3 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/mips/ingenic/devices.yaml b/Documentation/devicetree/bindings/mips/ingenic/devices.yaml
-> index d1175030781a..feb695be9f66 100644
-> --- a/Documentation/devicetree/bindings/mips/ingenic/devices.yaml
-> +++ b/Documentation/devicetree/bindings/mips/ingenic/devices.yaml
-> @@ -8,7 +8,8 @@ title: Ingenic XBurst based Platforms Device Tree Bindings
->  
->  maintainers:
->    - 周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>
-> -description: |
-> +
-> +description:
->    Devices with a Ingenic XBurst CPU shall have the following properties.
->  
->  properties:
-> @@ -32,8 +33,13 @@ properties:
->            - const: img,ci20
->            - const: ingenic,jz4780
->  
-> -      - description: YSH & ATIL General Board CU Neo
-> +      - description: YSH & ATIL General Board, CU1000 Module with Neo Backplane
->          items:
->            - const: yna,cu1000-neo
-> -          - const: ingenic,x1000
-> +          - const: ingenic,x1000e
+platform_get_resource() may return NULL, add proper
+check to avoid potential NULL dereferencing.
 
-What's this change? You can't just change bindings.
+Signed-off-by: Xu Wang <vulab@iscas.ac.cn>
+---
+ drivers/net/ethernet/xilinx/ll_temac_main.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-> +
-> +      - description: YSH & ATIL General Board, CU1830 Module with Neo Backplane
-> +        items:
-> +          - const: yna,cu1830-neo
-> +          - const: ingenic,x1830
->  ...
-> -- 
-> 2.11.0
-> 
+diff --git a/drivers/net/ethernet/xilinx/ll_temac_main.c b/drivers/net/ethernet/xilinx/ll_temac_main.c
+index 929244064abd..85a767fa2ecf 100644
+--- a/drivers/net/ethernet/xilinx/ll_temac_main.c
++++ b/drivers/net/ethernet/xilinx/ll_temac_main.c
+@@ -1408,6 +1408,8 @@ static int temac_probe(struct platform_device *pdev)
+ 
+ 	/* map device registers */
+ 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
++	if (!res)
++		return -EINVAL;
+ 	lp->regs = devm_ioremap(&pdev->dev, res->start,
+ 					resource_size(res));
+ 	if (!lp->regs) {
+@@ -1503,6 +1505,8 @@ static int temac_probe(struct platform_device *pdev)
+ 	} else if (pdata) {
+ 		/* 2nd memory resource specifies DMA registers */
+ 		res = platform_get_resource(pdev, IORESOURCE_MEM, 1);
++		if (!res)
++			return -EINVAL;
+ 		lp->sdma_regs = devm_ioremap(&pdev->dev, res->start,
+ 						     resource_size(res));
+ 		if (!lp->sdma_regs) {
+-- 
+2.17.1
+
