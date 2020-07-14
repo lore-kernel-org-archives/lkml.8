@@ -2,99 +2,94 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1310DC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 16:50:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE41EC433E2
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 16:56:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E218521835
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 16:50:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 86D772242B
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 16:56:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="MZtjLnyz"
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="pGhuzzIU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728717AbgGNQuP (ORCPT
+        id S1728527AbgGNQ4U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 12:50:15 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:43392 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726798AbgGNQuO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 12:50:14 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06EGli7o134803;
-        Tue, 14 Jul 2020 16:50:08 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
- from : message-id : references : date : in-reply-to : mime-version :
- content-type; s=corp-2020-01-29;
- bh=wDW+LJY/xmnT0U8mvYNtybMehN5jP3JYQycycM6EqFg=;
- b=MZtjLnyz53tnSf1bGYfuISkZZoXeCnD6A8pq1PQBCn3E7bjq5/OvrDrrpKcEjX+xCHEO
- nzkdmUHxWFvTq3ZM7oRL7/lmXHBdwSjiqUDNgkjNwrHw0m8BCsYjP/6wic9yzQG6iumY
- 8nxH+4sketoMPhlxGStNb96NFgfQoJnMXnS1EZTFmqD5aj1NmcTTl7eQv0VcDlJ/2t1Q
- opXajAVDsScL/O20vuOSd9NuSyvOoM8NQOMFPbODkimELqU4j6FSmCegJebSIgfhhiSK
- UXy4q/dzrGG7hu4XuKk0hEfegntCD+Y4s4Y+rjxwmwlGjnsMg1CNt2nEqErwjGEh1nxz zw== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2120.oracle.com with ESMTP id 32762nedux-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 14 Jul 2020 16:50:08 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06EGlZEb149400;
-        Tue, 14 Jul 2020 16:50:07 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by aserp3020.oracle.com with ESMTP id 327qb4mkr6-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 14 Jul 2020 16:50:07 +0000
-Received: from abhmp0003.oracle.com (abhmp0003.oracle.com [141.146.116.9])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 06EGo6Vq031596;
-        Tue, 14 Jul 2020 16:50:06 GMT
-Received: from ca-mkp.ca.oracle.com (/10.159.214.123)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 14 Jul 2020 09:50:05 -0700
-To:     Lee Jones <lee.jones@linaro.org>
-Cc:     "Martin K. Petersen" <martin.petersen@oracle.com>,
-        jejb@linux.ibm.com, linux-kernel@vger.kernel.org,
-        linux-scsi@vger.kernel.org, Hannes Reinecke <hare@suse.de>
-Subject: Re: [PATCH v2 05/29] scsi: fcoe: fcoe_ctlr: Fix a myriad of
- documentation issues
-From:   "Martin K. Petersen" <martin.petersen@oracle.com>
-Organization: Oracle Corporation
-Message-ID: <yq1y2nmoxcu.fsf@ca-mkp.ca.oracle.com>
-References: <20200713074645.126138-1-lee.jones@linaro.org>
-        <20200713074645.126138-6-lee.jones@linaro.org>
-        <yq1lfjmqji1.fsf@ca-mkp.ca.oracle.com> <20200714142324.GC1398296@dell>
-Date:   Tue, 14 Jul 2020 12:50:03 -0400
-In-Reply-To: <20200714142324.GC1398296@dell> (Lee Jones's message of "Tue, 14
-        Jul 2020 15:23:24 +0100")
+        Tue, 14 Jul 2020 12:56:20 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:39830 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726600AbgGNQ4T (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 12:56:19 -0400
+Received: from nazgul.tnic (77-85-108-148.ip.btc-net.bg [77.85.108.148])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 9D8AF1EC0316;
+        Tue, 14 Jul 2020 18:56:17 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1594745777;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=eSZXXJhICHmfJsUPO4ZXL5UFX2Z45md7BXHPQUpwRrQ=;
+        b=pGhuzzIUmbeeMwDdTz2V3jYnn383OWOOI2M1nIV782YvNDHdupPrCyfSuPCaW1W2BKN5RA
+        J6baEJxyrDDE6wIsMgRRI1ZXx2LD97AxV62rma4Hm6rQr/oyn4/j4smliO9NhECk4F/pPr
+        fHInmQA4BPMQ28+OWcZDhhXRfz0l2Vg=
+Date:   Tue, 14 Jul 2020 18:56:21 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Chris Down <chris@chrisdown.name>
+Cc:     linux-kernel@vger.kernel.org, sean.j.christopherson@intel.com,
+        tony.luck@intel.com, torvalds@linux-foundation.org, x86@kernel.org,
+        kernel-team@fb.com, Matthew Garrett <matthewgarrett@google.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <len.brown@intel.com>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        Jacob Pan <jacob.jun.pan@linux.intel.com>
+Subject: Re: [PATCH -v2.1] x86/msr: Filter MSR writes
+Message-ID: <20200714165621.GA3622@nazgul.tnic>
+References: <20200615063837.GA14668@zn.tnic>
+ <20200714121955.GA2080@chrisdown.name>
+ <20200714154728.GA3101@nazgul.tnic>
+ <20200714160448.GC2080@chrisdown.name>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9681 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 malwarescore=0
- mlxscore=0 spamscore=0 phishscore=0 suspectscore=1 bulkscore=0
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2007140122
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9681 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 malwarescore=0 spamscore=0
- clxscore=1015 priorityscore=1501 mlxlogscore=999 lowpriorityscore=0
- bulkscore=0 suspectscore=1 phishscore=0 adultscore=0 impostorscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2007140122
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200714160448.GC2080@chrisdown.name>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Jul 14, 2020 at 05:04:48PM +0100, Chris Down wrote:
+> Since the issue involves DPTF which is only supported via binary blobs, I
+> can't say for certain what the issue is. As I understand it, when the
+> throttling behaviour isn't explicitly configured by the OS kernel, the
+> default policy is extremely overeager. Matthew also had a look at it[0], but
+> I don't know if anything eventually happened there. I've cc'ed him.
+> 
+> Either way, again, this isn't really the point. :-) The point is that there
+> _are_ currently widespread cases involving poking MSRs from userspace,
+> however sacrilegious or ugly (which I agree with!), and while people should
+> be told about that, it's excessive to have the potential to take up 80% of
+> kmsg in the default configuration. It doesn't take thousands of messages to
+> get the message across, that's what a custom printk ratelimit is for.
 
-Lee,
+Ok, feel free to suggest a fix, better yet send a patch. Otherwise,
+you'd have to wait for my vacation to end first. :-)
 
-> Yes, I spotted it.  Hence my earlier comment to Hannes:
->
->  "Look at the function below it (in your local copy). ;)"
->
-> Do you want me to fix that up here as well?
+> 0: https://twitter.com/mjg59/status/1034132444201582596
 
-I can fix it up.
+As to the power issue, lemme CC some Intel folks I found in MAINTAINERS.
+
+Intel folks, pls check the link above and upthread: Why TF do people
+need to use some luserspace daemon which pokes at MSRs which the kernel
+writes to too, in order to bypass some apparently too conservative
+throttling, AFAIU?
+
+And why does this work on windoze reportedly?
 
 -- 
-Martin K. Petersen	Oracle Linux Engineering
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
