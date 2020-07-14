@@ -2,225 +2,125 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C090BC433E6
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 14:52:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3ECD7C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 14:54:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 98ABB21D6C
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 14:52:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594738320;
-	bh=yBb5NwYoawydc+4SE8fRGu7VyXAWbEb+g0AP6WC6mFc=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=Vf3o0+ODAV4z1I4+KVNdmuyutN7CmJQF28pGHTQgVEi564Q+vNLvFTgrgzrM1nSSc
-	 WYLYNAvYPqHsAu6qvcxBPn5W/Gqa09oOgf5nHegfE66a2wO5YD0i0CefFiBWVpBOoi
-	 K6zSNH+p+ptrXCQdC1OPXKzhq3WEzuBP+sV40cAo=
+	by mail.kernel.org (Postfix) with ESMTP id 190F02251D
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 14:54:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kHn32CLz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728892AbgGNOv7 (ORCPT
+        id S1728410AbgGNOyd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 10:51:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34938 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728410AbgGNOv6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 10:51:58 -0400
-Received: from mail-ot1-f47.google.com (mail-ot1-f47.google.com [209.85.210.47])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DF73C21973;
-        Tue, 14 Jul 2020 14:51:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594738318;
-        bh=yBb5NwYoawydc+4SE8fRGu7VyXAWbEb+g0AP6WC6mFc=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=ExIYtMs8JLqxwbj6nNae6eHnbYrvDYP541mY1ltF6anHWu+bVCKIuwonfQ8bolWwo
-         M1jqUoMWjVDZ0zMdYu2r22PNYJKQP0HIX7KUKdoB0lkauYgHJcWb/YtvIkeWpiIll/
-         /hGntYFS6PsAi0fD5K6FyrdUTkfYQoDbDfYu4BWo=
-Received: by mail-ot1-f47.google.com with SMTP id n24so13192540otr.13;
-        Tue, 14 Jul 2020 07:51:57 -0700 (PDT)
-X-Gm-Message-State: AOAM532SXy19f2eUz7X/OHR52VEtv1vNeRuT6+iNJnlp9Rwr638ofLIS
-        S7hpEK3yTK+2AD9yt/MGzcmNlF/eoXjAmXqK4g==
-X-Google-Smtp-Source: ABdhPJxu9bDpxj3Hu09V0IUmiMju7QCn1apEa8gYBelufC7LjqgI1XuYmXKWxWiuIqZ3DwQLWjG/IWRcqN1eIQ909Gg=
-X-Received: by 2002:a9d:2646:: with SMTP id a64mr4155072otb.107.1594738317260;
- Tue, 14 Jul 2020 07:51:57 -0700 (PDT)
+        Tue, 14 Jul 2020 10:54:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57886 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725925AbgGNOyd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 10:54:33 -0400
+Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B0CC5C061755;
+        Tue, 14 Jul 2020 07:54:32 -0700 (PDT)
+Received: by mail-lj1-x244.google.com with SMTP id h22so23104449lji.9;
+        Tue, 14 Jul 2020 07:54:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=216BVYRg8fMC6Xf6ygu+rllfsyrRcDfyiKujR0K+mPc=;
+        b=kHn32CLzrOuwZLpk9ERwy/KM5lLUSKQtzBVSbwI7cwwIJOwWVWQ1WRnZUupQiaAh+4
+         DXrU78MEiWX5Nn69pfoLFrgGROUtuhMLL+2Yz5waSsAXTlQfuEbJnrZvWGWq4wPK+Luc
+         w/ctvc/JWEMxg6FA2Eu0R+NrQotMjuCB0ZJs4AbZ5JH63g7R4BopCiz7yU0zCjFX8PdK
+         wLZWwaKFQUOgDEIDRgYv/x0XL0XzVz5qwFBDyjdM+rdKuX9/3B4cWpDYDpuAzux0+kDS
+         nSBAZbYwV2tNnW6DGz/aEr4V2jZN5R2ulV9mim3JiACheMgdvSlbwgSLQGJSxWkEf/SY
+         Zcgw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=216BVYRg8fMC6Xf6ygu+rllfsyrRcDfyiKujR0K+mPc=;
+        b=oSdy0UQAlPpLUOPdsE8fn6cmdSMUvnFfXEQJ6Ja2ngOj9uTjEwTih383+TAcTx81lt
+         5zvx79XG0D+qBgsFY7wWeJqHcGgCz02sQTURUj0w9bYUp1Ni989LL72SekW+XptvLnn5
+         TMN+fKTwleQxzTN6DcJvxNUUDsWKAcjW6erNzxxAyiCT2F+OZs07g9rC7YfD1PnWpDDb
+         4kFuL2ZltNJiKI4mwiPW4kcjQdrJsGAHofWnOijvRsAHpePDdgArB9GzvBD/jq8E/cQZ
+         MN+Ww7NWz4MdHG0Rbh6reRJQOZAiMvMOg9Jz75rzgUkLAwpeUr4LVT0miH7eqh9/sQet
+         pFjQ==
+X-Gm-Message-State: AOAM5335b1Gp7lJnlxiw8DPCV+nQCX8XTrUB05Xcg1PmFPCcuAAij3ss
+        dSfxQiDMwJ7Rsj37WZuxPebkC+cuD1kk5V4j3to=
+X-Google-Smtp-Source: ABdhPJwvDlbXhunIifVYskbFQ4VOYcKsNoELAbvbr9PR3SRQtrnJlZfWV2AxivvpGz7ke4f0LHdCvAWZ3MtxuBvyLNg=
+X-Received: by 2002:a2e:9a4d:: with SMTP id k13mr2633091ljj.283.1594738471100;
+ Tue, 14 Jul 2020 07:54:31 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200708074035.31595-1-luca@lucaceresoli.net> <20200708074035.31595-4-luca@lucaceresoli.net>
- <20200714031109.GA1210492@bogus> <6177ebd1-b39a-3b53-3f5b-92f8d1f9881b@lucaceresoli.net>
-In-Reply-To: <6177ebd1-b39a-3b53-3f5b-92f8d1f9881b@lucaceresoli.net>
-From:   Rob Herring <robh@kernel.org>
-Date:   Tue, 14 Jul 2020 08:51:45 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqKCQJjAoZciQOv+Ksb885E9MSR9FB1dEAkUh7DbqM_gcg@mail.gmail.com>
-Message-ID: <CAL_JsqKCQJjAoZciQOv+Ksb885E9MSR9FB1dEAkUh7DbqM_gcg@mail.gmail.com>
-Subject: Re: [PATCH v2 4/4] dt-bindings: clk: versaclock5: convert to yaml
-To:     Luca Ceresoli <luca@lucaceresoli.net>
-Cc:     linux-clk <linux-clk@vger.kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>, devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Marek Vasut <marek.vasut@gmail.com>,
-        Adam Ford <aford173@gmail.com>
+References: <20200714121608.58962d66@canb.auug.org.au> <20200714090048.GG183694@krava>
+ <20200714203341.4664dda3@canb.auug.org.au> <20200714104702.GH183694@krava> <20200714111545.GI183694@krava>
+In-Reply-To: <20200714111545.GI183694@krava>
+From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Date:   Tue, 14 Jul 2020 07:54:19 -0700
+Message-ID: <CAADnVQJsh3BTD4D4fBzaJ9_YdmWf0ftHNrj7RM1m3m5QcBU0gw@mail.gmail.com>
+Subject: Re: linux-next: build warning after merge of the bpf-next tree
+To:     Jiri Olsa <jolsa@redhat.com>
+Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        David Miller <davem@davemloft.net>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Networking <netdev@vger.kernel.org>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Jiri Olsa <jolsa@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 14, 2020 at 3:15 AM Luca Ceresoli <luca@lucaceresoli.net> wrote:
+On Tue, Jul 14, 2020 at 4:15 AM Jiri Olsa <jolsa@redhat.com> wrote:
 >
-> Hi Rob,
->
-> thanks for you review!
->
-> On 14/07/20 05:11, Rob Herring wrote:
-> > On Wed, Jul 08, 2020 at 09:40:35AM +0200, Luca Ceresoli wrote:
-> >> Convert to yaml the VersaClock bindings document. The mapping between
-> >> clock specifier and physical pins cannot be described formally in yaml
-> >> schema, then keep it verbatim in the description field.
-> >>
-> >> Signed-off-by: Luca Ceresoli <luca@lucaceresoli.net>
->
-> [...]
->
-> >> +  reg:
-> >> +    maxItems: 1
-> >> +    description: I2C device address, shall be 0x68 or 0x6a.
+> On Tue, Jul 14, 2020 at 12:47:02PM +0200, Jiri Olsa wrote:
+> > On Tue, Jul 14, 2020 at 08:33:41PM +1000, Stephen Rothwell wrote:
 > >
-> > Can be a schema:
+> > SNIP
 > >
-> > enum: [ 0x68, 0x6a ]
->
-> Nice, will fix.
->
-> >> +
-> >> +  '#clock-cells':
-> >> +    const: 1
-> >> +
-> >> +patternProperties:
-> >> +  "^OUT[1-4]$":
-> >> +    type: object
-> >> +    description:
-> >> +      Description of one of the outputs (OUT1..OUT4). See "Clock1 Output
-> >> +      Configuration" in the Versaclock 5/6/6E Family Register Description
-> >> +      and Programming Guide.
-> >> +    properties:
-> >> +      idt,mode:
-> >> +        description:
-> >> +          The output drive mode. Values defined in dt-bindings/clk/versaclock.h
-> >> +        enum:
-> >> +          - VC5_LVPECL
+> > > > diff --git a/tools/bpf/resolve_btfids/Makefile b/tools/bpf/resolve_btfids/Makefile
+> > > > index 948378ca73d4..a88cd4426398 100644
+> > > > --- a/tools/bpf/resolve_btfids/Makefile
+> > > > +++ b/tools/bpf/resolve_btfids/Makefile
+> > > > @@ -16,6 +16,20 @@ else
+> > > >    MAKEFLAGS=--no-print-directory
+> > > >  endif
+> > > >
+> > > > +# always use the host compiler
+> > > > +ifneq ($(LLVM),)
+> > > > +HOSTAR  ?= llvm-ar
+> > > > +HOSTCC  ?= clang
+> > > > +HOSTLD  ?= ld.lld
+> > > > +else
+> > > > +HOSTAR  ?= ar
+> > > > +HOSTCC  ?= gcc
+> > > > +HOSTLD  ?= ld
+> > > > +endif
+> > > > +AR       = $(HOSTAR)
+> > > > +CC       = $(HOSTCC)
+> > > > +LD       = $(HOSTLD)
+> > > > +
+> > > >  OUTPUT ?= $(srctree)/tools/bpf/resolve_btfids/
+> > > >
+> > > >  LIBBPF_SRC := $(srctree)/tools/lib/bpf/
+> > > >
+> > >
+> > > Thanks for the quick response.  However, in the mean time the bpf-next
+> > > tree has been merged into the net-next tree, so these fixes will be
+> > > needed there ASAP.
 > >
-> > This is defining a string. Can't use defines here.
+> > I just posted it
 >
-> How do I use the defines from include/dt-bindings then? Or should I just
-> use the numeric values then, like:
+> ugh, you said net-next..
 >
->   idt,mode:
->     description:
->       The output drive mode. Values defined in
->       dt-bindings/clk/versaclock.h
->     minimum: 0
->     maximum: 6
->
-> ?
+> David, do you need me to repost with net-next tag?
+>   https://lore.kernel.org/bpf/20200714102534.299280-1-jolsa@kernel.org/T/
 
-Yes.
-
->
-> >> +      idt,voltage-microvolts:
-> >> +        description: The output drive voltage.
-> >> +        $ref: /schemas/types.yaml#/definitions/uint32
-> >
-> > Standard unit suffixes have a type already, so drop.
->
-> Ok.
->
-> >> +allOf:
-> >> +  - if:
-> >> +      properties:
-> >> +        compatible:
-> >> +          contains:
-> >> +            enum:
-> >> +              - idt,5p49v5933
-> >> +              - idt,5p49v5935
-> >> +    then:
-> >> +      # Devices with builtin crystal, optional external input
-> >> +      properties:
-> >> +        clock-names:
-> >> +          const: clkin
-> >> +        clocks:
-> >> +          maxItems: 1
-> >> +    else:
-> >> +      # Devices without builtin crystal
-> >> +      properties:
-> >> +        clock-names:
-> >> +          anyOf:
-> >> +            - required: [ xin ]
-> >> +            - required: [ clkin ]
-> >
-> > This isn't valid. I think you want:
-> >
-> > clock-names:
-> >   minItems: 1
-> >   items:
-> >     - const: xin
-> >     - const: clkin
-> >
-> > This would mean 'xin' is always required, clkin is optional.
->
-> No, what I wanted to mean is that allowed cases are:
->  * for idt,5p49v5933 and idt,5p49v5935:
->    - only 'xin' (required)
-
-For this you need an if/then schema. There are plenty of examples in
-the tree, but this is what you need:
-
-if:
-  properties:
-    compatible:
-      enum:
-        - idt,5p49v5933
-        - idt,5p49v5935
-then:
-  properties:
-    clocks:
-      maxItems: 1
-    clock-names:
-      const: xin
-
->  * for the other parts one of these:
->    - only 'xin'
->    - only 'clkin'
->    - both 'xin' and 'clkin'
->
-> How do I express that?
-
-For the 2nd part:
-
-clock-names:
-  minItems: 1
-  maxItems: 2
-  items:
-    enum: [ xin, clkin ]
-
-> A general note: as a newcomer to yaml bindings I found a steep learning
-> curve. Finding a correct construct (not to mention the best one) for
-> each situation is time consuming and frustrating. I've been looking at
-> existing files for suitable examples but it doesn't work very well.
->
-> Is there any guide to yaml bindings for beginners with examples of
-> typical cases? It would greatly help in producing better patches and
-> saving time for everybody.
-
-bindings/example-schema.yaml is intended to do that. No doubt it could
-use more examples. Though from my perspective people already don't
-read and follow things it says there.
-
-The problem I think is not the typical cases, but the atypical ones. I
-don't think we can enumerate all the atypical cases. At that point you
-really need some understanding of json-schema which I agree has a bit
-of a learning curve if you've never used anything like it (I hadn't).
-
-Rob
+NO. The fixes must go into bpf-next first.
