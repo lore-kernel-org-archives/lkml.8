@@ -2,108 +2,116 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA422C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 09:41:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30FCDC433E2
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 09:42:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8F2F820EDD
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 09:41:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0840921D7A
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 09:42:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="cE91BZeY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726062AbgGNJlj (ORCPT
+        id S1726748AbgGNJmJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 05:41:39 -0400
-Received: from mx2.suse.de ([195.135.220.15]:40280 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725816AbgGNJli (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 05:41:38 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id B4DD7AAE8;
-        Tue, 14 Jul 2020 09:41:39 +0000 (UTC)
-Subject: Re: [PATCH] mm: thp: Replace HTTP links with HTTPS ones
-To:     "Alexander A. Klimov" <grandmaster@al2klimov.de>,
-        akpm@linux-foundation.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-References: <20200713164345.36088-1-grandmaster@al2klimov.de>
-From:   Vlastimil Babka <vbabka@suse.cz>
-Message-ID: <642ab4dc-d0fb-d973-0e5e-7d1bc7d90f11@suse.cz>
-Date:   Tue, 14 Jul 2020 11:41:37 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Tue, 14 Jul 2020 05:42:09 -0400
+Received: from mail29.static.mailgun.info ([104.130.122.29]:11180 "EHLO
+        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726187AbgGNJmJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 05:42:09 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1594719729; h=Content-Type: MIME-Version: Message-ID:
+ In-Reply-To: Date: References: Subject: Cc: To: From: Sender;
+ bh=rwaiPjJK4tdDLIrGur1Wip379yC4QzqC1DFY1MsdhpI=; b=cE91BZeYSoAVFTZX9/Olol/CSa281xtxuDAgmckk81+GrA21bNsImCb1V8OzvyXofBnpgDs3
+ 6B1HX2y594Vqf1so3LBmj6kw+TW1MQq9z3RACbEnEnyuqEBqa2jqMFZlaZgvRG4XvzZoEqQZ
+ X9O8ZNqS0wK1ZeKWWwZjwTwLuCo=
+X-Mailgun-Sending-Ip: 104.130.122.29
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n08.prod.us-west-2.postgun.com with SMTP id
+ 5f0d7de7ee6926bb4f054441 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 14 Jul 2020 09:41:59
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id DC794C433A1; Tue, 14 Jul 2020 09:41:58 +0000 (UTC)
+Received: from tynnyri.adurom.net (tynnyri.adurom.net [51.15.11.48])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: kvalo)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 6DEE0C433CB;
+        Tue, 14 Jul 2020 09:41:55 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 6DEE0C433CB
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
+From:   Kalle Valo <kvalo@codeaurora.org>
+To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Cc:     linux-kernel@vger.kernel.org,
+        Arend van Spriel <arend.vanspriel@broadcom.com>,
+        Franky Lin <franky.lin@broadcom.com>,
+        Hante Meuleman <hante.meuleman@broadcom.com>,
+        Chi-Hsien Lin <chi-hsien.lin@cypress.com>,
+        Wright Feng <wright.feng@cypress.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        linux-wireless@vger.kernel.org,
+        brcm80211-dev-list.pdl@broadcom.com,
+        brcm80211-dev-list@cypress.com, netdev@vger.kernel.org
+Subject: Re: [PATCH] brcmfmac: set timeout value when configuring power save
+References: <20200707155410.12123-1-nsaenzjulienne@suse.de>
+Date:   Tue, 14 Jul 2020 12:41:52 +0300
+In-Reply-To: <20200707155410.12123-1-nsaenzjulienne@suse.de> (Nicolas Saenz
+        Julienne's message of "Tue, 7 Jul 2020 17:54:10 +0200")
+Message-ID: <87blkicu1r.fsf@tynnyri.adurom.net>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 MIME-Version: 1.0
-In-Reply-To: <20200713164345.36088-1-grandmaster@al2klimov.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/13/20 6:43 PM, Alexander A. Klimov wrote:
-> Rationale:
-> Reduces attack surface on kernel devs opening the links for MITM
-> as HTTPS traffic is much harder to manipulate.
-> 
-> Deterministic algorithm:
-> For each file:
->   If not .svg:
->     For each line:
->       If doesn't contain `\bxmlns\b`:
->         For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
-> 	  If neither `\bgnu\.org/license`, nor `\bmozilla\.org/MPL\b`:
->             If both the HTTP and HTTPS versions
->             return 200 OK and serve the same content:
->               Replace HTTP with HTTPS.
-> 
-> Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
+Nicolas Saenz Julienne <nsaenzjulienne@suse.de> writes:
+
+> Set the timeout value as per cfg80211's set_power_mgmt() request. If the
+> requested value value is left undefined we set it to 2 seconds, the
+> maximum supported value.
+>
+> Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
 > ---
->  Continuing my work started at 93431e0607e5.
->  See also: git log --oneline '--author=Alexander A. Klimov <grandmaster@al2klimov.de>' v5.7..master
->  (Actually letting a shell for loop submit all this stuff for me.)
-> 
->  If there are any URLs to be removed completely or at least not just HTTPSified:
->  Just clearly say so and I'll *undo my change*.
->  See also: https://lkml.org/lkml/2020/6/27/64
-> 
->  If there are any valid, but yet not changed URLs:
->  See: https://lkml.org/lkml/2020/6/26/837
-> 
->  If you apply the patch, please let me know.
-> 
->  Sorry again to all maintainers who complained about subject lines.
->  Now I realized that you want an actually perfect prefixes,
->  not just subsystem ones.
->  I tried my best...
->  And yes, *I could* (at least half-)automate it.
->  Impossible is nothing! :)
-> 
-> 
->  mm/huge_memory.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/mm/huge_memory.c b/mm/huge_memory.c
-> index 78c84bee7e29..9e4b78cf73ab 100644
-> --- a/mm/huge_memory.c
-> +++ b/mm/huge_memory.c
-> @@ -2069,7 +2069,7 @@ static void __split_huge_pmd_locked(struct vm_area_struct *vma, pmd_t *pmd,
->  	 * free), userland could trigger a small page size TLB miss on the
->  	 * small sized TLB while the hugepage TLB entry is still established in
->  	 * the huge TLB. Some CPU doesn't like that.
-> -	 * See http://support.amd.com/us/Processor_TechDocs/41322.pdf, Erratum
-> +	 * See https://support.amd.com/us/Processor_TechDocs/41322.pdf, Erratum
->  	 * 383 on page 93. Intel should be safe but is also warns that it's
+>
+> Note: I got the 2 seconds value from the Raspberry Pi downstream kernel.
+>
+>  .../wireless/broadcom/brcm80211/brcmfmac/cfg80211.c    | 10 ++++++++++
+>  1 file changed, 10 insertions(+)
+>
+> diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/cfg80211.c b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/cfg80211.c
+> index a757abd7a599..15578c6e87cd 100644
+> --- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/cfg80211.c
+> +++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/cfg80211.c
+> @@ -84,6 +84,8 @@
+>  
+>  #define BRCMF_ND_INFO_TIMEOUT		msecs_to_jiffies(2000)
+>  
+> +#define BRCMF_PS_MAX_TIMEOUT_MS		2000
+> +
+>  #define BRCMF_ASSOC_PARAMS_FIXED_SIZE \
+>  	(sizeof(struct brcmf_assoc_params_le) - sizeof(u16))
+>  
+> @@ -2941,6 +2943,14 @@ brcmf_cfg80211_set_power_mgmt(struct wiphy *wiphy, struct net_device *ndev,
+>  		else
+>  			bphy_err(drvr, "error (%d)\n", err);
+>  	}
+> +
+> +	if ((u32)timeout > BRCMF_PS_MAX_TIMEOUT_MS)
+> +		timeout = BRCMF_PS_MAX_TIMEOUT_MS;
 
-Well, it was a good opportunity to find out that the link doesn't work anyway.
-The pdf seems to be now at
-http://support.amd.com/TechDocs/41322_10h_Rev_Gd.pdf
-and the erratum is on page 105
+Wouldn't min_t() be better? Then you won't need the ugly cast either.
 
->  	 * only safe if the permission and cache attributes of the two entries
->  	 * loaded in the two TLB is identical (which should be the case here).
-> 
-
+-- 
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
