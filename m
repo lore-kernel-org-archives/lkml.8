@@ -2,61 +2,95 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D47EC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 20:47:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9B30C433E4
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 20:47:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 83E1420658
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 20:47:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A312A20656
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 20:47:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594759657;
+	bh=AW8Fhw54zyXMIIci6R4Vy13WT2UOAWtC/jxlBSMDeZA=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=GX+8PrNK9UPBQwxOxWI/5JdPFY/yAgo4Q4xc63nkSN1p4WpDyduaO4R8tIVJcAfng
+	 0t+ZPX0uctzkH2AHKaUy9x9ZTOOAULkoS7FObf/cY3VSDacHqHLLnFdfRKw44/Y4Qo
+	 9unjOYEfK2KOiDspqSMe/Q4tj2guXmn+Rwd+wUnI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727782AbgGNUrD (ORCPT
+        id S1727821AbgGNUrg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 16:47:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57274 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726442AbgGNUrC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 16:47:02 -0400
-Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AF73AC061755;
-        Tue, 14 Jul 2020 13:47:02 -0700 (PDT)
-Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id B547E15E2864E;
-        Tue, 14 Jul 2020 13:47:01 -0700 (PDT)
-Date:   Tue, 14 Jul 2020 13:47:00 -0700 (PDT)
-Message-Id: <20200714.134700.1165829004344819671.davem@davemloft.net>
-To:     horatiu.vultur@microchip.com
-Cc:     nikolay@cumulusnetworks.com, roopa@cumulusnetworks.com,
-        kuba@kernel.org, jiri@resnulli.us, ivecera@redhat.com,
-        andrew@lunn.ch, UNGLinuxDriver@microchip.com,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        bridge@lists.linux-foundation.org
-Subject: Re: [PATCH net-next v4 00/12] bridge: mrp: Add support for
- interconnect ring
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20200714073458.1939574-1-horatiu.vultur@microchip.com>
-References: <20200714073458.1939574-1-horatiu.vultur@microchip.com>
-X-Mailer: Mew version 6.8 on Emacs 26.3
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Tue, 14 Jul 2020 13:47:02 -0700 (PDT)
+        Tue, 14 Jul 2020 16:47:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59682 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726858AbgGNUre (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 16:47:34 -0400
+Received: from mail-il1-f181.google.com (mail-il1-f181.google.com [209.85.166.181])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2D4792065D;
+        Tue, 14 Jul 2020 20:47:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594759654;
+        bh=AW8Fhw54zyXMIIci6R4Vy13WT2UOAWtC/jxlBSMDeZA=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=sYIvu3f173B017/4ldlM0SC5lETWMyt6khC6MQ5xwhlIu0Ndqh3De7uCSwP+2rpVC
+         vnUGQHRaoYn47Eqjcm2O4taCzxYq6uFKmVPiy2GPCO73etSHnkH01hOy1PmbO6a4Wh
+         VyAXCWP+Jq3GSfPFE7nYN96XRbQYXtiOemHgPwe0=
+Received: by mail-il1-f181.google.com with SMTP id t27so15369431ill.9;
+        Tue, 14 Jul 2020 13:47:34 -0700 (PDT)
+X-Gm-Message-State: AOAM530tMk3qu8avPBBWa9ZNABeCaDpW6E4VdytSwABXXUJPObPPnEmZ
+        sNK/sBKfZ6X+tOQpGqRFFMUrjA41BBvpqqETR1E=
+X-Google-Smtp-Source: ABdhPJzl2OnjW2TOVxFJ4nevMOUG50uYeQKfvJWwJjF+KRZ1tWxKUJfykO8UjV6vDxvWahYyVdWRu++GdlpKhdVr3T8=
+X-Received: by 2002:a05:6e02:f42:: with SMTP id y2mr6628078ilj.264.1594759653637;
+ Tue, 14 Jul 2020 13:47:33 -0700 (PDT)
+MIME-Version: 1.0
+References: <1594718402-20813-1-git-send-email-hanks.chen@mediatek.com> <1594718402-20813-4-git-send-email-hanks.chen@mediatek.com>
+In-Reply-To: <1594718402-20813-4-git-send-email-hanks.chen@mediatek.com>
+From:   Sean Wang <sean.wang@kernel.org>
+Date:   Tue, 14 Jul 2020 13:47:22 -0700
+X-Gmail-Original-Message-ID: <CAGp9LzqhFr2R4D00s4WCbPRwEsMjrY2RKg_OyFv-tTEQ7axTjg@mail.gmail.com>
+Message-ID: <CAGp9LzqhFr2R4D00s4WCbPRwEsMjrY2RKg_OyFv-tTEQ7axTjg@mail.gmail.com>
+Subject: Re: [PATCH v8 3/7] pinctrl: mediatek: avoid virtual gpio trying to
+ set reg
+To:     Hanks Chen <hanks.chen@mediatek.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        mtk01761 <wendell.lin@mediatek.com>,
+        Andy Teng <andy.teng@mediatek.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        lkml <linux-kernel@vger.kernel.org>, wsd_upstream@mediatek.com,
+        CC Hwang <cc.hwang@mediatek.com>,
+        Loda Chou <loda.chou@mediatek.com>,
+        Mars Cheng <mars.cheng@mediatek.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Horatiu Vultur <horatiu.vultur@microchip.com>
-Date: Tue, 14 Jul 2020 09:34:46 +0200
+On Tue, Jul 14, 2020 at 2:20 AM Hanks Chen <hanks.chen@mediatek.com> wrote:
+>
+> for virtual gpios, they should not do reg setting and
+> should behave as expected for eint function.
+>
+> Signed-off-by: Mars Cheng <mars.cheng@mediatek.com>
+> Signed-off-by: Hanks Chen <hanks.chen@mediatek.com>
 
-> This patch series extends existing MRP to add support for interconnect ring.
- ...
+Acked-by: Sean Wang <sean.wang@kernel.org>
 
-Series applied, thank you.
-
+> ---
+>  .../pinctrl/mediatek/pinctrl-mtk-common-v2.c  | 25 +++++++++++++++++++
+>  .../pinctrl/mediatek/pinctrl-mtk-common-v2.h  |  1 +
+>  drivers/pinctrl/mediatek/pinctrl-paris.c      |  7 ++++++
+>  3 files changed, 33 insertions(+)
