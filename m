@@ -2,99 +2,179 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C94DC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 17:31:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4410AC433E5
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 17:32:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5BE202074A
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 17:31:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1A2DC2074A
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 17:32:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hgdDu5IX"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tHaFTot1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728788AbgGNRb6 (ORCPT
+        id S1728933AbgGNRcJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 13:31:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54338 "EHLO
+        Tue, 14 Jul 2020 13:32:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54368 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726364AbgGNRb5 (ORCPT
+        with ESMTP id S1726169AbgGNRcI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 13:31:57 -0400
-Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9549DC061755;
-        Tue, 14 Jul 2020 10:31:57 -0700 (PDT)
-Received: by mail-pf1-x443.google.com with SMTP id q17so7861712pfu.8;
-        Tue, 14 Jul 2020 10:31:57 -0700 (PDT)
+        Tue, 14 Jul 2020 13:32:08 -0400
+Received: from mail-io1-xd42.google.com (mail-io1-xd42.google.com [IPv6:2607:f8b0:4864:20::d42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 42F37C061755;
+        Tue, 14 Jul 2020 10:32:08 -0700 (PDT)
+Received: by mail-io1-xd42.google.com with SMTP id i4so18122403iov.11;
+        Tue, 14 Jul 2020 10:32:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=p4yQKBD4fuwZyX2aETXM/9xgpuX9woM9ISDFBgC0eEo=;
-        b=hgdDu5IXgKoUF/NpPM3mJGnRCEDFXInBPWokzl3DS3yeuLSlVIr2+DWjzs99yFe8z1
-         JpqDSj05bcmw1cxyu79Uqa0D2ZKvneZq+bEJbQIkodfwEUvofIew2PljkoB0L7agyNBz
-         +RH94KpBuar0gPe+YNG0sLXCipU+jfW6M4WcLAdJr6XJ63fvKwFpgx6HCDDc83jOZ0WJ
-         EdGC7a708SugCkaPTC+CxN+lNWs40CRowBZMF0wzGl1288zbJShWB+XAx8n+GVgu6ag+
-         u2s8xgD2FVBVz7TfvLE2x6Mvf4Ux66G8PEWqLdvL3d/GoX6kWoF+eUXjn809ySXLtCyb
-         XyPw==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=fyd1Yem61aBK9j4xH0v8TMCTQl2WFmnBvLzZWnwdnEc=;
+        b=tHaFTot19KPHp0MlA0uocYvaOfJzaYZ5AoPy3T9fENTCX/ku/bwFYSdr5A461u5H/B
+         xbGJA30Vt6hsgAc6nl3XF22cNxedx4Px4/vwAsBod5/hmk8YP1vE0/hHw7zP03NEGraw
+         D/siRebVYWD9N+/1mOlVmPN/7TlJ77LGx7Ynxyi4kBO2svfB7/D8lvqexWnc4oV1x2Bh
+         zRs9q+7R218hm3SarF5+KQ8/toBryohiSFcxyv6Ij/7Dt2YZi2KlyEkc430bayEZPYhF
+         OhbWsp2jJ2VNZjFuSBvyM6plx4Gq4PtxhHrRtqIatdjHSuqJKUegDO0Sy28+QlYoD6sW
+         JPHg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=p4yQKBD4fuwZyX2aETXM/9xgpuX9woM9ISDFBgC0eEo=;
-        b=V+N56I0btL/HrUb2Xr1J5AvxayjRuTsYH5Bz8+DA0kHG+mfCffhXTMO7ZOzAj2qYU6
-         Aj75TVT4kegMBuMkfGBHvT0XpPZyFycIKZkBdMtAYBS20P5zZ0ARGBoU4OGHRGvPWd+W
-         FeyEfJkZgCBQw31UWDYo3ycaPyFIFESRMHSdngKOzJDS8LEa1/cSl9eaKZCoTNRTVKd5
-         ScSLF9XLRoHXST8tbhNK6OFMNjE9fWE0qFwMphWqAwxB5miNGIhcLNVgkHEcCokz3aAT
-         Y5lan4fHjlQcZAzGyXB2y1mhbih4UCa0x+8RgRvM82PvKk2HrRv+rD6DvTch2eo9sFCZ
-         XMiQ==
-X-Gm-Message-State: AOAM531eOB3XQZpRJGuP7GTsdXw9xDRhTzjIatW1CJ0xfWZM8XMgCmDC
-        qSyVY6RK/G3EoRFCbTlI2wOXGf0m
-X-Google-Smtp-Source: ABdhPJzFRXKIoZ8eRflYavclbmHPZtFmEJ0GgvuIIIgy8GHja5RF5nIXHemnbhLV8L3FnH9d+OoR/g==
-X-Received: by 2002:a63:481:: with SMTP id 123mr3960220pge.2.1594747917115;
-        Tue, 14 Jul 2020 10:31:57 -0700 (PDT)
-Received: from ast-mbp.dhcp.thefacebook.com ([2620:10d:c090:400::5:96f0])
-        by smtp.gmail.com with ESMTPSA id q6sm17745902pfg.76.2020.07.14.10.31.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 Jul 2020 10:31:56 -0700 (PDT)
-Date:   Tue, 14 Jul 2020 10:31:54 -0700
-From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
-To:     Matteo Croce <mcroce@linux.microsoft.com>
-Cc:     bpf@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>
-Subject: Re: [PATCH bpf-next] bpf: allow loading instructions from a fd
-Message-ID: <20200714173154.i2wxhm4n4ob7sfpd@ast-mbp.dhcp.thefacebook.com>
-References: <20200713130511.6942-1-mcroce@linux.microsoft.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=fyd1Yem61aBK9j4xH0v8TMCTQl2WFmnBvLzZWnwdnEc=;
+        b=b58tivEr64G/fnUz3qPLMZb2kW+SKNbuQgLDavUSNGTVLW746UsGCHIzU3qp7+KKcf
+         DwtT0FDUYjNYCPv9hNmOAv0IKMj11yg6tDE/sC+hNSHyxhXn0MyS2udRgnSmwywRfM/Q
+         yZ1IebrObNINIfQ15JuahBWzuDviE83haOyqvlIOETZpMyJJdtFwHLyvddXzXc0mhL1c
+         gBC9y1W9EUXN4YXLgca2vwdn+kZA/7c/W+yND6vM0vUxc8sMHurzA0pVxGmt9DyzQcx2
+         aQFppQQxqTimQP5O9tW/+LVADgDgCP717Xj5SBVCERSchXlKPLtaGTDA0G2NHaQfbixF
+         0tiA==
+X-Gm-Message-State: AOAM531NcfrDS9Nl0eMjQ+1ZhZBjPHgRKQhF20tzfovAeRU72OA0flqV
+        a4hFHPspGA6hwoAt540Ca5tMy4DouYSkYwF12/aEpYGM
+X-Google-Smtp-Source: ABdhPJx1N5E0GF7/F0ba6GbZ0mPoX1MKXs80ni9M2TowfvxnnTLsD0VvV0KlxZLoPSUGdtczPlbRSc4bn9Y0Z5hlfSg=
+X-Received: by 2002:a6b:2b12:: with SMTP id r18mr5852785ior.88.1594747927418;
+ Tue, 14 Jul 2020 10:32:07 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200713130511.6942-1-mcroce@linux.microsoft.com>
+References: <20200710113046.421366-1-mst@redhat.com> <CAKgT0UeZN+mOWNhgiT0btZTyki3TPoj7pbqA+__GkCxoifPqeg@mail.gmail.com>
+ <20200712105926-mutt-send-email-mst@kernel.org> <CAKgT0UdY1xpEH1Hg4HWJEkGwH5s64sm1y4O_XmHe8P_f=tDhpg@mail.gmail.com>
+ <20200714044017-mutt-send-email-mst@kernel.org>
+In-Reply-To: <20200714044017-mutt-send-email-mst@kernel.org>
+From:   Alexander Duyck <alexander.duyck@gmail.com>
+Date:   Tue, 14 Jul 2020 10:31:56 -0700
+Message-ID: <CAKgT0Ud_AFpB-=uCB_3qY8pFvG9Kj7OFSmFG76LZC9K91oUG2w@mail.gmail.com>
+Subject: Re: [PATCH] virtio_balloon: clear modern features under legacy
+To:     "Michael S. Tsirkin" <mst@redhat.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>, stable@vger.kernel.org,
+        David Hildenbrand <david@redhat.com>,
+        Jason Wang <jasowang@redhat.com>,
+        virtualization@lists.linux-foundation.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 13, 2020 at 03:05:11PM +0200, Matteo Croce wrote:
-> From: Matteo Croce <mcroce@microsoft.com>
-> 
-> Allow to load the BPF instructons from a file descriptor,
-> other than a pointer.
-> 
-> This is required by the Integrity Subsystem to validate the source of
-> the instructions.
-> 
-> In bpf_attr replace 'insns', which is an u64, to a union containing also
-> the file descriptor as int.
-> A new BPF_F_LOAD_BY_FD flag tells bpf_prog_load() to load
-> the instructions from file descriptor and ignore the pointer.
-> 
-> As BPF files usually are regular ELF files, start reading from the
-> current file position, so the userspace can skip the ELF header and jump
-> to the right section.
+On Tue, Jul 14, 2020 at 1:45 AM Michael S. Tsirkin <mst@redhat.com> wrote:
+>
+> On Mon, Jul 13, 2020 at 08:10:14AM -0700, Alexander Duyck wrote:
+> > On Sun, Jul 12, 2020 at 8:10 AM Michael S. Tsirkin <mst@redhat.com> wrote:
+> > >
+> > > On Fri, Jul 10, 2020 at 09:13:41AM -0700, Alexander Duyck wrote:
+> > > > On Fri, Jul 10, 2020 at 4:31 AM Michael S. Tsirkin <mst@redhat.com> wrote:
+> > > > >
 
-That is not the case at all.
-Have you looked at amount of work libbpf is doing with elf file before
-raw instructions become suitable to be loaded by the kernel?
+<snip>
+
+> > > As you say correctly the command id is actually assumed native endian:
+> > >
+> > >
+> > > static u32 virtio_balloon_cmd_id_received(struct virtio_balloon *vb)
+> > > {
+> > >         if (test_and_clear_bit(VIRTIO_BALLOON_CONFIG_READ_CMD_ID,
+> > >                                &vb->config_read_bitmap))
+> > >                 virtio_cread(vb->vdev, struct virtio_balloon_config,
+> > >                              free_page_hint_cmd_id,
+> > >                              &vb->cmd_id_received_cache);
+> > >
+> > >         return vb->cmd_id_received_cache;
+> > > }
+> > >
+> > >
+> > > So guest assumes native, host assumes LE.
+> >
+> > This wasn't even the one I was talking about, but now that you point
+> > it out this is definately bug. The command ID I was talking about was
+> > the one being passed via the descriptor ring. That one I believe is
+> > native on both sides.
+>
+> Well qemu swaps it for modern devices:
+>
+>         virtio_tswap32s(vdev, &id);
+>
+> guest swaps it too:
+>         vb->cmd_id_active = cpu_to_virtio32(vb->vdev,
+>                                         virtio_balloon_cmd_id_received(vb));
+>         sg_init_one(&sg, &vb->cmd_id_active, sizeof(vb->cmd_id_active));
+>         err = virtqueue_add_outbuf(vq, &sg, 1, &vb->cmd_id_active, GFP_KERNEL);
+>
+> So it's native for legacy.
+
+Okay, that makes sense. I just wasn't familiar with the virtio32 type.
+
+I guess that just means we need to fix the original issue you found
+where the guest was assuming native for the command ID in the config.
+Do you plan to patch that or should I?
+
+> > >
+> > >
+> > >
+> > > > > ---
+> > > > >  drivers/virtio/virtio_balloon.c | 9 +++++++++
+> > > > >  1 file changed, 9 insertions(+)
+> > > > >
+> > > > > diff --git a/drivers/virtio/virtio_balloon.c b/drivers/virtio/virtio_balloon.c
+> > > > > index 5d4b891bf84f..b9bc03345157 100644
+> > > > > --- a/drivers/virtio/virtio_balloon.c
+> > > > > +++ b/drivers/virtio/virtio_balloon.c
+> > > > > @@ -1107,6 +1107,15 @@ static int virtballoon_restore(struct virtio_device *vdev)
+> > > > >
+> > > > >  static int virtballoon_validate(struct virtio_device *vdev)
+> > > > >  {
+> > > > > +       /*
+> > > > > +        * Legacy devices never specified how modern features should behave.
+> > > > > +        * E.g. which endian-ness to use? Better not to assume anything.
+> > > > > +        */
+> > > > > +       if (!virtio_has_feature(vdev, VIRTIO_F_VERSION_1)) {
+> > > > > +               __virtio_clear_bit(vdev, VIRTIO_BALLOON_F_FREE_PAGE_HINT);
+> > > > > +               __virtio_clear_bit(vdev, VIRTIO_BALLOON_F_PAGE_POISON);
+> > > > > +               __virtio_clear_bit(vdev, VIRTIO_BALLOON_F_REPORTING);
+> > > > > +       }
+> > > > >         /*
+> > > > >          * Inform the hypervisor that our pages are poisoned or
+> > > > >          * initialized. If we cannot do that then we should disable
+> > > >
+> > > > The patch content itself I am fine with since odds are nobody would
+> > > > expect to use these features with a legacy device.
+> > > >
+> > > > Acked-by: Alexander Duyck <alexander.h.duyck@linux.intel.com>
+> > >
+> > > Hmm so now you pointed out it's just cmd id, maybe I should just fix it
+> > > instead? what do you say?
+> >
+> > So the config issues are bugs, but I don't think you saw the one I was
+> > talking about. In the function send_cmd_id_start the cmd_id_active
+> > value which is initialized as a virtio32 is added as a sg entry and
+> > then sent as an outbuf to the device. I'm assuming virtio32 is a host
+> > native byte ordering.
+>
+> IIUC it isn't :) virtio32 is guest native if device is legacy, and LE if
+> device is modern.
+
+Okay. So I should probably document that for the spec I have been
+working on. It looks like there is an example of similar documentation
+for the memory statistics so it should be pretty straight forward.
+
+Thanks.
+
+- Alex
