@@ -2,113 +2,161 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9746EC433E5
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 08:30:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44E77C433EC
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 08:30:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 71FC821BE5
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 08:30:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 226C221BE5
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 08:30:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="nP9sv9HQ"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="usyuXKN+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726461AbgGNIad (ORCPT
+        id S1726827AbgGNIa5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 04:30:33 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:60520 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725801AbgGNIac (ORCPT
+        Tue, 14 Jul 2020 04:30:57 -0400
+Received: from esa1.microchip.iphmx.com ([68.232.147.91]:33756 "EHLO
+        esa1.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725801AbgGNIa4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 04:30:32 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06E8S3W8158519;
-        Tue, 14 Jul 2020 08:30:24 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2020-01-29;
- bh=bmrC3uO0hL9mY59/ViKJ+rhM/g+cSn+ihe2iBW1t2lA=;
- b=nP9sv9HQLvr50sCLZVHB8NUFvJJPfh8ZULE2AUPbZhuSmQdwVh+AgYKI4alEJOfKBf9o
- 37mU7E5wIGriv4Ye0p7eL8PIFtuXTjzsqZfLgwoitfx84Zgtqx5Lu8WfTPIJpTHs+cmg
- EoyhyJu0OhAGfjwW/PZN+XyJ++lgVv6+YWKrWeQuQM7aAQ50Br9hQPm7G/EZRZ2QGLiJ
- P2GoTv6a7i1cPSIszxN59j716BMLTx1/g2nYmxBJfWZvdP/7tw5ShlcYO3vY+ub3zYQa
- 0cFrj0td3c9hGD8jf8WN3CkSfCK4gTkONWPvR02NY2iGoHxllUPsrw9X893nm7Qrh2Mk cA== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2130.oracle.com with ESMTP id 3274ur3yj9-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 14 Jul 2020 08:30:24 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06E8Hmsw084482;
-        Tue, 14 Jul 2020 08:28:23 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by aserp3020.oracle.com with ESMTP id 327qb3a5qk-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 14 Jul 2020 08:28:23 +0000
-Received: from abhmp0019.oracle.com (abhmp0019.oracle.com [141.146.116.25])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 06E8SNPG009448;
-        Tue, 14 Jul 2020 08:28:23 GMT
-Received: from kadam (/41.57.98.10)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 14 Jul 2020 01:28:22 -0700
-Date:   Tue, 14 Jul 2020 11:28:16 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Suraj Upadhyay <usuraj35@gmail.com>
-Cc:     manishc@marvell.com, GR-Linux-NIC-Dev@marvell.com,
-        gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
-        dri-devel@lists.freedesktop.org
-Subject: Re: [PATCH 4/6] staging: qlge: qlge_main: Simplify while statements.
-Message-ID: <20200714082816.GA2571@kadam>
-References: <cover.1594642213.git.usuraj35@gmail.com>
- <1bb472c5595d832221fd142dddb68907feeeecbe.1594642213.git.usuraj35@gmail.com>
- <20200713141235.GT2549@kadam>
- <20200714064022.GA12651@blackclown>
+        Tue, 14 Jul 2020 04:30:56 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1594715455; x=1626251455;
+  h=references:from:to:cc:subject:in-reply-to:date:
+   message-id:mime-version;
+  bh=iwME0Emw2+J43pHMb9qYdnILvBRF1cOmxeCbkgwHHWI=;
+  b=usyuXKN+KCwL4nBDIstjpgPvjiNq2A+Wp7eJ3bE8Z104DiEmMl816w30
+   kQP6l8kW7LZ1HZyYpy1AOkVnAGLtvjjdpa6sbvIpbZGON15TanIpIw3IC
+   1OV4SxKa+hlT1BqbgDIVKvpdhKhdctiIF/ORSNTWKiZ4ptOlzMKo8AeCM
+   gq8JLL7DBseA4m6UbO5Or0+SHAc+G5rntmpbtz7LSfH2mzPRSk+D7N84Z
+   4S/mH5m8ei3t76AH8uELMrIrv+vsfbjcntFuxBcmH9Ll6XfwIG12S5ilM
+   ZQjKFufh/MbFGrh82bu2ZNI35gHxc+gnAUnUMIUzKqcChztxpvSxsvyUH
+   w==;
+IronPort-SDR: rDCm3eZA3Wna9AO+bK/EoLvsiUHMNsKMDHn3nfTK+yrolAsyVlBnVSS1verBpraJXN83kMw8i8
+ R0nwofBCha3cvA79LOIo5b8kNGzwuiST9NpBr6An6U5v6hPEEMu6t448RPxcYtREMfCViZNZEB
+ JF7Ed4bGIIR34VfHP/943RyhAj/6MQoJxxmThFf4p2CwZysnM8IXuBpNyhwWuzc8ODnKgh2bah
+ pH8DdvW4lFzsp+rORr5YIX3twSt19kuTp7CulOfVd2V91QKNYPItKglCEf9q1UkDXb3K4gYi5S
+ 23U=
+X-IronPort-AV: E=Sophos;i="5.75,350,1589266800"; 
+   d="scan'208";a="87503354"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa1.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 14 Jul 2020 01:30:55 -0700
+Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
+ chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1979.3; Tue, 14 Jul 2020 01:30:54 -0700
+Received: from soft-dev15.microsemi.net.microchip.com (10.10.115.15) by
+ chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1979.3
+ via Frontend Transport; Tue, 14 Jul 2020 01:30:52 -0700
+References: <20200702101331.26375-1-lars.povlsen@microchip.com> <20200702101331.26375-6-lars.povlsen@microchip.com> <20200713192259.GA553903@bogus> <20200713195219.xfvqknioqw7yyr74@mobilestation>
+From:   Lars Povlsen <lars.povlsen@microchip.com>
+To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        Mark Brown <broonie@kernel.org>
+CC:     Rob Herring <robh@kernel.org>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        "Lars Povlsen" <lars.povlsen@microchip.com>,
+        Peter Rosin <peda@axentia.se>,
+        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
+        <linux-spi@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH v3 5/8] dt-bindings: snps,dw-apb-ssi: Add sparx5 support, plus snps,rx-sample-delay-ns property
+In-Reply-To: <20200713195219.xfvqknioqw7yyr74@mobilestation>
+Date:   Tue, 14 Jul 2020 10:30:51 +0200
+Message-ID: <87zh82jy6c.fsf@soft-dev15.microsemi.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200714064022.GA12651@blackclown>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9681 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 malwarescore=0
- mlxscore=0 spamscore=0 phishscore=0 suspectscore=0 bulkscore=0
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2007140063
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9681 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 lowpriorityscore=0 impostorscore=0
- suspectscore=0 phishscore=0 spamscore=0 mlxlogscore=999 malwarescore=0
- mlxscore=0 priorityscore=1501 adultscore=0 bulkscore=0 clxscore=1015
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2007140064
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 14, 2020 at 12:10:22PM +0530, Suraj Upadhyay wrote:
-> On Mon, Jul 13, 2020 at 05:12:35PM +0300, Dan Carpenter wrote:
-> > On Mon, Jul 13, 2020 at 05:50:14PM +0530, Suraj Upadhyay wrote:
-> > > Simplify while loops into more readable and simple for loops.
-> > > 
-> > 
-> > I don't think either is more clear that the other.  Walter Harms hates
-> > count down loops and he's not entirely wrong...
-> > 
-> > regards,
-> > dan carpenter
-> 
-> Hi Dan,
-> 	Thanks for your response.
-> Should I send a v2 of this patch or not ??
-> Also do you have any problems with the other two patches doing the same
-> thing in different files ??
-> I am all ears.
 
-I would just resend patch 6/6.  If this is your driver and you're going
-to be working on it extensively then you do what makes you feel
-comfortable.  But to me the original code seems fine with while count
-down loops.
+Serge Semin writes:
 
-regards,
-dan carpenter
+> On Mon, Jul 13, 2020 at 01:22:59PM -0600, Rob Herring wrote:
+>> On Thu, Jul 02, 2020 at 12:13:28PM +0200, Lars Povlsen wrote:
+> ...
+>>
+>> > +
+>> >  patternProperties:
+>> >    "^.*@[0-9a-f]+$":
+>> >      type: object
+>> > @@ -107,6 +122,14 @@ patternProperties:
+>> >        spi-tx-bus-width:
+>> >          const: 1
+>> >
+>> > +      snps,rx-sample-delay-ns:
+>>
+>
+>> We already have 'rx-sample-delay-ns' from Rockchip SPI, so use that. But
+>> note that it applies to the SPI node. Does this need to be per SPI
+>> child?
+>
+> It was me, who suggested to Lars to have that parameter moved to the SPI
+> sub-nodes. As I see it the property is highly dependent on the SPI slave device
+> the controller is communicating to. Some of the them may need the delay some
+> may not. It's not always the capacitance thing, but also depends on how good
+> the MISO signal a particular slave generates. So IMO the Rockchip SPI driver
+> developer should have moved that property to the sub-nodes too.
+>
 
+In the case with sparx5, having two bus interfaces, spi slaves may be on
+different busses - making it obvious why you may need different settings.
+
+But I guess even on the same bus the physical length of SPI connections
+and device response delay to each device could play in as well.
+
+Nevertheless, it *does* make sense to be able to specify per slave, but
+a default could make the DT more terse. Should I add this to my patch?
+
+I will remove the "snps," prefix now that the property is globally
+established.
+
+---Lars
+
+> On the other hand if the Rx errors are caused by the MISO lane capacitance,
+> then it will be cumbersome to have the same property duplicated for each
+> sub-node. Then what about having the property supported by both the SPI
+> controller and the SPI-child nodes? For instance the SPI-controller
+> "rx-sample-delay-ns" will provide a default sample delay for each sub-node
+> instead of zero by default, while the individual sub-node "rx-sample-delay-ns"
+> property can be used to override the default value.
+>
+> -Sergey
+>
+>>
+>> BTW, the Rockchip controller appears to be a version of the DW
+>> controller.
+>>
+>> > +        description: SPI Rx sample delay offset, unit is nanoseconds.
+>> > +          The delay from the default sample time before the actual
+>> > +          sample of the rxd input signal occurs. The "rx_sample_delay"
+>> > +          is an optional feature of the designware controller, and the
+>> > +          upper limit is also subject to controller configuration.
+>> > +        $ref: /schemas/types.yaml#/definitions/uint32
+>> > +
+>> >  unevaluatedProperties: false
+>> >
+>> >  required:
+>> > @@ -129,5 +152,10 @@ examples:
+>> >        num-cs = <2>;
+>> >        cs-gpios = <&gpio0 13 0>,
+>> >                   <&gpio0 14 0>;
+>> > +      spi-flash@1 {
+>> > +        compatible = "spi-nand";
+>> > +        reg = <1>;
+>> > +        snps,rx-sample-delay-ns = <7>;
+>> > +      };
+>> >      };
+>> >  ...
+>> > --
+>> > 2.27.0
+
+-- 
+Lars Povlsen,
+Microchip
