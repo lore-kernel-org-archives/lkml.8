@@ -2,77 +2,96 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CAEEC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 14:13:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92862C433E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 14:15:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7C74C22513
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 14:13:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B99F22510
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 14:15:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728437AbgGNONf (ORCPT
+        id S1728144AbgGNOPJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 10:13:35 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:34450 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725821AbgGNONe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 10:13:34 -0400
-Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id E4EB4544F1D0A41C85A6;
-        Tue, 14 Jul 2020 22:13:31 +0800 (CST)
-Received: from kernelci-master.huawei.com (10.175.101.6) by
- DGGEMS406-HUB.china.huawei.com (10.3.19.206) with Microsoft SMTP Server id
- 14.3.487.0; Tue, 14 Jul 2020 22:13:25 +0800
-From:   Wei Yongjun <weiyongjun1@huawei.com>
-To:     Hulk Robot <hulkci@huawei.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>
-CC:     Wei Yongjun <weiyongjun1@huawei.com>, <linux-nvdimm@lists.01.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: [PATCH -next] libnvdimm/security: Make __nvdimm_security_overwrite_query() static
-Date:   Tue, 14 Jul 2020 22:23:28 +0800
-Message-ID: <20200714142328.78838-1-weiyongjun1@huawei.com>
-X-Mailer: git-send-email 2.17.1
+        Tue, 14 Jul 2020 10:15:09 -0400
+Received: from mail.baikalelectronics.com ([87.245.175.226]:33610 "EHLO
+        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725890AbgGNOPJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 10:15:09 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id A21E68030867;
+        Tue, 14 Jul 2020 14:15:06 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at baikalelectronics.ru
+Received: from mail.baikalelectronics.ru ([127.0.0.1])
+        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id 3m-kbe7wnLov; Tue, 14 Jul 2020 17:15:06 +0300 (MSK)
+Date:   Tue, 14 Jul 2020 17:15:04 +0300
+From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
+To:     Arnd Bergmann <arnd@arndb.de>
+CC:     Serge Semin <fancer.lancer@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Rob Herring <robh+dt@kernel.org>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>, James Hogan <jhogan@kernel.org>,
+        "open list:BROADCOM NVRAM DRIVER" <linux-mips@vger.kernel.org>,
+        DTML <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v5 5/6] bus: cdmm: Add MIPS R5 arch support
+Message-ID: <20200714141504.oybqzaii5hcdy7cq@mobilestation>
+References: <20200714125753.22466-1-Sergey.Semin@baikalelectronics.ru>
+ <20200714125753.22466-6-Sergey.Semin@baikalelectronics.ru>
+ <CAK8P3a09RW+zCMJ9Luh2C3NkYPdY4Esu6EKk_QX_i4faV-rUjg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.175.101.6]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <CAK8P3a09RW+zCMJ9Luh2C3NkYPdY4Esu6EKk_QX_i4faV-rUjg@mail.gmail.com>
+X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The sparse tool complains as follows:
+On Tue, Jul 14, 2020 at 03:28:30PM +0200, Arnd Bergmann wrote:
+> On Tue, Jul 14, 2020 at 2:58 PM Serge Semin
+> <Sergey.Semin@baikalelectronics.ru> wrote:
+> >
+> >  config MIPS_CDMM
+> >         bool "MIPS Common Device Memory Map (CDMM) Driver"
+> > -       depends on CPU_MIPSR2
+> > +       depends on CPU_MIPSR2 || CPU_MIPSR5
+> >         help
+> 
 
-drivers/nvdimm/security.c:416:6: warning:
- symbol '__nvdimm_security_overwrite_query' was not declared. Should it be static?
+> Wouldn't a kernel built for P5600 have CPU_MIPSR2 set already?
 
-__nvdimm_security_overwrite_query() is not used outside of this
-file, so marks it static.
+No. P5600 core is based on MIPS32 r5, for which since 5.8 there has been a
+dedicated kernel config CPU_MIPSR5 available. 
 
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: Wei Yongjun <weiyongjun1@huawei.com>
----
- drivers/nvdimm/security.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+> I thought R5 was just a backwards-compatible extension of R2.
 
-diff --git a/drivers/nvdimm/security.c b/drivers/nvdimm/security.c
-index 89b85970912d..11fb5ada70ad 100644
---- a/drivers/nvdimm/security.c
-+++ b/drivers/nvdimm/security.c
-@@ -413,7 +413,7 @@ static int security_overwrite(struct nvdimm *nvdimm, unsigned int keyid)
- 	return rc;
- }
- 
--void __nvdimm_security_overwrite_query(struct nvdimm *nvdimm)
-+static void __nvdimm_security_overwrite_query(struct nvdimm *nvdimm)
- {
- 	struct nvdimm_bus *nvdimm_bus = walk_to_nvdimm_bus(&nvdimm->dev);
- 	int rc;
+Yes, it's an extension and they are compatible in most of aspects, but
+there are still differences, which when activated/used make kernel built
+for R5 being incompatible with R2. For instance there is an ISA
+extension in R5 which hasn't been available in R5 like "eretnc"
+(return from exceptions with no atomic flag cleared), "mfhc/mthc0"
+(extended C0 register move instructions), etc. There is some other
+features/optimizations available since R5. Please see commit
+ab7c01fdc3cf ("mips: Add MIPS Release 5 support") for details.
 
+> 
+> If not, what about R3?
+
+Currently if some chip is equipped with R3, then the kernel must be built
+for R2 with features like EVA enabled if it's required.
+
+-Sergey
+
+> 
+>       Arnd
