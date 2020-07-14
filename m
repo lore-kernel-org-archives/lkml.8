@@ -2,126 +2,103 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3DF7C433E7
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 19:06:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87BD7C433E6
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 19:06:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8F6CE22AAB
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 19:06:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B2F222AAB
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 19:06:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594753598;
+	bh=1f1XWa2bRWx73QVevXDY5pPvGfCNRVovTwrQSxmj5kA=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=D6EZSMg8Knoq626YJvKreXO5T/EGGMzL+3Ix4CkFUNDqturuccjuJ6niUT4yvQquS
+	 M+f0mPJV2CS5444vAT+HHXiZE7ztpW4h6lX4893LvvNFs0U8iQiqU694dll+fhWI7D
+	 e3spTr7LE44zmMBxajNjKV2YJPY2Hv+3PJawwQJE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730685AbgGNTG1 (ORCPT
+        id S1730580AbgGNTGh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 15:06:27 -0400
-Received: from mga14.intel.com ([192.55.52.115]:45257 "EHLO mga14.intel.com"
+        Tue, 14 Jul 2020 15:06:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50316 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731196AbgGNTGR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 15:06:17 -0400
-IronPort-SDR: 27iBeCfoeLRrVUeRTy/BI0zBGPcmN+PmJoub48PPOgpH+618PXlf6ue/5i8667iiPyfSDqvbOY
- ES4o41RqYn5w==
-X-IronPort-AV: E=McAfee;i="6000,8403,9682"; a="148148363"
-X-IronPort-AV: E=Sophos;i="5.75,352,1589266800"; 
-   d="scan'208";a="148148363"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jul 2020 12:06:16 -0700
-IronPort-SDR: 372ah54Muur1nzmIJ6WpFVvasq6EKc/XBygmqwb4njk9NqFeHdl/Vb7u58xf0Grd72pTvNiTPg
- ndEouPAOrQ8w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,352,1589266800"; 
-   d="scan'208";a="324632815"
-Received: from iweiny-desk2.sc.intel.com ([10.3.52.147])
-  by FMSMGA003.fm.intel.com with ESMTP; 14 Jul 2020 12:06:16 -0700
-Date:   Tue, 14 Jul 2020 12:06:16 -0700
-From:   Ira Weiny <ira.weiny@intel.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Andy Lutomirski <luto@kernel.org>, x86@kernel.org,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Fenghua Yu <fenghua.yu@intel.com>, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-nvdimm@lists.01.org,
-        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-        linux-kselftest@vger.kernel.org
-Subject: Re: [RFC PATCH 12/15] kmap: Add stray write protection for device
- pages
-Message-ID: <20200714190615.GC3008823@iweiny-DESK2.sc.intel.com>
-References: <20200714070220.3500839-1-ira.weiny@intel.com>
- <20200714070220.3500839-13-ira.weiny@intel.com>
- <20200714084451.GQ10769@hirez.programming.kicks-ass.net>
+        id S1730609AbgGNSxT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 14:53:19 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id EFF9A22C7B;
+        Tue, 14 Jul 2020 18:53:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594752798;
+        bh=1f1XWa2bRWx73QVevXDY5pPvGfCNRVovTwrQSxmj5kA=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=KMLvdWAxy2rjeuKo6GrZzLWbmBPl1QmNh6sHO9ZXiAHSHn0bmVYkRC6oDhzXTk3TC
+         MtiFlhl9eGEl05ZmgtFm4OhuqUQQ5C0bq627jaIL2q6oRIBqbh34VDIwzEqyioDWdi
+         A+wQTjYMDqD1xgyQxGJFr1JjHqOWd3EzpaEowVz8=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        Sebastien Boeuf <sebastien.boeuf@intel.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Subject: [PATCH 5.4 084/109] KVM: x86: Inject #GP if guest attempts to toggle CR4.LA57 in 64-bit mode
+Date:   Tue, 14 Jul 2020 20:44:27 +0200
+Message-Id: <20200714184109.569988645@linuxfoundation.org>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200714184105.507384017@linuxfoundation.org>
+References: <20200714184105.507384017@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200714084451.GQ10769@hirez.programming.kicks-ass.net>
-User-Agent: Mutt/1.11.1 (2018-12-01)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 14, 2020 at 10:44:51AM +0200, Peter Zijlstra wrote:
-> On Tue, Jul 14, 2020 at 12:02:17AM -0700, ira.weiny@intel.com wrote:
-> > From: Ira Weiny <ira.weiny@intel.com>
-> > 
-> > Device managed pages may have additional protections.  These protections
-> > need to be removed prior to valid use by kernel users.
-> > 
-> > Check for special treatment of device managed pages in kmap and take
-> > action if needed.  We use kmap as an interface for generic kernel code
-> > because under normal circumstances it would be a bug for general kernel
-> > code to not use kmap prior to accessing kernel memory.  Therefore, this
-> > should allow any valid kernel users to seamlessly use these pages
-> > without issues.
-> > 
-> > Signed-off-by: Ira Weiny <ira.weiny@intel.com>
-> > ---
-> >  include/linux/highmem.h | 32 +++++++++++++++++++++++++++++++-
-> >  1 file changed, 31 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/include/linux/highmem.h b/include/linux/highmem.h
-> > index d6e82e3de027..7f809d8d5a94 100644
-> > --- a/include/linux/highmem.h
-> > +++ b/include/linux/highmem.h
-> > @@ -8,6 +8,7 @@
-> >  #include <linux/mm.h>
-> >  #include <linux/uaccess.h>
-> >  #include <linux/hardirq.h>
-> > +#include <linux/memremap.h>
-> >  
-> >  #include <asm/cacheflush.h>
-> >  
-> > @@ -31,6 +32,20 @@ static inline void invalidate_kernel_vmap_range(void *vaddr, int size)
-> >  
-> >  #include <asm/kmap_types.h>
-> >  
-> > +static inline void enable_access(struct page *page)
-> > +{
-> > +	if (!page_is_access_protected(page))
-> > +		return;
-> > +	dev_access_enable();
-> > +}
-> > +
-> > +static inline void disable_access(struct page *page)
-> > +{
-> > +	if (!page_is_access_protected(page))
-> > +		return;
-> > +	dev_access_disable();
-> > +}
-> 
-> So, if I followed along correctly, you're proposing to do a WRMSR per
-> k{,un}map{_atomic}(), sounds like excellent performance all-round :-(
+From: Sean Christopherson <sean.j.christopherson@intel.com>
 
-Only to pages which have this additional protection, ie not DRAM.
+commit d74fcfc1f0ff4b6c26ecef1f9e48d8089ab4eaac upstream.
 
-User mappings of this memory is not affected (would be covered by User PKeys if
-desired).  User mappings to persistent memory are the primary use case and the
-performant path.
+Inject a #GP on MOV CR4 if CR4.LA57 is toggled in 64-bit mode, which is
+illegal per Intel's SDM:
 
-Ira
+  CR4.LA57
+    57-bit linear addresses (bit 12 of CR4) ... blah blah blah ...
+    This bit cannot be modified in IA-32e mode.
+
+Note, the pseudocode for MOV CR doesn't call out the fault condition,
+which is likely why the check was missed during initial development.
+This is arguably an SDM bug and will hopefully be fixed in future
+release of the SDM.
+
+Fixes: fd8cb433734ee ("KVM: MMU: Expose the LA57 feature to VM.")
+Cc: stable@vger.kernel.org
+Reported-by: Sebastien Boeuf <sebastien.boeuf@intel.com>
+Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+Message-Id: <20200703021714.5549-1-sean.j.christopherson@intel.com>
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ arch/x86/kvm/x86.c |    2 ++
+ 1 file changed, 2 insertions(+)
+
+--- a/arch/x86/kvm/x86.c
++++ b/arch/x86/kvm/x86.c
+@@ -980,6 +980,8 @@ int kvm_set_cr4(struct kvm_vcpu *vcpu, u
+ 	if (is_long_mode(vcpu)) {
+ 		if (!(cr4 & X86_CR4_PAE))
+ 			return 1;
++		if ((cr4 ^ old_cr4) & X86_CR4_LA57)
++			return 1;
+ 	} else if (is_paging(vcpu) && (cr4 & X86_CR4_PAE)
+ 		   && ((cr4 ^ old_cr4) & pdptr_bits)
+ 		   && !load_pdptrs(vcpu, vcpu->arch.walk_mmu,
+
+
