@@ -2,106 +2,319 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94091C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 15:48:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D68EBC433E4
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 15:48:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6DB6B22470
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 15:48:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A93EE22461
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 15:48:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="XxgHUC2I"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="1DdPHBSI";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="BRkEJJGk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726858AbgGNPsw (ORCPT
+        id S1727978AbgGNPs6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 11:48:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38098 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725876AbgGNPsv (ORCPT
+        Tue, 14 Jul 2020 11:48:58 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:44614 "EHLO
+        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725876AbgGNPs5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 11:48:51 -0400
-Received: from mail-ed1-x544.google.com (mail-ed1-x544.google.com [IPv6:2a00:1450:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B455EC061755
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 08:48:50 -0700 (PDT)
-Received: by mail-ed1-x544.google.com with SMTP id dm19so17702654edb.13
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 08:48:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=geWoHm0dGyB50Rmo0gHBfcDLwCZECBkcejM8K8k30DQ=;
-        b=XxgHUC2I3sDfRkOff33DVWFGlsDneOECTpImGtuyGsGtO0nGaNLhSMPKfl5P22aGeG
-         TLVZGuaiHQwXMQb46pJmGUWWfzbMQb6vl0+JJBB2ZAWXonJOV180ui8YM9H54B9qO/v0
-         9jbY2VQ2cueS9HveKggZsF7i7NEJPQUfQgolZuaYVXlAqRdyW1JJrAwNi3MG/8CCn7cs
-         4KVww/VHimVN4gxPkQZYoYrnqLOOgDxzUTcktukP3c6IuQOShciXd+3JnsumWHJTakP1
-         d4Rw0zG5CUIvzggFksUfup3hfCKWDPDlRpJXgrCPxEzkhj5NHVOif4DHRBV3VF/3yL/q
-         mz4w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=geWoHm0dGyB50Rmo0gHBfcDLwCZECBkcejM8K8k30DQ=;
-        b=fMFgkl8HkKahEQksRH6ISZnKZagbPe6t95YwW73LhUdQ318eqSqMGu/CMyUmN78xDj
-         lRYeTk29N7z8ZgaF8TS1oUY2KJK7KeDcZCB6dCREQh5Ws2c6RJMyK8upvUUqG0pzqcId
-         hBQBEFes8L6Z5c+CFB8Jk9/O6Cr7Xl/+Pgm6/CVNgDM5cZklspK7oSTKN1XrZTCeFbGv
-         8VRXLbAPBWgU/5H2QzlkKgefRG6t3s6nPh3+GWStg8MGXMes2q/7NrLoh6Kx1VyxMjOJ
-         1zy/pK25xJTIhcIeJlbQBvVxtN/tfUuYCkDJNCO9ujZtkj3HKnoH4bz87zmoq5Vwcg0O
-         52Eg==
-X-Gm-Message-State: AOAM531p2oHb6Xxx45Zfr4UBlhKLx5EwyvB89zQ8cidg51DGcxfz5Qsx
-        N17LwrUY08ulgLmUT3KaXD7F6/SydGFMXyqNbdYbtA==
-X-Google-Smtp-Source: ABdhPJyfSdzSTluvaFbGmnt3BZHPPUXVEh/wqplhH7kzckPA8BqWzWVcQmFn8u+H3NMap7hAORZdKRYwRfF6ymXh6d8=
-X-Received: by 2002:a50:ed15:: with SMTP id j21mr5401524eds.246.1594741729082;
- Tue, 14 Jul 2020 08:48:49 -0700 (PDT)
+        Tue, 14 Jul 2020 11:48:57 -0400
+Date:   Tue, 14 Jul 2020 15:48:52 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1594741733;
+        h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=GDVdxpPETEUs4zpH/T1YOqdeyC4ELnzkOPaqKzWyq/0=;
+        b=1DdPHBSIfxTtTROYTMAaEDBYS2RXD4d9KEHhOwUn5wziAXvOEhNgSUcpySwYcZe2v5ouDA
+        eljOyNtxnpXVenRRY4stYHop/y/5PQJY/OBXHiNyyVeTku1sY6JKoTPXVYtYI4W4Uiu0Ym
+        3eSgpk24I+PyJ8TZRm+xO4VME/9jGXeNH7YrDoK/DvQ820wrbT/bMOqVojwWy/7S2sQ15s
+        m/6qm9B82XeD7W+SxVcTtTJbnmy/QcNdyTN5EjV0Vdvx3IGzOcCKsr3eIRPkSMm7d0kVFb
+        1+skFbjuGfhYPi7znnOHWdUix2V67mmkmEFPWEjNSaVUaG2i8VFpr/tJ0/kRFQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1594741733;
+        h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=GDVdxpPETEUs4zpH/T1YOqdeyC4ELnzkOPaqKzWyq/0=;
+        b=BRkEJJGkVvKGprWY4FezRTtHvSHZEdqnb5tRiEMXzxWJ0Ma+uS2dAZ2d43/YeLwOdX/207
+        PC9H5XQ0BaTHfWAQ==
+From:   "tip-bot2 for Thomas Gleixner" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: irq/urgent] irqdomain/treewide: Keep firmware node
+ unconditionally allocated
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Marc Zyngier <maz@kernel.org>, stable@vger.kernel.org,
+        x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <873661qakd.fsf@nanos.tec.linutronix.de>
+References: <873661qakd.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-References: <20200710002209.6757-1-apronin@chromium.org> <20200710114000.GD2614@linux.intel.com>
- <CAP7wa8LfEtEATbENjr18jTXShT+YmrAoDt4k9FK1SLpxVqViog@mail.gmail.com> <20200714113205.GA1461506@linux.intel.com>
-In-Reply-To: <20200714113205.GA1461506@linux.intel.com>
-From:   Guenter Roeck <groeck@google.com>
-Date:   Tue, 14 Jul 2020 08:48:38 -0700
-Message-ID: <CABXOdTcAZjG8aQvs+M72CFe9rAdBKZH+6x=C1Ha2aX_w0gXiHw@mail.gmail.com>
-Subject: Re: [PATCH] tpm: avoid accessing cleared ops during shutdown
-To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Cc:     Andrey Pronin <apronin@chromium.org>,
-        Peter Huewe <peterhuewe@gmx.de>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        linux-integrity@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Guenter Roeck <groeck@chromium.org>
-Content-Type: text/plain; charset="UTF-8"
+Message-ID: <159474173226.4006.8854547347623536362.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 14, 2020 at 4:32 AM Jarkko Sakkinen
-<jarkko.sakkinen@linux.intel.com> wrote:
->
-> On Fri, Jul 10, 2020 at 11:25:44AM -0700, Andrey Pronin wrote:
-> > > Why does not tpm_del_char_device need this?
-> >
-> > "Not" is a typo in the sentence above, right? tpm_del_char_device *does*
-> > need the fix. When tpm_class_shutdown is called it sets chip->ops to
-> > NULL. If tpm_del_char_device is called after that, it doesn't check if
-> > chip->ops is NULL (normal kernel API and char device API calls go
-> > through tpm_try_get_ops, but tpm_del_char_device doesn't) and proceeds to
-> > call tpm2_shutdown(), which tries sending the command and dereferences
-> > chip->ops.
->
-> It's a typo, yes. Sorry about that.
->
-> tpm_class_shutdown() is essentially tail of tpm_del_char_device().
->
-> To clean things up, I'd suggest dropping tpm_del_char_device() and
-> call tpm_class_shutdown() in tpm_chip_unregisters() along, and open
-> coding things that prepend it in tpm_del_char_device().
->
+The following commit has been merged into the irq/urgent branch of tip:
 
-Personally I would have preferred two separate patches, one to fix the
-immediate problem (with Cc: stable) and one for the cleanup, but I
-guess merging both into one is ok as long as it is marked for stable.
+Commit-ID:     e3beca48a45b5e0e6e6a4e0124276b8248dcc9bb
+Gitweb:        https://git.kernel.org/tip/e3beca48a45b5e0e6e6a4e0124276b8248dcc9bb
+Author:        Thomas Gleixner <tglx@linutronix.de>
+AuthorDate:    Thu, 09 Jul 2020 11:53:06 +02:00
+Committer:     Thomas Gleixner <tglx@linutronix.de>
+CommitterDate: Tue, 14 Jul 2020 17:44:42 +02:00
 
-Thanks,
-Guenter
+irqdomain/treewide: Keep firmware node unconditionally allocated
+
+Quite some non OF/ACPI users of irqdomains allocate firmware nodes of type
+IRQCHIP_FWNODE_NAMED or IRQCHIP_FWNODE_NAMED_ID and free them right after
+creating the irqdomain. The only purpose of these FW nodes is to convey
+name information. When this was introduced the core code did not store the
+pointer to the node in the irqdomain. A recent change stored the firmware
+node pointer in irqdomain for other reasons and missed to notice that the
+usage sites which do the alloc_fwnode/create_domain/free_fwnode sequence
+are broken by this. Storing a dangling pointer is dangerous itself, but in
+case that the domain is destroyed later on this leads to a double free.
+
+Remove the freeing of the firmware node after creating the irqdomain from
+all affected call sites to cure this.
+
+Fixes: 711419e504eb ("irqdomain: Add the missing assignment of domain->fwnode for named fwnode")
+Reported-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+Acked-by: Marc Zyngier <maz@kernel.org>
+Cc: stable@vger.kernel.org
+Link: https://lkml.kernel.org/r/873661qakd.fsf@nanos.tec.linutronix.de
+
+---
+ arch/mips/pci/pci-xtalk-bridge.c    |  5 +++--
+ arch/x86/kernel/apic/io_apic.c      | 10 +++++-----
+ arch/x86/kernel/apic/msi.c          | 18 ++++++++++++------
+ arch/x86/kernel/apic/vector.c       |  1 -
+ arch/x86/platform/uv/uv_irq.c       |  3 ++-
+ drivers/iommu/amd/iommu.c           |  5 +++--
+ drivers/iommu/hyperv-iommu.c        |  5 ++++-
+ drivers/iommu/intel/irq_remapping.c |  2 +-
+ drivers/mfd/ioc3.c                  |  5 +++--
+ drivers/pci/controller/vmd.c        |  5 +++--
+ 10 files changed, 36 insertions(+), 23 deletions(-)
+
+diff --git a/arch/mips/pci/pci-xtalk-bridge.c b/arch/mips/pci/pci-xtalk-bridge.c
+index 3b2552f..5958217 100644
+--- a/arch/mips/pci/pci-xtalk-bridge.c
++++ b/arch/mips/pci/pci-xtalk-bridge.c
+@@ -627,9 +627,10 @@ static int bridge_probe(struct platform_device *pdev)
+ 		return -ENOMEM;
+ 	domain = irq_domain_create_hierarchy(parent, 0, 8, fn,
+ 					     &bridge_domain_ops, NULL);
+-	irq_domain_free_fwnode(fn);
+-	if (!domain)
++	if (!domain) {
++		irq_domain_free_fwnode(fn);
+ 		return -ENOMEM;
++	}
+ 
+ 	pci_set_flags(PCI_PROBE_ONLY);
+ 
+diff --git a/arch/x86/kernel/apic/io_apic.c b/arch/x86/kernel/apic/io_apic.c
+index ce61e3e..81ffcfb 100644
+--- a/arch/x86/kernel/apic/io_apic.c
++++ b/arch/x86/kernel/apic/io_apic.c
+@@ -2316,12 +2316,12 @@ static int mp_irqdomain_create(int ioapic)
+ 	ip->irqdomain = irq_domain_create_linear(fn, hwirqs, cfg->ops,
+ 						 (void *)(long)ioapic);
+ 
+-	/* Release fw handle if it was allocated above */
+-	if (!cfg->dev)
+-		irq_domain_free_fwnode(fn);
+-
+-	if (!ip->irqdomain)
++	if (!ip->irqdomain) {
++		/* Release fw handle if it was allocated above */
++		if (!cfg->dev)
++			irq_domain_free_fwnode(fn);
+ 		return -ENOMEM;
++	}
+ 
+ 	ip->irqdomain->parent = parent;
+ 
+diff --git a/arch/x86/kernel/apic/msi.c b/arch/x86/kernel/apic/msi.c
+index 5cbaca5..c2b2911 100644
+--- a/arch/x86/kernel/apic/msi.c
++++ b/arch/x86/kernel/apic/msi.c
+@@ -263,12 +263,13 @@ void __init arch_init_msi_domain(struct irq_domain *parent)
+ 		msi_default_domain =
+ 			pci_msi_create_irq_domain(fn, &pci_msi_domain_info,
+ 						  parent);
+-		irq_domain_free_fwnode(fn);
+ 	}
+-	if (!msi_default_domain)
++	if (!msi_default_domain) {
++		irq_domain_free_fwnode(fn);
+ 		pr_warn("failed to initialize irqdomain for MSI/MSI-x.\n");
+-	else
++	} else {
+ 		msi_default_domain->flags |= IRQ_DOMAIN_MSI_NOMASK_QUIRK;
++	}
+ }
+ 
+ #ifdef CONFIG_IRQ_REMAP
+@@ -301,7 +302,8 @@ struct irq_domain *arch_create_remap_msi_irq_domain(struct irq_domain *parent,
+ 	if (!fn)
+ 		return NULL;
+ 	d = pci_msi_create_irq_domain(fn, &pci_msi_ir_domain_info, parent);
+-	irq_domain_free_fwnode(fn);
++	if (!d)
++		irq_domain_free_fwnode(fn);
+ 	return d;
+ }
+ #endif
+@@ -364,7 +366,8 @@ static struct irq_domain *dmar_get_irq_domain(void)
+ 	if (fn) {
+ 		dmar_domain = msi_create_irq_domain(fn, &dmar_msi_domain_info,
+ 						    x86_vector_domain);
+-		irq_domain_free_fwnode(fn);
++		if (!dmar_domain)
++			irq_domain_free_fwnode(fn);
+ 	}
+ out:
+ 	mutex_unlock(&dmar_lock);
+@@ -489,7 +492,10 @@ struct irq_domain *hpet_create_irq_domain(int hpet_id)
+ 	}
+ 
+ 	d = msi_create_irq_domain(fn, domain_info, parent);
+-	irq_domain_free_fwnode(fn);
++	if (!d) {
++		irq_domain_free_fwnode(fn);
++		kfree(domain_info);
++	}
+ 	return d;
+ }
+ 
+diff --git a/arch/x86/kernel/apic/vector.c b/arch/x86/kernel/apic/vector.c
+index c48be6e..cc8b16f 100644
+--- a/arch/x86/kernel/apic/vector.c
++++ b/arch/x86/kernel/apic/vector.c
+@@ -709,7 +709,6 @@ int __init arch_early_irq_init(void)
+ 	x86_vector_domain = irq_domain_create_tree(fn, &x86_vector_domain_ops,
+ 						   NULL);
+ 	BUG_ON(x86_vector_domain == NULL);
+-	irq_domain_free_fwnode(fn);
+ 	irq_set_default_host(x86_vector_domain);
+ 
+ 	arch_init_msi_domain(x86_vector_domain);
+diff --git a/arch/x86/platform/uv/uv_irq.c b/arch/x86/platform/uv/uv_irq.c
+index fc13cbb..abb6075 100644
+--- a/arch/x86/platform/uv/uv_irq.c
++++ b/arch/x86/platform/uv/uv_irq.c
+@@ -167,9 +167,10 @@ static struct irq_domain *uv_get_irq_domain(void)
+ 		goto out;
+ 
+ 	uv_domain = irq_domain_create_tree(fn, &uv_domain_ops, NULL);
+-	irq_domain_free_fwnode(fn);
+ 	if (uv_domain)
+ 		uv_domain->parent = x86_vector_domain;
++	else
++		irq_domain_free_fwnode(fn);
+ out:
+ 	mutex_unlock(&uv_lock);
+ 
+diff --git a/drivers/iommu/amd/iommu.c b/drivers/iommu/amd/iommu.c
+index 74cca17..2f22326 100644
+--- a/drivers/iommu/amd/iommu.c
++++ b/drivers/iommu/amd/iommu.c
+@@ -3985,9 +3985,10 @@ int amd_iommu_create_irq_domain(struct amd_iommu *iommu)
+ 	if (!fn)
+ 		return -ENOMEM;
+ 	iommu->ir_domain = irq_domain_create_tree(fn, &amd_ir_domain_ops, iommu);
+-	irq_domain_free_fwnode(fn);
+-	if (!iommu->ir_domain)
++	if (!iommu->ir_domain) {
++		irq_domain_free_fwnode(fn);
+ 		return -ENOMEM;
++	}
+ 
+ 	iommu->ir_domain->parent = arch_get_ir_parent_domain();
+ 	iommu->msi_domain = arch_create_remap_msi_irq_domain(iommu->ir_domain,
+diff --git a/drivers/iommu/hyperv-iommu.c b/drivers/iommu/hyperv-iommu.c
+index 3c0c67a..8919c1c 100644
+--- a/drivers/iommu/hyperv-iommu.c
++++ b/drivers/iommu/hyperv-iommu.c
+@@ -155,7 +155,10 @@ static int __init hyperv_prepare_irq_remapping(void)
+ 				0, IOAPIC_REMAPPING_ENTRY, fn,
+ 				&hyperv_ir_domain_ops, NULL);
+ 
+-	irq_domain_free_fwnode(fn);
++	if (!ioapic_ir_domain) {
++		irq_domain_free_fwnode(fn);
++		return -ENOMEM;
++	}
+ 
+ 	/*
+ 	 * Hyper-V doesn't provide irq remapping function for
+diff --git a/drivers/iommu/intel/irq_remapping.c b/drivers/iommu/intel/irq_remapping.c
+index 7f87698..9564d23 100644
+--- a/drivers/iommu/intel/irq_remapping.c
++++ b/drivers/iommu/intel/irq_remapping.c
+@@ -563,8 +563,8 @@ static int intel_setup_irq_remapping(struct intel_iommu *iommu)
+ 					    0, INTR_REMAP_TABLE_ENTRIES,
+ 					    fn, &intel_ir_domain_ops,
+ 					    iommu);
+-	irq_domain_free_fwnode(fn);
+ 	if (!iommu->ir_domain) {
++		irq_domain_free_fwnode(fn);
+ 		pr_err("IR%d: failed to allocate irqdomain\n", iommu->seq_id);
+ 		goto out_free_bitmap;
+ 	}
+diff --git a/drivers/mfd/ioc3.c b/drivers/mfd/ioc3.c
+index 02998d4..74cee7c 100644
+--- a/drivers/mfd/ioc3.c
++++ b/drivers/mfd/ioc3.c
+@@ -142,10 +142,11 @@ static int ioc3_irq_domain_setup(struct ioc3_priv_data *ipd, int irq)
+ 		goto err;
+ 
+ 	domain = irq_domain_create_linear(fn, 24, &ioc3_irq_domain_ops, ipd);
+-	if (!domain)
++	if (!domain) {
++		irq_domain_free_fwnode(fn);
+ 		goto err;
++	}
+ 
+-	irq_domain_free_fwnode(fn);
+ 	ipd->domain = domain;
+ 
+ 	irq_set_chained_handler_and_data(irq, ioc3_irq_handler, domain);
+diff --git a/drivers/pci/controller/vmd.c b/drivers/pci/controller/vmd.c
+index e386d4e..9a64cf9 100644
+--- a/drivers/pci/controller/vmd.c
++++ b/drivers/pci/controller/vmd.c
+@@ -546,9 +546,10 @@ static int vmd_enable_domain(struct vmd_dev *vmd, unsigned long features)
+ 
+ 	vmd->irq_domain = pci_msi_create_irq_domain(fn, &vmd_msi_domain_info,
+ 						    x86_vector_domain);
+-	irq_domain_free_fwnode(fn);
+-	if (!vmd->irq_domain)
++	if (!vmd->irq_domain) {
++		irq_domain_free_fwnode(fn);
+ 		return -ENODEV;
++	}
+ 
+ 	pci_add_resource(&resources, &vmd->resources[0]);
+ 	pci_add_resource_offset(&resources, &vmd->resources[1], offset[0]);
