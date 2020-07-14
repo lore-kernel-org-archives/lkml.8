@@ -2,166 +2,208 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9A9BC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 19:54:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3294BC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 19:55:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AA2FB22C9E
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 19:54:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F11A422B51
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 19:55:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fs4fvydG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729479AbgGNTye (ORCPT
+        id S1729732AbgGNTzD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 15:54:34 -0400
-Received: from mga05.intel.com ([192.55.52.43]:14481 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726634AbgGNTye (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 15:54:34 -0400
-IronPort-SDR: wsoxCM2zgg6v4TOMoOHx2Z1CHnK4ItRToVe65DXkrrLalS88t+EE6f3iRHMkMVpwqnJfRpWyx3
- G6wPcGDumzig==
-X-IronPort-AV: E=McAfee;i="6000,8403,9682"; a="233873753"
-X-IronPort-AV: E=Sophos;i="5.75,352,1589266800"; 
-   d="scan'208";a="233873753"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jul 2020 12:54:31 -0700
-IronPort-SDR: PPq2wjG/VuBkxZQWD4RyuTVWXWXFLvv+HMF7lBFHDu2duafo7wT1B5gkBD2jnZ2+WOrFz8kTkL
- JFvUQHUOTZ5w==
-X-IronPort-AV: E=Sophos;i="5.75,352,1589266800"; 
-   d="scan'208";a="459811937"
-Received: from calinapo-mobl.amr.corp.intel.com (HELO [10.255.6.204]) ([10.255.6.204])
-  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jul 2020 12:54:27 -0700
-Subject: Re: [PATCH] x86/bugs/multihit: Fix mitigation reporting when KVM is
- not in use
-To:     Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
-Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, x86@kernel.org,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Tony Luck <tony.luck@intel.com>,
-        "Gomez Iglesias, Antonio" <antonio.gomez.iglesias@intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Anthony Steinhauser <asteinhauser@google.com>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Mark Gross <mgross@linux.intel.com>,
-        Waiman Long <longman@redhat.com>, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        Jonathan Corbet <corbet@lwn.net>
-References: <267631f4db4fd7e9f7ca789c2efaeab44103f68e.1594689154.git.pawan.kumar.gupta@linux.intel.com>
- <20200714014540.GH29725@linux.intel.com>
- <099d6985-9e9f-1d9f-7098-58a9e26e4450@intel.com>
- <20200714191759.GA7116@guptapadev.amr>
-From:   Dave Hansen <dave.hansen@intel.com>
-Autocrypt: addr=dave.hansen@intel.com; keydata=
- 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
- z5cecg==
-Message-ID: <ba442a51-294e-8624-9a69-5613ff050551@intel.com>
-Date:   Tue, 14 Jul 2020 12:54:26 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Tue, 14 Jul 2020 15:55:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49110 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729465AbgGNTzD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 15:55:03 -0400
+Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 20754C061755;
+        Tue, 14 Jul 2020 12:55:03 -0700 (PDT)
+Received: by mail-pf1-x443.google.com with SMTP id m9so8042681pfh.0;
+        Tue, 14 Jul 2020 12:55:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=JYMRhwsu+Sb7OdIXTr+m2jcY6PaVT0jbYkR2hlBIQac=;
+        b=fs4fvydGVNvlk5nD87KZFP08JqelxL90HPPkjS2E4M1OFRJ8jvE23FFOO6XgUs+EdC
+         zz9EDAHIdKWW9SjezQFxrX2LzMxaOS4r37lvUaibE+hLSWKbTDdQHf1S3c2Rk3Y2aDch
+         +IqWejNVTpOIfjj6tqwlzSI+JD2dkDI93kixcYJznNmSlHmV91Cw93Okv4rBTTW2I0fp
+         9pDNi7fAjNtQfnPsnSaFVAT0D9iS6Af5T/vm+E1a2ZX2rTZiv3AxUGPm2QrOZMM7Grhi
+         OZ0e7UrNfkMAFwrkALZm3hpOPt02D8g6TC9uOoOBDqQIlI8pfED8r5BnDPx3S9CRblfR
+         Oysw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=JYMRhwsu+Sb7OdIXTr+m2jcY6PaVT0jbYkR2hlBIQac=;
+        b=e9i+INIaY2rubZ9/4OdgVVqLOdhxecESmOIxQptklGoowMiTN60z0KqwJgwbBVTcwg
+         QRyFkTp9gT876c1O2NhZ40jqeXo7XxuRqMB4Od3H3IR//iiYek6yfN555/jZLYVFRwCh
+         OM8jB9ijI2uwdkBQhCUfnuYGfxAPqf7hqgQh/UKssi89ekKgxEYaUAau3xb/ZLhPMuiD
+         UaDqU/IkzqgcUScuxqDO9JZqBNkciSI9vrpvisjL/k3CxPAfxSPHd/FRsGbJIq3lA+kJ
+         pb8+ACWv+214imWrT+dhHPtTOjcGnf+UBpN0CC3qlfN8fqSc3/Wz2h18jCUZK5ehGxp3
+         swgQ==
+X-Gm-Message-State: AOAM53285KV4RdfCVuv2Pf+lWhHprioMsisrLK+08hAJWKompqngdp5d
+        P/1huMnfNaHNH1KW5zL5ZTIXkJ/A803auQ==
+X-Google-Smtp-Source: ABdhPJw/oO8x2DZghTsWUoMl473fHwCIUH5VYDjbimv6MY0MoeAVVAqLzc8Q/q4VrjOK+4DFIOHUgA==
+X-Received: by 2002:a05:6a00:2292:: with SMTP id f18mr5729482pfe.192.1594756502680;
+        Tue, 14 Jul 2020 12:55:02 -0700 (PDT)
+Received: from blackclown ([103.88.82.145])
+        by smtp.gmail.com with ESMTPSA id e20sm13898pfl.212.2020.07.14.12.54.59
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 14 Jul 2020 12:55:01 -0700 (PDT)
+Date:   Wed, 15 Jul 2020 01:24:56 +0530
+From:   Suraj Upadhyay <usuraj35@gmail.com>
+To:     Joe Perches <joe@perches.com>
+Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
+        GR-Linux-NIC-Dev@marvell.com, gregkh@linuxfoundation.org,
+        devel@driverdev.osuosl.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 6/6] staging: qlge: qlge_ethtool: Remove one byte memset.
+Message-ID: <20200714195456.GB14742@blackclown>
+References: <cover.1594642213.git.usuraj35@gmail.com>
+ <b5eb87576cef4bf1b968481d6341013e6c7e9650.1594642213.git.usuraj35@gmail.com>
+ <20200713141749.GU2549@kadam>
+ <a323c1e47e8de871ff7bb72289740cb0bc2d27f8.camel@perches.com>
+ <20200714190602.GA14742@blackclown>
+ <ce637b26b496dd99be8f272e6ec82333338321dc.camel@perches.com>
 MIME-Version: 1.0
-In-Reply-To: <20200714191759.GA7116@guptapadev.amr>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="1LKvkjL3sHcu1TtY"
+Content-Disposition: inline
+In-Reply-To: <ce637b26b496dd99be8f272e6ec82333338321dc.camel@perches.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/14/20 12:17 PM, Pawan Gupta wrote:
-> On Tue, Jul 14, 2020 at 07:57:53AM -0700, Dave Hansen wrote:
->> Let's stick to things which are at least static per reboot.  Checking
->> for X86_FEATURE_VMX or even CONFIG_KVM_INTEL seems like a good stopping
->> point.  "Could this kernel run a naughty guest?"  If so, report
->> "Vulnerable".  It's the same as Meltdown: "Could this kernel run
->> untrusted code?"  If so, report "Vulnerable".
-> 
-> Thanks, These are good inputs. So what I need to add is a boot time
-> check for VMX feature and report "Vulnerable" or "Not
-> affected(VMX disabled)".
-> 
-> Are you suggesting to not change the reporting when KVM deploys the
-> "Split huge pages" mitigation? Is this because VMX can still be used by
-> other VMMs?
-> 
-> The current mitigation reporting is very specific to KVM:
-> 
-> 	- "KVM: Vulnerable"
-> 	- "KVM: Mitigation: Split huge pages"
-> 
-> As the kernel doesn't know about the mitigation state of out-of-tree
-> VMMs can we add VMX reporting to always say vulnerable when VMX is
-> enabled:
-> 
-> 	- "VMX: Vulnerable, KVM: Vulnerable"
-> 	- "VMX: Vulnerable, KVM: Mitigation: Split huge pages"
-> 
-> And if VMX is disabled report:
-> 
-> 	- "VMX: Not affected(VMX disabled)"
 
-I see three inputs and four possible states (sorry for the ugly table,
-it was this or a spreadsheet :):
+--1LKvkjL3sHcu1TtY
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-X86_FEATURE_VMX	CONFIG_KVM_*	hpage split  Result	   Reason
-	N		x	    x	     Not Affected  No VMX
-	Y		N	    x	     Not affected  No KVM
-	Y		Y	    Y	     Mitigated	   hpage split
-	Y		Y	    N	     Vulnerable
+On Tue, Jul 14, 2020 at 12:22:05PM -0700, Joe Perches wrote:
+> On Wed, 2020-07-15 at 00:36 +0530, Suraj Upadhyay wrote:
+> > On Tue, Jul 14, 2020 at 11:57:23AM -0700, Joe Perches wrote:
+> > > On Mon, 2020-07-13 at 17:17 +0300, Dan Carpenter wrote:
+> > > > On Mon, Jul 13, 2020 at 05:52:22PM +0530, Suraj Upadhyay wrote:
+> > > > > Use direct assignment instead of using memset with just one byte =
+as an
+> > > > > argument.
+> > > > > Issue found by checkpatch.pl.
+> > > > >=20
+> > > > > Signed-off-by: Suraj Upadhyay <usuraj35@gmail.com>
+> > > > > ---
+> > > > > Hii Maintainers,
+> > > > > 	Please correct me if I am wrong here.
+> > > > > ---
+> > > > >=20
+> > > > >  drivers/staging/qlge/qlge_ethtool.c | 4 ++--
+> > > > >  1 file changed, 2 insertions(+), 2 deletions(-)
+> > > > >=20
+> > > > > diff --git a/drivers/staging/qlge/qlge_ethtool.c b/drivers/stagin=
+g/qlge/qlge_ethtool.c
+> > > > > index 16fcdefa9687..d44b2dae9213 100644
+> > > > > --- a/drivers/staging/qlge/qlge_ethtool.c
+> > > > > +++ b/drivers/staging/qlge/qlge_ethtool.c
+> > > > > @@ -516,8 +516,8 @@ static void ql_create_lb_frame(struct sk_buff=
+ *skb,
+> > > > >  	memset(skb->data, 0xFF, frame_size);
+> > > > >  	frame_size &=3D ~1;
+> > > > >  	memset(&skb->data[frame_size / 2], 0xAA, frame_size / 2 - 1);
+> > > > > -	memset(&skb->data[frame_size / 2 + 10], 0xBE, 1);
+> > > > > -	memset(&skb->data[frame_size / 2 + 12], 0xAF, 1);
+> > > > > +	skb->data[frame_size / 2 + 10] =3D (unsigned char)0xBE;
+> > > > > +	skb->data[frame_size / 2 + 12] =3D (unsigned char)0xAF;
+> > > >=20
+> > > > Remove the casting.
+> > > >=20
+> > > > I guess this is better than the original because now it looks like
+> > > > ql_check_lb_frame().  It's still really weird looking though.
+> > >=20
+> > > There are several of these in the intel drivers too:
+> > >=20
+> > > drivers/net/ethernet/intel/e1000/e1000_ethtool.c:       memset(&skb->=
+data[frame_size / 2 + 10], 0xBE, 1);
+> > > drivers/net/ethernet/intel/e1000/e1000_ethtool.c:       memset(&skb->=
+data[frame_size / 2 + 12], 0xAF, 1);
+> > > drivers/net/ethernet/intel/e1000e/ethtool.c:    memset(&skb->data[fra=
+me_size / 2 + 10], 0xBE, 1);
+> > > drivers/net/ethernet/intel/e1000e/ethtool.c:    memset(&skb->data[fra=
+me_size / 2 + 12], 0xAF, 1);
+> > > drivers/net/ethernet/intel/igb/igb_ethtool.c:   memset(&skb->data[fra=
+me_size + 10], 0xBE, 1);
+> > > drivers/net/ethernet/intel/igb/igb_ethtool.c:   memset(&skb->data[fra=
+me_size + 12], 0xAF, 1);
+> > > drivers/net/ethernet/intel/ixgbe/ixgbe_ethtool.c:       memset(&skb->=
+data[frame_size + 10], 0xBE, 1);
+> > > drivers/net/ethernet/intel/ixgbe/ixgbe_ethtool.c:       memset(&skb->=
+data[frame_size + 12], 0xAF, 1);
+> > > drivers/staging/qlge/qlge_ethtool.c:    memset(&skb->data[frame_size =
+/ 2 + 10], 0xBE, 1);
+> > > drivers/staging/qlge/qlge_ethtool.c:    memset(&skb->data[frame_size =
+/ 2 + 12], 0xAF, 1);
+> >=20
+> > Thanks to point this out,
+> > 	I will be sending a patchset for that soon.
+>=20
+>=20
+> It _might_ be useful to create and use a standard
+> mechanism for the loopback functions:
+>=20
+> 	<foo>create_lbtest_frame
+> and
+> 	<foo>check_lbtest_frame
+>=20
+> Maybe use something like:
+>=20
+> 	ether_loopback_frame_create
+> and
+> 	ether_loopback_frame_check
+>=20
+I thought about it=A0 but then again the fram_size is sometimes divided by =
+two
 
-I don't think we should worry about out-of-tree VMX.
+e.g. `frame_size /=3D 2;` or `frame_size >>=3D 1;`.
+
+and sometimes it is subtracted by one. i.e. `frame_size &=3D ~1;`.
+
+Anyway, I sent my layman patchset to the lkml and intel maintainers.
+
+Forgive my brevity.
+
+Thanks,=A0
+
+Suraj Upadhyay.=20
+
+--1LKvkjL3sHcu1TtY
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEE7AbCa0kOsMJ4cx0j+gRsbIfe744FAl8ODYgACgkQ+gRsbIfe
+744oCRAAqrqADv/xB4JVPjjXz492plNFNWc8LGb+FfE8WO/fXyAdP6QlihH6yTK/
+wf77xEFSJOao6VFX501O5KqklsWkNZ+FFs49mMcDdo6qXjlezHp0/4J6NFI+bn5g
+OXjshxMZpjyGI4wT03QHxP2dvhIVxEt+2FY44DzOT/vtsVYRKInLK3nTjS4f7Wdp
+yqgSmI831AWcoPYZd3PkZLneXDbFi2CSPBBMREmiP1N735WfXSZqEACPYRtKVj2f
+62QgFz6S8AWb0OYB/I67OUDFDDnufchuGa22SJNmv3HxYbMpF9QlhovCK2XfUT6/
+30UzieYqCPd+IIccn1iWtbFhMl5wa0bTTZRL3D8Zt7P3J7dxrb9wHZyjkt2baqhj
++n+GW4nfSoCVCDqJMr/AopOfIL0FS2eqvmkVsohOpneuElfYf6M+1AcH0kprADHW
+js9OomrTXRkanNAk1fjxPhItfVqqka8sT+dmYsVmfZMTDuytS6nxx55zwGSFuuzA
+BgTLJ0fNLrS7E7hrPyoc9/O2xktZ4DsWuFZYiB8SMz5F8nH1hG2VGsYOGjs+L7WS
+bFAau0a0f+GNRYj2TztM3Jq2Y393xBNBquUMaOAA6MXNd5InFZBb39L5dGuLmaXQ
+UyObb7g20JD6D8bJCBA+Jx4G4vGR3Qqvu9kbabnC6mINzK1AzyY=
+=iZ2l
+-----END PGP SIGNATURE-----
+
+--1LKvkjL3sHcu1TtY--
