@@ -2,188 +2,88 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40800C433E7
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 19:11:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 574BBC433E2
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 19:18:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1C9BA22461
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 19:11:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C1B02242C
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 19:18:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="WE4h/hbq"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="IzZThgcP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731386AbgGNTLM (ORCPT
+        id S1729375AbgGNTSD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 15:11:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41850 "EHLO
+        Tue, 14 Jul 2020 15:18:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43304 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730235AbgGNTIz (ORCPT
+        with ESMTP id S1728370AbgGNTSC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 15:08:55 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7A1BAC061755;
-        Tue, 14 Jul 2020 12:08:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
-        References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
-        Content-Type:Content-ID:Content-Description;
-        bh=jLnNS2iTfKAlsojBbZTaLr2xSlY0SBshpAX/GMxDj/c=; b=WE4h/hbqZeHCQuMg6xjxotr8pQ
-        BzkkqyRg8XGkHV6KH/R7f36RbDz5ax6wL4WIpbNdth+Q2kC3O70+11RJsTGHlCREqNZpbqYU35rEl
-        MONHMDPVOW2BHmrpKx/9RpZ7RQydqb27g04/WzXHH0BPO/hCR9KZJ/02A25aUuioRSTEnapdQ1VjA
-        zovwJhINU54N8/9Ny3fThlg1tKsRcLDNDCxNy7AydwWzSnaTr/TDp5Bhgjkinw0kF675dMkYTJWY6
-        Q1nAyo/o9BXlnkn6kp5HyBIWTOUUCsg6iR3YpJOoHWOEyufw0tMPiGtHLzhUhZ5t7OWtPS1ZhHE0y
-        H0iFpRig==;
-Received: from [2001:4bb8:188:5f50:f037:8cfe:627e:7028] (helo=localhost)
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jvQIP-0005pU-N0; Tue, 14 Jul 2020 19:08:54 +0000
-From:   Christoph Hellwig <hch@lst.de>
-To:     linux-kernel@vger.kernel.org
-Cc:     "H. Peter Anvin" <hpa@zytor.com>, Song Liu <song@kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-raid@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Subject: [PATCH 04/23] md: move the early init autodetect code to drivers/md/
-Date:   Tue, 14 Jul 2020 21:04:08 +0200
-Message-Id: <20200714190427.4332-5-hch@lst.de>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200714190427.4332-1-hch@lst.de>
-References: <20200714190427.4332-1-hch@lst.de>
+        Tue, 14 Jul 2020 15:18:02 -0400
+Received: from mail-io1-xd32.google.com (mail-io1-xd32.google.com [IPv6:2607:f8b0:4864:20::d32])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 64622C061755
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 12:18:02 -0700 (PDT)
+Received: by mail-io1-xd32.google.com with SMTP id e64so18516576iof.12
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 12:18:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=O+ls3I/N5zsUDO1aedELyDp7Kj09Qsqb8dgbqg/A980=;
+        b=IzZThgcPgwciiCyVEcQUJ/jfFCpEk/2MHNYLhGkXYrsI6T2S8YEvqn5hytvliX0W+a
+         U7XZBozq1quYR/PnHj+En8JweGapYod2EjFhYop3iQeptqiKwVZaNeAE8n7jGZHJcvi3
+         i3JGBvvQYa93bVF4ZKKbvhP+oEPqsJPa/kDdn718wyLjxL5hwY8Cyc/ANYx83mLLq3Kt
+         hahpKBGipauXvaLE91+i7Sfd6BSBkQbSqBonxcodbI5jBjAVj7m7zoOG8fvSd2fBd2Ig
+         nVvOebWetUGEnnommtlkzG0peh1QODDmBQszhuzATE44PAl30vckla5GrFIcRciKPwUz
+         Yb6A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=O+ls3I/N5zsUDO1aedELyDp7Kj09Qsqb8dgbqg/A980=;
+        b=bbJLMeZYe0UG2GkjyspiZ1YwDTHpTWxU1wSwfhw28LHCTN5mrNcFRGosOAF2j1DuOH
+         tipOkaFvkX5gSgy/eIWE2E64dJ9+z7oKroj+7WmGfAsbssBF/InCJAA/fniy3oQVPvsr
+         eqlTsCJ3lklvWGCrhd9ZrqpNkpv60Fn+Z6W+dOkH+aeHAtxUP+iuT9Wa96mTMsRJiWZo
+         GZKfB1on49F8iKPqYc1t7C9ytZfKJBfuPIJ7LXtMKbOYWOPaFiuPvGGGjzdeY12RfBDh
+         C85bsgfO1vUHeeEeHs4Ak9TVd9Vni+xq/Q1lzg5Dhr7BtjUP6rtW8ymPi6sJcpfm+e+y
+         3/vw==
+X-Gm-Message-State: AOAM530h19DKfeC1Bp5O4xasGYYID2zx+JBqB3cYA57hbr9rYVjk4YDx
+        KP0bCOe26q3iBtOwBY16GJTI11Mt3f/G16rJzbglqQ==
+X-Google-Smtp-Source: ABdhPJzbujNqtoQoRYwDGoiM7cW9ZxY92ueoJ7abo6SGFJr01p4gHzSMuSZlOFme+LCpUveW0ZKh0vQSSFndz7J0gTc=
+X-Received: by 2002:a6b:6508:: with SMTP id z8mr6459683iob.82.1594754281290;
+ Tue, 14 Jul 2020 12:18:01 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
+References: <20200615063837.GA14668@zn.tnic> <20200714121955.GA2080@chrisdown.name>
+ <20200714154728.GA3101@nazgul.tnic> <20200714160448.GC2080@chrisdown.name>
+In-Reply-To: <20200714160448.GC2080@chrisdown.name>
+From:   Matthew Garrett <mjg59@google.com>
+Date:   Tue, 14 Jul 2020 12:17:50 -0700
+Message-ID: <CACdnJuvfhjMNQUYNYWpPMfwTE3xHi7UNPm7HEwUMv_1F3KT4gA@mail.gmail.com>
+Subject: Re: [PATCH -v2.1] x86/msr: Filter MSR writes
+To:     Chris Down <chris@chrisdown.name>
+Cc:     Borislav Petkov <bp@alien8.de>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        sean.j.christopherson@intel.com, tony.luck@intel.com,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        "the arch/x86 maintainers" <x86@kernel.org>, kernel-team@fb.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Just like the NFS and CIFS root code this better lives with the
-driver it is tightly integrated with.
+On Tue, Jul 14, 2020 at 9:04 AM Chris Down <chris@chrisdown.name> wrote:
+> Either way, again, this isn't really the point. :-) The point is that there
+> _are_ currently widespread cases involving poking MSRs from userspace, however
+> sacrilegious or ugly (which I agree with!), and while people should be told
+> about that, it's excessive to have the potential to take up 80% of kmsg in the
+> default configuration. It doesn't take thousands of messages to get the message
+> across, that's what a custom printk ratelimit is for.
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
-Acked-by: Song Liu <song@kernel.org>
----
- drivers/md/Makefile                               |  3 +++
- init/do_mounts_md.c => drivers/md/md-autodetect.c | 15 +++++++++++++--
- include/linux/raid/detect.h                       |  8 ++++++++
- init/Makefile                                     |  1 -
- init/do_mounts.c                                  |  1 +
- init/do_mounts.h                                  | 10 ----------
- 6 files changed, 25 insertions(+), 13 deletions(-)
- rename init/do_mounts_md.c => drivers/md/md-autodetect.c (96%)
-
-diff --git a/drivers/md/Makefile b/drivers/md/Makefile
-index 31840f95cd408b..6d3e234dc46a5d 100644
---- a/drivers/md/Makefile
-+++ b/drivers/md/Makefile
-@@ -43,6 +43,9 @@ obj-$(CONFIG_MD_FAULTY)		+= faulty.o
- obj-$(CONFIG_MD_CLUSTER)	+= md-cluster.o
- obj-$(CONFIG_BCACHE)		+= bcache/
- obj-$(CONFIG_BLK_DEV_MD)	+= md-mod.o
-+ifeq ($(CONFIG_BLK_DEV_MD),y)
-+obj-y				+= md-autodetect.o
-+endif
- obj-$(CONFIG_BLK_DEV_DM)	+= dm-mod.o
- obj-$(CONFIG_BLK_DEV_DM_BUILTIN) += dm-builtin.o
- obj-$(CONFIG_DM_UNSTRIPED)	+= dm-unstripe.o
-diff --git a/init/do_mounts_md.c b/drivers/md/md-autodetect.c
-similarity index 96%
-rename from init/do_mounts_md.c
-rename to drivers/md/md-autodetect.c
-index 359363e85ccd0b..fe806f7b9759a1 100644
---- a/init/do_mounts_md.c
-+++ b/drivers/md/md-autodetect.c
-@@ -1,10 +1,15 @@
- // SPDX-License-Identifier: GPL-2.0
-+#include <linux/kernel.h>
-+#include <linux/blkdev.h>
-+#include <linux/init.h>
-+#include <linux/syscalls.h>
-+#include <linux/mount.h>
-+#include <linux/major.h>
- #include <linux/delay.h>
-+#include <linux/raid/detect.h>
- #include <linux/raid/md_u.h>
- #include <linux/raid/md_p.h>
- 
--#include "do_mounts.h"
--
- /*
-  * When md (and any require personalities) are compiled into the kernel
-  * (not a module), arrays can be assembles are boot time using with AUTODETECT
-@@ -114,6 +119,12 @@ static int __init md_setup(char *str)
- 	return 1;
- }
- 
-+static inline int create_dev(char *name, dev_t dev)
-+{
-+	ksys_unlink(name);
-+	return ksys_mknod(name, S_IFBLK|0600, new_encode_dev(dev));
-+}
-+
- static void __init md_setup_drive(void)
- {
- 	int minor, i, ent, partitioned;
-diff --git a/include/linux/raid/detect.h b/include/linux/raid/detect.h
-index 37dd3f40cd316e..1f029a71c3ef05 100644
---- a/include/linux/raid/detect.h
-+++ b/include/linux/raid/detect.h
-@@ -1,3 +1,11 @@
- /* SPDX-License-Identifier: GPL-2.0 */
- 
- void md_autodetect_dev(dev_t dev);
-+
-+#ifdef CONFIG_BLK_DEV_MD
-+void md_run_setup(void);
-+#else
-+static inline void md_run_setup(void)
-+{
-+}
-+#endif
-diff --git a/init/Makefile b/init/Makefile
-index 57499b1ff4714d..6bc37f64b3617c 100644
---- a/init/Makefile
-+++ b/init/Makefile
-@@ -18,7 +18,6 @@ obj-y                          += init_task.o
- mounts-y			:= do_mounts.o
- mounts-$(CONFIG_BLK_DEV_RAM)	+= do_mounts_rd.o
- mounts-$(CONFIG_BLK_DEV_INITRD)	+= do_mounts_initrd.o
--mounts-$(CONFIG_BLK_DEV_MD)	+= do_mounts_md.o
- 
- # dependencies on generated files need to be listed explicitly
- $(obj)/version.o: include/generated/compile.h
-diff --git a/init/do_mounts.c b/init/do_mounts.c
-index 29d326b6c29d2d..1a4dfa17fb2899 100644
---- a/init/do_mounts.c
-+++ b/init/do_mounts.c
-@@ -23,6 +23,7 @@
- #include <linux/nfs_fs.h>
- #include <linux/nfs_fs_sb.h>
- #include <linux/nfs_mount.h>
-+#include <linux/raid/detect.h>
- #include <uapi/linux/mount.h>
- 
- #include "do_mounts.h"
-diff --git a/init/do_mounts.h b/init/do_mounts.h
-index 7513d1c14d13fe..50d6c8941e15a1 100644
---- a/init/do_mounts.h
-+++ b/init/do_mounts.h
-@@ -41,13 +41,3 @@ bool __init initrd_load(void);
- static inline bool initrd_load(void) { return false; }
- 
- #endif
--
--#ifdef CONFIG_BLK_DEV_MD
--
--void md_run_setup(void);
--
--#else
--
--static inline void md_run_setup(void) {}
--
--#endif
--- 
-2.27.0
-
+Agreed - we should now offer all the necessary interfaces to avoid
+userspace having to hit MSRs directly for thermal management, but that
+wasn't always the case, and as a result there's tooling that still
+behaves this way.
