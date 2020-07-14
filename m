@@ -2,201 +2,91 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C8FFC433E4
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 07:58:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B59C9C433E4
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 08:00:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 759002145D
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 07:58:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="C+EG+XoG"
+	by mail.kernel.org (Postfix) with ESMTP id 9ED2E2053B
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 08:00:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725801AbgGNH6i (ORCPT
+        id S1726734AbgGNIAS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 03:58:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49962 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726352AbgGNH6h (ORCPT
+        Tue, 14 Jul 2020 04:00:18 -0400
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:43998 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725816AbgGNIAR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 03:58:37 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 466BFC061794
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 00:58:37 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id s10so20116219wrw.12
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 00:58:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=WP+E7Gzj6PVJ2ddQoR4ENITwGviQMzkXLlWTSG6P9Wo=;
-        b=C+EG+XoGDXZrOgdAVgjPyky+0C6vdaorrTtzP3C/Y5N+uJsfKIvb9HFoGrqJd3JJJS
-         zQQ0YlYcf2eyOurqx5DAktYbsTuudnF48MCpO35LuMskDlu9Y8OPPf5Y8fQ2lbQf2eoW
-         7+OAeMacDBFcJ0maVzCc90g0+HXvWxMscpC8CeJIy5qS7FpB4ZLFn7D0ZHybbjI9Ka3v
-         nKgoH3uIRALzDmTA3gcaEXlwhHCimXtD7UD4MmWwh51kwH+81RXXdEgn7LENyBogKdsR
-         Glu8uf88aM1ggL0cYFm9Tj4r7tzepxRQzDWmZTEPCO0HJC6vnacoP+mDNo4WGwBhQhXw
-         /+cg==
+        Tue, 14 Jul 2020 04:00:17 -0400
+Received: by mail-oi1-f196.google.com with SMTP id x83so13224780oif.10;
+        Tue, 14 Jul 2020 01:00:16 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=WP+E7Gzj6PVJ2ddQoR4ENITwGviQMzkXLlWTSG6P9Wo=;
-        b=GRUkA3lFq8DEUmaO5BfZPa4n/KSCGNHfnzan1F8LOvfURLVl2uqPsW8aLEUUR+GPUD
-         kjDulKc/s2yDDe2PE2oaaypib6U5aXMxKLQbY++cARvqpxXrxakHsz8fYU9HzWzQ9BcO
-         67XR5NJ9sbgAs5RZnI2YGC7TWjCaT1dGAZHrEY+JUqlUfyuDueVvh2l1noAer6SrrzCu
-         /maCxqYJkWIIuqot4DZqFR4UUCQULMIVc72ssdSRxo6aG1KSsK9JfoRqp7ekLDmYDo3x
-         jpJJLvbPvqP+hH8y+pmeWlYW4Cir3ERTFYBGxw+1nNukg2sRD4ytVXm8SABtqo9tJ4e7
-         emFg==
-X-Gm-Message-State: AOAM531AiXW7waTNP/EYB+povzQRwiaPlLfwzXG6bH9jBVB53LJWM6Va
-        pW7LSo3Uc00Az3OycitbQld8EQ==
-X-Google-Smtp-Source: ABdhPJweYtmFzDu77mUI7cZCU7+sT8sw1/UUcOD2+1eMC6c1lKqU0h8wdN3UEKHZtnX3gh4GdOA4og==
-X-Received: by 2002:a5d:40ca:: with SMTP id b10mr4027551wrq.56.1594713515787;
-        Tue, 14 Jul 2020 00:58:35 -0700 (PDT)
-Received: from dell ([2.31.163.61])
-        by smtp.gmail.com with ESMTPSA id g195sm3011377wme.38.2020.07.14.00.58.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 Jul 2020 00:58:35 -0700 (PDT)
-Date:   Tue, 14 Jul 2020 08:58:33 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Hannes Reinecke <hare@suse.de>
-Cc:     jejb@linux.ibm.com, martin.petersen@oracle.com,
-        linux-kernel@vger.kernel.org, linux-scsi@vger.kernel.org
-Subject: Re: [PATCH v2 04/29] scsi: fcoe: fcoe: Fix various kernel-doc
- infringements
-Message-ID: <20200714075833.GI3500@dell>
-References: <20200713074645.126138-1-lee.jones@linaro.org>
- <20200713074645.126138-5-lee.jones@linaro.org>
- <06bc5e03-04b0-7e09-18f4-d9fd536b714b@suse.de>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=QnTe4sZ/BVwx3aWuIY96pK3amPI3OQSt3QidovW9MDg=;
+        b=DVnbWK+//JZKX9DIxxeWG9G3CRQTZot4ixyDa7eabiimpmY8Jmd3b3JcQCLaqJWlLL
+         9cI3Gai+0CZ2a7c99Sw/7/Nz1rdtm7pgVuGqkyh1CAdhfFRi1Y1muUGDx8maCsU1uBKa
+         3d7+RpX2vdD+HjInfwsGg8G++eqfFOt0QcmvJSiWdk6DUevApz1Ew81diTE1mvncr1HF
+         6AwD9O7fZqSu0p7D9TWSMn7aua6H09sDRXAJrrXMBYFbW0InbblFsvW/nP/UXmo3Wx51
+         sP1GaOizDtns1TqUkL77JPBI4JY3cpXiYQh5GSt+VFX+H3c6uETPatGp9gS+x/DOUNjS
+         H4ow==
+X-Gm-Message-State: AOAM532bqYv+p9TB+7+q0mpttynDvxj53q7fymfcDVVYTJ0Wm/VNHlQh
+        I/3tDl7kcBPjP/B44dNqow3JKphhcnKWO4vHy9g=
+X-Google-Smtp-Source: ABdhPJyzIvtstGtIjvnC0xOdHX2BDAwrtjW5pB4zYT3uHZkIF8+JNHYsqpLcM1Tt8jiPySfbt+KukaiWmW7ArIQFH7w=
+X-Received: by 2002:a05:6808:64a:: with SMTP id z10mr2722714oih.54.1594713616158;
+ Tue, 14 Jul 2020 01:00:16 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <06bc5e03-04b0-7e09-18f4-d9fd536b714b@suse.de>
+References: <1594676120-5862-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <1594676120-5862-7-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <1594676120-5862-7-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Tue, 14 Jul 2020 10:00:05 +0200
+Message-ID: <CAMuHMdUZx56wWTMdpmXhbvJV6_M=jDhQUVvD6b0-5xU-jrGsAA@mail.gmail.com>
+Subject: Re: [PATCH 6/9] dt-bindings: gpio: renesas,rcar-gpio: Add r8a774e1 support
+To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Cc:     Vinod Koul <vkoul@kernel.org>, Rob Herring <robh+dt@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Sergei Shtylyov <sergei.shtylyov@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        dmaengine <dmaengine@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux IOMMU <iommu@lists.linux-foundation.org>,
+        netdev <netdev@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Prabhakar <prabhakar.csengg@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 14 Jul 2020, Hannes Reinecke wrote:
+On Mon, Jul 13, 2020 at 11:35 PM Lad Prabhakar
+<prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
+> Document Renesas RZ/G2H (R8A774E1) GPIO blocks compatibility within the
+> relevant dt-bindings.
+>
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 
-> On 7/13/20 9:46 AM, Lee Jones wrote:
-> > A couple of headers make no attempt to document their associated function
-> > parameters.  Others looks as if they are suffering with a little bitrot.
-> > 
-> > Fixes the following W=1 kernel build warning(s):
-> > 
-> >   drivers/scsi/fcoe/fcoe.c:654: warning: Function parameter or member 'lport' not described in 'fcoe_netdev_features_change'
-> >   drivers/scsi/fcoe/fcoe.c:654: warning: Function parameter or member 'netdev' not described in 'fcoe_netdev_features_change'
-> >   drivers/scsi/fcoe/fcoe.c:2039: warning: Function parameter or member 'ctlr_dev' not described in 'fcoe_ctlr_mode'
-> >   drivers/scsi/fcoe/fcoe.c:2039: warning: Excess function parameter 'cdev' description in 'fcoe_ctlr_mode'
-> >   drivers/scsi/fcoe/fcoe.c:2144: warning: Function parameter or member 'fcoe' not described in 'fcoe_dcb_create'
-> >   drivers/scsi/fcoe/fcoe.c:2144: warning: Excess function parameter 'netdev' description in 'fcoe_dcb_create'
-> >   drivers/scsi/fcoe/fcoe.c:2144: warning: Excess function parameter 'port' description in 'fcoe_dcb_create'
-> >   drivers/scsi/fcoe/fcoe.c:2627: warning: Function parameter or member 'lport' not described in 'fcoe_elsct_send'
-> >   drivers/scsi/fcoe/fcoe.c:2627: warning: Function parameter or member 'did' not described in 'fcoe_elsct_send'
-> >   drivers/scsi/fcoe/fcoe.c:2627: warning: Function parameter or member 'fp' not described in 'fcoe_elsct_send'
-> >   drivers/scsi/fcoe/fcoe.c:2627: warning: Function parameter or member 'op' not described in 'fcoe_elsct_send'
-> >   drivers/scsi/fcoe/fcoe.c:2627: warning: Function parameter or member 'resp' not described in 'fcoe_elsct_send'
-> >   drivers/scsi/fcoe/fcoe.c:2627: warning: Function parameter or member 'arg' not described in 'fcoe_elsct_send'
-> >   drivers/scsi/fcoe/fcoe.c:2627: warning: Function parameter or member 'timeout' not described in 'fcoe_elsct_send'
-> > 
-> > Cc: Hannes Reinecke <hare@suse.de>
-> > Signed-off-by: Lee Jones <lee.jones@linaro.org>
-> > ---
-> >   drivers/scsi/fcoe/fcoe.c | 10 ++++------
-> >   1 file changed, 4 insertions(+), 6 deletions(-)
-> > 
-> > diff --git a/drivers/scsi/fcoe/fcoe.c b/drivers/scsi/fcoe/fcoe.c
-> > index cb41d166e0c0f..0f9274960dc6b 100644
-> > --- a/drivers/scsi/fcoe/fcoe.c
-> > +++ b/drivers/scsi/fcoe/fcoe.c
-> > @@ -645,7 +645,7 @@ static int fcoe_lport_config(struct fc_lport *lport)
-> >   	return 0;
-> >   }
-> > -/**
-> > +/*
-> >    * fcoe_netdev_features_change - Updates the lport's offload flags based
-> >    * on the LLD netdev's FCoE feature flags
-> >    */
-> > @@ -2029,7 +2029,7 @@ static int fcoe_ctlr_enabled(struct fcoe_ctlr_device *cdev)
-> >   /**
-> >    * fcoe_ctlr_mode() - Switch FIP mode
-> > - * @cdev: The FCoE Controller that is being modified
-> > + * @ctlr_dev: The FCoE Controller that is being modified
-> >    *
-> >    * When the FIP mode has been changed we need to update
-> >    * the multicast addresses to ensure we get the correct
-> > @@ -2136,9 +2136,7 @@ static bool fcoe_match(struct net_device *netdev)
-> >   /**
-> >    * fcoe_dcb_create() - Initialize DCB attributes and hooks
-> > - * @netdev: The net_device object of the L2 link that should be queried
-> > - * @port: The fcoe_port to bind FCoE APP priority with
-> > - * @
-> > + * @fcoe:   The new FCoE interface
-> >    */
-> >   static void fcoe_dcb_create(struct fcoe_interface *fcoe)
-> >   {
-> > @@ -2609,7 +2607,7 @@ static void fcoe_logo_resp(struct fc_seq *seq, struct fc_frame *fp, void *arg)
-> >   	fc_lport_logo_resp(seq, fp, lport);
-> >   }
-> > -/**
-> > +/*
-> >    * fcoe_elsct_send - FCoE specific ELS handler
-> >    *
-> >    * This does special case handling of FIP encapsualted ELS exchanges for FCoE,
-> > 
-> I'd rather convert this and the fcoe_netdev_features_change to proper
-> kerneldocs:
-> 
-> diff --git a/drivers/scsi/fcoe/fcoe.c b/drivers/scsi/fcoe/fcoe.c
-> index cb41d166e0c0..151fe4c53b07 100644
-> --- a/drivers/scsi/fcoe/fcoe.c
-> +++ b/drivers/scsi/fcoe/fcoe.c
-> @@ -646,8 +646,12 @@ static int fcoe_lport_config(struct fc_lport *lport)
->  }
-> 
->  /**
-> - * fcoe_netdev_features_change - Updates the lport's offload flags based
-> - * on the LLD netdev's FCoE feature flags
-> + * fcoe_netdev_features_change - Updates the lport's offload flags
-> + * @lport:  The local port that is associated with the net device
-> + * @netdev: The associated net device
-> + *
-> + * Update the @lport offload flags based on the FCoE feature flags
-> + * from the LLD @netdev.
->   */
->  static void fcoe_netdev_features_change(struct fc_lport *lport,
->                                         struct net_device *netdev)
-> @@ -2611,6 +2615,13 @@ static void fcoe_logo_resp(struct fc_seq *seq, struct
-> fc_frame *fp, void *arg)
-> 
->  /**
->   * fcoe_elsct_send - FCoE specific ELS handler
-> + * @lport: Local port
-> + * @did: Destination ID
-> + * @fp: FCoE frame
-> + * @op: ELS operation
-> + * @resp: Response callback
-> + * @arg: Argument for the response callback
-> + * @timeout: Timeout for the ELS response
->   *
->   * This does special case handling of FIP encapsualted ELS exchanges for
-> FCoE,
->   * using FCoE specific response handlers and passing the FIP controller as
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-I don't want to steal your work.
+Gr{oetje,eeting}s,
 
-Why don't you send this and a follow-up to fix the broken header for
-fcoe_ctlr_disc_start() as follow-ups?
-
-It also saves me from having to submit a v3 of this entire set.
+                        Geert
 
 -- 
-Lee Jones [李琼斯]
-Senior Technical Lead - Developer Services
-Linaro.org │ Open source software for Arm SoCs
-Follow Linaro: Facebook | Twitter | Blog
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
