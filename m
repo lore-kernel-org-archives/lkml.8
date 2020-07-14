@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D3EEC433E2
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:47:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 849E1C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:47:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 22F2022B2D
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:47:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 587BE22B2C
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:47:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594752458;
-	bh=YZXuyh1eSZoyDT5f0ILiSyJB2BJsH+OqjQCOv45XoIA=;
+	s=default; t=1594752465;
+	bh=W7vStj3YtdpzeydOFVEpUDcx8DzNF5sDUM/w66x1BVo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xvptGT/s46IWfcMGtg4L6lQNMMDt0K9UwncVUfqzLyC52yq4ZI/yisZyStB1bwArJ
-	 urdoGSVlfsIv1QvbHiV0/LVP1nhaEH/tr9s1+bLkM0ZTdwW7tG7Z29XgZyfyFKwvLU
-	 I9VqBS8vkNw+Wex9z1LUXQ2rwEEktc4bPUEYnUtY=
+	b=o0UjBQH7uFWuTflw5fJiGaB8SQC5CgWOAgw9Aya6xpVaXQviuw6pZpyK2I0425BgT
+	 LbZUSWJON1ejIuyenByuemPo7Jw+C5B0rMm7NqEKrG729tqvTctiWy70jtOIp2tsJj
+	 6M/zdmuu5CFRYH4A9aTrKhEa4EL1OiWGDh9FOzZ0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729778AbgGNSrg (ORCPT
+        id S1729801AbgGNSrn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 14:47:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42670 "EHLO mail.kernel.org"
+        Tue, 14 Jul 2020 14:47:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42846 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729723AbgGNSrc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 14:47:32 -0400
+        id S1729785AbgGNSrk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 14:47:40 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CB80F22AAA;
-        Tue, 14 Jul 2020 18:47:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D434522AB0;
+        Tue, 14 Jul 2020 18:47:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594752452;
-        bh=YZXuyh1eSZoyDT5f0ILiSyJB2BJsH+OqjQCOv45XoIA=;
+        s=default; t=1594752460;
+        bh=W7vStj3YtdpzeydOFVEpUDcx8DzNF5sDUM/w66x1BVo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qI4EB0PZvxNCDFg9u2JaL9BY7kUnDcxos64vA0MVoB47tRMu4yKqG9zLzmkD/Aeff
-         kUU6uTLhYtznCH9JxC/CnxbpaDFWL2UZXQQptcqT8YHavdsS0Q6oC6hGB8UdkoRCAI
-         UV8iXQe6GULt/LXCq/ItIx+sro8qTBfVAZ6p9PyI=
+        b=tVijbIzMc+SoDEMnvKDhPn3KOJJMjZtA3K/Xakmw5gIwZZyFM6ORi8jXPjmq6JwKE
+         2aoyXi5eIb0lAjzKTg9yOwekJxD7CGtwpWZudObhWuZi/joc9tCmRrP5fmzTUsGRiH
+         72o0Fx5DNfaGQYEtppjwRxe9xKhMjKBjPO5hijGg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Jessica Yu <jeyu@kernel.org>
-Subject: [PATCH 4.19 47/58] kernel: module: Use struct_size() helper
-Date:   Tue, 14 Jul 2020 20:44:20 +0200
-Message-Id: <20200714184058.494015284@linuxfoundation.org>
+        stable@vger.kernel.org, Masami Hiramatsu <mhiramat@kernel.org>,
+        Kees Cook <keescook@chromium.org>
+Subject: [PATCH 4.19 50/58] kprobes: Do not expose probe addresses to non-CAP_SYSLOG
+Date:   Tue, 14 Jul 2020 20:44:23 +0200
+Message-Id: <20200714184058.655527155@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200714184056.149119318@linuxfoundation.org>
 References: <20200714184056.149119318@linuxfoundation.org>
@@ -60,51 +59,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Gustavo A. R. Silva <gustavo@embeddedor.com>
+From: Kees Cook <keescook@chromium.org>
 
-commit 8d1b73dd25ff92c3fa9807a20c22fa2b44c07336 upstream.
+commit 60f7bb66b88b649433bf700acfc60c3f24953871 upstream.
 
-One of the more common cases of allocation size calculations is finding
-the size of a structure that has a zero-sized array at the end, along
-with memory for some number of elements for that array. For example:
+The kprobe show() functions were using "current"'s creds instead
+of the file opener's creds for kallsyms visibility. Fix to use
+seq_file->file->f_cred.
 
-struct module_sect_attrs {
-	...
-        struct module_sect_attr attrs[0];
-};
-
-Make use of the struct_size() helper instead of an open-coded version
-in order to avoid any potential type mistakes.
-
-So, replace the following form:
-
-sizeof(*sect_attrs) + nloaded * sizeof(sect_attrs->attrs[0]
-
-with:
-
-struct_size(sect_attrs, attrs, nloaded)
-
-This code was detected with the help of Coccinelle.
-
-Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
-Signed-off-by: Jessica Yu <jeyu@kernel.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>
+Cc: stable@vger.kernel.org
+Fixes: 81365a947de4 ("kprobes: Show address of kprobes if kallsyms does")
+Fixes: ffb9bd68ebdb ("kprobes: Show blacklist addresses as same as kallsyms does")
+Signed-off-by: Kees Cook <keescook@chromium.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- kernel/module.c |    3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ kernel/kprobes.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/kernel/module.c
-+++ b/kernel/module.c
-@@ -1491,8 +1491,7 @@ static void add_sect_attrs(struct module
- 	for (i = 0; i < info->hdr->e_shnum; i++)
- 		if (!sect_empty(&info->sechdrs[i]))
- 			nloaded++;
--	size[0] = ALIGN(sizeof(*sect_attrs)
--			+ nloaded * sizeof(sect_attrs->attrs[0]),
-+	size[0] = ALIGN(struct_size(sect_attrs, attrs, nloaded),
- 			sizeof(sect_attrs->grp.attrs[0]));
- 	size[1] = (nloaded + 1) * sizeof(sect_attrs->grp.attrs[0]);
- 	sect_attrs = kzalloc(size[0] + size[1], GFP_KERNEL);
+--- a/kernel/kprobes.c
++++ b/kernel/kprobes.c
+@@ -2334,7 +2334,7 @@ static void report_probe(struct seq_file
+ 	else
+ 		kprobe_type = "k";
+ 
+-	if (!kallsyms_show_value(current_cred()))
++	if (!kallsyms_show_value(pi->file->f_cred))
+ 		addr = NULL;
+ 
+ 	if (sym)
+@@ -2435,7 +2435,7 @@ static int kprobe_blacklist_seq_show(str
+ 	 * If /proc/kallsyms is not showing kernel address, we won't
+ 	 * show them here either.
+ 	 */
+-	if (!kallsyms_show_value(current_cred()))
++	if (!kallsyms_show_value(m->file->f_cred))
+ 		seq_printf(m, "0x%px-0x%px\t%ps\n", NULL, NULL,
+ 			   (void *)ent->start_addr);
+ 	else
 
 
