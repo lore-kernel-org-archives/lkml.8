@@ -2,109 +2,156 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C142EC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 20:10:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39C9CC433E2
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 20:14:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8E396212CC
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 20:10:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0FB5D21527
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 20:14:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=hartkopp.net header.i=@hartkopp.net header.b="hvMq0Ftj"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="j7kSLWyr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728243AbgGNUKc (ORCPT
+        id S1730029AbgGNUOL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 16:10:32 -0400
-Received: from mo4-p01-ob.smtp.rzone.de ([81.169.146.166]:20786 "EHLO
-        mo4-p01-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725945AbgGNUKb (ORCPT
+        Tue, 14 Jul 2020 16:14:11 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:57720 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728777AbgGNUOJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 16:10:31 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1594757429;
-        s=strato-dkim-0002; d=hartkopp.net;
-        h=In-Reply-To:Date:Message-ID:From:References:Cc:To:Subject:
-        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=GNcdh9hbyCSYCE1dhM3aHIwRYOjxxn/mU4RGqzYVsko=;
-        b=hvMq0FtjXZ4ja0TuywxipPbO7azfGxH7OjuTLXyy6VhFPRT4qrOdDkKAsMlFVdtFq9
-        YT9PNq2F/LNh8bzxKgp5CQ5MNp+xONj78Vt59maynjmADTgIY8ZqoFuIWfFzCYH7mTme
-        CCXyAcxzAyuUia3pDuzOvJ8/e0DpQ7wV/gxIfCwxXsPPzWWBaNPZ7j+43SlV4yJPQEbw
-        F9a8IUc93tDHcIoNPoIbhxn5HR5pIKA7yQChmlxvyZB7xL8k6l14C4Rd6FfyP70HV4x/
-        v0ZlwWd3N7PTJlplBuTmU/FN6oHzbIcyrcraE5MH9/87eqp4j2OAKvVgPqswJDSitneJ
-        m8bQ==
-X-RZG-AUTH: ":P2MHfkW8eP4Mre39l357AZT/I7AY/7nT2yrDxb8mjG14FZxedJy6qgO1o3HMbEWKOdeVTdI="
-X-RZG-CLASS-ID: mo00
-Received: from [192.168.50.177]
-        by smtp.strato.de (RZmta 46.10.5 DYNA|AUTH)
-        with ESMTPSA id R09ac6w6EKA9tgs
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
-        (Client did not present a certificate);
-        Tue, 14 Jul 2020 22:10:09 +0200 (CEST)
-Subject: Re: [PATCH net-next] can: silence remove_proc_entry warning
-To:     Zhang Changzhong <zhangchangzhong@huawei.com>, mkl@pengutronix.de,
-        davem@davemloft.net, kuba@kernel.org
-Cc:     linux-can@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <1594709090-3203-1-git-send-email-zhangchangzhong@huawei.com>
-From:   Oliver Hartkopp <socketcan@hartkopp.net>
-Message-ID: <e2344833-b2f4-cc6f-4b6c-868afc3ced6e@hartkopp.net>
-Date:   Tue, 14 Jul 2020 22:10:04 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Tue, 14 Jul 2020 16:14:09 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06EKCvQO124230;
+        Tue, 14 Jul 2020 20:14:03 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id : in-reply-to : references : mime-version :
+ content-transfer-encoding; s=corp-2020-01-29;
+ bh=ySUbA5rzTLj3gy7j3X7tOY1gfV7BfEaidIIJe3idLBY=;
+ b=j7kSLWyrEPk1ulvnKWoAYLlwAIU63uyY9e8796K2fUQJ+KLigyboCUV1DGYYTs5r7BTj
+ kY4HIhtkL2vAtxPIPRE5nj1EYd64UNpMJTft13lRDC1z1wQ4jTSYuIjOjK9gneLos1gq
+ 6cWXmX8qZfvQlOOz/kz2+r8I6Z/mMs8O0Mlqg3LNGW/pa0f4ephHcEF4FukeNNYDmFL5
+ pC4q6XyAKx+Bhqlo+B0qL5iV5XwemHl5yYUvgCJKpQLry66VGU0FVausRP4dVw76Cize
+ DF9FAtga5Q7pxaSv81FIgB3Tr8PNxATgLBPk4W5ryPAgbPLDF9ulc/o/Szct6u82CQ0w Yw== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2120.oracle.com with ESMTP id 32762nfgc2-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 14 Jul 2020 20:14:03 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06EKDZ2R129793;
+        Tue, 14 Jul 2020 20:14:02 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by aserp3020.oracle.com with ESMTP id 327qb54aa4-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 14 Jul 2020 20:14:02 +0000
+Received: from abhmp0003.oracle.com (abhmp0003.oracle.com [141.146.116.9])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 06EKE1Hg003954;
+        Tue, 14 Jul 2020 20:14:01 GMT
+Received: from localhost.localdomain (/98.229.125.203)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 14 Jul 2020 13:14:01 -0700
+From:   Daniel Jordan <daniel.m.jordan@oracle.com>
+To:     Herbert Xu <herbert@gondor.apana.org.au>,
+        Steffen Klassert <steffen.klassert@secunet.com>
+Cc:     linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Daniel Jordan <daniel.m.jordan@oracle.com>
+Subject: [PATCH 3/6] padata: inline single call of pd_setup_cpumasks()
+Date:   Tue, 14 Jul 2020 16:13:53 -0400
+Message-Id: <20200714201356.889176-4-daniel.m.jordan@oracle.com>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200714201356.889176-1-daniel.m.jordan@oracle.com>
+References: <20200714201356.889176-1-daniel.m.jordan@oracle.com>
 MIME-Version: 1.0
-In-Reply-To: <1594709090-3203-1-git-send-email-zhangchangzhong@huawei.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9682 signatures=668680
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 malwarescore=0
+ mlxscore=0 spamscore=0 phishscore=0 suspectscore=2 bulkscore=0
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2007140141
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9682 signatures=668680
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 malwarescore=0 spamscore=0
+ clxscore=1015 priorityscore=1501 mlxlogscore=999 lowpriorityscore=0
+ bulkscore=0 suspectscore=2 phishscore=0 adultscore=0 impostorscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2007140141
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+pd_setup_cpumasks() has only one caller.  Move its contents inline to
+prepare for the next cleanup.
 
+Signed-off-by: Daniel Jordan <daniel.m.jordan@oracle.com>
+Cc: Herbert Xu <herbert@gondor.apana.org.au>
+Cc: Steffen Klassert <steffen.klassert@secunet.com>
+Cc: linux-crypto@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+---
+ kernel/padata.c | 32 +++++++++-----------------------
+ 1 file changed, 9 insertions(+), 23 deletions(-)
 
-On 14.07.20 08:44, Zhang Changzhong wrote:
-> If can_init_proc() fail to create /proc/net/can directory,
-> can_remove_proc() will trigger a warning:
-> 
-> WARNING: CPU: 6 PID: 7133 at fs/proc/generic.c:672 remove_proc_entry+0x17b0
-> Kernel panic - not syncing: panic_on_warn set ...
-> 
-> Fix to return early from can_remove_proc() if can proc_dir
-> does not exists.
-> 
-> Signed-off-by: Zhang Changzhong <zhangchangzhong@huawei.com>
+diff --git a/kernel/padata.c b/kernel/padata.c
+index 8f55e717ba50b..27f90a3c4dc6b 100644
+--- a/kernel/padata.c
++++ b/kernel/padata.c
+@@ -441,28 +441,6 @@ static int padata_setup_cpumasks(struct padata_instance *pinst)
+ 	return err;
+ }
+ 
+-static int pd_setup_cpumasks(struct parallel_data *pd,
+-			     const struct cpumask *pcpumask,
+-			     const struct cpumask *cbcpumask)
+-{
+-	int err = -ENOMEM;
+-
+-	if (!alloc_cpumask_var(&pd->cpumask.pcpu, GFP_KERNEL))
+-		goto out;
+-	if (!alloc_cpumask_var(&pd->cpumask.cbcpu, GFP_KERNEL))
+-		goto free_pcpu_mask;
+-
+-	cpumask_copy(pd->cpumask.pcpu, pcpumask);
+-	cpumask_copy(pd->cpumask.cbcpu, cbcpumask);
+-
+-	return 0;
+-
+-free_pcpu_mask:
+-	free_cpumask_var(pd->cpumask.pcpu);
+-out:
+-	return err;
+-}
+-
+ static void __init padata_mt_helper(struct work_struct *w)
+ {
+ 	struct padata_work *pw = container_of(w, struct padata_work, pw_work);
+@@ -613,8 +591,14 @@ static struct parallel_data *padata_alloc_pd(struct padata_shell *ps)
+ 		goto err_free_pqueue;
+ 
+ 	pd->ps = ps;
+-	if (pd_setup_cpumasks(pd, pcpumask, cbcpumask))
++
++	if (!alloc_cpumask_var(&pd->cpumask.pcpu, GFP_KERNEL))
+ 		goto err_free_squeue;
++	if (!alloc_cpumask_var(&pd->cpumask.cbcpu, GFP_KERNEL))
++		goto err_free_pcpu;
++
++	cpumask_copy(pd->cpumask.pcpu, pcpumask);
++	cpumask_copy(pd->cpumask.cbcpu, cbcpumask);
+ 
+ 	padata_init_pqueues(pd);
+ 	padata_init_squeues(pd);
+@@ -626,6 +610,8 @@ static struct parallel_data *padata_alloc_pd(struct padata_shell *ps)
+ 
+ 	return pd;
+ 
++err_free_pcpu:
++	free_cpumask_var(pd->cpumask.pcpu);
+ err_free_squeue:
+ 	free_percpu(pd->squeue);
+ err_free_pqueue:
+-- 
+2.27.0
 
-Acked-by: Oliver Hartkopp <socketcan@hartkopp.net>
-
-Thanks!
-
-> ---
->   net/can/proc.c | 6 ++++--
->   1 file changed, 4 insertions(+), 2 deletions(-)
-> 
-> diff --git a/net/can/proc.c b/net/can/proc.c
-> index e6881bf..077af42 100644
-> --- a/net/can/proc.c
-> +++ b/net/can/proc.c
-> @@ -471,6 +471,9 @@ void can_init_proc(struct net *net)
->    */
->   void can_remove_proc(struct net *net)
->   {
-> +	if (!net->can.proc_dir)
-> +		return;
-> +
->   	if (net->can.pde_version)
->   		remove_proc_entry(CAN_PROC_VERSION, net->can.proc_dir);
->   
-> @@ -498,6 +501,5 @@ void can_remove_proc(struct net *net)
->   	if (net->can.pde_rcvlist_sff)
->   		remove_proc_entry(CAN_PROC_RCVLIST_SFF, net->can.proc_dir);
->   
-> -	if (net->can.proc_dir)
-> -		remove_proc_entry("can", net->proc_net);
-> +	remove_proc_entry("can", net->proc_net);
->   }
-> 
