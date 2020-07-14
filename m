@@ -2,107 +2,144 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3AB6C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 21:27:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04E85C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 21:33:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A409820674
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 21:27:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D366F20674
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 21:33:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="GtzkgbuG"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ZdxXWZM/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728310AbgGNV1h (ORCPT
+        id S1726778AbgGNVdi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 17:27:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35272 "EHLO
+        Tue, 14 Jul 2020 17:33:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36198 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727822AbgGNV1g (ORCPT
+        with ESMTP id S1726440AbgGNVdh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 17:27:36 -0400
-Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 96B17C061755
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 14:27:36 -0700 (PDT)
-Received: by mail-wm1-x341.google.com with SMTP id f139so958082wmf.5
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 14:27:36 -0700 (PDT)
+        Tue, 14 Jul 2020 17:33:37 -0400
+Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 58D3FC061755
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 14:33:37 -0700 (PDT)
+Received: by mail-wm1-x342.google.com with SMTP id 22so982578wmg.1
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 14:33:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=KSfvDIX/TrKhNfavz9gqT4CkPok883ejJCseRAMUrzQ=;
-        b=GtzkgbuGm+CflRAs9y9OQuFQxiZl5hlT9j1xzSijnMFIFq/1ETlmkPrZBx4rPXpZQW
-         kQUMvTOCAS3v3gZFeaCvS7AG6Uz/NZz7h9lufDKAjEX6IwrfXF4czGjb56vFo6Brn0zU
-         /YR4DgTdYmVAF8I6PT6XGCwBW5JyaGZ4Jbhqlp8sSzGRy+EUiO7zFBs6ud0wuK0YCVRa
-         e7WtqO2ymi6k9GOuyREhUvA+khGnFBn8wSLNd8nALFXqS31mo3UzJR7k5xQF2qnIN5IH
-         JL3M3M/Qaxkw6nCT79ts/jLodZ0qILcCfE+jFLaGr0w/xkZrF41g8RgjZBulPXFRKI50
-         H4lg==
+        bh=UtdKaUC50+DBu44j3zskZy46PDkWi7WEkFGNTwqCIoY=;
+        b=ZdxXWZM/b8EqxIpABEM6pucd3tsDPMAQfWU1nIe16VgCJokdapVLUjRlV5UPCmXIy8
+         g/cPrQ8DefYSLzelcVRd7gziOGDddN35aIqanSzhKRDTeYvP8zwPVdUBeSLv83jn8cLE
+         CKlYIgFapNDT1Mujzuc1pYuICnf0PL9xwfIliuIxuZ9JpSzNBYWRBzqCkT/if1n7M9oY
+         rR4t+NCLHGYA5fzbPQ1SUTM47Lvtj1nJvxceDGuv9luNbkkjGxydDcdvq6vyAOoWPIGt
+         PKTwOkzm84pBrYLhfjP+ctuefK8I0nGvM2a2rfC3GAMvunHwuhO6DxKas83H/jumrufW
+         /x2w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:content-transfer-encoding
          :in-reply-to;
-        bh=KSfvDIX/TrKhNfavz9gqT4CkPok883ejJCseRAMUrzQ=;
-        b=ofE9E2JshEWo8pk7GfVY1O/JsWe8b5RuV4VYRDfL45t28RejRFVrJfjf+7XF5zBzQe
-         +QPEGuu7AO1a9lbxm2J7T3jMEPOrcM7RBxO31yp7bAIWxkX1uBniAKrZozfuRXNhOiZ2
-         us8JIaslG71APjGb36ofR9tjWqEbCB8pdV3jy916soFeePtNBVI+UNtgBZX2aYPUTWAe
-         urWYQcVNtPZW8CWSq8WDJ3I+i0jZbScpwgmvvA9mniy6WCx3lVjZe8gct3f7ODOCD0FH
-         isol7+R381wpeGh4wk9oYcbH6YgsPr4K8e3wzQc9yXs5R1nbGGlWIuoR+WBfC9qEMb6t
-         VtCw==
-X-Gm-Message-State: AOAM530eiXhmWw8F9kCF/eNaTXynhpx1k+9RlA1+g/CBkZ2rq7l8zAAe
-        yXPYWiOIMKwOni5g7JKLrG3lBxizd97Pig==
-X-Google-Smtp-Source: ABdhPJy0GFscM5m948VgN4h5ukfqjG35G3bXmIQulvRQz8qUJoPyiRdnYmLyFLy/FTP372JkZSxeSQ==
-X-Received: by 2002:a1c:3504:: with SMTP id c4mr5580994wma.177.1594760540764;
-        Tue, 14 Jul 2020 14:02:20 -0700 (PDT)
+        bh=UtdKaUC50+DBu44j3zskZy46PDkWi7WEkFGNTwqCIoY=;
+        b=QCcQcrh+u8roHg6l4md+HDfkHM9MsKO7OHSVvDa8b9pKBDQA7Uji123IxBOeGOhI/T
+         sfb0qw2mhPkQ6FCy5ps7CVItT5Y5ILnXDzT5yX7A8akxOLj8OaXhCYiS7P4ccYLl1mO6
+         ApWdhAqsGPRhxR80NRZOB4FVO0Gf51croFEzOSLZG0Gh/rqdh2+xEH7gaU2o8SgWbp5c
+         u9svowTGwoSQiEzoy+rgWStYeJUqNcIV9BBIbELizZBmY6eM8QEpGlTlJFWAG50HkeEo
+         pu6UuPcoO+m8AYSjNCdLmN3ztrGFuF4oGYpr2OKLMuEb74F/EPZIXHWbqMthoird+0DN
+         spNg==
+X-Gm-Message-State: AOAM530LOfwlVMUhT7p5eXm0ZRVT5ddVVf1GMoT42Z9L3r6UNVTdahz+
+        Zu2gtM41K/JJHTW4UqZU9g8e5gZ//4DIfg==
+X-Google-Smtp-Source: ABdhPJwN+wbuGDAsIxRpEcUZpQpduMqrY8XULh5RX+WB9UypF8LaMOjLVXqMgqHTPSLtn1qEMODkZw==
+X-Received: by 2002:a7b:cbcb:: with SMTP id n11mr5303227wmi.99.1594760623207;
+        Tue, 14 Jul 2020 14:03:43 -0700 (PDT)
 Received: from dell ([2.31.163.61])
-        by smtp.gmail.com with ESMTPSA id t141sm13313wmt.26.2020.07.14.14.02.19
+        by smtp.gmail.com with ESMTPSA id w14sm30807910wrt.55.2020.07.14.14.03.41
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 Jul 2020 14:02:20 -0700 (PDT)
-Date:   Tue, 14 Jul 2020 22:02:18 +0100
+        Tue, 14 Jul 2020 14:03:42 -0700 (PDT)
+Date:   Tue, 14 Jul 2020 22:03:40 +0100
 From:   Lee Jones <lee.jones@linaro.org>
-To:     Kim Phillips <kim.phillips@amd.com>
-Cc:     rjw@rjwysocki.net, viresh.kumar@linaro.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org, Jacob Shin <jacob.shin@amd.com>
-Subject: Re: [PATCH 13/13] cpufreq: amd_freq_sensitivity: Remove unused ID
- structs
-Message-ID: <20200714210218.GH1398296@dell>
+To:     "Rafael J. Wysocki" <rafael@kernel.org>
+Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Andy Grover <andrew.grover@intel.com>,
+        Paul Diefenbaugh <paul.s.diefenbaugh@intel.com>,
+        Dominik Brodowski <linux@brodo.de>,
+        Denis Sadykov <denis.m.sadykov@intel.com>
+Subject: Re: [PATCH 09/13] cpufreq: acpi-cpufreq: Remove unused ID structs
+Message-ID: <20200714210340.GJ1398296@dell>
 References: <20200714145049.2496163-1-lee.jones@linaro.org>
- <20200714145049.2496163-14-lee.jones@linaro.org>
- <6101e041-41e9-22bc-488d-38124c139bc7@amd.com>
+ <20200714145049.2496163-10-lee.jones@linaro.org>
+ <CAJZ5v0iB0K6H28DSDQj9T7k_kV10THxV6-HwN9qfmkLsYNHfiA@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <6101e041-41e9-22bc-488d-38124c139bc7@amd.com>
+In-Reply-To: <CAJZ5v0iB0K6H28DSDQj9T7k_kV10THxV6-HwN9qfmkLsYNHfiA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 14 Jul 2020, Kim Phillips wrote:
+On Tue, 14 Jul 2020, Rafael J. Wysocki wrote:
 
-> On 7/14/20 9:50 AM, Lee Jones wrote:
+> On Tue, Jul 14, 2020 at 4:51 PM Lee Jones <lee.jones@linaro.org> wrote:
+> >
 > > Can't see them being used anywhere and the compiler doesn't complain
 > > that they're missing, so ...
-> > 
+> 
+> Aren't they needed for automatic module loading in certain configurations?
+
+Any idea how that works, or where the code is for that?
+
 > > Fixes the following W=1 kernel build warning(s):
-> > 
-> >  drivers/cpufreq/amd_freq_sensitivity.c:147:32: warning: ‘amd_freq_sensitivity_ids’ defined but not used [-Wunused-const-variable=]
-> >  147 | static const struct x86_cpu_id amd_freq_sensitivity_ids[] = {
-> >  | ^~~~~~~~~~~~~~~~~~~~~~~~
-> > 
-> > Cc: Jacob Shin <jacob.shin@amd.com>
+> >
+> >  drivers/cpufreq/acpi-cpufreq.c:1004:36: warning: ‘processor_device_ids’ defined but not used [-Wunused-const-variable=]
+> >  997 | static const struct x86_cpu_id acpi_cpufreq_ids[] = {
+> >  | ^~~~~~~~~~~~~~~~
+> >  drivers/cpufreq/acpi-cpufreq.c:997:32: warning: ‘acpi_cpufreq_ids’ defined but not used [-Wunused-const-variable=]
+> >  619 | static const struct acpi_device_id processor_device_ids[] = {
+> >  | ^~~~~~~~~~~~~~~~~~~~
+> >
+> > Cc: Andy Grover <andrew.grover@intel.com>
+> > Cc: Paul Diefenbaugh <paul.s.diefenbaugh@intel.com>
+> > Cc: Dominik Brodowski <linux@brodo.de>
+> > Cc: Denis Sadykov <denis.m.sadykov@intel.com>
 > > Signed-off-by: Lee Jones <lee.jones@linaro.org>
 > > ---
-> 
-> Same comment as for patch 9/13: these are used automatic module loading.
-
-How does that work?
-
-Could you point me to the code which handles that please?
+> >  drivers/cpufreq/acpi-cpufreq.c | 14 --------------
+> >  1 file changed, 14 deletions(-)
+> >
+> > diff --git a/drivers/cpufreq/acpi-cpufreq.c b/drivers/cpufreq/acpi-cpufreq.c
+> > index d38a693b48e03..fc68f13352695 100644
+> > --- a/drivers/cpufreq/acpi-cpufreq.c
+> > +++ b/drivers/cpufreq/acpi-cpufreq.c
+> > @@ -995,18 +995,4 @@ MODULE_PARM_DESC(acpi_pstate_strict,
+> >  late_initcall(acpi_cpufreq_init);
+> >  module_exit(acpi_cpufreq_exit);
+> >
+> > -static const struct x86_cpu_id acpi_cpufreq_ids[] = {
+> > -       X86_MATCH_FEATURE(X86_FEATURE_ACPI, NULL),
+> > -       X86_MATCH_FEATURE(X86_FEATURE_HW_PSTATE, NULL),
+> > -       {}
+> > -};
+> > -MODULE_DEVICE_TABLE(x86cpu, acpi_cpufreq_ids);
+> > -
+> > -static const struct acpi_device_id processor_device_ids[] = {
+> > -       {ACPI_PROCESSOR_OBJECT_HID, },
+> > -       {ACPI_PROCESSOR_DEVICE_HID, },
+> > -       {},
+> > -};
+> > -MODULE_DEVICE_TABLE(acpi, processor_device_ids);
+> > -
+> >  MODULE_ALIAS("acpi");
+> >
 
 -- 
 Lee Jones [李琼斯]
