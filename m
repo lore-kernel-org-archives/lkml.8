@@ -2,117 +2,113 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EDD9C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 21:49:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A23DBC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 21:57:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2ACB0206D9
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 21:49:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 68A0420674
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 21:57:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="OfmVSBDs"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="YfslfIQX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728185AbgGNVt1 (ORCPT
+        id S1727839AbgGNV5M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 17:49:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38674 "EHLO
+        Tue, 14 Jul 2020 17:57:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39868 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727058AbgGNVt0 (ORCPT
+        with ESMTP id S1726710AbgGNV5L (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 17:49:26 -0400
-Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DF698C08C5C1
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 14:49:25 -0700 (PDT)
-Received: by mail-pj1-x1043.google.com with SMTP id mn17so30842pjb.4
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 14:49:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=z/2Da3iNyWh0eVa9re/PxqTbl8E4lNL39Wvo8BQa5Jk=;
-        b=OfmVSBDsHc9Rmasjt6KXSUQdd+K+htfdnDGZNH60suyaUxoZ6TXC2sZQyckRFbNtVW
-         eCczQAunkP9IdML7SUT1mKGAgRCYJZ2JU2BzFii89fLlf5/fb6WZmg8/bak5hryNE5Y3
-         stsrls1AUgm02a5MgTkAsfCOzaG5T8ZvxZN3Q=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=z/2Da3iNyWh0eVa9re/PxqTbl8E4lNL39Wvo8BQa5Jk=;
-        b=jXT8LTyJupQqCHPYdwJWiPA/P1DBFtKkkfhxLA+j1jHuibCmhi4jmcxECk+lJ7pyFP
-         VQGfXDnUZzWzNiQG+Eud4xRKSymQv/3FZkfgqrPPgSHGGvvadGOuY+dEG2ZnjlLKp4tD
-         ndGtR1vqxikbDMuhSi3uWZtrmvW6H9cLck3GpzrutmWwfld1vhKn+OKYrBO4UGMfMhsX
-         5Mgnx4gmB+V+NxqPGeSoJBAVbIWYFBjKYBuJ/GTAA6ejhjGehyGBLw/RbL05WQ3DdbeK
-         V5hUNxcQUFGm0BQhuDqkI0A37zFz2R89n5IQF8QRR9gRjWs1s8voWXzxntKFsfz9eSLm
-         XSDg==
-X-Gm-Message-State: AOAM533LFW0RNEvOmzmX+KG8FSfk9+J/Cf/8IGbODP8JnyEe/oS0PIqh
-        4U4P7DYGNdD9QMtS4PBXhN+Smg==
-X-Google-Smtp-Source: ABdhPJyfHN6nndxTZkr0qhDNx67iZO+T5mcaIl+et4AYLVpGCPX9K8cfoszp9wO2zi7jQoRkZbuhYA==
-X-Received: by 2002:a17:90a:240a:: with SMTP id h10mr7042196pje.225.1594763365288;
-        Tue, 14 Jul 2020 14:49:25 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id br9sm48405pjb.56.2020.07.14.14.49.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 Jul 2020 14:49:24 -0700 (PDT)
-Date:   Tue, 14 Jul 2020 14:49:23 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     "Eric W. Biederman" <ebiederm@xmission.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        linux-fsdevel@vger.kernel.org,
-        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
-        linux-security-module@vger.kernel.org,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        James Morris <jmorris@namei.org>,
-        Kentaro Takeda <takedakn@nttdata.co.jp>,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        John Johansen <john.johansen@canonical.com>,
-        Christoph Hellwig <hch@infradead.org>
-Subject: Re: [PATCH 7/7] exec: Implement kernel_execve
-Message-ID: <202007141446.A72A4437C@keescook>
-References: <871rle8bw2.fsf@x220.int.ebiederm.org>
- <87wo365ikj.fsf@x220.int.ebiederm.org>
+        Tue, 14 Jul 2020 17:57:11 -0400
+Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 38D3AC061755
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 14:57:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
+        :Reply-To:Content-ID:Content-Description;
+        bh=JIt3Ae9F/kZhyCF5QZvbdMIjxIyoLl2rwNBgtFMNQRY=; b=YfslfIQXTcYIAVg9OPPVDupPJM
+        /VtOcybkDTVk2IkuBc8Yfd5HL+S2g+2QFTz1mPds7wPHdt5MWBsH/fbN/NpNWL/ccEpeVx8BzfTXA
+        bAyYyAI2oXiBSXiExLvc5Ggu2QJ/g8sKGHH8WBMx6nnQ+bX0eSGWWjQQHKqwAjFxEWa9YzF+O4Yrm
+        E5XUlrGioP/beBOw812vMzkKvzbw6qNAWhQ3pZWWiUkYTZdUvfxWd0UYNmAVnJ9x+pDX5I9eFvNrr
+        ImksVHkvXKJtUPXobrSq89wFkxuGkf2mBXWO6/uvdTw4k233lvjXF7VdAYneP5bde8PPtqQsNtZpo
+        Ak2coXyA==;
+Received: from [2601:1c0:6280:3f0::19c2]
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jvSvA-0000jK-Qr; Tue, 14 Jul 2020 21:57:05 +0000
+Subject: Re: [PATCH] CREDITS: remove link http://www.dementia.org/~shadow
+To:     Jonathan Corbet <corbet@lwn.net>,
+        "Alexander A. Klimov" <grandmaster@al2klimov.de>
+Cc:     torvalds@linux-foundation.org, ribalda@kernel.org,
+        viro@zeniv.linux.org.uk, mchehab+samsung@kernel.org,
+        luis.f.correia@gmail.com, geert+renesas@glider.be,
+        paulburton@kernel.org, cyphar@cyphar.com, martink@posteo.de,
+        davej@codemonkey.org.uk, linux-kernel@vger.kernel.org
+References: <20200713114321.783f0ae6@lwn.net>
+ <20200714193805.49746-1-grandmaster@al2klimov.de>
+ <20200714154708.71b3efe2@lwn.net>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <083564e4-3099-15d0-9f18-04a8657a0885@infradead.org>
+Date:   Tue, 14 Jul 2020 14:56:58 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87wo365ikj.fsf@x220.int.ebiederm.org>
+In-Reply-To: <20200714154708.71b3efe2@lwn.net>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 14, 2020 at 08:31:40AM -0500, Eric W. Biederman wrote:
-> +static int count_strings_kernel(const char *const *argv)
-> +{
-> +	int i;
-> +
-> +	if (!argv)
-> +		return 0;
-> +
-> +	for (i = 0; argv[i]; ++i) {
-> +		if (i >= MAX_ARG_STRINGS)
-> +			return -E2BIG;
-> +		if (fatal_signal_pending(current))
-> +			return -ERESTARTNOHAND;
-> +		cond_resched();
-> +	}
-> +	return i;
-> +}
+On 7/14/20 2:47 PM, Jonathan Corbet wrote:
+> On Tue, 14 Jul 2020 21:38:05 +0200
+> "Alexander A. Klimov" <grandmaster@al2klimov.de> wrote:
+> 
+>> Rationale:
+>> The way it redirects looks like a fallback from a dead URL to a generic one.
+>>
+>> Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
+>> ---
+>>  Yes, I noted that some of the links removed by these "CREDITS: remove link:"
+>>  patches have email addresses with the same domain nearby.
+>>
+>>  Don't worry, I'll take care of them together with all other
+>>  dead email addresses - but not right now.
+>>
+>>
+>>  CREDITS | 1 -
+>>  1 file changed, 1 deletion(-)
+>>
+>> diff --git a/CREDITS b/CREDITS
+>> index 0787b5872906..92ad22b7ef56 100644
+>> --- a/CREDITS
+>> +++ b/CREDITS
+>> @@ -483,7 +483,6 @@ D: Intel Wireless WiMAX Connection 2400 SDIO driver
+>>  
+>>  N: Derrick J. Brashear
+>>  E: shadow@dementia.org
+>> -W: http://www.dementia.org/~shadow
+> 
+> So thanks for addressing these.  That said, I do wonder if this is quite
+> the right thing to do.  I'm assuming that the old sites still exist in the
+> wayback machine somewhere, and somebody might actually want to find them.
+> Pity the poor anthropologist researching the origins of the the
+> billion-line, free-software kernels widely used in the 2500's...
+> 
+> So maybe we should either mark it as "[BROKEN]" or make a direct link into
+> the wayback machine instead?  That would enable the suitably motivated to
+> go after the content that once existed.
+> 
+> Thoughts anybody?
 
-I notice count() is only ever called with MAX_ARG_STRINGS. Perhaps
-refactor that too? (And maybe rename it to count_strings_user()?)
-
-Otherwise, looks good:
-
-Reviewed-by: Kees Cook <keescook@chromium.org>
+I'm not going to be much help here: I like either of Jon's suggestions
+better than just deleting that line.
 
 -- 
-Kees Cook
+~Randy
+
