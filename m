@@ -2,378 +2,247 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CDF9C433E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 11:23:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2652EC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 11:23:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E267C2082F
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 11:23:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernelci-org.20150623.gappssmtp.com header.i=@kernelci-org.20150623.gappssmtp.com header.b="GwxB2TJx"
+	by mail.kernel.org (Postfix) with ESMTP id F401121D90
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 11:23:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594725835;
+	bh=H6ih8tb385005tV/0aaHXnq9UfaSn/HlbxFSlv/sql4=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=tMRMC4X3fF+n/fsE4QT8DfrCzxzkyi5I0dVLsE/ST7QvfA+ajkmJPo9tTmmKXazVx
+	 tNtjH5HrrYcrtbrDxAaaZYlWD0IKp2GxYoywceSf3wjz5/QbWIpCxLnyMQfolYyLPZ
+	 dob8XoDEvXP22EqAh78ZYmBqtWs7uTJwZUAyxZ9U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727812AbgGNLXN (ORCPT
+        id S1727926AbgGNLXy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 07:23:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53274 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726352AbgGNLXN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 07:23:13 -0400
-Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C727CC061794
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 04:23:12 -0700 (PDT)
-Received: by mail-pj1-x1042.google.com with SMTP id b92so1365624pjc.4
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 04:23:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernelci-org.20150623.gappssmtp.com; s=20150623;
-        h=message-id:date:mime-version:content-transfer-encoding:subject:to
-         :from:cc;
-        bh=//Y6Q6/nt5UQmFKrzLEvuZWLkdIv8woPD80SrhIdXso=;
-        b=GwxB2TJx/Q5Gzmc27zqgSGDWp9BFD8ezXXdKNdeVbfRHuvs+Gx7oP5c/nc37kCMPns
-         F0IXtXePSz4EcZkvdTXouWnDH2mD+7ZUDy5GmK4VJkVBbBA5kGxyt/EafnqwqE+MRya2
-         aHTe2MCOOut1BW6w3Aag5jXJZQ6ECIpSToCg070QrowqQth9bS7UN+WFfTOEvXAHGeov
-         QBDYWx4rp9QVdxdWmIsfD5ETVIe+ExmVS8KHQXHsuFzT1ysyQVXybhR/PECam3ncyXCE
-         zqWxD62gi29N0rAbmmsx3jyyauDakV8g3lbEEoGfgtoJohajf+o11Qh/aclTOK85Uvxi
-         G2Cg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:date:mime-version
-         :content-transfer-encoding:subject:to:from:cc;
-        bh=//Y6Q6/nt5UQmFKrzLEvuZWLkdIv8woPD80SrhIdXso=;
-        b=V/VkBV69oDPhmcr73U5ef45x+TDTbtwojwBk7YeYIdkkzCjNtT0/sTb0E2ps4AooKl
-         cAwlaCqfFQ02Enk4BeEY/gumEGu74j6wukptqn+z1n31goAPP4qA4S2+pgtfMRdc+AxC
-         xd/iSCYTQcy9WGR1qNZh1VpDBliVqbfK3bbM/9WBQx3MO8llSlfYvxI1qaqznqiFmqAV
-         VfcM4TTAWnNpnqrwe1x2rG4VT8tp0GBZFVpMxd70V6NBYayAp1WUjY5PZE78sC2abaNI
-         QAttKAZMm9YOtXWkgyuuHO54qoh3Nur11H77nPNjHjCNAymFr2I9QO7EyMoFEyhZMLz2
-         7QCw==
-X-Gm-Message-State: AOAM530FnrYz8MHkhaE6+LQT44ff4a0AE1UNJiGLJryTiCdQqeGc66+o
-        EKwh1HIFLzsUupXADpVglt9yDQ==
-X-Google-Smtp-Source: ABdhPJxvtS+urOiJgadhaOSFAZcKpmlxwgNZi3nXi9RCL4P9R91Xu7iOpv9+/jUyU8jYbnqAzGtejA==
-X-Received: by 2002:a17:90a:b63:: with SMTP id 90mr4262434pjq.47.1594725792100;
-        Tue, 14 Jul 2020 04:23:12 -0700 (PDT)
-Received: from kernelci-production.internal.cloudapp.net ([52.250.1.28])
-        by smtp.gmail.com with ESMTPSA id z11sm17144483pfk.46.2020.07.14.04.23.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 Jul 2020 04:23:11 -0700 (PDT)
-Message-ID: <5f0d959f.1c69fb81.e240a.a18c@mx.google.com>
-Date:   Tue, 14 Jul 2020 04:23:11 -0700 (PDT)
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Kernelci-Kernel: v5.8-rc5-8-g0dc589da873b
-X-Kernelci-Report-Type: bisect
-X-Kernelci-Tree: mainline
-X-Kernelci-Branch: master
-X-Kernelci-Lab-Name: lab-cip
-Subject: mainline/master bisection: baseline.dmesg.crit on
- qemu_arm-vexpress-a15
-To:     kernelci-results@groups.io, Sudeep Holla <sudeep.holla@arm.com>,
-        gtucker@collabora.com, Andre Przywara <andre.przywara@arm.com>
-From:   "kernelci.org bot" <bot@kernelci.org>
-Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        Liviu Dudau <liviu.dudau@arm.com>,
-        Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org
+        Tue, 14 Jul 2020 07:23:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42058 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726352AbgGNLXx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 07:23:53 -0400
+Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 109092082F;
+        Tue, 14 Jul 2020 11:23:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594725832;
+        bh=H6ih8tb385005tV/0aaHXnq9UfaSn/HlbxFSlv/sql4=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=A2hNjzdJTnqwm++IwaVVQXBKnLNxS7/v4wpYIBHHPRc/Cqw2Fny3jwOeLo+yR9BoW
+         yv3gJs/R3Sz5O7wE84mad50Zbrh74hrMoXQlTa2NRqGvuwKsUouSUEs9m6Do10QnT9
+         DVbInvUcnZhZMuvzu+BxtwWoVudG9Em9dV5llGlc=
+Date:   Tue, 14 Jul 2020 20:23:46 +0900
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     guoren@kernel.org
+Cc:     palmerdabbelt@google.com, paul.walmsley@sifive.com,
+        oleg@redhat.com, linux-riscv@lists.infradead.org,
+        linux-kernel@vger.kernel.org, anup@brainfault.org,
+        linux-csky@vger.kernel.org, greentime.hu@sifive.com,
+        zong.li@sifive.com, me@packi.ch, bjorn.topel@gmail.com,
+        Guo Ren <guoren@linux.alibaba.com>
+Subject: Re: [PATCH v3 0/7] riscv: Add k/uprobe supported
+Message-Id: <20200714202346.0911e9475bf30a30d0d36b67@kernel.org>
+In-Reply-To: <1594683562-68149-1-git-send-email-guoren@kernel.org>
+References: <1594683562-68149-1-git-send-email-guoren@kernel.org>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-* This automated bisection report was sent to you on the basis  *
-* that you may be involved with the breaking commit it has      *
-* found.  No manual investigation has been done to verify it,   *
-* and the root cause of the problem may be somewhere else.      *
-*                                                               *
-* If you do send a fix, please include this trailer:            *
-*   Reported-by: "kernelci.org bot" <bot@kernelci.org>          *
-*                                                               *
-* Hope this helps!                                              *
-* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+Hi Guo,
 
-mainline/master bisection: baseline.dmesg.crit on qemu_arm-vexpress-a15
+On Mon, 13 Jul 2020 23:39:15 +0000
+guoren@kernel.org wrote:
 
-Summary:
-  Start:      0dc589da873b Merge tag 'iommu-fixes-v5.8-rc5' of git://git.ke=
-rnel.org/pub/scm/linux/kernel/git/joro/iommu
-  Plain log:  https://storage.kernelci.org/mainline/master/v5.8-rc5-8-g0dc5=
-89da873b/arm/vexpress_defconfig/gcc-8/lab-cip/baseline-vexpress-v2p-ca15-tc=
-1.txt
-  HTML log:   https://storage.kernelci.org/mainline/master/v5.8-rc5-8-g0dc5=
-89da873b/arm/vexpress_defconfig/gcc-8/lab-cip/baseline-vexpress-v2p-ca15-tc=
-1.html
-  Result:     38ac46002d1d arm: dts: vexpress: Move mcc node back into moth=
-erboard node
+> From: Guo Ren <guoren@linux.alibaba.com>
+> 
+> The patchset includes kprobe/uprobe support and some related fixups.
+> Patrick provides HAVE_REGS_AND_STACK_ACCESS_API support and some
+> kprobe's code. The framework of k/uprobe is from csky but also refers
+> to other arches'. kprobes on ftrace is also supported in the patchset.
+> 
+> There is no single step exception in riscv ISA, only single-step
+> facility for jtag. See riscv-Privileged spec:
+> 
+> Interrupt Exception Code-Description
+> 1 0 Reserved
+> 1 1 Supervisor software interrupt
+> 1 2–4 Reserved
+> 1 5 Supervisor timer interrupt
+> 1 6–8 Reserved
+> 1 9 Supervisor external interrupt
+> 1 10–15 Reserved
+> 1 ≥16 Available for platform use
+> 0 0 Instruction address misaligned
+> 0 1 Instruction access fault
+> 0 2 Illegal instruction
+> 0 3 Breakpoint
+> 0 4 Load address misaligned
+> 0 5 Load access fault
+> 0 6 Store/AMO address misaligned
+> 0 7 Store/AMO access fault
+> 0 8 Environment call from U-mode
+> 0 9 Environment call from S-mode
+> 0 10–11 Reserved
+> 0 12 Instruction page fault
+> 0 13 Load page fault
+> 0 14 Reserved
+> 0 15 Store/AMO page fault
+> 0 16–23 Reserved
+> 0 24–31 Available for custom use
+> 0 32–47 Reserved
+> 0 48–63 Available for custom use
+> 0 ≥64 Reserved
+> 
+> No single step!
+> 
+> Other arches use hardware single-step exception for k/uprobe,  eg:
+>  - powerpc: regs->msr |= MSR_SINGLESTEP
+>  - arm/arm64: PSTATE.D for enabling software step exceptions
+>  - s390: Set PER control regs, turns on single step for the given address
+>  - x86: regs->flags |= X86_EFLAGS_TF
+>  - csky: of course use hw single step :)
+> 
+> All the above arches use a hardware single-step exception
+> mechanism to execute the instruction that was replaced with a probe
+> breakpoint. So utilize ebreak to simulate.
+> 
+> Some pc related instructions couldn't be executed out of line and some
+> system/fence instructions couldn't be a trace site at all. So we give
+> out a reject list and simulate list in decode-insn.c.
+> 
+> You could use uprobe to test simulate code like this:
+> 
+>  echo 'p:enter_current_state_one /hello:0x6e4 a0=%a0 a1=%a1' >> /sys/kernel/debug/tracing/uprobe_events
+>  echo 1 > /sys/kernel/debug/tracing/events/uprobes/enable
+>  /hello
+>  ^C
+>  cat /sys/kernel/debug/tracing/trace
+>  tracer: nop
+> 
+>  entries-in-buffer/entries-written: 1/1   #P:1
+> 
+>                               _-----=> irqs-off
+>                              / _----=> need-resched
+>                             | / _---=> hardirq/softirq
+>                             || / _--=> preempt-depth
+>                             ||| /     delay
+>            TASK-PID   CPU#  ||||    TIMESTAMP  FUNCTION
+>               | |       |   ||||       |         |
+>           hello-94    [000] d...    55.404242: enter_current_state_one: (0x106e4) a0=0x1 a1=0x3fffa8ada8
+> 
+> Be care /hello:0x6e4 is the file offset in elf and it relate to 0x106e4
+> in memory and hello is your target elf program.
+> 
+> Try kprobe like this:
+> 
+>  echo 'p:myprobe _do_fork dfd=%a0 filename=%a1 flags=%a2 mode=+4($stack)' > /sys/kernel/debug/tracing/kprobe_events
+>  echo 'r:myretprobe _do_fork $retval' >> /sys/kernel/debug/tracing/kprobe_event
+> 
+>  echo 1 >/sys/kernel/debug/tracing/events/kprobes/enable
+>  cat /sys/kernel/debug/tracing/trace
+>  tracer: nop
+> 
+>  entries-in-buffer/entries-written: 2/2   #P:1
+> 
+>                               _-----=> irqs-off
+>                              / _----=> need-resched
+>                             | / _---=> hardirq/softirq
+>                             || / _--=> preempt-depth
+>                             ||| /     delay
+>            TASK-PID   CPU#  ||||    TIMESTAMP  FUNCTION
+>               | |       |   ||||       |         |
+>              sh-92    [000] .n..   131.804230: myprobe: (_do_fork+0x0/0x2e6) dfd=0xffffffe03929fdf8 filename=0x0 flags=0x101000 mode=0x1200000ffffffe0
+>              sh-92    [000] d...   131.806607: myretprobe: (__do_sys_clone+0x70/0x82 <- _do_fork) arg1=0x5f
+>  cat /sys/kernel/debug/tracing/trace
 
-Checks:
-  revert:     PASS
-  verify:     PASS
+Thank you for your great work!
 
-Parameters:
-  Tree:       mainline
-  URL:        https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linu=
-x.git
-  Branch:     master
-  Target:     qemu_arm-vexpress-a15
-  CPU arch:   arm
-  Lab:        lab-cip
-  Compiler:   gcc-8
-  Config:     vexpress_defconfig
-  Test case:  baseline.dmesg.crit
+BTW, could you also run the ftracetest and boot-time smoke test on it?
+You can find it under tools/testing/selftests/ftrace, and
+CONFIG_KPROBES_SANITY_TEST.
+It will ensure that your patch is correctly ported.
 
-Breaking commit found:
+Thank you,
 
----------------------------------------------------------------------------=
-----
-commit 38ac46002d1df5707566a73486452851341028d2
-Author: Andre Przywara <andre.przywara@arm.com>
-Date:   Wed Jun 3 17:22:37 2020 +0100
-
-    arm: dts: vexpress: Move mcc node back into motherboard node
-    =
-
-    Commit d9258898ad49 ("arm64: dts: arm: vexpress: Move fixed devices
-    out of bus node") moved the "mcc" DT node into the root node, because
-    it does not have any children using "reg" properties, so does violate
-    some dtc checks about "simple-bus" nodes.
-    =
-
-    However this broke the vexpress config-bus code, which walks up the
-    device tree to find the first node with an "arm,vexpress,site" property.
-    This gave the wrong result (matching the root node instead of the
-    motherboard node), so broke the clocks and some other devices for
-    VExpress boards.
-    =
-
-    Move the whole node back into its original position. This re-introduces
-    the dtc warning, but is conceptually the right thing to do. The dtc
-    warning seems to be overzealous here, there are discussions on fixing or
-    relaxing this check instead.
-    =
-
-    Link: https://lore.kernel.org/r/20200603162237.16319-1-andre.przywara@a=
-rm.com
-    Fixes: d9258898ad49 ("arm64: dts: vexpress: Move fixed devices out of b=
-us node")
-    Reported-and-tested-by: Guenter Roeck <linux@roeck-us.net>
-    Signed-off-by: Andre Przywara <andre.przywara@arm.com>
-    Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
-
-diff --git a/arch/arm/boot/dts/vexpress-v2m-rs1.dtsi b/arch/arm/boot/dts/ve=
-xpress-v2m-rs1.dtsi
-index e6308fb76183..a88ee5294d35 100644
---- a/arch/arm/boot/dts/vexpress-v2m-rs1.dtsi
-+++ b/arch/arm/boot/dts/vexpress-v2m-rs1.dtsi
-@@ -100,79 +100,6 @@
- 		};
- 	};
- =
-
--	mcc {
--		compatible =3D "arm,vexpress,config-bus";
--		arm,vexpress,config-bridge =3D <&v2m_sysreg>;
--
--		oscclk0 {
--			/* MCC static memory clock */
--			compatible =3D "arm,vexpress-osc";
--			arm,vexpress-sysreg,func =3D <1 0>;
--			freq-range =3D <25000000 60000000>;
--			#clock-cells =3D <0>;
--			clock-output-names =3D "v2m:oscclk0";
--		};
--
--		v2m_oscclk1: oscclk1 {
--			/* CLCD clock */
--			compatible =3D "arm,vexpress-osc";
--			arm,vexpress-sysreg,func =3D <1 1>;
--			freq-range =3D <23750000 65000000>;
--			#clock-cells =3D <0>;
--			clock-output-names =3D "v2m:oscclk1";
--		};
--
--		v2m_oscclk2: oscclk2 {
--			/* IO FPGA peripheral clock */
--			compatible =3D "arm,vexpress-osc";
--			arm,vexpress-sysreg,func =3D <1 2>;
--			freq-range =3D <24000000 24000000>;
--			#clock-cells =3D <0>;
--			clock-output-names =3D "v2m:oscclk2";
--		};
--
--		volt-vio {
--			/* Logic level voltage */
--			compatible =3D "arm,vexpress-volt";
--			arm,vexpress-sysreg,func =3D <2 0>;
--			regulator-name =3D "VIO";
--			regulator-always-on;
--			label =3D "VIO";
--		};
--
--		temp-mcc {
--			/* MCC internal operating temperature */
--			compatible =3D "arm,vexpress-temp";
--			arm,vexpress-sysreg,func =3D <4 0>;
--			label =3D "MCC";
--		};
--
--		reset {
--			compatible =3D "arm,vexpress-reset";
--			arm,vexpress-sysreg,func =3D <5 0>;
--		};
--
--		muxfpga {
--			compatible =3D "arm,vexpress-muxfpga";
--			arm,vexpress-sysreg,func =3D <7 0>;
--		};
--
--		shutdown {
--			compatible =3D "arm,vexpress-shutdown";
--			arm,vexpress-sysreg,func =3D <8 0>;
--		};
--
--		reboot {
--			compatible =3D "arm,vexpress-reboot";
--			arm,vexpress-sysreg,func =3D <9 0>;
--		};
--
--		dvimode {
--			compatible =3D "arm,vexpress-dvimode";
--			arm,vexpress-sysreg,func =3D <11 0>;
--		};
--	};
--
- 	bus@8000000 {
- 		motherboard-bus {
- 			model =3D "V2M-P1";
-@@ -435,6 +362,79 @@
- 						};
- 					};
- 				};
-+
-+				mcc {
-+					compatible =3D "arm,vexpress,config-bus";
-+					arm,vexpress,config-bridge =3D <&v2m_sysreg>;
-+
-+					oscclk0 {
-+						/* MCC static memory clock */
-+						compatible =3D "arm,vexpress-osc";
-+						arm,vexpress-sysreg,func =3D <1 0>;
-+						freq-range =3D <25000000 60000000>;
-+						#clock-cells =3D <0>;
-+						clock-output-names =3D "v2m:oscclk0";
-+					};
-+
-+					v2m_oscclk1: oscclk1 {
-+						/* CLCD clock */
-+						compatible =3D "arm,vexpress-osc";
-+						arm,vexpress-sysreg,func =3D <1 1>;
-+						freq-range =3D <23750000 65000000>;
-+						#clock-cells =3D <0>;
-+						clock-output-names =3D "v2m:oscclk1";
-+					};
-+
-+					v2m_oscclk2: oscclk2 {
-+						/* IO FPGA peripheral clock */
-+						compatible =3D "arm,vexpress-osc";
-+						arm,vexpress-sysreg,func =3D <1 2>;
-+						freq-range =3D <24000000 24000000>;
-+						#clock-cells =3D <0>;
-+						clock-output-names =3D "v2m:oscclk2";
-+					};
-+
-+					volt-vio {
-+						/* Logic level voltage */
-+						compatible =3D "arm,vexpress-volt";
-+						arm,vexpress-sysreg,func =3D <2 0>;
-+						regulator-name =3D "VIO";
-+						regulator-always-on;
-+						label =3D "VIO";
-+					};
-+
-+					temp-mcc {
-+						/* MCC internal operating temperature */
-+						compatible =3D "arm,vexpress-temp";
-+						arm,vexpress-sysreg,func =3D <4 0>;
-+						label =3D "MCC";
-+					};
-+
-+					reset {
-+						compatible =3D "arm,vexpress-reset";
-+						arm,vexpress-sysreg,func =3D <5 0>;
-+					};
-+
-+					muxfpga {
-+						compatible =3D "arm,vexpress-muxfpga";
-+						arm,vexpress-sysreg,func =3D <7 0>;
-+					};
-+
-+					shutdown {
-+						compatible =3D "arm,vexpress-shutdown";
-+						arm,vexpress-sysreg,func =3D <8 0>;
-+					};
-+
-+					reboot {
-+						compatible =3D "arm,vexpress-reboot";
-+						arm,vexpress-sysreg,func =3D <9 0>;
-+					};
-+
-+					dvimode {
-+						compatible =3D "arm,vexpress-dvimode";
-+						arm,vexpress-sysreg,func =3D <11 0>;
-+					};
-+				};
- 			};
- 		};
- 	};
----------------------------------------------------------------------------=
-----
+> 
+> Changlog v3:
+>  - Add upport for function error injection
+>  - Fixup kprobes handler couldn't change pc
+> 
+> Changlog v2:
+>  - Add Reviewed-by, Tested-by, Acked-by, thx for all of you
+>  - Add kprobes on ftrace feature
+>  - Use __always_inline as same as fix_to_virt for fixup
+>    BUILD_BUG_ON
+>  - Use const "const unsigned int" for 2th param for fixup
+>    BUILD_BUG_ON
+> 
+> Guo Ren (6):
+>   riscv: Fixup compile error BUILD_BUG_ON failed
+>   riscv: Fixup kprobes handler couldn't change pc
+>   riscv: Add kprobes supported
+>   riscv: Add uprobes supported
+>   riscv: Add KPROBES_ON_FTRACE supported
+>   riscv: Add support for function error injection
+> 
+> Patrick Stählin (1):
+>   RISC-V: Implement ptrace regs and stack API
+> 
+>  arch/riscv/Kconfig                            |   8 +
+>  arch/riscv/include/asm/kprobes.h              |  40 +++
+>  arch/riscv/include/asm/probes.h               |  24 ++
+>  arch/riscv/include/asm/processor.h            |   1 +
+>  arch/riscv/include/asm/ptrace.h               |  35 ++
+>  arch/riscv/include/asm/thread_info.h          |   4 +-
+>  arch/riscv/include/asm/uprobes.h              |  40 +++
+>  arch/riscv/kernel/Makefile                    |   1 +
+>  arch/riscv/kernel/mcount-dyn.S                |   3 +-
+>  arch/riscv/kernel/patch.c                     |   8 +-
+>  arch/riscv/kernel/probes/Makefile             |   6 +
+>  arch/riscv/kernel/probes/decode-insn.c        |  48 +++
+>  arch/riscv/kernel/probes/decode-insn.h        |  18 +
+>  arch/riscv/kernel/probes/ftrace.c             |  52 +++
+>  arch/riscv/kernel/probes/kprobes.c            | 471 ++++++++++++++++++++++++++
+>  arch/riscv/kernel/probes/kprobes_trampoline.S |  93 +++++
+>  arch/riscv/kernel/probes/simulate-insn.c      |  85 +++++
+>  arch/riscv/kernel/probes/simulate-insn.h      |  47 +++
+>  arch/riscv/kernel/probes/uprobes.c            | 186 ++++++++++
+>  arch/riscv/kernel/ptrace.c                    |  99 ++++++
+>  arch/riscv/kernel/signal.c                    |   3 +
+>  arch/riscv/kernel/traps.c                     |  19 ++
+>  arch/riscv/lib/Makefile                       |   2 +
+>  arch/riscv/lib/error-inject.c                 |  10 +
+>  arch/riscv/mm/fault.c                         |  11 +
+>  25 files changed, 1310 insertions(+), 4 deletions(-)
+>  create mode 100644 arch/riscv/include/asm/probes.h
+>  create mode 100644 arch/riscv/include/asm/uprobes.h
+>  create mode 100644 arch/riscv/kernel/probes/Makefile
+>  create mode 100644 arch/riscv/kernel/probes/decode-insn.c
+>  create mode 100644 arch/riscv/kernel/probes/decode-insn.h
+>  create mode 100644 arch/riscv/kernel/probes/ftrace.c
+>  create mode 100644 arch/riscv/kernel/probes/kprobes.c
+>  create mode 100644 arch/riscv/kernel/probes/kprobes_trampoline.S
+>  create mode 100644 arch/riscv/kernel/probes/simulate-insn.c
+>  create mode 100644 arch/riscv/kernel/probes/simulate-insn.h
+>  create mode 100644 arch/riscv/kernel/probes/uprobes.c
+>  create mode 100644 arch/riscv/lib/error-inject.c
+> 
+> -- 
+> 2.7.4
+> 
 
 
-Git bisection log:
-
----------------------------------------------------------------------------=
-----
-git bisect start
-# good: [719fdd32921fb7e3208db8832d32ae1c2d68900f] afs: Fix storage of cell=
- names
-git bisect good 719fdd32921fb7e3208db8832d32ae1c2d68900f
-# bad: [0dc589da873b58b70f4caf4b070fb0cf70fdd1dc] Merge tag 'iommu-fixes-v5=
-.8-rc5' of git://git.kernel.org/pub/scm/linux/kernel/git/joro/iommu
-git bisect bad 0dc589da873b58b70f4caf4b070fb0cf70fdd1dc
-# bad: [aa27b32b76d0b1b242d43977da0e5358da1c825f] Merge tag 'for-5.8-rc4-ta=
-g' of git://git.kernel.org/pub/scm/linux/kernel/git/kdave/linux
-git bisect bad aa27b32b76d0b1b242d43977da0e5358da1c825f
-# bad: [684c8ccc40d7e5408d597a43712bad3827d3fb94] Merge tag 'devicetree-fix=
-es-for-5.8-2' of git://git.kernel.org/pub/scm/linux/kernel/git/robh/linux
-git bisect bad 684c8ccc40d7e5408d597a43712bad3827d3fb94
-# bad: [e44b59cd758acdd413512d4597a1fabdadfe3abf] Merge tag 'arm-fixes-5.8-=
-1' of git://git.kernel.org/pub/scm/linux/kernel/git/soc/soc
-git bisect bad e44b59cd758acdd413512d4597a1fabdadfe3abf
-# good: [91a9a90d040e8b9ff63d48ea71468e0f4db764ff] Merge tag 'sched_urgent_=
-for_5.8_rc3' of git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip
-git bisect good 91a9a90d040e8b9ff63d48ea71468e0f4db764ff
-# bad: [42d3f7e8da1bc55e3109f612c519c945f6587194] Merge tag 'imx-fixes-5.8'=
- of git://git.kernel.org/pub/scm/linux/kernel/git/shawnguo/linux into arm/f=
-ixes
-git bisect bad 42d3f7e8da1bc55e3109f612c519c945f6587194
-# bad: [6d89c73ca5813768a2cc66f7420ac0cbddf4f37d] Merge tag 'arm-soc/for-5.=
-8/soc-fixes' of https://github.com/Broadcom/stblinux into arm/fixes
-git bisect bad 6d89c73ca5813768a2cc66f7420ac0cbddf4f37d
-# bad: [0f77ce26ebcf6ea384421d2dd47b924b83649692] Revert "ARM: sti: Impleme=
-nt dummy L2 cache's write_sec"
-git bisect bad 0f77ce26ebcf6ea384421d2dd47b924b83649692
-# bad: [d68ec1644dd546851d651787a638aead32a60a6f] Merge tag 'juno-fix-5.8' =
-of git://git.kernel.org/pub/scm/linux/kernel/git/sudeep.holla/linux into ar=
-m/fixes
-git bisect bad d68ec1644dd546851d651787a638aead32a60a6f
-# bad: [38ac46002d1df5707566a73486452851341028d2] arm: dts: vexpress: Move =
-mcc node back into motherboard node
-git bisect bad 38ac46002d1df5707566a73486452851341028d2
-# first bad commit: [38ac46002d1df5707566a73486452851341028d2] arm: dts: ve=
-xpress: Move mcc node back into motherboard node
----------------------------------------------------------------------------=
-----
+-- 
+Masami Hiramatsu <mhiramat@kernel.org>
