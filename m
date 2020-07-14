@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5F5CC433EC
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 19:10:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 736BBC433FC
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 19:11:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BCE0D22461
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 19:10:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4885422AAF
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 19:11:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="uNWpmhH5"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="jbGQngvV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731040AbgGNTKs (ORCPT
+        id S1731137AbgGNTI6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 15:10:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41872 "EHLO
+        Tue, 14 Jul 2020 15:08:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41840 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731253AbgGNTJC (ORCPT
+        with ESMTP id S1730198AbgGNTIx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 15:09:02 -0400
+        Tue, 14 Jul 2020 15:08:53 -0400
 Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 27CB1C061755;
-        Tue, 14 Jul 2020 12:09:02 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0A322C061794;
+        Tue, 14 Jul 2020 12:08:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
         References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
         Content-Type:Content-ID:Content-Description;
-        bh=coa7A11I6J0G4iER3rlCNPw/aWxiSnKv3sMdMKmI36w=; b=uNWpmhH5Gc6lX6cAB74UuI1UIs
-        l0DyhCXO7oVbwFtvveNze9pTowzTWMnD7BOU5rjo55F0ytBkF5aYJfZvRqFWcSwguq6JEKIehc3Px
-        J9viANZqmzRYLofiSeq+f0xDev4UjrfJjOitRJdQ6X+jHiLdQzoAPuF6bBD6yERSAR46F23GbnNMt
-        IkaZOq78Z5/kD8l/Ko45DyYd1pnQJ0ALjbldwy6KUW9PCevbNpg7PGNBBjgvXWvh3n2Ya+C3yEQQJ
-        TaevvW4LN7CGZPLA0n7itCzXoEtGS/JxOTeTHgcUqJPTIu/DGFA/fOqbq84woQt/flbHiNpOrBvO0
-        jh/z0ZLg==;
+        bh=BDxqNAyXTxzLLCgYDAkjeG7ETUtTJqGj9qruExt6hQ4=; b=jbGQngvVuzXKT8N+TaSzkVnsIy
+        TIhImTs77/i/C8718Y8Qn3T8pmPJpu+4MN4uETRii8aUpey96ZZxNLecbin9T9CR4NLQG2ck/WLxR
+        Rn5DoF3TV/mBmRF3TLHsoW24E5ZEZVGxe64zeXBxlsJJ8dHeG63cAD2o42kfhzSEwsdBIgwwUpJLM
+        GO1cck0PorBhdHcittMmNalv9/4av3KIC0FRwi9KeIQBzk/beAKPL6c3wdbOoDLHpBffxvDvBLNq5
+        ATj36va3+CVflk8UOYtp7YkZED2mU/99nAUfF6TeHn7BOH22JsJXAtI2ZEcDVYPcGP0G57EXS1yje
+        wIH0k3MA==;
 Received: from [2001:4bb8:188:5f50:f037:8cfe:627e:7028] (helo=localhost)
         by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jvQIV-0005qg-Jm; Tue, 14 Jul 2020 19:09:00 +0000
+        id 1jvQIN-0005pH-9X; Tue, 14 Jul 2020 19:08:51 +0000
 From:   Christoph Hellwig <hch@lst.de>
 To:     linux-kernel@vger.kernel.org
 Cc:     "H. Peter Anvin" <hpa@zytor.com>, Song Liu <song@kernel.org>,
         Al Viro <viro@zeniv.linux.org.uk>,
         Linus Torvalds <torvalds@linux-foundation.org>,
         linux-raid@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Subject: [PATCH 08/23] md: simplify md_setup_drive
-Date:   Tue, 14 Jul 2020 21:04:12 +0200
-Message-Id: <20200714190427.4332-9-hch@lst.de>
+Subject: [PATCH 02/23] fs: add a vfs_fchmod helper
+Date:   Tue, 14 Jul 2020 21:04:06 +0200
+Message-Id: <20200714190427.4332-3-hch@lst.de>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200714190427.4332-1-hch@lst.de>
 References: <20200714190427.4332-1-hch@lst.de>
@@ -59,263 +59,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Move the loop over the possible arrays into the caller to remove a level
-of indentation for the whole function.
+Add a helper for struct file based chmode operations.  To be used by
+the initramfs code soon.
 
 Signed-off-by: Christoph Hellwig <hch@lst.de>
-Acked-by: Song Liu <song@kernel.org>
 ---
- drivers/md/md-autodetect.c | 203 ++++++++++++++++++-------------------
- 1 file changed, 101 insertions(+), 102 deletions(-)
+ fs/open.c          | 9 +++++++--
+ include/linux/fs.h | 1 +
+ 2 files changed, 8 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/md/md-autodetect.c b/drivers/md/md-autodetect.c
-index 6bc9b734eee6ff..a43a8f1580584c 100644
---- a/drivers/md/md-autodetect.c
-+++ b/drivers/md/md-autodetect.c
-@@ -27,7 +27,7 @@ static int __initdata raid_noautodetect=1;
- #endif
- static int __initdata raid_autopart;
- 
--static struct {
-+static struct md_setup_args {
- 	int minor;
- 	int partitioned;
- 	int level;
-@@ -126,122 +126,117 @@ static inline int create_dev(char *name, dev_t dev)
- 	return ksys_mknod(name, S_IFBLK|0600, new_encode_dev(dev));
+diff --git a/fs/open.c b/fs/open.c
+index 103c66309bee67..75166f071d280a 100644
+--- a/fs/open.c
++++ b/fs/open.c
+@@ -602,14 +602,19 @@ static int chmod_common(const struct path *path, umode_t mode)
+ 	return error;
  }
  
--static void __init md_setup_drive(void)
-+static void __init md_setup_drive(struct md_setup_args *args)
++int vfs_fchmod(struct file *file, umode_t mode)
++{
++	audit_file(file);
++	return chmod_common(&file->f_path, mode);
++}
++
+ int ksys_fchmod(unsigned int fd, umode_t mode)
  {
--	int minor, i, ent, partitioned;
-+	int minor, i, partitioned;
- 	dev_t dev;
- 	dev_t devices[MD_SB_DISKS+1];
-+	int fd;
-+	int err = 0;
-+	char *devname;
-+	mdu_disk_info_t dinfo;
-+	char name[16];
+ 	struct fd f = fdget(fd);
+ 	int err = -EBADF;
  
--	for (ent = 0; ent < md_setup_ents ; ent++) {
--		int fd;
--		int err = 0;
--		char *devname;
--		mdu_disk_info_t dinfo;
--		char name[16];
-+	minor = args->minor;
-+	partitioned = args->partitioned;
-+	devname = args->device_names;
- 
--		minor = md_setup_args[ent].minor;
--		partitioned = md_setup_args[ent].partitioned;
--		devname = md_setup_args[ent].device_names;
-+	sprintf(name, "/dev/md%s%d", partitioned?"_d":"", minor);
-+	if (partitioned)
-+		dev = MKDEV(mdp_major, minor << MdpMinorShift);
-+	else
-+		dev = MKDEV(MD_MAJOR, minor);
-+	create_dev(name, dev);
-+	for (i = 0; i < MD_SB_DISKS && devname != NULL; i++) {
-+		struct kstat stat;
-+		char *p;
-+		char comp_name[64];
- 
--		sprintf(name, "/dev/md%s%d", partitioned?"_d":"", minor);
--		if (partitioned)
--			dev = MKDEV(mdp_major, minor << MdpMinorShift);
--		else
--			dev = MKDEV(MD_MAJOR, minor);
--		create_dev(name, dev);
--		for (i = 0; i < MD_SB_DISKS && devname != NULL; i++) {
--			struct kstat stat;
--			char *p;
--			char comp_name[64];
-+		p = strchr(devname, ',');
-+		if (p)
-+			*p++ = 0;
- 
--			p = strchr(devname, ',');
--			if (p)
--				*p++ = 0;
-+		dev = name_to_dev_t(devname);
-+		if (strncmp(devname, "/dev/", 5) == 0)
-+			devname += 5;
-+		snprintf(comp_name, 63, "/dev/%s", devname);
-+		if (vfs_stat(comp_name, &stat) == 0 && S_ISBLK(stat.mode))
-+			dev = new_decode_dev(stat.rdev);
-+		if (!dev) {
-+			printk(KERN_WARNING "md: Unknown device name: %s\n", devname);
-+			break;
-+		}
- 
--			dev = name_to_dev_t(devname);
--			if (strncmp(devname, "/dev/", 5) == 0)
--				devname += 5;
--			snprintf(comp_name, 63, "/dev/%s", devname);
--			if (vfs_stat(comp_name, &stat) == 0 &&
--			    S_ISBLK(stat.mode))
--				dev = new_decode_dev(stat.rdev);
--			if (!dev) {
--				printk(KERN_WARNING "md: Unknown device name: %s\n", devname);
--				break;
--			}
-+		devices[i] = dev;
-+		devname = p;
-+	}
-+	devices[i] = 0;
- 
--			devices[i] = dev;
-+	if (!i)
-+		return;
- 
--			devname = p;
--		}
--		devices[i] = 0;
-+	printk(KERN_INFO "md: Loading md%s%d: %s\n",
-+		partitioned ? "_d" : "", minor,
-+		args->device_names);
- 
--		if (!i)
--			continue;
-+	fd = ksys_open(name, 0, 0);
-+	if (fd < 0) {
-+		printk(KERN_ERR "md: open failed - cannot start "
-+				"array %s\n", name);
-+		return;
-+	}
-+	if (ksys_ioctl(fd, SET_ARRAY_INFO, 0) == -EBUSY) {
-+		printk(KERN_WARNING
-+		       "md: Ignoring md=%d, already autodetected. (Use raid=noautodetect)\n",
-+		       minor);
-+		ksys_close(fd);
-+		return;
-+	}
- 
--		printk(KERN_INFO "md: Loading md%s%d: %s\n",
--			partitioned ? "_d" : "", minor,
--			md_setup_args[ent].device_names);
-+	if (args->level != LEVEL_NONE) {
-+		/* non-persistent */
-+		mdu_array_info_t ainfo;
-+		ainfo.level = args->level;
-+		ainfo.size = 0;
-+		ainfo.nr_disks =0;
-+		ainfo.raid_disks =0;
-+		while (devices[ainfo.raid_disks])
-+			ainfo.raid_disks++;
-+		ainfo.md_minor =minor;
-+		ainfo.not_persistent = 1;
- 
--		fd = ksys_open(name, 0, 0);
--		if (fd < 0) {
--			printk(KERN_ERR "md: open failed - cannot start "
--					"array %s\n", name);
--			continue;
--		}
--		if (ksys_ioctl(fd, SET_ARRAY_INFO, 0) == -EBUSY) {
--			printk(KERN_WARNING
--			       "md: Ignoring md=%d, already autodetected. (Use raid=noautodetect)\n",
--			       minor);
--			ksys_close(fd);
--			continue;
-+		ainfo.state = (1 << MD_SB_CLEAN);
-+		ainfo.layout = 0;
-+		ainfo.chunk_size = args->chunk;
-+		err = ksys_ioctl(fd, SET_ARRAY_INFO, (long)&ainfo);
-+		for (i = 0; !err && i <= MD_SB_DISKS; i++) {
-+			dev = devices[i];
-+			if (!dev)
-+				break;
-+			dinfo.number = i;
-+			dinfo.raid_disk = i;
-+			dinfo.state = (1<<MD_DISK_ACTIVE)|(1<<MD_DISK_SYNC);
-+			dinfo.major = MAJOR(dev);
-+			dinfo.minor = MINOR(dev);
-+			err = ksys_ioctl(fd, ADD_NEW_DISK,
-+					 (long)&dinfo);
- 		}
--
--		if (md_setup_args[ent].level != LEVEL_NONE) {
--			/* non-persistent */
--			mdu_array_info_t ainfo;
--			ainfo.level = md_setup_args[ent].level;
--			ainfo.size = 0;
--			ainfo.nr_disks =0;
--			ainfo.raid_disks =0;
--			while (devices[ainfo.raid_disks])
--				ainfo.raid_disks++;
--			ainfo.md_minor =minor;
--			ainfo.not_persistent = 1;
--
--			ainfo.state = (1 << MD_SB_CLEAN);
--			ainfo.layout = 0;
--			ainfo.chunk_size = md_setup_args[ent].chunk;
--			err = ksys_ioctl(fd, SET_ARRAY_INFO, (long)&ainfo);
--			for (i = 0; !err && i <= MD_SB_DISKS; i++) {
--				dev = devices[i];
--				if (!dev)
--					break;
--				dinfo.number = i;
--				dinfo.raid_disk = i;
--				dinfo.state = (1<<MD_DISK_ACTIVE)|(1<<MD_DISK_SYNC);
--				dinfo.major = MAJOR(dev);
--				dinfo.minor = MINOR(dev);
--				err = ksys_ioctl(fd, ADD_NEW_DISK,
--						 (long)&dinfo);
--			}
--		} else {
--			/* persistent */
--			for (i = 0; i <= MD_SB_DISKS; i++) {
--				dev = devices[i];
--				if (!dev)
--					break;
--				dinfo.major = MAJOR(dev);
--				dinfo.minor = MINOR(dev);
--				ksys_ioctl(fd, ADD_NEW_DISK, (long)&dinfo);
--			}
-+	} else {
-+		/* persistent */
-+		for (i = 0; i <= MD_SB_DISKS; i++) {
-+			dev = devices[i];
-+			if (!dev)
-+				break;
-+			dinfo.major = MAJOR(dev);
-+			dinfo.minor = MINOR(dev);
-+			ksys_ioctl(fd, ADD_NEW_DISK, (long)&dinfo);
- 		}
--		if (!err)
--			err = ksys_ioctl(fd, RUN_ARRAY, 0);
--		if (err)
--			printk(KERN_WARNING "md: starting md%d failed\n", minor);
--		ksys_close(fd);
+ 	if (f.file) {
+-		audit_file(f.file);
+-		err = chmod_common(&f.file->f_path, mode);
++		err = vfs_fchmod(f.file, mode);
+ 		fdput(f);
  	}
-+	if (!err)
-+		err = ksys_ioctl(fd, RUN_ARRAY, 0);
-+	if (err)
-+		printk(KERN_WARNING "md: starting md%d failed\n", minor);
-+	ksys_close(fd);
- }
+ 	return err;
+diff --git a/include/linux/fs.h b/include/linux/fs.h
+index 0ddd64ca0b45c0..635086726f2053 100644
+--- a/include/linux/fs.h
++++ b/include/linux/fs.h
+@@ -1745,6 +1745,7 @@ int vfs_mkobj(struct dentry *, umode_t,
+ 		void *);
  
- static int __init raid_setup(char *str)
-@@ -289,11 +284,15 @@ static void __init autodetect_raid(void)
+ int vfs_fchown(struct file *file, uid_t user, gid_t group);
++int vfs_fchmod(struct file *file, umode_t mode);
  
- void __init md_run_setup(void)
- {
-+	int ent;
-+
- 	create_dev("/dev/md0", MKDEV(MD_MAJOR, 0));
+ extern long vfs_ioctl(struct file *file, unsigned int cmd, unsigned long arg);
  
- 	if (raid_noautodetect)
- 		printk(KERN_INFO "md: Skipping autodetection of RAID arrays. (raid=autodetect will force)\n");
- 	else
- 		autodetect_raid();
--	md_setup_drive();
-+
-+	for (ent = 0; ent < md_setup_ents; ent++)
-+		md_setup_drive(&md_setup_args[ent]);
- }
 -- 
 2.27.0
 
