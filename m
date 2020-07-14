@@ -2,55 +2,51 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73A7CC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:52:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CD3EC433E6
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:52:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 518F722BEB
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:52:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 58DD722B3F
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:52:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594752724;
-	bh=I70nf84rWZrSCLQ2NFeB75EIdPZPnGNrLbNIid3wd1Q=;
+	s=default; t=1594752737;
+	bh=3tzB6AKeDEjrsEjBIXQkHHynvnQ1xdrC3D6f0+nPplM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oEHwt/fj9+jh6gEjnNSmLq1NZff/KxWus6PR1wVCOSS0AfHEfSRHFPArpLE5yH/pS
-	 Xw/QuEymlbmNtE3hYTtaF2lL8kZEcqMxKwY0G0/nyTCWu+S9QUSvCMQjWhfgPaAPBJ
-	 qNeM0PkltsrXhBlM4q+MORs97+K7BKSJfW2eJkew=
+	b=mf7JMYCxhUmnKeoUWCspDMqCbPiolZjkVr/H1qs0PZ+ZX7ruzfnfGbygSimJVTC7N
+	 tODxBaT3SZGtxGomHHtssEOyPWEO5qXivi6VW/q95/8trLV42E/xSFZNFeRh73V75V
+	 Tr57qiF9o6k0zNU1BHkhqjZOEdBX+jBPN2et4cpI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730460AbgGNSwC (ORCPT
+        id S1730497AbgGNSwQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 14:52:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48560 "EHLO mail.kernel.org"
+        Tue, 14 Jul 2020 14:52:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48814 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730442AbgGNSv7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 14:51:59 -0400
+        id S1730480AbgGNSwJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 14:52:09 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EDC0E22B3B;
-        Tue, 14 Jul 2020 18:51:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 66FFF22B42;
+        Tue, 14 Jul 2020 18:52:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594752718;
-        bh=I70nf84rWZrSCLQ2NFeB75EIdPZPnGNrLbNIid3wd1Q=;
+        s=default; t=1594752729;
+        bh=3tzB6AKeDEjrsEjBIXQkHHynvnQ1xdrC3D6f0+nPplM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=n/dkTnwpe40p6KDVBXvCr4DjHEBy+1swiDschdbHXB+bmqFarXBzOSg2CQlmV0SDB
-         nRNQjd7IosL3sgAWHQNwFf0AyZvb7O7RXzcWNpTCOXsaKWC6IvS0dqavyJ7B5pffn5
-         KWZGSs2GBi7pCm8/vcmD1h1zaDmMPH9hptx/NQaI=
+        b=SzL6TVBOlHK6sZqRlyUMnBdADoY5yiByQzyKLRYiP0Pk1Sh6LzP7TjVYwEiDLpOXf
+         mPIm/bH0qLETEl4maOuino1UFoYLOPxriQS5i5OkE1H3/k7caai0MxJ9znZRMmC30F
+         TNEmT1r7hVFZonVRHq2dUmcl+6Hwf34Pys9N1X6E=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jaroslav Kysela <perex@perex.cz>,
-        Kailang Yang <kailang@realtek.com>,
-        Vincent Bernat <vincent@bernat.ch>,
-        Even Brenden <evenbrenden@gmail.com>,
-        Benjamin Poirier <benjamin.poirier@gmail.com>,
-        Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 5.4 076/109] ALSA: hda/realtek - Fix Lenovo Thinkpad X1 Carbon 7th quirk subdevice id
-Date:   Tue, 14 Jul 2020 20:44:19 +0200
-Message-Id: <20200714184109.182219719@linuxfoundation.org>
+        stable@vger.kernel.org, Jessica Yu <jeyu@kernel.org>,
+        Kees Cook <keescook@chromium.org>
+Subject: [PATCH 5.4 088/109] module: Refactor section attr into bin attribute
+Date:   Tue, 14 Jul 2020 20:44:31 +0200
+Message-Id: <20200714184109.763764086@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200714184105.507384017@linuxfoundation.org>
 References: <20200714184105.507384017@linuxfoundation.org>
@@ -63,58 +59,131 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Benjamin Poirier <benjamin.poirier@gmail.com>
+From: Kees Cook <keescook@chromium.org>
 
-commit 9774dc218bb628974dcbc76412f970e9258e5f27 upstream.
+commit ed66f991bb19d94cae5d38f77de81f96aac7813f upstream.
 
-1)
-In snd_hda_pick_fixup(), quirks are first matched by PCI SSID and then, if
-there is no match, by codec SSID. The Lenovo "ThinkPad X1 Carbon 7th" has
-an audio chip with PCI SSID 0x2292 and codec SSID 0x2293[1]. Therefore, fix
-the quirk meant for that device to match on .subdevice == 0x2292.
+In order to gain access to the open file's f_cred for kallsym visibility
+permission checks, refactor the module section attributes to use the
+bin_attribute instead of attribute interface. Additionally removes the
+redundant "name" struct member.
 
-2)
-The "Thinkpad X1 Yoga 7th" does not exist. The companion product to the
-Carbon 7th is the Yoga 4th. That device has an audio chip with PCI SSID
-0x2292 and codec SSID 0x2292[2]. Given the behavior of
-snd_hda_pick_fixup(), it is not possible to have a separate quirk for the
-Yoga based on SSID. Therefore, merge the quirks meant for the Carbon and
-Yoga. This preserves the current behavior for the Yoga.
-
-[1] This is the case on my own machine and can also be checked here
-https://github.com/linuxhw/LsPCI/tree/master/Notebook/Lenovo/ThinkPad
-https://gist.github.com/hamidzr/dd81e429dc86f4327ded7a2030e7d7d9#gistcomment-3225701
-[2]
-https://github.com/linuxhw/LsPCI/tree/master/Convertible/Lenovo/ThinkPad
-https://gist.github.com/hamidzr/dd81e429dc86f4327ded7a2030e7d7d9#gistcomment-3176355
-
-Fixes: d2cd795c4ece ("ALSA: hda - fixup for the bass speaker on Lenovo Carbon X1 7th gen")
-Fixes: 54a6a7dc107d ("ALSA: hda/realtek - Add quirk for the bass speaker on Lenovo Yoga X1 7th gen")
-Cc: Jaroslav Kysela <perex@perex.cz>
-Cc: Kailang Yang <kailang@realtek.com>
-Tested-by: Vincent Bernat <vincent@bernat.ch>
-Tested-by: Even Brenden <evenbrenden@gmail.com>
-Signed-off-by: Benjamin Poirier <benjamin.poirier@gmail.com>
-Cc: <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20200703080005.8942-2-benjamin.poirier@gmail.com
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Cc: stable@vger.kernel.org
+Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Tested-by: Jessica Yu <jeyu@kernel.org>
+Acked-by: Jessica Yu <jeyu@kernel.org>
+Signed-off-by: Kees Cook <keescook@chromium.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/pci/hda/patch_realtek.c |    3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ kernel/module.c |   45 ++++++++++++++++++++++++---------------------
+ 1 file changed, 24 insertions(+), 21 deletions(-)
 
---- a/sound/pci/hda/patch_realtek.c
-+++ b/sound/pci/hda/patch_realtek.c
-@@ -7536,8 +7536,7 @@ static const struct snd_pci_quirk alc269
- 	SND_PCI_QUIRK(0x17aa, 0x224c, "Thinkpad", ALC298_FIXUP_TPT470_DOCK),
- 	SND_PCI_QUIRK(0x17aa, 0x224d, "Thinkpad", ALC298_FIXUP_TPT470_DOCK),
- 	SND_PCI_QUIRK(0x17aa, 0x225d, "Thinkpad T480", ALC269_FIXUP_LIMIT_INT_MIC_BOOST),
--	SND_PCI_QUIRK(0x17aa, 0x2292, "Thinkpad X1 Yoga 7th", ALC285_FIXUP_THINKPAD_HEADSET_JACK),
--	SND_PCI_QUIRK(0x17aa, 0x2293, "Thinkpad X1 Carbon 7th", ALC285_FIXUP_THINKPAD_HEADSET_JACK),
-+	SND_PCI_QUIRK(0x17aa, 0x2292, "Thinkpad X1 Carbon 7th", ALC285_FIXUP_THINKPAD_HEADSET_JACK),
- 	SND_PCI_QUIRK(0x17aa, 0x22be, "Thinkpad X1 Carbon 8th", ALC285_FIXUP_THINKPAD_HEADSET_JACK),
- 	SND_PCI_QUIRK(0x17aa, 0x30bb, "ThinkCentre AIO", ALC233_FIXUP_LENOVO_LINE2_MIC_HOTKEY),
- 	SND_PCI_QUIRK(0x17aa, 0x30e2, "ThinkCentre AIO", ALC233_FIXUP_LENOVO_LINE2_MIC_HOTKEY),
+--- a/kernel/module.c
++++ b/kernel/module.c
+@@ -1507,8 +1507,7 @@ static inline bool sect_empty(const Elf_
+ }
+ 
+ struct module_sect_attr {
+-	struct module_attribute mattr;
+-	char *name;
++	struct bin_attribute battr;
+ 	unsigned long address;
+ };
+ 
+@@ -1518,11 +1517,16 @@ struct module_sect_attrs {
+ 	struct module_sect_attr attrs[0];
+ };
+ 
+-static ssize_t module_sect_show(struct module_attribute *mattr,
+-				struct module_kobject *mk, char *buf)
++static ssize_t module_sect_read(struct file *file, struct kobject *kobj,
++				struct bin_attribute *battr,
++				char *buf, loff_t pos, size_t count)
+ {
+ 	struct module_sect_attr *sattr =
+-		container_of(mattr, struct module_sect_attr, mattr);
++		container_of(battr, struct module_sect_attr, battr);
++
++	if (pos != 0)
++		return -EINVAL;
++
+ 	return sprintf(buf, "0x%px\n", kptr_restrict < 2 ?
+ 		       (void *)sattr->address : NULL);
+ }
+@@ -1532,7 +1536,7 @@ static void free_sect_attrs(struct modul
+ 	unsigned int section;
+ 
+ 	for (section = 0; section < sect_attrs->nsections; section++)
+-		kfree(sect_attrs->attrs[section].name);
++		kfree(sect_attrs->attrs[section].battr.attr.name);
+ 	kfree(sect_attrs);
+ }
+ 
+@@ -1541,42 +1545,41 @@ static void add_sect_attrs(struct module
+ 	unsigned int nloaded = 0, i, size[2];
+ 	struct module_sect_attrs *sect_attrs;
+ 	struct module_sect_attr *sattr;
+-	struct attribute **gattr;
++	struct bin_attribute **gattr;
+ 
+ 	/* Count loaded sections and allocate structures */
+ 	for (i = 0; i < info->hdr->e_shnum; i++)
+ 		if (!sect_empty(&info->sechdrs[i]))
+ 			nloaded++;
+ 	size[0] = ALIGN(struct_size(sect_attrs, attrs, nloaded),
+-			sizeof(sect_attrs->grp.attrs[0]));
+-	size[1] = (nloaded + 1) * sizeof(sect_attrs->grp.attrs[0]);
++			sizeof(sect_attrs->grp.bin_attrs[0]));
++	size[1] = (nloaded + 1) * sizeof(sect_attrs->grp.bin_attrs[0]);
+ 	sect_attrs = kzalloc(size[0] + size[1], GFP_KERNEL);
+ 	if (sect_attrs == NULL)
+ 		return;
+ 
+ 	/* Setup section attributes. */
+ 	sect_attrs->grp.name = "sections";
+-	sect_attrs->grp.attrs = (void *)sect_attrs + size[0];
++	sect_attrs->grp.bin_attrs = (void *)sect_attrs + size[0];
+ 
+ 	sect_attrs->nsections = 0;
+ 	sattr = &sect_attrs->attrs[0];
+-	gattr = &sect_attrs->grp.attrs[0];
++	gattr = &sect_attrs->grp.bin_attrs[0];
+ 	for (i = 0; i < info->hdr->e_shnum; i++) {
+ 		Elf_Shdr *sec = &info->sechdrs[i];
+ 		if (sect_empty(sec))
+ 			continue;
++		sysfs_bin_attr_init(&sattr->battr);
+ 		sattr->address = sec->sh_addr;
+-		sattr->name = kstrdup(info->secstrings + sec->sh_name,
+-					GFP_KERNEL);
+-		if (sattr->name == NULL)
++		sattr->battr.attr.name =
++			kstrdup(info->secstrings + sec->sh_name, GFP_KERNEL);
++		if (sattr->battr.attr.name == NULL)
+ 			goto out;
+ 		sect_attrs->nsections++;
+-		sysfs_attr_init(&sattr->mattr.attr);
+-		sattr->mattr.show = module_sect_show;
+-		sattr->mattr.store = NULL;
+-		sattr->mattr.attr.name = sattr->name;
+-		sattr->mattr.attr.mode = S_IRUSR;
+-		*(gattr++) = &(sattr++)->mattr.attr;
++		sattr->battr.read = module_sect_read;
++		sattr->battr.size = 3 /* "0x", "\n" */ + (BITS_PER_LONG / 4);
++		sattr->battr.attr.mode = 0400;
++		*(gattr++) = &(sattr++)->battr;
+ 	}
+ 	*gattr = NULL;
+ 
+@@ -1666,7 +1669,7 @@ static void add_notes_attrs(struct modul
+ 			continue;
+ 		if (info->sechdrs[i].sh_type == SHT_NOTE) {
+ 			sysfs_bin_attr_init(nattr);
+-			nattr->attr.name = mod->sect_attrs->attrs[loaded].name;
++			nattr->attr.name = mod->sect_attrs->attrs[loaded].battr.attr.name;
+ 			nattr->attr.mode = S_IRUGO;
+ 			nattr->size = info->sechdrs[i].sh_size;
+ 			nattr->private = (void *) info->sechdrs[i].sh_addr;
 
 
