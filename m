@@ -7,24 +7,28 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A48D3C433EB
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 12:17:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EC4CC433E8
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 12:17:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8D48E22370
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 12:17:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 554852068F
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 12:17:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728978AbgGNMQ7 (ORCPT
+        id S1729006AbgGNMRB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 08:16:59 -0400
-Received: from 8bytes.org ([81.169.241.247]:53184 "EHLO theia.8bytes.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728168AbgGNMKo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 08:10:44 -0400
+        Tue, 14 Jul 2020 08:17:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60618 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728230AbgGNMKn (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 08:10:43 -0400
+Received: from theia.8bytes.org (8bytes.org [IPv6:2a01:238:4383:600:38bc:a715:4b6d:a889])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EF463C061755;
+        Tue, 14 Jul 2020 05:10:42 -0700 (PDT)
 Received: from cap.home.8bytes.org (p5b006776.dip0.t-ipconnect.de [91.0.103.118])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
         (No client certificate requested)
-        by theia.8bytes.org (Postfix) with ESMTPSA id 10C596B1;
-        Tue, 14 Jul 2020 14:10:42 +0200 (CEST)
+        by theia.8bytes.org (Postfix) with ESMTPSA id F394760E;
+        Tue, 14 Jul 2020 14:10:39 +0200 (CEST)
 From:   Joerg Roedel <joro@8bytes.org>
 To:     x86@kernel.org
 Cc:     Joerg Roedel <joro@8bytes.org>, Joerg Roedel <jroedel@suse.de>,
@@ -45,9 +49,9 @@ Cc:     Joerg Roedel <joro@8bytes.org>, Joerg Roedel <jroedel@suse.de>,
         Martin Radev <martin.b.radev@gmail.com>,
         linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
         virtualization@lists.linux-foundation.org
-Subject: [PATCH v4 17/75] x86/boot/compressed/64: Change add_identity_map() to take start and end
-Date:   Tue, 14 Jul 2020 14:08:19 +0200
-Message-Id: <20200714120917.11253-18-joro@8bytes.org>
+Subject: [PATCH v4 13/75] x86/boot/compressed/64: Rename kaslr_64.c to ident_map_64.c
+Date:   Tue, 14 Jul 2020 14:08:15 +0200
+Message-Id: <20200714120917.11253-14-joro@8bytes.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200714120917.11253-1-joro@8bytes.org>
 References: <20200714120917.11253-1-joro@8bytes.org>
@@ -60,68 +64,95 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Joerg Roedel <jroedel@suse.de>
 
-Changing the function to take start and end as parameters instead of
-start and size simplifies the callers, which don't need to calculate
-the size if they already have start and end.
+The file contains only code related to identity mapped page-tables.
+Rename the file and compile it always in.
 
 Signed-off-by: Joerg Roedel <jroedel@suse.de>
 ---
- arch/x86/boot/compressed/ident_map_64.c | 15 +++++----------
- 1 file changed, 5 insertions(+), 10 deletions(-)
+ arch/x86/boot/compressed/Makefile                       | 2 +-
+ arch/x86/boot/compressed/{kaslr_64.c => ident_map_64.c} | 9 +++++++++
+ arch/x86/boot/compressed/kaslr.c                        | 9 ---------
+ arch/x86/boot/compressed/misc.h                         | 8 ++++++++
+ 4 files changed, 18 insertions(+), 10 deletions(-)
+ rename arch/x86/boot/compressed/{kaslr_64.c => ident_map_64.c} (95%)
 
-diff --git a/arch/x86/boot/compressed/ident_map_64.c b/arch/x86/boot/compressed/ident_map_64.c
-index c63257bf8373..62e42c11a336 100644
---- a/arch/x86/boot/compressed/ident_map_64.c
+diff --git a/arch/x86/boot/compressed/Makefile b/arch/x86/boot/compressed/Makefile
+index 46928cb90d19..c825c95d13b9 100644
+--- a/arch/x86/boot/compressed/Makefile
++++ b/arch/x86/boot/compressed/Makefile
+@@ -83,7 +83,7 @@ vmlinux-objs-y := $(obj)/vmlinux.lds $(obj)/kernel_info.o $(obj)/head_$(BITS).o
+ vmlinux-objs-$(CONFIG_EARLY_PRINTK) += $(obj)/early_serial_console.o
+ vmlinux-objs-$(CONFIG_RANDOMIZE_BASE) += $(obj)/kaslr.o
+ ifdef CONFIG_X86_64
+-	vmlinux-objs-$(CONFIG_RANDOMIZE_BASE) += $(obj)/kaslr_64.o
++	vmlinux-objs-y += $(obj)/ident_map_64.o
+ 	vmlinux-objs-y += $(obj)/idt_64.o $(obj)/idt_handlers_64.o
+ 	vmlinux-objs-y += $(obj)/mem_encrypt.o
+ 	vmlinux-objs-y += $(obj)/pgtable_64.o
+diff --git a/arch/x86/boot/compressed/kaslr_64.c b/arch/x86/boot/compressed/ident_map_64.c
+similarity index 95%
+rename from arch/x86/boot/compressed/kaslr_64.c
+rename to arch/x86/boot/compressed/ident_map_64.c
+index f9c5c13d979b..d9932a133ac9 100644
+--- a/arch/x86/boot/compressed/kaslr_64.c
 +++ b/arch/x86/boot/compressed/ident_map_64.c
-@@ -89,10 +89,8 @@ static struct x86_mapping_info mapping_info;
- /*
-  * Adds the specified range to the identity mappings.
-  */
--static void add_identity_map(unsigned long start, unsigned long size)
-+static void add_identity_map(unsigned long start, unsigned long end)
- {
--	unsigned long end = start + size;
+@@ -29,6 +29,15 @@
+ #define __PAGE_OFFSET __PAGE_OFFSET_BASE
+ #include "../../mm/ident_map.c"
+ 
++#ifdef CONFIG_X86_5LEVEL
++unsigned int __pgtable_l5_enabled;
++unsigned int pgdir_shift = 39;
++unsigned int ptrs_per_p4d = 1;
++#endif
++
++/* Used by PAGE_KERN* macros: */
++pteval_t __default_kernel_pte_mask __read_mostly = ~0;
++
+ /* Used to track our page table allocation area. */
+ struct alloc_pgt_data {
+ 	unsigned char *pgt_buf;
+diff --git a/arch/x86/boot/compressed/kaslr.c b/arch/x86/boot/compressed/kaslr.c
+index d7408af55738..7c61a8c5b9cf 100644
+--- a/arch/x86/boot/compressed/kaslr.c
++++ b/arch/x86/boot/compressed/kaslr.c
+@@ -43,17 +43,8 @@
+ #define STATIC
+ #include <linux/decompress/mm.h>
+ 
+-#ifdef CONFIG_X86_5LEVEL
+-unsigned int __pgtable_l5_enabled;
+-unsigned int pgdir_shift __ro_after_init = 39;
+-unsigned int ptrs_per_p4d __ro_after_init = 1;
+-#endif
 -
- 	/* Align boundary to 2M. */
- 	start = round_down(start, PMD_SIZE);
- 	end = round_up(end, PMD_SIZE);
-@@ -107,8 +105,6 @@ static void add_identity_map(unsigned long start, unsigned long size)
- /* Locates and clears a region for a new top level page table. */
- void initialize_identity_maps(void)
- {
--	unsigned long start, size;
+ extern unsigned long get_cmd_line_ptr(void);
+ 
+-/* Used by PAGE_KERN* macros: */
+-pteval_t __default_kernel_pte_mask __read_mostly = ~0;
 -
- 	/* If running as an SEV guest, the encryption mask is required. */
- 	set_sev_encryption_mask();
+ /* Simplified build-specific string for starting entropy. */
+ static const char build_str[] = UTS_RELEASE " (" LINUX_COMPILE_BY "@"
+ 		LINUX_COMPILE_HOST ") (" LINUX_COMPILER ") " UTS_VERSION;
+diff --git a/arch/x86/boot/compressed/misc.h b/arch/x86/boot/compressed/misc.h
+index 062ae3ae6930..3a030a878d53 100644
+--- a/arch/x86/boot/compressed/misc.h
++++ b/arch/x86/boot/compressed/misc.h
+@@ -134,6 +134,14 @@ int count_immovable_mem_regions(void);
+ static inline int count_immovable_mem_regions(void) { return 0; }
+ #endif
  
-@@ -155,9 +151,7 @@ void initialize_identity_maps(void)
- 	 * New page-table is set up - map the kernel image and load it
- 	 * into cr3.
- 	 */
--	start = (unsigned long)_head;
--	size  = _end - _head;
--	add_identity_map(start, size);
-+	add_identity_map((unsigned long)_head, (unsigned long)_end);
- 	write_cr3(top_level_pgt);
- }
- 
-@@ -189,7 +183,8 @@ static void do_pf_error(const char *msg, unsigned long error_code,
- 
- void do_boot_page_fault(struct pt_regs *regs, unsigned long error_code)
- {
--	unsigned long address = native_read_cr2();
-+	unsigned long address = native_read_cr2() & PMD_MASK;
-+	unsigned long end = address + PMD_SIZE;
- 
- 	/*
- 	 * Check for unexpected error codes. Unexpected are:
-@@ -204,5 +199,5 @@ void do_boot_page_fault(struct pt_regs *regs, unsigned long error_code)
- 	 * Error code is sane - now identity map the 2M region around
- 	 * the faulting address.
- 	 */
--	add_identity_map(address & PMD_MASK, PMD_SIZE);
-+	add_identity_map(address, end);
- }
++/* ident_map_64.c */
++#ifdef CONFIG_X86_5LEVEL
++extern unsigned int __pgtable_l5_enabled, pgdir_shift, ptrs_per_p4d;
++#endif
++
++/* Used by PAGE_KERN* macros: */
++extern pteval_t __default_kernel_pte_mask;
++
+ /* idt_64.c */
+ extern gate_desc boot_idt[BOOT_IDT_ENTRIES];
+ extern struct desc_ptr boot_idt_desc;
 -- 
 2.27.0
 
