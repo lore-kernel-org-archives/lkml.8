@@ -2,109 +2,168 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BA6CC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 23:07:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BACEEC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 23:08:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0468A2065E
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 23:07:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="famrdTGR"
+	by mail.kernel.org (Postfix) with ESMTP id 96EEA2071B
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 23:08:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594768088;
+	bh=50NGcG7PTBsEuD+JIw7+r+6rrm7C47cIsguIyorgA+U=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=JCKXXToFCTXcbNBWeaG7IH7kIcqljHW5Af0o+CwFSD9UpT8O4ZchYshfMT65pWzWe
+	 e3oCLW/hlpqcD4uiFQZUARxH95Ub/hPrfASTp9LOUkmvF5gnz0xMCTldEVZRYxGw44
+	 QNCR5DFdSL1HpOB9QCpc7Vo/HdibIC7Tg7g/E7Zs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726974AbgGNXHC (ORCPT
+        id S1726859AbgGNXIG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 19:07:02 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:51899 "EHLO
-        mail.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725977AbgGNXHC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 19:07:02 -0400
-Received: from [IPv6:2601:646:8600:3281:209c:df9e:2b2f:146e] ([IPv6:2601:646:8600:3281:209c:df9e:2b2f:146e])
-        (authenticated bits=0)
-        by mail.zytor.com (8.15.2/8.15.2) with ESMTPSA id 06EN5sh73576441
-        (version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
-        Tue, 14 Jul 2020 16:05:57 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 06EN5sh73576441
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2020062301; t=1594767959;
-        bh=IBtiAYuFO05ncnsJ+6vQvNtaXVk0YRgUuOXae5QsK44=;
-        h=Date:In-Reply-To:References:Subject:To:CC:From:From;
-        b=famrdTGRZ4JlL+hHSH28ljPe5V/2PADQCw4ZKekTLgMhUsb616lwVgRuCLGURZB79
-         vDnLQ9F5oAcRplCeV1cm0HjClKEg5btO9njCS8BH12X5dnHN6rK8b8NAjJ4oAUH/Eg
-         yfGYCtutAfTVgo9Da+OsKa3gDYQimIP2DNfnr4tOh82l9FfgjTu/9AaXEoffIakBBW
-         ip9Sh26JlfiMtYTAhAbwjLnYwSBZ9qosssqTsw3R10LTmgG1Mmu5289tmsvBWy9pVz
-         lnL4WgWlV9SmReN+CZu5eytRBFNFiXXprU8oqyrNsfqynheuIL2/2MB4+gPLVJ+c0p
-         GtlOYIflxpDrg==
-Date:   Tue, 14 Jul 2020 16:05:46 -0700
-User-Agent: K-9 Mail for Android
-In-Reply-To: <80d91e21-6509-ff70-fb5a-5c042f6ea588@intel.com>
-References: <1594088183-7187-1-git-send-email-cathy.zhang@intel.com> <1594088183-7187-4-git-send-email-cathy.zhang@intel.com> <20200714030047.GA12592@linux.intel.com> <80d91e21-6509-ff70-fb5a-5c042f6ea588@intel.com>
+        Tue, 14 Jul 2020 19:08:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46600 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725955AbgGNXIG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 19:08:06 -0400
+Received: from localhost (mobile-166-175-191-139.mycingular.net [166.175.191.139])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 35F752065E;
+        Tue, 14 Jul 2020 23:08:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594768085;
+        bh=50NGcG7PTBsEuD+JIw7+r+6rrm7C47cIsguIyorgA+U=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=dCePTbovhLGakx5PakWD/j6cC7xbxIH7Q92dSlIlVISjtA1AQLWQoOY8gtUZ1Nh4P
+         ZlfggI5XhMpA+tkobe8q39WcLsvDGxuXP+mqMlhGmr/MC5V7+rqYr2IcrH3+2LX9L1
+         NkeBMGsK5iT7cIiPs9sGTrvnqVIQFE6g/5P5borE=
+Date:   Tue, 14 Jul 2020 18:08:03 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     sathyanarayanan.kuppuswamy@linux.intel.com
+Cc:     bhelgaas@google.com, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, ashok.raj@intel.com,
+        Jay Vosburgh <jay.vosburgh@canonical.com>
+Subject: Re: [PATCH v2 1/2] PCI/ERR: Fix fatal error recovery for non-hotplug
+ capable devices
+Message-ID: <20200714230803.GA92891@bjorn-Precision-5520>
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH v2 3/4] x86: Expose SERIALIZE for supported cpuid
-To:     "Zhang, Cathy" <cathy.zhang@intel.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>
-CC:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org, x86@kernel.org,
-        pbonzini@redhat.com, vkuznets@redhat.com, wanpengli@tencent.com,
-        jmattson@google.com, joro@8bytes.org, tglx@linutronix.de,
-        mingo@redhat.com, bp@alien8.de,
-        ricardo.neri-calderon@linux.intel.com, kyung.min.park@intel.com,
-        jpoimboe@redhat.com, gregkh@linuxfoundation.org,
-        ak@linux.intel.com, dave.hansen@intel.com, tony.luck@intel.com,
-        ravi.v.shankar@intel.com
-From:   hpa@zytor.com
-Message-ID: <3EFFDE4B-7844-4BB3-A824-487EE8359376@zytor.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ce417fbf81a8a46a89535f44b9224ee9fbb55a29.1591307288.git.sathyanarayanan.kuppuswamy@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On July 14, 2020 3:42:08 PM PDT, "Zhang, Cathy" <cathy=2Ezhang@intel=2Ecom>=
- wrote:
->On 7/14/2020 11:00 AM, Sean Christopherson wrote:
->> On Tue, Jul 07, 2020 at 10:16:22AM +0800, Cathy Zhang wrote:
->>> SERIALIZE instruction is supported by intel processors,
->>> like Sapphire Rapids=2E Expose it in KVM supported cpuid=2E
->> Providing at least a rough overview of the instruction, e=2Eg=2E its
->enumeration,
->> usage, fault rules, controls, etc=2E=2E=2E would be nice=2E  In isolati=
-on,
->the
->> changelog isn't remotely helpful in understanding the correctness of
->the
->> patch=2E
->Thanks Sean! Add it in the next version=2E
->>
->>> Signed-off-by: Cathy Zhang <cathy=2Ezhang@intel=2Ecom>
->>> ---
->>>   arch/x86/kvm/cpuid=2Ec | 3 ++-
->>>   1 file changed, 2 insertions(+), 1 deletion(-)
->>>
->>> diff --git a/arch/x86/kvm/cpuid=2Ec b/arch/x86/kvm/cpuid=2Ec
->>> index 8a294f9=2E=2Ee603aeb 100644
->>> --- a/arch/x86/kvm/cpuid=2Ec
->>> +++ b/arch/x86/kvm/cpuid=2Ec
->>> @@ -341,7 +341,8 @@ void kvm_set_cpu_caps(void)
->>>   	kvm_cpu_cap_mask(CPUID_7_EDX,
->>>   		F(AVX512_4VNNIW) | F(AVX512_4FMAPS) | F(SPEC_CTRL) |
->>>   		F(SPEC_CTRL_SSBD) | F(ARCH_CAPABILITIES) | F(INTEL_STIBP) |
->>> -		F(MD_CLEAR) | F(AVX512_VP2INTERSECT) | F(FSRM)
->>> +		F(MD_CLEAR) | F(AVX512_VP2INTERSECT) | F(FSRM) |
->>> +		F(SERIALIZE)
->>>   	);
->>>  =20
->>>   	/* TSC_ADJUST and ARCH_CAPABILITIES are emulated in software=2E */
->>> --=20
->>> 1=2E8=2E3=2E1
->>>
+On Thu, Jun 04, 2020 at 02:50:01PM -0700, sathyanarayanan.kuppuswamy@linux.intel.com wrote:
+> From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+> 
+> Fatal (DPC) error recovery is currently broken for non-hotplug
+> capable devices. With current implementation, after successful
+> fatal error recovery, non-hotplug capable device state won't be
+> restored properly. You can find related issues in following links.
+> 
+> https://lkml.org/lkml/2020/5/27/290
+> https://lore.kernel.org/linux-pci/12115.1588207324@famine/
+> https://lkml.org/lkml/2020/3/28/328
 
-At least that one is easy: SERIALIZE is architecturally a NOP, but with ha=
-rd serialization, like CPUID or IRET=2E
+Can you please convert these all to lore.kernel.org links?  lkml.org
+is not quite as useful or reliable.
 
---=20
-Sent from my Android device with K-9 Mail=2E Please excuse my brevity=2E
+> Current fatal error recovery implementation relies on hotplug handler
+> for detaching/re-enumerating the affected devices/drivers on DLLSC
+> state changes. 
+
+Can you remind us exactly how this relies on hotplug?  I know it
+*does*, but I can't remember how.  It would sure be nice if we could
+decouple this from pciehp somehow.
+
+> So when dealing with non-hotplug capable devices,
+> recovery code does not restore the state of the affected devices
+> correctly. Correct implementation should call report_slot_reset()
+> function after resetting the link to restore the state of the
+> device/driver.
+
+We don't restore the state correctly.  What does this look like to the
+user?  Does the device not work?
+
+> So use PCI_ERS_RESULT_NEED_RESET as error status for successful
+> reset_link() operation and use PCI_ERS_RESULT_DISCONNECT for failure
+> case. PCI_ERS_RESULT_NEED_RESET error state will ensure slot_reset()
+> is called after reset link operation which will also fix the above
+> mentioned issue.
+
+I think PCI_ERS_RESULT_NEED_RESET results in calling driver
+->slot_reset() callbacks, right?  Where does the state restoration
+happen?
+
+No, I guess it must be something in the hotplug driver that restores
+the state, because you said devices below hotplug-capable ports work
+correctly, but others don't.
+
+> [original patch is from jay.vosburgh@canonical.com]
+> [original patch link https://lore.kernel.org/linux-pci/12115.1588207324@famine/]
+> Fixes: 6d2c89441571 ("PCI/ERR: Update error status after reset_link()")
+> Signed-off-by: Jay Vosburgh <jay.vosburgh@canonical.com>
+> Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+> ---
+>  drivers/pci/pcie/err.c | 24 ++++++++++++++++++++++--
+>  1 file changed, 22 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/pci/pcie/err.c b/drivers/pci/pcie/err.c
+> index 14bb8f54723e..5fe8561c7185 100644
+> --- a/drivers/pci/pcie/err.c
+> +++ b/drivers/pci/pcie/err.c
+> @@ -165,8 +165,28 @@ pci_ers_result_t pcie_do_recovery(struct pci_dev *dev,
+>  	pci_dbg(dev, "broadcast error_detected message\n");
+>  	if (state == pci_channel_io_frozen) {
+>  		pci_walk_bus(bus, report_frozen_detected, &status);
+> -		status = reset_link(dev);
+> -		if (status != PCI_ERS_RESULT_RECOVERED) {
+> +		/*
+> +		 * After resetting the link using reset_link() call, the
+> +		 * possible value of error status is either
+> +		 * PCI_ERS_RESULT_DISCONNECT (failure case) or
+> +		 * PCI_ERS_RESULT_NEED_RESET (success case).
+> +		 * So ignore the return value of report_error_detected()
+> +		 * call for fatal errors. Instead use
+> +		 * PCI_ERS_RESULT_NEED_RESET as initial status value.
+> +		 *
+> +		 * Ignoring the status return value of report_error_detected()
+> +		 * call will also help in case of EDR mode based error
+> +		 * recovery. In EDR mode AER and DPC Capabilities are owned by
+> +		 * firmware and hence report_error_detected() call will possibly
+> +		 * return PCI_ERS_RESULT_NO_AER_DRIVER. So if we don't ignore
+> +		 * the return value of report_error_detected() then
+> +		 * pcie_do_recovery() would report incorrect status after
+> +		 * successful recovery. Ignoring PCI_ERS_RESULT_NO_AER_DRIVER
+> +		 * in non EDR case should not have any functional impact.
+
+I can't make sense out of the comment.  We already ignore the "status"
+from pci_walk_bus(bus, report_frozen_detected, &status).
+
+No idea what to make of the second paragraph.  If we make the commit
+log make sense, maybe some summary of that would be useful here.
+
+I think this code is equivalent and makes the patch much clearer:
+
+  status = reset_link(dev);
+  if (status == PCI_ERS_RESULT_RECOVERED) {
+    status = PCI_ERS_RESULT_NEED_RESET;
+  } else {
+    status = PCI_ERS_RESULT_DISCONNECT;
+    goto failed;
+  }
+
+> +		 */
+> +		status = PCI_ERS_RESULT_NEED_RESET;
+> +		if (reset_link(dev) != PCI_ERS_RESULT_RECOVERED) {
+> +			status = PCI_ERS_RESULT_DISCONNECT;
+>  			pci_warn(dev, "link reset failed\n");
+>  			goto failed;
+>  		}
+> -- 
+> 2.17.1
+> 
