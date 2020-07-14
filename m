@@ -2,86 +2,112 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B8D3C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 06:08:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C96FC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 06:09:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 233F920890
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 06:08:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB04420890
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 06:09:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726776AbgGNGIB (ORCPT
+        id S1726617AbgGNGJ3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 02:08:01 -0400
-Received: from mail.loongson.cn ([114.242.206.163]:57060 "EHLO loongson.cn"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725778AbgGNGIB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 02:08:01 -0400
-Received: from localhost.loongson.cn (unknown [10.20.42.122])
-        by mail.loongson.cn (Coremail) with SMTP id AQAAf9Dx7x+4Sw1fRD8EAA--.5360S2;
-        Tue, 14 Jul 2020 14:07:53 +0800 (CST)
-From:   Guoyun Sun <sunguoyun@loongson.cn>
-To:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Paul Burton <paulburton@kernel.org>
-Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Tiezhu Yang <yangtiezhu@loongson.cn>,
-        Sunguoyun <sunguoyun@loongson.cn>
-Subject: [PATCH] MIPS: fix vdso different address spaces
-Date:   Tue, 14 Jul 2020 14:07:47 +0800
-Message-Id: <1594706867-4426-1-git-send-email-sunguoyun@loongson.cn>
-X-Mailer: git-send-email 2.1.0
-X-CM-TRANSID: AQAAf9Dx7x+4Sw1fRD8EAA--.5360S2
-X-Coremail-Antispam: 1UD129KBjvdXoW7GFy3ZFW8Cr17AFW3GrW7Arb_yoWDtrc_KF
-        9FkwsYgr4rtFn7CF1DW34S9Fyjgw4UWry8ursxurnFg39YqrnrKrZF9F13Jw4xZrsF9393
-        Kry7uw1UA34xKjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-        9fnUUIcSsGvfJTRUUUbzxFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2IYs7xG
-        6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
-        A2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr0_
-        Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AKxVWxJr
-        0_GcWle2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
-        2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJV
-        W8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1l42xK82IYc2Ij64vI
-        r41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8Gjc
-        xK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7VAKI48JMIIF0xvE2Ix0
-        cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8V
-        AvwI8IcIk0rVWrZr1j6s0DMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7Cj
-        xVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7VUbrMaUUUUUU==
-X-CM-SenderInfo: 5vxqw3hr1x0qxorr0wxvrqhubq/
+        Tue, 14 Jul 2020 02:09:29 -0400
+Received: from mga11.intel.com ([192.55.52.93]:58184 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725306AbgGNGJ3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 02:09:29 -0400
+IronPort-SDR: 3Ulr9QZDjdEk+ZChUWy35VWBdbRzbF6Gz56s5WCq2il0w+GxLtg7QXbFLXynXoSQW1kE8Y/DY6
+ WCh71YSasViw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9681"; a="146832768"
+X-IronPort-AV: E=Sophos;i="5.75,350,1589266800"; 
+   d="scan'208";a="146832768"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jul 2020 23:09:29 -0700
+IronPort-SDR: jZ8IUhMWHZKyP8xm/ws5+WCpd0V2bb2/PzO8wZBd4diPNT5BNXwy9mnQ7zIBW9QejaRC1c0YG4
+ uj8I8Zcy1+fQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,350,1589266800"; 
+   d="scan'208";a="390386995"
+Received: from yilunxu-optiplex-7050.sh.intel.com (HELO localhost) ([10.239.159.141])
+  by fmsmga001.fm.intel.com with ESMTP; 13 Jul 2020 23:09:27 -0700
+Date:   Tue, 14 Jul 2020 14:05:20 +0800
+From:   Xu Yilun <yilun.xu@intel.com>
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     linux-kernel@vger.kernel.org, trix@redhat.com,
+        matthew.gerlach@linux.intel.com, russell.h.weight@intel.com,
+        lgoncalv@redhat.com, Wu Hao <hao.wu@intel.com>, yilun.xu@intel.com
+Subject: Re: [PATCH 1/2] mfd: intel-m10-bmc: add Max10 BMC chip support for
+  Intel FPGA PAC
+Message-ID: <20200714060520.GA27975@yilunxu-OptiPlex-7050>
+References: <1594614896-16606-1-git-send-email-yilun.xu@intel.com>
+ <1594614896-16606-2-git-send-email-yilun.xu@intel.com>
+ <20200713091708.GC3500@dell>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200713091708.GC3500@dell>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sunguoyun <sunguoyun@loongson.cn>
+On Mon, Jul 13, 2020 at 10:17:08AM +0100, Lee Jones wrote:
+> On Mon, 13 Jul 2020, Xu Yilun wrote:
+> 
+> > This patch implements the basic functions of the BMC chip for some Intel
+> > FPGA PCIe Acceleration Cards (PAC). The BMC is implemented using the
+> > intel max10 CPLD.
+> > 
+> > This BMC chip is connected to FPGA by a SPI bus. To provide reliable
+> > register access from FPGA, an Avalon Memory-Mapped (Avmm) transaction
+> > protocol over the SPI bus is used between host and slave.
+> > 
+> > This driver implements the basic register access with the regmap framework.
+> > The mfd cells array is empty now as a placeholder.
+> > 
+> > Signed-off-by: Xu Yilun <yilun.xu@intel.com>
+> > Signed-off-by: Wu Hao <hao.wu@intel.com>
+> > Signed-off-by: Matthew Gerlach <matthew.gerlach@linux.intel.com>
+> > Signed-off-by: Russ Weight <russell.h.weight@intel.com>
+> > Signed-off-by: Tom Rix <trix@redhat.com>
+> > ---
+> >  .../ABI/testing/sysfs-driver-intel-m10-bmc         |  15 +
+> >  drivers/mfd/Kconfig                                |  13 +
+> >  drivers/mfd/Makefile                               |   3 +
+> >  drivers/mfd/intel-m10-bmc-main.c                   | 176 ++++
+> 
+> >  drivers/mfd/intel-spi-avmm.c                       | 904 +++++++++++++++++++++
+> 
+> This does not belong in MFD.
+> 
+> Please consider moving it to drivers/spi.
 
-sparse report build warning as follows:
-arch/mips/vdso/vdso-n32-image.c:13:35:
-incorrect type in assignment (different address spaces) @@
-expected void *[usertype] vdso @@     got void [noderef] <asn:1> * @@
+OK, I could make the intel-spi-avmm.c as a separate module in other
+folder.
 
-Reported-by: kernel test robot <lkp@intel.com>
+Since it is an implementation of regmap, is it better we move it to
+drivers/base/regmap?
 
-Signed-off-by: Sunguoyun <sunguoyun@loongson.cn>
----
- arch/mips/vdso/genvdso.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/arch/mips/vdso/genvdso.c b/arch/mips/vdso/genvdso.c
-index be57b832bbe0..94f9538bc889 100644
---- a/arch/mips/vdso/genvdso.c
-+++ b/arch/mips/vdso/genvdso.c
-@@ -260,7 +260,7 @@ int main(int argc, char **argv)
- 	fprintf(out_file, "	if (vdso_image.size != new_size)\n");
- 	fprintf(out_file, "		return -EINVAL;\n");
- 	fprintf(out_file, "	current->mm->context.vdso =\n");
--	fprintf(out_file, "	(void __user *)(new_vma->vm_start);\n");
-+	fprintf(out_file, "	(void *)(new_vma->vm_start);\n");
- 	fprintf(out_file, "	return 0;\n");
- 	fprintf(out_file, "}\n");
- 
--- 
-2.17.1
-
+> 
+> >  drivers/mfd/intel-spi-avmm.h                       |  35 +
+> >  include/linux/mfd/intel-m10-bmc.h                  |  57 ++
+> >  7 files changed, 1203 insertions(+)
+> >  create mode 100644 Documentation/ABI/testing/sysfs-driver-intel-m10-bmc
+> >  create mode 100644 drivers/mfd/intel-m10-bmc-main.c
+> >  create mode 100644 drivers/mfd/intel-spi-avmm.c
+> >  create mode 100644 drivers/mfd/intel-spi-avmm.h
+> >  create mode 100644 include/linux/mfd/intel-m10-bmc.h
+> 
+> -- 
+> Lee Jones [李琼斯]
+> Senior Technical Lead - Developer Services
+> Linaro.org │ Open source software for Arm SoCs
+> Follow Linaro: Facebook | Twitter | Blog
