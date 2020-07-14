@@ -2,107 +2,61 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BC7DC433E2
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 20:22:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0057C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 20:24:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 58FEE206F5
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 20:22:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="P8ibvs29"
+	by mail.kernel.org (Postfix) with ESMTP id 83D68206F5
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 20:24:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726442AbgGNUWd (ORCPT
+        id S1726617AbgGNUYB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 16:22:33 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:52353 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725877AbgGNUWd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 16:22:33 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 4B5sPy5MrBz9sRK;
-        Wed, 15 Jul 2020 06:22:30 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1594758151;
-        bh=m6q0t5rQ4tSfOmMooV1EHEwUQAHvbpn5mjHL15F+qEw=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=P8ibvs29lkUkCz49co9V7WPBcFc/Fsw2a7NNDseIh5Z31qyH7nJnsa3KUz/4KcVHh
-         XKaV46mul9bSfayC/SuC0pMo/cIsabqX0Ssqr3ROzYPLYP/gMlHEo/br7IWo1BN1Zx
-         Yak5pqJreqTXZckh2FJxYNYTd1PgBpsFFWkz3fF4DRMinpALDJsfHr8XH3lXBQW+yq
-         kKRPfE4iZoOHBrWBEqnhLj6TPEtQxPK1BqaYzF9HV2JkfbETO8Q2mWN7b2p7gygoAO
-         /VjzTRywXnwW4StfhKJLmi/P4Khyhzd9ZEZO44JBhvzsww+HRXJO3vRdQjut/W7CDU
-         KBdoxrjfvqg8g==
-Date:   Wed, 15 Jul 2020 06:22:29 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Bixuan Cui <cuibixuan@huawei.com>
-Cc:     <akpm@linux-foundation.org>, <linux-mm@kvack.org>,
-        <linux-kernel@vger.kernel.org>, <linux-next@vger.kernel.org>,
-        <john.wanghui@huawei.com>, Roman Gushchin <guro@fb.com>
-Subject: Re: [PATCH v2] mm/percpu: fix 'defined but not used' warning
-Message-ID: <20200715062229.78591ff9@canb.auug.org.au>
-In-Reply-To: <6f1a8c76-d6d7-1a2c-8b0b-26a4a31f1a19@huawei.com>
-References: <20200714134101.80534-1-cuibixuan@huawei.com>
-        <20200714225311.7aeffffd@canb.auug.org.au>
-        <6f1a8c76-d6d7-1a2c-8b0b-26a4a31f1a19@huawei.com>
-MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/PLQTjSuhLZHKFG1.u30PGb4";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+        Tue, 14 Jul 2020 16:24:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53676 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725877AbgGNUYA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 16:24:00 -0400
+Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C0F71C061794;
+        Tue, 14 Jul 2020 13:24:00 -0700 (PDT)
+Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 1E96115E18275;
+        Tue, 14 Jul 2020 13:23:58 -0700 (PDT)
+Date:   Tue, 14 Jul 2020 13:23:55 -0700 (PDT)
+Message-Id: <20200714.132355.1352071851569568246.davem@davemloft.net>
+To:     dalon.westergreen@intel.com
+Cc:     kuba@kernel.org, mkubecek@suse.cz, ley.foon.tan@intel.com,
+        chin.liang.see@intel.com, dinh.nguyen@intel.com,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        joyce.ooi@intel.com, thor.thayer@linux.intel.com
+Subject: Re: [PATCH v4 09/10] net: eth: altera: add msgdma prefetcher
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <9a8ba2616f72fb44cdc3b45fabfb4d7bdf961fd0.camel@intel.com>
+References: <3bcb9020f0a3836f41036ddc3c8034b96e183197.camel@intel.com>
+        <20200714092903.38581b74@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+        <9a8ba2616f72fb44cdc3b45fabfb4d7bdf961fd0.camel@intel.com>
+X-Mailer: Mew version 6.8 on Emacs 26.3
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Tue, 14 Jul 2020 13:23:58 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/PLQTjSuhLZHKFG1.u30PGb4
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+From: "Westergreen, Dalon" <dalon.westergreen@intel.com>
+Date: Tue, 14 Jul 2020 18:51:15 +0000
 
-Hi Bixuan,
+> I don't think this is necessary, i think just having a module parameter
+> meets our needs.  I don't see a need for the value to change on a per
+> interface basis.  This was primarily used during testing / bringup.
 
-Thanks for this.
-
-On Tue, 14 Jul 2020 21:46:18 +0800 Bixuan Cui <cuibixuan@huawei.com> wrote:
->
-> Gcc report the following warning without CONFIG_MEMCG_KMEM:
->=20
-> mm/percpu-internal.h:145:29: warning: 'pcpu_chunk_type' defined
-> but not used [-Wunused-function]
->  static enum pcpu_chunk_type pcpu_chunk_type(struct pcpu_chunk *chunk)
->                              ^~~~~~~~~~~~~~~
->=20
-> Add 'inline' to pcpu_chunk_type(),pcpu_is_memcg_chunk() and
-> pcpu_chunk_list() to clear warning.
->=20
-> Fixes: 26c99879ef01 ("mm: memcg/percpu: account percpu memory to memory c=
-groups")
-> Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
-
-You really should not add SUB lines for others - in  this case a
-Suggested-by is more appropriate.
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/PLQTjSuhLZHKFG1.u30PGb4
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl8OFAUACgkQAVBC80lX
-0GwHggf/bNn1uN+FOLwHWa7pt12Gtfv8cZ13520mBvzbvw2hVaoiMGE1xgZuZ6WM
-9VYCtJXLpeFWsHJXOZKBI0HxIjJHkDR5rNZ3fnorDexzBJ0LvjTj/GUMjuUHv1vq
-owAraeXUIsJUDr2jpuRq60+5PUm80F3+YGF35694tl1uHxK8Do/CFM4i7bRz/aQ/
-ynfJNm/hFoR9CbBDISULAujfLnhKHgwR2z7fxgqqSM3Uj3hWZZyTI1GfS6oKVsJz
-XN7UEb95LUCQiCUhsZeU2g4IR/rkXokDwoqDghIEX63zeb5//XJstDKHV7x6Xpgd
-v49A+51vkMXaLbMI0h4C+gXZAETleA==
-=IdV1
------END PGP SIGNATURE-----
-
---Sig_/PLQTjSuhLZHKFG1.u30PGb4--
+Please no module parameters...
