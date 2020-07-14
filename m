@@ -2,171 +2,84 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E310C433E7
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 16:41:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 342A4C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 16:46:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7A9DD2256B
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 16:41:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="VHZOUHrV"
+	by mail.kernel.org (Postfix) with ESMTP id 0E25E2242C
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 16:46:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728860AbgGNQlz (ORCPT
+        id S1728156AbgGNQqP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 12:41:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46436 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728622AbgGNQlx (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 12:41:53 -0400
-Received: from mail-ua1-x943.google.com (mail-ua1-x943.google.com [IPv6:2607:f8b0:4864:20::943])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 50CD4C061794
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 09:41:53 -0700 (PDT)
-Received: by mail-ua1-x943.google.com with SMTP id p6so5895404uaq.12
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 09:41:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Ab7n3z5mmwJTrVdm4I/Qk+EgWW2BK5sF3S4Gs9LC2pU=;
-        b=VHZOUHrVRhNSrg3KXXZP+GAKYukKuZJqUkm5rQjUQ1ljdD3rJiZmHJ9JBEZxI/gQ78
-         LdVSaAcjIaGH2WHm3B6K1fnEsO+RpwuJIMwNVJZg0DwnljFT9vzkoAWDwNWe+zXSrjao
-         IpMj2M0CS/PRNwwFHxaGEGojTVKjZxRItENog=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Ab7n3z5mmwJTrVdm4I/Qk+EgWW2BK5sF3S4Gs9LC2pU=;
-        b=qE9akMcrPTCr6zhSDCBG1G47qWh7jrUnfYPMe8xpwEG1k+u9dCLQTATxuOGBFIlJIf
-         Q8J/fvgQDBOYx9A/DF1+9P56EltBVaPB384tdEjK6iYRJ+o+mDHTW+XI0gZ0LwwjHVyj
-         9mlMku6o5ZWwuH3QBAiTG/QM8oy1cRVLLWq/cdkSwJMh2AHZJTxb1JVwF3wTbPxHU56q
-         j9ieVuktHwL6EDhtq2MjrAtQTeNHJfCnmcn6D3LFf74WopJRJE0ToIgNFQpO8FNrTzGc
-         alZJ8yDMslcOcL6Yqmtn2FIIw0n1SAB3bMAMudK5kcIu1YH52PYPEiYMGNPnuQyiKGsy
-         JzOA==
-X-Gm-Message-State: AOAM533WLHJbNSkGniZ89O/rrSzYWm/MMGUVwr5C/kOSZfZLKq54a1YE
-        mlVGs8pg30/FzGHETe+qDJkmf7aWA6xjFVmDsALOTA==
-X-Google-Smtp-Source: ABdhPJyXVJ/fLtTJ5u5u/TYEyFxPBC2v7sTjbhSHP3mdXvobPVLvPRM7juHvP/wKZQeY+BIpC4A3UhZVueVzzEMcOHI=
-X-Received: by 2002:ab0:6f0a:: with SMTP id r10mr4847028uah.100.1594744912382;
- Tue, 14 Jul 2020 09:41:52 -0700 (PDT)
+        Tue, 14 Jul 2020 12:46:15 -0400
+Received: from mga02.intel.com ([134.134.136.20]:63426 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726062AbgGNQqO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 12:46:14 -0400
+IronPort-SDR: 9AspnhHnJKxdjgvKNxAcbIGKlh8Lj+n1Sbv4yQcJZ6L4JBinBPzZAA2xbjlZG8jP/PJSfbyv4f
+ YRvw2kX+PD/g==
+X-IronPort-AV: E=McAfee;i="6000,8403,9681"; a="137096649"
+X-IronPort-AV: E=Sophos;i="5.75,352,1589266800"; 
+   d="scan'208";a="137096649"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jul 2020 09:46:14 -0700
+IronPort-SDR: 0zIglL1rGjfXbMiyccoWIdYK7nyGnLsYlddSeTXk2lQJMEzThC5kWDM/9+ts/3x4JBnBUVHkha
+ DaQY8d300C2w==
+X-IronPort-AV: E=Sophos;i="5.75,352,1589266800"; 
+   d="scan'208";a="316437149"
+Received: from agluck-desk2.sc.intel.com (HELO agluck-desk2.amr.corp.intel.com) ([10.3.52.68])
+  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jul 2020 09:46:13 -0700
+Date:   Tue, 14 Jul 2020 09:46:12 -0700
+From:   "Luck, Tony" <tony.luck@intel.com>
+To:     Chris Down <chris@chrisdown.name>
+Cc:     Borislav Petkov <bp@alien8.de>, linux-kernel@vger.kernel.org,
+        sean.j.christopherson@intel.com, torvalds@linux-foundation.org,
+        x86@kernel.org, kernel-team@fb.com,
+        Matthew Garrett <matthewgarrett@google.com>
+Subject: Re: [PATCH -v2.1] x86/msr: Filter MSR writes
+Message-ID: <20200714164612.GA28474@agluck-desk2.amr.corp.intel.com>
+References: <20200615063837.GA14668@zn.tnic>
+ <20200714121955.GA2080@chrisdown.name>
+ <20200714154728.GA3101@nazgul.tnic>
+ <20200714160448.GC2080@chrisdown.name>
 MIME-Version: 1.0
-References: <20200706140715.v2.1.I51f5a0be89595b73c4dc17e6cf4cc6f26dc7f2fc@changeid>
- <20200714052941.GB3874@shao2-debian>
-In-Reply-To: <20200714052941.GB3874@shao2-debian>
-From:   Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
-Date:   Tue, 14 Jul 2020 09:41:41 -0700
-Message-ID: <CANFp7mURm5QKe8afuCHjFt89bgJtOyUkj_MJKdfzVto0i7EpZw@mail.gmail.com>
-Subject: Re: [power] 47b918cf9a: kmsg.power_supply_ADP1:Error_in_uevent_for_wakeup_sysfs_add
-To:     kernel test robot <rong.a.chen@intel.com>
-Cc:     Linux PM <linux-pm@vger.kernel.org>,
-        Bluez mailing list <linux-bluetooth@vger.kernel.org>,
-        ChromeOS Bluetooth Upstreaming 
-        <chromeos-bluetooth-upstreaming@chromium.org>,
-        Rafael Wysocki <rafael.j.wysocki@intel.com>,
-        Stephen Boyd <swboyd@chromium.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Len Brown <len.brown@intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Pavel Machek <pavel@ucw.cz>, lkp@lists.01.org,
-        yu.c.chen@intel.com, "Zhang, Rui" <rui.zhang@intel.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200714160448.GC2080@chrisdown.name>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This version of the patch was not merged and the message above doesn't
-exist in the merged patch:
-https://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git/commit/?h=bleeding-edge&id=9a3e9e6ff6d7f6b8ce7903893962d50adcbe82d2
+On Tue, Jul 14, 2020 at 05:04:48PM +0100, Chris Down wrote:
+> Borislav Petkov writes:
+> > On Tue, Jul 14, 2020 at 01:19:55PM +0100, Chris Down wrote:
+> > > That is, even with pr_err_ratelimited, we still end up logging on basically
+> > > every single write, even though it's from the same TGID writing to the same
+> > > MSRs, and end up becoming >80% of kmsg.
+> > > 
+> > > Of course, one can boot with `allow_writes=1` to avoid these messages at
+> > 
+> > Yes, use that.
+> > 
+> > From a quick scan over that "tool" you pointed me at, it pokes at some
+> > MSRs from userspace which the kernel *also* writes to and this is
+> > exactly what should not be allowed.
+> 
+> I don't think we're in disagreement about that. My concern is strictly about
+> the amount of spam caused for some of those existing use cases during the
+> transition phase. People should know that their tools would break, but there
+> shouldn't be so many messages generated that it inevitably pushes other
+> useful information out of the kmsg buffer.
 
-The err log was emitted during boot as well and is innocuous since the
-power_supply initializes fully in the next line:
-kern  :err   : [    5.918034] power_supply ADP1: Error in uevent for
-wakeup_sysfs_add: -11
-kern  :info  : [    5.918300] ACPI: AC Adapter [ADP1] (on-line)
+Maybe we just need smarter filtering of warnings.  It doesn't
+seem at all useful to warn for the same MSR 1000's of times.
+Maybe keep a count of warnings for each MSR and just stop
+all reports when reach a threshold?
 
-Abhishek
-
-On Mon, Jul 13, 2020 at 10:30 PM kernel test robot
-<rong.a.chen@intel.com> wrote:
->
-> Greeting,
->
-> FYI, we noticed the following commit (built with gcc-9):
->
-> commit: 47b918cf9a1d2b6e36706fd2be2b91e65f490146 ("[PATCH v2 1/1] power: Emit changed uevent on wakeup_sysfs_add/remove")
-> url: https://github.com/0day-ci/linux/commits/Abhishek-Pandit-Subedi/power-Emit-changed-uevent-on-wakeup_sysfs_add-remove/20200707-050912
-> base: https://git.kernel.org/cgit/linux/kernel/git/rafael/linux-pm.git linux-next
->
-> in testcase: suspend-stress
-> with following parameters:
->
->         mode: freeze
->         iterations: 10
->
->
->
-> on test machine: 4 threads Ivy Bridge with 4G memory
->
-> caused below changes (please refer to attached dmesg/kmsg for entire log/backtrace):
->
->
->
->
-> If you fix the issue, kindly add following tag
-> Reported-by: kernel test robot <rong.a.chen@intel.com>
->
->
->
-> kern  :debug : [    5.917685] calling  acpi_ac_init+0x0/0xa3 @ 1
-> kern  :err   : [    5.918034] power_supply ADP1: Error in uevent for wakeup_sysfs_add: -11
-> kern  :info  : [    5.918300] ACPI: AC Adapter [ADP1] (on-line)
-> kern  :debug : [    5.918500] initcall acpi_ac_init+0x0/0xa3 returned 0 after 609 usecs
-> kern  :debug : [    5.918725] calling  acpi_button_driver_init+0x0/0x53 @ 1
-> kern  :info  : [    5.919006] input: Power Button as /devices/LNXSYSTM:00/LNXSYBUS:00/PNP0C0C:00/input/input0
-> kern  :info  : [    5.919367] ACPI: Power Button [PWRB]
-> kern  :info  : [    5.919580] input: Lid Switch as /devices/LNXSYSTM:00/LNXSYBUS:00/PNP0C0D:00/input/input1
-> kern  :info  : [    5.919927] ACPI: Lid Switch [LID]
-> kern  :info  : [    5.920131] input: Power Button as /devices/LNXSYSTM:00/LNXPWRBN:00/input/input2
-> kern  :info  : [    5.920455] ACPI: Power Button [PWRF]
-> kern  :debug : [    5.920644] initcall acpi_button_driver_init+0x0/0x53 returned 0 after 1669 usecs
-> kern  :debug : [    5.920944] calling  acpi_fan_driver_init+0x0/0x13 @ 1
-> kern  :debug : [    5.921155] initcall acpi_fan_driver_init+0x0/0x13 returned 0 after 11 usecs
-> kern  :debug : [    5.921388] calling  acpi_processor_driver_init+0x0/0xb7 @ 1
-> kern  :debug : [    5.921905] initcall acpi_processor_driver_init+0x0/0xb7 returned 0 after 299 usecs
-> kern  :debug : [    5.922203] calling  acpi_thermal_init+0x0/0x82 @ 1
-> kern  :info  : [    5.922755] thermal LNXTHERM:00: registered as thermal_zone0
-> kern  :info  : [    5.922977] ACPI: Thermal Zone [TZ01] (16 C)
-> kern  :debug : [    5.923177] initcall acpi_thermal_init+0x0/0x82 returned 0 after 759 usecs
-> kern  :debug : [    5.923409] calling  acpi_battery_init+0x0/0x39 @ 1
-> kern  :debug : [    5.923606] initcall acpi_battery_init+0x0/0x39 returned 0 after 4 usecs
-> kern  :debug : [    5.923841] calling  acpi_hed_driver_init+0x0/0x11 @ 1
-> kern  :debug : [    5.924075] initcall acpi_hed_driver_init+0x0/0x11 returned 0 after 32 usecs
-> kern  :info  : [    5.924178] battery: ACPI: Battery Slot [BAT1] (battery present)
-> kern  :debug : [    5.924309] calling  bgrt_init+0x0/0xbe @ 1
-> kern  :debug : [    5.924312] initcall bgrt_init+0x0/0xbe returned -19 after 0 usecs
-> kern  :debug : [    5.924928] calling  erst_init+0x0/0x309 @ 1
-> kern  :debug : [    5.925110] initcall erst_init+0x0/0x309 returned 0 after 0 usecs
-> kern  :debug : [    5.925325] calling  ghes_init+0x0/0xe5 @ 1
-> kern  :debug : [    5.925504] initcall ghes_init+0x0/0xe5 returned -19 after 0 usecs
-> kern  :debug : [    5.925721] calling  erst_dbg_init+0x0/0x2c @ 1
-> kern  :info  : [    5.925912] ERST DBG: ERST support is disabled.
->
->
->
-> To reproduce:
->
->         git clone https://github.com/intel/lkp-tests.git
->         cd lkp-tests
->         bin/lkp install job.yaml  # job file is attached in this email
->         bin/lkp run     job.yaml
->
->
->
-> Thanks,
-> Rong Chen
->
+-Tony
