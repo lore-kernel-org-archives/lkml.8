@@ -2,129 +2,156 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB04DC433E4
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 13:10:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE776C433E7
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 13:15:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A609C21D79
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 13:10:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BA65F224B1
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 13:15:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GGvCVe9f"
+	dkim=pass (1024-bit key) header.d=cumulusnetworks.com header.i=@cumulusnetworks.com header.b="TqSa14w7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728335AbgGNNKq (ORCPT
+        id S1728605AbgGNNPv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 09:10:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41850 "EHLO
+        Tue, 14 Jul 2020 09:15:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42672 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726354AbgGNNKp (ORCPT
+        with ESMTP id S1727046AbgGNNPu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 09:10:45 -0400
-Received: from mail-io1-xd44.google.com (mail-io1-xd44.google.com [IPv6:2607:f8b0:4864:20::d44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 73B89C061755;
-        Tue, 14 Jul 2020 06:10:45 -0700 (PDT)
-Received: by mail-io1-xd44.google.com with SMTP id d18so17203604ion.0;
-        Tue, 14 Jul 2020 06:10:45 -0700 (PDT)
+        Tue, 14 Jul 2020 09:15:50 -0400
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1731DC061794
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 06:15:50 -0700 (PDT)
+Received: by mail-wr1-x441.google.com with SMTP id k6so21519987wrn.3
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 06:15:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=lv9gVEtOCHmdCNCXNh+kZOMT5/e2RCfYMVdBCxYu8hY=;
-        b=GGvCVe9fQU1dq95jD2QsY9q8iP9qkPLUMm8oPCRjJ7Anpl4RZFDQbyaFWBWnDnpLZ4
-         akCnj2zM5URBnRzaIYx3QViomArLjo2TYpYkKUdo/rc9Ev91ZRKMH/8XeuHIazcC6c9X
-         X5e55Z39z5v/S/1QJJmyS5e4BULhf2dcpWbN4Rz5aiw1fkHUaQuYK//DOOIuRhg/YMoN
-         n2xr6Y/ChWx51FMUP57QmncbKCORyhewPR3gy1lBR0mf/Hn9kfig/IhmlXPSlGpiPi80
-         ugnw+VVG06u4vmLe0YcKVW76Sjjn51ULmDMzk5J0lyt30N7aqkZelE3x0JW4tdCaw606
-         ps1Q==
+        d=cumulusnetworks.com; s=google;
+        h=subject:to:references:from:message-id:date:user-agent:mime-version
+         :in-reply-to:content-language:content-transfer-encoding;
+        bh=FxJqrHhg0G0ncHUrHEuIRffmrZYQGuHLCnGks1j1bQM=;
+        b=TqSa14w7dWnNYezldSLiuWoHhgo2zcjASexkPXEh+2iGpB2nAcR54Vdz6cuj8Oz9B0
+         atzp+jjuGO56jmDKvCcRCNrZPIRHALoy+bV3oqGvUCCyB/SO9HPvF1qSUL8iyjwiM2ZN
+         r950qHEUsa//TUKVU5SBVVDe1V/hqHRyghU+A=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=lv9gVEtOCHmdCNCXNh+kZOMT5/e2RCfYMVdBCxYu8hY=;
-        b=MwxVaudSE/X1IYIAZJFlTYzsvAapWoaQW9dkpQ0+T4jgQI5kBd2tEAD2cFp8FeHU03
-         DiqoHp9BIAqsxjvb88VIwGsTKtjLXfEAjXORSUPMdJzuOvBUAroIRDohIXx6XEpZ9MOw
-         zKnSg/axMc+O9tLxi08LRuyEYk8mBcxo7z0OCHOhdNV0C+lqFLoX5/ZDs5R6kRqLSidj
-         f/YcpblgVDNkrc3iaNtfsmq3PNIuu/ITrvgGyapuU3YCzAtOjeM8JQd0AAh0AP4freYb
-         N1Yu7TKQFI2a2hdgd1UNXfdTZuSF3fgJOxNzav44cz1pXUs6pZZW33QBw4QpdE0qFTcJ
-         QhTw==
-X-Gm-Message-State: AOAM5303SgIuUS2BDRhPz9hGEYCiZuEB7MuMFNaCohRnrk6VNlC8rBQn
-        7SgcrTelWNWNsXFaRrkT5073ZksYPrdeeCi77E0V4lPF
-X-Google-Smtp-Source: ABdhPJzXMwozFQAgRFaE2pFvKBmp5FCG/BtI9uXL/90zZu+JnA5e5/U/t3TL0CPy1LXwB+bUTV5aM8NrEjKdJO05MgI=
-X-Received: by 2002:a6b:b483:: with SMTP id d125mr4887880iof.186.1594732244839;
- Tue, 14 Jul 2020 06:10:44 -0700 (PDT)
+        h=x-gm-message-state:subject:to:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=FxJqrHhg0G0ncHUrHEuIRffmrZYQGuHLCnGks1j1bQM=;
+        b=Squvk3Lzk1mPHeG7NaRTqO7+qOnfo0CYWx8qW6s6gS/fSz/1MYVEt3Kgt1YzEZwnQS
+         d0MVgsWlV2FxyuRpOsnmaJxLCT/e8XM1P9Zp4A3S9W+e8M2l/tJ5zjVbXUEccjjiHus/
+         xp2wYDPL21IAHLCLx8i1qiFuDn2kr60YlHEOHvwA1WLuQsq46iM1OnxDV5u5eSM42NJO
+         fsUcHaUHafQx808s4KaHnTealbw9ITtsGUhj+JZP4mD9dXlnPu6VCbh2Jw9EMDst/qEW
+         7q1TmtFKfjKgSi4Ma5YHPlZU1578zfPf4RwKORp5zh5VpQpPPkIPD78SF+CDpj4QvxP6
+         VYkQ==
+X-Gm-Message-State: AOAM531KCCWNsk72F469zDe6dmnJwRhwBYsjpY1lccXEin4719ucZH+j
+        YTmvg6gwC/IGZ9K+w1PzMEdvRQ==
+X-Google-Smtp-Source: ABdhPJxAejX7e0cIDmVXbcaejKJR9o77DDTzyzXJOg3PPlA6j89HyUpCZ2ISzb4W6Wh0uyKIKLY8xw==
+X-Received: by 2002:a5d:62d1:: with SMTP id o17mr5291848wrv.162.1594732548828;
+        Tue, 14 Jul 2020 06:15:48 -0700 (PDT)
+Received: from [192.168.0.109] (84-238-136-197.ip.btc-net.bg. [84.238.136.197])
+        by smtp.gmail.com with ESMTPSA id e17sm27788229wrr.88.2020.07.14.06.15.47
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 14 Jul 2020 06:15:48 -0700 (PDT)
+Subject: Re: [PATCH net-next v4 05/12] bridge: mrp: Rename br_mrp_port_open to
+ br_mrp_ring_port_open
+To:     Horatiu Vultur <horatiu.vultur@microchip.com>,
+        roopa@cumulusnetworks.com, davem@davemloft.net, kuba@kernel.org,
+        jiri@resnulli.us, ivecera@redhat.com, andrew@lunn.ch,
+        UNGLinuxDriver@microchip.com, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, bridge@lists.linux-foundation.org
+References: <20200714073458.1939574-1-horatiu.vultur@microchip.com>
+ <20200714073458.1939574-6-horatiu.vultur@microchip.com>
+From:   Nikolay Aleksandrov <nikolay@cumulusnetworks.com>
+Message-ID: <622d77e3-6ea0-9a5e-2745-4231dd40b1e8@cumulusnetworks.com>
+Date:   Tue, 14 Jul 2020 16:15:47 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-References: <20200714025417.A25EB95C0339@us180.sjc.aristanetworks.com>
-In-Reply-To: <20200714025417.A25EB95C0339@us180.sjc.aristanetworks.com>
-From:   Amir Goldstein <amir73il@gmail.com>
-Date:   Tue, 14 Jul 2020 16:10:33 +0300
-Message-ID: <CAOQ4uxjLaGyOUd5GOV8oHwBY=nGGtgk4=5bRxmHTr5VsocrhiA@mail.gmail.com>
-Subject: Re: soft lockup in fanotify_read
-To:     Francesco Ruggeri <fruggeri@arista.com>
-Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Jan Kara <jack@suse.cz>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200714073458.1939574-6-horatiu.vultur@microchip.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 14, 2020 at 5:54 AM Francesco Ruggeri <fruggeri@arista.com> wrote:
->
-> We are getting this soft lockup in fanotify_read.
-> The reason is that this code does not seem to scale to cases where there
-> are big bursts of events generated by fanotify_handle_event.
-> fanotify_read acquires group->notification_lock for each event.
-> fanotify_handle_event uses the lock to add one event, which also involves
-> fanotify_merge, which scans the whole list trying to find an event to
-> merge the new one with.
+On 14/07/2020 10:34, Horatiu Vultur wrote:
+> This patch renames the function br_mrp_port_open to
+> br_mrp_ring_port_open. In this way is more clear that a ring port lost
+> the continuity because there will be also a br_mrp_in_port_open.
+> 
+> Signed-off-by: Horatiu Vultur <horatiu.vultur@microchip.com>
+> ---
+>  net/bridge/br_mrp.c         | 6 +++---
+>  net/bridge/br_mrp_netlink.c | 2 +-
+>  net/bridge/br_private_mrp.h | 2 +-
+>  3 files changed, 5 insertions(+), 5 deletions(-)
+> 
 
-Yes, that is a terribly inefficient merge algorithm.
-If it helps I am carrying a quick brown paper bag fix for this issue in my tree:
+Acked-by: Nikolay Aleksandrov <nikolay@cumulusnetworks.com>
 
-@@ -65,6 +74,8 @@ static int fanotify_merge(struct list_head *list,
-struct fsnotify_event *event)
- {
-        struct fsnotify_event *test_event;
-        struct fanotify_event *new;
-+       int limit = 128;
-+       int i = 0;
+> diff --git a/net/bridge/br_mrp.c b/net/bridge/br_mrp.c
+> index 90592af9db619..fe7cf1446b58a 100644
+> --- a/net/bridge/br_mrp.c
+> +++ b/net/bridge/br_mrp.c
+> @@ -213,7 +213,7 @@ static void br_mrp_test_work_expired(struct work_struct *work)
+>  		}
+>  
+>  		if (notify_open && !mrp->ring_role_offloaded)
+> -			br_mrp_port_open(p->dev, true);
+> +			br_mrp_ring_port_open(p->dev, true);
+>  	}
+>  
+>  	p = rcu_dereference(mrp->s_port);
+> @@ -229,7 +229,7 @@ static void br_mrp_test_work_expired(struct work_struct *work)
+>  		}
+>  
+>  		if (notify_open && !mrp->ring_role_offloaded)
+> -			br_mrp_port_open(p->dev, true);
+> +			br_mrp_ring_port_open(p->dev, true);
+>  	}
+>  
+>  out:
+> @@ -537,7 +537,7 @@ static void br_mrp_mrm_process(struct br_mrp *mrp, struct net_bridge_port *port,
+>  	 * not closed
+>  	 */
+>  	if (mrp->ring_state != BR_MRP_RING_STATE_CLOSED)
+> -		br_mrp_port_open(port->dev, false);
+> +		br_mrp_ring_port_open(port->dev, false);
+>  }
+>  
+>  /* Determin if the test hdr has a better priority than the node */
+> diff --git a/net/bridge/br_mrp_netlink.c b/net/bridge/br_mrp_netlink.c
+> index c4f5c356811f3..acce300c0cc29 100644
+> --- a/net/bridge/br_mrp_netlink.c
+> +++ b/net/bridge/br_mrp_netlink.c
+> @@ -368,7 +368,7 @@ int br_mrp_fill_info(struct sk_buff *skb, struct net_bridge *br)
+>  	return -EMSGSIZE;
+>  }
+>  
+> -int br_mrp_port_open(struct net_device *dev, u8 loc)
+> +int br_mrp_ring_port_open(struct net_device *dev, u8 loc)
+>  {
+>  	struct net_bridge_port *p;
+>  	int err = 0;
+> diff --git a/net/bridge/br_private_mrp.h b/net/bridge/br_private_mrp.h
+> index 8841ba847fb29..e93c8f9d4df58 100644
+> --- a/net/bridge/br_private_mrp.h
+> +++ b/net/bridge/br_private_mrp.h
+> @@ -74,6 +74,6 @@ int br_mrp_port_switchdev_set_role(struct net_bridge_port *p,
+>  				   enum br_mrp_port_role_type role);
+>  
+>  /* br_mrp_netlink.c  */
+> -int br_mrp_port_open(struct net_device *dev, u8 loc);
+> +int br_mrp_ring_port_open(struct net_device *dev, u8 loc);
+>  
+>  #endif /* _BR_PRIVATE_MRP_H */
+> 
 
-        pr_debug("%s: list=%p event=%p\n", __func__, list, event);
-        new = FANOTIFY_E(event);
-
-@@ -78,6 +89,9 @@ static int fanotify_merge(struct list_head *list,
-struct fsnotify_event *event)
-                return 0;
-
-        list_for_each_entry_reverse(test_event, list, list) {
-+               /* Event merges are expensive so should be limited */
-+               if (++i > limit)
-+                       break;
-                if (should_merge(test_event, event)) {
-
-It's somewhere down my TODO list to fix this properly with a hash table.
-
-> In our case fanotify_read is invoked with a buffer big enough for 200
-> events, and what happens is that every time fanotify_read dequeues an
-> event and releases the lock, fanotify_handle_event adds several more,
-> scanning a longer and longer list. This causes fanotify_read to wait
-> longer and longer for the lock, and the soft lockup happens before
-> fanotify_read can reach 200 events.
-> Is it intentional for fanotify_read to acquire the lock for each event,
-> rather than batching together a user buffer worth of events?
-
-I think it is meant to allow for multiple reader threads to read events
-with fairness, but not sure.
-
-Even if it was fine to read a batch of events on every spinlock acquire
-making the code in the fanotify_read() loop behave well in case of
-an error in an event after reading a bunch of good events looks challenging,
-but I didn't try. Anyway, the root cause of the issue seems to be the
-inefficient merge and not the spinlock taken per one event read.
-
-Thanks,
-Amir.
