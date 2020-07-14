@@ -2,385 +2,545 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09C57C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 04:52:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F32F5C433E4
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 04:53:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C79712193E
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 04:52:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ozlabs-ru.20150623.gappssmtp.com header.i=@ozlabs-ru.20150623.gappssmtp.com header.b="QqSsUUqP"
+	by mail.kernel.org (Postfix) with ESMTP id D06852193E
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 04:53:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725890AbgGNEwT (ORCPT
+        id S1725952AbgGNEx6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 00:52:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49602 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725306AbgGNEwR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 00:52:17 -0400
-Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BFA6FC061755
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 21:52:17 -0700 (PDT)
-Received: by mail-pf1-x441.google.com with SMTP id x72so7050803pfc.6
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 21:52:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ozlabs-ru.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=wL6p9uiSK8+WCAZmqiXZp3eTaRiKzRKo7/r/xXG5Ihk=;
-        b=QqSsUUqPN5AsmAJ71rJ21Uu5ONnQDGOEc1xrQ85JJjVo7nN0iH3yUTrf+6oLwT1jZw
-         XCbBur2174doqajG9dj1pb7WZ6SKlGpWr+978dOPDsTEGT0n350v5F5k53TCL8w4I0CN
-         c/m1Sl40y6ONmzvQUzz8jZNXblp+NVXIYyl389PbPgbY0NnnbIpY8R3VYe5oLHIc8+Ek
-         wGb/9SL4SV+fWrwm0gTC2+kDaWRRKbjyNC5cr8+oo8vyKC4yo/zJNukqK1/KrePi2u0n
-         lXnjkowug1CnbEHjBPETsZENjUAEr6y2Dm1kPoOUYhQ9NUipY0keyW6Kvtom35EQbjEJ
-         Z5bw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=wL6p9uiSK8+WCAZmqiXZp3eTaRiKzRKo7/r/xXG5Ihk=;
-        b=Q+wD/ZeK8YuWdxD2gQuNtuzci1JSUgG0nkXWxbCQHN+mBdHjsiJEtolyj2CYDVj6nz
-         ovXg6iqBK4y6hy35pgGC5XAbxt3KBHjVx8UTfKfqMVsQdhYW9CqCJkpW/oUTNRTcTBZc
-         2QQgMFSkIp6MVpEQj1EPtJ4n0PFbLFHsTeHn3INE+uJVcGnFRW4D5w+zYoPPMTcT3D4s
-         T+A4DjLDXDnpe901wydtKOhF4J5Kb7kXvx8Bhbbh/QAvVW9j69krMO9TbPgWWWSJ8IuH
-         F7Zfb2zvIrE976zAEI8Z8ltHGomkAJBECvrVNlCC9Sr8V12cccGlD/tTRCaU7gFxprNj
-         F9VA==
-X-Gm-Message-State: AOAM5320GwWBCADFWJ9EWqSmpwzY8SdCdfUitr0oTNqz2X2rwXIC5Zh6
-        NQP5L7Gi8ftZttJ8SbG6k72RiUxFdItGkQ==
-X-Google-Smtp-Source: ABdhPJzsiw+0XEW3ygSntiNJlYzJcmPlCVdCD5nr0WXIKdwS/Vo3Eb6mb3Hl/BAejvkcbIV1sPr3HA==
-X-Received: by 2002:a65:55c2:: with SMTP id k2mr1943602pgs.451.1594702336611;
-        Mon, 13 Jul 2020 21:52:16 -0700 (PDT)
-Received: from [192.168.10.94] (124-171-83-152.dyn.iinet.net.au. [124.171.83.152])
-        by smtp.gmail.com with ESMTPSA id p30sm16776793pfq.153.2020.07.13.21.52.12
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 13 Jul 2020 21:52:15 -0700 (PDT)
-Subject: Re: [PATCH v3 4/6] powerpc/pseries/iommu: Remove default DMA window
- before creating DDW
-To:     Leonardo Bras <leobras.c@gmail.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Thiago Jung Bauermann <bauerman@linux.ibm.com>,
-        Ram Pai <linuxram@us.ibm.com>
-Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-References: <20200703061844.111865-1-leobras.c@gmail.com>
- <20200703061844.111865-5-leobras.c@gmail.com>
- <cc15a81d-04d9-3ee4-4fdb-093618f6e635@ozlabs.ru>
- <8c29be499e8741e7d77d53ca005034a2ca0179ac.camel@gmail.com>
-From:   Alexey Kardashevskiy <aik@ozlabs.ru>
-Autocrypt: addr=aik@ozlabs.ru; keydata=
- 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
-Message-ID: <18fd94d2-4365-16d1-7c85-af07d5c9a0f3@ozlabs.ru>
-Date:   Tue, 14 Jul 2020 14:52:10 +1000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Tue, 14 Jul 2020 00:53:58 -0400
+Received: from mga05.intel.com ([192.55.52.43]:52266 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725306AbgGNEx5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 00:53:57 -0400
+IronPort-SDR: V/hBt/ZSnbwT3k2baKrVYNoCdpu74ZEO4wBT5htfiLrz8bgR6XNldaHYioG7/5o81yQSAj2xVM
+ qRMnuXhBUcZg==
+X-IronPort-AV: E=McAfee;i="6000,8403,9681"; a="233657561"
+X-IronPort-AV: E=Sophos;i="5.75,350,1589266800"; 
+   d="scan'208";a="233657561"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jul 2020 21:53:41 -0700
+IronPort-SDR: fztqHMO1cJu8A3BJUtnv9tzbTAk2JfZA1KTo2fc4GiJSeVf7wOvQDNDzVx5+TlI+JaZ6jdVqxe
+ 7Rx7GiYkZ/QA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,350,1589266800"; 
+   d="scan'208";a="325731047"
+Received: from jacob-builder.jf.intel.com (HELO jacob-builder) ([10.7.199.155])
+  by orsmga007.jf.intel.com with ESMTP; 13 Jul 2020 21:53:41 -0700
+Date:   Mon, 13 Jul 2020 22:00:23 -0700
+From:   Jacob Pan <jacob.jun.pan@linux.intel.com>
+To:     Alex Williamson <alex.williamson@redhat.com>
+Cc:     iommu@lists.linux-foundation.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        Joerg Roedel <joro@8bytes.org>,
+        "Lu Baolu" <baolu.lu@linux.intel.com>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Yi Liu <yi.l.liu@intel.com>,
+        "Tian, Kevin" <kevin.tian@intel.com>,
+        Raj Ashok <ashok.raj@intel.com>,
+        "Christoph Hellwig" <hch@infradead.org>,
+        Jean-Philippe Brucker <jean-philippe@linaro.com>,
+        Eric Auger <eric.auger@redhat.com>,
+        Jonathan Corbet <corbet@lwn.net>, jacob.jun.pan@linux.intel.com
+Subject: Re: [PATCH v4 1/5] docs: IOMMU user API
+Message-ID: <20200713220023.35f7c79b@jacob-builder>
+In-Reply-To: <20200713164842.693ff2ff@x1.home>
+References: <1594165429-20075-1-git-send-email-jacob.jun.pan@linux.intel.com>
+        <1594165429-20075-2-git-send-email-jacob.jun.pan@linux.intel.com>
+        <20200713164842.693ff2ff@x1.home>
+Organization: OTC
+X-Mailer: Claws Mail 3.13.2 (GTK+ 2.24.30; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <8c29be499e8741e7d77d53ca005034a2ca0179ac.camel@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Alex,
 
+On Mon, 13 Jul 2020 16:48:42 -0600
+Alex Williamson <alex.williamson@redhat.com> wrote:
 
-On 14/07/2020 12:40, Leonardo Bras wrote:
-> Thank you for this feedback Alexey!
+> On Tue,  7 Jul 2020 16:43:45 -0700
+> Jacob Pan <jacob.jun.pan@linux.intel.com> wrote:
 > 
-> On Mon, 2020-07-13 at 17:33 +1000, Alexey Kardashevskiy wrote:
->> [...]
->>> -	int len, ret;
->>> +	int len, ret, reset_win_ext;
->>
->> Make it "reset_token".
+> > IOMMU UAPI is newly introduced to support communications between
+> > guest virtual IOMMU and host IOMMU. There has been lots of
+> > discussions on how it should work with VFIO UAPI and userspace in
+> > general.
+> > 
+> > This document is indended to clarify the UAPI design and usage. The
+> > mechenics of how future extensions should be achieved are also
+> > covered  
 > 
-> Oh, it's not a token here, it just checks if the reset_win extension
-> exists. The token would be returned in *value, but since we did not
-> need it here, it's not copied.
+> mechanics
+> 
+will fix.
 
-ah right, so it is a bool actually.
+> > in this documentation.
+> > 
+> > Signed-off-by: Liu Yi L <yi.l.liu@intel.com>
+> > Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
+> > ---
+> >  Documentation/userspace-api/iommu.rst | 312
+> > ++++++++++++++++++++++++++++++++++ 1 file changed, 312 insertions(+)
+> >  create mode 100644 Documentation/userspace-api/iommu.rst
+> > 
+> > diff --git a/Documentation/userspace-api/iommu.rst
+> > b/Documentation/userspace-api/iommu.rst new file mode 100644
+> > index 000000000000..581b462c2cec
+> > --- /dev/null
+> > +++ b/Documentation/userspace-api/iommu.rst
+> > @@ -0,0 +1,312 @@
+> > +.. SPDX-License-Identifier: GPL-2.0
+> > +.. iommu:
+> > +
+> > +=====================================
+> > +IOMMU Userspace API
+> > +=====================================
+> > +
+> > +IOMMU UAPI is used for virtualization cases where communications
+> > are +needed between physical and virtual IOMMU drivers. For native
+> > +usage, IOMMU is a system device which does not need to communicate
+> > +with user space directly.
+> > +
+> > +The primary use cases are guest Shared Virtual Address (SVA) and
+> > +guest IO virtual address (IOVA), wherein a virtual IOMMU (vIOMMU)
+> > is +required to communicate with the physical IOMMU in the host.
+> > +
+> > +.. contents:: :local:
+> > +
+> > +Functionalities
+> > +===============
+> > +Communications of user and kernel involve both directions. The
+> > +supported user-kernel APIs are as follows:
+> > +
+> > +1. Alloc/Free PASID
+> > +2. Bind/unbind guest PASID (e.g. Intel VT-d)
+> > +3. Bind/unbind guest PASID table (e.g. ARM sMMU)
+> > +4. Invalidate IOMMU caches
+> > +5. Service page requests
+> > +
+> > +Requirements
+> > +============
+> > +The IOMMU UAPIs are generic and extensible to meet the following
+> > +requirements:
+> > +
+> > +1. Emulated and para-virtualised vIOMMUs
+> > +2. Multiple vendors (Intel VT-d, ARM sMMU, etc.)
+> > +3. Extensions to the UAPI shall not break existing user space
+> > +
+> > +Interfaces
+> > +==========
+> > +Although the data structures defined in IOMMU UAPI are
+> > self-contained, +there is no user API functions introduced.
+> > Instead, IOMMU UAPI is +designed to work with existing user driver
+> > frameworks such as VFIO. +
+> > +Extension Rules & Precautions
+> > +-----------------------------
+> > +When IOMMU UAPI gets extended, the data structures can *only* be
+> > +modified in two ways:
+> > +
+> > +1. Adding new fields by re-purposing the padding[] field. No size
+> > change. +2. Adding new union members at the end. May increase in
+> > size. +
+> > +No new fields can be added *after* the variable sized union in
+> > that it +will break backward compatibility when offset moves. In
+> > both cases, a +new flag must be accompanied with a new field such
+> > that the IOMMU +driver can process the data based on the new flag.
+> > Version field is +only reserved for the unlikely event of UAPI
+> > upgrade at its entirety. +
+> > +It's *always* the caller's responsibility to indicate the size of
+> > the +structure passed by setting argsz appropriately.
+> > +Though at the same time, argsz is user provided data which is not
+> > +trusted. The argsz field allows the user to indicate how much data
+> > +they're providing, it's still the kernel's responsibility to
+> > validate +whether it's correct and sufficient for the requested
+> > operation. +
+> > +Compatibility Checking
+> > +----------------------
+> > +When IOMMU UAPI extension results in size increase, user such as
+> > VFIO +has to handle the following cases:
+> > +
+> > +1. User and kernel has exact size match
+> > +2. An older user with older kernel header (smaller UAPI size)
+> > running on a
+> > +   newer kernel (larger UAPI size)
+> > +3. A newer user with newer kernel header (larger UAPI size) running
+> > +   on an older kernel.
+> > +4. A malicious/misbehaving user pass illegal/invalid size but
+> > within
+> > +   range. The data may contain garbage.  
+> 
+> I'm still not sure where VFIO has responsibility in managing any of
+> these cases.  I think we've determined that VFIO is just the wrapper
+> and call-through mechanism, it's the UAPI core implementation and
+> IOMMU drivers that are responsible for this.
+> 
+That is right, I shall rewrite the responsibility to be held by IOMMU
+core.
+"When IOMMU UAPI extension results in size increase, IOMMU UAPI core
+shall handle the following cases:"
 
+> > +
+> > +Feature Checking
+> > +----------------
+> > +While launching a guest with vIOMMU, it is important to ensure
+> > that host +can support the UAPI data structures to be used for
+> > vIOMMU-pIOMMU +communications. Without upfront compatibility
+> > checking, future faults +are difficult to report even in normal
+> > conditions. For example, TLB +invalidations should always succeed.
+> > There is no architectural way to +report back to the vIOMMU if the
+> > UAPI data is incompatible. If that +happens, in order to protect
+> > IOMMU iosolation guarantee, we have to +resort to not giving
+> > completion status in vIOMMU. This may result in +VM hang.
+> > +
+> > +For this reason the following IOMMU UAPIs cannot fail:
+> > +
+> > +1. Free PASID
+> > +2. Unbind guest PASID
+> > +3. Unbind guest PASID table (SMMU)
+> > +4. Cache invalidate
+> > +
+> > +User applications such as QEMU is expected to import kernel UAPI  
+> 
+> s/is/are/
+> 
+will fix.
 
+> > +headers. Backward compatibility is supported per feature flags.
+> > +For example, an older QEMU (with older kernel header) can run on
+> > newer +kernel. Newer QEMU (with new kernel header) may refuse to
+> > initialize +on an older kernel if new feature flags are not
+> > supported by older +kernel. Simply recompile existing code with
+> > newer kernel header should  
 > 
->>> [...]
->>> -out_failed:
->>> +out_restore_defwin:
->>> +	if (default_win && reset_win_ext == 0)
->>
->> reset_win_ext potentially may be uninitialized here. Yeah I know it is
->> tied to default_win but still.
+> s/recompile/recompiling/
 > 
-> I can't see it being used uninitialized here, as you said it's tied to
-> default_win. 
+got it.
 
-Where it is declared - it is not initialized so in theory it can skip
-"if (query.windows_available == 0)".
+> > +not be an issue in that only existing flags are used.
+> > +
+> > +IOMMU vendor driver should report the below features to IOMMU UAPI
+> > +consumers (e.g. via VFIO).
+> > +
+> > +1. IOMMU_NESTING_FEAT_SYSWIDE_PASID
+> > +2. IOMMU_NESTING_FEAT_BIND_PGTBL
+> > +3. IOMMU_NESTING_FEAT_BIND_PASID_TABLE
+> > +4. IOMMU_NESTING_FEAT_CACHE_INVLD
+> > +5. IOMMU_NESTING_FEAT_PAGE_REQUEST
+> > +
+> > +Take VFIO as example, upon request from VFIO user space (e.g.
+> > QEMU), +VFIO kernel code shall query IOMMU vendor driver for the
+> > support of +the above features. Query result can then be reported
+> > back to the +user-space caller. Details can be found in
+> > +Documentation/driver-api/vfio.rst.
+> > +
+> > +
+> > +Data Passing Example with VFIO
+> > +------------------------------
+> > +As the ubiquitous userspace driver framework, VFIO is already IOMMU
+> > +aware and share many key concepts such as device model, group,
+> > and  
+> 
+> s/share/shares/
+> 
+got it.
 
+> > +protection domain. Other user driver frameworks can also be
+> > extended +to support IOMMU UAPI but it is outside the scope of this
+> > document. +
+> > +In this tight-knit VFIO-IOMMU interface, the ultimate consumer of
+> > the +IOMMU UAPI data is the host IOMMU driver. VFIO facilitates
+> > user-kernel +transport, capability checking, security, and life
+> > cycle management of +process address space ID (PASID).
+> > +
+> > +Unlike normal user data passed via VFIO UAPI IOTCL, IOMMU driver
+> > is the +ultimate consumer of its UAPI data. At VFIO layer, the
+> > IOMMU UAPI data +is wrapped in a VFIO UAPI data. It follows the
+> > +pattern below::
+> > +
+> > +   struct {
+> > +	__u32 argsz;
+> > +	__u32 flags;
+> > +	__u8  data[];
+> > +   };
+> > +
+> > +Here data[] contains the IOMMU UAPI data structures. VFIO has the
+> > +freedom to bundle the data as well as parse data size based on its
+> > own flags. +
+> > +In order to determine the size and feature set of the user data,
+> > argsz +and flags are also embedded in the IOMMU UAPI data
+> > structures. +A "__u32 argsz" field is *always* at the beginning of
+> > each structure. +
+> > +For example:
+> > +::
+> > +
+> > +   struct iommu_cache_invalidate_info {
+> > +	__u32	argsz;
+> > +	#define IOMMU_CACHE_INVALIDATE_INFO_VERSION_1 1
+> > +	__u32	version;
+> > +	/* IOMMU paging structure cache */
+> > +	#define IOMMU_CACHE_INV_TYPE_IOTLB	(1 << 0) /*
+> > IOMMU IOTLB */
+> > +	#define IOMMU_CACHE_INV_TYPE_DEV_IOTLB	(1 << 1) /*
+> > Device IOTLB */
+> > +	#define IOMMU_CACHE_INV_TYPE_PASID	(1 << 2) /*
+> > PASID cache */
+> > +	#define IOMMU_CACHE_INV_TYPE_NR		(3)
+> > +	__u8	cache;
+> > +	__u8	granularity;
+> > +	__u8	padding[2];  
+> 
+> Now would be the right time to add more than just minimum alignment
+> padding for future use.  Also note that we have 4-byte alignment
+> leading into the union, it could be desirable to pad that out to
+> 8-byte alignment anyway.
+> 
+make sense, will do padding[6]
 
-> Could you please tell me how it can be used uninitialized here, or what
-> is bad by doing this way?
+> > +	union {
+> > +		struct iommu_inv_pasid_info pasid_info;
+> > +		struct iommu_inv_addr_info addr_info;
+> > +	} granu;
+> > +   };
+> > +
+> > +VFIO is responsible for checking its own argsz and flags then
+> > invokes +appropriate IOMMU UAPI functions. User pointer is passed
+> > to IOMMU +layer for further processing. The responsibilities are
+> > divided as +follows:
+> > +
+> > +- Generic IOMMU layer checks argsz range and override out-of-range
+> > +  value.
+> > +
+> > +- Generic IOMMU layer checks content of the UAPI data for non-zero
+> > +  reserved bits in flags, padding fields, and unsupported version.
+> > +  This is to ensure not breaking userspace in the future when these
+> > +  fields or flags are used.
+> > +
+> > +- Vendor IOMMU driver checks argsz based on vendor flags, UAPI data
+> > +  is consumed based on flags
+> > +
+> > +Once again, use guest TLB invalidation as an example, argsz is
+> > based +on generic flags in the invalidation information. IOMMU
+> > generic code +shall process the UAPI data as the following:
+> > +
+> > +::
+> > +
+> > + static int iommu_check_cache_invl_data(struct
+> > iommu_cache_invalidate_info *info)
+> > + {
+> > +	int ret = 0;
+> > +	u32 mask;
+> > +
+> > +	if (info->version != IOMMU_CACHE_INVALIDATE_INFO_VERSION_1)
+> > +		return -EINVAL;
+> > +
+> > +	mask =  IOMMU_CACHE_INV_TYPE_IOTLB |
+> > +		IOMMU_CACHE_INV_TYPE_DEV_IOTLB |
+> > +		IOMMU_CACHE_INV_TYPE_PASID;  
 > 
->> After looking at this function for a few minutes, it could use some
->> refactoring (way too many gotos)  such as:
+> Can TYPE_NR be used here?  ie.  ((1 << IOMMU_CACHE_INV_TYPE_NR) - 1)
 > 
-> Yes, I agree.
-> 
->> 1. move (query.page_size & xx) checks before "if
->> (query.windows_available == 0)"
-> 
-> Moving 'page_size selection' above 'checking windows available' will
-> need us to duplicate the 'page_size selection' after the new query,
-> inside the if.
+much better, thanks!
 
-page_size selection is not going to change, why?
+> > +	if (info->cache & ~mask) {
+> > +		pr_warn_ratelimited("Invalid cache types %x\n",
+> > info->cache);  
+> 
+> Even ratelimited, this is too much for a user triggered error, at most
+> these should be some sort of debug level.  Should probably just drop
+> them for production.
+> 
+I felt a little too chatty as well. will drop, we have a lot of these.
 
+> > +		return -EINVAL;
+> > +	}
+> > +
+> > +	if (info->granularity >= IOMMU_INV_GRANU_NR) {
+> > +		pr_warn_ratelimited("Invalid cache invalidation
+> > granu %x\n",
+> > +				info->granularity);
+> > +		return -EINVAL;
+> > +	}
+> > +
+> > +	switch (info->granularity) {
+> > +	case IOMMU_INV_GRANU_ADDR:
+> > +		mask = IOMMU_INV_ADDR_FLAGS_PASID |
+> > +			IOMMU_INV_ADDR_FLAGS_ARCHID |
+> > +			IOMMU_INV_ADDR_FLAGS_LEAF;
+> > +
+> > +		if (info->granu.addr_info.flags & ~mask) {
+> > +			pr_warn_ratelimited("Unsupported
+> > invalidation addr flags %x\n",
+> > +
+> > info->granu.addr_info.flags);
+> > +			ret = -EINVAL;  
+> 
+> Why not return?  Inconsistent with above and unclear benefit.
+> 
+will do. thanks
 
-> I mean, as query will be done again, it will need to get the (new) page
-> size.
+> > +		}
+> > +		break;
+> > +	case IOMMU_INV_GRANU_PASID:
+> > +		mask = IOMMU_INV_PASID_FLAGS_PASID |
+> > +			IOMMU_INV_PASID_FLAGS_ARCHID;
+> > +		if (info->granu.pasid_info.flags & ~mask) {
+> > +			pr_warn_ratelimited("Unsupported
+> > invalidation PASID flags%x\n",
+> > +
+> > info->granu.pasid_info.flags);
+> > +			ret = -EINVAL;
+> > +		}
+> > +		break;
+> > +	}  
 > 
->> 2. move "win64 = kzalloc(sizeof(struct property), GFP_KERNEL)" before
->> "if (query.windows_available == 0)"
 > 
->> 3. call "reset_dma_window(dev, pdn)" inside the "if
->> (query.windows_available == 0)" branch.
+> What happened to IOMMU_INV_GRANU_DOMAIN?  Nothing to check?  Should
+> probably still be included with a 
 > 
->> Then you can drop all "goto out_restore_defwin" and move default_win and
->> reset_win_ext inside "if (query.windows_available == 0)".
-> 
-> I did all changes suggested locally and did some analysis in the
-> result:
-> 
-> I did not see a way to put default_win and reset_win_ext inside 
-> "if (query.windows_available == 0)", because if we still need a way to
-> know if the default window was removed, and if so, restore in case
-> anything ever fails ahead (like creating the node property). 
+I am not sure I got the complete comments here.
 
-Ah, I missed that new out_restore_defwin label is between other exit
-labels. Sorry :-/
+IOMMU_INV_GRANU_DOMAIN does not have additional info, actually not used
+for now.
 
-
-> But from that analysis I noted it's possible to remove all the new
-> "goto out_restore_defwin", if we do default_win = NULL if
-> ddw_read_ext() fails. 
+> > +
+> > +	if (info->padding[0] || info->padding[1]) {
+> > +		pr_warn_ratelimited("Non-zero reserved fields\n");
+> > +		ret = -EINVAL;
+> > +	}
+> > +
+> > +	return ret;
+> > + }
+> > +
+> > + int iommu_cache_invalidate(struct iommu_domain *domain, struct
+> > device *dev,
+> > +			   void __user *uinfo)
+> > + {
+> > +	struct iommu_cache_invalidate_info inv_info;
+> > +	unsigned long minsz, maxsz;
+> > +	int ret = 0;
+> > +
+> > +	if (unlikely(!domain->ops->cache_invalidate))
+> > +		return -ENODEV;
+> > +
+> > +	/* Current kernel data size is the max to be copied from
+> > user */
+> > +	maxsz = sizeof(struct iommu_cache_invalidate_info);
+> > +	memset((void *)&inv_info, 0, maxsz);  
 > 
-> So testing only default_win should always be enough to say if the
-> default window was deleted, and reset_win_ext could be moved inside "if
-> (query.windows_available == 0)".
-> Also, it would avoid reset_win_ext being 'used uninitialized' and
-> "out_restore_defwin:" would not be needed.
+> initialize as = { 0 };
 > 
-> Against the current patch, we would have something like this:
+got it.
+
+> > +
+> > +	/*
+> > +	 * No new spaces can be added before the variable sized
+> > union, the
+> > +	 * minimum size is the offset to the union.
+> > +	 */
+> > +	minsz = offsetof(struct iommu_cache_invalidate_info,
+> > granu); +
+> > +	/* Copy minsz from user to get flags and argsz */
+> > +	if (copy_from_user(&inv_info, uinfo, minsz))
+> > +		return -EFAULT;
+> > +
+> > +	/* Fields before variable size union is mandatory */
+> > +	if (inv_info.argsz < minsz)
+> > +		return -EINVAL;
+> > +
+> > +	/*
+> > +	 * User might be using a newer UAPI header which has a
+> > larger data
+> > +	 * size, we shall support the existing flags within the
+> > current
+> > +	 * size.
+> > +	 */
+> > +	if (inv_info.argsz > maxsz)
+> > +		inv_info.argsz = maxsz;  
 > 
-> #####
+> maxsz handling seems a little clunky, maybe only because this is the
+> documentation example?
 > 
->  static u64 enable_ddw(struct pci_dev *dev, struct device_node *pdn)
->  {
-> -       int len, ret, reset_win_ext;
-> +       int len, ret;
->         struct ddw_query_response query;
->         struct ddw_create_response create;
->         int page_shift;
-> @@ -1173,25 +1173,28 @@ static u64 enable_ddw(struct pci_dev *dev,
-> struct device_node *pdn)
->          * for extensions presence.
->          */
->         if (query.windows_available == 0) {
-> +               int reset_win_ext;
->                 default_win = of_find_property(pdn, "ibm,dma-window",
-> NULL);
->                 if (!default_win)
->                         goto out_failed;
->  
->                 reset_win_ext = ddw_read_ext(pdn,
-> DDW_EXT_RESET_DMA_WIN, NULL);
-> -               if (reset_win_ext)
-> +               if (reset_win_ext){
-> +                       default_win = NULL;
->                         goto out_failed;
-> +               }
+Not sure I am following.
+My thinking is that we wanted to support old flags even the
+user is compiled with a newer header with larger struct size. But
+old flags must be within the current(older) kernel UAPI struct size.
+That is why we override the size here, there is no need to copy the
+whole new struct.
 
-
-This says "if we can reset, then we fail", no?
-
->                 remove_dma_window(pdn, ddw_avail, default_win);
-
-
-I think you can do "default_win=NULL" here and later at
-out_restore_defwin check if it is NULL - then call reset.
-
->                 /* Query again, to check if the window is available */
->                 ret = query_ddw(dev, ddw_avail, &query, pdn);
->                 if (ret != 0)
-> -                       goto out_restore_defwin;
-> +                       goto out_failed;
->  
->                 if (query.windows_available == 0) {
->                         /* no windows are available for this device. */
->                         dev_dbg(&dev->dev, "no free dynamic windows");
-> -                       goto out_restore_defwin;
-> +                       goto out_failed;
->                 }
->         }
->         if (query.page_size & 4) {
-> @@ -1203,7 +1206,7 @@ static u64 enable_ddw(struct pci_dev *dev, struct
-> device_node *pdn)
->         } else {
->                 dev_dbg(&dev->dev, "no supported direct page size in
-> mask %x",
->                           query.page_size);
-> -               goto out_restore_defwin;
-> +               goto out_failed;
->         }
->         /* verify the window * number of ptes will map the partition */
->         /* check largest block * page size > max memory hotplug addr */
-> @@ -1212,14 +1215,14 @@ static u64 enable_ddw(struct pci_dev *dev,
-> struct device_node *pdn)
->                 dev_dbg(&dev->dev, "can't map partition max 0x%llx with
-> %llu "
->                           "%llu-sized pages\n",
-> max_addr,  query.largest_available_block,
->                           1ULL << page_shift);
-> -               goto out_restore_defwin;
-> +               goto out_failed;
->         }
->         len = order_base_2(max_addr);
->         win64 = kzalloc(sizeof(struct property), GFP_KERNEL);
->         if (!win64) {
->                 dev_info(&dev->dev,
->                         "couldn't allocate property for 64bit dma
-> window\n");
-> -               goto out_restore_defwin;
-> +               goto out_failed;
->         }
->         win64->name = kstrdup(DIRECT64_PROPNAME, GFP_KERNEL);
->         win64->value = ddwprop = kmalloc(sizeof(*ddwprop), GFP_KERNEL);
-> @@ -1282,11 +1285,10 @@ static u64 enable_ddw(struct pci_dev *dev,
-> struct device_node *pdn)
->         kfree(win64->value);
->         kfree(win64);
->  
-> -out_restore_defwin:
-> -       if (default_win && reset_win_ext == 0)
-> +out_failed:
-> +       if (default_win)
->                 reset_dma_window(dev, pdn);
->  
-> -out_failed:
->         fpdn = kzalloc(sizeof(*fpdn), GFP_KERNEL);
->         if (!fpdn)
->                 goto out_unlock;
+> > +
+> > +	/* Copy the remaining user data _after_ minsz */
+> > +	if (copy_from_user((void *)&inv_info + minsz, uinfo +
+> > minsz,
+> > +				inv_info.argsz - minsz))
+> > +		return -EFAULT;
+> > +
+> > +	/* Now the argsz is validated, check the content for
+> > reserved bits */
+> > +	ret = iommu_check_cache_invl_data(&inv_info);
+> > +	if (ret)
+> > +		return ret;
+> > +
+> > +	return domain->ops->cache_invalidate(domain, dev,
+> > &inv_info);
+> > + }
+> > +
+> > +Notice that in this example, since union size is determined by
+> > generic +flags, all checking to argsz is validated in the generic
+> > IOMMU layer, +vendor driver does not need to check argsz.  
 > 
-> #####
-> 
-> What do you think?
-> 
-> 
-> 
->> The rest of the series is good as it is,
-> 
-> Thank you :)
-> 
->>  however it may conflict with
->> https://patchwork.ozlabs.org/project/linuxppc-dev/patch/20200713062348.100552-1-aik@ozlabs.ru/
->> and the patchset it is made on top of -
->> https://patchwork.ozlabs.org/project/linuxppc-dev/list/?series=188385 .
-> 
-> <From the message of the first link>
->> (do not rush, let me finish reviewing this first) 
-> 
-> Ok, I have no problem rebasing on top of those patchsets, but what
-> would you suggest to be done?
+> Not true.  What if the user provided argsz = minsz and the operation
+> requires an entry in the granu union?  The vendor driver needs to
+> check that argsz was _at_least_ sufficient to provide that entry.
+My reason is that we have no vendor specific flags in cache invalidate
+UAPI. Why would vendor driver gets involved in sanity checking?
+Previously in v3, we check union size against argsz but was deemed to
+strict.
 
-Polish this patch one more time and if by the time when you reposted it
-the other patchset is not in upstream, I'll ask Michael to take yours first.
+>  The
+> mangling of the user provided argsz above makes me cringe a little too
+> for that reason, once we start modifying the user values in the core
+> it could get messy for the vendor drivers.
+> 
+We do have vendor specific union in bind_gpasid UAPI. Could you
+elaborate your concern?
 
+> > +
+> > +For UAPIs that are shared with in-kernel users, a wrapper function
+> > +is provided to distinguish the callers. For example,
+> > +
+> > +Userspace caller ::
+> > +
+> > +  int iommu_sva_unbind_gpasid(struct iommu_domain *domain, struct
+> > device *dev,
+> > +  void __user *udata)
+> > +
+> > +In-kernel caller ::
+> > +
+> > +  int __iommu_sva_unbind_gpasid(struct iommu_domain *domain,
+> > struct device *dev,
+> > +  struct iommu_gpasid_bind_data *data)  
+> 
+> Maybe just prefix with iommu_uapi rather than underscores?  Underscore
+> prefixes usually imply a locking requirement or other reasons to tread
+> carefully whereas this is just the internal API.  Thanks,
+> 
+sounds good. Thanks for explaining.
 
-> Would it be ok doing a big multi-author patchset, so we guarantee it
-> being applied in the correct order?
->> (You probably want me to rebase my patchset on top of Hellwig + yours,
-> right?) 
+> Alex
+> 
 
-Nah, at least not yet.
-
-
--- 
-Alexey
+[Jacob Pan]
