@@ -7,48 +7,49 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0436C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 14:39:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3923FC433FC
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 14:39:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C39F62256D
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 14:39:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 160FF22525
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 14:39:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594737567;
-	bh=90/WbSukEK5s1iW2h/xGVzDI+tjhox/mLpz3WTRUY30=;
+	s=default; t=1594737571;
+	bh=ZMywclo+5R/Gc/XvHS3+MFq+PuAks1cUnMcIkj5lS4k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wroYJ8sjVWMKqdml9VC8qyzMo9j3yUD17dI+a9mbsVvW60Kkb2T+kAflS87be/FfD
-	 3l6jjndnIodUgMAz3iOYYsXebMjRWBU9h+RSONzJQu/W/omcJhhl/l04oRqWoNK7ga
-	 OOOyYE7NRaEbFy0XCdBpfNN59JZnTfP2xB5B2U5Y=
+	b=n2gOId2bSJ3pj54/mbTomimbuOjCmrnNXRtygh3DfLdUDgsdMbmCkHGs72wSmLh9z
+	 DNMMTIq/XahBPz09V+xEbW64YvT8b5gIk+ZMsSEe5370a2FvW3wgVRtsFl3YacnrsF
+	 XvfhZJEDMYJAYR9X1OCZSeJPtEhONltkmORAkw18=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728935AbgGNOj0 (ORCPT
+        id S1728958AbgGNOj3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 10:39:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54578 "EHLO mail.kernel.org"
+        Tue, 14 Jul 2020 10:39:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54716 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728892AbgGNOjS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 10:39:18 -0400
+        id S1728932AbgGNOj0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 10:39:26 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9F2152256D;
-        Tue, 14 Jul 2020 14:39:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D5C9B2256D;
+        Tue, 14 Jul 2020 14:39:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594737557;
-        bh=90/WbSukEK5s1iW2h/xGVzDI+tjhox/mLpz3WTRUY30=;
+        s=default; t=1594737565;
+        bh=ZMywclo+5R/Gc/XvHS3+MFq+PuAks1cUnMcIkj5lS4k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qOvABlNrKQKj0uGmfZTiUzQWbMG7gFpiup0xKuvRpg7cDS89X0J0VeBriGFmgXzDg
-         DH/9ZLGun5eXNRTEK2PxYz6bzf6FA0JI5rVyM6PIJQ6bZqRbfdmEXpEnNJEgSWJSH7
-         G+qa5nwl72eN9rfHttpoVbJfXslsj6lov17MsHAw=
+        b=O2/8sE/97MnDtfsmmLsz+E6qNBEGVGVow+oDigAZSVf7YHX+E8rYs1jecrUPlLAer
+         bvC535YQ+BZ/QR5eWLKM8icmdch+K285lypNuewYNQ/UU1QMSISrmEO5jGKgPwsqmg
+         8F4HwfinyYZUXCJkidv4g1AIoGCdt0ahrHdfLfYs=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Navid Emamdoost <navid.emamdoost@gmail.com>,
-        Charles Keepax <ckeepax@opensource.cirrus.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Sasha Levin <sashal@kernel.org>, patches@opensource.cirrus.com,
-        linux-gpio@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 02/18] gpio: arizona: put pm_runtime in case of failure
-Date:   Tue, 14 Jul 2020 10:38:58 -0400
-Message-Id: <20200714143914.4035489-2-sashal@kernel.org>
+Cc:     Damien Le Moal <damien.lemoal@wdc.com>,
+        Johannes Thumshirn <johannes.thumshirn@wdc.com>,
+        Sreekanth Reddy <sreekanth.reddy@broadcom.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>,
+        MPT-FusionLinux.pdl@broadcom.com, linux-scsi@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 09/18] scsi: mpt3sas: Fix unlock imbalance
+Date:   Tue, 14 Jul 2020 10:39:05 -0400
+Message-Id: <20200714143914.4035489-9-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200714143914.4035489-1-sashal@kernel.org>
 References: <20200714143914.4035489-1-sashal@kernel.org>
@@ -61,52 +62,80 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Navid Emamdoost <navid.emamdoost@gmail.com>
+From: Damien Le Moal <damien.lemoal@wdc.com>
 
-[ Upstream commit 861254d826499944cb4d9b5a15f5a794a6b99a69 ]
+[ Upstream commit cb551b8dc079d2ef189145782627c99cb68c0255 ]
 
-Calling pm_runtime_get_sync increments the counter even in case of
-failure, causing incorrect ref count if pm_runtime_put is not called in
-error handling paths. Call pm_runtime_put if pm_runtime_get_sync fails.
+In BRM_status_show(), if the condition "!ioc->is_warpdrive" tested on entry
+to the function is true, a "goto out" is called. This results in unlocking
+ioc->pci_access_mutex without this mutex lock being taken.  This generates
+the following splat:
 
-Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
-Acked-by: Charles Keepax <ckeepax@opensource.cirrus.com>
-Link: https://lore.kernel.org/r/20200605030052.78235-1-navid.emamdoost@gmail.com
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+[ 1148.539883] mpt3sas_cm2: BRM_status_show: BRM attribute is only for warpdrive
+[ 1148.547184]
+[ 1148.548708] =====================================
+[ 1148.553501] WARNING: bad unlock balance detected!
+[ 1148.558277] 5.8.0-rc3+ #827 Not tainted
+[ 1148.562183] -------------------------------------
+[ 1148.566959] cat/5008 is trying to release lock (&ioc->pci_access_mutex) at:
+[ 1148.574035] [<ffffffffc070b7a3>] BRM_status_show+0xd3/0x100 [mpt3sas]
+[ 1148.580574] but there are no more locks to release!
+[ 1148.585524]
+[ 1148.585524] other info that might help us debug this:
+[ 1148.599624] 3 locks held by cat/5008:
+[ 1148.607085]  #0: ffff92aea3e392c0 (&p->lock){+.+.}-{3:3}, at: seq_read+0x34/0x480
+[ 1148.618509]  #1: ffff922ef14c4888 (&of->mutex){+.+.}-{3:3}, at: kernfs_seq_start+0x2a/0xb0
+[ 1148.630729]  #2: ffff92aedb5d7310 (kn->active#224){.+.+}-{0:0}, at: kernfs_seq_start+0x32/0xb0
+[ 1148.643347]
+[ 1148.643347] stack backtrace:
+[ 1148.655259] CPU: 73 PID: 5008 Comm: cat Not tainted 5.8.0-rc3+ #827
+[ 1148.665309] Hardware name: HGST H4060-S/S2600STB, BIOS SE5C620.86B.02.01.0008.031920191559 03/19/2019
+[ 1148.678394] Call Trace:
+[ 1148.684750]  dump_stack+0x78/0xa0
+[ 1148.691802]  lock_release.cold+0x45/0x4a
+[ 1148.699451]  __mutex_unlock_slowpath+0x35/0x270
+[ 1148.707675]  BRM_status_show+0xd3/0x100 [mpt3sas]
+[ 1148.716092]  dev_attr_show+0x19/0x40
+[ 1148.723664]  sysfs_kf_seq_show+0x87/0x100
+[ 1148.731193]  seq_read+0xbc/0x480
+[ 1148.737882]  vfs_read+0xa0/0x160
+[ 1148.744514]  ksys_read+0x58/0xd0
+[ 1148.751129]  do_syscall_64+0x4c/0xa0
+[ 1148.757941]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+[ 1148.766240] RIP: 0033:0x7f1230566542
+[ 1148.772957] Code: Bad RIP value.
+[ 1148.779206] RSP: 002b:00007ffeac1bcac8 EFLAGS: 00000246 ORIG_RAX: 0000000000000000
+[ 1148.790063] RAX: ffffffffffffffda RBX: 0000000000020000 RCX: 00007f1230566542
+[ 1148.800284] RDX: 0000000000020000 RSI: 00007f1223460000 RDI: 0000000000000003
+[ 1148.810474] RBP: 00007f1223460000 R08: 00007f122345f010 R09: 0000000000000000
+[ 1148.820641] R10: 0000000000000022 R11: 0000000000000246 R12: 0000000000000000
+[ 1148.830728] R13: 0000000000000003 R14: 0000000000020000 R15: 0000000000020000
+
+Fix this by returning immediately instead of jumping to the out label.
+
+Link: https://lore.kernel.org/r/20200701085254.51740-1-damien.lemoal@wdc.com
+Reviewed-by: Johannes Thumshirn <johannes.thumshirn@wdc.com>
+Acked-by: Sreekanth Reddy <sreekanth.reddy@broadcom.com>
+Signed-off-by: Damien Le Moal <damien.lemoal@wdc.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpio/gpio-arizona.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ drivers/scsi/mpt3sas/mpt3sas_ctl.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/gpio/gpio-arizona.c b/drivers/gpio/gpio-arizona.c
-index 7520a13b4c7ca..5bda38e0780f2 100644
---- a/drivers/gpio/gpio-arizona.c
-+++ b/drivers/gpio/gpio-arizona.c
-@@ -64,6 +64,7 @@ static int arizona_gpio_get(struct gpio_chip *chip, unsigned offset)
- 		ret = pm_runtime_get_sync(chip->parent);
- 		if (ret < 0) {
- 			dev_err(chip->parent, "Failed to resume: %d\n", ret);
-+			pm_runtime_put_autosuspend(chip->parent);
- 			return ret;
- 		}
- 
-@@ -72,12 +73,15 @@ static int arizona_gpio_get(struct gpio_chip *chip, unsigned offset)
- 		if (ret < 0) {
- 			dev_err(chip->parent, "Failed to drop cache: %d\n",
- 				ret);
-+			pm_runtime_put_autosuspend(chip->parent);
- 			return ret;
- 		}
- 
- 		ret = regmap_read(arizona->regmap, reg, &val);
--		if (ret < 0)
-+		if (ret < 0) {
-+			pm_runtime_put_autosuspend(chip->parent);
- 			return ret;
-+		}
- 
- 		pm_runtime_mark_last_busy(chip->parent);
- 		pm_runtime_put_autosuspend(chip->parent);
+diff --git a/drivers/scsi/mpt3sas/mpt3sas_ctl.c b/drivers/scsi/mpt3sas/mpt3sas_ctl.c
+index b95f7d062ea44..82c4ecc16f191 100644
+--- a/drivers/scsi/mpt3sas/mpt3sas_ctl.c
++++ b/drivers/scsi/mpt3sas/mpt3sas_ctl.c
+@@ -2921,7 +2921,7 @@ BRM_status_show(struct device *cdev, struct device_attribute *attr,
+ 	if (!ioc->is_warpdrive) {
+ 		ioc_err(ioc, "%s: BRM attribute is only for warpdrive\n",
+ 			__func__);
+-		goto out;
++		return 0;
+ 	}
+ 	/* pci_access_mutex lock acquired by sysfs show path */
+ 	mutex_lock(&ioc->pci_access_mutex);
 -- 
 2.25.1
 
