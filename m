@@ -2,139 +2,155 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FE28C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 12:38:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8714C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 12:39:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EEB3C2242C
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 12:38:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B1AF32242C
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 12:39:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Mu7sGUuE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728159AbgGNMiJ (ORCPT
+        id S1728256AbgGNMjK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 08:38:09 -0400
-Received: from mx2.suse.de ([195.135.220.15]:52644 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726354AbgGNMiI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 08:38:08 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id DD59AAC49;
-        Tue, 14 Jul 2020 12:38:08 +0000 (UTC)
-Received: by quack2.suse.cz (Postfix, from userid 1000)
-        id 0AAE41E12C9; Tue, 14 Jul 2020 14:38:06 +0200 (CEST)
-Date:   Tue, 14 Jul 2020 14:38:06 +0200
-From:   Jan Kara <jack@suse.cz>
-To:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
-Cc:     jack@suse.com, corbet@lwn.net, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] udf: Replace HTTP links with HTTPS ones
-Message-ID: <20200714123806.GI23073@quack2.suse.cz>
-References: <20200713200738.37800-1-grandmaster@al2klimov.de>
+        Tue, 14 Jul 2020 08:39:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37012 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726041AbgGNMjJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 08:39:09 -0400
+Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C1C93C061755;
+        Tue, 14 Jul 2020 05:39:08 -0700 (PDT)
+Received: by mail-lj1-x243.google.com with SMTP id d17so22414069ljl.3;
+        Tue, 14 Jul 2020 05:39:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:references:date:in-reply-to:message-id
+         :user-agent:mime-version;
+        bh=JLOHdvyYSteBhwEJW7uffo0TGL6VVEqhn0x84Jxi3qk=;
+        b=Mu7sGUuEOMRnG28b8EWSexhxA6mB+gAdubs97YQAZHeOYEUWVcqsMW8uLRGOy9wW5w
+         UFDpWKDMJ29m2S/3GtQuBjz+nsGUNB6Ja7vSobIJcm5omie0YaAKbngk39Q1+EZiWus/
+         LDfrGmXzZmiyNWctIn85jdKczsGlQVnzTCmeicJ+OOPiw3lDbH7tIIALqkx+pF0RY6pC
+         YKUhdcqs9rE6E2e/R9xuwAD0WoKHNxoeRsF9W1pSXGk9s2AU/vcGjM8ge/n82vH4yHHz
+         WrdmDwzz11WyAACehn4CSMUyJ9sNhRVe2f9tvM5DMjJ9o357CNfHElG1I0sOFLti+iUT
+         eh6Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:references:date:in-reply-to
+         :message-id:user-agent:mime-version;
+        bh=JLOHdvyYSteBhwEJW7uffo0TGL6VVEqhn0x84Jxi3qk=;
+        b=kseruiOA2eUrK9FAqzGnG4LihEnRzFk2flGD1Yr970QwiZtNNDuIFh8SWG2ZlbWCyg
+         rJRQCNw5kM/W9O1h/+4tAgQ976gg1mn0VQod9u6yst2c96g3MO7qVx17C25ynttLbkr2
+         Oo9bSjJMgXHIigDWMMqGozYSKCsi1+gQcxKOj0H/OJnDvLn1+288XjrCFPbIYUFFpEDC
+         Vkrnrbnk9NCyhaE0DbZMEY7k8jGi8IRB8DkLaXoX1j76GxuJ3eNqbFTpXC+G8PaoEgb1
+         pkhPlIVAn0/PHiH+S34bTx+w3ZY452QslGrdPLAM+jJ3mjVhdcnan3oLgMS1jm4NsJeh
+         I7nA==
+X-Gm-Message-State: AOAM530vG0CFIAQc7jYAbfB4g5TzXXT44pJHnkyPrt/mXCmmADKL0yv2
+        JzhAdqo/xismIoh58yLrUO0=
+X-Google-Smtp-Source: ABdhPJy5jA02+aWY74G8lYig0KGgaa7eSgsbtTSLdLgLu0SeHhSdehN7LGgmXt45kwfjxQGce7JEog==
+X-Received: by 2002:a2e:9907:: with SMTP id v7mr2272585lji.347.1594730347221;
+        Tue, 14 Jul 2020 05:39:07 -0700 (PDT)
+Received: from osv.localdomain ([89.175.180.246])
+        by smtp.gmail.com with ESMTPSA id y13sm4635583ljd.20.2020.07.14.05.39.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 14 Jul 2020 05:39:05 -0700 (PDT)
+From:   Sergey Organov <sorganov@gmail.com>
+To:     Vladimir Oltean <olteanv@gmail.com>
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Fugang Duan <fugang.duan@nxp.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Richard Cochran <richardcochran@gmail.com>
+Subject: Re: [PATCH v2 net] net: fec: fix hardware time stamping by external
+ devices
+References: <20200706142616.25192-1-sorganov@gmail.com>
+        <20200711120842.2631-1-sorganov@gmail.com>
+        <20200711231937.wu2zrm5spn7a6u2o@skbuf> <87wo387r8n.fsf@osv.gnss.ru>
+        <20200712150151.55jttxaf4emgqcpc@skbuf> <87r1tg7ib9.fsf@osv.gnss.ru>
+        <20200712193344.bgd5vpftaikwcptq@skbuf> <87365wgyae.fsf@osv.gnss.ru>
+        <20200712231546.4k6qyaiq2cgok3ep@skbuf>
+Date:   Tue, 14 Jul 2020 15:39:04 +0300
+In-Reply-To: <20200712231546.4k6qyaiq2cgok3ep@skbuf> (Vladimir Oltean's
+        message of "Mon, 13 Jul 2020 02:15:46 +0300")
+Message-ID: <878sfmcluf.fsf@osv.gnss.ru>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/28.0.50 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200713200738.37800-1-grandmaster@al2klimov.de>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon 13-07-20 22:07:38, Alexander A. Klimov wrote:
-> Rationale:
-> Reduces attack surface on kernel devs opening the links for MITM
-> as HTTPS traffic is much harder to manipulate.
-> 
-> Deterministic algorithm:
-> For each file:
->   If not .svg:
->     For each line:
->       If doesn't contain `\bxmlns\b`:
->         For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
-> 	  If neither `\bgnu\.org/license`, nor `\bmozilla\.org/MPL\b`:
->             If both the HTTP and HTTPS versions
->             return 200 OK and serve the same content:
->               Replace HTTP with HTTPS.
-> 
-> Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
+Vladimir Oltean <olteanv@gmail.com> writes:
 
-Thanks. I've queued the patch to my tree.
+> On Mon, Jul 13, 2020 at 01:32:09AM +0300, Sergey Organov wrote:
 
-								Honza
+[...]
 
-> ---
->  Continuing my work started at 93431e0607e5.
->  See also: git log --oneline '--author=Alexander A. Klimov <grandmaster@al2klimov.de>' v5.7..master
->  (Actually letting a shell for loop submit all this stuff for me.)
-> 
->  If there are any URLs to be removed completely or at least not just HTTPSified:
->  Just clearly say so and I'll *undo my change*.
->  See also: https://lkml.org/lkml/2020/6/27/64
-> 
->  If there are any valid, but yet not changed URLs:
->  See: https://lkml.org/lkml/2020/6/26/837
-> 
->  If you apply the patch, please let me know.
-> 
->  Sorry again to all maintainers who complained about subject lines.
->  Now I realized that you want an actually perfect prefixes,
->  not just subsystem ones.
->  I tried my best...
->  And yes, *I could* (at least half-)automate it.
->  Impossible is nothing! :)
-> 
-> 
->  Documentation/filesystems/udf.rst | 2 +-
->  fs/udf/ecma_167.h                 | 2 +-
->  fs/udf/super.c                    | 4 ++--
->  3 files changed, 4 insertions(+), 4 deletions(-)
-> 
-> diff --git a/Documentation/filesystems/udf.rst b/Documentation/filesystems/udf.rst
-> index d9badbf285b2..f9489ddbb767 100644
-> --- a/Documentation/filesystems/udf.rst
-> +++ b/Documentation/filesystems/udf.rst
-> @@ -72,4 +72,4 @@ For the latest version and toolset see:
->  
->  Documentation on UDF and ECMA 167 is available FREE from:
->  	- http://www.osta.org/
-> -	- http://www.ecma-international.org/
-> +	- https://www.ecma-international.org/
-> diff --git a/fs/udf/ecma_167.h b/fs/udf/ecma_167.h
-> index 736ebc5dc441..185c3e247648 100644
-> --- a/fs/udf/ecma_167.h
-> +++ b/fs/udf/ecma_167.h
-> @@ -2,7 +2,7 @@
->   * ecma_167.h
->   *
->   * This file is based on ECMA-167 3rd edition (June 1997)
-> - * http://www.ecma.ch
-> + * https://www.ecma.ch
->   *
->   * Copyright (c) 2001-2002  Ben Fennema
->   * Copyright (c) 2017-2019  Pali Rohár <pali@kernel.org>
-> diff --git a/fs/udf/super.c b/fs/udf/super.c
-> index f747bf72edbe..1c42f544096d 100644
-> --- a/fs/udf/super.c
-> +++ b/fs/udf/super.c
-> @@ -11,8 +11,8 @@
->   *  This code is based on version 2.00 of the UDF specification,
->   *  and revision 3 of the ECMA 167 standard [equivalent to ISO 13346].
->   *    http://www.osta.org/
-> - *    http://www.ecma.ch/
-> - *    http://www.iso.org/
-> + *    https://www.ecma.ch/
-> + *    https://www.iso.org/
->   *
->   * COPYRIGHT
->   *  This file is distributed under the terms of the GNU General Public
-> -- 
-> 2.27.0
-> 
--- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+>> > From the perspective of the mainline kernel, that can never happen.
+>>
+>> Yet in happened to me, and in some way because of the UAPI deficiencies
+>> I've mentioned, as ethtool has entirely separate code path, that happens
+>> to be correct for a long time already.
+>>
+>
+> Yup, you are right:
+>
+
+[...]
+
+> Very bad design choice indeed...
+> Given the fact that the PHY timestamping needs massaging from MAC driver
+> for plenty of other reasons, now of all things, ethtool just decided
+> it's not going to consult the MAC driver about the PHC it intends to
+> expose to user space, and just say "here's the PHY, deal with it". This
+> is a structural bug, I would say.
+>
+>> > From your perspective as a developer, in your private work tree, where
+>> > _you_ added the necessary wiring for PHY timestamping, I fully
+>> > understand that this is exactly what happened _to_you_.
+>> > I am not saying that PHY timestamping doesn't need this issue fixed. It
+>> > does, and if it weren't for DSA, it would have simply been a "new
+>> > feature", and it would have been ok to have everything in the same
+>> > patch.
+>>
+>> Except that it's not a "new feature", but a bug-fix of an existing one,
+>> as I see it.
+>>
+>
+> See above. It's clear that the intention of the PHY timestamping support
+> is for MAC drivers to opt-in, otherwise some mechanism would have been
+> devised such that not every single one of them would need to check for
+> phy_has_hwtstamp() in .ndo_do_ioctl(). That simply doesn't scale. Also,
+> it seems that automatically calling phy_ts_info from
+> __ethtool_get_ts_info is not coherent with that intention.
+>
+> I need to think more about this. Anyway, if your aim is to "reduce
+> confusion" for others walking in your foot steps, I think this is much
+> worthier of your time: avoiding the inconsistent situation where the MAC
+> driver is obviously not ready for PHY timestamping, however not all
+> parts of the kernel are in agreement with that, and tell the user
+> something else.
+
+You see, I have a problem on kernel 4.9.146. After I apply this patch,
+the problem goes away, at least for FEC/PHY combo that I care about, and
+chances are high that for DSA as well, according to your own expertise.
+Why should I care what is or is not ready for what to get a bug-fix
+patch into the kernel? Why should I guess some vague "intentions" or
+spend my time elsewhere?
+
+Also please notice that if, as you suggest, I will propose only half of
+the patch that will fix DSA only, then I will create confusion for
+FEC/PHY users that will have no way to figure they need another part of
+the fix to get their setup to work.
+
+Could we please finally agree that, as what I suggest is indeed a simple
+bug-fix, we could safely let it into the kernel?
+
+Thanks,
+-- Sergey
