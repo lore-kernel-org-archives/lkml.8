@@ -7,73 +7,74 @@ X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EB52C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 19:35:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DCB7C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 19:31:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 21A8022AAE
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 19:35:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4821422AB9
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 19:31:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594755307;
-	bh=UWgfM4J1k3ptLf5eHBkwUzBGsbhcDzwpWX/DvrDrCGI=;
+	s=default; t=1594755085;
+	bh=cUXASkGUYuLCw2oKmIZFxgnmouGC/MpqGIpF0lF7HC8=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=Dj6Qyd6dPk5T//xySbhr14nmgKebfub1A8MhqPoUmfmahVTSzKuI5tK+Tj+B7OiPA
-	 5IvAHFVLjK3B1OGN2pFyX5HiB8oA/ZXS8p+CT2f/3Z0NJGeEdwp/8QWC9dlqStq12U
-	 17ai+4V2uxAi9HmCGOVoF93bFkx+4xoaSOaFJMSM=
+	b=MHuqUBcojhN+4Z/9YvN7RM7/b1ngwVBHYbO32izW7R1f7Nl0xt2VCHSx3pEEsyzjN
+	 GgiAh88iD9bSgh/VQgg3BAhPq9/bv7Do2RxAOhg/5nZ9Hu2337xPYlDmR+VsX+3mB/
+	 0G9939LNEJZ6ckBPW4D/WHOIy/mvIHj+N/p9BP6s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729532AbgGNTfF (ORCPT
+        id S1729704AbgGNTbY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 15:35:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45918 "EHLO
+        Tue, 14 Jul 2020 15:31:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45346 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728768AbgGNTfF (ORCPT
+        with ESMTP id S1728428AbgGNTbX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 15:35:05 -0400
-Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EC54BC061755
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 12:35:04 -0700 (PDT)
-Received: by mail-lj1-x242.google.com with SMTP id b25so24978102ljp.6
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 12:35:04 -0700 (PDT)
+        Tue, 14 Jul 2020 15:31:23 -0400
+Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 76E1AC061794
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 12:31:22 -0700 (PDT)
+Received: by mail-lj1-x244.google.com with SMTP id e4so24968091ljn.4
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 12:31:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linux-foundation.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=TmvrJI/J3yG66g6pPz5Il+RcCg67c3v/jT1iQASKlcc=;
-        b=KIYXfollvDwZIWSi8MBvzI16dhsw+y4zL9hnXlh1UD0SE8cjPtPzh3zCIWaf7usmKY
-         sJIPvwRi57eB+/xJI+6JaFihnvlQfFnptYDDF1G9FGiSyn3r0SxvQFRYD3v6hzm4/QTE
-         v64cADt8D/wtG1AQ2083itD+hTnNb9/mL5p7o=
+        bh=cPk5LMoGoThBA0eFxbivhO2pS56bC/86EhKFPKHKu4c=;
+        b=VLmnr+RKkXZkAascGHD+AaCNa6Y2XPywcyp6v/mdbuMkz/hf+hhfE1/nd7RM0JXapm
+         cVYAMBvwJI3Gd5pMjW+DZXpL4Lk84F0PSZHOcvKhlEII13xTPasta+T1CpQkTxCpx6DR
+         hsyOPnSmMSJKICLP2tLHfz+bnE3r2Zf/mvQgo=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=TmvrJI/J3yG66g6pPz5Il+RcCg67c3v/jT1iQASKlcc=;
-        b=Z58vQOg//nsmUU7zQOP1xwUPlZjB2h02Zko1bJWkVnDqPljy2UOsoRnQ8ZKqr/0TkV
-         NzBujEoygaJSmDVAFIYNGpcquJdag2gsLd2oV+FOBoKRqHB7+rlr3A1+rR8fe8zKSfLE
-         8hYSKK4el8Ts6PhssA9fsFM009ayjvEoWhGjAcUcB/qLjCa/1lJRGsLJoyVvJsCSR7V2
-         Qs8awhen0zZM4IrzVcVyulcHYKnRagQhuIRWoQjuFnVu6VW+ZYBMsjLd4sK/A9VTBoMQ
-         3MTbhnarKCrOTsuQrVS/cBf4/1NYGEzSvDk4ReiaeUyBsc1HlWoWLWbyabsm+V0kf6gZ
-         xp0w==
-X-Gm-Message-State: AOAM533fiyu1aJHUxXXqBzzeLrgQuyZmAd/kYVgzco/zy/UsXUIOTBtg
-        enYyVesTE9QeCIM2Kmacu1LQvmBJeOA=
-X-Google-Smtp-Source: ABdhPJxu+JkHL89co3sKA71u49FAq/0LNySvRORcRi8fR6PdZF6DHnytYXxeiS84ShQF/+mn3MQkbw==
-X-Received: by 2002:a2e:81a:: with SMTP id 26mr3142876lji.460.1594755302987;
-        Tue, 14 Jul 2020 12:35:02 -0700 (PDT)
-Received: from mail-lf1-f53.google.com (mail-lf1-f53.google.com. [209.85.167.53])
-        by smtp.gmail.com with ESMTPSA id i3sm2391ljj.64.2020.07.14.12.35.01
+        bh=cPk5LMoGoThBA0eFxbivhO2pS56bC/86EhKFPKHKu4c=;
+        b=J32LLnDh/amBZ1xOQ1t+vlpbl3cXBft/+zd4YbtCsy0VJA7/3IguE8SB6HEqzqX35Y
+         SUYBS94sHsI5FCiJqj70fGg7x2s/g3Cy/jTamLnL86idPdWPLCVvMIL9nuAwrUGL7Oq8
+         EjK0FREbB4NTzK62lBmxGqRug9yKICeaTAMM6nv0heZo7ZWws96EgWjmTdxVT96kIQv8
+         sCk8+eJ352fciO5m0WSFy4Y6QsOCi+dxOH+SEPj5zePuX9oVCz4vhQ6dU0WgSx43v/M/
+         26fhJpTaPb+alLAfn8a9UiqkXQMCzNUp/dqmaqSe3OPklewS49w65aHWaR0ecIkNcduS
+         svrg==
+X-Gm-Message-State: AOAM530ympgcDq5r23Ae9R6VXEL0AI7c+yF1AL59C+eC96HjRGq5HoQL
+        S6pBHa8Yi9/ezdHbOTJ147a9i1QmiTY=
+X-Google-Smtp-Source: ABdhPJxIgVv920VvRzsqbcR4uSLCPepgQCUsjCkLg9FdKn8dHWn83KUEyvZammItA6oEPBrnfOfg9A==
+X-Received: by 2002:a05:651c:30b:: with SMTP id a11mr1570468ljp.126.1594755080559;
+        Tue, 14 Jul 2020 12:31:20 -0700 (PDT)
+Received: from mail-lj1-f169.google.com (mail-lj1-f169.google.com. [209.85.208.169])
+        by smtp.gmail.com with ESMTPSA id i16sm1759ljn.50.2020.07.14.12.31.18
         for <linux-kernel@vger.kernel.org>
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 14 Jul 2020 12:35:02 -0700 (PDT)
-Received: by mail-lf1-f53.google.com with SMTP id s16so13039928lfp.12
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 12:35:01 -0700 (PDT)
-X-Received: by 2002:a19:8a07:: with SMTP id m7mr2908470lfd.31.1594755301618;
- Tue, 14 Jul 2020 12:35:01 -0700 (PDT)
+        Tue, 14 Jul 2020 12:31:19 -0700 (PDT)
+Received: by mail-lj1-f169.google.com with SMTP id h19so24972009ljg.13
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 12:31:18 -0700 (PDT)
+X-Received: by 2002:a2e:86c4:: with SMTP id n4mr3168247ljj.312.1594755078276;
+ Tue, 14 Jul 2020 12:31:18 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200714190427.4332-1-hch@lst.de>
-In-Reply-To: <20200714190427.4332-1-hch@lst.de>
+References: <20200714190427.4332-1-hch@lst.de> <20200714190427.4332-18-hch@lst.de>
+In-Reply-To: <20200714190427.4332-18-hch@lst.de>
 From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Tue, 14 Jul 2020 12:34:45 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wgxV9We+nVcJtQu2DHco+HSeja-WqVdA-KUcB=nyUYuoQ@mail.gmail.com>
-Message-ID: <CAHk-=wgxV9We+nVcJtQu2DHco+HSeja-WqVdA-KUcB=nyUYuoQ@mail.gmail.com>
-Subject: Re: decruft the early init / initrd / initramfs code v2
+Date:   Tue, 14 Jul 2020 12:31:01 -0700
+X-Gmail-Original-Message-ID: <CAHk-=whDbHL7x5Jx-CSz97=nVg4V_q45DsokX+X-Y-yZV4rPvw@mail.gmail.com>
+Message-ID: <CAHk-=whDbHL7x5Jx-CSz97=nVg4V_q45DsokX+X-Y-yZV4rPvw@mail.gmail.com>
+Subject: Re: [PATCH 17/23] initramfs: switch initramfs unpacking to struct
+ file based APIs
 To:     Christoph Hellwig <hch@lst.de>
 Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
         "H. Peter Anvin" <hpa@zytor.com>, Song Liu <song@kernel.org>,
@@ -85,21 +86,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 14, 2020 at 12:06 PM Christoph Hellwig <hch@lst.de> wrote:
+On Tue, Jul 14, 2020 at 12:09 PM Christoph Hellwig <hch@lst.de> wrote:
 >
-> this series starts to move the early init code away from requiring
-> KERNEL_DS to be implicitly set during early startup.  It does so by
-> first removing legacy unused cruft, and the switches away the code
-> from struct file based APIs to our more usual in-kernel APIs.
+> There is no good reason to mess with file descriptors from in-kernel
+> code, switch the initramfs unpacking to struct file based write
+> instead.
 
-Looks good to me, with the added note on the utimes cruft too as a
-further cleanup (separate patch).
+Looking at this diff, I realized this really should be cleaned up more.
 
-So you can add my acked-by.
+ +                       wfile = filp_open(collected, openflags, mode);
+> +                       if (IS_ERR(wfile))
+> +                               return 0;
+> +
+> +                       vfs_fchown(wfile, uid, gid);
+> +                       vfs_fchmod(wfile, mode);
+> +                       if (body_len)
+> +                               vfs_truncate(&wfile->f_path, body_len);
+> +                       vcollected = kstrdup(collected, GFP_KERNEL);
 
-I _would_ like the md parts to get a few more acks. I see the one from
-Song Liu, anybody else in md land willing to go through those patches?
-They were the bulk of it, and the least obvious to me because I don't
-know that code at all?
+That "vcollected" is ugly and broken, and seems oh-so-wrong.
 
-              Linus
+Because it's only use is:
+
+
+> -               ksys_close(wfd);
+> +               fput(wfile);
+>                 do_utime(vcollected, mtime);
+>                 kfree(vcollected);
+
+which should just have done the exact same thing that you did with
+vfs_chown() and friends: we already have a "utimes_common()" that
+takes a path, and it could have been made into "vfs_utimes()", and
+then this whole vcollected confusion would go away and be replaced by
+
+        vfs_truncate(&wfile->f_path, mtime);
+
+(ok, with all the "timespec64 t[2]" things going on that do_utime()
+does now, but you get the idea).
+
+Talk about de-crufting that initramfs unpacking..
+
+But I don't hate this patch, I'm just pointing out that there's room
+for improvement.
+
+             Linus
