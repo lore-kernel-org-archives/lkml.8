@@ -2,178 +2,109 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00778C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 23:03:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BA6CC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 23:07:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D76F9206D9
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 23:03:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0468A2065E
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 23:07:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="famrdTGR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726942AbgGNXDt (ORCPT
+        id S1726974AbgGNXHC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 19:03:49 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:25846 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726358AbgGNXDs (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 19:03:48 -0400
-Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06EN1wZa041042;
-        Tue, 14 Jul 2020 19:03:19 -0400
-Received: from ppma04dal.us.ibm.com (7a.29.35a9.ip4.static.sl-reverse.com [169.53.41.122])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 329bghce6k-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 14 Jul 2020 19:03:19 -0400
-Received: from pps.filterd (ppma04dal.us.ibm.com [127.0.0.1])
-        by ppma04dal.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 06EMxSQu022913;
-        Tue, 14 Jul 2020 23:03:18 GMT
-Received: from b03cxnp08027.gho.boulder.ibm.com (b03cxnp08027.gho.boulder.ibm.com [9.17.130.19])
-        by ppma04dal.us.ibm.com with ESMTP id 327529ay3c-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 14 Jul 2020 23:03:18 +0000
-Received: from b03ledav004.gho.boulder.ibm.com (b03ledav004.gho.boulder.ibm.com [9.17.130.235])
-        by b03cxnp08027.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 06EN3ETo29884888
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 14 Jul 2020 23:03:15 GMT
-Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id D1AE77805C;
-        Tue, 14 Jul 2020 23:03:16 +0000 (GMT)
-Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id B6A587805F;
-        Tue, 14 Jul 2020 23:03:15 +0000 (GMT)
-Received: from [153.66.254.194] (unknown [9.85.141.100])
-        by b03ledav004.gho.boulder.ibm.com (Postfix) with ESMTP;
-        Tue, 14 Jul 2020 23:03:15 +0000 (GMT)
-Message-ID: <1594767794.14804.21.camel@linux.ibm.com>
-Subject: Re: [PATCH v2 24/24] scsi: aic7xxx: aic79xx_osm: Remove set but
- unused variabes 'saved_scsiid' and 'saved_modes'
-From:   James Bottomley <jejb@linux.ibm.com>
-Reply-To: jejb@linux.ibm.com
-To:     Lee Jones <lee.jones@linaro.org>
-Cc:     Hannes Reinecke <hare@suse.de>, martin.petersen@oracle.com,
-        linux-kernel@vger.kernel.org, linux-scsi@vger.kernel.org,
-        Hannes Reinecke <hare@suse.com>
-Date:   Tue, 14 Jul 2020 16:03:14 -0700
-In-Reply-To: <20200714213951.GL1398296@dell>
-References: <20200713080001.128044-1-lee.jones@linaro.org>
-         <20200713080001.128044-25-lee.jones@linaro.org>
-         <559e47de-fa26-9ae5-a3c5-4adeae606309@suse.de>
-         <1594741430.4545.15.camel@linux.ibm.com> <20200714213951.GL1398296@dell>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.26.6 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-07-14_09:2020-07-14,2020-07-14 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 mlxscore=0
- adultscore=0 spamscore=0 lowpriorityscore=0 priorityscore=1501
- mlxlogscore=999 bulkscore=0 suspectscore=0 clxscore=1015 phishscore=0
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2007140155
+        Tue, 14 Jul 2020 19:07:02 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:51899 "EHLO
+        mail.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725977AbgGNXHC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 19:07:02 -0400
+Received: from [IPv6:2601:646:8600:3281:209c:df9e:2b2f:146e] ([IPv6:2601:646:8600:3281:209c:df9e:2b2f:146e])
+        (authenticated bits=0)
+        by mail.zytor.com (8.15.2/8.15.2) with ESMTPSA id 06EN5sh73576441
+        (version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
+        Tue, 14 Jul 2020 16:05:57 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 06EN5sh73576441
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+        s=2020062301; t=1594767959;
+        bh=IBtiAYuFO05ncnsJ+6vQvNtaXVk0YRgUuOXae5QsK44=;
+        h=Date:In-Reply-To:References:Subject:To:CC:From:From;
+        b=famrdTGRZ4JlL+hHSH28ljPe5V/2PADQCw4ZKekTLgMhUsb616lwVgRuCLGURZB79
+         vDnLQ9F5oAcRplCeV1cm0HjClKEg5btO9njCS8BH12X5dnHN6rK8b8NAjJ4oAUH/Eg
+         yfGYCtutAfTVgo9Da+OsKa3gDYQimIP2DNfnr4tOh82l9FfgjTu/9AaXEoffIakBBW
+         ip9Sh26JlfiMtYTAhAbwjLnYwSBZ9qosssqTsw3R10LTmgG1Mmu5289tmsvBWy9pVz
+         lnL4WgWlV9SmReN+CZu5eytRBFNFiXXprU8oqyrNsfqynheuIL2/2MB4+gPLVJ+c0p
+         GtlOYIflxpDrg==
+Date:   Tue, 14 Jul 2020 16:05:46 -0700
+User-Agent: K-9 Mail for Android
+In-Reply-To: <80d91e21-6509-ff70-fb5a-5c042f6ea588@intel.com>
+References: <1594088183-7187-1-git-send-email-cathy.zhang@intel.com> <1594088183-7187-4-git-send-email-cathy.zhang@intel.com> <20200714030047.GA12592@linux.intel.com> <80d91e21-6509-ff70-fb5a-5c042f6ea588@intel.com>
+MIME-Version: 1.0
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH v2 3/4] x86: Expose SERIALIZE for supported cpuid
+To:     "Zhang, Cathy" <cathy.zhang@intel.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>
+CC:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org, x86@kernel.org,
+        pbonzini@redhat.com, vkuznets@redhat.com, wanpengli@tencent.com,
+        jmattson@google.com, joro@8bytes.org, tglx@linutronix.de,
+        mingo@redhat.com, bp@alien8.de,
+        ricardo.neri-calderon@linux.intel.com, kyung.min.park@intel.com,
+        jpoimboe@redhat.com, gregkh@linuxfoundation.org,
+        ak@linux.intel.com, dave.hansen@intel.com, tony.luck@intel.com,
+        ravi.v.shankar@intel.com
+From:   hpa@zytor.com
+Message-ID: <3EFFDE4B-7844-4BB3-A824-487EE8359376@zytor.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2020-07-14 at 22:39 +0100, Lee Jones wrote:
-> On Tue, 14 Jul 2020, James Bottomley wrote:
-> 
-> > On Tue, 2020-07-14 at 09:46 +0200, Hannes Reinecke wrote:
-> > > On 7/13/20 10:00 AM, Lee Jones wrote:
-> > > > Haven't been used since 2006.
-> > > > 
-> > > > Fixes the following W=1 kernel build warning(s):
-> > > > 
-> > > >  drivers/scsi/aic7xxx/aic79xx_osm.c: In function
-> > > > ‘ahd_linux_queue_abort_cmd’:
-> > > >  drivers/scsi/aic7xxx/aic79xx_osm.c:2155:17: warning: variable
-> > > > ‘saved_modes’ set but not used [-Wunused-but-set-variable]
-> > > >  drivers/scsi/aic7xxx/aic79xx_osm.c:2148:9: warning: variable
-> > > > ‘saved_scsiid’ set but not used [-Wunused-but-set-variable]
-> > > > 
-> > > > Cc: Hannes Reinecke <hare@suse.com>
-> > > > Signed-off-by: Lee Jones <lee.jones@linaro.org>
-> > > > ---
-> > > >  drivers/scsi/aic7xxx/aic79xx_osm.c | 4 ----
-> > > >  1 file changed, 4 deletions(-)
-> > > > 
-> > > > diff --git a/drivers/scsi/aic7xxx/aic79xx_osm.c
-> > > > b/drivers/scsi/aic7xxx/aic79xx_osm.c
-> > > > index 3782a20d58885..140c4e74ddd7e 100644
-> > > > --- a/drivers/scsi/aic7xxx/aic79xx_osm.c
-> > > > +++ b/drivers/scsi/aic7xxx/aic79xx_osm.c
-> > > > @@ -2141,14 +2141,12 @@ ahd_linux_queue_abort_cmd(struct
-> > > > scsi_cmnd
-> > > > *cmd)
-> > > >  	u_int  saved_scbptr;
-> > > >  	u_int  active_scbptr;
-> > > >  	u_int  last_phase;
-> > > > -	u_int  saved_scsiid;
-> > > >  	u_int  cdb_byte;
-> > > >  	int    retval;
-> > > >  	int    was_paused;
-> > > >  	int    paused;
-> > > >  	int    wait;
-> > > >  	int    disconnected;
-> > > > -	ahd_mode_state saved_modes;
-> > > >  	unsigned long flags;
-> > > >  
-> > > >  	pending_scb = NULL;
-> > > > @@ -2239,7 +2237,6 @@ ahd_linux_queue_abort_cmd(struct
-> > > > scsi_cmnd
-> > > > *cmd)
-> > > >  		goto done;
-> > > >  	}
-> > > >  
-> > > > -	saved_modes = ahd_save_modes(ahd);
-> > > >  	ahd_set_modes(ahd, AHD_MODE_SCSI, AHD_MODE_SCSI);
-> > > >  	last_phase = ahd_inb(ahd, LASTPHASE);
-> > > >  	saved_scbptr = ahd_get_scbptr(ahd);
-> > > > @@ -2257,7 +2254,6 @@ ahd_linux_queue_abort_cmd(struct
-> > > > scsi_cmnd
-> > > > *cmd)
-> > > >  	 * passed in command.  That command is currently
-> > > > active on
-> > > > the
-> > > >  	 * bus or is in the disconnected state.
-> > > >  	 */
-> > > > -	saved_scsiid = ahd_inb(ahd, SAVED_SCSIID);
-> > > >  	if (last_phase != P_BUSFREE
-> > > >  	    && SCB_GET_TAG(pending_scb) == active_scbptr) {
-> > > >  
-> > > > 
-> > > 
-> > > Reviewed-by: Hannes Reinecke <hare@suse.de>
-> > 
-> > Hey, you don't get to do that ... I asked you to figure out why
-> > we're missing an ahd_restore_modes().  Removing the
-> > ahd_save_modes() is cosmetic: it gets rid of a warning but doesn't
-> > fix the problem.  I'd rather keep the warning until the problem is
-> > fixed and the problem is we need a mode save/restore around the
-> > ahd_set_modes() which is only partially implemented in this
-> > function.
-> 
-> I had a look.  Traced it back to the dawn of time (time == Git), then
-> delved even further back by downloading and trawling through ~10-15
-> tarballs.  It looks as though drivers/scsi/aic7xxx/aic79xx_osm.c was
-> upstreamed in v2.5.60, nearly 20 years ago.  'saved_modes' has been
-> unused since at least then.  If no one has complained in 2 decades,
-> I'd say it probably isn't an issue worth perusing.
+On July 14, 2020 3:42:08 PM PDT, "Zhang, Cathy" <cathy=2Ezhang@intel=2Ecom>=
+ wrote:
+>On 7/14/2020 11:00 AM, Sean Christopherson wrote:
+>> On Tue, Jul 07, 2020 at 10:16:22AM +0800, Cathy Zhang wrote:
+>>> SERIALIZE instruction is supported by intel processors,
+>>> like Sapphire Rapids=2E Expose it in KVM supported cpuid=2E
+>> Providing at least a rough overview of the instruction, e=2Eg=2E its
+>enumeration,
+>> usage, fault rules, controls, etc=2E=2E=2E would be nice=2E  In isolati=
+on,
+>the
+>> changelog isn't remotely helpful in understanding the correctness of
+>the
+>> patch=2E
+>Thanks Sean! Add it in the next version=2E
+>>
+>>> Signed-off-by: Cathy Zhang <cathy=2Ezhang@intel=2Ecom>
+>>> ---
+>>>   arch/x86/kvm/cpuid=2Ec | 3 ++-
+>>>   1 file changed, 2 insertions(+), 1 deletion(-)
+>>>
+>>> diff --git a/arch/x86/kvm/cpuid=2Ec b/arch/x86/kvm/cpuid=2Ec
+>>> index 8a294f9=2E=2Ee603aeb 100644
+>>> --- a/arch/x86/kvm/cpuid=2Ec
+>>> +++ b/arch/x86/kvm/cpuid=2Ec
+>>> @@ -341,7 +341,8 @@ void kvm_set_cpu_caps(void)
+>>>   	kvm_cpu_cap_mask(CPUID_7_EDX,
+>>>   		F(AVX512_4VNNIW) | F(AVX512_4FMAPS) | F(SPEC_CTRL) |
+>>>   		F(SPEC_CTRL_SSBD) | F(ARCH_CAPABILITIES) | F(INTEL_STIBP) |
+>>> -		F(MD_CLEAR) | F(AVX512_VP2INTERSECT) | F(FSRM)
+>>> +		F(MD_CLEAR) | F(AVX512_VP2INTERSECT) | F(FSRM) |
+>>> +		F(SERIALIZE)
+>>>   	);
+>>>  =20
+>>>   	/* TSC_ADJUST and ARCH_CAPABILITIES are emulated in software=2E */
+>>> --=20
+>>> 1=2E8=2E3=2E1
+>>>
 
-Well, we have what looks like a fix now.  The reason it matters is that
- if the bus is not in AHD_MODE_SCSI when the routine is called, it ends
-up being in a wrong state when the routine exits, so you abort one
-command and screw up another.  Ultimately I bet escalation to bus reset
-fixes it, so everything appears to work, but it might have worked a lot
-better if the original mode were restored.
+At least that one is easy: SERIALIZE is architecturally a NOP, but with ha=
+rd serialization, like CPUID or IRET=2E
 
-This is error handling code, so most installations run just fine
-without ever invoking it.
-
-James
-
+--=20
+Sent from my Android device with K-9 Mail=2E Please excuse my brevity=2E
