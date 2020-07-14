@@ -2,206 +2,102 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9864C433E6
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 16:35:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2DB8C433EA
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 16:35:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A4F83221E8
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 16:35:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="IHirfcaJ"
+	by mail.kernel.org (Postfix) with ESMTP id 827B322475
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 16:35:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594744535;
+	bh=R9WJikLkWQvHqtvHu+mFYozfwPs9zbuJa310V9wJUL4=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=Z6OSw00w8K7uY932IwOsLa4ATI0/x+3oCUWBv75awSw9q6vmztmcraRdNRtEYDpkW
+	 Mi5miRQdBYDC25Gttoh6CtPhaFHtJQ0PjR/e7cAddsnhocORXGkFnhBz+nNxk5a6nS
+	 vLY6Wn0FQZurdxKWzpG0qEr5b5wpVhTMlx7O4Q80=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728666AbgGNQf3 (ORCPT
+        id S1728776AbgGNQfe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 12:35:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45438 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728509AbgGNQf2 (ORCPT
+        Tue, 14 Jul 2020 12:35:34 -0400
+Received: from mail-oo1-f68.google.com ([209.85.161.68]:44529 "EHLO
+        mail-oo1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728509AbgGNQfc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 12:35:28 -0400
-Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5EB9DC08C5DB
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 09:35:28 -0700 (PDT)
-Received: by mail-pj1-x1044.google.com with SMTP id gc9so1862841pjb.2
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 09:35:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=QT9HiLZlfLtj7d6b920+DKn037dSUdlopmzK56b/6q0=;
-        b=IHirfcaJbhHyjx7vB9QvBqwOwTVcSdFMLZQl4j2hyW8YDmQaR4w9RlMvVF/+ktyHcZ
-         ZXa0jlYWpeJ/c83he59zpW1zRjEemSQEgmLdo6cXHNDV8kLlESMwjZrMOZ8c9/s9sR/Z
-         I/HYazN5iAgueFSwoJ62M03ijEhGTgM9bZDiN/msfYpV2SIcDISiXbnfMCMy8qn31jDz
-         0yOCdG7TfGom86kbqbtw4lXTE+CZRRvtdnJmYRGAY4zdjsCPC1bjyVAN2waTu6+99+xg
-         12QOOcg7HzsRLBQDmIrjcUeCYCytypMyyilqGYeGHboad6n2ZCYAP8/Vdy2E7xbXpQBg
-         m97w==
+        Tue, 14 Jul 2020 12:35:32 -0400
+Received: by mail-oo1-f68.google.com with SMTP id o36so3442716ooi.11;
+        Tue, 14 Jul 2020 09:35:31 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=QT9HiLZlfLtj7d6b920+DKn037dSUdlopmzK56b/6q0=;
-        b=se6MYnQZNADdO52VJccxUkoTxzs8mxPnn+59sa1zyeh3BsLOsh+xll1VrRiYAmDHEB
-         F2LLnapu3vpTDiHDnwePx06gHRXvC/xKFuNY/yJmbdpMC4qokWoCA+nUtGsSZd/zGzca
-         tLBVV74clujVrAqvpYYlkqK2mBjt0wldsst0DfL9dR1tLB0EB2HsNOmZS7yNCe+i6a24
-         07KTPqvVIEYE0ALfh2Z0CMyX8a8QiIlyQHlQ6kaZqUNRB8zGlbj9YeFGAH1jF+dXyONh
-         y/oVaa1DEMruGz3/ZsfJAgNcyKBR0nwavvmL9z2lJaYEJjzpF5ozLvlBHlOTDb2AbRXt
-         Vsyw==
-X-Gm-Message-State: AOAM532ux0YFgWLRmJ1GmtjChSV4r8856pyrn+gVZetswIlg2XlRmYbX
-        b7EM9cOwAJZE2m7C4ET5+Sjyj7WiMUw=
-X-Google-Smtp-Source: ABdhPJxdoVBg8By1fNhgQ98NTF8VWMQfs6MbKMLnnkm/WDhjn0JlZYGXMD/9r1FFbxM2nyzdxZVqPA==
-X-Received: by 2002:a17:90a:17e4:: with SMTP id q91mr5414151pja.61.1594744527521;
-        Tue, 14 Jul 2020 09:35:27 -0700 (PDT)
-Received: from builder.lan (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id e16sm17946323pff.180.2020.07.14.09.35.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 Jul 2020 09:35:26 -0700 (PDT)
-Date:   Tue, 14 Jul 2020 09:33:20 -0700
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Stephan Gerhold <stephan@gerhold.net>
-Cc:     Andy Gross <agross@kernel.org>, Ohad Ben-Cohen <ohad@wizery.com>,
-        Baolin Wang <baolin.wang7@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        linux-arm-msm@vger.kernel.org, linux-remoteproc@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Vinod Koul <vkoul@kernel.org>
-Subject: Re: [PATCH v2 3/4] hwspinlock: qcom: Allow mmio usage in addition to
- syscon
-Message-ID: <20200714163320.GB2161373@builder.lan>
-References: <20200622075956.171058-1-bjorn.andersson@linaro.org>
- <20200622075956.171058-4-bjorn.andersson@linaro.org>
- <20200714160445.GA3848@gerhold.net>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Xq4tKGNRH3KriixnxCn9uJFwafu8U4KY8hX/LfJhHus=;
+        b=YiDs65eV485lrt+lW5nub63ID42gtwNLyWQEU1PL09Oyw8qNqgjQB1f26GTBdYNH63
+         KI1ciMuKYb6BVEih/5QOZC3kiuJENxc5yU7c4axemexASwJanxwD28pXLV+Hq+6sK/ij
+         4Ye17M4vUHrKmrvvtWpdWt/Y5+rUewW0qZovF/QBBwXbNYor6FsJus0XAdXrLK0ahrs3
+         cPwPR2uNByIFC6UnJuLRtfswP9fkT5ddhuN/WHBMp58I1Wjhdr052t52GljFmGJe3X/u
+         G+pvQnTM+8NuSZBLCUOz2FqaUJw2UV/v6Pg1SxIeJa2tj7PBMjRKHw3ASXCBsO55enHx
+         jeqw==
+X-Gm-Message-State: AOAM5304/4XHSClLe3ptCo/WL5szvn/MqOrQ8O8g9Htuv7AmyvzRkwXk
+        nar/+YIkFtqVQrMs2Bdlfe30UBdFRoYK6hWOrYDdYw==
+X-Google-Smtp-Source: ABdhPJx9jwksQchlp8EzWcp4jDpRaQL5RgS6YS+xhSCdQj4OcOM3zMN5IV/4G0I2X0imPOE8KPCwOaKZyOkoPAp3Hf8=
+X-Received: by 2002:a4a:3e48:: with SMTP id t69mr5360935oot.38.1594744531359;
+ Tue, 14 Jul 2020 09:35:31 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200714160445.GA3848@gerhold.net>
+References: <20200714145049.2496163-1-lee.jones@linaro.org> <20200714145049.2496163-13-lee.jones@linaro.org>
+In-Reply-To: <20200714145049.2496163-13-lee.jones@linaro.org>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Tue, 14 Jul 2020 18:35:19 +0200
+Message-ID: <CAJZ5v0jkDWD6Ea2_oEDtFfPDWh5ByphUqEa=3jE2ZbnW0DVEcQ@mail.gmail.com>
+Subject: Re: [PATCH 12/13] cpufreq: intel_pstate: Supply struct attribute
+ description for get_aperf_mperf_shift()
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        Len Brown <lenb@kernel.org>,
+        Dirk Brandewie <dirk.j.brandewie@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue 14 Jul 09:04 PDT 2020, Stephan Gerhold wrote:
+On Tue, Jul 14, 2020 at 4:51 PM Lee Jones <lee.jones@linaro.org> wrote:
+>
+> Fixes the following W=1 kernel build warning(s):
+>
+>  drivers/cpufreq/intel_pstate.c:293: warning: Function parameter or member 'get_aperf_mperf_shift' not described in 'pstate_funcs'
+>
+> Cc: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+> Cc: Len Brown <lenb@kernel.org>
+> Cc: Dirk Brandewie <dirk.j.brandewie@intel.com>
+> Signed-off-by: Lee Jones <lee.jones@linaro.org>
+> ---
+>  drivers/cpufreq/intel_pstate.c | 2 ++
+>  1 file changed, 2 insertions(+)
+>
+> diff --git a/drivers/cpufreq/intel_pstate.c b/drivers/cpufreq/intel_pstate.c
+> index 44c7b4677675d..f92fc69c87269 100644
+> --- a/drivers/cpufreq/intel_pstate.c
+> +++ b/drivers/cpufreq/intel_pstate.c
+> @@ -275,6 +275,8 @@ static struct cpudata **all_cpu_data;
+>   * @get_min:           Callback to get minimum P state
+>   * @get_turbo:         Callback to get turbo P state
+>   * @get_scaling:       Callback to get frequency scaling factor
+> + * @get_aperf_mperf_shift: Callback to get the number of clock cycles after
+> + *                     aperf, merf is incremented
 
-> Hi Bjorn,
-> 
-> On Mon, Jun 22, 2020 at 12:59:55AM -0700, Bjorn Andersson wrote:
-> > In modern Qualcomm platforms the mutex region of the TCSR is forked off
-> > into its own block, all with a offset of 0 and stride of 4096, and in
-> > some of these platforms no other registers in this region is accessed
-> > from Linux.
-> > 
-> > So add support for directly memory mapping this register space, to avoid
-> > the need to represent this block using a syscon.
-> > 
-> > Reviewed-by: Baolin Wang <baolin.wang7@gmail.com>
-> > Reviewed-by: Vinod Koul <vkoul@kernel.org>
-> > Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-> > ---
-> > 
-> > Changes since v1:
-> > - Use devm_platform_ioremap_resource()
-> > 
-> >  drivers/hwspinlock/qcom_hwspinlock.c | 70 +++++++++++++++++++++-------
-> >  1 file changed, 54 insertions(+), 16 deletions(-)
-> > 
-> > diff --git a/drivers/hwspinlock/qcom_hwspinlock.c b/drivers/hwspinlock/qcom_hwspinlock.c
-> > index f0da544b14d2..364710966665 100644
-> > --- a/drivers/hwspinlock/qcom_hwspinlock.c
-> > +++ b/drivers/hwspinlock/qcom_hwspinlock.c
-> > @@ -70,41 +70,79 @@ static const struct of_device_id qcom_hwspinlock_of_match[] = {
-> >  };
-> >  MODULE_DEVICE_TABLE(of, qcom_hwspinlock_of_match);
-> >  
-> > -static int qcom_hwspinlock_probe(struct platform_device *pdev)
-> > +static struct regmap *qcom_hwspinlock_probe_syscon(struct platform_device *pdev,
-> > +						   u32 *base, u32 *stride)
-> >  {
-> > -	struct hwspinlock_device *bank;
-> >  	struct device_node *syscon;
-> > -	struct reg_field field;
-> >  	struct regmap *regmap;
-> > -	size_t array_size;
-> > -	u32 stride;
-> > -	u32 base;
-> >  	int ret;
-> > -	int i;
-> >  
-> >  	syscon = of_parse_phandle(pdev->dev.of_node, "syscon", 0);
-> > -	if (!syscon) {
-> > -		dev_err(&pdev->dev, "no syscon property\n");
-> > -		return -ENODEV;
-> > -	}
-> > +	if (!syscon)
-> > +		return ERR_PTR(-ENODEV);
-> >  
-> >  	regmap = syscon_node_to_regmap(syscon);
-> >  	of_node_put(syscon);
-> >  	if (IS_ERR(regmap))
-> > -		return PTR_ERR(regmap);
-> > +		return regmap;
-> >  
-> > -	ret = of_property_read_u32_index(pdev->dev.of_node, "syscon", 1, &base);
-> > +	ret = of_property_read_u32_index(pdev->dev.of_node, "syscon", 1, base);
-> >  	if (ret < 0) {
-> >  		dev_err(&pdev->dev, "no offset in syscon\n");
-> > -		return -EINVAL;
-> > +		return ERR_PTR(-EINVAL);
-> >  	}
-> >  
-> > -	ret = of_property_read_u32_index(pdev->dev.of_node, "syscon", 2, &stride);
-> > +	ret = of_property_read_u32_index(pdev->dev.of_node, "syscon", 2, stride);
-> >  	if (ret < 0) {
-> >  		dev_err(&pdev->dev, "no stride syscon\n");
-> > -		return -EINVAL;
-> > +		return ERR_PTR(-EINVAL);
-> >  	}
-> >  
-> > +	return regmap;
-> > +}
-> > +
-> > +static const struct regmap_config tcsr_mutex_config = {
-> > +	.reg_bits		= 32,
-> > +	.reg_stride		= 4,
-> > +	.val_bits		= 32,
-> > +	.max_register		= 0x40000,
-> 
-> Where does the 0x40000 come from?
-> 
+This added description is inaccurate.  It should be something like
+"Callback to get the APERF vs MPERF frequency difference".
 
-I presumably copied it off the dts I was looking (sm8250) as I wrote
-this, but...
-
-> It seems like this driver has QCOM_MUTEX_NUM_LOCKS = 32 hardcoded.
-> With a stride of 4096 = 0x1000 you get 0x1000 * 32 = 0x20000.
-> 
-> This is also the reg size used in msm8996.dtsi and msm8916.dtsi for
-> example, while sdm845.dtsi and sm8250.dtsi specify 0x40000.
-> Are you not exposing all available locks on the newer SoCs?
-> 
-> I'm not sure how important max_register is... But I guess it should be
-> either correct for all SoCs or not specified at all (since it's
-> optional)?
-> 
-
-...you're right. I think it should be omitted.
-
-> (That is assuming the hwlock can be also used directly via MMIO on
->  MSM8996 and MSM8916. It looks to me like it has its own register
->  space there as well...)
-> 
-
-If used on e.g. MSM8996 we still need to make sure the syscon is there,
-so that the modem subsystem halt registers is available to the mpss
-remoteproc. But specifying compatible as "qcom,tcsr-mutex", "syscon";
-would use the new scheme and still would allow that access.
-
-
-I merged patch 1-3 yesterday, so it would have to be an incremental
-patch. I've put it on my todo list, but if you write up a patch I'd be
-happy to merge it :)
-
-Thanks,
-Bjorn
+>   * @get_val:           Callback to convert P state to actual MSR write value
+>   * @get_vid:           Callback to get VID data for Atom platforms
+>   *
+> --
