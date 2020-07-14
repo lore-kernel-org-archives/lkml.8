@@ -2,81 +2,98 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 154E4C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 06:05:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EFA0C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 06:05:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DF3F621927
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 06:05:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0D69B21927
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 06:05:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594706724;
+	bh=bHbsEQUe++Lcee6QxGMLVV8KWlmKwrS5KtkVW9rfyeU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Ey4O3njsTMdXhhqaan7ACXDbq4iC1T0OaMR1v+G6UQkTdRKH6C7x17BhQpQPFF9yV
+	 hEG/uhTKcx9Uw44qKUiYD9T5RZOoVtSB/b2BMHUoUqSKUJsIb5L7WdU54VQN2flaUk
+	 RmoKok6RumOIZEC1IDv9dzy2p3sSYqhkY4Noh2Oo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726370AbgGNGFT (ORCPT
+        id S1726698AbgGNGFX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 02:05:19 -0400
-Received: from mga01.intel.com ([192.55.52.88]:33546 "EHLO mga01.intel.com"
+        Tue, 14 Jul 2020 02:05:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52644 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725283AbgGNGFS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 02:05:18 -0400
-IronPort-SDR: pUkNnsfPJJCCdg4uSwZYGjkex70pmyxQt5oUQeXatznnOboG2/GCfKLL8bklQoa8By5HEaC1Ki
- tRiRvhbWpeQQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9681"; a="166922467"
-X-IronPort-AV: E=Sophos;i="5.75,350,1589266800"; 
-   d="scan'208";a="166922467"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jul 2020 23:05:17 -0700
-IronPort-SDR: HZ5ONaUZk2NcuqcnMUCSoeA6IkdolHNVFUioiP5YxUkmGzxelBocDrUEKStlthXaj0wb4oS/VP
- 4i6iId8BGY1g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,350,1589266800"; 
-   d="scan'208";a="299428436"
-Received: from yilunxu-optiplex-7050.sh.intel.com (HELO localhost) ([10.239.159.141])
-  by orsmga002.jf.intel.com with ESMTP; 13 Jul 2020 23:05:15 -0700
-Date:   Tue, 14 Jul 2020 14:01:08 +0800
-From:   Xu Yilun <yilun.xu@intel.com>
-To:     Tom Rix <trix@redhat.com>
-Cc:     mdf@kernel.org, linux-fpga@vger.kernel.org,
-        linux-kernel@vger.kernel.org, lgoncalv@redhat.com,
-        Wu Hao <hao.wu@intel.com>,
-        Matthew Gerlach <matthew.gerlach@linux.intel.com>,
-        Russ Weight <russell.h.weight@intel.com>
-Subject: Re: [PATCH v2] fpga: dfl: pci: add device id for Intel FPGA PAC N3000
-Message-ID: <20200714060108.GA27430@yilunxu-OptiPlex-7050>
-References: <1594604866-30877-1-git-send-email-yilun.xu@intel.com>
- <4efe6ee9-4e88-5b31-01a2-414f752a3d2e@redhat.com>
+        id S1725283AbgGNGFW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 02:05:22 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 597C520890;
+        Tue, 14 Jul 2020 06:05:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594706721;
+        bh=bHbsEQUe++Lcee6QxGMLVV8KWlmKwrS5KtkVW9rfyeU=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=jm/Djc8vK56LTCq+jDsDw1QyMassDPWu10If0CuiGPm0/PC8lzLTMMbPDOFNnpA8l
+         xoxzZnzJxfUTfZ3ADn9XomKui/y9YscOQSFMsbHd99EVRT5Hre1d3T6iQznH7bANQQ
+         cZFO10EHHHvWRF/nqHybpFMZv240jmXo/r3Uex14=
+Date:   Tue, 14 Jul 2020 08:05:20 +0200
+From:   reg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Badhri Jagan Sridharan <badhri@google.com>
+Cc:     Guenter Roeck <linux@roeck-us.net>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] usb: typec: tcpm: Move to high priority workqueue for
+ processing events
+Message-ID: <20200714060520.GB657428@kroah.com>
+References: <20200713204300.345975-1-badhri@google.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <4efe6ee9-4e88-5b31-01a2-414f752a3d2e@redhat.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <20200713204300.345975-1-badhri@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 13, 2020 at 07:36:26AM -0700, Tom Rix wrote:
+On Mon, Jul 13, 2020 at 01:43:00PM -0700, Badhri Jagan Sridharan wrote:
+> "tReceiverResponse 15 ms Section 6.6.2
+> The receiver of a Message requiring a response Shall respond
+> within tReceiverResponse in order to ensure that the
+> senderâ€™s SenderResponseTimer does not expire."
 > 
-> > @@ -64,6 +64,7 @@ static void cci_pci_free_irq(struct pci_dev *pcidev)
-> >  #define PCIE_DEVICE_ID_PF_INT_5_X	0xBCBD
-> >  #define PCIE_DEVICE_ID_PF_INT_6_X	0xBCC0
-> >  #define PCIE_DEVICE_ID_PF_DSC_1_X	0x09C4
-> > +#define PCIE_DEVICE_ID_INTEL_PAC_N3000	0x0B30
+> When the cpu complex is busy running other lower priority
+> work items, TCPM's work queue sometimes does not get scheduled
+> on time to meet the above requirement from the spec.
+> Elevating the TCPM's work queue to higher priority allows
+> TCPM to meet tReceiverResponse in a busy system.
 > 
-> My point about consistency.  These are all intel  and all should have their pf parts removed.
+> Signed-off-by: Badhri Jagan Sridharan <badhri@google.com>
+> ---
+>  drivers/usb/typec/tcpm/tcpm.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
->  #define PCIE_DEVICE_ID_INTEL_INT_5_X	0xBCBD
->  #define PCIE_DEVICE_ID_INTEL_INT_6_X	0xBCC0
->  #define PCIE_DEVICE_ID_INTEL_DSC_1_X	0x09C4
-> 
-> Let's revisit this for the d5005.
+> diff --git a/drivers/usb/typec/tcpm/tcpm.c b/drivers/usb/typec/tcpm/tcpm.c
+> index 82b19ebd7838e0..088b6f1fa1ff89 100644
+> --- a/drivers/usb/typec/tcpm/tcpm.c
+> +++ b/drivers/usb/typec/tcpm/tcpm.c
+> @@ -4747,7 +4747,7 @@ struct tcpm_port *tcpm_register_port(struct device *dev, struct tcpc_dev *tcpc)
+>  	mutex_init(&port->lock);
+>  	mutex_init(&port->swap_lock);
+>  
+> -	port->wq = create_singlethread_workqueue(dev_name(dev));
+> +	port->wq = alloc_ordered_workqueue("%s", WQ_HIGHPRI, dev_name(dev));
 
-I agree that we should be consistent on the naming. I think we could
-reconsider the naming of previous cards and submit a new patch for them.
+How are you "guaranteeing" that this is really going to change anything
+on a highly loaded machine?
 
-> 
-> trix
-> 
+Yes, it might make things better, but if you have a hard deadline like
+this, you need to do things a bit differently to always ensure that you
+meet it.  I do not think this change is that fix, do you?
+
+thanks,
+
+greg k-h
