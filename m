@@ -2,138 +2,93 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B050DC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 01:57:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1A2AC433E2
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 02:09:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 89F2B2186A
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 01:57:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 829BE21927
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 02:09:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594692579;
+	bh=+cwhjBj8CfhqJWNHnp7/eo01IqnythBFj6b/ahFv/Ew=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=n7BgFhFFV2VO1CXAttm0eJ3x+d+HLLHTbfSb8oebCxb2iaaZc5hcd4Js0zgRUd/+0
+	 EnrSYKfMUVT3QpDe+CYF90PZ0nZGhiOdC51uDXtfcTKtOFjCr35ZWSgAO8C6PNu6/3
+	 ZC3vLSmjDvytzx8pvNhSQDN90dz0HsQHFia6PKSo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726568AbgGNB5e (ORCPT
+        id S1726505AbgGNCJi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 21:57:34 -0400
-Received: from mga14.intel.com ([192.55.52.115]:24486 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726149AbgGNB5e (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 21:57:34 -0400
-IronPort-SDR: R4Tp2NX0R6+OCjQD1BEERhXhQtpoLAo5yAg8M1A+nzGkADw5dDP4FcOS2NoqErlYHC4hwGy85U
- Y2eveZtY7kCA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9681"; a="147905455"
-X-IronPort-AV: E=Sophos;i="5.75,349,1589266800"; 
-   d="scan'208";a="147905455"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jul 2020 18:57:33 -0700
-IronPort-SDR: 71eSYM25ykw/jOPCA7O/DMLEvwPLrpRSDX+xrnEOdBZFL3wjyP/ejX2oMXO+mw+/WirUYCm/fl
- O7CxzvWmGL5w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,349,1589266800"; 
-   d="scan'208";a="307681797"
-Received: from sjchrist-coffee.jf.intel.com ([10.54.74.152])
-  by fmsmga004.fm.intel.com with ESMTP; 13 Jul 2020 18:57:33 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Oliver Upton <oupton@google.com>,
-        Peter Shier <pshier@google.com>
-Subject: [PATCH] KVM: x86: Don't attempt to load PDPTRs when 64-bit mode is enabled
-Date:   Mon, 13 Jul 2020 18:57:32 -0700
-Message-Id: <20200714015732.32426-1-sean.j.christopherson@intel.com>
-X-Mailer: git-send-email 2.26.0
+        Mon, 13 Jul 2020 22:09:38 -0400
+Received: from mail-il1-f193.google.com ([209.85.166.193]:41404 "EHLO
+        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726149AbgGNCJi (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jul 2020 22:09:38 -0400
+Received: by mail-il1-f193.google.com with SMTP id q3so12959121ilt.8;
+        Mon, 13 Jul 2020 19:09:37 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=KPcWWEFayVvDQVr24WFW0Iat95lCbS98CRPSzZcM2HA=;
+        b=SFw4/AYH1AOcgtAYPf/CYXijucCTKs8V3pYvuOoGzFYnnC7dL4IWKNgcNXqGig9SYG
+         2UAzJH6bSCRKaLV7lqepn4A8Iu5snRSgJyDZvXpCUW+9aC7CXtXcZzpoK2SZc9hz73e4
+         usXczK10ylDV/UlDan+yWVJwXbwrPdZC+Zzvwt/WWPzAufzMfUQk1Sb1tAhAv7ZSxHFv
+         w8io4QeYjJmPNQHDjTIoS7mX1Mx9AUaDhbgsIu76StJSnYsxpBScNO4X6iT+NVrwCdjf
+         LN4oVQHlVbPCjxusTSRTKzFUj0pQ5DrahopfOHOxvv7YiHASbwoMONXnY4JnCUGGpAJp
+         w6rA==
+X-Gm-Message-State: AOAM533bosifZDzRHTrmwdqk1KlevyfjHmRGZTcTFFF4Wfz/K5KEteue
+        7sDKEBt3gtShBSaYykEydg==
+X-Google-Smtp-Source: ABdhPJzQQad0wTSDAMPA9ATJ9hA1u98WVgnzC9LLhonu5X2eHqH93+QPB4bNhmGqkdB13vmALMiaJw==
+X-Received: by 2002:a05:6e02:14c2:: with SMTP id o2mr2669736ilk.54.1594692576834;
+        Mon, 13 Jul 2020 19:09:36 -0700 (PDT)
+Received: from xps15 ([64.188.179.252])
+        by smtp.gmail.com with ESMTPSA id i84sm9534158ill.30.2020.07.13.19.09.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 13 Jul 2020 19:09:36 -0700 (PDT)
+Received: (nullmailer pid 1132789 invoked by uid 1000);
+        Tue, 14 Jul 2020 02:09:35 -0000
+Date:   Mon, 13 Jul 2020 20:09:35 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     Baolin Wang <baolin.wang7@gmail.com>,
+        linux-arm-msm@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
+        Vinod Koul <vkoul@kernel.org>, linux-kernel@vger.kernel.org,
+        Ohad Ben-Cohen <ohad@wizery.com>,
+        linux-remoteproc@vger.kernel.org, devicetree@vger.kernel.org,
+        Andy Gross <agross@kernel.org>
+Subject: Re: [PATCH v2 1/4] dt-bindings: hwlock: qcom: Migrate binding to YAML
+Message-ID: <20200714020935.GA1122169@bogus>
+References: <20200622075956.171058-1-bjorn.andersson@linaro.org>
+ <20200622075956.171058-2-bjorn.andersson@linaro.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200622075956.171058-2-bjorn.andersson@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Don't attempt to load PDPTRs if EFER.LME=1, i.e. if 64-bit mode is
-enabled.  A recent change to reload the PDTPRs when CR0.CD or CR0.NW is
-toggled botched the EFER.LME handling and sends KVM down the PDTPR path
-when is_paging() is true, i.e. when the guest toggles CD/NW in 64-bit
-mode.
+On Mon, 22 Jun 2020 00:59:53 -0700, Bjorn Andersson wrote:
+> Migrate the Qualcomm TCSR mutex binding to YAML to allow validation.
+> 
+> Reviewed-by: Vinod Koul <vkoul@kernel.org>
+> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> ---
+> 
+> Changes since v1:
+> - Actually remove the old binding doc
+> 
+>  .../bindings/hwlock/qcom-hwspinlock.txt       | 39 --------------
+>  .../bindings/hwlock/qcom-hwspinlock.yaml      | 51 +++++++++++++++++++
+>  2 files changed, 51 insertions(+), 39 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/hwlock/qcom-hwspinlock.txt
+>  create mode 100644 Documentation/devicetree/bindings/hwlock/qcom-hwspinlock.yaml
+> 
 
-Split the CR0 checks for 64-bit vs. 32-bit PAE into separate paths.  The
-64-bit path is specifically checking state when paging is toggled on,
-i.e. CR0.PG transititions from 0->1.  The PDPTR path now needs to run if
-the new CR0 state has paging enabled, irrespective of whether paging was
-already enabled.  Trying to shave a few cycles to make the PDPTR path an
-"else if" case is a mess.
-
-Fixes: d42e3fae6faed ("kvm: x86: Read PDPTEs on CR0.CD and CR0.NW changes")
-Cc: Jim Mattson <jmattson@google.com>
-Cc: Oliver Upton <oupton@google.com>
-Cc: Peter Shier <pshier@google.com>
-Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
----
-
-The other way to fix this, with a much smaller diff stat, is to simply
-move the !is_page(vcpu) check inside (vcpu->arch.efer & EFER_LME).  But
-that results in a ridiculous amount of nested conditionals for what is a
-very straightforward check e.g.
-
-	if (cr0 & X86_CR0_PG) {
-		if (vcpu->arch.efer & EFER_LME) }
-			if (!is_paging(vcpu)) {
-				...
-			}
-		}
-	}
-
-Since this doesn't need to be backported anywhere, I didn't see any value
-in having an intermediate step.
-
- arch/x86/kvm/x86.c | 24 ++++++++++++------------
- 1 file changed, 12 insertions(+), 12 deletions(-)
-
-diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-index 95ef629228691..5f526d94c33f3 100644
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -819,22 +819,22 @@ int kvm_set_cr0(struct kvm_vcpu *vcpu, unsigned long cr0)
- 	if ((cr0 & X86_CR0_PG) && !(cr0 & X86_CR0_PE))
- 		return 1;
- 
--	if (cr0 & X86_CR0_PG) {
- #ifdef CONFIG_X86_64
--		if (!is_paging(vcpu) && (vcpu->arch.efer & EFER_LME)) {
--			int cs_db, cs_l;
-+	if ((vcpu->arch.efer & EFER_LME) && !is_paging(vcpu) &&
-+	    (cr0 & X86_CR0_PG)) {
-+		int cs_db, cs_l;
- 
--			if (!is_pae(vcpu))
--				return 1;
--			kvm_x86_ops.get_cs_db_l_bits(vcpu, &cs_db, &cs_l);
--			if (cs_l)
--				return 1;
--		} else
--#endif
--		if (is_pae(vcpu) && ((cr0 ^ old_cr0) & pdptr_bits) &&
--		    !load_pdptrs(vcpu, vcpu->arch.walk_mmu, kvm_read_cr3(vcpu)))
-+		if (!is_pae(vcpu))
-+			return 1;
-+		kvm_x86_ops.get_cs_db_l_bits(vcpu, &cs_db, &cs_l);
-+		if (cs_l)
- 			return 1;
- 	}
-+#endif
-+	if (!(vcpu->arch.efer & EFER_LME) && (cr0 & X86_CR0_PG) &&
-+	    is_pae(vcpu) && ((cr0 ^ old_cr0) & pdptr_bits) &&
-+	    !load_pdptrs(vcpu, vcpu->arch.walk_mmu, kvm_read_cr3(vcpu)))
-+		return 1;
- 
- 	if (!(cr0 & X86_CR0_PG) && kvm_read_cr4_bits(vcpu, X86_CR4_PCIDE))
- 		return 1;
--- 
-2.26.0
-
+Reviewed-by: Rob Herring <robh@kernel.org>
