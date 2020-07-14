@@ -2,94 +2,92 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35EBCC433E2
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 17:49:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2AB7C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 17:53:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 117A422596
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 17:49:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="GhQj7BBU"
+	by mail.kernel.org (Postfix) with ESMTP id 8C8912256C
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 17:53:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594749190;
+	bh=Vj9u8QF9x99xMmejTwSLhX1eTftkeD98fKJvUc1Dfws=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=gZm+myhD70sWKqZzMvyahbaGutgZdNiw4/Olgr9mCYH/TfXwz0IMtOWm0h6WOpPND
+	 WbF/RwwbOiviiFWSc/5NTIXgYsj5c4x5YfnGTfpqnWXfUDwjJv+ekMdjoHadVp+f+q
+	 rIMa+dKI1VaSYtieCgAzvacMWYI9n/PXCMLOPhOQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728988AbgGNRtP (ORCPT
+        id S1725883AbgGNRxJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 13:49:15 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:10021 "EHLO m43-7.mailgun.net"
+        Tue, 14 Jul 2020 13:53:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53824 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727028AbgGNRtN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 13:49:13 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1594748953; h=Content-Type: MIME-Version: Message-ID:
- In-Reply-To: Date: References: Subject: Cc: To: From: Sender;
- bh=HvsG3hhsmb4gPVoc6UyHgNH5M3ItFOz74uIV5eiJe8Y=; b=GhQj7BBU8pBHaYPTzWdFcqyj6LlK2KbhvAzRfGoUrg7Xpugpo9UTgYgbzirET8UrxINLOdnC
- q2jlwShPByCzMqSP/NhQUG0+6AXA40wmrFPaM/wBrYwc4pxrt5rAQJEQYt2Todf7OjpNQuxc
- MtPAiJptxtLE8blnGYofg0SCEn8=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n18.prod.us-west-2.postgun.com with SMTP id
- 5f0df01675eeb235f6006cbe (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 14 Jul 2020 17:49:10
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id EE35BC433C8; Tue, 14 Jul 2020 17:49:09 +0000 (UTC)
-Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
+        id S1725951AbgGNRxJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 13:53:09 -0400
+Received: from mail-oi1-f173.google.com (mail-oi1-f173.google.com [209.85.167.173])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        (Authenticated sender: kvalo)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id DB94DC433CA;
-        Tue, 14 Jul 2020 17:49:07 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org DB94DC433CA
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
-From:   Kalle Valo <kvalo@codeaurora.org>
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     Wireless <linux-wireless@vger.kernel.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Joseph Chuang <joseph.chuang@cypress.com>,
-        Chi-Hsien Lin <chi-hsien.lin@cypress.com>
-Subject: Re: linux-next: Fixes tag needs some work in the wireless-drivers-next tree
-References: <20200714205942.26248f1c@canb.auug.org.au>
-Date:   Tue, 14 Jul 2020 20:49:05 +0300
-In-Reply-To: <20200714205942.26248f1c@canb.auug.org.au> (Stephen Rothwell's
-        message of "Tue, 14 Jul 2020 20:59:42 +1000")
-Message-ID: <87mu429ecu.fsf@codeaurora.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/24.5 (gnu/linux)
+        by mail.kernel.org (Postfix) with ESMTPSA id 70E5E2256C;
+        Tue, 14 Jul 2020 17:53:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594749188;
+        bh=Vj9u8QF9x99xMmejTwSLhX1eTftkeD98fKJvUc1Dfws=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=h/LcrFQhreoRzvurbroMwkTmQ359hV48l9cybtWCBaOFtWTXb4wI4GMJFqJ1yaZwS
+         17nUkwG5qYZIEPugizU2WFZGkh4XDeo9yrcMshphwgzT2wfk4nQ04mAarfL4g4vK+W
+         YI5C9xFqehV0JuttYHL4lLcddwPuD7JqlQ7F4iTE=
+Received: by mail-oi1-f173.google.com with SMTP id k6so14572868oij.11;
+        Tue, 14 Jul 2020 10:53:08 -0700 (PDT)
+X-Gm-Message-State: AOAM532oajVipUrTyLccnmcL3uep0f+wk1mRqq0qOQhdihvaXUMkKKtR
+        a3I22+at2Knckf1bSo0QKFTPkLtAeUaiPk3Fcg==
+X-Google-Smtp-Source: ABdhPJzeQjKGJO3Po7FN1n6GH1S+VMKuEzA4tWJk8eA1Ub0hYOYIbQ9EQOL3U26bSjQVI/j843zgHlHyOlWhcVywtCA=
+X-Received: by 2002:aca:bb82:: with SMTP id l124mr4795615oif.106.1594749187884;
+ Tue, 14 Jul 2020 10:53:07 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
+References: <20200623114005.791643-1-yamada.masahiro@socionext.com>
+ <20200714022252.GA1151466@bogus> <CAK7LNAQrdqztMrHtAHnbMkxeaDLLyBS68WVovev+zytHdD7RVQ@mail.gmail.com>
+ <20200714095259.GB4900@sirena.org.uk>
+In-Reply-To: <20200714095259.GB4900@sirena.org.uk>
+From:   Rob Herring <robh@kernel.org>
+Date:   Tue, 14 Jul 2020 11:52:56 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqLvMbeMQL+SFgA58cZ=+FueSB5qYKf0f-CBy83S4sQ4cQ@mail.gmail.com>
+Message-ID: <CAL_JsqLvMbeMQL+SFgA58cZ=+FueSB5qYKf0f-CBy83S4sQ4cQ@mail.gmail.com>
+Subject: Re: [PATCH v2] dt-bindings: ASoC: Convert UniPhier EVEA codec to json-schema
+To:     Mark Brown <broonie@kernel.org>,
+        Masahiro Yamada <masahiroy@kernel.org>
+Cc:     Frank Rowand <frowand.list@gmail.com>,
+        Katsuhiro Suzuki <katsuhiro@katsuster.net>,
+        DTML <devicetree@vger.kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        - <alsa-devel@alsa-project.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Stephen Rothwell <sfr@canb.auug.org.au> writes:
+On Tue, Jul 14, 2020 at 3:53 AM Mark Brown <broonie@kernel.org> wrote:
+>
+> On Tue, Jul 14, 2020 at 03:13:26PM +0900, Masahiro Yamada wrote:
+>
+> > What do you mean by Reviewed-by ?
+> > Do you expect this to go to the asoc tree?
 
-> Hi all,
->
-> In commit
->
->   ad96bc27032c ("brcmfmac: initialize the requested dwell time")
->
-> Fixes tag
->
->   Fixes: 4905432b28b7 ("brcmfmac: Fix P2P Group Formation failure via Go-neg method")
->
-> has these problem(s):
->
->   - Target SHA1 does not exist
->
->
-> Maybe you meant
->
-> Fixes: 9c29da3f4e7e ("brcmfmac: Fix P2P Group Formation failure via Go-neg method")
+Yes.
 
-Heh, I noticed this and I even fixed it but maybe forgot to save my edit
-or something. I'll need to be more careful next time.
+> > I just thought the schema conversion
+> > would go through the dt tree.
+>
+> No, bindings changes usually go through the subsystem - if there's any
+> other work on the binding then it'll usually also involve driver
+> changes.
 
--- 
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+I have been taking some conversions so I can test them when they are
+standalone, there's a low chance of other changes, and the maintainer
+tends to be slow to apply and pickup fixes (not Mark).
+
+Rob
