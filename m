@@ -2,133 +2,128 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88F17C433FE
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 13:33:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AF81C43445
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 13:34:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6DEF0224B1
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 13:33:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 733D722280
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 13:34:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="iYPkFdVN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728404AbgGNNd4 (ORCPT
+        id S1728496AbgGNNeG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 09:33:56 -0400
-Received: from out02.mta.xmission.com ([166.70.13.232]:52472 "EHLO
-        out02.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728049AbgGNNdz (ORCPT
+        Tue, 14 Jul 2020 09:34:06 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:23639 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726624AbgGNNeE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 09:33:55 -0400
-Received: from in01.mta.xmission.com ([166.70.13.51])
-        by out02.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.90_1)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1jvL4D-0002gA-MW; Tue, 14 Jul 2020 07:33:53 -0600
-Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
-        by in01.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.87)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1jvL4C-0005bi-PE; Tue, 14 Jul 2020 07:33:53 -0600
-From:   ebiederm@xmission.com (Eric W. Biederman)
-To:     <linux-kernel@vger.kernel.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Kees Cook <keescook@chromium.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        <linux-fsdevel@vger.kernel.org>,
-        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
-        linux-security-module@vger.kernel.org,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        James Morris <jmorris@namei.org>,
-        Kentaro Takeda <takedakn@nttdata.co.jp>,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        John Johansen <john.johansen@canonical.com>,
-        Christoph Hellwig <hch@infradead.org>
-References: <871rle8bw2.fsf@x220.int.ebiederm.org>
-Date:   Tue, 14 Jul 2020 08:31:03 -0500
-In-Reply-To: <871rle8bw2.fsf@x220.int.ebiederm.org> (Eric W. Biederman's
-        message of "Tue, 14 Jul 2020 08:27:41 -0500")
-Message-ID: <87365u6x60.fsf@x220.int.ebiederm.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+        Tue, 14 Jul 2020 09:34:04 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1594733642;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=nbYxWd2D4nHUUgDPltXRuvjC0SSKlTNEhd9CP0YMbwc=;
+        b=iYPkFdVNZY4xcHPe4g3E+JLcLBNJW6yClvPAgKktSIPMR5rCQLetk0g+Tw1gCpU9PMGjvM
+        Y6Gjl1ZZpY7ZSM+nFUIMPO0PnpUgw+Oy7Z8lU7Uo9vvE+A9I0df+8k+EKxGlPtBGnmo9R/
+        4S6PV7RG1giS9bQ+I/RCbrOF/7+JJaI=
+Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
+ [209.85.221.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-433-N8t5nUnzNTi9U2MCXNV23w-1; Tue, 14 Jul 2020 09:34:01 -0400
+X-MC-Unique: N8t5nUnzNTi9U2MCXNV23w-1
+Received: by mail-wr1-f70.google.com with SMTP id w4so21722658wrm.5
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 06:34:00 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=nbYxWd2D4nHUUgDPltXRuvjC0SSKlTNEhd9CP0YMbwc=;
+        b=pydlHNy0O5jhPkrtmgrhWJeEjw06RXVDCPcXKs2NIFjdVBNTzD64nc23NXAE8KhuyU
+         5o+ya/f3kqOIvaoAxWUEhdvpgTKc7Ll+rDHmuJI3YIgT+PEKhjQ8IixQ6sSg/xIS/dnY
+         vLLyAnuh1oLFMtilAQOgYm5n/wH9eIg+CHMdPjkNZp2oB7EYEZYg/oXCCpTWFUNKVcTv
+         eA5SiCxnCOM4IrLm2jd+vHFbfRbpb1BrOpImNIzKJhWHR0k8HM++4HsfBy/yQpnrqTZU
+         1qSWpUxiZAdXwU3K3drPrBA3Y9hfkBaqyjnINlRjST/c9OodoWJdcmt/oo1G0S92BifX
+         jKpA==
+X-Gm-Message-State: AOAM53051Vx3//g2AN1xwyF2qs56OqN3KFEthCihJdhnAXMD7nfPZ+Ot
+        wm1D4zsLOd+83YS0xMxRE1R/3ux1kclRa5lflvBMGvj1Ok5HujnTbIDDrtnL9ryGW/v4XryK5Df
+        yMn9Btoi8T72v0SQ1BQXM8XFN
+X-Received: by 2002:a7b:c116:: with SMTP id w22mr4413279wmi.97.1594733639997;
+        Tue, 14 Jul 2020 06:33:59 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJxRuMChFkvfKKE/w1wbHZHIs87aQfuy0IINKhNsGaCWeLr1sl5q3sbqOzLFhiAFarAar7Nyng==
+X-Received: by 2002:a7b:c116:: with SMTP id w22mr4413259wmi.97.1594733639844;
+        Tue, 14 Jul 2020 06:33:59 -0700 (PDT)
+Received: from x1.localdomain (2001-1c00-0c0c-fe00-d2ea-f29d-118b-24dc.cable.dynamic.v6.ziggo.nl. [2001:1c00:c0c:fe00:d2ea:f29d:118b:24dc])
+        by smtp.gmail.com with ESMTPSA id m4sm4270892wmi.48.2020.07.14.06.33.58
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 14 Jul 2020 06:33:59 -0700 (PDT)
+Subject: Re: [PATCH] ASoC: Intel: bytcht_es8316: Add missed put_device()
+To:     Jing Xiangfeng <jingxiangfeng@huawei.com>,
+        cezary.rojewski@intel.com, pierre-louis.bossart@linux.intel.com,
+        liam.r.girdwood@linux.intel.com, yang.jie@linux.intel.com,
+        broonie@kernel.org, perex@perex.cz, tiwai@suse.com,
+        kuninori.morimoto.gx@renesas.com, paul@crapouillou.net
+Cc:     alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org
+References: <20200714080918.148196-1-jingxiangfeng@huawei.com>
+From:   Hans de Goede <hdegoede@redhat.com>
+Message-ID: <25abce87-5572-a78a-f001-7776f07be4ac@redhat.com>
+Date:   Tue, 14 Jul 2020 15:33:58 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-XM-SPF: eid=1jvL4C-0005bi-PE;;;mid=<87365u6x60.fsf@x220.int.ebiederm.org>;;;hst=in01.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
-X-XM-AID: U2FsdGVkX1+tYbnh3Q62SSMVnifjKF7zDyhQnXaMvYo=
-X-SA-Exim-Connect-IP: 68.227.160.95
-X-SA-Exim-Mail-From: ebiederm@xmission.com
-Subject: [PATCH 6/7] exec: Factor bprm_stack_limits out of prepare_arg_pages
-X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
-X-SA-Exim-Scanned: Yes (on in01.mta.xmission.com)
+In-Reply-To: <20200714080918.148196-1-jingxiangfeng@huawei.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi,
 
-In preparation for implementiong kernel_execve (which will take kernel
-pointers not userspace pointers) factor out bprm_stack_limits out of
-prepare_arg_pages.  This separates the counting which depends upon the
-getting data from userspace from the calculations of the stack limits
-which is usable in kernel_execve.
+On 7/14/20 10:09 AM, Jing Xiangfeng wrote:
+> snd_byt_cht_es8316_mc_probe() misses to call put_device() in an error
+> path. Add the missed function call to fix it.
+> 
+> Fixes: ba49cf6f8e4a ("ASoC: Intel: bytcht_es8316: Add quirk for inverted jack detect")
+> Signed-off-by: Jing Xiangfeng <jingxiangfeng@huawei.com>
 
-The remove prepare_args_pages and compute bprm->argc and bprm->envc
-directly in do_execveat_common, before bprm_stack_limits is called.
+Patch looks good to me:
 
-Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
----
- fs/exec.c | 23 ++++++++++++-----------
- 1 file changed, 12 insertions(+), 11 deletions(-)
+Reviewed-by: Hans de Goede <hdegoede@redhat.com>
 
-diff --git a/fs/exec.c b/fs/exec.c
-index 50508892fa71..f8135dc149b3 100644
---- a/fs/exec.c
-+++ b/fs/exec.c
-@@ -448,19 +448,10 @@ static int count(struct user_arg_ptr argv, int max)
- 	return i;
- }
- 
--static int prepare_arg_pages(struct linux_binprm *bprm,
--			struct user_arg_ptr argv, struct user_arg_ptr envp)
-+static int bprm_stack_limits(struct linux_binprm *bprm)
- {
- 	unsigned long limit, ptr_size;
- 
--	bprm->argc = count(argv, MAX_ARG_STRINGS);
--	if (bprm->argc < 0)
--		return bprm->argc;
--
--	bprm->envc = count(envp, MAX_ARG_STRINGS);
--	if (bprm->envc < 0)
--		return bprm->envc;
--
- 	/*
- 	 * Limit to 1/4 of the max stack size or 3/4 of _STK_LIM
- 	 * (whichever is smaller) for the argv+env strings.
-@@ -1964,7 +1955,17 @@ static int do_execveat_common(int fd, struct filename *filename,
- 		goto out_ret;
- 	}
- 
--	retval = prepare_arg_pages(bprm, argv, envp);
-+	retval = count(argv, MAX_ARG_STRINGS);
-+	if (retval < 0)
-+		goto out_free;
-+	bprm->argc = retval;
-+
-+	retval = count(envp, MAX_ARG_STRINGS);
-+	if (retval < 0)
-+		goto out_free;
-+	bprm->envc = retval;
-+
-+	retval = bprm_stack_limits(bprm);
- 	if (retval < 0)
- 		goto out_free;
- 
--- 
-2.25.0
+Regards,
+
+Hans
+
+
+> ---
+>   sound/soc/intel/boards/bytcht_es8316.c | 4 +++-
+>   1 file changed, 3 insertions(+), 1 deletion(-)
+> 
+> diff --git a/sound/soc/intel/boards/bytcht_es8316.c b/sound/soc/intel/boards/bytcht_es8316.c
+> index 9e5fc9430628..ecbc58e8a37f 100644
+> --- a/sound/soc/intel/boards/bytcht_es8316.c
+> +++ b/sound/soc/intel/boards/bytcht_es8316.c
+> @@ -543,8 +543,10 @@ static int snd_byt_cht_es8316_mc_probe(struct platform_device *pdev)
+>   
+>   	if (cnt) {
+>   		ret = device_add_properties(codec_dev, props);
+> -		if (ret)
+> +		if (ret) {
+> +			put_device(codec_dev);
+>   			return ret;
+> +		}
+>   	}
+>   
+>   	devm_acpi_dev_add_driver_gpios(codec_dev, byt_cht_es8316_gpios);
+> 
 
