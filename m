@@ -7,46 +7,49 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28A9DC433E2
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 19:05:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E4A7C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 19:05:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 08E97208C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 19:05:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4B32F208C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 19:05:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594753502;
-	bh=muY5iUHz/BlEr6zV2wNTZnyKKM+IE0t8F954ng1j9G4=;
+	s=default; t=1594753510;
+	bh=WnWXystKD1gPfAT1UfcvNWEFGL4xdS81LhQZ9qwrS4E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=G+jyywbwL/2fgxii3aIAPHzc1TlBqBu8t1tZuKYXPhFeZD2mZNbz4AvpF5NqyNdGz
-	 w4uuUmYR3/Nve8TuWf/9P+X7LSKfQsE1e974JbZuK4NQvsldM4dgMAeTAPXJTPJrM2
-	 fUtf84v9P695WKF/SQp4kVDetcU9dBjXBLdA0clg=
+	b=a2bUwO+9DTRqfLiyt5VuD9Zd6rxlzB8ocW/98HWUTohFPc95V2wevZAMcSIi0OMSy
+	 zpKGaZi7k3Tf3juyI9sn6CRDZXmshUKugMxAAT3K8LO54pb58/JC5oqRA/eS4deeZ2
+	 iGxBSJ6bnAB9N55XZk0tZ2mhA/00L7JmmzlU2DS4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731128AbgGNTFA (ORCPT
+        id S1730205AbgGNTFI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 15:05:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53224 "EHLO mail.kernel.org"
+        Tue, 14 Jul 2020 15:05:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52798 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730245AbgGNSza (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 14:55:30 -0400
+        id S1730433AbgGNSzL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 14:55:11 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 420C621D79;
-        Tue, 14 Jul 2020 18:55:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7807B22BEF;
+        Tue, 14 Jul 2020 18:55:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594752929;
-        bh=muY5iUHz/BlEr6zV2wNTZnyKKM+IE0t8F954ng1j9G4=;
+        s=default; t=1594752911;
+        bh=WnWXystKD1gPfAT1UfcvNWEFGL4xdS81LhQZ9qwrS4E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2K+JQrDA9drwp62fwENpLJ+axODxxn9SgPonpyc0ncx6+hKpddGwULHUyzxqV2X8b
-         t4AViT433CZkO+unXig2CZTsNNo75QchCgqA8ATyRPry2gWCCGyOEJ7L3kwXyW4mEe
-         INUePtCBxJvw4jipqBUSwGreunhoZkCFQ1NXSDg8=
+        b=jplqxF7/0sHcaobw28HmgCeN71O2qSC31B/HCHxWF7kS2Xf+xJpGCnXg3ZLeMMQ+T
+         C853mqWFKJIkRXzIBMTc0T/DFGOHwUsuhumKbr4/gw9JcBd5OO06HSSKcspKl/WVxu
+         26schXjtwAdCWnGDUfcyEIj7u3Je+AFB74DYNvBs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Zenghui Yu <yuzenghui@huawei.com>,
-        Marc Zyngier <maz@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 053/166] KVM: arm64: vgic-v4: Plug race between non-residency and v4.1 doorbell
-Date:   Tue, 14 Jul 2020 20:43:38 +0200
-Message-Id: <20200714184118.416543229@linuxfoundation.org>
+        stable@vger.kernel.org, Marek Vasut <marek.vasut@gmail.com>,
+        Roland Stigge <stigge@antcom.de>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.7 047/166] gpio: pca953x: Synchronize interrupt handler properly
+Date:   Tue, 14 Jul 2020 20:43:32 +0200
+Message-Id: <20200714184118.135701674@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200714184115.844176932@linuxfoundation.org>
 References: <20200714184115.844176932@linuxfoundation.org>
@@ -59,84 +62,107 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marc Zyngier <maz@kernel.org>
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-[ Upstream commit a3f574cd65487cd993f79ab235d70229d9302c1e ]
+[ Upstream commit 064c73afe7385de99e5b2785b88c83dc5d84403b ]
 
-When making a vPE non-resident because it has hit a blocking WFI,
-the doorbell can fire at any time after the write to the RD.
-Crucially, it can fire right between the write to GICR_VPENDBASER
-and the write to the pending_last field in the its_vpe structure.
+Since the commit aa58a21ae378 ("gpio: pca953x: disable regmap locking")
+the locking of regmap is disabled and that immediately introduces
+a synchronization issue. It's easy to see when we try to monitor
+more than one interrupt from the same chip.
 
-This means that we would overwrite pending_last with stale data,
-and potentially not wakeup until some unrelated event (such as
-a timer interrupt) puts the vPE back on the CPU.
+It seems that the problem exists from the day one and even commit
+6e20fb18054c ("drivers/gpio/pca953x.c: add a mutex to fix race condition")
+missed this.
 
-GICv4 isn't affected by this as we actively mask the doorbell on
-entering the guest, while GICv4.1 automatically manages doorbell
-delivery without any hypervisor-driven masking.
+Below are the traces and shell reproducers before and after proposed change.
+Note duplicates in the IRQ events. /proc/interrupts also shows a deviation,
+i.e. sum of children interrupts higher than parent's one.
 
-Use the vpe_lock to synchronize such update, which solves the
-problem altogether.
+When locking is disabled for regmap and no protection in IRQ handler
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ ...
+ gpioset-194          regmap_hw_write_start: i2c-INT3491:02 reg=2 count=1
+ irq/31-i2c-INT3-139  regmap_hw_read_start: i2c-INT3491:02 reg=4c count=2
+ gpioset-194          regmap_hw_write_done: i2c-INT3491:02 reg=2 count=1
+ gpioset-194          regmap_reg_read_cache: i2c-INT3491:02 reg=6 val=f5
+ gpioset-194          regmap_reg_write: i2c-INT3491:02 reg=6 val=f5
+ gpioset-194          regmap_hw_write_start: i2c-INT3491:02 reg=6 count=1
+ irq/31-i2c-INT3-139  regmap_hw_read_done: i2c-INT3491:02 reg=4c count=2
+ ...
 
-Fixes: ae699ad348cdc ("irqchip/gic-v4.1: Move doorbell management to the GICv4 abstraction layer")
-Reported-by: Zenghui Yu <yuzenghui@huawei.com>
-Signed-off-by: Marc Zyngier <maz@kernel.org>
+ % gpiomon gpiochip3 0 &
+ % gpioset gpiochip3 1=0
+ % gpioset gpiochip3 1=1
+ event:  RISING EDGE offset: 0 timestamp: [     302.782583765]
+ % gpiomon gpiochip3 2 &
+ % gpioset gpiochip3 1=0
+ event:  RISING EDGE offset: 2 timestamp: [     312.033148829]
+ event: FALLING EDGE offset: 0 timestamp: [     312.022757525]
+ % gpioset gpiochip3 1=1
+ event:  RISING EDGE offset: 2 timestamp: [     316.201148473]
+ event:  RISING EDGE offset: 0 timestamp: [     316.191759599]
+
+When locking is disabled for regmap and protection in IRQ handler
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ ...
+ gpioset-202          regmap_hw_write_start: i2c-INT3491:02 reg=2 count=1
+ gpioset-202          regmap_hw_write_done: i2c-INT3491:02 reg=2 count=1
+ gpioset-202          regmap_reg_read_cache: i2c-INT3491:02 reg=6 val=fd
+ gpioset-202          regmap_reg_write: i2c-INT3491:02 reg=6 val=fd
+ gpioset-202          regmap_hw_write_start: i2c-INT3491:02 reg=6 count=1
+ gpioset-202          regmap_hw_write_done: i2c-INT3491:02 reg=6 count=1
+ irq/31-i2c-INT3-139  regmap_hw_read_start: i2c-INT3491:02 reg=4c count=2
+ irq/31-i2c-INT3-139  regmap_hw_read_done: i2c-INT3491:02 reg=4c count=2
+ ...
+
+ % gpiomon gpiochip3 0 &
+ % gpioset gpiochip3 1=0
+ event: FALLING EDGE offset: 0 timestamp: [     531.330078107]
+ % gpioset gpiochip3 1=1
+ event:  RISING EDGE offset: 0 timestamp: [     532.912239128]
+ % gpiomon gpiochip3 2 &
+ % gpioset gpiochip3 1=0
+ event: FALLING EDGE offset: 0 timestamp: [     539.633669484]
+ % gpioset gpiochip3 1=1
+ event:  RISING EDGE offset: 0 timestamp: [     542.256978461]
+
+Fixes: 6e20fb18054c ("drivers/gpio/pca953x.c: add a mutex to fix race condition")
+Depends-on: 35d13d94893f ("gpio: pca953x: convert to use bitmap API")
+Depends-on: 49427232764d ("gpio: pca953x: Perform basic regmap conversion")
+Cc: Marek Vasut <marek.vasut@gmail.com>
+Cc: Roland Stigge <stigge@antcom.de>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/irqchip/irq-gic-v3-its.c | 8 ++++++++
- virt/kvm/arm/vgic/vgic-v4.c      | 8 ++++++++
- 2 files changed, 16 insertions(+)
+ drivers/gpio/gpio-pca953x.c | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/irqchip/irq-gic-v3-its.c b/drivers/irqchip/irq-gic-v3-its.c
-index b3e16a06c13b7..b99e3105bf9fe 100644
---- a/drivers/irqchip/irq-gic-v3-its.c
-+++ b/drivers/irqchip/irq-gic-v3-its.c
-@@ -3938,16 +3938,24 @@ static void its_vpe_4_1_deschedule(struct its_vpe *vpe,
- 	u64 val;
+diff --git a/drivers/gpio/gpio-pca953x.c b/drivers/gpio/gpio-pca953x.c
+index 01011a780688a..d8ba6c5195be7 100644
+--- a/drivers/gpio/gpio-pca953x.c
++++ b/drivers/gpio/gpio-pca953x.c
+@@ -724,14 +724,16 @@ static irqreturn_t pca953x_irq_handler(int irq, void *devid)
+ 	struct gpio_chip *gc = &chip->gpio_chip;
+ 	DECLARE_BITMAP(pending, MAX_LINE);
+ 	int level;
++	bool ret;
  
- 	if (info->req_db) {
-+		unsigned long flags;
-+
- 		/*
- 		 * vPE is going to block: make the vPE non-resident with
- 		 * PendingLast clear and DB set. The GIC guarantees that if
- 		 * we read-back PendingLast clear, then a doorbell will be
- 		 * delivered when an interrupt comes.
-+		 *
-+		 * Note the locking to deal with the concurrent update of
-+		 * pending_last from the doorbell interrupt handler that can
-+		 * run concurrently.
- 		 */
-+		raw_spin_lock_irqsave(&vpe->vpe_lock, flags);
- 		val = its_clear_vpend_valid(vlpi_base,
- 					    GICR_VPENDBASER_PendingLast,
- 					    GICR_VPENDBASER_4_1_DB);
- 		vpe->pending_last = !!(val & GICR_VPENDBASER_PendingLast);
-+		raw_spin_unlock_irqrestore(&vpe->vpe_lock, flags);
- 	} else {
- 		/*
- 		 * We're not blocking, so just make the vPE non-resident
-diff --git a/virt/kvm/arm/vgic/vgic-v4.c b/virt/kvm/arm/vgic/vgic-v4.c
-index 27ac833e5ec7c..b5fa73c9fd355 100644
---- a/virt/kvm/arm/vgic/vgic-v4.c
-+++ b/virt/kvm/arm/vgic/vgic-v4.c
-@@ -90,7 +90,15 @@ static irqreturn_t vgic_v4_doorbell_handler(int irq, void *info)
- 	    !irqd_irq_disabled(&irq_to_desc(irq)->irq_data))
- 		disable_irq_nosync(irq);
+-	if (!pca953x_irq_pending(chip, pending))
+-		return IRQ_NONE;
++	mutex_lock(&chip->i2c_lock);
++	ret = pca953x_irq_pending(chip, pending);
++	mutex_unlock(&chip->i2c_lock);
  
-+	/*
-+	 * The v4.1 doorbell can fire concurrently with the vPE being
-+	 * made non-resident. Ensure we only update pending_last
-+	 * *after* the non-residency sequence has completed.
-+	 */
-+	raw_spin_lock(&vcpu->arch.vgic_cpu.vgic_v3.its_vpe.vpe_lock);
- 	vcpu->arch.vgic_cpu.vgic_v3.its_vpe.pending_last = true;
-+	raw_spin_unlock(&vcpu->arch.vgic_cpu.vgic_v3.its_vpe.vpe_lock);
-+
- 	kvm_make_request(KVM_REQ_IRQ_PENDING, vcpu);
- 	kvm_vcpu_kick(vcpu);
+ 	for_each_set_bit(level, pending, gc->ngpio)
+ 		handle_nested_irq(irq_find_mapping(gc->irq.domain, level));
  
+-	return IRQ_HANDLED;
++	return IRQ_RETVAL(ret);
+ }
+ 
+ static int pca953x_irq_setup(struct pca953x_chip *chip, int irq_base)
 -- 
 2.25.1
 
