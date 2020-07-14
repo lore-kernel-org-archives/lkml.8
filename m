@@ -2,103 +2,114 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 893A3C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 10:59:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C1ABC433E7
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 11:00:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 63FED22200
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 10:59:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DAB8022200
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 11:00:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="ZcQVvzY6"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="uWSIo5yt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727078AbgGNK7q (ORCPT
+        id S1727798AbgGNLAA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 06:59:46 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:58017 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726041AbgGNK7p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 06:59:45 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 4B5cwb2qV0z9s1x;
-        Tue, 14 Jul 2020 20:59:43 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1594724383;
-        bh=CaU7hMehrwH/u8zCbwdV66QNc3iG4evLpsX9iI3ZC+Q=;
-        h=Date:From:To:Cc:Subject:From;
-        b=ZcQVvzY6KQEMk0CwfGUxxOYjXPcK05VLW5I2bcw0XwQMqWOhqm6jKRXo+4sgLJbOP
-         yM0KlqRrUQkLiyLqm02ksHByF9A5aOtFP+TOsGyOb1Zow5kHOLTLNzvlu3OKSdFi8t
-         tV05dE6Axo7cVmGMe5TqV8n7a6KbN/3dtE/27Upz/8gHWmlcjpKeZaPajR/7hof0JQ
-         DCeOMEDgGKmaogRoBbT/CDPXFhsGAfrj6kj5wtUuOPDqNoC1N0gKLSsqzxNzhyR62U
-         VTUkpWaKFcVb2BuxXj4glqiwmM28ExAdlKO1kDbSvHuH7XGIOHZWe3FDD1hDryslnb
-         XflqvL8ic4caw==
-Date:   Tue, 14 Jul 2020 20:59:42 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Kalle Valo <kvalo@codeaurora.org>,
-        Wireless <linux-wireless@vger.kernel.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Joseph Chuang <joseph.chuang@cypress.com>,
-        Chi-Hsien Lin <chi-hsien.lin@cypress.com>
-Subject: linux-next: Fixes tag needs some work in the wireless-drivers-next
- tree
-Message-ID: <20200714205942.26248f1c@canb.auug.org.au>
+        Tue, 14 Jul 2020 07:00:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49656 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726534AbgGNK77 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 06:59:59 -0400
+Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9F5F9C061755;
+        Tue, 14 Jul 2020 03:59:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=KCn+kBkY41F8RAgWcwTEUNO45YXItqYO+Iu35+qvwg0=; b=uWSIo5ytqOEjoxKysyDcE0PzIr
+        3zYDDQNcSq1GT1+ymnYDW8VImOa65X2m7iJ18QceLqoGgZAFN3pz2Iqm2g666/7X6BiV2p0MD9Uha
+        1A2hvnp78AssVI56e53PbylkRhVW7b3cBci4X/oqvn3uOVFkFlRAbjoOkIiBhsPCY6As3BQtlTv/h
+        TPZl/ufHiOsWClJXnK/3uQVbm8NSyW738l10nTqejGk44g1x3I+UA1CoTSCUTrTBj54ZO4C4raeN8
+        VT8vvrZ70FUDuRNNEGUSWYPEjKskqgjUwM07JBLoF9qjIjHCpZI2IpvoziP5sRcOAFB/JJ8l9xk4J
+        rXv6V17Q==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jvIev-00015n-SH; Tue, 14 Jul 2020 10:59:38 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 31B1D300130;
+        Tue, 14 Jul 2020 12:59:34 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 162DD28B91060; Tue, 14 Jul 2020 12:59:34 +0200 (CEST)
+Date:   Tue, 14 Jul 2020 12:59:34 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Alexey Budankov <alexey.budankov@linux.intel.com>,
+        Ravi Bangoria <ravi.bangoria@linux.ibm.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        James Morris <jmorris@namei.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Serge Hallyn <serge@hallyn.com>, Jiri Olsa <jolsa@redhat.com>,
+        Song Liu <songliubraving@fb.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Stephane Eranian <eranian@google.com>,
+        Igor Lubashev <ilubashe@akamai.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        "linux-security-module@vger.kernel.org" 
+        <linux-security-module@vger.kernel.org>,
+        "selinux@vger.kernel.org" <selinux@vger.kernel.org>,
+        "intel-gfx@lists.freedesktop.org" <intel-gfx@lists.freedesktop.org>,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        linux-man@vger.kernel.org
+Subject: Re: [PATCH v8 00/12] Introduce CAP_PERFMON to secure system
+ performance monitoring and observability
+Message-ID: <20200714105934.GU10769@hirez.programming.kicks-ass.net>
+References: <f96f8f8a-e65c-3f36-dc85-fc3f5191e8c5@linux.intel.com>
+ <76718dc6-5483-5e2e-85b8-64e70306ee1f@linux.ibm.com>
+ <7776fa40-6c65-2aa6-1322-eb3a01201000@linux.intel.com>
+ <20200710170911.GD7487@kernel.org>
+ <0d2e2306-22b2-a730-dc3f-edb3538b6561@linux.intel.com>
+ <20200713121746.GA7029@kernel.org>
+ <0fadcf78-8b0e-ed03-a554-cc172b7d249c@linux.intel.com>
+ <20200713185152.GA18094@kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/OiDA8Ai=f6igcds2bDJuwLA";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200713185152.GA18094@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/OiDA8Ai=f6igcds2bDJuwLA
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Mon, Jul 13, 2020 at 03:51:52PM -0300, Arnaldo Carvalho de Melo wrote:
 
-Hi all,
+> > > diff --git a/kernel/events/core.c b/kernel/events/core.c
+> > > index 856d98c36f56..a2397f724c10 100644
+> > > --- a/kernel/events/core.c
+> > > +++ b/kernel/events/core.c
+> > > @@ -11595,7 +11595,7 @@ SYSCALL_DEFINE5(perf_event_open,
+> > >  		 * perf_event_exit_task() that could imply).
+> > >  		 */
+> > >  		err = -EACCES;
+> > > -		if (!ptrace_may_access(task, PTRACE_MODE_READ_REALCREDS))
+> > > +		if (!perfmon_capable() && !ptrace_may_access(task, PTRACE_MODE_READ_REALCREDS))
+> > >  			goto err_cred;
+> > >  	}
+> > > 
+> > >> makes monitoring simpler and even more secure to use since Perf tool need
+> > >> not to start/stop/single-step and read/write registers and memory and so on
+> > >> like a debugger or strace-like tool. What do you think?
+> > > 
+> > > I tend to agree, Peter?
 
-In commit
+So this basically says that if CAP_PERFMON, we don't care about the
+ptrace() permissions? Just like how CAP_SYS_PTRACE would always allow
+the ptrace checks?
 
-  ad96bc27032c ("brcmfmac: initialize the requested dwell time")
-
-Fixes tag
-
-  Fixes: 4905432b28b7 ("brcmfmac: Fix P2P Group Formation failure via Go-ne=
-g method")
-
-has these problem(s):
-
-  - Target SHA1 does not exist
-
-
-Maybe you meant
-
-Fixes: 9c29da3f4e7e ("brcmfmac: Fix P2P Group Formation failure via Go-neg =
-method")
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/OiDA8Ai=f6igcds2bDJuwLA
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl8NkB4ACgkQAVBC80lX
-0Gw50Af+LW7WJB3/+r+ZbjDE806XKes7SJGPe6XT5WjrV4ULYecYAKRr0v+IZTJr
-V6GzRRJZzQ2KeIeCHSFjekWjsefCRn/Wdd8woFly/lAqWLGXA+t5ma/q4gAFxVOD
-FnER451dMzVpAYyUVI7hcwaQd+W3S1eGBcWNGPDpQ8RU5f/ECQ8N1ushy2Mj0z+L
-5a0XXn6W8DBJLON87dQYBmSubg+d68UMTz0JWP0pPcaoCLGZ/KrGhoHB+VGsMtEi
-zZdk+kGLwpOnm3VACO2OCLd/rMwYB1kdean/n70wt1cJ2lpxxV152QZLCjbKNzbo
-HS07Kz+w01ZP4GK0b50+dzodOiE0IQ==
-=3u/W
------END PGP SIGNATURE-----
-
---Sig_/OiDA8Ai=f6igcds2bDJuwLA--
+I suppose that makes sense.
