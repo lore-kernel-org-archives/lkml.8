@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6DDEC433EC
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:53:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF049C433F1
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:54:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8EFCD22BEB
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:53:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D5CC22B45
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:54:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594752839;
-	bh=EiZ93p2usv/LoFYCN6aaZNeVxDqwVAnsSNJ+CTiv9dc=;
+	s=default; t=1594752843;
+	bh=SDsC3WYUWbDqFtf8OSpck0pZHtY5L6+8Nqok/8gyQcQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PIgzl/74ZGMEkHBSImVQP8srmLLuXvJ2eP0kFXyBBvH6rmqsFenwEWPiluT+tCmmE
-	 RX4oXE4WFKLbpaDDISLKKBURa+usrof7gKmld4ydC/SOcOWqelFUH+GSQk62y1Xz3q
-	 CF0yuVETnmnDALMFPmj1hBLMx3eDRa1UpyNcjUrw=
+	b=RfyPaPhmNhN0ol+sov+pouY95/aE0C1TWdaMBNSwFHLOBU7/9oLM4/zz1Uwoyoeqy
+	 f6baKJRyYvUqHcUviP3Q7OXluHfvfm63N502IBnu9NWhs3nz6NCVoJdTCovmLfKdzv
+	 HEHzng6t01btKYoEzsKfRSb9d4fo77viUkUcRfLg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730699AbgGNSx6 (ORCPT
+        id S1730714AbgGNSyB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 14:53:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51202 "EHLO mail.kernel.org"
+        Tue, 14 Jul 2020 14:54:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51306 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730113AbgGNSxy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 14:53:54 -0400
+        id S1729726AbgGNSx7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 14:53:59 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 441E922BEF;
-        Tue, 14 Jul 2020 18:53:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 92DF622B45;
+        Tue, 14 Jul 2020 18:53:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594752833;
-        bh=EiZ93p2usv/LoFYCN6aaZNeVxDqwVAnsSNJ+CTiv9dc=;
+        s=default; t=1594752839;
+        bh=SDsC3WYUWbDqFtf8OSpck0pZHtY5L6+8Nqok/8gyQcQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JVGmkVNEAgSqIhyZ1k+tfB1oVLzgAGD9RIRe6ARsThHTZn9UHoYvYveOVulsO9SVP
-         OPdqkTVWdRIBvItYgS4uZ767adazzFvnQJaTFC/61P5nhHGr+BJobHmV6lh1J0iyu+
-         T3+yyPruZ1jkenLgoERe3e5cBzlsJlB6z+2jZ7qA=
+        b=I2j4PzFEFF2pNW+dl5xUmDIplZV9l/HB0C99f5xaCryqAQqiKfyyDuIJ0p0OXU57J
+         Se7dFqhFdGPlIaVz0f84AeOoe8XEP6/bIxjNJJIqg04uhA3cufLGMAWF5zT5XCTAgQ
+         ad+p9ZRb1MyBOcbOWVBnLCmWp6FLkETq1MQvV+7k=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Zhenzhong Duan <zhenzhong.duan@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
+        stable@vger.kernel.org, Russell King <rmk+kernel@armlinux.org.uk>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 018/166] spi: spidev: fix a race between spidev_release and spidev_remove
-Date:   Tue, 14 Jul 2020 20:43:03 +0200
-Message-Id: <20200714184116.766310701@linuxfoundation.org>
+Subject: [PATCH 5.7 020/166] net: ethernet: mvneta: Fix Serdes configuration for SoCs without comphy
+Date:   Tue, 14 Jul 2020 20:43:05 +0200
+Message-Id: <20200714184116.861499127@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200714184115.844176932@linuxfoundation.org>
 References: <20200714184115.844176932@linuxfoundation.org>
@@ -60,60 +61,168 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Zhenzhong Duan <zhenzhong.duan@gmail.com>
+From: Sascha Hauer <s.hauer@pengutronix.de>
 
-[ Upstream commit abd42781c3d2155868821f1b947ae45bbc33330d ]
+[ Upstream commit b4748553f53f2971e07d2619f13d461daac0f3bb ]
 
-Imagine below scene, spidev is referenced after it's freed.
+The MVNETA_SERDES_CFG register is only available on older SoCs like the
+Armada XP. On newer SoCs like the Armada 38x the fields are moved to
+comphy. This patch moves the writes to this register next to the comphy
+initialization, so that depending on the SoC either comphy or
+MVNETA_SERDES_CFG is configured.
+With this we no longer write to the MVNETA_SERDES_CFG on SoCs where it
+doesn't exist.
 
-spidev_release()                spidev_remove()
-...
-                                spin_lock_irq(&spidev->spi_lock);
-                                    spidev->spi = NULL;
-                                spin_unlock_irq(&spidev->spi_lock);
-mutex_lock(&device_list_lock);
-dofree = (spidev->spi == NULL);
-if (dofree)
-    kfree(spidev);
-mutex_unlock(&device_list_lock);
-                                mutex_lock(&device_list_lock);
-                                list_del(&spidev->device_entry);
-                                device_destroy(spidev_class, spidev->devt);
-                                clear_bit(MINOR(spidev->devt), minors);
-                                if (spidev->users == 0)
-                                    kfree(spidev);
-                                mutex_unlock(&device_list_lock);
-
-Fix it by resetting spidev->spi in device_list_lock's protection.
-
-Signed-off-by: Zhenzhong Duan <zhenzhong.duan@gmail.com>
-Link: https://lore.kernel.org/r/20200618032125.4650-1-zhenzhong.duan@gmail.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Suggested-by: Russell King <rmk+kernel@armlinux.org.uk>
+Signed-off-by: Sascha Hauer <s.hauer@pengutronix.de>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/spi/spidev.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/net/ethernet/marvell/mvneta.c | 80 +++++++++++++++------------
+ 1 file changed, 44 insertions(+), 36 deletions(-)
 
-diff --git a/drivers/spi/spidev.c b/drivers/spi/spidev.c
-index 80dd1025b9530..82e6481fdf950 100644
---- a/drivers/spi/spidev.c
-+++ b/drivers/spi/spidev.c
-@@ -786,13 +786,13 @@ static int spidev_remove(struct spi_device *spi)
+diff --git a/drivers/net/ethernet/marvell/mvneta.c b/drivers/net/ethernet/marvell/mvneta.c
+index 43b44a1e8f69e..401eeeca89660 100644
+--- a/drivers/net/ethernet/marvell/mvneta.c
++++ b/drivers/net/ethernet/marvell/mvneta.c
+@@ -106,6 +106,7 @@
+ #define      MVNETA_TX_IN_PRGRS                  BIT(1)
+ #define      MVNETA_TX_FIFO_EMPTY                BIT(8)
+ #define MVNETA_RX_MIN_FRAME_SIZE                 0x247c
++/* Only exists on Armada XP and Armada 370 */
+ #define MVNETA_SERDES_CFG			 0x24A0
+ #define      MVNETA_SGMII_SERDES_PROTO		 0x0cc7
+ #define      MVNETA_QSGMII_SERDES_PROTO		 0x0667
+@@ -3523,26 +3524,55 @@ static int mvneta_setup_txqs(struct mvneta_port *pp)
+ 	return 0;
+ }
+ 
+-static int mvneta_comphy_init(struct mvneta_port *pp)
++static int mvneta_comphy_init(struct mvneta_port *pp, phy_interface_t interface)
  {
- 	struct spidev_data	*spidev = spi_get_drvdata(spi);
+ 	int ret;
  
-+	/* prevent new opens */
-+	mutex_lock(&device_list_lock);
- 	/* make sure ops on existing fds can abort cleanly */
- 	spin_lock_irq(&spidev->spi_lock);
- 	spidev->spi = NULL;
- 	spin_unlock_irq(&spidev->spi_lock);
+-	if (!pp->comphy)
+-		return 0;
+-
+-	ret = phy_set_mode_ext(pp->comphy, PHY_MODE_ETHERNET,
+-			       pp->phy_interface);
++	ret = phy_set_mode_ext(pp->comphy, PHY_MODE_ETHERNET, interface);
+ 	if (ret)
+ 		return ret;
  
--	/* prevent new opens */
--	mutex_lock(&device_list_lock);
- 	list_del(&spidev->device_entry);
- 	device_destroy(spidev_class, spidev->devt);
- 	clear_bit(MINOR(spidev->devt), minors);
+ 	return phy_power_on(pp->comphy);
+ }
+ 
++static int mvneta_config_interface(struct mvneta_port *pp,
++				   phy_interface_t interface)
++{
++	int ret = 0;
++
++	if (pp->comphy) {
++		if (interface == PHY_INTERFACE_MODE_SGMII ||
++		    interface == PHY_INTERFACE_MODE_1000BASEX ||
++		    interface == PHY_INTERFACE_MODE_2500BASEX) {
++			ret = mvneta_comphy_init(pp, interface);
++		}
++	} else {
++		switch (interface) {
++		case PHY_INTERFACE_MODE_QSGMII:
++			mvreg_write(pp, MVNETA_SERDES_CFG,
++				    MVNETA_QSGMII_SERDES_PROTO);
++			break;
++
++		case PHY_INTERFACE_MODE_SGMII:
++		case PHY_INTERFACE_MODE_1000BASEX:
++			mvreg_write(pp, MVNETA_SERDES_CFG,
++				    MVNETA_SGMII_SERDES_PROTO);
++			break;
++		default:
++			return -EINVAL;
++		}
++	}
++
++	pp->phy_interface = interface;
++
++	return ret;
++}
++
+ static void mvneta_start_dev(struct mvneta_port *pp)
+ {
+ 	int cpu;
+ 
+-	WARN_ON(mvneta_comphy_init(pp));
++	WARN_ON(mvneta_config_interface(pp, pp->phy_interface));
+ 
+ 	mvneta_max_rx_size_set(pp, pp->pkt_size);
+ 	mvneta_txq_max_tx_size_set(pp, pp->pkt_size);
+@@ -3920,14 +3950,10 @@ static void mvneta_mac_config(struct phylink_config *config, unsigned int mode,
+ 	if (state->speed == SPEED_2500)
+ 		new_ctrl4 |= MVNETA_GMAC4_SHORT_PREAMBLE_ENABLE;
+ 
+-	if (pp->comphy && pp->phy_interface != state->interface &&
+-	    (state->interface == PHY_INTERFACE_MODE_SGMII ||
+-	     state->interface == PHY_INTERFACE_MODE_1000BASEX ||
+-	     state->interface == PHY_INTERFACE_MODE_2500BASEX)) {
+-		pp->phy_interface = state->interface;
+-
+-		WARN_ON(phy_power_off(pp->comphy));
+-		WARN_ON(mvneta_comphy_init(pp));
++	if (pp->phy_interface != state->interface) {
++		if (pp->comphy)
++			WARN_ON(phy_power_off(pp->comphy));
++		WARN_ON(mvneta_config_interface(pp, state->interface));
+ 	}
+ 
+ 	if (new_ctrl0 != gmac_ctrl0)
+@@ -4971,20 +4997,10 @@ static void mvneta_conf_mbus_windows(struct mvneta_port *pp,
+ }
+ 
+ /* Power up the port */
+-static int mvneta_port_power_up(struct mvneta_port *pp, int phy_mode)
++static void mvneta_port_power_up(struct mvneta_port *pp, int phy_mode)
+ {
+ 	/* MAC Cause register should be cleared */
+ 	mvreg_write(pp, MVNETA_UNIT_INTR_CAUSE, 0);
+-
+-	if (phy_mode == PHY_INTERFACE_MODE_QSGMII)
+-		mvreg_write(pp, MVNETA_SERDES_CFG, MVNETA_QSGMII_SERDES_PROTO);
+-	else if (phy_mode == PHY_INTERFACE_MODE_SGMII ||
+-		 phy_interface_mode_is_8023z(phy_mode))
+-		mvreg_write(pp, MVNETA_SERDES_CFG, MVNETA_SGMII_SERDES_PROTO);
+-	else if (!phy_interface_mode_is_rgmii(phy_mode))
+-		return -EINVAL;
+-
+-	return 0;
+ }
+ 
+ /* Device initialization routine */
+@@ -5170,11 +5186,7 @@ static int mvneta_probe(struct platform_device *pdev)
+ 	if (err < 0)
+ 		goto err_netdev;
+ 
+-	err = mvneta_port_power_up(pp, phy_mode);
+-	if (err < 0) {
+-		dev_err(&pdev->dev, "can't power up port\n");
+-		goto err_netdev;
+-	}
++	mvneta_port_power_up(pp, phy_mode);
+ 
+ 	/* Armada3700 network controller does not support per-cpu
+ 	 * operation, so only single NAPI should be initialized.
+@@ -5328,11 +5340,7 @@ static int mvneta_resume(struct device *device)
+ 		}
+ 	}
+ 	mvneta_defaults_set(pp);
+-	err = mvneta_port_power_up(pp, pp->phy_interface);
+-	if (err < 0) {
+-		dev_err(device, "can't power up port\n");
+-		return err;
+-	}
++	mvneta_port_power_up(pp, pp->phy_interface);
+ 
+ 	netif_device_attach(dev);
+ 
 -- 
 2.25.1
 
