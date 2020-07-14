@@ -2,152 +2,120 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FB99C433E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 17:17:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2F83C433E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 17:17:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 68F7022574
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 17:17:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE88822574
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 17:17:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="fGc8yYLs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728930AbgGNRRS (ORCPT
+        id S1728941AbgGNRRt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 13:17:18 -0400
-Received: from out01.mta.xmission.com ([166.70.13.231]:33888 "EHLO
-        out01.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728186AbgGNRRR (ORCPT
+        Tue, 14 Jul 2020 13:17:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52100 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728186AbgGNRRt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 13:17:17 -0400
-Received: from in02.mta.xmission.com ([166.70.13.52])
-        by out01.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.90_1)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1jvOYM-0008Cy-TV; Tue, 14 Jul 2020 11:17:14 -0600
-Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
-        by in02.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.87)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1jvOYL-0007NN-ND; Tue, 14 Jul 2020 11:17:14 -0600
-From:   ebiederm@xmission.com (Eric W. Biederman)
-To:     Al Viro <viro@zeniv.linux.org.uk>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-kernel@vger.kernel.org, David Howells <dhowells@redhat.com>,
-        Nicolas Pitre <nico@fluxnic.net>
-References: <20200630043641.GD2786714@ZenIV.linux.org.uk>
-Date:   Tue, 14 Jul 2020 12:14:25 -0500
-In-Reply-To: <20200630043641.GD2786714@ZenIV.linux.org.uk> (Al Viro's message
-        of "Tue, 30 Jun 2020 05:36:41 +0100")
-Message-ID: <875zaq589a.fsf@x220.int.ebiederm.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+        Tue, 14 Jul 2020 13:17:49 -0400
+Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 00918C061755
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 10:17:48 -0700 (PDT)
+Received: by mail-pj1-x1042.google.com with SMTP id k71so1921585pje.0
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 10:17:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=hnEFouxs+we3yCbXczH8V8BowgDMhEQabzvQ7VTQSUs=;
+        b=fGc8yYLs91rKUbePsXS8Omz/SMuyt3n7nXMuiwyo9zE3Ttv+pAC1IlQwkpIya38CCW
+         HByWzm4683r8rMc8n+GzW4h2LZ8swZqnWuNU6Ybv9BdUQs6ZFacZYFwf0rdGOTIuJyfd
+         9UTCtvrp4sFnv+ZLM40jX5XQe3WKr52/JZtxUzR7QDuLglqIJADP62Fftgh7oNEOfLka
+         sDNtNXfPLX026CAeZ6mevAW3L0KtJN4i9DI66mI7vesoVIZHooLFuiVAIvFUo7K3F5gE
+         t/YCDb/zIDIigaun2Mac91nNtYR5wATCIGbXxBdKSsu29Upd/6MxQmcs0WfbuHzOloFr
+         V85w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=hnEFouxs+we3yCbXczH8V8BowgDMhEQabzvQ7VTQSUs=;
+        b=k+CIcI4/0/iqkf12cFN3LeToCuF2y3EGPnP2+FEgSNNyzVmg6VhaR7JeUN1fLO0n+W
+         a7mFxnyxAs3hqd8qHv9Swi38ngYXeOw0ACDHWmovOZG69A3hpA9xwkBWoZ79M8KkpSlE
+         zLAuSjv3odEECqKMURs3nn/CcPjftEZgFWzymw5uFwTwuvXDMFQL9+1aDUkBBSsI1zkn
+         b12OMVmLBurOYFyxidmrssCn7qhXyq9eeF8QU7mgo6FFUXaYscg+OoYPXNWCfLVjs6Tc
+         xrqE3H0Kv4pKORJU3yf7Y3KpElw+BwKmS84N6T2FvRNAia+6tQN2k5n+0xVkmY1rSTIm
+         lT0A==
+X-Gm-Message-State: AOAM532OBpuhDXDyx+fKU9j+te/3dkeunwdcOhBdR/6m/b370tW7BmwR
+        IHlAsaGjjwFiQnN2GTSRpBy8
+X-Google-Smtp-Source: ABdhPJwp8WPJacRREeYurMSXd2PZPgxhOF/urNM0WAhQhjFkuxyGfC5yfSDtHEpTWWQOC95UvhFyEA==
+X-Received: by 2002:a17:902:7e01:: with SMTP id b1mr4839837plm.310.1594747068418;
+        Tue, 14 Jul 2020 10:17:48 -0700 (PDT)
+Received: from Mani-XPS-13-9360 ([2409:4072:6d83:a4f:d:a14d:ca62:5c15])
+        by smtp.gmail.com with ESMTPSA id c27sm17191410pfj.163.2020.07.14.10.17.45
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 14 Jul 2020 10:17:47 -0700 (PDT)
+Date:   Tue, 14 Jul 2020 22:47:42 +0530
+From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     linus.walleij@linaro.org, linux-kernel@vger.kernel.org,
+        linux-gpio@vger.kernel.org
+Subject: Re: [PATCH 18/25] pinctrl: pinctrl-bm1880: Rename ill documented
+ struct attribute entries
+Message-ID: <20200714171742.GA7260@Mani-XPS-13-9360>
+References: <20200713144930.1034632-1-lee.jones@linaro.org>
+ <20200713144930.1034632-19-lee.jones@linaro.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-XM-SPF: eid=1jvOYL-0007NN-ND;;;mid=<875zaq589a.fsf@x220.int.ebiederm.org>;;;hst=in02.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
-X-XM-AID: U2FsdGVkX1+DLwPEzJB8iPoGZ+F8SvH9+Vy8PldIabY=
-X-SA-Exim-Connect-IP: 68.227.160.95
-X-SA-Exim-Mail-From: ebiederm@xmission.com
-Subject: Re: [RFC][PATCHES] converting FDPIC coredumps to regsets
-X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
-X-SA-Exim-Scanned: Yes (on in02.mta.xmission.com)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200713144930.1034632-19-lee.jones@linaro.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Al Viro <viro@zeniv.linux.org.uk> writes:
+On Mon, Jul 13, 2020 at 03:49:23PM +0100, Lee Jones wrote:
+> Fixes the following W=1 kernel build warning(s):
+> 
+>  drivers/pinctrl/pinctrl-bm1880.c:40: warning: Function parameter or member 'pctrldev' not described in 'bm1880_pinctrl'
+>  drivers/pinctrl/pinctrl-bm1880.c:40: warning: Function parameter or member 'pinconf' not described in 'bm1880_pinctrl'
+> 
+> Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> Signed-off-by: Lee Jones <lee.jones@linaro.org>
 
-> 	Conversion of ELF coredumps to regsets has not touched
-> ELF_FDPIC.  Right now all architectures that support FDPIC have
-> regsets sufficient for switching it to regset-based coredumps.  A bit
-> of backstory: original ELF (and ELF_FDPIC) coredumps reused the old
-> helpers used by a.out coredumps.  These days a.out coredumps are gone;
-> we could remove the dead code, if not for several obstacles.  And one
-> of those obstacles is ELF_FDPIC.
->
-> 	This series more or less reproduces the conversion done
-> by Roland for ELF coredumps.  The branch is in
-> git://git.kernel.org/pub/scm/linux/kernel/git/viro/vfs.git #work.fdpic
-> and it's based on top of #regset.base there (just the introduction of
-> regset_get() wrapper for ->get(); nothing else from the regset series
-> is needed).  Killing the old aout helpers is _not_ in this branch;
-> followup cleanups live separately.
->
-> 	First we need to sort out the mess with struct elf_prstatus,
-> though.  It's used both for ELF and ELF_FDPIC coredumps, and it
-> contains a couple of fields under ifdef on CONFIG_BINFMT_ELF_FDPIC.
-> ELF is MMU-dependent and most, but not all configs that allow ELF_FDPIC
-> are non-MMU.  ARM is an exception - there ELF_FDPIC is allowed both for
-> MMU and non-MMU configs.  That's a problem - struct elf_prstatus is a
-> part of coredump layout, so ELF coredumps produced by arm kernels that
-> have ELF_FDPIC enabled are incompatible with those that have it disabled.
->
-> 	The obvious solution is to introduce struct elf_prstatus_fdpic
-> and use that in binfmt_elf_fdpic.c, taking these fields out of the
-> normal struct elf_prstatus.  Unfortunately, the damn thing is defined in
-> include/uapi/linux/elfcore.h, so nominally it's a part of userland ABI.
-> However, not a single userland program actually includes linux/elfcore.h.
-> The reason is that the definition in there uses elf_gregset_t as a member,
-> and _that_ is not defined anywhere in the exported headers.  It is defined
-> in (libc) sys/procfs.h, but the same file defines struct elf_prstatus
-> as well.  So if you try to include linux/elfcore.h without having already
-> pulled sys/procfs.h, it'll break on incomplete type of a member.  And if
-> you have pulled sys/procfs.h, it'll break on redefining a structure.
-> IOW, it's not usable and it never had been; as the matter of fact,
-> that's the reason sys/procfs.h had been introduced back in 1996.
->
-> 1/7) unexport linux/elfcore.h
-> 	Takes it out of include/uapi/linux and moves the stuff that used
-> to live there into include/linux/elfcore.h
->
-> 2/7) take fdpic-related parts of elf_prstatus out
-> 	Now we can take that ifdef out of the definition of elf_prstatus
-> (as well as compat_elf_prstatus) and put the variant with those extra
-> fields into binfmt_elf_fdpic.c, calling it elf_prstatus_fdpic there.
->
-> 3/7) kill elf_fpxregs_t
-> 	All code dealing with it (both in elf_fdpic and non-regset side
-> of elf) is conditional upon ELF_CORE_COPY_XFPREGS.  And no architectures
-> define that anymore.  Take the dead code out.
->
-> 4/7) [elf-fdpic] coredump: don't bother with cyclic list for per-thread
-> objects
-> 5/7) [elf-fdpic] move allocation of elf_thread_status into
-> elf_dump_thread_status()
-> 6/7) [elf-fdpic] use elf_dump_thread_status() for the dumper thread as well
-> 	Massaging fdpic coredump logics towards the regset side of
-> elf coredump.
->
-> 7/7) [elf-fdpic] switch coredump to regsets
-> 	... and now we can switch from elf_core_copy_task_{,fp}regs()
-> to regset_get().
+Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 
-I just did a quick read through.
+Thanks,
+Mani
 
-The KABI bits look sane, or rather pulling definitions out of the KABI
-headers because they are not usable seems like a reasonable response to
-a messed up situation.  In the long run it would be good if we could get
-some proper KABI headers for the format of coredumps.
-
-I am a bit confused about what is happening in the cleanups, and frankly
-the fault really lies with the binfmt_elf.c.  As binfmt_elf.c in Linus's
-tree still has a regset and a non-regset version of core dumping.
-
-What I see happening is that you are transforming what started off
-as a copy of the non-regset version of elf coredumping and transforming
-it into something close to the regset version of coredumping.  Which is
-sensible.  The fact that the elf_fdpic code continues to use the
-non-regset names for the functions it calls, and does not synchronize
-it's structure with the ordinary elf core dumping code may be sensible
-but it is extremely confusing to follow.
-
-As a follow up it would probably good to sort out synchronize the
-elf and elf_fdpic coredumping code as much as possible, just to simplify
-future maintenance.
-
-So for as much as I could understand and verify.
-
-Acked-by: "Eric W. Biederman" <ebiederm@xmission.com>
-
-Eric
+> ---
+>  drivers/pinctrl/pinctrl-bm1880.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/pinctrl/pinctrl-bm1880.c b/drivers/pinctrl/pinctrl-bm1880.c
+> index d1a7d98367870..a8e267237435f 100644
+> --- a/drivers/pinctrl/pinctrl-bm1880.c
+> +++ b/drivers/pinctrl/pinctrl-bm1880.c
+> @@ -22,12 +22,12 @@
+>  /**
+>   * struct bm1880_pinctrl - driver data
+>   * @base:	Pinctrl base address
+> - * @pctrl:	Pinctrl device
+> + * @pctrldev:	Pinctrl device
+>   * @groups:	Pingroups
+>   * @ngroups:	Number of @groups
+>   * @funcs:	Pinmux functions
+>   * @nfuncs:	Number of @funcs
+> - * @pconf:	Pinconf data
+> + * @pinconf:	Pinconf data
+>   */
+>  struct bm1880_pinctrl {
+>  	void __iomem *base;
+> -- 
+> 2.25.1
+> 
