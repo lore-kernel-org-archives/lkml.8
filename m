@@ -2,94 +2,142 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87676C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 16:29:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25624C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 16:30:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 57F97223AB
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 16:29:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594744147;
-	bh=4odRCreeBpRWf9k9xWiKzOUUUo8g02gshG5+keJQUpI=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=mP9tn0yx4WtwLwcoP5YZ3uDlu8VR2mcfzm+F1rFTo1Veb0Mv6rhez32IGCvcR+p2x
-	 k4yaR0m3sUhEhJ0uybeYYjWRFGor59bfNIxLiLmUW376VADHpiKsy9+XW1Kosv4/S4
-	 rY2zcQBHAOY3B9runqE2AdvxRVgVUKpwTTCDuLh0=
+	by mail.kernel.org (Postfix) with ESMTP id F40FA223AB
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 16:29:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uq83Pv7t"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728721AbgGNQ3F (ORCPT
+        id S1728730AbgGNQ36 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 12:29:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52692 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725890AbgGNQ3F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 12:29:05 -0400
-Received: from kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com (unknown [163.114.132.1])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B70D8223AB;
-        Tue, 14 Jul 2020 16:29:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594744145;
-        bh=4odRCreeBpRWf9k9xWiKzOUUUo8g02gshG5+keJQUpI=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=SsC/k4KH0RiKnJyANHzdOQq2xkfSIzMcUbenVPrxpqUdLls+fCuP/Te4F3n2mT6ES
-         Ksiq2dUy9HseBQclYz3xZf23DYiDtkE3PciLBNK4A248cYbmVaCAc4KLQ/LyYNx6o1
-         tOvT3MOvsF7BlEZ4t/IRK7luPGIQAsZR1fodbsXo=
-Date:   Tue, 14 Jul 2020 09:29:03 -0700
-From:   Jakub Kicinski <kuba@kernel.org>
-To:     "Westergreen, Dalon" <dalon.westergreen@intel.com>
-Cc:     "Ooi, Joyce" <joyce.ooi@intel.com>,
-        "See, Chin Liang" <chin.liang.see@intel.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Nguyen, Dinh" <dinh.nguyen@intel.com>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "thor.thayer@linux.intel.com" <thor.thayer@linux.intel.com>,
-        "Tan, Ley Foon" <ley.foon.tan@intel.com>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        Michal Kubecek <mkubecek@suse.cz>
-Subject: Re: [PATCH v4 09/10] net: eth: altera: add msgdma prefetcher
-Message-ID: <20200714092903.38581b74@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-In-Reply-To: <3bcb9020f0a3836f41036ddc3c8034b96e183197.camel@intel.com>
-References: <20200708072401.169150-1-joyce.ooi@intel.com>
-        <20200708072401.169150-10-joyce.ooi@intel.com>
-        <20200708144900.058a8b25@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-        <CY4PR11MB12537DA07C73574B82A239BDF2610@CY4PR11MB1253.namprd11.prod.outlook.com>
-        <20200714085526.2bb89dc6@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-        <3bcb9020f0a3836f41036ddc3c8034b96e183197.camel@intel.com>
+        Tue, 14 Jul 2020 12:29:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44574 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725890AbgGNQ35 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 12:29:57 -0400
+Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6135FC061755;
+        Tue, 14 Jul 2020 09:29:57 -0700 (PDT)
+Received: by mail-lj1-x243.google.com with SMTP id r19so23584426ljn.12;
+        Tue, 14 Jul 2020 09:29:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=E/fd4+ve+l+H502mXoaxeDxS6PWJ8G8plZiirt47oHI=;
+        b=uq83Pv7tgDH64WUNzFYrrR/E48jCN43Bab8+SBAdg7Zxs21SYFXCB6Hgt/BI+7G/yg
+         /Aw+42AAusY9mpF+olBfZW2YIYSKMQsI9W1Rqmi6DHDzPLitDgopQcp7TDJLyrZEsEJW
+         RSN2awUtFQXolcQXDu33ArWY0ZJqjYL3NXRA8D4mhsEa+i5LyCUxMq7d7nvPMOIpcL23
+         A7dgn9vaHkAUilwwpriMcL+f9scnNfW0Drqq9pneDe2qI3iJqOSeR4YbOsitpqnXs7Yg
+         LpxYGXTW/w2y1Vx3d38wZ5kErFALrrVBVrEUG43dCYZiIpfd8wat/ANV/ZkY8WHYyIY6
+         CcYg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=E/fd4+ve+l+H502mXoaxeDxS6PWJ8G8plZiirt47oHI=;
+        b=rrcf6JxjfEKUZdgCspJKJ78/rCFmLc/kWpJg3GjjXRqx5Dp1Fw3wLVJHiXVTMwiaPL
+         70M9xMdNndTab7sqj7KSA1p35SSo6ZUNrixseEF6nTjNsmuD8yqgafQL3dwp156MBgAd
+         i2tBlUtNjNjSk9nCHZSYA1ShUUzHG3ly7UKoSUxoX9uk8tLHEpQRJfCVU59HlFot7r/W
+         OU8oO21MVqUgT2QF18C99P344NqzUePeNU95yNOZYp10EUm268OTU1bI1ss07tHzmnAH
+         RVw9W5Rh6dQU/xPFVebPsiJar6xpVuAL6i+cdejmR2uJb/ih+l41Eg189O6c5RtV9zrk
+         bnRA==
+X-Gm-Message-State: AOAM532pHKJU/K0g2M5ovDTF+GTeO/lxzh98MKWh0rySPspmTBU6ZHHE
+        kaXZxsh0sjh3282inkbTV+zLatO3
+X-Google-Smtp-Source: ABdhPJy9XKMKAljS+dkH2V3EUqJ2kMbCeozYPbmE/34AgjNG/i4cmBWv9BCRezuYGsgLO2RdiWykwQ==
+X-Received: by 2002:a2e:3c0e:: with SMTP id j14mr2764753lja.25.1594744195878;
+        Tue, 14 Jul 2020 09:29:55 -0700 (PDT)
+Received: from mobilestation ([95.79.139.207])
+        by smtp.gmail.com with ESMTPSA id u7sm7283067lfi.45.2020.07.14.09.29.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 14 Jul 2020 09:29:55 -0700 (PDT)
+Date:   Tue, 14 Jul 2020 19:29:53 +0300
+From:   Serge Semin <fancer.lancer@gmail.com>
+To:     Dave Jiang <dave.jiang@intel.com>
+Cc:     Vinod Koul <vkoul@kernel.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Viresh Kumar <vireshk@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
+        devicetree@vger.kernel.org, dmaengine@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v7 05/11] dmaengine: Introduce DMA-device device_caps
+ callback
+Message-ID: <20200714162953.2333hke6pfvovjuk@mobilestation>
+References: <20200709224550.15539-1-Sergey.Semin@baikalelectronics.ru>
+ <20200709224550.15539-6-Sergey.Semin@baikalelectronics.ru>
+ <20200710084503.GE3703480@smile.fi.intel.com>
+ <20200710093834.su3nsjesnhntpd6d@mobilestation>
+ <07d4a977-1de6-b611-3d4f-7c7d6cd7fe5f@intel.com>
+ <20200714160830.GL34333@vkoul-mobl>
+ <f746fafd-851e-f402-3755-03ef94a65988@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <f746fafd-851e-f402-3755-03ef94a65988@intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 14 Jul 2020 15:58:53 +0000 Westergreen, Dalon wrote:
-> On Tue, 2020-07-14 at 08:55 -0700, Jakub Kicinski wrote:
-> > On Tue, 14 Jul 2020 14:35:16 +0000 Ooi, Joyce wrote:  
-> > > > I'm no device tree expert but these look like config options rather than
-> > > > HW
-> > > > description. They also don't appear to be documented in the next patch.    
-> > > 
-> > > The poll_freq are part of the msgdma prefetcher IP, whereby it
-> > > specifies the frequency of descriptor polling operation. I can add
-> > > the poll_freq description in the next patch.  
-> > 
-> > Is the value decided at the time of synthesis or can the driver choose 
-> > the value it wants?  
+On Tue, Jul 14, 2020 at 09:18:16AM -0700, Dave Jiang wrote:
 > 
-> It is not controlled at synthesis, this parameter should likely not be a
-> devicetree parameter, perhaps just make it a module parameter with a default
-> value.
+> 
+> On 7/14/2020 9:08 AM, Vinod Koul wrote:
+> > On 13-07-20, 13:55, Dave Jiang wrote:
+> > > 
+> > > 
+> > > On 7/10/2020 2:38 AM, Serge Semin wrote:
+> > > > On Fri, Jul 10, 2020 at 11:45:03AM +0300, Andy Shevchenko wrote:
+> > > > > On Fri, Jul 10, 2020 at 01:45:44AM +0300, Serge Semin wrote:
+> > > > > > There are DMA devices (like ours version of Synopsys DW DMAC) which have
+> > > > > > DMA capabilities non-uniformly redistributed between the device channels.
+> > > > > > In order to provide a way of exposing the channel-specific parameters to
+> > > > > > the DMA engine consumers, we introduce a new DMA-device callback. In case
+> > > > > > if provided it gets called from the dma_get_slave_caps() method and is
+> > > > > > able to override the generic DMA-device capabilities.
+> > > > > 
+> > > > 
+> > > > > In light of recent developments consider not to add 'slave' and a such words to the kernel.
+> > > > 
+> > > > As long as the 'slave' word is used in the name of the dma_slave_caps
+> > > > structure and in the rest of the DMA-engine subsystem, it will be ambiguous
+> > > > to use some else terminology. If renaming needs to be done, then it should be
+> > > > done synchronously for the whole subsystem.
+> > > 
+> > > What about just calling it dma_device_caps? Consider this is a useful
+> > > function not only slave DMA will utilize this. I can see this being useful
+> > > for some of my future code with idxd driver.
+> > 
+> > Some of the caps may make sense to generic dmaengine but few of them do
+> > not :) While at it, am planning to make it dmaengine_periph_caps to
+> > denote that these are dmaengine peripheral capabilities.
+> > 
+> 
 
-Let's see if I understand the feature - instead of using a doorbell the
-HW periodically checks the contents of the next-to-use descriptor to
-see if it contains a valid tx frame or rx buffer?
+> If the function only passes in periph_caps, how do we allow the non periph
+> DMA utilize this function?
 
-I've seen vendors abuse fields of ethtool --coalesce to configure
-similar settings. tx-usecs-irq and rx-usecs-irq, I think. Since this
-part of ethtool API has been ported to netlink, could we perhaps add 
-a new field to ethtool --coalesce?
+Hello Dave. That seems reasonable. "dma_device_caps" or even "dma_chan_caps"
+might be more suitable seeing after this patchset merged in the "dma_slave_caps"
+may really provide the DMA channel-specific configs. Moreover that structure is
+accessible only by means of the dma_chan descriptor:
+
+int dma_get_slave_caps(struct dma_chan *chan, struct dma_slave_caps *caps);
+
+which makes those caps being the channel-specific even without this patchset.
+
+So as I see it "dma_chan_caps" might be the better choice.
+
+-Sergey
