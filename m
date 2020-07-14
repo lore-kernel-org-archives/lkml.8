@@ -2,89 +2,86 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC1CBC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 06:06:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B8D3C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 06:08:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 93CB6221EA
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 06:06:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="JMzCTAEt"
+	by mail.kernel.org (Postfix) with ESMTP id 233F920890
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 06:08:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726767AbgGNGG0 (ORCPT
+        id S1726776AbgGNGIB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 02:06:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60906 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725306AbgGNGG0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 02:06:26 -0400
-Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CFBC2C061755;
-        Mon, 13 Jul 2020 23:06:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
-        :Reply-To:Content-ID:Content-Description;
-        bh=UIXDCXwJB/3NeMqMWfWT3V3jqZ15kLhlWyDghMyaIz0=; b=JMzCTAEtA44frARh4Fspuz2L0T
-        LccTR8Ea95W2ZujXKz28LnB2wK0cgNkGXSUFT+Az8bsG2vQ9Zjqg7OYeQLqmOwvmWWBjz6rO2Nwfy
-        7mNzELT3rwdoF6BY1R/7GzwAbyetPecUoa9kHiE35jnSfpPERVE8o08NA4wsj8ZSPFWf6D1kZUl19
-        r/DYvFiIqkHF4SaCtikLURLQEdcarDG51WagosW6HLAaFh9c4S+cdvdrGkyUT9w0D2oNPE04B0e4a
-        6u2Ccqd8TuhQJ9gBXv4ofE+r6nQn7/Ut0AmgNirCcA0Hd4YWNa1Q5e9JM4J1cBcsvYORWE18JLITP
-        MD5J27Uw==;
-Received: from [2601:1c0:6280:3f0::19c2]
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jvE56-0003wr-27; Tue, 14 Jul 2020 06:06:20 +0000
-Subject: Re: procfs VmFlags table missing from online docs
-To:     Chris Packham <Chris.Packham@alliedtelesis.co.nz>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Cc:     "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>
-References: <8abafee9-e34b-45f6-19a7-3f043ceb5537@alliedtelesis.co.nz>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <6ee41c18-934e-26c2-a875-3d9e4c700c6c@infradead.org>
-Date:   Mon, 13 Jul 2020 23:06:14 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
-MIME-Version: 1.0
-In-Reply-To: <8abafee9-e34b-45f6-19a7-3f043ceb5537@alliedtelesis.co.nz>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Tue, 14 Jul 2020 02:08:01 -0400
+Received: from mail.loongson.cn ([114.242.206.163]:57060 "EHLO loongson.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725778AbgGNGIB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 02:08:01 -0400
+Received: from localhost.loongson.cn (unknown [10.20.42.122])
+        by mail.loongson.cn (Coremail) with SMTP id AQAAf9Dx7x+4Sw1fRD8EAA--.5360S2;
+        Tue, 14 Jul 2020 14:07:53 +0800 (CST)
+From:   Guoyun Sun <sunguoyun@loongson.cn>
+To:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Paul Burton <paulburton@kernel.org>
+Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Tiezhu Yang <yangtiezhu@loongson.cn>,
+        Sunguoyun <sunguoyun@loongson.cn>
+Subject: [PATCH] MIPS: fix vdso different address spaces
+Date:   Tue, 14 Jul 2020 14:07:47 +0800
+Message-Id: <1594706867-4426-1-git-send-email-sunguoyun@loongson.cn>
+X-Mailer: git-send-email 2.1.0
+X-CM-TRANSID: AQAAf9Dx7x+4Sw1fRD8EAA--.5360S2
+X-Coremail-Antispam: 1UD129KBjvdXoW7GFy3ZFW8Cr17AFW3GrW7Arb_yoWDtrc_KF
+        9FkwsYgr4rtFn7CF1DW34S9Fyjgw4UWry8ursxurnFg39YqrnrKrZF9F13Jw4xZrsF9393
+        Kry7uw1UA34xKjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+        9fnUUIcSsGvfJTRUUUbzxFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2IYs7xG
+        6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
+        A2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr0_
+        Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AKxVWxJr
+        0_GcWle2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
+        2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJV
+        W8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1l42xK82IYc2Ij64vI
+        r41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8Gjc
+        xK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7VAKI48JMIIF0xvE2Ix0
+        cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8V
+        AvwI8IcIk0rVWrZr1j6s0DMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7Cj
+        xVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7VUbrMaUUUUUU==
+X-CM-SenderInfo: 5vxqw3hr1x0qxorr0wxvrqhubq/
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/13/20 10:11 PM, Chris Packham wrote:
-> Hi,
-> 
-> I was just browsing 
-> https://www.kernel.org/doc/html/latest/filesystems/proc.html
-> 
-> The "VmFlags" description seems to be missing a table. It's there in 
-> Documentation/filesystems/proc.rst so I assume it's some sphinx/rst 
-> problem. Possibly the table is over indented?
+From: Sunguoyun <sunguoyun@loongson.cn>
 
-Wow. It skips the table completely.
+sparse report build warning as follows:
+arch/mips/vdso/vdso-n32-image.c:13:35:
+incorrect type in assignment (different address spaces) @@
+expected void *[usertype] vdso @@     got void [noderef] <asn:1> * @@
 
-I tried a couple of things that did not help.
+Reported-by: kernel test robot <lkp@intel.com>
 
-> Anyway I thought I'd let someone know.
+Signed-off-by: Sunguoyun <sunguoyun@loongson.cn>
+---
+ arch/mips/vdso/genvdso.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Thanks.
-
-> Regards,
-> Chris
-
-
+diff --git a/arch/mips/vdso/genvdso.c b/arch/mips/vdso/genvdso.c
+index be57b832bbe0..94f9538bc889 100644
+--- a/arch/mips/vdso/genvdso.c
++++ b/arch/mips/vdso/genvdso.c
+@@ -260,7 +260,7 @@ int main(int argc, char **argv)
+ 	fprintf(out_file, "	if (vdso_image.size != new_size)\n");
+ 	fprintf(out_file, "		return -EINVAL;\n");
+ 	fprintf(out_file, "	current->mm->context.vdso =\n");
+-	fprintf(out_file, "	(void __user *)(new_vma->vm_start);\n");
++	fprintf(out_file, "	(void *)(new_vma->vm_start);\n");
+ 	fprintf(out_file, "	return 0;\n");
+ 	fprintf(out_file, "}\n");
+ 
 -- 
-~Randy
+2.17.1
 
