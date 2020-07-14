@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82094C433F2
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:55:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC8D2C433F4
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:55:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 52FEF22BEF
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:55:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A0D1722C9C
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:55:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594752905;
-	bh=JEMYg5gbmSFLxknIdptGKQdGbkRZKg4d8AowczU99ik=;
+	s=default; t=1594752908;
+	bh=N0oRkARnbaSnclY/Nw/wDIbiTxdcWzxHoAT1rVY5lT4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=i/v4ygIzO84mHSh07uEXFkdaA5SRwoB5+qhNHDCmJXjj49eAOxvKIxohtd4RdhmBP
-	 sMeySd+QK5loWN/zkKpk8a7ir05ll5xDqO0oZeUSI/LstMEmAWDxdFOELJ91hEsaXF
-	 Wx3u0p2pLo3HGWo2+o41p14ShujvX9QOsm7Y5pvo=
+	b=wHQBK9OBa7cVQ173D+qATsXCUjZsCV/bwAIqCiNdplyJ6XK3zM0s+k0Bhbg1tJCjm
+	 dIiTuUAyzF2+uvV8Q+hqu+pbsbTe7Ccem036uMI9MkBd/JDj67TEc22udPDaWrChNN
+	 7Oq/wjFCLWgUrHZrt4SZ9NQL5ojxv80LViu6WOeo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730169AbgGNSzE (ORCPT
+        id S1730832AbgGNSzG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 14:55:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52532 "EHLO mail.kernel.org"
+        Tue, 14 Jul 2020 14:55:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52626 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730814AbgGNSy6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 14:54:58 -0400
+        id S1730821AbgGNSzE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 14:55:04 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0102922B47;
-        Tue, 14 Jul 2020 18:54:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2891422B47;
+        Tue, 14 Jul 2020 18:55:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594752898;
-        bh=JEMYg5gbmSFLxknIdptGKQdGbkRZKg4d8AowczU99ik=;
+        s=default; t=1594752903;
+        bh=N0oRkARnbaSnclY/Nw/wDIbiTxdcWzxHoAT1rVY5lT4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CxR8FRmB0gOmv1HSLbC4YIYeswYe6Q3+wyt9nHxJekhy0KVFWxDt6uox1OTJQVmhL
-         wgpDMzzgU5U/EC4jm90IxkJYKg95eRQGIMRoFDHKj+TaM86FUVT0n3zfKQ67NB1VLr
-         cSikFnh+AuEZue/QrhgxgRWBBmEwXmWaL8rvD630=
+        b=MyWhuHyxLCvC/Ss5BeSX/ytCcbh/QIBKex6zp9VEvvB//mTYGukBg9/xOystKvgXp
+         2mouq2q1Jm34zwTTGKHz3JJndCGdKUz2fF5vP2c4j2VoR12wEBOGbtZQ75huYoa6Xa
+         E9CrCtQQ090s7F8k39TFSO6xN19f72GWd2XdWEhw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dany Madden <drt@linux.ibm.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 025/166] ibmvnic: continue to init in CRQ reset returns H_CLOSED
-Date:   Tue, 14 Jul 2020 20:43:10 +0200
-Message-Id: <20200714184117.089562706@linuxfoundation.org>
+        stable@vger.kernel.org, Scott Wood <swood@redhat.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.7 044/166] sched/core: Check cpus_mask, not cpus_ptr in __set_cpus_allowed_ptr(), to fix mask corruption
+Date:   Tue, 14 Jul 2020 20:43:29 +0200
+Message-Id: <20200714184117.989709434@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200714184115.844176932@linuxfoundation.org>
 References: <20200714184115.844176932@linuxfoundation.org>
@@ -60,46 +61,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dany Madden <drt@linux.ibm.com>
+From: Scott Wood <swood@redhat.com>
 
-[ Upstream commit 8b40eb73509f5704a0e8cd25de0163876299f1a7 ]
+[ Upstream commit fd844ba9ae59b51e34e77105d79f8eca780b3bd6 ]
 
-Continue the reset path when partner adapter is not ready or H_CLOSED is
-returned from reset crq. This patch allows the CRQ init to proceed to
-establish a valid CRQ for traffic to flow after reset.
+This function is concerned with the long-term CPU mask, not the
+transitory mask the task might have while migrate disabled.  Before
+this patch, if a task was migrate-disabled at the time
+__set_cpus_allowed_ptr() was called, and the new mask happened to be
+equal to the CPU that the task was running on, then the mask update
+would be lost.
 
-Signed-off-by: Dany Madden <drt@linux.ibm.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Scott Wood <swood@redhat.com>
+Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Link: https://lkml.kernel.org/r/20200617121742.cpxppyi7twxmpin7@linutronix.de
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/ibm/ibmvnic.c | 9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
+ kernel/sched/core.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/ibm/ibmvnic.c b/drivers/net/ethernet/ibm/ibmvnic.c
-index 2baf7b3ff4cbf..0fd7eae25fe9d 100644
---- a/drivers/net/ethernet/ibm/ibmvnic.c
-+++ b/drivers/net/ethernet/ibm/ibmvnic.c
-@@ -1971,13 +1971,18 @@ static int do_reset(struct ibmvnic_adapter *adapter,
- 			release_sub_crqs(adapter, 1);
- 		} else {
- 			rc = ibmvnic_reset_crq(adapter);
--			if (!rc)
-+			if (rc == H_CLOSED || rc == H_SUCCESS) {
- 				rc = vio_enable_interrupts(adapter->vdev);
-+				if (rc)
-+					netdev_err(adapter->netdev,
-+						   "Reset failed to enable interrupts. rc=%d\n",
-+						   rc);
-+			}
- 		}
+diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+index f2618ade80479..8034434b10400 100644
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -1637,7 +1637,7 @@ static int __set_cpus_allowed_ptr(struct task_struct *p,
+ 		goto out;
+ 	}
  
- 		if (rc) {
- 			netdev_err(adapter->netdev,
--				   "Couldn't initialize crq. rc=%d\n", rc);
-+				   "Reset couldn't initialize crq. rc=%d\n", rc);
- 			goto out;
- 		}
+-	if (cpumask_equal(p->cpus_ptr, new_mask))
++	if (cpumask_equal(&p->cpus_mask, new_mask))
+ 		goto out;
  
+ 	/*
 -- 
 2.25.1
 
