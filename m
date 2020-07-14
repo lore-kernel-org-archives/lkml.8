@@ -2,92 +2,113 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FD47C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 02:15:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BF36C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 02:16:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D4D0721BE5
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 02:15:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594692948;
-	bh=OzubgVFc3pjahklLc2y2IxmKpyNZA0d2DWC+kikFdzg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=FOsK9s9y6G7JfbB3+G2afHz1hBteqNoW7V8pAg9LSrVe8Kf93MW8PzluUEp3HSCGr
-	 o4Txx0s/1/lkFtU7TrNDWFNTiWv7qSu4e00KNr9viHbp0dpF3TpdvHIsIX5tUnYLf6
-	 pZe1VY28uTWUEkBID/HV+Bjwh/Ea9hOYHJxq7o8s=
+	by mail.kernel.org (Postfix) with ESMTP id 4FFEB20674
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 02:16:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="JKgEpVOF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726763AbgGNCPq (ORCPT
+        id S1726777AbgGNCQO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 22:15:46 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:34021 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726364AbgGNCPq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 22:15:46 -0400
-Received: by mail-io1-f68.google.com with SMTP id q74so15744587iod.1;
-        Mon, 13 Jul 2020 19:15:45 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=W/3EJR0UO+DEw9NNDm9c2vVCgxBKwyW6tiiCML3eaIY=;
-        b=h9F/+XOE0BmO28e+aRe0ajTH2K6YGjVmJ7Ao8U+3iBmTC5As9LTuLhvX/wA0VoLNmn
-         JX6LPhdxQPmw7snW/6VMtMucrBV5z5qN9TIyZt7YMTMkukzad+pdr3H9P6u+0HThFCHF
-         45Nl/oE6GMno10UuOpBN0CRQO9PH4gtH54Czjwo6DrM/vow8KQvBgSQB1qzt0md2MhqT
-         VrmsgzilTbGWXWT78OSPnpzZpbTLUf82muZo3ahFq03TFPeNnAL1JeOvHflO9CMpvwoB
-         MtDEzTpIDTNyqfKqjrZpCHtxIfbJB/smuN90pD9WeRK2lHCDoUvlxUDLFalenpFIyrwo
-         bQOA==
-X-Gm-Message-State: AOAM53273Pow+fHlSlx4b4TZYTXMCp+q8my0rkmED0puV7JGBFnUbrwj
-        2XTSNjsvtWxXUGOdfEt9xg==
-X-Google-Smtp-Source: ABdhPJzlc8uQiBvXN6TzU1Q5aKmi07q/eB5wKID1pG8ixxrevptiDKxWRy7HG9xU/9WbA9zAZ1U+jA==
-X-Received: by 2002:a02:cf12:: with SMTP id q18mr3366899jar.3.1594692945604;
-        Mon, 13 Jul 2020 19:15:45 -0700 (PDT)
-Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id u5sm9573480ili.33.2020.07.13.19.15.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 Jul 2020 19:15:45 -0700 (PDT)
-Received: (nullmailer pid 1141630 invoked by uid 1000);
-        Tue, 14 Jul 2020 02:15:44 -0000
-Date:   Mon, 13 Jul 2020 20:15:44 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>
-Cc:     James Tai =?utf-8?B?W+aItOW/l+WzsF0=?= <james.tai@realtek.com>,
-        Stanley Chang =?utf-8?B?W+aYjOiCsuW+t10=?= 
-        <stanley_chang@realtek.com>, linux-arm-kernel@lists.infradead.org,
-        Rob Herring <robh+dt@kernel.org>,
-        linux-realtek-soc@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Edgar Lee <cylee12@realtek.com>
-Subject: Re: [PATCH v2 24/29] dt-bindings: soc: realtek: rtd1195-chip: Allow
- nvmem-cells property
-Message-ID: <20200714021544.GA1141578@bogus>
-References: <20200623025106.31273-1-afaerber@suse.de>
- <20200623025106.31273-25-afaerber@suse.de>
+        Mon, 13 Jul 2020 22:16:14 -0400
+Received: from ozlabs.org ([203.11.71.1]:56949 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726150AbgGNCQO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jul 2020 22:16:14 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 4B5PJW4g67z9sQt;
+        Tue, 14 Jul 2020 12:16:11 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1594692971;
+        bh=rVAGOXUcYkSUFm/QOqX+mwpG4sJ8hnCIMzWRUosxu6Q=;
+        h=Date:From:To:Cc:Subject:From;
+        b=JKgEpVOF+gKsWfQndZKY3N6lwAcMLd0Spe1XkYa0/Jcl8cRwp0H+4fBGQM0tCny8E
+         lF0rm1X6JqN0dcrorkYPpu7u6a8ZPZH0vTTxN/rawOBxCYB6bKcDTA9Qfmsyq4fk3S
+         X+nIG0wZ3G3D+i0qJxPBxudbPEhVvUlPqOICvrAgnqz/RtAwrzjJTaACZz6VFj03mD
+         cUTOp3/GrKpFP2hfefLsa3rfXS8uGJEfywtvHaV8TImPy7EkMPf4XlQXYg2Y8RbTSq
+         ADNsN8aeH0+9ZvHhJJ4+xQHr1t6WIRBcTmSfCZTAhPt1hVmZfMrMLlUEOyDwGRMg3s
+         BJ7OYKtWK1GcQ==
+Date:   Tue, 14 Jul 2020 12:16:08 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Daniel Borkmann <daniel@iogearbox.net>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Networking <netdev@vger.kernel.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Jiri Olsa <jolsa@kernel.org>
+Subject: linux-next: build warning after merge of the bpf-next tree
+Message-ID: <20200714121608.58962d66@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200623025106.31273-25-afaerber@suse.de>
+Content-Type: multipart/signed; boundary="Sig_/FQM8yWfyiMO+aHkZLyky8.7";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 23 Jun 2020 04:51:01 +0200, Andreas Färber wrote:
-> Allow to optionally specify nvmem cells to identify the chip.
-> RTD1295 family will want the eFuse package_id cell.
-> 
-> Signed-off-by: Andreas Färber <afaerber@suse.de>
-> ---
->  v1 -> v2:
->  * Instead of extending reg, allow nvmem-cells reference for eFuse
-> 
->  .../bindings/soc/realtek/realtek,rtd1195-chip.yaml   | 12 ++++++++++++
->  1 file changed, 12 insertions(+)
-> 
+--Sig_/FQM8yWfyiMO+aHkZLyky8.7
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Hi all,
+
+After merging the bpf-next tree, today's linux-next build (powerpc
+ppc64_defconfig) produced this warning:
+
+ld: warning: orphan section `.BTF_ids' from `kernel/trace/bpf_trace.o' bein=
+g placed in section `.BTF_ids'
+ld: warning: orphan section `.BTF_ids' from `kernel/bpf/btf.o' being placed=
+ in section `.BTF_ids'
+ld: warning: orphan section `.BTF_ids' from `kernel/bpf/stackmap.o' being p=
+laced in section `.BTF_ids'
+ld: warning: orphan section `.BTF_ids' from `net/core/filter.o' being place=
+d in section `.BTF_ids'
+ld: warning: orphan section `.BTF_ids' from `kernel/trace/bpf_trace.o' bein=
+g placed in section `.BTF_ids'
+ld: warning: orphan section `.BTF_ids' from `kernel/bpf/btf.o' being placed=
+ in section `.BTF_ids'
+ld: warning: orphan section `.BTF_ids' from `kernel/bpf/stackmap.o' being p=
+laced in section `.BTF_ids'
+ld: warning: orphan section `.BTF_ids' from `net/core/filter.o' being place=
+d in section `.BTF_ids'
+ld: warning: orphan section `.BTF_ids' from `kernel/trace/bpf_trace.o' bein=
+g placed in section `.BTF_ids'
+ld: warning: orphan section `.BTF_ids' from `kernel/bpf/btf.o' being placed=
+ in section `.BTF_ids'
+ld: warning: orphan section `.BTF_ids' from `kernel/bpf/stackmap.o' being p=
+laced in section `.BTF_ids'
+ld: warning: orphan section `.BTF_ids' from `net/core/filter.o' being place=
+d in section `.BTF_ids'
+
+Presumably ntroduced by the merge of the resolve_btfids branch.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/FQM8yWfyiMO+aHkZLyky8.7
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl8NFWgACgkQAVBC80lX
+0Gy6+wgAoyJUbC/DVCPWdvLTBOUJoTlVg1/wYhG6hi7HsA3tnFCh0C1vrWRF6gbn
+QTvlEo5rfeEbcy4N8ksQDk2B00ED5iuInvkGGQp5fZXkq6hsTAyDItjnxxAh6Js0
+QtxhGGwP3LShrZg8pyOSmjqU/rfML22986kQsJ8cL6cn9Xsl6z099qv9U1mEgBoy
+muGwkgchg6PGfW3iVAW54zPt+ltLXNcuWKrPhPZ9ur44Vo0Dxt9j/T5AOV+Qo+R4
+dt3f3yrtJa+6VBI9bZDHcDBzDP9vOL0iQ5UKVDX5re8ivTH1bweRTRShImpM+sj3
+0JTXbJtZvut7+BLGIbB882ed6/tG8A==
+=0atY
+-----END PGP SIGNATURE-----
+
+--Sig_/FQM8yWfyiMO+aHkZLyky8.7--
