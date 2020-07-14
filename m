@@ -2,81 +2,137 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C574C433E5
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 05:33:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9706EC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 05:33:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1FD5B21927
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 05:33:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7CADC21927
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 05:33:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726670AbgGNFdL (ORCPT
+        id S1726517AbgGNFdG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 01:33:11 -0400
-Received: from out28-53.mail.aliyun.com ([115.124.28.53]:60284 "EHLO
-        out28-53.mail.aliyun.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725877AbgGNFdJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 01:33:09 -0400
-X-Alimail-AntiSpam: AC=CONTINUE;BC=0.07881087|-1;CH=green;DM=|CONTINUE|false|;DS=CONTINUE|ham_system_inform|0.0154259-0.00356313-0.981011;FP=0|0|0|0|0|-1|-1|-1;HT=e01a16378;MF=zhouyanjie@wanyeetech.com;NM=1;PH=DS;RN=15;RT=15;SR=0;TI=SMTPD_---.I1QwJ79_1594704779;
-Received: from localhost.localdomain(mailfrom:zhouyanjie@wanyeetech.com fp:SMTPD_---.I1QwJ79_1594704779)
-          by smtp.aliyun-inc.com(10.147.44.145);
-          Tue, 14 Jul 2020 13:33:04 +0800
-From:   =?UTF-8?q?=E5=91=A8=E7=90=B0=E6=9D=B0=20=28Zhou=20Yanjie=29?= 
-        <zhouyanjie@wanyeetech.com>
-To:     tsbogend@alpha.franken.de, robh+dt@kernel.org
-Cc:     linux-mips@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, paulburton@kernel.org,
-        paul@crapouillou.net, ak@linux.intel.com, ebiederm@xmission.com,
-        dongsheng.qiu@ingenic.com, aric.pzqi@ingenic.com,
-        rick.tyliu@ingenic.com, yanfei.li@ingenic.com,
-        sernia.zhou@foxmail.com, zhenwenjin@gmail.com
-Subject: [PATCH v4 0/5] Add support for Ingenic X1830 SoC and Y&A CU1830-Neo board.
-Date:   Tue, 14 Jul 2020 13:32:24 +0800
-Message-Id: <20200714053229.33195-1-zhouyanjie@wanyeetech.com>
-X-Mailer: git-send-email 2.11.0
+        Tue, 14 Jul 2020 01:33:06 -0400
+Received: from mga05.intel.com ([192.55.52.43]:55493 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726384AbgGNFdF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 01:33:05 -0400
+IronPort-SDR: yAnxvbBwHlM+WfbJTVsS6MdkDrrFxTq5cMQu76w3teMaVyFluWMJqXypZTanFE9QoHSzwBni9X
+ In0hlTPHlqHA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9681"; a="233663854"
+X-IronPort-AV: E=Sophos;i="5.75,350,1589266800"; 
+   d="scan'208";a="233663854"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jul 2020 22:33:05 -0700
+IronPort-SDR: aDD1C1O4sqMlQQpAgdX8Ubkii5NHmQDCEZKGR//L+tb/3L9XUP/tPGA+UJCwWRAc/b+vovC09l
+ Cy8acKKkmifg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,350,1589266800"; 
+   d="scan'208";a="324445520"
+Received: from linux.intel.com ([10.54.29.200])
+  by FMSMGA003.fm.intel.com with ESMTP; 13 Jul 2020 22:33:05 -0700
+Received: from [10.215.165.139] (rtanwar-MOBL.gar.corp.intel.com [10.215.165.139])
+        by linux.intel.com (Postfix) with ESMTP id 57D3758080E;
+        Mon, 13 Jul 2020 22:32:59 -0700 (PDT)
+Subject: Re: [PATCH v4 1/2] Add DT bindings YAML schema for PWM fan controller
+ of LGM SoC
+To:     Rob Herring <robh@kernel.org>
+Cc:     u.kleine-koenig@pengutronix.de, linux-pwm@vger.kernel.org,
+        thierry.reding@gmail.com, p.zabel@pengutronix.de,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        andriy.shevchenko@intel.com, songjun.Wu@intel.com,
+        cheol.yong.kim@intel.com, qi-ming.wu@intel.com,
+        rahul.tanwar.linux@gmail.com
+References: <cover.1593503228.git.rahul.tanwar@linux.intel.com>
+ <cfef33c19b97a9cfbb8ecc0c6a122f3c9a5b46dd.1593503228.git.rahul.tanwar@linux.intel.com>
+ <20200713164600.GA359372@bogus>
+From:   "Tanwar, Rahul" <rahul.tanwar@linux.intel.com>
+Message-ID: <b5832bbd-087e-4182-bea9-ed7b69626a8c@linux.intel.com>
+Date:   Tue, 14 Jul 2020 13:32:58 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+In-Reply-To: <20200713164600.GA359372@bogus>
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-v3->v4:
-1.Modify the commit message and add the change description
-  for CU1000-Neo in patch [2/5].
-2.The wrongly written "ingenic,x1000" in compatible is
-  changed to "ingenic,x1000e" in "cu1000-neo.dts".
-3.Adjust the order of nodes according to the corresponding
-  address value for X1000.
-4.Drop unnecessary node in "wlan_pwrseq" in "cu1000-neo.dts".
-5.Add the leds node to "cu1000-neo.dts".
 
-周琰杰 (Zhou Yanjie) (5):
-  MIPS: Ingenic: Add Ingenic X1830 support.
-  dt-bindings: MIPS: Add X1830 based CU1830-Neo and fix bug in
-    CU1000-Neo.
-  MIPS: Ingenic: Add YSH & ATIL CU Neo board support.
-  MIPS: Ingenic: Fix bugs and add missing LED node for X1000.
-  MIPS: CU1000-Neo: Refresh defconfig to support LED.
+Hi Rob,
 
- .../devicetree/bindings/mips/ingenic/devices.yaml  |  12 +-
- arch/mips/boot/dts/ingenic/Makefile                |   1 +
- arch/mips/boot/dts/ingenic/cu1000-neo.dts          | 114 ++++----
- arch/mips/boot/dts/ingenic/cu1830-neo.dts          | 168 ++++++++++++
- arch/mips/boot/dts/ingenic/x1000.dtsi              | 126 +++++----
- arch/mips/boot/dts/ingenic/x1830.dtsi              | 300 +++++++++++++++++++++
- arch/mips/configs/cu1000-neo_defconfig             |   4 +
- arch/mips/configs/cu1830-neo_defconfig             | 123 +++++++++
- arch/mips/jz4740/Kconfig                           |  10 +
- 9 files changed, 733 insertions(+), 125 deletions(-)
- create mode 100644 arch/mips/boot/dts/ingenic/cu1830-neo.dts
- create mode 100644 arch/mips/boot/dts/ingenic/x1830.dtsi
- create mode 100644 arch/mips/configs/cu1830-neo_defconfig
+On 14/7/2020 12:46 am, Rob Herring wrote:
+> On Tue, Jun 30, 2020 at 03:55:31PM +0800, Rahul Tanwar wrote:
+>> Intel's LGM(Lightning Mountain) SoC contains a PWM fan controller
+>> which is only used to control the fan attached to the system. This
+>> PWM controller does not have any other consumer other than fan.
+>> Add DT bindings documentation for this PWM fan controller.
+>>
+>> Signed-off-by: Rahul Tanwar <rahul.tanwar@linux.intel.com>
+>> ---
+>>  .../devicetree/bindings/pwm/intel,lgm-pwm.yaml     | 50 ++++++++++++++++++++++
+>>  1 file changed, 50 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/pwm/intel,lgm-pwm.yaml
+>>
+>> diff --git a/Documentation/devicetree/bindings/pwm/intel,lgm-pwm.yaml b/Documentation/devicetree/bindings/pwm/intel,lgm-pwm.yaml
+>> new file mode 100644
+>> index 000000000000..120bf3d85a24
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/pwm/intel,lgm-pwm.yaml
+>> @@ -0,0 +1,50 @@
+>> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+>> +%YAML 1.2
+>> +---
+>> +$id: http://devicetree.org/schemas/pwm/intel,lgm-pwm.yaml#
+>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+>> +
+>> +title: LGM SoC PWM fan controller
+>> +
+>> +maintainers:
+>> +  - Rahul Tanwar <rahul.tanwar@intel.com>
+>> +
+>> +properties:
+>> +  compatible:
+>> +    const: intel,lgm-pwm
+>> +
+>> +  reg:
+>> +    maxItems: 1
+>> +
+>> +  clocks:
+>> +    maxItems: 1
+>> +
+>> +  resets:
+>> +    maxItems: 1
+>> +
+>> +  intel,fan-wire:
+>> +    $ref: '/schemas/types.yaml#/definitions/uint32'
+>> +    description: Specifies fan mode. Default when unspecified is 2.
+>> +
+>> +  intel,max-rpm:
+>> +    $ref: '/schemas/types.yaml#/definitions/uint32'
+>> +    description:
+>> +      Specifies maximum RPM of fan attached to the system.
+>> +      Default when unspecified is 4000.
+> These are properties of the fan, not the PWM. And probably if you 
+> need these properties then others would too, so they should be 
+> common. Look at the pwm-fan.txt binding.
 
--- 
-2.11.0
+I checked pwm-fan.txt. I don't find any common property which matches
+our fan properties of fan wire mode & max-rpm. Are you suggesting to
+add these properties additionally in pwm-fan.txt as new common properties
+and then use newly added generic name in our driver?
+
+Also, we have a dedicated PWM fan controller. So do you think this driver
+belongs to drivers/hwmon instead of drivers/pwm? Thanks.
+
+Regards,
+Rahul 
 
