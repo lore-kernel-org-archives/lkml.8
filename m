@@ -2,110 +2,132 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0A60C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 17:42:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FC93C433E5
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 17:43:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 858AA22518
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 17:42:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594748576;
-	bh=GMYxrQPqSv99DdjrrrRWebTJeJPrIIuosy1dA1uF/5U=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=reQ61AeKPdMLUixF4vJRc/soTx0/mCcESwl+LYpIgjpdWtsvWItZCLNJhzNYEsmaE
-	 SzCa8Tx86Vxks0fJhotQ7FJwCYzGmKJ2C1Bstly50QmNAijkJvL+dmpKdwiKnqVLBu
-	 osfbwOQZ6fR7XaUb9Jcn9yAQP80YpSmYdnEfTvMs=
+	by mail.kernel.org (Postfix) with ESMTP id 203DC22518
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 17:43:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="QJj2qL1M"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728894AbgGNRmz convert rfc822-to-8bit (ORCPT
+        id S1728998AbgGNRnC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 13:42:55 -0400
-Received: from mail-oo1-f67.google.com ([209.85.161.67]:43791 "EHLO
-        mail-oo1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725951AbgGNRmy (ORCPT
+        Tue, 14 Jul 2020 13:43:02 -0400
+Received: from mail.efficios.com ([167.114.26.124]:54638 "EHLO
+        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725951AbgGNRnC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 13:42:54 -0400
-Received: by mail-oo1-f67.google.com with SMTP id t12so3488180ooc.10;
-        Tue, 14 Jul 2020 10:42:54 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=S0/1ZaSgSVdg/MxTYjJ9dtzl+Xg6TV7Nwz4t/Mg+vsA=;
-        b=bxG5u3JaixTFLisBdjbjmgG4Jst8r6wVfvLIGPHWzMlVo37Epp2Q4apYEcxdyWhO8Z
-         TaXXs8AThce5w/pZCHmpK5f7+PVxyoWsx0g4iaer6Sf6WKFj/Zt0Rl1zPL511V1/0wJ6
-         TjQz3WlqO22fERTQw96XP7ixxfZ39Y/8jSaMv7LIVY6CAoS0LFv9EIJlzl/tV5zzhg4D
-         es0R4+fpTaL/eZvlyQCuw2MZ01ICIcKVYvJ3iZbT5r+GQQB3T3qJKn5Aw3ZJWw/IWvUZ
-         pNansNA2kP6zgGsN3rVPctRK4fedW3VwcsW31+mJpP9mn8uY5ZP4VTpW69+bx3wL4LHB
-         o2Dw==
-X-Gm-Message-State: AOAM530/XpfJzhQ7svUeSjwdNyx/T48v0Jwv1NJjIduNMjmp5sWkuaDU
-        6JJLeo12H7rsmJU/+8wcMAC8ODvfdc34SJhdGQk=
-X-Google-Smtp-Source: ABdhPJymOPVRLUsrOujMOFvvybCIJI6YZCquLF+UTRGeAaJBEmNdfb5ZLFnZQsOI5ZGbtgzfbZEvH0Pjtz9Um19XLJw=
-X-Received: by 2002:a4a:9552:: with SMTP id n18mr5563407ooi.1.1594748574051;
- Tue, 14 Jul 2020 10:42:54 -0700 (PDT)
+        Tue, 14 Jul 2020 13:43:02 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by mail.efficios.com (Postfix) with ESMTP id 0C1112C05BD;
+        Tue, 14 Jul 2020 13:43:01 -0400 (EDT)
+Received: from mail.efficios.com ([127.0.0.1])
+        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id nhR_Ah5mzdji; Tue, 14 Jul 2020 13:43:00 -0400 (EDT)
+Received: from localhost (localhost [127.0.0.1])
+        by mail.efficios.com (Postfix) with ESMTP id 9B5322C05BA;
+        Tue, 14 Jul 2020 13:43:00 -0400 (EDT)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com 9B5322C05BA
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
+        s=default; t=1594748580;
+        bh=seWsR9nNwIwjY1q15u9E8IBkaous6A8kQWGjHM+M0II=;
+        h=Date:From:To:Message-ID:MIME-Version;
+        b=QJj2qL1Ma0h6IeEjzZADML6kkN8v4eT107DDZrwJ+tyI/VsmDvqiGp9CQxSDmgAqI
+         bhx5+yyK0iAMlqrjXYMtrw9il4bcv6lnlp3KUYX05k/X9eOWRn63jqe+M8mSarDD7P
+         zb/k68oYI+Bgwp96llrOudcKEGHJRQmuBSYNk/fuB8aoGBsVdPorwgf2uzONz2naDW
+         5YMPhncirtjqTJtLMXSeNz3gS44bQpeuMRKuZSxPWQjJ++w7QNe9P7yoKa2FVKfQVx
+         eFmZwoNld+EOjWWgz6LwfMFxwLjgvSA0NYRGfntx4UdxatKUwt9URxE0NVDZCcYKsO
+         AcmeEVBLv1roA==
+X-Virus-Scanned: amavisd-new at efficios.com
+Received: from mail.efficios.com ([127.0.0.1])
+        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id yo41s664PUBE; Tue, 14 Jul 2020 13:43:00 -0400 (EDT)
+Received: from mail03.efficios.com (mail03.efficios.com [167.114.26.124])
+        by mail.efficios.com (Postfix) with ESMTP id 85BEE2C05B9;
+        Tue, 14 Jul 2020 13:43:00 -0400 (EDT)
+Date:   Tue, 14 Jul 2020 13:43:00 -0400 (EDT)
+From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+To:     Peter Oskolkov <posk@posk.io>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        paulmck <paulmck@linux.ibm.com>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Paul Turner <pjt@google.com>,
+        linux-api <linux-api@vger.kernel.org>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        Florian Weimer <fw@deneb.enyo.de>, carlos <carlos@redhat.com>,
+        Peter Oskolkov <posk@google.com>
+Message-ID: <775688146.12145.1594748580461.JavaMail.zimbra@efficios.com>
+In-Reply-To: <CAFTs51UHaUqaKj5bEj0vQtEZrww9gnrqb-kGVk7DAgQJPBAR+w@mail.gmail.com>
+References: <20200714030348.6214-1-mathieu.desnoyers@efficios.com> <20200714030348.6214-3-mathieu.desnoyers@efficios.com> <CAFTs51UHaUqaKj5bEj0vQtEZrww9gnrqb-kGVk7DAgQJPBAR+w@mail.gmail.com>
+Subject: Re: [RFC PATCH 2/4] rseq: Allow extending struct rseq
 MIME-Version: 1.0
-References: <20200714145049.2496163-1-lee.jones@linaro.org> <20200714145049.2496163-12-lee.jones@linaro.org>
-In-Reply-To: <20200714145049.2496163-12-lee.jones@linaro.org>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Tue, 14 Jul 2020 19:42:42 +0200
-Message-ID: <CAJZ5v0h-RjAFChHB9OazbkwSmBR1E-sFCBO_b5=mC+Jr-j_VmA@mail.gmail.com>
-Subject: Re: [PATCH 11/13] cpufreq: pcc-cpufreq: Remove unused ID structs
-To:     Lee Jones <lee.jones@linaro.org>
-Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Matthew Garrett <mjg@redhat.com>,
-        Nagananda Chumbalkar <nagananda.chumbalkar@hp.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [167.114.26.124]
+X-Mailer: Zimbra 8.8.15_GA_3955 (ZimbraWebClient - FF78 (Linux)/8.8.15_GA_3953)
+Thread-Topic: rseq: Allow extending struct rseq
+Thread-Index: vGEUEey8cuOfMMOgr2MenI2vkLZz+g==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 14, 2020 at 4:51 PM Lee Jones <lee.jones@linaro.org> wrote:
->
-> Can't see them being used anywhere and the compiler doesn't complain
-> that they're missing, so ...
+----- On Jul 14, 2020, at 1:24 PM, Peter Oskolkov posk@posk.io wrote:
 
-Autoloading of the module too.
+> At Google, we actually extended struct rseq (I will post the patches
+> here once they are fully deployed and we have specific
+> benefits/improvements to report). We did this by adding several fields
+> below __u32 flags (the last field currently), and correspondingly
+> increasing rseq_len in rseq() syscall. If the kernel does not know of
+> this extension, it will return -EINVAL due to an unexpected rseq_len;
+> then the application can either fall-back to the standard/upstream
+> rseq, or bail. If the kernel does know of this extension, it accepts
+> it. If the application passes the old rseq_len (32), the kernel knows
+> that this is an old application and treats it as such.
+> 
+> I looked through the archives, but I did not find specifically why the
+> pretty standard approach described above is considered inferior to the
+> one taken in this patch (freeze rseq_len at 32, add additional length
+> fields to struct rseq). Can these be summarized?
 
-> Fixes the following W=1 kernel build warning(s):
->
->  drivers/cpufreq/pcc-cpufreq.c:619:36: warning: ‘processor_device_ids’ defined but not used [-Wunused-const-variable=]
->  619 | static const struct acpi_device_id processor_device_ids[] = {
->  | ^~~~~~~~~~~~~~~~~~~~
->
-> Cc: Matthew Garrett <mjg@redhat.com>
-> Cc: Nagananda Chumbalkar <nagananda.chumbalkar@hp.com>
-> Signed-off-by: Lee Jones <lee.jones@linaro.org>
-> ---
->  drivers/cpufreq/pcc-cpufreq.c | 7 -------
->  1 file changed, 7 deletions(-)
->
-> diff --git a/drivers/cpufreq/pcc-cpufreq.c b/drivers/cpufreq/pcc-cpufreq.c
-> index 5789fe7a94bd3..99cf8b78c032a 100644
-> --- a/drivers/cpufreq/pcc-cpufreq.c
-> +++ b/drivers/cpufreq/pcc-cpufreq.c
-> @@ -616,13 +616,6 @@ static void __exit pcc_cpufreq_exit(void)
->         free_percpu(pcc_cpu_info);
->  }
->
-> -static const struct acpi_device_id processor_device_ids[] = {
-> -       {ACPI_PROCESSOR_OBJECT_HID, },
-> -       {ACPI_PROCESSOR_DEVICE_HID, },
-> -       {},
-> -};
-> -MODULE_DEVICE_TABLE(acpi, processor_device_ids);
-> -
->  MODULE_AUTHOR("Matthew Garrett, Naga Chumbalkar");
->  MODULE_VERSION(PCC_VERSION);
->  MODULE_DESCRIPTION("Processor Clocking Control interface driver");
-> --
-> 2.25.1
->
+I think you don't face the issues I'm facing with libc rseq integration
+because you control the entire user-space software ecosystem at Google.
+
+The main issue we face is that the library responsible for registering
+rseq (either glibc 2.32+, an early-adopter librseq library, or the
+application) may very well not be the same library defining the __rseq_abi
+symbol used in the global symbol table. Interposition with ld preload or
+by defining the __rseq_abi in the program's executable are good examples
+of this kind of scenario, and those use-cases are supported.
+
+So the size of the __rseq_abi structure may be larger than the struct
+rseq known by glibc (and eventually smaller, if future glibc versions
+extend their __rseq_abi size but is loaded with an older program/library
+doing __rseq_abi interposition).
+
+So we need some way to allow code defining the __rseq_abi to let the kernel
+know how much room is available, without necessarily requiring the code
+responsible for rseq registration to be aware of that extended layout.
+This is the purpose of the __rseq_abi.flags RSEQ_FLAG_TLS_SIZE and field
+__rseq_abi.user_size.
+
+And we need some way to allow the kernel to let user-space rseq critical
+sections (user code) know how much of those fields are actually populated
+by the kernel. This is the purpose of __rseq_abi.flags RSEQ_FLAG_TLS_SIZE
+with __rseq_abi.kernel_size.
+
+Thanks,
+
+Mathieu
+
+-- 
+Mathieu Desnoyers
+EfficiOS Inc.
+http://www.efficios.com
