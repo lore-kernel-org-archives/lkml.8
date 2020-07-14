@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D6EAC433E6
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 19:07:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54C53C433E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 19:08:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 72F1421D79
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 19:07:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B57021D79
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 19:08:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594753679;
-	bh=DCOozzv+SC+l8M6QiWjP13NaDxXLcrR6MHm8+O/lmls=;
+	s=default; t=1594753690;
+	bh=+UMsA7dx2ruEUSC5PpGYxNIa++vB2pqqFaIU9LnKhwM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BxcKcNhkSEo50EM13apLwbYtrX7ONnk31WcqoRMrfBadi4XZQMo8R4LKhCSrSz9Bt
-	 GqzRiSm+DhdHNLwRaQRpucccsKmIB9vNqxG5QNZQ6mFd+bVMJbEr+fyVTpXLF1Fy/x
-	 r+0QmnIdWbHOofCgOtqegpqLVJIQkdhOkRNGtNzY=
+	b=XGnbUP6/rKDTupLezd2C0Ae8IkXN3BidRjskv+wt7YnrWype+Y65nSOFCOevjAlYd
+	 ZoJweV0yAvUVhoNz86JTcsM9DbDQWc3hVGgLi0GTnv7a5v77NTrfWf6WObRQi1vFcU
+	 4MiVIV+ca22/ti2dzwkBnjxZwfBUyc74i5DEeCVM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731069AbgGNTH6 (ORCPT
+        id S1730385AbgGNTIJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 15:07:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47714 "EHLO mail.kernel.org"
+        Tue, 14 Jul 2020 15:08:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47318 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730385AbgGNSvS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 14:51:18 -0400
+        id S1730343AbgGNSu6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 14:50:58 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2F420207F5;
-        Tue, 14 Jul 2020 18:51:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5ADA9223B0;
+        Tue, 14 Jul 2020 18:50:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594752677;
-        bh=DCOozzv+SC+l8M6QiWjP13NaDxXLcrR6MHm8+O/lmls=;
+        s=default; t=1594752657;
+        bh=+UMsA7dx2ruEUSC5PpGYxNIa++vB2pqqFaIU9LnKhwM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YTI6oF/cn22iT2shHsZrvLz/AFQZ/h7w2YHcZKTCg8uVshyXaabP9J6T+ifdz7AnD
-         2dsUvLBkm9WE9r/u14OBF+vmqSWce7gYP13Ci92xfynyhDXpaXcNlbcMZeashCaQrD
-         mtadHnfJc+RgCAx3sXvT41I4LnsTtPROcZjnik+U=
+        b=J4uyLdVTAnZzKlXO1tRfQ6FqUl8xVkyxK3IRySNsy501uwaA3BJ+s+0RXQMZDCD2U
+         8G6+dyhrMLFqBvhlY5vg0RejPEb1pyYpscSVuRNYFMO5+nKzOK7hKe579/08HkRZJF
+         WNlOgcAAYO+fToszYI39Rq2FTwwKB+myyWIW6A/s=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ido Schimmel <idosch@mellanox.com>,
-        Jiri Pirko <jiri@mellanox.com>,
+        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
+        Li Heng <liheng40@huawei.com>,
         "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 068/109] mlxsw: spectrum_router: Remove inappropriate usage of WARN_ON()
-Date:   Tue, 14 Jul 2020 20:44:11 +0200
-Message-Id: <20200714184108.794078147@linuxfoundation.org>
+Subject: [PATCH 5.4 044/109] net: cxgb4: fix return error value in t4_prep_fw
+Date:   Tue, 14 Jul 2020 20:43:47 +0200
+Message-Id: <20200714184107.629700499@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200714184105.507384017@linuxfoundation.org>
 References: <20200714184105.507384017@linuxfoundation.org>
@@ -61,47 +61,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ido Schimmel <idosch@mellanox.com>
+From: Li Heng <liheng40@huawei.com>
 
-[ Upstream commit d9d5420273997664a1c09151ca86ac993f2f89c1 ]
+[ Upstream commit 8a259e6b73ad8181b0b2ef338b35043433db1075 ]
 
-We should not trigger a warning when a memory allocation fails. Remove
-the WARN_ON().
+t4_prep_fw goto bye tag with positive return value when something
+bad happened and which can not free resource in adap_init0.
+so fix it to return negative value.
 
-The warning is constantly triggered by syzkaller when it is injecting
-faults:
-
-[ 2230.758664] FAULT_INJECTION: forcing a failure.
-[ 2230.758664] name failslab, interval 1, probability 0, space 0, times 0
-[ 2230.762329] CPU: 3 PID: 1407 Comm: syz-executor.0 Not tainted 5.8.0-rc2+ #28
-...
-[ 2230.898175] WARNING: CPU: 3 PID: 1407 at drivers/net/ethernet/mellanox/mlxsw/spectrum_router.c:6265 mlxsw_sp_router_fib_event+0xfad/0x13e0
-[ 2230.898179] Kernel panic - not syncing: panic_on_warn set ...
-[ 2230.898183] CPU: 3 PID: 1407 Comm: syz-executor.0 Not tainted 5.8.0-rc2+ #28
-[ 2230.898190] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.12.1-0-ga5cab58e9a3f-prebuilt.qemu.org 04/01/2014
-
-Fixes: 3057224e014c ("mlxsw: spectrum_router: Implement FIB offload in deferred work")
-Signed-off-by: Ido Schimmel <idosch@mellanox.com>
-Reviewed-by: Jiri Pirko <jiri@mellanox.com>
+Fixes: 16e47624e76b ("cxgb4: Add new scheme to update T4/T5 firmware")
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: Li Heng <liheng40@huawei.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/mellanox/mlxsw/spectrum_router.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/ethernet/chelsio/cxgb4/t4_hw.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/net/ethernet/mellanox/mlxsw/spectrum_router.c b/drivers/net/ethernet/mellanox/mlxsw/spectrum_router.c
-index efdf8cb5114c2..2f013fc716985 100644
---- a/drivers/net/ethernet/mellanox/mlxsw/spectrum_router.c
-+++ b/drivers/net/ethernet/mellanox/mlxsw/spectrum_router.c
-@@ -6287,7 +6287,7 @@ static int mlxsw_sp_router_fib_event(struct notifier_block *nb,
+diff --git a/drivers/net/ethernet/chelsio/cxgb4/t4_hw.c b/drivers/net/ethernet/chelsio/cxgb4/t4_hw.c
+index 31fcfc58e3373..588b63473c473 100644
+--- a/drivers/net/ethernet/chelsio/cxgb4/t4_hw.c
++++ b/drivers/net/ethernet/chelsio/cxgb4/t4_hw.c
+@@ -3499,7 +3499,7 @@ int t4_prep_fw(struct adapter *adap, struct fw_info *fw_info,
+ 	drv_fw = &fw_info->fw_hdr;
+ 
+ 	/* Read the header of the firmware on the card */
+-	ret = -t4_read_flash(adap, FLASH_FW_START,
++	ret = t4_read_flash(adap, FLASH_FW_START,
+ 			    sizeof(*card_fw) / sizeof(uint32_t),
+ 			    (uint32_t *)card_fw, 1);
+ 	if (ret == 0) {
+@@ -3528,8 +3528,8 @@ int t4_prep_fw(struct adapter *adap, struct fw_info *fw_info,
+ 		   should_install_fs_fw(adap, card_fw_usable,
+ 					be32_to_cpu(fs_fw->fw_ver),
+ 					be32_to_cpu(card_fw->fw_ver))) {
+-		ret = -t4_fw_upgrade(adap, adap->mbox, fw_data,
+-				     fw_size, 0);
++		ret = t4_fw_upgrade(adap, adap->mbox, fw_data,
++				    fw_size, 0);
+ 		if (ret != 0) {
+ 			dev_err(adap->pdev_dev,
+ 				"failed to install firmware: %d\n", ret);
+@@ -3560,7 +3560,7 @@ int t4_prep_fw(struct adapter *adap, struct fw_info *fw_info,
+ 			FW_HDR_FW_VER_MICRO_G(c), FW_HDR_FW_VER_BUILD_G(c),
+ 			FW_HDR_FW_VER_MAJOR_G(k), FW_HDR_FW_VER_MINOR_G(k),
+ 			FW_HDR_FW_VER_MICRO_G(k), FW_HDR_FW_VER_BUILD_G(k));
+-		ret = EINVAL;
++		ret = -EINVAL;
+ 		goto bye;
  	}
  
- 	fib_work = kzalloc(sizeof(*fib_work), GFP_ATOMIC);
--	if (WARN_ON(!fib_work))
-+	if (!fib_work)
- 		return NOTIFY_BAD;
- 
- 	fib_work->mlxsw_sp = router->mlxsw_sp;
 -- 
 2.25.1
 
