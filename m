@@ -2,108 +2,97 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91B7CC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 08:28:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C28EEC433E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 08:28:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6988921897
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 08:28:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ULwKSSLY"
+	by mail.kernel.org (Postfix) with ESMTP id A291B21D92
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 08:28:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594715309;
+	bh=pIHiPnXl29m/SBs4JyChDxAqMplo09HuFsHg6sAYMJo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=ciU1PWDV12sDkpBUguPvdg3+qtNnsnU+ghlEbFx0hSlzp5CxhD/ofkOgXeo5ZKHZW
+	 IaB1hPa42OYJIQYNMHoaHhh5IuxqdXvX3wG9jTuiELrrYXtZgpPy3nsb7jYhb2S81q
+	 Q2bZycWO+hda/h/NIE9QvqDCmTv/6zI+zTiY8dVw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726762AbgGNI2C (ORCPT
+        id S1726793AbgGNI22 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 04:28:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54494 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725955AbgGNI2B (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 04:28:01 -0400
-Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 92537C061755;
-        Tue, 14 Jul 2020 01:28:01 -0700 (PDT)
-Received: by mail-pg1-x544.google.com with SMTP id o13so7304016pgf.0;
-        Tue, 14 Jul 2020 01:28:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=RFASHkwcTOcp5xJmcZ6cr6YyCkNb4rp9EMZoB3APeEs=;
-        b=ULwKSSLYkH+bjGYv5JxlkMvcFS4rwLeo8EWsF8xUFQDq33RBMR3P4tXOWkrtgiOSwn
-         yXU3tTBk9X6raRX/hmHLwrPivEbgy4Aw2IFqE6C0HhH8ZswZh4FcMatEgN2aPTU5r21B
-         A7xq0B+hteJs5aqnD3We1qYIfLfyg7sgIb+ZOQXH9VXaFuj1nhLpLQmRFHIczqQ2v26v
-         P/LpX/7D8fRyBXbw8ORi0JWRehF6tUh4zp9nJMrKfXuV5WH3mCBtVt83Bk/Dvy8bhWn6
-         rfeezApSCQVKzQW18J+E1/JReIdJzotb61bOHY0biXkpeWPJjQNk/R4mNxppiQnxiSiW
-         /Okg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=RFASHkwcTOcp5xJmcZ6cr6YyCkNb4rp9EMZoB3APeEs=;
-        b=Bmy1cEPX+uB9goPyYPDD/QNXS6uemt3It0L49ufrbswrW/CtnpRympdq8pdAw+m/ER
-         mX0B5sRNZfK/gjM2xOX7HivydM0Cg9falJf6CZT/RAEfTxuFliKqXpYdfY0l/7W6rL19
-         97XII1cE0wbyrHRPQFTJuwxLDMBWH7c5OSQ4RzfDU+JjosjBXZDo8sChEOxEJxEudWde
-         eM5C9rOBOGkQdDm8WMI8s35Q9vLOzyCsypkiSwZ3YIMaCaQz9pmvia/cg8Y8w3a7snZN
-         6r9RLFa4BFMRUptbbxTyuvKwJXigeom+PnC9LuSlygOylpv0kfEXfjOSO6ltRtqjvRAA
-         bEIA==
-X-Gm-Message-State: AOAM531A136IBLVwLEc2OVNbRGIeROUoLDng2saLe2MdrmQPfJhgLiWg
-        /o9rw5hqygVQfvwXUguKEly3LxOYokDQnzFWVsQ=
-X-Google-Smtp-Source: ABdhPJy1EYtUDBT/tte1IBbm2WCblUvd+mmLWT5JgnWMWmxUN4zvKXGVtrhbtl66aUckEFjZ0g/VeOlVNdEJb1zRQO0=
-X-Received: by 2002:a63:924b:: with SMTP id s11mr2506093pgn.74.1594715281116;
- Tue, 14 Jul 2020 01:28:01 -0700 (PDT)
+        Tue, 14 Jul 2020 04:28:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56832 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725816AbgGNI22 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 04:28:28 -0400
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4A18121897;
+        Tue, 14 Jul 2020 08:28:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594715307;
+        bh=pIHiPnXl29m/SBs4JyChDxAqMplo09HuFsHg6sAYMJo=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=cca/sw3/jyus9ULYMXo0h2TBjV/Q+OEaM3QXhOQQN9gh0rzZoCsr+lXDNe1Y8FtjC
+         zH6wIyiBUzvZMiMF+TML3mUUcwPbiqsXG5lRUNj51n2NEC/bHHPxfZLPDLXc90vJzT
+         9YqF/zOe/+XKPeP1v7ljoCLfGG/EMIGPkjW39ynI=
+Date:   Tue, 14 Jul 2020 09:28:21 +0100
+From:   Will Deacon <will@kernel.org>
+To:     Baolin Wang <baolin.wang@linux.alibaba.com>
+Cc:     joro@8bytes.org, robin.murphy@arm.com, agross@kernel.org,
+        bjorn.andersson@linaro.org, matthias.bgg@gmail.com,
+        robdclark@gmail.com, robh@kernel.org, tomeu.vizoso@collabora.com,
+        steven.price@arm.com, alyssa.rosenzweig@collabora.com,
+        airlied@linux.ie, daniel@ffwll.ch, baolin.wang7@gmail.com,
+        linux-arm-kernel@lists.infradead.org,
+        iommu@lists.linux-foundation.org, linux-arm-msm@vger.kernel.org,
+        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
+        dri-devel@lists.freedesktop.org
+Subject: Re: [PATCH v2 2/2] iommu: Add gfp parameter to io_pgtable_ops->map()
+Message-ID: <20200714082821.GC4516@willie-the-truck>
+References: <cover.1591930156.git.baolin.wang@linux.alibaba.com>
+ <3093df4cb95497aaf713fca623ce4ecebb197c2e.1591930156.git.baolin.wang@linux.alibaba.com>
 MIME-Version: 1.0
-References: <20200714081510.6070-1-hdegoede@redhat.com> <CAHp75Vd6uGNw5m3-Tc1tkABLT_Wi7CtW2yo8+B5TpYV4U8XE9A@mail.gmail.com>
-In-Reply-To: <CAHp75Vd6uGNw5m3-Tc1tkABLT_Wi7CtW2yo8+B5TpYV4U8XE9A@mail.gmail.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Tue, 14 Jul 2020 11:27:43 +0300
-Message-ID: <CAHp75Ve9HF4WVkiUA77s9LsN6d8oaFPRgjLi86FnDSHgmVvTNA@mail.gmail.com>
-Subject: Re: [PATCH 5.8 regression fix] platform/x86: thinkpad_acpi: Revert:
- Use strndup_user() in dispatch_proc_write()
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>,
-        Thinkpad-acpi devel ML <ibm-acpi-devel@lists.sourceforge.net>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <3093df4cb95497aaf713fca623ce4ecebb197c2e.1591930156.git.baolin.wang@linux.alibaba.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 14, 2020 at 11:21 AM Andy Shevchenko
-<andy.shevchenko@gmail.com> wrote:
-> On Tue, Jul 14, 2020 at 11:15 AM Hans de Goede <hdegoede@redhat.com> wrote:
-> >
-> > Commit 35d13c7a0512 ("platform/x86: thinkpad_acpi: Use strndup_user()
-> > in dispatch_proc_write()") cleaned up dispatch_proc_write() by replacing
-> > the code to copy the passed in data from userspae with strndup_user().
->
-> user space
->
-> > But strndup_user() expects a 0 terminated input buffer and the buffer
-> > passed to dispatch_proc_write() is NOT 0 terminated.
+On Fri, Jun 12, 2020 at 11:39:55AM +0800, Baolin Wang wrote:
+> Now the ARM page tables are always allocated by GFP_ATOMIC parameter,
+> but the iommu_ops->map() function has been added a gfp_t parameter by
+> commit 781ca2de89ba ("iommu: Add gfp parameter to iommu_ops::map"),
+> thus io_pgtable_ops->map() should use the gfp parameter passed from
+> iommu_ops->map() to allocate page pages, which can avoid wasting the
+> memory allocators atomic pools for some non-atomic contexts.
+> 
+> Signed-off-by: Baolin Wang <baolin.wang@linux.alibaba.com>
+> ---
+>  drivers/gpu/drm/panfrost/panfrost_mmu.c |  2 +-
+>  drivers/iommu/arm-smmu-v3.c             |  2 +-
+>  drivers/iommu/arm-smmu.c                |  2 +-
+>  drivers/iommu/io-pgtable-arm-v7s.c      | 18 +++++++++---------
+>  drivers/iommu/io-pgtable-arm.c          | 18 +++++++++---------
+>  drivers/iommu/ipmmu-vmsa.c              |  2 +-
+>  drivers/iommu/msm_iommu.c               |  2 +-
+>  drivers/iommu/mtk_iommu.c               |  2 +-
+>  drivers/iommu/qcom_iommu.c              |  2 +-
+>  include/linux/io-pgtable.h              |  2 +-
+>  10 files changed, 26 insertions(+), 26 deletions(-)
 
-Second though, perhaps it's a simple wrong count parameter?
-strndup_user(..., min(count, PAGE_SIZE)) or so would work?
+I was a bit nervous about us passing GFP_KERNEL with a spinlock held, but
+it looks like you've checked all the callsites and it looks fine to me, so:
 
-> > So this change leads to strndup_user() copying some extra random bytes
-> > from userspace till it hits a 0 byte.
-> >
-> > This commit reverts the change to use strndup_user() fixing the
-> > buffer being passed to the ibm_struct.write() call back containing extra
-> > junk at the end.
->
-> Can we simply use memdup_user()?
-> And thanks for catching this up!
+Acked-by: Will Deacon <will@kernel.org>
 
+Joerg -- not sure what you want to do with this one, as it's likely to
+conflict (trivially) with unrelated driver changes.
 
-
--- 
-With Best Regards,
-Andy Shevchenko
+Will
