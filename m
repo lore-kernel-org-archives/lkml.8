@@ -7,74 +7,73 @@ X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1B67C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 15:33:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7981BC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 15:30:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BB855221EF
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 15:33:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5377E221ED
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 15:30:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594740822;
-	bh=13+mdSYMGqXRycM5c+9CAiM439WjJrPwmqY1LEtP5nM=;
+	s=default; t=1594740607;
+	bh=nSA48O1+qDS6muN+6TxBc64E0cZkHgsShGJn08+xmNw=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=bTr8haawpB/P0B7S3esfqSkWuF7rbnz+cNQLZXa/i6Cx9qV1LWffunOGCunrCE0XW
-	 PUSOYP09OfF9kOECK+nwDDK5VoYCbfXN/AgOyT911VYxhoWaifl/ZdPnI6y2dRcRZM
-	 NJyd6x77i85tp2UKbjUChpVrvGOTg79ZadrnEKWg=
+	b=zzgJa5pkxOlgnHtxwZBciwOd8DsqePokX0Is2aW718MTMX25QoKg4GcAu64VBhz7x
+	 wEieZTga3tK5jYb0LGdKVfaVp8X8OMhhpXIasDgEWCu4URDNyKVMVv+JIvla2BBm4/
+	 Q7GstpRWqYbM1e1NRjiHsxs+xV1lCcGt5qRIupq4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727924AbgGNPdl (ORCPT
+        id S1726794AbgGNPaF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 11:33:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35728 "EHLO
+        Tue, 14 Jul 2020 11:30:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35156 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725280AbgGNPdk (ORCPT
+        with ESMTP id S1726370AbgGNPaE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 11:33:40 -0400
-Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 80ACEC061755
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 08:33:40 -0700 (PDT)
-Received: by mail-lf1-x144.google.com with SMTP id k15so11988566lfc.4
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 08:33:40 -0700 (PDT)
+        Tue, 14 Jul 2020 11:30:04 -0400
+Received: from mail-lf1-x141.google.com (mail-lf1-x141.google.com [IPv6:2a00:1450:4864:20::141])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 34482C061794
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 08:30:03 -0700 (PDT)
+Received: by mail-lf1-x141.google.com with SMTP id m26so12002859lfo.13
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 08:30:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linux-foundation.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=3rYU4sbMcFdjvk+wenfKOdKBg9lSiSVy3qR8AsDWIT4=;
-        b=IobWZMZ2K4lfIlp2s0OMaugN8Nr0+nroGDJtXkiC4e/XOIRS/xcHqGwEs/K6W4JaY9
-         vx/FIjFLSo1MrfLf/XK1RlzcMb1/WLsHEyRjvsEhdixC9gGSR6G0trgFj5aiUsbt1zRC
-         5VvJnSve8NLK8sjeRHlLk7K93NUoBQ/sk2+O8=
+        bh=VvONWUUx+ge2aRqADFFqhcoKfa3RbBALz1DV1ooGJ/Y=;
+        b=XijJsNpSPPnejytiYcdHjB1XQVu8uaH3j6/gEPYZl+pAI0TcIHWcBLqvOFrhR7jXBP
+         9cveXgeLbceG8D7dAL+Zepto6GIlhPMkZ8CJdbQEnOtls2STHYWDEB8MFah9uo0hpegd
+         YSVwiX5OVwFQLLXykgySPxhz+QTAG24MkW3WE=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=3rYU4sbMcFdjvk+wenfKOdKBg9lSiSVy3qR8AsDWIT4=;
-        b=B+dxGDnFztpQjeoLty6CfHiejHaV5ui/Om+RAvXErC9omBrbj0Ey2Uvnyzw/7OgctQ
-         EeuBE6uadXDnfG2MUOwYzdOQQNJCQYXBaHnTAkRkoCdKy7S+JKgNAHnaxIGE+YQRIsgp
-         idX8RRiePFMKG+1vrO6hjB/pB2ZvTcDhPNRh1jKROpSmPwUQ8W9d5fTIewaHrAoS3+Yh
-         DDw/vhD6m8ttKJ5+t3/9NdR+DlamefBDhW4WH7rJa7tPuqBE4LT9GDzwLniX8BRQqRky
-         vzU9tSYZUyXce4i+EUTx1R+ZC16nk1sT9B7BEtLtyejYsHi60JtnrhPDtZiOipc5lvgc
-         ei6w==
-X-Gm-Message-State: AOAM531kk8gQgQYZykeQJgLLRRL7uQcnfcFIJXFKi68oSgNWbdGdaJeC
-        ge58M+f0fAwFZUWOIEdbEQg6EFDTlSQ=
-X-Google-Smtp-Source: ABdhPJwX+j2iwIadga+SOvdBYrbYUIqq0t1Q/2/PvqQJ3z8Squ+F/7lcO7J1AR3gBjuN58ctGGhNqw==
-X-Received: by 2002:a19:7002:: with SMTP id h2mr2465786lfc.62.1594740818359;
-        Tue, 14 Jul 2020 08:33:38 -0700 (PDT)
-Received: from mail-lj1-f169.google.com (mail-lj1-f169.google.com. [209.85.208.169])
-        by smtp.gmail.com with ESMTPSA id g7sm5356699lfe.62.2020.07.14.08.33.37
+        bh=VvONWUUx+ge2aRqADFFqhcoKfa3RbBALz1DV1ooGJ/Y=;
+        b=Mqm/MNIq+JRjAywsiDrEBzcEkCw82Oz8Pxjr9FFiZL9fLf7LWe/Ok2QINa1E1wQ+fR
+         gW6iR/4PL0xc2UNoxgOBWu3E7iofKzMfQs8g4d67l2Y8sz7k5REyn0J9P5yGzbutJ+A1
+         RG+S8mQwuBL0PJAhjGMI+hvRHXUZFM1yQYpoVW0cBL/n0VpNMKCqcPch/bEpzOgBBhGv
+         gHHo4yf0gWKLbj6rusGz9CItPGPa3WjaRS/PKd8p4zGAHIg2aHcTekDw2sehjkn6w1nS
+         PBd9zezWow55s8bDJ1IZ/0V6qOtugJ1bkDA714kDQsg/TIwAp4VJdYmgPu5dXCrCNSbh
+         Bzlw==
+X-Gm-Message-State: AOAM532/DaoVYo05l/JCC1bvMcBJ6sNjG/9acDbY52yox6Eh5h2DLwV/
+        KmkJXUZUoYATRxYqUc31XFtkQ4irf10=
+X-Google-Smtp-Source: ABdhPJyTYS66sgl+WsQmBPala5jfxGfktif+2nnRUbvaU8CQEYRQOOaXUXTt68kHfHHsUE9/1JG2GA==
+X-Received: by 2002:ac2:51a1:: with SMTP id f1mr2480766lfk.173.1594740601264;
+        Tue, 14 Jul 2020 08:30:01 -0700 (PDT)
+Received: from mail-lj1-f177.google.com (mail-lj1-f177.google.com. [209.85.208.177])
+        by smtp.gmail.com with ESMTPSA id r13sm5335710lfp.80.2020.07.14.08.29.59
         for <linux-kernel@vger.kernel.org>
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 14 Jul 2020 08:33:37 -0700 (PDT)
-Received: by mail-lj1-f169.google.com with SMTP id r19so23290319ljn.12
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 08:33:37 -0700 (PDT)
-X-Received: by 2002:a2e:999a:: with SMTP id w26mr2542103lji.371.1594740817078;
- Tue, 14 Jul 2020 08:33:37 -0700 (PDT)
+        Tue, 14 Jul 2020 08:30:00 -0700 (PDT)
+Received: by mail-lj1-f177.google.com with SMTP id h22so23294384lji.9
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 08:29:59 -0700 (PDT)
+X-Received: by 2002:a2e:760b:: with SMTP id r11mr2752959ljc.285.1594740599299;
+ Tue, 14 Jul 2020 08:29:59 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200710135706.537715-1-hch@lst.de> <CAHk-=wjGjwtgYJvLOd5aO2dWyPsC-6ED2Hthoxm1Eerf-Ahd-w@mail.gmail.com>
- <20200714070955.GB776@lst.de>
-In-Reply-To: <20200714070955.GB776@lst.de>
+References: <20200714105505.935079-1-hch@lst.de> <20200714105505.935079-6-hch@lst.de>
+In-Reply-To: <20200714105505.935079-6-hch@lst.de>
 From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Tue, 14 Jul 2020 08:33:21 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wibed1S5_XMgjrUTOgUf0UOy1djm3e14c3YOm1Loj2vzw@mail.gmail.com>
-Message-ID: <CAHk-=wibed1S5_XMgjrUTOgUf0UOy1djm3e14c3YOm1Loj2vzw@mail.gmail.com>
-Subject: Re: clean up address limit helpers
+Date:   Tue, 14 Jul 2020 08:29:43 -0700
+X-Gmail-Original-Message-ID: <CAHk-=whvwd9AWMCoUidO8pT3iw6e6NXCKThqbpDQOoz1=WTP7g@mail.gmail.com>
+Message-ID: <CAHk-=whvwd9AWMCoUidO8pT3iw6e6NXCKThqbpDQOoz1=WTP7g@mail.gmail.com>
+Subject: Re: [PATCH 5/6] uaccess: add force_uaccess_{begin,end} helpers
 To:     Christoph Hellwig <hch@lst.de>
 Cc:     Nick Hu <nickhu@andestech.com>, Greentime Hu <green.hu@gmail.com>,
         Vincent Chen <deanbo422@gmail.com>,
@@ -83,23 +82,28 @@ Cc:     Nick Hu <nickhu@andestech.com>, Greentime Hu <green.hu@gmail.com>,
         Andrew Morton <akpm@linux-foundation.org>,
         linux-riscv@lists.infradead.org,
         linux-arch <linux-arch@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 14, 2020 at 12:09 AM Christoph Hellwig <hch@lst.de> wrote:
+On Tue, Jul 14, 2020 at 4:08 AM Christoph Hellwig <hch@lst.de> wrote:
 >
-> On Fri, Jul 10, 2020 at 08:25:35AM -0700, Linus Torvalds wrote:
-> >
-> > Ack. All the patches looked like no-ops to me, but with better naming
-> > and clarity.
->
-> Is that a formal Acked-by?
+> Add helpers to wrap the get_fs/set_fs magic for undoing any damange done
+> by set_fs(KERNEL_DS).  There is no real functional benefit, but this
+> documents the intent of these calls better, and will allow stubbing the
+> functions out easily for kernels builds that do not allow address space
+> overrides in the future.
 
-Yup, the patch series looks fine to me, and it looks like you fixed up
-the things people noticed about off m68k behavior.
+It would perhaps have been nicer to rename the save variabel too
+(neither "seg" nor "oldfs" make much sense once you get rid of the old
+x86-inspired name).
 
-              Linus
+But from a greppability standpoint and a doc standpoint, I guess just
+renaming the function is sufficient (and certainly easier).
+
+               Linus
