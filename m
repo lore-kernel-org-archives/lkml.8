@@ -2,124 +2,89 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26E57C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 15:58:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EA67C433E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 15:58:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 013A722509
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 15:58:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5D869223C6
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 15:58:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728051AbgGNP6q (ORCPT
+        id S1728162AbgGNP64 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 11:58:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33482 "EHLO mail.kernel.org"
+        Tue, 14 Jul 2020 11:58:56 -0400
+Received: from mga05.intel.com ([192.55.52.43]:53204 "EHLO mga05.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725890AbgGNP6q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 11:58:46 -0400
-Received: from gaia (unknown [95.146.230.158])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 93708223C6;
-        Tue, 14 Jul 2020 15:58:43 +0000 (UTC)
-Date:   Tue, 14 Jul 2020 16:58:41 +0100
-From:   Catalin Marinas <catalin.marinas@arm.com>
-To:     Zhenyu Ye <yezhenyu2@huawei.com>
-Cc:     maz@kernel.org, steven.price@arm.com, guohanjun@huawei.com,
-        will@kernel.org, olof@lixom.net, suzuki.poulose@arm.com,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        zhangshaokun@hisilicon.com, prime.zeng@hisilicon.com,
-        linux-arch@vger.kernel.org, kuhn.chenqun@huawei.com,
-        xiexiangyou@huawei.com, linux-mm@kvack.org, arm@kernel.org
-Subject: Re: [PATCH v2 0/2] arm64: tlb: add support for TLBI RANGE
- instructions
-Message-ID: <20200714155840.GE18793@gaia>
-References: <20200710094420.517-1-yezhenyu2@huawei.com>
- <159440712962.27784.4664678472466095995.b4-ty@arm.com>
- <20200713122123.GC15829@gaia>
- <2edcf1ce-38d4-82b2-e500-51f742cae357@huawei.com>
- <20200713165903.GD15829@gaia>
- <b0c1ae56-3c22-dafe-a145-305714b211eb@huawei.com>
+        id S1725890AbgGNP6z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 11:58:55 -0400
+IronPort-SDR: mwbo8BbXzNkUhboRXRzMvyJuqYfCmP7s0D9GPRQgGQr5Prr1q033DsMxjrff38CeUxa3fUS/nA
+ O5BUWVCbExeQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9681"; a="233807723"
+X-IronPort-AV: E=Sophos;i="5.75,350,1589266800"; 
+   d="scan'208";a="233807723"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jul 2020 08:58:55 -0700
+IronPort-SDR: QKWYwV7G0OGMKoR2zfM+AL0IbLcHgFsPK+dO5sZ1hRpkB5xujimNxEojjMvfjHofvwe/kdJtey
+ IZMBv9qdfxRQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,350,1589266800"; 
+   d="scan'208";a="360428112"
+Received: from fmsmsx105.amr.corp.intel.com ([10.18.124.203])
+  by orsmga001.jf.intel.com with ESMTP; 14 Jul 2020 08:58:54 -0700
+Received: from fmsmsx121.amr.corp.intel.com ([169.254.6.72]) by
+ FMSMSX105.amr.corp.intel.com ([169.254.4.212]) with mapi id 14.03.0439.000;
+ Tue, 14 Jul 2020 08:58:54 -0700
+From:   "Westergreen, Dalon" <dalon.westergreen@intel.com>
+To:     "kuba@kernel.org" <kuba@kernel.org>,
+        "Ooi, Joyce" <joyce.ooi@intel.com>
+CC:     "See, Chin Liang" <chin.liang.see@intel.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Nguyen, Dinh" <dinh.nguyen@intel.com>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "thor.thayer@linux.intel.com" <thor.thayer@linux.intel.com>,
+        "Tan, Ley Foon" <ley.foon.tan@intel.com>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
+Subject: Re: [PATCH v4 09/10] net: eth: altera: add msgdma prefetcher
+Thread-Topic: [PATCH v4 09/10] net: eth: altera: add msgdma prefetcher
+Thread-Index: AQHWWfesVOnA2ZULWEys5PcG6yGprA==
+Date:   Tue, 14 Jul 2020 15:58:53 +0000
+Message-ID: <3bcb9020f0a3836f41036ddc3c8034b96e183197.camel@intel.com>
+References: <20200708072401.169150-1-joyce.ooi@intel.com>
+         <20200708072401.169150-10-joyce.ooi@intel.com>
+         <20200708144900.058a8b25@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+         <CY4PR11MB12537DA07C73574B82A239BDF2610@CY4PR11MB1253.namprd11.prod.outlook.com>
+         <20200714085526.2bb89dc6@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+In-Reply-To: <20200714085526.2bb89dc6@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Evolution 3.36.3 (3.36.3-1.fc32) 
+x-originating-ip: [10.212.241.105]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <BD230C14DD51844EA6E370AB08633EDF@intel.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <b0c1ae56-3c22-dafe-a145-305714b211eb@huawei.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 14, 2020 at 11:17:01PM +0800, Zhenyu Ye wrote:
-> On 2020/7/14 0:59, Catalin Marinas wrote:
-> >> +config ARM64_TLBI_RANGE
-> >> +	bool "Enable support for tlbi range feature"
-> >> +	default y
-> >> +	depends on AS_HAS_TLBI_RANGE
-> >> +	help
-> >> +	  ARMv8.4-TLBI provides TLBI invalidation instruction that apply to a
-> >> +	  range of input addresses.
-> >> +
-> >> +	  The feature introduces new assembly instructions, and they were
-> >> +	  support when binutils >= 2.30.
-> > 
-> > It looks like 2.30. I tracked it down to this commit:
-> > 
-> > https://sourceware.org/git/?p=binutils-gdb.git;a=commitdiff;h=793a194839bc8add71fdc7429c58b10f0667a6f6;hp=1a7ed57c840dcb0401f1a67c6763a89f7d2686d2
-> > 
-> >> +config AS_HAS_TLBI_RANGE
-> >> +	def_bool $(as-option, -Wa$(comma)-march=armv8.4-a)
-
-You could make this more generic like AS_HAS_ARMV8_4.
-
-> > The problem is that we don't pass -Wa,-march=armv8.4-a to gas. AFAICT,
-> > we only set an 8.3 for PAC but I'm not sure how passing two such options
-> > goes.
-> 
-> Pass the -march twice may not have bad impact.  Test in my toolchains
-> and the newer one will be chosen.  Anyway, we can add judgment to avoid
-> them be passed at the same time.
-
-I think the last one always overrides the previous (same with the .arch
-statements in asm files). For example:
-
-echo "paciasp" | aarch64-none-linux-gnu-as -march=armv8.2-a -march=armv8.3-a
-
-succeeds but the one below fails:
-
-echo "paciasp" | aarch64-none-linux-gnu-as -march=armv8.3-a -march=armv8.2-a
-
-> > A safer bet may be to simply encode the instructions by hand:
-> > 
-> > #define SYS_TLBI_RVAE1IS(Rt) \
-> > 	__emit_inst(0xd5000000 | sys_insn(1, 0, 8, 2, 1) | ((Rt) & 0x1f))
-> > #define SYS_TLBI_RVALE1IS(Rt) \
-> > 	__emit_inst(0xd5000000 | sys_insn(1, 0, 8, 2, 5) | ((Rt) & 0x1f))
-> > 
-> > (please check that they are correct)
-> 
-> Currently in kernel, all tlbi instructions are passed through __tlbi()
-> and __tlbi_user(). If we encode the range instructions by hand, we may
-> should have to add a new mechanism for this:
-> 
-> 1. choose a register and save it;
-> 2. put the operations for tlbi range to the register;
-> 3. do tlbi range by asm(SYS_TLBI_RVAE1IS(x0));
-> 4. restore the value of the register.
-> 
-> It's complicated and will only be used with tlbi range instructions.
-> (Am I understand something wrong? )
-> 
-> So I am prefer to pass -march=armv8.4-a to toolschains to support tlbi
-> range instruction, just like what PAC does.
-
-It will indeed get more complicated than necessary. So please go with
-the -Wa,-march=armv8.4-a check in Kconfig and update the
-arch/arm64/Makefile to pass this option (after the 8.3 one).
-
-Thanks.
-
--- 
-Catalin
+DQoNCk9uIFR1ZSwgMjAyMC0wNy0xNCBhdCAwODo1NSAtMDcwMCwgSmFrdWIgS2ljaW5za2kgd3Jv
+dGU6DQo+IE9uIFR1ZSwgMTQgSnVsIDIwMjAgMTQ6MzU6MTYgKzAwMDAgT29pLCBKb3ljZSB3cm90
+ZToNCj4gPiA+IEknbSBubyBkZXZpY2UgdHJlZSBleHBlcnQgYnV0IHRoZXNlIGxvb2sgbGlrZSBj
+b25maWcgb3B0aW9ucyByYXRoZXIgdGhhbg0KPiA+ID4gSFcNCj4gPiA+IGRlc2NyaXB0aW9uLiBU
+aGV5IGFsc28gZG9uJ3QgYXBwZWFyIHRvIGJlIGRvY3VtZW50ZWQgaW4gdGhlIG5leHQgcGF0Y2gu
+ICANCj4gPiANCj4gPiBUaGUgcG9sbF9mcmVxIGFyZSBwYXJ0IG9mIHRoZSBtc2dkbWEgcHJlZmV0
+Y2hlciBJUCwgd2hlcmVieSBpdA0KPiA+IHNwZWNpZmllcyB0aGUgZnJlcXVlbmN5IG9mIGRlc2Ny
+aXB0b3IgcG9sbGluZyBvcGVyYXRpb24uIEkgY2FuIGFkZA0KPiA+IHRoZSBwb2xsX2ZyZXEgZGVz
+Y3JpcHRpb24gaW4gdGhlIG5leHQgcGF0Y2guDQo+IA0KPiBJcyB0aGUgdmFsdWUgZGVjaWRlZCBh
+dCB0aGUgdGltZSBvZiBzeW50aGVzaXMgb3IgY2FuIHRoZSBkcml2ZXIgY2hvb3NlIA0KPiB0aGUg
+dmFsdWUgaXQgd2FudHM/DQoNCkl0IGlzIG5vdCBjb250cm9sbGVkIGF0IHN5bnRoZXNpcywgdGhp
+cyBwYXJhbWV0ZXIgc2hvdWxkIGxpa2VseSBub3QgYmUgYQ0KZGV2aWNldHJlZSBwYXJhbWV0ZXIs
+IHBlcmhhcHMganVzdCBtYWtlIGl0IGEgbW9kdWxlIHBhcmFtZXRlciB3aXRoIGEgZGVmYXVsdA0K
+dmFsdWUuDQoNCi0tZGFsb24NCg==
