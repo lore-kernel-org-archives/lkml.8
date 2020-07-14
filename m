@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 780B8C433EC
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:52:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93505C433E4
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:52:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4F00122AB0
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:52:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 75CFB22B42
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:52:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594752750;
-	bh=iv8j59IizSFovtJeOSAaB86Jk9Z6jur6Paq2/nEHfOw=;
+	s=default; t=1594752752;
+	bh=0Xrp3e7cgjtiKwpBv8X81MrVr9eYVuOABMXE5NdW4mo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YHblaz/i6eijiW7M49VAKWJETQSZJTXR7/hc+EwZLBkscwtJEXLMPUxvDYGPbMW+c
-	 5Ux8mcbLoASeHOKLshKpYobRwsaigmZyU9shmPk4UJscZDoe5n9vDruQcRk7ZFSwGG
-	 88v4CG40+73GnqkhvokST0mPq3hbLdy4pzikQxbA=
+	b=wVoU5QwDF8lx4+HbIq12K9QPCijqMsMPhh1MbA9hKxsI0gDVgDKlEs5VLnZ+MGbVd
+	 Y86VA8uZo/JCAZMjquMVgPP/R1lQ1YUaElStHzYxsZmxVVyjlqsuIKzWR07qNn3yv5
+	 U8KqtHUCyf5DtT5mWx2ggVBHh76wmKV7gSdjFKRQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730526AbgGNSw3 (ORCPT
+        id S1730530AbgGNSwb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 14:52:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49136 "EHLO mail.kernel.org"
+        Tue, 14 Jul 2020 14:52:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49174 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730511AbgGNSwY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 14:52:24 -0400
+        id S1730519AbgGNSw1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 14:52:27 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 81BB422B42;
-        Tue, 14 Jul 2020 18:52:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2B859223B0;
+        Tue, 14 Jul 2020 18:52:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594752744;
-        bh=iv8j59IizSFovtJeOSAaB86Jk9Z6jur6Paq2/nEHfOw=;
+        s=default; t=1594752746;
+        bh=0Xrp3e7cgjtiKwpBv8X81MrVr9eYVuOABMXE5NdW4mo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fTjQleT0YE61FAUpMxBNDHU/uOjYvrMHPtX8J06celY8+9W9iWjz/VkvGkCPzcDnX
-         psyhMS55CEkKJIqdEHHCbl711T5wS4d06NFV047rCWpHpWTmVjwwQ5bM2MxrBBJ+9o
-         kGrqiCHJYciE5KEU57q+dCqHUaYCA41GGyjKeZm4=
+        b=dwZl2/cu6VdtK5IcaAWA4Pa0ndfIoZG2YoMwQi5B5JDbH9ozg8dDFgksFvEhKT+s5
+         knbiMsQXeQoVYkG01lsPeKVB/Jf9wrAeX4juEQ6g9lMvTGyAJNAkpra8ufTyTFO90g
+         JPmhzAqljzLZBN6pXJU/+Ql5HvMb8J6br0zjZid0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Filipe Manana <fdmanana@suse.com>,
-        Josef Bacik <josef@toxicpanda.com>,
-        David Sterba <dsterba@suse.com>
-Subject: [PATCH 5.4 094/109] btrfs: fix double put of block group with nocow
-Date:   Tue, 14 Jul 2020 20:44:37 +0200
-Message-Id: <20200714184110.060376603@linuxfoundation.org>
+        stable@vger.kernel.org, Jian-Hong Pan <jian-hong@endlessm.com>,
+        Chris Chiu <chiu@endlessm.com>, Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 5.4 077/109] ALSA: hda/realtek - Enable audio jacks of Acer vCopperbox with ALC269VC
+Date:   Tue, 14 Jul 2020 20:44:20 +0200
+Message-Id: <20200714184109.229556637@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200714184105.507384017@linuxfoundation.org>
 References: <20200714184105.507384017@linuxfoundation.org>
@@ -60,68 +59,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Josef Bacik <josef@toxicpanda.com>
+From: Jian-Hong Pan <jian-hong@endlessm.com>
 
-commit 230ed397435e85b54f055c524fcb267ae2ce3bc4 upstream.
+commit 8eae7e9b3967f08efaa4d70403aec513cbe45ad0 upstream.
 
-While debugging a patch that I wrote I was hitting use-after-free panics
-when accessing block groups on unmount.  This turned out to be because
-in the nocow case if we bail out of doing the nocow for whatever reason
-we need to call btrfs_dec_nocow_writers() if we called the inc.  This
-puts our block group, but a few error cases does
+The Acer desktop vCopperbox with ALC269VC cannot detect the MIC of
+headset, the line out and internal speaker until
+ALC269VC_FIXUP_ACER_VCOPPERBOX_PINS quirk applied.
 
-if (nocow) {
-    btrfs_dec_nocow_writers();
-    goto error;
-}
-
-unfortunately, error is
-
-error:
-	if (nocow)
-		btrfs_dec_nocow_writers();
-
-so we get a double put on our block group.  Fix this by dropping the
-error cases calling of btrfs_dec_nocow_writers(), as it's handled at the
-error label now.
-
-Fixes: 762bf09893b4 ("btrfs: improve error handling in run_delalloc_nocow")
-CC: stable@vger.kernel.org # 5.4+
-Reviewed-by: Filipe Manana <fdmanana@suse.com>
-Signed-off-by: Josef Bacik <josef@toxicpanda.com>
-Reviewed-by: David Sterba <dsterba@suse.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
+Signed-off-by: Jian-Hong Pan <jian-hong@endlessm.com>
+Signed-off-by: Chris Chiu <chiu@endlessm.com>
+Cc: <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20200706071826.39726-1-jian-hong@endlessm.com
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/btrfs/inode.c |    9 +--------
- 1 file changed, 1 insertion(+), 8 deletions(-)
+ sound/pci/hda/patch_realtek.c |   13 +++++++++++++
+ 1 file changed, 13 insertions(+)
 
---- a/fs/btrfs/inode.c
-+++ b/fs/btrfs/inode.c
-@@ -1657,12 +1657,8 @@ out_check:
- 			ret = fallback_to_cow(inode, locked_page, cow_start,
- 					      found_key.offset - 1,
- 					      page_started, nr_written);
--			if (ret) {
--				if (nocow)
--					btrfs_dec_nocow_writers(fs_info,
--								disk_bytenr);
-+			if (ret)
- 				goto error;
--			}
- 			cow_start = (u64)-1;
- 		}
+--- a/sound/pci/hda/patch_realtek.c
++++ b/sound/pci/hda/patch_realtek.c
+@@ -6114,6 +6114,7 @@ enum {
+ 	ALC236_FIXUP_HP_MUTE_LED,
+ 	ALC298_FIXUP_SAMSUNG_HEADPHONE_VERY_QUIET,
+ 	ALC295_FIXUP_ASUS_MIC_NO_PRESENCE,
++	ALC269VC_FIXUP_ACER_VCOPPERBOX_PINS,
+ };
  
-@@ -1678,9 +1674,6 @@ out_check:
- 					  ram_bytes, BTRFS_COMPRESS_NONE,
- 					  BTRFS_ORDERED_PREALLOC);
- 			if (IS_ERR(em)) {
--				if (nocow)
--					btrfs_dec_nocow_writers(fs_info,
--								disk_bytenr);
- 				ret = PTR_ERR(em);
- 				goto error;
- 			}
+ static const struct hda_fixup alc269_fixups[] = {
+@@ -7292,6 +7293,17 @@ static const struct hda_fixup alc269_fix
+ 		.chained = true,
+ 		.chain_id = ALC269_FIXUP_HEADSET_MODE
+ 	},
++	[ALC269VC_FIXUP_ACER_VCOPPERBOX_PINS] = {
++		.type = HDA_FIXUP_PINS,
++		.v.pins = (const struct hda_pintbl[]) {
++			{ 0x14, 0x90100120 }, /* use as internal speaker */
++			{ 0x18, 0x02a111f0 }, /* use as headset mic, without its own jack detect */
++			{ 0x1a, 0x01011020 }, /* use as line out */
++			{ },
++		},
++		.chained = true,
++		.chain_id = ALC269_FIXUP_HEADSET_MIC
++	},
+ };
+ 
+ static const struct snd_pci_quirk alc269_fixup_tbl[] = {
+@@ -7311,6 +7323,7 @@ static const struct snd_pci_quirk alc269
+ 	SND_PCI_QUIRK(0x1025, 0x1099, "Acer Aspire E5-523G", ALC255_FIXUP_ACER_MIC_NO_PRESENCE),
+ 	SND_PCI_QUIRK(0x1025, 0x110e, "Acer Aspire ES1-432", ALC255_FIXUP_ACER_MIC_NO_PRESENCE),
+ 	SND_PCI_QUIRK(0x1025, 0x1246, "Acer Predator Helios 500", ALC299_FIXUP_PREDATOR_SPK),
++	SND_PCI_QUIRK(0x1025, 0x1247, "Acer vCopperbox", ALC269VC_FIXUP_ACER_VCOPPERBOX_PINS),
+ 	SND_PCI_QUIRK(0x1025, 0x128f, "Acer Veriton Z6860G", ALC286_FIXUP_ACER_AIO_HEADSET_MIC),
+ 	SND_PCI_QUIRK(0x1025, 0x1290, "Acer Veriton Z4860G", ALC286_FIXUP_ACER_AIO_HEADSET_MIC),
+ 	SND_PCI_QUIRK(0x1025, 0x1291, "Acer Veriton Z4660G", ALC286_FIXUP_ACER_AIO_HEADSET_MIC),
 
 
