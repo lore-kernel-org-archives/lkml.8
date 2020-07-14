@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4502DC433F7
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 19:11:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08BEAC433FE
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 19:11:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1C1EB22AAF
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 19:11:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D761D223AB
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 19:11:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594753892;
-	bh=sIUlAmhTnfBS1jKcMvo/2Rk0jPaABNfNX5aq1FKva4I=;
+	s=default; t=1594753896;
+	bh=NbpJd0Lm+GZx1BSXzmwTJkP2fHhPnzL6+/cCHrlwfkA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nOa9aqe0TAqjiaHpkbnVG1S2PFXvIA2qyN9unA7+JzvsysLgdhOsFDnM+N5k0QwPo
-	 5cWNBWqG21eFO9vNVBj83/ldP+8g8qwq8XzOtXHp9BpwvYZ/lrb8J5ZR1fXrsvogDp
-	 HK9446sMqO3tv4wosGUAWzGsOt81T41iNMFUHiRc=
+	b=x4XI6RT6TUNL28KXsHF63nynGQwhzlnSEZ/SNaxXOq57En9iWlmaOA7TVCdtHkMTI
+	 +7GlwUjruM6ea6eKVhRlJM9vYAz7iGoSdLGYpdb6J3WLItX/savXdC5QfHxm2uxuHv
+	 oiyQNNloDwu6BykpapQBycBJ43a+cNlTQK66WS30=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730054AbgGNStF (ORCPT
+        id S1730030AbgGNSs4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 14:49:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44738 "EHLO mail.kernel.org"
+        Tue, 14 Jul 2020 14:48:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44548 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729211AbgGNStC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 14:49:02 -0400
+        id S1730015AbgGNSsw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 14:48:52 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 849FA22B3A;
-        Tue, 14 Jul 2020 18:49:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3C14922B2A;
+        Tue, 14 Jul 2020 18:48:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594752542;
-        bh=sIUlAmhTnfBS1jKcMvo/2Rk0jPaABNfNX5aq1FKva4I=;
+        s=default; t=1594752531;
+        bh=NbpJd0Lm+GZx1BSXzmwTJkP2fHhPnzL6+/cCHrlwfkA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sTATgriZhG2jjxFo6okbU4OPLVxMphDJ/eB7J5KU3cnosdeX5m7/6/hoKedTSYnXu
-         GuOBqzke/xmRpjrVMnoSQMLcP8Jn9izu98HDoyVkfQ0pVf9dJnYCgnhQxXA7t/NlEI
-         7FfAxGPaf91kNKiODM+OUKrMUL4n7o7z9mWhLypk=
+        b=XJaqcxgePFy+oDGuUrV36KMBpA2H+wGEU6ezfxT832m9flSUKbF98RA3t1gmMYoeu
+         ZKIJ7RmFLmqbvZ2HRyZi+KFnH2xhVQcojzzVxYkNOp/Hh+cJmvcFdvvlL/HugIqbgO
+         tBbpnuST0PsiceHCyUopanCl5sjUqu0oEdCNmrYU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ingo Molnar <mingo@kernel.org>,
-        Kim Phillips <kim.phillips@amd.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 006/109] perf/x86/rapl: Fix RAPL config variable bug
-Date:   Tue, 14 Jul 2020 20:43:09 +0200
-Message-Id: <20200714184105.825183784@linuxfoundation.org>
+        stable@vger.kernel.org, Stephane Eranian <eranian@google.com>,
+        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 005/109] perf/x86/rapl: Move RAPL support to common x86 code
+Date:   Tue, 14 Jul 2020 20:43:08 +0200
+Message-ID: <20200714184105.778466736@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200714184105.507384017@linuxfoundation.org>
 References: <20200714184105.507384017@linuxfoundation.org>
@@ -60,39 +58,109 @@ Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
+Message-ID: <20200714184308.IWbtsdbGq0z80QsIPkvqkRv66neTp4hPzp5G-fbjzX4@z>
 
 From: Stephane Eranian <eranian@google.com>
 
-[ Upstream commit 16accae3d97f97d7f61c4ee5d0002bccdef59088 ]
+[ Upstream commit fd3ae1e1587d64ef8cc8e361903d33625458073e ]
 
-This patch fixes a bug introduced by:
+To prepare for support of both Intel and AMD RAPL.
 
-  fd3ae1e1587d6 ("perf/x86/rapl: Move RAPL support to common x86 code")
+As per the AMD PPR, Fam17h support Package RAPL counters to monitor power usage.
+The RAPL counter operates as with Intel RAPL, and as such it is beneficial
+to share the code.
 
-The Kconfig variable name was wrong. It was missing the CONFIG_ prefix.
+No change in functionality.
 
-Signed-off-by: Stephane Eranian <eraniangoogle.com>
+Signed-off-by: Stephane Eranian <eranian@google.com>
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Tested-by: Kim Phillips <kim.phillips@amd.com>
-Acked-by: Peter Zijlstra <peterz@infradead.org>
-Link: https://lore.kernel.org/r/20200528201614.250182-1-eranian@google.com
+Link: https://lore.kernel.org/r/20200527224659.206129-2-eranian@google.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/events/Makefile | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/x86/events/Kconfig            | 6 +++---
+ arch/x86/events/Makefile           | 1 +
+ arch/x86/events/intel/Makefile     | 2 --
+ arch/x86/events/{intel => }/rapl.c | 9 ++++++---
+ 4 files changed, 10 insertions(+), 8 deletions(-)
+ rename arch/x86/events/{intel => }/rapl.c (98%)
 
+diff --git a/arch/x86/events/Kconfig b/arch/x86/events/Kconfig
+index 9a7a1446cb3a0..4a809c6cbd2f5 100644
+--- a/arch/x86/events/Kconfig
++++ b/arch/x86/events/Kconfig
+@@ -10,11 +10,11 @@ config PERF_EVENTS_INTEL_UNCORE
+ 	available on NehalemEX and more modern processors.
+ 
+ config PERF_EVENTS_INTEL_RAPL
+-	tristate "Intel rapl performance events"
+-	depends on PERF_EVENTS && CPU_SUP_INTEL && PCI
++	tristate "Intel/AMD rapl performance events"
++	depends on PERF_EVENTS && (CPU_SUP_INTEL || CPU_SUP_AMD) && PCI
+ 	default y
+ 	---help---
+-	Include support for Intel rapl performance events for power
++	Include support for Intel and AMD rapl performance events for power
+ 	monitoring on modern processors.
+ 
+ config PERF_EVENTS_INTEL_CSTATE
 diff --git a/arch/x86/events/Makefile b/arch/x86/events/Makefile
-index b418ef6878796..726e83c0a31a1 100644
+index 9e07f554333fb..b418ef6878796 100644
 --- a/arch/x86/events/Makefile
 +++ b/arch/x86/events/Makefile
-@@ -1,6 +1,6 @@
+@@ -1,5 +1,6 @@
  # SPDX-License-Identifier: GPL-2.0-only
  obj-y					+= core.o probe.o
--obj-$(PERF_EVENTS_INTEL_RAPL)		+= rapl.o
-+obj-$(CONFIG_PERF_EVENTS_INTEL_RAPL)	+= rapl.o
++obj-$(PERF_EVENTS_INTEL_RAPL)		+= rapl.o
  obj-y					+= amd/
  obj-$(CONFIG_X86_LOCAL_APIC)            += msr.o
  obj-$(CONFIG_CPU_SUP_INTEL)		+= intel/
+diff --git a/arch/x86/events/intel/Makefile b/arch/x86/events/intel/Makefile
+index 3468b0c1dc7c9..e67a5886336c1 100644
+--- a/arch/x86/events/intel/Makefile
++++ b/arch/x86/events/intel/Makefile
+@@ -2,8 +2,6 @@
+ obj-$(CONFIG_CPU_SUP_INTEL)		+= core.o bts.o
+ obj-$(CONFIG_CPU_SUP_INTEL)		+= ds.o knc.o
+ obj-$(CONFIG_CPU_SUP_INTEL)		+= lbr.o p4.o p6.o pt.o
+-obj-$(CONFIG_PERF_EVENTS_INTEL_RAPL)	+= intel-rapl-perf.o
+-intel-rapl-perf-objs			:= rapl.o
+ obj-$(CONFIG_PERF_EVENTS_INTEL_UNCORE)	+= intel-uncore.o
+ intel-uncore-objs			:= uncore.o uncore_nhmex.o uncore_snb.o uncore_snbep.o
+ obj-$(CONFIG_PERF_EVENTS_INTEL_CSTATE)	+= intel-cstate.o
+diff --git a/arch/x86/events/intel/rapl.c b/arch/x86/events/rapl.c
+similarity index 98%
+rename from arch/x86/events/intel/rapl.c
+rename to arch/x86/events/rapl.c
+index 5053a403e4ae0..3c222d6fdee3b 100644
+--- a/arch/x86/events/intel/rapl.c
++++ b/arch/x86/events/rapl.c
+@@ -1,11 +1,14 @@
+ // SPDX-License-Identifier: GPL-2.0-only
+ /*
+- * Support Intel RAPL energy consumption counters
++ * Support Intel/AMD RAPL energy consumption counters
+  * Copyright (C) 2013 Google, Inc., Stephane Eranian
+  *
+  * Intel RAPL interface is specified in the IA-32 Manual Vol3b
+  * section 14.7.1 (September 2013)
+  *
++ * AMD RAPL interface for Fam17h is described in the public PPR:
++ * https://bugzilla.kernel.org/show_bug.cgi?id=206537
++ *
+  * RAPL provides more controls than just reporting energy consumption
+  * however here we only expose the 3 energy consumption free running
+  * counters (pp0, pkg, dram).
+@@ -58,8 +61,8 @@
+ #include <linux/nospec.h>
+ #include <asm/cpu_device_id.h>
+ #include <asm/intel-family.h>
+-#include "../perf_event.h"
+-#include "../probe.h"
++#include "perf_event.h"
++#include "probe.h"
+ 
+ MODULE_LICENSE("GPL");
+ 
 -- 
 2.25.1
 
