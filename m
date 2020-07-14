@@ -2,101 +2,212 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A6EAC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:12:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A8A5C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:16:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 00E2C20760
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:12:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="mtBjjCAz"
+	by mail.kernel.org (Postfix) with ESMTP id 4A8FD2242B
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:16:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729039AbgGNSMV (ORCPT
+        id S1729189AbgGNSQ5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 14:12:21 -0400
-Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:16305 "EHLO
-        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728117AbgGNSMU (ORCPT
+        Tue, 14 Jul 2020 14:16:57 -0400
+Received: from smtp-8fab.mail.infomaniak.ch ([83.166.143.171]:43889 "EHLO
+        smtp-8fab.mail.infomaniak.ch" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729150AbgGNSQy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 14:12:20 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5f0df54a0002>; Tue, 14 Jul 2020 11:11:22 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Tue, 14 Jul 2020 11:12:20 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Tue, 14 Jul 2020 11:12:20 -0700
-Received: from [10.26.72.103] (172.20.13.39) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 14 Jul
- 2020 18:12:19 +0000
-Subject: Re: [PATCH 0/5] firmware: tegra: Add support for in-band debug
-To:     Thierry Reding <thierry.reding@gmail.com>
-CC:     <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20200712100118.13343-1-jonathanh@nvidia.com>
- <20200714161809.GE251696@ulmo>
-From:   Jon Hunter <jonathanh@nvidia.com>
-Message-ID: <ff404043-3696-121d-52af-dbea4e1005d4@nvidia.com>
-Date:   Tue, 14 Jul 2020 19:12:16 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Tue, 14 Jul 2020 14:16:54 -0400
+Received: from smtp-3-0001.mail.infomaniak.ch (unknown [10.4.36.108])
+        by smtp-2-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4B5pcz4h40zlhGky;
+        Tue, 14 Jul 2020 20:16:51 +0200 (CEST)
+Received: from localhost (unknown [94.23.54.103])
+        by smtp-3-0001.mail.infomaniak.ch (Postfix) with ESMTPA id 4B5pcz1YDGzlh8TC;
+        Tue, 14 Jul 2020 20:16:51 +0200 (CEST)
+From:   =?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mic@digikod.net>
+To:     linux-kernel@vger.kernel.org
+Cc:     =?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mic@digikod.net>,
+        Aleksa Sarai <cyphar@cyphar.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        Christian Heimes <christian@python.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Deven Bowers <deven.desai@linux.microsoft.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Eric Biggers <ebiggers@kernel.org>,
+        Eric Chiang <ericchiang@google.com>,
+        Florian Weimer <fweimer@redhat.com>,
+        James Morris <jmorris@namei.org>, Jan Kara <jack@suse.cz>,
+        Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>,
+        Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
+        Matthew Garrett <mjg59@google.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Michael Kerrisk <mtk.manpages@gmail.com>,
+        =?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mickael.salaun@ssi.gouv.fr>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        =?UTF-8?q?Philippe=20Tr=C3=A9buchet?= 
+        <philippe.trebuchet@ssi.gouv.fr>,
+        Scott Shell <scottsh@microsoft.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Steve Dower <steve.dower@python.org>,
+        Steve Grubb <sgrubb@redhat.com>,
+        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
+        Thibaut Sautereau <thibaut.sautereau@ssi.gouv.fr>,
+        Vincent Strubel <vincent.strubel@ssi.gouv.fr>,
+        kernel-hardening@lists.openwall.com, linux-api@vger.kernel.org,
+        linux-integrity@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org
+Subject: [PATCH v6 2/7] exec: Move S_ISREG() check earlier
+Date:   Tue, 14 Jul 2020 20:16:33 +0200
+Message-Id: <20200714181638.45751-3-mic@digikod.net>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200714181638.45751-1-mic@digikod.net>
+References: <20200714181638.45751-1-mic@digikod.net>
 MIME-Version: 1.0
-In-Reply-To: <20200714161809.GE251696@ulmo>
-X-Originating-IP: [172.20.13.39]
-X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="windows-1252"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1594750282; bh=+018opWU1n69mTuUimpwA6LroZay1PBIuxMxVGCW+rs=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=mtBjjCAzABAGJHN4xvkUsy/3DRK+Y8oy5GvLCaujWARHCSMmz+c0ix+3SbOWYRjo1
-         EUvhSM8cL3OIBjnHLk7Wt5+0kA9ho4MxupqYaz1crl8fMk061hmZn4MPxKamxfgdZ6
-         0kRsnMldg/rF3SvlJYxDoUzvRAVZmkHct1JQwWuZojHrsPgagkDjIxnbVV+ctsMcTh
-         MlPyoO5+Fa1Yrp5wHWVFDV1C5CzJRJy86nB93Y4ZYwF1PMVyakPXZPupBKe/bDiEF4
-         rANTpaRu3ces4TVXPFO3TDZatAz6/SiEaYXaswBrd9ZBHWsSL2f98jBtI0Aq6RkzMK
-         tjnD7SaIo20VQ==
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Antivirus: Dr.Web (R) for Unix mail servers drweb plugin ver.6.0.2.8
+X-Antivirus-Code: 0x100000
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Kees Cook <keescook@chromium.org>
 
-On 14/07/2020 17:18, Thierry Reding wrote:
-> On Sun, Jul 12, 2020 at 11:01:13AM +0100, Jon Hunter wrote:
->> This series adds support for in-band debug messaging for the BPMP and
->> updates the BPMP ABI to align with the latest version.
->>
->> Jon Hunter (4):
->>   firmware: tegra: Use consistent return variable name
->>   firmware: tegra: Prepare for supporting in-band debugfs
->>   firmware: tegra: Add support for in-band debug
->>   firmware: tegra: Update BPMP ABI
->>
->> Timo Alho (1):
->>   firmware: tegra: add return code checks and increase debugfs size
->>
->>  drivers/firmware/tegra/bpmp-debugfs.c | 436 ++++++++++--
->>  drivers/firmware/tegra/bpmp.c         |   6 +-
->>  include/soc/tegra/bpmp-abi.h          | 913 ++++++++++++++++++--------
->>  3 files changed, 1038 insertions(+), 317 deletions(-)
-> 
-> All applied, thanks. I had to tweak a couple of things to make
-> checkpatch happy, though. checkpatch also wasn't happy with the ABI
-> header update, but I left it as-is to make it easier to update in the
-> future.
+The execve(2)/uselib(2) syscalls have always rejected non-regular
+files. Recently, it was noticed that a deadlock was introduced when trying
+to execute pipes, as the S_ISREG() test was happening too late. This was
+fixed in commit 73601ea5b7b1 ("fs/open.c: allow opening only regular files
+during execve()"), but it was added after inode_permission() had already
+run, which meant LSMs could see bogus attempts to execute non-regular
+files.
 
-Thanks. Yes I noticed that as well with the ABI update. I wonder if we
-should get them to fix that.
+Move the test into the other inode type checks (which already look
+for other pathological conditions[1]). Since there is no need to use
+FMODE_EXEC while we still have access to "acc_mode", also switch the
+test to MAY_EXEC.
 
-Jon
+Also include a comment with the redundant S_ISREG() checks at the end of
+execve(2)/uselib(2) to note that they are present to avoid any mistakes.
 
+My notes on the call path, and related arguments, checks, etc:
+
+do_open_execat()
+    struct open_flags open_exec_flags = {
+        .open_flag = O_LARGEFILE | O_RDONLY | __FMODE_EXEC,
+        .acc_mode = MAY_EXEC,
+        ...
+    do_filp_open(dfd, filename, open_flags)
+        path_openat(nameidata, open_flags, flags)
+            file = alloc_empty_file(open_flags, current_cred());
+            do_open(nameidata, file, open_flags)
+                may_open(path, acc_mode, open_flag)
+		    /* new location of MAY_EXEC vs S_ISREG() test */
+                    inode_permission(inode, MAY_OPEN | acc_mode)
+                        security_inode_permission(inode, acc_mode)
+                vfs_open(path, file)
+                    do_dentry_open(file, path->dentry->d_inode, open)
+                        /* old location of FMODE_EXEC vs S_ISREG() test */
+                        security_file_open(f)
+                        open()
+
+[1] https://lore.kernel.org/lkml/202006041910.9EF0C602@keescook/
+
+Signed-off-by: Kees Cook <keescook@chromium.org>
+Acked-by: Mickaël Salaün <mic@digikod.net>
+Link: https://lore.kernel.org/r/20200605160013.3954297-3-keescook@chromium.org
+---
+ fs/exec.c  | 14 ++++++++++++--
+ fs/namei.c |  6 ++++--
+ fs/open.c  |  6 ------
+ 3 files changed, 16 insertions(+), 10 deletions(-)
+
+diff --git a/fs/exec.c b/fs/exec.c
+index d7c937044d10..bdc6a6eb5dce 100644
+--- a/fs/exec.c
++++ b/fs/exec.c
+@@ -141,8 +141,13 @@ SYSCALL_DEFINE1(uselib, const char __user *, library)
+ 	if (IS_ERR(file))
+ 		goto out;
+ 
++	/*
++	 * may_open() has already checked for this, so it should be
++	 * impossible to trip now. But we need to be extra cautious
++	 * and check again at the very end too.
++	 */
+ 	error = -EACCES;
+-	if (!S_ISREG(file_inode(file)->i_mode))
++	if (WARN_ON_ONCE(!S_ISREG(file_inode(file)->i_mode)))
+ 		goto exit;
+ 
+ 	if (path_noexec(&file->f_path))
+@@ -886,8 +891,13 @@ static struct file *do_open_execat(int fd, struct filename *name, int flags)
+ 	if (IS_ERR(file))
+ 		goto out;
+ 
++	/*
++	 * may_open() has already checked for this, so it should be
++	 * impossible to trip now. But we need to be extra cautious
++	 * and check again at the very end too.
++	 */
+ 	err = -EACCES;
+-	if (!S_ISREG(file_inode(file)->i_mode))
++	if (WARN_ON_ONCE(!S_ISREG(file_inode(file)->i_mode)))
+ 		goto exit;
+ 
+ 	if (path_noexec(&file->f_path))
+diff --git a/fs/namei.c b/fs/namei.c
+index 72d4219c93ac..a559ad943970 100644
+--- a/fs/namei.c
++++ b/fs/namei.c
+@@ -2849,16 +2849,18 @@ static int may_open(const struct path *path, int acc_mode, int flag)
+ 	case S_IFLNK:
+ 		return -ELOOP;
+ 	case S_IFDIR:
+-		if (acc_mode & MAY_WRITE)
++		if (acc_mode & (MAY_WRITE | MAY_EXEC))
+ 			return -EISDIR;
+ 		break;
+ 	case S_IFBLK:
+ 	case S_IFCHR:
+ 		if (!may_open_dev(path))
+ 			return -EACCES;
+-		/*FALLTHRU*/
++		fallthrough;
+ 	case S_IFIFO:
+ 	case S_IFSOCK:
++		if (acc_mode & MAY_EXEC)
++			return -EACCES;
+ 		flag &= ~O_TRUNC;
+ 		break;
+ 	}
+diff --git a/fs/open.c b/fs/open.c
+index 6cd48a61cda3..623b7506a6db 100644
+--- a/fs/open.c
++++ b/fs/open.c
+@@ -784,12 +784,6 @@ static int do_dentry_open(struct file *f,
+ 		return 0;
+ 	}
+ 
+-	/* Any file opened for execve()/uselib() has to be a regular file. */
+-	if (unlikely(f->f_flags & FMODE_EXEC && !S_ISREG(inode->i_mode))) {
+-		error = -EACCES;
+-		goto cleanup_file;
+-	}
+-
+ 	if (f->f_mode & FMODE_WRITE && !special_file(inode->i_mode)) {
+ 		error = get_write_access(inode);
+ 		if (unlikely(error))
 -- 
-nvpublic
+2.27.0
+
