@@ -2,124 +2,119 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56A7EC433E4
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 00:53:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70273C433EA
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 00:53:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 300DA21841
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 00:53:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4B0AB217BA
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 00:53:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iv8VOWzP"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rMiR71v/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727019AbgGNAxi (ORCPT
+        id S1727050AbgGNAxo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 20:53:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41364 "EHLO
+        Mon, 13 Jul 2020 20:53:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41380 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726918AbgGNAxg (ORCPT
+        with ESMTP id S1726918AbgGNAxl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 20:53:36 -0400
-Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 229EAC061755;
-        Mon, 13 Jul 2020 17:53:36 -0700 (PDT)
-Received: by mail-pf1-x441.google.com with SMTP id 1so6802878pfn.9;
-        Mon, 13 Jul 2020 17:53:36 -0700 (PDT)
+        Mon, 13 Jul 2020 20:53:41 -0400
+Received: from mail-qk1-x743.google.com (mail-qk1-x743.google.com [IPv6:2607:f8b0:4864:20::743])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6C2E4C061755;
+        Mon, 13 Jul 2020 17:53:41 -0700 (PDT)
+Received: by mail-qk1-x743.google.com with SMTP id l6so14146817qkc.6;
+        Mon, 13 Jul 2020 17:53:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition;
-        bh=1WZl3SA6KMxtfbG5PMx34SOFRA0PpKVq9Dty/hOwW44=;
-        b=iv8VOWzPYj+OxwIko8MRq3OMGpatZTvQ0Y5pOdmjF9HpBXZ/069lOpNv2Bmu1s/UKU
-         3snl9GQSZz6SVSbqNIz4Is83acJSFZYvfJiT9g+aXOjVz+AOOSgaKBztRMzPTSAhGgDq
-         3snAREEl66DIBaUNb2OdjsljkYKecksOOWtwlQhOJ12Pn0i0OeUIKOALDs5hKDk7+oBX
-         AbzJo9XEHPgFa3Al9DZ0byAB4faRfWnS4xY9fPy+s91nO0IWHhSxOq9QGFCzgo5eiYeU
-         ATqWVkQLcDeUx2dJkFpKV6IWKcfXNB1jGZptph8XnPg2ze00Fl0rbuxvju0xNLc7PCJY
-         Topg==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=bpaDsBvlz9opHaHnQGrx2N2C4SwE84lnQr92+oDq3LY=;
+        b=rMiR71v/yR8fu0eB1iPdEzuhUbc3Mny0j9rhKZSyWfs+1MHiJRYvhF82OKFiwcI3X9
+         XeiFgk1K/dR0TL1vVCF/lQSSqa/gD4mrnxOYM7tt+DvJ2oPoGd95uW8w15LKE8GzZOTn
+         uJnZET35qb/G0NspQbaiwdvxGR7/QENEyDYKFWc5nkbymOswflogUc1UIV7n0pZFuspi
+         A5ouCCNm08KU7a96OiZ/WsFZN9Szb1Teoup51io8Dt4X1WWmakOZN4IA2+3gFZ32JTVN
+         /35A7tqKPg6tE0rU+Q8HBN4pXEmq040XQusOlSB/q1e9mKPGYVxJBMQwlkjhSrz+QdxU
+         NvUg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition;
-        bh=1WZl3SA6KMxtfbG5PMx34SOFRA0PpKVq9Dty/hOwW44=;
-        b=qrzkUKqXfE2QktUUbhLsbsW2KuL4PdSmoAUdhlhzuOMZOIud7tu8akHRriBTu1VYAR
-         MZCVlP7aqmp4UeqsoKtnZl80LapVS/qL2Q9d7SxD1J7yHDOVDP2R7mrRkGjrJ4qKMBIC
-         +7tOxMT6+Cn3rOgFFBCkOiDPEO0GC4w1oRYqz7Oml63XNqUIzu2e1SfpOMwWSPAc0JQp
-         ZcsNuP7wzwKqGJKXTXo6wkju9mrG0wNLv9NF9Bk2CUsCiHgQYLowvOfrihis+8FUEYjK
-         gACSqkYkgxzCTX6sWRHmk8Sg89aEkvfBmFjLMhxMzWoWi0ays2TQqwuAVi+e5OPR1qzU
-         cGRQ==
-X-Gm-Message-State: AOAM531Hd8vbvn2b9vfY2lgU3loUuAc8l1+0SOr3/SKXS+Ot9TjZhoZI
-        9vXu2KWpTX3s9Z/rZkNOXPYCqGUfVvM=
-X-Google-Smtp-Source: ABdhPJxEL50DSzvXMc7ikYncO/bul+8bsW/aa7e+aif3CI56u0vdWc3z/J8xXNJIgaAIqJHHwlgY4g==
-X-Received: by 2002:a65:6403:: with SMTP id a3mr1453280pgv.246.1594688015562;
-        Mon, 13 Jul 2020 17:53:35 -0700 (PDT)
-Received: from dtor-ws ([2620:15c:202:201:a6ae:11ff:fe11:fcc3])
-        by smtp.gmail.com with ESMTPSA id i128sm15914850pfe.74.2020.07.13.17.53.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 Jul 2020 17:53:34 -0700 (PDT)
-Date:   Mon, 13 Jul 2020 17:53:32 -0700
-From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-kernel@vger.kernel.org, linux-input@vger.kernel.org
-Subject: [git pull] Input updates for v5.8-rc5
-Message-ID: <20200714002748.GA1477546@dtor-ws>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=bpaDsBvlz9opHaHnQGrx2N2C4SwE84lnQr92+oDq3LY=;
+        b=HOA2O+D8Uwl7X1bZaUOdlNFJVx6yGypyejlT4YX7JZJqCoppK3iZ8AjXxikmZzy5fN
+         8kH+KPwibIQoXBB47C4pHS4M+FoXKAPj7ZUQijhgoe/VW2F+9pEIs1bffAbzYwpNqWSc
+         PWgtJ/6ihTsrM5eYDQUlRDdlfbwXE96HUNm1Vp2+oNfLxAhb7XZhCh2+hnrI4RFSUc28
+         gT6knMpNy0d/m4yg/nIOvvIJ/DL8fhoiL3KDyDOHsdoetNAd30oGm/9f5fun4KG59ett
+         zBzLswDESEXl1+Jl6eZkLgNoyLXkpobtvVoYvni4JfE5dqLXyyqkegsGvIhKk5VEVXhA
+         fLGw==
+X-Gm-Message-State: AOAM530qsF1RfiZ9e+WjhoIgbSW+vv1JcQEhwYjBbzbcJKE7Q7jfg1UX
+        yB3f890bY3YYO6oBsVXkRG1XSC4fEnXSJxc2Nwo=
+X-Google-Smtp-Source: ABdhPJznFhGSinelKiS7+HI+X4/sqgLA5sTa9+gPEz/8nzGxBgAA+YLhuelXQUf40NcKOvz88GZRILG2qCFPv1ILg6w=
+X-Received: by 2002:a37:7683:: with SMTP id r125mr2256135qkc.39.1594688020649;
+ Mon, 13 Jul 2020 17:53:40 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+References: <20200714003856.194768-1-yepeilin.cs@gmail.com>
+In-Reply-To: <20200714003856.194768-1-yepeilin.cs@gmail.com>
+From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date:   Mon, 13 Jul 2020 17:53:28 -0700
+Message-ID: <CAEf4BzZRGOsTiW3uFWd1aY6K5Yi+QBrTeC5FNOo6uVXviXuX4g@mail.gmail.com>
+Subject: Re: [Linux-kernel-mentees] [PATCH] bpf: Fix NULL pointer dereference
+ in __btf_resolve_helper_id()
+To:     Peilin Ye <yepeilin.cs@gmail.com>
+Cc:     Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        KP Singh <kpsingh@chromium.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
+        syzkaller-bugs@googlegroups.com,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        open list <linux-kernel@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+On Mon, Jul 13, 2020 at 5:43 PM Peilin Ye <yepeilin.cs@gmail.com> wrote:
+>
+> Prevent __btf_resolve_helper_id() from dereferencing `btf_vmlinux`
+> as NULL. This patch fixes the following syzbot bug:
+>
+>     https://syzkaller.appspot.com/bug?id=5edd146856fd513747c1992442732e5a0e9ba355
+>
+> Reported-by: syzbot+ee09bda7017345f1fbe6@syzkaller.appspotmail.com
+> Signed-off-by: Peilin Ye <yepeilin.cs@gmail.com>
+> ---
+>  kernel/bpf/btf.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/kernel/bpf/btf.c b/kernel/bpf/btf.c
+> index 30721f2c2d10..3e981b183fa4 100644
+> --- a/kernel/bpf/btf.c
+> +++ b/kernel/bpf/btf.c
+> @@ -4088,7 +4088,7 @@ static int __btf_resolve_helper_id(struct bpf_verifier_log *log, void *fn,
+>         const char *tname, *sym;
+>         u32 btf_id, i;
+>
+> -       if (IS_ERR(btf_vmlinux)) {
+> +       if (IS_ERR_OR_NULL(btf_vmlinux)) {
+>                 bpf_log(log, "btf_vmlinux is malformed\n");
 
-Please pull from:
+Can you please split IS_ERR and NULL cases and emit different messages
+to log? If the kernel is not built with btf_vmlinux, saying that it's
+"malformed" will confuse people. Thanks.
 
-	git://git.kernel.org/pub/scm/linux/kernel/git/dtor/input.git for-linus
-
-to receive updates for the input subsystem. You will get a few quirks
-for the Elan touchpad driver, another Thinkpad is being switched over
-from PS/2 to native RMI4 interface, and we gave a brand new
-SW_MACHINE_COVER switch definition.
-
-Changelog:
----------
-
-Dave Wang (1):
-      Input: elan_i2c - add more hardware ID for Lenovo laptops
-
-David Pedersen (1):
-      Input: i8042 - add Lenovo XiaoXin Air 12 to i8042 nomux list
-
-Derek Basehore (1):
-      Input: elan_i2c - only increment wakeup count on touch
-
-Dmitry Torokhov (1):
-      Revert "Input: elants_i2c - report resolution information for touch major"
-
-Ilya Katsnelson (1):
-      Input: synaptics - enable InterTouch for ThinkPad X1E 1st gen
-
-Merlijn Wajer (2):
-      Input: add `SW_MACHINE_COVER`
-      ARM: dts: n900: remove mmc1 card detect gpio
-
-Diffstat:
---------
-
- arch/arm/boot/dts/omap3-n900.dts       | 12 ++++++++----
- drivers/input/mouse/elan_i2c_core.c    |  9 +++++----
- drivers/input/mouse/synaptics.c        |  1 +
- drivers/input/serio/i8042-x86ia64io.h  |  7 +++++++
- drivers/input/touchscreen/elants_i2c.c |  1 -
- include/linux/input/elan-i2c-ids.h     |  7 +++++++
- include/linux/mod_devicetable.h        |  2 +-
- include/uapi/linux/input-event-codes.h |  3 ++-
- 8 files changed, 31 insertions(+), 11 deletions(-)
-
-Thanks.
-
-
--- 
-Dmitry
+>                 return -EINVAL;
+>         }
+> --
+> 2.25.1
+>
