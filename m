@@ -2,92 +2,114 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B02AC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 19:11:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CCB35C433ED
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 19:11:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4EAB022461
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 19:11:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="lCDAzL5P"
+	by mail.kernel.org (Postfix) with ESMTP id ADA2822461
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 19:11:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594753887;
+	bh=bP4Svco64tcbNZ0VKLuxdblCqIX6tIwtPXqy85bho7I=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=nFM6rKcE8qHkJJkaIapsEB0YHnrkiZTSSlzxCDgMPN0bZxlVrMmngb7ho9+Jyfiwa
+	 K2MWmluGfkfkl06YdzLwnYseU8AisSMyUwnB3CDBnggAe53gO8BgEp7/cVck8I6daf
+	 nD0Mx4K/5eT25tjIjUF5LE+13pn9YokVCYerN3Zs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730712AbgGNTLD (ORCPT
+        id S1730069AbgGNStJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 15:11:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41862 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731135AbgGNTI6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 15:08:58 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B88DCC061755;
-        Tue, 14 Jul 2020 12:08:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
-        References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
-        Content-Type:Content-ID:Content-Description;
-        bh=ldk35b647Blt4bomZ36KmbfkoU4onYAwVp0xJ3QcwvM=; b=lCDAzL5PEoWj3Zv8OCtq7KXifo
-        q4/YWDxx86bG7QJvCno34VPOO6pcAqRbBZXTdtYRWZzOLFuq1Aqo7AsL0eGleCI1DfuH+aacsT/sE
-        v6JB42zM0NNfOVb5MiZemMGVEdG+H9XTQygGYjD2JElDBYZHn20QR+ofcBpLsZGUE8toK/bLvI3s6
-        yoZQmeTmjVfQCPpDFlZyTph6+wM14MTR0bWJMhect5yeF6ur/XddYngIvRZWAr3jHhuraCqvgTifJ
-        4l2v6IMRLZ3HYXlLb/axs8/CzDfcL9QjIU1jtMmn403H2pmTRQ5pMeE1PHtmEwtgs968XDX2MOdVd
-        +SnRNXEQ==;
-Received: from [2001:4bb8:188:5f50:f037:8cfe:627e:7028] (helo=localhost)
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jvQIS-0005qG-CA; Tue, 14 Jul 2020 19:08:56 +0000
-From:   Christoph Hellwig <hch@lst.de>
+        Tue, 14 Jul 2020 14:49:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44798 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730050AbgGNStF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 14:49:05 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id ECCCB22B2C;
+        Tue, 14 Jul 2020 18:49:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594752544;
+        bh=bP4Svco64tcbNZ0VKLuxdblCqIX6tIwtPXqy85bho7I=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=Jzjvsb0ZpVX4zzz3EQ8cx4EO9I4wjcEViTxWPz8z4+xJe7c94otudtWlyIoPK0HRw
+         m4+FaM0YvNyh0OToFxPofNVDabCQMC62ltDtjzXft56Bl8wlts6eSyk+IZ8IZMfTvA
+         7lH2b6LAOm7ho4biYWt9a74kQYchWXSucSMXhKfI=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
-Cc:     "H. Peter Anvin" <hpa@zytor.com>, Song Liu <song@kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-raid@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Subject: [PATCH 06/23] md: remove the autoscan partition re-read
-Date:   Tue, 14 Jul 2020 21:04:10 +0200
-Message-Id: <20200714190427.4332-7-hch@lst.de>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        Sowjanya Komatineni <skomatineni@nvidia.com>,
+        Thierry Reding <treding@nvidia.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 010/109] gpu: host1x: Detach driver on unregister
+Date:   Tue, 14 Jul 2020 20:43:13 +0200
+Message-Id: <20200714184106.019140730@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200714190427.4332-1-hch@lst.de>
-References: <20200714190427.4332-1-hch@lst.de>
+In-Reply-To: <20200714184105.507384017@linuxfoundation.org>
+References: <20200714184105.507384017@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-devfs is long gone, and autoscan works just fine without this these days.
+From: Thierry Reding <treding@nvidia.com>
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
-Acked-by: Song Liu <song@kernel.org>
+[ Upstream commit d9a0a05bf8c76e6dc79230669a8b5d685b168c30 ]
+
+Currently when a host1x device driver is unregistered, it is not
+detached from the host1x controller, which means that the device
+will stay around and when the driver is registered again, it may
+bind to the old, stale device rather than the new one that was
+created from scratch upon driver registration. This in turn can
+cause various weird crashes within the driver core because it is
+confronted with a device that was already deleted.
+
+Fix this by detaching the driver from the host1x controller when
+it is unregistered. This ensures that the deleted device also is
+no longer present in the device list that drivers will bind to.
+
+Reported-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+Signed-off-by: Thierry Reding <treding@nvidia.com>
+Tested-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+Signed-off-by: Thierry Reding <treding@nvidia.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/md/md-autodetect.c | 10 ----------
- 1 file changed, 10 deletions(-)
+ drivers/gpu/host1x/bus.c | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-diff --git a/drivers/md/md-autodetect.c b/drivers/md/md-autodetect.c
-index 0eb746211ed53c..6bc9b734eee6ff 100644
---- a/drivers/md/md-autodetect.c
-+++ b/drivers/md/md-autodetect.c
-@@ -240,16 +240,6 @@ static void __init md_setup_drive(void)
- 			err = ksys_ioctl(fd, RUN_ARRAY, 0);
- 		if (err)
- 			printk(KERN_WARNING "md: starting md%d failed\n", minor);
--		else {
--			/* reread the partition table.
--			 * I (neilb) and not sure why this is needed, but I cannot
--			 * boot a kernel with devfs compiled in from partitioned md
--			 * array without it
--			 */
--			ksys_close(fd);
--			fd = ksys_open(name, 0, 0);
--			ksys_ioctl(fd, BLKRRPART, 0);
--		}
- 		ksys_close(fd);
- 	}
- }
+diff --git a/drivers/gpu/host1x/bus.c b/drivers/gpu/host1x/bus.c
+index 742aa9ff21b87..fcda8621ae6f9 100644
+--- a/drivers/gpu/host1x/bus.c
++++ b/drivers/gpu/host1x/bus.c
+@@ -686,8 +686,17 @@ EXPORT_SYMBOL(host1x_driver_register_full);
+  */
+ void host1x_driver_unregister(struct host1x_driver *driver)
+ {
++	struct host1x *host1x;
++
+ 	driver_unregister(&driver->driver);
+ 
++	mutex_lock(&devices_lock);
++
++	list_for_each_entry(host1x, &devices, list)
++		host1x_detach_driver(host1x, driver);
++
++	mutex_unlock(&devices_lock);
++
+ 	mutex_lock(&drivers_lock);
+ 	list_del_init(&driver->list);
+ 	mutex_unlock(&drivers_lock);
 -- 
-2.27.0
+2.25.1
+
+
 
