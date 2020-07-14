@@ -2,101 +2,341 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2CFEC433E2
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 08:22:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F60EC433E4
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 08:22:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AEF7621897
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 08:22:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="X5lhRJB5"
+	by mail.kernel.org (Postfix) with ESMTP id 39F8F21897
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 08:22:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726777AbgGNIWH (ORCPT
+        id S1726798AbgGNIWL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Tue, 14 Jul 2020 04:22:11 -0400
+Received: from mga18.intel.com ([134.134.136.126]:56868 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725820AbgGNIWH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 14 Jul 2020 04:22:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53584 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725793AbgGNIWG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 04:22:06 -0400
-Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F3728C061755;
-        Tue, 14 Jul 2020 01:22:05 -0700 (PDT)
-Received: by mail-pj1-x1044.google.com with SMTP id f16so1177977pjt.0;
-        Tue, 14 Jul 2020 01:22:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=UxT+xVg1iEE+TdiS6PzOnTuOQmCXGShz9BDeI/0k6RI=;
-        b=X5lhRJB59sgnqNf0zVexBgPh36/YV37c5fAfH/uEasMqURC7Cjb1qQQTGbU8+Vf4ya
-         SLBFKjBg8XYlaOjhYH1IBYHyDq523T8IWXb3MUtHun54j87VOyJHJ0+QBU7wCW2yffCj
-         jFUG20LunyablP3sh3UHL73xW+KI6skpUGIfD7wmU8amILZ2rToGcGRzJSwISDchE57W
-         eHU2t0i+DPDWXAj6+XryYf5KXM5xWezs4D/MMgWqnSEA0IXp55+ZIYykU7mRsooxSz1S
-         A0T/sw/PpP4rBfbLcFpEXcmi0GCG2abk/gW2aDyp+yGqUAiXILda4+7go4Bw8eb/MBFP
-         vxXA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=UxT+xVg1iEE+TdiS6PzOnTuOQmCXGShz9BDeI/0k6RI=;
-        b=RzUoxMgDG1O9iLq0Sa180MGgq2VAsz91cKbn0psoiOf0HqQWl3Mfc8uTuo6Ij2tSKj
-         WaaUkMFCKUMsA1FdcGEMmI7kq0ECGKVjEkCOBHOXwbdxM681ttycUaeWYvo19pH4HExc
-         +dDYSgxiTTC2wOSG8lSBhiPDkkM/q6YmcOZZ/qwTylyCFl5FEOVxhEU3/8Fwys3SvB5V
-         DRFXIBNvd3QIKkIjVKl8plpcTMPcqsQ8z4c0325/ISD/2xcQmdD+sjxTjTnN5H+GR2Uh
-         HrP314DvlUGryG9HLUqE42twwrEH2BJbraxAlE7CCDh4WLzMNExxz5tM5H9ZfLYb0axD
-         2ovA==
-X-Gm-Message-State: AOAM530ukV97U57Icku2IZJatj4oLIqG6aihymRcUA8+GlhOj992FCkv
-        z6Z1fpugTLly9FbBkreeZxix9ueFkEfeizqmGR0=
-X-Google-Smtp-Source: ABdhPJyJXVM7MeA3GmA+gb8Y/IKCddN/vz262hxa8lU5yf5tdOl+VJnVXqo/AabFiUCqcD9seS0VkBVvrXA45nivY9U=
-X-Received: by 2002:a17:902:7288:: with SMTP id d8mr3099798pll.18.1594714925385;
- Tue, 14 Jul 2020 01:22:05 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200714081510.6070-1-hdegoede@redhat.com>
-In-Reply-To: <20200714081510.6070-1-hdegoede@redhat.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Tue, 14 Jul 2020 11:21:48 +0300
-Message-ID: <CAHp75Vd6uGNw5m3-Tc1tkABLT_Wi7CtW2yo8+B5TpYV4U8XE9A@mail.gmail.com>
-Subject: Re: [PATCH 5.8 regression fix] platform/x86: thinkpad_acpi: Revert:
- Use strndup_user() in dispatch_proc_write()
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>,
-        Thinkpad-acpi devel ML <ibm-acpi-devel@lists.sourceforge.net>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+IronPort-SDR: baDPaL1cK5aUm4w38T6uxN7YCHXQ1qE8tZWW8Kjkd/htne3+suTJZVN2S0Cuey7HKzR7pPJLnW
+ 1m67xsqpmzmg==
+X-IronPort-AV: E=McAfee;i="6000,8403,9681"; a="136302618"
+X-IronPort-AV: E=Sophos;i="5.75,350,1589266800"; 
+   d="scan'208";a="136302618"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jul 2020 01:22:06 -0700
+IronPort-SDR: YZVPtJVybkz+dKclf3n1BQgGCXl9k0739OKpCmwofix8PLmUZzIi7k6YOoZLfVmiDpFqEqMG+d
+ vy8io6B6nGqA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,350,1589266800"; 
+   d="scan'208";a="485287634"
+Received: from unknown (HELO linuxpc.iind.intel.com) ([10.223.107.108])
+  by fmsmga006.fm.intel.com with ESMTP; 14 Jul 2020 01:22:03 -0700
+From:   Sumeet Pawnikar <sumeet.r.pawnikar@intel.com>
+To:     rjw@rjwysocki.net, rui.zhang@intel.com, linux-pm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     andriy.shevchenko@intel.com, srinivas.pandruvada@linux.intel.com,
+        sumeet.r.pawnikar@intel.com
+Subject: [PATCH v2] powercap: Add Power Limit4 support
+Date:   Tue, 14 Jul 2020 13:58:26 +0530
+Message-Id: <1594715306-10411-1-git-send-email-sumeet.r.pawnikar@intel.com>
+X-Mailer: git-send-email 1.7.9.5
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 14, 2020 at 11:15 AM Hans de Goede <hdegoede@redhat.com> wrote:
->
-> Commit 35d13c7a0512 ("platform/x86: thinkpad_acpi: Use strndup_user()
-> in dispatch_proc_write()") cleaned up dispatch_proc_write() by replacing
-> the code to copy the passed in data from userspae with strndup_user().
+Modern Intel Mobile platforms support power limit4 (PL4), which is
+the SoC package level maximum power limit (in Watts). It can be used
+to preemptively limits potential SoC power to prevent power spikes
+from tripping the power adapter and battery over-current protection.
+This patch enables this feature by exposing package level peak power
+capping control to userspace via RAPL sysfs interface. With this,
+application like DTPF can modify PL4 power limit, the similar way
+of other package power limit (PL1).
+As this feature is not tested on previous generations, here it is
+enabled only for the platform that has been verified to work,
+for safety concerns.
 
-user space
+Signed-off-by: Sumeet Pawnikar <sumeet.r.pawnikar@intel.com>
+Signed-off-by: Zhang Rui <rui.zhang@intel.com>
+---
+Changes in v2:
+ - Addressed review comments from Rafael.
+ - Made the commit message more clearer.
+ - Updated powercap documentation.
+---
+ Documentation/power/powercap/powercap.rst |   14 +++++---
+ drivers/powercap/intel_rapl_common.c      |   54 +++++++++++++++++++++++++++--
+ drivers/powercap/intel_rapl_msr.c         |   15 ++++++++
+ include/linux/intel_rapl.h                |    5 ++-
+ 4 files changed, 80 insertions(+), 8 deletions(-)
 
-> But strndup_user() expects a 0 terminated input buffer and the buffer
-> passed to dispatch_proc_write() is NOT 0 terminated.
->
-> So this change leads to strndup_user() copying some extra random bytes
-> from userspace till it hits a 0 byte.
->
-> This commit reverts the change to use strndup_user() fixing the
-> buffer being passed to the ibm_struct.write() call back containing extra
-> junk at the end.
-
-Can we simply use memdup_user()?
-And thanks for catching this up!
-
+diff --git a/Documentation/power/powercap/powercap.rst b/Documentation/power/powercap/powercap.rst
+index 7ae3b44c7624..b3af059b6d5d 100644
+--- a/Documentation/power/powercap/powercap.rst
++++ b/Documentation/power/powercap/powercap.rst
+@@ -167,11 +167,12 @@ For example::
+ package-0
+ ---------
+ 
+-The Intel RAPL technology allows two constraints, short term and long term,
+-with two different time windows to be applied to each power zone.  Thus for
+-each zone there are 2 attributes representing the constraint names, 2 power
+-limits and 2 attributes representing the sizes of the time windows. Such that,
+-constraint_j_* attributes correspond to the jth constraint (j = 0,1).
++Depending on different power zones, the Intel RAPL technology allows
++one or multiple constraints like short term, long term and peak power,
++with different time windows to be applied to each power zone.
++All the zones contain attributes representing the constraint names,
++power limits and the sizes of the time windows. Such that,
++constraint_j_* attributes correspond to the jth constraint (j = 0,1,2).
+ 
+ For example::
+ 
+@@ -181,6 +182,9 @@ For example::
+ 	constraint_1_name
+ 	constraint_1_power_limit_uw
+ 	constraint_1_time_window_us
++	constraint_2_name
++	constraint_2_power_limit_uw
++	constraint_2_time_window_us
+ 
+ Power Zone Attributes
+ =====================
+diff --git a/drivers/powercap/intel_rapl_common.c b/drivers/powercap/intel_rapl_common.c
+index 61a63a16b5e7..a8bcc58d61f0 100644
+--- a/drivers/powercap/intel_rapl_common.c
++++ b/drivers/powercap/intel_rapl_common.c
+@@ -39,6 +39,8 @@
+ #define POWER_HIGH_LOCK         BIT_ULL(63)
+ #define POWER_LOW_LOCK          BIT(31)
+ 
++#define POWER_LIMIT4_MASK		0x1FFF
++
+ #define TIME_WINDOW1_MASK       (0x7FULL<<17)
+ #define TIME_WINDOW2_MASK       (0x7FULL<<49)
+ 
+@@ -82,6 +84,7 @@ enum unit_type {
+ 
+ static const char pl1_name[] = "long_term";
+ static const char pl2_name[] = "short_term";
++static const char pl4_name[] = "peak_power";
+ 
+ #define power_zone_to_rapl_domain(_zone) \
+ 	container_of(_zone, struct rapl_domain, power_zone)
+@@ -337,6 +340,9 @@ static int set_power_limit(struct powercap_zone *power_zone, int cid,
+ 	case PL2_ENABLE:
+ 		rapl_write_data_raw(rd, POWER_LIMIT2, power_limit);
+ 		break;
++	case PL4_ENABLE:
++		rapl_write_data_raw(rd, POWER_LIMIT4, power_limit);
++		break;
+ 	default:
+ 		ret = -EINVAL;
+ 	}
+@@ -371,6 +377,9 @@ static int get_current_power_limit(struct powercap_zone *power_zone, int cid,
+ 	case PL2_ENABLE:
+ 		prim = POWER_LIMIT2;
+ 		break;
++	case PL4_ENABLE:
++		prim = POWER_LIMIT4;
++		break;
+ 	default:
+ 		put_online_cpus();
+ 		return -EINVAL;
+@@ -440,6 +449,13 @@ static int get_time_window(struct powercap_zone *power_zone, int cid,
+ 	case PL2_ENABLE:
+ 		ret = rapl_read_data_raw(rd, TIME_WINDOW2, true, &val);
+ 		break;
++	case PL4_ENABLE:
++		/*
++		 * Time window parameter is not applicable for PL4 entry
++		 * so assigining '0' as default value.
++		 */
++		val = 0;
++		break;
+ 	default:
+ 		put_online_cpus();
+ 		return -EINVAL;
+@@ -483,6 +499,9 @@ static int get_max_power(struct powercap_zone *power_zone, int id, u64 *data)
+ 	case PL2_ENABLE:
+ 		prim = MAX_POWER;
+ 		break;
++	case PL4_ENABLE:
++		prim = MAX_POWER;
++		break;
+ 	default:
+ 		put_online_cpus();
+ 		return -EINVAL;
+@@ -492,6 +511,10 @@ static int get_max_power(struct powercap_zone *power_zone, int id, u64 *data)
+ 	else
+ 		*data = val;
+ 
++	/* As a generalization rule, PL4 would be around two times PL2. */
++	if (rd->rpl[id].prim_id == PL4_ENABLE)
++		*data = *data * 2;
++
+ 	put_online_cpus();
+ 
+ 	return ret;
+@@ -524,12 +547,22 @@ static void rapl_init_domains(struct rapl_package *rp)
+ 		rd->id = i;
+ 		rd->rpl[0].prim_id = PL1_ENABLE;
+ 		rd->rpl[0].name = pl1_name;
+-		/* some domain may support two power limits */
+-		if (rp->priv->limits[i] == 2) {
++
++		/*
++		 * The PL2 power domain is applicable for limits two
++		 * and limits three
++		 */
++		if (rp->priv->limits[i] >= 2) {
+ 			rd->rpl[1].prim_id = PL2_ENABLE;
+ 			rd->rpl[1].name = pl2_name;
+ 		}
+ 
++		/* Enable PL4 domain if the total power limits are three */
++		if (rp->priv->limits[i] == 3) {
++			rd->rpl[2].prim_id = PL4_ENABLE;
++			rd->rpl[2].name = pl4_name;
++		}
++
+ 		for (j = 0; j < RAPL_DOMAIN_REG_MAX; j++)
+ 			rd->regs[j] = rp->priv->regs[i][j];
+ 
+@@ -587,6 +620,8 @@ static u64 rapl_unit_xlate(struct rapl_domain *rd, enum unit_type type,
+ 			    RAPL_DOMAIN_REG_LIMIT, POWER_UNIT, 0),
+ 	PRIMITIVE_INFO_INIT(POWER_LIMIT2, POWER_LIMIT2_MASK, 32,
+ 			    RAPL_DOMAIN_REG_LIMIT, POWER_UNIT, 0),
++	PRIMITIVE_INFO_INIT(POWER_LIMIT4, POWER_LIMIT4_MASK, 0,
++				RAPL_DOMAIN_REG_PL4, POWER_UNIT, 0),
+ 	PRIMITIVE_INFO_INIT(FW_LOCK, POWER_LOW_LOCK, 31,
+ 			    RAPL_DOMAIN_REG_LIMIT, ARBITRARY_UNIT, 0),
+ 	PRIMITIVE_INFO_INIT(PL1_ENABLE, POWER_LIMIT1_ENABLE, 15,
+@@ -597,6 +632,8 @@ static u64 rapl_unit_xlate(struct rapl_domain *rd, enum unit_type type,
+ 			    RAPL_DOMAIN_REG_LIMIT, ARBITRARY_UNIT, 0),
+ 	PRIMITIVE_INFO_INIT(PL2_CLAMP, POWER_LIMIT2_CLAMP, 48,
+ 			    RAPL_DOMAIN_REG_LIMIT, ARBITRARY_UNIT, 0),
++	PRIMITIVE_INFO_INIT(PL4_ENABLE, POWER_LIMIT4_MASK, 0,
++				RAPL_DOMAIN_REG_PL4, ARBITRARY_UNIT, 0),
+ 	PRIMITIVE_INFO_INIT(TIME_WINDOW1, TIME_WINDOW1_MASK, 17,
+ 			    RAPL_DOMAIN_REG_LIMIT, TIME_UNIT, 0),
+ 	PRIMITIVE_INFO_INIT(TIME_WINDOW2, TIME_WINDOW2_MASK, 49,
+@@ -1252,6 +1289,7 @@ void rapl_remove_package(struct rapl_package *rp)
+ 		if (find_nr_power_limit(rd) > 1) {
+ 			rapl_write_data_raw(rd, PL2_ENABLE, 0);
+ 			rapl_write_data_raw(rd, PL2_CLAMP, 0);
++			rapl_write_data_raw(rd, PL4_ENABLE, 0);
+ 		}
+ 		if (rd->id == RAPL_DOMAIN_PACKAGE) {
+ 			rd_package = rd;
+@@ -1360,6 +1398,13 @@ static void power_limit_state_save(void)
+ 				if (ret)
+ 					rd->rpl[i].last_power_limit = 0;
+ 				break;
++			case PL4_ENABLE:
++				ret = rapl_read_data_raw(rd,
++						 POWER_LIMIT4, true,
++						 &rd->rpl[i].last_power_limit);
++				if (ret)
++					rd->rpl[i].last_power_limit = 0;
++				break;
+ 			}
+ 		}
+ 	}
+@@ -1390,6 +1435,11 @@ static void power_limit_state_restore(void)
+ 					rapl_write_data_raw(rd, POWER_LIMIT2,
+ 					    rd->rpl[i].last_power_limit);
+ 				break;
++			case PL4_ENABLE:
++				if (rd->rpl[i].last_power_limit)
++					rapl_write_data_raw(rd, POWER_LIMIT4,
++					    rd->rpl[i].last_power_limit);
++				break;
+ 			}
+ 		}
+ 	}
+diff --git a/drivers/powercap/intel_rapl_msr.c b/drivers/powercap/intel_rapl_msr.c
+index d5487965bdfe..83c76454623e 100644
+--- a/drivers/powercap/intel_rapl_msr.c
++++ b/drivers/powercap/intel_rapl_msr.c
+@@ -28,6 +28,7 @@
+ 
+ /* Local defines */
+ #define MSR_PLATFORM_POWER_LIMIT	0x0000065C
++#define MSR_VR_CURRENT_CONFIG		0x00000601
+ 
+ /* private data for RAPL MSR Interface */
+ static struct rapl_if_priv rapl_msr_priv = {
+@@ -123,13 +124,27 @@ static int rapl_msr_write_raw(int cpu, struct reg_action *ra)
+ 	return ra->err;
+ }
+ 
++/* List of verified CPUs. */
++static const struct x86_cpu_id pl4_support_ids[] = {
++	{ X86_VENDOR_INTEL, 6, INTEL_FAM6_TIGERLAKE_L, X86_FEATURE_ANY },
++	{}
++};
++
+ static int rapl_msr_probe(struct platform_device *pdev)
+ {
+ 	int ret;
++	const struct x86_cpu_id *id = x86_match_cpu(pl4_support_ids);
+ 
+ 	rapl_msr_priv.read_raw = rapl_msr_read_raw;
+ 	rapl_msr_priv.write_raw = rapl_msr_write_raw;
+ 
++	if (id) {
++		rapl_msr_priv.limits[RAPL_DOMAIN_PACKAGE] = 3;
++		rapl_msr_priv.regs[RAPL_DOMAIN_PACKAGE][RAPL_DOMAIN_REG_PL4] =
++			MSR_VR_CURRENT_CONFIG;
++		pr_info("PL4 support detected.\n");
++	}
++
+ 	rapl_msr_priv.control_type = powercap_register_control_type(NULL, "intel-rapl", NULL);
+ 	if (IS_ERR(rapl_msr_priv.control_type)) {
+ 		pr_debug("failed to register powercap control_type.\n");
+diff --git a/include/linux/intel_rapl.h b/include/linux/intel_rapl.h
+index efb3ce892c20..3582176a1eca 100644
+--- a/include/linux/intel_rapl.h
++++ b/include/linux/intel_rapl.h
+@@ -29,6 +29,7 @@ enum rapl_domain_reg_id {
+ 	RAPL_DOMAIN_REG_PERF,
+ 	RAPL_DOMAIN_REG_POLICY,
+ 	RAPL_DOMAIN_REG_INFO,
++	RAPL_DOMAIN_REG_PL4,
+ 	RAPL_DOMAIN_REG_MAX,
+ };
+ 
+@@ -38,12 +39,14 @@ enum rapl_primitives {
+ 	ENERGY_COUNTER,
+ 	POWER_LIMIT1,
+ 	POWER_LIMIT2,
++	POWER_LIMIT4,
+ 	FW_LOCK,
+ 
+ 	PL1_ENABLE,		/* power limit 1, aka long term */
+ 	PL1_CLAMP,		/* allow frequency to go below OS request */
+ 	PL2_ENABLE,		/* power limit 2, aka short term, instantaneous */
+ 	PL2_CLAMP,
++	PL4_ENABLE,		/* power limit 4, aka max peak power */
+ 
+ 	TIME_WINDOW1,		/* long term */
+ 	TIME_WINDOW2,		/* short term */
+@@ -65,7 +68,7 @@ struct rapl_domain_data {
+ 	unsigned long timestamp;
+ };
+ 
+-#define NR_POWER_LIMITS (2)
++#define NR_POWER_LIMITS (3)
+ struct rapl_power_limit {
+ 	struct powercap_zone_constraint *constraint;
+ 	int prim_id;		/* primitive ID used to enable */
 -- 
-With Best Regards,
-Andy Shevchenko
+1.7.9.5
+
