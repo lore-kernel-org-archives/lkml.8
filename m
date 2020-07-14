@@ -2,104 +2,73 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F332C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 07:18:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CCB3C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 07:19:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 16C11221E8
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 07:18:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 69476221E8
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 07:19:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726831AbgGNHSV (ORCPT
+        id S1726845AbgGNHTA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 03:18:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43804 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725306AbgGNHSU (ORCPT
+        Tue, 14 Jul 2020 03:19:00 -0400
+Received: from smtp2207-205.mail.aliyun.com ([121.197.207.205]:47182 "EHLO
+        smtp2207-205.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725306AbgGNHTA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 03:18:20 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DC0FFC061755
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 00:18:19 -0700 (PDT)
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1jvFCf-0002wZ-BI; Tue, 14 Jul 2020 09:18:13 +0200
-Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1jvFCd-00072P-1J; Tue, 14 Jul 2020 09:18:11 +0200
-Date:   Tue, 14 Jul 2020 09:18:10 +0200
-From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To:     "Tanwar, Rahul" <rahul.tanwar@linux.intel.com>
-Cc:     linux-pwm@vger.kernel.org, thierry.reding@gmail.com,
-        p.zabel@pengutronix.de, robh+dt@kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        andriy.shevchenko@intel.com, songjun.Wu@intel.com,
-        cheol.yong.kim@intel.com, qi-ming.wu@intel.com,
-        rahul.tanwar.linux@gmail.com
-Subject: Re: [PATCH v4 2/2] Add PWM fan controller driver for LGM SoC
-Message-ID: <20200714071810.2gfrot2zupal2cn6@pengutronix.de>
-References: <cover.1593503228.git.rahul.tanwar@linux.intel.com>
- <a74b18b68f26bf902c30a017050cc4ea070da887.1593503228.git.rahul.tanwar@linux.intel.com>
- <20200713191059.zsokzvv3k2hyaxcl@pengutronix.de>
- <3e0623c7-45cd-ea60-bae3-a03d991e98bf@linux.intel.com>
+        Tue, 14 Jul 2020 03:19:00 -0400
+X-Alimail-AntiSpam: AC=CONTINUE;BC=0.3883162|-1;CH=green;DM=|CONTINUE|false|;DS=CONTINUE|ham_system_inform|0.00789351-0.00130981-0.990797;FP=0|0|0|0|0|-1|-1|-1;HT=e02c03273;MF=frank@allwinnertech.com;NM=1;PH=DS;RN=10;RT=10;SR=0;TI=SMTPD_---.I1Ta.lL_1594711131;
+Received: from allwinnertech.com(mailfrom:frank@allwinnertech.com fp:SMTPD_---.I1Ta.lL_1594711131)
+          by smtp.aliyun-inc.com(10.147.41.120);
+          Tue, 14 Jul 2020 15:18:56 +0800
+From:   Frank Lee <frank@allwinnertech.com>
+To:     gregory.clement@bootlin.com, robh+dt@kernel.org
+Cc:     linux-i2c@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, tiny.windzz@gmail.com,
+        huangshuosheng@allwinnertech.com, liyong@allwinnertech.com,
+        Yangtao Li <frank@allwinnertech.com>,
+        Rob Herring <robh@kernel.org>
+Subject: [PATCH v4 13/16] dt-bindings: i2c: mv64xxx: Add compatible for the A100 i2c node.
+Date:   Tue, 14 Jul 2020 15:18:39 +0800
+Message-Id: <2315816045fa84057968ec6b679d0df611a3b1d3.1594708864.git.frank@allwinnertech.com>
+X-Mailer: git-send-email 2.24.0
+In-Reply-To: <cover.1594708863.git.frank@allwinnertech.com>
+References: <cover.1594708863.git.frank@allwinnertech.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="jnvegtj3xe6kqzyc"
-Content-Disposition: inline
-In-Reply-To: <3e0623c7-45cd-ea60-bae3-a03d991e98bf@linux.intel.com>
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Yangtao Li <frank@allwinnertech.com>
 
---jnvegtj3xe6kqzyc
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Allwinner A100 have a mv64xxx i2c interface available to be used.
 
-Hello Rahul,
+Signed-off-by: Yangtao Li <frank@allwinnertech.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
+---
+ Documentation/devicetree/bindings/i2c/marvell,mv64xxx-i2c.yaml | 3 +++
+ 1 file changed, 3 insertions(+)
 
-On Tue, Jul 14, 2020 at 01:35:14PM +0800, Tanwar, Rahul wrote:
-> On 14/7/2020 3:10 am, Uwe Kleine-K=F6nig wrote:
-> > On Tue, Jun 30, 2020 at 03:55:32PM +0800, Rahul Tanwar wrote:
-> Given the fact that this is a dedicated PWM fan controller with no other
-> PWM consumer, do you think that this driver belongs to drivers/hwmon
-> instead of drivers/pwm? Thanks.
+diff --git a/Documentation/devicetree/bindings/i2c/marvell,mv64xxx-i2c.yaml b/Documentation/devicetree/bindings/i2c/marvell,mv64xxx-i2c.yaml
+index 2ceb05ba2df5..5b5ae402f97a 100644
+--- a/Documentation/devicetree/bindings/i2c/marvell,mv64xxx-i2c.yaml
++++ b/Documentation/devicetree/bindings/i2c/marvell,mv64xxx-i2c.yaml
+@@ -26,6 +26,9 @@ properties:
+       - items:
+           - const: allwinner,sun50i-a64-i2c
+           - const: allwinner,sun6i-a31-i2c
++      - items:
++          - const: allwinner,sun50i-a100-i2c
++          - const: allwinner,sun6i-a31-i2c
+       - items:
+           - const: allwinner,sun50i-h6-i2c
+           - const: allwinner,sun6i-a31-i2c
+-- 
+2.24.0
 
-If you implement the PWM API it belongs to drivers/pwm I'd say. (There
-are some "mixed" drivers that implement both GPIO and PWM that live in
-drivers/gpio, but if the support can be separated in a sane way, such
-mixing isn't welcome.)
-
-Best regards
-Uwe
-
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
-
---jnvegtj3xe6kqzyc
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAl8NXC8ACgkQwfwUeK3K
-7AkJRAgAmcJGk/pxe7g+BgNi4Tv+KWmis2yCmOnhRXpFv9JQkUcsBvi4O1t9ovuy
-P4BFh3rnYA6ks22ovydf5Smi08NCw6jgN678gNRIH6lLnfisjFwVbV77QWeIaDMW
-Ny3u3K6a5uA50VR15dLQk3gnKgICi/LqO0KaShsIYziuGajj2HfnFFIgh62n2+oK
-Qa+rHu6vKNnhiKC1YA+DtczgT9HEG1S17F98DL7QNQlJ4FYT/gxrhL0mMC2Y1SZO
-ZDP2UY6tILSfcgPoDXjd09B89FVhlJOl0Qaa5dz0aVniYjE0YMfvrQ5ZQIGF2YuF
-2Z7mWdfi1Yv5/KNyGxY7gg7lEMH9qQ==
-=gZ+y
------END PGP SIGNATURE-----
-
---jnvegtj3xe6kqzyc--
