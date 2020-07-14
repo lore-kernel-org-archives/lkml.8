@@ -2,116 +2,181 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00F84C433FE
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 21:01:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BAC94C4345B
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 21:01:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D924F2064C
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 21:01:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9515A2064C
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 21:01:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="YkXZdlKq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728044AbgGNVBQ (ORCPT
+        id S1727888AbgGNVAz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 17:01:16 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:43320 "EHLO
-        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728018AbgGNVBQ (ORCPT
+        Tue, 14 Jul 2020 17:00:55 -0400
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:57150 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726768AbgGNVAz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 17:01:16 -0400
-Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06EKXDR6194217;
-        Tue, 14 Jul 2020 17:01:00 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 3298wuxnag-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 14 Jul 2020 17:01:00 -0400
-Received: from m0098417.ppops.net (m0098417.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 06EKjYw8038895;
-        Tue, 14 Jul 2020 17:01:00 -0400
-Received: from ppma02dal.us.ibm.com (a.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.10])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 3298wuxn9y-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 14 Jul 2020 17:00:59 -0400
-Received: from pps.filterd (ppma02dal.us.ibm.com [127.0.0.1])
-        by ppma02dal.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 06EKu6P9015438;
-        Tue, 14 Jul 2020 21:00:59 GMT
-Received: from b01cxnp22036.gho.pok.ibm.com (b01cxnp22036.gho.pok.ibm.com [9.57.198.26])
-        by ppma02dal.us.ibm.com with ESMTP id 327529a5mc-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 14 Jul 2020 21:00:59 +0000
-Received: from b01ledav005.gho.pok.ibm.com (b01ledav005.gho.pok.ibm.com [9.57.199.110])
-        by b01cxnp22036.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 06EL0wlO38928860
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 14 Jul 2020 21:00:58 GMT
-Received: from b01ledav005.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 26234AE062;
-        Tue, 14 Jul 2020 21:00:58 +0000 (GMT)
-Received: from b01ledav005.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 3D977AE067;
-        Tue, 14 Jul 2020 21:00:53 +0000 (GMT)
-Received: from morokweng.localdomain (unknown [9.163.66.159])
-        by b01ledav005.gho.pok.ibm.com (Postfix) with ESMTPS;
-        Tue, 14 Jul 2020 21:00:52 +0000 (GMT)
-References: <159466074408.24747.10036072269371204890.stgit@hbathini.in.ibm.com> <159466083461.24747.6919654118386889005.stgit@hbathini.in.ibm.com>
-User-agent: mu4e 1.2.0; emacs 26.3
-From:   Thiago Jung Bauermann <bauerman@linux.ibm.com>
-To:     Hari Bathini <hbathini@linux.ibm.com>
-Cc:     Michael Ellerman <mpe@ellerman.id.au>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        kernel test robot <lkp@intel.com>,
-        Pingfan Liu <piliu@redhat.com>,
-        Kexec-ml <kexec@lists.infradead.org>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        Nayna Jain <nayna@linux.ibm.com>,
-        Petr Tesarik <ptesarik@suse.cz>,
-        Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
-        Sourabh Jain <sourabhjain@linux.ibm.com>,
-        lkml <linux-kernel@vger.kernel.org>,
-        linuxppc-dev <linuxppc-dev@ozlabs.org>,
-        Eric Biederman <ebiederm@xmission.com>,
-        Dave Young <dyoung@redhat.com>, Vivek Goyal <vgoyal@redhat.com>
-Subject: Re: [PATCH v3 01/12] kexec_file: allow archs to handle special regions while locating memory hole
-In-reply-to: <159466083461.24747.6919654118386889005.stgit@hbathini.in.ibm.com>
-Date:   Tue, 14 Jul 2020 18:00:49 -0300
-Message-ID: <875zap95ha.fsf@morokweng.localdomain>
+        Tue, 14 Jul 2020 17:00:55 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1594760453;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=Z00rvsVZTFdUuigrucb84GtZBYdoQhBpetY3yD6qCBI=;
+        b=YkXZdlKqaXriHXrTJur7VzwTxoXI3XtblHEy3ksDlZenCPkAGMm8Jjz5IHL0nlsFdV6FFP
+        LBO76X+nKhEke9Mppk8bZLgvSEOuD/Em/tkoyEBq24c57aRVQqoxqd/BSUha6h5lH0Y+f9
+        PE6BqQYs2WJAUXAk4tSt+ZUzdsE216w=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-170-eVLoMKjKOUiOF5BeLgCaCA-1; Tue, 14 Jul 2020 17:00:39 -0400
+X-MC-Unique: eVLoMKjKOUiOF5BeLgCaCA-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 505B52D0;
+        Tue, 14 Jul 2020 21:00:38 +0000 (UTC)
+Received: from madcap2.tricolour.ca (unknown [10.10.110.3])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 448597980F;
+        Tue, 14 Jul 2020 21:00:30 +0000 (UTC)
+Date:   Tue, 14 Jul 2020 17:00:27 -0400
+From:   Richard Guy Briggs <rgb@redhat.com>
+To:     Paul Moore <paul@paul-moore.com>
+Cc:     john.johansen@canonical.com,
+        Linux-Audit Mailing List <linux-audit@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux Security Module list 
+        <linux-security-module@vger.kernel.org>,
+        Eric Paris <eparis@parisplace.org>
+Subject: Re: [PATCH ghak84 v4] audit: purge audit_log_string from the
+ intra-kernel audit API
+Message-ID: <20200714210027.me2ieywjfcsf4v5r@madcap2.tricolour.ca>
+References: <6effbbd4574407d6af21162e57d9102d5f8b02ed.1594664015.git.rgb@redhat.com>
+ <CAHC9VhSyq7yKQqwvHL5syU9+TFki6-__WfCrvqewbnU3xpND4Q@mail.gmail.com>
+ <20200714174353.ds7lj3iisy67t2zu@madcap2.tricolour.ca>
+ <CAHC9VhQusQsdQc7EfdjdH5mp6qqqYVPHnG9nNhUhf3DS_cdWwA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-07-14_09:2020-07-14,2020-07-14 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0
- priorityscore=1501 lowpriorityscore=0 suspectscore=0 adultscore=0
- impostorscore=0 spamscore=0 phishscore=0 malwarescore=0 mlxscore=0
- mlxlogscore=755 clxscore=1011 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2006250000 definitions=main-2007140143
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHC9VhQusQsdQc7EfdjdH5mp6qqqYVPHnG9nNhUhf3DS_cdWwA@mail.gmail.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 2020-07-14 16:29, Paul Moore wrote:
+> On Tue, Jul 14, 2020 at 1:44 PM Richard Guy Briggs <rgb@redhat.com> wrote:
+> > On 2020-07-14 12:21, Paul Moore wrote:
+> > > On Mon, Jul 13, 2020 at 3:52 PM Richard Guy Briggs <rgb@redhat.com> wrote:
+> > > >
+> > > > audit_log_string() was inteded to be an internal audit function and
+> > > > since there are only two internal uses, remove them.  Purge all external
+> > > > uses of it by restructuring code to use an existing audit_log_format()
+> > > > or using audit_log_format().
+> > > >
+> > > > Please see the upstream issue
+> > > > https://github.com/linux-audit/audit-kernel/issues/84
+> > > >
+> > > > Signed-off-by: Richard Guy Briggs <rgb@redhat.com>
+> > > > ---
+> > > > Passes audit-testsuite.
+> > > >
+> > > > Changelog:
+> > > > v4
+> > > > - use double quotes in all replaced audit_log_string() calls
+> > > >
+> > > > v3
+> > > > - fix two warning: non-void function does not return a value in all control paths
+> > > >         Reported-by: kernel test robot <lkp@intel.com>
+> > > >
+> > > > v2
+> > > > - restructure to piggyback on existing audit_log_format() calls, checking quoting needs for each.
+> > > >
+> > > > v1 Vlad Dronov
+> > > > - https://github.com/nefigtut/audit-kernel/commit/dbbcba46335a002f44b05874153a85b9cc18aebf
+> > > >
+> > > >  include/linux/audit.h     |  5 -----
+> > > >  kernel/audit.c            |  4 ++--
+> > > >  security/apparmor/audit.c | 10 ++++------
+> > > >  security/apparmor/file.c  | 25 +++++++------------------
+> > > >  security/apparmor/ipc.c   | 46 +++++++++++++++++++++++-----------------------
+> > > >  security/apparmor/net.c   | 14 ++++++++------
+> > > >  security/lsm_audit.c      |  4 ++--
+> > > >  7 files changed, 46 insertions(+), 62 deletions(-)
+> > >
+> > > Thanks for restoring the quotes, just one question below ...
+> > >
+> > > > diff --git a/security/apparmor/ipc.c b/security/apparmor/ipc.c
+> > > > index 4ecedffbdd33..fe36d112aad9 100644
+> > > > --- a/security/apparmor/ipc.c
+> > > > +++ b/security/apparmor/ipc.c
+> > > > @@ -20,25 +20,23 @@
+> > > >
+> > > >  /**
+> > > >   * audit_ptrace_mask - convert mask to permission string
+> > > > - * @buffer: buffer to write string to (NOT NULL)
+> > > >   * @mask: permission mask to convert
+> > > > + *
+> > > > + * Returns: pointer to static string
+> > > >   */
+> > > > -static void audit_ptrace_mask(struct audit_buffer *ab, u32 mask)
+> > > > +static const char *audit_ptrace_mask(u32 mask)
+> > > >  {
+> > > >         switch (mask) {
+> > > >         case MAY_READ:
+> > > > -               audit_log_string(ab, "read");
+> > > > -               break;
+> > > > +               return "read";
+> > > >         case MAY_WRITE:
+> > > > -               audit_log_string(ab, "trace");
+> > > > -               break;
+> > > > +               return "trace";
+> > > >         case AA_MAY_BE_READ:
+> > > > -               audit_log_string(ab, "readby");
+> > > > -               break;
+> > > > +               return "readby";
+> > > >         case AA_MAY_BE_TRACED:
+> > > > -               audit_log_string(ab, "tracedby");
+> > > > -               break;
+> > > > +               return "tracedby";
+> > > >         }
+> > > > +       return "";
+> > >
+> > > Are we okay with this returning an empty string ("") in this case?
+> > > Should it be a question mark ("?")?
+> > >
+> > > My guess is that userspace parsing should be okay since it still has
+> > > quotes, I'm just not sure if we wanted to use a question mark as we do
+> > > in other cases where the field value is empty/unknown.
+> >
+> > Previously, it would have been an empty value, not even double quotes.
+> > "?" might be an improvement.
+> 
+> Did you want to fix that now in this patch, or leave it to later?  As
+> I said above, I'm not too bothered by it with the quotes so either way
+> is fine by me.
 
-Hari Bathini <hbathini@linux.ibm.com> writes:
+I'd defer to Steve, otherwise I'd say leave it, since there wasn't
+anything there before and this makes that more evident.
 
-> Some architectures may have special memory regions, within the given
-> memory range, which can't be used for the buffer in a kexec segment.
-> Implement weak arch_kexec_locate_mem_hole() definition which arch code
-> may override, to take care of special regions, while trying to locate
-> a memory hole.
->
-> Also, add the missing declarations for arch overridable functions and
-> and drop the __weak descriptors in the declarations to avoid non-weak
-> definitions from becoming weak.
->
-> Reported-by: kernel test robot <lkp@intel.com>
-> [lkp: In v1, arch_kimage_file_post_load_cleanup() declaration was missing]
-> Signed-off-by: Hari Bathini <hbathini@linux.ibm.com>
-> Acked-by: Dave Young <dyoung@redhat.com>
-> Tested-by: Pingfan Liu <piliu@redhat.com>
+> John, I'm assuming you are okay with this patch?
+> 
+> -- 
+> paul moore
 
-Reviewed-by: Thiago Jung Bauermann <bauerman@linux.ibm.com>
+- RGB
 
--- 
-Thiago Jung Bauermann
-IBM Linux Technology Center
+--
+Richard Guy Briggs <rgb@redhat.com>
+Sr. S/W Engineer, Kernel Security, Base Operating Systems
+Remote, Ottawa, Red Hat Canada
+IRC: rgb, SunRaycer
+Voice: +1.647.777.2635, Internal: (81) 32635
+
