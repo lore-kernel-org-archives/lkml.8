@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F41D9C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 14:41:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81D90C433E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 14:41:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CBA832064B
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 14:41:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D34F206F5
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 14:41:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594737691;
-	bh=w4AlBxMKEaOC2MohMrQHWmkC3cIbr3PwOl7vPZnUk8M=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=q3FbrcwVYAdQB0YzgfNgDbYHZny2M7Ndos4BScGlU36LbCLo58yE0AqSuo5ig0Bgb
-	 /vMeorSWtOgKlKJX4+U44ikbUsMvOePG9paqN+MwFHaTshmyzDnweAzKBmmU0v1Qcp
-	 l7zhAlCyCYo+0lOJOy/cZoJWEl9Lgj20qjK1t4HM=
+	s=default; t=1594737695;
+	bh=uXpmu6psb5xH47uWhmnUMxGJmFYHmZdXZm3CUBvJp1o=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=gVp2dG3r3ltoJLmCUtjvvMDxKNcXkIW9iLx6WYKeVvdu+lVg6Rej3MJC0HKQ5L3rP
+	 zJXQygrIMP1FJNBnwqZmxpSzP7ILQ6k3fYsMYMMwccfVKVT8l5zQfjGcFK38y4jZBQ
+	 XX5fP+LJUcWRWx+1dM5IkdWGXeX6O0NOK9mjdXE8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728774AbgGNOla (ORCPT
+        id S1729333AbgGNOkV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 10:41:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56194 "EHLO mail.kernel.org"
+        Tue, 14 Jul 2020 10:40:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55952 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729349AbgGNOkX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 10:40:23 -0400
+        id S1729278AbgGNOkM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 10:40:12 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 930BC206F5;
-        Tue, 14 Jul 2020 14:40:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B4F582256F;
+        Tue, 14 Jul 2020 14:40:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594737623;
-        bh=w4AlBxMKEaOC2MohMrQHWmkC3cIbr3PwOl7vPZnUk8M=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=auaAQY9AGDs2Vqr6mbsa++3gU2DeCfvZnvRbFfU0UYA2lWVmlzDZ2/Y8g9NCzkRtU
-         naIKzc3hFfDOsjxyJVGUYBkDcEKzD/gt9kTO8HPa83d0eM42xDv8sqSdj03os/RX+o
-         wwsg/J0LblAYh1HU8iC0CU9ui0ziFnwTc0f2ytug=
+        s=default; t=1594737612;
+        bh=uXpmu6psb5xH47uWhmnUMxGJmFYHmZdXZm3CUBvJp1o=;
+        h=From:To:Cc:Subject:Date:From;
+        b=xLnoz7OfbU8Nr2UQJ+VaXzv925p/sK/dvo7zFpIQ0VeZxHOa7/DKL8O7V1ki5rPLy
+         DNSAr3ewZbwKJ1noProMwM9UGn5Cdu39kdjfGuA8U/sBhZTKBlY5ErQTUfS/YSZWaG
+         Udg8/Lucy27yKLNVdb1BwVpHFDr5vfnGPZbEINHg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Ben Skeggs <bskeggs@redhat.com>, Sasha Levin <sashal@kernel.org>,
-        dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 4.9 10/10] drm/nouveau/i2c/g94-: increase NV_PMGR_DP_AUXCTL_TRANSACTREQ timeout
-Date:   Tue, 14 Jul 2020 10:40:10 -0400
-Message-Id: <20200714144010.4035987-10-sashal@kernel.org>
+Cc:     Jacky Hu <hengqing.hu@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Sasha Levin <sashal@kernel.org>, linux-gpio@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 01/10] pinctrl: amd: fix npins for uart0 in kerncz_groups
+Date:   Tue, 14 Jul 2020 10:40:01 -0400
+Message-Id: <20200714144010.4035987-1-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200714144010.4035987-1-sashal@kernel.org>
-References: <20200714144010.4035987-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -58,54 +57,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ben Skeggs <bskeggs@redhat.com>
+From: Jacky Hu <hengqing.hu@gmail.com>
 
-[ Upstream commit 0156e76d388310a490aeb0f2fbb5b284ded3aecc ]
+[ Upstream commit 69339d083dfb7786b0e0b3fc19eaddcf11fabdfb ]
 
-Tegra TRM says worst-case reply time is 1216us, and this should fix some
-spurious timeouts that have been popping up.
+uart0_pins is defined as:
+static const unsigned uart0_pins[] = {135, 136, 137, 138, 139};
 
-Signed-off-by: Ben Skeggs <bskeggs@redhat.com>
+which npins is wronly specified as 9 later
+	{
+		.name = "uart0",
+		.pins = uart0_pins,
+		.npins = 9,
+	},
+
+npins should be 5 instead of 9 according to the definition.
+
+Signed-off-by: Jacky Hu <hengqing.hu@gmail.com>
+Link: https://lore.kernel.org/r/20200616015024.287683-1-hengqing.hu@gmail.com
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/nouveau/nvkm/subdev/i2c/auxg94.c   | 4 ++--
- drivers/gpu/drm/nouveau/nvkm/subdev/i2c/auxgm200.c | 4 ++--
- 2 files changed, 4 insertions(+), 4 deletions(-)
+ drivers/pinctrl/pinctrl-amd.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/nouveau/nvkm/subdev/i2c/auxg94.c b/drivers/gpu/drm/nouveau/nvkm/subdev/i2c/auxg94.c
-index 954f5b76bfcf7..d44965f805fe9 100644
---- a/drivers/gpu/drm/nouveau/nvkm/subdev/i2c/auxg94.c
-+++ b/drivers/gpu/drm/nouveau/nvkm/subdev/i2c/auxg94.c
-@@ -118,10 +118,10 @@ g94_i2c_aux_xfer(struct nvkm_i2c_aux *obj, bool retry,
- 		if (retries)
- 			udelay(400);
- 
--		/* transaction request, wait up to 1ms for it to complete */
-+		/* transaction request, wait up to 2ms for it to complete */
- 		nvkm_wr32(device, 0x00e4e4 + base, 0x00010000 | ctrl);
- 
--		timeout = 1000;
-+		timeout = 2000;
- 		do {
- 			ctrl = nvkm_rd32(device, 0x00e4e4 + base);
- 			udelay(1);
-diff --git a/drivers/gpu/drm/nouveau/nvkm/subdev/i2c/auxgm200.c b/drivers/gpu/drm/nouveau/nvkm/subdev/i2c/auxgm200.c
-index 61d729b82c69b..a5783f4d972e3 100644
---- a/drivers/gpu/drm/nouveau/nvkm/subdev/i2c/auxgm200.c
-+++ b/drivers/gpu/drm/nouveau/nvkm/subdev/i2c/auxgm200.c
-@@ -118,10 +118,10 @@ gm200_i2c_aux_xfer(struct nvkm_i2c_aux *obj, bool retry,
- 		if (retries)
- 			udelay(400);
- 
--		/* transaction request, wait up to 1ms for it to complete */
-+		/* transaction request, wait up to 2ms for it to complete */
- 		nvkm_wr32(device, 0x00d954 + base, 0x00010000 | ctrl);
- 
--		timeout = 1000;
-+		timeout = 2000;
- 		do {
- 			ctrl = nvkm_rd32(device, 0x00d954 + base);
- 			udelay(1);
+diff --git a/drivers/pinctrl/pinctrl-amd.h b/drivers/pinctrl/pinctrl-amd.h
+index e8bbb20779d0d..83597e1d6dcd7 100644
+--- a/drivers/pinctrl/pinctrl-amd.h
++++ b/drivers/pinctrl/pinctrl-amd.h
+@@ -250,7 +250,7 @@ static const struct amd_pingroup kerncz_groups[] = {
+ 	{
+ 		.name = "uart0",
+ 		.pins = uart0_pins,
+-		.npins = 9,
++		.npins = 5,
+ 	},
+ 	{
+ 		.name = "uart1",
 -- 
 2.25.1
 
