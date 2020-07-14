@@ -2,69 +2,147 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BA56C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:33:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50187C433E5
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:34:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1768321835
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:33:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 311FC20890
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:33:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="qYKY00ME"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729209AbgGNSdw (ORCPT
+        id S1729239AbgGNSd6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 14:33:52 -0400
-Received: from gloria.sntech.de ([185.11.138.130]:34494 "EHLO gloria.sntech.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726817AbgGNSdw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 14:33:52 -0400
-Received: from x2f7fa33.dyn.telefonica.de ([2.247.250.51] helo=phil.localnet)
-        by gloria.sntech.de with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <heiko@sntech.de>)
-        id 1jvPkR-0008K2-BR; Tue, 14 Jul 2020 20:33:47 +0200
-From:   Heiko Stuebner <heiko@sntech.de>
-To:     Artur Rojek <contact@artur-rojek.eu>
-Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Paul Cercueil <paul@crapouillou.net>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>,
-        devicetree@vger.kernel.org, linux-iio@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v8 0/6] iio/adc: ingenic: Cleanups & add touchscreen mode.
-Date:   Tue, 14 Jul 2020 20:33:46 +0200
-Message-ID: <12263784.1eIgeU1MTH@phil>
-In-Reply-To: <20200709152200.10039-1-contact@artur-rojek.eu>
-References: <20200709152200.10039-1-contact@artur-rojek.eu>
+        Tue, 14 Jul 2020 14:33:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36396 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726817AbgGNSd5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 14:33:57 -0400
+Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7B4CBC061755
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 11:33:57 -0700 (PDT)
+Received: by mail-lj1-x243.google.com with SMTP id e4so24640512ljn.4
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 11:33:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=yyP3ZHSQbiIJkgfhj+w2LY9l2YJKPJ+qK594IrEb58E=;
+        b=qYKY00MEabqGiQ7om+FCgRsF3qL/GSt4BdQ+DC3BjaBjVRtPavSO7I+bKn2fn9H/+A
+         4YBy0mJ2n+3/LWK/rIvkJW2EI4G8dmOhSmAUXBD8hThIgdANEqiZViODGTy4FbwROfPK
+         tRn5nCWI7UiPloxZ1mwja90xAyhlIvln/CUboMoCeo0trcdTJyJjV/oBdcYI1stqk/wA
+         l7D4atz2mu0OIXlrT1I7Sjl4Zhb6DLYCoG6xROrOmWi4z+5tAVUy1jbIiVFPQUIr88t7
+         Q357PW73mz4a2VcF94WK8yu4QOJCbCniyE4OnjqjHoCYNlA/Y6U+x+hheWnzedDV4r0a
+         OqOQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=yyP3ZHSQbiIJkgfhj+w2LY9l2YJKPJ+qK594IrEb58E=;
+        b=X5YXFTLPyQMaAO9IUv6boITJZRCDKiSKNJz3JRAv3ubUoIZhD9vpXpcEkEvdHmPeyI
+         HJp8YNj2sjIaQg8HAcAU5KehpCinIt9Uh6wSSR+LyCKvD6SjM6pZehqtte/CGsMT2J6j
+         BjX1Qe0MugsOv6wJ7wpjH4dqFCK1LiCrnM8ZDrosX20pyKFJ/nf9HGKJPx6DxGeHXxLm
+         yXf0CPe4NJ7Z/OaLw1PVwxpSffMSqZcDwZdnJJUFl2xuKgPXu9OcHm6kijdE5M0P14/H
+         K2pGaTiwhXCQ8tNjTRJUvgKacK5DPLLDjwwzbtMj+RPOPLqzlX2Hw4RH+lEbHQi8Q0RC
+         gpSg==
+X-Gm-Message-State: AOAM530YJyFS0IQVap1u4aZc1q43GQxspuFW+AByjsO+dt1BpB/YFTi9
+        J/EVCzXTZ/IpQbMhO34ly3kKc7U7JagpWa9ZguXRQw==
+X-Google-Smtp-Source: ABdhPJzutP+Eujesct6aPGeAiwrZdsjZGD8qSndUPJy6OUx7H9vvuS79gJZzuNhHI60cmBHSQCgOeaiRiKEf+jUgss0=
+X-Received: by 2002:a2e:9b87:: with SMTP id z7mr186034lji.80.1594751635653;
+ Tue, 14 Jul 2020 11:33:55 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+References: <20200714030348.6214-1-mathieu.desnoyers@efficios.com>
+ <20200714030348.6214-3-mathieu.desnoyers@efficios.com> <CAFTs51UHaUqaKj5bEj0vQtEZrww9gnrqb-kGVk7DAgQJPBAR+w@mail.gmail.com>
+ <775688146.12145.1594748580461.JavaMail.zimbra@efficios.com>
+In-Reply-To: <775688146.12145.1594748580461.JavaMail.zimbra@efficios.com>
+From:   Peter Oskolkov <posk@google.com>
+Date:   Tue, 14 Jul 2020 11:33:44 -0700
+Message-ID: <CAPNVh5fiCCJpyeLj_ciWzFrO4fasVXZNhpfKXJhJWJirXdJOjQ@mail.gmail.com>
+Subject: Re: [RFC PATCH 2/4] rseq: Allow extending struct rseq
+To:     Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc:     Peter Oskolkov <posk@posk.io>,
+        Peter Zijlstra <peterz@infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        paulmck <paulmck@linux.ibm.com>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Paul Turner <pjt@google.com>,
+        linux-api <linux-api@vger.kernel.org>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        Florian Weimer <fw@deneb.enyo.de>, carlos <carlos@redhat.com>,
+        Chris Kennelly <ckennelly@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Artur,
+On Tue, Jul 14, 2020 at 10:43 AM Mathieu Desnoyers
+<mathieu.desnoyers@efficios.com> wrote:
+>
+> ----- On Jul 14, 2020, at 1:24 PM, Peter Oskolkov posk@posk.io wrote:
+>
+> > At Google, we actually extended struct rseq (I will post the patches
+> > here once they are fully deployed and we have specific
+> > benefits/improvements to report). We did this by adding several fields
+> > below __u32 flags (the last field currently), and correspondingly
+> > increasing rseq_len in rseq() syscall. If the kernel does not know of
+> > this extension, it will return -EINVAL due to an unexpected rseq_len;
+> > then the application can either fall-back to the standard/upstream
+> > rseq, or bail. If the kernel does know of this extension, it accepts
+> > it. If the application passes the old rseq_len (32), the kernel knows
+> > that this is an old application and treats it as such.
+> >
+> > I looked through the archives, but I did not find specifically why the
+> > pretty standard approach described above is considered inferior to the
+> > one taken in this patch (freeze rseq_len at 32, add additional length
+> > fields to struct rseq). Can these be summarized?
+>
+> I think you don't face the issues I'm facing with libc rseq integration
+> because you control the entire user-space software ecosystem at Google.
+>
+> The main issue we face is that the library responsible for registering
+> rseq (either glibc 2.32+, an early-adopter librseq library, or the
+> application) may very well not be the same library defining the __rseq_abi
+> symbol used in the global symbol table. Interposition with ld preload or
+> by defining the __rseq_abi in the program's executable are good examples
+> of this kind of scenario, and those use-cases are supported.
+>
+> So the size of the __rseq_abi structure may be larger than the struct
+> rseq known by glibc (and eventually smaller, if future glibc versions
+> extend their __rseq_abi size but is loaded with an older program/library
+> doing __rseq_abi interposition).
+>
+> So we need some way to allow code defining the __rseq_abi to let the kernel
+> know how much room is available, without necessarily requiring the code
+> responsible for rseq registration to be aware of that extended layout.
+> This is the purpose of the __rseq_abi.flags RSEQ_FLAG_TLS_SIZE and field
+> __rseq_abi.user_size.
+>
+> And we need some way to allow the kernel to let user-space rseq critical
+> sections (user code) know how much of those fields are actually populated
+> by the kernel. This is the purpose of __rseq_abi.flags RSEQ_FLAG_TLS_SIZE
+> with __rseq_abi.kernel_size.
 
-Am Donnerstag, 9. Juli 2020, 17:21:54 CEST schrieb Artur Rojek:
-> Hi all,
-> 
-> v8 of this patchset introduces some structural changes, which I deemed
-> worthy highlighting here:
-> 
->  - adc-joystick related changes have been dropped from this patchset and
->    will be upstreamed separately. Their only connection to this patchset
->    was that they used INGENIC_ADC_TOUCH_* defines in the DTS example,
->    causing trouble to Rob's scripts.
+Thanks, Mathieu, for the explanation. Yes, multiple unrelated
+libraries having to share struct rseq complicates matters. Your
+approach appears to be a way to reconcile the issues you outlined
+above.
 
-as I'm mainly eyeing your adc-joystick patch ... did you post that already
-somewhere - separately as you wrote?
+Thanks,
+Peter
 
-Thanks
-Heiko
-
-
+>
+> Thanks,
+>
+> Mathieu
+>
+> --
+> Mathieu Desnoyers
+> EfficiOS Inc.
+> http://www.efficios.com
