@@ -2,108 +2,122 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E886C433F2
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 19:08:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D200FC433FC
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 19:09:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5F2AE2240B
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 19:08:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594753736;
-	bh=3logLcMQQOo83B8CEm+7SX7oSisRfIO2V1PiVpYBb2w=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QoRh2C0+nfyqfVjzQlu//7HBi5jS2tYP3dFDsoBZrms2KQ0NnxeAiPwWdIc5Kj5T2
-	 3KyGc/+i+Yai2dvHu4sjB2cwDtMFpmYVGswmOm66fd16Z6GQt2VIgmc8qWon7PaKBN
-	 BnRaX6MGgNagXVsnCJqkv3PUKnODbnrB82aslot0=
+	by mail.kernel.org (Postfix) with ESMTP id A8C8521D79
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 19:09:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ib8dutrA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730139AbgGNStb (ORCPT
+        id S1731280AbgGNTJE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 14:49:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45268 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730126AbgGNSt2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 14:49:28 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EA377222E9;
-        Tue, 14 Jul 2020 18:49:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594752568;
-        bh=3logLcMQQOo83B8CEm+7SX7oSisRfIO2V1PiVpYBb2w=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OqTCCTorVHWkeOhISefvAbFzgUzV3hKL2IdadVz3l3YBOmphXT+ApENVXkYjTQLND
-         lxjrwj3+g71PB/8fj//FmUx2bEFQsTEjCNGT1Qp75/TGrbvcIpOT6YGMAsxVppY73l
-         2l+v72PRsw7iJsFZf8VxpyMY216eGPBzhG4nJL6Y=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+        Tue, 14 Jul 2020 15:09:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41846 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730228AbgGNTIy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 15:08:54 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3A9B1C08C5C1;
+        Tue, 14 Jul 2020 12:08:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
+        References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
+        Content-Type:Content-ID:Content-Description;
+        bh=WcArS13+FuVWgZpBq2jD9+35A9Hbd1u8/3A+t12Vw84=; b=ib8dutrASdxq5ixAa2izcpGDd8
+        E5vpjYNb9eM60YYK0LOg8AhUipNgP6uicqKfI0QWjHtLTK41cTGU94dQnEfFzRkgSizIPRX6jEP+s
+        Hw5ez6AwNdcM1gEvNntnm63w7oq3csfsoFpRkRWxL5yqwxWJ3iJRXYQbf5rR/RAWuJGGCFhfXoMwT
+        SPJKm4nFVE42oCfwCmXwODGnJLeeF4a9F6JJI/OHiVnKdYBdPNGhbQDaJ3xdji/uoYgzDRGo6BanF
+        gHJwGZsTKBDgMVTm1igR4FmT5CexBsZnr3Hr4CB6oKyQDmubOvvbg3XFbdOC1Bq7yaDJLZRdD5F4d
+        gkncjQ0Q==;
+Received: from [2001:4bb8:188:5f50:f037:8cfe:627e:7028] (helo=localhost)
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jvQIO-0005pN-He; Tue, 14 Jul 2020 19:08:52 +0000
+From:   Christoph Hellwig <hch@lst.de>
 To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
-        Zhang Xiaoxu <zhangxiaoxu5@huawei.com>,
-        Steve French <stfrench@microsoft.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 027/109] cifs: update ctime and mtime during truncate
-Date:   Tue, 14 Jul 2020 20:43:30 +0200
-Message-Id: <20200714184106.829713172@linuxfoundation.org>
+Cc:     "H. Peter Anvin" <hpa@zytor.com>, Song Liu <song@kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-raid@vger.kernel.org, linux-fsdevel@vger.kernel.org
+Subject: [PATCH 03/23] init: remove the bstat helper
+Date:   Tue, 14 Jul 2020 21:04:07 +0200
+Message-Id: <20200714190427.4332-4-hch@lst.de>
 X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200714184105.507384017@linuxfoundation.org>
-References: <20200714184105.507384017@linuxfoundation.org>
-User-Agent: quilt/0.66
+In-Reply-To: <20200714190427.4332-1-hch@lst.de>
+References: <20200714190427.4332-1-hch@lst.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Zhang Xiaoxu <zhangxiaoxu5@huawei.com>
+The only caller of the bstat function becomes cleaner and simpler when
+open coding the function.
 
-[ Upstream commit 5618303d8516f8ac5ecfe53ee8e8bc9a40eaf066 ]
-
-As the man description of the truncate, if the size changed,
-then the st_ctime and st_mtime fields should be updated. But
-in cifs, we doesn't do it.
-
-It lead the xfstests generic/313 failed.
-
-So, add the ATTR_MTIME|ATTR_CTIME flags on attrs when change
-the file size
-
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: Zhang Xiaoxu <zhangxiaoxu5@huawei.com>
-Signed-off-by: Steve French <stfrench@microsoft.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Christoph Hellwig <hch@lst.de>
+Acked-by: Song Liu <song@kernel.org>
 ---
- fs/cifs/inode.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
+ init/do_mounts.h    | 10 ----------
+ init/do_mounts_md.c |  8 ++++----
+ 2 files changed, 4 insertions(+), 14 deletions(-)
 
-diff --git a/fs/cifs/inode.c b/fs/cifs/inode.c
-index 6045b48682752..5ae458505f630 100644
---- a/fs/cifs/inode.c
-+++ b/fs/cifs/inode.c
-@@ -2270,6 +2270,15 @@ set_size_out:
- 	if (rc == 0) {
- 		cifsInode->server_eof = attrs->ia_size;
- 		cifs_setsize(inode, attrs->ia_size);
-+
-+		/*
-+		 * The man page of truncate says if the size changed,
-+		 * then the st_ctime and st_mtime fields for the file
-+		 * are updated.
-+		 */
-+		attrs->ia_ctime = attrs->ia_mtime = current_time(inode);
-+		attrs->ia_valid |= ATTR_CTIME | ATTR_MTIME;
-+
- 		cifs_truncate_page(inode->i_mapping, inode->i_size);
- 	}
+diff --git a/init/do_mounts.h b/init/do_mounts.h
+index 0bb0806de4ce2c..7513d1c14d13fe 100644
+--- a/init/do_mounts.h
++++ b/init/do_mounts.h
+@@ -20,16 +20,6 @@ static inline int create_dev(char *name, dev_t dev)
+ 	return ksys_mknod(name, S_IFBLK|0600, new_encode_dev(dev));
+ }
  
+-static inline u32 bstat(char *name)
+-{
+-	struct kstat stat;
+-	if (vfs_stat(name, &stat) != 0)
+-		return 0;
+-	if (!S_ISBLK(stat.mode))
+-		return 0;
+-	return stat.rdev;
+-}
+-
+ #ifdef CONFIG_BLK_DEV_RAM
+ 
+ int __init rd_load_disk(int n);
+diff --git a/init/do_mounts_md.c b/init/do_mounts_md.c
+index b84031528dd446..359363e85ccd0b 100644
+--- a/init/do_mounts_md.c
++++ b/init/do_mounts_md.c
+@@ -138,9 +138,9 @@ static void __init md_setup_drive(void)
+ 			dev = MKDEV(MD_MAJOR, minor);
+ 		create_dev(name, dev);
+ 		for (i = 0; i < MD_SB_DISKS && devname != NULL; i++) {
++			struct kstat stat;
+ 			char *p;
+ 			char comp_name[64];
+-			u32 rdev;
+ 
+ 			p = strchr(devname, ',');
+ 			if (p)
+@@ -150,9 +150,9 @@ static void __init md_setup_drive(void)
+ 			if (strncmp(devname, "/dev/", 5) == 0)
+ 				devname += 5;
+ 			snprintf(comp_name, 63, "/dev/%s", devname);
+-			rdev = bstat(comp_name);
+-			if (rdev)
+-				dev = new_decode_dev(rdev);
++			if (vfs_stat(comp_name, &stat) == 0 &&
++			    S_ISBLK(stat.mode))
++				dev = new_decode_dev(stat.rdev);
+ 			if (!dev) {
+ 				printk(KERN_WARNING "md: Unknown device name: %s\n", devname);
+ 				break;
 -- 
-2.25.1
-
-
+2.27.0
 
