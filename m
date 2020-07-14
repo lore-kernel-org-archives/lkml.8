@@ -2,359 +2,281 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 212B1C433E7
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 06:22:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB02EC433E8
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 06:22:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F30F8221EB
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 06:22:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D3B6221E7
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 06:22:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="X47Jq5jr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726750AbgGNGWj (ORCPT
+        id S1726789AbgGNGWn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Tue, 14 Jul 2020 02:22:43 -0400
+Received: from mail-mw2nam12on2049.outbound.protection.outlook.com ([40.107.244.49]:6053
+        "EHLO NAM12-MW2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726619AbgGNGWj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 14 Jul 2020 02:22:39 -0400
-Received: from mga01.intel.com ([192.55.52.88]:35141 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725788AbgGNGWg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 02:22:36 -0400
-IronPort-SDR: nhqRioMysSyEwF8Pxae3O++KiG/YhuY5Lu64gFNDOOtlV3iMJBvUAnYEU8BbxhKZVOiW7Dz20Y
- 8gKixAT1yXqg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9681"; a="166926169"
-X-IronPort-AV: E=Sophos;i="5.75,350,1589266800"; 
-   d="scan'208";a="166926169"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jul 2020 23:22:28 -0700
-IronPort-SDR: r76fPi199lozzLAOXSiGE8DfvdFPuCS1+MHFFImeLUfSI2rFz5Ctr0msGEIQTdB5hVzbyWHy7O
- RPTVDTwVz+xA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,350,1589266800"; 
-   d="scan'208";a="360287049"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga001.jf.intel.com with ESMTP; 13 Jul 2020 23:22:27 -0700
-Received: from debox1-desk2.jf.intel.com (debox1-desk2.jf.intel.com [10.54.75.16])
-        by linux.intel.com (Postfix) with ESMTP id A891C580812;
-        Mon, 13 Jul 2020 23:22:27 -0700 (PDT)
-From:   "David E. Box" <david.e.box@linux.intel.com>
-To:     lee.jones@linaro.org, david.e.box@linux.intel.com,
-        dvhart@infradead.org, andy@infradead.org, bhelgaas@google.com,
-        alexander.h.duyck@linux.intel.com
-Cc:     linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        linux-pci@vger.kernel.org
-Subject: [PATCH V3 2/3] mfd: Intel Platform Monitoring Technology support
-Date:   Mon, 13 Jul 2020 23:23:22 -0700
-Message-Id: <20200714062323.19990-3-david.e.box@linux.intel.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200508021844.6911-1-david.e.box@linux.intel.com>
-References: <20200508021844.6911-1-david.e.box@linux.intel.com>
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=IMrXDXNZTqcVgJeqXfJ4DS6bb7tO3WoP8jS1vGqlg53+avxLx+nCmvJkJHhjgVSo4AQmqZCOMveiPAlAZpXr5iSuCoVon4TvvsVvNu1gnYoDm3xMcWOkH9RgOwOTvHPrHo68gOv1VL+E3YWxuzwW+yfK9WxFPw5V3HtaYq5Gmmt4pMPWOz59lYoey+QiZzYmUUJ5hwcFatrIrhiqB6tnGK8815R+YZcU4wsJ8JLdyndM4ztRVjQYTc46CL3lIqq0nvJL0tjTNUDm588rM4tzy2OY9Nbz9Fxj5dRO+RNDg88ZVSZKPYWTt50eejruaGhWxD/4pgHGqIOiIH6/UvQ/DA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=KK0adPOLWWsmYvHwDukhvpxR7l3vNAdCIKqM4F+wTd8=;
+ b=HI4tTirzJ37nn+Zu7hmjadTpmZ00e6R9Kf6khupDIDK5qjv4ma9Jbr27Xa/deXZ7cDk6JaSs+UwjuzBylhCw0icwlLN7mRzxIiMpaQfXWyzEIrJr45AaCgk/v/7g3Es4JVpkWFgm0YG2/xyG0Sg9fVG8xorCnrm2F29oAWi1N6pJgxxAhis6Jh78ik78UInay7m3bmB1KRT+SRb/yuP/dDFwsk/FsmagdqREKX1VUJp3m0lPzMvOhirdKXr19Su99snL/WU3fpqCx+nASMbYYZbvB1OmPvCoZHymUdzpt7phb/Dzt8/iHkOwjI0DDF/9N9Jwi/lveKRL0R7TDr3gkA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 149.199.60.83) smtp.rcpttodomain=avnet.com smtp.mailfrom=xilinx.com;
+ dmarc=bestguesspass action=none header.from=xilinx.com; dkim=none (message
+ not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=KK0adPOLWWsmYvHwDukhvpxR7l3vNAdCIKqM4F+wTd8=;
+ b=X47Jq5jrz6C1b9Li+tb0rn2EuFBPkybLUdfEB9UZpkXjFmDFDRK46gZuzEcyeODnzxvclKTmQR91mD48yfG7gqWp6cuEGEZ1/eGGe8UdmNeA3c03IGp7JygJsnkSKS+Kb+rVA6tbvknFcchgO1JEU9MfmzyetFd6u6Cnf/tR/K4=
+Received: from CY4PR13CA0073.namprd13.prod.outlook.com (2603:10b6:903:152::11)
+ by BL0PR02MB3668.namprd02.prod.outlook.com (2603:10b6:207:4a::29) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3174.20; Tue, 14 Jul
+ 2020 06:22:35 +0000
+Received: from CY1NAM02FT009.eop-nam02.prod.protection.outlook.com
+ (2603:10b6:903:152:cafe::98) by CY4PR13CA0073.outlook.office365.com
+ (2603:10b6:903:152::11) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3195.9 via Frontend
+ Transport; Tue, 14 Jul 2020 06:22:35 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 149.199.60.83)
+ smtp.mailfrom=xilinx.com; avnet.com; dkim=none (message not signed)
+ header.d=none;avnet.com; dmarc=bestguesspass action=none
+ header.from=xilinx.com;
+Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
+ 149.199.60.83 as permitted sender) receiver=protection.outlook.com;
+ client-ip=149.199.60.83; helo=xsj-pvapsmtpgw01;
+Received: from xsj-pvapsmtpgw01 (149.199.60.83) by
+ CY1NAM02FT009.mail.protection.outlook.com (10.152.75.12) with Microsoft SMTP
+ Server id 15.20.3174.21 via Frontend Transport; Tue, 14 Jul 2020 06:22:34
+ +0000
+Received: from [149.199.38.66] (port=48879 helo=xsj-pvapsmtp01)
+        by xsj-pvapsmtpgw01 with esmtp (Exim 4.90)
+        (envelope-from <lakshmi.sai.krishna.potthuri@xilinx.com>)
+        id 1jvEJB-00033u-Ic; Mon, 13 Jul 2020 23:20:53 -0700
+Received: from localhost ([127.0.0.1] helo=xsj-pvapsmtp01)
+        by xsj-pvapsmtp01 with esmtp (Exim 4.63)
+        (envelope-from <lakshmi.sai.krishna.potthuri@xilinx.com>)
+        id 1jvEKo-00046G-03; Mon, 13 Jul 2020 23:22:34 -0700
+Received: from [10.140.6.35] (helo=xhdsaipava40.xilinx.com)
+        by xsj-pvapsmtp01 with esmtp (Exim 4.63)
+        (envelope-from <lakshmis@xhdsaipava40.xilinx.com>)
+        id 1jvEKn-000466-8h; Mon, 13 Jul 2020 23:22:33 -0700
+Received: by xhdsaipava40.xilinx.com (Postfix, from userid 14964)
+        id 5FBE013C0574; Tue, 14 Jul 2020 11:59:11 +0530 (IST)
+From:   Sai Krishna Potthuri <lakshmi.sai.krishna.potthuri@xilinx.com>
+To:     Philipp Zabel <p.zabel@pengutronix.de>,
+        Rob Herring <robh+dt@kernel.org>,
+        Michal Simek <michal.simek@xilinx.com>
+Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, git@xilinx.com,
+        saikrishna12468@gmail.com,
+        Sai Krishna Potthuri <lakshmi.sai.krishna.potthuri@xilinx.com>
+Subject: [PATCH 1/2] dt-bindings: reset: Updated binding for Versal reset driver
+Date:   Tue, 14 Jul 2020 11:59:08 +0530
+Message-Id: <1594708149-29944-2-git-send-email-lakshmi.sai.krishna.potthuri@xilinx.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1594708149-29944-1-git-send-email-lakshmi.sai.krishna.potthuri@xilinx.com>
+References: <1594708149-29944-1-git-send-email-lakshmi.sai.krishna.potthuri@xilinx.com>
+X-TM-AS-Product-Ver: IMSS-7.1.0.1224-8.2.0.1013-23620.005
+X-TM-AS-User-Approved-Sender: Yes;Yes
+X-EOPAttributedMessage: 0
+X-MS-Office365-Filtering-HT: Tenant
+X-Forefront-Antispam-Report: CIP:149.199.60.83;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:xsj-pvapsmtpgw01;PTR:unknown-60-83.xilinx.com;CAT:NONE;SFTY:;SFS:(346002)(39860400002)(136003)(376002)(396003)(46966005)(82310400002)(36756003)(6666004)(6266002)(6636002)(107886003)(42186006)(81166007)(83380400001)(478600001)(316002)(110136005)(356005)(186003)(4326008)(5660300002)(82740400003)(2906002)(26005)(2616005)(70586007)(70206006)(8676002)(336012)(47076004)(8936002)(426003);DIR:OUT;SFP:1101;
+X-MS-PublicTrafficType: Email
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-MS-Office365-Filtering-Correlation-Id: 241974aa-dc06-491f-1fcd-08d827be4c35
+X-MS-TrafficTypeDiagnostic: BL0PR02MB3668:
+X-LD-Processed: 657af505-d5df-48d0-8300-c31994686c5c,ExtAddr
+X-Microsoft-Antispam-PRVS: <BL0PR02MB3668AD6D2811476B73F4FFA2BD610@BL0PR02MB3668.namprd02.prod.outlook.com>
+X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
+X-MS-Oob-TLC-OOBClassifiers: OLM:7219;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: pijjffJM2MR8e3A4vG/OOCdIuKhFBHmoe0qL9DylY7bjeq0X1gM1vV8V/3OaV0FHKos5c27tg/nOYw150jjAXLkNmqQNRBUygVi+YOrRwdRD+U1QuRuvyDw0Z//v1Sq/G7X37GxU0W4jMB7Xkgv/AHAf3sJMzCVk6EeCv2B+6FWL/PrWKCBmZgjjj6fZfuRSqlAOcGt1D2yMhLQRhcBoEzE6vCcyUcEmm4IiHcswCzcpFyx21hnSzh77T2Ti9NYX9ssmi1/sI8YKOIJdjxWoFR/Uj2sxjRTijsEcbm1OSShpsoAOehgXw7Uw77BWWOSkmmfu8e6aIjytuogBs4KwBNfvDd4E4+2cWBosFHpUmhVE/FqPjmreWOtpd/Aiz85RfQRSit+wQLAJKkqJt7wgcA==
+X-OriginatorOrg: xilinx.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Jul 2020 06:22:34.8614
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 241974aa-dc06-491f-1fcd-08d827be4c35
+X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.60.83];Helo=[xsj-pvapsmtpgw01]
+X-MS-Exchange-CrossTenant-AuthSource: CY1NAM02FT009.eop-nam02.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL0PR02MB3668
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Intel Platform Monitoring Technology (PMT) is an architecture for
-enumerating and accessing hardware monitoring facilities. PMT supports
-multiple types of monitoring capabilities. This driver creates platform
-devices for each type so that they may be managed by capability specific
-drivers (to be introduced). Capabilities are discovered using PCIe DVSEC
-ids. Support is included for the 3 current capability types, Telemetry,
-Watcher, and Crashlog. The features are available on new Intel platforms
-starting from Tiger Lake for which support is added.
+Added documentation and Versal reset indices to describe
+about Versal reset driver bindings.
 
-This patch also adds a quirk mechanism for several early hardware
-differences and bugs.  For Tiger Lake, do not support Watcher and Crashlog
-capabilities since they will not be compatible with future product. Also,
-fix use a quirk to fix the discovery table offset.
-
-Signed-off-by: David E. Box <david.e.box@linux.intel.com>
-Signed-off-by: Alexander Duyck <alexander.h.duyck@linux.intel.com>
+Signed-off-by: Sai Krishna Potthuri <lakshmi.sai.krishna.potthuri@xilinx.com>
 ---
- MAINTAINERS             |   5 +
- drivers/mfd/Kconfig     |  10 ++
- drivers/mfd/Makefile    |   1 +
- drivers/mfd/intel_pmt.c | 218 ++++++++++++++++++++++++++++++++++++++++
- 4 files changed, 234 insertions(+)
- create mode 100644 drivers/mfd/intel_pmt.c
+ .../bindings/reset/xlnx,zynqmp-reset.txt      |  11 +-
+ .../dt-bindings/reset/xlnx-versal-resets.h    | 105 ++++++++++++++++++
+ 2 files changed, 112 insertions(+), 4 deletions(-)
+ create mode 100644 include/dt-bindings/reset/xlnx-versal-resets.h
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index b4a43a9e7fbc..2e42bf0c41ab 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -8845,6 +8845,11 @@ F:	drivers/mfd/intel_soc_pmic*
- F:	include/linux/mfd/intel_msic.h
- F:	include/linux/mfd/intel_soc_pmic*
+diff --git a/Documentation/devicetree/bindings/reset/xlnx,zynqmp-reset.txt b/Documentation/devicetree/bindings/reset/xlnx,zynqmp-reset.txt
+index 27a45fe5ecf1..ed836868dbf1 100644
+--- a/Documentation/devicetree/bindings/reset/xlnx,zynqmp-reset.txt
++++ b/Documentation/devicetree/bindings/reset/xlnx,zynqmp-reset.txt
+@@ -1,7 +1,7 @@
+ --------------------------------------------------------------------------
+- =  Zynq UltraScale+ MPSoC reset driver binding =
++ =  Zynq UltraScale+ MPSoC and Versal reset driver binding =
+ --------------------------------------------------------------------------
+-The Zynq UltraScale+ MPSoC has several different resets.
++The Zynq UltraScale+ MPSoC and Versal has several different resets.
  
-+INTEL PMT DRIVER
-+M:	"David E. Box" <david.e.box@linux.intel.com>
-+S:	Maintained
-+F:	drivers/mfd/intel_pmt.c
-+
- INTEL PRO/WIRELESS 2100, 2200BG, 2915ABG NETWORK CONNECTION SUPPORT
- M:	Stanislav Yakovlev <stas.yakovlev@gmail.com>
- L:	linux-wireless@vger.kernel.org
-diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
-index a37d7d171382..1a62ce2c68d9 100644
---- a/drivers/mfd/Kconfig
-+++ b/drivers/mfd/Kconfig
-@@ -670,6 +670,16 @@ config MFD_INTEL_PMC_BXT
- 	  Register and P-unit access. In addition this creates devices
- 	  for iTCO watchdog and telemetry that are part of the PMC.
+ See Chapter 36 of the Zynq UltraScale+ MPSoC TRM (UG) for more information
+ about zynqmp resets.
+@@ -10,7 +10,8 @@ Please also refer to reset.txt in this directory for common reset
+ controller binding usage.
  
-+config MFD_INTEL_PMT
-+	tristate "Intel Platform Monitoring Technology support"
-+	depends on PCI
-+	select MFD_CORE
-+	help
-+	  The Intel Platform Monitoring Technology (PMT) is an interface that
-+	  provides access to hardware monitor registers. This driver supports
-+	  Telemetry, Watcher, and Crashlog PMT capabilities/devices for
-+	  platforms starting from Tiger Lake.
-+
- config MFD_IPAQ_MICRO
- 	bool "Atmel Micro ASIC (iPAQ h3100/h3600/h3700) Support"
- 	depends on SA1100_H3100 || SA1100_H3600
-diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
-index 9367a92f795a..1961b4737985 100644
---- a/drivers/mfd/Makefile
-+++ b/drivers/mfd/Makefile
-@@ -216,6 +216,7 @@ obj-$(CONFIG_MFD_INTEL_LPSS_PCI)	+= intel-lpss-pci.o
- obj-$(CONFIG_MFD_INTEL_LPSS_ACPI)	+= intel-lpss-acpi.o
- obj-$(CONFIG_MFD_INTEL_MSIC)	+= intel_msic.o
- obj-$(CONFIG_MFD_INTEL_PMC_BXT)	+= intel_pmc_bxt.o
-+obj-$(CONFIG_MFD_INTEL_PMT)	+= intel_pmt.o
- obj-$(CONFIG_MFD_PALMAS)	+= palmas.o
- obj-$(CONFIG_MFD_VIPERBOARD)    += viperboard.o
- obj-$(CONFIG_MFD_RC5T583)	+= rc5t583.o rc5t583-irq.o
-diff --git a/drivers/mfd/intel_pmt.c b/drivers/mfd/intel_pmt.c
+ Required Properties:
+-- compatible:	"xlnx,zynqmp-reset"
++- compatible:	"xlnx,zynqmp-reset" for Zynq UltraScale+ MPSoC platform
++		"xlnx,versal-reset" for Versal platform
+ - #reset-cells:	Specifies the number of cells needed to encode reset
+ 		line, should be 1
+ 
+@@ -37,8 +38,10 @@ Device nodes that need access to reset lines should
+ specify them as a reset phandle in their corresponding node as
+ specified in reset.txt.
+ 
+-For list of all valid reset indicies see
++For list of all valid reset indices for Zynq UltraScale+ MPSoC see
+ <dt-bindings/reset/xlnx-zynqmp-resets.h>
++For list of all valid reset indices for Versal see
++<dt-bindings/reset/xlnx-versal-resets.h>
+ 
+ Example:
+ 
+diff --git a/include/dt-bindings/reset/xlnx-versal-resets.h b/include/dt-bindings/reset/xlnx-versal-resets.h
 new file mode 100644
-index 000000000000..0924eca25db0
+index 000000000000..895424e9b0e5
 --- /dev/null
-+++ b/drivers/mfd/intel_pmt.c
-@@ -0,0 +1,218 @@
-+// SPDX-License-Identifier: GPL-2.0
++++ b/include/dt-bindings/reset/xlnx-versal-resets.h
+@@ -0,0 +1,105 @@
++/* SPDX-License-Identifier: GPL-2.0 */
 +/*
-+ * Intel Platform Monitoring Technology MFD driver
-+ *
-+ * Copyright (c) 2020, Intel Corporation.
-+ * All Rights Reserved.
-+ *
-+ * Authors: David E. Box <david.e.box@linux.intel.com>
++ *  Copyright (C) 2020 Xilinx, Inc.
 + */
 +
-+#include <linux/bits.h>
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/pci.h>
-+#include <linux/platform_device.h>
-+#include <linux/pm.h>
-+#include <linux/pm_runtime.h>
-+#include <linux/mfd/core.h>
-+#include <linux/types.h>
++#ifndef _DT_BINDINGS_VERSAL_RESETS_H
++#define _DT_BINDINGS_VERSAL_RESETS_H
 +
-+/* Intel DVSEC capability vendor space offsets */
-+#define INTEL_DVSEC_ENTRIES		0xA
-+#define INTEL_DVSEC_SIZE		0xB
-+#define INTEL_DVSEC_TABLE		0xC
-+#define INTEL_DVSEC_TABLE_BAR(x)	((x) & GENMASK(2, 0))
-+#define INTEL_DVSEC_TABLE_OFFSET(x)	((x) & GENMASK(31, 3))
-+#define INTEL_DVSEC_ENTRY_SIZE		4
++#define VERSAL_RST_PMC_POR			(0xc30c001U)
++#define VERSAL_RST_PMC				(0xc410002U)
++#define VERSAL_RST_PS_POR			(0xc30c003U)
++#define VERSAL_RST_PL_POR			(0xc30c004U)
++#define VERSAL_RST_NOC_POR			(0xc30c005U)
++#define VERSAL_RST_FPD_POR			(0xc30c006U)
++#define VERSAL_RST_ACPU_0_POR			(0xc30c007U)
++#define VERSAL_RST_ACPU_1_POR			(0xc30c008U)
++#define VERSAL_RST_OCM2_POR			(0xc30c009U)
++#define VERSAL_RST_PS_SRST			(0xc41000aU)
++#define VERSAL_RST_PL_SRST			(0xc41000bU)
++#define VERSAL_RST_NOC				(0xc41000cU)
++#define VERSAL_RST_NPI				(0xc41000dU)
++#define VERSAL_RST_SYS_RST_1			(0xc41000eU)
++#define VERSAL_RST_SYS_RST_2			(0xc41000fU)
++#define VERSAL_RST_SYS_RST_3			(0xc410010U)
++#define VERSAL_RST_FPD				(0xc410011U)
++#define VERSAL_RST_PL0				(0xc410012U)
++#define VERSAL_RST_PL1				(0xc410013U)
++#define VERSAL_RST_PL2				(0xc410014U)
++#define VERSAL_RST_PL3				(0xc410015U)
++#define VERSAL_RST_APU				(0xc410016U)
++#define VERSAL_RST_ACPU_0			(0xc410017U)
++#define VERSAL_RST_ACPU_1			(0xc410018U)
++#define VERSAL_RST_ACPU_L2			(0xc410019U)
++#define VERSAL_RST_ACPU_GIC			(0xc41001aU)
++#define VERSAL_RST_RPU_ISLAND			(0xc41001bU)
++#define VERSAL_RST_RPU_AMBA			(0xc41001cU)
++#define VERSAL_RST_R5_0				(0xc41001dU)
++#define VERSAL_RST_R5_1				(0xc41001eU)
++#define VERSAL_RST_SYSMON_PMC_SEQ_RST		(0xc41001fU)
++#define VERSAL_RST_SYSMON_PMC_CFG_RST		(0xc410020U)
++#define VERSAL_RST_SYSMON_FPD_CFG_RST		(0xc410021U)
++#define VERSAL_RST_SYSMON_FPD_SEQ_RST		(0xc410022U)
++#define VERSAL_RST_SYSMON_LPD			(0xc410023U)
++#define VERSAL_RST_PDMA_RST1			(0xc410024U)
++#define VERSAL_RST_PDMA_RST0			(0xc410025U)
++#define VERSAL_RST_ADMA				(0xc410026U)
++#define VERSAL_RST_TIMESTAMP			(0xc410027U)
++#define VERSAL_RST_OCM				(0xc410028U)
++#define VERSAL_RST_OCM2_RST			(0xc410029U)
++#define VERSAL_RST_IPI				(0xc41002aU)
++#define VERSAL_RST_SBI				(0xc41002bU)
++#define VERSAL_RST_LPD				(0xc41002cU)
++#define VERSAL_RST_QSPI				(0xc10402dU)
++#define VERSAL_RST_OSPI				(0xc10402eU)
++#define VERSAL_RST_SDIO_0			(0xc10402fU)
++#define VERSAL_RST_SDIO_1			(0xc104030U)
++#define VERSAL_RST_I2C_PMC			(0xc104031U)
++#define VERSAL_RST_GPIO_PMC			(0xc104032U)
++#define VERSAL_RST_GEM_0			(0xc104033U)
++#define VERSAL_RST_GEM_1			(0xc104034U)
++#define VERSAL_RST_SPARE			(0xc104035U)
++#define VERSAL_RST_USB_0			(0xc104036U)
++#define VERSAL_RST_UART_0			(0xc104037U)
++#define VERSAL_RST_UART_1			(0xc104038U)
++#define VERSAL_RST_SPI_0			(0xc104039U)
++#define VERSAL_RST_SPI_1			(0xc10403aU)
++#define VERSAL_RST_CAN_FD_0			(0xc10403bU)
++#define VERSAL_RST_CAN_FD_1			(0xc10403cU)
++#define VERSAL_RST_I2C_0			(0xc10403dU)
++#define VERSAL_RST_I2C_1			(0xc10403eU)
++#define VERSAL_RST_GPIO_LPD			(0xc10403fU)
++#define VERSAL_RST_TTC_0			(0xc104040U)
++#define VERSAL_RST_TTC_1			(0xc104041U)
++#define VERSAL_RST_TTC_2			(0xc104042U)
++#define VERSAL_RST_TTC_3			(0xc104043U)
++#define VERSAL_RST_SWDT_FPD			(0xc104044U)
++#define VERSAL_RST_SWDT_LPD			(0xc104045U)
++#define VERSAL_RST_USB				(0xc104046U)
++#define VERSAL_RST_DPC				(0xc208047U)
++#define VERSAL_RST_PMCDBG			(0xc208048U)
++#define VERSAL_RST_DBG_TRACE			(0xc208049U)
++#define VERSAL_RST_DBG_FPD			(0xc20804aU)
++#define VERSAL_RST_DBG_TSTMP			(0xc20804bU)
++#define VERSAL_RST_RPU0_DBG			(0xc20804cU)
++#define VERSAL_RST_RPU1_DBG			(0xc20804dU)
++#define VERSAL_RST_HSDP				(0xc20804eU)
++#define VERSAL_RST_DBG_LPD			(0xc20804fU)
++#define VERSAL_RST_CPM_POR			(0xc30c050U)
++#define VERSAL_RST_CPM				(0xc410051U)
++#define VERSAL_RST_CPMDBG			(0xc208052U)
++#define VERSAL_RST_PCIE_CFG			(0xc410053U)
++#define VERSAL_RST_PCIE_CORE0			(0xc410054U)
++#define VERSAL_RST_PCIE_CORE1			(0xc410055U)
++#define VERSAL_RST_PCIE_DMA			(0xc410056U)
++#define VERSAL_RST_CMN				(0xc410057U)
++#define VERSAL_RST_L2_0				(0xc410058U)
++#define VERSAL_RST_L2_1				(0xc410059U)
++#define VERSAL_RST_ADDR_REMAP			(0xc41005aU)
++#define VERSAL_RST_CPI0				(0xc41005bU)
++#define VERSAL_RST_CPI1				(0xc41005cU)
++#define VERSAL_RST_XRAM				(0xc30c05dU)
++#define VERSAL_RST_AIE_ARRAY			(0xc10405eU)
++#define VERSAL_RST_AIE_SHIM			(0xc10405fU)
 +
-+/* PMT capabilities */
-+#define DVSEC_INTEL_ID_TELEMETRY	2
-+#define DVSEC_INTEL_ID_WATCHER		3
-+#define DVSEC_INTEL_ID_CRASHLOG		4
-+
-+#define TELEMETRY_DEV_NAME		"pmt_telemetry"
-+#define WATCHER_DEV_NAME		"pmt_watcher"
-+#define CRASHLOG_DEV_NAME		"pmt_crashlog"
-+
-+struct intel_dvsec_header {
-+	u16	length;
-+	u16	id;
-+	u8	num_entries;
-+	u8	entry_size;
-+	u8	tbir;
-+	u32	offset;
-+};
-+
-+enum pmt_quirks {
-+	/* Watcher capability not supported */
-+	PMT_QUIRK_NO_WATCHER	= BIT(0),
-+
-+	/* Crashlog capability not supported */
-+	PMT_QUIRK_NO_CRASHLOG	= BIT(1),
-+
-+	/* Use shift instead of mask to read discovery table offset */
-+	PMT_QUIRK_TABLE_SHIFT	= BIT(2),
-+};
-+
-+struct pmt_platform_info {
-+	unsigned long quirks;
-+};
-+
-+static const struct pmt_platform_info tgl_info = {
-+	.quirks = PMT_QUIRK_NO_WATCHER | PMT_QUIRK_NO_CRASHLOG |
-+		  PMT_QUIRK_TABLE_SHIFT,
-+};
-+
-+static const struct pmt_platform_info pmt_info = {
-+};
-+
-+static int
-+pmt_add_dev(struct pci_dev *pdev, struct intel_dvsec_header *header,
-+	    struct pmt_platform_info *info)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct resource *res, *tmp;
-+	struct mfd_cell *cell;
-+	const char *name;
-+	int count = header->num_entries;
-+	int size = header->entry_size;
-+	int i;
-+
-+	switch (header->id) {
-+	case DVSEC_INTEL_ID_TELEMETRY:
-+		name = TELEMETRY_DEV_NAME;
-+		break;
-+	case DVSEC_INTEL_ID_WATCHER:
-+		if (info->quirks & PMT_QUIRK_NO_WATCHER) {
-+			dev_info(dev, "Watcher not supported\n");
-+			return 0;
-+		}
-+		name = WATCHER_DEV_NAME;
-+		break;
-+	case DVSEC_INTEL_ID_CRASHLOG:
-+		if (info->quirks & PMT_QUIRK_NO_CRASHLOG) {
-+			dev_info(dev, "Crashlog not supported\n");
-+			return 0;
-+		}
-+		name = CRASHLOG_DEV_NAME;
-+		break;
-+	default:
-+		return -EINVAL;
-+	}
-+
-+	if (!header->num_entries || !header->entry_size) {
-+		dev_warn(dev, "Invalid count or size for %s header\n", name);
-+		return -EINVAL;
-+	}
-+
-+	cell = devm_kzalloc(dev, sizeof(*cell), GFP_KERNEL);
-+	if (!cell)
-+		return -ENOMEM;
-+
-+	res = devm_kcalloc(dev, count, sizeof(*res), GFP_KERNEL);
-+	if (!res)
-+		return -ENOMEM;
-+
-+	if (info->quirks & PMT_QUIRK_TABLE_SHIFT)
-+		header->offset >>= 3;
-+
-+	for (i = 0, tmp = res; i < count; i++, tmp++) {
-+		tmp->start = pdev->resource[header->tbir].start +
-+			     header->offset + i * (size << 2);
-+		tmp->end = tmp->start + (size << 2) - 1;
-+		tmp->flags = IORESOURCE_MEM;
-+	}
-+
-+	cell->resources = res;
-+	cell->num_resources = count;
-+	cell->name = name;
-+
-+	return devm_mfd_add_devices(dev, PLATFORM_DEVID_AUTO, cell, 1, NULL, 0,
-+				    NULL);
-+}
-+
-+static int
-+pmt_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
-+{
-+	struct intel_dvsec_header header;
-+	struct pmt_platform_info *info;
-+	bool found_devices = false;
-+	int ret, pos = 0;
-+	u32 table;
-+	u16 vid;
-+
-+	ret = pcim_enable_device(pdev);
-+	if (ret)
-+		return ret;
-+
-+	info = devm_kmemdup(&pdev->dev, (void *)id->driver_data, sizeof(*info),
-+			    GFP_KERNEL);
-+	if (!info)
-+		return -ENOMEM;
-+
-+	pos = pci_find_next_ext_capability(pdev, pos, PCI_EXT_CAP_ID_DVSEC);
-+	while (pos) {
-+		pci_read_config_word(pdev, pos + PCI_DVSEC_HEADER1, &vid);
-+		if (vid != PCI_VENDOR_ID_INTEL)
-+			continue;
-+
-+		pci_read_config_word(pdev, pos + PCI_DVSEC_HEADER2,
-+				     &header.id);
-+		pci_read_config_byte(pdev, pos + INTEL_DVSEC_ENTRIES,
-+				     &header.num_entries);
-+		pci_read_config_byte(pdev, pos + INTEL_DVSEC_SIZE,
-+				     &header.entry_size);
-+		pci_read_config_dword(pdev, pos + INTEL_DVSEC_TABLE,
-+				      &table);
-+
-+		header.tbir = INTEL_DVSEC_TABLE_BAR(table);
-+		header.offset = INTEL_DVSEC_TABLE_OFFSET(table);
-+
-+		ret = pmt_add_dev(pdev, &header, info);
-+		if (ret)
-+			dev_warn(&pdev->dev,
-+				 "Failed to add devices for DVSEC id %d\n",
-+				 header.id);
-+		found_devices = true;
-+
-+		pos = pci_find_next_ext_capability(pdev, pos,
-+						   PCI_EXT_CAP_ID_DVSEC);
-+	}
-+
-+	if (!found_devices) {
-+		dev_err(&pdev->dev, "No supported PMT capabilities found.\n");
-+		return -ENODEV;
-+	}
-+
-+	pm_runtime_put(&pdev->dev);
-+	pm_runtime_allow(&pdev->dev);
-+
-+	return 0;
-+}
-+
-+static void pmt_pci_remove(struct pci_dev *pdev)
-+{
-+	pm_runtime_forbid(&pdev->dev);
-+	pm_runtime_get_sync(&pdev->dev);
-+}
-+
-+#define PCI_DEVICE_ID_INTEL_PMT_TGL	0x9a0d
-+
-+static const struct pci_device_id pmt_pci_ids[] = {
-+	{ PCI_DEVICE_DATA(INTEL, PMT_TGL, &tgl_info) },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(pci, pmt_pci_ids);
-+
-+static struct pci_driver pmt_pci_driver = {
-+	.name = "intel-pmt",
-+	.id_table = pmt_pci_ids,
-+	.probe = pmt_pci_probe,
-+	.remove = pmt_pci_remove,
-+};
-+module_pci_driver(pmt_pci_driver);
-+
-+MODULE_AUTHOR("David E. Box <david.e.box@linux.intel.com>");
-+MODULE_DESCRIPTION("Intel Platform Monitoring Technology MFD driver");
-+MODULE_LICENSE("GPL v2");
++#endif
 -- 
-2.20.1
+2.17.1
 
