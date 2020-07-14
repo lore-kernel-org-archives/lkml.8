@@ -2,52 +2,54 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1240DC433F4
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:51:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C830AC433F8
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:51:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DA5AE223B0
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:51:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A785F223B0
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:51:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594752694;
-	bh=dy2uQDYAA9PIx9olKKhx+sOCYXjelwa7t4G64V/NNKQ=;
+	s=default; t=1594752698;
+	bh=8N8KSnGHvsmt4DlT8K/7s8+aOg80xit/1GhJqObhWvo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bGEWNXdabbJQZekIg46nSNGD2lB6D3JuAmH9aZfKRID3c1KeNfBx/WfLnyD5RMmwG
-	 YwtnxFFYG69J639FeGLWd2gjYdBgcAFhRTxUejowYVn07wd7z+z8kUgxtUKLXK5Qzg
-	 Gnu+tndpoYBGdBwo76wOfkGZtrvs2JrTuO9isH3g=
+	b=JyU32uySTwcfOZais9uh4B0s956KjmQJ87nmyb0usSg2MZKPEFO55BVgk8Ct3JaFs
+	 lqKdHX+R6zI4T42HlKtg1KKN+mVuQ4exWh/sT5oAn7pVu/Ukt9wzm5dPKtf13FlE+W
+	 xXIKFK8hoY+Q5gORdO6XnryeRnU6jgjMEs7gzlA0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730410AbgGNSvd (ORCPT
+        id S1729979AbgGNSvh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 14:51:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47948 "EHLO mail.kernel.org"
+        Tue, 14 Jul 2020 14:51:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47848 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730406AbgGNSv3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 14:51:29 -0400
+        id S1729346AbgGNSv0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 14:51:26 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2AFD722BF3;
-        Tue, 14 Jul 2020 18:51:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 328CC207F5;
+        Tue, 14 Jul 2020 18:51:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594752688;
-        bh=dy2uQDYAA9PIx9olKKhx+sOCYXjelwa7t4G64V/NNKQ=;
+        s=default; t=1594752685;
+        bh=8N8KSnGHvsmt4DlT8K/7s8+aOg80xit/1GhJqObhWvo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RLooLLrsLTF4bZ3/C5yYZ2K1e6uS7Mf6hRdVYf3RgahuBvFscgQweU2nUjNlbdsXe
-         6yckD6Ac+ueHh0nxau4xlgiAZgWpjn1JFfu3Nd5/rWpyZqb8rDxVemjAnVclQ79ejU
-         LINgu63fBypTHrxAO8OqlDdXniqDzZ+t12Pmj0EA=
+        b=uwKebXkQpbyIKONLxPFjB8WSmCcMPoq66s2Md0EJmHMM4dO33XF+EFmud+p82TDrE
+         cyuEPj21NeCZG2iu/vE33lVxX91gfUAUycbAr6C694byssvSXtKvlm/i61y6JiFFf5
+         XDLKXg7v46oupMKWCKsGZwvlFIOpPXTqTi5DRpu0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Divya Indi <divya.indi@oracle.com>,
-        Jason Gunthorpe <jgg@nvidia.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 045/109] IB/sa: Resolv use-after-free in ib_nl_make_request()
-Date:   Tue, 14 Jul 2020 20:43:48 +0200
-Message-Id: <20200714184107.680715975@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Mike Marciniszyn <mike.marciniszyn@intel.com>,
+        Kaike Wan <kaike.wan@intel.com>,
+        Dennis Dalessandro <dennis.dalessandro@intel.com>,
+        Jason Gunthorpe <jgg@nvidia.com>
+Subject: [PATCH 5.4 071/109] IB/hfi1: Do not destroy link_wq when the device is shut down
+Date:   Tue, 14 Jul 2020 20:44:14 +0200
+Message-Id: <20200714184108.949399098@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200714184105.507384017@linuxfoundation.org>
 References: <20200714184105.507384017@linuxfoundation.org>
@@ -60,130 +62,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Divya Indi <divya.indi@oracle.com>
+From: Kaike Wan <kaike.wan@intel.com>
 
-[ Upstream commit f427f4d6214c183c474eeb46212d38e6c7223d6a ]
+commit 2315ec12ee8e8257bb335654c62e0cae71dc278d upstream.
 
-There is a race condition where ib_nl_make_request() inserts the request
-data into the linked list but the timer in ib_nl_request_timeout() can see
-it and destroy it before ib_nl_send_msg() is done touching it. This could
-happen, for instance, if there is a long delay allocating memory during
-nlmsg_new()
+The workqueue link_wq should only be destroyed when the hfi1 driver is
+unloaded, not when the device is shut down.
 
-This causes a use-after-free in the send_mad() thread:
-
-  [<ffffffffa02f43cb>] ? ib_pack+0x17b/0x240 [ib_core]
-  [ <ffffffffa032aef1>] ib_sa_path_rec_get+0x181/0x200 [ib_sa]
-  [<ffffffffa0379db0>] rdma_resolve_route+0x3c0/0x8d0 [rdma_cm]
-  [<ffffffffa0374450>] ? cma_bind_port+0xa0/0xa0 [rdma_cm]
-  [<ffffffffa040f850>] ? rds_rdma_cm_event_handler_cmn+0x850/0x850 [rds_rdma]
-  [<ffffffffa040f22c>] rds_rdma_cm_event_handler_cmn+0x22c/0x850 [rds_rdma]
-  [<ffffffffa040f860>] rds_rdma_cm_event_handler+0x10/0x20 [rds_rdma]
-  [<ffffffffa037778e>] addr_handler+0x9e/0x140 [rdma_cm]
-  [<ffffffffa026cdb4>] process_req+0x134/0x190 [ib_addr]
-  [<ffffffff810a02f9>] process_one_work+0x169/0x4a0
-  [<ffffffff810a0b2b>] worker_thread+0x5b/0x560
-  [<ffffffff810a0ad0>] ? flush_delayed_work+0x50/0x50
-  [<ffffffff810a68fb>] kthread+0xcb/0xf0
-  [<ffffffff816ec49a>] ? __schedule+0x24a/0x810
-  [<ffffffff816ec49a>] ? __schedule+0x24a/0x810
-  [<ffffffff810a6830>] ? kthread_create_on_node+0x180/0x180
-  [<ffffffff816f25a7>] ret_from_fork+0x47/0x90
-  [<ffffffff810a6830>] ? kthread_create_on_node+0x180/0x180
-
-The ownership rule is once the request is on the list, ownership transfers
-to the list and the local thread can't touch it any more, just like for
-the normal MAD case in send_mad().
-
-Thus, instead of adding before send and then trying to delete after on
-errors, move the entire thing under the spinlock so that the send and
-update of the lists are atomic to the conurrent threads. Lightly reoganize
-things so spinlock safe memory allocations are done in the final NL send
-path and the rest of the setup work is done before and outside the lock.
-
-Fixes: 3ebd2fd0d011 ("IB/sa: Put netlink request into the request list before sending")
-Link: https://lore.kernel.org/r/1592964789-14533-1-git-send-email-divya.indi@oracle.com
-Signed-off-by: Divya Indi <divya.indi@oracle.com>
+Fixes: 71d47008ca1b ("IB/hfi1: Create workqueue for link events")
+Link: https://lore.kernel.org/r/20200623204053.107638.70315.stgit@awfm-01.aw.intel.com
+Cc: <stable@vger.kernel.org>
+Reviewed-by: Mike Marciniszyn <mike.marciniszyn@intel.com>
+Signed-off-by: Kaike Wan <kaike.wan@intel.com>
+Signed-off-by: Dennis Dalessandro <dennis.dalessandro@intel.com>
 Signed-off-by: Jason Gunthorpe <jgg@nvidia.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/infiniband/core/sa_query.c | 38 +++++++++++++-----------------
- 1 file changed, 17 insertions(+), 21 deletions(-)
+ drivers/infiniband/hw/hfi1/init.c |   10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/infiniband/core/sa_query.c b/drivers/infiniband/core/sa_query.c
-index bddb5434fbed2..d2d70c89193ff 100644
---- a/drivers/infiniband/core/sa_query.c
-+++ b/drivers/infiniband/core/sa_query.c
-@@ -829,13 +829,20 @@ static int ib_nl_get_path_rec_attrs_len(ib_sa_comp_mask comp_mask)
- 	return len;
+--- a/drivers/infiniband/hw/hfi1/init.c
++++ b/drivers/infiniband/hw/hfi1/init.c
+@@ -860,6 +860,10 @@ static void destroy_workqueues(struct hf
+ 			destroy_workqueue(ppd->hfi1_wq);
+ 			ppd->hfi1_wq = NULL;
+ 		}
++		if (ppd->link_wq) {
++			destroy_workqueue(ppd->link_wq);
++			ppd->link_wq = NULL;
++		}
+ 	}
  }
  
--static int ib_nl_send_msg(struct ib_sa_query *query, gfp_t gfp_mask)
-+static int ib_nl_make_request(struct ib_sa_query *query, gfp_t gfp_mask)
- {
- 	struct sk_buff *skb = NULL;
- 	struct nlmsghdr *nlh;
- 	void *data;
- 	struct ib_sa_mad *mad;
- 	int len;
-+	unsigned long flags;
-+	unsigned long delay;
-+	gfp_t gfp_flag;
-+	int ret;
-+
-+	INIT_LIST_HEAD(&query->list);
-+	query->seq = (u32)atomic_inc_return(&ib_nl_sa_request_seq);
- 
- 	mad = query->mad_buf->mad;
- 	len = ib_nl_get_path_rec_attrs_len(mad->sa_hdr.comp_mask);
-@@ -860,36 +867,25 @@ static int ib_nl_send_msg(struct ib_sa_query *query, gfp_t gfp_mask)
- 	/* Repair the nlmsg header length */
- 	nlmsg_end(skb, nlh);
- 
--	return rdma_nl_multicast(&init_net, skb, RDMA_NL_GROUP_LS, gfp_mask);
--}
-+	gfp_flag = ((gfp_mask & GFP_ATOMIC) == GFP_ATOMIC) ? GFP_ATOMIC :
-+		GFP_NOWAIT;
- 
--static int ib_nl_make_request(struct ib_sa_query *query, gfp_t gfp_mask)
--{
--	unsigned long flags;
--	unsigned long delay;
--	int ret;
-+	spin_lock_irqsave(&ib_nl_request_lock, flags);
-+	ret = rdma_nl_multicast(&init_net, skb, RDMA_NL_GROUP_LS, gfp_flag);
- 
--	INIT_LIST_HEAD(&query->list);
--	query->seq = (u32)atomic_inc_return(&ib_nl_sa_request_seq);
-+	if (ret)
-+		goto out;
- 
--	/* Put the request on the list first.*/
--	spin_lock_irqsave(&ib_nl_request_lock, flags);
-+	/* Put the request on the list.*/
- 	delay = msecs_to_jiffies(sa_local_svc_timeout_ms);
- 	query->timeout = delay + jiffies;
- 	list_add_tail(&query->list, &ib_nl_request_list);
- 	/* Start the timeout if this is the only request */
- 	if (ib_nl_request_list.next == &query->list)
- 		queue_delayed_work(ib_nl_wq, &ib_nl_timed_work, delay);
--	spin_unlock_irqrestore(&ib_nl_request_lock, flags);
- 
--	ret = ib_nl_send_msg(query, gfp_mask);
--	if (ret) {
--		ret = -EIO;
--		/* Remove the request */
--		spin_lock_irqsave(&ib_nl_request_lock, flags);
--		list_del(&query->list);
--		spin_unlock_irqrestore(&ib_nl_request_lock, flags);
--	}
-+out:
-+	spin_unlock_irqrestore(&ib_nl_request_lock, flags);
- 
- 	return ret;
+@@ -1136,14 +1140,10 @@ static void shutdown_device(struct hfi1_
+ 		 * We can't count on interrupts since we are stopping.
+ 		 */
+ 		hfi1_quiet_serdes(ppd);
+-
+ 		if (ppd->hfi1_wq)
+ 			flush_workqueue(ppd->hfi1_wq);
+-		if (ppd->link_wq) {
++		if (ppd->link_wq)
+ 			flush_workqueue(ppd->link_wq);
+-			destroy_workqueue(ppd->link_wq);
+-			ppd->link_wq = NULL;
+-		}
+ 	}
+ 	sdma_exit(dd);
  }
--- 
-2.25.1
-
 
 
