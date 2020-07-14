@@ -2,113 +2,125 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30788C433F7
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 14:45:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B5D2C433E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 14:50:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 04FB122227
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 14:45:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594737905;
-	bh=EiAbCr9SyKh7++gtJ0CjuADW/NCYaCwFhvzUccEcTU0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZSolDjz1wWLdk87igjtVwr1GGCJLU0emNcQVX/H1eX6u4ZVrncslzXndxtaprPVaa
-	 /6CkRDOuX9yUjRgWsukJsXWfU3DTZEDIb0VY3Bv41ZB7dIejsSxUE01sW3LXP3998N
-	 ddW5EAkIqaWfylL5MiY3TemnRNOI2baetO6ob68Y=
+	by mail.kernel.org (Postfix) with ESMTP id 0756A21973
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 14:50:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="h4Qh+z+Z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728766AbgGNOjF (ORCPT
+        id S1728275AbgGNOuy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 10:39:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54296 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728704AbgGNOjE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 10:39:04 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D5712222C8;
-        Tue, 14 Jul 2020 14:39:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594737543;
-        bh=EiAbCr9SyKh7++gtJ0CjuADW/NCYaCwFhvzUccEcTU0=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dp3e5Zmi6jtiawipmIcctz+f1dTxTOoVufQCApoIsV3/2rLnW9ux32BzhnxClGdRd
-         +przTGE5mzgQ0keNTMEg6TXuTsXMN9S3KOBG8zS4TqrdCiHj+87/q/UUDkUQFqNhjY
-         kIcTxKPrH32D3poDYkKpxvbQvls0IKvdkGBPO3Rg=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Xie He <xie.he.0141@gmail.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.7 11/19] drivers/net/wan/lapbether: Fixed the value of hard_header_len
-Date:   Tue, 14 Jul 2020 10:38:41 -0400
-Message-Id: <20200714143849.4035283-11-sashal@kernel.org>
+        Tue, 14 Jul 2020 10:50:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57282 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725803AbgGNOux (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 10:50:53 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7A549C061755
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 07:50:53 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id j4so22188120wrp.10
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 07:50:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=dBVqVVxkCFPydp4gvp9N47SqJWklBSjEVbb+D1SR9xk=;
+        b=h4Qh+z+ZYyiSuOo8neI6v9IW6E6TBYraxSGCGVufzc2pHG3de81R08TAFRAePhzBt3
+         ezeF0XHmPEY1tN5gWpjs6Gg06ggJfxXjQsbUqpcz4ygJbWN1rTmQh2puteU/Ziwdntp9
+         xed8JgYu3+7aYxoE64ZaV5ZxxflplAu6Mli2v44IYL35Z1LoHdixyzkLCNhVQP74z0Nb
+         JBORxe2cTAWJuCiQ2qQ+FpNidrabz+Ddaz2Px9oe30miQFL0XZOWCP81XTNU8mpxfKAW
+         FqMJ6fEqQCS5MVm6EZRAcGmCVst/fsjc+VtfFVNHzMvPMPCLx9CBfN1bbdvmXu8skwOi
+         OPRA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=dBVqVVxkCFPydp4gvp9N47SqJWklBSjEVbb+D1SR9xk=;
+        b=Rk1TIcAIVu0fkPktgO0hXYI3I8VU5WhX7mmVSABCnQev8MxUKjJkIVIGKZy8E0/esQ
+         Ei2mI1Z8XtRmLIPRD9MhMX0z/nF5DTteeo7bcReLntGTvHNTpBKhEIm+IwMouXKh0NKe
+         8qTQ9N/vBBNZQxyRyagNg+BGsn+NtfvkZOsXFLyshBjox4c7YqifZT4jkODqSt8Bfi07
+         0M9EFg4EyyHWYiKy2VC5MLB71PswtkwM27UzaCnEqov38mJbCz5EJSH1cEz/kyajc0ne
+         a8Q4wleOsbQwQWLEpnnf7sV7Qsri8aEH37WejYIhavt3kpM2GlpBQ2R3qq8b+56vc8Nh
+         whpg==
+X-Gm-Message-State: AOAM532nApoTJx+pBddShnNnfg9J8drZAbBtp9ryFjpcV30O9MIDgQsr
+        3J6Qa1Ve3mJ+k3EuLtTLrZcfGw==
+X-Google-Smtp-Source: ABdhPJxuJWZr/PeYSTFC+BJW8N1mAYAM+CjOxNV7UC21YCNpd0wztJ6jfBeMlZDcmUeWJrORwMd9+Q==
+X-Received: by 2002:adf:ff8d:: with SMTP id j13mr6007105wrr.11.1594738252169;
+        Tue, 14 Jul 2020 07:50:52 -0700 (PDT)
+Received: from localhost.localdomain ([2.31.163.61])
+        by smtp.gmail.com with ESMTPSA id a84sm4653305wmh.47.2020.07.14.07.50.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 14 Jul 2020 07:50:51 -0700 (PDT)
+From:   Lee Jones <lee.jones@linaro.org>
+To:     rjw@rjwysocki.net, viresh.kumar@linaro.org
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-pm@vger.kernel.org, Lee Jones <lee.jones@linaro.org>
+Subject: [PATCH 00/13] Rid W=1 warnings in CPUFreq
+Date:   Tue, 14 Jul 2020 15:50:36 +0100
+Message-Id: <20200714145049.2496163-1-lee.jones@linaro.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200714143849.4035283-1-sashal@kernel.org>
-References: <20200714143849.4035283-1-sashal@kernel.org>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Xie He <xie.he.0141@gmail.com>
+This set is part of a larger effort attempting to clean-up W=1
+kernel builds, which are currently overwhelmingly riddled with
+niggly little warnings.
 
-[ Upstream commit 9dc829a135fb5927f1519de11286e2bbb79f5b66 ]
+After these patches are applied, the build system no longer
+complains about any W=0 nor W=1 level warnings in drivers/cpufreq.
 
-When this driver transmits data,
-  first this driver will remove a pseudo header of 1 byte,
-  then the lapb module will prepend the LAPB header of 2 or 3 bytes,
-  then this driver will prepend a length field of 2 bytes,
-  then the underlying Ethernet device will prepend its own header.
+Hurrah!
 
-So, the header length required should be:
-  -1 + 3 + 2 + "the header length needed by the underlying device".
+Lee Jones (13):
+  cpufreq: freq_table: Demote obvious misuse of kerneldoc to standard
+    comment blocks
+  cpufreq: cpufreq: Demote lots of function headers unworthy of
+    kerneldoc status
+  cpufreq: cpufreq_governor: Demote store_sampling_rate() header to
+    standard comment block
+  cpufreq: sti-cpufreq: Fix some formatting and misspelling issues
+  cpufreq/arch: powerpc: pasemi: Move prototypes to shared header
+  cpufreq: powernv-cpufreq: Functions only used in call-backs should be
+    static
+  cpufreq: powernv-cpufreq: Fix a bunch of kerneldoc related issues
+  cpufreq: acpi-cpufreq: Take 'dummy' principle one stage further
+  cpufreq: acpi-cpufreq: Remove unused ID structs
+  cpufreq: powernow-k8: Make use of known set but not used variables
+  cpufreq: pcc-cpufreq: Remove unused ID structs
+  cpufreq: intel_pstate: Supply struct attribute description for
+    get_aperf_mperf_shift()
+  cpufreq: amd_freq_sensitivity: Remove unused ID structs
 
-This patch fixes kernel panic when this driver is used with AF_PACKET
-SOCK_DGRAM sockets.
+ arch/powerpc/platforms/pasemi/pasemi.h    | 15 -----------
+ arch/powerpc/platforms/pasemi/powersave.S |  2 ++
+ drivers/cpufreq/acpi-cpufreq.c            | 16 ++----------
+ drivers/cpufreq/amd_freq_sensitivity.c    |  6 -----
+ drivers/cpufreq/cpufreq.c                 | 32 ++++++++++++-----------
+ drivers/cpufreq/cpufreq_governor.c        |  2 +-
+ drivers/cpufreq/freq_table.c              |  6 ++---
+ drivers/cpufreq/intel_pstate.c            |  2 ++
+ drivers/cpufreq/pasemi-cpufreq.c          |  1 +
+ drivers/cpufreq/pcc-cpufreq.c             |  7 -----
+ drivers/cpufreq/powernow-k8.c             |  2 ++
+ drivers/cpufreq/powernv-cpufreq.c         | 15 ++++++-----
+ drivers/cpufreq/sti-cpufreq.c             |  8 +++---
+ include/linux/platform_data/pasemi.h      | 28 ++++++++++++++++++++
+ 14 files changed, 70 insertions(+), 72 deletions(-)
+ create mode 100644 include/linux/platform_data/pasemi.h
 
-Signed-off-by: Xie He <xie.he.0141@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/net/wan/lapbether.c | 9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/net/wan/lapbether.c b/drivers/net/wan/lapbether.c
-index e30d91a38cfb6..284832314f310 100644
---- a/drivers/net/wan/lapbether.c
-+++ b/drivers/net/wan/lapbether.c
-@@ -303,7 +303,6 @@ static void lapbeth_setup(struct net_device *dev)
- 	dev->netdev_ops	     = &lapbeth_netdev_ops;
- 	dev->needs_free_netdev = true;
- 	dev->type            = ARPHRD_X25;
--	dev->hard_header_len = 3;
- 	dev->mtu             = 1000;
- 	dev->addr_len        = 0;
- }
-@@ -324,6 +323,14 @@ static int lapbeth_new_device(struct net_device *dev)
- 	if (!ndev)
- 		goto out;
- 
-+	/* When transmitting data:
-+	 * first this driver removes a pseudo header of 1 byte,
-+	 * then the lapb module prepends an LAPB header of at most 3 bytes,
-+	 * then this driver prepends a length field of 2 bytes,
-+	 * then the underlying Ethernet device prepends its own header.
-+	 */
-+	ndev->hard_header_len = -1 + 3 + 2 + dev->hard_header_len;
-+
- 	lapbeth = netdev_priv(ndev);
- 	lapbeth->axdev = ndev;
- 
 -- 
 2.25.1
 
