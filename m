@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87BD7C433E6
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 19:06:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 009D9C433ED
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 19:06:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5B2F222AAB
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 19:06:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C8AF422AAB
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 19:06:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594753598;
-	bh=1f1XWa2bRWx73QVevXDY5pPvGfCNRVovTwrQSxmj5kA=;
+	s=default; t=1594753605;
+	bh=jnIhzxpXO0JKlxaSrH9JI4FN6RQDYgOo1kucbxLZ2DA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=D6EZSMg8Knoq626YJvKreXO5T/EGGMzL+3Ix4CkFUNDqturuccjuJ6niUT4yvQquS
-	 M+f0mPJV2CS5444vAT+HHXiZE7ztpW4h6lX4893LvvNFs0U8iQiqU694dll+fhWI7D
-	 e3spTr7LE44zmMBxajNjKV2YJPY2Hv+3PJawwQJE=
+	b=DxfrxHkM+FFmSh2QywfL1IwoWaYUExfYrpyKiLUt5TfW9SWBsyi6wnx2y7YT/6To6
+	 8Wt2WxH7MtmqCC6BJuWJu0hhNas5w0R8Xq+e5MqlSaGXzVnwNtyQXHJkvKRI2kMco0
+	 nP+sL8sLeTxhux2rIxt3AX11nI9AiAvmsB2jOmEY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730580AbgGNTGh (ORCPT
+        id S1731369AbgGNTGo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 15:06:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50316 "EHLO mail.kernel.org"
+        Tue, 14 Jul 2020 15:06:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50114 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730609AbgGNSxT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 14:53:19 -0400
+        id S1730588AbgGNSxJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 14:53:09 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EFF9A22C7B;
-        Tue, 14 Jul 2020 18:53:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1D73D22C7B;
+        Tue, 14 Jul 2020 18:53:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594752798;
-        bh=1f1XWa2bRWx73QVevXDY5pPvGfCNRVovTwrQSxmj5kA=;
+        s=default; t=1594752788;
+        bh=jnIhzxpXO0JKlxaSrH9JI4FN6RQDYgOo1kucbxLZ2DA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KMLvdWAxy2rjeuKo6GrZzLWbmBPl1QmNh6sHO9ZXiAHSHn0bmVYkRC6oDhzXTk3TC
-         MtiFlhl9eGEl05ZmgtFm4OhuqUQQ5C0bq627jaIL2q6oRIBqbh34VDIwzEqyioDWdi
-         A+wQTjYMDqD1xgyQxGJFr1JjHqOWd3EzpaEowVz8=
+        b=RCIDXry/Cdu8FhhiEITw/AJKbF/aVJPKi60228YpT/W5G2582IAs0XT+BYqR2mKjR
+         8o/O5hnIdKVHvP0byop0jd44dfmDKebRmey7tRLiY7NxnW4DcJxEMLb8x5NIRxIcQl
+         Xk9avGXyxnMJuae1P2VMtfm0p3Rgyx9tuN2Y5/jA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Sebastien Boeuf <sebastien.boeuf@intel.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Subject: [PATCH 5.4 084/109] KVM: x86: Inject #GP if guest attempts to toggle CR4.LA57 in 64-bit mode
-Date:   Tue, 14 Jul 2020 20:44:27 +0200
-Message-Id: <20200714184109.569988645@linuxfoundation.org>
+        stable@vger.kernel.org, Marc Zyngier <maz@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        James Morse <james.morse@arm.com>,
+        Will Deacon <will@kernel.org>
+Subject: [PATCH 5.4 080/109] KVM: arm64: Fix definition of PAGE_HYP_DEVICE
+Date:   Tue, 14 Jul 2020 20:44:23 +0200
+Message-Id: <20200714184109.380816501@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200714184105.507384017@linuxfoundation.org>
 References: <20200714184105.507384017@linuxfoundation.org>
@@ -61,44 +61,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sean Christopherson <sean.j.christopherson@intel.com>
+From: Will Deacon <will@kernel.org>
 
-commit d74fcfc1f0ff4b6c26ecef1f9e48d8089ab4eaac upstream.
+commit 68cf617309b5f6f3a651165f49f20af1494753ae upstream.
 
-Inject a #GP on MOV CR4 if CR4.LA57 is toggled in 64-bit mode, which is
-illegal per Intel's SDM:
+PAGE_HYP_DEVICE is intended to encode attribute bits for an EL2 stage-1
+pte mapping a device. Unfortunately, it includes PROT_DEVICE_nGnRE which
+encodes attributes for EL1 stage-1 mappings such as UXN and nG, which are
+RES0 for EL2, and DBM which is meaningless as TCR_EL2.HD is not set.
 
-  CR4.LA57
-    57-bit linear addresses (bit 12 of CR4) ... blah blah blah ...
-    This bit cannot be modified in IA-32e mode.
+Fix the definition of PAGE_HYP_DEVICE so that it doesn't set RES0 bits
+at EL2.
 
-Note, the pseudocode for MOV CR doesn't call out the fault condition,
-which is likely why the check was missed during initial development.
-This is arguably an SDM bug and will hopefully be fixed in future
-release of the SDM.
-
-Fixes: fd8cb433734ee ("KVM: MMU: Expose the LA57 feature to VM.")
-Cc: stable@vger.kernel.org
-Reported-by: Sebastien Boeuf <sebastien.boeuf@intel.com>
-Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-Message-Id: <20200703021714.5549-1-sean.j.christopherson@intel.com>
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+Acked-by: Marc Zyngier <maz@kernel.org>
+Cc: Marc Zyngier <maz@kernel.org>
+Cc: Catalin Marinas <catalin.marinas@arm.com>
+Cc: James Morse <james.morse@arm.com>
+Cc: <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20200708162546.26176-1-will@kernel.org
+Signed-off-by: Will Deacon <will@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/kvm/x86.c |    2 ++
- 1 file changed, 2 insertions(+)
+ arch/arm64/include/asm/pgtable-prot.h |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -980,6 +980,8 @@ int kvm_set_cr4(struct kvm_vcpu *vcpu, u
- 	if (is_long_mode(vcpu)) {
- 		if (!(cr4 & X86_CR4_PAE))
- 			return 1;
-+		if ((cr4 ^ old_cr4) & X86_CR4_LA57)
-+			return 1;
- 	} else if (is_paging(vcpu) && (cr4 & X86_CR4_PAE)
- 		   && ((cr4 ^ old_cr4) & pdptr_bits)
- 		   && !load_pdptrs(vcpu, vcpu->arch.walk_mmu,
+--- a/arch/arm64/include/asm/pgtable-prot.h
++++ b/arch/arm64/include/asm/pgtable-prot.h
+@@ -54,7 +54,7 @@
+ #define PAGE_HYP		__pgprot(_HYP_PAGE_DEFAULT | PTE_HYP | PTE_HYP_XN)
+ #define PAGE_HYP_EXEC		__pgprot(_HYP_PAGE_DEFAULT | PTE_HYP | PTE_RDONLY)
+ #define PAGE_HYP_RO		__pgprot(_HYP_PAGE_DEFAULT | PTE_HYP | PTE_RDONLY | PTE_HYP_XN)
+-#define PAGE_HYP_DEVICE		__pgprot(PROT_DEVICE_nGnRE | PTE_HYP)
++#define PAGE_HYP_DEVICE		__pgprot(_PROT_DEFAULT | PTE_ATTRINDX(MT_DEVICE_nGnRE) | PTE_HYP | PTE_HYP_XN)
+ 
+ #define PAGE_S2_MEMATTR(attr)						\
+ 	({								\
 
 
