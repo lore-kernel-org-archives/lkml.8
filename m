@@ -2,88 +2,103 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1442C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 06:35:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 269B3C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 06:36:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AC2EA21D93
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 06:35:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="kr3lngVS"
+	by mail.kernel.org (Postfix) with ESMTP id 0CB76221F0
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 06:36:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726923AbgGNGfs (ORCPT
+        id S1726675AbgGNGgn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 02:35:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37154 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725876AbgGNGfs (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 02:35:48 -0400
-Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AE18DC061755;
-        Mon, 13 Jul 2020 23:35:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=Content-Transfer-Encoding:Content-Type:
-        MIME-Version:Date:Message-ID:Subject:From:Cc:To:Sender:Reply-To:Content-ID:
-        Content-Description:In-Reply-To:References;
-        bh=894nJfbdHHUH/ylIpUbkkJ24k6/ppZVJBHTRyT/kui4=; b=kr3lngVSlsG3f4Lw6SDU3Y81LY
-        aV/H6hj1kW2Bsrp8p7+L9EzPewSaD2+fJmHeg9kFe4AuCFyVIsZpylNVdYHHkAdZ08+1k67hzx3bq
-        itseW3uxwfUa3uPAFPsiBv7NzPD7H69F2GAB0mbuefd279ut3e3PgiOybaElIUAl7O7n+KY2a4Bt4
-        U3mhqvS2nTORQal+hdH9bGnmxrZzTOcInsv2rGyDBCZGfW6gXdNRynrVAIDh5O9uj82oha/x+LD7g
-        AE5BliNO1p2/T5R6VZq4DEQfRxbxw96QEC6JwkeBRBFs2ElpXT9yJSfABYGiOMm7/3YOC8IevL3xf
-        xmlP5BQA==;
-Received: from [2601:1c0:6280:3f0::19c2]
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jvEXX-00064C-Ct; Tue, 14 Jul 2020 06:35:43 +0000
-To:     LKML <linux-kernel@vger.kernel.org>,
-        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>
-Cc:     Dave Jiang <dave.jiang@intel.com>, Vinod Koul <vkoul@kernel.org>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Subject: [PATCH -next] dmaengine: idxd: fix PCI_MSI build errors
-Message-ID: <9dee3f46-70d9-ea75-10cb-5527ab297d1d@infradead.org>
-Date:   Mon, 13 Jul 2020 23:35:39 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Tue, 14 Jul 2020 02:36:43 -0400
+Received: from mga07.intel.com ([134.134.136.100]:33942 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725306AbgGNGgm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 02:36:42 -0400
+IronPort-SDR: y/WZAvLRwj8hPQ+uwCxcEZnM8nPjeoUjN0QSyUOC0xJVFeLuCni7Mn36Ds8+2DTaG5TYrrPIls
+ Rlfl6sJCaKYA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9681"; a="213632478"
+X-IronPort-AV: E=Sophos;i="5.75,350,1589266800"; 
+   d="scan'208";a="213632478"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jul 2020 23:36:41 -0700
+IronPort-SDR: mzMEla1h7jyhnOmhfJhtbCX9CSn3eWsOlv1WrB9YA3MDDahiUzdA5d9zO3xruCKSGyNDa55twr
+ fDZmejJ2Owcw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,350,1589266800"; 
+   d="scan'208";a="299435523"
+Received: from silpixa00400314.ir.intel.com (HELO silpixa00400314.ger.corp.intel.com) ([10.237.222.51])
+  by orsmga002.jf.intel.com with ESMTP; 13 Jul 2020 23:36:38 -0700
+From:   Giovanni Cabiddu <giovanni.cabiddu@intel.com>
+To:     alex.williamson@redhat.com, herbert@gondor.apana.org.au
+Cc:     cohuck@redhat.com, nhorman@redhat.com, vdronov@redhat.com,
+        bhelgaas@google.com, mark.a.chambers@intel.com,
+        gordon.mcfadden@intel.com, ahsan.atta@intel.com,
+        qat-linux@intel.com, kvm@vger.kernel.org,
+        linux-crypto@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Giovanni Cabiddu <giovanni.cabiddu@intel.com>
+Subject: [PATCH v2 0/5] vfio/pci: add blocklist and disable qat
+Date:   Tue, 14 Jul 2020 07:36:05 +0100
+Message-Id: <20200714063610.849858-1-giovanni.cabiddu@intel.com>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Randy Dunlap <rdunlap@infradead.org>
+This patchset defines a blocklist of devices in the vfio-pci module and adds
+the current generation of Intel(R) QuickAssist devices to it as they are
+not designed to run in an untrusted environment.
 
-Fix build errors when CONFIG_PCI_MSI is not enabled by making the
-driver depend on PCI_MSI:
+By default, if a device is in the blocklist, the probe of vfio-pci fails.
+If a user wants to use a device in the blocklist, he needs to disable the
+full blocklist providing the option disable_blocklist=1 at the load of
+vfio-pci or specifying that parameter in a config file in /etc/modprobe.d.
 
-ld: drivers/dma/idxd/device.o: in function `idxd_mask_msix_vector':
-device.c:(.text+0x26f): undefined reference to `pci_msi_mask_irq'
-ld: drivers/dma/idxd/device.o: in function `idxd_unmask_msix_vector':
-device.c:(.text+0x2af): undefined reference to `pci_msi_unmask_irq'
+This series also moves the device ids definitions present in the qat driver
+to linux/pci_ids.h since they will be shared between the vfio-pci and the qat
+drivers and replaces the custom ADF_SYSTEM_DEVICE macro with PCI_VDEVICE.
 
-Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-Cc: Dave Jiang <dave.jiang@intel.com>
-Cc: dmaengine@vger.kernel.org
-Cc: Vinod Koul <vkoul@kernel.org>
----
- drivers/dma/Kconfig |    1 +
- 1 file changed, 1 insertion(+)
+The series is applicable to Herbert's tree. Patches 1 to 3 apply also to
+Alex's tree. Patches 4 and 5 are optional and can be applied at a later stage.
 
---- mmotm-2020-0713-1949.orig/drivers/dma/Kconfig
-+++ mmotm-2020-0713-1949/drivers/dma/Kconfig
-@@ -285,6 +285,7 @@ config INTEL_IDMA64
- config INTEL_IDXD
- 	tristate "Intel Data Accelerators support"
- 	depends on PCI && X86_64
-+	depends on PCI_MSI
- 	depends on SBITMAP
- 	select DMA_ENGINE
- 	help
+Changes from v1:
+ - Reworked commit messages:
+   Patches #1, #2 and #3: capitalized first character after column to comply to
+   subject line convention
+   Patch #3: Capitalized QAT acronym and added link and doc number for
+   document "Intel® QuickAssist Technology (Intel® QAT) Software for Linux"
 
+Giovanni Cabiddu (5):
+  PCI: Add Intel QuickAssist device IDs
+  vfio/pci: Add device blocklist
+  vfio/pci: Add QAT devices to blocklist
+  crypto: qat - replace device ids defines
+  crypto: qat - use PCI_VDEVICE
+
+ drivers/crypto/qat/qat_c3xxx/adf_drv.c        | 11 ++---
+ drivers/crypto/qat/qat_c3xxxvf/adf_drv.c      | 11 ++---
+ drivers/crypto/qat/qat_c62x/adf_drv.c         | 11 ++---
+ drivers/crypto/qat/qat_c62xvf/adf_drv.c       | 11 ++---
+ .../crypto/qat/qat_common/adf_accel_devices.h |  6 ---
+ drivers/crypto/qat/qat_common/qat_hal.c       |  7 +--
+ drivers/crypto/qat/qat_common/qat_uclo.c      |  9 ++--
+ drivers/crypto/qat/qat_dh895xcc/adf_drv.c     | 11 ++---
+ drivers/crypto/qat/qat_dh895xccvf/adf_drv.c   | 11 ++---
+ drivers/vfio/pci/vfio_pci.c                   | 48 +++++++++++++++++++
+ include/linux/pci_ids.h                       |  6 +++
+ 11 files changed, 87 insertions(+), 55 deletions(-)
+
+-- 
+2.26.2
 
