@@ -2,110 +2,107 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35CACC433FE
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 16:16:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2628BC433E6
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 16:18:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0BD002082F
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 16:16:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 00FED2251E
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 16:18:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="sXVBKbo9"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PxEWzwLp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728058AbgGNQQV (ORCPT
+        id S1728456AbgGNQSV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 12:16:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42434 "EHLO
+        Tue, 14 Jul 2020 12:18:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42744 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726062AbgGNQQU (ORCPT
+        with ESMTP id S1725876AbgGNQST (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 12:16:20 -0400
-Received: from mail-ed1-x52a.google.com (mail-ed1-x52a.google.com [IPv6:2a00:1450:4864:20::52a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A33FAC061755
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 09:16:20 -0700 (PDT)
-Received: by mail-ed1-x52a.google.com with SMTP id a8so17862522edy.1
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 09:16:20 -0700 (PDT)
+        Tue, 14 Jul 2020 12:18:19 -0400
+Received: from mail-lf1-x133.google.com (mail-lf1-x133.google.com [IPv6:2a00:1450:4864:20::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2F0A5C061755;
+        Tue, 14 Jul 2020 09:18:19 -0700 (PDT)
+Received: by mail-lf1-x133.google.com with SMTP id k15so12147499lfc.4;
+        Tue, 14 Jul 2020 09:18:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=PJAAkiMZvLbA+AbaUpZoAxP/9zA26GPbCpUDtX3Iaw0=;
-        b=sXVBKbo9WzTyqzS+cenfmH7NMprrjkl7E2/IKGdTaxT3ttHcBJ/7EqcL7ThyfjJtBU
-         mP00heFRE2CJNB28rt18anviIh7a8oj+q+OSqmvPZM1i4OE2pnzADns2q79a9thKjHbx
-         FPkCMBIlNtHsVcU/tiGlqZ9O9rKPzMqBd70OJId2OBTjMDYDNR09B4q6TrrVY7HdULoY
-         RZk9xGm1+/iij/+lPY4GyGZWYPJBGgWCF7UrFA7JLjkTJu5s2KUhW/wrledoXy1l35X7
-         L7epTxjKULtM0CEQWT/XIyePNQ2gwDcrDv8qK1ssVnCMh2clXH5ucWEEPWqGnhhToiEz
-         upfQ==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:references:date:in-reply-to:message-id
+         :user-agent:mime-version;
+        bh=vHKM0AHFlg7BGQiMriXkHvJOUHkWNn6XrS5eJsFzS0E=;
+        b=PxEWzwLp1YA/YskCyZFuVCTENSh98jt39ONfJ329yyHyeP2qlussesbvcH0OI/1AEc
+         dwJEBDzkirJDL0fa5R+/ICkP7hTCZHCb65Uo9pWuHX3LlSEohisKRt7cQih7D1NQq4V9
+         wuO8vvXY7fNECpOQCyOxX5AcrOMmiPHxiObTskPMQlZu49lrCOBk/S149jKUEOfbzsXC
+         2rDOinZ2mwaRKWFMKB1DajT6BB3vE4HvZIIJcExZjFxOZ3fstIvN7YA0Sb7fk5lye1KV
+         mxM9cJW4FdLFbCscCU8FX4uMJ6LKJmnRlC8+uM235LLbDjJapyjZODt/xPNvlR6l87Wx
+         PvWg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=PJAAkiMZvLbA+AbaUpZoAxP/9zA26GPbCpUDtX3Iaw0=;
-        b=rr2mYo2vEEAMuI43YrheuPaPehsyEYhUuZftzo6uJCWTrOEuc0r8MTPOUJ/NQ/v6fv
-         2bBZWg4J4QanA/YKSBDfhA2WXDYe7EJnsDLYMzZN26BSCy0jeapWIHGpRWAxVFPJZWCG
-         bclEF2SSB4h7bw/4geM+jp1ND++DYFKlwtGHazD6Pg2pjIlv+8K9ByySm8/P92lDm6GV
-         +myeV/gscLT32/jEGv/HTxwk7SL+s+RvpvX1wagwsZ4ikf2fE5VfOAmUqaCDcOhhbvxw
-         h5dW2cNKQll9jXOAxT0awzyjCxPmo78yNCORDmMCBlEZk2zAw/w67zYRVvN5d3/896Cf
-         cNiw==
-X-Gm-Message-State: AOAM530lWW9RR5LtZDtWHh8AOVyaMjR3wsSOlM4ewENr/PjfUrEgjTXE
-        zUhIHt+yk4hPzpsbnZoSNfO1AJnW5AEiI3m4k9NB2w==
-X-Google-Smtp-Source: ABdhPJzNi/7UkybDtVoiFAjUob/tmDhhxvh3g33zBS0Y7CPcLTcNAugl50BLXnG61QRkbhBFaeRXbnt4b9uY4+sUsBM=
-X-Received: by 2002:a50:9e02:: with SMTP id z2mr5169887ede.87.1594743378417;
- Tue, 14 Jul 2020 09:16:18 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:references:date:in-reply-to
+         :message-id:user-agent:mime-version;
+        bh=vHKM0AHFlg7BGQiMriXkHvJOUHkWNn6XrS5eJsFzS0E=;
+        b=dTOngar4Bs5CRKV104n1nIkSCWpEBsdAdxJh1Wf5VT89nwbkQ9im27cLovh+TWZfHw
+         dB2HU1XXTIfrmm8F4bJ7I0Qa8PMAhEPXs+5sUxxnbQyNKPycXmMhh1zraR/KrLjMPHAk
+         A9Pd+YBAZwloA4FZav1NcZAjXKNT+U+tbexzW8N3fVdCFgLfCURatB+XlhqUl599hVKz
+         JYqWaaAez8pQRGSkKeJlR9FzSbKDcXvoHFXSXv8DS6Kq5x5RsSS4oE7sYEptUlip/FWX
+         x7Pz0cdBkkvjFR9ADPLhlCrbYwCvg+aSkitXMPxtgQMtnFNqvRbO3P6rSo8fDYZjt01H
+         iSwA==
+X-Gm-Message-State: AOAM5315tLsHfnLuse2dihSrKDhY2xUjr7X9P+RcE0EilYz2z8P8TWHk
+        ibcTWA0+h2N8eLHxrqAVCow=
+X-Google-Smtp-Source: ABdhPJwbKaHklvYuQ4KMMROMkkWaTt7qO6CT724B94BC3Byyb7bwzTxtqsuy7FUYcFyV2eV2ZVNxkA==
+X-Received: by 2002:a19:b07:: with SMTP id 7mr2587565lfl.38.1594743497736;
+        Tue, 14 Jul 2020 09:18:17 -0700 (PDT)
+Received: from osv.localdomain ([89.175.180.246])
+        by smtp.gmail.com with ESMTPSA id u26sm7321492lfq.72.2020.07.14.09.18.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 14 Jul 2020 09:18:16 -0700 (PDT)
+From:   Sergey Organov <sorganov@gmail.com>
+To:     Vladimir Oltean <olteanv@gmail.com>
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Fugang Duan <fugang.duan@nxp.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Richard Cochran <richardcochran@gmail.com>
+Subject: Re: [PATCH v2 net] net: fec: fix hardware time stamping by external
+ devices
+References: <20200711120842.2631-1-sorganov@gmail.com>
+        <20200711231937.wu2zrm5spn7a6u2o@skbuf> <87wo387r8n.fsf@osv.gnss.ru>
+        <20200712150151.55jttxaf4emgqcpc@skbuf> <87r1tg7ib9.fsf@osv.gnss.ru>
+        <20200712193344.bgd5vpftaikwcptq@skbuf> <87365wgyae.fsf@osv.gnss.ru>
+        <20200712231546.4k6qyaiq2cgok3ep@skbuf> <878sfmcluf.fsf@osv.gnss.ru>
+        <20200714142324.oq7od3ylwd63ohyj@skbuf>
+        <20200714144409.ymnj6fhlnztsg6ir@skbuf>
+Date:   Tue, 14 Jul 2020 19:18:15 +0300
+In-Reply-To: <20200714144409.ymnj6fhlnztsg6ir@skbuf> (Vladimir Oltean's
+        message of "Tue, 14 Jul 2020 17:44:09 +0300")
+Message-ID: <87d04ydq9k.fsf@osv.gnss.ru>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/28.0.50 (gnu/linux)
 MIME-Version: 1.0
-References: <20200630180255.GD37466@atomide.com> <20200702051213.GB3450@jagdpanzerIV.localdomain>
- <20200702160514.GK37466@atomide.com> <20200703103241.GB182102@jagdpanzerIV.localdomain>
- <CAHp75VdvNi_LWv7QhEsm1vQikeiMpi68qmCwoVttjnp7oq0ahg@mail.gmail.com>
- <877dvg6ft6.fsf@kurt> <20200706144314.GB1485@jagdpanzerIV.localdomain>
- <87o8oqa1zy.fsf@kurt> <20200708080712.GC571@jagdpanzerIV.localdomain>
- <20200708095215.GB4751@alley> <20200709132229.GD4380@jagdpanzerIV.localdomain>
-In-Reply-To: <20200709132229.GD4380@jagdpanzerIV.localdomain>
-From:   Raul Rangel <rrangel@google.com>
-Date:   Tue, 14 Jul 2020 10:16:07 -0600
-Message-ID: <CAHQZ30BEe4uPJ=7TZWAd5XtjKjFcjcfhr8GMaR6GKmEMrcTVqQ@mail.gmail.com>
-Subject: Re: UART/TTY console deadlock
-To:     Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
-Cc:     Petr Mladek <pmladek@suse.com>,
-        Kurt Kanzenbach <kurt@linutronix.de>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        "S, Shirish" <Shirish.S@amd.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        John Ogness <john.ogness@linutronix.de>,
-        Steven Rostedt <rostedt@goodmis.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hey everyone,
-So it looks like this was a red herring. We were getting spurious
-interrupts which I suspect caused the console code to get called in
-some critical section. Once we fixed the spurious interrupts we no
-longer see the issue. Sorry for the noise.
+Vladimir Oltean <olteanv@gmail.com> writes:
+
+
+[...]
+
+>> Acked-by: Vladimir Oltean <olteanv@gmail.com>
+>> 
+>> Thanks,
+>> -Vladimir
+>
+> Of course, it would be good if you sent a new version with the sha1sum
+> of the Fixes: tag having the right length, otherwise people will
+> complain.
+
+Ah, thanks for reminding! I entirely forgot about it due to this lengthy
+discussion. Will do!
 
 Thanks,
-Raul
-
-On Thu, Jul 9, 2020 at 7:22 AM Sergey Senozhatsky
-<sergey.senozhatsky@gmail.com> wrote:
->
-> On (20/07/08 11:52), Petr Mladek wrote:
-> >
-> > I still believe that this is a false positive.
->
-> I've no problems with that. The thing that I'm trying to improve here is the
-> fact that from lockdep's point of view there are no false positives. lockdep
-> reports the problem and then waves good bye. It disables itself. There might
-> be some real suspend locking problems on some particular setups, but it's
-> hard to tell, because console startup blows up the lockdep first.
->
->         -ss
+-- Sergey
