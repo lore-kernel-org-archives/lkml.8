@@ -2,125 +2,101 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB741C433EA
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 12:39:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D24BC433E8
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 12:39:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ADA742242C
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 12:39:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 16CFB2242C
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 12:39:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728445AbgGNMjy (ORCPT
+        id S1728354AbgGNMjl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 08:39:54 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:33142 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726041AbgGNMjv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 08:39:51 -0400
-Received: by mail-ot1-f68.google.com with SMTP id h13so12929224otr.0;
-        Tue, 14 Jul 2020 05:39:51 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=1gkM+uPTnitshLBuV08goagb6Ra5DyU+s9EwRHXtZeQ=;
-        b=mfkgj4eGLF/mS6HqwU2jRhvquP2KbIWOqQVHucEbNhtAlIGrgbXdXbsPnTkayf14FE
-         oQg/z0nbq0N+stgN7htDaEcBL5b8DITSlN2vdoPC/vnB3zkOh6sRIKIDyXcD/1Lhgpx7
-         m+8MBQqD39qOni3D0FQ2zPI0yLuLo/dvpXpuVO8fTJCWIv33HKy4tP1k5rwtAIhtdVpv
-         UaVqpCj6ZFTqN4K68xtGjsnmaVhCwf5aMHL/Xha/LRqNAcGfXsOX9uM8yCjmJAKJPaH9
-         5/ifjivkwWjaZvYMaZXQ2q80AIvuA3d9wqLnZCear2qONGYWSW+PuDfaQGwbDI7nK4AI
-         Mg4A==
-X-Gm-Message-State: AOAM5326I/hh7zqgBgwJ88VvQbW6sEr26AX/NfYV4yASaSuSSOLlPDNM
-        yHg8earbspn+2BzeO70WnYQNYum9VJMV/FRyviQ=
-X-Google-Smtp-Source: ABdhPJwQEGIYICCEl9+rMfVmtnnA3KEy1Oav7DAM0WyYTDfpBWgrg5GEkZrfN+c/weUUf5GnvXRjVxzrNetFysb/vow=
-X-Received: by 2002:a9d:2646:: with SMTP id a64mr3637009otb.107.1594730390491;
- Tue, 14 Jul 2020 05:39:50 -0700 (PDT)
+        Tue, 14 Jul 2020 08:39:41 -0400
+Received: from inva021.nxp.com ([92.121.34.21]:51974 "EHLO inva021.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726914AbgGNMjh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 08:39:37 -0400
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id E7384200E5F;
+        Tue, 14 Jul 2020 14:39:34 +0200 (CEST)
+Received: from inva024.eu-rdc02.nxp.com (inva024.eu-rdc02.nxp.com [134.27.226.22])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id D9E2220018F;
+        Tue, 14 Jul 2020 14:39:34 +0200 (CEST)
+Received: from fsr-ub1864-014.ea.freescale.net (fsr-ub1864-014.ea.freescale.net [10.171.95.219])
+        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id 288FF205A4;
+        Tue, 14 Jul 2020 14:39:34 +0200 (CEST)
+From:   =?UTF-8?q?Horia=20Geant=C4=83?= <horia.geanta@nxp.com>
+To:     Rob Herring <robh+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Matt Mackall <mpm@selenic.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>
+Cc:     Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Martin Kaiser <martin@kaiser.cx>,
+        Marco Felsch <m.felsch@pengutronix.de>,
+        Franck Lenormand <franck.lenormand@nxp.com>,
+        Iuliana Prodan <iuliana.prodan@nxp.com>,
+        Silvano Di Ninno <silvano.dininno@nxp.com>,
+        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v3 1/5] dt-bindings: rng: add RNGB compatibles for i.MX6 SoCs
+Date:   Tue, 14 Jul 2020 15:39:16 +0300
+Message-Id: <20200714123920.23711-2-horia.geanta@nxp.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200714123920.23711-1-horia.geanta@nxp.com>
+References: <20200714123920.23711-1-horia.geanta@nxp.com>
 MIME-Version: 1.0
-References: <1594676120-5862-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <1594676120-5862-3-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <CAMuHMdV4zzrk_=-2Cmgq8=PKTeU457iveJ58gYekJ-Z8SXqaCQ@mail.gmail.com>
- <CA+V-a8tB0mA17f51GMQQ-Cj_CUXze_JjTahrpoAtmwuOFHQV6g@mail.gmail.com>
- <CAMuHMdXM3qf266exJtJrN0XAogEsJoM-k3FON9CjX+stLpuMFA@mail.gmail.com> <TY2PR01MB3692A868DD4E67D770C610E3D8610@TY2PR01MB3692.jpnprd01.prod.outlook.com>
-In-Reply-To: <TY2PR01MB3692A868DD4E67D770C610E3D8610@TY2PR01MB3692.jpnprd01.prod.outlook.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Tue, 14 Jul 2020 14:39:39 +0200
-Message-ID: <CAMuHMdUry12MnLvVgmd7NJ+Gv4mA86qKKfsQobP1o-ohzKm=RQ@mail.gmail.com>
-Subject: Re: [PATCH 2/9] iommu/ipmmu-vmsa: Hook up R8A774E1 DT matching code
-To:     Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Cc:     "Lad, Prabhakar" <prabhakar.csengg@gmail.com>,
-        Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Sergei Shtylyov <sergei.shtylyov@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        dmaengine <dmaengine@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux IOMMU <iommu@lists.linux-foundation.org>,
-        netdev <netdev@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Shimoda-san,
+RNGB block is found in some i.MX6 SoCs - 6SL, 6SLL, 6ULL, 6ULZ.
+Add corresponding compatible strings.
 
-On Tue, Jul 14, 2020 at 1:42 PM Yoshihiro Shimoda
-<yoshihiro.shimoda.uh@renesas.com> wrote:
-> > From: Geert Uytterhoeven, Sent: Tuesday, July 14, 2020 5:42 PM
-> > On Tue, Jul 14, 2020 at 10:30 AM Lad, Prabhakar
-> > <prabhakar.csengg@gmail.com> wrote:
-> > > On Tue, Jul 14, 2020 at 9:09 AM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
-> > > > On Mon, Jul 13, 2020 at 11:35 PM Lad Prabhakar
-> > > Also the recent patch to add
-> > > "r8a77961" just adds to soc_rcar_gen3_whitelist.
-> >
-> > Oops, commit 17fe16181639801b ("iommu/renesas: Add support for r8a77961")
-> > did it wrong, too.
->
-> Thank you for the point it out. We should add r8a77961 to the soc_rcar_gen3[].
-> However, I don't know why I could not realize this issue...
-> So, I investigated this a little and then, IIUC, glob_match() which
-> soc_device_match() uses seems to return true, if *pat = "r8a7796" and *str = "r8a77961".
+Note:
 
-Are you sure about this?
-I enabled CONFIG_GLOB_SELFTEST, and globtest succeeded.
-It does test glob_match("a", "aa"), which is a similar test.
+Several NXP SoC from QorIQ family (P1010, P1023, P4080, P3041, P5020)
+also have a RNGB, however it's part of the CAAM
+(Cryptograhic Accelerator and Assurance Module) crypto accelerator.
+In this case, RNGB is managed in the caam driver
+(drivers/crypto/caam/), since it's tightly related to
+the caam "job ring" interface, not to mention CAAM internally relying on
+RNGB as source of randomness.
 
-To be 100% sure, I added:
+On the other hand, the i.MX6 SoCs with RNGB have a DCP
+(Data Co-Processor) crypto accelerator and this block and RNGB
+are independent.
 
---- a/lib/globtest.c
-+++ b/lib/globtest.c
-@@ -59,6 +59,7 @@ static char const glob_tests[] __initconst =
-        "1" "a\0" "a\0"
-        "0" "a\0" "b\0"
-        "0" "a\0" "aa\0"
-+       "0" "r8a7796\0" "r8a77961\0"
-        "0" "a\0" "\0"
-        "1" "\0" "\0"
-        "0" "\0" "a\0"
+Signed-off-by: Horia Geantă <horia.geanta@nxp.com>
+---
+ Documentation/devicetree/bindings/rng/imx-rng.txt | 3 +++
+ 1 file changed, 3 insertions(+)
 
-and it still succeeded.
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
+diff --git a/Documentation/devicetree/bindings/rng/imx-rng.txt b/Documentation/devicetree/bindings/rng/imx-rng.txt
+index 405c2b00ccb0..659d4efdd664 100644
+--- a/Documentation/devicetree/bindings/rng/imx-rng.txt
++++ b/Documentation/devicetree/bindings/rng/imx-rng.txt
+@@ -5,6 +5,9 @@ Required properties:
+                "fsl,imx21-rnga"
+                "fsl,imx31-rnga" (backward compatible with "fsl,imx21-rnga")
+                "fsl,imx25-rngb"
++               "fsl,imx6sl-rngb" (backward compatible with "fsl,imx25-rngb")
++               "fsl,imx6sll-rngb" (backward compatible with "fsl,imx25-rngb")
++               "fsl,imx6ull-rngb" (backward compatible with "fsl,imx25-rngb")
+                "fsl,imx35-rngc"
+ - reg : offset and length of the register set of this block
+ - interrupts : the interrupt number for the RNG block
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+2.17.1
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
