@@ -7,50 +7,50 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E29DC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 19:11:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51CDFC433E5
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 19:11:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 44CE9223AB
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 19:11:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B086223AB
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 19:11:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594753904;
-	bh=XQBL9NrEUkiI8wtjcCl9dHlXNWIE2G3UKZK2k4ezkRE=;
+	s=default; t=1594753917;
+	bh=YrBst1bQgUd+Gjzd8v6dDWmG1vhFrTrycU3s+vHJksA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0Hk/3TN/8s/S5e3LUJRAAX8SLfveTb7+/1aabb0ZW8QwHBgpIha7V4z1VaQN3NMpI
-	 bx/1uMdtyzicD3rHV2HOMH1McnhU31Q1nkUSf4zy2AsJN3MSCizfecztteNo+v9Wes
-	 +QO+eOlmWrMBIxJSSI22kMiilKSUURHPYcSZ4BGE=
+	b=YNQUPMhwtLrOWTBTwudifZCDRnFwl89GPo71C52zT9/fgU/yov1uv+GkoF8Dpr7bz
+	 TbxEoMhxsDR3FM3A+or4QDKa6iln3q1SS/Cwph2HI0KfhLVe1t2egIoACrkM08reE8
+	 J+XUh9ukUiFDMkHxuOZRVETL5Qz3kZNBuB+yOTW0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730409AbgGNTLm (ORCPT
+        id S1730611AbgGNTLx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 15:11:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44492 "EHLO mail.kernel.org"
+        Tue, 14 Jul 2020 15:11:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43550 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729992AbgGNSsu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 14:48:50 -0400
+        id S1729325AbgGNSsM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 14:48:12 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C0D1222AB9;
-        Tue, 14 Jul 2020 18:48:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 70E2B22AAA;
+        Tue, 14 Jul 2020 18:48:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594752529;
-        bh=XQBL9NrEUkiI8wtjcCl9dHlXNWIE2G3UKZK2k4ezkRE=;
+        s=default; t=1594752492;
+        bh=YrBst1bQgUd+Gjzd8v6dDWmG1vhFrTrycU3s+vHJksA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Lt4EFFIkqFYkU9CL+hOEUN8n86rdY17Lb4hftrC0iBvqsMAeFgXPhQ9gg6dXl3EgC
-         PDags0Et/yUqp2dojH4lZ1qx/I6PuQLiTMyklJN5e32x54D4LJjSkeTbgr21mODDGq
-         gjHJexMC3VZk89lAKd72aWFN92tz+dhTVUjyxcS8=
+        b=K86IyglDJM/kj0vr62YkBO3XVOF9dJac1cRvohx7zGq5o2ZPz9FW6HwAss4c2bdaW
+         Yf6DOcJRhiMi0T2icnN4yt+zonLcHGvmxJODqIG7SADN413CfEBfVZ7lvA14xlVrY+
+         C5BDuPM010q9UB3+15Glqk7BEeozj1hOsdD/3bBU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jens Thoms Toerring <jt@toerring.de>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 004/109] regmap: fix alignment issue
-Date:   Tue, 14 Jul 2020 20:43:07 +0200
-Message-ID: <20200714184105.719730471@linuxfoundation.org>
+        stable@vger.kernel.org, Wei Li <liwei391@huawei.com>,
+        Douglas Anderson <dianders@chromium.org>,
+        Will Deacon <will@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 32/58] arm64: kgdb: Fix single-step exception handling oops
+Date:   Tue, 14 Jul 2020 20:44:05 +0200
+Message-Id: <20200714184057.731003031@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200714184105.507384017@linuxfoundation.org>
-References: <20200714184105.507384017@linuxfoundation.org>
+In-Reply-To: <20200714184056.149119318@linuxfoundation.org>
+References: <20200714184056.149119318@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -59,258 +59,114 @@ Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
-Message-ID: <20200714184307.HTF2lujFD7dE4K3ZJRaNzkOSK8k-dt1WK0ly91F5d-g@z>
 
-From: Jens Thoms Toerring <jt@toerring.de>
+From: Wei Li <liwei391@huawei.com>
 
-[ Upstream commit 53d860952c8215cf9ae1ea33409c8cb71ad6ad3d ]
+[ Upstream commit 8523c006264df65aac7d77284cc69aac46a6f842 ]
 
-The assembly and disassembly of data to be sent to or received from
-a device invoke functions regmap_format_XX() and regmap_parse_XX()
-that extract or insert data items from or into a buffer, using
-assignments. In some cases the functions are called with a buffer
-pointer with an odd address. On architectures with strict alignment
-requirements this can result in a kernel crash. The assignments
-have been replaced by functions that take alignment into account.
+After entering kdb due to breakpoint, when we execute 'ss' or 'go' (will
+delay installing breakpoints, do single-step first), it won't work
+correctly, and it will enter kdb due to oops.
 
-Signed-off-by: Jens Thoms Toerring <jt@toerring.de>
-Link: https://lore.kernel.org/r/20200531095300.GA27570@toerring.de
-Signed-off-by: Mark Brown <broonie@kernel.org>
+It's because the reason gotten in kdb_stub() is not as expected, and it
+seems that the ex_vector for single-step should be 0, like what arch
+powerpc/sh/parisc has implemented.
+
+Before the patch:
+Entering kdb (current=0xffff8000119e2dc0, pid 0) on processor 0 due to Keyboard Entry
+[0]kdb> bp printk
+Instruction(i) BP #0 at 0xffff8000101486cc (printk)
+    is enabled   addr at ffff8000101486cc, hardtype=0 installed=0
+
+[0]kdb> g
+
+/ # echo h > /proc/sysrq-trigger
+
+Entering kdb (current=0xffff0000fa878040, pid 266) on processor 3 due to Breakpoint @ 0xffff8000101486cc
+[3]kdb> ss
+
+Entering kdb (current=0xffff0000fa878040, pid 266) on processor 3 Oops: (null)
+due to oops @ 0xffff800010082ab8
+CPU: 3 PID: 266 Comm: sh Not tainted 5.7.0-rc4-13839-gf0e5ad491718 #6
+Hardware name: linux,dummy-virt (DT)
+pstate: 00000085 (nzcv daIf -PAN -UAO)
+pc : el1_irq+0x78/0x180
+lr : __handle_sysrq+0x80/0x190
+sp : ffff800015003bf0
+x29: ffff800015003d20 x28: ffff0000fa878040
+x27: 0000000000000000 x26: ffff80001126b1f0
+x25: ffff800011b6a0d8 x24: 0000000000000000
+x23: 0000000080200005 x22: ffff8000101486cc
+x21: ffff800015003d30 x20: 0000ffffffffffff
+x19: ffff8000119f2000 x18: 0000000000000000
+x17: 0000000000000000 x16: 0000000000000000
+x15: 0000000000000000 x14: 0000000000000000
+x13: 0000000000000000 x12: 0000000000000000
+x11: 0000000000000000 x10: 0000000000000000
+x9 : 0000000000000000 x8 : ffff800015003e50
+x7 : 0000000000000002 x6 : 00000000380b9990
+x5 : ffff8000106e99e8 x4 : ffff0000fadd83c0
+x3 : 0000ffffffffffff x2 : ffff800011b6a0d8
+x1 : ffff800011b6a000 x0 : ffff80001130c9d8
+Call trace:
+ el1_irq+0x78/0x180
+ printk+0x0/0x84
+ write_sysrq_trigger+0xb0/0x118
+ proc_reg_write+0xb4/0xe0
+ __vfs_write+0x18/0x40
+ vfs_write+0xb0/0x1b8
+ ksys_write+0x64/0xf0
+ __arm64_sys_write+0x14/0x20
+ el0_svc_common.constprop.2+0xb0/0x168
+ do_el0_svc+0x20/0x98
+ el0_sync_handler+0xec/0x1a8
+ el0_sync+0x140/0x180
+
+[3]kdb>
+
+After the patch:
+Entering kdb (current=0xffff8000119e2dc0, pid 0) on processor 0 due to Keyboard Entry
+[0]kdb> bp printk
+Instruction(i) BP #0 at 0xffff8000101486cc (printk)
+    is enabled   addr at ffff8000101486cc, hardtype=0 installed=0
+
+[0]kdb> g
+
+/ # echo h > /proc/sysrq-trigger
+
+Entering kdb (current=0xffff0000fa852bc0, pid 268) on processor 0 due to Breakpoint @ 0xffff8000101486cc
+[0]kdb> g
+
+Entering kdb (current=0xffff0000fa852bc0, pid 268) on processor 0 due to Breakpoint @ 0xffff8000101486cc
+[0]kdb> ss
+
+Entering kdb (current=0xffff0000fa852bc0, pid 268) on processor 0 due to SS trap @ 0xffff800010082ab8
+[0]kdb>
+
+Fixes: 44679a4f142b ("arm64: KGDB: Add step debugging support")
+Signed-off-by: Wei Li <liwei391@huawei.com>
+Tested-by: Douglas Anderson <dianders@chromium.org>
+Reviewed-by: Douglas Anderson <dianders@chromium.org>
+Link: https://lore.kernel.org/r/20200509214159.19680-2-liwei391@huawei.com
+Signed-off-by: Will Deacon <will@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/base/regmap/regmap.c | 100 ++++++++++++++++-------------------
- 1 file changed, 46 insertions(+), 54 deletions(-)
+ arch/arm64/kernel/kgdb.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/base/regmap/regmap.c b/drivers/base/regmap/regmap.c
-index 508bbd6ea4396..320d23de02c29 100644
---- a/drivers/base/regmap/regmap.c
-+++ b/drivers/base/regmap/regmap.c
-@@ -17,6 +17,7 @@
- #include <linux/delay.h>
- #include <linux/log2.h>
- #include <linux/hwspinlock.h>
-+#include <asm/unaligned.h>
+diff --git a/arch/arm64/kernel/kgdb.c b/arch/arm64/kernel/kgdb.c
+index 35f184a8fd85a..8815b5457dd0b 100644
+--- a/arch/arm64/kernel/kgdb.c
++++ b/arch/arm64/kernel/kgdb.c
+@@ -269,7 +269,7 @@ static int kgdb_step_brk_fn(struct pt_regs *regs, unsigned int esr)
+ 	if (user_mode(regs) || !kgdb_single_step)
+ 		return DBG_HOOK_ERROR;
  
- #define CREATE_TRACE_POINTS
- #include "trace.h"
-@@ -249,22 +250,20 @@ static void regmap_format_8(void *buf, unsigned int val, unsigned int shift)
- 
- static void regmap_format_16_be(void *buf, unsigned int val, unsigned int shift)
- {
--	__be16 *b = buf;
--
--	b[0] = cpu_to_be16(val << shift);
-+	put_unaligned_be16(val << shift, buf);
+-	kgdb_handle_exception(1, SIGTRAP, 0, regs);
++	kgdb_handle_exception(0, SIGTRAP, 0, regs);
+ 	return DBG_HOOK_HANDLED;
  }
- 
- static void regmap_format_16_le(void *buf, unsigned int val, unsigned int shift)
- {
--	__le16 *b = buf;
--
--	b[0] = cpu_to_le16(val << shift);
-+	put_unaligned_le16(val << shift, buf);
- }
- 
- static void regmap_format_16_native(void *buf, unsigned int val,
- 				    unsigned int shift)
- {
--	*(u16 *)buf = val << shift;
-+	u16 v = val << shift;
-+
-+	memcpy(buf, &v, sizeof(v));
- }
- 
- static void regmap_format_24(void *buf, unsigned int val, unsigned int shift)
-@@ -280,43 +279,39 @@ static void regmap_format_24(void *buf, unsigned int val, unsigned int shift)
- 
- static void regmap_format_32_be(void *buf, unsigned int val, unsigned int shift)
- {
--	__be32 *b = buf;
--
--	b[0] = cpu_to_be32(val << shift);
-+	put_unaligned_be32(val << shift, buf);
- }
- 
- static void regmap_format_32_le(void *buf, unsigned int val, unsigned int shift)
- {
--	__le32 *b = buf;
--
--	b[0] = cpu_to_le32(val << shift);
-+	put_unaligned_le32(val << shift, buf);
- }
- 
- static void regmap_format_32_native(void *buf, unsigned int val,
- 				    unsigned int shift)
- {
--	*(u32 *)buf = val << shift;
-+	u32 v = val << shift;
-+
-+	memcpy(buf, &v, sizeof(v));
- }
- 
- #ifdef CONFIG_64BIT
- static void regmap_format_64_be(void *buf, unsigned int val, unsigned int shift)
- {
--	__be64 *b = buf;
--
--	b[0] = cpu_to_be64((u64)val << shift);
-+	put_unaligned_be64((u64) val << shift, buf);
- }
- 
- static void regmap_format_64_le(void *buf, unsigned int val, unsigned int shift)
- {
--	__le64 *b = buf;
--
--	b[0] = cpu_to_le64((u64)val << shift);
-+	put_unaligned_le64((u64) val << shift, buf);
- }
- 
- static void regmap_format_64_native(void *buf, unsigned int val,
- 				    unsigned int shift)
- {
--	*(u64 *)buf = (u64)val << shift;
-+	u64 v = (u64) val << shift;
-+
-+	memcpy(buf, &v, sizeof(v));
- }
- #endif
- 
-@@ -333,35 +328,34 @@ static unsigned int regmap_parse_8(const void *buf)
- 
- static unsigned int regmap_parse_16_be(const void *buf)
- {
--	const __be16 *b = buf;
--
--	return be16_to_cpu(b[0]);
-+	return get_unaligned_be16(buf);
- }
- 
- static unsigned int regmap_parse_16_le(const void *buf)
- {
--	const __le16 *b = buf;
--
--	return le16_to_cpu(b[0]);
-+	return get_unaligned_le16(buf);
- }
- 
- static void regmap_parse_16_be_inplace(void *buf)
- {
--	__be16 *b = buf;
-+	u16 v = get_unaligned_be16(buf);
- 
--	b[0] = be16_to_cpu(b[0]);
-+	memcpy(buf, &v, sizeof(v));
- }
- 
- static void regmap_parse_16_le_inplace(void *buf)
- {
--	__le16 *b = buf;
-+	u16 v = get_unaligned_le16(buf);
- 
--	b[0] = le16_to_cpu(b[0]);
-+	memcpy(buf, &v, sizeof(v));
- }
- 
- static unsigned int regmap_parse_16_native(const void *buf)
- {
--	return *(u16 *)buf;
-+	u16 v;
-+
-+	memcpy(&v, buf, sizeof(v));
-+	return v;
- }
- 
- static unsigned int regmap_parse_24(const void *buf)
-@@ -376,69 +370,67 @@ static unsigned int regmap_parse_24(const void *buf)
- 
- static unsigned int regmap_parse_32_be(const void *buf)
- {
--	const __be32 *b = buf;
--
--	return be32_to_cpu(b[0]);
-+	return get_unaligned_be32(buf);
- }
- 
- static unsigned int regmap_parse_32_le(const void *buf)
- {
--	const __le32 *b = buf;
--
--	return le32_to_cpu(b[0]);
-+	return get_unaligned_le32(buf);
- }
- 
- static void regmap_parse_32_be_inplace(void *buf)
- {
--	__be32 *b = buf;
-+	u32 v = get_unaligned_be32(buf);
- 
--	b[0] = be32_to_cpu(b[0]);
-+	memcpy(buf, &v, sizeof(v));
- }
- 
- static void regmap_parse_32_le_inplace(void *buf)
- {
--	__le32 *b = buf;
-+	u32 v = get_unaligned_le32(buf);
- 
--	b[0] = le32_to_cpu(b[0]);
-+	memcpy(buf, &v, sizeof(v));
- }
- 
- static unsigned int regmap_parse_32_native(const void *buf)
- {
--	return *(u32 *)buf;
-+	u32 v;
-+
-+	memcpy(&v, buf, sizeof(v));
-+	return v;
- }
- 
- #ifdef CONFIG_64BIT
- static unsigned int regmap_parse_64_be(const void *buf)
- {
--	const __be64 *b = buf;
--
--	return be64_to_cpu(b[0]);
-+	return get_unaligned_be64(buf);
- }
- 
- static unsigned int regmap_parse_64_le(const void *buf)
- {
--	const __le64 *b = buf;
--
--	return le64_to_cpu(b[0]);
-+	return get_unaligned_le64(buf);
- }
- 
- static void regmap_parse_64_be_inplace(void *buf)
- {
--	__be64 *b = buf;
-+	u64 v =  get_unaligned_be64(buf);
- 
--	b[0] = be64_to_cpu(b[0]);
-+	memcpy(buf, &v, sizeof(v));
- }
- 
- static void regmap_parse_64_le_inplace(void *buf)
- {
--	__le64 *b = buf;
-+	u64 v = get_unaligned_le64(buf);
- 
--	b[0] = le64_to_cpu(b[0]);
-+	memcpy(buf, &v, sizeof(v));
- }
- 
- static unsigned int regmap_parse_64_native(const void *buf)
- {
--	return *(u64 *)buf;
-+	u64 v;
-+
-+	memcpy(&v, buf, sizeof(v));
-+	return v;
- }
- #endif
- 
+ NOKPROBE_SYMBOL(kgdb_step_brk_fn);
 -- 
 2.25.1
 
