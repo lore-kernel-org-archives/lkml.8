@@ -2,391 +2,138 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4BDEC433E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 04:28:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E80A3C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 04:38:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 803CD20773
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 04:28:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C018421D90
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 04:38:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="Aj7IS8lJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726602AbgGNE2o (ORCPT
+        id S1725962AbgGNEiG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 00:28:44 -0400
-Received: from mga09.intel.com ([134.134.136.24]:48396 "EHLO mga09.intel.com"
+        Tue, 14 Jul 2020 00:38:06 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:25708 "EHLO m43-7.mailgun.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726282AbgGNE2m (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 00:28:42 -0400
-IronPort-SDR: THxQuEnM1BQOF6YIJi4OVWhBANqRZsYoniFeJL9cfWyM1JImJcugMJ9j7TWe/e2LD3V9ScLZCy
- e1BncmJs3Frg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9681"; a="150235057"
-X-IronPort-AV: E=Sophos;i="5.75,350,1589266800"; 
-   d="scan'208";a="150235057"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jul 2020 21:28:41 -0700
-IronPort-SDR: LTGQjgD0Cktgs7V9NMZcPEk+znoUMikVzH5F3VFJrn75jjERyMU3hDkvv70TTEi2Z5Dx7+iK8V
- lr0c/kHYVNpg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,350,1589266800"; 
-   d="scan'208";a="324435736"
-Received: from sgsxdev004.isng.intel.com (HELO localhost) ([10.226.88.13])
-  by FMSMGA003.fm.intel.com with ESMTP; 13 Jul 2020 21:28:38 -0700
-From:   "Ramuthevar,Vadivel MuruganX" 
-        <vadivel.muruganx.ramuthevar@linux.intel.com>
-To:     kishon@ti.com, linux-kernel@vger.kernel.org
-Cc:     robh+dt@kernel.org, devicetree@vger.kernel.org,
-        p.zabel@pengutronix.de, gregkh@linuxfoundation.org,
-        andriy.shevchenko@intel.com, balbi@kernel.org,
-        cheol.yong.kim@intel.com, qi-ming.wu@intel.com, yin1.li@intel.com,
-        Ramuthevar Vadivel Murugan 
-        <vadivel.muruganx.ramuthevar@linux.intel.com>
-Subject: [PATCH v6 2/2] phy: Add USB3 PHY support for Intel LGM SoC
-Date:   Tue, 14 Jul 2020 12:26:21 +0800
-Message-Id: <20200714042621.25850-3-vadivel.muruganx.ramuthevar@linux.intel.com>
-X-Mailer: git-send-email 2.11.0
-In-Reply-To: <20200714042621.25850-1-vadivel.muruganx.ramuthevar@linux.intel.com>
-References: <20200714042621.25850-1-vadivel.muruganx.ramuthevar@linux.intel.com>
+        id S1725884AbgGNEiF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 00:38:05 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1594701485; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=l+SKEtwEvXbX8Q/Z4ekeTlZzRX1TnFGS7mEIQl2l3LY=;
+ b=Aj7IS8lJMxlBvNGYrjdZcSOLU4Sk5HkK8PjpyCBHbaseIv0kYOhRvRU496TKXHpCbX1n5J+D
+ bxGzdcmoskDh3Yn6qodUtIPte0cD+w2l+Sv3PGyvHDnHcmD71ApP1tsT5TyAvAwvhBkZwk82
+ IVUIDMWTmeTlel4fRrBoaydSgMA=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n09.prod.us-west-2.postgun.com with SMTP id
+ 5f0d36a61012768490091b29 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 14 Jul 2020 04:37:58
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 838F4C43391; Tue, 14 Jul 2020 04:37:57 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: saiprakash.ranjan)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id B5890C433C8;
+        Tue, 14 Jul 2020 04:37:56 +0000 (UTC)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Tue, 14 Jul 2020 10:07:56 +0530
+From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+To:     Will Deacon <will@kernel.org>,
+        Jordan Crouse <jcrouse@codeaurora.org>
+Cc:     linux-arm-msm@vger.kernel.org, Joerg Roedel <joro@8bytes.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        freedreno@lists.freedesktop.org, iommu@lists.linux-foundation.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [Freedreno] [PATCH] iommu/arm-smmu: Add a init_context_bank
+ implementation hook
+In-Reply-To: <20200713191310.GD3815@jcrouse1-lnx.qualcomm.com>
+References: <20200611223656.4724-1-jcrouse@codeaurora.org>
+ <20200713151123.GB3072@willie-the-truck>
+ <20200713170032.GH21059@jcrouse1-lnx.qualcomm.com>
+ <20200713190331.GA3444@willie-the-truck>
+ <20200713191310.GD3815@jcrouse1-lnx.qualcomm.com>
+Message-ID: <928c0e7a22e9b193774b1e35fbe98762@codeaurora.org>
+X-Sender: saiprakash.ranjan@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
+On 2020-07-14 00:43, Jordan Crouse wrote:
+> On Mon, Jul 13, 2020 at 08:03:32PM +0100, Will Deacon wrote:
+>> On Mon, Jul 13, 2020 at 11:00:32AM -0600, Jordan Crouse wrote:
+>> > On Mon, Jul 13, 2020 at 04:11:23PM +0100, Will Deacon wrote:
+>> > > On Thu, Jun 11, 2020 at 04:36:56PM -0600, Jordan Crouse wrote:
+>> > > > Add a new implementation hook to allow the implementation specific code
+>> > > > to tweek the context bank configuration just before it gets written.
+>> > > > The first user will be the Adreno GPU implementation to turn on
+>> > > > SCTLR.HUPCF to ensure that a page fault doesn't terminating pending
+>> > > > transactions. Doing so could hang the GPU if one of the terminated
+>> > > > transactions is a CP read.
+>> > > >
+>> > > > This depends on the arm-smmu adreno SMMU implementation [1].
+>> > > >
+>> > > > [1] https://patchwork.kernel.org/patch/11600943/
+>> > > >
+>> > > > Signed-off-by: Jordan Crouse <jcrouse@codeaurora.org>
+>> > > > ---
+>> > > >
+>> > > >  drivers/iommu/arm-smmu-qcom.c | 13 +++++++++++++
+>> > > >  drivers/iommu/arm-smmu.c      | 28 +++++++++++++---------------
+>> > > >  drivers/iommu/arm-smmu.h      | 11 +++++++++++
+>> > > >  3 files changed, 37 insertions(+), 15 deletions(-)
+>> > >
+>> > > This looks straightforward enough, but I don't want to merge this without
+>> > > a user and Sai's series has open questions afaict.
+>> >
+>> > Not sure what you mean by a user in this context?
+>> > Are you referring to https://patchwork.kernel.org/patch/11628541/?
+>> 
+>> Right, this post was just a single patch in isolation, whereas it was
+>> reposted over at:
+>> 
+>> https://lore.kernel.org/r/cdcc6a1c95a84e774790389dc8b3b7feeee490dc.1593344119.git.saiprakash.ranjan@codeaurora.org
+>> 
+>> so I'll ignore this one. Sorry, I'm just really struggling to keep 
+>> track
+>> of what is targetting 5.9, and I don't have tonnes of time to sift 
+>> through
+>> the backlog of duplicate postings :(
+> 
+> Yeah, that is our fault. There are too many cooks in the kitchen.
+> 
+> We need to pick either system cache or split pagetable and serialize
+> the other on top of it to get the impl code going and then build from 
+> there.
+> This particular patch can happily hang out in the background until the 
+> rest is
+> resolved.
+> 
 
-Add support for USB PHY on Intel LGM SoC.
+My bad, sorry. Let us get split pagetable support reviewed first, then I 
+can post
+system cache support on top of it. As jordan said, this patch can 
+hibernate until
+those get resolved.
 
-Signed-off-by: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
-Reviewed-by: Philipp Zabel <p.zabel@pengutronix.de>
----
- drivers/phy/Kconfig       |  11 ++
- drivers/phy/Makefile      |   1 +
- drivers/phy/phy-lgm-usb.c | 278 ++++++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 290 insertions(+)
- create mode 100644 drivers/phy/phy-lgm-usb.c
+Thanks,
+Sai
 
-diff --git a/drivers/phy/Kconfig b/drivers/phy/Kconfig
-index b3ed94b98d9b..43ff5943f513 100644
---- a/drivers/phy/Kconfig
-+++ b/drivers/phy/Kconfig
-@@ -49,6 +49,17 @@ config PHY_XGENE
- 	help
- 	  This option enables support for APM X-Gene SoC multi-purpose PHY.
- 
-+config USB_LGM_PHY
-+	tristate "INTEL Lightning Mountain USB PHY Driver"
-+	depends on USB_SUPPORT
-+	select USB_PHY
-+	select REGULATOR
-+	select REGULATOR_FIXED_VOLTAGE
-+	help
-+	  Enable this to support Intel DWC3 PHY USB phy. This driver provides
-+	  interface to interact with USB GEN-II and USB 3.x PHY that is part
-+	  of the Intel network SOC.
-+
- source "drivers/phy/allwinner/Kconfig"
- source "drivers/phy/amlogic/Kconfig"
- source "drivers/phy/broadcom/Kconfig"
-diff --git a/drivers/phy/Makefile b/drivers/phy/Makefile
-index 310c149a9df5..c2cd6d756f5f 100644
---- a/drivers/phy/Makefile
-+++ b/drivers/phy/Makefile
-@@ -8,6 +8,7 @@ obj-$(CONFIG_GENERIC_PHY_MIPI_DPHY)	+= phy-core-mipi-dphy.o
- obj-$(CONFIG_PHY_LPC18XX_USB_OTG)	+= phy-lpc18xx-usb-otg.o
- obj-$(CONFIG_PHY_XGENE)			+= phy-xgene.o
- obj-$(CONFIG_PHY_PISTACHIO_USB)		+= phy-pistachio-usb.o
-+obj-$(CONFIG_USB_LGM_PHY)		+= phy-lgm-usb.o
- obj-$(CONFIG_ARCH_SUNXI)		+= allwinner/
- obj-$(CONFIG_ARCH_MESON)		+= amlogic/
- obj-$(CONFIG_ARCH_MEDIATEK)		+= mediatek/
-diff --git a/drivers/phy/phy-lgm-usb.c b/drivers/phy/phy-lgm-usb.c
-new file mode 100644
-index 000000000000..1ec9ab266e08
---- /dev/null
-+++ b/drivers/phy/phy-lgm-usb.c
-@@ -0,0 +1,278 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Intel LGM USB PHY driver
-+ *
-+ * Copyright (C) 2020 Intel Corporation.
-+ */
-+
-+#include <linux/bitfield.h>
-+#include <linux/delay.h>
-+#include <linux/iopoll.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/platform_device.h>
-+#include <linux/regulator/consumer.h>
-+#include <linux/reset.h>
-+#include <linux/usb/phy.h>
-+#include <linux/workqueue.h>
-+
-+#define CTRL1_OFFSET		0x14
-+#define SRAM_EXT_LD_DONE	BIT(25)
-+#define SRAM_INIT_DONE		BIT(26)
-+
-+#define TCPC_OFFSET		0x1014
-+#define TCPC_MUX_CTL		GENMASK(1, 0)
-+#define MUX_NC			0
-+#define MUX_USB			1
-+#define MUX_DP			2
-+#define MUX_USBDP		3
-+#define TCPC_FLIPPED		BIT(2)
-+#define TCPC_LOW_POWER_EN	BIT(3)
-+#define TCPC_VALID		BIT(4)
-+#define TCPC_CONN		\
-+	(TCPC_VALID | FIELD_PREP(TCPC_MUX_CTL, MUX_USB))
-+#define TCPC_DISCONN		\
-+	(TCPC_VALID | FIELD_PREP(TCPC_MUX_CTL, MUX_NC) | TCPC_LOW_POWER_EN)
-+
-+static const char *const PHY_RESETS[] = { "phy31", "phy", };
-+static const char *const CTL_RESETS[] = { "apb", "ctrl", };
-+
-+struct tca_apb {
-+	struct reset_control *resets[ARRAY_SIZE(PHY_RESETS)];
-+	struct regulator *vbus;
-+	struct work_struct wk;
-+	struct usb_phy phy;
-+
-+	bool phy_initialized;
-+	bool connected;
-+};
-+
-+static int get_flipped(struct tca_apb *ta, bool *flipped)
-+{
-+	union extcon_property_value property;
-+	int ret;
-+
-+	ret = extcon_get_property(ta->phy.edev, EXTCON_USB_HOST,
-+				  EXTCON_PROP_USB_TYPEC_POLARITY, &property);
-+	if (ret) {
-+		dev_err(ta->phy.dev, "no polarity property from extcon\n");
-+		return ret;
-+	}
-+
-+	*flipped = property.intval;
-+
-+	return ret;
-+}
-+
-+static int phy_init(struct usb_phy *phy)
-+{
-+	struct tca_apb *ta = container_of(phy, struct tca_apb, phy);
-+	void __iomem *ctrl1 = phy->io_priv + CTRL1_OFFSET;
-+	int val, ret, i;
-+
-+	if (ta->phy_initialized)
-+		return 0;
-+
-+	for (i = 0; i < ARRAY_SIZE(PHY_RESETS); i++)
-+		reset_control_deassert(ta->resets[i]);
-+
-+	ret = readl_poll_timeout(ctrl1, val, val & SRAM_INIT_DONE, 10, 10 * 1000);
-+	if (ret) {
-+		dev_err(ta->phy.dev, "SRAM init failed, 0x%x\n", val);
-+		return ret;
-+	}
-+
-+	writel(readl(ctrl1) | SRAM_EXT_LD_DONE, ctrl1);
-+
-+	ta->phy_initialized = true;
-+	if (!ta->phy.edev) {
-+		writel(TCPC_CONN, ta->phy.io_priv + TCPC_OFFSET);
-+		return phy->set_vbus(phy, true);
-+	}
-+
-+	schedule_work(&ta->wk);
-+
-+	return ret;
-+}
-+
-+static void phy_shutdown(struct usb_phy *phy)
-+{
-+	struct tca_apb *ta = container_of(phy, struct tca_apb, phy);
-+	int i;
-+
-+	if (!ta->phy_initialized)
-+		return;
-+
-+	ta->phy_initialized = false;
-+	flush_work(&ta->wk);
-+	ta->phy.set_vbus(&ta->phy, false);
-+
-+	ta->connected = false;
-+	writel(TCPC_DISCONN, ta->phy.io_priv + TCPC_OFFSET);
-+
-+	for (i = 0; i < ARRAY_SIZE(PHY_RESETS); i++)
-+		reset_control_assert(ta->resets[i]);
-+}
-+
-+static int phy_set_vbus(struct usb_phy *phy, int on)
-+{
-+	struct tca_apb *ta = container_of(phy, struct tca_apb, phy);
-+	int ret;
-+
-+	if (on) {
-+		ret = regulator_enable(ta->vbus);
-+		if (ret)
-+			dev_err(ta->phy.dev, "regulator not enabled\n");
-+	} else {
-+		ret = regulator_disable(ta->vbus);
-+		if (ret)
-+			dev_err(ta->phy.dev, "regulator not disabled\n");
-+	}
-+
-+	return ret;
-+}
-+
-+static void tca_work(struct work_struct *work)
-+{
-+	struct tca_apb *ta = container_of(work, struct tca_apb, wk);
-+	bool connected;
-+	bool flipped = false;
-+	u32 val;
-+	int ret;
-+
-+	ret = get_flipped(ta, &flipped);
-+	connected = extcon_get_state(ta->phy.edev, EXTCON_USB_HOST) && !ret;
-+	if (connected == ta->connected)
-+		return;
-+
-+	ta->connected = connected;
-+	if (connected) {
-+		val = TCPC_CONN;
-+		if (flipped)
-+			val |= TCPC_FLIPPED;
-+		dev_info(ta->phy.dev, "connected%s\n", flipped ? " flipped" : "");
-+	} else {
-+		val = TCPC_DISCONN;
-+		dev_info(ta->phy.dev, "disconnected\n");
-+	}
-+
-+	writel(val, ta->phy.io_priv + TCPC_OFFSET);
-+
-+	ret = ta->phy.set_vbus(&ta->phy, connected);
-+	if (ret)
-+		dev_err(ta->phy.dev, "failed to set VBUS\n");
-+}
-+
-+static int id_notifier(struct notifier_block *nb, unsigned long event, void *ptr)
-+{
-+	struct tca_apb *ta = container_of(nb, struct tca_apb, phy.id_nb);
-+
-+	if (ta->phy_initialized)
-+		schedule_work(&ta->wk);
-+
-+	return NOTIFY_DONE;
-+}
-+
-+static int vbus_notifier(struct notifier_block *nb, unsigned long evnt, void *ptr)
-+{
-+	return NOTIFY_DONE;
-+}
-+
-+static int phy_probe(struct platform_device *pdev)
-+{
-+	struct reset_control *resets[ARRAY_SIZE(CTL_RESETS)];
-+	struct device *dev = &pdev->dev;
-+	struct usb_phy *phy;
-+	struct tca_apb *ta;
-+	int i;
-+
-+	ta = devm_kzalloc(dev, sizeof(*ta), GFP_KERNEL);
-+	if (!ta)
-+		return -ENOMEM;
-+
-+	platform_set_drvdata(pdev, ta);
-+	INIT_WORK(&ta->wk, tca_work);
-+
-+	phy = &ta->phy;
-+	phy->dev = dev;
-+	phy->label = dev_name(dev);
-+	phy->type = USB_PHY_TYPE_USB3;
-+	phy->init = phy_init;
-+	phy->shutdown = phy_shutdown;
-+	phy->set_vbus = phy_set_vbus;
-+	phy->id_nb.notifier_call = id_notifier;
-+	phy->vbus_nb.notifier_call = vbus_notifier;
-+
-+	phy->io_priv = devm_platform_ioremap_resource(pdev, 0);
-+	if (IS_ERR(phy->io_priv))
-+		return PTR_ERR(phy->io_priv);
-+
-+	ta->vbus = devm_regulator_get(dev, "vbus");
-+	if (IS_ERR(ta->vbus))
-+		return PTR_ERR(ta->vbus);
-+
-+	for (i = 0; i < ARRAY_SIZE(CTL_RESETS); i++) {
-+		resets[i] = devm_reset_control_get_exclusive(dev, CTL_RESETS[i]);
-+		if (IS_ERR(resets[i])) {
-+			dev_err(dev, "%s reset not found\n", CTL_RESETS[i]);
-+			return PTR_ERR(resets[i]);
-+		}
-+	}
-+
-+	for (i = 0; i < ARRAY_SIZE(PHY_RESETS); i++) {
-+		ta->resets[i] = devm_reset_control_get_exclusive(dev, PHY_RESETS[i]);
-+		if (IS_ERR(ta->resets[i])) {
-+			dev_err(dev, "%s reset not found\n", PHY_RESETS[i]);
-+			return PTR_ERR(ta->resets[i]);
-+		}
-+	}
-+
-+	for (i = 0; i < ARRAY_SIZE(CTL_RESETS); i++)
-+		reset_control_assert(resets[i]);
-+
-+	for (i = 0; i < ARRAY_SIZE(PHY_RESETS); i++)
-+		reset_control_assert(ta->resets[i]);
-+	/*
-+	 * Out-of-band reset of the controller after PHY reset will cause
-+	 * controller malfunctioning, so we should use in-band controller
-+	 * reset only and leave the controller de-asserted here.
-+	 */
-+	for (i = 0; i < ARRAY_SIZE(CTL_RESETS); i++)
-+		reset_control_deassert(resets[i]);
-+
-+	/* Need to wait at least 20us after de-assert the controller */
-+	usleep_range(20, 100);
-+
-+	return usb_add_phy_dev(phy);
-+}
-+
-+static int phy_remove(struct platform_device *pdev)
-+{
-+	struct tca_apb *ta = platform_get_drvdata(pdev);
-+
-+	usb_remove_phy(&ta->phy);
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id intel_usb_phy_dt_ids[] = {
-+	{ .compatible = "intel,lgm-usb-phy" },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(of, intel_usb_phy_dt_ids);
-+
-+static struct platform_driver lgm_phy_driver = {
-+	.driver = {
-+		.name = "lgm-usb-phy",
-+		.of_match_table = intel_usb_phy_dt_ids,
-+	},
-+	.probe = phy_probe,
-+	.remove = phy_remove,
-+};
-+
-+module_platform_driver(lgm_phy_driver);
-+
-+MODULE_DESCRIPTION("Intel LGM USB PHY driver");
-+MODULE_AUTHOR("Li Yin <yin1.li@intel.com>");
-+MODULE_AUTHOR("Vadivel Murugan R <vadivel.muruganx.ramuthevar@linux.intel.com>");
-+MODULE_LICENSE("GPL v2");
 -- 
-2.11.0
-
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a 
+member
+of Code Aurora Forum, hosted by The Linux Foundation
