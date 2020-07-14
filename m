@@ -7,47 +7,52 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6BD0C43457
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 19:03:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB0EBC433E7
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 19:03:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9F02722B4E
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 19:03:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF58E22B4E
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 19:03:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594753394;
-	bh=1q3eGcrgswO/Hm1Qc/cMcRPN19EH0r7T98jDvBGqZzY=;
+	s=default; t=1594753397;
+	bh=Y4vXQKe7mtBW2sC8bi/lqBkpZsVxlG9RqnJgmezmESQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=13y7KAT/SjOvk3Anm7hNimbNDi8byfM6FHW3iWt5dn1gP/XBJ9+Pw9q26CHBeu+Dm
-	 SD0pAsEpPWMWeTmgWWLwbJ0HGYNDO1+pS8+PCTqYUDzHLmZSwvPQ7/HsZrwJqUFM/7
-	 Tal3PmTJOlVYC/rqhfqfwawDuVmxn9bB9+0hpork=
+	b=q8m16kTUjeAG76qekK9Y8SzGWVgvgdXUKu3uH4MVc0Fzw+xWUUPXn2LaGkXIvVIf/
+	 zLHeFcfUpnyGC06QOmyIR1Ee6R5uvHkp0mob+olZ5K/p36mDGC0CBCy3xnhBuQBrWV
+	 NRE09OJKIYySPuzN0asFmg2a1oy08ldFbAgdOxwM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731098AbgGNS5f (ORCPT
+        id S1731159AbgGNTDP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 14:57:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55574 "EHLO mail.kernel.org"
+        Tue, 14 Jul 2020 15:03:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55900 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731144AbgGNS5T (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 14:57:19 -0400
+        id S1731099AbgGNS5g (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 14:57:36 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B50C922B2B;
-        Tue, 14 Jul 2020 18:57:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1F6A7207F5;
+        Tue, 14 Jul 2020 18:57:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594753039;
-        bh=1q3eGcrgswO/Hm1Qc/cMcRPN19EH0r7T98jDvBGqZzY=;
+        s=default; t=1594753055;
+        bh=Y4vXQKe7mtBW2sC8bi/lqBkpZsVxlG9RqnJgmezmESQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wk0Y+2bk05UfVJfAbldGSzIxtYmkpKQUTG7R5+nkQdb3VLviiyLueyRwG2t8B5rkL
-         TCNSWeroacGjppuOpW20JH5hQm6MfCRtPp9mrWaWv413lvLI/Gta7DlLyv5zX2kza3
-         qoW1q/XFxyjMWTJTz2WuFFP+2NfDNX0F/OqbddzE=
+        b=WbCPD67aONpLOpcDa7XWq+Ld/+Bu+duqqSIjbswGUQWUoW1+pEWai3fu7/gsNLNeO
+         ToF4OYXRu0M8hLPzwRXxAoQ6miHqBfqTqE1fCxGV/h/n+7GYXRrZG2hAcxZMIC9PC2
+         oqxkNBKGxbDEW9bUuZ9E8JbYreeGVCbHXhEILaMQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Luca Coelho <luciano.coelho@intel.com>,
-        Johannes Berg <johannes.berg@intel.com>,
+        stable@vger.kernel.org,
+        Claudiu Beznea <claudiu.beznea@microchip.com>,
+        Harini Katakam <harini.katakam@xilinx.com>,
+        Antoine Tenart <antoine.tenart@bootlin.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 056/166] nl80211: dont return err unconditionally in nl80211_start_ap()
-Date:   Tue, 14 Jul 2020 20:43:41 +0200
-Message-Id: <20200714184118.556622858@linuxfoundation.org>
+Subject: [PATCH 5.7 103/166] net: macb: fix macb_suspend() by removing call to netif_carrier_off()
+Date:   Tue, 14 Jul 2020 20:44:28 +0200
+Message-Id: <20200714184120.775125901@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200714184115.844176932@linuxfoundation.org>
 References: <20200714184115.844176932@linuxfoundation.org>
@@ -60,39 +65,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Luca Coelho <luciano.coelho@intel.com>
+From: Nicolas Ferre <nicolas.ferre@microchip.com>
 
-[ Upstream commit bc7a39b4272b9672d806d422b6850e8c1a09914c ]
+[ Upstream commit 64febc5e56c9a748162f206dcc5be1a44436087a ]
 
-When a memory leak was fixed, a return err was changed to goto err,
-but, accidentally, the if (err) was removed, so now we always exit at
-this point.
+As we now use the phylink call to phylink_stop() in the non-WoL path,
+there is no need for this call to netif_carrier_off() anymore. It can
+disturb the underlying phylink FSM.
 
-Fix it by adding if (err) back.
-
-Fixes: 9951ebfcdf2b ("nl80211: fix potential leak in AP start")
-Signed-off-by: Luca Coelho <luciano.coelho@intel.com>
-Link: https://lore.kernel.org/r/iwlwifi.20200626124931.871ba5b31eee.I97340172d92164ee92f3c803fe20a8a6e97714e1@changeid
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+Fixes: 7897b071ac3b ("net: macb: convert to phylink")
+Cc: Claudiu Beznea <claudiu.beznea@microchip.com>
+Cc: Harini Katakam <harini.katakam@xilinx.com>
+Cc: Antoine Tenart <antoine.tenart@bootlin.com>
+Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
+Signed-off-by: Nicolas Ferre <nicolas.ferre@microchip.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/wireless/nl80211.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/net/ethernet/cadence/macb_main.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/net/wireless/nl80211.c b/net/wireless/nl80211.c
-index 692bcd35f8094..a56ede64e70fc 100644
---- a/net/wireless/nl80211.c
-+++ b/net/wireless/nl80211.c
-@@ -5004,7 +5004,8 @@ static int nl80211_start_ap(struct sk_buff *skb, struct genl_info *info)
- 		err = nl80211_parse_he_obss_pd(
- 					info->attrs[NL80211_ATTR_HE_OBSS_PD],
- 					&params.he_obss_pd);
--		goto out;
-+		if (err)
-+			goto out;
+diff --git a/drivers/net/ethernet/cadence/macb_main.c b/drivers/net/ethernet/cadence/macb_main.c
+index 79c2fe0543038..548815255e22b 100644
+--- a/drivers/net/ethernet/cadence/macb_main.c
++++ b/drivers/net/ethernet/cadence/macb_main.c
+@@ -4604,7 +4604,6 @@ static int __maybe_unused macb_suspend(struct device *dev)
+ 			bp->pm_data.scrt2 = gem_readl_n(bp, ETHT, SCRT2_ETHT);
  	}
  
- 	if (info->attrs[NL80211_ATTR_HE_BSS_COLOR]) {
+-	netif_carrier_off(netdev);
+ 	if (bp->ptp_info)
+ 		bp->ptp_info->ptp_remove(netdev);
+ 	pm_runtime_force_suspend(dev);
 -- 
 2.25.1
 
