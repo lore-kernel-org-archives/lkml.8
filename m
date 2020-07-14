@@ -4,74 +4,108 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92333C433E4
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 16:58:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AC0AC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 16:58:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6780322571
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 16:58:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 18B4F22574
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 16:58:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="PJ+wCLEC"
+	dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b="rRonHJCI";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="d+e507Vn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728509AbgGNQ6F (ORCPT
+        id S1728841AbgGNQ62 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 12:58:05 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:40118 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726062AbgGNQ6F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 12:58:05 -0400
-Received: from nazgul.tnic (77-85-108-148.ip.btc-net.bg [77.85.108.148])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id DF3D81EC0316;
-        Tue, 14 Jul 2020 18:58:03 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1594745884;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=XyYLnc+06Gm9dGG/15z3YOVVpur6VHuhn4YtUH4KUP4=;
-        b=PJ+wCLEClDd+fP0J4ENiKVXVITYPzB7XKq8JPpkktzi8OAdAmkkxkQfx9d7LfiaSu22rbj
-        oDue+UJO3x9dKHuBYqUiPzvIVC1xz5eQyYI74Vh5LTo0zeCqOkBJWYcPvcPajuVgeZGpQD
-        mz0KM3lwKfmbSDbdgxK/FiRsDvMMXH0=
-Date:   Tue, 14 Jul 2020 18:58:13 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     "Luck, Tony" <tony.luck@intel.com>
-Cc:     Chris Down <chris@chrisdown.name>, linux-kernel@vger.kernel.org,
-        sean.j.christopherson@intel.com, torvalds@linux-foundation.org,
-        x86@kernel.org, kernel-team@fb.com,
-        Matthew Garrett <matthewgarrett@google.com>
-Subject: Re: [PATCH -v2.1] x86/msr: Filter MSR writes
-Message-ID: <20200714165813.GB3622@nazgul.tnic>
-References: <20200615063837.GA14668@zn.tnic>
- <20200714121955.GA2080@chrisdown.name>
- <20200714154728.GA3101@nazgul.tnic>
- <20200714160448.GC2080@chrisdown.name>
- <20200714164612.GA28474@agluck-desk2.amr.corp.intel.com>
+        Tue, 14 Jul 2020 12:58:28 -0400
+Received: from wout1-smtp.messagingengine.com ([64.147.123.24]:60063 "EHLO
+        wout1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726062AbgGNQ62 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 12:58:28 -0400
+Received: from compute1.internal (compute1.nyi.internal [10.202.2.41])
+        by mailout.west.internal (Postfix) with ESMTP id A37F6C60;
+        Tue, 14 Jul 2020 12:58:26 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute1.internal (MEProxy); Tue, 14 Jul 2020 12:58:27 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:content-transfer-encoding:in-reply-to; s=fm1; bh=J
+        n3Ad37SZHYYU1k/teK9BKKpMr/A2B9BBUZL/dISkAw=; b=rRonHJCIud40+m7Fz
+        d+DHSXfd+BJrfwWI9tMwkRffZ9Uq6k1GrtwJp8Q/C+26k4tbg1Yadc4d8S9n0S2v
+        hr9/Y+eRygltnOdxjjJynh0JPxJ1sO9TD2EGJ3Dtxlls0Pyt2LjuSDDdiz6/V0bL
+        QtV1fvo1t0YsoPYh9G0dS+ZBFGGAe0X1LDtgH74M3CNpmsfJiyQJmLwNS6nD3yEC
+        KHO8+Bd12f85i453o5FMCvI1kdxIsYiCjebwFU7Iu23L0izQyOlDhpqPGpIKB0+O
+        wIgmwFAWli4AO2TMnjlLZY4ga+cC8rrw1KVMe+69I1bolPRn7KsS2l8h7dcGMGju
+        lahJQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-transfer-encoding:content-type
+        :date:from:in-reply-to:message-id:mime-version:references
+        :subject:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
+        :x-sasl-enc; s=fm3; bh=Jn3Ad37SZHYYU1k/teK9BKKpMr/A2B9BBUZL/dISk
+        Aw=; b=d+e507VnLJEX/bU269xQFlaHhcDOlaP56eL+UnVJ7wS4UreDbd8+wLQeG
+        uGH63+FGRR56QaYud7+WzxfVDv3UND+hrIn+1lCyp88mrfW26LxGfirevaL8a8th
+        CC+8WuOFk708i+HhV4k7JovSRtirV7+DJcHCS8trHqAID2oYQfEg4hkUMs+oIE3Z
+        CzcEl4U5g7QsXfiVGMHbIrhfjac4KNfm8ziykmD6SLQ7g9aWbZn00WF8IawDgiow
+        k9CldDrW0DAXLwxm6EFMkLD6AHAUSIrncd2Ctu9BE0ZJ6wqeoyhnld2528nHl2WL
+        hwx/xDu+pfFLY3W740H86KbR6I3MA==
+X-ME-Sender: <xms:MeQNXx2shWVdt-0a8WgJskjjtwldq8kpE3j9wl8ERVlphuKK_PnVvQ>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedrfedtgddutdelucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepfffhvffukfhfgggtugfgjgesthekredttddtudenucfhrhhomhepifhrvghg
+    ucfmjfcuoehgrhgvgheskhhrohgrhhdrtghomheqnecuggftrfgrthhtvghrnhepvedtie
+    elueetgeeggfeufefhvefgtdetgfetgfdtvdegjeehieduvddtkeffheffnecukfhppeek
+    fedrkeeirdekledruddtjeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmh
+    grihhlfhhrohhmpehgrhgvgheskhhrohgrhhdrtghomh
+X-ME-Proxy: <xmx:MeQNX4FyPmsEPLoY3rJG8-Y8k4t0iP8vvEsKbuYdUy9cqLoB-OzVvg>
+    <xmx:MeQNXx7_wijXZzyA34CaJUKkrb6C4m7QA7OesUtE3Fm0ub106fNjrg>
+    <xmx:MeQNX-3_xgT0Lj0TRaq6m2md3F0rVqWozNva2WE0gCQWbKK6iQKY3Q>
+    <xmx:MuQNX55S2lpFY5-BJy5oiPdD7CKarlEeyLKeKRZCmequaFXEhoYibA>
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        by mail.messagingengine.com (Postfix) with ESMTPA id EF64A3280065;
+        Tue, 14 Jul 2020 12:58:24 -0400 (EDT)
+Date:   Tue, 14 Jul 2020 18:58:23 +0200
+From:   Greg KH <greg@kroah.com>
+To:     Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+Cc:     "H. Nikolaus Schaller" <hns@goldelico.com>, stable@vger.kernel.org,
+        Paul Cercueil <paul@crapouillou.net>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        letux-kernel@openphoenux.org, linux-mips@vger.kernel.org,
+        tsbogend@alpha.franken.de
+Subject: Re: [PATCH] [stable v5.4.x] pwm: jz4740: Fix build failure
+Message-ID: <20200714165823.GA2127080@kroah.com>
+References: <20200710102758.8341-1-u.kleine-koenig@pengutronix.de>
+ <DB8C7C01-0FBB-4A9F-B068-15C06BBC0873@goldelico.com>
+ <20200710194702.ire4deel2zn7mnxk@pengutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20200714164612.GA28474@agluck-desk2.amr.corp.intel.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200710194702.ire4deel2zn7mnxk@pengutronix.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 14, 2020 at 09:46:12AM -0700, Luck, Tony wrote:
-> Maybe we just need smarter filtering of warnings.  It doesn't
-> seem at all useful to warn for the same MSR 1000's of times.
-> Maybe keep a count of warnings for each MSR and just stop
-> all reports when reach a threshold?
+On Fri, Jul 10, 2020 at 09:47:02PM +0200, Uwe Kleine-König wrote:
+> On Fri, Jul 10, 2020 at 12:48:36PM +0200, H. Nikolaus Schaller wrote:
+> > 
+> > > Am 10.07.2020 um 12:27 schrieb Uwe Kleine-König <u.kleine-koenig@pengutronix.de>:
+> > > 
+> > > When commit 9017dc4fbd59 ("pwm: jz4740: Enhance precision in calculation
+> > > of duty cycle") from v5.8-rc1 was backported to v5.4.x its dependency on
+> > > commit ce1f9cece057 ("pwm: jz4740: Use clocks from TCU driver") was not
+> > > noticed which made the pwm-jz4740 driver fail to build.
+> > 
+> > Please can you add my "reported by?"
+> 
+> Greg, can you please add this while applying? (Assuming you're ok with
+> this change and ideally Paul can confirm the change is fine.)
+> 
+> Reported-by: H. Nikolaus Schaller <hns@goldelico.com>
 
-No, not stop - just make them more rare.
-
-And this is where the bikeshedding starts about how rare.
-
-/me runs away to the beach and lets the others fight it out.
-
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+Now added, thanks.
