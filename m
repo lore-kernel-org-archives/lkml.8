@@ -2,107 +2,113 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8646C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 02:56:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D8F4C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 02:54:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C6D4B21974
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 02:56:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 31C862192A
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 02:54:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IutIsFNF"
+	dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b="Qm8Gr88e"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726828AbgGNC4d (ORCPT
+        id S1726568AbgGNCyS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 22:56:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60142 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726435AbgGNC4c (ORCPT
+        Mon, 13 Jul 2020 22:54:18 -0400
+Received: from mx.aristanetworks.com ([162.210.129.12]:60493 "EHLO
+        smtp.aristanetworks.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726372AbgGNCyS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 22:56:32 -0400
-Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A4A1EC061755
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 19:56:32 -0700 (PDT)
-Received: by mail-pf1-x444.google.com with SMTP id a24so1324581pfc.10
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 19:56:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=GYXfA88REP7Ii+n/TRWlnJSZZVN1GYMTJsLHA5GKXTc=;
-        b=IutIsFNFnLOk4TxOKdywm5EsL4Di+SUjng9rJf9O1FjmjruWa3tdRKdD0rtzb2wTv5
-         w1xulcBvv+aBQ+cOJ0tq236sP4fea3kBz6Zaxdd1eWSGs904og6aAxg7fFPXj/1T3TFq
-         IK8M8Fwo3H7FHhDFBHtSeXkatXF6rO6P7g2ZwPk9esvHvmAqTeITFxGLQ1GgDuUE3sp1
-         SlEE+HV9p8u2C2JrFyOIrcPYNSqWFGQih71F838u9un8n+0A7pSF9Vu1oyiJ/Uro/0V9
-         puvQ9SePEz3fDiCpaEJuYx7bljIF6mZGO0KFwv1BS2qDajlEpIWbSX9zaVpBlmeHSQTE
-         lSRg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=GYXfA88REP7Ii+n/TRWlnJSZZVN1GYMTJsLHA5GKXTc=;
-        b=SZIMBXV9rsQWfHQGcyZo1mrq6difF92/oN/kf6EVbW5JaaEz58x7bJXfY+yMT0kboB
-         7EjaBfSITDB6DrNeHX5CVRH2j7VOZjkJ8lc3T0wacJ52j0E03zHdBUnvvsK4Smqm4wm3
-         91dZHpvWpqmxvzJhr7osNZRxb2TvPN0EzsXx/YCqmQ+ryimpqWWx3gg5XsdaFQ4z58sQ
-         MuAYZr453rhGCEnuhFWp+hUMd/BMYyiixTY3hZR6MHT76XBbQRjntkh9O/ZZ9GxTpdbz
-         aO3ygsGNkK7Fewtq0uZK169LCg+jo91mBi/KVhwJwSngQrhz5u8n0NC7x+dlcGFqsGYI
-         8M3g==
-X-Gm-Message-State: AOAM531DIiK7bGjRceXvWBKGeYT0RiT6oQEYl/FE6gFylMZ+nHHJDx8/
-        OuhRscVMRk/ynq3x7jMq3qQ=
-X-Google-Smtp-Source: ABdhPJwdobzTsnXXvwwSwUC7GWjx6B+1yH89Vzmd+jsP5xUlFPAhafRrcAiP8n8pSC+zQnc31qliSQ==
-X-Received: by 2002:a63:1d4:: with SMTP id 203mr1695817pgb.356.1594695392152;
-        Mon, 13 Jul 2020 19:56:32 -0700 (PDT)
-Received: from localhost ([2409:10:2e40:5100:6e29:95ff:fe2d:8f34])
-        by smtp.gmail.com with ESMTPSA id 2sm16048049pfa.110.2020.07.13.19.56.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 Jul 2020 19:56:31 -0700 (PDT)
-From:   Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
-X-Google-Original-From: Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
-Date:   Tue, 14 Jul 2020 11:56:26 +0900
-To:     John Ogness <john.ogness@linutronix.de>
-Cc:     Petr Mladek <pmladek@suse.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andrea Parri <parri.andrea@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Paul McKenney <paulmck@kernel.org>, kexec@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 0/4] printk: replace ringbuffer
-Message-ID: <20200714025626.GD491026@jagdpanzerIV.localdomain>
-References: <20200707145932.8752-1-john.ogness@linutronix.de>
- <20200708152005.GF4751@alley>
- <87wo3d9nlo.fsf@jogness.linutronix.de>
- <20200710091137.GN4751@alley>
- <87o8onhf31.fsf@jogness.linutronix.de>
-MIME-Version: 1.0
+        Mon, 13 Jul 2020 22:54:18 -0400
+Received: from us180.sjc.aristanetworks.com (us180.sjc.aristanetworks.com [172.25.230.4])
+        by smtp.aristanetworks.com (Postfix) with ESMTP id BA0E54000A4;
+        Mon, 13 Jul 2020 19:54:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arista.com;
+        s=Arista-A; t=1594695257;
+        bh=5S99b4Wsz1sSm6XJJBWve3nBCOGAX6DPDI8yaAHT25E=;
+        h=Date:To:Subject:From:From;
+        b=Qm8Gr88enAqDOUJHMvxrDLfLVMXPVBB1b6re0SVAco1YL0XDO16nhBoBrSKpaHEjp
+         a3iNLx/d3Zfj5y/FLzEoBqZBTIZ89w1Y0Ppw7X9Y5lvNuww7Xe/c/Z3iaRvZBFWEcF
+         aqbjmUUr5FOcUkF+IMas7Dy6OEV4dYbRRzOO66xOxD6K6mxQ7UGFcXeIrs7gHBQpyS
+         2cIjSuG+92Cg+sFi6/lUJpfZ4nrAuFh+XM+VepNxzMGor7QykGQCmo3hMwPBL2G61C
+         Dk7kAGBietPF96FPuEObRfehATihKjuQHXIm2lgCDlWlnbNRcygb4N43c+hNdoVre3
+         Fstayl15mHK7Q==
+Received: by us180.sjc.aristanetworks.com (Postfix, from userid 10189)
+        id A25EB95C0339; Mon, 13 Jul 2020 19:54:17 -0700 (PDT)
+Date:   Mon, 13 Jul 2020 19:54:17 -0700
+To:     linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        amir73il@gmail.com, jack@suse.cz, fruggeri@arista.com
+Subject: soft lockup in fanotify_read
+User-Agent: Heirloom mailx 12.5 7/5/10
 Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87o8onhf31.fsf@jogness.linutronix.de>
+Content-Transfer-Encoding: 7bit
+Message-Id: <20200714025417.A25EB95C0339@us180.sjc.aristanetworks.com>
+From:   fruggeri@arista.com (Francesco Ruggeri)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On (20/07/10 11:58), John Ogness wrote:
-> 
-> IMHO users of these sequence number interfaces need to see all the
-> records individually and reassemble the LOG_CONT messages themselves if
-> they want to. I believe that is the only sane path forward. To do this,
-> the caller id will no longer be optional to the sequence number output
-> since that is vital information to re-assemble the LOG_CONT messages.
+We are getting this soft lockup in fanotify_read.
+The reason is that this code does not seem to scale to cases where there
+are big bursts of events generated by fanotify_handle_event.
+fanotify_read acquires group->notification_lock for each event.
+fanotify_handle_event uses the lock to add one event, which also involves
+fanotify_merge, which scans the whole list trying to find an event to
+merge the new one with.
+In our case fanotify_read is invoked with a buffer big enough for 200
+events, and what happens is that every time fanotify_read dequeues an
+event and releases the lock, fanotify_handle_event adds several more,
+scanning a longer and longer list. This causes fanotify_read to wait
+longer and longer for the lock, and the soft lockup happens before
+fanotify_read can reach 200 events.
+Is it intentional for fanotify_read to acquire the lock for each event,
+rather than batching together a user buffer worth of events?
 
-Agreed. The caller id thus probably can be extended. Right now it only
-tells us either we are in a process context (PID) or in something else.
-This works sort of fine (I guess) because deeply nested printouts (printks
-from NMI atop of process or irq printks) land in the deferred printk-safe
-buffers, but things will change with the new logbuf (and after removal of
-the logbuf_lock and per-CPU printk-safe buffers).
+Thanks,
+Francesco Ruggeri
 
-	-ss
+[5752801.578813] watchdog: BUG: soft lockup - CPU#15 stuck for 22s! [fstrace:23105]
+[5752801.586804] Modules linked in: ...
+[5752801.586871] CPU: 15 PID: 23105 Comm: fstrace Tainted: G        W  O L    4.19.112-16802951.AroraKernel419.el7.x86_64 #1
+[5752801.586872] Hardware name: Supermicro SYS-6029TP-HTR/X11DPT-PS, BIOS 3.1 04/30/2019
+[5752801.586879] RIP: 0010:queued_spin_lock_slowpath+0x141/0x17c
+[5752801.586881] Code: 5e c1 e9 12 83 e0 03 ff c9 48 c1 e0 04 48 63 c9 48 05 c0 14 02 00 48 03 04 cd 20 e7 e9 81 48 89 10 8b 42 08 85 c0 75 04 f3 90 <eb> f5 48 8b 0a 48 85 c9 74 03 0f 0d 09 8b 07 66 85 c0 74 93 f3 90
+[5752801.586882] RSP: 0018:ffffc90027c5fd18 EFLAGS: 00000246 ORIG_RAX: ffffffffffffff13
+[5752801.586883] RAX: 0000000000000000 RBX: ffff8883a9078ce8 RCX: 000000000000001e
+[5752801.586884] RDX: ffff88df7f6e14c0 RSI: 0000000000400000 RDI: ffff88b06306e30c
+[5752801.586885] RBP: ffffc90027c5fd18 R08: 0000000000000001 R09: ffffffff811e8b7e
+[5752801.586886] R10: ffffc90027c5fce0 R11: 0000000000000000 R12: ffff88b06306e300
+[5752801.586887] R13: 00000000ff935638 R14: ffff88b4af422600 R15: 0000000000000018
+[5752801.586888] FS:  0000000000000000(0000) GS:ffff88df7f6c0000(0063) knlGS:0000000009c6a880
+[5752801.586889] CS:  0010 DS: 002b ES: 002b CR0: 0000000080050033
+[5752801.586890] CR2: 0000000009430914 CR3: 000000035bbef006 CR4: 00000000007606e0
+[5752801.586891] DR0: 000000000001864c DR1: 0000000000000000 DR2: 0000000000000000
+[5752801.586891] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000600
+[5752801.586892] PKRU: 55555554
+[5752801.586892] Call Trace:
+[5752801.586898]  do_raw_spin_lock+0x1a/0x1c
+[5752801.586901]  _raw_spin_lock+0xe/0x10
+[5752801.586905]  fanotify_read+0xa3/0x32d
+[5752801.586912]  ? __wake_up_sync+0x12/0x12
+[5752801.586916]  copy_oldmem_page+0xa9/0xa9
+[5752801.586920]  ? fsnotify_perm+0x60/0x6c
+[5752801.586921]  ? fsnotify_perm+0x60/0x6c
+[5752801.586923]  ? security_file_permission+0x37/0x3e
+[5752801.586926]  vfs_read+0xa4/0xdc
+[5752801.586928]  ksys_read+0x64/0xab
+[5752801.586930]  __ia32_sys_read+0x18/0x1a
+[5752801.586933]  do_fast_syscall_32+0xaf/0xf6
+[5752801.586935]  entry_SYSENTER_compat+0x6b/0x7a
+[5752801.586936] RIP: 0023:0xf7f64c29
+[5752801.586938] Code: 5b 5d c3 8b 04 24 c3 8b 14 24 c3 8b 1c 24 c3 8b 34 24 c3 90 90 90 90 90 90 90 90 90 90 90 90 90 90 51 52 55 89 e5 0f 34 cd 80 <5d> 5a 59 c3 90 90 90 90 eb 0d 90 90 90 90 90 90 90 90 90 90 90 90
+[5752801.586939] RSP: 002b:00000000ff933828 EFLAGS: 00000246 ORIG_RAX: 0000000000000003
+[5752801.586940] RAX: ffffffffffffffda RBX: 0000000000000004 RCX: 00000000ff9348d0
+[5752801.586941] RDX: 00000000000012c0 RSI: 0000000009c72da8 RDI: 00000000ff9348d0
+[5752801.586941] RBP: 00000000ff935ba8 R08: 0000000000000000 R09: 0000000000000000
+[5752801.586942] R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000000
+[5752801.586942] R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000000000
+
