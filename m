@@ -7,37 +7,38 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 651FCC433F1
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 12:12:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51517C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 12:12:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4D4B72236F
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 12:12:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 39DD6222B6
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 12:12:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728731AbgGNMMB (ORCPT
+        id S1728757AbgGNMMP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 08:12:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60750 "EHLO
+        Tue, 14 Jul 2020 08:12:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60744 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728603AbgGNMLV (ORCPT
+        with ESMTP id S1728581AbgGNMLT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 08:11:21 -0400
+        Tue, 14 Jul 2020 08:11:19 -0400
 Received: from theia.8bytes.org (8bytes.org [IPv6:2a01:238:4383:600:38bc:a715:4b6d:a889])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2AB2DC08C5DB;
-        Tue, 14 Jul 2020 05:11:21 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1AEC8C061755;
+        Tue, 14 Jul 2020 05:11:19 -0700 (PDT)
 Received: from cap.home.8bytes.org (p5b006776.dip0.t-ipconnect.de [91.0.103.118])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
         (No client certificate requested)
-        by theia.8bytes.org (Postfix) with ESMTPSA id B9D2CFED;
-        Tue, 14 Jul 2020 14:11:11 +0200 (CEST)
+        by theia.8bytes.org (Postfix) with ESMTPSA id 8C00DFDF;
+        Tue, 14 Jul 2020 14:11:09 +0200 (CEST)
 From:   Joerg Roedel <joro@8bytes.org>
 To:     x86@kernel.org
 Cc:     Joerg Roedel <joro@8bytes.org>, Joerg Roedel <jroedel@suse.de>,
-        hpa@zytor.com, Andy Lutomirski <luto@kernel.org>,
+        Doug Covelli <dcovelli@vmware.com>,
+        Tom Lendacky <thomas.lendacky@amd.com>, hpa@zytor.com,
+        Andy Lutomirski <luto@kernel.org>,
         Dave Hansen <dave.hansen@linux.intel.com>,
         Peter Zijlstra <peterz@infradead.org>,
         Jiri Slaby <jslaby@suse.cz>,
         Dan Williams <dan.j.williams@intel.com>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
         Juergen Gross <jgross@suse.com>,
         Kees Cook <keescook@chromium.org>,
         David Rientjes <rientjes@google.com>,
@@ -49,9 +50,9 @@ Cc:     Joerg Roedel <joro@8bytes.org>, Joerg Roedel <jroedel@suse.de>,
         Martin Radev <martin.b.radev@gmail.com>,
         linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
         virtualization@lists.linux-foundation.org
-Subject: [PATCH v4 70/75] x86/head/64: Don't call verify_cpu() on starting APs
-Date:   Tue, 14 Jul 2020 14:09:12 +0200
-Message-Id: <20200714120917.11253-71-joro@8bytes.org>
+Subject: [PATCH v4 66/75] x86/vmware: Add VMware specific handling for VMMCALL under SEV-ES
+Date:   Tue, 14 Jul 2020 14:09:08 +0200
+Message-Id: <20200714120917.11253-67-joro@8bytes.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200714120917.11253-1-joro@8bytes.org>
 References: <20200714120917.11253-1-joro@8bytes.org>
@@ -62,59 +63,87 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Joerg Roedel <jroedel@suse.de>
+From: Doug Covelli <dcovelli@vmware.com>
 
-The APs are not ready to handle exceptions when verify_cpu() is called
-in secondary_startup_64.
+Add VMware specific handling for #VC faults caused by VMMCALL
+instructions.
 
+Signed-off-by: Doug Covelli <dcovelli@vmware.com>
+Signed-off-by: Tom Lendacky <thomas.lendacky@amd.com>
+[ jroedel@suse.de: - Adapt to different paravirt interface ]
+Co-developed-by: Joerg Roedel <jroedel@suse.de>
 Signed-off-by: Joerg Roedel <jroedel@suse.de>
 ---
- arch/x86/include/asm/realmode.h | 1 +
- arch/x86/kernel/head_64.S       | 1 +
- arch/x86/realmode/init.c        | 6 ++++++
- 3 files changed, 8 insertions(+)
+ arch/x86/kernel/cpu/vmware.c | 50 ++++++++++++++++++++++++++++++++----
+ 1 file changed, 45 insertions(+), 5 deletions(-)
 
-diff --git a/arch/x86/include/asm/realmode.h b/arch/x86/include/asm/realmode.h
-index 6590394af309..5c97807c38a4 100644
---- a/arch/x86/include/asm/realmode.h
-+++ b/arch/x86/include/asm/realmode.h
-@@ -69,6 +69,7 @@ extern unsigned char startup_32_smp[];
- extern unsigned char boot_gdt[];
- #else
- extern unsigned char secondary_startup_64[];
-+extern unsigned char secondary_startup_64_no_verify[];
- #endif
+diff --git a/arch/x86/kernel/cpu/vmware.c b/arch/x86/kernel/cpu/vmware.c
+index 9b6fafa69be9..d2129d5e8373 100644
+--- a/arch/x86/kernel/cpu/vmware.c
++++ b/arch/x86/kernel/cpu/vmware.c
+@@ -33,6 +33,7 @@
+ #include <asm/timer.h>
+ #include <asm/apic.h>
+ #include <asm/vmware.h>
++#include <asm/svm.h>
  
- static inline size_t real_mode_size_needed(void)
-diff --git a/arch/x86/kernel/head_64.S b/arch/x86/kernel/head_64.S
-index 5b577d6bce7a..8b43ed0592e8 100644
---- a/arch/x86/kernel/head_64.S
-+++ b/arch/x86/kernel/head_64.S
-@@ -165,6 +165,7 @@ SYM_CODE_START(secondary_startup_64)
- 	/* Sanitize CPU configuration */
- 	call verify_cpu
+ #undef pr_fmt
+ #define pr_fmt(fmt)	"vmware: " fmt
+@@ -476,10 +477,49 @@ static bool __init vmware_legacy_x2apic_available(void)
+ 	       (eax & (1 << VMWARE_CMD_LEGACY_X2APIC)) != 0;
+ }
  
-+SYM_INNER_LABEL(secondary_startup_64_no_verify, SYM_L_GLOBAL)
- 	/*
- 	 * Retrieve the modifier (SME encryption mask if SME is active) to be
- 	 * added to the initial pgdir entry that will be programmed into CR3.
-diff --git a/arch/x86/realmode/init.c b/arch/x86/realmode/init.c
-index 61a52b925d15..df701f87ddef 100644
---- a/arch/x86/realmode/init.c
-+++ b/arch/x86/realmode/init.c
-@@ -46,6 +46,12 @@ static void sme_sev_setup_real_mode(struct trampoline_header *th)
- 		th->flags |= TH_FLAGS_SME_ACTIVE;
- 
- 	if (sev_es_active()) {
-+		/*
-+		 * Skip the call to verify_cpu() in secondary_startup_64 as it
-+		 * will cause #VC exceptions when the AP can't handle them yet.
-+		 */
-+		th->start = (u64) secondary_startup_64_no_verify;
++#ifdef CONFIG_AMD_MEM_ENCRYPT
++static void vmware_sev_es_hcall_prepare(struct ghcb *ghcb,
++					struct pt_regs *regs)
++{
++	/* Copy VMWARE specific Hypercall parameters to the GHCB */
++	ghcb_set_rip(ghcb, regs->ip);
++	ghcb_set_rbx(ghcb, regs->bx);
++	ghcb_set_rcx(ghcb, regs->cx);
++	ghcb_set_rdx(ghcb, regs->dx);
++	ghcb_set_rsi(ghcb, regs->si);
++	ghcb_set_rdi(ghcb, regs->di);
++	ghcb_set_rbp(ghcb, regs->bp);
++}
 +
- 		if (sev_es_setup_ap_jump_table(real_mode_header))
- 			panic("Failed to update SEV-ES AP Jump Table");
- 	}
++static bool vmware_sev_es_hcall_finish(struct ghcb *ghcb, struct pt_regs *regs)
++{
++	if (!(ghcb_is_valid_rbx(ghcb) &&
++	      ghcb_is_valid_rcx(ghcb) &&
++	      ghcb_is_valid_rdx(ghcb) &&
++	      ghcb_is_valid_rsi(ghcb) &&
++	      ghcb_is_valid_rdi(ghcb) &&
++	      ghcb_is_valid_rbp(ghcb)))
++		return false;
++
++	regs->bx = ghcb->save.rbx;
++	regs->cx = ghcb->save.rcx;
++	regs->dx = ghcb->save.rdx;
++	regs->si = ghcb->save.rsi;
++	regs->di = ghcb->save.rdi;
++	regs->bp = ghcb->save.rbp;
++
++	return true;
++}
++#endif
++
+ const __initconst struct hypervisor_x86 x86_hyper_vmware = {
+-	.name			= "VMware",
+-	.detect			= vmware_platform,
+-	.type			= X86_HYPER_VMWARE,
+-	.init.init_platform	= vmware_platform_setup,
+-	.init.x2apic_available	= vmware_legacy_x2apic_available,
++	.name				= "VMware",
++	.detect				= vmware_platform,
++	.type				= X86_HYPER_VMWARE,
++	.init.init_platform		= vmware_platform_setup,
++	.init.x2apic_available		= vmware_legacy_x2apic_available,
++#ifdef CONFIG_AMD_MEM_ENCRYPT
++	.runtime.sev_es_hcall_prepare	= vmware_sev_es_hcall_prepare,
++	.runtime.sev_es_hcall_finish	= vmware_sev_es_hcall_finish,
++#endif
+ };
 -- 
 2.27.0
 
