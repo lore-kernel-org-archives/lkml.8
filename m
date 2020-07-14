@@ -2,84 +2,95 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B3EAC433EB
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 19:00:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 580B4C433E8
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 19:00:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3721B221ED
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 19:00:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 399CF2240B
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 19:00:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594753219;
+	bh=gT5151k0Ubtk/tBEyVBe8PhGWzMR8W2gtoTZ7OzRg98=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=I/aMqcN4rN8ODNctZQxm86fjcXt5L9/KVPkUzsSWqP3BoCpHifxG2xCCfpB+Gx6wS
+	 nAIvmCgi4IKKW5nQ5DCfrnIzp3tZ2JdFWNnYqsYb4wuHirNQVQXf0bzlI5uasMRdMR
+	 rcsaHn0cs4sVdW3jCYzmKZoveI7WS5KInH/5M40I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731352AbgGNTAQ (ORCPT
+        id S1731094AbgGNTAS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 15:00:16 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:44655 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730432AbgGNTAL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 15:00:11 -0400
-Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <colin.king@canonical.com>)
-        id 1jvQ9r-00081N-Ug; Tue, 14 Jul 2020 19:00:04 +0000
-From:   Colin King <colin.king@canonical.com>
-To:     Sandy Huang <hjc@rock-chips.com>,
-        =?UTF-8?q?Heiko=20St=C3=BCbner?= <heiko@sntech.de>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        dri-devel@lists.freedesktop.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH][next] drm/rockchip: lvds: ensure ret is assigned before checking for an error
-Date:   Tue, 14 Jul 2020 20:00:03 +0100
-Message-Id: <20200714190003.744069-1-colin.king@canonical.com>
+        Tue, 14 Jul 2020 15:00:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59090 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730398AbgGNTAO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 15:00:14 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 77ECE22507;
+        Tue, 14 Jul 2020 19:00:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594753214;
+        bh=gT5151k0Ubtk/tBEyVBe8PhGWzMR8W2gtoTZ7OzRg98=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=omlI0mWt3ZXeEigMEm+ODmsxKGpycnzhvFhjvJc/uFJZMxvC4cDAHV1W0069yxmp1
+         0W4YjPRBGjgXNWUGI6wq0UklHdlMW5AXzNcxoBDbqHFK+AgNb/eEX9iYaB93oBcil4
+         oCRPU2vsDBbEw3P8wLeGUF91NEeUPNj23Gkke6F0=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
+        Janosch Frank <frankja@linux.ibm.com>,
+        Heiko Carstens <hca@linux.ibm.com>
+Subject: [PATCH 5.7 156/166] s390/mm: fix huge pte soft dirty copying
+Date:   Tue, 14 Jul 2020 20:45:21 +0200
+Message-Id: <20200714184123.293574193@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200714184115.844176932@linuxfoundation.org>
+References: <20200714184115.844176932@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+From: Janosch Frank <frankja@linux.ibm.com>
 
-Currently there are two places where the return status in ret is being
-checked for an error however the assignment of ret has been omitted
-making the checks redundant.  Fix this by adding in the missing assignments
-of ret.
+commit 528a9539348a0234375dfaa1ca5dbbb2f8f8e8d2 upstream.
 
-Addresses-Coverity: ("Logically dead code")
-Fixes: cca1705c3d89 ("drm/rockchip: lvds: Add PX30 support")
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
+If the pmd is soft dirty we must mark the pte as soft dirty (and not dirty).
+This fixes some cases for guest migration with huge page backings.
+
+Cc: <stable@vger.kernel.org> # 4.8
+Fixes: bc29b7ac1d9f ("s390/mm: clean up pte/pmd encoding")
+Reviewed-by: Christian Borntraeger <borntraeger@de.ibm.com>
+Reviewed-by: Gerald Schaefer <gerald.schaefer@de.ibm.com>
+Signed-off-by: Janosch Frank <frankja@linux.ibm.com>
+Signed-off-by: Heiko Carstens <hca@linux.ibm.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/gpu/drm/rockchip/rockchip_lvds.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/s390/mm/hugetlbpage.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/rockchip/rockchip_lvds.c b/drivers/gpu/drm/rockchip/rockchip_lvds.c
-index 63f967902c2d..b45c618b9793 100644
---- a/drivers/gpu/drm/rockchip/rockchip_lvds.c
-+++ b/drivers/gpu/drm/rockchip/rockchip_lvds.c
-@@ -499,11 +499,11 @@ static int px30_lvds_probe(struct platform_device *pdev,
- 	if (IS_ERR(lvds->dphy))
- 		return PTR_ERR(lvds->dphy);
- 
--	phy_init(lvds->dphy);
-+	ret = phy_init(lvds->dphy);
- 	if (ret)
- 		return ret;
- 
--	phy_set_mode(lvds->dphy, PHY_MODE_LVDS);
-+	ret = phy_set_mode(lvds->dphy, PHY_MODE_LVDS);
- 	if (ret)
- 		return ret;
- 
--- 
-2.27.0
+--- a/arch/s390/mm/hugetlbpage.c
++++ b/arch/s390/mm/hugetlbpage.c
+@@ -117,7 +117,7 @@ static inline pte_t __rste_to_pte(unsign
+ 					     _PAGE_YOUNG);
+ #ifdef CONFIG_MEM_SOFT_DIRTY
+ 		pte_val(pte) |= move_set_bit(rste, _SEGMENT_ENTRY_SOFT_DIRTY,
+-					     _PAGE_DIRTY);
++					     _PAGE_SOFT_DIRTY);
+ #endif
+ 		pte_val(pte) |= move_set_bit(rste, _SEGMENT_ENTRY_NOEXEC,
+ 					     _PAGE_NOEXEC);
+
 
