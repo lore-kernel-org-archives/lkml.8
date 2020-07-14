@@ -4,53 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 542C2C43460
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 14:41:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF97AC433F8
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 14:41:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2A222223C6
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 14:41:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8857C206F5
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 14:41:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594737666;
-	bh=8/u2v9f1AS4A+vYFzNeZgTlwKWH2MAHgTKw+YPnZWRA=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2MlrYldDGQIojd8rKgVC+GkMU9vWKEmRKrhuvCLw8Sp/vSn++1GjoS4NLk9JRCm8J
-	 mzMvkBgh0EHnLMh/LG1zLqkwp+eL93Gt5ArU0smNgkvETx3Jv4zVa6IpMTY9aIQd/r
-	 eeIntH8Cg1iPnWqa8A+XOGOCzIp7iExFNIHu4DeU=
+	s=default; t=1594737677;
+	bh=vheu8TZzVr7b5aGc1BoYKgMa8Ibhc2js0kaeO/WqSb8=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=e7f07L3hw/DRTWMv3aUavTKUiSW2cy3pM14xu3RBcTGamBC2SV/HrEkIKGEQJCIPH
+	 mqfa+B5Wi34Qs5J5Hfg9q8Zllvwuq8Ke1miYdRxbovaisgMVFHL6olEUo31LAU0m9J
+	 9eWbtxO6eZIQkVseWXQxq/Wx3fKChUP2uBx8h9KM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729490AbgGNOlF (ORCPT
+        id S1729516AbgGNOlP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 10:41:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56372 "EHLO mail.kernel.org"
+        Tue, 14 Jul 2020 10:41:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56262 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729375AbgGNOk2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 10:40:28 -0400
+        id S1729359AbgGNOk0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 10:40:26 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5F85B22248;
-        Tue, 14 Jul 2020 14:40:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1FC7D22203;
+        Tue, 14 Jul 2020 14:40:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594737628;
-        bh=8/u2v9f1AS4A+vYFzNeZgTlwKWH2MAHgTKw+YPnZWRA=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Ss019hXWgrOf4tIPazNCgre28tsRnq87h+dSJpgrVjfLMqSZZkC7Nl4kj6nVKR2Sj
-         mT/b2BHf9iLhELhKSMY5lLcRIItOPLlQfvIe3iEgA/uKNsKQIhVB1m6ONdgNzdebPU
-         EXmoxcp/3npUEb4TJNavC6itinDxNFZJt1HW1wZk=
+        s=default; t=1594737625;
+        bh=vheu8TZzVr7b5aGc1BoYKgMa8Ibhc2js0kaeO/WqSb8=;
+        h=From:To:Cc:Subject:Date:From;
+        b=IYCs9JeiUnPnqawPQi+AbOF8cCHB9SOfCQdq9GRiP60uUpYTn9QAssMzKE0LaOkcA
+         bz0SBsOSjMCmkSGHKtFWFzckGsI2HUhzqRFCr2fM9UJYEt1CcOlPBCh5uRYaCKR81J
+         Q/XPxP6vYdkGe5oh9LukAHryJe14ANdWE3iDQaaQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Tom Rix <trix@redhat.com>, James Bottomley <jejb@linux.ibm.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org,
-        clang-built-linux@googlegroups.com
-Subject: [PATCH AUTOSEL 4.4 3/9] scsi: scsi_transport_spi: Fix function pointer check
-Date:   Tue, 14 Jul 2020 10:40:17 -0400
-Message-Id: <20200714144024.4036118-3-sashal@kernel.org>
+Cc:     Jacky Hu <hengqing.hu@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Sasha Levin <sashal@kernel.org>, linux-gpio@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 1/9] pinctrl: amd: fix npins for uart0 in kerncz_groups
+Date:   Tue, 14 Jul 2020 10:40:15 -0400
+Message-Id: <20200714144024.4036118-1-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200714144024.4036118-1-sashal@kernel.org>
-References: <20200714144024.4036118-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -60,48 +57,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tom Rix <trix@redhat.com>
+From: Jacky Hu <hengqing.hu@gmail.com>
 
-[ Upstream commit 5aee52c44d9170591df65fafa1cd408acc1225ce ]
+[ Upstream commit 69339d083dfb7786b0e0b3fc19eaddcf11fabdfb ]
 
-clang static analysis flags several null function pointer problems.
+uart0_pins is defined as:
+static const unsigned uart0_pins[] = {135, 136, 137, 138, 139};
 
-drivers/scsi/scsi_transport_spi.c:374:1: warning: Called function pointer is null (null dereference) [core.CallAndMessage]
-spi_transport_max_attr(offset, "%d\n");
-^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+which npins is wronly specified as 9 later
+	{
+		.name = "uart0",
+		.pins = uart0_pins,
+		.npins = 9,
+	},
 
-Reviewing the store_spi_store_max macro
+npins should be 5 instead of 9 according to the definition.
 
-	if (i->f->set_##field)
-		return -EINVAL;
-
-should be
-
-	if (!i->f->set_##field)
-		return -EINVAL;
-
-Link: https://lore.kernel.org/r/20200627133242.21618-1-trix@redhat.com
-Reviewed-by: James Bottomley <jejb@linux.ibm.com>
-Signed-off-by: Tom Rix <trix@redhat.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Jacky Hu <hengqing.hu@gmail.com>
+Link: https://lore.kernel.org/r/20200616015024.287683-1-hengqing.hu@gmail.com
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/scsi_transport_spi.c | 2 +-
+ drivers/pinctrl/pinctrl-amd.h | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/scsi/scsi_transport_spi.c b/drivers/scsi/scsi_transport_spi.c
-index 319868f3f6743..083cd11ce7d7d 100644
---- a/drivers/scsi/scsi_transport_spi.c
-+++ b/drivers/scsi/scsi_transport_spi.c
-@@ -353,7 +353,7 @@ store_spi_transport_##field(struct device *dev, 			\
- 	struct spi_transport_attrs *tp					\
- 		= (struct spi_transport_attrs *)&starget->starget_data;	\
- 									\
--	if (i->f->set_##field)						\
-+	if (!i->f->set_##field)						\
- 		return -EINVAL;						\
- 	val = simple_strtoul(buf, NULL, 0);				\
- 	if (val > tp->max_##field)					\
+diff --git a/drivers/pinctrl/pinctrl-amd.h b/drivers/pinctrl/pinctrl-amd.h
+index 7bfea47dbb472..f63417197a62f 100644
+--- a/drivers/pinctrl/pinctrl-amd.h
++++ b/drivers/pinctrl/pinctrl-amd.h
+@@ -249,7 +249,7 @@ static const struct amd_pingroup kerncz_groups[] = {
+ 	{
+ 		.name = "uart0",
+ 		.pins = uart0_pins,
+-		.npins = 9,
++		.npins = 5,
+ 	},
+ 	{
+ 		.name = "uart1",
 -- 
 2.25.1
 
