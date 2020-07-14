@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08BEAC433FE
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 19:11:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38E6DC433F1
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 19:11:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D761D223AB
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 19:11:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0D10422507
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 19:11:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594753896;
-	bh=NbpJd0Lm+GZx1BSXzmwTJkP2fHhPnzL6+/cCHrlwfkA=;
+	s=default; t=1594753898;
+	bh=5xQaXOvzaMzuCHOjvnMhRJ706dOF3RTUM41C/MZ1DuM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=x4XI6RT6TUNL28KXsHF63nynGQwhzlnSEZ/SNaxXOq57En9iWlmaOA7TVCdtHkMTI
-	 +7GlwUjruM6ea6eKVhRlJM9vYAz7iGoSdLGYpdb6J3WLItX/savXdC5QfHxm2uxuHv
-	 oiyQNNloDwu6BykpapQBycBJ43a+cNlTQK66WS30=
+	b=m5CzlTkmkSjHbU1dZvxPuNoD2Y25BxcTf9p0kFN71OwvAHJKqUyV6nq52aJ24AWfN
+	 P9SR3PvevXUEkZs/7Ii70tM7RhBL/jxA4jlqmQjeV4obcXqBUR87hgyB1OAyUtEI2a
+	 qSqmNslJjccLBxRW7q00oIW6Q5pKdu9F5uYeRXRQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730030AbgGNSs4 (ORCPT
+        id S1730025AbgGNSsx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 14:48:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44548 "EHLO mail.kernel.org"
+        Tue, 14 Jul 2020 14:48:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44356 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730015AbgGNSsw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 14:48:52 -0400
+        id S1730001AbgGNSso (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 14:48:44 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3C14922B2A;
-        Tue, 14 Jul 2020 18:48:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D379222B42;
+        Tue, 14 Jul 2020 18:48:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594752531;
-        bh=NbpJd0Lm+GZx1BSXzmwTJkP2fHhPnzL6+/cCHrlwfkA=;
+        s=default; t=1594752524;
+        bh=5xQaXOvzaMzuCHOjvnMhRJ706dOF3RTUM41C/MZ1DuM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XJaqcxgePFy+oDGuUrV36KMBpA2H+wGEU6ezfxT832m9flSUKbF98RA3t1gmMYoeu
-         ZKIJ7RmFLmqbvZ2HRyZi+KFnH2xhVQcojzzVxYkNOp/Hh+cJmvcFdvvlL/HugIqbgO
-         tBbpnuST0PsiceHCyUopanCl5sjUqu0oEdCNmrYU=
+        b=EdDS+6nnoGJf7V2v6xnzkd6/h+bUSdGYnNIJ0N1/dWJ0b8ZbqcpnqbFzmEBs1LPaT
+         mNeDDJnQ39gt4BxeTsaRzBLKXh9NGiKsLxGw4mFC4k7e69naUVvg+Wvq6coFjBTjNs
+         AKg156DlkAiPlK8Gkbe0w/z8zRnfOzZXJs27ZHFY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Stephane Eranian <eranian@google.com>,
-        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 005/109] perf/x86/rapl: Move RAPL support to common x86 code
-Date:   Tue, 14 Jul 2020 20:43:08 +0200
-Message-ID: <20200714184105.778466736@linuxfoundation.org>
+        stable@vger.kernel.org, Peng Ma <peng.ma@nxp.com>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 002/109] spi: spi-fsl-dspi: Adding shutdown hook
+Date:   Tue, 14 Jul 2020 20:43:05 +0200
+Message-ID: <20200714184105.636023679@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200714184105.507384017@linuxfoundation.org>
 References: <20200714184105.507384017@linuxfoundation.org>
@@ -58,108 +59,78 @@ Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
-Message-ID: <20200714184308.IWbtsdbGq0z80QsIPkvqkRv66neTp4hPzp5G-fbjzX4@z>
+Message-ID: <20200714184305.odIfHSMM7WZIHV60sg-bX40RAtNTQ4ICh9u2XQtUpis@z>
 
-From: Stephane Eranian <eranian@google.com>
+From: Peng Ma <peng.ma@nxp.com>
 
-[ Upstream commit fd3ae1e1587d64ef8cc8e361903d33625458073e ]
+[ Upstream commit dc234825997ec6ff05980ca9e2204f4ac3f8d695 ]
 
-To prepare for support of both Intel and AMD RAPL.
+We need to ensure dspi controller could be stopped in order for kexec
+to start the next kernel.
+So add the shutdown operation support.
 
-As per the AMD PPR, Fam17h support Package RAPL counters to monitor power usage.
-The RAPL counter operates as with Intel RAPL, and as such it is beneficial
-to share the code.
-
-No change in functionality.
-
-Signed-off-by: Stephane Eranian <eranian@google.com>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Link: https://lore.kernel.org/r/20200527224659.206129-2-eranian@google.com
+Signed-off-by: Peng Ma <peng.ma@nxp.com>
+Link: https://lore.kernel.org/r/20200424061216.27445-1-peng.ma@nxp.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/events/Kconfig            | 6 +++---
- arch/x86/events/Makefile           | 1 +
- arch/x86/events/intel/Makefile     | 2 --
- arch/x86/events/{intel => }/rapl.c | 9 ++++++---
- 4 files changed, 10 insertions(+), 8 deletions(-)
- rename arch/x86/events/{intel => }/rapl.c (98%)
+ drivers/spi/spi-fsl-dspi.c | 23 +++++++++++++++++++++++
+ 1 file changed, 23 insertions(+)
 
-diff --git a/arch/x86/events/Kconfig b/arch/x86/events/Kconfig
-index 9a7a1446cb3a0..4a809c6cbd2f5 100644
---- a/arch/x86/events/Kconfig
-+++ b/arch/x86/events/Kconfig
-@@ -10,11 +10,11 @@ config PERF_EVENTS_INTEL_UNCORE
- 	available on NehalemEX and more modern processors.
+diff --git a/drivers/spi/spi-fsl-dspi.c b/drivers/spi/spi-fsl-dspi.c
+index 9a06818d28169..e34278a00b708 100644
+--- a/drivers/spi/spi-fsl-dspi.c
++++ b/drivers/spi/spi-fsl-dspi.c
+@@ -1,6 +1,7 @@
+ // SPDX-License-Identifier: GPL-2.0+
+ //
+ // Copyright 2013 Freescale Semiconductor, Inc.
++// Copyright 2020 NXP
+ //
+ // Freescale DSPI driver
+ // This file contains a driver for the Freescale DSPI
+@@ -33,6 +34,9 @@
+ #define SPI_MCR_CLR_TXF			BIT(11)
+ #define SPI_MCR_CLR_RXF			BIT(10)
+ #define SPI_MCR_XSPI			BIT(3)
++#define SPI_MCR_DIS_TXF			BIT(13)
++#define SPI_MCR_DIS_RXF			BIT(12)
++#define SPI_MCR_HALT			BIT(0)
  
- config PERF_EVENTS_INTEL_RAPL
--	tristate "Intel rapl performance events"
--	depends on PERF_EVENTS && CPU_SUP_INTEL && PCI
-+	tristate "Intel/AMD rapl performance events"
-+	depends on PERF_EVENTS && (CPU_SUP_INTEL || CPU_SUP_AMD) && PCI
- 	default y
- 	---help---
--	Include support for Intel rapl performance events for power
-+	Include support for Intel and AMD rapl performance events for power
- 	monitoring on modern processors.
+ #define SPI_TCR				0x08
+ #define SPI_TCR_GET_TCNT(x)		(((x) & GENMASK(31, 16)) >> 16)
+@@ -1169,6 +1173,24 @@ static int dspi_remove(struct platform_device *pdev)
+ 	return 0;
+ }
  
- config PERF_EVENTS_INTEL_CSTATE
-diff --git a/arch/x86/events/Makefile b/arch/x86/events/Makefile
-index 9e07f554333fb..b418ef6878796 100644
---- a/arch/x86/events/Makefile
-+++ b/arch/x86/events/Makefile
-@@ -1,5 +1,6 @@
- # SPDX-License-Identifier: GPL-2.0-only
- obj-y					+= core.o probe.o
-+obj-$(PERF_EVENTS_INTEL_RAPL)		+= rapl.o
- obj-y					+= amd/
- obj-$(CONFIG_X86_LOCAL_APIC)            += msr.o
- obj-$(CONFIG_CPU_SUP_INTEL)		+= intel/
-diff --git a/arch/x86/events/intel/Makefile b/arch/x86/events/intel/Makefile
-index 3468b0c1dc7c9..e67a5886336c1 100644
---- a/arch/x86/events/intel/Makefile
-+++ b/arch/x86/events/intel/Makefile
-@@ -2,8 +2,6 @@
- obj-$(CONFIG_CPU_SUP_INTEL)		+= core.o bts.o
- obj-$(CONFIG_CPU_SUP_INTEL)		+= ds.o knc.o
- obj-$(CONFIG_CPU_SUP_INTEL)		+= lbr.o p4.o p6.o pt.o
--obj-$(CONFIG_PERF_EVENTS_INTEL_RAPL)	+= intel-rapl-perf.o
--intel-rapl-perf-objs			:= rapl.o
- obj-$(CONFIG_PERF_EVENTS_INTEL_UNCORE)	+= intel-uncore.o
- intel-uncore-objs			:= uncore.o uncore_nhmex.o uncore_snb.o uncore_snbep.o
- obj-$(CONFIG_PERF_EVENTS_INTEL_CSTATE)	+= intel-cstate.o
-diff --git a/arch/x86/events/intel/rapl.c b/arch/x86/events/rapl.c
-similarity index 98%
-rename from arch/x86/events/intel/rapl.c
-rename to arch/x86/events/rapl.c
-index 5053a403e4ae0..3c222d6fdee3b 100644
---- a/arch/x86/events/intel/rapl.c
-+++ b/arch/x86/events/rapl.c
-@@ -1,11 +1,14 @@
- // SPDX-License-Identifier: GPL-2.0-only
- /*
-- * Support Intel RAPL energy consumption counters
-+ * Support Intel/AMD RAPL energy consumption counters
-  * Copyright (C) 2013 Google, Inc., Stephane Eranian
-  *
-  * Intel RAPL interface is specified in the IA-32 Manual Vol3b
-  * section 14.7.1 (September 2013)
-  *
-+ * AMD RAPL interface for Fam17h is described in the public PPR:
-+ * https://bugzilla.kernel.org/show_bug.cgi?id=206537
-+ *
-  * RAPL provides more controls than just reporting energy consumption
-  * however here we only expose the 3 energy consumption free running
-  * counters (pp0, pkg, dram).
-@@ -58,8 +61,8 @@
- #include <linux/nospec.h>
- #include <asm/cpu_device_id.h>
- #include <asm/intel-family.h>
--#include "../perf_event.h"
--#include "../probe.h"
-+#include "perf_event.h"
-+#include "probe.h"
- 
- MODULE_LICENSE("GPL");
++static void dspi_shutdown(struct platform_device *pdev)
++{
++	struct spi_controller *ctlr = platform_get_drvdata(pdev);
++	struct fsl_dspi *dspi = spi_controller_get_devdata(ctlr);
++
++	/* Disable RX and TX */
++	regmap_update_bits(dspi->regmap, SPI_MCR,
++			   SPI_MCR_DIS_TXF | SPI_MCR_DIS_RXF,
++			   SPI_MCR_DIS_TXF | SPI_MCR_DIS_RXF);
++
++	/* Stop Running */
++	regmap_update_bits(dspi->regmap, SPI_MCR, SPI_MCR_HALT, SPI_MCR_HALT);
++
++	dspi_release_dma(dspi);
++	clk_disable_unprepare(dspi->clk);
++	spi_unregister_controller(dspi->ctlr);
++}
++
+ static struct platform_driver fsl_dspi_driver = {
+ 	.driver.name		= DRIVER_NAME,
+ 	.driver.of_match_table	= fsl_dspi_dt_ids,
+@@ -1176,6 +1198,7 @@ static struct platform_driver fsl_dspi_driver = {
+ 	.driver.pm		= &dspi_pm,
+ 	.probe			= dspi_probe,
+ 	.remove			= dspi_remove,
++	.shutdown		= dspi_shutdown,
+ };
+ module_platform_driver(fsl_dspi_driver);
  
 -- 
 2.25.1
