@@ -2,260 +2,104 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B41ECC433EC
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 13:51:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EFAE9C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 13:54:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7985320760
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 13:51:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LMGM0YY9"
+	by mail.kernel.org (Postfix) with ESMTP id D1852224D3
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 13:54:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728047AbgGNNvT (ORCPT
+        id S1726624AbgGNNyv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 09:51:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48122 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727851AbgGNNvS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 09:51:18 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0DF65C061755;
-        Tue, 14 Jul 2020 06:51:18 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id f7so21745359wrw.1;
-        Tue, 14 Jul 2020 06:51:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Nyca4mJuwtZNwbe/unDUOzbarsOZ8fNHWHgCVrt+Cis=;
-        b=LMGM0YY9vstUQaRNmQG6n7YGnp8GuUPrHa+8bETrtD6WAYO4AkzO5s/oVijAaA8t88
-         eld3dS2i98Rz0UZCDjEpTlbEWFb0tlg+Inoph2GHx+5KluLiNZilW28pTIemNmH9fuX4
-         6smVKuc3qQ/AtFHJT8IVydDdMXy00sOOivrKnPpFQHBWP+Xpysiba9jG8jKJb6ZgGQlE
-         GHhTpjcU4zUsVlHZT9s6li/BdVz9ODh407b7VZLBFbrlUGrb+YG8TFgRoBwUr7jJr2RA
-         RMV0m+Qo5eTRNtYGagUlCrJYDDC+z7esApxsSWNVaFrmkILJHM/ff/DkL0KRQdbM/SnL
-         /K9w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Nyca4mJuwtZNwbe/unDUOzbarsOZ8fNHWHgCVrt+Cis=;
-        b=JkEwPvtA3QMHyObSOUoB9vUll6VoKubTtglv4XPwxygeMSgmjFxTRm4NjdfO2EiA+p
-         eAjKoDs66F7EY967i2/W9tSBfaykOFXcgm4YgGV5rduqqaZvzp53BiXiGcZTN4pztbu8
-         HeiUXFaSOO/e7MDYcYq6gNva99WV/UDFrAnAqtldwwP+rbvCOlzNDu26X+d27F0dy5lK
-         TIMBLfOO3chfTFHnOrjSk/GgC54dOkztjyayP7cGn79xTTWOeEC9llgXuoW4zyglWnts
-         ndlby+diqL6+kMTWVOyYbIiF6YXZSYYS9YUQFNVBp7sLEPf8R0DfCuftT0PuiUwjpZxo
-         W9Gg==
-X-Gm-Message-State: AOAM531VJeY6IrC3VFwWn3tXaZq5DLIZiOPmglbhaTSY4glKAB8J0YRM
-        Lhjq/MalRful+4s2GgWyHxEPVgScWeEJciyG7V0=
-X-Google-Smtp-Source: ABdhPJx07nFuIWBTBDF9itob9eflqn2aKKlchFXKTi+0LuKJ/PHtLO3CSunPZMpJdTstaFt6f04H0IrrUg0l99K0tNQ=
-X-Received: by 2002:adf:f34e:: with SMTP id e14mr5615326wrp.299.1594734676705;
- Tue, 14 Jul 2020 06:51:16 -0700 (PDT)
+        Tue, 14 Jul 2020 09:54:51 -0400
+Received: from mga09.intel.com ([134.134.136.24]:33363 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725906AbgGNNyu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 09:54:50 -0400
+IronPort-SDR: DfQ4pygSGIKCWICuBzK2GxdfELpJaN+3QJRCzuj7ImTAHpFioEkrBeR/QKbjnAkiRHcHmGyA/d
+ HChDdavJa1nA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9681"; a="150318980"
+X-IronPort-AV: E=Sophos;i="5.75,350,1589266800"; 
+   d="scan'208";a="150318980"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jul 2020 06:54:50 -0700
+IronPort-SDR: +XxidMzrv1a/8/8wXZ7LcHaInmy7T6RrqjR1IZ3hUJ3l6CBXlDbbvF1v1Acu2ApZ+1FOxRdw/u
+ m41TaWmbXY1A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,350,1589266800"; 
+   d="scan'208";a="485370296"
+Received: from romley-ivt3.sc.intel.com ([172.25.110.60])
+  by fmsmga006.fm.intel.com with ESMTP; 14 Jul 2020 06:54:49 -0700
+Date:   Tue, 14 Jul 2020 06:54:49 -0700
+From:   Fenghua Yu <fenghua.yu@intel.com>
+To:     "Liu, Yi L" <yi.l.liu@intel.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Joerg Roedel <joro@8bytes.org>, Ingo Molnar <mingo@redhat.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        H Peter Anvin <hpa@zytor.com>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Felix Kuehling <Felix.Kuehling@amd.com>,
+        "Hansen, Dave" <dave.hansen@intel.com>,
+        "Luck, Tony" <tony.luck@intel.com>,
+        Jean-Philippe Brucker <jean-philippe@linaro.org>,
+        Christoph Hellwig <hch@infradead.org>,
+        "Raj, Ashok" <ashok.raj@intel.com>,
+        "Pan, Jacob jun" <jacob.jun.pan@intel.com>,
+        "Jiang, Dave" <dave.jiang@intel.com>,
+        "Mehta, Sohil" <sohil.mehta@intel.com>,
+        "Shankar, Ravi V" <ravi.v.shankar@intel.com>,
+        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+        x86 <x86@kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        amd-gfx <amd-gfx@lists.freedesktop.org>
+Subject: Re: [PATCH v6 01/12] iommu: Change type of pasid to u32
+Message-ID: <20200714135449.GI32961@romley-ivt3.sc.intel.com>
+References: <1594684087-61184-1-git-send-email-fenghua.yu@intel.com>
+ <1594684087-61184-2-git-send-email-fenghua.yu@intel.com>
+ <DM5PR11MB1435D67E0CE9D8D4C1D7F675C3610@DM5PR11MB1435.namprd11.prod.outlook.com>
 MIME-Version: 1.0
-References: <0000000000003011fb05aa59df1e@google.com> <20200714093718.GQ20687@gauss3.secunet.de>
-In-Reply-To: <20200714093718.GQ20687@gauss3.secunet.de>
-From:   Xin Long <lucien.xin@gmail.com>
-Date:   Tue, 14 Jul 2020 22:01:32 +0800
-Message-ID: <CADvbK_cK1gPvrNro6DyuQEGEbQVuGEPUK=WO9+pWmhCx8=3YOw@mail.gmail.com>
-Subject: Re: KASAN: slab-out-of-bounds Read in __xfrm6_tunnel_spi_lookup
-To:     Steffen Klassert <steffen.klassert@secunet.com>
-Cc:     syzbot <syzbot+ea9832f8ae588deb0205@syzkaller.appspotmail.com>,
-        davem <davem@davemloft.net>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Jakub Kicinski <kuba@kernel.org>,
-        kuznet <kuznet@ms2.inr.ac.ru>,
-        LKML <linux-kernel@vger.kernel.org>,
-        network dev <netdev@vger.kernel.org>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        yoshfuji <yoshfuji@linux-ipv6.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <DM5PR11MB1435D67E0CE9D8D4C1D7F675C3610@DM5PR11MB1435.namprd11.prod.outlook.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 14, 2020 at 5:37 PM Steffen Klassert
-<steffen.klassert@secunet.com> wrote:
->
-> Xin,
->
-> this looks a bit like it was introduced with one of your recent
-> patches. Can you please look into that?
-Yes, I'm looking into it.
+On Mon, Jul 13, 2020 at 07:45:49PM -0700, Liu, Yi L wrote:
+> > From: Fenghua Yu <fenghua.yu@intel.com>
+> > Sent: Tuesday, July 14, 2020 7:48 AM
+> >
+> > PASID is defined as a few different types in iommu including "int",
+> > "u32", and "unsigned int". To be consistent and to match with uapi
+> > definitions, define PASID and its variations (e.g. max PASID) as "u32".
+> > "u32" is also shorter and a little more explicit than "unsigned int".
+> >
+> > No PASID type change in uapi although it defines PASID as __u64 in
+> > some places.
+> 
+> just out of curious, why not using ioasid_t? In Linux kernel, PASID is
+> managed by ioasid.
+
+ioasid_t is only used in limited underneath files (ioasid.c and ioasid.h).
+Instead of changing hundreds of places to use ioasid_t, it's better to
+keep ioasid_t only used in the files.
+
+And it's explict and matches with uapi to define PASID as u32. Changing
+to ioasid_t in so many files (amd, gpu, crypto, etc) may confuse upper
+users on "why ioasid_t".
+
+So we had better to explicitly define PASID as u32 and keep ioasid_t in
+the limited underneath files.
 
 Thanks.
 
->
-> Thanks!
->
-> On Mon, Jul 13, 2020 at 03:04:16PM -0700, syzbot wrote:
-> > Hello,
-> >
-> > syzbot found the following crash on:
-> >
-> > HEAD commit:    be978f8f Add linux-next specific files for 20200713
-> > git tree:       linux-next
-> > console output: https://syzkaller.appspot.com/x/log.txt?x=1225f8c7100000
-> > kernel config:  https://syzkaller.appspot.com/x/.config?x=3fe4fccb94cbc1a6
-> > dashboard link: https://syzkaller.appspot.com/bug?extid=ea9832f8ae588deb0205
-> > compiler:       gcc (GCC) 10.1.0-syz 20200507
-> > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=17270713100000
-> > C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=126c0ffb100000
-> >
-> > Bisection is inconclusive: the first bad commit could be any of:
-> >
-> > 08622869 ip6_vti: support IP6IP6 tunnel processing with .cb_handler
-> > e6ce6457 ip_vti: support IPIP6 tunnel processing
-> > 2ab110cb ip6_vti: support IP6IP tunnel processing
-> > 87e66b96 ip_vti: support IPIP tunnel processing with .cb_handler
-> > 86afc703 tunnel6: add tunnel6_input_afinfo for ipip and ipv6 tunnels
-> > d5a7a505 ipcomp: assign if_id to child tunnel from parent tunnel
-> > 6df2db5d tunnel4: add cb_handler to struct xfrm_tunnel
-> > d7b360c2 xfrm: interface: support IP6IP6 and IP6IP tunnels processing with .cb_handler
-> > 1475ee0a xfrm: add is_ipip to struct xfrm_input_afinfo
-> > da9bbf05 xfrm: interface: support IPIP and IPIP6 tunnels processing with .cb_handler
-> > 2d4c7986 Merge remote-tracking branch 'origin/testing'
-> > 428d2459 xfrm: introduce oseq-may-wrap flag
-> > bdf0acad Merge remote-tracking branch 'ipsec-next/master'
-> >
-> > bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=137de95d100000
-> >
-> > IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> > Reported-by: syzbot+ea9832f8ae588deb0205@syzkaller.appspotmail.com
-> >
-> > ==================================================================
-> > BUG: KASAN: slab-out-of-bounds in __xfrm6_tunnel_spi_lookup+0x3a9/0x3b0 net/ipv6/xfrm6_tunnel.c:79
-> > Read of size 8 at addr ffff88809a0d6b80 by task syz-executor016/7061
-> > CPU: 1 PID: 7061 Comm: syz-executor016 Not tainted 5.8.0-rc4-next-20200713-syzkaller #0
-> > Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-> > Call Trace:
-> >  <IRQ>
-> >  __dump_stack lib/dump_stack.c:77 [inline]
-> >  dump_stack+0x18f/0x20d lib/dump_stack.c:118
-> >  print_address_description.constprop.0.cold+0xae/0x497 mm/kasan/report.c:383
-> >  __kasan_report mm/kasan/report.c:513 [inline]
-> >  kasan_report.cold+0x1f/0x37 mm/kasan/report.c:530
-> >  __xfrm6_tunnel_spi_lookup+0x3a9/0x3b0 net/ipv6/xfrm6_tunnel.c:79
-> >  xfrm6_tunnel_spi_lookup+0x8a/0x1d0 net/ipv6/xfrm6_tunnel.c:95
-> >  xfrmi6_rcv_tunnel+0xb9/0x100 net/xfrm/xfrm_interface.c:810
-> >  tunnel46_rcv+0xef/0x2b0 net/ipv6/tunnel6.c:193
-> >  ip6_protocol_deliver_rcu+0x2e8/0x1670 net/ipv6/ip6_input.c:433
-> >  ip6_input_finish+0x7f/0x160 net/ipv6/ip6_input.c:474
-> >  NF_HOOK include/linux/netfilter.h:307 [inline]
-> >  NF_HOOK include/linux/netfilter.h:301 [inline]
-> >  ip6_input+0x9c/0xd0 net/ipv6/ip6_input.c:483
-> >  ip6_mc_input+0x411/0xea0 net/ipv6/ip6_input.c:577
-> >  dst_input include/net/dst.h:449 [inline]
-> >  ip6_rcv_finish net/ipv6/ip6_input.c:76 [inline]
-> >  NF_HOOK include/linux/netfilter.h:307 [inline]
-> >  NF_HOOK include/linux/netfilter.h:301 [inline]
-> >  ipv6_rcv+0x28e/0x3c0 net/ipv6/ip6_input.c:307
-> >  __netif_receive_skb_one_core+0x114/0x180 net/core/dev.c:5287
-> >  __netif_receive_skb+0x27/0x1c0 net/core/dev.c:5401
-> >  process_backlog+0x28d/0x7f0 net/core/dev.c:6245
-> >  napi_poll net/core/dev.c:6690 [inline]
-> >  net_rx_action+0x4a1/0xe80 net/core/dev.c:6760
-> >  __do_softirq+0x34c/0xa60 kernel/softirq.c:292
-> >  asm_call_on_stack+0xf/0x20 arch/x86/entry/entry_64.S:706
-> >  </IRQ>
-> >  __run_on_irqstack arch/x86/include/asm/irq_stack.h:22 [inline]
-> >  run_on_irqstack_cond arch/x86/include/asm/irq_stack.h:48 [inline]
-> >  do_softirq_own_stack+0x111/0x170 arch/x86/kernel/irq_64.c:77
-> >  do_softirq kernel/softirq.c:337 [inline]
-> >  do_softirq+0x16b/0x1e0 kernel/softirq.c:324
-> >  netif_rx_ni+0x3c5/0x650 net/core/dev.c:4836
-> >  dev_loopback_xmit+0x204/0x590 net/core/dev.c:3852
-> >  NF_HOOK include/linux/netfilter.h:307 [inline]
-> >  NF_HOOK include/linux/netfilter.h:301 [inline]
-> >  ip6_finish_output2+0x108f/0x17b0 net/ipv6/ip6_output.c:81
-> >  ip6_fragment+0xbdb/0x2490 net/ipv6/ip6_output.c:920
-> >  __ip6_finish_output net/ipv6/ip6_output.c:141 [inline]
-> >  __ip6_finish_output+0x578/0xab0 net/ipv6/ip6_output.c:128
-> >  ip6_finish_output+0x34/0x1f0 net/ipv6/ip6_output.c:153
-> >  NF_HOOK_COND include/linux/netfilter.h:296 [inline]
-> >  ip6_output+0x1db/0x520 net/ipv6/ip6_output.c:176
-> >  dst_output include/net/dst.h:443 [inline]
-> >  ip6_local_out+0xaf/0x1a0 net/ipv6/output_core.c:179
-> >  ip6_send_skb+0xb7/0x340 net/ipv6/ip6_output.c:1865
-> >  ip6_push_pending_frames+0xbd/0xe0 net/ipv6/ip6_output.c:1885
-> >  rawv6_push_pending_frames net/ipv6/raw.c:613 [inline]
-> >  rawv6_sendmsg+0x2add/0x38f0 net/ipv6/raw.c:956
-> >  inet_sendmsg+0x99/0xe0 net/ipv4/af_inet.c:817
-> >  sock_sendmsg_nosec net/socket.c:652 [inline]
-> >  sock_sendmsg+0xcf/0x120 net/socket.c:672
-> >  sock_no_sendpage+0xee/0x130 net/core/sock.c:2873
-> >  kernel_sendpage net/socket.c:3653 [inline]
-> >  sock_sendpage+0xe5/0x140 net/socket.c:945
-> >  pipe_to_sendpage+0x2ad/0x380 fs/splice.c:365
-> >  splice_from_pipe_feed fs/splice.c:419 [inline]
-> >  __splice_from_pipe+0x3dc/0x830 fs/splice.c:543
-> >  splice_from_pipe fs/splice.c:578 [inline]
-> >  generic_splice_sendpage+0xd4/0x140 fs/splice.c:724
-> >  do_splice_from fs/splice.c:736 [inline]
-> >  do_splice+0xbb8/0x17a0 fs/splice.c:1043
-> >  __do_sys_splice fs/splice.c:1318 [inline]
-> >  __se_sys_splice fs/splice.c:1300 [inline]
-> >  __x64_sys_splice+0x198/0x250 fs/splice.c:1300
-> >  do_syscall_64+0x60/0xe0 arch/x86/entry/common.c:384
-> >  entry_SYSCALL_64_after_hwframe+0x44/0xa9
-> > RIP: 0033:0x448bc9
-> > Code: Bad RIP value.
-> > RSP: 002b:00007f17b19a4da8 EFLAGS: 00000246 ORIG_RAX: 0000000000000113
-> > RAX: ffffffffffffffda RBX: 00000000006dec58 RCX: 0000000000448bc9
-> > RDX: 0000000000000005 RSI: 0000000000000000 RDI: 0000000000000003
-> > RBP: 00000000006dec50 R08: 000000000804ffe2 R09: 0000000000000000
-> > R10: 0000000000000000 R11: 0000000000000246 R12: 00000000006dec5c
-> > R13: 00007ffe929ff2df R14: 00007f17b19a59c0 R15: 00000000006dec5c
-> > Allocated by task 6840:
-> >  kasan_save_stack+0x1b/0x40 mm/kasan/common.c:48
-> >  kasan_set_track mm/kasan/common.c:56 [inline]
-> >  __kasan_kmalloc.constprop.0+0xbf/0xd0 mm/kasan/common.c:461
-> >  __do_kmalloc mm/slab.c:3655 [inline]
-> >  __kmalloc+0x1a8/0x320 mm/slab.c:3664
-> >  kmalloc include/linux/slab.h:559 [inline]
-> >  kzalloc include/linux/slab.h:666 [inline]
-> >  ops_init+0xfb/0x470 net/core/net_namespace.c:141
-> >  setup_net+0x2d8/0x850 net/core/net_namespace.c:341
-> >  copy_net_ns+0x2cf/0x5e0 net/core/net_namespace.c:482
-> >  create_new_namespaces+0x3f6/0xb10 kernel/nsproxy.c:110
-> >  unshare_nsproxy_namespaces+0xbd/0x1f0 kernel/nsproxy.c:231
-> >  ksys_unshare+0x445/0x8e0 kernel/fork.c:2927
-> >  __do_sys_unshare kernel/fork.c:2995 [inline]
-> >  __se_sys_unshare kernel/fork.c:2993 [inline]
-> >  __x64_sys_unshare+0x2d/0x40 kernel/fork.c:2993
-> >  do_syscall_64+0x60/0xe0 arch/x86/entry/common.c:384
-> >  entry_SYSCALL_64_after_hwframe+0x44/0xa9
-> > The buggy address belongs to the object at ffff88809a0d6800
-> >  which belongs to the cache kmalloc-512 of size 512
-> > The buggy address is located 384 bytes to the right of
-> >  512-byte region [ffff88809a0d6800, ffff88809a0d6a00)
-> > The buggy address belongs to the page:
-> > page:000000008c78ee7f refcount:1 mapcount:0 mapping:0000000000000000 index:0x0 pfn:0x9a0d6
-> > flags: 0xfffe0000000200(slab)
-> > raw: 00fffe0000000200 ffffea0002783b08 ffffea00026054c8 ffff8880aa000600
-> > raw: 0000000000000000 ffff88809a0d6000 0000000100000004 0000000000000000
-> > page dumped because: kasan: bad access detected
-> > Memory state around the buggy address:
-> >  ffff88809a0d6a80: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
-> >  ffff88809a0d6b00: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
-> > >ffff88809a0d6b80: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
-> >                    ^
-> >  ffff88809a0d6c00: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-> >  ffff88809a0d6c80: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-> > ==================================================================
-> >
-> >
-> > ---
-> > This bug is generated by a bot. It may contain errors.
-> > See https://goo.gl/tpsmEJ for more information about syzbot.
-> > syzbot engineers can be reached at syzkaller@googlegroups.com.
-> >
-> > syzbot will keep track of this bug report. See:
-> > https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-> > For information about bisection process see: https://goo.gl/tpsmEJ#bisection
-> > syzbot can test patches for this bug, for details see:
-> > https://goo.gl/tpsmEJ#testing-patches
+-Fenghua
