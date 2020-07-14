@@ -2,150 +2,126 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-16.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 353A9C433E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:03:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38BF8C433E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:10:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 12F3322597
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:03:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594749806;
-	bh=27yz5joe+49D2494fVuVbmM7h/G2j1WWWKnYTtSpw7o=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=u3LiiKyRIy5kV2FP7scccXWHRwHM/xUfkpNUPp8SPVn3dPlC+ObBnOLtiTzsqdOnH
-	 Xb5qJc3VrVt0S1Pit2gtuGk010Ki388BCNeXOwHwHpugh8xpsfhl6o0SGP7hH1KD79
-	 /rA1io4gyrMAw35fOFLsM7WnoR9jgaNW13cYrkwU=
+	by mail.kernel.org (Postfix) with ESMTP id 17F0320760
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:10:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WsiJGXVq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728169AbgGNSDY (ORCPT
+        id S1729019AbgGNSK2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 14:03:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55960 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727028AbgGNSDY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 14:03:24 -0400
-Received: from embeddedor (unknown [201.162.240.73])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B450F22582;
-        Tue, 14 Jul 2020 18:03:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594749803;
-        bh=27yz5joe+49D2494fVuVbmM7h/G2j1WWWKnYTtSpw7o=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=hH8elfPLJqZU4PF+MMAJRQZhsLdzvNUaVZjCRylV24xv4YMR7Q/R2Tz9ZwK2qC915
-         mXl6OFopoiUl6QIUl98T0Yz13cy7X3Zx68mZgzKYak6Kq7ODLp0g8kKrrrHKzDjMws
-         HOXqxSydOTFJcBvQXegyrM7c/FxaWVF7xRok/ptQ=
-Date:   Tue, 14 Jul 2020 13:08:55 -0500
-From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     "Winkler, Tomas" <tomas.winkler@intel.com>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Tue, 14 Jul 2020 14:10:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60926 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728301AbgGNSK2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 14:10:28 -0400
+Received: from mail-qt1-x841.google.com (mail-qt1-x841.google.com [IPv6:2607:f8b0:4864:20::841])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E26A9C061755;
+        Tue, 14 Jul 2020 11:10:27 -0700 (PDT)
+Received: by mail-qt1-x841.google.com with SMTP id u12so13508019qth.12;
+        Tue, 14 Jul 2020 11:10:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=ZX4l9y/mb02MIUOaKSz1lj12ECx0wlEAm51QAfF6o/8=;
+        b=WsiJGXVqDNs9WargJT52mvIz/gaCVCuxb52bFJeFukAYzSUEIh2fdlkQeVqeuWbB0D
+         Bzbqn0r0doaRe/L6ZZIb3zStjHYGZ8RF2beyf9yjYgP8agdHAl0PAiSbAO4euheDv12l
+         8btObml9Y9hX6nYx8w01Xl2cH7DSo25hPOO4FJFsbXHDRP0OEfMtN0dqr2T/CmkEn3QC
+         pOonLTv9BirBHzAunpzAGUXm4OHH4ctLfxxq13swaSMV/LTuMoEKHkYbwWJA0nb4jEM7
+         7Ke2VPeIG86ZGrJ4GX1h39LqB8Ud3pcWPrGhbq8RY+MWZ+rPqXoJNibnsLvzBSqf90bk
+         QeSw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=ZX4l9y/mb02MIUOaKSz1lj12ECx0wlEAm51QAfF6o/8=;
+        b=WK71pxN91y9WAgxJ1Gm/yHPuW91KAmwbGJnGDseTNRa445SVDVBhAkkW8sVHRLEuPd
+         SqHZ6F97P7CCk6BtDSbH0NQf04eR3vgRUIbOywAa4pXh1KlQTjkqVGgTpDQbL47RKlvS
+         9RzOi9xVrEuuTtKMQPDlK2j0IXWhn3jId1uOA/im9vxzPpCgEbdBn9EyQ2PVSM0NYpFM
+         e1NDWJVwCouTeWhVbSUOmnx2YFIrBb5U34ntq4uUa8HThl/zddlkzNBSY7zf+cDPwT4e
+         me+k/BLRReO0VbQwlO/VC41qwiRLj2XJFDD1r4a70o8mL8JeMs+DDQ4kMCLIjSJpspk4
+         JCww==
+X-Gm-Message-State: AOAM530SlVMg0pF7ewMbMJLxRkYDhfv+nxzPBG+E1DMbXlbzwSW5RVCB
+        v9i7lTg3ntGGtIix6rhL4w==
+X-Google-Smtp-Source: ABdhPJzIfX8uNaGelEtus3hlnEHUAzJCj9p6MTHvuiHUjgC4AFO0/AIzEJVEUS+Rr3I8EFtZYkxMRQ==
+X-Received: by 2002:ac8:3028:: with SMTP id f37mr5775930qte.351.1594750226967;
+        Tue, 14 Jul 2020 11:10:26 -0700 (PDT)
+Received: from localhost.localdomain ([209.94.141.207])
+        by smtp.gmail.com with ESMTPSA id n64sm22663726qke.77.2020.07.14.11.10.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 14 Jul 2020 11:10:26 -0700 (PDT)
+From:   Peilin Ye <yepeilin.cs@gmail.com>
+To:     Andrii Nakryiko <andriin@fb.com>,
+        Alexei Starovoitov <ast@kernel.org>
+Cc:     Peilin Ye <yepeilin.cs@gmail.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        KP Singh <kpsingh@chromium.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH][next] mei: Avoid the use of one-element arrays
-Message-ID: <20200714180855.GA31158@embeddedor>
-References: <20200714174644.GA30158@embeddedor>
- <fe3b8d4a4eb04ead83ffcefe12fd218e@intel.com>
+        netdev@vger.kernel.org, bpf@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com
+Subject: [Linux-kernel-mentees] [PATCH v3] bpf: Fix NULL pointer dereference in __btf_resolve_helper_id()
+Date:   Tue, 14 Jul 2020 14:09:04 -0400
+Message-Id: <20200714180904.277512-1-yepeilin.cs@gmail.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <CAADnVQ+jUPGJapkvKW=AfXESD6Vz2iuONvJm8eJm5Yd+u9mJ+w@mail.gmail.com>
+References: <CAADnVQ+jUPGJapkvKW=AfXESD6Vz2iuONvJm8eJm5Yd+u9mJ+w@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <fe3b8d4a4eb04ead83ffcefe12fd218e@intel.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 14, 2020 at 05:54:32PM +0000, Winkler, Tomas wrote:
-> > 
-> > There is a regular need in the kernel to provide a way to declare having a
-> > dynamically sized set of trailing elements in a structure.
-> > Kernel code should always use “flexible array members”[1] for these cases
-> > or, as in this particular case, replace the one-element array with a simple
-> > value type u8 reserved once this is just a placeholder for alignment. The older
-> > style of one-element or zero-length arrays should no longer be used[2].
-> > 
-> > Also, while there, use the preferred form for passing a size of a struct.
-> > The alternative form where struct name is spelled out hurts readability and
-> > introduces an opportunity for a bug when the variable type is changed but
-> > the corresponding sizeof that is passed as argument is not.
-> > 
-> > [1] https://en.wikipedia.org/wiki/Flexible_array_member
-> > [2] https://github.com/KSPP/linux/issues/79
-> > 
-> > Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
-> I'm okay with the patch but in this case the description is a bit off. 
-> In this case there was no intention for a flexible arrays its just a reserved field. 
-> 
+Prevent __btf_resolve_helper_id() from dereferencing `btf_vmlinux`
+as NULL. This patch fixes the following syzbot bug:
 
-The reserved field is actually mentioned in the description:
+    https://syzkaller.appspot.com/bug?id=f823224ada908fa5c207902a5a62065e53ca0fcc
 
-"... or, as in this particular case, replace the one-element array with a simple
-value type u8 reserved once this is just a placeholder for alignment."
+Reported-by: syzbot+ee09bda7017345f1fbe6@syzkaller.appspotmail.com
+Signed-off-by: Peilin Ye <yepeilin.cs@gmail.com>
+---
+Sorry, I got the link wrong. Thank you for pointing that out.
 
-Thanks
---
-Gustavo
+Change in v3:
+    - Fix incorrect syzbot dashboard link.
 
-> > ---
-> >  drivers/misc/mei/hbm.c | 4 ++--
-> >  drivers/misc/mei/hw.h  | 6 +++---
-> >  2 files changed, 5 insertions(+), 5 deletions(-)
-> > 
-> > diff --git a/drivers/misc/mei/hbm.c b/drivers/misc/mei/hbm.c index
-> > a44094cdbc36..f020d5594154 100644
-> > --- a/drivers/misc/mei/hbm.c
-> > +++ b/drivers/misc/mei/hbm.c
-> > @@ -408,14 +408,14 @@ static int mei_hbm_add_cl_resp(struct mei_device
-> > *dev, u8 addr, u8 status)  {
-> >  	struct mei_msg_hdr mei_hdr;
-> >  	struct hbm_add_client_response resp;
-> > -	const size_t len = sizeof(struct hbm_add_client_response);
-> > +	const size_t len = sizeof(resp);
-> >  	int ret;
-> > 
-> >  	dev_dbg(dev->dev, "adding client response\n");
-> > 
-> >  	mei_hbm_hdr(&mei_hdr, len);
-> > 
-> > -	memset(&resp, 0, sizeof(struct hbm_add_client_response));
-> > +	memset(&resp, 0, len);
-> >  	resp.hbm_cmd = MEI_HBM_ADD_CLIENT_RES_CMD;
-> >  	resp.me_addr = addr;
-> >  	resp.status  = status;
-> > diff --git a/drivers/misc/mei/hw.h b/drivers/misc/mei/hw.h index
-> > b1a8d5ec88b3..8c0297f0e7f3 100644
-> > --- a/drivers/misc/mei/hw.h
-> > +++ b/drivers/misc/mei/hw.h
-> > @@ -346,13 +346,13 @@ struct hbm_add_client_request {
-> >   * @hbm_cmd: bus message command header
-> >   * @me_addr: address of the client in ME
-> >   * @status: if HBMS_SUCCESS then the client can now accept connections.
-> > - * @reserved: reserved
-> > + * @reserved: reserved for alignment.
-> >   */
-> >  struct hbm_add_client_response {
-> >  	u8 hbm_cmd;
-> >  	u8 me_addr;
-> >  	u8 status;
-> > -	u8 reserved[1];
-> > +	u8 reserved;
-> >  } __packed;
-> > 
-> >  /**
-> > @@ -461,7 +461,7 @@ struct hbm_notification {
-> >  	u8 hbm_cmd;
-> >  	u8 me_addr;
-> >  	u8 host_addr;
-> > -	u8 reserved[1];
-> > +	u8 reserved;
-> >  } __packed;
-> > 
-> >  /**
-> > --
-> > 2.27.0
-> 
+Change in v2:
+    - Split NULL and IS_ERR cases.
+
+ kernel/bpf/btf.c | 5 +++++
+ 1 file changed, 5 insertions(+)
+
+diff --git a/kernel/bpf/btf.c b/kernel/bpf/btf.c
+index 30721f2c2d10..092116a311f4 100644
+--- a/kernel/bpf/btf.c
++++ b/kernel/bpf/btf.c
+@@ -4088,6 +4088,11 @@ static int __btf_resolve_helper_id(struct bpf_verifier_log *log, void *fn,
+ 	const char *tname, *sym;
+ 	u32 btf_id, i;
+ 
++	if (!btf_vmlinux) {
++		bpf_log(log, "btf_vmlinux doesn't exist\n");
++		return -EINVAL;
++	}
++
+ 	if (IS_ERR(btf_vmlinux)) {
+ 		bpf_log(log, "btf_vmlinux is malformed\n");
+ 		return -EINVAL;
+-- 
+2.25.1
+
