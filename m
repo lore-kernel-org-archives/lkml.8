@@ -4,58 +4,57 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F5C9C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:46:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AD79C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:47:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5213F22B48
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:46:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B14222B2B
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:47:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594752419;
-	bh=guW+R+NgHU962CogrYKOHyrmkNm6Y+ppDAjyq2omiG0=;
+	s=default; t=1594752424;
+	bh=xZrHt63A966fvbEgcorxDd/tiuYihsmKfqDkPZ2lMV8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=J6ywh9ybEQaILELvQpHAylnnYSEpLNNNkEwOnsN9X9g2P8AAXSTXKdTjej3+MmGvC
-	 ZajDN8CEOHjA2fG4xgWUN9cRdmu+wFE3ELB0CPVv37h54tyalrlAvpRJP4BkfRI21l
-	 ns06xmxDg7LvCQOzgGFX/MN9zZxKnZWkThzfQFQE=
+	b=isozLYGDsAL1Seo2ZEaFQFNIw1V3sWTh7Mzo7g+3+w56R2J8fnW4J9Zln7vCuYM+y
+	 Yz84DJEpxG1hiJf8WYTXYNZ9zq4uKPHaSFjyNtfpvArCjrr6r9D/S/RRFbfP9wyJH9
+	 teo/oGv6EHuhEIFDBKgpfhUr8qBhzMCqXr3gnwtU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729649AbgGNSq6 (ORCPT
+        id S1729670AbgGNSrC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 14:46:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41712 "EHLO mail.kernel.org"
+        Tue, 14 Jul 2020 14:47:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41896 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729607AbgGNSqv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 14:46:51 -0400
+        id S1729652AbgGNSq7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 14:46:59 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7D165222E9;
-        Tue, 14 Jul 2020 18:46:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6026322AAD;
+        Tue, 14 Jul 2020 18:46:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594752411;
-        bh=guW+R+NgHU962CogrYKOHyrmkNm6Y+ppDAjyq2omiG0=;
+        s=default; t=1594752418;
+        bh=xZrHt63A966fvbEgcorxDd/tiuYihsmKfqDkPZ2lMV8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lIRs8WYRjumfkvuSUvhweC90g06gWAYE3dGnedaWpnuPC50lEk0IQf2xtG5NcHjEz
-         NdprjbQZXMGr/hV2zJ+wHOH6DH4enanD5w9bUl4kzlVTP+jVXBs96p1VUOYoZLEaNp
-         e6O4cCj6e7cPht0mTqN5sEUKhqNuzYmud/U2Rhxo=
+        b=EHs/MLXNrA7DCL9nszb2joaFucY69JMlfV+QcHnel56Ew+17cJ+foP3wjezFCCqRE
+         6aq5v0wfpCWk4yKgtRiFv8x/lrGOHsfpgD13BS7L3v6QIGhia4NfJFaA1ageAlAdqP
+         wgW591ZwUNP2ukhu1kWEkvfhVZPa+3RGM6AuBd3Y=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Cornelia Huck <cohuck@redhat.com>,
-        David Hildenbrand <david@redhat.com>,
+        stable@vger.kernel.org, Fei Liu <feliu@redhat.com>,
+        Jonathan Toppins <jtoppins@redhat.com>,
+        Michael Chan <michael.chan@broadcom.com>,
+        Davide Caratti <dcaratti@redhat.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 01/58] KVM: s390: reduce number of IO pins to 1
-Date:   Tue, 14 Jul 2020 20:43:34 +0200
-Message-Id: <20200714184056.215128125@linuxfoundation.org>
+Subject: [PATCH 4.19 35/58] bnxt_en: fix NULL dereference in case SR-IOV configuration fails
+Date:   Tue, 14 Jul 2020 20:44:08 +0200
+Message-Id: <20200714184057.880568665@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200714184056.149119318@linuxfoundation.org>
 References: <20200714184056.149119318@linuxfoundation.org>
 User-Agent: quilt/0.66
-X-stable: review
-X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -64,71 +63,91 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christian Borntraeger <borntraeger@de.ibm.com>
+From: Davide Caratti <dcaratti@redhat.com>
 
-[ Upstream commit 774911290c589e98e3638e73b24b0a4d4530e97c ]
+[ Upstream commit c8b1d7436045d3599bae56aef1682813ecccaad7 ]
 
-The current number of KVM_IRQCHIP_NUM_PINS results in an order 3
-allocation (32kb) for each guest start/restart. This can result in OOM
-killer activity even with free swap when the memory is fragmented
-enough:
+we need to set 'active_vfs' back to 0, if something goes wrong during the
+allocation of SR-IOV resources: otherwise, further VF configurations will
+wrongly assume that bp->pf.vf[x] are valid memory locations, and commands
+like the ones in the following sequence:
 
-kernel: qemu-system-s39 invoked oom-killer: gfp_mask=0x440dc0(GFP_KERNEL_ACCOUNT|__GFP_COMP|__GFP_ZERO), order=3, oom_score_adj=0
-kernel: CPU: 1 PID: 357274 Comm: qemu-system-s39 Kdump: loaded Not tainted 5.4.0-29-generic #33-Ubuntu
-kernel: Hardware name: IBM 8562 T02 Z06 (LPAR)
-kernel: Call Trace:
-kernel: ([<00000001f848fe2a>] show_stack+0x7a/0xc0)
-kernel:  [<00000001f8d3437a>] dump_stack+0x8a/0xc0
-kernel:  [<00000001f8687032>] dump_header+0x62/0x258
-kernel:  [<00000001f8686122>] oom_kill_process+0x172/0x180
-kernel:  [<00000001f8686abe>] out_of_memory+0xee/0x580
-kernel:  [<00000001f86e66b8>] __alloc_pages_slowpath+0xd18/0xe90
-kernel:  [<00000001f86e6ad4>] __alloc_pages_nodemask+0x2a4/0x320
-kernel:  [<00000001f86b1ab4>] kmalloc_order+0x34/0xb0
-kernel:  [<00000001f86b1b62>] kmalloc_order_trace+0x32/0xe0
-kernel:  [<00000001f84bb806>] kvm_set_irq_routing+0xa6/0x2e0
-kernel:  [<00000001f84c99a4>] kvm_arch_vm_ioctl+0x544/0x9e0
-kernel:  [<00000001f84b8936>] kvm_vm_ioctl+0x396/0x760
-kernel:  [<00000001f875df66>] do_vfs_ioctl+0x376/0x690
-kernel:  [<00000001f875e304>] ksys_ioctl+0x84/0xb0
-kernel:  [<00000001f875e39a>] __s390x_sys_ioctl+0x2a/0x40
-kernel:  [<00000001f8d55424>] system_call+0xd8/0x2c8
+ # echo 2 >/sys/bus/pci/devices/${ADDR}/sriov_numvfs
+ # ip link set dev ens1f0np0 up
+ # ip link set dev ens1f0np0 vf 0 trust on
 
-As far as I can tell s390x does not use the iopins as we bail our for
-anything other than KVM_IRQ_ROUTING_S390_ADAPTER and the chip/pin is
-only used for KVM_IRQ_ROUTING_IRQCHIP. So let us use a small number to
-reduce the memory footprint.
+will cause a kernel crash similar to this:
 
-Signed-off-by: Christian Borntraeger <borntraeger@de.ibm.com>
-Reviewed-by: Cornelia Huck <cohuck@redhat.com>
-Reviewed-by: David Hildenbrand <david@redhat.com>
-Link: https://lore.kernel.org/r/20200617083620.5409-1-borntraeger@de.ibm.com
+ bnxt_en 0000:3b:00.0: not enough MMIO resources for SR-IOV
+ BUG: kernel NULL pointer dereference, address: 0000000000000014
+ #PF: supervisor read access in kernel mode
+ #PF: error_code(0x0000) - not-present page
+ PGD 0 P4D 0
+ Oops: 0000 [#1] SMP PTI
+ CPU: 43 PID: 2059 Comm: ip Tainted: G          I       5.8.0-rc2.upstream+ #871
+ Hardware name: Dell Inc. PowerEdge R740/08D89F, BIOS 2.2.11 06/13/2019
+ RIP: 0010:bnxt_set_vf_trust+0x5b/0x110 [bnxt_en]
+ Code: 44 24 58 31 c0 e8 f5 fb ff ff 85 c0 0f 85 b6 00 00 00 48 8d 1c 5b 41 89 c6 b9 0b 00 00 00 48 c1 e3 04 49 03 9c 24 f0 0e 00 00 <8b> 43 14 89 c2 83 c8 10 83 e2 ef 45 84 ed 49 89 e5 0f 44 c2 4c 89
+ RSP: 0018:ffffac6246a1f570 EFLAGS: 00010246
+ RAX: 0000000000000000 RBX: 0000000000000000 RCX: 000000000000000b
+ RDX: 0000000000000001 RSI: 0000000000000000 RDI: ffff98b28f538900
+ RBP: ffff98b28f538900 R08: 0000000000000000 R09: 0000000000000008
+ R10: ffffffffb9515be0 R11: ffffac6246a1f678 R12: ffff98b28f538000
+ R13: 0000000000000001 R14: 0000000000000000 R15: ffffffffc05451e0
+ FS:  00007fde0f688800(0000) GS:ffff98baffd40000(0000) knlGS:0000000000000000
+ CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+ CR2: 0000000000000014 CR3: 000000104bb0a003 CR4: 00000000007606e0
+ DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+ DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+ PKRU: 55555554
+ Call Trace:
+  do_setlink+0x994/0xfe0
+  __rtnl_newlink+0x544/0x8d0
+  rtnl_newlink+0x47/0x70
+  rtnetlink_rcv_msg+0x29f/0x350
+  netlink_rcv_skb+0x4a/0x110
+  netlink_unicast+0x21d/0x300
+  netlink_sendmsg+0x329/0x450
+  sock_sendmsg+0x5b/0x60
+  ____sys_sendmsg+0x204/0x280
+  ___sys_sendmsg+0x88/0xd0
+  __sys_sendmsg+0x5e/0xa0
+  do_syscall_64+0x47/0x80
+  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+
+Fixes: c0c050c58d840 ("bnxt_en: New Broadcom ethernet driver.")
+Reported-by: Fei Liu <feliu@redhat.com>
+CC: Jonathan Toppins <jtoppins@redhat.com>
+CC: Michael Chan <michael.chan@broadcom.com>
+Signed-off-by: Davide Caratti <dcaratti@redhat.com>
+Reviewed-by: Michael Chan <michael.chan@broadcom.com>
+Acked-by: Jonathan Toppins <jtoppins@redhat.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/s390/include/asm/kvm_host.h | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ drivers/net/ethernet/broadcom/bnxt/bnxt_sriov.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/s390/include/asm/kvm_host.h b/arch/s390/include/asm/kvm_host.h
-index dad110e9f41b3..be8fa30a6ea6d 100644
---- a/arch/s390/include/asm/kvm_host.h
-+++ b/arch/s390/include/asm/kvm_host.h
-@@ -30,12 +30,12 @@
- #define KVM_USER_MEM_SLOTS 32
+diff --git a/drivers/net/ethernet/broadcom/bnxt/bnxt_sriov.c b/drivers/net/ethernet/broadcom/bnxt/bnxt_sriov.c
+index bba6f09279d5e..ff53e597938ad 100644
+--- a/drivers/net/ethernet/broadcom/bnxt/bnxt_sriov.c
++++ b/drivers/net/ethernet/broadcom/bnxt/bnxt_sriov.c
+@@ -365,6 +365,7 @@ static void bnxt_free_vf_resources(struct bnxt *bp)
+ 		}
+ 	}
  
- /*
-- * These seem to be used for allocating ->chip in the routing table,
-- * which we don't use. 4096 is an out-of-thin-air value. If we need
-- * to look at ->chip later on, we'll need to revisit this.
-+ * These seem to be used for allocating ->chip in the routing table, which we
-+ * don't use. 1 is as small as we can get to reduce the needed memory. If we
-+ * need to look at ->chip later on, we'll need to revisit this.
-  */
- #define KVM_NR_IRQCHIPS 1
--#define KVM_IRQCHIP_NUM_PINS 4096
-+#define KVM_IRQCHIP_NUM_PINS 1
- #define KVM_HALT_POLL_NS_DEFAULT 80000
++	bp->pf.active_vfs = 0;
+ 	kfree(bp->pf.vf);
+ 	bp->pf.vf = NULL;
+ }
+@@ -750,7 +751,6 @@ void bnxt_sriov_disable(struct bnxt *bp)
  
- /* s390-specific vcpu->requests bit members */
+ 	bnxt_free_vf_resources(bp);
+ 
+-	bp->pf.active_vfs = 0;
+ 	/* Reclaim all resources for the PF. */
+ 	rtnl_lock();
+ 	bnxt_restore_pf_fw_resources(bp);
 -- 
 2.25.1
 
