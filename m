@@ -2,145 +2,131 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54491C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 03:41:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CB1FC433E2
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 03:44:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 32A1120890
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 03:41:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 37F4820890
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 03:44:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YrBOtJnj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726828AbgGNDlx (ORCPT
+        id S1726602AbgGNDoK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 23:41:53 -0400
-Received: from mail-pj1-f67.google.com ([209.85.216.67]:36905 "EHLO
-        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726768AbgGNDlx (ORCPT
+        Mon, 13 Jul 2020 23:44:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39154 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726432AbgGNDoJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 23:41:53 -0400
-Received: by mail-pj1-f67.google.com with SMTP id o22so884210pjw.2;
-        Mon, 13 Jul 2020 20:41:52 -0700 (PDT)
+        Mon, 13 Jul 2020 23:44:09 -0400
+Received: from mail-io1-xd41.google.com (mail-io1-xd41.google.com [IPv6:2607:f8b0:4864:20::d41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 71D53C061755;
+        Mon, 13 Jul 2020 20:44:09 -0700 (PDT)
+Received: by mail-io1-xd41.google.com with SMTP id i4so15825556iov.11;
+        Mon, 13 Jul 2020 20:44:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=5pIkH7mXC1jbQvQgKO8e4n9ss2Wr0Vand3f4K2LBYz4=;
+        b=YrBOtJnjGtArnUFIOOSjKKuUr3mYU6wCe/3j9WYc1t+7SI0WSSQ3z1qVrokn3PITMz
+         Diu+HPEas1OK5EDKEJ8ttv2QbCUqmus7l0+8dXkgj1dTe+MQ3L+MkVo9DUH2lh13HHV6
+         XwKvPo4o3gVF0WXt4YdIG6AfeG6a0PSCYzdvCABpRUDm5Mj7S4Ue03eG+K/x9rmhEx3c
+         844BZ25AJ2ApY4O/O2iOxuUgzw9EVLl70EBE9r6BZRNKkwg5S+LMEIiidjOCztp1+6hf
+         5C1tD6h4nN2FtIAQlV6fNNLHFwNq+emxJcTfMsJV6XLniFpTYOmGSpjqeG6Nlcl4RHfn
+         SlMA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=FIkoYpJoY156GHlaAk/Z9PrJ8CxCxosbs70run2YrjM=;
-        b=nJS6RLlihVTrdRIr5nFAJUTDBXqio16yilTPkLc2Bp8bqTekx0ob9iuRmkl2zMVnIi
-         2WKIKcATTG9QsPdrS7ZXCUWzPjllfl4su7gR0jBuLztx8LraBw6N283/Dta9VnfdfpFB
-         hP3sbe4C/Jo75jvVEQ3ErECwj2Mmxe0wuQX69L8cHKsY6i4tQltOjQNipa+Pghyhg7B4
-         myNDjtrxsPx03cskVhG4A5TyDYtEeWfiHEFddxv8mhgh2mzbflFN9nv48Hd1QAD71km5
-         63gLSzgQAnpXODZj71I/5kCyyIwOVB9nzstL55vlWnhUAd3FzhHfI7hUL8xL8Zi8kRLV
-         sJGA==
-X-Gm-Message-State: AOAM532oCwdHYrXi7uvvl5Lxik30Qch6eyoON3oEBWGAdA75nM5E/ycd
-        Tf66kg6u96xDw4FFYYkoCi/o3IK4
-X-Google-Smtp-Source: ABdhPJzV0zDlFgGwGnecA8mDKdz1bBhuAchtA+8ZGU5FLtvGqIRgsog41df9pB3T3jZp/n6J7DC7Wg==
-X-Received: by 2002:a17:90a:d3d7:: with SMTP id d23mr2479430pjw.232.1594698111736;
-        Mon, 13 Jul 2020 20:41:51 -0700 (PDT)
-Received: from [192.168.50.147] (c-73-241-217-19.hsd1.ca.comcast.net. [73.241.217.19])
-        by smtp.gmail.com with ESMTPSA id x3sm15749338pfn.154.2020.07.13.20.41.50
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 13 Jul 2020 20:41:50 -0700 (PDT)
-Subject: Re: [PATCH v2 2/4] scsi: ufs: Fix imbalanced scsi_block_reqs_cnt
- caused by ufshcd_hold()
-To:     Can Guo <cang@codeaurora.org>, asutoshd@codeaurora.org,
-        nguyenb@codeaurora.org, hongwus@codeaurora.org,
-        rnayak@codeaurora.org, linux-scsi@vger.kernel.org,
-        kernel-team@android.com, saravanak@google.com, salyzyn@google.com
-Cc:     Alim Akhtar <alim.akhtar@samsung.com>,
-        Avri Altman <avri.altman@wdc.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Stanley Chu <stanley.chu@mediatek.com>,
-        Bean Huo <beanhuo@micron.com>,
-        open list <linux-kernel@vger.kernel.org>
-References: <1594693693-22466-1-git-send-email-cang@codeaurora.org>
- <1594693693-22466-3-git-send-email-cang@codeaurora.org>
-From:   Bart Van Assche <bvanassche@acm.org>
-Autocrypt: addr=bvanassche@acm.org; prefer-encrypt=mutual; keydata=
- mQENBFSOu4oBCADcRWxVUvkkvRmmwTwIjIJvZOu6wNm+dz5AF4z0FHW2KNZL3oheO3P8UZWr
- LQOrCfRcK8e/sIs2Y2D3Lg/SL7qqbMehGEYcJptu6mKkywBfoYbtBkVoJ/jQsi2H0vBiiCOy
- fmxMHIPcYxaJdXxrOG2UO4B60Y/BzE6OrPDT44w4cZA9DH5xialliWU447Bts8TJNa3lZKS1
- AvW1ZklbvJfAJJAwzDih35LxU2fcWbmhPa7EO2DCv/LM1B10GBB/oQB5kvlq4aA2PSIWkqz4
- 3SI5kCPSsygD6wKnbRsvNn2mIACva6VHdm62A7xel5dJRfpQjXj2snd1F/YNoNc66UUTABEB
- AAG0JEJhcnQgVmFuIEFzc2NoZSA8YnZhbmFzc2NoZUBhY20ub3JnPokBOQQTAQIAIwUCVI67
- igIbAwcLCQgHAwIBBhUIAgkKCwQWAgMBAh4BAheAAAoJEHFcPTXFzhAJ8QkH/1AdXblKL65M
- Y1Zk1bYKnkAb4a98LxCPm/pJBilvci6boefwlBDZ2NZuuYWYgyrehMB5H+q+Kq4P0IBbTqTa
- jTPAANn62A6jwJ0FnCn6YaM9TZQjM1F7LoDX3v+oAkaoXuq0dQ4hnxQNu792bi6QyVdZUvKc
- macVFVgfK9n04mL7RzjO3f+X4midKt/s+G+IPr4DGlrq+WH27eDbpUR3aYRk8EgbgGKvQFdD
- CEBFJi+5ZKOArmJVBSk21RHDpqyz6Vit3rjep7c1SN8s7NhVi9cjkKmMDM7KYhXkWc10lKx2
- RTkFI30rkDm4U+JpdAd2+tP3tjGf9AyGGinpzE2XY1K5AQ0EVI67igEIAKiSyd0nECrgz+H5
- PcFDGYQpGDMTl8MOPCKw/F3diXPuj2eql4xSbAdbUCJzk2ETif5s3twT2ER8cUTEVOaCEUY3
- eOiaFgQ+nGLx4BXqqGewikPJCe+UBjFnH1m2/IFn4T9jPZkV8xlkKmDUqMK5EV9n3eQLkn5g
- lco+FepTtmbkSCCjd91EfThVbNYpVQ5ZjdBCXN66CKyJDMJ85HVr5rmXG/nqriTh6cv1l1Js
- T7AFvvPjUPknS6d+BETMhTkbGzoyS+sywEsQAgA+BMCxBH4LvUmHYhpS+W6CiZ3ZMxjO8Hgc
- ++w1mLeRUvda3i4/U8wDT3SWuHcB3DWlcppECLkAEQEAAYkBHwQYAQIACQUCVI67igIbDAAK
- CRBxXD01xc4QCZ4dB/0QrnEasxjM0PGeXK5hcZMT9Eo998alUfn5XU0RQDYdwp6/kMEXMdmT
- oH0F0xB3SQ8WVSXA9rrc4EBvZruWQ+5/zjVrhhfUAx12CzL4oQ9Ro2k45daYaonKTANYG22y
- //x8dLe2Fv1By4SKGhmzwH87uXxbTJAUxiWIi1np0z3/RDnoVyfmfbbL1DY7zf2hYXLLzsJR
- mSsED/1nlJ9Oq5fALdNEPgDyPUerqHxcmIub+pF0AzJoYHK5punqpqfGmqPbjxrJLPJfHVKy
- goMj5DlBMoYqEgpbwdUYkH6QdizJJCur4icy8GUNbisFYABeoJ91pnD4IGei3MTdvINSZI5e
-Message-ID: <5470be4c-cfa4-ebe5-a817-e53f26c7eaf6@acm.org>
-Date:   Mon, 13 Jul 2020 20:41:49 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=5pIkH7mXC1jbQvQgKO8e4n9ss2Wr0Vand3f4K2LBYz4=;
+        b=KvKSGMatihbCv3Ivj0K3b+0PD6Tz/w4dDWAe9RryKlMLlkSeqUfCKS89F/n6kLgVSN
+         atgXBjQEUT65OgYZPVglU8dpRze+uQlH/YksO7Qcho3BWVsOKSsHqyTwGV8OKy7ZuZJD
+         CK+B+YZfmtIN81E1b6mYqIA06UQbLMXzozn8psVvS5OgQZjzUwZgvhFB1nVAxNuG4OmU
+         o0prl1H7qan9VK9Z0zn1Kv/I9IjODIaH6glImMhebR1rN8iA52w4fBzAMOPSQn/TuoUM
+         ukZQaAbTt1kjmT6OikbdpF5jRQ1vyxaYoYQs+mKLa8vGT66GbyLO84+1+d72yajtuZ2m
+         p5/Q==
+X-Gm-Message-State: AOAM532VP+22RcWc6WjH2lkBBOSFfByTlnMT0oHAY8lOk4Uto9UFZn81
+        BP6OgWIeax9sm6i2m7IaH/dmABCUdwMLsYlWRow=
+X-Google-Smtp-Source: ABdhPJwdZwfVYKqVFMbcOMVarwyvJ7kguDcnx//+Z0fzQDSHID9tABdNxDB+esaGr5DViPMpG3uIbsfsyTVjj8YEVXU=
+X-Received: by 2002:a6b:ee02:: with SMTP id i2mr3032327ioh.110.1594698248705;
+ Mon, 13 Jul 2020 20:44:08 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <1594693693-22466-3-git-send-email-cang@codeaurora.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <1594696998-3995-1-git-send-email-dillon.minfei@gmail.com>
+ <1594696998-3995-2-git-send-email-dillon.minfei@gmail.com> <20200714133835.3b03b8af@canb.auug.org.au>
+In-Reply-To: <20200714133835.3b03b8af@canb.auug.org.au>
+From:   dillon min <dillon.minfei@gmail.com>
+Date:   Tue, 14 Jul 2020 11:43:31 +0800
+Message-ID: <CAL9mu0JurdBoXbSxvHUmNFSBOa=RneNyYtzT=C1MvJs10Y-Geg@mail.gmail.com>
+Subject: Re: [PATCH v2] Since am437x have the same clock structure with am335x
+ [1][2], reuse the code from Tony Lindgren's patch [3] to fix dcan probe
+ failed on am437x platform.
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     Benoit Cousson <bcousson@baylibre.com>, tony@atomide.com,
+        Rob Herring <robh+dt@kernel.org>, linux-omap@vger.kernel.org,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-07-13 19:28, Can Guo wrote:
-> The scsi_block_reqs_cnt increased in ufshcd_hold() is supposed to be
-> decreased back in ufshcd_ungate_work() in a paired way. However, if
-> specific ufshcd_hold/release sequences are met, it is possible that
-> scsi_block_reqs_cnt is increased twice but only one ungate work is
-> queued. To make sure scsi_block_reqs_cnt is handled by ufshcd_hold() and
-> ufshcd_ungate_work() in a paired way, increase it only if queue_work()
-> returns true.
-> 
-> Signed-off-by: Can Guo <cang@codeaurora.org>
-> ---
->  drivers/scsi/ufs/ufshcd.c | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
-> index ebf7a95..33214bb 100644
-> --- a/drivers/scsi/ufs/ufshcd.c
-> +++ b/drivers/scsi/ufs/ufshcd.c
-> @@ -1611,12 +1611,12 @@ int ufshcd_hold(struct ufs_hba *hba, bool async)
->  		 */
->  		/* fallthrough */
->  	case CLKS_OFF:
-> -		ufshcd_scsi_block_requests(hba);
->  		hba->clk_gating.state = REQ_CLKS_ON;
->  		trace_ufshcd_clk_gating(dev_name(hba->dev),
->  					hba->clk_gating.state);
-> -		queue_work(hba->clk_gating.clk_gating_workq,
-> -			   &hba->clk_gating.ungate_work);
-> +		if (queue_work(hba->clk_gating.clk_gating_workq,
-> +			       &hba->clk_gating.ungate_work))
-> +			ufshcd_scsi_block_requests(hba);
->  		/*
->  		 * fall through to check if we should wait for this
->  		 * work to be done or not.
+On Tue, Jul 14, 2020 at 11:38 AM Stephen Rothwell <sfr@canb.auug.org.au> wr=
+ote:
+>
+> Hi,
+>
+> On Tue, 14 Jul 2020 11:23:18 +0800 dillon.minfei@gmail.com wrote:
+> >
+> > From: dillon min <dillon.minfei@gmail.com>
+> >
+> > Fixes: 1a5cd7c23cc5 ("bus: ti-sysc: Enable all clocks directly during i=
+nit to read revision")
+> >
+> > [1]: https://www.ti.com/lit/pdf/spruh73 Chapter-23, Figure 23-1. DCAN
+> > Integration
+> > [2]: https://www.ti.com/lit/pdf/spruhl7 Chapter-25, Figure 25-1. DCAN
+> > Integration
+> > [3]: commit 516f1117d0fb ("ARM: dts: Configure osc clock for d_can on a=
+m335x")
+> >
+> > Signed-off-by: dillon min <dillon.minfei@gmail.com>
+> > ---
+> >
+> > Hi Stephen,
+> >
+> > This changes correct commit messages based on your reviewing.
+> > make Fixes tags to oneline.
+> > make all commit message tags at the end of commit message
+>
+> But the Fixes: line should be down with the Signed-off-by: line ...
+>
+Ok, should it be like this=EF=BC=8Ci will resubmit it.
 
-Since "ungate_work" involves calling ufshcd_scsi_unblock_requests() and
-since this patch changes the order in which ufshcd_scsi_block_requests()
-and queue_work() are called, I think this patch introduces a race
-condition. Has it been considered to leave the ufshcd_scsi_block_requests()
-call where it is and to call ufshcd_scsi_unblock_requests() if
-queue_work() fails?
+Subject: [PATCH v2] Since am437x have the same clock structure with am335x
+ [1][2], reuse the code from Tony Lindgren's patch [3] to fix dcan
+ probe failed on the am437x platform.
+
+[1]: https://www.ti.com/lit/pdf/spruh73 Chapter-23, Figure 23-1. DCAN
+Integration
+[2]: https://www.ti.com/lit/pdf/spruhl7 Chapter-25, Figure 25-1. DCAN
+Integration
+[3]: commit 516f1117d0fb ("ARM: dts: Configure osc clock for d_can on am335=
+x")
+
+Signed-off-by: dillon min <dillon.minfei@gmail.com>
+Fixes: 1a5cd7c23cc5 ("bus: ti-sysc: Enable all clocks directly during
+init to read revision")
 
 Thanks,
-
-Bart.
-
-
+Dillon,
+> --
+> Cheers,
+> Stephen Rothwell
