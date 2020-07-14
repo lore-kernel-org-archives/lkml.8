@@ -2,193 +2,126 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D756DC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 21:18:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D99F2C433E5
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 21:18:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9B92A20656
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 21:18:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B686720656
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 21:18:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="F3NZpnIv"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="kVVHus2P"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728291AbgGNVSI (ORCPT
+        id S1728304AbgGNVSh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 17:18:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33812 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726446AbgGNVSH (ORCPT
+        Tue, 14 Jul 2020 17:18:37 -0400
+Received: from esa1.hgst.iphmx.com ([68.232.141.245]:20892 "EHLO
+        esa1.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726446AbgGNVSh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 17:18:07 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 52DC6C061755;
-        Tue, 14 Jul 2020 14:18:07 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id o11so200870wrv.9;
-        Tue, 14 Jul 2020 14:18:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=+lZBBeyUE0lPJ7ofFYfVPRC61PUIwQVU3H14G0pJ7tc=;
-        b=F3NZpnIvV6tqV2q8ALdGW4uRyADrH4iYT2AdqPJNK9HsU8K0tyI4WQv1+Uig6/NNmk
-         qKScQHCi/YEBEAb/zqm1Lu7ne97Bgc9rhgPgJUmbijzfEv888yDzLkyDzccIHEO8KbGR
-         qxFzYZ8t7qwkeZu4D2e4oLdrfdSIZl6H8V74LCrBSVqIQdydQYRdR9gRZ9jRjiwKZRBq
-         ArvQ633flh6Kur0V6qlhpeIbnSw/tHpSwuybMcWheu5IJTq39FxowWwCkF6Oh9Iclg/h
-         NrUdkvAukBfkC1z1NkI6kmqWQ06qAOW1Q6yYiWlTvrUXwlz9h6KBhjnCQlFXJyfuFlLl
-         Hz7g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=+lZBBeyUE0lPJ7ofFYfVPRC61PUIwQVU3H14G0pJ7tc=;
-        b=QMldNHnDkztlAySfHygh4xhX1mQWZ2EpJVXtf3V4jrpjBa4XJAYVIwnvEvyqXBoaXl
-         DoTZZ9JVS+9/RfGK0ncZn/y9iVdrseWVd90e6Bt0V4w/WYgu9fKjDmJ16FUBENumc/v0
-         Z0xrFFiwCZ/p4+jmo95tZRCJmFwGhBLFWIBqN9WJXlyOcZNdn4lSBU3t0aZ3UxtlFGuY
-         y1FBQnr61aPwgp7rRh0oKyU3nbXcHQd7SuVteW7mGahU161Ww8tEuyU8t9N+/awgyJIl
-         5rLTLeVeEhkIiuoPrsL2Qu5zdIB3xAMcjxnuuotw4db/WfGEksEwkDhj4a8vOxXg8R9d
-         na9A==
-X-Gm-Message-State: AOAM531Q67fqjbOpHozuDoCjuCreJ3FIqnnq3sdjtL8YzArt0sylUtGT
-        +lPIb17dmH9fEYJdDFpS1ETw87BN
-X-Google-Smtp-Source: ABdhPJzDcFTmUmW90ndfjqy6LWZjEbFnjFisW6pTMPwBDeX+av28s7sc1wH8uk2lKXjz1BYHgeNsEw==
-X-Received: by 2002:adf:e908:: with SMTP id f8mr7787367wrm.3.1594761485670;
-        Tue, 14 Jul 2020 14:18:05 -0700 (PDT)
-Received: from [192.168.1.3] (ip68-111-84-250.oc.oc.cox.net. [68.111.84.250])
-        by smtp.gmail.com with ESMTPSA id f14sm34071251wro.90.2020.07.14.14.18.01
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 14 Jul 2020 14:18:04 -0700 (PDT)
-Subject: Re: [PATCH v3 1/9] dt-bindings: reset: Add a binding for the RPi
- Firmware reset controller
-To:     Rob Herring <robh@kernel.org>,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-Cc:     f.fainelli@gmail.com, gregkh@linuxfoundation.org, wahrenst@gmx.net,
-        p.zabel@pengutronix.de, linux-kernel@vger.kernel.org,
-        Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        bcm-kernel-feedback-list@broadcom.com,
-        Eric Anholt <eric@anholt.net>, linux-usb@vger.kernel.org,
-        linux-rpi-kernel@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, tim.gover@raspberrypi.org,
-        linux-pci@vger.kernel.org, helgaas@kernel.org,
-        andy.shevchenko@gmail.com, mathias.nyman@linux.intel.com,
-        lorenzo.pieralisi@arm.com, devicetree@vger.kernel.org
-References: <20200612171334.26385-1-nsaenzjulienne@suse.de>
- <20200612171334.26385-2-nsaenzjulienne@suse.de>
- <20200713182356.GA413630@bogus>
- <ed42e27eaf48fd19cc8ccccd15b0b25ba1d836ae.camel@suse.de>
- <20200714210708.GA2897216@bogus>
-From:   Florian Fainelli <f.fainelli@gmail.com>
-Message-ID: <925bab2c-91e0-bf60-9ec4-286eb53f72ab@gmail.com>
-Date:   Tue, 14 Jul 2020 14:17:59 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Firefox/68.0 Thunderbird/68.10.0
+        Tue, 14 Jul 2020 17:18:37 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1594761517; x=1626297517;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=Eii7FmfTiwjXtaWeM5VI3cqCVXCyz8WbJm0iTlMDWJs=;
+  b=kVVHus2PHjq3i+ziCcrND1PXldELov17MAses7XbS5ikQM1FDMPUReQp
+   DdFlEdc8VJ2JA6+Cm3FTYtd0N+p9YlzHdCmZiD3I2asKdAoLYwIebJcgq
+   yOX4DkP25MRDEvfLw+c00AcX/kAHM3Y45heqTmYQTv6zXc2nOL8QTasNB
+   1owWw5wpNoNmfEHO+uArk88sGTvWuGxQtBY77GT1b1sVdh9jT50zjUj8N
+   +1iKN1sDq1606AR7XdMwyYk1et1Y/3kerp7YDqAyCxnVYxaV4h8p3I+z3
+   zIjwQ/LnWLjTWZzPW3VR4vM9ngT8Rd7QjKt+GJO4/qRZs5lby7TLVHxPF
+   A==;
+IronPort-SDR: vIkvKDXrQogmZl1IHB4mazvAyLWTQxPlvpOhWHJHojCsDp4S5gnBvH6gLNEP5rsjxgLizVeutd
+ 8K8kaRYrQQqUECpt+cxcgiXYX/Sib/CAkXaG1z/jC1A8VqkC2d71XXBtUfYbKv47zZJhC/9Z2n
+ lhG0860Rt1F28gH5WtA1ClrMCU5dYmJORnZe3D6ws5TRaw+UYUa62v6dKm2203xF1NNj8ErrYT
+ xtJzk7XrQPXchZ07AYOEnDyVxbzDedyNGoIOQDtpENdGynJweHwbbdVmEUEFjczZZZUZz0X7PK
+ iGw=
+X-IronPort-AV: E=Sophos;i="5.75,352,1589212800"; 
+   d="scan'208";a="251722322"
+Received: from uls-op-cesaip01.wdc.com (HELO uls-op-cesaep01.wdc.com) ([199.255.45.14])
+  by ob1.hgst.iphmx.com with ESMTP; 15 Jul 2020 05:18:36 +0800
+IronPort-SDR: yxCyiQCl6J9TlnWkcAbuSiL9Zeudg4ZC2C+rIlriLM9PmnrYVB9/rsUA3yW/3UI3vENUOQCQrm
+ MV+iIri0AQphI8KBy2Eg1wx1PrlIFzNg8=
+Received: from uls-op-cesaip01.wdc.com ([10.248.3.36])
+  by uls-op-cesaep01.wdc.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jul 2020 14:07:02 -0700
+IronPort-SDR: k7z3BG/rBj8iFCvPyvk0k3PKbnvggxnH2BwR5yWdE3n5oHKB7mt35lSX0qKzIUfr8NJIC1e2Oq
+ dUHvmegCmbjw==
+WDCIronportException: Internal
+Received: from usa003306.ad.shared (HELO localhost.hgst.com) ([10.86.57.226])
+  by uls-op-cesaip01.wdc.com with ESMTP; 14 Jul 2020 14:18:33 -0700
+From:   Niklas Cassel <niklas.cassel@wdc.com>
+To:     Jonathan Corbet <corbet@lwn.net>, Jens Axboe <axboe@kernel.dk>,
+        Keith Busch <kbusch@kernel.org>,
+        Christoph Hellwig <hch@lst.de>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>
+Cc:     Niklas Cassel <niklas.cassel@wdc.com>,
+        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-block@vger.kernel.org, linux-nvme@lists.infradead.org,
+        linux-scsi@vger.kernel.org
+Subject: [PATCH v3 0/2] Export max open zones and max active zones to sysfs
+Date:   Tue, 14 Jul 2020 23:18:22 +0200
+Message-Id: <20200714211824.759224-1-niklas.cassel@wdc.com>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-In-Reply-To: <20200714210708.GA2897216@bogus>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Export max open zones and max active zones to sysfs.
+
+This patch series in based on Jens's linux-block/for-next branch.
+
+All zoned block devices in the kernel utilize the "zoned block device
+support" (CONFIG_BLK_DEV_ZONED).
+
+The Zoned Namespace Command Set Specification defines two different
+resource limits: Max Open Resources and Max Active Resources.
+
+The ZAC and ZBC standards define a MAXIMUM NUMBER OF OPEN SEQUENTIAL WRITE
+REQUIRED ZONES field.
 
 
-On 7/14/2020 2:07 PM, Rob Herring wrote:
-> On Tue, Jul 14, 2020 at 01:59:21PM +0200, Nicolas Saenz Julienne wrote:
->> On Mon, 2020-07-13 at 12:23 -0600, Rob Herring wrote:
->>> On Fri, Jun 12, 2020 at 07:13:25PM +0200, Nicolas Saenz Julienne wrote:
->>>> The firmware running on the RPi VideoCore can be used to reset and
->>>> initialize HW controlled by the firmware.
->>>>
->>>> Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
->>>> Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
->>>>
->>>> ---
->>>> Changes since v2:
->>>>  - Add include file for reset IDs
->>>>
->>>> Changes since v1:
->>>>  - Correct cells binding as per Florian's comment
->>>>  - Change compatible string to be more generic
->>>>
->>>>  .../arm/bcm/raspberrypi,bcm2835-firmware.yaml | 21 +++++++++++++++++++
->>>>  .../reset/raspberrypi,firmware-reset.h        | 13 ++++++++++++
->>>>  2 files changed, 34 insertions(+)
->>>>  create mode 100644 include/dt-bindings/reset/raspberrypi,firmware-reset.h
->>>>
->>>> diff --git a/Documentation/devicetree/bindings/arm/bcm/raspberrypi,bcm2835-
->>>> firmware.yaml
->>>> b/Documentation/devicetree/bindings/arm/bcm/raspberrypi,bcm2835-
->>>> firmware.yaml
->>>> index b48ed875eb8e..23a885af3a28 100644
->>>> --- a/Documentation/devicetree/bindings/arm/bcm/raspberrypi,bcm2835-
->>>> firmware.yaml
->>>> +++ b/Documentation/devicetree/bindings/arm/bcm/raspberrypi,bcm2835-
->>>> firmware.yaml
->>>> @@ -39,6 +39,22 @@ properties:
->>>>        - compatible
->>>>        - "#clock-cells"
->>>>  
->>>> +  reset:
->>>
->>> I'm not really thrilled how this is evolving with a node per provider. 
->>> There's no reason you can't just add #clock-cells and #reset-cells to 
->>> the parent firmware node.
->>
->> What are the downsides? The way I see it there is not much difference. And this
->> way of handling things is feels more intuitive and flexible (overlays can
->> control what to enable easily, we can take advantage of the platform device
->> core).
-> 
-> What the OS wants can evolve, so designing around the current needs of 
-> the OS is not how bindings should be done.
-> 
-> Using overlays to add clocks or resets wouldn't really work given they 
-> are spread out over the tree. And with clocks in particular, you'd have 
-> to replace dummy fixed clocks with actual firmware clocks. Sounds 
-> fragile and messy...
-> 
->>> I probably should have complained with the clocks node, but that's only 
->>> pending for 5.9.
->>
->> Note that there are more users for this pattern: "raspberrypi,firmware-ts" and
->> "raspberrypi,firmware-gpio". Actually you were the one to originally propose
->> this it[1]. :P
-> 
-> Sigh, this is why I dislike incomplete examples...
-> 
-> Based on that,
-> 
-> Acked-by: Rob Herring <robh@kernel.org>
-> 
-> And please get gpio and ts converted to schema and referenced here 
-> before the next time I look at this.
-> 
->> There already is a fair amount of churn in these drivers because of all the DT
->> changes we did in the past, and if we need to change how we integrate these
->> again, I'd really like it to be for good.
->>
->>> The bigger issue is this stuff is just trickling in one bit at a time 
->>> which gives no context for review. What's next? Is it really a mystery 
->>> as to what functions the firmware provides?
->>
->> We have no control over it, RPi engineers integrate new designs and new
->> firmware interfaces show up. This is a good example of it.
->>
->> I proposed them to use SCMI as it covers most of what they are already
->> providing here. But no luck so far.
-> 
-> Once we get tired of supporting all the different firmware interfaces 
-> and the mess they become, we'll just have to start refusing custom ones. 
-> Worked for PSCI.
+Since the ZNS Max Open Resources field has the same purpose as the ZAC/ZBC
+field, (the ZNS field is 0's based, the ZAC/ZBC field isn't), create a
+common "max_open_zones" definition in the sysfs documentation, and export
+both the ZNS field and the ZAC/ZBC field according to this new common
+definition.
 
-In this particular case, the Raspberry Pi Foundation VPU firmware should
-just implement SCMI and that would avoid having to write new client
-drivers for Linux, it is not clear to me why this has not been done yet.
+The ZNS Max Active Resources field does not have an equivalent field in
+ZAC/ZBC, however, since both ZAC/ZBC and ZNS utilize the "zoned block
+device support" in the kernel, create a "max_active_zones" definition in
+the sysfs documentation, similar to "max_open_zones", and export it
+according to this new definition. For ZAC/ZBC devices, this field will be
+exported as 0, meaning "no limit".
+
+Changes since v2:
+-Picked up Damien's Reviewed-by tags.
+-Update Documentation/ABI/testing/sysfs-block in addition to
+ Documentation/block/queue-sysfs.rst (Greg).
+-Added bdev_max_open_zones()/bdev_max_active_zones() helpers
+ (Johannes).
+
+Niklas Cassel (2):
+  block: add max_open_zones to blk-sysfs
+  block: add max_active_zones to blk-sysfs
+
+ Documentation/ABI/testing/sysfs-block | 18 ++++++++++
+ Documentation/block/queue-sysfs.rst   | 14 ++++++++
+ block/blk-sysfs.c                     | 27 +++++++++++++++
+ drivers/nvme/host/zns.c               |  2 ++
+ drivers/scsi/sd_zbc.c                 |  5 +++
+ include/linux/blkdev.h                | 50 +++++++++++++++++++++++++++
+ 6 files changed, 116 insertions(+)
+
 -- 
-Florian
+2.26.2
+
