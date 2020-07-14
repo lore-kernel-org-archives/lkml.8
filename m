@@ -2,135 +2,168 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21163C433E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 06:22:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AFC5C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 06:22:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E88BE221E7
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 06:22:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="HFWGEmDP"
+	by mail.kernel.org (Postfix) with ESMTP id 7D21F221E7
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 06:22:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726809AbgGNGWp (ORCPT
+        id S1726505AbgGNGWe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 02:22:45 -0400
-Received: from mail-dm6nam12on2071.outbound.protection.outlook.com ([40.107.243.71]:6030
-        "EHLO NAM12-DM6-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726629AbgGNGWi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 02:22:38 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ZZ/kOvobLklZAAjbus/RsWLGvyJIk9WbhWYARboYnezzldSd5huuZ+OvLjZ3wagUvrXxLzPd3b4ErIaXqLKHLNzuIE8reX+lJ/IUe0pfUuitiphi/mFq4zThjMayMtVdjCXklhQ/h4SwuyHfiIv2eOiSmfkY4b7cX8zich/pBe+I4GvEziFYfMqCzwhInx9N7rtiQtYAKv2YMBNFOjVIUws0f37awmRMfu3kWEqwNdE9GoVozPYCzUXmiFZjkMi8l364wXu0oLr6+9j+qxkpVpbpaUnqUfXnGqaDqifqsNJTTxVC8MUBe5xCRXQnawDci7cau4fbAdPARQ9kzalSUw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=cRlIsH2YUSk3nNnlfDhaWl/g3zpeIx5dADi5CDH7xmY=;
- b=maYGUvit1e6sdlNcsdqUXL0G/LGsK1i+3UXglAHjh3nG9WkUB1TdpmZoZ1yYh+h+7QfrCLAt3dAFf9OVEnx8X+/XZZftaKRIu9CTE3NEzDQXuH5KjE8EUXbvAMKu20Gsq1SNE9ggJTFs2hnEYsXswPCUtAUdsHmKzR6FiSCWqM5KjXZXqu8V9M9haVfYCpplmAwOT4dWn0EQpl0oqImNUIhrzxMPHwacDbJlnrxMUjXsuVZa6xjEtcBhZOk7oTG3HQBklz/nmNdUK7w2g3KG3e7ULW979TU+Ko0/atZlhxtihJEqFU3e2KIBa50OhbMukNntbWu4gmeCjdNEEHoHRQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 149.199.60.83) smtp.rcpttodomain=avnet.com smtp.mailfrom=xilinx.com;
- dmarc=bestguesspass action=none header.from=xilinx.com; dkim=none (message
- not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=cRlIsH2YUSk3nNnlfDhaWl/g3zpeIx5dADi5CDH7xmY=;
- b=HFWGEmDPJM8ZQycTwdtj0spXhu44j5fts6f0U3OL7pxZMGB5IbR38sqszqYpHHOkA0CrMTYovnSOMYmJLvhMGm5lJ6X42mEAvk8muvXGYrEcQrcxJYoN2hj3KYOnLurtV2jjrEkfMQyn7QtMaAZ9orAItFbNgxfQtf0GiLZGogk=
-Received: from BL1PR13CA0008.namprd13.prod.outlook.com (2603:10b6:208:256::13)
- by SN4PR0201MB3472.namprd02.prod.outlook.com (2603:10b6:803:48::19) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3174.22; Tue, 14 Jul
- 2020 06:22:35 +0000
-Received: from BL2NAM02FT045.eop-nam02.prod.protection.outlook.com
- (2603:10b6:208:256:cafe::e5) by BL1PR13CA0008.outlook.office365.com
- (2603:10b6:208:256::13) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3195.10 via Frontend
- Transport; Tue, 14 Jul 2020 06:22:35 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 149.199.60.83)
- smtp.mailfrom=xilinx.com; avnet.com; dkim=none (message not signed)
- header.d=none;avnet.com; dmarc=bestguesspass action=none
- header.from=xilinx.com;
-Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
- 149.199.60.83 as permitted sender) receiver=protection.outlook.com;
- client-ip=149.199.60.83; helo=xsj-pvapsmtpgw01;
-Received: from xsj-pvapsmtpgw01 (149.199.60.83) by
- BL2NAM02FT045.mail.protection.outlook.com (10.152.77.16) with Microsoft SMTP
- Server id 15.20.3174.21 via Frontend Transport; Tue, 14 Jul 2020 06:22:35
- +0000
-Received: from [149.199.38.66] (port=48881 helo=xsj-pvapsmtp01)
-        by xsj-pvapsmtpgw01 with esmtp (Exim 4.90)
-        (envelope-from <lakshmi.sai.krishna.potthuri@xilinx.com>)
-        id 1jvEJB-000340-Ov; Mon, 13 Jul 2020 23:20:53 -0700
-Received: from localhost ([127.0.0.1] helo=xsj-pvapsmtp01)
-        by xsj-pvapsmtp01 with esmtp (Exim 4.63)
-        (envelope-from <lakshmi.sai.krishna.potthuri@xilinx.com>)
-        id 1jvEKo-00046B-6H; Mon, 13 Jul 2020 23:22:34 -0700
-Received: from [10.140.6.35] (helo=xhdsaipava40.xilinx.com)
-        by xsj-pvapsmtp01 with esmtp (Exim 4.63)
-        (envelope-from <lakshmis@xhdsaipava40.xilinx.com>)
-        id 1jvEKn-000465-8V; Mon, 13 Jul 2020 23:22:33 -0700
-Received: by xhdsaipava40.xilinx.com (Postfix, from userid 14964)
-        id 5B43F13C063E; Tue, 14 Jul 2020 11:59:11 +0530 (IST)
-From:   Sai Krishna Potthuri <lakshmi.sai.krishna.potthuri@xilinx.com>
-To:     Philipp Zabel <p.zabel@pengutronix.de>,
-        Rob Herring <robh+dt@kernel.org>,
-        Michal Simek <michal.simek@xilinx.com>
-Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, git@xilinx.com,
-        saikrishna12468@gmail.com,
-        Sai Krishna Potthuri <lakshmi.sai.krishna.potthuri@xilinx.com>
-Subject: [PATCH 0/2] reset: reset-zynqmp: Added Versal platform support
-Date:   Tue, 14 Jul 2020 11:59:07 +0530
-Message-Id: <1594708149-29944-1-git-send-email-lakshmi.sai.krishna.potthuri@xilinx.com>
-X-Mailer: git-send-email 2.7.4
-X-TM-AS-Product-Ver: IMSS-7.1.0.1224-8.2.0.1013-23620.005
-X-TM-AS-User-Approved-Sender: Yes;Yes
-X-EOPAttributedMessage: 0
-X-MS-Office365-Filtering-HT: Tenant
-X-Forefront-Antispam-Report: CIP:149.199.60.83;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:xsj-pvapsmtpgw01;PTR:unknown-60-83.xilinx.com;CAT:NONE;SFTY:;SFS:(136003)(39860400002)(376002)(346002)(396003)(46966005)(4744005)(70206006)(5660300002)(70586007)(36756003)(47076004)(26005)(82740400003)(478600001)(107886003)(4326008)(83380400001)(82310400002)(2906002)(2616005)(316002)(6666004)(81166007)(8936002)(6636002)(6266002)(110136005)(426003)(42186006)(8676002)(336012)(186003)(356005);DIR:OUT;SFP:1101;
-X-MS-PublicTrafficType: Email
+        Tue, 14 Jul 2020 02:22:34 -0400
+Received: from mga05.intel.com ([192.55.52.43]:59744 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725306AbgGNGW3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 02:22:29 -0400
+IronPort-SDR: fXzdI0NCz67B+VJ10Ivtq7VUKCwdJWB8AuKttqqSZ3i8tyqQ5Gd2oRy60w39EdrLYZ2z6qd0ra
+ 8wSvOw9X3A4A==
+X-IronPort-AV: E=McAfee;i="6000,8403,9681"; a="233672560"
+X-IronPort-AV: E=Sophos;i="5.75,350,1589266800"; 
+   d="scan'208";a="233672560"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jul 2020 23:22:27 -0700
+IronPort-SDR: ClrHa22q+8x1IH2Rjx9xeLsx/jfVYcNFANixAkgLOBsLrfZkSG7205IEa8flMIZ3PXD/DKTak/
+ hMsBQYKGEX/A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,350,1589266800"; 
+   d="scan'208";a="299432444"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga002.jf.intel.com with ESMTP; 13 Jul 2020 23:22:27 -0700
+Received: from debox1-desk2.jf.intel.com (debox1-desk2.jf.intel.com [10.54.75.16])
+        by linux.intel.com (Postfix) with ESMTP id 46AEC580810;
+        Mon, 13 Jul 2020 23:22:27 -0700 (PDT)
+From:   "David E. Box" <david.e.box@linux.intel.com>
+To:     lee.jones@linaro.org, david.e.box@linux.intel.com,
+        dvhart@infradead.org, andy@infradead.org, bhelgaas@google.com,
+        alexander.h.duyck@linux.intel.com
+Cc:     linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        linux-pci@vger.kernel.org
+Subject: [PATCH V3 0/3] Intel Platform Monitoring Technology
+Date:   Mon, 13 Jul 2020 23:23:20 -0700
+Message-Id: <20200714062323.19990-1-david.e.box@linux.intel.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200508021844.6911-1-david.e.box@linux.intel.com>
+References: <20200508021844.6911-1-david.e.box@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-MS-Office365-Filtering-Correlation-Id: 1d84401a-1c01-49ee-a580-08d827be4c73
-X-MS-TrafficTypeDiagnostic: SN4PR0201MB3472:
-X-LD-Processed: 657af505-d5df-48d0-8300-c31994686c5c,ExtAddr
-X-Microsoft-Antispam-PRVS: <SN4PR0201MB3472F8DEC352822F72241F03BD610@SN4PR0201MB3472.namprd02.prod.outlook.com>
-X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
-X-MS-Oob-TLC-OOBClassifiers: OLM:5236;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: XFLGeau5EsedwPPHdRSWPMQ119wTNyed8dm9qcO8SmiXmhyMXbjTokhCZZxT1sV2lMxMceio6Q5VpyCXjSB4qh700AegmceAosTgkVFKWCnihMAYUqws0Mb0F9SV9xq4Vn4GtXDOu3mYCXww4QAhcJnL73Js6z0pfkAoIfMzHZhwp6dwbxqeiVZpCd84gYq8zg5tj2fRYMeOxymvjplHHaM4ttzg2amRO/65e/jXroPRCwmCd1PQ4Om2kCoKHGKe1h27jeLOD0hh44vYhsXCP0xgmGkUad1MwUslZ0rDPA+G3ViPo7pdjQ4nHBidGX31vlkyZhnWA8QzsIQ9ITmuHgmBdtJCssXjICM3Q5F4bl2LbjG3LCcOYu1SXabujaSwHjF2F73Wq65eNxZyLiitbg==
-X-OriginatorOrg: xilinx.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Jul 2020 06:22:35.2702
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 1d84401a-1c01-49ee-a580-08d827be4c73
-X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.60.83];Helo=[xsj-pvapsmtpgw01]
-X-MS-Exchange-CrossTenant-AuthSource: BL2NAM02FT045.eop-nam02.prod.protection.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN4PR0201MB3472
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Extended the ZynqMP reset driver to support Versal platform, accordingly
-updated the dt-binding with the Versal platform specific information
-like compatible string and reset indices.
+Intel Platform Monitoring Technology (PMT) is an architecture for
+enumerating and accessing hardware monitoring capabilities on a device.
+With customers increasingly asking for hardware telemetry, engineers not
+only have to figure out how to measure and collect data, but also how to
+deliver it and make it discoverable. The latter may be through some device
+specific method requiring device specific tools to collect the data. This
+in turn requires customers to manage a suite of different tools in order to
+collect the differing assortment of monitoring data on their systems.  Even
+when such information can be provided in kernel drivers, they may require
+constant maintenance to update register mappings as they change with
+firmware updates and new versions of hardware. PMT provides a solution for
+discovering and reading telemetry from a device through a hardware agnostic
+framework that allows for updates to systems without requiring patches to
+the kernel or software tools.
 
-Sai Krishna Potthuri (2):
-  dt-bindings: reset: Updated binding for Versal reset driver
-  reset: reset-zynqmp: Added support for Versal platform
+PMT defines several capabilities to support collecting monitoring data from
+hardware. All are discoverable as separate instances of the PCIE Designated
+Vendor extended capability (DVSEC) with the Intel vendor code. The DVSEC ID
+field uniquely identifies the capability. Each DVSEC also provides a BAR
+offset to a header that defines capability-specific attributes, including
+GUID, feature type, offset and length, as well as configuration settings
+where applicable. The GUID uniquely identifies the register space of any
+monitor data exposed by the capability. The GUID is associated with an XML
+file from the vendor that describes the mapping of the register space along
+with properties of the monitor data. This allows vendors to perform
+firmware updates that can change the mapping (e.g. add new metrics) without
+requiring any changes to drivers or software tools. The new mapping is
+confirmed by an updated GUID, read from the hardware, which software uses
+with a new XML.
 
- .../bindings/reset/xlnx,zynqmp-reset.txt      |  11 +-
- drivers/reset/reset-zynqmp.c                  |  24 +++-
- .../dt-bindings/reset/xlnx-versal-resets.h    | 105 ++++++++++++++++++
- 3 files changed, 132 insertions(+), 8 deletions(-)
- create mode 100644 include/dt-bindings/reset/xlnx-versal-resets.h
+The current capabilities defined by PMT are Telemetry, Watcher, and
+Crashlog.  The Telemetry capability provides access to a continuous block
+of read only data. The Watcher capability provides access to hardware
+sampling and tracing features. Crashlog provides access to device crash
+dumps.  While there is some relationship between capabilities (Watcher can
+be configured to sample from the Telemetry data set) each exists as stand
+alone features with no dependency on any other. The design therefore splits
+them into individual, capability specific drivers. MFD is used to create
+platform devices for each capability so that they may be managed by their
+own driver. The PMT architecture is (for the most part) agnostic to the
+type of device it can collect from. Devices nodes are consequently generic
+in naming, e.g. /dev/telem<n> and /dev/smplr<n>. Each capability driver
+creates a class to manage the list of devices supporting it.  Software can
+determine which devices support a PMT feature by searching through each
+device node entry in the sysfs class folder. It can additionally determine
+if a particular device supports a PMT feature by checking for a PMT class
+folder in the device folder.
+
+This patch set provides support for the PMT framework, along with support
+for Telemetry on Tiger Lake.
+
+Changes from V2:
+
+Please excuse this delayed V3 as we dealt with last minute hardware
+changes.
+
+ 	- In order to handle certain HW bugs from the telemetry capability
+	  driver, create a single platform device per capability instead of
+	  a device per entry. Add the entry data as device resources and
+	  let the capability driver manage them as a set allowing for
+	  cleaner HW bug resolution.
+	- Handle discovery table offset bug in intel_pmt.c
+	- Handle overlapping regions in intel_pmt_telemetry.c
+	- Add description of sysfs class to testing ABI.
+	- Don't check size and count until confirming support for the PMT
+	  capability to avoid bailing out when we need to skip it.
+	- Remove unneeded header file. Move code to the intel_pmt.c, the
+	  only place where it's needed.
+	- Remove now unused platform data.
+	- Add missing header files types.h, bits.h.
+	- Rename file name and build options from telem to telemetry.
+	- Code cleanup suggested by Andy S.
+	- x86 mailing list added.
+
+Changes from V1:
+
+	- In the telemetry driver, set the device in device_create() to
+	  the parent pci device (the monitoring device) for clear
+	  association in sysfs. Was set before to the platform device
+	  created by the pci parent.
+	- Move telem struct into driver and delete unneeded header file.
+	- Start telem device numbering from 0 instead of 1. 1 was used
+	  due to anticipated changes, no longer needed.
+	- Use helper macros suggested by Andy S.
+	- Rename class to pmt_telemetry, spelling out full name
+	- Move monitor device name defines to common header
+	- Coding style, spelling, and Makefile/MAINTAINERS ordering fixes
+
+David E. Box (3):
+  PCI: Add defines for Designated Vendor-Specific Capability
+  mfd: Intel Platform Monitoring Technology support
+  platform/x86: Intel PMT Telemetry capability driver
+
+ .../ABI/testing/sysfs-class-pmt_telemetry     |  46 ++
+ MAINTAINERS                                   |   6 +
+ drivers/mfd/Kconfig                           |  10 +
+ drivers/mfd/Makefile                          |   1 +
+ drivers/mfd/intel_pmt.c                       | 218 +++++++++
+ drivers/platform/x86/Kconfig                  |  10 +
+ drivers/platform/x86/Makefile                 |   1 +
+ drivers/platform/x86/intel_pmt_telemetry.c    | 454 ++++++++++++++++++
+ include/uapi/linux/pci_regs.h                 |   5 +
+ 9 files changed, 751 insertions(+)
+ create mode 100644 Documentation/ABI/testing/sysfs-class-pmt_telemetry
+ create mode 100644 drivers/mfd/intel_pmt.c
+ create mode 100644 drivers/platform/x86/intel_pmt_telemetry.c
 
 -- 
-2.17.1
+2.20.1
 
