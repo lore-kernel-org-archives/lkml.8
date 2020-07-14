@@ -2,130 +2,105 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3EB0C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 16:18:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 806B7C433E5
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 16:18:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8C9F92251E
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 16:18:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="d2+O0TC2"
+	by mail.kernel.org (Postfix) with ESMTP id 644D422527
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 16:18:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727871AbgGNQSO (ORCPT
+        id S1728258AbgGNQST (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 12:18:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42726 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725876AbgGNQSN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 12:18:13 -0400
-Received: from mail-ed1-x542.google.com (mail-ed1-x542.google.com [IPv6:2a00:1450:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 55C4BC061755;
-        Tue, 14 Jul 2020 09:18:13 -0700 (PDT)
-Received: by mail-ed1-x542.google.com with SMTP id dm19so17827896edb.13;
-        Tue, 14 Jul 2020 09:18:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=zAjrXG9HRck33siO67wv3KsLM2e4m1G4T3NRF0VxAEM=;
-        b=d2+O0TC2lgSnnnM/V/d0AkLmwNcwRJ9WhowEoFpUMrBgVtZ+7kJpHV6+iMoTNL5Awa
-         J4ny7YatE9BdM1dd7toiSFFzVbvb/PhVSeeci5PWdfSKl4i1rDrxxRtT/2JqDlUDoAH5
-         5lC5XtPGoaVj11A3Ytz1vru3nqzVn1Xc8i/2y97TGgh5U6mHVnVbgO1O8HfPiNsmHcIz
-         swtr8U3Vw6qMkdS09ioOYFbJbOjWfH++5DJBK3hx4QfUTz/vaocyYvkatlofk3uDv2+F
-         cScLX67m2C6+AbJxVEm3WZP1G2othr1z21zLOm/VbCk4uFTSTAlKxGxzoTBvTDm1Z7PG
-         +uBA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=zAjrXG9HRck33siO67wv3KsLM2e4m1G4T3NRF0VxAEM=;
-        b=AxZX3hna+ouvOqacayeKs1S1VOw8tzTzhSSHaBI0DXQ1TnMJYJAX1m7o6Nq23aUxP0
-         r4jMYpeiA6HjpMQMBdlaKSFklua8TjsgZ8+Amynmq88i4hRgRu644xMTMXoHMvTrbQuF
-         0tj4lYYnx3z/Pr2tIaoD0wNaMTVOdMixqRPJnkKmQUWECzGI5RNyha6N9Y7e8easfgDi
-         KpF39uu90MH7NIPvcl4WZH/gfbA2/m9Xc6v8NCQu5K9UUdTaNmssEq01Mq3YGYTNZVu+
-         pORixmikMg3SWZJWCHt1nvKbO2LDl+dyuPE0E6F2YFUBt3+F0vLb1kLPNqrLwCzqQaJv
-         S5dQ==
-X-Gm-Message-State: AOAM532X9Yb3m9u/QGfg18qazVPbpcIwRuvqfpqzb9JZMvKniWUlJblM
-        CTH6XmSeVnUPomJ2h94taScSE8xr
-X-Google-Smtp-Source: ABdhPJw6tXmAPbuJxT/b+tXKd+9Cgq1wbjcO4YfB0qlpjk7wjvT4EO0WpJkjvt2rBoXB/XBqMO5jWA==
-X-Received: by 2002:aa7:c54e:: with SMTP id s14mr5370829edr.81.1594743492066;
-        Tue, 14 Jul 2020 09:18:12 -0700 (PDT)
-Received: from localhost ([62.96.65.119])
-        by smtp.gmail.com with ESMTPSA id i7sm14762045eds.91.2020.07.14.09.18.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 Jul 2020 09:18:10 -0700 (PDT)
-Date:   Tue, 14 Jul 2020 18:18:09 +0200
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Jon Hunter <jonathanh@nvidia.com>
-Cc:     linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/5] firmware: tegra: Add support for in-band debug
-Message-ID: <20200714161809.GE251696@ulmo>
-References: <20200712100118.13343-1-jonathanh@nvidia.com>
+        Tue, 14 Jul 2020 12:18:19 -0400
+Received: from mga05.intel.com ([192.55.52.43]:55862 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725876AbgGNQSS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 12:18:18 -0400
+IronPort-SDR: qUaFIV6Ek4VO4F7jEEhBqUESBD1o+iItkVztJPDxdKUcyu5RrtBvgiISvltaqHUefzZQY5wys9
+ zLs2xqSzJbsg==
+X-IronPort-AV: E=McAfee;i="6000,8403,9681"; a="233813989"
+X-IronPort-AV: E=Sophos;i="5.75,350,1589266800"; 
+   d="scan'208";a="233813989"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jul 2020 09:18:18 -0700
+IronPort-SDR: HN+vpBCYu9KmC3INIgKGNBMsFh/JR6Q0OcGv5RbozxfE74tRKkf9WfaIPnZmBleoc/bK7AUnqY
+ E86DQqdVbCDQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,350,1589266800"; 
+   d="scan'208";a="307928997"
+Received: from djiang5-mobl1.amr.corp.intel.com (HELO [10.209.140.223]) ([10.209.140.223])
+  by fmsmga004.fm.intel.com with ESMTP; 14 Jul 2020 09:18:17 -0700
+Subject: Re: [PATCH v7 05/11] dmaengine: Introduce DMA-device device_caps
+ callback
+To:     Vinod Koul <vkoul@kernel.org>
+Cc:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Viresh Kumar <vireshk@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
+        devicetree@vger.kernel.org, dmaengine@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20200709224550.15539-1-Sergey.Semin@baikalelectronics.ru>
+ <20200709224550.15539-6-Sergey.Semin@baikalelectronics.ru>
+ <20200710084503.GE3703480@smile.fi.intel.com>
+ <20200710093834.su3nsjesnhntpd6d@mobilestation>
+ <07d4a977-1de6-b611-3d4f-7c7d6cd7fe5f@intel.com>
+ <20200714160830.GL34333@vkoul-mobl>
+From:   Dave Jiang <dave.jiang@intel.com>
+Message-ID: <f746fafd-851e-f402-3755-03ef94a65988@intel.com>
+Date:   Tue, 14 Jul 2020 09:18:16 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="Dzs2zDY0zgkG72+7"
-Content-Disposition: inline
-In-Reply-To: <20200712100118.13343-1-jonathanh@nvidia.com>
-User-Agent: Mutt/1.14.4 (2020-06-18)
+In-Reply-To: <20200714160830.GL34333@vkoul-mobl>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---Dzs2zDY0zgkG72+7
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-On Sun, Jul 12, 2020 at 11:01:13AM +0100, Jon Hunter wrote:
-> This series adds support for in-band debug messaging for the BPMP and
-> updates the BPMP ABI to align with the latest version.
->=20
-> Jon Hunter (4):
->   firmware: tegra: Use consistent return variable name
->   firmware: tegra: Prepare for supporting in-band debugfs
->   firmware: tegra: Add support for in-band debug
->   firmware: tegra: Update BPMP ABI
->=20
-> Timo Alho (1):
->   firmware: tegra: add return code checks and increase debugfs size
->=20
->  drivers/firmware/tegra/bpmp-debugfs.c | 436 ++++++++++--
->  drivers/firmware/tegra/bpmp.c         |   6 +-
->  include/soc/tegra/bpmp-abi.h          | 913 ++++++++++++++++++--------
->  3 files changed, 1038 insertions(+), 317 deletions(-)
+On 7/14/2020 9:08 AM, Vinod Koul wrote:
+> On 13-07-20, 13:55, Dave Jiang wrote:
+>>
+>>
+>> On 7/10/2020 2:38 AM, Serge Semin wrote:
+>>> On Fri, Jul 10, 2020 at 11:45:03AM +0300, Andy Shevchenko wrote:
+>>>> On Fri, Jul 10, 2020 at 01:45:44AM +0300, Serge Semin wrote:
+>>>>> There are DMA devices (like ours version of Synopsys DW DMAC) which have
+>>>>> DMA capabilities non-uniformly redistributed between the device channels.
+>>>>> In order to provide a way of exposing the channel-specific parameters to
+>>>>> the DMA engine consumers, we introduce a new DMA-device callback. In case
+>>>>> if provided it gets called from the dma_get_slave_caps() method and is
+>>>>> able to override the generic DMA-device capabilities.
+>>>>
+>>>
+>>>> In light of recent developments consider not to add 'slave' and a such words to the kernel.
+>>>
+>>> As long as the 'slave' word is used in the name of the dma_slave_caps
+>>> structure and in the rest of the DMA-engine subsystem, it will be ambiguous
+>>> to use some else terminology. If renaming needs to be done, then it should be
+>>> done synchronously for the whole subsystem.
+>>
+>> What about just calling it dma_device_caps? Consider this is a useful
+>> function not only slave DMA will utilize this. I can see this being useful
+>> for some of my future code with idxd driver.
+> 
+> Some of the caps may make sense to generic dmaengine but few of them do
+> not :) While at it, am planning to make it dmaengine_periph_caps to
+> denote that these are dmaengine peripheral capabilities.
+> 
 
-All applied, thanks. I had to tweak a couple of things to make
-checkpatch happy, though. checkpatch also wasn't happy with the ABI
-header update, but I left it as-is to make it easier to update in the
-future.
-
-Thierry
-
---Dzs2zDY0zgkG72+7
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl8N2r8ACgkQ3SOs138+
-s6HKbQ/+OyWkNabkwaz2VIm+/UvhFTkpltTAO12a9bnuwIL0Gt4mTs2HF+aDlcnZ
-fxDfrDxElOe9OJzNGxrbaKoM9ADIllqkiAw9OAgyDJG5SfdIRcZmD0gucFzM0mrS
-uHPduH0SvnW8lZaRO89886bZeODiIZwlQyy4VxntIlnhX5D6cb8Rvxx3R3r2KuT5
-SrRE63hz2C6HNuuBgzn6VNRzwnnc8FZkTzI6o2Oy3Rl86hOXe0W7YQZrl8UVtKEM
-5u3GmJPaxNU8FTzaq2iOLyy+TfElwG2a3O/z/31OAtMJp30eBeL3o92hOl8QUdC3
-uhYWerRv1d6Ykxm/3/bWyXYkm8hoKCMSHZW464mtCLOMH0RNM0+ZGgOVVFIGJROE
-0wjTdj+Lf05IF67jgCYXLAAqbB2Cl4ZpOwH8Yv8EY3exoObwMWEMwbZiR35LZlLw
-xe0GwwYFyCQLMAMLiXmqYqouQD7hlHWPHGjJ9KqcTwcdRKzvuDM40Nsm3fviJ+X8
-6qV1UGva09j8KlbNnotMEpak9J4meQlubD2BgRBXnfEjNwm369+z0BgxFj36LwT8
-+duclmGy9s5fTi+U4IbGD9i5kmHUQ/7bcRmmortkuR8LfNZ8bvL3C/yo3OSpVeKJ
-n6cMzHSArgZA6z1Qf6MTSsDOecytuH7K/htthYF0T3w8QNdkbjo=
-=k44N
------END PGP SIGNATURE-----
-
---Dzs2zDY0zgkG72+7--
+If the function only passes in periph_caps, how do we allow the non periph DMA 
+utilize this function?
