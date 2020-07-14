@@ -7,45 +7,49 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9415BC433E2
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:52:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AFF5EC433F1
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:52:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 73A6422B2B
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:52:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8923722B3A
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:52:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594752764;
-	bh=RFeeKoui4KBDzdL8DbDuYvj3wRJoymkA9Cz7r5lf/L8=;
+	s=default; t=1594752762;
+	bh=pK+W22/DcFThLfhF/4gRQyRFkRDEPbf2zOghp31jwvw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uVc19tjhPZW3XvWdSKSBSFbNxRf7qjNW538OS6oIlbIPPnkOcc9DH4d8YOiP7az8e
-	 KkJrQ93vMXXdqRJ0/OhWePBR4DUaDul+cN5rWKY0OpY2bWEEdhexXDBdXBgdgYJ4Ao
-	 nDpgimlV6Ev34bXtBpiDR2n335BcgEuPXn6HGlbk=
+	b=GLbXCudP26iNW8p18zCR5m0/ZakXQDXaXdWhw7FHszfeM/gBNNRiyU4vp4RgmLy0W
+	 q4YZQUcEt+gAdEUXATxyDhabz8I/EmB0OhUgDCyn1Je+XInxYTwOP+PejNyNyj/Eho
+	 2w3l8riP7eHljlYi5santLt57c/BFBzYHOsHGvqI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730560AbgGNSwm (ORCPT
+        id S1730552AbgGNSwl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 14:52:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49452 "EHLO mail.kernel.org"
+        Tue, 14 Jul 2020 14:52:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49366 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730547AbgGNSwk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 14:52:40 -0400
+        id S1729810AbgGNSwh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 14:52:37 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 81CC422B3B;
-        Tue, 14 Jul 2020 18:52:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CA4F022B2B;
+        Tue, 14 Jul 2020 18:52:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594752760;
-        bh=RFeeKoui4KBDzdL8DbDuYvj3wRJoymkA9Cz7r5lf/L8=;
+        s=default; t=1594752757;
+        bh=pK+W22/DcFThLfhF/4gRQyRFkRDEPbf2zOghp31jwvw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OVEyou0OlQG7DJDiwgRVy3jqGwIBiY/bQu/tyekllcxJMYGkKCJ2PXBU0bo3QxlGd
-         QExxr7ryXU3yOORnHzXXNhD7ZXkKibcHCa3AAi66oGp6INuLcWvOac46N207WbAE6J
-         rOt4IcJd1ItdwXOX55cQtgavxZ02rggzMXklLFxo=
+        b=v7qij7+u2KsHkLPsmA1Ssrjrqeo4C61E0+877LsJl0pHKuGD5qPt/+xgG6pDKg8nX
+         HUMeD7pqxXQqw9d67GLt/E5ORIU+SznHC42jiZMidfMKIspEcSpTiWkvopMJWYAl+b
+         xS39FB+ryEy+4yGuB7q2FIyBSHJ5+cpZ5eS6J0ZI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Vineet Gupta <vgupta@synopsys.com>
-Subject: [PATCH 5.4 099/109] ARC: entry: fix potential EFA clobber when TIF_SYSCALL_TRACE
-Date:   Tue, 14 Jul 2020 20:44:42 +0200
-Message-Id: <20200714184110.300014744@linuxfoundation.org>
+        stable@vger.kernel.org, Art Nikpal <art@khadas.com>,
+        Christian Hewitt <christianshewitt@gmail.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>
+Subject: [PATCH 5.4 098/109] mmc: meson-gx: limit segments to 1 when dram-access-quirk is needed
+Date:   Tue, 14 Jul 2020 20:44:41 +0200
+Message-Id: <20200714184110.256716835@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200714184105.507384017@linuxfoundation.org>
 References: <20200714184105.507384017@linuxfoundation.org>
@@ -58,81 +62,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vineet Gupta <vgupta@synopsys.com>
+From: Neil Armstrong <narmstrong@baylibre.com>
 
-commit 00fdec98d9881bf5173af09aebd353ab3b9ac729 upstream.
+commit 27a5e7d36d383970affae801d77141deafd536a8 upstream.
 
-Trap handler for syscall tracing reads EFA (Exception Fault Address),
-in case strace wants PC of trap instruction (EFA is not part of pt_regs
-as of current code).
+The actual max_segs computation leads to failure while using the broadcom
+sdio brcmfmac/bcmsdh driver, since the driver tries to make usage of
+scatter gather.
 
-However this EFA read is racy as it happens after dropping to pure
-kernel mode (re-enabling interrupts). A taken interrupt could
-context-switch, trigger a different task's trap, clobbering EFA for this
-execution context.
+But with the dram-access-quirk we use a 1,5K SRAM bounce buffer, and the
+max_segs current value of 3 leads to max transfers to 4,5k, which doesn't
+work.
 
-Fix this by reading EFA early, before re-enabling interrupts. A slight
-side benefit is de-duplication of FAKE_RET_FROM_EXCPN in trap handler.
-The trap handler is common to both ARCompact and ARCv2 builds too.
+This patch sets max_segs to 1 to better describe the hardware limitation,
+and fix the SDIO functionality with the brcmfmac/bcmsdh driver on Amlogic
+G12A/G12B SoCs on boards like SEI510 or Khadas VIM3.
 
-This just came out of code rework/review and no real problem was reported
-but is clearly a potential problem specially for strace.
-
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Vineet Gupta <vgupta@synopsys.com>
+Reported-by: Art Nikpal <art@khadas.com>
+Reported-by: Christian Hewitt <christianshewitt@gmail.com>
+Fixes: acdc8e71d9bb ("mmc: meson-gx: add dram-access-quirk")
+Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+Reviewed-by: Kevin Hilman <khilman@baylibre.com>
+Cc: stable@vger.kernel.org
+Link: https://lore.kernel.org/r/20200608084458.32014-1-narmstrong@baylibre.com
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/arc/kernel/entry.S |   16 +++++-----------
- 1 file changed, 5 insertions(+), 11 deletions(-)
+ drivers/mmc/host/meson-gx-mmc.c |    6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
---- a/arch/arc/kernel/entry.S
-+++ b/arch/arc/kernel/entry.S
-@@ -153,7 +153,6 @@ END(EV_Extension)
- tracesys:
- 	; save EFA in case tracer wants the PC of traced task
- 	; using ERET won't work since next-PC has already committed
--	lr  r12, [efa]
- 	GET_CURR_TASK_FIELD_PTR   TASK_THREAD, r11
- 	st  r12, [r11, THREAD_FAULT_ADDR]	; thread.fault_address
+--- a/drivers/mmc/host/meson-gx-mmc.c
++++ b/drivers/mmc/host/meson-gx-mmc.c
+@@ -1151,9 +1151,11 @@ static int meson_mmc_probe(struct platfo
  
-@@ -196,15 +195,9 @@ tracesys_exit:
- ; Breakpoint TRAP
- ; ---------------------------------------------
- trap_with_param:
--
--	; stop_pc info by gdb needs this info
--	lr  r0, [efa]
-+	mov r0, r12	; EFA in case ptracer/gdb wants stop_pc
- 	mov r1, sp
- 
--	; Now that we have read EFA, it is safe to do "fake" rtie
--	;   and get out of CPU exception mode
--	FAKE_RET_FROM_EXCPN
--
- 	; Save callee regs in case gdb wants to have a look
- 	; SP will grow up by size of CALLEE Reg-File
- 	; NOTE: clobbers r12
-@@ -231,6 +224,10 @@ ENTRY(EV_Trap)
- 
- 	EXCEPTION_PROLOGUE
- 
-+	lr  r12, [efa]
-+
-+	FAKE_RET_FROM_EXCPN
-+
- 	;============ TRAP 1   :breakpoints
- 	; Check ECR for trap with arg (PROLOGUE ensures r10 has ECR)
- 	bmsk.f 0, r10, 7
-@@ -238,9 +235,6 @@ ENTRY(EV_Trap)
- 
- 	;============ TRAP  (no param): syscall top level
- 
--	; First return from Exception to pure K mode (Exception/IRQs renabled)
--	FAKE_RET_FROM_EXCPN
--
- 	; If syscall tracing ongoing, invoke pre-post-hooks
- 	GET_CURR_THR_INFO_FLAGS   r10
- 	btst r10, TIF_SYSCALL_TRACE
+ 	mmc->caps |= MMC_CAP_CMD23;
+ 	if (host->dram_access_quirk) {
++		/* Limit segments to 1 due to low available sram memory */
++		mmc->max_segs = 1;
+ 		/* Limit to the available sram memory */
+-		mmc->max_segs = SD_EMMC_SRAM_DATA_BUF_LEN / mmc->max_blk_size;
+-		mmc->max_blk_count = mmc->max_segs;
++		mmc->max_blk_count = SD_EMMC_SRAM_DATA_BUF_LEN /
++				     mmc->max_blk_size;
+ 	} else {
+ 		mmc->max_blk_count = CMD_CFG_LENGTH_MASK;
+ 		mmc->max_segs = SD_EMMC_DESC_BUF_LEN /
 
 
