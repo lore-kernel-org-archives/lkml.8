@@ -2,191 +2,175 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9126EC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 16:28:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B50EC433E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 16:28:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6E2F4223AB
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 16:28:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1697D223AB
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 16:28:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jCU/PAy0"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mGw7hbF3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728596AbgGNQ2M (ORCPT
+        id S1728640AbgGNQ2h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 12:28:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44302 "EHLO
+        Tue, 14 Jul 2020 12:28:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44366 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725931AbgGNQ2M (ORCPT
+        with ESMTP id S1725890AbgGNQ2h (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 12:28:12 -0400
-Received: from mail-lf1-x141.google.com (mail-lf1-x141.google.com [IPv6:2a00:1450:4864:20::141])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DD717C061755;
-        Tue, 14 Jul 2020 09:28:11 -0700 (PDT)
-Received: by mail-lf1-x141.google.com with SMTP id y18so12189445lfh.11;
-        Tue, 14 Jul 2020 09:28:11 -0700 (PDT)
+        Tue, 14 Jul 2020 12:28:37 -0400
+Received: from mail-qv1-xf44.google.com (mail-qv1-xf44.google.com [IPv6:2607:f8b0:4864:20::f44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0F25DC061755
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 09:28:37 -0700 (PDT)
+Received: by mail-qv1-xf44.google.com with SMTP id dm12so7756607qvb.9
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 09:28:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=Q/X/V3rNSVQo1zs/OIkLIXgP3ECAZ9pYuBB0XwYGJSk=;
-        b=jCU/PAy0RRUtdHmQ5KGV4wutOmWEOZjx0fusGSx5GvB1T6hZp4UoRm/nqznCiZzjGe
-         dU4yw24libFVKR7S9MFV8gkfIHrLoNrcJmhoXYY6voTjyYbpfXPAdfuVMoMKR30ybuLd
-         pmsQLTiH3r4th0r4ZvgNRqwQzNjBjYn0hQpyexVbS3ckn5KssPEI18Q1NCnr4gFuoTOV
-         p/aIlJzeaE4T0pjZ0fu9R3oMuBXel0b20dFX/FQifD0EFVewsvWAdrBgMatQ/GqpKD0K
-         p9D/fQAYTEBuOLjOEZzMfRlm1zs1nIVOeTesgW1ybAmppDDRmpqsBoVxPET4x9HM/fIv
-         tzhA==
+        h=content-transfer-encoding:in-reply-to:date:subject:from:to:cc
+         :message-id;
+        bh=JE/9mxvl5sque/itISrZcO8tc5vQZFTyOpHVUavX1xU=;
+        b=mGw7hbF3ASrdOJSzbT8JGlVle3an+aFxNkwH4EVByeQGUG2IpEulVFHZDdhfZf7SD7
+         QNdxbF3BquaG1xvA7IhWbV4e6p8L7Z0x6iignQ+1QKBSK2vDOrPyFCLjRx0upDWZPqr/
+         3T6xViiJ14jDOv/BNLdf6oRrfnDLfnF7MTiHAgRtpOInF4mgD2tkzYUp4NKvQ7XHpPDr
+         PHyrvuLa4hWcct+qt7V7uam9IEn76RgxQYqQIt8FhEiU4fJ7Gto1vA62PvbVtxK716Zx
+         jlg59CXTOaQTEcqdKoZJjyxugTJGXB2PE/tjqmYI3FWq0gbvwDsLnLR2dSRABrkn6EOZ
+         eYvw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=Q/X/V3rNSVQo1zs/OIkLIXgP3ECAZ9pYuBB0XwYGJSk=;
-        b=V1obA84dxn5wJ1OJ3VguJOrRU5uGzHMmn7/m/9S2U69kdW40kV5i+WavcVjLqCHE+u
-         nf89FBlXPIpItKINSPzEDDJDPS7jfQnPhcvmXAsQtF/UA1M9rdDK0eBlXq+kSZTTaX2/
-         emkGn3XmJ3+79xROkJ50EKcgWcLH+0a/JJi3UGD2H2eJ/2l6Voa8gWQq7LzXoFM6rh+R
-         aVEWZ1kQ+t26vN9Chr73wGm6vmrxhmtmp/4Uu9Ssw7/H2V99qbwnIxmYTULtzIB/+9gu
-         DrVHE3mNJrfU6nTuHklYbE73MfpMzhgNnua4BihMR+lvfwamJ0wltuNudnn+bwo1g53v
-         inMA==
-X-Gm-Message-State: AOAM533sJcdL/5h8X61vJ7DSV8cG9hRQNt6TJpjSfoOFkW9Vjq5jpNi/
-        1rhnG+UpyqljbrRJ3CotGhB0PILv
-X-Google-Smtp-Source: ABdhPJzuzZ0nj1a3eKwkyB5HWa7PXh0/DUqRTqp6HSkHm14zJAVkMzVysI69UTVvSF9CLuzHfGiEXA==
-X-Received: by 2002:a19:6b16:: with SMTP id d22mr2560245lfa.111.1594744090092;
-        Tue, 14 Jul 2020 09:28:10 -0700 (PDT)
-Received: from osv.localdomain ([89.175.180.246])
-        by smtp.gmail.com with ESMTPSA id z7sm4751787ljj.33.2020.07.14.09.28.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 Jul 2020 09:28:09 -0700 (PDT)
-From:   Sergey Organov <sorganov@gmail.com>
-To:     netdev@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, Fugang Duan <fugang.duan@nxp.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Richard Cochran <richardcochran@gmail.com>,
-        Vladimir Oltean <olteanv@gmail.com>,
-        Sergey Organov <sorganov@gmail.com>
-Subject: [PATCH v3 net] net: fec: fix hardware time stamping by external devices
-Date:   Tue, 14 Jul 2020 19:28:02 +0300
-Message-Id: <20200714162802.11926-1-sorganov@gmail.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200706142616.25192-1-sorganov@gmail.com>
-References: <20200706142616.25192-1-sorganov@gmail.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        h=x-gm-message-state:content-transfer-encoding:in-reply-to:date
+         :subject:from:to:cc:message-id;
+        bh=JE/9mxvl5sque/itISrZcO8tc5vQZFTyOpHVUavX1xU=;
+        b=O8ZR8yFwZoHU21k6bheJIx7NoKfmUYA/MTAIZlrQrxqv3rwZ5GuspBbmXcbIxNd/v8
+         K6jQNO3wHsouXwbEdLMOF/sUwzOkGUfGCebpq/poEMuSFVMC9LYrT6LU2Gu+xYGEMiv6
+         61hXkeVTBGOV4iJ4lM0iWF+ivsh/HpQxn4+jhYy5hVfSG2xeYMua22VAflLoUHtAo1tn
+         4I9+mAbqYUUGym6EJZzKHFEVTT5r/f8yGfxZxraysS//xXIkrPTy0DA+JXS7CNT4rVod
+         ZqB9pgHW2jhXPopOFnzqScdlUIr9DAWeK/YxtvbZc6NsjBI01FgUye2dmqUgynqri5+a
+         wzyg==
+X-Gm-Message-State: AOAM532oYRlcZdnps0npQTaRO4C/kUEZ9x77kU/VjmILgsUHFSEVWdL2
+        DiD8CmxqyuxTopubgqxapvEqyEcE
+X-Google-Smtp-Source: ABdhPJzypw6RRZ3dMRpl9mft+Pk5UEzORtbiTyLFqXlLXCpN5wbhtyz4uSt8hmoFRnZ/CzoUQ0zLHQ==
+X-Received: by 2002:a0c:b791:: with SMTP id l17mr5627398qve.44.1594744116153;
+        Tue, 14 Jul 2020 09:28:36 -0700 (PDT)
+Received: from localhost (198-48-202-89.cpe.pppoe.ca. [198.48.202.89])
+        by smtp.gmail.com with ESMTPSA id q189sm23371167qke.21.2020.07.14.09.28.34
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 14 Jul 2020 09:28:35 -0700 (PDT)
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+In-Reply-To: <20200713050839.GS34333@vkoul-mobl>
+Date:   Tue, 14 Jul 2020 12:28:34 -0400
+Subject: Re: [PATCH v1 1/1] phy: tusb1210: use bitmasks to set
+ VENDOR_SPECIFIC2
+From:   "Liam Beguin" <liambeguin@gmail.com>
+To:     "Vinod Koul" <vkoul@kernel.org>
+Cc:     <kishon@ti.com>, <linux-kernel@vger.kernel.org>
+Message-Id: <C46HLW9JFSYI.2YB0NSAHXDI3A@atris>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix support for external PTP-aware devices such as DSA or PTP PHY:
+Hi Vinod,
 
-Make sure we never time stamp tx packets when hardware time stamping
-is disabled.
+On Mon Jul 13, 2020 at 10:38 AM Vinod Koul wrote:
+> On 01-07-20, 21:06, Liam Beguin wrote:
+> > From: Liam Beguin <lvb@xiphos.com>
+> >=20
+> > Start by reading the content of the VENDOR_SPECIFIC2 register and updat=
+e
+> > each bit field based on device properties when defined.
+> >=20
+> > The use of bit masks prevents fields from overriding each other and
+> > enables users to clear bits which are set by default, like datapolarity
+> > in this instance.
+> >=20
+> > Signed-off-by: Liam Beguin <lvb@xiphos.com>
+> > ---
+> >  drivers/phy/ti/phy-tusb1210.c | 29 ++++++++++++++++-------------
+> >  1 file changed, 16 insertions(+), 13 deletions(-)
+> >=20
+> > diff --git a/drivers/phy/ti/phy-tusb1210.c b/drivers/phy/ti/phy-tusb121=
+0.c
+> > index d8d0cc11d187..a957655ebd36 100644
+> > --- a/drivers/phy/ti/phy-tusb1210.c
+> > +++ b/drivers/phy/ti/phy-tusb1210.c
+> > @@ -13,9 +13,9 @@
+> >  #include <linux/phy/ulpi_phy.h>
+> > =20
+> >  #define TUSB1210_VENDOR_SPECIFIC2		0x80
+> > -#define TUSB1210_VENDOR_SPECIFIC2_IHSTX_SHIFT	0
+> > -#define TUSB1210_VENDOR_SPECIFIC2_ZHSDRV_SHIFT	4
+> > -#define TUSB1210_VENDOR_SPECIFIC2_DP_SHIFT	6
+> > +#define TUSB1210_VENDOR_SPECIFIC2_IHSTX_MASK	0x0f
+> > +#define TUSB1210_VENDOR_SPECIFIC2_ZHSDRV_MASK	0x30
+>=20
+> Why not be better and use GENMASK(3, 0) and GENMASK(5, 4) for these
+>=20
 
-Check for PTP PHY being in use and then pass ioctls related to time
-stamping of Ethernet packets to the PTP PHY rather than handle them
-ourselves. In addition, disable our own hardware time stamping in this
-case.
+Will update, I didn't know about GENMASK.
 
-Fixes: 6605b730c061 ("FEC: Add time stamping code and a PTP hardware clock")
-Signed-off-by: Sergey Organov <sorganov@gmail.com>
-Acked-by: Richard Cochran <richardcochran@gmail.com>
-Acked-by: Vladimir Oltean <olteanv@gmail.com>
----
+> > +#define TUSB1210_VENDOR_SPECIFIC2_DP_MASK	BIT(6)
+> > =20
+> >  struct tusb1210 {
+> >  	struct ulpi *ulpi;
+> > @@ -118,22 +118,25 @@ static int tusb1210_probe(struct ulpi *ulpi)
+> >  	 * diagram optimization and DP/DM swap.
+> >  	 */
+> > =20
+> > +	reg =3D ulpi_read(ulpi, TUSB1210_VENDOR_SPECIFIC2);
+> > +
+> >  	/* High speed output drive strength configuration */
+> > -	device_property_read_u8(&ulpi->dev, "ihstx", &val);
+> > -	reg =3D val << TUSB1210_VENDOR_SPECIFIC2_IHSTX_SHIFT;
+> > +	if (!device_property_read_u8(&ulpi->dev, "ihstx", &val))
+> > +		reg =3D (reg & ~TUSB1210_VENDOR_SPECIFIC2_IHSTX_MASK) |
+> > +			(val & TUSB1210_VENDOR_SPECIFIC2_IHSTX_MASK);
+>=20
+> It would be better to use a helper to do this
+>=20
 
-v3:
-  - Fixed SHA1 length of Fixes: tag
-  - Added Acked-by: tags
+I found set_mask_bits(), will use that instead.
 
-v2:
-  - Extracted from larger patch series
-  - Description/comments updated according to discussions
-  - Added Fixes: tag
+> > =20
+> >  	/* High speed output impedance configuration */
+> > -	device_property_read_u8(&ulpi->dev, "zhsdrv", &val);
+> > -	reg |=3D val << TUSB1210_VENDOR_SPECIFIC2_ZHSDRV_SHIFT;
+> > +	if (!device_property_read_u8(&ulpi->dev, "zhsdrv", &val))
+> > +		reg =3D (reg & ~TUSB1210_VENDOR_SPECIFIC2_ZHSDRV_MASK) |
+> > +			(val & TUSB1210_VENDOR_SPECIFIC2_ZHSDRV_MASK);
+> > =20
+> >  	/* DP/DM swap control */
+> > -	device_property_read_u8(&ulpi->dev, "datapolarity", &val);
+> > -	reg |=3D val << TUSB1210_VENDOR_SPECIFIC2_DP_SHIFT;
+> > +	if (!device_property_read_u8(&ulpi->dev, "datapolarity", &val))
+> > +		reg =3D (reg & ~TUSB1210_VENDOR_SPECIFIC2_DP_MASK) |
+> > +			(val & TUSB1210_VENDOR_SPECIFIC2_DP_MASK);
+> > =20
+> > -	if (reg) {
+> > -		ulpi_write(ulpi, TUSB1210_VENDOR_SPECIFIC2, reg);
+> > -		tusb->vendor_specific2 =3D reg;
+> > -	}
+> > +	ulpi_write(ulpi, TUSB1210_VENDOR_SPECIFIC2, reg);
+> > +	tusb->vendor_specific2 =3D reg;
+> > =20
+> >  	tusb->phy =3D ulpi_phy_create(ulpi, &phy_ops);
+> >  	if (IS_ERR(tusb->phy))
+> >=20
+> > base-commit: cd77006e01b3198c75fb7819b3d0ff89709539bb
+>=20
+> fatal: bad object cd77006e01b3198c75fb7819b3d0ff89709539bb in
+> linux-phy.git
+>=20
 
- drivers/net/ethernet/freescale/fec.h      |  1 +
- drivers/net/ethernet/freescale/fec_main.c | 23 +++++++++++++++++------
- drivers/net/ethernet/freescale/fec_ptp.c  | 12 ++++++++++++
- 3 files changed, 30 insertions(+), 6 deletions(-)
+Sorry about that, I'll rebase on the latest linux-phy.git
 
-diff --git a/drivers/net/ethernet/freescale/fec.h b/drivers/net/ethernet/freescale/fec.h
-index d8d76da..832a217 100644
---- a/drivers/net/ethernet/freescale/fec.h
-+++ b/drivers/net/ethernet/freescale/fec.h
-@@ -590,6 +590,7 @@ struct fec_enet_private {
- void fec_ptp_init(struct platform_device *pdev, int irq_idx);
- void fec_ptp_stop(struct platform_device *pdev);
- void fec_ptp_start_cyclecounter(struct net_device *ndev);
-+void fec_ptp_disable_hwts(struct net_device *ndev);
- int fec_ptp_set(struct net_device *ndev, struct ifreq *ifr);
- int fec_ptp_get(struct net_device *ndev, struct ifreq *ifr);
- 
-diff --git a/drivers/net/ethernet/freescale/fec_main.c b/drivers/net/ethernet/freescale/fec_main.c
-index 3982285..cc7fbfc 100644
---- a/drivers/net/ethernet/freescale/fec_main.c
-+++ b/drivers/net/ethernet/freescale/fec_main.c
-@@ -1294,8 +1294,13 @@ fec_enet_tx_queue(struct net_device *ndev, u16 queue_id)
- 			ndev->stats.tx_bytes += skb->len;
- 		}
- 
--		if (unlikely(skb_shinfo(skb)->tx_flags & SKBTX_IN_PROGRESS) &&
--			fep->bufdesc_ex) {
-+		/* NOTE: SKBTX_IN_PROGRESS being set does not imply it's we who
-+		 * are to time stamp the packet, so we still need to check time
-+		 * stamping enabled flag.
-+		 */
-+		if (unlikely(skb_shinfo(skb)->tx_flags & SKBTX_IN_PROGRESS &&
-+			     fep->hwts_tx_en) &&
-+		    fep->bufdesc_ex) {
- 			struct skb_shared_hwtstamps shhwtstamps;
- 			struct bufdesc_ex *ebdp = (struct bufdesc_ex *)bdp;
- 
-@@ -2723,10 +2728,16 @@ static int fec_enet_ioctl(struct net_device *ndev, struct ifreq *rq, int cmd)
- 		return -ENODEV;
- 
- 	if (fep->bufdesc_ex) {
--		if (cmd == SIOCSHWTSTAMP)
--			return fec_ptp_set(ndev, rq);
--		if (cmd == SIOCGHWTSTAMP)
--			return fec_ptp_get(ndev, rq);
-+		bool use_fec_hwts = !phy_has_hwtstamp(phydev);
-+
-+		if (cmd == SIOCSHWTSTAMP) {
-+			if (use_fec_hwts)
-+				return fec_ptp_set(ndev, rq);
-+			fec_ptp_disable_hwts(ndev);
-+		} else if (cmd == SIOCGHWTSTAMP) {
-+			if (use_fec_hwts)
-+				return fec_ptp_get(ndev, rq);
-+		}
- 	}
- 
- 	return phy_mii_ioctl(phydev, rq, cmd);
-diff --git a/drivers/net/ethernet/freescale/fec_ptp.c b/drivers/net/ethernet/freescale/fec_ptp.c
-index 945643c..f8a592c 100644
---- a/drivers/net/ethernet/freescale/fec_ptp.c
-+++ b/drivers/net/ethernet/freescale/fec_ptp.c
-@@ -452,6 +452,18 @@ static int fec_ptp_enable(struct ptp_clock_info *ptp,
- 	return -EOPNOTSUPP;
- }
- 
-+/**
-+ * fec_ptp_disable_hwts - disable hardware time stamping
-+ * @ndev: pointer to net_device
-+ */
-+void fec_ptp_disable_hwts(struct net_device *ndev)
-+{
-+	struct fec_enet_private *fep = netdev_priv(ndev);
-+
-+	fep->hwts_tx_en = 0;
-+	fep->hwts_rx_en = 0;
-+}
-+
- int fec_ptp_set(struct net_device *ndev, struct ifreq *ifr)
- {
- 	struct fec_enet_private *fep = netdev_priv(ndev);
--- 
-2.10.0.1.g57b01a3
+Thanks for your time,
+Liam
 
+> --=20
+> ~Vinod
