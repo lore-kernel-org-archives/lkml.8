@@ -2,102 +2,277 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2DB8C433EA
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 16:35:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C30BDC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 16:37:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 827B322475
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 16:35:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594744535;
-	bh=R9WJikLkWQvHqtvHu+mFYozfwPs9zbuJa310V9wJUL4=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=Z6OSw00w8K7uY932IwOsLa4ATI0/x+3oCUWBv75awSw9q6vmztmcraRdNRtEYDpkW
-	 Mi5miRQdBYDC25Gttoh6CtPhaFHtJQ0PjR/e7cAddsnhocORXGkFnhBz+nNxk5a6nS
-	 vLY6Wn0FQZurdxKWzpG0qEr5b5wpVhTMlx7O4Q80=
+	by mail.kernel.org (Postfix) with ESMTP id A0B69221E8
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 16:37:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728776AbgGNQfe (ORCPT
+        id S1728347AbgGNQhY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 12:35:34 -0400
-Received: from mail-oo1-f68.google.com ([209.85.161.68]:44529 "EHLO
-        mail-oo1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728509AbgGNQfc (ORCPT
+        Tue, 14 Jul 2020 12:37:24 -0400
+Received: from mail-il1-f197.google.com ([209.85.166.197]:52729 "EHLO
+        mail-il1-f197.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725931AbgGNQhX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 12:35:32 -0400
-Received: by mail-oo1-f68.google.com with SMTP id o36so3442716ooi.11;
-        Tue, 14 Jul 2020 09:35:31 -0700 (PDT)
+        Tue, 14 Jul 2020 12:37:23 -0400
+Received: by mail-il1-f197.google.com with SMTP id o17so12310519ilt.19
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 09:37:22 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Xq4tKGNRH3KriixnxCn9uJFwafu8U4KY8hX/LfJhHus=;
-        b=YiDs65eV485lrt+lW5nub63ID42gtwNLyWQEU1PL09Oyw8qNqgjQB1f26GTBdYNH63
-         KI1ciMuKYb6BVEih/5QOZC3kiuJENxc5yU7c4axemexASwJanxwD28pXLV+Hq+6sK/ij
-         4Ye17M4vUHrKmrvvtWpdWt/Y5+rUewW0qZovF/QBBwXbNYor6FsJus0XAdXrLK0ahrs3
-         cPwPR2uNByIFC6UnJuLRtfswP9fkT5ddhuN/WHBMp58I1Wjhdr052t52GljFmGJe3X/u
-         G+pvQnTM+8NuSZBLCUOz2FqaUJw2UV/v6Pg1SxIeJa2tj7PBMjRKHw3ASXCBsO55enHx
-         jeqw==
-X-Gm-Message-State: AOAM5304/4XHSClLe3ptCo/WL5szvn/MqOrQ8O8g9Htuv7AmyvzRkwXk
-        nar/+YIkFtqVQrMs2Bdlfe30UBdFRoYK6hWOrYDdYw==
-X-Google-Smtp-Source: ABdhPJx9jwksQchlp8EzWcp4jDpRaQL5RgS6YS+xhSCdQj4OcOM3zMN5IV/4G0I2X0imPOE8KPCwOaKZyOkoPAp3Hf8=
-X-Received: by 2002:a4a:3e48:: with SMTP id t69mr5360935oot.38.1594744531359;
- Tue, 14 Jul 2020 09:35:31 -0700 (PDT)
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=75r0bKaYzCUPJq0CQLzub/SBEorxWQMEleK0P8TUUfo=;
+        b=aJ3ITdE+LGmV9rgDXUFmcGTjZ9t881Npd2ynIFpNM+y6wTqTxFlsDy3PKEmqOUi9KP
+         zKfrMG08MLmGM2ywSaw91bP6QtgSE6E5dmT6VpfgeiS+5yskF38mgAOE6LvaKnaEgdt8
+         M2m4q5ZTossGjnthzuDUgHu0EdaXLgwoYfvlnxKA53GvhVOYBbpo7aJnkREuAG7dQRSl
+         TJTu+Hm/2oVzl8fzByrK8oRJBGA0SIfUwAA9CMBQ/BN/5pXyQND6+RJg4EnAOc9CltEJ
+         xZxZ5yYNHX3IchF3mrf6vcolOPcPHbEoxzO17xLU9L/DqT8pJUCqcdSe6F2CyD2tMbw9
+         7Ysg==
+X-Gm-Message-State: AOAM531m1yx0kmwuQ/rWaykPIcmQE5at6Sje9DDV4+mzoRK49zWXqLwo
+        aPs9Kj0qW4pdQN+LGSjI+X7/NOHMCr8yjbAL3H6fzcO8nHg1
+X-Google-Smtp-Source: ABdhPJzjfKrJmrpaSlNo9wjgOZ7gFUKTYGavk0VCi3LaJt0DkbD8WH+ZB9yxwHFIZtZaKZun6QKnhMio/AtIXGIKPgRidbDZJL6I
 MIME-Version: 1.0
-References: <20200714145049.2496163-1-lee.jones@linaro.org> <20200714145049.2496163-13-lee.jones@linaro.org>
-In-Reply-To: <20200714145049.2496163-13-lee.jones@linaro.org>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Tue, 14 Jul 2020 18:35:19 +0200
-Message-ID: <CAJZ5v0jkDWD6Ea2_oEDtFfPDWh5ByphUqEa=3jE2ZbnW0DVEcQ@mail.gmail.com>
-Subject: Re: [PATCH 12/13] cpufreq: intel_pstate: Supply struct attribute
- description for get_aperf_mperf_shift()
-To:     Lee Jones <lee.jones@linaro.org>
-Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        Len Brown <lenb@kernel.org>,
-        Dirk Brandewie <dirk.j.brandewie@intel.com>
+X-Received: by 2002:a92:cece:: with SMTP id z14mr5319119ilq.120.1594744642220;
+ Tue, 14 Jul 2020 09:37:22 -0700 (PDT)
+Date:   Tue, 14 Jul 2020 09:37:22 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000e8398205aa696bc3@google.com>
+Subject: possible deadlock in dev_uc_unsync
+From:   syzbot <syzbot+708f34079caa31416e39@syzkaller.appspotmail.com>
+To:     ap420073@gmail.com, davem@davemloft.net, kuba@kernel.org,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com, xiyou.wangcong@gmail.com
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 14, 2020 at 4:51 PM Lee Jones <lee.jones@linaro.org> wrote:
->
-> Fixes the following W=1 kernel build warning(s):
->
->  drivers/cpufreq/intel_pstate.c:293: warning: Function parameter or member 'get_aperf_mperf_shift' not described in 'pstate_funcs'
->
-> Cc: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-> Cc: Len Brown <lenb@kernel.org>
-> Cc: Dirk Brandewie <dirk.j.brandewie@intel.com>
-> Signed-off-by: Lee Jones <lee.jones@linaro.org>
-> ---
->  drivers/cpufreq/intel_pstate.c | 2 ++
->  1 file changed, 2 insertions(+)
->
-> diff --git a/drivers/cpufreq/intel_pstate.c b/drivers/cpufreq/intel_pstate.c
-> index 44c7b4677675d..f92fc69c87269 100644
-> --- a/drivers/cpufreq/intel_pstate.c
-> +++ b/drivers/cpufreq/intel_pstate.c
-> @@ -275,6 +275,8 @@ static struct cpudata **all_cpu_data;
->   * @get_min:           Callback to get minimum P state
->   * @get_turbo:         Callback to get turbo P state
->   * @get_scaling:       Callback to get frequency scaling factor
-> + * @get_aperf_mperf_shift: Callback to get the number of clock cycles after
-> + *                     aperf, merf is incremented
+Hello,
 
-This added description is inaccurate.  It should be something like
-"Callback to get the APERF vs MPERF frequency difference".
+syzbot found the following crash on:
 
->   * @get_val:           Callback to convert P state to actual MSR write value
->   * @get_vid:           Callback to get VID data for Atom platforms
->   *
-> --
+HEAD commit:    8fb49c01 Merge branch 'Expose-port-split-attributes'
+git tree:       net-next
+console output: https://syzkaller.appspot.com/x/log.txt?x=1196f38f100000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=415c682f6b7a0cbf
+dashboard link: https://syzkaller.appspot.com/bug?extid=708f34079caa31416e39
+compiler:       gcc (GCC) 10.1.0-syz 20200507
+
+Unfortunately, I don't have any reproducer for this crash yet.
+
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+708f34079caa31416e39@syzkaller.appspotmail.com
+
+device bridge_slave_1 left promiscuous mode
+bridge0: port 2(bridge_slave_1) entered disabled state
+device bridge_slave_0 left promiscuous mode
+bridge0: port 1(bridge_slave_0) entered disabled state
+======================================================
+WARNING: possible circular locking dependency detected
+5.8.0-rc2-syzkaller #0 Not tainted
+------------------------------------------------------
+kworker/u4:3/91 is trying to acquire lock:
+ffff8880a25c8280 (&vlan_netdev_addr_lock_key/1){+...}-{2:2}, at: netif_addr_lock_nested include/linux/netdevice.h:4243 [inline]
+ffff8880a25c8280 (&vlan_netdev_addr_lock_key/1){+...}-{2:2}, at: dev_uc_unsync net/core/dev_addr_lists.c:694 [inline]
+ffff8880a25c8280 (&vlan_netdev_addr_lock_key/1){+...}-{2:2}, at: dev_uc_unsync+0xf4/0x190 net/core/dev_addr_lists.c:688
+
+but task is already holding lock:
+ffff8880a74f2280 (&macvlan_netdev_addr_lock_key/1){+...}-{2:2}, at: spin_lock_bh include/linux/spinlock.h:358 [inline]
+ffff8880a74f2280 (&macvlan_netdev_addr_lock_key/1){+...}-{2:2}, at: netif_addr_lock_bh include/linux/netdevice.h:4248 [inline]
+ffff8880a74f2280 (&macvlan_netdev_addr_lock_key/1){+...}-{2:2}, at: dev_uc_unsync net/core/dev_addr_lists.c:693 [inline]
+ffff8880a74f2280 (&macvlan_netdev_addr_lock_key/1){+...}-{2:2}, at: dev_uc_unsync+0xb0/0x190 net/core/dev_addr_lists.c:688
+
+which lock already depends on the new lock.
+
+
+the existing dependency chain (in reverse order) is:
+
+-> #1 (&macvlan_netdev_addr_lock_key/1){+...}-{2:2}:
+       _raw_spin_lock_nested+0x30/0x40 kernel/locking/spinlock.c:361
+       netif_addr_lock_nested include/linux/netdevice.h:4243 [inline]
+       dev_mc_unsync net/core/dev_addr_lists.c:915 [inline]
+       dev_mc_unsync+0xf4/0x190 net/core/dev_addr_lists.c:909
+       vlan_dev_stop+0x51/0x350 net/8021q/vlan_dev.c:315
+       __dev_close_many+0x1b3/0x2e0 net/core/dev.c:1605
+       dev_close_many+0x238/0x650 net/core/dev.c:1630
+       rollback_registered_many+0x3af/0xf60 net/core/dev.c:8953
+       unregister_netdevice_many.part.0+0x1a/0x2f0 net/core/dev.c:10121
+       unregister_netdevice_many net/core/dev.c:10120 [inline]
+       default_device_exit_batch+0x30c/0x3d0 net/core/dev.c:10604
+       ops_exit_list+0x10d/0x160 net/core/net_namespace.c:189
+       cleanup_net+0x4ea/0xa00 net/core/net_namespace.c:603
+       process_one_work+0x94c/0x1670 kernel/workqueue.c:2269
+       worker_thread+0x64c/0x1120 kernel/workqueue.c:2415
+       kthread+0x3b5/0x4a0 kernel/kthread.c:291
+       ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:293
+
+-> #0 (&vlan_netdev_addr_lock_key/1){+...}-{2:2}:
+       check_prev_add kernel/locking/lockdep.c:2496 [inline]
+       check_prevs_add kernel/locking/lockdep.c:2601 [inline]
+       validate_chain kernel/locking/lockdep.c:3218 [inline]
+       __lock_acquire+0x2acb/0x56e0 kernel/locking/lockdep.c:4380
+       lock_acquire+0x1f1/0xad0 kernel/locking/lockdep.c:4959
+       _raw_spin_lock_nested+0x30/0x40 kernel/locking/spinlock.c:361
+       netif_addr_lock_nested include/linux/netdevice.h:4243 [inline]
+       dev_uc_unsync net/core/dev_addr_lists.c:694 [inline]
+       dev_uc_unsync+0xf4/0x190 net/core/dev_addr_lists.c:688
+       macvlan_stop+0xfe/0x4c0 drivers/net/macvlan.c:678
+       __dev_close_many+0x1b3/0x2e0 net/core/dev.c:1605
+       dev_close_many+0x238/0x650 net/core/dev.c:1630
+       rollback_registered_many+0x3af/0xf60 net/core/dev.c:8953
+       unregister_netdevice_many.part.0+0x1a/0x2f0 net/core/dev.c:10121
+       unregister_netdevice_many net/core/dev.c:10120 [inline]
+       default_device_exit_batch+0x30c/0x3d0 net/core/dev.c:10604
+       ops_exit_list+0x10d/0x160 net/core/net_namespace.c:189
+       cleanup_net+0x4ea/0xa00 net/core/net_namespace.c:603
+       process_one_work+0x94c/0x1670 kernel/workqueue.c:2269
+       worker_thread+0x64c/0x1120 kernel/workqueue.c:2415
+       kthread+0x3b5/0x4a0 kernel/kthread.c:291
+       ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:293
+
+other info that might help us debug this:
+
+ Possible unsafe locking scenario:
+
+       CPU0                    CPU1
+       ----                    ----
+  lock(&macvlan_netdev_addr_lock_key/1);
+                               lock(&vlan_netdev_addr_lock_key/1);
+                               lock(&macvlan_netdev_addr_lock_key/1);
+  lock(&vlan_netdev_addr_lock_key/1);
+
+ *** DEADLOCK ***
+
+5 locks held by kworker/u4:3/91:
+ #0: ffff8880a97ad138 ((wq_completion)netns){+.+.}-{0:0}, at: arch_atomic64_set arch/x86/include/asm/atomic64_64.h:34 [inline]
+ #0: ffff8880a97ad138 ((wq_completion)netns){+.+.}-{0:0}, at: atomic64_set include/asm-generic/atomic-instrumented.h:856 [inline]
+ #0: ffff8880a97ad138 ((wq_completion)netns){+.+.}-{0:0}, at: atomic_long_set include/asm-generic/atomic-long.h:41 [inline]
+ #0: ffff8880a97ad138 ((wq_completion)netns){+.+.}-{0:0}, at: set_work_data kernel/workqueue.c:616 [inline]
+ #0: ffff8880a97ad138 ((wq_completion)netns){+.+.}-{0:0}, at: set_work_pool_and_clear_pending kernel/workqueue.c:643 [inline]
+ #0: ffff8880a97ad138 ((wq_completion)netns){+.+.}-{0:0}, at: process_one_work+0x82b/0x1670 kernel/workqueue.c:2240
+ #1: ffffc90000e57da8 (net_cleanup_work){+.+.}-{0:0}, at: process_one_work+0x85f/0x1670 kernel/workqueue.c:2244
+ #2: ffffffff8a7a4930 (pernet_ops_rwsem){++++}-{3:3}, at: cleanup_net+0x9b/0xa00 net/core/net_namespace.c:565
+ #3: ffffffff8a7b17a8 (rtnl_mutex){+.+.}-{3:3}, at: rtnl_lock_unregistering net/core/dev.c:10557 [inline]
+ #3: ffffffff8a7b17a8 (rtnl_mutex){+.+.}-{3:3}, at: default_device_exit_batch+0xea/0x3d0 net/core/dev.c:10595
+ #4: ffff8880a74f2280 (&macvlan_netdev_addr_lock_key/1){+...}-{2:2}, at: spin_lock_bh include/linux/spinlock.h:358 [inline]
+ #4: ffff8880a74f2280 (&macvlan_netdev_addr_lock_key/1){+...}-{2:2}, at: netif_addr_lock_bh include/linux/netdevice.h:4248 [inline]
+ #4: ffff8880a74f2280 (&macvlan_netdev_addr_lock_key/1){+...}-{2:2}, at: dev_uc_unsync net/core/dev_addr_lists.c:693 [inline]
+ #4: ffff8880a74f2280 (&macvlan_netdev_addr_lock_key/1){+...}-{2:2}, at: dev_uc_unsync+0xb0/0x190 net/core/dev_addr_lists.c:688
+
+stack backtrace:
+CPU: 1 PID: 91 Comm: kworker/u4:3 Not tainted 5.8.0-rc2-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Workqueue: netns cleanup_net
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x18f/0x20d lib/dump_stack.c:118
+ check_noncircular+0x324/0x3e0 kernel/locking/lockdep.c:1827
+ check_prev_add kernel/locking/lockdep.c:2496 [inline]
+ check_prevs_add kernel/locking/lockdep.c:2601 [inline]
+ validate_chain kernel/locking/lockdep.c:3218 [inline]
+ __lock_acquire+0x2acb/0x56e0 kernel/locking/lockdep.c:4380
+ lock_acquire+0x1f1/0xad0 kernel/locking/lockdep.c:4959
+ _raw_spin_lock_nested+0x30/0x40 kernel/locking/spinlock.c:361
+ netif_addr_lock_nested include/linux/netdevice.h:4243 [inline]
+ dev_uc_unsync net/core/dev_addr_lists.c:694 [inline]
+ dev_uc_unsync+0xf4/0x190 net/core/dev_addr_lists.c:688
+ macvlan_stop+0xfe/0x4c0 drivers/net/macvlan.c:678
+ __dev_close_many+0x1b3/0x2e0 net/core/dev.c:1605
+ dev_close_many+0x238/0x650 net/core/dev.c:1630
+ rollback_registered_many+0x3af/0xf60 net/core/dev.c:8953
+ unregister_netdevice_many.part.0+0x1a/0x2f0 net/core/dev.c:10121
+ unregister_netdevice_many net/core/dev.c:10120 [inline]
+ default_device_exit_batch+0x30c/0x3d0 net/core/dev.c:10604
+ ops_exit_list+0x10d/0x160 net/core/net_namespace.c:189
+ cleanup_net+0x4ea/0xa00 net/core/net_namespace.c:603
+ process_one_work+0x94c/0x1670 kernel/workqueue.c:2269
+ worker_thread+0x64c/0x1120 kernel/workqueue.c:2415
+ kthread+0x3b5/0x4a0 kernel/kthread.c:291
+ ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:293
+device veth1_to_batadv left promiscuous mode
+device veth0_to_team left promiscuous mode
+device veth1_to_bridge left promiscuous mode
+device veth0 left promiscuous mode
+device veth1_macvtap left promiscuous mode
+device veth0_macvtap left promiscuous mode
+device veth1_vlan left promiscuous mode
+device veth0_vlan left promiscuous mode
+bond0 (unregistering): (slave macvlan60): Releasing backup interface
+bond0 (unregistering): (slave macvlan59): Releasing backup interface
+bond0 (unregistering): (slave macvlan58): Releasing backup interface
+bond0 (unregistering): (slave macvlan57): Releasing backup interface
+bond0 (unregistering): (slave macvlan56): Releasing backup interface
+bond0 (unregistering): (slave macvlan55): Releasing backup interface
+bond0 (unregistering): (slave macvlan54): Releasing backup interface
+bond0 (unregistering): (slave macvlan53): Releasing backup interface
+bond0 (unregistering): (slave macvlan52): Releasing backup interface
+bond0 (unregistering): (slave macvlan51): Releasing backup interface
+bond0 (unregistering): (slave macvlan50): Releasing backup interface
+bond0 (unregistering): (slave macvlan49): Releasing backup interface
+bond0 (unregistering): (slave macvlan48): Releasing backup interface
+bond0 (unregistering): (slave macvlan47): Releasing backup interface
+bond0 (unregistering): (slave macvlan46): Releasing backup interface
+bond0 (unregistering): (slave macvlan45): Releasing backup interface
+bond0 (unregistering): (slave macvlan44): Releasing backup interface
+bond0 (unregistering): (slave macvlan43): Releasing backup interface
+bond0 (unregistering): (slave macvlan42): Releasing backup interface
+bond0 (unregistering): (slave macvlan41): Releasing backup interface
+bond0 (unregistering): (slave macvlan40): Releasing backup interface
+bond0 (unregistering): (slave macvlan39): Releasing backup interface
+bond0 (unregistering): (slave macvlan38): Releasing backup interface
+bond0 (unregistering): (slave macvlan37): Releasing backup interface
+bond0 (unregistering): (slave macvlan36): Releasing backup interface
+bond0 (unregistering): (slave macvlan35): Releasing backup interface
+bond0 (unregistering): (slave macvlan34): Releasing backup interface
+bond0 (unregistering): (slave macvlan33): Releasing backup interface
+bond0 (unregistering): (slave macvlan32): Releasing backup interface
+bond0 (unregistering): (slave macvlan31): Releasing backup interface
+bond0 (unregistering): (slave macvlan30): Releasing backup interface
+bond0 (unregistering): (slave macvlan29): Releasing backup interface
+bond0 (unregistering): (slave macvlan28): Releasing backup interface
+bond0 (unregistering): (slave macvlan27): Releasing backup interface
+bond0 (unregistering): (slave macvlan26): Releasing backup interface
+bond0 (unregistering): (slave macvlan25): Releasing backup interface
+bond0 (unregistering): (slave macvlan24): Releasing backup interface
+bond0 (unregistering): (slave macvlan23): Releasing backup interface
+bond0 (unregistering): (slave macvlan22): Releasing backup interface
+bond0 (unregistering): (slave macvlan21): Releasing backup interface
+bond0 (unregistering): (slave macvlan20): Releasing backup interface
+bond0 (unregistering): (slave macvlan19): Releasing backup interface
+bond0 (unregistering): (slave macvlan18): Releasing backup interface
+bond0 (unregistering): (slave macvlan17): Releasing backup interface
+bond0 (unregistering): (slave macvlan16): Releasing backup interface
+bond0 (unregistering): (slave macvlan15): Releasing backup interface
+bond0 (unregistering): (slave macvlan14): Releasing backup interface
+bond0 (unregistering): (slave macvlan13): Releasing backup interface
+bond0 (unregistering): (slave macvlan12): Releasing backup interface
+bond0 (unregistering): (slave macvlan11): Releasing backup interface
+bond0 (unregistering): (slave macvlan10): Releasing backup interface
+bond0 (unregistering): (slave macvlan9): Releasing backup interface
+bond0 (unregistering): (slave macvlan8): Releasing backup interface
+bond0 (unregistering): (slave macvlan7): Releasing backup interface
+bond0 (unregistering): (slave macvlan6): Releasing backup interface
+bond0 (unregistering): (slave macvlan5): Releasing backup interface
+bond0 (unregistering): (slave macvlan4): Releasing backup interface
+bond0 (unregistering): (slave macvlan3): Releasing backup interface
+bond0 (unregistering): (slave macvlan2): Releasing backup interface
+team0 (unregistering): Port device team_slave_1 removed
+team0 (unregistering): Port device team_slave_0 removed
+bond0 (unregistering): (slave bond_slave_1): Releasing backup interface
+bond0 (unregistering): (slave bond_slave_0): Releasing backup interface
+bond0 (unregistering): Released all slaves
+
+
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
