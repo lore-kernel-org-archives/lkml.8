@@ -7,66 +7,67 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6B93C433F4
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 11:20:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10C1EC433F1
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 11:20:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C694F22203
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 11:20:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E03C121D90
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 11:20:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Fqu+JGaF"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="olMroX2n"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728059AbgGNLUj (ORCPT
+        id S1727953AbgGNLUh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 07:20:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52584 "EHLO
+        Tue, 14 Jul 2020 07:20:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52252 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727935AbgGNLSm (ORCPT
+        with ESMTP id S1728003AbgGNLSr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 07:18:42 -0400
-Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C17EEC08E876
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 04:16:06 -0700 (PDT)
-Received: by mail-wm1-x343.google.com with SMTP id l2so5010523wmf.0
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 04:16:06 -0700 (PDT)
+        Tue, 14 Jul 2020 07:18:47 -0400
+Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B91E7C08E8AC
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 04:16:11 -0700 (PDT)
+Received: by mail-wm1-x344.google.com with SMTP id g75so4774334wme.5
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 04:16:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=tHvsPtXMawqhgTlXf8i2jhQs/B2cBsj2Ks/fZJOcmHY=;
-        b=Fqu+JGaFSRh7vRRPgR/HabR8IBZaeLvvr2EcwSrSv7QCI/6fOnODRUdqwt90J3g5C8
-         0s7/ZkCY/MC07cLGz5P6eZPk8H0sOh7MIQCT3wT/fmUP0dZZvRlB6+ROihSuNTcRcnrn
-         3f/KQJT0rXlJvq27p2T59AjfgIz20tp6gxCQwiRj2g3DFceT0HNj5P5tLxs2F3WUfGUr
-         BCztbiua/SQvCo0rqC98vsPQJ6hLsJvnB5rS2qxatc4pm34FHMoA/X6H2H78RvRzapwC
-         7c22y4tqYny0qVqhSNYiSLAngITlsOr2bNM3rVNtPcNOiSxaFmQjsg/AEf1VCrEiPz2W
-         p5Bg==
+        bh=+6/z2bmjZMbhtqS1hEM9SRMyZids/5Sm1LJ5PQCQzW4=;
+        b=olMroX2nvIY5Lf+mJdh7YdFYN9DJVM3DML7ddb9rOUmNTds3C+m2JdC3mqOc4y2yki
+         oCjN/ROWc7AHqc9tDEJzhS48Ft6N8WDIfr4nT2lTE5jdLWQGIWrolpNjO+lPcicdCRRM
+         2fCsqXPM7bJUnvwrgFNVo7ICmUoZdIFs0+zJzOFi3XIgI9grTk89B6Pv4TQQAvkhtRye
+         9sjSmijV4C2Z3rQ8tSb74WzoWGcSTqF9z7JoxwTfy5DhX28xoARq2ihF4ykZe7GW8r58
+         nDxZdTjaN05xW+eeHH3pFOqwpav7WW2J+QyIHz+GahF3UcEzGl7obV8i3hDK+YXlBs7R
+         Pf0w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=tHvsPtXMawqhgTlXf8i2jhQs/B2cBsj2Ks/fZJOcmHY=;
-        b=ShEF3DacY3iIejks6uD9xP05l45Dwu+u8KDsnUmJ6GXLnGXIy9qlIod6gaoIqHEqZ2
-         jvBneX/bvn4BU6PIuvEfI3BTy4ez2LG46eOMykwVQleUWmlznubHZ3GVslr2fE5RbZlC
-         lUuTVXfWUr5knBJZ3TlMVgeprt9f7cgdtoOjM9+sE82EjSevoonDxd4IcTqxcOwIEvoh
-         vvEWZGK4im/gRj0IWk0SxtVdUTj7uN/QPcxSAj/Q7S4Zt6h57Bpfu5bNpv8I1BkRsCOn
-         3+NUGCmFU6lsS95lSOwdvkEky70L0flXkHwCemEwAHNmT/1Co0cEho1wp3kaouqW+J/j
-         gr8g==
-X-Gm-Message-State: AOAM531YGUsHOvCp6JbZ/JH3LEQ3/quSRY2zb+MlgNFwkMiVpj1XEL2C
-        DeU6K9D3VuKhq1YNoHp5diqId8Zoefs=
-X-Google-Smtp-Source: ABdhPJxVoSxX2N3tawtWC/yLdMqtT4pktyn2twbJ8qTyWyZpqmkc6sC5zihRJLY5WtskmmQJi5EWrw==
-X-Received: by 2002:a05:600c:2116:: with SMTP id u22mr3778571wml.82.1594725365560;
-        Tue, 14 Jul 2020 04:16:05 -0700 (PDT)
+        bh=+6/z2bmjZMbhtqS1hEM9SRMyZids/5Sm1LJ5PQCQzW4=;
+        b=qfm47azfmCw6qBpdMNPumMlyNn/skmcpW86n1x7rskCUent4x8dgwnXapIfYHl9tXQ
+         A7ns7s/47rj/JWoaQ6vCiRP1/hUPqLzKiUsXdPjEgUfHHCi2yJEjrTSEzG4/OUnmtMOb
+         QLaORKw2si8QZDQl2eyJ+HYC34Nfza2XjVFPcQK2bnkSlf+IVFqzGxElpIIl/5lvnQCe
+         cUEE6BgqxBcqrz0l++iqIh0ecjorPbVQPjMJkdhA3ivwe0VcE4wavJHnS2FAg6J8Xwog
+         D4uNewJRtAPV7t0qtAHSWEJyRlrns6WmAwp9uq/Zv6I4DOR+lq+yLQvwG4Eae5eHzM8n
+         1EJQ==
+X-Gm-Message-State: AOAM530UNeSbeSRZTe1pRPCT7olZKT0V5OLyorbNJcva/cx9251nwZoy
+        2XscY/FaJ1lvm6yq9/Fe2WblZw==
+X-Google-Smtp-Source: ABdhPJzfCBA237+MDiPPiC6gnBUiuuivn5CvYJKDoBxN2PB52EY3xNb72wTKP7tCyZ9qJUnt4SpQXw==
+X-Received: by 2002:a1c:7209:: with SMTP id n9mr3892120wmc.150.1594725369516;
+        Tue, 14 Jul 2020 04:16:09 -0700 (PDT)
 Received: from localhost.localdomain ([2.31.163.61])
-        by smtp.gmail.com with ESMTPSA id l8sm28566052wrq.15.2020.07.14.04.16.04
+        by smtp.gmail.com with ESMTPSA id l8sm28566052wrq.15.2020.07.14.04.16.08
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 Jul 2020 04:16:05 -0700 (PDT)
+        Tue, 14 Jul 2020 04:16:08 -0700 (PDT)
 From:   Lee Jones <lee.jones@linaro.org>
 To:     dan.j.williams@intel.com, vkoul@kernel.org
 Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         dmaengine@vger.kernel.org, Lee Jones <lee.jones@linaro.org>,
-        Prasad Sahu <rsahu@apm.com>, Loc Ho <lho@apm.com>
-Subject: [PATCH 14/17] dma: xgene-dma: Provide descriptions for 'dev' and 'clk' in device's ddata
-Date:   Tue, 14 Jul 2020 12:15:43 +0100
-Message-Id: <20200714111546.1755231-15-lee.jones@linaro.org>
+        Dave Jiang <dave.jiang@intel.com>,
+        Leonid Ravich <Leonid.Ravich@emc.com>
+Subject: [PATCH 17/17] dma: ioat: dma: Fix some parameter misspelling and provide description for phys_complete
+Date:   Tue, 14 Jul 2020 12:15:46 +0100
+Message-Id: <20200714111546.1755231-18-lee.jones@linaro.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200714111546.1755231-1-lee.jones@linaro.org>
 References: <20200714111546.1755231-1-lee.jones@linaro.org>
@@ -79,29 +80,53 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 Fixes the following W=1 kernel build warning(s):
 
- drivers/dma/xgene-dma.c:310: warning: Function parameter or member 'dev' not described in 'xgene_dma'
- drivers/dma/xgene-dma.c:310: warning: Function parameter or member 'clk' not described in 'xgene_dma'
+ drivers/dma/ioat/dma.c:202: warning: Function parameter or member 'ioat_chan' not described in 'ioat_update_pending'
+ drivers/dma/ioat/dma.c:202: warning: Excess function parameter 'ioat' description in 'ioat_update_pending'
+ drivers/dma/ioat/dma.c:465: warning: Function parameter or member 'ioat_chan' not described in 'ioat_check_space_lock'
+ drivers/dma/ioat/dma.c:465: warning: Excess function parameter 'ioat' description in 'ioat_check_space_lock'
+ drivers/dma/ioat/dma.c:591: warning: Function parameter or member 'ioat_chan' not described in '__cleanup'
+ drivers/dma/ioat/dma.c:591: warning: Function parameter or member 'phys_complete' not described in '__cleanup'
+ drivers/dma/ioat/dma.c:591: warning: Excess function parameter 'ioat' description in '__cleanup'
 
-Cc: Prasad Sahu <rsahu@apm.com>
-Cc: Loc Ho <lho@apm.com>
+Cc: Dave Jiang <dave.jiang@intel.com>
+Cc: Leonid Ravich <Leonid.Ravich@emc.com>
 Signed-off-by: Lee Jones <lee.jones@linaro.org>
 ---
- drivers/dma/xgene-dma.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/dma/ioat/dma.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/dma/xgene-dma.c b/drivers/dma/xgene-dma.c
-index cd60fa6d67501..4f733d37a22e2 100644
---- a/drivers/dma/xgene-dma.c
-+++ b/drivers/dma/xgene-dma.c
-@@ -287,6 +287,8 @@ struct xgene_dma_chan {
+diff --git a/drivers/dma/ioat/dma.c b/drivers/dma/ioat/dma.c
+index fd782aee02d92..a814b200299bf 100644
+--- a/drivers/dma/ioat/dma.c
++++ b/drivers/dma/ioat/dma.c
+@@ -193,7 +193,7 @@ void ioat_issue_pending(struct dma_chan *c)
  
  /**
-  * struct xgene_dma - internal representation of an X-Gene DMA device
-+ * @dev: reference to this device's struct device
-+ * @clk: reference to this device's clock
-  * @err_irq: DMA error irq number
-  * @ring_num: start id number for DMA ring
-  * @csr_dma: base for DMA register access
+  * ioat_update_pending - log pending descriptors
+- * @ioat: ioat+ channel
++ * @ioat_chan: ioat+ channel
+  *
+  * Check if the number of unsubmitted descriptors has exceeded the
+  * watermark.  Called with prep_lock held
+@@ -457,7 +457,7 @@ ioat_alloc_ring(struct dma_chan *c, int order, gfp_t flags)
+ 
+ /**
+  * ioat_check_space_lock - verify space and grab ring producer lock
+- * @ioat: ioat,3 channel (ring) to operate on
++ * @ioat_chan: ioat,3 channel (ring) to operate on
+  * @num_descs: allocation length
+  */
+ int ioat_check_space_lock(struct ioatdma_chan *ioat_chan, int num_descs)
+@@ -585,7 +585,8 @@ desc_get_errstat(struct ioatdma_chan *ioat_chan, struct ioat_ring_ent *desc)
+ 
+ /**
+  * __cleanup - reclaim used descriptors
+- * @ioat: channel (ring) to clean
++ * @ioat_chan: channel (ring) to clean
++ * @phys_complete: zeroed (or not) completion address (from status)
+  */
+ static void __cleanup(struct ioatdma_chan *ioat_chan, dma_addr_t phys_complete)
+ {
 -- 
 2.25.1
 
