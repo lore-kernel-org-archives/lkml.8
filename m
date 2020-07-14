@@ -2,110 +2,89 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AC0AC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 16:58:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E71EC433E2
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 16:58:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 18B4F22574
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 16:58:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b="rRonHJCI";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="d+e507Vn"
+	by mail.kernel.org (Postfix) with ESMTP id 644CA2255F
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 16:58:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594745901;
+	bh=vCNTULi6O+1BLjxJ2PVfqm+Hj9JXikuIYiaXPY+f9wc=;
+	h=Subject:From:To:Date:List-ID:From;
+	b=S5DYaTVMgz5Cd6UIS5tetFnI+axoqxRIZc362SlZv0iMeLMv4HQyPD/fVaNzdjGgW
+	 hn5UuEKfpds4sh9Yaj/mNVFEERC5XZq96GPLefiNur5mW/vfhq1RtnnrkA+Zw29nl+
+	 ODaqEog2bmyiKVOh/BmgWZgIphD/UMzy150qDiSg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728841AbgGNQ62 (ORCPT
+        id S1728770AbgGNQ6T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 12:58:28 -0400
-Received: from wout1-smtp.messagingengine.com ([64.147.123.24]:60063 "EHLO
-        wout1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726062AbgGNQ62 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 12:58:28 -0400
-Received: from compute1.internal (compute1.nyi.internal [10.202.2.41])
-        by mailout.west.internal (Postfix) with ESMTP id A37F6C60;
-        Tue, 14 Jul 2020 12:58:26 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute1.internal (MEProxy); Tue, 14 Jul 2020 12:58:27 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:content-transfer-encoding:in-reply-to; s=fm1; bh=J
-        n3Ad37SZHYYU1k/teK9BKKpMr/A2B9BBUZL/dISkAw=; b=rRonHJCIud40+m7Fz
-        d+DHSXfd+BJrfwWI9tMwkRffZ9Uq6k1GrtwJp8Q/C+26k4tbg1Yadc4d8S9n0S2v
-        hr9/Y+eRygltnOdxjjJynh0JPxJ1sO9TD2EGJ3Dtxlls0Pyt2LjuSDDdiz6/V0bL
-        QtV1fvo1t0YsoPYh9G0dS+ZBFGGAe0X1LDtgH74M3CNpmsfJiyQJmLwNS6nD3yEC
-        KHO8+Bd12f85i453o5FMCvI1kdxIsYiCjebwFU7Iu23L0izQyOlDhpqPGpIKB0+O
-        wIgmwFAWli4AO2TMnjlLZY4ga+cC8rrw1KVMe+69I1bolPRn7KsS2l8h7dcGMGju
-        lahJQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-transfer-encoding:content-type
-        :date:from:in-reply-to:message-id:mime-version:references
-        :subject:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
-        :x-sasl-enc; s=fm3; bh=Jn3Ad37SZHYYU1k/teK9BKKpMr/A2B9BBUZL/dISk
-        Aw=; b=d+e507VnLJEX/bU269xQFlaHhcDOlaP56eL+UnVJ7wS4UreDbd8+wLQeG
-        uGH63+FGRR56QaYud7+WzxfVDv3UND+hrIn+1lCyp88mrfW26LxGfirevaL8a8th
-        CC+8WuOFk708i+HhV4k7JovSRtirV7+DJcHCS8trHqAID2oYQfEg4hkUMs+oIE3Z
-        CzcEl4U5g7QsXfiVGMHbIrhfjac4KNfm8ziykmD6SLQ7g9aWbZn00WF8IawDgiow
-        k9CldDrW0DAXLwxm6EFMkLD6AHAUSIrncd2Ctu9BE0ZJ6wqeoyhnld2528nHl2WL
-        hwx/xDu+pfFLY3W740H86KbR6I3MA==
-X-ME-Sender: <xms:MeQNXx2shWVdt-0a8WgJskjjtwldq8kpE3j9wl8ERVlphuKK_PnVvQ>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedrfedtgddutdelucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepfffhvffukfhfgggtugfgjgesthekredttddtudenucfhrhhomhepifhrvghg
-    ucfmjfcuoehgrhgvgheskhhrohgrhhdrtghomheqnecuggftrfgrthhtvghrnhepvedtie
-    elueetgeeggfeufefhvefgtdetgfetgfdtvdegjeehieduvddtkeffheffnecukfhppeek
-    fedrkeeirdekledruddtjeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmh
-    grihhlfhhrohhmpehgrhgvgheskhhrohgrhhdrtghomh
-X-ME-Proxy: <xmx:MeQNX4FyPmsEPLoY3rJG8-Y8k4t0iP8vvEsKbuYdUy9cqLoB-OzVvg>
-    <xmx:MeQNXx7_wijXZzyA34CaJUKkrb6C4m7QA7OesUtE3Fm0ub106fNjrg>
-    <xmx:MeQNX-3_xgT0Lj0TRaq6m2md3F0rVqWozNva2WE0gCQWbKK6iQKY3Q>
-    <xmx:MuQNX55S2lpFY5-BJy5oiPdD7CKarlEeyLKeKRZCmequaFXEhoYibA>
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        by mail.messagingengine.com (Postfix) with ESMTPA id EF64A3280065;
-        Tue, 14 Jul 2020 12:58:24 -0400 (EDT)
-Date:   Tue, 14 Jul 2020 18:58:23 +0200
-From:   Greg KH <greg@kroah.com>
-To:     Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-Cc:     "H. Nikolaus Schaller" <hns@goldelico.com>, stable@vger.kernel.org,
-        Paul Cercueil <paul@crapouillou.net>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        letux-kernel@openphoenux.org, linux-mips@vger.kernel.org,
-        tsbogend@alpha.franken.de
-Subject: Re: [PATCH] [stable v5.4.x] pwm: jz4740: Fix build failure
-Message-ID: <20200714165823.GA2127080@kroah.com>
-References: <20200710102758.8341-1-u.kleine-koenig@pengutronix.de>
- <DB8C7C01-0FBB-4A9F-B068-15C06BBC0873@goldelico.com>
- <20200710194702.ire4deel2zn7mnxk@pengutronix.de>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200710194702.ire4deel2zn7mnxk@pengutronix.de>
+        Tue, 14 Jul 2020 12:58:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41512 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726062AbgGNQ6T (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 12:58:19 -0400
+Received: from tzanussi-mobl (c-73-211-240-131.hsd1.il.comcast.net [73.211.240.131])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 24ADD22571;
+        Tue, 14 Jul 2020 16:58:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594745899;
+        bh=vCNTULi6O+1BLjxJ2PVfqm+Hj9JXikuIYiaXPY+f9wc=;
+        h=Subject:From:To:Date:From;
+        b=sYMSRaDTcAgM0oAGCodUPAkDHDoErHGIztFelNcN1+llcuGxDKdx9Qo2yncyQGJgI
+         zPSVDKGViTRyqnC9J96WBOT2xWj6yLw+91rcdQtCJzR/BUwT6pKGeqBHMy9B8UTMkX
+         85yZpN5GSD5d8cGmqa487avUEASAjv/6CK8OmESY=
+Message-ID: <82932b48972f38fccf9920e2ec75b555c2b2494a.camel@kernel.org>
+Subject: [ANNOUNCE] 4.19.132-rt59
+From:   Tom Zanussi <zanussi@kernel.org>
+To:     LKML <linux-kernel@vger.kernel.org>,
+        linux-rt-users <linux-rt-users@vger.kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Carsten Emde <C.Emde@osadl.org>,
+        John Kacur <jkacur@redhat.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Daniel Wagner <wagi@monom.org>,
+        Clark Williams <williams@redhat.com>,
+        Pavel Machek <pavel@denx.de>, Tom Zanussi <zanussi@kernel.org>
+Date:   Tue, 14 Jul 2020 11:58:17 -0500
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 10, 2020 at 09:47:02PM +0200, Uwe Kleine-König wrote:
-> On Fri, Jul 10, 2020 at 12:48:36PM +0200, H. Nikolaus Schaller wrote:
-> > 
-> > > Am 10.07.2020 um 12:27 schrieb Uwe Kleine-König <u.kleine-koenig@pengutronix.de>:
-> > > 
-> > > When commit 9017dc4fbd59 ("pwm: jz4740: Enhance precision in calculation
-> > > of duty cycle") from v5.8-rc1 was backported to v5.4.x its dependency on
-> > > commit ce1f9cece057 ("pwm: jz4740: Use clocks from TCU driver") was not
-> > > noticed which made the pwm-jz4740 driver fail to build.
-> > 
-> > Please can you add my "reported by?"
-> 
-> Greg, can you please add this while applying? (Assuming you're ok with
-> this change and ideally Paul can confirm the change is fine.)
-> 
-> Reported-by: H. Nikolaus Schaller <hns@goldelico.com>
+Hello RT Folks!
 
-Now added, thanks.
+I'm pleased to announce the 4.19.132-rt59 stable release.
+
+This release is just an update to the new stable 4.19.132
+version and no RT specific changes have been made.
+
+You can get this release via the git tree at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/rt/linux-stable-rt.git
+
+  branch: v4.19-rt
+  Head SHA1: 1eebf4069aa37e54330cce9a42608517ea6996fe
+
+Or to build 4.19.132-rt59 directly, the following patches should be applied:
+
+  https://www.kernel.org/pub/linux/kernel/v4.x/linux-4.19.tar.xz
+
+  https://www.kernel.org/pub/linux/kernel/v4.x/patch-4.19.132.xz
+
+  https://www.kernel.org/pub/linux/kernel/projects/rt/4.19/patch-4.19.132-rt59.patch.xz
+
+Enjoy!
+
+   Tom
+
