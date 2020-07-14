@@ -7,100 +7,86 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BAA3C4345C
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 12:40:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83671C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 12:40:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F21DD2220D
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 12:40:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 635532245B
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 12:40:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728599AbgGNMkV (ORCPT
+        id S1728609AbgGNMki (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 08:40:21 -0400
-Received: from inva021.nxp.com ([92.121.34.21]:52080 "EHLO inva021.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728300AbgGNMjk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 08:39:40 -0400
-Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 36540200FFF;
-        Tue, 14 Jul 2020 14:39:38 +0200 (CEST)
-Received: from inva024.eu-rdc02.nxp.com (inva024.eu-rdc02.nxp.com [134.27.226.22])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 2903A20018F;
-        Tue, 14 Jul 2020 14:39:38 +0200 (CEST)
-Received: from fsr-ub1864-014.ea.freescale.net (fsr-ub1864-014.ea.freescale.net [10.171.95.219])
-        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id 6CBAB205A4;
-        Tue, 14 Jul 2020 14:39:37 +0200 (CEST)
-From:   =?UTF-8?q?Horia=20Geant=C4=83?= <horia.geanta@nxp.com>
-To:     Rob Herring <robh+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Matt Mackall <mpm@selenic.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>
-Cc:     Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Martin Kaiser <martin@kaiser.cx>,
-        Marco Felsch <m.felsch@pengutronix.de>,
-        Franck Lenormand <franck.lenormand@nxp.com>,
-        Iuliana Prodan <iuliana.prodan@nxp.com>,
-        Silvano Di Ninno <silvano.dininno@nxp.com>,
-        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v3 5/5] hwrng: imx-rngc: enable driver for i.MX6
-Date:   Tue, 14 Jul 2020 15:39:20 +0300
-Message-Id: <20200714123920.23711-6-horia.geanta@nxp.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200714123920.23711-1-horia.geanta@nxp.com>
-References: <20200714123920.23711-1-horia.geanta@nxp.com>
+        Tue, 14 Jul 2020 08:40:38 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:34397 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726354AbgGNMkh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 08:40:37 -0400
+Received: from 1.general.ppisati.uk.vpn ([10.172.193.134] helo=canonical.com)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <paolo.pisati@canonical.com>)
+        id 1jvKEb-0001KX-1E; Tue, 14 Jul 2020 12:40:33 +0000
+From:   Paolo Pisati <paolo.pisati@canonical.com>
+To:     "David S . Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>, Shuah Khan <shuah@kernel.org>
+Cc:     netdev@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] selftests: net: ip_defrag: modprobe missing nf_defrag_ipv6 support
+Date:   Tue, 14 Jul 2020 14:40:32 +0200
+Message-Id: <20200714124032.49133-1-paolo.pisati@canonical.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-i.MX6 SL, SLL, ULL, ULZ SoCs have an RNGB block.
+Fix ip_defrag.sh when CONFIG_NF_DEFRAG_IPV6=m:
 
-Since imx-rngc driver supports also rngb,
-let's enable it for these SoCs too.
+$ sudo ./ip_defrag.sh
++ set -e
++ mktemp -u XXXXXX
++ readonly NETNS=ns-rGlXcw
++ trap cleanup EXIT
++ setup
++ ip netns add ns-rGlXcw
++ ip -netns ns-rGlXcw link set lo up
++ ip netns exec ns-rGlXcw sysctl -w net.ipv4.ipfrag_high_thresh=9000000
++ ip netns exec ns-rGlXcw sysctl -w net.ipv4.ipfrag_low_thresh=7000000
++ ip netns exec ns-rGlXcw sysctl -w net.ipv4.ipfrag_time=1
++ ip netns exec ns-rGlXcw sysctl -w net.ipv6.ip6frag_high_thresh=9000000
++ ip netns exec ns-rGlXcw sysctl -w net.ipv6.ip6frag_low_thresh=7000000
++ ip netns exec ns-rGlXcw sysctl -w net.ipv6.ip6frag_time=1
++ ip netns exec ns-rGlXcw sysctl -w net.netfilter.nf_conntrack_frag6_high_thresh=9000000
++ cleanup
++ ip netns del ns-rGlXcw
 
-Signed-off-by: Horia Geantă <horia.geanta@nxp.com>
-Reviewed-by: Martin Kaiser <martin@kaiser.cx>
-Reviewed-by: Marco Felsch <m.felsch@pengutronix.de>
+$ ls -la /proc/sys/net/netfilter/nf_conntrack_frag6_high_thresh
+ls: cannot access '/proc/sys/net/netfilter/nf_conntrack_frag6_high_thresh': No such file or directory
+
+$ sudo modprobe nf_defrag_ipv6
+$ ls -la /proc/sys/net/netfilter/nf_conntrack_frag6_high_thresh
+-rw-r--r-- 1 root root 0 Jul 14 12:34 /proc/sys/net/netfilter/nf_conntrack_frag6_high_thresh
+
+Signed-off-by: Paolo Pisati <paolo.pisati@canonical.com>
 ---
- drivers/char/hw_random/Kconfig    | 2 +-
- drivers/char/hw_random/imx-rngc.c | 3 +++
- 2 files changed, 4 insertions(+), 1 deletion(-)
+ tools/testing/selftests/net/ip_defrag.sh | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/char/hw_random/Kconfig b/drivers/char/hw_random/Kconfig
-index 8478eb757f3c..98f95a09ce55 100644
---- a/drivers/char/hw_random/Kconfig
-+++ b/drivers/char/hw_random/Kconfig
-@@ -255,7 +255,7 @@ config HW_RANDOM_MXC_RNGA
- config HW_RANDOM_IMX_RNGC
- 	tristate "Freescale i.MX RNGC Random Number Generator"
- 	depends on HAS_IOMEM && HAVE_CLK
--	depends on SOC_IMX25 || COMPILE_TEST
-+	depends on SOC_IMX25 || SOC_IMX6SL || SOC_IMX6SLL || SOC_IMX6UL || COMPILE_TEST
- 	default HW_RANDOM
- 	help
- 	  This driver provides kernel-side support for the Random Number
-diff --git a/drivers/char/hw_random/imx-rngc.c b/drivers/char/hw_random/imx-rngc.c
-index 9c47e431ce90..84576d2fbf8c 100644
---- a/drivers/char/hw_random/imx-rngc.c
-+++ b/drivers/char/hw_random/imx-rngc.c
-@@ -350,6 +350,9 @@ static SIMPLE_DEV_PM_OPS(imx_rngc_pm_ops, imx_rngc_suspend, imx_rngc_resume);
+diff --git a/tools/testing/selftests/net/ip_defrag.sh b/tools/testing/selftests/net/ip_defrag.sh
+index 15d3489ecd9c..6919afe47e0a 100755
+--- a/tools/testing/selftests/net/ip_defrag.sh
++++ b/tools/testing/selftests/net/ip_defrag.sh
+@@ -3,6 +3,8 @@
+ #
+ # Run a couple of IP defragmentation tests.
  
- static const struct of_device_id imx_rngc_dt_ids[] = {
- 	{ .compatible = "fsl,imx25-rngb", .data = NULL, },
-+	{ .compatible = "fsl,imx6sl-rngb", .data = NULL, },
-+	{ .compatible = "fsl,imx6sll-rngb", .data = NULL, },
-+	{ .compatible = "fsl,imx6ull-rngb", .data = NULL, },
- 	{ /* sentinel */ }
- };
- MODULE_DEVICE_TABLE(of, imx_rngc_dt_ids);
++modprobe -q nf_defrag_ipv6
++
+ set +x
+ set -e
+ 
 -- 
-2.17.1
+2.25.1
 
