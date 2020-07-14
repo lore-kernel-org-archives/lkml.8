@@ -2,126 +2,121 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38BF8C433E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:10:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74737C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:12:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 17F0320760
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:10:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 57A6B20760
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:12:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WsiJGXVq"
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="dq68p4Oe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729019AbgGNSK2 (ORCPT
+        id S1729090AbgGNSMr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 14:10:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60926 "EHLO
+        Tue, 14 Jul 2020 14:12:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33052 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728301AbgGNSK2 (ORCPT
+        with ESMTP id S1728370AbgGNSMq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 14:10:28 -0400
-Received: from mail-qt1-x841.google.com (mail-qt1-x841.google.com [IPv6:2607:f8b0:4864:20::841])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E26A9C061755;
-        Tue, 14 Jul 2020 11:10:27 -0700 (PDT)
-Received: by mail-qt1-x841.google.com with SMTP id u12so13508019qth.12;
-        Tue, 14 Jul 2020 11:10:27 -0700 (PDT)
+        Tue, 14 Jul 2020 14:12:46 -0400
+Received: from mail-il1-x143.google.com (mail-il1-x143.google.com [IPv6:2607:f8b0:4864:20::143])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 94F91C061794
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 11:12:46 -0700 (PDT)
+Received: by mail-il1-x143.google.com with SMTP id p15so7382308ilh.13
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 11:12:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=ZX4l9y/mb02MIUOaKSz1lj12ECx0wlEAm51QAfF6o/8=;
-        b=WsiJGXVqDNs9WargJT52mvIz/gaCVCuxb52bFJeFukAYzSUEIh2fdlkQeVqeuWbB0D
-         Bzbqn0r0doaRe/L6ZZIb3zStjHYGZ8RF2beyf9yjYgP8agdHAl0PAiSbAO4euheDv12l
-         8btObml9Y9hX6nYx8w01Xl2cH7DSo25hPOO4FJFsbXHDRP0OEfMtN0dqr2T/CmkEn3QC
-         pOonLTv9BirBHzAunpzAGUXm4OHH4ctLfxxq13swaSMV/LTuMoEKHkYbwWJA0nb4jEM7
-         7Ke2VPeIG86ZGrJ4GX1h39LqB8Ud3pcWPrGhbq8RY+MWZ+rPqXoJNibnsLvzBSqf90bk
-         QeSw==
+        d=joelfernandes.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=XgMYLghS9qV+zQ3j/AEHdigXuQT8tk2Ry048DCv3WNo=;
+        b=dq68p4Oe6FTibRT0OKXe06CPAge1OFrmt3gile+/qSYXPHXUtOKRn0era1397ge7iu
+         SG0nsm4H7K+6hZKM5Vkb9MlBteNDRdUG8mrLYIN7NPDfr5s5pRLh9h6UcW6OI3ZCFfXb
+         Xd09xrFtLNw2jIxhB4wLLFDrF+rMXW9ILgVMY=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=ZX4l9y/mb02MIUOaKSz1lj12ECx0wlEAm51QAfF6o/8=;
-        b=WK71pxN91y9WAgxJ1Gm/yHPuW91KAmwbGJnGDseTNRa445SVDVBhAkkW8sVHRLEuPd
-         SqHZ6F97P7CCk6BtDSbH0NQf04eR3vgRUIbOywAa4pXh1KlQTjkqVGgTpDQbL47RKlvS
-         9RzOi9xVrEuuTtKMQPDlK2j0IXWhn3jId1uOA/im9vxzPpCgEbdBn9EyQ2PVSM0NYpFM
-         e1NDWJVwCouTeWhVbSUOmnx2YFIrBb5U34ntq4uUa8HThl/zddlkzNBSY7zf+cDPwT4e
-         me+k/BLRReO0VbQwlO/VC41qwiRLj2XJFDD1r4a70o8mL8JeMs+DDQ4kMCLIjSJpspk4
-         JCww==
-X-Gm-Message-State: AOAM530SlVMg0pF7ewMbMJLxRkYDhfv+nxzPBG+E1DMbXlbzwSW5RVCB
-        v9i7lTg3ntGGtIix6rhL4w==
-X-Google-Smtp-Source: ABdhPJzIfX8uNaGelEtus3hlnEHUAzJCj9p6MTHvuiHUjgC4AFO0/AIzEJVEUS+Rr3I8EFtZYkxMRQ==
-X-Received: by 2002:ac8:3028:: with SMTP id f37mr5775930qte.351.1594750226967;
-        Tue, 14 Jul 2020 11:10:26 -0700 (PDT)
-Received: from localhost.localdomain ([209.94.141.207])
-        by smtp.gmail.com with ESMTPSA id n64sm22663726qke.77.2020.07.14.11.10.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 Jul 2020 11:10:26 -0700 (PDT)
-From:   Peilin Ye <yepeilin.cs@gmail.com>
-To:     Andrii Nakryiko <andriin@fb.com>,
-        Alexei Starovoitov <ast@kernel.org>
-Cc:     Peilin Ye <yepeilin.cs@gmail.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@chromium.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        netdev@vger.kernel.org, bpf@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com
-Subject: [Linux-kernel-mentees] [PATCH v3] bpf: Fix NULL pointer dereference in __btf_resolve_helper_id()
-Date:   Tue, 14 Jul 2020 14:09:04 -0400
-Message-Id: <20200714180904.277512-1-yepeilin.cs@gmail.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <CAADnVQ+jUPGJapkvKW=AfXESD6Vz2iuONvJm8eJm5Yd+u9mJ+w@mail.gmail.com>
-References: <CAADnVQ+jUPGJapkvKW=AfXESD6Vz2iuONvJm8eJm5Yd+u9mJ+w@mail.gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=XgMYLghS9qV+zQ3j/AEHdigXuQT8tk2Ry048DCv3WNo=;
+        b=M1DVtxIjDkvbR4usU0SMWJGw2c4+leRSYHqZIqzG9VlZk/WVHprXpcoFVuHxYsAjZf
+         ej4l6ePDyL/bsxf2QP7JfU2ZUot2+LCACuescBXhWTEznk+zExTAGnkBxK1/+dGXbfNT
+         5x0eP9i4HE3W38bA/cnojBFX5p/nApSFAlCF83Q6r5FWZeTAhWNqEE3qIFH2ID8LvUX+
+         DZcx6f1pB7rJpY9uUHsFKwjrdMaSQIDMWrko+CcsUU+BFNVSa97kPeA2Ty457rwBHj18
+         3TKO4u1vHEdGPD8JE6nLnpZjFk2kky5f7ox9+rg7LiBEqvATwXvQit+Y7KBzOQRdA4MO
+         sWCQ==
+X-Gm-Message-State: AOAM530EC9m3e4x66SzlldgrGd9lOV/5zFTPQkfPmWLMODJM8XxegLqW
+        QblOWsc9n2PDNFZfI0+qJPy14GKHdRQJEhwFi9oMiQ==
+X-Google-Smtp-Source: ABdhPJxZh9UtdKz/96YNIgTICaWWllWK6qo3ibzuoBpQ/DEDx3DUR9Zka1P+EnolKivtnMEOWWuJNr7z5hjeAlsuqI0=
+X-Received: by 2002:a92:cf42:: with SMTP id c2mr6263546ilr.13.1594750365698;
+ Tue, 14 Jul 2020 11:12:45 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <CA+G9fYt+6OeibZMD0fP=O3nqFbcN3O4xcLkjq0mpQbZJ2uxB9w@mail.gmail.com>
+ <CAHk-=wgRcFSnQt=T95S+1dPkyvCuVAVGQ37JDvRg41h8hRqO3Q@mail.gmail.com>
+ <CA+G9fYuL=xJPLbQJVzDfXB8uNiCWdXpL=joDsnATEFCzyFh_1g@mail.gmail.com>
+ <CAHk-=wgB6Ds6yqbZZmscKNuAiNR2J0Pf3a8UrbdfewYxHE7SbA@mail.gmail.com>
+ <20200712215041.GA3644504@google.com> <CAHk-=whxP0Gj70pJN5R7Qec4qjrGr+G9Ex7FJi7=_fPcdQ2ocQ@mail.gmail.com>
+ <20200714073306.kq4zikkphqje2yzb@box> <20200714160843.GA1685150@google.com> <CAHk-=wjffJ=EBrLjsz=KUFyPXVQUO03L=VJmHnLhVr4XvT3Mpw@mail.gmail.com>
+In-Reply-To: <CAHk-=wjffJ=EBrLjsz=KUFyPXVQUO03L=VJmHnLhVr4XvT3Mpw@mail.gmail.com>
+From:   Joel Fernandes <joel@joelfernandes.org>
+Date:   Tue, 14 Jul 2020 14:12:33 -0400
+Message-ID: <CAEXW_YRTnCb-z6TeboA3OCYv8eoX8UiCNn7K1hGMX+41Zdz8Og@mail.gmail.com>
+Subject: Re: WARNING: at mm/mremap.c:211 move_page_tables in i386
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     "Kirill A. Shutemov" <kirill@shutemov.name>,
+        Naresh Kamboju <naresh.kamboju@linaro.org>,
+        linux- stable <stable@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        linux-mm <linux-mm@kvack.org>, Arnd Bergmann <arnd@arndb.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Roman Gushchin <guro@fb.com>, Michal Hocko <mhocko@kernel.org>,
+        lkft-triage@lists.linaro.org, Chris Down <chris@chrisdown.name>,
+        Michel Lespinasse <walken@google.com>,
+        Fan Yang <Fan_Yang@sjtu.edu.cn>,
+        Brian Geffon <bgeffon@google.com>,
+        Anshuman Khandual <anshuman.khandual@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>, pugaowei@gmail.com,
+        Jerome Glisse <jglisse@redhat.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Hugh Dickins <hughd@google.com>,
+        Al Viro <viro@zeniv.linux.org.uk>, Tejun Heo <tj@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Prevent __btf_resolve_helper_id() from dereferencing `btf_vmlinux`
-as NULL. This patch fixes the following syzbot bug:
+On Tue, Jul 14, 2020 at 12:11 PM Linus Torvalds
+<torvalds@linux-foundation.org> wrote:
+>
+> On Tue, Jul 14, 2020 at 9:08 AM Joel Fernandes <joel@joelfernandes.org> wrote:
+> >
+> > I was thinking we should not call move_page_tables() with overlapping ranges
+> > at all, just to keep things simple.
+>
+> No, we're not breaking the existing stack movement code just to keep
+> things simple.
+>
+> The rule is "make it as simple as possible, but no simpler".
+>
+> And "as possible" in the case of Linux means "no breaking of old
+> interfaces". The stack randomization movement most certainly counts.
 
-    https://syzkaller.appspot.com/bug?id=f823224ada908fa5c207902a5a62065e53ca0fcc
+Hi Linus,
+I think you misunderstood me. I was not advocating breaking the stack
+movement code or breaking stack randomization, I was going to try to
+see if I could keep that working while not having to do an overlapping
+move. That would be what I would do in the future patch (until which
+as you mentioned, you would switch the WARN_ON to WARN_ON_ONCE).
 
-Reported-by: syzbot+ee09bda7017345f1fbe6@syzkaller.appspotmail.com
-Signed-off-by: Peilin Ye <yepeilin.cs@gmail.com>
----
-Sorry, I got the link wrong. Thank you for pointing that out.
+I agree with you that we keep things as simple as possible while not
+breaking functionality.
 
-Change in v3:
-    - Fix incorrect syzbot dashboard link.
+Cheers,
 
-Change in v2:
-    - Split NULL and IS_ERR cases.
-
- kernel/bpf/btf.c | 5 +++++
- 1 file changed, 5 insertions(+)
-
-diff --git a/kernel/bpf/btf.c b/kernel/bpf/btf.c
-index 30721f2c2d10..092116a311f4 100644
---- a/kernel/bpf/btf.c
-+++ b/kernel/bpf/btf.c
-@@ -4088,6 +4088,11 @@ static int __btf_resolve_helper_id(struct bpf_verifier_log *log, void *fn,
- 	const char *tname, *sym;
- 	u32 btf_id, i;
- 
-+	if (!btf_vmlinux) {
-+		bpf_log(log, "btf_vmlinux doesn't exist\n");
-+		return -EINVAL;
-+	}
-+
- 	if (IS_ERR(btf_vmlinux)) {
- 		bpf_log(log, "btf_vmlinux is malformed\n");
- 		return -EINVAL;
--- 
-2.25.1
-
+ - Joel
