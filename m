@@ -2,166 +2,100 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 345ADC433E6
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 06:35:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C659C433F1
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 06:35:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 103AE21D93
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 06:35:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="k+9CWDSB"
+	by mail.kernel.org (Postfix) with ESMTP id 1BE3A2065D
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 06:35:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594708522;
+	bh=9YfHDlDan0VZajidQw+wcfSkD+P7SL9p2kINP03rs5s=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=vBiie5VLI6S368ieZIhz/3dZwKSLglRomh+dhuQmty/7EvGPXpjN/CTYzKD96/+Ug
+	 PfU9uCofX4uWg5iySvrI0Hz+eRNR9mDbHWaNEFaicbDyewy8yMzK+RDe9Q8+CP3wwr
+	 vEkQtOVsLpCn4Y9gEEaT68l53y+BVhFemwibjOe4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726891AbgGNGfR (ORCPT
+        id S1726907AbgGNGfV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 02:35:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37068 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725788AbgGNGfP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 02:35:15 -0400
-Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 996CAC061755;
-        Mon, 13 Jul 2020 23:35:15 -0700 (PDT)
-Received: by mail-pg1-x543.google.com with SMTP id m22so7160361pgv.9;
-        Mon, 13 Jul 2020 23:35:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=ttRWYRpQA+ROyR/qt6rQ042N5BqhH7zwDEorOgcsIPw=;
-        b=k+9CWDSBFyBA4uCZr9ZjCOxZFRn2+dG48OX0eM1HjXj+N2V3hERruL+Mcetjh8Hlpt
-         E7Kig993b6wqk3ckBvtplrk7lOgpTlrQkGUU4hVLpBQ8DU0JX8kUyWsGw/1oFihjWn8j
-         tOMVWjy/3bsyeOQEmqGIJwVQG3N4MzzY6pQGJm45d4PTng77FEjHi9ydbD00oFtV3uBK
-         6h88I2wYeRACthoCuGcH5o39H9pcohzPC1p4GnKgNY5HNs3INFHXJ+YFVwDp4nBH39EU
-         noOBxd+s93S/LK+u4xpFdIkMvLDfKt7ahXlfEzID58xF2tkrZon2MM9vEQVY4wJdqL0O
-         n9Aw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=ttRWYRpQA+ROyR/qt6rQ042N5BqhH7zwDEorOgcsIPw=;
-        b=FO3h5S44jmujNVPwVrhlRYp9DUvvPXVaJJQouiE0Wm18pvSd5CNsCKynNxtPylpms5
-         mpN4cVz1OrUhmPz3xglyWkvNgiR0mKM+sTSdKlx53TDo0zDajsrenFHffm8XHamcyuPl
-         B5PLwJo/UYj8tyS51Jc6Rm4LEULyEd0hzBqdonqv1mR3rMb1/MxK28hat7ENG+lp+29o
-         qoWSkJ2h4HXLdkHKKC6xac4san1lP4vnF9T6YYwzCKW3YD8Wul06UxjshBRo3o3NylcH
-         KEhlYUaILVHVSECmxsZKOhns70Jh20VPCmYeXv1g1aLA3Q2WUFaUfH1wl0aB9ctlTrfW
-         TqFA==
-X-Gm-Message-State: AOAM5339jiJcVO2+wHUgp08jBlf4tRJQhjES3S09SIICNBVWUK2GjxKz
-        nRdFGGccSDwP+DvoBRAEAe2oe/bfdw4=
-X-Google-Smtp-Source: ABdhPJxsXMb8aduQly7Mg4wx8VR76wGSzmEGY7JJaD/c4MxeTPvsNGUJRjc3/isijJ4jjqq1+Ci6/Q==
-X-Received: by 2002:aa7:9609:: with SMTP id q9mr2892721pfg.269.1594708515214;
-        Mon, 13 Jul 2020 23:35:15 -0700 (PDT)
-Received: from fmin-OptiPlex-7060.nreal.work ([103.206.191.8])
-        by smtp.gmail.com with ESMTPSA id q29sm16041215pfl.77.2020.07.13.23.35.12
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 13 Jul 2020 23:35:14 -0700 (PDT)
-From:   dillon.minfei@gmail.com
-To:     sfr@canb.auug.org.au, bcousson@baylibre.com, tony@atomide.com,
-        robh+dt@kernel.org
-Cc:     linux-omap@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, dillon min <dillon.minfei@gmail.com>
-Subject: [PATCH v4] Fix dcan driver probe failed on am437x platform
-Date:   Tue, 14 Jul 2020 14:35:07 +0800
-Message-Id: <1594708507-6794-2-git-send-email-dillon.minfei@gmail.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1594708507-6794-1-git-send-email-dillon.minfei@gmail.com>
-References: <1594708507-6794-1-git-send-email-dillon.minfei@gmail.com>
+        Tue, 14 Jul 2020 02:35:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34728 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726425AbgGNGfT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 02:35:19 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 01D142065D;
+        Tue, 14 Jul 2020 06:35:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594708519;
+        bh=9YfHDlDan0VZajidQw+wcfSkD+P7SL9p2kINP03rs5s=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=QdqN2/6kvTgo9yVT0pwQrbiTuCFn5/OuhrSSkWxkEsZ+mzGfXBRdZTDd0ZOGPzI5y
+         tRhpgofHkvJv2T2ElCV24e/8suwVmhfoaZ09B88x+CDhv57Bo0IGND++JxXzVn7lu/
+         b8BE7NmhXLnAy/iPWtrSg1N0i14gXjqzeJmDnW4M=
+Date:   Tue, 14 Jul 2020 08:35:17 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Garrit Franke <garritfranke@gmail.com>
+Cc:     rafael@kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] kobject: remove unused kobject action
+Message-ID: <20200714063517.GB662760@kroah.com>
+References: <20200713191509.342466-1-garritfranke@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200713191509.342466-1-garritfranke@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: dillon min <dillon.minfei@gmail.com>
+On Mon, Jul 13, 2020 at 09:15:10PM +0200, Garrit Franke wrote:
+> I noticed that the KOBJ_MAX action is never used. Does it serve any
+> purpose, or can it be removed?
 
-Got following d_can probe errors with kernel 5.8-rc1 on am437x
+Don't ask questions in a changelog comment that you don't also answer :)
 
-[   10.730822] CAN device driver interface
-Starting Wait for Network to be Configured...
-[  OK  ] Reached target Network.
-[   10.787363] c_can_platform 481cc000.can: probe failed
-[   10.792484] c_can_platform: probe of 481cc000.can failed with
-error -2
-[   10.799457] c_can_platform 481d0000.can: probe failed
-[   10.804617] c_can_platform: probe of 481d0000.can failed with
-error -2
+> As far as I know, Kobjects shouldn't be
+> used for drivers and more higher level abstraction layers, so I figured
+> it isn't used by user-provided code either.
 
-actually, Tony has fixed this issue on am335x with the patch [3]
+Userspace sees these uevents, right?
 
-Since am437x has the same clock structure with am335x
-[1][2], so reuse the code from Tony Lindgren's patch [3] to fix it.
+> 
+> Regards
+> Garrit Franke
 
+This isn't needed in a changelog text.
 
-[1]: https://www.ti.com/lit/pdf/spruh73 Chapter-23, Figure 23-1. DCAN
-Integration
-[2]: https://www.ti.com/lit/pdf/spruhl7 Chapter-25, Figure 25-1. DCAN
-Integration
-[3]: commit 516f1117d0fb ("ARM: dts: Configure osc clock for d_can on am335x")
+Try running and testing this a bit more before sending it for inclusion
+please.
 
-Fixes: 1a5cd7c23cc5 ("bus: ti-sysc: Enable all clocks directly during init to read revision")
-Signed-off-by: dillon min <dillon.minfei@gmail.com>
----
+> 
+> Signed-off-by: Garrit Franke <garritfranke@gmail.com>
+> ---
+>  include/linux/kobject.h | 3 +--
+>  1 file changed, 1 insertion(+), 2 deletions(-)
+> 
+> diff --git a/include/linux/kobject.h b/include/linux/kobject.h
+> index 6cba088bee24..fd99c5d2d8b7 100644
+> --- a/include/linux/kobject.h
+> +++ b/include/linux/kobject.h
+> @@ -58,8 +58,7 @@ enum kobject_action {
+>  	KOBJ_ONLINE,
+>  	KOBJ_OFFLINE,
+>  	KOBJ_BIND,
+> -	KOBJ_UNBIND,
+> -	KOBJ_MAX
+> +	KOBJ_UNBIND
 
-Hi Stephen,
+No need to drop that trailing ','
 
-This changes correct commit messages based on your reviewing.
-make Fixes tags to oneline.
-make all commit message tags at the end of commit message
-make Fixes tags before Signed-off-by line.
-add probe failed log to commit message.
+thanks,
 
- arch/arm/boot/dts/am437x-l4.dtsi | 14 ++++++++++----
- 1 file changed, 10 insertions(+), 4 deletions(-)
-
-diff --git a/arch/arm/boot/dts/am437x-l4.dtsi b/arch/arm/boot/dts/am437x-l4.dtsi
-index 0d0f9fe4a882..4129affde54e 100644
---- a/arch/arm/boot/dts/am437x-l4.dtsi
-+++ b/arch/arm/boot/dts/am437x-l4.dtsi
-@@ -1541,8 +1541,9 @@
- 			reg = <0xcc020 0x4>;
- 			reg-names = "rev";
- 			/* Domains (P, C): per_pwrdm, l4ls_clkdm */
--			clocks = <&l4ls_clkctrl AM4_L4LS_D_CAN0_CLKCTRL 0>;
--			clock-names = "fck";
-+			clocks = <&l4ls_clkctrl AM4_L4LS_D_CAN0_CLKCTRL 0>,
-+			<&dcan0_fck>;
-+			clock-names = "fck", "osc";
- 			#address-cells = <1>;
- 			#size-cells = <1>;
- 			ranges = <0x0 0xcc000 0x2000>;
-@@ -1550,6 +1551,8 @@
- 			dcan0: can@0 {
- 				compatible = "ti,am4372-d_can", "ti,am3352-d_can";
- 				reg = <0x0 0x2000>;
-+				clocks = <&dcan0_fck>;
-+				clock-names = "fck";
- 				syscon-raminit = <&scm_conf 0x644 0>;
- 				interrupts = <GIC_SPI 52 IRQ_TYPE_LEVEL_HIGH>;
- 				status = "disabled";
-@@ -1561,8 +1564,9 @@
- 			reg = <0xd0020 0x4>;
- 			reg-names = "rev";
- 			/* Domains (P, C): per_pwrdm, l4ls_clkdm */
--			clocks = <&l4ls_clkctrl AM4_L4LS_D_CAN1_CLKCTRL 0>;
--			clock-names = "fck";
-+			clocks = <&l4ls_clkctrl AM4_L4LS_D_CAN1_CLKCTRL 0>,
-+			<&dcan1_fck>;
-+			clock-names = "fck", "osc";
- 			#address-cells = <1>;
- 			#size-cells = <1>;
- 			ranges = <0x0 0xd0000 0x2000>;
-@@ -1570,6 +1574,8 @@
- 			dcan1: can@0 {
- 				compatible = "ti,am4372-d_can", "ti,am3352-d_can";
- 				reg = <0x0 0x2000>;
-+				clocks = <&dcan1_fck>;
-+				clock-name = "fck";
- 				syscon-raminit = <&scm_conf 0x644 1>;
- 				interrupts = <GIC_SPI 49 IRQ_TYPE_LEVEL_HIGH>;
- 				status = "disabled";
--- 
-2.7.4
-
+greg k-h
