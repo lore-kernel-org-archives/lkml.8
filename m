@@ -7,82 +7,201 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B902C433E4
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 13:05:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DDC9C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 13:10:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 75CAF224B0
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 13:05:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 55C0221D79
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 13:10:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728291AbgGNNFw (ORCPT
+        id S1728083AbgGNNKf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 09:05:52 -0400
-Received: from asavdk4.altibox.net ([109.247.116.15]:35934 "EHLO
-        asavdk4.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726354AbgGNNFw (ORCPT
+        Tue, 14 Jul 2020 09:10:35 -0400
+Received: from relay8-d.mail.gandi.net ([217.70.183.201]:58987 "EHLO
+        relay8-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726354AbgGNNKe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 09:05:52 -0400
-Received: from ravnborg.org (unknown [188.228.123.71])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by asavdk4.altibox.net (Postfix) with ESMTPS id 8261B804D0;
-        Tue, 14 Jul 2020 15:05:48 +0200 (CEST)
-Date:   Tue, 14 Jul 2020 15:05:46 +0200
-From:   Sam Ravnborg <sam@ravnborg.org>
-To:     Jitao Shi <jitao.shi@mediatek.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        linux-mediatek@lists.infradead.org, ck.hu@mediatek.com,
-        stonea168@163.com, huijuan.xie@mediatek.com
-Subject: Re: [PATCH] drm/panel: Fix auo,kd101n80-45na horizontal noise on
- edges of panel
-Message-ID: <20200714130546.GA1588550@ravnborg.org>
-References: <20200714123332.37609-1-jitao.shi@mediatek.com>
+        Tue, 14 Jul 2020 09:10:34 -0400
+X-Originating-IP: 93.34.118.233
+Received: from uno.localdomain (93-34-118-233.ip49.fastwebnet.it [93.34.118.233])
+        (Authenticated sender: jacopo@jmondi.org)
+        by relay8-d.mail.gandi.net (Postfix) with ESMTPSA id E2D5F1BF208;
+        Tue, 14 Jul 2020 13:10:30 +0000 (UTC)
+Date:   Tue, 14 Jul 2020 15:14:03 +0200
+From:   Jacopo Mondi <jacopo@jmondi.org>
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     linus.walleij@linaro.org, linux-kernel@vger.kernel.org,
+        linux-gpio@vger.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Jacopo Mondi <jacopo+renesas@jmondi.org>,
+        linux-renesas-soc@vger.kernel.org
+Subject: Re: [PATCH 20/25] pinctrl: pinctrl-rza1: Demote some kerneldoc
+ headers and fix others
+Message-ID: <20200714131403.eguxpnzsioxfzzko@uno.localdomain>
+References: <20200713144930.1034632-1-lee.jones@linaro.org>
+ <20200713144930.1034632-21-lee.jones@linaro.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200714123332.37609-1-jitao.shi@mediatek.com>
-X-CMAE-Score: 0
-X-CMAE-Analysis: v=2.3 cv=aP3eV41m c=1 sm=1 tr=0
-        a=S6zTFyMACwkrwXSdXUNehg==:117 a=S6zTFyMACwkrwXSdXUNehg==:17
-        a=kj9zAlcOel0A:10 a=mpaa-ttXAAAA:8 a=al6dfsjdgZPfAsxNZ6YA:9
-        a=CjuIK1q_8ugA:10 a=6heAxKwa5pAsJatQ0mat:22
+In-Reply-To: <20200713144930.1034632-21-lee.jones@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jitao.
+Hi Lee,
 
-Material for -fixes or just -next?
+On Mon, Jul 13, 2020 at 03:49:25PM +0100, Lee Jones wrote:
+> Some description blocks are void of any description/documentation,
+> others are missing 'struct' identifiers, there are also a couple of
+> misspellings of function parameter names.  Fix all of them.
+>
+> Fixes the following W=1 kernel build warning(s):
+>
+>  drivers/pinctrl/pinctrl-rza1.c:81: warning: cannot understand function prototype: 'struct rza1_bidir_pin '
+>  drivers/pinctrl/pinctrl-rza1.c:90: warning: cannot understand function prototype: 'struct rza1_bidir_entry '
+>  drivers/pinctrl/pinctrl-rza1.c:98: warning: cannot understand function prototype: 'struct rza1_swio_pin '
+>  drivers/pinctrl/pinctrl-rza1.c:108: warning: cannot understand function prototype: 'struct rza1_swio_entry '
+>  drivers/pinctrl/pinctrl-rza1.c:116: warning: cannot understand function prototype: 'struct rza1_pinmux_conf '
+>  drivers/pinctrl/pinctrl-rza1.c:443: warning: cannot understand function prototype: 'struct rza1_mux_conf '
+>  drivers/pinctrl/pinctrl-rza1.c:462: warning: cannot understand function prototype: 'struct rza1_port '
+>  drivers/pinctrl/pinctrl-rza1.c:482: warning: cannot understand function prototype: 'struct rza1_pinctrl '
+>  drivers/pinctrl/pinctrl-rza1.c:546: warning: Function parameter or member 'port' not described in 'rza1_pinmux_get_flags'
+>  drivers/pinctrl/pinctrl-rza1.c:546: warning: Function parameter or member 'pin' not described in 'rza1_pinmux_get_flags'
+>  drivers/pinctrl/pinctrl-rza1.c:546: warning: Function parameter or member 'func' not described in 'rza1_pinmux_get_flags'
+>  drivers/pinctrl/pinctrl-rza1.c:546: warning: Function parameter or member 'rza1_pctl' not described in 'rza1_pinmux_get_flags'
+>  drivers/pinctrl/pinctrl-rza1.c:575: warning: Function parameter or member 'port' not described in 'rza1_set_bit'
+>  drivers/pinctrl/pinctrl-rza1.c:575: warning: Function parameter or member 'reg' not described in 'rza1_set_bit'
+>  drivers/pinctrl/pinctrl-rza1.c:575: warning: Function parameter or member 'bit' not described in 'rza1_set_bit'
+>  drivers/pinctrl/pinctrl-rza1.c:575: warning: Function parameter or member 'set' not described in 'rza1_set_bit'
+>  drivers/pinctrl/pinctrl-rza1.c:672: warning: Function parameter or member 'rza1_pctl' not described in 'rza1_pin_mux_single'
+>  drivers/pinctrl/pinctrl-rza1.c:672: warning: Excess function parameter 'pinctrl' description in 'rza1_pin_mux_single'
+>
+> Cc: Geert Uytterhoeven <geert+renesas@glider.be>
+> Cc: Jacopo Mondi <jacopo+renesas@jmondi.org>
+> Cc: linux-renesas-soc@vger.kernel.org
+> Signed-off-by: Lee Jones <lee.jones@linaro.org>
 
-	Sam
+Thanks, at the time I had no real idea about the implications of
+documenting with kerneldoc :)
 
-On Tue, Jul 14, 2020 at 08:33:32PM +0800, Jitao Shi wrote:
-> Fine tune the HBP and HFP to avoid the dot noise on the left and right edges.
-> 
-> Signed-off-by: Jitao Shi <jitao.shi@mediatek.com>
+Acked-by: Jacopo Mondi <jacopo@jmondi.org>
+
+Thanks
+  j
+
 > ---
->  drivers/gpu/drm/panel/panel-boe-tv101wum-nl6.c | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/panel/panel-boe-tv101wum-nl6.c b/drivers/gpu/drm/panel/panel-boe-tv101wum-nl6.c
-> index 48a164257d18..3edb33e61908 100644
-> --- a/drivers/gpu/drm/panel/panel-boe-tv101wum-nl6.c
-> +++ b/drivers/gpu/drm/panel/panel-boe-tv101wum-nl6.c
-> @@ -615,9 +615,9 @@ static const struct panel_desc boe_tv101wum_nl6_desc = {
->  static const struct drm_display_mode auo_kd101n80_45na_default_mode = {
->  	.clock = 157000,
->  	.hdisplay = 1200,
-> -	.hsync_start = 1200 + 80,
-> -	.hsync_end = 1200 + 80 + 24,
-> -	.htotal = 1200 + 80 + 24 + 36,
-> +	.hsync_start = 1200 + 60,
-> +	.hsync_end = 1200 + 60 + 24,
-> +	.htotal = 1200 + 60 + 24 + 56,
->  	.vdisplay = 1920,
->  	.vsync_start = 1920 + 16,
->  	.vsync_end = 1920 + 16 + 4,
-> -- 
+>  drivers/pinctrl/pinctrl-rza1.c | 24 ++++++++++++------------
+>  1 file changed, 12 insertions(+), 12 deletions(-)
+>
+> diff --git a/drivers/pinctrl/pinctrl-rza1.c b/drivers/pinctrl/pinctrl-rza1.c
+> index 38a14bbced5f6..511f232ab7bc2 100644
+> --- a/drivers/pinctrl/pinctrl-rza1.c
+> +++ b/drivers/pinctrl/pinctrl-rza1.c
+> @@ -75,7 +75,7 @@
+>   * RZ/A1 pinmux flags
+>   */
+>
+> -/**
+> +/*
+>   * rza1_bidir_pin - describe a single pin that needs bidir flag applied.
+>   */
+>  struct rza1_bidir_pin {
+> @@ -83,7 +83,7 @@ struct rza1_bidir_pin {
+>  	u8 func: 4;
+>  };
+>
+> -/**
+> +/*
+>   * rza1_bidir_entry - describe a list of pins that needs bidir flag applied.
+>   *		      Each struct rza1_bidir_entry describes a port.
+>   */
+> @@ -92,7 +92,7 @@ struct rza1_bidir_entry {
+>  	const struct rza1_bidir_pin *pins;
+>  };
+>
+> -/**
+> +/*
+>   * rza1_swio_pin - describe a single pin that needs swio flag applied.
+>   */
+>  struct rza1_swio_pin {
+> @@ -102,7 +102,7 @@ struct rza1_swio_pin {
+>  	u16 input: 1;
+>  };
+>
+> -/**
+> +/*
+>   * rza1_swio_entry - describe a list of pins that needs swio flag applied
+>   */
+>  struct rza1_swio_entry {
+> @@ -110,7 +110,7 @@ struct rza1_swio_entry {
+>  	const struct rza1_swio_pin *pins;
+>  };
+>
+> -/**
+> +/*
+>   * rza1_pinmux_conf - group together bidir and swio pinmux flag tables
+>   */
+>  struct rza1_pinmux_conf {
+> @@ -431,7 +431,7 @@ static const struct rza1_pinmux_conf rza1l_pmx_conf = {
+>   * RZ/A1 types
+>   */
+>  /**
+> - * rza1_mux_conf - describes a pin multiplexing operation
+> + * struct rza1_mux_conf - describes a pin multiplexing operation
+>   *
+>   * @id: the pin identifier from 0 to RZA1_NPINS
+>   * @port: the port where pin sits on
+> @@ -450,7 +450,7 @@ struct rza1_mux_conf {
+>  };
+>
+>  /**
+> - * rza1_port - describes a pin port
+> + * struct rza1_port - describes a pin port
+>   *
+>   * This is mostly useful to lock register writes per-bank and not globally.
+>   *
+> @@ -467,12 +467,12 @@ struct rza1_port {
+>  };
+>
+>  /**
+> - * rza1_pinctrl - RZ pincontroller device
+> + * struct rza1_pinctrl - RZ pincontroller device
+>   *
+>   * @dev: parent device structure
+>   * @mutex: protect [pinctrl|pinmux]_generic functions
+>   * @base: logical address base
+> - * @nports: number of pin controller ports
+> + * @nport: number of pin controller ports
+>   * @ports: pin controller banks
+>   * @pins: pin array for pinctrl core
+>   * @desc: pincontroller desc for pinctrl core
+> @@ -536,7 +536,7 @@ static inline int rza1_pinmux_get_swio(unsigned int port,
+>  	return -ENOENT;
+>  }
+>
+> -/**
+> +/*
+>   * rza1_pinmux_get_flags() - return pinmux flags associated to a pin
+>   */
+>  static unsigned int rza1_pinmux_get_flags(unsigned int port, unsigned int pin,
+> @@ -566,7 +566,7 @@ static unsigned int rza1_pinmux_get_flags(unsigned int port, unsigned int pin,
+>   * RZ/A1 SoC operations
+>   */
+>
+> -/**
+> +/*
+>   * rza1_set_bit() - un-locked set/clear a single bit in pin configuration
+>   *		    registers
+>   */
+> @@ -664,7 +664,7 @@ static inline int rza1_pin_get(struct rza1_port *port, unsigned int pin)
+>  /**
+>   * rza1_pin_mux_single() - configure pin multiplexing on a single pin
+>   *
+> - * @pinctrl: RZ/A1 pin controller device
+> + * @rza1_pctl: RZ/A1 pin controller device
+>   * @mux_conf: pin multiplexing descriptor
+>   */
+>  static int rza1_pin_mux_single(struct rza1_pinctrl *rza1_pctl,
+> --
 > 2.25.1
+>
