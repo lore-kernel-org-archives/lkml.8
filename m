@@ -2,173 +2,92 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-11.4 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F4F8C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 09:00:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03926C433E4
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 09:04:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E91D220672
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 09:00:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB70C21927
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 09:04:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="eiBqHUC4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725997AbgGNJAY (ORCPT
+        id S1726989AbgGNJEy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 05:00:24 -0400
-Received: from www1102.sakura.ne.jp ([219.94.129.142]:28073 "EHLO
-        www1102.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725816AbgGNJAY (ORCPT
+        Tue, 14 Jul 2020 05:04:54 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:57139 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726431AbgGNJEv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 05:00:24 -0400
-X-Greylist: delayed 3004 seconds by postgrey-1.27 at vger.kernel.org; Tue, 14 Jul 2020 05:00:23 EDT
-Received: from fsav302.sakura.ne.jp (fsav302.sakura.ne.jp [153.120.85.133])
-        by www1102.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id 06E8A6nX049094;
-        Tue, 14 Jul 2020 17:10:06 +0900 (JST)
-        (envelope-from katsuhiro@katsuster.net)
-Received: from www1102.sakura.ne.jp (219.94.129.142)
- by fsav302.sakura.ne.jp (F-Secure/fsigk_smtp/550/fsav302.sakura.ne.jp);
- Tue, 14 Jul 2020 17:10:06 +0900 (JST)
-X-Virus-Status: clean(F-Secure/fsigk_smtp/550/fsav302.sakura.ne.jp)
-Received: from localhost.localdomain (121.252.232.153.ap.dti.ne.jp [153.232.252.121])
-        (authenticated bits=0)
-        by www1102.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id 06E8A1Zq049060
-        (version=TLSv1.2 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO);
-        Tue, 14 Jul 2020 17:10:06 +0900 (JST)
-        (envelope-from katsuhiro@katsuster.net)
-From:   Katsuhiro Suzuki <katsuhiro@katsuster.net>
-To:     Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>
-Cc:     devicetree@vger.kernel.org, alsa-devel@alsa-project.org,
-        linux-kernel@vger.kernel.org,
-        Katsuhiro Suzuki <katsuhiro@katsuster.net>
-Subject: [PATCH] dt-bindings: sound: convert ROHM BD28623 amplifier binding to yaml
-Date:   Tue, 14 Jul 2020 17:09:59 +0900
-Message-Id: <20200714081000.177914-1-katsuhiro@katsuster.net>
-X-Mailer: git-send-email 2.27.0
+        Tue, 14 Jul 2020 05:04:51 -0400
+X-UUID: a4b343c57ba148feb1051876e467c252-20200714
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=1M2tLMfRDT4iREqBJhkNOzVrRqUYRDLLQVyW5lJpNaQ=;
+        b=eiBqHUC4tGtqDtFOVQsEtqmyVEnbKzzGqgo+hbtUFEdp7u8yWhKzfd+Dwe1G19jGJdGJk9KI/BjC7J6DMgAIcMRMwNBLrbfK950Ggzl9qz5c/4I2pJFCTjzWayvUNkjw0B/gtd59dIhOcIPFWZkhSJg9G7gU9lbTjAsFE4nFUkA=;
+X-UUID: a4b343c57ba148feb1051876e467c252-20200714
+Received: from mtkexhb01.mediatek.inc [(172.21.101.102)] by mailgw01.mediatek.com
+        (envelope-from <hanks.chen@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 1269191179; Tue, 14 Jul 2020 17:04:43 +0800
+Received: from mtkcas07.mediatek.inc (172.21.101.84) by
+ mtkmbs01n1.mediatek.inc (172.21.101.68) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Tue, 14 Jul 2020 17:04:41 +0800
+Received: from mtkswgap22.mediatek.inc (172.21.77.33) by mtkcas07.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Tue, 14 Jul 2020 17:04:42 +0800
+From:   Hanks Chen <hanks.chen@mediatek.com>
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Sean Wang <sean.wang@kernel.org>
+CC:     mtk01761 <wendell.lin@mediatek.com>,
+        Andy Teng <andy.teng@mediatek.com>,
+        <linux-gpio@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <wsd_upstream@mediatek.com>,
+        CC Hwang <cc.hwang@mediatek.com>,
+        Loda Chou <loda.chou@mediatek.com>,
+        Hanks Chen <hanks.chen@mediatek.com>,
+        Mars Cheng <mars.cheng@mediatek.com>
+Subject: [PATCH 5/7] pinctrl: mediatek: add mt6779 eint support
+Date:   Tue, 14 Jul 2020 17:04:37 +0800
+Message-ID: <1594717479-8160-6-git-send-email-hanks.chen@mediatek.com>
+X-Mailer: git-send-email 1.7.9.5
+In-Reply-To: <1594717479-8160-1-git-send-email-hanks.chen@mediatek.com>
+References: <1594717479-8160-1-git-send-email-hanks.chen@mediatek.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch converts ROHM BD28623UMV class D speaker amplifier binding
-to DT schema.
-
-Signed-off-by: Katsuhiro Suzuki <katsuhiro@katsuster.net>
----
- .../bindings/sound/rohm,bd28623.txt           | 29 ---------
- .../bindings/sound/rohm,bd28623.yaml          | 65 +++++++++++++++++++
- 2 files changed, 65 insertions(+), 29 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/sound/rohm,bd28623.txt
- create mode 100644 Documentation/devicetree/bindings/sound/rohm,bd28623.yaml
-
-diff --git a/Documentation/devicetree/bindings/sound/rohm,bd28623.txt b/Documentation/devicetree/bindings/sound/rohm,bd28623.txt
-deleted file mode 100644
-index d84557c2686e..000000000000
---- a/Documentation/devicetree/bindings/sound/rohm,bd28623.txt
-+++ /dev/null
-@@ -1,29 +0,0 @@
--ROHM BD28623MUV Class D speaker amplifier for digital input
--
--This codec does not have any control buses such as I2C, it detect format and
--rate of I2S signal automatically. It has two signals that can be connected
--to GPIOs: reset and mute.
--
--Required properties:
--- compatible      : should be "rohm,bd28623"
--- #sound-dai-cells: should be 0.
--- VCCA-supply     : regulator phandle for the VCCA supply
--- VCCP1-supply    : regulator phandle for the VCCP1 supply
--- VCCP2-supply    : regulator phandle for the VCCP2 supply
--
--Optional properties:
--- reset-gpios     : GPIO specifier for the active low reset line
--- mute-gpios      : GPIO specifier for the active low mute line
--
--Example:
--
--	codec {
--		compatible = "rohm,bd28623";
--		#sound-dai-cells = <0>;
--
--		VCCA-supply = <&vcc_reg>;
--		VCCP1-supply = <&vcc_reg>;
--		VCCP2-supply = <&vcc_reg>;
--		reset-gpios = <&gpio 0 GPIO_ACTIVE_LOW>;
--		mute-gpios = <&gpio 1 GPIO_ACTIVE_LOW>;
--	};
-diff --git a/Documentation/devicetree/bindings/sound/rohm,bd28623.yaml b/Documentation/devicetree/bindings/sound/rohm,bd28623.yaml
-new file mode 100644
-index 000000000000..acd8609252b4
---- /dev/null
-+++ b/Documentation/devicetree/bindings/sound/rohm,bd28623.yaml
-@@ -0,0 +1,65 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/sound/rohm,bd28623.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: ROHM BD28623MUV Class D speaker amplifier for digital input
-+
-+description:
-+  This codec does not have any control buses such as I2C, it detect
-+  format and rate of I2S signal automatically. It has two signals
-+  that can be connected to GPIOs reset and mute.
-+
-+maintainers:
-+  - Katsuhiro Suzuki <katsuhiro@katsuster.net>
-+
-+properties:
-+  compatible:
-+    const: rohm,bd28623
-+
-+  "#sound-dai-cells":
-+    const: 0
-+
-+  VCCA-supply:
-+    description:
-+      regulator phandle for the VCCA (for analog) power supply
-+
-+  VCCP1-supply:
-+    description:
-+      regulator phandle for the VCCP1 (for ch1) power supply
-+
-+  VCCP2-supply:
-+    description:
-+      regulator phandle for the VCCP2 (for ch2) power supply
-+
-+  reset-gpios:
-+    maxItems: 1
-+    description:
-+      GPIO specifier for the active low reset line
-+
-+  mute-gpios:
-+    maxItems: 1
-+    description:
-+      GPIO specifier for the active low mute line
-+
-+required:
-+  - compatible
-+  - VCCA-supply
-+  - VCCP1-supply
-+  - VCCP2-supply
-+  - "#sound-dai-cells"
-+
-+examples:
-+  - |
-+    #include <dt-bindings/gpio/gpio.h>
-+    codec {
-+      compatible = "rohm,bd28623";
-+      #sound-dai-cells = <0>;
-+
-+      VCCA-supply = <&vcc_reg>;
-+      VCCP1-supply = <&vcc_reg>;
-+      VCCP2-supply = <&vcc_reg>;
-+      reset-gpios = <&gpio 0 GPIO_ACTIVE_LOW>;
-+      mute-gpios = <&gpio 1 GPIO_ACTIVE_LOW>;
-+    };
--- 
-2.27.0
+YWRkIGRyaXZlciBzZXR0aW5nIHRvIHN1cHBvcnQgbXQ2Nzc5IGVpbnQNCg0KQWNrZWQtYnk6IFNl
+YW4gV2FuZyA8c2Vhbi53YW5nQGtlcm5lbC5vcmc+DQpTaWduZWQtb2ZmLWJ5OiBNYXJzIENoZW5n
+IDxtYXJzLmNoZW5nQG1lZGlhdGVrLmNvbT4NClNpZ25lZC1vZmYtYnk6IEhhbmtzIENoZW4gPGhh
+bmtzLmNoZW5AbWVkaWF0ZWsuY29tPg0KLS0tDQogZHJpdmVycy9waW5jdHJsL21lZGlhdGVrL3Bp
+bmN0cmwtbXQ2Nzc5LmMgfCAgICA4ICsrKysrKysrDQogMSBmaWxlIGNoYW5nZWQsIDggaW5zZXJ0
+aW9ucygrKQ0KDQpkaWZmIC0tZ2l0IGEvZHJpdmVycy9waW5jdHJsL21lZGlhdGVrL3BpbmN0cmwt
+bXQ2Nzc5LmMgYi9kcml2ZXJzL3BpbmN0cmwvbWVkaWF0ZWsvcGluY3RybC1tdDY3NzkuYw0KaW5k
+ZXggMTQ1YmYyMi4uMzI4MjI2MCAxMDA2NDQNCi0tLSBhL2RyaXZlcnMvcGluY3RybC9tZWRpYXRl
+ay9waW5jdHJsLW10Njc3OS5jDQorKysgYi9kcml2ZXJzL3BpbmN0cmwvbWVkaWF0ZWsvcGluY3Ry
+bC1tdDY3NzkuYw0KQEAgLTczMSwxMSArNzMxLDE5IEBADQogCSJpb2NmZ19ydCIsICJpb2NmZ19s
+dCIsICJpb2NmZ190bCIsDQogfTsNCiANCitzdGF0aWMgY29uc3Qgc3RydWN0IG10a19laW50X2h3
+IG10Njc3OV9laW50X2h3ID0gew0KKwkucG9ydF9tYXNrID0gNywNCisJLnBvcnRzICAgICA9IDYs
+DQorCS5hcF9udW0gICAgPSAxOTUsDQorCS5kYl9jbnQgICAgPSAxMywNCit9Ow0KKw0KIHN0YXRp
+YyBjb25zdCBzdHJ1Y3QgbXRrX3Bpbl9zb2MgbXQ2Nzc5X2RhdGEgPSB7DQogCS5yZWdfY2FsID0g
+bXQ2Nzc5X3JlZ19jYWxzLA0KIAkucGlucyA9IG10a19waW5zX210Njc3OSwNCiAJLm5waW5zID0g
+QVJSQVlfU0laRShtdGtfcGluc19tdDY3NzkpLA0KIAkubmdycHMgPSBBUlJBWV9TSVpFKG10a19w
+aW5zX210Njc3OSksDQorCS5laW50X2h3ID0gJm10Njc3OV9laW50X2h3LA0KIAkuZ3Bpb19tID0g
+MCwNCiAJLmllc19wcmVzZW50ID0gdHJ1ZSwNCiAJLmJhc2VfbmFtZXMgPSBtdDY3NzlfcGluY3Ry
+bF9yZWdpc3Rlcl9iYXNlX25hbWVzLA0KLS0gDQoxLjcuOS41DQo=
 
