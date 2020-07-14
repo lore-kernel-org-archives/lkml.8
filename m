@@ -2,149 +2,109 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14C86C433E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 19:04:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 248D6C433E6
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 19:04:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E111522AAF
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 19:04:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594753455;
-	bh=Y3gmnZ14UNbPHkqjjTj7iYbabG72aVSl4P4Rk3VvwZQ=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pcifLgZc5PTQ6eU0GZCazrpgTC4Cg4P1he6TLljithBKU6tcoCelHIT5eTHVta6A3
-	 1Nnhur8yobfMfDLpL02Lk06xSEFqXStP96qOLEZDY4PM0LlK569lHLkuASiPR1/vTL
-	 aYep8S6Fvd7AAMLUGotrZpbakdmtxEac45RzUfDE=
+	by mail.kernel.org (Postfix) with ESMTP id F405022B4E
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 19:04:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="0gYbMbZr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731008AbgGNTEN (ORCPT
+        id S1731287AbgGNTE2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 15:04:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54114 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730546AbgGNS4P (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 14:56:15 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 84F6922282;
-        Tue, 14 Jul 2020 18:56:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594752975;
-        bh=Y3gmnZ14UNbPHkqjjTj7iYbabG72aVSl4P4Rk3VvwZQ=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kqLIqZF4WXWkJNPLnCawZ2pYZC5sH3RTcxFQQPhI9EFwjxkecFvKTUzzideF0krq9
-         Ude0BlrbtQGSCU3S8zDkA278AdxV7/lJQZXEpcYNy3wnl1vtVMujmH+IdNTxTfkI3D
-         bdzJ+1EzYotn9URt/Z9N60B83jHHvhDuAE8guDes=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Wei Li <liwei391@huawei.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Hanjun Guo <guohanjun@huawei.com>,
-        Jin Yao <yao.jin@linux.intel.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 072/166] perf report TUI: Fix segmentation fault in perf_evsel__hists_browse()
-Date:   Tue, 14 Jul 2020 20:43:57 +0200
-Message-Id: <20200714184119.305256839@linuxfoundation.org>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200714184115.844176932@linuxfoundation.org>
-References: <20200714184115.844176932@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Tue, 14 Jul 2020 15:04:28 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:53036 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730936AbgGNS4C (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 14:56:02 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06EIg5nH123000;
+        Tue, 14 Jul 2020 18:55:47 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2020-01-29;
+ bh=zBSFWFJmK6H6QUNUzT1isFDg2o5kHAYgey+PVkvmy3A=;
+ b=0gYbMbZrTAKzqSs2uR5NW6kMPhqX/DyK3rUF6liKEMQa3koTon0ow0cqknhFyywpq/wA
+ Rbf/qWKjaJ6oUkh3kA1XsauNCBe+9dwPXZE3JFMZBXQxAkYtBmrQGc1m0FP+gxMUyLn0
+ mgTDeZfuIu9cyZ72cuAFJVAbMqgNJhwuLKrHAtiO7qOofQIb6rbeujmg2k/vcVEwYZNw
+ bLg1guO8SSaA9zbBn9BMaq+I6V8CHulxgINt7q0/q13i8CLZyasB/SxLvYfz7bCgp8ia
+ WagyEEEtcsMNbdU3R+4qLGlmEC4+4sPX8nuFkIaIA8kgmcIZ7u2DG3JyG65JAC1Eb3s1 1w== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2130.oracle.com with ESMTP id 3274ur7afj-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 14 Jul 2020 18:55:46 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06EIhbb1092521;
+        Tue, 14 Jul 2020 18:55:45 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by aserp3030.oracle.com with ESMTP id 327q0ps5x5-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 14 Jul 2020 18:55:45 +0000
+Received: from abhmp0010.oracle.com (abhmp0010.oracle.com [141.146.116.16])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 06EIthgF006460;
+        Tue, 14 Jul 2020 18:55:43 GMT
+Received: from OracleT490.vogsphere (/73.203.30.179)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 14 Jul 2020 11:55:42 -0700
+Subject: Re: [PATCH 0/2] iowait and idle fixes in /proc/stat
+To:     linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        tglx@linutronix.de
+Cc:     fweisbec@gmail.com, mingo@kernel.org, adobriyan@gmail.com
+References: <20200610210549.61193-1-tom.hromatka@oracle.com>
+From:   Tom Hromatka <tom.hromatka@oracle.com>
+Message-ID: <85937052-fcdf-8bd7-83ec-831a51e320cb@oracle.com>
+Date:   Tue, 14 Jul 2020 12:55:41 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200610210549.61193-1-tom.hromatka@oracle.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9682 signatures=668680
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 malwarescore=0 spamscore=0
+ mlxlogscore=999 bulkscore=0 adultscore=0 phishscore=0 suspectscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2007140133
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9682 signatures=668680
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 lowpriorityscore=0 impostorscore=0
+ suspectscore=0 phishscore=0 spamscore=0 mlxlogscore=999 malwarescore=0
+ mlxscore=0 priorityscore=1501 adultscore=0 bulkscore=0 clxscore=1011
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2007140133
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wei Li <liwei391@huawei.com>
+Ping.
 
-[ Upstream commit d61cbb859b45fdb6b4997f2d51834fae41af0e94 ]
+Thanks.
 
-The segmentation fault can be reproduced as following steps:
-
-1) Executing perf report in tui.
-
-2) Typing '/xxxxx' to filter the symbol to get nothing matched.
-
-3) Pressing enter with no entry selected.
-
-Then it will report a segmentation fault.
-
-It is caused by the lack of check of browser->he_selection when
-accessing it's member res_samples in perf_evsel__hists_browse().
-
-These processes are meaningful for specified samples, so we can skip
-these when nothing is selected.
-
-Fixes: 4968ac8fb7c3 ("perf report: Implement browsing of individual samples")
-Signed-off-by: Wei Li <liwei391@huawei.com>
-Acked-by: Jiri Olsa <jolsa@redhat.com>
-Acked-by: Namhyung Kim <namhyung@kernel.org>
-Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Andi Kleen <ak@linux.intel.com>
-Cc: Hanjun Guo <guohanjun@huawei.com>
-Cc: Jin Yao <yao.jin@linux.intel.com>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Link: http://lore.kernel.org/lkml/20200612094322.39565-1-liwei391@huawei.com
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- tools/perf/ui/browsers/hists.c | 17 +++++++++++------
- 1 file changed, 11 insertions(+), 6 deletions(-)
-
-diff --git a/tools/perf/ui/browsers/hists.c b/tools/perf/ui/browsers/hists.c
-index 487e54ef56a98..2101b6b770d81 100644
---- a/tools/perf/ui/browsers/hists.c
-+++ b/tools/perf/ui/browsers/hists.c
-@@ -2288,6 +2288,11 @@ static struct thread *hist_browser__selected_thread(struct hist_browser *browser
- 	return browser->he_selection->thread;
- }
- 
-+static struct res_sample *hist_browser__selected_res_sample(struct hist_browser *browser)
-+{
-+	return browser->he_selection ? browser->he_selection->res_samples : NULL;
-+}
-+
- /* Check whether the browser is for 'top' or 'report' */
- static inline bool is_report_browser(void *timer)
- {
-@@ -3357,16 +3362,16 @@ static int perf_evsel__hists_browse(struct evsel *evsel, int nr_events,
- 					     &options[nr_options], NULL, NULL, evsel);
- 		nr_options += add_res_sample_opt(browser, &actions[nr_options],
- 						 &options[nr_options],
--				 hist_browser__selected_entry(browser)->res_samples,
--				 evsel, A_NORMAL);
-+						 hist_browser__selected_res_sample(browser),
-+						 evsel, A_NORMAL);
- 		nr_options += add_res_sample_opt(browser, &actions[nr_options],
- 						 &options[nr_options],
--				 hist_browser__selected_entry(browser)->res_samples,
--				 evsel, A_ASM);
-+						 hist_browser__selected_res_sample(browser),
-+						 evsel, A_ASM);
- 		nr_options += add_res_sample_opt(browser, &actions[nr_options],
- 						 &options[nr_options],
--				 hist_browser__selected_entry(browser)->res_samples,
--				 evsel, A_SOURCE);
-+						 hist_browser__selected_res_sample(browser),
-+						 evsel, A_SOURCE);
- 		nr_options += add_switch_opt(browser, &actions[nr_options],
- 					     &options[nr_options]);
- skip_scripting:
--- 
-2.25.1
+Tom
 
 
+On 6/10/20 3:05 PM, Tom Hromatka wrote:
+> A customer is using /proc/stat to track cpu usage in a VM and noted
+> that the iowait and idle times behave strangely when a cpu goes
+> offline and comes back online.
+>
+> This patchset addresses two issues that can cause iowait and idle
+> to fluctuate up and down.  With these changes, cpu iowait and idle
+> now only monotonically increase.
+>
+> Tom Hromatka (2):
+>    tick-sched: Do not clear the iowait and idle times
+>    /proc/stat: Simplify iowait and idle calculations when cpu is offline
+>
+>   fs/proc/stat.c           | 24 ++++++------------------
+>   kernel/time/tick-sched.c |  9 +++++++++
+>   2 files changed, 15 insertions(+), 18 deletions(-)
+>
 
