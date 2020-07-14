@@ -2,138 +2,118 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7AECC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 11:16:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B749C433E4
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 11:16:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9241D22208
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 11:16:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 51F6E2220D
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 11:16:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="yBJE8KjJ"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="SdnZRHxr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727905AbgGNLQm (ORCPT
+        id S1727961AbgGNLQy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 07:16:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52114 "EHLO
+        Tue, 14 Jul 2020 07:16:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52250 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726610AbgGNLPv (ORCPT
+        with ESMTP id S1727858AbgGNLQk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 07:15:51 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DD9FEC061755
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 04:15:50 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id f18so20905799wrs.0
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 04:15:50 -0700 (PDT)
+        Tue, 14 Jul 2020 07:16:40 -0400
+Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 32F86C08C5DF
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 04:15:54 -0700 (PDT)
+Received: by mail-wm1-x342.google.com with SMTP id l2so5008878wmf.0
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 04:15:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=dg33bFZj/pX2p8X7OxPHlMst/L5EH8g1IuDjLVgf1/4=;
-        b=yBJE8KjJ6NEYCDwv9wNX8ZXYdU6hPPbpWM1MaN9ieShRfvwSuASVoer1Ihb+eIWjtK
-         UzSIa+xB0bDjytLVDLErLy7rarcj4dViPg3TEFJdBaaN01b+/Y9rcoi9K13Ya/nLIj2O
-         RPJp2p3e2v9tkZ14wLXYfQjwrZNc9oDvFcQDfYiQ3FU4hz7JGF0g2YW/c6qUSTguN7Ft
-         AqgzYQccKJ9gjfHQlW+xlUJYVwn+AtRaqQPrJp3t/q7rR3jvYUGRI5X4qdC7RyEbM+Ta
-         I5KnfqbFqg2fxEQ4jkstLmZfvDzrZVwlyuSkKPROjYhcVEJ8bDDShUkBejVuRzoQsJEO
-         ytgQ==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=1JX6Y3K2cqUwU/GGZOaVZUng81gC2+PNbg79UPVm7pA=;
+        b=SdnZRHxrdki/679eF7FPi+/jeTt1n4vu5QCRmxeDf6qNUzYvM7bS2wL2e0ozSfTlDM
+         tARtuX6tX/rbJL0nOjGxOz1EtxEWgSJNBrFZwRThgWXp5Kl5a6eD/wFnCjhIw+jzzB7/
+         pa4ZdykY/E568sV/yKFbCQxdcbcvMthgP72Nu27IdlPvdnWn5ftPWOFl2iZSTN1CLks5
+         jCbJHl6gQERwh+F3BClZBDXiW2ATsNlEyVQiw6QRQl3Zs4s0/giQC73/rqp6wSLML6mF
+         zYRMnkFtGmDat2lWvacTNArmkiOZWN/S+hRGD0VkR7xu8KkSelzdOD+GdqTV8/pI3av1
+         6uAA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=dg33bFZj/pX2p8X7OxPHlMst/L5EH8g1IuDjLVgf1/4=;
-        b=FvbIQSUbD5XKXONpJaoEP7Y+GhyAds0BCeS3oM83rqkYPmBftZcSnxnxHO+vdB2kjg
-         I8Py+FelcOefIIJ1Vo8ikMdDjBsSZg6IqhayQdgE5EV9mhUbTRVGq5mg7cFLRHifWu5q
-         oyNq7EwL+e7Hd/jZRgcHR5c3/evFxQyGbSBkBMdUvQhA2vlUgPsNLgm73qBv7gZvNmfU
-         ioh6yoqHm62PyBRFwUgi1iFbaqFyxUxKzhliAWOKttiaTEaUtdGAYLYqnsZ8DNJDD3Z9
-         Xybxx71q7pki53/TDe2aXxdwokdg8HshMWOq2iIvudT5aCwm++ST8Pf8mOCF6IVDUOqs
-         BWMA==
-X-Gm-Message-State: AOAM530+K70pzjT1uWVb9iSIostPq4abdfDYzxXiwsPk6gimDXFIlHqh
-        V3VhL6DWNl7saU7PysVfQbOwhA==
-X-Google-Smtp-Source: ABdhPJyc/Cos2QXFAWOsJJhYX0QbQtXR3o/JuBqfk4bb+hio6dotMso+h9vRFegmjWcVlmEDFyXRFA==
-X-Received: by 2002:a5d:43d2:: with SMTP id v18mr4597136wrr.196.1594725349633;
-        Tue, 14 Jul 2020 04:15:49 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=1JX6Y3K2cqUwU/GGZOaVZUng81gC2+PNbg79UPVm7pA=;
+        b=uhIEFxDEJFYFniZ2jTe+n++9Cww+PPRWQdA+IJrEYS8woXZSy3qIIk9UAzTTYYM5jl
+         bKzkznHi19L4U2yn33wqnlOOuN09Tf0/0hGk/BcfgiEOwGIf0+d1OQib54vC5rtRIgiP
+         PuhfmQJdgNhZ7DA5tBE9+XrOkTObjGaVTozEQt6qUG75ay85kjadFw1T6WHYX6aTavg3
+         ruO/81a+q33MMIsU8W9/sLNmBKkPElQO9x3SGArNyBmzOI8kgu4D4MaqJGUL5dXoNeKC
+         byhSKkiiMg0TCapmiGBZe1HfsJITKXKCfCsOPmDqQWALjGPdg+kgC+ylpKjRoNS56GjO
+         L7mg==
+X-Gm-Message-State: AOAM533LMYqgJOM2RRK7MUYiMoSx8ZKBgjp/gTaqNBlMc/n/oKGUuXl0
+        Dc/DaFpTIvHVrjqYe0x9hqY0mg==
+X-Google-Smtp-Source: ABdhPJzIAm8WUFOAz5PhBWJ+LR0cHqt9Te+7GSve6DdRDT8JFwjK99lQq5ArJTTuSWYWI8WtVeWu0w==
+X-Received: by 2002:a1c:a4c6:: with SMTP id n189mr3714749wme.173.1594725352930;
+        Tue, 14 Jul 2020 04:15:52 -0700 (PDT)
 Received: from localhost.localdomain ([2.31.163.61])
-        by smtp.gmail.com with ESMTPSA id l8sm28566052wrq.15.2020.07.14.04.15.48
+        by smtp.gmail.com with ESMTPSA id l8sm28566052wrq.15.2020.07.14.04.15.51
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 Jul 2020 04:15:48 -0700 (PDT)
+        Tue, 14 Jul 2020 04:15:52 -0700 (PDT)
 From:   Lee Jones <lee.jones@linaro.org>
 To:     dan.j.williams@intel.com, vkoul@kernel.org
 Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        dmaengine@vger.kernel.org, Lee Jones <lee.jones@linaro.org>
-Subject: [PATCH 00/17] Rid W=1 warnings in DMA
-Date:   Tue, 14 Jul 2020 12:15:29 +0100
-Message-Id: <20200714111546.1755231-1-lee.jones@linaro.org>
+        dmaengine@vger.kernel.org, Lee Jones <lee.jones@linaro.org>,
+        Lennert Buytenhek <buytenh@wantstofly.org>,
+        Ryan Mallon <rmallon@gmail.com>,
+        Mika Westerberg <mika.westerberg@iki.fi>
+Subject: [PATCH 03/17] dma: ep93xx_dma: Provide some missing struct attribute documentation
+Date:   Tue, 14 Jul 2020 12:15:32 +0100
+Message-Id: <20200714111546.1755231-4-lee.jones@linaro.org>
 X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200714111546.1755231-1-lee.jones@linaro.org>
+References: <20200714111546.1755231-1-lee.jones@linaro.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This set is part of a larger effort attempting to clean-up W=1
-kernel builds, which are currently overwhelmingly riddled with
-niggly little warnings.
+A couple of entries were missed, causing kerneldoc to complain.
 
-After these patches are applied, the build system no longer
-complains about any W=0 nor W=1 level warnings in drivers/dma.
+Fixes the following W=1 kernel build warning(s):
 
-Hurrah!
+ drivers/dma/ep93xx_dma.c:183: warning: Function parameter or member 'slave_config' not described in 'ep93xx_dma_chan'
+ drivers/dma/ep93xx_dma.c:215: warning: Function parameter or member 'hw_synchronize' not described in 'ep93xx_dma_engine'
 
-Lee Jones (17):
-  dma: mediatek: mtk-hsdma: Fix formatting in 'struct mtk_hsdma_pdesc'
-    doc block
-  dma: of-dma: Fix misspellings/formatting issues in some function
-    headers
-  dma: ep93xx_dma: Provide some missing struct attribute documentation
-  dma: mmp_pdma: Demote obvious misuse of kerneldoc to standard comment
-    blocks
-  dma: pl330: Demote obvious misuse of kerneldoc to standard comment
-    block
-  dma: ste_dma40: Supply 2 missing struct attribute descriptions
-  dma: altera-msgdma: Fix struct documentation blocks
-  dma: at_hdmac: Repair parameter misspelling and demote non-kerneldoc
-    headers
-  dma: sun4i-dma: Demote obvious misuse of kerneldoc to standard comment
-    blocks
-  dma: fsl-qdma: Fix 'struct fsl_qdma_format' formatting issue
-  dma: imx-sdma: Correct formatting issue and provide 2 new descriptions
-  dma: iop-adma: Function parameter documentation must adhere to correct
-    formatting
-  dma: nbpfaxi: Provide some missing attribute docs and split out slave
-    info
-  dma: xgene-dma: Provide descriptions for 'dev' and 'clk' in device's
-    ddata
-  dma: mv_xor_v2: Supply some missing 'struct mv_xor_v2_device'
-    attribute docs
-  dma: ioat: init: Correct misspelling of function parameter 'c' for
-    channel
-  dma: ioat: dma: Fix some parameter misspelling and provide description
-    for phys_complete
+Cc: Lennert Buytenhek <buytenh@wantstofly.org>
+Cc: Ryan Mallon <rmallon@gmail.com>
+Cc: Mika Westerberg <mika.westerberg@iki.fi>
+Signed-off-by: Lee Jones <lee.jones@linaro.org>
+---
+ drivers/dma/ep93xx_dma.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
- drivers/dma/altera-msgdma.c      |  6 ++++--
- drivers/dma/at_hdmac.c           |  6 +++---
- drivers/dma/ep93xx_dma.c         |  2 ++
- drivers/dma/fsl-qdma.c           |  2 +-
- drivers/dma/imx-sdma.c           |  4 +++-
- drivers/dma/ioat/dma.c           |  7 ++++---
- drivers/dma/ioat/init.c          |  2 +-
- drivers/dma/iop-adma.c           |  3 +--
- drivers/dma/mediatek/mtk-hsdma.c |  8 ++++----
- drivers/dma/mmp_pdma.c           |  6 +++---
- drivers/dma/mv_xor_v2.c          |  6 +++++-
- drivers/dma/nbpfaxi.c            | 13 ++++++++++---
- drivers/dma/of-dma.c             |  8 ++++----
- drivers/dma/pl330.c              |  2 +-
- drivers/dma/ste_dma40.c          |  2 ++
- drivers/dma/sun4i-dma.c          | 12 ++++++------
- drivers/dma/xgene-dma.c          |  2 ++
- 17 files changed, 56 insertions(+), 35 deletions(-)
-
+diff --git a/drivers/dma/ep93xx_dma.c b/drivers/dma/ep93xx_dma.c
+index 9c8b4d35cf03d..87a246012629f 100644
+--- a/drivers/dma/ep93xx_dma.c
++++ b/drivers/dma/ep93xx_dma.c
+@@ -147,6 +147,7 @@ struct ep93xx_dma_desc {
+  *                is set via .device_config before slave operation is
+  *                prepared
+  * @runtime_ctrl: M2M runtime values for the control register.
++ * @slave_config: slave configuration
+  *
+  * As EP93xx DMA controller doesn't support real chained DMA descriptors we
+  * will have slightly different scheme here: @active points to a head of
+@@ -187,6 +188,7 @@ struct ep93xx_dma_chan {
+  * @dma_dev: holds the dmaengine device
+  * @m2m: is this an M2M or M2P device
+  * @hw_setup: method which sets the channel up for operation
++ * @hw_synchronize: synchronizes DMA channel termination to current context
+  * @hw_shutdown: shuts the channel down and flushes whatever is left
+  * @hw_submit: pushes active descriptor(s) to the hardware
+  * @hw_interrupt: handle the interrupt
 -- 
 2.25.1
 
