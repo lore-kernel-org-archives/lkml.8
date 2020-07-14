@@ -2,113 +2,87 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BF36C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 02:16:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B74C4C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 02:17:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4FFEB20674
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 02:16:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="JKgEpVOF"
+	by mail.kernel.org (Postfix) with ESMTP id 94CE420674
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 02:17:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594693069;
+	bh=gcDfgbO3q8pVxqYv7ZRRLWSUibyUhngogHhP6MN+qt8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=chDwa1KNe6oX/JXECEJOVfTl04HMx0kpv8QWRQhZxGleq9hQa7GMVxlO6yjhSRBtp
+	 F9cKmiM4nPW3UZAJiedQRRcWKrIRiO7GND28ajT48hkFFdljYNZpz2zz9YDWVG/Qim
+	 ch3A+rzFvZbAGc0PWQXOXkszg22I9eJm7BUAw6QE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726777AbgGNCQO (ORCPT
+        id S1726619AbgGNCRs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 22:16:14 -0400
-Received: from ozlabs.org ([203.11.71.1]:56949 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726150AbgGNCQO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 22:16:14 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 4B5PJW4g67z9sQt;
-        Tue, 14 Jul 2020 12:16:11 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1594692971;
-        bh=rVAGOXUcYkSUFm/QOqX+mwpG4sJ8hnCIMzWRUosxu6Q=;
-        h=Date:From:To:Cc:Subject:From;
-        b=JKgEpVOF+gKsWfQndZKY3N6lwAcMLd0Spe1XkYa0/Jcl8cRwp0H+4fBGQM0tCny8E
-         lF0rm1X6JqN0dcrorkYPpu7u6a8ZPZH0vTTxN/rawOBxCYB6bKcDTA9Qfmsyq4fk3S
-         X+nIG0wZ3G3D+i0qJxPBxudbPEhVvUlPqOICvrAgnqz/RtAwrzjJTaACZz6VFj03mD
-         cUTOp3/GrKpFP2hfefLsa3rfXS8uGJEfywtvHaV8TImPy7EkMPf4XlQXYg2Y8RbTSq
-         ADNsN8aeH0+9ZvHhJJ4+xQHr1t6WIRBcTmSfCZTAhPt1hVmZfMrMLlUEOyDwGRMg3s
-         BJ7OYKtWK1GcQ==
-Date:   Tue, 14 Jul 2020 12:16:08 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Daniel Borkmann <daniel@iogearbox.net>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Networking <netdev@vger.kernel.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Jiri Olsa <jolsa@kernel.org>
-Subject: linux-next: build warning after merge of the bpf-next tree
-Message-ID: <20200714121608.58962d66@canb.auug.org.au>
+        Mon, 13 Jul 2020 22:17:48 -0400
+Received: from mail-il1-f193.google.com ([209.85.166.193]:42336 "EHLO
+        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726372AbgGNCRs (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jul 2020 22:17:48 -0400
+Received: by mail-il1-f193.google.com with SMTP id t27so12956270ill.9;
+        Mon, 13 Jul 2020 19:17:47 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=oFdPFI+MbNBnmxHM20F+AOCXori4Lgn3RYqynR+OBf8=;
+        b=SNw32SyAJECuugIEwvc8NSGCKGR5vq1ViOcJoHzNqUa0pbY9beGF1Cdz9fgkYBzcXK
+         myoZSk46tOkBSljDNn5vYoyqrZzgyODl2tB0RU2bnBzQvO6VKdcAcJXm0J02NOiJTwbn
+         eLEA7fYHTcYYEFezP9B7hUJllnjz+Pe296yDLUHzymw1Tgz38iaFOXUR8KTKq6LX+ceG
+         Jrc2x51dlRh2nDQKssi6GvPUk3pEsfMiea7FnK76fz8yBge1T6My+GCzAivQJwdJa85E
+         Yfy20Y71LW7ujnasxTpBOvRxWLAWPv2Mi8MclpggzDXWmYRAm/Q11CY/UH3MA/IxPR5N
+         QEXw==
+X-Gm-Message-State: AOAM531KORd9LINceY7Sx38yLN4TsXdgbB0X/rxjRM+MBdTGAvCdkXQQ
+        SNVGeqMUnEGVgDO11uXGdA==
+X-Google-Smtp-Source: ABdhPJwwwbrRzUvoKcbbV4zCrrZnyCRjMCDpLDC5U2L/wfozkEChDnPIWXBNDDoEO/fbqqWxsE1aOQ==
+X-Received: by 2002:a92:d2c6:: with SMTP id w6mr2628347ilg.24.1594693067006;
+        Mon, 13 Jul 2020 19:17:47 -0700 (PDT)
+Received: from xps15 ([64.188.179.252])
+        by smtp.gmail.com with ESMTPSA id i84sm9543027ill.30.2020.07.13.19.17.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 13 Jul 2020 19:17:46 -0700 (PDT)
+Received: (nullmailer pid 1144515 invoked by uid 1000);
+        Tue, 14 Jul 2020 02:17:45 -0000
+Date:   Mon, 13 Jul 2020 20:17:45 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Kathiravan T <kathirav@codeaurora.org>
+Cc:     lgirdwood@gmail.com, robh+dt@kernel.org, agross@kernel.org,
+        linux-kernel@vger.kernel.org, bjorn.andersson@linaro.org,
+        linux-arm-msm@vger.kernel.org, sivaprak@codeaurora.org,
+        broonie@kernel.org, devicetree@vger.kernel.org
+Subject: Re: [PATCH V2 5/6] dt-bindings: soc: qcom: convert the SMD-RPM
+ document to YAML schema
+Message-ID: <20200714021745.GA1144468@bogus>
+References: <1592889472-6843-1-git-send-email-kathirav@codeaurora.org>
+ <1592889472-6843-6-git-send-email-kathirav@codeaurora.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/FQM8yWfyiMO+aHkZLyky8.7";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1592889472-6843-6-git-send-email-kathirav@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/FQM8yWfyiMO+aHkZLyky8.7
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Tue, 23 Jun 2020 10:47:51 +0530, Kathiravan T wrote:
+> Convert the qcom,smd-rpm.txt document to YAML schema
+> 
+> Signed-off-by: Kathiravan T <kathirav@codeaurora.org>
+> ---
+>  .../devicetree/bindings/soc/qcom/qcom,smd-rpm.txt  | 63 ---------------
+>  .../devicetree/bindings/soc/qcom/qcom,smd-rpm.yaml | 92 ++++++++++++++++++++++
+>  2 files changed, 92 insertions(+), 63 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/soc/qcom/qcom,smd-rpm.txt
+>  create mode 100644 Documentation/devicetree/bindings/soc/qcom/qcom,smd-rpm.yaml
+> 
 
-Hi all,
-
-After merging the bpf-next tree, today's linux-next build (powerpc
-ppc64_defconfig) produced this warning:
-
-ld: warning: orphan section `.BTF_ids' from `kernel/trace/bpf_trace.o' bein=
-g placed in section `.BTF_ids'
-ld: warning: orphan section `.BTF_ids' from `kernel/bpf/btf.o' being placed=
- in section `.BTF_ids'
-ld: warning: orphan section `.BTF_ids' from `kernel/bpf/stackmap.o' being p=
-laced in section `.BTF_ids'
-ld: warning: orphan section `.BTF_ids' from `net/core/filter.o' being place=
-d in section `.BTF_ids'
-ld: warning: orphan section `.BTF_ids' from `kernel/trace/bpf_trace.o' bein=
-g placed in section `.BTF_ids'
-ld: warning: orphan section `.BTF_ids' from `kernel/bpf/btf.o' being placed=
- in section `.BTF_ids'
-ld: warning: orphan section `.BTF_ids' from `kernel/bpf/stackmap.o' being p=
-laced in section `.BTF_ids'
-ld: warning: orphan section `.BTF_ids' from `net/core/filter.o' being place=
-d in section `.BTF_ids'
-ld: warning: orphan section `.BTF_ids' from `kernel/trace/bpf_trace.o' bein=
-g placed in section `.BTF_ids'
-ld: warning: orphan section `.BTF_ids' from `kernel/bpf/btf.o' being placed=
- in section `.BTF_ids'
-ld: warning: orphan section `.BTF_ids' from `kernel/bpf/stackmap.o' being p=
-laced in section `.BTF_ids'
-ld: warning: orphan section `.BTF_ids' from `net/core/filter.o' being place=
-d in section `.BTF_ids'
-
-Presumably ntroduced by the merge of the resolve_btfids branch.
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/FQM8yWfyiMO+aHkZLyky8.7
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl8NFWgACgkQAVBC80lX
-0Gy6+wgAoyJUbC/DVCPWdvLTBOUJoTlVg1/wYhG6hi7HsA3tnFCh0C1vrWRF6gbn
-QTvlEo5rfeEbcy4N8ksQDk2B00ED5iuInvkGGQp5fZXkq6hsTAyDItjnxxAh6Js0
-QtxhGGwP3LShrZg8pyOSmjqU/rfML22986kQsJ8cL6cn9Xsl6z099qv9U1mEgBoy
-muGwkgchg6PGfW3iVAW54zPt+ltLXNcuWKrPhPZ9ur44Vo0Dxt9j/T5AOV+Qo+R4
-dt3f3yrtJa+6VBI9bZDHcDBzDP9vOL0iQ5UKVDX5re8ivTH1bweRTRShImpM+sj3
-0JTXbJtZvut7+BLGIbB882ed6/tG8A==
-=0atY
------END PGP SIGNATURE-----
-
---Sig_/FQM8yWfyiMO+aHkZLyky8.7--
+Reviewed-by: Rob Herring <robh@kernel.org>
