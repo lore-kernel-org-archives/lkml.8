@@ -2,77 +2,113 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 547EEC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 19:22:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D305C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 19:23:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 35550225A9
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 19:22:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C99022282
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 19:23:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729689AbgGNTWR (ORCPT
+        id S1729710AbgGNTXw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 15:22:17 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:45322 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727930AbgGNTWQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 15:22:16 -0400
-Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <colin.king@canonical.com>)
-        id 1jvQVH-00030h-Nb; Tue, 14 Jul 2020 19:22:11 +0000
-From:   Colin King <colin.king@canonical.com>
-To:     Joerg Roedel <joro@8bytes.org>, Tony Lindgren <tony@atomide.com>,
-        Hiroshi DOYU <Hiroshi.DOYU@nokia.com>,
-        iommu@lists.linux-foundation.org
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] OMAP: iommu: check for failure of a call to omap_iommu_dump_ctx
-Date:   Tue, 14 Jul 2020 20:22:11 +0100
-Message-Id: <20200714192211.744776-1-colin.king@canonical.com>
-X-Mailer: git-send-email 2.27.0
+        Tue, 14 Jul 2020 15:23:52 -0400
+Received: from mga11.intel.com ([192.55.52.93]:9953 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727930AbgGNTXv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 15:23:51 -0400
+IronPort-SDR: kWL5vu8lEG7WbOubWKGL/AZAtgk69fWGkm5J/r8kIHlbETWF6vuzdAM2f9cugRn5M62Fv6l55R
+ 7X235GhGpYAQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9682"; a="147022483"
+X-IronPort-AV: E=Sophos;i="5.75,352,1589266800"; 
+   d="scan'208";a="147022483"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jul 2020 12:23:51 -0700
+IronPort-SDR: PCMjJ49O7HM1ZDukmb0/xSV3g6OqD7Hs4Q4nkyKXVCpxH8AQYuOK6cDIyzUqcC1dWE+GGzGVQL
+ DKKPOK90aDlg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,352,1589266800"; 
+   d="scan'208";a="285859255"
+Received: from guptapadev.jf.intel.com (HELO guptapadev.amr) ([10.54.74.188])
+  by orsmga006.jf.intel.com with ESMTP; 14 Jul 2020 12:23:51 -0700
+Date:   Tue, 14 Jul 2020 12:17:59 -0700
+From:   Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
+To:     Dave Hansen <dave.hansen@intel.com>
+Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, x86@kernel.org,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Tony Luck <tony.luck@intel.com>,
+        "Gomez Iglesias, Antonio" <antonio.gomez.iglesias@intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Anthony Steinhauser <asteinhauser@google.com>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Mark Gross <mgross@linux.intel.com>,
+        Waiman Long <longman@redhat.com>, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        Jonathan Corbet <corbet@lwn.net>
+Subject: Re: [PATCH] x86/bugs/multihit: Fix mitigation reporting when KVM is
+ not in use
+Message-ID: <20200714191759.GA7116@guptapadev.amr>
+References: <267631f4db4fd7e9f7ca789c2efaeab44103f68e.1594689154.git.pawan.kumar.gupta@linux.intel.com>
+ <20200714014540.GH29725@linux.intel.com>
+ <099d6985-9e9f-1d9f-7098-58a9e26e4450@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <099d6985-9e9f-1d9f-7098-58a9e26e4450@intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+On Tue, Jul 14, 2020 at 07:57:53AM -0700, Dave Hansen wrote:
+> Let's stick to things which are at least static per reboot.  Checking
+> for X86_FEATURE_VMX or even CONFIG_KVM_INTEL seems like a good stopping
+> point.  "Could this kernel run a naughty guest?"  If so, report
+> "Vulnerable".  It's the same as Meltdown: "Could this kernel run
+> untrusted code?"  If so, report "Vulnerable".
 
-It is possible for the call to omap_iommu_dump_ctx to return
-a negative error number, so check for the failure and return
-the error number rather than pass the negative value to
-simple_read_from_buffer.
+Thanks, These are good inputs. So what I need to add is a boot time
+check for VMX feature and report "Vulnerable" or "Not
+affected(VMX disabled)".
 
-Addresses-Coverity: ("Improper use of negative value")
-Fixes: 14e0e6796a0d ("OMAP: iommu: add initial debugfs support")
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
----
- drivers/iommu/omap-iommu-debug.c | 3 +++
- 1 file changed, 3 insertions(+)
+Are you suggesting to not change the reporting when KVM deploys the
+"Split huge pages" mitigation? Is this because VMX can still be used by
+other VMMs?
 
-diff --git a/drivers/iommu/omap-iommu-debug.c b/drivers/iommu/omap-iommu-debug.c
-index 8e19bfa94121..a99afb5d9011 100644
---- a/drivers/iommu/omap-iommu-debug.c
-+++ b/drivers/iommu/omap-iommu-debug.c
-@@ -98,8 +98,11 @@ static ssize_t debug_read_regs(struct file *file, char __user *userbuf,
- 	mutex_lock(&iommu_debug_lock);
- 
- 	bytes = omap_iommu_dump_ctx(obj, p, count);
-+	if (bytes < 0)
-+		goto err;
- 	bytes = simple_read_from_buffer(userbuf, count, ppos, buf, bytes);
- 
-+err:
- 	mutex_unlock(&iommu_debug_lock);
- 	kfree(buf);
- 
--- 
-2.27.0
+The current mitigation reporting is very specific to KVM:
 
+	- "KVM: Vulnerable"
+	- "KVM: Mitigation: Split huge pages"
+
+As the kernel doesn't know about the mitigation state of out-of-tree
+VMMs can we add VMX reporting to always say vulnerable when VMX is
+enabled:
+
+	- "VMX: Vulnerable, KVM: Vulnerable"
+	- "VMX: Vulnerable, KVM: Mitigation: Split huge pages"
+
+And if VMX is disabled report:
+
+	- "VMX: Not affected(VMX disabled)"
+
+or something like that.
+
+Thanks,
+Pawan
