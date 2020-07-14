@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD951C433FB
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:55:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE921C433F7
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:55:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B171922B45
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:55:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AE5D6221EB
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:55:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594752915;
-	bh=JWG7+TRaw8KM0rnneWTrc86o5aSOOmpb0FdLuyLoM4o=;
+	s=default; t=1594752918;
+	bh=Ad+qtcP7m90TJkaeB4xLLz7v3rfFl5dJLbmoMSLc2eA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vSgNng75InIiafJFUo+3KqAhuVvOF+5XakqdnfWrXSdTvdu6yqYR1QF9LYL4wWz76
-	 PoyIG9eC1Trw78XVJnMivG2cUugwRvPl3YfERtN3TQcqb0fIJXSjioIwzqI+QLl8sK
-	 ANx6/EEQtKhrWRvEpz9b11fNZtr8C+UhmBt3PpxQ=
+	b=gbRsmye2gHDCInyM17aewjABzfTEQwm6WZHZf/YRH2NgDkSxENJGGGmk59EeJERQV
+	 9FljK+ZGN5KQiPY9/BwNT4mxkIEn+qGl3FszKeSWbquIRvHmEbcKIA7szqkY+dzfzi
+	 I48GmBJ45BUb2ClHXOEKFNszA58ypSZx4fNTFHpA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730847AbgGNSzN (ORCPT
+        id S1730852AbgGNSzR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 14:55:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52740 "EHLO mail.kernel.org"
+        Tue, 14 Jul 2020 14:55:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52864 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730833AbgGNSzI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 14:55:08 -0400
+        id S1730846AbgGNSzO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 14:55:14 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 04D2222B45;
-        Tue, 14 Jul 2020 18:55:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2454522B45;
+        Tue, 14 Jul 2020 18:55:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594752908;
-        bh=JWG7+TRaw8KM0rnneWTrc86o5aSOOmpb0FdLuyLoM4o=;
+        s=default; t=1594752913;
+        bh=Ad+qtcP7m90TJkaeB4xLLz7v3rfFl5dJLbmoMSLc2eA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0f7ySXR26Hf+EUCdWC4STrXH4iMkNKqvH4Hi3NIzrJgFNmPQ98OWC2C+Vpsde3Li0
-         khdcliMnC9vyH/ReAvPhcxEPpW0xaUUg5nwAmGc0ePSp3KwwWj3pD1A2PkE98+zK7P
-         5SCuY4qGLV5Mqm4VnHls0xY6HZuSDxvBQLPvJRSY=
+        b=wvvvU+WHdZhOG7QeXWfMK1Hr1GG5YtU/aEfv6QQaLxzOLQ7cl075vpezfkZhJjX/T
+         nFgnjnLx751RiZ1FTCww1phnFBOZ52miBdO2/VyNZYmswWWZT8ntbkKu8naOCQukdf
+         vh9F8pvb4yfWgP2TrlkCzMiWsXQXxzsHsL+RpVNA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kamal Dasu <kdasu.kdev@gmail.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
+        stable@vger.kernel.org,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 046/166] mtd: set master partition panic write flag
-Date:   Tue, 14 Jul 2020 20:43:31 +0200
-Message-Id: <20200714184118.087679531@linuxfoundation.org>
+Subject: [PATCH 5.7 048/166] gpio: pca953x: Override IRQ for one of the expanders on Galileo Gen 2
+Date:   Tue, 14 Jul 2020 20:43:33 +0200
+Message-Id: <20200714184118.182908556@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200714184115.844176932@linuxfoundation.org>
 References: <20200714184115.844176932@linuxfoundation.org>
@@ -60,38 +62,127 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kamal Dasu <kdasu.kdev@gmail.com>
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-[ Upstream commit 630e8d5507d9f55dfa98134bfcadefb6cfba4fbb ]
+[ Upstream commit ba8c90c6184784b397807b72403656085ac2f8c1 ]
 
-Check and set master panic write flag so that low level drivers
-can use it to take required action to ensure oops data gets written
-to assigned mtdoops device partition.
+ACPI table on Intel Galileo Gen 2 has wrong pin number for IRQ resource
+of one of the I²C GPIO expanders. Since we know what that number is and
+luckily have GPIO bases fixed for SoC's controllers, we may use a simple
+DMI quirk to match the platform and retrieve GpioInt() pin on it for
+the expander in question.
 
-Fixes: 9f897bfdd89f ("mtd: Add flag to indicate panic_write")
-Signed-off-by: Kamal Dasu <kdasu.kdev@gmail.com>
-Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
-Link: https://lore.kernel.org/linux-mtd/20200615155134.32007-1-kdasu.kdev@gmail.com
+Mika suggested the way to avoid a quirk in the GPIO ACPI library and
+here is the second, almost rewritten version of it.
+
+Fixes: f32517bf1ae0 ("gpio: pca953x: support ACPI devices found on Galileo Gen2")
+Depends-on: 25e3ef894eef ("gpio: acpi: Split out acpi_gpio_get_irq_resource() helper")
+Suggested-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/mtd/mtdcore.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/gpio/gpio-pca953x.c | 79 +++++++++++++++++++++++++++++++++++++
+ 1 file changed, 79 insertions(+)
 
-diff --git a/drivers/mtd/mtdcore.c b/drivers/mtd/mtdcore.c
-index 29d41003d6e0d..f8317ccd8f2a6 100644
---- a/drivers/mtd/mtdcore.c
-+++ b/drivers/mtd/mtdcore.c
-@@ -1235,8 +1235,8 @@ int mtd_panic_write(struct mtd_info *mtd, loff_t to, size_t len, size_t *retlen,
- 		return -EROFS;
- 	if (!len)
- 		return 0;
--	if (!mtd->oops_panic_write)
--		mtd->oops_panic_write = true;
-+	if (!master->oops_panic_write)
-+		master->oops_panic_write = true;
+diff --git a/drivers/gpio/gpio-pca953x.c b/drivers/gpio/gpio-pca953x.c
+index d8ba6c5195be7..8571e54512476 100644
+--- a/drivers/gpio/gpio-pca953x.c
++++ b/drivers/gpio/gpio-pca953x.c
+@@ -107,6 +107,79 @@ static const struct i2c_device_id pca953x_id[] = {
+ };
+ MODULE_DEVICE_TABLE(i2c, pca953x_id);
  
- 	return master->_panic_write(master, mtd_get_master_ofs(mtd, to), len,
- 				    retlen, buf);
++#ifdef CONFIG_GPIO_PCA953X_IRQ
++
++#include <linux/dmi.h>
++#include <linux/gpio.h>
++#include <linux/list.h>
++
++static const struct dmi_system_id pca953x_dmi_acpi_irq_info[] = {
++	{
++		/*
++		 * On Intel Galileo Gen 2 board the IRQ pin of one of
++		 * the I²C GPIO expanders, which has GpioInt() resource,
++		 * is provided as an absolute number instead of being
++		 * relative. Since first controller (gpio-sch.c) and
++		 * second (gpio-dwapb.c) are at the fixed bases, we may
++		 * safely refer to the number in the global space to get
++		 * an IRQ out of it.
++		 */
++		.matches = {
++			DMI_EXACT_MATCH(DMI_BOARD_NAME, "GalileoGen2"),
++		},
++	},
++	{}
++};
++
++#ifdef CONFIG_ACPI
++static int pca953x_acpi_get_pin(struct acpi_resource *ares, void *data)
++{
++	struct acpi_resource_gpio *agpio;
++	int *pin = data;
++
++	if (acpi_gpio_get_irq_resource(ares, &agpio))
++		*pin = agpio->pin_table[0];
++	return 1;
++}
++
++static int pca953x_acpi_find_pin(struct device *dev)
++{
++	struct acpi_device *adev = ACPI_COMPANION(dev);
++	int pin = -ENOENT, ret;
++	LIST_HEAD(r);
++
++	ret = acpi_dev_get_resources(adev, &r, pca953x_acpi_get_pin, &pin);
++	acpi_dev_free_resource_list(&r);
++	if (ret < 0)
++		return ret;
++
++	return pin;
++}
++#else
++static inline int pca953x_acpi_find_pin(struct device *dev) { return -ENXIO; }
++#endif
++
++static int pca953x_acpi_get_irq(struct device *dev)
++{
++	int pin, ret;
++
++	pin = pca953x_acpi_find_pin(dev);
++	if (pin < 0)
++		return pin;
++
++	dev_info(dev, "Applying ACPI interrupt quirk (GPIO %d)\n", pin);
++
++	if (!gpio_is_valid(pin))
++		return -EINVAL;
++
++	ret = gpio_request(pin, "pca953x interrupt");
++	if (ret)
++		return ret;
++
++	return gpio_to_irq(pin);
++}
++#endif
++
+ static const struct acpi_device_id pca953x_acpi_ids[] = {
+ 	{ "INT3491", 16 | PCA953X_TYPE | PCA_LATCH_INT, },
+ 	{ }
+@@ -744,6 +817,12 @@ static int pca953x_irq_setup(struct pca953x_chip *chip, int irq_base)
+ 	DECLARE_BITMAP(irq_stat, MAX_LINE);
+ 	int ret;
+ 
++	if (dmi_first_match(pca953x_dmi_acpi_irq_info)) {
++		ret = pca953x_acpi_get_irq(&client->dev);
++		if (ret > 0)
++			client->irq = ret;
++	}
++
+ 	if (!client->irq)
+ 		return 0;
+ 
 -- 
 2.25.1
 
