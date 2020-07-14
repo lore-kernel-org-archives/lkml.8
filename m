@@ -2,132 +2,126 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MIME_BASE64_TEXT,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88BE9C433E8
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 09:20:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03E88C433F8
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 09:20:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6658721835
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 09:20:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB38F2053B
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 09:20:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JjpUcWI8"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="vFJdk8vB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726768AbgGNJUA (ORCPT
+        id S1727047AbgGNJUW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 05:20:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34206 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725833AbgGNJT7 (ORCPT
+        Tue, 14 Jul 2020 05:20:22 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:10474 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726352AbgGNJUS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 05:19:59 -0400
-Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 31E71C061755;
-        Tue, 14 Jul 2020 02:19:59 -0700 (PDT)
-Received: by mail-ej1-x644.google.com with SMTP id a1so20747555ejg.12;
-        Tue, 14 Jul 2020 02:19:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=aABLyhbhtvw8FafkChmgdm2LhwAHxmqBZPtM1x4GBxo=;
-        b=JjpUcWI8m6kuIybqZUI/GOO/wPGpFv1Gx+F6fStEj+NmEVY/Wq4EmHH5pcjOJjSexM
-         lCS2kEPIEQXICbr3YOIZaPt/VQv29bspkMvtbsp0NYIemBppbYb9APdbg/Rh6Flh+HcJ
-         CpRiYO+eMM2f7tHbsFhvoMx+RwZAuPJW7nB/mdgQOqdgxh59CTEl3Of7FrSnVAZwJfKu
-         XMXSk16AnFe7jodB+PWOS6ihas3F2ALzgXTs5d1TKnj4uXTaOkm8o6XTie79NuI5cgp3
-         QyvqOJz5s2IcGY/C6SHcti1C/9i7gpBad4/3R1eSP5mLiz0qEYnqpQN6EgGemyTb54Aw
-         3enw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=aABLyhbhtvw8FafkChmgdm2LhwAHxmqBZPtM1x4GBxo=;
-        b=rJdhsbBRTSNgMd6pz0tmb1onz1z+xL3/qboiFDu7oGKdrdTRkOfIeMj9nNlxOXCGO9
-         4VgsyUJPc1rizYKrrs3WxxARlYnx6rXefwSkr2sE24d6d6uhIgYlWY4fH9G9nMDP7ygz
-         TS8jVii1cnRjDh5Pv8U3y4XDtsyV01ddPim8rNJ+8JrFG/0Thk5Pc6atmgA0a2+AqcQJ
-         5dbQLEQdiUGu4hm3ycf0mVeR0BA3ihUTg4T7MaQiQJ144oPaWaIWlLdYY7bu6pLZEHWf
-         v2t8pULZQ+2zrc/qlvKTd5Hx12Epzc4m0zPU1DOVeeFSDTeq4v5vQ8eOtmj8Zubl48Bt
-         7wzA==
-X-Gm-Message-State: AOAM530KCG5HQdPwPd4rmC1fBGfNv3NOsnOzyqyJ22gUpu0Jj3Xz1qNH
-        HWmqLpwHTCN2OLqeqRuXk/Q=
-X-Google-Smtp-Source: ABdhPJyAFGBGrwMRW4/F2b6w7vtgLIBEpYbjMzVZkbeebuSlo5W0Zg+iHimkWSzc07+Q9PFi5BlpVg==
-X-Received: by 2002:a17:906:1403:: with SMTP id p3mr3545377ejc.106.1594718397911;
-        Tue, 14 Jul 2020 02:19:57 -0700 (PDT)
-Received: from localhost ([62.96.65.119])
-        by smtp.gmail.com with ESMTPSA id z25sm11856923ejd.38.2020.07.14.02.19.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 Jul 2020 02:19:56 -0700 (PDT)
-Date:   Tue, 14 Jul 2020 11:19:55 +0200
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Jon Hunter <jonathanh@nvidia.com>
-Cc:     Mathias Nyman <mathias.nyman@intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
-        stable@vger.kernel.org
-Subject: Re: [PATCH 1/2] usb: tegra: Fix allocation for the FPCI context
-Message-ID: <20200714091955.GF141356@ulmo>
-References: <20200712102837.24340-1-jonathanh@nvidia.com>
+        Tue, 14 Jul 2020 05:20:18 -0400
+X-UUID: 40cb303faeb34b5f9cfe22808e3e0d28-20200714
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=hmsORDIPMJN07qmiFoSYlo7v/gV+W406wr5ivtTn3g0=;
+        b=vFJdk8vBozqBQgg8Au52/fUn1c7a70GE7L3pamzC8jj4AUih0HBXY1lmMxnbtldG9wlh9sFyLtUiAwBTgesl43vzLufANeDNi9wCODFMsbiKWAokUxhzzXXPv20Xz3XA0vQmd2qRjvXYqQLh+XvrHRONCieHwPWlXa9cPnySwC0=;
+X-UUID: 40cb303faeb34b5f9cfe22808e3e0d28-20200714
+Received: from mtkcas10.mediatek.inc [(172.21.101.39)] by mailgw01.mediatek.com
+        (envelope-from <hanks.chen@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 2045001762; Tue, 14 Jul 2020 17:20:14 +0800
+Received: from mtkcas08.mediatek.inc (172.21.101.126) by
+ mtkmbs01n1.mediatek.inc (172.21.101.68) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Tue, 14 Jul 2020 17:20:04 +0800
+Received: from mtkswgap22.mediatek.inc (172.21.77.33) by mtkcas08.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Tue, 14 Jul 2020 17:20:04 +0800
+From:   Hanks Chen <hanks.chen@mediatek.com>
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Sean Wang <sean.wang@kernel.org>
+CC:     mtk01761 <wendell.lin@mediatek.com>,
+        Andy Teng <andy.teng@mediatek.com>,
+        <linux-gpio@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <wsd_upstream@mediatek.com>,
+        CC Hwang <cc.hwang@mediatek.com>,
+        Loda Chou <loda.chou@mediatek.com>,
+        Hanks Chen <hanks.chen@mediatek.com>
+Subject: [PATCH v8 0/7] Add basic SoC Support for Mediatek MT6779 SoC
+Date:   Tue, 14 Jul 2020 17:19:55 +0800
+Message-ID: <1594718402-20813-1-git-send-email-hanks.chen@mediatek.com>
+X-Mailer: git-send-email 1.7.9.5
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="DEueqSqTbz/jWVG1"
-Content-Disposition: inline
-In-Reply-To: <20200712102837.24340-1-jonathanh@nvidia.com>
-User-Agent: Mutt/1.14.4 (2020-06-18)
+Content-Type: text/plain
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+DQpDaGFuZ2Ugc2luY2Ugdjg6DQpDb21taXQgImR0LWJpbmRpbmdzOiBwaW5jdHJsOiBhZGQgYmlu
+ZGluZ3MgZm9yIE1lZGlhVGVrIg0KLS0gdXBkYXRlIHRoZSBmb3JtYXQNCkNvbW1pdCAiYXJtNjQ6
+IGR0czogYWRkIGR0cyBub2RlcyBmb3IgTVQ2Nzc5Ig0KLS0gZml4IHRoZSB0eXBvIGluIHVhcnQg
+bm9kZQ0KDQoNCkNoYW5nZSBzaW5jZSB2NzoNCkNvbW1pdCAiZHQtYmluZGluZ3M6IHBpbmN0cmw6
+IGFkZCBiaW5kaW5ncyBmb3IgTWVkaWFUZWsiDQotLSBmaXggdHlwbyBhbmQgY2hhbmdlIG9yZGVy
+IG9mIHBhdGNoDQpDb21taXQgImNsazogbWVkaWF0ZWs6IGFkZCBVQVJUMCBjbG9jayBzdXBwb3J0
+Ig0KLS0gYWRkIGZpeGVzIHRhZyBhbmQgcmVhbCBuYW1lDQpDb21taXQgImFybTY0OiBkdHM6IGFk
+ZCBkdHMgbm9kZXMgZm9yIE1UNjc3OSINCi0tIGV4cG9zZSBhbGwgdGhyZWUgVUFSVHMgaW4gdGhl
+IGR0c2kNCg0KDQpDaGFuZ2Ugc2luY2UgdjY6DQpDb21taXQgImR0LWJpbmRpbmdzOiBwaW5jdHJs
+OiBhZGQgYmluZGluZ3MgZm9yIE1lZGlhVGVrIg0KLS0gZml4IGZvcm1hdCBvZiBiaW5kaW5ncyBh
+bmQgYWRkIGludGVycnVwdCBkZWZpbml0aW9uLg0KQ29tbWl0ICJwaW5jdHJsOiBtZWRpYXRlazog
+dXBkYXRlIHBpbm11eCBkZWZpbml0aW9ucyBmb3IiDQotLSB1c2UgdGhlIHN0YW5kYXJkIGluY2x1
+ZGUgcGF0aA0KQ29tbWl0ICJwaW5jdHJsOiBtZWRpYXRlazogYXZvaWQgdmlydHVhbCBncGlvIHRy
+eWluZyB0byBzZXQiDQotLSByZW1vdmUgdW5uZWNlc3NhcnkgZXJyb3IgaGFuZGxlcg0KQ29tbWl0
+ICJwaW5jdHJsOiBtZWRpYXRlazogYWRkIHBpbmN0cmwgc3VwcG9ydCBmb3IgTVQ2Nzc5IFNvQyIN
+Ci0tIGFkZCBzb21lIHVzZWZ1bCBoZWxwIHRleHQgaW4ga2NvbmZpZw0KQ29tbWl0ICJjbGs6IG1l
+ZGlhdGVrOiBhZGQgVUFSVDAgY2xvY2sgc3VwcG9ydCINCi0tIGFkZCBVQVJUMCBjbG9jayBzdXBw
+b3J0DQpDb21taXQgImFybTY0OiBkdHM6IGFkZCBkdHMgbm9kZXMgZm9yIE1UNjc3OSINCi0tIGFk
+ZCAiYmF1ZCIgYW5kICJidXMiIGNsb2NrcyBmb3IgdWFydA0KLS0gYWRkIG5ldyBhcHByb2FjaCBm
+b3IgbW1zeXMNCg0KDQpDaGFuZ2Ugc2luY2UgdjU6DQoxLiByZW1vdmUgdW5uZWNlc3Nhcnkgc3Ry
+aW5nIGluIGNvbW1pdCBtZXNzYWdlDQoNCg0KQ2hhbmdlIHNpbmNlIHY0Og0KMS4gZml4IGZvcm1h
+dCBvZiBwaW5jdHJsIGJpbmRpbmdzDQoNCg0KQ2hhbmdlIHNpbmNlIHYzOg0KMS4gYWRkIGJpbmRp
+bmdzIGZvciAibWVkaWF0ZWssbXQ2Nzc5LXBpbmN0cmwiDQoyLiBhZGQgc29tZSBjb21tZW50cyBp
+bnRvIHRoZSBjb2RlIChlLmcuIHZpcnR1YWwgZ3BpbyAuLi4pDQozLiBhZGQgQWNrZWQtYnkgdGFn
+cw0KNC4gYWRkIHBtdSBub2RlIGludG8gZHRzDQo1LiBzdXBwb3J0IHBwaSBwYXJ0aXRpb24gYW5k
+IGZpeCBiYXNlIGFkZHJlc3MgaW4gZ2ljIG5vZGUgb2YgZHRzDQoNCg0KQ2hhbmdlIHNpbmNlIHYy
+Og0KMS4gYWRkIFJldmlld2VkLWJ5IHRhZ3MNCjIuIGZpeCBjaGVja3BhdGNoIHdhcm5pbmdzIHdp
+dGggc3RyaWN0IGxldmVsDQoNCg0KQ2hhbmdlIHNpbmNlIHYxOg0KZmlyc3QgcGF0Y2hzZXQNCg0K
+QW5keSBUZW5nICgxKToNCiAgZHQtYmluZGluZ3M6IHBpbmN0cmw6IGFkZCBiaW5kaW5ncyBmb3Ig
+TWVkaWFUZWsgTVQ2Nzc5IFNvQw0KDQpIYW5rcyBDaGVuICg2KToNCiAgcGluY3RybDogbWVkaWF0
+ZWs6IHVwZGF0ZSBwaW5tdXggZGVmaW5pdGlvbnMgZm9yIG10Njc3OQ0KICBwaW5jdHJsOiBtZWRp
+YXRlazogYXZvaWQgdmlydHVhbCBncGlvIHRyeWluZyB0byBzZXQgcmVnDQogIHBpbmN0cmw6IG1l
+ZGlhdGVrOiBhZGQgcGluY3RybCBzdXBwb3J0IGZvciBNVDY3NzkgU29DDQogIHBpbmN0cmw6IG1l
+ZGlhdGVrOiBhZGQgbXQ2Nzc5IGVpbnQgc3VwcG9ydA0KICBhcm02NDogZHRzOiBhZGQgZHRzIG5v
+ZGVzIGZvciBNVDY3NzkNCiAgY2xrOiBtZWRpYXRlazogYWRkIFVBUlQwIGNsb2NrIHN1cHBvcnQN
+Cg0KIC4uLi9waW5jdHJsL21lZGlhdGVrLG10Njc3OS1waW5jdHJsLnlhbWwgICAgICB8ICAyMDMg
+KysNCiBhcmNoL2FybTY0L2Jvb3QvZHRzL21lZGlhdGVrL01ha2VmaWxlICAgICAgICAgfCAgICAx
+ICsNCiBhcmNoL2FybTY0L2Jvb3QvZHRzL21lZGlhdGVrL210Njc3OS1ldmIuZHRzICAgfCAgIDMx
+ICsNCiBhcmNoL2FybTY0L2Jvb3QvZHRzL21lZGlhdGVrL210Njc3OS5kdHNpICAgICAgfCAgMjcx
+ICsrKw0KIGRyaXZlcnMvY2xrL21lZGlhdGVrL2Nsay1tdDY3NzkuYyAgICAgICAgICAgICB8ICAg
+IDIgKw0KIGRyaXZlcnMvcGluY3RybC9tZWRpYXRlay9LY29uZmlnICAgICAgICAgICAgICB8ICAg
+MTIgKw0KIGRyaXZlcnMvcGluY3RybC9tZWRpYXRlay9NYWtlZmlsZSAgICAgICAgICAgICB8ICAg
+IDEgKw0KIGRyaXZlcnMvcGluY3RybC9tZWRpYXRlay9waW5jdHJsLW10Njc3OS5jICAgICB8ICA3
+ODMgKysrKysrKw0KIC4uLi9waW5jdHJsL21lZGlhdGVrL3BpbmN0cmwtbXRrLWNvbW1vbi12Mi5j
+ICB8ICAgMjUgKw0KIC4uLi9waW5jdHJsL21lZGlhdGVrL3BpbmN0cmwtbXRrLWNvbW1vbi12Mi5o
+ICB8ICAgIDEgKw0KIGRyaXZlcnMvcGluY3RybC9tZWRpYXRlay9waW5jdHJsLW10ay1tdDY3Nzku
+aCB8IDIwODUgKysrKysrKysrKysrKysrKysNCiBkcml2ZXJzL3BpbmN0cmwvbWVkaWF0ZWsvcGlu
+Y3RybC1wYXJpcy5jICAgICAgfCAgICA3ICsNCiBpbmNsdWRlL2R0LWJpbmRpbmdzL3BpbmN0cmwv
+bXQ2Nzc5LXBpbmZ1bmMuaCAgfCAxMjQyICsrKysrKysrKysNCiAxMyBmaWxlcyBjaGFuZ2VkLCA0
+NjY0IGluc2VydGlvbnMoKykNCiBjcmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZp
+Y2V0cmVlL2JpbmRpbmdzL3BpbmN0cmwvbWVkaWF0ZWssbXQ2Nzc5LXBpbmN0cmwueWFtbA0KIGNy
+ZWF0ZSBtb2RlIDEwMDY0NCBhcmNoL2FybTY0L2Jvb3QvZHRzL21lZGlhdGVrL210Njc3OS1ldmIu
+ZHRzDQogY3JlYXRlIG1vZGUgMTAwNjQ0IGFyY2gvYXJtNjQvYm9vdC9kdHMvbWVkaWF0ZWsvbXQ2
+Nzc5LmR0c2kNCiBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9waW5jdHJsL21lZGlhdGVrL3Bp
+bmN0cmwtbXQ2Nzc5LmMNCiBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9waW5jdHJsL21lZGlh
+dGVrL3BpbmN0cmwtbXRrLW10Njc3OS5oDQogY3JlYXRlIG1vZGUgMTAwNjQ0IGluY2x1ZGUvZHQt
+YmluZGluZ3MvcGluY3RybC9tdDY3NzktcGluZnVuYy5oDQoNCi0tIA0KMi4xOC4wDQo=
 
---DEueqSqTbz/jWVG1
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Sun, Jul 12, 2020 at 11:28:36AM +0100, Jon Hunter wrote:
-> Commit 5c4e8d3781bc ("usb: host: xhci-tegra: Add support for XUSB
-> context save/restore") is using the IPFS 'num_offsets' value when
-> allocating memory for FPCI context instead of the FPCI 'num_offsets'.
-> We have not observed any specific issues because of this, but could
-> cause too much memory or too little memory to be allocated. Fix this
-> by using the FPCI 'num_offsets' for allocating the FPCI memory for
-> storing the FPCI state.
->=20
-> Cc: stable@vger.kernel.org
->=20
-> Fixes: 5c4e8d3781bc ("usb: host: xhci-tegra: Add support for XUSB context=
- save/restore")
->=20
-> Signed-off-by: Jon Hunter <jonathanh@nvidia.com>
-> ---
->  drivers/usb/host/xhci-tegra.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-
-Good catch!
-
-Acked-by: Thierry Reding <treding@nvidia.com>
-
---DEueqSqTbz/jWVG1
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl8NeLsACgkQ3SOs138+
-s6G7cg/9FTvsISm0svIWmK3kAgMVZkVea+cESYFM2UwbzPvCuznYAXuObClSzmKY
-/s7hMh3A5gUvn1Y0j1dYgb5oc8zrf9GHWr3T3aCODdBnQk6HrDyFBUP5sTYA+wfR
-684PfsyxG47Ei18zAWtSNlbgGdd0pk0uLRGsrKqxHA+bbooHwO4+Ci6AO242Wovr
-V7yBsNxTwgdLtZI2Bx70XSf9Kao4m+zRsaPorS96gnWoJKNtHXWTz4JUWHYSkBtw
-B1FJ+YjlBQEaXhdSXtU3VOXaFGJGAm/uPkAXU0pK3YuZvJXkzC224Tgi4BaYK9/c
-WDCaMgRhF5V7auBeDKt1xh+nxBAjG8eaMJHuBpKsN1dnRZdXjJG/c+evHFce9noM
-VR9jMR6cmg7EJBM9/QfvDA54MGsanmSrDit0Tg//Ba2BtiqQQv8jgl5bkPP8ZSBv
-1caFyAn74JoJd/tjPOYoDsgXbhjN64o5eez2z66fXLfvxesfEQMeLKykBnrwEJAE
-gXZ7OaOnHsjyWnf+Nd2zYVY8zc48P2NLb8GLYaWboNeVekWSkFK/+VmQ5J6ayDrn
-mNJfZ7eNijZlbPz2pkDah47Jta2NzHfjS/zYuiYT/pOa+6UbxsEV7wWOl28mneTO
-EpjAS3lJAFSZLiA/Px0WjNwYE+H/iJ8P3BP3RH9ghMu4zCo1Qvg=
-=Jwud
------END PGP SIGNATURE-----
-
---DEueqSqTbz/jWVG1--
