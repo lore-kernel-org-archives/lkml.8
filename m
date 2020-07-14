@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97D29C433F1
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 19:01:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A00ACC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 19:01:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 78A9C22209
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 19:01:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6FADA2255F
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 19:01:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594753267;
-	bh=uCmkHrA9W1woj+zxRdjrTWe3xUJXJ9PDW2gEo6jLwxc=;
+	s=default; t=1594753271;
+	bh=imOiDUvX9IgMI4DgKmLXDbP4TlQTsiuChEG4SULf2I0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=S8c6KEYWIzE9Gv6fSA1BV5Qx1y7gD3O6pWTcQYBN75Ao8rZ8jFkpSQmf5kAMr/ods
-	 DPIHP08sK096X5xgr50X0MGwgrdu6b8ZtZbdO5MXEZUI9dALySrJwxHati1/f4etB2
-	 jR7OXlv7lhtOoO45Qufgc9Vz5f886cy4eKjuMIHw=
+	b=ILuQBrKzHyEUxDa4f/ad0okOdu+fAEfCXUY0lIV20QKWIEZnD73Ydg/F5catSOLsO
+	 c+iWwYp0jRSp1C4c0jnFDEY9aftH5cDoOePJd6TLlVxQMC68HY496zWdz91szRArJK
+	 q6FXTytVZJiRw7WRf6hCLOenskOMAOOgcGenEz8k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731145AbgGNTAN (ORCPT
+        id S1730942AbgGNTBI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 15:00:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58844 "EHLO mail.kernel.org"
+        Tue, 14 Jul 2020 15:01:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58988 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731326AbgGNTAE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 15:00:04 -0400
+        id S1730809AbgGNTAL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 15:00:11 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 60C1922507;
-        Tue, 14 Jul 2020 19:00:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B2331222B9;
+        Tue, 14 Jul 2020 19:00:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594753203;
-        bh=uCmkHrA9W1woj+zxRdjrTWe3xUJXJ9PDW2gEo6jLwxc=;
+        s=default; t=1594753211;
+        bh=imOiDUvX9IgMI4DgKmLXDbP4TlQTsiuChEG4SULf2I0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jyg95FYXd+M/5Ua9/Vt2YUvqdDY/3zrLtZPZgqZbsqHAsccVkHxyULTcSq8KKyuHY
-         jMb0GBUwS+rd8yigFvaqGabnd5lPekFVEozn0PyQyRl9ZmFPPvqSLcNpevW1gbxMry
-         DbzGPJwJITi64lXXEA/pW3NqGCarEHLRXDe6B9pk=
+        b=EYJrgTHhUhtPF+6F1VSPisLCcfctAA/8NHBzeFY32dURW75WhgxLxaYJpAmN1PBUr
+         dfLWvIpjk2YXVbjlVYQlQtOc71CeMrWC/UWcgZG1umMa4Fo2RESKNVvktwDDPaR/Fj
+         lmNhklmX3k+zGQrKb1Z+uNaTCZGAMLBANpb7KYeE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jessica Yu <jeyu@kernel.org>,
-        Kees Cook <keescook@chromium.org>
-Subject: [PATCH 5.7 129/166] module: Refactor section attr into bin attribute
-Date:   Tue, 14 Jul 2020 20:44:54 +0200
-Message-Id: <20200714184122.010782230@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Subject: [PATCH 5.7 122/166] KVM: x86: Mark CR4.TSD as being possibly owned by the guest
+Date:   Tue, 14 Jul 2020 20:44:47 +0200
+Message-Id: <20200714184121.677249888@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200714184115.844176932@linuxfoundation.org>
 References: <20200714184115.844176932@linuxfoundation.org>
@@ -59,131 +60,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kees Cook <keescook@chromium.org>
+From: Sean Christopherson <sean.j.christopherson@intel.com>
 
-commit ed66f991bb19d94cae5d38f77de81f96aac7813f upstream.
+commit 7c83d096aed055a7763a03384f92115363448b71 upstream.
 
-In order to gain access to the open file's f_cred for kallsym visibility
-permission checks, refactor the module section attributes to use the
-bin_attribute instead of attribute interface. Additionally removes the
-redundant "name" struct member.
+Mark CR4.TSD as being possibly owned by the guest as that is indeed the
+case on VMX.  Without TSD being tagged as possibly owned by the guest, a
+targeted read of CR4 to get TSD could observe a stale value.  This bug
+is benign in the current code base as the sole consumer of TSD is the
+emulator (for RDTSC) and the emulator always "reads" the entirety of CR4
+when grabbing bits.
 
+Add a build-time assertion in to ensure VMX doesn't hand over more CR4
+bits without also updating x86.
+
+Fixes: 52ce3c21aec3 ("x86,kvm,vmx: Don't trap writes to CR4.TSD")
 Cc: stable@vger.kernel.org
-Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Tested-by: Jessica Yu <jeyu@kernel.org>
-Acked-by: Jessica Yu <jeyu@kernel.org>
-Signed-off-by: Kees Cook <keescook@chromium.org>
+Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+Message-Id: <20200703040422.31536-2-sean.j.christopherson@intel.com>
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- kernel/module.c |   45 ++++++++++++++++++++++++---------------------
- 1 file changed, 24 insertions(+), 21 deletions(-)
+ arch/x86/kvm/kvm_cache_regs.h |    2 +-
+ arch/x86/kvm/vmx/vmx.c        |    2 ++
+ 2 files changed, 3 insertions(+), 1 deletion(-)
 
---- a/kernel/module.c
-+++ b/kernel/module.c
-@@ -1507,8 +1507,7 @@ static inline bool sect_empty(const Elf_
- }
+--- a/arch/x86/kvm/kvm_cache_regs.h
++++ b/arch/x86/kvm/kvm_cache_regs.h
+@@ -7,7 +7,7 @@
+ #define KVM_POSSIBLE_CR0_GUEST_BITS X86_CR0_TS
+ #define KVM_POSSIBLE_CR4_GUEST_BITS				  \
+ 	(X86_CR4_PVI | X86_CR4_DE | X86_CR4_PCE | X86_CR4_OSFXSR  \
+-	 | X86_CR4_OSXMMEXCPT | X86_CR4_LA57 | X86_CR4_PGE)
++	 | X86_CR4_OSXMMEXCPT | X86_CR4_LA57 | X86_CR4_PGE | X86_CR4_TSD)
  
- struct module_sect_attr {
--	struct module_attribute mattr;
--	char *name;
-+	struct bin_attribute battr;
- 	unsigned long address;
- };
+ #define BUILD_KVM_GPR_ACCESSORS(lname, uname)				      \
+ static __always_inline unsigned long kvm_##lname##_read(struct kvm_vcpu *vcpu)\
+--- a/arch/x86/kvm/vmx/vmx.c
++++ b/arch/x86/kvm/vmx/vmx.c
+@@ -3932,6 +3932,8 @@ void vmx_set_constant_host_state(struct
  
-@@ -1518,11 +1517,16 @@ struct module_sect_attrs {
- 	struct module_sect_attr attrs[];
- };
- 
--static ssize_t module_sect_show(struct module_attribute *mattr,
--				struct module_kobject *mk, char *buf)
-+static ssize_t module_sect_read(struct file *file, struct kobject *kobj,
-+				struct bin_attribute *battr,
-+				char *buf, loff_t pos, size_t count)
+ void set_cr4_guest_host_mask(struct vcpu_vmx *vmx)
  {
- 	struct module_sect_attr *sattr =
--		container_of(mattr, struct module_sect_attr, mattr);
-+		container_of(battr, struct module_sect_attr, battr);
++	BUILD_BUG_ON(KVM_CR4_GUEST_OWNED_BITS & ~KVM_POSSIBLE_CR4_GUEST_BITS);
 +
-+	if (pos != 0)
-+		return -EINVAL;
-+
- 	return sprintf(buf, "0x%px\n", kptr_restrict < 2 ?
- 		       (void *)sattr->address : NULL);
- }
-@@ -1532,7 +1536,7 @@ static void free_sect_attrs(struct modul
- 	unsigned int section;
- 
- 	for (section = 0; section < sect_attrs->nsections; section++)
--		kfree(sect_attrs->attrs[section].name);
-+		kfree(sect_attrs->attrs[section].battr.attr.name);
- 	kfree(sect_attrs);
- }
- 
-@@ -1541,42 +1545,41 @@ static void add_sect_attrs(struct module
- 	unsigned int nloaded = 0, i, size[2];
- 	struct module_sect_attrs *sect_attrs;
- 	struct module_sect_attr *sattr;
--	struct attribute **gattr;
-+	struct bin_attribute **gattr;
- 
- 	/* Count loaded sections and allocate structures */
- 	for (i = 0; i < info->hdr->e_shnum; i++)
- 		if (!sect_empty(&info->sechdrs[i]))
- 			nloaded++;
- 	size[0] = ALIGN(struct_size(sect_attrs, attrs, nloaded),
--			sizeof(sect_attrs->grp.attrs[0]));
--	size[1] = (nloaded + 1) * sizeof(sect_attrs->grp.attrs[0]);
-+			sizeof(sect_attrs->grp.bin_attrs[0]));
-+	size[1] = (nloaded + 1) * sizeof(sect_attrs->grp.bin_attrs[0]);
- 	sect_attrs = kzalloc(size[0] + size[1], GFP_KERNEL);
- 	if (sect_attrs == NULL)
- 		return;
- 
- 	/* Setup section attributes. */
- 	sect_attrs->grp.name = "sections";
--	sect_attrs->grp.attrs = (void *)sect_attrs + size[0];
-+	sect_attrs->grp.bin_attrs = (void *)sect_attrs + size[0];
- 
- 	sect_attrs->nsections = 0;
- 	sattr = &sect_attrs->attrs[0];
--	gattr = &sect_attrs->grp.attrs[0];
-+	gattr = &sect_attrs->grp.bin_attrs[0];
- 	for (i = 0; i < info->hdr->e_shnum; i++) {
- 		Elf_Shdr *sec = &info->sechdrs[i];
- 		if (sect_empty(sec))
- 			continue;
-+		sysfs_bin_attr_init(&sattr->battr);
- 		sattr->address = sec->sh_addr;
--		sattr->name = kstrdup(info->secstrings + sec->sh_name,
--					GFP_KERNEL);
--		if (sattr->name == NULL)
-+		sattr->battr.attr.name =
-+			kstrdup(info->secstrings + sec->sh_name, GFP_KERNEL);
-+		if (sattr->battr.attr.name == NULL)
- 			goto out;
- 		sect_attrs->nsections++;
--		sysfs_attr_init(&sattr->mattr.attr);
--		sattr->mattr.show = module_sect_show;
--		sattr->mattr.store = NULL;
--		sattr->mattr.attr.name = sattr->name;
--		sattr->mattr.attr.mode = S_IRUSR;
--		*(gattr++) = &(sattr++)->mattr.attr;
-+		sattr->battr.read = module_sect_read;
-+		sattr->battr.size = 3 /* "0x", "\n" */ + (BITS_PER_LONG / 4);
-+		sattr->battr.attr.mode = 0400;
-+		*(gattr++) = &(sattr++)->battr;
- 	}
- 	*gattr = NULL;
- 
-@@ -1666,7 +1669,7 @@ static void add_notes_attrs(struct modul
- 			continue;
- 		if (info->sechdrs[i].sh_type == SHT_NOTE) {
- 			sysfs_bin_attr_init(nattr);
--			nattr->attr.name = mod->sect_attrs->attrs[loaded].name;
-+			nattr->attr.name = mod->sect_attrs->attrs[loaded].battr.attr.name;
- 			nattr->attr.mode = S_IRUGO;
- 			nattr->size = info->sechdrs[i].sh_size;
- 			nattr->private = (void *) info->sechdrs[i].sh_addr;
+ 	vmx->vcpu.arch.cr4_guest_owned_bits = KVM_CR4_GUEST_OWNED_BITS;
+ 	if (enable_ept)
+ 		vmx->vcpu.arch.cr4_guest_owned_bits |= X86_CR4_PGE;
 
 
