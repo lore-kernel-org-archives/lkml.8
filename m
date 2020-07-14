@@ -2,99 +2,114 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D420BC433F1
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 12:13:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 937FAC433E4
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 12:13:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AF0E9222D9
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 12:13:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B5FD222D9
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 12:13:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728848AbgGNMNJ (ORCPT
+        id S1728858AbgGNMNQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 08:13:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32840 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728252AbgGNMNH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 08:13:07 -0400
-Received: from nautica.notk.org (ipv6.notk.org [IPv6:2001:41d0:1:7a93::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E7E16C061755
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 05:13:06 -0700 (PDT)
-Received: by nautica.notk.org (Postfix, from userid 1001)
-        id C9AB1C01B; Tue, 14 Jul 2020 14:13:04 +0200 (CEST)
-Date:   Tue, 14 Jul 2020 14:12:49 +0200
-From:   Dominique Martinet <asmadeus@codewreck.org>
-To:     Victor Hsieh <victorhsieh@google.com>
-Cc:     v9fs-developer@lists.sourceforge.net,
-        Eric Van Hensbergen <ericvh@gmail.com>,
-        Latchesar Ionkov <lucho@ionkov.net>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        stable@vger.kernel.org
-Subject: Re: [PATCH] fs/9p: Fix TCREATE's fid in protocol
-Message-ID: <20200714121249.GA21928@nautica>
-References: <20200713215759.3701482-1-victorhsieh@google.com>
+        Tue, 14 Jul 2020 08:13:16 -0400
+Received: from 8bytes.org ([81.169.241.247]:52886 "EHLO theia.8bytes.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728500AbgGNMLL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 08:11:11 -0400
+Received: from cap.home.8bytes.org (p5b006776.dip0.t-ipconnect.de [91.0.103.118])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (No client certificate requested)
+        by theia.8bytes.org (Postfix) with ESMTPSA id 934E7FC8;
+        Tue, 14 Jul 2020 14:11:04 +0200 (CEST)
+From:   Joerg Roedel <joro@8bytes.org>
+To:     x86@kernel.org
+Cc:     Joerg Roedel <joro@8bytes.org>, Joerg Roedel <jroedel@suse.de>,
+        Tom Lendacky <thomas.lendacky@amd.com>, hpa@zytor.com,
+        Andy Lutomirski <luto@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Jiri Slaby <jslaby@suse.cz>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Juergen Gross <jgross@suse.com>,
+        Kees Cook <keescook@chromium.org>,
+        David Rientjes <rientjes@google.com>,
+        Cfir Cohen <cfir@google.com>,
+        Erdem Aktas <erdemaktas@google.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Mike Stunes <mstunes@vmware.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Martin Radev <martin.b.radev@gmail.com>,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        virtualization@lists.linux-foundation.org
+Subject: [PATCH v4 57/75] x86/sev-es: Handle RDPMC Events
+Date:   Tue, 14 Jul 2020 14:08:59 +0200
+Message-Id: <20200714120917.11253-58-joro@8bytes.org>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200714120917.11253-1-joro@8bytes.org>
+References: <20200714120917.11253-1-joro@8bytes.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200713215759.3701482-1-victorhsieh@google.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Victor Hsieh wrote on Mon, Jul 13, 2020:
-> The fid parameter of TCREATE represents the directory that the file
+From: Tom Lendacky <thomas.lendacky@amd.com>
 
-This is not TCREATE, this is TLCREATE.
-The fid represents the directory before the call, but on success
-represents the file that has been created.
+Implement a handler for #VC exceptions caused by RDPMC instructions.
 
-> should be created at. The current implementation mistakenly passes a
-> locally created fid for the file. The correct file fid is usually
-> retrieved by another WALK call, which does happen right after.
-> 
-> The problem happens when a new created fd is read from (i.e. where
-> private_data->fid is used), but not write to.
+Signed-off-by: Tom Lendacky <thomas.lendacky@amd.com>
+[ jroedel@suse.de: Adapt to #VC handling infrastructure ]
+Co-developed-by: Joerg Roedel <jroedel@suse.de>
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
+---
+ arch/x86/kernel/sev-es.c | 22 ++++++++++++++++++++++
+ 1 file changed, 22 insertions(+)
 
-I'm not sure why the code currently does a 2nd walk from the directory
-with the name which is prone to a race instead of cloning ofid without a
-path, but I fail to see the problem you ran into - file->private_data is
-a fid pointing to the file as it should be.
+diff --git a/arch/x86/kernel/sev-es.c b/arch/x86/kernel/sev-es.c
+index 0e69d498f008..6258bc8074fd 100644
+--- a/arch/x86/kernel/sev-es.c
++++ b/arch/x86/kernel/sev-es.c
+@@ -859,6 +859,25 @@ static enum es_result vc_handle_wbinvd(struct ghcb *ghcb,
+ 	return sev_es_ghcb_hv_call(ghcb, ctxt, SVM_EXIT_WBINVD, 0, 0);
+ }
+ 
++static enum es_result vc_handle_rdpmc(struct ghcb *ghcb, struct es_em_ctxt *ctxt)
++{
++	enum es_result ret;
++
++	ghcb_set_rcx(ghcb, ctxt->regs->cx);
++
++	ret = sev_es_ghcb_hv_call(ghcb, ctxt, SVM_EXIT_RDPMC, 0, 0);
++	if (ret != ES_OK)
++		return ret;
++
++	if (!(ghcb_is_valid_rax(ghcb) && ghcb_is_valid_rdx(ghcb)))
++		return ES_VMM_ERROR;
++
++	ctxt->regs->ax = ghcb->save.rax;
++	ctxt->regs->dx = ghcb->save.rdx;
++
++	return ES_OK;
++}
++
+ static enum es_result vc_handle_exitcode(struct es_em_ctxt *ctxt,
+ 					 struct ghcb *ghcb,
+ 					 unsigned long exit_code)
+@@ -876,6 +895,9 @@ static enum es_result vc_handle_exitcode(struct es_em_ctxt *ctxt,
+ 	case SVM_EXIT_RDTSCP:
+ 		result = vc_handle_rdtsc(ghcb, ctxt, exit_code);
+ 		break;
++	case SVM_EXIT_RDPMC:
++		result = vc_handle_rdpmc(ghcb, ctxt);
++		break;
+ 	case SVM_EXIT_CPUID:
+ 		result = vc_handle_cpuid(ghcb, ctxt);
+ 		break;
+-- 
+2.27.0
 
-Could you describe what kind of errors you get and if possible how to
-reproduce?
-
-> Fixes: 5643135a2846 ("fs/9p: This patch implements TLCREATE for 9p2000.L protocol.")
-> Signed-off-by: Victor Hsieh <victorhsieh@google.com>
-> Cc: stable@vger.kernel.org
-
-(afaiu it is normally frowned upon for developers to add this cc (I can
-understand stable@ not wanting spam discussing issues left and right
-before maintainers agreed on them!) ; I can add it to the commit itself
-if requested but they normally pick most such fixes pretty nicely for
-backport anyway; I see most 9p patches backported as long as the patch
-applies cleanly which is pretty much all the time.
-Please let me know if I understood that incorrectly)
-
-> ---
->  fs/9p/vfs_inode_dotl.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/fs/9p/vfs_inode_dotl.c b/fs/9p/vfs_inode_dotl.c
-> index 60328b21c5fb..90a7aaea918d 100644
-> --- a/fs/9p/vfs_inode_dotl.c
-> +++ b/fs/9p/vfs_inode_dotl.c
-> @@ -285,7 +285,7 @@ v9fs_vfs_atomic_open_dotl(struct inode *dir, struct dentry *dentry,
->  			 err);
->  		goto error;
->  	}
-> -	err = p9_client_create_dotl(ofid, name, v9fs_open_to_dotl_flags(flags),
-> +	err = p9_client_create_dotl(dfid, name, v9fs_open_to_dotl_flags(flags),
->  				    mode, gid, &qid);
->  	if (err < 0) {
->  		p9_debug(P9_DEBUG_VFS, "p9_client_open_dotl failed in creat %d\n",
