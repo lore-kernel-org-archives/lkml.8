@@ -2,455 +2,211 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B107C43468
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:17:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70643C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:20:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 328FE22955
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:17:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3838622596
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:20:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YgGQaKPE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729100AbgGNSRf (ORCPT
+        id S1728995AbgGNSUN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 14:17:35 -0400
-Received: from smtp-190a.mail.infomaniak.ch ([185.125.25.10]:34167 "EHLO
-        smtp-190a.mail.infomaniak.ch" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729263AbgGNSR3 (ORCPT
+        Tue, 14 Jul 2020 14:20:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34236 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726989AbgGNSUM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 14:17:29 -0400
-Received: from smtp-2-0000.mail.infomaniak.ch (unknown [10.5.36.107])
-        by smtp-3-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4B5pd5143WzlhCYJ;
-        Tue, 14 Jul 2020 20:16:57 +0200 (CEST)
-Received: from localhost (unknown [94.23.54.103])
-        by smtp-2-0000.mail.infomaniak.ch (Postfix) with ESMTPA id 4B5pd44Pj7zlh8TK;
-        Tue, 14 Jul 2020 20:16:56 +0200 (CEST)
-From:   =?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mic@digikod.net>
-To:     linux-kernel@vger.kernel.org
-Cc:     =?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mic@digikod.net>,
-        Aleksa Sarai <cyphar@cyphar.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Christian Heimes <christian@python.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Deven Bowers <deven.desai@linux.microsoft.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Eric Biggers <ebiggers@kernel.org>,
-        Eric Chiang <ericchiang@google.com>,
-        Florian Weimer <fweimer@redhat.com>,
-        James Morris <jmorris@namei.org>, Jan Kara <jack@suse.cz>,
-        Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
-        Kees Cook <keescook@chromium.org>,
-        Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
-        Matthew Garrett <mjg59@google.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Michael Kerrisk <mtk.manpages@gmail.com>,
-        =?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mickael.salaun@ssi.gouv.fr>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        =?UTF-8?q?Philippe=20Tr=C3=A9buchet?= 
-        <philippe.trebuchet@ssi.gouv.fr>,
-        Scott Shell <scottsh@microsoft.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Steve Dower <steve.dower@python.org>,
-        Steve Grubb <sgrubb@redhat.com>,
-        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
-        Thibaut Sautereau <thibaut.sautereau@ssi.gouv.fr>,
-        Vincent Strubel <vincent.strubel@ssi.gouv.fr>,
-        kernel-hardening@lists.openwall.com, linux-api@vger.kernel.org,
-        linux-integrity@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org
-Subject: [PATCH v6 6/7] selftest/openat2: Add tests for O_MAYEXEC enforcing
-Date:   Tue, 14 Jul 2020 20:16:37 +0200
-Message-Id: <20200714181638.45751-7-mic@digikod.net>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200714181638.45751-1-mic@digikod.net>
-References: <20200714181638.45751-1-mic@digikod.net>
+        Tue, 14 Jul 2020 14:20:12 -0400
+Received: from mail-il1-x143.google.com (mail-il1-x143.google.com [IPv6:2607:f8b0:4864:20::143])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 44931C061755
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 11:20:12 -0700 (PDT)
+Received: by mail-il1-x143.google.com with SMTP id t4so15051511iln.1
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 11:20:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:reply-to:from:date:message-id
+         :subject:to:cc;
+        bh=LBM8mZ5TU62dVovLrevNINwnFxRJdGHmD0tUrxeo9bA=;
+        b=YgGQaKPEOmvcQOyPiDG6H54qBUMxmOa9APfc6QP93a9cVxaGD1EwsdbxcjmTF8LhyI
+         Y872ffWWDPqAxdyYNiGeVwdvQC19MdpEZMBOX9eoS6mH9pZesXywgOrkhkS3KITmUk4W
+         Z9dOj8YFJ9QV2lh4vXq2K8R0ZNSWkS8nGlRbrrzaH5SUnfOHAiB1qleAySu5Cy3oY4Uk
+         5uxmPvlx6i9XYRAEsqOyGgZAgRSdIfl/jQf+XS5kpeGeXWSsEfO5aarZGprO+LmS3jFd
+         S06ZrSUQVBdJW2VfAn3bOcqP/CoLJen36e0VN5Bw1BhsNzvu8oGa66t164DdvUOZzmNx
+         aAFA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:reply-to
+         :from:date:message-id:subject:to:cc;
+        bh=LBM8mZ5TU62dVovLrevNINwnFxRJdGHmD0tUrxeo9bA=;
+        b=E/AP9aMd7S+6wSIXaZYDTWK8jiPatdKRPBmp9/tryUNIxWep8MRi4JsyjxfyJUUtpU
+         2uxgHHhTH9HcCFGjFqLU6pWMHTuD9jKm5F7wzieblnr2l2KRo7tDvF+Vhpv4qTzDwb/M
+         48tItXXICuHiEV2Mc1ZlQtYNWmoXbsjGCn4/fSPE73m5A+ugoeeSQ1lRx2p/q457z8vq
+         jp9tgC49BTfo9zCGf04oiQ1U91fnEsacCqQyr0aT8Csf4IQx+uIFMHwgL+JAHGAxbmw3
+         mYIZJ86Guk6FdOXL2l1bXtE5UlmyhkRjQFF/xYNrXJH+xnS5vbYlbhjIc3wVgGYh82g/
+         WWoQ==
+X-Gm-Message-State: AOAM5323zugQOSv8RdbRcI23L108Py9zJv15bt7FGv0eKgn0on4ha3zC
+        VNEGb0kwr6u4ostELW7PtdYIxxUWQso4hLs7nmI=
+X-Google-Smtp-Source: ABdhPJzMp8f1ZYsA+NPqsWgoz/btZaewhlW6Krb1Gw9Ul9uLTmz79yG70LVh7EN0MW9KtgDy81QQ0RVD+6O7dMHvmOQ=
+X-Received: by 2002:a92:dc09:: with SMTP id t9mr6142976iln.226.1594750811549;
+ Tue, 14 Jul 2020 11:20:11 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Antivirus: Dr.Web (R) for Unix mail servers drweb plugin ver.6.0.2.8
-X-Antivirus-Code: 0x100000
+References: <20200714111103.14591-1-sedat.dilek@gmail.com> <CAKwvOdk3WSMhMxxaWfFeWYkR=xYgwrREckS+X5Yg5QeC48UVrg@mail.gmail.com>
+In-Reply-To: <CAKwvOdk3WSMhMxxaWfFeWYkR=xYgwrREckS+X5Yg5QeC48UVrg@mail.gmail.com>
+Reply-To: sedat.dilek@gmail.com
+From:   Sedat Dilek <sedat.dilek@gmail.com>
+Date:   Tue, 14 Jul 2020 20:19:59 +0200
+Message-ID: <CA+icZUUBvSzbG9CXSzdtphotmFhG-5y5aXgDFwjwx7_QeE5hvg@mail.gmail.com>
+Subject: Re: [PATCH v2] x86/entry: Fix vectors to IDTENTRY_SYSVEC for CONFIG_HYPERV
+To:     Nick Desaulniers <ndesaulniers@google.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Alexandre Chartre <alexandre.chartre@oracle.com>,
+        Wei Liu <wei.liu@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Jian Cai <caij2003@gmail.com>,
+        Nathan Chancellor <natechancellor@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Test propagation of noexec mount points or file executability through
-files open with or without O_MAYEXEC, thanks to the
-fs.open_mayexec_enforce sysctl.
+On Tue, Jul 14, 2020 at 7:46 PM Nick Desaulniers
+<ndesaulniers@google.com> wrote:
+>
+> On Tue, Jul 14, 2020 at 4:11 AM Sedat Dilek <sedat.dilek@gmail.com> wrote:
+> >
+> > When using Clang's Integrated Assembler (LLVM_IAS=1) we fell over
+> > ClangBuiltLinux (CBL) issue #1043 where Jian Cai provided a patch.
+> >
+> > With Jian's patch applied another issue raised up when CONFIG_HYPERV=m.
+> >
+> > It turned out that the conversion of vectors to IDTENTRY_SYSVEC in
+> > case of CONFIG_HYPERV was incomplete and fails with a build error:
+> >
+> > <instantiation>:9:6: error: expected absolute expression
+> >  .if HYPERVISOR_REENLIGHTENMENT_VECTOR == 3
+> >      ^
+> > <instantiation>:1:1: note: while in macro instantiation
+> > idtentry HYPERVISOR_REENLIGHTENMENT_VECTOR asm_sysvec_hyperv_reenlightenment sysvec_hyperv_reenlightenment has_error_code=0
+> > ^
+> > ./arch/x86/include/asm/idtentry.h:627:1: note: while in macro instantiation
+> > idtentry_sysvec HYPERVISOR_REENLIGHTENMENT_VECTOR sysvec_hyperv_reenlightenment;
+> > ^
+> > <instantiation>:9:6: error: expected absolute expression
+> >  .if HYPERVISOR_STIMER0_VECTOR == 3
+> >      ^
+> > <instantiation>:1:1: note: while in macro instantiation
+> > idtentry HYPERVISOR_STIMER0_VECTOR asm_sysvec_hyperv_stimer0 sysvec_hyperv_stimer0 has_error_code=0
+> > ^
+> > ./arch/x86/include/asm/idtentry.h:628:1: note: while in macro instantiation
+> > idtentry_sysvec HYPERVISOR_STIMER0_VECTOR sysvec_hyperv_stimer0;
+> >
+> > I and Nathan double-checked the hyperv(isor) vectors:
+> >
+> > $ rg --no-heading "HYPERVISOR_REENLIGHTENMENT_VECTOR|HYPERVISOR_STIMER0_VECTOR"
+> > $ rg --no-heading "HYPERV_REENLIGHTENMENT_VECTOR|HYPERV_STIMER0_VECTOR"
+> >
+> > Fix these typos in arch/x86/include/asm/idtentry.h:
+> >
+> > HYPERVISOR_REENLIGHTENMENT_VECTOR -> HYPERV_REENLIGHTENMENT_VECTOR
+> > HYPERVISOR_STIMER0_VECTOR         -> HYPERV_STIMER0_VECTOR
+> >
+> > For more details see CBL issue #1088.
+> >
+> > With both fixes applied I was able to build/assemble with a snapshot
+> > version of LLVM/Clang from Debian/experimental.
+> >
+> > NOTE: My patch is independent from Jian's patch and should be applied separately.
+>
+> Hi Sedat,
+> Thanks for the patch!  Nice job finding the fix.
+>
+> I would like to see a v3 with the commit message trimmed a bit.  In
+> particular, you mention that Jian's patch is unrelated.  In that case,
+> please don't mention it in the commit message, drop the link to issue
+> #1043, and drop the lore link.  I think if the commit was just simply:
+>
+> ```
+> x86/entry: Fix vectors to IDTENTRY_SYSVEC for CONFIG_HYPERV
+>
+> When assembling with Clang via `make LLVM_IAS=1`, we observe the
+> following error:
+> <instantiation>:9:6: error: expected absolute expression
+> <rest of the diagnostic>
+>
+> This is caused by typos in arch/x86/include/asm/idtentry.h:
+>
+> HYPERVISOR_REENLIGHTENMENT_VECTOR -> HYPERV_REENLIGHTENMENT_VECTOR
+> HYPERVISOR_STIMER0_VECTOR         -> HYPERV_STIMER0_VECTOR
+> ```
+> Then the tags you have below minus the unrelated ones.
+>
+> >
+> > Cc: Jian Cai <caij2003@gmail.com>
+> > Cc: clang-built-linux@googlegroups.com
+> > Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
+> > Reviewed-by: Wei Liu <wei.liu@kernel.org>
+> > Fixes: a16be368dd3f ("x86/entry: Convert various hypervisor vectors to IDTENTRY_SYSVEC")
+> > Link: https://github.com/ClangBuiltLinux/linux/issues/1043
+> > Link: https://lore.kernel.org/patchwork/patch/1272115/
+> > Link: https://github.com/ClangBuiltLinux/linux/issues/1088
+> > Signed-off-by: Sedat Dilek <sedat.dilek@gmail.com>
+> > ---
+>
+> Otherwise you can put some additional info here "below the fold."  It
+> doesn't hurt to say "I also need Jian's patch to completely build with
+> LLVM_IAS=1" but I don't think that should be in the message that gets
+> committed per se.  Sorry to be a pedant about this.  With those
+> changes, I'd be happy to sign off on the patch.
+>
 
-Signed-off-by: Mickaël Salaün <mic@digikod.net>
-Reviewed-by: Thibaut Sautereau <thibaut.sautereau@ssi.gouv.fr>
-Cc: Aleksa Sarai <cyphar@cyphar.com>
-Cc: Al Viro <viro@zeniv.linux.org.uk>
-Cc: Kees Cook <keescook@chromium.org>
-Cc: Shuah Khan <shuah@kernel.org>
----
+Yeah, that sounds like good compromise.
 
-Changes since v5:
-* Refactor with FIXTURE_VARIANT, which make the tests much more easy to
-  read and maintain.
-* Save and restore initial sysctl value (suggested by Kees Cook).
-* Test with a sysctl value of 0.
-* Check errno in sysctl_access_write test.
-* Update tests for the CAP_SYS_ADMIN switch.
-* Update tests to check -EISDIR (replacing -EACCES).
-* Replace FIXTURE_DATA() with FIXTURE() (spotted by Kees Cook).
-* Use global const strings.
+Without Jian's fix/patch we did not found the issue.
+I wanted to respect this.
 
-Changes since v3:
-* Replace RESOLVE_MAYEXEC with O_MAYEXEC.
-* Add tests to check that O_MAYEXEC is ignored by open(2) and openat(2).
+I will send out a v3 soonish.
 
-Changes since v2:
-* Move tests from exec/ to openat2/ .
-* Replace O_MAYEXEC with RESOLVE_MAYEXEC from openat2(2).
-* Cleanup tests.
+- Sedat -
 
-Changes since v1:
-* Move tests from yama/ to exec/ .
-* Fix _GNU_SOURCE in kselftest_harness.h .
-* Add a new test sysctl_access_write to check if CAP_MAC_ADMIN is taken
-  into account.
-* Test directory execution which is always forbidden since commit
-  73601ea5b7b1 ("fs/open.c: allow opening only regular files during
-  execve()"), and also check that even the root user can not bypass file
-  execution checks.
-* Make sure delete_workspace() always as enough right to succeed.
-* Cosmetic cleanup.
----
- tools/testing/selftests/kselftest_harness.h   |   3 +
- tools/testing/selftests/openat2/Makefile      |   3 +-
- tools/testing/selftests/openat2/config        |   1 +
- tools/testing/selftests/openat2/helpers.h     |   1 +
- .../testing/selftests/openat2/omayexec_test.c | 262 ++++++++++++++++++
- 5 files changed, 269 insertions(+), 1 deletion(-)
- create mode 100644 tools/testing/selftests/openat2/config
- create mode 100644 tools/testing/selftests/openat2/omayexec_test.c
-
-diff --git a/tools/testing/selftests/kselftest_harness.h b/tools/testing/selftests/kselftest_harness.h
-index c9f03ef93338..68a0acd9ea1e 100644
---- a/tools/testing/selftests/kselftest_harness.h
-+++ b/tools/testing/selftests/kselftest_harness.h
-@@ -50,7 +50,10 @@
- #ifndef __KSELFTEST_HARNESS_H
- #define __KSELFTEST_HARNESS_H
- 
-+#ifndef _GNU_SOURCE
- #define _GNU_SOURCE
-+#endif
-+
- #include <asm/types.h>
- #include <errno.h>
- #include <stdbool.h>
-diff --git a/tools/testing/selftests/openat2/Makefile b/tools/testing/selftests/openat2/Makefile
-index 4b93b1417b86..cb98bdb4d5b1 100644
---- a/tools/testing/selftests/openat2/Makefile
-+++ b/tools/testing/selftests/openat2/Makefile
-@@ -1,7 +1,8 @@
- # SPDX-License-Identifier: GPL-2.0-or-later
- 
- CFLAGS += -Wall -O2 -g -fsanitize=address -fsanitize=undefined
--TEST_GEN_PROGS := openat2_test resolve_test rename_attack_test
-+LDLIBS += -lcap
-+TEST_GEN_PROGS := openat2_test resolve_test rename_attack_test omayexec_test
- 
- include ../lib.mk
- 
-diff --git a/tools/testing/selftests/openat2/config b/tools/testing/selftests/openat2/config
-new file mode 100644
-index 000000000000..dd53c266bf52
---- /dev/null
-+++ b/tools/testing/selftests/openat2/config
-@@ -0,0 +1 @@
-+CONFIG_SYSCTL=y
-diff --git a/tools/testing/selftests/openat2/helpers.h b/tools/testing/selftests/openat2/helpers.h
-index a6ea27344db2..1dcd3e1e2f38 100644
---- a/tools/testing/selftests/openat2/helpers.h
-+++ b/tools/testing/selftests/openat2/helpers.h
-@@ -9,6 +9,7 @@
- 
- #define _GNU_SOURCE
- #include <stdint.h>
-+#include <stdbool.h>
- #include <errno.h>
- #include <linux/types.h>
- #include "../kselftest.h"
-diff --git a/tools/testing/selftests/openat2/omayexec_test.c b/tools/testing/selftests/openat2/omayexec_test.c
-new file mode 100644
-index 000000000000..a33f31e59045
---- /dev/null
-+++ b/tools/testing/selftests/openat2/omayexec_test.c
-@@ -0,0 +1,262 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Test O_MAYEXEC
-+ *
-+ * Copyright © 2018-2020 ANSSI
-+ *
-+ * Author: Mickaël Salaün <mic@digikod.net>
-+ */
-+
-+#include <errno.h>
-+#include <fcntl.h>
-+#include <stdio.h>
-+#include <stdlib.h>
-+#include <sys/capability.h>
-+#include <sys/mount.h>
-+#include <sys/stat.h>
-+#include <unistd.h>
-+
-+#include "helpers.h"
-+#include "../kselftest_harness.h"
-+
-+#ifndef O_MAYEXEC
-+#define O_MAYEXEC		040000000
-+#endif
-+
-+static const char sysctl_path[] = "/proc/sys/fs/open_mayexec_enforce";
-+
-+static const char workdir_path[] = "./test-mount";
-+static const char file_path[] = "./test-mount/file";
-+static const char dir_path[] = "./test-mount/directory";
-+
-+static void ignore_dac(struct __test_metadata *_metadata, int override)
-+{
-+	cap_t caps;
-+	const cap_value_t cap_val[2] = {
-+		CAP_DAC_OVERRIDE,
-+		CAP_DAC_READ_SEARCH,
-+	};
-+
-+	caps = cap_get_proc();
-+	ASSERT_NE(NULL, caps);
-+	ASSERT_EQ(0, cap_set_flag(caps, CAP_EFFECTIVE, 2, cap_val,
-+				override ? CAP_SET : CAP_CLEAR));
-+	ASSERT_EQ(0, cap_set_proc(caps));
-+	EXPECT_EQ(0, cap_free(caps));
-+}
-+
-+static void ignore_sys_admin(struct __test_metadata *_metadata, int override)
-+{
-+	cap_t caps;
-+	const cap_value_t cap_val[1] = {
-+		CAP_SYS_ADMIN,
-+	};
-+
-+	caps = cap_get_proc();
-+	ASSERT_NE(NULL, caps);
-+	ASSERT_EQ(0, cap_set_flag(caps, CAP_EFFECTIVE, 1, cap_val,
-+				override ? CAP_SET : CAP_CLEAR));
-+	ASSERT_EQ(0, cap_set_proc(caps));
-+	EXPECT_EQ(0, cap_free(caps));
-+}
-+
-+static void test_omx(struct __test_metadata *_metadata,
-+		const char *const path, const int err_code)
-+{
-+	struct open_how how = {
-+		.flags = O_RDONLY | O_CLOEXEC,
-+	};
-+	int fd;
-+
-+	/* Opens without O_MAYEXEC. */
-+	fd = sys_openat2(AT_FDCWD, path, &how);
-+	ASSERT_LE(0, fd);
-+	EXPECT_EQ(0, close(fd));
-+
-+	how.flags |= O_MAYEXEC;
-+
-+	/* Checks that O_MAYEXEC is ignored with open(2). */
-+	fd = open(path, how.flags);
-+	ASSERT_LE(0, fd);
-+	EXPECT_EQ(0, close(fd));
-+
-+	/* Checks that O_MAYEXEC is ignored with openat(2). */
-+	fd = openat(AT_FDCWD, path, how.flags);
-+	ASSERT_LE(0, fd);
-+	EXPECT_EQ(0, close(fd));
-+
-+	/* Opens with O_MAYEXEC. */
-+	fd = sys_openat2(AT_FDCWD, path, &how);
-+	if (!err_code) {
-+		ASSERT_LE(0, fd);
-+		EXPECT_EQ(0, close(fd));
-+	} else {
-+		ASSERT_EQ(err_code, fd);
-+	}
-+}
-+
-+static void test_omx_dir_file(struct __test_metadata *_metadata, const int err_code)
-+{
-+	test_omx(_metadata, dir_path, -EISDIR);
-+	test_omx(_metadata, file_path, err_code);
-+}
-+
-+static void test_dir_file(struct __test_metadata *_metadata, const int err_code)
-+{
-+	/* Tests as root. */
-+	ignore_dac(_metadata, 1);
-+	test_omx_dir_file(_metadata, err_code);
-+
-+	/* Tests without bypass. */
-+	ignore_dac(_metadata, 0);
-+	test_omx_dir_file(_metadata, err_code);
-+}
-+
-+static void sysctl_write_char(struct __test_metadata *_metadata, const char value)
-+{
-+	int fd;
-+
-+	fd = open(sysctl_path, O_WRONLY | O_CLOEXEC);
-+	ASSERT_LE(0, fd);
-+	ASSERT_EQ(1, write(fd, &value, 1));
-+	EXPECT_EQ(0, close(fd));
-+}
-+
-+static char sysctl_read_char(struct __test_metadata *_metadata)
-+{
-+	int fd;
-+	char sysctl_value;
-+
-+	fd = open(sysctl_path, O_RDONLY | O_CLOEXEC);
-+	ASSERT_LE(0, fd);
-+	ASSERT_EQ(1, read(fd, &sysctl_value, 1));
-+	EXPECT_EQ(0, close(fd));
-+	return sysctl_value;
-+}
-+
-+FIXTURE(omayexec) {
-+	char initial_sysctl_value;
-+};
-+
-+FIXTURE_VARIANT(omayexec) {
-+	const bool mount_exec;
-+	const bool file_exec;
-+	const int sysctl_err_code[3];
-+};
-+
-+FIXTURE_VARIANT_ADD(omayexec, mount_exec_file_exec) {
-+	.mount_exec = true,
-+	.file_exec = true,
-+	.sysctl_err_code = {0, 0, 0},
-+};
-+
-+FIXTURE_VARIANT_ADD(omayexec, mount_exec_file_noexec)
-+{
-+	.mount_exec = true,
-+	.file_exec = false,
-+	.sysctl_err_code = {0, -EACCES, -EACCES},
-+};
-+
-+FIXTURE_VARIANT_ADD(omayexec, mount_noexec_file_exec)
-+{
-+	.mount_exec = false,
-+	.file_exec = true,
-+	.sysctl_err_code = {-EACCES, 0, -EACCES},
-+};
-+
-+FIXTURE_VARIANT_ADD(omayexec, mount_noexec_file_noexec)
-+{
-+	.mount_exec = false,
-+	.file_exec = false,
-+	.sysctl_err_code = {-EACCES, -EACCES, -EACCES},
-+};
-+
-+FIXTURE_SETUP(omayexec)
-+{
-+	int fd;
-+
-+	/*
-+	 * Cleans previous workspace if any error previously happened (don't
-+	 * check errors).
-+	 */
-+	umount(workdir_path);
-+	rmdir(workdir_path);
-+
-+	/* Creates a clean mount point. */
-+	ASSERT_EQ(0, mkdir(workdir_path, 00700));
-+	ASSERT_EQ(0, mount("test", workdir_path, "tmpfs", MS_MGC_VAL |
-+				(variant->mount_exec ? 0 : MS_NOEXEC),
-+				"mode=0700,size=4k"));
-+
-+	/* Creates a test file. */
-+	fd = open(file_path, O_CREAT | O_RDONLY | O_CLOEXEC,
-+			variant->file_exec ? 00500 : 00400);
-+	ASSERT_LE(0, fd);
-+	EXPECT_EQ(0, close(fd));
-+
-+	/* Creates a test directory. */
-+	ASSERT_EQ(0, mkdir(dir_path, variant->file_exec ? 00500 : 00400));
-+
-+	/* Saves initial sysctl value. */
-+	self->initial_sysctl_value = sysctl_read_char(_metadata);
-+
-+	/* Prepares for sysctl writes. */
-+	ignore_sys_admin(_metadata, 1);
-+}
-+
-+FIXTURE_TEARDOWN(omayexec)
-+{
-+	/* Restores initial sysctl value. */
-+	sysctl_write_char(_metadata, self->initial_sysctl_value);
-+
-+	/* There is no need to unlink file_path nor dir_path. */
-+	ASSERT_EQ(0, umount(workdir_path));
-+	ASSERT_EQ(0, rmdir(workdir_path));
-+}
-+
-+TEST_F(omayexec, sysctl_0)
-+{
-+	/* Do not enforce anything. */
-+	sysctl_write_char(_metadata, '0');
-+	test_dir_file(_metadata, 0);
-+}
-+
-+TEST_F(omayexec, sysctl_1)
-+{
-+	/* Enforces mount exec check. */
-+	sysctl_write_char(_metadata, '1');
-+	test_dir_file(_metadata, variant->sysctl_err_code[0]);
-+}
-+
-+TEST_F(omayexec, sysctl_2)
-+{
-+	/* Enforces file exec check. */
-+	sysctl_write_char(_metadata, '2');
-+	test_dir_file(_metadata, variant->sysctl_err_code[1]);
-+}
-+
-+TEST_F(omayexec, sysctl_3)
-+{
-+	/* Enforces mount and file exec check. */
-+	sysctl_write_char(_metadata, '3');
-+	test_dir_file(_metadata, variant->sysctl_err_code[2]);
-+}
-+
-+TEST(sysctl_access_write)
-+{
-+	int fd;
-+	ssize_t ret;
-+
-+	ignore_sys_admin(_metadata, 1);
-+	sysctl_write_char(_metadata, '0');
-+
-+	ignore_sys_admin(_metadata, 0);
-+	fd = open(sysctl_path, O_WRONLY | O_CLOEXEC);
-+	ASSERT_LE(0, fd);
-+	ret = write(fd, "0", 1);
-+	ASSERT_EQ(-1, ret);
-+	ASSERT_EQ(EPERM, errno);
-+	EXPECT_EQ(0, close(fd));
-+}
-+
-+TEST_HARNESS_MAIN
--- 
-2.27.0
-
+> > Changes v1->v2:
+> > - Add Wei Liu's Reviewed-by
+> > - Add note to clarify my patch is independent from Jian's patch
+> > - Add link to latest version of Jian's patch
+> >
+> >  arch/x86/include/asm/idtentry.h | 4 ++--
+> >  1 file changed, 2 insertions(+), 2 deletions(-)
+> >
+> > diff --git a/arch/x86/include/asm/idtentry.h b/arch/x86/include/asm/idtentry.h
+> > index eeac6dc2adaa..d79541bfc36f 100644
+> > --- a/arch/x86/include/asm/idtentry.h
+> > +++ b/arch/x86/include/asm/idtentry.h
+> > @@ -626,8 +626,8 @@ DECLARE_IDTENTRY_SYSVEC(POSTED_INTR_NESTED_VECTOR,  sysvec_kvm_posted_intr_nested
+> >
+> >  #if IS_ENABLED(CONFIG_HYPERV)
+> >  DECLARE_IDTENTRY_SYSVEC(HYPERVISOR_CALLBACK_VECTOR,    sysvec_hyperv_callback);
+> > -DECLARE_IDTENTRY_SYSVEC(HYPERVISOR_REENLIGHTENMENT_VECTOR,     sysvec_hyperv_reenlightenment);
+> > -DECLARE_IDTENTRY_SYSVEC(HYPERVISOR_STIMER0_VECTOR,     sysvec_hyperv_stimer0);
+> > +DECLARE_IDTENTRY_SYSVEC(HYPERV_REENLIGHTENMENT_VECTOR, sysvec_hyperv_reenlightenment);
+> > +DECLARE_IDTENTRY_SYSVEC(HYPERV_STIMER0_VECTOR, sysvec_hyperv_stimer0);
+> >  #endif
+> >
+> >  #if IS_ENABLED(CONFIG_ACRN_GUEST)
+> > --
+>
+> --
+> Thanks,
+> ~Nick Desaulniers
