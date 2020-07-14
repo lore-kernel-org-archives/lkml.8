@@ -2,179 +2,234 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4410AC433E5
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 17:32:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB09AC433E2
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 17:32:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1A2DC2074A
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 17:32:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C43A022518
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 17:32:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tHaFTot1"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="I4yd2tYC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728933AbgGNRcJ (ORCPT
+        id S1728969AbgGNRce (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 13:32:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54368 "EHLO
+        Tue, 14 Jul 2020 13:32:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54434 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726169AbgGNRcI (ORCPT
+        with ESMTP id S1726169AbgGNRcd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 13:32:08 -0400
-Received: from mail-io1-xd42.google.com (mail-io1-xd42.google.com [IPv6:2607:f8b0:4864:20::d42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 42F37C061755;
-        Tue, 14 Jul 2020 10:32:08 -0700 (PDT)
-Received: by mail-io1-xd42.google.com with SMTP id i4so18122403iov.11;
-        Tue, 14 Jul 2020 10:32:08 -0700 (PDT)
+        Tue, 14 Jul 2020 13:32:33 -0400
+Received: from mail-vs1-xe41.google.com (mail-vs1-xe41.google.com [IPv6:2607:f8b0:4864:20::e41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8FDB7C061755
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 10:32:33 -0700 (PDT)
+Received: by mail-vs1-xe41.google.com with SMTP id a17so8945194vsq.6
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 10:32:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=fyd1Yem61aBK9j4xH0v8TMCTQl2WFmnBvLzZWnwdnEc=;
-        b=tHaFTot19KPHp0MlA0uocYvaOfJzaYZ5AoPy3T9fENTCX/ku/bwFYSdr5A461u5H/B
-         xbGJA30Vt6hsgAc6nl3XF22cNxedx4Px4/vwAsBod5/hmk8YP1vE0/hHw7zP03NEGraw
-         D/siRebVYWD9N+/1mOlVmPN/7TlJ77LGx7Ynxyi4kBO2svfB7/D8lvqexWnc4oV1x2Bh
-         zRs9q+7R218hm3SarF5+KQ8/toBryohiSFcxyv6Ij/7Dt2YZi2KlyEkc430bayEZPYhF
-         OhbWsp2jJ2VNZjFuSBvyM6plx4Gq4PtxhHrRtqIatdjHSuqJKUegDO0Sy28+QlYoD6sW
-         JPHg==
+        bh=wKQqoE49hY1h24A/ULTRwztiia1lkZDkVuV1AI5gZxk=;
+        b=I4yd2tYCFpKnBAEJVZuPcvzbUCV4m/tg5VgJt6FqT4ufqa7EoCc4B2aKyESglcBlgX
+         PLu4FPf8UWVCaeYsW+RGc0mQb7Hv5XWWXtexPhjFNgPDsY5V4ftKWElKMV0Tws+zwAXk
+         qsZVPa5AxaahaIkc+inzI2cbFValQXQJWPdaYnZnwX4h/kTbqoBfVobXHqN6ZWuUDQm3
+         VWmf8+5x8A8U3rMjwf9AVK0Csnfu+RnYYvDQ+uONGJpdU7Lot0o+ZjDbTCYt3RmkJsca
+         EjLT2sGS9FszEK9xAw75LgkHEDZZapEbvAe0j1E/OvfVxw/WQI1UTWnQoiWZXYQZwWH/
+         VhJg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=fyd1Yem61aBK9j4xH0v8TMCTQl2WFmnBvLzZWnwdnEc=;
-        b=b58tivEr64G/fnUz3qPLMZb2kW+SKNbuQgLDavUSNGTVLW746UsGCHIzU3qp7+KKcf
-         DwtT0FDUYjNYCPv9hNmOAv0IKMj11yg6tDE/sC+hNSHyxhXn0MyS2udRgnSmwywRfM/Q
-         yZ1IebrObNINIfQ15JuahBWzuDviE83haOyqvlIOETZpMyJJdtFwHLyvddXzXc0mhL1c
-         gBC9y1W9EUXN4YXLgca2vwdn+kZA/7c/W+yND6vM0vUxc8sMHurzA0pVxGmt9DyzQcx2
-         aQFppQQxqTimQP5O9tW/+LVADgDgCP717Xj5SBVCERSchXlKPLtaGTDA0G2NHaQfbixF
-         0tiA==
-X-Gm-Message-State: AOAM531NcfrDS9Nl0eMjQ+1ZhZBjPHgRKQhF20tzfovAeRU72OA0flqV
-        a4hFHPspGA6hwoAt540Ca5tMy4DouYSkYwF12/aEpYGM
-X-Google-Smtp-Source: ABdhPJx1N5E0GF7/F0ba6GbZ0mPoX1MKXs80ni9M2TowfvxnnTLsD0VvV0KlxZLoPSUGdtczPlbRSc4bn9Y0Z5hlfSg=
-X-Received: by 2002:a6b:2b12:: with SMTP id r18mr5852785ior.88.1594747927418;
- Tue, 14 Jul 2020 10:32:07 -0700 (PDT)
+        bh=wKQqoE49hY1h24A/ULTRwztiia1lkZDkVuV1AI5gZxk=;
+        b=VvB0pJI6fiabX+i80lxqCVnMawGZWj/v4220ZM2DIw3v+tfI0atT1HinE9JziT+6ih
+         QbfesCKrawv8N9nps9qLsyi3PRe3griDxSyFrVAbBwUMUVi0MyoXs+5KNl2vhdKcRoEQ
+         4tg94JskIqiSfmqunRgzaK64KUJ63FYNuF0SIPYp/BW9T5ooljvU6X1U5RUKGIL4In5i
+         Sp5Hro2PK618XMuxCyI2OrSOX9Ie3nTmd2YrcFEzKmsyISHiAAKVwjF15+1rUgwwNlwb
+         0Gqgy9A8Z5HbL4PHgLwM6jcsW2rwX8lCkyM60we9M6usEkIUvjashgYkB9MG0Z+PS6HH
+         eZPQ==
+X-Gm-Message-State: AOAM530RzQXy4Mx8SfxFOZDbQLdSCIetT82Euenr0xl5C+JAIYryyriu
+        h11HtqEg64yNPSjw5iJMj2yBzVME8ApxPwb40pnxYw==
+X-Google-Smtp-Source: ABdhPJwqIAsR0maZT2/rFgCAmd2x6qhrpX0RcDNO/WUFfXhQmZZ7p9b7sNbXzqCJmWk2gEmDf2IPXFGRTWsIZ2b9Ia0=
+X-Received: by 2002:a67:ed82:: with SMTP id d2mr4484456vsp.221.1594747952390;
+ Tue, 14 Jul 2020 10:32:32 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200710113046.421366-1-mst@redhat.com> <CAKgT0UeZN+mOWNhgiT0btZTyki3TPoj7pbqA+__GkCxoifPqeg@mail.gmail.com>
- <20200712105926-mutt-send-email-mst@kernel.org> <CAKgT0UdY1xpEH1Hg4HWJEkGwH5s64sm1y4O_XmHe8P_f=tDhpg@mail.gmail.com>
- <20200714044017-mutt-send-email-mst@kernel.org>
-In-Reply-To: <20200714044017-mutt-send-email-mst@kernel.org>
-From:   Alexander Duyck <alexander.duyck@gmail.com>
-Date:   Tue, 14 Jul 2020 10:31:56 -0700
-Message-ID: <CAKgT0Ud_AFpB-=uCB_3qY8pFvG9Kj7OFSmFG76LZC9K91oUG2w@mail.gmail.com>
-Subject: Re: [PATCH] virtio_balloon: clear modern features under legacy
-To:     "Michael S. Tsirkin" <mst@redhat.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>, stable@vger.kernel.org,
-        David Hildenbrand <david@redhat.com>,
-        Jason Wang <jasowang@redhat.com>,
-        virtualization@lists.linux-foundation.org
+References: <0000000000000b5f9d059aa2037f@google.com> <20200714033252.8748-1-hdanton@sina.com>
+ <20200714053205.15240-1-hdanton@sina.com> <20200714140859.15156-1-hdanton@sina.com>
+ <20200714141815.GP24642@dhcp22.suse.cz> <CAHRSSEzbCW3E0QTR0ryf3p=5J5uhs_vY2D6fFQEzP=HeCDkPGQ@mail.gmail.com>
+ <CAJuCfpExhJJO_xPk663-eUkmAXVVwNDd9a7ahQuwMW8JVMBJpg@mail.gmail.com>
+In-Reply-To: <CAJuCfpExhJJO_xPk663-eUkmAXVVwNDd9a7ahQuwMW8JVMBJpg@mail.gmail.com>
+From:   Suren Baghdasaryan <surenb@google.com>
+Date:   Tue, 14 Jul 2020 10:32:20 -0700
+Message-ID: <CAJuCfpFz9kEfTPxcausVj63mUvU7i6Dvv6=KNePVX2qR+-Ci2A@mail.gmail.com>
+Subject: Re: possible deadlock in shmem_fallocate (4)
+To:     Todd Kjos <tkjos@google.com>
+Cc:     Michal Hocko <mhocko@kernel.org>,
+        Hridya Valsaraju <hridya@google.com>,
+        Hillf Danton <hdanton@sina.com>,
+        Eric Biggers <ebiggers@kernel.org>,
+        syzbot <syzbot+7a0d9d0b26efefe61780@syzkaller.appspotmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        =?UTF-8?B?QXJ2ZSBIasO4bm5ldsOlZw==?= <arve@android.com>,
+        Christian Brauner <christian@brauner.io>,
+        "open list:ANDROID DRIVERS" <devel@driverdev.osuosl.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Hugh Dickins <hughd@google.com>,
+        "Joel Fernandes (Google)" <joel@joelfernandes.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux-MM <linux-mm@kvack.org>, Martijn Coenen <maco@android.com>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        Todd Kjos <tkjos@android.com>,
+        Markus Elfring <Markus.Elfring@web.de>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 14, 2020 at 1:45 AM Michael S. Tsirkin <mst@redhat.com> wrote:
+On Tue, Jul 14, 2020 at 9:41 AM Suren Baghdasaryan <surenb@google.com> wrote:
 >
-> On Mon, Jul 13, 2020 at 08:10:14AM -0700, Alexander Duyck wrote:
-> > On Sun, Jul 12, 2020 at 8:10 AM Michael S. Tsirkin <mst@redhat.com> wrote:
-> > >
-> > > On Fri, Jul 10, 2020 at 09:13:41AM -0700, Alexander Duyck wrote:
-> > > > On Fri, Jul 10, 2020 at 4:31 AM Michael S. Tsirkin <mst@redhat.com> wrote:
-> > > > >
-
-<snip>
-
-> > > As you say correctly the command id is actually assumed native endian:
-> > >
-> > >
-> > > static u32 virtio_balloon_cmd_id_received(struct virtio_balloon *vb)
-> > > {
-> > >         if (test_and_clear_bit(VIRTIO_BALLOON_CONFIG_READ_CMD_ID,
-> > >                                &vb->config_read_bitmap))
-> > >                 virtio_cread(vb->vdev, struct virtio_balloon_config,
-> > >                              free_page_hint_cmd_id,
-> > >                              &vb->cmd_id_received_cache);
-> > >
-> > >         return vb->cmd_id_received_cache;
-> > > }
-> > >
-> > >
-> > > So guest assumes native, host assumes LE.
+> On Tue, Jul 14, 2020 at 8:47 AM Todd Kjos <tkjos@google.com> wrote:
 > >
-> > This wasn't even the one I was talking about, but now that you point
-> > it out this is definately bug. The command ID I was talking about was
-> > the one being passed via the descriptor ring. That one I believe is
-> > native on both sides.
+> > +Suren Baghdasaryan +Hridya Valsaraju who support the ashmem driver.
 >
-> Well qemu swaps it for modern devices:
+> Thanks for looping me in.
 >
->         virtio_tswap32s(vdev, &id);
->
-> guest swaps it too:
->         vb->cmd_id_active = cpu_to_virtio32(vb->vdev,
->                                         virtio_balloon_cmd_id_received(vb));
->         sg_init_one(&sg, &vb->cmd_id_active, sizeof(vb->cmd_id_active));
->         err = virtqueue_add_outbuf(vq, &sg, 1, &vb->cmd_id_active, GFP_KERNEL);
->
-> So it's native for legacy.
-
-Okay, that makes sense. I just wasn't familiar with the virtio32 type.
-
-I guess that just means we need to fix the original issue you found
-where the guest was assuming native for the command ID in the config.
-Do you plan to patch that or should I?
-
-> > >
-> > >
-> > >
-> > > > > ---
-> > > > >  drivers/virtio/virtio_balloon.c | 9 +++++++++
-> > > > >  1 file changed, 9 insertions(+)
-> > > > >
-> > > > > diff --git a/drivers/virtio/virtio_balloon.c b/drivers/virtio/virtio_balloon.c
-> > > > > index 5d4b891bf84f..b9bc03345157 100644
-> > > > > --- a/drivers/virtio/virtio_balloon.c
-> > > > > +++ b/drivers/virtio/virtio_balloon.c
-> > > > > @@ -1107,6 +1107,15 @@ static int virtballoon_restore(struct virtio_device *vdev)
-> > > > >
-> > > > >  static int virtballoon_validate(struct virtio_device *vdev)
-> > > > >  {
-> > > > > +       /*
-> > > > > +        * Legacy devices never specified how modern features should behave.
-> > > > > +        * E.g. which endian-ness to use? Better not to assume anything.
-> > > > > +        */
-> > > > > +       if (!virtio_has_feature(vdev, VIRTIO_F_VERSION_1)) {
-> > > > > +               __virtio_clear_bit(vdev, VIRTIO_BALLOON_F_FREE_PAGE_HINT);
-> > > > > +               __virtio_clear_bit(vdev, VIRTIO_BALLOON_F_PAGE_POISON);
-> > > > > +               __virtio_clear_bit(vdev, VIRTIO_BALLOON_F_REPORTING);
-> > > > > +       }
-> > > > >         /*
-> > > > >          * Inform the hypervisor that our pages are poisoned or
-> > > > >          * initialized. If we cannot do that then we should disable
-> > > >
-> > > > The patch content itself I am fine with since odds are nobody would
-> > > > expect to use these features with a legacy device.
-> > > >
-> > > > Acked-by: Alexander Duyck <alexander.h.duyck@linux.intel.com>
-> > >
-> > > Hmm so now you pointed out it's just cmd id, maybe I should just fix it
-> > > instead? what do you say?
 > >
-> > So the config issues are bugs, but I don't think you saw the one I was
-> > talking about. In the function send_cmd_id_start the cmd_id_active
-> > value which is initialized as a virtio32 is added as a sg entry and
-> > then sent as an outbuf to the device. I'm assuming virtio32 is a host
-> > native byte ordering.
+> >
+> > On Tue, Jul 14, 2020 at 7:18 AM Michal Hocko <mhocko@kernel.org> wrote:
+> > >
+> > > On Tue 14-07-20 22:08:59, Hillf Danton wrote:
+> > > >
+> > > > On Tue, 14 Jul 2020 10:26:29 +0200 Michal Hocko wrote:
+> > > > > On Tue 14-07-20 13:32:05, Hillf Danton wrote:
+> > > > > >
+> > > > > > On Mon, 13 Jul 2020 20:41:11 -0700 Eric Biggers wrote:
+> > > > > > > On Tue, Jul 14, 2020 at 11:32:52AM +0800, Hillf Danton wrote:
+> > > > > > > >
+> > > > > > > > Add FALLOC_FL_NOBLOCK and on the shmem side try to lock inode upon the
+> > > > > > > > new flag. And the overall upside is to keep the current gfp either in
+> > > > > > > > the khugepaged context or not.
+> > > > > > > >
+> > > > > > > > --- a/include/uapi/linux/falloc.h
+> > > > > > > > +++ b/include/uapi/linux/falloc.h
+> > > > > > > > @@ -77,4 +77,6 @@
+> > > > > > > >   */
+> > > > > > > >  #define FALLOC_FL_UNSHARE_RANGE              0x40
+> > > > > > > >
+> > > > > > > > +#define FALLOC_FL_NOBLOCK            0x80
+> > > > > > > > +
+> > > > > > >
+> > > > > > > You can't add a new UAPI flag to fix a kernel-internal problem like this.
+> > > > > >
+> > > > > > Sounds fair, see below.
+> > > > > >
+> > > > > > What the report indicates is a missing PF_MEMALLOC_NOFS and it's
+> > > > > > checked on the ashmem side and added as an exception before going
+> > > > > > to filesystem. On shmem side, no more than a best effort is paid
+> > > > > > on the inteded exception.
+> > > > > >
+> > > > > > --- a/drivers/staging/android/ashmem.c
+> > > > > > +++ b/drivers/staging/android/ashmem.c
+> > > > > > @@ -437,6 +437,7 @@ static unsigned long
+> > > > > >  ashmem_shrink_scan(struct shrinker *shrink, struct shrink_control *sc)
+> > > > > >  {
+> > > > > >   unsigned long freed = 0;
+> > > > > > + bool nofs;
+> > > > > >
+> > > > > >   /* We might recurse into filesystem code, so bail out if necessary */
+> > > > > >   if (!(sc->gfp_mask & __GFP_FS))
+> > > > > > @@ -445,6 +446,11 @@ ashmem_shrink_scan(struct shrinker *shri
+> > > > > >   if (!mutex_trylock(&ashmem_mutex))
+> > > > > >           return -1;
+> > > > > >
+> > > > > > + /* enter filesystem with caution: nonblock on locking */
+> > > > > > + nofs = current->flags & PF_MEMALLOC_NOFS;
+> > > > > > + if (!nofs)
+> > > > > > +         current->flags |= PF_MEMALLOC_NOFS;
+> > > > > > +
+> > > > > >   while (!list_empty(&ashmem_lru_list)) {
+> > > > > >           struct ashmem_range *range =
+> > > > > >                   list_first_entry(&ashmem_lru_list, typeof(*range), lru);
+> > > > >
+> > > > > I do not think this is an appropriate fix. First of all is this a real
+> > > > > deadlock or a lockdep false positive? Is it possible that ashmem just
+> > > >
+> > > > The warning matters and we can do something to quiesce it.
+> > >
+> > > The underlying issue should be fixed rather than _something_ done to
+> > > silence it.
+> > >
+> > > > > needs to properly annotate its shmem inodes? Or is it possible that
+> > > > > the internal backing shmem file is visible to the userspace so the write
+> > > > > path would be possible?
+> > > > >
+> > > > > If this a real problem then the proper fix would be to set internal
+> > > > > shmem mapping's gfp_mask to drop __GFP_FS.
+> > > >
+> > > > Thanks for the tip, see below.
+> > > >
+> > > > Can you expand a bit on how it helps direct reclaimers like khugepaged
+> > > > in the syzbot report wrt deadlock?
+> > >
+> > > I do not understand your question.
+> > >
+> > > > TBH I have difficult time following
+> > > > up after staring at the chart below for quite a while.
+> > >
+> > > Yes, lockdep reports are quite hard to follow and they tend to confuse
+> > > one hell out of me. But this one says that there is a reclaim dependency
+> > > between the shmem inode lock and the reclaim context.
+> > >
+> > > > Possible unsafe locking scenario:
+> > > >
+> > > >        CPU0                    CPU1
+> > > >        ----                    ----
+> > > >   lock(fs_reclaim);
+> > > >                                lock(&sb->s_type->i_mutex_key#15);
+> > > >                                lock(fs_reclaim);
+> > > >
+> > > >   lock(&sb->s_type->i_mutex_key#15);
+> > >
+> > > Please refrain from proposing fixes until the actual problem is
+> > > understood. I suspect that this might be just false positive because the
+> > > lockdep cannot tell the backing shmem which is internal to ashmem(?)
+> > > with any general shmem.
+
+Actually looking some more into this, I think you are right. Ashmem
+currently does not redirect writes into the backing shmem and
+fallocate call from ashmem_shrink_scan is always performed against
+asma->file, which is the backing shmem. IOW writes into the backing
+shmem are not supported, therefore this concurrent locking can't
+happen.
+
+I'm not sure how we can annotate the fact that the inode_lock in
+generic_file_write_iter and in shmem_fallocate always operate on
+different inodes. Ideas?
+
+> > >  But somebody really familiar with ashmem code
+> > > should have a look I believe.
 >
-> IIUC it isn't :) virtio32 is guest native if device is legacy, and LE if
-> device is modern.
-
-Okay. So I should probably document that for the spec I have been
-working on. It looks like there is an example of similar documentation
-for the memory statistics so it should be pretty straight forward.
-
-Thanks.
-
-- Alex
+> I believe the deadlock is possible if a write to ashmem fd coincides
+> with shrinking of ashmem caches. I just developed a possible fix here
+> https://android-review.googlesource.com/c/kernel/common/+/1361205 but
+> wanted to test it before posting upstream. The idea is to detect such
+> a race between write and cache shrinking operations and let
+> ashmem_shrink_scan bail out if the race is detected instead of taking
+> inode_lock. AFAIK writing ashmem files is not a usual usage for ashmem
+> (standard usage is to mmap it and use as shared memory), therefore
+> this bailing out early should not affect ashmem cache maintenance
+> much. Besides ashmem_shrink_scan already bails out early if a
+> contention on ashmem_mutex is detected, which is a much more probable
+> case (see: https://elixir.bootlin.com/linux/v5.8-rc4/source/drivers/staging/android/ashmem.c#L497).
+>
+> I'll test and post the patch here in a day or so if there are no early
+> objections to it.
+> Thanks!
+>
+> > >
+> > > --
+> > > Michal Hocko
+> > > SUSE Labs
