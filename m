@@ -2,206 +2,147 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0321C433E6
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 00:32:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A101EC433E2
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 00:36:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BA9CB2186A
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 00:32:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7CCA621835
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 00:36:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="RjJpjRvC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727105AbgGNAcV (ORCPT
+        id S1726815AbgGNAgI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 20:32:21 -0400
-Received: from mail-io1-f70.google.com ([209.85.166.70]:54542 "EHLO
-        mail-io1-f70.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726347AbgGNAcV (ORCPT
+        Mon, 13 Jul 2020 20:36:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38654 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726345AbgGNAgH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 20:32:21 -0400
-Received: by mail-io1-f70.google.com with SMTP id q207so9304897iod.21
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 17:32:20 -0700 (PDT)
+        Mon, 13 Jul 2020 20:36:07 -0400
+Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4CACFC061794
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 17:36:07 -0700 (PDT)
+Received: by mail-pf1-x441.google.com with SMTP id a14so6808725pfi.2
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 17:36:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=A7lpw6xuEk98E7l/Wdgz5P9zvThUyBZ2UkYBSt1Hrdo=;
+        b=RjJpjRvCeLyEGpg4MIYDt/ZGKyckJkPDjyT4JZAk6F8Zjul6IXJY/mNRnwqtUXKLLs
+         hs5kBKjpaeqx/ZOx1JR3zh+Ekb9aGAl9d5RmQq3GJyz0u1vkJCUMbPizqbQRmbBxufTf
+         VGxEHkDEfwsPwbmHPG9bzuaridwPz03UJUv5I=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to;
-        bh=OGa5G8n9bZSpejkRGng5nhRd6WfkeHtlnbdqdO/BRyQ=;
-        b=tmoLf+Jefp65X5KkV2tMjRDS69Lt0r1/YSjyp29SM6qNnWQBYKO00+iRmb3roSj7Q2
-         Ar4lf8i25z/Kybf8pYX3hVG9kH4ZEK5mAwdyN06f7kR45DGCXwLhOHLhdA17TF4Svjxi
-         3M9F+0iIwbl3F2eZT9cW0TcnZ1+BxmxeDbZ0EL3x29WFoYcCE0MRpl54fJVCmj1QsF+7
-         FWkeERuUY+4WfQLrPa9I8+2MEvJjVGoUoLZZdN3JjggsQGWvYwRg53LhAqQNM5SFidCX
-         jGWJ0pmgPhdskYYRreYmKdOVmFcXpw8Fz9kWTz3Fort7wZjPyVhsAJnW2ftZFhifY/Su
-         Bepg==
-X-Gm-Message-State: AOAM5333uVsehdM7hNp4gEw8QK2uSklos0FQG1uLz2KWCFHCGNd6I1xk
-        jI6AAXIXmmMA4bHcbnRjNFoiDc+SHfW4Hqc18SsOVM7PbtMz
-X-Google-Smtp-Source: ABdhPJx5DwzfkB6I2G9+hljAKUAib2JL32Jwa4rHT+H0YyulfDtDPBKyd9eXlIGroJVMldB3rH9jqzpI/RS4bdYj99rGyMZ2+UPE
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=A7lpw6xuEk98E7l/Wdgz5P9zvThUyBZ2UkYBSt1Hrdo=;
+        b=QbTn1iKze8VlbZXgK6B1lKzivRC9ATFTKO5wohiz1tsqF4CLf3bA/7VTzhGsN/PSIP
+         lXkHK02HFI62Vq8hJpeLSXpbILhHiE4davXlL2uDvTJyIA1aAI6DWx5lCBLtqFBHVQpI
+         nsdiQaMmi/JwKzJ4PDzwoz/KlQPH690UjFG3uBms37sR+1nYFslW82bje42vnxMh4Y1A
+         cSI7o8r1uz6El06ZBqeqJJuVlhEVP9374vTIEAYImiWpXuLw/NPRCtg34Gc3sHgblNoN
+         9X7kCgqlGj81FAmXS9C+Klupir+BgTbqa1MV83vctTw6ggBqGwypZ5/PZdiQfH0nOysy
+         IpHQ==
+X-Gm-Message-State: AOAM530AoX5l0frOYJWRQ7gu1CMTPLN5h89Jsr72zozyeCvjuqv3bCJE
+        iGYRR8b/vo29Qjc5Qn02ae/UBg==
+X-Google-Smtp-Source: ABdhPJxHMHL3gvRbWi8K6hyKlsY+h7vOtYivEYiBYHkW/4wu/JcZ+ysku+NUBYwSAHd9i63V7asVEw==
+X-Received: by 2002:a63:e24d:: with SMTP id y13mr1415981pgj.248.1594686966735;
+        Mon, 13 Jul 2020 17:36:06 -0700 (PDT)
+Received: from localhost ([2620:15c:202:1:f693:9fff:fef4:e70a])
+        by smtp.gmail.com with ESMTPSA id 186sm15402499pfe.1.2020.07.13.17.36.05
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 13 Jul 2020 17:36:05 -0700 (PDT)
+Date:   Mon, 13 Jul 2020 17:36:03 -0700
+From:   Matthias Kaehlcke <mka@chromium.org>
+To:     Rajendra Nayak <rnayak@codeaurora.org>
+Cc:     stanimir.varbanov@linaro.org, agross@kernel.org,
+        bjorn.andersson@linaro.org, linux-media@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 3/3] arm64: dts: sc7180: Add OPP tables and power-domains
+ for venus
+Message-ID: <20200714003603.GP3191083@google.com>
+References: <1593603638-19296-1-git-send-email-rnayak@codeaurora.org>
+ <1593603638-19296-4-git-send-email-rnayak@codeaurora.org>
+ <20200701165414.GB3191083@google.com>
+ <1ce702e1-6deb-8f13-3e17-38170b136b2c@codeaurora.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6638:16c9:: with SMTP id g9mr3094436jat.118.1594686739674;
- Mon, 13 Jul 2020 17:32:19 -0700 (PDT)
-Date:   Mon, 13 Jul 2020 17:32:19 -0700
-In-Reply-To: <0000000000000b5f9d059aa2037f@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000a5797805aa5bf03e@google.com>
-Subject: Re: possible deadlock in shmem_fallocate (4)
-From:   syzbot <syzbot+7a0d9d0b26efefe61780@syzkaller.appspotmail.com>
-To:     akpm@linux-foundation.org, arve@android.com, christian@brauner.io,
-        devel@driverdev.osuosl.org, ebiggers@kernel.org,
-        gregkh@linuxfoundation.org, hdanton@sina.com, hughd@google.com,
-        joel@joelfernandes.org, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, maco@android.com,
-        syzkaller-bugs@googlegroups.com, tkjos@android.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <1ce702e1-6deb-8f13-3e17-38170b136b2c@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-syzbot has found a reproducer for the following crash on:
+On Thu, Jul 02, 2020 at 02:26:14PM +0530, Rajendra Nayak wrote:
+> 
+> On 7/1/2020 10:24 PM, Matthias Kaehlcke wrote:
+> > On Wed, Jul 01, 2020 at 05:10:38PM +0530, Rajendra Nayak wrote:
+> > > Add the OPP tables in order to be able to vote on the performance state
+> > > of a power-domain
+> > > 
+> > > Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
+> > > ---
+> > >   arch/arm64/boot/dts/qcom/sc7180.dtsi | 35 +++++++++++++++++++++++++++++++++--
+> > >   1 file changed, 33 insertions(+), 2 deletions(-)
+> > > 
+> > > diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> > > index ad57df2..738a741 100644
+> > > --- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> > > +++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> > > @@ -2392,8 +2392,10 @@
+> > >   			reg = <0 0x0aa00000 0 0xff000>;
+> > >   			interrupts = <GIC_SPI 174 IRQ_TYPE_LEVEL_HIGH>;
+> > >   			power-domains = <&videocc VENUS_GDSC>,
+> > > -					<&videocc VCODEC0_GDSC>;
+> > > -			power-domain-names = "venus", "vcodec0";
+> > > +					<&videocc VCODEC0_GDSC>,
+> > > +					<&rpmhpd SC7180_CX>;
+> > > +			power-domain-names = "venus", "vcodec0", "opp-pd";
+> > > +			operating-points-v2 = <&venus_opp_table>;
+> > >   			clocks = <&videocc VIDEO_CC_VENUS_CTL_CORE_CLK>,
+> > >   				 <&videocc VIDEO_CC_VENUS_AHB_CLK>,
+> > >   				 <&videocc VIDEO_CC_VENUS_CTL_AXI_CLK>,
+> > > @@ -2414,6 +2416,35 @@
+> > >   			video-encoder {
+> > >   				compatible = "venus-encoder";
+> > >   			};
+> > > +
+> > > +			venus_opp_table: venus-opp-table {
+> > > +				compatible = "operating-points-v2";
+> > > +
+> > > +				opp-200000000 {
+> > > +					opp-hz = /bits/ 64 <150000000>;
+> > > +					required-opps = <&rpmhpd_opp_low_svs>;
+> > > +				};
+> > > +
+> > > +				opp-320000000 {
+> > > +					opp-hz = /bits/ 64 <270000000>;
+> > > +					required-opps = <&rpmhpd_opp_svs>;
+> > > +				};
+> > > +
+> > > +				opp-380000000 {
+> > > +					opp-hz = /bits/ 64 <340000000>;
+> > > +					required-opps = <&rpmhpd_opp_svs_l1>;
+> > > +				};
+> > > +
+> > > +				opp-444000000 {
+> > > +					opp-hz = /bits/ 64 <434000000>;
+> > > +					required-opps = <&rpmhpd_opp_nom>;
+> > > +				};
+> > > +
+> > > +				opp-533000000 {
+> > > +					opp-hz = /bits/ 64 <500000000>;
+> > > +					required-opps = <&rpmhpd_opp_turbo>;
+> > > +				};
+> > 
+> > the labels of the OPP nodes don't match the specified frequencies
+> 
+> Oops, I'll fix and respin.
 
-HEAD commit:    11ba4688 Linux 5.8-rc5
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=13f1bf47100000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=a160d1053fc89af5
-dashboard link: https://syzkaller.appspot.com/bug?extid=7a0d9d0b26efefe61780
-compiler:       gcc (GCC) 10.1.0-syz 20200507
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1181004f100000
-
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+7a0d9d0b26efefe61780@syzkaller.appspotmail.com
-
-======================================================
-WARNING: possible circular locking dependency detected
-5.8.0-rc5-syzkaller #0 Not tainted
-------------------------------------------------------
-khugepaged/1157 is trying to acquire lock:
-ffff88809272e910 (&sb->s_type->i_mutex_key#15){+.+.}-{3:3}, at: inode_lock include/linux/fs.h:800 [inline]
-ffff88809272e910 (&sb->s_type->i_mutex_key#15){+.+.}-{3:3}, at: shmem_fallocate+0x153/0xd90 mm/shmem.c:2707
-
-but task is already holding lock:
-ffffffff89c6c260 (fs_reclaim){+.+.}-{0:0}, at: fs_reclaim_release mm/page_alloc.c:4202 [inline]
-ffffffff89c6c260 (fs_reclaim){+.+.}-{0:0}, at: fs_reclaim_release mm/page_alloc.c:4198 [inline]
-ffffffff89c6c260 (fs_reclaim){+.+.}-{0:0}, at: __perform_reclaim mm/page_alloc.c:4227 [inline]
-ffffffff89c6c260 (fs_reclaim){+.+.}-{0:0}, at: __alloc_pages_direct_reclaim mm/page_alloc.c:4244 [inline]
-ffffffff89c6c260 (fs_reclaim){+.+.}-{0:0}, at: __alloc_pages_slowpath.constprop.0+0x1554/0x2780 mm/page_alloc.c:4650
-
-which lock already depends on the new lock.
-
-
-the existing dependency chain (in reverse order) is:
-
--> #1 (fs_reclaim){+.+.}-{0:0}:
-       __fs_reclaim_acquire mm/page_alloc.c:4183 [inline]
-       fs_reclaim_acquire mm/page_alloc.c:4194 [inline]
-       prepare_alloc_pages mm/page_alloc.c:4780 [inline]
-       __alloc_pages_nodemask+0x3d1/0x930 mm/page_alloc.c:4832
-       alloc_pages_vma+0xdd/0x720 mm/mempolicy.c:2255
-       shmem_alloc_page+0x11f/0x1f0 mm/shmem.c:1502
-       shmem_alloc_and_acct_page+0x161/0x8a0 mm/shmem.c:1527
-       shmem_getpage_gfp+0x511/0x2450 mm/shmem.c:1823
-       shmem_getpage mm/shmem.c:153 [inline]
-       shmem_write_begin+0xf9/0x1d0 mm/shmem.c:2459
-       generic_perform_write+0x20a/0x4f0 mm/filemap.c:3318
-       __generic_file_write_iter+0x24b/0x610 mm/filemap.c:3447
-       generic_file_write_iter+0x3a6/0x5c0 mm/filemap.c:3479
-       call_write_iter include/linux/fs.h:1908 [inline]
-       new_sync_write+0x422/0x650 fs/read_write.c:503
-       vfs_write+0x59d/0x6b0 fs/read_write.c:578
-       ksys_write+0x12d/0x250 fs/read_write.c:631
-       do_syscall_64+0x60/0xe0 arch/x86/entry/common.c:384
-       entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
--> #0 (&sb->s_type->i_mutex_key#15){+.+.}-{3:3}:
-       check_prev_add kernel/locking/lockdep.c:2496 [inline]
-       check_prevs_add kernel/locking/lockdep.c:2601 [inline]
-       validate_chain kernel/locking/lockdep.c:3218 [inline]
-       __lock_acquire+0x2acb/0x56e0 kernel/locking/lockdep.c:4380
-       lock_acquire+0x1f1/0xad0 kernel/locking/lockdep.c:4959
-       down_write+0x8d/0x150 kernel/locking/rwsem.c:1531
-       inode_lock include/linux/fs.h:800 [inline]
-       shmem_fallocate+0x153/0xd90 mm/shmem.c:2707
-       ashmem_shrink_scan.part.0+0x2e9/0x490 drivers/staging/android/ashmem.c:490
-       ashmem_shrink_scan+0x6c/0xa0 drivers/staging/android/ashmem.c:473
-       do_shrink_slab+0x3c6/0xab0 mm/vmscan.c:518
-       shrink_slab+0x16f/0x5c0 mm/vmscan.c:679
-       shrink_node_memcgs mm/vmscan.c:2658 [inline]
-       shrink_node+0x519/0x1b60 mm/vmscan.c:2770
-       shrink_zones mm/vmscan.c:2973 [inline]
-       do_try_to_free_pages+0x38b/0x1340 mm/vmscan.c:3026
-       try_to_free_pages+0x29a/0x8b0 mm/vmscan.c:3265
-       __perform_reclaim mm/page_alloc.c:4223 [inline]
-       __alloc_pages_direct_reclaim mm/page_alloc.c:4244 [inline]
-       __alloc_pages_slowpath.constprop.0+0x949/0x2780 mm/page_alloc.c:4650
-       __alloc_pages_nodemask+0x68f/0x930 mm/page_alloc.c:4863
-       __alloc_pages include/linux/gfp.h:509 [inline]
-       __alloc_pages_node include/linux/gfp.h:522 [inline]
-       khugepaged_alloc_page+0xa0/0x170 mm/khugepaged.c:867
-       collapse_huge_page mm/khugepaged.c:1056 [inline]
-       khugepaged_scan_pmd mm/khugepaged.c:1349 [inline]
-       khugepaged_scan_mm_slot mm/khugepaged.c:2110 [inline]
-       khugepaged_do_scan mm/khugepaged.c:2193 [inline]
-       khugepaged+0x3093/0x5a10 mm/khugepaged.c:2238
-       kthread+0x3b5/0x4a0 kernel/kthread.c:291
-       ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:293
-
-other info that might help us debug this:
-
- Possible unsafe locking scenario:
-
-       CPU0                    CPU1
-       ----                    ----
-  lock(fs_reclaim);
-                               lock(&sb->s_type->i_mutex_key#15);
-                               lock(fs_reclaim);
-  lock(&sb->s_type->i_mutex_key#15);
-
- *** DEADLOCK ***
-
-2 locks held by khugepaged/1157:
- #0: ffffffff89c6c260 (fs_reclaim){+.+.}-{0:0}, at: fs_reclaim_release mm/page_alloc.c:4202 [inline]
- #0: ffffffff89c6c260 (fs_reclaim){+.+.}-{0:0}, at: fs_reclaim_release mm/page_alloc.c:4198 [inline]
- #0: ffffffff89c6c260 (fs_reclaim){+.+.}-{0:0}, at: __perform_reclaim mm/page_alloc.c:4227 [inline]
- #0: ffffffff89c6c260 (fs_reclaim){+.+.}-{0:0}, at: __alloc_pages_direct_reclaim mm/page_alloc.c:4244 [inline]
- #0: ffffffff89c6c260 (fs_reclaim){+.+.}-{0:0}, at: __alloc_pages_slowpath.constprop.0+0x1554/0x2780 mm/page_alloc.c:4650
- #1: ffffffff89c46a90 (shrinker_rwsem){++++}-{3:3}, at: shrink_slab+0xc7/0x5c0 mm/vmscan.c:669
-
-stack backtrace:
-CPU: 0 PID: 1157 Comm: khugepaged Not tainted 5.8.0-rc5-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x18f/0x20d lib/dump_stack.c:118
- check_noncircular+0x324/0x3e0 kernel/locking/lockdep.c:1827
- check_prev_add kernel/locking/lockdep.c:2496 [inline]
- check_prevs_add kernel/locking/lockdep.c:2601 [inline]
- validate_chain kernel/locking/lockdep.c:3218 [inline]
- __lock_acquire+0x2acb/0x56e0 kernel/locking/lockdep.c:4380
- lock_acquire+0x1f1/0xad0 kernel/locking/lockdep.c:4959
- down_write+0x8d/0x150 kernel/locking/rwsem.c:1531
- inode_lock include/linux/fs.h:800 [inline]
- shmem_fallocate+0x153/0xd90 mm/shmem.c:2707
- ashmem_shrink_scan.part.0+0x2e9/0x490 drivers/staging/android/ashmem.c:490
- ashmem_shrink_scan+0x6c/0xa0 drivers/staging/android/ashmem.c:473
- do_shrink_slab+0x3c6/0xab0 mm/vmscan.c:518
- shrink_slab+0x16f/0x5c0 mm/vmscan.c:679
- shrink_node_memcgs mm/vmscan.c:2658 [inline]
- shrink_node+0x519/0x1b60 mm/vmscan.c:2770
- shrink_zones mm/vmscan.c:2973 [inline]
- do_try_to_free_pages+0x38b/0x1340 mm/vmscan.c:3026
- try_to_free_pages+0x29a/0x8b0 mm/vmscan.c:3265
- __perform_reclaim mm/page_alloc.c:4223 [inline]
- __alloc_pages_direct_reclaim mm/page_alloc.c:4244 [inline]
- __alloc_pages_slowpath.constprop.0+0x949/0x2780 mm/page_alloc.c:4650
- __alloc_pages_nodemask+0x68f/0x930 mm/page_alloc.c:4863
- __alloc_pages include/linux/gfp.h:509 [inline]
- __alloc_pages_node include/linux/gfp.h:522 [inline]
- khugepaged_alloc_page+0xa0/0x170 mm/khugepaged.c:867
- collapse_huge_page mm/khugepaged.c:1056 [inline]
- khugepaged_scan_pmd mm/khugepaged.c:1349 [inline]
- khugepaged_scan_mm_slot mm/khugepaged.c:2110 [inline]
- khugepaged_do_scan mm/khugepaged.c:2193 [inline]
- khugepaged+0x3093/0x5a10 mm/khugepaged.c:2238
- kthread+0x3b5/0x4a0 kernel/kthread.c:291
- ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:293
-
+ping, it seems the respin is still pending
