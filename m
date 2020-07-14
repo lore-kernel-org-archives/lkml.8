@@ -7,48 +7,50 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA472C433E6
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:51:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88C34C433EC
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:51:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 91712207F5
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:51:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 645E7207F5
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:51:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594752669;
-	bh=m1m092XrQX3GfV9d3V77hve2zULsbBlvhWpQsEt4laY=;
+	s=default; t=1594752673;
+	bh=Ig9SJkoqrePGD1i2jyWyoSl7rbTRe2ntMfMgdb8a0ns=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1RtS3ACt1E/1TQkNZoxo73As+ePBmbAAfRRo36f1OP/Eu/tJUXDtE0R59OZNepRC4
-	 zS4a07VEbNCSumNTt0fa7aMt3wfaLKEykS+hDGIghjClCwL2DHWWJG9Yla5xdypr8+
-	 lg2DoeJqjDYKK7GbKw3pardMGqTuztx3fPeePCQo=
+	b=AYyJyVIjs00HCeW1kWNpK9ZMhc68hg/CaLfjXr95nFjMjljDqxqimnCNEhBAo+M8k
+	 IxoVC0vS8jDWfmX0uz1/MridhI2RpKnaf5oP3Srh0d7/R+wM7y3vmou7kJ4tA1Pvkq
+	 sqRVX+xbYjfI6BOzf19/zpS2njMLxNeMYG85cV5U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729880AbgGNSvH (ORCPT
+        id S1729889AbgGNSvL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 14:51:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47440 "EHLO mail.kernel.org"
+        Tue, 14 Jul 2020 14:51:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47462 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729873AbgGNSvE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 14:51:04 -0400
+        id S1730370AbgGNSvH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 14:51:07 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D766522B2A;
-        Tue, 14 Jul 2020 18:51:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CFFC4208C3;
+        Tue, 14 Jul 2020 18:51:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594752663;
-        bh=m1m092XrQX3GfV9d3V77hve2zULsbBlvhWpQsEt4laY=;
+        s=default; t=1594752666;
+        bh=Ig9SJkoqrePGD1i2jyWyoSl7rbTRe2ntMfMgdb8a0ns=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dgGOMx8IXreG3nIWBz1HI0z0dTmaQlHGgFBoGwTHDz8C42Erd6ssIwzzKaGxpp3Bg
-         rcFT5O3HOl81tWDy86rz00m41JEJkLT1DyTq5fyuimE1fi99qwcXhpujjOJfjOle30
-         JAX3OSAaRqe/MDo3mcmeW5BVyKJhB0c8Y3+AooLU=
+        b=PJOA3Vu52+uAr9yp1WaP3ip3aWEyP281Kn+LnqINfUHrY7rNPAmYCi2qW6IB/olDU
+         QL/aFekoqu4SrJGJejVs8ANMrGg7JY3qiyUr2jCICXUYIs4bsnqtaSXtpnhsRfkv24
+         9EtUjpsnclBB6uJioS6xUHvRZq0rSyAFt92W7BGM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Aya Levin <ayal@mellanox.com>,
-        Eran Ben Elisha <eranbe@mellanox.com>,
-        Saeed Mahameed <saeedm@mellanox.com>,
+        stable@vger.kernel.org, Fei Liu <feliu@redhat.com>,
+        Jonathan Toppins <jtoppins@redhat.com>,
+        Michael Chan <michael.chan@broadcom.com>,
+        Davide Caratti <dcaratti@redhat.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 063/109] net/mlx5e: Fix 50G per lane indication
-Date:   Tue, 14 Jul 2020 20:44:06 +0200
-Message-Id: <20200714184108.539102399@linuxfoundation.org>
+Subject: [PATCH 5.4 064/109] bnxt_en: fix NULL dereference in case SR-IOV configuration fails
+Date:   Tue, 14 Jul 2020 20:44:07 +0200
+Message-Id: <20200714184108.587458560@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200714184105.507384017@linuxfoundation.org>
 References: <20200714184105.507384017@linuxfoundation.org>
@@ -61,132 +63,91 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Aya Levin <ayal@mellanox.com>
+From: Davide Caratti <dcaratti@redhat.com>
 
-[ Upstream commit 6a1cf4e443a3b0a4d690d3c93b84b1e9cbfcb1bd ]
+[ Upstream commit c8b1d7436045d3599bae56aef1682813ecccaad7 ]
 
-Some released FW versions mistakenly don't set the capability that 50G
-per lane link-modes are supported for VFs (ptys_extended_ethernet
-capability bit). When the capability is unset, read
-PTYS.ext_eth_proto_capability (always reliable).
-If PTYS.ext_eth_proto_capability is valid (has a non-zero value)
-conclude that the HCA supports 50G per lane. Otherwise, conclude that
-the HCA doesn't support 50G per lane.
+we need to set 'active_vfs' back to 0, if something goes wrong during the
+allocation of SR-IOV resources: otherwise, further VF configurations will
+wrongly assume that bp->pf.vf[x] are valid memory locations, and commands
+like the ones in the following sequence:
 
-Fixes: a08b4ed1373d ("net/mlx5: Add support to ext_* fields introduced in Port Type and Speed register")
-Signed-off-by: Aya Levin <ayal@mellanox.com>
-Reviewed-by: Eran Ben Elisha <eranbe@mellanox.com>
-Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
+ # echo 2 >/sys/bus/pci/devices/${ADDR}/sriov_numvfs
+ # ip link set dev ens1f0np0 up
+ # ip link set dev ens1f0np0 vf 0 trust on
+
+will cause a kernel crash similar to this:
+
+ bnxt_en 0000:3b:00.0: not enough MMIO resources for SR-IOV
+ BUG: kernel NULL pointer dereference, address: 0000000000000014
+ #PF: supervisor read access in kernel mode
+ #PF: error_code(0x0000) - not-present page
+ PGD 0 P4D 0
+ Oops: 0000 [#1] SMP PTI
+ CPU: 43 PID: 2059 Comm: ip Tainted: G          I       5.8.0-rc2.upstream+ #871
+ Hardware name: Dell Inc. PowerEdge R740/08D89F, BIOS 2.2.11 06/13/2019
+ RIP: 0010:bnxt_set_vf_trust+0x5b/0x110 [bnxt_en]
+ Code: 44 24 58 31 c0 e8 f5 fb ff ff 85 c0 0f 85 b6 00 00 00 48 8d 1c 5b 41 89 c6 b9 0b 00 00 00 48 c1 e3 04 49 03 9c 24 f0 0e 00 00 <8b> 43 14 89 c2 83 c8 10 83 e2 ef 45 84 ed 49 89 e5 0f 44 c2 4c 89
+ RSP: 0018:ffffac6246a1f570 EFLAGS: 00010246
+ RAX: 0000000000000000 RBX: 0000000000000000 RCX: 000000000000000b
+ RDX: 0000000000000001 RSI: 0000000000000000 RDI: ffff98b28f538900
+ RBP: ffff98b28f538900 R08: 0000000000000000 R09: 0000000000000008
+ R10: ffffffffb9515be0 R11: ffffac6246a1f678 R12: ffff98b28f538000
+ R13: 0000000000000001 R14: 0000000000000000 R15: ffffffffc05451e0
+ FS:  00007fde0f688800(0000) GS:ffff98baffd40000(0000) knlGS:0000000000000000
+ CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+ CR2: 0000000000000014 CR3: 000000104bb0a003 CR4: 00000000007606e0
+ DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+ DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+ PKRU: 55555554
+ Call Trace:
+  do_setlink+0x994/0xfe0
+  __rtnl_newlink+0x544/0x8d0
+  rtnl_newlink+0x47/0x70
+  rtnetlink_rcv_msg+0x29f/0x350
+  netlink_rcv_skb+0x4a/0x110
+  netlink_unicast+0x21d/0x300
+  netlink_sendmsg+0x329/0x450
+  sock_sendmsg+0x5b/0x60
+  ____sys_sendmsg+0x204/0x280
+  ___sys_sendmsg+0x88/0xd0
+  __sys_sendmsg+0x5e/0xa0
+  do_syscall_64+0x47/0x80
+  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+
+Fixes: c0c050c58d840 ("bnxt_en: New Broadcom ethernet driver.")
+Reported-by: Fei Liu <feliu@redhat.com>
+CC: Jonathan Toppins <jtoppins@redhat.com>
+CC: Michael Chan <michael.chan@broadcom.com>
+Signed-off-by: Davide Caratti <dcaratti@redhat.com>
+Reviewed-by: Michael Chan <michael.chan@broadcom.com>
+Acked-by: Jonathan Toppins <jtoppins@redhat.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../net/ethernet/mellanox/mlx5/core/en/port.c | 21 ++++++++++++++++---
- .../net/ethernet/mellanox/mlx5/core/en/port.h |  2 +-
- .../ethernet/mellanox/mlx5/core/en_ethtool.c  |  8 +++----
- 3 files changed, 23 insertions(+), 8 deletions(-)
+ drivers/net/ethernet/broadcom/bnxt/bnxt_sriov.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en/port.c b/drivers/net/ethernet/mellanox/mlx5/core/en/port.c
-index fce6eccdcf8b2..fa81a97f6ba9e 100644
---- a/drivers/net/ethernet/mellanox/mlx5/core/en/port.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/en/port.c
-@@ -78,11 +78,26 @@ static const u32 mlx5e_ext_link_speed[MLX5E_EXT_LINK_MODES_NUMBER] = {
- 	[MLX5E_400GAUI_8]			= 400000,
- };
- 
-+bool mlx5e_ptys_ext_supported(struct mlx5_core_dev *mdev)
-+{
-+	struct mlx5e_port_eth_proto eproto;
-+	int err;
-+
-+	if (MLX5_CAP_PCAM_FEATURE(mdev, ptys_extended_ethernet))
-+		return true;
-+
-+	err = mlx5_port_query_eth_proto(mdev, 1, true, &eproto);
-+	if (err)
-+		return false;
-+
-+	return !!eproto.cap;
-+}
-+
- static void mlx5e_port_get_speed_arr(struct mlx5_core_dev *mdev,
- 				     const u32 **arr, u32 *size,
- 				     bool force_legacy)
- {
--	bool ext = force_legacy ? false : MLX5_CAP_PCAM_FEATURE(mdev, ptys_extended_ethernet);
-+	bool ext = force_legacy ? false : mlx5e_ptys_ext_supported(mdev);
- 
- 	*size = ext ? ARRAY_SIZE(mlx5e_ext_link_speed) :
- 		      ARRAY_SIZE(mlx5e_link_speed);
-@@ -177,7 +192,7 @@ int mlx5e_port_linkspeed(struct mlx5_core_dev *mdev, u32 *speed)
- 	bool ext;
- 	int err;
- 
--	ext = MLX5_CAP_PCAM_FEATURE(mdev, ptys_extended_ethernet);
-+	ext = mlx5e_ptys_ext_supported(mdev);
- 	err = mlx5_port_query_eth_proto(mdev, 1, ext, &eproto);
- 	if (err)
- 		goto out;
-@@ -205,7 +220,7 @@ int mlx5e_port_max_linkspeed(struct mlx5_core_dev *mdev, u32 *speed)
- 	int err;
- 	int i;
- 
--	ext = MLX5_CAP_PCAM_FEATURE(mdev, ptys_extended_ethernet);
-+	ext = mlx5e_ptys_ext_supported(mdev);
- 	err = mlx5_port_query_eth_proto(mdev, 1, ext, &eproto);
- 	if (err)
- 		return err;
-diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en/port.h b/drivers/net/ethernet/mellanox/mlx5/core/en/port.h
-index 4a7f4497692bc..e196888f7056b 100644
---- a/drivers/net/ethernet/mellanox/mlx5/core/en/port.h
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/en/port.h
-@@ -54,7 +54,7 @@ int mlx5e_port_linkspeed(struct mlx5_core_dev *mdev, u32 *speed);
- int mlx5e_port_max_linkspeed(struct mlx5_core_dev *mdev, u32 *speed);
- u32 mlx5e_port_speed2linkmodes(struct mlx5_core_dev *mdev, u32 speed,
- 			       bool force_legacy);
--
-+bool mlx5e_ptys_ext_supported(struct mlx5_core_dev *mdev);
- int mlx5e_port_query_pbmc(struct mlx5_core_dev *mdev, void *out);
- int mlx5e_port_set_pbmc(struct mlx5_core_dev *mdev, void *in);
- int mlx5e_port_query_priority2buffer(struct mlx5_core_dev *mdev, u8 *buffer);
-diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en_ethtool.c b/drivers/net/ethernet/mellanox/mlx5/core/en_ethtool.c
-index 39ee32518b106..8cd529556b214 100644
---- a/drivers/net/ethernet/mellanox/mlx5/core/en_ethtool.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/en_ethtool.c
-@@ -200,7 +200,7 @@ static void mlx5e_ethtool_get_speed_arr(struct mlx5_core_dev *mdev,
- 					struct ptys2ethtool_config **arr,
- 					u32 *size)
- {
--	bool ext = MLX5_CAP_PCAM_FEATURE(mdev, ptys_extended_ethernet);
-+	bool ext = mlx5e_ptys_ext_supported(mdev);
- 
- 	*arr = ext ? ptys2ext_ethtool_table : ptys2legacy_ethtool_table;
- 	*size = ext ? ARRAY_SIZE(ptys2ext_ethtool_table) :
-@@ -871,7 +871,7 @@ static void get_lp_advertising(struct mlx5_core_dev *mdev, u32 eth_proto_lp,
- 			       struct ethtool_link_ksettings *link_ksettings)
- {
- 	unsigned long *lp_advertising = link_ksettings->link_modes.lp_advertising;
--	bool ext = MLX5_CAP_PCAM_FEATURE(mdev, ptys_extended_ethernet);
-+	bool ext = mlx5e_ptys_ext_supported(mdev);
- 
- 	ptys2ethtool_adver_link(lp_advertising, eth_proto_lp, ext);
- }
-@@ -900,7 +900,7 @@ int mlx5e_ethtool_get_link_ksettings(struct mlx5e_priv *priv,
- 			   __func__, err);
- 		goto err_query_regs;
+diff --git a/drivers/net/ethernet/broadcom/bnxt/bnxt_sriov.c b/drivers/net/ethernet/broadcom/bnxt/bnxt_sriov.c
+index 1046b22220a30..452be9749827a 100644
+--- a/drivers/net/ethernet/broadcom/bnxt/bnxt_sriov.c
++++ b/drivers/net/ethernet/broadcom/bnxt/bnxt_sriov.c
+@@ -398,6 +398,7 @@ static void bnxt_free_vf_resources(struct bnxt *bp)
+ 		}
  	}
--	ext = MLX5_CAP_PCAM_FEATURE(mdev, ptys_extended_ethernet);
-+	ext = !!MLX5_GET_ETH_PROTO(ptys_reg, out, true, eth_proto_capability);
- 	eth_proto_cap    = MLX5_GET_ETH_PROTO(ptys_reg, out, ext,
- 					      eth_proto_capability);
- 	eth_proto_admin  = MLX5_GET_ETH_PROTO(ptys_reg, out, ext,
-@@ -1052,7 +1052,7 @@ int mlx5e_ethtool_set_link_ksettings(struct mlx5e_priv *priv,
- 	autoneg = link_ksettings->base.autoneg;
- 	speed = link_ksettings->base.speed;
  
--	ext_supported = MLX5_CAP_PCAM_FEATURE(mdev, ptys_extended_ethernet);
-+	ext_supported = mlx5e_ptys_ext_supported(mdev);
- 	ext = ext_requested(autoneg, adver, ext_supported);
- 	if (!ext_supported && ext)
- 		return -EOPNOTSUPP;
++	bp->pf.active_vfs = 0;
+ 	kfree(bp->pf.vf);
+ 	bp->pf.vf = NULL;
+ }
+@@ -833,7 +834,6 @@ void bnxt_sriov_disable(struct bnxt *bp)
+ 
+ 	bnxt_free_vf_resources(bp);
+ 
+-	bp->pf.active_vfs = 0;
+ 	/* Reclaim all resources for the PF. */
+ 	rtnl_lock();
+ 	bnxt_restore_pf_fw_resources(bp);
 -- 
 2.25.1
 
