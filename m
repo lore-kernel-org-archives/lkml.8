@@ -2,55 +2,60 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 556F1C433EB
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 19:01:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01F34C433E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 19:06:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2735022B51
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 19:01:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF92C21D79
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 19:06:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594753289;
-	bh=bI0/qwc2zKiJvpANqNzd0zDdKboGYWu7C8PdxDM/ibc=;
+	s=default; t=1594753576;
+	bh=YQI3JFO0/IRGd0ndbGFLjzwEN80zHIU6ULPZ524xL9A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Yn6uXmpfGzOP42gcTAAnnC5UeZF7Y4z0URSnRTdAeS2gi2goxcP9bchHYK8DwDLkK
-	 iIOVSpjGTuCchCHDDbsB7iMRgaMIv9kAIzRLq+jesb5pACNvSz2Aa51kTWnS3GqqyW
-	 JfeLHp6ygsl2kx/l7n1OkPLq0E2MuwOsHBC6xLKk=
+	b=TWibEv/iO+dIk75bERdwltMuoaWoilCXl1jR0Ug7RBSrd48rccNfitzAhS5wFtWI9
+	 gBKZLmRBiCI+GRkP0LJpXNJm/0mIiLxHBXx0acxFxwN1+umGNDQeRaVzoPyBNKl7G7
+	 0pEWa5z7SUcmHWFTeTKVUq2ly9MCoI/Tzh0baj1U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730943AbgGNTB1 (ORCPT
+        id S1731195AbgGNTGO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 15:01:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58708 "EHLO mail.kernel.org"
+        Tue, 14 Jul 2020 15:06:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50564 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731323AbgGNS77 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 14:59:59 -0400
+        id S1730247AbgGNSxa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 14:53:30 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7536E229CA;
-        Tue, 14 Jul 2020 18:59:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 929F1207F5;
+        Tue, 14 Jul 2020 18:53:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594753199;
-        bh=bI0/qwc2zKiJvpANqNzd0zDdKboGYWu7C8PdxDM/ibc=;
+        s=default; t=1594752809;
+        bh=YQI3JFO0/IRGd0ndbGFLjzwEN80zHIU6ULPZ524xL9A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jH1211bnCTiEIFHZf8mzIa9nFuBFVn1rAukeZw4nEYUspa9keODQaqzoL2geojtlj
-         rDFl0JkcbJPJApCjzqRMEh6gTxIqWONDvAwsCD788jwk8+t22E62cSSPBxsN4V07nk
-         bIkGNLMM8xLCWdU6C0njb2j75L8h7eNJHej6YYOY=
+        b=GZPTSk09r41HgEDQjv8zq0UYZhFjhhuqEOULNdo4014KjLI9IqUO34GuIr106Tmnf
+         ItmeIQv+QZPmH827kVZPR94RFH2BcCN82IN1OnjNiBHeO8HEczc0IfDaOE34QGX8eD
+         l4NSOWchriYsXRbzhsnRn1CvqjKp8BptXc37WYVc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Pavel Begunkov <asml.silence@gmail.com>,
-        Jens Axboe <axboe@kernel.dk>
-Subject: [PATCH 5.7 127/166] io_uring: fix missing msg_name assignment
-Date:   Tue, 14 Jul 2020 20:44:52 +0200
-Message-Id: <20200714184121.915085982@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        David Hildenbrand <david@redhat.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.7 001/166] KVM: s390: reduce number of IO pins to 1
+Date:   Tue, 14 Jul 2020 20:42:46 +0200
+Message-Id: <20200714184115.917313137@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200714184115.844176932@linuxfoundation.org>
 References: <20200714184115.844176932@linuxfoundation.org>
 User-Agent: quilt/0.66
+X-stable: review
+X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -59,39 +64,73 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pavel Begunkov <asml.silence@gmail.com>
+From: Christian Borntraeger <borntraeger@de.ibm.com>
 
-commit dd821e0c95a64b5923a0c57f07d3f7563553e756 upstream.
+[ Upstream commit 774911290c589e98e3638e73b24b0a4d4530e97c ]
 
-Ensure to set msg.msg_name for the async portion of send/recvmsg,
-as the header copy will copy to/from it.
+The current number of KVM_IRQCHIP_NUM_PINS results in an order 3
+allocation (32kb) for each guest start/restart. This can result in OOM
+killer activity even with free swap when the memory is fragmented
+enough:
 
-Cc: stable@vger.kernel.org # v5.5+
-Signed-off-by: Pavel Begunkov <asml.silence@gmail.com>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+kernel: qemu-system-s39 invoked oom-killer: gfp_mask=0x440dc0(GFP_KERNEL_ACCOUNT|__GFP_COMP|__GFP_ZERO), order=3, oom_score_adj=0
+kernel: CPU: 1 PID: 357274 Comm: qemu-system-s39 Kdump: loaded Not tainted 5.4.0-29-generic #33-Ubuntu
+kernel: Hardware name: IBM 8562 T02 Z06 (LPAR)
+kernel: Call Trace:
+kernel: ([<00000001f848fe2a>] show_stack+0x7a/0xc0)
+kernel:  [<00000001f8d3437a>] dump_stack+0x8a/0xc0
+kernel:  [<00000001f8687032>] dump_header+0x62/0x258
+kernel:  [<00000001f8686122>] oom_kill_process+0x172/0x180
+kernel:  [<00000001f8686abe>] out_of_memory+0xee/0x580
+kernel:  [<00000001f86e66b8>] __alloc_pages_slowpath+0xd18/0xe90
+kernel:  [<00000001f86e6ad4>] __alloc_pages_nodemask+0x2a4/0x320
+kernel:  [<00000001f86b1ab4>] kmalloc_order+0x34/0xb0
+kernel:  [<00000001f86b1b62>] kmalloc_order_trace+0x32/0xe0
+kernel:  [<00000001f84bb806>] kvm_set_irq_routing+0xa6/0x2e0
+kernel:  [<00000001f84c99a4>] kvm_arch_vm_ioctl+0x544/0x9e0
+kernel:  [<00000001f84b8936>] kvm_vm_ioctl+0x396/0x760
+kernel:  [<00000001f875df66>] do_vfs_ioctl+0x376/0x690
+kernel:  [<00000001f875e304>] ksys_ioctl+0x84/0xb0
+kernel:  [<00000001f875e39a>] __s390x_sys_ioctl+0x2a/0x40
+kernel:  [<00000001f8d55424>] system_call+0xd8/0x2c8
 
+As far as I can tell s390x does not use the iopins as we bail our for
+anything other than KVM_IRQ_ROUTING_S390_ADAPTER and the chip/pin is
+only used for KVM_IRQ_ROUTING_IRQCHIP. So let us use a small number to
+reduce the memory footprint.
+
+Signed-off-by: Christian Borntraeger <borntraeger@de.ibm.com>
+Reviewed-by: Cornelia Huck <cohuck@redhat.com>
+Reviewed-by: David Hildenbrand <david@redhat.com>
+Link: https://lore.kernel.org/r/20200617083620.5409-1-borntraeger@de.ibm.com
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/io_uring.c |    2 ++
- 1 file changed, 2 insertions(+)
+ arch/s390/include/asm/kvm_host.h | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
---- a/fs/io_uring.c
-+++ b/fs/io_uring.c
-@@ -3587,6 +3587,7 @@ static int io_sendmsg_prep(struct io_kio
- 	if (req->flags & REQ_F_NEED_CLEANUP)
- 		return 0;
+diff --git a/arch/s390/include/asm/kvm_host.h b/arch/s390/include/asm/kvm_host.h
+index d6bcd34f3ec32..ec65bc2bd084e 100644
+--- a/arch/s390/include/asm/kvm_host.h
++++ b/arch/s390/include/asm/kvm_host.h
+@@ -31,12 +31,12 @@
+ #define KVM_USER_MEM_SLOTS 32
  
-+	io->msg.msg.msg_name = &io->msg.addr;
- 	io->msg.iov = io->msg.fast_iov;
- 	ret = sendmsg_copy_msghdr(&io->msg.msg, sr->msg, sr->msg_flags,
- 					&io->msg.iov);
-@@ -3774,6 +3775,7 @@ static int __io_compat_recvmsg_copy_hdr(
+ /*
+- * These seem to be used for allocating ->chip in the routing table,
+- * which we don't use. 4096 is an out-of-thin-air value. If we need
+- * to look at ->chip later on, we'll need to revisit this.
++ * These seem to be used for allocating ->chip in the routing table, which we
++ * don't use. 1 is as small as we can get to reduce the needed memory. If we
++ * need to look at ->chip later on, we'll need to revisit this.
+  */
+ #define KVM_NR_IRQCHIPS 1
+-#define KVM_IRQCHIP_NUM_PINS 4096
++#define KVM_IRQCHIP_NUM_PINS 1
+ #define KVM_HALT_POLL_NS_DEFAULT 50000
  
- static int io_recvmsg_copy_hdr(struct io_kiocb *req, struct io_async_ctx *io)
- {
-+	io->msg.msg.msg_name = &io->msg.addr;
- 	io->msg.iov = io->msg.fast_iov;
- 
- #ifdef CONFIG_COMPAT
+ /* s390-specific vcpu->requests bit members */
+-- 
+2.25.1
+
 
 
