@@ -7,50 +7,52 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BCF2C43459
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 07:05:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72458C4345E
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 07:05:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1DEDF22210
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 07:05:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5CE70221EB
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 07:05:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726963AbgGNHEW (ORCPT
+        id S1727821AbgGNHFL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 03:04:22 -0400
-Received: from mga03.intel.com ([134.134.136.65]:9058 "EHLO mga03.intel.com"
+        Tue, 14 Jul 2020 03:05:11 -0400
+Received: from mga07.intel.com ([134.134.136.100]:36442 "EHLO mga07.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726848AbgGNHEK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 03:04:10 -0400
-IronPort-SDR: JBuIvf2YtFsNi22v3/RUtr75DO/ciMR9WkCpEfzGFai07bchYwUQfvtxSRkpQk/XHCXSSrlKQ/
- htWxveCSbjVA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9681"; a="148828664"
+        id S1726936AbgGNHEV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 03:04:21 -0400
+IronPort-SDR: ACgwm0Q1Kl4+u+a+0fm2nJRhaByd2yiJ5R4dOGP70IW8ekzBS+C0hthslOcxkRtLLi+v0gj07v
+ dP5G1chAvo8A==
+X-IronPort-AV: E=McAfee;i="6000,8403,9681"; a="213635649"
 X-IronPort-AV: E=Sophos;i="5.75,350,1589266800"; 
-   d="scan'208";a="148828664"
+   d="scan'208";a="213635649"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jul 2020 00:04:10 -0700
-IronPort-SDR: 2BwForAF8NIBLQ8QKx/Fab82qfbti+rxwheupRip9gzdF6hvypzmf9dFXHNlerP8hNn7uHyG1i
- egetIafJxTNA==
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jul 2020 00:04:17 -0700
+IronPort-SDR: 5oFSt+rQ81PQdl8QBXCqp9lx6EuUp2oSohr8H0g6Sb5uObVFDfEd/Sews/ccuD5tPz01v6Cf0X
+ n+qUtmLpJo0g==
 X-IronPort-AV: E=Sophos;i="5.75,350,1589266800"; 
-   d="scan'208";a="281659457"
+   d="scan'208";a="268570272"
 Received: from iweiny-desk2.sc.intel.com (HELO localhost) ([10.3.52.147])
-  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jul 2020 00:04:09 -0700
+  by fmsmga007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jul 2020 00:04:17 -0700
 From:   ira.weiny@intel.com
 To:     Thomas Gleixner <tglx@linutronix.de>,
         Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
         Andy Lutomirski <luto@kernel.org>,
         Peter Zijlstra <peterz@infradead.org>
-Cc:     Fenghua Yu <fenghua.yu@intel.com>, Ira Weiny <ira.weiny@intel.com>,
-        x86@kernel.org, Dave Hansen <dave.hansen@linux.intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
+Cc:     Ira Weiny <ira.weiny@intel.com>,
+        Ben Widawsky <ben.widawsky@intel.com>,
+        Dan Williams <dan.j.williams@intel.com>, x86@kernel.org,
+        Dave Hansen <dave.hansen@linux.intel.com>,
         Vishal Verma <vishal.l.verma@intel.com>,
         Andrew Morton <akpm@linux-foundation.org>,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-nvdimm@lists.01.org, linux-fsdevel@vger.kernel.org,
-        linux-mm@kvack.org, linux-kselftest@vger.kernel.org
-Subject: [RFC PATCH 05/15] x86/pks: Add PKS kernel API
-Date:   Tue, 14 Jul 2020 00:02:10 -0700
-Message-Id: <20200714070220.3500839-6-ira.weiny@intel.com>
+        Fenghua Yu <fenghua.yu@intel.com>, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-nvdimm@lists.01.org,
+        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+        linux-kselftest@vger.kernel.org
+Subject: [RFC PATCH 09/15] fs/dax: Remove unused size parameter
+Date:   Tue, 14 Jul 2020 00:02:14 -0700
+Message-Id: <20200714070220.3500839-10-ira.weiny@intel.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200714070220.3500839-1-ira.weiny@intel.com>
 References: <20200714070220.3500839-1-ira.weiny@intel.com>
@@ -61,251 +63,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Fenghua Yu <fenghua.yu@intel.com>
+From: Ira Weiny <ira.weiny@intel.com>
 
-PKS allows kernel users to define domains of page mappings which have
-additional protections beyond the paging protections.
+Passing size to copy_user_dax implies it can copy variable sizes of data
+when in fact it calls copy_user_page() which is exactly a page.
 
-Add an API to allocate, use, and free a protection key which identifies
-such a domain.
+We are safe because the only caller uses PAGE_SIZE anyway so just remove
+the variable for clarity.
 
-We export 2 new symbols pks_key_alloc() and pks_key_free() while
-pks_update_protection() is exposed as an inline function via header
-file.
+While we are at it change copy_user_dax() to copy_cow_page_dax() to make
+it clear it is a singleton helper for this one case not implementing
+what dax_iomap_actor() does.
 
-pks_key_alloc() reserves pkey 0 for default kernel pages.  The other 15
-keys are dynamically allocated to allow better use of the limited key
-space.
-
-This, and the fact that PKS may not be available on all arch's, means
-callers of the allocator _must_ be prepared for it to fail and take
-appropriate action to run without their allocated domain.  This is not
-anticipated to be a problem as these protections only serve to harden
-memory and users should be no worse off than before the introduction of
-PKS.
-
-PAGE_KERNEL_PKEY(key) and _PAGE_PKEY(pkey) aid in setting page table
-entry bits by kernel users.  Note these defines will be used in follow
-on patches but are included here for a complete interface.
-
-pks_update_protection() is inlined for performance and allows kernel
-users the ability to change the protections for the domain identified by
-the pkey specified.  It is undefined behavior to call this on a pkey not
-allocated by the allocator.  And will WARN_ON if called on architectures
-which do not support PKS.  (Again callers are expected to check the
-return of pks_key_alloc() before using this API further.)
-
-Finally, pks_key_free() allows a user to return the key to the
-allocator for use by others.
-
-The interface maintains Access Disabled (AD=1) for all keys not
-currently allocated.  Therefore, the user can depend on access being
-disabled when pks_key_alloc() returns a key.
-
-Co-developed-by: Ira Weiny <ira.weiny@intel.com>
+Reviewed-by: Ben Widawsky <ben.widawsky@intel.com>
+Reviewed-by: Dan Williams <dan.j.williams@intel.com>
 Signed-off-by: Ira Weiny <ira.weiny@intel.com>
-Signed-off-by: Fenghua Yu <fenghua.yu@intel.com>
 ---
- arch/x86/include/asm/pgtable_types.h  |  4 ++
- arch/x86/include/asm/pkeys.h          | 30 ++++++++++
- arch/x86/include/asm/pkeys_internal.h |  4 ++
- arch/x86/mm/pkeys.c                   | 79 +++++++++++++++++++++++++++
- include/linux/pkeys.h                 | 14 +++++
- 5 files changed, 131 insertions(+)
+ fs/dax.c | 13 ++++++-------
+ 1 file changed, 6 insertions(+), 7 deletions(-)
 
-diff --git a/arch/x86/include/asm/pgtable_types.h b/arch/x86/include/asm/pgtable_types.h
-index 816b31c68550..2ab45ef89c7d 100644
---- a/arch/x86/include/asm/pgtable_types.h
-+++ b/arch/x86/include/asm/pgtable_types.h
-@@ -73,6 +73,8 @@
- 			 _PAGE_PKEY_BIT2 | \
- 			 _PAGE_PKEY_BIT3)
- 
-+#define _PAGE_PKEY(pkey)	(_AT(pteval_t, pkey) << _PAGE_BIT_PKEY_BIT0)
-+
- #if defined(CONFIG_X86_64) || defined(CONFIG_X86_PAE)
- #define _PAGE_KNL_ERRATUM_MASK (_PAGE_DIRTY | _PAGE_ACCESSED)
- #else
-@@ -229,6 +231,8 @@ enum page_cache_mode {
- #define PAGE_KERNEL_IO		__pgprot_mask(__PAGE_KERNEL_IO)
- #define PAGE_KERNEL_IO_NOCACHE	__pgprot_mask(__PAGE_KERNEL_IO_NOCACHE)
- 
-+#define PAGE_KERNEL_PKEY(pkey)	__pgprot_mask(__PAGE_KERNEL | _PAGE_PKEY(pkey))
-+
- #endif	/* __ASSEMBLY__ */
- 
- /*         xwr */
-diff --git a/arch/x86/include/asm/pkeys.h b/arch/x86/include/asm/pkeys.h
-index 34cef29fed20..e30ea907abb6 100644
---- a/arch/x86/include/asm/pkeys.h
-+++ b/arch/x86/include/asm/pkeys.h
-@@ -138,4 +138,34 @@ static inline int vma_pkey(struct vm_area_struct *vma)
- 
- u32 get_new_pkr(u32 old_pkr, int pkey, unsigned long init_val);
- 
-+#ifdef CONFIG_ARCH_HAS_SUPERVISOR_PKEYS
-+int pks_key_alloc(const char *const pkey_user);
-+void pks_key_free(int pkey);
-+u32 get_new_pkr(u32 old_pkr, int pkey, unsigned long init_val);
-+
-+/*
-+ * pks_update_protection - Update the protection of the specified key
-+ *
-+ * @pkey: Key for the domain to change
-+ * @protection: protection bits to be used
-+ *
-+ * Protection utilizes the same protection bits specified for User pkeys
-+ *     PKEY_DISABLE_ACCESS
-+ *     PKEY_DISABLE_WRITE
-+ *
-+ * This is not a global update.  It only affects the current running thread.
-+ *
-+ * It is undefined and a bug for users to call this without having allocated a
-+ * pkey and using it as pkey here.
-+ */
-+static inline void pks_update_protection(int pkey, unsigned long protection)
-+{
-+	current->thread.saved_pkrs = get_new_pkr(current->thread.saved_pkrs,
-+						 pkey, protection);
-+	preempt_disable();
-+	write_pkrs(current->thread.saved_pkrs);
-+	preempt_enable();
-+}
-+#endif /* CONFIG_ARCH_HAS_SUPERVISOR_PKEYS */
-+
- #endif /*_ASM_X86_PKEYS_H */
-diff --git a/arch/x86/include/asm/pkeys_internal.h b/arch/x86/include/asm/pkeys_internal.h
-index 05257cdc7200..e34f380c66d1 100644
---- a/arch/x86/include/asm/pkeys_internal.h
-+++ b/arch/x86/include/asm/pkeys_internal.h
-@@ -22,6 +22,10 @@
- 			 PKR_AD_KEY(10) | PKR_AD_KEY(11) | PKR_AD_KEY(12) | \
- 			 PKR_AD_KEY(13) | PKR_AD_KEY(14) | PKR_AD_KEY(15))
- 
-+/*  PKS supports 16 keys. Key 0 is reserved for the kernel. */
-+#define        PKS_KERN_DEFAULT_KEY    0
-+#define        PKS_NUM_KEYS            16
-+
- #ifdef CONFIG_ARCH_HAS_SUPERVISOR_PKEYS
- void write_pkrs(u32 pkrs_val);
- #else
-diff --git a/arch/x86/mm/pkeys.c b/arch/x86/mm/pkeys.c
-index 0f86f2374bd7..16f735c12fcd 100644
---- a/arch/x86/mm/pkeys.c
-+++ b/arch/x86/mm/pkeys.c
-@@ -3,6 +3,9 @@
-  * Intel Memory Protection Keys management
-  * Copyright (c) 2015, Intel Corporation.
-  */
-+#undef pr_fmt
-+#define pr_fmt(fmt) "x86/pkeys: " fmt
-+
- #include <linux/debugfs.h>		/* debugfs_create_u32()		*/
- #include <linux/mm_types.h>             /* mm_struct, vma, etc...       */
- #include <linux/pkeys.h>                /* PKEY_*                       */
-@@ -249,3 +252,79 @@ void write_pkrs(u32 pkrs_val)
- 	this_cpu_write(pkrs_cache, pkrs_val);
- 	wrmsrl(MSR_IA32_PKRS, pkrs_val);
+diff --git a/fs/dax.c b/fs/dax.c
+index 11b16729b86f..3e0babeb0365 100644
+--- a/fs/dax.c
++++ b/fs/dax.c
+@@ -680,21 +680,20 @@ int dax_invalidate_mapping_entry_sync(struct address_space *mapping,
+ 	return __dax_invalidate_entry(mapping, index, false);
  }
-+
-+DEFINE_MUTEX(pks_lock);
-+static const char pks_key_user0[] = "kernel";
-+
-+/* Store names of allocated keys for debug.  Key 0 is reserved for the kernel.  */
-+static const char *pks_key_users[PKS_NUM_KEYS] = {
-+	pks_key_user0
-+};
-+
-+/*
-+ * Each key is represented by a bit.  Bit 0 is set for key 0 and reserved for
-+ * its use.  We use ulong for the bit operations but only 16 bits are used.
-+ */
-+static unsigned long pks_key_allocation_map = 1 << PKS_KERN_DEFAULT_KEY;
-+
-+/*
-+ * pks_key_alloc - Allocate a PKS key
-+ *
-+ * @pkey_user: String stored for debugging of key exhaustion.  The caller is
-+ * responsible to maintain this memory until pks_key_free().
-+ */
-+int pks_key_alloc(const char * const pkey_user)
-+{
-+	int nr, old_bit, pkey;
-+
-+	might_sleep();
-+
-+	if (!cpu_feature_enabled(X86_FEATURE_PKS))
-+		return -EINVAL;
-+
-+	mutex_lock(&pks_lock);
-+	/* Find a free bit (0) in the bit map. */
-+	old_bit = 1;
-+	while (old_bit) {
-+		nr = ffz(pks_key_allocation_map);
-+		old_bit = __test_and_set_bit(nr, &pks_key_allocation_map);
-+	}
-+
-+	if (nr < PKS_NUM_KEYS) {
-+		pkey = nr;
-+		/* for debugging key exhaustion */
-+		pks_key_users[pkey] = pkey_user;
-+	} else {
-+		pkey = -ENOSPC;
-+		pr_info("Cannot allocate supervisor key for %s.\n",
-+			pkey_user);
-+	}
-+
-+	mutex_unlock(&pks_lock);
-+	return pkey;
-+}
-+EXPORT_SYMBOL_GPL(pks_key_alloc);
-+
-+/*
-+ * pks_key_free - Free a previously allocate PKS key
-+ *
-+ * @pkey: Key to be free'ed
-+ */
-+void pks_key_free(int pkey)
-+{
-+	might_sleep();
-+
-+	if (!cpu_feature_enabled(X86_FEATURE_PKS))
-+		return;
-+
-+	if (pkey >= PKS_NUM_KEYS || pkey <= PKS_KERN_DEFAULT_KEY)
-+		return;
-+
-+	mutex_lock(&pks_lock);
-+	__clear_bit(pkey, &pks_key_allocation_map);
-+	pks_key_users[pkey] = NULL;
-+	/* Restore to default AD=1 and WD=0. */
-+	pks_update_protection(pkey, PKEY_DISABLE_ACCESS);
-+	mutex_unlock(&pks_lock);
-+}
-+EXPORT_SYMBOL_GPL(pks_key_free);
-diff --git a/include/linux/pkeys.h b/include/linux/pkeys.h
-index 2955ba976048..e4bff77d7b49 100644
---- a/include/linux/pkeys.h
-+++ b/include/linux/pkeys.h
-@@ -50,4 +50,18 @@ static inline void copy_init_pkru_to_fpregs(void)
  
- #endif /* ! CONFIG_ARCH_HAS_PKEYS */
+-static int copy_user_dax(struct block_device *bdev, struct dax_device *dax_dev,
+-		sector_t sector, size_t size, struct page *to,
+-		unsigned long vaddr)
++static int copy_cow_page_dax(struct block_device *bdev, struct dax_device *dax_dev,
++			     sector_t sector, struct page *to, unsigned long vaddr)
+ {
+ 	void *vto, *kaddr;
+ 	pgoff_t pgoff;
+ 	long rc;
+ 	int id;
  
-+#ifndef CONFIG_ARCH_HAS_SUPERVISOR_PKEYS
-+static inline int pks_key_alloc(const char * const pkey_user)
-+{
-+	return -EINVAL;
-+}
-+static inline void pks_key_free(int pkey)
-+{
-+}
-+static inline void pks_update_protection(int pkey, unsigned long protection)
-+{
-+	WARN_ON_ONCE(1);
-+}
-+#endif /* ! CONFIG_ARCH_HAS_SUPERVISOR_PKEYS */
-+
- #endif /* _LINUX_PKEYS_H */
+-	rc = bdev_dax_pgoff(bdev, sector, size, &pgoff);
++	rc = bdev_dax_pgoff(bdev, sector, PAGE_SIZE, &pgoff);
+ 	if (rc)
+ 		return rc;
+ 
+ 	id = dax_read_lock();
+-	rc = dax_direct_access(dax_dev, pgoff, PHYS_PFN(size), &kaddr, NULL);
++	rc = dax_direct_access(dax_dev, pgoff, PHYS_PFN(PAGE_SIZE), &kaddr, NULL);
+ 	if (rc < 0) {
+ 		dax_read_unlock(id);
+ 		return rc;
+@@ -1305,8 +1304,8 @@ static vm_fault_t dax_iomap_pte_fault(struct vm_fault *vmf, pfn_t *pfnp,
+ 			clear_user_highpage(vmf->cow_page, vaddr);
+ 			break;
+ 		case IOMAP_MAPPED:
+-			error = copy_user_dax(iomap.bdev, iomap.dax_dev,
+-					sector, PAGE_SIZE, vmf->cow_page, vaddr);
++			error = copy_cow_page_dax(iomap.bdev, iomap.dax_dev,
++						  sector, vmf->cow_page, vaddr);
+ 			break;
+ 		default:
+ 			WARN_ON_ONCE(1);
 -- 
 2.25.1
 
