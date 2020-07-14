@@ -2,135 +2,124 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EBFFC433EB
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 12:18:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16B93C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 12:20:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 539702068F
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 12:18:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E0C43217A0
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 12:20:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chrisdown.name header.i=@chrisdown.name header.b="OgzthXDQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729079AbgGNMSS (ORCPT
+        id S1728214AbgGNMT6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 08:18:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60596 "EHLO
+        Tue, 14 Jul 2020 08:19:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34056 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727909AbgGNMKh (ORCPT
+        with ESMTP id S1726352AbgGNMT6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 08:10:37 -0400
-Received: from theia.8bytes.org (8bytes.org [IPv6:2a01:238:4383:600:38bc:a715:4b6d:a889])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 52CA8C061794;
-        Tue, 14 Jul 2020 05:10:37 -0700 (PDT)
-Received: from cap.home.8bytes.org (p5b006776.dip0.t-ipconnect.de [91.0.103.118])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (No client certificate requested)
-        by theia.8bytes.org (Postfix) with ESMTPSA id D82C32EC;
-        Tue, 14 Jul 2020 14:10:34 +0200 (CEST)
-From:   Joerg Roedel <joro@8bytes.org>
-To:     x86@kernel.org
-Cc:     Joerg Roedel <joro@8bytes.org>, Joerg Roedel <jroedel@suse.de>,
-        Borislav Petkov <bp@alien8.de>, hpa@zytor.com,
-        Andy Lutomirski <luto@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Jiri Slaby <jslaby@suse.cz>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Juergen Gross <jgross@suse.com>,
-        Kees Cook <keescook@chromium.org>,
-        David Rientjes <rientjes@google.com>,
-        Cfir Cohen <cfir@google.com>,
-        Erdem Aktas <erdemaktas@google.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Mike Stunes <mstunes@vmware.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Martin Radev <martin.b.radev@gmail.com>,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        virtualization@lists.linux-foundation.org
-Subject: [PATCH v4 03/75] KVM: SVM: Use __packed shorthand
-Date:   Tue, 14 Jul 2020 14:08:05 +0200
-Message-Id: <20200714120917.11253-4-joro@8bytes.org>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200714120917.11253-1-joro@8bytes.org>
-References: <20200714120917.11253-1-joro@8bytes.org>
+        Tue, 14 Jul 2020 08:19:58 -0400
+Received: from mail-ed1-x544.google.com (mail-ed1-x544.google.com [IPv6:2a00:1450:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C6009C061755
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 05:19:57 -0700 (PDT)
+Received: by mail-ed1-x544.google.com with SMTP id a1so11384823edt.10
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 05:19:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chrisdown.name; s=google;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :in-reply-to:user-agent;
+        bh=Upvq0XTnNDqkoJtFc1NKNfRMzIAOX3/LGCieRj7keA0=;
+        b=OgzthXDQQkSKENql4YztVr6tFQiY54k6p17Uy/5bcc7+0ujdY5rlF65bya2ugm/1k4
+         hzNEqhYpj9g/Zq3XQF5qyl7U0HOvJ73Gh/4rNSG0PwfvemMNXstBpS9eNgrPPNU7UX77
+         WhHatpJCe+PLBLssCm85nbfGfIxvpMVvj4FBU=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=Upvq0XTnNDqkoJtFc1NKNfRMzIAOX3/LGCieRj7keA0=;
+        b=i/M/MU45gAB8Q/Ooi5IVwLYaSx0Vhii9iHtgSsPdfJOBW2wZBMJFUV0kxfyrqFPbZr
+         lUkbClZ23LEyubLIoucw6ywYyWVLKFCQB/gJeQa9KAOT/6o/TdNRGcQCcxjXeXaoXH7P
+         5Lolj6jR24p+C1hkGI1IhLZ37ji9wzaxkdDNpPg6bWccaqA5pudGBiwnPgMf5MG7l4y+
+         E6iQLt2FCRc4e1uQNAlwa9L4e/ubsqs4bk/KaLqK3+zja3Rl6YbmrUiLkiJDedVkN5ny
+         AopsL9K2WYCfUs6F2515cu2t5jXN2l/CBtWoob/Gpk/T2tKPYdniW7xcuIlqKpB8qrYO
+         Ad4w==
+X-Gm-Message-State: AOAM5305BzCD4ZgY+/oghj/CXOyaGue3ap7etQu7OiZF6zFFWC5ggDF6
+        iV9dl/0BXV/p/iI2X4RivkydHg==
+X-Google-Smtp-Source: ABdhPJzKDJKgOVyW2LvwituaOpypnl46h37Y+mxK8+iWEJWcch9N/FMLfcDPk9lAh1tmX3XCw7wjtg==
+X-Received: by 2002:a05:6402:b57:: with SMTP id bx23mr4056450edb.304.1594729196472;
+        Tue, 14 Jul 2020 05:19:56 -0700 (PDT)
+Received: from localhost ([2620:10d:c093:400::5:6f85])
+        by smtp.gmail.com with ESMTPSA id ai4sm11724577ejc.91.2020.07.14.05.19.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 14 Jul 2020 05:19:56 -0700 (PDT)
+Date:   Tue, 14 Jul 2020 13:19:55 +0100
+From:   Chris Down <chris@chrisdown.name>
+To:     Borislav Petkov <bp@alien8.de>
+Cc:     linux-kernel@vger.kernel.org, sean.j.christopherson@intel.com,
+        tony.luck@intel.com, torvalds@linux-foundation.org, x86@kernel.org,
+        kernel-team@fb.com
+Subject: Re: [PATCH -v2.1] x86/msr: Filter MSR writes
+Message-ID: <20200714121955.GA2080@chrisdown.name>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20200615063837.GA14668@zn.tnic>
+User-Agent: Mutt/1.14.6 (2020-07-11)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Borislav Petkov <bp@alien8.de>
+Hi Borislav,
 
-Use the shorthand to make it more readable.
+This is certainly a good idea, but I wonder whether we should be more pragmatic 
+about the printk ratelimiting while we give userspace time to react and update 
+their methodologies.
 
-No functional changes.
+As one example, there is a common MSR hack which is verging on essential if 
+you're doing thermally intensive work on some recent ThinkPads[0][1], and this 
+drastically reduces the signal-to-noise ratio in kmsg (and this is only about 
+five minutes after boot):
 
-Signed-off-by: Joerg Roedel <jroedel@suse.de>
----
- arch/x86/include/asm/svm.h | 16 ++++++++--------
- 1 file changed, 8 insertions(+), 8 deletions(-)
+     % dmesg | wc -l
+     2963
+     % dmesg | grep -c 'unrecognized MSR'
+     2411
 
-diff --git a/arch/x86/include/asm/svm.h b/arch/x86/include/asm/svm.h
-index 0420250b008b..af91ced0f370 100644
---- a/arch/x86/include/asm/svm.h
-+++ b/arch/x86/include/asm/svm.h
-@@ -150,14 +150,14 @@ struct __attribute__ ((__packed__)) vmcb_control_area {
- #define SVM_NESTED_CTL_NP_ENABLE	BIT(0)
- #define SVM_NESTED_CTL_SEV_ENABLE	BIT(1)
- 
--struct __attribute__ ((__packed__)) vmcb_seg {
-+struct vmcb_seg {
- 	u16 selector;
- 	u16 attrib;
- 	u32 limit;
- 	u64 base;
--};
-+} __packed;
- 
--struct __attribute__ ((__packed__)) vmcb_save_area {
-+struct vmcb_save_area {
- 	struct vmcb_seg es;
- 	struct vmcb_seg cs;
- 	struct vmcb_seg ss;
-@@ -231,9 +231,9 @@ struct __attribute__ ((__packed__)) vmcb_save_area {
- 	u64 xcr0;
- 	u8 valid_bitmap[16];
- 	u64 x87_state_gpa;
--};
-+} __packed;
- 
--struct __attribute__ ((__packed__)) ghcb {
-+struct ghcb {
- 	struct vmcb_save_area save;
- 	u8 reserved_save[2048 - sizeof(struct vmcb_save_area)];
- 
-@@ -242,7 +242,7 @@ struct __attribute__ ((__packed__)) ghcb {
- 	u8 reserved_1[10];
- 	u16 protocol_version;	/* negotiated SEV-ES/GHCB protocol version */
- 	u32 ghcb_usage;
--};
-+} __packed;
- 
- 
- static inline void __unused_size_checks(void)
-@@ -252,11 +252,11 @@ static inline void __unused_size_checks(void)
- 	BUILD_BUG_ON(sizeof(struct ghcb) != 4096);
- }
- 
--struct __attribute__ ((__packed__)) vmcb {
-+struct vmcb {
- 	struct vmcb_control_area control;
- 	u8 reserved_control[1024 - sizeof(struct vmcb_control_area)];
- 	struct vmcb_save_area save;
--};
-+} __packed;
- 
- #define SVM_CPUID_FUNC 0x8000000a
- 
--- 
-2.27.0
+That is, even with pr_err_ratelimited, we still end up logging on basically 
+every single write, even though it's from the same TGID writing to the same 
+MSRs, and end up becoming >80% of kmsg.
 
+Of course, one can boot with `allow_writes=1` to avoid these messages at all, 
+but that then has the downfall that one doesn't get _any_ notification at all 
+about these problems in the first place, and so is much less likely to forget 
+to fix it. One might rather it was less binary: it was still logged, just less 
+often, so that application developers _do_ have the incentive to improve their 
+current methods, without us having to push other useful stuff out of the kmsg 
+buffer.
+
+This one example isn't the point, of course: I'm sure there are plenty of other 
+non-ideal-but-pragmatic cases where people are writing to MSRs from userspace 
+right now, and it will take time for those people to find other solutions.
+
+I completely agree with you that there should be a better solution for these 
+cases, and that writing to MSRs from userspace is really not a good idea.  
+However, going from zero to over 80% of dmesg in cases where these MSRs are 
+repeatedly used seems too fast to me.
+
+Have you considered perhaps making the ramping up of error logging more gradual 
+by having this printk have its own, more conservative `struct ratelimit_state`, 
+as we do in some other places with similar noise concerns? Then we could 
+gradually make the warnings more aggressive as time goes on, up until the point 
+where we make allow_writes=0 the default.
+
+Thanks,
+
+Chris
+
+0: Lenovo is supposedly fixing this since last year, but no news yet.
+1: https://github.com/erpalma/throttled
