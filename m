@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CFF71C433F8
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 19:04:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28A9DC433E2
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 19:05:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B286822B4E
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 19:04:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 08E97208C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 19:05:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594753495;
-	bh=lFGMtysz5U3UgWxk8qAbvF8pcn57l+N6BjIQ7eXaho0=;
+	s=default; t=1594753502;
+	bh=muY5iUHz/BlEr6zV2wNTZnyKKM+IE0t8F954ng1j9G4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RGzhvefl+j3jKgkn8NGnbA2vU7DgAbRt7G2MC0nTjD0xHggiWKhtTr/IUTpPLkCr6
-	 4jGjBAabac667aFlOMkGK8+BdodeXudmcpVkF/OD7tlyO7uKshJhsQiMN9FcZIURCr
-	 hDNbcg/Bx9SItajwIom2/lniOU2NqdR5WAlVWFj0=
+	b=G+jyywbwL/2fgxii3aIAPHzc1TlBqBu8t1tZuKYXPhFeZD2mZNbz4AvpF5NqyNdGz
+	 w4uuUmYR3/Nve8TuWf/9P+X7LSKfQsE1e974JbZuK4NQvsldM4dgMAeTAPXJTPJrM2
+	 fUtf84v9P695WKF/SQp4kVDetcU9dBjXBLdA0clg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730076AbgGNSzk (ORCPT
+        id S1731128AbgGNTFA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 14:55:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53276 "EHLO mail.kernel.org"
+        Tue, 14 Jul 2020 15:05:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53224 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730879AbgGNSzc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 14:55:32 -0400
+        id S1730245AbgGNSza (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 14:55:30 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D936222507;
-        Tue, 14 Jul 2020 18:55:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 420C621D79;
+        Tue, 14 Jul 2020 18:55:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594752932;
-        bh=lFGMtysz5U3UgWxk8qAbvF8pcn57l+N6BjIQ7eXaho0=;
+        s=default; t=1594752929;
+        bh=muY5iUHz/BlEr6zV2wNTZnyKKM+IE0t8F954ng1j9G4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CEB1saT5dS+iRiifJs96KCeI4aCXl3K2tN+oKS+UNZvPeQCgtvaxTRwpJt5IrsXIb
-         z3M0LnwSsF6hQ2jKrcCZ5O5FDIkw93SAhx1PyTSgp6zZPm3Fzqwgt7AuSQKFARvzRb
-         0qIKjEOkHQij6CABuWt+u9zoWwhVvR4p8Uo7zHtY=
+        b=2K+JQrDA9drwp62fwENpLJ+axODxxn9SgPonpyc0ncx6+hKpddGwULHUyzxqV2X8b
+         t4AViT433CZkO+unXig2CZTsNNo75QchCgqA8ATyRPry2gWCCGyOEJ7L3kwXyW4mEe
+         INUePtCBxJvw4jipqBUSwGreunhoZkCFQ1NXSDg8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Seevalamuthu Mariappan <seevalam@codeaurora.org>,
-        Johannes Berg <johannes.berg@intel.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 054/166] mac80211: Fix dropping broadcast packets in 802.11 encap
-Date:   Tue, 14 Jul 2020 20:43:39 +0200
-Message-Id: <20200714184118.463503899@linuxfoundation.org>
+        stable@vger.kernel.org, Zenghui Yu <yuzenghui@huawei.com>,
+        Marc Zyngier <maz@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.7 053/166] KVM: arm64: vgic-v4: Plug race between non-residency and v4.1 doorbell
+Date:   Tue, 14 Jul 2020 20:43:38 +0200
+Message-Id: <20200714184118.416543229@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200714184115.844176932@linuxfoundation.org>
 References: <20200714184115.844176932@linuxfoundation.org>
@@ -61,35 +59,84 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Seevalamuthu Mariappan <seevalam@codeaurora.org>
+From: Marc Zyngier <maz@kernel.org>
 
-[ Upstream commit 78fb5b541b7ae57ac39187ccb3097e606004cf9b ]
+[ Upstream commit a3f574cd65487cd993f79ab235d70229d9302c1e ]
 
-Broadcast pkts like arp are getting dropped in 'ieee80211_8023_xmit'.
-Fix this by replacing is_valid_ether_addr api with is_zero_ether_addr.
+When making a vPE non-resident because it has hit a blocking WFI,
+the doorbell can fire at any time after the write to the RD.
+Crucially, it can fire right between the write to GICR_VPENDBASER
+and the write to the pending_last field in the its_vpe structure.
 
-Fixes: 50ff477a8639 ("mac80211: add 802.11 encapsulation offloading support")
-Signed-off-by: Seevalamuthu Mariappan <seevalam@codeaurora.org>
-Link: https://lore.kernel.org/r/1591697754-4975-1-git-send-email-seevalam@codeaurora.org
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+This means that we would overwrite pending_last with stale data,
+and potentially not wakeup until some unrelated event (such as
+a timer interrupt) puts the vPE back on the CPU.
+
+GICv4 isn't affected by this as we actively mask the doorbell on
+entering the guest, while GICv4.1 automatically manages doorbell
+delivery without any hypervisor-driven masking.
+
+Use the vpe_lock to synchronize such update, which solves the
+problem altogether.
+
+Fixes: ae699ad348cdc ("irqchip/gic-v4.1: Move doorbell management to the GICv4 abstraction layer")
+Reported-by: Zenghui Yu <yuzenghui@huawei.com>
+Signed-off-by: Marc Zyngier <maz@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/mac80211/tx.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/irqchip/irq-gic-v3-its.c | 8 ++++++++
+ virt/kvm/arm/vgic/vgic-v4.c      | 8 ++++++++
+ 2 files changed, 16 insertions(+)
 
-diff --git a/net/mac80211/tx.c b/net/mac80211/tx.c
-index 82846aca86d96..6ab33d9904eec 100644
---- a/net/mac80211/tx.c
-+++ b/net/mac80211/tx.c
-@@ -4192,7 +4192,7 @@ static void ieee80211_8023_xmit(struct ieee80211_sub_if_data *sdata,
- 	    (!sta || !test_sta_flag(sta, WLAN_STA_TDLS_PEER)))
- 		ra = sdata->u.mgd.bssid;
+diff --git a/drivers/irqchip/irq-gic-v3-its.c b/drivers/irqchip/irq-gic-v3-its.c
+index b3e16a06c13b7..b99e3105bf9fe 100644
+--- a/drivers/irqchip/irq-gic-v3-its.c
++++ b/drivers/irqchip/irq-gic-v3-its.c
+@@ -3938,16 +3938,24 @@ static void its_vpe_4_1_deschedule(struct its_vpe *vpe,
+ 	u64 val;
  
--	if (!is_valid_ether_addr(ra))
-+	if (is_zero_ether_addr(ra))
- 		goto out_free;
+ 	if (info->req_db) {
++		unsigned long flags;
++
+ 		/*
+ 		 * vPE is going to block: make the vPE non-resident with
+ 		 * PendingLast clear and DB set. The GIC guarantees that if
+ 		 * we read-back PendingLast clear, then a doorbell will be
+ 		 * delivered when an interrupt comes.
++		 *
++		 * Note the locking to deal with the concurrent update of
++		 * pending_last from the doorbell interrupt handler that can
++		 * run concurrently.
+ 		 */
++		raw_spin_lock_irqsave(&vpe->vpe_lock, flags);
+ 		val = its_clear_vpend_valid(vlpi_base,
+ 					    GICR_VPENDBASER_PendingLast,
+ 					    GICR_VPENDBASER_4_1_DB);
+ 		vpe->pending_last = !!(val & GICR_VPENDBASER_PendingLast);
++		raw_spin_unlock_irqrestore(&vpe->vpe_lock, flags);
+ 	} else {
+ 		/*
+ 		 * We're not blocking, so just make the vPE non-resident
+diff --git a/virt/kvm/arm/vgic/vgic-v4.c b/virt/kvm/arm/vgic/vgic-v4.c
+index 27ac833e5ec7c..b5fa73c9fd355 100644
+--- a/virt/kvm/arm/vgic/vgic-v4.c
++++ b/virt/kvm/arm/vgic/vgic-v4.c
+@@ -90,7 +90,15 @@ static irqreturn_t vgic_v4_doorbell_handler(int irq, void *info)
+ 	    !irqd_irq_disabled(&irq_to_desc(irq)->irq_data))
+ 		disable_irq_nosync(irq);
  
- 	multicast = is_multicast_ether_addr(ra);
++	/*
++	 * The v4.1 doorbell can fire concurrently with the vPE being
++	 * made non-resident. Ensure we only update pending_last
++	 * *after* the non-residency sequence has completed.
++	 */
++	raw_spin_lock(&vcpu->arch.vgic_cpu.vgic_v3.its_vpe.vpe_lock);
+ 	vcpu->arch.vgic_cpu.vgic_v3.its_vpe.pending_last = true;
++	raw_spin_unlock(&vcpu->arch.vgic_cpu.vgic_v3.its_vpe.vpe_lock);
++
+ 	kvm_make_request(KVM_REQ_IRQ_PENDING, vcpu);
+ 	kvm_vcpu_kick(vcpu);
+ 
 -- 
 2.25.1
 
