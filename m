@@ -2,110 +2,104 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20341C433E4
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 17:32:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3C7EC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 17:34:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E854A22518
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 17:32:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594747975;
-	bh=zyZEA+TmaYx9HIH4TKfXi4hIG1sMV22qo4R5bh/s0e4=;
-	h=Date:From:To:Cc:Subject:Reply-To:List-ID:From;
-	b=iwg4s3dT7S9aK4xo6IjqvAPrrtnnh5FZk1/EpftvqH1Sas4dsTPyIN+Ciw4CAtMgf
-	 ja3eil1VmFgR5yHWeLZQto5yTrGvfHkeNtBwsNymaSmRje/S6CekmqBkK/bW8s4GqM
-	 IXv6r9IIn9qK40nc3a34JNBWRgI2Oo5z+74HBibE=
+	by mail.kernel.org (Postfix) with ESMTP id 8BC192074A
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 17:34:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728983AbgGNRcx (ORCPT
+        id S1728809AbgGNRed (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 13:32:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46052 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726169AbgGNRcx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 13:32:53 -0400
-Received: from paulmck-ThinkPad-P72.home (50-39-111-31.bvtn.or.frontiernet.net [50.39.111.31])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B18AB22450;
-        Tue, 14 Jul 2020 17:32:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594747972;
-        bh=zyZEA+TmaYx9HIH4TKfXi4hIG1sMV22qo4R5bh/s0e4=;
-        h=Date:From:To:Cc:Subject:Reply-To:From;
-        b=tux0jxNthNtq9o2fuXzgxnq27EFg1a+hfPyEw+mL7e8RWGUuwd/BtmJG1FzvhA6Jk
-         xxhP6/NVPQ8bIfrcrEwddf/egH/42naepoICJYkAhcTnrJuNHoEbwlRY5+fgIe8Pq1
-         Ug0HADccu05FqQpYVBywxXHO/rkvKK8YJpd6YzUM=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id 9A8C9352262C; Tue, 14 Jul 2020 10:32:52 -0700 (PDT)
-Date:   Tue, 14 Jul 2020 10:32:52 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     mingo@kernel.org, tglx@linutronix.de
-Cc:     linux-kernel@vger.kernel.org, cai@lca.pw, elver@google.com
-Subject: [GIT PULL kcsan] KCSAN commits for v5.9
-Message-ID: <20200714173252.GA32057@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
+        Tue, 14 Jul 2020 13:34:33 -0400
+Received: from pbmsgap02.intersil.com ([192.157.179.202]:60974 "EHLO
+        pbmsgap02.intersil.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726169AbgGNRed (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 13:34:33 -0400
+X-Greylist: delayed 1119 seconds by postgrey-1.27 at vger.kernel.org; Tue, 14 Jul 2020 13:34:32 EDT
+Received: from pps.filterd (pbmsgap02.intersil.com [127.0.0.1])
+        by pbmsgap02.intersil.com (8.16.0.27/8.16.0.27) with SMTP id 06EHDIkX023308;
+        Tue, 14 Jul 2020 13:15:50 -0400
+Received: from pbmxdp02.intersil.corp (pbmxdp02.pb.intersil.com [132.158.200.223])
+        by pbmsgap02.intersil.com with ESMTP id 3277kcs6pa-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
+        Tue, 14 Jul 2020 13:15:50 -0400
+Received: from pbmxdp03.intersil.corp (132.158.200.224) by
+ pbmxdp02.intersil.corp (132.158.200.223) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384_P384) id
+ 15.1.1979.3; Tue, 14 Jul 2020 13:15:49 -0400
+Received: from localhost (132.158.202.109) by pbmxdp03.intersil.corp
+ (132.158.200.224) with Microsoft SMTP Server id 15.1.1979.3 via Frontend
+ Transport; Tue, 14 Jul 2020 13:15:48 -0400
+From:   <min.li.xe@renesas.com>
+To:     <richardcochran@gmail.com>, <corbet@lwn.net>
+CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-doc@vger.kernel.org>, Min Li <min.li.xe@renesas.com>
+Subject: [PATCH net 1/1] docs: ptp.rst: add support for Renesas (IDT) ClockMatrix
+Date:   Tue, 14 Jul 2020 13:15:20 -0400
+Message-ID: <1594746920-28760-1-git-send-email-min.li.xe@renesas.com>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-TM-AS-MML: disable
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-07-14_06:2020-07-14,2020-07-14 signatures=0
+X-Proofpoint-Spam-Details: rule=junk_notspam policy=junk score=0 suspectscore=2 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-2006250000 definitions=main-2007140126
+X-Proofpoint-Spam-Reason: mlx
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello!
+From: Min Li <min.li.xe@renesas.com>
 
-This pull request contains KCSAN updates for v5.9.  These have been
-subjected to LKML review, most recently here:
+Add below to “Ancillary clock features” section
+  - Low Pass Filter (LPF) access from user space
 
-	https://lore.kernel.org/lkml/20200623004310.GA26995@paulmck-ThinkPad-P72/
+Add below to list of “Supported hardware” section
+  + Renesas (IDT) ClockMatrix™
 
-All of these have also been subjected to the kbuild test robot and
--next testing.  The following changes since v5.8-rc3 are available in
-the git repository at:
+Signed-off-by: Min Li <min.li.xe@renesas.com>
+---
+ Documentation/driver-api/ptp.rst | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/paulmck/linux-rcu.git kcsan
+diff --git a/Documentation/driver-api/ptp.rst b/Documentation/driver-api/ptp.rst
+index a15192e..664838a 100644
+--- a/Documentation/driver-api/ptp.rst
++++ b/Documentation/driver-api/ptp.rst
+@@ -23,6 +23,7 @@ PTP hardware clock infrastructure for Linux
+   + Ancillary clock features
+     - Time stamp external events
+     - Period output signals configurable from user space
++    - Low Pass Filter (LPF) access from user space
+     - Synchronization of the Linux system time via the PPS subsystem
+ 
+ PTP hardware clock kernel API
+@@ -94,3 +95,14 @@ Supported hardware
+ 
+      - Auxiliary Slave/Master Mode Snapshot (optional interrupt)
+      - Target Time (optional interrupt)
++
++   * Renesas (IDT) ClockMatrix™
++
++     - Up to 4 independent PHC channels
++     - Integrated low pass filter (LPF), access via .adjPhase (compliant to ITU-T G.8273.2)
++     - Programmable output periodic signals
++     - Programmable inputs can time stamp external triggers
++     - Driver and/or hardware configuration through firmware (idtcm.bin)
++          - LPF settings (bandwidth, phase limiting, automatic holdover, physical layer assist (per ITU-T G.8273.2))
++          - Programmable output PTP clocks, any frequency up to 1GHz (to other PHY/MAC time stampers, refclk to ASSPs/SoCs/FPGAs)
++          - Lock to GNSS input, automatic switching between GNSS and user-space PHC control (optional)
+-- 
+2.7.4
 
-for you to fetch changes up to 61d56d7aa5eca3b909bce51ba8125b0fa44d7e17:
-
-  kcsan: Disable branch tracing in core runtime (2020-06-29 12:04:48 -0700)
-
-----------------------------------------------------------------
-Marco Elver (9):
-      kcsan: Add test suite
-      kcsan: Prefer '__no_kcsan inline' in test
-      kcsan: Silence -Wmissing-prototypes warning with W=1
-      kcsan: Rename test.c to selftest.c
-      kcsan: Remove existing special atomic rules
-      kcsan: Add jiffies test to test suite
-      kcsan: Re-add GCC as a supported compiler
-      kcsan: Simplify compiler flags
-      kcsan: Disable branch tracing in core runtime
-
-Paul E. McKenney (1):
-      rculist: Add ASSERT_EXCLUSIVE_ACCESS() to __list_splice_init_rcu()
-
-Qian Cai (3):
-      fork: Annotate a data race in vm_area_dup()
-      x86/mm/pat: Mark an intentional data race
-      locking/osq_lock: Annotate a data race in osq_lock
-
- Documentation/dev-tools/kcsan.rst   |    3 +-
- arch/x86/mm/pat/set_memory.c        |    2 +-
- include/linux/rculist.h             |    2 +
- kernel/fork.c                       |    8 +-
- kernel/kcsan/Makefile               |    9 +-
- kernel/kcsan/atomic.h               |    6 +-
- kernel/kcsan/core.c                 |    9 +
- kernel/kcsan/kcsan-test.c           | 1107 +++++++++++++++++++++++++++++++++++
- kernel/kcsan/{test.c => selftest.c} |    0
- kernel/locking/osq_lock.c           |    6 +-
- lib/Kconfig.kcsan                   |   26 +-
- scripts/Makefile.kcsan              |    2 +-
- 12 files changed, 1166 insertions(+), 14 deletions(-)
- create mode 100644 kernel/kcsan/kcsan-test.c
- rename kernel/kcsan/{test.c => selftest.c} (100%)
