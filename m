@@ -7,45 +7,47 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C216AC433F4
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 19:00:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FFD9C433E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 19:00:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A2CDE229CA
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 19:00:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EAF8C229CA
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 19:00:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594753203;
-	bh=8XehDhDAYZ5yLnOp2poj5t1BNfP/ZjLH1Sgm6/0JwTk=;
+	s=default; t=1594753208;
+	bh=G15zM31QICDMV7rJs5RJeHhuMGQu1mL+XeWYE7wr6vs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Q5RqcmZftLlO0kaBToq3i56fuYfL68t3dbShJixn8cu22k/YJxorKogUPuc5hTURC
-	 64pmBDrjhqZ+DMuUVQJjsx9xTYmzuBH18UqPyh+tUJPt99Dg/x3A578dVBJhMSTRWU
-	 Zp6H6Wjh8YCnGEYeuIsEHR0LlsTnCFMJAOIPiAZM=
+	b=jH01xLh6uvEh+bHbsHDe9m38Jk9s/oyjUpGK1tVa1NG0ijfrSgcSW21U/zUTmH8Ga
+	 oFxjapZbJ2IA5oNrNEaD2RCshqE3wxJtWOKPGXmW7o6So4ZcD16CNSLsAu7aDTPh4K
+	 BWcJwk12xjhI/p4Cxn3Oy0qPMlOFd0nYZZDI5fgg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731141AbgGNTAC (ORCPT
+        id S1731333AbgGNTAG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 15:00:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58616 "EHLO mail.kernel.org"
+        Tue, 14 Jul 2020 15:00:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58640 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731314AbgGNS7y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 14:59:54 -0400
+        id S1731015AbgGNS74 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 14:59:56 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5945322507;
-        Tue, 14 Jul 2020 18:59:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F001122507;
+        Tue, 14 Jul 2020 18:59:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594753193;
-        bh=8XehDhDAYZ5yLnOp2poj5t1BNfP/ZjLH1Sgm6/0JwTk=;
+        s=default; t=1594753196;
+        bh=G15zM31QICDMV7rJs5RJeHhuMGQu1mL+XeWYE7wr6vs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zQgTPTNFUON0lyDqhTDc3BxuoqhzvM7CKSH1zyuX0puHqra/y+zGS5GrYqzxH/337
-         1Z0NtM7Cu8GNio9SxthkCOUjgpIBf6sT/lk3KCdHFZyxbN/cdOHuBdurHi23UCS7Ki
-         7MV4CG94jIkHl8ZEhFaV99kxgdtyrZp7cKm5iDnk=
+        b=IeXNbBv/gM4hj/iXPkxL6uUZ6LH/FW2CJ0sABNX4yDoNT9nVkyYU/rjw+Z/KBe1fW
+         jJvjokIe/A3zzmVGWVzr9bRVJVr33mSwSkqOSrFr7hSQ8q1I11xb9HigPt3co1Ky6I
+         Rbo27OrLmbVZbpnFoQInA5rZUmDugro3nljZZqLM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Vineet Gupta <vgupta@synopsys.com>
-Subject: [PATCH 5.7 154/166] ARC: elf: use right ELF_ARCH
-Date:   Tue, 14 Jul 2020 20:45:19 +0200
-Message-Id: <20200714184123.197962493@linuxfoundation.org>
+        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
+        Yang Yingliang <yangyingliang@huawei.com>,
+        Jens Axboe <axboe@kernel.dk>
+Subject: [PATCH 5.7 126/166] io_uring: fix memleak in io_sqe_files_register()
+Date:   Tue, 14 Jul 2020 20:44:51 +0200
+Message-Id: <20200714184121.866656714@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200714184115.844176932@linuxfoundation.org>
 References: <20200714184115.844176932@linuxfoundation.org>
@@ -58,28 +60,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vineet Gupta <vgupta@synopsys.com>
+From: Yang Yingliang <yangyingliang@huawei.com>
 
-commit b7faf971081a4e56147f082234bfff55135305cb upstream.
+commit 667e57da358f61b6966e12e925a69e42d912e8bb upstream.
 
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Vineet Gupta <vgupta@synopsys.com>
+I got a memleak report when doing some fuzz test:
+
+BUG: memory leak
+unreferenced object 0x607eeac06e78 (size 8):
+  comm "test", pid 295, jiffies 4294735835 (age 31.745s)
+  hex dump (first 8 bytes):
+    00 00 00 00 00 00 00 00                          ........
+  backtrace:
+    [<00000000932632e6>] percpu_ref_init+0x2a/0x1b0
+    [<0000000092ddb796>] __io_uring_register+0x111d/0x22a0
+    [<00000000eadd6c77>] __x64_sys_io_uring_register+0x17b/0x480
+    [<00000000591b89a6>] do_syscall_64+0x56/0xa0
+    [<00000000864a281d>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
+
+Call percpu_ref_exit() on error path to avoid
+refcount memleak.
+
+Fixes: 05f3fb3c5397 ("io_uring: avoid ring quiesce for fixed file set unregister and update")
+Cc: stable@vger.kernel.org
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: Yang Yingliang <yangyingliang@huawei.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/arc/include/asm/elf.h |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/io_uring.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/arch/arc/include/asm/elf.h
-+++ b/arch/arc/include/asm/elf.h
-@@ -19,7 +19,7 @@
- #define  R_ARC_32_PCREL		0x31
+--- a/fs/io_uring.c
++++ b/fs/io_uring.c
+@@ -6751,6 +6751,7 @@ static int io_sqe_files_register(struct
+ 		for (i = 0; i < nr_tables; i++)
+ 			kfree(ctx->file_data->table[i].files);
  
- /*to set parameters in the core dumps */
--#define ELF_ARCH		EM_ARCOMPACT
-+#define ELF_ARCH		EM_ARC_INUSE
- #define ELF_CLASS		ELFCLASS32
- 
- #ifdef CONFIG_CPU_BIG_ENDIAN
++		percpu_ref_exit(&ctx->file_data->refs);
+ 		kfree(ctx->file_data->table);
+ 		kfree(ctx->file_data);
+ 		ctx->file_data = NULL;
 
 
