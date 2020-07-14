@@ -2,168 +2,202 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D837C433E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 16:05:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 608EBC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 16:08:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5B6B822518
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 16:05:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3AAAA22515
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 16:08:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gerhold.net header.i=@gerhold.net header.b="DgIOeDcH"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="nIxTOnai"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728082AbgGNQFB (ORCPT
+        id S1727047AbgGNQIE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 12:05:01 -0400
-Received: from mo4-p01-ob.smtp.rzone.de ([81.169.146.164]:27773 "EHLO
-        mo4-p01-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725884AbgGNQFA (ORCPT
+        Tue, 14 Jul 2020 12:08:04 -0400
+Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:5846 "EHLO
+        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725876AbgGNQID (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 12:05:00 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1594742695;
-        s=strato-dkim-0002; d=gerhold.net;
-        h=In-Reply-To:References:Message-ID:Subject:Cc:To:From:Date:
-        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=Spezz/C6//ge5H/J9Y8FNwVYQDRFbPkYkD8EuMVrEEA=;
-        b=DgIOeDcHYCL9DqC1yJlnGeiQyI4agtDlAtG7qjJwwlQBjkiHva6QZLyCwL/v22IchC
-        nMt6aozEOALnNok42Uab4bokRM/rTomeIY9dInjoszOnYW+U/1x/AQmUuYFf1qqCL8EE
-        NHCL03NU2DkMAIk6pIaE8YqFIqeCSzgeOcWzREzM6UQWL4s62wiVQ44YfZcVYQZumzst
-        HYTZRtS8UVJct7x6iIJ7laaaGGvdA7Sbtd8+HUe7MsBIMtLBNpzmRnWg1yJeQiYwMk19
-        fzFgJXIi27DX9gcM0bGx4diSkF5zqXuQ/G5+PXGvdvx9K4xxhPUvcx+zp5mupGwjITRq
-        b+UA==
-X-RZG-AUTH: ":P3gBZUipdd93FF5ZZvYFPugejmSTVR2nRPhVOQ/OcYgojyw4j34+u26zEodhPgRDZ8j9IcfFBg=="
-X-RZG-CLASS-ID: mo00
-Received: from gerhold.net
-        by smtp.strato.de (RZmta 46.10.5 DYNA|AUTH)
-        with ESMTPSA id Y0939ew6EG4t8mh
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
-        (Client did not present a certificate);
-        Tue, 14 Jul 2020 18:04:55 +0200 (CEST)
-Date:   Tue, 14 Jul 2020 18:04:45 +0200
-From:   Stephan Gerhold <stephan@gerhold.net>
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     Andy Gross <agross@kernel.org>, Ohad Ben-Cohen <ohad@wizery.com>,
-        Baolin Wang <baolin.wang7@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        linux-arm-msm@vger.kernel.org, linux-remoteproc@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Vinod Koul <vkoul@kernel.org>
-Subject: Re: [PATCH v2 3/4] hwspinlock: qcom: Allow mmio usage in addition to
- syscon
-Message-ID: <20200714160445.GA3848@gerhold.net>
-References: <20200622075956.171058-1-bjorn.andersson@linaro.org>
- <20200622075956.171058-4-bjorn.andersson@linaro.org>
+        Tue, 14 Jul 2020 12:08:03 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5f0dd7f10001>; Tue, 14 Jul 2020 09:06:09 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Tue, 14 Jul 2020 09:08:03 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Tue, 14 Jul 2020 09:08:03 -0700
+Received: from HQMAIL111.nvidia.com (172.20.187.18) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 14 Jul
+ 2020 16:07:59 +0000
+Received: from rnnvemgw01.nvidia.com (10.128.109.123) by HQMAIL111.nvidia.com
+ (172.20.187.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Tue, 14 Jul 2020 16:07:59 +0000
+Received: from sumitg-l4t.nvidia.com (Not Verified[10.24.37.103]) by rnnvemgw01.nvidia.com with Trustwave SEG (v7,5,8,10121)
+        id <B5f0dd85a0001>; Tue, 14 Jul 2020 09:07:58 -0700
+From:   Sumit Gupta <sumitg@nvidia.com>
+To:     <rjw@rjwysocki.net>, <viresh.kumar@linaro.org>,
+        <catalin.marinas@arm.com>, <will@kernel.org>,
+        <thierry.reding@gmail.com>, <robh+dt@kernel.org>,
+        <mirq-linux@rere.qmqm.pl>, <devicetree@vger.kernel.org>,
+        <jonathanh@nvidia.com>, <talho@nvidia.com>,
+        <linux-pm@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     <bbasu@nvidia.com>, <sumitg@nvidia.com>, <mperttunen@nvidia.com>
+Subject: [TEGRA194_CPUFREQ PATCH v6 1/4] dt-bindings: arm: Add NVIDIA Tegra194 CPU Complex binding
+Date:   Tue, 14 Jul 2020 21:37:50 +0530
+Message-ID: <1594742870-19957-1-git-send-email-sumitg@nvidia.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <CAL_JsqL1CuumdT1CZiofEZw9j+3gsir8JwSrZVfcxFxEB=bavQ@mail.gmail.com>
+References: <CAL_JsqL1CuumdT1CZiofEZw9j+3gsir8JwSrZVfcxFxEB=bavQ@mail.gmail.com>
+X-NVConfidentiality: public
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200622075956.171058-4-bjorn.andersson@linaro.org>
+Content-Type: text/plain
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1594742769; bh=1dBLDP4PGuNfttH15wzchZO1kkAghBjJKlbYsdl9U78=;
+        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
+         In-Reply-To:References:X-NVConfidentiality:MIME-Version:
+         Content-Type;
+        b=nIxTOnai/j/kl+2qVXVH+6Je2bGs6nQeYnTZZDcc4CRZudogNcl9paf7xq8okJS38
+         oLSimMmro9r3f0ii31RxC/GqngyM0lUfTTPicn7zs4O+LXerwxbMEEu/nZ3ZsN+Zfh
+         0HT+dajlM1GVRFicMnJ/0Sir/lVbfFtSLOHlA9/C/vwttc1FZujFdPAQ791GS8NMty
+         gvoQsPQz4XCPsmhpVShwvcZ15C3a2hW+SfrqWijxRthoAvLMhXCJxteaYizDJNiwab
+         CwhFeym3QxhOdPiCQ79iRoFDMiiCrjMYyit/61qJ+lOCqWAhO+ZNhFg6d3+4POLzla
+         fhhYmokcuFqyg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Bjorn,
+Add device-tree binding documentation to represent Tegra194
+CPU Complex with compatible string under 'cpus' node. This
+can be used by drivers like cpufreq which don't have their
+node or CPU Complex node to bind to. Also, documenting
+'nvidia,bpmp' property which points to BPMP device.
 
-On Mon, Jun 22, 2020 at 12:59:55AM -0700, Bjorn Andersson wrote:
-> In modern Qualcomm platforms the mutex region of the TCSR is forked off
-> into its own block, all with a offset of 0 and stride of 4096, and in
-> some of these platforms no other registers in this region is accessed
-> from Linux.
-> 
-> So add support for directly memory mapping this register space, to avoid
-> the need to represent this block using a syscon.
-> 
-> Reviewed-by: Baolin Wang <baolin.wang7@gmail.com>
-> Reviewed-by: Vinod Koul <vkoul@kernel.org>
-> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-> ---
-> 
-> Changes since v1:
-> - Use devm_platform_ioremap_resource()
-> 
->  drivers/hwspinlock/qcom_hwspinlock.c | 70 +++++++++++++++++++++-------
->  1 file changed, 54 insertions(+), 16 deletions(-)
-> 
-> diff --git a/drivers/hwspinlock/qcom_hwspinlock.c b/drivers/hwspinlock/qcom_hwspinlock.c
-> index f0da544b14d2..364710966665 100644
-> --- a/drivers/hwspinlock/qcom_hwspinlock.c
-> +++ b/drivers/hwspinlock/qcom_hwspinlock.c
-> @@ -70,41 +70,79 @@ static const struct of_device_id qcom_hwspinlock_of_match[] = {
->  };
->  MODULE_DEVICE_TABLE(of, qcom_hwspinlock_of_match);
->  
-> -static int qcom_hwspinlock_probe(struct platform_device *pdev)
-> +static struct regmap *qcom_hwspinlock_probe_syscon(struct platform_device *pdev,
-> +						   u32 *base, u32 *stride)
->  {
-> -	struct hwspinlock_device *bank;
->  	struct device_node *syscon;
-> -	struct reg_field field;
->  	struct regmap *regmap;
-> -	size_t array_size;
-> -	u32 stride;
-> -	u32 base;
->  	int ret;
-> -	int i;
->  
->  	syscon = of_parse_phandle(pdev->dev.of_node, "syscon", 0);
-> -	if (!syscon) {
-> -		dev_err(&pdev->dev, "no syscon property\n");
-> -		return -ENODEV;
-> -	}
-> +	if (!syscon)
-> +		return ERR_PTR(-ENODEV);
->  
->  	regmap = syscon_node_to_regmap(syscon);
->  	of_node_put(syscon);
->  	if (IS_ERR(regmap))
-> -		return PTR_ERR(regmap);
-> +		return regmap;
->  
-> -	ret = of_property_read_u32_index(pdev->dev.of_node, "syscon", 1, &base);
-> +	ret = of_property_read_u32_index(pdev->dev.of_node, "syscon", 1, base);
->  	if (ret < 0) {
->  		dev_err(&pdev->dev, "no offset in syscon\n");
-> -		return -EINVAL;
-> +		return ERR_PTR(-EINVAL);
->  	}
->  
-> -	ret = of_property_read_u32_index(pdev->dev.of_node, "syscon", 2, &stride);
-> +	ret = of_property_read_u32_index(pdev->dev.of_node, "syscon", 2, stride);
->  	if (ret < 0) {
->  		dev_err(&pdev->dev, "no stride syscon\n");
-> -		return -EINVAL;
-> +		return ERR_PTR(-EINVAL);
->  	}
->  
-> +	return regmap;
-> +}
-> +
-> +static const struct regmap_config tcsr_mutex_config = {
-> +	.reg_bits		= 32,
-> +	.reg_stride		= 4,
-> +	.val_bits		= 32,
-> +	.max_register		= 0x40000,
+Signed-off-by: Sumit Gupta <sumitg@nvidia.com>
+---
+ .../bindings/arm/nvidia,tegra194-ccplex.yaml       | 106 +++++++++++++++++++++
+ 1 file changed, 106 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/arm/nvidia,tegra194-ccplex.yaml
 
-Where does the 0x40000 come from?
+diff --git a/Documentation/devicetree/bindings/arm/nvidia,tegra194-ccplex.yaml b/Documentation/devicetree/bindings/arm/nvidia,tegra194-ccplex.yaml
+new file mode 100644
+index 0000000..06dbdaa
+--- /dev/null
++++ b/Documentation/devicetree/bindings/arm/nvidia,tegra194-ccplex.yaml
+@@ -0,0 +1,106 @@
++# SPDX-License-Identifier: GPL-2.0
++%YAML 1.2
++---
++$id: "http://devicetree.org/schemas/arm/nvidia,tegra194-ccplex.yaml#"
++$schema: "http://devicetree.org/meta-schemas/core.yaml#"
++
++title: NVIDIA Tegra194 CPU Complex device tree bindings
++
++maintainers:
++  - Thierry Reding <thierry.reding@gmail.com>
++  - Jonathan Hunter <jonathanh@nvidia.com>
++  - Sumit Gupta <sumitg@nvidia.com>
++
++description: |+
++  Tegra194 SOC has homogeneous architecture where each cluster has two
++  symmetric cores. Compatible string in "cpus" node represents the CPU
++  Complex having all clusters.
++
++properties:
++  compatible:
++    enum:
++      - nvidia,tegra194-ccplex
++
++  nvidia,bpmp:
++    $ref: '/schemas/types.yaml#/definitions/phandle'
++    description: |
++      Specifies the bpmp node that needs to be queried to get
++      operating point data for all CPUs.
++
++      Optional for systems that have a "compatible"
++      property value of "nvidia,tegra194-ccplex".
++
++  "#address-cells":
++    const: 1
++
++  "#size-cells":
++    const: 0
++
++dependencies:
++  nvidia,bpmp: [compatible]
++
++examples:
++  - |
++    cpus {
++      compatible = "nvidia,tegra194-ccplex";
++      nvidia,bpmp = <&bpmp>;
++      #address-cells = <1>;
++      #size-cells = <0>;
++
++      cpu0_0: cpu@0 {
++        compatible = "nvidia,tegra194-carmel";
++        device_type = "cpu";
++        reg = <0x0>;
++        enable-method = "psci";
++      };
++
++      cpu0_1: cpu@1 {
++        compatible = "nvidia,tegra194-carmel";
++        device_type = "cpu";
++        reg = <0x001>;
++        enable-method = "psci";
++      };
++
++      cpu1_0: cpu@100 {
++        compatible = "nvidia,tegra194-carmel";
++        device_type = "cpu";
++        reg = <0x100>;
++        enable-method = "psci";
++      };
++
++      cpu1_1: cpu@101 {
++        compatible = "nvidia,tegra194-carmel";
++        device_type = "cpu";
++        reg = <0x101>;
++        enable-method = "psci";
++      };
++
++      cpu2_0: cpu@200 {
++        compatible = "nvidia,tegra194-carmel";
++        device_type = "cpu";
++        reg = <0x200>;
++        enable-method = "psci";
++      };
++
++      cpu2_1: cpu@201 {
++        compatible = "nvidia,tegra194-carmel";
++        device_type = "cpu";
++        reg = <0x201>;
++        enable-method = "psci";
++      };
++
++      cpu3_0: cpu@300 {
++        compatible = "nvidia,tegra194-carmel";
++        device_type = "cpu";
++        reg = <0x300>;
++        enable-method = "psci";
++      };
++
++      cpu3_1: cpu@301 {
++        compatible = "nvidia,tegra194-carmel";
++        device_type = "cpu";
++        reg = <0x301>;
++        enable-method = "psci";
++       };
++    };
++...
+-- 
+2.7.4
 
-It seems like this driver has QCOM_MUTEX_NUM_LOCKS = 32 hardcoded.
-With a stride of 4096 = 0x1000 you get 0x1000 * 32 = 0x20000.
-
-This is also the reg size used in msm8996.dtsi and msm8916.dtsi for
-example, while sdm845.dtsi and sm8250.dtsi specify 0x40000.
-Are you not exposing all available locks on the newer SoCs?
-
-I'm not sure how important max_register is... But I guess it should be
-either correct for all SoCs or not specified at all (since it's
-optional)?
-
-(That is assuming the hwlock can be also used directly via MMIO on
- MSM8996 and MSM8916. It looks to me like it has its own register
- space there as well...)
-
-Thanks,
-Stephan
