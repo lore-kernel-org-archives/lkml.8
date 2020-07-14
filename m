@@ -2,166 +2,197 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-22.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B241FC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 17:44:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E497C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 17:46:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 969B822519
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 17:44:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EAD9422518
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 17:46:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="A371v1AQ"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="rQRl75iU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729076AbgGNRoP (ORCPT
+        id S1728392AbgGNRqh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 13:44:15 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:58202 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727028AbgGNRoO (ORCPT
+        Tue, 14 Jul 2020 13:46:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56634 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726169AbgGNRqh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 13:44:14 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1594748652;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=fRu/5iacxmutQ7kMDS7dLLg3NGipwsCDb2mhidsZLDQ=;
-        b=A371v1AQk+HsL23DwZqr9lLNT8usudt7CFEVpM1I8eH52Ay+zND5Ivl4gFAWMFwSQO5OBV
-        XHL91w/UvmgdN+V6xpd4ACT6ii7L/V0YmpW5vBC4CJmWCQ0cvtnY4AMqBgoN0JlFxVWvIX
-        QlsbkqUMqEmcnLVpnfhWHZzN0tHIits=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-164--oAd_irlPMmMGcwJY665gQ-1; Tue, 14 Jul 2020 13:44:05 -0400
-X-MC-Unique: -oAd_irlPMmMGcwJY665gQ-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 741CF100CCC4;
-        Tue, 14 Jul 2020 17:44:04 +0000 (UTC)
-Received: from madcap2.tricolour.ca (unknown [10.10.110.3])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id B9E786FEDF;
-        Tue, 14 Jul 2020 17:43:56 +0000 (UTC)
-Date:   Tue, 14 Jul 2020 13:43:53 -0400
-From:   Richard Guy Briggs <rgb@redhat.com>
-To:     Paul Moore <paul@paul-moore.com>
-Cc:     Linux-Audit Mailing List <linux-audit@redhat.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux Security Module list 
-        <linux-security-module@vger.kernel.org>,
-        Eric Paris <eparis@parisplace.org>, john.johansen@canonical.com
-Subject: Re: [PATCH ghak84 v4] audit: purge audit_log_string from the
- intra-kernel audit API
-Message-ID: <20200714174353.ds7lj3iisy67t2zu@madcap2.tricolour.ca>
-References: <6effbbd4574407d6af21162e57d9102d5f8b02ed.1594664015.git.rgb@redhat.com>
- <CAHC9VhSyq7yKQqwvHL5syU9+TFki6-__WfCrvqewbnU3xpND4Q@mail.gmail.com>
+        Tue, 14 Jul 2020 13:46:37 -0400
+Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2867AC061755
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 10:46:37 -0700 (PDT)
+Received: by mail-pl1-x641.google.com with SMTP id t6so4164684plo.3
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 10:46:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=zVAqQ1RrD/8AbvIkruHdsHuHjF9WaxXjKmuECQBQMDs=;
+        b=rQRl75iUGDhFskIErM2L0Noay1KPR2rp4AlXszWBUkvVzdkMl4mSjOfCMyzKXF1fVp
+         kBMkoR7UUJ82bUFSjkETHmu5RQLEmPl06vVxEv+MR9OfHpKVQI+/MSEJqahn5m+XXyCs
+         MNX6455aC6pGi0AnCMcUzJdslORghD5r7PQZSnOmnqNPF89ugqETciSbKZC7PJQ/AdEy
+         T8AsRDNheIWhPPz9mZte4Wtsymr3QRBcHg+6oI5xAmicXIVtEnKuR3KFbYo+W4xSCd8Q
+         qkvRPudgYTzIvk3aNev9ZfxFC5f/+ey0KuGjtXJrf0Cg2uDwRY0XowTvRiim/S224BS/
+         i4zA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=zVAqQ1RrD/8AbvIkruHdsHuHjF9WaxXjKmuECQBQMDs=;
+        b=JnXgKszSIfJvTmg4RlrEwimmMUvUzvQ52QvV+9U5EZ5tAKbyUq6lt740/kJ2qUG4Qh
+         YTNnt7kixPcAzCGvLqZ97X//ak7Zo/+IfRrCZwW8gLbAEmSk9ZMc1lV9e2ho2CDKZnb5
+         q/UqWF8AAYNptEGbli1VuxPON1GsLVjPtr4i5JsVUOrSHoWCC/z4FiKeWAy1jtvLclg5
+         E2zbUd2SZANe3wvazaD7+T9SI5hpP2XK/qe68vRKoLDjvO1jX+oYw/741PCfVhsFIIbC
+         bNFEM/CFlacZ075/JXndc8oPXzGJ1mMnM+W1jxlQjj1zevGd+b/Edhx/184yiR70WIdB
+         GCDQ==
+X-Gm-Message-State: AOAM533afQQyqyzlvO8f7XxSBNiPy/s+vaDpFq2+7bFLs8QQUIX1ctlF
+        dVMdVrDT6vTB3LpD+n4FS86JgSLrmBZwmxI5klD/YQ==
+X-Google-Smtp-Source: ABdhPJys8XlKLqMxlDNDBEQtANTmDynliAQELgoKV6tKqh7iKneYzDtXHXBrbmKS20IGMwXLi1ymVvnbP193mwrqqhI=
+X-Received: by 2002:a17:902:d311:: with SMTP id b17mr4752076plc.223.1594748796321;
+ Tue, 14 Jul 2020 10:46:36 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHC9VhSyq7yKQqwvHL5syU9+TFki6-__WfCrvqewbnU3xpND4Q@mail.gmail.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+References: <20200714111103.14591-1-sedat.dilek@gmail.com>
+In-Reply-To: <20200714111103.14591-1-sedat.dilek@gmail.com>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Tue, 14 Jul 2020 10:46:24 -0700
+Message-ID: <CAKwvOdk3WSMhMxxaWfFeWYkR=xYgwrREckS+X5Yg5QeC48UVrg@mail.gmail.com>
+Subject: Re: [PATCH v2] x86/entry: Fix vectors to IDTENTRY_SYSVEC for CONFIG_HYPERV
+To:     Sedat Dilek <sedat.dilek@gmail.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Alexandre Chartre <alexandre.chartre@oracle.com>,
+        Wei Liu <wei.liu@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Jian Cai <caij2003@gmail.com>,
+        Nathan Chancellor <natechancellor@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-07-14 12:21, Paul Moore wrote:
-> On Mon, Jul 13, 2020 at 3:52 PM Richard Guy Briggs <rgb@redhat.com> wrote:
-> >
-> > audit_log_string() was inteded to be an internal audit function and
-> > since there are only two internal uses, remove them.  Purge all external
-> > uses of it by restructuring code to use an existing audit_log_format()
-> > or using audit_log_format().
-> >
-> > Please see the upstream issue
-> > https://github.com/linux-audit/audit-kernel/issues/84
-> >
-> > Signed-off-by: Richard Guy Briggs <rgb@redhat.com>
-> > ---
-> > Passes audit-testsuite.
-> >
-> > Changelog:
-> > v4
-> > - use double quotes in all replaced audit_log_string() calls
-> >
-> > v3
-> > - fix two warning: non-void function does not return a value in all control paths
-> >         Reported-by: kernel test robot <lkp@intel.com>
-> >
-> > v2
-> > - restructure to piggyback on existing audit_log_format() calls, checking quoting needs for each.
-> >
-> > v1 Vlad Dronov
-> > - https://github.com/nefigtut/audit-kernel/commit/dbbcba46335a002f44b05874153a85b9cc18aebf
-> >
-> >  include/linux/audit.h     |  5 -----
-> >  kernel/audit.c            |  4 ++--
-> >  security/apparmor/audit.c | 10 ++++------
-> >  security/apparmor/file.c  | 25 +++++++------------------
-> >  security/apparmor/ipc.c   | 46 +++++++++++++++++++++++-----------------------
-> >  security/apparmor/net.c   | 14 ++++++++------
-> >  security/lsm_audit.c      |  4 ++--
-> >  7 files changed, 46 insertions(+), 62 deletions(-)
-> 
-> Thanks for restoring the quotes, just one question below ...
-> 
-> > diff --git a/security/apparmor/ipc.c b/security/apparmor/ipc.c
-> > index 4ecedffbdd33..fe36d112aad9 100644
-> > --- a/security/apparmor/ipc.c
-> > +++ b/security/apparmor/ipc.c
-> > @@ -20,25 +20,23 @@
-> >
-> >  /**
-> >   * audit_ptrace_mask - convert mask to permission string
-> > - * @buffer: buffer to write string to (NOT NULL)
-> >   * @mask: permission mask to convert
-> > + *
-> > + * Returns: pointer to static string
-> >   */
-> > -static void audit_ptrace_mask(struct audit_buffer *ab, u32 mask)
-> > +static const char *audit_ptrace_mask(u32 mask)
-> >  {
-> >         switch (mask) {
-> >         case MAY_READ:
-> > -               audit_log_string(ab, "read");
-> > -               break;
-> > +               return "read";
-> >         case MAY_WRITE:
-> > -               audit_log_string(ab, "trace");
-> > -               break;
-> > +               return "trace";
-> >         case AA_MAY_BE_READ:
-> > -               audit_log_string(ab, "readby");
-> > -               break;
-> > +               return "readby";
-> >         case AA_MAY_BE_TRACED:
-> > -               audit_log_string(ab, "tracedby");
-> > -               break;
-> > +               return "tracedby";
-> >         }
-> > +       return "";
-> 
-> Are we okay with this returning an empty string ("") in this case?
-> Should it be a question mark ("?")?
-> 
-> My guess is that userspace parsing should be okay since it still has
-> quotes, I'm just not sure if we wanted to use a question mark as we do
-> in other cases where the field value is empty/unknown.
+On Tue, Jul 14, 2020 at 4:11 AM Sedat Dilek <sedat.dilek@gmail.com> wrote:
+>
+> When using Clang's Integrated Assembler (LLVM_IAS=1) we fell over
+> ClangBuiltLinux (CBL) issue #1043 where Jian Cai provided a patch.
+>
+> With Jian's patch applied another issue raised up when CONFIG_HYPERV=m.
+>
+> It turned out that the conversion of vectors to IDTENTRY_SYSVEC in
+> case of CONFIG_HYPERV was incomplete and fails with a build error:
+>
+> <instantiation>:9:6: error: expected absolute expression
+>  .if HYPERVISOR_REENLIGHTENMENT_VECTOR == 3
+>      ^
+> <instantiation>:1:1: note: while in macro instantiation
+> idtentry HYPERVISOR_REENLIGHTENMENT_VECTOR asm_sysvec_hyperv_reenlightenment sysvec_hyperv_reenlightenment has_error_code=0
+> ^
+> ./arch/x86/include/asm/idtentry.h:627:1: note: while in macro instantiation
+> idtentry_sysvec HYPERVISOR_REENLIGHTENMENT_VECTOR sysvec_hyperv_reenlightenment;
+> ^
+> <instantiation>:9:6: error: expected absolute expression
+>  .if HYPERVISOR_STIMER0_VECTOR == 3
+>      ^
+> <instantiation>:1:1: note: while in macro instantiation
+> idtentry HYPERVISOR_STIMER0_VECTOR asm_sysvec_hyperv_stimer0 sysvec_hyperv_stimer0 has_error_code=0
+> ^
+> ./arch/x86/include/asm/idtentry.h:628:1: note: while in macro instantiation
+> idtentry_sysvec HYPERVISOR_STIMER0_VECTOR sysvec_hyperv_stimer0;
+>
+> I and Nathan double-checked the hyperv(isor) vectors:
+>
+> $ rg --no-heading "HYPERVISOR_REENLIGHTENMENT_VECTOR|HYPERVISOR_STIMER0_VECTOR"
+> $ rg --no-heading "HYPERV_REENLIGHTENMENT_VECTOR|HYPERV_STIMER0_VECTOR"
+>
+> Fix these typos in arch/x86/include/asm/idtentry.h:
+>
+> HYPERVISOR_REENLIGHTENMENT_VECTOR -> HYPERV_REENLIGHTENMENT_VECTOR
+> HYPERVISOR_STIMER0_VECTOR         -> HYPERV_STIMER0_VECTOR
+>
+> For more details see CBL issue #1088.
+>
+> With both fixes applied I was able to build/assemble with a snapshot
+> version of LLVM/Clang from Debian/experimental.
+>
+> NOTE: My patch is independent from Jian's patch and should be applied separately.
 
-Previously, it would have been an empty value, not even double quotes.
-"?" might be an improvement.
+Hi Sedat,
+Thanks for the patch!  Nice job finding the fix.
 
-> paul moore
+I would like to see a v3 with the commit message trimmed a bit.  In
+particular, you mention that Jian's patch is unrelated.  In that case,
+please don't mention it in the commit message, drop the link to issue
+#1043, and drop the lore link.  I think if the commit was just simply:
 
-- RGB
+```
+x86/entry: Fix vectors to IDTENTRY_SYSVEC for CONFIG_HYPERV
 
---
-Richard Guy Briggs <rgb@redhat.com>
-Sr. S/W Engineer, Kernel Security, Base Operating Systems
-Remote, Ottawa, Red Hat Canada
-IRC: rgb, SunRaycer
-Voice: +1.647.777.2635, Internal: (81) 32635
+When assembling with Clang via `make LLVM_IAS=1`, we observe the
+following error:
+<instantiation>:9:6: error: expected absolute expression
+<rest of the diagnostic>
 
+This is caused by typos in arch/x86/include/asm/idtentry.h:
+
+HYPERVISOR_REENLIGHTENMENT_VECTOR -> HYPERV_REENLIGHTENMENT_VECTOR
+HYPERVISOR_STIMER0_VECTOR         -> HYPERV_STIMER0_VECTOR
+```
+Then the tags you have below minus the unrelated ones.
+
+>
+> Cc: Jian Cai <caij2003@gmail.com>
+> Cc: clang-built-linux@googlegroups.com
+> Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
+> Reviewed-by: Wei Liu <wei.liu@kernel.org>
+> Fixes: a16be368dd3f ("x86/entry: Convert various hypervisor vectors to IDTENTRY_SYSVEC")
+> Link: https://github.com/ClangBuiltLinux/linux/issues/1043
+> Link: https://lore.kernel.org/patchwork/patch/1272115/
+> Link: https://github.com/ClangBuiltLinux/linux/issues/1088
+> Signed-off-by: Sedat Dilek <sedat.dilek@gmail.com>
+> ---
+
+Otherwise you can put some additional info here "below the fold."  It
+doesn't hurt to say "I also need Jian's patch to completely build with
+LLVM_IAS=1" but I don't think that should be in the message that gets
+committed per se.  Sorry to be a pedant about this.  With those
+changes, I'd be happy to sign off on the patch.
+
+> Changes v1->v2:
+> - Add Wei Liu's Reviewed-by
+> - Add note to clarify my patch is independent from Jian's patch
+> - Add link to latest version of Jian's patch
+>
+>  arch/x86/include/asm/idtentry.h | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+>
+> diff --git a/arch/x86/include/asm/idtentry.h b/arch/x86/include/asm/idtentry.h
+> index eeac6dc2adaa..d79541bfc36f 100644
+> --- a/arch/x86/include/asm/idtentry.h
+> +++ b/arch/x86/include/asm/idtentry.h
+> @@ -626,8 +626,8 @@ DECLARE_IDTENTRY_SYSVEC(POSTED_INTR_NESTED_VECTOR,  sysvec_kvm_posted_intr_nested
+>
+>  #if IS_ENABLED(CONFIG_HYPERV)
+>  DECLARE_IDTENTRY_SYSVEC(HYPERVISOR_CALLBACK_VECTOR,    sysvec_hyperv_callback);
+> -DECLARE_IDTENTRY_SYSVEC(HYPERVISOR_REENLIGHTENMENT_VECTOR,     sysvec_hyperv_reenlightenment);
+> -DECLARE_IDTENTRY_SYSVEC(HYPERVISOR_STIMER0_VECTOR,     sysvec_hyperv_stimer0);
+> +DECLARE_IDTENTRY_SYSVEC(HYPERV_REENLIGHTENMENT_VECTOR, sysvec_hyperv_reenlightenment);
+> +DECLARE_IDTENTRY_SYSVEC(HYPERV_STIMER0_VECTOR, sysvec_hyperv_stimer0);
+>  #endif
+>
+>  #if IS_ENABLED(CONFIG_ACRN_GUEST)
+> --
+
+-- 
+Thanks,
+~Nick Desaulniers
