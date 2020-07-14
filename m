@@ -7,48 +7,52 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87A38C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:51:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A66EFC433E2
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:51:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5C9FB22B3B
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:51:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7CE6822B3F
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:51:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594752686;
-	bh=zYdDNT/yQE/oQ5Sz1v5XNbIvBfceOo0HS//1BuParTk=;
+	s=default; t=1594752687;
+	bh=nPabgI61cyglhr8CDG2fYST1FksxQWMrZeREH6JDWuA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IT68WJr0GqKuoX2hvBeQ+7TbHqXh7oL9sUU9Wo4FJGq9K/NoduIJXZLd6eYExh/xu
-	 gtAbVyDdVWcVkLKABG4o4AnP8zmWoz3YhjXscQv+lsvAKRfevjTuzdwoGak74c1Mx5
-	 udQ6Q4AEYxgbRtI0Fzx8MYtJPJmrJ959vzP4UM9A=
+	b=hB4jlg45lVldYhfRKxcmNJhvtWDgQWMcWEE5SFAMSBBnyHnBlPmJ184E64GrQYnph
+	 ypQnsUXWIUxmE3dQMK/HG/qSTYZRenn+1UGCSN6hb2+X3r5EgShzAqiEiL9Fq1Ie4R
+	 7QdEMaXZMwAw92mFNblUVwOxTR5NxcP0zZm61W2A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729923AbgGNSvY (ORCPT
+        id S1730396AbgGNSvV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 14:51:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47790 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729917AbgGNSvV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 14 Jul 2020 14:51:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47656 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730370AbgGNSvO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 14:51:14 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C8B3822B3F;
-        Tue, 14 Jul 2020 18:51:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F331522B3F;
+        Tue, 14 Jul 2020 18:51:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594752680;
-        bh=zYdDNT/yQE/oQ5Sz1v5XNbIvBfceOo0HS//1BuParTk=;
+        s=default; t=1594752674;
+        bh=nPabgI61cyglhr8CDG2fYST1FksxQWMrZeREH6JDWuA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PNvaBM4Z3AVM10PsaP5ix0A6J1JJ1TOHhmqCrqxVp/G+3TKDXRfBye6gw1zb3pgr4
-         P3DFt5a9EON6rJJVksvKwCvFLftaNW14T0NP6vwi7/4OcTVuingv46aljaYhx4g8is
-         JiZtGmtE/J0PmVK1x6rn2gL5OkzqJfl/SsHyVb30=
+        b=Es62PjgIiz9QwtHQzV2qdK0S0m8i33UpRDkGOy4xrULoHTKcSZxzlOk6/Qeeyt7oR
+         tKs+tHr3AHd2mopsfCyir5lHYNrkzUeB3YQN11Iom4VogAO51fpbvDPNlmvUUZ0h3q
+         UJwpN5UIaJ4T02RSS8lC07ZRs4zD6BEgYVmtEdj4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ido Schimmel <idosch@mellanox.com>,
-        Jiri Pirko <jiri@mellanox.com>,
+        stable@vger.kernel.org,
+        Claudiu Beznea <claudiu.beznea@microchip.com>,
+        Harini Katakam <harini.katakam@xilinx.com>,
+        Sergio Prado <sergio.prado@e-labworks.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
         "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 069/109] mlxsw: pci: Fix use-after-free in case of failed devlink reload
-Date:   Tue, 14 Jul 2020 20:44:12 +0200
-Message-Id: <20200714184108.843201791@linuxfoundation.org>
+Subject: [PATCH 5.4 067/109] net: macb: fix call to pm_runtime in the suspend/resume functions
+Date:   Tue, 14 Jul 2020 20:44:10 +0200
+Message-Id: <20200714184108.732893390@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200714184105.507384017@linuxfoundation.org>
 References: <20200714184105.507384017@linuxfoundation.org>
@@ -61,193 +65,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ido Schimmel <idosch@mellanox.com>
+From: Nicolas Ferre <nicolas.ferre@microchip.com>
 
-[ Upstream commit c4317b11675b99af6641662ebcbd3c6010600e64 ]
+[ Upstream commit 6c8f85cac98a4c6b767c4c4f6af7283724c32b47 ]
 
-In case devlink reload failed, it is possible to trigger a
-use-after-free when querying the kernel for device info via 'devlink dev
-info' [1].
+The calls to pm_runtime_force_suspend/resume() functions are only
+relevant if the device is not configured to act as a WoL wakeup source.
+Add the device_may_wakeup() test before calling them.
 
-This happens because as part of the reload error path the PCI command
-interface is de-initialized and its mailboxes are freed. When the
-devlink '->info_get()' callback is invoked the device is queried via the
-command interface and the freed mailboxes are accessed.
-
-Fix this by initializing the command interface once during probe and not
-during every reload.
-
-This is consistent with the other bus used by mlxsw (i.e., 'mlxsw_i2c')
-and also allows user space to query the running firmware version (for
-example) from the device after a failed reload.
-
-[1]
-BUG: KASAN: use-after-free in memcpy include/linux/string.h:406 [inline]
-BUG: KASAN: use-after-free in mlxsw_pci_cmd_exec+0x177/0xa60 drivers/net/ethernet/mellanox/mlxsw/pci.c:1675
-Write of size 4096 at addr ffff88810ae32000 by task syz-executor.1/2355
-
-CPU: 1 PID: 2355 Comm: syz-executor.1 Not tainted 5.8.0-rc2+ #29
-Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.12.1-0-ga5cab58e9a3f-prebuilt.qemu.org 04/01/2014
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0xf6/0x16e lib/dump_stack.c:118
- print_address_description.constprop.0+0x1c/0x250 mm/kasan/report.c:383
- __kasan_report mm/kasan/report.c:513 [inline]
- kasan_report.cold+0x1f/0x37 mm/kasan/report.c:530
- check_memory_region_inline mm/kasan/generic.c:186 [inline]
- check_memory_region+0x14e/0x1b0 mm/kasan/generic.c:192
- memcpy+0x39/0x60 mm/kasan/common.c:106
- memcpy include/linux/string.h:406 [inline]
- mlxsw_pci_cmd_exec+0x177/0xa60 drivers/net/ethernet/mellanox/mlxsw/pci.c:1675
- mlxsw_cmd_exec+0x249/0x550 drivers/net/ethernet/mellanox/mlxsw/core.c:2335
- mlxsw_cmd_access_reg drivers/net/ethernet/mellanox/mlxsw/cmd.h:859 [inline]
- mlxsw_core_reg_access_cmd drivers/net/ethernet/mellanox/mlxsw/core.c:1938 [inline]
- mlxsw_core_reg_access+0x2f6/0x540 drivers/net/ethernet/mellanox/mlxsw/core.c:1985
- mlxsw_reg_query drivers/net/ethernet/mellanox/mlxsw/core.c:2000 [inline]
- mlxsw_devlink_info_get+0x17f/0x6e0 drivers/net/ethernet/mellanox/mlxsw/core.c:1090
- devlink_nl_info_fill.constprop.0+0x13c/0x2d0 net/core/devlink.c:4588
- devlink_nl_cmd_info_get_dumpit+0x246/0x460 net/core/devlink.c:4648
- genl_lock_dumpit+0x85/0xc0 net/netlink/genetlink.c:575
- netlink_dump+0x515/0xe50 net/netlink/af_netlink.c:2245
- __netlink_dump_start+0x53d/0x830 net/netlink/af_netlink.c:2353
- genl_family_rcv_msg_dumpit.isra.0+0x296/0x300 net/netlink/genetlink.c:638
- genl_family_rcv_msg net/netlink/genetlink.c:733 [inline]
- genl_rcv_msg+0x78d/0x9d0 net/netlink/genetlink.c:753
- netlink_rcv_skb+0x152/0x440 net/netlink/af_netlink.c:2469
- genl_rcv+0x24/0x40 net/netlink/genetlink.c:764
- netlink_unicast_kernel net/netlink/af_netlink.c:1303 [inline]
- netlink_unicast+0x53a/0x750 net/netlink/af_netlink.c:1329
- netlink_sendmsg+0x850/0xd90 net/netlink/af_netlink.c:1918
- sock_sendmsg_nosec net/socket.c:652 [inline]
- sock_sendmsg+0x150/0x190 net/socket.c:672
- ____sys_sendmsg+0x6d8/0x840 net/socket.c:2363
- ___sys_sendmsg+0xff/0x170 net/socket.c:2417
- __sys_sendmsg+0xe5/0x1b0 net/socket.c:2450
- do_syscall_64+0x56/0xa0 arch/x86/entry/common.c:359
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-Fixes: a9c8336f6544 ("mlxsw: core: Add support for devlink info command")
-Signed-off-by: Ido Schimmel <idosch@mellanox.com>
-Reviewed-by: Jiri Pirko <jiri@mellanox.com>
+Fixes: 3e2a5e153906 ("net: macb: add wake-on-lan support via magic packet")
+Cc: Claudiu Beznea <claudiu.beznea@microchip.com>
+Cc: Harini Katakam <harini.katakam@xilinx.com>
+Cc: Sergio Prado <sergio.prado@e-labworks.com>
+Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
+Signed-off-by: Nicolas Ferre <nicolas.ferre@microchip.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/mellanox/mlxsw/pci.c | 54 ++++++++++++++++-------
- 1 file changed, 38 insertions(+), 16 deletions(-)
+ drivers/net/ethernet/cadence/macb_main.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/ethernet/mellanox/mlxsw/pci.c b/drivers/net/ethernet/mellanox/mlxsw/pci.c
-index f3d1f9411d104..aa4fef7890841 100644
---- a/drivers/net/ethernet/mellanox/mlxsw/pci.c
-+++ b/drivers/net/ethernet/mellanox/mlxsw/pci.c
-@@ -1401,23 +1401,12 @@ static int mlxsw_pci_init(void *bus_priv, struct mlxsw_core *mlxsw_core,
- 	u16 num_pages;
- 	int err;
+diff --git a/drivers/net/ethernet/cadence/macb_main.c b/drivers/net/ethernet/cadence/macb_main.c
+index e7fafe2fcae5d..01ed4d4296db2 100644
+--- a/drivers/net/ethernet/cadence/macb_main.c
++++ b/drivers/net/ethernet/cadence/macb_main.c
+@@ -4453,7 +4453,8 @@ static int __maybe_unused macb_suspend(struct device *dev)
+ 	netif_carrier_off(netdev);
+ 	if (bp->ptp_info)
+ 		bp->ptp_info->ptp_remove(netdev);
+-	pm_runtime_force_suspend(dev);
++	if (!device_may_wakeup(dev))
++		pm_runtime_force_suspend(dev);
  
--	mutex_init(&mlxsw_pci->cmd.lock);
--	init_waitqueue_head(&mlxsw_pci->cmd.wait);
--
- 	mlxsw_pci->core = mlxsw_core;
- 
- 	mbox = mlxsw_cmd_mbox_alloc();
- 	if (!mbox)
- 		return -ENOMEM;
- 
--	err = mlxsw_pci_mbox_alloc(mlxsw_pci, &mlxsw_pci->cmd.in_mbox);
--	if (err)
--		goto mbox_put;
--
--	err = mlxsw_pci_mbox_alloc(mlxsw_pci, &mlxsw_pci->cmd.out_mbox);
--	if (err)
--		goto err_out_mbox_alloc;
--
- 	err = mlxsw_pci_sw_reset(mlxsw_pci, mlxsw_pci->id);
- 	if (err)
- 		goto err_sw_reset;
-@@ -1524,9 +1513,6 @@ static int mlxsw_pci_init(void *bus_priv, struct mlxsw_core *mlxsw_core,
- 	mlxsw_pci_free_irq_vectors(mlxsw_pci);
- err_alloc_irq:
- err_sw_reset:
--	mlxsw_pci_mbox_free(mlxsw_pci, &mlxsw_pci->cmd.out_mbox);
--err_out_mbox_alloc:
--	mlxsw_pci_mbox_free(mlxsw_pci, &mlxsw_pci->cmd.in_mbox);
- mbox_put:
- 	mlxsw_cmd_mbox_free(mbox);
- 	return err;
-@@ -1540,8 +1526,6 @@ static void mlxsw_pci_fini(void *bus_priv)
- 	mlxsw_pci_aqs_fini(mlxsw_pci);
- 	mlxsw_pci_fw_area_fini(mlxsw_pci);
- 	mlxsw_pci_free_irq_vectors(mlxsw_pci);
--	mlxsw_pci_mbox_free(mlxsw_pci, &mlxsw_pci->cmd.out_mbox);
--	mlxsw_pci_mbox_free(mlxsw_pci, &mlxsw_pci->cmd.in_mbox);
- }
- 
- static struct mlxsw_pci_queue *
-@@ -1755,6 +1739,37 @@ static const struct mlxsw_bus mlxsw_pci_bus = {
- 	.features		= MLXSW_BUS_F_TXRX | MLXSW_BUS_F_RESET,
- };
- 
-+static int mlxsw_pci_cmd_init(struct mlxsw_pci *mlxsw_pci)
-+{
-+	int err;
-+
-+	mutex_init(&mlxsw_pci->cmd.lock);
-+	init_waitqueue_head(&mlxsw_pci->cmd.wait);
-+
-+	err = mlxsw_pci_mbox_alloc(mlxsw_pci, &mlxsw_pci->cmd.in_mbox);
-+	if (err)
-+		goto err_in_mbox_alloc;
-+
-+	err = mlxsw_pci_mbox_alloc(mlxsw_pci, &mlxsw_pci->cmd.out_mbox);
-+	if (err)
-+		goto err_out_mbox_alloc;
-+
-+	return 0;
-+
-+err_out_mbox_alloc:
-+	mlxsw_pci_mbox_free(mlxsw_pci, &mlxsw_pci->cmd.in_mbox);
-+err_in_mbox_alloc:
-+	mutex_destroy(&mlxsw_pci->cmd.lock);
-+	return err;
-+}
-+
-+static void mlxsw_pci_cmd_fini(struct mlxsw_pci *mlxsw_pci)
-+{
-+	mlxsw_pci_mbox_free(mlxsw_pci, &mlxsw_pci->cmd.out_mbox);
-+	mlxsw_pci_mbox_free(mlxsw_pci, &mlxsw_pci->cmd.in_mbox);
-+	mutex_destroy(&mlxsw_pci->cmd.lock);
-+}
-+
- static int mlxsw_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
- {
- 	const char *driver_name = pdev->driver->name;
-@@ -1810,6 +1825,10 @@ static int mlxsw_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
- 	mlxsw_pci->pdev = pdev;
- 	pci_set_drvdata(pdev, mlxsw_pci);
- 
-+	err = mlxsw_pci_cmd_init(mlxsw_pci);
-+	if (err)
-+		goto err_pci_cmd_init;
-+
- 	mlxsw_pci->bus_info.device_kind = driver_name;
- 	mlxsw_pci->bus_info.device_name = pci_name(mlxsw_pci->pdev);
- 	mlxsw_pci->bus_info.dev = &pdev->dev;
-@@ -1827,6 +1846,8 @@ static int mlxsw_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
  	return 0;
+ }
+@@ -4468,7 +4469,8 @@ static int __maybe_unused macb_resume(struct device *dev)
+ 	if (!netif_running(netdev))
+ 		return 0;
  
- err_bus_device_register:
-+	mlxsw_pci_cmd_fini(mlxsw_pci);
-+err_pci_cmd_init:
- 	iounmap(mlxsw_pci->hw_addr);
- err_ioremap:
- err_pci_resource_len_check:
-@@ -1844,6 +1865,7 @@ static void mlxsw_pci_remove(struct pci_dev *pdev)
- 	struct mlxsw_pci *mlxsw_pci = pci_get_drvdata(pdev);
+-	pm_runtime_force_resume(dev);
++	if (!device_may_wakeup(dev))
++		pm_runtime_force_resume(dev);
  
- 	mlxsw_core_bus_device_unregister(mlxsw_pci->core, false);
-+	mlxsw_pci_cmd_fini(mlxsw_pci);
- 	iounmap(mlxsw_pci->hw_addr);
- 	pci_release_regions(mlxsw_pci->pdev);
- 	pci_disable_device(mlxsw_pci->pdev);
+ 	if (bp->wol & MACB_WOL_ENABLED) {
+ 		macb_writel(bp, IDR, MACB_BIT(WOL));
 -- 
 2.25.1
 
