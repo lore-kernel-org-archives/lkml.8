@@ -2,116 +2,114 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E90F1C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 20:00:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD2E3C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 20:04:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D26FB206F5
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 20:00:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 99E4820720
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 20:04:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="pSWmdrIl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729605AbgGNUAm (ORCPT
+        id S1729761AbgGNUEt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 16:00:42 -0400
-Received: from mga06.intel.com ([134.134.136.31]:25480 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726634AbgGNUAl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 16:00:41 -0400
-IronPort-SDR: 2IhkmdjfPgZ5IuioDDRrcWeaOHjBw3lv0U5MhQaqEp8Xl+psT/JE+D0WyUK0huLJiDBztAorb9
- BkNPxqDPHcTg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9682"; a="210560145"
-X-IronPort-AV: E=Sophos;i="5.75,352,1589266800"; 
-   d="scan'208";a="210560145"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jul 2020 13:00:41 -0700
-IronPort-SDR: 4MS2nxEKSwXjwkPrhbmJP1OzdSRAj8lQAiaaHjC1Noo6yhxlz0lTa5uR4dcxyj5kZWZTGL1LmE
- m/OZlhrKMlvg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,352,1589266800"; 
-   d="scan'208";a="299658353"
-Received: from iweiny-desk2.sc.intel.com ([10.3.52.147])
-  by orsmga002.jf.intel.com with ESMTP; 14 Jul 2020 13:00:40 -0700
-Date:   Tue, 14 Jul 2020 13:00:40 -0700
-From:   Ira Weiny <ira.weiny@intel.com>
-To:     Dave Hansen <dave.hansen@intel.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Andy Lutomirski <luto@kernel.org>, x86@kernel.org,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Fenghua Yu <fenghua.yu@intel.com>, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-nvdimm@lists.01.org,
-        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-        linux-kselftest@vger.kernel.org
-Subject: Re: [RFC PATCH 12/15] kmap: Add stray write protection for device
- pages
-Message-ID: <20200714200040.GF3008823@iweiny-DESK2.sc.intel.com>
-References: <20200714070220.3500839-1-ira.weiny@intel.com>
- <20200714070220.3500839-13-ira.weiny@intel.com>
- <20200714084451.GQ10769@hirez.programming.kicks-ass.net>
- <20200714190615.GC3008823@iweiny-DESK2.sc.intel.com>
- <20200714192930.GH5523@worktop.programming.kicks-ass.net>
- <50d472d8-e4d9-dd35-f31f-268aa69c76e2@intel.com>
+        Tue, 14 Jul 2020 16:04:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50612 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729383AbgGNUEs (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 16:04:48 -0400
+Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1EBFEC061794
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 13:04:48 -0700 (PDT)
+Received: by mail-pg1-x541.google.com with SMTP id e8so8078294pgc.5
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 13:04:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=LjzGXptWS/l0yG6s3mnPFGJ9K+cv+bp4hvQ+18wjBOc=;
+        b=pSWmdrIlDHbS9EiuzX5lEL+nl6cwEFKhWNqXr24ppucg3KUIEItrCqgIaY2CfWl5Sb
+         VXCPBw9smvPY9q5wN2FjPisBSw/oMoLzsdE3mUlNlMnIJrtSGiPWAQ8qFoBUwS9hLECt
+         stXm8A+QYTxXLKJ8xPOpARtEIRygLfZrzqSUk32OQC9+EnRMfrGDd9O+8uiHIgkWAqI9
+         fRKIwqRUabJDEGXhMj+fBvuMe26diJ7knaDmPQsIdNAvmJGr5ipTt5Iv1KtzvJgdD5hP
+         GdlvcmzYywX8JcOuLydc3CI+W3lrUd4maNGsBsu8XCh0mOoBftWAZHXFJQEo1B9BYKwS
+         dykA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=LjzGXptWS/l0yG6s3mnPFGJ9K+cv+bp4hvQ+18wjBOc=;
+        b=glVc3cr93h56uLNuj/mAZmI1He2V3r1rIvyAI+Bz8ZuwvPhKpfx0nchum98wKoV8Df
+         xo+AJ6J36eAnhw5AYuEGXJjVrt4MtSMXa8zQAtztsFxhKr+1+yVA/5U4+YuX3gOLlouJ
+         WzixHNaaQz5dGKdaoccnMMfdDZ9nRE+YEBUxMrlCTYsABC5ttcdsk4ktqpvSmEhn+aWt
+         Clns+NlR756R72j1y0axWGJt4wT6UF3w+FYRoutd6x9Yj5URD1SLlC4fUokKnIrQaXMc
+         AT691ZoJ5PteqdIwtKbU+FmmA4j05wIF6iSmLH2MF94UB+Xdgv0LmbPopUSi0UvK3st4
+         MAXg==
+X-Gm-Message-State: AOAM531msewIBmjHU5DJ2152RBrQqP/aA83zZVNmn46LkDSm6G0Xyv3k
+        04iwlBy5akFjRsh/aps+D6k7mA==
+X-Google-Smtp-Source: ABdhPJzCWJ6LvA6aca6tiDqN7zYn4kfS9K/PQYq6jFFANS1a+sv1tJBiB1G33DS7mXamhMqGfm7uDQ==
+X-Received: by 2002:a63:2146:: with SMTP id s6mr4602907pgm.411.1594757087541;
+        Tue, 14 Jul 2020 13:04:47 -0700 (PDT)
+Received: from xps15.cg.shawcable.net (S0106002369de4dac.cg.shawcable.net. [68.147.8.254])
+        by smtp.gmail.com with ESMTPSA id t13sm3262959pjs.17.2020.07.14.13.04.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 14 Jul 2020 13:04:46 -0700 (PDT)
+From:   Mathieu Poirier <mathieu.poirier@linaro.org>
+To:     ohad@wizery.com, bjorn.andersson@linaro.org, loic.pallardy@st.com,
+        arnaud.pouliquen@st.com, mcoquelin.stm32@gmail.com,
+        alexandre.torgue@st.com
+Cc:     linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com
+Subject: [PATCH v6 00/11] remoteproc: stm32: Add support for attaching to M4
+Date:   Tue, 14 Jul 2020 14:04:34 -0600
+Message-Id: <20200714200445.1427257-1-mathieu.poirier@linaro.org>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <50d472d8-e4d9-dd35-f31f-268aa69c76e2@intel.com>
-User-Agent: Mutt/1.11.1 (2018-12-01)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 14, 2020 at 12:42:11PM -0700, Dave Hansen wrote:
-> On 7/14/20 12:29 PM, Peter Zijlstra wrote:
-> > On Tue, Jul 14, 2020 at 12:06:16PM -0700, Ira Weiny wrote:
-> >> On Tue, Jul 14, 2020 at 10:44:51AM +0200, Peter Zijlstra wrote:
-> >>> So, if I followed along correctly, you're proposing to do a WRMSR per
-> >>> k{,un}map{_atomic}(), sounds like excellent performance all-round :-(
-> >> Only to pages which have this additional protection, ie not DRAM.
-> >>
-> >> User mappings of this memory is not affected (would be covered by User PKeys if
-> >> desired).  User mappings to persistent memory are the primary use case and the
-> >> performant path.
-> > Because performance to non-volatile memory doesn't matter? I think Dave
-> > has a better answer here ...
-> 
-> So, these WRMSRs are less evil than normal.  They're architecturally
-> non-serializing instructions, just like the others in the SDM WRMSR
-> documentation:
-> 
-> 	Note that WRMSR to the IA32_TSC_DEADLINE MSR (MSR index 6E0H)
-> 	and the X2APIC MSRs (MSR indices 802H to 83FH) are  not
-> 	serializing.
-> 
-> This section of the SDM needs to be updated for the PKRS.  Also note
-> that the PKRS WRMSR is similar in its ordering properties to WRPKRU:
-> 
-> 	WRPKRU will never execute speculatively. Memory accesses
-> 	affected by PKRU register will not execute (even speculatively)
-> 	until all prior executions of WRPKRU have completed execution
-> 	and updated the PKRU register.
-> 
-> Which means we don't have to do silliness like LFENCE before WRMSR to
-> get ordering *back*.  This is another tidbit that needs to get added to
-> the SDM.  It should probably also get captured in the changelog.
-> 
-> But, either way, this *will* make accessing PMEM more expensive from the
-> kernel.  No escaping that.  But, we've also got customers saying they
-> won't deploy PMEM until we mitigate this stray write issue.  Those folks
-> are quite willing to pay the increased in-kernel cost for increased
-> protection from stray kernel writes.  Intel is also quite motivated
-> because we really like increasing the number of PMEM deployments. :)
-> 
-> Ira, can you make sure this all gets pulled into the changelogs somewhere?
+This set applies on top of [1] and refactors the STM32 platform code in
+order to attach to the M4 remote processor when it has been started by the
+boot loader.
 
-Yes of course.  Thanks for writing that up.
+New to V6:
+1) Removed extra newline in patch 06. 
+2) Re-worked title and changelog of patch 08 to better reflect
+   what is done by the patch.
 
-Ira
+Tested on ST's mp157c development board.
+
+Thanks,
+Mathieu
+
+[1].https://patchwork.kernel.org/project/linux-remoteproc/list/?series=318275 
+
+Mathieu Poirier (11):
+  remoteproc: stm32: Decouple rproc from memory translation
+  remoteproc: stm32: Request IRQ with platform device
+  remoteproc: stm32: Decouple rproc from DT parsing
+  remoteproc: stm32: Remove memory translation from DT parsing
+  remoteproc: stm32: Parse syscon that will manage M4 synchronisation
+  remoteproc: stm32: Properly set co-processor state when attaching
+  remoteproc: Make function rproc_resource_cleanup() public
+  remoteproc: stm32: Parse memory regions when attaching to M4
+  remoteproc: stm32: Properly handle the resource table when attaching
+  remoteproc: stm32: Introduce new attach() operation
+  remoteproc: stm32: Update M4 state in stm32_rproc_stop()
+
+ drivers/remoteproc/remoteproc_core.c |   3 +-
+ drivers/remoteproc/stm32_rproc.c     | 214 ++++++++++++++++++++++++---
+ include/linux/remoteproc.h           |   1 +
+ 3 files changed, 198 insertions(+), 20 deletions(-)
+
+-- 
+2.25.1
+
