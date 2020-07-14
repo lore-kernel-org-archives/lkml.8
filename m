@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA6F9C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:53:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6DDEC433EC
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:53:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9271022B45
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:53:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8EFCD22BEB
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:53:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594752836;
-	bh=XQBL9NrEUkiI8wtjcCl9dHlXNWIE2G3UKZK2k4ezkRE=;
+	s=default; t=1594752839;
+	bh=EiZ93p2usv/LoFYCN6aaZNeVxDqwVAnsSNJ+CTiv9dc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=G+F0QpvS3/7NejL+jQc0StrpIEBamshAsTYGp6TNFhASpdsxvWbXKlS9lJrrVjoCW
-	 84ioG57pYF1tPitrSkjvHz/vz2wU8XOOR7IkwPhDuABIQ9k9fy0c5BR2NyMXlaZM0X
-	 498NH0Oa1WrC7T9rp5kDpJ6wjgwAIgpzZQw5Ore8=
+	b=PIgzl/74ZGMEkHBSImVQP8srmLLuXvJ2eP0kFXyBBvH6rmqsFenwEWPiluT+tCmmE
+	 RX4oXE4WFKLbpaDDISLKKBURa+usrof7gKmld4ydC/SOcOWqelFUH+GSQk62y1Xz3q
+	 CF0yuVETnmnDALMFPmj1hBLMx3eDRa1UpyNcjUrw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729342AbgGNSxz (ORCPT
+        id S1730699AbgGNSx6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 14:53:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50794 "EHLO mail.kernel.org"
+        Tue, 14 Jul 2020 14:53:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51202 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730269AbgGNSxi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 14:53:38 -0400
+        id S1730113AbgGNSxy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 14:53:54 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C0FDA22B45;
-        Tue, 14 Jul 2020 18:53:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 441E922BEF;
+        Tue, 14 Jul 2020 18:53:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594752817;
-        bh=XQBL9NrEUkiI8wtjcCl9dHlXNWIE2G3UKZK2k4ezkRE=;
+        s=default; t=1594752833;
+        bh=EiZ93p2usv/LoFYCN6aaZNeVxDqwVAnsSNJ+CTiv9dc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LRY1LDOkcbwNPqW8YziZ0HRPIL+DwbUehZHUSVKrnB5byE2vpgk3TtfqDEClmTD6Q
-         l5eRdWfKKV1j+j1E+dBv/QQgtbkti2mtitIWN7g6j45engjw7Q5ZnvVtPc7MozTo2v
-         3SvnrrT7Uy8V6b12d9yw+iKHwj//SZkjpViG1p8A=
+        b=JVGmkVNEAgSqIhyZ1k+tfB1oVLzgAGD9RIRe6ARsThHTZn9UHoYvYveOVulsO9SVP
+         OPdqkTVWdRIBvItYgS4uZ767adazzFvnQJaTFC/61P5nhHGr+BJobHmV6lh1J0iyu+
+         T3+yyPruZ1jkenLgoERe3e5cBzlsJlB6z+2jZ7qA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jens Thoms Toerring <jt@toerring.de>,
+        stable@vger.kernel.org, Zhenzhong Duan <zhenzhong.duan@gmail.com>,
         Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 004/166] regmap: fix alignment issue
-Date:   Tue, 14 Jul 2020 20:42:49 +0200
-Message-Id: <20200714184116.078290368@linuxfoundation.org>
+Subject: [PATCH 5.7 018/166] spi: spidev: fix a race between spidev_release and spidev_remove
+Date:   Tue, 14 Jul 2020 20:43:03 +0200
+Message-Id: <20200714184116.766310701@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200714184115.844176932@linuxfoundation.org>
 References: <20200714184115.844176932@linuxfoundation.org>
@@ -60,256 +60,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jens Thoms Toerring <jt@toerring.de>
+From: Zhenzhong Duan <zhenzhong.duan@gmail.com>
 
-[ Upstream commit 53d860952c8215cf9ae1ea33409c8cb71ad6ad3d ]
+[ Upstream commit abd42781c3d2155868821f1b947ae45bbc33330d ]
 
-The assembly and disassembly of data to be sent to or received from
-a device invoke functions regmap_format_XX() and regmap_parse_XX()
-that extract or insert data items from or into a buffer, using
-assignments. In some cases the functions are called with a buffer
-pointer with an odd address. On architectures with strict alignment
-requirements this can result in a kernel crash. The assignments
-have been replaced by functions that take alignment into account.
+Imagine below scene, spidev is referenced after it's freed.
 
-Signed-off-by: Jens Thoms Toerring <jt@toerring.de>
-Link: https://lore.kernel.org/r/20200531095300.GA27570@toerring.de
+spidev_release()                spidev_remove()
+...
+                                spin_lock_irq(&spidev->spi_lock);
+                                    spidev->spi = NULL;
+                                spin_unlock_irq(&spidev->spi_lock);
+mutex_lock(&device_list_lock);
+dofree = (spidev->spi == NULL);
+if (dofree)
+    kfree(spidev);
+mutex_unlock(&device_list_lock);
+                                mutex_lock(&device_list_lock);
+                                list_del(&spidev->device_entry);
+                                device_destroy(spidev_class, spidev->devt);
+                                clear_bit(MINOR(spidev->devt), minors);
+                                if (spidev->users == 0)
+                                    kfree(spidev);
+                                mutex_unlock(&device_list_lock);
+
+Fix it by resetting spidev->spi in device_list_lock's protection.
+
+Signed-off-by: Zhenzhong Duan <zhenzhong.duan@gmail.com>
+Link: https://lore.kernel.org/r/20200618032125.4650-1-zhenzhong.duan@gmail.com
 Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/base/regmap/regmap.c | 100 ++++++++++++++++-------------------
- 1 file changed, 46 insertions(+), 54 deletions(-)
+ drivers/spi/spidev.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/base/regmap/regmap.c b/drivers/base/regmap/regmap.c
-index 508bbd6ea4396..320d23de02c29 100644
---- a/drivers/base/regmap/regmap.c
-+++ b/drivers/base/regmap/regmap.c
-@@ -17,6 +17,7 @@
- #include <linux/delay.h>
- #include <linux/log2.h>
- #include <linux/hwspinlock.h>
-+#include <asm/unaligned.h>
- 
- #define CREATE_TRACE_POINTS
- #include "trace.h"
-@@ -249,22 +250,20 @@ static void regmap_format_8(void *buf, unsigned int val, unsigned int shift)
- 
- static void regmap_format_16_be(void *buf, unsigned int val, unsigned int shift)
+diff --git a/drivers/spi/spidev.c b/drivers/spi/spidev.c
+index 80dd1025b9530..82e6481fdf950 100644
+--- a/drivers/spi/spidev.c
++++ b/drivers/spi/spidev.c
+@@ -786,13 +786,13 @@ static int spidev_remove(struct spi_device *spi)
  {
--	__be16 *b = buf;
--
--	b[0] = cpu_to_be16(val << shift);
-+	put_unaligned_be16(val << shift, buf);
- }
+ 	struct spidev_data	*spidev = spi_get_drvdata(spi);
  
- static void regmap_format_16_le(void *buf, unsigned int val, unsigned int shift)
- {
--	__le16 *b = buf;
--
--	b[0] = cpu_to_le16(val << shift);
-+	put_unaligned_le16(val << shift, buf);
- }
++	/* prevent new opens */
++	mutex_lock(&device_list_lock);
+ 	/* make sure ops on existing fds can abort cleanly */
+ 	spin_lock_irq(&spidev->spi_lock);
+ 	spidev->spi = NULL;
+ 	spin_unlock_irq(&spidev->spi_lock);
  
- static void regmap_format_16_native(void *buf, unsigned int val,
- 				    unsigned int shift)
- {
--	*(u16 *)buf = val << shift;
-+	u16 v = val << shift;
-+
-+	memcpy(buf, &v, sizeof(v));
- }
- 
- static void regmap_format_24(void *buf, unsigned int val, unsigned int shift)
-@@ -280,43 +279,39 @@ static void regmap_format_24(void *buf, unsigned int val, unsigned int shift)
- 
- static void regmap_format_32_be(void *buf, unsigned int val, unsigned int shift)
- {
--	__be32 *b = buf;
--
--	b[0] = cpu_to_be32(val << shift);
-+	put_unaligned_be32(val << shift, buf);
- }
- 
- static void regmap_format_32_le(void *buf, unsigned int val, unsigned int shift)
- {
--	__le32 *b = buf;
--
--	b[0] = cpu_to_le32(val << shift);
-+	put_unaligned_le32(val << shift, buf);
- }
- 
- static void regmap_format_32_native(void *buf, unsigned int val,
- 				    unsigned int shift)
- {
--	*(u32 *)buf = val << shift;
-+	u32 v = val << shift;
-+
-+	memcpy(buf, &v, sizeof(v));
- }
- 
- #ifdef CONFIG_64BIT
- static void regmap_format_64_be(void *buf, unsigned int val, unsigned int shift)
- {
--	__be64 *b = buf;
--
--	b[0] = cpu_to_be64((u64)val << shift);
-+	put_unaligned_be64((u64) val << shift, buf);
- }
- 
- static void regmap_format_64_le(void *buf, unsigned int val, unsigned int shift)
- {
--	__le64 *b = buf;
--
--	b[0] = cpu_to_le64((u64)val << shift);
-+	put_unaligned_le64((u64) val << shift, buf);
- }
- 
- static void regmap_format_64_native(void *buf, unsigned int val,
- 				    unsigned int shift)
- {
--	*(u64 *)buf = (u64)val << shift;
-+	u64 v = (u64) val << shift;
-+
-+	memcpy(buf, &v, sizeof(v));
- }
- #endif
- 
-@@ -333,35 +328,34 @@ static unsigned int regmap_parse_8(const void *buf)
- 
- static unsigned int regmap_parse_16_be(const void *buf)
- {
--	const __be16 *b = buf;
--
--	return be16_to_cpu(b[0]);
-+	return get_unaligned_be16(buf);
- }
- 
- static unsigned int regmap_parse_16_le(const void *buf)
- {
--	const __le16 *b = buf;
--
--	return le16_to_cpu(b[0]);
-+	return get_unaligned_le16(buf);
- }
- 
- static void regmap_parse_16_be_inplace(void *buf)
- {
--	__be16 *b = buf;
-+	u16 v = get_unaligned_be16(buf);
- 
--	b[0] = be16_to_cpu(b[0]);
-+	memcpy(buf, &v, sizeof(v));
- }
- 
- static void regmap_parse_16_le_inplace(void *buf)
- {
--	__le16 *b = buf;
-+	u16 v = get_unaligned_le16(buf);
- 
--	b[0] = le16_to_cpu(b[0]);
-+	memcpy(buf, &v, sizeof(v));
- }
- 
- static unsigned int regmap_parse_16_native(const void *buf)
- {
--	return *(u16 *)buf;
-+	u16 v;
-+
-+	memcpy(&v, buf, sizeof(v));
-+	return v;
- }
- 
- static unsigned int regmap_parse_24(const void *buf)
-@@ -376,69 +370,67 @@ static unsigned int regmap_parse_24(const void *buf)
- 
- static unsigned int regmap_parse_32_be(const void *buf)
- {
--	const __be32 *b = buf;
--
--	return be32_to_cpu(b[0]);
-+	return get_unaligned_be32(buf);
- }
- 
- static unsigned int regmap_parse_32_le(const void *buf)
- {
--	const __le32 *b = buf;
--
--	return le32_to_cpu(b[0]);
-+	return get_unaligned_le32(buf);
- }
- 
- static void regmap_parse_32_be_inplace(void *buf)
- {
--	__be32 *b = buf;
-+	u32 v = get_unaligned_be32(buf);
- 
--	b[0] = be32_to_cpu(b[0]);
-+	memcpy(buf, &v, sizeof(v));
- }
- 
- static void regmap_parse_32_le_inplace(void *buf)
- {
--	__le32 *b = buf;
-+	u32 v = get_unaligned_le32(buf);
- 
--	b[0] = le32_to_cpu(b[0]);
-+	memcpy(buf, &v, sizeof(v));
- }
- 
- static unsigned int regmap_parse_32_native(const void *buf)
- {
--	return *(u32 *)buf;
-+	u32 v;
-+
-+	memcpy(&v, buf, sizeof(v));
-+	return v;
- }
- 
- #ifdef CONFIG_64BIT
- static unsigned int regmap_parse_64_be(const void *buf)
- {
--	const __be64 *b = buf;
--
--	return be64_to_cpu(b[0]);
-+	return get_unaligned_be64(buf);
- }
- 
- static unsigned int regmap_parse_64_le(const void *buf)
- {
--	const __le64 *b = buf;
--
--	return le64_to_cpu(b[0]);
-+	return get_unaligned_le64(buf);
- }
- 
- static void regmap_parse_64_be_inplace(void *buf)
- {
--	__be64 *b = buf;
-+	u64 v =  get_unaligned_be64(buf);
- 
--	b[0] = be64_to_cpu(b[0]);
-+	memcpy(buf, &v, sizeof(v));
- }
- 
- static void regmap_parse_64_le_inplace(void *buf)
- {
--	__le64 *b = buf;
-+	u64 v = get_unaligned_le64(buf);
- 
--	b[0] = le64_to_cpu(b[0]);
-+	memcpy(buf, &v, sizeof(v));
- }
- 
- static unsigned int regmap_parse_64_native(const void *buf)
- {
--	return *(u64 *)buf;
-+	u64 v;
-+
-+	memcpy(&v, buf, sizeof(v));
-+	return v;
- }
- #endif
- 
+-	/* prevent new opens */
+-	mutex_lock(&device_list_lock);
+ 	list_del(&spidev->device_entry);
+ 	device_destroy(spidev_class, spidev->devt);
+ 	clear_bit(MINOR(spidev->devt), minors);
 -- 
 2.25.1
 
