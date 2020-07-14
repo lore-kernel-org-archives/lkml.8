@@ -2,54 +2,51 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68160C433F2
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:52:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 479E8C433E6
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:52:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4975B22B49
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:52:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1E5BA22B42
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:52:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594752770;
-	bh=UdVNl+rmnCmVIMGITeCqI/vCHrvoAIr2z9iVHtccCB4=;
+	s=default; t=1594752771;
+	bh=GzXMa+oOgx/9PPybBTdvrlfwVo8zIPCQTjDYGhEhxTY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fpdMmhS4V0femo2Xrh5IDeleI8mRVzLkSJEapYHAkpJYqKuV0sC8s1HaB1bXpZR9F
-	 pHBjj1mVsnm19ZcBkWxA5WlY9ySq64Zs+TcEOeDL93ENfan8simojkwIFuW2yWtzLE
-	 RjKIdXQwuZUu123xcWr3KycSyzLuTpVmcOL9Ai+8=
+	b=QyUQ6L8QqHhP8HqIts4s4KJ01zFMXGxcLuc72aG+npUSATGJzmiGArecJYwxX4j/P
+	 5HAeck3gx3D1gRKTfdbyAOMpM0Uf1Sxi+LH2F0cN3KzmMk3wbOgtvWDulqUwLDnAJu
+	 XPYPssNIBt/35PAyjM+9r7vNE0qAfd6/kN4awImA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730447AbgGNSvw (ORCPT
+        id S1729863AbgGNSwt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 14:51:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48356 "EHLO mail.kernel.org"
+        Tue, 14 Jul 2020 14:52:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49578 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730433AbgGNSvs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 14:51:48 -0400
+        id S1730125AbgGNSwp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 14:52:45 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 43B0A22B2A;
-        Tue, 14 Jul 2020 18:51:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EE00622B2B;
+        Tue, 14 Jul 2020 18:52:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594752707;
-        bh=UdVNl+rmnCmVIMGITeCqI/vCHrvoAIr2z9iVHtccCB4=;
+        s=default; t=1594752765;
+        bh=GzXMa+oOgx/9PPybBTdvrlfwVo8zIPCQTjDYGhEhxTY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DgVauUPFLXQ46K+hEqcctnNAla6L9thvwl8Wzfs8fAHtj5GxQzBeVR0BIbRQSYoOJ
-         FzLlMDeLlAANc9vifFWUUfiO6DM7aYIOQ7DPdPQxKABHKW/LOyUWJZkWMe+WRpaoGm
-         M1msJ9WLX96gqCnJV/Onmp56hoUqrXqcl22VoOcU=
+        b=QTMcU6zni7eDxE2nicnOuEsmylGYpww3kOfwHDMH2dITgiQMlb1ierBKY1ZUp2RVR
+         YEEfSRxc0uhbckRurX2pzOBphawTncGhLjxPw7SyvYmcNBkVphGBoJE+b8xyxGYk7H
+         q0Q3tjVYVS1IipJqvd7OrbRKgSgTFNapJfNWi0T4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Adrian Hunter <adrian.hunter@intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Luwei Kang <luwei.kang@intel.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 049/109] perf intel-pt: Fix recording PEBS-via-PT with registers
-Date:   Tue, 14 Jul 2020 20:43:52 +0200
-Message-Id: <20200714184107.869835372@linuxfoundation.org>
+        stable@vger.kernel.org, Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>
+Subject: [PATCH 5.4 101/109] s390/setup: init jump labels before command line parsing
+Date:   Tue, 14 Jul 2020 20:44:44 +0200
+Message-Id: <20200714184110.387166565@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200714184105.507384017@linuxfoundation.org>
 References: <20200714184105.507384017@linuxfoundation.org>
@@ -62,69 +59,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Adrian Hunter <adrian.hunter@intel.com>
+From: Vasily Gorbik <gor@linux.ibm.com>
 
-[ Upstream commit 75bcb8776dc987538f267ba4ba05ca43fc2b1676 ]
+commit 95e61b1b5d6394b53d147c0fcbe2ae70fbe09446 upstream.
 
-When recording PEBS-via-PT, the kernel will not accept the intel_pt
-event with register sampling e.g.
+Command line parameters might set static keys. This is true for s390 at
+least since commit 6471384af2a6 ("mm: security: introduce init_on_alloc=1
+and init_on_free=1 boot options"). To avoid the following WARN:
 
- # perf record --kcore -c 10000 -e '{intel_pt/branch=0/,branch-loads/aux-output/ppp}' -I -- ls -l
- Error:
- intel_pt/branch=0/: PMU Hardware doesn't support sampling/overflow-interrupts. Try 'perf stat'
+static_key_enable_cpuslocked(): static key 'init_on_alloc+0x0/0x40' used
+before call to jump_label_init()
 
-Fix by suppressing register sampling on the intel_pt evsel.
+call jump_label_init() just before parse_early_param().
+jump_label_init() is safe to call multiple times (x86 does that), doesn't
+do any memory allocations and hence should be safe to call that early.
 
-Committer notes:
+Fixes: 6471384af2a6 ("mm: security: introduce init_on_alloc=1 and init_on_free=1 boot options")
+Cc: <stable@vger.kernel.org> # 5.3: d6df52e9996d: s390/maccess: add no DAT mode to kernel_write
+Cc: <stable@vger.kernel.org> # 5.3
+Reviewed-by: Heiko Carstens <heiko.carstens@de.ibm.com>
+Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
+Signed-off-by: Heiko Carstens <heiko.carstens@de.ibm.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-Adrian informed that this is only available from Tremont onwards, so on
-older processors the error continues the same as before.
-
-Fixes: 9e64cefe4335b ("perf intel-pt: Process options for PEBS event synthesis")
-Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Luwei Kang <luwei.kang@intel.com>
-Link: http://lore.kernel.org/lkml/20200630133935.11150-2-adrian.hunter@intel.com
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/arch/x86/util/intel-pt.c | 1 +
- tools/perf/util/evsel.c             | 4 ++--
- 2 files changed, 3 insertions(+), 2 deletions(-)
+ arch/s390/kernel/setup.c |    1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/tools/perf/arch/x86/util/intel-pt.c b/tools/perf/arch/x86/util/intel-pt.c
-index d43f9dec69980..e768c02ef2ab9 100644
---- a/tools/perf/arch/x86/util/intel-pt.c
-+++ b/tools/perf/arch/x86/util/intel-pt.c
-@@ -596,6 +596,7 @@ static int intel_pt_recording_options(struct auxtrace_record *itr,
- 			}
- 			evsel->core.attr.freq = 0;
- 			evsel->core.attr.sample_period = 1;
-+			evsel->no_aux_samples = true;
- 			intel_pt_evsel = evsel;
- 			opts->full_auxtrace = true;
- 		}
-diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-index abc7fda4a0fe1..a844715a352d8 100644
---- a/tools/perf/util/evsel.c
-+++ b/tools/perf/util/evsel.c
-@@ -1028,12 +1028,12 @@ void perf_evsel__config(struct evsel *evsel, struct record_opts *opts,
- 	if (callchain && callchain->enabled && !evsel->no_aux_samples)
- 		perf_evsel__config_callchain(evsel, opts, callchain);
+--- a/arch/s390/kernel/setup.c
++++ b/arch/s390/kernel/setup.c
+@@ -1120,6 +1120,7 @@ void __init setup_arch(char **cmdline_p)
+ 	if (IS_ENABLED(CONFIG_EXPOLINE_AUTO))
+ 		nospec_auto_detect();
  
--	if (opts->sample_intr_regs) {
-+	if (opts->sample_intr_regs && !evsel->no_aux_samples) {
- 		attr->sample_regs_intr = opts->sample_intr_regs;
- 		perf_evsel__set_sample_bit(evsel, REGS_INTR);
- 	}
- 
--	if (opts->sample_user_regs) {
-+	if (opts->sample_user_regs && !evsel->no_aux_samples) {
- 		attr->sample_regs_user |= opts->sample_user_regs;
- 		perf_evsel__set_sample_bit(evsel, REGS_USER);
- 	}
--- 
-2.25.1
-
++	jump_label_init();
+ 	parse_early_param();
+ #ifdef CONFIG_CRASH_DUMP
+ 	/* Deactivate elfcorehdr= kernel parameter */
 
 
