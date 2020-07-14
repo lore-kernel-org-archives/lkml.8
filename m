@@ -2,198 +2,105 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44B1FC433E4
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 02:29:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B78E3C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 02:30:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2138C207BB
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 02:29:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=akamai.com header.i=@akamai.com header.b="geoh4f3T"
+	by mail.kernel.org (Postfix) with ESMTP id 9773B207BB
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 02:30:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594693854;
+	bh=/hS33VdzsRLPV6IWYMz6RL4rg+LZtzUiUyPbAEDJ0TM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=cPyLbQf2YKPr9//7BR+61Md9/Sa2Y9zf8wZLtgo+9l6Ot2xpN8+WlvqwfbHXNy6a+
+	 gZG4XWmZlhAC6qFpizZ1V8CHIN/2RIeQQ0KIhyXS3ed7pisVARlFrsQ8rYPiclT8Ik
+	 APLow64sACWsiow0CccvHSh14Cn9qhTC5sInbzD0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726768AbgGNC35 (ORCPT
+        id S1726619AbgGNCax (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 22:29:57 -0400
-Received: from mx0a-00190b01.pphosted.com ([67.231.149.131]:38990 "EHLO
-        mx0a-00190b01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726150AbgGNC35 (ORCPT
+        Mon, 13 Jul 2020 22:30:53 -0400
+Received: from mail-il1-f195.google.com ([209.85.166.195]:43643 "EHLO
+        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726150AbgGNCax (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 22:29:57 -0400
-Received: from pps.filterd (m0050093.ppops.net [127.0.0.1])
-        by m0050093.ppops.net-00190b01. (8.16.0.42/8.16.0.42) with SMTP id 06E2Pgf7028288;
-        Tue, 14 Jul 2020 03:26:36 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=akamai.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=jan2016.eng;
- bh=CMcWgeN70W9yzJtbKSXSLvUJZMguz5JGKLMRefnJ8lw=;
- b=geoh4f3TugKozfQ9Cfy3aRtr+995DFFBaOKo0APSihxXRXFCe+FPFSSWNX8MyP3I1TcE
- /npw2P0wBD0pXnTQjLVjdpentHTmJI1tsUEAJnk+H7LaMUte+RfHXjnjDkXsjTX1f8WH
- BYp0ItB6UiJifUoZA2tWRktRg2jkmAPo2oJrPxmSW8Ct0v2lVs4zlRfSvKfvp1XsNXb8
- 4Zm7fup2nuFtt+4zC1jfWHCGHNMx/DLoSAAn5q5i0EMCXNhKydpOv45BJWqcrQDFOi3D
- 0ez6EyK4YAcl3/bpoujT5kawQ1/aYsBBQmDsWkNIY8gzfWczyz6q/8okxN21KxGOe/9o tw== 
-Received: from prod-mail-ppoint2 (prod-mail-ppoint2.akamai.com [184.51.33.19] (may be forged))
-        by m0050093.ppops.net-00190b01. with ESMTP id 328kc6gxan-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 14 Jul 2020 03:26:36 +0100
-Received: from pps.filterd (prod-mail-ppoint2.akamai.com [127.0.0.1])
-        by prod-mail-ppoint2.akamai.com (8.16.0.42/8.16.0.42) with SMTP id 06E2HXAA023075;
-        Mon, 13 Jul 2020 22:26:34 -0400
-Received: from prod-mail-relay11.akamai.com ([172.27.118.250])
-        by prod-mail-ppoint2.akamai.com with ESMTP id 3278rx7aq1-1;
-        Mon, 13 Jul 2020 22:26:34 -0400
-Received: from [0.0.0.0] (prod-ssh-gw01.bos01.corp.akamai.com [172.27.119.138])
-        by prod-mail-relay11.akamai.com (Postfix) with ESMTP id 1996F229E9;
-        Tue, 14 Jul 2020 02:26:34 +0000 (GMT)
-Subject: Re: [PATCH v4 13/17] dyndbg: accept 'file foo.c:func1' and 'file
- foo.c:10-100'
-To:     Jim Cromie <jim.cromie@gmail.com>, linux-kernel@vger.kernel.org,
-        akpm@linuxfoundation.org, gregkh@linuxfoundation.org
-Cc:     linux@rasmusvillemoes.dk, Jonathan Corbet <corbet@lwn.net>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Orson Zhai <orson.zhai@unisoc.com>,
-        Will Deacon <will@kernel.org>, Petr Mladek <pmladek@suse.com>,
-        linux-doc@vger.kernel.org
-References: <20200620180643.887546-1-jim.cromie@gmail.com>
- <20200620180643.887546-14-jim.cromie@gmail.com>
-From:   Jason Baron <jbaron@akamai.com>
-Message-ID: <30de6359-e56b-0915-5742-a360ef1b2814@akamai.com>
-Date:   Mon, 13 Jul 2020 22:26:34 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Mon, 13 Jul 2020 22:30:53 -0400
+Received: by mail-il1-f195.google.com with SMTP id i18so13002043ilk.10;
+        Mon, 13 Jul 2020 19:30:52 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=PIQmxPiwEmBfrqbUBFZETE9PAgGB7RmQQ0RmEk0XV2o=;
+        b=RYoG1x2+pv8cg4uWfokhXlJ0T0F6iOIjGOcUkZfgkpxYgbDBzAu5pdZ2I+9jBMJTWo
+         H/sESeoDp/huWygzfpKNeCKf4DmyHxkT2O7MPicDBYKlMefCEq0rZVygncdqnwmIdF52
+         eA4GhGiqTFLO5FBxasW0KLs237Q2B/xhga3GwRBE1t3kBAv8/NbsZGc6PPogJmJEUvpY
+         GxVXAilFM+gYENctPXiGZGwvNc55PiA0Bb7xHjPhfax6moK9Zn1Utbx8xV0N56lwmPbA
+         I8INyFu6k6Zf39B7qmuuOAIErX6RhlzPpgIdIM5p4wV4DC0KTcuXolnvmEDfjAx8opCc
+         Mp3g==
+X-Gm-Message-State: AOAM533xx3RNSDE5t9q2B7JEVVw/bJv+vs1qwsh/Ot/ZFrUSn/rjZYcN
+        U0eUOy5W8/imiwkrstbvEg==
+X-Google-Smtp-Source: ABdhPJxXsnuwtyRrz+snuTSfJAc/5Y1nlNxsR/FuJxzhcyWKWH7prPgt9D2+OmHoYyG5esy2UjixSg==
+X-Received: by 2002:a05:6e02:f85:: with SMTP id v5mr2688806ilo.31.1594693851894;
+        Mon, 13 Jul 2020 19:30:51 -0700 (PDT)
+Received: from xps15 ([64.188.179.252])
+        by smtp.gmail.com with ESMTPSA id b2sm9386188ilf.0.2020.07.13.19.30.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 13 Jul 2020 19:30:51 -0700 (PDT)
+Received: (nullmailer pid 1161968 invoked by uid 1000);
+        Tue, 14 Jul 2020 02:30:48 -0000
+Date:   Mon, 13 Jul 2020 20:30:48 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Wolfram Sang <wsa@kernel.org>
+Cc:     Alain Volmat <alain.volmat@st.com>, mark.rutland@arm.com,
+        pierre-yves.mordret@st.com, mcoquelin.stm32@gmail.com,
+        alexandre.torgue@st.com, linux-i2c@vger.kernel.org,
+        devicetree@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        fabrice.gasnier@st.com
+Subject: Re: [PATCH v2 3/4] dt-bindings: i2c-stm32: add SMBus Alert bindings
+Message-ID: <20200714023048.GA1151665@bogus>
+References: <1593070769-9106-1-git-send-email-alain.volmat@st.com>
+ <1593070769-9106-4-git-send-email-alain.volmat@st.com>
+ <20200630194107.GA999@ninjato>
 MIME-Version: 1.0
-In-Reply-To: <20200620180643.887546-14-jim.cromie@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-07-13_17:2020-07-13,2020-07-13 signatures=0
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 adultscore=0
- phishscore=0 suspectscore=0 bulkscore=0 malwarescore=0 spamscore=0
- mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2007140014
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-07-13_17:2020-07-13,2020-07-13 signatures=0
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 priorityscore=1501
- mlxscore=0 lowpriorityscore=0 mlxlogscore=999 adultscore=0 spamscore=0
- suspectscore=0 impostorscore=0 malwarescore=0 clxscore=1015 phishscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2007140017
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200630194107.GA999@ninjato>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 6/20/20 2:06 PM, Jim Cromie wrote:
-> Accept these additional query forms:
+On Tue, Jun 30, 2020 at 09:41:07PM +0200, Wolfram Sang wrote:
+> On Thu, Jun 25, 2020 at 09:39:28AM +0200, Alain Volmat wrote:
+> > Add a new binding of the i2c-stm32f7 driver to enable the handling
+> > of the SMBUS-Alert.
+> > 
+> > The I2C/SMBUS framework already provides a mechanism to enable SMBus-Alert
+> > by naming an IRQ line "smbus_alert". However, on stm32, the SMBus-Alert is
+> > part of the i2c IRQ. Using the smbus_alert naming here would lead to having
+> > 2 handlers (the handler of the driver and the smbus_alert handler
+> > from I2C/SMBUS framework) on the unique i2c IRQ of the stm32. Meaning that
+> > the smbus_alert handler would get called for all IRQ generated by the stm32
+> > I2C controller.
+> > 
+> > For that reason, the smbus_alert IRQ naming cannot be used and a dedicated
+> > binding is introduced.
 > 
->    echo "file $filestr +_" > control
+> What if we update the core to not register another irq handler if the
+> "smbus_alert" and main irq are the same?
 > 
->        path/to/file.c:100	# as from control, column 1
->        path/to/file.c:1-100	# or any legal line-range
->        path/to/file.c:func_A	# as from an editor/browser
->        path/to/file.c:drm_\*	# wildcards still work
->        path/to/file.c:*_foo	# lead wildcard too
-> 
-> 1st 2 examples are treated as line-ranges, 3,4 are treated as func's
-> 
-> Doc these changes, and sprinkle in a few extra wild-card examples and
-> trailing # explanation texts.
-> 
-> Signed-off-by: Jim Cromie <jim.cromie@gmail.com>
-> ---
->  .../admin-guide/dynamic-debug-howto.rst       |  5 +++++
->  lib/dynamic_debug.c                           | 20 ++++++++++++++++++-
->  2 files changed, 24 insertions(+), 1 deletion(-)
-> 
-> diff --git a/Documentation/admin-guide/dynamic-debug-howto.rst b/Documentation/admin-guide/dynamic-debug-howto.rst
-> index 1423af580bed..6c04aea8f4cd 100644
-> --- a/Documentation/admin-guide/dynamic-debug-howto.rst
-> +++ b/Documentation/admin-guide/dynamic-debug-howto.rst
-> @@ -164,6 +164,7 @@ func
->      of each callsite.  Example::
->  
->  	func svc_tcp_accept
-> +	func *recv*		# in rfcomm, bluetooth, ping, tcp
->  
->  file
->      The given string is compared against either the src-root relative
-> @@ -172,6 +173,9 @@ file
->  
->  	file svcsock.c
->  	file kernel/freezer.c	# ie column 1 of control file
-> +	file drivers/usb/*	# all callsites under it
-> +	file inode.c:start_*	# parse :tail as a func (above)
-> +	file inode.c:1-100	# parse :tail as a line-range (above)
->  
->  module
->      The given string is compared against the module name
-> @@ -181,6 +185,7 @@ module
->  
->  	module sunrpc
->  	module nfsd
-> +	module drm*	# both drm, drm_kms_helper
->  
->  format
->      The given string is searched for in the dynamic debug format
-> diff --git a/lib/dynamic_debug.c b/lib/dynamic_debug.c
-> index ae6e523fdecd..7eb963b1bd11 100644
-> --- a/lib/dynamic_debug.c
-> +++ b/lib/dynamic_debug.c
-> @@ -321,6 +321,8 @@ static int parse_linerange(struct ddebug_query *query, const char *first)
->  	} else {
->  		query->last_lineno = query->first_lineno;
->  	}
-> +	vpr_info("parsed line %d-%d\n", query->first_lineno,
-> +		 query->last_lineno);
->  	return 0;
->  }
+> I think it could work. However, while trying to make a proof-of-concept,
+> I found that irq descriptions in the generic i2c binding document are
+> probably mixed up. And before fixing that, I'd like to get HostNotify
+> done first.
 
-This bit seems like its unrelated to this patch and makes more sense in the
-previous patch, or as separate patch...
+Why does this even need to be in DT? Can't the driver just register that 
+it supports SMBus alert or have some call to the core signaling an SMBus 
+alert? 
 
-Thanks,
-
--Jason
-
-
->  
-> @@ -357,6 +359,7 @@ static int ddebug_parse_query(char *words[], int nwords,
->  {
->  	unsigned int i;
->  	int rc = 0;
-> +	char *fline;
->  
->  	/* check we have an even number of words */
->  	if (nwords % 2 != 0) {
-> @@ -372,7 +375,22 @@ static int ddebug_parse_query(char *words[], int nwords,
->  		if (!strcmp(words[i], "func")) {
->  			rc = check_set(&query->function, words[i+1], "func");
->  		} else if (!strcmp(words[i], "file")) {
-> -			rc = check_set(&query->filename, words[i+1], "file");
-> +			if (check_set(&query->filename, words[i+1], "file"))
-> +				return -EINVAL;
-> +
-> +			/* tail :$info is function or line-range */
-> +			fline = strchr(query->filename, ':');
-> +			if (!fline)
-> +				break;
-> +			*fline++ = '\0';
-> +			if (isalpha(*fline) || *fline == '*' || *fline == '?') {
-> +				/* take as function name */
-> +				if (check_set(&query->function, fline, "func"))
-> +					return -EINVAL;
-> +			} else {
-> +				if (parse_linerange(query, fline))
-> +					return -EINVAL;
-> +			}
->  		} else if (!strcmp(words[i], "module")) {
->  			rc = check_set(&query->module, words[i+1], "module");
->  		} else if (!strcmp(words[i], "format")) {
-> 
+Rob
