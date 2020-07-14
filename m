@@ -2,131 +2,113 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CB1FC433E2
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 03:44:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 195D2C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 03:46:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 37F4820890
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 03:44:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E103621973
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 03:46:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YrBOtJnj"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="QAdMbtUZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726602AbgGNDoK (ORCPT
+        id S1726722AbgGNDqQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 23:44:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39154 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726432AbgGNDoJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 23:44:09 -0400
-Received: from mail-io1-xd41.google.com (mail-io1-xd41.google.com [IPv6:2607:f8b0:4864:20::d41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 71D53C061755;
-        Mon, 13 Jul 2020 20:44:09 -0700 (PDT)
-Received: by mail-io1-xd41.google.com with SMTP id i4so15825556iov.11;
-        Mon, 13 Jul 2020 20:44:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=5pIkH7mXC1jbQvQgKO8e4n9ss2Wr0Vand3f4K2LBYz4=;
-        b=YrBOtJnjGtArnUFIOOSjKKuUr3mYU6wCe/3j9WYc1t+7SI0WSSQ3z1qVrokn3PITMz
-         Diu+HPEas1OK5EDKEJ8ttv2QbCUqmus7l0+8dXkgj1dTe+MQ3L+MkVo9DUH2lh13HHV6
-         XwKvPo4o3gVF0WXt4YdIG6AfeG6a0PSCYzdvCABpRUDm5Mj7S4Ue03eG+K/x9rmhEx3c
-         844BZ25AJ2ApY4O/O2iOxuUgzw9EVLl70EBE9r6BZRNKkwg5S+LMEIiidjOCztp1+6hf
-         5C1tD6h4nN2FtIAQlV6fNNLHFwNq+emxJcTfMsJV6XLniFpTYOmGSpjqeG6Nlcl4RHfn
-         SlMA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=5pIkH7mXC1jbQvQgKO8e4n9ss2Wr0Vand3f4K2LBYz4=;
-        b=KvKSGMatihbCv3Ivj0K3b+0PD6Tz/w4dDWAe9RryKlMLlkSeqUfCKS89F/n6kLgVSN
-         atgXBjQEUT65OgYZPVglU8dpRze+uQlH/YksO7Qcho3BWVsOKSsHqyTwGV8OKy7ZuZJD
-         CK+B+YZfmtIN81E1b6mYqIA06UQbLMXzozn8psVvS5OgQZjzUwZgvhFB1nVAxNuG4OmU
-         o0prl1H7qan9VK9Z0zn1Kv/I9IjODIaH6glImMhebR1rN8iA52w4fBzAMOPSQn/TuoUM
-         ukZQaAbTt1kjmT6OikbdpF5jRQ1vyxaYoYQs+mKLa8vGT66GbyLO84+1+d72yajtuZ2m
-         p5/Q==
-X-Gm-Message-State: AOAM532VP+22RcWc6WjH2lkBBOSFfByTlnMT0oHAY8lOk4Uto9UFZn81
-        BP6OgWIeax9sm6i2m7IaH/dmABCUdwMLsYlWRow=
-X-Google-Smtp-Source: ABdhPJwdZwfVYKqVFMbcOMVarwyvJ7kguDcnx//+Z0fzQDSHID9tABdNxDB+esaGr5DViPMpG3uIbsfsyTVjj8YEVXU=
-X-Received: by 2002:a6b:ee02:: with SMTP id i2mr3032327ioh.110.1594698248705;
- Mon, 13 Jul 2020 20:44:08 -0700 (PDT)
+        Mon, 13 Jul 2020 23:46:16 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:46807 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726432AbgGNDqQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jul 2020 23:46:16 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 4B5RJN5wSbz9sRK;
+        Tue, 14 Jul 2020 13:46:12 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1594698374;
+        bh=Qw7YnurS9X7mYF//AOPfy9vNeNoTKWc5cdcLkBaxxcI=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=QAdMbtUZmaq4l1wlPNz+4Utr2+7Sb1Gnz4o+8H5Z3syrV/DLniJP4AVx2p6mtedNn
+         Pt3L/QZPZ0EOeYh5s2qsnwyztRmLWsV2zZ3bUBNz7bImfwbIDRSyV+EG14IMXLS9GQ
+         00omS06gErezBuO9yHe4uJ4PPxQ1xz+9pGjYEWLr4RnntnU3gps1OldLXPtuqGkmBe
+         XXt8QU3FTAn0mFXDW/xWYdwzgoL0UQqbCl8TgTQ4mVbHoBouUQpT9VrEhhw9PeGRLj
+         nBKCmErYwk9ga+FcMCIepshX+Rmuz3g+bLLKBwpD4KLaiK7YsbASqGm15PAv01qL1b
+         bS1yoUgkQOXrA==
+Date:   Tue, 14 Jul 2020 13:46:10 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     David Howells <dhowells@redhat.com>
+Cc:     Qian Cai <cai@lca.pw>, Alexander Viro <viro@zeniv.linux.org.uk>,
+        linux-fsdevel@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        Linux-Next Mailing List <linux-next@vger.kernel.org>,
+        paulmck@kernel.org, rcu@vger.kernel.org,
+        torvalds@linux-foundation.org
+Subject: Re: Null-ptr-deref due to "vfs, fsinfo: Add an RCU safe per-ns
+ mount list"
+Message-ID: <20200714134610.1268402f@canb.auug.org.au>
+In-Reply-To: <20200625112517.4cf8f3a9@canb.auug.org.au>
+References: <31941725-BEB0-4839-945A-4952C2B5ADC7@lca.pw>
+        <2961585.1589326192@warthog.procyon.org.uk>
+        <20200624155707.GA1259@lca.pw>
+        <20200625112517.4cf8f3a9@canb.auug.org.au>
 MIME-Version: 1.0
-References: <1594696998-3995-1-git-send-email-dillon.minfei@gmail.com>
- <1594696998-3995-2-git-send-email-dillon.minfei@gmail.com> <20200714133835.3b03b8af@canb.auug.org.au>
-In-Reply-To: <20200714133835.3b03b8af@canb.auug.org.au>
-From:   dillon min <dillon.minfei@gmail.com>
-Date:   Tue, 14 Jul 2020 11:43:31 +0800
-Message-ID: <CAL9mu0JurdBoXbSxvHUmNFSBOa=RneNyYtzT=C1MvJs10Y-Geg@mail.gmail.com>
-Subject: Re: [PATCH v2] Since am437x have the same clock structure with am335x
- [1][2], reuse the code from Tony Lindgren's patch [3] to fix dcan probe
- failed on am437x platform.
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     Benoit Cousson <bcousson@baylibre.com>, tony@atomide.com,
-        Rob Herring <robh+dt@kernel.org>, linux-omap@vger.kernel.org,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: multipart/signed; boundary="Sig_/fpv0od1joaNWLrVRZrg+VM7";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 14, 2020 at 11:38 AM Stephen Rothwell <sfr@canb.auug.org.au> wr=
-ote:
->
-> Hi,
->
-> On Tue, 14 Jul 2020 11:23:18 +0800 dillon.minfei@gmail.com wrote:
-> >
-> > From: dillon min <dillon.minfei@gmail.com>
-> >
-> > Fixes: 1a5cd7c23cc5 ("bus: ti-sysc: Enable all clocks directly during i=
-nit to read revision")
-> >
-> > [1]: https://www.ti.com/lit/pdf/spruh73 Chapter-23, Figure 23-1. DCAN
-> > Integration
-> > [2]: https://www.ti.com/lit/pdf/spruhl7 Chapter-25, Figure 25-1. DCAN
-> > Integration
-> > [3]: commit 516f1117d0fb ("ARM: dts: Configure osc clock for d_can on a=
-m335x")
-> >
-> > Signed-off-by: dillon min <dillon.minfei@gmail.com>
-> > ---
-> >
-> > Hi Stephen,
-> >
-> > This changes correct commit messages based on your reviewing.
-> > make Fixes tags to oneline.
-> > make all commit message tags at the end of commit message
->
-> But the Fixes: line should be down with the Signed-off-by: line ...
->
-Ok, should it be like this=EF=BC=8Ci will resubmit it.
+--Sig_/fpv0od1joaNWLrVRZrg+VM7
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-Subject: [PATCH v2] Since am437x have the same clock structure with am335x
- [1][2], reuse the code from Tony Lindgren's patch [3] to fix dcan
- probe failed on the am437x platform.
+Hi sll,
 
-[1]: https://www.ti.com/lit/pdf/spruh73 Chapter-23, Figure 23-1. DCAN
-Integration
-[2]: https://www.ti.com/lit/pdf/spruhl7 Chapter-25, Figure 25-1. DCAN
-Integration
-[3]: commit 516f1117d0fb ("ARM: dts: Configure osc clock for d_can on am335=
-x")
+On Thu, 25 Jun 2020 11:25:17 +1000 Stephen Rothwell <sfr@canb.auug.org.au> =
+wrote:
+>
+> On Wed, 24 Jun 2020 11:57:07 -0400 Qian Cai <cai@lca.pw> wrote:
+> >
+> > On Wed, May 13, 2020 at 12:29:52AM +0100, David Howells wrote: =20
+> > > Qian Cai <cai@lca.pw> wrote:
+> > >    =20
+> > > > Reverted the linux-next commit ee8ad8190cb1 (=E2=80=9Cvfs, fsinfo: =
+Add an RCU safe per-ns mount list=E2=80=9D) fixed the null-ptr-deref.   =20
+> > >=20
+> > > Okay, I'm dropping this commit for now.   =20
+> >=20
+> > What's the point of re-adding this buggy patch to linux-next again since
+> > 0621 without fixing the previous reported issue at all? Reverting the
+> > commit will still fix the crash below immediately, i.e.,
+> >=20
+> > dbc87e74d022 ("vfs, fsinfo: Add an RCU safe per-ns mount list") =20
+>=20
+> I have added a revert of that commit to linux-next today.
 
-Signed-off-by: dillon min <dillon.minfei@gmail.com>
-Fixes: 1a5cd7c23cc5 ("bus: ti-sysc: Enable all clocks directly during
-init to read revision")
+I am still reverting that commit ...
 
-Thanks,
-Dillon,
-> --
-> Cheers,
-> Stephen Rothwell
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/fpv0od1joaNWLrVRZrg+VM7
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl8NKoIACgkQAVBC80lX
+0GybYggAmWxmQ1SfgeqUuK++jhLBzDwkzBn6NEkRSXUXI1NdoC0Nco5Hm9KlPcKP
+HnihB3LKzg4lfEMwnK1ydDVODycwPKY/q5H+HAO95/dNy0AuDngiljSJRvmEqiA9
+xSzDgvieiZH58lkkI+YcBdn13sFkn24lLGI1tyCV7t4+loHcPIlbjl8XMXhQej7E
+aGGQm2VPHbX42OQ59OQSkFDTVeHeKFmg2wUHuXubpK8GkXwUy6md2CgxcWqV2j9q
+UvRCtxC9QsTBR3lkETWJ5UGu/KKJx9vpvk/BxgOGUOFFIFRV0KArCczZllEnOlLG
+WvNN03Ql4QPdrP4rpWbtc5p0MjxkyQ==
+=Zr0Z
+-----END PGP SIGNATURE-----
+
+--Sig_/fpv0od1joaNWLrVRZrg+VM7--
