@@ -4,50 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 554FBC433E7
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 19:05:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B0ABC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 19:05:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 23DA5208C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 19:05:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F2400223B0
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 19:05:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594753550;
-	bh=AvNkMqex9opwcOjlVrEdUuWs40UvWGZnvJdJ0ztqmWY=;
+	s=default; t=1594753555;
+	bh=euUSQ0+G+OQuEWGJtnQ7V1xuV+jzYS4hNg0f3Bg3v18=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=X1//IrGE6s3FiU1T9sSjTJDzXh9OG6Odi8KQa4skkFYlr+Jjdm4H9hW6dA2/vOD84
-	 2dZzjMKix8FHmii4QfXW2ytneIxeDtgOgm5trTe5827YSIG/DlmBmJOHplhbYx1e7H
-	 9BLpmtJozr5NuJNpdksYP0zo3YZWpCydOIW85EkU=
+	b=s0inIMYglpGN6XwBVcMVQDIfBVFRX36/2S4iBl+JcDrYH+tHkOy6+wZZtjVwKnBbF
+	 69V/5+Pa1A6AGEgojy7RlhiGIBilcuk/Di9lp23CvZgxy0SVMS3jKHe3z+GZ6Ys0xF
+	 pMJA3+zX15nu8N+n7P4CVpKbmtVqp5NBthny25XI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730707AbgGNSyA (ORCPT
+        id S1729416AbgGNSxy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 14:54:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51232 "EHLO mail.kernel.org"
+        Tue, 14 Jul 2020 14:53:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50978 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729493AbgGNSx5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 14:53:57 -0400
+        id S1729993AbgGNSxq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 14:53:46 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 035BD22B4E;
-        Tue, 14 Jul 2020 18:53:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4921622B45;
+        Tue, 14 Jul 2020 18:53:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594752836;
-        bh=AvNkMqex9opwcOjlVrEdUuWs40UvWGZnvJdJ0ztqmWY=;
+        s=default; t=1594752825;
+        bh=euUSQ0+G+OQuEWGJtnQ7V1xuV+jzYS4hNg0f3Bg3v18=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wjtYB++7di+RWDqJYst6Q87SSll4nrIA5ZCKuEAPFfaE+GNFaO7A+QMwi7f6wZZ+V
-         uksNi4S+9IxgePEnvOb4UrSuI/NQdGbIAdlf19n6ozhj5gc9956h1THQNukc75skTp
-         ErbH9KKkmGFRkDLTKL++66wCLYdrJ58Wc0jsC0HQ=
+        b=DKyFmUUT90UlGJOaL0NJSOc2cTTHdoZ+F2/HiZFWu1kFx8XiomgYYYZYqj2pDjx9g
+         V/DIXhgJmdKDkurEZU83X7PrAN3xlJuwbqLHk1BkmJYQVY0y9AF3J5+42lGBAKBpv4
+         ICNE+IqE9JL4uWO3i+ovn5SPN8WTcm3EEd9W2Ddc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Zhenzhong Duan <zhenzhong.duan@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
+        stable@vger.kernel.org, maemo-leste@lists.dyne.org,
+        Merlijn Wajer <merlijn@wizzup.org>,
+        Pavel Machek <pavel@ucw.cz>,
+        Sebastian Reichel <sre@kernel.org>,
+        Tony Lindgren <tony@atomide.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 019/166] spi: spidev: fix a potential use-after-free in spidev_release()
-Date:   Tue, 14 Jul 2020 20:43:04 +0200
-Message-Id: <20200714184116.813413487@linuxfoundation.org>
+Subject: [PATCH 5.7 007/166] ARM: dts: omap4-droid4: Fix spi configuration and increase rate
+Date:   Tue, 14 Jul 2020 20:42:52 +0200
+Message-Id: <20200714184116.228638624@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200714184115.844176932@linuxfoundation.org>
 References: <20200714184115.844176932@linuxfoundation.org>
@@ -60,74 +63,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Zhenzhong Duan <zhenzhong.duan@gmail.com>
+From: Tony Lindgren <tony@atomide.com>
 
-[ Upstream commit 06096cc6c5a84ced929634b0d79376b94c65a4bd ]
+[ Upstream commit 0df12a01f4857495816b05f048c4c31439446e35 ]
 
-If an spi device is unbounded from the driver before the release
-process, there will be an NULL pointer reference when it's
-referenced in spi_slave_abort().
+We can currently sometimes get "RXS timed out" errors and "EOT timed out"
+errors with spi transfers.
 
-Fix it by checking it's already freed before reference.
+These errors can be made easy to reproduce by reading the cpcap iio
+values in a loop while keeping the CPUs busy by also reading /dev/urandom.
 
-Signed-off-by: Zhenzhong Duan <zhenzhong.duan@gmail.com>
-Link: https://lore.kernel.org/r/20200618032125.4650-2-zhenzhong.duan@gmail.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+The "RXS timed out" errors we can fix by adding spi-cpol and spi-cpha
+in addition to the spi-cs-high property we already have.
+
+The "EOT timed out" errors we can fix by increasing the spi clock rate
+to 9.6 MHz. Looks similar MC13783 PMIC says it works at spi clock rates
+up to 20 MHz, so let's assume we can pick any rate up to 20 MHz also
+for cpcap.
+
+Cc: maemo-leste@lists.dyne.org
+Cc: Merlijn Wajer <merlijn@wizzup.org>
+Cc: Pavel Machek <pavel@ucw.cz>
+Cc: Sebastian Reichel <sre@kernel.org>
+Signed-off-by: Tony Lindgren <tony@atomide.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/spi/spidev.c | 20 ++++++++++----------
- 1 file changed, 10 insertions(+), 10 deletions(-)
+ arch/arm/boot/dts/motorola-cpcap-mapphone.dtsi | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/spi/spidev.c b/drivers/spi/spidev.c
-index 82e6481fdf950..012a89123067c 100644
---- a/drivers/spi/spidev.c
-+++ b/drivers/spi/spidev.c
-@@ -608,15 +608,20 @@ err_find_dev:
- static int spidev_release(struct inode *inode, struct file *filp)
- {
- 	struct spidev_data	*spidev;
-+	int			dofree;
+diff --git a/arch/arm/boot/dts/motorola-cpcap-mapphone.dtsi b/arch/arm/boot/dts/motorola-cpcap-mapphone.dtsi
+index e39eee628afd6..08a7d3ce383f2 100644
+--- a/arch/arm/boot/dts/motorola-cpcap-mapphone.dtsi
++++ b/arch/arm/boot/dts/motorola-cpcap-mapphone.dtsi
+@@ -13,8 +13,10 @@
+ 		#interrupt-cells = <2>;
+ 		#address-cells = <1>;
+ 		#size-cells = <0>;
+-		spi-max-frequency = <3000000>;
++		spi-max-frequency = <9600000>;
+ 		spi-cs-high;
++		spi-cpol;
++		spi-cpha;
  
- 	mutex_lock(&device_list_lock);
- 	spidev = filp->private_data;
- 	filp->private_data = NULL;
- 
-+	spin_lock_irq(&spidev->spi_lock);
-+	/* ... after we unbound from the underlying device? */
-+	dofree = (spidev->spi == NULL);
-+	spin_unlock_irq(&spidev->spi_lock);
-+
- 	/* last close? */
- 	spidev->users--;
- 	if (!spidev->users) {
--		int		dofree;
- 
- 		kfree(spidev->tx_buffer);
- 		spidev->tx_buffer = NULL;
-@@ -624,19 +629,14 @@ static int spidev_release(struct inode *inode, struct file *filp)
- 		kfree(spidev->rx_buffer);
- 		spidev->rx_buffer = NULL;
- 
--		spin_lock_irq(&spidev->spi_lock);
--		if (spidev->spi)
--			spidev->speed_hz = spidev->spi->max_speed_hz;
--
--		/* ... after we unbound from the underlying device? */
--		dofree = (spidev->spi == NULL);
--		spin_unlock_irq(&spidev->spi_lock);
--
- 		if (dofree)
- 			kfree(spidev);
-+		else
-+			spidev->speed_hz = spidev->spi->max_speed_hz;
- 	}
- #ifdef CONFIG_SPI_SLAVE
--	spi_slave_abort(spidev->spi);
-+	if (!dofree)
-+		spi_slave_abort(spidev->spi);
- #endif
- 	mutex_unlock(&device_list_lock);
- 
+ 		cpcap_adc: adc {
+ 			compatible = "motorola,mapphone-cpcap-adc";
 -- 
 2.25.1
 
