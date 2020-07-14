@@ -7,45 +7,45 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 789E3C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 12:32:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77D94C433E4
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 12:32:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 46BA921D79
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 12:32:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 45D3821D79
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 12:32:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="sGNKR3jp"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="H701flhh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728232AbgGNMcL (ORCPT
+        id S1728251AbgGNMcP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 08:32:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35930 "EHLO
+        Tue, 14 Jul 2020 08:32:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35944 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727867AbgGNMcK (ORCPT
+        with ESMTP id S1728234AbgGNMcO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 08:32:10 -0400
+        Tue, 14 Jul 2020 08:32:14 -0400
 Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A840BC061755;
-        Tue, 14 Jul 2020 05:32:10 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8BBFCC061794;
+        Tue, 14 Jul 2020 05:32:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
         References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
         Content-Type:Content-ID:Content-Description;
-        bh=OyZ2gK5FcIExI1V3T5j7nMnhL8zUoo41svBXtzu2/oY=; b=sGNKR3jpcBArGgMT6zGENCzXGs
-        nagY8RxgQNVF+mlKXANL8Hw5UtNASYKTTt1XiJG5swyQpHPBDL5U1JvDqZayOWfsUjuw1qiVQxJu7
-        KxfeajcTF+wRNbsD32/k9aut+8tzX5352HITFRovPmiOFzVF5Lr5IPHQhvBEMBsqt3ApEEloO+Fs/
-        0BJaH+xTzx6rYWAPNejQw41bifRm8vF39ySOn3Ahl83m7yhA1foUfNXPQeLvIfL932du4a2RHUaJ8
-        LhbdFF0vj4/o2raW0l7al/enXD74lFUZ/jwWwLKiVnlD4/OzEgOpxHdLEPMdpk6jAHlPRW49b4Uh1
-        44B64S5A==;
-Received: from 089144201169.atnat0010.highway.a1.net ([89.144.201.169] helo=localhost)
+        bh=mJrdBgQpUS2E8ZU9OhPctyoTZb0a1wZwaSFfhF40f0Q=; b=H701flhhnzsJ9Bu3C1iWy6fI6Y
+        kZY3iuqWwcZ2A9cLjx4B132P7MJaVnSEHKFjAKtILWYZFSGjmenkk5FjMkjevKN9duwrPk19uSrLw
+        mkazPJMU9Ttftc92rZ3ELhiCp17bya7+FTnle2sF0Qa6ItHraQp74AWPRU424MgKXxuolBQNhXPt9
+        EWLEQYjxA/EtzHQo2xMGam2gQVlqgdFcKTDIDYtn2OCILRWW/gSdOxfbtLGnlhCL5l8oPunzaBYNp
+        GqiiN3HuEfKysp2xCJTcPX+ZU+gOvFpDp5lMEns924K6dPAENiDAsQrmpQEilPzS+oIvDvP70JWI3
+        5BhXTW8g==;
+Received: from [2001:4bb8:188:5f50:c70:4a89:bc61:2] (helo=localhost)
         by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jvK6Q-000260-G5; Tue, 14 Jul 2020 12:32:06 +0000
+        id 1jvK6T-00026F-2o; Tue, 14 Jul 2020 12:32:09 +0000
 From:   Christoph Hellwig <hch@lst.de>
 To:     Yoshinori Sato <ysato@users.sourceforge.jp>,
         Rich Felker <dalias@libc.org>
 Cc:     linux-sh@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 05/10] sh: move the ioremap implementation out of line
-Date:   Tue, 14 Jul 2020 14:18:51 +0200
-Message-Id: <20200714121856.955680-6-hch@lst.de>
+Subject: [PATCH 07/10] sh: unexport register_trapped_io and match_trapped_io_handler
+Date:   Tue, 14 Jul 2020 14:18:53 +0200
+Message-Id: <20200714121856.955680-8-hch@lst.de>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200714121856.955680-1-hch@lst.de>
 References: <20200714121856.955680-1-hch@lst.de>
@@ -57,215 +57,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Move the internal implementation details of ioremap out of line, no need
-to expose any of this to drivers for a slow path API.
+Both functions are only used by compiled in core code.
 
 Signed-off-by: Christoph Hellwig <hch@lst.de>
 ---
- arch/sh/include/asm/io.h | 101 ++++++---------------------------------
- arch/sh/mm/ioremap.c     |  53 ++++++++++++++++++++
- 2 files changed, 68 insertions(+), 86 deletions(-)
+ arch/sh/kernel/io_trapped.c | 2 --
+ 1 file changed, 2 deletions(-)
 
-diff --git a/arch/sh/include/asm/io.h b/arch/sh/include/asm/io.h
-index 357a7e0c86d682..da08a61a2f7dae 100644
---- a/arch/sh/include/asm/io.h
-+++ b/arch/sh/include/asm/io.h
-@@ -242,109 +242,38 @@ unsigned long long poke_real_address_q(unsigned long long addr,
- #define phys_to_virt(address)	(__va(address))
- #endif
- 
--/*
-- * On 32-bit SH, we traditionally have the whole physical address space
-- * mapped at all times (as MIPS does), so "ioremap()" and "iounmap()" do
-- * not need to do anything but place the address in the proper segment.
-- * This is true for P1 and P2 addresses, as well as some P3 ones.
-- * However, most of the P3 addresses and newer cores using extended
-- * addressing need to map through page tables, so the ioremap()
-- * implementation becomes a bit more complicated.
-- *
-- * See arch/sh/mm/ioremap.c for additional notes on this.
-- *
-- * We cheat a bit and always return uncachable areas until we've fixed
-- * the drivers to handle caching properly.
-- *
-- * On the SH-5 the concept of segmentation in the 1:1 PXSEG sense simply
-- * doesn't exist, so everything must go through page tables.
-- */
- #ifdef CONFIG_MMU
-+void iounmap(void __iomem *addr);
- void __iomem *__ioremap_caller(phys_addr_t offset, unsigned long size,
- 			       pgprot_t prot, void *caller);
--void iounmap(void __iomem *addr);
--
--static inline void __iomem *
--__ioremap(phys_addr_t offset, unsigned long size, pgprot_t prot)
--{
--	return __ioremap_caller(offset, size, prot, __builtin_return_address(0));
--}
--
--static inline void __iomem *
--__ioremap_29bit(phys_addr_t offset, unsigned long size, pgprot_t prot)
--{
--#ifdef CONFIG_29BIT
--	phys_addr_t last_addr = offset + size - 1;
--
--	/*
--	 * For P1 and P2 space this is trivial, as everything is already
--	 * mapped. Uncached access for P1 addresses are done through P2.
--	 * In the P3 case or for addresses outside of the 29-bit space,
--	 * mapping must be done by the PMB or by using page tables.
--	 */
--	if (likely(PXSEG(offset) < P3SEG && PXSEG(last_addr) < P3SEG)) {
--		u64 flags = pgprot_val(prot);
--
--		/*
--		 * Anything using the legacy PTEA space attributes needs
--		 * to be kicked down to page table mappings.
--		 */
--		if (unlikely(flags & _PAGE_PCC_MASK))
--			return NULL;
--		if (unlikely(flags & _PAGE_CACHABLE))
--			return (void __iomem *)P1SEGADDR(offset);
--
--		return (void __iomem *)P2SEGADDR(offset);
--	}
--
--	/* P4 above the store queues are always mapped. */
--	if (unlikely(offset >= P3_ADDR_MAX))
--		return (void __iomem *)P4SEGADDR(offset);
--#endif
--
--	return NULL;
--}
--
--static inline void __iomem *
--__ioremap_mode(phys_addr_t offset, unsigned long size, pgprot_t prot)
--{
--	void __iomem *ret;
--
--	ret = __ioremap_trapped(offset, size);
--	if (ret)
--		return ret;
--
--	ret = __ioremap_29bit(offset, size, prot);
--	if (ret)
--		return ret;
--
--	return __ioremap(offset, size, prot);
--}
--#else
--#define __ioremap(offset, size, prot)		((void __iomem *)(offset))
--#define __ioremap_mode(offset, size, prot)	((void __iomem *)(offset))
--static inline void iounmap(void __iomem *addr) {}
--#endif /* CONFIG_MMU */
- 
- static inline void __iomem *ioremap(phys_addr_t offset, unsigned long size)
- {
--	return __ioremap_mode(offset, size, PAGE_KERNEL_NOCACHE);
-+	return __ioremap_caller(offset, size, PAGE_KERNEL_NOCACHE,
-+			__builtin_return_address(0));
+diff --git a/arch/sh/kernel/io_trapped.c b/arch/sh/kernel/io_trapped.c
+index 037aab2708b7ac..004ad0130b1038 100644
+--- a/arch/sh/kernel/io_trapped.c
++++ b/arch/sh/kernel/io_trapped.c
+@@ -102,7 +102,6 @@ int register_trapped_io(struct trapped_io *tiop)
+ 	pr_warn("unable to install trapped io filter\n");
+ 	return -1;
  }
+-EXPORT_SYMBOL_GPL(register_trapped_io);
  
- static inline void __iomem *
- ioremap_cache(phys_addr_t offset, unsigned long size)
- {
--	return __ioremap_mode(offset, size, PAGE_KERNEL);
-+	return __ioremap_caller(offset, size, PAGE_KERNEL,
-+			__builtin_return_address(0));
+ void __iomem *match_trapped_io_handler(struct list_head *list,
+ 				       unsigned long offset,
+@@ -131,7 +130,6 @@ void __iomem *match_trapped_io_handler(struct list_head *list,
+ 	spin_unlock_irqrestore(&trapped_lock, flags);
+ 	return NULL;
  }
- #define ioremap_cache ioremap_cache
+-EXPORT_SYMBOL_GPL(match_trapped_io_handler);
  
- #ifdef CONFIG_HAVE_IOREMAP_PROT
--static inline void __iomem *
--ioremap_prot(phys_addr_t offset, unsigned long size, unsigned long flags)
-+static inline void __iomem *ioremap_prot(phys_addr_t offset, unsigned long size,
-+		unsigned long flags)
+ static struct trapped_io *lookup_tiop(unsigned long address)
  {
--	return __ioremap_mode(offset, size, __pgprot(flags));
-+	return __ioremap_caller(offset, size, __pgprot(flags),
-+			__builtin_return_address(0));
- }
--#endif
-+#endif /* CONFIG_HAVE_IOREMAP_PROT */
-+
-+#else /* CONFIG_MMU */
-+#define iounmap(addr)		do { } while (0)
-+#define ioremap(offset, size)	((void __iomem *)(unsigned long)(offset))
-+#endif /* CONFIG_MMU */
- 
- #define ioremap_uc	ioremap
- 
-diff --git a/arch/sh/mm/ioremap.c b/arch/sh/mm/ioremap.c
-index d9ec85b6bb2130..69e55939e48a6f 100644
---- a/arch/sh/mm/ioremap.c
-+++ b/arch/sh/mm/ioremap.c
-@@ -26,6 +26,51 @@
- #include <asm/mmu.h>
- #include "ioremap.h"
- 
-+/*
-+ * On 32-bit SH, we traditionally have the whole physical address space mapped
-+ * at all times (as MIPS does), so "ioremap()" and "iounmap()" do not need to do
-+ * anything but place the address in the proper segment.  This is true for P1
-+ * and P2 addresses, as well as some P3 ones.  However, most of the P3 addresses
-+ * and newer cores using extended addressing need to map through page tables, so
-+ * the ioremap() implementation becomes a bit more complicated.
-+ */
-+#ifdef CONFIG_29BIT
-+static void __iomem *
-+__ioremap_29bit(phys_addr_t offset, unsigned long size, pgprot_t prot)
-+{
-+	phys_addr_t last_addr = offset + size - 1;
-+
-+	/*
-+	 * For P1 and P2 space this is trivial, as everything is already
-+	 * mapped. Uncached access for P1 addresses are done through P2.
-+	 * In the P3 case or for addresses outside of the 29-bit space,
-+	 * mapping must be done by the PMB or by using page tables.
-+	 */
-+	if (likely(PXSEG(offset) < P3SEG && PXSEG(last_addr) < P3SEG)) {
-+		u64 flags = pgprot_val(prot);
-+
-+		/*
-+		 * Anything using the legacy PTEA space attributes needs
-+		 * to be kicked down to page table mappings.
-+		 */
-+		if (unlikely(flags & _PAGE_PCC_MASK))
-+			return NULL;
-+		if (unlikely(flags & _PAGE_CACHABLE))
-+			return (void __iomem *)P1SEGADDR(offset);
-+
-+		return (void __iomem *)P2SEGADDR(offset);
-+	}
-+
-+	/* P4 above the store queues are always mapped. */
-+	if (unlikely(offset >= P3_ADDR_MAX))
-+		return (void __iomem *)P4SEGADDR(offset);
-+
-+	return NULL;
-+}
-+#else
-+#define __ioremap_29bit(offset, size, prot)		NULL
-+#endif /* CONFIG_29BIT */
-+
- /*
-  * Remap an arbitrary physical address space into the kernel virtual
-  * address space. Needed when the kernel wants to access high addresses
-@@ -43,6 +88,14 @@ __ioremap_caller(phys_addr_t phys_addr, unsigned long size,
- 	unsigned long offset, last_addr, addr, orig_addr;
- 	void __iomem *mapped;
- 
-+	mapped = __ioremap_trapped(phys_addr, size);
-+	if (mapped)
-+		return mapped;
-+
-+	mapped = __ioremap_29bit(phys_addr, size, pgprot);
-+	if (mapped)
-+		return mapped;
-+
- 	/* Don't allow wraparound or zero size */
- 	last_addr = phys_addr + size - 1;
- 	if (!size || last_addr < phys_addr)
 -- 
 2.26.2
 
