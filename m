@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EA36C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:53:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AFBC1C433ED
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:53:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 61EC122C9F
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:53:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8C5D322C9C
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:53:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594752820;
-	bh=vAnzA0C/u5tCL+T0Iz5HQH6VrGT3O31BBkN+InP8bZ0=;
+	s=default; t=1594752822;
+	bh=XedFlO1QM2ZHmpdMk6/Pd+m5+8FBosx+3XqZsu01g2Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Qtdqbr1Ejk2/veecVHW1s2BN/BtmSD5T+E50P4cIejB8dJY4Q0WTaIey4xtjso2ap
-	 6nGUbnueJsXu/O+oXcPLn4oxZL0F1P86JVSreEQfvVd0ocnCgUl9Po24yGqzHKqazv
-	 KxSiO3bGwAnCEvHRgMw9/3+urgktXgy97pVrf5kk=
+	b=xBGbp6unPIBx45VN4mIVET+0h4a+E3Imb4zF1BAZOFsoe0V8z8larshOF5wMXJsW5
+	 sDpPnNhii/V/RYtMzaBnAbWgX9cG6eKKOw8mgqirvjIIquMBcZKRMfe2WKTLBNqPoo
+	 CWcTlyRaHCk4BcsUKGQM6uN2aGTL9iKnuUEDdc+4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730661AbgGNSxi (ORCPT
+        id S1730669AbgGNSxl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 14:53:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50732 "EHLO mail.kernel.org"
+        Tue, 14 Jul 2020 14:53:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50648 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729964AbgGNSxf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 14:53:35 -0400
+        id S1730646AbgGNSxc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 14:53:32 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5DB4F22BF3;
-        Tue, 14 Jul 2020 18:53:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5887322B45;
+        Tue, 14 Jul 2020 18:53:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594752814;
-        bh=vAnzA0C/u5tCL+T0Iz5HQH6VrGT3O31BBkN+InP8bZ0=;
+        s=default; t=1594752811;
+        bh=XedFlO1QM2ZHmpdMk6/Pd+m5+8FBosx+3XqZsu01g2Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=X5WPvVcCkJx5hgMec3b3qxiG0UmL67Ah2VkSoZTox1rteKDGkDh7cM2If0fBTMYqJ
-         D0zweKy1djmzYWIkU1pSQeu8RQ6WZ41kL+iCBzsybtEOri3rt7J3gcQhqBoYFG2dNu
-         ovBozYUVuk+IauNB0B/k0VM+xuFM7WtBr3k2dJMw=
+        b=UXTbpg3Y+HVhb34XzeXk1J96rSwXO9TzF8Sby1hRvDOX42R9fRRKMNZ+IuqQ6mV1r
+         GO/Kq+dKwaPYuPiyPE+IvshGUnLqIUmyar2ntlelmm+MzKgm9Q0FKcjO0bPXfvFW1F
+         BFFnHiS0IHlbTbobK7LLnJSexJuQA5FyIgFnGWmY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Vladimir Oltean <olteanv@gmail.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
+        stable@vger.kernel.org, Peng Ma <peng.ma@nxp.com>,
         Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 003/166] spi: spi-fsl-dspi: Fix lockup if device is removed during SPI transfer
-Date:   Tue, 14 Jul 2020 20:42:48 +0200
-Message-Id: <20200714184116.029638837@linuxfoundation.org>
+Subject: [PATCH 5.7 002/166] spi: spi-fsl-dspi: Adding shutdown hook
+Date:   Tue, 14 Jul 2020 20:42:47 +0200
+Message-Id: <20200714184115.966826177@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200714184115.844176932@linuxfoundation.org>
 References: <20200714184115.844176932@linuxfoundation.org>
@@ -61,38 +60,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Krzysztof Kozlowski <krzk@kernel.org>
+From: Peng Ma <peng.ma@nxp.com>
 
-[ Upstream commit 7684580d45bd3d84ed9b453a4cadf7a9a5605a3f ]
+[ Upstream commit dc234825997ec6ff05980ca9e2204f4ac3f8d695 ]
 
-During device removal, the driver should unregister the SPI controller
-and stop the hardware.  Otherwise the dspi_transfer_one_message() could
-wait on completion infinitely.
+We need to ensure dspi controller could be stopped in order for kexec
+to start the next kernel.
+So add the shutdown operation support.
 
-Additionally, calling spi_unregister_controller() first in device
-removal reverse-matches the probe function, where SPI controller is
-registered at the end.
-
-Fixes: 05209f457069 ("spi: fsl-dspi: add missing clk_disable_unprepare() in dspi_remove()")
-Reported-by: Vladimir Oltean <olteanv@gmail.com>
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20200622110543.5035-1-krzk@kernel.org
+Signed-off-by: Peng Ma <peng.ma@nxp.com>
+Link: https://lore.kernel.org/r/20200424061216.27445-1-peng.ma@nxp.com
 Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/spi/spi-fsl-dspi.c | 11 ++++++++++-
- 1 file changed, 10 insertions(+), 1 deletion(-)
+ drivers/spi/spi-fsl-dspi.c | 23 +++++++++++++++++++++++
+ 1 file changed, 23 insertions(+)
 
 diff --git a/drivers/spi/spi-fsl-dspi.c b/drivers/spi/spi-fsl-dspi.c
-index 89d403dfb3bdf..38d337f0967db 100644
+index 856a4a0edcc7a..89d403dfb3bdf 100644
 --- a/drivers/spi/spi-fsl-dspi.c
 +++ b/drivers/spi/spi-fsl-dspi.c
-@@ -1441,11 +1441,20 @@ static int dspi_remove(struct platform_device *pdev)
- 	struct fsl_dspi *dspi = spi_controller_get_devdata(ctlr);
+@@ -1,6 +1,7 @@
+ // SPDX-License-Identifier: GPL-2.0+
+ //
+ // Copyright 2013 Freescale Semiconductor, Inc.
++// Copyright 2020 NXP
+ //
+ // Freescale DSPI driver
+ // This file contains a driver for the Freescale DSPI
+@@ -26,6 +27,9 @@
+ #define SPI_MCR_CLR_TXF			BIT(11)
+ #define SPI_MCR_CLR_RXF			BIT(10)
+ #define SPI_MCR_XSPI			BIT(3)
++#define SPI_MCR_DIS_TXF			BIT(13)
++#define SPI_MCR_DIS_RXF			BIT(12)
++#define SPI_MCR_HALT			BIT(0)
  
- 	/* Disconnect from the SPI framework */
-+	spi_unregister_controller(dspi->ctlr);
+ #define SPI_TCR				0x08
+ #define SPI_TCR_GET_TCNT(x)		(((x) & GENMASK(31, 16)) >> 16)
+@@ -1446,6 +1450,24 @@ static int dspi_remove(struct platform_device *pdev)
+ 	return 0;
+ }
+ 
++static void dspi_shutdown(struct platform_device *pdev)
++{
++	struct spi_controller *ctlr = platform_get_drvdata(pdev);
++	struct fsl_dspi *dspi = spi_controller_get_devdata(ctlr);
 +
 +	/* Disable RX and TX */
 +	regmap_update_bits(dspi->regmap, SPI_MCR,
@@ -102,14 +115,22 @@ index 89d403dfb3bdf..38d337f0967db 100644
 +	/* Stop Running */
 +	regmap_update_bits(dspi->regmap, SPI_MCR, SPI_MCR_HALT, SPI_MCR_HALT);
 +
- 	dspi_release_dma(dspi);
- 	if (dspi->irq)
- 		free_irq(dspi->irq, dspi);
- 	clk_disable_unprepare(dspi->clk);
--	spi_unregister_controller(dspi->ctlr);
++	dspi_release_dma(dspi);
++	clk_disable_unprepare(dspi->clk);
++	spi_unregister_controller(dspi->ctlr);
++}
++
+ static struct platform_driver fsl_dspi_driver = {
+ 	.driver.name		= DRIVER_NAME,
+ 	.driver.of_match_table	= fsl_dspi_dt_ids,
+@@ -1453,6 +1475,7 @@ static struct platform_driver fsl_dspi_driver = {
+ 	.driver.pm		= &dspi_pm,
+ 	.probe			= dspi_probe,
+ 	.remove			= dspi_remove,
++	.shutdown		= dspi_shutdown,
+ };
+ module_platform_driver(fsl_dspi_driver);
  
- 	return 0;
- }
 -- 
 2.25.1
 
