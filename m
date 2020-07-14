@@ -2,108 +2,108 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 373FBC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 09:37:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA422C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 09:41:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0C759217A0
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 09:37:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="AVCiL+FR"
+	by mail.kernel.org (Postfix) with ESMTP id 8F2F820EDD
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 09:41:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727050AbgGNJhb (ORCPT
+        id S1726062AbgGNJlj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 05:37:31 -0400
-Received: from mail29.static.mailgun.info ([104.130.122.29]:21201 "EHLO
-        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726384AbgGNJh2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 05:37:28 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1594719448; h=Date: Message-Id: Cc: To: References:
- In-Reply-To: From: Subject: Content-Transfer-Encoding: MIME-Version:
- Content-Type: Sender; bh=kHP4fewFsWW13Lx02ZIwoFklJ0oLYlVkRTJp91Ke7JM=;
- b=AVCiL+FRIRJoC8I79F55J5s7kIcFUOxSHSEjTqZ68f3hCsN/Nw3pjjDyemYIpAdVc9Byn+g5
- r/KmBjkWXXytv+rl4RU2Oc5HUQMS4fnc+bMO/deHYCGrFI5xysOLW40+gKW3VYSafLpvUG5Y
- JgCYlAlbmUmXT1+89RypHAdcCi4=
-X-Mailgun-Sending-Ip: 104.130.122.29
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n15.prod.us-east-1.postgun.com with SMTP id
- 5f0d7cc9427cd55766c3c974 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 14 Jul 2020 09:37:13
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 0B0C3C433B2; Tue, 14 Jul 2020 09:37:11 +0000 (UTC)
-Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: kvalo)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 24376C433C8;
-        Tue, 14 Jul 2020 09:37:05 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 24376C433C8
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
-Content-Type: text/plain; charset="utf-8"
+        Tue, 14 Jul 2020 05:41:39 -0400
+Received: from mx2.suse.de ([195.135.220.15]:40280 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725816AbgGNJli (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 05:41:38 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id B4DD7AAE8;
+        Tue, 14 Jul 2020 09:41:39 +0000 (UTC)
+Subject: Re: [PATCH] mm: thp: Replace HTTP links with HTTPS ones
+To:     "Alexander A. Klimov" <grandmaster@al2klimov.de>,
+        akpm@linux-foundation.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+References: <20200713164345.36088-1-grandmaster@al2klimov.de>
+From:   Vlastimil Babka <vbabka@suse.cz>
+Message-ID: <642ab4dc-d0fb-d973-0e5e-7d1bc7d90f11@suse.cz>
+Date:   Tue, 14 Jul 2020 11:41:37 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
+In-Reply-To: <20200713164345.36088-1-grandmaster@al2klimov.de>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-Subject: Re: [PATCH] brcmfmac: expose firmware config files through modinfo
-From:   Kalle Valo <kvalo@codeaurora.org>
-In-Reply-To: <20200701153123.25602-1-matthias.bgg@kernel.org>
-References: <20200701153123.25602-1-matthias.bgg@kernel.org>
-To:     matthias.bgg@kernel.org
-Cc:     Jakub Kicinski <kuba@kernel.org>,
-        "David S . Miller" <davem@davemloft.net>, hdegoede@redhat.com,
-        =?utf-8?q?Pali_Roh=C3=A1r?= <pali@kernel.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Chi-Hsien Lin <chi-hsien.lin@cypress.com>,
-        Franky Lin <franky.lin@broadcom.com>,
-        Chung-Hsien Hsu <stanley.hsu@cypress.com>,
-        Jean-Philippe Brucker <jean-philippe@linaro.org>,
-        Double Lo <double.lo@cypress.com>,
-        Frank Kao <frank.kao@cypress.com>,
-        linux-wireless@vger.kernel.org,
-        brcm80211-dev-list.pdl@broadcom.com,
-        Arend van Spriel <arend.vanspriel@broadcom.com>,
-        "Gustavo A . R . Silva" <gustavo@embeddedor.com>,
-        netdev@vger.kernel.org,
-        =?utf-8?b?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>,
-        Hante Meuleman <hante.meuleman@broadcom.com>,
-        Wright Feng <wright.feng@cypress.com>,
-        Matthias Brugger <mbrugger@suse.com>,
-        Saravanan Shanmugham <saravanan.shanmugham@cypress.com>,
-        brcm80211-dev-list@cypress.com, linux-kernel@vger.kernel.org,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Soeren Moch <smoch@web.de>
-User-Agent: pwcli/0.1.0-git (https://github.com/kvalo/pwcli/) Python/3.5.2
-Message-Id: <20200714093712.0B0C3C433B2@smtp.codeaurora.org>
-Date:   Tue, 14 Jul 2020 09:37:11 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-matthias.bgg@kernel.org wrote:
-
-> From: Matthias Brugger <mbrugger@suse.com>
+On 7/13/20 6:43 PM, Alexander A. Klimov wrote:
+> Rationale:
+> Reduces attack surface on kernel devs opening the links for MITM
+> as HTTPS traffic is much harder to manipulate.
 > 
-> Apart from a firmware binary the chip needs a config file used by the
-> FW. Add the config files to modinfo so that they can be read by
-> userspace.
+> Deterministic algorithm:
+> For each file:
+>   If not .svg:
+>     For each line:
+>       If doesn't contain `\bxmlns\b`:
+>         For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
+> 	  If neither `\bgnu\.org/license`, nor `\bmozilla\.org/MPL\b`:
+>             If both the HTTP and HTTPS versions
+>             return 200 OK and serve the same content:
+>               Replace HTTP with HTTPS.
 > 
-> Signed-off-by: Matthias Brugger <mbrugger@suse.com>
+> Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
+> ---
+>  Continuing my work started at 93431e0607e5.
+>  See also: git log --oneline '--author=Alexander A. Klimov <grandmaster@al2klimov.de>' v5.7..master
+>  (Actually letting a shell for loop submit all this stuff for me.)
+> 
+>  If there are any URLs to be removed completely or at least not just HTTPSified:
+>  Just clearly say so and I'll *undo my change*.
+>  See also: https://lkml.org/lkml/2020/6/27/64
+> 
+>  If there are any valid, but yet not changed URLs:
+>  See: https://lkml.org/lkml/2020/6/26/837
+> 
+>  If you apply the patch, please let me know.
+> 
+>  Sorry again to all maintainers who complained about subject lines.
+>  Now I realized that you want an actually perfect prefixes,
+>  not just subsystem ones.
+>  I tried my best...
+>  And yes, *I could* (at least half-)automate it.
+>  Impossible is nothing! :)
+> 
+> 
+>  mm/huge_memory.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/mm/huge_memory.c b/mm/huge_memory.c
+> index 78c84bee7e29..9e4b78cf73ab 100644
+> --- a/mm/huge_memory.c
+> +++ b/mm/huge_memory.c
+> @@ -2069,7 +2069,7 @@ static void __split_huge_pmd_locked(struct vm_area_struct *vma, pmd_t *pmd,
+>  	 * free), userland could trigger a small page size TLB miss on the
+>  	 * small sized TLB while the hugepage TLB entry is still established in
+>  	 * the huge TLB. Some CPU doesn't like that.
+> -	 * See http://support.amd.com/us/Processor_TechDocs/41322.pdf, Erratum
+> +	 * See https://support.amd.com/us/Processor_TechDocs/41322.pdf, Erratum
+>  	 * 383 on page 93. Intel should be safe but is also warns that it's
 
-I agree with Hans, this does not look a good solution for the problem.
+Well, it was a good opportunity to find out that the link doesn't work anyway.
+The pdf seems to be now at
+http://support.amd.com/TechDocs/41322_10h_Rev_Gd.pdf
+and the erratum is on page 105
 
-Patch set to Changes Requested.
-
--- 
-https://patchwork.kernel.org/patch/11636715/
-
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+>  	 * only safe if the permission and cache attributes of the two entries
+>  	 * loaded in the two TLB is identical (which should be the case here).
+> 
 
