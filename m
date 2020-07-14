@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC6D2C433E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:51:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA472C433E6
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:51:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A6D8A22B3F
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:51:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 91712207F5
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:51:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594752666;
-	bh=90v7GWqKPrOeoj463uhOu72VM+HIUqvK41t3azHjKDM=;
+	s=default; t=1594752669;
+	bh=m1m092XrQX3GfV9d3V77hve2zULsbBlvhWpQsEt4laY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kyQyqAgT23AZa0FxZ26kRG7hryLLULC0XTOXvWn1oQlW9n7rPBEXjEIF1AjfHQOYj
-	 mMYWfJ8eCQzskY8UrKG582vMpgd8NwGlZQALqcYJe1LDuF6xdRS1tualyyRySHC3AL
-	 4HlI3aUu17x1DRNuaLG8sfLlb9LxEIEihGuVETtE=
+	b=1RtS3ACt1E/1TQkNZoxo73As+ePBmbAAfRRo36f1OP/Eu/tJUXDtE0R59OZNepRC4
+	 zS4a07VEbNCSumNTt0fa7aMt3wfaLKEykS+hDGIghjClCwL2DHWWJG9Yla5xdypr8+
+	 lg2DoeJqjDYKK7GbKw3pardMGqTuztx3fPeePCQo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730363AbgGNSvF (ORCPT
+        id S1729880AbgGNSvH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 14:51:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47366 "EHLO mail.kernel.org"
+        Tue, 14 Jul 2020 14:51:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47440 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730350AbgGNSvB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 14:51:01 -0400
+        id S1729873AbgGNSvE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 14:51:04 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 59EBB208C3;
-        Tue, 14 Jul 2020 18:51:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D766522B2A;
+        Tue, 14 Jul 2020 18:51:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594752660;
-        bh=90v7GWqKPrOeoj463uhOu72VM+HIUqvK41t3azHjKDM=;
+        s=default; t=1594752663;
+        bh=m1m092XrQX3GfV9d3V77hve2zULsbBlvhWpQsEt4laY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MF894AkyySGE5dmyV8N5hZ5EITRwvtQa6One3PuZtEHTgtyQTxClICpW4asewzJVX
-         2UCVweW1xSEyDfQMqcOLIafbG0EiIrAACWQR9I7dzNexj5HeOAoyDitltvZGEU37OK
-         9R7kpRsBg1QBf7p5CVaNfU+uRL6qQyiwi5dveg2w=
+        b=dgGOMx8IXreG3nIWBz1HI0z0dTmaQlHGgFBoGwTHDz8C42Erd6ssIwzzKaGxpp3Bg
+         rcFT5O3HOl81tWDy86rz00m41JEJkLT1DyTq5fyuimE1fi99qwcXhpujjOJfjOle30
+         JAX3OSAaRqe/MDo3mcmeW5BVyKJhB0c8Y3+AooLU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eran Ben Elisha <eranbe@mellanox.com>,
-        Huy Nguyen <huyn@mellanox.com>,
+        stable@vger.kernel.org, Aya Levin <ayal@mellanox.com>,
+        Eran Ben Elisha <eranbe@mellanox.com>,
         Saeed Mahameed <saeedm@mellanox.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 062/109] net/mlx5: Fix eeprom support for SFP module
-Date:   Tue, 14 Jul 2020 20:44:05 +0200
-Message-Id: <20200714184108.492825285@linuxfoundation.org>
+Subject: [PATCH 5.4 063/109] net/mlx5e: Fix 50G per lane indication
+Date:   Tue, 14 Jul 2020 20:44:06 +0200
+Message-Id: <20200714184108.539102399@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200714184105.507384017@linuxfoundation.org>
 References: <20200714184105.507384017@linuxfoundation.org>
@@ -61,171 +61,132 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eran Ben Elisha <eranbe@mellanox.com>
+From: Aya Levin <ayal@mellanox.com>
 
-[ Upstream commit 47afbdd2fa4c5775c383ba376a3d1da7d7f694dc ]
+[ Upstream commit 6a1cf4e443a3b0a4d690d3c93b84b1e9cbfcb1bd ]
 
-Fix eeprom SFP query support by setting i2c_addr, offset and page number
-correctly. Unlike QSFP modules, SFP eeprom params are as follow:
-- i2c_addr is 0x50 for offset 0 - 255 and 0x51 for offset 256 - 511.
-- Page number is always zero.
-- Page offset is always relative to zero.
+Some released FW versions mistakenly don't set the capability that 50G
+per lane link-modes are supported for VFs (ptys_extended_ethernet
+capability bit). When the capability is unset, read
+PTYS.ext_eth_proto_capability (always reliable).
+If PTYS.ext_eth_proto_capability is valid (has a non-zero value)
+conclude that the HCA supports 50G per lane. Otherwise, conclude that
+the HCA doesn't support 50G per lane.
 
-As part of eeprom query, query the module ID (SFP / QSFP*) via helper
-function to set the params accordingly.
-
-In addition, change mlx5_qsfp_eeprom_page() input type to be u16 to avoid
-unnecessary casting.
-
-Fixes: a708fb7b1f8d ("net/mlx5e: ethtool, Add support for EEPROM high pages query")
-Signed-off-by: Eran Ben Elisha <eranbe@mellanox.com>
-Signed-off-by: Huy Nguyen <huyn@mellanox.com>
+Fixes: a08b4ed1373d ("net/mlx5: Add support to ext_* fields introduced in Port Type and Speed register")
+Signed-off-by: Aya Levin <ayal@mellanox.com>
+Reviewed-by: Eran Ben Elisha <eranbe@mellanox.com>
 Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../net/ethernet/mellanox/mlx5/core/port.c    | 93 +++++++++++++++----
- 1 file changed, 77 insertions(+), 16 deletions(-)
+ .../net/ethernet/mellanox/mlx5/core/en/port.c | 21 ++++++++++++++++---
+ .../net/ethernet/mellanox/mlx5/core/en/port.h |  2 +-
+ .../ethernet/mellanox/mlx5/core/en_ethtool.c  |  8 +++----
+ 3 files changed, 23 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/net/ethernet/mellanox/mlx5/core/port.c b/drivers/net/ethernet/mellanox/mlx5/core/port.c
-index cc262b30aed53..dc589322940c5 100644
---- a/drivers/net/ethernet/mellanox/mlx5/core/port.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/port.c
-@@ -293,7 +293,40 @@ static int mlx5_query_module_num(struct mlx5_core_dev *dev, int *module_num)
- 	return 0;
- }
+diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en/port.c b/drivers/net/ethernet/mellanox/mlx5/core/en/port.c
+index fce6eccdcf8b2..fa81a97f6ba9e 100644
+--- a/drivers/net/ethernet/mellanox/mlx5/core/en/port.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/en/port.c
+@@ -78,11 +78,26 @@ static const u32 mlx5e_ext_link_speed[MLX5E_EXT_LINK_MODES_NUMBER] = {
+ 	[MLX5E_400GAUI_8]			= 400000,
+ };
  
--static int mlx5_eeprom_page(int offset)
-+static int mlx5_query_module_id(struct mlx5_core_dev *dev, int module_num,
-+				u8 *module_id)
++bool mlx5e_ptys_ext_supported(struct mlx5_core_dev *mdev)
 +{
-+	u32 in[MLX5_ST_SZ_DW(mcia_reg)] = {};
-+	u32 out[MLX5_ST_SZ_DW(mcia_reg)];
-+	int err, status;
-+	u8 *ptr;
++	struct mlx5e_port_eth_proto eproto;
++	int err;
 +
-+	MLX5_SET(mcia_reg, in, i2c_device_address, MLX5_I2C_ADDR_LOW);
-+	MLX5_SET(mcia_reg, in, module, module_num);
-+	MLX5_SET(mcia_reg, in, device_address, 0);
-+	MLX5_SET(mcia_reg, in, page_number, 0);
-+	MLX5_SET(mcia_reg, in, size, 1);
-+	MLX5_SET(mcia_reg, in, l, 0);
++	if (MLX5_CAP_PCAM_FEATURE(mdev, ptys_extended_ethernet))
++		return true;
 +
-+	err = mlx5_core_access_reg(dev, in, sizeof(in), out,
-+				   sizeof(out), MLX5_REG_MCIA, 0, 0);
++	err = mlx5_port_query_eth_proto(mdev, 1, true, &eproto);
 +	if (err)
-+		return err;
++		return false;
 +
-+	status = MLX5_GET(mcia_reg, out, status);
-+	if (status) {
-+		mlx5_core_err(dev, "query_mcia_reg failed: status: 0x%x\n",
-+			      status);
-+		return -EIO;
-+	}
-+	ptr = MLX5_ADDR_OF(mcia_reg, out, dword_0);
-+
-+	*module_id = ptr[0];
-+
-+	return 0;
++	return !!eproto.cap;
 +}
 +
-+static int mlx5_qsfp_eeprom_page(u16 offset)
+ static void mlx5e_port_get_speed_arr(struct mlx5_core_dev *mdev,
+ 				     const u32 **arr, u32 *size,
+ 				     bool force_legacy)
  {
- 	if (offset < MLX5_EEPROM_PAGE_LENGTH)
- 		/* Addresses between 0-255 - page 00 */
-@@ -307,7 +340,7 @@ static int mlx5_eeprom_page(int offset)
- 		    MLX5_EEPROM_HIGH_PAGE_LENGTH);
- }
+-	bool ext = force_legacy ? false : MLX5_CAP_PCAM_FEATURE(mdev, ptys_extended_ethernet);
++	bool ext = force_legacy ? false : mlx5e_ptys_ext_supported(mdev);
  
--static int mlx5_eeprom_high_page_offset(int page_num)
-+static int mlx5_qsfp_eeprom_high_page_offset(int page_num)
- {
- 	if (!page_num) /* Page 0 always start from low page */
- 		return 0;
-@@ -316,35 +349,62 @@ static int mlx5_eeprom_high_page_offset(int page_num)
- 	return page_num * MLX5_EEPROM_HIGH_PAGE_LENGTH;
- }
+ 	*size = ext ? ARRAY_SIZE(mlx5e_ext_link_speed) :
+ 		      ARRAY_SIZE(mlx5e_link_speed);
+@@ -177,7 +192,7 @@ int mlx5e_port_linkspeed(struct mlx5_core_dev *mdev, u32 *speed)
+ 	bool ext;
+ 	int err;
  
-+static void mlx5_qsfp_eeprom_params_set(u16 *i2c_addr, int *page_num, u16 *offset)
-+{
-+	*i2c_addr = MLX5_I2C_ADDR_LOW;
-+	*page_num = mlx5_qsfp_eeprom_page(*offset);
-+	*offset -=  mlx5_qsfp_eeprom_high_page_offset(*page_num);
-+}
-+
-+static void mlx5_sfp_eeprom_params_set(u16 *i2c_addr, int *page_num, u16 *offset)
-+{
-+	*i2c_addr = MLX5_I2C_ADDR_LOW;
-+	*page_num = 0;
-+
-+	if (*offset < MLX5_EEPROM_PAGE_LENGTH)
-+		return;
-+
-+	*i2c_addr = MLX5_I2C_ADDR_HIGH;
-+	*offset -= MLX5_EEPROM_PAGE_LENGTH;
-+}
-+
- int mlx5_query_module_eeprom(struct mlx5_core_dev *dev,
- 			     u16 offset, u16 size, u8 *data)
- {
--	int module_num, page_num, status, err;
-+	int module_num, status, err, page_num = 0;
-+	u32 in[MLX5_ST_SZ_DW(mcia_reg)] = {};
- 	u32 out[MLX5_ST_SZ_DW(mcia_reg)];
--	u32 in[MLX5_ST_SZ_DW(mcia_reg)];
--	u16 i2c_addr;
--	void *ptr = MLX5_ADDR_OF(mcia_reg, out, dword_0);
-+	u16 i2c_addr = 0;
-+	u8 module_id;
-+	void *ptr;
+-	ext = MLX5_CAP_PCAM_FEATURE(mdev, ptys_extended_ethernet);
++	ext = mlx5e_ptys_ext_supported(mdev);
+ 	err = mlx5_port_query_eth_proto(mdev, 1, ext, &eproto);
+ 	if (err)
+ 		goto out;
+@@ -205,7 +220,7 @@ int mlx5e_port_max_linkspeed(struct mlx5_core_dev *mdev, u32 *speed)
+ 	int err;
+ 	int i;
  
- 	err = mlx5_query_module_num(dev, &module_num);
+-	ext = MLX5_CAP_PCAM_FEATURE(mdev, ptys_extended_ethernet);
++	ext = mlx5e_ptys_ext_supported(mdev);
+ 	err = mlx5_port_query_eth_proto(mdev, 1, ext, &eproto);
  	if (err)
  		return err;
- 
--	memset(in, 0, sizeof(in));
--	size = min_t(int, size, MLX5_EEPROM_MAX_BYTES);
+diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en/port.h b/drivers/net/ethernet/mellanox/mlx5/core/en/port.h
+index 4a7f4497692bc..e196888f7056b 100644
+--- a/drivers/net/ethernet/mellanox/mlx5/core/en/port.h
++++ b/drivers/net/ethernet/mellanox/mlx5/core/en/port.h
+@@ -54,7 +54,7 @@ int mlx5e_port_linkspeed(struct mlx5_core_dev *mdev, u32 *speed);
+ int mlx5e_port_max_linkspeed(struct mlx5_core_dev *mdev, u32 *speed);
+ u32 mlx5e_port_speed2linkmodes(struct mlx5_core_dev *mdev, u32 speed,
+ 			       bool force_legacy);
 -
--	/* Get the page number related to the given offset */
--	page_num = mlx5_eeprom_page(offset);
-+	err = mlx5_query_module_id(dev, module_num, &module_id);
-+	if (err)
-+		return err;
++bool mlx5e_ptys_ext_supported(struct mlx5_core_dev *mdev);
+ int mlx5e_port_query_pbmc(struct mlx5_core_dev *mdev, void *out);
+ int mlx5e_port_set_pbmc(struct mlx5_core_dev *mdev, void *in);
+ int mlx5e_port_query_priority2buffer(struct mlx5_core_dev *mdev, u8 *buffer);
+diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en_ethtool.c b/drivers/net/ethernet/mellanox/mlx5/core/en_ethtool.c
+index 39ee32518b106..8cd529556b214 100644
+--- a/drivers/net/ethernet/mellanox/mlx5/core/en_ethtool.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/en_ethtool.c
+@@ -200,7 +200,7 @@ static void mlx5e_ethtool_get_speed_arr(struct mlx5_core_dev *mdev,
+ 					struct ptys2ethtool_config **arr,
+ 					u32 *size)
+ {
+-	bool ext = MLX5_CAP_PCAM_FEATURE(mdev, ptys_extended_ethernet);
++	bool ext = mlx5e_ptys_ext_supported(mdev);
  
--	/* Set the right offset according to the page number,
--	 * For page_num > 0, relative offset is always >= 128 (high page).
--	 */
--	offset -= mlx5_eeprom_high_page_offset(page_num);
-+	switch (module_id) {
-+	case MLX5_MODULE_ID_SFP:
-+		mlx5_sfp_eeprom_params_set(&i2c_addr, &page_num, &offset);
-+		break;
-+	case MLX5_MODULE_ID_QSFP:
-+	case MLX5_MODULE_ID_QSFP_PLUS:
-+	case MLX5_MODULE_ID_QSFP28:
-+		mlx5_qsfp_eeprom_params_set(&i2c_addr, &page_num, &offset);
-+		break;
-+	default:
-+		mlx5_core_err(dev, "Module ID not recognized: 0x%x\n", module_id);
-+		return -EINVAL;
-+	}
+ 	*arr = ext ? ptys2ext_ethtool_table : ptys2legacy_ethtool_table;
+ 	*size = ext ? ARRAY_SIZE(ptys2ext_ethtool_table) :
+@@ -871,7 +871,7 @@ static void get_lp_advertising(struct mlx5_core_dev *mdev, u32 eth_proto_lp,
+ 			       struct ethtool_link_ksettings *link_ksettings)
+ {
+ 	unsigned long *lp_advertising = link_ksettings->link_modes.lp_advertising;
+-	bool ext = MLX5_CAP_PCAM_FEATURE(mdev, ptys_extended_ethernet);
++	bool ext = mlx5e_ptys_ext_supported(mdev);
  
- 	if (offset + size > MLX5_EEPROM_PAGE_LENGTH)
- 		/* Cross pages read, read until offset 256 in low page */
- 		size -= offset + size - MLX5_EEPROM_PAGE_LENGTH;
- 
--	i2c_addr = MLX5_I2C_ADDR_LOW;
-+	size = min_t(int, size, MLX5_EEPROM_MAX_BYTES);
- 
- 	MLX5_SET(mcia_reg, in, l, 0);
- 	MLX5_SET(mcia_reg, in, module, module_num);
-@@ -365,6 +425,7 @@ int mlx5_query_module_eeprom(struct mlx5_core_dev *dev,
- 		return -EIO;
+ 	ptys2ethtool_adver_link(lp_advertising, eth_proto_lp, ext);
+ }
+@@ -900,7 +900,7 @@ int mlx5e_ethtool_get_link_ksettings(struct mlx5e_priv *priv,
+ 			   __func__, err);
+ 		goto err_query_regs;
  	}
+-	ext = MLX5_CAP_PCAM_FEATURE(mdev, ptys_extended_ethernet);
++	ext = !!MLX5_GET_ETH_PROTO(ptys_reg, out, true, eth_proto_capability);
+ 	eth_proto_cap    = MLX5_GET_ETH_PROTO(ptys_reg, out, ext,
+ 					      eth_proto_capability);
+ 	eth_proto_admin  = MLX5_GET_ETH_PROTO(ptys_reg, out, ext,
+@@ -1052,7 +1052,7 @@ int mlx5e_ethtool_set_link_ksettings(struct mlx5e_priv *priv,
+ 	autoneg = link_ksettings->base.autoneg;
+ 	speed = link_ksettings->base.speed;
  
-+	ptr = MLX5_ADDR_OF(mcia_reg, out, dword_0);
- 	memcpy(data, ptr, size);
- 
- 	return size;
+-	ext_supported = MLX5_CAP_PCAM_FEATURE(mdev, ptys_extended_ethernet);
++	ext_supported = mlx5e_ptys_ext_supported(mdev);
+ 	ext = ext_requested(autoneg, adver, ext_supported);
+ 	if (!ext_supported && ext)
+ 		return -EOPNOTSUPP;
 -- 
 2.25.1
 
