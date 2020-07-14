@@ -2,88 +2,262 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED4FCC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 13:14:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64198C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 13:14:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CC7CA224B0
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 13:14:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 35ABD224B2
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 13:14:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=cumulusnetworks.com header.i=@cumulusnetworks.com header.b="KP7mla+v"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728495AbgGNNOT (ORCPT
+        id S1728461AbgGNNOT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Tue, 14 Jul 2020 09:14:19 -0400
-Received: from mx2.suse.de ([195.135.220.15]:51132 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726914AbgGNNOS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 09:14:18 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id AAFCEAFB7;
-        Tue, 14 Jul 2020 13:14:18 +0000 (UTC)
-Received: by quack2.suse.cz (Postfix, from userid 1000)
-        id C99941E12C9; Tue, 14 Jul 2020 15:14:13 +0200 (CEST)
-Date:   Tue, 14 Jul 2020 15:14:13 +0200
-From:   Jan Kara <jack@suse.cz>
-To:     Francesco Ruggeri <fruggeri@arista.com>
-Cc:     linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        amir73il@gmail.com, jack@suse.cz
-Subject: Re: soft lockup in fanotify_read
-Message-ID: <20200714131413.GJ23073@quack2.suse.cz>
-References: <20200714025417.A25EB95C0339@us180.sjc.aristanetworks.com>
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42416 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726823AbgGNNOQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 09:14:16 -0400
+Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E8872C061755
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 06:14:15 -0700 (PDT)
+Received: by mail-wm1-x344.google.com with SMTP id f139so5823382wmf.5
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 06:14:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cumulusnetworks.com; s=google;
+        h=subject:to:references:from:message-id:date:user-agent:mime-version
+         :in-reply-to:content-language:content-transfer-encoding;
+        bh=1AJSCaA9AJiVaVMrb6q0a2YgcuNnUrAPsUutkIoBrlE=;
+        b=KP7mla+vPb+XSGtSDhi2klcSbIgpVzmppgsD2StJS+NDiLzJ7E/OGviL7c10+sdQX/
+         mU2ycPJQQWWN+P+L4NqKX/qCO1qITVeNHjnrHDlbpXz5bQ4rTj2y92hb+Ri54JhUJd3w
+         t77cK4dckcMgES3cSg0+yoKpf81Bo6RQ90/04=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=1AJSCaA9AJiVaVMrb6q0a2YgcuNnUrAPsUutkIoBrlE=;
+        b=kqNCVvl8mKyARaFxMSx6M5oin3P54J0OhGeXC4En5mMe3345Y49lDNiwIMIuTjWXVK
+         yrBG1cTzWdLOtGAGjF3EFsapN6Wh4QKJK/RNQDCvgfozHn92dDOLYtvwAqCVHr/gdEIA
+         P01Cvi707FYiHkKDTtgK04XvjBpUSDb59P7pr0WTu4MhLhhir6XQiifwTVI6SweVDbAT
+         4pSjpNnirBv53OzrnS9VT3b+CXLUJ5pfrpbBpH7p2fuoL96xPfbS1WfQ56O52jKIrVvN
+         q1Kh4a1bXAbyv67vLE8csb0hBhY26XUvxWreETR+2/WczPpEc1bVxnH1womyaeDcuckp
+         5wsg==
+X-Gm-Message-State: AOAM532nNAUgQHRljiJfgI+La3WIzgN2T/gZiUdWjIin3e09Wm6xqYfl
+        NGkTBydBaOHN9lq9BzubXnta8A==
+X-Google-Smtp-Source: ABdhPJza0n+wds1kcTU4mseaxPhXB71oAq87NXVGqzW81mFJe4YA93/WPoi2yHUVPLIH5nk0QuU9Ow==
+X-Received: by 2002:a1c:9650:: with SMTP id y77mr4422291wmd.101.1594732454603;
+        Tue, 14 Jul 2020 06:14:14 -0700 (PDT)
+Received: from [192.168.0.109] (84-238-136-197.ip.btc-net.bg. [84.238.136.197])
+        by smtp.gmail.com with ESMTPSA id v18sm30475537wrv.49.2020.07.14.06.14.12
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 14 Jul 2020 06:14:13 -0700 (PDT)
+Subject: Re: [PATCH net-next v4 02/12] bridge: uapi: mrp: Extend MRP
+ attributes for MRP interconnect
+To:     Horatiu Vultur <horatiu.vultur@microchip.com>,
+        roopa@cumulusnetworks.com, davem@davemloft.net, kuba@kernel.org,
+        jiri@resnulli.us, ivecera@redhat.com, andrew@lunn.ch,
+        UNGLinuxDriver@microchip.com, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, bridge@lists.linux-foundation.org
+References: <20200714073458.1939574-1-horatiu.vultur@microchip.com>
+ <20200714073458.1939574-3-horatiu.vultur@microchip.com>
+From:   Nikolay Aleksandrov <nikolay@cumulusnetworks.com>
+Message-ID: <86fe5d1d-1cda-e832-3ebb-504876ed548a@cumulusnetworks.com>
+Date:   Tue, 14 Jul 2020 16:14:12 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200714025417.A25EB95C0339@us180.sjc.aristanetworks.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200714073458.1939574-3-horatiu.vultur@microchip.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello!
+On 14/07/2020 10:34, Horatiu Vultur wrote:
+> Extend the existing MRP netlink attributes to allow to configure MRP
+> Interconnect:
+> 
+> IFLA_BRIDGE_MRP_IN_ROLE - the parameter type is br_mrp_in_role which
+>   contains the interconnect id, the ring id, the interconnect role(MIM
+>   or MIC) and the port ifindex that represents the interconnect port.
+> 
+> IFLA_BRIDGE_MRP_IN_STATE - the parameter type is br_mrp_in_state which
+>   contains the interconnect id and the interconnect state.
+> 
+> IFLA_BRIDGE_MRP_IN_TEST - the parameter type is br_mrp_start_in_test
+>   which contains the interconnect id, the interval at which to send
+>   MRP_InTest frames, how many test frames can be missed before declaring
+>   the interconnect ring open and the period which represents for how long
+>   to send MRP_InTest frames.
+> 
+> Signed-off-by: Horatiu Vultur <horatiu.vultur@microchip.com>
+> ---
+>  include/uapi/linux/if_bridge.h  | 53 +++++++++++++++++++++++++++++++++
+>  include/uapi/linux/mrp_bridge.h | 38 +++++++++++++++++++++++
+>  2 files changed, 91 insertions(+)
+> 
 
-On Mon 13-07-20 19:54:17, Francesco Ruggeri wrote:
-> We are getting this soft lockup in fanotify_read.
-> The reason is that this code does not seem to scale to cases where there
-> are big bursts of events generated by fanotify_handle_event.
-> fanotify_read acquires group->notification_lock for each event.
-> fanotify_handle_event uses the lock to add one event, which also involves
-> fanotify_merge, which scans the whole list trying to find an event to
-> merge the new one with.
-> In our case fanotify_read is invoked with a buffer big enough for 200
-> events, and what happens is that every time fanotify_read dequeues an
-> event and releases the lock, fanotify_handle_event adds several more,
-> scanning a longer and longer list. This causes fanotify_read to wait
-> longer and longer for the lock, and the soft lockup happens before
-> fanotify_read can reach 200 events.
-> Is it intentional for fanotify_read to acquire the lock for each event,
-> rather than batching together a user buffer worth of events?
+Acked-by: Nikolay Aleksandrov <nikolay@cumulusnetworks.com>
 
-Thanks for report and the analysis. I agree what you describe is possible.
-The locking is actually fine I think but you're correct that the merging
-logic isn't ideal and for large amounts of queued events may be too slow.
-We were already discussing with Amir how to speed it up but didn't end up
-doing anything yet since the issue wasn't really pressing.
+> diff --git a/include/uapi/linux/if_bridge.h b/include/uapi/linux/if_bridge.h
+> index c114c1c2bd533..d840a3e37a37c 100644
+> --- a/include/uapi/linux/if_bridge.h
+> +++ b/include/uapi/linux/if_bridge.h
+> @@ -167,6 +167,9 @@ enum {
+>  	IFLA_BRIDGE_MRP_RING_ROLE,
+>  	IFLA_BRIDGE_MRP_START_TEST,
+>  	IFLA_BRIDGE_MRP_INFO,
+> +	IFLA_BRIDGE_MRP_IN_ROLE,
+> +	IFLA_BRIDGE_MRP_IN_STATE,
+> +	IFLA_BRIDGE_MRP_START_IN_TEST,
+>  	__IFLA_BRIDGE_MRP_MAX,
+>  };
+>  
+> @@ -245,6 +248,37 @@ enum {
+>  
+>  #define IFLA_BRIDGE_MRP_INFO_MAX (__IFLA_BRIDGE_MRP_INFO_MAX - 1)
+>  
+> +enum {
+> +	IFLA_BRIDGE_MRP_IN_STATE_UNSPEC,
+> +	IFLA_BRIDGE_MRP_IN_STATE_IN_ID,
+> +	IFLA_BRIDGE_MRP_IN_STATE_STATE,
+> +	__IFLA_BRIDGE_MRP_IN_STATE_MAX,
+> +};
+> +
+> +#define IFLA_BRIDGE_MRP_IN_STATE_MAX (__IFLA_BRIDGE_MRP_IN_STATE_MAX - 1)
+> +
+> +enum {
+> +	IFLA_BRIDGE_MRP_IN_ROLE_UNSPEC,
+> +	IFLA_BRIDGE_MRP_IN_ROLE_RING_ID,
+> +	IFLA_BRIDGE_MRP_IN_ROLE_IN_ID,
+> +	IFLA_BRIDGE_MRP_IN_ROLE_ROLE,
+> +	IFLA_BRIDGE_MRP_IN_ROLE_I_IFINDEX,
+> +	__IFLA_BRIDGE_MRP_IN_ROLE_MAX,
+> +};
+> +
+> +#define IFLA_BRIDGE_MRP_IN_ROLE_MAX (__IFLA_BRIDGE_MRP_IN_ROLE_MAX - 1)
+> +
+> +enum {
+> +	IFLA_BRIDGE_MRP_START_IN_TEST_UNSPEC,
+> +	IFLA_BRIDGE_MRP_START_IN_TEST_IN_ID,
+> +	IFLA_BRIDGE_MRP_START_IN_TEST_INTERVAL,
+> +	IFLA_BRIDGE_MRP_START_IN_TEST_MAX_MISS,
+> +	IFLA_BRIDGE_MRP_START_IN_TEST_PERIOD,
+> +	__IFLA_BRIDGE_MRP_START_IN_TEST_MAX,
+> +};
+> +
+> +#define IFLA_BRIDGE_MRP_START_IN_TEST_MAX (__IFLA_BRIDGE_MRP_START_IN_TEST_MAX - 1)
+> +
+>  struct br_mrp_instance {
+>  	__u32 ring_id;
+>  	__u32 p_ifindex;
+> @@ -270,6 +304,25 @@ struct br_mrp_start_test {
+>  	__u32 monitor;
+>  };
+>  
+> +struct br_mrp_in_state {
+> +	__u32 in_state;
+> +	__u16 in_id;
+> +};
+> +
+> +struct br_mrp_in_role {
+> +	__u32 ring_id;
+> +	__u32 in_role;
+> +	__u32 i_ifindex;
+> +	__u16 in_id;
+> +};
+> +
+> +struct br_mrp_start_in_test {
+> +	__u32 interval;
+> +	__u32 max_miss;
+> +	__u32 period;
+> +	__u16 in_id;
+> +};
+> +
+>  struct bridge_stp_xstats {
+>  	__u64 transition_blk;
+>  	__u64 transition_fwd;
+> diff --git a/include/uapi/linux/mrp_bridge.h b/include/uapi/linux/mrp_bridge.h
+> index bee3665402129..6aeb13ef0b1ec 100644
+> --- a/include/uapi/linux/mrp_bridge.h
+> +++ b/include/uapi/linux/mrp_bridge.h
+> @@ -21,11 +21,22 @@ enum br_mrp_ring_role_type {
+>  	BR_MRP_RING_ROLE_MRA,
+>  };
+>  
+> +enum br_mrp_in_role_type {
+> +	BR_MRP_IN_ROLE_DISABLED,
+> +	BR_MRP_IN_ROLE_MIC,
+> +	BR_MRP_IN_ROLE_MIM,
+> +};
+> +
+>  enum br_mrp_ring_state_type {
+>  	BR_MRP_RING_STATE_OPEN,
+>  	BR_MRP_RING_STATE_CLOSED,
+>  };
+>  
+> +enum br_mrp_in_state_type {
+> +	BR_MRP_IN_STATE_OPEN,
+> +	BR_MRP_IN_STATE_CLOSED,
+> +};
+> +
+>  enum br_mrp_port_state_type {
+>  	BR_MRP_PORT_STATE_DISABLED,
+>  	BR_MRP_PORT_STATE_BLOCKED,
+> @@ -36,6 +47,7 @@ enum br_mrp_port_state_type {
+>  enum br_mrp_port_role_type {
+>  	BR_MRP_PORT_ROLE_PRIMARY,
+>  	BR_MRP_PORT_ROLE_SECONDARY,
+> +	BR_MRP_PORT_ROLE_INTER,
+>  };
+>  
+>  enum br_mrp_tlv_header_type {
+> @@ -45,6 +57,10 @@ enum br_mrp_tlv_header_type {
+>  	BR_MRP_TLV_HEADER_RING_TOPO = 0x3,
+>  	BR_MRP_TLV_HEADER_RING_LINK_DOWN = 0x4,
+>  	BR_MRP_TLV_HEADER_RING_LINK_UP = 0x5,
+> +	BR_MRP_TLV_HEADER_IN_TEST = 0x6,
+> +	BR_MRP_TLV_HEADER_IN_TOPO = 0x7,
+> +	BR_MRP_TLV_HEADER_IN_LINK_DOWN = 0x8,
+> +	BR_MRP_TLV_HEADER_IN_LINK_UP = 0x9,
+>  	BR_MRP_TLV_HEADER_OPTION = 0x7f,
+>  };
+>  
+> @@ -118,4 +134,26 @@ struct br_mrp_oui_hdr {
+>  	__u8 oui[MRP_OUI_LENGTH];
+>  };
+>  
+> +struct br_mrp_in_test_hdr {
+> +	__be16 id;
+> +	__u8 sa[ETH_ALEN];
+> +	__be16 port_role;
+> +	__be16 state;
+> +	__be16 transitions;
+> +	__be32 timestamp;
+> +};
+> +
+> +struct br_mrp_in_topo_hdr {
+> +	__u8 sa[ETH_ALEN];
+> +	__be16 id;
+> +	__be16 interval;
+> +};
+> +
+> +struct br_mrp_in_link_hdr {
+> +	__u8 sa[ETH_ALEN];
+> +	__be16 port_role;
+> +	__be16 id;
+> +	__be16 interval;
+> +};
+> +
+>  #endif
+> 
 
-WRT fanotify_read() removing events from the list in batches: That's
-certainly one possible optimization but (especially with recent extensions
-to fanotify interface) it is difficult to tell how many events will
-actually fit in the provided buffer so we'd have to provide a way to push
-events back to the event queue which may get a bit tricky. And as I wrote
-above I think the real problem is actually with fanotify merge logic which
-ends up holding the notification_lock for too long...
-
-But we may want to add cond_resched() into the loop in fanotify_read() as
-that can currently take time proportinal to user-provided buffer which can
-be a lot. That will probably silence the softlockup for you as well
-(although it's not really fixing the underlying issue).
-
-We'll have a look what we can do about this :)
-
-								Honza
--- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
