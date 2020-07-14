@@ -7,69 +7,69 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7396C433F7
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 14:51:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72C03C433E4
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 14:51:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C210421D6C
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 14:51:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4DA3722205
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 14:51:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="kw0j6YyJ"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="YaPkEvwk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728979AbgGNOva (ORCPT
+        id S1728994AbgGNOvb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 10:51:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57332 "EHLO
+        Tue, 14 Jul 2020 10:51:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57320 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728735AbgGNOvC (ORCPT
+        with ESMTP id S1728652AbgGNOvA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 10:51:02 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7173DC061794
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 07:51:02 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id q5so22195941wru.6
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 07:51:02 -0700 (PDT)
+        Tue, 14 Jul 2020 10:51:00 -0400
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E7C37C08C5DB
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 07:50:59 -0700 (PDT)
+Received: by mail-wr1-x441.google.com with SMTP id q5so22195604wru.6
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 07:50:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=oYBUe5BwYsr/R2phlHidQsm6+vzt4cxxnkc0JimKqEE=;
-        b=kw0j6YyJsiIk2n3yX5+GkWGHEPOb5rpZONh1AHETutb3Im0RIS6q17btR7I5qt+Y3G
-         Cr1hhv/Kwb4+WIS0DNHRjmc1aw52YDL0xbevlEKg7TJLPfD4wiKMTStgnlv9QSESRuy2
-         ud15ingoco58gPEiG8JkpQosiAAkovGqjbIlBoloUt9rOcx2anemoSqTP2ATqz6NrUQt
-         tulqxTx3pqJ1mnmLEsWngWkqghXlkZjKVXZb6FZTVVe+ZC2J0MR1r2jQ+V86qR4QnhyQ
-         LWrTAK+0ruiFBAkkrUIWJlkdAkSpEDrtau+/OBkjXFh5ifl7sURfmnAjGYLKjcVCRWk7
-         J80Q==
+        bh=6pwz2ffWzBJ40s4OQQcEx95BGb6IW3I0JlI9ImusOaw=;
+        b=YaPkEvwkRMrXCrAr3GD3Lq5esr1zvrFowgkVtFLyXE9aeQ+n6qHPlhaUhK4AYO4xUs
+         hm5M2HAtd3m5JHJjY2xKUYjnMD1tdtfs5OPz2xXGUBp2zizzY0ZWTKvQ9U0A5cXFSIRJ
+         j3yMdMtUprKvhoEl35KqZAv8e37m9RfHJ9JDTy287GDX+MDLsV7UmkJ7LDgRcd0qsysv
+         Ia93V3kAPH4VDyioq5fO47gOCGnLqoR2QLu1mPSgJAUAUCITRKMczfB1Ec4oXyA2jWHx
+         PQLY4by7vk9xQhpkcw3oZfR/uB2heai2vAqu8clRrz2QEmp5oM3aCK3aViE9BDI4b5mz
+         3u7g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=oYBUe5BwYsr/R2phlHidQsm6+vzt4cxxnkc0JimKqEE=;
-        b=Ex77a/pUezBN7FoCc1f/dvrLeEu3PK5IHGKmborRZyCNPZCDYXhxf0XHGYZMfmss7p
-         QOy/jQAPOD76S166gMeF8Rkd+RU4yhsdadn08EWb1E+vDYNvgHDzk6GZoOBQWIbBPQkR
-         FCjyfncQtv7f0kkQjTsoSjkDChEJyZr8TzaHI47FDwTCTKED91QTa+BPwPFBGWFfYYHs
-         m71p4t71Sp5d4GRScJeMxziV+ZskerDKh1O1MY++ykIYlpNEdGKKPp0gZaXiZkmsKI+b
-         J8F5moJXL8X2i6SntCn6sr5lLN27bLkUjW0LW1XPd2G4u4hu4X1N3oqlU70oeZWzoFF9
-         Wdmg==
-X-Gm-Message-State: AOAM530H/TIWRp95DYvxr6yWRGACKP+nDFL3UQ+n7ht6VY/O8qKdrcpi
-        2aQL/D6rbTUHxoCDO9AbTsrNrA==
-X-Google-Smtp-Source: ABdhPJz8xLGj6PyHHnWxNk1fB9l9swenCZNjFdqaoHR4cK01bpPaXCLBFCFf4j5xacHn27d9sC7Xrw==
-X-Received: by 2002:a5d:5151:: with SMTP id u17mr6280720wrt.154.1594738261236;
-        Tue, 14 Jul 2020 07:51:01 -0700 (PDT)
+        bh=6pwz2ffWzBJ40s4OQQcEx95BGb6IW3I0JlI9ImusOaw=;
+        b=GxBwKVwoEKGwFb7QvepOmfYrd5khbAih7Xx9JJ9dSxnpvby2V4IWSnwKlYjYZyBa4p
+         V8KdZJtjJWnupGnBNkcWLQMSKTDAyTrHQflcBBc+/LJuHlUfhF17CJiXdV2R/Et8YR3T
+         oPIbGQv6089k6iKzmbAOJlU6v0si7KNq+2gitVrsBI87HnwjS6CW56R7KLUOa30WTdqp
+         j+mFk4AgxtS+ksgDwc9kRSw0cpyOiaGtxsZ8Zd/iobt14+3SEoCE2WhE96DWKl4qmoTQ
+         slgbxiIm/ZwaBhlE5MPYPjUjeuEO+g7kpkoLzCxuEOIOmUpE/i2ljTvV096ikygAQu3f
+         hLyg==
+X-Gm-Message-State: AOAM533j1I8lDUcMAN+m4+Zjjjyc9ayc053lLKrMVTRgOxm7sQfgMywB
+        FPo/l5oesG3ypSV5rKNpddi3eA==
+X-Google-Smtp-Source: ABdhPJxR1XkWPEdO/OToyZfeyPk6VSF/2G2O+HfpfRXS3rTqGgoQ4md522X2INCeZPPwNAHNuFWGZw==
+X-Received: by 2002:a5d:650e:: with SMTP id x14mr6401946wru.187.1594738258660;
+        Tue, 14 Jul 2020 07:50:58 -0700 (PDT)
 Received: from localhost.localdomain ([2.31.163.61])
-        by smtp.gmail.com with ESMTPSA id a84sm4653305wmh.47.2020.07.14.07.51.00
+        by smtp.gmail.com with ESMTPSA id a84sm4653305wmh.47.2020.07.14.07.50.57
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 Jul 2020 07:51:00 -0700 (PDT)
+        Tue, 14 Jul 2020 07:50:58 -0700 (PDT)
 From:   Lee Jones <lee.jones@linaro.org>
 To:     rjw@rjwysocki.net, viresh.kumar@linaro.org
 Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         linux-pm@vger.kernel.org, Lee Jones <lee.jones@linaro.org>,
-        Andy Grover <andrew.grover@intel.com>,
-        Paul Diefenbaugh <paul.s.diefenbaugh@intel.com>,
-        Dominik Brodowski <linux@brodo.de>,
-        Denis Sadykov <denis.m.sadykov@intel.com>
-Subject: [PATCH 08/13] cpufreq: acpi-cpufreq: Take 'dummy' principle one stage further
-Date:   Tue, 14 Jul 2020 15:50:44 +0100
-Message-Id: <20200714145049.2496163-9-lee.jones@linaro.org>
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        linuxppc-dev@lists.ozlabs.org
+Subject: [PATCH 06/13] cpufreq: powernv-cpufreq: Functions only used in call-backs should be static
+Date:   Tue, 14 Jul 2020 15:50:42 +0100
+Message-Id: <20200714145049.2496163-7-lee.jones@linaro.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200714145049.2496163-1-lee.jones@linaro.org>
 References: <20200714145049.2496163-1-lee.jones@linaro.org>
@@ -81,46 +81,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If we fail to use a variable, even a 'dummy' one, then the compiler
-complains that it is set but not used.  We know this is fine, so we
-set it to its own value here.
-
 Fixes the following W=1 kernel build warning(s):
 
- drivers/cpufreq/acpi-cpufreq.c: In function ‘cpu_freq_read_intel’:
- drivers/cpufreq/acpi-cpufreq.c:247:11: warning: variable ‘dummy’ set but not used [-Wunused-but-set-variable]
- drivers/cpufreq/acpi-cpufreq.c: In function ‘cpu_freq_read_amd’:
- drivers/cpufreq/acpi-cpufreq.c:265:11: warning: variable ‘dummy’ set but not used [-Wunused-but-set-variable]
+ drivers/cpufreq/powernv-cpufreq.c:669:6: warning: no previous prototype for ‘gpstate_timer_handler’ [-Wmissing-prototypes]
+ drivers/cpufreq/powernv-cpufreq.c:902:6: warning: no previous prototype for ‘powernv_cpufreq_work_fn’ [-Wmissing-prototypes]
 
-Cc: Andy Grover <andrew.grover@intel.com>
-Cc: Paul Diefenbaugh <paul.s.diefenbaugh@intel.com>
-Cc: Dominik Brodowski <linux@brodo.de>
-Cc: Denis Sadykov <denis.m.sadykov@intel.com>
+Cc: Michael Ellerman <mpe@ellerman.id.au>
+Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Cc: Paul Mackerras <paulus@samba.org>
+Cc: linuxppc-dev@lists.ozlabs.org
 Signed-off-by: Lee Jones <lee.jones@linaro.org>
 ---
- drivers/cpufreq/acpi-cpufreq.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/cpufreq/powernv-cpufreq.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/cpufreq/acpi-cpufreq.c b/drivers/cpufreq/acpi-cpufreq.c
-index 429e5a36c08a9..d38a693b48e03 100644
---- a/drivers/cpufreq/acpi-cpufreq.c
-+++ b/drivers/cpufreq/acpi-cpufreq.c
-@@ -247,6 +247,7 @@ static u32 cpu_freq_read_intel(struct acpi_pct_register *not_used)
- 	u32 val, dummy;
+diff --git a/drivers/cpufreq/powernv-cpufreq.c b/drivers/cpufreq/powernv-cpufreq.c
+index 8646eb197cd96..068cc53abe320 100644
+--- a/drivers/cpufreq/powernv-cpufreq.c
++++ b/drivers/cpufreq/powernv-cpufreq.c
+@@ -666,7 +666,7 @@ static inline void  queue_gpstate_timer(struct global_pstate_info *gpstates)
+  * according quadratic equation. Queues a new timer if it is still not equal
+  * to local pstate
+  */
+-void gpstate_timer_handler(struct timer_list *t)
++static void gpstate_timer_handler(struct timer_list *t)
+ {
+ 	struct global_pstate_info *gpstates = from_timer(gpstates, t, timer);
+ 	struct cpufreq_policy *policy = gpstates->policy;
+@@ -899,7 +899,7 @@ static struct notifier_block powernv_cpufreq_reboot_nb = {
+ 	.notifier_call = powernv_cpufreq_reboot_notifier,
+ };
  
- 	rdmsr(MSR_IA32_PERF_CTL, val, dummy);
-+	dummy &= dummy; /* Silence set but not used warning */
- 	return val;
- }
- 
-@@ -264,6 +265,7 @@ static u32 cpu_freq_read_amd(struct acpi_pct_register *not_used)
- 	u32 val, dummy;
- 
- 	rdmsr(MSR_AMD_PERF_CTL, val, dummy);
-+	dummy &= dummy; /* Silence set but not used warning */
- 	return val;
- }
- 
+-void powernv_cpufreq_work_fn(struct work_struct *work)
++static void powernv_cpufreq_work_fn(struct work_struct *work)
+ {
+ 	struct chip *chip = container_of(work, struct chip, throttle);
+ 	struct cpufreq_policy *policy;
 -- 
 2.25.1
 
