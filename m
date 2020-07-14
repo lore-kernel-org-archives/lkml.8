@@ -2,129 +2,256 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A925C433F4
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 07:53:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0462C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 07:53:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D72B020C56
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 07:53:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF25F208FE
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 07:53:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="E41YoIku"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qfb2C0sd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726758AbgGNHwv (ORCPT
+        id S1726864AbgGNHxl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 03:52:51 -0400
-Received: from mail-eopbgr00062.outbound.protection.outlook.com ([40.107.0.62]:64598
-        "EHLO EUR02-AM5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725801AbgGNHwt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 03:52:49 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=PWBV/I7SshOz882CNBiSCOe8dTLqLdvoZi0yxIf57pXrJdjcbeM9kHNOvrbRjHvulx0NH6S/b2iTekxwEFl9RbBtdmJPkXmZVOa99pzW7M9XtJLzz37lawNA3ClA+8g5Y2G2UwPKpZHkFX1TsUU/5qke9hRriOJX3E4qxJ4ROo2WGhvQCjF8qiid0MATXq3om9j0ybOQNPQRFWTGJ1T6dkzt+/5tWlFrqWgSWF6P6QQVz/O3+LGnDPUOAdq1gzAiNzG0QOKDkByswSuwTbjKebjPZFlyyqAYD04Blq7MNF4/IGaupXR5V7/au+QRHv+gfCa0q18St83KqCWx1PXzfQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=jAX/VOWe5u6r0maIKiHNTQNUXXJ1/0Y1jndYh9bd8p8=;
- b=Pb30PB2dFquYkIdzxNzPv9HcJV17T1ix2EAc+w0Smj2Y2zUT5qUOX/y2UdPEhjOyyD3qcQg8KFoF76pZ373sYy0hgZUeVN6zoMOBf35cvaQM+rds3txFRXUcSP0tRgJRv4wutKRzsYqZMCNeyLTrkkBGa4i8HqDLzqfMsPUoAkv2wHp6KkER9F/n+XKYSWkPsu8XEi8MmyjDROWJD54s9OG5NGrCJAde7KqJSkn8Apug9fIgaO09IY4ZS8/t3lNxQQNoCS5/x4P4nSfDdn5ULu3UYhZ8rvSc0K8EzPeDNLC6fgzx8t51YMeqpIJwewZ7zRUAmks8TTd/lRqdKcXfYw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=jAX/VOWe5u6r0maIKiHNTQNUXXJ1/0Y1jndYh9bd8p8=;
- b=E41YoIkuSq4FfTs9v0w7z/UF414L1vSc2HEmBu3Zh6ei0d+7bxdovDxMOyljhrra6Jtor/DPndC0QOMgZ2JjvI7pPOilVAs3ZutKWY+3aehBhor60PcZdCDLeEjYsh2PKGgnzKE8mi3lW4L/WjBFatAYWYRSBGzgEUa0lRxHxhU=
-Authentication-Results: kernel.org; dkim=none (message not signed)
- header.d=none;kernel.org; dmarc=none action=none header.from=nxp.com;
-Received: from AM6PR04MB5623.eurprd04.prod.outlook.com (2603:10a6:20b:a9::13)
- by AM6PR04MB4854.eurprd04.prod.outlook.com (2603:10a6:20b:e::10) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3174.20; Tue, 14 Jul
- 2020 07:52:45 +0000
-Received: from AM6PR04MB5623.eurprd04.prod.outlook.com
- ([fe80::ccb9:b047:d156:2694]) by AM6PR04MB5623.eurprd04.prod.outlook.com
- ([fe80::ccb9:b047:d156:2694%5]) with mapi id 15.20.3174.026; Tue, 14 Jul 2020
- 07:52:45 +0000
-From:   Clark Wang <xiaoning.wang@nxp.com>
-To:     broonie@kernel.org
-Cc:     linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 1/5] spi: lpspi: fix the imbalance of runtime pm function call
-Date:   Tue, 14 Jul 2020 15:52:47 +0800
-Message-Id: <20200714075251.12777-2-xiaoning.wang@nxp.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200714075251.12777-1-xiaoning.wang@nxp.com>
-References: <20200714075251.12777-1-xiaoning.wang@nxp.com>
-Content-Type: text/plain
-X-ClientProxiedBy: SG2PR0401CA0013.apcprd04.prod.outlook.com
- (2603:1096:3:1::23) To AM6PR04MB5623.eurprd04.prod.outlook.com
- (2603:10a6:20b:a9::13)
+        Tue, 14 Jul 2020 03:53:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49196 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725793AbgGNHxk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 03:53:40 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 54BDAC061755
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 00:53:40 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id s10so20101893wrw.12
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 00:53:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=CkqZPlj61ah7xjZ/9xP5LZTgLtyHaYvcc0sKoNZrcnk=;
+        b=qfb2C0sdEhIxpGnb0IPQ2mnsaDiyM65qorjCXzs1CUlCv9ZBXXe8yfUdiE+Ii5q0lW
+         d6CmhfKoUiTSaGRJZ7pFP6Cv8VnjWijuH5hevqltqQOyI2QT4FIQsW0GeYLOwGMb3Saw
+         1B0BTWOrNUYL9dWV3hV6i2B1ij68ApO5wRcdEhGzsX1/WHE6tAQCS4LhIAWFNKARUp9Z
+         d8jfyP5wDifgUeY0IaHQb5u5N1CrfCmMB3I2rNgjypsG3oJdoKNY5cBPg9fgA2vnmKM7
+         jI6zoY0C13jzO8PqfPZlKWPkgYCSflMTzt62D6U7GxzVpMUTLDhIcf1U5SVXu9hq146W
+         v2kA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=CkqZPlj61ah7xjZ/9xP5LZTgLtyHaYvcc0sKoNZrcnk=;
+        b=JK8KXF1mJ37l9GYwLY0gBsVHdQfCSkX9vmfAn9A4eZzq2I6ZSxCS7DSQx9pKriYXqJ
+         0slzv7mt7Mif+02sGMbgrywb8DSFZyLO3ODYOFvehtmeu7qmrLvnrBVh6zSeYq35AHdK
+         3xi+OLnIZ1ww+EJier+5LpGCLUcCY+AMcScSTcDSYiU6kOEFBYBcLoUaL6HZoY5TFUmw
+         yUpnifR4EWuMPhJWqShHvUaXxW2xxxjYEcxRHC2m0lF/2g4k8AljfCOIqlc1qPVOI03n
+         0CClrSDU+fmuP+JGbuic3pZatYdnQDSJIXI3Rant0b4vTAN1qz4dip4wsoS8JFq25N5H
+         HuOg==
+X-Gm-Message-State: AOAM532FZSzUGHCEiyZVXHm1BQvRLXW+GHwGhMr5YqL9qp+vWMg1VPiq
+        08JWebGEIqlUS8TSXDotJttZxw==
+X-Google-Smtp-Source: ABdhPJwueUUQpbwYp7wZ5rVMiFAn8/9F0eTI+50kkesgB+aVQ4+u4gsdoBWNvLZvZLjPXmHla+NV7g==
+X-Received: by 2002:adf:f0c5:: with SMTP id x5mr3705836wro.396.1594713218918;
+        Tue, 14 Jul 2020 00:53:38 -0700 (PDT)
+Received: from dell ([2.31.163.61])
+        by smtp.gmail.com with ESMTPSA id p29sm3171600wmi.43.2020.07.14.00.53.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 14 Jul 2020 00:53:38 -0700 (PDT)
+Date:   Tue, 14 Jul 2020 08:53:36 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Hannes Reinecke <mail@hannes-reinecke.de>
+Cc:     jejb@linux.ibm.com, martin.petersen@oracle.com,
+        linux-kernel@vger.kernel.org, linux-scsi@vger.kernel.org
+Subject: Re: [PATCH v2 05/29] scsi: fcoe: fcoe_ctlr: Fix a myriad of
+ documentation issues
+Message-ID: <20200714075336.GH3500@dell>
+References: <20200713074645.126138-1-lee.jones@linaro.org>
+ <20200713074645.126138-6-lee.jones@linaro.org>
+ <975ab8d4-eedc-c763-c2c6-436344395fb8@hannes-reinecke.de>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from localhost.localdomain (119.31.174.71) by SG2PR0401CA0013.apcprd04.prod.outlook.com (2603:1096:3:1::23) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3174.21 via Frontend Transport; Tue, 14 Jul 2020 07:52:43 +0000
-X-Mailer: git-send-email 2.17.1
-X-Originating-IP: [119.31.174.71]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: dec0f567-8b1d-43f3-a7b3-08d827cae4c0
-X-MS-TrafficTypeDiagnostic: AM6PR04MB4854:
-X-Microsoft-Antispam-PRVS: <AM6PR04MB48545E6001F35F27C391DAF5F3610@AM6PR04MB4854.eurprd04.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:1002;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: HzCOYGbJPrnuj3PKtpb61Wc+PupRLvDAcJ1bGJRQe/S430RqqjsT09ddfpJCcO0iMLgrAU079P4dWJoNzEILR1eaO1z45Gyfgxm9ia8KQ3VWAYjSdPzX84Oqfc8IiOC/0gGDQpHHF1gVGkawzTSUiD/Z6dKTs6I7fRnmvtuD1Y2IG1Okpg4lhT6+k8BkdICzJH0HKYnC9eKodSOlDFsnkoSYjb6iKtJjgmoga7+fYV7cwXDQAZHuvrCYy4H7p05XsNNerz9AvzTiNWZpphHlHaeeZteJuT95/4xk3GVm1LBjJ33YfHM9SvtZDP/OD5atygcxqrsc+DMDhe0+7YLihDUy1b50oSAdPZamS7anSNt/kp4pVWPNcvyELjjjYQ2k
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM6PR04MB5623.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(39860400002)(376002)(366004)(396003)(346002)(136003)(66556008)(8936002)(66476007)(66946007)(86362001)(316002)(69590400007)(52116002)(5660300002)(6916009)(83380400001)(8676002)(2616005)(956004)(36756003)(6486002)(26005)(1076003)(6512007)(478600001)(2906002)(4326008)(16526019)(6506007)(186003);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: RzP1+Rb5oVe54j4KEI8SLMyttQ9V8PY2T1u01KxFDnnkQ4dAfyCu8Wn2fD9JPXjNQtTF2MJsMq9aj0833Z2NwiKHjF6S7PvuIOhuoqSbc0YE/BRVUK8XOyfILHZYX/D38SVkdCTaqb/uI+3CHU32buvHbuPIb7c3OdlYJBrBUmQkmqVtTE2QjZ5raNjtHn8xb/kMQHTAB5hXDJjaIOsFGNzvxK5ezFmkmi/JwA9hF5kp2bLe3QMgBut/v8YtxQIWrAfb4ta65EgI+vHDaf5HI7eb9XaXaA0tL8fiQjJk4vqdeVPSZ+dnVMCkOl2/+lpAbRAJgXCPi/ugzEYntP44Ws0JAwmXqR//uYcEOgGN41EvO1cApnTCiXj8rDAgAo1i5Ulbu6/4xbyt8Wa0BQTGw4cl4F0E+5meDu5rKkBD77aT5RSVD8YumTpQxTSNDFL/SIV1q9YWk5msfO2y10sC88JbIGfqE65EgmivXkjuHxg=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: dec0f567-8b1d-43f3-a7b3-08d827cae4c0
-X-MS-Exchange-CrossTenant-AuthSource: AM6PR04MB5623.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Jul 2020 07:52:45.2630
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 2xephH3Vmwik1/GCWAGVZ+FK+Nr6o4R6TyGA5bWYgC5F4vzt4rz0erYA/LtGrfQSauw52/2Ms2QutFKbCPWnQA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR04MB4854
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <975ab8d4-eedc-c763-c2c6-436344395fb8@hannes-reinecke.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Call the put function after probe successfully. Otherwise, the lpspi
-module will keep active status until the first spi transfer called.
+On Tue, 14 Jul 2020, Hannes Reinecke wrote:
 
-Disable runtime pm when probe fails. There is no need to active runtime
-pm after probe failed.
+> On 7/13/20 9:46 AM, Lee Jones wrote:
+> > Mostly missing or incorrect (bitrotted) function parameters.
+> > 
+> > Fixes the following W=1 kernel build warning(s):
+> > 
+> >   drivers/scsi/fcoe/fcoe_ctlr.c:139: warning: Function parameter or member 'mode' not described in 'fcoe_ctlr_init'
+> >   drivers/scsi/fcoe/fcoe_ctlr.c:604: warning: Function parameter or member 'lport' not described in 'fcoe_ctlr_encaps'
+> >   drivers/scsi/fcoe/fcoe_ctlr.c:1312: warning: Function parameter or member 'skb' not described in 'fcoe_ctlr_recv_clr_vlink'
+> >   drivers/scsi/fcoe/fcoe_ctlr.c:1312: warning: Excess function parameter 'fh' description in 'fcoe_ctlr_recv_clr_vlink'
+> >   drivers/scsi/fcoe/fcoe_ctlr.c:1781: warning: Function parameter or member 't' not described in 'fcoe_ctlr_timeout'
+> >   drivers/scsi/fcoe/fcoe_ctlr.c:1781: warning: Excess function parameter 'arg' description in 'fcoe_ctlr_timeout'
+> >   drivers/scsi/fcoe/fcoe_ctlr.c:1904: warning: Function parameter or member 'lport' not described in 'fcoe_ctlr_recv_flogi'
+> >   drivers/scsi/fcoe/fcoe_ctlr.c:2166: warning: Function parameter or member 'lport' not described in 'fcoe_ctlr_disc_stop_locked'
+> >   drivers/scsi/fcoe/fcoe_ctlr.c:2166: warning: Excess function parameter 'fip' description in 'fcoe_ctlr_disc_stop_locked'
+> >   drivers/scsi/fcoe/fcoe_ctlr.c:2188: warning: Function parameter or member 'lport' not described in 'fcoe_ctlr_disc_stop'
+> >   drivers/scsi/fcoe/fcoe_ctlr.c:2188: warning: Excess function parameter 'fip' description in 'fcoe_ctlr_disc_stop'
+> >   drivers/scsi/fcoe/fcoe_ctlr.c:2204: warning: Function parameter or member 'lport' not described in 'fcoe_ctlr_disc_stop_final'
+> >   drivers/scsi/fcoe/fcoe_ctlr.c:2204: warning: Excess function parameter 'fip' description in 'fcoe_ctlr_disc_stop_final'
+> >   drivers/scsi/fcoe/fcoe_ctlr.c:2273: warning: Function parameter or member 'frport' not described in 'fcoe_ctlr_vn_parse'
+> >   drivers/scsi/fcoe/fcoe_ctlr.c:2273: warning: Excess function parameter 'rdata' description in 'fcoe_ctlr_vn_parse'
+> >   drivers/scsi/fcoe/fcoe_ctlr.c:2804: warning: Function parameter or member 'frport' not described in 'fcoe_ctlr_vlan_parse'
+> >   drivers/scsi/fcoe/fcoe_ctlr.c:2804: warning: Excess function parameter 'rdata' description in 'fcoe_ctlr_vlan_parse'
+> >   drivers/scsi/fcoe/fcoe_ctlr.c:2900: warning: Excess function parameter 'min_len' description in 'fcoe_ctlr_vlan_send'
+> >   drivers/scsi/fcoe/fcoe_ctlr.c:2977: warning: Function parameter or member 'fip' not described in 'fcoe_ctlr_vlan_recv'
+> >   drivers/scsi/fcoe/fcoe_ctlr.c:2977: warning: Function parameter or member 'skb' not described in 'fcoe_ctlr_vlan_recv'
+> >   drivers/scsi/fcoe/fcoe_ctlr.c:2977: warning: Excess function parameter 'lport' description in 'fcoe_ctlr_vlan_recv'
+> >   drivers/scsi/fcoe/fcoe_ctlr.c:2977: warning: Excess function parameter 'fp' description in 'fcoe_ctlr_vlan_recv'
+> >   drivers/scsi/fcoe/fcoe_ctlr.c:3033: warning: Function parameter or member 'callback' not described in 'fcoe_ctlr_disc_start'
+> >   drivers/scsi/fcoe/fcoe_ctlr.c:3033: warning: Function parameter or member 'lport' not described in 'fcoe_ctlr_disc_start'
+> >   drivers/scsi/fcoe/fcoe_ctlr.c:3033: warning: Excess function parameter 'fip' description in 'fcoe_ctlr_disc_start'
+> > 
+> > Cc: Hannes Reinecke <hare@suse.de>
+> > Signed-off-by: Lee Jones <lee.jones@linaro.org>
+> > ---
+> >   drivers/scsi/fcoe/fcoe_ctlr.c | 26 +++++++++++++-------------
+> >   1 file changed, 13 insertions(+), 13 deletions(-)
+> > 
+> > diff --git a/drivers/scsi/fcoe/fcoe_ctlr.c b/drivers/scsi/fcoe/fcoe_ctlr.c
+> > index 1791a393795da..99242f9856708 100644
+> > --- a/drivers/scsi/fcoe/fcoe_ctlr.c
+> > +++ b/drivers/scsi/fcoe/fcoe_ctlr.c
+> > @@ -134,6 +134,7 @@ static void fcoe_ctlr_map_dest(struct fcoe_ctlr *fip)
+> >   /**
+> >    * fcoe_ctlr_init() - Initialize the FCoE Controller instance
+> >    * @fip: The FCoE controller to initialize
+> > + * @mode: FIP mode to set
+> >    */
+> >   void fcoe_ctlr_init(struct fcoe_ctlr *fip, enum fip_mode mode)
+> >   {
+> > @@ -587,6 +588,7 @@ static void fcoe_ctlr_send_keep_alive(struct fcoe_ctlr *fip,
+> >   /**
+> >    * fcoe_ctlr_encaps() - Encapsulate an ELS frame for FIP, without sending it
+> >    * @fip:   The FCoE controller for the ELS frame
+> > + * @lport: The local port
+> >    * @dtype: The FIP descriptor type for the frame
+> >    * @skb:   The FCoE ELS frame including FC header but no FCoE headers
+> >    * @d_id:  The destination port ID.
+> > @@ -1302,7 +1304,7 @@ static void fcoe_ctlr_recv_els(struct fcoe_ctlr *fip, struct sk_buff *skb)
+> >   /**
+> >    * fcoe_ctlr_recv_els() - Handle an incoming link reset frame
+> >    * @fip: The FCoE controller that received the frame
+> > - * @fh:	 The received FIP header
+> > + * @skb: The received FIP packet
+> >    *
+> >    * There may be multiple VN_Port descriptors.
+> >    * The overall length has already been checked.
+> > @@ -1775,7 +1777,7 @@ static void fcoe_ctlr_flogi_send(struct fcoe_ctlr *fip)
+> >   /**
+> >    * fcoe_ctlr_timeout() - FIP timeout handler
+> > - * @arg: The FCoE controller that timed out
+> > + * @t: Timer context use to obtain the controller reference
+> >    */
+> >   static void fcoe_ctlr_timeout(struct timer_list *t)
+> >   {
+> > @@ -1887,6 +1889,7 @@ static void fcoe_ctlr_recv_work(struct work_struct *recv_work)
+> >   /**
+> >    * fcoe_ctlr_recv_flogi() - Snoop pre-FIP receipt of FLOGI response
+> >    * @fip: The FCoE controller
+> > + * @lport: The local port
+> >    * @fp:	 The FC frame to snoop
+> >    *
+> >    * Snoop potential response to FLOGI or even incoming FLOGI.
+> > @@ -2158,7 +2161,7 @@ static struct fc_rport_operations fcoe_ctlr_vn_rport_ops = {
+> >   /**
+> >    * fcoe_ctlr_disc_stop_locked() - stop discovery in VN2VN mode
+> > - * @fip: The FCoE controller
+> > + * @lport: The local port
+> >    *
+> >    * Called with ctlr_mutex held.
+> >    */
+> > @@ -2179,7 +2182,7 @@ static void fcoe_ctlr_disc_stop_locked(struct fc_lport *lport)
+> >   /**
+> >    * fcoe_ctlr_disc_stop() - stop discovery in VN2VN mode
+> > - * @fip: The FCoE controller
+> > + * @lport: The local port
+> >    *
+> >    * Called through the local port template for discovery.
+> >    * Called without the ctlr_mutex held.
+> > @@ -2195,7 +2198,7 @@ static void fcoe_ctlr_disc_stop(struct fc_lport *lport)
+> >   /**
+> >    * fcoe_ctlr_disc_stop_final() - stop discovery for shutdown in VN2VN mode
+> > - * @fip: The FCoE controller
+> > + * @lport: The local port
+> >    *
+> >    * Called through the local port template for discovery.
+> >    * Called without the ctlr_mutex held.
+> > @@ -2262,7 +2265,7 @@ static void fcoe_ctlr_vn_start(struct fcoe_ctlr *fip)
+> >    * fcoe_ctlr_vn_parse - parse probe request or response
+> >    * @fip: The FCoE controller
+> >    * @skb: incoming packet
+> > - * @rdata: buffer for resulting parsed VN entry plus fcoe_rport
+> > + * @frport: parsed FCoE rport from the probe request
+> >    *
+> >    * Returns non-zero error number on error.
+> >    * Does not consume the packet.
+> > @@ -2793,7 +2796,7 @@ static int fcoe_ctlr_vn_recv(struct fcoe_ctlr *fip, struct sk_buff *skb)
+> >    * fcoe_ctlr_vlan_parse - parse vlan discovery request or response
+> >    * @fip: The FCoE controller
+> >    * @skb: incoming packet
+> > - * @rdata: buffer for resulting parsed VLAN entry plus fcoe_rport
+> > + * @frport: parsed FCoE rport from the probe request
+> >    *
+> >    * Returns non-zero error number on error.
+> >    * Does not consume the packet.
+> > @@ -2892,7 +2895,6 @@ static int fcoe_ctlr_vlan_parse(struct fcoe_ctlr *fip,
+> >    * @fip: The FCoE controller
+> >    * @sub: sub-opcode for vlan notification or vn2vn vlan notification
+> >    * @dest: The destination Ethernet MAC address
+> > - * @min_len: minimum size of the Ethernet payload to be sent
+> >    */
+> >   static void fcoe_ctlr_vlan_send(struct fcoe_ctlr *fip,
+> >   			      enum fip_vlan_subcode sub,
+> > @@ -2969,9 +2971,8 @@ static void fcoe_ctlr_vlan_disc_reply(struct fcoe_ctlr *fip,
+> >   /**
+> >    * fcoe_ctlr_vlan_recv - vlan request receive handler for VN2VN mode.
+> > - * @lport: The local port
+> > - * @fp: The received frame
+> > - *
+> > + * @fip: The FCoE controller
+> > + * @skb: The received FIP packet
+> >    */
+> >   static int fcoe_ctlr_vlan_recv(struct fcoe_ctlr *fip, struct sk_buff *skb)
+> >   {
+> > @@ -3015,9 +3016,8 @@ static void fcoe_ctlr_disc_recv(struct fc_lport *lport, struct fc_frame *fp)
+> >   	fc_frame_free(fp);
+> >   }
+> > -/**
+> > +/*
+> >    * fcoe_ctlr_disc_recv - start discovery for VN2VN mode.
+> > - * @fip: The FCoE controller
+> >    *
+> >    * This sets a flag indicating that remote ports should be created
+> >    * and started for the peers we discover.  We use the disc_callback
+> > 
+> Please, this should continue to be a kernel-doc comment; my copy still has
+> this header:
+> 
+> /**
+>  * fcoe_ctlr_disc_recv - discovery receive handler for VN2VN mode.
+>  * @lport: The local port
+>  * @fp: The received frame
+>  *
+> 
+> What happened to it?
 
-Signed-off-by: Clark Wang <xiaoning.wang@nxp.com>
----
- drivers/spi/spi-fsl-lpspi.c | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+Look at the function below it (in your local copy). ;)
 
-diff --git a/drivers/spi/spi-fsl-lpspi.c b/drivers/spi/spi-fsl-lpspi.c
-index 1552b28b9515..a1555bbc5e5a 100644
---- a/drivers/spi/spi-fsl-lpspi.c
-+++ b/drivers/spi/spi-fsl-lpspi.c
-@@ -954,10 +954,15 @@ static int fsl_lpspi_probe(struct platform_device *pdev)
- 	if (ret < 0)
- 		dev_err(&pdev->dev, "dma setup error %d, use pio\n", ret);
- 
-+	pm_runtime_mark_last_busy(fsl_lpspi->dev);
-+	pm_runtime_put_autosuspend(fsl_lpspi->dev);
-+
- 	return 0;
- 
- out_pm_get:
--	pm_runtime_put_noidle(fsl_lpspi->dev);
-+	pm_runtime_dont_use_autosuspend(fsl_lpspi->dev);
-+	pm_runtime_put_sync(fsl_lpspi->dev);
-+	pm_runtime_disable(fsl_lpspi->dev);
- out_controller_put:
- 	spi_controller_put(controller);
- 
 -- 
-2.17.1
-
+Lee Jones [李琼斯]
+Senior Technical Lead - Developer Services
+Linaro.org │ Open source software for Arm SoCs
+Follow Linaro: Facebook | Twitter | Blog
