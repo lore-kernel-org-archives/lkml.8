@@ -7,68 +7,67 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5107C433E5
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 14:51:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DDAFAC433E8
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 14:51:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 919F621973
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 14:51:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B1F3D21D6C
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 14:51:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="QHrJMslm"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="vBZqRin9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728712AbgGNOvB (ORCPT
+        id S1728750AbgGNOvD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 10:51:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57304 "EHLO
+        Tue, 14 Jul 2020 10:51:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57310 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728440AbgGNOu5 (ORCPT
+        with ESMTP id S1728561AbgGNOu6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 10:50:57 -0400
+        Tue, 14 Jul 2020 10:50:58 -0400
 Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9C2BAC08C5DB
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 07:50:56 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id a6so22167819wrm.4
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 07:50:56 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B597CC08C5DE
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 07:50:57 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id k6so22174445wrn.3
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 07:50:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=JqiGjo2A+JuWYmJhOxUeBH7YynB0Z20iJW99N6uR5uY=;
-        b=QHrJMslmP0Kh8UfmYvSOG0q4hByvfx/EPXrsCJO7U06cWI5RsbB6FO/K0J4OQ20T3j
-         RBSFiYd9YHmUsFIbhn61Ge90cJT0vVd9vMRFr2EWRb1rkIHD8mMz/JY2ZZYwATz7auHu
-         18qgce0k8NfkRreMk/6e8YOBYMNHETPxUAHrQe2cFWQJRL/XweHeVtQEfMjN4YFvAnWL
-         iIGlreeiHb8EF/eZQZCNRcHzlxKZv4+L5IkxmQFPUubbWI4G7B4xk0u1kk6T2CxnXRGo
-         Jhw6lNuhbQ/AQS6p3QF5pvEy8QaJWxBEzyv1VQLjejUm4KkJTim9bBrnVEfdT59BlKQV
-         Liyg==
+        bh=CMXxo9aOlmaJXA2Fa0TTzO8LQVMEninajvd8D9uCCWE=;
+        b=vBZqRin9ErymR0h6YWFtX6OzZP7QsHPxUOwJ1TB67Z1qz2iAYJvnsWx2gcLuhJy4lb
+         hDDc4aeOkm27SRzf8X1k2WIAObsAJND5revrzkP/m7ZCMP80546Bxq3T3UndYTS8OzUC
+         JRsd6UB7YHbFJbx8g2t1uiz5Y+e8rX83mYC50waDpkpo5tPFH0kwV8nCXZvv/pkzP297
+         KtwmqwGgdm6Um5BEKSCxhXmSf67vT0WeoxDQQEouLXVk2MTiwej9lYE4yeXcO2AgZFPY
+         1n2hO29e3beuwFoHJWMa6cOWi5ut2YKBxpnhv1OpHJLS9ZZ8+unvn3Q7bOKY5dKnNGed
+         ooaQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=JqiGjo2A+JuWYmJhOxUeBH7YynB0Z20iJW99N6uR5uY=;
-        b=mbv065X7g06yBfz9Sn5CYrcVztrhd1EdyOZDGIUhWDHoIFdvscdgJcFnRRNKFV3Y1O
-         Egc+hMHAWzHAWmmyvw3MyZUQrkmLhKxdqilpj5BULm4f8hu5nuHDp6KdH/ELAFqAnroY
-         wAG+KnJ5dr4+YgGK9T81X50XU6nXU9CiL3fnouhMQffzZfyjD++rL66fXWeyTuWKTBwc
-         C17X0T1w/C85em3W0jItBMakxUgGOZVn2miQEHCHbZDuf66Ni+US1vudQkI6MpQn5EG+
-         a4ZnZ5CBNjWk+ZppJYuF6xwe7chA1lHRsoZCOTNCEtOrXOgwzcFuULQI2hT6Mfc8KMte
-         yQwA==
-X-Gm-Message-State: AOAM5332YC3J11UKHOUvQGZMKFyCsTBwRI1iZaJWiWs7dz99EACGs1PG
-        LLgx05AET3nhSpe+Cu5yb6CsIg==
-X-Google-Smtp-Source: ABdhPJz0D8DB83PkawksqyN2zvcSXy61SCN97inRz7exzjOwhX1N4sU7xjVlExKi+/mgYquJYu+oog==
-X-Received: by 2002:adf:fa8f:: with SMTP id h15mr6113893wrr.211.1594738255423;
-        Tue, 14 Jul 2020 07:50:55 -0700 (PDT)
+        bh=CMXxo9aOlmaJXA2Fa0TTzO8LQVMEninajvd8D9uCCWE=;
+        b=FQBAILmzqgXQ2EjsyGFWdJN5YSfdQ3oses1ork6oFE8mOpkpJkIhEsK+6Nsq2GaICR
+         YaB2BG6CMnHItFyQMGbAN08Zu9YC2c6dac9f8uaReqfEVUc+Hwz4PWzYpcTM/vRPd/Vd
+         S47RVJkW91D9htvNm8R4GGbXB9WoRLEbgqx9Evx7GIVXfEYrpICDb8M0dNV+Fm3Bv9aY
+         wAnqHGz5/+5aLKaW8lY9bDdDGzYDvw250M1ABotCI9sKX3e4ZZ34XwMvwM11PjAsWGsu
+         phtuBsSznEpgmntGe4H30mlrKIFxV4l8K185RWgeqixCkKZcTU+rYCsaQh4SPPR09jTP
+         9ddw==
+X-Gm-Message-State: AOAM533VjSG9FERWmGO87+7dfbEtq+w02SA4gOhFyizDWku2K3EmKrb+
+        dW9/AN/rww68/Anpp77TLe0IMA==
+X-Google-Smtp-Source: ABdhPJwYqf/NbTXIZQ6P2+Ae9aB7yAhOCiew0QjfGjYt6pXaaft/XHPCaQXykUjtuNfRA79JvHAIRA==
+X-Received: by 2002:adf:81c8:: with SMTP id 66mr6172511wra.348.1594738256436;
+        Tue, 14 Jul 2020 07:50:56 -0700 (PDT)
 Received: from localhost.localdomain ([2.31.163.61])
-        by smtp.gmail.com with ESMTPSA id a84sm4653305wmh.47.2020.07.14.07.50.54
+        by smtp.gmail.com with ESMTPSA id a84sm4653305wmh.47.2020.07.14.07.50.55
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 Jul 2020 07:50:54 -0700 (PDT)
+        Tue, 14 Jul 2020 07:50:55 -0700 (PDT)
 From:   Lee Jones <lee.jones@linaro.org>
 To:     rjw@rjwysocki.net, viresh.kumar@linaro.org
 Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         linux-pm@vger.kernel.org, Lee Jones <lee.jones@linaro.org>,
-        Venkatesh Pallipadi <venkatesh.pallipadi@intel.com>,
-        Jun Nakajima <jun.nakajima@intel.com>,
-        Alexander Clouter <alex@digriz.org.uk>
-Subject: [PATCH 03/13] cpufreq: cpufreq_governor: Demote store_sampling_rate() header to standard comment block
-Date:   Tue, 14 Jul 2020 15:50:39 +0100
-Message-Id: <20200714145049.2496163-4-lee.jones@linaro.org>
+        Patrice Chotard <patrice.chotard@st.com>,
+        Pal Singh <ajitpal.singh@st.com>
+Subject: [PATCH 04/13] cpufreq: sti-cpufreq: Fix some formatting and misspelling issues
+Date:   Tue, 14 Jul 2020 15:50:40 +0100
+Message-Id: <20200714145049.2496163-5-lee.jones@linaro.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200714145049.2496163-1-lee.jones@linaro.org>
 References: <20200714145049.2496163-1-lee.jones@linaro.org>
@@ -79,35 +78,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There is no need for this to be denoted as kerneldoc.
+Kerneldoc format for attribute descriptions should be '@.*: '.
 
 Fixes the following W=1 kernel build warning(s):
 
- drivers/cpufreq/cpufreq_governor.c:46: warning: Function parameter or member 'attr_set' not described in 'store_sampling_rate'
- drivers/cpufreq/cpufreq_governor.c:46: warning: Function parameter or member 'buf' not described in 'store_sampling_rate'
- drivers/cpufreq/cpufreq_governor.c:46: warning: Function parameter or member 'count' not described in 'store_sampling_rate'
+ drivers/cpufreq/sti-cpufreq.c:49: warning: cannot understand function prototype: 'struct sti_cpufreq_ddata '
 
-Cc: Venkatesh Pallipadi <venkatesh.pallipadi@intel.com>
-Cc: Jun Nakajima <jun.nakajima@intel.com>
-Cc: Alexander Clouter <alex@digriz.org.uk>
+Cc: Patrice Chotard <patrice.chotard@st.com>
+Cc: Pal Singh <ajitpal.singh@st.com>
 Signed-off-by: Lee Jones <lee.jones@linaro.org>
 ---
- drivers/cpufreq/cpufreq_governor.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/cpufreq/sti-cpufreq.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/cpufreq/cpufreq_governor.c b/drivers/cpufreq/cpufreq_governor.c
-index f99ae45efaea7..63f7c219062b9 100644
---- a/drivers/cpufreq/cpufreq_governor.c
-+++ b/drivers/cpufreq/cpufreq_governor.c
-@@ -26,7 +26,7 @@ static DEFINE_PER_CPU(struct cpu_dbs_info, cpu_dbs);
- static DEFINE_MUTEX(gov_dbs_data_mutex);
+diff --git a/drivers/cpufreq/sti-cpufreq.c b/drivers/cpufreq/sti-cpufreq.c
+index 8f16bbb164b84..a5ad96d29adca 100644
+--- a/drivers/cpufreq/sti-cpufreq.c
++++ b/drivers/cpufreq/sti-cpufreq.c
+@@ -40,11 +40,11 @@ enum {
+ };
  
- /* Common sysfs tunables */
--/**
-+/*
-  * store_sampling_rate - update sampling rate effective immediately if needed.
+ /**
+- * ST CPUFreq Driver Data
++ * struct sti_cpufreq_ddata - ST CPUFreq Driver Data
   *
-  * If new rate is smaller than the old, simply updating
+- * @cpu_node		CPU's OF node
+- * @syscfg_eng		Engineering Syscon register map
+- * @regmap		Syscon register map
++ * @cpu:		CPU's OF node
++ * @syscfg_eng:		Engineering Syscon register map
++ * @syscfg:		Syscon register map
+  */
+ static struct sti_cpufreq_ddata {
+ 	struct device *cpu;
 -- 
 2.25.1
 
