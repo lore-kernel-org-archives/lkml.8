@@ -2,329 +2,118 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE7A1C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 17:27:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C30EBC433E5
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 17:27:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C385D2256C
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 17:27:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594747624;
-	bh=zftzRFW56Uz2UhoHBNV9X5R5uepJrxyztoOfkOo2fbM=;
-	h=Date:From:To:Cc:Subject:Reply-To:List-ID:From;
-	b=KlyrB6/u9pzRSZ/wsg4oAK8uVb7KU8RnzLQgaNg9Aau8Tm7x7GArZ6qOzWH15BTNd
-	 Z0kJ24o8i1CN+xlpXeogmd5Hcc+vGVJhWe+rDyoU49xwN3Ony/a2CVOJFM73Or2b4H
-	 018yRAqdUgmUJsNy0mBlRDx7elpbZDCEAkECJ85Q=
+	by mail.kernel.org (Postfix) with ESMTP id A46FD22518
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 17:27:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mrk8nP8Z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728867AbgGNR1D (ORCPT
+        id S1728961AbgGNR14 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 13:27:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38588 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728312AbgGNR1C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 13:27:02 -0400
-Received: from paulmck-ThinkPad-P72.home (50-39-111-31.bvtn.or.frontiernet.net [50.39.111.31])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9396222518;
-        Tue, 14 Jul 2020 17:27:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594747621;
-        bh=zftzRFW56Uz2UhoHBNV9X5R5uepJrxyztoOfkOo2fbM=;
-        h=Date:From:To:Cc:Subject:Reply-To:From;
-        b=dxEPSdM/5J4lbH0XPb/hELxTAVH6Eo6vyaNii/AWR5O+G6cXp68L1mtOYT6o23h2I
-         kho2GvVb8zAlYl6yf7yjXkWDVrz4WPJU0pEpsp/om+J52G2Y/o3NcRoEyvZr9OI/6X
-         EI9ZM/00sHFJUiL2XPzm8Ip6L2y3y+BPEoyPqbZQ=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id 721C4352262C; Tue, 14 Jul 2020 10:27:01 -0700 (PDT)
-Date:   Tue, 14 Jul 2020 10:27:01 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     mingo@kernel.org
-Cc:     linux-kernel@vger.kernel.org, rcu@vger.kernel.org, arnd@arndb.de,
-        bigeasy@linutronix.de, elver@google.com, ethp@qq.com,
-        frederic@kernel.org, jbi.octave@gmail.com, joel@joelfernandes.org,
-        lihaoliang@google.com, madhuparnabhowmik10@gmail.com,
-        mchehab+huawei@kernel.org, paulmck@kernel.org,
-        peter.enderborg@sony.com, rdunlap@infradead.org,
-        richard.weiyang@linux.alibaba.com, urezki@gmail.com,
-        zou_wei@huawei.com, tglx@linutronix.de
-Subject: [GIT PULL tip/core/rcu] RCU commits for v5.9
-Message-ID: <20200714172701.GA31369@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
+        Tue, 14 Jul 2020 13:27:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53714 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726364AbgGNR1z (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 13:27:55 -0400
+Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3A32DC061755;
+        Tue, 14 Jul 2020 10:27:55 -0700 (PDT)
+Received: by mail-lj1-x242.google.com with SMTP id h22so24081103lji.9;
+        Tue, 14 Jul 2020 10:27:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=rJflZjiXOdQ2b9X0uINcJ4Ucju/qSppPTgvRYeR307M=;
+        b=mrk8nP8ZaXDxwoSsyA8k3vVqLdKjX86zxjouhivf+G7iTeVFciVWjDwblY2qlwRa9V
+         9emGm1OFwkHsv0RNh6k8KhURGH1D+FwH8FkT9vHm1WjxGSwkBcc7aO9Y48XsU2c2Ndfp
+         ncNp8CUw5jw3N9JSVvpdTbpMguEDLfXGvNBMVwFLUb+lT15MUcBJEF7DDDa2ApoKe2px
+         /yca6v25q5b+Ew54GU19aO3kaPD9/jBteoDRN5SWUr1u5ykP8GzprDDHxTAHJoLMATxH
+         L2Itbr80hoTwWdfBBNrcSmyBVo7l9b1xeyICzyCQG5N5jUV/3HnVVjmUfM6PWg6pxsNZ
+         6wcA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=rJflZjiXOdQ2b9X0uINcJ4Ucju/qSppPTgvRYeR307M=;
+        b=ET10/RrCXX3P6owUfagMkf0F59cQkj4lMqorDfThTR08/3iHauj8+fW55m8TA/Vg88
+         qLZFkJZGsi4KatUVHxXehJBsyv3utbjY7xrDh8BCimVCF+TKkVo/3H/lMeqeHHBeTSaz
+         4+lRiHLYzrfPMf6NpDUnbXPfZCCIIYKfgGlaaHzDGUgwAqvvnKWAY121nd6itBt+DruG
+         SswYVc6sJ8DLxpRsnFfK0F29Kox+ZgXz9meTTDPPKy5aH0INGdq0hShlxKZgsxOA5bG/
+         DBIz3ogC8hg/7EmfPwEu0UY0LK0dpDHf4vQSXYZ3HchrZ+sTxr9f0khpbhNKhzLZORbL
+         Ip1g==
+X-Gm-Message-State: AOAM532BdN0pyMUdsKZOgY9jkGw8oBX6mDyl7p6M/TurDAcVc38mQSIp
+        mIUyrGtXqPfVKmBkFmw4CRMPqcrrSmQDhAeLeGj17A==
+X-Google-Smtp-Source: ABdhPJwXkCPdv8pEQTPBzV1xLgwG/Fk/yXhNz7NQyeZbo2FvwLmIalitSURyFPmgQdvxw6/FjTtTVnFu1TFItk7wtV8=
+X-Received: by 2002:a2e:9a4d:: with SMTP id k13mr2946227ljj.283.1594747673686;
+ Tue, 14 Jul 2020 10:27:53 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <CAEf4BzZRGOsTiW3uFWd1aY6K5Yi+QBrTeC5FNOo6uVXviXuX4g@mail.gmail.com>
+ <20200714012732.195466-1-yepeilin.cs@gmail.com> <CAEf4Bzas-C7hKX=AutcV1fz-F_q2P8+OCnrA37h-nCytLHPn1g@mail.gmail.com>
+In-Reply-To: <CAEf4Bzas-C7hKX=AutcV1fz-F_q2P8+OCnrA37h-nCytLHPn1g@mail.gmail.com>
+From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Date:   Tue, 14 Jul 2020 10:27:42 -0700
+Message-ID: <CAADnVQ+jUPGJapkvKW=AfXESD6Vz2iuONvJm8eJm5Yd+u9mJ+w@mail.gmail.com>
+Subject: Re: [Linux-kernel-mentees] [PATCH v2] bpf: Fix NULL pointer
+ dereference in __btf_resolve_helper_id()
+To:     Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Cc:     Peilin Ye <yepeilin.cs@gmail.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        KP Singh <kpsingh@chromium.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        open list <linux-kernel@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello, Ingo!
+On Mon, Jul 13, 2020 at 9:38 PM Andrii Nakryiko
+<andrii.nakryiko@gmail.com> wrote:
+>
+> On Mon, Jul 13, 2020 at 6:29 PM Peilin Ye <yepeilin.cs@gmail.com> wrote:
+> >
+> > Prevent __btf_resolve_helper_id() from dereferencing `btf_vmlinux`
+> > as NULL. This patch fixes the following syzbot bug:
+> >
+> >     https://syzkaller.appspot.com/bug?id=5edd146856fd513747c1992442732e5a0e9ba355
 
-This pull request contains the following changes:
+The link looks wrong?
+Nothing in the stack trace indicates this issue.
 
-1.	Documentation updates.
-
-	https://lore.kernel.org/lkml/20200623000923.GA25047@paulmck-ThinkPad-P72
-
-2.	Miscellaneous fixes.
-
-	https://lore.kernel.org/lkml/20200623002128.GA25456@paulmck-ThinkPad-P72
-
-3.	kfree_rcu updates.
-
-	https://lore.kernel.org/lkml/20200624201200.GA28901@paulmck-ThinkPad-P72
-
-4.	RCU tasks updates.
-
-	https://lore.kernel.org/lkml/20200623002423.GA25869@paulmck-ThinkPad-P72
-
-5.	Read-side scalability tests.
-
-	https://lore.kernel.org/lkml/20200623002941.GA26089@paulmck-ThinkPad-P72
-
-6.	SRCU updates.
-
-	https://lore.kernel.org/lkml/20200623003310.GA26539@paulmck-ThinkPad-P72
-
-7.	Torture-test updates.
-
-	https://lore.kernel.org/lkml/20200623003731.GA26717@paulmck-ThinkPad-P72
-
-All of these have been subjected to the kbuild test robot and -next
-testing, and are available in the git repository based on v5.8-rc3 at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/paulmck/linux-rcu.git for-mingo
-
-for you to fetch changes up to 13625c0a4074d3bab61b1dc70a828b574255f339:
-
-  Merge branches 'doc.2020.06.29a', 'fixes.2020.06.29a', 'kfree_rcu.2020.06.29a', 'rcu-tasks.2020.06.29a', 'scale.2020.06.29a', 'srcu.2020.06.29a' and 'torture.2020.06.29a' into HEAD (2020-06-29 12:03:15 -0700)
-
-----------------------------------------------------------------
-Arnd Bergmann (1):
-      refperf: Work around 64-bit division
-
-Ethon Paul (1):
-      srcu: Fix a typo in comment "amoritized"->"amortized"
-
-Frederic Weisbecker (1):
-      tick/nohz: Narrow down noise while setting current task's tick dependency
-
-Joel Fernandes (Google) (5):
-      rcu/tree: Keep kfree_rcu() awake during lock contention
-      rcu/tree: Skip entry into the page allocator for PREEMPT_RT
-      rcu/tree: Make debug_objects logic independent of rcu_head
-      rcuperf: Remove useless while loops around wait_event
-      refperf: Add a test to measure performance of read-side synchronization
-
-Jules Irenge (2):
-      rcu: Replace 1 with true
-      rcu/rcutorture: Replace 0 with false
-
-Lihao Liang (1):
-      rcu: Update comment from rsp->rcu_gp_seq to rsp->gp_seq
-
-Madhuparna Bhowmik (1):
-      trace: events: rcu: Change description of rcu_dyntick trace event
-
-Marco Elver (1):
-      torture: Pass --kmake-arg to all make invocations
-
-Mauro Carvalho Chehab (10):
-      docs: RCU: Convert checklist.txt to ReST
-      docs: RCU: Convert lockdep-splat.txt to ReST
-      docs: RCU: Convert lockdep.txt to ReST
-      docs: RCU: Convert rculist_nulls.txt to ReST
-      docs: RCU: Convert torture.txt to ReST
-      docs: RCU: Convert rcuref.txt to ReST
-      docs: RCU: Convert stallwarn.txt to ReST
-      docs: RCU: Don't duplicate chapter names in rculist_nulls.rst
-      rcu: Fix some kernel-doc warnings
-      rcu: Fix a kernel-doc warnings for "count"
-
-Paul E. McKenney (65):
-      doc: Timer problems can cause RCU CPU stall warnings
-      doc: Tasks RCU must protect instructions before trampoline
-      mm/mmap.c: Add cond_resched() for exit_mmap() CPU stalls
-      rcu: Add callbacks-invoked counters
-      rcu: Add comment documenting rcu_callback_map's purpose
-      rcu: Grace-period-kthread related sleeps to idle priority
-      rcu: Priority-boost-related sleeps to idle priority
-      rcu: No-CBs-related sleeps to idle priority
-      rcu: Expedited grace-period sleeps to idle priority
-      fs/btrfs: Add cond_resched() for try_release_extent_mapping() stalls
-      rcu: Remove initialized but unused rnp from check_slow_task()
-      rcu: Mark rcu_nmi_enter() call to rcu_cleanup_after_idle() noinstr
-      lockdep: Complain only once about RCU in extended quiescent state
-      rcu-tasks: Convert sleeps to idle priority
-      rcu-tasks: Make rcu_tasks_postscan() be static
-      rcu-tasks: Add #include of rcupdate_trace.h to update.c
-      rcu-tasks: Conditionally compile show_rcu_tasks_gp_kthreads()
-      rcu-tasks: Fix code-style issues
-      rcuperf: Add comments explaining the high reader overhead
-      torture: Add refperf to the rcutorture scripting
-      refperf: Add holdoff parameter to allow CPUs to come online
-      refperf: Hoist function-pointer calls out of the loop
-      refperf: Allow decimal nanoseconds
-      refperf: Convert nreaders to a module parameter
-      refperf: Provide module parameter to specify number of experiments
-      refperf: Dynamically allocate experiment-summary output buffer
-      refperf: Dynamically allocate thread-summary output buffer
-      refperf: Make functions static
-      refperf: Tune reader measurement interval
-      refperf: Convert reader_task structure's "start" field to int
-      refperf: More closely synchronize reader start times
-      refperf: Add warmup and cooldown processing phases
-      refperf: Label experiment-number column "Runs"
-      refperf: Output per-experiment data points
-      refperf: Simplify initialization-time wakeup protocol
-      refperf: Add read-side delay module parameter
-      refperf: Adjust refperf.loop default value
-      doc: Document rcuperf's module parameters
-      refperf: Change readdelay module parameter to nanoseconds
-      refperf: Add test for RCU Tasks Trace readers.
-      refperf: Add test for RCU Tasks readers
-      rcu-tasks: Fix synchronize_rcu_tasks_trace() header comment
-      refperf: Rename RCU_REF_PERF_TEST to RCU_REF_SCALE_TEST
-      refperf: Rename refperf.c to refscale.c and change internal names
-      refscale: Change --torture type from refperf to refscale
-      torture:  Remove qemu dependency on EFI firmware
-      torture: Add script to smoke-test commits in a branch
-      rcutorture: Add races with task-exit processing
-      torture: Set configfile variable to current scenario
-      rcutorture: Handle non-statistic bang-string error messages
-      rcutorture: NULL rcu_torture_current earlier in cleanup code
-      torture: Remove whitespace from identify_qemu_vcpus output
-      torture: Add --allcpus argument to the kvm.sh script
-      torture: Create qemu-cmd in --buildonly runs
-      torture: Add a stop-run capability
-      torture: Abstract out console-log error detection
-      rcutorture: Check for unwatched readers
-      torture: Correctly summarize build-only runs
-      torture: Improve diagnostic for KCSAN-incapable compilers
-      torture: Add more tracing crib notes to kvm.sh
-      torture: Add kvm-tranform.sh script for qemu-cmd files
-      torture: Dump ftrace at shutdown only if requested
-      torture: Avoid duplicate specification of qemu command
-      torture: Remove obsolete "cd $KVM"
-      Merge branches 'doc.2020.06.29a', 'fixes.2020.06.29a', 'kfree_rcu.2020.06.29a', 'rcu-tasks.2020.06.29a', 'scale.2020.06.29a', 'srcu.2020.06.29a' and 'torture.2020.06.29a' into HEAD
-
-Peter Enderborg (1):
-      rcu: Stop shrinker loop
-
-Randy Dunlap (1):
-      kernel/rcu/tree.c: Fix kernel-doc warnings
-
-Sebastian Andrzej Siewior (2):
-      rcu/tree: Use static initializer for krc.lock
-      srcu: Avoid local_irq_save() before acquiring spinlock_t
-
-Uladzislau Rezki (Sony) (12):
-      rcu/tree: Repeat the monitor if any free channel is busy
-      rcu/tree: Simplify KFREE_BULK_MAX_ENTR macro
-      rcu/tree: Move kfree_rcu_cpu locking/unlocking to separate functions
-      rcu/tree: cache specified number of objects
-      rcu/tree: Maintain separate array for vmalloc ptrs
-      rcu/tiny: support vmalloc in tiny-RCU
-      rcu: Rename *_kfree_callback/*_kfree_rcu_offset/kfree_call_*
-      mm/list_lru.c: Rename kvfree_rcu() to local variant
-      rcu: Introduce 2 arg kvfree_rcu() interface
-      rcu: Support reclaim for head-less object
-      rcu: Introduce single argument kvfree_rcu() interface
-      lib/test_vmalloc.c: Add test cases for kvfree_rcu()
-
-Wei Yang (5):
-      rcu: Initialize and destroy rcu_synchronize only when necessary
-      rcu: Simplify the calculation of rcu_state.ncpus
-      rcu: gp_max is protected by root rcu_node's lock
-      rcu: grplo/grphi just records CPU number
-      rcu: grpnum just records group number
-
-Zou Wei (1):
-      locktorture: Use true and false to assign to bool variables
-
- .../RCU/Design/Requirements/Requirements.rst       |   7 +-
- Documentation/RCU/{checklist.txt => checklist.rst} |  17 +-
- Documentation/RCU/index.rst                        |   9 +
- .../RCU/{lockdep-splat.txt => lockdep-splat.rst}   | 109 ++--
- Documentation/RCU/{lockdep.txt => lockdep.rst}     |  12 +-
- Documentation/RCU/rculist_nulls.rst                | 200 ++++++
- Documentation/RCU/rculist_nulls.txt                | 172 -----
- Documentation/RCU/{rcuref.txt => rcuref.rst}       | 199 +++---
- Documentation/RCU/{stallwarn.txt => stallwarn.rst} |  62 +-
- Documentation/RCU/{torture.txt => torture.rst}     | 117 ++--
- Documentation/admin-guide/kernel-parameters.txt    |  68 ++
- Documentation/locking/locktorture.rst              |   2 +-
- MAINTAINERS                                        |   4 +-
- fs/btrfs/extent_io.c                               |   2 +
- include/linux/rculist.h                            |   2 +-
- include/linux/rculist_nulls.h                      |   2 +-
- include/linux/rcupdate.h                           |  53 +-
- include/linux/rcupdate_trace.h                     |   4 +-
- include/linux/rcutiny.h                            |  20 +-
- include/linux/rcutree.h                            |   2 +-
- include/linux/torture.h                            |   5 +
- include/trace/events/rcu.h                         |  19 +-
- kernel/locking/lockdep.c                           |   4 +-
- kernel/locking/locktorture.c                       |  14 +-
- kernel/rcu/Kconfig.debug                           |  19 +
- kernel/rcu/Makefile                                |   1 +
- kernel/rcu/rcuperf.c                               |  25 +-
- kernel/rcu/rcutorture.c                            | 119 +++-
- kernel/rcu/refscale.c                              | 717 +++++++++++++++++++++
- kernel/rcu/srcutree.c                              |  16 +-
- kernel/rcu/tasks.h                                 |  37 +-
- kernel/rcu/tiny.c                                  |   7 +-
- kernel/rcu/tree.c                                  | 407 ++++++++----
- kernel/rcu/tree.h                                  |  15 +-
- kernel/rcu/tree_exp.h                              |   2 +-
- kernel/rcu/tree_plugin.h                           |   4 +-
- kernel/rcu/tree_stall.h                            |   9 +-
- kernel/rcu/update.c                                |  16 +-
- kernel/time/tick-sched.c                           |  22 +-
- kernel/torture.c                                   |   6 +-
- lib/test_vmalloc.c                                 | 103 ++-
- mm/list_lru.c                                      |   6 +-
- mm/mmap.c                                          |   1 +
- net/core/sock.c                                    |   4 +-
- .../testing/selftests/rcutorture/bin/configinit.sh |   4 +-
- .../selftests/rcutorture/bin/console-badness.sh    |  16 +
- .../testing/selftests/rcutorture/bin/functions.sh  |  23 +-
- tools/testing/selftests/rcutorture/bin/jitter.sh   |   6 +
- .../testing/selftests/rcutorture/bin/kvm-build.sh  |   6 +
- .../selftests/rcutorture/bin/kvm-check-branches.sh | 108 ++++
- .../rcutorture/bin/kvm-recheck-refscale.sh         |  71 ++
- .../selftests/rcutorture/bin/kvm-recheck.sh        |  20 +-
- .../selftests/rcutorture/bin/kvm-test-1-run.sh     |  27 +-
- .../selftests/rcutorture/bin/kvm-transform.sh      |  51 ++
- tools/testing/selftests/rcutorture/bin/kvm.sh      |  19 +-
- .../selftests/rcutorture/bin/parse-console.sh      |  27 +-
- .../selftests/rcutorture/configs/refscale/CFLIST   |   2 +
- .../selftests/rcutorture/configs/refscale/CFcommon |   2 +
- .../rcutorture/configs/refscale/NOPREEMPT          |  18 +
- .../selftests/rcutorture/configs/refscale/PREEMPT  |  18 +
- .../rcutorture/configs/refscale/ver_functions.sh   |  16 +
- 61 files changed, 2395 insertions(+), 680 deletions(-)
- rename Documentation/RCU/{checklist.txt => checklist.rst} (98%)
- rename Documentation/RCU/{lockdep-splat.txt => lockdep-splat.rst} (54%)
- rename Documentation/RCU/{lockdep.txt => lockdep.rst} (96%)
- create mode 100644 Documentation/RCU/rculist_nulls.rst
- delete mode 100644 Documentation/RCU/rculist_nulls.txt
- rename Documentation/RCU/{rcuref.txt => rcuref.rst} (50%)
- rename Documentation/RCU/{stallwarn.txt => stallwarn.rst} (88%)
- rename Documentation/RCU/{torture.txt => torture.rst} (76%)
- create mode 100644 kernel/rcu/refscale.c
- create mode 100755 tools/testing/selftests/rcutorture/bin/console-badness.sh
- create mode 100755 tools/testing/selftests/rcutorture/bin/kvm-check-branches.sh
- create mode 100755 tools/testing/selftests/rcutorture/bin/kvm-recheck-refscale.sh
- create mode 100755 tools/testing/selftests/rcutorture/bin/kvm-transform.sh
- create mode 100644 tools/testing/selftests/rcutorture/configs/refscale/CFLIST
- create mode 100644 tools/testing/selftests/rcutorture/configs/refscale/CFcommon
- create mode 100644 tools/testing/selftests/rcutorture/configs/refscale/NOPREEMPT
- create mode 100644 tools/testing/selftests/rcutorture/configs/refscale/PREEMPT
- create mode 100644 tools/testing/selftests/rcutorture/configs/refscale/ver_functions.sh
+> > Reported-by: syzbot+ee09bda7017345f1fbe6@syzkaller.appspotmail.com
+> > Signed-off-by: Peilin Ye <yepeilin.cs@gmail.com>
+> > ---
+> > Thank you for reviewing my patch! I am new to Linux kernel development; would
+> > the log message and errno be appropriate for this case?
+>
+> I think it's good enough, thanks for the fix.
+>
+> Acked-by: Andrii Nakryiko <andriin@fb.com>
+>
+> >
+> > Change in v2:
+> >     - Split NULL and IS_ERR cases.
+> >
+> >  kernel/bpf/btf.c | 5 +++++
+> >  1 file changed, 5 insertions(+)
+> >
+>
+> [...]
