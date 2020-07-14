@@ -2,87 +2,126 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FC81C433E4
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 08:19:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD42CC433E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 08:19:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2B7E921927
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 08:19:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594714797;
-	bh=y+kMcjwj62DUaai6UaM9R3NF5UPVqYjpo4MPe+fl5/M=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=xwlvFD/1jlIPSL+uz4v3NS0+0K92h4bkJki/mVhJk4XI/CGwi5HtKtpMyZ6QKGqDo
-	 MZ45X8KJKeV1kMKNI4RhOMiDMAj4u86f8/iNbQtxlVRGuWVQEpeVOQN7EnADEJ9Quu
-	 Xsp6hq2uzJvqVN4k8zb9ESA10nuPdaicOz7K/2fE=
+	by mail.kernel.org (Postfix) with ESMTP id A9FF921897
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 08:19:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="XYiTOvRA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726609AbgGNITz (ORCPT
+        id S1726461AbgGNITi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 04:19:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54398 "EHLO mail.kernel.org"
+        Tue, 14 Jul 2020 04:19:38 -0400
+Received: from ozlabs.org ([203.11.71.1]:32839 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725793AbgGNITz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 04:19:55 -0400
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1725793AbgGNITi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 04:19:38 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DE03B21841;
-        Tue, 14 Jul 2020 08:19:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594714795;
-        bh=y+kMcjwj62DUaai6UaM9R3NF5UPVqYjpo4MPe+fl5/M=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=EwN9vIxQSjaO9e8cUaJo+M3xEPCfTIwpe+D7LX6937JtKIX+pAe1YSSToA2FrjOt9
-         BILjibwYsmo1ymsbfg8G9rGHEfj2UVC/9m9Np3VWOIAbcuAqD+976EzWmJBTPeUh6t
-         AdZFrIsLB/+40Nck+WUu2TdBz3I+bLlgf4iFlT1k=
-Date:   Tue, 14 Jul 2020 09:19:49 +0100
-From:   Will Deacon <will@kernel.org>
-To:     Tomasz Nowicki <tn@semihalf.com>
-Cc:     robin.murphy@arm.com, joro@8bytes.org, gregory.clement@bootlin.com,
-        robh+dt@kernel.org, hannah@marvell.com,
-        linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org,
-        devicetree@vger.kernel.org, catalin.marinas@arm.com,
-        nadavh@marvell.com, linux-arm-kernel@lists.infradead.org,
-        mw@semihalf.com
-Subject: Re: [PATCH v3 0/4] Add system mmu support for Armada-806
-Message-ID: <20200714081949.GA4516@willie-the-truck>
-References: <20200702201633.22693-1-tn@semihalf.com>
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 4B5YMq4R6kz9sDX;
+        Tue, 14 Jul 2020 18:19:35 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1594714776;
+        bh=5FTY9IYSNtTjBV9hCkBrN5BM8oS4XK8NEYCYAmC4pho=;
+        h=Date:From:To:Cc:Subject:From;
+        b=XYiTOvRAwF0WInq7fmx9uySQwHS4QU7+5H4wNOXfe5qujQyFqufHzXjv/gV4rAURK
+         7qc7LkQ+72RkF0nxyN9X7vZk2EMHfOAzEt5nPAT0OMJZaFsBucslFNG9TYQ/HI/w9q
+         AT/AihDv9ikR4MY2i3Z+f+GIBHvCd4kHdr+Tbl4BwAepTQRrx1nx89Hr2qtkdDvuXY
+         4WvWTPJi9twzf3GoKZ/Xix7HVyhjUDUOljPnAsC9UAiQxMaQUQVStkFDPD+pWh9Iu1
+         VraZ+nWWt4gCXkr0WyLblK6wV2Q8ZhdgZWwEU3+Ab6T2iKs6DIG/+AAeXHvp1WtUBQ
+         iaNESJaKdNHog==
+Date:   Tue, 14 Jul 2020 18:19:34 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Andrew Morton <akpm@linux-foundation.org>,
+        Jonathan Corbet <corbet@lwn.net>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Michal Hocko <mhocko@suse.com>
+Subject: linux-next: manual merge of the akpm-current tree with the jc_docs
+ tree
+Message-ID: <20200714181934.58fc201c@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200702201633.22693-1-tn@semihalf.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: multipart/signed; boundary="Sig_/pWHLCaf7d0uibWm8g.V_EP+";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Tomasz,
+--Sig_/pWHLCaf7d0uibWm8g.V_EP+
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Jul 02, 2020 at 10:16:29PM +0200, Tomasz Nowicki wrote:
-> There were already two versions of series to support SMMU for AP806,
-> including workaround for accessing ARM SMMU 64bit registers.
-> First [1] by Hanna Hawa and second [2] by Gregory CLEMENT.
-> Since it got stuck this is yet another try. I incorporated the V2 comments,
-> mainly by moving workaround code to arm-smmu-impl.c as requested.
-> 
-> For the record, AP-806 can't access SMMU registers with 64bit width,
-> this patches split the readq/writeq into two 32bit accesses instead
-> and update DT bindings.
-> 
-> The series was successfully tested on a vanilla v5.8-rc3 kernel and
-> Intel e1000e PCIe NIC. The same for platform devices like SATA and USB.
-> 
-> [1]: https://lkml.org/lkml/2018/10/15/373
-> [2]: https://lkml.org/lkml/2019/7/11/426
+Hi all,
 
-Do you have a v4 of this series? It looks like there were a few comments
-left to address, but with that I can pick it up for 5.9.
+Today's linux-next merge of the akpm-current tree got a conflict in:
 
+  Documentation/filesystems/proc.rst
+
+between commit:
+
+  059db4341303 ("Documentation/filesystems/proc.rst: copy-editing cleanup")
+
+from the jc_docs tree and commit:
+
+  7079aa70a489 ("doc, mm: clarify /proc/<pid>/oom_score value range")
+
+from the akpm-current tree.
+
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
+
+--=20
 Cheers,
+Stephen Rothwell
 
-Will
+diff --cc Documentation/filesystems/proc.rst
+index e024a9efffd8,78a0dec323a3..000000000000
+--- a/Documentation/filesystems/proc.rst
++++ b/Documentation/filesystems/proc.rst
+@@@ -1680,7 -1673,10 +1672,10 @@@ requires CAP_SYS_RESOURCE
+  3.2 /proc/<pid>/oom_score - Display current oom-killer score
+  -------------------------------------------------------------
+ =20
++ Please note that the exported value includes oom_score_adj so it is effec=
+tively
++ in range [0,2000].
++=20
+ -This file can be used to check the current score used by the oom-killer i=
+s for
+ +This file can be used to check the current score used by the oom-killer f=
+or
+  any given <pid>. Use it together with /proc/<pid>/oom_score_adj to tune w=
+hich
+  process should be killed in an out-of-memory situation.
+ =20
+
+--Sig_/pWHLCaf7d0uibWm8g.V_EP+
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl8NapYACgkQAVBC80lX
+0GyXuwf/dvy90fXsK1Ge1EvLGc0AaEgeuMrARjFynOSHOEwAUWtmXAo23qd6HvXI
+SzrSC9FH61rjd/XEtJT/qPPBPd1POeK4+vX1aZ452zxNVZJB442N3ksm+BKqgGDv
+kXtWtRjjg8ath8PNCR9d6LXuTKvZ5jmlHrcYcKKXnCS5NLF1EjZW06wdLaVOPnEn
+E4i6riAstKMdHEeN11rXqeRAR06sdhBQ0/gPEpwDQ3L3Btv7tJin0mPMLjrvkXwa
+pO6kNNtKs7vil6aJDqpyQCxoYGe1hXUgzkgKZXcoN7dfxW3IylEGqzYCdMmTLpl9
+KvFibtj9qHs5ReEnBACbGMCyfxFBpw==
+=R6FN
+-----END PGP SIGNATURE-----
+
+--Sig_/pWHLCaf7d0uibWm8g.V_EP+--
