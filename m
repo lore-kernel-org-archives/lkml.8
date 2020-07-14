@@ -2,109 +2,116 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 248D6C433E6
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 19:04:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EBA17C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 19:04:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F405022B4E
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 19:04:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="0gYbMbZr"
+	by mail.kernel.org (Postfix) with ESMTP id B831F22AAF
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 19:04:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594753462;
+	bh=jZ/uBJLMnF7CksbNt0FsKVe0JN/CTahK8lmRklB3lGI=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=T/jNKwAjGWH1EMSxiB31oHUFk9uYaEKkLFLwvdbX5Kx1pTQPywFdQh3DjFa/n81F+
+	 ZNdEnSWWVXsoIfGUKV6AoeuDp0lvC7SeRfT+EGIRCbol1QpVD9xn7kLPiX5Pem+RUe
+	 qG7ocf5e8zO0ggd75kb+byINfQE2tnvPUjmtRRUk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731287AbgGNTE2 (ORCPT
+        id S1731048AbgGNTEV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 15:04:28 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:53036 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730936AbgGNS4C (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 14:56:02 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06EIg5nH123000;
-        Tue, 14 Jul 2020 18:55:47 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2020-01-29;
- bh=zBSFWFJmK6H6QUNUzT1isFDg2o5kHAYgey+PVkvmy3A=;
- b=0gYbMbZrTAKzqSs2uR5NW6kMPhqX/DyK3rUF6liKEMQa3koTon0ow0cqknhFyywpq/wA
- Rbf/qWKjaJ6oUkh3kA1XsauNCBe+9dwPXZE3JFMZBXQxAkYtBmrQGc1m0FP+gxMUyLn0
- mgTDeZfuIu9cyZ72cuAFJVAbMqgNJhwuLKrHAtiO7qOofQIb6rbeujmg2k/vcVEwYZNw
- bLg1guO8SSaA9zbBn9BMaq+I6V8CHulxgINt7q0/q13i8CLZyasB/SxLvYfz7bCgp8ia
- WagyEEEtcsMNbdU3R+4qLGlmEC4+4sPX8nuFkIaIA8kgmcIZ7u2DG3JyG65JAC1Eb3s1 1w== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2130.oracle.com with ESMTP id 3274ur7afj-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 14 Jul 2020 18:55:46 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06EIhbb1092521;
-        Tue, 14 Jul 2020 18:55:45 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by aserp3030.oracle.com with ESMTP id 327q0ps5x5-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 14 Jul 2020 18:55:45 +0000
-Received: from abhmp0010.oracle.com (abhmp0010.oracle.com [141.146.116.16])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 06EIthgF006460;
-        Tue, 14 Jul 2020 18:55:43 GMT
-Received: from OracleT490.vogsphere (/73.203.30.179)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 14 Jul 2020 11:55:42 -0700
-Subject: Re: [PATCH 0/2] iowait and idle fixes in /proc/stat
-To:     linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        tglx@linutronix.de
-Cc:     fweisbec@gmail.com, mingo@kernel.org, adobriyan@gmail.com
-References: <20200610210549.61193-1-tom.hromatka@oracle.com>
-From:   Tom Hromatka <tom.hromatka@oracle.com>
-Message-ID: <85937052-fcdf-8bd7-83ec-831a51e320cb@oracle.com>
-Date:   Tue, 14 Jul 2020 12:55:41 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Tue, 14 Jul 2020 15:04:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53904 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730940AbgGNS4F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 14:56:05 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5551D22B39;
+        Tue, 14 Jul 2020 18:56:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594752964;
+        bh=jZ/uBJLMnF7CksbNt0FsKVe0JN/CTahK8lmRklB3lGI=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=JqxfbhNZ5cTalVk8W5+xXUozkR55RzR//v9bIUZ6AOpww6ZdxKGHD52n4bs0PxlVc
+         kWhCJRzvtljTQ7dM8UAWWCaxu8r2VrwN2x3I+iL6LUXy334i29/UEaSjNFGmiUgbw2
+         I/TxSiNoiGQHfGuX4B1qOIFx+FERuTMUQM0d/uiM=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        Codrin Ciubotariu <codrin.ciubotariu@microchip.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.7 068/166] net: dsa: microchip: set the correct number of ports
+Date:   Tue, 14 Jul 2020 20:43:53 +0200
+Message-Id: <20200714184119.121413478@linuxfoundation.org>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200714184115.844176932@linuxfoundation.org>
+References: <20200714184115.844176932@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-In-Reply-To: <20200610210549.61193-1-tom.hromatka@oracle.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9682 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 malwarescore=0 spamscore=0
- mlxlogscore=999 bulkscore=0 adultscore=0 phishscore=0 suspectscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2007140133
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9682 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 lowpriorityscore=0 impostorscore=0
- suspectscore=0 phishscore=0 spamscore=0 mlxlogscore=999 malwarescore=0
- mlxscore=0 priorityscore=1501 adultscore=0 bulkscore=0 clxscore=1011
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2007140133
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Ping.
+From: Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
 
-Thanks.
+[ Upstream commit af199a1a9cb02ec0194804bd46c174b6db262075 ]
 
-Tom
+The number of ports is incorrectly set to the maximum available for a DSA
+switch. Even if the extra ports are not used, this causes some functions
+to be called later, like port_disable() and port_stp_state_set(). If the
+driver doesn't check the port index, it will end up modifying unknown
+registers.
+
+Fixes: b987e98e50ab ("dsa: add DSA switch driver for Microchip KSZ9477")
+Signed-off-by: Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/net/dsa/microchip/ksz8795.c | 3 +++
+ drivers/net/dsa/microchip/ksz9477.c | 3 +++
+ 2 files changed, 6 insertions(+)
+
+diff --git a/drivers/net/dsa/microchip/ksz8795.c b/drivers/net/dsa/microchip/ksz8795.c
+index 47d65b77caf77..7c17b0f705ec3 100644
+--- a/drivers/net/dsa/microchip/ksz8795.c
++++ b/drivers/net/dsa/microchip/ksz8795.c
+@@ -1268,6 +1268,9 @@ static int ksz8795_switch_init(struct ksz_device *dev)
+ 			return -ENOMEM;
+ 	}
+ 
++	/* set the real number of ports */
++	dev->ds->num_ports = dev->port_cnt;
++
+ 	return 0;
+ }
+ 
+diff --git a/drivers/net/dsa/microchip/ksz9477.c b/drivers/net/dsa/microchip/ksz9477.c
+index 9a51b8a4de5d1..8d15c30160246 100644
+--- a/drivers/net/dsa/microchip/ksz9477.c
++++ b/drivers/net/dsa/microchip/ksz9477.c
+@@ -1588,6 +1588,9 @@ static int ksz9477_switch_init(struct ksz_device *dev)
+ 			return -ENOMEM;
+ 	}
+ 
++	/* set the real number of ports */
++	dev->ds->num_ports = dev->port_cnt;
++
+ 	return 0;
+ }
+ 
+-- 
+2.25.1
 
 
-On 6/10/20 3:05 PM, Tom Hromatka wrote:
-> A customer is using /proc/stat to track cpu usage in a VM and noted
-> that the iowait and idle times behave strangely when a cpu goes
-> offline and comes back online.
->
-> This patchset addresses two issues that can cause iowait and idle
-> to fluctuate up and down.  With these changes, cpu iowait and idle
-> now only monotonically increase.
->
-> Tom Hromatka (2):
->    tick-sched: Do not clear the iowait and idle times
->    /proc/stat: Simplify iowait and idle calculations when cpu is offline
->
->   fs/proc/stat.c           | 24 ++++++------------------
->   kernel/time/tick-sched.c |  9 +++++++++
->   2 files changed, 15 insertions(+), 18 deletions(-)
->
 
