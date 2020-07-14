@@ -2,80 +2,119 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BADEC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 11:55:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19879C433E7
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 11:56:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5DC0222224
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 11:55:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EC8B322224
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 11:56:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b="BWruN3AF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728081AbgGNLzM (ORCPT
+        id S1728037AbgGNL4F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 07:55:12 -0400
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:46045 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727046AbgGNLzL (ORCPT
+        Tue, 14 Jul 2020 07:56:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58316 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726889AbgGNL4D (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 07:55:11 -0400
-Received: by mail-lf1-f67.google.com with SMTP id s16so11240104lfp.12
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 04:55:10 -0700 (PDT)
+        Tue, 14 Jul 2020 07:56:03 -0400
+Received: from mail-ed1-x542.google.com (mail-ed1-x542.google.com [IPv6:2a00:1450:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0BF16C061794
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 04:56:03 -0700 (PDT)
+Received: by mail-ed1-x542.google.com with SMTP id a8so16764455edy.1
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 04:56:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=szeredi.hu; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=+sjMIjM2/JFepdRAXpOHb7ghC5LhQeVZQ0Kayo5azeY=;
+        b=BWruN3AFlA46ZLoJRaXr2SIqdS24ok0rzjPKi9syKMhMKh0JxzioNs8EdhKj+fmaW8
+         LtFlAX3lpklg05W9WQ2EZYCE821vzWc7x2++w2jVILwn2boWbSBMsrC6/5ApTmFgISg3
+         lazdTrnPmPdLzow7yla7Nzl2D4pVlMvE8cJJk=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=LSrABorvrDzSA3D02QxdjN1XVE24+Jlv3WcRHgwThLc=;
-        b=Ok4uBkgPJP6S2pn/6Ausmhs5Ernhyc2AkxNAB3lfhSRb4RPo4pphiRYwdFW2AVDt3z
-         XJO92ar0RzZdX652hF+2oRLqxcQM6iSJtenT2n6VSnAQFCQSaSlpO6RWYkw7rg7Coods
-         8YmZHxjgqQSppRaJp31J7je+YjnEThkZdHi9p034GWVU31BqDe4oSsh9+a7PYxIiXXMs
-         jI7y/DEKOsuALE655g/v/zwZK87rwDZDhsKKQ51P1o8SgzW9eWUdoTI73UKyIzUTDoI3
-         FbrR+GNdMrUgfK2/PWzFRYgczEbLlAcWlmas3VnLMQY5qSApiQp+imnvipmRHvIGFemx
-         YuoQ==
-X-Gm-Message-State: AOAM531eZkWykSD51ygsctoCA3LmZItv7bdvDnN2ibKH3XZ+nJeBzpXw
-        Ih47DAM0inJFdHcD4XVnFu39og4cDQc=
-X-Google-Smtp-Source: ABdhPJzom7xBiRFyek2ByJURbVVv9yQ7kjX108x9GkaZ2LsxgfECYiMRXiW7HIFSGUXzCoYP7IxUng==
-X-Received: by 2002:ac2:5593:: with SMTP id v19mr1999623lfg.43.1594727709309;
-        Tue, 14 Jul 2020 04:55:09 -0700 (PDT)
-Received: from mail-lj1-f179.google.com (mail-lj1-f179.google.com. [209.85.208.179])
-        by smtp.gmail.com with ESMTPSA id i2sm4603595ljn.109.2020.07.14.04.55.08
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 14 Jul 2020 04:55:08 -0700 (PDT)
-Received: by mail-lj1-f179.google.com with SMTP id q7so22225572ljm.1
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 04:55:08 -0700 (PDT)
-X-Received: by 2002:a2e:958f:: with SMTP id w15mr2098178ljh.190.1594727708768;
- Tue, 14 Jul 2020 04:55:08 -0700 (PDT)
+        bh=+sjMIjM2/JFepdRAXpOHb7ghC5LhQeVZQ0Kayo5azeY=;
+        b=tD9el2SetmXU88awBYcL46bhV7ULgQ5VPGdCUxhUJLnAj5ZXkUNCpoyKAbJ9EtJXSL
+         XA7ytEid3XD32ndo7yrt1Re9Sl8x80emv8E8I77cYFJT6VFdhZoPAPrG/8hyVdv2I3iO
+         jQKbf1Zbo+rnfQG6bwz13715A8i/XCb4AmAv4aRsQn9nUd9YDLaarkHbF9JxrTaSIHiZ
+         eENWIXqbLmkMO/atxrBn+Ue++WOeLxhjM7aaA3C5hCPNmRVxHRFZzV1tgakaMdcywdmT
+         KHw15sB/3RUepVlHG6r+dJZwhETTB5AULV+Bjga82NUhUiG57TOTX/VIH8moE3p5KVR3
+         gjUQ==
+X-Gm-Message-State: AOAM533+1hjz29aeDfQhtnKoypAWuR1mhBbB53n7cFpm72v6dnNOtI8T
+        KOGrvJC2zARLT7CfRdzYScho8xLS6k9p5TAhsaSFdA==
+X-Google-Smtp-Source: ABdhPJx7T4CbUMQ5B2n8Maq8US8S/XJNlgydPVNLLLOLr6IH9mheDQ+RV1Tk59Uievz5SqNyI1kTrxdL9hey9Cb11rE=
+X-Received: by 2002:a05:6402:1d0b:: with SMTP id dg11mr3988736edb.212.1594727761659;
+ Tue, 14 Jul 2020 04:56:01 -0700 (PDT)
 MIME-Version: 1.0
-References: <cover.1594708863.git.frank@allwinnertech.com> <bd2b5ba093adba25dc1321cbdfb1532af7bd6047.1594708864.git.frank@allwinnertech.com>
-In-Reply-To: <bd2b5ba093adba25dc1321cbdfb1532af7bd6047.1594708864.git.frank@allwinnertech.com>
-From:   Chen-Yu Tsai <wens@csie.org>
-Date:   Tue, 14 Jul 2020 19:54:59 +0800
-X-Gmail-Original-Message-ID: <CAGb2v64e+jEnf98fQowusPKVaVAz=QL5k1K6aoAGsOT7_sx73A@mail.gmail.com>
-Message-ID: <CAGb2v64e+jEnf98fQowusPKVaVAz=QL5k1K6aoAGsOT7_sx73A@mail.gmail.com>
-Subject: Re: [PATCH v4 10/16] mfd: axp20x: Allow the AXP803 to be probed by I2C
-To:     Frank Lee <frank@allwinnertech.com>
-Cc:     Lee Jones <lee.jones@linaro.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Yangtao Li <tiny.windzz@gmail.com>,
-        =?UTF-8?B?6buE54OB55Sf?= <huangshuosheng@allwinnertech.com>,
-        liyong@allwinnertech.com
+References: <CAODFU0q6CrUB_LkSdrbp5TQ4Jm6Sw=ZepZwD-B7-aFudsOvsig@mail.gmail.com>
+ <20200705115021.GA1227929@kroah.com> <20200714065110.GA8047@amd>
+ <CAJfpegu8AXZWQh3W39PriqxVna+t3D2pz23t_4xEVxGcNf1AUA@mail.gmail.com> <4e92b851-ce9a-e2f6-3f9a-a4d47219d320@gmail.com>
+In-Reply-To: <4e92b851-ce9a-e2f6-3f9a-a4d47219d320@gmail.com>
+From:   Miklos Szeredi <miklos@szeredi.hu>
+Date:   Tue, 14 Jul 2020 13:55:50 +0200
+Message-ID: <CAJfpegvroouw5ndHv+395w5PP1c+pUyp=-T8qhhvSnFbhbRehg@mail.gmail.com>
+Subject: Re: [PATCH 0/3] readfile(2): a new syscall to make open/read/close faster
+To:     Pavel Begunkov <asml.silence@gmail.com>
+Cc:     Pavel Machek <pavel@denx.de>, Greg KH <gregkh@linuxfoundation.org>,
+        Jan Ziak <0xe2.0x9a.0x9b@gmail.com>,
+        Linux API <linux-api@vger.kernel.org>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-kselftest@vger.kernel.org,
+        linux-man <linux-man@vger.kernel.org>,
+        Michael Kerrisk <mtk.manpages@gmail.com>, shuah@kernel.org,
+        Al Viro <viro@zeniv.linux.org.uk>, io-uring@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 14, 2020 at 5:45 PM Frank Lee <frank@allwinnertech.com> wrote:
+On Tue, Jul 14, 2020 at 1:36 PM Pavel Begunkov <asml.silence@gmail.com> wrote:
 >
-> From: Yangtao Li <frank@allwinnertech.com>
+> On 14/07/2020 11:07, Miklos Szeredi wrote:
+> > On Tue, Jul 14, 2020 at 8:51 AM Pavel Machek <pavel@denx.de> wrote:
+> >>
+> >> Hi!
+> >>
+> >>>> At first, I thought that the proposed system call is capable of
+> >>>> reading *multiple* small files using a single system call - which
+> >>>> would help increase HDD/SSD queue utilization and increase IOPS (I/O
+> >>>> operations per second) - but that isn't the case and the proposed
+> >>>> system call can read just a single file.
+> >>>
+> >>> If you want to do this for multple files, use io_ring, that's what it
+> >>> was designed for.  I think Jens was going to be adding support for the
+> >>> open/read/close pattern to it as well, after some other more pressing
+> >>> features/fixes were finished.
+> >>
+> >> What about... just using io_uring for single file, too? I'm pretty
+> >> sure it can be wrapped in a library that is simple to use, avoiding
+> >> need for new syscall.
+> >
+> > Just wondering:  is there a plan to add strace support to io_uring?
+> > And I don't just mean the syscalls associated with io_uring, but
+> > tracing the ring itself.
 >
-> The AXP803 can be used both using the RSB proprietary bus, or a more
-> traditional I2C bus.
+> What kind of support do you mean? io_uring is asynchronous in nature
+> with all intrinsic tracing/debugging/etc. problems of such APIs.
+> And there are a lot of handy trace points, are those not enough?
 >
-> Let's add that possibility.
->
-> Signed-off-by: Yangtao Li <frank@allwinnertech.com>
+> Though, this can be an interesting project to rethink how async
+> APIs are worked with.
 
-Acked-by: Chen-Yu Tsai <wens@csie.org>
+Yeah, it's an interesting problem.  The uring has the same events, as
+far as I understand, that are recorded in a multithreaded strace
+output (syscall entry, syscall exit); nothing more is needed.
+
+I do think this needs to be integrated into strace(1), otherwise the
+usefulness of that tool (which I think is *very* high) would go down
+drastically as io_uring usage goes up.
+
+Thanks,
+Miklos
