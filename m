@@ -2,151 +2,137 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CDC44C433E5
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 05:40:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9C6BC433E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 05:41:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B204F221E7
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 05:40:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC1F02193E
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 05:41:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="d4pjqhm9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726456AbgGNFkP (ORCPT
+        id S1726619AbgGNFlo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 01:40:15 -0400
-Received: from mga07.intel.com ([134.134.136.100]:29411 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725306AbgGNFkO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 01:40:14 -0400
-IronPort-SDR: 9P7nAcsnhmnqLDaTYOnxbFNxZ7+0vQJLs/Dn7P9ryN6qCT64IwTWR+MtV/XbHw2O0RSvGtULCA
- BbJ3UbGSRuMA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9681"; a="213622006"
-X-IronPort-AV: E=Sophos;i="5.75,350,1589266800"; 
-   d="scan'208";a="213622006"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jul 2020 22:40:13 -0700
-IronPort-SDR: 8O3V/it4p0N6j+N7QEPzWNuCQ5U/VyDf2kVsZZjpwRZculpB/yqsVZ6ChpHCkWM+k6CU/n5I6/
- JVf3sEmYaXEw==
-X-IronPort-AV: E=Sophos;i="5.75,350,1589266800"; 
-   d="scan'208";a="269919030"
-Received: from otcsectest.jf.intel.com (HELO 760745902f30) ([10.54.30.81])
-  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jul 2020 22:40:12 -0700
-Date:   Tue, 14 Jul 2020 05:36:33 +0000
-From:   "Andersen, John" <john.s.andersen@intel.com>,
-        Arvind Sankar <nivedita@alum.mit.edu>
-To:     Andy Lutomirski <luto@kernel.org>
-Cc:     Dave Hansen <dave.hansen@intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        X86 ML <x86@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Liran Alon <liran.alon@oracle.com>,
-        Andrew Jones <drjones@redhat.com>,
-        Rick Edgecombe <rick.p.edgecombe@intel.com>,
-        Kristen Carlson Accardi <kristen@linux.intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
-        Juergen Gross <jgross@suse.com>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Oliver Neukum <oneukum@suse.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Fenghua Yu <fenghua.yu@intel.com>, reinette.chatre@intel.com,
-        vineela.tummalapalli@intel.com,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Arjan van de Ven <arjan@linux.intel.com>,
-        caoj.fnst@cn.fujitsu.com, Baoquan He <bhe@redhat.com>,
-        Kees Cook <keescook@chromium.org>,
-        Dan Williams <dan.j.williams@intel.com>, eric.auger@redhat.com,
-        aaronlewis@google.com, Peter Xu <peterx@redhat.com>,
-        makarandsonare@google.com,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        kvm list <kvm@vger.kernel.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        Kernel Hardening <kernel-hardening@lists.openwall.com>
-Subject: Re: [PATCH 2/4] KVM: x86: Introduce paravirt feature CR0/CR4 pinning
-Message-ID: <20200714053633.GB25@760745902f30>
-References: <20200618144314.GB23@258ff54ff3c0>
- <124a59a3-a603-701b-e3bb-61e83d70b20d@intel.com>
- <20200707211244.GN20096@linux.intel.com>
- <19b97891-bbb0-1061-5971-549a386f7cfb@intel.com>
- <31eb5b00-9e2a-aa10-0f20-4abc3cd35112@redhat.com>
- <20200709154412.GA25@64c96d3be97b>
- <af6ac772-318d-aab0-ce5f-55cf92f6e96d@intel.com>
- <CALCETrWxt0CHUoonWX1fgbM46ydJPQZhj8Q=G+45EG4wW3wZqQ@mail.gmail.com>
- <6040c3b3-cac9-cc0e-f0de-baaa274920a2@intel.com>
- <CALCETrUHcpqjDfAM9SbrZUM7xcS2wkVm=r1Nb1JmxV7A-KAeUQ@mail.gmail.com>
+        Tue, 14 Jul 2020 01:41:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57118 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725306AbgGNFlo (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 01:41:44 -0400
+Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5ED3FC061755;
+        Mon, 13 Jul 2020 22:41:44 -0700 (PDT)
+Received: by mail-pf1-x442.google.com with SMTP id j20so7104860pfe.5;
+        Mon, 13 Jul 2020 22:41:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=5vY1n+N/VQ+6xLkxPzwANaxUQVVSv14sE1Bo22nwo+8=;
+        b=d4pjqhm9RHROhmxjFHCDV5yLw6T0kj3qhWLPRo406IDG5azkucuSPO3ZDF/L4txM8Y
+         GtIq7DDawqq9+eCzdNsDa/KjzDAYKycDf35LtXOnMPPB1Ls5cQM6ggiogc8YoKNmNIex
+         0/JT6yFHLvH3wel8MBq0vLV5EONcwVwOPwtipkupNJP08JRB8EzyJrXYIrDexcPUV96N
+         anzrTf7FolMbrktBP0qcialz3tze2/h5PZlP5JJ+GmTKfXhzExsTR82txdvJroVdqxD2
+         3+JSge3Lrq2+V24h+wfUDIzQihxObwDVBC3ysQJwLwrmTrLCIXSG+zB33mqleLsKhjF7
+         ffSA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=5vY1n+N/VQ+6xLkxPzwANaxUQVVSv14sE1Bo22nwo+8=;
+        b=fN3el8ueypoyV+p0YhFbpMtArC2Sn1CB/NcYr775Clsh3S5+CU1rjG0AVwFzD+eG2N
+         FsPG/Z6ZZ3u8uESnRHT6s6R0sxcR3HImxFOGm7rw2ZuXItJ0cHyibasTjcs88FF5ELUG
+         /TeBj2pvUGP3Y6Di8MF+H4gbCTWhpWOgrQ0lmTihWdgXfpv33vhvDZ3qijiQZ8OISfzj
+         CNf+yQv498NRtuD0xnaFu9gTcHSV0uL7sKX0u//SOJ1sR0QYCEosWd0O6FvInPQTbg36
+         ge42x6MPRczY+k8sJy+NO9wGe3xZPkkVBOWYvOE9udEDXlXPVbKce2MzrMF2e224HaQq
+         X9gQ==
+X-Gm-Message-State: AOAM530jkc7v4GlFEM2QinUMmajV8hXW8JXWI5Iym3yBnATFqSgiPl2h
+        0uTWdBo5KHUPzb6sZqNbTc8=
+X-Google-Smtp-Source: ABdhPJzyetHHZwcsu3ySYi6T0RyV+znuILAhavOnyxSfyl5RmIoJptvZEUpziE0tgNLhzIyOorCpqg==
+X-Received: by 2002:a62:8608:: with SMTP id x8mr2790289pfd.96.1594705303844;
+        Mon, 13 Jul 2020 22:41:43 -0700 (PDT)
+Received: from f3 (ae055068.dynamic.ppp.asahi-net.or.jp. [14.3.55.68])
+        by smtp.gmail.com with ESMTPSA id z13sm15469334pfq.220.2020.07.13.22.41.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 13 Jul 2020 22:41:42 -0700 (PDT)
+Date:   Tue, 14 Jul 2020 14:41:37 +0900
+From:   Benjamin Poirier <benjamin.poirier@gmail.com>
+To:     Suraj Upadhyay <usuraj35@gmail.com>
+Cc:     manishc@marvell.com, GR-Linux-NIC-Dev@marvell.com,
+        gregkh@linuxfoundation.org, netdev@vger.kernel.org,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 4/6] staging: qlge: qlge_main: Simplify while statements.
+Message-ID: <20200714054137.GA49448@f3>
+References: <cover.1594642213.git.usuraj35@gmail.com>
+ <1bb472c5595d832221fd142dddb68907feeeecbe.1594642213.git.usuraj35@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="fUYQa+Pmc3FrFX/N"
 Content-Disposition: inline
-In-Reply-To: <CALCETrUHcpqjDfAM9SbrZUM7xcS2wkVm=r1Nb1JmxV7A-KAeUQ@mail.gmail.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <1bb472c5595d832221fd142dddb68907feeeecbe.1594642213.git.usuraj35@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 09, 2020 at 09:27:43AM -0700, Andy Lutomirski wrote:
-> On Thu, Jul 9, 2020 at 9:22 AM Dave Hansen <dave.hansen@intel.com> wrote:
-> >
-> > On 7/9/20 9:07 AM, Andy Lutomirski wrote:
-> > > On Thu, Jul 9, 2020 at 8:56 AM Dave Hansen <dave.hansen@intel.com> wrote:
-> > >> On 7/9/20 8:44 AM, Andersen, John wrote:
-> > >>>         Bits which are allowed to be pinned default to WP for CR0 and SMEP,
-> > >>>         SMAP, and UMIP for CR4.
-> > >> I think it also makes sense to have FSGSBASE in this set.
-> > >>
-> > >> I know it hasn't been tested, but I think we should do the legwork to
-> > >> test it.  If not in this set, can we agree that it's a logical next step?
-> > > I have no objection to pinning FSGSBASE, but is there a clear
-> > > description of the threat model that this whole series is meant to
-> > > address?  The idea is to provide a degree of protection against an
-> > > attacker who is able to convince a guest kernel to write something
-> > > inappropriate to CR4, right?  How realistic is this?
-> >
-> > If a quick search can find this:
-> >
-> > > https://googleprojectzero.blogspot.com/2017/05/exploiting-linux-kernel-via-packet.html
-> >
-> > I'd pretty confident that the guys doing actual bad things have it in
-> > their toolbox too.
-> >
-> 
-> True, but we have the existing software CR4 pinning.  I suppose the
-> virtualization version is stronger.
-> 
 
-Yes, as Kees said this will be stronger because it stops ROP and other gadget
-based techniques which avoid the use of native_write_cr0/4().
+--fUYQa+Pmc3FrFX/N
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-With regards to what should be done in this patchset and what in other
-patchsets. I have a fix for kexec thanks to Arvind's note about
-TRAMPOLINE_32BIT_CODE_SIZE. The physical host boots fine now and the virtual
-one can kexec fine.
+On 2020-07-13 17:50 +0530, Suraj Upadhyay wrote:
+> Simplify while loops into more readable and simple for loops.
+>=20
+> Signed-off-by: Suraj Upadhyay <usuraj35@gmail.com>
+> ---
+[...]
+> @@ -1824,7 +1821,7 @@ static struct sk_buff *ql_build_rx_skb(struct ql_ad=
+apter *qdev,
+>  			sbq_desc->p.skb =3D NULL;
+>  			skb_reserve(skb, NET_IP_ALIGN);
+>  		}
+> -		do {
+> +		for (; length > 0; length -=3D size, i++) {
+>  			lbq_desc =3D ql_get_curr_lchunk(qdev, rx_ring);
+>  			size =3D min(length, qdev->lbq_buf_size);
+> =20
+> @@ -1839,7 +1836,7 @@ static struct sk_buff *ql_build_rx_skb(struct ql_ad=
+apter *qdev,
+>  			skb->truesize +=3D size;
+>  			length -=3D size;
+>  			i++;
+> -		} while (length > 0);
+> +		}
 
-What remains to be done on that front is to add some identifying information to
-the kernel image to declare that it supports paravirtualized control register
-pinning or not.
+Looks like length and i modification should be removed from here. But in
+this instance, maybe the original was better anyways.
 
-Liran suggested adding a section to the built image acting as a flag to signify
-support for being kexec'd by a kernel with pinning enabled. If anyone has any
-opinions on how they'd like to see this implemented please let me know.
-Otherwise I'll just take a stab at it and you'll all see it hopefully in the
-next version.
+Agreed with Dan. At least some of those loops can be converted to "count
+up" loops for a more familiar appearance.
 
-With regards to FSGSBASE, are we open to validating and adding that to the
-DEFAULT set as a part of a separate patchset? This patchset is focused on
-replicating the functionality we already have natively.
+--fUYQa+Pmc3FrFX/N
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEkvpDtefvZykbqQVOaJBbS33YWS0FAl8NRY0ACgkQaJBbS33Y
+WS0Z3g//WcVnTN4TKXOSsgeRlWHyX3urQyWEoECrDPEHYUOMJw+KG+lDtZdJOEqa
+imuRQ79vr+x5wb806yuriU7kWYoH8AtS/7tEXubU3nHMZtw6IiVQiyMvA/pCFUDr
+8Z9lfVyNfIxiJqYSNigLEx0P3Psd8UYvbj09XYa5M6YlL77M2QU97RWgwPSwp7Eb
+NottP8d9Y1TYk34o/tDHPqt1UBWxVi438/ulKkbfrGr7vKsBN65F/sE5Xpa4kGaY
+eZx/ruVcekeso6UbWEHqk+foSK4RXr2C/ES0AXVvaJwxXnthE8lABye7EbZMDrPi
+QAyd3AWdQbWq0ScymyhUHZB0VUtQWD8nEEs/k3XA/M3CDLrsVwv1KDekECDvwcHv
+3r/Sj+XCo3jZ1Pc1f5KYSDsHRRUV83QMI0uiovUnEOuf8kGKe4jx0CFVv66bwsxb
+eeAhk7aHWS9f95Ij9HHmWxuSsh/KVoH6F8NwQNwhYVRXGv4ytxYqsRNkZEN7DlNW
+OGkcAySETR302XjTL/HbLZVVi8hzu/CTmF+YpBbzpc7JHY43cWHID19CS6F3yjS6
+tOe4t5JLEVHure0wZy39cew8lGP9urN4/sbQ2qFHZOksmAVXaX0kE/5uwxnPsnEh
+8+xHL8sBm3j6jBQI9RiCQHZ8UcvKxEue1ZL2NK/i504aYOjkQG4=
+=huGq
+-----END PGP SIGNATURE-----
+
+--fUYQa+Pmc3FrFX/N--
