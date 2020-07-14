@@ -2,147 +2,145 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=BAYES_00,DATE_IN_FUTURE_06_12,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01152C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 09:26:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AD43C433E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 09:27:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D7A9C2075F
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 09:26:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E4AA82075F
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 09:27:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="I3QhAvRt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726354AbgGNJ0V (ORCPT
+        id S1726715AbgGNJ1V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 05:26:21 -0400
-Received: from hostingweb31-40.netsons.net ([89.40.174.40]:60178 "EHLO
-        hostingweb31-40.netsons.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725884AbgGNJ0V (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 05:26:21 -0400
-Received: from [78.134.114.177] (port=53776 helo=[192.168.77.62])
-        by hostingweb31.netsons.net with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-        (Exim 4.93)
-        (envelope-from <luca@lucaceresoli.net>)
-        id 1jvHCb-0004n6-TG; Tue, 14 Jul 2020 11:26:17 +0200
-Subject: Re: [PATCH v3 2/4] dt-bindings: mfd: lp87565: convert to yaml
-To:     Rob Herring <robh@kernel.org>
-Cc:     Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Lee Jones <lee.jones@linaro.org>,
-        Keerthy <j-keerthy@ti.com>, Axel Lin <axel.lin@ingics.com>
-References: <20200622204329.11147-1-luca@lucaceresoli.net>
- <20200622204329.11147-3-luca@lucaceresoli.net>
- <20200713190107.GA538448@bogus>
-From:   Luca Ceresoli <luca@lucaceresoli.net>
-Message-ID: <fda84ebc-a484-fa88-3bdf-00a4272512e7@lucaceresoli.net>
-Date:   Tue, 14 Jul 2020 11:26:17 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Tue, 14 Jul 2020 05:27:21 -0400
+Received: from mail-eopbgr50042.outbound.protection.outlook.com ([40.107.5.42]:42625
+        "EHLO EUR03-VE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725884AbgGNJ1U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 05:27:20 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=T/Itw9lwDsPzMhfaHKlYPpw9L2zIam5NTKnMlB/sv6hXaS1zKvHqXKK/egHD3Z/dkFSI+wcropflay2WmRGOu9DMPEj9c50glufhs78Va6U7+RlurZ0z/C05KEnVEHuzlXCJx2pw1KnpWlvuVYMlQxlkBXY+zSsMcYSsm4DLBF4uP0G8UotQao8g8QVxYrf0qD8n1VLo+zkv/CgKQGnc6ulYB2MjMoEdbbBR8aeLqoUhM2vuEQFTLrwgLP/XIVutEQCKZmLJ0XfyjdCNzZc7eujMl+AJOwjAV59q+sQ+K48MGeSabDG81u5hEb16BpLkRb2YPn5mdGVCPa0w0QpJPQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Pr8z1PgtHqsrP94smhtYxGqq7vebsC3+BUQnQAmy0A4=;
+ b=fM1ALwZ1fF0hqrTuDtbFZBvWqWGwZwIqw7Rs4ccPlV8Nch1mmDfi3hhDiUNPDoVGetc80nBowlRCSkXEZ76z/2JR8lGgLt6W1IO69mMdmqEo/HxSUKX199//L/fIYQzcwvvcLepGUpTXnRKIYnPi/WuSLHN7EDb+Gs2weIHykqovzQnNuy7iDOvL4LIVrnmgwp4pfnNJCm4yQ7lTglwCpM8VkBTO+wnsIYEkTnMymcAdYh2bDW/s6ZylHegYB4dj1vZ6bMQUYyRw7O4eXWCU0WBVX3pICx2Fn/0JsBPKcGcO7jNECbFiuid4nhNb8+zC89FpIbOLD5xMnW6lFuATGA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Pr8z1PgtHqsrP94smhtYxGqq7vebsC3+BUQnQAmy0A4=;
+ b=I3QhAvRt0eQxpdQKWyr37YlWuxI2WBvjJ5av2jrLkJuqQMGc39S2k3+8vXgTmHu3qxxd8p7P5cuXmKLyqnkJtoa/KvHq0aVsSbNobBIPQAWc1kbSl6zGd75MQyqunh9OSGi/4OqfNel4txeCo0HZ0SJQIGeJD/Thq5LuZG4HTbQ=
+Authentication-Results: kernel.org; dkim=none (message not signed)
+ header.d=none;kernel.org; dmarc=none action=none header.from=nxp.com;
+Received: from VE1PR04MB6638.eurprd04.prod.outlook.com (2603:10a6:803:119::15)
+ by VI1PR04MB6270.eurprd04.prod.outlook.com (2603:10a6:803:fb::14) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3174.21; Tue, 14 Jul
+ 2020 09:27:16 +0000
+Received: from VE1PR04MB6638.eurprd04.prod.outlook.com
+ ([fe80::5cc4:23a5:ca17:da7d]) by VE1PR04MB6638.eurprd04.prod.outlook.com
+ ([fe80::5cc4:23a5:ca17:da7d%6]) with mapi id 15.20.3174.025; Tue, 14 Jul 2020
+ 09:27:16 +0000
+From:   Robin Gong <yibin.gong@nxp.com>
+To:     vkoul@kernel.org, robh+dt@kernel.org, shawnguo@kernel.org,
+        s.hauer@pengutronix.de, festevam@gmail.com,
+        catalin.marinas@arm.com, will@kernel.org, dan.j.williams@intel.com,
+        angelo@sysam.it
+Cc:     kernel@pengutronix.de, linux-imx@nxp.com,
+        dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: [PATCH v2 0/9] add fsl-edma3 support
+Date:   Wed, 15 Jul 2020 01:41:39 +0800
+Message-Id: <1594748508-22179-1-git-send-email-yibin.gong@nxp.com>
+X-Mailer: git-send-email 2.7.4
+Content-Type: text/plain
+X-ClientProxiedBy: SG2PR01CA0092.apcprd01.prod.exchangelabs.com
+ (2603:1096:3:15::18) To VE1PR04MB6638.eurprd04.prod.outlook.com
+ (2603:10a6:803:119::15)
 MIME-Version: 1.0
-In-Reply-To: <20200713190107.GA538448@bogus>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - hostingweb31.netsons.net
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - lucaceresoli.net
-X-Get-Message-Sender-Via: hostingweb31.netsons.net: authenticated_id: luca@lucaceresoli.net
-X-Authenticated-Sender: hostingweb31.netsons.net: luca@lucaceresoli.net
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from robin-OptiPlex-790.ap.freescale.net (119.31.174.67) by SG2PR01CA0092.apcprd01.prod.exchangelabs.com (2603:1096:3:15::18) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.20.3195.17 via Frontend Transport; Tue, 14 Jul 2020 09:27:12 +0000
+X-Mailer: git-send-email 2.7.4
+X-Originating-IP: [119.31.174.67]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 71e9b69b-04fa-4621-d6a1-08d827d81921
+X-MS-TrafficTypeDiagnostic: VI1PR04MB6270:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <VI1PR04MB627060CA620DD796B52F2A2289610@VI1PR04MB6270.eurprd04.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:6430;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: qB4kIznkL1P5aEe7wVgtMJVNHhchDsmRMCEnhh692q+e58+rV29Aj8np333h/j1o5QTajylfooDwhqxJBPditkNM26LlmaPmrohbFh3IV4SNr4OEJtUfF3KS5DG/ZRZ8EnqRobDJ5Y1XpKMitNDRpDMEGmhp4FAgRUTdhk2K6MS4uY9l5ZCa5LXnZ5DjwPFQ6Rd730eW4ue2fZmYKmJYc06FwXYeUaaPBqYHPUnfM5SzmuWGn5LUJxE/8yfXevw2J9xwQto3SUZ4r/MDakAnURkxtpKexQlBzWRvTG5t7ZFFuWsR4JgL4fx1aGgvi+ufXmiZulI1xYXACLaG8WkR/g==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VE1PR04MB6638.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(39860400002)(366004)(396003)(136003)(346002)(376002)(66946007)(6486002)(6512007)(66476007)(66556008)(8936002)(4326008)(86362001)(2906002)(6506007)(83380400001)(478600001)(36756003)(16526019)(956004)(2616005)(186003)(6666004)(26005)(5660300002)(8676002)(52116002)(7416002)(316002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: W6s+wRPOVRCSjDKWylN/KBnB/mIfOkYxf1xpRFsvQ6aIO0+NOkcJJS1/kDsXhU5MRl0YVIYTHjznZAeI3Lm0H7T9sQP4sCNBazsgc/Z9nODpvA10WJEL+x2gebMpi91Itov4WOZIXHgKDg9HcgKFsGJihGBlQ+ri3CM8lVFXjp5o3dq6MgQ/tExdGwl2yiIDezl8Uz4SO2Ajw/hYyNaBFOmybRZO3zYbiJz56iKUIZNTGjsO6aCtTJ+3oEPaSKwcTZj2S7IH/lMfMQwv8m16WzmtAmcqEP4VkRynZNMWYGYde0CiXNgqW/m2zdslzTg9cHAMk+E0MPn8HDz8ZMLLuvu2ATMHdwQkFeBbyYOBui7A0dn6seDPGouQiWLMDdV2Cd9Y9cHZ4WFDou3BPZeEfWAIycMoQg901Qx6ReuMxS0sL+P/85dn/EMuwNtsxwMIWo1wOZj3Cmy7VBDcDhCgNCF+MlVoR5UjdPNPvX3LrVs=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 71e9b69b-04fa-4621-d6a1-08d827d81921
+X-MS-Exchange-CrossTenant-AuthSource: VE1PR04MB6638.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Jul 2020 09:27:16.3560
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: dqzUEa4JNvHJ1sdQo2fayO7oUEcZNf8ztqG1HUrvTPevZt6a/MafKCqSxcucfbDRf2SWNgZ4EAXP8f6VCvQGIw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB6270
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Rob,
+This patchset enable fsl-edma3 which is used on i.mx8qxp/i.mx8qm. There
+are big changes on fsl-edma so that add indepent fsl-edma3 here:
 
-On 13/07/20 21:01, Rob Herring wrote:
-> On Mon, Jun 22, 2020 at 10:43:27PM +0200, Luca Ceresoli wrote:
->> The definition of "xxx-in-supply" was generic, thus define in detail the
->> possible cases for each chip variant.
->>
->> Also document that the only possible I2C slave address is 0x60 as per the
->> datasheet and fix the second example accordingly.
->>
->> Signed-off-by: Luca Ceresoli <luca@lucaceresoli.net>
+1. split memory address for per channel, while all channels share the same
+   memory address and the same control registers CR/INT..etc.
+2. all TCD registers of channels are continuous on legacy edma but split on
+   edma3.
+3. per interrupt per channel on edma3.
+4. totally different register layer and add some register such as SBR
+5. power domain support, per domain per channel.
 
-[...]
 
->> +allOf:
->> +  - if:
->> +      properties:
->> +        compatible:
->> +          contains:
->> +            enum:
->> +              - ti,lp87565
->> +              - ti,lp87565-q1
->> +    then:
->> +      properties:
->> +        buck10-in-supply:
->> +          description:
->> +            Phandle to parent supply node for BUCK0 and BUCK1 converters.
->> +
->> +        buck23-in-supply:
->> +          description:
->> +            Phandle to parent supply node for BUCK2 and BUCK3 converters.
->> +
->> +      required:
->> +        - buck10-in-supply
->> +        - buck23-in-supply
->> +
->> +  - if:
->> +      properties:
->> +        compatible:
->> +          contains:
->> +            enum:
->> +              - ti,lp87561-q1
->> +    then:
->> +      properties:
->> +        buck3210-in-supply:
->> +          description:
->> +            Phandle to parent supply node for all the four BUCK converters.
->> +
->> +      required:
->> +        - buck3210-in-supply
-> 
-> I think this should probably be 2 schema documents (and a 3rd for the 
-> next patch)...
+The first 4 patches are used for preparing no any function changes involed.
 
-No problem, will do.
 
-Is there a specific rule to know when to split, or is it just when the
-amount of changes is relevant?
+v2:
+  1. fix yaml binding doc build warning.
 
->> +
->> +examples:
->> +  - |
->> +    /* TI LP87565-Q1 PMIC (dual 2-phase output configuration) */
->> +    i2c@0 {
->> +        reg = <0x0 0x100>;
->> +        #address-cells = <1>;
->> +        #size-cells = <0>;
->> +
->> +        pmic@60 {
->> +            compatible = "ti,lp87565-q1";
->> +            reg = <0x60>;
->> +            gpio-controller;
->> +            #gpio-cells = <2>;
->> +
->> +            buck10-in-supply = <&vsys_3v3>;
->> +            buck23-in-supply = <&vsys_3v3>;
->> +
->> +            regulators {
->> +                buck10_reg: buck10 {
-> 
-> The regulators also need to be documented.
+Robin Gong (9):
+  dmaengine: fsl-edma: move edma_request functions into drvdata
+  dmaengine: fsl-edma-common: add condition check for fsl_edma_chan_mux
+  dmaengine: fsl-edma-common: add fsl_chan into fsl_edma_fill_tcd
+  dmaengine: fsl-edma-common: export fsl_edma_set_tcd_regs
+  dmaengine: fsl-edma3: add fsl-edma3 driver
+  dt-bindings: dma: add fsl-edma3 yaml
+  firmware: imx: scu-pd: correct dma resource
+  arm64: dts: imx8qxp: add edma2
+  arm64: defconfig: add CONFIG_FSL_EDMA3
 
-OK.
+ .../devicetree/bindings/dma/nxp,fsl-edma3.yaml     | 134 ++++++
+ arch/arm64/boot/dts/freescale/imx8qxp.dtsi         |  38 ++
+ arch/arm64/configs/defconfig                       |   1 +
+ drivers/dma/Kconfig                                |  12 +
+ drivers/dma/Makefile                               |   1 +
+ drivers/dma/fsl-edma-common.c                      | 151 +++++--
+ drivers/dma/fsl-edma-common.h                      |  30 ++
+ drivers/dma/fsl-edma.c                             |  10 +-
+ drivers/dma/fsl-edma3.c                            | 493 +++++++++++++++++++++
+ drivers/dma/mcf-edma.c                             |   2 +
+ drivers/firmware/imx/scu-pd.c                      |   7 +-
+ 11 files changed, 849 insertions(+), 30 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/dma/nxp,fsl-edma3.yaml
+ create mode 100644 drivers/dma/fsl-edma3.c
 
 -- 
-Luca
+2.7.4
+
