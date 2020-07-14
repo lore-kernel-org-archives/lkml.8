@@ -2,135 +2,111 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-10.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4469C433F2
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 19:42:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CBD73C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 19:43:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A182C22B51
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 19:42:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AXt6kevx"
+	by mail.kernel.org (Postfix) with ESMTP id A87D322B4B
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 19:43:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730361AbgGNTm2 (ORCPT
+        id S1729861AbgGNTn4 convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 15:42:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47142 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729329AbgGNTm0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 15:42:26 -0400
-Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5BED1C061755;
-        Tue, 14 Jul 2020 12:42:26 -0700 (PDT)
-Received: by mail-pf1-x442.google.com with SMTP id s26so8017344pfm.4;
-        Tue, 14 Jul 2020 12:42:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=PQoiTk/94i+cEQXK8JsAB0AkTjYJXwZwOn4dJ+xwUDg=;
-        b=AXt6kevxd3MbkPZ1VCvIa7CWEeXW1Hnzu9JlVFfg+1OzvgzUAs4ASun5mkK+0k500o
-         54P7OkAxIMaeRNbb/vjw0CL+AutZpp0r7vyr5oyUq4ShbS2sVv/2A0MWOOff+TCUY+GK
-         pKhZ2JjaGSpeJShOUUlm56WAoCdzjQg0SPcnrkLVptvoSMr5T1Sf0HXgY2zsFwfsPWm7
-         8xSYOIfbXa2kgyKX++hsK8Zo0qwamVWWPEzJ9ZaztPc5qb4phTanBGehRlouMu37JdT2
-         E1mOz3JeXHs6zZyqFIEezDNeKtT8bcUCsxRPjyv/6wcz6xCO27uD+xryOUOnbqiuvk3/
-         s5Fg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=PQoiTk/94i+cEQXK8JsAB0AkTjYJXwZwOn4dJ+xwUDg=;
-        b=DESTiRP7FsW38nmw1gQZbi3qU8xRLcn71EQXmRD5PyMl6Myay80O6zjOZ9c7TqFjU6
-         j+wLU/+kBEMs9x5pqrBamK8lKJkUi5xorzW7eMaWwPlajXxKz04W/KUUOqz0IKA9UmL4
-         0TZpxxacJ/CW3hOM9jK3Jw8ibWPIz+u5fCx8wrSecRWWbJigL6CiKskrvC8dfjodVy0g
-         DKrx7/oBmOW3GJ7626jGHYcPEbZktjs8w2UUX6vCGdW+c/nrGaQM324liUAtphPLK5W7
-         yT2DXWPkIxLD424E+u6vbOu5zXVRg8y2CsQk6aM0x7q62bmoPJvXSbWgTLYlwiZwTIBP
-         DQBQ==
-X-Gm-Message-State: AOAM5323sFKUVeqHJAVqZsecNnmo+Rdj+nIAURbDUOhKFhZQhzj8dArv
-        ysEUxseC+GZIf7pm54nw9bc=
-X-Google-Smtp-Source: ABdhPJwAec0PSq8vCkDHhMwK5e+77YkqFKNDRznTfSIalx/Ujpnz4QHpwP48pufGGWmOeeKFrr9t7g==
-X-Received: by 2002:a05:6a00:f:: with SMTP id h15mr5547490pfk.193.1594755745915;
-        Tue, 14 Jul 2020 12:42:25 -0700 (PDT)
-Received: from blackclown ([103.88.82.145])
-        by smtp.gmail.com with ESMTPSA id g6sm10805pfr.129.2020.07.14.12.42.23
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 14 Jul 2020 12:42:25 -0700 (PDT)
-Date:   Wed, 15 Jul 2020 01:12:13 +0530
-From:   Suraj Upadhyay <usuraj35@gmail.com>
-To:     jeffrey.t.kirsher@intel.com, davem@davemloft.net, kuba@kernel.org
-Cc:     intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
-Subject: [PATCH 4/4] ixgbe/ixgbe_ethtool.c: Remove unnecessary usages of
- memset.
-Message-ID: <20200714194212.GA21612@blackclown>
+        Tue, 14 Jul 2020 15:43:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51166 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729329AbgGNTnz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 15:43:55 -0400
+Received: from oasis.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 337C022B4D;
+        Tue, 14 Jul 2020 19:43:54 +0000 (UTC)
+Date:   Tue, 14 Jul 2020 15:43:52 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Pavel Machek <pavel@denx.de>
+Cc:     Tom Zanussi <zanussi@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-rt-users <linux-rt-users@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Carsten Emde <C.Emde@osadl.org>,
+        John Kacur <jkacur@redhat.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Daniel Wagner <wagi@monom.org>,
+        Clark Williams <williams@redhat.com>,
+        Kate Stewart <kstewart@linuxfoundation.org>
+Subject: Re: [ANNOUNCE] 4.19.132-rt59
+Message-ID: <20200714154352.04794760@oasis.local.home>
+In-Reply-To: <20200714183512.GA18816@duo.ucw.cz>
+References: <82932b48972f38fccf9920e2ec75b555c2b2494a.camel@kernel.org>
+        <20200714183512.GA18816@duo.ucw.cz>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="WIyZ46R2i8wDzkSu"
-Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, 14 Jul 2020 20:35:12 +0200
+Pavel Machek <pavel@denx.de> wrote:
 
---WIyZ46R2i8wDzkSu
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> Hi!
+> 
+> > 
+> > I'm pleased to announce the 4.19.132-rt59 stable release.
+> > 
+> > This release is just an update to the new stable 4.19.132
+> > version and no RT specific changes have been made.
+> > 
+> > You can get this release via the git tree at:
+> > 
+> >   git://git.kernel.org/pub/scm/linux/kernel/git/rt/linux-stable-rt.git
+> > 
+> >   branch: v4.19-rt
+> >   Head SHA1: 1eebf4069aa37e54330cce9a42608517ea6996fe
+> > 
+> > Or to build 4.19.132-rt59 directly, the following patches should be
+> > applied:  
+> 
+> Thanks a lot.
+> 
+> But now I am confused, I completely missed announcements for
+> v4.19.127-rt55 to v4.19.131-rt58.
+> 
+> And for example -rt56 is not listed in
+> 
+> https://mirrors.edge.kernel.org/pub/linux/kernel/projects/rt/4.19/older/sha256sums.asc
+> 
+> ...aha, and the versions do not have signed tags, either:
+> 
+> pavel@amd:~/cip/k$ git show v4.19.131-rt58
+> fatal: ambiguous argument 'v4.19.131-rt58': unknown revision or path not in the working tree.
+> 
+> Is that because they were created just as quick steps towards -rt59?
+>
 
-Replace memsets of 1 byte with simple assignment.
-Issue found with checkpatch.pl
+Ah, I was about to say this is something that Kate keeps reminding me
+to add to the wiki, but looking, I already did!
 
-Signed-off-by: Suraj Upadhyay <usuraj35@gmail.com>
----
- drivers/net/ethernet/intel/ixgbe/ixgbe_ethtool.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+https://wiki.linuxfoundation.org/realtime/documentation/start
 
-diff --git a/drivers/net/ethernet/intel/ixgbe/ixgbe_ethtool.c b/drivers/net=
-/ethernet/intel/ixgbe/ixgbe_ethtool.c
-index 6725d892336e..71ec908266a6 100644
---- a/drivers/net/ethernet/intel/ixgbe/ixgbe_ethtool.c
-+++ b/drivers/net/ethernet/intel/ixgbe/ixgbe_ethtool.c
-@@ -1951,8 +1951,8 @@ static void ixgbe_create_lbtest_frame(struct sk_buff =
-*skb,
- 	memset(skb->data, 0xFF, frame_size);
- 	frame_size >>=3D 1;
- 	memset(&skb->data[frame_size], 0xAA, frame_size / 2 - 1);
--	memset(&skb->data[frame_size + 10], 0xBE, 1);
--	memset(&skb->data[frame_size + 12], 0xAF, 1);
-+	skb->data[frame_size + 10] =3D 0xBE;
-+	skb->data[frame_size + 12] =3D 0xAF;
- }
-=20
- static bool ixgbe_check_lbtest_frame(struct ixgbe_rx_buffer *rx_buffer,
---=20
-2.17.1
+"Tagging policy of the PREEMPT_RT stable releases. Each PREEMPT_RT
+stable release is tagged with the version number of the upstream Linux
+stable kernel as well as its own “-rt” counter that is appended. The
+-rt counter will increment for the following:
 
+ - When forward ported to the latest upstream Linux stable version.
+ - When any merge with a upstream Linux stable causes a conflict.
+ - When a backport of the PREEMPT_RT development branch is done.
 
---WIyZ46R2i8wDzkSu
-Content-Type: application/pgp-signature; name="signature.asc"
+A backport will not be done with a forward port of a stable version.
+They will be done separately, and tagged separately."
 
------BEGIN PGP SIGNATURE-----
+Tom, I sign all tags, we probably should be consistent with that too.
 
-iQIzBAABCgAdFiEE7AbCa0kOsMJ4cx0j+gRsbIfe744FAl8OCpQACgkQ+gRsbIfe
-747X5hAAmO9wn96MNt3fhAqcRyBhBhOvp01FWsT+wzrwjc+1bw4lkhROTDcrOjpf
-1efjH5SijYmhpe5WwtmmW82lLLBf8Dz1P3z50LDW/P/Y4LJBJa401d+iUubw8VNI
-an0hcZ7RqJuxO9P4LI1HT+xa7OlI5nZB1bYEPToeQRdbutLXZg7KmIP/mlMYK76i
-2e4cj0oVCkKtYcsPTK6tMCAmWFhR58uxoiS5OVIqz2r6kyISMplwF0rzv3uUbz8Q
-hUBh3dtQfoAENaSTlvcWCb8Bpdgp/DoaQOPgRD97nxbWmaX+byg9elyzElMjtvKv
-6oU5D9FuDSnO4Z+qciTkajLE+hq2rBpN44WA55DDBcT2q7wbaVtfu18+GJQyUhqb
-4PBKeGLLnVORKGhbEtofmDV1mSt+GjvW60YIkaJlF084Our7850xWdqO7jpd5Wtc
-jfGQph7TTC7Myqk6xi7foWRe7kuTZNuProC7DFN9z6idow/q9+PVrO2YKEI8pDwi
-xj6g3DLurusKneJR1wMFv4T1iU7/Aafc5q90xwSGAku7/W155CO7LR6OkA6Tv/Wg
-AcFMBtKyTrUL+1q0zb3eg36DjpH2Tr7T40mtyK5XPo31Bv4PIx8Q1XjLXbCFaDtD
-pST0Sam3+M5Ng88ktcGITfbvLzHQ6bNJhGbDstTbW/tqCRZ9peg=
-=mpgA
------END PGP SIGNATURE-----
-
---WIyZ46R2i8wDzkSu--
+-- Steve
