@@ -2,132 +2,93 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DD00C433E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 02:59:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1157C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 03:00:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 18030208FE
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 02:59:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="JdXSRbsl"
+	by mail.kernel.org (Postfix) with ESMTP id C4B75208FE
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 03:00:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726785AbgGNC7r (ORCPT
+        id S1726836AbgGNDAt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 22:59:47 -0400
-Received: from ozlabs.org ([203.11.71.1]:54853 "EHLO ozlabs.org"
+        Mon, 13 Jul 2020 23:00:49 -0400
+Received: from mga03.intel.com ([134.134.136.65]:53581 "EHLO mga03.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726150AbgGNC7q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 22:59:46 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 4B5QGk17nqz9sRR;
-        Tue, 14 Jul 2020 12:59:41 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1594695584;
-        bh=JytnyXM7mLZ22ITo74iTEVgYm2GIE3T8PylBD0v5KgY=;
-        h=Date:From:To:Cc:Subject:From;
-        b=JdXSRbslO/Pgp5vOwnzDhf5U0D9sLTudJWxJLalueYDscSrqSNH2kz8JrhYO7Z/hN
-         m5a0qEq5QdveiQxXgEDXWO+PxDBv9iUbeuTDdWhXYm89CeFQj58Eao4sCeiPgeznpD
-         C/MS5eQzOcQpJzHPTVDycp16AkWBhE1KSOYeQl1CD+AdA5EMVRYCuciVvJSdZh/PL0
-         7j7IuTHOxcO1bM8JbQGAHuc9Uch4iEZy0L8cTOkfVje/x03r8nDC231w9rtfEEoFcN
-         m/fuySsulxwC36LDd/PiAs1b8h2nGPJ3zSC5GFox4o/vUuKP4afYI6oIs8MOfGwmtx
-         dFBhm/kbFv1zQ==
-Date:   Tue, 14 Jul 2020 12:59:41 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Jani Nikula <jani.nikula@linux.intel.com>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        Intel Graphics <intel-gfx@lists.freedesktop.org>,
-        Dave Airlie <airlied@linux.ie>,
-        DRI <dri-devel@lists.freedesktop.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
-        Sam Ravnborg <sam@ravnborg.org>, Lyude Paul <lyude@redhat.com>
-Subject: linux-next: manual merge of the drm-intel tree with the drm tree
-Message-ID: <20200714125941.2e95d167@canb.auug.org.au>
+        id S1726150AbgGNDAt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jul 2020 23:00:49 -0400
+IronPort-SDR: 2cBCrFdulCoILb9YKWerCcdFozm0EeVQDGhYINi58ujMk/2vmLdI+kqXdUUolKxa5+FzmNctnq
+ uhs5X11Nfu3A==
+X-IronPort-AV: E=McAfee;i="6000,8403,9681"; a="148785154"
+X-IronPort-AV: E=Sophos;i="5.75,349,1589266800"; 
+   d="scan'208";a="148785154"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jul 2020 20:00:48 -0700
+IronPort-SDR: sqfQGqcJIpZPi2++Jsf4Ce6MY48ACp1NgfVCgb4oQrahAJYA1NQ+ofg2oBcz3TD2FrnLme4VHK
+ YFwXrniBF/Vg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,349,1589266800"; 
+   d="scan'208";a="390357412"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.152])
+  by fmsmga001.fm.intel.com with ESMTP; 13 Jul 2020 20:00:48 -0700
+Date:   Mon, 13 Jul 2020 20:00:47 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Cathy Zhang <cathy.zhang@intel.com>
+Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org, x86@kernel.org,
+        pbonzini@redhat.com, vkuznets@redhat.com, wanpengli@tencent.com,
+        jmattson@google.com, joro@8bytes.org, tglx@linutronix.de,
+        mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
+        ricardo.neri-calderon@linux.intel.com, kyung.min.park@intel.com,
+        jpoimboe@redhat.com, gregkh@linuxfoundation.org,
+        ak@linux.intel.com, dave.hansen@intel.com, tony.luck@intel.com,
+        ravi.v.shankar@intel.com
+Subject: Re: [PATCH v2 3/4] x86: Expose SERIALIZE for supported cpuid
+Message-ID: <20200714030047.GA12592@linux.intel.com>
+References: <1594088183-7187-1-git-send-email-cathy.zhang@intel.com>
+ <1594088183-7187-4-git-send-email-cathy.zhang@intel.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/TvsK9JqjR7N6ZoKB_AWExuI";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1594088183-7187-4-git-send-email-cathy.zhang@intel.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/TvsK9JqjR7N6ZoKB_AWExuI
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Tue, Jul 07, 2020 at 10:16:22AM +0800, Cathy Zhang wrote:
+> SERIALIZE instruction is supported by intel processors,
+> like Sapphire Rapids. Expose it in KVM supported cpuid.
 
-Hi all,
+Providing at least a rough overview of the instruction, e.g. its enumeration,
+usage, fault rules, controls, etc... would be nice.  In isolation, the
+changelog isn't remotely helpful in understanding the correctness of the
+patch.
 
-Today's linux-next merge of the drm-intel tree got a conflict in:
-
-  drivers/gpu/drm/drm_probe_helper.c
-
-between commit:
-
-  12c683e12cd8 ("drm: bridge: Pass drm_display_info to drm_bridge_funcs .mo=
-de_valid()")
-
-from the drm tree and commit:
-
-  1c26b8e09004 ("drm/probe_helper: Add drm_connector_helper_funcs.mode_vali=
-d_ctx")
-
-from the drm-intel tree.
-
-I fixed it up (see below) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
-diff --cc drivers/gpu/drm/drm_probe_helper.c
-index 09e872e61315,601a4f25bb47..000000000000
---- a/drivers/gpu/drm/drm_probe_helper.c
-+++ b/drivers/gpu/drm/drm_probe_helper.c
-@@@ -114,10 -116,8 +116,10 @@@ drm_mode_validate_pipeline(struct drm_d
-  		}
- =20
-  		bridge =3D drm_bridge_chain_get_first_bridge(encoder);
-- 		ret =3D drm_bridge_chain_mode_valid(bridge,
-- 						  &connector->display_info,
-- 						  mode);
-- 		if (ret !=3D MODE_OK) {
- -		*status =3D drm_bridge_chain_mode_valid(bridge, mode);
-++		*status =3D drm_bridge_chain_mode_valid(bridge,
-++						      &connector->display_info,
-++						      mode);
-+ 		if (*status !=3D MODE_OK) {
-  			/* There is also no point in continuing for crtc check
-  			 * here. */
-  			continue;
-
---Sig_/TvsK9JqjR7N6ZoKB_AWExuI
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl8NH50ACgkQAVBC80lX
-0GzXtAf+PoX61dmQpbPg7isR1p+Aj2H9XJqtIJtg07sPx1L99h57SexFt7fDSwOf
-lan4UNJQdY83y8IeWf5j1Jc4ra23HyiCTJFJvnoCXTSId5jpcYzeExKiAx3esXvu
-K8JP8/sa27GUYQueZLnq/6UOfc8YBA2j93KubDqJcnX0gh+BxucYdo/eozlFobfz
-NnDuLoLvnry6cGIsyEGiBBVrOwNKbXXahMw9awFfcJ7QPWQ+jBKXXpMmiuKvRTZc
-jZAzuK2vk7VUjyIoZC1tCuFc5bcPiCv0H5vDFrPNsg57wzuTCaW2gawKnXE9rtD0
-pKtW57wQ541NuMcbVQZgaTJEMowjmg==
-=nBIt
------END PGP SIGNATURE-----
-
---Sig_/TvsK9JqjR7N6ZoKB_AWExuI--
+> Signed-off-by: Cathy Zhang <cathy.zhang@intel.com>
+> ---
+>  arch/x86/kvm/cpuid.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
+> index 8a294f9..e603aeb 100644
+> --- a/arch/x86/kvm/cpuid.c
+> +++ b/arch/x86/kvm/cpuid.c
+> @@ -341,7 +341,8 @@ void kvm_set_cpu_caps(void)
+>  	kvm_cpu_cap_mask(CPUID_7_EDX,
+>  		F(AVX512_4VNNIW) | F(AVX512_4FMAPS) | F(SPEC_CTRL) |
+>  		F(SPEC_CTRL_SSBD) | F(ARCH_CAPABILITIES) | F(INTEL_STIBP) |
+> -		F(MD_CLEAR) | F(AVX512_VP2INTERSECT) | F(FSRM)
+> +		F(MD_CLEAR) | F(AVX512_VP2INTERSECT) | F(FSRM) |
+> +		F(SERIALIZE)
+>  	);
+>  
+>  	/* TSC_ADJUST and ARCH_CAPABILITIES are emulated in software. */
+> -- 
+> 1.8.3.1
+> 
