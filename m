@@ -7,24 +7,24 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89CA9C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 12:16:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A48D3C433EB
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 12:17:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 616682068F
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 12:16:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D48E22370
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 12:17:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728925AbgGNMQ4 (ORCPT
+        id S1728978AbgGNMQ7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 08:16:56 -0400
-Received: from 8bytes.org ([81.169.241.247]:52864 "EHLO theia.8bytes.org"
+        Tue, 14 Jul 2020 08:16:59 -0400
+Received: from 8bytes.org ([81.169.241.247]:53184 "EHLO theia.8bytes.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728246AbgGNMKp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 08:10:45 -0400
+        id S1728168AbgGNMKo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 08:10:44 -0400
 Received: from cap.home.8bytes.org (p5b006776.dip0.t-ipconnect.de [91.0.103.118])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
         (No client certificate requested)
-        by theia.8bytes.org (Postfix) with ESMTPSA id 2E6786B4;
-        Tue, 14 Jul 2020 14:10:43 +0200 (CEST)
+        by theia.8bytes.org (Postfix) with ESMTPSA id 10C596B1;
+        Tue, 14 Jul 2020 14:10:42 +0200 (CEST)
 From:   Joerg Roedel <joro@8bytes.org>
 To:     x86@kernel.org
 Cc:     Joerg Roedel <joro@8bytes.org>, Joerg Roedel <jroedel@suse.de>,
@@ -45,9 +45,9 @@ Cc:     Joerg Roedel <joro@8bytes.org>, Joerg Roedel <jroedel@suse.de>,
         Martin Radev <martin.b.radev@gmail.com>,
         linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
         virtualization@lists.linux-foundation.org
-Subject: [PATCH v4 19/75] x86/boot/compressed/64: Call set_sev_encryption_mask earlier
-Date:   Tue, 14 Jul 2020 14:08:21 +0200
-Message-Id: <20200714120917.11253-20-joro@8bytes.org>
+Subject: [PATCH v4 17/75] x86/boot/compressed/64: Change add_identity_map() to take start and end
+Date:   Tue, 14 Jul 2020 14:08:19 +0200
+Message-Id: <20200714120917.11253-18-joro@8bytes.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200714120917.11253-1-joro@8bytes.org>
 References: <20200714120917.11253-1-joro@8bytes.org>
@@ -60,51 +60,68 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Joerg Roedel <jroedel@suse.de>
 
-Call set_sev_encryption_mask() while still on the stage 1 #VC-handler,
-because the stage 2 handler needs our own page-tables to be set up, to
-which calling set_sev_encryption_mask() is a prerequisite.
+Changing the function to take start and end as parameters instead of
+start and size simplifies the callers, which don't need to calculate
+the size if they already have start and end.
 
 Signed-off-by: Joerg Roedel <jroedel@suse.de>
 ---
- arch/x86/boot/compressed/head_64.S      | 8 +++++++-
- arch/x86/boot/compressed/ident_map_64.c | 3 ---
- 2 files changed, 7 insertions(+), 4 deletions(-)
+ arch/x86/boot/compressed/ident_map_64.c | 15 +++++----------
+ 1 file changed, 5 insertions(+), 10 deletions(-)
 
-diff --git a/arch/x86/boot/compressed/head_64.S b/arch/x86/boot/compressed/head_64.S
-index 36f18d5592f4..963bf2ce11cf 100644
---- a/arch/x86/boot/compressed/head_64.S
-+++ b/arch/x86/boot/compressed/head_64.S
-@@ -543,9 +543,15 @@ SYM_FUNC_START_LOCAL_NOALIGN(.Lrelocated)
- 	rep	stosq
- 
- /*
-- * Load stage2 IDT and switch to our own page-table
-+ * If running as an SEV guest, the encryption mask is required in the
-+ * page-table setup code below. When the guest also has SEV-ES enabled
-+ * set_sev_encryption_mask() will cause #VC exceptions, but the stage2
-+ * handler can't map its GHCB because the page-table is not set up yet.
-+ * So set up the encryption mask here while still on the stage1 #VC
-+ * handler. Then load stage2 IDT and switch to our own page-table.
-  */
- 	pushq	%rsi
-+	call	set_sev_encryption_mask
- 	call	load_stage2_idt
- 	call	initialize_identity_maps
- 	popq	%rsi
 diff --git a/arch/x86/boot/compressed/ident_map_64.c b/arch/x86/boot/compressed/ident_map_64.c
-index 62e42c11a336..b4f2a5f503cd 100644
+index c63257bf8373..62e42c11a336 100644
 --- a/arch/x86/boot/compressed/ident_map_64.c
 +++ b/arch/x86/boot/compressed/ident_map_64.c
-@@ -105,9 +105,6 @@ static void add_identity_map(unsigned long start, unsigned long end)
+@@ -89,10 +89,8 @@ static struct x86_mapping_info mapping_info;
+ /*
+  * Adds the specified range to the identity mappings.
+  */
+-static void add_identity_map(unsigned long start, unsigned long size)
++static void add_identity_map(unsigned long start, unsigned long end)
+ {
+-	unsigned long end = start + size;
+-
+ 	/* Align boundary to 2M. */
+ 	start = round_down(start, PMD_SIZE);
+ 	end = round_up(end, PMD_SIZE);
+@@ -107,8 +105,6 @@ static void add_identity_map(unsigned long start, unsigned long size)
  /* Locates and clears a region for a new top level page table. */
  void initialize_identity_maps(void)
  {
--	/* If running as an SEV guest, the encryption mask is required. */
--	set_sev_encryption_mask();
+-	unsigned long start, size;
 -
- 	/* Exclude the encryption mask from __PHYSICAL_MASK */
- 	physical_mask &= ~sme_me_mask;
+ 	/* If running as an SEV guest, the encryption mask is required. */
+ 	set_sev_encryption_mask();
  
+@@ -155,9 +151,7 @@ void initialize_identity_maps(void)
+ 	 * New page-table is set up - map the kernel image and load it
+ 	 * into cr3.
+ 	 */
+-	start = (unsigned long)_head;
+-	size  = _end - _head;
+-	add_identity_map(start, size);
++	add_identity_map((unsigned long)_head, (unsigned long)_end);
+ 	write_cr3(top_level_pgt);
+ }
+ 
+@@ -189,7 +183,8 @@ static void do_pf_error(const char *msg, unsigned long error_code,
+ 
+ void do_boot_page_fault(struct pt_regs *regs, unsigned long error_code)
+ {
+-	unsigned long address = native_read_cr2();
++	unsigned long address = native_read_cr2() & PMD_MASK;
++	unsigned long end = address + PMD_SIZE;
+ 
+ 	/*
+ 	 * Check for unexpected error codes. Unexpected are:
+@@ -204,5 +199,5 @@ void do_boot_page_fault(struct pt_regs *regs, unsigned long error_code)
+ 	 * Error code is sane - now identity map the 2M region around
+ 	 * the faulting address.
+ 	 */
+-	add_identity_map(address & PMD_MASK, PMD_SIZE);
++	add_identity_map(address, end);
+ }
 -- 
 2.27.0
 
