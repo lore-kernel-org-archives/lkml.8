@@ -2,169 +2,116 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C92BC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 04:28:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8071C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 04:28:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 26CBE20773
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 04:28:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="DBLVinRO"
+	by mail.kernel.org (Postfix) with ESMTP id A52E920773
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 04:28:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725945AbgGNE14 (ORCPT
+        id S1726062AbgGNE2d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 00:27:56 -0400
-Received: from mail29.static.mailgun.info ([104.130.122.29]:14158 "EHLO
-        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725355AbgGNE14 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 00:27:56 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1594700875; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=+w/jMDThVHsl+vACGVROtp9/KAIwQu+xqoBS9/1qkfo=;
- b=DBLVinRO4lyau5AXhnisztG4dcCmccKwkvZbSmcwCWsQrQoapL0dOC9wHtHSSvc9xcsHQBKX
- vOuJ/V3g+1yKqAGRe2a2K/l6KUHSkCmpzaH8E9273xr0dzfQ1izmxeKqSkjvdHdYepfd+upb
- fowZtsjBa8wV7xjuxronHMXTr70=
-X-Mailgun-Sending-Ip: 104.130.122.29
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n02.prod.us-east-1.postgun.com with SMTP id
- 5f0d33e0f9ca681bd0b5189d (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 14 Jul 2020 04:26:08
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 8695EC433A1; Tue, 14 Jul 2020 04:26:07 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: cang)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 82385C433CA;
-        Tue, 14 Jul 2020 04:26:06 +0000 (UTC)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Tue, 14 Jul 2020 12:26:06 +0800
-From:   Can Guo <cang@codeaurora.org>
-To:     Bart Van Assche <bvanassche@acm.org>
-Cc:     asutoshd@codeaurora.org, nguyenb@codeaurora.org,
-        hongwus@codeaurora.org, rnayak@codeaurora.org,
-        linux-scsi@vger.kernel.org, kernel-team@android.com,
-        saravanak@google.com, salyzyn@google.com,
-        Alim Akhtar <alim.akhtar@samsung.com>,
-        Avri Altman <avri.altman@wdc.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Stanley Chu <stanley.chu@mediatek.com>,
-        Nitin Rawat <nitirawa@codeaurora.org>,
-        Tomas Winkler <tomas.winkler@intel.com>,
-        Bean Huo <beanhuo@micron.com>,
-        Satya Tangirala <satyat@google.com>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 4/4] scsi: ufs: Fix up and simplify error recovery
- mechanism
-In-Reply-To: <fe00619c-f337-397f-9ccf-7babda095210@acm.org>
-References: <1594693693-22466-1-git-send-email-cang@codeaurora.org>
- <1594693693-22466-5-git-send-email-cang@codeaurora.org>
- <fe00619c-f337-397f-9ccf-7babda095210@acm.org>
-Message-ID: <47e7a4ec9a0404bc6d01818fcdad90eb@codeaurora.org>
-X-Sender: cang@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+        Tue, 14 Jul 2020 00:28:33 -0400
+Received: from mga09.intel.com ([134.134.136.24]:48387 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725955AbgGNE2d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 00:28:33 -0400
+IronPort-SDR: APWHb8pluGQpBOj+f3UQQHSo2Jfpa1yqxUL/ry5IbOo+cUz0IrfcCImZQWhsksoLrN6FvdtWXM
+ 8oKhPUIlQ2oA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9681"; a="150235042"
+X-IronPort-AV: E=Sophos;i="5.75,350,1589266800"; 
+   d="scan'208";a="150235042"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jul 2020 21:28:32 -0700
+IronPort-SDR: TOk/5GX3xG2KFG4+dzjYYQuumr69eIzQHPoib8Rlmvbzi/+9oN1iai87cCjO95npoRym8A13wg
+ B6NGiKEE50ug==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,350,1589266800"; 
+   d="scan'208";a="269901707"
+Received: from sgsxdev004.isng.intel.com (HELO localhost) ([10.226.88.13])
+  by fmsmga008.fm.intel.com with ESMTP; 13 Jul 2020 21:28:29 -0700
+From:   "Ramuthevar,Vadivel MuruganX" 
+        <vadivel.muruganx.ramuthevar@linux.intel.com>
+To:     kishon@ti.com, linux-kernel@vger.kernel.org
+Cc:     robh+dt@kernel.org, devicetree@vger.kernel.org,
+        p.zabel@pengutronix.de, gregkh@linuxfoundation.org,
+        andriy.shevchenko@intel.com, balbi@kernel.org,
+        cheol.yong.kim@intel.com, qi-ming.wu@intel.com, yin1.li@intel.com,
+        "Ramuthevar,Vadivel MuruganX" 
+        <vadivel.muruganx.ramuthevar@linux.intel.com>
+Subject: [PATCH v6 0/2] phy: Add USB PHY support on Intel LGM SoC
+Date:   Tue, 14 Jul 2020 12:26:19 +0800
+Message-Id: <20200714042621.25850-1-vadivel.muruganx.ramuthevar@linux.intel.com>
+X-Mailer: git-send-email 2.11.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Bart,
+The USB PHY provides the optimized for low power dissipation while active, idle, or on standby.
+Requires minimal external components, a single resistor, for best operation.
+Supports 10/5-Gbps high-speed data transmission rates through 3-m USB 3.x cable
+---
+v6:
+ -  No Change
+v5:
+  - As per Felipe and Greg's suggestion usb phy driver reviewed patches
+    changed the folder from drivers/usb/phy to drivers/phy
+  - Reviewed-By tag added in commit message
+v4:
+  - Andy's review comments addressed
+  - drop the excess error debug prints
+  - error check optimized
+  - merge the split line to one line
+v3:
+  - Andy's review comments update
+  - hardcode return value changed to actual return value from the callee
+  - add error check is fixed according to the above
+  - correct the assignment in redundant
+  - combine the split line into one line
+v2:
+  - Address Phillip's review comments
+  - replace devm_reset_control_get() by devm_reset_control_get_exclusive()
+  - re-design the assert and deassert fucntion calls as per review comments
+  - address kbuild bot warnings
+  - add the comments
+v1:
+  - initial version
 
-On 2020-07-14 11:52, Bart Van Assche wrote:
-> On 2020-07-13 19:28, Can Guo wrote:
->> o Queue eh_work on a single threaded workqueue to avoid concurrency 
->> between
->>   eh_works.
-> 
-> Please use another approach (mutex?) to serialize error handling. There 
-> are
-> already way too workqueues in a running Linux system.
-> 
->> o According to the UFSHCI JEDEC spec, hibern8 enter/exit error occurs 
->> when
->>   the link is broken. This actaully applies to any power mode change
->>   operations. In this change, if a power mode change operation 
->> (including
->>   AH8 enter/exit) fails, mark the link state as UIC_LINK_BROKEN_STATE 
->> and
->>   schedule eh_work. eh_work needs to do full reset and restore to 
->> recover
->>   the link back to active. Before the link state is recovered to 
->> active by
->>   eh_work, any power mode change attempts just return -ENOLINK to 
->> avoid
->>   consecutive HW error.
->> 
->> o To avoid concurrency between eh_work and link recovery, remove link
->>   recovery from hibern8 enter/exit func. If hibern8 enter/exit func 
->> fails,
->>   simply return error code and let eh_work run in parallel.
->> 
->> o Recover UFS hba runtime PM error in eh_work. If 
->> ufschd_suspend/resume
->>   fails due to UFS error, e.g. hibern8 enter/exit error and SSU cmd 
->> error,
->>   the runtime PM framework saves the error to dev.power.runtime_error.
->>   After that, hba runtime suspend/resume would not be invoked anymore 
->> until
->>   dev.power.runtime_error is cleared. The runtime PM error can be 
->> recovered
->>   in eh_work by calling pm_runtime_set_active() after reset and 
->> restore
->>   succeeds. Meanwhile, if pm_runtime_set_active() returns no error, 
->> which
->>   means dev.power.runtime_error is cleared, we also need to explicitly
->>   resume those scsi devices under hba in case any of them has failed 
->> to be
->>   resumed due to hba runtime resume error.
->> 
->> o Fix a racing problem between eh_work and ufshcd_suspend/resume. In 
->> the
->>   old code, it blocks scsi requests before schedules eh_work, but when
->>   eh_work calls pm_runtime_get_sync(), if ufshcd_suspend/resume is 
->> sending
->>   a scsi cmd, most likely the SSU cmd, pm_runtime_get_sync() will 
->> never
->>   return because scsi requests were blocked. To fix this racing 
->> problem,
->>   o Don't block scsi requests before schedule eh_work, but let eh_work
->>     block scsi requests when eh_work is ready to start error recovery.
->>   o Meanwhile, if eh_work is schueduled due to fatal error, don't 
->> requeue
->>     the scsi cmds sent from ufshcd_suspend/resume path, but simply let 
->> the
->>     scsi cmds fail. If the scsi cmds fail, hba runtime suspend/resume 
->> fails
->>     too, but it does hurt since eh_work recovers hba runtime PM error.
->> 
->> o Move host/regs dump in ufshcd_check_errors() to eh_work because 
->> heavy
->>   dump in IRQ context can lead to stability issues. In addition, some 
->> clean
->>   up in ufshcd_print_host_regs() and ufshcd_print_host_state().
-> 
-> The above list is a long list. To me that is a sign that this patch 
-> needs to
-> be split into multiple patches.
-> 
-> Thanks,
-> 
-> Bart.
+---
+dt-bindings: usb: Add USB PHY support for Intel LGM SoC
+v6: 
+  - Fixed the bot issue.
+  - replace node-name by usb-phy@ in example
+v5:
+  - Reviewed-By tag added
+v4:
+  - No Change
+v3:
+  - No Change
+v2:
+  - No Change
+v1:
+  - initial version
 
-Sure, will split it into a few patches.
 
-Thanks,
+Ramuthevar Vadivel Murugan (2):
+  dt-bindings: phy: Add USB PHY support for Intel LGM SoC
+  phy: Add USB3 PHY support for Intel LGM SoC
 
-Can Guo.
+ .../devicetree/bindings/phy/intel,lgm-usb-phy.yaml |  53 ++++
+ drivers/phy/Kconfig                                |  11 +
+ drivers/phy/Makefile                               |   1 +
+ drivers/phy/phy-lgm-usb.c                          | 278 +++++++++++++++++++++
+ 4 files changed, 343 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/phy/intel,lgm-usb-phy.yaml
+ create mode 100644 drivers/phy/phy-lgm-usb.c
+
+-- 
+2.11.0
+
