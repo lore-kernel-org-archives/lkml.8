@@ -7,42 +7,42 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AADDC433EA
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 02:38:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C190C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 02:38:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5C0BA21974
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 02:38:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 135C4207E8
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 02:38:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726892AbgGNCi4 (ORCPT
+        id S1726798AbgGNCip (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 22:38:56 -0400
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:38092 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726630AbgGNCir (ORCPT
+        Mon, 13 Jul 2020 22:38:45 -0400
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:43024 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726750AbgGNCil (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 22:38:47 -0400
-Received: by mail-qt1-f193.google.com with SMTP id a32so11763772qtb.5
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 19:38:46 -0700 (PDT)
+        Mon, 13 Jul 2020 22:38:41 -0400
+Received: by mail-qt1-f194.google.com with SMTP id k18so11730165qtm.10
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 19:38:40 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=FIActeAe5YKjciIRa6g1CJPgBFTITfx8e3sVsm6Q5Tw=;
-        b=uCYmFFcmxx4K5xowddIdjnj9XS5nfzOej4JyMI/Et6JDLPMBeWyIaS55C276hy+Fcb
-         7RrWEklSvqXVSU6YrLf5zxh1xb+KerB4x1tc92E8KFQbGjQBWbwGFfBU/qfWiFzCPOyW
-         qeYQ4Gp+TK7b2DY7CT2CBtTGrRTsWovRS0vYDnWf5xUDiEm6BPPV17tAx94vzIua/zfd
-         YI02gdgw+HsRXKWfpgrYWORj4za87dYyQzWE5SQwrpGdQoKAnSFClToxbCaDUyJS4MeJ
-         GlhFex/GMgkDzswQmcm0KJu/EOMWX0xwKj6ndB1T1XscWyvqy721f8u+nqxuLehRXcIl
-         kG7w==
-X-Gm-Message-State: AOAM532FEj9UDl/Op6lWwMw0WbDEIbf4ja91EQVkG/vn3qnOE0QipRpT
-        F3boJZB6qeCBPUmInt/C5gk=
-X-Google-Smtp-Source: ABdhPJxOzaRIgdeEgt9zkdghOBZmkVUGKni7cEBr+mYF2uc3+FV3fioon0fL2l5ucCScQqTOtuyUMg==
-X-Received: by 2002:aed:2f26:: with SMTP id l35mr2513732qtd.79.1594694326442;
-        Mon, 13 Jul 2020 19:38:46 -0700 (PDT)
+        bh=RhWnzCqvgTN++G31OGgg9qNDvvhiuki5nvpw8uOP67s=;
+        b=iykKiRANC7xXp/f/XNUjhyD0XqXF5EqclqhdCGauL1FScKRvcPIxMbjuMP4q83rQV2
+         hk5eDDCUlzzr2Tui8Vxt3AoDBI6+yda+KseG9PbJqz0PxPN35CAzAmapE3rdEsPx68n/
+         OtOEsJHc4W4oxIKzsaEnDoFY4NdNzSmwwAF2xIXCupTbYm0gIrgo6H2Ym6mGW8wp6FUh
+         XEQmq70JUiNGocd+IdU4Gqz/Uyak9Hqo5lmDg9CpzkP2qzFUk9/CRbMunxzVNLp8c0Kb
+         7Utdnpl04SEnOibUrzNIgBnI2QGEcdZDkf/Y4tXWxfOt2d7+QKVroB2cxRMBfx+PbpN1
+         UxXw==
+X-Gm-Message-State: AOAM533zOXRm4WWxXM9F3bh3ykD2W3z6lo/pUAWVKl4sIwgXicaOsU1P
+        iocnf6SHfLzS/ZHUNZfnO0Y=
+X-Google-Smtp-Source: ABdhPJyD7qP9lZFweP4z1r5ZI0QeCeUktNqgeXftUuQcGKDSL65SMY53iJ2yXSuWDyFQd0OlU9U5gA==
+X-Received: by 2002:ac8:4714:: with SMTP id f20mr2481897qtp.141.1594694320024;
+        Mon, 13 Jul 2020 19:38:40 -0700 (PDT)
 Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
-        by smtp.gmail.com with ESMTPSA id a22sm21046291qka.64.2020.07.13.19.38.45
+        by smtp.gmail.com with ESMTPSA id a22sm21046291qka.64.2020.07.13.19.38.39
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 Jul 2020 19:38:45 -0700 (PDT)
+        Mon, 13 Jul 2020 19:38:39 -0700 (PDT)
 From:   Arvind Sankar <nivedita@alum.mit.edu>
 To:     Thomas Gleixner <tglx@linutronix.de>,
         Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
@@ -59,9 +59,9 @@ Cc:     Nick Desaulniers <ndesaulniers@google.com>,
         Nathan Chancellor <natechancellor@gmail.com>,
         Arnd Bergmann <arnd@arndb.de>,
         "H . J . Lu" <hjl@sourceware.org>, linux-kernel@vger.kernel.org
-Subject: [PATCH v4 7/7] x86/boot: Check that there are no runtime relocations
-Date:   Mon, 13 Jul 2020 22:38:36 -0400
-Message-Id: <20200714023836.2310569-8-nivedita@alum.mit.edu>
+Subject: [PATCH v4 1/7] x86/boot/compressed: Move .got.plt entries out of the .got section
+Date:   Mon, 13 Jul 2020 22:38:30 -0400
+Message-Id: <20200714023836.2310569-2-nivedita@alum.mit.edu>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200629140928.858507-1-nivedita@alum.mit.edu>
 References: <20200629140928.858507-1-nivedita@alum.mit.edu>
@@ -72,100 +72,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add a linker script check that there are no runtime relocations, and
-remove the old one that tries to check via looking for specially-named
-sections in the object files.
+From: Ard Biesheuvel <ardb@kernel.org>
 
-Drop the tests for -fPIE compiler option and -pie linker option, as they
-are available in all supported gcc and binutils versions (as well as
-clang and lld).
+The .got.plt section contains the part of the GOT which is used by PLT
+entries, and which gets updated lazily by the dynamic loader when
+function calls are dispatched through those PLT entries.
+
+On fully linked binaries such as the kernel proper or the decompressor,
+this never happens, and so in practice, the .got.plt section consists
+only of the first 3 magic entries that are meant to point at the _DYNAMIC
+section and at the fixup routine in the loader. However, since we don't
+use a dynamic loader, those entries are never populated or used.
+
+This means that treating those entries like ordinary GOT entries, and
+updating their values based on the actual placement of the executable in
+memory is completely pointless, and we can just ignore the .got.plt
+section entirely, provided that it has no additional entries beyond
+the first 3 ones.
+
+So add an assertion in the linker script to ensure that this assumption
+holds, and move the contents out of the [_got, _egot) memory range that
+is modified by the GOT fixup routines.
+
+While at it, drop the KEEP(), since it has no effect on the contents
+of output sections that are created by the linker itself.
 
 Reviewed-by: Kees Cook <keescook@chromium.org>
-Reviewed-by: Ard Biesheuvel <ardb@kernel.org>
-Reviewed-by: Fangrui Song <maskray@google.com>
+Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
+Acked-by: Arvind Sankar <nivedita@alum.mit.edu>
 Signed-off-by: Arvind Sankar <nivedita@alum.mit.edu>
+From: Ard Biesheuvel <ardb@kernel.org>
+Link: https://lore.kernel.org/r/20200523120021.34996-2-ardb@kernel.org
 ---
- arch/x86/boot/compressed/Makefile      | 28 +++-----------------------
- arch/x86/boot/compressed/vmlinux.lds.S |  8 ++++++++
- 2 files changed, 11 insertions(+), 25 deletions(-)
+ arch/x86/boot/compressed/vmlinux.lds.S | 11 ++++++++++-
+ 1 file changed, 10 insertions(+), 1 deletion(-)
 
-diff --git a/arch/x86/boot/compressed/Makefile b/arch/x86/boot/compressed/Makefile
-index 7cd9a2870f7c..cd286bb90423 100644
---- a/arch/x86/boot/compressed/Makefile
-+++ b/arch/x86/boot/compressed/Makefile
-@@ -29,7 +29,7 @@ targets := vmlinux vmlinux.bin vmlinux.bin.gz vmlinux.bin.bz2 vmlinux.bin.lzma \
- 	vmlinux.bin.xz vmlinux.bin.lzo vmlinux.bin.lz4
- 
- KBUILD_CFLAGS := -m$(BITS) -O2
--KBUILD_CFLAGS += -fno-strict-aliasing $(call cc-option, -fPIE, -fPIC)
-+KBUILD_CFLAGS += -fno-strict-aliasing -fPIE
- KBUILD_CFLAGS += -DDISABLE_BRANCH_PROFILING
- cflags-$(CONFIG_X86_32) := -march=i386
- cflags-$(CONFIG_X86_64) := -mcmodel=small
-@@ -51,7 +51,7 @@ UBSAN_SANITIZE :=n
- KBUILD_LDFLAGS := -m elf_$(UTS_MACHINE)
- # Compressed kernel should be built as PIE since it may be loaded at any
- # address by the bootloader.
--KBUILD_LDFLAGS += $(call ld-option, -pie) $(call ld-option, --no-dynamic-linker)
-+KBUILD_LDFLAGS += -pie $(call ld-option, --no-dynamic-linker)
- LDFLAGS_vmlinux := -T
- 
- hostprogs	:= mkpiggy
-@@ -86,30 +86,8 @@ vmlinux-objs-$(CONFIG_ACPI) += $(obj)/acpi.o
- vmlinux-objs-$(CONFIG_EFI_STUB) += $(objtree)/drivers/firmware/efi/libstub/lib.a
- vmlinux-objs-$(CONFIG_EFI_MIXED) += $(obj)/efi_thunk_$(BITS).o
- 
--# The compressed kernel is built with -fPIC/-fPIE so that a boot loader
--# can place it anywhere in memory and it will still run. However, since
--# it is executed as-is without any ELF relocation processing performed
--# (and has already had all relocation sections stripped from the binary),
--# none of the code can use data relocations (e.g. static assignments of
--# pointer values), since they will be meaningless at runtime. This check
--# will refuse to link the vmlinux if any of these relocations are found.
--quiet_cmd_check_data_rel = DATAREL $@
--define cmd_check_data_rel
--	for obj in $(filter %.o,$^); do \
--		$(READELF) -S $$obj | grep -qF .rel.local && { \
--			echo "error: $$obj has data relocations!" >&2; \
--			exit 1; \
--		} || true; \
--	done
--endef
--
--# We need to run two commands under "if_changed", so merge them into a
--# single invocation.
--quiet_cmd_check-and-link-vmlinux = LD      $@
--      cmd_check-and-link-vmlinux = $(cmd_check_data_rel); $(cmd_ld)
--
- $(obj)/vmlinux: $(vmlinux-objs-y) FORCE
--	$(call if_changed,check-and-link-vmlinux)
-+	$(call if_changed,ld)
- 
- OBJCOPYFLAGS_vmlinux.bin :=  -R .comment -S
- $(obj)/vmlinux.bin: vmlinux FORCE
 diff --git a/arch/x86/boot/compressed/vmlinux.lds.S b/arch/x86/boot/compressed/vmlinux.lds.S
-index a4a4a59a2628..a78510046eec 100644
+index 8f1025d1f681..b17d218ccdf9 100644
 --- a/arch/x86/boot/compressed/vmlinux.lds.S
 +++ b/arch/x86/boot/compressed/vmlinux.lds.S
-@@ -42,6 +42,12 @@ SECTIONS
- 		*(.rodata.*)
- 		_erodata = . ;
+@@ -44,10 +44,13 @@ SECTIONS
  	}
-+	.rel.dyn : {
-+		*(.rel.*)
-+	}
-+	.rela.dyn : {
-+		*(.rela.*)
-+	}
  	.got : {
- 		*(.got)
+ 		_got = .;
+-		KEEP(*(.got.plt))
+ 		KEEP(*(.got))
+ 		_egot = .;
  	}
-@@ -85,3 +91,5 @@ ASSERT(SIZEOF(.got.plt) == 0 || SIZEOF(.got.plt) == 0x18, "Unexpected GOT/PLT en
- #else
- ASSERT(SIZEOF(.got.plt) == 0 || SIZEOF(.got.plt) == 0xc, "Unexpected GOT/PLT entries detected!")
- #endif
++	.got.plt : {
++		*(.got.plt)
++	}
 +
-+ASSERT(SIZEOF(.rel.dyn) == 0 && SIZEOF(.rela.dyn) == 0, "Unexpected runtime relocations detected!")
+ 	.data :	{
+ 		_data = . ;
+ 		*(.data)
+@@ -77,3 +80,9 @@ SECTIONS
+ 
+ 	DISCARDS
+ }
++
++#ifdef CONFIG_X86_64
++ASSERT(SIZEOF(.got.plt) == 0 || SIZEOF(.got.plt) == 0x18, "Unexpected GOT/PLT entries detected!")
++#else
++ASSERT(SIZEOF(.got.plt) == 0 || SIZEOF(.got.plt) == 0xc, "Unexpected GOT/PLT entries detected!")
++#endif
 -- 
 2.26.2
 
