@@ -7,24 +7,28 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C707BC433EC
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 12:12:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E56DC43459
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 12:12:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AB692222B6
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 12:12:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 09888222B6
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 12:12:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728711AbgGNML7 (ORCPT
+        id S1728745AbgGNMMC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 08:11:59 -0400
-Received: from 8bytes.org ([81.169.241.247]:54694 "EHLO theia.8bytes.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728594AbgGNMLV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 08:11:21 -0400
+        Tue, 14 Jul 2020 08:12:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60748 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728595AbgGNMLU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 08:11:20 -0400
+Received: from theia.8bytes.org (8bytes.org [IPv6:2a01:238:4383:600:38bc:a715:4b6d:a889])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9EA51C061794;
+        Tue, 14 Jul 2020 05:11:20 -0700 (PDT)
 Received: from cap.home.8bytes.org (p5b006776.dip0.t-ipconnect.de [91.0.103.118])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
         (No client certificate requested)
-        by theia.8bytes.org (Postfix) with ESMTPSA id 41641FEE;
-        Tue, 14 Jul 2020 14:11:12 +0200 (CEST)
+        by theia.8bytes.org (Postfix) with ESMTPSA id 3BFD8FEA;
+        Tue, 14 Jul 2020 14:11:11 +0200 (CEST)
 From:   Joerg Roedel <joro@8bytes.org>
 To:     x86@kernel.org
 Cc:     Joerg Roedel <joro@8bytes.org>, Joerg Roedel <jroedel@suse.de>,
@@ -45,9 +49,9 @@ Cc:     Joerg Roedel <joro@8bytes.org>, Joerg Roedel <jroedel@suse.de>,
         Martin Radev <martin.b.radev@gmail.com>,
         linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
         virtualization@lists.linux-foundation.org
-Subject: [PATCH v4 71/75] x86/head/64: Rename start_cpu0
-Date:   Tue, 14 Jul 2020 14:09:13 +0200
-Message-Id: <20200714120917.11253-72-joro@8bytes.org>
+Subject: [PATCH v4 69/75] x86/head/64: Setup TSS early for secondary CPUs
+Date:   Tue, 14 Jul 2020 14:09:11 +0200
+Message-Id: <20200714120917.11253-70-joro@8bytes.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200714120917.11253-1-joro@8bytes.org>
 References: <20200714120917.11253-1-joro@8bytes.org>
@@ -60,93 +64,62 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Joerg Roedel <jroedel@suse.de>
 
-For SEV-ES this entry point will be used for restarting APs after they
-have been offlined. Remove the '0' from the name to reflect that.
+The #VC exception will trigger very early in head_64.S, when the first
+CPUID instruction is executed. When secondary CPUs boot, they already
+load the real system IDT, which has the #VC handler configured to use an
+IST stack. IST stacks require a TSS to be loaded, so set up the TSS
+early for bringing up the secondary CPUs. Use the read-write version of
+the per-CPU TSS struct early, until cpu_init() switches to the read-only
+mapping.
+
+On the boot CPU the TSS will also be loaded early, but not used as the
+the early boot #VC handlers do not use IST stacks.
 
 Signed-off-by: Joerg Roedel <jroedel@suse.de>
 ---
- arch/x86/include/asm/cpu.h | 2 +-
- arch/x86/kernel/head_32.S  | 4 ++--
- arch/x86/kernel/head_64.S  | 6 +++---
- arch/x86/kernel/smpboot.c  | 4 ++--
- 4 files changed, 8 insertions(+), 8 deletions(-)
+ arch/x86/kernel/head64.c  | 13 +++++++++++++
+ arch/x86/kernel/head_64.S |  5 +++++
+ 2 files changed, 18 insertions(+)
 
-diff --git a/arch/x86/include/asm/cpu.h b/arch/x86/include/asm/cpu.h
-index da78ccbd493b..1536b607971f 100644
---- a/arch/x86/include/asm/cpu.h
-+++ b/arch/x86/include/asm/cpu.h
-@@ -29,7 +29,7 @@ struct x86_cpu {
- #ifdef CONFIG_HOTPLUG_CPU
- extern int arch_register_cpu(int num);
- extern void arch_unregister_cpu(int);
--extern void start_cpu0(void);
-+extern void start_cpu(void);
- #ifdef CONFIG_DEBUG_HOTPLUG_CPU0
- extern int _debug_hotplug_cpu(int cpu, int action);
- #endif
-diff --git a/arch/x86/kernel/head_32.S b/arch/x86/kernel/head_32.S
-index f66a6b90f954..aad62c677486 100644
---- a/arch/x86/kernel/head_32.S
-+++ b/arch/x86/kernel/head_32.S
-@@ -174,12 +174,12 @@ SYM_CODE_END(startup_32)
-  * up already except stack. We just set up stack here. Then call
-  * start_secondary().
-  */
--SYM_FUNC_START(start_cpu0)
-+SYM_FUNC_START(start_cpu)
- 	movl initial_stack, %ecx
- 	movl %ecx, %esp
- 	call *(initial_code)
- 1:	jmp 1b
--SYM_FUNC_END(start_cpu0)
-+SYM_FUNC_END(start_cpu)
- #endif
+diff --git a/arch/x86/kernel/head64.c b/arch/x86/kernel/head64.c
+index 23d492091f3b..f57eefb1e4ba 100644
+--- a/arch/x86/kernel/head64.c
++++ b/arch/x86/kernel/head64.c
+@@ -545,6 +545,19 @@ void __head early_idt_setup_early_handler(unsigned long descr_addr, unsigned lon
+ 	}
+ }
  
- /*
++void __head early_load_tss(void)
++{
++	struct desc_struct *gdt = (struct desc_struct *)boot_gdt;
++	struct tss_struct *tss = this_cpu_ptr(&cpu_tss_rw);
++	tss_desc tss_desc;
++
++	set_tssldt_descriptor(&tss_desc, (unsigned long)tss, DESC_TSS,
++			      __KERNEL_TSS_LIMIT);
++	native_write_gdt_entry(gdt, GDT_ENTRY_TSS, &tss_desc, DESC_TSS);
++
++	asm volatile("ltr %w0"::"q" (GDT_ENTRY_TSS*8));
++}
++
+ #ifdef CONFIG_AMD_MEM_ENCRYPT
+ static void __head set_early_idt_handler(gate_desc *idt, int n, void *handler)
+ {
 diff --git a/arch/x86/kernel/head_64.S b/arch/x86/kernel/head_64.S
-index 8b43ed0592e8..12d1e407461c 100644
+index 3bd4c36d1d36..5b577d6bce7a 100644
 --- a/arch/x86/kernel/head_64.S
 +++ b/arch/x86/kernel/head_64.S
-@@ -319,15 +319,15 @@ SYM_CODE_END(secondary_startup_64)
+@@ -235,6 +235,11 @@ SYM_CODE_START(secondary_startup_64)
+ 	 */
+ 	movq initial_stack(%rip), %rsp
  
- #ifdef CONFIG_HOTPLUG_CPU
- /*
-- * Boot CPU0 entry point. It's called from play_dead(). Everything has been set
-+ * CPU entry point. It's called from play_dead(). Everything has been set
-  * up already except stack. We just set up stack here. Then call
-  * start_secondary() via .Ljump_to_C_code.
-  */
--SYM_CODE_START(start_cpu0)
-+SYM_CODE_START(start_cpu)
- 	UNWIND_HINT_EMPTY
- 	movq	initial_stack(%rip), %rsp
- 	jmp	.Ljump_to_C_code
--SYM_CODE_END(start_cpu0)
-+SYM_CODE_END(start_cpu)
- #endif
- 
- 	/* Both SMP bootup and ACPI suspend change these variables */
-diff --git a/arch/x86/kernel/smpboot.c b/arch/x86/kernel/smpboot.c
-index ffbd9a3d78d8..5a173459759d 100644
---- a/arch/x86/kernel/smpboot.c
-+++ b/arch/x86/kernel/smpboot.c
-@@ -1729,7 +1729,7 @@ static inline void mwait_play_dead(void)
- 		 * If NMI wants to wake up CPU0, start CPU0.
- 		 */
- 		if (wakeup_cpu0())
--			start_cpu0();
-+			start_cpu();
- 	}
- }
- 
-@@ -1744,7 +1744,7 @@ void hlt_play_dead(void)
- 		 * If NMI wants to wake up CPU0, start CPU0.
- 		 */
- 		if (wakeup_cpu0())
--			start_cpu0();
-+			start_cpu();
- 	}
- }
++	/* Setup a TSS for early IST handlers - needs %gs to be set up */
++	pushq	%rsi
++	call	early_load_tss
++	popq	%rsi
++
+ 	/* Load IDT */
+ 	lidt	idt_descr(%rip)
  
 -- 
 2.27.0
