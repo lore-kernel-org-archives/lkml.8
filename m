@@ -2,83 +2,111 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11A76C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 03:36:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01562C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 03:40:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D5AE52193E
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 03:36:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="hSE/BPX9"
+	by mail.kernel.org (Postfix) with ESMTP id DEAD9206F5
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 03:40:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726630AbgGNDgL (ORCPT
+        id S1726771AbgGNDkZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 23:36:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37928 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726432AbgGNDgL (ORCPT
+        Mon, 13 Jul 2020 23:40:25 -0400
+Received: from out28-220.mail.aliyun.com ([115.124.28.220]:33093 "EHLO
+        out28-220.mail.aliyun.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726456AbgGNDkZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 23:36:11 -0400
-Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CD847C061755
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 20:36:10 -0700 (PDT)
-Received: by mail-yb1-xb4a.google.com with SMTP id s9so19942783ybj.18
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 20:36:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=zNQV95i7c6JcJLlsny6Fhc23+QJFeBp9C60Maw1tGG4=;
-        b=hSE/BPX913HTAs++baLX4mt1JgCuoxgt/V9igV0OR3rWM++ODniXgdSBD7s+jXLHhR
-         a452v+zASbCdRzM9C18yCMZHTmFww6nQiHdnKQKfyqeNHa1BxFDBXXrmuQOxFtyDdUUS
-         I/1eB5quNOsb0K8jVl1LObnoefnQk5OALxRZ/mYNqe+hzRywAxJEC9JPF2GJ/iwSquYi
-         UnM4P0svZlU/mxf+0n83oM1QEM7mV05C2iIGpPhyHlQ6JdIpOwuJleqPTYN9HRjfhlpO
-         FRIm6k3tIqAZBXakOrcIk1Env3Kclme5mD5xynU+EKbRHGJ707PPIsAlALWHniOjfPY2
-         wIEA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=zNQV95i7c6JcJLlsny6Fhc23+QJFeBp9C60Maw1tGG4=;
-        b=bJazKCy8SuTd5ZN28jW78KVtN9TpJX+vzHsbRRtIFNh5TSK1aeiptF9U6ftyZ0lpdM
-         dru8vxikG5u238DykoW145eA//xJMyZb3D+hLGQcgxYz4KoqvEbm2iB3XC1hWfYA7RB4
-         NHnsBsnnQLdBmnlYPJiFHElsnhvQk9Sp7yjclEMbiXCcV+KYlb3w+FJbWYs1Xbv7EbER
-         KwVPIPI8VAWsUoOZ6Avkmrb31XUG1m11QnxdZK7UzQOerolCJljOV/7cw1ALDuRDLAyx
-         hudgxt1VdbzVVb3bRZXkK3jgwSmhadrFNg83EtAyFO2c5zoSGZke+ThskT7jAVH1+Di/
-         Pj5Q==
-X-Gm-Message-State: AOAM530b8IxWZi2m/9p6hT8KRUYlxjkHEsFkk8qhaReqbGRcJkpyy9st
-        RjQfk1vR1abVbH+cZslA30UvVxGsglVA
-X-Google-Smtp-Source: ABdhPJxnEf16kvDaLZZB9IfoIH2D+Xb4ovNqya7VkOUTo5ipYiwqV6Qi6ORPMZNHMpsbUnYXRU344QdXRV+v
-X-Received: by 2002:a25:803:: with SMTP id 3mr2023649ybi.518.1594697769925;
- Mon, 13 Jul 2020 20:36:09 -0700 (PDT)
-Date:   Tue, 14 Jul 2020 11:34:51 +0800
-Message-Id: <20200714033453.4044482-1-kyletso@google.com>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.27.0.389.gc38d7665816-goog
-Subject: [PATCH 0/2] tcpm: Error handling for tcpm_register_partner_altmodes
-From:   Kyle Tso <kyletso@google.com>
-To:     linux@roeck-us.net, heikki.krogerus@linux.intel.com,
-        gregkh@linuxfoundation.org
-Cc:     badhri@google.com, linux-usb@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Kyle Tso <kyletso@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        Mon, 13 Jul 2020 23:40:25 -0400
+X-Alimail-AntiSpam: AC=CONTINUE;BC=0.08019729|-1;CH=green;DM=|CONTINUE|false|;DS=CONTINUE|ham_regular_dialog|0.0150631-0.00417496-0.980762;FP=0|0|0|0|0|-1|-1|-1;HT=e02c03294;MF=zhouyanjie@wanyeetech.com;NM=1;PH=DS;RN=15;RT=15;SR=0;TI=SMTPD_---.I1OFFep_1594698019;
+Received: from 192.168.10.205(mailfrom:zhouyanjie@wanyeetech.com fp:SMTPD_---.I1OFFep_1594698019)
+          by smtp.aliyun-inc.com(10.147.40.7);
+          Tue, 14 Jul 2020 11:40:20 +0800
+Subject: Re: [PATCH v2 2/3] dt-bindings: MIPS: Add Ingenic X1830 based boards.
+To:     Rob Herring <robh@kernel.org>
+Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, paul.burton@mips.com,
+        paul@crapouillou.net, tsbogend@alpha.franken.de,
+        ak@linux.intel.com, ebiederm@xmission.com,
+        dongsheng.qiu@ingenic.com, aric.pzqi@ingenic.com,
+        rick.tyliu@ingenic.com, yanfei.li@ingenic.com,
+        sernia.zhou@foxmail.com, zhenwenjin@gmail.com
+References: <20200625173716.56146-1-zhouyanjie@wanyeetech.com>
+ <20200625173716.56146-3-zhouyanjie@wanyeetech.com>
+ <20200714023212.GA1162143@bogus>
+From:   Zhou Yanjie <zhouyanjie@wanyeetech.com>
+Message-ID: <2ef2d552-1e7d-0855-87fb-37bc848a4dc4@wanyeetech.com>
+Date:   Tue, 14 Jul 2020 11:40:16 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.3.0
+MIME-Version: 1.0
+In-Reply-To: <20200714023212.GA1162143@bogus>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-*** BLURB HERE ***
+Hi Rob,
 
-Kyle Tso (2):
-  usb: typec: Comment correction for typec_partner_register_altmode
-  usb: typec: tcpm: Error handling for tcpm_register_partner_altmodes
+在 2020/7/14 上午10:32, Rob Herring 写道:
+> On Fri, Jun 26, 2020 at 01:37:15AM +0800, 周琰杰 (Zhou Yanjie) wrote:
+>> Add bindings for Ingenic X1830 based board, prepare for later dts.
+>>
+>> Tested-by: 周正 (Zhou Zheng) <sernia.zhou@foxmail.com>
+>> Signed-off-by: 周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>
+>> ---
+>>
+>> Notes:
+>>      v1->v2:
+>>      No change.
+>>
+>>   Documentation/devicetree/bindings/mips/ingenic/devices.yaml | 12 +++++++++---
+>>   1 file changed, 9 insertions(+), 3 deletions(-)
+>>
+>> diff --git a/Documentation/devicetree/bindings/mips/ingenic/devices.yaml b/Documentation/devicetree/bindings/mips/ingenic/devices.yaml
+>> index d1175030781a..feb695be9f66 100644
+>> --- a/Documentation/devicetree/bindings/mips/ingenic/devices.yaml
+>> +++ b/Documentation/devicetree/bindings/mips/ingenic/devices.yaml
+>> @@ -8,7 +8,8 @@ title: Ingenic XBurst based Platforms Device Tree Bindings
+>>   
+>>   maintainers:
+>>     - 周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>
+>> -description: |
+>> +
+>> +description:
+>>     Devices with a Ingenic XBurst CPU shall have the following properties.
+>>   
+>>   properties:
+>> @@ -32,8 +33,13 @@ properties:
+>>             - const: img,ci20
+>>             - const: ingenic,jz4780
+>>   
+>> -      - description: YSH & ATIL General Board CU Neo
+>> +      - description: YSH & ATIL General Board, CU1000 Module with Neo Backplane
+>>           items:
+>>             - const: yna,cu1000-neo
+>> -          - const: ingenic,x1000
+>> +          - const: ingenic,x1000e
+> What's this change? You can't just change bindings.
 
- drivers/usb/typec/class.c     | 2 +-
- drivers/usb/typec/tcpm/tcpm.c | 4 +++-
- 2 files changed, 4 insertions(+), 2 deletions(-)
 
--- 
-2.27.0.389.gc38d7665816-goog
+This is my fault, I will add the modification of the corresponding dts 
+file in the next version.
 
+Thanks and best regards!
+
+>> +
+>> +      - description: YSH & ATIL General Board, CU1830 Module with Neo Backplane
+>> +        items:
+>> +          - const: yna,cu1830-neo
+>> +          - const: ingenic,x1830
+>>   ...
+>> -- 
+>> 2.11.0
+>>
