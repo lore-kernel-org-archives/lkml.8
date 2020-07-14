@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47621C433F2
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:56:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1D91C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:56:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 28450229CA
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:56:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A5B6122B39
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:56:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594752990;
-	bh=Vtv5mLkCI6qiMehxAsixw06K2d7dfO/qJO4vvMJqHxY=;
+	s=default; t=1594752993;
+	bh=D3i3S5j44fiC1IDgMasI5b1YhvYLYdQs/3us46NgZYw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TnhQSOYnttVNEZQAsfuFlgcxqxRk6wdB8JjtmGcID7H8ev9E80m55+qk9N5r8W/lF
-	 EXLYni5jJTQQrf9vAsJk9i3D9vqqIRk8cGOLaG7PhJSs1gHqQhPJBUAiS8LEmQ0XRd
-	 kI09hh3iRX84attSHbMm2caf4uzLJKP91gkWHVB8=
+	b=IdM5flW8a2runMA7O98+JdKwn8kWohjXPPq5vPDqohraX25CiiUrH3AvAg6S8HiMK
+	 NqBt0QS6QT01+7FBAYpTenPF7jmxsupE5mW2BtOqR9bX/wJNIkWWD4oBbfTIopTJUJ
+	 rzYuqZLKfcSOKaOGeWMD+i2H+jrtXQZyQkOSBM9Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730987AbgGNS42 (ORCPT
+        id S1730993AbgGNS4c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 14:56:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54390 "EHLO mail.kernel.org"
+        Tue, 14 Jul 2020 14:56:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54454 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730187AbgGNS40 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 14:56:26 -0400
+        id S1730985AbgGNS42 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 14:56:28 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 219C322CBB;
-        Tue, 14 Jul 2020 18:56:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AA374229CA;
+        Tue, 14 Jul 2020 18:56:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594752985;
-        bh=Vtv5mLkCI6qiMehxAsixw06K2d7dfO/qJO4vvMJqHxY=;
+        s=default; t=1594752988;
+        bh=D3i3S5j44fiC1IDgMasI5b1YhvYLYdQs/3us46NgZYw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YIJPY0UohxvE2LGG82yLmo28oI0R7eTYyFQ01Qs1sgIvXkTCTF/Pe0UIaR+EYLHFU
-         0hdCQPG6EMrK2rx1pNSHF7zIchf7LFdhcAU48dvFtytu77Pde5hOHwHpSCIC2zlo41
-         L9z88191AnzNQR3bfV4V4lPf16FConRGGtuTwttw=
+        b=V8qRcimvfsqgjH3n++hkGUhA6xYbK0sUMKV5rEY7yjlBNJkTAJC6fnkuLR0qkXLu6
+         Bk1any/vl/83HSXd2XW4zDRmmSPlThUxKjU80iaSBFHOu8lKfITC3HnOaP1hSP+lby
+         bGUvulq7+kV8cV5OJKcs++2jb+C5NDLBkbyN195Y=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hsin-Yi Wang <hsinyi@chromium.org>,
-        Tomasz Figa <tfiga@chromium.org>,
-        Chun-Kuang Hu <chunkuang.hu@kernel.org>,
+        stable@vger.kernel.org, Andre Edich <andre.edich@microchip.com>,
+        Parthiban Veerasooran <Parthiban.Veerasooran@microchip.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 058/166] drm/mediatek: Check plane visibility in atomic_update
-Date:   Tue, 14 Jul 2020 20:43:43 +0200
-Message-Id: <20200714184118.649480206@linuxfoundation.org>
+Subject: [PATCH 5.7 076/166] smsc95xx: avoid memory leak in smsc95xx_bind
+Date:   Tue, 14 Jul 2020 20:44:01 +0200
+Message-Id: <20200714184119.493097971@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200714184115.844176932@linuxfoundation.org>
 References: <20200714184115.844176932@linuxfoundation.org>
@@ -61,72 +61,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hsin-Yi Wang <hsinyi@chromium.org>
+From: Andre Edich <andre.edich@microchip.com>
 
-[ Upstream commit c0b8892e2461b5fa740e47efbb1269a487b04020 ]
+[ Upstream commit 3ed58f96a70b85ef646d5427258f677f1395b62f ]
 
-Disable the plane if it's not visible. Otherwise mtk_ovl_layer_config()
-would proceed with invalid plane and we may see vblank timeout.
+In a case where the ID_REV register read is failed, the memory for a
+private data structure has to be freed before returning error from the
+function smsc95xx_bind.
 
-Fixes: 119f5173628a ("drm/mediatek: Add DRM Driver for Mediatek SoC MT8173.")
-Signed-off-by: Hsin-Yi Wang <hsinyi@chromium.org>
-Reviewed-by: Tomasz Figa <tfiga@chromium.org>
-Signed-off-by: Chun-Kuang Hu <chunkuang.hu@kernel.org>
+Fixes: bbd9f9ee69242 ("smsc95xx: add wol support for more frame types")
+Signed-off-by: Andre Edich <andre.edich@microchip.com>
+Signed-off-by: Parthiban Veerasooran <Parthiban.Veerasooran@microchip.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/mediatek/mtk_drm_plane.c | 25 ++++++++++++++----------
- 1 file changed, 15 insertions(+), 10 deletions(-)
+ drivers/net/usb/smsc95xx.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/mediatek/mtk_drm_plane.c b/drivers/gpu/drm/mediatek/mtk_drm_plane.c
-index c2bd683a87c82..92141a19681b9 100644
---- a/drivers/gpu/drm/mediatek/mtk_drm_plane.c
-+++ b/drivers/gpu/drm/mediatek/mtk_drm_plane.c
-@@ -164,6 +164,16 @@ static int mtk_plane_atomic_check(struct drm_plane *plane,
- 						   true, true);
- }
- 
-+static void mtk_plane_atomic_disable(struct drm_plane *plane,
-+				     struct drm_plane_state *old_state)
-+{
-+	struct mtk_plane_state *state = to_mtk_plane_state(plane->state);
+diff --git a/drivers/net/usb/smsc95xx.c b/drivers/net/usb/smsc95xx.c
+index eb404bb74e18e..bb4ccbda031ab 100644
+--- a/drivers/net/usb/smsc95xx.c
++++ b/drivers/net/usb/smsc95xx.c
+@@ -1293,7 +1293,8 @@ static int smsc95xx_bind(struct usbnet *dev, struct usb_interface *intf)
+ 	/* detect device revision as different features may be available */
+ 	ret = smsc95xx_read_reg(dev, ID_REV, &val);
+ 	if (ret < 0)
+-		return ret;
++		goto free_pdata;
 +
-+	state->pending.enable = false;
-+	wmb(); /* Make sure the above parameter is set before update */
-+	state->pending.dirty = true;
-+}
-+
- static void mtk_plane_atomic_update(struct drm_plane *plane,
- 				    struct drm_plane_state *old_state)
- {
-@@ -178,6 +188,11 @@ static void mtk_plane_atomic_update(struct drm_plane *plane,
- 	if (!crtc || WARN_ON(!fb))
- 		return;
- 
-+	if (!plane->state->visible) {
-+		mtk_plane_atomic_disable(plane, old_state);
-+		return;
-+	}
-+
- 	gem = fb->obj[0];
- 	mtk_gem = to_mtk_gem_obj(gem);
- 	addr = mtk_gem->dma_addr;
-@@ -200,16 +215,6 @@ static void mtk_plane_atomic_update(struct drm_plane *plane,
- 	state->pending.dirty = true;
- }
- 
--static void mtk_plane_atomic_disable(struct drm_plane *plane,
--				     struct drm_plane_state *old_state)
--{
--	struct mtk_plane_state *state = to_mtk_plane_state(plane->state);
--
--	state->pending.enable = false;
--	wmb(); /* Make sure the above parameter is set before update */
--	state->pending.dirty = true;
--}
--
- static const struct drm_plane_helper_funcs mtk_plane_helper_funcs = {
- 	.prepare_fb = drm_gem_fb_prepare_fb,
- 	.atomic_check = mtk_plane_atomic_check,
+ 	val >>= 16;
+ 	pdata->chip_id = val;
+ 	pdata->mdix_ctrl = get_mdix_status(dev->net);
 -- 
 2.25.1
 
