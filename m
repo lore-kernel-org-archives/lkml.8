@@ -2,130 +2,199 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=BAYES_00,DATE_IN_FUTURE_06_12,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B37BC433E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 09:28:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CD16C433E5
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 09:28:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1CAC42075F
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 09:28:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="P/HcrS6j"
+	by mail.kernel.org (Postfix) with ESMTP id 71A472075F
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 09:28:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727771AbgGNJ2E (ORCPT
+        id S1726935AbgGNJ2l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 05:28:04 -0400
-Received: from mail-eopbgr50075.outbound.protection.outlook.com ([40.107.5.75]:34030
-        "EHLO EUR03-VE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725955AbgGNJ2B (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 05:28:01 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Qo+iaEMkZF3jTXVNCQtWQLSMYrqgjIAUGcSUhjCBhVYS22eRahciGW9whBLhD4jMQL2GIIe7pIwaa9gNZLnolvnnFpc9DApqudwZ6hVHb86bw1k03AjjgqfizYuUce1pnH2iEGr7UcZviNPkXW5j/FbOyoa5FJwkVJgCjQT++RzGtQBwWRSKtiUXKvw0E6M0R73m8Vbu0+0xbiS1jIQ3mN3ZvpYc7abrdRViej9mToRv5N5eT7EYPx+EF9otvZ/E2drWHunW2WpVinMgm1iZYSJVtgpj+0zG3aw0IklGEPUwK09P3NIo+Fz8xHEcD9sd1mwkt8eD3oj8BRhRZ6XEqA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=2oPNSBxTNY2/skpU+HftgqZlcyRxLbDifUvEbmUW7J8=;
- b=cqorzGTIeZ0UC2AoC5yisviMZJ+SCpxLji4c+pdqQjo/C0ov4DDYC6dYsUv+v+67MB0I5o9MpwJo41wIqWa0rUBHfuTlOWn4AakDZq2Kq8P7lvfmnUKdU7ZFvWQpFStLImhHgGJc6SwYbBUpEwXGvotCF3O89wfLk/j2EANxViFAvyhwsq/p9cidTF2Ovk4WZavR9X4TU793MooLnH/X77isi7IobRD9+tiuYd7Ik7IbMCDfF4O2BDkcgxjY5NlEmVYf7vohQX7NsoQbkNyjmHOwJPU2XvDSJMy+U2ddscGCbDqR12d1nC1cAGhSfSC+XfkcgNoYEX5Rfn7QHDR7EQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=2oPNSBxTNY2/skpU+HftgqZlcyRxLbDifUvEbmUW7J8=;
- b=P/HcrS6jRpXhbESdhYldQbFGyHxBYQ6gIBlcydpa4VJbS3hBhxQpzR9VCdtXROQQ2P1QUduRZwWAP2qp2+XAA5RTfVUaNos/MmPtJ1kYEigL89PPGFixJtj0t2V+t2FfIa2513VzHPHukXN3ZVJAtTaYXQuzM8EAB4pFczZrLTc=
-Authentication-Results: kernel.org; dkim=none (message not signed)
- header.d=none;kernel.org; dmarc=none action=none header.from=nxp.com;
-Received: from VE1PR04MB6638.eurprd04.prod.outlook.com (2603:10a6:803:119::15)
- by VI1PR04MB6270.eurprd04.prod.outlook.com (2603:10a6:803:fb::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3174.21; Tue, 14 Jul
- 2020 09:27:50 +0000
-Received: from VE1PR04MB6638.eurprd04.prod.outlook.com
- ([fe80::5cc4:23a5:ca17:da7d]) by VE1PR04MB6638.eurprd04.prod.outlook.com
- ([fe80::5cc4:23a5:ca17:da7d%6]) with mapi id 15.20.3174.025; Tue, 14 Jul 2020
- 09:27:50 +0000
-From:   Robin Gong <yibin.gong@nxp.com>
-To:     vkoul@kernel.org, robh+dt@kernel.org, shawnguo@kernel.org,
-        s.hauer@pengutronix.de, festevam@gmail.com,
-        catalin.marinas@arm.com, will@kernel.org, dan.j.williams@intel.com,
-        angelo@sysam.it
-Cc:     kernel@pengutronix.de, linux-imx@nxp.com,
-        dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: [PATCH v2 7/9] firmware: imx: scu-pd: correct dma resource
-Date:   Wed, 15 Jul 2020 01:41:46 +0800
-Message-Id: <1594748508-22179-8-git-send-email-yibin.gong@nxp.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1594748508-22179-1-git-send-email-yibin.gong@nxp.com>
-References: <1594748508-22179-1-git-send-email-yibin.gong@nxp.com>
-Content-Type: text/plain
-X-ClientProxiedBy: SG2PR01CA0092.apcprd01.prod.exchangelabs.com
- (2603:1096:3:15::18) To VE1PR04MB6638.eurprd04.prod.outlook.com
- (2603:10a6:803:119::15)
+        Tue, 14 Jul 2020 05:28:41 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:58197 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725955AbgGNJ2k (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 05:28:40 -0400
+Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <colin.king@canonical.com>)
+        id 1jvHEr-0003hO-Oe; Tue, 14 Jul 2020 09:28:37 +0000
+From:   Colin King <colin.king@canonical.com>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] scripts/spelling.txt: add more spellings to spelling.txt
+Date:   Tue, 14 Jul 2020 10:28:37 +0100
+Message-Id: <20200714092837.173796-1-colin.king@canonical.com>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from robin-OptiPlex-790.ap.freescale.net (119.31.174.67) by SG2PR01CA0092.apcprd01.prod.exchangelabs.com (2603:1096:3:15::18) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.20.3195.17 via Frontend Transport; Tue, 14 Jul 2020 09:27:45 +0000
-X-Mailer: git-send-email 2.7.4
-X-Originating-IP: [119.31.174.67]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 9c2b7b0e-a675-4c40-9a97-08d827d82d2a
-X-MS-TrafficTypeDiagnostic: VI1PR04MB6270:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <VI1PR04MB6270F9639F64B420EF954B2789610@VI1PR04MB6270.eurprd04.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:538;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: mnREYlnwy856cwh4u4RHfg+9/OuzVPBnb6ddspjQVbZfxxJEMgpqKlXVCVqrRmP73vvSnVeQ6SDiR9n1BpI3pRgQd1XPrF8jXpUBaZ5Kq4xrDN53o278NfZffw191JvlTxNuiW9ZQBP4LLBnTY+kv0fZKagxdRDXHxkmP13iLCfvA7BepqJiC7gYLMSwbq2yWCRyZlu92SFol7m65+NIHeXwjH7sLbLce4LuWg0H4QqKVlh19ykehj2P8wKYRP6QlGWpPNAS3KTo+24ndb9YscgtA1ID0cfbD5BQ3SHHSaVOfgIY6ZoUrbUyw4faeRIPMQz0oI4l4IXg477U6/6ksw==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VE1PR04MB6638.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(39860400002)(366004)(396003)(136003)(346002)(376002)(66946007)(6486002)(6512007)(66476007)(66556008)(8936002)(4326008)(86362001)(2906002)(6506007)(83380400001)(478600001)(36756003)(16526019)(956004)(2616005)(186003)(26005)(5660300002)(8676002)(52116002)(7416002)(316002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: uNfSVcq+oWkfE1jFmvf56OmD7n+Vk15X/Eq1bv83Mb3rj/INBnOFGx+Gf90sL0T/r/dnURukggIhXzHW8Wxd6rWmpS0woAFaB4k64dSiHJrZnJB3jpjcrTTRAcLOBuJ168jE7J94F+Zs+uvwpYEKfInoUUGKrJ9wQtph1acn5uSkQn8XTzrkXxlYOpG9wJ0FsQ5kQuQ0ENiRD4fm4kZyho+5uQ/GCTOiptFrxP83etT5IvSENnZxqODkj8daW0QxTE8LNdK7VWKnRYBXZ8wkhLIx3X2e0365otD23aff6nSylFtlVLho/FNYIh+Xot8K2GAW3gpsNgYPuiGly1TKOWhYF0pbsHYoC5BidmdeNntapli8z5TnxyLeFkykTP1IZDLw8jXLNBxlxfuWGVHgek4Ogg4XUU/esqrCeB2YYuDWCcLeox+/aNWDBwJhcXKAxmp0tws2oEByQEDe5Wnemjg50kjrrjuYAwxaq7yYIPY=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9c2b7b0e-a675-4c40-9a97-08d827d82d2a
-X-MS-Exchange-CrossTenant-AuthSource: VE1PR04MB6638.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Jul 2020 09:27:50.0809
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: +xpsjZKPH7UhF96i7GuW/mt4O1E4xemBzMldJayGZDIlkI2q5d3AwDMZF5dk3VWc9z3qixT2erdFakJbttZ4Gg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB6270
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-enlarge dma0/dma1 channel resource to 32 and split two parts of dma2 since
-their resource id are not continouse.
+From: Colin Ian King <colin.king@canonical.com>
 
-Signed-off-by: Robin Gong <yibin.gong@nxp.com>
+Here are some of the more common spelling mistakes and typos that I've
+found while fixing up spelling mistakes in the kernel since April 2020.
+
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
 ---
- drivers/firmware/imx/scu-pd.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ scripts/spelling.txt | 19 +++++++++++++++++++
+ 1 file changed, 19 insertions(+)
 
-diff --git a/drivers/firmware/imx/scu-pd.c b/drivers/firmware/imx/scu-pd.c
-index af3d6d9..9818890 100644
---- a/drivers/firmware/imx/scu-pd.c
-+++ b/drivers/firmware/imx/scu-pd.c
-@@ -110,9 +110,10 @@ static const struct imx_sc_pd_range imx8qxp_scu_pd_ranges[] = {
- 	{ "audio-pll1", IMX_SC_R_AUDIO_PLL_1, 1, false, 0 },
- 	{ "audio-clk-0", IMX_SC_R_AUDIO_CLK_0, 1, false, 0 },
- 	{ "audio-clk-1", IMX_SC_R_AUDIO_CLK_1, 1, false, 0 },
--	{ "dma0-ch", IMX_SC_R_DMA_0_CH0, 16, true, 0 },
--	{ "dma1-ch", IMX_SC_R_DMA_1_CH0, 16, true, 0 },
--	{ "dma2-ch", IMX_SC_R_DMA_2_CH0, 5, true, 0 },
-+	{ "dma0-ch", IMX_SC_R_DMA_0_CH0, 32, true, 0 },
-+	{ "dma1-ch", IMX_SC_R_DMA_1_CH0, 32, true, 0 },
-+	{ "dma2-ch0", IMX_SC_R_DMA_2_CH0, 5, true, 0 },
-+	{ "dma2-ch1", IMX_SC_R_DMA_2_CH5, 27, true, 0 },
- 	{ "asrc0", IMX_SC_R_ASRC_0, 1, false, 0 },
- 	{ "asrc1", IMX_SC_R_ASRC_1, 1, false, 0 },
- 	{ "esai0", IMX_SC_R_ESAI_0, 1, false, 0 },
+diff --git a/scripts/spelling.txt b/scripts/spelling.txt
+index c45e9afaab2d..f253681e7e2a 100644
+--- a/scripts/spelling.txt
++++ b/scripts/spelling.txt
+@@ -149,6 +149,7 @@ arbitary||arbitrary
+ architechture||architecture
+ arguement||argument
+ arguements||arguments
++arithmatic||arithmetic
+ aritmetic||arithmetic
+ arne't||aren't
+ arraival||arrival
+@@ -454,6 +455,7 @@ destorys||destroys
+ destroied||destroyed
+ detabase||database
+ deteced||detected
++detectt||detect
+ develope||develop
+ developement||development
+ developped||developed
+@@ -545,6 +547,7 @@ entires||entries
+ entites||entities
+ entrys||entries
+ enocded||encoded
++enought||enough
+ enterily||entirely
+ enviroiment||environment
+ enviroment||environment
+@@ -556,11 +559,14 @@ equivelant||equivalent
+ equivilant||equivalent
+ eror||error
+ errorr||error
++errror||error
+ estbalishment||establishment
+ etsablishment||establishment
+ etsbalishment||establishment
++evalution||evaluation
+ excecutable||executable
+ exceded||exceeded
++exceds||exceeds
+ exceeed||exceed
+ excellant||excellent
+ execeeded||exceeded
+@@ -583,6 +589,7 @@ explictly||explicitly
+ expresion||expression
+ exprimental||experimental
+ extened||extended
++exteneded||extended||extended
+ extensability||extensibility
+ extention||extension
+ extenstion||extension
+@@ -610,10 +617,12 @@ feautures||features
+ fetaure||feature
+ fetaures||features
+ fileystem||filesystem
++fimrware||firmware
+ fimware||firmware
+ firmare||firmware
+ firmaware||firmware
+ firware||firmware
++firwmare||firmware
+ finanize||finalize
+ findn||find
+ finilizes||finalizes
+@@ -661,6 +670,7 @@ globel||global
+ grabing||grabbing
+ grahical||graphical
+ grahpical||graphical
++granularty||granularity
+ grapic||graphic
+ grranted||granted
+ guage||gauge
+@@ -906,6 +916,7 @@ miximum||maximum
+ mmnemonic||mnemonic
+ mnay||many
+ modfiy||modify
++modifer||modifier
+ modulues||modules
+ momery||memory
+ memomry||memory
+@@ -915,6 +926,7 @@ monochromo||monochrome
+ monocrome||monochrome
+ mopdule||module
+ mroe||more
++multipler||multiplier
+ mulitplied||multiplied
+ multidimensionnal||multidimensional
+ multipe||multiple
+@@ -952,6 +964,7 @@ occassionally||occasionally
+ occationally||occasionally
+ occurance||occurrence
+ occurances||occurrences
++occurd||occurred
+ occured||occurred
+ occurence||occurrence
+ occure||occurred
+@@ -1058,6 +1071,7 @@ precission||precision
+ preemptable||preemptible
+ prefered||preferred
+ prefferably||preferably
++prefitler||prefilter
+ premption||preemption
+ prepaired||prepared
+ preperation||preparation
+@@ -1101,6 +1115,7 @@ pronunce||pronounce
+ propery||property
+ propigate||propagate
+ propigation||propagation
++propogation||propagation
+ propogate||propagate
+ prosess||process
+ protable||portable
+@@ -1316,6 +1331,7 @@ sturcture||structure
+ subdirectoires||subdirectories
+ suble||subtle
+ substract||subtract
++submited||submitted
+ submition||submission
+ suceed||succeed
+ succesfully||successfully
+@@ -1324,6 +1340,7 @@ successed||succeeded
+ successfull||successful
+ successfuly||successfully
+ sucessfully||successfully
++sucessful||successful
+ sucess||success
+ superflous||superfluous
+ superseeded||superseded
+@@ -1409,6 +1426,7 @@ transormed||transformed
+ trasfer||transfer
+ trasmission||transmission
+ treshold||threshold
++triggerd||triggered
+ trigerred||triggered
+ trigerring||triggering
+ trun||turn
+@@ -1421,6 +1439,7 @@ uknown||unknown
+ usccess||success
+ usupported||unsupported
+ uncommited||uncommitted
++uncompatible||incompatible
+ unconditionaly||unconditionally
+ undeflow||underflow
+ underun||underrun
 -- 
-2.7.4
+2.27.0
 
