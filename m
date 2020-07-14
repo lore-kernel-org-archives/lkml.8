@@ -2,204 +2,114 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0AE2C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 21:06:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E44CFC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 21:07:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6EBEB20658
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 21:06:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BCEEC2067D
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 21:07:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Q/mC/UlD"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hlMTj6kj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727101AbgGNVGg (ORCPT
+        id S1728100AbgGNVHu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 17:06:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60256 "EHLO
+        Tue, 14 Jul 2020 17:07:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60450 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726789AbgGNVGg (ORCPT
+        with ESMTP id S1728033AbgGNVHt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 17:06:36 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 005FDC061755
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 14:06:35 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id o11so174584wrv.9
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 14:06:35 -0700 (PDT)
+        Tue, 14 Jul 2020 17:07:49 -0400
+Received: from mail-qt1-x844.google.com (mail-qt1-x844.google.com [IPv6:2607:f8b0:4864:20::844])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 469F5C061755
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 14:07:49 -0700 (PDT)
+Received: by mail-qt1-x844.google.com with SMTP id d27so34618qtg.4
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 14:07:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=7JMUJfmLILJAC3wwSn7dkUj0r4rvZ4E8tu+aX4YpkZE=;
-        b=Q/mC/UlDR1Elq0xd5L9jkydnt5g9mRR0i3iucnKpnRY0OUVyhkxmuS0ax7CwwHuJPe
-         TbyPUZVhuGNk0DrbObtKA5lL33TmU/nHEDm7uQZAo5CJPlJeBOYFZ0OaPcGVKZkCyhpW
-         trSnU3Soog1BSF1L6VWtC+KgbEku3iXUIxk/RKUh18gIdSSRGqWZGKqBSP483byfBsZk
-         DyQw8o+l5fpakYQ1c1uSEkG4vljGiMVszeTJlpeWKZABViI6g4+3jTQwr+9wHGjYaZ8Q
-         UZEWl6OvOVnqbQiJhVGoxk0N7YyLwOy678NRLmBTgsD0CA2K3NWDcCtuJ662FcptmYk0
-         uawA==
+        d=gmail.com; s=20161025;
+        h=sender:from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=11WJyEAm3+xbqzduMNqA3WjbGwHVjoCwQAhn6aCLeDs=;
+        b=hlMTj6kjGIKoGE7fT8lAFF/hZ8rq9g/khJg8CTst9mUJ30kwFBOXM/gBMJLKWne0Zc
+         OvMPQ8t9KYsoBOOiaO3vq5XAv4tOSbqTCMZ5okH35+/D2yA6je1eftwRr0UhxyTsQXXX
+         0911LRC6Suq/A8tWS4Ln+pDFF4NNPosS5jl42xCwK/zb0FJdfJGKx9MWb3lXikz6zNCW
+         ++eg0AGqes4BZ1S4JkALVEDTczxy1oo9RoManqXY4kuWll9Ca78WvASO2wGP8t40GgoW
+         CIFTV68bEEYY1S3gp9InQAbsTaqD0g2B4SNWv/tAQn1RX44zpzQpnxIr9BJ7JsZQqyRl
+         /klQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=7JMUJfmLILJAC3wwSn7dkUj0r4rvZ4E8tu+aX4YpkZE=;
-        b=McOSUjWGYZT8SmSWxzDpZ2kcbr8xTl6yBhQk0kt1YkM0QaV1pQ50OY7HVTDdsbEmBJ
-         BHy6THa7eMgS1QXLQYcJ0jqjNJ9XiuMFJmxu/ym2SnDGhbe0ezvniq7UHKZyrMF3IOv3
-         jz1CxvmNqzB7n047s0e8cMAj02WRF10h96ocWl8Sz+lpw6ZEo1aFUZegrO65f4g3KBSu
-         RrL31WNAdWj+tepTSpOCA1TqS39aQ5qK9uZgFZZLNJC1fh/X+bfwSE5+qAe0nOJUYQEF
-         mynNsJSFj0wb92Oi6EEc8Ju/kRjwToCOD++r/MC/b4adKks+C6kT8H892exatSw7nVJH
-         mvYg==
-X-Gm-Message-State: AOAM530SiPf7cHL1l7oosHGnrkVtEB3+fVnV/CRjF5a+uNaaFZYHSQjx
-        9DAlR1pTFdXIy79NL7qEy3/+AU/aVev2FZem+1JRdA==
-X-Google-Smtp-Source: ABdhPJzZM6vh0J+v1cYhXpa6uIF84ICMcvhovKgga70JYXwiTm1YOHxTTCCdt2tZOxwIx6xWx6oDv5G//QF3FNjMM8g=
-X-Received: by 2002:adf:e40e:: with SMTP id g14mr8377563wrm.271.1594760794276;
- Tue, 14 Jul 2020 14:06:34 -0700 (PDT)
+        h=x-gm-message-state:sender:from:date:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to;
+        bh=11WJyEAm3+xbqzduMNqA3WjbGwHVjoCwQAhn6aCLeDs=;
+        b=IEnpwY4KTBGt8jSjbTjM2LL/0MvcA3ZXBDLTomBIqPvJ9TEbN6F4P8uZ2lwb6Ayeax
+         NVOVFtY4+D9gorLJb263YNQBbh73e+cqW19H9+kv/k64Dj3ELrPjPuVrUFn/oA4aZIaE
+         W9BpeI0+drHteblsuNeW+VdNabR51Y9PP0MJOtEQ0Vb8iZ1uSOvOFj2JkalTA/a1XD5C
+         h2oo5vmbtx8i/hue2WgFtctEZgxo9NdGYqcAbaBKQc15uB7BYty4wbU95zC+jSX5/CSi
+         ZdqkCXIjaiJI//azdkbcVDdoMIYd9UHRtEHsLmPRL7eNmLez2aKC7oFQ5AOw1wfvmUv/
+         7hTg==
+X-Gm-Message-State: AOAM531qjCgfSVg1JUwFGysgWGdkY1A/67UI5FjzHXdE7q0N6gpPplYJ
+        7p7W+ekydlQBtsYOGxgAGFU=
+X-Google-Smtp-Source: ABdhPJzgleKBQPpfNsJkCIT0b1MEwvXSjtSn6u3Qy1MPOFCIhV6AjsxvdIagPpEMB7h1s+qaMv8RoQ==
+X-Received: by 2002:aed:3b99:: with SMTP id r25mr6640502qte.315.1594760868524;
+        Tue, 14 Jul 2020 14:07:48 -0700 (PDT)
+Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
+        by smtp.gmail.com with ESMTPSA id m20sm21772838qkk.104.2020.07.14.14.07.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 14 Jul 2020 14:07:47 -0700 (PDT)
+From:   Arvind Sankar <nivedita@alum.mit.edu>
+X-Google-Original-From: Arvind Sankar <arvind@rani.riverdale.lan>
+Date:   Tue, 14 Jul 2020 17:07:45 -0400
+To:     Sedat Dilek <sedat.dilek@gmail.com>
+Cc:     Arvind Sankar <nivedita@alum.mit.edu>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Fangrui Song <maskray@google.com>,
+        Dmitry Golovin <dima@golovin.in>,
+        Clang-Built-Linux ML <clang-built-linux@googlegroups.com>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Daniel Kiper <daniel.kiper@oracle.com>,
+        Kees Cook <keescook@chromium.org>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        "H . J . Lu" <hjl@sourceware.org>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 0/7] x86/boot: Remove runtime relocations from
+ compressed kernel
+Message-ID: <20200714210745.GA918357@rani.riverdale.lan>
+References: <CA+icZUU88wYmyycthW7AQUZ72HGa9RWPZmxVS5Gm6UW=6ES9kA@mail.gmail.com>
+ <CA+icZUWHdsk9+wkTZOdDghM7pRZyk2vHgxpYx62vPooqohzbYw@mail.gmail.com>
+ <20200714192956.GA689174@rani.riverdale.lan>
+ <CA+icZUXoZzhUMRsVVexazd=oFK4vKa1KJN5=_KXz+fcYxcA4Rw@mail.gmail.com>
+ <CA+icZUXBggJtwtWmyXEwgu1WztrcTiLrZCW1_QqSw2SiThOkfQ@mail.gmail.com>
+ <20200714202100.GB902932@rani.riverdale.lan>
+ <CA+icZUVcyAfXqyAQp+bjb0bx5z2Q0Bfyt899AxJASXY-GCRCrA@mail.gmail.com>
+ <CA+icZUUtcQhzO=1KToJyhL0-kWFvV6Ow49u_28Ez9AhvkVjWEw@mail.gmail.com>
+ <20200714203537.GD902932@rani.riverdale.lan>
+ <CA+icZUX93x_vhG-j+H+ktC_vt1d0f-KWZ+0L+hf1dnr=0L9h7g@mail.gmail.com>
 MIME-Version: 1.0
-References: <20200712132634.138901-1-jolsa@kernel.org> <20200712132634.138901-3-jolsa@kernel.org>
-In-Reply-To: <20200712132634.138901-3-jolsa@kernel.org>
-From:   Ian Rogers <irogers@google.com>
-Date:   Tue, 14 Jul 2020 14:06:23 -0700
-Message-ID: <CAP-5=fU=WKHp5So8Wj+HossbjP1TL1gnvPczFQUK32eiuwP4SQ@mail.gmail.com>
-Subject: Re: [PATCH 02/18] perf metric: Add struct expr_id_data to keep expr value
-To:     Jiri Olsa <jolsa@kernel.org>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Michael Petlan <mpetlan@redhat.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Kajol Jain <kjain@linux.ibm.com>,
-        John Garry <john.garry@huawei.com>,
-        "Paul A. Clarke" <pc@us.ibm.com>,
-        Stephane Eranian <eranian@google.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <CA+icZUX93x_vhG-j+H+ktC_vt1d0f-KWZ+0L+hf1dnr=0L9h7g@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jul 12, 2020 at 6:26 AM Jiri Olsa <jolsa@kernel.org> wrote:
->
-> Adding struct expr_id_data to keep expr value
-> instead of just simple double pointer, so we can
-> store more data for ID in following changes.
->
-> Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+On Tue, Jul 14, 2020 at 10:43:11PM +0200, Sedat Dilek wrote:
+> If we move to LDFLAGS_vmlinux we can drop the "call ld-option" as both
+> linker GNU/ld.bfd and LLVM/lld.ld support this?
 
-Acked-by: Ian Rogers <irogers@google.com>
+No, because ld.bfd only started supporting it from v2.26, and the kernel
+aims to be buildable with v2.23.
 
-Thanks,
-Ian
+> 
+> Do we need to adjust the comments?
+>  # Compressed kernel should be built as PIE since it may be loaded at any
+>  # address by the bootloader
+> 
 
-> ---
->  tools/perf/tests/expr.c       |  3 ++-
->  tools/perf/util/expr.c        | 22 +++++++++++-----------
->  tools/perf/util/expr.h        |  4 ++++
->  tools/perf/util/metricgroup.c |  2 +-
->  4 files changed, 18 insertions(+), 13 deletions(-)
->
-> diff --git a/tools/perf/tests/expr.c b/tools/perf/tests/expr.c
-> index d13fc1dfd5ef..4d01051951cd 100644
-> --- a/tools/perf/tests/expr.c
-> +++ b/tools/perf/tests/expr.c
-> @@ -18,8 +18,9 @@ static int test(struct expr_parse_ctx *ctx, const char *e, double val2)
->
->  int test__expr(struct test *t __maybe_unused, int subtest __maybe_unused)
->  {
-> +       struct expr_id_data *val_ptr;
->         const char *p;
-> -       double val, *val_ptr;
-> +       double val;
->         int ret;
->         struct expr_parse_ctx ctx;
->
-> diff --git a/tools/perf/util/expr.c b/tools/perf/util/expr.c
-> index 9116a3a01eea..5d05f9765ed8 100644
-> --- a/tools/perf/util/expr.c
-> +++ b/tools/perf/util/expr.c
-> @@ -33,32 +33,32 @@ static bool key_equal(const void *key1, const void *key2,
->  }
->
->  /* Caller must make sure id is allocated */
-> -int expr__add_id_val(struct expr_parse_ctx *ctx, const char *name, double val)
-> +int expr__add_id_val(struct expr_parse_ctx *ctx, const char *id, double val)
->  {
-> -       double *val_ptr = NULL, *old_val = NULL;
-> +       struct expr_id_data *data_ptr = NULL, *old_data = NULL;
->         char *old_key = NULL;
->         int ret;
->
->         if (val != 0.0) {
-> -               val_ptr = malloc(sizeof(double));
-> -               if (!val_ptr)
-> +               data_ptr = malloc(sizeof(*data_ptr));
-> +               if (!data_ptr)
->                         return -ENOMEM;
-> -               *val_ptr = val;
-> +               data_ptr->val = val;
->         }
-> -       ret = hashmap__set(&ctx->ids, name, val_ptr,
-> -                          (const void **)&old_key, (void **)&old_val);
-> +       ret = hashmap__set(&ctx->ids, id, data_ptr,
-> +                          (const void **)&old_key, (void **)&old_data);
->         free(old_key);
-> -       free(old_val);
-> +       free(old_data);
->         return ret;
->  }
->
->  int expr__get_id(struct expr_parse_ctx *ctx, const char *id, double *val_ptr)
->  {
-> -       double *data;
-> +       struct expr_id_data *data;
->
->         if (!hashmap__find(&ctx->ids, id, (void **)&data))
->                 return -1;
-> -       *val_ptr = (data == NULL) ?  0.0 : *data;
-> +       *val_ptr = (data == NULL) ?  0.0 : data->val;
->         return 0;
->  }
->
-> @@ -119,7 +119,7 @@ int expr__parse(double *final_val, struct expr_parse_ctx *ctx,
->  int expr__find_other(const char *expr, const char *one,
->                      struct expr_parse_ctx *ctx, int runtime)
->  {
-> -       double *old_val = NULL;
-> +       struct expr_id_data *old_val = NULL;
->         char *old_key = NULL;
->         int ret = __expr__parse(NULL, ctx, expr, EXPR_OTHER, runtime);
->
-> diff --git a/tools/perf/util/expr.h b/tools/perf/util/expr.h
-> index bb6bac836b48..21fe5bd85718 100644
-> --- a/tools/perf/util/expr.h
-> +++ b/tools/perf/util/expr.h
-> @@ -15,6 +15,10 @@ struct expr_parse_ctx {
->         struct hashmap ids;
->  };
->
-> +struct expr_id_data {
-> +       double  val;
-> +};
-> +
->  struct expr_scanner_ctx {
->         int start_token;
->         int runtime;
-> diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.c
-> index 82fecb5a302d..df0356ec120d 100644
-> --- a/tools/perf/util/metricgroup.c
-> +++ b/tools/perf/util/metricgroup.c
-> @@ -138,7 +138,7 @@ static struct evsel *find_evsel_group(struct evlist *perf_evlist,
->                                       unsigned long *evlist_used)
->  {
->         struct evsel *ev, *current_leader = NULL;
-> -       double *val_ptr;
-> +       struct expr_id_data *val_ptr;
->         int i = 0, matched_events = 0, events_to_match;
->         const int idnum = (int)hashmap__size(&pctx->ids);
->
-> --
-> 2.25.4
->
+It looks fine, no?
