@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51F25C433FE
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 19:07:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00D0BC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 19:07:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 232B721D79
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 19:07:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA21E21D79
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 19:07:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594753645;
-	bh=UX1Wegt7Ui0ykQnZ5X64GWQ6m2Lm9rwaN7IFfHvRiWM=;
+	s=default; t=1594753651;
+	bh=xJ5eRZ2PiIgyAhVGGbcA8cN/Vr9pXMazVtnNM1VMiA4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZFCheIA/8BvdxM705tvW9DlIelRdCgBBMkoguj2XMI5IIMuLi4+Uv3yBwcxUy/RRg
-	 fAW72/qVPJZeAh6t4y4tLOLvkJHUfsKvbc6yrq3W8XLqH0iBoyPz+5nYdtBfdU4/f+
-	 Y9qWjAa5BFTQ5XFEW2qdgtmKp/gHyvdJn69t7FmQ=
+	b=mWvEbjq57Ruz2kUssRb0Iw8XKpOsTL5NEVKTRHgQsc9F1TCKt8E3thLgh+PddM3Tu
+	 QiNnjCr9gyBnyjLvRGegRPAt4xI0rFA9J77Hvh0LQZdv1wCbrmpLHD965CQkpQQt5n
+	 RLLqpiT8q1y0VXgpr0h7YmFLH/giTHl8f5xXTpnY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730490AbgGNSwO (ORCPT
+        id S1730684AbgGNTH3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 14:52:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48844 "EHLO mail.kernel.org"
+        Tue, 14 Jul 2020 15:07:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48678 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730476AbgGNSwM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 14:52:12 -0400
+        id S1729859AbgGNSwE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 14:52:04 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EF5E122B3B;
-        Tue, 14 Jul 2020 18:52:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3AA1922B49;
+        Tue, 14 Jul 2020 18:52:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594752731;
-        bh=UX1Wegt7Ui0ykQnZ5X64GWQ6m2Lm9rwaN7IFfHvRiWM=;
+        s=default; t=1594752723;
+        bh=xJ5eRZ2PiIgyAhVGGbcA8cN/Vr9pXMazVtnNM1VMiA4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cC0RS27jxtWt4DP3hrQMTvM8gpHWJ96ApOXfExlWhX9ZDM/O+ruppNmi4ECB2VtWP
-         upvl6KPK6X6qeVqTVhJNPglgiygh/RNLmupZE8v1kk9lIZnxAM1FvxMCEks2W0cMgg
-         2v8UASkq0MER2hTcLgtTbI0xh4Q6E/S0aIApWl10=
+        b=jY9963bqEJZueQ04s/nUzajOqj19TJLjUgIfLrwtVFziYdDdAQi5ctiDVCNaVOf3A
+         2k6MGZ4O5o7gzeuwFvMiJp+B6EwEQUoQ6j+2b9duTNtQI4OK2KYPK9/2WT4dQ2w75X
+         oBZcmAiU7rxYHMlgb68sPnSfHi8ZT3INI0eUxvRM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Dominik Czarnota <dominik.czarnota@trailofbits.com>,
-        Jessica Yu <jeyu@kernel.org>, Kees Cook <keescook@chromium.org>
-Subject: [PATCH 5.4 089/109] module: Do not expose section addresses to non-CAP_SYSLOG
-Date:   Tue, 14 Jul 2020 20:44:32 +0200
-Message-Id: <20200714184109.811303236@linuxfoundation.org>
+        stable@vger.kernel.org, James Morse <james.morse@arm.com>,
+        Steven Price <steven.price@arm.com>,
+        Marc Zyngier <maz@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 086/109] KVM: arm64: Fix kvm_reset_vcpu() return code being incorrect with SVE
+Date:   Tue, 14 Jul 2020 20:44:29 +0200
+Message-Id: <20200714184109.668790444@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200714184105.507384017@linuxfoundation.org>
 References: <20200714184105.507384017@linuxfoundation.org>
@@ -60,67 +60,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kees Cook <keescook@chromium.org>
+From: Steven Price <steven.price@arm.com>
 
-commit b25a7c5af9051850d4f3d93ca500056ab6ec724b upstream.
+If SVE is enabled then 'ret' can be assigned the return value of
+kvm_vcpu_enable_sve() which may be 0 causing future "goto out" sites to
+erroneously return 0 on failure rather than -EINVAL as expected.
 
-The printing of section addresses in /sys/module/*/sections/* was not
-using the correct credentials to evaluate visibility.
+Remove the initialisation of 'ret' and make setting the return value
+explicit to avoid this situation in the future.
 
-Before:
-
- # cat /sys/module/*/sections/.*text
- 0xffffffffc0458000
- ...
- # capsh --drop=CAP_SYSLOG -- -c "cat /sys/module/*/sections/.*text"
- 0xffffffffc0458000
- ...
-
-After:
-
- # cat /sys/module/*/sections/*.text
- 0xffffffffc0458000
- ...
- # capsh --drop=CAP_SYSLOG -- -c "cat /sys/module/*/sections/.*text"
- 0x0000000000000000
- ...
-
-Additionally replaces the existing (safe) /proc/modules check with
-file->f_cred for consistency.
-
-Reported-by: Dominik Czarnota <dominik.czarnota@trailofbits.com>
-Fixes: be71eda5383f ("module: Fix display of wrong module .text address")
+Fixes: 9a3cdf26e336 ("KVM: arm64/sve: Allow userspace to enable SVE for vcpus")
 Cc: stable@vger.kernel.org
-Tested-by: Jessica Yu <jeyu@kernel.org>
-Acked-by: Jessica Yu <jeyu@kernel.org>
-Signed-off-by: Kees Cook <keescook@chromium.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Reported-by: James Morse <james.morse@arm.com>
+Signed-off-by: Steven Price <steven.price@arm.com>
+Signed-off-by: Marc Zyngier <maz@kernel.org>
+Link: https://lore.kernel.org/r/20200617105456.28245-1-steven.price@arm.com
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/module.c |    6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ arch/arm64/kvm/reset.c |   10 +++++++---
+ 1 file changed, 7 insertions(+), 3 deletions(-)
 
---- a/kernel/module.c
-+++ b/kernel/module.c
-@@ -1527,8 +1527,8 @@ static ssize_t module_sect_read(struct f
- 	if (pos != 0)
- 		return -EINVAL;
+--- a/arch/arm64/kvm/reset.c
++++ b/arch/arm64/kvm/reset.c
+@@ -258,7 +258,7 @@ static int kvm_vcpu_enable_ptrauth(struc
+ int kvm_reset_vcpu(struct kvm_vcpu *vcpu)
+ {
+ 	const struct kvm_regs *cpu_reset;
+-	int ret = -EINVAL;
++	int ret;
+ 	bool loaded;
  
--	return sprintf(buf, "0x%px\n", kptr_restrict < 2 ?
--		       (void *)sattr->address : NULL);
-+	return sprintf(buf, "0x%px\n",
-+		       kallsyms_show_value(file->f_cred) ? (void *)sattr->address : NULL);
- }
+ 	/* Reset PMU outside of the non-preemptible section */
+@@ -281,15 +281,19 @@ int kvm_reset_vcpu(struct kvm_vcpu *vcpu
  
- static void free_sect_attrs(struct module_sect_attrs *sect_attrs)
-@@ -4394,7 +4394,7 @@ static int modules_open(struct inode *in
- 
- 	if (!err) {
- 		struct seq_file *m = file->private_data;
--		m->private = kallsyms_show_value(current_cred()) ? NULL : (void *)8ul;
-+		m->private = kallsyms_show_value(file->f_cred) ? NULL : (void *)8ul;
+ 	if (test_bit(KVM_ARM_VCPU_PTRAUTH_ADDRESS, vcpu->arch.features) ||
+ 	    test_bit(KVM_ARM_VCPU_PTRAUTH_GENERIC, vcpu->arch.features)) {
+-		if (kvm_vcpu_enable_ptrauth(vcpu))
++		if (kvm_vcpu_enable_ptrauth(vcpu)) {
++			ret = -EINVAL;
+ 			goto out;
++		}
  	}
  
- 	return err;
+ 	switch (vcpu->arch.target) {
+ 	default:
+ 		if (test_bit(KVM_ARM_VCPU_EL1_32BIT, vcpu->arch.features)) {
+-			if (!cpu_has_32bit_el1())
++			if (!cpu_has_32bit_el1()) {
++				ret = -EINVAL;
+ 				goto out;
++			}
+ 			cpu_reset = &default_regs_reset32;
+ 		} else {
+ 			cpu_reset = &default_regs_reset;
 
 
