@@ -2,181 +2,161 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BAC94C4345B
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 21:01:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06A94C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 21:01:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9515A2064C
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 21:01:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D25B22064C
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 21:01:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="YkXZdlKq"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="XcralwfL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727888AbgGNVAz (ORCPT
+        id S1728013AbgGNVBB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 17:00:55 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:57150 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726768AbgGNVAz (ORCPT
+        Tue, 14 Jul 2020 17:01:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59398 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727935AbgGNVBA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 17:00:55 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1594760453;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=Z00rvsVZTFdUuigrucb84GtZBYdoQhBpetY3yD6qCBI=;
-        b=YkXZdlKqaXriHXrTJur7VzwTxoXI3XtblHEy3ksDlZenCPkAGMm8Jjz5IHL0nlsFdV6FFP
-        LBO76X+nKhEke9Mppk8bZLgvSEOuD/Em/tkoyEBq24c57aRVQqoxqd/BSUha6h5lH0Y+f9
-        PE6BqQYs2WJAUXAk4tSt+ZUzdsE216w=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-170-eVLoMKjKOUiOF5BeLgCaCA-1; Tue, 14 Jul 2020 17:00:39 -0400
-X-MC-Unique: eVLoMKjKOUiOF5BeLgCaCA-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 505B52D0;
-        Tue, 14 Jul 2020 21:00:38 +0000 (UTC)
-Received: from madcap2.tricolour.ca (unknown [10.10.110.3])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 448597980F;
-        Tue, 14 Jul 2020 21:00:30 +0000 (UTC)
-Date:   Tue, 14 Jul 2020 17:00:27 -0400
-From:   Richard Guy Briggs <rgb@redhat.com>
-To:     Paul Moore <paul@paul-moore.com>
-Cc:     john.johansen@canonical.com,
-        Linux-Audit Mailing List <linux-audit@redhat.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux Security Module list 
-        <linux-security-module@vger.kernel.org>,
-        Eric Paris <eparis@parisplace.org>
-Subject: Re: [PATCH ghak84 v4] audit: purge audit_log_string from the
- intra-kernel audit API
-Message-ID: <20200714210027.me2ieywjfcsf4v5r@madcap2.tricolour.ca>
-References: <6effbbd4574407d6af21162e57d9102d5f8b02ed.1594664015.git.rgb@redhat.com>
- <CAHC9VhSyq7yKQqwvHL5syU9+TFki6-__WfCrvqewbnU3xpND4Q@mail.gmail.com>
- <20200714174353.ds7lj3iisy67t2zu@madcap2.tricolour.ca>
- <CAHC9VhQusQsdQc7EfdjdH5mp6qqqYVPHnG9nNhUhf3DS_cdWwA@mail.gmail.com>
+        Tue, 14 Jul 2020 17:01:00 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5AD2FC061794
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 14:01:00 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id z15so175086wrl.8
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 14:01:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=UgHePzwDWkj9USOlRyqZl2fpeHBfUUnRLMgbgOfnUNw=;
+        b=XcralwfLeQ7zj7+U3F2rSAPGT3V8zamxaPPIYWkdnVcg1eqJTtcBIzvMHPoh9SZOlN
+         P+OH+yjrTB/h8zYJDIOIwKL2Uab/VJC2d7uLCgECqsDHk/RuOurQx/rlbdRiQlI1cdXH
+         b77V2g6/Fp8ue7H6AeTCP5hxb8i8yFxzvwf/VYlt3Czd8VIQbplQ/KHogvebw3BARvGA
+         g/Rwirjizpgq7QoRm2E6MGGFZEj0oEU4o/gRnJcoHdQk0/Atr12T1jWx70vifMvObnQ4
+         R8EbHOurRCPlsJb5mU5p/My0E3ftHvacHOGbXQwL4o2ntH76gHDdOrKYJUObO3jiLYD6
+         ordg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=UgHePzwDWkj9USOlRyqZl2fpeHBfUUnRLMgbgOfnUNw=;
+        b=nCoWSAgGwKKdSS+cz7UVurGllsxCv6Dxe/5oSpyyqpxv2kofzY39ct+LAqNRXdwcLA
+         DEDG1x5uIVp0eePxTLH9SNkHL9THZLd4QBlhWu6TwPbjDpOJAV5wtWc/IY+lUI82S5xT
+         bw7pR1b4++iZYgEwXx5FDGxUd3TEvGt5SAGGsstsznZa8KxJ7jEWEIqUCCRiUReY9qZ7
+         bJO2mbujetpbkmSkg+rsCogZn4FU6eobGRYKgwImuGSvSPntB6PUEM9BynfD43iRC/cl
+         88v1tqTuRiFcn0Ue/3MPLEfvuZiQoPfd48bjwbYVe6pJAuUetSi17yWU2N5TlF+o98lF
+         jgnw==
+X-Gm-Message-State: AOAM530DbmKcaVZU1gipQhhfHJRzH/9gZtwiD4PxaFMNke7VWsSd2Ygt
+        viIzL0kVRfpzLSKm2lloUaaqug==
+X-Google-Smtp-Source: ABdhPJxrP4msc1UWDW+tsY/mSi27FFkqHu34o0CYWRyeqHZuSTP+UmUSIKZrgJtsQIqST40ul+ICCQ==
+X-Received: by 2002:adf:ff90:: with SMTP id j16mr7773895wrr.364.1594760458999;
+        Tue, 14 Jul 2020 14:00:58 -0700 (PDT)
+Received: from dell ([2.31.163.61])
+        by smtp.gmail.com with ESMTPSA id b184sm15426wmc.20.2020.07.14.14.00.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 14 Jul 2020 14:00:58 -0700 (PDT)
+Date:   Tue, 14 Jul 2020 22:00:56 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Robin Murphy <robin.murphy@arm.com>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Denis Sadykov <denis.m.sadykov@intel.com>,
+        Andy Grover <andrew.grover@intel.com>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Paul Diefenbaugh <paul.s.diefenbaugh@intel.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Dominik Brodowski <linux@brodo.de>
+Subject: Re: [PATCH 08/13] cpufreq: acpi-cpufreq: Take 'dummy' principle one
+ stage further
+Message-ID: <20200714210056.GF1398296@dell>
+References: <20200714145049.2496163-1-lee.jones@linaro.org>
+ <20200714145049.2496163-9-lee.jones@linaro.org>
+ <CAJZ5v0igiz-VmmDC2qsZ3AhqjGhM54LHMLeLdZ7Dr=h5Dm9Rrg@mail.gmail.com>
+ <8b2f7674-9e33-e09c-cf99-84c59edb9779@arm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <CAHC9VhQusQsdQc7EfdjdH5mp6qqqYVPHnG9nNhUhf3DS_cdWwA@mail.gmail.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <8b2f7674-9e33-e09c-cf99-84c59edb9779@arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-07-14 16:29, Paul Moore wrote:
-> On Tue, Jul 14, 2020 at 1:44 PM Richard Guy Briggs <rgb@redhat.com> wrote:
-> > On 2020-07-14 12:21, Paul Moore wrote:
-> > > On Mon, Jul 13, 2020 at 3:52 PM Richard Guy Briggs <rgb@redhat.com> wrote:
-> > > >
-> > > > audit_log_string() was inteded to be an internal audit function and
-> > > > since there are only two internal uses, remove them.  Purge all external
-> > > > uses of it by restructuring code to use an existing audit_log_format()
-> > > > or using audit_log_format().
-> > > >
-> > > > Please see the upstream issue
-> > > > https://github.com/linux-audit/audit-kernel/issues/84
-> > > >
-> > > > Signed-off-by: Richard Guy Briggs <rgb@redhat.com>
-> > > > ---
-> > > > Passes audit-testsuite.
-> > > >
-> > > > Changelog:
-> > > > v4
-> > > > - use double quotes in all replaced audit_log_string() calls
-> > > >
-> > > > v3
-> > > > - fix two warning: non-void function does not return a value in all control paths
-> > > >         Reported-by: kernel test robot <lkp@intel.com>
-> > > >
-> > > > v2
-> > > > - restructure to piggyback on existing audit_log_format() calls, checking quoting needs for each.
-> > > >
-> > > > v1 Vlad Dronov
-> > > > - https://github.com/nefigtut/audit-kernel/commit/dbbcba46335a002f44b05874153a85b9cc18aebf
-> > > >
-> > > >  include/linux/audit.h     |  5 -----
-> > > >  kernel/audit.c            |  4 ++--
-> > > >  security/apparmor/audit.c | 10 ++++------
-> > > >  security/apparmor/file.c  | 25 +++++++------------------
-> > > >  security/apparmor/ipc.c   | 46 +++++++++++++++++++++++-----------------------
-> > > >  security/apparmor/net.c   | 14 ++++++++------
-> > > >  security/lsm_audit.c      |  4 ++--
-> > > >  7 files changed, 46 insertions(+), 62 deletions(-)
-> > >
-> > > Thanks for restoring the quotes, just one question below ...
-> > >
-> > > > diff --git a/security/apparmor/ipc.c b/security/apparmor/ipc.c
-> > > > index 4ecedffbdd33..fe36d112aad9 100644
-> > > > --- a/security/apparmor/ipc.c
-> > > > +++ b/security/apparmor/ipc.c
-> > > > @@ -20,25 +20,23 @@
-> > > >
-> > > >  /**
-> > > >   * audit_ptrace_mask - convert mask to permission string
-> > > > - * @buffer: buffer to write string to (NOT NULL)
-> > > >   * @mask: permission mask to convert
-> > > > + *
-> > > > + * Returns: pointer to static string
-> > > >   */
-> > > > -static void audit_ptrace_mask(struct audit_buffer *ab, u32 mask)
-> > > > +static const char *audit_ptrace_mask(u32 mask)
-> > > >  {
-> > > >         switch (mask) {
-> > > >         case MAY_READ:
-> > > > -               audit_log_string(ab, "read");
-> > > > -               break;
-> > > > +               return "read";
-> > > >         case MAY_WRITE:
-> > > > -               audit_log_string(ab, "trace");
-> > > > -               break;
-> > > > +               return "trace";
-> > > >         case AA_MAY_BE_READ:
-> > > > -               audit_log_string(ab, "readby");
-> > > > -               break;
-> > > > +               return "readby";
-> > > >         case AA_MAY_BE_TRACED:
-> > > > -               audit_log_string(ab, "tracedby");
-> > > > -               break;
-> > > > +               return "tracedby";
-> > > >         }
-> > > > +       return "";
-> > >
-> > > Are we okay with this returning an empty string ("") in this case?
-> > > Should it be a question mark ("?")?
-> > >
-> > > My guess is that userspace parsing should be okay since it still has
-> > > quotes, I'm just not sure if we wanted to use a question mark as we do
-> > > in other cases where the field value is empty/unknown.
-> >
-> > Previously, it would have been an empty value, not even double quotes.
-> > "?" might be an improvement.
+On Tue, 14 Jul 2020, Robin Murphy wrote:
+
+> On 2020-07-14 17:03, Rafael J. Wysocki wrote:
+> > On Tue, Jul 14, 2020 at 4:51 PM Lee Jones <lee.jones@linaro.org> wrote:
+> > > 
+> > > If we fail to use a variable, even a 'dummy' one, then the compiler
+> > > complains that it is set but not used.  We know this is fine, so we
+> > > set it to its own value here.
+> > 
+> > Which is kind of ugly in my personal view.  I hope that the compiler
+> > will actually optimize the extra code away ...
+> > 
+> > > Fixes the following W=1 kernel build warning(s):
+> > 
+> > Well, "Makes the following ... warning(s) go away:" rather ...
 > 
-> Did you want to fix that now in this patch, or leave it to later?  As
-> I said above, I'm not too bothered by it with the quotes so either way
-> is fine by me.
+> Isn't that what we have __maybe_unused and __always_unused for?
 
-I'd defer to Steve, otherwise I'd say leave it, since there wasn't
-anything there before and this makes that more evident.
+Yes, that would be better.
 
-> John, I'm assuming you are okay with this patch?
-> 
-> -- 
-> paul moore
+I didn't know you could do that with standard variables.
 
-- RGB
+Will fix.
 
---
-Richard Guy Briggs <rgb@redhat.com>
-Sr. S/W Engineer, Kernel Security, Base Operating Systems
-Remote, Ottawa, Red Hat Canada
-IRC: rgb, SunRaycer
-Voice: +1.647.777.2635, Internal: (81) 32635
+> > >   drivers/cpufreq/acpi-cpufreq.c: In function ‘cpu_freq_read_intel’:
+> > >   drivers/cpufreq/acpi-cpufreq.c:247:11: warning: variable ‘dummy’ set but not used [-Wunused-but-set-variable]
+> > >   drivers/cpufreq/acpi-cpufreq.c: In function ‘cpu_freq_read_amd’:
+> > >   drivers/cpufreq/acpi-cpufreq.c:265:11: warning: variable ‘dummy’ set but not used [-Wunused-but-set-variable]
+> > > 
+> > > Cc: Andy Grover <andrew.grover@intel.com>
+> > > Cc: Paul Diefenbaugh <paul.s.diefenbaugh@intel.com>
+> > > Cc: Dominik Brodowski <linux@brodo.de>
+> > > Cc: Denis Sadykov <denis.m.sadykov@intel.com>
+> > > Signed-off-by: Lee Jones <lee.jones@linaro.org>
+> > > ---
+> > >   drivers/cpufreq/acpi-cpufreq.c | 2 ++
+> > >   1 file changed, 2 insertions(+)
+> > > 
+> > > diff --git a/drivers/cpufreq/acpi-cpufreq.c b/drivers/cpufreq/acpi-cpufreq.c
+> > > index 429e5a36c08a9..d38a693b48e03 100644
+> > > --- a/drivers/cpufreq/acpi-cpufreq.c
+> > > +++ b/drivers/cpufreq/acpi-cpufreq.c
+> > > @@ -247,6 +247,7 @@ static u32 cpu_freq_read_intel(struct acpi_pct_register *not_used)
+> > >          u32 val, dummy;
+> > > 
+> > >          rdmsr(MSR_IA32_PERF_CTL, val, dummy);
+> > > +       dummy &= dummy; /* Silence set but not used warning */
+> > >          return val;
+> > >   }
+> > > 
+> > > @@ -264,6 +265,7 @@ static u32 cpu_freq_read_amd(struct acpi_pct_register *not_used)
+> > >          u32 val, dummy;
+> > > 
+> > >          rdmsr(MSR_AMD_PERF_CTL, val, dummy);
+> > > +       dummy &= dummy; /* Silence set but not used warning */
+> > >          return val;
+> > >   }
+> > > 
+> > 
+> > _______________________________________________
+> > linux-arm-kernel mailing list
+> > linux-arm-kernel@lists.infradead.org
+> > http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+> > 
 
+-- 
+Lee Jones [李琼斯]
+Senior Technical Lead - Developer Services
+Linaro.org │ Open source software for Arm SoCs
+Follow Linaro: Facebook | Twitter | Blog
