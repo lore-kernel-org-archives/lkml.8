@@ -2,131 +2,128 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MIME_BASE64_TEXT,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53921C433E6
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 09:09:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1606CC433E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 09:04:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2C64B2076D
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 09:09:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DDEB021D79
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 09:04:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="ZoP53Kci"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726975AbgGNJJi (ORCPT
+        id S1726935AbgGNJEv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 05:09:38 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:42072 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725833AbgGNJJg (ORCPT
+        Tue, 14 Jul 2020 05:04:51 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:57139 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726801AbgGNJEt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 05:09:36 -0400
-Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06E94i4L059720;
-        Tue, 14 Jul 2020 05:09:28 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 32991e9cdw-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 14 Jul 2020 05:09:28 -0400
-Received: from m0098410.ppops.net (m0098410.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 06E95IZN063342;
-        Tue, 14 Jul 2020 05:09:27 -0400
-Received: from ppma03wdc.us.ibm.com (ba.79.3fa9.ip4.static.sl-reverse.com [169.63.121.186])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 32991e9cdb-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 14 Jul 2020 05:09:27 -0400
-Received: from pps.filterd (ppma03wdc.us.ibm.com [127.0.0.1])
-        by ppma03wdc.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 06E969bQ010626;
-        Tue, 14 Jul 2020 09:09:26 GMT
-Received: from b01cxnp23034.gho.pok.ibm.com (b01cxnp23034.gho.pok.ibm.com [9.57.198.29])
-        by ppma03wdc.us.ibm.com with ESMTP id 327528y4y3-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 14 Jul 2020 09:09:26 +0000
-Received: from b01ledav001.gho.pok.ibm.com (b01ledav001.gho.pok.ibm.com [9.57.199.106])
-        by b01cxnp23034.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 06E99PK748300430
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 14 Jul 2020 09:09:25 GMT
-Received: from b01ledav001.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id B06DD28059;
-        Tue, 14 Jul 2020 09:09:25 +0000 (GMT)
-Received: from b01ledav001.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 52CC428058;
-        Tue, 14 Jul 2020 09:09:21 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.199.38.35])
-        by b01ledav001.gho.pok.ibm.com (Postfix) with ESMTP;
-        Tue, 14 Jul 2020 09:09:21 +0000 (GMT)
-Subject: Re: [RFC v2 1/5] perf/pmu-events/jevents: Add enum to store
- aggregation like PerPkg
-To:     Jiri Olsa <jolsa@redhat.com>
-Cc:     acme@kernel.org, peterz@infradead.org, mingo@redhat.com,
-        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
-        pc@us.ibm.com, namhyung@kernel.org, ak@linux.intel.com,
-        yao.jin@linux.intel.com, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org, irogers@google.com,
-        maddy@linux.ibm.com, ravi.bangoria@linux.ibm.com,
-        anju@linux.vnet.ibm.com, kan.liang@linux.intel.com,
-        nasastry@in.ibm.com
-References: <20200707122314.624400-1-kjain@linux.ibm.com>
- <20200707122314.624400-2-kjain@linux.ibm.com> <20200712185534.GB147742@krava>
-From:   kajoljain <kjain@linux.ibm.com>
-Message-ID: <38d2fd54-41aa-61b0-c396-c58fc1da70da@linux.ibm.com>
-Date:   Tue, 14 Jul 2020 14:39:20 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Tue, 14 Jul 2020 05:04:49 -0400
+X-UUID: 0eec8e902a7a4aaa9281468b903c5f0a-20200714
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=gg/UxrARz1LjEmbIn/dsLyHmNcLosv+d6Ng22kKepIs=;
+        b=ZoP53Kci5eKwvUDN4BxhBNBw4kQ/iALBEdurBHkxQozBg8KZEsBbFScWIIbU99fWSo+pp1NyHqQex7HfPD68N1dsYg9j9YHcOP/Y6s4f+H9idWkPS4NlVmnYKX7uL9DgxNPrCfmGwCqmklF9l6TGdNNacs6wztRBXQCEn0Hb5Kc=;
+X-UUID: 0eec8e902a7a4aaa9281468b903c5f0a-20200714
+Received: from mtkexhb01.mediatek.inc [(172.21.101.102)] by mailgw01.mediatek.com
+        (envelope-from <hanks.chen@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 1945067045; Tue, 14 Jul 2020 17:04:43 +0800
+Received: from mtkcas07.mediatek.inc (172.21.101.84) by
+ mtkmbs01n1.mediatek.inc (172.21.101.68) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Tue, 14 Jul 2020 17:04:40 +0800
+Received: from mtkswgap22.mediatek.inc (172.21.77.33) by mtkcas07.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Tue, 14 Jul 2020 17:04:41 +0800
+From:   Hanks Chen <hanks.chen@mediatek.com>
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Sean Wang <sean.wang@kernel.org>
+CC:     mtk01761 <wendell.lin@mediatek.com>,
+        Andy Teng <andy.teng@mediatek.com>,
+        <linux-gpio@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <wsd_upstream@mediatek.com>,
+        CC Hwang <cc.hwang@mediatek.com>,
+        Loda Chou <loda.chou@mediatek.com>,
+        Hanks Chen <hanks.chen@mediatek.com>
+Subject: [PATCH 0/7] Add basic SoC Support for Mediatek MT6779 SoC
+Date:   Tue, 14 Jul 2020 17:04:32 +0800
+Message-ID: <1594717479-8160-1-git-send-email-hanks.chen@mediatek.com>
+X-Mailer: git-send-email 1.7.9.5
 MIME-Version: 1.0
-In-Reply-To: <20200712185534.GB147742@krava>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-07-14_01:2020-07-13,2020-07-14 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999
- suspectscore=0 spamscore=0 impostorscore=0 mlxscore=0 clxscore=1015
- malwarescore=0 adultscore=0 priorityscore=1501 lowpriorityscore=0
- bulkscore=0 phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2007140065
+Content-Type: text/plain
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+DQpDaGFuZ2Ugc2luY2Ugdjg6DQpDb21taXQgImR0LWJpbmRpbmdzOiBwaW5jdHJsOiBhZGQgYmlu
+ZGluZ3MgZm9yIE1lZGlhVGVrIg0KLS0gdXBkYXRlIHRoZSBmb3JtYXQNCkNvbW1pdCAiYXJtNjQ6
+IGR0czogYWRkIGR0cyBub2RlcyBmb3IgTVQ2Nzc5Ig0KLS0gZml4IHRoZSB0eXBvIGluIHVhcnQg
+bm9kZQ0KDQoNCkNoYW5nZSBzaW5jZSB2NzoNCkNvbW1pdCAiZHQtYmluZGluZ3M6IHBpbmN0cmw6
+IGFkZCBiaW5kaW5ncyBmb3IgTWVkaWFUZWsiDQotLSBmaXggdHlwbyBhbmQgY2hhbmdlIG9yZGVy
+IG9mIHBhdGNoDQpDb21taXQgImNsazogbWVkaWF0ZWs6IGFkZCBVQVJUMCBjbG9jayBzdXBwb3J0
+Ig0KLS0gYWRkIGZpeGVzIHRhZyBhbmQgcmVhbCBuYW1lDQpDb21taXQgImFybTY0OiBkdHM6IGFk
+ZCBkdHMgbm9kZXMgZm9yIE1UNjc3OSINCi0tIGV4cG9zZSBhbGwgdGhyZWUgVUFSVHMgaW4gdGhl
+IGR0c2kNCg0KDQpDaGFuZ2Ugc2luY2UgdjY6DQpDb21taXQgImR0LWJpbmRpbmdzOiBwaW5jdHJs
+OiBhZGQgYmluZGluZ3MgZm9yIE1lZGlhVGVrIg0KLS0gZml4IGZvcm1hdCBvZiBiaW5kaW5ncyBh
+bmQgYWRkIGludGVycnVwdCBkZWZpbml0aW9uLg0KQ29tbWl0ICJwaW5jdHJsOiBtZWRpYXRlazog
+dXBkYXRlIHBpbm11eCBkZWZpbml0aW9ucyBmb3IiDQotLSB1c2UgdGhlIHN0YW5kYXJkIGluY2x1
+ZGUgcGF0aA0KQ29tbWl0ICJwaW5jdHJsOiBtZWRpYXRlazogYXZvaWQgdmlydHVhbCBncGlvIHRy
+eWluZyB0byBzZXQiDQotLSByZW1vdmUgdW5uZWNlc3NhcnkgZXJyb3IgaGFuZGxlcg0KQ29tbWl0
+ICJwaW5jdHJsOiBtZWRpYXRlazogYWRkIHBpbmN0cmwgc3VwcG9ydCBmb3IgTVQ2Nzc5IFNvQyIN
+Ci0tIGFkZCBzb21lIHVzZWZ1bCBoZWxwIHRleHQgaW4ga2NvbmZpZw0KQ29tbWl0ICJjbGs6IG1l
+ZGlhdGVrOiBhZGQgVUFSVDAgY2xvY2sgc3VwcG9ydCINCi0tIGFkZCBVQVJUMCBjbG9jayBzdXBw
+b3J0DQpDb21taXQgImFybTY0OiBkdHM6IGFkZCBkdHMgbm9kZXMgZm9yIE1UNjc3OSINCi0tIGFk
+ZCAiYmF1ZCIgYW5kICJidXMiIGNsb2NrcyBmb3IgdWFydA0KLS0gYWRkIG5ldyBhcHByb2FjaCBm
+b3IgbW1zeXMNCg0KDQpDaGFuZ2Ugc2luY2UgdjU6DQoxLiByZW1vdmUgdW5uZWNlc3Nhcnkgc3Ry
+aW5nIGluIGNvbW1pdCBtZXNzYWdlDQoNCg0KQ2hhbmdlIHNpbmNlIHY0Og0KMS4gZml4IGZvcm1h
+dCBvZiBwaW5jdHJsIGJpbmRpbmdzDQoNCg0KQ2hhbmdlIHNpbmNlIHYzOg0KMS4gYWRkIGJpbmRp
+bmdzIGZvciAibWVkaWF0ZWssbXQ2Nzc5LXBpbmN0cmwiDQoyLiBhZGQgc29tZSBjb21tZW50cyBp
+bnRvIHRoZSBjb2RlIChlLmcuIHZpcnR1YWwgZ3BpbyAuLi4pDQozLiBhZGQgQWNrZWQtYnkgdGFn
+cw0KNC4gYWRkIHBtdSBub2RlIGludG8gZHRzDQo1LiBzdXBwb3J0IHBwaSBwYXJ0aXRpb24gYW5k
+IGZpeCBiYXNlIGFkZHJlc3MgaW4gZ2ljIG5vZGUgb2YgZHRzDQoNCg0KQ2hhbmdlIHNpbmNlIHYy
+Og0KMS4gYWRkIFJldmlld2VkLWJ5IHRhZ3MNCjIuIGZpeCBjaGVja3BhdGNoIHdhcm5pbmdzIHdp
+dGggc3RyaWN0IGxldmVsDQoNCg0KQ2hhbmdlIHNpbmNlIHYxOg0KZmlyc3QgcGF0Y2hzZXQNCg0K
+QW5keSBUZW5nICgxKToNCiAgZHQtYmluZGluZ3M6IHBpbmN0cmw6IGFkZCBiaW5kaW5ncyBmb3Ig
+TWVkaWFUZWsgTVQ2Nzc5IFNvQw0KDQpIYW5rcyBDaGVuICg2KToNCiAgcGluY3RybDogbWVkaWF0
+ZWs6IHVwZGF0ZSBwaW5tdXggZGVmaW5pdGlvbnMgZm9yIG10Njc3OQ0KICBwaW5jdHJsOiBtZWRp
+YXRlazogYXZvaWQgdmlydHVhbCBncGlvIHRyeWluZyB0byBzZXQgcmVnDQogIHBpbmN0cmw6IG1l
+ZGlhdGVrOiBhZGQgcGluY3RybCBzdXBwb3J0IGZvciBNVDY3NzkgU29DDQogIHBpbmN0cmw6IG1l
+ZGlhdGVrOiBhZGQgbXQ2Nzc5IGVpbnQgc3VwcG9ydA0KICBhcm02NDogZHRzOiBhZGQgZHRzIG5v
+ZGVzIGZvciBNVDY3NzkNCiAgY2xrOiBtZWRpYXRlazogYWRkIFVBUlQwIGNsb2NrIHN1cHBvcnQN
+Cg0KIC4uLi9iaW5kaW5ncy9waW5jdHJsL21lZGlhdGVrLG10Njc3OS1waW5jdHJsLnlhbWwgIHwg
+IDIwMyArKw0KIGFyY2gvYXJtNjQvYm9vdC9kdHMvbWVkaWF0ZWsvTWFrZWZpbGUgICAgICAgICAg
+ICAgIHwgICAgMSArDQogYXJjaC9hcm02NC9ib290L2R0cy9tZWRpYXRlay9tdDY3NzktZXZiLmR0
+cyAgICAgICAgfCAgIDMxICsNCiBhcmNoL2FybTY0L2Jvb3QvZHRzL21lZGlhdGVrL210Njc3OS5k
+dHNpICAgICAgICAgICB8ICAyNzEgKysrDQogZHJpdmVycy9jbGsvbWVkaWF0ZWsvY2xrLW10Njc3
+OS5jICAgICAgICAgICAgICAgICAgfCAgICAyICsNCiBkcml2ZXJzL3BpbmN0cmwvbWVkaWF0ZWsv
+S2NvbmZpZyAgICAgICAgICAgICAgICAgICB8ICAgMTIgKw0KIGRyaXZlcnMvcGluY3RybC9tZWRp
+YXRlay9NYWtlZmlsZSAgICAgICAgICAgICAgICAgIHwgICAgMSArDQogZHJpdmVycy9waW5jdHJs
+L21lZGlhdGVrL3BpbmN0cmwtbXQ2Nzc5LmMgICAgICAgICAgfCAgNzgzICsrKysrKysrDQogZHJp
+dmVycy9waW5jdHJsL21lZGlhdGVrL3BpbmN0cmwtbXRrLWNvbW1vbi12Mi5jICAgfCAgIDI1ICsN
+CiBkcml2ZXJzL3BpbmN0cmwvbWVkaWF0ZWsvcGluY3RybC1tdGstY29tbW9uLXYyLmggICB8ICAg
+IDEgKw0KIGRyaXZlcnMvcGluY3RybC9tZWRpYXRlay9waW5jdHJsLW10ay1tdDY3NzkuaCAgICAg
+IHwgMjA4NSArKysrKysrKysrKysrKysrKysrKw0KIGRyaXZlcnMvcGluY3RybC9tZWRpYXRlay9w
+aW5jdHJsLXBhcmlzLmMgICAgICAgICAgIHwgICAgNyArDQogaW5jbHVkZS9kdC1iaW5kaW5ncy9w
+aW5jdHJsL210Njc3OS1waW5mdW5jLmggICAgICAgfCAxMjQyICsrKysrKysrKysrKw0KIDEzIGZp
+bGVzIGNoYW5nZWQsIDQ2NjQgaW5zZXJ0aW9ucygrKQ0KIGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1
+bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcGluY3RybC9tZWRpYXRlayxtdDY3NzktcGlu
+Y3RybC55YW1sDQogY3JlYXRlIG1vZGUgMTAwNjQ0IGFyY2gvYXJtNjQvYm9vdC9kdHMvbWVkaWF0
+ZWsvbXQ2Nzc5LWV2Yi5kdHMNCiBjcmVhdGUgbW9kZSAxMDA2NDQgYXJjaC9hcm02NC9ib290L2R0
+cy9tZWRpYXRlay9tdDY3NzkuZHRzaQ0KIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL3BpbmN0
+cmwvbWVkaWF0ZWsvcGluY3RybC1tdDY3NzkuYw0KIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJz
+L3BpbmN0cmwvbWVkaWF0ZWsvcGluY3RybC1tdGstbXQ2Nzc5LmgNCiBjcmVhdGUgbW9kZSAxMDA2
+NDQgaW5jbHVkZS9kdC1iaW5kaW5ncy9waW5jdHJsL210Njc3OS1waW5mdW5jLmgNCg0KLS0gDQox
+LjcuOS41DQo=
 
-
-On 7/13/20 12:25 AM, Jiri Olsa wrote:
-> On Tue, Jul 07, 2020 at 05:53:10PM +0530, Kajol Jain wrote:
-> 
-> SNIP
-> 
->>  			}
->>  
->> diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
->> index 93fe72a9dc0b..3cafbb320d68 100644
->> --- a/tools/perf/util/pmu.c
->> +++ b/tools/perf/util/pmu.c
->> @@ -306,7 +306,7 @@ static bool perf_pmu_merge_alias(struct perf_pmu_alias *newalias,
->>  static int __perf_pmu__new_alias(struct list_head *list, char *dir, char *name,
->>  				 char *desc, char *val,
->>  				 char *long_desc, char *topic,
->> -				 char *unit, char *perpkg,
->> +				 char *unit, char *aggr_mode,
->>  				 char *metric_expr,
->>  				 char *metric_name,
->>  				 char *deprecated)
->> @@ -378,7 +378,7 @@ static int __perf_pmu__new_alias(struct list_head *list, char *dir, char *name,
->>  			return -1;
->>  		snprintf(alias->unit, sizeof(alias->unit), "%s", unit);
->>  	}
->> -	alias->per_pkg = perpkg && sscanf(perpkg, "%d", &num) == 1 && num == 1;
->> +	alias->per_pkg = aggr_mode && sscanf(aggr_mode, "%d", &num) == 1 && num == 1;
-> 
-> should you rather use 'num == PerPkg' instead 'num == 1' ?
-
-Hi Jiri,
-     Thanks for reviewing the patchset. Sure I will update it.
-
-Thanks,
-Kajol Jain
-> 
-> jirka
-> 
