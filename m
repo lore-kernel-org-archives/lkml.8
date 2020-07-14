@@ -2,116 +2,101 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30FCDC433E2
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 09:42:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17E39C433E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 09:41:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0840921D7A
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 09:42:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D953720EDD
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 09:41:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="cE91BZeY"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Lj7MOBP1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726748AbgGNJmJ (ORCPT
+        id S1726492AbgGNJlp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 05:42:09 -0400
-Received: from mail29.static.mailgun.info ([104.130.122.29]:11180 "EHLO
-        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726187AbgGNJmJ (ORCPT
+        Tue, 14 Jul 2020 05:41:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37538 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725816AbgGNJlp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 05:42:09 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1594719729; h=Content-Type: MIME-Version: Message-ID:
- In-Reply-To: Date: References: Subject: Cc: To: From: Sender;
- bh=rwaiPjJK4tdDLIrGur1Wip379yC4QzqC1DFY1MsdhpI=; b=cE91BZeYSoAVFTZX9/Olol/CSa281xtxuDAgmckk81+GrA21bNsImCb1V8OzvyXofBnpgDs3
- 6B1HX2y594Vqf1so3LBmj6kw+TW1MQq9z3RACbEnEnyuqEBqa2jqMFZlaZgvRG4XvzZoEqQZ
- X9O8ZNqS0wK1ZeKWWwZjwTwLuCo=
-X-Mailgun-Sending-Ip: 104.130.122.29
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n08.prod.us-west-2.postgun.com with SMTP id
- 5f0d7de7ee6926bb4f054441 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 14 Jul 2020 09:41:59
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id DC794C433A1; Tue, 14 Jul 2020 09:41:58 +0000 (UTC)
-Received: from tynnyri.adurom.net (tynnyri.adurom.net [51.15.11.48])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: kvalo)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 6DEE0C433CB;
-        Tue, 14 Jul 2020 09:41:55 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 6DEE0C433CB
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
-From:   Kalle Valo <kvalo@codeaurora.org>
-To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-Cc:     linux-kernel@vger.kernel.org,
-        Arend van Spriel <arend.vanspriel@broadcom.com>,
-        Franky Lin <franky.lin@broadcom.com>,
-        Hante Meuleman <hante.meuleman@broadcom.com>,
-        Chi-Hsien Lin <chi-hsien.lin@cypress.com>,
-        Wright Feng <wright.feng@cypress.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        linux-wireless@vger.kernel.org,
-        brcm80211-dev-list.pdl@broadcom.com,
-        brcm80211-dev-list@cypress.com, netdev@vger.kernel.org
-Subject: Re: [PATCH] brcmfmac: set timeout value when configuring power save
-References: <20200707155410.12123-1-nsaenzjulienne@suse.de>
-Date:   Tue, 14 Jul 2020 12:41:52 +0300
-In-Reply-To: <20200707155410.12123-1-nsaenzjulienne@suse.de> (Nicolas Saenz
-        Julienne's message of "Tue, 7 Jul 2020 17:54:10 +0200")
-Message-ID: <87blkicu1r.fsf@tynnyri.adurom.net>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+        Tue, 14 Jul 2020 05:41:45 -0400
+Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BC4AEC061755
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 02:41:44 -0700 (PDT)
+Received: by mail-ej1-x642.google.com with SMTP id a21so670150ejj.10
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 02:41:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=t1goKmWs8WiSF1nT1eZt9VQtP+wqANJIMbkSLOmzlPQ=;
+        b=Lj7MOBP1AU6sec/aLVxEwKwFNHW1+LgfjNd1gHtD5gj3aYl86ve5a5wgv1mwZUp0H9
+         ljEPVpeZChpI1ATeOu4SDEAtW+B9Qbf03GfbWiwbPB6G0vaQXaIdPSKaFpmVW5poCs7C
+         EHSL2Q4E5taLV3/3/5YqegTuhmroBibSlydMo5obrYbqm/dVtrAMWSz56HTPSqnCc5hB
+         q/xePnzX0V91pjXFZ8pb9VbLqRBg5yk0oiRJJ0AkNNVOVJthZwhTNR0A8mj8TTbw5ygt
+         iJ5f8O84EVlziJ7MdZmdkRRBRNKU14Fb76/8naQiTA6UCQyD6NVkvXv5WZNPpzUCyPb7
+         oYEw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=t1goKmWs8WiSF1nT1eZt9VQtP+wqANJIMbkSLOmzlPQ=;
+        b=G9GqbJ5EdU6SQutT2gOkjfniUd9yxo1dTrJPHpEyDShVW51OyVYbR6Md0wrqosu7V1
+         QGSwEtxhX9eICAW1Z03+NGFaosCY6GpclXsjWHRHmgcc2q/xpOFVfcf1ZSGCECDG93Vu
+         wXfQJlR2FM9Y27dXhZ+lfj+Cf5awxIzkiqUZBo8VrDxQq9xLx4FALX7rtOUG2KIJYw52
+         sv6qU9oUZCrT3rcatW2IoxuhwMcwBOr7J5w8RkGQgSx1vhoeaIaP6UhDH0m2xLw+RgWE
+         4oGzFEmtUnlPcy3JzpMM0RKLOgahPavkudXDe1SC8hbEkPt62PpKvXcOqzI9Y2QbKzlD
+         37Ww==
+X-Gm-Message-State: AOAM533wrapaKHVA2rhz5FkYt3IYT7fY4DOl6nTtJf02DgkGj7pgYUiM
+        x0aPg4Jo7557jLL1c6lzjPw=
+X-Google-Smtp-Source: ABdhPJzbHyXdOB+4r2vLVBSv+RpNvQdu/saLh4j/ZuePIca6/mGkdLW6cXaTsWHJzjqV7Xv/jXVqqA==
+X-Received: by 2002:a17:906:4341:: with SMTP id z1mr3638997ejm.392.1594719703396;
+        Tue, 14 Jul 2020 02:41:43 -0700 (PDT)
+Received: from localhost ([62.96.65.119])
+        by smtp.gmail.com with ESMTPSA id cw14sm14077959edb.88.2020.07.14.02.41.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 14 Jul 2020 02:41:42 -0700 (PDT)
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Andy Whitcroft <apw@canonical.com>, Joe Perches <joe@perches.com>
+Cc:     Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org
+Subject: [PATCH] checkpatch.pl: Allow '+' in compatible strings
+Date:   Tue, 14 Jul 2020 11:41:41 +0200
+Message-Id: <20200714094141.147418-1-thierry.reding@gmail.com>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Nicolas Saenz Julienne <nsaenzjulienne@suse.de> writes:
+From: Thierry Reding <treding@nvidia.com>
 
-> Set the timeout value as per cfg80211's set_power_mgmt() request. If the
-> requested value value is left undefined we set it to 2 seconds, the
-> maximum supported value.
->
-> Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-> ---
->
-> Note: I got the 2 seconds value from the Raspberry Pi downstream kernel.
->
->  .../wireless/broadcom/brcm80211/brcmfmac/cfg80211.c    | 10 ++++++++++
->  1 file changed, 10 insertions(+)
->
-> diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/cfg80211.c b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/cfg80211.c
-> index a757abd7a599..15578c6e87cd 100644
-> --- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/cfg80211.c
-> +++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/cfg80211.c
-> @@ -84,6 +84,8 @@
->  
->  #define BRCMF_ND_INFO_TIMEOUT		msecs_to_jiffies(2000)
->  
-> +#define BRCMF_PS_MAX_TIMEOUT_MS		2000
-> +
->  #define BRCMF_ASSOC_PARAMS_FIXED_SIZE \
->  	(sizeof(struct brcmf_assoc_params_le) - sizeof(u16))
->  
-> @@ -2941,6 +2943,14 @@ brcmf_cfg80211_set_power_mgmt(struct wiphy *wiphy, struct net_device *ndev,
->  		else
->  			bphy_err(drvr, "error (%d)\n", err);
->  	}
-> +
-> +	if ((u32)timeout > BRCMF_PS_MAX_TIMEOUT_MS)
-> +		timeout = BRCMF_PS_MAX_TIMEOUT_MS;
+The current checks will interpret a '+' character as special because
+they use regular expression matching. Escape the '+' character if it
+appears in a compatible string.
 
-Wouldn't min_t() be better? Then you won't need the ugly cast either.
+Signed-off-by: Thierry Reding <treding@nvidia.com>
+---
+ scripts/checkpatch.pl | 1 +
+ 1 file changed, 1 insertion(+)
 
+diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
+index 4c820607540b..8104d0736e7f 100755
+--- a/scripts/checkpatch.pl
++++ b/scripts/checkpatch.pl
+@@ -3145,6 +3145,7 @@ sub process {
+ 			my $vp_file = $dt_path . "vendor-prefixes.yaml";
+ 
+ 			foreach my $compat (@compats) {
++				$compat =~ s/\+/\\+/;
+ 				my $compat2 = $compat;
+ 				$compat2 =~ s/\,[a-zA-Z0-9]*\-/\,<\.\*>\-/;
+ 				my $compat3 = $compat;
 -- 
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+2.27.0
+
