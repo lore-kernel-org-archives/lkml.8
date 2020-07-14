@@ -7,24 +7,24 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2790CC433F1
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 12:17:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02789C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 12:17:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 06FC02068F
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 12:17:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB6B3217A0
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 12:17:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728806AbgGNMRR (ORCPT
+        id S1729009AbgGNMRM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 08:17:17 -0400
-Received: from 8bytes.org ([81.169.241.247]:52864 "EHLO theia.8bytes.org"
+        Tue, 14 Jul 2020 08:17:12 -0400
+Received: from 8bytes.org ([81.169.241.247]:52886 "EHLO theia.8bytes.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728199AbgGNMKm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 08:10:42 -0400
+        id S1728224AbgGNMKn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 08:10:43 -0400
 Received: from cap.home.8bytes.org (p5b006776.dip0.t-ipconnect.de [91.0.103.118])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
         (No client certificate requested)
-        by theia.8bytes.org (Postfix) with ESMTPSA id 737065DF;
-        Tue, 14 Jul 2020 14:10:39 +0200 (CEST)
+        by theia.8bytes.org (Postfix) with ESMTPSA id 0628F6A7;
+        Tue, 14 Jul 2020 14:10:41 +0200 (CEST)
 From:   Joerg Roedel <joro@8bytes.org>
 To:     x86@kernel.org
 Cc:     Joerg Roedel <joro@8bytes.org>, Joerg Roedel <jroedel@suse.de>,
@@ -45,9 +45,9 @@ Cc:     Joerg Roedel <joro@8bytes.org>, Joerg Roedel <jroedel@suse.de>,
         Martin Radev <martin.b.radev@gmail.com>,
         linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
         virtualization@lists.linux-foundation.org
-Subject: [PATCH v4 12/75] x86/boot/compressed/64: Add IDT Infrastructure
-Date:   Tue, 14 Jul 2020 14:08:14 +0200
-Message-Id: <20200714120917.11253-13-joro@8bytes.org>
+Subject: [PATCH v4 15/75] x86/boot/compressed/64: Always switch to own page-table
+Date:   Tue, 14 Jul 2020 14:08:17 +0200
+Message-Id: <20200714120917.11253-16-joro@8bytes.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200714120917.11253-1-joro@8bytes.org>
 References: <20200714120917.11253-1-joro@8bytes.org>
@@ -60,259 +60,138 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Joerg Roedel <jroedel@suse.de>
 
-Add code needed to setup an IDT in the early pre-decompression
-boot-code. The IDT is loaded first in startup_64, which is after
-EfiExitBootServices() has been called, and later reloaded when the
-kernel image has been relocated to the end of the decompression area.
+When booted through startup_64 the kernel keeps running on the EFI
+page-table until the KASLR code sets up its own page-table. Without
+KASLR the pre-decompression boot code never switches off the EFI
+page-table. Change that by unconditionally switching to a kernel
+controlled page-table after relocation.
 
-This allows to setup different IDT handlers before and after the
-relocation.
+This makes sure we can make changes to the mapping when necessary, for
+example map pages unencrypted in SEV and SEV-ES guests.
+
+Also remove the debug_putstr() calls in initialize_identity_maps()
+because the function now runs before console_init() is called.
 
 Signed-off-by: Joerg Roedel <jroedel@suse.de>
 ---
- arch/x86/boot/compressed/Makefile          |  1 +
- arch/x86/boot/compressed/head_64.S         | 25 +++++++-
- arch/x86/boot/compressed/idt_64.c          | 44 ++++++++++++++
- arch/x86/boot/compressed/idt_handlers_64.S | 70 ++++++++++++++++++++++
- arch/x86/boot/compressed/misc.h            |  5 ++
- arch/x86/include/asm/desc_defs.h           |  3 +
- 6 files changed, 147 insertions(+), 1 deletion(-)
- create mode 100644 arch/x86/boot/compressed/idt_64.c
- create mode 100644 arch/x86/boot/compressed/idt_handlers_64.S
+ arch/x86/boot/compressed/head_64.S      |  3 +-
+ arch/x86/boot/compressed/ident_map_64.c | 51 +++++++++++++++----------
+ arch/x86/boot/compressed/kaslr.c        |  3 --
+ 3 files changed, 32 insertions(+), 25 deletions(-)
 
-diff --git a/arch/x86/boot/compressed/Makefile b/arch/x86/boot/compressed/Makefile
-index 95ac85b8ef27..46928cb90d19 100644
---- a/arch/x86/boot/compressed/Makefile
-+++ b/arch/x86/boot/compressed/Makefile
-@@ -84,6 +84,7 @@ vmlinux-objs-$(CONFIG_EARLY_PRINTK) += $(obj)/early_serial_console.o
- vmlinux-objs-$(CONFIG_RANDOMIZE_BASE) += $(obj)/kaslr.o
- ifdef CONFIG_X86_64
- 	vmlinux-objs-$(CONFIG_RANDOMIZE_BASE) += $(obj)/kaslr_64.o
-+	vmlinux-objs-y += $(obj)/idt_64.o $(obj)/idt_handlers_64.o
- 	vmlinux-objs-y += $(obj)/mem_encrypt.o
- 	vmlinux-objs-y += $(obj)/pgtable_64.o
- endif
 diff --git a/arch/x86/boot/compressed/head_64.S b/arch/x86/boot/compressed/head_64.S
-index 97d37f0a34f5..4174d2f97b29 100644
+index 4174d2f97b29..36f18d5592f4 100644
 --- a/arch/x86/boot/compressed/head_64.S
 +++ b/arch/x86/boot/compressed/head_64.S
-@@ -33,6 +33,7 @@
- #include <asm/processor-flags.h>
- #include <asm/asm-offsets.h>
- #include <asm/bootparam.h>
-+#include <asm/desc_defs.h>
- #include "pgtable.h"
- 
- /*
-@@ -410,6 +411,10 @@ SYM_CODE_START(startup_64)
- 
- .Lon_kernel_cs:
- 
-+	pushq	%rsi
-+	call	load_stage1_idt
-+	popq	%rsi
-+
- 	/*
- 	 * paging_prepare() sets up the trampoline and checks if we need to
- 	 * enable 5-level paging.
-@@ -537,6 +542,13 @@ SYM_FUNC_START_LOCAL_NOALIGN(.Lrelocated)
- 	shrq	$3, %rcx
+@@ -543,10 +543,11 @@ SYM_FUNC_START_LOCAL_NOALIGN(.Lrelocated)
  	rep	stosq
  
-+/*
-+ * Load stage2 IDT
-+ */
-+	pushq	%rsi
-+	call	load_stage2_idt
-+	popq	%rsi
-+
  /*
-  * Do the extraction, and jump to the new kernel..
+- * Load stage2 IDT
++ * Load stage2 IDT and switch to our own page-table
   */
-@@ -690,10 +702,21 @@ SYM_DATA_START_LOCAL(gdt)
- 	.quad   0x0000000000000000	/* TS continued */
- SYM_DATA_END_LABEL(gdt, SYM_L_LOCAL, gdt_end)
+ 	pushq	%rsi
+ 	call	load_stage2_idt
++	call	initialize_identity_maps
+ 	popq	%rsi
  
-+SYM_DATA_START(boot_idt_desc)
-+	.word	boot_idt_end - boot_idt
-+	.quad	0
-+SYM_DATA_END(boot_idt_desc)
-+	.balign 8
-+SYM_DATA_START(boot_idt)
-+	.rept	BOOT_IDT_ENTRIES
-+	.quad	0
-+	.quad	0
-+	.endr
-+SYM_DATA_END_LABEL(boot_idt, SYM_L_GLOBAL, boot_idt_end)
-+
- #ifdef CONFIG_EFI_STUB
- SYM_DATA(image_offset, .long 0)
- #endif
--
- #ifdef CONFIG_EFI_MIXED
- SYM_DATA_LOCAL(efi32_boot_args, .long 0, 0, 0)
- SYM_DATA(efi_is64, .byte 1)
-diff --git a/arch/x86/boot/compressed/idt_64.c b/arch/x86/boot/compressed/idt_64.c
-new file mode 100644
-index 000000000000..082cd6bca033
---- /dev/null
-+++ b/arch/x86/boot/compressed/idt_64.c
-@@ -0,0 +1,44 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+#include <asm/trap_pf.h>
-+#include <asm/segment.h>
-+#include <asm/trapnr.h>
-+#include "misc.h"
-+
-+static void set_idt_entry(int vector, void (*handler)(void))
-+{
-+	unsigned long address = (unsigned long)handler;
-+	gate_desc entry;
-+
-+	memset(&entry, 0, sizeof(entry));
-+
-+	entry.offset_low    = (u16)(address & 0xffff);
-+	entry.segment       = __KERNEL_CS;
-+	entry.bits.type     = GATE_TRAP;
-+	entry.bits.p        = 1;
-+	entry.offset_middle = (u16)((address >> 16) & 0xffff);
-+	entry.offset_high   = (u32)(address >> 32);
-+
-+	memcpy(&boot_idt[vector], &entry, sizeof(entry));
-+}
-+
-+/* Have this here so we don't need to include <asm/desc.h> */
-+static void load_boot_idt(const struct desc_ptr *dtr)
-+{
-+	asm volatile("lidt %0"::"m" (*dtr));
-+}
-+
-+/* Setup IDT before kernel jumping to  .Lrelocated */
-+void load_stage1_idt(void)
-+{
-+	boot_idt_desc.address = (unsigned long)boot_idt;
-+
-+	load_boot_idt(&boot_idt_desc);
-+}
-+
-+/* Setup IDT after kernel jumping to  .Lrelocated */
-+void load_stage2_idt(void)
-+{
-+	boot_idt_desc.address = (unsigned long)boot_idt;
-+
-+	load_boot_idt(&boot_idt_desc);
-+}
-diff --git a/arch/x86/boot/compressed/idt_handlers_64.S b/arch/x86/boot/compressed/idt_handlers_64.S
-new file mode 100644
-index 000000000000..36dee2f40a8b
---- /dev/null
-+++ b/arch/x86/boot/compressed/idt_handlers_64.S
-@@ -0,0 +1,70 @@
-+/* SPDX-License-Identifier: GPL-2.0-only */
+ /*
+diff --git a/arch/x86/boot/compressed/ident_map_64.c b/arch/x86/boot/compressed/ident_map_64.c
+index e3d980ae9c2b..ecf9353b064d 100644
+--- a/arch/x86/boot/compressed/ident_map_64.c
++++ b/arch/x86/boot/compressed/ident_map_64.c
+@@ -86,9 +86,31 @@ phys_addr_t physical_mask = (1ULL << __PHYSICAL_MASK_SHIFT) - 1;
+  */
+ static struct x86_mapping_info mapping_info;
+ 
 +/*
-+ * Early IDT handler entry points
-+ *
-+ * Copyright (C) 2019 SUSE
-+ *
-+ * Author: Joerg Roedel <jroedel@suse.de>
++ * Adds the specified range to what will become the new identity mappings.
++ * Once all ranges have been added, the new mapping is activated by calling
++ * finalize_identity_maps() below.
 + */
++void add_identity_map(unsigned long start, unsigned long size)
++{
++	unsigned long end = start + size;
 +
-+#include <asm/segment.h>
++	/* Align boundary to 2M. */
++	start = round_down(start, PMD_SIZE);
++	end = round_up(end, PMD_SIZE);
++	if (start >= end)
++		return;
 +
-+/* For ORIG_RAX */
-+#include "../../entry/calling.h"
++	/* Build the mapping. */
++	kernel_ident_mapping_init(&mapping_info, (pgd_t *)top_level_pgt,
++				  start, end);
++}
 +
-+.macro EXCEPTION_HANDLER name function error_code=0
-+SYM_FUNC_START(\name)
+ /* Locates and clears a region for a new top level page table. */
+ void initialize_identity_maps(void)
+ {
++	unsigned long start, size;
 +
-+	/* Build pt_regs */
-+	.if \error_code == 0
-+	pushq   $0
-+	.endif
-+
-+	pushq   %rdi
-+	pushq   %rsi
-+	pushq   %rdx
-+	pushq   %rcx
-+	pushq   %rax
-+	pushq   %r8
-+	pushq   %r9
-+	pushq   %r10
-+	pushq   %r11
-+	pushq   %rbx
-+	pushq   %rbp
-+	pushq   %r12
-+	pushq   %r13
-+	pushq   %r14
-+	pushq   %r15
-+
-+	/* Call handler with pt_regs */
-+	movq    %rsp, %rdi
-+	/* Error code is second parameter */
-+	movq	ORIG_RAX(%rsp), %rsi
-+	call    \function
-+
-+	/* Restore regs */
-+	popq    %r15
-+	popq    %r14
-+	popq    %r13
-+	popq    %r12
-+	popq    %rbp
-+	popq    %rbx
-+	popq    %r11
-+	popq    %r10
-+	popq    %r9
-+	popq    %r8
-+	popq    %rax
-+	popq    %rcx
-+	popq    %rdx
-+	popq    %rsi
-+	popq    %rdi
-+
-+	/* Remove error code and return */
-+	addq    $8, %rsp
-+
-+	iretq
-+SYM_FUNC_END(\name)
-+	.endm
-+
-+	.text
-+	.code64
-diff --git a/arch/x86/boot/compressed/misc.h b/arch/x86/boot/compressed/misc.h
-index 726e264410ff..062ae3ae6930 100644
---- a/arch/x86/boot/compressed/misc.h
-+++ b/arch/x86/boot/compressed/misc.h
-@@ -23,6 +23,7 @@
- #include <asm/page.h>
- #include <asm/boot.h>
- #include <asm/bootparam.h>
-+#include <asm/desc_defs.h>
+ 	/* If running as an SEV guest, the encryption mask is required. */
+ 	set_sev_encryption_mask();
  
- #define BOOT_CTYPE_H
- #include <linux/acpi.h>
-@@ -133,4 +134,8 @@ int count_immovable_mem_regions(void);
- static inline int count_immovable_mem_regions(void) { return 0; }
- #endif
+@@ -121,37 +143,24 @@ void initialize_identity_maps(void)
+ 	 */
+ 	top_level_pgt = read_cr3_pa();
+ 	if (p4d_offset((pgd_t *)top_level_pgt, 0) == (p4d_t *)_pgtable) {
+-		debug_putstr("booted via startup_32()\n");
+ 		pgt_data.pgt_buf = _pgtable + BOOT_INIT_PGT_SIZE;
+ 		pgt_data.pgt_buf_size = BOOT_PGT_SIZE - BOOT_INIT_PGT_SIZE;
+ 		memset(pgt_data.pgt_buf, 0, pgt_data.pgt_buf_size);
+ 	} else {
+-		debug_putstr("booted via startup_64()\n");
+ 		pgt_data.pgt_buf = _pgtable;
+ 		pgt_data.pgt_buf_size = BOOT_PGT_SIZE;
+ 		memset(pgt_data.pgt_buf, 0, pgt_data.pgt_buf_size);
+ 		top_level_pgt = (unsigned long)alloc_pgt_page(&pgt_data);
+ 	}
+-}
  
-+/* idt_64.c */
-+extern gate_desc boot_idt[BOOT_IDT_ENTRIES];
-+extern struct desc_ptr boot_idt_desc;
-+
- #endif /* BOOT_COMPRESSED_MISC_H */
-diff --git a/arch/x86/include/asm/desc_defs.h b/arch/x86/include/asm/desc_defs.h
-index a91f3b6e4f2a..5621fb3f2d1a 100644
---- a/arch/x86/include/asm/desc_defs.h
-+++ b/arch/x86/include/asm/desc_defs.h
-@@ -109,6 +109,9 @@ struct desc_ptr {
+-/*
+- * Adds the specified range to what will become the new identity mappings.
+- * Once all ranges have been added, the new mapping is activated by calling
+- * finalize_identity_maps() below.
+- */
+-void add_identity_map(unsigned long start, unsigned long size)
+-{
+-	unsigned long end = start + size;
+-
+-	/* Align boundary to 2M. */
+-	start = round_down(start, PMD_SIZE);
+-	end = round_up(end, PMD_SIZE);
+-	if (start >= end)
+-		return;
+-
+-	/* Build the mapping. */
+-	kernel_ident_mapping_init(&mapping_info, (pgd_t *)top_level_pgt,
+-				  start, end);
++	/*
++	 * New page-table is set up - map the kernel image and load it
++	 * into cr3.
++	 */
++	start = (unsigned long)_head;
++	size  = _end - _head;
++	add_identity_map(start, size);
++	write_cr3(top_level_pgt);
+ }
  
- #endif /* !__ASSEMBLY__ */
+ /*
+diff --git a/arch/x86/boot/compressed/kaslr.c b/arch/x86/boot/compressed/kaslr.c
+index 7c61a8c5b9cf..856dc1c9bb0d 100644
+--- a/arch/x86/boot/compressed/kaslr.c
++++ b/arch/x86/boot/compressed/kaslr.c
+@@ -903,9 +903,6 @@ void choose_random_location(unsigned long input,
  
-+/* Boot IDT definitions */
-+#define	BOOT_IDT_ENTRIES	32
-+
- /* Access rights as returned by LAR */
- #define AR_TYPE_RODATA		(0 * (1 << 9))
- #define AR_TYPE_RWDATA		(1 * (1 << 9))
+ 	boot_params->hdr.loadflags |= KASLR_FLAG;
+ 
+-	/* Prepare to add new identity pagetables on demand. */
+-	initialize_identity_maps();
+-
+ 	/* Record the various known unsafe memory ranges. */
+ 	mem_avoid_init(input, input_size, *output);
+ 
 -- 
 2.27.0
 
