@@ -4,53 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B453C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 14:39:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0554C433F2
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 14:39:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 49B0D2256D
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 14:39:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 84ED022582
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 14:39:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594737589;
-	bh=cqwlgHyPsfPuA8z4WrenfxsuVzf4oQ5bGA82xRt0E4c=;
+	s=default; t=1594737599;
+	bh=qCrRnVRA5KhdFuJB9e1HF7uBLgDqdl/68XqOah8yMvo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wtVWGXzeZVjVhq2m+3OWiCVdKSKGLIoYXdqHYKCeJPYK3Cn4yPia6XJoM/h+G0fCU
-	 xRs/5oZk941OiImKJFaZWNEZSN1t/d/NfXwH/OwZG974KY4lQqRIud8NjC1A5MkzMj
-	 KnO/fobD0XvY/dx41dkrMIgeBRlJG5urPmPvjiLY=
+	b=yyGK0w8/EUPzDrgM1OeBC5lfTfxRIZ3+cl4Aoh1EXhzjGR1a/Sfp3UUsZdNzmKErP
+	 bqn0jzJIff2zWpucO56bAm2GzH+xTlCxWCxpVj+xyyr4t99uRoqFAHusmxo5z8d2d4
+	 qRyurxWMSFWf5KRwBL5AEafy997Qh0MtMDVExhsg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729123AbgGNOjr (ORCPT
+        id S1729183AbgGNOj6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 10:39:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55212 "EHLO mail.kernel.org"
+        Tue, 14 Jul 2020 10:39:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55260 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728187AbgGNOjp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 10:39:45 -0400
+        id S1729124AbgGNOjs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 10:39:48 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B5EA22256D;
-        Tue, 14 Jul 2020 14:39:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CF6282256C;
+        Tue, 14 Jul 2020 14:39:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594737585;
-        bh=cqwlgHyPsfPuA8z4WrenfxsuVzf4oQ5bGA82xRt0E4c=;
+        s=default; t=1594737587;
+        bh=qCrRnVRA5KhdFuJB9e1HF7uBLgDqdl/68XqOah8yMvo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1DjrKmgUQLOIp4isoR7QXHBSZATiXkO7GZknST0oVu2RFVTVikjyPKUppEF3QmAI+
-         tOlPGWabD0WKgJlIcApzSPb0FuuP7utbHYSirxtQUycG1eCCFo0CuG3o7sDhVMiqLj
-         oUhnIAKx09vH7m1zzZyrHs3J/EnN3OtTcgdQfW1A=
+        b=nImYRFra2KUDxgxxdd8bgF3XmKo1tU6uCZJiwg80xgRJq3kM6JEvCq2T3mUzHNDFi
+         zKC9d34uHCmsl3UynqAYPFVS/p9OHqjrTKmjjv5+v4yR4I9AE4tvj8Veu7uIFRkk6O
+         fm4Q3HpDbmh2sgBdoHjAx+LxYqS9PC9OB/I0uoRU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Max Filippov <jcmvbkbc@gmail.com>, Sasha Levin <sashal@kernel.org>,
-        linux-xtensa@linux-xtensa.org
-Subject: [PATCH AUTOSEL 4.19 06/13] xtensa: fix __sync_fetch_and_{and,or}_4 declarations
-Date:   Tue, 14 Jul 2020 10:39:30 -0400
-Message-Id: <20200714143937.4035685-6-sashal@kernel.org>
+Cc:     Xie He <xie.he.0141@gmail.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 08/13] drivers/net/wan/lapbether: Fixed the value of hard_header_len
+Date:   Tue, 14 Jul 2020 10:39:32 -0400
+Message-Id: <20200714143937.4035685-8-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200714143937.4035685-1-sashal@kernel.org>
 References: <20200714143937.4035685-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -59,48 +59,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Max Filippov <jcmvbkbc@gmail.com>
+From: Xie He <xie.he.0141@gmail.com>
 
-[ Upstream commit 73f9941306d5ce030f3ffc7db425c7b2a798cf8e ]
+[ Upstream commit 9dc829a135fb5927f1519de11286e2bbb79f5b66 ]
 
-Building xtensa kernel with gcc-10 produces the following warnings:
-  arch/xtensa/kernel/xtensa_ksyms.c:90:15: warning: conflicting types
-    for built-in function ‘__sync_fetch_and_and_4’;
-    expected ‘unsigned int(volatile void *, unsigned int)’
-    [-Wbuiltin-declaration-mismatch]
-  arch/xtensa/kernel/xtensa_ksyms.c:96:15: warning: conflicting types
-    for built-in function ‘__sync_fetch_and_or_4’;
-    expected ‘unsigned int(volatile void *, unsigned int)’
-    [-Wbuiltin-declaration-mismatch]
+When this driver transmits data,
+  first this driver will remove a pseudo header of 1 byte,
+  then the lapb module will prepend the LAPB header of 2 or 3 bytes,
+  then this driver will prepend a length field of 2 bytes,
+  then the underlying Ethernet device will prepend its own header.
 
-Fix declarations of these functions to avoid the warning.
+So, the header length required should be:
+  -1 + 3 + 2 + "the header length needed by the underlying device".
 
-Signed-off-by: Max Filippov <jcmvbkbc@gmail.com>
+This patch fixes kernel panic when this driver is used with AF_PACKET
+SOCK_DGRAM sockets.
+
+Signed-off-by: Xie He <xie.he.0141@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/xtensa/kernel/xtensa_ksyms.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/net/wan/lapbether.c | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
 
-diff --git a/arch/xtensa/kernel/xtensa_ksyms.c b/arch/xtensa/kernel/xtensa_ksyms.c
-index 4092555828b13..24cf6972eacea 100644
---- a/arch/xtensa/kernel/xtensa_ksyms.c
-+++ b/arch/xtensa/kernel/xtensa_ksyms.c
-@@ -87,13 +87,13 @@ void __xtensa_libgcc_window_spill(void)
+diff --git a/drivers/net/wan/lapbether.c b/drivers/net/wan/lapbether.c
+index 0e3f8ed84660e..ac34257e9f203 100644
+--- a/drivers/net/wan/lapbether.c
++++ b/drivers/net/wan/lapbether.c
+@@ -308,7 +308,6 @@ static void lapbeth_setup(struct net_device *dev)
+ 	dev->netdev_ops	     = &lapbeth_netdev_ops;
+ 	dev->needs_free_netdev = true;
+ 	dev->type            = ARPHRD_X25;
+-	dev->hard_header_len = 3;
+ 	dev->mtu             = 1000;
+ 	dev->addr_len        = 0;
  }
- EXPORT_SYMBOL(__xtensa_libgcc_window_spill);
+@@ -329,6 +328,14 @@ static int lapbeth_new_device(struct net_device *dev)
+ 	if (!ndev)
+ 		goto out;
  
--unsigned long __sync_fetch_and_and_4(unsigned long *p, unsigned long v)
-+unsigned int __sync_fetch_and_and_4(volatile void *p, unsigned int v)
- {
- 	BUG();
- }
- EXPORT_SYMBOL(__sync_fetch_and_and_4);
++	/* When transmitting data:
++	 * first this driver removes a pseudo header of 1 byte,
++	 * then the lapb module prepends an LAPB header of at most 3 bytes,
++	 * then this driver prepends a length field of 2 bytes,
++	 * then the underlying Ethernet device prepends its own header.
++	 */
++	ndev->hard_header_len = -1 + 3 + 2 + dev->hard_header_len;
++
+ 	lapbeth = netdev_priv(ndev);
+ 	lapbeth->axdev = ndev;
  
--unsigned long __sync_fetch_and_or_4(unsigned long *p, unsigned long v)
-+unsigned int __sync_fetch_and_or_4(volatile void *p, unsigned int v)
- {
- 	BUG();
- }
 -- 
 2.25.1
 
