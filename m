@@ -7,28 +7,33 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10818C43457
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 12:11:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A984CC43458
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 12:11:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EC0F02245F
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 12:11:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8841B2245B
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 12:11:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728658AbgGNMLc (ORCPT
+        id S1728632AbgGNMLh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 08:11:32 -0400
-Received: from 8bytes.org ([81.169.241.247]:54694 "EHLO theia.8bytes.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728572AbgGNMLT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 08:11:19 -0400
+        Tue, 14 Jul 2020 08:11:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60770 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728541AbgGNMLZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 08:11:25 -0400
+Received: from theia.8bytes.org (8bytes.org [IPv6:2a01:238:4383:600:38bc:a715:4b6d:a889])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 73139C08C5DF;
+        Tue, 14 Jul 2020 05:11:23 -0700 (PDT)
 Received: from cap.home.8bytes.org (p5b006776.dip0.t-ipconnect.de [91.0.103.118])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
         (No client certificate requested)
-        by theia.8bytes.org (Postfix) with ESMTPSA id 1D21FFE7;
-        Tue, 14 Jul 2020 14:11:10 +0200 (CEST)
+        by theia.8bytes.org (Postfix) with ESMTPSA id B1749FF5;
+        Tue, 14 Jul 2020 14:11:14 +0200 (CEST)
 From:   Joerg Roedel <joro@8bytes.org>
 To:     x86@kernel.org
 Cc:     Joerg Roedel <joro@8bytes.org>, Joerg Roedel <jroedel@suse.de>,
-        hpa@zytor.com, Andy Lutomirski <luto@kernel.org>,
+        Martin Radev <martin.b.radev@gmail.com>, hpa@zytor.com,
+        Andy Lutomirski <luto@kernel.org>,
         Dave Hansen <dave.hansen@linux.intel.com>,
         Peter Zijlstra <peterz@infradead.org>,
         Jiri Slaby <jslaby@suse.cz>,
@@ -42,12 +47,11 @@ Cc:     Joerg Roedel <joro@8bytes.org>, Joerg Roedel <jroedel@suse.de>,
         Masami Hiramatsu <mhiramat@kernel.org>,
         Mike Stunes <mstunes@vmware.com>,
         Sean Christopherson <sean.j.christopherson@intel.com>,
-        Martin Radev <martin.b.radev@gmail.com>,
         linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
         virtualization@lists.linux-foundation.org
-Subject: [PATCH v4 67/75] x86/realmode: Add SEV-ES specific trampoline entry point
-Date:   Tue, 14 Jul 2020 14:09:09 +0200
-Message-Id: <20200714120917.11253-68-joro@8bytes.org>
+Subject: [PATCH v4 75/75] x86/sev-es: Check required CPU features for SEV-ES
+Date:   Tue, 14 Jul 2020 14:09:17 +0200
+Message-Id: <20200714120917.11253-76-joro@8bytes.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200714120917.11253-1-joro@8bytes.org>
 References: <20200714120917.11253-1-joro@8bytes.org>
@@ -58,89 +62,73 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Joerg Roedel <jroedel@suse.de>
+From: Martin Radev <martin.b.radev@gmail.com>
 
-The code at the trampoline entry point is executed in real-mode. In
-real-mode #VC exceptions can't be handled, so anything that might cause
-such an exception must be avoided.
+Make sure the machine supports RDRAND, otherwise there is no trusted
+source of of randomness in the system.
 
-In the standard trampoline entry code this is the WBINVD instruction and
-the call to verify_cpu(), which are both not needed anyway when running
-as an SEV-ES guest.
-
+Signed-off-by: Martin Radev <martin.b.radev@gmail.com>
 Signed-off-by: Joerg Roedel <jroedel@suse.de>
 ---
- arch/x86/include/asm/realmode.h      |  3 +++
- arch/x86/realmode/rm/header.S        |  3 +++
- arch/x86/realmode/rm/trampoline_64.S | 20 ++++++++++++++++++++
- 3 files changed, 26 insertions(+)
+ arch/x86/boot/compressed/sev-es.c |  3 +++
+ arch/x86/kernel/sev-es-shared.c   | 15 +++++++++++++++
+ arch/x86/kernel/sev-es.c          |  3 +++
+ 3 files changed, 21 insertions(+)
 
-diff --git a/arch/x86/include/asm/realmode.h b/arch/x86/include/asm/realmode.h
-index b35030eeec36..6590394af309 100644
---- a/arch/x86/include/asm/realmode.h
-+++ b/arch/x86/include/asm/realmode.h
-@@ -21,6 +21,9 @@ struct real_mode_header {
- 	/* SMP trampoline */
- 	u32	trampoline_start;
- 	u32	trampoline_header;
-+#ifdef CONFIG_AMD_MEM_ENCRYPT
-+	u32	sev_es_trampoline_start;
-+#endif
- #ifdef CONFIG_X86_64
- 	u32	trampoline_pgd;
- #endif
-diff --git a/arch/x86/realmode/rm/header.S b/arch/x86/realmode/rm/header.S
-index af04512c02d9..8c1db5bf5d78 100644
---- a/arch/x86/realmode/rm/header.S
-+++ b/arch/x86/realmode/rm/header.S
-@@ -20,6 +20,9 @@ SYM_DATA_START(real_mode_header)
- 	/* SMP trampoline */
- 	.long	pa_trampoline_start
- 	.long	pa_trampoline_header
-+#ifdef CONFIG_AMD_MEM_ENCRYPT
-+	.long	pa_sev_es_trampoline_start
-+#endif
- #ifdef CONFIG_X86_64
- 	.long	pa_trampoline_pgd;
- #endif
-diff --git a/arch/x86/realmode/rm/trampoline_64.S b/arch/x86/realmode/rm/trampoline_64.S
-index 251758ed7443..84c5d1b33d10 100644
---- a/arch/x86/realmode/rm/trampoline_64.S
-+++ b/arch/x86/realmode/rm/trampoline_64.S
-@@ -56,6 +56,7 @@ SYM_CODE_START(trampoline_start)
- 	testl   %eax, %eax		# Check for return code
- 	jnz	no_longmode
+diff --git a/arch/x86/boot/compressed/sev-es.c b/arch/x86/boot/compressed/sev-es.c
+index b522c18c0588..eb1a8b5cc753 100644
+--- a/arch/x86/boot/compressed/sev-es.c
++++ b/arch/x86/boot/compressed/sev-es.c
+@@ -145,6 +145,9 @@ void sev_es_shutdown_ghcb(void)
+ 	if (!boot_ghcb)
+ 		return;
  
-+.Lswitch_to_protected:
++	if (!sev_es_check_cpu_features())
++		error("SEV-ES CPU Features missing.");
++
  	/*
- 	 * GDT tables in non default location kernel can be beyond 16MB and
- 	 * lgdt will not be able to load the address as in real mode default
-@@ -80,6 +81,25 @@ no_longmode:
- 	jmp no_longmode
- SYM_CODE_END(trampoline_start)
+ 	 * GHCB Page must be flushed from the cache and mapped encrypted again.
+ 	 * Otherwise the running kernel will see strange cache effects when
+diff --git a/arch/x86/kernel/sev-es-shared.c b/arch/x86/kernel/sev-es-shared.c
+index 608f76d0d088..56de70cb80d8 100644
+--- a/arch/x86/kernel/sev-es-shared.c
++++ b/arch/x86/kernel/sev-es-shared.c
+@@ -9,6 +9,21 @@
+  * and is included directly into both code-bases.
+  */
  
-+#ifdef CONFIG_AMD_MEM_ENCRYPT
-+/* SEV-ES supports non-zero IP for entry points - no alignment needed */
-+SYM_CODE_START(sev_es_trampoline_start)
-+	cli			# We should be safe anyway
++#ifndef __BOOT_COMPRESSED
++#define error(v)	pr_err(v)
++#define has_cpuflag(f)	boot_cpu_has(f)
++#endif
 +
-+	LJMPW_RM(1f)
-+1:
-+	mov	%cs, %ax	# Code and data in the same place
-+	mov	%ax, %ds
-+	mov	%ax, %es
-+	mov	%ax, %ss
++static bool __init sev_es_check_cpu_features(void)
++{
++	if (!has_cpuflag(X86_FEATURE_RDRAND)) {
++		error("RDRAND instruction not supported - no trusted source of randomness available\n");
++		return false;
++	}
 +
-+	# Setup stack
-+	movl	$rm_stack_end, %esp
++	return true;
++}
 +
-+	jmp	.Lswitch_to_protected
-+SYM_CODE_END(sev_es_trampoline_start)
-+#endif	/* CONFIG_AMD_MEM_ENCRYPT */
-+
- #include "../kernel/verify_cpu.S"
+ static void sev_es_terminate(unsigned int reason)
+ {
+ 	u64 val = GHCB_SEV_TERMINATE;
+diff --git a/arch/x86/kernel/sev-es.c b/arch/x86/kernel/sev-es.c
+index 61308f9c8138..481ea00c58b6 100644
+--- a/arch/x86/kernel/sev-es.c
++++ b/arch/x86/kernel/sev-es.c
+@@ -682,6 +682,9 @@ void __init sev_es_init_vc_handling(void)
+ 	if (!sev_es_active())
+ 		return;
  
- 	.section ".text32","ax"
++	if (!sev_es_check_cpu_features())
++		panic("SEV-ES CPU Features missing");
++
+ 	/* Initialize per-cpu GHCB pages */
+ 	for_each_possible_cpu(cpu) {
+ 		sev_es_alloc_runtime_data(cpu);
 -- 
 2.27.0
 
