@@ -2,79 +2,106 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9048DC433F7
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 11:20:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6B93C433F4
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 11:20:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 644FE21D90
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 11:20:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C694F22203
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 11:20:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Fqu+JGaF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728097AbgGNLUo (ORCPT
+        id S1728059AbgGNLUj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 07:20:44 -0400
-Received: from mga04.intel.com ([192.55.52.120]:10830 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726823AbgGNLUg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 07:20:36 -0400
-IronPort-SDR: lSxUzVJBfFnX+XKu5B9yefceayGdeAP5xO1ELQHL1H/h/3ZjyK8AToDX0vl621t1Y6w6RevuUp
- PW4lzE9ptVwQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9681"; a="146349943"
-X-IronPort-AV: E=Sophos;i="5.75,350,1589266800"; 
-   d="scan'208";a="146349943"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jul 2020 04:20:34 -0700
-IronPort-SDR: B5BSpZgOdkfuAEIuDBr1rtuqVEsHQIemWCTJzzjDQUC8llN9zkJYda/njPIPKbKVCga2E4SBko
- QYsSxABJp2kg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,350,1589266800"; 
-   d="scan'208";a="299508857"
-Received: from rmarti11-mobl.ger.corp.intel.com (HELO localhost) ([10.252.54.57])
-  by orsmga002.jf.intel.com with ESMTP; 14 Jul 2020 04:20:32 -0700
-Date:   Tue, 14 Jul 2020 14:20:30 +0300
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     Stefan Berger <stefanb@linux.ibm.com>
-Cc:     Stefan Berger <stefanb@linux.vnet.ibm.com>,
-        linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-acpi@vger.kernel.org, linux-security-module@vger.kernel.org
-Subject: Re: [PATCH v9 2/2] tpm: Add support for event log pointer found in
- TPM2 ACPI table
-Message-ID: <20200714112030.GA1448526@linux.intel.com>
-References: <20200706181953.3592084-1-stefanb@linux.vnet.ibm.com>
- <20200706181953.3592084-3-stefanb@linux.vnet.ibm.com>
- <20200706230914.GC20770@linux.intel.com>
- <78ec872f-89b3-6464-6ede-bd0a46fe5c4c@linux.ibm.com>
- <20200707022416.GC112019@linux.intel.com>
- <f3e0fb50-8617-da40-1456-158531a070cb@linux.ibm.com>
- <20200707040325.GB143804@linux.intel.com>
- <85c27199-df55-eecc-855c-dedcea64f89e@linux.ibm.com>
- <20200708140753.GC538949@linux.intel.com>
- <e42cb59d-6a3d-12be-bb51-88aa8c5dba23@linux.ibm.com>
+        Tue, 14 Jul 2020 07:20:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52584 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727935AbgGNLSm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 07:18:42 -0400
+Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C17EEC08E876
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 04:16:06 -0700 (PDT)
+Received: by mail-wm1-x343.google.com with SMTP id l2so5010523wmf.0
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 04:16:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=tHvsPtXMawqhgTlXf8i2jhQs/B2cBsj2Ks/fZJOcmHY=;
+        b=Fqu+JGaFSRh7vRRPgR/HabR8IBZaeLvvr2EcwSrSv7QCI/6fOnODRUdqwt90J3g5C8
+         0s7/ZkCY/MC07cLGz5P6eZPk8H0sOh7MIQCT3wT/fmUP0dZZvRlB6+ROihSuNTcRcnrn
+         3f/KQJT0rXlJvq27p2T59AjfgIz20tp6gxCQwiRj2g3DFceT0HNj5P5tLxs2F3WUfGUr
+         BCztbiua/SQvCo0rqC98vsPQJ6hLsJvnB5rS2qxatc4pm34FHMoA/X6H2H78RvRzapwC
+         7c22y4tqYny0qVqhSNYiSLAngITlsOr2bNM3rVNtPcNOiSxaFmQjsg/AEf1VCrEiPz2W
+         p5Bg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=tHvsPtXMawqhgTlXf8i2jhQs/B2cBsj2Ks/fZJOcmHY=;
+        b=ShEF3DacY3iIejks6uD9xP05l45Dwu+u8KDsnUmJ6GXLnGXIy9qlIod6gaoIqHEqZ2
+         jvBneX/bvn4BU6PIuvEfI3BTy4ez2LG46eOMykwVQleUWmlznubHZ3GVslr2fE5RbZlC
+         lUuTVXfWUr5knBJZ3TlMVgeprt9f7cgdtoOjM9+sE82EjSevoonDxd4IcTqxcOwIEvoh
+         vvEWZGK4im/gRj0IWk0SxtVdUTj7uN/QPcxSAj/Q7S4Zt6h57Bpfu5bNpv8I1BkRsCOn
+         3+NUGCmFU6lsS95lSOwdvkEky70L0flXkHwCemEwAHNmT/1Co0cEho1wp3kaouqW+J/j
+         gr8g==
+X-Gm-Message-State: AOAM531YGUsHOvCp6JbZ/JH3LEQ3/quSRY2zb+MlgNFwkMiVpj1XEL2C
+        DeU6K9D3VuKhq1YNoHp5diqId8Zoefs=
+X-Google-Smtp-Source: ABdhPJxVoSxX2N3tawtWC/yLdMqtT4pktyn2twbJ8qTyWyZpqmkc6sC5zihRJLY5WtskmmQJi5EWrw==
+X-Received: by 2002:a05:600c:2116:: with SMTP id u22mr3778571wml.82.1594725365560;
+        Tue, 14 Jul 2020 04:16:05 -0700 (PDT)
+Received: from localhost.localdomain ([2.31.163.61])
+        by smtp.gmail.com with ESMTPSA id l8sm28566052wrq.15.2020.07.14.04.16.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 14 Jul 2020 04:16:05 -0700 (PDT)
+From:   Lee Jones <lee.jones@linaro.org>
+To:     dan.j.williams@intel.com, vkoul@kernel.org
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        dmaengine@vger.kernel.org, Lee Jones <lee.jones@linaro.org>,
+        Prasad Sahu <rsahu@apm.com>, Loc Ho <lho@apm.com>
+Subject: [PATCH 14/17] dma: xgene-dma: Provide descriptions for 'dev' and 'clk' in device's ddata
+Date:   Tue, 14 Jul 2020 12:15:43 +0100
+Message-Id: <20200714111546.1755231-15-lee.jones@linaro.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200714111546.1755231-1-lee.jones@linaro.org>
+References: <20200714111546.1755231-1-lee.jones@linaro.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <e42cb59d-6a3d-12be-bb51-88aa8c5dba23@linux.ibm.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 08, 2020 at 10:17:17AM -0400, Stefan Berger wrote:
-> > ❯ swtpm-mvo.swtpm socket --tpmstate dir=/tmp/mytpm1 \
-> >    --ctrl type=unixio,path=/tmp/mytpm1/swtpm-sock \
-> >    --log level=20
-> > swtpm: Could not open UnixIO socket: No such file or directory
-> 
-> 
-> Did you create the directory '/tmp/mytpm1' ?
+Fixes the following W=1 kernel build warning(s):
 
-Yes. It's the socket file that it is complain because it does
-not exist beforehand.
+ drivers/dma/xgene-dma.c:310: warning: Function parameter or member 'dev' not described in 'xgene_dma'
+ drivers/dma/xgene-dma.c:310: warning: Function parameter or member 'clk' not described in 'xgene_dma'
 
-/Jarkko
+Cc: Prasad Sahu <rsahu@apm.com>
+Cc: Loc Ho <lho@apm.com>
+Signed-off-by: Lee Jones <lee.jones@linaro.org>
+---
+ drivers/dma/xgene-dma.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/drivers/dma/xgene-dma.c b/drivers/dma/xgene-dma.c
+index cd60fa6d67501..4f733d37a22e2 100644
+--- a/drivers/dma/xgene-dma.c
++++ b/drivers/dma/xgene-dma.c
+@@ -287,6 +287,8 @@ struct xgene_dma_chan {
+ 
+ /**
+  * struct xgene_dma - internal representation of an X-Gene DMA device
++ * @dev: reference to this device's struct device
++ * @clk: reference to this device's clock
+  * @err_irq: DMA error irq number
+  * @ring_num: start id number for DMA ring
+  * @csr_dma: base for DMA register access
+-- 
+2.25.1
+
