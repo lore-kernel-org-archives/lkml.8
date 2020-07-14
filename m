@@ -7,50 +7,49 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F069FC433F4
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 14:42:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CD3FC4345F
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 14:42:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C39AE206F5
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 14:42:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 70B79206F5
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 14:42:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594737720;
-	bh=/oDceVRvBcZtcSeouwu1wm8VWD2sKbRTIpY4H/q1V0g=;
+	s=default; t=1594737725;
+	bh=Nq5QR3iG8Cr3ox2BQ3/zYb67ZQcxz9425Pv2U2LcgGI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=iOgtBa6kHMpL172nKuruonPaMhtVXp57KnNyjqKK7/TY0HFaQyzmE5atmbCfU/guz
-	 8SgY64cbskrMLouys0aE/yQt5pTa0w4tERtUc+gVpIkQ1z7y5HGfNg3v0yXqVFfFJv
-	 OvRz8cD1V6w9Hiwvyrqtm1Elr/mJVHz0E1ix9kMk=
+	b=msXshqKfKKXv72K78QCQbQECCCqeaPZwtVV/QpJlUoOqdS1Isi+sb6B1X481UWpLa
+	 PLUDcNMZa9G/k+Az4G4wHJDP5dGwh0VQsMNq7zdJUKz/kCo1wVFA2SE+OQ1A9pl18V
+	 GUm+Sv0BazMW+TII/ePDVQYt7cOGbmpfdnpuSlFE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729268AbgGNOkL (ORCPT
+        id S1728971AbgGNOmD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 10:40:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55732 "EHLO mail.kernel.org"
+        Tue, 14 Jul 2020 10:42:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55878 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729219AbgGNOkD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 10:40:03 -0400
+        id S1729257AbgGNOkK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 10:40:10 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 03C8C2256C;
-        Tue, 14 Jul 2020 14:40:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2B68422519;
+        Tue, 14 Jul 2020 14:40:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594737602;
-        bh=/oDceVRvBcZtcSeouwu1wm8VWD2sKbRTIpY4H/q1V0g=;
+        s=default; t=1594737609;
+        bh=Nq5QR3iG8Cr3ox2BQ3/zYb67ZQcxz9425Pv2U2LcgGI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KGOa9VWOxndJJgHevJe3rPaGNIclnKhXxQeJB2wfuc0Ha4Wdrajh/n4cbXpRjmTo8
-         FaSwslddzknSprexSZ1wbwZ5Qs2gDmiIeWDOIEH3ASdIPv3bu2o4Llo42kNe8Uv4K1
-         xyeIvzNBZ95Kb+kJ5NT6f3AX5M9Tp8DeCSjLsyXg=
+        b=SuKHWvckfy9lpjPgDd1mtyqs+XKoidp5O77wkJTEDRyQTsKeJmIuUFdCpO+WHm0m0
+         Guu2U/Vf0ikN1kCb8Rc3p1cAllXBNN6XMs+HKqWecVQnAeDb28mCgBfnJjGSoF6JGh
+         2KxSZbUBi9KIs2JMOOJ/9OEixuDjfD5v7qotilp0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Max Filippov <jcmvbkbc@gmail.com>, Sasha Levin <sashal@kernel.org>,
-        linux-xtensa@linux-xtensa.org
-Subject: [PATCH AUTOSEL 4.14 06/12] xtensa: fix __sync_fetch_and_{and,or}_4 declarations
-Date:   Tue, 14 Jul 2020 10:39:48 -0400
-Message-Id: <20200714143954.4035840-6-sashal@kernel.org>
+Cc:     Ben Skeggs <bskeggs@redhat.com>, Sasha Levin <sashal@kernel.org>,
+        dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 4.14 12/12] drm/nouveau/i2c/g94-: increase NV_PMGR_DP_AUXCTL_TRANSACTREQ timeout
+Date:   Tue, 14 Jul 2020 10:39:54 -0400
+Message-Id: <20200714143954.4035840-12-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200714143954.4035840-1-sashal@kernel.org>
 References: <20200714143954.4035840-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -59,48 +58,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Max Filippov <jcmvbkbc@gmail.com>
+From: Ben Skeggs <bskeggs@redhat.com>
 
-[ Upstream commit 73f9941306d5ce030f3ffc7db425c7b2a798cf8e ]
+[ Upstream commit 0156e76d388310a490aeb0f2fbb5b284ded3aecc ]
 
-Building xtensa kernel with gcc-10 produces the following warnings:
-  arch/xtensa/kernel/xtensa_ksyms.c:90:15: warning: conflicting types
-    for built-in function ‘__sync_fetch_and_and_4’;
-    expected ‘unsigned int(volatile void *, unsigned int)’
-    [-Wbuiltin-declaration-mismatch]
-  arch/xtensa/kernel/xtensa_ksyms.c:96:15: warning: conflicting types
-    for built-in function ‘__sync_fetch_and_or_4’;
-    expected ‘unsigned int(volatile void *, unsigned int)’
-    [-Wbuiltin-declaration-mismatch]
+Tegra TRM says worst-case reply time is 1216us, and this should fix some
+spurious timeouts that have been popping up.
 
-Fix declarations of these functions to avoid the warning.
-
-Signed-off-by: Max Filippov <jcmvbkbc@gmail.com>
+Signed-off-by: Ben Skeggs <bskeggs@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/xtensa/kernel/xtensa_ksyms.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/gpu/drm/nouveau/nvkm/subdev/i2c/auxg94.c   | 4 ++--
+ drivers/gpu/drm/nouveau/nvkm/subdev/i2c/auxgm200.c | 4 ++--
+ 2 files changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/arch/xtensa/kernel/xtensa_ksyms.c b/arch/xtensa/kernel/xtensa_ksyms.c
-index dc7b470a423a6..58b79e2ea569c 100644
---- a/arch/xtensa/kernel/xtensa_ksyms.c
-+++ b/arch/xtensa/kernel/xtensa_ksyms.c
-@@ -82,13 +82,13 @@ void __xtensa_libgcc_window_spill(void)
- }
- EXPORT_SYMBOL(__xtensa_libgcc_window_spill);
+diff --git a/drivers/gpu/drm/nouveau/nvkm/subdev/i2c/auxg94.c b/drivers/gpu/drm/nouveau/nvkm/subdev/i2c/auxg94.c
+index c8ab1b5741a3e..db7769cb33eba 100644
+--- a/drivers/gpu/drm/nouveau/nvkm/subdev/i2c/auxg94.c
++++ b/drivers/gpu/drm/nouveau/nvkm/subdev/i2c/auxg94.c
+@@ -118,10 +118,10 @@ g94_i2c_aux_xfer(struct nvkm_i2c_aux *obj, bool retry,
+ 		if (retries)
+ 			udelay(400);
  
--unsigned long __sync_fetch_and_and_4(unsigned long *p, unsigned long v)
-+unsigned int __sync_fetch_and_and_4(volatile void *p, unsigned int v)
- {
- 	BUG();
- }
- EXPORT_SYMBOL(__sync_fetch_and_and_4);
+-		/* transaction request, wait up to 1ms for it to complete */
++		/* transaction request, wait up to 2ms for it to complete */
+ 		nvkm_wr32(device, 0x00e4e4 + base, 0x00010000 | ctrl);
  
--unsigned long __sync_fetch_and_or_4(unsigned long *p, unsigned long v)
-+unsigned int __sync_fetch_and_or_4(volatile void *p, unsigned int v)
- {
- 	BUG();
- }
+-		timeout = 1000;
++		timeout = 2000;
+ 		do {
+ 			ctrl = nvkm_rd32(device, 0x00e4e4 + base);
+ 			udelay(1);
+diff --git a/drivers/gpu/drm/nouveau/nvkm/subdev/i2c/auxgm200.c b/drivers/gpu/drm/nouveau/nvkm/subdev/i2c/auxgm200.c
+index 7ef60895f43a7..edb6148cbca04 100644
+--- a/drivers/gpu/drm/nouveau/nvkm/subdev/i2c/auxgm200.c
++++ b/drivers/gpu/drm/nouveau/nvkm/subdev/i2c/auxgm200.c
+@@ -118,10 +118,10 @@ gm200_i2c_aux_xfer(struct nvkm_i2c_aux *obj, bool retry,
+ 		if (retries)
+ 			udelay(400);
+ 
+-		/* transaction request, wait up to 1ms for it to complete */
++		/* transaction request, wait up to 2ms for it to complete */
+ 		nvkm_wr32(device, 0x00d954 + base, 0x00010000 | ctrl);
+ 
+-		timeout = 1000;
++		timeout = 2000;
+ 		do {
+ 			ctrl = nvkm_rd32(device, 0x00d954 + base);
+ 			udelay(1);
 -- 
 2.25.1
 
