@@ -2,104 +2,150 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-16.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D803C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:01:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 353A9C433E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:03:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E3B2722582
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:01:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 12F3322597
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:03:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594749716;
-	bh=ZubfW/0iXET/B7w9JGcLDB1JM38q0c4IOOWOXRumOn4=;
+	s=default; t=1594749806;
+	bh=27yz5joe+49D2494fVuVbmM7h/G2j1WWWKnYTtSpw7o=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ELw5mvFakyX4xbOfJP+0HgLFR8Xa2n/DdAZyICuPoPB2vxZFal3HsLDL9m+9w1EmW
-	 Y0DPPiFBXbii7xJ8P8mNJMnlAMT6H+/0uwsQHQLu1mTaBDQSzgBbs4UWA7RqsFMsWw
-	 66s/wN2cYHs/YfwVzg/DXxP5KbI6eJbxadFKQ/1g=
+	b=u3LiiKyRIy5kV2FP7scccXWHRwHM/xUfkpNUPp8SPVn3dPlC+ObBnOLtiTzsqdOnH
+	 Xb5qJc3VrVt0S1Pit2gtuGk010Ki388BCNeXOwHwHpugh8xpsfhl6o0SGP7hH1KD79
+	 /rA1io4gyrMAw35fOFLsM7WnoR9jgaNW13cYrkwU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729069AbgGNSBz (ORCPT
+        id S1728169AbgGNSDY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 14:01:55 -0400
-Received: from mail-il1-f195.google.com ([209.85.166.195]:42858 "EHLO
-        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725906AbgGNSBz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 14:01:55 -0400
-Received: by mail-il1-f195.google.com with SMTP id t27so14949372ill.9;
-        Tue, 14 Jul 2020 11:01:54 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=KSpgOvwlN47x6DPVrtxLSXxqcuUY+XXj9Joyu4Ctj7M=;
-        b=fjkiMq/Z+V+Zh8RPQZYxB65WqYzxZPDlbimBXprvgzNUL9GL2K+KPhlbOekBIU5bBv
-         ic8SfERzh6U4Bx7623+P4dH8tSTL6dPS6hC0dvYb4gsNs9vwpBjBSAuq1m1h0afrUhot
-         IZtm+wHgYPICq22911gm5mwTEDIni2zOuagUPMAuFfnzN7gYuFMj5VW88cQ64BI6daRU
-         gTjfnDiIzkP84qEgQSyblLvIUH1wwVKmh9t7k0EA+QmHzMVcuLbgxND62Dk0XTDgllzp
-         Sob/slMGtC/FDEZOPfn34PF37U24hWh310zITPsrYwGNU6iO+zM1wUFS5wGPNGvRyBNk
-         jV0A==
-X-Gm-Message-State: AOAM530tfwvhdjDaiGJj1Pm171iR5fTrvwRK43dYXtKpl+eg7UAhos5q
-        nSc7qVb+CxReAmkhcN6KPQ==
-X-Google-Smtp-Source: ABdhPJxEgcafXXyb16LmwyglpFw9HdqPPxSf5Ulikof0SJ9B1PG6vWPgFvCZ9//LAhpato+pi7dB5Q==
-X-Received: by 2002:a92:49c3:: with SMTP id k64mr5438219ilg.278.1594749713943;
-        Tue, 14 Jul 2020 11:01:53 -0700 (PDT)
-Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id q4sm10170382ils.11.2020.07.14.11.01.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 Jul 2020 11:01:53 -0700 (PDT)
-Received: (nullmailer pid 2634305 invoked by uid 1000);
-        Tue, 14 Jul 2020 18:01:52 -0000
-Date:   Tue, 14 Jul 2020 12:01:52 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     "Ramuthevar,Vadivel MuruganX" 
-        <vadivel.muruganx.ramuthevar@linux.intel.com>
-Cc:     cheol.yong.kim@intel.com, qi-ming.wu@intel.com, yin1.li@intel.com,
-        robh+dt@kernel.org, linux-kernel@vger.kernel.org,
-        gregkh@linuxfoundation.org, kishon@ti.com,
-        andriy.shevchenko@intel.com, devicetree@vger.kernel.org,
-        p.zabel@pengutronix.de, balbi@kernel.org
-Subject: Re: [PATCH v6 1/2] dt-bindings: phy: Add USB PHY support for Intel
- LGM SoC
-Message-ID: <20200714180152.GA2633416@bogus>
-References: <20200714042621.25850-1-vadivel.muruganx.ramuthevar@linux.intel.com>
- <20200714042621.25850-2-vadivel.muruganx.ramuthevar@linux.intel.com>
+        Tue, 14 Jul 2020 14:03:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55960 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727028AbgGNSDY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 14:03:24 -0400
+Received: from embeddedor (unknown [201.162.240.73])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B450F22582;
+        Tue, 14 Jul 2020 18:03:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594749803;
+        bh=27yz5joe+49D2494fVuVbmM7h/G2j1WWWKnYTtSpw7o=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=hH8elfPLJqZU4PF+MMAJRQZhsLdzvNUaVZjCRylV24xv4YMR7Q/R2Tz9ZwK2qC915
+         mXl6OFopoiUl6QIUl98T0Yz13cy7X3Zx68mZgzKYak6Kq7ODLp0g8kKrrrHKzDjMws
+         HOXqxSydOTFJcBvQXegyrM7c/FxaWVF7xRok/ptQ=
+Date:   Tue, 14 Jul 2020 13:08:55 -0500
+From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To:     "Winkler, Tomas" <tomas.winkler@intel.com>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH][next] mei: Avoid the use of one-element arrays
+Message-ID: <20200714180855.GA31158@embeddedor>
+References: <20200714174644.GA30158@embeddedor>
+ <fe3b8d4a4eb04ead83ffcefe12fd218e@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200714042621.25850-2-vadivel.muruganx.ramuthevar@linux.intel.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <fe3b8d4a4eb04ead83ffcefe12fd218e@intel.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 14 Jul 2020 12:26:20 +0800, Ramuthevar,Vadivel MuruganX wrote:
-> From: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
+On Tue, Jul 14, 2020 at 05:54:32PM +0000, Winkler, Tomas wrote:
+> > 
+> > There is a regular need in the kernel to provide a way to declare having a
+> > dynamically sized set of trailing elements in a structure.
+> > Kernel code should always use “flexible array members”[1] for these cases
+> > or, as in this particular case, replace the one-element array with a simple
+> > value type u8 reserved once this is just a placeholder for alignment. The older
+> > style of one-element or zero-length arrays should no longer be used[2].
+> > 
+> > Also, while there, use the preferred form for passing a size of a struct.
+> > The alternative form where struct name is spelled out hurts readability and
+> > introduces an opportunity for a bug when the variable type is changed but
+> > the corresponding sizeof that is passed as argument is not.
+> > 
+> > [1] https://en.wikipedia.org/wiki/Flexible_array_member
+> > [2] https://github.com/KSPP/linux/issues/79
+> > 
+> > Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+> I'm okay with the patch but in this case the description is a bit off. 
+> In this case there was no intention for a flexible arrays its just a reserved field. 
 > 
-> Add the dt-schema to support USB PHY on Intel LGM SoC
+
+The reserved field is actually mentioned in the description:
+
+"... or, as in this particular case, replace the one-element array with a simple
+value type u8 reserved once this is just a placeholder for alignment."
+
+Thanks
+--
+Gustavo
+
+> > ---
+> >  drivers/misc/mei/hbm.c | 4 ++--
+> >  drivers/misc/mei/hw.h  | 6 +++---
+> >  2 files changed, 5 insertions(+), 5 deletions(-)
+> > 
+> > diff --git a/drivers/misc/mei/hbm.c b/drivers/misc/mei/hbm.c index
+> > a44094cdbc36..f020d5594154 100644
+> > --- a/drivers/misc/mei/hbm.c
+> > +++ b/drivers/misc/mei/hbm.c
+> > @@ -408,14 +408,14 @@ static int mei_hbm_add_cl_resp(struct mei_device
+> > *dev, u8 addr, u8 status)  {
+> >  	struct mei_msg_hdr mei_hdr;
+> >  	struct hbm_add_client_response resp;
+> > -	const size_t len = sizeof(struct hbm_add_client_response);
+> > +	const size_t len = sizeof(resp);
+> >  	int ret;
+> > 
+> >  	dev_dbg(dev->dev, "adding client response\n");
+> > 
+> >  	mei_hbm_hdr(&mei_hdr, len);
+> > 
+> > -	memset(&resp, 0, sizeof(struct hbm_add_client_response));
+> > +	memset(&resp, 0, len);
+> >  	resp.hbm_cmd = MEI_HBM_ADD_CLIENT_RES_CMD;
+> >  	resp.me_addr = addr;
+> >  	resp.status  = status;
+> > diff --git a/drivers/misc/mei/hw.h b/drivers/misc/mei/hw.h index
+> > b1a8d5ec88b3..8c0297f0e7f3 100644
+> > --- a/drivers/misc/mei/hw.h
+> > +++ b/drivers/misc/mei/hw.h
+> > @@ -346,13 +346,13 @@ struct hbm_add_client_request {
+> >   * @hbm_cmd: bus message command header
+> >   * @me_addr: address of the client in ME
+> >   * @status: if HBMS_SUCCESS then the client can now accept connections.
+> > - * @reserved: reserved
+> > + * @reserved: reserved for alignment.
+> >   */
+> >  struct hbm_add_client_response {
+> >  	u8 hbm_cmd;
+> >  	u8 me_addr;
+> >  	u8 status;
+> > -	u8 reserved[1];
+> > +	u8 reserved;
+> >  } __packed;
+> > 
+> >  /**
+> > @@ -461,7 +461,7 @@ struct hbm_notification {
+> >  	u8 hbm_cmd;
+> >  	u8 me_addr;
+> >  	u8 host_addr;
+> > -	u8 reserved[1];
+> > +	u8 reserved;
+> >  } __packed;
+> > 
+> >  /**
+> > --
+> > 2.27.0
 > 
-> Signed-off-by: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
-> Reviewed-by: Rob Herring <robh@kernel.org>
-> ---
->  .../devicetree/bindings/phy/intel,lgm-usb-phy.yaml | 53 ++++++++++++++++++++++
->  1 file changed, 53 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/phy/intel,lgm-usb-phy.yaml
-> 
-
-
-My bot found errors running 'make dt_binding_check' on your patch:
-
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/phy/intel,lgm-usb-phy.example.dt.yaml: usb-phy@e7e00000: '#phy-cells' is a required property
-
-
-See https://patchwork.ozlabs.org/patch/1328612
-
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure dt-schema is up to date:
-
-pip3 install git+https://github.com/devicetree-org/dt-schema.git@master --upgrade
-
-Please check and re-submit.
-
