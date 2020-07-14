@@ -2,239 +2,281 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-25.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E29CC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 23:21:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90466C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 23:24:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 67D9020658
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 23:21:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 64E9020658
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 23:24:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="ZRRF+jnB"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="dOfVLO3j"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727866AbgGNXVt (ORCPT
+        id S1727906AbgGNXYS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 19:21:49 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:40482 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725977AbgGNXVs (ORCPT
+        Tue, 14 Jul 2020 19:24:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53200 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726169AbgGNXYR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 19:21:48 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06ENI58Z031995;
-        Tue, 14 Jul 2020 23:21:08 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2020-01-29;
- bh=huwe7LJjPiG05JDlokSws0RPUDGrjHXSLJK2vvuRoFM=;
- b=ZRRF+jnBix38ga052rXF5+mTn5/bZZ4SWTrmykOkoErMt/KZGutKmStn2PBDRM3FPJ50
- VRtz2j4BKJvSFnt2C5a64/mer1JdTrBf7rN6Jj8NuAWYqFTrjY1Z0rw8HYHJBU7iWACi
- 2Lde/HNtt/YVgy9sd2KJwLdOQtloYAi/jMqcjeiOcUJ8Rp5bEv1FjZUWY1hmUh3EmQPj
- rw2B26boLreFPzagSWP0L5MAfSJeF7Nv4G9fBQuBkL3UuB2iyV+ewGncq4Ra+tYMkkbr
- FwDhqKlXQTvmJKE3w/HTtDmjvs+QG0Rxm926fEuPF9C+YADLE4QKXLPHQMO3wvE1C3cR SA== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2130.oracle.com with ESMTP id 3274ur8bjv-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 14 Jul 2020 23:21:08 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06ENDcdx077551;
-        Tue, 14 Jul 2020 23:21:08 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by userp3020.oracle.com with ESMTP id 327q6t810m-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 14 Jul 2020 23:21:08 +0000
-Received: from abhmp0016.oracle.com (abhmp0016.oracle.com [141.146.116.22])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 06ENL32W032162;
-        Tue, 14 Jul 2020 23:21:04 GMT
-Received: from [192.168.2.112] (/50.38.35.18)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 14 Jul 2020 16:21:03 -0700
-Subject: Re: [PATCH v3] mm/hugetlb: split hugetlb_cma in nodes with memory
-To:     Barry Song <song.bao.hua@hisilicon.com>, akpm@linux-foundation.org
-Cc:     x86@kernel.org, linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        linuxarm@huawei.com, linux-arm-kernel@lists.infradead.org,
-        Roman Gushchin <guro@fb.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H.Peter Anvin" <hpa@zytor.com>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
-        Jonathan Cameron <jonathan.cameron@huawei.com>
-References: <20200710120950.37716-1-song.bao.hua@hisilicon.com>
-From:   Mike Kravetz <mike.kravetz@oracle.com>
-Message-ID: <359ea1d0-b1fd-d09f-d28a-a44655834277@oracle.com>
-Date:   Tue, 14 Jul 2020 16:21:01 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
-MIME-Version: 1.0
-In-Reply-To: <20200710120950.37716-1-song.bao.hua@hisilicon.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9682 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 suspectscore=2
- phishscore=0 malwarescore=0 mlxlogscore=999 bulkscore=0 mlxscore=0
- spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2007140161
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9682 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 lowpriorityscore=0 impostorscore=0
- suspectscore=2 phishscore=0 spamscore=0 mlxlogscore=999 malwarescore=0
- mlxscore=0 priorityscore=1501 adultscore=0 bulkscore=0 clxscore=1011
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2007140161
+        Tue, 14 Jul 2020 19:24:17 -0400
+Received: from mail-io1-xd4a.google.com (mail-io1-xd4a.google.com [IPv6:2607:f8b0:4864:20::d4a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 93055C061794
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 16:24:17 -0700 (PDT)
+Received: by mail-io1-xd4a.google.com with SMTP id 63so240816ioy.4
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 16:24:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
+         :cc;
+        bh=2MgCYW3UINne2osnWjKqpbw5LUhaGCf3Xmk9thEs7q4=;
+        b=dOfVLO3jlim0zb9WHzhTGm0jo6RhQKLeVileQs4onfYV8C0NDaTm8dCDLEcrtZYcKO
+         zCez3YySkFunloZdbla++ue8szahSBXOepUxMJG+MNvW0BIaZAfzHFxtWnAegNuCE6er
+         AZDMOzaUy/l9JdBX4MZIzbmSE20yp6rlakGW00sDCto2c9Rb5sOU67ZoH+WD/PGE8X0h
+         E7aLCEB6UZd5AOeeUXcwMFhhqdc62OqNRDSEt7ASNsseVOe0l59s9qaoumTrZwxUqF7h
+         2D794wbhML3bHixXtG6cIMfrp6mCFxtM7j/a3PPJMnYp44Is97Q7yGGMveu5rkOGgRwD
+         K7Aw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
+         :references:subject:from:to:cc;
+        bh=2MgCYW3UINne2osnWjKqpbw5LUhaGCf3Xmk9thEs7q4=;
+        b=hAj3zQPDHiHHzM7THAqe7+zI7dsunbPK0S0mn7n5VwEFOjnPC1QF73vkD5T/9ZJW8X
+         OfzFr1YN5RzdmBCYKAnwSGNnmHUW7onrb1tvt2N+tjFmRRRwA6KL5I3GRsaakhewQTfG
+         WhxwCwBRXgJl01kH6Lo2llTjWLLDUm01Rz96zBSUx7feoVvFBVcSE1UppJRJl6mhwjPc
+         x9WUoQao9X5WTlyWcmNhCiz5xHntgzia9OhO58PdsRI2BOmljl1WkthTsrvDQPMzkDHa
+         34afXxmrbl0r2EdD8d6EN/rv5qxpb/FDNXy2xFlyrqUjiQ587ypcibSuvIV/R3wg3I29
+         Ph5g==
+X-Gm-Message-State: AOAM532mPXw21v1ACur7ZOz/mExEW0aS0JoljAyIXFAoynmuqgSy8duZ
+        bpgsHoM6P6+8YEoSBuHia6b2owzCZQ==
+X-Google-Smtp-Source: ABdhPJzA0rVDrfWNGsOJlpomXWRnd2FOUAwGD6tuO1OeT4r/rHHZbSfoauDyZdczZ04JNApzrb8tDzY1Xw==
+X-Received: by 2002:a05:6638:3aa:: with SMTP id z10mr8679368jap.54.1594769056604;
+ Tue, 14 Jul 2020 16:24:16 -0700 (PDT)
+Date:   Tue, 14 Jul 2020 23:23:49 +0000
+In-Reply-To: <20200713225103.GA1095851@google.com>
+Message-Id: <20200714232349.2198114-1-nhuck@google.com>
+Mime-Version: 1.0
+References: <20200713225103.GA1095851@google.com>
+X-Mailer: git-send-email 2.27.0.389.gc38d7665816-goog
+Subject: [PATCH v3] Makefile: Add clang-tidy and static analyzer support to makefile
+From:   Nathan Huckleberry <nhuck@google.com>
+To:     masahiroy@kernel.org, michal.lkml@markovi.net
+Cc:     linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
+        clang-built-linux@googlegroups.com,
+        Nathan Huckleberry <nhuck@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/10/20 5:09 AM, Barry Song wrote:
-> Online nodes are not necessarily memory containing nodes. Splitting
-> huge_cma in online nodes can lead to inconsistent hugetlb_cma size
-> with user setting. For example, for one system with 4 numa nodes and
-> only one of them has memory, if users set hugetlb_cma to 4GB, it will
-> split into four 1GB. So only the node with memory will get 1GB CMA.
-> All other three nodes get nothing. That means the whole system gets
-> only 1GB CMA while users ask for 4GB.
-> 
-> Thus, it is more sensible to split hugetlb_cma in nodes with memory.
-> For the above case, the only node with memory will reserve 4GB cma
-> which is same with user setting in bootargs. In order to split cma
-> in nodes with memory, hugetlb_cma_reserve() should scan over those
-> nodes with N_MEMORY state rather than N_ONLINE state. That means
-> the function should be called only after arch code has finished
-> setting the N_MEMORY state of nodes.
-> 
-> The problem is always there if N_ONLINE != N_MEMORY. It is a general
-> problem to all platforms. But there is some trivial difference among
-> different architectures.
-> For example, for ARM64, before hugetlb_cma_reserve() is called, all
-> nodes have got N_ONLINE state. So hugetlb will get inconsistent cma
-> size when some online nodes have no memory. For x86 case, the problem
-> is hidden because X86 happens to just set N_ONLINE on the nodes with
-> memory when hugetlb_cma_reserve() is called.
-> 
-> Anyway, this patch moves to scan N_MEMORY in hugetlb_cma_reserve()
-> and lets both x86 and ARM64 call the function after N_MEMORY state
-> is ready. It also documents the requirement in the definition of
-> hugetlb_cma_reserve().
-> 
-> Cc: Roman Gushchin <guro@fb.com>
-> Cc: Catalin Marinas <catalin.marinas@arm.com>
-> Cc: Will Deacon <will@kernel.org>
-> Cc: Thomas Gleixner <tglx@linutronix.de>
-> Cc: Ingo Molnar <mingo@redhat.com>
-> Cc: Borislav Petkov <bp@alien8.de>
-> Cc: H. Peter Anvin <hpa@zytor.com>
-> Cc: Mike Kravetz <mike.kravetz@oracle.com>
-> Cc: Mike Rapoport <rppt@linux.ibm.com>
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Cc: Anshuman Khandual <anshuman.khandual@arm.com>
-> Cc: Jonathan Cameron <jonathan.cameron@huawei.com>
-> Signed-off-by: Barry Song <song.bao.hua@hisilicon.com>
+This patch adds clang-tidy and the clang static-analyzer as make
+targets. The goal of this patch is to make static analysis tools
+usable and extendable by any developer or researcher who is familiar
+with basic c++.
 
-I agree we should only be concerned with N_MEMORY nodes for the CMA
-reservations.  However, this patch got me thinking:
-- Do we really have to initiate the CMA reservations from arch specific code?
-- Can we move the call to reserve CMA a little later into hugetlb arch
-  independent code?
+The current static analysis tools require intimate knowledge of the
+internal
+workings of the static analysis.  Clang-tidy and the clang static
+analyzers
+expose an easy to use api and allow users unfamiliar with clang to
+write new checks with relative ease.
 
-I know the cma_declare_contiguous_nid() routine says it should be called
-from arch specific code.  However, unless I am missing something that seems
-mostly about timing.
+===Clang-tidy===
 
-What about a change like this on top of this patch?
+Clang-tidy is an easily extendable 'linter' that runs on the AST.
+Clang-tidy checks are easy to write and understand. A check consists of
+two parts, a matcher and a checker. The matcher is created using a
+domain specific language that acts on the AST
+(https://clang.llvm.org/docs/LibASTMatchersReference.html).  When AST
+nodes are found by the matcher a callback is made to the checker. The
+checker can then execute additional checks and issue warnings.
 
-From 72b5b9a623f8711ad7f79f1a8f910906245f5d07 Mon Sep 17 00:00:00 2001
-From: Mike Kravetz <mike.kravetz@oracle.com>
-Date: Tue, 14 Jul 2020 15:54:46 -0700
-Subject: [PATCH] hugetlb: move cma allocation call to arch independent code
+Here is an example clang-tidy check to report functions that have calls
+to local_irq_disable without calls to local_irq_enable and vice-versa.
+Functions flagged with __attribute((annotation("ignore_irq_balancing")))
+are ignored for analysis. (https://reviews.llvm.org/D65828)
 
-Instead of calling hugetlb_cma_reserve() from arch specific code,
-call from arch independent code when a gigantic page hstate is
-created.  This is late enough in the init process that all numa
-memory information should be initialized.  And, it is early enough
-to still use early memory allocator.
+===Clang static analyzer===
 
-Signed-off-by: Mike Kravetz <mike.kravetz@oracle.com>
+The clang static analyzer is a more powerful static analysis tool that
+uses symbolic execution to find bugs. Currently there is a check that
+looks for potential security bugs from invalid uses of kmalloc and
+kfree. There are several more general purpose checks that are useful for
+the kernel.
+
+The clang static analyzer is well documented and designed to be
+extensible.
+(https://clang-analyzer.llvm.org/checker_dev_manual.html)
+(https://github.com/haoNoQ/clang-analyzer-guide/releases/download/v0.1/clang-analyzer-guide-v0.1.pdf)
+
+The main draw of the clang tools is how accessible they are. The clang
+documentation is very nice and these tools are built specifically to be
+easily extendable by any developer. They provide an accessible method of
+bug-finding and research to people who are not overly familiar with the
+kernel codebase.
+
+Signed-off-by: Nathan Huckleberry <nhuck@google.com>
 ---
- arch/arm64/mm/init.c    | 10 ----------
- arch/x86/kernel/setup.c |  9 ---------
- mm/hugetlb.c            |  8 +++++++-
- 3 files changed, 7 insertions(+), 20 deletions(-)
+Changes v2 -> v3
+* Redirect clang-tidy output to stderr
+* Style fixes
+* Add directory to MAINTAINERS
+ MAINTAINERS                                   |  1 +
+ Makefile                                      |  3 +
+ scripts/clang-tools/Makefile.clang-tools      | 23 +++++++
+ .../{ => clang-tools}/gen_compile_commands.py |  0
+ scripts/clang-tools/run-clang-tools.py        | 69 +++++++++++++++++++
+ 5 files changed, 96 insertions(+)
+ create mode 100644 scripts/clang-tools/Makefile.clang-tools
+ rename scripts/{ => clang-tools}/gen_compile_commands.py (100%)
+ create mode 100755 scripts/clang-tools/run-clang-tools.py
 
-diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
-index 79806732f4b4..ff0ff584dde9 100644
---- a/arch/arm64/mm/init.c
-+++ b/arch/arm64/mm/init.c
-@@ -427,16 +427,6 @@ void __init bootmem_init(void)
- 	sparse_init();
- 	zone_sizes_init(min, max);
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 1d4aa7f942de..a444564e5572 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -4198,6 +4198,7 @@ W:	https://clangbuiltlinux.github.io/
+ B:	https://github.com/ClangBuiltLinux/linux/issues
+ C:	irc://chat.freenode.net/clangbuiltlinux
+ F:	Documentation/kbuild/llvm.rst
++F:	scripts/clang-tools/
+ K:	\b(?i:clang|llvm)\b
  
--	/*
--	 * must be done after zone_sizes_init() which calls free_area_init()
--	 * that calls node_set_state() to initialize node_states[N_MEMORY]
--	 * because hugetlb_cma_reserve() will scan over nodes with N_MEMORY
--	 * state
--	 */
--#ifdef CONFIG_ARM64_4K_PAGES
--	hugetlb_cma_reserve(PUD_SHIFT - PAGE_SHIFT);
--#endif
--
- 	memblock_dump_all();
- }
+ CLEANCACHE API
+diff --git a/Makefile b/Makefile
+index fe0164a654c7..3e2df010b342 100644
+--- a/Makefile
++++ b/Makefile
+@@ -747,6 +747,7 @@ KBUILD_CFLAGS	+= $(call cc-option,-fno-allow-store-data-races)
  
-diff --git a/arch/x86/kernel/setup.c b/arch/x86/kernel/setup.c
-index a1a9712090ae..111c8467fafa 100644
---- a/arch/x86/kernel/setup.c
-+++ b/arch/x86/kernel/setup.c
-@@ -1177,15 +1177,6 @@ void __init setup_arch(char **cmdline_p)
+ include scripts/Makefile.kcov
+ include scripts/Makefile.gcc-plugins
++include scripts/clang-tools/Makefile.clang-tools
  
- 	x86_init.paging.pagetable_init();
- 
--	/*
--	 * must be done after zone_sizes_init() which calls free_area_init()
--	 * that calls node_set_state() to initialize node_states[N_MEMORY]
--	 * because hugetlb_cma_reserve() will scan over nodes with N_MEMORY
--	 * state
--	 */
--	if (boot_cpu_has(X86_FEATURE_GBPAGES))
--		hugetlb_cma_reserve(PUD_SHIFT - PAGE_SHIFT);
--
- 	kasan_init();
- 
- 	/*
-diff --git a/mm/hugetlb.c b/mm/hugetlb.c
-index f24acb3af741..a0007d1d12d2 100644
---- a/mm/hugetlb.c
-+++ b/mm/hugetlb.c
-@@ -3273,6 +3273,9 @@ void __init hugetlb_add_hstate(unsigned int order)
- 	snprintf(h->name, HSTATE_NAME_LEN, "hugepages-%lukB",
- 					huge_page_size(h)/1024);
- 
-+	if (order >= MAX_ORDER && hugetlb_cma_size)
-+		hugetlb_cma_reserve(order);
+ ifdef CONFIG_READABLE_ASM
+ # Disable optimizations that make assembler listings hard to read.
+@@ -1543,6 +1544,8 @@ help:
+ 	@echo  '  export_report   - List the usages of all exported symbols'
+ 	@echo  '  headerdep       - Detect inclusion cycles in headers'
+ 	@echo  '  coccicheck      - Check with Coccinelle'
++	@echo  '  clang-analyzer  - Check with clang static analyzer'
++	@echo  '  clang-tidy      - Check with clang-tidy'
+ 	@echo  ''
+ 	@echo  'Tools:'
+ 	@echo  '  nsdeps          - Generate missing symbol namespace dependencies'
+diff --git a/scripts/clang-tools/Makefile.clang-tools b/scripts/clang-tools/Makefile.clang-tools
+new file mode 100644
+index 000000000000..7ad3308c1937
+--- /dev/null
++++ b/scripts/clang-tools/Makefile.clang-tools
+@@ -0,0 +1,23 @@
++# SPDX-License-Identifier: GPL-2.0
++#
++# Copyright (C) Google LLC, 2020
++#
++# Author: Nathan Huckleberry <nhuck@google.com>
++#
++PHONY += clang-tidy
++clang-tidy:
++ifdef CONFIG_CC_IS_CLANG
++	$(PYTHON3) scripts/clang-tools/gen_compile_commands.py
++	$(PYTHON3) scripts/clang-tools/run-clang-tools.py clang-tidy compile_commands.json
++else
++	$(error clang-tidy requires CC=clang)
++endif
 +
- 	parsed_hstate = h;
- }
- 
-@@ -5647,7 +5650,10 @@ void __init hugetlb_cma_reserve(int order)
- 	unsigned long size, reserved, per_node;
- 	int nid;
- 
--	cma_reserve_called = true;
-+	if (cma_reserve_called)
-+		return;
-+	else
-+		cma_reserve_called = true;
- 
- 	if (!hugetlb_cma_size)
- 		return;
++PHONY += clang-analyzer
++clang-analyzer:
++ifdef CONFIG_CC_IS_CLANG
++	$(PYTHON3) scripts/clang-tools/gen_compile_commands.py
++	$(PYTHON3) scripts/clang-tools/run-clang-tools.py static-analyzer compile_commands.json
++else
++	$(error clang-analyzer requires CC=clang)
++endif
+diff --git a/scripts/gen_compile_commands.py b/scripts/clang-tools/gen_compile_commands.py
+similarity index 100%
+rename from scripts/gen_compile_commands.py
+rename to scripts/clang-tools/gen_compile_commands.py
+diff --git a/scripts/clang-tools/run-clang-tools.py b/scripts/clang-tools/run-clang-tools.py
+new file mode 100755
+index 000000000000..00b8532c1729
+--- /dev/null
++++ b/scripts/clang-tools/run-clang-tools.py
+@@ -0,0 +1,69 @@
++#!/usr/bin/env python
++# SPDX-License-Identifier: GPL-2.0
++#
++# Copyright (C) Google LLC, 2020
++#
++# Author: Nathan Huckleberry <nhuck@google.com>
++#
++"""A helper routine run clang-tidy and the clang static-analyzer on
++compile_commands.json."""
++
++import argparse
++import json
++import logging
++import multiprocessing
++import os
++import subprocess
++import sys
++
++def parse_arguments():
++  """Set up and parses command-line arguments.
++  Returns:
++    args: Dict of parsed args
++      Has keys "file" and "type"
++  """
++  usage = """Run clang-tidy or the clang static-analyzer on a
++  compilation database."""
++  parser = argparse.ArgumentParser(description=usage)
++
++  type_help = ("Type of analysis to be performed")
++  parser.add_argument("type", choices=["clang-tidy", "static-analyzer"],
++                      help=type_help)
++  file_path_help = ("Path to the compilation database to parse")
++  parser.add_argument("file",  type=str, help=file_path_help)
++
++  args = parser.parse_args()
++
++  return args
++
++def init(l,t):
++  global lock
++  global analysis_type
++  lock = l
++  analysis_type = t
++
++def run_analysis(entry):
++  filename = entry["file"]
++  checks = "-checks=-*,linuxkernel-*" if (analysis_type == "clang-tidy") else "-checks=-*,clang-analyzer-*"
++  p = subprocess.run(["clang-tidy", "-p", os.getcwd(),
++                    checks, filename],
++                    stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
++  lock.acquire()
++  print(filename, file=sys.stderr)
++  sys.stderr.buffer.write(p.stdout)
++  lock.release()
++
++
++def main():
++  args = parse_arguments()
++  filename = args.file
++
++  #Read JSON data into the datastore variable
++  with open(filename, "r") as f:
++    datastore = json.load(f)
++    lock = multiprocessing.Lock()
++    pool = multiprocessing.Pool(initializer=init, initargs=(lock, args.type))
++    pool.map(run_analysis,datastore)
++
++if __name__ == "__main__":
++    main()
 -- 
-2.25.4
+2.27.0.389.gc38d7665816-goog
 
