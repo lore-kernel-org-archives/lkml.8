@@ -2,118 +2,88 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C30EBC433E5
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 17:27:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 231A4C433E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 17:30:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A46FD22518
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 17:27:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mrk8nP8Z"
+	by mail.kernel.org (Postfix) with ESMTP id 028DC22450
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 17:30:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728961AbgGNR14 (ORCPT
+        id S1728494AbgGNRav (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 13:27:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53714 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726364AbgGNR1z (ORCPT
+        Tue, 14 Jul 2020 13:30:51 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:42931 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726364AbgGNRav (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 13:27:55 -0400
-Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3A32DC061755;
-        Tue, 14 Jul 2020 10:27:55 -0700 (PDT)
-Received: by mail-lj1-x242.google.com with SMTP id h22so24081103lji.9;
-        Tue, 14 Jul 2020 10:27:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=rJflZjiXOdQ2b9X0uINcJ4Ucju/qSppPTgvRYeR307M=;
-        b=mrk8nP8ZaXDxwoSsyA8k3vVqLdKjX86zxjouhivf+G7iTeVFciVWjDwblY2qlwRa9V
-         9emGm1OFwkHsv0RNh6k8KhURGH1D+FwH8FkT9vHm1WjxGSwkBcc7aO9Y48XsU2c2Ndfp
-         ncNp8CUw5jw3N9JSVvpdTbpMguEDLfXGvNBMVwFLUb+lT15MUcBJEF7DDDa2ApoKe2px
-         /yca6v25q5b+Ew54GU19aO3kaPD9/jBteoDRN5SWUr1u5ykP8GzprDDHxTAHJoLMATxH
-         L2Itbr80hoTwWdfBBNrcSmyBVo7l9b1xeyICzyCQG5N5jUV/3HnVVjmUfM6PWg6pxsNZ
-         6wcA==
+        Tue, 14 Jul 2020 13:30:51 -0400
+Received: by mail-ot1-f67.google.com with SMTP id g37so13625772otb.9;
+        Tue, 14 Jul 2020 10:30:50 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=rJflZjiXOdQ2b9X0uINcJ4Ucju/qSppPTgvRYeR307M=;
-        b=ET10/RrCXX3P6owUfagMkf0F59cQkj4lMqorDfThTR08/3iHauj8+fW55m8TA/Vg88
-         qLZFkJZGsi4KatUVHxXehJBsyv3utbjY7xrDh8BCimVCF+TKkVo/3H/lMeqeHHBeTSaz
-         4+lRiHLYzrfPMf6NpDUnbXPfZCCIIYKfgGlaaHzDGUgwAqvvnKWAY121nd6itBt+DruG
-         SswYVc6sJ8DLxpRsnFfK0F29Kox+ZgXz9meTTDPPKy5aH0INGdq0hShlxKZgsxOA5bG/
-         DBIz3ogC8hg/7EmfPwEu0UY0LK0dpDHf4vQSXYZ3HchrZ+sTxr9f0khpbhNKhzLZORbL
-         Ip1g==
-X-Gm-Message-State: AOAM532BdN0pyMUdsKZOgY9jkGw8oBX6mDyl7p6M/TurDAcVc38mQSIp
-        mIUyrGtXqPfVKmBkFmw4CRMPqcrrSmQDhAeLeGj17A==
-X-Google-Smtp-Source: ABdhPJwXkCPdv8pEQTPBzV1xLgwG/Fk/yXhNz7NQyeZbo2FvwLmIalitSURyFPmgQdvxw6/FjTtTVnFu1TFItk7wtV8=
-X-Received: by 2002:a2e:9a4d:: with SMTP id k13mr2946227ljj.283.1594747673686;
- Tue, 14 Jul 2020 10:27:53 -0700 (PDT)
+        bh=M/cNHRoFa4ZZjmVaGoyconZpvhXMck6nqNSnofkb4M4=;
+        b=nrNtTWExrjtJQTMqOuFC0PAiJU1mI/zJaZ5gl6ioFdR3nAr+sVfZYOg8crKEvKjSXm
+         dyVHI8L40O/1VV5iEXwufeH8Uy1WBT5jDCqtjv8SEgLEU/qWYha2Kqq9AbHOOGN+/aQM
+         8pnjatAYfL1KJI1pF2e741MZ4Squs58N8rmMlHFYdAW2gGwLk50l6VSKoeqGv9Lr3YLO
+         7tdbAXi5B2ozV+GR0VZGUicWeZNhJs+BgX/n6gZPImmD0YqMAwzH27A4qUL/m3Rj1ng5
+         cULTWwcxf00Qsq7T0Ffa896lhDZemrI5hxgx/sDsf/0HPr/3l9UZOtZbXBzRWyupUQDK
+         0cFg==
+X-Gm-Message-State: AOAM531qjhyic5O5654wnIwMrO9mqw55motHZpo07AZe5Whr5i2oaI5U
+        IdZDpAorSBMZfloE4lmRdb54Z48sHyNenaQCLyc5BINH
+X-Google-Smtp-Source: ABdhPJyjtOKVrskn2k0uotMlFr81PpuggxZ+Bi4Vw/Z+yFlzfzcEe35xF2O5iYz07cLAkDBRX5w969ExRVCIDRcAt/8=
+X-Received: by 2002:a9d:1b0d:: with SMTP id l13mr4989325otl.145.1594747850060;
+ Tue, 14 Jul 2020 10:30:50 -0700 (PDT)
 MIME-Version: 1.0
-References: <CAEf4BzZRGOsTiW3uFWd1aY6K5Yi+QBrTeC5FNOo6uVXviXuX4g@mail.gmail.com>
- <20200714012732.195466-1-yepeilin.cs@gmail.com> <CAEf4Bzas-C7hKX=AutcV1fz-F_q2P8+OCnrA37h-nCytLHPn1g@mail.gmail.com>
-In-Reply-To: <CAEf4Bzas-C7hKX=AutcV1fz-F_q2P8+OCnrA37h-nCytLHPn1g@mail.gmail.com>
-From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Date:   Tue, 14 Jul 2020 10:27:42 -0700
-Message-ID: <CAADnVQ+jUPGJapkvKW=AfXESD6Vz2iuONvJm8eJm5Yd+u9mJ+w@mail.gmail.com>
-Subject: Re: [Linux-kernel-mentees] [PATCH v2] bpf: Fix NULL pointer
- dereference in __btf_resolve_helper_id()
-To:     Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Cc:     Peilin Ye <yepeilin.cs@gmail.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@chromium.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        open list <linux-kernel@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>
+References: <20200710062019.28755-1-grandmaster@al2klimov.de>
+ <20200713113430.1c1777bb@lwn.net> <CAMuHMdXoUME_dCOZP1N0tXyMv61edfNECM4-n4NPa56YbBCncw@mail.gmail.com>
+ <20200714074022.24481c73@lwn.net>
+In-Reply-To: <20200714074022.24481c73@lwn.net>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Tue, 14 Jul 2020 19:30:38 +0200
+Message-ID: <CAMuHMdXMumw9CnMHOc_GJGO0MNsLowTv-wE399BMJveXgTXbLQ@mail.gmail.com>
+Subject: Re: [PATCH] OPENRISC ARCHITECTURE: Replace HTTP links with HTTPS ones
+To:     Jonathan Corbet <corbet@lwn.net>
+Cc:     "Alexander A. Klimov" <grandmaster@al2klimov.de>,
+        Jonas Bonn <jonas@southpole.se>,
+        Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>,
+        Stafford Horne <shorne@gmail.com>,
+        Openrisc <openrisc@lists.librecores.org>,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 13, 2020 at 9:38 PM Andrii Nakryiko
-<andrii.nakryiko@gmail.com> wrote:
+On Tue, Jul 14, 2020 at 3:40 PM Jonathan Corbet <corbet@lwn.net> wrote:
+> On Tue, 14 Jul 2020 09:22:39 +0200
+> Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+> > > > -     website         http://openrisc.io
+> > > > +     website         https://openrisc.io
+> > > >       email           openrisc@lists.librecores.org
+> > > >       =======         =============================
+> > >
+> > > Applied, thanks.
+> >
+> > Is that site accessible for anyone? It times out for me.
 >
-> On Mon, Jul 13, 2020 at 6:29 PM Peilin Ye <yepeilin.cs@gmail.com> wrote:
-> >
-> > Prevent __btf_resolve_helper_id() from dereferencing `btf_vmlinux`
-> > as NULL. This patch fixes the following syzbot bug:
-> >
-> >     https://syzkaller.appspot.com/bug?id=5edd146856fd513747c1992442732e5a0e9ba355
+> Works for me.
 
-The link looks wrong?
-Nothing in the stack trace indicates this issue.
+Now it indeed does.
 
-> > Reported-by: syzbot+ee09bda7017345f1fbe6@syzkaller.appspotmail.com
-> > Signed-off-by: Peilin Ye <yepeilin.cs@gmail.com>
-> > ---
-> > Thank you for reviewing my patch! I am new to Linux kernel development; would
-> > the log message and errno be appropriate for this case?
->
-> I think it's good enough, thanks for the fix.
->
-> Acked-by: Andrii Nakryiko <andriin@fb.com>
->
-> >
-> > Change in v2:
-> >     - Split NULL and IS_ERR cases.
-> >
-> >  kernel/bpf/btf.c | 5 +++++
-> >  1 file changed, 5 insertions(+)
-> >
->
-> [...]
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
