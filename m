@@ -2,97 +2,71 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C28EEC433E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 08:28:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C64FC433E2
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 08:25:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A291B21D92
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 08:28:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594715309;
-	bh=pIHiPnXl29m/SBs4JyChDxAqMplo09HuFsHg6sAYMJo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ciU1PWDV12sDkpBUguPvdg3+qtNnsnU+ghlEbFx0hSlzp5CxhD/ofkOgXeo5ZKHZW
-	 IaB1hPa42OYJIQYNMHoaHhh5IuxqdXvX3wG9jTuiELrrYXtZgpPy3nsb7jYhb2S81q
-	 Q2bZycWO+hda/h/NIE9QvqDCmTv/6zI+zTiY8dVw=
+	by mail.kernel.org (Postfix) with ESMTP id 7482621835
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 08:25:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="qnPEx8f4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726793AbgGNI22 (ORCPT
+        id S1726479AbgGNIZ3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 04:28:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56832 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725816AbgGNI22 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 04:28:28 -0400
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4A18121897;
-        Tue, 14 Jul 2020 08:28:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594715307;
-        bh=pIHiPnXl29m/SBs4JyChDxAqMplo09HuFsHg6sAYMJo=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=cca/sw3/jyus9ULYMXo0h2TBjV/Q+OEaM3QXhOQQN9gh0rzZoCsr+lXDNe1Y8FtjC
-         zH6wIyiBUzvZMiMF+TML3mUUcwPbiqsXG5lRUNj51n2NEC/bHHPxfZLPDLXc90vJzT
-         9YqF/zOe/+XKPeP1v7ljoCLfGG/EMIGPkjW39ynI=
-Date:   Tue, 14 Jul 2020 09:28:21 +0100
-From:   Will Deacon <will@kernel.org>
-To:     Baolin Wang <baolin.wang@linux.alibaba.com>
-Cc:     joro@8bytes.org, robin.murphy@arm.com, agross@kernel.org,
-        bjorn.andersson@linaro.org, matthias.bgg@gmail.com,
-        robdclark@gmail.com, robh@kernel.org, tomeu.vizoso@collabora.com,
-        steven.price@arm.com, alyssa.rosenzweig@collabora.com,
-        airlied@linux.ie, daniel@ffwll.ch, baolin.wang7@gmail.com,
-        linux-arm-kernel@lists.infradead.org,
-        iommu@lists.linux-foundation.org, linux-arm-msm@vger.kernel.org,
-        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
-        dri-devel@lists.freedesktop.org
-Subject: Re: [PATCH v2 2/2] iommu: Add gfp parameter to io_pgtable_ops->map()
-Message-ID: <20200714082821.GC4516@willie-the-truck>
-References: <cover.1591930156.git.baolin.wang@linux.alibaba.com>
- <3093df4cb95497aaf713fca623ce4ecebb197c2e.1591930156.git.baolin.wang@linux.alibaba.com>
+        Tue, 14 Jul 2020 04:25:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54100 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725793AbgGNIZ2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 04:25:28 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DC3F8C061755;
+        Tue, 14 Jul 2020 01:25:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=NEZwXm7zIVwhexgTBK1mEJLmzgEMI2bgToX51xgqmB0=; b=qnPEx8f4QgxTMq/2KZsUkeDNlG
+        lZfLmt7MLBU63aX/MGMi+nxcE1QmuHryMIyjOczvhvnFS2J/cvl3KN3OmqTbIpeFbsYS1m6vjNQhq
+        KbFw214YQziN+ILm/P83k8PuU46L9xdltVo4jheS3j5Q/kf1Yv/4RyUh03ezKx5wAYRaR4E4FRbmx
+        7C6WoeDC6sflqomvZ0IF9pum3PatfKWKCaOToAiEtg37L9MJiZZabBYb+Rh/J0xvENC+uFmi/562u
+        tHd/YE9sQs3rul9Hj+lm8f6624cznt1/ZH9P7/Qo8KVTpr4xRS6Ks5E2gSrLRDQSWET7Jr3s6+CL+
+        na47ColA==;
+Received: from hch by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jvGFW-00084s-HT; Tue, 14 Jul 2020 08:25:14 +0000
+Date:   Tue, 14 Jul 2020 09:25:14 +0100
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Lu Baolu <baolu.lu@linux.intel.com>
+Cc:     Joerg Roedel <joro@8bytes.org>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Jean-Philippe Brucker <jean-philippe@linaro.org>,
+        Kevin Tian <kevin.tian@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Ashok Raj <ashok.raj@intel.com>, kvm@vger.kernel.org,
+        Cornelia Huck <cohuck@redhat.com>,
+        linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org,
+        Robin Murphy <robin.murphy@arm.com>
+Subject: Re: [PATCH v3 4/4] vfio/type1: Use iommu_aux_at(de)tach_group() APIs
+Message-ID: <20200714082514.GA30622@infradead.org>
+References: <20200714055703.5510-1-baolu.lu@linux.intel.com>
+ <20200714055703.5510-5-baolu.lu@linux.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <3093df4cb95497aaf713fca623ce4ecebb197c2e.1591930156.git.baolin.wang@linux.alibaba.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200714055703.5510-5-baolu.lu@linux.intel.com>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 12, 2020 at 11:39:55AM +0800, Baolin Wang wrote:
-> Now the ARM page tables are always allocated by GFP_ATOMIC parameter,
-> but the iommu_ops->map() function has been added a gfp_t parameter by
-> commit 781ca2de89ba ("iommu: Add gfp parameter to iommu_ops::map"),
-> thus io_pgtable_ops->map() should use the gfp parameter passed from
-> iommu_ops->map() to allocate page pages, which can avoid wasting the
-> memory allocators atomic pools for some non-atomic contexts.
-> 
-> Signed-off-by: Baolin Wang <baolin.wang@linux.alibaba.com>
-> ---
->  drivers/gpu/drm/panfrost/panfrost_mmu.c |  2 +-
->  drivers/iommu/arm-smmu-v3.c             |  2 +-
->  drivers/iommu/arm-smmu.c                |  2 +-
->  drivers/iommu/io-pgtable-arm-v7s.c      | 18 +++++++++---------
->  drivers/iommu/io-pgtable-arm.c          | 18 +++++++++---------
->  drivers/iommu/ipmmu-vmsa.c              |  2 +-
->  drivers/iommu/msm_iommu.c               |  2 +-
->  drivers/iommu/mtk_iommu.c               |  2 +-
->  drivers/iommu/qcom_iommu.c              |  2 +-
->  include/linux/io-pgtable.h              |  2 +-
->  10 files changed, 26 insertions(+), 26 deletions(-)
+On Tue, Jul 14, 2020 at 01:57:03PM +0800, Lu Baolu wrote:
+> Replace iommu_aux_at(de)tach_device() with iommu_aux_at(de)tach_group().
+> It also saves the IOMMU_DEV_FEAT_AUX-capable physcail device in the
+> vfio_group data structure so that it could be reused in other places.
 
-I was a bit nervous about us passing GFP_KERNEL with a spinlock held, but
-it looks like you've checked all the callsites and it looks fine to me, so:
-
-Acked-by: Will Deacon <will@kernel.org>
-
-Joerg -- not sure what you want to do with this one, as it's likely to
-conflict (trivially) with unrelated driver changes.
-
-Will
+This removes the last user of iommu_aux_attach_device and
+iommu_aux_detach_device, which can be removed now.
