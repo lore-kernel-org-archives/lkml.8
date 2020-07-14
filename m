@@ -2,128 +2,119 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09739C433E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:30:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67DD2C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:30:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D867A206F0
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:30:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4877220EDD
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:30:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hRtCYfvr"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="g6gZ1A4W"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729286AbgGNSac (ORCPT
+        id S1729270AbgGNSab (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 14:30:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35836 "EHLO
+        Tue, 14 Jul 2020 14:30:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35830 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729257AbgGNSa0 (ORCPT
+        with ESMTP id S1729256AbgGNSa0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 14 Jul 2020 14:30:26 -0400
-Received: from mail-il1-x143.google.com (mail-il1-x143.google.com [IPv6:2607:f8b0:4864:20::143])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8F464C08C5C1
+Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5630DC061755
         for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 11:30:26 -0700 (PDT)
-Received: by mail-il1-x143.google.com with SMTP id s21so15044978ilk.5
+Received: by mail-pl1-x642.google.com with SMTP id q17so7363777pls.9
         for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 11:30:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:reply-to:from:date:message-id
-         :subject:to:cc;
-        bh=dWHcSl+qV/ewcMbxZBTT0+5lIFUMoe4sskE51jeT9lk=;
-        b=hRtCYfvrOgpiPBp2kK7bu3rXM3+A1WNg1/pBdBE/siaWiM/19t27VY9kkFGjEq+SJK
-         ZYvOB00ShqmSXS7CXhPY8hZ9MCMnJS6Le3tuc7ckIa1uqYQINYDueKcnthpHeIae4vI6
-         yepNLFfcmEzLvmlLX6QA6wM3yFaUX3DigXae81DLwVuCO9cyo/Mf+lTXGlauuloY8L9r
-         yuTDSstfIPBPncoGehCS60mw7HFl16ZNvxyQU8IqVnkQoWDFP83Vdmtv87kqcuxMgo2r
-         NqW8K3Grv6DvAv5jpkr/t6gv3c4PEIR1qWa+33t1KsIcLY5+o6NwaWxxJxiSSk8tj6Mj
-         3pXA==
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition;
+        bh=W+8q1daBddAXvOtBFXAsV/dQeLyDputz9vwjDvvFrCo=;
+        b=g6gZ1A4WuOIoYr8rxcyDj1SdE42QcHNevJm1VxLwaCiSS2uhXIbMQj4fbdrcNwyzHk
+         KnvFuRPRUDe5Yf+Rh2mFTJTuON6B+mzDyipBnRMnXk3yrjPC9OfA6/+sq/1SZ4MYJwSq
+         78eMkxt7DiIedoW1NofxUFgnmjqqoXHpk5SPw=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:reply-to
-         :from:date:message-id:subject:to:cc;
-        bh=dWHcSl+qV/ewcMbxZBTT0+5lIFUMoe4sskE51jeT9lk=;
-        b=oB+PathOP1svVHHeXJE+cY2WHJobUg1rvb/mKEqkdc32mcfkpy8TdDkUfHeb+/if+n
-         2iISsKEay/jFl/ZJYwcSTjwTRWRsVuJ9w9ocfTmv6JQTcMvUHzbH3U3WzByqJwWJEb1u
-         jRhQkWcgimqVV9tgeD2TBO2FT+Zp85nxU8NnbiSjumysB9i9swl1jylQ6qL3p/z3NnUg
-         x6YmmDxPHChECuvRsaivQb/BzSqYCuPVB5qvNfVIhoOHUL31oCg8wuD3Fp/VxBsE5n24
-         9XLmiIC0r1n40eEipASTl/8JB2YoHgREXvB1PYZHLXSXNXQmnz8BTHq0Hbcu3vfsP/vv
-         fMRw==
-X-Gm-Message-State: AOAM533F0YxSrjA9JUtDukuKP6hzN46aMm6nj1EzaDXOTctCAIfeqkhg
-        pSmGmsNZ30siL9iR7w8vbmfwegncpi1amxiBsAQ=
-X-Google-Smtp-Source: ABdhPJzx18mqHyQ4etVh1LD4UcOLiKcnXXsoj42hNNmGLq1OnW/+nQ0kwzVRMEqW0axSc18V2VGu02BP/HutZChrMrM=
-X-Received: by 2002:a92:d843:: with SMTP id h3mr6290036ilq.255.1594751425849;
- Tue, 14 Jul 2020 11:30:25 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition;
+        bh=W+8q1daBddAXvOtBFXAsV/dQeLyDputz9vwjDvvFrCo=;
+        b=DdYBWjmmd+GBbLIAU5xqGiiY+iLa0yjouXAhKyYH+FL2O0L4qVIgYMtHW/7v1yLZxZ
+         Ujli73JAIu22N/KjwaXkqRE/uD4TLBUyJdLeVpzolNc1337g70nM2Cb2AJ2Q3tcZw2Xl
+         P2a2/Y0aYE6WEFRfcnbGAbgr/U/2NAWwtwTsxNw4ndK5V2njWgQpBrmsyppAM5d9Priv
+         9xzE6C2i3kWpqnesj138ECMdxhnSXp8nJCzO1UGbEaiqhFrKZ72360VKOEaRdi1CChkn
+         jcqPS2RjMONkfTQ5D6eXNhX6zbZ4DHsfIgeife/W036B1nKapI++0Pko0haHpuf7opzq
+         eqCA==
+X-Gm-Message-State: AOAM531cFMQRFOajFbCzZiB1e2QzCFdFELW1/HLcJb6uWGVAQ3CGCWFm
+        JXOv5Dnr/h6RzhTOqYfVLN/k/Q==
+X-Google-Smtp-Source: ABdhPJya+EiWFEJrlE0qPDf2Gq7NOZdjqmit6Y9e6eKWmO2lnvPlzplAV/n+sFRa/06ifs0zFz25Lg==
+X-Received: by 2002:a17:90a:ce0c:: with SMTP id f12mr6190895pju.19.1594751425748;
+        Tue, 14 Jul 2020 11:30:25 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id e195sm17091209pfh.218.2020.07.14.11.30.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 14 Jul 2020 11:30:24 -0700 (PDT)
+Date:   Tue, 14 Jul 2020 11:30:23 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Shuah Khan <shuah@kernel.org>
+Cc:     Ralph Campbell <rcampbell@nvidia.com>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Will Drewry <wad@chromium.org>,
+        linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] selftests/harness: Limit step counter reporting
+Message-ID: <202007141129.54335CEAC6@keescook>
 MIME-Version: 1.0
-References: <20200629140928.858507-1-nivedita@alum.mit.edu>
- <20200714023836.2310569-1-nivedita@alum.mit.edu> <CA+icZUXSPfybFtzQB3wKn9spQmEPnQu_iGPWkRisAmRQbJLWXA@mail.gmail.com>
- <20200714141550.GA329060@rani.riverdale.lan> <CA+icZUU88wYmyycthW7AQUZ72HGa9RWPZmxVS5Gm6UW=6ES9kA@mail.gmail.com>
-In-Reply-To: <CA+icZUU88wYmyycthW7AQUZ72HGa9RWPZmxVS5Gm6UW=6ES9kA@mail.gmail.com>
-Reply-To: sedat.dilek@gmail.com
-From:   Sedat Dilek <sedat.dilek@gmail.com>
-Date:   Tue, 14 Jul 2020 20:30:14 +0200
-Message-ID: <CA+icZUWHdsk9+wkTZOdDghM7pRZyk2vHgxpYx62vPooqohzbYw@mail.gmail.com>
-Subject: Re: [PATCH v4 0/7] x86/boot: Remove runtime relocations from
- compressed kernel
-To:     Arvind Sankar <nivedita@alum.mit.edu>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Fangrui Song <maskray@google.com>,
-        Dmitry Golovin <dima@golovin.in>,
-        Clang-Built-Linux ML <clang-built-linux@googlegroups.com>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Daniel Kiper <daniel.kiper@oracle.com>,
-        Kees Cook <keescook@chromium.org>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        "H . J . Lu" <hjl@sourceware.org>, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> I did a full new build...
->
-> ...and it fails with ld.lld-11 as linker:
->
-> ld.lld-11 -m elf_x86_64 -pie  --no-dynamic-linker -r -o
-> arch/x86/boot/compressed/.tmp_misc.o arch/x86/boot/compressed/misc.o
-> -T arch/x86/boot/compressed/.tmp_misc.ver; mv -f
-> arch/x86/boot/compressed/.tmp_misc.o arch/x86/boot/compressed/misc.o;
-> rm -f arch/x86/boot/compressed/.tmp_misc.ver; fi
-> *** ld.lld-11: error: -r and -pie may not be used together ***
-> make[5]: *** [scripts/Makefile.build:281:
-> arch/x86/boot/compressed/misc.o] Error 1
->
-> It's annoying to fail on the last minutes of a build.
-> Sorry for being very honest.
->
+When the selftest "step" counter grew beyond 255, non-fatal warnings
+were being emitted, which is noisy and pointless. There are selftests
+with more than 255 steps (especially those in loops, etc). Instead,
+just cap "steps" to 254 and do not report the saturation.
 
-I applied this diff...
+Reported-by: Ralph Campbell <rcampbell@nvidia.com>
+Tested-by: Ralph Campbell <rcampbell@nvidia.com>
+Fixes: 9847d24af95c ("selftests/harness: Refactor XFAIL into SKIP")
+Signed-off-by: Kees Cook <keescook@chromium.org>
+---
+ tools/testing/selftests/kselftest_harness.h | 9 ++-------
+ 1 file changed, 2 insertions(+), 7 deletions(-)
 
-$ git diff arch/x86/boot/compressed/Makefile
-diff --git a/arch/x86/boot/compressed/Makefile
-b/arch/x86/boot/compressed/Makefile
-index 789d5d14d8b0..9ba52a656838 100644
---- a/arch/x86/boot/compressed/Makefile
-+++ b/arch/x86/boot/compressed/Makefile
-@@ -51,7 +51,10 @@ UBSAN_SANITIZE :=n
- KBUILD_LDFLAGS := -m elf_$(UTS_MACHINE)
- # Compressed kernel should be built as PIE since it may be loaded at any
- # address by the bootloader.
-+# LLD linker does not allow -r and -pie options to be used together.
-+ifndef CONFIG_LD_IS_LLD
- KBUILD_LDFLAGS += -pie $(call ld-option, --no-dynamic-linker)
-+endif
- LDFLAGS_vmlinux := -T
+diff --git a/tools/testing/selftests/kselftest_harness.h b/tools/testing/selftests/kselftest_harness.h
+index 935029d4fb21..4f78e4805633 100644
+--- a/tools/testing/selftests/kselftest_harness.h
++++ b/tools/testing/selftests/kselftest_harness.h
+@@ -680,7 +680,8 @@
+ 			__bail(_assert, _metadata->no_print, _metadata->step))
+ 
+ #define __INC_STEP(_metadata) \
+-	if (_metadata->passed && _metadata->step < 255) \
++	/* Keep "step" below 255 (which is used for "SKIP" reporting). */	\
++	if (_metadata->passed && _metadata->step < 253) \
+ 		_metadata->step++;
+ 
+ #define is_signed_type(var)       (!!(((__typeof__(var))(-1)) < (__typeof__(var))1))
+@@ -976,12 +977,6 @@ void __run_test(struct __fixture_metadata *f,
+ 		t->passed = 0;
+ 	} else if (t->pid == 0) {
+ 		t->fn(t, variant);
+-		/* Make sure step doesn't get lost in reporting */
+-		if (t->step >= 255) {
+-			ksft_print_msg("Too many test steps (%u)!?\n", t->step);
+-			t->step = 254;
+-		}
+-		/* Use 255 for SKIP */
+ 		if (t->skip)
+ 			_exit(255);
+ 		/* Pass is exit 0 */
+-- 
+2.25.1
 
- hostprogs      := mkpiggy
 
-...and was able to build, assemble, link arch/x86/boot/compressed/*.
-
-- Sedat -
+-- 
+Kees Cook
