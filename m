@@ -2,164 +2,88 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3757DC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 09:13:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72801C433E6
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 09:13:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 192D92145D
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 09:13:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4210521D7B
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 09:13:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="RK1/AHX1";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="UF/8CrTM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726851AbgGNJNQ (ORCPT
+        id S1727098AbgGNJN3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 05:13:16 -0400
-Received: from mx2.suse.de ([195.135.220.15]:56228 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725833AbgGNJNQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 05:13:16 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 1BAC0AAC7;
-        Tue, 14 Jul 2020 09:13:17 +0000 (UTC)
-Subject: Re: [PATCH] mm/hugetlb: hide nr_nodes in the internal of
- for_each_node_mask_to_[alloc|free]
-To:     Wei Yang <richard.weiyang@linux.alibaba.com>,
-        mike.kravetz@oracle.com, akpm@linux-foundation.org
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org
-References: <20200714073404.84863-1-richard.weiyang@linux.alibaba.com>
-From:   Vlastimil Babka <vbabka@suse.cz>
-Message-ID: <cd1651a0-35c6-7535-5782-ce7e31cc26e8@suse.cz>
-Date:   Tue, 14 Jul 2020 11:13:14 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Tue, 14 Jul 2020 05:13:29 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:42426 "EHLO
+        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727081AbgGNJN2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 05:13:28 -0400
+From:   Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1594718006;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=8ad5Ds6y4Cwxz0EA9bWnm/7kcoiw95HIzl75sRuD+Ac=;
+        b=RK1/AHX1Rve2bsD2WogQoxhSXwX9sHKm7rT41BX+73vjXmCqdEynjA8IQj8sv9s/3MRJkl
+        7wsONs10Lnv6MxBX8s3p0LVcNZI7hiUXqFGcWPjPdinhNN16X8KpS71PVSUoBtz4j6dOxQ
+        tlRnv6LI3eewOUpA85L6bGhr/sUEhcvrry5tUswQ7krfEMAWLvSFUx5pUZ5TZjFgEoHNMo
+        SkAwHf/xxr5XA34UaVcmCuD7P9KDGK4C+5iMRD2WT1IVIK8HFezod7Fmk4umFc884QNUgg
+        KT/+MGsgLEiwV34COnPbAfvYmgVfH3x7XAI2FPdc40OlkVIQ8CIT0V8YEpoxsQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1594718006;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=8ad5Ds6y4Cwxz0EA9bWnm/7kcoiw95HIzl75sRuD+Ac=;
+        b=UF/8CrTM1V/tJQbuBTT0/KNsCOaRx49ZdJWeyJxpZ0WhtFKXq6SR6DuOscvYQbSmZ8sw7b
+        uITmx7VQkw60JaAA==
+To:     Frederic Weisbecker <frederic@kernel.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Anna-Maria Gleixner <anna-maria@linutronix.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Juri Lelli <juri.lelli@redhat.com>
+Subject: Re: [PATCH 2/9] timer: Add comments about calc_index() ceiling work
+In-Reply-To: <20200707013253.26770-3-frederic@kernel.org>
+References: <20200707013253.26770-1-frederic@kernel.org> <20200707013253.26770-3-frederic@kernel.org>
+Date:   Tue, 14 Jul 2020 11:13:26 +0200
+Message-ID: <87tuyav4qx.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-In-Reply-To: <20200714073404.84863-1-richard.weiyang@linux.alibaba.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/14/20 9:34 AM, Wei Yang wrote:
-> The second parameter of for_each_node_mask_to_[alloc|free] is a loop
-> variant, which is not used outside of loop iteration.
-> 
-> Let's hide this.
-> 
-> Signed-off-by: Wei Yang <richard.weiyang@linux.alibaba.com>
-> ---
->  mm/hugetlb.c | 38 ++++++++++++++++++++------------------
->  1 file changed, 20 insertions(+), 18 deletions(-)
-> 
-> diff --git a/mm/hugetlb.c b/mm/hugetlb.c
-> index 57ece74e3aae..9c3d15fb317e 100644
-> --- a/mm/hugetlb.c
-> +++ b/mm/hugetlb.c
-> @@ -1196,17 +1196,19 @@ static int hstate_next_node_to_free(struct hstate *h, nodemask_t *nodes_allowed)
->  	return nid;
->  }
->  
-> -#define for_each_node_mask_to_alloc(hs, nr_nodes, node, mask)		\
-> -	for (nr_nodes = nodes_weight(*mask);				\
-> -		nr_nodes > 0 &&						\
-> +#define for_each_node_mask_to_alloc(hs, node, mask)			\
-> +	int __nr_nodes;							\
-> +	for (__nr_nodes = nodes_weight(*mask);				\
+Frederic Weisbecker <frederic@kernel.org> writes:
+>  static inline unsigned calc_index(unsigned expires, unsigned lvl)
+>  {
+> +	/*
+> +	 * Time may have past since the clock last reached an index of
+> +	 * this @lvl. And that time, below LVL_GRAN(@lvl), is going to
+> +	 * be substracted from the delta until we reach @expires. To
+> +	 * fix that we must add one level granularity unit to make sure
+> +	 * we rather expire late than early. Prefer ceil over floor.
 
-The problem with this is that if I use the macro twice in the same block, this
-will redefine __nr_nodes and fail to compile, no?
-In that case it's better to avoid setting up this trap, IMHO.
+This comment confuses the hell out of me.
 
-> +		__nr_nodes > 0 &&					\
->  		((node = hstate_next_node_to_alloc(hs, mask)) || 1);	\
-> -		nr_nodes--)
-> +		__nr_nodes--)
->  
-> -#define for_each_node_mask_to_free(hs, nr_nodes, node, mask)		\
-> -	for (nr_nodes = nodes_weight(*mask);				\
-> -		nr_nodes > 0 &&						\
-> +#define for_each_node_mask_to_free(hs, node, mask)			\
-> +	int __nr_nodes;							\
-> +	for (__nr_nodes = nodes_weight(*mask);				\
-> +		__nr_nodes > 0 &&					\
->  		((node = hstate_next_node_to_free(hs, mask)) || 1);	\
-> -		nr_nodes--)
-> +		__nr_nodes--)
->  
->  #ifdef CONFIG_ARCH_HAS_GIGANTIC_PAGE
->  static void destroy_compound_gigantic_page(struct page *page,
-> @@ -1403,7 +1405,7 @@ static void __free_huge_page(struct page *page)
->  	 * reservation.  If the page was associated with a subpool, there
->  	 * would have been a page reserved in the subpool before allocation
->  	 * via hugepage_subpool_get_pages().  Since we are 'restoring' the
-> -	 * reservtion, do not call hugepage_subpool_put_pages() as this will
-> +	 * reservation, do not call hugepage_subpool_put_pages() as this will
->  	 * remove the reserved page from the subpool.
->  	 */
->  	if (!restore_reserve) {
-> @@ -1760,10 +1762,10 @@ static int alloc_pool_huge_page(struct hstate *h, nodemask_t *nodes_allowed,
->  				nodemask_t *node_alloc_noretry)
->  {
->  	struct page *page;
-> -	int nr_nodes, node;
-> +	int node;
->  	gfp_t gfp_mask = htlb_alloc_mask(h) | __GFP_THISNODE;
->  
-> -	for_each_node_mask_to_alloc(h, nr_nodes, node, nodes_allowed) {
-> +	for_each_node_mask_to_alloc(h, node, nodes_allowed) {
->  		page = alloc_fresh_huge_page(h, gfp_mask, node, nodes_allowed,
->  						node_alloc_noretry);
->  		if (page)
-> @@ -1787,10 +1789,10 @@ static int alloc_pool_huge_page(struct hstate *h, nodemask_t *nodes_allowed,
->  static int free_pool_huge_page(struct hstate *h, nodemask_t *nodes_allowed,
->  							 bool acct_surplus)
->  {
-> -	int nr_nodes, node;
-> +	int node;
->  	int ret = 0;
->  
-> -	for_each_node_mask_to_free(h, nr_nodes, node, nodes_allowed) {
-> +	for_each_node_mask_to_free(h, node, nodes_allowed) {
->  		/*
->  		 * If we're returning unused surplus pages, only examine
->  		 * nodes with surplus pages.
-> @@ -2481,9 +2483,9 @@ int alloc_bootmem_huge_page(struct hstate *h)
->  int __alloc_bootmem_huge_page(struct hstate *h)
->  {
->  	struct huge_bootmem_page *m;
-> -	int nr_nodes, node;
-> +	int node;
->  
-> -	for_each_node_mask_to_alloc(h, nr_nodes, node, &node_states[N_MEMORY]) {
-> +	for_each_node_mask_to_alloc(h, node, &node_states[N_MEMORY]) {
->  		void *addr;
->  
->  		addr = memblock_alloc_try_nid_raw(
-> @@ -2662,17 +2664,17 @@ static inline void try_to_free_low(struct hstate *h, unsigned long count,
->  static int adjust_pool_surplus(struct hstate *h, nodemask_t *nodes_allowed,
->  				int delta)
->  {
-> -	int nr_nodes, node;
-> +	int node;
->  
->  	VM_BUG_ON(delta != -1 && delta != 1);
->  
->  	if (delta < 0) {
-> -		for_each_node_mask_to_alloc(h, nr_nodes, node, nodes_allowed) {
-> +		for_each_node_mask_to_alloc(h, node, nodes_allowed) {
->  			if (h->surplus_huge_pages_node[node])
->  				goto found;
->  		}
->  	} else {
-> -		for_each_node_mask_to_free(h, nr_nodes, node, nodes_allowed) {
-> +		for_each_node_mask_to_free(h, node, nodes_allowed) {
->  			if (h->surplus_huge_pages_node[node] <
->  					h->nr_huge_pages_node[node])
->  				goto found;
-> 
+        /*
+         * The timer wheel has to guarantee that a timer does not fire
+         * early. Early expiry can happen due to:
+         * - Timer is armed at the edge of a tick
+         * - Truncation of the expiry time in the outer wheel levels
+         *
+         * Round up with level granularity to prevent this.
+         */
 
+Hmm?
+
+Thanks,
+
+        tglx
