@@ -2,67 +2,77 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2A96C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 19:40:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FF97C433E5
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 19:40:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B968822B47
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 19:40:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594755607;
-	bh=pcuKZNaNufkGLHLNWD8QpG9rGBl7RWapF2nTKQpekvc=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=MtFUS1N510fWxi6zxMep9nOzNr2sz582l/NUEGxCC3LsjKQNsd333KnRURUQDMvH7
-	 6xIB8XZrR5VRlVZXCoBCkSIfEwRHgOrg786kNvvATMimmrwlH7G4CWrpgq95W3Iy07
-	 lM6LP+1d+4W+bQTm0XkDVSO3fL8TejzhQ1JOnOes=
+	by mail.kernel.org (Postfix) with ESMTP id 61B8222B3A
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 19:40:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729932AbgGNTkG (ORCPT
+        id S1729890AbgGNTkD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 15:40:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49414 "EHLO mail.kernel.org"
+        Tue, 14 Jul 2020 15:40:03 -0400
+Received: from smtp.al2klimov.de ([78.46.175.9]:40740 "EHLO smtp.al2klimov.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729829AbgGNTkF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 15:40:05 -0400
-Subject: Re: [git pull] Input updates for v5.8-rc5
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594755604;
-        bh=pcuKZNaNufkGLHLNWD8QpG9rGBl7RWapF2nTKQpekvc=;
-        h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=mzOWRcJMRTiDaHxP9rQQDoAD9PFEsJ1zPEh9/OU8USUNpZvCZUL9iSSSJfniKrLiJ
-         wUxoMyRuR+w/MUdzaGDG7/f02ixet9JW52aXIHcQhuf6hzSBbJ+gmM8ia4pT3Q3V0P
-         jKoF0gHDaDvhKBoT8my/Fs7uMEqiX/T159cOYPRU=
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20200714002748.GA1477546@dtor-ws>
-References: <20200714002748.GA1477546@dtor-ws>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20200714002748.GA1477546@dtor-ws>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/dtor/input.git for-linus
-X-PR-Tracked-Commit-Id: a50ca29523b18baea548bdf5df9b4b923c2bb4f6
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: e9919e11e219eaa5e8041b7b1a196839143e9125
-Message-Id: <159475560462.23655.616523737761639070.pr-tracker-bot@kernel.org>
-Date:   Tue, 14 Jul 2020 19:40:04 +0000
-To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-kernel@vger.kernel.org, linux-input@vger.kernel.org
+        id S1729832AbgGNTkC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 15:40:02 -0400
+Received: from authenticated-user (PRIMARY_HOSTNAME [PUBLIC_IP])
+        by smtp.al2klimov.de (Postfix) with ESMTPA id 10AE0BC070;
+        Tue, 14 Jul 2020 19:39:59 +0000 (UTC)
+From:   "Alexander A. Klimov" <grandmaster@al2klimov.de>
+To:     torvalds@linux-foundation.org, corbet@lwn.net, f4bug@amsat.org,
+        geert+renesas@glider.be, paulburton@kernel.org,
+        mchehab+samsung@kernel.org, ribalda@kernel.org, martink@posteo.de,
+        cyphar@cyphar.com, davej@codemonkey.org.uk,
+        linux-kernel@vger.kernel.org
+Cc:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
+Subject: [PATCH] CREDITS: remove link: http://www.andante.org
+Date:   Tue, 14 Jul 2020 21:39:54 +0200
+Message-Id: <20200714193954.49979-1-grandmaster@al2klimov.de>
+In-Reply-To: <20200714175528.46712-1-grandmaster@al2klimov.de>
+References: <20200714175528.46712-1-grandmaster@al2klimov.de>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Spamd-Bar: ++++++
+Authentication-Results: smtp.al2klimov.de;
+        auth=pass smtp.auth=aklimov@al2klimov.de smtp.mailfrom=grandmaster@al2klimov.de
+X-Spam: Yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Mon, 13 Jul 2020 17:53:32 -0700:
+Rationale:
+A completely white page with just an <iframe> in the <body>.
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/dtor/input.git for-linus
+Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
+---
+ Yes, I noted that some of the links removed by these "CREDITS: remove link:"
+ patches have email addresses with the same domain nearby.
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/e9919e11e219eaa5e8041b7b1a196839143e9125
+ Don't worry, I'll take care of them together with all other
+ dead email addresses - but not right now.
 
-Thank you!
 
+ CREDITS | 1 -
+ 1 file changed, 1 deletion(-)
+
+diff --git a/CREDITS b/CREDITS
+index 0787b5872906..ed58df9db15b 100644
+--- a/CREDITS
++++ b/CREDITS
+@@ -4113,7 +4113,6 @@ S: Japan
+ 
+ N: Eric Youngdale
+ E: eric@andante.org
+-W: http://www.andante.org
+ D: General kernel hacker
+ D: SCSI iso9660 and ELF
+ S: 6389 Hawk View Lane
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.wiki.kernel.org/userdoc/prtracker
+2.27.0
+
