@@ -2,181 +2,135 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 148AEC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 08:48:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 225F8C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 08:48:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DE7F12075B
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 08:48:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 023D02075B
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 08:48:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="fQNQBl07"
+	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="iiHzhBB7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726375AbgGNIsL (ORCPT
+        id S1726660AbgGNIsb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 04:48:11 -0400
-Received: from mailout2.w1.samsung.com ([210.118.77.12]:51517 "EHLO
-        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725816AbgGNIsK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 04:48:10 -0400
-Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
-        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20200714084808euoutp02c7929af6b8e3e12b2a84e27a5d160c3c~hkjJpqXOA0706607066euoutp02u
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 08:48:08 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20200714084808euoutp02c7929af6b8e3e12b2a84e27a5d160c3c~hkjJpqXOA0706607066euoutp02u
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1594716488;
-        bh=nf9+rmH806iB74WPwNFe4oqbior1dSEZhoJ7GlacjDk=;
-        h=From:To:Cc:Subject:Date:References:From;
-        b=fQNQBl071BT9nZGPGW5MqxTwd6FJBOO50PMkuGhb1BfM1KWFCnRQePG2aZGTa94w6
-         GU26+9s9H2U0Jt8dyHtH6VOPxJ+Y3NMhGYhzovsdULRDmqPibkO9N6aXT4Cx9OHkOy
-         YraeUZFUVK/gQGE3hKV6VTGTB5Lg1VosyUYRS6Jw=
-Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
-        20200714084808eucas1p19a340f9b3d245baa125565eafbc89992~hkjJeJzbP0985509855eucas1p1F;
-        Tue, 14 Jul 2020 08:48:08 +0000 (GMT)
-Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
-        eusmges1new.samsung.com (EUCPMTA) with SMTP id 44.FA.06456.7417D0F5; Tue, 14
-        Jul 2020 09:48:07 +0100 (BST)
-Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
-        20200714084807eucas1p1f6e680d162573c6a0660037172a65805~hkjJGzWkA3158931589eucas1p1e;
-        Tue, 14 Jul 2020 08:48:07 +0000 (GMT)
-Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
-        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20200714084807eusmtrp19327fdb45397ddfab5ad9af6edb2ba27~hkjJGJcdw0886508865eusmtrp1T;
-        Tue, 14 Jul 2020 08:48:07 +0000 (GMT)
-X-AuditID: cbfec7f2-7efff70000001938-a2-5f0d7147c03d
-Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
-        eusmgms2.samsung.com (EUCPMTA) with SMTP id CE.49.06017.7417D0F5; Tue, 14
-        Jul 2020 09:48:07 +0100 (BST)
-Received: from AMDC2765.digital.local (unknown [106.120.51.73]) by
-        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20200714084807eusmtip16580d3ed95cbdcd055ffd5bf2b5ca7df~hkjIq9KwM1330213302eusmtip1Y;
-        Tue, 14 Jul 2020 08:48:07 +0000 (GMT)
-From:   Marek Szyprowski <m.szyprowski@samsung.com>
-To:     linux-usb@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Minas Harutyunyan <hminas@synopsys.com>,
-        Felipe Balbi <balbi@kernel.org>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH] usb: dwc2: Fix error path in gadget registration
-Date:   Tue, 14 Jul 2020 10:48:00 +0200
-Message-Id: <20200714084800.11340-1-m.szyprowski@samsung.com>
-X-Mailer: git-send-email 2.17.1
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrLIsWRmVeSWpSXmKPExsWy7djP87ruhbzxBq9v2FhsnLGe1eJY2xN2
-        i+bF69ksGn/tZbe4vGsOm8WiZa3MFmuP3GV3YPfYtKqTzWP/3DXsHn1bVjF6bNn/mdHj8ya5
-        ANYoLpuU1JzMstQifbsEroymvrtsBQ8lKw788WxgXCfWxcjJISFgInH94hPGLkYuDiGBFYwS
-        e47cYANJCAl8YZRouWcKkfjMKNHQ9YMZpqPrbSM7RGI5o8TLhd+hHKCOuf+2soBUsQkYAlV1
-        gY0SEZCVOHzlNzNIEbNAC5PE4vMHwEYJCzhK7D77B2g5BweLgKrE2/NVIGFeAVuJV+cnM0Js
-        k5dYveEA1ObrbBLN3zIhbBeJey2tLBC2sMSr41vYIWwZidOTe1hAdkkINDNKPDy3lh3C6WGU
-        uNw0A2qqtcSdc7/YQBYzC2hKrN+lDxF2lOh/8g3sHgkBPokbbwVBwsxA5qRt05khwrwSHW1C
-        ENVqErOOr4Nbe/DCJagzPSQOXT8ODcVYib3P2hgnMMrNQti1gJFxFaN4amlxbnpqsWFearle
-        cWJucWleul5yfu4mRmAiOP3v+KcdjF8vJR1iFOBgVOLhlfDniRdiTSwrrsw9xCjBwawkwut0
-        9nScEG9KYmVValF+fFFpTmrxIUZpDhYlcV7jRS9jhQTSE0tSs1NTC1KLYLJMHJxSDYym5ie3
-        nonubvZfEqoq31W7ePvMRy/8FxtbanbF/N+35/p5J8usYwdrVt7ccXCyKROD/7zyCpdvzh8V
-        ImZJtfg81L3fEXU79d0WlQfnLBxbOmLMome58Oo2Bl9U9fvRYdmZePDsb8kPoUW2t/k8A+bO
-        nXDD2Zr5GkPNpNNc0T1rj6h9WVwisVCJpTgj0VCLuag4EQD2V+OBAAMAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrCLMWRmVeSWpSXmKPExsVy+t/xu7ruhbzxBgsmqFlsnLGe1eJY2xN2
-        i+bF69ksGn/tZbe4vGsOm8WiZa3MFmuP3GV3YPfYtKqTzWP/3DXsHn1bVjF6bNn/mdHj8ya5
-        ANYoPZui/NKSVIWM/OISW6VoQwsjPUNLCz0jE0s9Q2PzWCsjUyV9O5uU1JzMstQifbsEvYym
-        vrtsBQ8lKw788WxgXCfWxcjJISFgItH1tpG9i5GLQ0hgKaNEd+MjZoiEjMTJaQ2sELawxJ9r
-        XWwQRZ8YJQ41rWIDSbAJGAJ1d4HZIgKyEoev/GYGKWIW6GCS6O35yQiSEBZwlNh99g+QzcHB
-        IqAq8fZ8FUiYV8BW4tX5yYwQC+QlVm84wDyBkWcBI8MqRpHU0uLc9NxiI73ixNzi0rx0veT8
-        3E2MwBDcduznlh2MXe+CDzEKcDAq8fBK+PPEC7EmlhVX5h5ilOBgVhLhdTp7Ok6INyWxsiq1
-        KD++qDQntfgQoynQ7onMUqLJ+cD4yCuJNzQ1NLewNDQ3Njc2s1AS5+0QOBgjJJCeWJKanZpa
-        kFoE08fEwSnVwFjz1++FelXa3pRNzZf1jRyPXlbf2NpyN5atgOfkih38MslJy1ODV3T2M835
-        PY9X6frWfcFvTI032hou6fsVv+NhkGBX4Spl/6r/5tl8Hgyc0Xn3PFx2vBCXee8gtInz/o0b
-        Z6LuhO5+93iO5bXI5X6dvu+qfRvX7Ft3e4nQgms7o5Qt5vdJ2iqxFGckGmoxFxUnAgDdMmdb
-        VwIAAA==
-X-CMS-MailID: 20200714084807eucas1p1f6e680d162573c6a0660037172a65805
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20200714084807eucas1p1f6e680d162573c6a0660037172a65805
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20200714084807eucas1p1f6e680d162573c6a0660037172a65805
-References: <CGME20200714084807eucas1p1f6e680d162573c6a0660037172a65805@eucas1p1.samsung.com>
+        Tue, 14 Jul 2020 04:48:31 -0400
+Received: from mout.web.de ([212.227.17.11]:46467 "EHLO mout.web.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725816AbgGNIsa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 04:48:30 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
+        s=dbaedf251592; t=1594716504;
+        bh=657xU/XyB4tnfr32yGNOVfIho3ObAg38aWOJ2ik2nQc=;
+        h=X-UI-Sender-Class:To:Cc:Subject:From:Date;
+        b=iiHzhBB7kX2dmcip3UueM8avfOVgoY0tEuqqVZZKP9mtmz36eDaE27VIdiV0aLvcT
+         lSQqKlvcPRuvA/ZzQDCIVa8zIF2wGCVfKWN7RQli4Zz63+suCrgFG+8Ij1p7NwXYvW
+         dmOKmh4LXbSZZ5ZaABi7N6NGwrZqdQeQzm+lsDhg=
+X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
+Received: from [192.168.1.2] ([78.48.21.3]) by smtp.web.de (mrweb106
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 1MaHSp-1kOZZd2eG5-00WIp5; Tue, 14
+ Jul 2020 10:48:24 +0200
+To:     Clark Wang <xiaoning.wang@nxp.com>, linux-spi@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH 2/5] spi: lpspi: add NULL check when probe device
+From:   Markus Elfring <Markus.Elfring@web.de>
+Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
+ mQINBFg2+xABEADBJW2hoUoFXVFWTeKbqqif8VjszdMkriilx90WB5c0ddWQX14h6w5bT/A8
+ +v43YoGpDNyhgA0w9CEhuwfZrE91GocMtjLO67TAc2i2nxMc/FJRDI0OemO4VJ9RwID6ltwt
+ mpVJgXGKkNJ1ey+QOXouzlErVvE2fRh+KXXN1Q7fSmTJlAW9XJYHS3BDHb0uRpymRSX3O+E2
+ lA87C7R8qAigPDZi6Z7UmwIA83ZMKXQ5stA0lhPyYgQcM7fh7V4ZYhnR0I5/qkUoxKpqaYLp
+ YHBczVP+Zx/zHOM0KQphOMbU7X3c1pmMruoe6ti9uZzqZSLsF+NKXFEPBS665tQr66HJvZvY
+ GMDlntZFAZ6xQvCC1r3MGoxEC1tuEa24vPCC9RZ9wk2sY5Csbva0WwYv3WKRZZBv8eIhGMxs
+ rcpeGShRFyZ/0BYO53wZAPV1pEhGLLxd8eLN/nEWjJE0ejakPC1H/mt5F+yQBJAzz9JzbToU
+ 5jKLu0SugNI18MspJut8AiA1M44CIWrNHXvWsQ+nnBKHDHHYZu7MoXlOmB32ndsfPthR3GSv
+ jN7YD4Ad724H8fhRijmC1+RpuSce7w2JLj5cYj4MlccmNb8YUxsE8brY2WkXQYS8Ivse39MX
+ BE66MQN0r5DQ6oqgoJ4gHIVBUv/ZwgcmUNS5gQkNCFA0dWXznQARAQABtCZNYXJrdXMgRWxm
+ cmluZyA8TWFya3VzLkVsZnJpbmdAd2ViLmRlPokCVAQTAQgAPhYhBHDP0hzibeXjwQ/ITuU9
+ Figxg9azBQJYNvsQAhsjBQkJZgGABQsJCAcCBhUICQoLAgQWAgMBAh4BAheAAAoJEOU9Figx
+ g9azcyMP/iVihZkZ4VyH3/wlV3nRiXvSreqg+pGPI3c8J6DjP9zvz7QHN35zWM++1yNek7Ar
+ OVXwuKBo18ASlYzZPTFJZwQQdkZSV+atwIzG3US50ZZ4p7VyUuDuQQVVqFlaf6qZOkwHSnk+
+ CeGxlDz1POSHY17VbJG2CzPuqMfgBtqIU1dODFLpFq4oIAwEOG6fxRa59qbsTLXxyw+PzRaR
+ LIjVOit28raM83Efk07JKow8URb4u1n7k9RGAcnsM5/WMLRbDYjWTx0lJ2WO9zYwPgRykhn2
+ sOyJVXk9xVESGTwEPbTtfHM+4x0n0gC6GzfTMvwvZ9G6xoM0S4/+lgbaaa9t5tT/PrsvJiob
+ kfqDrPbmSwr2G5mHnSM9M7B+w8odjmQFOwAjfcxoVIHxC4Cl/GAAKsX3KNKTspCHR0Yag78w
+ i8duH/eEd4tB8twcqCi3aCgWoIrhjNS0myusmuA89kAWFFW5z26qNCOefovCx8drdMXQfMYv
+ g5lRk821ZCNBosfRUvcMXoY6lTwHLIDrEfkJQtjxfdTlWQdwr0mM5ye7vd83AManSQwutgpI
+ q+wE8CNY2VN9xAlE7OhcmWXlnAw3MJLW863SXdGlnkA3N+U4BoKQSIToGuXARQ14IMNvfeKX
+ NphLPpUUnUNdfxAHu/S3tPTc/E/oePbHo794dnEm57LuuQINBFg2+xABEADZg/T+4o5qj4cw
+ nd0G5pFy7ACxk28mSrLuva9tyzqPgRZ2bdPiwNXJUvBg1es2u81urekeUvGvnERB/TKekp25
+ 4wU3I2lEhIXj5NVdLc6eU5czZQs4YEZbu1U5iqhhZmKhlLrhLlZv2whLOXRlLwi4jAzXIZAu
+ 76mT813jbczl2dwxFxcT8XRzk9+dwzNTdOg75683uinMgskiiul+dzd6sumdOhRZR7YBT+xC
+ wzfykOgBKnzfFscMwKR0iuHNB+VdEnZw80XGZi4N1ku81DHxmo2HG3icg7CwO1ih2jx8ik0r
+ riIyMhJrTXgR1hF6kQnX7p2mXe6K0s8tQFK0ZZmYpZuGYYsV05OvU8yqrRVL/GYvy4Xgplm3
+ DuMuC7/A9/BfmxZVEPAS1gW6QQ8vSO4zf60zREKoSNYeiv+tURM2KOEj8tCMZN3k3sNASfoG
+ fMvTvOjT0yzMbJsI1jwLwy5uA2JVdSLoWzBD8awZ2X/eCU9YDZeGuWmxzIHvkuMj8FfX8cK/
+ 2m437UA877eqmcgiEy/3B7XeHUipOL83gjfq4ETzVmxVswkVvZvR6j2blQVr+MhCZPq83Ota
+ xNB7QptPxJuNRZ49gtT6uQkyGI+2daXqkj/Mot5tKxNKtM1Vbr/3b+AEMA7qLz7QjhgGJcie
+ qp4b0gELjY1Oe9dBAXMiDwARAQABiQI8BBgBCAAmFiEEcM/SHOJt5ePBD8hO5T0WKDGD1rMF
+ Alg2+xACGwwFCQlmAYAACgkQ5T0WKDGD1rOYSw/+P6fYSZjTJDAl9XNfXRjRRyJSfaw6N1pA
+ Ahuu0MIa3djFRuFCrAHUaaFZf5V2iW5xhGnrhDwE1Ksf7tlstSne/G0a+Ef7vhUyeTn6U/0m
+ +/BrsCsBUXhqeNuraGUtaleatQijXfuemUwgB+mE3B0SobE601XLo6MYIhPh8MG32MKO5kOY
+ hB5jzyor7WoN3ETVNQoGgMzPVWIRElwpcXr+yGoTLAOpG7nkAUBBj9n9TPpSdt/npfok9ZfL
+ /Q+ranrxb2Cy4tvOPxeVfR58XveX85ICrW9VHPVq9sJf/a24bMm6+qEg1V/G7u/AM3fM8U2m
+ tdrTqOrfxklZ7beppGKzC1/WLrcr072vrdiN0icyOHQlfWmaPv0pUnW3AwtiMYngT96BevfA
+ qlwaymjPTvH+cTXScnbydfOQW8220JQwykUe+sHRZfAF5TS2YCkQvsyf7vIpSqo/ttDk4+xc
+ Z/wsLiWTgKlih2QYULvW61XU+mWsK8+ZlYUrRMpkauN4CJ5yTpvp+Orcz5KixHQmc5tbkLWf
+ x0n1QFc1xxJhbzN+r9djSGGN/5IBDfUqSANC8cWzHpWaHmSuU3JSAMB/N+yQjIad2ztTckZY
+ pwT6oxng29LzZspTYUEzMz3wK2jQHw+U66qBFk8whA7B2uAU1QdGyPgahLYSOa4XAEGb6wbI FEE=
+Message-ID: <40ba9761-3f51-3f7f-5026-eed613dbf6dc@web.de>
+Date:   Tue, 14 Jul 2020 10:48:18 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:JOILYCpiV6lAo9XxA9m6+Qu3qD7SYEsgNVYI9NnR6/AoqLb+2I0
+ tziIYE5bNbqtMiX5XpdQ9XHypE4m07B6V5ncDfUPCXGS0t3H/Nic0T2DAx9NYSglXiGwa5Q
+ dkpzzYrCOiqNdOykO0i0Vv1joI8limKx/PlIY1U4LQvclgC+83fu9BO/7g12lxhZ3OonknC
+ OoYbQUOr/ifpPVLkKoSAQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:Tyr5XWVW7aw=:N4bkXfOuQs3xZU57hnb0hL
+ bOXjy61lpqb48Y8cqcfHDWdpb15vPQeRMMdYh66MLznh/6+/eSIGodfN8XChJJ1jb6JJksz0I
+ HoIc09zrR+fwh3L8M/6Gj40qR1+EWyjBkc8t++Eqz2WFWXngxqEu+HvYib9BXoRuN13wLfztE
+ V9zFGpH+l/aG0B/iFLDSkGfzjY4mpFhF91FpYv/0Y1SBGmdFGF3hKfk6FPqPc2HZ3GnfPVh3J
+ GWPD2mSUtJqgbiMw2ZEAD/L5PirY+9aIIvJaO7dKusJHQYGthubO4Mg9oKwXpZBMnIgyV375x
+ otMuFw3meNouuXYnRMwiKLRfKMcJ4uit50w1cohqTIlhd7i8R/9w00b728tLnb47hDz5sDmzz
+ RQtNSwtmn2jJzqOYSS4RefL8RbWgDBeqTvt1UAk4s5R02wzqB0w/Ewr4IyUpogIhajxjehriz
+ XmNtqovG6S1sVCgImYOHL/F7wzaB/YPDT6vZZ4Zp7PNli+Hy8HAc3/aaON+45n1GkUh2B2npb
+ 9M9ku1o95ihtxy42SYCF8c5FXnV9/lggg1D6xpcItfBclLoLA86gEs4WZvjb0hF/55orRBGBv
+ YDWspUQw/fYbjNdTboSdWHKfBr0LLIdyBV3E5hxwTFCZuo7EqrrsUzsxF2ULTIbBANbKSlI1O
+ SyLk0dk7UbYIdIjS7f5E/SK++ovie3KDJN0NlcchDT1YBcPzguctt7MxG1eocdRPxbQ3fquAC
+ Gpv/Z3X97QHX44vzteV7u4CTlEyPXS3ynlH7bNaDMF2jG8FNQvwRohEVaGthUMtn4aZ/P0BK+
+ MvLjuCCER3wnntt+4brLXophN4/dVDh9eGvTmMrkxq4h7YuMMS4Sw30n57GyCTyQFnI2nWQfv
+ eVj75rhhVBQE4eZ7gzjeGstgGHFmz2lwNbl0dwRL3e0skSDgRevDwA3gi7S6F5uyghIQ21sSE
+ jLK5UBQsBiU/bpl9voch7+Bf/GezwtP/MsBPqB98SEmfyxs8lVGq8VWCI7jR8Mzec4ofaug35
+ gbzOWO0bp2DMLWxES5qtE7mOxC2VooP9jzmuS3wq0uPcXcvyuAnkqVeRzIKG/nPmYXTC5k6sq
+ YyHBUjiMMUL/1tUaFmTcFGEILvjiZyvLqvLtpc9TlZDE0B0kFjb5wA1dMbNkGAXxMMx5YQzQF
+ YMpsg+1hx4JCOuN9vhQj0+/p1ms0AA2g4dACKehUj/N135rCx5DTP/6NnGeBBOSy//tpDtvZZ
+ YJbB6vxuNiL1PPWbDr+2Wrke21lXMES3bgjGHEQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When gadget registration fails, one should not call usb_del_gadget_udc().
-Ensure this by setting gadget->udc to NULL. Also in case of a failure
-there is no need to disable low-level hardware, so return immiedetly
-instead of jumping to error_init label.
+=E2=80=A6
+> +++ b/drivers/spi/spi-fsl-lpspi.c
+> @@ -841,6 +841,11 @@ static int fsl_lpspi_probe(struct platform_device *=
+pdev)
+>  	u32 temp;
+>  	bool is_slave;
+>
+> +	if (!np && !lpspi_platform_info) {
+> +		dev_err(&pdev->dev, "can't get the platform data\n");
+> +		return -EINVAL;
+> +	}
+=E2=80=A6
 
-This fixes the following kernel NULL ptr dereference on gadget failure
-(can be easily triggered with g_mass_storage without any module
-parameters):
+How do you think about to combine these null pointer checks by the logical
+operator =E2=80=9Cor=E2=80=9D instead of =E2=80=9Cand=E2=80=9D?
 
-dwc2 12480000.hsotg: dwc2_check_params: Invalid parameter besl=1
-dwc2 12480000.hsotg: dwc2_check_params: Invalid parameter g_np_tx_fifo_size=1024
-dwc2 12480000.hsotg: EPs: 16, dedicated fifos, 7808 entries in SPRAM
-Mass Storage Function, version: 2009/09/11
-LUN: removable file: (no medium)
-no file given for LUN0
-g_mass_storage 12480000.hsotg: failed to start g_mass_storage: -22
-8<--- cut here ---
-Unable to handle kernel NULL pointer dereference at virtual address 00000104
-pgd = (ptrval)
-[00000104] *pgd=00000000
-Internal error: Oops: 805 [#1] PREEMPT SMP ARM
-Modules linked in:
-CPU: 0 PID: 12 Comm: kworker/0:1 Not tainted 5.8.0-rc5 #3133
-Hardware name: Samsung Exynos (Flattened Device Tree)
-Workqueue: events deferred_probe_work_func
-PC is at usb_del_gadget_udc+0x38/0xc4
-LR is at __mutex_lock+0x31c/0xb18
-...
-Process kworker/0:1 (pid: 12, stack limit = 0x(ptrval))
-Stack: (0xef121db0 to 0xef122000)
-...
-[<c076bf3c>] (usb_del_gadget_udc) from [<c0726bec>] (dwc2_hsotg_remove+0x10/0x20)
-[<c0726bec>] (dwc2_hsotg_remove) from [<c0711208>] (dwc2_driver_probe+0x57c/0x69c)
-[<c0711208>] (dwc2_driver_probe) from [<c06247c0>] (platform_drv_probe+0x6c/0xa4)
-[<c06247c0>] (platform_drv_probe) from [<c0621df4>] (really_probe+0x200/0x48c)
-[<c0621df4>] (really_probe) from [<c06221e8>] (driver_probe_device+0x78/0x1fc)
-[<c06221e8>] (driver_probe_device) from [<c061fcd4>] (bus_for_each_drv+0x74/0xb8)
-[<c061fcd4>] (bus_for_each_drv) from [<c0621b54>] (__device_attach+0xd4/0x16c)
-[<c0621b54>] (__device_attach) from [<c0620c98>] (bus_probe_device+0x88/0x90)
-[<c0620c98>] (bus_probe_device) from [<c06211b0>] (deferred_probe_work_func+0x3c/0xd0)
-[<c06211b0>] (deferred_probe_work_func) from [<c0149280>] (process_one_work+0x234/0x7dc)
-[<c0149280>] (process_one_work) from [<c014986c>] (worker_thread+0x44/0x51c)
-[<c014986c>] (worker_thread) from [<c0150b1c>] (kthread+0x158/0x1a0)
-[<c0150b1c>] (kthread) from [<c0100114>] (ret_from_fork+0x14/0x20)
-Exception stack(0xef121fb0 to 0xef121ff8)
-...
----[ end trace 9724c2fc7cc9c982 ]---
-
-Fixes: 207324a321a8 ("usb: dwc2: Postponed gadget registration to the udc class driver")
-Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
----
- drivers/usb/dwc2/platform.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/usb/dwc2/platform.c b/drivers/usb/dwc2/platform.c
-index c347d93eae64..a6022dc4766d 100644
---- a/drivers/usb/dwc2/platform.c
-+++ b/drivers/usb/dwc2/platform.c
-@@ -581,8 +581,9 @@ static int dwc2_driver_probe(struct platform_device *dev)
- 	if (hsotg->gadget_enabled) {
- 		retval = usb_add_gadget_udc(hsotg->dev, &hsotg->gadget);
- 		if (retval) {
-+			hsotg->gadget.udc = NULL;
- 			dwc2_hsotg_remove(hsotg);
--			goto error_init;
-+			return retval;
- 		}
- 	}
- #endif /* CONFIG_USB_DWC2_PERIPHERAL || CONFIG_USB_DWC2_DUAL_ROLE */
--- 
-2.17.1
-
+Regards,
+Markus
