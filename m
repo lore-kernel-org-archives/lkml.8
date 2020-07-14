@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8DA0C433EB
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 19:00:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64608C433EC
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 19:00:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8EAF422209
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 19:00:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2956822209
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 19:00:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594753252;
-	bh=6B5jIb/26lBpWGpB9rpxmceMVon6BoW1xkEz+8P/Sws=;
+	s=default; t=1594753258;
+	bh=E/O41ziLlGXad5UgL0xa+rM/Hmr3Fn4lysQaJWrleqE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zGl0FLOLzoh1ljCfWA3HSCyqP+LDiBDqsG8nEqgYPqS3LopBW1E1H7Us/puBjY5Yl
-	 oXgtKdgpfdnEaHYbTMR+f6LQBKRC+4VUa64cwMR+y9u12xzOtbUrPkcQpEmNVILxlf
-	 HlgdXhp0UIeBM1FJ/FwNJEr/YYcUUOLN4pip2H4k=
+	b=d63o4dW+kxgZ0vHrk+US43iXumU+qEqiqyS6GUivyLKENZLyuPwQGuv7cJAQacvM0
+	 svU8B2fiKH+/UYBcUTyzOnniqL4xYHkgAlQ+ABMrvXc5+GmHwabXWyfZ0GgBWNi1vx
+	 8NvMXtYkErrcTXgoZfcJg8EujXSr+gQDHSKFZeNk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730094AbgGNTAv (ORCPT
+        id S1731210AbgGNTA4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 15:00:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59744 "EHLO mail.kernel.org"
+        Tue, 14 Jul 2020 15:00:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59688 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731381AbgGNTAm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 15:00:42 -0400
+        id S1730891AbgGNTAk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 15:00:40 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 87FA6229CA;
-        Tue, 14 Jul 2020 19:00:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E4F6A22BED;
+        Tue, 14 Jul 2020 19:00:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594753242;
-        bh=6B5jIb/26lBpWGpB9rpxmceMVon6BoW1xkEz+8P/Sws=;
+        s=default; t=1594753239;
+        bh=E/O41ziLlGXad5UgL0xa+rM/Hmr3Fn4lysQaJWrleqE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MKPGbDgGUFBdP4YECgR3y4qD/2vOUrW5gPf1TDGNm4GYXmQwDKHaWlY0/gkZN0Pvz
-         psPFAfwTD7/Y5IgLDu0wZYSx+cSsazfgJzuyKDMlhLrcY+tTm8RUfM16rXWJHsTPx5
-         pIsHLOFEU0zNWsesuOg36hwKOvupuuDP9JjdmYL8=
+        b=QuZMbmfEgaOKjIy65W2gNW9ay0IeJHiEbTs14eaUNmXGXoqoj1zkWWcl63KnVsJHt
+         0U55NhDrwpNEkpjb563dX6X6wt3D0iq6ZI6zWtMwcsdMCOgT4Ukrpo720xK9TeqMIh
+         myAwo7E7AfU/ps/RRjiKHi+8Nm2raLxQTRupWNuU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>
-Subject: [PATCH 5.7 155/166] s390/setup: init jump labels before command line parsing
-Date:   Tue, 14 Jul 2020 20:45:20 +0200
-Message-Id: <20200714184123.245732554@linuxfoundation.org>
+        stable@vger.kernel.org, Adrian Hunter <adrian.hunter@intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>
+Subject: [PATCH 5.7 164/166] perf scripts python: exported-sql-viewer.py: Fix zero id in call tree Find result
+Date:   Tue, 14 Jul 2020 20:45:29 +0200
+Message-Id: <20200714184123.678497479@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200714184115.844176932@linuxfoundation.org>
 References: <20200714184115.844176932@linuxfoundation.org>
@@ -59,42 +60,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vasily Gorbik <gor@linux.ibm.com>
+From: Adrian Hunter <adrian.hunter@intel.com>
 
-commit 95e61b1b5d6394b53d147c0fcbe2ae70fbe09446 upstream.
+commit 031c8d5edb1ddeb6d398f7942ce2a01a1a51ada9 upstream.
 
-Command line parameters might set static keys. This is true for s390 at
-least since commit 6471384af2a6 ("mm: security: introduce init_on_alloc=1
-and init_on_free=1 boot options"). To avoid the following WARN:
+Using ctrl-F ('Find') would not find 'unknown' because it matches id
+zero.  Fix by excluding id zero from selection.
 
-static_key_enable_cpuslocked(): static key 'init_on_alloc+0x0/0x40' used
-before call to jump_label_init()
+Example:
 
-call jump_label_init() just before parse_early_param().
-jump_label_init() is safe to call multiple times (x86 does that), doesn't
-do any memory allocations and hence should be safe to call that early.
+   $ perf record -e intel_pt//u uname
+   Linux
+   [ perf record: Woken up 1 times to write data ]
+   [ perf record: Captured and wrote 0.034 MB perf.data ]
+   $ perf script --itrace=bep -s ~/libexec/perf-core/scripts/python/export-to-sqlite.py perf.data.db branches calls
+   2020-06-26 15:32:14.928997 Creating database ...
+   2020-06-26 15:32:14.933971 Writing records...
+   2020-06-26 15:32:15.535251 Adding indexes
+   2020-06-26 15:32:15.542993 Dropping unused tables
+   2020-06-26 15:32:15.549716 Done
+   $ python3 ~/libexec/perf-core/scripts/python/exported-sql-viewer.py perf.data.db
 
-Fixes: 6471384af2a6 ("mm: security: introduce init_on_alloc=1 and init_on_free=1 boot options")
-Cc: <stable@vger.kernel.org> # 5.3: d6df52e9996d: s390/maccess: add no DAT mode to kernel_write
-Cc: <stable@vger.kernel.org> # 5.3
-Reviewed-by: Heiko Carstens <heiko.carstens@de.ibm.com>
-Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
-Signed-off-by: Heiko Carstens <heiko.carstens@de.ibm.com>
+   Select: Reports -> Call Tree
+   Press: Ctrl-F
+   Enter: unknown
+   Press: Enter
+
+Before: displays 'unknown' not found
+After: tree is expanded to line showing 'unknown'
+
+Fixes: ae8b887c00d3f ("perf scripts python: exported-sql-viewer.py: Add call tree")
+Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: stable@vger.kernel.org
+Link: http://lore.kernel.org/lkml/20200629091955.17090-6-adrian.hunter@intel.com
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/s390/kernel/setup.c |    1 +
- 1 file changed, 1 insertion(+)
+ tools/perf/scripts/python/exported-sql-viewer.py |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/arch/s390/kernel/setup.c
-+++ b/arch/s390/kernel/setup.c
-@@ -1107,6 +1107,7 @@ void __init setup_arch(char **cmdline_p)
- 	if (IS_ENABLED(CONFIG_EXPOLINE_AUTO))
- 		nospec_auto_detect();
+--- a/tools/perf/scripts/python/exported-sql-viewer.py
++++ b/tools/perf/scripts/python/exported-sql-viewer.py
+@@ -964,7 +964,8 @@ class CallTreeModel(CallGraphModelBase):
+ 						" FROM calls"
+ 						" INNER JOIN call_paths ON calls.call_path_id = call_paths.id"
+ 						" INNER JOIN symbols ON call_paths.symbol_id = symbols.id"
+-						" WHERE symbols.name" + match +
++						" WHERE calls.id <> 0"
++						" AND symbols.name" + match +
+ 						" ORDER BY comm_id, thread_id, call_time, calls.id")
  
-+	jump_label_init();
- 	parse_early_param();
- #ifdef CONFIG_CRASH_DUMP
- 	/* Deactivate elfcorehdr= kernel parameter */
+ 	def FindPath(self, query):
 
 
