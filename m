@@ -2,155 +2,129 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AA25C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 21:07:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B92CC433E2
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 21:13:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4691620663
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 21:07:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 547C820658
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 21:13:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="rywsZE8M"
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="G7AYZYDT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728084AbgGNVHW (ORCPT
+        id S1728096AbgGNVNj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 17:07:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60376 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728075AbgGNVHV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 17:07:21 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4CFE8C061755
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 14:07:21 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id z2so237256wrp.2
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 14:07:21 -0700 (PDT)
+        Tue, 14 Jul 2020 17:13:39 -0400
+Received: from mail-dm6nam11on2070.outbound.protection.outlook.com ([40.107.223.70]:53984
+        "EHLO NAM11-DM6-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726446AbgGNVNi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 17:13:38 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=GNnJLJhFhi+yh9bUFIrSqmFw/GExDnk6+voePrR2t2HJ42AhZ6THwj0uqlsZQXPdDICaEwux6WaEefAJIaeUT0b0MBj5XaZrW684z7ZSKLtI3mQxKu3g0MwPBqTE5Ldi0Kdd8FgdKfdH70cvgl33kYNUQEWAiR+pMAPtPphHsVyE4aGm1EEeLl5MQkX6FOn59vTICzANnKxoBwX17HZCqSlZV5+vwaX1iQ/txQwI3OpxFhx8CdfoyMewBfLeB81mVNUTK3igngT4dL6AziCu8CmMIvFRj6lIpXJ/fwRtFcz8y8x+a5Qk5onnO6KMlvMZ028SuHp+lQE4DhsjWxJS7g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=kjhGRwR4u0axIPgkha6M9AvWP6W20uXRNVX0N9UBbQk=;
+ b=YSMyKOd+282+ZPOOzz4WC14LFhetprsd4+wGff1PhNTThQOQIjQMvbB+rtjc/8z9d7dHOUayHLqrh9vHH15jsR753Rqit3dweoWIPjfL9RDbMUh+4AAyBoxdf9hpWK/zzuasxkm9TuJo06yaKbnb7l2hXFAZeGC0SB8c09tFkve0uoOC5pRqRAMkUugFwZmekA9NeqNbpxzmkSw73FFG0TrSYCfZg0Y0GtbxEoO/wN4kXITH4HfKjdO0PQjKteiUO1Fu995siwHWzaAOeqEoO3aa0EKfGgftJvuSFOH6ycfQmiw8pSo/t7GNLIAEkanqbMl0q/RVl9wmB31eEOitag==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=sYFj9/i+aUbs/mCeLmpyFo7UqQJ2JsN4UUIr9kbw2Aw=;
-        b=rywsZE8M6HmZZx8BUzKG7f8USqXKuzqtTTBdSOVOq9PfcUDN4TQq2S0zYrbDxaE2WM
-         cwXoTaSLY5gXyxk+BI5wUN9vOzFmDzQimnepQueuv/xy1D600yK++bFQImfF/vczUkja
-         fX37ngssdzPaI0bcqxt3fOqacIfOSxPuwcru0NaiKFG4zHV5Mp7SZwBk+RQh1AXtANwF
-         TI2PM4Vz0GwyIpsCQJzXFvFmv3iPLdZ6B3sOP/TppkcJECYam1VfhrjC+DZJh07ipkb2
-         i/DNjl5KYdKSKlxw7HCuDo0tvKNZCmmIpc25QcO32wA9IOuzrg+GqYc33ihRaFKgU204
-         s3bQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=sYFj9/i+aUbs/mCeLmpyFo7UqQJ2JsN4UUIr9kbw2Aw=;
-        b=mAZVIK59ChHwlNU8UNS6BImMPl+vvxvZpFxcJpqSQkqHsiJNh31pJsTnSgLtIJg2V3
-         /aq+Q04XkdM2STl6VYCttWQGBkmTgBPsfWyp3PAaohpakUinLDCHsmr+dh7q5KeE3XZf
-         EwEgvoQYSv2hEBvN0KZYhWlCK9dm9L7rPSEm3UAwczqBETi/LSQZgEe8ANTF2aD7OUVC
-         oMqwdoq8m0a016baJVWJGCKtpmZBR2/9wcaSPxVKyEcSfCx32Hlwyk7Qk7Isb7ldGWct
-         OQ3Cbds8KSaXYxKVvrVgyOI5o40sigyRqCM42wOrBu9392iLPLIDH1+KxSH1OzX8lUnw
-         Mrsg==
-X-Gm-Message-State: AOAM531eJuitMx3RP2kjsHDYqKen0qeE7y4ghUBWu7mlAxnVNHb3pGdQ
-        s9vlfnOyPiCVsumYQ5pY15TqLJ88Pkdwcn/kvYf+IVU9ufdONw==
-X-Google-Smtp-Source: ABdhPJwDzDaDsQB8APRfzYyupV70rs9H0ijoNO2+CqK9d2rIzlBSj+qumRJ5mY+ZOVzgmHf1j5i2B5Q2UWNdUhzHSqk=
-X-Received: by 2002:adf:82e1:: with SMTP id 88mr7596337wrc.376.1594760839869;
- Tue, 14 Jul 2020 14:07:19 -0700 (PDT)
+ d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=kjhGRwR4u0axIPgkha6M9AvWP6W20uXRNVX0N9UBbQk=;
+ b=G7AYZYDTqfqgmKbWlhwNhYmtXQPsCygSI9z4YkU1/RkRb2XntrJWRrR57t0azp1mDM2fVIlLOrmg8ZVZ58kkCZ1c+BwINjfc777Gvdsom79hs0RNJ0Do04PjCFMu3saag3+CuQ8ufFM1Gav4IDwLakICOSCaKQw+i+jGD3dgtWQ=
+Authentication-Results: vger.kernel.org; dkim=none (message not signed)
+ header.d=none;vger.kernel.org; dmarc=none action=none header.from=amd.com;
+Received: from BN8PR12MB2946.namprd12.prod.outlook.com (2603:10b6:408:9d::13)
+ by BN6PR1201MB0209.namprd12.prod.outlook.com (2603:10b6:405:4d::19) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3174.21; Tue, 14 Jul
+ 2020 21:13:33 +0000
+Received: from BN8PR12MB2946.namprd12.prod.outlook.com
+ ([fe80::8dfe:a00d:ac29:b1a4]) by BN8PR12MB2946.namprd12.prod.outlook.com
+ ([fe80::8dfe:a00d:ac29:b1a4%5]) with mapi id 15.20.3174.025; Tue, 14 Jul 2020
+ 21:13:33 +0000
+Subject: Re: [PATCH 13/13] cpufreq: amd_freq_sensitivity: Remove unused ID
+ structs
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     rjw@rjwysocki.net, viresh.kumar@linaro.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-pm@vger.kernel.org
+References: <20200714145049.2496163-1-lee.jones@linaro.org>
+ <20200714145049.2496163-14-lee.jones@linaro.org>
+ <6101e041-41e9-22bc-488d-38124c139bc7@amd.com>
+ <20200714210218.GH1398296@dell>
+From:   Kim Phillips <kim.phillips@amd.com>
+Message-ID: <8f7f2325-8c6a-b005-1f27-67e4b640da31@amd.com>
+Date:   Tue, 14 Jul 2020 16:13:31 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
+In-Reply-To: <20200714210218.GH1398296@dell>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: BN6PR2001CA0006.namprd20.prod.outlook.com
+ (2603:10b6:404:b4::16) To BN8PR12MB2946.namprd12.prod.outlook.com
+ (2603:10b6:408:9d::13)
 MIME-Version: 1.0
-References: <20200712132634.138901-1-jolsa@kernel.org> <20200712132634.138901-6-jolsa@kernel.org>
-In-Reply-To: <20200712132634.138901-6-jolsa@kernel.org>
-From:   Ian Rogers <irogers@google.com>
-Date:   Tue, 14 Jul 2020 14:07:08 -0700
-Message-ID: <CAP-5=fX4pjM70pdaUJPqv1x_YWyk2Ua44Q7qVCz-jbtOcwBNAw@mail.gmail.com>
-Subject: Re: [PATCH 05/18] perf metric: Add expr__del_id function
-To:     Jiri Olsa <jolsa@kernel.org>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Michael Petlan <mpetlan@redhat.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Kajol Jain <kjain@linux.ibm.com>,
-        John Garry <john.garry@huawei.com>,
-        "Paul A. Clarke" <pc@us.ibm.com>,
-        Stephane Eranian <eranian@google.com>
-Content-Type: text/plain; charset="UTF-8"
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from [10.252.5.212] (165.204.84.11) by BN6PR2001CA0006.namprd20.prod.outlook.com (2603:10b6:404:b4::16) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3195.17 via Frontend Transport; Tue, 14 Jul 2020 21:13:32 +0000
+X-Originating-IP: [165.204.84.11]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 9b3e804f-5ab9-46df-a285-08d8283ac3b8
+X-MS-TrafficTypeDiagnostic: BN6PR1201MB0209:
+X-Microsoft-Antispam-PRVS: <BN6PR1201MB0209536BE641DC518284941487610@BN6PR1201MB0209.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:4714;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: YsMf/Yy4lfGmstk9in2OWb8H3BbsuSBuf66OQkGsu+tkP4RQvh6coV5+s16jCp6ejVfU9QN/+CK+PnGUjoYe86+ycChdYGOO2cSH341JwnMA9WHRlCzwjLOyJnkayT4h/kIDZ+utSie9x5ZozAL5fUgfwdxPuRpiWjyxnVp1IyjRt9oNkl1XUWzAX0goZQxktgj9Fh/Kxhx5G9+VCnrQQDUDlVgbVnxwXg7il73TAwNYlhIWGH7QZVlP7/es9nvNAuu26GFK8alouP0apKLs1UIBT7WDWbSsafj10gWD/8iOUQT1zEpsXgNx/2B6Vsr4sMfNuFBZfVC3vmHHfCv56MZkGjJYwtXflnhkJ4xkDKja4Ar965L25+ulYLQzAfzg
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN8PR12MB2946.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(39860400002)(346002)(136003)(396003)(366004)(376002)(2906002)(2616005)(956004)(31696002)(86362001)(52116002)(26005)(6916009)(16576012)(31686004)(478600001)(44832011)(16526019)(186003)(53546011)(36756003)(8676002)(5660300002)(6486002)(4744005)(66556008)(66946007)(316002)(66476007)(8936002)(83380400001)(4326008)(43740500002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: riN6dV08FZyyM9BFJJlwVEk63E8XRDK7x4BrrgeLOJTYFUDftTmU1iw4WLd+gyw+KFBl8qndrZTwt+z2+LIDgT7kbWW5UXUg+CFeKVof07A906hx/klTaKg2FbuwseZyZIjCnKwmvu4Cbg1h8TFU1o0fw8ZASyCqOFXKXa9n/F1WRnfOUDHVYBnXjpqbwGwekGxPSqm9g+R3NVeokQHcmRLAVMvhdGyGc1AkrxDclKWgu0U239invL5iZshQ4GbopOnKOo/ZaWKLjwsWxRfkXXPperXUPYRrQ2rPTZ0d4xA6xnEdBSssbyqOgTtvxFRpY6Cq/buGfwudKnCsChXrWf8p8K7mCHi/T5QW/UeLWzhhzGzQwyEEtfYfIQNOd34A0FfYb96fIv3od7aIUWVY6P7L/2QrC+Lc1HeCo8sX6DxseC7ZoACt3PWm/JfI+WatWwTDl5juMbEX3udsdH+GEbHvlIbja6NYo4tQIIWQAD4=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9b3e804f-5ab9-46df-a285-08d8283ac3b8
+X-MS-Exchange-CrossTenant-AuthSource: BN8PR12MB2946.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Jul 2020 21:13:33.1895
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 7XL2A4dbkUvveNAA7qyfH2KnIOfRwWtFbSKVBxQoHsBzgH7eS7nrSC4Xwc7SYPkBZO7jil3wZzRW9iUl9vrjPQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN6PR1201MB0209
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jul 12, 2020 at 6:27 AM Jiri Olsa <jolsa@kernel.org> wrote:
->
-> Adding expr__del_id function to remove ID from hashmap.
-> It will save us few lines in following changes.
->
-> Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+On 7/14/20 4:02 PM, Lee Jones wrote:
+> On Tue, 14 Jul 2020, Kim Phillips wrote:
+>> On 7/14/20 9:50 AM, Lee Jones wrote:
+>>> Can't see them being used anywhere and the compiler doesn't complain
+>>> that they're missing, so ...
+>>>
+>>> Fixes the following W=1 kernel build warning(s):
+>>>
+>>>  drivers/cpufreq/amd_freq_sensitivity.c:147:32: warning: ‘amd_freq_sensitivity_ids’ defined but not used [-Wunused-const-variable=]
+>>>  147 | static const struct x86_cpu_id amd_freq_sensitivity_ids[] = {
+>>>  | ^~~~~~~~~~~~~~~~~~~~~~~~
+>>>
+>>> Cc: Jacob Shin <jacob.shin@amd.com>
+>>> Signed-off-by: Lee Jones <lee.jones@linaro.org>
+>>> ---
+>>
+>> Same comment as for patch 9/13: these are used automatic module loading.
+> 
+> How does that work?
+> 
+> Could you point me to the code which handles that please?
 
-Acked-by: Ian Rogers <irogers@google.com>
+It's MODULE_DEVICE_TABLE magic.
 
-Thanks,
-Ian
-
-> ---
->  tools/perf/util/expr.c | 21 +++++++++++++--------
->  tools/perf/util/expr.h |  1 +
->  2 files changed, 14 insertions(+), 8 deletions(-)
->
-> diff --git a/tools/perf/util/expr.c b/tools/perf/util/expr.c
-> index 7d02d29286bc..91142d4c3419 100644
-> --- a/tools/perf/util/expr.c
-> +++ b/tools/perf/util/expr.c
-> @@ -75,6 +75,17 @@ int expr__get_id(struct expr_parse_ctx *ctx, const char *id,
->         return hashmap__find(&ctx->ids, id, (void **)data) ? 0 : -1;
->  }
->
-> +void expr__del_id(struct expr_parse_ctx *ctx, const char *id)
-> +{
-> +       struct expr_id_data *old_val = NULL;
-> +       char *old_key = NULL;
-> +
-> +       hashmap__delete(&ctx->ids, id,
-> +                       (const void **)&old_key, (void **)&old_val);
-> +       free(old_key);
-> +       free(old_val);
-> +}
-> +
->  void expr__ctx_init(struct expr_parse_ctx *ctx)
->  {
->         hashmap__init(&ctx->ids, key_hash, key_equal, NULL);
-> @@ -132,16 +143,10 @@ int expr__parse(double *final_val, struct expr_parse_ctx *ctx,
->  int expr__find_other(const char *expr, const char *one,
->                      struct expr_parse_ctx *ctx, int runtime)
->  {
-> -       struct expr_id_data *old_val = NULL;
-> -       char *old_key = NULL;
->         int ret = __expr__parse(NULL, ctx, expr, EXPR_OTHER, runtime);
->
-> -       if (one) {
-> -               hashmap__delete(&ctx->ids, one,
-> -                               (const void **)&old_key, (void **)&old_val);
-> -               free(old_key);
-> -               free(old_val);
-> -       }
-> +       if (one)
-> +               expr__del_id(ctx, one);
->
->         return ret;
->  }
-> diff --git a/tools/perf/util/expr.h b/tools/perf/util/expr.h
-> index f38292fdab19..2462abd0ac65 100644
-> --- a/tools/perf/util/expr.h
-> +++ b/tools/perf/util/expr.h
-> @@ -26,6 +26,7 @@ struct expr_scanner_ctx {
->
->  void expr__ctx_init(struct expr_parse_ctx *ctx);
->  void expr__ctx_clear(struct expr_parse_ctx *ctx);
-> +void expr__del_id(struct expr_parse_ctx *ctx, const char *id);
->  int expr__add_id(struct expr_parse_ctx *ctx, const char *id);
->  int expr__add_id_val(struct expr_parse_ctx *ctx, const char *id, double val);
->  int expr__get_id(struct expr_parse_ctx *ctx, const char *id,
-> --
-> 2.25.4
->
+Kim
