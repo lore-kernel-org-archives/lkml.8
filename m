@@ -2,155 +2,131 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33C15C433E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 11:44:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22ABCC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 11:45:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 10B1322201
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 11:44:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="mMHZutoF"
+	by mail.kernel.org (Postfix) with ESMTP id EF5CA22209
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 11:45:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594727115;
+	bh=KBVGwEZPi1g9YxK6fNaw250dyQo7rBMsKhBhkVEiwnU=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=KRIZCftQ78ORu6NKqMP85NBTryo7nS8W3PBa0wMaHlOBb9R+WorU2+ZCWEXNMZP03
+	 6sW5o7YNXfFONAPySAjSoCmTTV5M1qi38Z2YHf0/iRnMzSqffMx91JZcrQrcltE+7T
+	 BF0sAYvowiZW8H9fICVp/lhSHSfHzVTkqLyQBGiA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728033AbgGNLoB (ORCPT
+        id S1727119AbgGNLpN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 07:44:01 -0400
-Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:17282 "EHLO
-        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726352AbgGNLoA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 07:44:00 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5f0d9a720000>; Tue, 14 Jul 2020 04:43:47 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Tue, 14 Jul 2020 04:43:59 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Tue, 14 Jul 2020 04:43:59 -0700
-Received: from [10.24.37.103] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 14 Jul
- 2020 11:43:51 +0000
-Subject: Re: [TEGRA194_CPUFREQ PATCH v5 1/4] dt-bindings: arm: Add t194 ccplex
- compatible and bpmp property
-To:     Rob Herring <robh@kernel.org>
-CC:     <rjw@rjwysocki.net>, <viresh.kumar@linaro.org>,
-        <catalin.marinas@arm.com>, <will@kernel.org>,
-        <thierry.reding@gmail.com>, <mirq-linux@rere.qmqm.pl>,
-        <devicetree@vger.kernel.org>, <jonathanh@nvidia.com>,
-        <talho@nvidia.com>, <linux-pm@vger.kernel.org>,
-        <linux-tegra@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <bbasu@nvidia.com>,
-        <mperttunen@nvidia.com>, Sumit Gupta <sumitg@nvidia.com>
-References: <1594649209-29394-1-git-send-email-sumitg@nvidia.com>
- <1594649209-29394-2-git-send-email-sumitg@nvidia.com>
- <20200713164214.GA341271@bogus>
-From:   Sumit Gupta <sumitg@nvidia.com>
-Message-ID: <70a0a8ee-b79a-2a05-5150-2ee0faaf2730@nvidia.com>
-Date:   Tue, 14 Jul 2020 17:13:47 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
-MIME-Version: 1.0
-In-Reply-To: <20200713164214.GA341271@bogus>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
+        Tue, 14 Jul 2020 07:45:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56146 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726041AbgGNLpM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 07:45:12 -0400
+Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id CAA7222201;
+        Tue, 14 Jul 2020 11:45:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594727112;
+        bh=KBVGwEZPi1g9YxK6fNaw250dyQo7rBMsKhBhkVEiwnU=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=RzWbu5RtJqcEVBTvHmTGJlOHHjNMnFAhUdfHSXgDNreMOjEzRPuBcVxD0g6oNsgpS
+         yYa49EkXZ91cieWM8o/IeHsJZlFtEB8ROEQbqcjwaQDAarrqHPd4C+XtZQemIUtPYM
+         LdI+ZtEQKrWZIXYqPn/uKM7hw9iOc1h+CB8gIAAA=
+Date:   Tue, 14 Jul 2020 20:45:03 +0900
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        linux-kernel@vger.kernel.org, Andi Kleen <ak@linux.intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
+        Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+        Will Deacon <will@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Arnd Bergmann <arnd@arndb.de>, Alexandre Ghiti <alex@ghiti.fr>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Sami Tolvanen <samitolvanen@google.com>,
+        Peter Collingbourne <pcc@google.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Jiri Olsa <jolsa@redhat.com>, hch@lst.de
+Subject: Re: [PATCH RFC] kprobes: Remove MODULES dependency
+Message-Id: <20200714204503.833eceb606a37f4bb93d95bd@kernel.org>
+In-Reply-To: <20200713054955.GC956284@linux.intel.com>
+References: <20200709234521.194005-1-jarkko.sakkinen@linux.intel.com>
+        <20200710193257.4eeb19e9cd042d99cbca7f9a@kernel.org>
+        <20200710113238.GH4800@hirez.programming.kicks-ass.net>
+        <20200713054955.GC956284@linux.intel.com>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1594727027; bh=UrDpE1YD14GDWCNhmIrtodld5JLaTd22aLzUVIM8f98=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=mMHZutoFQHCAIoy3C50Yj8sRZfz8bUZeBCDekvCUEPPE8fsSz4fwzSQExX22vT/cZ
-         CflAgHY7F7DJQ0Ib4eEEBXTwMFoxODxAFuZ7sqHypnZdLsr1h4XhH0RpEetY5HUKUq
-         dpdSChmaeb86JPmxsDAXX5wUYvBjjNXhm6RcDVwsF0ZUP0UzXoU78qq0SEFs+zR/Ak
-         KPnQHXDPepa0yEXM9VUFQMFH/fIJIQfTam+Zy1qhexBLYqL8k6s2t6w8P2vQ65lKZJ
-         m67IHksK0pXbcM+jcJ+j556VUZyo8+yLif9IcjmoS32tdNUvZbpy57tu1db+VDf5g0
-         mRMvlTySolpVA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, 13 Jul 2020 08:49:55 +0300
+Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com> wrote:
 
-
-> On Mon, Jul 13, 2020 at 07:36:46PM +0530, Sumit Gupta wrote:
->> To do frequency scaling on all CPUs within T194 CPU Complex, we need
->> to query BPMP for data on valid operating points. Document a compatible
->> string under 'cpus' node to represent the CPU Complex for binding drivers
->> like cpufreq which don't have their node or CPU Complex node to bind to.
->> Also, document a property to point to the BPMP device that can be queried
->> for all CPUs.
+> On Fri, Jul 10, 2020 at 01:32:38PM +0200, Peter Zijlstra wrote:
+> > On Fri, Jul 10, 2020 at 07:32:57PM +0900, Masami Hiramatsu wrote:
+> > > > -	page = module_alloc(PAGE_SIZE);
+> > > > +	page = vmalloc(PAGE_SIZE);
+> > > 
+> > > No, you can not use vmalloc here. The reason why we use module_alloc()
+> > > is to allocate the executable memory for trampoline code.
+> > > So, you need to use vmalloc_exec() instead.
+> > 
+> > vmalloc_exec() would be broken too, also hch recently got rid of that
+> > thing.
+> > 
+> > module_alloc() really is the only sane choice here.
+> > 
+> > We should make module_alloc() unconditionally available, and maybe even
+> > rename it to text_alloc().
 > 
-> The cpus.yaml binding documents what's in 'cpu' nodes, not 'cpus'
-> node. AIUI, the latter is what you want. You should do your own schema
-> file here.
+> Thanks for the remarks.
 > 
-Do you mean to change existing file name from 'cpus.yaml' to 'cpu.yaml' 
-and create new 'cpus.yaml' file?
-I think it's better to incorporate the change in existing 'cpus.yaml' 
-file to keep both cpu@X and cpus node details together. Please suggest.
-
->>
->> Signed-off-by: Sumit Gupta <sumitg@nvidia.com>
->> ---
->>   Documentation/devicetree/bindings/arm/cpus.yaml | 11 +++++++++++
->>   1 file changed, 11 insertions(+)
->>
->> diff --git a/Documentation/devicetree/bindings/arm/cpus.yaml b/Documentation/devicetree/bindings/arm/cpus.yaml
->> index a018147..9b328e3 100644
->> --- a/Documentation/devicetree/bindings/arm/cpus.yaml
->> +++ b/Documentation/devicetree/bindings/arm/cpus.yaml
->> @@ -162,6 +162,7 @@ properties:
->>         - nvidia,tegra132-denver
->>         - nvidia,tegra186-denver
->>         - nvidia,tegra194-carmel
->> +      - nvidia,tegra194-ccplex
+> The current module_alloc looks like this:
 > 
-> Tegra194 has 2 different CPUs?
+> void * __weak module_alloc(unsigned long size)
+> {
+> 	return __vmalloc_node_range(size, 1, VMALLOC_START, VMALLOC_END,
+> 			GFP_KERNEL, PAGE_KERNEL_EXEC, VM_FLUSH_RESET_PERMS,
+> 			NUMA_NO_NODE, __builtin_return_address(0));
+> }
 > 
-No, T194 SOC has homogeneous architecture with four clusters where each 
-cluster has two symmetric cores. 'nvidia,tegra194-carmel' compatible 
-string represents each cpu. 'nvidia,tegra194-ccplex' string represents 
-the CPU Complex to bind cpufreq driver. The change was done as per 
-discussion [1]
+> What if I create inline functions for text_alloc() and text_memfree() and
+> convert this function as:
+> 
+> void * __weak module_alloc(unsigned long size)
+> {
+> 	return text_alloc(size);
+> }
 
->>         - qcom,krait
->>         - qcom,kryo
->>         - qcom,kryo260
->> @@ -255,6 +256,15 @@ properties:
->>
->>         where voltage is in V, frequency is in MHz.
->>
->> +  nvidia,bpmp:
->> +    $ref: '/schemas/types.yaml#/definitions/phandle'
->> +    description: |
->> +      Specifies the bpmp node that needs to be queried to get
->> +      operating point data for all CPUs.
->> +
->> +      Optional for systems that have a "compatible"
->> +      property value of "nvidia,tegra194-ccplex".
->> +
->>     power-domains:
->>       $ref: '/schemas/types.yaml#/definitions/phandle-array'
->>       description:
->> @@ -340,6 +350,7 @@ required:
->>
->>   dependencies:
->>     rockchip,pmu: [enable-method]
->> +  nvidia,bpmp: [compatible]
->>
->>   examples:
->>     - |
->> --
->> 2.7.4
->>
+Yeah, that'll be good.
 
-[1] https://marc.info/?l=linux-arm-kernel&m=158999171528418&w=2
+Thank you,
+
+
+-- 
+Masami Hiramatsu <mhiramat@kernel.org>
