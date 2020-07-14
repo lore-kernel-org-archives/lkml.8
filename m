@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82E20C433EC
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 14:39:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B61F7C433E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 14:39:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5B38422516
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 14:39:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D38D2251D
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 14:39:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594737545;
-	bh=10DbsIHggpfnX/L/cuS6NGvTsPwVjqJzSZhttOZm9R8=;
+	s=default; t=1594737549;
+	bh=E9kOmYvx3YB9KGGH3MDEv+MFY5zgfWQoOjXQAr6Pwbo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=quDhRBZOHY8J4wRagX0+mpFwJh89srMo05OWn9cG6/9PY1p0cxjKnuKOLYT+63j6B
-	 LKAXwCt45SIyAhIBOwb809++VNnP8LZ0Xy3uzzeCNpFPV5hrKcqmiEkEcRVnw+YTzw
-	 HTxArsqaxux8ugtmqCHx333mMAECFeJk5/JU3qNw=
+	b=08bl1q+mDA8nrQnZpwwh+B2nMB4fQha+Epa0QhpKDxKOgVbG3HybNHqrhoy4vMwbA
+	 HkuwNuoGMIV2mbbT82ETwcZFdFs/ggyqR5WktRVSgX1O8UMVdnxraJ/rGRo8/zvWvl
+	 4UyvL8MKn69XW8VjB4ryMUbXVGbu9JvNO+vxfnKU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728706AbgGNOjD (ORCPT
+        id S1728791AbgGNOjI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 10:39:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54182 "EHLO mail.kernel.org"
+        Tue, 14 Jul 2020 10:39:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54286 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728552AbgGNOi6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 10:38:58 -0400
+        id S1728696AbgGNOjD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 10:39:03 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DD03C2067D;
-        Tue, 14 Jul 2020 14:38:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7A66122516;
+        Tue, 14 Jul 2020 14:39:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594737537;
-        bh=10DbsIHggpfnX/L/cuS6NGvTsPwVjqJzSZhttOZm9R8=;
+        s=default; t=1594737542;
+        bh=E9kOmYvx3YB9KGGH3MDEv+MFY5zgfWQoOjXQAr6Pwbo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sRWSbPsKZNW+q+17x8ivS09UJScGmg9x83avVYpt77UQzMILywW6DkiLDAPTuQEpz
-         umor4d1+rBip/5C9NJI7D6njsV/WeXusWiuojlocSB6JCeg71AlNZXAT42mRHvGDeD
-         e4KKjR2ALuIpPlj/mlSVLepWxatyavXnmQzAH+7I=
+        b=Ip7uAwBbrWMFqmFE0rYMXSK0Mk0qGCo0zGOBx45DNTw8s5W0ki6290TGZrYxsc2ml
+         LEuhmXOajYeGS5pBKxhQkZrGVPECDDKYXB/QrPVolesuKcgaYFo8lzQt4GRk5zENDz
+         EckDrIgXJ6x1JRrb3QlmD60D2ifJ4vBnqbPa4vHQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Markus Theil <markus.theil@tu-ilmenau.de>,
-        Johannes Berg <johannes.berg@intel.com>,
+Cc:     Damien Le Moal <damien.lemoal@wdc.com>,
+        Johannes Thumshirn <johannes.thumshirn@wdc.com>,
+        Sreekanth Reddy <sreekanth.reddy@broadcom.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
         Sasha Levin <sashal@kernel.org>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.7 06/19] mac80211: allow rx of mesh eapol frames with default rx key
-Date:   Tue, 14 Jul 2020 10:38:36 -0400
-Message-Id: <20200714143849.4035283-6-sashal@kernel.org>
+        MPT-FusionLinux.pdl@broadcom.com, linux-scsi@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.7 10/19] scsi: mpt3sas: Fix unlock imbalance
+Date:   Tue, 14 Jul 2020 10:38:40 -0400
+Message-Id: <20200714143849.4035283-10-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200714143849.4035283-1-sashal@kernel.org>
 References: <20200714143849.4035283-1-sashal@kernel.org>
@@ -60,78 +62,80 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Markus Theil <markus.theil@tu-ilmenau.de>
+From: Damien Le Moal <damien.lemoal@wdc.com>
 
-[ Upstream commit 0b467b63870d9c05c81456aa9bfee894ab2db3b6 ]
+[ Upstream commit cb551b8dc079d2ef189145782627c99cb68c0255 ]
 
-Without this patch, eapol frames cannot be received in mesh
-mode, when 802.1X should be used. Initially only a MGTK is
-defined, which is found and set as rx->key, when there are
-no other keys set. ieee80211_drop_unencrypted would then
-drop these eapol frames, as they are data frames without
-encryption and there exists some rx->key.
+In BRM_status_show(), if the condition "!ioc->is_warpdrive" tested on entry
+to the function is true, a "goto out" is called. This results in unlocking
+ioc->pci_access_mutex without this mutex lock being taken.  This generates
+the following splat:
 
-Fix this by differentiating between mesh eapol frames and
-other data frames with existing rx->key. Allow mesh mesh
-eapol frames only if they are for our vif address.
+[ 1148.539883] mpt3sas_cm2: BRM_status_show: BRM attribute is only for warpdrive
+[ 1148.547184]
+[ 1148.548708] =====================================
+[ 1148.553501] WARNING: bad unlock balance detected!
+[ 1148.558277] 5.8.0-rc3+ #827 Not tainted
+[ 1148.562183] -------------------------------------
+[ 1148.566959] cat/5008 is trying to release lock (&ioc->pci_access_mutex) at:
+[ 1148.574035] [<ffffffffc070b7a3>] BRM_status_show+0xd3/0x100 [mpt3sas]
+[ 1148.580574] but there are no more locks to release!
+[ 1148.585524]
+[ 1148.585524] other info that might help us debug this:
+[ 1148.599624] 3 locks held by cat/5008:
+[ 1148.607085]  #0: ffff92aea3e392c0 (&p->lock){+.+.}-{3:3}, at: seq_read+0x34/0x480
+[ 1148.618509]  #1: ffff922ef14c4888 (&of->mutex){+.+.}-{3:3}, at: kernfs_seq_start+0x2a/0xb0
+[ 1148.630729]  #2: ffff92aedb5d7310 (kn->active#224){.+.+}-{0:0}, at: kernfs_seq_start+0x32/0xb0
+[ 1148.643347]
+[ 1148.643347] stack backtrace:
+[ 1148.655259] CPU: 73 PID: 5008 Comm: cat Not tainted 5.8.0-rc3+ #827
+[ 1148.665309] Hardware name: HGST H4060-S/S2600STB, BIOS SE5C620.86B.02.01.0008.031920191559 03/19/2019
+[ 1148.678394] Call Trace:
+[ 1148.684750]  dump_stack+0x78/0xa0
+[ 1148.691802]  lock_release.cold+0x45/0x4a
+[ 1148.699451]  __mutex_unlock_slowpath+0x35/0x270
+[ 1148.707675]  BRM_status_show+0xd3/0x100 [mpt3sas]
+[ 1148.716092]  dev_attr_show+0x19/0x40
+[ 1148.723664]  sysfs_kf_seq_show+0x87/0x100
+[ 1148.731193]  seq_read+0xbc/0x480
+[ 1148.737882]  vfs_read+0xa0/0x160
+[ 1148.744514]  ksys_read+0x58/0xd0
+[ 1148.751129]  do_syscall_64+0x4c/0xa0
+[ 1148.757941]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+[ 1148.766240] RIP: 0033:0x7f1230566542
+[ 1148.772957] Code: Bad RIP value.
+[ 1148.779206] RSP: 002b:00007ffeac1bcac8 EFLAGS: 00000246 ORIG_RAX: 0000000000000000
+[ 1148.790063] RAX: ffffffffffffffda RBX: 0000000000020000 RCX: 00007f1230566542
+[ 1148.800284] RDX: 0000000000020000 RSI: 00007f1223460000 RDI: 0000000000000003
+[ 1148.810474] RBP: 00007f1223460000 R08: 00007f122345f010 R09: 0000000000000000
+[ 1148.820641] R10: 0000000000000022 R11: 0000000000000246 R12: 0000000000000000
+[ 1148.830728] R13: 0000000000000003 R14: 0000000000020000 R15: 0000000000020000
 
-With this patch in-place, ieee80211_rx_h_mesh_fwding continues
-after the ieee80211_drop_unencrypted check and notices, that
-these eapol frames have to be delivered locally, as they should.
+Fix this by returning immediately instead of jumping to the out label.
 
-Signed-off-by: Markus Theil <markus.theil@tu-ilmenau.de>
-Link: https://lore.kernel.org/r/20200625104214.50319-1-markus.theil@tu-ilmenau.de
-[small code cleanups]
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+Link: https://lore.kernel.org/r/20200701085254.51740-1-damien.lemoal@wdc.com
+Reviewed-by: Johannes Thumshirn <johannes.thumshirn@wdc.com>
+Acked-by: Sreekanth Reddy <sreekanth.reddy@broadcom.com>
+Signed-off-by: Damien Le Moal <damien.lemoal@wdc.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/mac80211/rx.c | 26 ++++++++++++++++++++++++++
- 1 file changed, 26 insertions(+)
+ drivers/scsi/mpt3sas/mpt3sas_ctl.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/net/mac80211/rx.c b/net/mac80211/rx.c
-index 91a13aee43784..961f37c0701bc 100644
---- a/net/mac80211/rx.c
-+++ b/net/mac80211/rx.c
-@@ -2357,6 +2357,7 @@ static int ieee80211_802_1x_port_control(struct ieee80211_rx_data *rx)
- 
- static int ieee80211_drop_unencrypted(struct ieee80211_rx_data *rx, __le16 fc)
- {
-+	struct ieee80211_hdr *hdr = (void *)rx->skb->data;
- 	struct sk_buff *skb = rx->skb;
- 	struct ieee80211_rx_status *status = IEEE80211_SKB_RXCB(skb);
- 
-@@ -2367,6 +2368,31 @@ static int ieee80211_drop_unencrypted(struct ieee80211_rx_data *rx, __le16 fc)
- 	if (status->flag & RX_FLAG_DECRYPTED)
- 		return 0;
- 
-+	/* check mesh EAPOL frames first */
-+	if (unlikely(rx->sta && ieee80211_vif_is_mesh(&rx->sdata->vif) &&
-+		     ieee80211_is_data(fc))) {
-+		struct ieee80211s_hdr *mesh_hdr;
-+		u16 hdr_len = ieee80211_hdrlen(fc);
-+		u16 ethertype_offset;
-+		__be16 ethertype;
-+
-+		if (!ether_addr_equal(hdr->addr1, rx->sdata->vif.addr))
-+			goto drop_check;
-+
-+		/* make sure fixed part of mesh header is there, also checks skb len */
-+		if (!pskb_may_pull(rx->skb, hdr_len + 6))
-+			goto drop_check;
-+
-+		mesh_hdr = (struct ieee80211s_hdr *)(skb->data + hdr_len);
-+		ethertype_offset = hdr_len + ieee80211_get_mesh_hdrlen(mesh_hdr) +
-+				   sizeof(rfc1042_header);
-+
-+		if (skb_copy_bits(rx->skb, ethertype_offset, &ethertype, 2) == 0 &&
-+		    ethertype == rx->sdata->control_port_protocol)
-+			return 0;
-+	}
-+
-+drop_check:
- 	/* Drop unencrypted frames if key is set. */
- 	if (unlikely(!ieee80211_has_protected(fc) &&
- 		     !ieee80211_is_any_nullfunc(fc) &&
+diff --git a/drivers/scsi/mpt3sas/mpt3sas_ctl.c b/drivers/scsi/mpt3sas/mpt3sas_ctl.c
+index 62e552838565f..e94e72de2fc68 100644
+--- a/drivers/scsi/mpt3sas/mpt3sas_ctl.c
++++ b/drivers/scsi/mpt3sas/mpt3sas_ctl.c
+@@ -3145,7 +3145,7 @@ BRM_status_show(struct device *cdev, struct device_attribute *attr,
+ 	if (!ioc->is_warpdrive) {
+ 		ioc_err(ioc, "%s: BRM attribute is only for warpdrive\n",
+ 			__func__);
+-		goto out;
++		return 0;
+ 	}
+ 	/* pci_access_mutex lock acquired by sysfs show path */
+ 	mutex_lock(&ioc->pci_access_mutex);
 -- 
 2.25.1
 
