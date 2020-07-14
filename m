@@ -7,35 +7,35 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2B7EC433EA
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 06:02:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37C92C433E7
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 06:02:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C7B4821D93
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 06:02:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D8B521D93
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 06:02:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726890AbgGNGCC (ORCPT
+        id S1726831AbgGNGB7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 02:02:02 -0400
+        Tue, 14 Jul 2020 02:01:59 -0400
 Received: from mga03.intel.com ([134.134.136.65]:3745 "EHLO mga03.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726820AbgGNGB7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 02:01:59 -0400
-IronPort-SDR: 9l8++kve+6QLYogvl0JoKe7YgS/6+iumvfZIyNsOKcuyNt/a4nr1ztYd8NH9XKWF82sU4XC+UI
- ek89B4FycrkA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9681"; a="148812785"
+        id S1725876AbgGNGB4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 02:01:56 -0400
+IronPort-SDR: pgPROVciwd6Z/trpdt3MJnJEKYGTUWpxmVSUYGLjpHNiVwLoVKrJAkVH3z6imuKtL8ON9+2gJj
+ xJp2enbQHRug==
+X-IronPort-AV: E=McAfee;i="6000,8403,9681"; a="148812776"
 X-IronPort-AV: E=Sophos;i="5.75,350,1589266800"; 
-   d="scan'208";a="148812785"
+   d="scan'208";a="148812776"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jul 2020 23:01:58 -0700
-IronPort-SDR: rTEgJcSxIi++CMfnT+nngPUTP0N3kw4b1QGT3C0ZWXgc/CTL1WEwNKTMFvxK2405AHpjNDZaEM
- B0fV5qZj/pcA==
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jul 2020 23:01:55 -0700
+IronPort-SDR: 4ebZ60DufuEhFPqE4Gkmd+ePddVrhbbdayHPeCH8VuA3vj20rht4UKFYoH48pMqMStwVzf2thc
+ Dn5L6WunnSqg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.75,350,1589266800"; 
-   d="scan'208";a="324450203"
+   d="scan'208";a="324450182"
 Received: from allen-box.sh.intel.com ([10.239.159.139])
-  by FMSMGA003.fm.intel.com with ESMTP; 13 Jul 2020 23:01:55 -0700
+  by FMSMGA003.fm.intel.com with ESMTP; 13 Jul 2020 23:01:52 -0700
 From:   Lu Baolu <baolu.lu@linux.intel.com>
 To:     Joerg Roedel <joro@8bytes.org>,
         Alex Williamson <alex.williamson@redhat.com>
@@ -48,9 +48,9 @@ Cc:     Robin Murphy <robin.murphy@arm.com>,
         Liu Yi L <yi.l.liu@intel.com>,
         iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
         kvm@vger.kernel.org, Lu Baolu <baolu.lu@linux.intel.com>
-Subject: [PATCH v3 3/4] iommu: Add iommu_aux_get_domain_for_dev()
-Date:   Tue, 14 Jul 2020 13:57:02 +0800
-Message-Id: <20200714055703.5510-4-baolu.lu@linux.intel.com>
+Subject: [PATCH v3 2/4] iommu: Add iommu_aux_at(de)tach_group()
+Date:   Tue, 14 Jul 2020 13:57:01 +0800
+Message-Id: <20200714055703.5510-3-baolu.lu@linux.intel.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200714055703.5510-1-baolu.lu@linux.intel.com>
 References: <20200714055703.5510-1-baolu.lu@linux.intel.com>
@@ -59,83 +59,152 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The device driver needs an API to get its aux-domain. A typical usage
-scenario is:
+This adds two new aux-domain APIs for a use case like vfio/mdev where
+sub-devices derived from an aux-domain capable device are created and
+put in an iommu_group.
 
-        unsigned long pasid;
-        struct iommu_domain *domain;
-        struct device *dev = mdev_dev(mdev);
-        struct device *iommu_device = vfio_mdev_get_iommu_device(dev);
+/**
+ * iommu_aux_attach_group - attach an aux-domain to an iommu_group which
+ *                          contains sub-devices (for example mdevs) derived
+ *                          from @dev.
+ * @domain: an aux-domain;
+ * @group:  an iommu_group which contains sub-devices derived from @dev;
+ * @dev:    the physical device which supports IOMMU_DEV_FEAT_AUX.
+ *
+ * Returns 0 on success, or an error value.
+ */
+int iommu_aux_attach_group(struct iommu_domain *domain,
+                           struct iommu_group *group,
+                           struct device *dev)
 
-        domain = iommu_aux_get_domain_for_dev(dev);
-        if (!domain)
-                return -ENODEV;
+/**
+ * iommu_aux_detach_group - detach an aux-domain from an iommu_group
+ *
+ * @domain: an aux-domain;
+ * @group:  an iommu_group which contains sub-devices derived from @dev;
+ * @dev:    the physical device which supports IOMMU_DEV_FEAT_AUX.
+ *
+ * @domain must have been attached to @group via iommu_aux_attach_group().
+ */
+void iommu_aux_detach_group(struct iommu_domain *domain,
+                            struct iommu_group *group,
+                            struct device *dev)
 
-        pasid = iommu_aux_get_pasid(domain, iommu_device);
-        if (pasid <= 0)
-                return -EINVAL;
+It also adds a flag in the iommu_group data structure to identify
+an iommu_group with aux-domain attached from those normal ones.
 
-         /* Program the device context */
-         ....
-
-This adds an API for such use case.
-
-Suggested-by: Alex Williamson <alex.williamson@redhat.com>
 Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
 ---
- drivers/iommu/iommu.c | 18 ++++++++++++++++++
- include/linux/iommu.h |  7 +++++++
- 2 files changed, 25 insertions(+)
+ drivers/iommu/iommu.c | 58 +++++++++++++++++++++++++++++++++++++++++++
+ include/linux/iommu.h | 17 +++++++++++++
+ 2 files changed, 75 insertions(+)
 
 diff --git a/drivers/iommu/iommu.c b/drivers/iommu/iommu.c
-index cad5a19ebf22..434bf42b6b9b 100644
+index e1fdd3531d65..cad5a19ebf22 100644
 --- a/drivers/iommu/iommu.c
 +++ b/drivers/iommu/iommu.c
-@@ -2817,6 +2817,24 @@ void iommu_aux_detach_group(struct iommu_domain *domain,
- }
- EXPORT_SYMBOL_GPL(iommu_aux_detach_group);
+@@ -45,6 +45,7 @@ struct iommu_group {
+ 	struct iommu_domain *default_domain;
+ 	struct iommu_domain *domain;
+ 	struct list_head entry;
++	unsigned int aux_domain_attached:1;
+ };
  
-+struct iommu_domain *iommu_aux_get_domain_for_dev(struct device *dev)
+ struct group_device {
+@@ -2759,6 +2760,63 @@ int iommu_aux_get_pasid(struct iommu_domain *domain, struct device *dev)
+ }
+ EXPORT_SYMBOL_GPL(iommu_aux_get_pasid);
+ 
++/**
++ * iommu_aux_attach_group - attach an aux-domain to an iommu_group which
++ *                          contains sub-devices (for example mdevs) derived
++ *                          from @dev.
++ * @domain: an aux-domain;
++ * @group:  an iommu_group which contains sub-devices derived from @dev;
++ * @dev:    the physical device which supports IOMMU_DEV_FEAT_AUX.
++ *
++ * Returns 0 on success, or an error value.
++ */
++int iommu_aux_attach_group(struct iommu_domain *domain,
++			   struct iommu_group *group, struct device *dev)
 +{
-+	struct iommu_domain *domain = NULL;
-+	struct iommu_group *group;
++	int ret = -EBUSY;
 +
-+	group = iommu_group_get(dev);
-+	if (!group)
-+		return NULL;
++	mutex_lock(&group->mutex);
++	if (group->domain)
++		goto out_unlock;
 +
-+	if (group->aux_domain_attached)
-+		domain = group->domain;
++	ret = iommu_aux_attach_device(domain, dev);
++	if (!ret) {
++		group->domain = domain;
++		group->aux_domain_attached = true;
++	}
 +
-+	iommu_group_put(group);
-+
-+	return domain;
++out_unlock:
++	mutex_unlock(&group->mutex);
++	return ret;
 +}
-+EXPORT_SYMBOL_GPL(iommu_aux_get_domain_for_dev);
++EXPORT_SYMBOL_GPL(iommu_aux_attach_group);
++
++/**
++ * iommu_aux_detach_group - detach an aux-domain from an iommu_group
++ *
++ * @domain: an aux-domain;
++ * @group:  an iommu_group which contains sub-devices derived from @dev;
++ * @dev:    the physical device which supports IOMMU_DEV_FEAT_AUX.
++ *
++ * @domain must have been attached to @group via iommu_aux_attach_group().
++ */
++void iommu_aux_detach_group(struct iommu_domain *domain,
++			    struct iommu_group *group, struct device *dev)
++{
++	mutex_lock(&group->mutex);
++
++	if (WARN_ON(!group->aux_domain_attached || group->domain != domain))
++		goto out_unlock;
++
++	iommu_aux_detach_device(domain, dev);
++	group->aux_domain_attached = false;
++	group->domain = NULL;
++
++out_unlock:
++	mutex_unlock(&group->mutex);
++}
++EXPORT_SYMBOL_GPL(iommu_aux_detach_group);
 +
  /**
   * iommu_sva_bind_device() - Bind a process address space to a device
   * @dev: the device
 diff --git a/include/linux/iommu.h b/include/linux/iommu.h
-index 9506551139ab..cda6cef7579e 100644
+index 5657d4fef9f2..9506551139ab 100644
 --- a/include/linux/iommu.h
 +++ b/include/linux/iommu.h
-@@ -639,6 +639,7 @@ int iommu_aux_attach_group(struct iommu_domain *domain,
- 			   struct iommu_group *group, struct device *dev);
- void iommu_aux_detach_group(struct iommu_domain *domain,
- 			   struct iommu_group *group, struct device *dev);
-+struct iommu_domain *iommu_aux_get_domain_for_dev(struct device *dev);
+@@ -635,6 +635,10 @@ bool iommu_dev_feature_enabled(struct device *dev, enum iommu_dev_features f);
+ int iommu_aux_attach_device(struct iommu_domain *domain, struct device *dev);
+ void iommu_aux_detach_device(struct iommu_domain *domain, struct device *dev);
+ int iommu_aux_get_pasid(struct iommu_domain *domain, struct device *dev);
++int iommu_aux_attach_group(struct iommu_domain *domain,
++			   struct iommu_group *group, struct device *dev);
++void iommu_aux_detach_group(struct iommu_domain *domain,
++			   struct iommu_group *group, struct device *dev);
  
  struct iommu_sva *iommu_sva_bind_device(struct device *dev,
  					struct mm_struct *mm,
-@@ -1040,6 +1041,12 @@ iommu_aux_detach_group(struct iommu_domain *domain,
- {
+@@ -1023,6 +1027,19 @@ iommu_aux_get_pasid(struct iommu_domain *domain, struct device *dev)
+ 	return -ENODEV;
  }
  
-+static inline struct iommu_domain *
-+iommu_aux_get_domain_for_dev(struct device *dev)
++static inline int
++iommu_aux_attach_group(struct iommu_domain *domain,
++		       struct iommu_group *group, struct device *dev)
 +{
-+	return NULL;
++	return -ENODEV;
++}
++
++static inline void
++iommu_aux_detach_group(struct iommu_domain *domain,
++		       struct iommu_group *group, struct device *dev)
++{
 +}
 +
  static inline struct iommu_sva *
