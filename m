@@ -2,88 +2,109 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AF5FC433E4
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 15:08:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8867FC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 15:09:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 557582074B
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 15:08:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="PiOFeJm6";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="8w2x4Qms"
+	by mail.kernel.org (Postfix) with ESMTP id 646762074A
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 15:09:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594739371;
+	bh=BJa6fLKmJwuRF1O/mc37Kc4DY7nUta/3nl09dK0slaA=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=Y4EeY+AMa9YvbBdeTHUNTIuBpenzTUNaVkigLd/XGuvzciQxTnG6jgmBi/coPt1P7
+	 IavW5WVEonQwHgy2u4sEwjQIPTKxxev14yzScmbjlkn7L6VqPqDOmJdwRSl5ePgxPN
+	 7m3wck07g/mqa3GvXfyc5MYbYIHmTJpNeyG4HGJI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728903AbgGNPI4 (ORCPT
+        id S1728822AbgGNPJa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 11:08:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60088 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725876AbgGNPIz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 11:08:55 -0400
-Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 84772C061755
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 08:08:55 -0700 (PDT)
-From:   Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1594739333;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=abOwsb/H+mxHjN22WO9IsbbGy077NPz9xL3vebfSX5A=;
-        b=PiOFeJm6Z/HMxh1fraj4HHFtcqFW1bxQUsdEGzjKuAFCw2Yzum8zp10O1MtlHYxRJrN/lW
-        cRimnumFhQouW4/b5Dgjd2BO2jS3AhoAIqjmAZcdMrh2wA9gH2LYqypQHgfzj/sgFcDsxz
-        07zWAtfyAY4bjcw6bpEiQRRG8/oRC459KBleTOdBGPuJtb2elApTNijnxDMyVDExlvpOL+
-        bGxf65z3dCuE/ata3TsE4xPwGstf05N6vSeqyRAfORmC8BxIEaHeND+/pbmcwgedI+WOCV
-        iOpgSlEV/AY6RAkRlvWOZm3HxCWyPQNGZE5ZtQXmKGQat9ushB5PDx1PKkvrXg==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1594739333;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=abOwsb/H+mxHjN22WO9IsbbGy077NPz9xL3vebfSX5A=;
-        b=8w2x4QmsyaJytPpc/92fuAvQQ2kKl4G8ty+WpyYlxKOtUwPfkyHGrb2iaQDFgH0Mxe8g+y
-        vGS6+f7CZeNK8YDg==
-To:     Claudiu Beznea <claudiu.beznea@microchip.com>,
-        john.stultz@linaro.org, sboyd@kernel.org
-Cc:     linux-kernel@vger.kernel.org,
-        Claudiu Beznea <claudiu.beznea@microchip.com>
-Subject: Re: [PATCH] timekeeping: correct typo
-In-Reply-To: <1594648845-17200-1-git-send-email-claudiu.beznea@microchip.com>
-References: <1594648845-17200-1-git-send-email-claudiu.beznea@microchip.com>
-Date:   Tue, 14 Jul 2020 17:08:53 +0200
-Message-ID: <87r1teuoai.fsf@nanos.tec.linutronix.de>
+        Tue, 14 Jul 2020 11:09:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41998 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725876AbgGNPJ3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 11:09:29 -0400
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 24AE120663;
+        Tue, 14 Jul 2020 15:09:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594739369;
+        bh=BJa6fLKmJwuRF1O/mc37Kc4DY7nUta/3nl09dK0slaA=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=zN+hQ9++SyHoH7aDcnQWGcJMzpKxXH941BOoyLFyBt5b+1JepfWlx2voN0SR4Hv+A
+         BmnXBYK4jvMIyVIc8tP7HdCIn57cRhd2d1YW6TxOV8eOLZVKYvqoaSkigu9wK4ZCk7
+         ZMokTGFkZi5LRAFJ1n9b4MDqxx814lpYtRTOB7YI=
+Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
+        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.92)
+        (envelope-from <maz@kernel.org>)
+        id 1jvMYh-00Bipk-FQ; Tue, 14 Jul 2020 16:09:27 +0100
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Tue, 14 Jul 2020 16:09:27 +0100
+From:   Marc Zyngier <maz@kernel.org>
+To:     Douglas Anderson <dianders@chromium.org>
+Cc:     linus.walleij@linaro.org, rnayak@codeaurora.org,
+        mkshah@codeaurora.org, ilina@codeaurora.org, cychiang@chromium.org,
+        swboyd@chromium.org, bjorn.andersson@linaro.org, agross@kernel.org,
+        linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3] pinctrl: qcom: Handle broken/missing PDC dual edge
+ IRQs on sc7180
+In-Reply-To: <20200714080254.v3.1.Ie0d730120b232a86a4eac1e2909bcbec844d1766@changeid>
+References: <20200714080254.v3.1.Ie0d730120b232a86a4eac1e2909bcbec844d1766@changeid>
+User-Agent: Roundcube Webmail/1.4.5
+Message-ID: <ac694b7ad8ff6b7563475e014acde1cb@kernel.org>
+X-Sender: maz@kernel.org
+X-SA-Exim-Connect-IP: 51.254.78.96
+X-SA-Exim-Rcpt-To: dianders@chromium.org, linus.walleij@linaro.org, rnayak@codeaurora.org, mkshah@codeaurora.org, ilina@codeaurora.org, cychiang@chromium.org, swboyd@chromium.org, bjorn.andersson@linaro.org, agross@kernel.org, linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Claudiu Beznea <claudiu.beznea@microchip.com> writes:
-> Correct typo in logarithmic_accumulation() description.
->
-> Signed-off-by: Claudiu Beznea <claudiu.beznea@microchip.com>
-> ---
->  kernel/time/timekeeping.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/kernel/time/timekeeping.c b/kernel/time/timekeeping.c
-> index d20d489841c8..6b436d7a751f 100644
-> --- a/kernel/time/timekeeping.c
-> +++ b/kernel/time/timekeeping.c
-> @@ -2001,7 +2001,7 @@ static inline unsigned int accumulate_nsecs_to_secs(struct timekeeper *tk)
->   * logarithmic_accumulation - shifted accumulation of cycles
->   *
->   * This functions accumulates a shifted interval of cycles into
-> - * into a shifted interval nanoseconds. Allows for O(log) accumulation
-> + * a shifted interval nanoseconds. Allows for O(log) accumulation
+On 2020-07-14 16:04, Douglas Anderson wrote:
+> Depending on how you look at it, you can either say that:
+> a) There is a PDC hardware issue (with the specific IP rev that exists
+>    on sc7180) that causes the PDC not to work properly when configured
+>    to handle dual edges.
+> b) The dual edge feature of the PDC hardware was only added in later
+>    HW revisions and thus isn't in all hardware.
+> 
+> Regardless of how you look at it, let's work around the lack of dual
+> edge support by only ever letting our parent see requests for single
+> edge interrupts on affected hardware.
+> 
+> NOTE: it's possible that a driver requesting a dual edge interrupt
+> might get several edges coalesced into a single IRQ.  For instance if
+> a line starts low and then goes high and low again, the driver that
+> requested the IRQ is not guaranteed to be called twice.  However, it
+> is guaranteed that once the driver's interrupt handler starts running
+> its first instruction that any new edges coming in will cause the
+> interrupt to fire again.  This is relatively commonplace for dual-edge
+> gpio interrupts (many gpio controllers require software to emulate
+> dual edge with single edge) so client drivers should be setup to
+> handle it.
+> 
+> Fixes: e35a6ae0eb3a ("pinctrl/msm: Setup GPIO chip in hierarchy")
+> Signed-off-by: Douglas Anderson <dianders@chromium.org>
 
-If you fix the typo, can you please add the missing 'of' as well?
+Reviewed-by: Marc Zyngier <maz@kernel.org>
+
+Linus, I assume you will get this one via the pinctrl tree once you
+are happy with it?
 
 Thanks,
 
-        tglx
+         M.
+-- 
+Jazz is not dead. It just smells funny...
