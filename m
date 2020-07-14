@@ -2,135 +2,190 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1199C433E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 08:34:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA19BC433E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 08:37:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BA3EC21BE5
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 08:34:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C76121897
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 08:37:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ViRM9gIJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726675AbgGNIeI (ORCPT
+        id S1726437AbgGNIhv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 04:34:08 -0400
-Received: from mail.loongson.cn ([114.242.206.163]:57054 "EHLO loongson.cn"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725884AbgGNIeH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 04:34:07 -0400
-Received: from ticat.localdomain (unknown [113.200.148.30])
-        by mail.loongson.cn (Coremail) with SMTP id AQAAf9Cxr9b5bQ1fM1MEAA--.5354S2;
-        Tue, 14 Jul 2020 16:34:02 +0800 (CST)
-From:   Peng Fan <fanpeng@loongson.cn>
-To:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] mips/vdso: Fix resource leaks in genvdso.c
-Date:   Tue, 14 Jul 2020 16:34:01 +0800
-Message-Id: <1594715641-8492-1-git-send-email-fanpeng@loongson.cn>
-X-Mailer: git-send-email 2.1.0
-X-CM-TRANSID: AQAAf9Cxr9b5bQ1fM1MEAA--.5354S2
-X-Coremail-Antispam: 1UD129KBjvJXoW7Cr4xCrWkur17WrykXr43Jrb_yoW8ZFW7pF
-        s5uFyv9rZ2kFy7tw45J34j9FZ5AFn7XryUWr4kA3yDZFZ5X3sFy3y8GFyrtFy5Ar9Iq3yS
-        9anruFZ5AFs7trJanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDU0xBIdaVrnRJUUUySb7Iv0xC_Cr1lb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I2
-        0VC2zVCF04k26cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rw
-        A2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xII
-        jxv20xvEc7CjxVAFwI0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwV
-        C2z280aVCY1x0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC
-        0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Gr0_Cr
-        1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JMxAIw28IcxkI7VAKI48JMxC2
-        0s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI
-        0_JrI_JrWlx4CE17CEb7AF67AKxVWUXVWUAwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE
-        14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw20EY4v20x
-        vaj40_WFyUJVCq3wCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v2
-        6r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07jFfO7UUUUU=
-X-CM-SenderInfo: xidq1vtqj6z05rqj20fqof0/
+        Tue, 14 Jul 2020 04:37:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56002 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725793AbgGNIhv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 04:37:51 -0400
+Received: from mail-io1-xd44.google.com (mail-io1-xd44.google.com [IPv6:2607:f8b0:4864:20::d44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D42A4C061755
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 01:37:50 -0700 (PDT)
+Received: by mail-io1-xd44.google.com with SMTP id p205so7893687iod.8
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 01:37:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=UXcvlRkL+rP00wIkwxgaUUeJruwfzTk+tSb1yGBtYmE=;
+        b=ViRM9gIJdvZpZ70h5V18lNlz42DdiJjWHAySlSiZaRqdSMYDEIF4GVCoogQUsYYx7a
+         iV2IamjZVmDh2TSD4SUEvRFICzdIyjXWG5lRN5eS8KaU7C8ip+BZ42O+uf0Vmkl/+yS7
+         W9OQ7nD7XLV2HlbUVgjuvhapmfx5XH6Q0zvE9sAXxV8BTl3KpbtWdVVQoJtK/cYz5fAs
+         QKGyr3Ca0vWDCoekuo60137XBx592F+GaNtpdff8/z2LTa2GpPPCCgVZlssS/lH1jmxx
+         wH6P51vZzZlPtjUZiiT91O1pTIw4oCioFvMMVLrA4faNkByCEvskjvXB7M6Iw27jtBtz
+         RWDw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=UXcvlRkL+rP00wIkwxgaUUeJruwfzTk+tSb1yGBtYmE=;
+        b=WDq5TsEZjPx+zpSVnIJ/joyKQjJmcbrHGfWcZdTMYTB/cnJ4oa/hKo6EWsPwMYL1Gt
+         Z4HHfGmWF5D456YUBzptyYdRbu7FXR+XIj8fpu28qVoNuaSWHLtyvHmEeoxxz4NtvwDK
+         dxxCVHsP5XxuDyxEVmq1o0lwfbn87XygAjLDcWjm/zUreBISJdRx7POc55BbYuh/HcmJ
+         XIPvNWF+LSXSFkmpdoY+PwyId+BmqjyxfAP/GKbKh9pCqCGbGkbvaS0wyw5fmWYm4RpG
+         GLRpMxO/JqajbHCDq5pPldFrs3ktLuLNZ+M1SogPRRDsBLiN56tq/gwnxlZ0FGcmnEq1
+         9AOw==
+X-Gm-Message-State: AOAM530XbDHVIrAtVbqZn5C7M1sc2qNdIQ4sxPxfMJFnzBl9B3PAUQnR
+        d+IXGRNpkHL1NlCFPuniLhAJRKczYaOvW4VQDFU=
+X-Google-Smtp-Source: ABdhPJyud0vB1fj9qgci4bf8eIrWivIZFePW3mXSe2/bCbwrXhJ7Zw4rj6gqUBgewPK7E+jB9OOQpYAgLtL5OEWsMCE=
+X-Received: by 2002:a02:cc24:: with SMTP id o4mr4689471jap.105.1594715870042;
+ Tue, 14 Jul 2020 01:37:50 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200714073404.84863-1-richard.weiyang@linux.alibaba.com>
+In-Reply-To: <20200714073404.84863-1-richard.weiyang@linux.alibaba.com>
+From:   Pankaj Gupta <pankaj.gupta.linux@gmail.com>
+Date:   Tue, 14 Jul 2020 10:37:38 +0200
+Message-ID: <CAM9Jb+gu6vvYOQGTL546-J-gcXrC4N0jqK_rKpP7PwZdPea8ZQ@mail.gmail.com>
+Subject: Re: [PATCH] mm/hugetlb: hide nr_nodes in the internal of for_each_node_mask_to_[alloc|free]
+To:     Wei Yang <richard.weiyang@linux.alibaba.com>
+Cc:     mike.kravetz@oracle.com, Andrew Morton <akpm@linux-foundation.org>,
+        Linux MM <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Close "fd" before the return of map_vdso() and close "out_file"
-in main().
+> The second parameter of for_each_node_mask_to_[alloc|free] is a loop
+> variant, which is not used outside of loop iteration.
+>
+> Let's hide this.
+>
+> Signed-off-by: Wei Yang <richard.weiyang@linux.alibaba.com>
+> ---
+>  mm/hugetlb.c | 38 ++++++++++++++++++++------------------
+>  1 file changed, 20 insertions(+), 18 deletions(-)
+>
+> diff --git a/mm/hugetlb.c b/mm/hugetlb.c
+> index 57ece74e3aae..9c3d15fb317e 100644
+> --- a/mm/hugetlb.c
+> +++ b/mm/hugetlb.c
+> @@ -1196,17 +1196,19 @@ static int hstate_next_node_to_free(struct hstate *h, nodemask_t *nodes_allowed)
+>         return nid;
+>  }
+>
+> -#define for_each_node_mask_to_alloc(hs, nr_nodes, node, mask)          \
+> -       for (nr_nodes = nodes_weight(*mask);                            \
+> -               nr_nodes > 0 &&                                         \
+> +#define for_each_node_mask_to_alloc(hs, node, mask)                    \
+> +       int __nr_nodes;                                                 \
+> +       for (__nr_nodes = nodes_weight(*mask);                          \
+> +               __nr_nodes > 0 &&                                       \
+>                 ((node = hstate_next_node_to_alloc(hs, mask)) || 1);    \
+> -               nr_nodes--)
+> +               __nr_nodes--)
+>
+> -#define for_each_node_mask_to_free(hs, nr_nodes, node, mask)           \
+> -       for (nr_nodes = nodes_weight(*mask);                            \
+> -               nr_nodes > 0 &&                                         \
+> +#define for_each_node_mask_to_free(hs, node, mask)                     \
+> +       int __nr_nodes;                                                 \
+> +       for (__nr_nodes = nodes_weight(*mask);                          \
+> +               __nr_nodes > 0 &&                                       \
+>                 ((node = hstate_next_node_to_free(hs, mask)) || 1);     \
+> -               nr_nodes--)
+> +               __nr_nodes--)
+>
+>  #ifdef CONFIG_ARCH_HAS_GIGANTIC_PAGE
+>  static void destroy_compound_gigantic_page(struct page *page,
+> @@ -1403,7 +1405,7 @@ static void __free_huge_page(struct page *page)
+>          * reservation.  If the page was associated with a subpool, there
+>          * would have been a page reserved in the subpool before allocation
+>          * via hugepage_subpool_get_pages().  Since we are 'restoring' the
+> -        * reservtion, do not call hugepage_subpool_put_pages() as this will
+> +        * reservation, do not call hugepage_subpool_put_pages() as this will
+>          * remove the reserved page from the subpool.
+>          */
+>         if (!restore_reserve) {
+> @@ -1760,10 +1762,10 @@ static int alloc_pool_huge_page(struct hstate *h, nodemask_t *nodes_allowed,
+>                                 nodemask_t *node_alloc_noretry)
+>  {
+>         struct page *page;
+> -       int nr_nodes, node;
+> +       int node;
+>         gfp_t gfp_mask = htlb_alloc_mask(h) | __GFP_THISNODE;
+>
+> -       for_each_node_mask_to_alloc(h, nr_nodes, node, nodes_allowed) {
+> +       for_each_node_mask_to_alloc(h, node, nodes_allowed) {
+>                 page = alloc_fresh_huge_page(h, gfp_mask, node, nodes_allowed,
+>                                                 node_alloc_noretry);
+>                 if (page)
+> @@ -1787,10 +1789,10 @@ static int alloc_pool_huge_page(struct hstate *h, nodemask_t *nodes_allowed,
+>  static int free_pool_huge_page(struct hstate *h, nodemask_t *nodes_allowed,
+>                                                          bool acct_surplus)
+>  {
+> -       int nr_nodes, node;
+> +       int node;
+>         int ret = 0;
+>
+> -       for_each_node_mask_to_free(h, nr_nodes, node, nodes_allowed) {
+> +       for_each_node_mask_to_free(h, node, nodes_allowed) {
+>                 /*
+>                  * If we're returning unused surplus pages, only examine
+>                  * nodes with surplus pages.
+> @@ -2481,9 +2483,9 @@ int alloc_bootmem_huge_page(struct hstate *h)
+>  int __alloc_bootmem_huge_page(struct hstate *h)
+>  {
+>         struct huge_bootmem_page *m;
+> -       int nr_nodes, node;
+> +       int node;
+>
+> -       for_each_node_mask_to_alloc(h, nr_nodes, node, &node_states[N_MEMORY]) {
+> +       for_each_node_mask_to_alloc(h, node, &node_states[N_MEMORY]) {
+>                 void *addr;
+>
+>                 addr = memblock_alloc_try_nid_raw(
+> @@ -2662,17 +2664,17 @@ static inline void try_to_free_low(struct hstate *h, unsigned long count,
+>  static int adjust_pool_surplus(struct hstate *h, nodemask_t *nodes_allowed,
+>                                 int delta)
+>  {
+> -       int nr_nodes, node;
+> +       int node;
+>
+>         VM_BUG_ON(delta != -1 && delta != 1);
+>
+>         if (delta < 0) {
+> -               for_each_node_mask_to_alloc(h, nr_nodes, node, nodes_allowed) {
+> +               for_each_node_mask_to_alloc(h, node, nodes_allowed) {
+>                         if (h->surplus_huge_pages_node[node])
+>                                 goto found;
+>                 }
+>         } else {
+> -               for_each_node_mask_to_free(h, nr_nodes, node, nodes_allowed) {
+> +               for_each_node_mask_to_free(h, node, nodes_allowed) {
+>                         if (h->surplus_huge_pages_node[node] <
+>                                         h->nr_huge_pages_node[node])
+>                                 goto found;
+> --
+> 2.20.1 (Apple Git-117)
 
-Signed-off-by: Peng Fan <fanpeng@loongson.cn>
----
- arch/mips/vdso/genvdso.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
+Acked-by: Pankaj Gupta <pankaj.gupta.linux@gmail.com>
 
-diff --git a/arch/mips/vdso/genvdso.c b/arch/mips/vdso/genvdso.c
-index be57b832..f459c7a 100644
---- a/arch/mips/vdso/genvdso.c
-+++ b/arch/mips/vdso/genvdso.c
-@@ -122,6 +122,7 @@ static void *map_vdso(const char *path, size_t *_size)
- 	if (fstat(fd, &stat) != 0) {
- 		fprintf(stderr, "%s: Failed to stat '%s': %s\n", program_name,
- 			path, strerror(errno));
-+		close(fd);
- 		return NULL;
- 	}
- 
-@@ -130,6 +131,7 @@ static void *map_vdso(const char *path, size_t *_size)
- 	if (addr == MAP_FAILED) {
- 		fprintf(stderr, "%s: Failed to map '%s': %s\n", program_name,
- 			path, strerror(errno));
-+		close(fd);
- 		return NULL;
- 	}
- 
-@@ -139,6 +141,7 @@ static void *map_vdso(const char *path, size_t *_size)
- 	if (memcmp(ehdr->e_ident, ELFMAG, SELFMAG) != 0) {
- 		fprintf(stderr, "%s: '%s' is not an ELF file\n", program_name,
- 			path);
-+		close(fd);
- 		return NULL;
- 	}
- 
-@@ -150,6 +153,7 @@ static void *map_vdso(const char *path, size_t *_size)
- 	default:
- 		fprintf(stderr, "%s: '%s' has invalid ELF class\n",
- 			program_name, path);
-+		close(fd);
- 		return NULL;
- 	}
- 
-@@ -161,6 +165,7 @@ static void *map_vdso(const char *path, size_t *_size)
- 	default:
- 		fprintf(stderr, "%s: '%s' has invalid ELF data order\n",
- 			program_name, path);
-+		close(fd);
- 		return NULL;
- 	}
- 
-@@ -168,15 +173,18 @@ static void *map_vdso(const char *path, size_t *_size)
- 		fprintf(stderr,
- 			"%s: '%s' has invalid ELF machine (expected EM_MIPS)\n",
- 			program_name, path);
-+		close(fd);
- 		return NULL;
- 	} else if (swap_uint16(ehdr->e_type) != ET_DYN) {
- 		fprintf(stderr,
- 			"%s: '%s' has invalid ELF type (expected ET_DYN)\n",
- 			program_name, path);
-+		close(fd);
- 		return NULL;
- 	}
- 
- 	*_size = stat.st_size;
-+	close(fd);
- 	return addr;
- }
- 
-@@ -297,6 +305,7 @@ int main(int argc, char **argv)
- 	}
- 
- 	fprintf(out_file, "};\n");
-+	fclose(out_file);
- 
- 	return EXIT_SUCCESS;
- }
--- 
-2.1.0
-
+>
+>
