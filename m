@@ -2,147 +2,110 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50187C433E5
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:34:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D87CAC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:35:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 311FC20890
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:33:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="qYKY00ME"
+	by mail.kernel.org (Postfix) with ESMTP id BBDB6229C9
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:35:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729239AbgGNSd6 (ORCPT
+        id S1729232AbgGNSfP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 14:33:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36396 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726817AbgGNSd5 (ORCPT
+        Tue, 14 Jul 2020 14:35:15 -0400
+Received: from jabberwock.ucw.cz ([46.255.230.98]:48932 "EHLO
+        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726817AbgGNSfP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 14:33:57 -0400
-Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7B4CBC061755
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 11:33:57 -0700 (PDT)
-Received: by mail-lj1-x243.google.com with SMTP id e4so24640512ljn.4
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 11:33:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=yyP3ZHSQbiIJkgfhj+w2LY9l2YJKPJ+qK594IrEb58E=;
-        b=qYKY00MEabqGiQ7om+FCgRsF3qL/GSt4BdQ+DC3BjaBjVRtPavSO7I+bKn2fn9H/+A
-         4YBy0mJ2n+3/LWK/rIvkJW2EI4G8dmOhSmAUXBD8hThIgdANEqiZViODGTy4FbwROfPK
-         tRn5nCWI7UiPloxZ1mwja90xAyhlIvln/CUboMoCeo0trcdTJyJjV/oBdcYI1stqk/wA
-         l7D4atz2mu0OIXlrT1I7Sjl4Zhb6DLYCoG6xROrOmWi4z+5tAVUy1jbIiVFPQUIr88t7
-         Q357PW73mz4a2VcF94WK8yu4QOJCbCniyE4OnjqjHoCYNlA/Y6U+x+hheWnzedDV4r0a
-         OqOQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=yyP3ZHSQbiIJkgfhj+w2LY9l2YJKPJ+qK594IrEb58E=;
-        b=X5YXFTLPyQMaAO9IUv6boITJZRCDKiSKNJz3JRAv3ubUoIZhD9vpXpcEkEvdHmPeyI
-         HJp8YNj2sjIaQg8HAcAU5KehpCinIt9Uh6wSSR+LyCKvD6SjM6pZehqtte/CGsMT2J6j
-         BjX1Qe0MugsOv6wJ7wpjH4dqFCK1LiCrnM8ZDrosX20pyKFJ/nf9HGKJPx6DxGeHXxLm
-         yXf0CPe4NJ7Z/OaLw1PVwxpSffMSqZcDwZdnJJUFl2xuKgPXu9OcHm6kijdE5M0P14/H
-         K2pGaTiwhXCQ8tNjTRJUvgKacK5DPLLDjwwzbtMj+RPOPLqzlX2Hw4RH+lEbHQi8Q0RC
-         gpSg==
-X-Gm-Message-State: AOAM530YJyFS0IQVap1u4aZc1q43GQxspuFW+AByjsO+dt1BpB/YFTi9
-        J/EVCzXTZ/IpQbMhO34ly3kKc7U7JagpWa9ZguXRQw==
-X-Google-Smtp-Source: ABdhPJzutP+Eujesct6aPGeAiwrZdsjZGD8qSndUPJy6OUx7H9vvuS79gJZzuNhHI60cmBHSQCgOeaiRiKEf+jUgss0=
-X-Received: by 2002:a2e:9b87:: with SMTP id z7mr186034lji.80.1594751635653;
- Tue, 14 Jul 2020 11:33:55 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200714030348.6214-1-mathieu.desnoyers@efficios.com>
- <20200714030348.6214-3-mathieu.desnoyers@efficios.com> <CAFTs51UHaUqaKj5bEj0vQtEZrww9gnrqb-kGVk7DAgQJPBAR+w@mail.gmail.com>
- <775688146.12145.1594748580461.JavaMail.zimbra@efficios.com>
-In-Reply-To: <775688146.12145.1594748580461.JavaMail.zimbra@efficios.com>
-From:   Peter Oskolkov <posk@google.com>
-Date:   Tue, 14 Jul 2020 11:33:44 -0700
-Message-ID: <CAPNVh5fiCCJpyeLj_ciWzFrO4fasVXZNhpfKXJhJWJirXdJOjQ@mail.gmail.com>
-Subject: Re: [RFC PATCH 2/4] rseq: Allow extending struct rseq
-To:     Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc:     Peter Oskolkov <posk@posk.io>,
-        Peter Zijlstra <peterz@infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
+        Tue, 14 Jul 2020 14:35:15 -0400
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+        id 634131C0BD5; Tue, 14 Jul 2020 20:35:13 +0200 (CEST)
+Date:   Tue, 14 Jul 2020 20:35:12 +0200
+From:   Pavel Machek <pavel@denx.de>
+To:     Tom Zanussi <zanussi@kernel.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        linux-rt-users <linux-rt-users@vger.kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
         Thomas Gleixner <tglx@linutronix.de>,
-        paulmck <paulmck@linux.ibm.com>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Paul Turner <pjt@google.com>,
-        linux-api <linux-api@vger.kernel.org>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Florian Weimer <fw@deneb.enyo.de>, carlos <carlos@redhat.com>,
-        Chris Kennelly <ckennelly@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        Carsten Emde <C.Emde@osadl.org>,
+        John Kacur <jkacur@redhat.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Daniel Wagner <wagi@monom.org>,
+        Clark Williams <williams@redhat.com>,
+        Pavel Machek <pavel@denx.de>
+Subject: Re: [ANNOUNCE] 4.19.132-rt59
+Message-ID: <20200714183512.GA18816@duo.ucw.cz>
+References: <82932b48972f38fccf9920e2ec75b555c2b2494a.camel@kernel.org>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="opJtzjQTFsWo+cga"
+Content-Disposition: inline
+In-Reply-To: <82932b48972f38fccf9920e2ec75b555c2b2494a.camel@kernel.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 14, 2020 at 10:43 AM Mathieu Desnoyers
-<mathieu.desnoyers@efficios.com> wrote:
->
-> ----- On Jul 14, 2020, at 1:24 PM, Peter Oskolkov posk@posk.io wrote:
->
-> > At Google, we actually extended struct rseq (I will post the patches
-> > here once they are fully deployed and we have specific
-> > benefits/improvements to report). We did this by adding several fields
-> > below __u32 flags (the last field currently), and correspondingly
-> > increasing rseq_len in rseq() syscall. If the kernel does not know of
-> > this extension, it will return -EINVAL due to an unexpected rseq_len;
-> > then the application can either fall-back to the standard/upstream
-> > rseq, or bail. If the kernel does know of this extension, it accepts
-> > it. If the application passes the old rseq_len (32), the kernel knows
-> > that this is an old application and treats it as such.
-> >
-> > I looked through the archives, but I did not find specifically why the
-> > pretty standard approach described above is considered inferior to the
-> > one taken in this patch (freeze rseq_len at 32, add additional length
-> > fields to struct rseq). Can these be summarized?
->
-> I think you don't face the issues I'm facing with libc rseq integration
-> because you control the entire user-space software ecosystem at Google.
->
-> The main issue we face is that the library responsible for registering
-> rseq (either glibc 2.32+, an early-adopter librseq library, or the
-> application) may very well not be the same library defining the __rseq_abi
-> symbol used in the global symbol table. Interposition with ld preload or
-> by defining the __rseq_abi in the program's executable are good examples
-> of this kind of scenario, and those use-cases are supported.
->
-> So the size of the __rseq_abi structure may be larger than the struct
-> rseq known by glibc (and eventually smaller, if future glibc versions
-> extend their __rseq_abi size but is loaded with an older program/library
-> doing __rseq_abi interposition).
->
-> So we need some way to allow code defining the __rseq_abi to let the kernel
-> know how much room is available, without necessarily requiring the code
-> responsible for rseq registration to be aware of that extended layout.
-> This is the purpose of the __rseq_abi.flags RSEQ_FLAG_TLS_SIZE and field
-> __rseq_abi.user_size.
->
-> And we need some way to allow the kernel to let user-space rseq critical
-> sections (user code) know how much of those fields are actually populated
-> by the kernel. This is the purpose of __rseq_abi.flags RSEQ_FLAG_TLS_SIZE
-> with __rseq_abi.kernel_size.
 
-Thanks, Mathieu, for the explanation. Yes, multiple unrelated
-libraries having to share struct rseq complicates matters. Your
-approach appears to be a way to reconcile the issues you outlined
-above.
+--opJtzjQTFsWo+cga
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Thanks,
-Peter
+Hi!
 
->
-> Thanks,
->
-> Mathieu
->
-> --
-> Mathieu Desnoyers
-> EfficiOS Inc.
-> http://www.efficios.com
+>=20
+> I'm pleased to announce the 4.19.132-rt59 stable release.
+>=20
+> This release is just an update to the new stable 4.19.132
+> version and no RT specific changes have been made.
+>=20
+> You can get this release via the git tree at:
+>=20
+>   git://git.kernel.org/pub/scm/linux/kernel/git/rt/linux-stable-rt.git
+>=20
+>   branch: v4.19-rt
+>   Head SHA1: 1eebf4069aa37e54330cce9a42608517ea6996fe
+>=20
+> Or to build 4.19.132-rt59 directly, the following patches should be
+> applied:
+
+Thanks a lot.
+
+But now I am confused, I completely missed announcements for
+v4.19.127-rt55 to v4.19.131-rt58.
+
+And for example -rt56 is not listed in
+
+https://mirrors.edge.kernel.org/pub/linux/kernel/projects/rt/4.19/older/sha=
+256sums.asc
+
+=2E..aha, and the versions do not have signed tags, either:
+
+pavel@amd:~/cip/k$ git show v4.19.131-rt58
+fatal: ambiguous argument 'v4.19.131-rt58': unknown revision or path not in=
+ the working tree.
+
+Is that because they were created just as quick steps towards -rt59?
+
+Best regards,
+							Pavel
+--=20
+DENX Software Engineering GmbH,      Managing Director: Wolfgang Denk
+HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
+
+--opJtzjQTFsWo+cga
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCXw364AAKCRAw5/Bqldv6
+8rOPAJ9qkGbTCIP1F9HTh+ef752cxTiLZACcCjVOsvnHNrg5exKcv5zgou5X9Xc=
+=QjTP
+-----END PGP SIGNATURE-----
+
+--opJtzjQTFsWo+cga--
