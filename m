@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B8C6C433E8
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 19:12:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02BE8C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 19:12:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5A617221ED
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 19:12:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D58F8221ED
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 19:12:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594753950;
-	bh=WaI4zcf7p58FCzVfZfWBdeLKbAZ6Z+i4ih5TUkvlf/w=;
+	s=default; t=1594753957;
+	bh=AJh1bWO1xZ9Y0Ic/7ATl41MmP9Qjy8I3qx2CX1KBFxk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=N2l7mHuK5o1K3RW69qQmC22zUJNjbkHnC2CyznYcy04s4xrdtzOix0EMymQ2bj/lt
-	 ZpVLsHwpeXhOaw+XNle1p34FVuPcjuyRoaqdF9Ngk2NdOTy5Mjfv+Vetz3opuSL5l6
-	 HOX0kNlQJ89PZwwXCnBW74brcA5lT/vW5EdTLw5U=
+	b=SCO9reIJrLkhkGHq5aXyrdLJ8elxKlfG6MgjOsOtxkVIiLkVcdRIX9lge3iPHGMUd
+	 j1KAB6A1G1JWP6zxL+5/WXu1uzPvK8ZUD5oQOa9eZ0OmeuRmQOMBjPOG6GFrAtXHub
+	 7ku4jqom7vN8eemTbYlX5MHPLZVhHYY4OvksTnqw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730973AbgGNTM2 (ORCPT
+        id S1729574AbgGNSqo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 15:12:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42026 "EHLO mail.kernel.org"
+        Tue, 14 Jul 2020 14:46:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41428 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728117AbgGNSrE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 14:47:04 -0400
+        id S1729551AbgGNSqi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 14:46:38 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 47B2022AAE;
-        Tue, 14 Jul 2020 18:47:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7055B222E9;
+        Tue, 14 Jul 2020 18:46:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594752423;
-        bh=WaI4zcf7p58FCzVfZfWBdeLKbAZ6Z+i4ih5TUkvlf/w=;
+        s=default; t=1594752398;
+        bh=AJh1bWO1xZ9Y0Ic/7ATl41MmP9Qjy8I3qx2CX1KBFxk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FnN4R0nC1p8uPxZn62Z51Yi2gPHrH2Z1KBj3UCTDsXpWZWCjDywsAFfJX53V6+tQC
-         O/9ddEgzYCRDX1blSBi1KtNwYIRt8ebcNATX96DQ5ughRR44LQ443UwNMsEAhA96Sz
-         xxxK3ft3M4TgE1BRjgJWpwLF0jQj+3NhnNu+X4mI=
+        b=Gim549Fu3Af2vgwHmAIAotjo0ZaswhoDLQ58p33JLkLdM5TT66n9wXRXTY0Od05nb
+         56RyiEVzjiXWflNzMaA1Di7qZkA0l9zKaUoNhwMjiyyvYx24wVp9eY7ZS5wUu5ronI
+         nAgReVL9HfI7TTAAL7w5jKnU3JG8TrsqX2R4140k=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ido Schimmel <idosch@mellanox.com>,
-        Jiri Pirko <jiri@mellanox.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Jens Thoms Toerring <jt@toerring.de>,
+        Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 37/58] mlxsw: spectrum_router: Remove inappropriate usage of WARN_ON()
-Date:   Tue, 14 Jul 2020 20:44:10 +0200
-Message-Id: <20200714184057.973201050@linuxfoundation.org>
+Subject: [PATCH 4.19 06/58] regmap: fix alignment issue
+Date:   Tue, 14 Jul 2020 20:43:39 +0200
+Message-Id: <20200714184056.456365729@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200714184056.149119318@linuxfoundation.org>
 References: <20200714184056.149119318@linuxfoundation.org>
@@ -61,47 +60,256 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ido Schimmel <idosch@mellanox.com>
+From: Jens Thoms Toerring <jt@toerring.de>
 
-[ Upstream commit d9d5420273997664a1c09151ca86ac993f2f89c1 ]
+[ Upstream commit 53d860952c8215cf9ae1ea33409c8cb71ad6ad3d ]
 
-We should not trigger a warning when a memory allocation fails. Remove
-the WARN_ON().
+The assembly and disassembly of data to be sent to or received from
+a device invoke functions regmap_format_XX() and regmap_parse_XX()
+that extract or insert data items from or into a buffer, using
+assignments. In some cases the functions are called with a buffer
+pointer with an odd address. On architectures with strict alignment
+requirements this can result in a kernel crash. The assignments
+have been replaced by functions that take alignment into account.
 
-The warning is constantly triggered by syzkaller when it is injecting
-faults:
-
-[ 2230.758664] FAULT_INJECTION: forcing a failure.
-[ 2230.758664] name failslab, interval 1, probability 0, space 0, times 0
-[ 2230.762329] CPU: 3 PID: 1407 Comm: syz-executor.0 Not tainted 5.8.0-rc2+ #28
-...
-[ 2230.898175] WARNING: CPU: 3 PID: 1407 at drivers/net/ethernet/mellanox/mlxsw/spectrum_router.c:6265 mlxsw_sp_router_fib_event+0xfad/0x13e0
-[ 2230.898179] Kernel panic - not syncing: panic_on_warn set ...
-[ 2230.898183] CPU: 3 PID: 1407 Comm: syz-executor.0 Not tainted 5.8.0-rc2+ #28
-[ 2230.898190] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.12.1-0-ga5cab58e9a3f-prebuilt.qemu.org 04/01/2014
-
-Fixes: 3057224e014c ("mlxsw: spectrum_router: Implement FIB offload in deferred work")
-Signed-off-by: Ido Schimmel <idosch@mellanox.com>
-Reviewed-by: Jiri Pirko <jiri@mellanox.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Jens Thoms Toerring <jt@toerring.de>
+Link: https://lore.kernel.org/r/20200531095300.GA27570@toerring.de
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/mellanox/mlxsw/spectrum_router.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/base/regmap/regmap.c | 100 ++++++++++++++++-------------------
+ 1 file changed, 46 insertions(+), 54 deletions(-)
 
-diff --git a/drivers/net/ethernet/mellanox/mlxsw/spectrum_router.c b/drivers/net/ethernet/mellanox/mlxsw/spectrum_router.c
-index 76960d3adfc03..93d662de106e8 100644
---- a/drivers/net/ethernet/mellanox/mlxsw/spectrum_router.c
-+++ b/drivers/net/ethernet/mellanox/mlxsw/spectrum_router.c
-@@ -5982,7 +5982,7 @@ static int mlxsw_sp_router_fib_event(struct notifier_block *nb,
- 	}
+diff --git a/drivers/base/regmap/regmap.c b/drivers/base/regmap/regmap.c
+index b38b2d8c333d5..c7d946b745efe 100644
+--- a/drivers/base/regmap/regmap.c
++++ b/drivers/base/regmap/regmap.c
+@@ -21,6 +21,7 @@
+ #include <linux/delay.h>
+ #include <linux/log2.h>
+ #include <linux/hwspinlock.h>
++#include <asm/unaligned.h>
  
- 	fib_work = kzalloc(sizeof(*fib_work), GFP_ATOMIC);
--	if (WARN_ON(!fib_work))
-+	if (!fib_work)
- 		return NOTIFY_BAD;
+ #define CREATE_TRACE_POINTS
+ #include "trace.h"
+@@ -232,22 +233,20 @@ static void regmap_format_8(void *buf, unsigned int val, unsigned int shift)
  
- 	fib_work->mlxsw_sp = router->mlxsw_sp;
+ static void regmap_format_16_be(void *buf, unsigned int val, unsigned int shift)
+ {
+-	__be16 *b = buf;
+-
+-	b[0] = cpu_to_be16(val << shift);
++	put_unaligned_be16(val << shift, buf);
+ }
+ 
+ static void regmap_format_16_le(void *buf, unsigned int val, unsigned int shift)
+ {
+-	__le16 *b = buf;
+-
+-	b[0] = cpu_to_le16(val << shift);
++	put_unaligned_le16(val << shift, buf);
+ }
+ 
+ static void regmap_format_16_native(void *buf, unsigned int val,
+ 				    unsigned int shift)
+ {
+-	*(u16 *)buf = val << shift;
++	u16 v = val << shift;
++
++	memcpy(buf, &v, sizeof(v));
+ }
+ 
+ static void regmap_format_24(void *buf, unsigned int val, unsigned int shift)
+@@ -263,43 +262,39 @@ static void regmap_format_24(void *buf, unsigned int val, unsigned int shift)
+ 
+ static void regmap_format_32_be(void *buf, unsigned int val, unsigned int shift)
+ {
+-	__be32 *b = buf;
+-
+-	b[0] = cpu_to_be32(val << shift);
++	put_unaligned_be32(val << shift, buf);
+ }
+ 
+ static void regmap_format_32_le(void *buf, unsigned int val, unsigned int shift)
+ {
+-	__le32 *b = buf;
+-
+-	b[0] = cpu_to_le32(val << shift);
++	put_unaligned_le32(val << shift, buf);
+ }
+ 
+ static void regmap_format_32_native(void *buf, unsigned int val,
+ 				    unsigned int shift)
+ {
+-	*(u32 *)buf = val << shift;
++	u32 v = val << shift;
++
++	memcpy(buf, &v, sizeof(v));
+ }
+ 
+ #ifdef CONFIG_64BIT
+ static void regmap_format_64_be(void *buf, unsigned int val, unsigned int shift)
+ {
+-	__be64 *b = buf;
+-
+-	b[0] = cpu_to_be64((u64)val << shift);
++	put_unaligned_be64((u64) val << shift, buf);
+ }
+ 
+ static void regmap_format_64_le(void *buf, unsigned int val, unsigned int shift)
+ {
+-	__le64 *b = buf;
+-
+-	b[0] = cpu_to_le64((u64)val << shift);
++	put_unaligned_le64((u64) val << shift, buf);
+ }
+ 
+ static void regmap_format_64_native(void *buf, unsigned int val,
+ 				    unsigned int shift)
+ {
+-	*(u64 *)buf = (u64)val << shift;
++	u64 v = (u64) val << shift;
++
++	memcpy(buf, &v, sizeof(v));
+ }
+ #endif
+ 
+@@ -316,35 +311,34 @@ static unsigned int regmap_parse_8(const void *buf)
+ 
+ static unsigned int regmap_parse_16_be(const void *buf)
+ {
+-	const __be16 *b = buf;
+-
+-	return be16_to_cpu(b[0]);
++	return get_unaligned_be16(buf);
+ }
+ 
+ static unsigned int regmap_parse_16_le(const void *buf)
+ {
+-	const __le16 *b = buf;
+-
+-	return le16_to_cpu(b[0]);
++	return get_unaligned_le16(buf);
+ }
+ 
+ static void regmap_parse_16_be_inplace(void *buf)
+ {
+-	__be16 *b = buf;
++	u16 v = get_unaligned_be16(buf);
+ 
+-	b[0] = be16_to_cpu(b[0]);
++	memcpy(buf, &v, sizeof(v));
+ }
+ 
+ static void regmap_parse_16_le_inplace(void *buf)
+ {
+-	__le16 *b = buf;
++	u16 v = get_unaligned_le16(buf);
+ 
+-	b[0] = le16_to_cpu(b[0]);
++	memcpy(buf, &v, sizeof(v));
+ }
+ 
+ static unsigned int regmap_parse_16_native(const void *buf)
+ {
+-	return *(u16 *)buf;
++	u16 v;
++
++	memcpy(&v, buf, sizeof(v));
++	return v;
+ }
+ 
+ static unsigned int regmap_parse_24(const void *buf)
+@@ -359,69 +353,67 @@ static unsigned int regmap_parse_24(const void *buf)
+ 
+ static unsigned int regmap_parse_32_be(const void *buf)
+ {
+-	const __be32 *b = buf;
+-
+-	return be32_to_cpu(b[0]);
++	return get_unaligned_be32(buf);
+ }
+ 
+ static unsigned int regmap_parse_32_le(const void *buf)
+ {
+-	const __le32 *b = buf;
+-
+-	return le32_to_cpu(b[0]);
++	return get_unaligned_le32(buf);
+ }
+ 
+ static void regmap_parse_32_be_inplace(void *buf)
+ {
+-	__be32 *b = buf;
++	u32 v = get_unaligned_be32(buf);
+ 
+-	b[0] = be32_to_cpu(b[0]);
++	memcpy(buf, &v, sizeof(v));
+ }
+ 
+ static void regmap_parse_32_le_inplace(void *buf)
+ {
+-	__le32 *b = buf;
++	u32 v = get_unaligned_le32(buf);
+ 
+-	b[0] = le32_to_cpu(b[0]);
++	memcpy(buf, &v, sizeof(v));
+ }
+ 
+ static unsigned int regmap_parse_32_native(const void *buf)
+ {
+-	return *(u32 *)buf;
++	u32 v;
++
++	memcpy(&v, buf, sizeof(v));
++	return v;
+ }
+ 
+ #ifdef CONFIG_64BIT
+ static unsigned int regmap_parse_64_be(const void *buf)
+ {
+-	const __be64 *b = buf;
+-
+-	return be64_to_cpu(b[0]);
++	return get_unaligned_be64(buf);
+ }
+ 
+ static unsigned int regmap_parse_64_le(const void *buf)
+ {
+-	const __le64 *b = buf;
+-
+-	return le64_to_cpu(b[0]);
++	return get_unaligned_le64(buf);
+ }
+ 
+ static void regmap_parse_64_be_inplace(void *buf)
+ {
+-	__be64 *b = buf;
++	u64 v =  get_unaligned_be64(buf);
+ 
+-	b[0] = be64_to_cpu(b[0]);
++	memcpy(buf, &v, sizeof(v));
+ }
+ 
+ static void regmap_parse_64_le_inplace(void *buf)
+ {
+-	__le64 *b = buf;
++	u64 v = get_unaligned_le64(buf);
+ 
+-	b[0] = le64_to_cpu(b[0]);
++	memcpy(buf, &v, sizeof(v));
+ }
+ 
+ static unsigned int regmap_parse_64_native(const void *buf)
+ {
+-	return *(u64 *)buf;
++	u64 v;
++
++	memcpy(&v, buf, sizeof(v));
++	return v;
+ }
+ #endif
+ 
 -- 
 2.25.1
 
