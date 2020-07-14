@@ -2,113 +2,95 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D305C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 19:23:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0328C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 19:27:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0C99022282
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 19:23:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BDD57225AB
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 19:27:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594754831;
+	bh=P5jNGMBlBX/QkkJRNB1+sQIGoUmYLPb4UbvcuiwyfXU=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=VwZWA73xODPjbAPs2AaejeriqLGtRbAEWYEIXKjhkYcanh3A7bdXNuIH0Wy1Xbnze
+	 O0GIJYxHcgiB+YzilC+hCy0DXDVfPXt6maLmRj3Gsp5uznhZx1D5FCtSHoNSkXKBh1
+	 6DgO0wlKUbX9mWkLBwVy0vnWj3yeA2eVQEcHJa4o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729710AbgGNTXw (ORCPT
+        id S1729328AbgGNT1K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 15:23:52 -0400
-Received: from mga11.intel.com ([192.55.52.93]:9953 "EHLO mga11.intel.com"
+        Tue, 14 Jul 2020 15:27:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45602 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727930AbgGNTXv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 15:23:51 -0400
-IronPort-SDR: kWL5vu8lEG7WbOubWKGL/AZAtgk69fWGkm5J/r8kIHlbETWF6vuzdAM2f9cugRn5M62Fv6l55R
- 7X235GhGpYAQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9682"; a="147022483"
-X-IronPort-AV: E=Sophos;i="5.75,352,1589266800"; 
-   d="scan'208";a="147022483"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jul 2020 12:23:51 -0700
-IronPort-SDR: PCMjJ49O7HM1ZDukmb0/xSV3g6OqD7Hs4Q4nkyKXVCpxH8AQYuOK6cDIyzUqcC1dWE+GGzGVQL
- DKKPOK90aDlg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,352,1589266800"; 
-   d="scan'208";a="285859255"
-Received: from guptapadev.jf.intel.com (HELO guptapadev.amr) ([10.54.74.188])
-  by orsmga006.jf.intel.com with ESMTP; 14 Jul 2020 12:23:51 -0700
-Date:   Tue, 14 Jul 2020 12:17:59 -0700
-From:   Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
-To:     Dave Hansen <dave.hansen@intel.com>
-Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, x86@kernel.org,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Tony Luck <tony.luck@intel.com>,
-        "Gomez Iglesias, Antonio" <antonio.gomez.iglesias@intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Anthony Steinhauser <asteinhauser@google.com>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Mark Gross <mgross@linux.intel.com>,
-        Waiman Long <longman@redhat.com>, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        Jonathan Corbet <corbet@lwn.net>
-Subject: Re: [PATCH] x86/bugs/multihit: Fix mitigation reporting when KVM is
- not in use
-Message-ID: <20200714191759.GA7116@guptapadev.amr>
-References: <267631f4db4fd7e9f7ca789c2efaeab44103f68e.1594689154.git.pawan.kumar.gupta@linux.intel.com>
- <20200714014540.GH29725@linux.intel.com>
- <099d6985-9e9f-1d9f-7098-58a9e26e4450@intel.com>
+        id S1728370AbgGNT1J (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 15:27:09 -0400
+Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C0EE7225AB
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 19:27:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594754829;
+        bh=P5jNGMBlBX/QkkJRNB1+sQIGoUmYLPb4UbvcuiwyfXU=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=D7ZxWEJC3oQ/TI0IJ+5dDrybFphlb1csCiK3XkuOwP5oqHfRRzbdSKZ8IeBpUScMP
+         lCa2ypQlxbT2mEOffrh1BYDi8jYiyr0Ljl/I5PCQDiJITjiRfyH95Z52Rh+lMuxFk1
+         vJFM3kQtm5MzPWXR3+A81e5kYbG75dRPjlYXeOLA=
+Received: by mail-wm1-f47.google.com with SMTP id q15so8337733wmj.2
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 12:27:08 -0700 (PDT)
+X-Gm-Message-State: AOAM530Ed+yF41a94NnNzQyNioQ5Moth81TTryB0W5q+RBbH/ngmil79
+        L1JZCaYehCMmKDGJIYBHO+DSL2KgwBZjsZdFMprYLw==
+X-Google-Smtp-Source: ABdhPJxdA00P6WYL5aBprrtpWULRdP3PtUO6mZJTS1tjNWVBTfJxhDStj7KTroekfThk3dz/LDqSAqwPthtxEIwVRio=
+X-Received: by 2002:a7b:c92e:: with SMTP id h14mr4877690wml.36.1594748492474;
+ Tue, 14 Jul 2020 10:41:32 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <099d6985-9e9f-1d9f-7098-58a9e26e4450@intel.com>
+References: <20200616142315.375918-1-brgerst@gmail.com> <20200714064004.GA32655@lst.de>
+ <CAMzpN2gg4H5qnU8Dk=bCaEm2WdRF-synfpf_yUaK8L6vyuo=zQ@mail.gmail.com>
+In-Reply-To: <CAMzpN2gg4H5qnU8Dk=bCaEm2WdRF-synfpf_yUaK8L6vyuo=zQ@mail.gmail.com>
+From:   Andy Lutomirski <luto@kernel.org>
+Date:   Tue, 14 Jul 2020 10:41:18 -0700
+X-Gmail-Original-Message-ID: <CALCETrWLac6LV_iJhbo86hqZ87oAY5L62S6L82PYZi2Y_5k1BQ@mail.gmail.com>
+Message-ID: <CALCETrWLac6LV_iJhbo86hqZ87oAY5L62S6L82PYZi2Y_5k1BQ@mail.gmail.com>
+Subject: Re: [PATCH 0/2] X32 syscall cleanups
+To:     Brian Gerst <brgerst@gmail.com>
+Cc:     Christoph Hellwig <hch@lst.de>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 14, 2020 at 07:57:53AM -0700, Dave Hansen wrote:
-> Let's stick to things which are at least static per reboot.  Checking
-> for X86_FEATURE_VMX or even CONFIG_KVM_INTEL seems like a good stopping
-> point.  "Could this kernel run a naughty guest?"  If so, report
-> "Vulnerable".  It's the same as Meltdown: "Could this kernel run
-> untrusted code?"  If so, report "Vulnerable".
+On Tue, Jul 14, 2020 at 10:03 AM Brian Gerst <brgerst@gmail.com> wrote:>
+> On Tue, Jul 14, 2020 at 2:40 AM Christoph Hellwig <hch@lst.de> wrote:
+> >
+> > On Tue, Jun 16, 2020 at 10:23:13AM -0400, Brian Gerst wrote:
+> > > Christoph Hellwig uncovered an issue with how we currently handle X32
+> > > syscalls.  Currently, we can only use COMPAT_SYS_DEFINEx() for X32
+> > > specific syscalls.  These changes remove that restriction and allow
+> > > native syscalls.
+> >
+> > Did this go anywhere?
+>
+> This approach wasn't well received, so I'd just go with this as the
+> simplest solution:
+> https://lore.kernel.org/lkml/CAK8P3a17h782gO65qJ9Mmz0EuiTSKQPEyr_=nvqOtnmQZuh9Kw@mail.gmail.com/
+>
 
-Thanks, These are good inputs. So what I need to add is a boot time
-check for VMX feature and report "Vulnerable" or "Not
-affected(VMX disabled)".
+I'm okay with either approach, although I think the original approach
+is nicer than the simplified #define approach.
 
-Are you suggesting to not change the reporting when KVM deploys the
-"Split huge pages" mitigation? Is this because VMX can still be used by
-other VMMs?
+In my mind, the __x64_omg_so_many_underscores prefixes really mean
+"don't think too hard about these -- we just decided to make extra
+long names", so whatever.  We can clean it up more some day.
 
-The current mitigation reporting is very specific to KVM:
-
-	- "KVM: Vulnerable"
-	- "KVM: Mitigation: Split huge pages"
-
-As the kernel doesn't know about the mitigation state of out-of-tree
-VMMs can we add VMX reporting to always say vulnerable when VMX is
-enabled:
-
-	- "VMX: Vulnerable, KVM: Vulnerable"
-	- "VMX: Vulnerable, KVM: Mitigation: Split huge pages"
-
-And if VMX is disabled report:
-
-	- "VMX: Not affected(VMX disabled)"
-
-or something like that.
-
-Thanks,
-Pawan
+> --
+> Brian Gerst
