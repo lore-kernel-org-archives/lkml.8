@@ -2,112 +2,312 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33A69C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 06:49:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A12DEC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 06:50:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1A810221F0
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 06:49:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 78717221E8
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 06:50:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="OM4D/d+v"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726907AbgGNGtK (ORCPT
+        id S1726936AbgGNGus (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 02:49:10 -0400
-Received: from mx2.suse.de ([195.135.220.15]:55994 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725788AbgGNGtJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 02:49:09 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 0345CACC6;
-        Tue, 14 Jul 2020 06:49:10 +0000 (UTC)
-Subject: Re: [PATCH v2 02/29] include: scsi: scsi_transport_fc: Match HBA
- Attribute Length with HBAAPI V2.0 definitions
-To:     Lee Jones <lee.jones@linaro.org>, jejb@linux.ibm.com,
-        martin.petersen@oracle.com
-Cc:     linux-kernel@vger.kernel.org, linux-scsi@vger.kernel.org
-References: <20200713074645.126138-1-lee.jones@linaro.org>
- <20200713074645.126138-3-lee.jones@linaro.org>
-From:   Hannes Reinecke <hare@suse.de>
-Message-ID: <52269484-8df0-38f7-2be3-b0a10ff9696d@suse.de>
-Date:   Tue, 14 Jul 2020 08:49:05 +0200
+        Tue, 14 Jul 2020 02:50:48 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:53912 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725876AbgGNGur (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 02:50:47 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 06E6oPFV126323;
+        Tue, 14 Jul 2020 01:50:25 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1594709425;
+        bh=ODFYpNfb9ZJS19+xrm21BXYeqSk4GABYzjm6/wXuBwU=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=OM4D/d+vWkK6IRBWFml+E+C19KBLwEvvtg8OVRiuu1yOGyUuoGBOK3alUf6lfu6LP
+         FiG28327pD7F8TFPfDkr0QIcprxIOYQ8iwclBKVUunN/zIIMhGFWVHYfwrJGEY5fPH
+         ummH7gO7LCjJAeglsVxku+l0soE5WXzpw0S1PhnU=
+Received: from DFLE104.ent.ti.com (dfle104.ent.ti.com [10.64.6.25])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 06E6oPIK105706
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 14 Jul 2020 01:50:25 -0500
+Received: from DFLE105.ent.ti.com (10.64.6.26) by DFLE104.ent.ti.com
+ (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Tue, 14
+ Jul 2020 01:50:24 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE105.ent.ti.com
+ (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Tue, 14 Jul 2020 01:50:24 -0500
+Received: from [127.0.0.1] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 06E6oMV1067549;
+        Tue, 14 Jul 2020 01:50:23 -0500
+Subject: Re: [PATCHv3 3/4] watchdog: rti-wdt: attach to running watchdog
+ during probe
+To:     Guenter Roeck <linux@roeck-us.net>, <wim@linux-watchdog.org>,
+        <linux-watchdog@vger.kernel.org>
+CC:     <linux-kernel@vger.kernel.org>, <jan.kiszka@siemens.com>
+References: <20200713131818.825-1-t-kristo@ti.com>
+ <20200713131818.825-4-t-kristo@ti.com>
+ <0c69734d-b301-7762-7614-0644e2a719ba@roeck-us.net>
+From:   Tero Kristo <t-kristo@ti.com>
+Message-ID: <2a92083c-f8bd-7a42-25e2-ee6ae354a4de@ti.com>
+Date:   Tue, 14 Jul 2020 09:50:22 +0300
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-In-Reply-To: <20200713074645.126138-3-lee.jones@linaro.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <0c69734d-b301-7762-7614-0644e2a719ba@roeck-us.net>
+Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/13/20 9:46 AM, Lee Jones wrote:
-> According to 'include/scsi/scsi_transport_fc.h':
+On 14/07/2020 08:15, Guenter Roeck wrote:
+> On 7/13/20 6:18 AM, Tero Kristo wrote:
+>> If the RTI watchdog is running already during probe, the driver must
+>> configure itself to match the HW. Window size and timeout is probed from
+>> hardware, and the last keepalive ping is adjusted to match it also.
+>>
+>> Signed-off-by: Tero Kristo <t-kristo@ti.com>
+>> ---
+>>   drivers/watchdog/rti_wdt.c | 111 +++++++++++++++++++++++++++++++++----
+>>   1 file changed, 101 insertions(+), 10 deletions(-)
+>>
+>> diff --git a/drivers/watchdog/rti_wdt.c b/drivers/watchdog/rti_wdt.c
+>> index d456dd72d99a..45dfc546e371 100644
+>> --- a/drivers/watchdog/rti_wdt.c
+>> +++ b/drivers/watchdog/rti_wdt.c
+>> @@ -35,7 +35,11 @@
+>>   
+>>   #define RTIWWDRX_NMI	0xa
+>>   
+>> -#define RTIWWDSIZE_50P	0x50
+>> +#define RTIWWDSIZE_50P		0x50
+>> +#define RTIWWDSIZE_25P		0x500
+>> +#define RTIWWDSIZE_12P5		0x5000
+>> +#define RTIWWDSIZE_6P25		0x50000
+>> +#define RTIWWDSIZE_3P125	0x500000
+>>   
+>>   #define WDENABLE_KEY	0xa98559da
+>>   
+>> @@ -48,7 +52,7 @@
+>>   
+>>   #define DWDST			BIT(1)
+>>   
+>> -static int heartbeat;
+>> +static int heartbeat = DEFAULT_HEARTBEAT;
+>>   
+>>   /*
+>>    * struct to hold data for each WDT device
+>> @@ -79,11 +83,9 @@ static int rti_wdt_start(struct watchdog_device *wdd)
+>>   	 * be petted during the open window; not too early or not too late.
+>>   	 * The HW configuration options only allow for the open window size
+>>   	 * to be 50% or less than that; we obviouly want to configure the open
+>> -	 * window as large as possible so we select the 50% option. To avoid
+>> -	 * any glitches, we accommodate 5% safety margin also, so we setup
+>> -	 * the min_hw_hearbeat at 55% of the timeout period.
+>> +	 * window as large as possible so we select the 50% option.
+>>   	 */
+>> -	wdd->min_hw_heartbeat_ms = 11 * wdd->timeout * 1000 / 20;
+>> +	wdd->min_hw_heartbeat_ms = 500 * wdd->timeout;
+>>   
+>>   	/* Generate NMI when wdt expires */
+>>   	writel_relaxed(RTIWWDRX_NMI, wdt->base + RTIWWDRXCTRL);
+>> @@ -110,7 +112,48 @@ static int rti_wdt_ping(struct watchdog_device *wdd)
+>>   	return 0;
+>>   }
+>>   
+>> -static unsigned int rti_wdt_get_timeleft(struct watchdog_device *wdd)
+>> +static int rti_wdt_setup_hw_hb(struct watchdog_device *wdd, u32 wsize)
+>> +{
+>> +	/*
+>> +	 * RTI only supports a windowed mode, where the watchdog can only
+>> +	 * be petted during the open window; not too early or not too late.
+>> +	 * The HW configuration options only allow for the open window size
+>> +	 * to be 50% or less than that.
+>> +	 */
+>> +	switch (wsize) {
+>> +	case RTIWWDSIZE_50P:
+>> +		/* 50% open window => 50% min heartbeat */
+>> +		wdd->min_hw_heartbeat_ms = 500 * heartbeat;
+>> +		break;
+>> +
+>> +	case RTIWWDSIZE_25P:
+>> +		/* 25% open window => 75% min heartbeat */
+>> +		wdd->min_hw_heartbeat_ms = 750 * heartbeat;
+>> +		break;
+>> +
+>> +	case RTIWWDSIZE_12P5:
+>> +		/* 12.5% open window => 87.5% min heartbeat */
+>> +		wdd->min_hw_heartbeat_ms = 875 * heartbeat;
+>> +		break;
+>> +
+>> +	case RTIWWDSIZE_6P25:
+>> +		/* 6.5% open window => 93.5% min heartbeat */
+>> +		wdd->min_hw_heartbeat_ms = 935 * heartbeat;
+>> +		break;
+>> +
+>> +	case RTIWWDSIZE_3P125:
+>> +		/* 3.125% open window => 96.9% min heartbeat */
+>> +		wdd->min_hw_heartbeat_ms = 969 * heartbeat;
+>> +		break;
+>> +
+>> +	default:
+>> +		return -EINVAL;
+>> +	}
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static unsigned int rti_wdt_get_timeleft_ms(struct watchdog_device *wdd)
+>>   {
+>>   	u64 timer_counter;
+>>   	u32 val;
+>> @@ -123,11 +166,18 @@ static unsigned int rti_wdt_get_timeleft(struct watchdog_device *wdd)
+>>   
+>>   	timer_counter = readl_relaxed(wdt->base + RTIDWDCNTR);
+>>   
+>> +	timer_counter *= 1000;
+>> +
+>>   	do_div(timer_counter, wdt->freq);
+>>   
+>>   	return timer_counter;
+>>   }
+>>   
+>> +static unsigned int rti_wdt_get_timeleft(struct watchdog_device *wdd)
+>> +{
+>> +	return rti_wdt_get_timeleft_ms(wdd) / 1000;
+>> +}
+>> +
+>>   static const struct watchdog_info rti_wdt_info = {
+>>   	.options = WDIOF_KEEPALIVEPING,
+>>   	.identity = "K3 RTI Watchdog",
+>> @@ -148,6 +198,7 @@ static int rti_wdt_probe(struct platform_device *pdev)
+>>   	struct watchdog_device *wdd;
+>>   	struct rti_wdt_device *wdt;
+>>   	struct clk *clk;
+>> +	u32 last_ping = 0;
+>>   
+>>   	wdt = devm_kzalloc(dev, sizeof(*wdt), GFP_KERNEL);
+>>   	if (!wdt)
+>> @@ -169,6 +220,14 @@ static int rti_wdt_probe(struct platform_device *pdev)
+>>   		return -EINVAL;
+>>   	}
+>>   
+>> +	/*
+>> +	 * If watchdog is running at 32k clock, it is not accurate.
+>> +	 * Adjust frequency down in this case so that we don't pet
+>> +	 * the watchdog too often.
+>> +	 */
+>> +	if (wdt->freq < 32768)
+>> +		wdt->freq = wdt->freq * 9 / 10;
+>> +
 > 
->   "Attributes are based on HBAAPI V2.0 definitions"
-> 
-> ... so it seems sane to match the 'HBA Attribute Length' to them.
-> 
-> If we don't, the compiler complains that the copied data will be truncated.
-> 
-> Fixes the following W=1 kernel build warning(s):
-> 
->   In file included from include/linux/bitmap.h:9,
->   from include/linux/cpumask.h:12,
->   from include/linux/smp.h:13,
->   from include/linux/percpu.h:7,
->   from include/scsi/libfc.h:13,
->   from drivers/scsi/libfc/fc_elsct.c:17:
->   In function ‘strncpy’,
->   inlined from ‘fc_ct_ms_fill.constprop’ at include/scsi/fc_encode.h:263:3:
->   include/linux/string.h:297:30: warning: ‘__builtin_strncpy’ output may be truncated copying 64 bytes from a string of length  79 [-Wstringop-truncation]
->   297 | #define __underlying_strncpy __builtin_strncpy
->   | ^
->   include/linux/string.h:307:9: note: in expansion of macro ‘__underlying_strncpy’
->   307 | return __underlying_strncpy(p, q, size);
->   | ^~~~~~~~~~~~~~~~~~~~
->   In function ‘strncpy’,
->   inlined from ‘fc_ct_ms_fill.constprop’ at include/scsi/fc_encode.h:275:3:
->   include/linux/string.h:297:30: warning: ‘__builtin_strncpy’ output may be truncated copying 64 bytes from a string of length 79 [-Wstringop-truncation]
->   297 | #define __underlying_strncpy __builtin_strncpy
->   | ^
->   include/linux/string.h:307:9: note: in expansion of macro ‘__underlying_strncpy’
->   307 | return __underlying_strncpy(p, q, size);
->   | ^~~~~~~~~~~~~~~~~~~~
-> 
-> Signed-off-by: Lee Jones <lee.jones@linaro.org>
-> ---
->   include/scsi/fc/fc_ms.h | 4 ++--
->   1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/include/scsi/fc/fc_ms.h b/include/scsi/fc/fc_ms.h
-> index 800d53dc94705..9e273fed0a85f 100644
-> --- a/include/scsi/fc/fc_ms.h
-> +++ b/include/scsi/fc/fc_ms.h
-> @@ -63,8 +63,8 @@ enum fc_fdmi_hba_attr_type {
->    * HBA Attribute Length
->    */
->   #define FC_FDMI_HBA_ATTR_NODENAME_LEN		8
-> -#define FC_FDMI_HBA_ATTR_MANUFACTURER_LEN	64
-> -#define FC_FDMI_HBA_ATTR_SERIALNUMBER_LEN	64
-> +#define FC_FDMI_HBA_ATTR_MANUFACTURER_LEN	80
-> +#define FC_FDMI_HBA_ATTR_SERIALNUMBER_LEN	80
->   #define FC_FDMI_HBA_ATTR_MODEL_LEN		256
->   #define FC_FDMI_HBA_ATTR_MODELDESCR_LEN		256
->   #define FC_FDMI_HBA_ATTR_HARDWAREVERSION_LEN	256
-> 
-Reviewed-by: Hannes Reinecke <hare@suse.de>
+> So this is now only a problem is the window size was set restrictively
+> in the BOS/ROMMON. Meaning it is still a problem. How is this better than
+> before ? Why not just always set the window size to something reasonable ?
 
-Cheers,
+Re-programming of the watchdog only takes effect at the next ping, then 
+and only then will it adjust the window size + timeout period.
 
-Hannes
--- 
-Dr. Hannes Reinecke            Teamlead Storage & Networking
-hare@suse.de                               +49 911 74053 688
-SUSE Software Solutions GmbH, Maxfeldstr. 5, 90409 Nürnberg
-HRB 36809 (AG Nürnberg), Geschäftsführer: Felix Imendörffer
+> 
+> 
+>>   	pm_runtime_enable(dev);
+>>   	ret = pm_runtime_get_sync(dev);
+>>   	if (ret) {
+>> @@ -185,11 +244,8 @@ static int rti_wdt_probe(struct platform_device *pdev)
+>>   	wdd->min_timeout = 1;
+>>   	wdd->max_hw_heartbeat_ms = (WDT_PRELOAD_MAX << WDT_PRELOAD_SHIFT) /
+>>   		wdt->freq * 1000;
+>> -	wdd->timeout = DEFAULT_HEARTBEAT;
+>>   	wdd->parent = dev;
+>>   
+>> -	watchdog_init_timeout(wdd, heartbeat, dev);
+>> -
+>>   	watchdog_set_drvdata(wdd, wdt);
+>>   	watchdog_set_nowayout(wdd, 1);
+>>   	watchdog_set_restart_priority(wdd, 128);
+>> @@ -201,12 +257,47 @@ static int rti_wdt_probe(struct platform_device *pdev)
+>>   		goto err_iomap;
+>>   	}
+>>   
+>> +	if (readl(wdt->base + RTIDWDCTRL) == WDENABLE_KEY) {
+>> +		u32 time_left_ms;
+>> +		u64 heartbeat_ms;
+>> +		u32 wsize;
+>> +
+>> +		set_bit(WDOG_HW_RUNNING, &wdd->status);
+>> +		time_left_ms = rti_wdt_get_timeleft_ms(wdd);
+>> +		heartbeat_ms = readl(wdt->base + RTIDWDPRLD);
+>> +		heartbeat_ms <<= WDT_PRELOAD_SHIFT;
+>> +		heartbeat_ms *= 1000;
+>> +		heartbeat_ms /= wdt->freq;
+> 
+> Ah yes, the pitfalls of 64-bit divide operations.
+
+Should I convert this to use do_div? With 64bit archs this code is 
+targeted at it runs just fine.
+
+> 
+>> +		if (heartbeat_ms / 1000 != heartbeat)
+>> +			dev_warn(dev, "watchdog already running, ignoring heartbeat config!\n");
+>> +
+>> +		heartbeat = heartbeat_ms / 1000;
+>> +
+>> +		wsize = readl(wdt->base + RTIWWDSIZECTRL);
+>> +		ret = rti_wdt_setup_hw_hb(wdd, wsize);
+>> +		if (ret) {
+>> +			dev_err(dev, "bad window size.\n");
+>> +			goto err_iomap;
+>> +		}
+>> +
+>> +		last_ping = heartbeat_ms - time_left_ms;
+>> +		if (time_left_ms > heartbeat_ms) {
+>> +			dev_warn(dev, "time_left > heartbeat? Assuming last ping just before now.\n");
+>> +			last_ping = 0;
+>> +		}
+> 
+> All that complexity makes me wonder if it wouldn't be better to just reprogram
+> the watchdog if it is already running. Any reason for not doing that ?
+
+Well, you can re-program it but... It does not take effect until next 
+window starts, so basically we need to take care of the currently 
+running window anyways after which re-programming it doesn't make much 
+sense anymore. And handling the switch from one setup to next would add 
+extra complexity.
+
+-Tero
+
+> 
+>> +	}
+>> +
+>> +	watchdog_init_timeout(wdd, heartbeat, dev);
+>> +
+>>   	ret = watchdog_register_device(wdd);
+>>   	if (ret) {
+>>   		dev_err(dev, "cannot register watchdog device\n");
+>>   		goto err_iomap;
+>>   	}
+>>   
+>> +	if (last_ping)
+>> +		watchdog_set_last_hw_keepalive(wdd, last_ping);
+>> +
+>>   	return 0;
+>>   
+>>   err_iomap:
+>>
+> 
+
+--
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
