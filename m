@@ -2,115 +2,205 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B2E6C433EA
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 20:16:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC487C433EB
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 20:16:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 639902076C
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 20:16:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 95C5020773
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 20:16:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kfJX8RRg"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="fO88FZTn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730398AbgGNUQN (ORCPT
+        id S1730425AbgGNUQV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 16:16:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52446 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730371AbgGNUQJ (ORCPT
+        Tue, 14 Jul 2020 16:16:21 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:57984 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730057AbgGNUQJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 14 Jul 2020 16:16:09 -0400
-Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C9631C061755
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 13:16:09 -0700 (PDT)
-Received: by mail-pf1-x443.google.com with SMTP id m9so8070795pfh.0
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 13:16:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=isacsWKlY2hogV7o0KRbs8AppWDN/iG8vIZCQlmiM8c=;
-        b=kfJX8RRgL3w39hgg+eFWjqDIkMxIHuOqN9XY3bPq9N9g+jinxvkDkmvu10fWdrWzkF
-         rlj0sh1ktttzaUUvdLHwZoHH8IsKgZjFLqMeEeI72DXuRmmKzacsqISPv9e4Z0DGiya2
-         mAgSMVnRa6E8vJkyxMhwo1YRkEzY/NJo77QgqcmssBC3+psgls0rwCkY24T/u8BD5MRY
-         LHJFfsPB235oyZYh8fmjQHMy6cHGfVaKoXFiYDJSWwgWT1OidYj1sc86fvR5OZS4ThuF
-         7pZv+3xlydLI2ndjEph9mpL+1mEeas9+CnOaEMlwyjiIiyEmWdjyzYVjn8GgGH1T9Ec/
-         OB5Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=isacsWKlY2hogV7o0KRbs8AppWDN/iG8vIZCQlmiM8c=;
-        b=L7g4DmnzkEsGMUbZNfW1dg010j2WdPeWT1PsPN+HbTSYqsiFdEvQZESoQg+9cvvDf4
-         XE0YltMg+D4q9qQHumXKPHb0j7+DaKXow40pz+jTQuEzRLmjtqfGYTsedtouwGlu0yUC
-         7Oy23e2RFRHszU2YDNTlU3RCkP3cjf1LFvNG5aHSEH1Cf4SCptzKvR8CHbc3xY5PqYvv
-         gsgSp1yWXJjaka6FTn2Wx/ndeWlbdMElgc8m6D6wByEhjagPpUfuVs3b/J6lyin1mDao
-         WeR/4QlTGgsjuXj+i5owS87ArZBXZE2OLHwSsMsd1f4UIeuKA9fyYkpyBnpyToOrD6hz
-         Lbqw==
-X-Gm-Message-State: AOAM530Zc3pMR67BqyrnMVEAP0IaX1dCdVmV4PZC5iwpeHETeeWXYKEi
-        7CawGD7Mv/PQzt04Re3Etsc=
-X-Google-Smtp-Source: ABdhPJz4mHhE+EWHl0+c9gi56UeWi3Y28r21XTa3JlYyq0tBKwdN2h5M4l6Qs7kLwtkNK5cOaciEWQ==
-X-Received: by 2002:a63:1a44:: with SMTP id a4mr4796308pgm.281.1594757769130;
-        Tue, 14 Jul 2020 13:16:09 -0700 (PDT)
-Received: from Asurada-Nvidia (searspoint.nvidia.com. [216.228.112.21])
-        by smtp.gmail.com with ESMTPSA id e28sm37314pfm.177.2020.07.14.13.16.08
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 14 Jul 2020 13:16:08 -0700 (PDT)
-Date:   Tue, 14 Jul 2020 13:15:45 -0700
-From:   Nicolin Chen <nicoleotsuka@gmail.com>
-To:     Arnaud Ferraris <arnaud.ferraris@collabora.com>
-Cc:     alsa-devel@alsa-project.org, Timur Tabi <timur@kernel.org>,
-        Xiubo Li <Xiubo.Lee@gmail.com>, linux-kernel@vger.kernel.org,
-        Takashi Iwai <tiwai@suse.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Brown <broonie@kernel.org>, kernel@collabora.com,
-        Fabio Estevam <festevam@gmail.com>
-Subject: Re: [PATCH 0/4] ASoC: fsl_asrc: allow selecting arbitrary clocks
-Message-ID: <20200714201544.GA10501@Asurada-Nvidia>
-References: <20200702142235.235869-1-arnaud.ferraris@collabora.com>
- <20200702184226.GA23935@Asurada-Nvidia>
- <3f39a0bb-a766-f646-28b3-a51cf9983c6b@collabora.com>
- <3fea8912-63df-ff27-0c29-6284a85107ab@collabora.com>
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06EKC7lH097128;
+        Tue, 14 Jul 2020 20:16:04 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id : in-reply-to : references : mime-version :
+ content-transfer-encoding; s=corp-2020-01-29;
+ bh=VKtfSGs57quI8GvMfrjEl4/gJY9j9e0LVcZIEfEMCkY=;
+ b=fO88FZTnC0d6D7+mH8OdoN+MPYDj+gRBBoXCnwZqLeG/WV9rN5rmCa51mcmqCrgvQGA4
+ UDCytqrhaLMKwQUnjk/+OB3QzHv+Di9AYMDC/oCKquYAliHLeCqAcZp6/OEgR1SD9qN8
+ QP+FUZPB9NLdyK7zhtg3UMkyXlSNi7ZqPebyQXryqlFHJ+fzNuzHvcyVf97seNdufCu9
+ JqsS3acDIrlQA5h1sPiLB5GK9OPf1iDTdq90qSnh9VW0BxZR6yY/Nt4j3nvGWcIB4qbu
+ 2iXm6sg7xRV83yAu17D69m/yFCO/jCkQ0kwMJToAOz7g/GnQvoaHiHyrVaq7DvbPhuca dA== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2130.oracle.com with ESMTP id 3274ur7q69-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 14 Jul 2020 20:16:04 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06EKDbge025130;
+        Tue, 14 Jul 2020 20:14:03 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by aserp3030.oracle.com with ESMTP id 327q0pvn9q-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 14 Jul 2020 20:14:03 +0000
+Received: from abhmp0003.oracle.com (abhmp0003.oracle.com [141.146.116.9])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 06EKE2Ep003960;
+        Tue, 14 Jul 2020 20:14:02 GMT
+Received: from localhost.localdomain (/98.229.125.203)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 14 Jul 2020 13:14:02 -0700
+From:   Daniel Jordan <daniel.m.jordan@oracle.com>
+To:     Herbert Xu <herbert@gondor.apana.org.au>,
+        Steffen Klassert <steffen.klassert@secunet.com>
+Cc:     linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Daniel Jordan <daniel.m.jordan@oracle.com>
+Subject: [PATCH 5/6] padata: fold padata_alloc_possible() into padata_alloc()
+Date:   Tue, 14 Jul 2020 16:13:55 -0400
+Message-Id: <20200714201356.889176-6-daniel.m.jordan@oracle.com>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200714201356.889176-1-daniel.m.jordan@oracle.com>
+References: <20200714201356.889176-1-daniel.m.jordan@oracle.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <3fea8912-63df-ff27-0c29-6284a85107ab@collabora.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9682 signatures=668680
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 malwarescore=0 spamscore=0
+ mlxlogscore=999 bulkscore=0 adultscore=0 phishscore=0 suspectscore=2
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2007140141
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9682 signatures=668680
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 lowpriorityscore=0 impostorscore=0
+ suspectscore=2 phishscore=0 spamscore=0 mlxlogscore=999 malwarescore=0
+ mlxscore=0 priorityscore=1501 adultscore=0 bulkscore=0 clxscore=1015
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2007140141
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 14, 2020 at 06:20:32PM +0200, Arnaud Ferraris wrote:
-> >>> The current ASRC driver hardcodes the input and output clocks used for
-> >>> sample rate conversions. In order to allow greater flexibility and to
-> >>> cover more use cases, it would be preferable to select the clocks using
-> >>> device-tree properties.
-> >>
-> >> We recent just merged a new change that auto-selecting internal
-> >> clocks based on sample rates as the first option -- ideal ratio
-> >> mode is the fallback mode now. Please refer to:
-> >> https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/?h=next-20200702&id=d0250cf4f2abfbea64ed247230f08f5ae23979f0
+There's no reason to have two interfaces when there's only one caller.
+Removing _possible saves text and simplifies future changes.
 
-> I finally got some time to test and debug clock auto-selection on my
-> system, and unfortunately couldn't get it to work.
-> 
-> Here's some background about my use case: the i.MX6 board acts as a
-> Bluetooth proxy between a phone and a headset. It has 2 Bluetooth
-> modules (one for each connected device), with audio connected to SSI1 &
-> SSI2. Audio sample rate can be either 8 or 16kHz, and bclk can be either
-> 512 or 1024kHz, all depending of the capabilities of the headset and phone.
-> In our case we want SSI2 to be the input clock to the ASRC and SSI1 the
-> output clock, but there is no way to force that with auto-selection:
-> both clocks are multiples of both 8k and 16k, so the algorithm will
-> always select the SSI1 clock.
+Signed-off-by: Daniel Jordan <daniel.m.jordan@oracle.com>
+Cc: Herbert Xu <herbert@gondor.apana.org.au>
+Cc: Steffen Klassert <steffen.klassert@secunet.com>
+Cc: linux-crypto@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+---
+ Documentation/core-api/padata.rst |  2 +-
+ crypto/pcrypt.c                   |  2 +-
+ include/linux/padata.h            |  2 +-
+ kernel/padata.c                   | 33 +++++--------------------------
+ 4 files changed, 8 insertions(+), 31 deletions(-)
 
-Anything wrong with ASRC selecting SSI1 clock for both cases? The
-driver calculates the divisors based on the given clock rate, so
-the final internal rate should be the same. If there's a problem,
-I feel that's a separate bug.
+diff --git a/Documentation/core-api/padata.rst b/Documentation/core-api/padata.rst
+index 771d50330e5b5..35175710b43cc 100644
+--- a/Documentation/core-api/padata.rst
++++ b/Documentation/core-api/padata.rst
+@@ -27,7 +27,7 @@ padata_instance structure for overall control of how jobs are to be run::
+ 
+     #include <linux/padata.h>
+ 
+-    struct padata_instance *padata_alloc_possible(const char *name);
++    struct padata_instance *padata_alloc(const char *name);
+ 
+ 'name' simply identifies the instance.
+ 
+diff --git a/crypto/pcrypt.c b/crypto/pcrypt.c
+index 7374dfecaf70f..812892732a5e5 100644
+--- a/crypto/pcrypt.c
++++ b/crypto/pcrypt.c
+@@ -320,7 +320,7 @@ static int pcrypt_init_padata(struct padata_instance **pinst, const char *name)
+ {
+ 	int ret = -ENOMEM;
+ 
+-	*pinst = padata_alloc_possible(name);
++	*pinst = padata_alloc(name);
+ 	if (!*pinst)
+ 		return ret;
+ 
+diff --git a/include/linux/padata.h b/include/linux/padata.h
+index a941b96b7119e..070a7d43e8af8 100644
+--- a/include/linux/padata.h
++++ b/include/linux/padata.h
+@@ -192,7 +192,7 @@ extern void __init padata_init(void);
+ static inline void __init padata_init(void) {}
+ #endif
+ 
+-extern struct padata_instance *padata_alloc_possible(const char *name);
++extern struct padata_instance *padata_alloc(const char *name);
+ extern void padata_free(struct padata_instance *pinst);
+ extern struct padata_shell *padata_alloc_shell(struct padata_instance *pinst);
+ extern void padata_free_shell(struct padata_shell *ps);
+diff --git a/kernel/padata.c b/kernel/padata.c
+index 4f0a57e5738c9..1c0b97891edb8 100644
+--- a/kernel/padata.c
++++ b/kernel/padata.c
+@@ -979,18 +979,12 @@ static struct kobj_type padata_attr_type = {
+ };
+ 
+ /**
+- * padata_alloc - allocate and initialize a padata instance and specify
+- *                cpumasks for serial and parallel workers.
+- *
++ * padata_alloc - allocate and initialize a padata instance
+  * @name: used to identify the instance
+- * @pcpumask: cpumask that will be used for padata parallelization
+- * @cbcpumask: cpumask that will be used for padata serialization
+  *
+  * Return: new instance on success, NULL on error
+  */
+-static struct padata_instance *padata_alloc(const char *name,
+-					    const struct cpumask *pcpumask,
+-					    const struct cpumask *cbcpumask)
++struct padata_instance *padata_alloc(const char *name)
+ {
+ 	struct padata_instance *pinst;
+ 
+@@ -1016,14 +1010,11 @@ static struct padata_instance *padata_alloc(const char *name,
+ 		free_cpumask_var(pinst->cpumask.pcpu);
+ 		goto err_free_serial_wq;
+ 	}
+-	if (!padata_validate_cpumask(pinst, pcpumask) ||
+-	    !padata_validate_cpumask(pinst, cbcpumask))
+-		goto err_free_masks;
+ 
+ 	INIT_LIST_HEAD(&pinst->pslist);
+ 
+-	cpumask_copy(pinst->cpumask.pcpu, pcpumask);
+-	cpumask_copy(pinst->cpumask.cbcpu, cbcpumask);
++	cpumask_copy(pinst->cpumask.pcpu, cpu_possible_mask);
++	cpumask_copy(pinst->cpumask.cbcpu, cpu_possible_mask);
+ 
+ 	if (padata_setup_cpumasks(pinst))
+ 		goto err_free_masks;
+@@ -1057,21 +1048,7 @@ static struct padata_instance *padata_alloc(const char *name,
+ err:
+ 	return NULL;
+ }
+-
+-/**
+- * padata_alloc_possible - Allocate and initialize padata instance.
+- *                         Use the cpu_possible_mask for serial and
+- *                         parallel workers.
+- *
+- * @name: used to identify the instance
+- *
+- * Return: new instance on success, NULL on error
+- */
+-struct padata_instance *padata_alloc_possible(const char *name)
+-{
+-	return padata_alloc(name, cpu_possible_mask, cpu_possible_mask);
+-}
+-EXPORT_SYMBOL(padata_alloc_possible);
++EXPORT_SYMBOL(padata_alloc);
+ 
+ /**
+  * padata_free - free a padata instance
+-- 
+2.27.0
+
