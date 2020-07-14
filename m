@@ -2,145 +2,79 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A19BC433ED
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 11:38:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F55AC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 11:40:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F0BDA22201
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 11:38:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6356022201
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 11:40:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728063AbgGNLiw (ORCPT
+        id S1727121AbgGNLkF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 07:38:52 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:24086 "EHLO
-        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726352AbgGNLis (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 07:38:48 -0400
-Received: from pps.filterd (m0127361.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06EBXgNl034705;
-        Tue, 14 Jul 2020 07:38:42 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 327u1hgt25-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 14 Jul 2020 07:38:41 -0400
-Received: from m0127361.ppops.net (m0127361.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 06EBXhV7034765;
-        Tue, 14 Jul 2020 07:38:41 -0400
-Received: from ppma06ams.nl.ibm.com (66.31.33a9.ip4.static.sl-reverse.com [169.51.49.102])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 327u1hgt1c-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 14 Jul 2020 07:38:41 -0400
-Received: from pps.filterd (ppma06ams.nl.ibm.com [127.0.0.1])
-        by ppma06ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 06EBbu6i020996;
-        Tue, 14 Jul 2020 11:38:39 GMT
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (d06relay12.portsmouth.uk.ibm.com [9.149.109.197])
-        by ppma06ams.nl.ibm.com with ESMTP id 3274pgu6ut-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 14 Jul 2020 11:38:39 +0000
-Received: from d06av24.portsmouth.uk.ibm.com (mk.ibm.com [9.149.105.60])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 06EBca3127066428
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 14 Jul 2020 11:38:36 GMT
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 8AED142045;
-        Tue, 14 Jul 2020 11:38:36 +0000 (GMT)
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 93B2E42041;
-        Tue, 14 Jul 2020 11:38:34 +0000 (GMT)
-Received: from oc3016276355.ibm.com (unknown [9.145.162.148])
-        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Tue, 14 Jul 2020 11:38:34 +0000 (GMT)
-From:   Pierre Morel <pmorel@linux.ibm.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     pasic@linux.ibm.com, borntraeger@de.ibm.com, frankja@linux.ibm.com,
-        mst@redhat.com, jasowang@redhat.com, cohuck@redhat.com,
-        kvm@vger.kernel.org, linux-s390@vger.kernel.org,
-        virtualization@lists.linux-foundation.org, thomas.lendacky@amd.com,
-        david@gibson.dropbear.id.au, linuxram@us.ibm.com,
-        hca@linux.ibm.com, gor@linux.ibm.com
-Subject: [PATCH v6 2/2] s390: virtio: PV needs VIRTIO I/O device protection
-Date:   Tue, 14 Jul 2020 13:38:02 +0200
-Message-Id: <1594726682-12076-3-git-send-email-pmorel@linux.ibm.com>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <1594726682-12076-1-git-send-email-pmorel@linux.ibm.com>
-References: <1594726682-12076-1-git-send-email-pmorel@linux.ibm.com>
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-07-14_03:2020-07-14,2020-07-14 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 malwarescore=0
- spamscore=0 priorityscore=1501 clxscore=1015 mlxlogscore=999
- suspectscore=1 phishscore=0 bulkscore=0 impostorscore=0 mlxscore=0
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2007140088
+        Tue, 14 Jul 2020 07:40:05 -0400
+Received: from mx2.suse.de ([195.135.220.15]:38966 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726332AbgGNLkF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 07:40:05 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id C2425AF36;
+        Tue, 14 Jul 2020 11:40:06 +0000 (UTC)
+Message-ID: <809a3445c6fdbc2dfc0ea00097157bce61ccd5ea.camel@suse.de>
+Subject: Re: [PATCH 3/4] dma-pool: Introduce dma_guess_pool()
+From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Robin Murphy <robin.murphy@arm.com>,
+        David Rientjes <rientjes@google.com>,
+        iommu@lists.linux-foundation.org,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        linux-rpi-kernel@lists.infradead.org, jeremy.linton@arm.com,
+        linux-kernel@vger.kernel.org
+Date:   Tue, 14 Jul 2020 13:40:01 +0200
+In-Reply-To: <20200714112208.GA18261@lst.de>
+References: <20200709161903.26229-1-nsaenzjulienne@suse.de>
+         <20200709161903.26229-4-nsaenzjulienne@suse.de>
+         <20200714112208.GA18261@lst.de>
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-jtA8Pvm/q46e3P8cNpns"
+User-Agent: Evolution 3.36.4 
+MIME-Version: 1.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If protected virtualization is active on s390, the virtio queues are
-not accessible to the host, unless VIRTIO_F_IOMMU_PLATFORM has been
-negotiated. Use the new arch_validate_virtio_features() interface to
-fail probe if that's not the case, preventing a host error on access
-attempt.
 
-Signed-off-by: Pierre Morel <pmorel@linux.ibm.com>
-Reviewed-by: Cornelia Huck <cohuck@redhat.com>
-Acked-by: Halil Pasic <pasic@linux.ibm.com>
----
- arch/s390/mm/init.c | 28 ++++++++++++++++++++++++++++
- 1 file changed, 28 insertions(+)
+--=-jtA8Pvm/q46e3P8cNpns
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/arch/s390/mm/init.c b/arch/s390/mm/init.c
-index 6dc7c3b60ef6..26efb663bac2 100644
---- a/arch/s390/mm/init.c
-+++ b/arch/s390/mm/init.c
-@@ -45,6 +45,7 @@
- #include <asm/kasan.h>
- #include <asm/dma-mapping.h>
- #include <asm/uv.h>
-+#include <linux/virtio_config.h>
- 
- pgd_t swapper_pg_dir[PTRS_PER_PGD] __section(.bss..swapper_pg_dir);
- 
-@@ -161,6 +162,33 @@ bool force_dma_unencrypted(struct device *dev)
- 	return is_prot_virt_guest();
- }
- 
-+/*
-+ * arch_validate_virtio_features
-+ * @dev: the VIRTIO device being added
-+ *
-+ * Return an error if required features are missing on a guest running
-+ * with protected virtualization.
-+ */
-+int arch_validate_virtio_features(struct virtio_device *dev)
-+{
-+	if (!is_prot_virt_guest())
-+		return 0;
-+
-+	if (!virtio_has_feature(dev, VIRTIO_F_VERSION_1)) {
-+		dev_warn(&dev->dev,
-+			 "legacy virtio not supported with protected virtualizatio\n");
-+		return -ENODEV;
-+	}
-+
-+	if (!virtio_has_feature(dev, VIRTIO_F_IOMMU_PLATFORM)) {
-+		dev_warn(&dev->dev,
-+			 "support for limited memory access required for protected virtualization\n");
-+		return -ENODEV;
-+	}
-+
-+	return 0;
-+}
-+
- /* protected virtualization */
- static void pv_init(void)
- {
--- 
-2.25.1
+On Tue, 2020-07-14 at 13:22 +0200, Christoph Hellwig wrote:
+> This one doesn't appear to actually apply on top of Linus' tree plus the
+> two previous patches.
+
+I'll take care of it.
+
+
+--=-jtA8Pvm/q46e3P8cNpns
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl8NmZEACgkQlfZmHno8
+x/67vgf/S8THsKAgGwIlTRp0AyhSbdCLurjEs05omCC23BcU290BbvGjT1aaYB31
++sO2IbjDIv7EsH/DN4LeiAwJHagCrw8NlEdwSmreJDRdGhCgFaXfCwRBOtK5TXsr
+zPrTK//uac3ZdJjrBt76k3ww247ff5lfAuXcXzaemRRPlYk/tM9j6XrONBNtU2Tn
+snSlA798GKc5yS77daiyp8Fkb50px6aMj8YW8nQEcInDcUDiVZ7y8mwfojBWZKez
+IH48qHWxEEojTBooK2dLlLkhRWAtPLhj8G8CeKFHZh//Zbp5SCuGsQKREh7eRulG
+psgvv6ahP0v7UW4NngAQ9Gu3Nz5VTw==
+=Yb8P
+-----END PGP SIGNATURE-----
+
+--=-jtA8Pvm/q46e3P8cNpns--
 
