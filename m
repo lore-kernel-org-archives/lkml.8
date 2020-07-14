@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0875C433F1
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:55:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82094C433F2
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:55:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6F94022B47
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:55:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 52FEF22BEF
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:55:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594752900;
-	bh=cy5Qh/XKBJsz+OaLp+9qPvYzkHVd0QmKFeuT0HGW0oo=;
+	s=default; t=1594752905;
+	bh=JEMYg5gbmSFLxknIdptGKQdGbkRZKg4d8AowczU99ik=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QVLMMAqtjzL2VWIGZblX6sOa5yIiDz1h7RjakEsC5pFXQhr7XhPn+XiGzicrsH5kB
-	 NVjIOAh0WDKq84LxRscpfIIGFb14bJmbwfILBCQz6KuYwEK+nTi4ctFuzmeTcGZgJH
-	 A1fYfIzUX6Ftgpanu9KRcT5I0UHzVCpJVQCYG/9I=
+	b=i/v4ygIzO84mHSh07uEXFkdaA5SRwoB5+qhNHDCmJXjj49eAOxvKIxohtd4RdhmBP
+	 sMeySd+QK5loWN/zkKpk8a7ir05ll5xDqO0oZeUSI/LstMEmAWDxdFOELJ91hEsaXF
+	 Wx3u0p2pLo3HGWo2+o41p14ShujvX9QOsm7Y5pvo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730817AbgGNSy7 (ORCPT
+        id S1730169AbgGNSzE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 14:54:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52420 "EHLO mail.kernel.org"
+        Tue, 14 Jul 2020 14:55:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52532 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729957AbgGNSyx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 14:54:53 -0400
+        id S1730814AbgGNSy6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 14:54:58 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EE49822B47;
-        Tue, 14 Jul 2020 18:54:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0102922B47;
+        Tue, 14 Jul 2020 18:54:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594752893;
-        bh=cy5Qh/XKBJsz+OaLp+9qPvYzkHVd0QmKFeuT0HGW0oo=;
+        s=default; t=1594752898;
+        bh=JEMYg5gbmSFLxknIdptGKQdGbkRZKg4d8AowczU99ik=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mwKMJGuqKhzyGza4wgQvDEugS6WQA11oeKIDD6bdoXU0VpHbC57j7scrIPIahJ5Tz
-         F+sx00W73aHz9nvTohJXP53gy19PYxALc0AqX7omhPI3NRdy9SArOicH5fTh5XUass
-         JLR63D0jQR9h0+kK+qJBtvqXVYLAiLWynWWir7Rw=
+        b=CxR8FRmB0gOmv1HSLbC4YIYeswYe6Q3+wyt9nHxJekhy0KVFWxDt6uox1OTJQVmhL
+         wgpDMzzgU5U/EC4jm90IxkJYKg95eRQGIMRoFDHKj+TaM86FUVT0n3zfKQ67NB1VLr
+         cSikFnh+AuEZue/QrhgxgRWBBmEwXmWaL8rvD630=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Andy Lutomirski <luto@amacapital.net>,
-        Marco Elver <elver@google.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
+        stable@vger.kernel.org, Dany Madden <drt@linux.ibm.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 041/166] x86/entry: Increase entry_stack size to a full page
-Date:   Tue, 14 Jul 2020 20:43:26 +0200
-Message-Id: <20200714184117.845108345@linuxfoundation.org>
+Subject: [PATCH 5.7 025/166] ibmvnic: continue to init in CRQ reset returns H_CLOSED
+Date:   Tue, 14 Jul 2020 20:43:10 +0200
+Message-Id: <20200714184117.089562706@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200714184115.844176932@linuxfoundation.org>
 References: <20200714184115.844176932@linuxfoundation.org>
@@ -62,38 +60,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peter Zijlstra <peterz@infradead.org>
+From: Dany Madden <drt@linux.ibm.com>
 
-[ Upstream commit c7aadc09321d8f9a1d3bd1e6d8a47222ecddf6c5 ]
+[ Upstream commit 8b40eb73509f5704a0e8cd25de0163876299f1a7 ]
 
-Marco crashed in bad_iret with a Clang11/KCSAN build due to
-overflowing the stack. Now that we run C code on it, expand it to a
-full page.
+Continue the reset path when partner adapter is not ready or H_CLOSED is
+returned from reset crq. This patch allows the CRQ init to proceed to
+establish a valid CRQ for traffic to flow after reset.
 
-Suggested-by: Andy Lutomirski <luto@amacapital.net>
-Reported-by: Marco Elver <elver@google.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Reviewed-by: Lai Jiangshan <jiangshanlai@gmail.com>
-Tested-by: Marco Elver <elver@google.com>
-Link: https://lkml.kernel.org/r/20200618144801.819246178@infradead.org
+Signed-off-by: Dany Madden <drt@linux.ibm.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/include/asm/processor.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/ethernet/ibm/ibmvnic.c | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
 
-diff --git a/arch/x86/include/asm/processor.h b/arch/x86/include/asm/processor.h
-index c4e8fd709cf67..e38befea287fc 100644
---- a/arch/x86/include/asm/processor.h
-+++ b/arch/x86/include/asm/processor.h
-@@ -370,7 +370,7 @@ struct x86_hw_tss {
- #define IO_BITMAP_OFFSET_INVALID	(__KERNEL_TSS_LIMIT + 1)
+diff --git a/drivers/net/ethernet/ibm/ibmvnic.c b/drivers/net/ethernet/ibm/ibmvnic.c
+index 2baf7b3ff4cbf..0fd7eae25fe9d 100644
+--- a/drivers/net/ethernet/ibm/ibmvnic.c
++++ b/drivers/net/ethernet/ibm/ibmvnic.c
+@@ -1971,13 +1971,18 @@ static int do_reset(struct ibmvnic_adapter *adapter,
+ 			release_sub_crqs(adapter, 1);
+ 		} else {
+ 			rc = ibmvnic_reset_crq(adapter);
+-			if (!rc)
++			if (rc == H_CLOSED || rc == H_SUCCESS) {
+ 				rc = vio_enable_interrupts(adapter->vdev);
++				if (rc)
++					netdev_err(adapter->netdev,
++						   "Reset failed to enable interrupts. rc=%d\n",
++						   rc);
++			}
+ 		}
  
- struct entry_stack {
--	unsigned long		words[64];
-+	char	stack[PAGE_SIZE];
- };
+ 		if (rc) {
+ 			netdev_err(adapter->netdev,
+-				   "Couldn't initialize crq. rc=%d\n", rc);
++				   "Reset couldn't initialize crq. rc=%d\n", rc);
+ 			goto out;
+ 		}
  
- struct entry_stack_page {
 -- 
 2.25.1
 
