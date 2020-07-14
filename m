@@ -2,124 +2,102 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9ACDC433E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 03:03:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 524D4C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 03:05:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A87A721974
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 03:03:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="cBHrCYvI"
+	by mail.kernel.org (Postfix) with ESMTP id 1A59F21974
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 03:05:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726830AbgGNDD5 (ORCPT
+        id S1726782AbgGNDFD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 23:03:57 -0400
-Received: from mail.efficios.com ([167.114.26.124]:46198 "EHLO
-        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726432AbgGNDD4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 23:03:56 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by mail.efficios.com (Postfix) with ESMTP id C42872B8642;
-        Mon, 13 Jul 2020 23:03:55 -0400 (EDT)
-Received: from mail.efficios.com ([127.0.0.1])
-        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id 6-nSYf6aGGFD; Mon, 13 Jul 2020 23:03:55 -0400 (EDT)
-Received: from localhost (localhost [127.0.0.1])
-        by mail.efficios.com (Postfix) with ESMTP id 90B5E2B8901;
-        Mon, 13 Jul 2020 23:03:55 -0400 (EDT)
-DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com 90B5E2B8901
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
-        s=default; t=1594695835;
-        bh=w9++onGpxSKMGIZF8bfKR0TS6LlGjGmbqBWAtBmSjx4=;
-        h=From:To:Date:Message-Id;
-        b=cBHrCYvIqybF1wJu4N/CsRu9xLt3RsHCO0k+6j/CN7fg8stsNk7jvNd9ZwgLtmvkY
-         8uAoZEHL9M54DF9BMK9vPhkRcdxryAV2Jk+3g2a+pwn8b81oKCW/e0upmbso3YkMcz
-         GAFRWk2iVch5nDgFOkUeGHY1EzsnW5TjRYM9svqSfOhAsBNfH/jUlYCbNOJJYtjVBT
-         Y6ocJlrXLM4dwV0GvzjAkheuCyTFKKLxl3O3YoXbqGA22+yoO4vf8W4NROlf5lh6IQ
-         AE0s36yBQV7nWRYR362wZwGxwgaB0uCobcGU19BvxcrQW0fB19FE2GvdlGgedFDhm/
-         UUATQwEvp4P2g==
-X-Virus-Scanned: amavisd-new at efficios.com
-Received: from mail.efficios.com ([127.0.0.1])
-        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id 5Wlf2mxEeFwU; Mon, 13 Jul 2020 23:03:55 -0400 (EDT)
-Received: from localhost.localdomain (192-222-181-218.qc.cable.ebox.net [192.222.181.218])
-        by mail.efficios.com (Postfix) with ESMTPSA id 2C4842B8640;
-        Mon, 13 Jul 2020 23:03:55 -0400 (EDT)
-From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        "Paul E . McKenney" <paulmck@linux.ibm.com>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        "H . Peter Anvin" <hpa@zytor.com>, Paul Turner <pjt@google.com>,
-        linux-api@vger.kernel.org,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Florian Weimer <fw@deneb.enyo.de>, carlos@redhat.com,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Subject: [RFC PATCH 1/4] selftests: rseq: Use fixed value as rseq_len parameter
-Date:   Mon, 13 Jul 2020 23:03:45 -0400
-Message-Id: <20200714030348.6214-2-mathieu.desnoyers@efficios.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200714030348.6214-1-mathieu.desnoyers@efficios.com>
-References: <20200714030348.6214-1-mathieu.desnoyers@efficios.com>
+        Mon, 13 Jul 2020 23:05:03 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:7300 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726150AbgGNDFD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jul 2020 23:05:03 -0400
+Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 3E5588FE5E4EB98F451C;
+        Tue, 14 Jul 2020 11:05:00 +0800 (CST)
+Received: from huawei.com (10.175.101.6) by DGGEMS408-HUB.china.huawei.com
+ (10.3.19.208) with Microsoft SMTP Server id 14.3.487.0; Tue, 14 Jul 2020
+ 11:04:53 +0800
+From:   linmiaohe <linmiaohe@huawei.com>
+To:     <akpm@linux-foundation.org>
+CC:     <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>,
+        <linmiaohe@huawei.com>
+Subject: [PATCH] mm: mmap: Merge vma after call_mmap() if possible
+Date:   Tue, 14 Jul 2020 11:07:44 +0800
+Message-ID: <1594696064-1409-1-git-send-email-linmiaohe@huawei.com>
+X-Mailer: git-send-email 1.8.3.1
+MIME-Version: 1.0
+Content-Type: text/plain
+X-Originating-IP: [10.175.101.6]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The rseq registration and unregistration expect a fixed-size length
-(32 bytes). In preparation to extend struct rseq, pass a fixed value
-rather than the size of the rseq structure.
+From: Miaohe Lin <linmiaohe@huawei.com>
 
-Signed-off-by: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+The vm_flags may be changed after call_mmap() because drivers may set some
+flags for their own purpose. As a result, we failed to merge the adjacent
+vma due to the different vm_flags as userspace can't pass in the same one.
+Try to merge vma after call_mmap() to fix this issue.
+
+Signed-off-by: Hongxiang Lou <louhongxiang@huawei.com>
+Signed-off-by: Miaohe Lin <linmiaohe@huawei.com>
 ---
- include/uapi/linux/rseq.h           | 5 +++++
- tools/testing/selftests/rseq/rseq.c | 5 ++---
- 2 files changed, 7 insertions(+), 3 deletions(-)
+ mm/mmap.c | 17 ++++++++++++++++-
+ 1 file changed, 16 insertions(+), 1 deletion(-)
 
-diff --git a/include/uapi/linux/rseq.h b/include/uapi/linux/rseq.h
-index 9a402fdb60e9..e11d9df5e564 100644
---- a/include/uapi/linux/rseq.h
-+++ b/include/uapi/linux/rseq.h
-@@ -37,6 +37,11 @@ enum rseq_cs_flags {
- 		(1U << RSEQ_CS_FLAG_NO_RESTART_ON_MIGRATE_BIT),
- };
+diff --git a/mm/mmap.c b/mm/mmap.c
+index 59a4682ebf3f..9568117471f8 100644
+--- a/mm/mmap.c
++++ b/mm/mmap.c
+@@ -1689,7 +1689,7 @@ unsigned long mmap_region(struct file *file, unsigned long addr,
+ 		struct list_head *uf)
+ {
+ 	struct mm_struct *mm = current->mm;
+-	struct vm_area_struct *vma, *prev;
++	struct vm_area_struct *vma, *prev, *merge;
+ 	int error;
+ 	struct rb_node **rb_link, *rb_parent;
+ 	unsigned long charged = 0;
+@@ -1773,6 +1773,20 @@ unsigned long mmap_region(struct file *file, unsigned long addr,
+ 		if (error)
+ 			goto unmap_and_free_vma;
  
-+/* The rseq_len expected by rseq registration is always 32 bytes. */
-+enum rseq_len_expected {
-+	RSEQ_LEN_EXPECTED = 32,
-+};
++		/* If vm_flags changed after call_mmap(), we should try merge vma again
++		 * as we may succeed this time.
++		 */
++		if (unlikely(vm_flags != vma->vm_flags && prev)) {
++			merge = vma_merge(mm, prev, vma->vm_start, vma->vm_end, vma->vm_flags,
++				NULL, vma->vm_file, vma->vm_pgoff, NULL, NULL_VM_UFFD_CTX);
++			if (merge) {
++				fput(file);
++				vm_area_free(vma);
++				vma = merge;
++				goto unmap_writable;
++			}
++		}
 +
- /*
-  * struct rseq_cs is aligned on 4 * 8 bytes to ensure it is always
-  * contained within a single cache-line. It is usually declared as
-diff --git a/tools/testing/selftests/rseq/rseq.c b/tools/testing/selftests/rseq/rseq.c
-index 7159eb777fd3..da2264c679b9 100644
---- a/tools/testing/selftests/rseq/rseq.c
-+++ b/tools/testing/selftests/rseq/rseq.c
-@@ -87,7 +87,7 @@ int rseq_register_current_thread(void)
- 	}
- 	if (__rseq_refcount++)
- 		goto end;
--	rc = sys_rseq(&__rseq_abi, sizeof(struct rseq), 0, RSEQ_SIG);
-+	rc = sys_rseq(&__rseq_abi, RSEQ_LEN_EXPECTED, 0, RSEQ_SIG);
- 	if (!rc) {
- 		assert(rseq_current_cpu_raw() >= 0);
- 		goto end;
-@@ -115,8 +115,7 @@ int rseq_unregister_current_thread(void)
- 	}
- 	if (--__rseq_refcount)
- 		goto end;
--	rc = sys_rseq(&__rseq_abi, sizeof(struct rseq),
--		      RSEQ_FLAG_UNREGISTER, RSEQ_SIG);
-+	rc = sys_rseq(&__rseq_abi, RSEQ_LEN_EXPECTED, RSEQ_FLAG_UNREGISTER, RSEQ_SIG);
- 	if (!rc)
- 		goto end;
- 	__rseq_refcount = 1;
+ 		/* Can addr have changed??
+ 		 *
+ 		 * Answer: Yes, several device drivers can do it in their
+@@ -1795,6 +1809,7 @@ unsigned long mmap_region(struct file *file, unsigned long addr,
+ 	vma_link(mm, vma, prev, rb_link, rb_parent);
+ 	/* Once vma denies write, undo our temporary denial count */
+ 	if (file) {
++unmap_writable:
+ 		if (vm_flags & VM_SHARED)
+ 			mapping_unmap_writable(file->f_mapping);
+ 		if (vm_flags & VM_DENYWRITE)
 -- 
-2.17.1
+2.19.1
 
