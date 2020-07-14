@@ -2,93 +2,267 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B955C433E6
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 07:22:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E283FC433E7
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 07:22:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 55B25206F0
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 07:22:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CC131206F0
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 07:22:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726935AbgGNHWv (ORCPT
+        id S1726890AbgGNHWl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 03:22:51 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:45232 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726050AbgGNHWv (ORCPT
+        Tue, 14 Jul 2020 03:22:41 -0400
+Received: from smtp2207-205.mail.aliyun.com ([121.197.207.205]:46609 "EHLO
+        smtp2207-205.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725884AbgGNHWk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 03:22:51 -0400
-Received: by mail-ot1-f66.google.com with SMTP id h1so12255340otq.12;
-        Tue, 14 Jul 2020 00:22:50 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=zQc3b3cEG4qoV3UIOktn0Ijwe/EIk3WLKFZosqYyBVs=;
-        b=PsmL6a9oltMwdBJvv7Gv+u2qO9gVFjcGaGIXPgWk9S0BEgiXmg4/MzyGV9DG5a+hmy
-         rkAwwv0Gxz5S6Va1Vp0IbBhJosKfGbrWGp6zBMKP0scPMVe2dxi5WET7QFoIwTIw6hCX
-         hhZ31JeNdMqOsn0jFJ2cZpTavrnOzgOw5i6G8tAK1XMJt5V+etAgdlXQKlFicCI/J/3X
-         iAfcCaUvovjWfhlGMxC4bVyr5LAq0BYofBIwo7FFfXBwtvkjYRAYnAi8Q2dMikRcY0Bq
-         tI74zliDqqxqdqp0xc4/D76iU8uQwwBbs7Y8mGgxnM1WvUMP9tNonPoSbIh5cAk3oSgQ
-         /6HA==
-X-Gm-Message-State: AOAM5319VQea9YC73jhQnB+rjH63HdnPlWrR8hOxpiO6qpsUuaUgZaTT
-        nv1//mnKwO+umToMbyTCOEl/adlYNTG7Bt3PAI4=
-X-Google-Smtp-Source: ABdhPJz1sAOdS6D9PESw3CKqn8GGA2iUl9nNfnBianI8jxVmwEadGYyk0M5nb2M82d5LxVc36lQQSerNhEHLzoOzfSM=
-X-Received: by 2002:a9d:1b0d:: with SMTP id l13mr2887577otl.145.1594711370357;
- Tue, 14 Jul 2020 00:22:50 -0700 (PDT)
+        Tue, 14 Jul 2020 03:22:40 -0400
+X-Alimail-AntiSpam: AC=CONTINUE;BC=0.07526159|-1;CH=green;DM=|CONTINUE|false|;DS=CONTINUE|ham_system_inform|0.664333-0.000360464-0.335307;FP=0|0|0|0|0|-1|-1|-1;HT=e02c03307;MF=frank@allwinnertech.com;NM=1;PH=DS;RN=10;RT=10;SR=0;TI=SMTPD_---.I1TTd6V_1594711352;
+Received: from allwinnertech.com(mailfrom:frank@allwinnertech.com fp:SMTPD_---.I1TTd6V_1594711352)
+          by smtp.aliyun-inc.com(10.147.43.95);
+          Tue, 14 Jul 2020 15:22:37 +0800
+From:   Frank Lee <frank@allwinnertech.com>
+To:     mripard@kernel.org, wens@csie.org, robh+dt@kernel.org
+Cc:     linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, tiny.windzz@gmail.com,
+        huangshuosheng@allwinnertech.com, liyong@allwinnertech.com,
+        Yangtao Li <frank@allwinnertech.com>
+Subject: [PATCH v4 16/16] arm64: allwinner: A100: add support for Allwinner Perf1 board
+Date:   Tue, 14 Jul 2020 15:22:26 +0800
+Message-Id: <d0674af1f386f6fae1b2363eabe4129770957d47.1594708864.git.frank@allwinnertech.com>
+X-Mailer: git-send-email 2.24.0
+In-Reply-To: <cover.1594708863.git.frank@allwinnertech.com>
+References: <cover.1594708863.git.frank@allwinnertech.com>
 MIME-Version: 1.0
-References: <20200710062019.28755-1-grandmaster@al2klimov.de> <20200713113430.1c1777bb@lwn.net>
-In-Reply-To: <20200713113430.1c1777bb@lwn.net>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Tue, 14 Jul 2020 09:22:39 +0200
-Message-ID: <CAMuHMdXoUME_dCOZP1N0tXyMv61edfNECM4-n4NPa56YbBCncw@mail.gmail.com>
-Subject: Re: [PATCH] OPENRISC ARCHITECTURE: Replace HTTP links with HTTPS ones
-To:     Jonathan Corbet <corbet@lwn.net>
-Cc:     "Alexander A. Klimov" <grandmaster@al2klimov.de>,
-        Jonas Bonn <jonas@southpole.se>,
-        Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>,
-        Stafford Horne <shorne@gmail.com>,
-        Openrisc <openrisc@lists.librecores.org>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 13, 2020 at 7:37 PM Jonathan Corbet <corbet@lwn.net> wrote:
-> On Fri, 10 Jul 2020 08:20:19 +0200
-> "Alexander A. Klimov" <grandmaster@al2klimov.de> wrote:
-> >  Documentation/openrisc/openrisc_port.rst | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> >
-> > diff --git a/Documentation/openrisc/openrisc_port.rst b/Documentation/openrisc/openrisc_port.rst
-> > index 4b2c437942a0..657ac4af7be6 100644
-> > --- a/Documentation/openrisc/openrisc_port.rst
-> > +++ b/Documentation/openrisc/openrisc_port.rst
-> > @@ -8,7 +8,7 @@ target architecture, specifically, is the 32-bit OpenRISC 1000 family (or1k).
-> >  For information about OpenRISC processors and ongoing development:
-> >
-> >       =======         =============================
-> > -     website         http://openrisc.io
-> > +     website         https://openrisc.io
-> >       email           openrisc@lists.librecores.org
-> >       =======         =============================
->
-> Applied, thanks.
+From: Yangtao Li <frank@allwinnertech.com>
 
-Is that site accessible for anyone? It times out for me.
+A100 perf1 is an Allwinner A100-based SBC, with the following features:
 
-Gr{oetje,eeting}s,
+- 1GiB DDR3 DRAM
+- AXP803 PMIC
+- 2 USB 2.0 ports
+- MicroSD slot and on-board eMMC module
+- on-board Nand flash
+- ···
 
-                        Geert
+Adds initial support for it, including UART and PMU.
 
+Signed-off-by: Yangtao Li <frank@allwinnertech.com>
+---
+ arch/arm64/boot/dts/allwinner/Makefile        |   1 +
+ .../allwinner/sun50i-a100-allwinner-perf1.dts | 180 ++++++++++++++++++
+ 2 files changed, 181 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/allwinner/sun50i-a100-allwinner-perf1.dts
+
+diff --git a/arch/arm64/boot/dts/allwinner/Makefile b/arch/arm64/boot/dts/allwinner/Makefile
+index e4d3cd0ac5bb..ab780dbdd17b 100644
+--- a/arch/arm64/boot/dts/allwinner/Makefile
++++ b/arch/arm64/boot/dts/allwinner/Makefile
+@@ -14,6 +14,7 @@ dtb-$(CONFIG_ARCH_SUNXI) += sun50i-a64-pinephone-1.1.dtb
+ dtb-$(CONFIG_ARCH_SUNXI) += sun50i-a64-pinetab.dtb
+ dtb-$(CONFIG_ARCH_SUNXI) += sun50i-a64-sopine-baseboard.dtb
+ dtb-$(CONFIG_ARCH_SUNXI) += sun50i-a64-teres-i.dtb
++dtb-$(CONFIG_ARCH_SUNXI) += sun50i-a100-allwinner-perf1.dtb
+ dtb-$(CONFIG_ARCH_SUNXI) += sun50i-h5-bananapi-m2-plus.dtb
+ dtb-$(CONFIG_ARCH_SUNXI) += sun50i-h5-bananapi-m2-plus-v1.2.dtb
+ dtb-$(CONFIG_ARCH_SUNXI) += sun50i-h5-emlid-neutis-n5-devboard.dtb
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a100-allwinner-perf1.dts b/arch/arm64/boot/dts/allwinner/sun50i-a100-allwinner-perf1.dts
+new file mode 100644
+index 000000000000..d34c2bb1079f
+--- /dev/null
++++ b/arch/arm64/boot/dts/allwinner/sun50i-a100-allwinner-perf1.dts
+@@ -0,0 +1,180 @@
++// SPDX-License-Identifier: (GPL-2.0+ or MIT)
++/*
++ * Copyright (c) 2020 Yangtao Li <frank@allwinnertech.com>
++ */
++
++/dts-v1/;
++
++#include "sun50i-a100.dtsi"
++
++/{
++	model = "Allwinner A100 Perf1";
++	compatible = "allwinner,a100-perf1", "allwinner,sun50i-a100";
++
++	aliases {
++		serial0 = &uart0;
++	};
++
++	chosen {
++		stdout-path = "serial0:115200n8";
++	};
++};
++
++&pio {
++	vcc-pb-supply = <&reg_dcdc1>;
++	vcc-pc-supply = <&reg_eldo1>;
++	vcc-pd-supply = <&reg_dcdc1>;
++	vcc-pe-supply = <&reg_dldo2>;
++	vcc-pf-supply = <&reg_dcdc1>;
++	vcc-pg-supply = <&reg_dldo1>;
++	vcc-ph-supply = <&reg_dcdc1>;
++};
++
++&r_pio {
++	/*
++	 * FIXME: We can't add that supply for now since it would
++	 * create a circular dependency between pinctrl, the regulator
++	 * and the RSB Bus.
++	 *
++	 * vcc-pl-supply = <&reg_aldo3>;
++	 */
++};
++
++&r_i2c0 {
++	status = "okay";
++
++	axp803: pmic@34 {
++		compatible = "x-powers,axp803";
++		reg = <0x34>;
++		interrupt-parent = <&r_intc>;
++		interrupts = <0 IRQ_TYPE_LEVEL_LOW>;
++		x-powers,drive-vbus-en; /* set N_VBUSEN as output pin */
++	};
++};
++
++#include "axp803.dtsi"
++
++&ac_power_supply {
++	status = "okay";
++};
++
++&reg_aldo1 {
++	regulator-always-on;
++	regulator-min-microvolt = <1800000>;
++	regulator-max-microvolt = <1800000>;
++	regulator-name = "vcc-pll-avcc";
++};
++
++&reg_aldo2 {
++	regulator-always-on;
++	regulator-min-microvolt = <1800000>;
++	regulator-max-microvolt = <1800000>;
++	regulator-name = "vcc-dram-1";
++};
++
++&reg_aldo3 {
++	regulator-always-on;
++	regulator-min-microvolt = <3300000>;
++	regulator-max-microvolt = <3300000>;
++	regulator-name = "vcc-usb-pl";
++};
++
++&reg_dcdc1 {
++	regulator-always-on;
++	regulator-min-microvolt = <3300000>;
++	regulator-max-microvolt = <3300000>;
++	regulator-name = "vcc-io-usb-pd-emmc-nand-card";
++};
++
++&reg_dcdc2 {
++	regulator-always-on;
++	/*
++	 * FIXME: update min and max before support dvfs.
++	 */
++	regulator-min-microvolt = <500000>;
++	regulator-max-microvolt = <1300000>;
++	regulator-name = "vdd-cpux";
++};
++
++/* DCDC3 is polyphased with DCDC2 */
++
++&reg_dcdc4 {
++	regulator-always-on;
++	regulator-min-microvolt = <950000>;
++	regulator-max-microvolt = <950000>;
++	regulator-name = "vdd-sys-usb-dram";
++};
++
++&reg_dcdc5 {
++	regulator-always-on;
++	regulator-min-microvolt = <1500000>;
++	regulator-max-microvolt = <1500000>;
++	regulator-name = "vcc-dram-2";
++};
++
++&reg_dldo1 {
++	regulator-min-microvolt = <3300000>;
++	regulator-max-microvolt = <3300000>;
++	regulator-name = "vcc-pg-dcxo-wifi";
++};
++
++&reg_dldo2 {
++	regulator-min-microvolt = <1800000>;
++	regulator-max-microvolt = <2800000>;
++	regulator-name = "vcc-pe-csi";
++};
++
++&reg_dldo3 {
++	regulator-min-microvolt = <1800000>;
++	regulator-max-microvolt = <3300000>;
++	regulator-name = "ldo-avdd-csi";
++};
++
++&reg_dldo4 {
++	regulator-min-microvolt = <1800000>;
++	regulator-max-microvolt = <2800000>;
++	regulator-name = "avcc-csi";
++};
++
++&reg_eldo1 {
++	regulator-min-microvolt = <1800000>;
++	regulator-max-microvolt = <1800000>;
++	regulator-name = "vcc-pc-lvds-csi-efuse-emmc-nand";
++};
++
++&reg_eldo2 {
++	regulator-min-microvolt = <1200000>;
++	regulator-max-microvolt = <1800000>;
++	regulator-name = "dvdd-csi";
++};
++
++&reg_eldo3 {
++	regulator-min-microvolt = <1800000>;
++	regulator-max-microvolt = <1800000>;
++	regulator-name = "vcc-mipi-lcd";
++};
++
++&reg_fldo1 {
++	regulator-always-on;
++	regulator-min-microvolt = <900000>;
++	regulator-max-microvolt = <900000>;
++	regulator-name = "vdd-cpus-usb";
++};
++
++&reg_ldo_io0 {
++	regulator-min-microvolt = <3300000>;
++	regulator-max-microvolt = <3300000>;
++	regulator-name = "vcc-ctp";
++	status = "okay";
++};
++
++&reg_drivevbus {
++	regulator-name = "usb0-vbus";
++	status = "okay";
++};
++
++&uart0 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&uart0_pb_pins>;
++	status = "okay";
++};
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+2.24.0
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
