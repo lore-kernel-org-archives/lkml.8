@@ -3,213 +3,85 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C04EC433E5
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 17:39:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24C74C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 17:40:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 44A1B22574
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 17:39:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="arxBHLO6"
+	by mail.kernel.org (Postfix) with ESMTP id F1CB122518
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 17:40:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594748403;
+	bh=ie+V0fQiEeLtoc7KjUdBC+Kd90jAwscL7G+GUJ3Hgns=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=GAl2hkkT5nRgGkWVeXnYukLWaNplG69PR3ZtfiD5xIdl7OBQ58I+kxV5BOSavF3X1
+	 TP2d6GryhiTRHD+LsmbAn+ktf+zPrpCzKpuEoLugumX/Pv6R9PRTB0MpKuzApTCfSQ
+	 FUqq9phqcJ+CLERQ6FLmEhnMeJGmcV5Fr6bdAsHc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728939AbgGNRjZ (ORCPT
+        id S1728980AbgGNRkB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 13:39:25 -0400
-Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:43542 "EHLO
-        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726817AbgGNRjX (ORCPT
+        Tue, 14 Jul 2020 13:40:01 -0400
+Received: from conuserg-12.nifty.com ([210.131.2.79]:40701 "EHLO
+        conuserg-12.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726817AbgGNRkB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 13:39:23 -0400
-Received: from pps.filterd (m0109334.ppops.net [127.0.0.1])
-        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06EHVg71006972
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 10:39:22 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
- : date : message-id : mime-version : content-transfer-encoding :
- content-type; s=facebook; bh=BVn4I8AIX9oqcbM7NHzQzswap0P9x2xl+MMQO5TJB2o=;
- b=arxBHLO6VAZkrL7CgJ2QGAxlFCDkj9GswxHT+/3EqAxj/5kRLhzGpviv/tnZEBucTarL
- nl2BeT4xuL9z+nWKHEVwI8hnXbD3aK1q3FKlFMYL9Vl5h6IzW+ZE61ADGhTauM89ZMVJ
- 1mQJ/Esn4DLj+YrDVXcVVZjvUEgbCeMr4H8= 
-Received: from mail.thefacebook.com ([163.114.132.120])
-        by mx0a-00082601.pphosted.com with ESMTP id 327wd8ke8k-4
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 10:39:22 -0700
-Received: from intmgw002.06.prn3.facebook.com (2620:10d:c085:208::f) by
- mail.thefacebook.com (2620:10d:c085:21d::4) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1979.3; Tue, 14 Jul 2020 10:39:22 -0700
-Received: by devvm1096.prn0.facebook.com (Postfix, from userid 111017)
-        id 62B9711D9EAD; Tue, 14 Jul 2020 10:39:21 -0700 (PDT)
-Smtp-Origin-Hostprefix: devvm
-From:   Roman Gushchin <guro@fb.com>
-Smtp-Origin-Hostname: devvm1096.prn0.facebook.com
-To:     Andrew Morton <akpm@linux-foundation.org>
-CC:     Johannes Weiner <hannes@cmpxchg.org>,
-        Michal Hocko <mhocko@kernel.org>, <linux-mm@kvack.org>,
-        <kernel-team@fb.com>, <linux-kernel@vger.kernel.org>,
-        Roman Gushchin <guro@fb.com>, Hugh Dickins <hughd@google.com>
-Smtp-Origin-Cluster: prn0c01
-Subject: [PATCH v2] mm: vmstat: fix /proc/sys/vm/stat_refresh generating false warnings
-Date:   Tue, 14 Jul 2020 10:39:20 -0700
-Message-ID: <20200714173920.3319063-1-guro@fb.com>
-X-Mailer: git-send-email 2.24.1
+        Tue, 14 Jul 2020 13:40:01 -0400
+Received: from oscar.flets-west.jp (softbank126025067101.bbtec.net [126.25.67.101]) (authenticated)
+        by conuserg-12.nifty.com with ESMTP id 06EHd5VO022065;
+        Wed, 15 Jul 2020 02:39:05 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-12.nifty.com 06EHd5VO022065
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1594748346;
+        bh=VSlrCdvfnyOvmg1z7jLB1HmUkH/aJAVl+cYuH7oRhd8=;
+        h=From:To:Cc:Subject:Date:From;
+        b=oUQKHpngLvTQI1Jaf8u0Rr53oK6ABUWQivPYf4GEOcK/nWwSLfSBjmbokIMGte55U
+         j6zYSG4QlSp5BQOFimsdol8t1KDXBnJznVElB90zKxIr0M8DpyPrD1uYw/H6EPYfrw
+         3W8qN8av79j3LWFu1f4nA9ntkU8eYrPwqLkdG4kk1+p/WOLdh2r4L6HHRwCBxJ3132
+         x7W1n5nhPVriO1jcLQPuyqcwruE+6aulF7K4BscNY29SO0ZcQU+Whs4MY0q/lwyO8u
+         O0jgkXieXZaQJRZS/N4gneHc/4t0MJ/1vVu28TMF+DYqbZuamXoi7nvZw6PKWFTLEi
+         bnMfVmwwLyX+Q==
+X-Nifty-SrcIP: [126.25.67.101]
+From:   Masahiro Yamada <masahiroy@kernel.org>
+To:     Marc Zyngier <maz@kernel.org>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] irqchip: ativic32: constify irq_domain_ops
+Date:   Wed, 15 Jul 2020 02:38:57 +0900
+Message-Id: <20200714173857.477422-1-masahiroy@kernel.org>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-FB-Internal: Safe
-Content-Type: text/plain
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-07-14_07:2020-07-14,2020-07-14 signatures=0
-X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 adultscore=0
- mlxlogscore=999 clxscore=1015 spamscore=0 impostorscore=0 malwarescore=0
- phishscore=0 suspectscore=2 priorityscore=1501 bulkscore=0 mlxscore=0
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2007140129
-X-FB-Internal: deliver
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-I've noticed a number of warnings like "vmstat_refresh: nr_free_cma
--5" or "vmstat_refresh: nr_zone_write_pending -11" on our production
-hosts. The numbers of these warnings were relatively low and stable,
-so it didn't look like we are systematically leaking the counters.
-The corresponding vmstat counters also looked sane.
+This is passed to irq_domain_add_linear(), which accepts a pointer
+to a const structure.
 
-These warnings are generated by the vmstat_refresh() function, which
-assumes that atomic zone and numa counters can't go below zero.
-However, on a SMP machine it's not quite right: due to per-cpu
-caching it can in theory be as low as -(zone threshold) * NR_CPUs.
-
-For instance, let's say all cma pages are in use and NR_FREE_CMA_PAGES
-reached 0. Then we've reclaimed a small number of cma pages on each
-CPU except CPU0, so that most percpu NR_FREE_CMA_PAGES counters are
-slightly positive (the atomic counter is still 0). Then somebody on
-CPU0 consumes all these pages. The number of pages can easily exceed
-the threshold and a negative value will be committed to the atomic
-counter.
-
-To fix the problem and avoid generating false warnings, let's just
-relax the condition and warn only if the value is less than minus
-the maximum theoretically possible drift value, which is 125 *
-number of online CPUs. It will still allow to catch systematic leaks,
-but will not generate bogus warnings.
-
-Signed-off-by: Roman Gushchin <guro@fb.com>
-Cc: Hugh Dickins <hughd@google.com>
+Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
 ---
- Documentation/admin-guide/sysctl/vm.rst |  4 ++--
- mm/vmstat.c                             | 30 ++++++++++++++++---------
- 2 files changed, 21 insertions(+), 13 deletions(-)
 
-diff --git a/Documentation/admin-guide/sysctl/vm.rst b/Documentation/admi=
-n-guide/sysctl/vm.rst
-index 4b9d2e8e9142..95fb80d0c606 100644
---- a/Documentation/admin-guide/sysctl/vm.rst
-+++ b/Documentation/admin-guide/sysctl/vm.rst
-@@ -822,8 +822,8 @@ e.g. cat /proc/sys/vm/stat_refresh /proc/meminfo
-=20
- As a side-effect, it also checks for negative totals (elsewhere reported
- as 0) and "fails" with EINVAL if any are found, with a warning in dmesg.
--(At time of writing, a few stats are known sometimes to be found negativ=
-e,
--with no ill effects: errors and warnings on these stats are suppressed.)
-+(On a SMP machine some stats can temporarily become negative, with no il=
-l
-+effects: errors and warnings on these stats are suppressed.)
-=20
-=20
- numa_stat
-diff --git a/mm/vmstat.c b/mm/vmstat.c
-index a21140373edb..8f0ef8aaf8ee 100644
---- a/mm/vmstat.c
-+++ b/mm/vmstat.c
-@@ -169,6 +169,8 @@ EXPORT_SYMBOL(vm_node_stat);
-=20
- #ifdef CONFIG_SMP
-=20
-+#define MAX_THRESHOLD 125
-+
- int calculate_pressure_threshold(struct zone *zone)
- {
- 	int threshold;
-@@ -186,11 +188,9 @@ int calculate_pressure_threshold(struct zone *zone)
- 	threshold =3D max(1, (int)(watermark_distance / num_online_cpus()));
-=20
- 	/*
--	 * Maximum threshold is 125
-+	 * Threshold is capped by MAX_THRESHOLD
- 	 */
--	threshold =3D min(125, threshold);
--
--	return threshold;
-+	return min(MAX_THRESHOLD, threshold);
+ drivers/irqchip/irq-ativic32.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/irqchip/irq-ativic32.c b/drivers/irqchip/irq-ativic32.c
+index 85cf6e0e0e52..476d6024aaf2 100644
+--- a/drivers/irqchip/irq-ativic32.c
++++ b/drivers/irqchip/irq-ativic32.c
+@@ -92,7 +92,7 @@ static int ativic32_irq_domain_map(struct irq_domain *id, unsigned int virq,
+ 	return 0;
  }
-=20
- int calculate_normal_threshold(struct zone *zone)
-@@ -610,6 +610,9 @@ void dec_node_page_state(struct page *page, enum node=
-_stat_item item)
- }
- EXPORT_SYMBOL(dec_node_page_state);
- #else
-+
-+#define MAX_THRESHOLD 0
-+
- /*
-  * Use interrupt disable to serialize counter updates
-  */
-@@ -1810,7 +1813,7 @@ static void refresh_vm_stats(struct work_struct *wo=
-rk)
- int vmstat_refresh(struct ctl_table *table, int write,
- 		   void *buffer, size_t *lenp, loff_t *ppos)
- {
--	long val;
-+	long val, max_drift;
- 	int err;
- 	int i;
-=20
-@@ -1821,17 +1824,22 @@ int vmstat_refresh(struct ctl_table *table, int w=
-rite,
- 	 * pages, immediately after running a test.  /proc/sys/vm/stat_refresh,
- 	 * which can equally be echo'ed to or cat'ted from (by root),
- 	 * can be used to update the stats just before reading them.
--	 *
--	 * Oh, and since global_zone_page_state() etc. are so careful to hide
--	 * transiently negative values, report an error here if any of
--	 * the stats is negative, so we know to go looking for imbalance.
- 	 */
- 	err =3D schedule_on_each_cpu(refresh_vm_stats);
- 	if (err)
- 		return err;
-+
-+	/*
-+	 * Since global_zone_page_state() etc. are so careful to hide
-+	 * transiently negative values, report an error here if any of
-+	 * the stats is negative and are less than the maximum drift value,
-+	 * so we know to go looking for imbalance.
-+	 */
-+	max_drift =3D num_online_cpus() * MAX_THRESHOLD;
-+
- 	for (i =3D 0; i < NR_VM_ZONE_STAT_ITEMS; i++) {
- 		val =3D atomic_long_read(&vm_zone_stat[i]);
--		if (val < 0) {
-+		if (val < -max_drift) {
- 			pr_warn("%s: %s %ld\n",
- 				__func__, zone_stat_name(i), val);
- 			err =3D -EINVAL;
-@@ -1840,7 +1848,7 @@ int vmstat_refresh(struct ctl_table *table, int wri=
-te,
- #ifdef CONFIG_NUMA
- 	for (i =3D 0; i < NR_VM_NUMA_STAT_ITEMS; i++) {
- 		val =3D atomic_long_read(&vm_numa_stat[i]);
--		if (val < 0) {
-+		if (val < -max_drift) {
- 			pr_warn("%s: %s %ld\n",
- 				__func__, numa_stat_name(i), val);
- 			err =3D -EINVAL;
---=20
-2.26.2
+ 
+-static struct irq_domain_ops ativic32_ops = {
++static const struct irq_domain_ops ativic32_ops = {
+ 	.map = ativic32_irq_domain_map,
+ 	.xlate = irq_domain_xlate_onecell
+ };
+-- 
+2.25.1
 
