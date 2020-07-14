@@ -2,55 +2,52 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A8FBC433E8
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:50:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57B3FC433F2
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:50:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 12771207F5
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:50:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C680208C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:50:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594752617;
-	bh=QiABNGIC6INiRA8Y6M1rckpaH1GiJ7V5407vAG7OMGg=;
+	s=default; t=1594752624;
+	bh=lB/TV7OaebSpgcZCywI1o/AcmKyEEY97WqjSnD6Z+2k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KiXtQ4pszIdJ4z0y10hfjtPazktmSgb70RZXmIqAnAvEa5Uzs4GqQbAGbqqZi3Fjp
-	 QvePC1YVFwL/LN5xXzicty4rcGVsj0CE5f8gl98gfJ5suHAzois0URybDvG5qwdC0o
-	 WQnK3LrLcnNqtbm0VsGTCbzX4cF+T9vi1OrtPICs=
+	b=hbWOYRwyt1RgFHq/3O7M/T85/dscY6LwQ28J9C29gGc5iFyr/F8r91rvzKJmDoYnm
+	 arlXeWWZ/FR5TdyPSYBQMUu5WS0pagaof8WLE14flg3k8EaD9egFqAMHAanHzd1riH
+	 6QuZTmr9GhT2psoQP8RcNLQv75VNErFU+LSQ90fw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730291AbgGNSuQ (ORCPT
+        id S1730295AbgGNSuX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 14:50:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46228 "EHLO mail.kernel.org"
+        Tue, 14 Jul 2020 14:50:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46340 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730276AbgGNSuL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 14:50:11 -0400
+        id S1730292AbgGNSuQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 14:50:16 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8402122AAA;
-        Tue, 14 Jul 2020 18:50:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7DD2921835;
+        Tue, 14 Jul 2020 18:50:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594752611;
-        bh=QiABNGIC6INiRA8Y6M1rckpaH1GiJ7V5407vAG7OMGg=;
+        s=default; t=1594752616;
+        bh=lB/TV7OaebSpgcZCywI1o/AcmKyEEY97WqjSnD6Z+2k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=e6rCN3AwgHNcsTe3M/waFILJ53odeoQj2WNGdTDTDun1p3TuFmh1NjL+/a/S+/gGP
-         5vy5nXNsIQRxcqeqyvdZbnaGH6eCYXTqlzGzfIguMxMvif6X+3fU2qJQ5pZFWwsKfC
-         WwCUUYBjNyxEIgZdywUKAVL+HXCSrep7A8xnpDjc=
+        b=Th4NOsN0WJMWZLkuGf2W62JpYrnsrBUJ26j9VFWoB64XFQglQ05HMEu+/xxRglvl+
+         6jYUC3f5UGkYvGLgb8PrI2sHgliBMkD5OpD7yGknRwa2q1qKH4eEhVujWojaD3A/ea
+         1OfWVhJBRyPsxKsQgGb6k0JCjWrRFZrF7vxAFl6w=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Guennadi Liakhovetski <guennadi.liakhovetski@linux.intel.com>,
-        Kai Vehmanen <kai.vehmanen@linux.intel.com>,
-        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 013/109] ALSA: hda: Intel: add missing PCI IDs for ICL-H, TGL-H and EKL
-Date:   Tue, 14 Jul 2020 20:43:16 +0200
-Message-Id: <20200714184106.155795290@linuxfoundation.org>
+        stable@vger.kernel.org, Zhenzhong Duan <zhenzhong.duan@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 015/109] spi: spidev: fix a potential use-after-free in spidev_release()
+Date:   Tue, 14 Jul 2020 20:43:18 +0200
+Message-Id: <20200714184106.251697280@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200714184105.507384017@linuxfoundation.org>
 References: <20200714184105.507384017@linuxfoundation.org>
@@ -63,51 +60,74 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+From: Zhenzhong Duan <zhenzhong.duan@gmail.com>
 
-[ Upstream commit d50313a5a0d803bcf55121a2b82086633060d05e ]
+[ Upstream commit 06096cc6c5a84ced929634b0d79376b94c65a4bd ]
 
-Mirror PCI ids used for SOF.
+If an spi device is unbounded from the driver before the release
+process, there will be an NULL pointer reference when it's
+referenced in spi_slave_abort().
 
-Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Reviewed-by: Guennadi Liakhovetski <guennadi.liakhovetski@linux.intel.com>
-Reviewed-by: Kai Vehmanen <kai.vehmanen@linux.intel.com>
-Link: https://lore.kernel.org/r/20200617164909.18225-1-pierre-louis.bossart@linux.intel.com
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Fix it by checking it's already freed before reference.
+
+Signed-off-by: Zhenzhong Duan <zhenzhong.duan@gmail.com>
+Link: https://lore.kernel.org/r/20200618032125.4650-2-zhenzhong.duan@gmail.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/pci/hda/hda_intel.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ drivers/spi/spidev.c | 20 ++++++++++----------
+ 1 file changed, 10 insertions(+), 10 deletions(-)
 
-diff --git a/sound/pci/hda/hda_intel.c b/sound/pci/hda/hda_intel.c
-index 612441508e80a..95b0fdffc504c 100644
---- a/sound/pci/hda/hda_intel.c
-+++ b/sound/pci/hda/hda_intel.c
-@@ -2433,6 +2433,9 @@ static const struct pci_device_id azx_ids[] = {
- 	/* Icelake */
- 	{ PCI_DEVICE(0x8086, 0x34c8),
- 	  .driver_data = AZX_DRIVER_SKL | AZX_DCAPS_INTEL_SKYLAKE},
-+	/* Icelake-H */
-+	{ PCI_DEVICE(0x8086, 0x3dc8),
-+	  .driver_data = AZX_DRIVER_SKL | AZX_DCAPS_INTEL_SKYLAKE},
- 	/* Jasperlake */
- 	{ PCI_DEVICE(0x8086, 0x38c8),
- 	  .driver_data = AZX_DRIVER_SKL | AZX_DCAPS_INTEL_SKYLAKE},
-@@ -2441,9 +2444,14 @@ static const struct pci_device_id azx_ids[] = {
- 	/* Tigerlake */
- 	{ PCI_DEVICE(0x8086, 0xa0c8),
- 	  .driver_data = AZX_DRIVER_SKL | AZX_DCAPS_INTEL_SKYLAKE},
-+	/* Tigerlake-H */
-+	{ PCI_DEVICE(0x8086, 0x43c8),
-+	  .driver_data = AZX_DRIVER_SKL | AZX_DCAPS_INTEL_SKYLAKE},
- 	/* Elkhart Lake */
- 	{ PCI_DEVICE(0x8086, 0x4b55),
- 	  .driver_data = AZX_DRIVER_SKL | AZX_DCAPS_INTEL_SKYLAKE},
-+	{ PCI_DEVICE(0x8086, 0x4b58),
-+	  .driver_data = AZX_DRIVER_SKL | AZX_DCAPS_INTEL_SKYLAKE},
- 	/* Broxton-P(Apollolake) */
- 	{ PCI_DEVICE(0x8086, 0x5a98),
- 	  .driver_data = AZX_DRIVER_SKL | AZX_DCAPS_INTEL_BROXTON },
+diff --git a/drivers/spi/spidev.c b/drivers/spi/spidev.c
+index 88d0976215fac..ac6bf1fbbfe68 100644
+--- a/drivers/spi/spidev.c
++++ b/drivers/spi/spidev.c
+@@ -605,15 +605,20 @@ err_find_dev:
+ static int spidev_release(struct inode *inode, struct file *filp)
+ {
+ 	struct spidev_data	*spidev;
++	int			dofree;
+ 
+ 	mutex_lock(&device_list_lock);
+ 	spidev = filp->private_data;
+ 	filp->private_data = NULL;
+ 
++	spin_lock_irq(&spidev->spi_lock);
++	/* ... after we unbound from the underlying device? */
++	dofree = (spidev->spi == NULL);
++	spin_unlock_irq(&spidev->spi_lock);
++
+ 	/* last close? */
+ 	spidev->users--;
+ 	if (!spidev->users) {
+-		int		dofree;
+ 
+ 		kfree(spidev->tx_buffer);
+ 		spidev->tx_buffer = NULL;
+@@ -621,19 +626,14 @@ static int spidev_release(struct inode *inode, struct file *filp)
+ 		kfree(spidev->rx_buffer);
+ 		spidev->rx_buffer = NULL;
+ 
+-		spin_lock_irq(&spidev->spi_lock);
+-		if (spidev->spi)
+-			spidev->speed_hz = spidev->spi->max_speed_hz;
+-
+-		/* ... after we unbound from the underlying device? */
+-		dofree = (spidev->spi == NULL);
+-		spin_unlock_irq(&spidev->spi_lock);
+-
+ 		if (dofree)
+ 			kfree(spidev);
++		else
++			spidev->speed_hz = spidev->spi->max_speed_hz;
+ 	}
+ #ifdef CONFIG_SPI_SLAVE
+-	spi_slave_abort(spidev->spi);
++	if (!dofree)
++		spi_slave_abort(spidev->spi);
+ #endif
+ 	mutex_unlock(&device_list_lock);
+ 
 -- 
 2.25.1
 
