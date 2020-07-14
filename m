@@ -7,49 +7,48 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF494C433F4
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:51:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC6D2C433E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:51:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9C57222B2A
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:51:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A6D8A22B3F
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:51:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594752662;
-	bh=Ph/2Lcc+Ow4U1icyFt7+6fCPl1Qqh/+7JBO2gz2tJC4=;
+	s=default; t=1594752666;
+	bh=90v7GWqKPrOeoj463uhOu72VM+HIUqvK41t3azHjKDM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=W1Bt87ofxabx5dLTE8m6JAR1pDrj71lImOoikQzdNG6E39IY6DjAMPtavAqT6O4GN
-	 tAOlNcl8o+3/p7gBQL9G1tix//Hk2/sWu40n+xTGeThHFV3FLekkulvhp8aZ0g6sv2
-	 ivEaBEwtsX/EXtsy15/sJ7fWtQfQIc3tholfmsVA=
+	b=kyQyqAgT23AZa0FxZ26kRG7hryLLULC0XTOXvWn1oQlW9n7rPBEXjEIF1AjfHQOYj
+	 mMYWfJ8eCQzskY8UrKG582vMpgd8NwGlZQALqcYJe1LDuF6xdRS1tualyyRySHC3AL
+	 4HlI3aUu17x1DRNuaLG8sfLlb9LxEIEihGuVETtE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730354AbgGNSvB (ORCPT
+        id S1730363AbgGNSvF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 14:51:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47248 "EHLO mail.kernel.org"
+        Tue, 14 Jul 2020 14:51:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47366 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729862AbgGNSu4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 14:50:56 -0400
+        id S1730350AbgGNSvB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 14:51:01 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C144D22B3F;
-        Tue, 14 Jul 2020 18:50:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 59EBB208C3;
+        Tue, 14 Jul 2020 18:51:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594752655;
-        bh=Ph/2Lcc+Ow4U1icyFt7+6fCPl1Qqh/+7JBO2gz2tJC4=;
+        s=default; t=1594752660;
+        bh=90v7GWqKPrOeoj463uhOu72VM+HIUqvK41t3azHjKDM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Pes5UVphFE/wDzVvq0HPhjVtUP0JDpgS2TmG6Ykly68rtt/G5vDpUkRDTQZPT677y
-         7b6nqn+8imC50lFyZa7fX5OXEo+CeC6r3kjAPXdksK+zs0oJhzaUvqI+vJIPulHQIB
-         6za96a33r/riDcvHNVVqTkYMc8C9OQjcSQ7zgHio=
+        b=MF894AkyySGE5dmyV8N5hZ5EITRwvtQa6One3PuZtEHTgtyQTxClICpW4asewzJVX
+         2UCVweW1xSEyDfQMqcOLIafbG0EiIrAACWQR9I7dzNexj5HeOAoyDitltvZGEU37OK
+         9R7kpRsBg1QBf7p5CVaNfU+uRL6qQyiwi5dveg2w=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Sudarsana Reddy Kalluru <skalluru@marvell.com>,
-        Igor Russkikh <irusskikh@marvell.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Eran Ben Elisha <eranbe@mellanox.com>,
+        Huy Nguyen <huyn@mellanox.com>,
+        Saeed Mahameed <saeedm@mellanox.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 061/109] qed: Populate nvm-file attributes while reading nvm config partition.
-Date:   Tue, 14 Jul 2020 20:44:04 +0200
-Message-Id: <20200714184108.445486727@linuxfoundation.org>
+Subject: [PATCH 5.4 062/109] net/mlx5: Fix eeprom support for SFP module
+Date:   Tue, 14 Jul 2020 20:44:05 +0200
+Message-Id: <20200714184108.492825285@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200714184105.507384017@linuxfoundation.org>
 References: <20200714184105.507384017@linuxfoundation.org>
@@ -62,127 +61,171 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sudarsana Reddy Kalluru <skalluru@marvell.com>
+From: Eran Ben Elisha <eranbe@mellanox.com>
 
-[ Upstream commit 13cf8aab7425a253070433b5a55b4209ceac8b19 ]
+[ Upstream commit 47afbdd2fa4c5775c383ba376a3d1da7d7f694dc ]
 
-NVM config file address will be modified when the MBI image is upgraded.
-Driver would return stale config values if user reads the nvm-config
-(via ethtool -d) in this state. The fix is to re-populate nvm attribute
-info while reading the nvm config values/partition.
+Fix eeprom SFP query support by setting i2c_addr, offset and page number
+correctly. Unlike QSFP modules, SFP eeprom params are as follow:
+- i2c_addr is 0x50 for offset 0 - 255 and 0x51 for offset 256 - 511.
+- Page number is always zero.
+- Page offset is always relative to zero.
 
-Changes from previous version:
--------------------------------
-v3: Corrected the formatting in 'Fixes' tag.
-v2: Added 'Fixes' tag.
+As part of eeprom query, query the module ID (SFP / QSFP*) via helper
+function to set the params accordingly.
 
-Fixes: 1ac4329a1cff ("qed: Add configuration information to register dump and debug data")
-Signed-off-by: Sudarsana Reddy Kalluru <skalluru@marvell.com>
-Signed-off-by: Igor Russkikh <irusskikh@marvell.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+In addition, change mlx5_qsfp_eeprom_page() input type to be u16 to avoid
+unnecessary casting.
+
+Fixes: a708fb7b1f8d ("net/mlx5e: ethtool, Add support for EEPROM high pages query")
+Signed-off-by: Eran Ben Elisha <eranbe@mellanox.com>
+Signed-off-by: Huy Nguyen <huyn@mellanox.com>
+Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/qlogic/qed/qed_debug.c |  4 ++++
- drivers/net/ethernet/qlogic/qed/qed_dev.c   | 12 +++---------
- drivers/net/ethernet/qlogic/qed/qed_mcp.c   |  7 +++++++
- drivers/net/ethernet/qlogic/qed/qed_mcp.h   |  7 +++++++
- 4 files changed, 21 insertions(+), 9 deletions(-)
+ .../net/ethernet/mellanox/mlx5/core/port.c    | 93 +++++++++++++++----
+ 1 file changed, 77 insertions(+), 16 deletions(-)
 
-diff --git a/drivers/net/ethernet/qlogic/qed/qed_debug.c b/drivers/net/ethernet/qlogic/qed/qed_debug.c
-index 859caa6c1a1fb..8e7be214f9598 100644
---- a/drivers/net/ethernet/qlogic/qed/qed_debug.c
-+++ b/drivers/net/ethernet/qlogic/qed/qed_debug.c
-@@ -8197,6 +8197,10 @@ int qed_dbg_all_data(struct qed_dev *cdev, void *buffer)
- 		DP_ERR(cdev, "qed_dbg_mcp_trace failed. rc = %d\n", rc);
- 	}
- 
-+	/* Re-populate nvm attribute info */
-+	qed_mcp_nvm_info_free(p_hwfn);
-+	qed_mcp_nvm_info_populate(p_hwfn);
-+
- 	/* nvm cfg1 */
- 	rc = qed_dbg_nvm_image(cdev,
- 			       (u8 *)buffer + offset + REGDUMP_HEADER_SIZE,
-diff --git a/drivers/net/ethernet/qlogic/qed/qed_dev.c b/drivers/net/ethernet/qlogic/qed/qed_dev.c
-index ecd14474a6031..638047b937c65 100644
---- a/drivers/net/ethernet/qlogic/qed/qed_dev.c
-+++ b/drivers/net/ethernet/qlogic/qed/qed_dev.c
-@@ -4423,12 +4423,6 @@ static int qed_get_dev_info(struct qed_hwfn *p_hwfn, struct qed_ptt *p_ptt)
+diff --git a/drivers/net/ethernet/mellanox/mlx5/core/port.c b/drivers/net/ethernet/mellanox/mlx5/core/port.c
+index cc262b30aed53..dc589322940c5 100644
+--- a/drivers/net/ethernet/mellanox/mlx5/core/port.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/port.c
+@@ -293,7 +293,40 @@ static int mlx5_query_module_num(struct mlx5_core_dev *dev, int *module_num)
  	return 0;
  }
  
--static void qed_nvm_info_free(struct qed_hwfn *p_hwfn)
--{
--	kfree(p_hwfn->nvm_info.image_att);
--	p_hwfn->nvm_info.image_att = NULL;
--}
--
- static int qed_hw_prepare_single(struct qed_hwfn *p_hwfn,
- 				 void __iomem *p_regview,
- 				 void __iomem *p_doorbells,
-@@ -4513,7 +4507,7 @@ static int qed_hw_prepare_single(struct qed_hwfn *p_hwfn,
- 	return rc;
- err3:
- 	if (IS_LEAD_HWFN(p_hwfn))
--		qed_nvm_info_free(p_hwfn);
-+		qed_mcp_nvm_info_free(p_hwfn);
- err2:
- 	if (IS_LEAD_HWFN(p_hwfn))
- 		qed_iov_free_hw_info(p_hwfn->cdev);
-@@ -4574,7 +4568,7 @@ int qed_hw_prepare(struct qed_dev *cdev,
- 		if (rc) {
- 			if (IS_PF(cdev)) {
- 				qed_init_free(p_hwfn);
--				qed_nvm_info_free(p_hwfn);
-+				qed_mcp_nvm_info_free(p_hwfn);
- 				qed_mcp_free(p_hwfn);
- 				qed_hw_hwfn_free(p_hwfn);
- 			}
-@@ -4608,7 +4602,7 @@ void qed_hw_remove(struct qed_dev *cdev)
- 
- 	qed_iov_free_hw_info(cdev);
- 
--	qed_nvm_info_free(p_hwfn);
-+	qed_mcp_nvm_info_free(p_hwfn);
- }
- 
- static void qed_chain_free_next_ptr(struct qed_dev *cdev,
-diff --git a/drivers/net/ethernet/qlogic/qed/qed_mcp.c b/drivers/net/ethernet/qlogic/qed/qed_mcp.c
-index 36ddb89856a86..9401b49275f0a 100644
---- a/drivers/net/ethernet/qlogic/qed/qed_mcp.c
-+++ b/drivers/net/ethernet/qlogic/qed/qed_mcp.c
-@@ -3149,6 +3149,13 @@ int qed_mcp_nvm_info_populate(struct qed_hwfn *p_hwfn)
- 	return rc;
- }
- 
-+void qed_mcp_nvm_info_free(struct qed_hwfn *p_hwfn)
+-static int mlx5_eeprom_page(int offset)
++static int mlx5_query_module_id(struct mlx5_core_dev *dev, int module_num,
++				u8 *module_id)
 +{
-+	kfree(p_hwfn->nvm_info.image_att);
-+	p_hwfn->nvm_info.image_att = NULL;
-+	p_hwfn->nvm_info.valid = false;
++	u32 in[MLX5_ST_SZ_DW(mcia_reg)] = {};
++	u32 out[MLX5_ST_SZ_DW(mcia_reg)];
++	int err, status;
++	u8 *ptr;
++
++	MLX5_SET(mcia_reg, in, i2c_device_address, MLX5_I2C_ADDR_LOW);
++	MLX5_SET(mcia_reg, in, module, module_num);
++	MLX5_SET(mcia_reg, in, device_address, 0);
++	MLX5_SET(mcia_reg, in, page_number, 0);
++	MLX5_SET(mcia_reg, in, size, 1);
++	MLX5_SET(mcia_reg, in, l, 0);
++
++	err = mlx5_core_access_reg(dev, in, sizeof(in), out,
++				   sizeof(out), MLX5_REG_MCIA, 0, 0);
++	if (err)
++		return err;
++
++	status = MLX5_GET(mcia_reg, out, status);
++	if (status) {
++		mlx5_core_err(dev, "query_mcia_reg failed: status: 0x%x\n",
++			      status);
++		return -EIO;
++	}
++	ptr = MLX5_ADDR_OF(mcia_reg, out, dword_0);
++
++	*module_id = ptr[0];
++
++	return 0;
 +}
 +
- int
- qed_mcp_get_nvm_image_att(struct qed_hwfn *p_hwfn,
- 			  enum qed_nvm_images image_id,
-diff --git a/drivers/net/ethernet/qlogic/qed/qed_mcp.h b/drivers/net/ethernet/qlogic/qed/qed_mcp.h
-index 9c4c2763de8d7..e38297383b007 100644
---- a/drivers/net/ethernet/qlogic/qed/qed_mcp.h
-+++ b/drivers/net/ethernet/qlogic/qed/qed_mcp.h
-@@ -1192,6 +1192,13 @@ void qed_mcp_read_ufp_config(struct qed_hwfn *p_hwfn, struct qed_ptt *p_ptt);
-  */
- int qed_mcp_nvm_info_populate(struct qed_hwfn *p_hwfn);
++static int mlx5_qsfp_eeprom_page(u16 offset)
+ {
+ 	if (offset < MLX5_EEPROM_PAGE_LENGTH)
+ 		/* Addresses between 0-255 - page 00 */
+@@ -307,7 +340,7 @@ static int mlx5_eeprom_page(int offset)
+ 		    MLX5_EEPROM_HIGH_PAGE_LENGTH);
+ }
  
-+/**
-+ * @brief Delete nvm info shadow in the given hardware function
-+ *
-+ * @param p_hwfn
-+ */
-+void qed_mcp_nvm_info_free(struct qed_hwfn *p_hwfn);
+-static int mlx5_eeprom_high_page_offset(int page_num)
++static int mlx5_qsfp_eeprom_high_page_offset(int page_num)
+ {
+ 	if (!page_num) /* Page 0 always start from low page */
+ 		return 0;
+@@ -316,35 +349,62 @@ static int mlx5_eeprom_high_page_offset(int page_num)
+ 	return page_num * MLX5_EEPROM_HIGH_PAGE_LENGTH;
+ }
+ 
++static void mlx5_qsfp_eeprom_params_set(u16 *i2c_addr, int *page_num, u16 *offset)
++{
++	*i2c_addr = MLX5_I2C_ADDR_LOW;
++	*page_num = mlx5_qsfp_eeprom_page(*offset);
++	*offset -=  mlx5_qsfp_eeprom_high_page_offset(*page_num);
++}
 +
- /**
-  * @brief Get the engine affinity configuration.
-  *
++static void mlx5_sfp_eeprom_params_set(u16 *i2c_addr, int *page_num, u16 *offset)
++{
++	*i2c_addr = MLX5_I2C_ADDR_LOW;
++	*page_num = 0;
++
++	if (*offset < MLX5_EEPROM_PAGE_LENGTH)
++		return;
++
++	*i2c_addr = MLX5_I2C_ADDR_HIGH;
++	*offset -= MLX5_EEPROM_PAGE_LENGTH;
++}
++
+ int mlx5_query_module_eeprom(struct mlx5_core_dev *dev,
+ 			     u16 offset, u16 size, u8 *data)
+ {
+-	int module_num, page_num, status, err;
++	int module_num, status, err, page_num = 0;
++	u32 in[MLX5_ST_SZ_DW(mcia_reg)] = {};
+ 	u32 out[MLX5_ST_SZ_DW(mcia_reg)];
+-	u32 in[MLX5_ST_SZ_DW(mcia_reg)];
+-	u16 i2c_addr;
+-	void *ptr = MLX5_ADDR_OF(mcia_reg, out, dword_0);
++	u16 i2c_addr = 0;
++	u8 module_id;
++	void *ptr;
+ 
+ 	err = mlx5_query_module_num(dev, &module_num);
+ 	if (err)
+ 		return err;
+ 
+-	memset(in, 0, sizeof(in));
+-	size = min_t(int, size, MLX5_EEPROM_MAX_BYTES);
+-
+-	/* Get the page number related to the given offset */
+-	page_num = mlx5_eeprom_page(offset);
++	err = mlx5_query_module_id(dev, module_num, &module_id);
++	if (err)
++		return err;
+ 
+-	/* Set the right offset according to the page number,
+-	 * For page_num > 0, relative offset is always >= 128 (high page).
+-	 */
+-	offset -= mlx5_eeprom_high_page_offset(page_num);
++	switch (module_id) {
++	case MLX5_MODULE_ID_SFP:
++		mlx5_sfp_eeprom_params_set(&i2c_addr, &page_num, &offset);
++		break;
++	case MLX5_MODULE_ID_QSFP:
++	case MLX5_MODULE_ID_QSFP_PLUS:
++	case MLX5_MODULE_ID_QSFP28:
++		mlx5_qsfp_eeprom_params_set(&i2c_addr, &page_num, &offset);
++		break;
++	default:
++		mlx5_core_err(dev, "Module ID not recognized: 0x%x\n", module_id);
++		return -EINVAL;
++	}
+ 
+ 	if (offset + size > MLX5_EEPROM_PAGE_LENGTH)
+ 		/* Cross pages read, read until offset 256 in low page */
+ 		size -= offset + size - MLX5_EEPROM_PAGE_LENGTH;
+ 
+-	i2c_addr = MLX5_I2C_ADDR_LOW;
++	size = min_t(int, size, MLX5_EEPROM_MAX_BYTES);
+ 
+ 	MLX5_SET(mcia_reg, in, l, 0);
+ 	MLX5_SET(mcia_reg, in, module, module_num);
+@@ -365,6 +425,7 @@ int mlx5_query_module_eeprom(struct mlx5_core_dev *dev,
+ 		return -EIO;
+ 	}
+ 
++	ptr = MLX5_ADDR_OF(mcia_reg, out, dword_0);
+ 	memcpy(data, ptr, size);
+ 
+ 	return size;
 -- 
 2.25.1
 
