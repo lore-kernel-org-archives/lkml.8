@@ -2,256 +2,179 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0462C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 07:53:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1C1CC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 07:55:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BF25F208FE
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 07:53:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AE48D2145D
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 07:55:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qfb2C0sd"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Gge+R7Cg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726864AbgGNHxl (ORCPT
+        id S1726425AbgGNHz2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 03:53:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49196 "EHLO
+        Tue, 14 Jul 2020 03:55:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49472 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725793AbgGNHxk (ORCPT
+        with ESMTP id S1725876AbgGNHz1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 03:53:40 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 54BDAC061755
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 00:53:40 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id s10so20101893wrw.12
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 00:53:40 -0700 (PDT)
+        Tue, 14 Jul 2020 03:55:27 -0400
+Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 44932C061755;
+        Tue, 14 Jul 2020 00:55:27 -0700 (PDT)
+Received: by mail-pj1-x1041.google.com with SMTP id k71so1202351pje.0;
+        Tue, 14 Jul 2020 00:55:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
+        d=gmail.com; s=20161025;
         h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=CkqZPlj61ah7xjZ/9xP5LZTgLtyHaYvcc0sKoNZrcnk=;
-        b=qfb2C0sdEhIxpGnb0IPQ2mnsaDiyM65qorjCXzs1CUlCv9ZBXXe8yfUdiE+Ii5q0lW
-         d6CmhfKoUiTSaGRJZ7pFP6Cv8VnjWijuH5hevqltqQOyI2QT4FIQsW0GeYLOwGMb3Saw
-         1B0BTWOrNUYL9dWV3hV6i2B1ij68ApO5wRcdEhGzsX1/WHE6tAQCS4LhIAWFNKARUp9Z
-         d8jfyP5wDifgUeY0IaHQb5u5N1CrfCmMB3I2rNgjypsG3oJdoKNY5cBPg9fgA2vnmKM7
-         jI6zoY0C13jzO8PqfPZlKWPkgYCSflMTzt62D6U7GxzVpMUTLDhIcf1U5SVXu9hq146W
-         v2kA==
+         :content-disposition:in-reply-to;
+        bh=Fr0V53mp8gct+D0reFrcGwuhnT+2GL17XE1iCQ4XpVI=;
+        b=Gge+R7Cg1yjg9iL0BE17WXm/g57Pn9HkIqT9YWBxp3KwEuFAuIKRHcUTDBv+cfSrw/
+         TCX4qy6GgGFW2X9szsU0k0gIVmtwIttwLGTU6F41pDjCbQ+iHoVmKCvafswEIUVV8XBf
+         hSQ7d8lx6G6vhNG77N2nhuI5T8zrVnxRUK3z5buqAlloqXOX++ivVBoemEt5Mdx36fwP
+         ZnWJKqbOBv5Ixlv5VVRMpYoNoA/OnZEStGi+wSU1eKMGCFWhp1IvmXseHBMiVq9Xnab9
+         yKUeYIUckh1drup9zfAUbZw4/tW+VBxl3B3N2Am7QgSV1XZvaW+1tN+ZnK7NKCzowEkL
+         dR1Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=CkqZPlj61ah7xjZ/9xP5LZTgLtyHaYvcc0sKoNZrcnk=;
-        b=JK8KXF1mJ37l9GYwLY0gBsVHdQfCSkX9vmfAn9A4eZzq2I6ZSxCS7DSQx9pKriYXqJ
-         0slzv7mt7Mif+02sGMbgrywb8DSFZyLO3ODYOFvehtmeu7qmrLvnrBVh6zSeYq35AHdK
-         3xi+OLnIZ1ww+EJier+5LpGCLUcCY+AMcScSTcDSYiU6kOEFBYBcLoUaL6HZoY5TFUmw
-         yUpnifR4EWuMPhJWqShHvUaXxW2xxxjYEcxRHC2m0lF/2g4k8AljfCOIqlc1qPVOI03n
-         0CClrSDU+fmuP+JGbuic3pZatYdnQDSJIXI3Rant0b4vTAN1qz4dip4wsoS8JFq25N5H
-         HuOg==
-X-Gm-Message-State: AOAM532FZSzUGHCEiyZVXHm1BQvRLXW+GHwGhMr5YqL9qp+vWMg1VPiq
-        08JWebGEIqlUS8TSXDotJttZxw==
-X-Google-Smtp-Source: ABdhPJwueUUQpbwYp7wZ5rVMiFAn8/9F0eTI+50kkesgB+aVQ4+u4gsdoBWNvLZvZLjPXmHla+NV7g==
-X-Received: by 2002:adf:f0c5:: with SMTP id x5mr3705836wro.396.1594713218918;
-        Tue, 14 Jul 2020 00:53:38 -0700 (PDT)
-Received: from dell ([2.31.163.61])
-        by smtp.gmail.com with ESMTPSA id p29sm3171600wmi.43.2020.07.14.00.53.38
+         :mime-version:content-disposition:in-reply-to;
+        bh=Fr0V53mp8gct+D0reFrcGwuhnT+2GL17XE1iCQ4XpVI=;
+        b=kz7ZTUMK/Gy3jDx06AZneTlPBdjctDJXhSS4row8Dr39KzNgB7141sUoEjEV7eTWNc
+         YCLUrOUBSQKKddCUsGzkBk65kLLPgJKF7DkIuHqzXRabGZsTYdmvL7X3Tl6HSnBOxXmE
+         hwbqGEZw9wSPOBa1KG7nrSYVF644ZTLzzzlZo0gZiqkjL6dt6h9KCwP59DcSOn7uxh6R
+         ueUpiCP0MjfRtSdtd05OLY9dUdVnuGZ/Ej2iI3i3QvvD2xeninpy8SG86HCKbG4FYQ5T
+         I1GRrDT3PnxtICvg+R01Zblj8fF+bkFfccfeCgTmXtXX0wbDX1sB/gtlH99KcDOFhCDp
+         sSpQ==
+X-Gm-Message-State: AOAM531orLf+47jRVGRjptu7whdzq0e7/3ew0O+tkNJlcOuM/6oskYo6
+        /5V5dcQQSryALGJXOolsJ8M=
+X-Google-Smtp-Source: ABdhPJzYDyYtVsFITfsqj3tmWGRYr2P9068LqybFQZ8fMOdrTVGKRYAQj1kQKJCIXWH+Eqx1bL7jEQ==
+X-Received: by 2002:a17:90a:c794:: with SMTP id gn20mr3174778pjb.114.1594713326762;
+        Tue, 14 Jul 2020 00:55:26 -0700 (PDT)
+Received: from gmail.com ([103.105.153.67])
+        by smtp.gmail.com with ESMTPSA id p19sm15100868pgj.74.2020.07.14.00.54.00
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 Jul 2020 00:53:38 -0700 (PDT)
-Date:   Tue, 14 Jul 2020 08:53:36 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Hannes Reinecke <mail@hannes-reinecke.de>
-Cc:     jejb@linux.ibm.com, martin.petersen@oracle.com,
-        linux-kernel@vger.kernel.org, linux-scsi@vger.kernel.org
-Subject: Re: [PATCH v2 05/29] scsi: fcoe: fcoe_ctlr: Fix a myriad of
- documentation issues
-Message-ID: <20200714075336.GH3500@dell>
-References: <20200713074645.126138-1-lee.jones@linaro.org>
- <20200713074645.126138-6-lee.jones@linaro.org>
- <975ab8d4-eedc-c763-c2c6-436344395fb8@hannes-reinecke.de>
+        Tue, 14 Jul 2020 00:55:26 -0700 (PDT)
+Date:   Tue, 14 Jul 2020 13:22:47 +0530
+From:   Vaibhav Gupta <vaibhav.varodek@gmail.com>
+To:     Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Cc:     Vaibhav Gupta <vaibhavgupta40@gmail.com>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>, bjorn@helgaas.com,
+        "David S. Miller" <davem@davemloft.net>,
+        linux-kernel@vger.kernel.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        skhan@linuxfoundation.org, linux-ide@vger.kernel.org
+Subject: Re: [PATCH v3 0/3] drivers: ide: use generic power management
+Message-ID: <20200714075247.GA4859@gmail.com>
+References: <20200713173613.2095-1-vaibhavgupta40@gmail.com>
+ <CGME20200714073256eucas1p13ebe9585c29b766e48506400ba91a8ed@eucas1p1.samsung.com>
+ <3b26bfff-7a42-7bbe-2050-51fe1ce96d4e@samsung.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <975ab8d4-eedc-c763-c2c6-436344395fb8@hannes-reinecke.de>
+In-Reply-To: <3b26bfff-7a42-7bbe-2050-51fe1ce96d4e@samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 14 Jul 2020, Hannes Reinecke wrote:
-
-> On 7/13/20 9:46 AM, Lee Jones wrote:
-> > Mostly missing or incorrect (bitrotted) function parameters.
-> > 
-> > Fixes the following W=1 kernel build warning(s):
-> > 
-> >   drivers/scsi/fcoe/fcoe_ctlr.c:139: warning: Function parameter or member 'mode' not described in 'fcoe_ctlr_init'
-> >   drivers/scsi/fcoe/fcoe_ctlr.c:604: warning: Function parameter or member 'lport' not described in 'fcoe_ctlr_encaps'
-> >   drivers/scsi/fcoe/fcoe_ctlr.c:1312: warning: Function parameter or member 'skb' not described in 'fcoe_ctlr_recv_clr_vlink'
-> >   drivers/scsi/fcoe/fcoe_ctlr.c:1312: warning: Excess function parameter 'fh' description in 'fcoe_ctlr_recv_clr_vlink'
-> >   drivers/scsi/fcoe/fcoe_ctlr.c:1781: warning: Function parameter or member 't' not described in 'fcoe_ctlr_timeout'
-> >   drivers/scsi/fcoe/fcoe_ctlr.c:1781: warning: Excess function parameter 'arg' description in 'fcoe_ctlr_timeout'
-> >   drivers/scsi/fcoe/fcoe_ctlr.c:1904: warning: Function parameter or member 'lport' not described in 'fcoe_ctlr_recv_flogi'
-> >   drivers/scsi/fcoe/fcoe_ctlr.c:2166: warning: Function parameter or member 'lport' not described in 'fcoe_ctlr_disc_stop_locked'
-> >   drivers/scsi/fcoe/fcoe_ctlr.c:2166: warning: Excess function parameter 'fip' description in 'fcoe_ctlr_disc_stop_locked'
-> >   drivers/scsi/fcoe/fcoe_ctlr.c:2188: warning: Function parameter or member 'lport' not described in 'fcoe_ctlr_disc_stop'
-> >   drivers/scsi/fcoe/fcoe_ctlr.c:2188: warning: Excess function parameter 'fip' description in 'fcoe_ctlr_disc_stop'
-> >   drivers/scsi/fcoe/fcoe_ctlr.c:2204: warning: Function parameter or member 'lport' not described in 'fcoe_ctlr_disc_stop_final'
-> >   drivers/scsi/fcoe/fcoe_ctlr.c:2204: warning: Excess function parameter 'fip' description in 'fcoe_ctlr_disc_stop_final'
-> >   drivers/scsi/fcoe/fcoe_ctlr.c:2273: warning: Function parameter or member 'frport' not described in 'fcoe_ctlr_vn_parse'
-> >   drivers/scsi/fcoe/fcoe_ctlr.c:2273: warning: Excess function parameter 'rdata' description in 'fcoe_ctlr_vn_parse'
-> >   drivers/scsi/fcoe/fcoe_ctlr.c:2804: warning: Function parameter or member 'frport' not described in 'fcoe_ctlr_vlan_parse'
-> >   drivers/scsi/fcoe/fcoe_ctlr.c:2804: warning: Excess function parameter 'rdata' description in 'fcoe_ctlr_vlan_parse'
-> >   drivers/scsi/fcoe/fcoe_ctlr.c:2900: warning: Excess function parameter 'min_len' description in 'fcoe_ctlr_vlan_send'
-> >   drivers/scsi/fcoe/fcoe_ctlr.c:2977: warning: Function parameter or member 'fip' not described in 'fcoe_ctlr_vlan_recv'
-> >   drivers/scsi/fcoe/fcoe_ctlr.c:2977: warning: Function parameter or member 'skb' not described in 'fcoe_ctlr_vlan_recv'
-> >   drivers/scsi/fcoe/fcoe_ctlr.c:2977: warning: Excess function parameter 'lport' description in 'fcoe_ctlr_vlan_recv'
-> >   drivers/scsi/fcoe/fcoe_ctlr.c:2977: warning: Excess function parameter 'fp' description in 'fcoe_ctlr_vlan_recv'
-> >   drivers/scsi/fcoe/fcoe_ctlr.c:3033: warning: Function parameter or member 'callback' not described in 'fcoe_ctlr_disc_start'
-> >   drivers/scsi/fcoe/fcoe_ctlr.c:3033: warning: Function parameter or member 'lport' not described in 'fcoe_ctlr_disc_start'
-> >   drivers/scsi/fcoe/fcoe_ctlr.c:3033: warning: Excess function parameter 'fip' description in 'fcoe_ctlr_disc_start'
-> > 
-> > Cc: Hannes Reinecke <hare@suse.de>
-> > Signed-off-by: Lee Jones <lee.jones@linaro.org>
-> > ---
-> >   drivers/scsi/fcoe/fcoe_ctlr.c | 26 +++++++++++++-------------
-> >   1 file changed, 13 insertions(+), 13 deletions(-)
-> > 
-> > diff --git a/drivers/scsi/fcoe/fcoe_ctlr.c b/drivers/scsi/fcoe/fcoe_ctlr.c
-> > index 1791a393795da..99242f9856708 100644
-> > --- a/drivers/scsi/fcoe/fcoe_ctlr.c
-> > +++ b/drivers/scsi/fcoe/fcoe_ctlr.c
-> > @@ -134,6 +134,7 @@ static void fcoe_ctlr_map_dest(struct fcoe_ctlr *fip)
-> >   /**
-> >    * fcoe_ctlr_init() - Initialize the FCoE Controller instance
-> >    * @fip: The FCoE controller to initialize
-> > + * @mode: FIP mode to set
-> >    */
-> >   void fcoe_ctlr_init(struct fcoe_ctlr *fip, enum fip_mode mode)
-> >   {
-> > @@ -587,6 +588,7 @@ static void fcoe_ctlr_send_keep_alive(struct fcoe_ctlr *fip,
-> >   /**
-> >    * fcoe_ctlr_encaps() - Encapsulate an ELS frame for FIP, without sending it
-> >    * @fip:   The FCoE controller for the ELS frame
-> > + * @lport: The local port
-> >    * @dtype: The FIP descriptor type for the frame
-> >    * @skb:   The FCoE ELS frame including FC header but no FCoE headers
-> >    * @d_id:  The destination port ID.
-> > @@ -1302,7 +1304,7 @@ static void fcoe_ctlr_recv_els(struct fcoe_ctlr *fip, struct sk_buff *skb)
-> >   /**
-> >    * fcoe_ctlr_recv_els() - Handle an incoming link reset frame
-> >    * @fip: The FCoE controller that received the frame
-> > - * @fh:	 The received FIP header
-> > + * @skb: The received FIP packet
-> >    *
-> >    * There may be multiple VN_Port descriptors.
-> >    * The overall length has already been checked.
-> > @@ -1775,7 +1777,7 @@ static void fcoe_ctlr_flogi_send(struct fcoe_ctlr *fip)
-> >   /**
-> >    * fcoe_ctlr_timeout() - FIP timeout handler
-> > - * @arg: The FCoE controller that timed out
-> > + * @t: Timer context use to obtain the controller reference
-> >    */
-> >   static void fcoe_ctlr_timeout(struct timer_list *t)
-> >   {
-> > @@ -1887,6 +1889,7 @@ static void fcoe_ctlr_recv_work(struct work_struct *recv_work)
-> >   /**
-> >    * fcoe_ctlr_recv_flogi() - Snoop pre-FIP receipt of FLOGI response
-> >    * @fip: The FCoE controller
-> > + * @lport: The local port
-> >    * @fp:	 The FC frame to snoop
-> >    *
-> >    * Snoop potential response to FLOGI or even incoming FLOGI.
-> > @@ -2158,7 +2161,7 @@ static struct fc_rport_operations fcoe_ctlr_vn_rport_ops = {
-> >   /**
-> >    * fcoe_ctlr_disc_stop_locked() - stop discovery in VN2VN mode
-> > - * @fip: The FCoE controller
-> > + * @lport: The local port
-> >    *
-> >    * Called with ctlr_mutex held.
-> >    */
-> > @@ -2179,7 +2182,7 @@ static void fcoe_ctlr_disc_stop_locked(struct fc_lport *lport)
-> >   /**
-> >    * fcoe_ctlr_disc_stop() - stop discovery in VN2VN mode
-> > - * @fip: The FCoE controller
-> > + * @lport: The local port
-> >    *
-> >    * Called through the local port template for discovery.
-> >    * Called without the ctlr_mutex held.
-> > @@ -2195,7 +2198,7 @@ static void fcoe_ctlr_disc_stop(struct fc_lport *lport)
-> >   /**
-> >    * fcoe_ctlr_disc_stop_final() - stop discovery for shutdown in VN2VN mode
-> > - * @fip: The FCoE controller
-> > + * @lport: The local port
-> >    *
-> >    * Called through the local port template for discovery.
-> >    * Called without the ctlr_mutex held.
-> > @@ -2262,7 +2265,7 @@ static void fcoe_ctlr_vn_start(struct fcoe_ctlr *fip)
-> >    * fcoe_ctlr_vn_parse - parse probe request or response
-> >    * @fip: The FCoE controller
-> >    * @skb: incoming packet
-> > - * @rdata: buffer for resulting parsed VN entry plus fcoe_rport
-> > + * @frport: parsed FCoE rport from the probe request
-> >    *
-> >    * Returns non-zero error number on error.
-> >    * Does not consume the packet.
-> > @@ -2793,7 +2796,7 @@ static int fcoe_ctlr_vn_recv(struct fcoe_ctlr *fip, struct sk_buff *skb)
-> >    * fcoe_ctlr_vlan_parse - parse vlan discovery request or response
-> >    * @fip: The FCoE controller
-> >    * @skb: incoming packet
-> > - * @rdata: buffer for resulting parsed VLAN entry plus fcoe_rport
-> > + * @frport: parsed FCoE rport from the probe request
-> >    *
-> >    * Returns non-zero error number on error.
-> >    * Does not consume the packet.
-> > @@ -2892,7 +2895,6 @@ static int fcoe_ctlr_vlan_parse(struct fcoe_ctlr *fip,
-> >    * @fip: The FCoE controller
-> >    * @sub: sub-opcode for vlan notification or vn2vn vlan notification
-> >    * @dest: The destination Ethernet MAC address
-> > - * @min_len: minimum size of the Ethernet payload to be sent
-> >    */
-> >   static void fcoe_ctlr_vlan_send(struct fcoe_ctlr *fip,
-> >   			      enum fip_vlan_subcode sub,
-> > @@ -2969,9 +2971,8 @@ static void fcoe_ctlr_vlan_disc_reply(struct fcoe_ctlr *fip,
-> >   /**
-> >    * fcoe_ctlr_vlan_recv - vlan request receive handler for VN2VN mode.
-> > - * @lport: The local port
-> > - * @fp: The received frame
-> > - *
-> > + * @fip: The FCoE controller
-> > + * @skb: The received FIP packet
-> >    */
-> >   static int fcoe_ctlr_vlan_recv(struct fcoe_ctlr *fip, struct sk_buff *skb)
-> >   {
-> > @@ -3015,9 +3016,8 @@ static void fcoe_ctlr_disc_recv(struct fc_lport *lport, struct fc_frame *fp)
-> >   	fc_frame_free(fp);
-> >   }
-> > -/**
-> > +/*
-> >    * fcoe_ctlr_disc_recv - start discovery for VN2VN mode.
-> > - * @fip: The FCoE controller
-> >    *
-> >    * This sets a flag indicating that remote ports should be created
-> >    * and started for the peers we discover.  We use the disc_callback
-> > 
-> Please, this should continue to be a kernel-doc comment; my copy still has
-> this header:
+On Tue, Jul 14, 2020 at 09:32:56AM +0200, Bartlomiej Zolnierkiewicz wrote:
 > 
-> /**
->  * fcoe_ctlr_disc_recv - discovery receive handler for VN2VN mode.
->  * @lport: The local port
->  * @fp: The received frame
->  *
+> Hi,
 > 
-> What happened to it?
+> On 7/13/20 7:36 PM, Vaibhav Gupta wrote:
+> > Linux Kernel Mentee: Remove Legacy Power Management.
+> > 
+> > The purpose of this patch series is to remove legacy power management callbacks
+> > from ide drivers.
+> > 
+> > The suspend() and resume() callbacks operations are still invoking
+> > pci_save/restore_state(), pci_set_power_state(), pci_enable/disable_state(),
+> > etc. and handling the power management themselves, which is not recommended.
+> > 
+> > The conversion requires the removal of the those function calls and change the
+> > callback definition accordingly and make use of dev_pm_ops structure.
+> 
+> IDE subsystem (drivers/ide/) is deprecated and has been superseded by libata
+> subsystem (drivers/ata/).
+> 
+> libata drivers have the same issue so please concentrate on fixing them
+> first. Later (if desirable) changes can be back-ported to drivers/ide/.
+>
+Hello, (drivers/ide) and (drivers/ata) are the two major families, I am working
+on, for generic PM upgradation. I was bit unaware about priority, and also in
+the last, both ide and ata drivers have to be upgraded.
+> > All patches are compile-tested only.
+> 
+> This patchset needs (at least) some basic testing. It should be easier with
+> libata subsystem as it also support SATA controllers and devices.
+To upgrade PM in (drivers/ide) I have made .suspend() and .resume() static. Then
+bind them in "struct dev_pm_ops" variable (ide_pci_pm_ops) and expose it using
+EXPORT_SYMBOL_GPL(). This has affected 30 drivers. I was hoping if ide changes
+can be tested/verified, specially [PATCH 1/3]. As then, I will be sure about
+similar change in ata, as it also requires similar alteration.
 
-Look at the function below it (in your local copy). ;)
+Thanks
+Vaibhav Gupta
 
--- 
-Lee Jones [李琼斯]
-Senior Technical Lead - Developer Services
-Linaro.org │ Open source software for Arm SoCs
-Follow Linaro: Facebook | Twitter | Blog
+> 
+> Best regards,
+> --
+> Bartlomiej Zolnierkiewicz
+> Samsung R&D Institute Poland
+> Samsung Electronics
+> 
+> > v3:
+> >     - Modpost error for undefined reference by Kbuild in v1.
+> >     - Another approach to disable PM in drivers/ide/triflex.c suggested by
+> >       Bjorn Helgaas in v2.
+> > 
+> > Test tools:
+> >     - Compiler: gcc (GCC) 10.1.0
+> >     - allmodconfig build: make -j$(nproc) W=1 all
+> > 
+> > Vaibhav Gupta (3):
+> >   ide: use generic power management
+> >   ide: sc1200: use generic power management
+> >   ide: delkin_cb: use generic power management
+> > 
+> >  drivers/ide/aec62xx.c         |  3 +--
+> >  drivers/ide/alim15x3.c        |  3 +--
+> >  drivers/ide/amd74xx.c         |  3 +--
+> >  drivers/ide/atiixp.c          |  3 +--
+> >  drivers/ide/cmd64x.c          |  3 +--
+> >  drivers/ide/cs5520.c          |  3 +--
+> >  drivers/ide/cs5530.c          |  3 +--
+> >  drivers/ide/cs5535.c          |  3 +--
+> >  drivers/ide/cs5536.c          |  3 +--
+> >  drivers/ide/cy82c693.c        |  3 +--
+> >  drivers/ide/delkin_cb.c       | 32 +++++---------------------
+> >  drivers/ide/hpt366.c          |  3 +--
+> >  drivers/ide/ide-pci-generic.c |  3 +--
+> >  drivers/ide/it8172.c          |  3 +--
+> >  drivers/ide/it8213.c          |  3 +--
+> >  drivers/ide/it821x.c          |  3 +--
+> >  drivers/ide/jmicron.c         |  3 +--
+> >  drivers/ide/ns87415.c         |  3 +--
+> >  drivers/ide/opti621.c         |  3 +--
+> >  drivers/ide/pdc202xx_new.c    |  3 +--
+> >  drivers/ide/pdc202xx_old.c    |  3 +--
+> >  drivers/ide/piix.c            |  3 +--
+> >  drivers/ide/sc1200.c          | 43 ++++++++++++-----------------------
+> >  drivers/ide/serverworks.c     |  3 +--
+> >  drivers/ide/setup-pci.c       | 29 +++++------------------
+> >  drivers/ide/siimage.c         |  3 +--
+> >  drivers/ide/sis5513.c         |  3 +--
+> >  drivers/ide/sl82c105.c        |  3 +--
+> >  drivers/ide/slc90e66.c        |  3 +--
+> >  drivers/ide/triflex.c         | 24 +++++++------------
+> >  drivers/ide/via82cxxx.c       |  3 +--
+> >  include/linux/ide.h           |  8 +------
+> >  32 files changed, 62 insertions(+), 155 deletions(-)
+> > 
+> 
