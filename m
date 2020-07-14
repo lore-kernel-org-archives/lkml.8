@@ -2,85 +2,78 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MIME_BASE64_TEXT,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF3F6C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 09:22:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C499C433E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 09:22:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CF7A920674
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 09:22:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 015BE20674
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 09:22:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="EgojdO0t"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726603AbgGNJWE (ORCPT
+        id S1726762AbgGNJWs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 05:22:04 -0400
-Received: from mx2.suse.de ([195.135.220.15]:43114 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725884AbgGNJWE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 05:22:04 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id D7651AC1D;
-        Tue, 14 Jul 2020 09:22:05 +0000 (UTC)
-Subject: Re: [PATCH] mm/hugetlb: hide nr_nodes in the internal of
- for_each_node_mask_to_[alloc|free]
-From:   Vlastimil Babka <vbabka@suse.cz>
-To:     Wei Yang <richard.weiyang@linux.alibaba.com>,
-        mike.kravetz@oracle.com, akpm@linux-foundation.org
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org
-References: <20200714073404.84863-1-richard.weiyang@linux.alibaba.com>
- <cd1651a0-35c6-7535-5782-ce7e31cc26e8@suse.cz>
-Message-ID: <807a1e32-926b-2882-740b-6484b8dca2b6@suse.cz>
-Date:   Tue, 14 Jul 2020 11:22:03 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Tue, 14 Jul 2020 05:22:48 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:5370 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726414AbgGNJWs (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 05:22:48 -0400
+X-UUID: f9f359f98fc04684b29fdb42377438af-20200714
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=xsOBFtDX2zzdwsWEy4DmEh6sQCZBGIkRn1wJVvBBCdQ=;
+        b=EgojdO0tJXTR+4FQZgXlI0lO/zZOCGlzUHXeXalmaxoEG0f5SrUxBX3IpjItlnZigOSMqW4zvZOKy4PwAfPLNy79k5f8diDeWVpkoKvIZf1QrNe+oHNFhf1jC99eruUBT2Ihh/pj5Ld4HUw7KIvXwvmJpPgk56eYKU14XVmUzro=;
+X-UUID: f9f359f98fc04684b29fdb42377438af-20200714
+Received: from mtkcas08.mediatek.inc [(172.21.101.126)] by mailgw01.mediatek.com
+        (envelope-from <fengping.yu@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 2138757407; Tue, 14 Jul 2020 17:22:43 +0800
+Received: from mtkcas07.mediatek.inc (172.21.101.84) by
+ mtkmbs02n2.mediatek.inc (172.21.101.101) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Tue, 14 Jul 2020 17:22:38 +0800
+Received: from localhost.localdomain (10.15.20.246) by mtkcas07.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Tue, 14 Jul 2020 17:22:38 +0800
+From:   Fengping Yu <fengping.yu@mediatek.com>
+To:     Yingjoe Chen <yingjoe.chen@mediatek.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Marco Felsch <m.felsch@pengutronix.de>
+CC:     <linux-input@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>
+Subject: [PATCH v14] Add matrix keypad driver support Mediatek SoCs 
+Date:   Tue, 14 Jul 2020 17:20:50 +0800
+Message-ID: <20200714092053.16067-1-fengping.yu@mediatek.com>
+X-Mailer: git-send-email 2.18.0
 MIME-Version: 1.0
-In-Reply-To: <cd1651a0-35c6-7535-5782-ce7e31cc26e8@suse.cz>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-TM-SNTS-SMTP: 79AE5D1AD6DEE60D16E09EE0A5304D7B54A6050E17675433065CC2E6E59410502000:8
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/14/20 11:13 AM, Vlastimil Babka wrote:
-> On 7/14/20 9:34 AM, Wei Yang wrote:
->> The second parameter of for_each_node_mask_to_[alloc|free] is a loop
->> variant, which is not used outside of loop iteration.
->> 
->> Let's hide this.
->> 
->> Signed-off-by: Wei Yang <richard.weiyang@linux.alibaba.com>
->> ---
->>  mm/hugetlb.c | 38 ++++++++++++++++++++------------------
->>  1 file changed, 20 insertions(+), 18 deletions(-)
->> 
->> diff --git a/mm/hugetlb.c b/mm/hugetlb.c
->> index 57ece74e3aae..9c3d15fb317e 100644
->> --- a/mm/hugetlb.c
->> +++ b/mm/hugetlb.c
->> @@ -1196,17 +1196,19 @@ static int hstate_next_node_to_free(struct hstate *h, nodemask_t *nodes_allowed)
->>  	return nid;
->>  }
->>  
->> -#define for_each_node_mask_to_alloc(hs, nr_nodes, node, mask)		\
->> -	for (nr_nodes = nodes_weight(*mask);				\
->> -		nr_nodes > 0 &&						\
->> +#define for_each_node_mask_to_alloc(hs, node, mask)			\
->> +	int __nr_nodes;							\
->> +	for (__nr_nodes = nodes_weight(*mask);				\
-> 
-> The problem with this is that if I use the macro twice in the same block, this
-> will redefine __nr_nodes and fail to compile, no?
-> In that case it's better to avoid setting up this trap, IMHO.
+DQpDaGFuZ2Ugc2luY2UgdjEzOg0KLSByZW1vdmUgZGVmY29uZmlnIGFuZCBtdGsta3BkLnlhbWwg
+ZmlsZXMgcmV2aWV3ZWQtYnkgdGFnDQoNCmZlbmdwaW5nLnl1ICgzKToNCiAgZHQtYmluZGluZ3M6
+IEFkZCBrZXlwYWQgZGV2aWNldHJlZSBkb2N1bWVudGF0aW9uDQogIGRyaXZlcnM6IGlucHV0OiBr
+ZXlib2FyZDogQWRkIG10ayBrZXlwYWQgZHJpdmVyDQogIGNvbmZpZ3M6IGRlZmNvbmZpZzogQWRk
+IENPTkZJR19LRVlCT0FSRF9NVEtfS1BEPW0NCg0KIC4uLi9kZXZpY2V0cmVlL2JpbmRpbmdzL2lu
+cHV0L210ay1rcGQueWFtbCAgICB8ICA5NiArKysrKysrKw0KIGFyY2gvYXJtNjQvY29uZmlncy9k
+ZWZjb25maWcgICAgICAgICAgICAgICAgICB8ICAgMSArDQogZHJpdmVycy9pbnB1dC9rZXlib2Fy
+ZC9LY29uZmlnICAgICAgICAgICAgICAgIHwgIDExICsNCiBkcml2ZXJzL2lucHV0L2tleWJvYXJk
+L01ha2VmaWxlICAgICAgICAgICAgICAgfCAgIDEgKw0KIGRyaXZlcnMvaW5wdXQva2V5Ym9hcmQv
+bXRrLWtwZC5jICAgICAgICAgICAgICB8IDIwOSArKysrKysrKysrKysrKysrKysNCiA1IGZpbGVz
+IGNoYW5nZWQsIDMxOCBpbnNlcnRpb25zKCspDQogY3JlYXRlIG1vZGUgMTAwNjQ0IERvY3VtZW50
+YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9pbnB1dC9tdGsta3BkLnlhbWwNCiBjcmVhdGUgbW9k
+ZSAxMDA2NDQgZHJpdmVycy9pbnB1dC9rZXlib2FyZC9tdGsta3BkLmMNCg0KLS0NCjIuMTguMA0K
+DQo=
 
-Ah, and it will also generate the following warning, if the use of for_each*
-macro is not the first thing after variable declarations, but there's another
-statement before:
-
-warning: ISO C90 forbids mixed declarations and code [-Wdeclaration-after-statement]
-
-Instead we should switch to C99 and declare it as "for (int __nr_nodes" :P
