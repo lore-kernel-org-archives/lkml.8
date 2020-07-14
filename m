@@ -2,62 +2,128 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A137C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 12:36:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF6D0C433E5
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 12:36:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2F88722453
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 12:36:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CCE2222453
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 12:36:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="O5WUPXHD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728272AbgGNMgR (ORCPT
+        id S1728197AbgGNMgj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 08:36:17 -0400
-Received: from mx2.suse.de ([195.135.220.15]:51576 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726354AbgGNMgR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 08:36:17 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 13E47AD3A;
-        Tue, 14 Jul 2020 12:36:18 +0000 (UTC)
-Received: by quack2.suse.cz (Postfix, from userid 1000)
-        id 49B501E12C9; Tue, 14 Jul 2020 14:36:15 +0200 (CEST)
-Date:   Tue, 14 Jul 2020 14:36:15 +0200
-From:   Jan Kara <jack@suse.cz>
-To:     Jonathan Corbet <corbet@lwn.net>
-Cc:     "Alexander A. Klimov" <grandmaster@al2klimov.de>, jack@suse.com,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] Replace HTTP links with HTTPS ones: DISKQUOTA
-Message-ID: <20200714123615.GH23073@quack2.suse.cz>
-References: <20200708171905.15396-1-grandmaster@al2klimov.de>
- <20200713113044.3af1002c@lwn.net>
+        Tue, 14 Jul 2020 08:36:39 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:33247 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726354AbgGNMgj (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 08:36:39 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1594730197;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=uN+URw2m81+BGl4jOJuzvBqo88yHsU8OolOc4NwmsLI=;
+        b=O5WUPXHD/oJfYjcMvNsVe0RWicWxsF8ZhP2TTzjLgGClMntoyxeFRiRtRJEHsZRYtDxAme
+        WTxMlqd+cxkY7C/FY9j46huc9JpgoJzFJlouuX0hwSJ0BIO0+VKSDV6A9HmLAzLYlb8SZa
+        7YSTmpl3De+iSMyRXxrHRZjKR1L5N5c=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-195-94l5EXXuMgaqUySrQrUW0g-1; Tue, 14 Jul 2020 08:36:34 -0400
+X-MC-Unique: 94l5EXXuMgaqUySrQrUW0g-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 97BF91085;
+        Tue, 14 Jul 2020 12:36:32 +0000 (UTC)
+Received: from [10.10.112.73] (ovpn-112-73.rdu2.redhat.com [10.10.112.73])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 9C6F17B42D;
+        Tue, 14 Jul 2020 12:36:31 +0000 (UTC)
+Subject: Re: [PATCH v2] selftests/livepatch: adopt to newer sysctl error
+ format
+To:     Petr Mladek <pmladek@suse.com>,
+        Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Jiri Kosina <jikos@kernel.org>, Miroslav Benes <mbenes@suse.cz>
+Cc:     Shuah Khan <shuah@kernel.org>, live-patching@vger.kernel.org,
+        linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200714091030.1611-1-pmladek@suse.com>
+From:   Joe Lawrence <joe.lawrence@redhat.com>
+Message-ID: <480e4da4-36b6-c112-255c-8cdab57e24ff@redhat.com>
+Date:   Tue, 14 Jul 2020 08:36:30 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200713113044.3af1002c@lwn.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200714091030.1611-1-pmladek@suse.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon 13-07-20 11:30:44, Jonathan Corbet wrote:
-> On Wed,  8 Jul 2020 19:19:05 +0200
-> "Alexander A. Klimov" <grandmaster@al2klimov.de> wrote:
+On 7/14/20 5:10 AM, Petr Mladek wrote:
+> With procfs v3.3.16, the sysctl command doesn't print the set key and
+> value on error.  This change breaks livepatch selftest test-ftrace.sh,
+> that tests the interaction of sysctl ftrace_enabled:
 > 
-> >  The interface uses generic netlink framework (see
-> > -http://lwn.net/Articles/208755/ and http://people.suug.ch/~tgr/libnl/ for more
-> > +https://lwn.net/Articles/208755/ and http://people.suug.ch/~tgr/libnl/ for more
+> Make it work with all sysctl versions using '-q' option.
 > 
-> That other link is 404, no reason to keep it around...
+> Explicitly print the final status on success so that it can be verified
+> in the log. The error message is enough on failure.
+> 
+> Reported-by: Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>
+> Signed-off-by: Petr Mladek <pmladek@suse.com>
+> ---
+> The patch has been created against livepatch.git,
+> branch for-5.9/selftests-cleanup. But it applies also against
+> the current Linus' tree.
+> 
+> tools/testing/selftests/livepatch/functions.sh   | 3 ++-
+>   tools/testing/selftests/livepatch/test-ftrace.sh | 2 +-
+>   2 files changed, 3 insertions(+), 2 deletions(-)
+> 
+> diff --git a/tools/testing/selftests/livepatch/functions.sh b/tools/testing/selftests/livepatch/functions.sh
+> index 408529d94ddb..1aba83c87ad3 100644
+> --- a/tools/testing/selftests/livepatch/functions.sh
+> +++ b/tools/testing/selftests/livepatch/functions.sh
+> @@ -75,7 +75,8 @@ function set_dynamic_debug() {
+>   }
+>   
+>   function set_ftrace_enabled() {
+> -	result=$(sysctl kernel.ftrace_enabled="$1" 2>&1 | paste --serial --delimiters=' ')
+> +	result=$(sysctl -q kernel.ftrace_enabled="$1" 2>&1 && \
+> +		 sysctl kernel.ftrace_enabled 2>&1)
+>   	echo "livepatch: $result" > /dev/kmsg
+>   }
+>   
+> diff --git a/tools/testing/selftests/livepatch/test-ftrace.sh b/tools/testing/selftests/livepatch/test-ftrace.sh
+> index 9160c9ec3b6f..552e165512f4 100755
+> --- a/tools/testing/selftests/livepatch/test-ftrace.sh
+> +++ b/tools/testing/selftests/livepatch/test-ftrace.sh
+> @@ -51,7 +51,7 @@ livepatch: '$MOD_LIVEPATCH': initializing patching transition
+>   livepatch: '$MOD_LIVEPATCH': starting patching transition
+>   livepatch: '$MOD_LIVEPATCH': completing patching transition
+>   livepatch: '$MOD_LIVEPATCH': patching complete
+> -livepatch: sysctl: setting key \"kernel.ftrace_enabled\": Device or resource busy kernel.ftrace_enabled = 0
+> +livepatch: sysctl: setting key \"kernel.ftrace_enabled\": Device or resource busy
+>   % echo 0 > /sys/kernel/livepatch/$MOD_LIVEPATCH/enabled
+>   livepatch: '$MOD_LIVEPATCH': initializing unpatching transition
+>   livepatch: '$MOD_LIVEPATCH': starting unpatching transition
+> 
 
-I've already queued a patch that replaces the second link with a working
-one...
+Looks good, thanks.
 
-								Honza
--- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+Reviewed-by: Joe Lawrence <joe.lawrence@redhat.com>
+
+-- Joe
+
