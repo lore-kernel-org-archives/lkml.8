@@ -2,167 +2,145 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7766AC433E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 16:24:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07DC7C433E4
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 16:25:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 559BE22464
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 16:24:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="H2WtL8qd"
+	by mail.kernel.org (Postfix) with ESMTP id DACE3221FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 16:25:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594743910;
+	bh=k/Tsw6xLqgnJY1o7iH6r4M/K+u3aSSQdGkYMYdYd8I8=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=KINpTK1WbBMOh8Rx/Aat1XzPtJ2ABQ+e3j0DWhC7uGJXo6XGO01vHUeLoW2gOelP0
+	 BTx84iSv78e7Hjpqfdh9ANcFAHbkWmUHrJ5sCrbaTUPCA9Id+Yfls9zDQVjVgxfXLD
+	 0kS2abJXZdtyvWwKHMZfWtoY5E9DrQ1X74N2ZQgg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727898AbgGNQYt (ORCPT
+        id S1728300AbgGNQZJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 12:24:49 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:35421 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726252AbgGNQYs (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 12:24:48 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1594743886;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=+FLEpEZDk8rISaWZvNwzXNsNJnARmS3TqRhR9UwaCUo=;
-        b=H2WtL8qdGx+qpqcT/V/xFEng/QTRwG6nE/iB/Vte5Bde1iT8Qu6K4qaSypeMYJJgY8IANY
-        aIyzY++8jHwksDNctSbNzYZ7dls5XVfVnebWiEJ+cWW+udirEuXmxKKepHqB2UEZC+WxWV
-        HA8pHXzOZs18V8MC0svaV4HBr4peUf4=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-116-mrzt3_DMN1OGm-OpsLcevg-1; Tue, 14 Jul 2020 12:24:42 -0400
-X-MC-Unique: mrzt3_DMN1OGm-OpsLcevg-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Tue, 14 Jul 2020 12:25:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51372 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725890AbgGNQZI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 12:25:08 -0400
+Received: from mail-lj1-f171.google.com (mail-lj1-f171.google.com [209.85.208.171])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 53D138027E3;
-        Tue, 14 Jul 2020 16:24:41 +0000 (UTC)
-Received: from linux-ws.nc.xsintricity.com (unknown [10.10.110.4])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 4AE5E710A0;
-        Tue, 14 Jul 2020 16:24:40 +0000 (UTC)
-Message-ID: <95350d0a60d1e305e2053388ada2cbd3310684e3.camel@redhat.com>
-Subject: Re: [PATCH v2 18/29] scsi: aic7xxx: aic7xxx_osm: Remove unused
- variable 'tinfo'
-From:   Doug Ledford <dledford@redhat.com>
-To:     Lee Jones <lee.jones@linaro.org>, jejb@linux.ibm.com,
-        martin.petersen@oracle.com
-Cc:     linux-kernel@vger.kernel.org, linux-scsi@vger.kernel.org,
-        Hannes Reinecke <hare@suse.com>
-Date:   Tue, 14 Jul 2020 12:24:37 -0400
-In-Reply-To: <20200713074645.126138-19-lee.jones@linaro.org>
-References: <20200713074645.126138-1-lee.jones@linaro.org>
-         <20200713074645.126138-19-lee.jones@linaro.org>
-Organization: Red Hat, Inc.
-User-Agent: Evolution 3.34.4 (3.34.4-1.fc31)
+        by mail.kernel.org (Postfix) with ESMTPSA id A60662255F;
+        Tue, 14 Jul 2020 16:25:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594743908;
+        bh=k/Tsw6xLqgnJY1o7iH6r4M/K+u3aSSQdGkYMYdYd8I8=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=VTmpkPIzMgweGoJMVFQhHwPlTmsACcCZYKLnJf4uV5MJbosmzzKJ397vHUls2HOaz
+         eFZ69VNZv/h5RjAH/J8ksD9O2qsAxaIIp5R0iwg9VlZld06OGkc2JS41oAV6UtM2Za
+         h6VSMX+rCl64xxRhkdYo617vEockbRKEzQ3aA/hg=
+Received: by mail-lj1-f171.google.com with SMTP id d17so23599198ljl.3;
+        Tue, 14 Jul 2020 09:25:07 -0700 (PDT)
+X-Gm-Message-State: AOAM530zx9pSZGMmt+pXQJpdJUBK8GQyz5xzGkOp7MZq62TcyGqWho1E
+        B9u7XmA/PYsim9qu+R+jpLh0W7yFrwIv9gSaKYk=
+X-Google-Smtp-Source: ABdhPJw2LgpnAjeHGhekyjVCCVOxT1kK9hVgydd27e2JfjQorPcSs3QPMc/nVkb/g8IlxUzlBQI7f749Aj988uEH82o=
+X-Received: by 2002:a2e:864e:: with SMTP id i14mr2747628ljj.441.1594743905973;
+ Tue, 14 Jul 2020 09:25:05 -0700 (PDT)
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-Authentication-Results: relay.mimecast.com;
-        auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=dledford@redhat.com
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-MF4GySdp1S1KOrSEiVRK"
+References: <1594683562-68149-1-git-send-email-guoren@kernel.org>
+ <1594683562-68149-7-git-send-email-guoren@kernel.org> <20200714203757.512ce7fb5fa61a88b1dbb2f3@kernel.org>
+In-Reply-To: <20200714203757.512ce7fb5fa61a88b1dbb2f3@kernel.org>
+From:   Guo Ren <guoren@kernel.org>
+Date:   Wed, 15 Jul 2020 00:24:54 +0800
+X-Gmail-Original-Message-ID: <CAJF2gTSMUnHfv3GLj_TGT2dJkKq2zbEsnbPKREiq5i6PPjyTBg@mail.gmail.com>
+Message-ID: <CAJF2gTSMUnHfv3GLj_TGT2dJkKq2zbEsnbPKREiq5i6PPjyTBg@mail.gmail.com>
+Subject: Re: [PATCH v3 6/7] riscv: Add KPROBES_ON_FTRACE supported
+To:     Masami Hiramatsu <mhiramat@kernel.org>
+Cc:     Palmer Dabbelt <palmerdabbelt@google.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Oleg Nesterov <oleg@redhat.com>,
+        linux-riscv <linux-riscv@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Anup Patel <anup@brainfault.org>, linux-csky@vger.kernel.org,
+        Greentime Hu <greentime.hu@sifive.com>,
+        Zong Li <zong.li@sifive.com>,
+        =?UTF-8?Q?Patrick_St=C3=A4hlin?= <me@packi.ch>,
+        =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn.topel@gmail.com>,
+        Guo Ren <guoren@linux.alibaba.com>,
+        Pekka Enberg <penberg@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---=-MF4GySdp1S1KOrSEiVRK
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Thx Masami,
 
-On Mon, 2020-07-13 at 08:46 +0100, Lee Jones wrote:
-> Looks like none of the artifact from  ahc_fetch_transinfo() are used
-> anymore.
->=20
-> Fixes the following W=3D1 kernel build warning(s):
->=20
->  drivers/scsi/aic7xxx/aic7xxx_osm.c: In function
-> =E2=80=98ahc_linux_target_alloc=E2=80=99:
->  drivers/scsi/aic7xxx/aic7xxx_osm.c:567:30: warning: variable =E2=80=98ti=
-nfo=E2=80=99
-> set but not used [-Wunused-but-set-variable]
->  567 | struct ahc_initiator_tinfo *tinfo;
->  | ^~~~~
->=20
-> Cc: Hannes Reinecke <hare@suse.com>
-> Cc: "Daniel M. Eischen" <deischen@iworks.InterWorks.org>
-> Cc: Doug Ledford <dledford@redhat.com>
+On Tue, Jul 14, 2020 at 7:38 PM Masami Hiramatsu <mhiramat@kernel.org> wrot=
+e:
+>
+> On Mon, 13 Jul 2020 23:39:21 +0000
+> guoren@kernel.org wrote:
+>
+> > From: Guo Ren <guoren@linux.alibaba.com>
+> >
+> > This patch adds support for kprobes on ftrace call sites to avoids
+> > much of the overhead with regular kprobes. Try it with simple
+> > steps:
+> >
+> > 1. Get _do_fork ftrace call site.
+> > Dump of assembler code for function _do_fork:
+> >    0xffffffe00020af64 <+0>:     addi    sp,sp,-128
+> >    0xffffffe00020af66 <+2>:     sd      s0,112(sp)
+> >    0xffffffe00020af68 <+4>:     sd      ra,120(sp)
+> >    0xffffffe00020af6a <+6>:     addi    s0,sp,128
+> >    0xffffffe00020af6c <+8>:     sd      s1,104(sp)
+> >    0xffffffe00020af6e <+10>:    sd      s2,96(sp)
+> >    0xffffffe00020af70 <+12>:    sd      s3,88(sp)
+> >    0xffffffe00020af72 <+14>:    sd      s4,80(sp)
+> >    0xffffffe00020af74 <+16>:    sd      s5,72(sp)
+> >    0xffffffe00020af76 <+18>:    sd      s6,64(sp)
+> >    0xffffffe00020af78 <+20>:    sd      s7,56(sp)
+> >    0xffffffe00020af7a <+22>:    mv      s4,a0
+> >    0xffffffe00020af7c <+24>:    mv      a0,ra
+> >    0xffffffe00020af7e <+26>:    nop   <<<<<<<< here!
+> >    0xffffffe00020af82 <+30>:    nop
+> >    0xffffffe00020af86 <+34>:    ld      s3,0(s4)
+> >
+> > 2. Set _do_fork+26 as the kprobe.
+> >   echo 'p:myprobe _do_fork+26 dfd=3D%a0 filename=3D%a1 flags=3D%a2 mode=
+=3D+4($stack)' > /sys/kernel/debug/tracing/kprobe_events
+> >   echo 1 > /sys/kernel/debug/tracing/events/kprobes/enable
+> >   cat /sys/kernel/debug/tracing/trace
+> >   tracer: nop
+> >
+> >   entries-in-buffer/entries-written: 3/3   #P:1
+> >
+> >                                _-----=3D> irqs-off
+> >                               / _----=3D> need-resched
+> >                              | / _---=3D> hardirq/softirq
+> >                              || / _--=3D> preempt-depth
+> >                              ||| /     delay
+> >             TASK-PID   CPU#  ||||    TIMESTAMP  FUNCTION
+> >                | |       |   ||||       |         |
+> >               sh-87    [000] ....   551.557031: myprobe: (_do_fork+0x1a=
+/0x2e6) dfd=3D0xffffffe00020af7e filename=3D0xffffffe00020b34e flags=3D0xff=
+ffffe00101e7c0 mode=3D0x20af86ffffffe0
+> >
+> >   cat /sys/kernel/debug/kprobes/list
+> > ffffffe00020af7e  k  _do_fork+0x1a    [FTRACE]
+> >                                        ^^^^^^
+>
+> Hmm, this seems fentry is not supported on RISC-V yet. But anyway,
+> it will be useful for users (if they can find the offset).
 
-FWIW, I can't seem to figure out how you got mine or Dan's email
-addresses as related to this driver.  The MAINTAINERS file only lists
-Hannes.  The driver Dan and I worked on was a different driver.  It was
-named aic7xxx, but that was back in the 1990s.  It was renamed to
-aic7xxx_old so that Adaptec could contribute this driver you are
-currently patching back around 2001 or so.  And then maybe around 2010
-or something like that, the aic7xxx_old driver that Dan and I worked on
-was removed from the upstream source tree entirely.  So, just out of
-curiosity, how did you get mine and Dan's email addresses to put on the
-Cc: list for these patches?
+Seems only x86 & =E2=AC=86=EF=B8=8F90 use fentry=EF=BC=8Ccan you elaborate =
+more about fentry's
+benefit and how the user could set kprobe on ftrace call site without
+disassemble?
 
-> Signed-off-by: Lee Jones <lee.jones@linaro.org>
-> ---
->  drivers/scsi/aic7xxx/aic7xxx_osm.c | 5 -----
->  1 file changed, 5 deletions(-)
->=20
-> diff --git a/drivers/scsi/aic7xxx/aic7xxx_osm.c
-> b/drivers/scsi/aic7xxx/aic7xxx_osm.c
-> index 2edfa0594f183..32bfe20d79cc1 100644
-> --- a/drivers/scsi/aic7xxx/aic7xxx_osm.c
-> +++ b/drivers/scsi/aic7xxx/aic7xxx_osm.c
-> @@ -564,8 +564,6 @@ ahc_linux_target_alloc(struct scsi_target
-> *starget)
->  =09struct scsi_target **ahc_targp =3D
-> ahc_linux_target_in_softc(starget);
->  =09unsigned short scsirate;
->  =09struct ahc_devinfo devinfo;
-> -=09struct ahc_initiator_tinfo *tinfo;
-> -=09struct ahc_tmode_tstate *tstate;
->  =09char channel =3D starget->channel + 'A';
->  =09unsigned int our_id =3D ahc->our_id;
->  =09unsigned int target_offset;
-> @@ -612,9 +610,6 @@ ahc_linux_target_alloc(struct scsi_target
-> *starget)
->  =09=09=09spi_max_offset(starget) =3D 0;
->  =09=09spi_min_period(starget) =3D=20
->  =09=09=09ahc_find_period(ahc, scsirate, maxsync);
-> -
-> -=09=09tinfo =3D ahc_fetch_transinfo(ahc, channel, ahc->our_id,
-> -=09=09=09=09=09    starget->id, &tstate);
->  =09}
->  =09ahc_compile_devinfo(&devinfo, our_id, starget->id,
->  =09=09=09    CAM_LUN_WILDCARD, channel,
+--
+Best Regards
+ Guo Ren
 
---=20
-Doug Ledford <dledford@redhat.com>
-    GPG KeyID: B826A3330E572FDD
-    Fingerprint =3D AE6B 1BDA 122B 23B4 265B  1274 B826 A333 0E57 2FDD
-
---=-MF4GySdp1S1KOrSEiVRK
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEErmsb2hIrI7QmWxJ0uCajMw5XL90FAl8N3EUACgkQuCajMw5X
-L91QwA//el/KRYXqi4LScWD4EuamYdKhnWngV66Q6k420INwOgyIB8fW+w+UdBci
-p0+hBw0PVeZsa6aK2seWm7ac1bc04isSBgUJBss6t/XZIie61T325hUEtva1HryB
-ekcCgzq0qUNPNS6HsxAXvDgBZhESJxwWLCYYWfnWqEyvgKpOFGb/SlqqaxTK7jjz
-4Bb3FIhMYxNzYm/99EGUc+tkth187j48JQ9tawfOQsiNyrILNoj1PpPHD5tqdDzY
-sQMKWG5QZd7PbFZAL0BC8L0u8JfAGEcVK4b4vINmhmPdLcBXGVkHjMkQjp8rCDUD
-qWBlitjSDMU+F1h6jLLefQq1I7OUimiH4tb99at4qXlB5GtGCU7AR35PZmFnJPQv
-FTnNIL2JwaJc2vGyITEuc3LyqIJMhjvu8fQ2U/2McDSHplqbAd0mRWMM/Ytk2V+r
-F5n6MxAvOaY7FJi5uF4DXnXvyg6yc74MRwgFATnZFMHB6cDFYvxZwnLTLzUQq76I
-qzIl+ko4UW0dVLbpbmKbSYbtNa84rd1CvAGrStJ00F5XHWLX8J4+HfyHFBJKY6YQ
-4XCHAp5qQMdxyliX4EPzn4K0pvva7ocyxStYykSaIe6LaPqcD1pUQdicoJwvcdkQ
-aAa5L8XE9ZzgQ2bOU7g4tBxlYwsibLFdy4PyfocWqk3NxgI0k5w=
-=qSbG
------END PGP SIGNATURE-----
-
---=-MF4GySdp1S1KOrSEiVRK--
-
+ML: https://lore.kernel.org/linux-csky/
