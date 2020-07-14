@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D56A7C433EC
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:46:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B9A8C433E7
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:46:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B11F322AAE
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:46:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ECAEF22AAA
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:46:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594752372;
-	bh=CEY62XlbzwgiW5Lf2uBoRurdb/wAA8yCa81CH4PGnhI=;
+	s=default; t=1594752366;
+	bh=+VzMihOcflKyBhJLRK+iXixmPZ+aRhDOslFb+/ZKxFA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FM524UkXNlbKwDY/qTRqRR+tztPZuvdD0gs2M7HxYAOcPJmjPZjEUO8GQZFtWTNw5
-	 Djw20uRi9S6FCeKw9tERPXNHE7lbkvdP9uv6EmnR1K2ukzP77wcOoWA/yatY6i9C8+
-	 F8bIRZeyGoU+Pqzi7fvk2gRCvo1f/tUqL6jfPCxU=
+	b=y9dvrw2ZpU4WU+hnJ0CK/2mjkojw6o+gzMc5vjkYYs6boAY6csd5RdD9OIecjtJyF
+	 X7ujSD1nChTFztUXQwBmmV7ndol9R4cMZLhdEhxJihAU16AdFocux5EcuseCBnCQE5
+	 mYytNQcNprvD/oTf1UE5SkBoh3BOIEgfFSOdy+B4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729369AbgGNSqL (ORCPT
+        id S1729339AbgGNSqE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 14:46:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40668 "EHLO mail.kernel.org"
+        Tue, 14 Jul 2020 14:46:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40544 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729350AbgGNSqH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 14:46:07 -0400
+        id S1729312AbgGNSqC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 14:46:02 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0179522AAC;
-        Tue, 14 Jul 2020 18:46:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DB31B2231B;
+        Tue, 14 Jul 2020 18:46:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594752366;
-        bh=CEY62XlbzwgiW5Lf2uBoRurdb/wAA8yCa81CH4PGnhI=;
+        s=default; t=1594752361;
+        bh=+VzMihOcflKyBhJLRK+iXixmPZ+aRhDOslFb+/ZKxFA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qq5HE+akQRcwuIdD1uNyxrILB2XC+U77j5sH2IV71lDL7JdIJwDT6B4o0faqaTeub
-         G5vu4Nw/YdSbFrl3Qtt2Gn3Mzcvfg/cSCrgaRzMQuNUvOAAlmnF+OXIpLLJUVLz/A5
-         i4P9gaW3vGCsLdtDIeI5OHLr+itC1NvGyIdS9wxM=
+        b=kFXMzuh55rwrFjewswGicMZeRupoMDZG6c487kzO+2+nQBeoYZCUMXZgSH2y2o/kI
+         WDxu8Z1rPt42H1N98xpWmXfk6ygV0UQUgFinPMfUeg9waGMfXaZv2dgr4J3rqHkvyO
+         xWf4qAlWVN0+1UpsenE8buNMEaBQ8UUnKgwQxB1w=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Emil Velikov <emil.l.velikov@gmail.com>,
-        Hans de Goede <hdegoede@redhat.com>,
+        stable@vger.kernel.org, Ciara Loftus <ciara.loftus@intel.com>,
+        Andrew Bowers <andrewx.bowers@intel.com>,
+        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 15/58] drm: panel-orientation-quirks: Use generic orientation-data for Acer S1003
-Date:   Tue, 14 Jul 2020 20:43:48 +0200
-Message-Id: <20200714184056.909662669@linuxfoundation.org>
+Subject: [PATCH 4.19 13/58] i40e: protect ring accesses with READ- and WRITE_ONCE
+Date:   Tue, 14 Jul 2020 20:43:46 +0200
+Message-Id: <20200714184056.800412889@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200714184056.149119318@linuxfoundation.org>
 References: <20200714184056.149119318@linuxfoundation.org>
@@ -60,50 +61,108 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hans de Goede <hdegoede@redhat.com>
+From: Ciara Loftus <ciara.loftus@intel.com>
 
-[ Upstream commit a05caf9e62a85d12da27e814ac13195f4683f21c ]
+[ Upstream commit d59e267912cd90b0adf33b4659050d831e746317 ]
 
-The Acer S1003 has proper DMI strings for sys-vendor and product-name,
-so we do not need to match by BIOS-date.
+READ_ONCE should be used when reading rings prior to accessing the
+statistics pointer. Introduce this as well as the corresponding WRITE_ONCE
+usage when allocating and freeing the rings, to ensure protected access.
 
-This means that the Acer S1003 can use the generic lcd800x1280_rightside_up
-drm_dmi_panel_orientation_data struct which is also used by other quirks.
-
-Reviewed-by: Emil Velikov <emil.l.velikov@gmail.com>
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20200531093025.28050-2-hdegoede@redhat.com
+Signed-off-by: Ciara Loftus <ciara.loftus@intel.com>
+Tested-by: Andrew Bowers <andrewx.bowers@intel.com>
+Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/drm_panel_orientation_quirks.c | 8 +-------
- 1 file changed, 1 insertion(+), 7 deletions(-)
+ drivers/net/ethernet/intel/i40e/i40e_main.c | 29 ++++++++++++++-------
+ 1 file changed, 19 insertions(+), 10 deletions(-)
 
-diff --git a/drivers/gpu/drm/drm_panel_orientation_quirks.c b/drivers/gpu/drm/drm_panel_orientation_quirks.c
-index de7837efbbfce..fa5c25d36d3dc 100644
---- a/drivers/gpu/drm/drm_panel_orientation_quirks.c
-+++ b/drivers/gpu/drm/drm_panel_orientation_quirks.c
-@@ -30,12 +30,6 @@ struct drm_dmi_panel_orientation_data {
- 	int orientation;
- };
+diff --git a/drivers/net/ethernet/intel/i40e/i40e_main.c b/drivers/net/ethernet/intel/i40e/i40e_main.c
+index 23b31b2ff5ccd..a74b01bf581e9 100644
+--- a/drivers/net/ethernet/intel/i40e/i40e_main.c
++++ b/drivers/net/ethernet/intel/i40e/i40e_main.c
+@@ -446,11 +446,15 @@ static void i40e_get_netdev_stats_struct(struct net_device *netdev,
+ 		i40e_get_netdev_stats_struct_tx(ring, stats);
  
--static const struct drm_dmi_panel_orientation_data acer_s1003 = {
--	.width = 800,
--	.height = 1280,
--	.orientation = DRM_MODE_PANEL_ORIENTATION_RIGHT_UP,
--};
--
- static const struct drm_dmi_panel_orientation_data asus_t100ha = {
- 	.width = 800,
- 	.height = 1280,
-@@ -100,7 +94,7 @@ static const struct dmi_system_id orientation_data[] = {
- 		  DMI_EXACT_MATCH(DMI_SYS_VENDOR, "Acer"),
- 		  DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "One S1003"),
- 		},
--		.driver_data = (void *)&acer_s1003,
-+		.driver_data = (void *)&lcd800x1280_rightside_up,
- 	}, {	/* Asus T100HA */
- 		.matches = {
- 		  DMI_EXACT_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
+ 		if (i40e_enabled_xdp_vsi(vsi)) {
+-			ring++;
++			ring = READ_ONCE(vsi->xdp_rings[i]);
++			if (!ring)
++				continue;
+ 			i40e_get_netdev_stats_struct_tx(ring, stats);
+ 		}
+ 
+-		ring++;
++		ring = READ_ONCE(vsi->rx_rings[i]);
++		if (!ring)
++			continue;
+ 		do {
+ 			start   = u64_stats_fetch_begin_irq(&ring->syncp);
+ 			packets = ring->stats.packets;
+@@ -793,6 +797,8 @@ static void i40e_update_vsi_stats(struct i40e_vsi *vsi)
+ 	for (q = 0; q < vsi->num_queue_pairs; q++) {
+ 		/* locate Tx ring */
+ 		p = READ_ONCE(vsi->tx_rings[q]);
++		if (!p)
++			continue;
+ 
+ 		do {
+ 			start = u64_stats_fetch_begin_irq(&p->syncp);
+@@ -806,8 +812,11 @@ static void i40e_update_vsi_stats(struct i40e_vsi *vsi)
+ 		tx_linearize += p->tx_stats.tx_linearize;
+ 		tx_force_wb += p->tx_stats.tx_force_wb;
+ 
+-		/* Rx queue is part of the same block as Tx queue */
+-		p = &p[1];
++		/* locate Rx ring */
++		p = READ_ONCE(vsi->rx_rings[q]);
++		if (!p)
++			continue;
++
+ 		do {
+ 			start = u64_stats_fetch_begin_irq(&p->syncp);
+ 			packets = p->stats.packets;
+@@ -10196,10 +10205,10 @@ static void i40e_vsi_clear_rings(struct i40e_vsi *vsi)
+ 	if (vsi->tx_rings && vsi->tx_rings[0]) {
+ 		for (i = 0; i < vsi->alloc_queue_pairs; i++) {
+ 			kfree_rcu(vsi->tx_rings[i], rcu);
+-			vsi->tx_rings[i] = NULL;
+-			vsi->rx_rings[i] = NULL;
++			WRITE_ONCE(vsi->tx_rings[i], NULL);
++			WRITE_ONCE(vsi->rx_rings[i], NULL);
+ 			if (vsi->xdp_rings)
+-				vsi->xdp_rings[i] = NULL;
++				WRITE_ONCE(vsi->xdp_rings[i], NULL);
+ 		}
+ 	}
+ }
+@@ -10233,7 +10242,7 @@ static int i40e_alloc_rings(struct i40e_vsi *vsi)
+ 		if (vsi->back->hw_features & I40E_HW_WB_ON_ITR_CAPABLE)
+ 			ring->flags = I40E_TXR_FLAGS_WB_ON_ITR;
+ 		ring->itr_setting = pf->tx_itr_default;
+-		vsi->tx_rings[i] = ring++;
++		WRITE_ONCE(vsi->tx_rings[i], ring++);
+ 
+ 		if (!i40e_enabled_xdp_vsi(vsi))
+ 			goto setup_rx;
+@@ -10251,7 +10260,7 @@ static int i40e_alloc_rings(struct i40e_vsi *vsi)
+ 			ring->flags = I40E_TXR_FLAGS_WB_ON_ITR;
+ 		set_ring_xdp(ring);
+ 		ring->itr_setting = pf->tx_itr_default;
+-		vsi->xdp_rings[i] = ring++;
++		WRITE_ONCE(vsi->xdp_rings[i], ring++);
+ 
+ setup_rx:
+ 		ring->queue_index = i;
+@@ -10264,7 +10273,7 @@ setup_rx:
+ 		ring->size = 0;
+ 		ring->dcb_tc = 0;
+ 		ring->itr_setting = pf->rx_itr_default;
+-		vsi->rx_rings[i] = ring;
++		WRITE_ONCE(vsi->rx_rings[i], ring);
+ 	}
+ 
+ 	return 0;
 -- 
 2.25.1
 
