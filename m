@@ -2,89 +2,117 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1094BC433E7
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 10:56:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B2A9C433E4
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 10:56:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E941D22206
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 10:56:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E430F22209
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 10:56:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727786AbgGNK42 (ORCPT
+        id S1727114AbgGNK4X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 06:56:28 -0400
-Received: from out1.zte.com.cn ([202.103.147.172]:2873 "EHLO mxct.zte.com.cn"
+        Tue, 14 Jul 2020 06:56:23 -0400
+Received: from mx2.suse.de ([195.135.220.15]:33508 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726729AbgGNK42 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 06:56:28 -0400
-Received: from mse-fl1.zte.com.cn (unknown [10.30.14.238])
-        by Forcepoint Email with ESMTPS id 58476E37E1D18590D425;
-        Tue, 14 Jul 2020 18:56:24 +0800 (CST)
-Received: from notes_smtp.zte.com.cn (notes_smtp.zte.com.cn [10.30.1.239])
-        by mse-fl1.zte.com.cn with ESMTP id 06EAuIRN053109;
-        Tue, 14 Jul 2020 18:56:18 +0800 (GMT-8)
-        (envelope-from wang.yi59@zte.com.cn)
-Received: from fox-host8.localdomain ([10.74.120.8])
-          by szsmtp06.zte.com.cn (Lotus Domino Release 8.5.3FP6)
-          with ESMTP id 2020071418563168-4282341 ;
-          Tue, 14 Jul 2020 18:56:31 +0800 
-From:   Yi Wang <wang.yi59@zte.com.cn>
-To:     jejb@linux.ibm.com
-Cc:     martin.petersen@oracle.com, linux-scsi@vger.kernel.org,
-        linux-kernel@vger.kernel.org, xue.zhihong@zte.com.cn,
-        wang.yi59@zte.com.cn, wang.liang82@zte.com.cn,
-        Liao Pingfang <liao.pingfang@zte.com.cn>
-Subject: [PATCH] scsi: imm: Remove superfluous breaks
-Date:   Tue, 14 Jul 2020 18:59:27 +0800
-Message-Id: <1594724367-11593-1-git-send-email-wang.yi59@zte.com.cn>
-X-Mailer: git-send-email 1.8.3.1
-X-MIMETrack: Itemize by SMTP Server on SZSMTP06/server/zte_ltd(Release 8.5.3FP6|November
- 21, 2013) at 2020-07-14 18:56:31,
-        Serialize by Router on notes_smtp/zte_ltd(Release 9.0.1FP7|August  17, 2016) at
- 2020-07-14 18:56:20,
-        Serialize complete at 2020-07-14 18:56:20
-X-MAIL: mse-fl1.zte.com.cn 06EAuIRN053109
+        id S1726729AbgGNK4X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 06:56:23 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id 47770AD1A;
+        Tue, 14 Jul 2020 10:56:24 +0000 (UTC)
+Date:   Tue, 14 Jul 2020 12:56:21 +0200 (CEST)
+From:   Miroslav Benes <mbenes@suse.cz>
+To:     Josh Poimboeuf <jpoimboe@redhat.com>
+cc:     Randy Dunlap <rdunlap@infradead.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>, pmladek@suse.cz,
+        live-patching@vger.kernel.org
+Subject: Re: linux-next: Tree for Jun 23 (objtool (2))
+In-Reply-To: <20200702123555.bjioosahrs5vjovu@treble>
+Message-ID: <alpine.LSU.2.21.2007141240540.5393@pobox.suse.cz>
+References: <20200623162820.3f45feae@canb.auug.org.au> <61df2e8f-75e8-d233-9c3c-5b4fa2b7fbdc@infradead.org> <20200702123555.bjioosahrs5vjovu@treble>
+User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Liao Pingfang <liao.pingfang@zte.com.cn>
+On Thu, 2 Jul 2020, Josh Poimboeuf wrote:
 
-Remove superfluous breaks, as there is a "return" before them.
+> On Tue, Jun 23, 2020 at 08:06:07AM -0700, Randy Dunlap wrote:
+> > On 6/22/20 11:28 PM, Stephen Rothwell wrote:
+> > > Hi all,
+> > > 
+> > > Changes since 20200622:
+> > > 
+> > 
+> > on x86_64:
+> > 
+> > arch/x86/kernel/cpu/mce/core.o: warning: objtool: mce_timed_out()+0x24: unreachable instruction
+> > kernel/exit.o: warning: objtool: __x64_sys_exit_group()+0x14: unreachable instruction
+> > 
+> > Full randconfig file is attached.
+> 
+> More livepatch...
 
-Signed-off-by: Liao Pingfang <liao.pingfang@zte.com.cn>
-Signed-off-by: Yi Wang <wang.yi59@zte.com.cn>
+Correct.
+
+Both are known and I thought Josh had fixes queued somewhere for both, but 
+my memory fails me quite often. See below.
+
+However, I think it is time to decide how to approach this whole saga. It 
+seems that there are not so many places in the kernel in need of 
+__noreturn annotation in the end and as jikos argued at least some of 
+those should be fixed regardless. Josh, should I prepare proper patches 
+and submit them to relevant maintainers to see where this path is going?
+
+It would be much better to fix it in GCC, but it has been like banging 
+one's head against a wall so far. Josh, you wanted to create a bug 
+for GCC in this respect in the past? Has that happened?
+
+If I remember correctly, we discussed briefly a possibility to cope with 
+that in objtool, but no solution was presented.
+
+Removing -flive-patching is also a possibility. I don't like it much, but 
+we discussed it with Petr M. a couple of months ago and it might be a way 
+too.
+
+Thanks
+Miroslav
+
 ---
- drivers/scsi/imm.c | 3 ---
- 1 file changed, 3 deletions(-)
 
-diff --git a/drivers/scsi/imm.c b/drivers/scsi/imm.c
-index 2519fb7..1459b14 100644
---- a/drivers/scsi/imm.c
-+++ b/drivers/scsi/imm.c
-@@ -903,7 +903,6 @@ static int imm_engine(imm_struct *dev, struct scsi_cmnd *cmd)
- 			w_ctr(ppb, 0x4);
- 		}
- 		return 0;	/* Finished */
--		break;
+diff --git a/arch/x86/kernel/cpu/mce/core.c b/arch/x86/kernel/cpu/mce/core.c
+index 14e4b4d17ee5..469a71ecea3c 100644
+--- a/arch/x86/kernel/cpu/mce/core.c
++++ b/arch/x86/kernel/cpu/mce/core.c
+@@ -279,7 +279,7 @@ static int fake_panic;
+ static atomic_t mce_fake_panicked;
  
- 	default:
- 		printk("imm: Invalid scsi phase\n");
-@@ -969,10 +968,8 @@ static int imm_abort(struct scsi_cmnd *cmd)
- 	case 1:		/* Have not connected to interface */
- 		dev->cur_cmd = NULL;	/* Forget the problem */
- 		return SUCCESS;
--		break;
- 	default:		/* SCSI command sent, can not abort */
- 		return FAILED;
--		break;
- 	}
- }
+ /* Panic in progress. Enable interrupts and wait for final IPI */
+-static void wait_for_panic(void)
++static void __noreturn wait_for_panic(void)
+ {
+        long timeout = PANIC_TIMEOUT*USEC_PER_SEC;
  
--- 
-2.9.5
+diff --git a/kernel/exit.c b/kernel/exit.c
+index 727150f28103..570649152e7f 100644
+--- a/kernel/exit.c
++++ b/kernel/exit.c
+@@ -877,7 +877,7 @@ SYSCALL_DEFINE1(exit, int, error_code)
+  * as well as by sys_exit_group (below).
+  */
+ void
+-do_group_exit(int exit_code)
++__noreturn do_group_exit(int exit_code)
+ {
+        struct signal_struct *sig = current->signal;
 
