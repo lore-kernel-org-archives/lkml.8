@@ -2,202 +2,100 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 608EBC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 16:08:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94EC5C433EA
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 16:08:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3AAAA22515
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 16:08:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="nIxTOnai"
+	by mail.kernel.org (Postfix) with ESMTP id 6C7D422519
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 16:08:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594742917;
+	bh=m1sZU8ZEuecg3AdLYhlDX2E1cX3Y8hJyqEV30UQuGNU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=An7HEfU/CopmpuF20NbpC34t3w9UGR7H3slmv1+1MSEOhTWSRPzfFG/1WqQSEQrNB
+	 v8eSgqeZxY7kG3sk4byK6ng2huCnESqeDv/7D/ol8JAfS3hi0ktrjyBcRuUMp5fmoo
+	 lQOTzuwdC0G+zsEvtWhmcXVLAKMUaglf7e15YUOU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727047AbgGNQIE (ORCPT
+        id S1727989AbgGNQIf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 12:08:04 -0400
-Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:5846 "EHLO
-        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725876AbgGNQID (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 12:08:03 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5f0dd7f10001>; Tue, 14 Jul 2020 09:06:09 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Tue, 14 Jul 2020 09:08:03 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Tue, 14 Jul 2020 09:08:03 -0700
-Received: from HQMAIL111.nvidia.com (172.20.187.18) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 14 Jul
- 2020 16:07:59 +0000
-Received: from rnnvemgw01.nvidia.com (10.128.109.123) by HQMAIL111.nvidia.com
- (172.20.187.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Tue, 14 Jul 2020 16:07:59 +0000
-Received: from sumitg-l4t.nvidia.com (Not Verified[10.24.37.103]) by rnnvemgw01.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5f0dd85a0001>; Tue, 14 Jul 2020 09:07:58 -0700
-From:   Sumit Gupta <sumitg@nvidia.com>
-To:     <rjw@rjwysocki.net>, <viresh.kumar@linaro.org>,
-        <catalin.marinas@arm.com>, <will@kernel.org>,
-        <thierry.reding@gmail.com>, <robh+dt@kernel.org>,
-        <mirq-linux@rere.qmqm.pl>, <devicetree@vger.kernel.org>,
-        <jonathanh@nvidia.com>, <talho@nvidia.com>,
-        <linux-pm@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>
-CC:     <bbasu@nvidia.com>, <sumitg@nvidia.com>, <mperttunen@nvidia.com>
-Subject: [TEGRA194_CPUFREQ PATCH v6 1/4] dt-bindings: arm: Add NVIDIA Tegra194 CPU Complex binding
-Date:   Tue, 14 Jul 2020 21:37:50 +0530
-Message-ID: <1594742870-19957-1-git-send-email-sumitg@nvidia.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <CAL_JsqL1CuumdT1CZiofEZw9j+3gsir8JwSrZVfcxFxEB=bavQ@mail.gmail.com>
-References: <CAL_JsqL1CuumdT1CZiofEZw9j+3gsir8JwSrZVfcxFxEB=bavQ@mail.gmail.com>
-X-NVConfidentiality: public
+        Tue, 14 Jul 2020 12:08:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39908 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725876AbgGNQIf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 12:08:35 -0400
+Received: from localhost (unknown [122.171.202.192])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A3AE822515;
+        Tue, 14 Jul 2020 16:08:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594742914;
+        bh=m1sZU8ZEuecg3AdLYhlDX2E1cX3Y8hJyqEV30UQuGNU=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=dYPw/QTslqDwXMkvcuWmgLjUlIp+8O6gOIUKVUY2+TlTa34zQ+zz1U09lJOwQW09S
+         Zs39faJMF1AQ5iw8NUoRb+aOAmoaJq57/pNyE2didK61rX+fg7Upj2jbx+qnSqFSBo
+         krdukl4duieXXuhukMg/55wm4P/zD5q7x9vpVeLg=
+Date:   Tue, 14 Jul 2020 21:38:30 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Dave Jiang <dave.jiang@intel.com>
+Cc:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Viresh Kumar <vireshk@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
+        devicetree@vger.kernel.org, dmaengine@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v7 05/11] dmaengine: Introduce DMA-device device_caps
+ callback
+Message-ID: <20200714160830.GL34333@vkoul-mobl>
+References: <20200709224550.15539-1-Sergey.Semin@baikalelectronics.ru>
+ <20200709224550.15539-6-Sergey.Semin@baikalelectronics.ru>
+ <20200710084503.GE3703480@smile.fi.intel.com>
+ <20200710093834.su3nsjesnhntpd6d@mobilestation>
+ <07d4a977-1de6-b611-3d4f-7c7d6cd7fe5f@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1594742769; bh=1dBLDP4PGuNfttH15wzchZO1kkAghBjJKlbYsdl9U78=;
-        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
-         In-Reply-To:References:X-NVConfidentiality:MIME-Version:
-         Content-Type;
-        b=nIxTOnai/j/kl+2qVXVH+6Je2bGs6nQeYnTZZDcc4CRZudogNcl9paf7xq8okJS38
-         oLSimMmro9r3f0ii31RxC/GqngyM0lUfTTPicn7zs4O+LXerwxbMEEu/nZ3ZsN+Zfh
-         0HT+dajlM1GVRFicMnJ/0Sir/lVbfFtSLOHlA9/C/vwttc1FZujFdPAQ791GS8NMty
-         gvoQsPQz4XCPsmhpVShwvcZ15C3a2hW+SfrqWijxRthoAvLMhXCJxteaYizDJNiwab
-         CwhFeym3QxhOdPiCQ79iRoFDMiiCrjMYyit/61qJ+lOCqWAhO+ZNhFg6d3+4POLzla
-         fhhYmokcuFqyg==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <07d4a977-1de6-b611-3d4f-7c7d6cd7fe5f@intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add device-tree binding documentation to represent Tegra194
-CPU Complex with compatible string under 'cpus' node. This
-can be used by drivers like cpufreq which don't have their
-node or CPU Complex node to bind to. Also, documenting
-'nvidia,bpmp' property which points to BPMP device.
+On 13-07-20, 13:55, Dave Jiang wrote:
+> 
+> 
+> On 7/10/2020 2:38 AM, Serge Semin wrote:
+> > On Fri, Jul 10, 2020 at 11:45:03AM +0300, Andy Shevchenko wrote:
+> > > On Fri, Jul 10, 2020 at 01:45:44AM +0300, Serge Semin wrote:
+> > > > There are DMA devices (like ours version of Synopsys DW DMAC) which have
+> > > > DMA capabilities non-uniformly redistributed between the device channels.
+> > > > In order to provide a way of exposing the channel-specific parameters to
+> > > > the DMA engine consumers, we introduce a new DMA-device callback. In case
+> > > > if provided it gets called from the dma_get_slave_caps() method and is
+> > > > able to override the generic DMA-device capabilities.
+> > > 
+> > 
+> > > In light of recent developments consider not to add 'slave' and a such words to the kernel.
+> > 
+> > As long as the 'slave' word is used in the name of the dma_slave_caps
+> > structure and in the rest of the DMA-engine subsystem, it will be ambiguous
+> > to use some else terminology. If renaming needs to be done, then it should be
+> > done synchronously for the whole subsystem.
+> 
+> What about just calling it dma_device_caps? Consider this is a useful
+> function not only slave DMA will utilize this. I can see this being useful
+> for some of my future code with idxd driver.
 
-Signed-off-by: Sumit Gupta <sumitg@nvidia.com>
----
- .../bindings/arm/nvidia,tegra194-ccplex.yaml       | 106 +++++++++++++++++++++
- 1 file changed, 106 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/arm/nvidia,tegra194-ccplex.yaml
+Some of the caps may make sense to generic dmaengine but few of them do
+not :) While at it, am planning to make it dmaengine_periph_caps to
+denote that these are dmaengine peripheral capabilities.
 
-diff --git a/Documentation/devicetree/bindings/arm/nvidia,tegra194-ccplex.yaml b/Documentation/devicetree/bindings/arm/nvidia,tegra194-ccplex.yaml
-new file mode 100644
-index 0000000..06dbdaa
---- /dev/null
-+++ b/Documentation/devicetree/bindings/arm/nvidia,tegra194-ccplex.yaml
-@@ -0,0 +1,106 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: "http://devicetree.org/schemas/arm/nvidia,tegra194-ccplex.yaml#"
-+$schema: "http://devicetree.org/meta-schemas/core.yaml#"
-+
-+title: NVIDIA Tegra194 CPU Complex device tree bindings
-+
-+maintainers:
-+  - Thierry Reding <thierry.reding@gmail.com>
-+  - Jonathan Hunter <jonathanh@nvidia.com>
-+  - Sumit Gupta <sumitg@nvidia.com>
-+
-+description: |+
-+  Tegra194 SOC has homogeneous architecture where each cluster has two
-+  symmetric cores. Compatible string in "cpus" node represents the CPU
-+  Complex having all clusters.
-+
-+properties:
-+  compatible:
-+    enum:
-+      - nvidia,tegra194-ccplex
-+
-+  nvidia,bpmp:
-+    $ref: '/schemas/types.yaml#/definitions/phandle'
-+    description: |
-+      Specifies the bpmp node that needs to be queried to get
-+      operating point data for all CPUs.
-+
-+      Optional for systems that have a "compatible"
-+      property value of "nvidia,tegra194-ccplex".
-+
-+  "#address-cells":
-+    const: 1
-+
-+  "#size-cells":
-+    const: 0
-+
-+dependencies:
-+  nvidia,bpmp: [compatible]
-+
-+examples:
-+  - |
-+    cpus {
-+      compatible = "nvidia,tegra194-ccplex";
-+      nvidia,bpmp = <&bpmp>;
-+      #address-cells = <1>;
-+      #size-cells = <0>;
-+
-+      cpu0_0: cpu@0 {
-+        compatible = "nvidia,tegra194-carmel";
-+        device_type = "cpu";
-+        reg = <0x0>;
-+        enable-method = "psci";
-+      };
-+
-+      cpu0_1: cpu@1 {
-+        compatible = "nvidia,tegra194-carmel";
-+        device_type = "cpu";
-+        reg = <0x001>;
-+        enable-method = "psci";
-+      };
-+
-+      cpu1_0: cpu@100 {
-+        compatible = "nvidia,tegra194-carmel";
-+        device_type = "cpu";
-+        reg = <0x100>;
-+        enable-method = "psci";
-+      };
-+
-+      cpu1_1: cpu@101 {
-+        compatible = "nvidia,tegra194-carmel";
-+        device_type = "cpu";
-+        reg = <0x101>;
-+        enable-method = "psci";
-+      };
-+
-+      cpu2_0: cpu@200 {
-+        compatible = "nvidia,tegra194-carmel";
-+        device_type = "cpu";
-+        reg = <0x200>;
-+        enable-method = "psci";
-+      };
-+
-+      cpu2_1: cpu@201 {
-+        compatible = "nvidia,tegra194-carmel";
-+        device_type = "cpu";
-+        reg = <0x201>;
-+        enable-method = "psci";
-+      };
-+
-+      cpu3_0: cpu@300 {
-+        compatible = "nvidia,tegra194-carmel";
-+        device_type = "cpu";
-+        reg = <0x300>;
-+        enable-method = "psci";
-+      };
-+
-+      cpu3_1: cpu@301 {
-+        compatible = "nvidia,tegra194-carmel";
-+        device_type = "cpu";
-+        reg = <0x301>;
-+        enable-method = "psci";
-+       };
-+    };
-+...
 -- 
-2.7.4
-
+~Vinod
