@@ -7,46 +7,49 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE9FBC433E4
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 19:02:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63D05C433ED
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 19:03:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AE0FE22B4E
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 19:02:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 381EC22B4E
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 19:03:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594753377;
-	bh=iYiwePp934ix+9yWuEcbluFpzpyu+MCl53X7RGFu3GI=;
+	s=default; t=1594753387;
+	bh=mXHwHhKh8SZHgPmpOskA3H6RVyKL75Bc5+jHFc9GS0Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=T8cibBb3Tb/gXobmQv6cRBQ/20twHfaEW6DObS+miNME3tckhjMQZek71jbLmnf9v
-	 bEq09YB+p+YrfJHIeVe7c3ciH/czETrT8hPyOU2HZ5494ezxx2oByhhRtHYLA5NGRL
-	 0KqB7couZBal+IPH4cXbUhXCKCPQkOhLsI2VdAeE=
+	b=T5m0hqHpG7MqrPKssJW7HAz77GzclffCT6gtMGwxdsHLXG1dUwPlAeS9Z9uWhs44H
+	 WGQRmqY5aFMc3qPf3+4SrXJ0vj8pQgy4Wk5bdCMzI36vhZMH6GI2U0pYFqo19fWRRS
+	 C10rAH9yZEvdhdY4U4oSZvSD3/1pbR3Ce6ggomJ8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730957AbgGNTC4 (ORCPT
+        id S1731152AbgGNTDF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 15:02:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56232 "EHLO mail.kernel.org"
+        Tue, 14 Jul 2020 15:03:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56134 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731152AbgGNS5y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 14:57:54 -0400
+        id S1730303AbgGNS5t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 14:57:49 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 28753207F5;
-        Tue, 14 Jul 2020 18:57:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C2D5E207F5;
+        Tue, 14 Jul 2020 18:57:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594753074;
-        bh=iYiwePp934ix+9yWuEcbluFpzpyu+MCl53X7RGFu3GI=;
+        s=default; t=1594753069;
+        bh=mXHwHhKh8SZHgPmpOskA3H6RVyKL75Bc5+jHFc9GS0Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JcQTcHQQQMb7oK1mEpnGLimDv6Rp2mGDWuvqlSy3JOXXysqlZfxQhLgljSlV0TaVK
-         QjPA0N8OkspdJ74CrDNBzOafAave+uOzam1ZDwuWhut0Jr+j7M7NQMShV/MhWIRJeV
-         gUlJJ6S3c7Fr/fGPpaxtGCFYmD4LaAPK3dvM5Xlk=
+        b=rSI6sxlGPDx2xVKMhqMdsVImNFodiArm5D7KZzgyn5SAKfPP9QsKN8tUYl3HsPxee
+         F2mbozur+NxOcRE8kaDceCklfLKGIXY4rCu3P21zwJGwfdN7iFJDQq63dQZRpGToRo
+         mTPRkgjb3GaNdR3D+KHecf/gAmg+MY791kx2S2s4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, xidongwang <wangxidong_97@163.com>,
-        Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 5.7 109/166] ALSA: opl3: fix infoleak in opl3
-Date:   Tue, 14 Jul 2020 20:44:34 +0200
-Message-Id: <20200714184121.056904592@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Mike Marciniszyn <mike.marciniszyn@intel.com>,
+        Kaike Wan <kaike.wan@intel.com>,
+        Dennis Dalessandro <dennis.dalessandro@intel.com>,
+        Jason Gunthorpe <jgg@nvidia.com>
+Subject: [PATCH 5.7 108/166] IB/hfi1: Do not destroy link_wq when the device is shut down
+Date:   Tue, 14 Jul 2020 20:44:33 +0200
+Message-Id: <20200714184121.015647480@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200714184115.844176932@linuxfoundation.org>
 References: <20200714184115.844176932@linuxfoundation.org>
@@ -59,34 +62,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: xidongwang <wangxidong_97@163.com>
+From: Kaike Wan <kaike.wan@intel.com>
 
-commit ad155712bb1ea2151944cf06a0e08c315c70c1e3 upstream.
+commit 2315ec12ee8e8257bb335654c62e0cae71dc278d upstream.
 
-The stack object “info” in snd_opl3_ioctl() has a leaking problem.
-It has 2 padding bytes which are not initialized and leaked via
-“copy_to_user”.
+The workqueue link_wq should only be destroyed when the hfi1 driver is
+unloaded, not when the device is shut down.
 
-Signed-off-by: xidongwang <wangxidong_97@163.com>
+Fixes: 71d47008ca1b ("IB/hfi1: Create workqueue for link events")
+Link: https://lore.kernel.org/r/20200623204053.107638.70315.stgit@awfm-01.aw.intel.com
 Cc: <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/1594006058-30362-1-git-send-email-wangxidong_97@163.com
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Reviewed-by: Mike Marciniszyn <mike.marciniszyn@intel.com>
+Signed-off-by: Kaike Wan <kaike.wan@intel.com>
+Signed-off-by: Dennis Dalessandro <dennis.dalessandro@intel.com>
+Signed-off-by: Jason Gunthorpe <jgg@nvidia.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/drivers/opl3/opl3_synth.c |    2 ++
- 1 file changed, 2 insertions(+)
+ drivers/infiniband/hw/hfi1/init.c |   10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
---- a/sound/drivers/opl3/opl3_synth.c
-+++ b/sound/drivers/opl3/opl3_synth.c
-@@ -91,6 +91,8 @@ int snd_opl3_ioctl(struct snd_hwdep * hw
- 		{
- 			struct snd_dm_fm_info info;
+--- a/drivers/infiniband/hw/hfi1/init.c
++++ b/drivers/infiniband/hw/hfi1/init.c
+@@ -844,6 +844,10 @@ static void destroy_workqueues(struct hf
+ 			destroy_workqueue(ppd->hfi1_wq);
+ 			ppd->hfi1_wq = NULL;
+ 		}
++		if (ppd->link_wq) {
++			destroy_workqueue(ppd->link_wq);
++			ppd->link_wq = NULL;
++		}
+ 	}
+ }
  
-+			memset(&info, 0, sizeof(info));
-+
- 			info.fm_mode = opl3->fm_mode;
- 			info.rhythm = opl3->rhythm;
- 			if (copy_to_user(argp, &info, sizeof(struct snd_dm_fm_info)))
+@@ -1120,14 +1124,10 @@ static void shutdown_device(struct hfi1_
+ 		 * We can't count on interrupts since we are stopping.
+ 		 */
+ 		hfi1_quiet_serdes(ppd);
+-
+ 		if (ppd->hfi1_wq)
+ 			flush_workqueue(ppd->hfi1_wq);
+-		if (ppd->link_wq) {
++		if (ppd->link_wq)
+ 			flush_workqueue(ppd->link_wq);
+-			destroy_workqueue(ppd->link_wq);
+-			ppd->link_wq = NULL;
+-		}
+ 	}
+ 	sdma_exit(dd);
+ }
 
 
