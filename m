@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 849E1C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:47:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ECF74C433E7
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:47:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 587BE22B2C
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:47:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C58E822B2C
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:47:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594752465;
-	bh=W7vStj3YtdpzeydOFVEpUDcx8DzNF5sDUM/w66x1BVo=;
+	s=default; t=1594752462;
+	bh=FrW5svSSOMr6F6SuCMiGrVaNwk3DE5YpZW0VtD3OlHY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=o0UjBQH7uFWuTflw5fJiGaB8SQC5CgWOAgw9Aya6xpVaXQviuw6pZpyK2I0425BgT
-	 LbZUSWJON1ejIuyenByuemPo7Jw+C5B0rMm7NqEKrG729tqvTctiWy70jtOIp2tsJj
-	 6M/zdmuu5CFRYH4A9aTrKhEa4EL1OiWGDh9FOzZ0=
+	b=iEOwfDS+Gca6oeJXeT+oe7hOKQ1fBS38Bt43fn81CzaJeRxDxBB/MHQOewzCP036Y
+	 GLRtPhq+NB5UYoQTG56uOY9Mbdx3RdNhMQFLJ6hL6VI3WuCqtTIdcfzyEBsFTPlnWs
+	 f2jYSVBnNOUoR5MLHgcl1BavFjF985Ss7A8eycE4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729801AbgGNSrn (ORCPT
+        id S1729792AbgGNSrl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 14:47:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42846 "EHLO mail.kernel.org"
+        Tue, 14 Jul 2020 14:47:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42790 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729785AbgGNSrk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 14:47:40 -0400
+        id S1729723AbgGNSri (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 14:47:38 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D434522AB0;
-        Tue, 14 Jul 2020 18:47:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3FB4D22B2C;
+        Tue, 14 Jul 2020 18:47:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594752460;
-        bh=W7vStj3YtdpzeydOFVEpUDcx8DzNF5sDUM/w66x1BVo=;
+        s=default; t=1594752457;
+        bh=FrW5svSSOMr6F6SuCMiGrVaNwk3DE5YpZW0VtD3OlHY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tVijbIzMc+SoDEMnvKDhPn3KOJJMjZtA3K/Xakmw5gIwZZyFM6ORi8jXPjmq6JwKE
-         2aoyXi5eIb0lAjzKTg9yOwekJxD7CGtwpWZudObhWuZi/joc9tCmRrP5fmzTUsGRiH
-         72o0Fx5DNfaGQYEtppjwRxe9xKhMjKBjPO5hijGg=
+        b=xaAvRnONvkZemAES5cErBf7B17PMwaZv8yv6/REzpstNAH20gDcQ/L7uBPrxcIXd+
+         fnj2GaBIOPKSreUWqbh4fUDIU94JDFrXgVgmSrFhu5uruc1/eFLd/e3iTlrJWxfEzu
+         T0zHmpntsdlRu1CN+09lzW/kQJvKAbjlLK8KMGZw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Masami Hiramatsu <mhiramat@kernel.org>,
-        Kees Cook <keescook@chromium.org>
-Subject: [PATCH 4.19 50/58] kprobes: Do not expose probe addresses to non-CAP_SYSLOG
-Date:   Tue, 14 Jul 2020 20:44:23 +0200
-Message-Id: <20200714184058.655527155@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Dominik Czarnota <dominik.czarnota@trailofbits.com>,
+        Jessica Yu <jeyu@kernel.org>, Kees Cook <keescook@chromium.org>
+Subject: [PATCH 4.19 49/58] module: Do not expose section addresses to non-CAP_SYSLOG
+Date:   Tue, 14 Jul 2020 20:44:22 +0200
+Message-Id: <20200714184058.596597029@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200714184056.149119318@linuxfoundation.org>
 References: <20200714184056.149119318@linuxfoundation.org>
@@ -61,42 +62,65 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Kees Cook <keescook@chromium.org>
 
-commit 60f7bb66b88b649433bf700acfc60c3f24953871 upstream.
+commit b25a7c5af9051850d4f3d93ca500056ab6ec724b upstream.
 
-The kprobe show() functions were using "current"'s creds instead
-of the file opener's creds for kallsyms visibility. Fix to use
-seq_file->file->f_cred.
+The printing of section addresses in /sys/module/*/sections/* was not
+using the correct credentials to evaluate visibility.
 
-Cc: Masami Hiramatsu <mhiramat@kernel.org>
+Before:
+
+ # cat /sys/module/*/sections/.*text
+ 0xffffffffc0458000
+ ...
+ # capsh --drop=CAP_SYSLOG -- -c "cat /sys/module/*/sections/.*text"
+ 0xffffffffc0458000
+ ...
+
+After:
+
+ # cat /sys/module/*/sections/*.text
+ 0xffffffffc0458000
+ ...
+ # capsh --drop=CAP_SYSLOG -- -c "cat /sys/module/*/sections/.*text"
+ 0x0000000000000000
+ ...
+
+Additionally replaces the existing (safe) /proc/modules check with
+file->f_cred for consistency.
+
+Reported-by: Dominik Czarnota <dominik.czarnota@trailofbits.com>
+Fixes: be71eda5383f ("module: Fix display of wrong module .text address")
 Cc: stable@vger.kernel.org
-Fixes: 81365a947de4 ("kprobes: Show address of kprobes if kallsyms does")
-Fixes: ffb9bd68ebdb ("kprobes: Show blacklist addresses as same as kallsyms does")
+Tested-by: Jessica Yu <jeyu@kernel.org>
+Acked-by: Jessica Yu <jeyu@kernel.org>
 Signed-off-by: Kees Cook <keescook@chromium.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- kernel/kprobes.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ kernel/module.c |    6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
---- a/kernel/kprobes.c
-+++ b/kernel/kprobes.c
-@@ -2334,7 +2334,7 @@ static void report_probe(struct seq_file
- 	else
- 		kprobe_type = "k";
+--- a/kernel/module.c
++++ b/kernel/module.c
+@@ -1471,8 +1471,8 @@ static ssize_t module_sect_read(struct f
+ 	if (pos != 0)
+ 		return -EINVAL;
  
--	if (!kallsyms_show_value(current_cred()))
-+	if (!kallsyms_show_value(pi->file->f_cred))
- 		addr = NULL;
+-	return sprintf(buf, "0x%px\n", kptr_restrict < 2 ?
+-		       (void *)sattr->address : NULL);
++	return sprintf(buf, "0x%px\n",
++		       kallsyms_show_value(file->f_cred) ? (void *)sattr->address : NULL);
+ }
  
- 	if (sym)
-@@ -2435,7 +2435,7 @@ static int kprobe_blacklist_seq_show(str
- 	 * If /proc/kallsyms is not showing kernel address, we won't
- 	 * show them here either.
- 	 */
--	if (!kallsyms_show_value(current_cred()))
-+	if (!kallsyms_show_value(m->file->f_cred))
- 		seq_printf(m, "0x%px-0x%px\t%ps\n", NULL, NULL,
- 			   (void *)ent->start_addr);
- 	else
+ static void free_sect_attrs(struct module_sect_attrs *sect_attrs)
+@@ -4260,7 +4260,7 @@ static int modules_open(struct inode *in
+ 
+ 	if (!err) {
+ 		struct seq_file *m = file->private_data;
+-		m->private = kallsyms_show_value(current_cred()) ? NULL : (void *)8ul;
++		m->private = kallsyms_show_value(file->f_cred) ? NULL : (void *)8ul;
+ 	}
+ 
+ 	return err;
 
 
