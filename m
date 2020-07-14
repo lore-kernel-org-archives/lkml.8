@@ -2,137 +2,396 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9706EC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 05:33:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64D06C433EA
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 05:33:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7CADC21927
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 05:33:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4BE0421927
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 05:33:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726517AbgGNFdG (ORCPT
+        id S1726752AbgGNFdM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 01:33:06 -0400
-Received: from mga05.intel.com ([192.55.52.43]:55493 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726384AbgGNFdF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 01:33:05 -0400
-IronPort-SDR: yAnxvbBwHlM+WfbJTVsS6MdkDrrFxTq5cMQu76w3teMaVyFluWMJqXypZTanFE9QoHSzwBni9X
- In0hlTPHlqHA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9681"; a="233663854"
-X-IronPort-AV: E=Sophos;i="5.75,350,1589266800"; 
-   d="scan'208";a="233663854"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jul 2020 22:33:05 -0700
-IronPort-SDR: aDD1C1O4sqMlQQpAgdX8Ubkii5NHmQDCEZKGR//L+tb/3L9XUP/tPGA+UJCwWRAc/b+vovC09l
- Cy8acKKkmifg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,350,1589266800"; 
-   d="scan'208";a="324445520"
-Received: from linux.intel.com ([10.54.29.200])
-  by FMSMGA003.fm.intel.com with ESMTP; 13 Jul 2020 22:33:05 -0700
-Received: from [10.215.165.139] (rtanwar-MOBL.gar.corp.intel.com [10.215.165.139])
-        by linux.intel.com (Postfix) with ESMTP id 57D3758080E;
-        Mon, 13 Jul 2020 22:32:59 -0700 (PDT)
-Subject: Re: [PATCH v4 1/2] Add DT bindings YAML schema for PWM fan controller
- of LGM SoC
-To:     Rob Herring <robh@kernel.org>
-Cc:     u.kleine-koenig@pengutronix.de, linux-pwm@vger.kernel.org,
-        thierry.reding@gmail.com, p.zabel@pengutronix.de,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        andriy.shevchenko@intel.com, songjun.Wu@intel.com,
-        cheol.yong.kim@intel.com, qi-ming.wu@intel.com,
-        rahul.tanwar.linux@gmail.com
-References: <cover.1593503228.git.rahul.tanwar@linux.intel.com>
- <cfef33c19b97a9cfbb8ecc0c6a122f3c9a5b46dd.1593503228.git.rahul.tanwar@linux.intel.com>
- <20200713164600.GA359372@bogus>
-From:   "Tanwar, Rahul" <rahul.tanwar@linux.intel.com>
-Message-ID: <b5832bbd-087e-4182-bea9-ed7b69626a8c@linux.intel.com>
-Date:   Tue, 14 Jul 2020 13:32:58 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Tue, 14 Jul 2020 01:33:12 -0400
+Received: from out28-194.mail.aliyun.com ([115.124.28.194]:57417 "EHLO
+        out28-194.mail.aliyun.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726542AbgGNFdL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 01:33:11 -0400
+X-Alimail-AntiSpam: AC=CONTINUE;BC=0.074363|-1;CH=green;DM=|CONTINUE|false|;DS=CONTINUE|ham_system_inform|0.0074057-0.00270883-0.989885;FP=16341417026346914016|3|2|11|0|-1|-1|-1;HT=e02c03302;MF=zhouyanjie@wanyeetech.com;NM=1;PH=DS;RN=15;RT=15;SR=0;TI=SMTPD_---.I1QwJ79_1594704779;
+Received: from localhost.localdomain(mailfrom:zhouyanjie@wanyeetech.com fp:SMTPD_---.I1QwJ79_1594704779)
+          by smtp.aliyun-inc.com(10.147.44.145);
+          Tue, 14 Jul 2020 13:33:05 +0800
+From:   =?UTF-8?q?=E5=91=A8=E7=90=B0=E6=9D=B0=20=28Zhou=20Yanjie=29?= 
+        <zhouyanjie@wanyeetech.com>
+To:     tsbogend@alpha.franken.de, robh+dt@kernel.org
+Cc:     linux-mips@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, paulburton@kernel.org,
+        paul@crapouillou.net, ak@linux.intel.com, ebiederm@xmission.com,
+        dongsheng.qiu@ingenic.com, aric.pzqi@ingenic.com,
+        rick.tyliu@ingenic.com, yanfei.li@ingenic.com,
+        sernia.zhou@foxmail.com, zhenwenjin@gmail.com
+Subject: [PATCH v4 1/5] MIPS: Ingenic: Add Ingenic X1830 support.
+Date:   Tue, 14 Jul 2020 13:32:25 +0800
+Message-Id: <20200714053229.33195-2-zhouyanjie@wanyeetech.com>
+X-Mailer: git-send-email 2.11.0
+In-Reply-To: <20200714053229.33195-1-zhouyanjie@wanyeetech.com>
+References: <20200714053229.33195-1-zhouyanjie@wanyeetech.com>
 MIME-Version: 1.0
-In-Reply-To: <20200713164600.GA359372@bogus>
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Support the Ingenic X1830 SoC using the code under arch/mips/jz4740.
+This is left unselectable in Kconfig until a X1830 based board is
+added in a later commit.
 
-Hi Rob,
+Tested-by: 周正 (Zhou Zheng) <sernia.zhou@foxmail.com>
+Signed-off-by: 周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>
+---
 
-On 14/7/2020 12:46 am, Rob Herring wrote:
-> On Tue, Jun 30, 2020 at 03:55:31PM +0800, Rahul Tanwar wrote:
->> Intel's LGM(Lightning Mountain) SoC contains a PWM fan controller
->> which is only used to control the fan attached to the system. This
->> PWM controller does not have any other consumer other than fan.
->> Add DT bindings documentation for this PWM fan controller.
->>
->> Signed-off-by: Rahul Tanwar <rahul.tanwar@linux.intel.com>
->> ---
->>  .../devicetree/bindings/pwm/intel,lgm-pwm.yaml     | 50 ++++++++++++++++++++++
->>  1 file changed, 50 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/pwm/intel,lgm-pwm.yaml
->>
->> diff --git a/Documentation/devicetree/bindings/pwm/intel,lgm-pwm.yaml b/Documentation/devicetree/bindings/pwm/intel,lgm-pwm.yaml
->> new file mode 100644
->> index 000000000000..120bf3d85a24
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/pwm/intel,lgm-pwm.yaml
->> @@ -0,0 +1,50 @@
->> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
->> +%YAML 1.2
->> +---
->> +$id: http://devicetree.org/schemas/pwm/intel,lgm-pwm.yaml#
->> +$schema: http://devicetree.org/meta-schemas/core.yaml#
->> +
->> +title: LGM SoC PWM fan controller
->> +
->> +maintainers:
->> +  - Rahul Tanwar <rahul.tanwar@intel.com>
->> +
->> +properties:
->> +  compatible:
->> +    const: intel,lgm-pwm
->> +
->> +  reg:
->> +    maxItems: 1
->> +
->> +  clocks:
->> +    maxItems: 1
->> +
->> +  resets:
->> +    maxItems: 1
->> +
->> +  intel,fan-wire:
->> +    $ref: '/schemas/types.yaml#/definitions/uint32'
->> +    description: Specifies fan mode. Default when unspecified is 2.
->> +
->> +  intel,max-rpm:
->> +    $ref: '/schemas/types.yaml#/definitions/uint32'
->> +    description:
->> +      Specifies maximum RPM of fan attached to the system.
->> +      Default when unspecified is 4000.
-> These are properties of the fan, not the PWM. And probably if you 
-> need these properties then others would too, so they should be 
-> common. Look at the pwm-fan.txt binding.
+Notes:
+    v1->v2:
+    No change.
+    
+    v2->v3:
+    Adjust the order of nodes according to the
+    corresponding address value.
+    
+    v3->v4:
+    No change.
 
-I checked pwm-fan.txt. I don't find any common property which matches
-our fan properties of fan wire mode & max-rpm. Are you suggesting to
-add these properties additionally in pwm-fan.txt as new common properties
-and then use newly added generic name in our driver?
+ arch/mips/boot/dts/ingenic/x1830.dtsi | 300 ++++++++++++++++++++++++++++++++++
+ arch/mips/jz4740/Kconfig              |   6 +
+ 2 files changed, 306 insertions(+)
+ create mode 100644 arch/mips/boot/dts/ingenic/x1830.dtsi
 
-Also, we have a dedicated PWM fan controller. So do you think this driver
-belongs to drivers/hwmon instead of drivers/pwm? Thanks.
-
-Regards,
-Rahul 
+diff --git a/arch/mips/boot/dts/ingenic/x1830.dtsi b/arch/mips/boot/dts/ingenic/x1830.dtsi
+new file mode 100644
+index 000000000000..eb1214481a33
+--- /dev/null
++++ b/arch/mips/boot/dts/ingenic/x1830.dtsi
+@@ -0,0 +1,300 @@
++// SPDX-License-Identifier: GPL-2.0
++#include <dt-bindings/clock/ingenic,tcu.h>
++#include <dt-bindings/clock/x1830-cgu.h>
++#include <dt-bindings/dma/x1830-dma.h>
++
++/ {
++	#address-cells = <1>;
++	#size-cells = <1>;
++	compatible = "ingenic,x1830";
++
++	cpuintc: interrupt-controller {
++		#address-cells = <0>;
++		#interrupt-cells = <1>;
++		interrupt-controller;
++		compatible = "mti,cpu-interrupt-controller";
++	};
++
++	intc: interrupt-controller@10001000 {
++		compatible = "ingenic,x1830-intc", "ingenic,jz4780-intc";
++		reg = <0x10001000 0x50>;
++
++		interrupt-controller;
++		#interrupt-cells = <1>;
++
++		interrupt-parent = <&cpuintc>;
++		interrupts = <2>;
++	};
++
++	exclk: ext {
++		compatible = "fixed-clock";
++		#clock-cells = <0>;
++	};
++
++	rtclk: rtc {
++		compatible = "fixed-clock";
++		#clock-cells = <0>;
++		clock-frequency = <32768>;
++	};
++
++	cgu: x1830-cgu@10000000 {
++		compatible = "ingenic,x1830-cgu";
++		reg = <0x10000000 0x100>;
++
++		#clock-cells = <1>;
++
++		clocks = <&exclk>, <&rtclk>;
++		clock-names = "ext", "rtc";
++	};
++
++	tcu: timer@10002000 {
++		compatible = "ingenic,x1830-tcu", "ingenic,x1000-tcu", "simple-mfd";
++		reg = <0x10002000 0x1000>;
++		#address-cells = <1>;
++		#size-cells = <1>;
++		ranges = <0x0 0x10002000 0x1000>;
++
++		#clock-cells = <1>;
++
++		clocks = <&cgu X1830_CLK_RTCLK
++			  &cgu X1830_CLK_EXCLK
++			  &cgu X1830_CLK_PCLK>;
++		clock-names = "rtc", "ext", "pclk";
++
++		interrupt-controller;
++		#interrupt-cells = <1>;
++
++		interrupt-parent = <&intc>;
++		interrupts = <27 26 25>;
++
++		wdt: watchdog@0 {
++			compatible = "ingenic,x1830-watchdog", "ingenic,jz4780-watchdog";
++			reg = <0x0 0x10>;
++
++			clocks = <&tcu TCU_CLK_WDT>;
++			clock-names = "wdt";
++		};
++	};
++
++	rtc: rtc@10003000 {
++		compatible = "ingenic,x1830-rtc", "ingenic,jz4780-rtc";
++		reg = <0x10003000 0x4c>;
++
++		interrupt-parent = <&intc>;
++		interrupts = <32>;
++
++		clocks = <&cgu X1830_CLK_RTCLK>;
++		clock-names = "rtc";
++	};
++
++	pinctrl: pin-controller@10010000 {
++		compatible = "ingenic,x1830-pinctrl";
++		reg = <0x10010000 0x800>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		gpa: gpio@0 {
++			compatible = "ingenic,x1830-gpio";
++			reg = <0>;
++
++			gpio-controller;
++			gpio-ranges = <&pinctrl 0 0 32>;
++			#gpio-cells = <2>;
++
++			interrupt-controller;
++			#interrupt-cells = <2>;
++
++			interrupt-parent = <&intc>;
++			interrupts = <17>;
++		};
++
++		gpb: gpio@1 {
++			compatible = "ingenic,x1830-gpio";
++			reg = <1>;
++
++			gpio-controller;
++			gpio-ranges = <&pinctrl 0 32 32>;
++			#gpio-cells = <2>;
++
++			interrupt-controller;
++			#interrupt-cells = <2>;
++
++			interrupt-parent = <&intc>;
++			interrupts = <16>;
++		};
++
++		gpc: gpio@2 {
++			compatible = "ingenic,x1830-gpio";
++			reg = <2>;
++
++			gpio-controller;
++			gpio-ranges = <&pinctrl 0 64 32>;
++			#gpio-cells = <2>;
++
++			interrupt-controller;
++			#interrupt-cells = <2>;
++
++			interrupt-parent = <&intc>;
++			interrupts = <15>;
++		};
++
++		gpd: gpio@3 {
++			compatible = "ingenic,x1830-gpio";
++			reg = <3>;
++
++			gpio-controller;
++			gpio-ranges = <&pinctrl 0 96 32>;
++			#gpio-cells = <2>;
++
++			interrupt-controller;
++			#interrupt-cells = <2>;
++
++			interrupt-parent = <&intc>;
++			interrupts = <14>;
++		};
++	};
++
++	uart0: serial@10030000 {
++		compatible = "ingenic,x1830-uart", "ingenic,x1000-uart";
++		reg = <0x10030000 0x100>;
++
++		interrupt-parent = <&intc>;
++		interrupts = <51>;
++
++		clocks = <&exclk>, <&cgu X1830_CLK_UART0>;
++		clock-names = "baud", "module";
++
++		status = "disabled";
++	};
++
++	uart1: serial@10031000 {
++		compatible = "ingenic,x1830-uart", "ingenic,x1000-uart";
++		reg = <0x10031000 0x100>;
++
++		interrupt-parent = <&intc>;
++		interrupts = <50>;
++
++		clocks = <&exclk>, <&cgu X1830_CLK_UART1>;
++		clock-names = "baud", "module";
++
++		status = "disabled";
++	};
++
++	i2c0: i2c-controller@10050000 {
++		compatible = "ingenic,x1830-i2c", "ingenic,x1000-i2c";
++		reg = <0x10050000 0x1000>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		interrupt-parent = <&intc>;
++		interrupts = <60>;
++
++		clocks = <&cgu X1830_CLK_SMB0>;
++
++		status = "disabled";
++	};
++
++	i2c1: i2c-controller@10051000 {
++		compatible = "ingenic,x1830-i2c", "ingenic,x1000-i2c";
++		reg = <0x10051000 0x1000>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		interrupt-parent = <&intc>;
++		interrupts = <59>;
++
++		clocks = <&cgu X1830_CLK_SMB1>;
++
++		status = "disabled";
++	};
++
++	i2c2: i2c-controller@10052000 {
++		compatible = "ingenic,x1830-i2c", "ingenic,x1000-i2c";
++		reg = <0x10052000 0x1000>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		interrupt-parent = <&intc>;
++		interrupts = <58>;
++
++		clocks = <&cgu X1830_CLK_SMB2>;
++
++		status = "disabled";
++	};
++
++	pdma: dma-controller@13420000 {
++		compatible = "ingenic,x1830-dma";
++		reg = <0x13420000 0x400
++			   0x13421000 0x40>;
++		#dma-cells = <2>;
++
++		interrupt-parent = <&intc>;
++		interrupts = <10>;
++
++		clocks = <&cgu X1830_CLK_PDMA>;
++	};
++
++	msc0: mmc@13450000 {
++		compatible = "ingenic,x1830-mmc", "ingenic,x1000-mmc";
++		reg = <0x13450000 0x1000>;
++
++		interrupt-parent = <&intc>;
++		interrupts = <37>;
++
++		clocks = <&cgu X1830_CLK_MSC0>;
++		clock-names = "mmc";
++
++		cap-sd-highspeed;
++		cap-mmc-highspeed;
++		cap-sdio-irq;
++
++		dmas = <&pdma X1830_DMA_MSC0_RX 0xffffffff>,
++			   <&pdma X1830_DMA_MSC0_TX 0xffffffff>;
++		dma-names = "rx", "tx";
++
++		status = "disabled";
++	};
++
++	msc1: mmc@13460000 {
++		compatible = "ingenic,x1830-mmc", "ingenic,x1000-mmc";
++		reg = <0x13460000 0x1000>;
++
++		interrupt-parent = <&intc>;
++		interrupts = <36>;
++
++		clocks = <&cgu X1830_CLK_MSC1>;
++		clock-names = "mmc";
++
++		cap-sd-highspeed;
++		cap-mmc-highspeed;
++		cap-sdio-irq;
++
++		dmas = <&pdma X1830_DMA_MSC1_RX 0xffffffff>,
++			   <&pdma X1830_DMA_MSC1_TX 0xffffffff>;
++		dma-names = "rx", "tx";
++
++		status = "disabled";
++	};
++
++	mac: ethernet@134b0000 {
++		compatible = "ingenic,x1830-mac", "snps,dwmac";
++		reg = <0x134b0000 0x2000>;
++
++		interrupt-parent = <&intc>;
++		interrupts = <55>;
++		interrupt-names = "macirq";
++
++		clocks = <&cgu X1830_CLK_MAC>;
++		clock-names = "stmmaceth";
++
++		status = "disabled";
++
++		mdio: mdio {
++			compatible = "snps,dwmac-mdio";
++			#address-cells = <1>;
++			#size-cells = <0>;
++
++			status = "disabled";
++		};
++	};
++};
+diff --git a/arch/mips/jz4740/Kconfig b/arch/mips/jz4740/Kconfig
+index 9c2e8c15bb97..cd0ddb52da99 100644
+--- a/arch/mips/jz4740/Kconfig
++++ b/arch/mips/jz4740/Kconfig
+@@ -50,3 +50,9 @@ config MACH_X1000
+ 	select MIPS_CPU_SCACHE
+ 	select SYS_HAS_CPU_MIPS32_R2
+ 	select SYS_SUPPORTS_HIGHMEM
++
++config MACH_X1830
++	bool
++	select MIPS_CPU_SCACHE
++	select SYS_HAS_CPU_MIPS32_R2
++	select SYS_SUPPORTS_HIGHMEM
+-- 
+2.11.0
 
