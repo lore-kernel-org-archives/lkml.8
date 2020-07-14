@@ -7,49 +7,45 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E031C433F4
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:48:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 190AAC433F7
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:48:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 70F4F222E9
+	by mail.kernel.org (Postfix) with ESMTP id EE051222E9
 	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:48:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594752506;
-	bh=gT5151k0Ubtk/tBEyVBe8PhGWzMR8W2gtoTZ7OzRg98=;
+	s=default; t=1594752507;
+	bh=nbwn6TZZ0LFmygzzXGwmza/qSf14tzLEA/vC7zv4svw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZUvyp35GaP5AsCHIiPw7TJK3Ma8LvYEUT5cuUlPhz58XNJVjS61XGMEtZ3INm72Kr
-	 6pLNdY5e2Did02QlX2Yt+UKbqtZ5uSwnJ+Vetn/LmOHVuZFp1r8Ien7y73H4vb7TXr
-	 l3PJHMEzZkRt4QQluBGgm0zh3gJcq2eVBHh6pDf0=
+	b=ZrY9AJhapf4mIrwRsFgsceSCZ8AJc5DZbEu/NTUgZ/v0wxPsBDHWjSAeR9EUaiDoJ
+	 PczeM3AbRjFZECPsjrVkp3ihaaMY8j/g8kwG0K3T0VAgFiTbv9U4bp2+4yck0vme+M
+	 FHRjD3P2rBSRsyVU8ogss4bKfscbmrE1WVJL9X4E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729935AbgGNSsY (ORCPT
+        id S1729943AbgGNSs0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 14:48:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43752 "EHLO mail.kernel.org"
+        Tue, 14 Jul 2020 14:48:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43818 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729326AbgGNSsU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 14:48:20 -0400
+        id S1729329AbgGNSsX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 14:48:23 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DCEC622AAA;
-        Tue, 14 Jul 2020 18:48:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4E1CE22AB9;
+        Tue, 14 Jul 2020 18:48:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594752500;
-        bh=gT5151k0Ubtk/tBEyVBe8PhGWzMR8W2gtoTZ7OzRg98=;
+        s=default; t=1594752502;
+        bh=nbwn6TZZ0LFmygzzXGwmza/qSf14tzLEA/vC7zv4svw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jqKG+iTjI61D+HD1QmGWJ8N+qWbgLM3mEqOeUyCngDGtkbqZJiD10ow9+JCuH3dbv
-         yiuIzCqOIt4OrZKeaX8bWZFkGrw7fnNaZSY5ojGWDlZ95b8oldUxQkmRH7OVuyFVl+
-         6FlsZWNcvsLbyR7R+IZb6SkTxfG60FdrVFvfej5o=
+        b=kN74pZV8TJu2L2ktnkjMVsd9+o43Bkg0cw6BJOPo/ehfC0BdSkKKiw240bPeo6OME
+         EO6r+hJxb2VbAvskFejX4PGsfOgN59hp0D3Wh2vCUT7SxOqQuXzpjgLMxlPHhyt3fS
+         twkeUTnnFcmY07652tYu+g4sObmus9upM2GyGSW8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
-        Janosch Frank <frankja@linux.ibm.com>,
-        Heiko Carstens <hca@linux.ibm.com>
-Subject: [PATCH 4.19 58/58] s390/mm: fix huge pte soft dirty copying
-Date:   Tue, 14 Jul 2020 20:44:31 +0200
-Message-Id: <20200714184059.052295653@linuxfoundation.org>
+        stable@vger.kernel.org, Vineet Gupta <vgupta@synopsys.com>
+Subject: [PATCH 4.19 57/58] ARC: elf: use right ELF_ARCH
+Date:   Tue, 14 Jul 2020 20:44:30 +0200
+Message-Id: <20200714184059.004925857@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200714184056.149119318@linuxfoundation.org>
 References: <20200714184056.149119318@linuxfoundation.org>
@@ -62,35 +58,28 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Janosch Frank <frankja@linux.ibm.com>
+From: Vineet Gupta <vgupta@synopsys.com>
 
-commit 528a9539348a0234375dfaa1ca5dbbb2f8f8e8d2 upstream.
+commit b7faf971081a4e56147f082234bfff55135305cb upstream.
 
-If the pmd is soft dirty we must mark the pte as soft dirty (and not dirty).
-This fixes some cases for guest migration with huge page backings.
-
-Cc: <stable@vger.kernel.org> # 4.8
-Fixes: bc29b7ac1d9f ("s390/mm: clean up pte/pmd encoding")
-Reviewed-by: Christian Borntraeger <borntraeger@de.ibm.com>
-Reviewed-by: Gerald Schaefer <gerald.schaefer@de.ibm.com>
-Signed-off-by: Janosch Frank <frankja@linux.ibm.com>
-Signed-off-by: Heiko Carstens <hca@linux.ibm.com>
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Vineet Gupta <vgupta@synopsys.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/s390/mm/hugetlbpage.c |    2 +-
+ arch/arc/include/asm/elf.h |    2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/arch/s390/mm/hugetlbpage.c
-+++ b/arch/s390/mm/hugetlbpage.c
-@@ -117,7 +117,7 @@ static inline pte_t __rste_to_pte(unsign
- 					     _PAGE_YOUNG);
- #ifdef CONFIG_MEM_SOFT_DIRTY
- 		pte_val(pte) |= move_set_bit(rste, _SEGMENT_ENTRY_SOFT_DIRTY,
--					     _PAGE_DIRTY);
-+					     _PAGE_SOFT_DIRTY);
- #endif
- 		pte_val(pte) |= move_set_bit(rste, _SEGMENT_ENTRY_NOEXEC,
- 					     _PAGE_NOEXEC);
+--- a/arch/arc/include/asm/elf.h
++++ b/arch/arc/include/asm/elf.h
+@@ -26,7 +26,7 @@
+ #define  R_ARC_32_PCREL		0x31
+ 
+ /*to set parameters in the core dumps */
+-#define ELF_ARCH		EM_ARCOMPACT
++#define ELF_ARCH		EM_ARC_INUSE
+ #define ELF_CLASS		ELFCLASS32
+ 
+ #ifdef CONFIG_CPU_BIG_ENDIAN
 
 
