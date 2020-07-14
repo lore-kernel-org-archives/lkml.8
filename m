@@ -2,116 +2,113 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+X-Spam-Status: No, score=-11.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86ACFC433E2
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 19:06:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E254BC433F8
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 19:06:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5DDDE2240B
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 19:06:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594753600;
-	bh=t38cKROaW5bZm5m83DpUpizQxSlDQDkFXo+98nVCCqs=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mFjm9SHyAyqT57MzrVk43BPSn1kmip2fFxHaBwZwpufQUQWli45p0CI26+/BYFSxj
-	 RosjMPC8L07ep34yq24/elcTDPDuR0KzrxEVDJD3ENVRbmdgL+SdSJxvzQ2xxuyyQh
-	 yb6Aw/wUC203aWLZuTClpILGY2a4sMjjbMfp/Z0Q=
+	by mail.kernel.org (Postfix) with ESMTP id BC98822AAB
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 19:06:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="IDR/vZd4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730596AbgGNSxN (ORCPT
+        id S1731093AbgGNTGr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 14:53:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50016 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730156AbgGNSxE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 14:53:04 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3155022BED;
-        Tue, 14 Jul 2020 18:53:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594752783;
-        bh=t38cKROaW5bZm5m83DpUpizQxSlDQDkFXo+98nVCCqs=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LtFTcZW8LiNux8IypoXf3IoZCG+LSRHkHccxhsF0C5m6gVn5QXzqMx4hKIhGJv02K
-         yecpSsxN2Jw+R9EPSE3J6vM6nLo6UxgHHVTm5Wwf3dTn7B1Lm0qw7lZdTsL7apExKO
-         n6u5tcimALMm8gR6vRlQtnl5WKRo9gzcyIB56vK0=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+        Tue, 14 Jul 2020 15:06:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41502 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729917AbgGNTGl (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 15:06:41 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 558B2C061755;
+        Tue, 14 Jul 2020 12:06:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
+        Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
+        Content-Description:In-Reply-To:References;
+        bh=3mOaoD/B/fJiX289qQjOUZtXOEZ2+n+0JbvjRMjxJao=; b=IDR/vZd4vo7XbrQ3tTdWn6EOsA
+        fGgy5xPMuRkYm1IvorwX2tRu+QVFD9THWEEz/F7SKv0ODpJrJMTqvujD8fMBgR+96UDHuQwN1+ukr
+        3qVqC2NlQi310NumxiqTfX1xt6lAECmhhBdKCE3mcgN/+qR+ms56Vesqe3YU2AGA/LA3p2p0nnLrd
+        sYTfvUSptdqcle1kCtdQ/Lf/QWY9HbbtZN3C0tcqN9qKYaffJlbVIRy3pkXa2OiVMbc0MfMitchUT
+        fQdG5vK6q4WfYqnrTWI7pCNgpRqBwnjERK3xS8X1sDu1AC3nRIsCBnvsPI5n3q4cJPCekNSVi6O7z
+        h7IBwuxA==;
+Received: from 089144201169.atnat0010.highway.a1.net ([89.144.201.169] helo=localhost)
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jvQGE-0005cy-Vv; Tue, 14 Jul 2020 19:06:39 +0000
+From:   Christoph Hellwig <hch@lst.de>
 To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Adrian Hunter <adrian.hunter@intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH 5.4 107/109] perf scripts python: exported-sql-viewer.py: Fix zero id in call tree Find result
-Date:   Tue, 14 Jul 2020 20:44:50 +0200
-Message-Id: <20200714184110.688231384@linuxfoundation.org>
+Cc:     "H. Peter Anvin" <hpa@zytor.com>, Song Liu <song@kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-raid@vger.kernel.org, linux-fsdevel@vger.kernel.org
+Subject: decruft the early init / initrd / initramfs code v2
+Date:   Tue, 14 Jul 2020 21:04:04 +0200
+Message-Id: <20200714190427.4332-1-hch@lst.de>
 X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200714184105.507384017@linuxfoundation.org>
-References: <20200714184105.507384017@linuxfoundation.org>
-User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Adrian Hunter <adrian.hunter@intel.com>
+Hi all,
 
-commit 031c8d5edb1ddeb6d398f7942ce2a01a1a51ada9 upstream.
+this series starts to move the early init code away from requiring
+KERNEL_DS to be implicitly set during early startup.  It does so by
+first removing legacy unused cruft, and the switches away the code
+from struct file based APIs to our more usual in-kernel APIs.
 
-Using ctrl-F ('Find') would not find 'unknown' because it matches id
-zero.  Fix by excluding id zero from selection.
-
-Example:
-
-   $ perf record -e intel_pt//u uname
-   Linux
-   [ perf record: Woken up 1 times to write data ]
-   [ perf record: Captured and wrote 0.034 MB perf.data ]
-   $ perf script --itrace=bep -s ~/libexec/perf-core/scripts/python/export-to-sqlite.py perf.data.db branches calls
-   2020-06-26 15:32:14.928997 Creating database ...
-   2020-06-26 15:32:14.933971 Writing records...
-   2020-06-26 15:32:15.535251 Adding indexes
-   2020-06-26 15:32:15.542993 Dropping unused tables
-   2020-06-26 15:32:15.549716 Done
-   $ python3 ~/libexec/perf-core/scripts/python/exported-sql-viewer.py perf.data.db
-
-   Select: Reports -> Call Tree
-   Press: Ctrl-F
-   Enter: unknown
-   Press: Enter
-
-Before: displays 'unknown' not found
-After: tree is expanded to line showing 'unknown'
-
-Fixes: ae8b887c00d3f ("perf scripts python: exported-sql-viewer.py: Add call tree")
-Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: stable@vger.kernel.org
-Link: http://lore.kernel.org/lkml/20200629091955.17090-6-adrian.hunter@intel.com
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
----
- tools/perf/scripts/python/exported-sql-viewer.py |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
---- a/tools/perf/scripts/python/exported-sql-viewer.py
-+++ b/tools/perf/scripts/python/exported-sql-viewer.py
-@@ -951,7 +951,8 @@ class CallTreeModel(CallGraphModelBase):
- 						" FROM calls"
- 						" INNER JOIN call_paths ON calls.call_path_id = call_paths.id"
- 						" INNER JOIN symbols ON call_paths.symbol_id = symbols.id"
--						" WHERE symbols.name" + match +
-+						" WHERE calls.id <> 0"
-+						" AND symbols.name" + match +
- 						" ORDER BY comm_id, thread_id, call_time, calls.id")
- 
- 	def FindPath(self, query):
+There is no really good tree for this, so if there are no objections
+I'd like to set up a new one for linux-next.
 
 
+Git tree:
+
+    git://git.infradead.org/users/hch/misc.git init-user-pointers
+
+Gitweb:
+
+    http://git.infradead.org/users/hch/misc.git/shortlog/refs/heads/init-user-pointers
+
+Changes since v2:
+ - add vfs_fchown and vfs_fchmod helpers and use them for initramfs
+   unpacking
+ - split patches up a little more
+ - fix a commit log typo
+Changes since v1:
+ - add a patch to deprecated "classic" initrd support
+
+Diffstat:
+ b/arch/arm/kernel/atags_parse.c |    2 
+ b/arch/sh/kernel/setup.c        |    2 
+ b/arch/sparc/kernel/setup_32.c  |    2 
+ b/arch/sparc/kernel/setup_64.c  |    2 
+ b/arch/x86/kernel/setup.c       |    2 
+ b/drivers/md/Makefile           |    3 
+ b/drivers/md/md-autodetect.c    |  239 ++++++++++++++++++----------------------
+ b/drivers/md/md.c               |   34 +----
+ b/drivers/md/md.h               |   10 +
+ b/fs/file.c                     |    7 -
+ b/fs/ioctl.c                    |    7 -
+ b/fs/open.c                     |   56 +++++----
+ b/fs/read_write.c               |    2 
+ b/fs/readdir.c                  |   11 -
+ b/include/linux/fs.h            |    3 
+ b/include/linux/initrd.h        |    6 -
+ b/include/linux/raid/detect.h   |    8 +
+ b/include/linux/syscalls.h      |   17 --
+ b/init/Makefile                 |    1 
+ b/init/do_mounts.c              |   70 +----------
+ b/init/do_mounts.h              |   21 ---
+ b/init/do_mounts_initrd.c       |   13 --
+ b/init/do_mounts_rd.c           |  102 +++++++----------
+ b/init/initramfs.c              |  103 +++++------------
+ b/init/main.c                   |   16 +-
+ include/linux/raid/md_u.h       |   13 --
+ 26 files changed, 279 insertions(+), 473 deletions(-)
