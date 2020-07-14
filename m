@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39F5DC433E7
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:49:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43316C433EA
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:49:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0D81222B3A
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:49:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 19B6122B3F
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:49:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594752567;
-	bh=YTaFIXKUgmcdP1e9IE1EuXcT+y6FsRB2iZKzwevw40I=;
+	s=default; t=1594752571;
+	bh=yCgP41Iuucg6rYe1fQulaznsKmDM1DXMDqNIOVZgaQg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SMAFTvudljSCcc1fGzRDU0wGcouuAoDmv9r4Dyi4KsqMwpsdYEPCrVHjHNpLiHiR4
-	 ms/WTUGqAuQIbpfA//ARRisy7+8yV6lBJgt1o/yohFIu5ehqyyx2fTTCbnNN2mdOo0
-	 QRLez4aWlxRAyYSfiBqmPe0upr1SXaIm8Za5ehak=
+	b=VS5rBGQ4j2ZPk/QokFkDWbEutFnzetNLJv8Ac79UCVcxj9lIaivvnrHL4JzkG61SP
+	 W5ZGUZ1N1Za0kfYdYEb1Dqm8AFXN7gXxxQlbW/N+GH8Umd9tYThBGf1sctcJ+WpYTB
+	 DA8oiB/o1QRpVZF0RW0v5zLOTtygxBRWXRcLEx7o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730118AbgGNStZ (ORCPT
+        id S1730129AbgGNSt3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 14:49:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45126 "EHLO mail.kernel.org"
+        Tue, 14 Jul 2020 14:49:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45216 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730113AbgGNStV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 14:49:21 -0400
+        id S1730113AbgGNSt0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 14:49:26 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4F30622AB9;
-        Tue, 14 Jul 2020 18:49:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 54E28222E9;
+        Tue, 14 Jul 2020 18:49:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594752560;
-        bh=YTaFIXKUgmcdP1e9IE1EuXcT+y6FsRB2iZKzwevw40I=;
+        s=default; t=1594752565;
+        bh=yCgP41Iuucg6rYe1fQulaznsKmDM1DXMDqNIOVZgaQg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KlJ6WsudWz3EM5pt10ZZkcOHPg7HqJXkk68W3p5PXM5BdZ7b/cHJPKqLhIfJB1j1k
-         nsiRRoK0+fG5AccVPdwcph/9HMylZSFDNt0qyXnbk40KVnNmj8C83GfOauoQCrNiAb
-         PnAOaVigKNvHcXKzwaQ0LvtOmToK8F1kwDEbNevA=
+        b=MjwYBXna0Lk3pbxyk0YNSBm3fi60nhSey5+xOctUPsAcrWKVFXW/SPGDVFScp9597
+         Yh3m9NS97Q0/E7WSQ+CzfjWx909k9QFDhSmIhR+LZS0d9YHDzZd+6hqSm3Lh2c3OfT
+         XoXBOj/XDHm/PRtRr6L4YWSOdU0GNzvq22goy19k=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Emil Velikov <emil.l.velikov@gmail.com>,
-        Hans de Goede <hdegoede@redhat.com>,
+        stable@vger.kernel.org,
+        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
+        Maxime Ripard <maxime@cerno.tech>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 024/109] drm: panel-orientation-quirks: Use generic orientation-data for Acer S1003
-Date:   Tue, 14 Jul 2020 20:43:27 +0200
-Message-Id: <20200714184106.687691472@linuxfoundation.org>
+Subject: [PATCH 5.4 026/109] drm/sun4i: mixer: Call of_dma_configure if theres an IOMMU
+Date:   Tue, 14 Jul 2020 20:43:29 +0200
+Message-Id: <20200714184106.782410654@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200714184105.507384017@linuxfoundation.org>
 References: <20200714184105.507384017@linuxfoundation.org>
@@ -60,50 +61,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hans de Goede <hdegoede@redhat.com>
+From: Maxime Ripard <maxime@cerno.tech>
 
-[ Upstream commit a05caf9e62a85d12da27e814ac13195f4683f21c ]
+[ Upstream commit 842ec61f4006a6477a9deaedd69131e9f46e4cb5 ]
 
-The Acer S1003 has proper DMI strings for sys-vendor and product-name,
-so we do not need to match by BIOS-date.
+The main DRM device is actually a virtual device so it doesn't have the
+iommus property, which is instead on the DMA masters, in this case the
+mixers.
 
-This means that the Acer S1003 can use the generic lcd800x1280_rightside_up
-drm_dmi_panel_orientation_data struct which is also used by other quirks.
+Add a call to of_dma_configure with the mixers DT node but on the DRM
+virtual device to configure it in the same way than the mixers.
 
-Reviewed-by: Emil Velikov <emil.l.velikov@gmail.com>
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20200531093025.28050-2-hdegoede@redhat.com
+Reviewed-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+Signed-off-by: Maxime Ripard <maxime@cerno.tech>
+Link: https://patchwork.freedesktop.org/patch/msgid/9a4daf438dd3f2fe07afb23688bfb793a0613d7d.1589378833.git-series.maxime@cerno.tech
+(cherry picked from commit b718102dbdfd0285ad559687a30e27cc9124e592)
+[Maxime: Applied to -fixes since it missed the merge window and display is
+         broken without it]
+Signed-off-by: Maxime Ripard <maxime@cerno.tech>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/drm_panel_orientation_quirks.c | 8 +-------
- 1 file changed, 1 insertion(+), 7 deletions(-)
+ drivers/gpu/drm/sun4i/sun8i_mixer.c | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
 
-diff --git a/drivers/gpu/drm/drm_panel_orientation_quirks.c b/drivers/gpu/drm/drm_panel_orientation_quirks.c
-index d11d83703931e..d00ea384dcbfe 100644
---- a/drivers/gpu/drm/drm_panel_orientation_quirks.c
-+++ b/drivers/gpu/drm/drm_panel_orientation_quirks.c
-@@ -30,12 +30,6 @@ struct drm_dmi_panel_orientation_data {
- 	int orientation;
- };
+diff --git a/drivers/gpu/drm/sun4i/sun8i_mixer.c b/drivers/gpu/drm/sun4i/sun8i_mixer.c
+index 18b4881f44814..e24f225d80f1f 100644
+--- a/drivers/gpu/drm/sun4i/sun8i_mixer.c
++++ b/drivers/gpu/drm/sun4i/sun8i_mixer.c
+@@ -452,6 +452,19 @@ static int sun8i_mixer_bind(struct device *dev, struct device *master,
+ 	mixer->engine.ops = &sun8i_engine_ops;
+ 	mixer->engine.node = dev->of_node;
  
--static const struct drm_dmi_panel_orientation_data acer_s1003 = {
--	.width = 800,
--	.height = 1280,
--	.orientation = DRM_MODE_PANEL_ORIENTATION_RIGHT_UP,
--};
--
- static const struct drm_dmi_panel_orientation_data asus_t100ha = {
- 	.width = 800,
- 	.height = 1280,
-@@ -114,7 +108,7 @@ static const struct dmi_system_id orientation_data[] = {
- 		  DMI_EXACT_MATCH(DMI_SYS_VENDOR, "Acer"),
- 		  DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "One S1003"),
- 		},
--		.driver_data = (void *)&acer_s1003,
-+		.driver_data = (void *)&lcd800x1280_rightside_up,
- 	}, {	/* Asus T100HA */
- 		.matches = {
- 		  DMI_EXACT_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
++	if (of_find_property(dev->of_node, "iommus", NULL)) {
++		/*
++		 * This assume we have the same DMA constraints for
++		 * all our the mixers in our pipeline. This sounds
++		 * bad, but it has always been the case for us, and
++		 * DRM doesn't do per-device allocation either, so we
++		 * would need to fix DRM first...
++		 */
++		ret = of_dma_configure(drm->dev, dev->of_node, true);
++		if (ret)
++			return ret;
++	}
++
+ 	/*
+ 	 * While this function can fail, we shouldn't do anything
+ 	 * if this happens. Some early DE2 DT entries don't provide
 -- 
 2.25.1
 
