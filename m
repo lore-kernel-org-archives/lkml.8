@@ -2,247 +2,345 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65944C433E5
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 00:45:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89A1DC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 00:46:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3A26021835
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 00:45:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5671221835
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 00:46:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=paul-moore-com.20150623.gappssmtp.com header.i=@paul-moore-com.20150623.gappssmtp.com header.b="Jg0UAal5"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZQPxLdQS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727025AbgGNApM (ORCPT
+        id S1726907AbgGNAqY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 20:45:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40044 "EHLO
+        Mon, 13 Jul 2020 20:46:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40238 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726257AbgGNApL (ORCPT
+        with ESMTP id S1726364AbgGNAqX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 20:45:11 -0400
-Received: from mail-ed1-x541.google.com (mail-ed1-x541.google.com [IPv6:2a00:1450:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A20C7C061755
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 17:45:10 -0700 (PDT)
-Received: by mail-ed1-x541.google.com with SMTP id by13so15381412edb.11
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 17:45:10 -0700 (PDT)
+        Mon, 13 Jul 2020 20:46:23 -0400
+Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9E85FC061755
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 17:46:23 -0700 (PDT)
+Received: by mail-pj1-x1042.google.com with SMTP id cm21so738719pjb.3
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 17:46:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=paul-moore-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=bmkyDT2Ok5AKFPTzejs90EKhv0LPiFP9AWMW7s63JrQ=;
-        b=Jg0UAal5+4ko6u58hgMcHJj+uPsQ3LKmIcb61aCtyM4jaS3QWcAOCy0OObnsCpkXUU
-         ISOHXxoeLc2wCXHvajiQfNFdrMJ7CZz0MIzF+f971d/Gfu7vDxvayh7mhP2svb+qf2K1
-         YjCKpJmEeHMPjbQgTcGGPjMJ2K/Bh+qYoKC+z1uXDQYgcZeKcEhWagYje7djbIKDgWYJ
-         AYe/bLL7xIkCn1F4CcRszKPFnDbSkFF4fiY64ouwJMLevX6CoCQo+zUsKxKywrzWL6JY
-         EIXB9J4+THNCUiMEJXbr8YqqIliuE2LBwznBkdqqenwgZ5vW4MfNPwXn4hh3McNhiyp1
-         6Lpg==
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=8r/ns8NnPKy/N7dekyAtGhBhg3kPMPGKsLiPQZHspAw=;
+        b=ZQPxLdQSGc9aLdz33XfX1RgGKLsU5G2wrmPVsGFyoS3O1KDm0IftWv07HOyAfMV3bP
+         SObIsdaSylKu2ynf10yuPVxITQDbBC1DdgS2PCb3T78ZpH8Nv/FeLR11L3cytvei9btw
+         vBpxR6lv2HNNL6EN5vVMAPQqYuNYRKgLn62IGap2xK51JrTlcv/wKoBNdR3tT+DZGMVR
+         uCUjh5YWY4v0PdDSQGcq31mZMnk9VNglt88HcP15dxIdI5P/v+mDEWWqGHpPs6Ljdfuf
+         6KfRXqf9HRtI8mwim5UdbC450t7o4C2pV/18efKoRNdm68uzD5z9SLeSbvsGQMIjkJxu
+         oxxA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=bmkyDT2Ok5AKFPTzejs90EKhv0LPiFP9AWMW7s63JrQ=;
-        b=O3Ycpgf/Kf9YvTZucCSIRjJrIQi1NiIYCpPx3MSAJ9S1LlZkplFB3d56BP8jAn5cYd
-         37YNZz2jxVwk2CqcJfEhWkZBoXK2TpHIDztDASVj0dFoCSWAYFW9zb/O5fWIXo1dhKDP
-         tLDghZqd84sNfghi8+RMegQ+g6RLWAJXPBnYRMH6jSsxeiqaPadwx1LZEV+fJCewo5vS
-         +Yh0Kk4UBDyfBAGIQ3zo9t43PGg5Hfb1ZBE1XCgRVMiRi0/6oILNfpag7vCF+tONmKL4
-         p/IaQAUOWMsTCgxZL896C5ghfhulAOcWj0lI8YiHDTJyamHpV3c55AA8sAWGRuVk/82P
-         uNJA==
-X-Gm-Message-State: AOAM530QTZOoqEYrBk/V7esYw7YHS0L8MP5GeKBoWS/g9Z5w5i0BVuMh
-        NXjtt9B2UyUmMFTaW513BPr0nzVsHufhBM5GMluz
-X-Google-Smtp-Source: ABdhPJxFM46eZkco0XOaaCsFFTHlrOfIfbbkJNmhbdNiqdLTCYkgzE1EAejSD/O9P/+a7qjfCVbCzfrxVpEC0f0mWgE=
-X-Received: by 2002:a05:6402:1d89:: with SMTP id dk9mr1958150edb.31.1594687509148;
- Mon, 13 Jul 2020 17:45:09 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=8r/ns8NnPKy/N7dekyAtGhBhg3kPMPGKsLiPQZHspAw=;
+        b=pU9F4N7T0bJzFxEDWLOHbG/NoCzbZKp0z8hFO2M0f8IVA8zrvLS29qS+fcG1Fh8rAP
+         Mg1p74Oonh+0TzQm0shrFwoai+LCL8eSqLlS+ngkILbQPm8EParmhDM3l+cllfxnQ+C3
+         pfWIlmHoGwUo82LTAJJ7CVutyeLoQ0i3r9dB2qo1sdkPQW0pgZ03LBo7glznrID9M0Kz
+         J6S8aBbr9MdVQYLB0hHGW9EsmpaLQGVGG8iWcni8ZTVzGkyyLTOXRvWtd6jLX7QWDvxk
+         MYxfmauHUd9xeB1jpnPsxVsQL+GuL+e7oa4BnN/D7kbzWWlB0d80gmbK3BpeYX7e/ZJO
+         KiEA==
+X-Gm-Message-State: AOAM533sySj8jgPsJkfzmkRlQmbI70v9Vdm3Zb53HEUtE5Jjc255jMf9
+        LID2eUwSQCL+zpBX+LnAuPY=
+X-Google-Smtp-Source: ABdhPJxoJWNGsurXWkvbIx0NyIPyzBIdPeemYoJ0GNNN1dKoyCp+IEp5xxA6eXIBYpj3KoARnktZpA==
+X-Received: by 2002:a17:902:b589:: with SMTP id a9mr1705217pls.98.1594687583175;
+        Mon, 13 Jul 2020 17:46:23 -0700 (PDT)
+Received: from js1304-desktop ([114.206.198.176])
+        by smtp.gmail.com with ESMTPSA id c1sm634729pje.9.2020.07.13.17.46.20
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 13 Jul 2020 17:46:22 -0700 (PDT)
+Date:   Tue, 14 Jul 2020 09:46:17 +0900
+From:   Joonsoo Kim <js1304@gmail.com>
+To:     Vlastimil Babka <vbabka@suse.cz>
+Cc:     Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, kernel-team@lge.com,
+        Christoph Hellwig <hch@infradead.org>,
+        Roman Gushchin <guro@fb.com>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>,
+        Michal Hocko <mhocko@suse.com>
+Subject: Re: [PATCH v5 5/9] mm/migrate: make a standard migration target
+ allocation function
+Message-ID: <20200714004616.GB7891@js1304-desktop>
+References: <1594622517-20681-1-git-send-email-iamjoonsoo.kim@lge.com>
+ <1594622517-20681-6-git-send-email-iamjoonsoo.kim@lge.com>
+ <641fa691-ce77-7eae-75e5-452c0a111ae9@suse.cz>
 MIME-Version: 1.0
-References: <cover.1593198710.git.rgb@redhat.com> <6abeb26e64489fc29b00c86b60b501c8b7316424.1593198710.git.rgb@redhat.com>
- <CAHC9VhTx=4879F1MSXg4=Xd1i5rhEtyam6CakQhy=_ZjGtTaMA@mail.gmail.com>
- <20200707025014.x33eyxbankw2fbww@madcap2.tricolour.ca> <CAHC9VhTTGLf9MPS_FgL1ibUVoH+YzMtPK6+2dp_j8a5o9fzftA@mail.gmail.com>
- <20200713202906.iiz435vjeedljcwf@madcap2.tricolour.ca>
-In-Reply-To: <20200713202906.iiz435vjeedljcwf@madcap2.tricolour.ca>
-From:   Paul Moore <paul@paul-moore.com>
-Date:   Mon, 13 Jul 2020 20:44:57 -0400
-Message-ID: <CAHC9VhScQAMeEXssDhDeAo+za9f-doqcM-yutDmFBuwqZVpa3A@mail.gmail.com>
-Subject: Re: [PATCH ghak90 V9 01/13] audit: collect audit task parameters
-To:     Richard Guy Briggs <rgb@redhat.com>
-Cc:     nhorman@tuxdriver.com, linux-api@vger.kernel.org,
-        containers@lists.linux-foundation.org,
-        LKML <linux-kernel@vger.kernel.org>, dhowells@redhat.com,
-        Linux-Audit Mailing List <linux-audit@redhat.com>,
-        netfilter-devel@vger.kernel.org, ebiederm@xmission.com,
-        simo@redhat.com, netdev@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, Eric Paris <eparis@parisplace.org>,
-        mpatel@redhat.com, Serge Hallyn <serge@hallyn.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <641fa691-ce77-7eae-75e5-452c0a111ae9@suse.cz>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 13, 2020 at 4:30 PM Richard Guy Briggs <rgb@redhat.com> wrote:
-> On 2020-07-07 21:42, Paul Moore wrote:
-> > On Mon, Jul 6, 2020 at 10:50 PM Richard Guy Briggs <rgb@redhat.com> wrote:
-> > > On 2020-07-05 11:09, Paul Moore wrote:
-> > > > On Sat, Jun 27, 2020 at 9:21 AM Richard Guy Briggs <rgb@redhat.com> wrote:
+On Mon, Jul 13, 2020 at 09:53:40AM +0200, Vlastimil Babka wrote:
+> On 7/13/20 8:41 AM, js1304@gmail.com wrote:
+> > From: Joonsoo Kim <iamjoonsoo.kim@lge.com>
+> 
+> Nit: s/make/introduce/ in the subject, is a more common verb in this context.
+> 
 
-...
+Thanks for correcting!
+Following is fixed version.
 
-> > > > In the early days of this patchset we talked a lot about how to handle
-> > > > the task_struct and the changes that would be necessary, ultimately
-> > > > deciding that encapsulating all of the audit fields into an
-> > > > audit_task_info struct.  However, what is puzzling me a bit at this
-> > > > moment is why we are only including audit_task_info in task_info by
-> > > > reference *and* making it a build time conditional (via CONFIG_AUDIT).
-> > > >
-> > > > If audit is enabled at build time it would seem that we are always
-> > > > going to allocate an audit_task_info struct, so I have to wonder why
-> > > > we don't simply embed it inside the task_info struct (similar to the
-> > > > seccomp struct in the snippet above?  Of course the audit_context
-> > > > struct needs to remain as is, I'm talking only about the
-> > > > task_info/audit_task_info struct.
-> > >
-> > > I agree that including the audit_task_info struct in the struct
-> > > task_struct would have been preferred to simplify allocation and free,
-> > > but the reason it was included by reference instead was to make the
-> > > task_struct size independent of audit so that future changes would not
-> > > cause as many kABI challenges.  This first change will cause kABI
-> > > challenges regardless, but it was future ones that we were trying to
-> > > ease.
-> > >
-> > > Does that match with your recollection?
-> >
-> > I guess, sure.  I suppose what I was really asking was if we had a
-> > "good" reason for not embedding the audit_task_info struct.
-> > Regardless, thanks for the explanation, that was helpful.
->
-> Making it dynamic was actually your idea back in the spring of 2018:
->         https://lkml.org/lkml/2018/4/18/759
+Thanks.
 
-If you read my comments from 2018 carefully, or even not so carefully
-I think, you'll notice that my primary motivation for using a pointer
-was to "hide" the audit_task_info struct contents so that they
-couldn't be abused by other kernel subsystems looking for a general
-container identifier inside the kernel.  As we've discussed many times
-before, this patchset is not a general purpose container identifier,
-this is an ***audit*** container ID; limiting the scope and usage of
-this identifier is what has allowed us to gain the begrudging
-acceptance we've had thus far and I believe it is the key to success.
+----------------->8-------------------
+From e8e4533bbc56fff3a77d5bc9a40dda7a9efc83e8 Mon Sep 17 00:00:00 2001
+From: Joonsoo Kim <iamjoonsoo.kim@lge.com>
+Date: Wed, 1 Jul 2020 16:19:18 +1000
+Subject: [PATCH v5 5/9] mm/migrate: introduce a standard migration target
+ allocation function
 
-For whatever it is worth, this patchset doesn't hide the
-audit_task_struct definition in a kernel/audit*.c file, it lives in a
-header file which is easily accessed by other subsystems.
+There are some similar functions for migration target allocation.  Since
+there is no fundamental difference, it's better to keep just one rather
+than keeping all variants.  This patch implements base migration target
+allocation function.  In the following patches, variants will be converted
+to use this function.
 
-In my opinion we should pick one of two options: leave it as a pointer
-reference and "hide" the struct definition, or just embed the struct
-and simplify the code.  I see little value in openly defining the
-audit_task_info struct and using a pointer reference; if you believe
-you have a valid argument for why this makes sense I'm open to hearing
-it, but your comments thus far have been unconvincing.
+Changes should be mechanical, but, unfortunately, there are some
+differences. First, some callers' nodemask is assgined to NULL since NULL
+nodemask will be considered as all available nodes, that is,
+&node_states[N_MEMORY]. Second, for hugetlb page allocation, gfp_mask is
+redefined as regular hugetlb allocation gfp_mask plus __GFP_THISNODE if
+user provided gfp_mask has it. This is because future caller of this
+function requires to set this node constaint. Lastly, if provided nodeid
+is NUMA_NO_NODE, nodeid is set up to the node where migration source
+lives. It helps to remove simple wrappers for setting up the nodeid.
 
-> > > > Richard, I'm sure you can answer this off the top of your head, but
-> > > > I'd have to go digging through the archives to pull out the relevant
-> > > > discussions so I figured I would just ask you for a reminder ... ?  I
-> > > > imagine it's also possible things have changed a bit since those early
-> > > > discussions and the solution we arrived at then no longer makes as
-> > > > much sense as it did before.
-> > >
-> > > Agreed, it doesn't make as much sense now as it did when proposed, but
-> > > will make more sense in the future depending on when this change gets
-> > > accepted upstream.  This is why I wanted this patch to go through as
-> > > part of ghak81 at the time the rest of it did so that future kABI issues
-> > > would be easier to handle, but that ship has long sailed.
-> >
-> > To be clear, kABI issues with task_struct really aren't an issue with
-> > the upstream kernel.  I know that you know all of this already
-> > Richard, I'm mostly talking to everyone else on the To/CC line in case
-> > they are casually watching this discussion.
->
-> kABI issues may not as much of an upstream issue, but part of the goal
-> here was upstream kernel issues, isolating the kernel audit changes
-> to its own subsystem and affect struct task_struct as little as possible
-> in the future and to protect it from "abuse" (as you had expressed
-> serious concerns) from the rest of the kernel.  include/linux/sched.h
-> will need to know more about struct audit_task_info if it is embedded,
-> making it more suceptible to abuse.
+Note that PageHighmem() call in previous function is changed to open-code
+"is_highmem_idx()" since it provides more readability.
 
-I define "abuse" in this context as other kernel subsystems inspecting
-the contents of the audit_task_struct, most likely to try and
-approximate a general container identifier.
+Acked-by: Vlastimil Babka <vbabka@suse.cz>
+Acked-by: Michal Hocko <mhocko@suse.com>
+Signed-off-by: Joonsoo Kim <iamjoonsoo.kim@lge.com>
+---
+ include/linux/hugetlb.h | 15 +++++++++++++++
+ include/linux/migrate.h |  9 +++++----
+ mm/internal.h           |  7 +++++++
+ mm/memory-failure.c     |  7 +++++--
+ mm/memory_hotplug.c     | 12 ++++++++----
+ mm/migrate.c            | 26 ++++++++++++++++----------
+ mm/page_isolation.c     |  7 +++++--
+ 7 files changed, 61 insertions(+), 22 deletions(-)
 
-Better separation between the audit subsystem and the task_struct,
-while conceptually nice, isn't critical and is easily changed upstream
-with each kernel release as it isn't part of the kernel/userspace API.
-Regardless, a basic conceptual separation is achieved by the
-audit_task_struct regardless of if it is embedded into the task_struct
-or included by a pointer reference.
-
-> > While I'm sympathetic to long-lifetime enterprise distros such as
-> > RHEL, my responsibility is to ensure the upstream kernel is as good as
-> > we can make it, and in this case I believe that means embedding
-> > audit_task_info into the task_struct.
->
-> Keeping audit_task_info dynamic will also make embedding struct
-> audit_context as a zero-length array at the end of it possible in the
-> future as an internal audit subsystem optimization whereas largely
-> preclude that if it were embedded.
-
-Predicting the future is hard, but I would be comfortable giving up on
-a variable length audit_task_info struct.  Besides, if we *really* had
-to do that in the future we could, it's not part of the
-kernel/userspace API.
-
-> This method has been well exercised over the last two years of
-> development, testing and rebases, so I'm not particularly concerned
-> about its dynamic nature any more.  It works well.  At this point this
-> change seems to be more gratuitously disruptive than helpful.
-
-It may not seem like it, but at this point in this patchset's life I
-do try to limit my comments to only those things which I feel are
-substantive.  In the cases where I think something is borderline I'll
-mention that in my comments.  The trivial cases I'll generally call
-out as "nitpicks".  I assure you my comments are not gratuitous.
-
-I look forward to reviewing another round of this patchset about as
-much as I expect you look forward to writing, testing, and submitting
-it.
-
-> > > > > diff --git a/kernel/auditsc.c b/kernel/auditsc.c
-> > > > > index 468a23390457..f00c1da587ea 100644
-> > > > > --- a/kernel/auditsc.c
-> > > > > +++ b/kernel/auditsc.c
-> > > > > @@ -1612,7 +1615,6 @@ void __audit_free(struct task_struct *tsk)
-> > > > >                 if (context->current_state == AUDIT_RECORD_CONTEXT)
-> > > > >                         audit_log_exit();
-> > > > >         }
-> > > > > -
-> > > > >         audit_set_context(tsk, NULL);
-> > > > >         audit_free_context(context);
-> > > > >  }
-> > > >
-> > > > This nitpick is barely worth the time it is taking me to write this,
-> > > > but the whitespace change above isn't strictly necessary.
-> > >
-> > > Sure, it is a harmless but noisy cleanup when the function was being
-> > > cleaned up and renamed.  It wasn't an accident, but a style preference.
-> > > Do you prefer a vertical space before cleanup actions at the end of
-> > > functions and more versus less vertical whitespace in general?
-> >
-> > As I mentioned above, this really was barely worth mentioning, but I
-> > made the comment simply because I feel this patchset is going to draw
-> > a lot of attention once it is merged and I feel keeping the patchset
-> > as small, and as focused, as possible is a good thing.
->
-> Is this concern also affecting the perspective on the change from
-> pointer to embedded above?
-
-Keeping this particular patchset small and focused has always been a
-goal; I know we talked about this at least once, likely more than
-that, while I was still at RH and we were talking offline.
-
-If something is going to be contentious, it is better to be small and
-focused on the contention.
-
+diff --git a/include/linux/hugetlb.h b/include/linux/hugetlb.h
+index bb93e95..6b9508d 100644
+--- a/include/linux/hugetlb.h
++++ b/include/linux/hugetlb.h
+@@ -701,6 +701,16 @@ static inline gfp_t htlb_alloc_mask(struct hstate *h)
+ 		return GFP_HIGHUSER;
+ }
+ 
++static inline gfp_t htlb_modify_alloc_mask(struct hstate *h, gfp_t gfp_mask)
++{
++	gfp_t modified_mask = htlb_alloc_mask(h);
++
++	/* Some callers might want to enfoce node */
++	modified_mask |= (gfp_mask & __GFP_THISNODE);
++
++	return modified_mask;
++}
++
+ static inline spinlock_t *huge_pte_lockptr(struct hstate *h,
+ 					   struct mm_struct *mm, pte_t *pte)
+ {
+@@ -888,6 +898,11 @@ static inline gfp_t htlb_alloc_mask(struct hstate *h)
+ 	return 0;
+ }
+ 
++static inline gfp_t htlb_modify_alloc_mask(struct hstate *h, gfp_t gfp_mask)
++{
++	return 0;
++}
++
+ static inline spinlock_t *huge_pte_lockptr(struct hstate *h,
+ 					   struct mm_struct *mm, pte_t *pte)
+ {
+diff --git a/include/linux/migrate.h b/include/linux/migrate.h
+index 1d70b4a..cc56f0d 100644
+--- a/include/linux/migrate.h
++++ b/include/linux/migrate.h
+@@ -10,6 +10,8 @@
+ typedef struct page *new_page_t(struct page *page, unsigned long private);
+ typedef void free_page_t(struct page *page, unsigned long private);
+ 
++struct migration_target_control;
++
+ /*
+  * Return values from addresss_space_operations.migratepage():
+  * - negative errno on page migration failure;
+@@ -39,8 +41,7 @@ extern int migrate_page(struct address_space *mapping,
+ 			enum migrate_mode mode);
+ extern int migrate_pages(struct list_head *l, new_page_t new, free_page_t free,
+ 		unsigned long private, enum migrate_mode mode, int reason);
+-extern struct page *new_page_nodemask(struct page *page,
+-		int preferred_nid, nodemask_t *nodemask);
++extern struct page *alloc_migration_target(struct page *page, unsigned long private);
+ extern int isolate_movable_page(struct page *page, isolate_mode_t mode);
+ extern void putback_movable_page(struct page *page);
+ 
+@@ -59,8 +60,8 @@ static inline int migrate_pages(struct list_head *l, new_page_t new,
+ 		free_page_t free, unsigned long private, enum migrate_mode mode,
+ 		int reason)
+ 	{ return -ENOSYS; }
+-static inline struct page *new_page_nodemask(struct page *page,
+-		int preferred_nid, nodemask_t *nodemask)
++static inline struct page *alloc_migration_target(struct page *page,
++		unsigned long private)
+ 	{ return NULL; }
+ static inline int isolate_movable_page(struct page *page, isolate_mode_t mode)
+ 	{ return -EBUSY; }
+diff --git a/mm/internal.h b/mm/internal.h
+index dd14c53..0beacf3 100644
+--- a/mm/internal.h
++++ b/mm/internal.h
+@@ -614,4 +614,11 @@ static inline bool is_migrate_highatomic_page(struct page *page)
+ 
+ void setup_zone_pageset(struct zone *zone);
+ extern struct page *alloc_new_node_page(struct page *page, unsigned long node);
++
++struct migration_target_control {
++	int nid;		/* preferred node id */
++	nodemask_t *nmask;
++	gfp_t gfp_mask;
++};
++
+ #endif	/* __MM_INTERNAL_H */
+diff --git a/mm/memory-failure.c b/mm/memory-failure.c
+index c5e4cee..609d42b6 100644
+--- a/mm/memory-failure.c
++++ b/mm/memory-failure.c
+@@ -1679,9 +1679,12 @@ EXPORT_SYMBOL(unpoison_memory);
+ 
+ static struct page *new_page(struct page *p, unsigned long private)
+ {
+-	int nid = page_to_nid(p);
++	struct migration_target_control mtc = {
++		.nid = page_to_nid(p),
++		.gfp_mask = GFP_USER | __GFP_MOVABLE | __GFP_RETRY_MAYFAIL,
++	};
+ 
+-	return new_page_nodemask(p, nid, &node_states[N_MEMORY]);
++	return alloc_migration_target(p, (unsigned long)&mtc);
+ }
+ 
+ /*
+diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
+index cafe65eb..431b470f 100644
+--- a/mm/memory_hotplug.c
++++ b/mm/memory_hotplug.c
+@@ -1267,19 +1267,23 @@ static int scan_movable_pages(unsigned long start, unsigned long end,
+ 
+ static struct page *new_node_page(struct page *page, unsigned long private)
+ {
+-	int nid = page_to_nid(page);
+ 	nodemask_t nmask = node_states[N_MEMORY];
++	struct migration_target_control mtc = {
++		.nid = page_to_nid(page),
++		.nmask = &nmask,
++		.gfp_mask = GFP_USER | __GFP_MOVABLE | __GFP_RETRY_MAYFAIL,
++	};
+ 
+ 	/*
+ 	 * try to allocate from a different node but reuse this node if there
+ 	 * are no other online nodes to be used (e.g. we are offlining a part
+ 	 * of the only existing node)
+ 	 */
+-	node_clear(nid, nmask);
++	node_clear(mtc.nid, nmask);
+ 	if (nodes_empty(nmask))
+-		node_set(nid, nmask);
++		node_set(mtc.nid, nmask);
+ 
+-	return new_page_nodemask(page, nid, &nmask);
++	return alloc_migration_target(page, (unsigned long)&mtc);
+ }
+ 
+ static int
+diff --git a/mm/migrate.c b/mm/migrate.c
+index faabb2e..8a1ab4f 100644
+--- a/mm/migrate.c
++++ b/mm/migrate.c
+@@ -1531,19 +1531,26 @@ int migrate_pages(struct list_head *from, new_page_t get_new_page,
+ 	return rc;
+ }
+ 
+-struct page *new_page_nodemask(struct page *page,
+-				int preferred_nid, nodemask_t *nodemask)
++struct page *alloc_migration_target(struct page *page, unsigned long private)
+ {
+-	gfp_t gfp_mask = GFP_USER | __GFP_MOVABLE | __GFP_RETRY_MAYFAIL;
++	struct migration_target_control *mtc;
++	gfp_t gfp_mask;
+ 	unsigned int order = 0;
+ 	struct page *new_page = NULL;
++	int nid;
++	int zidx;
++
++	mtc = (struct migration_target_control *)private;
++	gfp_mask = mtc->gfp_mask;
++	nid = mtc->nid;
++	if (nid == NUMA_NO_NODE)
++		nid = page_to_nid(page);
+ 
+ 	if (PageHuge(page)) {
+ 		struct hstate *h = page_hstate(compound_head(page));
+ 
+-		gfp_mask = htlb_alloc_mask(h);
+-		return alloc_huge_page_nodemask(h, preferred_nid,
+-						nodemask, gfp_mask);
++		gfp_mask = htlb_modify_alloc_mask(h, gfp_mask);
++		return alloc_huge_page_nodemask(h, nid, mtc->nmask, gfp_mask);
+ 	}
+ 
+ 	if (PageTransHuge(page)) {
+@@ -1555,12 +1562,11 @@ struct page *new_page_nodemask(struct page *page,
+ 		gfp_mask |= GFP_TRANSHUGE;
+ 		order = HPAGE_PMD_ORDER;
+ 	}
+-
+-	if (PageHighMem(page) || (zone_idx(page_zone(page)) == ZONE_MOVABLE))
++	zidx = zone_idx(page_zone(page));
++	if (is_highmem_idx(zidx) || zidx == ZONE_MOVABLE)
+ 		gfp_mask |= __GFP_HIGHMEM;
+ 
+-	new_page = __alloc_pages_nodemask(gfp_mask, order,
+-				preferred_nid, nodemask);
++	new_page = __alloc_pages_nodemask(gfp_mask, order, nid, mtc->nmask);
+ 
+ 	if (new_page && PageTransHuge(new_page))
+ 		prep_transhuge_page(new_page);
+diff --git a/mm/page_isolation.c b/mm/page_isolation.c
+index aec26d9..f25c66e 100644
+--- a/mm/page_isolation.c
++++ b/mm/page_isolation.c
+@@ -309,7 +309,10 @@ int test_pages_isolated(unsigned long start_pfn, unsigned long end_pfn,
+ 
+ struct page *alloc_migrate_target(struct page *page, unsigned long private)
+ {
+-	int nid = page_to_nid(page);
++	struct migration_target_control mtc = {
++		.nid = page_to_nid(page),
++		.gfp_mask = GFP_USER | __GFP_MOVABLE | __GFP_RETRY_MAYFAIL,
++	};
+ 
+-	return new_page_nodemask(page, nid, &node_states[N_MEMORY]);
++	return alloc_migration_target(page, (unsigned long)&mtc);
+ }
 -- 
-paul moore
-www.paul-moore.com
+2.7.4
+
