@@ -7,33 +7,28 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A984CC43458
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 12:11:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A91B5C433EA
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 12:11:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8841B2245B
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 12:11:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 91A8F222D9
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 12:11:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728632AbgGNMLh (ORCPT
+        id S1728698AbgGNMLp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 08:11:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60770 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728541AbgGNMLZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 08:11:25 -0400
-Received: from theia.8bytes.org (8bytes.org [IPv6:2a01:238:4383:600:38bc:a715:4b6d:a889])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 73139C08C5DF;
-        Tue, 14 Jul 2020 05:11:23 -0700 (PDT)
+        Tue, 14 Jul 2020 08:11:45 -0400
+Received: from 8bytes.org ([81.169.241.247]:54824 "EHLO theia.8bytes.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728502AbgGNMLW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 08:11:22 -0400
 Received: from cap.home.8bytes.org (p5b006776.dip0.t-ipconnect.de [91.0.103.118])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
         (No client certificate requested)
-        by theia.8bytes.org (Postfix) with ESMTPSA id B1749FF5;
-        Tue, 14 Jul 2020 14:11:14 +0200 (CEST)
+        by theia.8bytes.org (Postfix) with ESMTPSA id C4FB6FF1;
+        Tue, 14 Jul 2020 14:11:12 +0200 (CEST)
 From:   Joerg Roedel <joro@8bytes.org>
 To:     x86@kernel.org
 Cc:     Joerg Roedel <joro@8bytes.org>, Joerg Roedel <jroedel@suse.de>,
-        Martin Radev <martin.b.radev@gmail.com>, hpa@zytor.com,
-        Andy Lutomirski <luto@kernel.org>,
+        hpa@zytor.com, Andy Lutomirski <luto@kernel.org>,
         Dave Hansen <dave.hansen@linux.intel.com>,
         Peter Zijlstra <peterz@infradead.org>,
         Jiri Slaby <jslaby@suse.cz>,
@@ -47,11 +42,12 @@ Cc:     Joerg Roedel <joro@8bytes.org>, Joerg Roedel <jroedel@suse.de>,
         Masami Hiramatsu <mhiramat@kernel.org>,
         Mike Stunes <mstunes@vmware.com>,
         Sean Christopherson <sean.j.christopherson@intel.com>,
+        Martin Radev <martin.b.radev@gmail.com>,
         linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
         virtualization@lists.linux-foundation.org
-Subject: [PATCH v4 75/75] x86/sev-es: Check required CPU features for SEV-ES
-Date:   Tue, 14 Jul 2020 14:09:17 +0200
-Message-Id: <20200714120917.11253-76-joro@8bytes.org>
+Subject: [PATCH v4 72/75] x86/sev-es: Support CPU offline/online
+Date:   Tue, 14 Jul 2020 14:09:14 +0200
+Message-Id: <20200714120917.11253-73-joro@8bytes.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200714120917.11253-1-joro@8bytes.org>
 References: <20200714120917.11253-1-joro@8bytes.org>
@@ -62,73 +58,120 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Martin Radev <martin.b.radev@gmail.com>
+From: Joerg Roedel <jroedel@suse.de>
 
-Make sure the machine supports RDRAND, otherwise there is no trusted
-source of of randomness in the system.
+Add a play_dead handler when running under SEV-ES. This is needed
+because the hypervisor can't deliver an SIPI request to restart the AP.
+Instead the kernel has to issue a VMGEXIT to halt the VCPU until the
+hypervisor wakes it up again.
 
-Signed-off-by: Martin Radev <martin.b.radev@gmail.com>
 Signed-off-by: Joerg Roedel <jroedel@suse.de>
 ---
- arch/x86/boot/compressed/sev-es.c |  3 +++
- arch/x86/kernel/sev-es-shared.c   | 15 +++++++++++++++
- arch/x86/kernel/sev-es.c          |  3 +++
- 3 files changed, 21 insertions(+)
+ arch/x86/include/uapi/asm/svm.h |  1 +
+ arch/x86/kernel/sev-es.c        | 64 +++++++++++++++++++++++++++++++++
+ 2 files changed, 65 insertions(+)
 
-diff --git a/arch/x86/boot/compressed/sev-es.c b/arch/x86/boot/compressed/sev-es.c
-index b522c18c0588..eb1a8b5cc753 100644
---- a/arch/x86/boot/compressed/sev-es.c
-+++ b/arch/x86/boot/compressed/sev-es.c
-@@ -145,6 +145,9 @@ void sev_es_shutdown_ghcb(void)
- 	if (!boot_ghcb)
- 		return;
- 
-+	if (!sev_es_check_cpu_features())
-+		error("SEV-ES CPU Features missing.");
-+
- 	/*
- 	 * GHCB Page must be flushed from the cache and mapped encrypted again.
- 	 * Otherwise the running kernel will see strange cache effects when
-diff --git a/arch/x86/kernel/sev-es-shared.c b/arch/x86/kernel/sev-es-shared.c
-index 608f76d0d088..56de70cb80d8 100644
---- a/arch/x86/kernel/sev-es-shared.c
-+++ b/arch/x86/kernel/sev-es-shared.c
-@@ -9,6 +9,21 @@
-  * and is included directly into both code-bases.
-  */
- 
-+#ifndef __BOOT_COMPRESSED
-+#define error(v)	pr_err(v)
-+#define has_cpuflag(f)	boot_cpu_has(f)
-+#endif
-+
-+static bool __init sev_es_check_cpu_features(void)
-+{
-+	if (!has_cpuflag(X86_FEATURE_RDRAND)) {
-+		error("RDRAND instruction not supported - no trusted source of randomness available\n");
-+		return false;
-+	}
-+
-+	return true;
-+}
-+
- static void sev_es_terminate(unsigned int reason)
- {
- 	u64 val = GHCB_SEV_TERMINATE;
+diff --git a/arch/x86/include/uapi/asm/svm.h b/arch/x86/include/uapi/asm/svm.h
+index a19ce9681ec2..20a05839dd9a 100644
+--- a/arch/x86/include/uapi/asm/svm.h
++++ b/arch/x86/include/uapi/asm/svm.h
+@@ -84,6 +84,7 @@
+ /* SEV-ES software-defined VMGEXIT events */
+ #define SVM_VMGEXIT_MMIO_READ			0x80000001
+ #define SVM_VMGEXIT_MMIO_WRITE			0x80000002
++#define SVM_VMGEXIT_AP_HLT_LOOP			0x80000004
+ #define SVM_VMGEXIT_AP_JUMP_TABLE		0x80000005
+ #define		SVM_VMGEXIT_SET_AP_JUMP_TABLE			0
+ #define		SVM_VMGEXIT_GET_AP_JUMP_TABLE			1
 diff --git a/arch/x86/kernel/sev-es.c b/arch/x86/kernel/sev-es.c
-index 61308f9c8138..481ea00c58b6 100644
+index 370cf9bf2c88..b147d97856c3 100644
 --- a/arch/x86/kernel/sev-es.c
 +++ b/arch/x86/kernel/sev-es.c
-@@ -682,6 +682,9 @@ void __init sev_es_init_vc_handling(void)
- 	if (!sev_es_active())
- 		return;
+@@ -29,6 +29,8 @@
+ #include <asm/processor.h>
+ #include <asm/traps.h>
+ #include <asm/svm.h>
++#include <asm/smp.h>
++#include <asm/cpu.h>
  
-+	if (!sev_es_check_cpu_features())
-+		panic("SEV-ES CPU Features missing");
+ #define DR7_RESET_VALUE        0x400
+ 
+@@ -531,6 +533,66 @@ static bool __init sev_es_setup_ghcb(void)
+ 	return true;
+ }
+ 
++#ifdef CONFIG_HOTPLUG_CPU
++static void sev_es_ap_hlt_loop(void)
++{
++	struct ghcb_state state;
++	struct ghcb *ghcb;
 +
- 	/* Initialize per-cpu GHCB pages */
- 	for_each_possible_cpu(cpu) {
- 		sev_es_alloc_runtime_data(cpu);
++	ghcb = sev_es_get_ghcb(&state);
++
++	while (true) {
++		vc_ghcb_invalidate(ghcb);
++		ghcb_set_sw_exit_code(ghcb, SVM_VMGEXIT_AP_HLT_LOOP);
++		ghcb_set_sw_exit_info_1(ghcb, 0);
++		ghcb_set_sw_exit_info_2(ghcb, 0);
++
++		sev_es_wr_ghcb_msr(__pa(ghcb));
++		VMGEXIT();
++
++		/* Wakeup signal? */
++		if (ghcb_is_valid_sw_exit_info_2(ghcb) &&
++		    ghcb->save.sw_exit_info_2)
++			break;
++	}
++
++	sev_es_put_ghcb(&state);
++}
++
++/*
++ * Play_dead handler when running under SEV-ES. This is needed because
++ * the hypervisor can't deliver an SIPI request to restart the AP.
++ * Instead the kernel has to issue a VMGEXIT to halt the VCPU until the
++ * hypervisor wakes it up again.
++ */
++static void sev_es_play_dead(void)
++{
++	play_dead_common();
++
++	/* IRQs now disabled */
++
++	sev_es_ap_hlt_loop();
++
++	/*
++	 * If we get here, the VCPU was woken up again. Jump to CPU
++	 * startup code to get it back online.
++	 */
++
++	start_cpu();
++}
++#else  /* CONFIG_HOTPLUG_CPU */
++#define sev_es_play_dead	native_play_dead
++#endif /* CONFIG_HOTPLUG_CPU */
++
++#ifdef CONFIG_SMP
++static void __init sev_es_setup_play_dead(void)
++{
++	smp_ops.play_dead = sev_es_play_dead;
++}
++#else
++static inline void sev_es_setup_play_dead(void) { }
++#endif
++
+ static void __init sev_es_alloc_runtime_data(int cpu)
+ {
+ 	struct sev_es_runtime_data *data;
+@@ -575,6 +637,8 @@ void __init sev_es_init_vc_handling(void)
+ 		sev_es_init_ghcb(cpu);
+ 		sev_es_setup_vc_stacks(cpu);
+ 	}
++
++	sev_es_setup_play_dead();
+ }
+ 
+ static void __init vc_early_forward_exception(struct es_em_ctxt *ctxt)
 -- 
 2.27.0
 
