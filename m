@@ -7,49 +7,49 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F482C433F2
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:59:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AC7EC433E8
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:59:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E800022AAD
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:59:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 63B4C22B2B
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:59:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594753183;
-	bh=+35NpI2+cmc6zSKm8WAvHpihqbmsuWHGZQPwE3PARgI=;
+	s=default; t=1594753186;
+	bh=hieG4kLY8y4c6e+4fHOysQN0bav8nSD+YYv5fN2DRUU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=U0/hxCjiONuzAU7G1RaSOAGJlG0yQRmcP8JH5mz1DX+l1gCREe+UtyFGUfG2nmciO
-	 g3g+RRJ9gn2lSkyeVPlPXnqdcw8y4BCEo5EDPahn8zdQT4eKcHt7heDmNF+KATsEQD
-	 eXFYstXpxOz7VHqsp1QhljIvkn7kxH9uPZzAcUIw=
+	b=oE0xACMZoolXfhwbtZyKX7o8H5/YLVc2lxBOABZz6Arz5r7zv0zQRIF+VHooacE21
+	 +gS1bY6aWBED340/AjBPjFkef8IqgSB2MlPOW7cpq8LpwDJ8vHSLxWD0CA3h7Ddljb
+	 Qipj7MxWxoIoZq+QN0cXtrqXmYQkYQ8/Qs1qqVXI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729781AbgGNS7l (ORCPT
+        id S1729623AbgGNS7o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 14:59:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58268 "EHLO mail.kernel.org"
+        Tue, 14 Jul 2020 14:59:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58324 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729694AbgGNS7i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 14:59:38 -0400
+        id S1731287AbgGNS7l (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 14:59:41 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C3DD9207F5;
-        Tue, 14 Jul 2020 18:59:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 950A122507;
+        Tue, 14 Jul 2020 18:59:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594753178;
-        bh=+35NpI2+cmc6zSKm8WAvHpihqbmsuWHGZQPwE3PARgI=;
+        s=default; t=1594753181;
+        bh=hieG4kLY8y4c6e+4fHOysQN0bav8nSD+YYv5fN2DRUU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2nKN/VHdFqpmukMUL009OeJCOj/DskaZmOHuieCmDF6yvlqWEMz1/fVbrqyJXCIHQ
-         xHjoN4nkxVpJBCNfPNbrJ38wIBWHcJmk+Tm4BMuI4L3EE7i3aSLVOGQNqloCVCZZgi
-         luvRttV9MbtOoZkWl0AT2M5ke0/AMtPu/8bL9G9U=
+        b=DCz58qfAi8GRv6vVjDhi7NVvtq5I0mQId96YF4wfwKHBH4vfxaKuE3xtzR6aF4lAj
+         vd27aDYVSpBFTjLDo46M0KERuonXeaRxNOuWBo7R+YuZJEFHmfy40htQRDMEAfduLo
+         YuFQBqUyuaAc04ZssYvCzLDGbmqRFPGQ3ug4LpLI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Khazhismel Kumykov <khazhy@google.com>,
-        Tahsin Erdogan <tahsin@google.com>,
-        Gabriel Krisman Bertazi <krisman@collabora.com>,
-        Mikulas Patocka <mpatocka@redhat.com>,
-        Mike Snitzer <snitzer@redhat.com>
-Subject: [PATCH 5.7 149/166] dm: use noio when sending kobject event
-Date:   Tue, 14 Jul 2020 20:45:14 +0200
-Message-Id: <20200714184122.961398714@linuxfoundation.org>
+        stable@vger.kernel.org, Art Nikpal <art@khadas.com>,
+        Christian Hewitt <christianshewitt@gmail.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>
+Subject: [PATCH 5.7 150/166] mmc: meson-gx: limit segments to 1 when dram-access-quirk is needed
+Date:   Tue, 14 Jul 2020 20:45:15 +0200
+Message-Id: <20200714184123.010825967@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200714184115.844176932@linuxfoundation.org>
 References: <20200714184115.844176932@linuxfoundation.org>
@@ -62,67 +62,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mikulas Patocka <mpatocka@redhat.com>
+From: Neil Armstrong <narmstrong@baylibre.com>
 
-commit 6958c1c640af8c3f40fa8a2eee3b5b905d95b677 upstream.
+commit 27a5e7d36d383970affae801d77141deafd536a8 upstream.
 
-kobject_uevent may allocate memory and it may be called while there are dm
-devices suspended. The allocation may recurse into a suspended device,
-causing a deadlock. We must set the noio flag when sending a uevent.
+The actual max_segs computation leads to failure while using the broadcom
+sdio brcmfmac/bcmsdh driver, since the driver tries to make usage of
+scatter gather.
 
-The observed deadlock was reported here:
-https://www.redhat.com/archives/dm-devel/2020-March/msg00025.html
+But with the dram-access-quirk we use a 1,5K SRAM bounce buffer, and the
+max_segs current value of 3 leads to max transfers to 4,5k, which doesn't
+work.
 
-Reported-by: Khazhismel Kumykov <khazhy@google.com>
-Reported-by: Tahsin Erdogan <tahsin@google.com>
-Reported-by: Gabriel Krisman Bertazi <krisman@collabora.com>
-Signed-off-by: Mikulas Patocka <mpatocka@redhat.com>
+This patch sets max_segs to 1 to better describe the hardware limitation,
+and fix the SDIO functionality with the brcmfmac/bcmsdh driver on Amlogic
+G12A/G12B SoCs on boards like SEI510 or Khadas VIM3.
+
+Reported-by: Art Nikpal <art@khadas.com>
+Reported-by: Christian Hewitt <christianshewitt@gmail.com>
+Fixes: acdc8e71d9bb ("mmc: meson-gx: add dram-access-quirk")
+Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+Reviewed-by: Kevin Hilman <khilman@baylibre.com>
 Cc: stable@vger.kernel.org
-Signed-off-by: Mike Snitzer <snitzer@redhat.com>
+Link: https://lore.kernel.org/r/20200608084458.32014-1-narmstrong@baylibre.com
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/md/dm.c |   15 ++++++++++++---
- 1 file changed, 12 insertions(+), 3 deletions(-)
+ drivers/mmc/host/meson-gx-mmc.c |    6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
---- a/drivers/md/dm.c
-+++ b/drivers/md/dm.c
-@@ -12,6 +12,7 @@
- #include <linux/init.h>
- #include <linux/module.h>
- #include <linux/mutex.h>
-+#include <linux/sched/mm.h>
- #include <linux/sched/signal.h>
- #include <linux/blkpg.h>
- #include <linux/bio.h>
-@@ -2894,17 +2895,25 @@ EXPORT_SYMBOL_GPL(dm_internal_resume_fas
- int dm_kobject_uevent(struct mapped_device *md, enum kobject_action action,
- 		       unsigned cookie)
- {
-+	int r;
-+	unsigned noio_flag;
- 	char udev_cookie[DM_COOKIE_LENGTH];
- 	char *envp[] = { udev_cookie, NULL };
+--- a/drivers/mmc/host/meson-gx-mmc.c
++++ b/drivers/mmc/host/meson-gx-mmc.c
+@@ -1143,9 +1143,11 @@ static int meson_mmc_probe(struct platfo
  
-+	noio_flag = memalloc_noio_save();
-+
- 	if (!cookie)
--		return kobject_uevent(&disk_to_dev(md->disk)->kobj, action);
-+		r = kobject_uevent(&disk_to_dev(md->disk)->kobj, action);
- 	else {
- 		snprintf(udev_cookie, DM_COOKIE_LENGTH, "%s=%u",
- 			 DM_COOKIE_ENV_VAR_NAME, cookie);
--		return kobject_uevent_env(&disk_to_dev(md->disk)->kobj,
--					  action, envp);
-+		r = kobject_uevent_env(&disk_to_dev(md->disk)->kobj,
-+				       action, envp);
- 	}
-+
-+	memalloc_noio_restore(noio_flag);
-+
-+	return r;
- }
- 
- uint32_t dm_next_uevent_seq(struct mapped_device *md)
+ 	mmc->caps |= MMC_CAP_CMD23;
+ 	if (host->dram_access_quirk) {
++		/* Limit segments to 1 due to low available sram memory */
++		mmc->max_segs = 1;
+ 		/* Limit to the available sram memory */
+-		mmc->max_segs = SD_EMMC_SRAM_DATA_BUF_LEN / mmc->max_blk_size;
+-		mmc->max_blk_count = mmc->max_segs;
++		mmc->max_blk_count = SD_EMMC_SRAM_DATA_BUF_LEN /
++				     mmc->max_blk_size;
+ 	} else {
+ 		mmc->max_blk_count = CMD_CFG_LENGTH_MASK;
+ 		mmc->max_segs = SD_EMMC_DESC_BUF_LEN /
 
 
