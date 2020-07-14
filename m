@@ -7,35 +7,35 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85379C433E6
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 13:35:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB8CCC433E8
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 13:35:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5C2A622314
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 13:35:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B8A8B224D2
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 13:35:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728682AbgGNNfa (ORCPT
+        id S1728693AbgGNNfi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 09:35:30 -0400
-Received: from inva020.nxp.com ([92.121.34.13]:49994 "EHLO inva020.nxp.com"
+        Tue, 14 Jul 2020 09:35:38 -0400
+Received: from inva020.nxp.com ([92.121.34.13]:49972 "EHLO inva020.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728440AbgGNNfU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 09:35:20 -0400
+        id S1728187AbgGNNfS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 09:35:18 -0400
 Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id EB0611A11EA;
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 11A481A01FC;
         Tue, 14 Jul 2020 15:35:16 +0200 (CEST)
 Received: from inva024.eu-rdc02.nxp.com (inva024.eu-rdc02.nxp.com [134.27.226.22])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id DBD111A11E7;
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 052921A01E7;
         Tue, 14 Jul 2020 15:35:16 +0200 (CEST)
 Received: from fsr-ub1864-126.ea.freescale.net (fsr-ub1864-126.ea.freescale.net [10.171.82.212])
-        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id A665A205A4;
-        Tue, 14 Jul 2020 15:35:16 +0200 (CEST)
+        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id C18EA205A4;
+        Tue, 14 Jul 2020 15:35:15 +0200 (CEST)
 From:   Ioana Ciornei <ioana.ciornei@nxp.com>
 To:     gregkh@linuxfoundation.org
 Cc:     linux-kernel@vger.kernel.org, devel@driverdev.osuosl.org,
         Ioana Ciornei <ioana.ciornei@nxp.com>
-Subject: [PATCH 6/6] staging: dpaa2-ethsw: setup MAC address of switch netdevices
-Date:   Tue, 14 Jul 2020 16:34:31 +0300
-Message-Id: <20200714133431.17532-7-ioana.ciornei@nxp.com>
+Subject: [PATCH 3/6] staging: dpaa2-ethsw: use netif_running when checking for port up
+Date:   Tue, 14 Jul 2020 16:34:28 +0300
+Message-Id: <20200714133431.17532-4-ioana.ciornei@nxp.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200714133431.17532-1-ioana.ciornei@nxp.com>
 References: <20200714133431.17532-1-ioana.ciornei@nxp.com>
@@ -45,315 +45,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-At probe time, retrieve the MAC addresses of the switch ports using a
-firmware call and use that to setup the switch interface net_device
-instead of relying entirely on the user to configure a MAC address on
-the interface. In case a switch interface is not connected to a MAC,
-thus the dpsw_if_get_port_mac_addr() will return all zeroes, generate a
-random MAC address and use that.
-
-This new functionality is dependent on a firmware call which is
-available only on newer versions, so depending on the running DPSW
-object version skip this step.
+There are some cases where the switch interface needs to be disabled so
+that changes in the configuration can be made. In such cases, we should
+check for a running interface (bit __LINK_STATE_START of the netdev)
+instead of netif_carrier_ok(). This is because on open() we enable the
+switch interface even though the link up has not come out yet.
 
 Signed-off-by: Ioana Ciornei <ioana.ciornei@nxp.com>
 ---
- drivers/staging/fsl-dpaa2/ethsw/dpsw-cmd.h |  14 +++
- drivers/staging/fsl-dpaa2/ethsw/dpsw.c     | 106 +++++++++++++++++++++
- drivers/staging/fsl-dpaa2/ethsw/dpsw.h     |   9 ++
- drivers/staging/fsl-dpaa2/ethsw/ethsw.c    |  59 +++++++++++-
- drivers/staging/fsl-dpaa2/ethsw/ethsw.h    |   3 +
- 5 files changed, 190 insertions(+), 1 deletion(-)
+ drivers/staging/fsl-dpaa2/ethsw/ethsw.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/staging/fsl-dpaa2/ethsw/dpsw-cmd.h b/drivers/staging/fsl-dpaa2/ethsw/dpsw-cmd.h
-index 5e1339daa7c7..f100d503bd17 100644
---- a/drivers/staging/fsl-dpaa2/ethsw/dpsw-cmd.h
-+++ b/drivers/staging/fsl-dpaa2/ethsw/dpsw-cmd.h
-@@ -69,6 +69,10 @@
- #define DPSW_CMDID_FDB_SET_LEARNING_MODE    DPSW_CMD_ID(0x088)
- #define DPSW_CMDID_FDB_DUMP                 DPSW_CMD_ID(0x08A)
- 
-+#define DPSW_CMDID_IF_GET_PORT_MAC_ADDR     DPSW_CMD_ID(0x0A7)
-+#define DPSW_CMDID_IF_GET_PRIMARY_MAC_ADDR  DPSW_CMD_ID(0x0A8)
-+#define DPSW_CMDID_IF_SET_PRIMARY_MAC_ADDR  DPSW_CMD_ID(0x0A9)
-+
- /* Macros for accessing command fields smaller than 1byte */
- #define DPSW_MASK(field)        \
- 	GENMASK(DPSW_##field##_SHIFT + DPSW_##field##_SIZE - 1, \
-@@ -369,4 +373,14 @@ struct dpsw_rsp_get_api_version {
- 	__le16 version_minor;
- };
- 
-+struct dpsw_rsp_if_get_mac_addr {
-+	__le16 pad;
-+	u8 mac_addr[6];
-+};
-+
-+struct dpsw_cmd_if_set_mac_addr {
-+	__le16 if_id;
-+	u8 mac_addr[6];
-+};
-+
- #endif /* __FSL_DPSW_CMD_H */
-diff --git a/drivers/staging/fsl-dpaa2/ethsw/dpsw.c b/drivers/staging/fsl-dpaa2/ethsw/dpsw.c
-index 56b0fa789a67..f8bfe779bd30 100644
---- a/drivers/staging/fsl-dpaa2/ethsw/dpsw.c
-+++ b/drivers/staging/fsl-dpaa2/ethsw/dpsw.c
-@@ -1214,3 +1214,109 @@ int dpsw_get_api_version(struct fsl_mc_io *mc_io,
- 
- 	return 0;
- }
-+
-+/**
-+ * dpsw_if_get_port_mac_addr()
-+ * @mc_io:	Pointer to MC portal's I/O object
-+ * @cmd_flags:	Command flags; one or more of 'MC_CMD_FLAG_'
-+ * @token:	Token of DPSW object
-+ * @if_id:	Interface Identifier
-+ * @mac_addr:	MAC address of the physical port, if any, otherwise 0
-+ *
-+ * Return:	Completion status. '0' on Success; Error code otherwise.
-+ */
-+int dpsw_if_get_port_mac_addr(struct fsl_mc_io *mc_io, u32 cmd_flags, u16 token,
-+			      u16 if_id, u8 mac_addr[6])
-+{
-+	struct dpsw_rsp_if_get_mac_addr *rsp_params;
-+	struct fsl_mc_command cmd = { 0 };
-+	struct dpsw_cmd_if *cmd_params;
-+	int err, i;
-+
-+	/* prepare command */
-+	cmd.header = mc_encode_cmd_header(DPSW_CMDID_IF_GET_PORT_MAC_ADDR,
-+					  cmd_flags,
-+					  token);
-+	cmd_params = (struct dpsw_cmd_if *)cmd.params;
-+	cmd_params->if_id = cpu_to_le16(if_id);
-+
-+	/* send command to mc*/
-+	err = mc_send_command(mc_io, &cmd);
-+	if (err)
-+		return err;
-+
-+	/* retrieve response parameters */
-+	rsp_params = (struct dpsw_rsp_if_get_mac_addr *)cmd.params;
-+	for (i = 0; i < 6; i++)
-+		mac_addr[5 - i] = rsp_params->mac_addr[i];
-+
-+	return 0;
-+}
-+
-+/**
-+ * dpsw_if_get_primary_mac_addr()
-+ * @mc_io:	Pointer to MC portal's I/O object
-+ * @cmd_flags:	Command flags; one or more of 'MC_CMD_FLAG_'
-+ * @token:	Token of DPSW object
-+ * @if_id:	Interface Identifier
-+ * @mac_addr:	MAC address of the physical port, if any, otherwise 0
-+ *
-+ * Return:	Completion status. '0' on Success; Error code otherwise.
-+ */
-+int dpsw_if_get_primary_mac_addr(struct fsl_mc_io *mc_io, u32 cmd_flags,
-+				 u16 token, u16 if_id, u8 mac_addr[6])
-+{
-+	struct dpsw_rsp_if_get_mac_addr *rsp_params;
-+	struct fsl_mc_command cmd = { 0 };
-+	struct dpsw_cmd_if *cmd_params;
-+	int err, i;
-+
-+	/* prepare command */
-+	cmd.header = mc_encode_cmd_header(DPSW_CMDID_IF_SET_PRIMARY_MAC_ADDR,
-+					  cmd_flags,
-+					  token);
-+	cmd_params = (struct dpsw_cmd_if *)cmd.params;
-+	cmd_params->if_id = cpu_to_le16(if_id);
-+
-+	/* send command to mc*/
-+	err = mc_send_command(mc_io, &cmd);
-+	if (err)
-+		return err;
-+
-+	/* retrieve response parameters */
-+	rsp_params = (struct dpsw_rsp_if_get_mac_addr *)cmd.params;
-+	for (i = 0; i < 6; i++)
-+		mac_addr[5 - i] = rsp_params->mac_addr[i];
-+
-+	return 0;
-+}
-+
-+/**
-+ * dpsw_if_set_primary_mac_addr()
-+ * @mc_io:	Pointer to MC portal's I/O object
-+ * @cmd_flags:	Command flags; one or more of 'MC_CMD_FLAG_'
-+ * @token:	Token of DPSW object
-+ * @if_id:	Interface Identifier
-+ * @mac_addr:	MAC address of the physical port, if any, otherwise 0
-+ *
-+ * Return:	Completion status. '0' on Success; Error code otherwise.
-+ */
-+int dpsw_if_set_primary_mac_addr(struct fsl_mc_io *mc_io, u32 cmd_flags,
-+				 u16 token, u16 if_id, u8 mac_addr[6])
-+{
-+	struct dpsw_cmd_if_set_mac_addr *cmd_params;
-+	struct fsl_mc_command cmd = { 0 };
-+	int i;
-+
-+	/* prepare command */
-+	cmd.header = mc_encode_cmd_header(DPSW_CMDID_IF_SET_PRIMARY_MAC_ADDR,
-+					  cmd_flags,
-+					  token);
-+	cmd_params = (struct dpsw_cmd_if_set_mac_addr *)cmd.params;
-+	cmd_params->if_id = cpu_to_le16(if_id);
-+	for (i = 0; i < 6; i++)
-+		cmd_params->mac_addr[i] = mac_addr[5 - i];
-+
-+	/* send command to mc*/
-+	return mc_send_command(mc_io, &cmd);
-+}
-diff --git a/drivers/staging/fsl-dpaa2/ethsw/dpsw.h b/drivers/staging/fsl-dpaa2/ethsw/dpsw.h
-index 25b45850925c..ab63ee4f5cb7 100644
---- a/drivers/staging/fsl-dpaa2/ethsw/dpsw.h
-+++ b/drivers/staging/fsl-dpaa2/ethsw/dpsw.h
-@@ -580,4 +580,13 @@ int dpsw_get_api_version(struct fsl_mc_io *mc_io,
- 			 u16 *major_ver,
- 			 u16 *minor_ver);
- 
-+int dpsw_if_get_port_mac_addr(struct fsl_mc_io *mc_io, u32 cmd_flags, u16 token,
-+			      u16 if_id, u8 mac_addr[6]);
-+
-+int dpsw_if_get_primary_mac_addr(struct fsl_mc_io *mc_io, u32 cmd_flags,
-+				 u16 token, u16 if_id, u8 mac_addr[6]);
-+
-+int dpsw_if_set_primary_mac_addr(struct fsl_mc_io *mc_io, u32 cmd_flags,
-+				 u16 token, u16 if_id, u8 mac_addr[6]);
-+
- #endif /* __FSL_DPSW_H */
 diff --git a/drivers/staging/fsl-dpaa2/ethsw/ethsw.c b/drivers/staging/fsl-dpaa2/ethsw/ethsw.c
-index a8fc9bcf3b8a..2fb75a7c9314 100644
+index b57bc705c2ee..a1917842536e 100644
 --- a/drivers/staging/fsl-dpaa2/ethsw/ethsw.c
 +++ b/drivers/staging/fsl-dpaa2/ethsw/ethsw.c
-@@ -468,6 +468,7 @@ static int port_carrier_state_sync(struct net_device *netdev)
- 			netif_carrier_off(netdev);
- 		port_priv->link_state = state.up;
- 	}
-+
- 	return 0;
- }
+@@ -48,7 +48,7 @@ static int ethsw_port_set_pvid(struct ethsw_port_priv *port_priv, u16 pvid)
+ 	struct ethsw_core *ethsw = port_priv->ethsw_data;
+ 	struct net_device *netdev = port_priv->netdev;
+ 	struct dpsw_tci_cfg tci_cfg = { 0 };
+-	bool is_oper;
++	bool up;
+ 	int err, ret;
  
-@@ -690,6 +691,46 @@ static int port_fdb_dump(struct sk_buff *skb, struct netlink_callback *cb,
- 	return err;
- }
+ 	err = dpsw_if_get_tci(ethsw->mc_io, 0, ethsw->dpsw_handle,
+@@ -61,8 +61,8 @@ static int ethsw_port_set_pvid(struct ethsw_port_priv *port_priv, u16 pvid)
+ 	tci_cfg.vlan_id = pvid;
  
-+static int ethsw_port_set_mac_addr(struct ethsw_port_priv *port_priv)
-+{
-+	struct ethsw_core *ethsw = port_priv->ethsw_data;
-+	struct net_device *net_dev = port_priv->netdev;
-+	struct device *dev = net_dev->dev.parent;
-+	u8 mac_addr[ETH_ALEN];
-+	int err;
-+
-+	if (!(ethsw->features & ETHSW_FEATURE_MAC_ADDR))
-+		return 0;
-+
-+	/* Get firmware address, if any */
-+	err = dpsw_if_get_port_mac_addr(ethsw->mc_io, 0, ethsw->dpsw_handle,
-+					port_priv->idx, mac_addr);
-+	if (err) {
-+		dev_err(dev, "dpsw_if_get_port_mac_addr() failed\n");
-+		return err;
-+	}
-+
-+	/* First check if firmware has any address configured by bootloader */
-+	if (!is_zero_ether_addr(mac_addr)) {
-+		memcpy(net_dev->dev_addr, mac_addr, net_dev->addr_len);
-+	} else {
-+		/* No MAC address configured, fill in net_dev->dev_addr
-+		 * with a random one
-+		 */
-+		eth_hw_addr_random(net_dev);
-+		dev_dbg_once(dev, "device(s) have all-zero hwaddr, replaced with random\n");
-+
-+		/* Override NET_ADDR_RANDOM set by eth_hw_addr_random(); for all
-+		 * practical purposes, this will be our "permanent" mac address,
-+		 * at least until the next reboot. This move will also permit
-+		 * register_netdevice() to properly fill up net_dev->perm_addr.
-+		 */
-+		net_dev->addr_assign_type = NET_ADDR_PERM;
-+	}
-+
-+	return 0;
-+}
-+
- static const struct net_device_ops ethsw_port_ops = {
- 	.ndo_open		= port_open,
- 	.ndo_stop		= port_stop,
-@@ -712,8 +753,10 @@ static void ethsw_links_state_update(struct ethsw_core *ethsw)
- {
- 	int i;
+ 	/* Interface needs to be down to change PVID */
+-	is_oper = netif_oper_up(netdev);
+-	if (is_oper) {
++	up = netif_running(netdev);
++	if (up) {
+ 		err = dpsw_if_disable(ethsw->mc_io, 0,
+ 				      ethsw->dpsw_handle,
+ 				      port_priv->idx);
+@@ -85,7 +85,7 @@ static int ethsw_port_set_pvid(struct ethsw_port_priv *port_priv, u16 pvid)
+ 	port_priv->pvid = pvid;
  
--	for (i = 0; i < ethsw->sw_attr.num_ifs; i++)
-+	for (i = 0; i < ethsw->sw_attr.num_ifs; i++) {
- 		port_carrier_state_sync(ethsw->ports[i]->netdev);
-+		ethsw_port_set_mac_addr(ethsw->ports[i]);
-+	}
- }
+ set_tci_error:
+-	if (is_oper) {
++	if (up) {
+ 		ret = dpsw_if_enable(ethsw->mc_io, 0,
+ 				     ethsw->dpsw_handle,
+ 				     port_priv->idx);
+@@ -188,7 +188,7 @@ static int ethsw_port_set_stp_state(struct ethsw_port_priv *port_priv, u8 state)
+ 	};
+ 	int err;
  
- static irqreturn_t ethsw_irq0_handler_thread(int irq_num, void *arg)
-@@ -1364,6 +1407,14 @@ static int ethsw_register_notifier(struct device *dev)
- 	return err;
- }
+-	if (!netif_oper_up(port_priv->netdev) || state == port_priv->stp_state)
++	if (!netif_running(port_priv->netdev) || state == port_priv->stp_state)
+ 		return 0;	/* Nothing to do */
  
-+static void ethsw_detect_features(struct ethsw_core *ethsw)
-+{
-+	ethsw->features = 0;
-+
-+	if (ethsw->major > 8 || (ethsw->major == 8 && ethsw->minor >= 6))
-+		ethsw->features |= ETHSW_FEATURE_MAC_ADDR;
-+}
-+
- static int ethsw_init(struct fsl_mc_device *sw_dev)
- {
- 	struct device *dev = &sw_dev->dev;
-@@ -1407,6 +1458,8 @@ static int ethsw_init(struct fsl_mc_device *sw_dev)
- 		goto err_close;
- 	}
- 
-+	ethsw_detect_features(ethsw);
-+
- 	err = dpsw_reset(ethsw->mc_io, 0, ethsw->dpsw_handle);
- 	if (err) {
- 		dev_err(dev, "dpsw_reset err %d\n", err);
-@@ -1602,6 +1655,10 @@ static int ethsw_probe_port(struct ethsw_core *ethsw, u16 port_idx)
- 	if (err)
- 		goto err_port_probe;
- 
-+	err = ethsw_port_set_mac_addr(port_priv);
-+	if (err)
-+		goto err_port_probe;
-+
- 	err = register_netdev(port_netdev);
- 	if (err < 0) {
- 		dev_err(dev, "register_netdev error %d\n", err);
-diff --git a/drivers/staging/fsl-dpaa2/ethsw/ethsw.h b/drivers/staging/fsl-dpaa2/ethsw/ethsw.h
-index 0e520fd94dbc..d136dbdcaffa 100644
---- a/drivers/staging/fsl-dpaa2/ethsw/ethsw.h
-+++ b/drivers/staging/fsl-dpaa2/ethsw/ethsw.h
-@@ -37,6 +37,8 @@
- #define ETHSW_MAX_FRAME_LENGTH	(DPAA2_MFL - VLAN_ETH_HLEN - ETH_FCS_LEN)
- #define ETHSW_L2_MAX_FRM(mtu)	((mtu) + VLAN_ETH_HLEN + ETH_FCS_LEN)
- 
-+#define ETHSW_FEATURE_MAC_ADDR	BIT(0)
-+
- extern const struct ethtool_ops ethsw_port_ethtool_ops;
- 
- struct ethsw_core;
-@@ -62,6 +64,7 @@ struct ethsw_core {
- 	u16				dpsw_handle;
- 	struct dpsw_attr		sw_attr;
- 	u16				major, minor;
-+	unsigned long			features;
- 	int				dev_id;
- 	struct ethsw_port_priv		**ports;
- 
+ 	err = dpsw_if_set_stp(port_priv->ethsw_data->mc_io, 0,
 -- 
 2.25.1
 
