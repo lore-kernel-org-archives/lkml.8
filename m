@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7D96C433F8
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:53:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB84AC433E2
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:53:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 94F9F22C7B
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:53:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AEC3F22BEF
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:53:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594752796;
-	bh=/9Hm/xSYktH0LLH6MOmys3DleHFYDKGxs4K6ki9AYFg=;
+	s=default; t=1594752800;
+	bh=9UytBGID80b0f2L62wiWfV0joIQ/oSf+EzEK7kofbTc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=b0G4Rwtz8DxVhmCNh4lqfqvFMoxryqr6ONOPEtNsr9OKP4DjW7VRPCHVdpk8NxRej
-	 FKCAzHcQiQQ3dtuJ/oTA9hCVKXu3WzWdvEyKxuXGUDr/HOeTr0JmyDlYfNxS0qiGLy
-	 qn0BMuo36HHw8zcs/aMitUuERUZNQB/0oQG7iMnQ=
+	b=sU6jOJ9rvH1LACv0U/iA7J9XqgiIf150sVnpfQJ5F7G3Um7XjkWnnIqPqH/gvNI0b
+	 DPglZReuly0oGCKPx+MO+LrR5EZkKWru8Y5j+sSUj7PRcMjm1ftTDkGTc5iRydKqqS
+	 bbWUjBG08yp8HXL0PE7dfmNTfuQ7nkJUJ71vqJXc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730603AbgGNSxP (ORCPT
+        id S1730613AbgGNSxT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 14:53:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50168 "EHLO mail.kernel.org"
+        Tue, 14 Jul 2020 14:53:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50256 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730208AbgGNSxL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 14:53:11 -0400
+        id S1729918AbgGNSxQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 14:53:16 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A9D2422C9D;
-        Tue, 14 Jul 2020 18:53:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8F9D322BF5;
+        Tue, 14 Jul 2020 18:53:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594752791;
-        bh=/9Hm/xSYktH0LLH6MOmys3DleHFYDKGxs4K6ki9AYFg=;
+        s=default; t=1594752796;
+        bh=9UytBGID80b0f2L62wiWfV0joIQ/oSf+EzEK7kofbTc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oTMQqX10Us4Cz+CcOk5Vq7lI5/PGNN+3MZE8LhQgrOgjleoUQUH5zzEiFI+5mtpW1
-         rDBnI6XYh+TmUke6chVrLWBZUueZMrDWDY77u1hwKJyJMAHOHSfLfO8l4FsG/xgvLH
-         RRVpaJ1W8YPTXjXTnk7bfKv2Sg5kCBsxhpk3OXfM=
+        b=08kMqTELKXyghSuTWyAYfd3jbK1OyrDmx/w+NlxsPfdCy03WhHjVxLVaLPErnxs4k
+         SKCQcwTESZqgp2RKg3U7waUBoEKUGe4nd60eKhcjHAKY0Twv2Pwk+yq0WuSgU9u3av
+         oLK5NBzlHniwe/NdwzECV9sAk7dUdUGLEjYexii8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Andrew Scull <ascull@google.com>,
-        Marc Zyngier <maz@kernel.org>
-Subject: [PATCH 5.4 081/109] KVM: arm64: Stop clobbering x0 for HVC_SOFT_RESTART
-Date:   Tue, 14 Jul 2020 20:44:24 +0200
-Message-Id: <20200714184109.428333611@linuxfoundation.org>
+        stable@vger.kernel.org, Nadav Amit <namit@vmware.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Subject: [PATCH 5.4 083/109] KVM: x86: bit 8 of non-leaf PDPEs is not reserved
+Date:   Tue, 14 Jul 2020 20:44:26 +0200
+Message-Id: <20200714184109.526812261@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200714184105.507384017@linuxfoundation.org>
 References: <20200714184105.507384017@linuxfoundation.org>
@@ -59,53 +59,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andrew Scull <ascull@google.com>
+From: Paolo Bonzini <pbonzini@redhat.com>
 
-commit b9e10d4a6c9f5cbe6369ce2c17ebc67d2e5a4be5 upstream.
+commit 5ecad245de2ae23dc4e2dbece92f8ccfbaed2fa7 upstream.
 
-HVC_SOFT_RESTART is given values for x0-2 that it should installed
-before exiting to the new address so should not set x0 to stub HVC
-success or failure code.
+Bit 8 would be the "global" bit, which does not quite make sense for non-leaf
+page table entries.  Intel ignores it; AMD ignores it in PDEs and PDPEs, but
+reserves it in PML4Es.
 
-Fixes: af42f20480bf1 ("arm64: hyp-stub: Zero x0 on successful stub handling")
+Probably, earlier versions of the AMD manual documented it as reserved in PDPEs
+as well, and that behavior made it into KVM as well as kvm-unit-tests; fix it.
+
 Cc: stable@vger.kernel.org
-Signed-off-by: Andrew Scull <ascull@google.com>
-Signed-off-by: Marc Zyngier <maz@kernel.org>
-Link: https://lore.kernel.org/r/20200706095259.1338221-1-ascull@google.com
+Reported-by: Nadav Amit <namit@vmware.com>
+Fixes: a0c0feb57992 ("KVM: x86: reserve bit 8 of non-leaf PDPEs and PML4Es in 64-bit mode on AMD", 2014-09-03)
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/arm64/kvm/hyp-init.S |   11 +++++++----
- 1 file changed, 7 insertions(+), 4 deletions(-)
+ arch/x86/kvm/mmu.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/arch/arm64/kvm/hyp-init.S
-+++ b/arch/arm64/kvm/hyp-init.S
-@@ -136,11 +136,15 @@ ENTRY(__kvm_handle_stub_hvc)
- 
- 1:	cmp	x0, #HVC_RESET_VECTORS
- 	b.ne	1f
--reset:
-+
- 	/*
--	 * Reset kvm back to the hyp stub. Do not clobber x0-x4 in
--	 * case we coming via HVC_SOFT_RESTART.
-+	 * Set the HVC_RESET_VECTORS return code before entering the common
-+	 * path so that we do not clobber x0-x2 in case we are coming via
-+	 * HVC_SOFT_RESTART.
- 	 */
-+	mov	x0, xzr
-+reset:
-+	/* Reset kvm back to the hyp stub. */
- 	mrs	x5, sctlr_el2
- 	ldr	x6, =SCTLR_ELx_FLAGS
- 	bic	x5, x5, x6		// Clear SCTL_M and etc
-@@ -151,7 +155,6 @@ reset:
- 	/* Install stub vectors */
- 	adr_l	x5, __hyp_stub_vectors
- 	msr	vbar_el2, x5
--	mov	x0, xzr
- 	eret
- 
- 1:	/* Bad stub call */
+--- a/arch/x86/kvm/mmu.c
++++ b/arch/x86/kvm/mmu.c
+@@ -4580,7 +4580,7 @@ __reset_rsvds_bits_mask(struct kvm_vcpu
+ 			nonleaf_bit8_rsvd | rsvd_bits(7, 7) |
+ 			rsvd_bits(maxphyaddr, 51);
+ 		rsvd_check->rsvd_bits_mask[0][2] = exb_bit_rsvd |
+-			nonleaf_bit8_rsvd | gbpages_bit_rsvd |
++			gbpages_bit_rsvd |
+ 			rsvd_bits(maxphyaddr, 51);
+ 		rsvd_check->rsvd_bits_mask[0][1] = exb_bit_rsvd |
+ 			rsvd_bits(maxphyaddr, 51);
 
 
