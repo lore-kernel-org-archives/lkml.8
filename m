@@ -2,422 +2,310 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BB92C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 08:38:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30372C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 08:38:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C8E9321897
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 08:38:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=qti.qualcomm.com header.i=@qti.qualcomm.com header.b="hAr3jrpK"
+	by mail.kernel.org (Postfix) with ESMTP id 0780821D90
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 08:38:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726609AbgGNIiN (ORCPT
+        id S1726722AbgGNIiZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 04:38:13 -0400
-Received: from alexa-out.qualcomm.com ([129.46.98.28]:3203 "EHLO
-        alexa-out.qualcomm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725793AbgGNIiN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 04:38:13 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=qti.qualcomm.com; i=@qti.qualcomm.com; q=dns/txt;
-  s=qcdkim; t=1594715891; x=1626251891;
-  h=from:to:cc:subject:date:message-id;
-  bh=nud3N8g8Z+XUy6Ezoia3mS9wEnvaITQ2oTiSdXjGUNM=;
-  b=hAr3jrpK1HViABN7wx2xTWGbxJSLPl5JQX4eKl6qmDg+xZRTD0jlB0dH
-   Ft8XQawgWc6HECJKOs6HU1ZXw2YClS5H7IWinecXOpnkQCrBtuHP/cEeV
-   Wf7+Cg0u6ONDOhM74LOYDu3RDBkOb03oJHoW475yWSsyvwxsya2dGeFSf
-   Y=;
-Received: from ironmsg07-lv.qualcomm.com (HELO ironmsg07-lv.qulacomm.com) ([10.47.202.151])
-  by alexa-out.qualcomm.com with ESMTP; 14 Jul 2020 01:38:11 -0700
-Received: from ironmsg01-blr.qualcomm.com ([10.86.208.130])
-  by ironmsg07-lv.qulacomm.com with ESMTP/TLS/AES256-SHA; 14 Jul 2020 01:38:09 -0700
-Received: from dikshita-linux.qualcomm.com ([10.204.65.237])
-  by ironmsg01-blr.qualcomm.com with ESMTP; 14 Jul 2020 14:07:53 +0530
-Received: by dikshita-linux.qualcomm.com (Postfix, from userid 347544)
-        id 0AD9C4125; Tue, 14 Jul 2020 14:07:51 +0530 (IST)
-From:   Dikshita Agarwal <dikshita@qti.qualcomm.com>
-To:     linux-media@vger.kernel.org, stanimir.varbanov@linaro.org
-Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        vgarodia@codeaurora.org, majja@codeaurora.org, jdas@codeaurora.org,
-        Dikshita Agarwal <dikshita@codeaurora.org>
-Subject: [PATCH v2] venus: move platform specific data to platform file
-Date:   Tue, 14 Jul 2020 14:07:40 +0530
-Message-Id: <1594715860-27056-1-git-send-email-dikshita@qti.qualcomm.com>
-X-Mailer: git-send-email 1.9.1
+        Tue, 14 Jul 2020 04:38:25 -0400
+Received: from mga04.intel.com ([192.55.52.120]:60552 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725820AbgGNIiX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 04:38:23 -0400
+IronPort-SDR: QO1BkL1qzQVUxJkxdwKldibqzDbl/9c2vnF3UgbWEODPYMPbAzHTAtyYwKjuszBlt8+6TXzFN3
+ GQyh943/cMTA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9681"; a="146322477"
+X-IronPort-AV: E=Sophos;i="5.75,350,1589266800"; 
+   d="scan'208";a="146322477"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jul 2020 01:37:20 -0700
+IronPort-SDR: hpVZxF11voeC+dqWnYC7/G59MCrdgeyCh/7dGUm0HaBIUQjAXFsRX100fKAXIDIFf4Jw/1px46
+ 37ZA1btbl7Uw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,350,1589266800"; 
+   d="scan'208";a="268592852"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmsmga007.fm.intel.com with ESMTP; 14 Jul 2020 01:37:20 -0700
+Received: from [10.249.230.149] (abudanko-mobl.ccr.corp.intel.com [10.249.230.149])
+        by linux.intel.com (Postfix) with ESMTP id 523C8580810;
+        Tue, 14 Jul 2020 01:37:18 -0700 (PDT)
+From:   Alexey Budankov <alexey.budankov@linux.intel.com>
+Subject: [PATCH v11 00/15] perf: support enable and disable commands in stat
+ and record modes
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Organization: Intel Corp.
+Message-ID: <037d737f-0ada-a9f0-9686-f7521ca6fbc3@linux.intel.com>
+Date:   Tue, 14 Jul 2020 11:37:17 +0300
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dikshita Agarwal <dikshita@codeaurora.org>
 
-Move all data specific to platform into a separate file.
+Changes in v11:
+- added comments to struct ctl_fd
+- explicitly coded data_size decrement
 
-Signed-off-by: Dikshita Agarwal <dikshita@codeaurora.org>
+v10: https://lore.kernel.org/lkml/4af50c95-36f6-7a61-5a22-2949970fe7a5@linux.intel.com/
+
+Changes in v10:
+- reused struct priv, renamed props into flags and used unsigned int type as a storage
+- implemented and adopted usage of evlist__ctlfd_initialized() function
+- updated while condition with checking !(done || stop)
+- implemented compute_tts() to calculate the remainder of timeout to wait in poll()
+
+v9: https://lore.kernel.org/lkml/a4d5db4a-f25c-38dc-1c41-321a886cb122@linux.intel.com/
+
+Changes in v9:
+- avoided screwing of fds by fdarray__filter() to fix staleness of pos returned by fdarray__add()
+- implemented notion of properties for fds kept by fdarray object and introduced nonfilterable
+  property for control fd
+- avoided counting of nonfilterable fds by fdarray__filter()
+- replaced strlen() with sizeof(str)-1 for CMD_TAGS
+- avoided mixing timeout and interval processing in one function
+- renamed child to child_exited variable
+- processed time_to_sleep < time_diff condition
+- placed evlist__ctlfd_process() call after evlist__poll() and evlist__filter_pollfd()
+  calls in record mode
+
+v8: https://lore.kernel.org/lkml/0781a077-aa82-5b4a-273e-c17372a72b93@linux.intel.com/
+
+Changes in v8:
+- avoided moving of fds at fdarray__filter() call
+- skipped counting of fds with zeroed revents at fdarray__filter() call
+- converted explicit --ctl-fd[-ack] into --control fd:ctl-fd[,ack-fd option 
+- updated docs to accommodate --control fd:ctl-fd[,ack-fd] option
+
+v7: https://lore.kernel.org/lkml/5de4b954-24f0-1e8d-5a0d-7b12783b8218@linux.intel.com/
+
+Changes in v7:
+- added missing perf-record.txt changes 
+- adjusted docs wording for --ctl-fd,ctl-fd-ack options 
+  to additionally mention --delay=-1 effect
+
+v6: https://lore.kernel.org/lkml/f8e3a714-d9b1-4647-e1d2-9981cbaa83ec@linux.intel.com/
+
+Changes in v6:
+- split re-factoring of events handling loops for stat mode
+  into smaller incremental parts
+- added parts missing at v5
+- corrected v5 runtime issues
+
+v5: https://lore.kernel.org/lkml/e5cac8dd-7aa4-ec7c-671c-07756907acba@linux.intel.com/
+
+Changes in v5:
+- split re-factoring of events handling loops for stat mode
+  into smaller incremental parts
+
+v4: https://lore.kernel.org/lkml/653fe5f3-c986-a841-1ed8-0a7d2fa24c00@linux.intel.com/
+
+Changes in v4:
+- made checking of ctlfd state unconditional in record trace streaming loop
+- introduced static poll fds to keep evlist__filter_pollfd() unaffected
+- handled ret code of evlist__initialize_ctlfd() where need
+- renamed and structured handle_events() function
+- applied anonymous structs where needed
+
+v3: https://lore.kernel.org/lkml/eb38e9e5-754f-d410-1d9b-e26b702d51b7@linux.intel.com/
+
+Changes in v3:
+- renamed functions and types from perf_evlist_ to evlist_ to avoid
+  clash with libperf code;
+- extended commands to be strings of variable length consisting of
+  command name and also possibly including command specific data;
+- merged docs update with the code changes;
+- updated docs for -D,--delay=-1 option for stat and record modes;
+
+v2: https://lore.kernel.org/lkml/d582cc3d-2302-c7e2-70d3-bc7ab6f628c3@linux.intel.com/
+
+Changes in v2:
+- renamed resume and pause commands to enable and disable ones, renamed
+  CTL_CMD_RESUME and CTL_CMD_PAUSE to CTL_CMD_ENABLE and CTL_CMD_DISABLE
+  to fit to the appropriate ioctls and avoid mixing up with PAUSE_OUTPUT
+  ioctl;
+- factored out event handling loop into a handle_events() for stat mode;
+- separated -D,--delay=-1 into separate patches for stat and record modes;
+
+v1: https://lore.kernel.org/lkml/825a5132-b58d-c0b6-b050-5a6040386ec7@linux.intel.com/
+
+repo: tip of git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git perf/core
+
+The patch set implements handling of 'start disabled', 'enable' and 'disable'
+external control commands which can be provided for stat and record modes
+of the tool from an external controlling process. 'start disabled' command
+can be used to postpone enabling of events in the beginning of a monitoring
+session. 'enable' and 'disable' commands can be used to enable and disable
+events correspondingly any time after the start of the session.
+
+The 'start disabled', 'enable' and 'disable' external control commands can be
+used to focus measurement on specially selected time intervals of workload
+execution. Focused measurement reduces tool intrusion and influence on
+workload behavior, reduces distortion and amount of collected and stored
+data, mitigates data accuracy loss because measurement and data capturing
+happen only during intervals of interest.
+
+A controlling process can be a bash shell script [1], native executable or
+any other language program that can directly work with file descriptors,
+e.g. pipes [2], and spawn a process, specially the tool one.
+
+-D,--delay <val> option is extended with -1 value to skip events enabling
+in the beginning of a monitoring session ('start disabled' command).
+--control fd:ctl-fd[,ack-fd] command line option is introduced to provide the
+tool with a pair of file descriptors to listen to control commands and reply
+to the controlling process on the completion of received commands.
+
+The tool reads control command message from ctl-fd descriptor, handles the
+command and optionally replies acknowledgement message to ack-fd descriptor,
+if it is specified on the command line. 'enable' command is recognized as
+'enable' string message and 'disable' command is recognized as 'disable'
+string message both received from ctl-fd descriptor. Completion message is
+'ack\n' and sent to ack-fd descriptor.
+
+Example bash script demonstrating simple use case follows:
+
+#!/bin/bash
+
+ctl_dir=/tmp/
+
+ctl_fifo=${ctl_dir}perf_ctl.fifo
+test -p ${ctl_fifo} && unlink ${ctl_fifo}
+mkfifo ${ctl_fifo} && exec {ctl_fd}<>${ctl_fifo}
+
+ctl_ack_fifo=${ctl_dir}perf_ctl_ack.fifo
+test -p ${ctl_ack_fifo} && unlink ${ctl_ack_fifo}
+mkfifo ${ctl_ack_fifo} && exec {ctl_fd_ack}<>${ctl_ack_fifo}
+
+perf stat -D -1 -e cpu-cycles -a -I 1000       \
+          --control fd:${ctl_fd},${ctl_fd_ack} \
+          -- sleep 40 &
+perf_pid=$!
+
+sleep 5  && echo 'enable' >&${ctl_fd} && read -u ${ctl_fd_ack} e1 && echo "enabled(${e1})"
+sleep 10 && echo 'disable' >&${ctl_fd} && read -u ${ctl_fd_ack} d1 && echo "disabled(${d1})"
+sleep 5  && echo 'enable' >&${ctl_fd} && read -u ${ctl_fd_ack} e2 && echo "enabled(${e2})"
+sleep 10 && echo 'disable' >&${ctl_fd} && read -u ${ctl_fd_ack} d2 && echo "disabled(${d2})"
+
+exec {ctl_fd_ack}>&- && unlink ${ctl_ack_fifo}
+exec {ctl_fd}>&- && unlink ${ctl_fifo}
+
+wait -n ${perf_pid}
+exit $?
+
+
+Script output:
+
+[root@host dir] example
+Events disabled
+#           time             counts unit events
+     1.001101062      <not counted>      cpu-cycles                                                  
+     2.002994944      <not counted>      cpu-cycles                                                  
+     3.004864340      <not counted>      cpu-cycles                                                  
+     4.006727177      <not counted>      cpu-cycles                                                  
+Events enabled
+enabled(ack)
+     4.993808464          3,124,246      cpu-cycles                                                  
+     5.008597004          3,325,624      cpu-cycles                                                  
+     6.010387483         83,472,992      cpu-cycles                                                  
+     7.012266598         55,877,621      cpu-cycles                                                  
+     8.014175695         97,892,729      cpu-cycles                                                  
+     9.016056093         68,461,242      cpu-cycles                                                  
+    10.017937507         55,449,643      cpu-cycles                                                  
+    11.019830154         68,938,167      cpu-cycles                                                  
+    12.021719952         55,164,101      cpu-cycles                                                  
+    13.023627550         70,535,720      cpu-cycles                                                  
+    14.025580995         53,240,125      cpu-cycles                                                  
+disabled(ack)
+    14.997518260         53,558,068      cpu-cycles                                                  
+Events disabled
+    15.027216416      <not counted>      cpu-cycles                                                  
+    16.029052729      <not counted>      cpu-cycles                                                  
+    17.030904762      <not counted>      cpu-cycles                                                  
+    18.032073424      <not counted>      cpu-cycles                                                  
+    19.033805074      <not counted>      cpu-cycles                                                  
+Events enabled
+enabled(ack)
+    20.001279097          3,021,022      cpu-cycles                                                  
+    20.035044381          6,434,367      cpu-cycles                                                  
+    21.036923813         89,358,251      cpu-cycles                                                  
+    22.038825169         72,516,351      cpu-cycles                                                  
+#           time             counts unit events
+    23.040715596         55,046,157      cpu-cycles                                                  
+    24.042643757         78,128,649      cpu-cycles                                                  
+    25.044558535         61,052,428      cpu-cycles                                                  
+    26.046452785         62,142,806      cpu-cycles                                                  
+    27.048353021         74,477,971      cpu-cycles                                                  
+    28.050241286         61,001,623      cpu-cycles                                                  
+    29.052149961         61,653,502      cpu-cycles                                                  
+disabled(ack)
+    30.004980264         82,729,640      cpu-cycles                                                  
+Events disabled
+    30.053516176      <not counted>      cpu-cycles                                                  
+    31.055348366      <not counted>      cpu-cycles                                                  
+    32.057202097      <not counted>      cpu-cycles                                                  
+    33.059040702      <not counted>      cpu-cycles                                                  
+    34.060843288      <not counted>      cpu-cycles                                                  
+    35.000888624      <not counted>      cpu-cycles                                                  
+[root@host dir]# 
+
+[1] http://man7.org/linux/man-pages/man1/bash.1.html
+[2] http://man7.org/linux/man-pages/man2/pipe.2.html
+
 ---
- drivers/media/platform/qcom/venus/Makefile       |  3 +-
- drivers/media/platform/qcom/venus/core.c         | 20 ++------
- drivers/media/platform/qcom/venus/core.h         | 12 +----
- drivers/media/platform/qcom/venus/helpers.c      | 31 +----------
- drivers/media/platform/qcom/venus/helpers.h      |  1 -
- drivers/media/platform/qcom/venus/hfi_platform.c | 65 ++++++++++++++++++++++++
- drivers/media/platform/qcom/venus/hfi_platform.h | 28 ++++++++++
- drivers/media/platform/qcom/venus/pm_helpers.c   |  1 +
- drivers/media/platform/qcom/venus/vdec.c         |  3 +-
- drivers/media/platform/qcom/venus/venc.c         |  3 +-
- 10 files changed, 106 insertions(+), 61 deletions(-)
- create mode 100644 drivers/media/platform/qcom/venus/hfi_platform.c
- create mode 100644 drivers/media/platform/qcom/venus/hfi_platform.h
+Alexey Budankov (15):
+  tools/libperf: avoid internal moving of fdarray fds
+  tools/libperf: add flags to fdarray fds objects
+  tools/libperf: avoid counting of nonfilterable fdarray fds
+  perf evlist: introduce control file descriptors
+  perf evlist: implement control command handling functions
+  perf stat: factor out body of event handling loop for system wide
+  perf stat: move target check to loop control statement
+  perf stat: factor out body of event handling loop for fork case
+  perf stat: factor out event handling loop into dispatch_events()
+  perf stat: extend -D,--delay option with -1 value
+  perf stat: implement control commands handling
+  perf stat: introduce --control fd:ctl-fd[,ack-fd] options
+  perf record: extend -D,--delay option with -1 value
+  perf record: implement control commands handling
+  perf record: introduce --control fd:ctl-fd[,ack-fd] options
 
-diff --git a/drivers/media/platform/qcom/venus/Makefile b/drivers/media/platform/qcom/venus/Makefile
-index dfc6368..c8f0e39 100644
---- a/drivers/media/platform/qcom/venus/Makefile
-+++ b/drivers/media/platform/qcom/venus/Makefile
-@@ -3,7 +3,8 @@
- 
- venus-core-objs += core.o helpers.o firmware.o \
- 		   hfi_venus.o hfi_msgs.o hfi_cmds.o hfi.o \
--		   hfi_parser.o pm_helpers.o dbgfs.o
-+		   hfi_parser.o pm_helpers.o dbgfs.o \
-+		   hfi_platform.o
- 
- venus-dec-objs += vdec.o vdec_ctrls.o
- venus-enc-objs += venc.o venc_ctrls.o
-diff --git a/drivers/media/platform/qcom/venus/core.c b/drivers/media/platform/qcom/venus/core.c
-index bbb394c..8f857a3 100644
---- a/drivers/media/platform/qcom/venus/core.c
-+++ b/drivers/media/platform/qcom/venus/core.c
-@@ -20,6 +20,7 @@
- #include "core.h"
- #include "firmware.h"
- #include "pm_helpers.h"
-+#include "hfi_platform.h"
- 
- static void venus_event_notify(struct venus_core *core, u32 event)
- {
-@@ -222,6 +223,8 @@ static int venus_probe(struct platform_device *pdev)
- 			return ret;
- 	}
- 
-+	core->hfi_plat= hfi_platform_get(core->res->hfi_version);
-+
- 	ret = dma_set_mask_and_coherent(dev, core->res->dma_mask);
- 	if (ret)
- 		return ret;
-@@ -461,17 +464,6 @@ static __maybe_unused int venus_runtime_resume(struct device *dev)
- 	{  244800, 100000000 },	/* 1920x1080@30 */
- };
- 
--static const struct codec_freq_data sdm845_codec_freq_data[] =  {
--	{ V4L2_PIX_FMT_H264, VIDC_SESSION_TYPE_ENC, 675, 10 },
--	{ V4L2_PIX_FMT_HEVC, VIDC_SESSION_TYPE_ENC, 675, 10 },
--	{ V4L2_PIX_FMT_VP8, VIDC_SESSION_TYPE_ENC, 675, 10 },
--	{ V4L2_PIX_FMT_MPEG2, VIDC_SESSION_TYPE_DEC, 200, 10 },
--	{ V4L2_PIX_FMT_H264, VIDC_SESSION_TYPE_DEC, 200, 10 },
--	{ V4L2_PIX_FMT_HEVC, VIDC_SESSION_TYPE_DEC, 200, 10 },
--	{ V4L2_PIX_FMT_VP8, VIDC_SESSION_TYPE_DEC, 200, 10 },
--	{ V4L2_PIX_FMT_VP9, VIDC_SESSION_TYPE_DEC, 200, 10 },
--};
--
- static const struct bw_tbl sdm845_bw_table_enc[] = {
- 	{ 1944000, 1612000, 0, 2416000, 0 },	/* 3840x2160@60 */
- 	{  972000,  951000, 0, 1434000, 0 },	/* 3840x2160@30 */
-@@ -493,8 +485,6 @@ static __maybe_unused int venus_runtime_resume(struct device *dev)
- 	.bw_tbl_enc_size = ARRAY_SIZE(sdm845_bw_table_enc),
- 	.bw_tbl_dec = sdm845_bw_table_dec,
- 	.bw_tbl_dec_size = ARRAY_SIZE(sdm845_bw_table_dec),
--	.codec_freq_data = sdm845_codec_freq_data,
--	.codec_freq_data_size = ARRAY_SIZE(sdm845_codec_freq_data),
- 	.clks = {"core", "iface", "bus" },
- 	.clks_num = 3,
- 	.vcodec0_clks = { "core", "bus" },
-@@ -516,8 +506,6 @@ static __maybe_unused int venus_runtime_resume(struct device *dev)
- 	.bw_tbl_enc_size = ARRAY_SIZE(sdm845_bw_table_enc),
- 	.bw_tbl_dec = sdm845_bw_table_dec,
- 	.bw_tbl_dec_size = ARRAY_SIZE(sdm845_bw_table_dec),
--	.codec_freq_data = sdm845_codec_freq_data,
--	.codec_freq_data_size = ARRAY_SIZE(sdm845_codec_freq_data),
- 	.clks = {"core", "iface", "bus" },
- 	.clks_num = 3,
- 	.vcodec0_clks = { "vcodec0_core", "vcodec0_bus" },
-@@ -562,8 +550,6 @@ static __maybe_unused int venus_runtime_resume(struct device *dev)
- 	.bw_tbl_enc_size = ARRAY_SIZE(sc7180_bw_table_enc),
- 	.bw_tbl_dec = sc7180_bw_table_dec,
- 	.bw_tbl_dec_size = ARRAY_SIZE(sc7180_bw_table_dec),
--	.codec_freq_data = sdm845_codec_freq_data,
--	.codec_freq_data_size = ARRAY_SIZE(sdm845_codec_freq_data),
- 	.clks = {"core", "iface", "bus" },
- 	.clks_num = 3,
- 	.vcodec0_clks = { "vcodec0_core", "vcodec0_bus" },
-diff --git a/drivers/media/platform/qcom/venus/core.h b/drivers/media/platform/qcom/venus/core.h
-index 82438f1..c8f0824 100644
---- a/drivers/media/platform/qcom/venus/core.h
-+++ b/drivers/media/platform/qcom/venus/core.h
-@@ -34,13 +34,6 @@ struct reg_val {
- 	u32 value;
- };
- 
--struct codec_freq_data {
--	u32 pixfmt;
--	u32 session_type;
--	unsigned long vpp_freq;
--	unsigned long vsp_freq;
--};
--
- struct bw_tbl {
- 	u32 mbs_per_sec;
- 	u32 avg;
-@@ -59,8 +52,6 @@ struct venus_resources {
- 	unsigned int bw_tbl_dec_size;
- 	const struct reg_val *reg_tbl;
- 	unsigned int reg_tbl_size;
--	const struct codec_freq_data *codec_freq_data;
--	unsigned int codec_freq_data_size;
- 	const char * const clks[VIDC_CLKS_NUM_MAX];
- 	unsigned int clks_num;
- 	const char * const vcodec0_clks[VIDC_VCODEC_CLKS_NUM_MAX];
-@@ -176,6 +167,7 @@ struct venus_core {
- 	bool sys_error;
- 	const struct hfi_core_ops *core_ops;
- 	const struct venus_pm_ops *pm_ops;
-+	const struct hfi_platform *hfi_plat;
- 	struct mutex pm_lock;
- 	unsigned long enc_codecs;
- 	unsigned long dec_codecs;
-@@ -256,7 +248,7 @@ struct venus_buffer {
- struct clock_data {
- 	u32 core_id;
- 	unsigned long freq;
--	const struct codec_freq_data *codec_freq_data;
-+	const struct hfi_platform_codec_freq_data *codec_freq_data;
- };
- 
- #define to_venus_buffer(ptr)	container_of(ptr, struct venus_buffer, vb)
-diff --git a/drivers/media/platform/qcom/venus/helpers.c b/drivers/media/platform/qcom/venus/helpers.c
-index 115a9a2..712d0ed 100644
---- a/drivers/media/platform/qcom/venus/helpers.c
-+++ b/drivers/media/platform/qcom/venus/helpers.c
-@@ -14,6 +14,7 @@
- #include "helpers.h"
- #include "hfi_helper.h"
- #include "pm_helpers.h"
-+#include "hfi_platform.h"
- 
- struct intbuf {
- 	struct list_head list;
-@@ -801,36 +802,6 @@ int venus_helper_set_work_mode(struct venus_inst *inst, u32 mode)
- }
- EXPORT_SYMBOL_GPL(venus_helper_set_work_mode);
- 
--int venus_helper_init_codec_freq_data(struct venus_inst *inst)
--{
--	const struct codec_freq_data *data;
--	unsigned int i, data_size;
--	u32 pixfmt;
--	int ret = 0;
--
--	if (!IS_V4(inst->core))
--		return 0;
--
--	data = inst->core->res->codec_freq_data;
--	data_size = inst->core->res->codec_freq_data_size;
--	pixfmt = inst->session_type == VIDC_SESSION_TYPE_DEC ?
--			inst->fmt_out->pixfmt : inst->fmt_cap->pixfmt;
--
--	for (i = 0; i < data_size; i++) {
--		if (data[i].pixfmt == pixfmt &&
--		    data[i].session_type == inst->session_type) {
--			inst->clk_data.codec_freq_data = &data[i];
--			break;
--		}
--	}
--
--	if (!inst->clk_data.codec_freq_data)
--		ret = -EINVAL;
--
--	return ret;
--}
--EXPORT_SYMBOL_GPL(venus_helper_init_codec_freq_data);
--
- int venus_helper_set_num_bufs(struct venus_inst *inst, unsigned int input_bufs,
- 			      unsigned int output_bufs,
- 			      unsigned int output2_bufs)
-diff --git a/drivers/media/platform/qcom/venus/helpers.h b/drivers/media/platform/qcom/venus/helpers.h
-index 8fbbda1..9c83c91 100644
---- a/drivers/media/platform/qcom/venus/helpers.h
-+++ b/drivers/media/platform/qcom/venus/helpers.h
-@@ -33,7 +33,6 @@ int venus_helper_set_output_resolution(struct venus_inst *inst,
- 				       unsigned int width, unsigned int height,
- 				       u32 buftype);
- int venus_helper_set_work_mode(struct venus_inst *inst, u32 mode);
--int venus_helper_init_codec_freq_data(struct venus_inst *inst);
- int venus_helper_set_num_bufs(struct venus_inst *inst, unsigned int input_bufs,
- 			      unsigned int output_bufs,
- 			      unsigned int output2_bufs);
-diff --git a/drivers/media/platform/qcom/venus/hfi_platform.c b/drivers/media/platform/qcom/venus/hfi_platform.c
-new file mode 100644
-index 0000000..d84cd7e
---- /dev/null
-+++ b/drivers/media/platform/qcom/venus/hfi_platform.c
-@@ -0,0 +1,65 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * Copyright (c) 2020, The Linux Foundation. All rights reserved.
-+ */
-+#include "hfi_platform.h"
-+#include "core.h"
-+
-+static struct hfi_platform_codec_freq_data hfi_plat_codec_freq_data_v4[] =  {
-+    { V4L2_PIX_FMT_H264, VIDC_SESSION_TYPE_ENC, 675, 10 },
-+	{ V4L2_PIX_FMT_HEVC, VIDC_SESSION_TYPE_ENC, 675, 10 },
-+	{ V4L2_PIX_FMT_VP8, VIDC_SESSION_TYPE_ENC, 675, 10 },
-+	{ V4L2_PIX_FMT_MPEG2, VIDC_SESSION_TYPE_DEC, 200, 10 },
-+	{ V4L2_PIX_FMT_H264, VIDC_SESSION_TYPE_DEC, 200, 10 },
-+	{ V4L2_PIX_FMT_HEVC, VIDC_SESSION_TYPE_DEC, 200, 10 },
-+	{ V4L2_PIX_FMT_VP8, VIDC_SESSION_TYPE_DEC, 200, 10 },
-+	{ V4L2_PIX_FMT_VP9, VIDC_SESSION_TYPE_DEC, 200, 10 },
-+};
-+
-+static const struct hfi_platform hfi_plat_v4 = {
-+	.hfi_plat_codec_freq_data = hfi_plat_codec_freq_data_v4,
-+	.hfi_plat_codec_freq_data_size = ARRAY_SIZE(hfi_plat_codec_freq_data_v4),
-+};
-+
-+const struct hfi_platform *hfi_platform_get
-+	(enum hfi_version version)
-+{
-+	switch (version) {
-+	case HFI_VERSION_4XX:
-+		return &hfi_plat_v4;
-+	default:
-+		return NULL;
-+	}
-+	return NULL;
-+}
-+
-+int hfi_platform_init_codec_freq_data(struct venus_inst *inst)
-+{
-+	const struct hfi_platform_codec_freq_data *data;
-+	unsigned int i, data_size;
-+	u32 pixfmt;
-+	int ret = 0;
-+
-+	if (!IS_V4(inst->core))
-+		return 0;
-+
-+	data = inst->core->hfi_plat->hfi_plat_codec_freq_data;
-+	data_size = inst->core->hfi_plat->hfi_plat_codec_freq_data_size;
-+
-+	pixfmt = inst->session_type == VIDC_SESSION_TYPE_DEC ?
-+			inst->fmt_out->pixfmt : inst->fmt_cap->pixfmt;
-+
-+	for (i = 0; i < data_size; i++) {
-+		if (data[i].pixfmt == pixfmt &&
-+		    data[i].session_type == inst->session_type) {
-+			inst->clk_data.codec_freq_data = &data[i];
-+			break;
-+		}
-+	}
-+
-+	if (!inst->clk_data.codec_freq_data)
-+		ret = -EINVAL;
-+
-+	return ret;
-+}
-+EXPORT_SYMBOL_GPL(hfi_platform_init_codec_freq_data);
-diff --git a/drivers/media/platform/qcom/venus/hfi_platform.h b/drivers/media/platform/qcom/venus/hfi_platform.h
-new file mode 100644
-index 0000000..3f869f8
---- /dev/null
-+++ b/drivers/media/platform/qcom/venus/hfi_platform.h
-@@ -0,0 +1,28 @@
-+/* SPDX-License-Identifier: GPL-2.0-only */
-+/*
-+ * Copyright (c) 2020, The Linux Foundation. All rights reserved.
-+ */
-+
-+#ifndef __HFI_PLATFORM_H__
-+#define __HFI_PLATFORM_H__
-+
-+#include "core.h"
-+
-+struct hfi_platform_codec_freq_data {
-+	u32 pixfmt;
-+	u32 session_type;
-+	unsigned long vpp_freq;
-+	unsigned long vsp_freq;
-+};
-+
-+struct hfi_platform {
-+	const struct hfi_platform_codec_freq_data *hfi_plat_codec_freq_data;
-+	unsigned int hfi_plat_codec_freq_data_size;
-+};
-+
-+const struct hfi_platform *hfi_platform_get
-+	(enum hfi_version version);
-+int hfi_platform_init_codec_freq_data(struct venus_inst *inst);
-+
-+#endif
-+
-diff --git a/drivers/media/platform/qcom/venus/pm_helpers.c b/drivers/media/platform/qcom/venus/pm_helpers.c
-index f33fc70..7fae9a4 100644
---- a/drivers/media/platform/qcom/venus/pm_helpers.c
-+++ b/drivers/media/platform/qcom/venus/pm_helpers.c
-@@ -17,6 +17,7 @@
- #include "hfi_parser.h"
- #include "hfi_venus_io.h"
- #include "pm_helpers.h"
-+#include "hfi_platform.h"
- 
- static bool legacy_binding;
- 
-diff --git a/drivers/media/platform/qcom/venus/vdec.c b/drivers/media/platform/qcom/venus/vdec.c
-index 7959e45..4219ea9 100644
---- a/drivers/media/platform/qcom/venus/vdec.c
-+++ b/drivers/media/platform/qcom/venus/vdec.c
-@@ -21,6 +21,7 @@
- #include "helpers.h"
- #include "vdec.h"
- #include "pm_helpers.h"
-+#include "hfi_platform.h"
- 
- /*
-  * Three resons to keep MPLANE formats (despite that the number of planes
-@@ -748,7 +749,7 @@ static int vdec_session_init(struct venus_inst *inst)
- 	if (ret)
- 		goto deinit;
- 
--	ret = venus_helper_init_codec_freq_data(inst);
-+	ret = hfi_platform_init_codec_freq_data(inst);
- 	if (ret)
- 		goto deinit;
- 
-diff --git a/drivers/media/platform/qcom/venus/venc.c b/drivers/media/platform/qcom/venus/venc.c
-index c591d00..8f9e2a3 100644
---- a/drivers/media/platform/qcom/venus/venc.c
-+++ b/drivers/media/platform/qcom/venus/venc.c
-@@ -21,6 +21,7 @@
- #include "helpers.h"
- #include "venc.h"
- #include "pm_helpers.h"
-+#include "hfi_platform.h"
- 
- #define NUM_B_FRAMES_MAX	4
- 
-@@ -849,7 +850,7 @@ static int venc_init_session(struct venus_inst *inst)
- 	if (ret)
- 		goto deinit;
- 
--	ret = venus_helper_init_codec_freq_data(inst);
-+	ret = hfi_platform_init_codec_freq_data(inst);
- 	if (ret)
- 		goto deinit;
- 
+ tools/lib/api/fd/array.c                 |  17 ++-
+ tools/lib/api/fd/array.h                 |  16 +-
+ tools/lib/perf/evlist.c                  |   6 +-
+ tools/lib/perf/include/internal/evlist.h |   2 +-
+ tools/perf/Documentation/perf-record.txt |  44 +++++-
+ tools/perf/Documentation/perf-stat.txt   |  44 +++++-
+ tools/perf/builtin-record.c              |  65 +++++++-
+ tools/perf/builtin-stat.c                | 183 ++++++++++++++++++-----
+ tools/perf/builtin-trace.c               |   2 +-
+ tools/perf/tests/fdarray.c               |  22 +--
+ tools/perf/util/evlist.c                 | 145 +++++++++++++++++-
+ tools/perf/util/evlist.h                 |  26 ++++
+ tools/perf/util/record.h                 |   4 +-
+ tools/perf/util/stat.h                   |   4 +-
+ 14 files changed, 495 insertions(+), 85 deletions(-)
+
 -- 
-1.9.1
+2.24.1
 
