@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B97BC433EB
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 19:11:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92949C433F4
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 19:11:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5ACBC22507
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 19:11:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A8E022507
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 19:11:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594753884;
-	bh=4+1CY02Uuaz+/7FNehvUYc0HJJynuT1ixS30/49OQKI=;
+	s=default; t=1594753888;
+	bh=t14ieBLjcRC8mGAiZegb7Cr7kUc2KlBM9DA1w+vutoM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=p8BDFbxGH1gMvPrjntecSxiaGAIKaCyTF0e/JLQinjp/QezmOj+hmppwMBxmyVffC
-	 tfSsYdRmMJp8M5tDfhMIWlh2Nw4jyGoBf3C2xon8CMFypbjo3Q1GVM+6bWad2tu4bD
-	 k8KBDRj3mXK52JQG1SWuMt+4iRtsYRVZkJ81xzpk=
+	b=LpKQzboQQf9Hqzcic6omm9etGL/rXdqOcWqzUMG2v+GB+qvsM84a38Q+1AJXjfnnC
+	 MufbaYalRQ9qKFj8pZcYNZnOD4bhyOWvNgLtbt+5+HmSh2P5/ihA3QA4tDRU5AGvLf
+	 heWLmE5+b5T0JmLambrnalVXTlW9WRJBtwSz8yDo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730636AbgGNTLW (ORCPT
+        id S1730065AbgGNStG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 15:11:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45182 "EHLO mail.kernel.org"
+        Tue, 14 Jul 2020 14:49:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44694 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728926AbgGNStX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 14:49:23 -0400
+        id S1730047AbgGNStA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 14:49:00 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A2AAE22B3F;
-        Tue, 14 Jul 2020 18:49:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0365C22AAA;
+        Tue, 14 Jul 2020 18:48:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594752563;
-        bh=4+1CY02Uuaz+/7FNehvUYc0HJJynuT1ixS30/49OQKI=;
+        s=default; t=1594752539;
+        bh=t14ieBLjcRC8mGAiZegb7Cr7kUc2KlBM9DA1w+vutoM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ldz+V3zgFg32qCJ2GeCLPBbAbisbAebhMAkD/2KZBKQZegz3U1XthmUQE25LLpimH
-         GmpHOfVOYXQj4q6an8TUd25u79n2WmdkVEew3na0QFCIj1fcUyexhHq+e2TnmV/+wJ
-         e2b1uTrlKXIgg0DnkUiJ/ur/L8mWTzlQAtk5V2BQ=
+        b=lZrATEcO99ER/+SCPMZVXiZ/QVk9nngnw3Gt0iHorDy+vsXzpjvi3T0wQTVM9agJF
+         Kfb3cmfBEhCWBfZMNnRnr4oPRH4FVDNzdYIEflQNS3VQvc3GTtdTLATVMclBqKpUzG
+         k88tI8QxKT8NaW/iWirEX2TJWzX6SV4JNq6qj1y4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Sasha Levin <sashal@kernel.org>,
-        Alexander Egorenkov <egorenar@linux.ibm.com>
-Subject: [PATCH 5.4 025/109] s390/kasan: fix early pgm check handler execution
-Date:   Tue, 14 Jul 2020 20:43:28 +0200
-Message-Id: <20200714184106.735185073@linuxfoundation.org>
+        stable@vger.kernel.org, Xiyu Yang <xiyuyang19@fudan.edu.cn>,
+        Xin Tan <tanxin.ctf@gmail.com>,
+        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 008/109] drm/ttm: Fix dma_fence refcnt leak when adding move fence
+Date:   Tue, 14 Jul 2020 20:43:11 +0200
+Message-Id: <20200714184105.922884512@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200714184105.507384017@linuxfoundation.org>
 References: <20200714184105.507384017@linuxfoundation.org>
@@ -61,40 +61,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vasily Gorbik <gor@linux.ibm.com>
+From: Xiyu Yang <xiyuyang19@fudan.edu.cn>
 
-[ Upstream commit 998f5bbe3dbdab81c1cfb1aef7c3892f5d24f6c7 ]
+[ Upstream commit 11425c4519e2c974a100fc984867046d905b9380 ]
 
-Currently if early_pgm_check_handler is called it ends up in pgm check
-loop. The problem is that early_pgm_check_handler is instrumented by
-KASAN but executed without DAT flag enabled which leads to addressing
-exception when KASAN checks try to access shadow memory.
+ttm_bo_add_move_fence() invokes dma_fence_get(), which returns a
+reference of the specified dma_fence object to "fence" with increased
+refcnt.
 
-Fix that by executing early handlers with DAT flag on under KASAN as
-expected.
+When ttm_bo_add_move_fence() returns, local variable "fence" becomes
+invalid, so the refcount should be decreased to keep refcount balanced.
 
-Reported-and-tested-by: Alexander Egorenkov <egorenar@linux.ibm.com>
-Reviewed-by: Heiko Carstens <heiko.carstens@de.ibm.com>
-Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
-Signed-off-by: Heiko Carstens <heiko.carstens@de.ibm.com>
+The reference counting issue happens in one exception handling path of
+ttm_bo_add_move_fence(). When no_wait_gpu flag is equals to true, the
+function forgets to decrease the refcnt increased by dma_fence_get(),
+causing a refcnt leak.
+
+Fix this issue by calling dma_fence_put() when no_wait_gpu flag is
+equals to true.
+
+Signed-off-by: Xiyu Yang <xiyuyang19@fudan.edu.cn>
+Signed-off-by: Xin Tan <tanxin.ctf@gmail.com>
+Reviewed-by: Christian König <christian.koenig@amd.com>
+Link: https://patchwork.freedesktop.org/patch/370221/
+Signed-off-by: Christian König <christian.koenig@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/s390/kernel/early.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/gpu/drm/ttm/ttm_bo.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/arch/s390/kernel/early.c b/arch/s390/kernel/early.c
-index b432d63d0b373..2531776cf6cf9 100644
---- a/arch/s390/kernel/early.c
-+++ b/arch/s390/kernel/early.c
-@@ -169,6 +169,8 @@ static noinline __init void setup_lowcore_early(void)
- 	psw_t psw;
+diff --git a/drivers/gpu/drm/ttm/ttm_bo.c b/drivers/gpu/drm/ttm/ttm_bo.c
+index abf165b2f64fc..3ce8ad7603c7f 100644
+--- a/drivers/gpu/drm/ttm/ttm_bo.c
++++ b/drivers/gpu/drm/ttm/ttm_bo.c
+@@ -941,8 +941,10 @@ static int ttm_bo_add_move_fence(struct ttm_buffer_object *bo,
+ 	if (!fence)
+ 		return 0;
  
- 	psw.mask = PSW_MASK_BASE | PSW_DEFAULT_KEY | PSW_MASK_EA | PSW_MASK_BA;
-+	if (IS_ENABLED(CONFIG_KASAN))
-+		psw.mask |= PSW_MASK_DAT;
- 	psw.addr = (unsigned long) s390_base_ext_handler;
- 	S390_lowcore.external_new_psw = psw;
- 	psw.addr = (unsigned long) s390_base_pgm_handler;
+-	if (no_wait_gpu)
++	if (no_wait_gpu) {
++		dma_fence_put(fence);
+ 		return -EBUSY;
++	}
+ 
+ 	dma_resv_add_shared_fence(bo->base.resv, fence);
+ 
 -- 
 2.25.1
 
