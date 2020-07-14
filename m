@@ -8,61 +8,61 @@ X-Spam-Status: No, score=-20.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
 	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8889C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 03:36:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7909C433E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 03:36:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B34862193E
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 03:36:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 911232193E
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 03:36:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Vpd863DW"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="XphMBp2T"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726750AbgGNDgV (ORCPT
+        id S1726619AbgGNDg0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 23:36:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37956 "EHLO
+        Mon, 13 Jul 2020 23:36:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37976 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726619AbgGNDgU (ORCPT
+        with ESMTP id S1726609AbgGNDgZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 23:36:20 -0400
-Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5628BC061755
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 20:36:20 -0700 (PDT)
-Received: by mail-yb1-xb49.google.com with SMTP id d27so19893418ybe.20
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 20:36:20 -0700 (PDT)
+        Mon, 13 Jul 2020 23:36:25 -0400
+Received: from mail-qt1-x84a.google.com (mail-qt1-x84a.google.com [IPv6:2607:f8b0:4864:20::84a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6DA8DC061755
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 20:36:25 -0700 (PDT)
+Received: by mail-qt1-x84a.google.com with SMTP id h10so11709704qtc.4
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 20:36:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=0+nyRB4FjMX87DKB086K0BKyIubl+CqEw8r/lrjQmxQ=;
-        b=Vpd863DWtRje1jzZiUqY+85x9YDp4OKtuawen/XxjhstnxKOa7+DKF8jeefo/rEiRg
-         cJ57qzZjMfX/dwbrFBeJeN5UN17t4L7D/nwyKuCMNMcSIok2yLJLdK3zBpo404vdBcXL
-         TR98Qx9PIM8D2zbFibUMHBTV/sAFcy7UXxWF62zWnLmxFVTtxCqKMChrp41V5WbCs3oX
-         mbQwZKZ7b/LteXsP8WqdbjjldWR0uBke8c+ZnY9ccAXVH/d2HenbCWCgcW0m55Ifo1bh
-         +oWfC1CVcqvxshVIfhR/zZ3XKORCM3CqNWJQt7sEkW1v60Xwu7eIXake3VQSvBZ/Sz7C
-         eoCA==
+        bh=QRGV21zDsqgReRz8UhXO3hb4yh7SnqqrmCjjSQRfV8I=;
+        b=XphMBp2T7rn+hqKSzkbTANp5kYe95a79kEgcFT+LoKklRhZiEDcYtPZNqpe4AV2gmA
+         MsLZ1AtT+o8cbj/r3syUri/JyYmwDfagrzEc95+MRqkmlYHUZXXQb7//kN5fzv0pl2lE
+         Uk/S/2A90wmxcm7YYxLhvymp2CphBVmvYk0YNmn1l6MQqxZUgJv721/zruOk3mP+VszF
+         8JUfUqfHKkbzozRA/WuxjeLL0OQoIOsZPa+XCm0yn5mQKqwoG+uH73K+ioWE0O4GsyK4
+         sF6RNN4ngo6iu9K/bx7Fb8i3obmzLl50TPQiJ83t7oaQp5fOYVTGOx4J9/EtYz06EPA7
+         Arjg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=0+nyRB4FjMX87DKB086K0BKyIubl+CqEw8r/lrjQmxQ=;
-        b=buM+AgHYbeyuBRpOtSrJmhjUo1Yl5WBHOWYip9WctMDpJ7SwBxJZuO/tpuWwSjiYRz
-         UTjxxrU7XvBxdLv9SjHs3p2qg435qDu1g+pCtecc27Bhc0cUX4xLsqB0otw3SgF8uGI7
-         hYJxjE8tx5e2nqvCZHm+fbzFjjktcwCEhpnTPTqzyapmUkY+Hs27aKGnjPT31ALI4vP1
-         hikCK3XApAT7NlRyyqrnv9G80/q0anPSnS41MDbzp9VMKSinRRvD0u0tyI0T/OOwPH23
-         ho99SjIhOW6/7mMwv3+6hOqFKjNKG2em0PXi+Oqn3HK8BB4rkM2NB28FAuFMdxiZbcTq
-         p8WQ==
-X-Gm-Message-State: AOAM533g/dB0O4Omcn1fhEOYPsyXu+b945+7za6ijGVItaf8Gq+UjAVr
-        i8c7as6Z/2+rP7FR9oP28Hrmqr5iWpbb
-X-Google-Smtp-Source: ABdhPJypXU4xQMjv4OfZEmpngqqwsqY3SfhQH2rS2+ro4iTC+chO8wmNzvludTkKpsLR9hoBfW8VQBBqU8Ny
-X-Received: by 2002:a25:d104:: with SMTP id i4mr5388671ybg.176.1594697779588;
- Mon, 13 Jul 2020 20:36:19 -0700 (PDT)
-Date:   Tue, 14 Jul 2020 11:34:52 +0800
+        bh=QRGV21zDsqgReRz8UhXO3hb4yh7SnqqrmCjjSQRfV8I=;
+        b=DoGzUTPZK4MMlwMFFaG6lMt28h1ZH7UXPqS5FKP1bVFIawT+A4PfCT7Vx6aoK9V7W+
+         wPoAXfy9zFHceGoD/4x7JriGjiXGMGcPE/cQQBhpgbgjym3f3qhRFj1but/dO6YDMQCk
+         AFKVSWYPElYzZhlCejHUK06VBRErwabTOlDKy9uMBXckVWp33OtyfkNBmVx8iBXxGf3d
+         FVR4VZvuFGupKzPDYPywXIYKY+a1DxY4RpzgPVAKo23mPzWJAJaRxEJRTKeBkvY554gR
+         tI0mLR+RH3kqyviLEj6qUkGuCqnqgp4dgWIqgHEUoHxHKnXNPpeAoj610bW90IanTa82
+         erIw==
+X-Gm-Message-State: AOAM5339GAsAiUvQpWkCurjt+c2CVMjKqlmZRkjuV0W8TWndd6Xn/YFb
+        7f81IEd/fd62Iw3CqgJcAyxPxVvBqRMU
+X-Google-Smtp-Source: ABdhPJyFtn7bk8z0unulWpf4PvIfSuun4DmAwO4sGFV2nov6DXVCdYqv3+LLV3oM6Vf+C+/j+J5qVRvbE4AZ
+X-Received: by 2002:a0c:cd84:: with SMTP id v4mr2554450qvm.35.1594697784025;
+ Mon, 13 Jul 2020 20:36:24 -0700 (PDT)
+Date:   Tue, 14 Jul 2020 11:34:53 +0800
 In-Reply-To: <20200714033453.4044482-1-kyletso@google.com>
-Message-Id: <20200714033453.4044482-2-kyletso@google.com>
+Message-Id: <20200714033453.4044482-3-kyletso@google.com>
 Mime-Version: 1.0
 References: <20200714033453.4044482-1-kyletso@google.com>
 X-Mailer: git-send-email 2.27.0.389.gc38d7665816-goog
-Subject: [PATCH 1/2] usb: typec: Comment correction for typec_partner_register_altmode
+Subject: [PATCH 2/2] usb: typec: tcpm: Error handling for tcpm_register_partner_altmodes
 From:   Kyle Tso <kyletso@google.com>
 To:     linux@roeck-us.net, heikki.krogerus@linux.intel.com,
         gregkh@linuxfoundation.org
@@ -74,26 +74,31 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-typec_register_altmode returns ERR_PTR on failure.
+typec_partner_register_altmode returns ERR_PTR. Reset the pointer
+altmode to NULL on failure.
 
 Signed-off-by: Kyle Tso <kyletso@google.com>
 ---
- drivers/usb/typec/class.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/usb/typec/tcpm/tcpm.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/usb/typec/class.c b/drivers/usb/typec/class.c
-index c9234748537a..02655694f200 100644
---- a/drivers/usb/typec/class.c
-+++ b/drivers/usb/typec/class.c
-@@ -580,7 +580,7 @@ EXPORT_SYMBOL_GPL(typec_partner_set_identity);
-  * SVID listed in response to Discover Modes command need to be listed in an
-  * array in @desc.
-  *
-- * Returns handle to the alternate mode on success or NULL on failure.
-+ * Returns handle to the alternate mode on success or ERR_PTR on failure.
-  */
- struct typec_altmode *
- typec_partner_register_altmode(struct typec_partner *partner,
+diff --git a/drivers/usb/typec/tcpm/tcpm.c b/drivers/usb/typec/tcpm/tcpm.c
+index 82b19ebd7838..a6d4b03ec250 100644
+--- a/drivers/usb/typec/tcpm/tcpm.c
++++ b/drivers/usb/typec/tcpm/tcpm.c
+@@ -1061,9 +1061,11 @@ static void tcpm_register_partner_altmodes(struct tcpm_port *port)
+ 	for (i = 0; i < modep->altmodes; i++) {
+ 		altmode = typec_partner_register_altmode(port->partner,
+ 						&modep->altmode_desc[i]);
+-		if (!altmode)
++		if (IS_ERR(altmode)) {
+ 			tcpm_log(port, "Failed to register partner SVID 0x%04x",
+ 				 modep->altmode_desc[i].svid);
++			altmode = NULL;
++		}
+ 		port->partner_altmode[i] = altmode;
+ 	}
+ }
 -- 
 2.27.0.389.gc38d7665816-goog
 
