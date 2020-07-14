@@ -2,136 +2,146 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFA25C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 04:08:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19FD5C433E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 04:12:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7F1AC21883
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 04:08:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E2F5721D90
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 04:12:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="r8xsncgV";
-	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="MdCCv/HZ"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="tN0++k2F"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726546AbgGNEIh (ORCPT
+        id S1725939AbgGNEMG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 00:08:37 -0400
-Received: from esa2.hgst.iphmx.com ([68.232.143.124]:30777 "EHLO
-        esa2.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725497AbgGNEIg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 00:08:36 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1594699738; x=1626235738;
-  h=from:to:cc:subject:date:message-id:references:
-   content-transfer-encoding:mime-version;
-  bh=SRwsubRr2o7oCnz0+8wJ39l8zscgrTjLlpOsImSNGD4=;
-  b=r8xsncgVvFWModKuVlqfaW3uw/CjWqRA4IF/xAD0LbmHl7JnCBY8BZTi
-   G71ll5ppzM/Tj98jVr2ulaweFbXJ4EzWzy0rliPby/QWYeFBUj3eKIoU2
-   EXGY4YmO/cRzu6jfcx+HKUd7qeszS2fHbZsUHG6q2vLzAev8vAQSxMnog
-   GZi5hRHNRHXPlsUmj2JSbvAqSWfxS8E1pCN7BTCfhF6GWucXClNae8jX/
-   IlOrmplwsEdv0WiHmLAWkZoFI6GpaglCqaZCkhszmoAbBV7XkBS2Onsc+
-   zOHYQun2CiIbcoEf4b0IkcNZLSpI8lACCEJh9kbSMpap9a6sHdd4wJvJF
-   A==;
-IronPort-SDR: r2SNe48TsdKiei1fVQO1CgyiCKwR6l0LFIJlIndAQbkqwsJJfhmiDtqhGanyO5fMIj2ZbCR6po
- rRmgkV8cFvA+YlD916hMG98OI5rVeVzYfgd9XHDHystPOG52PAbmTL8HwLcmr25fVHhCLZlrTH
- RTr/yFip4vu9WVPKX7scyhES5Q1HBR0lT38GqEl+1n6tls9hiCGI46FjiKshXIjJWE/u0VRW/u
- wTXjXd8+glWqfWVyOLHmY3rieF3qZ9/raaSKDxDodyA9PkIIdsy0TG+Qjb0v+XI308bnoQ/7eU
- +fM=
-X-IronPort-AV: E=Sophos;i="5.75,350,1589212800"; 
-   d="scan'208";a="245408240"
-Received: from mail-cys01nam02lp2056.outbound.protection.outlook.com (HELO NAM02-CY1-obe.outbound.protection.outlook.com) ([104.47.37.56])
-  by ob1.hgst.iphmx.com with ESMTP; 14 Jul 2020 12:08:56 +0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=KmMse8G0mD0biv+zUwI4CEv8XabPHE9YmCucjQXjlBxNmyhzKLy7ZDLkY9KIuJgRbVqycJt26RQwejWYtOHfxBBCQc18TdKs+uEzB+4zwHyAq250BVmZPzCZ/FMqefFtKfLZsdUM8RBHdk3aXPrZBc9gfUANoTW+QsufDo1RYGwys3m1m+4wQKU3vZjlNZnZ4p0JSmo/8q7CCGBFccTX+5vR03ECJNMWIasyyGWJiy1k7b4sgvBJTN7LJJ5ufpTRoYsWQaVoLBRICCPDybJf2ijccjKHK1xULYnAGi+REjb/fhFyB1AnJb8mG7Hwb9/Gyh4xJq1ayMfiqsoCfNA89A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=SRwsubRr2o7oCnz0+8wJ39l8zscgrTjLlpOsImSNGD4=;
- b=LsNI+ZtW2lVJcimwXgo0M/4vP1galjf5sx86Ag2LmXCPBe57KiNJCNmo83neHkv1zbIIhei6MrnNnsty6PwF1GEvyXty1Kk+/Lpr/7aYxBVnO27uSPOa98ca/xV0KxLN6XSiWujgTRkHaAJE//HlyFpeXk/wl/F+WXToCwUcXK9yTSTkJDlCxBGkvTytodt9yyQ7m5RSf4N+WrnLaA039GPaP1NR56XJjBrJlYkp1p8+bWt9oXxQ1IZYe7iP6hwRiwtBcEwQa2hC/b0AKwxO2TceAIq41ZJQXOcqqCRUKv9LM6UZ9jMcN3T1ES08NxuOXehdCvIdmJWska12xORJiQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
- header.d=wdc.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=SRwsubRr2o7oCnz0+8wJ39l8zscgrTjLlpOsImSNGD4=;
- b=MdCCv/HZJZTTqBNMxgvZFFuxW37QsdKNaYg9UU0DFQ9DNMUOPq6FGExcyA3TBNA52rv0kVQm5y1CKBafCplSiy5ZsZuBA5tQt4mKk0OYGktoJ1oh7JwsMkQZFXmapvysuhdIvYdvE3EWTf6xZjPBfxhNqR8Kzjy9O8vmjdoUeeA=
-Received: from BYAPR04MB4965.namprd04.prod.outlook.com (2603:10b6:a03:4d::25)
- by BY5PR04MB7121.namprd04.prod.outlook.com (2603:10b6:a03:223::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3174.22; Tue, 14 Jul
- 2020 04:08:33 +0000
-Received: from BYAPR04MB4965.namprd04.prod.outlook.com
- ([fe80::4d72:27c:c075:c5e6]) by BYAPR04MB4965.namprd04.prod.outlook.com
- ([fe80::4d72:27c:c075:c5e6%7]) with mapi id 15.20.3174.026; Tue, 14 Jul 2020
- 04:08:33 +0000
-From:   Chaitanya Kulkarni <Chaitanya.Kulkarni@wdc.com>
-To:     "kbusch@kernel.org" <kbusch@kernel.org>, "hch@lst.de" <hch@lst.de>
-CC:     Baolin Wang <baolin.wang@linux.alibaba.com>,
-        "axboe@fb.com" <axboe@fb.com>,
-        "sagi@grimberg.me" <sagi@grimberg.me>,
-        "baolin.wang7@gmail.com" <baolin.wang7@gmail.com>,
-        "linux-nvme@lists.infradead.org" <linux-nvme@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] nvme: Remove redundant validation in nvme_start_ctrl()
-Thread-Topic: [PATCH] nvme: Remove redundant validation in nvme_start_ctrl()
-Thread-Index: AQHWWN9KvInmw7yU802p8iILluvbIQ==
-Date:   Tue, 14 Jul 2020 04:08:33 +0000
-Message-ID: <BYAPR04MB4965DF607DCD4F59EAAD873186610@BYAPR04MB4965.namprd04.prod.outlook.com>
-References: <710eb90d9c1c125bdb37aae31ddc41a0f9782fa6.1594621435.git.baolin.wang@linux.alibaba.com>
- <BYAPR04MB49655C05950BC7BDAD30629F86600@BYAPR04MB4965.namprd04.prod.outlook.com>
- <20200714032352.GA111285@VM20190228-100.tbsite.net>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: kernel.org; dkim=none (message not signed)
- header.d=none;kernel.org; dmarc=none action=none header.from=wdc.com;
-x-originating-ip: [199.255.45.62]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 22181cfd-16bc-460f-63ac-08d827ab936a
-x-ms-traffictypediagnostic: BY5PR04MB7121:
-x-microsoft-antispam-prvs: <BY5PR04MB71211EC1A9C2730D72EB750986610@BY5PR04MB7121.namprd04.prod.outlook.com>
-wdcipoutbound: EOP-TRUE
-x-ms-oob-tlc-oobclassifiers: OLM:4502;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 8+dZe8yQNeR5ssqBDOaGRHwajTDTQOqqqEyNBJ8iSa+Y6G7ulZihHeAutr8ZkbqaxTwxIAH23Z+5shNjwyB/3nFNX95cBtzycKwQzrrs/YxUJZ+JdmuYbbCm+UAj3Nq2wUMdslTFgUv351jgILNoNi2CfUJYFtosglzYMRINKEQM8NG2yO5+n88RTm+muEykIy5PoD2xsr2pwmCjCbAmwzp7zPl3Az/zwpm3JLsGb8pL0SYkTz8U5NbV8UHTw8L6c4wO23B06jGAVhqIyiFEBonYsIP8bn8upLNUXjIsSOFK20RRhdTxIUcsJmUyDBdfvHUKlsNbBhxvnH6EHOnTFA==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR04MB4965.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(39860400002)(136003)(396003)(366004)(346002)(376002)(478600001)(8936002)(110136005)(7696005)(76116006)(9686003)(52536014)(54906003)(55016002)(316002)(66946007)(66556008)(2906002)(64756008)(66446008)(66476007)(186003)(5660300002)(8676002)(6506007)(4326008)(26005)(86362001)(53546011)(4744005)(71200400001)(33656002);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: 4VcdoItiOrMc6X7HBtfifLYRRN2zqWqKlqJ8w1Xrk4rvmTHoy2eYxwaaGoAdKr8bUz8xMJ+6ukJcqqcfHo62pxzQx5sRn3SFL3WrVI/T4gW8lJOLpyas+ex4fkPiQc+xbEFG6zaI03M8wcnZ/r9W9h7vIiDsvYncFgJLaiVd5GY58LwcKT007bI8MZ13wWIun5HVV/OJLe+2Lnc6rqFqDP8nCajItaLS/sqt5840lr/mAnmjz3tWepzmFyJLrDywE/4ORuXLxF0L9KAw5sQZp2rnjGYPDRxaW5rce5XRWqEYUmKu16Fwuc50K7tb8Sa/4JDsNByb3HsdDNUQ6BgoBGdGvIXI4Bw70n9ZdafRq1kkbcD1hMQ/IIvq44SENJFsas2L9+aB2f20hrhMSsAAfNdx893OmmoX4TtqvPTsUxb3HuP+g4LARcFsuIj7Q+yZGPFDUh2ugHHtQMHwWvJ2BWOf/PRGHwOPADOtPJh9/SM=
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Tue, 14 Jul 2020 00:12:06 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:36321 "EHLO m43-7.mailgun.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725497AbgGNEME (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 00:12:04 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1594699923; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=hsEKA/3eRhukZygPW6Cac0stnOTwRE32z+LOOhbzLN0=;
+ b=tN0++k2F2BkuIgOKwHBHiox23t+88conFMUWnfjhAuWgFmu0hyHEfxjidIkWCtfqmhpWPUYd
+ DP7LBvMOr5q4dlSJOzi43vJSrHFqW59tdcmDvNpuz8B6bOESQpXcuvhCBiIZh2scRCk5ONtV
+ atX8C2K0sts5TtKZTtzg1EJEnB4=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n16.prod.us-west-2.postgun.com with SMTP id
+ 5f0d3056512812c070c94d8f (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 14 Jul 2020 04:11:02
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 15219C43387; Tue, 14 Jul 2020 04:11:01 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: cang)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 17BF8C433C8;
+        Tue, 14 Jul 2020 04:11:01 +0000 (UTC)
 MIME-Version: 1.0
-X-OriginatorOrg: wdc.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: BYAPR04MB4965.namprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 22181cfd-16bc-460f-63ac-08d827ab936a
-X-MS-Exchange-CrossTenant-originalarrivaltime: 14 Jul 2020 04:08:33.7330
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: SWB6uduIIz0eGDEm97bduSnRzbPxIAGCXmasP9tuLgaNJnQD8GHlpFAVBL+sY/iak5fTS/EIJvAmxrYQ4dEheJYH//7FedrboSX8ucc9/9M=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR04MB7121
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Tue, 14 Jul 2020 12:11:01 +0800
+From:   Can Guo <cang@codeaurora.org>
+To:     Bart Van Assche <bvanassche@acm.org>
+Cc:     asutoshd@codeaurora.org, nguyenb@codeaurora.org,
+        hongwus@codeaurora.org, rnayak@codeaurora.org,
+        linux-scsi@vger.kernel.org, kernel-team@android.com,
+        saravanak@google.com, salyzyn@google.com,
+        Alim Akhtar <alim.akhtar@samsung.com>,
+        Avri Altman <avri.altman@wdc.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Stanley Chu <stanley.chu@mediatek.com>,
+        Bean Huo <beanhuo@micron.com>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 2/4] scsi: ufs: Fix imbalanced scsi_block_reqs_cnt
+ caused by ufshcd_hold()
+In-Reply-To: <5470be4c-cfa4-ebe5-a817-e53f26c7eaf6@acm.org>
+References: <1594693693-22466-1-git-send-email-cang@codeaurora.org>
+ <1594693693-22466-3-git-send-email-cang@codeaurora.org>
+ <5470be4c-cfa4-ebe5-a817-e53f26c7eaf6@acm.org>
+Message-ID: <b9abe84856f5d2f6eced90a55638743c@codeaurora.org>
+X-Sender: cang@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/13/20 20:24, Baolin Wang wrote:=0A=
->> Since start keep alive is so small to make a function call how about we=
-=0A=
->> in-line the call ? untested patch :-=0A=
-> I am Okay about your suggestion. Will send v2 with your suggested-by tag=
-=0A=
-> if no other objection. Thanks.=0A=
-> =0A=
-=0A=
-Keith, Christoph are you guys okay with this ? OR we want to keep the =0A=
-small helpers ?=0A=
+On 2020-07-14 11:41, Bart Van Assche wrote:
+> On 2020-07-13 19:28, Can Guo wrote:
+>> The scsi_block_reqs_cnt increased in ufshcd_hold() is supposed to be
+>> decreased back in ufshcd_ungate_work() in a paired way. However, if
+>> specific ufshcd_hold/release sequences are met, it is possible that
+>> scsi_block_reqs_cnt is increased twice but only one ungate work is
+>> queued. To make sure scsi_block_reqs_cnt is handled by ufshcd_hold() 
+>> and
+>> ufshcd_ungate_work() in a paired way, increase it only if queue_work()
+>> returns true.
+>> 
+>> Signed-off-by: Can Guo <cang@codeaurora.org>
+>> ---
+>>  drivers/scsi/ufs/ufshcd.c | 6 +++---
+>>  1 file changed, 3 insertions(+), 3 deletions(-)
+>> 
+>> diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
+>> index ebf7a95..33214bb 100644
+>> --- a/drivers/scsi/ufs/ufshcd.c
+>> +++ b/drivers/scsi/ufs/ufshcd.c
+>> @@ -1611,12 +1611,12 @@ int ufshcd_hold(struct ufs_hba *hba, bool 
+>> async)
+>>  		 */
+>>  		/* fallthrough */
+>>  	case CLKS_OFF:
+>> -		ufshcd_scsi_block_requests(hba);
+>>  		hba->clk_gating.state = REQ_CLKS_ON;
+>>  		trace_ufshcd_clk_gating(dev_name(hba->dev),
+>>  					hba->clk_gating.state);
+>> -		queue_work(hba->clk_gating.clk_gating_workq,
+>> -			   &hba->clk_gating.ungate_work);
+>> +		if (queue_work(hba->clk_gating.clk_gating_workq,
+>> +			       &hba->clk_gating.ungate_work))
+>> +			ufshcd_scsi_block_requests(hba);
+>>  		/*
+>>  		 * fall through to check if we should wait for this
+>>  		 * work to be done or not.
+> 
+> Since "ungate_work" involves calling ufshcd_scsi_unblock_requests() and
+> since this patch changes the order in which 
+> ufshcd_scsi_block_requests()
+> and queue_work() are called, I think this patch introduces a race
+> condition. Has it been considered to leave the 
+> ufshcd_scsi_block_requests()
+> call where it is and to call ufshcd_scsi_unblock_requests() if
+> queue_work() fails?
+> 
+> Thanks,
+> 
+> Bart.
+
+Hi Bart,
+
+The racing does not exist due to we still hold the spin lock here. 
+Before
+release the spin lock, the ungate_work, even it starts to run, cannot
+move forward as it needs to require the spin lock once in the entrance.
+
+static void ufshcd_ungate_work(struct work_struct *work)
+{
+...
+         spin_lock_irqsave(hba->host->host_lock, flags);
+         if (hba->clk_gating.state == CLKS_ON) {
+                 spin_unlock_irqrestore(hba->host->host_lock, flags);
+                 goto unblock_reqs;
+         }
+...
+}
