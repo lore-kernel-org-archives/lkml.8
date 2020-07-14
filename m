@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78BE8C433ED
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:47:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D3EEC433E2
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:47:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 516AF22B2C
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:47:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 22F2022B2D
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:47:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594752455;
-	bh=cYOpxKAoXkdPePsgbV3CLteCZS+Kk1WupGIBIWeo6Aw=;
+	s=default; t=1594752458;
+	bh=YZXuyh1eSZoyDT5f0ILiSyJB2BJsH+OqjQCOv45XoIA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=w5Q8X/5G6ZWCL43IViOXDpYUgvjco6VWebDS2d5sMDw2JZaXirVfyD+4mX4yp8kqu
-	 99smqgNVzjIXNLx5bVfIipgeqV0gz78+zq5ZUKiZwLqkxwLh/++TLHlNCKk0n0iK3M
-	 7+5Jbkt5CkulkaVPUeH1QIBFsFmNjt4I4r9Ulue4=
+	b=xvptGT/s46IWfcMGtg4L6lQNMMDt0K9UwncVUfqzLyC52yq4ZI/yisZyStB1bwArJ
+	 urdoGSVlfsIv1QvbHiV0/LVP1nhaEH/tr9s1+bLkM0ZTdwW7tG7Z29XgZyfyFKwvLU
+	 I9VqBS8vkNw+Wex9z1LUXQ2rwEEktc4bPUEYnUtY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729767AbgGNSrd (ORCPT
+        id S1729778AbgGNSrg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 14:47:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42540 "EHLO mail.kernel.org"
+        Tue, 14 Jul 2020 14:47:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42670 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729738AbgGNSr1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 14:47:27 -0400
+        id S1729723AbgGNSrc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 14:47:32 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4E81322AAA;
-        Tue, 14 Jul 2020 18:47:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CB80F22AAA;
+        Tue, 14 Jul 2020 18:47:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594752447;
-        bh=cYOpxKAoXkdPePsgbV3CLteCZS+Kk1WupGIBIWeo6Aw=;
+        s=default; t=1594752452;
+        bh=YZXuyh1eSZoyDT5f0ILiSyJB2BJsH+OqjQCOv45XoIA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WwNWyU9DVHuS8jN27EMobr15pkpb7EXuF90jV3ODuyFwYL9E4TEMv3NufDJwd0mGJ
-         B9olLmo7OiSV8SVjOnW8VhXKJ9ZTpMoymrFt1XxLPrhUGf3Ynes7utHrie0rTpUxF8
-         87YKW7+1d48r8ww8GBMTCj74mt5sBHryH5MGx+UA=
+        b=qI4EB0PZvxNCDFg9u2JaL9BY7kUnDcxos64vA0MVoB47tRMu4yKqG9zLzmkD/Aeff
+         kUU6uTLhYtznCH9JxC/CnxbpaDFWL2UZXQQptcqT8YHavdsS0Q6oC6hGB8UdkoRCAI
+         UV8iXQe6GULt/LXCq/ItIx+sro8qTBfVAZ6p9PyI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Subject: [PATCH 4.19 45/58] KVM: x86: Mark CR4.TSD as being possibly owned by the guest
-Date:   Tue, 14 Jul 2020 20:44:18 +0200
-Message-Id: <20200714184058.398101684@linuxfoundation.org>
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Jessica Yu <jeyu@kernel.org>
+Subject: [PATCH 4.19 47/58] kernel: module: Use struct_size() helper
+Date:   Tue, 14 Jul 2020 20:44:20 +0200
+Message-Id: <20200714184058.494015284@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200714184056.149119318@linuxfoundation.org>
 References: <20200714184056.149119318@linuxfoundation.org>
@@ -60,53 +60,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sean Christopherson <sean.j.christopherson@intel.com>
+From: Gustavo A. R. Silva <gustavo@embeddedor.com>
 
-commit 7c83d096aed055a7763a03384f92115363448b71 upstream.
+commit 8d1b73dd25ff92c3fa9807a20c22fa2b44c07336 upstream.
 
-Mark CR4.TSD as being possibly owned by the guest as that is indeed the
-case on VMX.  Without TSD being tagged as possibly owned by the guest, a
-targeted read of CR4 to get TSD could observe a stale value.  This bug
-is benign in the current code base as the sole consumer of TSD is the
-emulator (for RDTSC) and the emulator always "reads" the entirety of CR4
-when grabbing bits.
+One of the more common cases of allocation size calculations is finding
+the size of a structure that has a zero-sized array at the end, along
+with memory for some number of elements for that array. For example:
 
-Add a build-time assertion in to ensure VMX doesn't hand over more CR4
-bits without also updating x86.
+struct module_sect_attrs {
+	...
+        struct module_sect_attr attrs[0];
+};
 
-Fixes: 52ce3c21aec3 ("x86,kvm,vmx: Don't trap writes to CR4.TSD")
-Cc: stable@vger.kernel.org
-Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-Message-Id: <20200703040422.31536-2-sean.j.christopherson@intel.com>
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+Make use of the struct_size() helper instead of an open-coded version
+in order to avoid any potential type mistakes.
+
+So, replace the following form:
+
+sizeof(*sect_attrs) + nloaded * sizeof(sect_attrs->attrs[0]
+
+with:
+
+struct_size(sect_attrs, attrs, nloaded)
+
+This code was detected with the help of Coccinelle.
+
+Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+Signed-off-by: Jessica Yu <jeyu@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/kvm/kvm_cache_regs.h |    2 +-
- arch/x86/kvm/vmx.c            |    2 ++
- 2 files changed, 3 insertions(+), 1 deletion(-)
+ kernel/module.c |    3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
---- a/arch/x86/kvm/kvm_cache_regs.h
-+++ b/arch/x86/kvm/kvm_cache_regs.h
-@@ -5,7 +5,7 @@
- #define KVM_POSSIBLE_CR0_GUEST_BITS X86_CR0_TS
- #define KVM_POSSIBLE_CR4_GUEST_BITS				  \
- 	(X86_CR4_PVI | X86_CR4_DE | X86_CR4_PCE | X86_CR4_OSFXSR  \
--	 | X86_CR4_OSXMMEXCPT | X86_CR4_LA57 | X86_CR4_PGE)
-+	 | X86_CR4_OSXMMEXCPT | X86_CR4_LA57 | X86_CR4_PGE | X86_CR4_TSD)
- 
- static inline unsigned long kvm_register_read(struct kvm_vcpu *vcpu,
- 					      enum kvm_reg reg)
---- a/arch/x86/kvm/vmx.c
-+++ b/arch/x86/kvm/vmx.c
-@@ -6335,6 +6335,8 @@ static void vmx_set_constant_host_state(
- 
- static void set_cr4_guest_host_mask(struct vcpu_vmx *vmx)
- {
-+	BUILD_BUG_ON(KVM_CR4_GUEST_OWNED_BITS & ~KVM_POSSIBLE_CR4_GUEST_BITS);
-+
- 	vmx->vcpu.arch.cr4_guest_owned_bits = KVM_CR4_GUEST_OWNED_BITS;
- 	if (enable_ept)
- 		vmx->vcpu.arch.cr4_guest_owned_bits |= X86_CR4_PGE;
+--- a/kernel/module.c
++++ b/kernel/module.c
+@@ -1491,8 +1491,7 @@ static void add_sect_attrs(struct module
+ 	for (i = 0; i < info->hdr->e_shnum; i++)
+ 		if (!sect_empty(&info->sechdrs[i]))
+ 			nloaded++;
+-	size[0] = ALIGN(sizeof(*sect_attrs)
+-			+ nloaded * sizeof(sect_attrs->attrs[0]),
++	size[0] = ALIGN(struct_size(sect_attrs, attrs, nloaded),
+ 			sizeof(sect_attrs->grp.attrs[0]));
+ 	size[1] = (nloaded + 1) * sizeof(sect_attrs->grp.attrs[0]);
+ 	sect_attrs = kzalloc(size[0] + size[1], GFP_KERNEL);
 
 
