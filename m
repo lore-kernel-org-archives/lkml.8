@@ -2,162 +2,158 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-18.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E7FAC433E2
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 14:42:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3B83C433E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 14:42:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5DCA7206F5
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 14:42:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594737738;
-	bh=ODeja8ZbbbsF0+/QkL7ragA/7v6rT+R0y3p4lM9mCC4=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gHOgs45cSZLK5VPHD56//1UD0I6VChcLCxoQ66qlt+egWx4ECSwAnS7EAJC+D7fDV
-	 sQEhnfhg1PcrWRnSiGWXk6tTjhUW/+UT2lKarNpXdEamXe3v28bXV5dzzAG1xhH+1o
-	 0KBNKnHE+EZU8l1otM0VfT5tapJ+95oNLEI37mY8=
+	by mail.kernel.org (Postfix) with ESMTP id A5DCA2064B
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 14:42:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GV4k29Ju"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729549AbgGNOmQ (ORCPT
+        id S1729553AbgGNOme (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 10:42:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55806 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729239AbgGNOkG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 10:40:06 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2DE082253D;
-        Tue, 14 Jul 2020 14:40:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594737606;
-        bh=ODeja8ZbbbsF0+/QkL7ragA/7v6rT+R0y3p4lM9mCC4=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JDAo4wdUevGWUPTAqTEOntFQj/g4rFSM9YO+vG1ZAUAbTn47ulMeYxZ2zBv03VcCz
-         ZkKGfIXCm0eaOEyk4RI5bFiypn0XuowbePJNzgFN35aDM4SVZF3jooMlF93jZHcqPJ
-         4+00Fh76bX5nNzsCW9Uwgev6bgp3AJh/xI78yJuk=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Kai Vehmanen <kai.vehmanen@linux.intel.com>,
-        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>,
-        alsa-devel@alsa-project.org
-Subject: [PATCH AUTOSEL 4.14 09/12] ALSA: hda/hdmi: fix failures at PCM open on Intel ICL and later
-Date:   Tue, 14 Jul 2020 10:39:51 -0400
-Message-Id: <20200714143954.4035840-9-sashal@kernel.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200714143954.4035840-1-sashal@kernel.org>
-References: <20200714143954.4035840-1-sashal@kernel.org>
+        Tue, 14 Jul 2020 10:42:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55978 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728594AbgGNOma (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 10:42:30 -0400
+Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CCC38C061755;
+        Tue, 14 Jul 2020 07:42:30 -0700 (PDT)
+Received: by mail-pj1-x1044.google.com with SMTP id md7so1627111pjb.1;
+        Tue, 14 Jul 2020 07:42:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:subject:to:cc:references:from:autocrypt:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=SP0Naqe+XyrnxJdPH8f9ichHee+APezC6SuY9ngtXIk=;
+        b=GV4k29JuC5mkobx0g3nRtMcPBcK9WLwmE/uhek51rHSWApaFN1yLu2Zb0nnq73fUE+
+         NOHGuWA9x81GtzwesIZf08C4cpi7nwl9pF1Lxgva49TRvhA4Sz8rKyyQCDH+kgLg5BAt
+         GR6Jzp66fdFLtGZmj+ym2g9TW6xOR9FKSOMgdm3CmIH0zjeqRixHoq/bH029UrlKgWrg
+         6H3od+zUs5sI4ZqIScykWY06FxP8z3yXA1HPRjg5JaMRE+B77eByQPkQ4BT40DXNwN8L
+         D72ErKnc+Be611GdoBTrxC6bM4kR7TW0pwX0ypn7Q+1DzGOOWr5YHpVmD2+q8+oUZGdY
+         iPXg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=SP0Naqe+XyrnxJdPH8f9ichHee+APezC6SuY9ngtXIk=;
+        b=LY0zv4IU4DLdLutZgwkm8x7PWHKs6ahG2StScsmByYvrQv+5mpEyKJlIXBvpDtSlNo
+         Rn31sH2CKDZ32iY0u4f0OGtewMTvLZGJXf5fUOVdIOLvj1aPn2p9oFk4P6JCGXzq3oZJ
+         RWgfQelOc7oZelHvUYehOpkkgqZQV7SdkefG6MFE88Kj6o9CL4K9A/98ZZ9Q/r2Ww3ss
+         zkjzAQdaY5+E5Ve9QwU/QIsRlIBiKEtz0PESgw9WBRNxo3/GeCHHmsE5vw5D+Bz8/ezl
+         5k43OVbxd3x2ZI7Qq4giffDLMMXLkfrfIpgebgDesKHNhHGGTh9lLP87cHjhGifdauCC
+         IIqg==
+X-Gm-Message-State: AOAM53079bRWEDz07Ja+mI5HCCumGN4E1sip152lgLzKWF54X+ldofy4
+        ft9hYyCxrHzTOaXjqAvKIK0=
+X-Google-Smtp-Source: ABdhPJyXLpAXYb4IkQRZC+hSMIGJW6iNB3EXKAM3DlPY/X13BbrGTTZ2JMycam+qLSaTRPE+QGLpxQ==
+X-Received: by 2002:a17:902:54c:: with SMTP id 70mr4383816plf.0.1594737750382;
+        Tue, 14 Jul 2020 07:42:30 -0700 (PDT)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id b14sm17390441pfo.28.2020.07.14.07.42.29
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 14 Jul 2020 07:42:29 -0700 (PDT)
+Subject: Re: [PATCHv3 3/4] watchdog: rti-wdt: attach to running watchdog
+ during probe
+To:     Tero Kristo <t-kristo@ti.com>, wim@linux-watchdog.org,
+        linux-watchdog@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, jan.kiszka@siemens.com
+References: <20200713131818.825-1-t-kristo@ti.com>
+ <20200713131818.825-4-t-kristo@ti.com>
+ <0c69734d-b301-7762-7614-0644e2a719ba@roeck-us.net>
+ <2a92083c-f8bd-7a42-25e2-ee6ae354a4de@ti.com>
+ <19373936-7566-3936-428a-2f2f7f3392d4@roeck-us.net>
+ <350ea70f-9647-863c-a4f7-6ba7c402ccff@ti.com>
+From:   Guenter Roeck <linux@roeck-us.net>
+Autocrypt: addr=linux@roeck-us.net; keydata=
+ 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
+ mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
+Message-ID: <ad4bd82f-3f6f-0a32-3d9f-32e66817e61a@roeck-us.net>
+Date:   Tue, 14 Jul 2020 07:42:28 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
+In-Reply-To: <350ea70f-9647-863c-a4f7-6ba7c402ccff@ti.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kai Vehmanen <kai.vehmanen@linux.intel.com>
+On 7/14/20 12:13 AM, Tero Kristo wrote:
+[ ... ]
 
-[ Upstream commit 56275036d8185f92eceac7479d48b858ee3dab84 ]
+>>> Well, you can re-program it but... It does not take effect until next window starts, so basically we need to take care of the currently running window anyways after which re-programming it doesn't make much sense anymore. And handling the switch from one setup to next would add extra complexity.
+>>>
+>>
+>> Seems to me that hardware team really made an effort to make the
+>> watchdog as difficult to program as possible :-(.
+> 
+> Yea, it is surprisingly difficult to program... when watchdogs in principle are extremely simple pieces of HW. This claims to be some automotive grade watchdog, which means it has the window in place.
+> 
 
-When HDMI PCM devices are opened in a specific order, with at least one
-HDMI/DP receiver connected, ALSA PCM open fails to -EBUSY on the
-connected monitor, on recent Intel platforms (ICL/JSL and newer). While
-this is not a typical sequence, at least Pulseaudio does this every time
-when it is started, to discover the available PCMs.
+We are getting a bit off topic, but that almost sounds like
+"automotive" translates to "it must be hard to program".
+I can not think of a valid reason for such a window, no matter
+the circumstances. Either case, dealing with the window in the
+kernel in that situation (ie if some specification states that
+the window must exist) would be the wrong solution and circumvent
+the reason for having it in the first place.
 
-The rootcause is an invalid assumption in hdmi_add_pin(), where the
-total number of converters is assumed to be known at the time the
-function is called. On older Intel platforms this held true, but after
-ICL/JSL, the order how pins and converters are in the subnode list as
-returned by snd_hda_get_sub_nodes(), was changed. As a result,
-information for some converters was not stored to per_pin->mux_nids.
-And this means some pins cannot be connected to all converters, and
-application instead gets -EBUSY instead at open.
+Not that this matters here, of course. I am just wondering what the impact
+would be if the driver is indeed used in such an application. For example,
+some compliance test code might try to ping the watchdog outside the window
+to test its reaction. Such test code would fail if the ping is delayed
+by the kernel.
 
-The assumption that converters are always before pins in the subnode
-list, is not really a valid one. Fix the problem in hdmi_parse_codec()
-by introducing separate loops for discovering converters and pins.
-
-BugLink: https://github.com/thesofproject/linux/issues/1978
-BugLink: https://github.com/thesofproject/linux/issues/2216
-BugLink: https://github.com/thesofproject/linux/issues/2217
-Reviewed-by: Ranjani Sridharan <ranjani.sridharan@linux.intel.com>
-Reviewed-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Signed-off-by: Kai Vehmanen <kai.vehmanen@linux.intel.com>
-Link: https://lore.kernel.org/r/20200703153818.2808592-1-kai.vehmanen@linux.intel.com
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- sound/pci/hda/patch_hdmi.c | 36 +++++++++++++++++++++++-------------
- 1 file changed, 23 insertions(+), 13 deletions(-)
-
-diff --git a/sound/pci/hda/patch_hdmi.c b/sound/pci/hda/patch_hdmi.c
-index 9e8cfc409b4b3..04420a3bf5eb0 100644
---- a/sound/pci/hda/patch_hdmi.c
-+++ b/sound/pci/hda/patch_hdmi.c
-@@ -1805,33 +1805,43 @@ static int hdmi_add_cvt(struct hda_codec *codec, hda_nid_t cvt_nid)
- 
- static int hdmi_parse_codec(struct hda_codec *codec)
- {
--	hda_nid_t nid;
-+	hda_nid_t start_nid;
-+	unsigned int caps;
- 	int i, nodes;
- 
--	nodes = snd_hda_get_sub_nodes(codec, codec->core.afg, &nid);
--	if (!nid || nodes < 0) {
-+	nodes = snd_hda_get_sub_nodes(codec, codec->core.afg, &start_nid);
-+	if (!start_nid || nodes < 0) {
- 		codec_warn(codec, "HDMI: failed to get afg sub nodes\n");
- 		return -EINVAL;
- 	}
- 
--	for (i = 0; i < nodes; i++, nid++) {
--		unsigned int caps;
--		unsigned int type;
-+	/*
-+	 * hdmi_add_pin() assumes total amount of converters to
-+	 * be known, so first discover all converters
-+	 */
-+	for (i = 0; i < nodes; i++) {
-+		hda_nid_t nid = start_nid + i;
- 
- 		caps = get_wcaps(codec, nid);
--		type = get_wcaps_type(caps);
- 
- 		if (!(caps & AC_WCAP_DIGITAL))
- 			continue;
- 
--		switch (type) {
--		case AC_WID_AUD_OUT:
-+		if (get_wcaps_type(caps) == AC_WID_AUD_OUT)
- 			hdmi_add_cvt(codec, nid);
--			break;
--		case AC_WID_PIN:
-+	}
-+
-+	/* discover audio pins */
-+	for (i = 0; i < nodes; i++) {
-+		hda_nid_t nid = start_nid + i;
-+
-+		caps = get_wcaps(codec, nid);
-+
-+		if (!(caps & AC_WCAP_DIGITAL))
-+			continue;
-+
-+		if (get_wcaps_type(caps) == AC_WID_PIN)
- 			hdmi_add_pin(codec, nid);
--			break;
--		}
- 	}
- 
- 	return 0;
--- 
-2.25.1
-
+Guenter
