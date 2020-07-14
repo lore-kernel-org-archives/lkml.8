@@ -7,51 +7,51 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93DCFC433E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 07:39:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C8DFC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 07:39:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 704172084C
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 07:39:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2CB542084C
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 07:39:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="yI1DNvr3"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="FErJXuvg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727787AbgGNHjl (ORCPT
+        id S1727873AbgGNHj6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 03:39:41 -0400
+        Tue, 14 Jul 2020 03:39:58 -0400
 Received: from esa1.microchip.iphmx.com ([68.232.147.91]:28220 "EHLO
         esa1.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727033AbgGNHjf (ORCPT
+        with ESMTP id S1726932AbgGNHjb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 03:39:35 -0400
+        Tue, 14 Jul 2020 03:39:31 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
   d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1594712375; x=1626248375;
+  t=1594712370; x=1626248370;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=BPXYksHE/6skyxwfmW3layVz9HGsj0QnR14maadzSj4=;
-  b=yI1DNvr3vwFmAoP6K1zLHmblXuUVriM8TsMKRYHkqBjp2UXo0FLZEqEN
-   6q7+8Yj2dRt9qfja5Go9Ijvvt/1cToMEspdkUmdT6fdbCP2+iOUuCFHno
-   sEF6omAg2f9aTqbWa25wKElS7W2uhqAfLwBGMSvnwSZ9ZSkyY+O7nZgXi
-   TQsLxgOa4ZP1fTjls2hB/2TiDxAg2QDk5uJSq8txP8VPP9dbZf7hwvo75
-   YND0Ai9/gtIpB/7+hyQHRYFud8gwDi3nWZ0kBywpd+oXc+mSRV+IO3zd+
-   H9PdFULi4odSHaB+xEWNf3LjOwyCV9pUw1yrctDJJDL9bsChO9ee0yPwW
-   g==;
-IronPort-SDR: qVrw3YIn6sG4hEyRQbgC1jJhSLzmMiDdnEs20Z0NqMWb24KNqNO6o5pMaIkal9ygUealwfWviX
- /vQGaXHO8wlR51SPQmPB686T4PxLwWrnSXhvPI1D02wsvjidMegkj9oFoSKg+2oSxriNau2xaY
- VJtzMrmezc3USpI+0rgGutAYxZuQO3SVaPg7Rva/4gKuVSkFkEgTzzLAy51Fn/HZT46RflfwDu
- OY0L9dSKBPfhAFL5uMchREOkfTL02dr2hXFVMMy32VyLF+33UCgqQ0CEtgrir6hnu9CbeDDi52
- 2F0=
+  bh=bDsPDcBsqLSCU8wYG3pcNrGvWrN5XQXdrnUKLu6IKAM=;
+  b=FErJXuvgOv0zRyPMRhKP+uLYIMN35JTYrQ9OH3mPiLgOaCO34SXYmu0U
+   0suZNij6/Ptgqs9Ps5o6hTDwya3Xy5GyA/qUUVLn9AAZTY6keHcs70nSY
+   xBsbpXCk1+Q+po1B2WO2U+17801YyalWztuRcfkxyscy6JcumqggbJOvU
+   9fzxdTgDNqPzb6alqjvCR8cFKl8HwYghZgGKiWFRuomYRbP69QGmX/tOU
+   bSebiwtOVyPgbKuAe82pWsN6Mnpb+KIfKzSgPtF942R12bYCnQEL7O3ro
+   HwmgDTR+jAJN2wkPj2M63Oe9WwjCpCDLh916xzC57oQNQCGYmXkle4iwo
+   w==;
+IronPort-SDR: Ch/oEyXZGU9eY5u0t9amE25ulO0Xy6flWcCbZzQq2g2T9HHqos96eD1jmHqSpmIBzOr0zm1Vvh
+ L7HOSnsqD1LByKs6KSLYT2ITeOT6VX9NcRQD1m3yKiqpHmEIsYNyBupua9Ttu1L3l6s6x3jUjI
+ ty6G6pOSE6coX8MokEyGGz905VDo30Cs9knoZ3xedxCVkONBmrxMIfvnE8Vs2DcuhF8bwndEra
+ Ov9j54tRr1VgrExb3H23UQI7xiKNtScsMpGcu1gh1OtrLWh8XSNED9gC0CN6PlEoRBAfNaIhKE
+ 7IY=
 X-IronPort-AV: E=Sophos;i="5.75,350,1589266800"; 
-   d="scan'208";a="87494105"
+   d="scan'208";a="87494092"
 Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa1.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 14 Jul 2020 00:39:34 -0700
+  by esa1.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 14 Jul 2020 00:39:28 -0700
 Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
  chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1979.3; Tue, 14 Jul 2020 00:39:34 -0700
+ 15.1.1979.3; Tue, 14 Jul 2020 00:39:28 -0700
 Received: from soft-dev3.localdomain (10.10.115.15) by
  chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server id
- 15.1.1979.3 via Frontend Transport; Tue, 14 Jul 2020 00:39:31 -0700
+ 15.1.1979.3 via Frontend Transport; Tue, 14 Jul 2020 00:39:26 -0700
 From:   Horatiu Vultur <horatiu.vultur@microchip.com>
 To:     <nikolay@cumulusnetworks.com>, <roopa@cumulusnetworks.com>,
         <davem@davemloft.net>, <kuba@kernel.org>, <jiri@resnulli.us>,
@@ -59,9 +59,9 @@ To:     <nikolay@cumulusnetworks.com>, <roopa@cumulusnetworks.com>,
         <UNGLinuxDriver@microchip.com>, <netdev@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>, <bridge@lists.linux-foundation.org>
 CC:     Horatiu Vultur <horatiu.vultur@microchip.com>
-Subject: [PATCH net-next v4 12/12] net: bridge: Add port attribute IFLA_BRPORT_MRP_IN_OPEN
-Date:   Tue, 14 Jul 2020 09:34:58 +0200
-Message-ID: <20200714073458.1939574-13-horatiu.vultur@microchip.com>
+Subject: [PATCH net-next v4 10/12] bridge: uapi: mrp: Extend MRP_INFO attributes for interconnect status
+Date:   Tue, 14 Jul 2020 09:34:56 +0200
+Message-ID: <20200714073458.1939574-11-horatiu.vultur@microchip.com>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200714073458.1939574-1-horatiu.vultur@microchip.com>
 References: <20200714073458.1939574-1-horatiu.vultur@microchip.com>
@@ -73,62 +73,31 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch adds a new port attribute, IFLA_BRPORT_MRP_IN_OPEN, which
-allows to notify the userspace when the node lost the contiuity of
-MRP_InTest frames.
+Extend the existing MRP_INFO to return status of MRP interconnect. In
+case there is no MRP interconnect on the node then the role will be
+disabled so the other attributes can be ignored.
 
 Signed-off-by: Horatiu Vultur <horatiu.vultur@microchip.com>
 ---
- include/uapi/linux/if_link.h       | 1 +
- net/bridge/br_netlink.c            | 3 +++
- tools/include/uapi/linux/if_link.h | 1 +
- 3 files changed, 5 insertions(+)
+ include/uapi/linux/if_bridge.h | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/include/uapi/linux/if_link.h b/include/uapi/linux/if_link.h
-index cc185a007ade8..26842ffd0501d 100644
---- a/include/uapi/linux/if_link.h
-+++ b/include/uapi/linux/if_link.h
-@@ -344,6 +344,7 @@ enum {
- 	IFLA_BRPORT_ISOLATED,
- 	IFLA_BRPORT_BACKUP_PORT,
- 	IFLA_BRPORT_MRP_RING_OPEN,
-+	IFLA_BRPORT_MRP_IN_OPEN,
- 	__IFLA_BRPORT_MAX
+diff --git a/include/uapi/linux/if_bridge.h b/include/uapi/linux/if_bridge.h
+index d840a3e37a37c..c1227aecd38fd 100644
+--- a/include/uapi/linux/if_bridge.h
++++ b/include/uapi/linux/if_bridge.h
+@@ -243,6 +243,11 @@ enum {
+ 	IFLA_BRIDGE_MRP_INFO_TEST_INTERVAL,
+ 	IFLA_BRIDGE_MRP_INFO_TEST_MAX_MISS,
+ 	IFLA_BRIDGE_MRP_INFO_TEST_MONITOR,
++	IFLA_BRIDGE_MRP_INFO_I_IFINDEX,
++	IFLA_BRIDGE_MRP_INFO_IN_STATE,
++	IFLA_BRIDGE_MRP_INFO_IN_ROLE,
++	IFLA_BRIDGE_MRP_INFO_IN_TEST_INTERVAL,
++	IFLA_BRIDGE_MRP_INFO_IN_TEST_MAX_MISS,
+ 	__IFLA_BRIDGE_MRP_INFO_MAX,
  };
- #define IFLA_BRPORT_MAX (__IFLA_BRPORT_MAX - 1)
-diff --git a/net/bridge/br_netlink.c b/net/bridge/br_netlink.c
-index c532fa65c9834..147d52596e174 100644
---- a/net/bridge/br_netlink.c
-+++ b/net/bridge/br_netlink.c
-@@ -152,6 +152,7 @@ static inline size_t br_port_info_size(void)
- #endif
- 		+ nla_total_size(sizeof(u16))	/* IFLA_BRPORT_GROUP_FWD_MASK */
- 		+ nla_total_size(sizeof(u8))	/* IFLA_BRPORT_MRP_RING_OPEN */
-+		+ nla_total_size(sizeof(u8))	/* IFLA_BRPORT_MRP_IN_OPEN */
- 		+ 0;
- }
  
-@@ -216,6 +217,8 @@ static int br_port_fill_attrs(struct sk_buff *skb,
- 		       !!(p->flags & BR_NEIGH_SUPPRESS)) ||
- 	    nla_put_u8(skb, IFLA_BRPORT_MRP_RING_OPEN, !!(p->flags &
- 							  BR_MRP_LOST_CONT)) ||
-+	    nla_put_u8(skb, IFLA_BRPORT_MRP_IN_OPEN,
-+		       !!(p->flags & BR_MRP_LOST_IN_CONT)) ||
- 	    nla_put_u8(skb, IFLA_BRPORT_ISOLATED, !!(p->flags & BR_ISOLATED)))
- 		return -EMSGSIZE;
- 
-diff --git a/tools/include/uapi/linux/if_link.h b/tools/include/uapi/linux/if_link.h
-index cafedbbfefbe9..781e482dc499f 100644
---- a/tools/include/uapi/linux/if_link.h
-+++ b/tools/include/uapi/linux/if_link.h
-@@ -344,6 +344,7 @@ enum {
- 	IFLA_BRPORT_ISOLATED,
- 	IFLA_BRPORT_BACKUP_PORT,
- 	IFLA_BRPORT_MRP_RING_OPEN,
-+	IFLA_BRPORT_MRP_IN_OPEN,
- 	__IFLA_BRPORT_MAX
- };
- #define IFLA_BRPORT_MAX (__IFLA_BRPORT_MAX - 1)
 -- 
 2.27.0
 
