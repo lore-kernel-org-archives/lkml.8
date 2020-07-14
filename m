@@ -2,131 +2,168 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-16.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA234C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 21:39:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43A99C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 21:39:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A3374206D9
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 21:39:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594762787;
-	bh=IcwyAgDmrYiZARCGLD0f3MGzv0IuApQzk4+xUcZdmu0=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=QfolwHmDaxmK6tCDZ7cq2ewYDPJlQNjXfEN0Io0+y6wc0uL9e8w+F9ImwLYyN1xjt
-	 f8tUKB0GS1bzZa9siI1qsMoP+8AuD1tj1b/HhPiXsTH+U1f7oZ6EeeY/0mgdi5DHVh
-	 Y/5yUtHFTED3s9gVCdf73i3gJAwQCia4nb7yivug=
+	by mail.kernel.org (Postfix) with ESMTP id 12F772064C
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 21:39:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="hl2mRBj5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728315AbgGNVjq (ORCPT
+        id S1728364AbgGNVj4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 17:39:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37684 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727098AbgGNVjp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 17:39:45 -0400
-Received: from embeddedor (unknown [201.162.240.73])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 152C42064C;
-        Tue, 14 Jul 2020 21:39:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594762785;
-        bh=IcwyAgDmrYiZARCGLD0f3MGzv0IuApQzk4+xUcZdmu0=;
-        h=Date:From:To:Cc:Subject:From;
-        b=lB4VlDnlygA2pEVWgQoeFBVs0Gq0vzvLeL7QBNhohPHcraW3FQgK7esV7tOgziQKn
-         5ekZKIUFUVyMYnWn7klTRrDzQuGH8B8Lwa7T2dXERXRgyepqbLLpsPGIfnGSIZ5acv
-         YODa6H7SsGMysRWWHHfp6+/yx5o5+W0VIaQGPqUQ=
-Date:   Tue, 14 Jul 2020 16:45:16 -0500
-From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     Tomas Winkler <tomas.winkler@intel.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Subject: [PATCH v2] mei: Avoid the use of one-element arrays
-Message-ID: <20200714214516.GA1040@embeddedor>
+        Tue, 14 Jul 2020 17:39:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37204 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726722AbgGNVjz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 17:39:55 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1C1E8C061755
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 14:39:55 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id f7so318188wrw.1
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 14:39:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=cmHcwmTccT13ZJXcb7SBLzTw/UgSDiTbBWL8nKbEfh8=;
+        b=hl2mRBj5TXYfXXlig2eChw0XasjMiOrb9AtRFxZdbPyHE59r5Wap6WzQTySOdEQUJI
+         tgFQc7fupgoqDrRc4Wn0CrupPbdEojws4yyp8xGLozYqdZ+6dSzfYy9qzKGkM5FV2Oot
+         JbUj+RtfHk/mhyglpCa+/0ezOc66UcAQVwVY/q5jd1U8RZZvcfbf5rWZ8jh+w0OB4ndd
+         BOAIKcnWA4EHnVvIftC76Fk+nsHIzerjm0BABgGduehlIa3KOS9RIL5mJPZMwTxnzhFc
+         6g0zZxbsTIbeQwd0MMdLVYaPZjRj2G5QXPIswenRv7L1YSXMhp26dAtHy6ZelPtw6+o6
+         cbyA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=cmHcwmTccT13ZJXcb7SBLzTw/UgSDiTbBWL8nKbEfh8=;
+        b=Lgn080a89OSXFAuNTKlhzm/qL5vwmfpwcv3XZN1ZRz9lqMh6msKtdvBcbbdPjXtbAe
+         jl6Xf8X0Q5TugjodL2ypxlwDXVx+dGzY0P8AIVwQA3rs9ACWoH2Nl2uU0s0RCkga8AWB
+         B+2lh16B4Z+rgSA8zJFxlJvmTKDDsT7YMr6nQOxJDmb4y8L45+KcigiUmKHuZ9w3tAKs
+         53OxYLXkndM1pCtalKcvXe5xZSy+L1FKwwfa4qxdHqkbNZ4DRMt/X/ZCcfAdxA+4Lbhj
+         tjE7e3O7IzA9wDTMB8PZogGHEPFEwNN50AbP15YbS75L5S9wV9wmXIEeoV0qgDJHj7Ih
+         99GQ==
+X-Gm-Message-State: AOAM531Pc0F0PvWAMDSBTIJgA3ND7AdAkc+aU+cMr3rX4Xu/5RFmecZc
+        UafO6ZqzpYBRkZwOG+v1cwqe7klYejOMVA==
+X-Google-Smtp-Source: ABdhPJxIEccNsYzkB+5beVgvKTvwXqRGoyrdzYXHMD7gkZ4Eq4nfKYrUQld8CLXdiaS/LHOlv5+6SQ==
+X-Received: by 2002:a5d:5388:: with SMTP id d8mr7829244wrv.35.1594762793831;
+        Tue, 14 Jul 2020 14:39:53 -0700 (PDT)
+Received: from dell ([2.31.163.61])
+        by smtp.gmail.com with ESMTPSA id v18sm26479wrv.49.2020.07.14.14.39.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 14 Jul 2020 14:39:53 -0700 (PDT)
+Date:   Tue, 14 Jul 2020 22:39:51 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     James Bottomley <jejb@linux.ibm.com>
+Cc:     Hannes Reinecke <hare@suse.de>, martin.petersen@oracle.com,
+        linux-kernel@vger.kernel.org, linux-scsi@vger.kernel.org,
+        Hannes Reinecke <hare@suse.com>
+Subject: Re: [PATCH v2 24/24] scsi: aic7xxx: aic79xx_osm: Remove set but
+ unused variabes 'saved_scsiid' and 'saved_modes'
+Message-ID: <20200714213951.GL1398296@dell>
+References: <20200713080001.128044-1-lee.jones@linaro.org>
+ <20200713080001.128044-25-lee.jones@linaro.org>
+ <559e47de-fa26-9ae5-a3c5-4adeae606309@suse.de>
+ <1594741430.4545.15.camel@linux.ibm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <1594741430.4545.15.camel@linux.ibm.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-One-element arrays are being deprecated[1]. Replace the one-element
-arrays with a simple value type u8 reserved, once this is just a
-placeholder for alignment.
+On Tue, 14 Jul 2020, James Bottomley wrote:
 
-Also, while there, use the preferred form for passing a size of a struct.
-The alternative form where struct name is spelled out hurts readability
-and introduces an opportunity for a bug when the variable type is changed
-but the corresponding sizeof that is passed as argument is not.
+> On Tue, 2020-07-14 at 09:46 +0200, Hannes Reinecke wrote:
+> > On 7/13/20 10:00 AM, Lee Jones wrote:
+> > > Haven't been used since 2006.
+> > > 
+> > > Fixes the following W=1 kernel build warning(s):
+> > > 
+> > >  drivers/scsi/aic7xxx/aic79xx_osm.c: In function
+> > > ‘ahd_linux_queue_abort_cmd’:
+> > >  drivers/scsi/aic7xxx/aic79xx_osm.c:2155:17: warning: variable
+> > > ‘saved_modes’ set but not used [-Wunused-but-set-variable]
+> > >  drivers/scsi/aic7xxx/aic79xx_osm.c:2148:9: warning: variable
+> > > ‘saved_scsiid’ set but not used [-Wunused-but-set-variable]
+> > > 
+> > > Cc: Hannes Reinecke <hare@suse.com>
+> > > Signed-off-by: Lee Jones <lee.jones@linaro.org>
+> > > ---
+> > >  drivers/scsi/aic7xxx/aic79xx_osm.c | 4 ----
+> > >  1 file changed, 4 deletions(-)
+> > > 
+> > > diff --git a/drivers/scsi/aic7xxx/aic79xx_osm.c
+> > > b/drivers/scsi/aic7xxx/aic79xx_osm.c
+> > > index 3782a20d58885..140c4e74ddd7e 100644
+> > > --- a/drivers/scsi/aic7xxx/aic79xx_osm.c
+> > > +++ b/drivers/scsi/aic7xxx/aic79xx_osm.c
+> > > @@ -2141,14 +2141,12 @@ ahd_linux_queue_abort_cmd(struct scsi_cmnd
+> > > *cmd)
+> > >  	u_int  saved_scbptr;
+> > >  	u_int  active_scbptr;
+> > >  	u_int  last_phase;
+> > > -	u_int  saved_scsiid;
+> > >  	u_int  cdb_byte;
+> > >  	int    retval;
+> > >  	int    was_paused;
+> > >  	int    paused;
+> > >  	int    wait;
+> > >  	int    disconnected;
+> > > -	ahd_mode_state saved_modes;
+> > >  	unsigned long flags;
+> > >  
+> > >  	pending_scb = NULL;
+> > > @@ -2239,7 +2237,6 @@ ahd_linux_queue_abort_cmd(struct scsi_cmnd
+> > > *cmd)
+> > >  		goto done;
+> > >  	}
+> > >  
+> > > -	saved_modes = ahd_save_modes(ahd);
+> > >  	ahd_set_modes(ahd, AHD_MODE_SCSI, AHD_MODE_SCSI);
+> > >  	last_phase = ahd_inb(ahd, LASTPHASE);
+> > >  	saved_scbptr = ahd_get_scbptr(ahd);
+> > > @@ -2257,7 +2254,6 @@ ahd_linux_queue_abort_cmd(struct scsi_cmnd
+> > > *cmd)
+> > >  	 * passed in command.  That command is currently active on
+> > > the
+> > >  	 * bus or is in the disconnected state.
+> > >  	 */
+> > > -	saved_scsiid = ahd_inb(ahd, SAVED_SCSIID);
+> > >  	if (last_phase != P_BUSFREE
+> > >  	    && SCB_GET_TAG(pending_scb) == active_scbptr) {
+> > >  
+> > > 
+> > 
+> > Reviewed-by: Hannes Reinecke <hare@suse.de>
+> 
+> Hey, you don't get to do that ... I asked you to figure out why we're
+> missing an ahd_restore_modes().  Removing the ahd_save_modes() is
+> cosmetic: it gets rid of a warning but doesn't fix the problem.  I'd
+> rather keep the warning until the problem is fixed and the problem is
+> we need a mode save/restore around the ahd_set_modes() which is only
+> partially implemented in this function.
 
-[1] https://github.com/KSPP/linux/issues/79
+I had a look.  Traced it back to the dawn of time (time == Git), then
+delved even further back by downloading and trawling through ~10-15
+tarballs.  It looks as though drivers/scsi/aic7xxx/aic79xx_osm.c was
+upstreamed in v2.5.60, nearly 20 years ago.  'saved_modes' has been
+unused since at least then.  If no one has complained in 2 decades,
+I'd say it probably isn't an issue worth perusing.
 
-Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
----
-Changes in v2:
- - Use a more concise changelog text.
-
- drivers/misc/mei/hbm.c | 4 ++--
- drivers/misc/mei/hw.h  | 6 +++---
- 2 files changed, 5 insertions(+), 5 deletions(-)
-
-diff --git a/drivers/misc/mei/hbm.c b/drivers/misc/mei/hbm.c
-index a44094cdbc36..f020d5594154 100644
---- a/drivers/misc/mei/hbm.c
-+++ b/drivers/misc/mei/hbm.c
-@@ -408,14 +408,14 @@ static int mei_hbm_add_cl_resp(struct mei_device *dev, u8 addr, u8 status)
- {
- 	struct mei_msg_hdr mei_hdr;
- 	struct hbm_add_client_response resp;
--	const size_t len = sizeof(struct hbm_add_client_response);
-+	const size_t len = sizeof(resp);
- 	int ret;
- 
- 	dev_dbg(dev->dev, "adding client response\n");
- 
- 	mei_hbm_hdr(&mei_hdr, len);
- 
--	memset(&resp, 0, sizeof(struct hbm_add_client_response));
-+	memset(&resp, 0, len);
- 	resp.hbm_cmd = MEI_HBM_ADD_CLIENT_RES_CMD;
- 	resp.me_addr = addr;
- 	resp.status  = status;
-diff --git a/drivers/misc/mei/hw.h b/drivers/misc/mei/hw.h
-index b1a8d5ec88b3..8c0297f0e7f3 100644
---- a/drivers/misc/mei/hw.h
-+++ b/drivers/misc/mei/hw.h
-@@ -346,13 +346,13 @@ struct hbm_add_client_request {
-  * @hbm_cmd: bus message command header
-  * @me_addr: address of the client in ME
-  * @status: if HBMS_SUCCESS then the client can now accept connections.
-- * @reserved: reserved
-+ * @reserved: reserved for alignment.
-  */
- struct hbm_add_client_response {
- 	u8 hbm_cmd;
- 	u8 me_addr;
- 	u8 status;
--	u8 reserved[1];
-+	u8 reserved;
- } __packed;
- 
- /**
-@@ -461,7 +461,7 @@ struct hbm_notification {
- 	u8 hbm_cmd;
- 	u8 me_addr;
- 	u8 host_addr;
--	u8 reserved[1];
-+	u8 reserved;
- } __packed;
- 
- /**
 -- 
-2.27.0
-
+Lee Jones [李琼斯]
+Senior Technical Lead - Developer Services
+Linaro.org │ Open source software for Arm SoCs
+Follow Linaro: Facebook | Twitter | Blog
