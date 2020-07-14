@@ -2,57 +2,55 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-18.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BE7DC43465
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 14:41:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30BB2C433E6
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 14:41:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 677272064B
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 14:41:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE58C2064B
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 14:41:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594737700;
-	bh=+TpmgRyoAimEk+9EmfjO4fVbNk/czgms/EFFceKQDgs=;
+	s=default; t=1594737706;
+	bh=4UDb7Ao8BAv6BbrlbobXgiF4d3R3K3FUqdy1c8fpSGU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0HOV5kvlgLgpT/uSBQffJerPHksRkPcSpHFXQP9/u8TxCcYco/Zmvbc9uhguNkQqu
-	 KQfh6yGyjt1f0APFCwczjdq0561UxGwSyk1Q4UESfu71Q3liyu+uAFs5oWDOYW4m2m
-	 5/QWYEEwANldxLreFr66fYhQCKVPjMwSrv8sP9Tc=
+	b=uQjpDAd0cbut3pfBNY1aoHRfZoYjaUlp71XwnLraGCWusMoJ1OQ0ImnTWwgtu1ub7
+	 xK1c37OCAztNDRTwUBMxRZldbOvT+zL9gOswwAlJzTFb361xj/SuWPHbpDK9Drng8l
+	 YOmKfwhDyR8GxUXkvR0s0TluTeeVV4kiy50R0GR0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728855AbgGNOli (ORCPT
+        id S1729524AbgGNOlo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 10:41:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56114 "EHLO mail.kernel.org"
+        Tue, 14 Jul 2020 10:41:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56036 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729324AbgGNOkU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 10:40:20 -0400
+        id S1729305AbgGNOkQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 10:40:16 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 90F2A206F5;
-        Tue, 14 Jul 2020 14:40:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 58CC222582;
+        Tue, 14 Jul 2020 14:40:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594737619;
-        bh=+TpmgRyoAimEk+9EmfjO4fVbNk/czgms/EFFceKQDgs=;
+        s=default; t=1594737615;
+        bh=4UDb7Ao8BAv6BbrlbobXgiF4d3R3K3FUqdy1c8fpSGU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KIC8jTy8ry1ltCrulSBTEMEN59DUlyYLhGYT+Ra8gfaCvERy14cBEwGDLjpUgtvvO
-         mm5xuU1VJzVEA3Pxm/AN/QPjftBnB/MEbNBNq8fHj0lyOtEJ1KsZ1652d8XGH27SHC
-         8jF8FRyQZbMTiFMvmyunwxAAd8Ju5vtqghs6qvAc=
+        b=qDqJv5f/RORJNWevQBz48XPgip3ux39tRp7B5tUQgRbhaBcE7TfJocz4Zpd9mfemp
+         CD8VGZE4Nf+bJcjW1gYk4zMZrWEETzjPbsFstpMVV1nZkZa31fRtyBucduzaniR8xZ
+         4ymJxyyWp43CTl85R49kayrFdXN6Q/CJhJWHz0kA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Kai Vehmanen <kai.vehmanen@linux.intel.com>,
-        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>,
-        alsa-devel@alsa-project.org
-Subject: [PATCH AUTOSEL 4.9 07/10] ALSA: hda/hdmi: fix failures at PCM open on Intel ICL and later
-Date:   Tue, 14 Jul 2020 10:40:07 -0400
-Message-Id: <20200714144010.4035987-7-sashal@kernel.org>
+Cc:     Max Filippov <jcmvbkbc@gmail.com>, Sasha Levin <sashal@kernel.org>,
+        linux-xtensa@linux-xtensa.org
+Subject: [PATCH AUTOSEL 4.9 04/10] xtensa: fix __sync_fetch_and_{and,or}_4 declarations
+Date:   Tue, 14 Jul 2020 10:40:04 -0400
+Message-Id: <20200714144010.4035987-4-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200714144010.4035987-1-sashal@kernel.org>
 References: <20200714144010.4035987-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -61,103 +59,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kai Vehmanen <kai.vehmanen@linux.intel.com>
+From: Max Filippov <jcmvbkbc@gmail.com>
 
-[ Upstream commit 56275036d8185f92eceac7479d48b858ee3dab84 ]
+[ Upstream commit 73f9941306d5ce030f3ffc7db425c7b2a798cf8e ]
 
-When HDMI PCM devices are opened in a specific order, with at least one
-HDMI/DP receiver connected, ALSA PCM open fails to -EBUSY on the
-connected monitor, on recent Intel platforms (ICL/JSL and newer). While
-this is not a typical sequence, at least Pulseaudio does this every time
-when it is started, to discover the available PCMs.
+Building xtensa kernel with gcc-10 produces the following warnings:
+  arch/xtensa/kernel/xtensa_ksyms.c:90:15: warning: conflicting types
+    for built-in function ‘__sync_fetch_and_and_4’;
+    expected ‘unsigned int(volatile void *, unsigned int)’
+    [-Wbuiltin-declaration-mismatch]
+  arch/xtensa/kernel/xtensa_ksyms.c:96:15: warning: conflicting types
+    for built-in function ‘__sync_fetch_and_or_4’;
+    expected ‘unsigned int(volatile void *, unsigned int)’
+    [-Wbuiltin-declaration-mismatch]
 
-The rootcause is an invalid assumption in hdmi_add_pin(), where the
-total number of converters is assumed to be known at the time the
-function is called. On older Intel platforms this held true, but after
-ICL/JSL, the order how pins and converters are in the subnode list as
-returned by snd_hda_get_sub_nodes(), was changed. As a result,
-information for some converters was not stored to per_pin->mux_nids.
-And this means some pins cannot be connected to all converters, and
-application instead gets -EBUSY instead at open.
+Fix declarations of these functions to avoid the warning.
 
-The assumption that converters are always before pins in the subnode
-list, is not really a valid one. Fix the problem in hdmi_parse_codec()
-by introducing separate loops for discovering converters and pins.
-
-BugLink: https://github.com/thesofproject/linux/issues/1978
-BugLink: https://github.com/thesofproject/linux/issues/2216
-BugLink: https://github.com/thesofproject/linux/issues/2217
-Reviewed-by: Ranjani Sridharan <ranjani.sridharan@linux.intel.com>
-Reviewed-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Signed-off-by: Kai Vehmanen <kai.vehmanen@linux.intel.com>
-Link: https://lore.kernel.org/r/20200703153818.2808592-1-kai.vehmanen@linux.intel.com
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Signed-off-by: Max Filippov <jcmvbkbc@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/pci/hda/patch_hdmi.c | 36 +++++++++++++++++++++++-------------
- 1 file changed, 23 insertions(+), 13 deletions(-)
+ arch/xtensa/kernel/xtensa_ksyms.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/sound/pci/hda/patch_hdmi.c b/sound/pci/hda/patch_hdmi.c
-index 2def4ad579ccf..f7bd91b713e83 100644
---- a/sound/pci/hda/patch_hdmi.c
-+++ b/sound/pci/hda/patch_hdmi.c
-@@ -1655,33 +1655,43 @@ static int hdmi_add_cvt(struct hda_codec *codec, hda_nid_t cvt_nid)
+diff --git a/arch/xtensa/kernel/xtensa_ksyms.c b/arch/xtensa/kernel/xtensa_ksyms.c
+index 9210b9cc4ec96..455c6ec4086c2 100644
+--- a/arch/xtensa/kernel/xtensa_ksyms.c
++++ b/arch/xtensa/kernel/xtensa_ksyms.c
+@@ -82,13 +82,13 @@ void __xtensa_libgcc_window_spill(void)
+ }
+ EXPORT_SYMBOL(__xtensa_libgcc_window_spill);
  
- static int hdmi_parse_codec(struct hda_codec *codec)
+-unsigned long __sync_fetch_and_and_4(unsigned long *p, unsigned long v)
++unsigned int __sync_fetch_and_and_4(volatile void *p, unsigned int v)
  {
--	hda_nid_t nid;
-+	hda_nid_t start_nid;
-+	unsigned int caps;
- 	int i, nodes;
+ 	BUG();
+ }
+ EXPORT_SYMBOL(__sync_fetch_and_and_4);
  
--	nodes = snd_hda_get_sub_nodes(codec, codec->core.afg, &nid);
--	if (!nid || nodes < 0) {
-+	nodes = snd_hda_get_sub_nodes(codec, codec->core.afg, &start_nid);
-+	if (!start_nid || nodes < 0) {
- 		codec_warn(codec, "HDMI: failed to get afg sub nodes\n");
- 		return -EINVAL;
- 	}
- 
--	for (i = 0; i < nodes; i++, nid++) {
--		unsigned int caps;
--		unsigned int type;
-+	/*
-+	 * hdmi_add_pin() assumes total amount of converters to
-+	 * be known, so first discover all converters
-+	 */
-+	for (i = 0; i < nodes; i++) {
-+		hda_nid_t nid = start_nid + i;
- 
- 		caps = get_wcaps(codec, nid);
--		type = get_wcaps_type(caps);
- 
- 		if (!(caps & AC_WCAP_DIGITAL))
- 			continue;
- 
--		switch (type) {
--		case AC_WID_AUD_OUT:
-+		if (get_wcaps_type(caps) == AC_WID_AUD_OUT)
- 			hdmi_add_cvt(codec, nid);
--			break;
--		case AC_WID_PIN:
-+	}
-+
-+	/* discover audio pins */
-+	for (i = 0; i < nodes; i++) {
-+		hda_nid_t nid = start_nid + i;
-+
-+		caps = get_wcaps(codec, nid);
-+
-+		if (!(caps & AC_WCAP_DIGITAL))
-+			continue;
-+
-+		if (get_wcaps_type(caps) == AC_WID_PIN)
- 			hdmi_add_pin(codec, nid);
--			break;
--		}
- 	}
- 
- 	return 0;
+-unsigned long __sync_fetch_and_or_4(unsigned long *p, unsigned long v)
++unsigned int __sync_fetch_and_or_4(volatile void *p, unsigned int v)
+ {
+ 	BUG();
+ }
 -- 
 2.25.1
 
