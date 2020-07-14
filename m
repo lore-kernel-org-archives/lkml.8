@@ -2,54 +2,53 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1344C433E4
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:57:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C382C433E5
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:57:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9B45D229CA
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:57:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E55AF229CA
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:57:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594753072;
-	bh=0UlU6MmCmjiBgLVWngg6X8UHSA6SYjsELOi/ZlNr5iU=;
+	s=default; t=1594753077;
+	bh=KU9WAil+YqGeJB6dX1RxcmZ1Lyeryj+Fn1vXKePkQBE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vblsW5SXfZX4qf2H4KbqDH7u4s065IdfIgI4MvZHAa8I/PqXFqVi1r3hiykk6Pidb
-	 v/6r06nfvFZaYb5rGcQU6sVjDgS54eeXgiV1KUWe8JM5OmvL80rfT/KFGjV7qXh6O9
-	 Qg1mjGj89j7LCYUuDcDEQyU8ERFkf4Nx5j1GzV7w=
+	b=onr10Bx7XkHO7qr2Q9gNZZnKrYC0eWSWnc/IB2HoWhiZvmPiNR+hgzrUo3Qw5Zt2d
+	 tYYzISfwbej2osl7WXw0xEIGNpURHQv9hFV0Z8qbTfuUvUWaCAQznBJ2M3xvpNIYpB
+	 dlV68Fo3vw2xOtZDeL8GWSxXx4fkpYReNKbMIUM8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729927AbgGNS5v (ORCPT
+        id S1730535AbgGNS5z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 14:57:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56086 "EHLO mail.kernel.org"
+        Tue, 14 Jul 2020 14:57:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56026 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731135AbgGNS5r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 14:57:47 -0400
+        id S1731120AbgGNS5o (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 14:57:44 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3A0DF207F5;
-        Tue, 14 Jul 2020 18:57:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5CF88207F5;
+        Tue, 14 Jul 2020 18:57:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594753066;
-        bh=0UlU6MmCmjiBgLVWngg6X8UHSA6SYjsELOi/ZlNr5iU=;
+        s=default; t=1594753063;
+        bh=KU9WAil+YqGeJB6dX1RxcmZ1Lyeryj+Fn1vXKePkQBE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YxUgtVjoeM8wD3YekFZfQNBPyx5s/8gJX25toC8VQRrVyNyXAprmUbkRRnaSRk7LW
-         LqgUpGl+aVlPIdvxGeqs5plFkPxPoBqF0nS9gqHDvfKvupq28QeZQOVvkVW9wYQrrv
-         MELi9e3f1EXisX4dbtl4S6rIPDzkiAWtA6R6wdwc=
+        b=cM0Li3FWK0DrwXL0Eh+RuWFwDygAANy4zvjCzz2SWkIbqG1UULSdQAB3010IG8YgX
+         dMBUMPK24AXPnAXIRQDO+f9ATVKypFjtaSLScoxrg8Jp9egEZq7jTpz5/TSfN04Ztu
+         SIUCTMfezPUW3E0V82TSPXSUgld3NVIHwC4BL6lc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Mike Marciniszyn <mike.marciniszyn@intel.com>,
-        Kaike Wan <kaike.wan@intel.com>,
-        Dennis Dalessandro <dennis.dalessandro@intel.com>,
-        Jason Gunthorpe <jgg@nvidia.com>
-Subject: [PATCH 5.7 107/166] IB/hfi1: Do not destroy hfi1_wq when the device is shut down
-Date:   Tue, 14 Jul 2020 20:44:32 +0200
-Message-Id: <20200714184120.968127370@linuxfoundation.org>
+        stable@vger.kernel.org, Ido Schimmel <idosch@mellanox.com>,
+        Jiri Pirko <jiri@mellanox.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.7 106/166] mlxsw: pci: Fix use-after-free in case of failed devlink reload
+Date:   Tue, 14 Jul 2020 20:44:31 +0200
+Message-Id: <20200714184120.919429441@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200714184115.844176932@linuxfoundation.org>
 References: <20200714184115.844176932@linuxfoundation.org>
@@ -62,158 +61,195 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kaike Wan <kaike.wan@intel.com>
+From: Ido Schimmel <idosch@mellanox.com>
 
-commit 28b70cd9236563e1a88a6094673fef3c08db0d51 upstream.
+[ Upstream commit c4317b11675b99af6641662ebcbd3c6010600e64 ]
 
-The workqueue hfi1_wq is destroyed in function shutdown_device(), which is
-called by either shutdown_one() or remove_one(). The function
-shutdown_one() is called when the kernel is rebooted while remove_one() is
-called when the hfi1 driver is unloaded. When the kernel is rebooted,
-hfi1_wq is destroyed while all qps are still active, leading to a kernel
-crash:
+In case devlink reload failed, it is possible to trigger a
+use-after-free when querying the kernel for device info via 'devlink dev
+info' [1].
 
-  BUG: unable to handle kernel NULL pointer dereference at 0000000000000102
-  IP: [<ffffffff94cb7b02>] __queue_work+0x32/0x3e0
-  PGD 0
-  Oops: 0000 [#1] SMP
-  Modules linked in: dm_round_robin nvme_rdma(OE) nvme_fabrics(OE) nvme_core(OE) ib_isert iscsi_target_mod target_core_mod ib_ucm mlx4_ib iTCO_wdt iTCO_vendor_support mxm_wmi sb_edac intel_powerclamp coretemp intel_rapl iosf_mbi kvm rpcrdma sunrpc irqbypass crc32_pclmul ghash_clmulni_intel rdma_ucm aesni_intel ib_uverbs lrw gf128mul opa_vnic glue_helper ablk_helper ib_iser cryptd ib_umad rdma_cm iw_cm ses enclosure libiscsi scsi_transport_sas pcspkr joydev ib_ipoib(OE) scsi_transport_iscsi ib_cm sg ipmi_ssif mei_me lpc_ich i2c_i801 mei ioatdma ipmi_si dm_multipath ipmi_devintf ipmi_msghandler wmi acpi_pad acpi_power_meter hangcheck_timer ip_tables ext4 mbcache jbd2 mlx4_en sd_mod crc_t10dif crct10dif_generic mgag200 drm_kms_helper syscopyarea sysfillrect sysimgblt fb_sys_fops ttm hfi1(OE)
-  crct10dif_pclmul crct10dif_common crc32c_intel drm ahci mlx4_core libahci rdmavt(OE) igb megaraid_sas ib_core libata drm_panel_orientation_quirks ptp pps_core devlink dca i2c_algo_bit dm_mirror dm_region_hash dm_log dm_mod
-  CPU: 19 PID: 0 Comm: swapper/19 Kdump: loaded Tainted: G OE ------------ 3.10.0-957.el7.x86_64 #1
-  Hardware name: Phegda X2226A/S2600CW, BIOS SE5C610.86B.01.01.0024.021320181901 02/13/2018
-  task: ffff8a799ba0d140 ti: ffff8a799bad8000 task.ti: ffff8a799bad8000
-  RIP: 0010:[<ffffffff94cb7b02>] [<ffffffff94cb7b02>] __queue_work+0x32/0x3e0
-  RSP: 0018:ffff8a90dde43d80 EFLAGS: 00010046
-  RAX: 0000000000000082 RBX: 0000000000000086 RCX: 0000000000000000
-  RDX: ffff8a90b924fcb8 RSI: 0000000000000000 RDI: 000000000000001b
-  RBP: ffff8a90dde43db8 R08: ffff8a799ba0d6d8 R09: ffff8a90dde53900
-  R10: 0000000000000002 R11: ffff8a90dde43de8 R12: ffff8a90b924fcb8
-  R13: 000000000000001b R14: 0000000000000000 R15: ffff8a90d2890000
-  FS: 0000000000000000(0000) GS:ffff8a90dde40000(0000) knlGS:0000000000000000
-  CS: 0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-  CR2: 0000000000000102 CR3: 0000001a70410000 CR4: 00000000001607e0
-  Call Trace:
-  [<ffffffff94cb8105>] queue_work_on+0x45/0x50
-  [<ffffffffc03f781e>] _hfi1_schedule_send+0x6e/0xc0 [hfi1]
-  [<ffffffffc03f78a2>] hfi1_schedule_send+0x32/0x70 [hfi1]
-  [<ffffffffc02cf2d9>] rvt_rc_timeout+0xe9/0x130 [rdmavt]
-  [<ffffffff94ce563a>] ? trigger_load_balance+0x6a/0x280
-  [<ffffffffc02cf1f0>] ? rvt_free_qpn+0x40/0x40 [rdmavt]
-  [<ffffffff94ca7f58>] call_timer_fn+0x38/0x110
-  [<ffffffffc02cf1f0>] ? rvt_free_qpn+0x40/0x40 [rdmavt]
-  [<ffffffff94caa3bd>] run_timer_softirq+0x24d/0x300
-  [<ffffffff94ca0f05>] __do_softirq+0xf5/0x280
-  [<ffffffff9537832c>] call_softirq+0x1c/0x30
-  [<ffffffff94c2e675>] do_softirq+0x65/0xa0
-  [<ffffffff94ca1285>] irq_exit+0x105/0x110
-  [<ffffffff953796c8>] smp_apic_timer_interrupt+0x48/0x60
-  [<ffffffff95375df2>] apic_timer_interrupt+0x162/0x170
-  <EOI>
-  [<ffffffff951adfb7>] ? cpuidle_enter_state+0x57/0xd0
-  [<ffffffff951ae10e>] cpuidle_idle_call+0xde/0x230
-  [<ffffffff94c366de>] arch_cpu_idle+0xe/0xc0
-  [<ffffffff94cfc3ba>] cpu_startup_entry+0x14a/0x1e0
-  [<ffffffff94c57db7>] start_secondary+0x1f7/0x270
-  [<ffffffff94c000d5>] start_cpu+0x5/0x14
+This happens because as part of the reload error path the PCI command
+interface is de-initialized and its mailboxes are freed. When the
+devlink '->info_get()' callback is invoked the device is queried via the
+command interface and the freed mailboxes are accessed.
 
-The solution is to destroy the workqueue only when the hfi1 driver is
-unloaded, not when the device is shut down. In addition, when the device
-is shut down, no more work should be scheduled on the workqueues and the
-workqueues are flushed.
+Fix this by initializing the command interface once during probe and not
+during every reload.
 
-Fixes: 8d3e71136a08 ("IB/{hfi1, qib}: Add handling of kernel restart")
-Link: https://lore.kernel.org/r/20200623204047.107638.77646.stgit@awfm-01.aw.intel.com
-Cc: <stable@vger.kernel.org>
-Reviewed-by: Mike Marciniszyn <mike.marciniszyn@intel.com>
-Signed-off-by: Kaike Wan <kaike.wan@intel.com>
-Signed-off-by: Dennis Dalessandro <dennis.dalessandro@intel.com>
-Signed-off-by: Jason Gunthorpe <jgg@nvidia.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+This is consistent with the other bus used by mlxsw (i.e., 'mlxsw_i2c')
+and also allows user space to query the running firmware version (for
+example) from the device after a failed reload.
 
+[1]
+BUG: KASAN: use-after-free in memcpy include/linux/string.h:406 [inline]
+BUG: KASAN: use-after-free in mlxsw_pci_cmd_exec+0x177/0xa60 drivers/net/ethernet/mellanox/mlxsw/pci.c:1675
+Write of size 4096 at addr ffff88810ae32000 by task syz-executor.1/2355
+
+CPU: 1 PID: 2355 Comm: syz-executor.1 Not tainted 5.8.0-rc2+ #29
+Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.12.1-0-ga5cab58e9a3f-prebuilt.qemu.org 04/01/2014
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0xf6/0x16e lib/dump_stack.c:118
+ print_address_description.constprop.0+0x1c/0x250 mm/kasan/report.c:383
+ __kasan_report mm/kasan/report.c:513 [inline]
+ kasan_report.cold+0x1f/0x37 mm/kasan/report.c:530
+ check_memory_region_inline mm/kasan/generic.c:186 [inline]
+ check_memory_region+0x14e/0x1b0 mm/kasan/generic.c:192
+ memcpy+0x39/0x60 mm/kasan/common.c:106
+ memcpy include/linux/string.h:406 [inline]
+ mlxsw_pci_cmd_exec+0x177/0xa60 drivers/net/ethernet/mellanox/mlxsw/pci.c:1675
+ mlxsw_cmd_exec+0x249/0x550 drivers/net/ethernet/mellanox/mlxsw/core.c:2335
+ mlxsw_cmd_access_reg drivers/net/ethernet/mellanox/mlxsw/cmd.h:859 [inline]
+ mlxsw_core_reg_access_cmd drivers/net/ethernet/mellanox/mlxsw/core.c:1938 [inline]
+ mlxsw_core_reg_access+0x2f6/0x540 drivers/net/ethernet/mellanox/mlxsw/core.c:1985
+ mlxsw_reg_query drivers/net/ethernet/mellanox/mlxsw/core.c:2000 [inline]
+ mlxsw_devlink_info_get+0x17f/0x6e0 drivers/net/ethernet/mellanox/mlxsw/core.c:1090
+ devlink_nl_info_fill.constprop.0+0x13c/0x2d0 net/core/devlink.c:4588
+ devlink_nl_cmd_info_get_dumpit+0x246/0x460 net/core/devlink.c:4648
+ genl_lock_dumpit+0x85/0xc0 net/netlink/genetlink.c:575
+ netlink_dump+0x515/0xe50 net/netlink/af_netlink.c:2245
+ __netlink_dump_start+0x53d/0x830 net/netlink/af_netlink.c:2353
+ genl_family_rcv_msg_dumpit.isra.0+0x296/0x300 net/netlink/genetlink.c:638
+ genl_family_rcv_msg net/netlink/genetlink.c:733 [inline]
+ genl_rcv_msg+0x78d/0x9d0 net/netlink/genetlink.c:753
+ netlink_rcv_skb+0x152/0x440 net/netlink/af_netlink.c:2469
+ genl_rcv+0x24/0x40 net/netlink/genetlink.c:764
+ netlink_unicast_kernel net/netlink/af_netlink.c:1303 [inline]
+ netlink_unicast+0x53a/0x750 net/netlink/af_netlink.c:1329
+ netlink_sendmsg+0x850/0xd90 net/netlink/af_netlink.c:1918
+ sock_sendmsg_nosec net/socket.c:652 [inline]
+ sock_sendmsg+0x150/0x190 net/socket.c:672
+ ____sys_sendmsg+0x6d8/0x840 net/socket.c:2363
+ ___sys_sendmsg+0xff/0x170 net/socket.c:2417
+ __sys_sendmsg+0xe5/0x1b0 net/socket.c:2450
+ do_syscall_64+0x56/0xa0 arch/x86/entry/common.c:359
+ entry_SYSCALL_64_after_hwframe+0x44/0xa9
+
+Fixes: a9c8336f6544 ("mlxsw: core: Add support for devlink info command")
+Signed-off-by: Ido Schimmel <idosch@mellanox.com>
+Reviewed-by: Jiri Pirko <jiri@mellanox.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/hw/hfi1/init.c     |   27 +++++++++++++++++++++++----
- drivers/infiniband/hw/hfi1/qp.c       |    5 ++++-
- drivers/infiniband/hw/hfi1/tid_rdma.c |    5 ++++-
- 3 files changed, 31 insertions(+), 6 deletions(-)
+ drivers/net/ethernet/mellanox/mlxsw/pci.c | 54 ++++++++++++++++-------
+ 1 file changed, 38 insertions(+), 16 deletions(-)
 
---- a/drivers/infiniband/hw/hfi1/init.c
-+++ b/drivers/infiniband/hw/hfi1/init.c
-@@ -829,6 +829,25 @@ wq_error:
+diff --git a/drivers/net/ethernet/mellanox/mlxsw/pci.c b/drivers/net/ethernet/mellanox/mlxsw/pci.c
+index fd0e97de44e7a..c04ec1a928260 100644
+--- a/drivers/net/ethernet/mellanox/mlxsw/pci.c
++++ b/drivers/net/ethernet/mellanox/mlxsw/pci.c
+@@ -1414,23 +1414,12 @@ static int mlxsw_pci_init(void *bus_priv, struct mlxsw_core *mlxsw_core,
+ 	u16 num_pages;
+ 	int err;
+ 
+-	mutex_init(&mlxsw_pci->cmd.lock);
+-	init_waitqueue_head(&mlxsw_pci->cmd.wait);
+-
+ 	mlxsw_pci->core = mlxsw_core;
+ 
+ 	mbox = mlxsw_cmd_mbox_alloc();
+ 	if (!mbox)
+ 		return -ENOMEM;
+ 
+-	err = mlxsw_pci_mbox_alloc(mlxsw_pci, &mlxsw_pci->cmd.in_mbox);
+-	if (err)
+-		goto mbox_put;
+-
+-	err = mlxsw_pci_mbox_alloc(mlxsw_pci, &mlxsw_pci->cmd.out_mbox);
+-	if (err)
+-		goto err_out_mbox_alloc;
+-
+ 	err = mlxsw_pci_sw_reset(mlxsw_pci, mlxsw_pci->id);
+ 	if (err)
+ 		goto err_sw_reset;
+@@ -1537,9 +1526,6 @@ static int mlxsw_pci_init(void *bus_priv, struct mlxsw_core *mlxsw_core,
+ 	mlxsw_pci_free_irq_vectors(mlxsw_pci);
+ err_alloc_irq:
+ err_sw_reset:
+-	mlxsw_pci_mbox_free(mlxsw_pci, &mlxsw_pci->cmd.out_mbox);
+-err_out_mbox_alloc:
+-	mlxsw_pci_mbox_free(mlxsw_pci, &mlxsw_pci->cmd.in_mbox);
+ mbox_put:
+ 	mlxsw_cmd_mbox_free(mbox);
+ 	return err;
+@@ -1553,8 +1539,6 @@ static void mlxsw_pci_fini(void *bus_priv)
+ 	mlxsw_pci_aqs_fini(mlxsw_pci);
+ 	mlxsw_pci_fw_area_fini(mlxsw_pci);
+ 	mlxsw_pci_free_irq_vectors(mlxsw_pci);
+-	mlxsw_pci_mbox_free(mlxsw_pci, &mlxsw_pci->cmd.out_mbox);
+-	mlxsw_pci_mbox_free(mlxsw_pci, &mlxsw_pci->cmd.in_mbox);
  }
  
- /**
-+ * destroy_workqueues - destroy per port workqueues
-+ * @dd: the hfi1_ib device
-+ */
-+static void destroy_workqueues(struct hfi1_devdata *dd)
+ static struct mlxsw_pci_queue *
+@@ -1776,6 +1760,37 @@ static const struct mlxsw_bus mlxsw_pci_bus = {
+ 	.features		= MLXSW_BUS_F_TXRX | MLXSW_BUS_F_RESET,
+ };
+ 
++static int mlxsw_pci_cmd_init(struct mlxsw_pci *mlxsw_pci)
 +{
-+	int pidx;
-+	struct hfi1_pportdata *ppd;
++	int err;
 +
-+	for (pidx = 0; pidx < dd->num_pports; ++pidx) {
-+		ppd = dd->pport + pidx;
++	mutex_init(&mlxsw_pci->cmd.lock);
++	init_waitqueue_head(&mlxsw_pci->cmd.wait);
 +
-+		if (ppd->hfi1_wq) {
-+			destroy_workqueue(ppd->hfi1_wq);
-+			ppd->hfi1_wq = NULL;
-+		}
-+	}
++	err = mlxsw_pci_mbox_alloc(mlxsw_pci, &mlxsw_pci->cmd.in_mbox);
++	if (err)
++		goto err_in_mbox_alloc;
++
++	err = mlxsw_pci_mbox_alloc(mlxsw_pci, &mlxsw_pci->cmd.out_mbox);
++	if (err)
++		goto err_out_mbox_alloc;
++
++	return 0;
++
++err_out_mbox_alloc:
++	mlxsw_pci_mbox_free(mlxsw_pci, &mlxsw_pci->cmd.in_mbox);
++err_in_mbox_alloc:
++	mutex_destroy(&mlxsw_pci->cmd.lock);
++	return err;
 +}
 +
-+/**
-  * enable_general_intr() - Enable the IRQs that will be handled by the
-  * general interrupt handler.
-  * @dd: valid devdata
-@@ -1102,11 +1121,10 @@ static void shutdown_device(struct hfi1_
- 		 */
- 		hfi1_quiet_serdes(ppd);
- 
--		if (ppd->hfi1_wq) {
--			destroy_workqueue(ppd->hfi1_wq);
--			ppd->hfi1_wq = NULL;
--		}
-+		if (ppd->hfi1_wq)
-+			flush_workqueue(ppd->hfi1_wq);
- 		if (ppd->link_wq) {
-+			flush_workqueue(ppd->link_wq);
- 			destroy_workqueue(ppd->link_wq);
- 			ppd->link_wq = NULL;
- 		}
-@@ -1757,6 +1775,7 @@ static void remove_one(struct pci_dev *p
- 	 * clear dma engines, etc.
- 	 */
- 	shutdown_device(dd);
-+	destroy_workqueues(dd);
- 
- 	stop_timers(dd);
- 
---- a/drivers/infiniband/hw/hfi1/qp.c
-+++ b/drivers/infiniband/hw/hfi1/qp.c
-@@ -381,7 +381,10 @@ bool _hfi1_schedule_send(struct rvt_qp *
- 	struct hfi1_ibport *ibp =
- 		to_iport(qp->ibqp.device, qp->port_num);
- 	struct hfi1_pportdata *ppd = ppd_from_ibp(ibp);
--	struct hfi1_devdata *dd = dd_from_ibdev(qp->ibqp.device);
-+	struct hfi1_devdata *dd = ppd->dd;
++static void mlxsw_pci_cmd_fini(struct mlxsw_pci *mlxsw_pci)
++{
++	mlxsw_pci_mbox_free(mlxsw_pci, &mlxsw_pci->cmd.out_mbox);
++	mlxsw_pci_mbox_free(mlxsw_pci, &mlxsw_pci->cmd.in_mbox);
++	mutex_destroy(&mlxsw_pci->cmd.lock);
++}
 +
-+	if (dd->flags & HFI1_SHUTDOWN)
-+		return true;
+ static int mlxsw_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+ {
+ 	const char *driver_name = pdev->driver->name;
+@@ -1831,6 +1846,10 @@ static int mlxsw_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+ 	mlxsw_pci->pdev = pdev;
+ 	pci_set_drvdata(pdev, mlxsw_pci);
  
- 	return iowait_schedule(&priv->s_iowait, ppd->hfi1_wq,
- 			       priv->s_sde ?
---- a/drivers/infiniband/hw/hfi1/tid_rdma.c
-+++ b/drivers/infiniband/hw/hfi1/tid_rdma.c
-@@ -5406,7 +5406,10 @@ static bool _hfi1_schedule_tid_send(stru
- 	struct hfi1_ibport *ibp =
- 		to_iport(qp->ibqp.device, qp->port_num);
- 	struct hfi1_pportdata *ppd = ppd_from_ibp(ibp);
--	struct hfi1_devdata *dd = dd_from_ibdev(qp->ibqp.device);
-+	struct hfi1_devdata *dd = ppd->dd;
++	err = mlxsw_pci_cmd_init(mlxsw_pci);
++	if (err)
++		goto err_pci_cmd_init;
 +
-+	if ((dd->flags & HFI1_SHUTDOWN))
-+		return true;
+ 	mlxsw_pci->bus_info.device_kind = driver_name;
+ 	mlxsw_pci->bus_info.device_name = pci_name(mlxsw_pci->pdev);
+ 	mlxsw_pci->bus_info.dev = &pdev->dev;
+@@ -1848,6 +1867,8 @@ static int mlxsw_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+ 	return 0;
  
- 	return iowait_tid_schedule(&priv->s_iowait, ppd->hfi1_wq,
- 				   priv->s_sde ?
+ err_bus_device_register:
++	mlxsw_pci_cmd_fini(mlxsw_pci);
++err_pci_cmd_init:
+ 	iounmap(mlxsw_pci->hw_addr);
+ err_ioremap:
+ err_pci_resource_len_check:
+@@ -1865,6 +1886,7 @@ static void mlxsw_pci_remove(struct pci_dev *pdev)
+ 	struct mlxsw_pci *mlxsw_pci = pci_get_drvdata(pdev);
+ 
+ 	mlxsw_core_bus_device_unregister(mlxsw_pci->core, false);
++	mlxsw_pci_cmd_fini(mlxsw_pci);
+ 	iounmap(mlxsw_pci->hw_addr);
+ 	pci_release_regions(mlxsw_pci->pdev);
+ 	pci_disable_device(mlxsw_pci->pdev);
+-- 
+2.25.1
+
 
 
