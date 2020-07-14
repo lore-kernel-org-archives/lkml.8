@@ -2,88 +2,99 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 231A4C433E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 17:30:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C94DC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 17:31:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 028DC22450
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 17:30:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5BE202074A
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 17:31:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hgdDu5IX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728494AbgGNRav (ORCPT
+        id S1728788AbgGNRb6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 13:30:51 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:42931 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726364AbgGNRav (ORCPT
+        Tue, 14 Jul 2020 13:31:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54338 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726364AbgGNRb5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 13:30:51 -0400
-Received: by mail-ot1-f67.google.com with SMTP id g37so13625772otb.9;
-        Tue, 14 Jul 2020 10:30:50 -0700 (PDT)
+        Tue, 14 Jul 2020 13:31:57 -0400
+Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9549DC061755;
+        Tue, 14 Jul 2020 10:31:57 -0700 (PDT)
+Received: by mail-pf1-x443.google.com with SMTP id q17so7861712pfu.8;
+        Tue, 14 Jul 2020 10:31:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=p4yQKBD4fuwZyX2aETXM/9xgpuX9woM9ISDFBgC0eEo=;
+        b=hgdDu5IXgKoUF/NpPM3mJGnRCEDFXInBPWokzl3DS3yeuLSlVIr2+DWjzs99yFe8z1
+         JpqDSj05bcmw1cxyu79Uqa0D2ZKvneZq+bEJbQIkodfwEUvofIew2PljkoB0L7agyNBz
+         +RH94KpBuar0gPe+YNG0sLXCipU+jfW6M4WcLAdJr6XJ63fvKwFpgx6HCDDc83jOZ0WJ
+         EdGC7a708SugCkaPTC+CxN+lNWs40CRowBZMF0wzGl1288zbJShWB+XAx8n+GVgu6ag+
+         u2s8xgD2FVBVz7TfvLE2x6Mvf4Ux66G8PEWqLdvL3d/GoX6kWoF+eUXjn809ySXLtCyb
+         XyPw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=M/cNHRoFa4ZZjmVaGoyconZpvhXMck6nqNSnofkb4M4=;
-        b=nrNtTWExrjtJQTMqOuFC0PAiJU1mI/zJaZ5gl6ioFdR3nAr+sVfZYOg8crKEvKjSXm
-         dyVHI8L40O/1VV5iEXwufeH8Uy1WBT5jDCqtjv8SEgLEU/qWYha2Kqq9AbHOOGN+/aQM
-         8pnjatAYfL1KJI1pF2e741MZ4Squs58N8rmMlHFYdAW2gGwLk50l6VSKoeqGv9Lr3YLO
-         7tdbAXi5B2ozV+GR0VZGUicWeZNhJs+BgX/n6gZPImmD0YqMAwzH27A4qUL/m3Rj1ng5
-         cULTWwcxf00Qsq7T0Ffa896lhDZemrI5hxgx/sDsf/0HPr/3l9UZOtZbXBzRWyupUQDK
-         0cFg==
-X-Gm-Message-State: AOAM531qjhyic5O5654wnIwMrO9mqw55motHZpo07AZe5Whr5i2oaI5U
-        IdZDpAorSBMZfloE4lmRdb54Z48sHyNenaQCLyc5BINH
-X-Google-Smtp-Source: ABdhPJyjtOKVrskn2k0uotMlFr81PpuggxZ+Bi4Vw/Z+yFlzfzcEe35xF2O5iYz07cLAkDBRX5w969ExRVCIDRcAt/8=
-X-Received: by 2002:a9d:1b0d:: with SMTP id l13mr4989325otl.145.1594747850060;
- Tue, 14 Jul 2020 10:30:50 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=p4yQKBD4fuwZyX2aETXM/9xgpuX9woM9ISDFBgC0eEo=;
+        b=V+N56I0btL/HrUb2Xr1J5AvxayjRuTsYH5Bz8+DA0kHG+mfCffhXTMO7ZOzAj2qYU6
+         Aj75TVT4kegMBuMkfGBHvT0XpPZyFycIKZkBdMtAYBS20P5zZ0ARGBoU4OGHRGvPWd+W
+         FeyEfJkZgCBQw31UWDYo3ycaPyFIFESRMHSdngKOzJDS8LEa1/cSl9eaKZCoTNRTVKd5
+         ScSLF9XLRoHXST8tbhNK6OFMNjE9fWE0qFwMphWqAwxB5miNGIhcLNVgkHEcCokz3aAT
+         Y5lan4fHjlQcZAzGyXB2y1mhbih4UCa0x+8RgRvM82PvKk2HrRv+rD6DvTch2eo9sFCZ
+         XMiQ==
+X-Gm-Message-State: AOAM531eOB3XQZpRJGuP7GTsdXw9xDRhTzjIatW1CJ0xfWZM8XMgCmDC
+        qSyVY6RK/G3EoRFCbTlI2wOXGf0m
+X-Google-Smtp-Source: ABdhPJzFRXKIoZ8eRflYavclbmHPZtFmEJ0GgvuIIIgy8GHja5RF5nIXHemnbhLV8L3FnH9d+OoR/g==
+X-Received: by 2002:a63:481:: with SMTP id 123mr3960220pge.2.1594747917115;
+        Tue, 14 Jul 2020 10:31:57 -0700 (PDT)
+Received: from ast-mbp.dhcp.thefacebook.com ([2620:10d:c090:400::5:96f0])
+        by smtp.gmail.com with ESMTPSA id q6sm17745902pfg.76.2020.07.14.10.31.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 14 Jul 2020 10:31:56 -0700 (PDT)
+Date:   Tue, 14 Jul 2020 10:31:54 -0700
+From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
+To:     Matteo Croce <mcroce@linux.microsoft.com>
+Cc:     bpf@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>
+Subject: Re: [PATCH bpf-next] bpf: allow loading instructions from a fd
+Message-ID: <20200714173154.i2wxhm4n4ob7sfpd@ast-mbp.dhcp.thefacebook.com>
+References: <20200713130511.6942-1-mcroce@linux.microsoft.com>
 MIME-Version: 1.0
-References: <20200710062019.28755-1-grandmaster@al2klimov.de>
- <20200713113430.1c1777bb@lwn.net> <CAMuHMdXoUME_dCOZP1N0tXyMv61edfNECM4-n4NPa56YbBCncw@mail.gmail.com>
- <20200714074022.24481c73@lwn.net>
-In-Reply-To: <20200714074022.24481c73@lwn.net>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Tue, 14 Jul 2020 19:30:38 +0200
-Message-ID: <CAMuHMdXMumw9CnMHOc_GJGO0MNsLowTv-wE399BMJveXgTXbLQ@mail.gmail.com>
-Subject: Re: [PATCH] OPENRISC ARCHITECTURE: Replace HTTP links with HTTPS ones
-To:     Jonathan Corbet <corbet@lwn.net>
-Cc:     "Alexander A. Klimov" <grandmaster@al2klimov.de>,
-        Jonas Bonn <jonas@southpole.se>,
-        Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>,
-        Stafford Horne <shorne@gmail.com>,
-        Openrisc <openrisc@lists.librecores.org>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200713130511.6942-1-mcroce@linux.microsoft.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 14, 2020 at 3:40 PM Jonathan Corbet <corbet@lwn.net> wrote:
-> On Tue, 14 Jul 2020 09:22:39 +0200
-> Geert Uytterhoeven <geert@linux-m68k.org> wrote:
-> > > > -     website         http://openrisc.io
-> > > > +     website         https://openrisc.io
-> > > >       email           openrisc@lists.librecores.org
-> > > >       =======         =============================
-> > >
-> > > Applied, thanks.
-> >
-> > Is that site accessible for anyone? It times out for me.
->
-> Works for me.
+On Mon, Jul 13, 2020 at 03:05:11PM +0200, Matteo Croce wrote:
+> From: Matteo Croce <mcroce@microsoft.com>
+> 
+> Allow to load the BPF instructons from a file descriptor,
+> other than a pointer.
+> 
+> This is required by the Integrity Subsystem to validate the source of
+> the instructions.
+> 
+> In bpf_attr replace 'insns', which is an u64, to a union containing also
+> the file descriptor as int.
+> A new BPF_F_LOAD_BY_FD flag tells bpf_prog_load() to load
+> the instructions from file descriptor and ignore the pointer.
+> 
+> As BPF files usually are regular ELF files, start reading from the
+> current file position, so the userspace can skip the ELF header and jump
+> to the right section.
 
-Now it indeed does.
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+That is not the case at all.
+Have you looked at amount of work libbpf is doing with elf file before
+raw instructions become suitable to be loaded by the kernel?
