@@ -2,100 +2,92 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A4B1C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 01:08:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3260C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 01:22:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5C84E21841
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 01:08:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F575206F0
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 01:22:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="svBxC2pH"
+	dkim=pass (2048-bit key) header.d=aol.com header.i=@aol.com header.b="ODio+wTg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726767AbgGNBIa (ORCPT
+        id S1726929AbgGNBWy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 21:08:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43666 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726364AbgGNBI3 (ORCPT
+        Mon, 13 Jul 2020 21:22:54 -0400
+Received: from sonic315-55.consmr.mail.gq1.yahoo.com ([98.137.65.31]:36112
+        "EHLO sonic315-55.consmr.mail.gq1.yahoo.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726364AbgGNBWy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 21:08:29 -0400
-Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4B949C061755
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 18:08:29 -0700 (PDT)
-Received: by mail-pj1-x1043.google.com with SMTP id f16so732193pjt.0
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 18:08:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:references:from:message-id:date:user-agent:mime-version
-         :in-reply-to:content-language:content-transfer-encoding;
-        bh=0UDBsOmZ33D1jxEA/FhoZCPCt2o2bA5IJ1Yx0QIpJv8=;
-        b=svBxC2pHFv0oOInJ5KG3TN7I2C0/vQ/GW2X7lZe+ra21V61maz0H9iihEiCeW63kDU
-         nmSX/ctT9WhqVoQGf3aHV7dbp+o56tvBedbuX1JuIq3y3vq7tu/0TWhtAZ8TBAnpLQDM
-         uNtRaryp5hIvgS3cxVY/iz+Y2yy2RxoaksFl5mnpgSvHE10v4E8u5xvIYBD7wgzrW8I6
-         LOE/c6BZCknMANK6AnKqZjm9sFAzV4zQfacS6rbX6Ps6puLFfkTR6mxzMNrjlePGVBp7
-         xuIZb5lsizlR1qOCiR0UpSQvbGUmrAkrCt+SJ8kCFDoimgiBBlIUG5kCHiXm4xAsbKrq
-         LENA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=0UDBsOmZ33D1jxEA/FhoZCPCt2o2bA5IJ1Yx0QIpJv8=;
-        b=ELzMnJcPsXfzfEFPWUZVAgkgic3R2zno6dShVvEd9765BzrVLYJ/tTYOt+6gmsg2hI
-         5xWDtiOsbI2oO6euXaFgaGQ8oxGiLqzL4QhySPxvnP39QihWH/PDPinAY21ohMwlHS8g
-         JMEujJFIXNA4qZawNgVyG81K6GSpJB21Enl/00oU8UL6ANhCi5HxcLxOY5I+eVzm8Wj1
-         fY/DgfnZ9AHEaUmYZRWONIYR/tROeIz4c+LWQkmOc0sdGz3cB3w3v/iWHAgcwfOLu/vT
-         pxUExc9FtzYhqqcCuHY7v1hVhOm0I+YwwE6d9Xcx8Ub12D6yAgQWcJxY8+SCo80lpxjL
-         aHzw==
-X-Gm-Message-State: AOAM530FEyWl7yDww0Bhtnd5PP8dDkUv2ArkfIjMOeW55S1yoV8Bm4va
-        UR/Uu2lf1fULGO1vIhpgos2FIydJEsdAkA==
-X-Google-Smtp-Source: ABdhPJyGU03phPN5hAdUXP+3DHWo3YYYwZykKV/+KVf+6qeI90BOcAfVc/BDf3l4/D5FeZVDhDj7yg==
-X-Received: by 2002:a17:90a:240a:: with SMTP id h10mr2118382pje.225.1594688908417;
-        Mon, 13 Jul 2020 18:08:28 -0700 (PDT)
-Received: from [192.168.1.182] ([66.219.217.173])
-        by smtp.gmail.com with ESMTPSA id p127sm15779479pfb.17.2020.07.13.18.08.27
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 13 Jul 2020 18:08:27 -0700 (PDT)
-Subject: Re: [PATCH 0/5] batch completion + freeing improvements
-To:     Pavel Begunkov <asml.silence@gmail.com>, io-uring@vger.kernel.org,
+        Mon, 13 Jul 2020 21:22:54 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aol.com; s=a2048; t=1594689773; bh=kSZ8A/K3JBp8LhqRTcQFI6Kag9kj97BCjG/6uEWAlZc=; h=Date:From:To:Cc:Subject:References:In-Reply-To:From:Subject; b=ODio+wTgG8PN6r2cbOHOkXApXvS1xdIi6NXA4PImpbo92ezGIVt3qYUGr3XfmyJF+yz9QOZC7ctmV8OcDl1V5YodnuMr1ZFW0/rHZZBP33k6tRTFN9Zdzdpe11PIaQcCkGq5Vok7ibIRQqAxVpAxHF7k8qT4VeZduSu2Uam/W/O2J80rNGlI1JO8LwSWXlT2A4e4I0wcJgFX8cOqQlb9dmKvgIxk9BZxMVnKjvvY8LPhpVplhLBpbkqukIDPqUxBwEU0yQZsxf8qjXdA8Zr60JcYF65JxYf1BRA8DB5LoeU/b6ER96lnkGBNDGNBvBrHfJ5BbyGrdydPQ3ODolpAMg==
+X-YMail-OSG: .wzDUJ0VM1mceQnxa9_yhOOOke64Dafy9Q9UDbMovPnBzGAmgBzLsOJ7LySXt5a
+ 9J3R9gX9oe_eAvBUo_B055.hPtrQKHHBimBiKNacZeirx8lMzsr8YJBmlNwgPsIUi3zuoOR8xMEh
+ .xD86sEv2WRKPKgvI9IdWwr5suBNFi8ZFZYR_saqcru2b9BpMjZiHPlOhde2PpzD1CkGrkcv_rkT
+ qrz2FY29v5MDLxPO7XAw6g5jOSwCJfhNBw4Wr4yavjFgsFbUVpvL9spTDdyjO6fWQOWQSr_sExdv
+ xyth76vWEaYH6Ha2VNbOjdnOQzTH3jjgiKc.qx_JeiBSE3OtQA0SUw5CkMzX55wTJEgslA3ZELuU
+ I4zajfP7.ITRLJpVvq_SzemDEB6Cx2FTN.6dPlqa_NNfll5opyWdhECoNI06Ba0_X.rIKk000kvb
+ 1f3v3U39bBgm8c9y4EUs1xlVkoB20_Xyx3rvVgN5h1rh1uPZnLguOLr2.Mia3xZMzJGVBE4tIYzN
+ rP5amZ935LW3ov.pGZWs2fNa0BVStIy7nMIChTgC75q1BmlISgtEAT.8Mo5Q.CQ5QRgasnFUr429
+ iW4cR9ZoAsAe6OnmF7Lb5.oZ_DXWInpjHSAbC.kiroM4jtSDjvgc8nqP8NuM7KI4BGjQXW121r94
+ aGtsjEySM2LoEa2svcNlY.gIhZD7jOWOph4F38tqbre7ORBLhuCyK8S70kneBU6lHYJEVVIhhac.
+ 1BsZq2oLgZrTAsFLLzLUJsEu_TWxyDyjjrGX4IIz3g2MMeT.g3aqqcpunRXMNxT8Ax5uvG4hg5H0
+ RHSXZ5rpdYM.4q077o8GTu2es118G3Duh0JlOcGVWbVj92BoSkWyVaCAzgo9PdwvXSZdgN9aLoVe
+ W4CDO319FR_fZx2kSly6a08v9.p8SxbAyE27CDzgyEbeshWIf6goUofcGQ75lHyw.7B7ud4hH3YW
+ eAogDELd2AZBbndnSFpF4oj27JCVmSckNAL972OqJceHhf4Zq6uHeo3UtflRq7pPNbhgItHuGN0L
+ xj2fNssv4F6BaYMCnENMYwnB_EtpvHz4_m1R7blesOIm02bcdW.EK9nYDkHSjHoNTwCv9pIgZNZy
+ kqM0lpLDkoDRZm_s5voyIMhHg065MosNVMU0iVsnqb.DkEngb2duuQTUGwVk.tky2h2EO2Nk1Rjh
+ JI_yAxzmiNp2r9mW4E1zXPvGU04r3BXExwVkEO04Yd.ocJ_UQvoYUOnluZR8wGVN8So4jmhWp5cz
+ KCr2q8eH9IoHQQF7nS55l572onKVaIgsMCU1I6a8sDf0Zn7DRyqDo0e2y9wH_5U8SqJH9djPq9CB
+ XWxnwQO0HSxE1bGZBWCdaNzjzqZq428dy0QBJWplYEkPBMHnAp325Akn6tCdzp_y6_ZqF
+Received: from sonic.gate.mail.ne1.yahoo.com by sonic315.consmr.mail.gq1.yahoo.com with HTTP; Tue, 14 Jul 2020 01:22:53 +0000
+Received: by smtp416.mail.gq1.yahoo.com (VZM Hermes SMTP Server) with ESMTPA ID ccb2d8946b485b8111546e619c1c7f07;
+          Tue, 14 Jul 2020 01:22:51 +0000 (UTC)
+Date:   Tue, 14 Jul 2020 09:22:46 +0800
+From:   Gao Xiang <hsiangkao@aol.com>
+To:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
+Cc:     xiang@kernel.org, chao@kernel.org, linux-erofs@lists.ozlabs.org,
         linux-kernel@vger.kernel.org
-References: <cover.1594683622.git.asml.silence@gmail.com>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <fc03ea42-8f83-1a49-2ea2-9697c797e76b@kernel.dk>
-Date:   Mon, 13 Jul 2020 19:08:26 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+Subject: Re: [PATCH] erofs: Replace HTTP links with HTTPS ones
+Message-ID: <20200714012244.GA18418@hsiangkao-HP-ZHAN-66-Pro-G1>
+References: <20200713130944.34419-1-grandmaster@al2klimov.de>
 MIME-Version: 1.0
-In-Reply-To: <cover.1594683622.git.asml.silence@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200713130944.34419-1-grandmaster@al2klimov.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Mailer: WebService/1.1.16271 hermes_aol Apache-HttpAsyncClient/4.1.4 (Java/11.0.7)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/13/20 5:41 PM, Pavel Begunkov wrote:
-> Different batching improvements, that's it.
+On Mon, Jul 13, 2020 at 03:09:44PM +0200, Alexander A. Klimov wrote:
+> Rationale:
+> Reduces attack surface on kernel devs opening the links for MITM
+> as HTTPS traffic is much harder to manipulate.
 > 
-> Unfortunately, I don't have a decent SSD/setup at hand to
-> benchmark it properly.
+> Deterministic algorithm:
+> For each file:
+>   If not .svg:
+>     For each line:
+>       If doesn't contain `\bxmlns\b`:
+>         For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
+> 	  If neither `\bgnu\.org/license`, nor `\bmozilla\.org/MPL\b`:
+>             If both the HTTP and HTTPS versions
+>             return 200 OK and serve the same content:
+>               Replace HTTP with HTTPS.
+> 
+> Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
 
-I do though, but I'm not seeing any improvement with this, whereas
-some of the previous series made nice improvements... If anything
-maybe it's a bit slower.
+Looks good to me,
+Reviewed-by: Gao Xiang <hsiangkao@redhat.com>
 
-> p.s. if extra 32 pointers on stack would be a problem, I wanted for
-> long to put submit_state into ctx itself.
+(Will apply later with other potential patches...)
 
-It's getting up there... But really depends on how early in the stack,
-so 32 could _probably_ work, though usually batched on-stack counts
-are a bit lower than that.
-
--- 
-Jens Axboe
-
+Thanks,
+Gao Xiang
