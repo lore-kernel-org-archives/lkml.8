@@ -2,161 +2,190 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0049DC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 07:56:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD5B1C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 08:01:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CFB5E217A0
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 07:56:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594713371;
-	bh=qeHxoelopC8fC8i1MYKZLmE+ijVyBr7FSm/jfPrNJf8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=y7GAZKm6lCWwy8g9vh/6SwBk73wU5ZFY4hlSJ7mGFpM2Qs+ucXyHqNHm+Gq5k+A8M
-	 RML/r/gbg32CIIQv19YXrH42PfQAccukioNK2NCyA9k9bjRB2DCaDgOd8byP3pY1El
-	 rhxlRpHi1/GQNIZmG9xshqYtiQgTZi9spo1dYc94=
+	by mail.kernel.org (Postfix) with ESMTP id 8161621582
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 08:01:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="gSGWB+49"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726803AbgGNH4K (ORCPT
+        id S1726769AbgGNIBR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 03:56:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48808 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725833AbgGNH4K (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 03:56:10 -0400
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B46E72145D;
-        Tue, 14 Jul 2020 07:56:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594713369;
-        bh=qeHxoelopC8fC8i1MYKZLmE+ijVyBr7FSm/jfPrNJf8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=fkeT9Yj3tp1TDlDqeq3AhcpLjrOBqs5FOt7gsO1aA2J+sG41iTneHzbLldMqyksjg
-         KtKaUN+u+m6bmGA/fqs07uM46fY8E4Y1giEhRtzqRd0CljhONMXkPmnA/s7Xmvboeh
-         N+obl3zoeIZ1hKl8vv3F9U81LTbfJmMMMUJArlM0=
-Date:   Tue, 14 Jul 2020 08:56:03 +0100
-From:   Will Deacon <will@kernel.org>
-To:     John Stultz <john.stultz@linaro.org>
-Cc:     lkml <linux-kernel@vger.kernel.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Joerg Roedel <joro@8bytes.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Maulik Shah <mkshah@codeaurora.org>,
-        Lina Iyer <ilina@codeaurora.org>,
-        Saravana Kannan <saravanak@google.com>,
-        Todd Kjos <tkjos@google.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        iommu@lists.linux-foundation.org, linux-gpio@vger.kernel.org
-Subject: Re: [PATCH v2 5/5] firmware: QCOM_SCM: Allow qcom_scm driver to be
- loadable as a permenent module
-Message-ID: <20200714075603.GE4277@willie-the-truck>
-References: <20200625001039.56174-1-john.stultz@linaro.org>
- <20200625001039.56174-6-john.stultz@linaro.org>
- <20200702141825.GA16941@willie-the-truck>
- <CALAqxLVZ2EhutYjOt7Be1RgnYwHT6-4m6DxA-t1wuxuSy=6yDQ@mail.gmail.com>
- <20200710075411.GA30011@willie-the-truck>
- <CALAqxLWadLrxckRHRAR0Q417RnFKquQJbRfO_DLEVH56cykRow@mail.gmail.com>
- <20200713204133.GA3731@willie-the-truck>
- <CALAqxLXDVRzWDfuAS78EFwyYs3yr3QrPF3Tze0KAW1fo9c7M2A@mail.gmail.com>
+        Tue, 14 Jul 2020 04:01:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50370 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725816AbgGNIBQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 04:01:16 -0400
+Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 31AB3C061755
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 01:01:16 -0700 (PDT)
+Received: by mail-wm1-x344.google.com with SMTP id o2so3907187wmh.2
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 01:01:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=3ztT/QpJ6PrCphActN8ZP+HT90Nds35MNzsbH5sIelU=;
+        b=gSGWB+49lMVbaphzeSLTo9w7GB7qEMwC4bbiMp1OgiArWtvWIKNyyi/2Aq3I95jJ79
+         dPty4eSAc7AwGcGkdCXiQrwmvm/qEHrEGNB2oxj9fmJOZEytDX2nv7ctd2xQVlggFJ10
+         yZLg0Ve/YIXNOcO8YqKf795Uu3r4g3QcQpnp6ftWay8TlSfLZpDN5psMA1Rw8sYRV0cO
+         WAbOCyPTdp7V/khUNKoljVY0LQ42tKizHWU426sN/mWb0YzGqGNWNGOIxKvfsSeIpaRI
+         ZIloyx4VcMk1Iz44hjlLrm3kRAbw5mc9qSN84T2yxFD0W/hb+DhhiwEYUevNgtR+lCqh
+         TN6w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=3ztT/QpJ6PrCphActN8ZP+HT90Nds35MNzsbH5sIelU=;
+        b=YZeJt/pfS4m9Sv3/D2WMi8gW6zhu+9mB9VfG/bGjpe3Q2Uw2u7fwW7M+6rygEHuKgx
+         7Yk0VlTqSjSuzGhdUheYidaimW8VfaBzQK7YvmPPhzPn4gnoxmyop2ICClmY3i3y+Dwl
+         +AHotnOhBOKiKHJJpwLkUqx4fwR1O4JpHiGnqZbbKzb5slf+1pZTsQVkLYCAGH/JpRab
+         1FSkFh0/RhiIVKUWQeLuUBMP8z/JUEcahHqYYQcw5/+fhsuAcWB7u2lKHb3x47VlS/u2
+         vG6ycZZFphhDO3ZkMcNWfM3oeLLaNI+Anaab79IqZMQ2JsoN5MsOXYX9NJfoEVHzMj+4
+         VTjw==
+X-Gm-Message-State: AOAM531MiJszR6uwGg+zuVZjlHeylJj4riG7KUYW+3YJNca5+pQWz+oT
+        WZqHzEHgNoW4VW4vz71iWWXl3w==
+X-Google-Smtp-Source: ABdhPJzeN2SHrdqPIt1LbkEDBs+YbZAAr6ZyG989rcpJQDX84Mi5m2wsg8bqV9/RfQG/IQu7KXu5wg==
+X-Received: by 2002:a1c:2095:: with SMTP id g143mr2942928wmg.113.1594713674837;
+        Tue, 14 Jul 2020 01:01:14 -0700 (PDT)
+Received: from dell ([2.31.163.61])
+        by smtp.gmail.com with ESMTPSA id e17sm26518093wrr.88.2020.07.14.01.01.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 14 Jul 2020 01:01:14 -0700 (PDT)
+Date:   Tue, 14 Jul 2020 09:01:12 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        "Eurotech S.p.A" <info@eurotech.it>,
+        Rodolfo Giometti <giometti@linux.it>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH 01/10] misc: c2port: core: Ensure source size does not
+ equal destination size in strncpy()
+Message-ID: <20200714080112.GJ3500@dell>
+References: <20200626130525.389469-1-lee.jones@linaro.org>
+ <20200626130525.389469-2-lee.jones@linaro.org>
+ <CAMuHMdVaO3gABJxRzBL+2U9axfAuBLRghSY0vCc9f8a6huiYZg@mail.gmail.com>
+ <20200714074629.GG3500@dell>
+ <CAMuHMdVW_MzdDQk4f0RN-FsaedEr8WHREuTHxymWGpx3CmDX0Q@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <CALAqxLXDVRzWDfuAS78EFwyYs3yr3QrPF3Tze0KAW1fo9c7M2A@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAMuHMdVW_MzdDQk4f0RN-FsaedEr8WHREuTHxymWGpx3CmDX0Q@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 13, 2020 at 01:48:29PM -0700, John Stultz wrote:
-> On Mon, Jul 13, 2020 at 1:41 PM Will Deacon <will@kernel.org> wrote:
-> > On Fri, Jul 10, 2020 at 03:21:53PM -0700, John Stultz wrote:
-> > > On Fri, Jul 10, 2020 at 12:54 AM Will Deacon <will@kernel.org> wrote:
-> > > > On Thu, Jul 09, 2020 at 08:28:45PM -0700, John Stultz wrote:
-> > > > > On Thu, Jul 2, 2020 at 7:18 AM Will Deacon <will@kernel.org> wrote:
-> > > > > > On Thu, Jun 25, 2020 at 12:10:39AM +0000, John Stultz wrote:
-> > > > > > > diff --git a/drivers/iommu/Kconfig b/drivers/iommu/Kconfig
-> > > > > > > index b510f67dfa49..714893535dd2 100644
-> > > > > > > --- a/drivers/iommu/Kconfig
-> > > > > > > +++ b/drivers/iommu/Kconfig
-> > > > > > > @@ -381,6 +381,7 @@ config SPAPR_TCE_IOMMU
-> > > > > > >  config ARM_SMMU
-> > > > > > >       tristate "ARM Ltd. System MMU (SMMU) Support"
-> > > > > > >       depends on (ARM64 || ARM || (COMPILE_TEST && !GENERIC_ATOMIC64)) && MMU
-> > > > > > > +     depends on QCOM_SCM || !QCOM_SCM #if QCOM_SCM=m this can't be =y
-> > > > > > >       select IOMMU_API
-> > > > > > >       select IOMMU_IO_PGTABLE_LPAE
-> > > > > > >       select ARM_DMA_USE_IOMMU if ARM
-> > > > > >
-> > > > > > This looks like a giant hack. Is there another way to handle this?
-> > > > >
-> > > > > Sorry for the slow response here.
-> > > > >
-> > > > > So, I agree the syntax looks strange (requiring a comment obviously
-> > > > > isn't a good sign), but it's a fairly common way to ensure drivers
-> > > > > don't get built in if they optionally depend on another driver that
-> > > > > can be built as a module.
-> > > > >   See "RFKILL || !RFKILL", "EXTCON || !EXTCON", or "USB_GADGET ||
-> > > > > !USB_GADGET" in various Kconfig files.
-> > > > >
-> > > > > I'm open to using a different method, and in a different thread you
-> > > > > suggested using something like symbol_get(). I need to look into it
-> > > > > more, but that approach looks even more messy and prone to runtime
-> > > > > failures. Blocking the unwanted case at build time seems a bit cleaner
-> > > > > to me, even if the syntax is odd.
-> > > >
-> > > > Maybe just split it out then, so that the ARM_SMMU entry doesn't have this,
-> > > > as that driver _really_ doesn't care about SoC details like this. In other
-> > > > words, add a new entry along the lines of:
-> > > >
-> > > >         config ARM_SMMU_QCOM_IMPL
-> > > >         default y
-> > > >         #if QCOM_SCM=m this can't be =y
-> > > >         depends on ARM_SMMU & (QCOM_SCM || !QCOM_SCM)
-> > > >
-> > > > and then have arm-smmu.h provide a static inline qcom_smmu_impl_init()
-> > > > which returns -ENODEV if CONFIG_ARM_SMMU_QCOM_IMPL=n and hack the Makefile
-> > > > so that we don't bother to compile arm-smmu-qcom.o in that case.
-> > > >
-> > > > Would that work?
-> > >
-> > > I think this proposal still has problems with the directionality of the call.
-> > >
-> > > The arm-smmu-impl.o calls to arm-smmu-qcom.o which calls qcom_scm.o
-> > > So if qcom_scm.o is part of a module, the calling code in
-> > > arm-smmu-qcom.o also needs to be a module, which means CONFIG_ARM_SMMU
-> > > needs to be a module.
-> > >
-> > > I know you said the arm-smmu driver doesn't care about SoC details,
-> > > but the trouble is that currently the arm-smmu driver does directly
-> > > call the qcom-scm code. So it is a real dependency. However, if
-> > > QCOM_SCM is not configured, it calls stubs and that's ok.  In that
-> > > way, the "depends on QCOM_SCM || !QCOM_SCM" line actually makes sense.
-> > > It looks terrible because we're used to boolean logic, but it's
-> > > ternary.
-> >
-> > Yes, it looks ugly, but the part I really have issues with is that building
-> > QCOM_SCM=m and ARM_SMMU=y is perfectly fine if you don't run on an SoC
-> > with the qcom implementation. I don't see why we need to enforce things
-> > here beyond making sure that all selectable permutations _build_ and
-> > fail gracefully at runtime on the qcom SoC if SCM isn't available.
+On Tue, 14 Jul 2020, Geert Uytterhoeven wrote:
+
+> Hi Lee,
 > 
-> Ok. Thanks, that context/rationale makes sense to me now!  I'll dig in
-> and see if I can figure out the runtime get_symbol handling you
-> suggested for the scm callout.
+> On Tue, Jul 14, 2020 at 9:46 AM Lee Jones <lee.jones@linaro.org> wrote:
+> > On Mon, 13 Jul 2020, Geert Uytterhoeven wrote:
+> > > On Fri, Jun 26, 2020 at 3:06 PM Lee Jones <lee.jones@linaro.org> wrote:
+> > > > We need to ensure there's a place for the NULL terminator.
+> > >
+> > > But who's filling that space with a NUL (not NULL) terminator?
+> > >
+> > > > Fixes the following W=1 warning(s):
+> > > >
+> > > >  In file included from include/linux/bitmap.h:9,
+> > > >  from include/linux/nodemask.h:95,
+> > > >  from include/linux/mmzone.h:17,
+> > > >  from include/linux/gfp.h:6,
+> > > >  from include/linux/umh.h:4,
+> > > >  from include/linux/kmod.h:9,
+> > > >  from include/linux/module.h:16,
+> > > >  from drivers/misc/c2port/core.c:9:
+> > > >  In function ‘strncpy’,
+> > > >  inlined from ‘c2port_device_register’ at drivers/misc/c2port/core.c:926:2:
+> > > >  include/linux/string.h:297:30: warning: ‘__builtin_strncpy’ specified bound 32 equals destination size [-Wstringop-truncation]
+> > > >  297 | #define __underlying_strncpy __builtin_strncpy
+> > > >  | ^
+> > > >  include/linux/string.h:307:9: note: in expansion of macro ‘__underlying_strncpy’
+> > > >  307 | return __underlying_strncpy(p, q, size);
+> > > >  | ^~~~~~~~~~~~~~~~~~~~
+> > > >
+> > > > Cc: Rodolfo Giometti <giometti@linux.it>
+> > > > Cc: "Eurotech S.p.A" <info@eurotech.it>
+> > > > Signed-off-by: Lee Jones <lee.jones@linaro.org>
+> > > > ---
+> > > >  drivers/misc/c2port/core.c | 2 +-
+> > > >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > > >
+> > > > diff --git a/drivers/misc/c2port/core.c b/drivers/misc/c2port/core.c
+> > > > index 33bba18022892..80d87e8a0bea9 100644
+> > > > --- a/drivers/misc/c2port/core.c
+> > > > +++ b/drivers/misc/c2port/core.c
+> > > > @@ -923,7 +923,7 @@ struct c2port_device *c2port_device_register(char *name,
+> > > >         }
+> > > >         dev_set_drvdata(c2dev->dev, c2dev);
+> > >
+> > > c2dev is allocated using:
+> > >
+> > >         c2dev = kmalloc(sizeof(struct c2port_device), GFP_KERNEL);
+> > >
+> > > hence the allocated memory is not zeroed.
+> > >
+> > > >
+> > > > -       strncpy(c2dev->name, name, C2PORT_NAME_LEN);
+> > > > +       strncpy(c2dev->name, name, C2PORT_NAME_LEN - 1);
+> > >
+> > > strncpy()
+> > >   1. does not terminate the destination with a NUL if the source length
+> > >       is C2PORT_NAME_LEN - 1,
+> > >   2. fills all remaining space in the destination buffer with NUL characters.
+> > >
+> > > So c2dev.name[C2PORT_NAME_LEN - 1] always contains an uninitialized
+> > > value.
+> > >
+> > > Now, it seems the only caller of c2port_device_register() passes
+> > > "uc" as the name.  Which means in practice c2dev.name[] will be
+> > > NUL-terminated. However, the last byte will still be uninitialized, and
+> > > if the buffer is ever copied to userspace, your patch will have introduced
+> > > a leak.
+> >
+> > Quite right.  Good spot.  I must have made the assumption that the
+> > destination buffer would be pre-initialised.  Not sure why it's not in
+> > this case.  Seems like an odd practice.
+> >
+> > So we have a choice.  We can either enlarge the destination buffer to
+> > *actually* allow a full length (32 byte in this case) naming string,
+> > or zero the buffer.
+> >
+> > Or even both!
+> >
+> > Do you have a preference?
+> 
+> Do we know if the buffer or full c2dev struct is ever copied to userspace?
 
-Cheers, but in the interest of not being a massive pain in the bum, please
-yell if it ends up being tonnes of work and I'll close my eyes while
-applying your original patch.
+I don't know that, but I think we should err on the side of caution.
 
-Will
+> If it may be copied => kalloc().
+
+Do you mean kzalloc()?
+
+> If it will never be copied => strlcpy() (no NUL-padding, only NUL-terminator).
+> 
+> Oh, and there is a newer one on the block (which I always have to lookup),
+> which is preferred over strlcpy() and strncpy(): strscpy().
+> And reading lib/string.c, there's strscpy_pad(), too ;-)
+
+Let's not get too crazy. ;)
+
+-- 
+Lee Jones [李琼斯]
+Senior Technical Lead - Developer Services
+Linaro.org │ Open source software for Arm SoCs
+Follow Linaro: Facebook | Twitter | Blog
