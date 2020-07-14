@@ -7,49 +7,49 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 018A4C433E4
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 14:44:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EAB42C433E5
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 14:44:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C683D2082F
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 14:44:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B71282064B
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 14:44:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594737883;
-	bh=ePzMsZXUTslGkSsNhaVZcjTY3pwqZrmfziQBGeiOnbY=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=iJGxLB1O39p+m0+Dedygq85LF++yzP374CAzMdOdX32+BfdQvf7Sj8pXOAJipYhMr
-	 MdpYuV0P1DAK9pnif5iULzftqLaBOEZk0mJzD7NhnCFOX0lCSscnrVDnQ2rRdOOgOH
-	 WroHaO0AJcnRuLAJfCW/37sDIEWVbl/pHUif3bPQ=
+	s=default; t=1594737889;
+	bh=cToFvjwH/rD41ff8mryTBGVqToQbljdz/cOulN4Cwqg=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=g+rKCLFPSm4erOHMiU3IQ+KXgu3UdGI3Kunbaet4RMtVPks5udOaXrfUhl+HfGZMe
+	 ir04fsYvm2YNEMHkSGdEzSbOoJInS8Yz9vK8nOCIHm7BNLL25FAeSjxOyvyIppJuZ1
+	 3lI0PQzhTlokj00jok3VrxiHJkRzADK8UMczz7o0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729530AbgGNOol (ORCPT
+        id S1729279AbgGNOos (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 10:44:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54546 "EHLO mail.kernel.org"
+        Tue, 14 Jul 2020 10:44:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54426 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728879AbgGNOjQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 10:39:16 -0400
+        id S1728833AbgGNOjL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 10:39:11 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5B612222C8;
-        Tue, 14 Jul 2020 14:39:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5AA5A2253A;
+        Tue, 14 Jul 2020 14:39:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594737556;
-        bh=ePzMsZXUTslGkSsNhaVZcjTY3pwqZrmfziQBGeiOnbY=;
-        h=From:To:Cc:Subject:Date:From;
-        b=D0OKB/yCxw49myf5J7ZmM+DR/msFBRLXQYJ8CcbbaUEnY7jKzo6+JNTZN0Olqg3As
-         e5SmYx3AXVISI0Nos+mlZaaeAPstlApsD3nQ204iibqGcscPJQmWTaXmyNNwOhxHLP
-         QAWIi029t7v4mp9zS8zmsh4CD5Nz3Zq8ir54Esgc=
+        s=default; t=1594737551;
+        bh=cToFvjwH/rD41ff8mryTBGVqToQbljdz/cOulN4Cwqg=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=yax5IgWc9zLyDzpAQqcPs/DTiQYX5tuu8qBCRx+IG37s3eG1w5Z1pFC/5NUAZUjmq
+         JeEHIvko+pEguLnp+USNy0x0W0xYBtAWg3dPCc+gUlem/bMokntE3iI0Y5oRL609wl
+         MIwLVy1btGz0EK0AQWejoDTKTRI5d3ihk+JNamqE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Navid Emamdoost <navid.emamdoost@gmail.com>,
-        Charles Keepax <ckeepax@opensource.cirrus.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Sasha Levin <sashal@kernel.org>, patches@opensource.cirrus.com,
-        linux-gpio@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 01/18] gpio: arizona: handle pm_runtime_get_sync failure case
-Date:   Tue, 14 Jul 2020 10:38:57 -0400
-Message-Id: <20200714143914.4035489-1-sashal@kernel.org>
+Cc:     Steve Schremmer <steve.schremmer@netapp.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.7 17/19] scsi: dh: Add Fujitsu device to devinfo and dh lists
+Date:   Tue, 14 Jul 2020 10:38:47 -0400
+Message-Id: <20200714143849.4035283-17-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200714143849.4035283-1-sashal@kernel.org>
+References: <20200714143849.4035283-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -59,35 +59,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Navid Emamdoost <navid.emamdoost@gmail.com>
+From: Steve Schremmer <steve.schremmer@netapp.com>
 
-[ Upstream commit e6f390a834b56583e6fc0949822644ce92fbb107 ]
+[ Upstream commit e094fd346021b820f37188aaa6b502c7490ab5b5 ]
 
-Calling pm_runtime_get_sync increments the counter even in case of
-failure, causing incorrect ref count. Call pm_runtime_put if
-pm_runtime_get_sync fails.
+Add FUJITSU ETERNUS_AHB
 
-Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
-Acked-by: Charles Keepax <ckeepax@opensource.cirrus.com>
-Link: https://lore.kernel.org/r/20200605025207.65719-1-navid.emamdoost@gmail.com
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Link: https://lore.kernel.org/r/DM6PR06MB5276CCA765336BD312C4282E8C660@DM6PR06MB5276.namprd06.prod.outlook.com
+Signed-off-by: Steve Schremmer <steve.schremmer@netapp.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpio/gpio-arizona.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/scsi/scsi_devinfo.c | 1 +
+ drivers/scsi/scsi_dh.c      | 1 +
+ 2 files changed, 2 insertions(+)
 
-diff --git a/drivers/gpio/gpio-arizona.c b/drivers/gpio/gpio-arizona.c
-index 5640efe5e7504..7520a13b4c7ca 100644
---- a/drivers/gpio/gpio-arizona.c
-+++ b/drivers/gpio/gpio-arizona.c
-@@ -106,6 +106,7 @@ static int arizona_gpio_direction_out(struct gpio_chip *chip,
- 		ret = pm_runtime_get_sync(chip->parent);
- 		if (ret < 0) {
- 			dev_err(chip->parent, "Failed to resume: %d\n", ret);
-+			pm_runtime_put(chip->parent);
- 			return ret;
- 		}
- 	}
+diff --git a/drivers/scsi/scsi_devinfo.c b/drivers/scsi/scsi_devinfo.c
+index eed31021e7885..ba84244c1b4f6 100644
+--- a/drivers/scsi/scsi_devinfo.c
++++ b/drivers/scsi/scsi_devinfo.c
+@@ -239,6 +239,7 @@ static struct {
+ 	{"LSI", "Universal Xport", "*", BLIST_NO_ULD_ATTACH},
+ 	{"ENGENIO", "Universal Xport", "*", BLIST_NO_ULD_ATTACH},
+ 	{"LENOVO", "Universal Xport", "*", BLIST_NO_ULD_ATTACH},
++	{"FUJITSU", "Universal Xport", "*", BLIST_NO_ULD_ATTACH},
+ 	{"SanDisk", "Cruzer Blade", NULL, BLIST_TRY_VPD_PAGES |
+ 		BLIST_INQUIRY_36},
+ 	{"SMSC", "USB 2 HS-CF", NULL, BLIST_SPARSELUN | BLIST_INQUIRY_36},
+diff --git a/drivers/scsi/scsi_dh.c b/drivers/scsi/scsi_dh.c
+index 42f0550d6b11f..6f41e4b5a2b85 100644
+--- a/drivers/scsi/scsi_dh.c
++++ b/drivers/scsi/scsi_dh.c
+@@ -63,6 +63,7 @@ static const struct scsi_dh_blist scsi_dh_blist[] = {
+ 	{"LSI", "INF-01-00",		"rdac", },
+ 	{"ENGENIO", "INF-01-00",	"rdac", },
+ 	{"LENOVO", "DE_Series",		"rdac", },
++	{"FUJITSU", "ETERNUS_AHB",	"rdac", },
+ 	{NULL, NULL,			NULL },
+ };
+ 
 -- 
 2.25.1
 
