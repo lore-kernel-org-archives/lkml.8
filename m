@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E22FC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:58:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5F41C433F7
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:58:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5D53222B37
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:58:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD2E522B30
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:58:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594753101;
-	bh=Wegz6/ipsnYUokJXvOMieFYrk6wYPm9LCT/S3tzRTt0=;
+	s=default; t=1594753104;
+	bh=++xeluKFGWT+3/SC5dEdlfa+Jt6oboYeozUTFtyjtvg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OvMAX6iOoxj+LPtB5YnSZDYbJO0sZSZ02MHz+ahJPBoTKbMHvjL/TTLx/a0my3YLs
-	 FHYCCWU/e942kHtDswcEVPQUkfbuv+FIVjqzXiXf4U8pn0BRfUdWOMe/7dTDo0bM9w
-	 0bd2jiDOw7+bU6YbavSWu5GSLxoKYxDnwW3lC6TE=
+	b=FKHrVZKNnC3or7cvh/I5vIhpePKqS80Dyc9zZkCoK9UlYE4QrAmLm+hr0PUFoUpaq
+	 xzjYDKpG7p4ibNrtBtLgOCZ8aENMd74Aj+Eb5HD7XvLhc1vq3+rEMlYeb8n4LGfoCq
+	 2bHaIKP0ybYnIbkHHhPY+eJSgnbn30i+4uWYOkwg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730570AbgGNS6U (ORCPT
+        id S1730828AbgGNS6X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 14:58:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56610 "EHLO mail.kernel.org"
+        Tue, 14 Jul 2020 14:58:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56692 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730813AbgGNS6N (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 14:58:13 -0400
+        id S1731196AbgGNS6Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 14:58:16 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A06C222507;
-        Tue, 14 Jul 2020 18:58:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 369AC22507;
+        Tue, 14 Jul 2020 18:58:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594753093;
-        bh=Wegz6/ipsnYUokJXvOMieFYrk6wYPm9LCT/S3tzRTt0=;
+        s=default; t=1594753095;
+        bh=++xeluKFGWT+3/SC5dEdlfa+Jt6oboYeozUTFtyjtvg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RccQPCyMjyxsnyZq7ZZT2iEYju56bui29kAuScSxJRXR2/wWq9KwITDvYk2Vk7XqE
-         b7k7mY1UyDgqo1HTUmo9YNEl1pKgQB4ZvhFBRU8oMhwrwFeMTESgewqFJRkNOCkmh+
-         3kVtKsDGoEbpPYTJIPPww5gFiWCrBZ3u4tgDsA8U=
+        b=SZsUbfEFvpFlv00zet0m/n+kt0oWL1/OXcMfipUTJAOujO7NEKm+f+eadyI3oRZ7U
+         xR7o9ceb7FdpDHuXbPQl2QjcEgqF8Cncq5gYx7LK7yJbExpQhSWseqFHFoy0AohbKo
+         lJc0Hu81UO/oAnZZie6BeKuQGLNVHZU+VA3NVtlw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jian-Hong Pan <jian-hong@endlessm.com>,
-        Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 5.7 116/166] ALSA: hda/realtek: Enable headset mic of Acer Veriton N4660G with ALC269VC
-Date:   Tue, 14 Jul 2020 20:44:41 +0200
-Message-Id: <20200714184121.388850951@linuxfoundation.org>
+        stable@vger.kernel.org, Marc Zyngier <maz@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        James Morse <james.morse@arm.com>,
+        Will Deacon <will@kernel.org>
+Subject: [PATCH 5.7 117/166] KVM: arm64: Fix definition of PAGE_HYP_DEVICE
+Date:   Tue, 14 Jul 2020 20:44:42 +0200
+Message-Id: <20200714184121.436937711@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200714184115.844176932@linuxfoundation.org>
 References: <20200714184115.844176932@linuxfoundation.org>
@@ -59,57 +61,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jian-Hong Pan <jian-hong@endlessm.com>
+From: Will Deacon <will@kernel.org>
 
-commit 781c90c034d994c6a4e2badf189128a95ed864c2 upstream.
+commit 68cf617309b5f6f3a651165f49f20af1494753ae upstream.
 
-The Acer Veriton N4660G desktop's audio (1025:1248) with ALC269VC cannot
-detect the headset microphone until ALC269VC_FIXUP_ACER_MIC_NO_PRESENCE
-quirk maps the NID 0x18 as the headset mic pin.
+PAGE_HYP_DEVICE is intended to encode attribute bits for an EL2 stage-1
+pte mapping a device. Unfortunately, it includes PROT_DEVICE_nGnRE which
+encodes attributes for EL1 stage-1 mappings such as UXN and nG, which are
+RES0 for EL2, and DBM which is meaningless as TCR_EL2.HD is not set.
 
-Signed-off-by: Jian-Hong Pan <jian-hong@endlessm.com>
+Fix the definition of PAGE_HYP_DEVICE so that it doesn't set RES0 bits
+at EL2.
+
+Acked-by: Marc Zyngier <maz@kernel.org>
+Cc: Marc Zyngier <maz@kernel.org>
+Cc: Catalin Marinas <catalin.marinas@arm.com>
+Cc: James Morse <james.morse@arm.com>
 Cc: <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20200706071826.39726-3-jian-hong@endlessm.com
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Link: https://lore.kernel.org/r/20200708162546.26176-1-will@kernel.org
+Signed-off-by: Will Deacon <will@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/pci/hda/patch_realtek.c |   11 +++++++++++
- 1 file changed, 11 insertions(+)
+ arch/arm64/include/asm/pgtable-prot.h |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/sound/pci/hda/patch_realtek.c
-+++ b/sound/pci/hda/patch_realtek.c
-@@ -6116,6 +6116,7 @@ enum {
- 	ALC295_FIXUP_ASUS_MIC_NO_PRESENCE,
- 	ALC269VC_FIXUP_ACER_VCOPPERBOX_PINS,
- 	ALC269VC_FIXUP_ACER_HEADSET_MIC,
-+	ALC269VC_FIXUP_ACER_MIC_NO_PRESENCE,
- };
+--- a/arch/arm64/include/asm/pgtable-prot.h
++++ b/arch/arm64/include/asm/pgtable-prot.h
+@@ -56,7 +56,7 @@ extern bool arm64_use_ng_mappings;
+ #define PAGE_HYP		__pgprot(_HYP_PAGE_DEFAULT | PTE_HYP | PTE_HYP_XN)
+ #define PAGE_HYP_EXEC		__pgprot(_HYP_PAGE_DEFAULT | PTE_HYP | PTE_RDONLY)
+ #define PAGE_HYP_RO		__pgprot(_HYP_PAGE_DEFAULT | PTE_HYP | PTE_RDONLY | PTE_HYP_XN)
+-#define PAGE_HYP_DEVICE		__pgprot(PROT_DEVICE_nGnRE | PTE_HYP)
++#define PAGE_HYP_DEVICE		__pgprot(_PROT_DEFAULT | PTE_ATTRINDX(MT_DEVICE_nGnRE) | PTE_HYP | PTE_HYP_XN)
  
- static const struct hda_fixup alc269_fixups[] = {
-@@ -7314,6 +7315,15 @@ static const struct hda_fixup alc269_fix
- 		.chained = true,
- 		.chain_id = ALC269_FIXUP_HEADSET_MIC
- 	},
-+	[ALC269VC_FIXUP_ACER_MIC_NO_PRESENCE] = {
-+		.type = HDA_FIXUP_PINS,
-+		.v.pins = (const struct hda_pintbl[]) {
-+			{ 0x18, 0x01a11130 }, /* use as headset mic, without its own jack detect */
-+			{ }
-+		},
-+		.chained = true,
-+		.chain_id = ALC269_FIXUP_HEADSET_MIC
-+	},
- };
- 
- static const struct snd_pci_quirk alc269_fixup_tbl[] = {
-@@ -7335,6 +7345,7 @@ static const struct snd_pci_quirk alc269
- 	SND_PCI_QUIRK(0x1025, 0x110e, "Acer Aspire ES1-432", ALC255_FIXUP_ACER_MIC_NO_PRESENCE),
- 	SND_PCI_QUIRK(0x1025, 0x1246, "Acer Predator Helios 500", ALC299_FIXUP_PREDATOR_SPK),
- 	SND_PCI_QUIRK(0x1025, 0x1247, "Acer vCopperbox", ALC269VC_FIXUP_ACER_VCOPPERBOX_PINS),
-+	SND_PCI_QUIRK(0x1025, 0x1248, "Acer Veriton N4660G", ALC269VC_FIXUP_ACER_MIC_NO_PRESENCE),
- 	SND_PCI_QUIRK(0x1025, 0x128f, "Acer Veriton Z6860G", ALC286_FIXUP_ACER_AIO_HEADSET_MIC),
- 	SND_PCI_QUIRK(0x1025, 0x1290, "Acer Veriton Z4860G", ALC286_FIXUP_ACER_AIO_HEADSET_MIC),
- 	SND_PCI_QUIRK(0x1025, 0x1291, "Acer Veriton Z4660G", ALC286_FIXUP_ACER_AIO_HEADSET_MIC),
+ #define PAGE_S2_MEMATTR(attr)						\
+ 	({								\
 
 
