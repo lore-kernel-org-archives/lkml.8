@@ -7,42 +7,42 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C190C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 02:38:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40A23C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 02:39:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 135C4207E8
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 02:38:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2384F207E8
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 02:39:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726798AbgGNCip (ORCPT
+        id S1726934AbgGNCjD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 22:38:45 -0400
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:43024 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726750AbgGNCil (ORCPT
+        Mon, 13 Jul 2020 22:39:03 -0400
+Received: from mail-qk1-f194.google.com ([209.85.222.194]:44779 "EHLO
+        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726150AbgGNCio (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 22:38:41 -0400
-Received: by mail-qt1-f194.google.com with SMTP id k18so11730165qtm.10
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 19:38:40 -0700 (PDT)
+        Mon, 13 Jul 2020 22:38:44 -0400
+Received: by mail-qk1-f194.google.com with SMTP id b4so14299105qkn.11
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 19:38:42 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=RhWnzCqvgTN++G31OGgg9qNDvvhiuki5nvpw8uOP67s=;
-        b=iykKiRANC7xXp/f/XNUjhyD0XqXF5EqclqhdCGauL1FScKRvcPIxMbjuMP4q83rQV2
-         hk5eDDCUlzzr2Tui8Vxt3AoDBI6+yda+KseG9PbJqz0PxPN35CAzAmapE3rdEsPx68n/
-         OtOEsJHc4W4oxIKzsaEnDoFY4NdNzSmwwAF2xIXCupTbYm0gIrgo6H2Ym6mGW8wp6FUh
-         XEQmq70JUiNGocd+IdU4Gqz/Uyak9Hqo5lmDg9CpzkP2qzFUk9/CRbMunxzVNLp8c0Kb
-         7Utdnpl04SEnOibUrzNIgBnI2QGEcdZDkf/Y4tXWxfOt2d7+QKVroB2cxRMBfx+PbpN1
-         UxXw==
-X-Gm-Message-State: AOAM533zOXRm4WWxXM9F3bh3ykD2W3z6lo/pUAWVKl4sIwgXicaOsU1P
-        iocnf6SHfLzS/ZHUNZfnO0Y=
-X-Google-Smtp-Source: ABdhPJyD7qP9lZFweP4z1r5ZI0QeCeUktNqgeXftUuQcGKDSL65SMY53iJ2yXSuWDyFQd0OlU9U5gA==
-X-Received: by 2002:ac8:4714:: with SMTP id f20mr2481897qtp.141.1594694320024;
-        Mon, 13 Jul 2020 19:38:40 -0700 (PDT)
+        bh=hjflrgJ1nEMfvu6o0sT4KLViapV2UjMMsYBLgsk/fRo=;
+        b=RbrQwTYzm97E4LK1CLYP6zKj2qEPW3xZ0BBaVx5W7o64bIIQ2Hke7YjeW2QO5xq/sm
+         DPFRLMWXhkvIsLhjoxWil5vnY01K3aF+SU9N3t/WUKfvHFNizRyiacye07tIvypIitLy
+         rl0lb3h2YGWZ+wGlCExv9luaPTkUZ9iIYjL6R6l65D9JAL7c5/s9pauTrJq8zBBfxDqJ
+         BT/MUVQevKqYoUB9dxWAB0QX471UMDr8hAKCN7SeI0pcDDYpCE7/+saH9xY92GplHKaR
+         Kp/0X9BthF1NCOqAqMQ77/KLt3SDaHjyPSFVb7Y6qQz5EbcxbwwK7P+h+hrx0IfFP3NZ
+         rUKA==
+X-Gm-Message-State: AOAM532ExIN5ptw9IQ5skciEH447WeUdx+XOfJ41/t3sgdjjDrGpajeF
+        zIloNNC1zUb5zRzZ1YEnpro=
+X-Google-Smtp-Source: ABdhPJweHuzpO6+gjLuseSpwU05hNRU1Hn2GkBDL/Gl1G9EKUKl3MozsNMubIYqM+/nnPp+M5ddlyw==
+X-Received: by 2002:a37:444c:: with SMTP id r73mr2523232qka.141.1594694321988;
+        Mon, 13 Jul 2020 19:38:41 -0700 (PDT)
 Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
-        by smtp.gmail.com with ESMTPSA id a22sm21046291qka.64.2020.07.13.19.38.39
+        by smtp.gmail.com with ESMTPSA id a22sm21046291qka.64.2020.07.13.19.38.41
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 Jul 2020 19:38:39 -0700 (PDT)
+        Mon, 13 Jul 2020 19:38:41 -0700 (PDT)
 From:   Arvind Sankar <nivedita@alum.mit.edu>
 To:     Thomas Gleixner <tglx@linutronix.de>,
         Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
@@ -59,9 +59,9 @@ Cc:     Nick Desaulniers <ndesaulniers@google.com>,
         Nathan Chancellor <natechancellor@gmail.com>,
         Arnd Bergmann <arnd@arndb.de>,
         "H . J . Lu" <hjl@sourceware.org>, linux-kernel@vger.kernel.org
-Subject: [PATCH v4 1/7] x86/boot/compressed: Move .got.plt entries out of the .got section
-Date:   Mon, 13 Jul 2020 22:38:30 -0400
-Message-Id: <20200714023836.2310569-2-nivedita@alum.mit.edu>
+Subject: [PATCH v4 3/7] x86/boot/compressed: Get rid of GOT fixup code
+Date:   Mon, 13 Jul 2020 22:38:32 -0400
+Message-Id: <20200714023836.2310569-4-nivedita@alum.mit.edu>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200629140928.858507-1-nivedita@alum.mit.edu>
 References: <20200629140928.858507-1-nivedita@alum.mit.edu>
@@ -74,68 +74,175 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Ard Biesheuvel <ardb@kernel.org>
 
-The .got.plt section contains the part of the GOT which is used by PLT
-entries, and which gets updated lazily by the dynamic loader when
-function calls are dispatched through those PLT entries.
+In a previous patch, we have eliminated GOT entries from the decompressor
+binary and added an assertion that the .got section is empty. This means
+that the GOT fixup routines that exist in both the 32-bit and 64-bit
+startup routines have become dead code, and can be removed.
 
-On fully linked binaries such as the kernel proper or the decompressor,
-this never happens, and so in practice, the .got.plt section consists
-only of the first 3 magic entries that are meant to point at the _DYNAMIC
-section and at the fixup routine in the loader. However, since we don't
-use a dynamic loader, those entries are never populated or used.
-
-This means that treating those entries like ordinary GOT entries, and
-updating their values based on the actual placement of the executable in
-memory is completely pointless, and we can just ignore the .got.plt
-section entirely, provided that it has no additional entries beyond
-the first 3 ones.
-
-So add an assertion in the linker script to ensure that this assumption
-holds, and move the contents out of the [_got, _egot) memory range that
-is modified by the GOT fixup routines.
-
-While at it, drop the KEEP(), since it has no effect on the contents
-of output sections that are created by the linker itself.
+While at it, drop the KEEP() from the linker script, as it has no effect
+on the contents of output sections that are created by the linker itself.
 
 Reviewed-by: Kees Cook <keescook@chromium.org>
 Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
 Acked-by: Arvind Sankar <nivedita@alum.mit.edu>
 Signed-off-by: Arvind Sankar <nivedita@alum.mit.edu>
 From: Ard Biesheuvel <ardb@kernel.org>
-Link: https://lore.kernel.org/r/20200523120021.34996-2-ardb@kernel.org
+Link: https://lore.kernel.org/r/20200523120021.34996-4-ardb@kernel.org
 ---
- arch/x86/boot/compressed/vmlinux.lds.S | 11 ++++++++++-
- 1 file changed, 10 insertions(+), 1 deletion(-)
+ arch/x86/boot/compressed/head_32.S     | 24 ++---------
+ arch/x86/boot/compressed/head_64.S     | 57 --------------------------
+ arch/x86/boot/compressed/vmlinux.lds.S |  4 +-
+ 3 files changed, 5 insertions(+), 80 deletions(-)
 
+diff --git a/arch/x86/boot/compressed/head_32.S b/arch/x86/boot/compressed/head_32.S
+index 03557f2174bf..39f0bb43218f 100644
+--- a/arch/x86/boot/compressed/head_32.S
++++ b/arch/x86/boot/compressed/head_32.S
+@@ -49,16 +49,13 @@
+  * Position Independent Executable (PIE) so that linker won't optimize
+  * R_386_GOT32X relocation to its fixed symbol address.  Older
+  * linkers generate R_386_32 relocations against locally defined symbols,
+- * _bss, _ebss, _got, _egot and _end, in PIE.  It isn't wrong, just less
+- * optimal than R_386_RELATIVE.  But the x86 kernel fails to properly handle
+- * R_386_32 relocations when relocating the kernel.  To generate
+- * R_386_RELATIVE relocations, we mark _bss, _ebss, _got, _egot and _end as
+- * hidden:
++ * _bss, _ebss and _end, in PIE.  It isn't wrong, just less optimal than
++ * R_386_RELATIVE.  But the x86 kernel fails to properly handle R_386_32
++ * relocations when relocating the kernel.  To generate R_386_RELATIVE
++ * relocations, we mark _bss, _ebss and _end as hidden:
+  */
+ 	.hidden _bss
+ 	.hidden _ebss
+-	.hidden _got
+-	.hidden _egot
+ 	.hidden _end
+ 
+ 	__HEAD
+@@ -192,19 +189,6 @@ SYM_FUNC_START_LOCAL_NOALIGN(.Lrelocated)
+ 	shrl	$2, %ecx
+ 	rep	stosl
+ 
+-/*
+- * Adjust our own GOT
+- */
+-	leal	_got(%ebx), %edx
+-	leal	_egot(%ebx), %ecx
+-1:
+-	cmpl	%ecx, %edx
+-	jae	2f
+-	addl	%ebx, (%edx)
+-	addl	$4, %edx
+-	jmp	1b
+-2:
+-
+ /*
+  * Do the extraction, and jump to the new kernel..
+  */
+diff --git a/arch/x86/boot/compressed/head_64.S b/arch/x86/boot/compressed/head_64.S
+index 97d37f0a34f5..bf1ab30acc5b 100644
+--- a/arch/x86/boot/compressed/head_64.S
++++ b/arch/x86/boot/compressed/head_64.S
+@@ -40,8 +40,6 @@
+  */
+ 	.hidden _bss
+ 	.hidden _ebss
+-	.hidden _got
+-	.hidden _egot
+ 	.hidden _end
+ 
+ 	__HEAD
+@@ -353,25 +351,6 @@ SYM_CODE_START(startup_64)
+ 	/* Set up the stack */
+ 	leaq	boot_stack_end(%rbx), %rsp
+ 
+-	/*
+-	 * paging_prepare() and cleanup_trampoline() below can have GOT
+-	 * references. Adjust the table with address we are running at.
+-	 *
+-	 * Zero RAX for adjust_got: the GOT was not adjusted before;
+-	 * there's no adjustment to undo.
+-	 */
+-	xorq	%rax, %rax
+-
+-	/*
+-	 * Calculate the address the binary is loaded at and use it as
+-	 * a GOT adjustment.
+-	 */
+-	call	1f
+-1:	popq	%rdi
+-	subq	$1b, %rdi
+-
+-	call	.Ladjust_got
+-
+ 	/*
+ 	 * At this point we are in long mode with 4-level paging enabled,
+ 	 * but we might want to enable 5-level paging or vice versa.
+@@ -464,21 +443,6 @@ trampoline_return:
+ 	pushq	$0
+ 	popfq
+ 
+-	/*
+-	 * Previously we've adjusted the GOT with address the binary was
+-	 * loaded at. Now we need to re-adjust for relocation address.
+-	 *
+-	 * Calculate the address the binary is loaded at, so that we can
+-	 * undo the previous GOT adjustment.
+-	 */
+-	call	1f
+-1:	popq	%rax
+-	subq	$1b, %rax
+-
+-	/* The new adjustment is the relocation address */
+-	movq	%rbx, %rdi
+-	call	.Ladjust_got
+-
+ /*
+  * Copy the compressed kernel to the end of our buffer
+  * where decompression in place becomes safe.
+@@ -556,27 +520,6 @@ SYM_FUNC_START_LOCAL_NOALIGN(.Lrelocated)
+ 	jmp	*%rax
+ SYM_FUNC_END(.Lrelocated)
+ 
+-/*
+- * Adjust the global offset table
+- *
+- * RAX is the previous adjustment of the table to undo (use 0 if it's the
+- * first time we touch GOT).
+- * RDI is the new adjustment to apply.
+- */
+-.Ladjust_got:
+-	/* Walk through the GOT adding the address to the entries */
+-	leaq	_got(%rip), %rdx
+-	leaq	_egot(%rip), %rcx
+-1:
+-	cmpq	%rcx, %rdx
+-	jae	2f
+-	subq	%rax, (%rdx)	/* Undo previous adjustment */
+-	addq	%rdi, (%rdx)	/* Apply the new adjustment */
+-	addq	$8, %rdx
+-	jmp	1b
+-2:
+-	ret
+-
+ 	.code32
+ /*
+  * This is the 32-bit trampoline that will be copied over to low memory.
 diff --git a/arch/x86/boot/compressed/vmlinux.lds.S b/arch/x86/boot/compressed/vmlinux.lds.S
-index 8f1025d1f681..b17d218ccdf9 100644
+index 4bcc943842ab..a4a4a59a2628 100644
 --- a/arch/x86/boot/compressed/vmlinux.lds.S
 +++ b/arch/x86/boot/compressed/vmlinux.lds.S
-@@ -44,10 +44,13 @@ SECTIONS
+@@ -43,9 +43,7 @@ SECTIONS
+ 		_erodata = . ;
  	}
  	.got : {
- 		_got = .;
--		KEEP(*(.got.plt))
- 		KEEP(*(.got))
- 		_egot = .;
+-		_got = .;
+-		KEEP(*(.got))
+-		_egot = .;
++		*(.got)
  	}
-+	.got.plt : {
-+		*(.got.plt)
-+	}
-+
- 	.data :	{
- 		_data = . ;
- 		*(.data)
-@@ -77,3 +80,9 @@ SECTIONS
- 
- 	DISCARDS
- }
-+
-+#ifdef CONFIG_X86_64
-+ASSERT(SIZEOF(.got.plt) == 0 || SIZEOF(.got.plt) == 0x18, "Unexpected GOT/PLT entries detected!")
-+#else
-+ASSERT(SIZEOF(.got.plt) == 0 || SIZEOF(.got.plt) == 0xc, "Unexpected GOT/PLT entries detected!")
-+#endif
+ 	.got.plt : {
+ 		*(.got.plt)
 -- 
 2.26.2
 
