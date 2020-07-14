@@ -2,91 +2,103 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT
+X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9846FC433E4
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 06:59:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C79BC433E5
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 07:01:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 70CDD221ED
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 06:59:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 50A4E221ED
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 07:01:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726766AbgGNG7h (ORCPT
+        id S1726780AbgGNHBK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 02:59:37 -0400
-Received: from smtp2207-205.mail.aliyun.com ([121.197.207.205]:52951 "EHLO
-        smtp2207-205.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725778AbgGNG7h (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 02:59:37 -0400
-X-Alimail-AntiSpam: AC=CONTINUE;BC=0.7789875|0.5314721;CH=green;DM=|SPAM|false|;DS=CONTINUE|ham_regular_dialog|0.0554704-0.000987751-0.943542;FP=0|0|0|0|0|-1|-1|-1;HT=e01l04362;MF=frank@allwinnertech.com;NM=1;PH=DS;RN=13;RT=13;SR=0;TI=SMTPD_---.I1TXvIO_1594709967;
-Received: from allwinnertech.com(mailfrom:frank@allwinnertech.com fp:SMTPD_---.I1TXvIO_1594709967)
-          by smtp.aliyun-inc.com(10.147.44.145);
-          Tue, 14 Jul 2020 14:59:32 +0800
-From:   Frank Lee <frank@allwinnertech.com>
-To:     mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org,
-        mripard@kernel.org, wens@csie.org, linux-clk@vger.kernel.org
-Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, huangshuosheng@allwinnertech.com,
-        liyong@allwinnertech.com, Yangtao Li <frank@allwinnertech.com>,
-        Rob Herring <robh@kernel.org>
-Subject: [PATCH v4 01/16] dt-bindings: clk: sunxi-ccu: add compatible string for A100 CCU and R-CCU
-Date:   Tue, 14 Jul 2020 14:59:20 +0800
-Message-Id: <ca521ce2603649ad530acd8a562c639479c81e80.1594708864.git.frank@allwinnertech.com>
-X-Mailer: git-send-email 2.24.0
-In-Reply-To: <cover.1594708863.git.frank@allwinnertech.com>
-References: <cover.1594708863.git.frank@allwinnertech.com>
+        Tue, 14 Jul 2020 03:01:10 -0400
+Received: from mx2.suse.de ([195.135.220.15]:37794 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725853AbgGNHBK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 03:01:10 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id A7D27AEAA;
+        Tue, 14 Jul 2020 07:01:10 +0000 (UTC)
+Subject: Re: [PATCH v2 06/29] scsi: fcoe: fcoe_transport: Correct some
+ kernel-doc issues
+To:     Lee Jones <lee.jones@linaro.org>, jejb@linux.ibm.com,
+        martin.petersen@oracle.com
+Cc:     linux-kernel@vger.kernel.org, linux-scsi@vger.kernel.org
+References: <20200713074645.126138-1-lee.jones@linaro.org>
+ <20200713074645.126138-7-lee.jones@linaro.org>
+From:   Hannes Reinecke <hare@suse.de>
+Message-ID: <d2c4ead1-8922-3b72-0aee-b889a0c409f8@suse.de>
+Date:   Tue, 14 Jul 2020 09:01:07 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
+In-Reply-To: <20200713074645.126138-7-lee.jones@linaro.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yangtao Li <frank@allwinnertech.com>
+On 7/13/20 9:46 AM, Lee Jones wrote:
+> Mainly due to misdocumentation or bitrotted descriptions.
+> 
+> Fixes the following W=1 kernel build warning(s):
+> 
+>   drivers/scsi/fcoe/fcoe_transport.c:396: warning: Function parameter or member 'skb' not described in 'fcoe_check_wait_queue'
+>   drivers/scsi/fcoe/fcoe_transport.c:447: warning: Function parameter or member 't' not described in 'fcoe_queue_timer'
+>   drivers/scsi/fcoe/fcoe_transport.c:447: warning: Excess function parameter 'lport' description in 'fcoe_queue_timer'
+>   drivers/scsi/fcoe/fcoe_transport.c:682: warning: Function parameter or member 'netdev' not described in 'fcoe_netdev_map_lookup'
+> 
+> Cc: Hannes Reinecke <hare@suse.de>
+> Signed-off-by: Lee Jones <lee.jones@linaro.org>
+> ---
+>   drivers/scsi/fcoe/fcoe_transport.c | 4 +++-
+>   1 file changed, 3 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/scsi/fcoe/fcoe_transport.c b/drivers/scsi/fcoe/fcoe_transport.c
+> index a20ddc301c89e..6e187d0e71fd2 100644
+> --- a/drivers/scsi/fcoe/fcoe_transport.c
+> +++ b/drivers/scsi/fcoe/fcoe_transport.c
+> @@ -382,6 +382,7 @@ EXPORT_SYMBOL_GPL(fcoe_clean_pending_queue);
+>   /**
+>    * fcoe_check_wait_queue() - Attempt to clear the transmit backlog
+>    * @lport: The local port whose backlog is to be cleared
+> + * @skb: The received FIP packet
+>    *
+>    * This empties the wait_queue, dequeues the head of the wait_queue queue
+>    * and calls fcoe_start_io() for each packet. If all skb have been
+> @@ -439,7 +440,7 @@ EXPORT_SYMBOL_GPL(fcoe_check_wait_queue);
+>   
+>   /**
+>    * fcoe_queue_timer() - The fcoe queue timer
+> - * @lport: The local port
+> + * @t: Timer context use to obtain the FCoE port
+>    *
+>    * Calls fcoe_check_wait_queue on timeout
+>    */
+> @@ -672,6 +673,7 @@ static void fcoe_del_netdev_mapping(struct net_device *netdev)
+>   /**
+>    * fcoe_netdev_map_lookup - find the fcoe transport that matches the netdev on which
+>    * it was created
+> + * @netdev: The net device that the FCoE interface is on
+>    *
+>    * Returns : ptr to the fcoe transport that supports this netdev or NULL
+>    * if not found.
+> 
+Reviewed-by: Hannes Reinecke <hare@suse.de>
 
-This patch adds binding to a100's ccu clock and r-ccu clock.
+Cheers,
 
-Signed-off-by: Yangtao Li <frank@allwinnertech.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
----
- .../devicetree/bindings/clock/allwinner,sun4i-a10-ccu.yaml | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
-
-diff --git a/Documentation/devicetree/bindings/clock/allwinner,sun4i-a10-ccu.yaml b/Documentation/devicetree/bindings/clock/allwinner,sun4i-a10-ccu.yaml
-index 4d382128b711..3b45344ed758 100644
---- a/Documentation/devicetree/bindings/clock/allwinner,sun4i-a10-ccu.yaml
-+++ b/Documentation/devicetree/bindings/clock/allwinner,sun4i-a10-ccu.yaml
-@@ -36,6 +36,8 @@ properties:
-       - allwinner,sun9i-a80-ccu
-       - allwinner,sun50i-a64-ccu
-       - allwinner,sun50i-a64-r-ccu
-+      - allwinner,sun50i-a100-ccu
-+      - allwinner,sun50i-a100-r-ccu
-       - allwinner,sun50i-h5-ccu
-       - allwinner,sun50i-h6-ccu
-       - allwinner,sun50i-h6-r-ccu
-@@ -78,6 +80,7 @@ if:
-         - allwinner,sun8i-a83t-r-ccu
-         - allwinner,sun8i-h3-r-ccu
-         - allwinner,sun50i-a64-r-ccu
-+        - allwinner,sun50i-a100-r-ccu
-         - allwinner,sun50i-h6-r-ccu
- 
- then:
-@@ -94,7 +97,9 @@ else:
-   if:
-     properties:
-       compatible:
--        const: allwinner,sun50i-h6-ccu
-+        enum:
-+          - allwinner,sun50i-a100-ccu
-+          - allwinner,sun50i-h6-ccu
- 
-   then:
-     properties:
+Hannes
 -- 
-2.24.0
-
+Dr. Hannes Reinecke            Teamlead Storage & Networking
+hare@suse.de                               +49 911 74053 688
+SUSE Software Solutions GmbH, Maxfeldstr. 5, 90409 Nürnberg
+HRB 36809 (AG Nürnberg), Geschäftsführer: Felix Imendörffer
