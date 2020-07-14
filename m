@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8387C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:56:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 251B2C433E6
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:56:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B1CDD229CA
+	by mail.kernel.org (Postfix) with ESMTP id F083622AAF
 	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:56:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594753017;
-	bh=sANhJ2Ti1EUL70NCb3kes9GpA7wbID4KFIxyaOjnT4Q=;
+	s=default; t=1594753018;
+	bh=fyIViGjnqT3Isc8lUNNxqQHXm6quHzb/i5mIuWINQ9s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mrg7FgDjW6Fb0LW4OZF6o+hijTMHGjgC+lltHV6wro8ekygtSJNsNJ7lsAom76J+h
-	 nDiWx2gMqIy96Q7VmYV3XkspRCdWZLvpaHDbJ6yW3xrV3DZDx/JeodfTijJrvYWped
-	 gI5sZh2/AL93xIqpBp/BFSZYB8Odztj4B2zSku80=
+	b=dsL4evafED0brHXebGOriN/FYKX1eWRo1QtKRuka9WgIEoU+Rqpam42ksRhZxHAu0
+	 yhtS/WoFhmmxtesaCEomh3203ZfQeoLxosQSgK9ceG3YIYwDZue1dQstFOimxthUk+
+	 UaUnSjSvEZDCK2Xu+Ie1CaLRu8vOpPqfKqiiowmY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731033AbgGNS4u (ORCPT
+        id S1731073AbgGNS4x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 14:56:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54708 "EHLO mail.kernel.org"
+        Tue, 14 Jul 2020 14:56:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54904 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731009AbgGNS4j (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 14:56:39 -0400
+        id S1730217AbgGNS4r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 14:56:47 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 09DC5229CA;
-        Tue, 14 Jul 2020 18:56:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id ECAC7229CA;
+        Tue, 14 Jul 2020 18:56:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594752998;
-        bh=sANhJ2Ti1EUL70NCb3kes9GpA7wbID4KFIxyaOjnT4Q=;
+        s=default; t=1594753006;
+        bh=fyIViGjnqT3Isc8lUNNxqQHXm6quHzb/i5mIuWINQ9s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nuyaGhq0w5JX53Pjby0IPoFzj8X6IChG976j3WHnG+5+YCOGC4ysQKQDE/tOymOe9
-         7kkCqTE5r0WC4UCBUd73D7i1etMzAXOWtjTOTxodUxg7R7KqSAi+wiEQMm4GgmQz6a
-         uo5vX46eeqjEJsjB34NlyCUmD7LSnxua+eXEhHNo=
+        b=OVFtWbRHUm4Pj4kiwluSHPXCPV1PE05g2MceISX6+J5Jn7Y10dZnxz1aLoVKx+Hf8
+         YWRf0hlY/hE3rpzTpypg3Hb3EczEg9H1k72CNq4rhYJxKIjF3j/pJVqDtMK4hMcxX0
+         V+7TxzWEQ/eIWDdThz+pLLhdNCxzLByru89e1YvE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Yonglong Liu <liuyonglong@huawei.com>,
-        Huazhong Tan <tanhuazhong@huawei.com>,
+        stable@vger.kernel.org, Alexander Lobakin <alobakin@marvell.com>,
+        Igor Russkikh <irusskikh@marvell.com>,
         "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 080/166] net: hns3: fix use-after-free when doing self test
-Date:   Tue, 14 Jul 2020 20:44:05 +0200
-Message-Id: <20200714184119.682981960@linuxfoundation.org>
+Subject: [PATCH 5.7 083/166] net: qed: fix buffer overflow on ethtool -d
+Date:   Tue, 14 Jul 2020 20:44:08 +0200
+Message-Id: <20200714184119.826423080@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200714184115.844176932@linuxfoundation.org>
 References: <20200714184115.844176932@linuxfoundation.org>
@@ -61,83 +61,105 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yonglong Liu <liuyonglong@huawei.com>
+From: Alexander Lobakin <alobakin@marvell.com>
 
-[ Upstream commit a06656211304fec653c1931c2ca6d644013b5bbb ]
+[ Upstream commit da3287111ab43b32cec54d7ca6b48640f210a196 ]
 
-Enable promisc mode of PF, set VF link state to enable, and
-run iperf of the VF, then do self test of the PF. The self test
-will fail with a low frequency, and may cause a use-after-free
-problem.
+When generating debug dump, driver firstly collects all data in binary
+form, and then performs per-feature formatting to human-readable if it
+is supported.
 
-[   87.142126] selftest:000004a0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-[   87.159722] ==================================================================
-[   87.174187] BUG: KASAN: use-after-free in hex_dump_to_buffer+0x140/0x608
-[   87.187600] Read of size 1 at addr ffff003b22828000 by task ethtool/1186
-[   87.201012]
-[   87.203978] CPU: 7 PID: 1186 Comm: ethtool Not tainted 5.5.0-rc4-gfd51c473-dirty #4
-[   87.219306] Hardware name: Huawei TaiShan 2280 V2/BC82AMDA, BIOS TA BIOS 2280-A CS V2.B160.01 01/15/2020
-[   87.238292] Call trace:
-[   87.243173]  dump_backtrace+0x0/0x280
-[   87.250491]  show_stack+0x24/0x30
-[   87.257114]  dump_stack+0xe8/0x140
-[   87.263911]  print_address_description.isra.8+0x70/0x380
-[   87.274538]  __kasan_report+0x12c/0x230
-[   87.282203]  kasan_report+0xc/0x18
-[   87.288999]  __asan_load1+0x60/0x68
-[   87.295969]  hex_dump_to_buffer+0x140/0x608
-[   87.304332]  print_hex_dump+0x140/0x1e0
-[   87.312000]  hns3_lb_check_skb_data+0x168/0x170
-[   87.321060]  hns3_clean_rx_ring+0xa94/0xfe0
-[   87.329422]  hns3_self_test+0x708/0x8c0
+For ethtool -d, this is roughly incorrect for two reasons. First of all,
+drivers should always provide only original raw dumps to Ethtool without
+any changes.
+The second, and more critical, is that Ethtool's output buffer size is
+strictly determined by ethtool_ops::get_regs_len(), and all data *must*
+fit in it. The current version of driver always returns the size of raw
+data, but the size of the formatted buffer exceeds it in most cases.
+This leads to out-of-bound writes and memory corruption.
 
-The length of packet sent by the selftest process is only
-128 + 14 bytes, and the min buffer size of a BD is 256 bytes,
-and the receive process will make sure the packet sent by
-the selftest process is in the linear part, so only check
-the linear part in hns3_lb_check_skb_data().
+Address both issues by adding an option to return original, non-formatted
+debug data, and using it for Ethtool case.
 
-So fix this use-after-free by using skb_headlen() to dump
-skb->data instead of skb->len.
+v2:
+ - Expand commit message to make it more clear;
+ - No functional changes.
 
-Fixes: c39c4d98dc65 ("net: hns3: Add mac loopback selftest support in hns3 driver")
-Signed-off-by: Yonglong Liu <liuyonglong@huawei.com>
-Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
+Fixes: c965db444629 ("qed: Add support for debug data collection")
+Signed-off-by: Alexander Lobakin <alobakin@marvell.com>
+Signed-off-by: Igor Russkikh <irusskikh@marvell.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/hisilicon/hns3/hns3_ethtool.c | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+ drivers/net/ethernet/qlogic/qed/qed.h       |  2 ++
+ drivers/net/ethernet/qlogic/qed/qed_debug.c | 13 ++++++++++++-
+ 2 files changed, 14 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3_ethtool.c b/drivers/net/ethernet/hisilicon/hns3/hns3_ethtool.c
-index 28b81f24afa11..2a78805d531a1 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3_ethtool.c
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3_ethtool.c
-@@ -174,18 +174,21 @@ static void hns3_lb_check_skb_data(struct hns3_enet_ring *ring,
- {
- 	struct hns3_enet_tqp_vector *tqp_vector = ring->tqp_vector;
- 	unsigned char *packet = skb->data;
-+	u32 len = skb_headlen(skb);
- 	u32 i;
- 
--	for (i = 0; i < skb->len; i++)
-+	len = min_t(u32, len, HNS3_NIC_LB_TEST_PACKET_SIZE);
+diff --git a/drivers/net/ethernet/qlogic/qed/qed.h b/drivers/net/ethernet/qlogic/qed/qed.h
+index fa41bf08a5895..58d6ef489d5bf 100644
+--- a/drivers/net/ethernet/qlogic/qed/qed.h
++++ b/drivers/net/ethernet/qlogic/qed/qed.h
+@@ -880,6 +880,8 @@ struct qed_dev {
+ #endif
+ 	struct qed_dbg_feature dbg_features[DBG_FEATURE_NUM];
+ 	bool disable_ilt_dump;
++	bool				dbg_bin_dump;
 +
-+	for (i = 0; i < len; i++)
- 		if (packet[i] != (unsigned char)(i & 0xff))
- 			break;
+ 	DECLARE_HASHTABLE(connections, 10);
+ 	const struct firmware		*firmware;
  
- 	/* The packet is correctly received */
--	if (i == skb->len)
-+	if (i == HNS3_NIC_LB_TEST_PACKET_SIZE)
- 		tqp_vector->rx_group.total_packets++;
- 	else
- 		print_hex_dump(KERN_ERR, "selftest:", DUMP_PREFIX_OFFSET, 16, 1,
--			       skb->data, skb->len, true);
-+			       skb->data, len, true);
+diff --git a/drivers/net/ethernet/qlogic/qed/qed_debug.c b/drivers/net/ethernet/qlogic/qed/qed_debug.c
+index 3e56b6056b477..03ce18f653932 100644
+--- a/drivers/net/ethernet/qlogic/qed/qed_debug.c
++++ b/drivers/net/ethernet/qlogic/qed/qed_debug.c
+@@ -7506,6 +7506,12 @@ static enum dbg_status format_feature(struct qed_hwfn *p_hwfn,
+ 	if (p_hwfn->cdev->dbg_params.print_data)
+ 		qed_dbg_print_feature(text_buf, text_size_bytes);
  
- 	dev_kfree_skb_any(skb);
- }
++	/* Just return the original binary buffer if requested */
++	if (p_hwfn->cdev->dbg_bin_dump) {
++		vfree(text_buf);
++		return DBG_STATUS_OK;
++	}
++
+ 	/* Free the old dump_buf and point the dump_buf to the newly allocagted
+ 	 * and formatted text buffer.
+ 	 */
+@@ -7733,7 +7739,9 @@ int qed_dbg_mcp_trace_size(struct qed_dev *cdev)
+ #define REGDUMP_HEADER_SIZE_SHIFT		0
+ #define REGDUMP_HEADER_SIZE_MASK		0xffffff
+ #define REGDUMP_HEADER_FEATURE_SHIFT		24
+-#define REGDUMP_HEADER_FEATURE_MASK		0x3f
++#define REGDUMP_HEADER_FEATURE_MASK		0x1f
++#define REGDUMP_HEADER_BIN_DUMP_SHIFT		29
++#define REGDUMP_HEADER_BIN_DUMP_MASK		0x1
+ #define REGDUMP_HEADER_OMIT_ENGINE_SHIFT	30
+ #define REGDUMP_HEADER_OMIT_ENGINE_MASK		0x1
+ #define REGDUMP_HEADER_ENGINE_SHIFT		31
+@@ -7771,6 +7779,7 @@ static u32 qed_calc_regdump_header(struct qed_dev *cdev,
+ 			  feature, feature_size);
+ 
+ 	SET_FIELD(res, REGDUMP_HEADER_FEATURE, feature);
++	SET_FIELD(res, REGDUMP_HEADER_BIN_DUMP, 1);
+ 	SET_FIELD(res, REGDUMP_HEADER_OMIT_ENGINE, omit_engine);
+ 	SET_FIELD(res, REGDUMP_HEADER_ENGINE, engine);
+ 
+@@ -7794,6 +7803,7 @@ int qed_dbg_all_data(struct qed_dev *cdev, void *buffer)
+ 		omit_engine = 1;
+ 
+ 	mutex_lock(&qed_dbg_lock);
++	cdev->dbg_bin_dump = true;
+ 
+ 	org_engine = qed_get_debug_engine(cdev);
+ 	for (cur_engine = 0; cur_engine < cdev->num_hwfns; cur_engine++) {
+@@ -7993,6 +8003,7 @@ int qed_dbg_all_data(struct qed_dev *cdev, void *buffer)
+ 		       QED_NVM_IMAGE_MDUMP, "QED_NVM_IMAGE_MDUMP", rc);
+ 	}
+ 
++	cdev->dbg_bin_dump = false;
+ 	mutex_unlock(&qed_dbg_lock);
+ 
+ 	return 0;
 -- 
 2.25.1
 
