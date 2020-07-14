@@ -2,93 +2,97 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1157C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 03:00:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8F50C433E7
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 03:04:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C4B75208FE
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 03:00:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 777AB21D95
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 03:04:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="Wfty55aW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726836AbgGNDAt (ORCPT
+        id S1726769AbgGNDD5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 23:00:49 -0400
-Received: from mga03.intel.com ([134.134.136.65]:53581 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726150AbgGNDAt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 23:00:49 -0400
-IronPort-SDR: 2cBCrFdulCoILb9YKWerCcdFozm0EeVQDGhYINi58ujMk/2vmLdI+kqXdUUolKxa5+FzmNctnq
- uhs5X11Nfu3A==
-X-IronPort-AV: E=McAfee;i="6000,8403,9681"; a="148785154"
-X-IronPort-AV: E=Sophos;i="5.75,349,1589266800"; 
-   d="scan'208";a="148785154"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jul 2020 20:00:48 -0700
-IronPort-SDR: sqfQGqcJIpZPi2++Jsf4Ce6MY48ACp1NgfVCgb4oQrahAJYA1NQ+ofg2oBcz3TD2FrnLme4VHK
- YFwXrniBF/Vg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,349,1589266800"; 
-   d="scan'208";a="390357412"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.152])
-  by fmsmga001.fm.intel.com with ESMTP; 13 Jul 2020 20:00:48 -0700
-Date:   Mon, 13 Jul 2020 20:00:47 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Cathy Zhang <cathy.zhang@intel.com>
-Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org, x86@kernel.org,
-        pbonzini@redhat.com, vkuznets@redhat.com, wanpengli@tencent.com,
-        jmattson@google.com, joro@8bytes.org, tglx@linutronix.de,
-        mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
-        ricardo.neri-calderon@linux.intel.com, kyung.min.park@intel.com,
-        jpoimboe@redhat.com, gregkh@linuxfoundation.org,
-        ak@linux.intel.com, dave.hansen@intel.com, tony.luck@intel.com,
-        ravi.v.shankar@intel.com
-Subject: Re: [PATCH v2 3/4] x86: Expose SERIALIZE for supported cpuid
-Message-ID: <20200714030047.GA12592@linux.intel.com>
-References: <1594088183-7187-1-git-send-email-cathy.zhang@intel.com>
- <1594088183-7187-4-git-send-email-cathy.zhang@intel.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1594088183-7187-4-git-send-email-cathy.zhang@intel.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+        Mon, 13 Jul 2020 23:03:57 -0400
+Received: from mail.efficios.com ([167.114.26.124]:46160 "EHLO
+        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726150AbgGNDD4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jul 2020 23:03:56 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by mail.efficios.com (Postfix) with ESMTP id 81CDA2B8641;
+        Mon, 13 Jul 2020 23:03:55 -0400 (EDT)
+Received: from mail.efficios.com ([127.0.0.1])
+        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id c7g69rhorLiH; Mon, 13 Jul 2020 23:03:55 -0400 (EDT)
+Received: from localhost (localhost [127.0.0.1])
+        by mail.efficios.com (Postfix) with ESMTP id 2E14F2B84C5;
+        Mon, 13 Jul 2020 23:03:55 -0400 (EDT)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com 2E14F2B84C5
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
+        s=default; t=1594695835;
+        bh=i0IKhP8FYjVj9PU2ZwfUV53aZ9hjgamCtIU+kee/py8=;
+        h=From:To:Date:Message-Id;
+        b=Wfty55aWgQavXhCrAE4Emzg17kW+mRORyLaWTEpm7Z0y/TltVeOjk+aKGSuArEV24
+         Cr3ycvDPCn/4576UbDV0JqdMrpq1wre2XwJji9839/2Htk9dzo2BkXdYgfTd/twm5a
+         JSZd5ncoWkS+vLIE6342d93gs6LStpS3g6lu/M3pfTj+P6U+btMSCiV6fUZp/ONUiX
+         N0jy5dwd73NTtmvDsrxoENQsNkAzeHCiwvyCaNAWvFVbyavqVQW10sEut0tDWTu8I4
+         Gqj6/8tGDrfpknqAUyhCoLBAGXl4Iefai2RI9is3nCR+ggLN+VGHowQ9stD36wSCkH
+         QBL8iILyDwJOQ==
+X-Virus-Scanned: amavisd-new at efficios.com
+Received: from mail.efficios.com ([127.0.0.1])
+        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id RAbGfGtBseht; Mon, 13 Jul 2020 23:03:55 -0400 (EDT)
+Received: from localhost.localdomain (192-222-181-218.qc.cable.ebox.net [192.222.181.218])
+        by mail.efficios.com (Postfix) with ESMTPSA id D4BF82B84C4;
+        Mon, 13 Jul 2020 23:03:54 -0400 (EDT)
+From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        "Paul E . McKenney" <paulmck@linux.ibm.com>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        "H . Peter Anvin" <hpa@zytor.com>, Paul Turner <pjt@google.com>,
+        linux-api@vger.kernel.org,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        Florian Weimer <fw@deneb.enyo.de>, carlos@redhat.com,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Subject: [RFC PATCH 0/4] rseq: Introduce extensible struct rseq
+Date:   Mon, 13 Jul 2020 23:03:44 -0400
+Message-Id: <20200714030348.6214-1-mathieu.desnoyers@efficios.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 07, 2020 at 10:16:22AM +0800, Cathy Zhang wrote:
-> SERIALIZE instruction is supported by intel processors,
-> like Sapphire Rapids. Expose it in KVM supported cpuid.
+Recent discussion led to a solution for extending struct rseq. This is
+an implementation of the proposed solution.
 
-Providing at least a rough overview of the instruction, e.g. its enumeration,
-usage, fault rules, controls, etc... would be nice.  In isolation, the
-changelog isn't remotely helpful in understanding the correctness of the
-patch.
+Now is a good time to agree on this scheme before the release of glibc
+2.32, just in case there are small details to fix on the user-space
+side in order to allow extending struct rseq.
 
-> Signed-off-by: Cathy Zhang <cathy.zhang@intel.com>
-> ---
->  arch/x86/kvm/cpuid.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
-> 
-> diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
-> index 8a294f9..e603aeb 100644
-> --- a/arch/x86/kvm/cpuid.c
-> +++ b/arch/x86/kvm/cpuid.c
-> @@ -341,7 +341,8 @@ void kvm_set_cpu_caps(void)
->  	kvm_cpu_cap_mask(CPUID_7_EDX,
->  		F(AVX512_4VNNIW) | F(AVX512_4FMAPS) | F(SPEC_CTRL) |
->  		F(SPEC_CTRL_SSBD) | F(ARCH_CAPABILITIES) | F(INTEL_STIBP) |
-> -		F(MD_CLEAR) | F(AVX512_VP2INTERSECT) | F(FSRM)
-> +		F(MD_CLEAR) | F(AVX512_VP2INTERSECT) | F(FSRM) |
-> +		F(SERIALIZE)
->  	);
->  
->  	/* TSC_ADJUST and ARCH_CAPABILITIES are emulated in software. */
-> -- 
-> 1.8.3.1
-> 
+Thanks,
+
+Mathieu
+
+Mathieu Desnoyers (4):
+  selftests: rseq: Use fixed value as rseq_len parameter
+  rseq: Allow extending struct rseq
+  selftests: rseq: define __rseq_abi with extensible size
+  selftests: rseq: print rseq extensible size in basic test
+
+ include/linux/sched.h                     |  4 +++
+ include/uapi/linux/rseq.h                 | 42 ++++++++++++++++++++--
+ kernel/rseq.c                             | 44 +++++++++++++++++++----
+ tools/testing/selftests/rseq/basic_test.c | 15 ++++++++
+ tools/testing/selftests/rseq/rseq.c       |  8 +++--
+ 5 files changed, 101 insertions(+), 12 deletions(-)
+
+-- 
+2.17.1
+
