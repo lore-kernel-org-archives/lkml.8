@@ -7,24 +7,24 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C93C7C433FE
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 05:33:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9065C433FB
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 05:33:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A34D521927
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 05:33:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B7F41221E7
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 05:33:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726844AbgGNFd1 (ORCPT
+        id S1726827AbgGNFdZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 01:33:27 -0400
-Received: from out28-197.mail.aliyun.com ([115.124.28.197]:41155 "EHLO
-        out28-197.mail.aliyun.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726545AbgGNFdM (ORCPT
+        Tue, 14 Jul 2020 01:33:25 -0400
+Received: from out28-74.mail.aliyun.com ([115.124.28.74]:55866 "EHLO
+        out28-74.mail.aliyun.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726630AbgGNFdO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 01:33:12 -0400
-X-Alimail-AntiSpam: AC=CONTINUE;BC=0.08660413|-1;CH=green;DM=|CONTINUE|false|;DS=CONTINUE|ham_system_inform|0.00561206-0.000962136-0.993426;FP=0|0|0|0|0|-1|-1|-1;HT=e02c03275;MF=zhouyanjie@wanyeetech.com;NM=1;PH=DS;RN=15;RT=15;SR=0;TI=SMTPD_---.I1QwJ79_1594704779;
+        Tue, 14 Jul 2020 01:33:14 -0400
+X-Alimail-AntiSpam: AC=CONTINUE;BC=0.07436284|-1;CH=green;DM=|CONTINUE|false|;DS=CONTINUE|ham_regular_dialog|0.0113441-8.72379e-05-0.988569;FP=0|0|0|0|0|-1|-1|-1;HT=e02c03299;MF=zhouyanjie@wanyeetech.com;NM=1;PH=DS;RN=15;RT=15;SR=0;TI=SMTPD_---.I1QwJ79_1594704779;
 Received: from localhost.localdomain(mailfrom:zhouyanjie@wanyeetech.com fp:SMTPD_---.I1QwJ79_1594704779)
           by smtp.aliyun-inc.com(10.147.44.145);
-          Tue, 14 Jul 2020 13:33:06 +0800
+          Tue, 14 Jul 2020 13:33:09 +0800
 From:   =?UTF-8?q?=E5=91=A8=E7=90=B0=E6=9D=B0=20=28Zhou=20Yanjie=29?= 
         <zhouyanjie@wanyeetech.com>
 To:     tsbogend@alpha.franken.de, robh+dt@kernel.org
@@ -34,9 +34,9 @@ Cc:     linux-mips@vger.kernel.org, devicetree@vger.kernel.org,
         dongsheng.qiu@ingenic.com, aric.pzqi@ingenic.com,
         rick.tyliu@ingenic.com, yanfei.li@ingenic.com,
         sernia.zhou@foxmail.com, zhenwenjin@gmail.com
-Subject: [PATCH v4 2/5] dt-bindings: MIPS: Add X1830 based CU1830-Neo and fix bug in CU1000-Neo.
-Date:   Tue, 14 Jul 2020 13:32:26 +0800
-Message-Id: <20200714053229.33195-3-zhouyanjie@wanyeetech.com>
+Subject: [PATCH v4 4/5] MIPS: Ingenic: Fix bugs and add missing LED node for X1000.
+Date:   Tue, 14 Jul 2020 13:32:28 +0800
+Message-Id: <20200714053229.33195-5-zhouyanjie@wanyeetech.com>
 X-Mailer: git-send-email 2.11.0
 In-Reply-To: <20200714053229.33195-1-zhouyanjie@wanyeetech.com>
 References: <20200714053229.33195-1-zhouyanjie@wanyeetech.com>
@@ -48,60 +48,391 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-1.Add bindings for Ingenic X1830 based board, prepare for later dts.
-2.The CU1000-Neo board actually uses X1000E instead of X1000, so
-  the wrongly written "ingenic,x1000" in bindings should be changed
-  to "ingenic,x1000e", the corresponding dts file modification will
-  be made in a patch later in this series.
+1.The CU1000-Neo board actually uses X1000E instead of X1000,
+  so the wrongly written "ingenic,x1000" in compatible should
+  be changed to "ingenic,x1000e".
+2.Adjust the order of nodes according to the corresponding
+  address value.
+3.Drop unnecessary node in "wlan_pwrseq".
+4.Add the leds node to "cu1000-neo.dts".
 
 Tested-by: 周正 (Zhou Zheng) <sernia.zhou@foxmail.com>
 Signed-off-by: 周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>
 ---
 
 Notes:
-    v1->v2:
-    No change.
-    
-    v2->v3:
-    No change.
-    
-    v3->v4:
-    Modify the commit message and add the change description
-    for CU1000-Neo.
+    v4:
+    New patch.
 
- Documentation/devicetree/bindings/mips/ingenic/devices.yaml | 12 +++++++++---
- 1 file changed, 9 insertions(+), 3 deletions(-)
+ arch/mips/boot/dts/ingenic/cu1000-neo.dts | 114 +++++++++++++--------------
+ arch/mips/boot/dts/ingenic/x1000.dtsi     | 126 +++++++++++++++---------------
+ 2 files changed, 118 insertions(+), 122 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/mips/ingenic/devices.yaml b/Documentation/devicetree/bindings/mips/ingenic/devices.yaml
-index d1175030781a..feb695be9f66 100644
---- a/Documentation/devicetree/bindings/mips/ingenic/devices.yaml
-+++ b/Documentation/devicetree/bindings/mips/ingenic/devices.yaml
-@@ -8,7 +8,8 @@ title: Ingenic XBurst based Platforms Device Tree Bindings
+diff --git a/arch/mips/boot/dts/ingenic/cu1000-neo.dts b/arch/mips/boot/dts/ingenic/cu1000-neo.dts
+index 03abd94acd84..22a1066d637b 100644
+--- a/arch/mips/boot/dts/ingenic/cu1000-neo.dts
++++ b/arch/mips/boot/dts/ingenic/cu1000-neo.dts
+@@ -7,8 +7,8 @@
+ #include <dt-bindings/interrupt-controller/irq.h>
  
- maintainers:
-   - 周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>
--description: |
+ / {
+-	compatible = "yna,cu1000-neo", "ingenic,x1000";
+-	model = "YSH & ATIL General Board CU Neo";
++	compatible = "yna,cu1000-neo", "ingenic,x1000e";
++	model = "YSH & ATIL General Board CU1000-Neo";
+ 
+ 	aliases {
+ 		serial2 = &uart2;
+@@ -23,20 +23,19 @@
+ 		reg = <0x0 0x04000000>;
+ 	};
+ 
++	leds {
++		compatible = "gpio-leds";
++		led-0 {
++			gpios = <&gpb 21 GPIO_ACTIVE_HIGH>;
++			linux,default-trigger = "mmc0";
++		};
++	};
 +
-+description:
-   Devices with a Ingenic XBurst CPU shall have the following properties.
+ 	wlan_pwrseq: msc1-pwrseq {
+ 		compatible = "mmc-pwrseq-simple";
  
- properties:
-@@ -32,8 +33,13 @@ properties:
-           - const: img,ci20
-           - const: ingenic,jz4780
+-		clocks = <&lpoclk>;
+-		clock-names = "ext_clock";
+-
+ 		reset-gpios = <&gpc 17 GPIO_ACTIVE_LOW>;
+ 		post-power-on-delay-ms = <200>;
+-
+-		lpoclk: ap6212a {
+-			compatible = "fixed-clock";
+-			#clock-cells = <0>;
+-			clock-frequency = <32768>;
+-		};
+ 	};
+ };
  
--      - description: YSH & ATIL General Board CU Neo
-+      - description: YSH & ATIL General Board, CU1000 Module with Neo Backplane
-         items:
-           - const: yna,cu1000-neo
--          - const: ingenic,x1000
-+          - const: ingenic,x1000e
+@@ -53,6 +52,13 @@
+ 	ingenic,pwm-channels-mask = <0xfa>;
+ };
+ 
++&uart2 {
++	status = "okay";
 +
-+      - description: YSH & ATIL General Board, CU1830 Module with Neo Backplane
-+        items:
-+          - const: yna,cu1830-neo
-+          - const: ingenic,x1830
- ...
++	pinctrl-names = "default";
++	pinctrl-0 = <&pins_uart2>;
++};
++
+ &i2c0 {
+ 	status = "okay";
+ 
+@@ -61,43 +67,15 @@
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&pins_i2c0>;
+ 
+-	ads7830@48 {
++	ads7830: adc@48 {
+ 		compatible = "ti,ads7830";
+ 		reg = <0x48>;
+ 	};
+ };
+ 
+-&uart2 {
+-	pinctrl-names = "default";
+-	pinctrl-0 = <&pins_uart2>;
+-
+-	status = "okay";
+-};
+-
+-&mac {
+-	phy-mode = "rmii";
+-	phy-handle = <&lan8720a>;
+-
+-	pinctrl-names = "default";
+-	pinctrl-0 = <&pins_mac>;
+-
+-	snps,reset-gpio = <&gpc 23 GPIO_ACTIVE_LOW>; /* PC23 */
+-	snps,reset-active-low;
+-	snps,reset-delays-us = <0 10000 30000>;
+-
+-	status = "okay";
+-};
+-
+-&mdio {
++&msc0 {
+ 	status = "okay";
+ 
+-	lan8720a: ethernet-phy@0 {
+-		compatible = "ethernet-phy-id0007.c0f0", "ethernet-phy-ieee802.3-c22";
+-		reg = <0>;
+-	};
+-};
+-
+-&msc0 {
+ 	bus-width = <8>;
+ 	max-frequency = <50000000>;
+ 
+@@ -105,26 +83,23 @@
+ 	pinctrl-0 = <&pins_msc0>;
+ 
+ 	non-removable;
+-
+-	status = "okay";
+ };
+ 
+ &msc1 {
++	status = "okay";
++
++	#address-cells = <1>;
++	#size-cells = <0>;
+ 	bus-width = <4>;
+ 	max-frequency = <50000000>;
+ 
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&pins_msc1>;
+ 
+-	#address-cells = <1>;
+-	#size-cells = <0>;
+-
+ 	non-removable;
+ 
+ 	mmc-pwrseq = <&wlan_pwrseq>;
+ 
+-	status = "okay";
+-
+ 	ap6212a: wifi@1 {
+ 		compatible = "brcm,bcm4329-fmac";
+ 		reg = <1>;
+@@ -137,23 +112,40 @@
+ 	};
+ };
+ 
+-&pinctrl {
+-	pins_i2c0: i2c0 {
+-		function = "i2c0";
+-		groups = "i2c0-data";
+-		bias-disable;
++&mac {
++	status = "okay";
++
++	phy-mode = "rmii";
++	phy-handle = <&lan8720a>;
++
++	pinctrl-names = "default";
++	pinctrl-0 = <&pins_mac>;
++
++	snps,reset-gpio = <&gpc 23 GPIO_ACTIVE_LOW>; /* PC23 */
++	snps,reset-active-low;
++	snps,reset-delays-us = <0 10000 30000>;
++};
++
++&mdio {
++	status = "okay";
++
++	lan8720a: ethernet-phy@0 {
++		compatible = "ethernet-phy-id0007.c0f0", "ethernet-phy-ieee802.3-c22";
++		reg = <0>;
+ 	};
++};
+ 
++&pinctrl {
+ 	pins_uart2: uart2 {
+ 		function = "uart2";
+ 		groups = "uart2-data-d";
+-		bias-disable;
++		bias-pull-up;
+ 	};
+ 
+-	pins_mac: mac {
+-		function = "mac";
+-		groups = "mac";
+-		bias-disable;
++	pins_i2c0: i2c0 {
++		function = "i2c0";
++		groups = "i2c0-data";
++		bias-pull-up;
+ 	};
+ 
+ 	pins_msc0: msc0 {
+@@ -167,4 +159,10 @@
+ 		groups = "mmc1-1bit", "mmc1-4bit";
+ 		bias-disable;
+ 	};
++
++	pins_mac: mac {
++		function = "mac";
++		groups = "mac";
++		bias-disable;
++	};
+ };
+diff --git a/arch/mips/boot/dts/ingenic/x1000.dtsi b/arch/mips/boot/dts/ingenic/x1000.dtsi
+index 59a63a0985a8..9de9e7c2d523 100644
+--- a/arch/mips/boot/dts/ingenic/x1000.dtsi
++++ b/arch/mips/boot/dts/ingenic/x1000.dtsi
+@@ -48,9 +48,7 @@
+ 	};
+ 
+ 	tcu: timer@10002000 {
+-		compatible = "ingenic,x1000-tcu",
+-				 "ingenic,jz4770-tcu",
+-				 "simple-mfd";
++		compatible = "ingenic,x1000-tcu", "simple-mfd";
+ 		reg = <0x10002000 0x1000>;
+ 		#address-cells = <1>;
+ 		#size-cells = <1>;
+@@ -156,48 +154,6 @@
+ 		};
+ 	};
+ 
+-	i2c0: i2c-controller@10050000 {
+-		compatible = "ingenic,x1000-i2c";
+-		reg = <0x10050000 0x1000>;
+-		#address-cells = <1>;
+-		#size-cells = <0>;
+-
+-		interrupt-parent = <&intc>;
+-		interrupts = <60>;
+-
+-		clocks = <&cgu X1000_CLK_I2C0>;
+-
+-		status = "disabled";
+-	};
+-
+-	i2c1: i2c-controller@10051000 {
+-		compatible = "ingenic,x1000-i2c";
+-		reg = <0x10051000 0x1000>;
+-		#address-cells = <1>;
+-		#size-cells = <0>;
+-
+-		interrupt-parent = <&intc>;
+-		interrupts = <59>;
+-
+-		clocks = <&cgu X1000_CLK_I2C1>;
+-
+-		status = "disabled";
+-	};
+-
+-	i2c2: i2c-controller@10052000 {
+-		compatible = "ingenic,x1000-i2c";
+-		reg = <0x10052000 0x1000>;
+-		#address-cells = <1>;
+-		#size-cells = <0>;
+-
+-		interrupt-parent = <&intc>;
+-		interrupts = <58>;
+-
+-		clocks = <&cgu X1000_CLK_I2C2>;
+-
+-		status = "disabled";
+-	};
+-
+ 	uart0: serial@10030000 {
+ 		compatible = "ingenic,x1000-uart";
+ 		reg = <0x10030000 0x100>;
+@@ -237,37 +193,57 @@
+ 		status = "disabled";
+ 	};
+ 
+-	pdma: dma-controller@13420000 {
+-		compatible = "ingenic,x1000-dma";
+-		reg = <0x13420000 0x400>, <0x13421000 0x40>;
+-		#dma-cells = <2>;
++	i2c0: i2c-controller@10050000 {
++		compatible = "ingenic,x1000-i2c";
++		reg = <0x10050000 0x1000>;
++		#address-cells = <1>;
++		#size-cells = <0>;
+ 
+ 		interrupt-parent = <&intc>;
+-		interrupts = <10>;
++		interrupts = <60>;
+ 
+-		clocks = <&cgu X1000_CLK_PDMA>;
++		clocks = <&cgu X1000_CLK_I2C0>;
++
++		status = "disabled";
+ 	};
+ 
+-	mac: ethernet@134b0000 {
+-		compatible = "ingenic,x1000-mac", "snps,dwmac";
+-		reg = <0x134b0000 0x2000>;
++	i2c1: i2c-controller@10051000 {
++		compatible = "ingenic,x1000-i2c";
++		reg = <0x10051000 0x1000>;
++		#address-cells = <1>;
++		#size-cells = <0>;
+ 
+ 		interrupt-parent = <&intc>;
+-		interrupts = <55>;
+-		interrupt-names = "macirq";
++		interrupts = <59>;
+ 
+-		clocks = <&cgu X1000_CLK_MAC>;
+-		clock-names = "stmmaceth";
++		clocks = <&cgu X1000_CLK_I2C1>;
+ 
+ 		status = "disabled";
++	};
+ 
+-		mdio: mdio {
+-			compatible = "snps,dwmac-mdio";
+-			#address-cells = <1>;
+-			#size-cells = <0>;
++	i2c2: i2c-controller@10052000 {
++		compatible = "ingenic,x1000-i2c";
++		reg = <0x10052000 0x1000>;
++		#address-cells = <1>;
++		#size-cells = <0>;
+ 
+-			status = "disabled";
+-		};
++		interrupt-parent = <&intc>;
++		interrupts = <58>;
++
++		clocks = <&cgu X1000_CLK_I2C2>;
++
++		status = "disabled";
++	};
++
++	pdma: dma-controller@13420000 {
++		compatible = "ingenic,x1000-dma";
++		reg = <0x13420000 0x400>, <0x13421000 0x40>;
++		#dma-cells = <2>;
++
++		interrupt-parent = <&intc>;
++		interrupts = <10>;
++
++		clocks = <&cgu X1000_CLK_PDMA>;
+ 	};
+ 
+ 	msc0: mmc@13450000 {
+@@ -311,4 +287,26 @@
+ 
+ 		status = "disabled";
+ 	};
++
++	mac: ethernet@134b0000 {
++		compatible = "ingenic,x1000-mac", "snps,dwmac";
++		reg = <0x134b0000 0x2000>;
++
++		interrupt-parent = <&intc>;
++		interrupts = <55>;
++		interrupt-names = "macirq";
++
++		clocks = <&cgu X1000_CLK_MAC>;
++		clock-names = "stmmaceth";
++
++		status = "disabled";
++
++		mdio: mdio {
++			compatible = "snps,dwmac-mdio";
++			#address-cells = <1>;
++			#size-cells = <0>;
++
++			status = "disabled";
++		};
++	};
+ };
 -- 
 2.11.0
 
