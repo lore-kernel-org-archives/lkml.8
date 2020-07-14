@@ -7,67 +7,67 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B40B6C433EC
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 20:05:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D69E9C433F4
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 20:05:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 922E6212CC
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 20:05:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B43FF21D80
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 20:05:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="fLGHaDr7"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="BIyPWwdn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730176AbgGNUFG (ORCPT
+        id S1730022AbgGNUFM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 16:05:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50680 "EHLO
+        Tue, 14 Jul 2020 16:05:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50684 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730107AbgGNUE7 (ORCPT
+        with ESMTP id S1730123AbgGNUFB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 16:04:59 -0400
-Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C8277C061755
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 13:04:59 -0700 (PDT)
-Received: by mail-pl1-x643.google.com with SMTP id x9so7481998plr.2
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 13:04:59 -0700 (PDT)
+        Tue, 14 Jul 2020 16:05:01 -0400
+Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 07DD1C061755
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 13:05:01 -0700 (PDT)
+Received: by mail-pl1-x641.google.com with SMTP id 72so7484269ple.0
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 13:05:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=/YiyO8YAURPMKhdCUUf90yIifUk9z/vNRci8et/i7Y4=;
-        b=fLGHaDr7EGhI0ARXCJ6FH15LxIgXWZnfSIc3WnGgMWJwl028i6hQ3LB6bvS56g26XA
-         FcY/0tJaJ2tdTNk0oIaThlXdzziyQdbHs/AcjMxu+6RWhHMyANZePUH2rjyLY3R387EX
-         GM4lXJzKgt6Znm+vKyzm6vLGFf1bA0WKqSTBpW2U2HP/xBXPpPZFQqY1R2yZLq6S1tN8
-         e+Yj5vYAnjzyKxHIpLd+Fzw9F4HKOzBe0o+f1C4vC7JyPXtdzTWYMq3r8G9ld+zNVrSr
-         qDVhLGSJQ1S7mHOGXl0s519r/zc2k+lLYCsMHO2S9WoxpouX6TnAQFmU0dF2jq1o30Ey
-         dM5Q==
+        bh=QJEcAvXCkMubZ5CvQAwW4/233WmH+zu/CCD6+/Cfr60=;
+        b=BIyPWwdnQqdLgzRx9cNGys4K4Pu3bhZEesGNSVDGZxDEXs2zbZQQZyhbbHp2epIS96
+         J+nEoi/pULu61ZtxPYE3Bfjbka5SW/KZjZIoaA3Y+A/U57Rncged53Djhc3g2bXY6z3H
+         +85B5dHbMWroWGxKepDR5lOKxzqOL6RdhTUTPoDSf+nDjkp+uiaB+nd1Iog/bnQsOaqd
+         9n5JtYVde8Q6jaFb6CEwdHPRFaHg9v1l06V5Qhs9nPHo4Y1PjxI1jl0iVf8K6pgr/eOM
+         FM5kIjQkmEbSCe2XJ5lfaGZhvPlk+0xUNhgTmz4ny67/zx5JSFx8+5ml4S+o9Eq6DRc+
+         LOgQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=/YiyO8YAURPMKhdCUUf90yIifUk9z/vNRci8et/i7Y4=;
-        b=BC3CZdXjEONUoNoKPe8lT7Kn3sIYRHWTAR2WhPHy6U3Mh3hQx04xReVSkhcK12G/uC
-         fcLiBxnq2Y90ETUtZ3NSaXvhhye0PwkDfOYkwvzuVXnEGHsW7BktEnRxaBfIAnOArML1
-         q5FD6Zdc6Dm77p+2tIwsu/ZegJLEWyn0ce4FJi6fr90jt7GilYwGDYBnIDCviQKVo9/1
-         aPr/EJg9wfefCuSQG9kvZGgXP/Bx7qKAuCxoj+9eZ8o9t4rNzGPcfysE8PhwGn9SJB/n
-         +uUyyquPdgh3e+y4dGYZ77YgXXr4oVC+K2Q3DL/x8tXHPLxk/o6MxeVxX1qvOYnns6h1
-         q6aA==
-X-Gm-Message-State: AOAM530vZGVp5OCHCiFabYCKktkEqdYvEawWIy2LBD4n1hXxVZCTaUxb
-        gIh98bT9ZxUl93Uj2i9joStCRA==
-X-Google-Smtp-Source: ABdhPJxCgxZL477MT/4ssjdsMbb7uSFgaJyv5Am639vvkRN66dzOSJdYNppKZ+oP/EXpPWLRvPwvfQ==
-X-Received: by 2002:a17:90a:e60b:: with SMTP id j11mr6489416pjy.189.1594757099351;
-        Tue, 14 Jul 2020 13:04:59 -0700 (PDT)
+        bh=QJEcAvXCkMubZ5CvQAwW4/233WmH+zu/CCD6+/Cfr60=;
+        b=XzzKvJNX3ZSo3Fttver4MSXKJEFYbC4USRm88yHOxAVDf31R/B0viLgI0sUi3KZ0zj
+         j7RImTPpCu1Ea5YWjjg+VAypysbh/Qhh/l7DyNTSlj5HElUcK9ODE7gbhWiphqStuLMg
+         dlpWmxeDS+HQwp44bBOgHdCklx1cvjnHIj5aMEDi6JVET6b+EY7zGn/oiZeWMChf3Nyg
+         798zwxnprm95pUVXJxijC1xhFAjPYpmJ2e5LBHUpzOjGdk/UU0QFpB0gxtknTGRYP87n
+         1767E6a/Da2rc71trZN/vsldkJvnAsuFt2Vo5lly2hczUlyha0K02FnJ5xAyJB8fViB/
+         jSWw==
+X-Gm-Message-State: AOAM531EqZBv79SmKr4w5kqe0SoEbmQLpHojAFewuUeL4gCqcK3JILVN
+        1uWoRqeNm4vvUF+xFwbTrycIpw==
+X-Google-Smtp-Source: ABdhPJwaKsSwOg/f51cv/yU6D2+O0bNi34srVgzYHBWsLtjgqOy83hgxLW3gTKAwMRf8Q/DDyFSVvQ==
+X-Received: by 2002:a17:90a:3684:: with SMTP id t4mr6142014pjb.91.1594757100594;
+        Tue, 14 Jul 2020 13:05:00 -0700 (PDT)
 Received: from xps15.cg.shawcable.net (S0106002369de4dac.cg.shawcable.net. [68.147.8.254])
-        by smtp.gmail.com with ESMTPSA id t13sm3262959pjs.17.2020.07.14.13.04.58
+        by smtp.gmail.com with ESMTPSA id t13sm3262959pjs.17.2020.07.14.13.04.59
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 Jul 2020 13:04:58 -0700 (PDT)
+        Tue, 14 Jul 2020 13:05:00 -0700 (PDT)
 From:   Mathieu Poirier <mathieu.poirier@linaro.org>
 To:     ohad@wizery.com, bjorn.andersson@linaro.org, loic.pallardy@st.com,
         arnaud.pouliquen@st.com, mcoquelin.stm32@gmail.com,
         alexandre.torgue@st.com
 Cc:     linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-stm32@st-md-mailman.stormreply.com
-Subject: [PATCH v6 09/11] remoteproc: stm32: Properly handle the resource table when attaching
-Date:   Tue, 14 Jul 2020 14:04:43 -0600
-Message-Id: <20200714200445.1427257-10-mathieu.poirier@linaro.org>
+Subject: [PATCH v6 10/11] remoteproc: stm32: Introduce new attach() operation
+Date:   Tue, 14 Jul 2020 14:04:44 -0600
+Message-Id: <20200714200445.1427257-11-mathieu.poirier@linaro.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200714200445.1427257-1-mathieu.poirier@linaro.org>
 References: <20200714200445.1427257-1-mathieu.poirier@linaro.org>
@@ -78,8 +78,8 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Properly set the remote processor's resource table based on where it was
-loaded by the external entity when attaching to a remote processor.
+Introduce new attach function to be used when attaching to a
+remote processor.
 
 Mainly based on the work published by Arnaud Pouliquen [1].
 
@@ -87,117 +87,35 @@ Mainly based on the work published by Arnaud Pouliquen [1].
 
 Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
 ---
- drivers/remoteproc/stm32_rproc.c | 76 ++++++++++++++++++++++++++++++++
- 1 file changed, 76 insertions(+)
+ drivers/remoteproc/stm32_rproc.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
 diff --git a/drivers/remoteproc/stm32_rproc.c b/drivers/remoteproc/stm32_rproc.c
-index 2a1cccd8d311..882229f3b1c9 100644
+index 882229f3b1c9..7145cd49616e 100644
 --- a/drivers/remoteproc/stm32_rproc.c
 +++ b/drivers/remoteproc/stm32_rproc.c
-@@ -39,6 +39,8 @@
- #define STM32_MBX_VQ1_ID	1
- #define STM32_MBX_SHUTDOWN	"shutdown"
- 
-+#define RSC_TBL_SIZE		1024
-+
- #define M4_STATE_OFF		0
- #define M4_STATE_INI		1
- #define M4_STATE_CRUN		2
-@@ -86,6 +88,7 @@ struct stm32_rproc {
- 	struct stm32_mbox mb[MBOX_NB_MBX];
- 	struct workqueue_struct *workqueue;
- 	bool secured_soc;
-+	void __iomem *rsc_va;
- };
- 
- static int stm32_rproc_pa_to_da(struct rproc *rproc, phys_addr_t pa, u64 *da)
-@@ -669,6 +672,75 @@ static int stm32_rproc_get_m4_status(struct stm32_rproc *ddata,
- 	return regmap_read(ddata->m4_state.map, ddata->m4_state.reg, state);
+@@ -460,6 +460,13 @@ static int stm32_rproc_start(struct rproc *rproc)
+ 	return stm32_rproc_set_hold_boot(rproc, true);
  }
  
-+static int stm32_rproc_da_to_pa(struct platform_device *pdev,
-+				struct stm32_rproc *ddata,
-+				u64 da, phys_addr_t *pa)
++static int stm32_rproc_attach(struct rproc *rproc)
 +{
-+	struct device *dev = &pdev->dev;
-+	struct stm32_rproc_mem *p_mem;
-+	unsigned int i;
++	stm32_rproc_add_coredump_trace(rproc);
 +
-+	for (i = 0; i < ddata->nb_rmems; i++) {
-+		p_mem = &ddata->rmems[i];
-+
-+		if (da < p_mem->dev_addr ||
-+		    da >= p_mem->dev_addr + p_mem->size)
-+			continue;
-+
-+		*pa = da - p_mem->dev_addr + p_mem->bus_addr;
-+		dev_dbg(dev, "da %llx to pa %#x\n", da, *pa);
-+
-+		return 0;
-+	}
-+
-+	dev_err(dev, "can't translate da %llx\n", da);
-+
-+	return -EINVAL;
++	return stm32_rproc_set_hold_boot(rproc, true);
 +}
 +
-+static int stm32_rproc_get_loaded_rsc_table(struct platform_device *pdev,
-+					    struct rproc *rproc,
-+					    struct stm32_rproc *ddata)
-+{
-+	struct device *dev = &pdev->dev;
-+	phys_addr_t rsc_pa;
-+	u32 rsc_da;
-+	int err;
-+
-+	err = regmap_read(ddata->rsctbl.map, ddata->rsctbl.reg, &rsc_da);
-+	if (err) {
-+		dev_err(dev, "failed to read rsc tbl addr\n");
-+		return err;
-+	}
-+
-+	if (!rsc_da)
-+		/* no rsc table */
-+		return 0;
-+
-+	err = stm32_rproc_da_to_pa(pdev, ddata, rsc_da, &rsc_pa);
-+	if (err)
-+		return err;
-+
-+	ddata->rsc_va = devm_ioremap_wc(dev, rsc_pa, RSC_TBL_SIZE);
-+	if (IS_ERR_OR_NULL(ddata->rsc_va)) {
-+		dev_err(dev, "Unable to map memory region: %pa+%zx\n",
-+			&rsc_pa, RSC_TBL_SIZE);
-+		ddata->rsc_va = NULL;
-+		return -ENOMEM;
-+	}
-+
-+	/*
-+	 * The resource table is already loaded in device memory, no need
-+	 * to work with a cached table.
-+	 */
-+	rproc->cached_table = NULL;
-+	/* Assuming the resource table fits in 1kB is fair */
-+	rproc->table_sz = RSC_TBL_SIZE;
-+	rproc->table_ptr = (struct resource_table *)ddata->rsc_va;
-+
-+	return 0;
-+}
-+
- static int stm32_rproc_probe(struct platform_device *pdev)
+ static int stm32_rproc_stop(struct rproc *rproc)
  {
- 	struct device *dev = &pdev->dev;
-@@ -708,6 +780,10 @@ static int stm32_rproc_probe(struct platform_device *pdev)
- 		ret = stm32_rproc_parse_memory_regions(rproc);
- 		if (ret)
- 			goto free_resources;
-+
-+		ret = stm32_rproc_get_loaded_rsc_table(pdev, rproc, ddata);
-+		if (ret)
-+			goto free_resources;
- 	}
- 
- 	rproc->has_iommu = false;
+ 	struct stm32_rproc *ddata = rproc->priv;
+@@ -525,6 +532,7 @@ static void stm32_rproc_kick(struct rproc *rproc, int vqid)
+ static struct rproc_ops st_rproc_ops = {
+ 	.start		= stm32_rproc_start,
+ 	.stop		= stm32_rproc_stop,
++	.attach		= stm32_rproc_attach,
+ 	.kick		= stm32_rproc_kick,
+ 	.load		= rproc_elf_load_segments,
+ 	.parse_fw	= stm32_rproc_parse_fw,
 -- 
 2.25.1
 
