@@ -2,50 +2,53 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AA84C433F2
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:52:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82594C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:52:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E852722B48
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:52:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5AF4922B48
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:52:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594752732;
-	bh=pqw5UfEYGYT8ol4RNywBnTNu1KP+OoGQYk4BTsvHyYU=;
+	s=default; t=1594752721;
+	bh=/i/L+QXEIyiTeQwGZtEm3vN+93SIRsNOgz5dGm0N9jg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2A2wU3TrsSmBiuycaomujvNmHXXrzG0nmyrldslo6iQpy3bbkX3eeFbJkUnhHXGWN
-	 uy1uNlC4jaepsqFfkWKqEvZCbkonVO7SrU+YAw5Lg0/M+sbda74TIoTOUA37NrHL3F
-	 rHiCFjNAfT6/ttk8Ttxe6mhH4bGXYncW3ivjBZg8=
+	b=r1Ndqlct9Y8LUR9nszwWZAV8lX2a7KyVTxyyjmCWJ7dSjYVFM+3dnocttaLRbqVyn
+	 951ysr4rETZVkzn1313R8xh+sSF6I2SxkvOycAs952mgBiQFgC0GZg65o5SyAJWxwZ
+	 uo1MLIxV6ZUVlzEZH/ZOgM1nwq8dmTQDXORak1jk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730483AbgGNSwK (ORCPT
+        id S1730457AbgGNSwA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 14:52:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48746 "EHLO mail.kernel.org"
+        Tue, 14 Jul 2020 14:52:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48494 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730476AbgGNSwH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 14:52:07 -0400
+        id S1730020AbgGNSv5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 14:51:57 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D2CF122B48;
-        Tue, 14 Jul 2020 18:52:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7B25022B48;
+        Tue, 14 Jul 2020 18:51:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594752726;
-        bh=pqw5UfEYGYT8ol4RNywBnTNu1KP+OoGQYk4BTsvHyYU=;
+        s=default; t=1594752716;
+        bh=/i/L+QXEIyiTeQwGZtEm3vN+93SIRsNOgz5dGm0N9jg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nBUJUNV5UMzefvehC/cW7s6dF+qatrRhF64/+MxaQWviF1UBMH5+qNbeGYuJwJrJB
-         ZTsLD9YTC33TrKPQUZ0B61l2bY+yWDo5ldOTyEQfY2OWqJ9An4AAq4P8onP+0UAIfO
-         zeMfviOkrZY/n9HFKypsbjnuzRCz7MajPM4f63YM=
+        b=IGvskTe9NnOhiZqYPuypxNZXYgz5GG3Knc719Opw4bPW2O3ToR/KIo6W/hLLIh2Qq
+         xcKumh++rlgrlhAZAuECTuzsZG1f1nDevwGMnEQ/ghSGF6fC2bTPF0V/xDC3dWaZYT
+         G/qh3h9wC6n5ENkgn3Xq8p6ys4fnh4t91T0ux3gE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kees Cook <keescook@chromium.org>
-Subject: [PATCH 5.4 087/109] kallsyms: Refactor kallsyms_show_value() to take cred
-Date:   Tue, 14 Jul 2020 20:44:30 +0200
-Message-Id: <20200714184109.715957926@linuxfoundation.org>
+        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
+        syzbot <syzkaller@googlegroups.com>,
+        Pablo Neira Ayuso <pablo@netfilter.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 042/109] netfilter: ipset: call ip_set_free() instead of kfree()
+Date:   Tue, 14 Jul 2020 20:43:45 +0200
+Message-Id: <20200714184107.535209568@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200714184105.507384017@linuxfoundation.org>
 References: <20200714184105.507384017@linuxfoundation.org>
@@ -58,142 +61,134 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kees Cook <keescook@chromium.org>
+From: Eric Dumazet <edumazet@google.com>
 
-commit 160251842cd35a75edfb0a1d76afa3eb674ff40a upstream.
+[ Upstream commit c4e8fa9074ad94f80e5c0dcaa16b313e50e958c5 ]
 
-In order to perform future tests against the cred saved during open(),
-switch kallsyms_show_value() to operate on a cred, and have all current
-callers pass current_cred(). This makes it very obvious where callers
-are checking the wrong credential in their "read" contexts. These will
-be fixed in the coming patches.
+Whenever ip_set_alloc() is used, allocated memory can either
+use kmalloc() or vmalloc(). We should call kvfree() or
+ip_set_free()
 
-Additionally switch return value to bool, since it is always used as a
-direct permission check, not a 0-on-success, negative-on-error style
-function return.
+invalid opcode: 0000 [#1] PREEMPT SMP KASAN
+CPU: 0 PID: 21935 Comm: syz-executor.3 Not tainted 5.8.0-rc2-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+RIP: 0010:__phys_addr+0xa7/0x110 arch/x86/mm/physaddr.c:28
+Code: 1d 7a 09 4c 89 e3 31 ff 48 d3 eb 48 89 de e8 d0 58 3f 00 48 85 db 75 0d e8 26 5c 3f 00 4c 89 e0 5b 5d 41 5c c3 e8 19 5c 3f 00 <0f> 0b e8 12 5c 3f 00 48 c7 c0 10 10 a8 89 48 ba 00 00 00 00 00 fc
+RSP: 0000:ffffc900018572c0 EFLAGS: 00010046
+RAX: 0000000000040000 RBX: 0000000000000001 RCX: ffffc9000fac3000
+RDX: 0000000000040000 RSI: ffffffff8133f437 RDI: 0000000000000007
+RBP: ffffc90098aff000 R08: 0000000000000000 R09: ffff8880ae636cdb
+R10: 0000000000000000 R11: 0000000000000000 R12: 0000408018aff000
+R13: 0000000000080000 R14: 000000000000001d R15: ffffc900018573d8
+FS:  00007fc540c66700(0000) GS:ffff8880ae600000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007fc9dcd67200 CR3: 0000000059411000 CR4: 00000000001406f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ virt_to_head_page include/linux/mm.h:841 [inline]
+ virt_to_cache mm/slab.h:474 [inline]
+ kfree+0x77/0x2c0 mm/slab.c:3749
+ hash_net_create+0xbb2/0xd70 net/netfilter/ipset/ip_set_hash_gen.h:1536
+ ip_set_create+0x6a2/0x13c0 net/netfilter/ipset/ip_set_core.c:1128
+ nfnetlink_rcv_msg+0xbe8/0xea0 net/netfilter/nfnetlink.c:230
+ netlink_rcv_skb+0x15a/0x430 net/netlink/af_netlink.c:2469
+ nfnetlink_rcv+0x1ac/0x420 net/netfilter/nfnetlink.c:564
+ netlink_unicast_kernel net/netlink/af_netlink.c:1303 [inline]
+ netlink_unicast+0x533/0x7d0 net/netlink/af_netlink.c:1329
+ netlink_sendmsg+0x856/0xd90 net/netlink/af_netlink.c:1918
+ sock_sendmsg_nosec net/socket.c:652 [inline]
+ sock_sendmsg+0xcf/0x120 net/socket.c:672
+ ____sys_sendmsg+0x6e8/0x810 net/socket.c:2352
+ ___sys_sendmsg+0xf3/0x170 net/socket.c:2406
+ __sys_sendmsg+0xe5/0x1b0 net/socket.c:2439
+ do_syscall_64+0x60/0xe0 arch/x86/entry/common.c:359
+ entry_SYSCALL_64_after_hwframe+0x44/0xa9
+RIP: 0033:0x45cb19
+Code: Bad RIP value.
+RSP: 002b:00007fc540c65c78 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
+RAX: ffffffffffffffda RBX: 00000000004fed80 RCX: 000000000045cb19
+RDX: 0000000000000000 RSI: 0000000020001080 RDI: 0000000000000003
+RBP: 000000000078bf00 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 00000000ffffffff
+R13: 000000000000095e R14: 00000000004cc295 R15: 00007fc540c666d4
 
-Cc: stable@vger.kernel.org
-Signed-off-by: Kees Cook <keescook@chromium.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Fixes: f66ee0410b1c ("netfilter: ipset: Fix "INFO: rcu detected stall in hash_xxx" reports")
+Fixes: 03c8b234e61a ("netfilter: ipset: Generalize extensions support")
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Reported-by: syzbot <syzkaller@googlegroups.com>
+Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/linux/filter.h   |    2 +-
- include/linux/kallsyms.h |    5 +++--
- kernel/kallsyms.c        |   17 +++++++++++------
- kernel/kprobes.c         |    4 ++--
- kernel/module.c          |    2 +-
- 5 files changed, 18 insertions(+), 12 deletions(-)
+ net/netfilter/ipset/ip_set_bitmap_ip.c    | 2 +-
+ net/netfilter/ipset/ip_set_bitmap_ipmac.c | 2 +-
+ net/netfilter/ipset/ip_set_bitmap_port.c  | 2 +-
+ net/netfilter/ipset/ip_set_hash_gen.h     | 4 ++--
+ 4 files changed, 5 insertions(+), 5 deletions(-)
 
---- a/include/linux/filter.h
-+++ b/include/linux/filter.h
-@@ -858,7 +858,7 @@ static inline bool bpf_dump_raw_ok(void)
- 	/* Reconstruction of call-sites is dependent on kallsyms,
- 	 * thus make dump the same restriction.
- 	 */
--	return kallsyms_show_value() == 1;
-+	return kallsyms_show_value(current_cred());
- }
- 
- struct bpf_prog *bpf_patch_insn_single(struct bpf_prog *prog, u32 off,
---- a/include/linux/kallsyms.h
-+++ b/include/linux/kallsyms.h
-@@ -18,6 +18,7 @@
- #define KSYM_SYMBOL_LEN (sizeof("%s+%#lx/%#lx [%s]") + (KSYM_NAME_LEN - 1) + \
- 			 2*(BITS_PER_LONG*3/10) + (MODULE_NAME_LEN - 1) + 1)
- 
-+struct cred;
- struct module;
- 
- static inline int is_kernel_inittext(unsigned long addr)
-@@ -98,7 +99,7 @@ int lookup_symbol_name(unsigned long add
- int lookup_symbol_attrs(unsigned long addr, unsigned long *size, unsigned long *offset, char *modname, char *name);
- 
- /* How and when do we show kallsyms values? */
--extern int kallsyms_show_value(void);
-+extern bool kallsyms_show_value(const struct cred *cred);
- 
- #else /* !CONFIG_KALLSYMS */
- 
-@@ -158,7 +159,7 @@ static inline int lookup_symbol_attrs(un
- 	return -ERANGE;
- }
- 
--static inline int kallsyms_show_value(void)
-+static inline bool kallsyms_show_value(const struct cred *cred)
- {
- 	return false;
- }
---- a/kernel/kallsyms.c
-+++ b/kernel/kallsyms.c
-@@ -645,19 +645,20 @@ static inline int kallsyms_for_perf(void
-  * Otherwise, require CAP_SYSLOG (assuming kptr_restrict isn't set to
-  * block even that).
-  */
--int kallsyms_show_value(void)
-+bool kallsyms_show_value(const struct cred *cred)
- {
- 	switch (kptr_restrict) {
- 	case 0:
- 		if (kallsyms_for_perf())
--			return 1;
-+			return true;
- 	/* fallthrough */
- 	case 1:
--		if (has_capability_noaudit(current, CAP_SYSLOG))
--			return 1;
-+		if (security_capable(cred, &init_user_ns, CAP_SYSLOG,
-+				     CAP_OPT_NOAUDIT) == 0)
-+			return true;
- 	/* fallthrough */
- 	default:
--		return 0;
-+		return false;
- 	}
- }
- 
-@@ -674,7 +675,11 @@ static int kallsyms_open(struct inode *i
+diff --git a/net/netfilter/ipset/ip_set_bitmap_ip.c b/net/netfilter/ipset/ip_set_bitmap_ip.c
+index d934384f31ad6..6e3cf4d19ce88 100644
+--- a/net/netfilter/ipset/ip_set_bitmap_ip.c
++++ b/net/netfilter/ipset/ip_set_bitmap_ip.c
+@@ -314,7 +314,7 @@ bitmap_ip_create(struct net *net, struct ip_set *set, struct nlattr *tb[],
+ 	set->variant = &bitmap_ip;
+ 	if (!init_map_ip(set, map, first_ip, last_ip,
+ 			 elements, hosts, netmask)) {
+-		kfree(map);
++		ip_set_free(map);
  		return -ENOMEM;
- 	reset_iter(iter, 0);
- 
--	iter->show_value = kallsyms_show_value();
-+	/*
-+	 * Instead of checking this on every s_show() call, cache
-+	 * the result here at open time.
-+	 */
-+	iter->show_value = kallsyms_show_value(file->f_cred);
- 	return 0;
- }
- 
---- a/kernel/kprobes.c
-+++ b/kernel/kprobes.c
-@@ -2362,7 +2362,7 @@ static void report_probe(struct seq_file
- 	else
- 		kprobe_type = "k";
- 
--	if (!kallsyms_show_value())
-+	if (!kallsyms_show_value(current_cred()))
- 		addr = NULL;
- 
- 	if (sym)
-@@ -2463,7 +2463,7 @@ static int kprobe_blacklist_seq_show(str
- 	 * If /proc/kallsyms is not showing kernel address, we won't
- 	 * show them here either.
- 	 */
--	if (!kallsyms_show_value())
-+	if (!kallsyms_show_value(current_cred()))
- 		seq_printf(m, "0x%px-0x%px\t%ps\n", NULL, NULL,
- 			   (void *)ent->start_addr);
- 	else
---- a/kernel/module.c
-+++ b/kernel/module.c
-@@ -4391,7 +4391,7 @@ static int modules_open(struct inode *in
- 
- 	if (!err) {
- 		struct seq_file *m = file->private_data;
--		m->private = kallsyms_show_value() ? NULL : (void *)8ul;
-+		m->private = kallsyms_show_value(current_cred()) ? NULL : (void *)8ul;
  	}
- 
- 	return err;
+ 	if (tb[IPSET_ATTR_TIMEOUT]) {
+diff --git a/net/netfilter/ipset/ip_set_bitmap_ipmac.c b/net/netfilter/ipset/ip_set_bitmap_ipmac.c
+index e8532783b43aa..ae7cdc0d0f29a 100644
+--- a/net/netfilter/ipset/ip_set_bitmap_ipmac.c
++++ b/net/netfilter/ipset/ip_set_bitmap_ipmac.c
+@@ -363,7 +363,7 @@ bitmap_ipmac_create(struct net *net, struct ip_set *set, struct nlattr *tb[],
+ 	map->memsize = BITS_TO_LONGS(elements) * sizeof(unsigned long);
+ 	set->variant = &bitmap_ipmac;
+ 	if (!init_map_ipmac(set, map, first_ip, last_ip, elements)) {
+-		kfree(map);
++		ip_set_free(map);
+ 		return -ENOMEM;
+ 	}
+ 	if (tb[IPSET_ATTR_TIMEOUT]) {
+diff --git a/net/netfilter/ipset/ip_set_bitmap_port.c b/net/netfilter/ipset/ip_set_bitmap_port.c
+index e3ac914fff1a5..d4a14750f5c42 100644
+--- a/net/netfilter/ipset/ip_set_bitmap_port.c
++++ b/net/netfilter/ipset/ip_set_bitmap_port.c
+@@ -247,7 +247,7 @@ bitmap_port_create(struct net *net, struct ip_set *set, struct nlattr *tb[],
+ 	map->memsize = BITS_TO_LONGS(elements) * sizeof(unsigned long);
+ 	set->variant = &bitmap_port;
+ 	if (!init_map_port(set, map, first_port, last_port)) {
+-		kfree(map);
++		ip_set_free(map);
+ 		return -ENOMEM;
+ 	}
+ 	if (tb[IPSET_ATTR_TIMEOUT]) {
+diff --git a/net/netfilter/ipset/ip_set_hash_gen.h b/net/netfilter/ipset/ip_set_hash_gen.h
+index 2389c9f89e481..a7a982a3e6761 100644
+--- a/net/netfilter/ipset/ip_set_hash_gen.h
++++ b/net/netfilter/ipset/ip_set_hash_gen.h
+@@ -682,7 +682,7 @@ mtype_resize(struct ip_set *set, bool retried)
+ 	}
+ 	t->hregion = ip_set_alloc(ahash_sizeof_regions(htable_bits));
+ 	if (!t->hregion) {
+-		kfree(t);
++		ip_set_free(t);
+ 		ret = -ENOMEM;
+ 		goto out;
+ 	}
+@@ -1533,7 +1533,7 @@ IPSET_TOKEN(HTYPE, _create)(struct net *net, struct ip_set *set,
+ 	}
+ 	t->hregion = ip_set_alloc(ahash_sizeof_regions(hbits));
+ 	if (!t->hregion) {
+-		kfree(t);
++		ip_set_free(t);
+ 		kfree(h);
+ 		return -ENOMEM;
+ 	}
+-- 
+2.25.1
+
 
 
