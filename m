@@ -2,430 +2,268 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81B54C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 07:20:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C22C9C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 07:21:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 61DA3207BB
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 07:20:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 965DF207BB
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 07:21:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="G1ij+rBs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726477AbgGNHUs (ORCPT
+        id S1726798AbgGNHVz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 03:20:48 -0400
-Received: from smtp2207-205.mail.aliyun.com ([121.197.207.205]:43350 "EHLO
-        smtp2207-205.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725306AbgGNHUr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 03:20:47 -0400
-X-Alimail-AntiSpam: AC=CONTINUE;BC=0.07436283|-1;CH=green;DM=|CONTINUE|false|;DS=CONTINUE|ham_system_inform|0.610353-0.000446443-0.389201;FP=0|0|0|0|0|-1|-1|-1;HT=e02c03301;MF=frank@allwinnertech.com;NM=1;PH=DS;RN=10;RT=10;SR=0;TI=SMTPD_---.I1TtOEL_1594711236;
-Received: from allwinnertech.com(mailfrom:frank@allwinnertech.com fp:SMTPD_---.I1TtOEL_1594711236)
-          by smtp.aliyun-inc.com(10.147.40.26);
-          Tue, 14 Jul 2020 15:20:40 +0800
-From:   Frank Lee <frank@allwinnertech.com>
-To:     robh+dt@kernel.org, mripard@kernel.org, wens@csie.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Cc:     tiny.windzz@gmail.com, huangshuosheng@allwinnertech.com,
-        liyong@allwinnertech.com, Yangtao Li <frank@allwinnertech.com>
-Subject: [PATCH v4 14/16] arm64: allwinner: A100: add the basical Allwinner A100 DTSI file
-Date:   Tue, 14 Jul 2020 15:20:29 +0800
-Message-Id: <f7f86c648bad6e72f8fc8117b96065bf5326a273.1594708864.git.frank@allwinnertech.com>
-X-Mailer: git-send-email 2.24.0
-In-Reply-To: <cover.1594708863.git.frank@allwinnertech.com>
-References: <cover.1594708863.git.frank@allwinnertech.com>
+        Tue, 14 Jul 2020 03:21:55 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:64549 "EHLO m43-7.mailgun.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725306AbgGNHVy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 03:21:54 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1594711313; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=g+7CvZDLH4+dV0RR1o5l6XfYy1r2BwGxUi5cULYTmy8=;
+ b=G1ij+rBsaRk2OP8Nk1VqurTK8Lfg0+WvqdNWogsjC6yW8ibQCPm1wsnSydRA8y1tH/lYo0Kd
+ ZYeOWEWAoQiqRRDNIKL8SQvuXN6xLXNV94FAdwRi3ikOhCUS/byvYum7I4mwxCRd+m4Fycpw
+ sA/Hqe89gNphHhvb4nPio+lwidI=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n20.prod.us-west-2.postgun.com with SMTP id
+ 5f0d5d0fee866185759a8640 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 14 Jul 2020 07:21:51
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id A1AAEC43391; Tue, 14 Jul 2020 07:21:50 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: dikshita)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 5B209C433CA;
+        Tue, 14 Jul 2020 07:21:49 +0000 (UTC)
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
 Content-Transfer-Encoding: 8bit
+Date:   Tue, 14 Jul 2020 12:51:49 +0530
+From:   dikshita@codeaurora.org
+To:     Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Cc:     Nicolas Dufresne <nicolas@ndufresne.ca>, mchehab@kernel.org,
+        ezequiel@collabora.com, boris.brezillon@collabora.com,
+        ribalda@kernel.org, paul.kocialkowski@bootlin.com,
+        posciak@chromium.org, linux-media@vger.kernel.org,
+        stanimir.varbanov@linaro.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, vgarodia@codeaurora.org,
+        majja@codeaurora.org, linux-media-owner@vger.kernel.org
+Subject: Re: [RFC PATCH 0/1] Add LTR controls
+In-Reply-To: <40040141fc3027c3eb1fdebc1a0e8ade@codeaurora.org>
+References: <1591871121-25420-1-git-send-email-dikshita@codeaurora.org>
+ <f07c4aab69d2b333c0e36c50c526c0a85322e708.camel@ndufresne.ca>
+ <1a9904b6-60a5-0faa-8a5e-c9dc00802184@xs4all.nl>
+ <40040141fc3027c3eb1fdebc1a0e8ade@codeaurora.org>
+Message-ID: <a52d74a1284531e7d919eb9d675697f3@codeaurora.org>
+X-Sender: dikshita@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yangtao Li <frank@allwinnertech.com>
+Hi,
 
-Allwinner A100 is a new SoC with Cortex-A53 cores, this commit adds
-the basical DTSI file of it, including the clock, i2c, pins, sid, ths,
-nmi, and UART support.
+A gentle reminder for the review.
 
-Signed-off-by: Yangtao Li <frank@allwinnertech.com>
----
- .../arm64/boot/dts/allwinner/sun50i-a100.dtsi | 364 ++++++++++++++++++
- 1 file changed, 364 insertions(+)
- create mode 100644 arch/arm64/boot/dts/allwinner/sun50i-a100.dtsi
+Thanks,
+Dikshita
 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a100.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-a100.dtsi
-new file mode 100644
-index 000000000000..3fb2443f2121
---- /dev/null
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-a100.dtsi
-@@ -0,0 +1,364 @@
-+// SPDX-License-Identifier: (GPL-2.0+ or MIT)
-+/*
-+ * Copyright (c) 2020 Yangtao Li <frank@allwinnertech.com>
-+ */
-+
-+#include <dt-bindings/interrupt-controller/arm-gic.h>
-+#include <dt-bindings/clock/sun50i-a100-ccu.h>
-+#include <dt-bindings/clock/sun50i-a100-r-ccu.h>
-+#include <dt-bindings/reset/sun50i-a100-ccu.h>
-+#include <dt-bindings/reset/sun50i-a100-r-ccu.h>
-+
-+/ {
-+	interrupt-parent = <&gic>;
-+	#address-cells = <2>;
-+	#size-cells = <2>;
-+
-+	cpus {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		cpu0: cpu@0 {
-+			compatible = "arm,armv8";
-+			device_type = "cpu";
-+			reg = <0x0>;
-+			enable-method = "psci";
-+		};
-+
-+		cpu@1 {
-+			compatible = "arm,armv8";
-+			device_type = "cpu";
-+			reg = <0x1>;
-+			enable-method = "psci";
-+		};
-+
-+		cpu@2 {
-+			compatible = "arm,armv8";
-+			device_type = "cpu";
-+			reg = <0x2>;
-+			enable-method = "psci";
-+		};
-+
-+		cpu@3 {
-+			compatible = "arm,armv8";
-+			device_type = "cpu";
-+			reg = <0x3>;
-+			enable-method = "psci";
-+		};
-+	};
-+
-+	psci {
-+		compatible = "arm,psci-1.0";
-+		method = "smc";
-+	};
-+
-+	dcxo24M: dcxo24M-clk {
-+		compatible = "fixed-clock";
-+		clock-frequency = <24000000>;
-+		clock-output-names = "dcxo24M";
-+		#clock-cells = <0>;
-+	};
-+
-+	iosc: internal-osc-clk {
-+		compatible = "fixed-clock";
-+		clock-frequency = <16000000>;
-+		clock-accuracy = <300000000>;
-+		clock-output-names = "iosc";
-+		#clock-cells = <0>;
-+	};
-+
-+	osc32k: osc32k-clk {
-+		compatible = "fixed-clock";
-+		clock-frequency = <32768>;
-+		clock-output-names = "osc32k";
-+		#clock-cells = <0>;
-+	};
-+
-+	timer {
-+		compatible = "arm,armv8-timer";
-+		interrupts = <GIC_PPI 13
-+			(GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_HIGH)>,
-+			     <GIC_PPI 14
-+			(GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_HIGH)>,
-+			     <GIC_PPI 11
-+			(GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_HIGH)>,
-+			     <GIC_PPI 10
-+			(GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_HIGH)>;
-+	};
-+
-+	soc {
-+		compatible = "simple-bus";
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		ranges = <0 0 0 0x3fffffff>;
-+
-+		ccu: clock@3001000 {
-+			compatible = "allwinner,sun50i-a100-ccu";
-+			reg = <0x03001000 0x1000>;
-+			clocks = <&dcxo24M>, <&osc32k>, <&iosc>;
-+			clock-names = "hosc", "losc", "iosc";
-+			#clock-cells = <1>;
-+			#reset-cells = <1>;
-+		};
-+
-+		gic: interrupt-controller@3021000 {
-+			compatible = "arm,gic-400";
-+			reg = <0x03021000 0x1000>, <0x03022000 0x2000>,
-+			      <0x03024000 0x2000>, <0x03026000 0x2000>;
-+			interrupts = <GIC_PPI 9 (GIC_CPU_MASK_SIMPLE(4) |
-+						 IRQ_TYPE_LEVEL_HIGH)>;
-+			interrupt-controller;
-+			#interrupt-cells = <3>;
-+		};
-+
-+		sid@3006000 {
-+			compatible = "allwinner,sun50i-a100-sid",
-+				     "allwinner,sun50i-a64-sid";
-+			reg = <0x03006000 0x1000>;
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+
-+			ths_calibration: calib@14 {
-+				reg = <0x14 8>;
-+			};
-+		};
-+
-+		pio: pinctrl@300b000 {
-+			compatible = "allwinner,sun50i-a100-pinctrl";
-+			reg = <0x0300b000 0x400>;
-+			interrupts = <GIC_SPI 54 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 55 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 56 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 57 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 58 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 59 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 60 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&ccu CLK_APB1>, <&dcxo24M>, <&osc32k>;
-+			clock-names = "apb", "hosc", "losc";
-+			gpio-controller;
-+			#gpio-cells = <3>;
-+			interrupt-controller;
-+			#interrupt-cells = <3>;
-+
-+			uart0_pb_pins: uart0-pb-pins {
-+				pins = "PB9", "PB10";
-+				function = "uart0";
-+			};
-+		};
-+
-+		uart0: serial@5000000 {
-+			compatible = "snps,dw-apb-uart";
-+			reg = <0x05000000 0x400>;
-+			interrupts = <GIC_SPI 0 IRQ_TYPE_LEVEL_HIGH>;
-+			reg-shift = <2>;
-+			reg-io-width = <4>;
-+			clocks = <&ccu CLK_BUS_UART0>;
-+			resets = <&ccu RST_BUS_UART0>;
-+			status = "disabled";
-+		};
-+
-+		uart1: serial@5000400 {
-+			compatible = "snps,dw-apb-uart";
-+			reg = <0x05000400 0x400>;
-+			interrupts = <GIC_SPI 1 IRQ_TYPE_LEVEL_HIGH>;
-+			reg-shift = <2>;
-+			reg-io-width = <4>;
-+			clocks = <&ccu CLK_BUS_UART1>;
-+			resets = <&ccu RST_BUS_UART1>;
-+			status = "disabled";
-+		};
-+
-+		uart2: serial@5000800 {
-+			compatible = "snps,dw-apb-uart";
-+			reg = <0x05000800 0x400>;
-+			interrupts = <GIC_SPI 2 IRQ_TYPE_LEVEL_HIGH>;
-+			reg-shift = <2>;
-+			reg-io-width = <4>;
-+			clocks = <&ccu CLK_BUS_UART2>;
-+			resets = <&ccu RST_BUS_UART2>;
-+			status = "disabled";
-+		};
-+
-+		uart3: serial@5000c00 {
-+			compatible = "snps,dw-apb-uart";
-+			reg = <0x05000c00 0x400>;
-+			interrupts = <GIC_SPI 3 IRQ_TYPE_LEVEL_HIGH>;
-+			reg-shift = <2>;
-+			reg-io-width = <4>;
-+			clocks = <&ccu CLK_BUS_UART3>;
-+			resets = <&ccu RST_BUS_UART3>;
-+			status = "disabled";
-+		};
-+
-+		uart4: serial@5001000 {
-+			compatible = "snps,dw-apb-uart";
-+			reg = <0x05001000 0x400>;
-+			interrupts = <GIC_SPI 4 IRQ_TYPE_LEVEL_HIGH>;
-+			reg-shift = <2>;
-+			reg-io-width = <4>;
-+			clocks = <&ccu CLK_BUS_UART4>;
-+			resets = <&ccu RST_BUS_UART4>;
-+			status = "disabled";
-+		};
-+
-+		i2c0: i2c@5002000 {
-+			compatible = "allwinner,sun50i-a100-i2c",
-+				     "allwinner,sun6i-a31-i2c";
-+			reg = <0x05002000 0x400>;
-+			interrupts = <GIC_SPI 7 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&ccu CLK_BUS_I2C0>;
-+			resets = <&ccu RST_BUS_I2C0>;
-+			status = "disabled";
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+		};
-+
-+		i2c1: i2c@5002400 {
-+			compatible = "allwinner,sun50i-a100-i2c",
-+				     "allwinner,sun6i-a31-i2c";
-+			reg = <0x05002400 0x400>;
-+			interrupts = <GIC_SPI 8 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&ccu CLK_BUS_I2C1>;
-+			resets = <&ccu RST_BUS_I2C1>;
-+			status = "disabled";
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+		};
-+
-+		i2c2: i2c@5002800 {
-+			compatible = "allwinner,sun50i-a100-i2c",
-+				     "allwinner,sun6i-a31-i2c";
-+			reg = <0x05002800 0x400>;
-+			interrupts = <GIC_SPI 9 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&ccu CLK_BUS_I2C2>;
-+			resets = <&ccu RST_BUS_I2C2>;
-+			status = "disabled";
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+		};
-+
-+		i2c3: i2c@5002c00 {
-+			compatible = "allwinner,sun50i-a100-i2c",
-+				     "allwinner,sun6i-a31-i2c";
-+			reg = <0x05002c00 0x400>;
-+			interrupts = <GIC_SPI 10 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&ccu CLK_BUS_I2C3>;
-+			resets = <&ccu RST_BUS_I2C3>;
-+			status = "disabled";
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+		};
-+
-+		ths: thermal-sensor@5070400 {
-+			compatible = "allwinner,sun50i-a100-ths";
-+			reg = <0x05070400 0x100>;
-+			interrupts = <GIC_SPI 21 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&ccu CLK_BUS_THS>;
-+			clock-names = "bus";
-+			resets = <&ccu RST_BUS_THS>;
-+			nvmem-cells = <&ths_calibration>;
-+			nvmem-cell-names = "calibration";
-+			#thermal-sensor-cells = <1>;
-+		};
-+
-+		r_ccu: clock@7010000 {
-+			compatible = "allwinner,sun50i-a100-r-ccu";
-+			reg = <0x07010000 0x300>;
-+			clocks = <&dcxo24M>, <&osc32k>, <&iosc>,
-+				 <&ccu CLK_PLL_PERIPH0>;
-+			clock-names = "hosc", "losc", "iosc", "pll-periph";
-+			#clock-cells = <1>;
-+			#reset-cells = <1>;
-+		};
-+
-+		r_intc: interrupt-controller@7010320 {
-+			compatible = "allwinner,sun50i-a100-nmi",
-+				     "allwinner,sun9i-a80-nmi";
-+			interrupt-controller;
-+			#interrupt-cells = <2>;
-+			reg = <0x07010320 0xc>;
-+			interrupts = <GIC_SPI 103 IRQ_TYPE_LEVEL_HIGH>;
-+		};
-+
-+		r_pio: pinctrl@7022000 {
-+			compatible = "allwinner,sun50i-a100-r-pinctrl";
-+			reg = <0x07022000 0x400>;
-+			interrupts = <GIC_SPI 111 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&r_ccu CLK_R_APB1>, <&dcxo24M>, <&osc32k>;
-+			clock-names = "apb", "hosc", "losc";
-+			gpio-controller;
-+			#gpio-cells = <3>;
-+			interrupt-controller;
-+			#interrupt-cells = <3>;
-+
-+			r_i2c0_pins: r-i2c0-pins {
-+				pins = "PL0", "PL1";
-+				function = "s_i2c0";
-+			};
-+
-+			r_i2c1_pins: r-i2c1-pins {
-+				pins = "PL8", "PL9";
-+				function = "s_i2c1";
-+			};
-+		};
-+
-+		r_uart: serial@7080000 {
-+			compatible = "snps,dw-apb-uart";
-+			reg = <0x07080000 0x400>;
-+			interrupts = <GIC_SPI 112 IRQ_TYPE_LEVEL_HIGH>;
-+			reg-shift = <2>;
-+			reg-io-width = <4>;
-+			clocks = <&r_ccu CLK_R_APB2_UART>;
-+			resets = <&r_ccu RST_R_APB2_UART>;
-+			status = "disabled";
-+		};
-+
-+		r_i2c0: i2c@7081400 {
-+			compatible = "allwinner,sun50i-a100-i2c",
-+				     "allwinner,sun6i-a31-i2c";
-+			reg = <0x07081400 0x400>;
-+			interrupts = <GIC_SPI 113 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&r_ccu CLK_R_APB2_I2C0>;
-+			resets = <&r_ccu RST_R_APB2_I2C0>;
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&r_i2c0_pins>;
-+			status = "disabled";
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+		};
-+
-+		r_i2c1: i2c@7081800 {
-+			compatible = "allwinner,sun50i-a100-i2c",
-+				     "allwinner,sun6i-a31-i2c";
-+			reg = <0x07081800 0x400>;
-+			interrupts = <GIC_SPI 114 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&r_ccu CLK_R_APB2_I2C1>;
-+			resets = <&r_ccu RST_R_APB2_I2C1>;
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&r_i2c1_pins>;
-+			status = "disabled";
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+		};
-+	};
-+
-+	thermal-zones {
-+		cpu-thermal-zone {
-+			polling-delay-passive = <0>;
-+			polling-delay = <0>;
-+			thermal-sensors = <&ths 0>;
-+		};
-+
-+		gpu-thermal-zone {
-+			polling-delay-passive = <0>;
-+			polling-delay = <0>;
-+			thermal-sensors = <&ths 1>;
-+		};
-+
-+		ddr-thermal-zone {
-+			polling-delay-passive = <0>;
-+			polling-delay = <0>;
-+			thermal-sensors = <&ths 2>;
-+		};
-+	};
-+};
--- 
-2.24.0
-
+On 2020-06-17 00:11, dikshita@codeaurora.org wrote:
+> Hi Hans, Nicolas,
+> 
+> Thanks for your comments.
+> 
+> On 2020-06-12 14:41, Hans Verkuil wrote:
+>> Hi Dikshita, Nicolas,
+>> 
+>> On 11/06/2020 16:22, Nicolas Dufresne wrote:
+>>> Le jeudi 11 juin 2020 à 15:55 +0530, Dikshita Agarwal a écrit :
+>>>> LTR (Long Term Reference) frames are the frames that are encoded 
+>>>> sometime in the past
+>>>> and stored in the DPB buffer list to be used as reference to encode 
+>>>> future frames.
+>>>> One usage of LTR encoding is to reduce error propagation for video 
+>>>> transmission
+>>>> in packet lossy networks.  For example, encoder may want to specify 
+>>>> some key frames as
+>>>> LTR pictures and use them as reference frames for encoding. With 
+>>>> extra protection
+>>>> selectively on these LTR frames or synchronization with the receiver 
+>>>> of reception of
+>>>> the LTR frames during transmission, decoder can receive reference 
+>>>> frames more reliably
+>>>> than other non-reference frames. As a result, transmission error can 
+>>>> be effectively
+>>>> restricted within certain frames rather than propagated to future 
+>>>> frames.
+>>>> 
+>>>> We are introducing below V4l2 Controls for this feature
+>>>> 1. V4L2_CID_MPEG_VIDEO_LTRCOUNT
+>>>>     a. This is used to query or configure the number of LTR frames.
+>>>>        This is a static control and is controlled by the client.
+>>>>     b. The LTR index varies from 0 to the max LTR-1.
+>>>>     c. If LTR Count is more than max supported LTR count (max LTR) 
+>>>> by driver, it will be rejected.
+>>>>     d. Auto Marking : If LTR count is non zero,
+>>>>         1) first LTR count frames would be mark as LTR automatically 
+>>>> after
+>>>>       	   every IDR frame (inclusive).
+>>>>         2) For multilayer encoding: first LTR count base layer 
+>>>> reference frames starting after
+>>>>            every IDR frame (inclusive) in encoding order would be 
+>>>> marked as LTR frames by the encoder.
+>>>>         3) Auto marking of LTR due to IDR should consider following 
+>>>> conditions:
+>>>>             1. The frame is not already set to be marked as LTR.
+>>>>             2. The frame is part of the base layer in the 
+>>>> hierarchical layer case.
+>>>>             3. The number of frames currently marked as LTR is less 
+>>>> than the maximum LTR frame index plus 1.
+>>>>     e. Encoder needs to handle explicit Mark/Use command when 
+>>>> encoder is still doing "auto" marking
+>> 
+>> I don't follow this, quite possibly due to lack of experience with 
+>> encoders.
+>> 
+>> I kind of would expect to see two modes: either automatic where 
+>> encoders can
+>> mark up to LTR_COUNT frames as long term reference, and userspace just 
+>> sets
+>> LTR_COUNT and doesn't have to do anything else.
+>> 
+>> Or it is manual mode where userspace explicitly marks long term 
+>> reference
+>> frames.
+>> 
+>> From the proposal above it looks like you can mix auto and manual 
+>> modes.
+>> 
+>> BTW, how do you 'unmark' long term reference frames?
+>> 
+>> This feature is for stateful encoders, right?
+>> 
+>>> 
+>>> Perhaps we are missing a LONG_TERM_REFERENCE_MODE ? I bet some 
+>>> encoder
+>>> can select by themself long term references and even some encoders 
+>>> may
+>>> not let the user decide.
+>>> 
+>>> (not huge han of LTR acronyme, but that could be fine too, assuming 
+>>> you
+>>> add more _).
+>>> 
+> 
+> Userspace sets LTR count which signifies the number of LTR frames
+> encoder needs to generate or keep.
+> The encoder has to build-up its internal buffer reference list (aka
+> DBP list or recon buffer list).
+> In order to achieve that encoder will fill It's LTR (long term
+> references) list and STR (short term references) list
+> by auto marking n frames as LTR frames(n is equal to LTR count) based
+> on auto-marking dictated by the encoder spec.
+> The client then can replace those automatically marked frames with new
+> frames using V4L2_CID_MPEG_VIDEO_MARKLTRFRAME and can ask
+> encoder to refer the newly marked frame for encoding the next frame
+> using V4L2_CID_MPEG_VIDEO_USELTRFRAME.
+> 
+>>>> 
+>>>> 2. V4L2_CID_MPEG_VIDEO_MARKLTRFRAME :
+>>>>     a. This signals to mark the current frame as LTR frame. It is a 
+>>>> dynamic control and also provide the LTR index to be used.
+>>>>     b. the LTR index provided by this control should never exceed 
+>>>> the max LTR-1. Else it will be rejected.
+>>> 
+>>> The "current" frame seems a bit loose. Perhaps you wanted to use 
+>>> buffer
+>>> flags ? A bit like what we have to signal TOP/BOTTOM fields in
+>>> alternate interlacing.
+>> 
+>> I was thinking the same thing. Using a control for this doesn't seem 
+>> right.
+>> 
+> 
+> the client sets this to replace automatically marked frames by the
+> encoder with a particular frame.
+> this provides an index that ranges from 0 to LTR count-1 and then the
+> particular frame will be marked with that index.
+> this can be achieved through request by associating this control with
+> a specific buffer to make it synchronized.
+> 
+>>> 
+>>>> 
+>>>> 3. V4L2_CID_MPEG_VIDEO_USELTRFRAME :
+>>>>     a. This specifies the LTR frame(s) to be used for encoding the 
+>>>> current frame. This is a dynamic control.
+>>>>     b. LTR Use Bitmap : this consists of bits [0, 15]. A total of N 
+>>>> LSB bits of this field are valid,
+>>>>        where N is the maximum number of LTRs supported. All the 
+>>>> other bits are invalid and should be rejected.
+>>>>        The LSB corresponds to the LTR index 0. Bit N-1 from the LSB 
+>>>> corresponds to the LTR index max LTR-1.
+>> 
+>> How would userspace know this? Esp. with auto marking since userspace 
+>> would have
+>> to predict how auto marking works (if I understand this correctly).
+>> 
+> 
+> Client sets LTR count which tells about the number of LTR frames
+> automatically marked by the encoder.
+> so client can use LTR index (0 to LTR count -1) to ask encoder to
+> refer any particular
+> frame (marked automatically by driver or marked by client with
+> V4L2_CID_MPEG_VIDEO_MARKLTRFRAME) as a reference to encode the next
+> frame.
+> 
+>> For which HW encoder is this meant?
+>> 
+> This is primarily meant for H264 and HEVC.
+> 
+> Thanks,
+> Dikshita
+> 
+>>> 
+>>> Note, I haven't captured very well the userspace control flow, 
+>>> perhaps
+>>> this could be enhanced through writing some documentation.
+>>> 
+>>> As per all other generic encoder controls, we need to make sure it 
+>>> will
+>>> be usable and flexible enough for multiple HW blocks, as it can be
+>>> tedious to extend later otherwise. It is important that along with 
+>>> this
+>>> RFC you provide some comparisons with with other HW / SW APIs in 
+>>> order
+>>> to help justify the design decisions. I also think there should be
+>>> link made V4L2_CID_MPEG_VIDEO_GOP_* , number of B-Frames etc.
+>> 
+>> I agree with Nicolas.
+>> 
+>> Regards,
+>> 
+>> 	Hans
+>> 
+>>> 
+>>> regards,
+>>> Nicolas
+>>> 
+>>>> 
+>>>> Dikshita Agarwal (1):
+>>>>   media: v4l2-ctrls:  add control for ltr
+>>>> 
+>>>>  drivers/media/v4l2-core/v4l2-ctrls.c | 6 ++++++
+>>>>  include/uapi/linux/v4l2-controls.h   | 4 ++++
+>>>>  2 files changed, 10 insertions(+)
+>>>> 
+>>> 
