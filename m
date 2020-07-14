@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C24A5C433EB
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:58:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61D64C433E7
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:58:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9A6DA22B37
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:58:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 38C9522B37
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:58:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594753089;
-	bh=sBNdJl4w5KzMHk76Q+hkYXFrJJggdaSJ9oZroUN7ooM=;
+	s=default; t=1594753095;
+	bh=0Xrp3e7cgjtiKwpBv8X81MrVr9eYVuOABMXE5NdW4mo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ONfnXSabEcZieZLIWijShMVaWfPehnZRR780RUzg5iWbOx1ddl59aH7DpMr2p6N/+
-	 ++/Xi51+lLxOD29fMU+6SwWV3aD/HzV3WMcBtgeiXEyLT4V19wmADybMHnJSiCvg2U
-	 kM2iZaw/Vxi/XXRdYl1vfMy5frx/CKHklcyFt0ss=
+	b=V9oCU6nZNLl3hdsgBeSodueGrC+M4HU/Z9WAppX0RtbtxBsB/fLoMll7ldE/dd3sK
+	 /Wwsrr6K5nXkoHR1qAM1waZoybsltGg6JT8eXvf64n19VwqZb19Tcmxd0gWtt/DoYe
+	 8r3Qz5ch0tBGPlIWmM6TnRCmY+1qsviNM+qr/qb4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730664AbgGNS6I (ORCPT
+        id S1731189AbgGNS6N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 14:58:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56402 "EHLO mail.kernel.org"
+        Tue, 14 Jul 2020 14:58:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56500 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730806AbgGNS6D (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 14:58:03 -0400
+        id S1731178AbgGNS6I (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 14:58:08 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 584F8229CA;
-        Tue, 14 Jul 2020 18:58:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8DF8122AAB;
+        Tue, 14 Jul 2020 18:58:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594753082;
-        bh=sBNdJl4w5KzMHk76Q+hkYXFrJJggdaSJ9oZroUN7ooM=;
+        s=default; t=1594753088;
+        bh=0Xrp3e7cgjtiKwpBv8X81MrVr9eYVuOABMXE5NdW4mo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ACjJABMusfg0j6jzYo0iSh3dOxx63fVaDa91ERRR1lw36vTXTfy1HsCNZXwUI46oO
-         JTdro4axfJC8QgNx4Yn0t+Z0vf43jZxZB6V748DJ1NEtDNhz+2P/iaTEuOPvbDR9MM
-         TZtWcxY+NmrnBUuQXf3az664gQPs5aVB7vY23GYI=
+        b=DBsOwRAx+vhNM7cmO3FWuqjZUXxIozFsD2qubGtWnauUcUoeqpAlw98EKiDdNdBy7
+         3/Nr/CQ6/9VtCq4iJcvAreaxPGQiTBvktSk2TCdZCtHVFc23bDq4/SLff+ExRUwMrC
+         6OFIWNvjevYOjdY4dHvmm11ESew9uGikPZPpVuMY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Pavel Hofman <pavel.hofman@ivitera.com>,
-        Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 5.7 112/166] ALSA: usb-audio: Add implicit feedback quirk for RTX6001
-Date:   Tue, 14 Jul 2020 20:44:37 +0200
-Message-Id: <20200714184121.200567985@linuxfoundation.org>
+        stable@vger.kernel.org, Jian-Hong Pan <jian-hong@endlessm.com>,
+        Chris Chiu <chiu@endlessm.com>, Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 5.7 114/166] ALSA: hda/realtek - Enable audio jacks of Acer vCopperbox with ALC269VC
+Date:   Tue, 14 Jul 2020 20:44:39 +0200
+Message-Id: <20200714184121.295631795@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200714184115.844176932@linuxfoundation.org>
 References: <20200714184115.844176932@linuxfoundation.org>
@@ -59,33 +59,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pavel Hofman <pavel.hofman@ivitera.com>
+From: Jian-Hong Pan <jian-hong@endlessm.com>
 
-commit b6a1e78b96a5d7f312f08b3a470eb911ab5feec0 upstream.
+commit 8eae7e9b3967f08efaa4d70403aec513cbe45ad0 upstream.
 
-USB Audio analyzer RTX6001 uses the same implicit feedback quirk
-as other XMOS-based devices.
+The Acer desktop vCopperbox with ALC269VC cannot detect the MIC of
+headset, the line out and internal speaker until
+ALC269VC_FIXUP_ACER_VCOPPERBOX_PINS quirk applied.
 
-Signed-off-by: Pavel Hofman <pavel.hofman@ivitera.com>
-Tested-by: Pavel Hofman <pavel.hofman@ivitera.com>
+Signed-off-by: Jian-Hong Pan <jian-hong@endlessm.com>
+Signed-off-by: Chris Chiu <chiu@endlessm.com>
 Cc: <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/822f0f20-1886-6884-a6b2-d11c685cbafa@ivitera.com
+Link: https://lore.kernel.org/r/20200706071826.39726-1-jian-hong@endlessm.com
 Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/usb/pcm.c |    1 +
- 1 file changed, 1 insertion(+)
+ sound/pci/hda/patch_realtek.c |   13 +++++++++++++
+ 1 file changed, 13 insertions(+)
 
---- a/sound/usb/pcm.c
-+++ b/sound/usb/pcm.c
-@@ -368,6 +368,7 @@ static int set_sync_ep_implicit_fb_quirk
- 		goto add_sync_ep_from_ifnum;
- 	case USB_ID(0x07fd, 0x0008): /* MOTU M Series */
- 	case USB_ID(0x31e9, 0x0002): /* Solid State Logic SSL2+ */
-+	case USB_ID(0x0d9a, 0x00df): /* RTX6001 */
- 		ep = 0x81;
- 		ifnum = 2;
- 		goto add_sync_ep_from_ifnum;
+--- a/sound/pci/hda/patch_realtek.c
++++ b/sound/pci/hda/patch_realtek.c
+@@ -6114,6 +6114,7 @@ enum {
+ 	ALC236_FIXUP_HP_MUTE_LED,
+ 	ALC298_FIXUP_SAMSUNG_HEADPHONE_VERY_QUIET,
+ 	ALC295_FIXUP_ASUS_MIC_NO_PRESENCE,
++	ALC269VC_FIXUP_ACER_VCOPPERBOX_PINS,
+ };
+ 
+ static const struct hda_fixup alc269_fixups[] = {
+@@ -7292,6 +7293,17 @@ static const struct hda_fixup alc269_fix
+ 		.chained = true,
+ 		.chain_id = ALC269_FIXUP_HEADSET_MODE
+ 	},
++	[ALC269VC_FIXUP_ACER_VCOPPERBOX_PINS] = {
++		.type = HDA_FIXUP_PINS,
++		.v.pins = (const struct hda_pintbl[]) {
++			{ 0x14, 0x90100120 }, /* use as internal speaker */
++			{ 0x18, 0x02a111f0 }, /* use as headset mic, without its own jack detect */
++			{ 0x1a, 0x01011020 }, /* use as line out */
++			{ },
++		},
++		.chained = true,
++		.chain_id = ALC269_FIXUP_HEADSET_MIC
++	},
+ };
+ 
+ static const struct snd_pci_quirk alc269_fixup_tbl[] = {
+@@ -7311,6 +7323,7 @@ static const struct snd_pci_quirk alc269
+ 	SND_PCI_QUIRK(0x1025, 0x1099, "Acer Aspire E5-523G", ALC255_FIXUP_ACER_MIC_NO_PRESENCE),
+ 	SND_PCI_QUIRK(0x1025, 0x110e, "Acer Aspire ES1-432", ALC255_FIXUP_ACER_MIC_NO_PRESENCE),
+ 	SND_PCI_QUIRK(0x1025, 0x1246, "Acer Predator Helios 500", ALC299_FIXUP_PREDATOR_SPK),
++	SND_PCI_QUIRK(0x1025, 0x1247, "Acer vCopperbox", ALC269VC_FIXUP_ACER_VCOPPERBOX_PINS),
+ 	SND_PCI_QUIRK(0x1025, 0x128f, "Acer Veriton Z6860G", ALC286_FIXUP_ACER_AIO_HEADSET_MIC),
+ 	SND_PCI_QUIRK(0x1025, 0x1290, "Acer Veriton Z4860G", ALC286_FIXUP_ACER_AIO_HEADSET_MIC),
+ 	SND_PCI_QUIRK(0x1025, 0x1291, "Acer Veriton Z4660G", ALC286_FIXUP_ACER_AIO_HEADSET_MIC),
 
 
