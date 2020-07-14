@@ -7,67 +7,67 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A2CFC433E8
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 20:05:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FD4DC433E6
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 20:05:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 50BB9212CC
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 20:05:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3B309212CC
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 20:05:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="fEqF6kjW"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="J2al1fLy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730075AbgGNUE7 (ORCPT
+        id S1730131AbgGNUFB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 16:04:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50636 "EHLO
+        Tue, 14 Jul 2020 16:05:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50660 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729826AbgGNUEw (ORCPT
+        with ESMTP id S1729982AbgGNUE4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 16:04:52 -0400
-Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 256EEC061755
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 13:04:52 -0700 (PDT)
-Received: by mail-pf1-x442.google.com with SMTP id a24so2430684pfc.10
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 13:04:52 -0700 (PDT)
+        Tue, 14 Jul 2020 16:04:56 -0400
+Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 20D3EC061794
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 13:04:56 -0700 (PDT)
+Received: by mail-pj1-x1042.google.com with SMTP id o22so2041893pjw.2
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 13:04:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=+L0m/PbK8aAeOqWVeHEDiQMGUfIG8Y+7XMpTLF4upOo=;
-        b=fEqF6kjWaxyZ1+V6TLHGALcgaDHO2s0ImXDRbJ6RX49FUiFX4NFc8v43GgWpaG2iFP
-         EybqTnvGA7yDFIiC9BslvB0x1/lNnsOobFSwHSSpUzFT4Aa0Sgca493T3eEiH3WB69Ne
-         xeLBljIAiwcnfwuEkeYR2BMQUX6HmahveCHhwtYcvNX2/WdiEdLdWSxWV9OodN4U4faC
-         B/vwHhGNAHpacYPnCtJIyNqL7jhYpqFo3Y0LPsPvv/Ar2hbmfPYvHO2auCL0MIsf9ZgU
-         B3PuJ2XLPFv0uOq1FAmcIoxCuehtSz3GQgV26G44YrBR4w54dwF6pbSepAQODw+GZkt1
-         fzQQ==
+        bh=HLlEel+6hkVFpJmPTSkYr9jJlciZ5vVR474YE3QPGUI=;
+        b=J2al1fLyl+C52Ke+qEdt6M1Bbv8a6SBTdeYTQm9PdUTrHxKH6TblbNw6+xcL60+qML
+         s+Fb1GjCAinYeKKMfupdyIwYHbuyHiGV5GdjwaP+4+S8bH2iOup0ev6zNRJ7kXXC8GQr
+         CEqSJcWz6HnEQTD+JyK5kkRBduxnQNSJceHNgHd68kvx3+5Oy3X+V55jizyeh41D0QoA
+         BOJlQhmfTS33b+QUEPNT51HsgqLNhSW9g6GvoefqOlDps8iEqy+iJk8UX5G7D3FEG3dr
+         1U9PYiv7Yn+uT21VI9qlA/P3cLI4bqu2uWLSMzN0pPNas0Grw5Bt/bZtohj0kwknnKvh
+         nM8g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=+L0m/PbK8aAeOqWVeHEDiQMGUfIG8Y+7XMpTLF4upOo=;
-        b=jSS68+2NE+GQIY0fvyWOnZ8c4nLtlAJ9h1/q7hw08+w2nXMnrmFU/rPorSeBLfwHBD
-         S5TXsuaxlttOfnldpmIC4JxgzTQpIncKvo6/z4gkfW6sOpqPcsFtp0QokQaO1A61TNH6
-         PAun7ethHfbdxq13c6p8tIay7n3aB5GniUHFBEUNt3tnNAeDhIx6CxoHcFmo+ugTrkRJ
-         dN78aJEFNOh7tGPaerA8ya419xqK2LlhuxeMiD83EisD9tUNQvPEncEMpWxDLRGQNcDF
-         MF2jDAcQpeIQEwjzx1fehwN1wTJNTmeVpCOXCr4PfJSwOK1J5z9OrVYfCM6dBUBSxZiI
-         n67Q==
-X-Gm-Message-State: AOAM532X1iIh6rNU98X/8GthkK2fq/wkteaOXEEHMkhEvV4WX5NZbS7g
-        sU47seDlf+IhxsMP/hmCZs3OYw==
-X-Google-Smtp-Source: ABdhPJxDBYL2W6Bl/6d0RgZHksPUhWpH+arn9L3GFnp4gCNsyD59y54jBwv5KQqmOWLLokMZqH1W1Q==
-X-Received: by 2002:a65:6799:: with SMTP id e25mr4902524pgr.364.1594757091659;
-        Tue, 14 Jul 2020 13:04:51 -0700 (PDT)
+        bh=HLlEel+6hkVFpJmPTSkYr9jJlciZ5vVR474YE3QPGUI=;
+        b=SgUirFcoA+ecy2X17x7ec6G7Z7qc1toL1pjT64hGPQDM3JOCiCagcPt90sS0SBuPnG
+         s648cq7kr8iOmXf/4kXVw22ZN7w0XNWHXN73WiLtzG1T5kefUqIHAcLzDub+Ga/yWJx+
+         sDZTVcwmoGF2B+oj/dFbdy6x193Fa4sKztlui1tLv4hoq1M5awap1WPwfxF3JJ0x5C8A
+         02CrVdGAUHkX5Zx5JlQBxn6TeBb/z9FWs9QuwOdTdBhDgVIY37vNrnVH3YyFgGHFY62H
+         WGg8slVKbEtAUsYAsQva3QLMIq0U1cS5fZXR97tYrABmd8pWktRsvzAflLjSAl+Mv1RH
+         k5hA==
+X-Gm-Message-State: AOAM530VN3hV/HpWNAxdSmurmwpZcaUZuIxbBaOOvEqMr6laprAGBaVo
+        Kvh0Nu2SnLE0Ww/DX/K48U1YYw==
+X-Google-Smtp-Source: ABdhPJxYNLWJRYA87GVE2PmZT3pjEv+4tXiNcgg7HfZU4zaIdo175xOC9JQGh0zDYmdfjP1o83nP3w==
+X-Received: by 2002:a17:90a:43c3:: with SMTP id r61mr6805055pjg.216.1594757095648;
+        Tue, 14 Jul 2020 13:04:55 -0700 (PDT)
 Received: from xps15.cg.shawcable.net (S0106002369de4dac.cg.shawcable.net. [68.147.8.254])
-        by smtp.gmail.com with ESMTPSA id t13sm3262959pjs.17.2020.07.14.13.04.50
+        by smtp.gmail.com with ESMTPSA id t13sm3262959pjs.17.2020.07.14.13.04.54
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 Jul 2020 13:04:51 -0700 (PDT)
+        Tue, 14 Jul 2020 13:04:55 -0700 (PDT)
 From:   Mathieu Poirier <mathieu.poirier@linaro.org>
 To:     ohad@wizery.com, bjorn.andersson@linaro.org, loic.pallardy@st.com,
         arnaud.pouliquen@st.com, mcoquelin.stm32@gmail.com,
         alexandre.torgue@st.com
 Cc:     linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-stm32@st-md-mailman.stormreply.com
-Subject: [PATCH v6 03/11] remoteproc: stm32: Decouple rproc from DT parsing
-Date:   Tue, 14 Jul 2020 14:04:37 -0600
-Message-Id: <20200714200445.1427257-4-mathieu.poirier@linaro.org>
+Subject: [PATCH v6 06/11] remoteproc: stm32: Properly set co-processor state when attaching
+Date:   Tue, 14 Jul 2020 14:04:40 -0600
+Message-Id: <20200714200445.1427257-7-mathieu.poirier@linaro.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200714200445.1427257-1-mathieu.poirier@linaro.org>
 References: <20200714200445.1427257-1-mathieu.poirier@linaro.org>
@@ -78,86 +78,82 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Remove the remote processor from the process of parsing the device tree
-since (1) there is no correlation between them and (2) to use the
-information that was gathered to make a decision on whether to
-synchronise with the M4 or not.
+Introduce the required mechanic to set the state of the M4 in order
+to properly deal with scenarios where the co-processor has been
+started by another entity.
+
+Mainly based on the work published by Arnaud Pouliquen [1].
+
+[1]. https://patchwork.kernel.org/project/linux-remoteproc/list/?series=239877
 
 Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
 Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 ---
- drivers/remoteproc/stm32_rproc.c | 23 ++++++++++++-----------
- 1 file changed, 12 insertions(+), 11 deletions(-)
+ drivers/remoteproc/stm32_rproc.c | 31 +++++++++++++++++++++++++++++++
+ 1 file changed, 31 insertions(+)
 
 diff --git a/drivers/remoteproc/stm32_rproc.c b/drivers/remoteproc/stm32_rproc.c
-index c00f60d42ab6..cbba995a80a2 100644
+index 961a53f67ec5..f393f2503106 100644
 --- a/drivers/remoteproc/stm32_rproc.c
 +++ b/drivers/remoteproc/stm32_rproc.c
-@@ -539,12 +539,11 @@ static int stm32_rproc_get_syscon(struct device_node *np, const char *prop,
- 	return err;
+@@ -39,6 +39,13 @@
+ #define STM32_MBX_VQ1_ID	1
+ #define STM32_MBX_SHUTDOWN	"shutdown"
+ 
++#define M4_STATE_OFF		0
++#define M4_STATE_INI		1
++#define M4_STATE_CRUN		2
++#define M4_STATE_CSTOP		3
++#define M4_STATE_STANDBY	4
++#define M4_STATE_CRASH		5
++
+ struct stm32_syscon {
+ 	struct regmap *map;
+ 	u32 reg;
+@@ -636,12 +643,29 @@ static int stm32_rproc_parse_dt(struct platform_device *pdev,
+ 	return 0;
  }
  
--static int stm32_rproc_parse_dt(struct platform_device *pdev)
-+static int stm32_rproc_parse_dt(struct platform_device *pdev,
-+				struct stm32_rproc *ddata, bool *auto_boot)
++static int stm32_rproc_get_m4_status(struct stm32_rproc *ddata,
++				     unsigned int *state)
++{
++	/* See stm32_rproc_parse_dt() */
++	if (!ddata->m4_state.map) {
++		/*
++		 * We couldn't get the coprocessor's state, assume
++		 * it is not running.
++		 */
++		state = M4_STATE_OFF;
++		return 0;
++	}
++
++	return regmap_read(ddata->m4_state.map, ddata->m4_state.reg, state);
++}
++
+ static int stm32_rproc_probe(struct platform_device *pdev)
  {
  	struct device *dev = &pdev->dev;
+ 	struct stm32_rproc *ddata;
  	struct device_node *np = dev->of_node;
--	struct rproc *rproc = platform_get_drvdata(pdev);
--	struct stm32_rproc *ddata = rproc->priv;
- 	struct stm32_syscon tz;
- 	unsigned int tzen;
- 	int err, irq;
-@@ -590,7 +589,7 @@ static int stm32_rproc_parse_dt(struct platform_device *pdev)
+ 	struct rproc *rproc;
++	unsigned int state;
+ 	int ret;
  
- 	err = regmap_read(tz.map, tz.reg, &tzen);
- 	if (err) {
--		dev_err(&rproc->dev, "failed to read tzen\n");
-+		dev_err(dev, "failed to read tzen\n");
- 		return err;
- 	}
- 	ddata->secured_soc = tzen & tz.mask;
-@@ -606,7 +605,7 @@ static int stm32_rproc_parse_dt(struct platform_device *pdev)
- 	if (err)
- 		dev_info(dev, "failed to get pdds\n");
+ 	ret = dma_coerce_mask_and_coherent(dev, DMA_BIT_MASK(32));
+@@ -664,6 +688,13 @@ static int stm32_rproc_probe(struct platform_device *pdev)
+ 	if (ret)
+ 		goto free_rproc;
  
--	rproc->auto_boot = of_property_read_bool(np, "st,auto-boot");
-+	*auto_boot = of_property_read_bool(np, "st,auto-boot");
- 
- 	return stm32_rproc_of_memory_translations(pdev, ddata);
- }
-@@ -627,9 +626,15 @@ static int stm32_rproc_probe(struct platform_device *pdev)
- 	if (!rproc)
- 		return -ENOMEM;
- 
-+	ddata = rproc->priv;
-+
- 	rproc_coredump_set_elf_info(rproc, ELFCLASS32, EM_NONE);
-+
-+	ret = stm32_rproc_parse_dt(pdev, ddata, &rproc->auto_boot);
++	ret = stm32_rproc_get_m4_status(ddata, &state);
 +	if (ret)
 +		goto free_rproc;
 +
++	if (state == M4_STATE_CRUN)
++		rproc->state = RPROC_DETACHED;
++
  	rproc->has_iommu = false;
--	ddata = rproc->priv;
  	ddata->workqueue = create_workqueue(dev_name(dev));
  	if (!ddata->workqueue) {
- 		dev_err(dev, "cannot create workqueue\n");
-@@ -639,13 +644,9 @@ static int stm32_rproc_probe(struct platform_device *pdev)
- 
- 	platform_set_drvdata(pdev, rproc);
- 
--	ret = stm32_rproc_parse_dt(pdev);
--	if (ret)
--		goto free_wkq;
--
- 	ret = stm32_rproc_request_mbox(rproc);
- 	if (ret)
--		goto free_rproc;
-+		goto free_wkq;
- 
- 	ret = rproc_add(rproc);
- 	if (ret)
 -- 
 2.25.1
 
