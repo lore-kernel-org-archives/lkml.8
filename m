@@ -2,128 +2,233 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MIME_BASE64_TEXT,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1606CC433E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 09:04:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A568CC433E4
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 09:10:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DDEB021D79
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 09:04:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="ZoP53Kci"
+	by mail.kernel.org (Postfix) with ESMTP id 865B321D7E
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 09:10:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726935AbgGNJEv (ORCPT
+        id S1726599AbgGNJKh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 05:04:51 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:57139 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726801AbgGNJEt (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 05:04:49 -0400
-X-UUID: 0eec8e902a7a4aaa9281468b903c5f0a-20200714
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=gg/UxrARz1LjEmbIn/dsLyHmNcLosv+d6Ng22kKepIs=;
-        b=ZoP53Kci5eKwvUDN4BxhBNBw4kQ/iALBEdurBHkxQozBg8KZEsBbFScWIIbU99fWSo+pp1NyHqQex7HfPD68N1dsYg9j9YHcOP/Y6s4f+H9idWkPS4NlVmnYKX7uL9DgxNPrCfmGwCqmklF9l6TGdNNacs6wztRBXQCEn0Hb5Kc=;
-X-UUID: 0eec8e902a7a4aaa9281468b903c5f0a-20200714
-Received: from mtkexhb01.mediatek.inc [(172.21.101.102)] by mailgw01.mediatek.com
-        (envelope-from <hanks.chen@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 1945067045; Tue, 14 Jul 2020 17:04:43 +0800
-Received: from mtkcas07.mediatek.inc (172.21.101.84) by
- mtkmbs01n1.mediatek.inc (172.21.101.68) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Tue, 14 Jul 2020 17:04:40 +0800
-Received: from mtkswgap22.mediatek.inc (172.21.77.33) by mtkcas07.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Tue, 14 Jul 2020 17:04:41 +0800
-From:   Hanks Chen <hanks.chen@mediatek.com>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Sean Wang <sean.wang@kernel.org>
-CC:     mtk01761 <wendell.lin@mediatek.com>,
-        Andy Teng <andy.teng@mediatek.com>,
-        <linux-gpio@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <wsd_upstream@mediatek.com>,
-        CC Hwang <cc.hwang@mediatek.com>,
-        Loda Chou <loda.chou@mediatek.com>,
-        Hanks Chen <hanks.chen@mediatek.com>
-Subject: [PATCH 0/7] Add basic SoC Support for Mediatek MT6779 SoC
-Date:   Tue, 14 Jul 2020 17:04:32 +0800
-Message-ID: <1594717479-8160-1-git-send-email-hanks.chen@mediatek.com>
-X-Mailer: git-send-email 1.7.9.5
+        Tue, 14 Jul 2020 05:10:37 -0400
+Received: from mga14.intel.com ([192.55.52.115]:45798 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725793AbgGNJKg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 05:10:36 -0400
+IronPort-SDR: AS8IZ1qloJt+ONm9WM/kDVThY0o7RkXeK5Xw8DWZ5xHzOdMM6ZC1z4Fj8xOVPuTXp7Ol1NLj38
+ WXoFvGRQ9xzQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9681"; a="147983832"
+X-IronPort-AV: E=Sophos;i="5.75,350,1589266800"; 
+   d="scan'208";a="147983832"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jul 2020 02:10:34 -0700
+IronPort-SDR: 1W7BBjphT5HpmyjchM1+X3JpCRebcO/wNm2bho4lgdURUYCMqFSRjqygwuyY/ay5O3FYfjIPfw
+ aBnrckEb/qdw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,350,1589266800"; 
+   d="scan'208";a="485806381"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmsmga005.fm.intel.com with ESMTP; 14 Jul 2020 02:10:34 -0700
+Received: from [10.249.230.149] (abudanko-mobl.ccr.corp.intel.com [10.249.230.149])
+        by linux.intel.com (Postfix) with ESMTP id 4F4EE580810;
+        Tue, 14 Jul 2020 02:10:29 -0700 (PDT)
+Subject: [PATCH v11 12/15] perf stat: introduce --control fd:ctl-fd[,ack-fd]
+ options
+From:   Alexey Budankov <alexey.budankov@linux.intel.com>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+References: <037d737f-0ada-a9f0-9686-f7521ca6fbc3@linux.intel.com>
+Organization: Intel Corp.
+Message-ID: <e9443270-38cf-d4c3-2b83-218205ee5ff4@linux.intel.com>
+Date:   Tue, 14 Jul 2020 12:10:28 +0300
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-MTK:  N
-Content-Transfer-Encoding: base64
+In-Reply-To: <037d737f-0ada-a9f0-9686-f7521ca6fbc3@linux.intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQpDaGFuZ2Ugc2luY2Ugdjg6DQpDb21taXQgImR0LWJpbmRpbmdzOiBwaW5jdHJsOiBhZGQgYmlu
-ZGluZ3MgZm9yIE1lZGlhVGVrIg0KLS0gdXBkYXRlIHRoZSBmb3JtYXQNCkNvbW1pdCAiYXJtNjQ6
-IGR0czogYWRkIGR0cyBub2RlcyBmb3IgTVQ2Nzc5Ig0KLS0gZml4IHRoZSB0eXBvIGluIHVhcnQg
-bm9kZQ0KDQoNCkNoYW5nZSBzaW5jZSB2NzoNCkNvbW1pdCAiZHQtYmluZGluZ3M6IHBpbmN0cmw6
-IGFkZCBiaW5kaW5ncyBmb3IgTWVkaWFUZWsiDQotLSBmaXggdHlwbyBhbmQgY2hhbmdlIG9yZGVy
-IG9mIHBhdGNoDQpDb21taXQgImNsazogbWVkaWF0ZWs6IGFkZCBVQVJUMCBjbG9jayBzdXBwb3J0
-Ig0KLS0gYWRkIGZpeGVzIHRhZyBhbmQgcmVhbCBuYW1lDQpDb21taXQgImFybTY0OiBkdHM6IGFk
-ZCBkdHMgbm9kZXMgZm9yIE1UNjc3OSINCi0tIGV4cG9zZSBhbGwgdGhyZWUgVUFSVHMgaW4gdGhl
-IGR0c2kNCg0KDQpDaGFuZ2Ugc2luY2UgdjY6DQpDb21taXQgImR0LWJpbmRpbmdzOiBwaW5jdHJs
-OiBhZGQgYmluZGluZ3MgZm9yIE1lZGlhVGVrIg0KLS0gZml4IGZvcm1hdCBvZiBiaW5kaW5ncyBh
-bmQgYWRkIGludGVycnVwdCBkZWZpbml0aW9uLg0KQ29tbWl0ICJwaW5jdHJsOiBtZWRpYXRlazog
-dXBkYXRlIHBpbm11eCBkZWZpbml0aW9ucyBmb3IiDQotLSB1c2UgdGhlIHN0YW5kYXJkIGluY2x1
-ZGUgcGF0aA0KQ29tbWl0ICJwaW5jdHJsOiBtZWRpYXRlazogYXZvaWQgdmlydHVhbCBncGlvIHRy
-eWluZyB0byBzZXQiDQotLSByZW1vdmUgdW5uZWNlc3NhcnkgZXJyb3IgaGFuZGxlcg0KQ29tbWl0
-ICJwaW5jdHJsOiBtZWRpYXRlazogYWRkIHBpbmN0cmwgc3VwcG9ydCBmb3IgTVQ2Nzc5IFNvQyIN
-Ci0tIGFkZCBzb21lIHVzZWZ1bCBoZWxwIHRleHQgaW4ga2NvbmZpZw0KQ29tbWl0ICJjbGs6IG1l
-ZGlhdGVrOiBhZGQgVUFSVDAgY2xvY2sgc3VwcG9ydCINCi0tIGFkZCBVQVJUMCBjbG9jayBzdXBw
-b3J0DQpDb21taXQgImFybTY0OiBkdHM6IGFkZCBkdHMgbm9kZXMgZm9yIE1UNjc3OSINCi0tIGFk
-ZCAiYmF1ZCIgYW5kICJidXMiIGNsb2NrcyBmb3IgdWFydA0KLS0gYWRkIG5ldyBhcHByb2FjaCBm
-b3IgbW1zeXMNCg0KDQpDaGFuZ2Ugc2luY2UgdjU6DQoxLiByZW1vdmUgdW5uZWNlc3Nhcnkgc3Ry
-aW5nIGluIGNvbW1pdCBtZXNzYWdlDQoNCg0KQ2hhbmdlIHNpbmNlIHY0Og0KMS4gZml4IGZvcm1h
-dCBvZiBwaW5jdHJsIGJpbmRpbmdzDQoNCg0KQ2hhbmdlIHNpbmNlIHYzOg0KMS4gYWRkIGJpbmRp
-bmdzIGZvciAibWVkaWF0ZWssbXQ2Nzc5LXBpbmN0cmwiDQoyLiBhZGQgc29tZSBjb21tZW50cyBp
-bnRvIHRoZSBjb2RlIChlLmcuIHZpcnR1YWwgZ3BpbyAuLi4pDQozLiBhZGQgQWNrZWQtYnkgdGFn
-cw0KNC4gYWRkIHBtdSBub2RlIGludG8gZHRzDQo1LiBzdXBwb3J0IHBwaSBwYXJ0aXRpb24gYW5k
-IGZpeCBiYXNlIGFkZHJlc3MgaW4gZ2ljIG5vZGUgb2YgZHRzDQoNCg0KQ2hhbmdlIHNpbmNlIHYy
-Og0KMS4gYWRkIFJldmlld2VkLWJ5IHRhZ3MNCjIuIGZpeCBjaGVja3BhdGNoIHdhcm5pbmdzIHdp
-dGggc3RyaWN0IGxldmVsDQoNCg0KQ2hhbmdlIHNpbmNlIHYxOg0KZmlyc3QgcGF0Y2hzZXQNCg0K
-QW5keSBUZW5nICgxKToNCiAgZHQtYmluZGluZ3M6IHBpbmN0cmw6IGFkZCBiaW5kaW5ncyBmb3Ig
-TWVkaWFUZWsgTVQ2Nzc5IFNvQw0KDQpIYW5rcyBDaGVuICg2KToNCiAgcGluY3RybDogbWVkaWF0
-ZWs6IHVwZGF0ZSBwaW5tdXggZGVmaW5pdGlvbnMgZm9yIG10Njc3OQ0KICBwaW5jdHJsOiBtZWRp
-YXRlazogYXZvaWQgdmlydHVhbCBncGlvIHRyeWluZyB0byBzZXQgcmVnDQogIHBpbmN0cmw6IG1l
-ZGlhdGVrOiBhZGQgcGluY3RybCBzdXBwb3J0IGZvciBNVDY3NzkgU29DDQogIHBpbmN0cmw6IG1l
-ZGlhdGVrOiBhZGQgbXQ2Nzc5IGVpbnQgc3VwcG9ydA0KICBhcm02NDogZHRzOiBhZGQgZHRzIG5v
-ZGVzIGZvciBNVDY3NzkNCiAgY2xrOiBtZWRpYXRlazogYWRkIFVBUlQwIGNsb2NrIHN1cHBvcnQN
-Cg0KIC4uLi9iaW5kaW5ncy9waW5jdHJsL21lZGlhdGVrLG10Njc3OS1waW5jdHJsLnlhbWwgIHwg
-IDIwMyArKw0KIGFyY2gvYXJtNjQvYm9vdC9kdHMvbWVkaWF0ZWsvTWFrZWZpbGUgICAgICAgICAg
-ICAgIHwgICAgMSArDQogYXJjaC9hcm02NC9ib290L2R0cy9tZWRpYXRlay9tdDY3NzktZXZiLmR0
-cyAgICAgICAgfCAgIDMxICsNCiBhcmNoL2FybTY0L2Jvb3QvZHRzL21lZGlhdGVrL210Njc3OS5k
-dHNpICAgICAgICAgICB8ICAyNzEgKysrDQogZHJpdmVycy9jbGsvbWVkaWF0ZWsvY2xrLW10Njc3
-OS5jICAgICAgICAgICAgICAgICAgfCAgICAyICsNCiBkcml2ZXJzL3BpbmN0cmwvbWVkaWF0ZWsv
-S2NvbmZpZyAgICAgICAgICAgICAgICAgICB8ICAgMTIgKw0KIGRyaXZlcnMvcGluY3RybC9tZWRp
-YXRlay9NYWtlZmlsZSAgICAgICAgICAgICAgICAgIHwgICAgMSArDQogZHJpdmVycy9waW5jdHJs
-L21lZGlhdGVrL3BpbmN0cmwtbXQ2Nzc5LmMgICAgICAgICAgfCAgNzgzICsrKysrKysrDQogZHJp
-dmVycy9waW5jdHJsL21lZGlhdGVrL3BpbmN0cmwtbXRrLWNvbW1vbi12Mi5jICAgfCAgIDI1ICsN
-CiBkcml2ZXJzL3BpbmN0cmwvbWVkaWF0ZWsvcGluY3RybC1tdGstY29tbW9uLXYyLmggICB8ICAg
-IDEgKw0KIGRyaXZlcnMvcGluY3RybC9tZWRpYXRlay9waW5jdHJsLW10ay1tdDY3NzkuaCAgICAg
-IHwgMjA4NSArKysrKysrKysrKysrKysrKysrKw0KIGRyaXZlcnMvcGluY3RybC9tZWRpYXRlay9w
-aW5jdHJsLXBhcmlzLmMgICAgICAgICAgIHwgICAgNyArDQogaW5jbHVkZS9kdC1iaW5kaW5ncy9w
-aW5jdHJsL210Njc3OS1waW5mdW5jLmggICAgICAgfCAxMjQyICsrKysrKysrKysrKw0KIDEzIGZp
-bGVzIGNoYW5nZWQsIDQ2NjQgaW5zZXJ0aW9ucygrKQ0KIGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1
-bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcGluY3RybC9tZWRpYXRlayxtdDY3NzktcGlu
-Y3RybC55YW1sDQogY3JlYXRlIG1vZGUgMTAwNjQ0IGFyY2gvYXJtNjQvYm9vdC9kdHMvbWVkaWF0
-ZWsvbXQ2Nzc5LWV2Yi5kdHMNCiBjcmVhdGUgbW9kZSAxMDA2NDQgYXJjaC9hcm02NC9ib290L2R0
-cy9tZWRpYXRlay9tdDY3NzkuZHRzaQ0KIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL3BpbmN0
-cmwvbWVkaWF0ZWsvcGluY3RybC1tdDY3NzkuYw0KIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJz
-L3BpbmN0cmwvbWVkaWF0ZWsvcGluY3RybC1tdGstbXQ2Nzc5LmgNCiBjcmVhdGUgbW9kZSAxMDA2
-NDQgaW5jbHVkZS9kdC1iaW5kaW5ncy9waW5jdHJsL210Njc3OS1waW5mdW5jLmgNCg0KLS0gDQox
-LjcuOS41DQo=
+
+Introduce --control fd:ctl-fd[,ack-fd] options to pass open file
+descriptors numbers from command line. Extend perf-stat.txt file
+with --control fd:ctl-fd[,ack-fd] options description. Document
+possible usage model introduced by --control fd:ctl-fd[,ack-fd]
+options by providing example bash shell script.
+
+Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
+---
+ tools/perf/Documentation/perf-stat.txt | 39 +++++++++++++++++++++++++
+ tools/perf/builtin-stat.c              | 40 +++++++++++++++++++++++++-
+ tools/perf/util/stat.h                 |  2 ++
+ 3 files changed, 80 insertions(+), 1 deletion(-)
+
+diff --git a/tools/perf/Documentation/perf-stat.txt b/tools/perf/Documentation/perf-stat.txt
+index 9f32f6cd558d..c9bfefc051fb 100644
+--- a/tools/perf/Documentation/perf-stat.txt
++++ b/tools/perf/Documentation/perf-stat.txt
+@@ -176,6 +176,45 @@ with it.  --append may be used here.  Examples:
+      3>results  perf stat --log-fd 3          -- $cmd
+      3>>results perf stat --log-fd 3 --append -- $cmd
+ 
++--control fd:ctl-fd[,ack-fd]
++Listen on ctl-fd descriptor for command to control measurement ('enable': enable events,
++'disable': disable events). Measurements can be started with events disabled using
++--delay=-1 option. Optionally send control command completion ('ack\n') to ack-fd descriptor
++to synchronize with the controlling process. Example of bash shell script to enable and
++disable events during measurements:
++
++#!/bin/bash
++
++ctl_dir=/tmp/
++
++ctl_fifo=${ctl_dir}perf_ctl.fifo
++test -p ${ctl_fifo} && unlink ${ctl_fifo}
++mkfifo ${ctl_fifo}
++exec {ctl_fd}<>${ctl_fifo}
++
++ctl_ack_fifo=${ctl_dir}perf_ctl_ack.fifo
++test -p ${ctl_ack_fifo} && unlink ${ctl_ack_fifo}
++mkfifo ${ctl_ack_fifo}
++exec {ctl_fd_ack}<>${ctl_ack_fifo}
++
++perf stat -D -1 -e cpu-cycles -a -I 1000       \
++          --control fd:${ctl_fd},${ctl_fd_ack} \
++          -- sleep 30 &
++perf_pid=$!
++
++sleep 5  && echo 'enable' >&${ctl_fd} && read -u ${ctl_fd_ack} e1 && echo "enabled(${e1})"
++sleep 10 && echo 'disable' >&${ctl_fd} && read -u ${ctl_fd_ack} d1 && echo "disabled(${d1})"
++
++exec {ctl_fd_ack}>&-
++unlink ${ctl_ack_fifo}
++
++exec {ctl_fd}>&-
++unlink ${ctl_fifo}
++
++wait -n ${perf_pid}
++exit $?
++
++
+ --pre::
+ --post::
+ 	Pre and post measurement hooks, e.g.:
+diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
+index 5280a45af5dc..483a28ef4ec4 100644
+--- a/tools/perf/builtin-stat.c
++++ b/tools/perf/builtin-stat.c
+@@ -188,6 +188,8 @@ static struct perf_stat_config stat_config = {
+ 	.metric_only_len	= METRIC_ONLY_LEN,
+ 	.walltime_nsecs_stats	= &walltime_nsecs_stats,
+ 	.big_num		= true,
++	.ctl_fd			= -1,
++	.ctl_fd_ack		= -1
+ };
+ 
+ static bool cpus_map_matched(struct evsel *a, struct evsel *b)
+@@ -867,7 +869,7 @@ static int __run_perf_stat(int argc, const char **argv, int run_idx)
+ 		perf_evlist__start_workload(evsel_list);
+ 		enable_counters();
+ 
+-		if (interval || timeout)
++		if (interval || timeout || evlist__ctlfd_initialized(evsel_list))
+ 			status = dispatch_events(forks, timeout, interval, &times);
+ 		if (child_pid != -1) {
+ 			if (timeout)
+@@ -1039,6 +1041,33 @@ static int parse_metric_groups(const struct option *opt,
+ 					 &stat_config.metric_events);
+ }
+ 
++static int parse_control_option(const struct option *opt,
++				const char *str,
++				int unset __maybe_unused)
++{
++	char *comma = NULL, *endptr = NULL;
++	struct perf_stat_config *config = (struct perf_stat_config *)opt->value;
++
++	if (strncmp(str, "fd:", 3))
++		return -EINVAL;
++
++	config->ctl_fd = strtoul(&str[3], &endptr, 0);
++	if (endptr == &str[3])
++		return -EINVAL;
++
++	comma = strchr(str, ',');
++	if (comma) {
++		if (endptr != comma)
++			return -EINVAL;
++
++		config->ctl_fd_ack = strtoul(comma + 1, &endptr, 0);
++		if (endptr == comma + 1 || *endptr != '\0')
++			return -EINVAL;
++	}
++
++	return 0;
++}
++
+ static struct option stat_options[] = {
+ 	OPT_BOOLEAN('T', "transaction", &transaction_run,
+ 		    "hardware transaction statistics"),
+@@ -1140,6 +1169,10 @@ static struct option stat_options[] = {
+ 		"libpfm4 event selector. use 'perf list' to list available events",
+ 		parse_libpfm_events_option),
+ #endif
++	OPT_CALLBACK(0, "control", &stat_config, "fd:ctl-fd[,ack-fd]",
++		     "Listen on ctl-fd descriptor for command to control measurement ('enable': enable events, 'disable': disable events).\n"
++		     "\t\t\t  Optionally send control command completion ('ack\\n') to ack-fd descriptor.",
++		      parse_control_option),
+ 	OPT_END()
+ };
+ 
+@@ -2309,6 +2342,9 @@ int cmd_stat(int argc, const char **argv)
+ 	signal(SIGALRM, skip_signal);
+ 	signal(SIGABRT, skip_signal);
+ 
++	if (evlist__initialize_ctlfd(evsel_list, stat_config.ctl_fd, stat_config.ctl_fd_ack))
++		goto out;
++
+ 	status = 0;
+ 	for (run_idx = 0; forever || run_idx < stat_config.run_count; run_idx++) {
+ 		if (stat_config.run_count != 1 && verbose > 0)
+@@ -2328,6 +2364,8 @@ int cmd_stat(int argc, const char **argv)
+ 	if (!forever && status != -1 && (!interval || stat_config.summary))
+ 		print_counters(NULL, argc, argv);
+ 
++	evlist__finalize_ctlfd(evsel_list);
++
+ 	if (STAT_RECORD) {
+ 		/*
+ 		 * We synthesize the kernel mmap record just so that older tools
+diff --git a/tools/perf/util/stat.h b/tools/perf/util/stat.h
+index 41d59f192931..f8778cffd941 100644
+--- a/tools/perf/util/stat.h
++++ b/tools/perf/util/stat.h
+@@ -133,6 +133,8 @@ struct perf_stat_config {
+ 	struct perf_cpu_map		*cpus_aggr_map;
+ 	u64			*walltime_run;
+ 	struct rblist		 metric_events;
++	int			 ctl_fd;
++	int			 ctl_fd_ack;
+ };
+ 
+ void perf_stat__set_big_num(int set);
+-- 
+2.24.1
+
 
