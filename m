@@ -2,132 +2,95 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA2C9C433E6
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 08:42:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4B8DC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 08:40:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B149F21897
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 08:42:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8375421897
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 08:40:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="pa1ECT1M"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726823AbgGNImB (ORCPT
+        id S1726766AbgGNIkg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 04:42:01 -0400
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:37554 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725833AbgGNImA (ORCPT
+        Tue, 14 Jul 2020 04:40:36 -0400
+Received: from mail29.static.mailgun.info ([104.130.122.29]:32992 "EHLO
+        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725816AbgGNIkf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 04:42:00 -0400
-Received: by mail-oi1-f193.google.com with SMTP id 12so13327377oir.4;
-        Tue, 14 Jul 2020 01:41:59 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=oQnzKz3C/NevNjTlEZYFL5iXV3ehjQViqfoH5iOv3SM=;
-        b=ZXEtkG+Wam84TPU/nvD5Wwj0MonII4buXn2A4y2s2Y3L2GtprWNx7EMJra5L96QT3j
-         nYkx05Idwq6j8lVh6THDI51bJcoVcNQyhnTAwqu3s4wAG8EwM6/RIEHUxIfZMJbLtAz2
-         BbmSP+zeSy3UCs7hwqg6Lg4Bx+7nxxlQWQXVu954QqC11CEGD+DWVxQeU1OZzrMte7QF
-         V2yhiILIg1hgILs0AUkd8TCG9602QltCBIQ4Xonhhws6xEt751XZQIxhb0GRwfuxz2ql
-         Fixvq4PJMegWvuR/NEpBgR5/4FoFInxyGsYQsz7rBDwKBB4TBDUpezEtgA9feW0XHMni
-         TBdQ==
-X-Gm-Message-State: AOAM531WbWsLPXEW/IpMQASLjoDCmgt9XphcndZaHn/JFRcW7JeB3RcT
-        fCxCDUy0rVsnpO0glmEowRgJOBNtlQivzD97c/U=
-X-Google-Smtp-Source: ABdhPJwxHQ4k7EDiUkAc1gcDGSS4Uw8Rp1iYZBGwEma0KUZbSrLDof4x63mIGl3zVqSk/DDgD3zmVlx4dejHfmNAQO0=
-X-Received: by 2002:aca:ac10:: with SMTP id v16mr2626302oie.153.1594716118642;
- Tue, 14 Jul 2020 01:41:58 -0700 (PDT)
+        Tue, 14 Jul 2020 04:40:35 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1594716035; h=Content-Type: MIME-Version: Message-ID:
+ In-Reply-To: Date: References: Subject: Cc: To: From: Sender;
+ bh=VnSMU06GceCsRYOOdGyZP1O5FA/lUKd375PdgWf8H4Y=; b=pa1ECT1MGSAW2pzlOtTsIpCr70anrzhochu+Eewg6csrSxLFb6NauvTnoDt53U6Yhkhv155J
+ kEwNmUt2tD7/25/CVit/BUYy4A0xSZeIhqHuCShpi/OjRtevvQYs/jjChEgas2qoEv8i+VEE
+ yzwzN1u+PmCxuy3XG23h9jW/SuQ=
+X-Mailgun-Sending-Ip: 104.130.122.29
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n02.prod.us-west-2.postgun.com with SMTP id
+ 5f0d6f7f2991e765cd01e415 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 14 Jul 2020 08:40:31
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 28531C43395; Tue, 14 Jul 2020 08:40:31 +0000 (UTC)
+Received: from tynnyri.adurom.net (tynnyri.adurom.net [51.15.11.48])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: kvalo)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id B3F55C433CA;
+        Tue, 14 Jul 2020 08:40:29 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org B3F55C433CA
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
+From:   Kalle Valo <kvalo@codeaurora.org>
+To:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
+Cc:     m@bues.ch, linux-wireless@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] ssb: Replace HTTP links with HTTPS ones
+References: <CACna6ryNBH7ZSie985YV9zXaEa_XmTXX2S2XH5LC8WfMZNFuAg@mail.gmail.com>
+        <20200710062151.28871-1-grandmaster@al2klimov.de>
+Date:   Tue, 14 Jul 2020 11:40:27 +0300
+In-Reply-To: <20200710062151.28871-1-grandmaster@al2klimov.de> (Alexander A.
+        Klimov's message of "Fri, 10 Jul 2020 08:21:51 +0200")
+Message-ID: <87mu42cww4.fsf@tynnyri.adurom.net>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 MIME-Version: 1.0
-References: <1594676120-5862-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <1594676120-5862-3-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <CAMuHMdV4zzrk_=-2Cmgq8=PKTeU457iveJ58gYekJ-Z8SXqaCQ@mail.gmail.com> <CA+V-a8tB0mA17f51GMQQ-Cj_CUXze_JjTahrpoAtmwuOFHQV6g@mail.gmail.com>
-In-Reply-To: <CA+V-a8tB0mA17f51GMQQ-Cj_CUXze_JjTahrpoAtmwuOFHQV6g@mail.gmail.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Tue, 14 Jul 2020 10:41:47 +0200
-Message-ID: <CAMuHMdXM3qf266exJtJrN0XAogEsJoM-k3FON9CjX+stLpuMFA@mail.gmail.com>
-Subject: Re: [PATCH 2/9] iommu/ipmmu-vmsa: Hook up R8A774E1 DT matching code
-To:     "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Cc:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Sergei Shtylyov <sergei.shtylyov@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        dmaengine <dmaengine@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux IOMMU <iommu@lists.linux-foundation.org>,
-        netdev <netdev@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Prabhakar,
+"Alexander A. Klimov" <grandmaster@al2klimov.de> writes:
 
-On Tue, Jul 14, 2020 at 10:30 AM Lad, Prabhakar
-<prabhakar.csengg@gmail.com> wrote:
-> On Tue, Jul 14, 2020 at 9:09 AM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
-> > On Mon, Jul 13, 2020 at 11:35 PM Lad Prabhakar
-> > <prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
-> > > From: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
-> > >
-> > > Add support for RZ/G2H (R8A774E1) SoC IPMMUs.
-> > >
-> > > Signed-off-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
-> > > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> >
-> > Thanks for your patch!
-> >
-> > > --- a/drivers/iommu/ipmmu-vmsa.c
-> > > +++ b/drivers/iommu/ipmmu-vmsa.c
-> > > @@ -751,6 +751,7 @@ static const struct soc_device_attribute soc_rcar_gen3[] = {
-> > >  static const struct soc_device_attribute soc_rcar_gen3_whitelist[] = {
-> > >         { .soc_id = "r8a774b1", },
-> > >         { .soc_id = "r8a774c0", },
-> > > +       { .soc_id = "r8a774e1", },
-> >
-> > Adding an entry to soc_rcar_gen3_whitelist[] doesn't do anything, unless
-> > you also add the same entry to soc_rcar_gen3[].
-> >
-> I think the comment "For R-Car Gen3 use a white list to opt-in slave
-> devices." is misleading.  Booting through the kernel I do see iommu
-> groups (attached is the logs).
+> Rationale:
+> Reduces attack surface on kernel devs opening the links for MITM
+> as HTTPS traffic is much harder to manipulate.
+>
+> Deterministic algorithm:
+> For each file:
+>   If not .svg:
+>     For each line:
+>       If doesn't contain `\bxmlns\b`:
+>         For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
+> 	  If neither `\bgnu\.org/license`, nor `\bmozilla\.org/MPL\b`:
+>             If both the HTTP and HTTPS versions
+>             return 200 OK and serve the same content:
+>               Replace HTTP with HTTPS.
+>
+> Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
+> ---
+>  Better?
 
-Indeed. Without an entry in soc_rcar_gen3[], the IPMMU is enabled
-unconditionally, and soc_rcar_gen3_whitelist[] is ignored.
-That's why you want an entry in both, unless you have an R-Car Gen3
-SoC where the IPMMU works correctly with all slave devices present.
-Perhaps soc_rcar_gen3[] should be renamed to soc_rcar_gen3_greylist[]
-(or soc_rcar_gen3_maybelist[]) to make this clear?
-
-> Also the recent patch to add
-> "r8a77961" just adds to soc_rcar_gen3_whitelist.
-
-Oops, commit 17fe16181639801b ("iommu/renesas: Add support for r8a77961")
-did it wrong, too.
-
-> > >         { .soc_id = "r8a7795", .revision = "ES3.*" },
-> > >         { .soc_id = "r8a77961", },
-> > >         { .soc_id = "r8a77965", },
-
-Gr{oetje,eeting}s,
-
-                        Geert
+When you submit a new version of the patch you should mark it as v2 and
+add a changelog what changed since v1, see link below for more. But this
+is for the future, no need to resend because of this.
 
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
