@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00E87C433E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:53:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 165D1C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:53:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CB25D207F5
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:53:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB00322B45
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:53:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594752806;
-	bh=VNLiK8TeBYmWAMxY/YD4soQp/ZXucvsXLee0gy0MjLA=;
+	s=default; t=1594752816;
+	bh=Y0ZL7fYwpv1P8Ccuhgv3GoEXJWVonj3eDP4lzZJ/Lk4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EVyVDqkZVwTafryWojgteAWTe8nlxCAMrrBJt4fTrGQMUnThnndulF8rfkaQbSFr/
-	 wyXmXwPMKeFBDSWoF89LIPQa7rNvTKv0hMxpAKoHquGMSwaCqdsqB3DgVT+Tbc3l1F
-	 hnwV2K7iE6lihQSqFbXXehyTHdi3ovs2tODhHRhU=
+	b=ANCXVwydybKD6m0pdZB8EkBNERadV8HJb2GGHzOSaJAtut4AJZu7HY/mdcU94Xwyl
+	 uGntXDTeNcePq48E59Y6Q4yMa1QVi3r6TZzXcikJcKnpnxGt4wszDLodVZJNONmUBD
+	 08ZX91f4K9p/+PYEE7PVBj352e+bGjXVUq2eh1os=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730234AbgGNSxY (ORCPT
+        id S1730655AbgGNSxd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 14:53:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50358 "EHLO mail.kernel.org"
+        Tue, 14 Jul 2020 14:53:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50430 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730618AbgGNSxV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 14:53:21 -0400
+        id S1730628AbgGNSxY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 14:53:24 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7090F207F5;
-        Tue, 14 Jul 2020 18:53:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2B54C207F5;
+        Tue, 14 Jul 2020 18:53:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594752800;
-        bh=VNLiK8TeBYmWAMxY/YD4soQp/ZXucvsXLee0gy0MjLA=;
+        s=default; t=1594752803;
+        bh=Y0ZL7fYwpv1P8Ccuhgv3GoEXJWVonj3eDP4lzZJ/Lk4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tR9f5pCouzyhqhUk3pgYi2ZZpBDnzmEiMw/IXDDzjvKGKtJpYu/iI3UecLgGnG3xB
-         j31uXUFXeiMlnCNDr/AMu4QFAK99fLBqCOLt2mV8HmrkGrNObbWNrBwWinWawkwH4x
-         2iF978OGffN3nBVaHtkYH48Gvbhig9Xmy+UbHnR8=
+        b=pXiT6Y0zNF1KYTGxw/r538+S1SsiJB8MPJho3KrB6uNDYkpPHfLe77W4p0/oW3rwm
+         xpMpEgk1hFpHVOwhjKKkCM2mp8v92D/wUZWJm7ppFZrocLw9ihV9ezEW1V8Guz9mnT
+         JySeO/QF7kHbLnTzz5PgU4Vejwfm+jkT7QuTPVEo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Pavel Hofman <pavel.hofman@ivitera.com>,
-        Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 5.4 075/109] ALSA: usb-audio: Add implicit feedback quirk for RTX6001
-Date:   Tue, 14 Jul 2020 20:44:18 +0200
-Message-Id: <20200714184109.128454170@linuxfoundation.org>
+        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        "H. Nikolaus Schaller" <hns@goldelico.com>
+Subject: [PATCH 5.4 109/109] pwm: jz4740: Fix build failure
+Date:   Tue, 14 Jul 2020 20:44:52 +0200
+Message-Id: <20200714184110.775627425@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200714184105.507384017@linuxfoundation.org>
 References: <20200714184105.507384017@linuxfoundation.org>
@@ -59,33 +60,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pavel Hofman <pavel.hofman@ivitera.com>
+From: "Uwe Kleine-König" <u.kleine-koenig@pengutronix.de>
 
-commit b6a1e78b96a5d7f312f08b3a470eb911ab5feec0 upstream.
+When commit 9017dc4fbd59 ("pwm: jz4740: Enhance precision in calculation
+of duty cycle") from v5.8-rc1 was backported to v5.4.x its dependency on
+commit ce1f9cece057 ("pwm: jz4740: Use clocks from TCU driver") was not
+noticed which made the pwm-jz4740 driver fail to build.
 
-USB Audio analyzer RTX6001 uses the same implicit feedback quirk
-as other XMOS-based devices.
+As ce1f9cece057 depends on still more rework, just backport a small part
+of this commit to make the driver build again. (There is no dependency
+on the functionality introduced in ce1f9cece057, just the rate variable
+is needed.)
 
-Signed-off-by: Pavel Hofman <pavel.hofman@ivitera.com>
-Tested-by: Pavel Hofman <pavel.hofman@ivitera.com>
-Cc: <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/822f0f20-1886-6884-a6b2-d11c685cbafa@ivitera.com
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Signed-off-by: Uwe Kleine-KÃ¶nig <u.kleine-koenig@pengutronix.de>
+Reported-by: H. Nikolaus Schaller <hns@goldelico.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/usb/pcm.c |    1 +
- 1 file changed, 1 insertion(+)
+ drivers/pwm/pwm-jz4740.c |    5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
---- a/sound/usb/pcm.c
-+++ b/sound/usb/pcm.c
-@@ -350,6 +350,7 @@ static int set_sync_ep_implicit_fb_quirk
- 		goto add_sync_ep_from_ifnum;
- 	case USB_ID(0x07fd, 0x0008): /* MOTU M Series */
- 	case USB_ID(0x31e9, 0x0002): /* Solid State Logic SSL2+ */
-+	case USB_ID(0x0d9a, 0x00df): /* RTX6001 */
- 		ep = 0x81;
- 		ifnum = 2;
- 		goto add_sync_ep_from_ifnum;
+--- a/drivers/pwm/pwm-jz4740.c
++++ b/drivers/pwm/pwm-jz4740.c
+@@ -92,11 +92,12 @@ static int jz4740_pwm_apply(struct pwm_c
+ {
+ 	struct jz4740_pwm_chip *jz4740 = to_jz4740(pwm->chip);
+ 	unsigned long long tmp;
+-	unsigned long period, duty;
++	unsigned long rate, period, duty;
+ 	unsigned int prescaler = 0;
+ 	uint16_t ctrl;
+ 
+-	tmp = (unsigned long long)clk_get_rate(jz4740->clk) * state->period;
++	rate = clk_get_rate(jz4740->clk);
++	tmp = rate * state->period;
+ 	do_div(tmp, 1000000000);
+ 	period = tmp;
+ 
 
 
