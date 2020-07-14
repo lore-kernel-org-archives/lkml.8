@@ -7,51 +7,48 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A62E1C433E6
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:57:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4983AC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:57:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6D9DE229CA
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:57:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D811207F5
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:57:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594753065;
-	bh=wtENemkomMKDguxOh+MgHWzgky8ASOFxtzzxFSRMiSw=;
+	s=default; t=1594753068;
+	bh=JYfOiBOUm4P3pjmchGUH5VzRPMLgcMzZNY+DU8Pm3rA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=m+aRTt4h3oZucMa/FUWllcKp4yaZ5qsrQ8v0XUPp7z7CvwDyOnAOSxsukwLhyDNIr
-	 jl8fUzw2RYAHWFdCwG3jZt013WcQ6whhd2ygykr60dp7gmUzLVcH5CR/afo8TfTSCd
-	 P/ZCpkV+pEJNggYLSzbv5WWDVXJATu5jePxPJxb4=
+	b=GBHcVkhyTB7c6RSORzlUZ0nK+8cgHtjp1mzVnu3AnAFOsHKtygsd7MvykEVhJnSGB
+	 ddxqyi/z4eD7vtimlN1JAHy2zwlYIcj9WDARBXSA23FaAKEEizZ1AnRgpNpBbo+Qgn
+	 bOJeYtLsPEmTMTQBL/l7SVss8h+wdZVBQp6hZZiM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731118AbgGNS5n (ORCPT
+        id S1731121AbgGNS5q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 14:57:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55702 "EHLO mail.kernel.org"
+        Tue, 14 Jul 2020 14:57:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55974 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731076AbgGNS51 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 14:57:27 -0400
+        id S1731105AbgGNS5l (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 14:57:41 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F19BF207F5;
-        Tue, 14 Jul 2020 18:57:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 93C1A207F5;
+        Tue, 14 Jul 2020 18:57:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594753047;
-        bh=wtENemkomMKDguxOh+MgHWzgky8ASOFxtzzxFSRMiSw=;
+        s=default; t=1594753061;
+        bh=JYfOiBOUm4P3pjmchGUH5VzRPMLgcMzZNY+DU8Pm3rA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jodU0FCBtDn6Pm2Gm0cOY8NnTc0ikC6pJWFjVwCuhyL5jWoMHneYzcsZPTTnDPbDA
-         krMlHCiaXbGo6UNlPXBSTzSE6zkvauks/bB6P+tNz4vnNUhWhyfdqCmoXRYV391Zrl
-         Zt0ntpfZ70S8c3p+LXx0uKAQwQ73LX286chy17Xc=
+        b=wSn2fB4ALrq6EQ2SXzKytjzNH5XxPDHkyQUxensCk5jj1ulKIY3UVivSupgR2cdP4
+         roSXI3wd53lGVk/IEJTNW4nHe82sAj4OuG7z48eAKmeAwiH1unnc7weCuQB+eJxkDe
+         HSLPrDSGoMkUmS/iGtxmCXajZQGoRdLoVZ66RPwg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Claudiu Beznea <claudiu.beznea@microchip.com>,
-        Harini Katakam <harini.katakam@xilinx.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        stable@vger.kernel.org, Ido Schimmel <idosch@mellanox.com>,
+        Jiri Pirko <jiri@mellanox.com>,
         "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 100/166] net: macb: fix wakeup test in runtime suspend/resume routines
-Date:   Tue, 14 Jul 2020 20:44:25 +0200
-Message-Id: <20200714184120.631483837@linuxfoundation.org>
+Subject: [PATCH 5.7 105/166] mlxsw: spectrum_router: Remove inappropriate usage of WARN_ON()
+Date:   Tue, 14 Jul 2020 20:44:30 +0200
+Message-Id: <20200714184120.871876432@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200714184115.844176932@linuxfoundation.org>
 References: <20200714184115.844176932@linuxfoundation.org>
@@ -64,51 +61,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nicolas Ferre <nicolas.ferre@microchip.com>
+From: Ido Schimmel <idosch@mellanox.com>
 
-[ Upstream commit 515a10a701d570e26dfbe6ee373f77c8bf11053f ]
+[ Upstream commit d9d5420273997664a1c09151ca86ac993f2f89c1 ]
 
-Use the proper struct device pointer to check if the wakeup flag
-and wakeup source are positioned.
-Use the one passed by function call which is equivalent to
-&bp->dev->dev.parent.
+We should not trigger a warning when a memory allocation fails. Remove
+the WARN_ON().
 
-It's preventing the trigger of a spurious interrupt in case the
-Wake-on-Lan feature is used.
+The warning is constantly triggered by syzkaller when it is injecting
+faults:
 
-Fixes: d54f89af6cc4 ("net: macb: Add pm runtime support")
-Cc: Claudiu Beznea <claudiu.beznea@microchip.com>
-Cc: Harini Katakam <harini.katakam@xilinx.com>
-Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
-Signed-off-by: Nicolas Ferre <nicolas.ferre@microchip.com>
+[ 2230.758664] FAULT_INJECTION: forcing a failure.
+[ 2230.758664] name failslab, interval 1, probability 0, space 0, times 0
+[ 2230.762329] CPU: 3 PID: 1407 Comm: syz-executor.0 Not tainted 5.8.0-rc2+ #28
+...
+[ 2230.898175] WARNING: CPU: 3 PID: 1407 at drivers/net/ethernet/mellanox/mlxsw/spectrum_router.c:6265 mlxsw_sp_router_fib_event+0xfad/0x13e0
+[ 2230.898179] Kernel panic - not syncing: panic_on_warn set ...
+[ 2230.898183] CPU: 3 PID: 1407 Comm: syz-executor.0 Not tainted 5.8.0-rc2+ #28
+[ 2230.898190] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.12.1-0-ga5cab58e9a3f-prebuilt.qemu.org 04/01/2014
+
+Fixes: 3057224e014c ("mlxsw: spectrum_router: Implement FIB offload in deferred work")
+Signed-off-by: Ido Schimmel <idosch@mellanox.com>
+Reviewed-by: Jiri Pirko <jiri@mellanox.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/cadence/macb_main.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/net/ethernet/mellanox/mlxsw/spectrum_router.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/cadence/macb_main.c b/drivers/net/ethernet/cadence/macb_main.c
-index 52582e8ed90e5..55e680f350222 100644
---- a/drivers/net/ethernet/cadence/macb_main.c
-+++ b/drivers/net/ethernet/cadence/macb_main.c
-@@ -4654,7 +4654,7 @@ static int __maybe_unused macb_runtime_suspend(struct device *dev)
- 	struct net_device *netdev = dev_get_drvdata(dev);
- 	struct macb *bp = netdev_priv(netdev);
+diff --git a/drivers/net/ethernet/mellanox/mlxsw/spectrum_router.c b/drivers/net/ethernet/mellanox/mlxsw/spectrum_router.c
+index d5bca1be3ef53..84b3d78a9dd84 100644
+--- a/drivers/net/ethernet/mellanox/mlxsw/spectrum_router.c
++++ b/drivers/net/ethernet/mellanox/mlxsw/spectrum_router.c
+@@ -6256,7 +6256,7 @@ static int mlxsw_sp_router_fib_event(struct notifier_block *nb,
+ 	}
  
--	if (!(device_may_wakeup(&bp->dev->dev))) {
-+	if (!(device_may_wakeup(dev))) {
- 		clk_disable_unprepare(bp->tx_clk);
- 		clk_disable_unprepare(bp->hclk);
- 		clk_disable_unprepare(bp->pclk);
-@@ -4670,7 +4670,7 @@ static int __maybe_unused macb_runtime_resume(struct device *dev)
- 	struct net_device *netdev = dev_get_drvdata(dev);
- 	struct macb *bp = netdev_priv(netdev);
+ 	fib_work = kzalloc(sizeof(*fib_work), GFP_ATOMIC);
+-	if (WARN_ON(!fib_work))
++	if (!fib_work)
+ 		return NOTIFY_BAD;
  
--	if (!(device_may_wakeup(&bp->dev->dev))) {
-+	if (!(device_may_wakeup(dev))) {
- 		clk_prepare_enable(bp->pclk);
- 		clk_prepare_enable(bp->hclk);
- 		clk_prepare_enable(bp->tx_clk);
+ 	fib_work->mlxsw_sp = router->mlxsw_sp;
 -- 
 2.25.1
 
