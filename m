@@ -4,54 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B67E9C4345F
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 14:44:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA8C7C433E8
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 14:44:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8BC44206F5
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 14:44:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C8866206F5
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 14:44:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594737874;
-	bh=QoEuy0hJIJikJq+yXPq8PDA+ZuxirAj2PA6pqi5aF04=;
+	s=default; t=1594737879;
+	bh=GAFcz6VMhCl4x1qHq3sS9k3Cf5CjbBVOHTbT3FSCZ9s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JRED0GG4LrpVL5s3DVmp+5htOOlM6HT3HfECzbKr9qI/B/HDJ3Nu5Zj2EKiOGvzXb
-	 WzF7ita6jYPJaibJ0/9gsdIj9v6lwh3+z0RNdyv97LectAuC2Rd3mnyJ4WwT9m4SMn
-	 Cqqrca0Sv1ZRkOhWjdlGLyTjWj+0rVFOZLOdDH8E=
+	b=D4wPeTMLr1JSsTsagkwS1nJVAtX0FVic3CqbvmVIh+HBgjfyOhKksZoaj8d9ar8k8
+	 a5SOBSkbesIry94T4vXmPXvGQ9iIgnHC8wEmIvdkvlcdYSciWMSnnKgu4neeYcXKNe
+	 saWV/UcjvpZWj+KzmGdhTS2vci3RHb1JaEFh89Xk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729408AbgGNOod (ORCPT
+        id S1728881AbgGNOjR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 10:44:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54594 "EHLO mail.kernel.org"
+        Tue, 14 Jul 2020 10:39:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54404 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728903AbgGNOjT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 10:39:19 -0400
+        id S1728798AbgGNOjK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 10:39:10 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E47EA2253A;
-        Tue, 14 Jul 2020 14:39:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EE5C622527;
+        Tue, 14 Jul 2020 14:39:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594737558;
-        bh=QoEuy0hJIJikJq+yXPq8PDA+ZuxirAj2PA6pqi5aF04=;
+        s=default; t=1594737549;
+        bh=GAFcz6VMhCl4x1qHq3sS9k3Cf5CjbBVOHTbT3FSCZ9s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UAKck29qGHrWok7TAjuCazyaaYhECVZmGLTj+Vs7h9ARRO3dAz8u1LZqowLRX8K+x
-         hOidSXp4ACVpPvnAD1cSt9FqJfF3bbIw1ETeavkzHgr8NVjpdb3b0nF+bhN+/zfd9z
-         JBW8r2RQDRQ31PPZ1vsZBUf9uV8xkiEM6Do599CM=
+        b=ePr7SY9VMpffNn9QlDsz/b2dcsC5UdQOmQJJiD/wFTL/fmlY1FfMiHc/OTehBsi/5
+         yYhPw28FoYSwiYqY8zl9ufXwC8TO0MEZa3oWVcX2VQv5BT2Uf/XzORnbojiZVYOJUy
+         As+9UvGIOauQmJB/TI0KYLTTGFT/0gQXVwmKlpec=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Christian Borntraeger <borntraeger@de.ibm.com>,
-        Cornelia Huck <cohuck@redhat.com>,
-        David Hildenbrand <david@redhat.com>,
-        Sasha Levin <sashal@kernel.org>, kvm@vger.kernel.org,
-        linux-s390@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 03/18] KVM: s390: reduce number of IO pins to 1
-Date:   Tue, 14 Jul 2020 10:38:59 -0400
-Message-Id: <20200714143914.4035489-3-sashal@kernel.org>
+Cc:     Johannes Thumshirn <johannes.thumshirn@wdc.com>,
+        Damien Le Moal <damien.lemoal@wdc.com>,
+        Sreekanth Reddy <sreekanth.reddy@broadcom.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>,
+        MPT-FusionLinux.pdl@broadcom.com, linux-scsi@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.7 16/19] scsi: mpt3sas: Fix error returns in BRM_status_show
+Date:   Tue, 14 Jul 2020 10:38:46 -0400
+Message-Id: <20200714143849.4035283-16-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200714143914.4035489-1-sashal@kernel.org>
-References: <20200714143914.4035489-1-sashal@kernel.org>
+In-Reply-To: <20200714143849.4035283-1-sashal@kernel.org>
+References: <20200714143849.4035283-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -61,71 +62,78 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christian Borntraeger <borntraeger@de.ibm.com>
+From: Johannes Thumshirn <johannes.thumshirn@wdc.com>
 
-[ Upstream commit 774911290c589e98e3638e73b24b0a4d4530e97c ]
+[ Upstream commit 0fd181456aa0826057adbfb6c79c40f4083cfd75 ]
 
-The current number of KVM_IRQCHIP_NUM_PINS results in an order 3
-allocation (32kb) for each guest start/restart. This can result in OOM
-killer activity even with free swap when the memory is fragmented
-enough:
+BRM_status_show() has several error branches, but none of them record the
+error in the error return.
 
-kernel: qemu-system-s39 invoked oom-killer: gfp_mask=0x440dc0(GFP_KERNEL_ACCOUNT|__GFP_COMP|__GFP_ZERO), order=3, oom_score_adj=0
-kernel: CPU: 1 PID: 357274 Comm: qemu-system-s39 Kdump: loaded Not tainted 5.4.0-29-generic #33-Ubuntu
-kernel: Hardware name: IBM 8562 T02 Z06 (LPAR)
-kernel: Call Trace:
-kernel: ([<00000001f848fe2a>] show_stack+0x7a/0xc0)
-kernel:  [<00000001f8d3437a>] dump_stack+0x8a/0xc0
-kernel:  [<00000001f8687032>] dump_header+0x62/0x258
-kernel:  [<00000001f8686122>] oom_kill_process+0x172/0x180
-kernel:  [<00000001f8686abe>] out_of_memory+0xee/0x580
-kernel:  [<00000001f86e66b8>] __alloc_pages_slowpath+0xd18/0xe90
-kernel:  [<00000001f86e6ad4>] __alloc_pages_nodemask+0x2a4/0x320
-kernel:  [<00000001f86b1ab4>] kmalloc_order+0x34/0xb0
-kernel:  [<00000001f86b1b62>] kmalloc_order_trace+0x32/0xe0
-kernel:  [<00000001f84bb806>] kvm_set_irq_routing+0xa6/0x2e0
-kernel:  [<00000001f84c99a4>] kvm_arch_vm_ioctl+0x544/0x9e0
-kernel:  [<00000001f84b8936>] kvm_vm_ioctl+0x396/0x760
-kernel:  [<00000001f875df66>] do_vfs_ioctl+0x376/0x690
-kernel:  [<00000001f875e304>] ksys_ioctl+0x84/0xb0
-kernel:  [<00000001f875e39a>] __s390x_sys_ioctl+0x2a/0x40
-kernel:  [<00000001f8d55424>] system_call+0xd8/0x2c8
+Also while at it remove the manual mutex_unlock() of the pci_access_mutex
+in case of an ongoing pci error recovery or host removal and jump to the
+cleanup label instead.
 
-As far as I can tell s390x does not use the iopins as we bail our for
-anything other than KVM_IRQ_ROUTING_S390_ADAPTER and the chip/pin is
-only used for KVM_IRQ_ROUTING_IRQCHIP. So let us use a small number to
-reduce the memory footprint.
+Note: We can safely jump to out from here as io_unit_pg3 is initialized to
+NULL and if it hasn't been allocated, kfree() skips the NULL pointer.
 
-Signed-off-by: Christian Borntraeger <borntraeger@de.ibm.com>
-Reviewed-by: Cornelia Huck <cohuck@redhat.com>
-Reviewed-by: David Hildenbrand <david@redhat.com>
-Link: https://lore.kernel.org/r/20200617083620.5409-1-borntraeger@de.ibm.com
+[mkp: compilation warning]
+
+Link: https://lore.kernel.org/r/20200701131454.5255-1-johannes.thumshirn@wdc.com
+Reviewed-by: Damien Le Moal <damien.lemoal@wdc.com>
+Acked-by: Sreekanth Reddy <sreekanth.reddy@broadcom.com>
+Signed-off-by: Johannes Thumshirn <johannes.thumshirn@wdc.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/s390/include/asm/kvm_host.h | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ drivers/scsi/mpt3sas/mpt3sas_ctl.c | 10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
 
-diff --git a/arch/s390/include/asm/kvm_host.h b/arch/s390/include/asm/kvm_host.h
-index abe60268335d2..0fe5600a037e4 100644
---- a/arch/s390/include/asm/kvm_host.h
-+++ b/arch/s390/include/asm/kvm_host.h
-@@ -31,12 +31,12 @@
- #define KVM_USER_MEM_SLOTS 32
+diff --git a/drivers/scsi/mpt3sas/mpt3sas_ctl.c b/drivers/scsi/mpt3sas/mpt3sas_ctl.c
+index e94e72de2fc68..983e568ff2317 100644
+--- a/drivers/scsi/mpt3sas/mpt3sas_ctl.c
++++ b/drivers/scsi/mpt3sas/mpt3sas_ctl.c
+@@ -3149,15 +3149,14 @@ BRM_status_show(struct device *cdev, struct device_attribute *attr,
+ 	}
+ 	/* pci_access_mutex lock acquired by sysfs show path */
+ 	mutex_lock(&ioc->pci_access_mutex);
+-	if (ioc->pci_error_recovery || ioc->remove_host) {
+-		mutex_unlock(&ioc->pci_access_mutex);
+-		return 0;
+-	}
++	if (ioc->pci_error_recovery || ioc->remove_host)
++		goto out;
  
- /*
-- * These seem to be used for allocating ->chip in the routing table,
-- * which we don't use. 4096 is an out-of-thin-air value. If we need
-- * to look at ->chip later on, we'll need to revisit this.
-+ * These seem to be used for allocating ->chip in the routing table, which we
-+ * don't use. 1 is as small as we can get to reduce the needed memory. If we
-+ * need to look at ->chip later on, we'll need to revisit this.
-  */
- #define KVM_NR_IRQCHIPS 1
--#define KVM_IRQCHIP_NUM_PINS 4096
-+#define KVM_IRQCHIP_NUM_PINS 1
- #define KVM_HALT_POLL_NS_DEFAULT 50000
+ 	/* allocate upto GPIOVal 36 entries */
+ 	sz = offsetof(Mpi2IOUnitPage3_t, GPIOVal) + (sizeof(u16) * 36);
+ 	io_unit_pg3 = kzalloc(sz, GFP_KERNEL);
+ 	if (!io_unit_pg3) {
++		rc = -ENOMEM;
+ 		ioc_err(ioc, "%s: failed allocating memory for iounit_pg3: (%d) bytes\n",
+ 			__func__, sz);
+ 		goto out;
+@@ -3167,6 +3166,7 @@ BRM_status_show(struct device *cdev, struct device_attribute *attr,
+ 	    0) {
+ 		ioc_err(ioc, "%s: failed reading iounit_pg3\n",
+ 			__func__);
++		rc = -EINVAL;
+ 		goto out;
+ 	}
  
- /* s390-specific vcpu->requests bit members */
+@@ -3174,12 +3174,14 @@ BRM_status_show(struct device *cdev, struct device_attribute *attr,
+ 	if (ioc_status != MPI2_IOCSTATUS_SUCCESS) {
+ 		ioc_err(ioc, "%s: iounit_pg3 failed with ioc_status(0x%04x)\n",
+ 			__func__, ioc_status);
++		rc = -EINVAL;
+ 		goto out;
+ 	}
+ 
+ 	if (io_unit_pg3->GPIOCount < 25) {
+ 		ioc_err(ioc, "%s: iounit_pg3->GPIOCount less than 25 entries, detected (%d) entries\n",
+ 			__func__, io_unit_pg3->GPIOCount);
++		rc = -EINVAL;
+ 		goto out;
+ 	}
+ 
 -- 
 2.25.1
 
