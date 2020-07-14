@@ -2,142 +2,165 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A6D6C433E6
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 21:15:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E6C9C433E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 21:15:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 588D820658
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 21:15:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 170CB20656
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 21:15:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="c4g5l41v"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qRr2B3VH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728173AbgGNVPL (ORCPT
+        id S1728202AbgGNVPR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 17:15:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33350 "EHLO
+        Tue, 14 Jul 2020 17:15:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33368 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726446AbgGNVPK (ORCPT
+        with ESMTP id S1726446AbgGNVPR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 17:15:10 -0400
-Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8518DC061755;
-        Tue, 14 Jul 2020 14:15:10 -0700 (PDT)
-Received: by mail-pf1-x443.google.com with SMTP id a14so8169302pfi.2;
-        Tue, 14 Jul 2020 14:15:10 -0700 (PDT)
+        Tue, 14 Jul 2020 17:15:17 -0400
+Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D9B97C061755
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 14:15:16 -0700 (PDT)
+Received: by mail-wm1-x342.google.com with SMTP id f139so622212wmf.5
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 14:15:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=linaro.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=gUsxgEIbOCPN/g+dhdnfdWC6Rsm4WcdiQ4zDxdYgS80=;
-        b=c4g5l41vPTzdfvBku6Gyyd9dtF0BOhHeYH39FPISi5h5zu/7m0KQBQAauU6DRWwCNI
-         aJFxK5Oqe96j7ceibK0CyVHiTNei10p4jHaC3l7OVoXMCCEeHsi/Q8ezd90xrh3x8oJ6
-         UwDEyUiPh3Ja1sl8MrwnF5+o4DsaE+nx8NDmDwYw98Nea3ZKmlTfZx3CCP800NIM0SOY
-         CXa3j3AUDNMdDH2KvVLhkxmyCWqXWjSov+f1nxIO31O0Gx6YS7hwxXt8puB0/xHjTd2f
-         u1Y3X+ybA8mclQRcyyvl59frNzSpsGVtHfR6Mbi41HgC+bFjI9xSl+k3C4ePbPUODuiP
-         oeqQ==
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=JUEg0KE2LQNXUnQ1n5BTApkaeDmfdKi09730MDrCtg0=;
+        b=qRr2B3VHmkvr9FzAb3TPPTTqg5epYJaKAyo+kjk19u5o8YsrGM5dkE+b4m+vt5vaUn
+         WEadUCo2DCD3ihT+hjhAZ/keb6lH8+Mrb3cc5ha/3M8RgcylQ9+aF6RLvSiSojj2Wmlb
+         1hpN7rZzGO5b2WpeiXfgfDTrAsJRazU6v2C2wgQCxUuT0h31EQU97VXxMVzWbE+KN2gN
+         S+nCngBk7af0akuxHtqWzE7q2ttmbFrZ+lsOWmVEMNz8ARkMf8bGeeWg6rjlAfPFQj+Y
+         h97fnhnLQqxNgCHKMocfPN22r/uYjTwtq2KN9GSB0SoN5SkPf3mHaSEmOyGXm9lqSNsu
+         9dVg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=gUsxgEIbOCPN/g+dhdnfdWC6Rsm4WcdiQ4zDxdYgS80=;
-        b=CJhBoUyDKNAruOx9OlNPhIoFgub1z5G0UVntrJbF7BH0UlDhUOHY2OeCF7qdukYk2x
-         LvSLo4QvZsXPo4cY3H1bvyVPaW5XjGtG0Pi4HystgE4CjNb06GST0IMvPqXGXbzA3Ht0
-         7H88S9W/E66zCuD3JQK2ALBrS6+/aljYpLFSE18PAYEDNoh3yf8dqfz0GAG/6ZfP7/bL
-         h3Ihb+ActDEtzNubyiUbXcqIa9NTlT7b2S6Jc8JEm6YwpR2l2csdryfSO7bhkgfXpCyI
-         NWcm9+1sQUVOIS8BiM6x7j2sMCz2Uw545aqQeq5OecsQM4a0fSKTtSCJIqRPHLW0c+6E
-         4FsA==
-X-Gm-Message-State: AOAM530nD/P9ReNRmgkjA3FXYbCPnY7LBZDD/Z93oh6cYwj5iMffVkWQ
-        3ySCFp9XTSg2MvoKsdX6H0I=
-X-Google-Smtp-Source: ABdhPJwsRQ9mKCwSTE8ucb75FPjtcLbouSD8dQj1J5mA3EExVAJ2tJ3R4hWiETcAhJVqwmV+N1o7rA==
-X-Received: by 2002:a63:441c:: with SMTP id r28mr4965134pga.372.1594761309828;
-        Tue, 14 Jul 2020 14:15:09 -0700 (PDT)
-Received: from Asurada-Nvidia (searspoint.nvidia.com. [216.228.112.21])
-        by smtp.gmail.com with ESMTPSA id y17sm105760pfe.30.2020.07.14.14.15.08
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 14 Jul 2020 14:15:09 -0700 (PDT)
-Date:   Tue, 14 Jul 2020 14:14:45 -0700
-From:   Nicolin Chen <nicoleotsuka@gmail.com>
-To:     Shengjiu Wang <shengjiu.wang@nxp.com>
-Cc:     perex@perex.cz, tiwai@suse.com, lgirdwood@gmail.com,
-        broonie@kernel.org, kuninori.morimoto.gx@renesas.com,
-        katsuhiro@katsuster.net, samuel@sholland.org,
-        alsa-devel@alsa-project.org, robh+dt@kernel.org,
-        devicetree@vger.kernel.org, timur@kernel.org, Xiubo.Lee@gmail.com,
-        festevam@gmail.com, linux-kernel@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org
-Subject: Re: [PATCH 3/3] ASoC: fsl-asoc-card: Support Headphone and
- Microphone Jack detection
-Message-ID: <20200714211432.GA10818@Asurada-Nvidia>
-References: <1594717536-5188-1-git-send-email-shengjiu.wang@nxp.com>
- <1594717536-5188-4-git-send-email-shengjiu.wang@nxp.com>
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=JUEg0KE2LQNXUnQ1n5BTApkaeDmfdKi09730MDrCtg0=;
+        b=Z8F5VdrGRlOVZk7p+oz0jnyTkZO66S1C0ct3uDcMRNNzDjDJaAFKzQqyqghIwmrkHs
+         0g+FpVUOyTjSqJqIJyvQq3adyHz+koWW23ArQd/MwKcyp+yA0mhCjopRB+zONbSj2+5c
+         6wPFNB+XkG+IkQg0Q3cWWMazpoX8P8Cf8uvVgpDrMNU6FMhqEudiXdC07weoQ52fnqGC
+         y3/fdMgDuFuIj7XOYYFjdTzHx36GeU/J6axLujskXGdODxOFVx3nELoS4cNbwwp+s6j/
+         37o06Og5CCSTOS2q4Kd/WWxWA13hJQuHQiabnJwfRmR185yYpaxoPu5QzCV3wNJ5Ew53
+         Tyqw==
+X-Gm-Message-State: AOAM530DLlSDjmiS1lcZxvlAPCBdT7kLRPuMhJ2KPB8HR7n5BoNNZ0X+
+        KOZt28W618ZpqNjXPM3nMZWrZhNSGaidOA==
+X-Google-Smtp-Source: ABdhPJytELNObhA895rBmJRA6pjcTMN68Hpoeai8c9X/kohg1+XkGLZ++8WCuOYx+YzJWvcCVsWgZg==
+X-Received: by 2002:a05:600c:2182:: with SMTP id e2mr5513024wme.186.1594760923346;
+        Tue, 14 Jul 2020 14:08:43 -0700 (PDT)
+Received: from dell ([2.31.163.61])
+        by smtp.gmail.com with ESMTPSA id a123sm30765wmd.28.2020.07.14.14.08.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 14 Jul 2020 14:08:42 -0700 (PDT)
+Date:   Tue, 14 Jul 2020 22:08:41 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Doug Ledford <dledford@redhat.com>
+Cc:     jejb@linux.ibm.com, martin.petersen@oracle.com,
+        linux-kernel@vger.kernel.org, linux-scsi@vger.kernel.org,
+        Hannes Reinecke <hare@suse.com>
+Subject: Re: [PATCH v2 18/29] scsi: aic7xxx: aic7xxx_osm: Remove unused
+ variable 'tinfo'
+Message-ID: <20200714210841.GK1398296@dell>
+References: <20200713074645.126138-1-lee.jones@linaro.org>
+ <20200713074645.126138-19-lee.jones@linaro.org>
+ <95350d0a60d1e305e2053388ada2cbd3310684e3.camel@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <1594717536-5188-4-git-send-email-shengjiu.wang@nxp.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <95350d0a60d1e305e2053388ada2cbd3310684e3.camel@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Shengjiu,
+On Tue, 14 Jul 2020, Doug Ledford wrote:
 
-The whole series looks good to me. Just a couple of small
-questions inline:
-
-On Tue, Jul 14, 2020 at 05:05:36PM +0800, Shengjiu Wang wrote:
-> Use asoc_simple_init_jack function from simple card to implement
-> the Headphone and Microphone detection.
-> Register notifier to disable Speaker when Headphone is plugged in
-> and enable Speaker when Headphone is unplugged.
-> Register notifier to disable Digital Microphone when Analog Microphone
-> is plugged in and enable DMIC when Analog Microphone is unplugged.
+> On Mon, 2020-07-13 at 08:46 +0100, Lee Jones wrote:
+> > Looks like none of the artifact from  ahc_fetch_transinfo() are used
+> > anymore.
+> > 
+> > Fixes the following W=1 kernel build warning(s):
+> > 
+> >  drivers/scsi/aic7xxx/aic7xxx_osm.c: In function
+> > ‘ahc_linux_target_alloc’:
+> >  drivers/scsi/aic7xxx/aic7xxx_osm.c:567:30: warning: variable ‘tinfo’
+> > set but not used [-Wunused-but-set-variable]
+> >  567 | struct ahc_initiator_tinfo *tinfo;
+> >  | ^~~~~
+> > 
+> > Cc: Hannes Reinecke <hare@suse.com>
+> > Cc: "Daniel M. Eischen" <deischen@iworks.InterWorks.org>
+> > Cc: Doug Ledford <dledford@redhat.com>
 > 
-> Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
-> ---
->  sound/soc/fsl/Kconfig         |  1 +
->  sound/soc/fsl/fsl-asoc-card.c | 69 ++++++++++++++++++++++++++++++++++-
->  2 files changed, 68 insertions(+), 2 deletions(-)
+> FWIW, I can't seem to figure out how you got mine or Dan's email
+> addresses as related to this driver.  The MAINTAINERS file only lists
+> Hannes.  The driver Dan and I worked on was a different driver.  It was
+> named aic7xxx, but that was back in the 1990s.  It was renamed to
+> aic7xxx_old so that Adaptec could contribute this driver you are
+> currently patching back around 2001 or so.  And then maybe around 2010
+> or something like that, the aic7xxx_old driver that Dan and I worked on
+> was removed from the upstream source tree entirely.  So, just out of
+> curiosity, how did you get mine and Dan's email addresses to put on the
+> Cc: list for these patches?
 
->  static int fsl_asoc_card_late_probe(struct snd_soc_card *card)
->  {
->  	struct fsl_asoc_card_priv *priv = snd_soc_card_get_drvdata(card);
-> @@ -745,8 +789,29 @@ static int fsl_asoc_card_probe(struct platform_device *pdev)
->  	snd_soc_card_set_drvdata(&priv->card, priv);
->  
->  	ret = devm_snd_soc_register_card(&pdev->dev, &priv->card);
-> -	if (ret && ret != -EPROBE_DEFER)
-> -		dev_err(&pdev->dev, "snd_soc_register_card failed (%d)\n", ret);
-> +	if (ret) {
-> +		if (ret != -EPROBE_DEFER)
-> +			dev_err(&pdev->dev, "snd_soc_register_card failed (%d)\n", ret);
+ $ ./scripts/get_maintainer.pl --file-emails --git-min-percent 75 -f drivers/scsi/aic7xxx/aic7xxx_osm.c
+  Hannes Reinecke <hare@suse.com> (maintainer:AIC7XXX / AIC79XX SCSI DRIVER,in file)
+  "James E.J. Bottomley" <jejb@linux.ibm.com> (maintainer:SCSI SUBSYSTEM)
+  "Martin K. Petersen" <martin.petersen@oracle.com> (maintainer:SCSI SUBSYSTEM)
+  "Daniel M. Eischen" <deischen@iworks.InterWorks.org> (in file)
+  Doug Ledford <dledford@redhat.com> (in file)
+  linux-scsi@vger.kernel.org (open list:AIC7XXX / AIC79XX SCSI DRIVER)
+  linux-kernel@vger.kernel.org (open list)
 
-I think we may move this EPROBE_DEFER to the asrc_fail label.
+Looks like get_maintainer.pl pulled it from the file header.
 
-> +		goto asrc_fail;
-> +	}
-> +
-> +	if (of_property_read_bool(np, "hp-det-gpio")) {
+> > Signed-off-by: Lee Jones <lee.jones@linaro.org>
+> > ---
+> >  drivers/scsi/aic7xxx/aic7xxx_osm.c | 5 -----
+> >  1 file changed, 5 deletions(-)
+> > 
+> > diff --git a/drivers/scsi/aic7xxx/aic7xxx_osm.c
+> > b/drivers/scsi/aic7xxx/aic7xxx_osm.c
+> > index 2edfa0594f183..32bfe20d79cc1 100644
+> > --- a/drivers/scsi/aic7xxx/aic7xxx_osm.c
+> > +++ b/drivers/scsi/aic7xxx/aic7xxx_osm.c
+> > @@ -564,8 +564,6 @@ ahc_linux_target_alloc(struct scsi_target
+> > *starget)
+> >  	struct scsi_target **ahc_targp =
+> > ahc_linux_target_in_softc(starget);
+> >  	unsigned short scsirate;
+> >  	struct ahc_devinfo devinfo;
+> > -	struct ahc_initiator_tinfo *tinfo;
+> > -	struct ahc_tmode_tstate *tstate;
+> >  	char channel = starget->channel + 'A';
+> >  	unsigned int our_id = ahc->our_id;
+> >  	unsigned int target_offset;
+> > @@ -612,9 +610,6 @@ ahc_linux_target_alloc(struct scsi_target
+> > *starget)
+> >  			spi_max_offset(starget) = 0;
+> >  		spi_min_period(starget) = 
+> >  			ahc_find_period(ahc, scsirate, maxsync);
+> > -
+> > -		tinfo = ahc_fetch_transinfo(ahc, channel, ahc->our_id,
+> > -					    starget->id, &tstate);
+> >  	}
+> >  	ahc_compile_devinfo(&devinfo, our_id, starget->id,
+> >  			    CAM_LUN_WILDCARD, channel,
+> 
 
-Could we move this check inside asoc_simple_init_jack? There's no
-problem with doing it here though, yet I got a bit confused by it
-as I thought it's a boolean type property, which would be against
-the DT bindings until I saw asoc_simple_init_jack() uses the same
-string to get the GPIO. Just it probably would be a bit tricky as
-we need it to be optional here.
 
-Otherwise, I think we may add a line of comments to indicate that
-the API would use the same string to get the GPIO.
 
-> +		ret = asoc_simple_init_jack(&priv->card, &priv->hp_jack,
-> +					    1, NULL, "Headphone Jack");
-> +		if (ret)
-> +			goto asrc_fail;
-> +
-> +		snd_soc_jack_notifier_register(&priv->hp_jack.jack, &hp_jack_nb);
-> +	}
+-- 
+Lee Jones [李琼斯]
+Senior Technical Lead - Developer Services
+Linaro.org │ Open source software for Arm SoCs
+Follow Linaro: Facebook | Twitter | Blog
