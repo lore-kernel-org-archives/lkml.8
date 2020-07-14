@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76926C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:54:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96F57C433EA
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:54:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4887822BF5
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:54:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6F0A922BEB
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:54:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594752875;
-	bh=sIUlAmhTnfBS1jKcMvo/2Rk0jPaABNfNX5aq1FKva4I=;
+	s=default; t=1594752879;
+	bh=8mOxigm9UcnaqhIj1gro2LO8PVn5pK1FR9RWDCgSIwg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HvLCxdrN7nLTOV3cvSCmyaEQbjMkbuSnYZPqDhby+xqm95Ue3+oaf16BLxRDe15Se
-	 LAf4SrdsjPIQkmJ8LUdIM7Zb688bleT1a/hroC9+vv5+T+hfMcouQIHm6/VnPRppyE
-	 GsKBcsUQxZbEW38SamXAu35YDhOWB6h0EMWTM00Y=
+	b=UYbHZMrXakbP8dkBfA41p48pDGcZm1rH1inrK2n9oxvTTMuYsFyE1VDJua3tHnctu
+	 MRHtnWJBLlGXlR57L3rKsw/tA1i6HKY/FtfaGtwMAIYBzPtFYOT+5shTdL5B5AoVMF
+	 JeC60aLreJl+gwb9VX998WQUKDWIyeZ71TvNAoVw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730773AbgGNSye (ORCPT
+        id S1730778AbgGNSyi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 14:54:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51922 "EHLO mail.kernel.org"
+        Tue, 14 Jul 2020 14:54:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52042 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730754AbgGNSy1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 14:54:27 -0400
+        id S1730286AbgGNSyf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 14:54:35 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A0F2222BED;
-        Tue, 14 Jul 2020 18:54:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CFB3022BEB;
+        Tue, 14 Jul 2020 18:54:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594752867;
-        bh=sIUlAmhTnfBS1jKcMvo/2Rk0jPaABNfNX5aq1FKva4I=;
+        s=default; t=1594752875;
+        bh=8mOxigm9UcnaqhIj1gro2LO8PVn5pK1FR9RWDCgSIwg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=P4zfaGqSCKKX8eYvwxalLTvkse0RQnVExnf/s1+Nf9Ti+pxvOSYTC/yn9AGAv04b4
-         9VJDQCB5WEtjyRSiXklFEn4gDF10zCB6lxeUXuyx6jxpXaGceMnko8GdV+FXwGHzp6
-         hb0jM7L/Lr1cL228Z4RvS/BbDIRBuLDeiMga1LBc=
+        b=itZV8L4wOMJld8GmXJC/aJlDT8VvY2Qdnq85y7Wh5i6V/IUzsFBw9wepaSBpkKaq2
+         bzFne0MR4rvm0Sc3szXqDOY4ms6tfTjMZLUOweq6CveKc9oNtVrfp6/AA1jkNNORl/
+         I/eIXtSELaLki6ftYLFgOTMqXO3I6EIl1OC0/ojs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ingo Molnar <mingo@kernel.org>,
-        Kim Phillips <kim.phillips@amd.com>,
-        Peter Zijlstra <peterz@infradead.org>,
+        stable@vger.kernel.org, yu kuai <yukuai3@huawei.com>,
+        Shawn Guo <shawnguo@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 006/166] perf/x86/rapl: Fix RAPL config variable bug
-Date:   Tue, 14 Jul 2020 20:42:51 +0200
-Message-Id: <20200714184116.180516995@linuxfoundation.org>
+Subject: [PATCH 5.7 034/166] ARM: imx6: add missing put_device() call in imx6q_suspend_init()
+Date:   Tue, 14 Jul 2020 20:43:19 +0200
+Message-Id: <20200714184117.512692302@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200714184115.844176932@linuxfoundation.org>
 References: <20200714184115.844176932@linuxfoundation.org>
@@ -61,38 +60,69 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stephane Eranian <eranian@google.com>
+From: yu kuai <yukuai3@huawei.com>
 
-[ Upstream commit 16accae3d97f97d7f61c4ee5d0002bccdef59088 ]
+[ Upstream commit 4845446036fc9c13f43b54a65c9b757c14f5141b ]
 
-This patch fixes a bug introduced by:
+if of_find_device_by_node() succeed, imx6q_suspend_init() doesn't have a
+corresponding put_device(). Thus add a jump target to fix the exception
+handling for this function implementation.
 
-  fd3ae1e1587d6 ("perf/x86/rapl: Move RAPL support to common x86 code")
-
-The Kconfig variable name was wrong. It was missing the CONFIG_ prefix.
-
-Signed-off-by: Stephane Eranian <eraniangoogle.com>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Tested-by: Kim Phillips <kim.phillips@amd.com>
-Acked-by: Peter Zijlstra <peterz@infradead.org>
-Link: https://lore.kernel.org/r/20200528201614.250182-1-eranian@google.com
+Signed-off-by: yu kuai <yukuai3@huawei.com>
+Signed-off-by: Shawn Guo <shawnguo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/events/Makefile | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm/mach-imx/pm-imx6.c | 10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
 
-diff --git a/arch/x86/events/Makefile b/arch/x86/events/Makefile
-index b418ef6878796..726e83c0a31a1 100644
---- a/arch/x86/events/Makefile
-+++ b/arch/x86/events/Makefile
-@@ -1,6 +1,6 @@
- # SPDX-License-Identifier: GPL-2.0-only
- obj-y					+= core.o probe.o
--obj-$(PERF_EVENTS_INTEL_RAPL)		+= rapl.o
-+obj-$(CONFIG_PERF_EVENTS_INTEL_RAPL)	+= rapl.o
- obj-y					+= amd/
- obj-$(CONFIG_X86_LOCAL_APIC)            += msr.o
- obj-$(CONFIG_CPU_SUP_INTEL)		+= intel/
+diff --git a/arch/arm/mach-imx/pm-imx6.c b/arch/arm/mach-imx/pm-imx6.c
+index dd34dff137626..40c74b4c4d730 100644
+--- a/arch/arm/mach-imx/pm-imx6.c
++++ b/arch/arm/mach-imx/pm-imx6.c
+@@ -493,14 +493,14 @@ static int __init imx6q_suspend_init(const struct imx6_pm_socdata *socdata)
+ 	if (!ocram_pool) {
+ 		pr_warn("%s: ocram pool unavailable!\n", __func__);
+ 		ret = -ENODEV;
+-		goto put_node;
++		goto put_device;
+ 	}
+ 
+ 	ocram_base = gen_pool_alloc(ocram_pool, MX6Q_SUSPEND_OCRAM_SIZE);
+ 	if (!ocram_base) {
+ 		pr_warn("%s: unable to alloc ocram!\n", __func__);
+ 		ret = -ENOMEM;
+-		goto put_node;
++		goto put_device;
+ 	}
+ 
+ 	ocram_pbase = gen_pool_virt_to_phys(ocram_pool, ocram_base);
+@@ -523,7 +523,7 @@ static int __init imx6q_suspend_init(const struct imx6_pm_socdata *socdata)
+ 	ret = imx6_pm_get_base(&pm_info->mmdc_base, socdata->mmdc_compat);
+ 	if (ret) {
+ 		pr_warn("%s: failed to get mmdc base %d!\n", __func__, ret);
+-		goto put_node;
++		goto put_device;
+ 	}
+ 
+ 	ret = imx6_pm_get_base(&pm_info->src_base, socdata->src_compat);
+@@ -570,7 +570,7 @@ static int __init imx6q_suspend_init(const struct imx6_pm_socdata *socdata)
+ 		&imx6_suspend,
+ 		MX6Q_SUSPEND_OCRAM_SIZE - sizeof(*pm_info));
+ 
+-	goto put_node;
++	goto put_device;
+ 
+ pl310_cache_map_failed:
+ 	iounmap(pm_info->gpc_base.vbase);
+@@ -580,6 +580,8 @@ iomuxc_map_failed:
+ 	iounmap(pm_info->src_base.vbase);
+ src_map_failed:
+ 	iounmap(pm_info->mmdc_base.vbase);
++put_device:
++	put_device(&pdev->dev);
+ put_node:
+ 	of_node_put(node);
+ 
 -- 
 2.25.1
 
