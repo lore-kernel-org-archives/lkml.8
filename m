@@ -7,28 +7,24 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 782FCC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 12:16:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B0FFC433E5
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 12:16:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5E3652068F
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 12:16:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D354E207FB
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 12:16:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728260AbgGNMKr (ORCPT
+        id S1728601AbgGNMQd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 08:10:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60608 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728177AbgGNMKk (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 08:10:40 -0400
-Received: from theia.8bytes.org (8bytes.org [IPv6:2a01:238:4383:600:38bc:a715:4b6d:a889])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0B762C061755;
-        Tue, 14 Jul 2020 05:10:40 -0700 (PDT)
+        Tue, 14 Jul 2020 08:16:33 -0400
+Received: from 8bytes.org ([81.169.241.247]:52918 "EHLO theia.8bytes.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728248AbgGNMKp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 08:10:45 -0400
 Received: from cap.home.8bytes.org (p5b006776.dip0.t-ipconnect.de [91.0.103.118])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
         (No client certificate requested)
-        by theia.8bytes.org (Postfix) with ESMTPSA id 603BD4C4;
-        Tue, 14 Jul 2020 14:10:37 +0200 (CEST)
+        by theia.8bytes.org (Postfix) with ESMTPSA id B74997DD;
+        Tue, 14 Jul 2020 14:10:43 +0200 (CEST)
 From:   Joerg Roedel <joro@8bytes.org>
 To:     x86@kernel.org
 Cc:     Joerg Roedel <joro@8bytes.org>, Joerg Roedel <jroedel@suse.de>,
@@ -49,9 +45,9 @@ Cc:     Joerg Roedel <joro@8bytes.org>, Joerg Roedel <jroedel@suse.de>,
         Martin Radev <martin.b.radev@gmail.com>,
         linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
         virtualization@lists.linux-foundation.org
-Subject: [PATCH v4 08/75] x86/umip: Factor out instruction decoding
-Date:   Tue, 14 Jul 2020 14:08:10 +0200
-Message-Id: <20200714120917.11253-9-joro@8bytes.org>
+Subject: [PATCH v4 20/75] x86/boot/compressed/64: Check return value of kernel_ident_mapping_init()
+Date:   Tue, 14 Jul 2020 14:08:22 +0200
+Message-Id: <20200714120917.11253-21-joro@8bytes.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200714120917.11253-1-joro@8bytes.org>
 References: <20200714120917.11253-1-joro@8bytes.org>
@@ -64,124 +60,39 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Joerg Roedel <jroedel@suse.de>
 
-Factor out the code used to decode an instruction with the correct
-address and operand sizes to a helper function.
-
-No functional changes.
+The function can fail to create an identity mapping, check for that
+and bail out if it happens.
 
 Signed-off-by: Joerg Roedel <jroedel@suse.de>
 ---
- arch/x86/include/asm/insn-eval.h |  2 ++
- arch/x86/kernel/umip.c           | 23 +---------------
- arch/x86/lib/insn-eval.c         | 45 ++++++++++++++++++++++++++++++++
- 3 files changed, 48 insertions(+), 22 deletions(-)
+ arch/x86/boot/compressed/ident_map_64.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
-diff --git a/arch/x86/include/asm/insn-eval.h b/arch/x86/include/asm/insn-eval.h
-index b8b9ef1bbd06..392b4fe377f9 100644
---- a/arch/x86/include/asm/insn-eval.h
-+++ b/arch/x86/include/asm/insn-eval.h
-@@ -21,5 +21,7 @@ unsigned long insn_get_seg_base(struct pt_regs *regs, int seg_reg_idx);
- int insn_get_code_seg_params(struct pt_regs *regs);
- int insn_fetch_from_user(struct pt_regs *regs,
- 			 unsigned char buf[MAX_INSN_SIZE]);
-+bool insn_decode(struct insn *insn, struct pt_regs *regs,
-+		 unsigned char buf[MAX_INSN_SIZE], int buf_size);
+diff --git a/arch/x86/boot/compressed/ident_map_64.c b/arch/x86/boot/compressed/ident_map_64.c
+index b4f2a5f503cd..aa91bebc0fe9 100644
+--- a/arch/x86/boot/compressed/ident_map_64.c
++++ b/arch/x86/boot/compressed/ident_map_64.c
+@@ -91,6 +91,8 @@ static struct x86_mapping_info mapping_info;
+  */
+ static void add_identity_map(unsigned long start, unsigned long end)
+ {
++	int ret;
++
+ 	/* Align boundary to 2M. */
+ 	start = round_down(start, PMD_SIZE);
+ 	end = round_up(end, PMD_SIZE);
+@@ -98,8 +100,9 @@ static void add_identity_map(unsigned long start, unsigned long end)
+ 		return;
  
- #endif /* _ASM_X86_INSN_EVAL_H */
-diff --git a/arch/x86/kernel/umip.c b/arch/x86/kernel/umip.c
-index c9e5345da793..4d9044340e78 100644
---- a/arch/x86/kernel/umip.c
-+++ b/arch/x86/kernel/umip.c
-@@ -324,7 +324,6 @@ bool fixup_umip_exception(struct pt_regs *regs)
- 	unsigned long *reg_addr;
- 	void __user *uaddr;
- 	struct insn insn;
--	int seg_defs;
- 
- 	if (!regs)
- 		return false;
-@@ -339,27 +338,7 @@ bool fixup_umip_exception(struct pt_regs *regs)
- 	if (!nr_copied)
- 		return false;
- 
--	insn_init(&insn, buf, nr_copied, user_64bit_mode(regs));
--
--	/*
--	 * Override the default operand and address sizes with what is specified
--	 * in the code segment descriptor. The instruction decoder only sets
--	 * the address size it to either 4 or 8 address bytes and does nothing
--	 * for the operand bytes. This OK for most of the cases, but we could
--	 * have special cases where, for instance, a 16-bit code segment
--	 * descriptor is used.
--	 * If there is an address override prefix, the instruction decoder
--	 * correctly updates these values, even for 16-bit defaults.
--	 */
--	seg_defs = insn_get_code_seg_params(regs);
--	if (seg_defs == -EINVAL)
--		return false;
--
--	insn.addr_bytes = INSN_CODE_SEG_ADDR_SZ(seg_defs);
--	insn.opnd_bytes = INSN_CODE_SEG_OPND_SZ(seg_defs);
--
--	insn_get_length(&insn);
--	if (nr_copied < insn.length)
-+	if (!insn_decode(&insn, regs, buf, nr_copied))
- 		return false;
- 
- 	umip_inst = identify_insn(&insn);
-diff --git a/arch/x86/lib/insn-eval.c b/arch/x86/lib/insn-eval.c
-index 0c4f7ebc261b..f52046f90dd3 100644
---- a/arch/x86/lib/insn-eval.c
-+++ b/arch/x86/lib/insn-eval.c
-@@ -1407,3 +1407,48 @@ int insn_fetch_from_user(struct pt_regs *regs, unsigned char buf[MAX_INSN_SIZE])
- 
- 	return MAX_INSN_SIZE - not_copied;
+ 	/* Build the mapping. */
+-	kernel_ident_mapping_init(&mapping_info, (pgd_t *)top_level_pgt,
+-				  start, end);
++	ret = kernel_ident_mapping_init(&mapping_info, (pgd_t *)top_level_pgt, start, end);
++	if (ret)
++		error("Error: kernel_ident_mapping_init() failed\n");
  }
-+
-+/**
-+ * insn_decode() - Decode an instruction
-+ * @insn:	Structure to store decoded instruction
-+ * @regs:	Structure with register values as seen when entering kernel mode
-+ * @buf:	Buffer containing the instruction bytes
-+ * @buf_size:   Number of instruction bytes available in buf
-+ *
-+ * Decodes the instruction provided in buf and stores the decoding results in
-+ * insn. Also determines the correct address and operand sizes.
-+ *
-+ * Returns:
-+ *
-+ * True if instruction was decoded, False otherwise.
-+ */
-+bool insn_decode(struct insn *insn, struct pt_regs *regs,
-+		 unsigned char buf[MAX_INSN_SIZE], int buf_size)
-+{
-+	int seg_defs;
-+
-+	insn_init(insn, buf, buf_size, user_64bit_mode(regs));
-+
-+	/*
-+	 * Override the default operand and address sizes with what is specified
-+	 * in the code segment descriptor. The instruction decoder only sets
-+	 * the address size it to either 4 or 8 address bytes and does nothing
-+	 * for the operand bytes. This OK for most of the cases, but we could
-+	 * have special cases where, for instance, a 16-bit code segment
-+	 * descriptor is used.
-+	 * If there is an address override prefix, the instruction decoder
-+	 * correctly updates these values, even for 16-bit defaults.
-+	 */
-+	seg_defs = insn_get_code_seg_params(regs);
-+	if (seg_defs == -EINVAL)
-+		return false;
-+
-+	insn->addr_bytes = INSN_CODE_SEG_ADDR_SZ(seg_defs);
-+	insn->opnd_bytes = INSN_CODE_SEG_OPND_SZ(seg_defs);
-+
-+	insn_get_length(insn);
-+	if (buf_size < insn->length)
-+		return false;
-+
-+	return true;
-+}
+ 
+ /* Locates and clears a region for a new top level page table. */
 -- 
 2.27.0
 
