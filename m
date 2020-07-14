@@ -7,102 +7,98 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9353C433F8
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 07:04:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B048C433F1
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 07:04:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9578822229
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 07:04:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4401622224
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 07:04:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727095AbgGNHEh (ORCPT
+        id S1726734AbgGNHEn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Tue, 14 Jul 2020 03:04:43 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:55386 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727091AbgGNHEh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 14 Jul 2020 03:04:37 -0400
-Received: from mga01.intel.com ([192.55.52.88]:38972 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727025AbgGNHE2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 03:04:28 -0400
-IronPort-SDR: i7PHFqUKWuxp5lv35VRP21KvIozxwHJg1WLpeQaFVUuVqNIbWjLGxpCJUzDAjII+uR5hshyBHH
- Bfdkih2LvyHg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9681"; a="166930866"
-X-IronPort-AV: E=Sophos;i="5.75,350,1589266800"; 
-   d="scan'208";a="166930866"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jul 2020 00:04:28 -0700
-IronPort-SDR: 2GlF4QiJnNhoGgMJ5XMp7xdyQ0iPfyqW+HUR8m12RTg7zWuuTG19TEkAYr8cw+FwjIa2w1Dc3M
- MV33WpvpzAfw==
-X-IronPort-AV: E=Sophos;i="5.75,350,1589266800"; 
-   d="scan'208";a="269934896"
-Received: from iweiny-desk2.sc.intel.com (HELO localhost) ([10.3.52.147])
-  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jul 2020 00:04:28 -0700
-From:   ira.weiny@intel.com
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>
-Cc:     Ira Weiny <ira.weiny@intel.com>, x86@kernel.org,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Fenghua Yu <fenghua.yu@intel.com>, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-nvdimm@lists.01.org,
-        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-        linux-kselftest@vger.kernel.org
-Subject: [RFC PATCH 14/15] nvdimm/pmem: Stray write protection for pmem->virt_addr
-Date:   Tue, 14 Jul 2020 00:02:19 -0700
-Message-Id: <20200714070220.3500839-15-ira.weiny@intel.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200714070220.3500839-1-ira.weiny@intel.com>
-References: <20200714070220.3500839-1-ira.weiny@intel.com>
+Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 2858A5A23F2DA69548A0;
+        Tue, 14 Jul 2020 15:04:36 +0800 (CST)
+Received: from localhost (10.175.101.6) by DGGEMS401-HUB.china.huawei.com
+ (10.3.19.201) with Microsoft SMTP Server id 14.3.487.0; Tue, 14 Jul 2020
+ 15:04:28 +0800
+From:   Weilong Chen <chenweilong@huawei.com>
+To:     <davem@davemloft.net>, <kuba@kernel.org>, <jiri@mellanox.com>,
+        <edumazet@google.com>, <chenweilong@huawei.com>
+CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH v3 net] rtnetlink: Fix memory(net_device) leak when ->newlink fails
+Date:   Tue, 14 Jul 2020 15:48:14 +0800
+Message-ID: <20200714074814.108767-1-chenweilong@huawei.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [10.175.101.6]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ira Weiny <ira.weiny@intel.com>
+When vlan_newlink call register_vlan_dev fails, it might return error
+with dev->reg_state = NETREG_UNREGISTERED. The rtnl_newlink should
+free the memory. But currently rtnl_newlink only free the memory which
+state is NETREG_UNINITIALIZED.
 
-The pmem driver uses a cached virtual address to access its memory
-directly.  Because the nvdimm driver is well aware of the special
-protections it has mapped memory with, we call dev_access_[en|dis]able()
-around the direct pmem->virt_addr (pmem_addr) usage instead of the
-unnecessary overhead of trying to get a page to kmap.
+BUG: memory leak
+unreferenced object 0xffff8881051de000 (size 4096):
+  comm "syz-executor139", pid 560, jiffies 4294745346 (age 32.445s)
+  hex dump (first 32 bytes):
+    76 6c 61 6e 32 00 00 00 00 00 00 00 00 00 00 00  vlan2...........
+    00 45 28 03 81 88 ff ff 00 00 00 00 00 00 00 00  .E(.............
+  backtrace:
+    [<0000000047527e31>] kmalloc_node include/linux/slab.h:578 [inline]
+    [<0000000047527e31>] kvmalloc_node+0x33/0xd0 mm/util.c:574
+    [<000000002b59e3bc>] kvmalloc include/linux/mm.h:753 [inline]
+    [<000000002b59e3bc>] kvzalloc include/linux/mm.h:761 [inline]
+    [<000000002b59e3bc>] alloc_netdev_mqs+0x83/0xd90 net/core/dev.c:9929
+    [<000000006076752a>] rtnl_create_link+0x2c0/0xa20 net/core/rtnetlink.c:3067
+    [<00000000572b3be5>] __rtnl_newlink+0xc9c/0x1330 net/core/rtnetlink.c:3329
+    [<00000000e84ea553>] rtnl_newlink+0x66/0x90 net/core/rtnetlink.c:3397
+    [<0000000052c7c0a9>] rtnetlink_rcv_msg+0x540/0x990 net/core/rtnetlink.c:5460
+    [<000000004b5cb379>] netlink_rcv_skb+0x12b/0x3a0 net/netlink/af_netlink.c:2469
+    [<00000000c71c20d3>] netlink_unicast_kernel net/netlink/af_netlink.c:1303 [inline]
+    [<00000000c71c20d3>] netlink_unicast+0x4c6/0x690 net/netlink/af_netlink.c:1329
+    [<00000000cca72fa9>] netlink_sendmsg+0x735/0xcc0 net/netlink/af_netlink.c:1918
+    [<000000009221ebf7>] sock_sendmsg_nosec net/socket.c:652 [inline]
+    [<000000009221ebf7>] sock_sendmsg+0x109/0x140 net/socket.c:672
+    [<000000001c30ffe4>] ____sys_sendmsg+0x5f5/0x780 net/socket.c:2352
+    [<00000000b71ca6f3>] ___sys_sendmsg+0x11d/0x1a0 net/socket.c:2406
+    [<0000000007297384>] __sys_sendmsg+0xeb/0x1b0 net/socket.c:2439
+    [<000000000eb29b11>] do_syscall_64+0x56/0xa0 arch/x86/entry/common.c:359
+    [<000000006839b4d0>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
 
-Signed-off-by: Ira Weiny <ira.weiny@intel.com>
+Fixes: e51fb152318ee6 (rtnetlink: fix a memory leak when ->newlink fails)
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Cc: David S. Miller <davem@davemloft.net>
+Signed-off-by: Wei Yongjun <weiyongjun1@huawei.com>
+Signed-off-by: Weilong Chen <chenweilong@huawei.com>
 ---
- drivers/nvdimm/pmem.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ net/core/rtnetlink.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/nvdimm/pmem.c b/drivers/nvdimm/pmem.c
-index d25e66fd942d..46c11a09b813 100644
---- a/drivers/nvdimm/pmem.c
-+++ b/drivers/nvdimm/pmem.c
-@@ -148,7 +148,9 @@ static blk_status_t pmem_do_read(struct pmem_device *pmem,
- 	if (unlikely(is_bad_pmem(&pmem->bb, sector, len)))
- 		return BLK_STS_IOERR;
- 
-+	dev_access_enable();
- 	rc = read_pmem(page, page_off, pmem_addr, len);
-+	dev_access_disable();
- 	flush_dcache_page(page);
- 	return rc;
- }
-@@ -180,11 +182,13 @@ static blk_status_t pmem_do_write(struct pmem_device *pmem,
- 	 * after clear poison.
- 	 */
- 	flush_dcache_page(page);
-+	dev_access_enable();
- 	write_pmem(pmem_addr, page, page_off, len);
- 	if (unlikely(bad_pmem)) {
- 		rc = pmem_clear_poison(pmem, pmem_off, len);
- 		write_pmem(pmem_addr, page, page_off, len);
- 	}
-+	dev_access_disable();
- 
- 	return rc;
- }
+diff --git a/net/core/rtnetlink.c b/net/core/rtnetlink.c
+index 9aedc15736ad..85a4b0101f76 100644
+--- a/net/core/rtnetlink.c
++++ b/net/core/rtnetlink.c
+@@ -3343,7 +3343,8 @@ static int __rtnl_newlink(struct sk_buff *skb, struct nlmsghdr *nlh,
+ 		 */
+ 		if (err < 0) {
+ 			/* If device is not registered at all, free it now */
+-			if (dev->reg_state == NETREG_UNINITIALIZED)
++			if (dev->reg_state == NETREG_UNINITIALIZED ||
++			    dev->reg_state == NETREG_UNREGISTERED)
+ 				free_netdev(dev);
+ 			goto out;
+ 		}
 -- 
-2.25.1
+2.17.1
 
