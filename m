@@ -2,113 +2,107 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-14.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF56EC433EA
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 21:09:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FF81C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 21:10:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 98C9120658
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 21:09:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594760989;
-	bh=ArJuSwehu3eqi2k6YsxpjQ7tdEvCHdkWkCFNGLW+GGQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ubufDsoZ4S+4WgnYK9kCRYSGm8DULup/YR5GXt2jsvaU3sTQ8/NtNlj0k86155noe
-	 CFbXAB85VGtPZw0M2jvS2PdAi7x4wGWbIQtDn1ra/YuFGXHpxyUIHfXABattY4CY6w
-	 hbUaO50B10xFsRptBBgLKJNJ0sygD1dszIKIo5+8=
+	by mail.kernel.org (Postfix) with ESMTP id 4B64320658
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 21:10:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="cpWNBhuf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728179AbgGNVJs (ORCPT
+        id S1728188AbgGNVK0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 17:09:48 -0400
-Received: from mail-il1-f194.google.com ([209.85.166.194]:43510 "EHLO
-        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726750AbgGNVJr (ORCPT
+        Tue, 14 Jul 2020 17:10:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60850 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727939AbgGNVKZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 17:09:47 -0400
-Received: by mail-il1-f194.google.com with SMTP id i18so43204ilk.10;
-        Tue, 14 Jul 2020 14:09:46 -0700 (PDT)
+        Tue, 14 Jul 2020 17:10:25 -0400
+Received: from mail-io1-xd43.google.com (mail-io1-xd43.google.com [IPv6:2607:f8b0:4864:20::d43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D2D82C061794
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 14:10:25 -0700 (PDT)
+Received: by mail-io1-xd43.google.com with SMTP id l17so7338644iok.7
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 14:10:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=tf9PAf4+scrz48zRc1kpOyACTjUnABDU7s5fr84q2Xs=;
+        b=cpWNBhufuFQNDA2gpemEkyku+gKrlNiQt3MhwI1Eugw/Bx6Y0AYdA21C8z0JAUNfHb
+         9js0LLzYMMUrX76NM3O+OIdWsFtaDqEimtbf2jPZmG45ku17m5JsSioQvJzpgAvqhPvs
+         n4QCFMP3DwDh/tkETDRDxy4mhoouYJCJcKvXlsY1v25wvGr6/WN9Kxetf6ApX2A0Ret+
+         sp3n5A7pP65mjvAbQo2k/XC0KVZdWM5qeKjmfm/Un78MHqsfxgyIf82nxRgtqNAq8NkE
+         1EfxMyhngVhXWdkjHy8gHjgkBGEiclN7ZDujnXYZzyOWOrLrQJD3AbtTwvWop8cg0641
+         h9Nw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=7n1eCfcIXRzp8Zf/h32IGI3ysZU8V6mXbcHVjQ48LpM=;
-        b=pyKmC1iUGPTpESp5UMsKKB8qMGHSZYTG3QAWfP9O6DfL/dhCSRBo7hYqVDFUPQLbXB
-         AwtEVltT2cRklulEZ5N08nsVNMdUmf1Y608Q0vHnEXmwsYfnUWa3a+xXiC1TJj4XNZYV
-         E53s+iO0ATpir+MMmN3vryeS8+96VWAtl/plIKUtZvHGP6ksq4E5SfaJTMQ8LxdUaHj1
-         bpFHsfLQ2v+8f4t21pg0RFTz8xIBCJ/w6xmhN69Lrc4JVbUHqg3SJDtSH0kZ6D4pUIbg
-         2sEfEl2BuFI+cqSoTEMlVSBm/HfCSBjuONy29rRbZRQzQS6seBFRKUyUb9z3EBU/0sUv
-         CkOg==
-X-Gm-Message-State: AOAM531wDsS6JMD2Ob2ASYR5HEziOU31/RMklbkWn4yEEB+LvkuVuvGl
-        4pERuDrNz5WLvxS+/7H8dh7//cK03ZTK
-X-Google-Smtp-Source: ABdhPJy2M+RM7ODxSIifUBuOn2xzZSlv5UJSECY0kHYVvd6TGRWoVCEMCkEvE+CKWf8plGmQrP4TkA==
-X-Received: by 2002:a92:6a02:: with SMTP id f2mr5984073ilc.68.1594760986430;
-        Tue, 14 Jul 2020 14:09:46 -0700 (PDT)
-Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id x71sm57098ilk.43.2020.07.14.14.09.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 Jul 2020 14:09:45 -0700 (PDT)
-Received: (nullmailer pid 2921463 invoked by uid 1000);
-        Tue, 14 Jul 2020 21:09:44 -0000
-Date:   Tue, 14 Jul 2020 15:09:44 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Horia =?utf-8?Q?Geant=C4=83?= <horia.geanta@nxp.com>
-Cc:     Franck Lenormand <franck.lenormand@nxp.com>,
-        Marco Felsch <m.felsch@pengutronix.de>,
-        Matt Mackall <mpm@selenic.com>,
-        Iuliana Prodan <iuliana.prodan@nxp.com>,
-        linux-crypto@vger.kernel.org, Fabio Estevam <festevam@gmail.com>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Martin Kaiser <martin@kaiser.cx>,
-        linux-arm-kernel@lists.infradead.org,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
-        Shawn Guo <shawnguo@kernel.org>,
-        Silvano Di Ninno <silvano.dininno@nxp.com>,
-        Sascha Hauer <s.hauer@pengutronix.de>
-Subject: Re: [PATCH v3 1/5] dt-bindings: rng: add RNGB compatibles for i.MX6
- SoCs
-Message-ID: <20200714210944.GA2921406@bogus>
-References: <20200714123920.23711-1-horia.geanta@nxp.com>
- <20200714123920.23711-2-horia.geanta@nxp.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=tf9PAf4+scrz48zRc1kpOyACTjUnABDU7s5fr84q2Xs=;
+        b=opyVl/uyGKSXUeyOw88w8biawyN7s+F+PA4S9iqzTaQD/hLT49eKJF/UFymfGf7KtP
+         4A2dLqt7hzX4Ie4VeU5DmTGgRtONAwEygDE528F4JDBIhHC3srddVS4S1bKv0lUWFrmH
+         Mcd+vkP8aHMkQP73EfGtGtCDlbELQXqvdrsy/EquoDfUT3iCsJfQIwP8l76nf5Ghr7wA
+         Vp8tCEF3i6vOBSeG4zfVWqM8fm/+xORkNJ0rzPxXZ7vUo+TxVCTCLNM+h4RGKnSAGsOR
+         MCClfqg4iHIOZtCEZcRxpwpe6TXem3GTNM4c38xUaOCV+E8Stquc0awIq53Rr50Wnm7R
+         A9jw==
+X-Gm-Message-State: AOAM533IsPaVSPEuwhzuBkV4hCyROPvZ7gg1c/VzoZwD+6qoO6Fuongn
+        25fnh4v+jFI530j+imD4KpoWFtH93N+YxM82PH6SLg==
+X-Google-Smtp-Source: ABdhPJzMjt9SabBaf1o//577oui3GOmtQID23iPxyM0BvroWjYHuwu82cadQM1D4S+NKjseqAU1eQd+4NuDPbMB8/UM=
+X-Received: by 2002:a6b:5b0e:: with SMTP id v14mr6876818ioh.145.1594761024680;
+ Tue, 14 Jul 2020 14:10:24 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200714123920.23711-2-horia.geanta@nxp.com>
+References: <20200713215759.3701482-1-victorhsieh@google.com>
+ <20200714121249.GA21928@nautica> <20200714205401.GE1064009@gmail.com>
+In-Reply-To: <20200714205401.GE1064009@gmail.com>
+From:   Victor Hsieh <victorhsieh@google.com>
+Date:   Tue, 14 Jul 2020 14:10:11 -0700
+Message-ID: <CAFCauYPo_3ztwbbexEJvdfDFCZgiake1L32cTc_Y_p4bDLr7zg@mail.gmail.com>
+Subject: Re: [PATCH] fs/9p: Fix TCREATE's fid in protocol
+To:     Eric Biggers <ebiggers@kernel.org>
+Cc:     Dominique Martinet <asmadeus@codewreck.org>,
+        v9fs-developer@lists.sourceforge.net,
+        Eric Van Hensbergen <ericvh@gmail.com>,
+        Latchesar Ionkov <lucho@ionkov.net>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        stable@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 14 Jul 2020 15:39:16 +0300, Horia Geantă wrote:
-> RNGB block is found in some i.MX6 SoCs - 6SL, 6SLL, 6ULL, 6ULZ.
-> Add corresponding compatible strings.
-> 
-> Note:
-> 
-> Several NXP SoC from QorIQ family (P1010, P1023, P4080, P3041, P5020)
-> also have a RNGB, however it's part of the CAAM
-> (Cryptograhic Accelerator and Assurance Module) crypto accelerator.
-> In this case, RNGB is managed in the caam driver
-> (drivers/crypto/caam/), since it's tightly related to
-> the caam "job ring" interface, not to mention CAAM internally relying on
-> RNGB as source of randomness.
-> 
-> On the other hand, the i.MX6 SoCs with RNGB have a DCP
-> (Data Co-Processor) crypto accelerator and this block and RNGB
-> are independent.
-> 
-> Signed-off-by: Horia Geantă <horia.geanta@nxp.com>
-> ---
->  Documentation/devicetree/bindings/rng/imx-rng.txt | 3 +++
->  1 file changed, 3 insertions(+)
-> 
+Please disregard this patch.  I misunderstood the protocol and have
+found the actual problem in the hypervisor's 9P implementation.  Sorry
+about the noise.
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+On Tue, Jul 14, 2020 at 1:54 PM Eric Biggers <ebiggers@kernel.org> wrote:
+>
+> On Tue, Jul 14, 2020 at 02:12:49PM +0200, Dominique Martinet wrote:
+> >
+> > > Fixes: 5643135a2846 ("fs/9p: This patch implements TLCREATE for 9p2000.L protocol.")
+> > > Signed-off-by: Victor Hsieh <victorhsieh@google.com>
+> > > Cc: stable@vger.kernel.org
+> >
+> > (afaiu it is normally frowned upon for developers to add this cc (I can
+> > understand stable@ not wanting spam discussing issues left and right
+> > before maintainers agreed on them!) ; I can add it to the commit itself
+> > if requested but they normally pick most such fixes pretty nicely for
+> > backport anyway; I see most 9p patches backported as long as the patch
+> > applies cleanly which is pretty much all the time.
+> > Please let me know if I understood that incorrectly)
+> >
+>
+> Some people assume this, but the stable maintainers themselves say that Cc'ing
+> stable@vger.kernel.org on in-development patches is fine:
+> https://lkml.kernel.org/r/20200423184219.GA80650@kroah.com
+>
+> And doing so is pretty much inevitable, since the tag gets picked up by
+> 'git send-email'.  (Yes, there's also "stable@kernel.org", but it's not actually
+> what is documented.)
+>
+> - Eric
