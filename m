@@ -2,79 +2,153 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 807E9C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 07:15:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F943C433E4
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 07:17:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 63B07221E8
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 07:15:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E9BC1221E8
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 07:17:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eqW/v9ZZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726768AbgGNHPj (ORCPT
+        id S1726780AbgGNHRV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 03:15:39 -0400
-Received: from smtp2207-205.mail.aliyun.com ([121.197.207.205]:47740 "EHLO
-        smtp2207-205.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725905AbgGNHPj (ORCPT
+        Tue, 14 Jul 2020 03:17:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43652 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725884AbgGNHRU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 03:15:39 -0400
-X-Alimail-AntiSpam: AC=CONTINUE;BC=0.2701682|-1;CH=green;DM=|CONTINUE|false|;DS=CONTINUE|ham_system_inform|0.0469075-0.00178881-0.951304;FP=0|0|0|0|0|-1|-1|-1;HT=e01l04362;MF=frank@allwinnertech.com;NM=1;PH=DS;RN=7;RT=7;SR=0;TI=SMTPD_---.I1U1Yi2_1594710932;
-Received: from allwinnertech.com(mailfrom:frank@allwinnertech.com fp:SMTPD_---.I1U1Yi2_1594710932)
-          by smtp.aliyun-inc.com(10.147.40.44);
-          Tue, 14 Jul 2020 15:15:35 +0800
-From:   Frank Lee <frank@allwinnertech.com>
-To:     lee.jones@linaro.org, wens@csie.org
-Cc:     linux-kernel@vger.kernel.org, tiny.windzz@gmail.com,
-        huangshuosheng@allwinnertech.com, liyong@allwinnertech.com,
-        Yangtao Li <frank@allwinnertech.com>
-Subject: [PATCH v4 10/16] mfd: axp20x: Allow the AXP803 to be probed by I2C
-Date:   Tue, 14 Jul 2020 15:15:25 +0800
-Message-Id: <bd2b5ba093adba25dc1321cbdfb1532af7bd6047.1594708864.git.frank@allwinnertech.com>
-X-Mailer: git-send-email 2.24.0
-In-Reply-To: <cover.1594708863.git.frank@allwinnertech.com>
-References: <cover.1594708863.git.frank@allwinnertech.com>
+        Tue, 14 Jul 2020 03:17:20 -0400
+Received: from mail-ed1-x541.google.com (mail-ed1-x541.google.com [IPv6:2a00:1450:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 23918C061755;
+        Tue, 14 Jul 2020 00:17:20 -0700 (PDT)
+Received: by mail-ed1-x541.google.com with SMTP id bm28so14071183edb.2;
+        Tue, 14 Jul 2020 00:17:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=to:references:from:autocrypt:subject:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=uL/pCchFQcexJop7i0+ssZbCLLEOeuiKRpXqF5hkshw=;
+        b=eqW/v9ZZKefry1pax8L2HmwnHPkOVRzIvlK/RLWWVW7bUHP3G72zhoZ3oAA1B4yXKb
+         V/NiglySA9Uj8RiGtj7nBbrL4XaD4rj5hierse+sCH0WZP6PYq6g+CtxdF3prF8uD8Zm
+         uIoF1XKZzWre/hvrQWN/SR0/cpSgsw1Fpgei0NQEMBJv/+Jhf51OvrFqMTqYieqwgEHA
+         jhu/xNT2N3JeMHceSabMf1UqgcgTzjVehyMBVHBaSA+AfDxgPSrvTA8pTKyHEzZyX7xr
+         44txf+jZTVvmiN/MS9fa3oB3TdIxaf+CGImLUYUyECxASh7jgFW4bADY/NMV6U5RDqQd
+         wmbA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:to:references:from:autocrypt:subject:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=uL/pCchFQcexJop7i0+ssZbCLLEOeuiKRpXqF5hkshw=;
+        b=sxPGIhg1frVWh9SYTXYnPnqegGsGv1x6/q4bFKycJMoKHvMVtp8aok3rYjLCzCVYxH
+         ynBBkxtDAEXvJESwTQNmpdc5UDOgTnZOg2DIu7IcTtW2hw0Ww678ghgeKtWkNWu+tKdx
+         TtL0OgbuByI+4uVhS//An1jxfPv9OziZCVplGYUdWAH9N8WboAb96il1ja+b3qzC2eoI
+         0WVrFifpWgomy//or1M+IsPp6qFTe0Omz9G22BaSjYChLqsqnc6WBsqGHLcXuJybCSl1
+         F1kaKDkMnM/dkjhP1gOSAuTLf6gcQ+ooqoK2ziJYNJ5t5h096Ij0+fm8+HxIw1P7nvTh
+         kH4Q==
+X-Gm-Message-State: AOAM5316O4KW2A0LKyt79HrSOQB1FXztbZ7gZ79yiF0m/43gTaHPmw90
+        kdaBi+nCrB7+p/nttv5tKAh3xVnu
+X-Google-Smtp-Source: ABdhPJyOyDqBc6wAfG420LeV552PNPLJgCr8WuB7mw/z38O+KtAhud2J7s32DzzqGfrNrFy246AuVA==
+X-Received: by 2002:aa7:d4ca:: with SMTP id t10mr3119735edr.244.1594711038449;
+        Tue, 14 Jul 2020 00:17:18 -0700 (PDT)
+Received: from [192.168.43.236] ([5.100.193.69])
+        by smtp.gmail.com with ESMTPSA id z22sm13682826edx.72.2020.07.14.00.17.17
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 14 Jul 2020 00:17:17 -0700 (PDT)
+To:     Jens Axboe <axboe@kernel.dk>, io-uring@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <cover.1594683622.git.asml.silence@gmail.com>
+ <fc03ea42-8f83-1a49-2ea2-9697c797e76b@kernel.dk>
+From:   Pavel Begunkov <asml.silence@gmail.com>
+Autocrypt: addr=asml.silence@gmail.com; prefer-encrypt=mutual; keydata=
+ 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 bA==
+Subject: Re: [PATCH 0/5] batch completion + freeing improvements
+Message-ID: <4cfeff8d-cdd2-a705-4b59-0c0e1a6c213a@gmail.com>
+Date:   Tue, 14 Jul 2020 10:15:32 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.0
 MIME-Version: 1.0
+In-Reply-To: <fc03ea42-8f83-1a49-2ea2-9697c797e76b@kernel.dk>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yangtao Li <frank@allwinnertech.com>
+On 14/07/2020 04:08, Jens Axboe wrote:
+> On 7/13/20 5:41 PM, Pavel Begunkov wrote:
+>> Different batching improvements, that's it.
+>>
+>> Unfortunately, I don't have a decent SSD/setup at hand to
+>> benchmark it properly.
+> 
+> I do though, but I'm not seeing any improvement with this, whereas
+> some of the previous series made nice improvements... If anything
+> maybe it's a bit slower.
 
-The AXP803 can be used both using the RSB proprietary bus, or a more
-traditional I2C bus.
+Thanks for testing it, appreciate that. Probably, the array did
+something wrong with your caches, or the 2-step approach is to blame.
+I'll try to refine and/or resend parts after closer benchmarking.
 
-Let's add that possibility.
+> 
+>> p.s. if extra 32 pointers on stack would be a problem, I wanted for
+>> long to put submit_state into ctx itself.
+> 
+> It's getting up there... But really depends on how early in the stack,
+> so 32 could _probably_ work, though usually batched on-stack counts
+> are a bit lower than that.
 
-Signed-off-by: Yangtao Li <frank@allwinnertech.com>
----
- drivers/mfd/axp20x-i2c.c | 2 ++
- 1 file changed, 2 insertions(+)
+On a fresh head 250 bytes looks too much, I agree. That considering
+that io_uring is stacking on top of vfs or near that, and there are
+already fast_iovec/msg.
 
-diff --git a/drivers/mfd/axp20x-i2c.c b/drivers/mfd/axp20x-i2c.c
-index 14f9df74f855..446a7d0bbb47 100644
---- a/drivers/mfd/axp20x-i2c.c
-+++ b/drivers/mfd/axp20x-i2c.c
-@@ -63,6 +63,7 @@ static const struct of_device_id axp20x_i2c_of_match[] = {
- 	{ .compatible = "x-powers,axp209", .data = (void *)AXP209_ID },
- 	{ .compatible = "x-powers,axp221", .data = (void *)AXP221_ID },
- 	{ .compatible = "x-powers,axp223", .data = (void *)AXP223_ID },
-+	{ .compatible = "x-powers,axp803", .data = (void *)AXP803_ID },
- 	{ .compatible = "x-powers,axp806", .data = (void *)AXP806_ID },
- 	{ },
- };
-@@ -74,6 +75,7 @@ static const struct i2c_device_id axp20x_i2c_id[] = {
- 	{ "axp209", 0 },
- 	{ "axp221", 0 },
- 	{ "axp223", 0 },
-+	{ "axp803", 0 },
- 	{ "axp806", 0 },
- 	{ },
- };
 -- 
-2.24.0
-
+Pavel Begunkov
