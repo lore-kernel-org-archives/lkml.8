@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B66A9C433E7
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 19:00:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D68ECC433E5
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 19:00:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8AAA222B37
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 19:00:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B714E229CA
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 19:00:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594753243;
-	bh=kbSlFT4yADAzoHau1CbFspp9DIIsUrsPcu87ugGuJaA=;
+	s=default; t=1594753245;
+	bh=/6OqGyB6j1Y5RgqtxHPkVz0xAsQg57VglVJYD2HVQ2Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Lb646v1UEl6YHNQDCl6jRgg21F4fs2wdhaFIJ5Rig+4mld+tJrR/gCskCo6NLgOKP
-	 eu54y58h2oMz1t7lYfGLx8lARy+n38DfarH/+Ap51teh4MSB9hQvCDKFs/0LZvRNZD
-	 1xuj9b8p17O/ztB7rC0KBZEWmUNXQtKKYEsnDank=
+	b=jwnKyntkZMFzy6/hGNGQckVDf+B1S2OhiuEYqO1LK7yQVWcnyJJQK5dfkOaaO8LuG
+	 AOkrDCiJII0DBRssPxk2Bwa4/Llc/CQeI5QYpzeHmqLWl8ZJXBgAVqvxVBb3ISyGyE
+	 nJ3r1MRmgRLwZpipFV9XQWvduyXYv2ADygvtZn2g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731379AbgGNTAl (ORCPT
+        id S1731186AbgGNTAn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 15:00:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59462 "EHLO mail.kernel.org"
+        Tue, 14 Jul 2020 15:00:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59592 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731372AbgGNTA3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 15:00:29 -0400
+        id S1729996AbgGNTAf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 15:00:35 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D089122A99;
-        Tue, 14 Jul 2020 19:00:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D362B22AAF;
+        Tue, 14 Jul 2020 19:00:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594753229;
-        bh=kbSlFT4yADAzoHau1CbFspp9DIIsUrsPcu87ugGuJaA=;
+        s=default; t=1594753234;
+        bh=/6OqGyB6j1Y5RgqtxHPkVz0xAsQg57VglVJYD2HVQ2Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=szdsDkpJwvtxMpvruM90eeUpl2PtCfnI6516DOsYvL3co543rLMen4MeqVTY2UTg2
-         i+ia7B4emYUZH0JSa9bX2M0gfYhou2MQW/KhE61yJppnl95cM1ZTvM+MrBXfEwgmfN
-         T1LSOLlz/zmbxiu+U4kzJnxXew6xUFRGXuiS3KH0=
+        b=DDoV+DPmxCUK4BJCDz2+oU55rBclPLMVyJx41/iXkdXEbWpqmVLgT4Ff4q7rRl/2n
+         haFY/nUiQMix+LEX6ddtdCyDalDqK9Dg7+4egtFUbszeMR8NfwYEJsLGX5d2F7zYn3
+         FmViwGaJe/AKtmvcapd8R8vC+sRxQ4KBfE4cLRzw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ming Lei <ming.lei@redhat.com>,
-        Mike Snitzer <snitzer@redhat.com>, Jens Axboe <axboe@kernel.dk>
-Subject: [PATCH 5.7 160/166] blk-mq: consider non-idle request as "inflight" in blk_mq_rq_inflight()
-Date:   Tue, 14 Jul 2020 20:45:25 +0200
-Message-Id: <20200714184123.483980264@linuxfoundation.org>
+        stable@vger.kernel.org, Adrian Hunter <adrian.hunter@intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>
+Subject: [PATCH 5.7 162/166] perf scripts python: export-to-postgresql.py: Fix struct.pack() int argument
+Date:   Tue, 14 Jul 2020 20:45:27 +0200
+Message-Id: <20200714184123.578904010@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200714184115.844176932@linuxfoundation.org>
 References: <20200714184115.844176932@linuxfoundation.org>
@@ -59,52 +60,68 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ming Lei <ming.lei@redhat.com>
+From: Adrian Hunter <adrian.hunter@intel.com>
 
-commit 05a4fed69ff00a8bd83538684cb602a4636b07a7 upstream.
+commit 640432e6bed08e9d5d2ba26856ba3f55008b07e3 upstream.
 
-dm-multipath is the only user of blk_mq_queue_inflight().  When
-dm-multipath calls blk_mq_queue_inflight() to check if it has
-outstanding IO it can get a false negative.  The reason for this is
-blk_mq_rq_inflight() doesn't consider requests that are no longer
-MQ_RQ_IN_FLIGHT but that are now MQ_RQ_COMPLETE (->complete isn't
-called or finished yet) as "inflight".
+Python 3.8 is requiring that arguments being packed as integers are also
+integers.  Add int() accordingly.
 
-This causes request-based dm-multipath's dm_wait_for_completion() to
-return before all outstanding dm-multipath requests have actually
-completed.  This breaks DM multipath's suspend functionality because
-blk-mq requests complete after DM's suspend has finished -- which
-shouldn't happen.
+ Before:
 
-Fix this by considering any request not in the MQ_RQ_IDLE state
-(so either MQ_RQ_COMPLETE or MQ_RQ_IN_FLIGHT) as "inflight" in
-blk_mq_rq_inflight().
+   $ perf record -e intel_pt//u uname
+   $ perf script --itrace=bep -s ~/libexec/perf-core/scripts/python/export-to-postgresql.py perf_data_db branches calls
+   2020-06-25 16:09:10.547256 Creating database...
+   2020-06-25 16:09:10.733185 Writing to intermediate files...
+   Traceback (most recent call last):
+     File "/home/ahunter/libexec/perf-core/scripts/python/export-to-postgresql.py", line 1106, in synth_data
+       cbr(id, raw_buf)
+     File "/home/ahunter/libexec/perf-core/scripts/python/export-to-postgresql.py", line 1058, in cbr
+       value = struct.pack("!hiqiiiiii", 4, 8, id, 4, cbr, 4, MHz, 4, percent)
+   struct.error: required argument is not an integer
+   Fatal Python error: problem in Python trace event handler
+   Python runtime state: initialized
 
-Fixes: 3c94d83cb3526 ("blk-mq: change blk_mq_queue_busy() to blk_mq_queue_inflight()")
-Signed-off-by: Ming Lei <ming.lei@redhat.com>
-Signed-off-by: Mike Snitzer <snitzer@redhat.com>
+   Current thread 0x00007f35d3695780 (most recent call first):
+   <no Python frame>
+   Aborted (core dumped)
+
+ After:
+
+   $ dropdb perf_data_db
+   $ rm -rf perf_data_db-perf-data
+   $ perf script --itrace=bep -s ~/libexec/perf-core/scripts/python/export-to-postgresql.py perf_data_db branches calls
+   2020-06-25 16:09:40.990267 Creating database...
+   2020-06-25 16:09:41.207009 Writing to intermediate files...
+   2020-06-25 16:09:41.270915 Copying to database...
+   2020-06-25 16:09:41.382030 Removing intermediate files...
+   2020-06-25 16:09:41.384630 Adding primary keys
+   2020-06-25 16:09:41.541894 Adding foreign keys
+   2020-06-25 16:09:41.677044 Dropping unused tables
+   2020-06-25 16:09:41.703761 Done
+
+Fixes: aba44287a224 ("perf scripts python: export-to-postgresql.py: Export Intel PT power and ptwrite events")
+Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
 Cc: stable@vger.kernel.org
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Link: http://lore.kernel.org/lkml/20200629091955.17090-2-adrian.hunter@intel.com
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- block/blk-mq.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ tools/perf/scripts/python/export-to-postgresql.py |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/block/blk-mq.c
-+++ b/block/blk-mq.c
-@@ -803,10 +803,10 @@ static bool blk_mq_rq_inflight(struct bl
- 			       void *priv, bool reserved)
- {
- 	/*
--	 * If we find a request that is inflight and the queue matches,
-+	 * If we find a request that isn't idle and the queue matches,
- 	 * we know the queue is busy. Return false to stop the iteration.
- 	 */
--	if (rq->state == MQ_RQ_IN_FLIGHT && rq->q == hctx->queue) {
-+	if (blk_mq_request_started(rq) && rq->q == hctx->queue) {
- 		bool *busy = priv;
+--- a/tools/perf/scripts/python/export-to-postgresql.py
++++ b/tools/perf/scripts/python/export-to-postgresql.py
+@@ -1055,7 +1055,7 @@ def cbr(id, raw_buf):
+ 	cbr = data[0]
+ 	MHz = (data[4] + 500) / 1000
+ 	percent = ((cbr * 1000 / data[2]) + 5) / 10
+-	value = struct.pack("!hiqiiiiii", 4, 8, id, 4, cbr, 4, MHz, 4, percent)
++	value = struct.pack("!hiqiiiiii", 4, 8, id, 4, cbr, 4, int(MHz), 4, int(percent))
+ 	cbr_file.write(value)
  
- 		*busy = true;
+ def mwait(id, raw_buf):
 
 
