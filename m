@@ -2,282 +2,205 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-20.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no
+	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23A38C433E7
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 20:15:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DCB2C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 20:16:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EF4562076C
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 20:15:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0DB142076C
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 20:16:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="S2GVzOkC"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="qG3Xhrwi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730357AbgGNUPq (ORCPT
+        id S1730378AbgGNUQK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 16:15:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52384 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730340AbgGNUPp (ORCPT
+        Tue, 14 Jul 2020 16:16:10 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:57976 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729617AbgGNUQJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 16:15:45 -0400
-Received: from mail-qt1-x849.google.com (mail-qt1-x849.google.com [IPv6:2607:f8b0:4864:20::849])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 336B6C08C5C1
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 13:15:45 -0700 (PDT)
-Received: by mail-qt1-x849.google.com with SMTP id l53so13373595qtl.10
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 13:15:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=k8sSMgjK9I2PUQMRw/GWlcNooM3tXXrf+Vhg/OAtdZg=;
-        b=S2GVzOkC2LGtGQ21lvarvs9uv1aEUX8YsRU1aoZZE1+59iLM2WChsBBWqbtUFhGnJe
-         skhA4nhLC0cZjFmHedgRpWJ8wAylwTiRzy+nHZhHXZ/peY/4t9Xl3GBqVAP+GSCQzQy7
-         t4SArJ5g3XVdGGf+YJRvi+guvQvZ8t/kdE51J8xOXGnfDo1T39uO7pZ61cNd3lKHoaMS
-         Qv21vzUYEzSrpAqdw9M8gY2KT081z/v6EXry5P+MISlDEa/l2DkucnwJbMHP/PEX/Dmi
-         ivGV0gqVCM763+8JJTAx738FPM++fQKoL94CzaZ8bYMCm4OpFCkiVFkJ5XiQ9yFOv5+v
-         2Yyw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=k8sSMgjK9I2PUQMRw/GWlcNooM3tXXrf+Vhg/OAtdZg=;
-        b=YfBbFQlc+gn8UqGsWvljR9Ae0HEHxIynVWHUIw7FviDt0olOdVDXFKx+LsJ1E+4CQc
-         UWvSDmlEhL1PLvTvce9WZzryzXcL9MJrF5HxZkmNxguCq4UtZGbUxN8SRqIEcSo8Zty2
-         G1YMt5zTyQy6Q12NroP3sEfzfUQIaN0NYkATwzYzgS6OvlyKFuxo6vv1j0KIkoVqUWcq
-         ndcodkHnpg3PHlndN2yYgcFXpsQKG+IidS/laSX+nnebrh8csE/JApQPR3mVh16flYKg
-         eQZZqwYekjSWyo05ofxk0O7PKhy/t67dbV18EG0rsxq7fzZ4qbQXZx/oYlSVxlp/Y5hZ
-         j9mA==
-X-Gm-Message-State: AOAM5303EROHg9jNTTuVuSrHaQct4lLN8GOyRNIhla/mBGps7y+Ah6dJ
-        oZ0ISTkEapTvVD8wTLyznNV3RNhPnbn3
-X-Google-Smtp-Source: ABdhPJwHlifHg+spec7YOdMDJm+3uxVhSlu5bZvFHXamqwQeKt8gqiqlfnbxbsk5PbdhuRmTp8ZcTz1dt5uu
-X-Received: by 2002:a0c:b2d1:: with SMTP id d17mr6537991qvf.100.1594757743926;
- Tue, 14 Jul 2020 13:15:43 -0700 (PDT)
-Date:   Tue, 14 Jul 2020 13:15:40 -0700
-Message-Id: <20200714201540.3139140-1-rajatja@google.com>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.27.0.389.gc38d7665816-goog
-Subject: [PATCH v5] PCI/ACS: Enable PCI_ACS_TB and disable only when needed
- for ATS
-From:   Rajat Jain <rajatja@google.com>
-To:     David Woodhouse <dwmw2@infradead.org>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>, iommu@lists.linux-foundation.org,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-acpi@vger.kernel.org, Raj Ashok <ashok.raj@intel.com>,
-        lalithambika.krishnakumar@intel.com,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Jean-Philippe Brucker <jean-philippe@linaro.org>,
-        Prashant Malani <pmalani@google.com>,
-        Benson Leung <bleung@google.com>,
-        Todd Broch <tbroch@google.com>,
-        Alex Levin <levinale@google.com>,
-        Mattias Nissler <mnissler@google.com>,
-        Rajat Jain <rajatxjain@gmail.com>,
-        Bernie Keany <bernie.keany@intel.com>,
-        Aaron Durbin <adurbin@google.com>,
-        Diego Rivas <diegorivas@google.com>,
-        Duncan Laurie <dlaurie@google.com>,
-        Furquan Shaikh <furquan@google.com>,
-        Jesse Barnes <jsbarnes@google.com>,
-        Christian Kellner <christian@kellner.me>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        oohall@gmail.com, Saravana Kannan <saravanak@google.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Cc:     Rajat Jain <rajatja@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        Tue, 14 Jul 2020 16:16:09 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06EKD3UE097781;
+        Tue, 14 Jul 2020 20:16:03 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id : in-reply-to : references : mime-version :
+ content-transfer-encoding; s=corp-2020-01-29;
+ bh=GKZ07ZU8LV5s043fh4pCl0IkufVmPubx2VM55YqZHGI=;
+ b=qG3Xhrwi5Ynd5OuLQOn0tt/qmamPhA9LA+wMU18AaFamb5dNHKdNKRnzPs+qRZ1+PV90
+ EjeQKZtfBc6SGmr3vxABUXoiCrFpTrFQiIaKDeyZUU+LkNKetHPcS1tMYAuWQ0mSY3lg
+ QPh8ALGguQN8OgF5nopXBhSAidqkdJBbEkF1//uo3gSY9qfQ1OtFRz5yiQKkA3XiXrTb
+ Nj/BIK2vryj3oOvvuKpjc7rFF1OvKIk5SzzV+GERckZ2txMX/Bgh+2I2wQqtHbaKuTWs
+ CC2gcwTmf5rl6jlw8EnQ9SONTWKaMjBrQsG6eixvtaHD8m1MdQh55CNBT8o8SPmUaYJ/ aQ== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2130.oracle.com with ESMTP id 3274ur7q68-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 14 Jul 2020 20:16:03 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06EKCdNY155108;
+        Tue, 14 Jul 2020 20:14:03 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by userp3030.oracle.com with ESMTP id 327qbyc6rm-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 14 Jul 2020 20:14:03 +0000
+Received: from abhmp0003.oracle.com (abhmp0003.oracle.com [141.146.116.9])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 06EKE2nE003957;
+        Tue, 14 Jul 2020 20:14:02 GMT
+Received: from localhost.localdomain (/98.229.125.203)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 14 Jul 2020 13:14:02 -0700
+From:   Daniel Jordan <daniel.m.jordan@oracle.com>
+To:     Herbert Xu <herbert@gondor.apana.org.au>,
+        Steffen Klassert <steffen.klassert@secunet.com>
+Cc:     linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Daniel Jordan <daniel.m.jordan@oracle.com>
+Subject: [PATCH 4/6] padata: remove effective cpumasks from the instance
+Date:   Tue, 14 Jul 2020 16:13:54 -0400
+Message-Id: <20200714201356.889176-5-daniel.m.jordan@oracle.com>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200714201356.889176-1-daniel.m.jordan@oracle.com>
+References: <20200714201356.889176-1-daniel.m.jordan@oracle.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9682 signatures=668680
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=2 spamscore=0
+ mlxlogscore=999 bulkscore=0 malwarescore=0 mlxscore=0 phishscore=0
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2007140141
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9682 signatures=668680
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 lowpriorityscore=0 impostorscore=0
+ suspectscore=2 phishscore=0 spamscore=0 mlxlogscore=999 malwarescore=0
+ mlxscore=0 priorityscore=1501 adultscore=0 bulkscore=0 clxscore=1015
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2007140141
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The ACS "Translation Blocking" bit blocks the translated addresses from
-the devices. We don't expect such traffic from devices unless ATS is
-enabled on them. A device sending such traffic without ATS enabled,
-indicates malicious intent, and thus should be blocked.
+A padata instance has effective cpumasks that store the user-supplied
+masks ANDed with the online mask, but this middleman is unnecessary.
+parallel_data keeps the same information around.  Removing this saves
+text and code churn in future changes.
 
-Enable PCI_ACS_TB by default for all devices, and it stays enabled until
-atleast one of the devices downstream wants to enable ATS. It gets
-disabled to enable ATS on a device downstream it, and then gets enabled
-back on once all the downstream devices don't need ATS.
-
-Signed-off-by: Rajat Jain <rajatja@google.com>
+Signed-off-by: Daniel Jordan <daniel.m.jordan@oracle.com>
+Cc: Herbert Xu <herbert@gondor.apana.org.au>
+Cc: Steffen Klassert <steffen.klassert@secunet.com>
+Cc: linux-crypto@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
 ---
-Note that I'm ignoring the devices that require quirks to enable or
-disable ACS, instead of using the standard way for ACS configuration.
-The reason is that it would require adding yet another quirk table or
-quirk function pointer, that I don't know how to implement for those
-devices, and will neither have the devices to test that code.
+ include/linux/padata.h |  2 --
+ kernel/padata.c        | 30 +++---------------------------
+ 2 files changed, 3 insertions(+), 29 deletions(-)
 
-v5: Enable TB and disable ATS for all devices on boot. Disable TB later
-    only if needed to enable ATS on downstream devices.
-v4: Add braces to avoid warning from kernel robot
-    print warning for only external-facing devices.
-v3: print warning if ACS_TB not supported on external-facing/untrusted ports.
-    Minor code comments fixes.
-v2: Commit log change
-
- drivers/pci/ats.c   |  5 ++++
- drivers/pci/pci.c   | 57 +++++++++++++++++++++++++++++++++++++++++++++
- drivers/pci/pci.h   |  2 ++
- drivers/pci/probe.c |  2 +-
- include/linux/pci.h |  2 ++
- 5 files changed, 67 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/pci/ats.c b/drivers/pci/ats.c
-index b761c1f72f67..e2ea9083f30f 100644
---- a/drivers/pci/ats.c
-+++ b/drivers/pci/ats.c
-@@ -28,6 +28,9 @@ void pci_ats_init(struct pci_dev *dev)
- 		return;
+diff --git a/include/linux/padata.h b/include/linux/padata.h
+index 7d53208b43daa..a941b96b7119e 100644
+--- a/include/linux/padata.h
++++ b/include/linux/padata.h
+@@ -167,7 +167,6 @@ struct padata_mt_job {
+  * @serial_wq: The workqueue used for serial work.
+  * @pslist: List of padata_shell objects attached to this instance.
+  * @cpumask: User supplied cpumasks for parallel and serial works.
+- * @rcpumask: Actual cpumasks based on user cpumask and cpu_online_mask.
+  * @kobj: padata instance kernel object.
+  * @lock: padata instance lock.
+  * @flags: padata flags.
+@@ -179,7 +178,6 @@ struct padata_instance {
+ 	struct workqueue_struct		*serial_wq;
+ 	struct list_head		pslist;
+ 	struct padata_cpumask		cpumask;
+-	struct padata_cpumask		rcpumask;
+ 	struct kobject                   kobj;
+ 	struct mutex			 lock;
+ 	u8				 flags;
+diff --git a/kernel/padata.c b/kernel/padata.c
+index 27f90a3c4dc6b..4f0a57e5738c9 100644
+--- a/kernel/padata.c
++++ b/kernel/padata.c
+@@ -571,13 +571,8 @@ static void padata_init_pqueues(struct parallel_data *pd)
+ static struct parallel_data *padata_alloc_pd(struct padata_shell *ps)
+ {
+ 	struct padata_instance *pinst = ps->pinst;
+-	const struct cpumask *cbcpumask;
+-	const struct cpumask *pcpumask;
+ 	struct parallel_data *pd;
  
- 	dev->ats_cap = pos;
-+
-+	dev->ats_enabled = 1; /* To avoid WARN_ON from pci_disable_ats() */
-+	pci_disable_ats(dev);
- }
+-	cbcpumask = pinst->rcpumask.cbcpu;
+-	pcpumask = pinst->rcpumask.pcpu;
+-
+ 	pd = kzalloc(sizeof(struct parallel_data), GFP_KERNEL);
+ 	if (!pd)
+ 		goto err;
+@@ -597,8 +592,8 @@ static struct parallel_data *padata_alloc_pd(struct padata_shell *ps)
+ 	if (!alloc_cpumask_var(&pd->cpumask.cbcpu, GFP_KERNEL))
+ 		goto err_free_pcpu;
  
- /**
-@@ -82,6 +85,7 @@ int pci_enable_ats(struct pci_dev *dev, int ps)
- 	}
- 	pci_write_config_word(dev, dev->ats_cap + PCI_ATS_CTRL, ctrl);
+-	cpumask_copy(pd->cpumask.pcpu, pcpumask);
+-	cpumask_copy(pd->cpumask.cbcpu, cbcpumask);
++	cpumask_and(pd->cpumask.pcpu, pinst->cpumask.pcpu, cpu_online_mask);
++	cpumask_and(pd->cpumask.cbcpu, pinst->cpumask.cbcpu, cpu_online_mask);
  
-+	pci_disable_acs_trans_blocking(dev);
- 	dev->ats_enabled = 1;
- 	return 0;
- }
-@@ -102,6 +106,7 @@ void pci_disable_ats(struct pci_dev *dev)
- 	ctrl &= ~PCI_ATS_CTRL_ENABLE;
- 	pci_write_config_word(dev, dev->ats_cap + PCI_ATS_CTRL, ctrl);
+ 	padata_init_pqueues(pd);
+ 	padata_init_squeues(pd);
+@@ -668,12 +663,6 @@ static int padata_replace(struct padata_instance *pinst)
  
-+	pci_enable_acs_trans_blocking(dev);
- 	dev->ats_enabled = 0;
- }
- EXPORT_SYMBOL_GPL(pci_disable_ats);
-diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-index 73a862782214..614e3c1e8c56 100644
---- a/drivers/pci/pci.c
-+++ b/drivers/pci/pci.c
-@@ -876,6 +876,9 @@ static void pci_std_enable_acs(struct pci_dev *dev)
- 	/* Upstream Forwarding */
- 	ctrl |= (cap & PCI_ACS_UF);
+ 	pinst->flags |= PADATA_RESET;
  
-+	/* Translation Blocking */
-+	ctrl |= (cap & PCI_ACS_TB);
-+
- 	pci_write_config_word(dev, pos + PCI_ACS_CTRL, ctrl);
- }
+-	cpumask_and(pinst->rcpumask.pcpu, pinst->cpumask.pcpu,
+-		    cpu_online_mask);
+-
+-	cpumask_and(pinst->rcpumask.cbcpu, pinst->cpumask.cbcpu,
+-		    cpu_online_mask);
+-
+ 	list_for_each_entry(ps, &pinst->pslist, list) {
+ 		err = padata_replace_one(ps);
+ 		if (err)
+@@ -856,8 +845,6 @@ static void __padata_free(struct padata_instance *pinst)
  
-@@ -904,6 +907,60 @@ static void pci_enable_acs(struct pci_dev *dev)
- 	pci_disable_acs_redir(dev);
- }
+ 	WARN_ON(!list_empty(&pinst->pslist));
  
-+void pci_disable_acs_trans_blocking(struct pci_dev *pdev)
-+{
-+	u16 cap, ctrl, pos;
-+	struct pci_dev *dev;
-+
-+	if (!pci_acs_enable)
-+		return;
-+
-+	for (dev = pdev; dev; dev = pci_upstream_bridge(pdev)) {
-+
-+		pos = dev->acs_cap;
-+		if (!pos)
-+			continue;
-+
-+		/*
-+		 * Disable translation blocking when first downstream
-+		 * device that needs it (for ATS) wants to enable ATS
-+		 */
-+		if (++dev->ats_dependencies == 1) {
-+			pci_read_config_word(dev, pos + PCI_ACS_CAP, &cap);
-+			pci_read_config_word(dev, pos + PCI_ACS_CTRL, &ctrl);
-+			ctrl &= ~(cap & PCI_ACS_TB);
-+			pci_write_config_word(dev, pos + PCI_ACS_CTRL, ctrl);
-+		}
-+	}
-+}
-+
-+void pci_enable_acs_trans_blocking(struct pci_dev *pdev)
-+{
-+	u16 cap, ctrl, pos;
-+	struct pci_dev *dev;
-+
-+	if (!pci_acs_enable)
-+		return;
-+
-+	for (dev = pdev; dev; dev = pci_upstream_bridge(pdev)) {
-+
-+		pos = dev->acs_cap;
-+		if (!pos)
-+			continue;
-+
-+		/*
-+		 * Enable translation blocking when last downstream device
-+		 * that depends on it (for ATS), doesn't need ATS anymore
-+		 */
-+		if (--dev->ats_dependencies == 0) {
-+			pci_read_config_word(dev, pos + PCI_ACS_CAP, &cap);
-+			pci_read_config_word(dev, pos + PCI_ACS_CTRL, &ctrl);
-+			ctrl |= (cap & PCI_ACS_TB);
-+			pci_write_config_word(dev, pos + PCI_ACS_CTRL, ctrl);
-+		}
-+	}
-+}
-+
- /**
-  * pci_restore_bars - restore a device's BAR values (e.g. after wake-up)
-  * @dev: PCI device to have its BARs restored
-diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-index 12fb79fbe29d..f5d8ecb6ba96 100644
---- a/drivers/pci/pci.h
-+++ b/drivers/pci/pci.h
-@@ -552,6 +552,8 @@ static inline int pci_dev_specific_disable_acs_redir(struct pci_dev *dev)
- 	return -ENOTTY;
- }
- #endif
-+void pci_disable_acs_trans_blocking(struct pci_dev *dev);
-+void pci_enable_acs_trans_blocking(struct pci_dev *dev);
+-	free_cpumask_var(pinst->rcpumask.cbcpu);
+-	free_cpumask_var(pinst->rcpumask.pcpu);
+ 	free_cpumask_var(pinst->cpumask.pcpu);
+ 	free_cpumask_var(pinst->cpumask.cbcpu);
+ 	destroy_workqueue(pinst->serial_wq);
+@@ -1033,20 +1020,13 @@ static struct padata_instance *padata_alloc(const char *name,
+ 	    !padata_validate_cpumask(pinst, cbcpumask))
+ 		goto err_free_masks;
  
- /* PCI error reporting and recovery */
- pci_ers_result_t pcie_do_recovery(struct pci_dev *dev,
-diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
-index 8c40c00413e7..e2ff3a94e621 100644
---- a/drivers/pci/probe.c
-+++ b/drivers/pci/probe.c
-@@ -2387,10 +2387,10 @@ static void pci_init_capabilities(struct pci_dev *dev)
- 	pci_vpd_init(dev);		/* Vital Product Data */
- 	pci_configure_ari(dev);		/* Alternative Routing-ID Forwarding */
- 	pci_iov_init(dev);		/* Single Root I/O Virtualization */
-+	pci_acs_init(dev);		/* Access Control Services */
- 	pci_ats_init(dev);		/* Address Translation Services */
- 	pci_pri_init(dev);		/* Page Request Interface */
- 	pci_pasid_init(dev);		/* Process Address Space ID */
--	pci_acs_init(dev);		/* Access Control Services */
- 	pci_ptm_init(dev);		/* Precision Time Measurement */
- 	pci_aer_init(dev);		/* Advanced Error Reporting */
- 	pci_dpc_init(dev);		/* Downstream Port Containment */
-diff --git a/include/linux/pci.h b/include/linux/pci.h
-index 7a40cd5caed0..31da4355f0fd 100644
---- a/include/linux/pci.h
-+++ b/include/linux/pci.h
-@@ -480,6 +480,8 @@ struct pci_dev {
- 	u16		ats_cap;	/* ATS Capability offset */
- 	u8		ats_stu;	/* ATS Smallest Translation Unit */
- #endif
-+	/* Total number of downstream devices below a bridge that need ATS */
-+	u8		ats_dependencies;
- #ifdef CONFIG_PCI_PRI
- 	u16		pri_cap;	/* PRI Capability offset */
- 	u32		pri_reqs_alloc; /* Number of PRI requests allocated */
+-	if (!alloc_cpumask_var(&pinst->rcpumask.pcpu, GFP_KERNEL))
+-		goto err_free_masks;
+-	if (!alloc_cpumask_var(&pinst->rcpumask.cbcpu, GFP_KERNEL))
+-		goto err_free_rcpumask_pcpu;
+-
+ 	INIT_LIST_HEAD(&pinst->pslist);
+ 
+ 	cpumask_copy(pinst->cpumask.pcpu, pcpumask);
+ 	cpumask_copy(pinst->cpumask.cbcpu, cbcpumask);
+-	cpumask_and(pinst->rcpumask.pcpu, pcpumask, cpu_online_mask);
+-	cpumask_and(pinst->rcpumask.cbcpu, cbcpumask, cpu_online_mask);
+ 
+ 	if (padata_setup_cpumasks(pinst))
+-		goto err_free_rcpumask_cbcpu;
++		goto err_free_masks;
+ 
+ 	__padata_start(pinst);
+ 
+@@ -1064,10 +1044,6 @@ static struct padata_instance *padata_alloc(const char *name,
+ 
+ 	return pinst;
+ 
+-err_free_rcpumask_cbcpu:
+-	free_cpumask_var(pinst->rcpumask.cbcpu);
+-err_free_rcpumask_pcpu:
+-	free_cpumask_var(pinst->rcpumask.pcpu);
+ err_free_masks:
+ 	free_cpumask_var(pinst->cpumask.pcpu);
+ 	free_cpumask_var(pinst->cpumask.cbcpu);
 -- 
-2.27.0.389.gc38d7665816-goog
+2.27.0
 
