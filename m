@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0BF5C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:53:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04996C433E4
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:53:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 836A522BF5
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:53:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C9ED622C7B
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:53:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594752783;
-	bh=PeEl4ee3ukWwHBYOjv0FvZ8gt+uoagbNQbI0Jek4OAY=;
+	s=default; t=1594752785;
+	bh=pRAM5uxbYFcPLfSBwRsJ+pVFsdxPO7cUTTFpcYq2DkE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RI5ZjzTkqosM58PTvarpbAI/Da4+XIz0wvUaPdux3cgY+vj3nHT6obcpXDR/O6fSV
-	 SDDe9flFZ3KGSb9RPzTB1nX3AD/clRcvU2h1pJKnP2Wktso2+I7nYRilXgVT0iLnag
-	 9aDedvsqGLn7+T+ZQi1N/XmWuUcUnCoD2LEMHVRY=
+	b=nL9FxsGywu9h9ufA93hWR0k9ZT6g+Xw6P+16YYqan3VcUB8eLuYSPs4jpWhVg9pad
+	 nN9MjluNdtEgDXeUwvYIXnz9eI1eunLJs1TySoeP3gLGMVOuA085znVu8Tgu7hyHN6
+	 6+JYduqs9EvHnL0mhyu072Y51lMHcNykRtaK7gcc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730577AbgGNSxB (ORCPT
+        id S1730184AbgGNSxE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 14:53:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49726 "EHLO mail.kernel.org"
+        Tue, 14 Jul 2020 14:53:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49862 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730132AbgGNSwv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 14:52:51 -0400
+        id S1729820AbgGNSw4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 14:52:56 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5388222B4D;
-        Tue, 14 Jul 2020 18:52:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4DFB6223B0;
+        Tue, 14 Jul 2020 18:52:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594752770;
-        bh=PeEl4ee3ukWwHBYOjv0FvZ8gt+uoagbNQbI0Jek4OAY=;
+        s=default; t=1594752775;
+        bh=pRAM5uxbYFcPLfSBwRsJ+pVFsdxPO7cUTTFpcYq2DkE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1u2l2dvO0ted0rOPFS3REG0ED0Y6yzYYNHEMSj5Dp9vHExcq8aDSaMKx+1gK0XPjQ
-         j0JXC27OnujLUTSiIEFoT0Y9zbSORQkUK5+ugKefmLXGZKanY4zFrPF5ydDPzqlBdl
-         wboXOQde+iu6lk5FpKXH9V6+US92W1ApYRnMkYvU=
+        b=S6+QL5vrmgNNHCZTfckdseU3rv+GleLavkisIVSdoClOht9GeRydjlVuHjqcM6sRG
+         PMrXejRlFVBK4VSWupTbuTrfgSuEofTuFxeH905u/bez0hgyH0A6jSEgAwh5YkUUxy
+         7EC0eVTrnqHhBsFPl5YfDqkN/5AL/UswYqZvbwtI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ming Lei <ming.lei@redhat.com>,
-        Mike Snitzer <snitzer@redhat.com>, Jens Axboe <axboe@kernel.dk>
-Subject: [PATCH 5.4 103/109] blk-mq: consider non-idle request as "inflight" in blk_mq_rq_inflight()
-Date:   Tue, 14 Jul 2020 20:44:46 +0200
-Message-Id: <20200714184110.498166191@linuxfoundation.org>
+        stable@vger.kernel.org, Jian-Hong Pan <jian-hong@endlessm.com>,
+        Daniel Drake <drake@endlessm.com>, Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 5.4 078/109] ALSA: hda/realtek: Enable headset mic of Acer C20-820 with ALC269VC
+Date:   Tue, 14 Jul 2020 20:44:21 +0200
+Message-Id: <20200714184109.277269270@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200714184105.507384017@linuxfoundation.org>
 References: <20200714184105.507384017@linuxfoundation.org>
@@ -59,52 +59,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ming Lei <ming.lei@redhat.com>
+From: Jian-Hong Pan <jian-hong@endlessm.com>
 
-commit 05a4fed69ff00a8bd83538684cb602a4636b07a7 upstream.
+commit 6e15d1261d522d1d222f8f89b23c6966905e9049 upstream.
 
-dm-multipath is the only user of blk_mq_queue_inflight().  When
-dm-multipath calls blk_mq_queue_inflight() to check if it has
-outstanding IO it can get a false negative.  The reason for this is
-blk_mq_rq_inflight() doesn't consider requests that are no longer
-MQ_RQ_IN_FLIGHT but that are now MQ_RQ_COMPLETE (->complete isn't
-called or finished yet) as "inflight".
+The Acer Aspire C20-820 AIO's audio (1025:1065) with ALC269VC can't
+detect the headset microphone until ALC269VC_FIXUP_ACER_HEADSET_MIC
+quirk maps the NID 0x18 as the headset mic pin.
 
-This causes request-based dm-multipath's dm_wait_for_completion() to
-return before all outstanding dm-multipath requests have actually
-completed.  This breaks DM multipath's suspend functionality because
-blk-mq requests complete after DM's suspend has finished -- which
-shouldn't happen.
-
-Fix this by considering any request not in the MQ_RQ_IDLE state
-(so either MQ_RQ_COMPLETE or MQ_RQ_IN_FLIGHT) as "inflight" in
-blk_mq_rq_inflight().
-
-Fixes: 3c94d83cb3526 ("blk-mq: change blk_mq_queue_busy() to blk_mq_queue_inflight()")
-Signed-off-by: Ming Lei <ming.lei@redhat.com>
-Signed-off-by: Mike Snitzer <snitzer@redhat.com>
-Cc: stable@vger.kernel.org
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Jian-Hong Pan <jian-hong@endlessm.com>
+Signed-off-by: Daniel Drake <drake@endlessm.com>
+Cc: <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20200706071826.39726-2-jian-hong@endlessm.com
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- block/blk-mq.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ sound/pci/hda/patch_realtek.c |   11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
---- a/block/blk-mq.c
-+++ b/block/blk-mq.c
-@@ -829,10 +829,10 @@ static bool blk_mq_rq_inflight(struct bl
- 			       void *priv, bool reserved)
- {
- 	/*
--	 * If we find a request that is inflight and the queue matches,
-+	 * If we find a request that isn't idle and the queue matches,
- 	 * we know the queue is busy. Return false to stop the iteration.
- 	 */
--	if (rq->state == MQ_RQ_IN_FLIGHT && rq->q == hctx->queue) {
-+	if (blk_mq_request_started(rq) && rq->q == hctx->queue) {
- 		bool *busy = priv;
+--- a/sound/pci/hda/patch_realtek.c
++++ b/sound/pci/hda/patch_realtek.c
+@@ -6115,6 +6115,7 @@ enum {
+ 	ALC298_FIXUP_SAMSUNG_HEADPHONE_VERY_QUIET,
+ 	ALC295_FIXUP_ASUS_MIC_NO_PRESENCE,
+ 	ALC269VC_FIXUP_ACER_VCOPPERBOX_PINS,
++	ALC269VC_FIXUP_ACER_HEADSET_MIC,
+ };
  
- 		*busy = true;
+ static const struct hda_fixup alc269_fixups[] = {
+@@ -7304,6 +7305,15 @@ static const struct hda_fixup alc269_fix
+ 		.chained = true,
+ 		.chain_id = ALC269_FIXUP_HEADSET_MIC
+ 	},
++	[ALC269VC_FIXUP_ACER_HEADSET_MIC] = {
++		.type = HDA_FIXUP_PINS,
++		.v.pins = (const struct hda_pintbl[]) {
++			{ 0x18, 0x02a11030 }, /* use as headset mic */
++			{ }
++		},
++		.chained = true,
++		.chain_id = ALC269_FIXUP_HEADSET_MIC
++	},
+ };
+ 
+ static const struct snd_pci_quirk alc269_fixup_tbl[] = {
+@@ -7319,6 +7329,7 @@ static const struct snd_pci_quirk alc269
+ 	SND_PCI_QUIRK(0x1025, 0x0775, "Acer Aspire E1-572", ALC271_FIXUP_HP_GATE_MIC_JACK_E1_572),
+ 	SND_PCI_QUIRK(0x1025, 0x079b, "Acer Aspire V5-573G", ALC282_FIXUP_ASPIRE_V5_PINS),
+ 	SND_PCI_QUIRK(0x1025, 0x102b, "Acer Aspire C24-860", ALC286_FIXUP_ACER_AIO_MIC_NO_PRESENCE),
++	SND_PCI_QUIRK(0x1025, 0x1065, "Acer Aspire C20-820", ALC269VC_FIXUP_ACER_HEADSET_MIC),
+ 	SND_PCI_QUIRK(0x1025, 0x106d, "Acer Cloudbook 14", ALC283_FIXUP_CHROME_BOOK),
+ 	SND_PCI_QUIRK(0x1025, 0x1099, "Acer Aspire E5-523G", ALC255_FIXUP_ACER_MIC_NO_PRESENCE),
+ 	SND_PCI_QUIRK(0x1025, 0x110e, "Acer Aspire ES1-432", ALC255_FIXUP_ACER_MIC_NO_PRESENCE),
 
 
