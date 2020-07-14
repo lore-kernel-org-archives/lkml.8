@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3D36C433FC
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:46:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0A0FC433FB
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:46:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BBBB222AAD
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:46:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 702B022AAD
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:46:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594752390;
-	bh=twPQB/IAqQjDTQxqwlo9kyFexVnEMbyRzMSUlbw0Jdw=;
+	s=default; t=1594752399;
+	bh=qcIOft0MLkg1KnyJFUEDBFnjyBxhSKNla132/jfSNCs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1NmoRjCSfa/hv7XKp3xRm6fvJNtv2Qqhnm3YrKwfaRwyg2yfm4oFOe/Rq83C0iDsL
-	 D7Ypht+WRSv22mzu9nqNO/1aXvuwcgl6Qhb8eycAI9Pt/O+ClLAjMtfmhw7BTEEsiP
-	 GDoZ5Ag5jpLkysuxV3B/MvMYACbsaq8bBADEMerI=
+	b=cBXDzO8oFkMZbtXq6aisoN1dAlcXxSQ4tehKYl9EP7K6e6KNfs1cub4fKqgIYLv6q
+	 r4ZHzQdPULMjtv/haZsfQBqxDaC5CqVwyzWWtWpC9spetHpgoMVtqLfkz+IYJ1DT+6
+	 pd8dzSDSucHfd72CtuBnIsDjspZQQDM8G9i4d1xQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729487AbgGNSq3 (ORCPT
+        id S1729547AbgGNSqh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 14:46:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41166 "EHLO mail.kernel.org"
+        Tue, 14 Jul 2020 14:46:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41324 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729423AbgGNSq1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 14:46:27 -0400
+        id S1729509AbgGNSqc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 14:46:32 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ACF722231B;
-        Tue, 14 Jul 2020 18:46:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0B4FA22AAB;
+        Tue, 14 Jul 2020 18:46:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594752387;
-        bh=twPQB/IAqQjDTQxqwlo9kyFexVnEMbyRzMSUlbw0Jdw=;
+        s=default; t=1594752392;
+        bh=qcIOft0MLkg1KnyJFUEDBFnjyBxhSKNla132/jfSNCs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XpjPQBPe+/3QKDoCZlyFXLoSXwi99i4mVFMiTbYK54Ws4zW1sd2zdv91453RzkOvt
-         62eVFWdUra6/xPnR7QauMkSSlpsWPOPI0PYZl/13Kzljy/eco63IGoEWnn1iDDSzOb
-         BxT+I7DpxpuVz9Al8ESDAddkJkxjw4wKuc68hdkw=
+        b=CuucY0239VQ+/NxK8Bqy0CWsCMvod+gIC8ydAToZfxIinV76pyl7FXjyje0+7+Hjk
+         WD1kGwOafDrjsZ5q5ZNgqc4HtgwDDso5yPIKYtDKXjtSbUOm0TIDWz0v1PTSvfMuJp
+         zw4WQW+XVXs0BP4SjXic9O7lknenOj8jL2uwKZno=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chengguang Xu <cgxu519@mykernel.net>,
-        Christoph Hellwig <hch@lst.de>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 22/58] block: release bip in a right way in error path
-Date:   Tue, 14 Jul 2020 20:43:55 +0200
-Message-Id: <20200714184057.245267468@linuxfoundation.org>
+        stable@vger.kernel.org, Chuanhua Han <chuanhua.han@nxp.com>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 04/58] spi: spi-fsl-dspi: use IRQF_SHARED mode to request IRQ
+Date:   Tue, 14 Jul 2020 20:43:37 +0200
+Message-Id: <20200714184056.360794727@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200714184056.149119318@linuxfoundation.org>
 References: <20200714184056.149119318@linuxfoundation.org>
@@ -61,70 +60,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chengguang Xu <cgxu519@mykernel.net>
+From: Chuanhua Han <chuanhua.han@nxp.com>
 
-[ Upstream commit 0b8eb629a700c0ef15a437758db8255f8444e76c ]
+[ Upstream commit 13aed23927414137a017ac2f7d567001f714293f ]
 
-Release bip using kfree() in error path when that was allocated
-by kmalloc().
+Some SoC share one irq number between DSPI controllers.
+For example, on the LX2160 board, DSPI0 and DSPI1 share one irq number.
+In this case, only one DSPI controller can register successfully,
+and others will fail.
 
-Signed-off-by: Chengguang Xu <cgxu519@mykernel.net>
-Reviewed-by: Christoph Hellwig <hch@lst.de>
-Acked-by: Martin K. Petersen <martin.petersen@oracle.com>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Chuanhua Han <chuanhua.han@nxp.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- block/bio-integrity.c | 23 ++++++++++++++---------
- 1 file changed, 14 insertions(+), 9 deletions(-)
+ drivers/spi/spi-fsl-dspi.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/block/bio-integrity.c b/block/bio-integrity.c
-index a059fad53f1b0..0b96220d0efd4 100644
---- a/block/bio-integrity.c
-+++ b/block/bio-integrity.c
-@@ -38,6 +38,18 @@ void blk_flush_integrity(void)
- 	flush_workqueue(kintegrityd_wq);
- }
+diff --git a/drivers/spi/spi-fsl-dspi.c b/drivers/spi/spi-fsl-dspi.c
+index 970ffdb976d73..9ab8c52a5ba6d 100644
+--- a/drivers/spi/spi-fsl-dspi.c
++++ b/drivers/spi/spi-fsl-dspi.c
+@@ -1094,8 +1094,8 @@ static int dspi_probe(struct platform_device *pdev)
+ 		goto out_clk_put;
+ 	}
  
-+void __bio_integrity_free(struct bio_set *bs, struct bio_integrity_payload *bip)
-+{
-+	if (bs && mempool_initialized(&bs->bio_integrity_pool)) {
-+		if (bip->bip_vec)
-+			bvec_free(&bs->bvec_integrity_pool, bip->bip_vec,
-+				  bip->bip_slab);
-+		mempool_free(bip, &bs->bio_integrity_pool);
-+	} else {
-+		kfree(bip);
-+	}
-+}
-+
- /**
-  * bio_integrity_alloc - Allocate integrity payload and attach it to bio
-  * @bio:	bio to attach integrity metadata to
-@@ -90,7 +102,7 @@ struct bio_integrity_payload *bio_integrity_alloc(struct bio *bio,
- 
- 	return bip;
- err:
--	mempool_free(bip, &bs->bio_integrity_pool);
-+	__bio_integrity_free(bs, bip);
- 	return ERR_PTR(-ENOMEM);
- }
- EXPORT_SYMBOL(bio_integrity_alloc);
-@@ -111,14 +123,7 @@ static void bio_integrity_free(struct bio *bio)
- 		kfree(page_address(bip->bip_vec->bv_page) +
- 		      bip->bip_vec->bv_offset);
- 
--	if (bs && mempool_initialized(&bs->bio_integrity_pool)) {
--		bvec_free(&bs->bvec_integrity_pool, bip->bip_vec, bip->bip_slab);
--
--		mempool_free(bip, &bs->bio_integrity_pool);
--	} else {
--		kfree(bip);
--	}
--
-+	__bio_integrity_free(bs, bip);
- 	bio->bi_integrity = NULL;
- 	bio->bi_opf &= ~REQ_INTEGRITY;
- }
+-	ret = devm_request_irq(&pdev->dev, dspi->irq, dspi_interrupt, 0,
+-			pdev->name, dspi);
++	ret = devm_request_irq(&pdev->dev, dspi->irq, dspi_interrupt,
++			       IRQF_SHARED, pdev->name, dspi);
+ 	if (ret < 0) {
+ 		dev_err(&pdev->dev, "Unable to attach DSPI interrupt\n");
+ 		goto out_clk_put;
 -- 
 2.25.1
 
