@@ -2,104 +2,215 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3C7EC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 17:34:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0474FC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 17:37:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8BC192074A
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 17:34:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D008D22518
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 17:37:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="Hrkw1wiI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728809AbgGNRed (ORCPT
+        id S1728336AbgGNRhz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 13:34:33 -0400
-Received: from pbmsgap02.intersil.com ([192.157.179.202]:60974 "EHLO
-        pbmsgap02.intersil.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726169AbgGNRed (ORCPT
+        Tue, 14 Jul 2020 13:37:55 -0400
+Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:57518 "EHLO
+        mx0b-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726169AbgGNRhz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 13:34:33 -0400
-X-Greylist: delayed 1119 seconds by postgrey-1.27 at vger.kernel.org; Tue, 14 Jul 2020 13:34:32 EDT
-Received: from pps.filterd (pbmsgap02.intersil.com [127.0.0.1])
-        by pbmsgap02.intersil.com (8.16.0.27/8.16.0.27) with SMTP id 06EHDIkX023308;
-        Tue, 14 Jul 2020 13:15:50 -0400
-Received: from pbmxdp02.intersil.corp (pbmxdp02.pb.intersil.com [132.158.200.223])
-        by pbmsgap02.intersil.com with ESMTP id 3277kcs6pa-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
-        Tue, 14 Jul 2020 13:15:50 -0400
-Received: from pbmxdp03.intersil.corp (132.158.200.224) by
- pbmxdp02.intersil.corp (132.158.200.223) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384_P384) id
- 15.1.1979.3; Tue, 14 Jul 2020 13:15:49 -0400
-Received: from localhost (132.158.202.109) by pbmxdp03.intersil.corp
- (132.158.200.224) with Microsoft SMTP Server id 15.1.1979.3 via Frontend
- Transport; Tue, 14 Jul 2020 13:15:48 -0400
-From:   <min.li.xe@renesas.com>
-To:     <richardcochran@gmail.com>, <corbet@lwn.net>
-CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-doc@vger.kernel.org>, Min Li <min.li.xe@renesas.com>
-Subject: [PATCH net 1/1] docs: ptp.rst: add support for Renesas (IDT) ClockMatrix
-Date:   Tue, 14 Jul 2020 13:15:20 -0400
-Message-ID: <1594746920-28760-1-git-send-email-min.li.xe@renesas.com>
-X-Mailer: git-send-email 2.7.4
+        Tue, 14 Jul 2020 13:37:55 -0400
+Received: from pps.filterd (m0148460.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06EHVlU7020416
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 10:37:53 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-transfer-encoding :
+ content-type; s=facebook; bh=EsIhcEg5yglXpW3rCuyKG1bMZzzwxUJS0zfvcC1B5FU=;
+ b=Hrkw1wiIS3xztRCtXLSewxKkfzE/QF2kEUzxyiuAa3994nYHDPKcZ+lfaMU31YIRjElh
+ dX77TtzIRQGQjzch85czZiai++PySnSwRSBzyVwWmDJ9dbpfcE7UkD5srWXjdqGA18aD
+ 9LIkPrD9Rb5UEk13Wdg2Si0EPOnrnoLZQWU= 
+Received: from maileast.thefacebook.com ([163.114.130.16])
+        by mx0a-00082601.pphosted.com with ESMTP id 327axn6du3-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 10:37:53 -0700
+Received: from intmgw001.41.prn1.facebook.com (2620:10d:c0a8:1b::d) by
+ mail.thefacebook.com (2620:10d:c0a8:83::6) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1979.3; Tue, 14 Jul 2020 10:37:52 -0700
+Received: by devvm1096.prn0.facebook.com (Postfix, from userid 111017)
+        id B775D11D9D9E; Tue, 14 Jul 2020 10:37:50 -0700 (PDT)
+Smtp-Origin-Hostprefix: devvm
+From:   Roman Gushchin <guro@fb.com>
+Smtp-Origin-Hostname: devvm1096.prn0.facebook.com
+To:     Andrew Morton <akpm@linux-foundation.org>
+CC:     Johannes Weiner <hannes@cmpxchg.org>,
+        Michal Hocko <mhocko@kernel.org>, <linux-mm@kvack.org>,
+        <kernel-team@fb.com>, <linux-kernel@vger.kernel.org>,
+        Roman Gushchin <guro@fb.com>, Hugh Dickins <hughd@google.com>
+Smtp-Origin-Cluster: prn0c01
+Subject: [PATCH] mm: vmstat: fix /proc/sys/vm/stat_refresh generating false warnings
+Date:   Tue, 14 Jul 2020 10:37:47 -0700
+Message-ID: <20200714173747.3315771-1-guro@fb.com>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-TM-AS-MML: disable
+Content-Transfer-Encoding: quoted-printable
+X-FB-Internal: Safe
+Content-Type: text/plain
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-07-14_06:2020-07-14,2020-07-14 signatures=0
-X-Proofpoint-Spam-Details: rule=junk_notspam policy=junk score=0 suspectscore=2 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-2006250000 definitions=main-2007140126
-X-Proofpoint-Spam-Reason: mlx
+ definitions=2020-07-14_07:2020-07-14,2020-07-14 signatures=0
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 mlxscore=0
+ impostorscore=0 suspectscore=2 phishscore=0 malwarescore=0 spamscore=0
+ mlxlogscore=999 lowpriorityscore=0 adultscore=0 bulkscore=0 clxscore=1015
+ priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2007140129
+X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Min Li <min.li.xe@renesas.com>
+I've noticed a number of warnings like "vmstat_refresh: nr_free_cma
+-5" or "vmstat_refresh: nr_zone_write_pending -11" on our production
+hosts. The numbers of these warnings were relatively low and stable,
+so it didn't look like we are systematically leaking the counters.
+The corresponding vmstat counters also looked sane.
 
-Add below to “Ancillary clock features” section
-  - Low Pass Filter (LPF) access from user space
+These warnings are generated by the vmstat_refresh() function, which
+assumes that atomic zone and numa counters can't go below zero.
+However, on a SMP machine it's not quite right: due to per-cpu
+caching it can in theory be as low as -(zone threshold) * NR_CPUs.
 
-Add below to list of “Supported hardware” section
-  + Renesas (IDT) ClockMatrix™
+For instance, let's say all cma pages are in use and NR_FREE_CMA_PAGES
+reached 0. Then we've reclaimed a small number of cma pages on each
+CPU except CPU0, so that most percpu NR_FREE_CMA_PAGES counters are
+slightly positive (the atomic counter is still 0). Then somebody on
+CPU0 consumes all these pages. The number of pages can easily exceed
+the threshold and a negative value will be committed to the atomic
+counter.
 
-Signed-off-by: Min Li <min.li.xe@renesas.com>
+To fix the problem and avoid generating false warnings, let's just
+relax the condition and warn only if the value is less than minus
+the maximum theoretically possible drift value, which is 125 *
+number of online CPUs. It will still allow to catch systematic leaks,
+but will not generate bogus warnings.
+
+Signed-off-by: Roman Gushchin <guro@fb.com>
+Cc: Hugh Dickins <hughd@google.com>
+Signed-off-by: Roman Gushchin <guro@fb.com>
 ---
- Documentation/driver-api/ptp.rst | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+ Documentation/admin-guide/sysctl/vm.rst |  4 ++--
+ mm/vmstat.c                             | 30 ++++++++++++++++---------
+ 2 files changed, 21 insertions(+), 13 deletions(-)
 
-diff --git a/Documentation/driver-api/ptp.rst b/Documentation/driver-api/ptp.rst
-index a15192e..664838a 100644
---- a/Documentation/driver-api/ptp.rst
-+++ b/Documentation/driver-api/ptp.rst
-@@ -23,6 +23,7 @@ PTP hardware clock infrastructure for Linux
-   + Ancillary clock features
-     - Time stamp external events
-     - Period output signals configurable from user space
-+    - Low Pass Filter (LPF) access from user space
-     - Synchronization of the Linux system time via the PPS subsystem
- 
- PTP hardware clock kernel API
-@@ -94,3 +95,14 @@ Supported hardware
- 
-      - Auxiliary Slave/Master Mode Snapshot (optional interrupt)
-      - Target Time (optional interrupt)
+diff --git a/Documentation/admin-guide/sysctl/vm.rst b/Documentation/admi=
+n-guide/sysctl/vm.rst
+index 4b9d2e8e9142..95fb80d0c606 100644
+--- a/Documentation/admin-guide/sysctl/vm.rst
++++ b/Documentation/admin-guide/sysctl/vm.rst
+@@ -822,8 +822,8 @@ e.g. cat /proc/sys/vm/stat_refresh /proc/meminfo
+=20
+ As a side-effect, it also checks for negative totals (elsewhere reported
+ as 0) and "fails" with EINVAL if any are found, with a warning in dmesg.
+-(At time of writing, a few stats are known sometimes to be found negativ=
+e,
+-with no ill effects: errors and warnings on these stats are suppressed.)
++(On a SMP machine some stats can temporarily become negative, with no il=
+l
++effects: errors and warnings on these stats are suppressed.)
+=20
+=20
+ numa_stat
+diff --git a/mm/vmstat.c b/mm/vmstat.c
+index a21140373edb..8f0ef8aaf8ee 100644
+--- a/mm/vmstat.c
++++ b/mm/vmstat.c
+@@ -169,6 +169,8 @@ EXPORT_SYMBOL(vm_node_stat);
+=20
+ #ifdef CONFIG_SMP
+=20
++#define MAX_THRESHOLD 125
 +
-+   * Renesas (IDT) ClockMatrix™
+ int calculate_pressure_threshold(struct zone *zone)
+ {
+ 	int threshold;
+@@ -186,11 +188,9 @@ int calculate_pressure_threshold(struct zone *zone)
+ 	threshold =3D max(1, (int)(watermark_distance / num_online_cpus()));
+=20
+ 	/*
+-	 * Maximum threshold is 125
++	 * Threshold is capped by MAX_THRESHOLD
+ 	 */
+-	threshold =3D min(125, threshold);
+-
+-	return threshold;
++	return min(MAX_THRESHOLD, threshold);
+ }
+=20
+ int calculate_normal_threshold(struct zone *zone)
+@@ -610,6 +610,9 @@ void dec_node_page_state(struct page *page, enum node=
+_stat_item item)
+ }
+ EXPORT_SYMBOL(dec_node_page_state);
+ #else
 +
-+     - Up to 4 independent PHC channels
-+     - Integrated low pass filter (LPF), access via .adjPhase (compliant to ITU-T G.8273.2)
-+     - Programmable output periodic signals
-+     - Programmable inputs can time stamp external triggers
-+     - Driver and/or hardware configuration through firmware (idtcm.bin)
-+          - LPF settings (bandwidth, phase limiting, automatic holdover, physical layer assist (per ITU-T G.8273.2))
-+          - Programmable output PTP clocks, any frequency up to 1GHz (to other PHY/MAC time stampers, refclk to ASSPs/SoCs/FPGAs)
-+          - Lock to GNSS input, automatic switching between GNSS and user-space PHC control (optional)
--- 
-2.7.4
++#define MAX_THRESHOLD 0
++
+ /*
+  * Use interrupt disable to serialize counter updates
+  */
+@@ -1810,7 +1813,7 @@ static void refresh_vm_stats(struct work_struct *wo=
+rk)
+ int vmstat_refresh(struct ctl_table *table, int write,
+ 		   void *buffer, size_t *lenp, loff_t *ppos)
+ {
+-	long val;
++	long val, max_drift;
+ 	int err;
+ 	int i;
+=20
+@@ -1821,17 +1824,22 @@ int vmstat_refresh(struct ctl_table *table, int w=
+rite,
+ 	 * pages, immediately after running a test.  /proc/sys/vm/stat_refresh,
+ 	 * which can equally be echo'ed to or cat'ted from (by root),
+ 	 * can be used to update the stats just before reading them.
+-	 *
+-	 * Oh, and since global_zone_page_state() etc. are so careful to hide
+-	 * transiently negative values, report an error here if any of
+-	 * the stats is negative, so we know to go looking for imbalance.
+ 	 */
+ 	err =3D schedule_on_each_cpu(refresh_vm_stats);
+ 	if (err)
+ 		return err;
++
++	/*
++	 * Since global_zone_page_state() etc. are so careful to hide
++	 * transiently negative values, report an error here if any of
++	 * the stats is negative and are less than the maximum drift value,
++	 * so we know to go looking for imbalance.
++	 */
++	max_drift =3D num_online_cpus() * MAX_THRESHOLD;
++
+ 	for (i =3D 0; i < NR_VM_ZONE_STAT_ITEMS; i++) {
+ 		val =3D atomic_long_read(&vm_zone_stat[i]);
+-		if (val < 0) {
++		if (val < -max_drift) {
+ 			pr_warn("%s: %s %ld\n",
+ 				__func__, zone_stat_name(i), val);
+ 			err =3D -EINVAL;
+@@ -1840,7 +1848,7 @@ int vmstat_refresh(struct ctl_table *table, int wri=
+te,
+ #ifdef CONFIG_NUMA
+ 	for (i =3D 0; i < NR_VM_NUMA_STAT_ITEMS; i++) {
+ 		val =3D atomic_long_read(&vm_numa_stat[i]);
+-		if (val < 0) {
++		if (val < -max_drift) {
+ 			pr_warn("%s: %s %ld\n",
+ 				__func__, numa_stat_name(i), val);
+ 			err =3D -EINVAL;
+--=20
+2.26.2
 
