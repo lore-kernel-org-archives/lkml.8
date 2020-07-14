@@ -2,136 +2,188 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03B1CC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 13:05:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6455C433E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 13:05:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C7D372077D
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 13:05:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dSDD6Oor"
+	by mail.kernel.org (Postfix) with ESMTP id 7E71421BE5
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 13:05:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594731939;
+	bh=3fl7P/ZlDcALEwUu9l3u4NgNlRUlsU+1yFnk4YtB/cA=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=wjGtkggrkMsGteuL6gOvi5BS2+CpINKH1edy0i71yZHm1WzeSqgJaKDWsNcPjme1J
+	 8FNW0xJfCvgSIShmadVtcGkaabD/n3OGpyRpi3aCmUNbWS9+07rh2zi1MxbPczy5uX
+	 euY8rv/S1OiOxl1Lk7dkGGCy7EeXv6fAwEYyCLKI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727891AbgGNNFX (ORCPT
+        id S1728174AbgGNNFc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 09:05:23 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:39526 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726354AbgGNNFW (ORCPT
+        Tue, 14 Jul 2020 09:05:32 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:33157 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726354AbgGNNFb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 09:05:22 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1594731921;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc; bh=6VIoOR5Zq1Eiat1CGdfDl2SCC7HipCcOifvnlXpfoZM=;
-        b=dSDD6Oor+i8plV7dOuIihMZwjU3vWVYFBF2oP5TePkhDWQU3E8cQyL+DUv1ueAPhMGncSv
-        JlSTEuqVSeuHXeTRFPIeGVSJMpaAEt0+MKgREFMVMufNwilCTWbGtzRQXAZeLmVCodIj8L
-        3Yf0ulkOrP7oP0EqRgUJviMALmhz/h0=
-Received: from mail-qt1-f200.google.com (mail-qt1-f200.google.com
- [209.85.160.200]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-80-cZoKZhCvPuSzp2ujv3ravg-1; Tue, 14 Jul 2020 09:05:18 -0400
-X-MC-Unique: cZoKZhCvPuSzp2ujv3ravg-1
-Received: by mail-qt1-f200.google.com with SMTP id x6so12533252qtf.2
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 06:05:18 -0700 (PDT)
+        Tue, 14 Jul 2020 09:05:31 -0400
+Received: by mail-ot1-f65.google.com with SMTP id h13so12986569otr.0;
+        Tue, 14 Jul 2020 06:05:31 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=6VIoOR5Zq1Eiat1CGdfDl2SCC7HipCcOifvnlXpfoZM=;
-        b=QgybBT1IthZyJGAHyjLz+qsNAr7DXhS1wiJFZTZ9mW6/jIr6ubvtChdumDn4ZMpMjO
-         DUw6/wIQ40NaHz3dcMvYrILAdW0JzNNYjD4yMq/j1HNUYNy9gLMY72aXtktzCSIX2eec
-         iiZfsSOdPxX1zZjp9ffMie1PzA6DWBrRNbvzPssj+dmT5Uu2rxH+imfG6OMbNX+NZk1P
-         uG6yxZsXw41SuGVjahwAEbvquqduD8aTd4LWyB9VZAkQgx9FlWdmbV63SrdVlKQLFE+P
-         xbRWJBy0ROEIzZq1qtsgsTfesVcZhi07G2fICt5HQ8JJq16259mVG3BemogUxR2gQeF6
-         OiGg==
-X-Gm-Message-State: AOAM532ib5sQkPhySW8veWkXhn8bBtyKPjW/ZEjrLY4m/MVIRVHHrnnX
-        LV1ssxdUBzKB/o6fKlWGH5gUTvyqq98UmkD7f9pbs6gTCcDARUsWALSXTXJ8gdJs9FZANeiXuPP
-        Gwt4ZyeizvoIfGzHH3G3/nUIO
-X-Received: by 2002:ac8:197b:: with SMTP id g56mr4449149qtk.105.1594731917837;
-        Tue, 14 Jul 2020 06:05:17 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJzVKa3PW5ERXw99RIG+5uzKIILhRlDiEsTBc59MTNrGF1RtX7vID/XbIEyJTmTUVgPSjNdDnA==
-X-Received: by 2002:ac8:197b:: with SMTP id g56mr4449125qtk.105.1594731917573;
-        Tue, 14 Jul 2020 06:05:17 -0700 (PDT)
-Received: from trix.remote.csb (075-142-250-213.res.spectrum.com. [75.142.250.213])
-        by smtp.gmail.com with ESMTPSA id b53sm23888483qtc.65.2020.07.14.06.05.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 Jul 2020 06:05:16 -0700 (PDT)
-From:   trix@redhat.com
-To:     jack@suse.cz, william.kucharski@oracle.com, jeffm@suse.com,
-        willy@infradead.org, joseph.qi@linux.alibaba.com,
-        liao.pingfang@zte.com.cn
-Cc:     reiserfs-devel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Tom Rix <trix@redhat.com>
-Subject: [PATCH] reiserfs : fix improper free in reiserfs_get_block
-Date:   Tue, 14 Jul 2020 06:05:09 -0700
-Message-Id: <20200714130509.11791-1-trix@redhat.com>
-X-Mailer: git-send-email 2.18.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=dsQNLe/BA5spAjR6HNPKokWsHGNEHDhOqKYNmI6E978=;
+        b=NgXSEirKCnF+sDWU0CwGnwH9ivwB6hSyByw+j4ry6fcYKga1QhSlfrH05Rl2NLVtLd
+         1+7l5CzJfVhe9A2Kqb4DY9L/t3UMnpj5h8YWT0WA+xvsYQMRVjRGI1hTPe+60aJc0qyx
+         qYiUzIAO7Tj3Bvs5Vuici+l4C2On5rlBKwWgWNsfR7PQxuGCYzmXiEoEotyvMcT68c0j
+         H1v3NrlmF6r5ck0Lsyb3+Or3kv0j9T86VtbF04qx4vZWfRmiv7wrNz3mq0c8OMqU6dI/
+         eqjHDOjJOkVkpgf0UA6MxGFIFhaXO8A+ts8UGgvd5ATxw3h4WXuEW2LNuk2ZoIIWYPhD
+         TvhA==
+X-Gm-Message-State: AOAM531pWJs5W0S4M8xtP+09+psGyXnhBJunEhNHNPuWdnmJVIgcqqgN
+        N3X8Fqy53epzn/rtW9wBzE7XEZwAFY2U8AAHEV8=
+X-Google-Smtp-Source: ABdhPJyOh42BSODoXRB1w7iyb1wvgKwRrKCCOQ6fLdTWNfkGmNteB1ZCjapDc+TLAENIBVoA1nmL+jY+tg8Mcs811Zg=
+X-Received: by 2002:a05:6830:30ba:: with SMTP id g26mr3843930ots.118.1594731930891;
+ Tue, 14 Jul 2020 06:05:30 -0700 (PDT)
+MIME-Version: 1.0
+References: <cover.1594707424.git.viresh.kumar@linaro.org> <b051b42f0c4f36d7177978e090c6a85df17922c6.1594707424.git.viresh.kumar@linaro.org>
+In-Reply-To: <b051b42f0c4f36d7177978e090c6a85df17922c6.1594707424.git.viresh.kumar@linaro.org>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Tue, 14 Jul 2020 15:05:18 +0200
+Message-ID: <CAJZ5v0i=yNH9pGkty2QdeQLcqJcuY=pLx_XcY4VXs8bSqXL=dg@mail.gmail.com>
+Subject: Re: [PATCH 2/2] thermal: cpufreq_cooling: Reuse effective_cpu_util()
+To:     Viresh Kumar <viresh.kumar@linaro.org>
+Cc:     Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Amit Daniel Kachhap <amit.kachhap@gmail.com>,
+        Javi Merino <javi.merino@kernel.org>,
+        Amit Kucheria <amit.kucheria@verdurent.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Quentin Perret <qperret@google.com>,
+        Rafael Wysocki <rjw@rjwysocki.net>,
+        Linux PM <linux-pm@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tom Rix <trix@redhat.com>
+On Tue, Jul 14, 2020 at 8:37 AM Viresh Kumar <viresh.kumar@linaro.org> wrote:
+>
+> Several parts of the kernel are already using the effective CPU
+> utilization to get the current load on the CPU, do the same here instead
+> of depending on the idle time of the CPU, which isn't that accurate
+> comparatively.
+>
+> Note that, this (and CPU frequency scaling in general) doesn't work that
+> well with idle injection as that is done from rt threads and is counted
+> as load while it tries to do quite the opposite. That should be solved
+> separately though.
+>
+> Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+> ---
+>  drivers/thermal/cpufreq_cooling.c | 65 +++++++------------------------
+>  1 file changed, 15 insertions(+), 50 deletions(-)
+>
+> diff --git a/drivers/thermal/cpufreq_cooling.c b/drivers/thermal/cpufreq_cooling.c
+> index 6c0e1b053126..74340b2b0da7 100644
+> --- a/drivers/thermal/cpufreq_cooling.c
+> +++ b/drivers/thermal/cpufreq_cooling.c
+> @@ -23,6 +23,7 @@
+>  #include <linux/thermal.h>
+>
+>  #include <trace/events/thermal.h>
+> +#include "../../kernel/sched/sched.h"
+>
+>  /*
+>   * Cooling state <-> CPUFreq frequency
+> @@ -38,16 +39,6 @@
+>   *     ...
+>   */
+>
+> -/**
+> - * struct time_in_idle - Idle time stats
+> - * @time: previous reading of the absolute time that this cpu was idle
+> - * @timestamp: wall time of the last invocation of get_cpu_idle_time_us()
+> - */
+> -struct time_in_idle {
+> -       u64 time;
+> -       u64 timestamp;
+> -};
+> -
+>  /**
+>   * struct cpufreq_cooling_device - data for cooling device with cpufreq
+>   * @id: unique integer value corresponding to each cpufreq_cooling_device
+> @@ -62,7 +53,6 @@ struct time_in_idle {
+>   *     registered cooling device.
+>   * @policy: cpufreq policy.
+>   * @node: list_head to link all cpufreq_cooling_device together.
+> - * @idle_time: idle time stats
+>   * @qos_req: PM QoS contraint to apply
+>   *
+>   * This structure is required for keeping information of each registered
+> @@ -76,7 +66,6 @@ struct cpufreq_cooling_device {
+>         struct em_perf_domain *em;
+>         struct cpufreq_policy *policy;
+>         struct list_head node;
+> -       struct time_in_idle *idle_time;
+>         struct freq_qos_request qos_req;
+>  };
+>
+> @@ -132,34 +121,21 @@ static u32 cpu_power_to_freq(struct cpufreq_cooling_device *cpufreq_cdev,
+>  }
+>
+>  /**
+> - * get_load() - get load for a cpu since last updated
+> + * get_load() - get current load for a cpu
+>   * @cpufreq_cdev:      &struct cpufreq_cooling_device for this cpu
+>   * @cpu:       cpu number
+> - * @cpu_idx:   index of the cpu in time_in_idle*
+> + * @cpu_idx:   index of the cpu
+>   *
+> - * Return: The average load of cpu @cpu in percentage since this
+> - * function was last called.
+> + * Return: The current load of cpu @cpu in percentage.
+>   */
+>  static u32 get_load(struct cpufreq_cooling_device *cpufreq_cdev, int cpu,
+>                     int cpu_idx)
+>  {
+> -       u32 load;
+> -       u64 now, now_idle, delta_time, delta_idle;
+> -       struct time_in_idle *idle_time = &cpufreq_cdev->idle_time[cpu_idx];
+> -
+> -       now_idle = get_cpu_idle_time(cpu, &now, 0);
+> -       delta_idle = now_idle - idle_time->time;
+> -       delta_time = now - idle_time->timestamp;
+> +       unsigned long util = cpu_util_cfs(cpu_rq(cpu));
+> +       unsigned long max = arch_scale_cpu_capacity(cpu);
+>
+> -       if (delta_time <= delta_idle)
+> -               load = 0;
+> -       else
+> -               load = div64_u64(100 * (delta_time - delta_idle), delta_time);
+> -
+> -       idle_time->time = now_idle;
+> -       idle_time->timestamp = now;
+> -
+> -       return load;
+> +       util = effective_cpu_util(cpu, util, max, ENERGY_UTIL, NULL);
 
-clang static analysis flags this error
+Hmm.
 
-inode.c:1083:5: warning: Argument to kfree() is the address of the
-  local variable 'unf_single', which is not memory allocated by
-  malloc() [unix.Malloc]
-                                kfree(un);
-                                ^~~~~~~~~
-Assignment of 'un'
+It doesn't look like cpufreq_cdev and cpu_idx are needed any more in
+this function, so maybe drop them from the arg list?  And then there
+won't be anything specific to CPU cooling in this function, so maybe
+move it to sched and export it from there properly?
 
-	/*
-	 * We use this in case we need to allocate
-	 * only one block which is a fastpath
-	 */
-	unp_t unf_single = 0;
+Also it looks like max could be passed to it along with the CPU number
+instead of being always taken as arch_scale_cpu_capacity(cpu).
 
-	...
-
-	if (blocks_needed == 1) {
-		un = &unf_single;
-	} else {
-		un = kcalloc(min(blocks_needed, max_to_insert),
-			     UNFM_P_SIZE, GFP_NOFS);
-		if (!un) {
-			un = &unf_single;
-			blocks_needed = 1;
-			max_to_insert = 0;
-		}
-	}
-
-The logic to free 'un'
-
-	if (blocks_needed != 1)
-		kfree(un);
-
-Because the kcalloc failure falls back to using unf_single,
-the if-check for the free is wrong.
-
-So improve the check.
-
-Signed-off-by: Tom Rix <trix@redhat.com>
----
- fs/reiserfs/inode.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/fs/reiserfs/inode.c b/fs/reiserfs/inode.c
-index 1509775da040..4d62148e43e6 100644
---- a/fs/reiserfs/inode.c
-+++ b/fs/reiserfs/inode.c
-@@ -1079,7 +1079,7 @@ int reiserfs_get_block(struct inode *inode, sector_t block,
- 						     UNFM_P_SIZE *
- 						     blocks_needed);
- 
--			if (blocks_needed != 1)
-+			if (un != &unf_single)
- 				kfree(un);
- 
- 			if (retval) {
--- 
-2.18.1
-
+> +       return (util * 100) / max;
+>  }
+>
+>  /**
