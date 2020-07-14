@@ -7,49 +7,48 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00E55C433F7
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:49:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72041C433E6
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:49:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BC36F22B2C
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:49:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 459CB22B3B
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:49:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594752592;
-	bh=fSt4TwcoOm/uEpQtZN433CVrqFJwCh0iluC37WxKGoY=;
+	s=default; t=1594752596;
+	bh=8loZ5vzd7dqeVhEOYV35bNDjrOFzthtoyhQ0z6NnDlw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oJDA5JAUglc2uX0hSFCb+v/p3rB1sUM9YGDwIleCys1+O0WuH81go/t3T90JWF5cw
-	 BMCbragjCs+H7cMui9QczaC9ahZQX7peDCXCEEsJ99nrlOAd9T+ELwHV0Wdoa1Znqn
-	 vgDNUMrXseFDvNqUNixXm21quJUmTMQPkjydjIiY=
+	b=mKnR7tag9JVPx0mB1jx95aazbfRDHnr8zL/KvSHehSsjxrnIIExMxzq7buo9OnLSs
+	 mISn3ssdp1I4izzmKJCl2t3BS+utBTYCuNIKP+TaCR0DLvURuWJFDs3hSNMTElZhwm
+	 3QGqbV8k+gcl8MFlztj54gtp200v94uzpok7Md/o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730212AbgGNStv (ORCPT
+        id S1730220AbgGNSty (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 14:49:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45668 "EHLO mail.kernel.org"
+        Tue, 14 Jul 2020 14:49:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45736 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729605AbgGNStq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 14:49:46 -0400
+        id S1729612AbgGNStt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 14:49:49 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 02C6E22AAA;
-        Tue, 14 Jul 2020 18:49:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 85D88222E9;
+        Tue, 14 Jul 2020 18:49:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594752586;
-        bh=fSt4TwcoOm/uEpQtZN433CVrqFJwCh0iluC37WxKGoY=;
+        s=default; t=1594752589;
+        bh=8loZ5vzd7dqeVhEOYV35bNDjrOFzthtoyhQ0z6NnDlw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BeshKuYNGTQQ0fP7cDcXXsTIe5fFqub3somyYeN2EYnD1NXMDf7vfELZzVxu5uetk
-         eYvr4gkjWziltpGSiYTNC+KfUmEFq7Ue4qicYzvCCya/NHo9OER7dd3iDRhW9brDro
-         JJoyk3BHjGdqjVEhIjsQ4ZzmpChqya93cm/KNC0Y=
+        b=b1i1/wWUZcYOtxSjOMx9Qj4jpK0dKeMvPr6xiuonJMT97i9r3Me/+89GepIFVW+oy
+         6nD2QkXiLCSIhHfgc6ZrUPQOTy9WPvK283SfBrcO7GKhvveupp4CUDYlqDASBr7XQh
+         1jGras1NeHeUyhRLpNb/b++7W2uhQzBfDHJPfwsA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Andy Lutomirski <luto@amacapital.net>,
-        Marco Elver <elver@google.com>,
+        stable@vger.kernel.org, Scott Wood <swood@redhat.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
         "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 033/109] x86/entry: Increase entry_stack size to a full page
-Date:   Tue, 14 Jul 2020 20:43:36 +0200
-Message-Id: <20200714184107.106217550@linuxfoundation.org>
+        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 034/109] sched/core: Check cpus_mask, not cpus_ptr in __set_cpus_allowed_ptr(), to fix mask corruption
+Date:   Tue, 14 Jul 2020 20:43:37 +0200
+Message-Id: <20200714184107.153892295@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200714184105.507384017@linuxfoundation.org>
 References: <20200714184105.507384017@linuxfoundation.org>
@@ -62,38 +61,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peter Zijlstra <peterz@infradead.org>
+From: Scott Wood <swood@redhat.com>
 
-[ Upstream commit c7aadc09321d8f9a1d3bd1e6d8a47222ecddf6c5 ]
+[ Upstream commit fd844ba9ae59b51e34e77105d79f8eca780b3bd6 ]
 
-Marco crashed in bad_iret with a Clang11/KCSAN build due to
-overflowing the stack. Now that we run C code on it, expand it to a
-full page.
+This function is concerned with the long-term CPU mask, not the
+transitory mask the task might have while migrate disabled.  Before
+this patch, if a task was migrate-disabled at the time
+__set_cpus_allowed_ptr() was called, and the new mask happened to be
+equal to the CPU that the task was running on, then the mask update
+would be lost.
 
-Suggested-by: Andy Lutomirski <luto@amacapital.net>
-Reported-by: Marco Elver <elver@google.com>
+Signed-off-by: Scott Wood <swood@redhat.com>
+Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Reviewed-by: Lai Jiangshan <jiangshanlai@gmail.com>
-Tested-by: Marco Elver <elver@google.com>
-Link: https://lkml.kernel.org/r/20200618144801.819246178@infradead.org
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Link: https://lkml.kernel.org/r/20200617121742.cpxppyi7twxmpin7@linutronix.de
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/include/asm/processor.h | 2 +-
+ kernel/sched/core.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/x86/include/asm/processor.h b/arch/x86/include/asm/processor.h
-index 54f5d54280f60..a07dfdf7759ec 100644
---- a/arch/x86/include/asm/processor.h
-+++ b/arch/x86/include/asm/processor.h
-@@ -334,7 +334,7 @@ struct x86_hw_tss {
- #define INVALID_IO_BITMAP_OFFSET	0x8000
+diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+index 7238ef445dafb..8b3e99d095ae0 100644
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -1649,7 +1649,7 @@ static int __set_cpus_allowed_ptr(struct task_struct *p,
+ 		goto out;
+ 	}
  
- struct entry_stack {
--	unsigned long		words[64];
-+	char	stack[PAGE_SIZE];
- };
+-	if (cpumask_equal(p->cpus_ptr, new_mask))
++	if (cpumask_equal(&p->cpus_mask, new_mask))
+ 		goto out;
  
- struct entry_stack_page {
+ 	dest_cpu = cpumask_any_and(cpu_valid_mask, new_mask);
 -- 
 2.25.1
 
