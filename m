@@ -2,84 +2,87 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09605C433EC
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 08:27:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2D27C433F1
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 08:27:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D235F21BE5
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 08:27:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Qliqg88y"
+	by mail.kernel.org (Postfix) with ESMTP id AE90621897
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 08:27:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726788AbgGNI1S (ORCPT
+        id S1726803AbgGNI10 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 04:27:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54380 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725793AbgGNI1Q (ORCPT
+        Tue, 14 Jul 2020 04:27:26 -0400
+Received: from eu-smtp-delivery-151.mimecast.com ([207.82.80.151]:21486 "EHLO
+        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725997AbgGNI1Z (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 04:27:16 -0400
-Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A8F56C061755;
-        Tue, 14 Jul 2020 01:27:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=A51ag8nDs9zuaekV72PLvRRRTy65GcHBqX/h7vCoPM8=; b=Qliqg88yubr5gTr0CebRm5zHyM
-        VmoSi0W8BiWxbo8q0BQItVbTESnzPp2YQGxipV4dST4DFJUBsJEgrytU7IzP9Ptmtt31ahpakJj6W
-        pvVJgC5LHcsQYfqFGy5fNdrhBWJcuZf7H3SfDGiu09ZMSL4+z0b4A+hAncBX1lLJRahHM4aEJlNXj
-        lWa0NgagAQJSPYr3J9uR3wRQOov3bvouDKlbm6svybYdiMyh2k7P7B7hdk3PoyRtrnU8/ltNHbyf4
-        4872KPEM7cf358Zm+G7TVXFu4J9ua11eoXXrDYwTVxnobsO9G7E1mpGrwznsBUZ6VolO/a5+BQvvh
-        bjtbmldw==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jvGHI-0003qe-0A; Tue, 14 Jul 2020 08:27:04 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id E72DC305C22;
-        Tue, 14 Jul 2020 10:27:01 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id C5FA120D27C6B; Tue, 14 Jul 2020 10:27:01 +0200 (CEST)
-Date:   Tue, 14 Jul 2020 10:27:01 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     ira.weiny@intel.com
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Andy Lutomirski <luto@kernel.org>,
-        Fenghua Yu <fenghua.yu@intel.com>, x86@kernel.org,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-nvdimm@lists.01.org, linux-fsdevel@vger.kernel.org,
-        linux-mm@kvack.org, linux-kselftest@vger.kernel.org
-Subject: Re: [RFC PATCH 04/15] x86/pks: Preserve the PKRS MSR on context
- switch
-Message-ID: <20200714082701.GO10769@hirez.programming.kicks-ass.net>
-References: <20200714070220.3500839-1-ira.weiny@intel.com>
- <20200714070220.3500839-5-ira.weiny@intel.com>
+        Tue, 14 Jul 2020 04:27:25 -0400
+Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
+ TLS) by relay.mimecast.com with ESMTP id
+ uk-mta-172-hKkJFKMyNo2WmzryHRbtrg-1; Tue, 14 Jul 2020 09:27:21 +0100
+X-MC-Unique: hKkJFKMyNo2WmzryHRbtrg-1
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
+ AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
+ Server (TLS) id 15.0.1347.2; Tue, 14 Jul 2020 09:27:20 +0100
+Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
+ AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
+ Tue, 14 Jul 2020 09:27:20 +0100
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     'Adrian Bunk' <bunk@kernel.org>,
+        Josh Triplett <josh@joshtriplett.org>
+CC:     Nick Desaulniers <ndesaulniers@google.com>,
+        "alex.gaynor@gmail.com" <alex.gaynor@gmail.com>,
+        "geofft@ldpreload.com" <geofft@ldpreload.com>,
+        "jbaublitz@redhat.com" <jbaublitz@redhat.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        "Greg KH" <gregkh@linuxfoundation.org>,
+        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>
+Subject: RE: Linux kernel in-tree Rust support
+Thread-Topic: Linux kernel in-tree Rust support
+Thread-Index: AQHWWI1aGJZ9TFzlDkOe6uJPijYhMqkGvlGQ
+Date:   Tue, 14 Jul 2020 08:27:20 +0000
+Message-ID: <732be8f3c8dc483785670259cc94dc26@AcuMS.aculab.com>
+References: <CAKwvOdmuYc8rW_H4aQG4DsJzho=F+djd68fp7mzmBp3-wY--Uw@mail.gmail.com>
+ <20200712123151.GB25970@localhost> <20200712193944.GA81641@localhost>
+ <20200712204501.GC25970@localhost>
+In-Reply-To: <20200712204501.GC25970@localhost>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200714070220.3500839-5-ira.weiny@intel.com>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: aculab.com
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 14, 2020 at 12:02:09AM -0700, ira.weiny@intel.com wrote:
-> From: Ira Weiny <ira.weiny@intel.com>
-> 
-> The PKRS MSR is defined as a per-core register.  This isolates memory
-> access by CPU.  Unfortunately, the MSR is not preserved by XSAVE.
-> Therefore, We must preserve the protections for individual tasks even if
-> they are context switched out and placed on another cpu later.
+RnJvbTogQWRyaWFuIEJ1bmsNCj4gU2VudDogMTIgSnVseSAyMDIwIDIxOjQ1DQouLi4uDQo+IFJ1
+c3QgZ2V0cyB1cGRhdGVkIGZyZXF1ZW50bHkuDQo+IFNvbWV0aW1lcyB0aGlzIGFsc28gY2hhbmdl
+cyB0aGUgTExWTSB2ZXJzaW9uIHVzZWQgYnkgUnVzdC4NCj4gRGViaWFuIHN0YWJsZSBzdXBwb3J0
+cyB0YXJnZXRzIGxpa2UgQVJNdjUgYW5kIDMyYml0IE1JUFMuDQo+IERpc3RyaWJ1dGlvbiBrZXJu
+ZWwgdXBkYXRlcyBhcmUgb2Z0ZW4gYXV0b21hdGljYWxseSBpbnN0YWxsZWQNCj4gb24gdXNlciBo
+YXJkd2FyZS4NCg0KVGhpcyByZW1pbmRzIG1lIG9mIHdoeSBJIG5ldmVyIHdhbnQgdG8gdXNlIGFu
+IG9ubGluZSBjb21waWxlcg0Kc2VydmljZSAtIG5ldmVyIG1pbmQgaG93IGhhcmQgY29tcGFuaWVz
+IHB1c2ggdGhlbS4NCg0KSWYgSSBuZWVkIHRvIGRvIGEgYnVnLWZpeCBidWlsZCBvZiBzb21ldGhp
+bmcgdGhhdCB3YXMgcmVsZWFzZWQNCjIgKG9yIG1vcmUpIHllYXJzIGFnbyBJIHdhbnQgdG8gdXNl
+IGV4YWN0bHkgdGhlIHNhbWUgdG9vbGNoYWluDQood2FydHMgYW5kIGFsbCkgdGhhdCB3YXMgdXNl
+ZCBmb3IgdGhlIG9yaWdpbmFsIGJ1aWxkLg0KDQpJZiB0aGUgY29tcGlsZXIgaGFzIGNoYW5nZWQg
+SSBuZWVkIHRvIGRvIGEgZnVsbCB0ZXN0IC0ganVzdA0KaW4gY2FzZSBpdCBjb21waWxlcyBzb21l
+ICdkb2RneScgY29kZSBkaWZmZXJlbnRseS4NCldpdGggdGhlIHNhbWUgY29tcGlsZXIgSSBvbmx5
+IG5lZWQgdG8gdGVzdCB0aGUgZml4Lg0KDQoJRGF2aWQNCg0KLQ0KUmVnaXN0ZXJlZCBBZGRyZXNz
+IExha2VzaWRlLCBCcmFtbGV5IFJvYWQsIE1vdW50IEZhcm0sIE1pbHRvbiBLZXluZXMsIE1LMSAx
+UFQsIFVLDQpSZWdpc3RyYXRpb24gTm86IDEzOTczODYgKFdhbGVzKQ0K
 
-This is a contradiction and utter trainwreck. We're not going to do more
-per-core MSRs and pretend they make sense per-task.
