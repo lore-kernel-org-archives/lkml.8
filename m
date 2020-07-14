@@ -2,92 +2,213 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3260C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 01:22:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC054C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 01:24:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9F575206F0
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 01:22:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=aol.com header.i=@aol.com header.b="ODio+wTg"
+	by mail.kernel.org (Postfix) with ESMTP id 919B9206F0
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 01:24:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726929AbgGNBWy (ORCPT
+        id S1726935AbgGNBYq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 21:22:54 -0400
-Received: from sonic315-55.consmr.mail.gq1.yahoo.com ([98.137.65.31]:36112
-        "EHLO sonic315-55.consmr.mail.gq1.yahoo.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726364AbgGNBWy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 21:22:54 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aol.com; s=a2048; t=1594689773; bh=kSZ8A/K3JBp8LhqRTcQFI6Kag9kj97BCjG/6uEWAlZc=; h=Date:From:To:Cc:Subject:References:In-Reply-To:From:Subject; b=ODio+wTgG8PN6r2cbOHOkXApXvS1xdIi6NXA4PImpbo92ezGIVt3qYUGr3XfmyJF+yz9QOZC7ctmV8OcDl1V5YodnuMr1ZFW0/rHZZBP33k6tRTFN9Zdzdpe11PIaQcCkGq5Vok7ibIRQqAxVpAxHF7k8qT4VeZduSu2Uam/W/O2J80rNGlI1JO8LwSWXlT2A4e4I0wcJgFX8cOqQlb9dmKvgIxk9BZxMVnKjvvY8LPhpVplhLBpbkqukIDPqUxBwEU0yQZsxf8qjXdA8Zr60JcYF65JxYf1BRA8DB5LoeU/b6ER96lnkGBNDGNBvBrHfJ5BbyGrdydPQ3ODolpAMg==
-X-YMail-OSG: .wzDUJ0VM1mceQnxa9_yhOOOke64Dafy9Q9UDbMovPnBzGAmgBzLsOJ7LySXt5a
- 9J3R9gX9oe_eAvBUo_B055.hPtrQKHHBimBiKNacZeirx8lMzsr8YJBmlNwgPsIUi3zuoOR8xMEh
- .xD86sEv2WRKPKgvI9IdWwr5suBNFi8ZFZYR_saqcru2b9BpMjZiHPlOhde2PpzD1CkGrkcv_rkT
- qrz2FY29v5MDLxPO7XAw6g5jOSwCJfhNBw4Wr4yavjFgsFbUVpvL9spTDdyjO6fWQOWQSr_sExdv
- xyth76vWEaYH6Ha2VNbOjdnOQzTH3jjgiKc.qx_JeiBSE3OtQA0SUw5CkMzX55wTJEgslA3ZELuU
- I4zajfP7.ITRLJpVvq_SzemDEB6Cx2FTN.6dPlqa_NNfll5opyWdhECoNI06Ba0_X.rIKk000kvb
- 1f3v3U39bBgm8c9y4EUs1xlVkoB20_Xyx3rvVgN5h1rh1uPZnLguOLr2.Mia3xZMzJGVBE4tIYzN
- rP5amZ935LW3ov.pGZWs2fNa0BVStIy7nMIChTgC75q1BmlISgtEAT.8Mo5Q.CQ5QRgasnFUr429
- iW4cR9ZoAsAe6OnmF7Lb5.oZ_DXWInpjHSAbC.kiroM4jtSDjvgc8nqP8NuM7KI4BGjQXW121r94
- aGtsjEySM2LoEa2svcNlY.gIhZD7jOWOph4F38tqbre7ORBLhuCyK8S70kneBU6lHYJEVVIhhac.
- 1BsZq2oLgZrTAsFLLzLUJsEu_TWxyDyjjrGX4IIz3g2MMeT.g3aqqcpunRXMNxT8Ax5uvG4hg5H0
- RHSXZ5rpdYM.4q077o8GTu2es118G3Duh0JlOcGVWbVj92BoSkWyVaCAzgo9PdwvXSZdgN9aLoVe
- W4CDO319FR_fZx2kSly6a08v9.p8SxbAyE27CDzgyEbeshWIf6goUofcGQ75lHyw.7B7ud4hH3YW
- eAogDELd2AZBbndnSFpF4oj27JCVmSckNAL972OqJceHhf4Zq6uHeo3UtflRq7pPNbhgItHuGN0L
- xj2fNssv4F6BaYMCnENMYwnB_EtpvHz4_m1R7blesOIm02bcdW.EK9nYDkHSjHoNTwCv9pIgZNZy
- kqM0lpLDkoDRZm_s5voyIMhHg065MosNVMU0iVsnqb.DkEngb2duuQTUGwVk.tky2h2EO2Nk1Rjh
- JI_yAxzmiNp2r9mW4E1zXPvGU04r3BXExwVkEO04Yd.ocJ_UQvoYUOnluZR8wGVN8So4jmhWp5cz
- KCr2q8eH9IoHQQF7nS55l572onKVaIgsMCU1I6a8sDf0Zn7DRyqDo0e2y9wH_5U8SqJH9djPq9CB
- XWxnwQO0HSxE1bGZBWCdaNzjzqZq428dy0QBJWplYEkPBMHnAp325Akn6tCdzp_y6_ZqF
-Received: from sonic.gate.mail.ne1.yahoo.com by sonic315.consmr.mail.gq1.yahoo.com with HTTP; Tue, 14 Jul 2020 01:22:53 +0000
-Received: by smtp416.mail.gq1.yahoo.com (VZM Hermes SMTP Server) with ESMTPA ID ccb2d8946b485b8111546e619c1c7f07;
-          Tue, 14 Jul 2020 01:22:51 +0000 (UTC)
-Date:   Tue, 14 Jul 2020 09:22:46 +0800
-From:   Gao Xiang <hsiangkao@aol.com>
-To:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
-Cc:     xiang@kernel.org, chao@kernel.org, linux-erofs@lists.ozlabs.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] erofs: Replace HTTP links with HTTPS ones
-Message-ID: <20200714012244.GA18418@hsiangkao-HP-ZHAN-66-Pro-G1>
-References: <20200713130944.34419-1-grandmaster@al2klimov.de>
+        Mon, 13 Jul 2020 21:24:46 -0400
+Received: from mga12.intel.com ([192.55.52.136]:3555 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726364AbgGNBYq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jul 2020 21:24:46 -0400
+IronPort-SDR: SIGcOZgvAqjfH//LbaTL/KD/vLUq4oLQendT9QYk+KT9Vc/gGkuPgu+UzIWhuWJ4SapHoLU21S
+ Rprxhe2HE5tg==
+X-IronPort-AV: E=McAfee;i="6000,8403,9681"; a="128335352"
+X-IronPort-AV: E=Sophos;i="5.75,349,1589266800"; 
+   d="scan'208";a="128335352"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jul 2020 18:24:45 -0700
+IronPort-SDR: zTuwavoXlFX6hjRzlLozhiHIC7rdTX3dDznO7Xsbcd+TcvNnPRYsMfxCNvEFbKCCwi91T5suab
+ 2Nu9R/xpPjRg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,349,1589266800"; 
+   d="scan'208";a="485691184"
+Received: from guptapadev.jf.intel.com (HELO guptapadev.amr) ([10.54.74.188])
+  by fmsmga005.fm.intel.com with ESMTP; 13 Jul 2020 18:24:44 -0700
+Date:   Mon, 13 Jul 2020 18:18:54 -0700
+From:   Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
+To:     Borislav Petkov <bp@alien8.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>
+Cc:     x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+        Tony Luck <tony.luck@intel.com>,
+        "Gomez Iglesias, Antonio" <antonio.gomez.iglesias@intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Anthony Steinhauser <asteinhauser@google.com>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Mark Gross <mgross@linux.intel.com>,
+        Waiman Long <longman@redhat.com>, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        Jonathan Corbet <corbet@lwn.net>
+Subject: [PATCH] x86/bugs/multihit: Fix mitigation reporting when KVM is not
+ in use
+Message-ID: <267631f4db4fd7e9f7ca789c2efaeab44103f68e.1594689154.git.pawan.kumar.gupta@linux.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200713130944.34419-1-grandmaster@al2klimov.de>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Mailer: WebService/1.1.16271 hermes_aol Apache-HttpAsyncClient/4.1.4 (Java/11.0.7)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 13, 2020 at 03:09:44PM +0200, Alexander A. Klimov wrote:
-> Rationale:
-> Reduces attack surface on kernel devs opening the links for MITM
-> as HTTPS traffic is much harder to manipulate.
-> 
-> Deterministic algorithm:
-> For each file:
->   If not .svg:
->     For each line:
->       If doesn't contain `\bxmlns\b`:
->         For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
-> 	  If neither `\bgnu\.org/license`, nor `\bmozilla\.org/MPL\b`:
->             If both the HTTP and HTTPS versions
->             return 200 OK and serve the same content:
->               Replace HTTP with HTTPS.
-> 
-> Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
+On systems that have virtualization disabled or KVM module is not
+loaded, sysfs mitigation state of X86_BUG_ITLB_MULTIHIT is reported
+incorrectly as:
 
-Looks good to me,
-Reviewed-by: Gao Xiang <hsiangkao@redhat.com>
+  $ cat /sys/devices/system/cpu/vulnerabilities/itlb_multihit
+  KVM: Vulnerable
 
-(Will apply later with other potential patches...)
+System is not vulnerable to DoS attack from a rogue guest when:
+ - KVM module is not loaded or
+ - Virtualization is disabled in the hardware or
+ - Kernel was configured without support for KVM
 
-Thanks,
-Gao Xiang
+Change the reporting to "Currently not affected (KVM not in use)" for
+such cases.
+
+Reported-by: Nelson Dsouza <nelson.dsouza@linux.intel.com>
+Fixes: b8e8c8303ff2 ("kvm: mmu: ITLB_MULTIHIT mitigation")
+Signed-off-by: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
+Reviewed-by: Tony Luck <tony.luck@intel.com>
+---
+ .../admin-guide/hw-vuln/multihit.rst          |  5 +++-
+ arch/x86/include/asm/processor.h              |  6 +++++
+ arch/x86/kernel/cpu/bugs.c                    | 24 +++++++++----------
+ arch/x86/kvm/mmu/mmu.c                        |  9 +++++--
+ 4 files changed, 29 insertions(+), 15 deletions(-)
+
+diff --git a/Documentation/admin-guide/hw-vuln/multihit.rst b/Documentation/admin-guide/hw-vuln/multihit.rst
+index ba9988d8bce5..842961419f3e 100644
+--- a/Documentation/admin-guide/hw-vuln/multihit.rst
++++ b/Documentation/admin-guide/hw-vuln/multihit.rst
+@@ -82,7 +82,10 @@ The possible values in this file are:
+        - Software changes mitigate this issue.
+      * - KVM: Vulnerable
+        - The processor is vulnerable, but no mitigation enabled
+-
++     * - Currently not affected (KVM not in use)
++       - The processor is vulnerable but no mitigation is required because
++         KVM module is not loaded or virtualization is disabled in the hardware or
++         kernel was configured without support for KVM.
+ 
+ Enumeration of the erratum
+ --------------------------------
+diff --git a/arch/x86/include/asm/processor.h b/arch/x86/include/asm/processor.h
+index 03b7c4ca425a..830a3e7725af 100644
+--- a/arch/x86/include/asm/processor.h
++++ b/arch/x86/include/asm/processor.h
+@@ -989,4 +989,10 @@ enum mds_mitigations {
+ 	MDS_MITIGATION_VMWERV,
+ };
+ 
++enum itlb_multihit_mitigations {
++	ITLB_MULTIHIT_MITIGATION_OFF,
++	ITLB_MULTIHIT_MITIGATION_FULL,
++	ITLB_MULTIHIT_MITIGATION_NO_KVM,
++};
++
+ #endif /* _ASM_X86_PROCESSOR_H */
+diff --git a/arch/x86/kernel/cpu/bugs.c b/arch/x86/kernel/cpu/bugs.c
+index 0b71970d2d3d..97f66a93f2be 100644
+--- a/arch/x86/kernel/cpu/bugs.c
++++ b/arch/x86/kernel/cpu/bugs.c
+@@ -1395,8 +1395,15 @@ void x86_spec_ctrl_setup_ap(void)
+ 		x86_amd_ssb_disable();
+ }
+ 
+-bool itlb_multihit_kvm_mitigation;
+-EXPORT_SYMBOL_GPL(itlb_multihit_kvm_mitigation);
++/* Default to KVM not in use, KVM module changes this later */
++enum itlb_multihit_mitigations itlb_multihit_mitigation = ITLB_MULTIHIT_MITIGATION_NO_KVM;
++EXPORT_SYMBOL_GPL(itlb_multihit_mitigation);
++
++static const char * const itlb_multihit_strings[] = {
++	[ITLB_MULTIHIT_MITIGATION_OFF]		= "KVM: Vulnerable",
++	[ITLB_MULTIHIT_MITIGATION_FULL]		= "KVM: Mitigation: Split huge pages",
++	[ITLB_MULTIHIT_MITIGATION_NO_KVM]	= "Currently not affected (KVM not in use)",
++};
+ 
+ #undef pr_fmt
+ #define pr_fmt(fmt)	"L1TF: " fmt
+@@ -1553,25 +1560,18 @@ static ssize_t l1tf_show_state(char *buf)
+ 		       l1tf_vmx_states[l1tf_vmx_mitigation],
+ 		       sched_smt_active() ? "vulnerable" : "disabled");
+ }
+-
+-static ssize_t itlb_multihit_show_state(char *buf)
+-{
+-	if (itlb_multihit_kvm_mitigation)
+-		return sprintf(buf, "KVM: Mitigation: Split huge pages\n");
+-	else
+-		return sprintf(buf, "KVM: Vulnerable\n");
+-}
+ #else
+ static ssize_t l1tf_show_state(char *buf)
+ {
+ 	return sprintf(buf, "%s\n", L1TF_DEFAULT_MSG);
+ }
++#endif
+ 
+ static ssize_t itlb_multihit_show_state(char *buf)
+ {
+-	return sprintf(buf, "Processor vulnerable\n");
++	return sprintf(buf, "%s\n",
++		       itlb_multihit_strings[itlb_multihit_mitigation]);
+ }
+-#endif
+ 
+ static ssize_t mds_show_state(char *buf)
+ {
+diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
+index 6d6a0ae7800c..e089b9e565a5 100644
+--- a/arch/x86/kvm/mmu/mmu.c
++++ b/arch/x86/kvm/mmu/mmu.c
+@@ -50,7 +50,7 @@
+ #include <asm/kvm_page_track.h>
+ #include "trace.h"
+ 
+-extern bool itlb_multihit_kvm_mitigation;
++extern enum itlb_multihit_mitigations itlb_multihit_mitigation;
+ 
+ static int __read_mostly nx_huge_pages = -1;
+ #ifdef CONFIG_PREEMPT_RT
+@@ -6158,7 +6158,12 @@ static bool get_nx_auto_mode(void)
+ 
+ static void __set_nx_huge_pages(bool val)
+ {
+-	nx_huge_pages = itlb_multihit_kvm_mitigation = val;
++	nx_huge_pages = val;
++
++	if (val)
++		itlb_multihit_mitigation = ITLB_MULTIHIT_MITIGATION_FULL;
++	else
++		itlb_multihit_mitigation = ITLB_MULTIHIT_MITIGATION_OFF;
+ }
+ 
+ static int set_nx_huge_pages(const char *val, const struct kernel_param *kp)
+-- 
+2.21.3
+
