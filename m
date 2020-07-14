@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85B13C433ED
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:46:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A41AC433F1
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:46:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5752F22AAF
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:46:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 112D422AB0
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:46:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594752377;
-	bh=/gmxHS3XLDyTXY59bVZQeIR8YytUDZlxFAMR595dCLM=;
+	s=default; t=1594752379;
+	bh=pieAcDd6bFTdpg6107qY4pEzKvJ8WHGm9bg/hlipDIk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IdhgxcZX+g/MTxe//XI8+bZwuUjrhDmrqTv0cTxZuheq6W05y8hUfnuEypj+XDHiB
-	 dyzfzxLlGt7JwgOMeXz2crnID7MMnTOFiLnIBbrw8uH03GErZMyXBJO3ZN6qzD7iwT
-	 U+CkwgFkzNnAsOhDWJaqF0bxJhzPPSU8RqnnD8cI=
+	b=BxN78LYvTzqnHie8UJyWfLZWxYlRBPXPj3go5GgZQB5Rimf4OZ2aozAhvn68jzNPQ
+	 GaJxO+KAZMLP4y86aIu4APunfU0E1gHNq9OPfGwAI3BwT2WSsXt1ZXbERHtIq9pkJU
+	 ahb0DuP/+O7BhwQvVf47+izM9DO7Eum/tnoRK1hw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729401AbgGNSqQ (ORCPT
+        id S1729388AbgGNSqO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 14:46:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40690 "EHLO mail.kernel.org"
+        Tue, 14 Jul 2020 14:46:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40764 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729337AbgGNSqJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 14:46:09 -0400
+        id S1729370AbgGNSqM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 14:46:12 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AAE2C22282;
-        Tue, 14 Jul 2020 18:46:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3E03622AAA;
+        Tue, 14 Jul 2020 18:46:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594752369;
-        bh=/gmxHS3XLDyTXY59bVZQeIR8YytUDZlxFAMR595dCLM=;
+        s=default; t=1594752371;
+        bh=pieAcDd6bFTdpg6107qY4pEzKvJ8WHGm9bg/hlipDIk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cnTLTuFao7GCqxqKUdwMEsJKyMuti4NYz5dOTxB7TVyyMTWV9nUxtmPpoFsbBwEuU
-         1RvCSvrzshy0uiGo3Ho1xhFZm77X5wqzK8tFkdCxQBuwXGzH/P3/nsmxiRaRnZZUs4
-         fy61WRUmtgij81BNHO7prgGsLyrZB8WLInkGO/Z8=
+        b=J3QCZBsFF8vNi1fYu/TiR57v4qfozFVzMNIA1vIDO1rkDaZeBfAhgbUyZV3h8QpCB
+         7uWncq0LTzHW1LIyItJ6uXLQT9ytiTFeh0lyvsTMJhEAY7NbbqT28TGZTn6ziNvOpq
+         k/eY8fe45ewgxfbmfQ9de8CucGks8LAnVfy9hvpo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Sasha Levin <sashal@kernel.org>,
-        Alexander Egorenkov <egorenar@linux.ibm.com>
-Subject: [PATCH 4.19 16/58] s390/kasan: fix early pgm check handler execution
-Date:   Tue, 14 Jul 2020 20:43:49 +0200
-Message-Id: <20200714184056.958041028@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
+        Maxime Ripard <maxime@cerno.tech>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 17/58] drm/sun4i: mixer: Call of_dma_configure if theres an IOMMU
+Date:   Tue, 14 Jul 2020 20:43:50 +0200
+Message-Id: <20200714184057.012718826@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200714184056.149119318@linuxfoundation.org>
 References: <20200714184056.149119318@linuxfoundation.org>
@@ -61,40 +61,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vasily Gorbik <gor@linux.ibm.com>
+From: Maxime Ripard <maxime@cerno.tech>
 
-[ Upstream commit 998f5bbe3dbdab81c1cfb1aef7c3892f5d24f6c7 ]
+[ Upstream commit 842ec61f4006a6477a9deaedd69131e9f46e4cb5 ]
 
-Currently if early_pgm_check_handler is called it ends up in pgm check
-loop. The problem is that early_pgm_check_handler is instrumented by
-KASAN but executed without DAT flag enabled which leads to addressing
-exception when KASAN checks try to access shadow memory.
+The main DRM device is actually a virtual device so it doesn't have the
+iommus property, which is instead on the DMA masters, in this case the
+mixers.
 
-Fix that by executing early handlers with DAT flag on under KASAN as
-expected.
+Add a call to of_dma_configure with the mixers DT node but on the DRM
+virtual device to configure it in the same way than the mixers.
 
-Reported-and-tested-by: Alexander Egorenkov <egorenar@linux.ibm.com>
-Reviewed-by: Heiko Carstens <heiko.carstens@de.ibm.com>
-Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
-Signed-off-by: Heiko Carstens <heiko.carstens@de.ibm.com>
+Reviewed-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+Signed-off-by: Maxime Ripard <maxime@cerno.tech>
+Link: https://patchwork.freedesktop.org/patch/msgid/9a4daf438dd3f2fe07afb23688bfb793a0613d7d.1589378833.git-series.maxime@cerno.tech
+(cherry picked from commit b718102dbdfd0285ad559687a30e27cc9124e592)
+[Maxime: Applied to -fixes since it missed the merge window and display is
+         broken without it]
+Signed-off-by: Maxime Ripard <maxime@cerno.tech>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/s390/kernel/early.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/gpu/drm/sun4i/sun8i_mixer.c | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
 
-diff --git a/arch/s390/kernel/early.c b/arch/s390/kernel/early.c
-index e7e6608b996c6..ad88bed743954 100644
---- a/arch/s390/kernel/early.c
-+++ b/arch/s390/kernel/early.c
-@@ -155,6 +155,8 @@ static noinline __init void setup_lowcore_early(void)
- 	psw_t psw;
+diff --git a/drivers/gpu/drm/sun4i/sun8i_mixer.c b/drivers/gpu/drm/sun4i/sun8i_mixer.c
+index 71a798e5d5591..ddab3fab36a1a 100644
+--- a/drivers/gpu/drm/sun4i/sun8i_mixer.c
++++ b/drivers/gpu/drm/sun4i/sun8i_mixer.c
+@@ -435,6 +435,19 @@ static int sun8i_mixer_bind(struct device *dev, struct device *master,
+ 	mixer->engine.ops = &sun8i_engine_ops;
+ 	mixer->engine.node = dev->of_node;
  
- 	psw.mask = PSW_MASK_BASE | PSW_DEFAULT_KEY | PSW_MASK_EA | PSW_MASK_BA;
-+	if (IS_ENABLED(CONFIG_KASAN))
-+		psw.mask |= PSW_MASK_DAT;
- 	psw.addr = (unsigned long) s390_base_ext_handler;
- 	S390_lowcore.external_new_psw = psw;
- 	psw.addr = (unsigned long) s390_base_pgm_handler;
++	if (of_find_property(dev->of_node, "iommus", NULL)) {
++		/*
++		 * This assume we have the same DMA constraints for
++		 * all our the mixers in our pipeline. This sounds
++		 * bad, but it has always been the case for us, and
++		 * DRM doesn't do per-device allocation either, so we
++		 * would need to fix DRM first...
++		 */
++		ret = of_dma_configure(drm->dev, dev->of_node, true);
++		if (ret)
++			return ret;
++	}
++
+ 	/*
+ 	 * While this function can fail, we shouldn't do anything
+ 	 * if this happens. Some early DE2 DT entries don't provide
 -- 
 2.25.1
 
