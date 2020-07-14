@@ -2,113 +2,219 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2085AC433E2
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 10:06:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22539C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 10:06:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F235C217D8
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 10:06:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E6B6D217D8
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 10:06:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="skKTE+Cp"
+	dkim=pass (1024-bit key) header.d=g001.emailsrvr.com header.i=@g001.emailsrvr.com header.b="dauVLxOA";
+	dkim=pass (1024-bit key) header.d=mev.co.uk header.i=@mev.co.uk header.b="DVOIyhso"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726617AbgGNKGJ (ORCPT
+        id S1726809AbgGNKGq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 06:06:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41330 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725952AbgGNKGI (ORCPT
+        Tue, 14 Jul 2020 06:06:46 -0400
+Received: from smtp104.ord1d.emailsrvr.com ([184.106.54.104]:52047 "EHLO
+        smtp104.ord1d.emailsrvr.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725906AbgGNKGq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 06:06:08 -0400
-Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 541C1C061755;
-        Tue, 14 Jul 2020 03:06:08 -0700 (PDT)
-Received: by mail-pl1-x642.google.com with SMTP id p1so6826168pls.4;
-        Tue, 14 Jul 2020 03:06:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=eYpCQfk/q2dXlOvqggXDmkrAf68vEnrgzdjskwoJL6M=;
-        b=skKTE+CpIsdKXt3/0nlblro53GUANKxqNtTyG/+IjykwtXnPLWN2ztxla7THEHgzH7
-         uGA61QgHlK6eFYdNEtt05P9FNTsqwXikvAR1Ha+CP/QySTYvzeYrAnHwE5yjRheYfkO/
-         3BEh2FAMbrPvrpuECImvgbgZ1V5H1FpUGVxoZp2KucYUsnHYB4PLIulj4r4ENMZDvtJ8
-         vV7uzdGS0DQcmvh9J7T0xybMq5uPoaoQP0Vevf+QkaRjV8Ou3Qz+9/sRjvMOuUjhtCGw
-         0Qnud8/LutL7ucYLB4wlJBDecFp7+rv6x36+NC858rm/VBy1Rp3nADTExX47SdkXqxZJ
-         hCVA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=eYpCQfk/q2dXlOvqggXDmkrAf68vEnrgzdjskwoJL6M=;
-        b=NNoc0RBC3JBd8GR3LqFsl7/BmCwYGQJvNgBlQk2HDzopnL3b6/bcN/bba/jZCe0XmX
-         8K6iM7+DDC2QA3vSZb+bI9LXJE+FFouhWKdt0JTE9hUb5GJysxjhKSNZwSaiSl5+LnMD
-         SQ9jAg6gGXFz9EcxbYToih7M90OfYNIELWkw0DcLqwLjpR0zKd7i900UBKOstDcMakjf
-         dekyKrW9NKJQ0h5/oIxv5WnKYWfRRb32YYG/TLydNSvZYtIiILCBRZIjp7Ut6vYd0AuU
-         +AAJ55Qj9dlGgKcCRX7USAZmmxW5sV8JI79R6ETHralCSw0S2CNtkOZ5BjDcJsg7MSch
-         LRPg==
-X-Gm-Message-State: AOAM530zoQ573+u/WxR+0T1rWmUDfSje488ynPwlC99JVgtsHX0lsIJ7
-        qmKvoJIwrHIpFAuj2fL752c=
-X-Google-Smtp-Source: ABdhPJztQv0rhQk5gYPwf/IdL9QA4paHfVHV8Ckv+UiFjvEVBFFyA/8krZQ1RQWQcTOCzHtMwAZ6UA==
-X-Received: by 2002:a17:90a:ea0f:: with SMTP id w15mr3999097pjy.138.1594721167865;
-        Tue, 14 Jul 2020 03:06:07 -0700 (PDT)
-Received: from localhost (g175.219-103-161.ppp.wakwak.ne.jp. [219.103.161.175])
-        by smtp.gmail.com with ESMTPSA id l9sm2084386pjy.2.2020.07.14.03.05.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 Jul 2020 03:05:55 -0700 (PDT)
-Date:   Tue, 14 Jul 2020 19:05:45 +0900
-From:   Stafford Horne <shorne@gmail.com>
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     Jonathan Corbet <corbet@lwn.net>,
-        "Alexander A. Klimov" <grandmaster@al2klimov.de>,
-        Jonas Bonn <jonas@southpole.se>,
-        Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>,
-        Openrisc <openrisc@lists.librecores.org>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] OPENRISC ARCHITECTURE: Replace HTTP links with HTTPS ones
-Message-ID: <20200714100545.GD437393@lianli.shorne-pla.net>
-References: <20200710062019.28755-1-grandmaster@al2klimov.de>
- <20200713113430.1c1777bb@lwn.net>
- <CAMuHMdXoUME_dCOZP1N0tXyMv61edfNECM4-n4NPa56YbBCncw@mail.gmail.com>
+        Tue, 14 Jul 2020 06:06:46 -0400
+X-Greylist: delayed 589 seconds by postgrey-1.27 at vger.kernel.org; Tue, 14 Jul 2020 06:06:45 EDT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=g001.emailsrvr.com;
+        s=20190322-9u7zjiwi; t=1594720615;
+        bh=/+UlnFraBXeWBpY49tUc6AX489lG5XkgFdMfCiG/X6c=;
+        h=Subject:To:From:Date:From;
+        b=dauVLxOAZG1A+phbdkYOg78f4/RR5/nEjvVm2wlRgjz3G6kg7G045kmqE2owdHj0D
+         slckOfRMPTz56nwilnPFWlQCUh6ew4CQn5sykceGtxUmMDXgfUc2Cl+ZfkEovFVHtK
+         pH0pOT/+WdqN/hUvCamGKaaP3g+hwL7uFMqgPHsE=
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=mev.co.uk;
+        s=20190130-41we5z8j; t=1594720615;
+        bh=/+UlnFraBXeWBpY49tUc6AX489lG5XkgFdMfCiG/X6c=;
+        h=Subject:To:From:Date:From;
+        b=DVOIyhsoXyiUxlrZ0ClClowuYtkQZjI4sZjyWS1elFPaK+44iN2rrz1hzRV9iCv6H
+         jrLicK3ihpVx1I/9JcS5X46bFa3JlxK6SKUTR+j6k6ynk7VqOVTqk1FfL8x53BNBJV
+         N4y0erHghKrz5+AtYXh2mvl2ace+jLIfgb4Pw0QQ=
+X-Auth-ID: abbotti@mev.co.uk
+Received: by smtp6.relay.ord1d.emailsrvr.com (Authenticated sender: abbotti-AT-mev.co.uk) with ESMTPSA id BCC59E00B0;
+        Tue, 14 Jul 2020 05:56:54 -0400 (EDT)
+Subject: Re: [PATCH v2] staging: comedi: s626: Remove pci-dma-compat wrapper
+ APIs.
+To:     Suraj Upadhyay <usuraj35@gmail.com>, gregkh@linuxfoundation.org,
+        hsweeten@visionengravers.com, christophe.jaillet@wanadoo.fr
+Cc:     linux-kernel@vger.kernel.org, devel@driverdev.osuosl.org,
+        kernel-janitors@vger.kernel.org
+References: <20200713143253.GA14953@blackclown>
+From:   Ian Abbott <abbotti@mev.co.uk>
+Organization: MEV Ltd.
+Message-ID: <5c137548-9c64-1aa5-bd31-e84e42fcc5a2@mev.co.uk>
+Date:   Tue, 14 Jul 2020 10:56:53 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAMuHMdXoUME_dCOZP1N0tXyMv61edfNECM4-n4NPa56YbBCncw@mail.gmail.com>
+In-Reply-To: <20200713143253.GA14953@blackclown>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
+X-Classification-ID: 8a350055-a3ab-4065-96a7-ca23740e4d13-1-1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 14, 2020 at 09:22:39AM +0200, Geert Uytterhoeven wrote:
-> On Mon, Jul 13, 2020 at 7:37 PM Jonathan Corbet <corbet@lwn.net> wrote:
-> > On Fri, 10 Jul 2020 08:20:19 +0200
-> > "Alexander A. Klimov" <grandmaster@al2klimov.de> wrote:
-> > >  Documentation/openrisc/openrisc_port.rst | 2 +-
-> > >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > >
-> > > diff --git a/Documentation/openrisc/openrisc_port.rst b/Documentation/openrisc/openrisc_port.rst
-> > > index 4b2c437942a0..657ac4af7be6 100644
-> > > --- a/Documentation/openrisc/openrisc_port.rst
-> > > +++ b/Documentation/openrisc/openrisc_port.rst
-> > > @@ -8,7 +8,7 @@ target architecture, specifically, is the 32-bit OpenRISC 1000 family (or1k).
-> > >  For information about OpenRISC processors and ongoing development:
-> > >
-> > >       =======         =============================
-> > > -     website         http://openrisc.io
-> > > +     website         https://openrisc.io
-> > >       email           openrisc@lists.librecores.org
-> > >       =======         =============================
-> >
-> > Applied, thanks.
+On 13/07/2020 15:32, Suraj Upadhyay wrote:
+> The legacy API wrappers in include/linux/pci-dma-compat.h
+> should go away as it creates unnecessary midlayering
+> for include/linux/dma-mapping.h APIs, instead use dma-mapping.h
+> APIs directly.
 > 
-> Is that site accessible for anyone? It times out for me.
+> The patch has been generated with the coccinelle script below
+> and compile-tested.
+> 
+> @@@@
+> - PCI_DMA_BIDIRECTIONAL
+> + DMA_BIDIRECTIONAL
+> 
+> @@@@
+> - PCI_DMA_TODEVICE
+> + DMA_TO_DEVICE
+> 
+> @@@@
+> - PCI_DMA_FROMDEVICE
+> + DMA_FROM_DEVICE
+> 
+> @@@@
+> - PCI_DMA_NONE
+> + DMA_NONE
+> 
+> @@ expression E1, E2, E3; @@
+> - pci_alloc_consistent(E1, E2, E3)
+> + dma_alloc_coherent(&E1->dev, E2, E3, GFP_ATOMIC)
+> 
+> @@ expression E1, E2, E3; @@
+> - pci_zalloc_consistent(E1, E2, E3)
+> + dma_alloc_coherent(&E1->dev, E2, E3, GFP_ATOMIC)
+> 
+> @@ expression E1, E2, E3, E4; @@
+> - pci_free_consistent(E1, E2, E3, E4)
+> + dma_free_coherent(&E1->dev, E2, E3, E4)
+> 
+> @@ expression E1, E2, E3, E4; @@
+> - pci_map_single(E1, E2, E3, E4)
+> + dma_map_single(&E1->dev, E2, E3, (enum dma_data_direction)E4)
+> 
+> @@ expression E1, E2, E3, E4; @@
+> - pci_unmap_single(E1, E2, E3, E4)
+> + dma_unmap_single(&E1->dev, E2, E3, (enum dma_data_direction)E4)
+> 
+> @@ expression E1, E2, E3, E4, E5; @@
+> - pci_map_page(E1, E2, E3, E4, E5)
+> + dma_map_page(&E1->dev, E2, E3, E4, (enum dma_data_direction)E5)
+> 
+> @@ expression E1, E2, E3, E4; @@
+> - pci_unmap_page(E1, E2, E3, E4)
+> + dma_unmap_page(&E1->dev, E2, E3, (enum dma_data_direction)E4)
+> 
+> @@ expression E1, E2, E3, E4; @@
+> - pci_map_sg(E1, E2, E3, E4)
+> + dma_map_sg(&E1->dev, E2, E3, (enum dma_data_direction)E4)
+> 
+> @@ expression E1, E2, E3, E4; @@
+> - pci_unmap_sg(E1, E2, E3, E4)
+> + dma_unmap_sg(&E1->dev, E2, E3, (enum dma_data_direction)E4)
+> 
+> @@ expression E1, E2, E3, E4; @@
+> - pci_dma_sync_single_for_cpu(E1, E2, E3, E4)
+> + dma_sync_single_for_cpu(&E1->dev, E2, E3, (enum dma_data_direction)E4)
+> 
+> @@ expression E1, E2, E3, E4; @@
+> - pci_dma_sync_single_for_device(E1, E2, E3, E4)
+> + dma_sync_single_for_device(&E1->dev, E2, E3, (enum dma_data_direction)E4)
+> 
+> @@ expression E1, E2, E3, E4; @@
+> - pci_dma_sync_sg_for_cpu(E1, E2, E3, E4)
+> + dma_sync_sg_for_cpu(&E1->dev, E2, E3, (enum dma_data_direction)E4)
+> 
+> @@ expression E1, E2, E3, E4; @@
+> - pci_dma_sync_sg_for_device(E1, E2, E3, E4)
+> + dma_sync_sg_for_device(&E1->dev, E2, E3, (enum dma_data_direction)E4)
+> 
+> @@ expression E1, E2; @@
+> - pci_dma_mapping_error(E1, E2)
+> + dma_mapping_error(&E1->dev, E2)
+> 
+> @@ expression E1, E2; @@
+> - pci_set_consistent_dma_mask(E1, E2)
+> + dma_set_coherent_mask(&E1->dev, E2)
+> 
+> @@ expression E1, E2; @@
+> - pci_set_dma_mask(E1, E2)
+> + dma_set_mask(&E1->dev, E2)
+> 
+> Signed-off-by: Suraj Upadhyay <usuraj35@gmail.com>
+> ---
+> Changes:
+> 	v2: Converted the GFP_ATOMIC flag to GFP_KERNEL to suit for the
+> 	context. On reviewer's advise.
+> 
+>   drivers/staging/comedi/drivers/s626.c | 18 ++++++++++--------
+>   1 file changed, 10 insertions(+), 8 deletions(-)
+> 
+> diff --git a/drivers/staging/comedi/drivers/s626.c b/drivers/staging/comedi/drivers/s626.c
+> index 084a8e7b9fc2..e7aba937d896 100644
+> --- a/drivers/staging/comedi/drivers/s626.c
+> +++ b/drivers/staging/comedi/drivers/s626.c
+> @@ -2130,13 +2130,15 @@ static int s626_allocate_dma_buffers(struct comedi_device *dev)
+>   	void *addr;
+>   	dma_addr_t appdma;
+>   
+> -	addr = pci_alloc_consistent(pcidev, S626_DMABUF_SIZE, &appdma);
+> +	addr = dma_alloc_coherent(&pcidev->dev, S626_DMABUF_SIZE, &appdma,
+> +				  GFP_KERNEL);
+>   	if (!addr)
+>   		return -ENOMEM;
+>   	devpriv->ana_buf.logical_base = addr;
+>   	devpriv->ana_buf.physical_base = appdma;
+>   
+> -	addr = pci_alloc_consistent(pcidev, S626_DMABUF_SIZE, &appdma);
+> +	addr = dma_alloc_coherent(&pcidev->dev, S626_DMABUF_SIZE, &appdma,
+> +				  GFP_KERNEL);
+>   	if (!addr)
+>   		return -ENOMEM;
+>   	devpriv->rps_buf.logical_base = addr;
+> @@ -2154,13 +2156,13 @@ static void s626_free_dma_buffers(struct comedi_device *dev)
+>   		return;
+>   
+>   	if (devpriv->rps_buf.logical_base)
+> -		pci_free_consistent(pcidev, S626_DMABUF_SIZE,
+> -				    devpriv->rps_buf.logical_base,
+> -				    devpriv->rps_buf.physical_base);
+> +		dma_free_coherent(&pcidev->dev, S626_DMABUF_SIZE,
+> +				  devpriv->rps_buf.logical_base,
+> +				  devpriv->rps_buf.physical_base);
+>   	if (devpriv->ana_buf.logical_base)
+> -		pci_free_consistent(pcidev, S626_DMABUF_SIZE,
+> -				    devpriv->ana_buf.logical_base,
+> -				    devpriv->ana_buf.physical_base);
+> +		dma_free_coherent(&pcidev->dev, S626_DMABUF_SIZE,
+> +				  devpriv->ana_buf.logical_base,
+> +				  devpriv->ana_buf.physical_base);
+>   }
+>   
+>   static int s626_initialize(struct comedi_device *dev)
 > 
 
-It should be,  It was working a few days ago when I updated it last.  Perhaps
-there is an issue caused by the github outage yesterday.  I will look into it.
+Looks good to me.
 
--Stafford
+Reviewed-by: Ian Abbott <abbotti@mev.co.uk>
+
+-- 
+-=( Ian Abbott <abbotti@mev.co.uk> || Web: www.mev.co.uk )=-
+-=( MEV Ltd. is a company registered in England & Wales. )=-
+-=( Registered number: 02862268.  Registered address:    )=-
+-=( 15 West Park Road, Bramhall, STOCKPORT, SK7 3JZ, UK. )=-
