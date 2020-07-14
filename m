@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14E91C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 19:05:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00657C433EA
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 19:05:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DE27122200
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 19:05:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D17632240B
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 19:05:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594753535;
-	bh=n0AitVfgdLldntIptWUBYQyNz/wZ9glfh8b0xqufE50=;
+	s=default; t=1594753537;
+	bh=7q/Jn05xenrj87leqnZtfVjiwdpZVJxdfTwBAn5Es/E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=A0oxoKahG92YxPvgO6RTdLp7P1/P7IYgo5UVTUH/qv7yRZxo1jPXjJUX0vf+0A61R
-	 grSurL2iO/yhPZ2mpJfcGOywPsyTaICBsjibYgQfTfHCYVvq7TQOEdRN6cvwuaLn5w
-	 msBRTxkVDFwhee+BGhDvR5HbCd9FlwNFZe+eN4Gc=
+	b=tl5E3SdosZredS+YfChYxbpxIVGEqcbynAW8bjdzE3007x1kt+8ARgxL/MQzGr8sj
+	 QSZaxkxSoWjSABbUcuJ+DnEu0d8eXjjlCN55JA90EG1fj4IJvigTMBA91ew88RR8zx
+	 RGI58ak8DJ58z8RCkst/YJJpV8MjspUZiEyD8/co=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730875AbgGNTFe (ORCPT
+        id S1730760AbgGNSya (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 15:05:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51988 "EHLO mail.kernel.org"
+        Tue, 14 Jul 2020 14:54:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51756 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730767AbgGNSyc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 14:54:32 -0400
+        id S1729848AbgGNSyT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 14:54:19 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E2CC522B4E;
-        Tue, 14 Jul 2020 18:54:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1E70822BF5;
+        Tue, 14 Jul 2020 18:54:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594752872;
-        bh=n0AitVfgdLldntIptWUBYQyNz/wZ9glfh8b0xqufE50=;
+        s=default; t=1594752859;
+        bh=7q/Jn05xenrj87leqnZtfVjiwdpZVJxdfTwBAn5Es/E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bOYmrb3pOKjuZv2Dj2Gn6N/4O/OzkFcKMBJ+ClLdWR42zt8hM0TQSSzDz3H0M2iXJ
-         FIwMqflpA0XVGJbhFS0f6ueIRb6tq1yUTG9htuhWjbyUvbZRadM8Q+ch8vm5xdvvvK
-         JFyJqa845qQL3fQJfFMu1E7iW6To/SRFgX+UdqGk=
+        b=LfHZuw75AflXlQNro9HM2GaG6S/xZF8Y1xe1QtfrRCC7gV/1F6Y/nmfggkd7AP8QA
+         br4KZNBbxNjQxNVoV886FLTo8rCH9/HnPjVllrDdr8CLXlMGcLVZ1yUuv0nJ3JNU8N
+         k9Pnir7mjLSauP6HzVlxVHWJxdakbY9DsxOlinpo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
-        Zhang Xiaoxu <zhangxiaoxu5@huawei.com>,
-        Steve French <stfrench@microsoft.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 033/166] cifs: update ctime and mtime during truncate
-Date:   Tue, 14 Jul 2020 20:43:18 +0200
-Message-Id: <20200714184117.464466687@linuxfoundation.org>
+        stable@vger.kernel.org,
+        =?UTF-8?q?J=C3=A9r=C3=B4me=20Pouiller?= 
+        <jerome.pouiller@silabs.com>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.7 013/166] staging: wfx: fix coherency of hif_scan() prototype
+Date:   Tue, 14 Jul 2020 20:42:58 +0200
+Message-Id: <20200714184116.532625160@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200714184115.844176932@linuxfoundation.org>
 References: <20200714184115.844176932@linuxfoundation.org>
@@ -61,47 +60,88 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Zhang Xiaoxu <zhangxiaoxu5@huawei.com>
+From: Jérôme Pouiller <jerome.pouiller@silabs.com>
 
-[ Upstream commit 5618303d8516f8ac5ecfe53ee8e8bc9a40eaf066 ]
+[ Upstream commit 29de523a6270a308d12d21f4fecf52dac491e226 ]
 
-As the man description of the truncate, if the size changed,
-then the st_ctime and st_mtime fields should be updated. But
-in cifs, we doesn't do it.
+The function hif_scan() return the timeout for the completion of the
+scan request. It is the only function from hif_tx.c that return another
+thing than just an error code. This behavior is not coherent with the
+rest of file. Worse, if value returned is positive, the caller can't
+make say if it is a timeout or the value returned by the hardware.
 
-It lead the xfstests generic/313 failed.
+Uniformize API with other HIF functions, only return the error code and
+pass timeout with parameters.
 
-So, add the ATTR_MTIME|ATTR_CTIME flags on attrs when change
-the file size
-
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: Zhang Xiaoxu <zhangxiaoxu5@huawei.com>
-Signed-off-by: Steve French <stfrench@microsoft.com>
+Signed-off-by: Jérôme Pouiller <jerome.pouiller@silabs.com>
+Link: https://lore.kernel.org/r/20200529121256.1045521-1-Jerome.Pouiller@silabs.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/cifs/inode.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
+ drivers/staging/wfx/hif_tx.c | 6 ++++--
+ drivers/staging/wfx/hif_tx.h | 2 +-
+ drivers/staging/wfx/scan.c   | 6 +++---
+ 3 files changed, 8 insertions(+), 6 deletions(-)
 
-diff --git a/fs/cifs/inode.c b/fs/cifs/inode.c
-index 430b0b1256547..44a57b65915bf 100644
---- a/fs/cifs/inode.c
-+++ b/fs/cifs/inode.c
-@@ -2350,6 +2350,15 @@ set_size_out:
- 	if (rc == 0) {
- 		cifsInode->server_eof = attrs->ia_size;
- 		cifs_setsize(inode, attrs->ia_size);
-+
-+		/*
-+		 * The man page of truncate says if the size changed,
-+		 * then the st_ctime and st_mtime fields for the file
-+		 * are updated.
-+		 */
-+		attrs->ia_ctime = attrs->ia_mtime = current_time(inode);
-+		attrs->ia_valid |= ATTR_CTIME | ATTR_MTIME;
-+
- 		cifs_truncate_page(inode->i_mapping, inode->i_size);
- 	}
+diff --git a/drivers/staging/wfx/hif_tx.c b/drivers/staging/wfx/hif_tx.c
+index 20b3045d76674..15ff60a584668 100644
+--- a/drivers/staging/wfx/hif_tx.c
++++ b/drivers/staging/wfx/hif_tx.c
+@@ -222,7 +222,7 @@ int hif_write_mib(struct wfx_dev *wdev, int vif_id, u16 mib_id, void *val,
+ }
  
+ int hif_scan(struct wfx_vif *wvif, struct cfg80211_scan_request *req,
+-	     int chan_start_idx, int chan_num)
++	     int chan_start_idx, int chan_num, int *timeout)
+ {
+ 	int ret, i;
+ 	struct hif_msg *hif;
+@@ -269,11 +269,13 @@ int hif_scan(struct wfx_vif *wvif, struct cfg80211_scan_request *req,
+ 	tmo_chan_fg = 512 * USEC_PER_TU + body->probe_delay;
+ 	tmo_chan_fg *= body->num_of_probe_requests;
+ 	tmo = chan_num * max(tmo_chan_bg, tmo_chan_fg) + 512 * USEC_PER_TU;
++	if (timeout)
++		*timeout = usecs_to_jiffies(tmo);
+ 
+ 	wfx_fill_header(hif, wvif->id, HIF_REQ_ID_START_SCAN, buf_len);
+ 	ret = wfx_cmd_send(wvif->wdev, hif, NULL, 0, false);
+ 	kfree(hif);
+-	return ret ? ret : usecs_to_jiffies(tmo);
++	return ret;
+ }
+ 
+ int hif_stop_scan(struct wfx_vif *wvif)
+diff --git a/drivers/staging/wfx/hif_tx.h b/drivers/staging/wfx/hif_tx.h
+index f8520a14c14cd..7a21338470eeb 100644
+--- a/drivers/staging/wfx/hif_tx.h
++++ b/drivers/staging/wfx/hif_tx.h
+@@ -43,7 +43,7 @@ int hif_read_mib(struct wfx_dev *wdev, int vif_id, u16 mib_id,
+ int hif_write_mib(struct wfx_dev *wdev, int vif_id, u16 mib_id,
+ 		  void *buf, size_t buf_size);
+ int hif_scan(struct wfx_vif *wvif, struct cfg80211_scan_request *req80211,
+-	     int chan_start, int chan_num);
++	     int chan_start, int chan_num, int *timeout);
+ int hif_stop_scan(struct wfx_vif *wvif);
+ int hif_join(struct wfx_vif *wvif, const struct ieee80211_bss_conf *conf,
+ 	     struct ieee80211_channel *channel, const u8 *ssid, int ssidlen);
+diff --git a/drivers/staging/wfx/scan.c b/drivers/staging/wfx/scan.c
+index 9aa14331affd6..d47b8a3ba403c 100644
+--- a/drivers/staging/wfx/scan.c
++++ b/drivers/staging/wfx/scan.c
+@@ -56,10 +56,10 @@ static int send_scan_req(struct wfx_vif *wvif,
+ 	wfx_tx_lock_flush(wvif->wdev);
+ 	wvif->scan_abort = false;
+ 	reinit_completion(&wvif->scan_complete);
+-	timeout = hif_scan(wvif, req, start_idx, i - start_idx);
+-	if (timeout < 0) {
++	ret = hif_scan(wvif, req, start_idx, i - start_idx, &timeout);
++	if (ret) {
+ 		wfx_tx_unlock(wvif->wdev);
+-		return timeout;
++		return -EIO;
+ 	}
+ 	ret = wait_for_completion_timeout(&wvif->scan_complete, timeout);
+ 	if (req->channels[start_idx]->max_power != wvif->vif->bss_conf.txpower)
 -- 
 2.25.1
 
