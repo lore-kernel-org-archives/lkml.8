@@ -2,180 +2,153 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E066AC433E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 06:31:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E771CC433E8
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 06:34:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AD44B221E7
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 06:31:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C10EF221EB
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 06:34:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nVpM8O7y"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tyB5kEh8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726630AbgGNGba (ORCPT
+        id S1726720AbgGNGeP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 02:31:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36480 "EHLO
+        Tue, 14 Jul 2020 02:34:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36904 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725306AbgGNGba (ORCPT
+        with ESMTP id S1725306AbgGNGeO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 02:31:30 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1B846C061755;
-        Mon, 13 Jul 2020 23:31:30 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id s10so19859834wrw.12;
-        Mon, 13 Jul 2020 23:31:30 -0700 (PDT)
+        Tue, 14 Jul 2020 02:34:14 -0400
+Received: from mail-io1-xd43.google.com (mail-io1-xd43.google.com [IPv6:2607:f8b0:4864:20::d43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B5A08C061755;
+        Mon, 13 Jul 2020 23:34:14 -0700 (PDT)
+Received: by mail-io1-xd43.google.com with SMTP id i4so16117075iov.11;
+        Mon, 13 Jul 2020 23:34:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:subject:to:cc:references:in-reply-to:mime-version
-         :message-id:content-transfer-encoding;
-        bh=IW5MsAw16WncT7hiN49Rl3HYAzAQeKbFqwcVhNGKS+0=;
-        b=nVpM8O7ybmoMTE2akKTxb4v6KVMISCvIgqJqJwoSHz7qagb7clcsDC+oQbghkHElPc
-         bjm8Hayl9wJtAbIZeB/zSnP71SuAi3ZZ9gwGNQUbLx+zLfKT/mL98S0vnSloOp8FEKm+
-         llTVPmLwkGgpk0HU9VepNa3BRC4XZTAOOYqEGL5xzDZ+7uEJW5gcwoQ4Fj4KvV5z51q1
-         JYdIEQF1uD+mz1mq86749Bjgs5ZqP5DaAH6LawN8dS6YhviPE0IiwuVRW2V3LxQ+wY2D
-         zsIYrVjcm7MPuqhZSyITlHvpp6ktGzPjvSTFNN57jN4HmJQQfkicQ+1HDNrT042NANOi
-         TA7Q==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=mg7wgDULy0lIYE5hnNqN0j2UtYPwULkhOaQ9Kls/Nyc=;
+        b=tyB5kEh80h4y6UqY/UvTDtTj1/IY5xUlBHVQVix/iwHkP+r7UPrvX1yge1andtOWaU
+         mk/1qV78d18S7ZRJ9GhbfiVg1DdsBX9wba0scX51M8BJEwHps8NVftl1kGQ4lBYVpqf7
+         M1jyWUwNxD74fSXeClEQOIRXqBGZ2+rXeD6di4xSv7B2MBSHAne9ofkIyIhv7wF+by1l
+         zxS3BQhuHwsAJN9x2DfjVI9F2sl7Zc8+285WDIEveOwSHKmMd/8Kf1/8lQ/dxqdlUaxj
+         BNasa0voiAVzQlCrE7uFkQIpMh8YIts77J4Rf2rCZZ887byAJ2+nHZQ0RFhH/98PoX2R
+         XNkA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:subject:to:cc:references:in-reply-to
-         :mime-version:message-id:content-transfer-encoding;
-        bh=IW5MsAw16WncT7hiN49Rl3HYAzAQeKbFqwcVhNGKS+0=;
-        b=W7XEq12VakA1RV6foXH+WX4tMj+59veg22EaQ1B6GvbNFWhtrWpJD814kCaANZPq65
-         6FoBb5MHHUy7WdxS2wtc6jDOpW7B4zz92RjHQLiRdxsFnNbGb8CVxMHxX4wGznsl2vfF
-         c9ivlZZR86+dc2DIXdQu8aaZbsZAaScrvsAOB9MCQcxzcSFm4M5aPv1pRmPzd+LscIcS
-         g/zmR+QX1aO7I61Np7MQw8L6gl9gzAEvHYwTCnk0vpCAtlCzc834ifreoOyj+f/l8Og/
-         Lq+5AXxK0biTVgBvRRYoH4BkzmRGLqCxEVzZYhLl0/YhjdCaanXYZgR0FlRrQ51efasy
-         m+yA==
-X-Gm-Message-State: AOAM533MXEj9x+eJMOHS0mW4uF4Hbv676CeKPl6YJkwAtjCTeXYZQXpQ
-        JNhz41c1Nl662vdx/bHh0to=
-X-Google-Smtp-Source: ABdhPJwfFy6dmo1Vm5gws7qxqL6AU1u3wZpvQnq5Cd3DfkTvP2ksYNqKbknLtrONUpUfmGGPoNjFgA==
-X-Received: by 2002:adf:e482:: with SMTP id i2mr3266445wrm.75.1594708288840;
-        Mon, 13 Jul 2020 23:31:28 -0700 (PDT)
-Received: from localhost (110-174-173-27.tpgi.com.au. [110.174.173.27])
-        by smtp.gmail.com with ESMTPSA id z6sm2772208wmf.33.2020.07.13.23.31.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 Jul 2020 23:31:28 -0700 (PDT)
-Date:   Tue, 14 Jul 2020 16:31:20 +1000
-From:   Nicholas Piggin <npiggin@gmail.com>
-Subject: Re: [RFC PATCH 7/7] lazy tlb: shoot lazies, a non-refcounting lazy
- tlb option
-To:     Andy Lutomirski <luto@amacapital.net>
-Cc:     Anton Blanchard <anton@ozlabs.org>, Arnd Bergmann <arnd@arndb.de>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux-MM <linux-mm@kvack.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Peter Zijlstra <peterz@infradead.org>, X86 ML <x86@kernel.org>
-References: <1594658283.qabzoxga67.astroid@bobo.none>
-        <010054C3-7FFF-4FB5-BDA8-D2B80F7B1A5D@amacapital.net>
-        <1594701900.gcgdq8p13l.astroid@bobo.none>
-In-Reply-To: <1594701900.gcgdq8p13l.astroid@bobo.none>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=mg7wgDULy0lIYE5hnNqN0j2UtYPwULkhOaQ9Kls/Nyc=;
+        b=XyFf5cZs6tVzyu+v+PxlVP2+v5AiDALH8clf8DojsjRsHn/71/HWEt6cwgUljUSHHE
+         UhZR46Hi8bGYU8U06g8s0b1CU2ow+GFGNbEgRbgkkSvJ/ncowxYGAF1LdKhVMNFgR5IH
+         wg7cnuUITTfdan+x812YwqisDs0rr2ddL1aAnR42rgCeG3R6mPVer0Y11av7nb4HeYG9
+         FJI6E8A5OA0ZovgIVK68SIE3Fhgfb/F6s4HTppITVpY7legsC6soiXXshoQIhUDgvFWD
+         78qdIhb7/rD0wwCNRQBawMCwD8xw3IohkU4vtYB4AD4E4/EEkHr02qMfpG8fm8bjx8Wp
+         hwwA==
+X-Gm-Message-State: AOAM532A5VngAImTyv3vuV9XEGQ6g5iT2+bFs8E2Jf8qbczKluvsCt3Y
+        IRIpIc9+48xLezZosaEOTrJ/3rBl88Cb5t9TztY=
+X-Google-Smtp-Source: ABdhPJwT7lxoi1W5OkuUSDXYa65U0eLsDbZo+QW7nVqjhL+XvY+W+cBhzor2TTtyvrY+kkqGl3UK6GC8McCAFTbKtMU=
+X-Received: by 2002:a6b:ee02:: with SMTP id i2mr3525208ioh.110.1594708454180;
+ Mon, 13 Jul 2020 23:34:14 -0700 (PDT)
 MIME-Version: 1.0
-Message-Id: <1594708054.04iuyxuyb5.astroid@bobo.none>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+References: <1594696998-3995-1-git-send-email-dillon.minfei@gmail.com>
+ <1594696998-3995-2-git-send-email-dillon.minfei@gmail.com>
+ <20200714133835.3b03b8af@canb.auug.org.au> <CAL9mu0JurdBoXbSxvHUmNFSBOa=RneNyYtzT=C1MvJs10Y-Geg@mail.gmail.com>
+ <20200714135407.35992389@canb.auug.org.au> <CAL9mu0L5=khi2oXaei=EhTmRJC5mC1hj5gZVBHJgowi_3vxk=Q@mail.gmail.com>
+ <20200714153656.4a044437@canb.auug.org.au>
+In-Reply-To: <20200714153656.4a044437@canb.auug.org.au>
+From:   dillon min <dillon.minfei@gmail.com>
+Date:   Tue, 14 Jul 2020 14:33:38 +0800
+Message-ID: <CAL9mu0+sbCPEuriONAzWAFdpb+ak+ufG=vP7Z10eGL8TC=c3JQ@mail.gmail.com>
+Subject: Re: [PATCH v2] Since am437x have the same clock structure with am335x
+ [1][2], reuse the code from Tony Lindgren's patch [3] to fix dcan probe
+ failed on am437x platform.
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     Benoit Cousson <bcousson@baylibre.com>, tony@atomide.com,
+        Rob Herring <robh+dt@kernel.org>, linux-omap@vger.kernel.org,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Excerpts from Nicholas Piggin's message of July 14, 2020 3:04 pm:
-> Excerpts from Andy Lutomirski's message of July 14, 2020 4:18 am:
->>=20
->>> On Jul 13, 2020, at 9:48 AM, Nicholas Piggin <npiggin@gmail.com> wrote:
->>>=20
->>> =EF=BB=BFExcerpts from Andy Lutomirski's message of July 14, 2020 1:59 =
-am:
->>>>> On Thu, Jul 9, 2020 at 6:57 PM Nicholas Piggin <npiggin@gmail.com> wr=
-ote:
->>>>>=20
->>>>> On big systems, the mm refcount can become highly contented when doin=
-g
->>>>> a lot of context switching with threaded applications (particularly
->>>>> switching between the idle thread and an application thread).
->>>>>=20
->>>>> Abandoning lazy tlb slows switching down quite a bit in the important
->>>>> user->idle->user cases, so so instead implement a non-refcounted sche=
-me
->>>>> that causes __mmdrop() to IPI all CPUs in the mm_cpumask and shoot do=
-wn
->>>>> any remaining lazy ones.
->>>>>=20
->>>>> On a 16-socket 192-core POWER8 system, a context switching benchmark
->>>>> with as many software threads as CPUs (so each switch will go in and
->>>>> out of idle), upstream can achieve a rate of about 1 million context
->>>>> switches per second. After this patch it goes up to 118 million.
->>>>>=20
->>>>=20
->>>> I read the patch a couple of times, and I have a suggestion that could
->>>> be nonsense.  You are, effectively, using mm_cpumask() as a sort of
->>>> refcount.  You're saying "hey, this mm has no more references, but it
->>>> still has nonempty mm_cpumask(), so let's send an IPI and shoot down
->>>> those references too."  I'm wondering whether you actually need the
->>>> IPI.  What if, instead, you actually treated mm_cpumask as a refcount
->>>> for real?  Roughly, in __mmdrop(), you would only free the page tables
->>>> if mm_cpumask() is empty.  And, in the code that removes a CPU from
->>>> mm_cpumask(), you would check if mm_users =3D=3D 0 and, if so, check i=
-f
->>>> you just removed the last bit from mm_cpumask and potentially free the
->>>> mm.
->>>>=20
->>>> Getting the locking right here could be a bit tricky -- you need to
->>>> avoid two CPUs simultaneously exiting lazy TLB and thinking they
->>>> should free the mm, and you also need to avoid an mm with mm_users
->>>> hitting zero concurrently with the last remote CPU using it lazily
->>>> exiting lazy TLB.  Perhaps this could be resolved by having mm_count
->>>> =3D=3D 1 mean "mm_cpumask() is might contain bits and, if so, it owns =
-the
->>>> mm" and mm_count =3D=3D 0 meaning "now it's dead" and using some caref=
-ul
->>>> cmpxchg or dec_return to make sure that only one CPU frees it.
->>>>=20
->>>> Or maybe you'd need a lock or RCU for this, but the idea would be to
->>>> only ever take the lock after mm_users goes to zero.
->>>=20
->>> I don't think it's nonsense, it could be a good way to avoid IPIs.
->>>=20
->>> I haven't seen much problem here that made me too concerned about IPIs=20
->>> yet, so I think the simple patch may be good enough to start with
->>> for powerpc. I'm looking at avoiding/reducing the IPIs by combining the
->>> unlazying with the exit TLB flush without doing anything fancy with
->>> ref counting, but we'll see.
->>=20
->> I would be cautious with benchmarking here. I would expect that the
->> nasty cases may affect power consumption more than performance =E2=80=94=
- the=20
->> specific issue is IPIs hitting idle cores, and the main effects are to=20
->> slow down exit() a bit but also to kick the idle core out of idle.=20
->> Although, if the idle core is in a deep sleep, that IPI could be=20
->> *very* slow.
->=20
-> It will tend to be self-limiting to some degree (deeper idle cores
-> would tend to have less chance of IPI) but we have bigger issues on
-> powerpc with that, like broadcast IPIs to the mm cpumask for THP
-> management. Power hasn't really shown up as an issue but powerpc
-> CPUs may have their own requirements and issues there, shall we say.
->=20
->> So I think it=E2=80=99s worth at least giving this a try.
->=20
-> To be clear it's not a complete solution itself. The problem is of=20
-> course that mm cpumask gives you false negatives, so the bits
-> won't always clean up after themselves as CPUs switch away from their
-> lazy tlb mms.
+Hi Stephen,
 
-^^
+On Tue, Jul 14, 2020 at 1:37 PM Stephen Rothwell <sfr@canb.auug.org.au> wrote:
+>
+> Hi Dillon,
+>
+> On Tue, 14 Jul 2020 13:21:07 +0800 dillon min <dillon.minfei@gmail.com> wrote:
+> >
+> > Thanks, how about the below commit message.
+> >
+> > Subject: [PATCH v4] Fix dcan driver probe failed on am437x platform
+> >
+> > Got following d_can probe errors with kernel 5.8-rc1 on am437x
+> >
+> > [   10.730822] CAN device driver interface
+> > Starting Wait for Network to be Configured...
+> > [  OK  ] Reached target Network.
+> > [   10.787363] c_can_platform 481cc000.can: probe failed
+> > [   10.792484] c_can_platform: probe of 481cc000.can failed with
+> > error -2
+> > [   10.799457] c_can_platform 481d0000.can: probe failed
+> > [   10.804617] c_can_platform: probe of 481d0000.can failed with
+> > error -2
+> >
+> > actually, Tony has fixed this issue on am335x with the patch [3]
+> >
+> > Since am437x has the same clock structure with am335x
+> > [1][2], so reuse the code from Tony Lindgren's patch [3] to fix it.
+> >
+> >
+> > [1]: https://www.ti.com/lit/pdf/spruh73 Chapter-23, Figure 23-1. DCAN
+> > Integration
+> > [2]: https://www.ti.com/lit/pdf/spruhl7 Chapter-25, Figure 25-1. DCAN
+> > Integration
+> > [3]: commit 516f1117d0fb ("ARM: dts: Configure osc clock for d_can on am335x")
+> >
+> > Fixes: 1a5cd7c23cc5 ("bus: ti-sysc: Enable all clocks directly during
+> > init to read revision")
+> > Signed-off-by: dillon min <dillon.minfei@gmail.com>
+> > ---
+> >
+> > Hi Stephen,
+> >
+> > This changes correct commit messages based on your reviewing.
+> > make Fixes tags to oneline.
+> > make all commit message tags at the end of commit message
+> > make Fixes tags before Signed-off-by line.
+> > add probe failed log to commit message.
+>
+> Apart from the line wrapping, that looks better.  I assume that your
+> email client (looks like Gmail web gui) is wrapping the lines, please
+> see if you can stop it doing that (see the section on Gmail in
+> Documentation/process/email-clients.rst).
+>
+Thanks.
+I checked with git send-email , there is no line wrapping. maybe gmail just has
+the feature which text be split into lines of about 78 characters in
+gmail web clients.
 
-False positives: CPU is in the mm_cpumask, but is not using the mm
-as a lazy tlb. So there can be bits left and never freed.
+if add '>' before the line which exceeds 78 characters in gmail web
+clients, this line will not be wrapped.
 
-If you closed the false positives, you're back to a shared mm cache
-line on lazy mm context switches.
+>Fixes: 1a5cd7c23cc5 ("bus: ti-sysc: Enable all clocks directly during init to read revision")
 
-Thanks,
-Nick
+I will sumit v4 version for you.
+
+thanks,
+dillon,
+
+> --
+> Cheers,
+> Stephen Rothwell
