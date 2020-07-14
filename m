@@ -2,112 +2,83 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 435C2C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 03:38:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11A76C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 03:36:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 172892193E
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 03:38:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D5AE52193E
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 03:36:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="YhNyqPH3"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="hSE/BPX9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726834AbgGNDik (ORCPT
+        id S1726630AbgGNDgL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 23:38:40 -0400
-Received: from ozlabs.org ([203.11.71.1]:41395 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726456AbgGNDij (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 23:38:39 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 4B5R7c1n5lz9sRf;
-        Tue, 14 Jul 2020 13:38:36 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1594697917;
-        bh=utKdEPCFFOb8Q1Yxk4/KLx+BAJ8D2GFKAuYxXohCvG8=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=YhNyqPH34KDJC8jEG9M/eVuyt9cp7GboLqIlNbnCksVZV0jDSD5tcjZ3qamCB2BTW
-         77nJg9JkOSDaEQYDHE5qSYLdALc9cAixTzF6wwWdelNfgZJEOXuRtsb5OmM/Ryndal
-         Fi7cu7PRJ8g836mWmZbDvPevVHabbZo9dUzYQEMix9rzzA15BBiwJbcWsnkxmMvgFo
-         An/EbFyasd8sLsnaqw9HAYxY8ljonIpWhWzeKGjMXwdb46oLK/X7pPGwYDZ0MzgzeH
-         Ydu7j+da1KVtcIwii1oA/6ogGp2YLXf8fHv6gX+PbS/4lujDnGNdPiqpeYR18fLRVl
-         SW2JhvfMsQzpw==
-Date:   Tue, 14 Jul 2020 13:38:35 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     dillon.minfei@gmail.com
-Cc:     bcousson@baylibre.com, tony@atomide.com, robh+dt@kernel.org,
-        linux-omap@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] Since am437x have the same clock structure with
- am335x [1][2], reuse the code from Tony Lindgren's patch [3] to fix dcan
- probe failed on am437x platform.
-Message-ID: <20200714133835.3b03b8af@canb.auug.org.au>
-In-Reply-To: <1594696998-3995-2-git-send-email-dillon.minfei@gmail.com>
-References: <1594696998-3995-1-git-send-email-dillon.minfei@gmail.com>
-        <1594696998-3995-2-git-send-email-dillon.minfei@gmail.com>
-MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/k1XeJEgdCmFTZKkg66haG0l";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+        Mon, 13 Jul 2020 23:36:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37928 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726432AbgGNDgL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jul 2020 23:36:11 -0400
+Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CD847C061755
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 20:36:10 -0700 (PDT)
+Received: by mail-yb1-xb4a.google.com with SMTP id s9so19942783ybj.18
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 20:36:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=zNQV95i7c6JcJLlsny6Fhc23+QJFeBp9C60Maw1tGG4=;
+        b=hSE/BPX913HTAs++baLX4mt1JgCuoxgt/V9igV0OR3rWM++ODniXgdSBD7s+jXLHhR
+         a452v+zASbCdRzM9C18yCMZHTmFww6nQiHdnKQKfyqeNHa1BxFDBXXrmuQOxFtyDdUUS
+         I/1eB5quNOsb0K8jVl1LObnoefnQk5OALxRZ/mYNqe+hzRywAxJEC9JPF2GJ/iwSquYi
+         UnM4P0svZlU/mxf+0n83oM1QEM7mV05C2iIGpPhyHlQ6JdIpOwuJleqPTYN9HRjfhlpO
+         FRIm6k3tIqAZBXakOrcIk1Env3Kclme5mD5xynU+EKbRHGJ707PPIsAlALWHniOjfPY2
+         wIEA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=zNQV95i7c6JcJLlsny6Fhc23+QJFeBp9C60Maw1tGG4=;
+        b=bJazKCy8SuTd5ZN28jW78KVtN9TpJX+vzHsbRRtIFNh5TSK1aeiptF9U6ftyZ0lpdM
+         dru8vxikG5u238DykoW145eA//xJMyZb3D+hLGQcgxYz4KoqvEbm2iB3XC1hWfYA7RB4
+         NHnsBsnnQLdBmnlYPJiFHElsnhvQk9Sp7yjclEMbiXCcV+KYlb3w+FJbWYs1Xbv7EbER
+         KwVPIPI8VAWsUoOZ6Avkmrb31XUG1m11QnxdZK7UzQOerolCJljOV/7cw1ALDuRDLAyx
+         hudgxt1VdbzVVb3bRZXkK3jgwSmhadrFNg83EtAyFO2c5zoSGZke+ThskT7jAVH1+Di/
+         Pj5Q==
+X-Gm-Message-State: AOAM530b8IxWZi2m/9p6hT8KRUYlxjkHEsFkk8qhaReqbGRcJkpyy9st
+        RjQfk1vR1abVbH+cZslA30UvVxGsglVA
+X-Google-Smtp-Source: ABdhPJxnEf16kvDaLZZB9IfoIH2D+Xb4ovNqya7VkOUTo5ipYiwqV6Qi6ORPMZNHMpsbUnYXRU344QdXRV+v
+X-Received: by 2002:a25:803:: with SMTP id 3mr2023649ybi.518.1594697769925;
+ Mon, 13 Jul 2020 20:36:09 -0700 (PDT)
+Date:   Tue, 14 Jul 2020 11:34:51 +0800
+Message-Id: <20200714033453.4044482-1-kyletso@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.27.0.389.gc38d7665816-goog
+Subject: [PATCH 0/2] tcpm: Error handling for tcpm_register_partner_altmodes
+From:   Kyle Tso <kyletso@google.com>
+To:     linux@roeck-us.net, heikki.krogerus@linux.intel.com,
+        gregkh@linuxfoundation.org
+Cc:     badhri@google.com, linux-usb@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Kyle Tso <kyletso@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/k1XeJEgdCmFTZKkg66haG0l
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+*** BLURB HERE ***
 
-Hi,
+Kyle Tso (2):
+  usb: typec: Comment correction for typec_partner_register_altmode
+  usb: typec: tcpm: Error handling for tcpm_register_partner_altmodes
 
-On Tue, 14 Jul 2020 11:23:18 +0800 dillon.minfei@gmail.com wrote:
->
-> From: dillon min <dillon.minfei@gmail.com>
->=20
-> Fixes: 1a5cd7c23cc5 ("bus: ti-sysc: Enable all clocks directly during ini=
-t to read revision")
->=20
-> [1]: https://www.ti.com/lit/pdf/spruh73 Chapter-23, Figure 23-1. DCAN
-> Integration
-> [2]: https://www.ti.com/lit/pdf/spruhl7 Chapter-25, Figure 25-1. DCAN
-> Integration
-> [3]: commit 516f1117d0fb ("ARM: dts: Configure osc clock for d_can on am3=
-35x")
->=20
-> Signed-off-by: dillon min <dillon.minfei@gmail.com>
-> ---
->=20
-> Hi Stephen,
->=20
-> This changes correct commit messages based on your reviewing.
-> make Fixes tags to oneline.
-> make all commit message tags at the end of commit message
+ drivers/usb/typec/class.c     | 2 +-
+ drivers/usb/typec/tcpm/tcpm.c | 4 +++-
+ 2 files changed, 4 insertions(+), 2 deletions(-)
 
-But the Fixes: line should be down with the Signed-off-by: line ...
+-- 
+2.27.0.389.gc38d7665816-goog
 
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/k1XeJEgdCmFTZKkg66haG0l
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl8NKLsACgkQAVBC80lX
-0Gxd/gf/XDaMTcgnoIkuJHOcd/X609x4hkBiINhaOmMBdPYVD/PQndttJiqXeUPM
-NTBl0H06S0BFUyeLAMiw2eA0gfzcCoz81NKhgTiKFl1uh3n+3MHM4Uw1ZkC2aj+o
-XW46IYvBt9Kf4IFd07cs/JGz8S25/LXhlU1tUQlujk5nBk52afUguIpIPLMq66QS
-3K4BlmGIYFvJhATTndQEkT4nGKfLXm0J00Pg8Ajq+y0kcErMGRgrGOgySdB9v0Ij
-wyZlDlZpLcSF8kfr+3Fk31ZGZmxkNAEvKrvdbsZjmV48PYedlgXYrQ8vk1924nAE
-lT4RqY7Bbs2VdqKaTY1WHYppHlCAOQ==
-=Y4xQ
------END PGP SIGNATURE-----
-
---Sig_/k1XeJEgdCmFTZKkg66haG0l--
