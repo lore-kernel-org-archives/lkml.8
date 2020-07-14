@@ -2,91 +2,104 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-12.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07A31C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:00:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D803C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:01:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D3FF122582
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:00:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E3B2722582
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:01:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594749641;
-	bh=3/I2eTVPWqvrsySRhFsLdL2VS130lm9nIDIg6wCK//Y=;
+	s=default; t=1594749716;
+	bh=ZubfW/0iXET/B7w9JGcLDB1JM38q0c4IOOWOXRumOn4=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Am7xZJGze03BSf9wVuarw4TWV2L0SyVT9BT8cjUKq1BgcW/nyVhXOFNiFMPLxB9J7
-	 z5XZX5qLY5E+S1jbKlaYnL+/SfkwY6XS6wK88LdKWeXRspAM6L9BAMit4e7tOMusT0
-	 572npiWRDn90JwqpLlIAxrWHpACGOJxzv2VEoobU=
+	b=ELw5mvFakyX4xbOfJP+0HgLFR8Xa2n/DdAZyICuPoPB2vxZFal3HsLDL9m+9w1EmW
+	 Y0DPPiFBXbii7xJ8P8mNJMnlAMT6H+/0uwsQHQLu1mTaBDQSzgBbs4UWA7RqsFMsWw
+	 66s/wN2cYHs/YfwVzg/DXxP5KbI6eJbxadFKQ/1g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728911AbgGNSAk (ORCPT
+        id S1729069AbgGNSBz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 14:00:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55368 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726762AbgGNSAj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 14:00:39 -0400
-Received: from embeddedor (unknown [201.162.240.73])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7540522582;
-        Tue, 14 Jul 2020 18:00:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594749639;
-        bh=3/I2eTVPWqvrsySRhFsLdL2VS130lm9nIDIg6wCK//Y=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=aFWSPCFqzRP4iRvQgv8DRsG9NhBv6ElfZROED0uvt+26WJ3714qsCtztlEWqgPOB3
-         CTWJux3REx/kZEqn284Yfd30b4TzC1sN5sW8WdMjxRqepIVKsM7QzZ1fVD3EDdaNgl
-         DXlOBuEJso4aLPQP8erdbhFDOvqNzGaiQ3yphLwg=
-Date:   Tue, 14 Jul 2020 13:06:11 -0500
-From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH][next] hpilo: Replace one-element array with
- flexible-array member
-Message-ID: <20200714180611.GA30749@embeddedor>
-References: <20200714154449.GA26153@embeddedor>
- <20200714161948.GA2092551@kroah.com>
+        Tue, 14 Jul 2020 14:01:55 -0400
+Received: from mail-il1-f195.google.com ([209.85.166.195]:42858 "EHLO
+        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725906AbgGNSBz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 14:01:55 -0400
+Received: by mail-il1-f195.google.com with SMTP id t27so14949372ill.9;
+        Tue, 14 Jul 2020 11:01:54 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=KSpgOvwlN47x6DPVrtxLSXxqcuUY+XXj9Joyu4Ctj7M=;
+        b=fjkiMq/Z+V+Zh8RPQZYxB65WqYzxZPDlbimBXprvgzNUL9GL2K+KPhlbOekBIU5bBv
+         ic8SfERzh6U4Bx7623+P4dH8tSTL6dPS6hC0dvYb4gsNs9vwpBjBSAuq1m1h0afrUhot
+         IZtm+wHgYPICq22911gm5mwTEDIni2zOuagUPMAuFfnzN7gYuFMj5VW88cQ64BI6daRU
+         gTjfnDiIzkP84qEgQSyblLvIUH1wwVKmh9t7k0EA+QmHzMVcuLbgxND62Dk0XTDgllzp
+         Sob/slMGtC/FDEZOPfn34PF37U24hWh310zITPsrYwGNU6iO+zM1wUFS5wGPNGvRyBNk
+         jV0A==
+X-Gm-Message-State: AOAM530tfwvhdjDaiGJj1Pm171iR5fTrvwRK43dYXtKpl+eg7UAhos5q
+        nSc7qVb+CxReAmkhcN6KPQ==
+X-Google-Smtp-Source: ABdhPJxEgcafXXyb16LmwyglpFw9HdqPPxSf5Ulikof0SJ9B1PG6vWPgFvCZ9//LAhpato+pi7dB5Q==
+X-Received: by 2002:a92:49c3:: with SMTP id k64mr5438219ilg.278.1594749713943;
+        Tue, 14 Jul 2020 11:01:53 -0700 (PDT)
+Received: from xps15 ([64.188.179.252])
+        by smtp.gmail.com with ESMTPSA id q4sm10170382ils.11.2020.07.14.11.01.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 14 Jul 2020 11:01:53 -0700 (PDT)
+Received: (nullmailer pid 2634305 invoked by uid 1000);
+        Tue, 14 Jul 2020 18:01:52 -0000
+Date:   Tue, 14 Jul 2020 12:01:52 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     "Ramuthevar,Vadivel MuruganX" 
+        <vadivel.muruganx.ramuthevar@linux.intel.com>
+Cc:     cheol.yong.kim@intel.com, qi-ming.wu@intel.com, yin1.li@intel.com,
+        robh+dt@kernel.org, linux-kernel@vger.kernel.org,
+        gregkh@linuxfoundation.org, kishon@ti.com,
+        andriy.shevchenko@intel.com, devicetree@vger.kernel.org,
+        p.zabel@pengutronix.de, balbi@kernel.org
+Subject: Re: [PATCH v6 1/2] dt-bindings: phy: Add USB PHY support for Intel
+ LGM SoC
+Message-ID: <20200714180152.GA2633416@bogus>
+References: <20200714042621.25850-1-vadivel.muruganx.ramuthevar@linux.intel.com>
+ <20200714042621.25850-2-vadivel.muruganx.ramuthevar@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200714161948.GA2092551@kroah.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200714042621.25850-2-vadivel.muruganx.ramuthevar@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 14, 2020 at 06:19:48PM +0200, Greg Kroah-Hartman wrote:
-> On Tue, Jul 14, 2020 at 10:44:49AM -0500, Gustavo A. R. Silva wrote:
-> > There is a regular need in the kernel to provide a way to declare
-> > having a dynamically sized set of trailing elements in a structure.
-> > Kernel code should always use “flexible array members”[1] for these
-> > cases. The older style of one-element or zero-length arrays should
-> > no longer be used[2].
-> > 
-> > For this particular case, it is important to notice that the cachelines
-> > change from 7 to 6 after the flexible-array conversion:
+On Tue, 14 Jul 2020 12:26:20 +0800, Ramuthevar,Vadivel MuruganX wrote:
+> From: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
 > 
-> That's really funny to see.  Nice work, I'll go queue this up.  I doubt
-> anyone will notice as this is a very old driver :)
+> Add the dt-schema to support USB PHY on Intel LGM SoC
+> 
+> Signed-off-by: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
+> Reviewed-by: Rob Herring <robh@kernel.org>
+> ---
+>  .../devicetree/bindings/phy/intel,lgm-usb-phy.yaml | 53 ++++++++++++++++++++++
+>  1 file changed, 53 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/phy/intel,lgm-usb-phy.yaml
 > 
 
-Yep; by the way, notice the link to the Kernel CI test results:
 
-https://github.com/GustavoARSilva/linux-hardening/blob/master/cii/kernel-ci/hpilo-20200714.md
+My bot found errors running 'make dt_binding_check' on your patch:
 
-I plan to add the generation --and inclusion in the changelog text-- of
-such links to my workflow, whenever possible.
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/phy/intel,lgm-usb-phy.example.dt.yaml: usb-phy@e7e00000: '#phy-cells' is a required property
 
-When Kernel CI reports 'SUCCESS', they don't send the report to any mailing
-list; they only send those reports to the maintainers/developers. So. I'm
-going to store the ones I get in this github repository:
 
-https://github.com/GustavoARSilva/linux-hardening/tree/master/cii/kernel-ci/
+See https://patchwork.ozlabs.org/patch/1328612
 
-Thanks
---
-Gustavo
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure dt-schema is up to date:
+
+pip3 install git+https://github.com/devicetree-org/dt-schema.git@master --upgrade
+
+Please check and re-submit.
+
