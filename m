@@ -7,49 +7,46 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E4A7C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 19:05:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50C77C433E7
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 19:05:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4B32F208C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 19:05:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 26CE8208C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 19:05:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594753510;
-	bh=WnWXystKD1gPfAT1UfcvNWEFGL4xdS81LhQZ9qwrS4E=;
+	s=default; t=1594753513;
+	bh=gYrUy+2BPIkfxEAcimiUvhDES1CyrM816VquNjMev6s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=a2bUwO+9DTRqfLiyt5VuD9Zd6rxlzB8ocW/98HWUTohFPc95V2wevZAMcSIi0OMSy
-	 zpKGaZi7k3Tf3juyI9sn6CRDZXmshUKugMxAAT3K8LO54pb58/JC5oqRA/eS4deeZ2
-	 iGxBSJ6bnAB9N55XZk0tZ2mhA/00L7JmmzlU2DS4=
+	b=hY0QqjB/dzxLKtfe/Ns9EUm8V3SfY/KZ1Qf23EeoFyHkwX+rj/PW1r0CeaHV6bRCl
+	 XJfyLnDlDlkjHMcYzCyjw0mbMYpEhKMIMxsnfrYh6tjHk6UpvBcROu8YY8C09YRzp6
+	 /gY2nziMRXRr5xVbUCCTT+USnIrbliOzIWUw5gQ8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730205AbgGNTFI (ORCPT
+        id S1730810AbgGNSy5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 15:05:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52798 "EHLO mail.kernel.org"
+        Tue, 14 Jul 2020 14:54:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52382 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730433AbgGNSzL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 14:55:11 -0400
+        id S1730799AbgGNSyv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 14:54:51 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7807B22BEF;
-        Tue, 14 Jul 2020 18:55:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7E76822BF3;
+        Tue, 14 Jul 2020 18:54:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594752911;
-        bh=WnWXystKD1gPfAT1UfcvNWEFGL4xdS81LhQZ9qwrS4E=;
+        s=default; t=1594752891;
+        bh=gYrUy+2BPIkfxEAcimiUvhDES1CyrM816VquNjMev6s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jplqxF7/0sHcaobw28HmgCeN71O2qSC31B/HCHxWF7kS2Xf+xJpGCnXg3ZLeMMQ+T
-         C853mqWFKJIkRXzIBMTc0T/DFGOHwUsuhumKbr4/gw9JcBd5OO06HSSKcspKl/WVxu
-         26schXjtwAdCWnGDUfcyEIj7u3Je+AFB74DYNvBs=
+        b=kP67fMjXkmPRGUVYtqjmUM2Pj7W/bHY+32gdKYkawlO7rZh7m2tYlREzXxHQXOsOI
+         ybCEHxahgi8NjP2uE+n9roA2/9N+60DAS/ldhW9rjBM/TTY2eEDk5ctyvg7Y6U504Z
+         k1K7kxqhYpXXgppaCpVkNAnT0OkUM1DSHfqluVOQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Marek Vasut <marek.vasut@gmail.com>,
-        Roland Stigge <stigge@antcom.de>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 047/166] gpio: pca953x: Synchronize interrupt handler properly
-Date:   Tue, 14 Jul 2020 20:43:32 +0200
-Message-Id: <20200714184118.135701674@linuxfoundation.org>
+        stable@vger.kernel.org, Max Gurtovoy <maxg@mellanox.com>,
+        Christoph Hellwig <hch@lst.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.7 040/166] nvme-rdma: assign completion vector correctly
+Date:   Tue, 14 Jul 2020 20:43:25 +0200
+Message-Id: <20200714184117.797576293@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200714184115.844176932@linuxfoundation.org>
 References: <20200714184115.844176932@linuxfoundation.org>
@@ -62,107 +59,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+From: Max Gurtovoy <maxg@mellanox.com>
 
-[ Upstream commit 064c73afe7385de99e5b2785b88c83dc5d84403b ]
+[ Upstream commit 032a9966a22a3596addf81dacf0c1736dfedc32a ]
 
-Since the commit aa58a21ae378 ("gpio: pca953x: disable regmap locking")
-the locking of regmap is disabled and that immediately introduces
-a synchronization issue. It's easy to see when we try to monitor
-more than one interrupt from the same chip.
+The completion vector index that is given during CQ creation can't
+exceed the number of support vectors by the underlying RDMA device. This
+violation currently can accure, for example, in case one will try to
+connect with N regular read/write queues and M poll queues and the sum
+of N + M > num_supported_vectors. This will lead to failure in establish
+a connection to remote target. Instead, in that case, share a completion
+vector between queues.
 
-It seems that the problem exists from the day one and even commit
-6e20fb18054c ("drivers/gpio/pca953x.c: add a mutex to fix race condition")
-missed this.
-
-Below are the traces and shell reproducers before and after proposed change.
-Note duplicates in the IRQ events. /proc/interrupts also shows a deviation,
-i.e. sum of children interrupts higher than parent's one.
-
-When locking is disabled for regmap and no protection in IRQ handler
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
- ...
- gpioset-194          regmap_hw_write_start: i2c-INT3491:02 reg=2 count=1
- irq/31-i2c-INT3-139  regmap_hw_read_start: i2c-INT3491:02 reg=4c count=2
- gpioset-194          regmap_hw_write_done: i2c-INT3491:02 reg=2 count=1
- gpioset-194          regmap_reg_read_cache: i2c-INT3491:02 reg=6 val=f5
- gpioset-194          regmap_reg_write: i2c-INT3491:02 reg=6 val=f5
- gpioset-194          regmap_hw_write_start: i2c-INT3491:02 reg=6 count=1
- irq/31-i2c-INT3-139  regmap_hw_read_done: i2c-INT3491:02 reg=4c count=2
- ...
-
- % gpiomon gpiochip3 0 &
- % gpioset gpiochip3 1=0
- % gpioset gpiochip3 1=1
- event:  RISING EDGE offset: 0 timestamp: [     302.782583765]
- % gpiomon gpiochip3 2 &
- % gpioset gpiochip3 1=0
- event:  RISING EDGE offset: 2 timestamp: [     312.033148829]
- event: FALLING EDGE offset: 0 timestamp: [     312.022757525]
- % gpioset gpiochip3 1=1
- event:  RISING EDGE offset: 2 timestamp: [     316.201148473]
- event:  RISING EDGE offset: 0 timestamp: [     316.191759599]
-
-When locking is disabled for regmap and protection in IRQ handler
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
- ...
- gpioset-202          regmap_hw_write_start: i2c-INT3491:02 reg=2 count=1
- gpioset-202          regmap_hw_write_done: i2c-INT3491:02 reg=2 count=1
- gpioset-202          regmap_reg_read_cache: i2c-INT3491:02 reg=6 val=fd
- gpioset-202          regmap_reg_write: i2c-INT3491:02 reg=6 val=fd
- gpioset-202          regmap_hw_write_start: i2c-INT3491:02 reg=6 count=1
- gpioset-202          regmap_hw_write_done: i2c-INT3491:02 reg=6 count=1
- irq/31-i2c-INT3-139  regmap_hw_read_start: i2c-INT3491:02 reg=4c count=2
- irq/31-i2c-INT3-139  regmap_hw_read_done: i2c-INT3491:02 reg=4c count=2
- ...
-
- % gpiomon gpiochip3 0 &
- % gpioset gpiochip3 1=0
- event: FALLING EDGE offset: 0 timestamp: [     531.330078107]
- % gpioset gpiochip3 1=1
- event:  RISING EDGE offset: 0 timestamp: [     532.912239128]
- % gpiomon gpiochip3 2 &
- % gpioset gpiochip3 1=0
- event: FALLING EDGE offset: 0 timestamp: [     539.633669484]
- % gpioset gpiochip3 1=1
- event:  RISING EDGE offset: 0 timestamp: [     542.256978461]
-
-Fixes: 6e20fb18054c ("drivers/gpio/pca953x.c: add a mutex to fix race condition")
-Depends-on: 35d13d94893f ("gpio: pca953x: convert to use bitmap API")
-Depends-on: 49427232764d ("gpio: pca953x: Perform basic regmap conversion")
-Cc: Marek Vasut <marek.vasut@gmail.com>
-Cc: Roland Stigge <stigge@antcom.de>
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Signed-off-by: Max Gurtovoy <maxg@mellanox.com>
+Signed-off-by: Christoph Hellwig <hch@lst.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpio/gpio-pca953x.c | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+ drivers/nvme/host/rdma.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/gpio/gpio-pca953x.c b/drivers/gpio/gpio-pca953x.c
-index 01011a780688a..d8ba6c5195be7 100644
---- a/drivers/gpio/gpio-pca953x.c
-+++ b/drivers/gpio/gpio-pca953x.c
-@@ -724,14 +724,16 @@ static irqreturn_t pca953x_irq_handler(int irq, void *devid)
- 	struct gpio_chip *gc = &chip->gpio_chip;
- 	DECLARE_BITMAP(pending, MAX_LINE);
- 	int level;
-+	bool ret;
+diff --git a/drivers/nvme/host/rdma.c b/drivers/nvme/host/rdma.c
+index cac8a930396a0..1f9a45145d0d3 100644
+--- a/drivers/nvme/host/rdma.c
++++ b/drivers/nvme/host/rdma.c
+@@ -443,7 +443,7 @@ static int nvme_rdma_create_queue_ib(struct nvme_rdma_queue *queue)
+ 	 * Spread I/O queues completion vectors according their queue index.
+ 	 * Admin queues can always go on completion vector 0.
+ 	 */
+-	comp_vector = idx == 0 ? idx : idx - 1;
++	comp_vector = (idx == 0 ? idx : idx - 1) % ibdev->num_comp_vectors;
  
--	if (!pca953x_irq_pending(chip, pending))
--		return IRQ_NONE;
-+	mutex_lock(&chip->i2c_lock);
-+	ret = pca953x_irq_pending(chip, pending);
-+	mutex_unlock(&chip->i2c_lock);
- 
- 	for_each_set_bit(level, pending, gc->ngpio)
- 		handle_nested_irq(irq_find_mapping(gc->irq.domain, level));
- 
--	return IRQ_HANDLED;
-+	return IRQ_RETVAL(ret);
- }
- 
- static int pca953x_irq_setup(struct pca953x_chip *chip, int irq_base)
+ 	/* Polling queues need direct cq polling context */
+ 	if (nvme_rdma_poll_queue(queue))
 -- 
 2.25.1
 
