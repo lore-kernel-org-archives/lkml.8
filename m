@@ -2,124 +2,197 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16B93C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 12:20:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8C28C433E6
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 12:15:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E0C43217A0
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 12:20:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chrisdown.name header.i=@chrisdown.name header.b="OgzthXDQ"
+	by mail.kernel.org (Postfix) with ESMTP id BA9B622370
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 12:15:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728214AbgGNMT6 (ORCPT
+        id S1728316AbgGNMPy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 08:19:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34056 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726352AbgGNMT6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 08:19:58 -0400
-Received: from mail-ed1-x544.google.com (mail-ed1-x544.google.com [IPv6:2a00:1450:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C6009C061755
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 05:19:57 -0700 (PDT)
-Received: by mail-ed1-x544.google.com with SMTP id a1so11384823edt.10
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 05:19:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chrisdown.name; s=google;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :in-reply-to:user-agent;
-        bh=Upvq0XTnNDqkoJtFc1NKNfRMzIAOX3/LGCieRj7keA0=;
-        b=OgzthXDQQkSKENql4YztVr6tFQiY54k6p17Uy/5bcc7+0ujdY5rlF65bya2ugm/1k4
-         hzNEqhYpj9g/Zq3XQF5qyl7U0HOvJ73Gh/4rNSG0PwfvemMNXstBpS9eNgrPPNU7UX77
-         WhHatpJCe+PLBLssCm85nbfGfIxvpMVvj4FBU=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=Upvq0XTnNDqkoJtFc1NKNfRMzIAOX3/LGCieRj7keA0=;
-        b=i/M/MU45gAB8Q/Ooi5IVwLYaSx0Vhii9iHtgSsPdfJOBW2wZBMJFUV0kxfyrqFPbZr
-         lUkbClZ23LEyubLIoucw6ywYyWVLKFCQB/gJeQa9KAOT/6o/TdNRGcQCcxjXeXaoXH7P
-         5Lolj6jR24p+C1hkGI1IhLZ37ji9wzaxkdDNpPg6bWccaqA5pudGBiwnPgMf5MG7l4y+
-         E6iQLt2FCRc4e1uQNAlwa9L4e/ubsqs4bk/KaLqK3+zja3Rl6YbmrUiLkiJDedVkN5ny
-         AopsL9K2WYCfUs6F2515cu2t5jXN2l/CBtWoob/Gpk/T2tKPYdniW7xcuIlqKpB8qrYO
-         Ad4w==
-X-Gm-Message-State: AOAM5305BzCD4ZgY+/oghj/CXOyaGue3ap7etQu7OiZF6zFFWC5ggDF6
-        iV9dl/0BXV/p/iI2X4RivkydHg==
-X-Google-Smtp-Source: ABdhPJzKDJKgOVyW2LvwituaOpypnl46h37Y+mxK8+iWEJWcch9N/FMLfcDPk9lAh1tmX3XCw7wjtg==
-X-Received: by 2002:a05:6402:b57:: with SMTP id bx23mr4056450edb.304.1594729196472;
-        Tue, 14 Jul 2020 05:19:56 -0700 (PDT)
-Received: from localhost ([2620:10d:c093:400::5:6f85])
-        by smtp.gmail.com with ESMTPSA id ai4sm11724577ejc.91.2020.07.14.05.19.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 Jul 2020 05:19:56 -0700 (PDT)
-Date:   Tue, 14 Jul 2020 13:19:55 +0100
-From:   Chris Down <chris@chrisdown.name>
-To:     Borislav Petkov <bp@alien8.de>
-Cc:     linux-kernel@vger.kernel.org, sean.j.christopherson@intel.com,
-        tony.luck@intel.com, torvalds@linux-foundation.org, x86@kernel.org,
-        kernel-team@fb.com
-Subject: Re: [PATCH -v2.1] x86/msr: Filter MSR writes
-Message-ID: <20200714121955.GA2080@chrisdown.name>
+        Tue, 14 Jul 2020 08:15:54 -0400
+Received: from 8bytes.org ([81.169.241.247]:52886 "EHLO theia.8bytes.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728009AbgGNMKv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 08:10:51 -0400
+Received: from cap.home.8bytes.org (p5b006776.dip0.t-ipconnect.de [91.0.103.118])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (No client certificate requested)
+        by theia.8bytes.org (Postfix) with ESMTPSA id 9C076C07;
+        Tue, 14 Jul 2020 14:10:48 +0200 (CEST)
+From:   Joerg Roedel <joro@8bytes.org>
+To:     x86@kernel.org
+Cc:     Joerg Roedel <joro@8bytes.org>, Joerg Roedel <jroedel@suse.de>,
+        hpa@zytor.com, Andy Lutomirski <luto@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Jiri Slaby <jslaby@suse.cz>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Juergen Gross <jgross@suse.com>,
+        Kees Cook <keescook@chromium.org>,
+        David Rientjes <rientjes@google.com>,
+        Cfir Cohen <cfir@google.com>,
+        Erdem Aktas <erdemaktas@google.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Mike Stunes <mstunes@vmware.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Martin Radev <martin.b.radev@gmail.com>,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        virtualization@lists.linux-foundation.org
+Subject: [PATCH v4 29/75] x86/idt: Move two function from k/idt.c to i/a/desc.h
+Date:   Tue, 14 Jul 2020 14:08:31 +0200
+Message-Id: <20200714120917.11253-30-joro@8bytes.org>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200714120917.11253-1-joro@8bytes.org>
+References: <20200714120917.11253-1-joro@8bytes.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20200615063837.GA14668@zn.tnic>
-User-Agent: Mutt/1.14.6 (2020-07-11)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Borislav,
+From: Joerg Roedel <jroedel@suse.de>
 
-This is certainly a good idea, but I wonder whether we should be more pragmatic 
-about the printk ratelimiting while we give userspace time to react and update 
-their methodologies.
+Move these two functions from kernel/idt.c to include/asm/desc.h:
 
-As one example, there is a common MSR hack which is verging on essential if 
-you're doing thermally intensive work on some recent ThinkPads[0][1], and this 
-drastically reduces the signal-to-noise ratio in kmsg (and this is only about 
-five minutes after boot):
+	* init_idt_data()
+	* idt_init_desc()
 
-     % dmesg | wc -l
-     2963
-     % dmesg | grep -c 'unrecognized MSR'
-     2411
+These functions are needed to setup IDT entries very early and need to
+be called from head64.c. To be usable this early these functions need to
+be compiled without instrumentation and the stack-protector feature.
+These features need to be kept enabled for kernel/idt.c, so head64.c
+must use its own versions.
 
-That is, even with pr_err_ratelimited, we still end up logging on basically 
-every single write, even though it's from the same TGID writing to the same 
-MSRs, and end up becoming >80% of kmsg.
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
+---
+ arch/x86/include/asm/desc.h      | 27 +++++++++++++++++++++++++
+ arch/x86/include/asm/desc_defs.h |  7 +++++++
+ arch/x86/kernel/idt.c            | 34 --------------------------------
+ 3 files changed, 34 insertions(+), 34 deletions(-)
 
-Of course, one can boot with `allow_writes=1` to avoid these messages at all, 
-but that then has the downfall that one doesn't get _any_ notification at all 
-about these problems in the first place, and so is much less likely to forget 
-to fix it. One might rather it was less binary: it was still logged, just less 
-often, so that application developers _do_ have the incentive to improve their 
-current methods, without us having to push other useful stuff out of the kmsg 
-buffer.
+diff --git a/arch/x86/include/asm/desc.h b/arch/x86/include/asm/desc.h
+index 1ced11d31932..476082a83d1c 100644
+--- a/arch/x86/include/asm/desc.h
++++ b/arch/x86/include/asm/desc.h
+@@ -383,6 +383,33 @@ static inline void set_desc_limit(struct desc_struct *desc, unsigned long limit)
+ 
+ void alloc_intr_gate(unsigned int n, const void *addr);
+ 
++static inline void init_idt_data(struct idt_data *data, unsigned int n,
++				 const void *addr)
++{
++	BUG_ON(n > 0xFF);
++
++	memset(data, 0, sizeof(*data));
++	data->vector	= n;
++	data->addr	= addr;
++	data->segment	= __KERNEL_CS;
++	data->bits.type	= GATE_INTERRUPT;
++	data->bits.p	= 1;
++}
++
++static inline void idt_init_desc(gate_desc *gate, const struct idt_data *d)
++{
++	unsigned long addr = (unsigned long) d->addr;
++
++	gate->offset_low	= (u16) addr;
++	gate->segment		= (u16) d->segment;
++	gate->bits		= d->bits;
++	gate->offset_middle	= (u16) (addr >> 16);
++#ifdef CONFIG_X86_64
++	gate->offset_high	= (u32) (addr >> 32);
++	gate->reserved		= 0;
++#endif
++}
++
+ extern unsigned long system_vectors[];
+ 
+ extern void load_current_idt(void);
+diff --git a/arch/x86/include/asm/desc_defs.h b/arch/x86/include/asm/desc_defs.h
+index 5621fb3f2d1a..f7e7099af595 100644
+--- a/arch/x86/include/asm/desc_defs.h
++++ b/arch/x86/include/asm/desc_defs.h
+@@ -74,6 +74,13 @@ struct idt_bits {
+ 			p	: 1;
+ } __attribute__((packed));
+ 
++struct idt_data {
++	unsigned int	vector;
++	unsigned int	segment;
++	struct idt_bits	bits;
++	const void	*addr;
++};
++
+ struct gate_struct {
+ 	u16		offset_low;
+ 	u16		segment;
+diff --git a/arch/x86/kernel/idt.c b/arch/x86/kernel/idt.c
+index 367eb6a593dd..d3f0c8133300 100644
+--- a/arch/x86/kernel/idt.c
++++ b/arch/x86/kernel/idt.c
+@@ -11,13 +11,6 @@
+ #include <asm/desc.h>
+ #include <asm/hw_irq.h>
+ 
+-struct idt_data {
+-	unsigned int	vector;
+-	unsigned int	segment;
+-	struct idt_bits	bits;
+-	const void	*addr;
+-};
+-
+ #define DPL0		0x0
+ #define DPL3		0x3
+ 
+@@ -178,20 +171,6 @@ bool idt_is_f00f_address(unsigned long address)
+ }
+ #endif
+ 
+-static inline void idt_init_desc(gate_desc *gate, const struct idt_data *d)
+-{
+-	unsigned long addr = (unsigned long) d->addr;
+-
+-	gate->offset_low	= (u16) addr;
+-	gate->segment		= (u16) d->segment;
+-	gate->bits		= d->bits;
+-	gate->offset_middle	= (u16) (addr >> 16);
+-#ifdef CONFIG_X86_64
+-	gate->offset_high	= (u32) (addr >> 32);
+-	gate->reserved		= 0;
+-#endif
+-}
+-
+ static __init void
+ idt_setup_from_table(gate_desc *idt, const struct idt_data *t, int size, bool sys)
+ {
+@@ -205,19 +184,6 @@ idt_setup_from_table(gate_desc *idt, const struct idt_data *t, int size, bool sy
+ 	}
+ }
+ 
+-static void init_idt_data(struct idt_data *data, unsigned int n,
+-			  const void *addr)
+-{
+-	BUG_ON(n > 0xFF);
+-
+-	memset(data, 0, sizeof(*data));
+-	data->vector	= n;
+-	data->addr	= addr;
+-	data->segment	= __KERNEL_CS;
+-	data->bits.type	= GATE_INTERRUPT;
+-	data->bits.p	= 1;
+-}
+-
+ static __init void set_intr_gate(unsigned int n, const void *addr)
+ {
+ 	struct idt_data data;
+-- 
+2.27.0
 
-This one example isn't the point, of course: I'm sure there are plenty of other 
-non-ideal-but-pragmatic cases where people are writing to MSRs from userspace 
-right now, and it will take time for those people to find other solutions.
-
-I completely agree with you that there should be a better solution for these 
-cases, and that writing to MSRs from userspace is really not a good idea.  
-However, going from zero to over 80% of dmesg in cases where these MSRs are 
-repeatedly used seems too fast to me.
-
-Have you considered perhaps making the ramping up of error logging more gradual 
-by having this printk have its own, more conservative `struct ratelimit_state`, 
-as we do in some other places with similar noise concerns? Then we could 
-gradually make the warnings more aggressive as time goes on, up until the point 
-where we make allow_writes=0 the default.
-
-Thanks,
-
-Chris
-
-0: Lenovo is supposedly fixing this since last year, but no news yet.
-1: https://github.com/erpalma/throttled
