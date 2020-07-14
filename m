@@ -2,190 +2,126 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EDF5CC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 15:49:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93EF0C433E8
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 15:49:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C4B9522470
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 15:49:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="M7oahEXE"
+	by mail.kernel.org (Postfix) with ESMTP id 692BD22464
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 15:49:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594741787;
+	bh=Ulz6kftsIf17MgM1f0YQJELfS5NjvEeQg+27bJIWgUA=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=DuKNObe+fUxPkVsFD7WxG34r7QAp6jUylTREoEFTAW6eMdYpMRHh6ATs/B+5r4RXG
+	 XCtz4iGDdfmSPMlLak8CGU4Cp0kKIRJ1oMgjvv3F1zWzTJX49AfSxozBwx8huf3UQr
+	 MfqK3PL0BvPRUakctJc+w38esttCxA2/FFvpXbbQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728054AbgGNPtT (ORCPT
+        id S1728123AbgGNPtq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 11:49:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38174 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725876AbgGNPtS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 11:49:18 -0400
-Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9D15BC061755;
-        Tue, 14 Jul 2020 08:49:18 -0700 (PDT)
-Received: by mail-ej1-x644.google.com with SMTP id p20so22524167ejd.13;
-        Tue, 14 Jul 2020 08:49:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=1H4dhNeluJc6PmfPVu2dwjJilc9M0K3+/pSSegsHSMU=;
-        b=M7oahEXEKXEwJgKF/Bp1/K8h6eZI+M/87e6IbpHARagYHM3JDWTh1vkZZRhXzNs6R/
-         /t6AEMz71eBb5D1xJ1MT124wj/0rHWDnuuWgACFm5f4GdYbz/Mb1BNzTKqpcNL6Bif7i
-         smaFJnGw6aH5Nr/PK8Zjt54lhQQlH10l/4C8mI4wPGQ0buBGuROq3IhWVFyNj+Z37W7i
-         gH4sg5ei4YM2Y9HsFa9t7QgLEteOtsewIdzs40uZ6Vu4doWxcWcoeVWg5bN2xbyz2f+x
-         oRex7Gb18A7trMHYiDlPZNNouhIaeS3RHajOWKupiB0aEK1l5UDJ5dAbVXPKa/QSzJkz
-         nLXw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=1H4dhNeluJc6PmfPVu2dwjJilc9M0K3+/pSSegsHSMU=;
-        b=iaaqRa1/TMtBm7P14zuJ1DxyiPrOYRKeINVjLe+hWK5HsmaUpEP11GcBh6BnOONvQS
-         kZCsV0ToPQBtB06YDLNHZlbHIPsUcDdozENK6zFSlaUTgtrIdajaxDhIQVG3uY/lwYO9
-         jOuCIsD3WoB5ZKBA0p+8sn/UzyFByqkSGygSD+uoEuNX7Hl/FxQjWGJ8demGZ9j3Hfdk
-         naY5iE+nw9ZtXgvJ+ifoAkvZj7QIiQlypoYV5l6durc4Txyuv8ERi2QqNNQr7oFk+ypj
-         ohlUdibzCLNXbhHT8mI6a6qcK2fxKLPf1bKCGwSqm8pDhnxRAQ3n+fJxPxBCejsyna+W
-         2u2w==
-X-Gm-Message-State: AOAM532GC8F4p6uCEPpfk1waWW8BkiZZyAVx3V3PTxQwhLjwAdHn96ZM
-        t7M3NLZF5TEWZCmXtO46Nf3Y21M+
-X-Google-Smtp-Source: ABdhPJzC4iiO39pixEVj0uU66VZOzVnJ2fABhUrOPzIg2s1poH5/ZYA9GU+ZkthPgPCFlGEw7mJZYQ==
-X-Received: by 2002:a17:907:20d1:: with SMTP id qq17mr5151818ejb.214.1594741757383;
-        Tue, 14 Jul 2020 08:49:17 -0700 (PDT)
-Received: from localhost ([62.96.65.119])
-        by smtp.gmail.com with ESMTPSA id d26sm14470879edz.93.2020.07.14.08.49.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 Jul 2020 08:49:16 -0700 (PDT)
-Date:   Tue, 14 Jul 2020 17:49:14 +0200
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Lee Jones <lee.jones@linaro.org>
-Cc:     linus.walleij@linaro.org, linux-kernel@vger.kernel.org,
-        linux-gpio@vger.kernel.org, Jonathan Hunter <jonathanh@nvidia.com>,
-        linux-tegra@vger.kernel.org
-Subject: Re: [PATCH 22/25] pinctrl: tegra: pinctrl-tegra194: Do not
- initialise field twice
-Message-ID: <20200714154914.GA251696@ulmo>
-References: <20200713144930.1034632-1-lee.jones@linaro.org>
- <20200713144930.1034632-23-lee.jones@linaro.org>
+        Tue, 14 Jul 2020 11:49:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56108 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725876AbgGNPtp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 11:49:45 -0400
+Received: from localhost (mobile-166-175-191-139.mycingular.net [166.175.191.139])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C781122464;
+        Tue, 14 Jul 2020 15:49:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594741784;
+        bh=Ulz6kftsIf17MgM1f0YQJELfS5NjvEeQg+27bJIWgUA=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=EaQlvs/TC2yUjHJK6smf4ynxhvgNy5wlI9WFj7L3BfuTU4CDzmYYc6S17Kw23RlD1
+         ane48ARw0DttiT5GA+ADF+3szgTdBi3G/NGuj6uqbXK7TbOGD28k/kXcKTsDcmnQ/H
+         L4Vbv6eXEAxcd1xgmuHjECuy9pqpSHzJy0jUhojw=
+Date:   Tue, 14 Jul 2020 10:49:41 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Saheed Olayemi Bolarinwa <refactormyself@gmail.com>
+Cc:     bjorn@helgaas.com, skhan@linuxfoundation.org,
+        linux-pci@vger.kernel.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        linux-kernel@vger.kernel.org,
+        Mike Marciniszyn <mike.marciniszyn@intel.com>,
+        Dennis Dalessandro <dennis.dalessandro@intel.com>,
+        Doug Ledford <dledford@redhat.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>, linux-rdma@vger.kernel.org
+Subject: Re: [PATCH 0/14 v4] PCI: Remove '*val = 0' from
+ pcie_capability_read_*()
+Message-ID: <20200714154941.GA396741@bjorn-Precision-5520>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="nFreZHaLTZJo0R7j"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200713144930.1034632-23-lee.jones@linaro.org>
-User-Agent: Mutt/1.14.4 (2020-06-18)
+In-Reply-To: <20200714110445.32605-1-refactormyself@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Jul 14, 2020 at 01:04:42PM +0200, Saheed Olayemi Bolarinwa wrote:
+> From: Bolarinwa Olayemi Saheed <refactormyself@gmail.com>
+> ...
 
---nFreZHaLTZJo0R7j
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> Bolarinwa Olayemi Saheed (14):
+>   IB/hfi1: Check the return value of pcie_capability_read_*()
+>   misc: rtsx: Check the return value of pcie_capability_read_*()
+>   ath9k: Check the return value of pcie_capability_read_*()
+>   iwlegacy: Check the return value of pcie_capability_read_*()
+>   PCI: pciehp: Check the return value of pcie_capability_read_*()
+>   PCI: pciehp: Make "Power On" the default 
+>   PCI: pciehp: Check the return value of pcie_capability_read_*()
+>   PCI/ACPI: Check the return value of pcie_capability_read_*()
+>   PCI: pciehp: Check the return value of pcie_capability_read_*()
+>   PCI: Check the return value of pcie_capability_read_*()
+>   PCI/PM: Check return value of pcie_capability_read_*()
+>   PCI/AER: Check the return value of pcie_capability_read_*()
+>   PCI/ASPM: Check the return value of pcie_capability_read_*()
+>   PCI: Remove '*val = 0' from pcie_capability_read_*()
 
-On Mon, Jul 13, 2020 at 03:49:27PM +0100, Lee Jones wrote:
-> Both PIN_PINGROUP_ENTRY_Y() and DRV_PINGROUP_ENTRY_Y() macros are
-> called for each of the 2 pin groups defined here, and both of them
-> initialise 'drv_reg', causing the compiler to complain.
->=20
-> Only initialise 'drv_reg' once.
->=20
-> Fixes the following W=3D1 kernel build warning(s):
->=20
->  drivers/pinctrl/tegra/pinctrl-tegra194.c:71:14: warning: initialized fie=
-ld overwritten [-Woverride-init]
->  71 | .drv_reg =3D ((r)), | ^
->  drivers/pinctrl/tegra/pinctrl-tegra194.c:105:2: note: in expansion of ma=
-cro =E2=80=98DRV_PINGROUP_ENTRY_Y=E2=80=99
->  105 | DRV_PINGROUP_ENTRY_Y(0x14004, 12, 5, 20, 5, -1, -1, -1, -1, 0)
->  | ^~~~~~~~~~~~~~~~~~~~
->  drivers/pinctrl/tegra/pinctrl-tegra194.c:124:3: note: in expansion of ma=
-cro =E2=80=98drive_pex_l5_clkreq_n_pgg0=E2=80=99
->  124 | drive_##pg_name, | ^~~~~~
->  drivers/pinctrl/tegra/pinctrl-tegra194.c:128:2: note: in expansion of ma=
-cro =E2=80=98PINGROUP=E2=80=99
->  128 | PINGROUP(pex_l5_clkreq_n_pgg0, PE5, RSVD1, RSVD2, RSVD3, 0x14000, =
-0,
->  | ^~~~~~~~
->  drivers/pinctrl/tegra/pinctrl-tegra194.c:71:14: note: (near initializati=
-on for =E2=80=98tegra194_groups[0].drv_reg=E2=80=99)
->  71 | .drv_reg =3D ((r)), | ^
->  drivers/pinctrl/tegra/pinctrl-tegra194.c:105:2: note: in expansion of ma=
-cro =E2=80=98DRV_PINGROUP_ENTRY_Y=E2=80=99
->  105 | DRV_PINGROUP_ENTRY_Y(0x14004, 12, 5, 20, 5, -1, -1, -1, -1, 0)
->  | ^~~~~~~~~~~~~~~~~~~~
->  drivers/pinctrl/tegra/pinctrl-tegra194.c:124:3: note: in expansion of ma=
-cro =E2=80=98drive_pex_l5_clkreq_n_pgg0=E2=80=99
->  124 | drive_##pg_name, | ^~~~~~
->  drivers/pinctrl/tegra/pinctrl-tegra194.c:128:2: note: in expansion of ma=
-cro =E2=80=98PINGROUP=E2=80=99
->  128 | PINGROUP(pex_l5_clkreq_n_pgg0, PE5, RSVD1, RSVD2, RSVD3, 0x14000, =
-0,
->  | ^~~~~~~~
->  drivers/pinctrl/tegra/pinctrl-tegra194.c:71:14: warning: initialized fie=
-ld overwritten [-Woverride-init]
->  71 | .drv_reg =3D ((r)), | ^
->  drivers/pinctrl/tegra/pinctrl-tegra194.c:107:2: note: in expansion of ma=
-cro =E2=80=98DRV_PINGROUP_ENTRY_Y=E2=80=99
->  107 | DRV_PINGROUP_ENTRY_Y(0x1400c, 12, 5, 20, 5, -1, -1, -1, -1, 0)
->  | ^~~~~~~~~~~~~~~~~~~~
->  drivers/pinctrl/tegra/pinctrl-tegra194.c:124:3: note: in expansion of ma=
-cro =E2=80=98drive_pex_l5_rst_n_pgg1=E2=80=99
->  124 | drive_##pg_name, | ^~~~~~
->  drivers/pinctrl/tegra/pinctrl-tegra194.c:130:2: note: in expansion of ma=
-cro =E2=80=98PINGROUP=E2=80=99
->  130 | PINGROUP(pex_l5_rst_n_pgg1, PE5, RSVD1, RSVD2, RSVD3, 0x14008, 0,
->  | ^~~~~~~~
->  drivers/pinctrl/tegra/pinctrl-tegra194.c:71:14: note: (near initializati=
-on for =E2=80=98tegra194_groups[1].drv_reg=E2=80=99)
->  71 | .drv_reg =3D ((r)), | ^
->  drivers/pinctrl/tegra/pinctrl-tegra194.c:107:2: note: in expansion of ma=
-cro =E2=80=98DRV_PINGROUP_ENTRY_Y=E2=80=99
->  107 | DRV_PINGROUP_ENTRY_Y(0x1400c, 12, 5, 20, 5, -1, -1, -1, -1, 0)
->  | ^~~~~~~~~~~~~~~~~~~~
->  drivers/pinctrl/tegra/pinctrl-tegra194.c:124:3: note: in expansion of ma=
-cro =E2=80=98drive_pex_l5_rst_n_pgg1=E2=80=99
->  124 | drive_##pg_name, | ^~~~~~
->  drivers/pinctrl/tegra/pinctrl-tegra194.c:130:2: note: in expansion of ma=
-cro =E2=80=98PINGROUP=E2=80=99
->  130 | PINGROUP(pex_l5_rst_n_pgg1, PE5, RSVD1, RSVD2, RSVD3, 0x14008, 0,
->  | ^~~~~~~~
->=20
-> Cc: Thierry Reding <thierry.reding@gmail.com>
-> Cc: Jonathan Hunter <jonathanh@nvidia.com>
-> Cc: linux-tegra@vger.kernel.org
-> Signed-off-by: Lee Jones <lee.jones@linaro.org>
-> ---
->  drivers/pinctrl/tegra/pinctrl-tegra194.c | 1 -
->  1 file changed, 1 deletion(-)
+1) Let's slow down on posting patches.  We need time to think and have
+a conversation about where we're going, and waking up to dozens of new
+patches every day doesn't help.
 
-Indeed, looks correct to me:
+2) This series claims to have 14 patches, but only 3 made it to the
+list.  I don't know if the others were rejected for too many folks in
+the cc: list or what.  If you only updated these 3, we will still want
+the full set of 14 posted because it's too hard to collect 11 things
+from v3 and 3 things from v4, etc.
 
-Acked-by: Thierry Reding <treding@nvidia.com>
+  $ b4 am -om/ 20200714110445.32605-1-refactormyself@gmail.com
+  Looking up https://lore.kernel.org/r/20200714110445.32605-1-refactormyself%40gmail.com
+  Grabbing thread from lore.kernel.org/linux-kernel-mentees
+  Analyzing 4 messages in the thread
+  ---
+  Thread incomplete, attempting to backfill
+  Grabbing thread from lore.kernel.org/linux-rdma
+  Grabbing thread from lore.kernel.org/lkml
+  Grabbing thread from lore.kernel.org/linux-pci
+  ---
+  Writing m/v4_20200714_refactormyself_pci_remove_val_0_from_pcie_capability_read.mbx
+    [PATCH 1/14 v4] IB/hfi1: Check the return value of pcie_capability_read_*()
+    ERROR: missing [2/14]!
+    ERROR: missing [3/14]!
+    ERROR: missing [4/14]!
+    ERROR: missing [5/14]!
+    ERROR: missing [6/14]!
+    ERROR: missing [7/14]!
+    ERROR: missing [8/14]!
+    ERROR: missing [9/14]!
+    [PATCH 10/14 v4] PCI: Check return value of pcie_capability_read_*()
+    [PATCH 11/14 v4] PCI/PM: Check return value of pcie_capability_read_*()
+    ERROR: missing [12/14]!
+    ERROR: missing [13/14]!
+    ERROR: missing [14/14]!
+  ---
+  Total patches: 3
+  ---
+  WARNING: Thread incomplete!
+  Cover: m/v4_20200714_refactormyself_pci_remove_val_0_from_pcie_capability_read.cover
+   Link: https://lore.kernel.org/r/20200714110445.32605-1-refactormyself@gmail.com
+   Base: not found
+	 git am m/v4_20200714_refactormyself_pci_remove_val_0_from_pcie_capability_read.mbx
 
---nFreZHaLTZJo0R7j
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl8N0/cACgkQ3SOs138+
-s6EyDg/8DvdSsh/xAJCs/CnR7MTGLh60dManNXVZn2FQihuEEXhDyqs7WC+JLmiw
-5mxbGiNt+0I6GsVizGeyuqtFUY0t4HpLLAY6mrMatr2lRnJ7+5VWnKhvj3ouRDqU
-Xmw96Gkc+aoQY2he1VyJ41OnZrdSNoaniDN7GUZ4rSg+oRYsv/7GzMcUGuH021oc
-MtOFXZZeaelUIE+AUqT7V4WBurTNW0EFmCC/l7n7ZWQBz4eZ1cbRS3XNZBDArqsv
-acF+a7W6RlgmiTYyQtVvew1KttdW8vXPLE4IvhibWe5EVW8x6ra7CeYDnsUZE7RY
-JuOImmlImnjwoJbRLuHcuOL9tGU6f5Lvchmt8moR/rADue3D0ltswJZE+jslleyp
-9aM4wtOOmymbbPLzNeNPwMU4FWmA3KR2DSa0GxLMuLOJR7s1bTyOb4ygWAPGnBUY
-gHxAjYLCTS+ZpLMEh0mHaSAxAt0pSq7j/wZVyEUe/QXTGrvq3D0LiL7jHJKcX46R
-x6mkVt7vFHlv4lhkUIpsE56BYws+9q1s5g63OHuJ+8VFkUwCaPFXX1MaLaBpXNTa
-9SmovIo0mG99ExVK1RZmba0Dd/SUF20cxK5NRtRTvEYMRAdzhNMHNa7vgDFlZLF2
-oplZw4k0f61kijz2+u8GF+gpyzEDsxJgBM1yOm+7JAy1L9OLQwg=
-=1tXh
------END PGP SIGNATURE-----
-
---nFreZHaLTZJo0R7j--
