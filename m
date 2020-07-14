@@ -2,177 +2,131 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36B6DC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 21:11:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BECEC433E2
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 21:11:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0F3452067D
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 21:11:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="h0ozwMR4"
+	by mail.kernel.org (Postfix) with ESMTP id 569E32075F
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 21:11:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594761087;
+	bh=d/inj00VssFARtJHINdbyeltu6189BFFI92XI1Fgmfc=;
+	h=Date:From:To:List-Id:Cc:Subject:References:In-Reply-To:List-ID:
+	 From;
+	b=sVfky47uq0XE8pxkbFJmLciSjjplCgs6l9PH6zXaYAfD8NK1ikQ+kQCEkkpY6MTmx
+	 NzGepuv+64TM01oDhcC+HDYjskDMgZ6OhqHV1H9vrgm4pjRHAvagwEJ0EC1pD375pJ
+	 s5i1PZUn2dQxw44LasD8+BkQPa5VLkjYBsdoQfI4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728232AbgGNVLP (ORCPT
+        id S1728238AbgGNVLZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 17:11:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60980 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726960AbgGNVLP (ORCPT
+        Tue, 14 Jul 2020 17:11:25 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:41130 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726960AbgGNVLZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 17:11:15 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C6013C061755
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 14:11:14 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id s10so158680wrw.12
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 14:11:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ojcSMWBtY7u+CjYmd74/kAQvI15WEU4Or6gUCK1Km7c=;
-        b=h0ozwMR4QdnFXPq1Eu/IUUzZ0vyn7dQxLbSiWTziJlLaF3dCyg/VrvDHq+vOqYXpZR
-         E0xbrcWB3caHPhvKlu8r7nvrWoxREXCfvrQNEzOyzVz7HXUewi9VQVmH1CXqe4YZT0oN
-         8NRFykyriZsaK3qRz8BSD0bTVvlXnKwCy5aKy2hmn1c0WoibHONdBQMYwZQiNkydPc8T
-         C8l8n26NJFq88nuwY6I5FwdFafGWqRgjPoH78Hb6e42PjHUvsNnzEPlU9bFSQwEafp3Y
-         yzOagwRq5tCTOHaI3zQA3Rli60dRAen82kCON3zK35oKQH3y7WRJf9TLUGL8xJ6vGx3j
-         MB5g==
+        Tue, 14 Jul 2020 17:11:25 -0400
+Received: by mail-io1-f67.google.com with SMTP id p205so10306535iod.8;
+        Tue, 14 Jul 2020 14:11:24 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ojcSMWBtY7u+CjYmd74/kAQvI15WEU4Or6gUCK1Km7c=;
-        b=fXK6iUlH8jWryPyZqUi+s1dZX6sm6RUUe4XJmXn/jYJis2qPBI9vN35AWDdzS/nkoA
-         VgiHaimnc3tZXUshZJpXoBuK1+/okXKG5u7vtesow+IDIsOIJF2ZMREB0Wu3giv06xzY
-         8XOEp/g17uhxALN5IaYFyxoLwm3sX4s4vZycYZFpPeKjfjG3Rax6Qo40OmHYq1E6F56m
-         aXdON7o59tYZ5Jmy3CWBA8+aKeDO5FZzT1tSIWnZEFYQC5DbnSGkxoIOEBA7OQcTqxvd
-         MRiYaySKy+UbI5S764GvugyUwvKKhNTXYebiGTyR+M+EOlyU9qu34YXZN+z0JCtsvC5l
-         dhGA==
-X-Gm-Message-State: AOAM531e0FOOYO7x6cxFwedIdVe+bjx2Mb38ty05ftLcAS0aYlpIZY25
-        k0qbVBwTVE6/XUFpIaUdoH5Swbo+Ez1iebP0bTa40ynYBQtrFg==
-X-Google-Smtp-Source: ABdhPJxuX9pwd0xWMYRj3bvfJIjBk0P17xVA3/LSF6gQdhDLAgqFZbGf6JeDKtKGQRNiHuDQ7BPC26nJeRGuyLtHNhw=
-X-Received: by 2002:a5d:4bd2:: with SMTP id l18mr7655356wrt.119.1594761073310;
- Tue, 14 Jul 2020 14:11:13 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=5Swq7a5ctRoc+RuUYTUtL7qfmQuMHqbMs5u22W+BDmI=;
+        b=f0lxcX8VuyTB5tLjjCGW/mImBTsdeHub4NYpK0PrOmigpfRRTT4i+OBSuH0StOBbF+
+         TGh1Re8U4eYTJgjJVVFLYNkhU1Mh9YzvXsEYZsm32QLnI8q6r+d30UpSHWWqTFBlFilo
+         sL7uOanNLXABFE06IH+moucIh07Rfb0TRiHQgchM40KVNX38UN8ReHBkkzJWlSW2EiS1
+         bhUDqGKc46XKp6MlITNTFsWO/EZwUyw2qT3ZBvn4NvnCBtNP6O00t8khwVtpW78jfLvC
+         dtWD8PeullDzBmkZQAJD5eOHTX8hN1QvuK6aznSf3gjglHB3VjdZXknXp5TqxRC6+6eM
+         cOTg==
+X-Gm-Message-State: AOAM530ywV6YyNhsteMAFH3X22wAgwAXFCokPL37JbrW2rZX6GjVtDgA
+        rkWL2uJnCNKoFCx57TM/jQ==
+X-Google-Smtp-Source: ABdhPJxQmB+aTO4ntgpsDZOBSbGOX3QoKNxusCrXTBL7nhUHdW/a1NUULt6jrIxYZguq5sV6SCOjow==
+X-Received: by 2002:a6b:8f04:: with SMTP id r4mr6811433iod.160.1594761084379;
+        Tue, 14 Jul 2020 14:11:24 -0700 (PDT)
+Received: from xps15 ([64.188.179.252])
+        by smtp.gmail.com with ESMTPSA id v4sm53032ilo.44.2020.07.14.14.11.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 14 Jul 2020 14:11:23 -0700 (PDT)
+Received: (nullmailer pid 2924676 invoked by uid 1000);
+        Tue, 14 Jul 2020 21:11:22 -0000
+Date:   Tue, 14 Jul 2020 15:11:22 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Daniele Alessandrelli <daniele.alessandrelli@linux.intel.com>
+List-Id: <soc.lore.kernel.org>
+Cc:     linux-arm-kernel@lists.infradead.org, SoC Team <soc@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>,
+        Daniele Alessandrelli <daniele.alessandrelli@intel.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Jassi Brar <jassisinghbrar@gmail.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        "Paul J. Murphy" <paul.j.murphy@intel.com>,
+        Dinh Nguyen <dinguyen@kernel.org>
+Subject: Re: [PATCH v3 2/7] dt-bindings: arm: Add Keem Bay bindings
+Message-ID: <20200714211122.GA2921587@bogus>
+References: <20200714161305.836348-1-daniele.alessandrelli@linux.intel.com>
+ <20200714161305.836348-3-daniele.alessandrelli@linux.intel.com>
 MIME-Version: 1.0
-References: <20200712132634.138901-1-jolsa@kernel.org> <20200712132634.138901-8-jolsa@kernel.org>
-In-Reply-To: <20200712132634.138901-8-jolsa@kernel.org>
-From:   Ian Rogers <irogers@google.com>
-Date:   Tue, 14 Jul 2020 14:11:02 -0700
-Message-ID: <CAP-5=fUdSGvd9DYoFM5eGU8itjER=AYXcL33vDWDMTP3GZfZJg@mail.gmail.com>
-Subject: Re: [PATCH 07/18] perf metric: Add add_metric function
-To:     Jiri Olsa <jolsa@kernel.org>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Michael Petlan <mpetlan@redhat.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Kajol Jain <kjain@linux.ibm.com>,
-        John Garry <john.garry@huawei.com>,
-        "Paul A. Clarke" <pc@us.ibm.com>,
-        Stephane Eranian <eranian@google.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200714161305.836348-3-daniele.alessandrelli@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jul 12, 2020 at 6:27 AM Jiri Olsa <jolsa@kernel.org> wrote:
->
-> Decouple metric adding login into add_metric function,
-
-s/login/logging/ ?
-
-> so it can be used from other places in following changes.
->
-> Signed-off-by: Jiri Olsa <jolsa@kernel.org>
-
-Acked-by: Ian Rogers <irogers@google.com>
-
-Thanks,
-Ian
-
+On Tue, Jul 14, 2020 at 05:13:00PM +0100, Daniele Alessandrelli wrote:
+> From: Daniele Alessandrelli <daniele.alessandrelli@intel.com>
+> 
+> Document Intel Movidius SoC code-named Keem Bay, along with the Keem Bay
+> EVM board.
+> 
+> Reviewed-by: Dinh Nguyen <dinguyen@kernel.org>
+> Signed-off-by: Daniele Alessandrelli <daniele.alessandrelli@intel.com>
 > ---
->  tools/perf/util/metricgroup.c | 42 ++++++++++++++++++++++-------------
->  1 file changed, 26 insertions(+), 16 deletions(-)
->
-> diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.c
-> index 72552608ff7d..9a168f3df7a4 100644
-> --- a/tools/perf/util/metricgroup.c
-> +++ b/tools/perf/util/metricgroup.c
-> @@ -634,18 +634,11 @@ static struct pmu_event *find_metric(const char *metric, struct pmu_events_map *
->         return NULL;
->  }
->
-> -static int metricgroup__add_metric(const char *metric, bool metric_no_group,
-> -                                  struct strbuf *events,
-> -                                  struct list_head *group_list,
-> -                                  struct pmu_events_map *map)
-> +static int add_metric(struct list_head *group_list,
-> +                     struct pmu_event *pe,
-> +                     bool metric_no_group)
->  {
-> -       struct pmu_event *pe;
-> -       struct egroup *eg;
-> -       int ret;
-> -
-> -       pe = find_metric(metric, map);
-> -       if (!pe)
-> -               return -EINVAL;
-> +       int ret = 0;
->
->         pr_debug("metric expr %s for %s\n", pe->metric_expr, pe->metric_name);
->
-> @@ -654,8 +647,6 @@ static int metricgroup__add_metric(const char *metric, bool metric_no_group,
->                                                 pe,
->                                                 metric_no_group,
->                                                 1);
-> -               if (ret)
-> -                       return ret;
->         } else {
->                 int j, count;
->
-> @@ -666,14 +657,33 @@ static int metricgroup__add_metric(const char *metric, bool metric_no_group,
->                  * those events to group_list.
->                  */
->
-> -               for (j = 0; j < count; j++) {
-> +               for (j = 0; j < count && !ret; j++) {
->                         ret = __metricgroup__add_metric(
->                                 group_list, pe,
->                                 metric_no_group, j);
-> -                       if (ret)
-> -                               return ret;
->                 }
->         }
+>  .../devicetree/bindings/arm/keembay.yaml      | 19 +++++++++++++++++++
+
+/intel,keembay.yaml
+
+With that,
+
+Reviewed-by: Rob Herring <robh@kernel.org>
+
+>  1 file changed, 19 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/arm/keembay.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/arm/keembay.yaml b/Documentation/devicetree/bindings/arm/keembay.yaml
+> new file mode 100644
+> index 000000000000..f81b110046ca
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/arm/keembay.yaml
+> @@ -0,0 +1,19 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/arm/keembay.yaml#
+
+And don't forget this update.
+
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
 > +
-> +       return ret;
-> +}
+> +title: Keem Bay platform device tree bindings
 > +
-> +static int metricgroup__add_metric(const char *metric, bool metric_no_group,
-> +                                  struct strbuf *events,
-> +                                  struct list_head *group_list,
-> +                                  struct pmu_events_map *map)
-> +{
-> +       struct pmu_event *pe;
-> +       struct egroup *eg;
-> +       int ret;
+> +maintainers:
+> +  - Paul J. Murphy <paul.j.murphy@intel.com>
+> +  - Daniele Alessandrelli <daniele.alessandrelli@intel.com>
 > +
-> +       pe = find_metric(metric, map);
-> +       if (!pe)
-> +               return -EINVAL;
-> +
-> +       ret = add_metric(group_list, pe, metric_no_group);
-> +       if (ret)
-> +               return ret;
-> +
->         list_for_each_entry(eg, group_list, nd) {
->                 if (events->len > 0)
->                         strbuf_addf(events, ",");
-> --
-> 2.25.4
->
+> +properties:
+> +  compatible:
+> +    items:
+> +      - enum:
+> +        - intel,keembay-evm
+> +      - const: intel,keembay
+> +...
+> -- 
+> 2.26.2
+> 
