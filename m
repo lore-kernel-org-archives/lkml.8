@@ -2,53 +2,51 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 216E5C433EB
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57D64C433E8
 	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 19:08:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EDA5F2240B
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 19:08:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3063F21D79
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 19:08:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=default; t=1594753732;
-	bh=WDOcpm8AiqOoHahlx7bW0LSDjS5IJ/h+aOG5VQUvvuo=;
+	bh=Wegz6/ipsnYUokJXvOMieFYrk6wYPm9LCT/S3tzRTt0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=abEJLN21E41Id8MHz4fy33uVe0CreD4p5i37JNP7/lorVnMnXmz0gXY1Q9YO1IH/v
-	 R2I+B0fUp6uoH35JeqjgG/nt8EZhYaj6HVwkuAPhizlsLkcUPrep4yFrTJmbwZgfwK
-	 kHfFB2C/s3bXPYgBziId5botdfkvY4qzxsOL/wKY=
+	b=0OccS7t0sxh4drTFi2KAUoMOJEtYl62bcSvlAnEvhw6TOdXYUgcJWljK6DqpgcotJ
+	 uv72cQPCYl+9OlVbRzF3N4QSC3pKaJmwjLvY3lTI+rXnYA7UnDnybG/h9SaPXVNrfp
+	 2db2aOoRF7gFwvF3nrvOU84IOVLMlztuIdnrLDdE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730625AbgGNTIu (ORCPT
+        id S1731394AbgGNTGw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 15:08:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45514 "EHLO mail.kernel.org"
+        Tue, 14 Jul 2020 15:06:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50088 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729587AbgGNStl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 14:49:41 -0400
+        id S1730583AbgGNSxG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 14:53:06 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DD45122B3F;
-        Tue, 14 Jul 2020 18:49:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 92A6622BF5;
+        Tue, 14 Jul 2020 18:53:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594752581;
-        bh=WDOcpm8AiqOoHahlx7bW0LSDjS5IJ/h+aOG5VQUvvuo=;
+        s=default; t=1594752786;
+        bh=Wegz6/ipsnYUokJXvOMieFYrk6wYPm9LCT/S3tzRTt0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YzcQBMWvAWI5jki0NQUaFte3LS3l/3mISC8OJXomPGWzvQJu/4J4SlywJ3OpAfwcd
-         7/Ipo8XxYFmDn0fSb04uUY9I0TeMZ/r8XKuE58k5WqxW1Hi3HR4kw+biCOSKd6Cmmv
-         7UKBTMq2z05ejAQxiJKh/LHlNEvoov2aLz4JnFB0=
+        b=atNY0Oi/Qp86fFGMYBmLKSWAYiUCxSr7kerlWhSdWVz1Z/FPRIz520VDsULiRNGQD
+         EjogtcnNlLEy1woqa1TJ6EgN2+33k2oTuwOEzEXj+SjkuU9JZJVfyLlxN95vVkbctF
+         ae4hZKZ+Gb+ggBvvIFv3gZhCHQAz44Tv2TK6gqhM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chengguang Xu <cgxu519@mykernel.net>,
-        Christoph Hellwig <hch@lst.de>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 031/109] block: release bip in a right way in error path
-Date:   Tue, 14 Jul 2020 20:43:34 +0200
-Message-Id: <20200714184107.010737495@linuxfoundation.org>
+        stable@vger.kernel.org, Jian-Hong Pan <jian-hong@endlessm.com>,
+        Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 5.4 079/109] ALSA: hda/realtek: Enable headset mic of Acer Veriton N4660G with ALC269VC
+Date:   Tue, 14 Jul 2020 20:44:22 +0200
+Message-Id: <20200714184109.324388925@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200714184105.507384017@linuxfoundation.org>
 References: <20200714184105.507384017@linuxfoundation.org>
@@ -61,72 +59,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chengguang Xu <cgxu519@mykernel.net>
+From: Jian-Hong Pan <jian-hong@endlessm.com>
 
-[ Upstream commit 0b8eb629a700c0ef15a437758db8255f8444e76c ]
+commit 781c90c034d994c6a4e2badf189128a95ed864c2 upstream.
 
-Release bip using kfree() in error path when that was allocated
-by kmalloc().
+The Acer Veriton N4660G desktop's audio (1025:1248) with ALC269VC cannot
+detect the headset microphone until ALC269VC_FIXUP_ACER_MIC_NO_PRESENCE
+quirk maps the NID 0x18 as the headset mic pin.
 
-Signed-off-by: Chengguang Xu <cgxu519@mykernel.net>
-Reviewed-by: Christoph Hellwig <hch@lst.de>
-Acked-by: Martin K. Petersen <martin.petersen@oracle.com>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Jian-Hong Pan <jian-hong@endlessm.com>
+Cc: <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20200706071826.39726-3-jian-hong@endlessm.com
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- block/bio-integrity.c | 23 ++++++++++++++---------
- 1 file changed, 14 insertions(+), 9 deletions(-)
+ sound/pci/hda/patch_realtek.c |   11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
-diff --git a/block/bio-integrity.c b/block/bio-integrity.c
-index ae07dd78e9518..c9dc2b17ce251 100644
---- a/block/bio-integrity.c
-+++ b/block/bio-integrity.c
-@@ -24,6 +24,18 @@ void blk_flush_integrity(void)
- 	flush_workqueue(kintegrityd_wq);
- }
+--- a/sound/pci/hda/patch_realtek.c
++++ b/sound/pci/hda/patch_realtek.c
+@@ -6116,6 +6116,7 @@ enum {
+ 	ALC295_FIXUP_ASUS_MIC_NO_PRESENCE,
+ 	ALC269VC_FIXUP_ACER_VCOPPERBOX_PINS,
+ 	ALC269VC_FIXUP_ACER_HEADSET_MIC,
++	ALC269VC_FIXUP_ACER_MIC_NO_PRESENCE,
+ };
  
-+void __bio_integrity_free(struct bio_set *bs, struct bio_integrity_payload *bip)
-+{
-+	if (bs && mempool_initialized(&bs->bio_integrity_pool)) {
-+		if (bip->bip_vec)
-+			bvec_free(&bs->bvec_integrity_pool, bip->bip_vec,
-+				  bip->bip_slab);
-+		mempool_free(bip, &bs->bio_integrity_pool);
-+	} else {
-+		kfree(bip);
-+	}
-+}
-+
- /**
-  * bio_integrity_alloc - Allocate integrity payload and attach it to bio
-  * @bio:	bio to attach integrity metadata to
-@@ -75,7 +87,7 @@ struct bio_integrity_payload *bio_integrity_alloc(struct bio *bio,
+ static const struct hda_fixup alc269_fixups[] = {
+@@ -7314,6 +7315,15 @@ static const struct hda_fixup alc269_fix
+ 		.chained = true,
+ 		.chain_id = ALC269_FIXUP_HEADSET_MIC
+ 	},
++	[ALC269VC_FIXUP_ACER_MIC_NO_PRESENCE] = {
++		.type = HDA_FIXUP_PINS,
++		.v.pins = (const struct hda_pintbl[]) {
++			{ 0x18, 0x01a11130 }, /* use as headset mic, without its own jack detect */
++			{ }
++		},
++		.chained = true,
++		.chain_id = ALC269_FIXUP_HEADSET_MIC
++	},
+ };
  
- 	return bip;
- err:
--	mempool_free(bip, &bs->bio_integrity_pool);
-+	__bio_integrity_free(bs, bip);
- 	return ERR_PTR(-ENOMEM);
- }
- EXPORT_SYMBOL(bio_integrity_alloc);
-@@ -96,14 +108,7 @@ void bio_integrity_free(struct bio *bio)
- 		kfree(page_address(bip->bip_vec->bv_page) +
- 		      bip->bip_vec->bv_offset);
- 
--	if (bs && mempool_initialized(&bs->bio_integrity_pool)) {
--		bvec_free(&bs->bvec_integrity_pool, bip->bip_vec, bip->bip_slab);
--
--		mempool_free(bip, &bs->bio_integrity_pool);
--	} else {
--		kfree(bip);
--	}
--
-+	__bio_integrity_free(bs, bip);
- 	bio->bi_integrity = NULL;
- 	bio->bi_opf &= ~REQ_INTEGRITY;
- }
--- 
-2.25.1
-
+ static const struct snd_pci_quirk alc269_fixup_tbl[] = {
+@@ -7335,6 +7345,7 @@ static const struct snd_pci_quirk alc269
+ 	SND_PCI_QUIRK(0x1025, 0x110e, "Acer Aspire ES1-432", ALC255_FIXUP_ACER_MIC_NO_PRESENCE),
+ 	SND_PCI_QUIRK(0x1025, 0x1246, "Acer Predator Helios 500", ALC299_FIXUP_PREDATOR_SPK),
+ 	SND_PCI_QUIRK(0x1025, 0x1247, "Acer vCopperbox", ALC269VC_FIXUP_ACER_VCOPPERBOX_PINS),
++	SND_PCI_QUIRK(0x1025, 0x1248, "Acer Veriton N4660G", ALC269VC_FIXUP_ACER_MIC_NO_PRESENCE),
+ 	SND_PCI_QUIRK(0x1025, 0x128f, "Acer Veriton Z6860G", ALC286_FIXUP_ACER_AIO_HEADSET_MIC),
+ 	SND_PCI_QUIRK(0x1025, 0x1290, "Acer Veriton Z4860G", ALC286_FIXUP_ACER_AIO_HEADSET_MIC),
+ 	SND_PCI_QUIRK(0x1025, 0x1291, "Acer Veriton Z4660G", ALC286_FIXUP_ACER_AIO_HEADSET_MIC),
 
 
