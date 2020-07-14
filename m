@@ -2,80 +2,138 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E96E7C433EC
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 19:02:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7ADDC433EA
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 19:02:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D3ACE22B51
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 19:02:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C15BE22B51
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 19:02:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594753321;
+	bh=ZoJll4LksI40TPNtumYVwQbqJz3alFiU1ldCO5srpFQ=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=u1Si7Hj6M1a5bQMj7HwMtk5bMKb6jRdj/41+yq8szLxEslT1z7reDxT19wZi6OTsc
+	 x2BDkMcRfDX+p3oK7+G73kSV59Lu1VbQKT3Axb8bDcZvg8W+qUFx9fE89VCU9evzjs
+	 rfIZCp/fL/8GoIBKf3Dn9arnuPivqrnXJDt92Q2U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731124AbgGNTCG (ORCPT
+        id S1731316AbgGNTCA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 15:02:06 -0400
-Received: from mga06.intel.com ([134.134.136.31]:19710 "EHLO mga06.intel.com"
+        Tue, 14 Jul 2020 15:02:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57678 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731262AbgGNS6z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 14:58:55 -0400
-IronPort-SDR: givwFSprjeL4Mr4h/slmcV8zftQTk35wDE2YZRBlvpeRAVZ8IfNbXB1l2zsVNPJvxj6lKF0yNw
- 8Lxp0ehWQNAw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9682"; a="210549633"
-X-IronPort-AV: E=Sophos;i="5.75,352,1589266800"; 
-   d="scan'208";a="210549633"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jul 2020 11:58:54 -0700
-IronPort-SDR: T4uUEX03cyAvgT+sDDYLZfjnqNCrWzrggMmI031wo1yUThJxQ3uGcdrJkujY7qZw+MLsY6rKHu
- YW2uwZzwrDKA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,352,1589266800"; 
-   d="scan'208";a="390565699"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.152])
-  by fmsmga001.fm.intel.com with ESMTP; 14 Jul 2020 11:58:54 -0700
-Date:   Tue, 14 Jul 2020 11:58:54 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Jim Mattson <jmattson@google.com>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Joerg Roedel <joro@8bytes.org>, kvm list <kvm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Oliver Upton <oupton@google.com>,
-        Peter Shier <pshier@google.com>
-Subject: Re: [PATCH] KVM: x86: Don't attempt to load PDPTRs when 64-bit mode
- is enabled
-Message-ID: <20200714185853.GC14404@linux.intel.com>
-References: <20200714015732.32426-1-sean.j.christopherson@intel.com>
- <CALMp9eQ1-6GEiSh55-NXgjuq3EOwP9VWNMeriH_J64p9JMjN0g@mail.gmail.com>
+        id S1730154AbgGNS7H (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 14:59:07 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B2E17207F5;
+        Tue, 14 Jul 2020 18:59:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594753147;
+        bh=ZoJll4LksI40TPNtumYVwQbqJz3alFiU1ldCO5srpFQ=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=mBIXGo01oXTV5w7Sq8Hn0nOG/7JN9cBjRqGw3uD96vn+zvwVrWkHbvhMw4fQyarPU
+         K4r0ESX+vTywDQUamrH/wzlSNbPUbkm9WQh4C+uGXI1tLuX+znuA//KUpjLk7PHbLz
+         zsqWD8xratdnb+9g4RPEvprXa180wQTPgHrqMh2s=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Tom Rix <trix@redhat.com>,
+        Alex Deucher <alexander.deucher@amd.com>
+Subject: [PATCH 5.7 138/166] drm/radeon: fix double free
+Date:   Tue, 14 Jul 2020 20:45:03 +0200
+Message-Id: <20200714184122.442239512@linuxfoundation.org>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200714184115.844176932@linuxfoundation.org>
+References: <20200714184115.844176932@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CALMp9eQ1-6GEiSh55-NXgjuq3EOwP9VWNMeriH_J64p9JMjN0g@mail.gmail.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 14, 2020 at 11:55:45AM -0700, Jim Mattson wrote:
-> On Mon, Jul 13, 2020 at 6:57 PM Sean Christopherson
-> <sean.j.christopherson@intel.com> wrote:
-> >
-> > Don't attempt to load PDPTRs if EFER.LME=1, i.e. if 64-bit mode is
-> > enabled.  A recent change to reload the PDTPRs when CR0.CD or CR0.NW is
-> > toggled botched the EFER.LME handling and sends KVM down the PDTPR path
-> > when is_paging() is true, i.e. when the guest toggles CD/NW in 64-bit
-> > mode.
-> 
-> Oops!
-> 
-> I don't think "is_paging()" is relevant here, so much as "EFER.LME=1."
-> As you note below, KVM *should* go down the PDPTR path when
-> is_paging() is true and EFER.LME=0.
+From: Tom Rix <trix@redhat.com>
 
-It's relevant for the EFER.LME=1 case as it's used to detect CR0.PG 0->1.
+commit 41855a898650803e24b284173354cc3e44d07725 upstream.
 
-Though maybe we're in violent agreement?
+clang static analysis flags this error
+
+drivers/gpu/drm/radeon/ci_dpm.c:5652:9: warning: Use of memory after it is freed [unix.Malloc]
+                kfree(rdev->pm.dpm.ps[i].ps_priv);
+                      ^~~~~~~~~~~~~~~~~~~~~~~~~~
+drivers/gpu/drm/radeon/ci_dpm.c:5654:2: warning: Attempt to free released memory [unix.Malloc]
+        kfree(rdev->pm.dpm.ps);
+        ^~~~~~~~~~~~~~~~~~~~~~
+
+problem is reported in ci_dpm_fini, with these code blocks.
+
+	for (i = 0; i < rdev->pm.dpm.num_ps; i++) {
+		kfree(rdev->pm.dpm.ps[i].ps_priv);
+	}
+	kfree(rdev->pm.dpm.ps);
+
+The first free happens in ci_parse_power_table where it cleans up locally
+on a failure.  ci_dpm_fini also does a cleanup.
+
+	ret = ci_parse_power_table(rdev);
+	if (ret) {
+		ci_dpm_fini(rdev);
+		return ret;
+	}
+
+So remove the cleanup in ci_parse_power_table and
+move the num_ps calculation to inside the loop so ci_dpm_fini
+will know how many array elements to free.
+
+Fixes: cc8dbbb4f62a ("drm/radeon: add dpm support for CI dGPUs (v2)")
+
+Signed-off-by: Tom Rix <trix@redhat.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Cc: stable@vger.kernel.org
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ drivers/gpu/drm/radeon/ci_dpm.c |    7 +++----
+ 1 file changed, 3 insertions(+), 4 deletions(-)
+
+--- a/drivers/gpu/drm/radeon/ci_dpm.c
++++ b/drivers/gpu/drm/radeon/ci_dpm.c
+@@ -5577,6 +5577,7 @@ static int ci_parse_power_table(struct r
+ 	if (!rdev->pm.dpm.ps)
+ 		return -ENOMEM;
+ 	power_state_offset = (u8 *)state_array->states;
++	rdev->pm.dpm.num_ps = 0;
+ 	for (i = 0; i < state_array->ucNumEntries; i++) {
+ 		u8 *idx;
+ 		power_state = (union pplib_power_state *)power_state_offset;
+@@ -5586,10 +5587,8 @@ static int ci_parse_power_table(struct r
+ 		if (!rdev->pm.power_state[i].clock_info)
+ 			return -EINVAL;
+ 		ps = kzalloc(sizeof(struct ci_ps), GFP_KERNEL);
+-		if (ps == NULL) {
+-			kfree(rdev->pm.dpm.ps);
++		if (ps == NULL)
+ 			return -ENOMEM;
+-		}
+ 		rdev->pm.dpm.ps[i].ps_priv = ps;
+ 		ci_parse_pplib_non_clock_info(rdev, &rdev->pm.dpm.ps[i],
+ 					      non_clock_info,
+@@ -5611,8 +5610,8 @@ static int ci_parse_power_table(struct r
+ 			k++;
+ 		}
+ 		power_state_offset += 2 + power_state->v2.ucNumDPMLevels;
++		rdev->pm.dpm.num_ps = i + 1;
+ 	}
+-	rdev->pm.dpm.num_ps = state_array->ucNumEntries;
+ 
+ 	/* fill in the vce power states */
+ 	for (i = 0; i < RADEON_MAX_VCE_LEVELS; i++) {
+
+
