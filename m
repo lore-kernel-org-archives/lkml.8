@@ -2,137 +2,163 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B47A1C433E6
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 03:48:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 923AFC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 03:50:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 92AAE21973
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 03:48:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5ACB421927
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 03:50:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="uJcRAIpO"
+	dkim=pass (2048-bit key) header.d=brainfault-org.20150623.gappssmtp.com header.i=@brainfault-org.20150623.gappssmtp.com header.b="xSUjBlOy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726832AbgGNDsG (ORCPT
+        id S1726624AbgGNDuM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 23:48:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39788 "EHLO
+        Mon, 13 Jul 2020 23:50:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40104 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726510AbgGNDsF (ORCPT
+        with ESMTP id S1726432AbgGNDuL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 23:48:05 -0400
-Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CA946C061755
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 20:48:05 -0700 (PDT)
-Received: by mail-pl1-x644.google.com with SMTP id k5so6435808plk.13
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 20:48:05 -0700 (PDT)
+        Mon, 13 Jul 2020 23:50:11 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5B2E4C061755
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 20:50:11 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id r12so19500632wrj.13
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 20:50:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=EsBq089GZDoIsvZsbiScToJsxprKvs/96JCOecXXXpQ=;
-        b=uJcRAIpO/eks3FbmlqRMbW3QTtdRhagCtBBH/OPRFzO+cItithAHhWdexOdJ0Qd4PJ
-         /2Cb47Eiz6ndS7Pq12thMyP16KBwyvGmNOR0aXL4HkMoYjwI5Gdvxclz02dpsz5+be3e
-         RDYvNtm5JmHU3p6Jq2ji4NCzRuWwhF9g2Wjr43rZoQNFT73EI8NKtaRRODCtcMXRaQ4U
-         W0WiiM7dXislDwe3VkYVgNYylgwa/KBKaQJqZAjlH23E5tQhzRNLXsvV+gyxSNclygYD
-         OqX55Quq6wpD0uq2nuLV01i4AyXuFwkU0wrOfSBIQ3IkeeojSYD8GlbGaLtpFT5Tfb8/
-         3+4g==
+        d=brainfault-org.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=W2pU/oRXe8zSH98/qlLNnZqVfljdKaiKGd5Djyh/EW4=;
+        b=xSUjBlOytxheMN0Qygh7ElYrmY/6f5sOe3XoReILxBTvS+M/NKh4zZDDmr6WF4A6Ft
+         zU/Ghe9q8AOapCe1xcwtRt2f7CkyVqHXMc4q7C7uZqjLywbOOv5Ru/SFE7w08PPgMQ7/
+         yyJIXh69rVO4dfbZ+bYhMnPUywUqj1pUJmHYwT16W/PAkASHlCtRov419gtTrAhc+Lz1
+         T2GxOF8p6rzAUVzDP64yxNHkjqUEvCckMKaO1qMzxeVsIGDeFDfdw0VbeEQu5t/GauLR
+         makvc8Ts0BG2zt2oi+VysQqrk74fGbMeiaJ+7SGSrfRb0dBYR/PkOSsOy8iSR9XEwOwv
+         EdEg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=EsBq089GZDoIsvZsbiScToJsxprKvs/96JCOecXXXpQ=;
-        b=Q0kgpSw7KG9DAcquU8wgW1pa2kMm2LWCe1Bf+mMxzMA51RRUf5MrwxyhHbjw+YwyPr
-         2Cm8wcB44UB8es3agtiNA9Bs2Sg+Z1xQsTiwd5Oh3zE/aM2ewX/FDHXqGSAfAJX/svnR
-         Edd7iFdXC+hwWbLEtQn064UK8J5vEPhDJRew/oQ6f+tOHsi5N+pEXK3jxKLIY8UOVMcq
-         fYN3S0pWpdhocBswi2D2QuhcRI5sJmNJbrB5wX7FKlcqzdrlbR38jYMxeZbeVQmT1u8q
-         RIXLAXuWwEbTFaeh9j9MWr0FQ84GBXOt3Hax+iGbbldxkG1mcsAjlkUUifjbcdqAOrEm
-         rK7A==
-X-Gm-Message-State: AOAM533rjHQ4SUe20GGi45W9uRd1impFQ7O47v1DAWk1eJymfz8fJ06X
-        J7cjL1kzQafMkx2wrucaiG4fyQ==
-X-Google-Smtp-Source: ABdhPJzRBT5ZmUusJ1D4/9YXERxeJndlFfagLYukjSBjqjbkA64+3k6R2Ucrsr5Y2e6mTn3WY83raA==
-X-Received: by 2002:a17:90b:120a:: with SMTP id gl10mr2436607pjb.44.1594698484589;
-        Mon, 13 Jul 2020 20:48:04 -0700 (PDT)
-Received: from localhost ([122.172.34.142])
-        by smtp.gmail.com with ESMTPSA id i184sm15489021pfc.73.2020.07.13.20.48.03
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 13 Jul 2020 20:48:03 -0700 (PDT)
-Date:   Tue, 14 Jul 2020 09:18:02 +0530
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
-Cc:     vireshk@kernel.org, nm@ti.com, sboyd@kernel.org,
-        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] opp: ti-opp-supply: Replace HTTP links with HTTPS ones
-Message-ID: <20200714034802.jq2y5km4qentpehe@vireshk-i7>
-References: <20200713180516.36746-1-grandmaster@al2klimov.de>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=W2pU/oRXe8zSH98/qlLNnZqVfljdKaiKGd5Djyh/EW4=;
+        b=afOWeRpiXwLnfOih9TA859dUZYo2QAtcgoY27d+jvl1ewMDldtJRf91ICnMDxdNWdS
+         eWfb0Pb3F8CxqFAGwfx7PvkJfxn7ebPzCPNAPa73MvBjYtKs1sTi776AItcCkh/pDkQR
+         cbGC6VF+5gMXZE2wHiI02BvlkTKSCFSahD8itDxd/oHsGBbNW7pBFDtOUw66+wS5sY0D
+         /O/583nhrEiXvu3VLFa6BSpk+9T6+9uHsO01uUJ7RlsxhOkGgevNv5C1PbOikiKjUJgZ
+         FAcZ/z4eP8JwzvNWRl4zBLzI5jzDBSHlvZkmujcjjOLsYygCH8n+kNMKdp0sqlu7Bqnp
+         4VWw==
+X-Gm-Message-State: AOAM5328Q9Hqajt/NExe3YTrXzHKE/yOIvH26sXejiJ7TVEAGtvTNXK4
+        Ea7psHcl0iMQkTseoGJvAMFYcmESUYn+ML2CptAe4A==
+X-Google-Smtp-Source: ABdhPJyxhhnTBn9Z/d3RQByv+5O7q0RnlhAbpx4mldb52mcVpL0AUfedlXqbhjWWfR/hwCGcWa89EFLWLUtbzxojgNo=
+X-Received: by 2002:adf:fcca:: with SMTP id f10mr2671322wrs.325.1594698609842;
+ Mon, 13 Jul 2020 20:50:09 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200713180516.36746-1-grandmaster@al2klimov.de>
-User-Agent: NeoMutt/20180716-391-311a52
+References: <20200627161957.134376-1-anup.patel@wdc.com> <mhng-4d70be69-ef20-4d38-bda4-ec4101530c0a@palmerdabbelt-glaptop1>
+In-Reply-To: <mhng-4d70be69-ef20-4d38-bda4-ec4101530c0a@palmerdabbelt-glaptop1>
+From:   Anup Patel <anup@brainfault.org>
+Date:   Tue, 14 Jul 2020 09:19:57 +0530
+Message-ID: <CAAhSdy3mHhaKTrhRnNd_gGv7GbmjqxkB28sOw4q7ZTxw4oRd1Q@mail.gmail.com>
+Subject: Re: [PATCH v2 0/5] Dedicated CLINT timer driver
+To:     Palmer Dabbelt <palmer@dabbelt.com>
+Cc:     Anup Patel <Anup.Patel@wdc.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Rob Herring <robh+dt@kernel.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Damien Le Moal <Damien.LeMoal@wdc.com>,
+        Atish Patra <Atish.Patra@wdc.com>,
+        Alistair Francis <Alistair.Francis@wdc.com>,
+        linux-riscv <linux-riscv@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>,
+        devicetree@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 13-07-20, 20:05, Alexander A. Klimov wrote:
-> Rationale:
-> Reduces attack surface on kernel devs opening the links for MITM
-> as HTTPS traffic is much harder to manipulate.
-> 
-> Deterministic algorithm:
-> For each file:
->   If not .svg:
->     For each line:
->       If doesn't contain `\bxmlns\b`:
->         For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
-> 	  If neither `\bgnu\.org/license`, nor `\bmozilla\.org/MPL\b`:
->             If both the HTTP and HTTPS versions
->             return 200 OK and serve the same content:
->               Replace HTTP with HTTPS.
-> 
-> Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
-> ---
->  Continuing my work started at 93431e0607e5.
->  See also: git log --oneline '--author=Alexander A. Klimov <grandmaster@al2klimov.de>' v5.7..master
->  (Actually letting a shell for loop submit all this stuff for me.)
-> 
->  If there are any URLs to be removed completely or at least not just HTTPSified:
->  Just clearly say so and I'll *undo my change*.
->  See also: https://lkml.org/lkml/2020/6/27/64
-> 
->  If there are any valid, but yet not changed URLs:
->  See: https://lkml.org/lkml/2020/6/26/837
-> 
->  If you apply the patch, please let me know.
-> 
->  Sorry again to all maintainers who complained about subject lines.
->  Now I realized that you want an actually perfect prefixes,
->  not just subsystem ones.
->  I tried my best...
->  And yes, *I could* (at least half-)automate it.
->  Impossible is nothing! :)
-> 
-> 
->  drivers/opp/ti-opp-supply.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/opp/ti-opp-supply.c b/drivers/opp/ti-opp-supply.c
-> index e3357e91decb..bd4771f388ab 100644
-> --- a/drivers/opp/ti-opp-supply.c
-> +++ b/drivers/opp/ti-opp-supply.c
-> @@ -1,6 +1,6 @@
->  // SPDX-License-Identifier: GPL-2.0
->  /*
-> - * Copyright (C) 2016-2017 Texas Instruments Incorporated - http://www.ti.com/
-> + * Copyright (C) 2016-2017 Texas Instruments Incorporated - https://www.ti.com/
->   *	Nishanth Menon <nm@ti.com>
->   *	Dave Gerlach <d-gerlach@ti.com>
->   *
+On Tue, Jul 14, 2020 at 4:32 AM Palmer Dabbelt <palmer@dabbelt.com> wrote:
+>
+> On Sat, 27 Jun 2020 09:19:52 PDT (-0700), Anup Patel wrote:
+> > The current RISC-V timer driver is convoluted and implements two
+> > distinct timers:
+> >  1. S-mode timer: This is for Linux RISC-V S-mode with MMU. The
+> >     clocksource is implemented using TIME CSR and clockevent device
+> >     is implemented using SBI Timer calls.
+> >  2. M-mode timer: This is for Linux RISC-V M-mode without MMU. The
+> >     clocksource is implemented using CLINT MMIO time register and
+> >     clockevent device is implemented using CLINT MMIO timecmp registers.
+> >
+> > This patchset removes clint related code from RISC-V timer driver and
+> > arch/riscv directory. Instead, the series adds a dedicated MMIO based
+> > CLINT driver under drivers/clocksource directory which can be used by
+> > Linux RISC-V M-mode (i.e NoMMU Linux RISC-V).
+> >
+> > The patchset is based up Linux-5.8-rc2 and can be found at riscv_clint_v2
+> > branch of: https://github.com/avpatel/linux.git
+> >
+> > This series is tested on:
+> >  1. QEMU RV64 virt machine using Linux RISC-V S-mode
+> >  2. QEMU RV32 virt machine using Linux RISC-V S-mode
+> >  3. QEMU RV64 virt machine using Linux RISC-V M-mode (i.e. NoMMU)
+> >
+> > Changes since v1:
+> >  - Rebased series on Linux-5.8-rc2
+> >  - Added pr_warn() for case where ipi_ops not available in PATCH1
+> >  - Updated ipi_inject() prototype to use "struct cpumask *" in PATCH1
+> >  - Updated CLINT_TIMER kconfig option to depend on RISCV_M_MODE in PATCH4
+> >  - Added riscv,clint0 compatible string in DT bindings document
+> >
+> > Anup Patel (5):
+> >   RISC-V: Add mechanism to provide custom IPI operations
+> >   RISC-V: Remove CLINT related code
+> >   clocksource/drivers/timer-riscv: Remove MMIO related stuff
+> >   clocksource/drivers: Add CLINT timer driver
+> >   dt-bindings: timer: Add CLINT bindings
+>
+> This all generally LGTM, though I haven't been through the code line-by-line
+> yet.  It touches a bunch of trees, so I'd prefer to have some Acks before
+> merging -- I'll dig through the RISC-V specific stuff, but the new CLINT driver
+> probhably deserves a look from one of the clocksource folks.
+>
+> I think the only issue is that the port will be broken between patch 2 and 4,
+> as at that point we won't have an M-mode timer driver.  I think it shouldn't be
+> too much to just reorder these, LMK if you want to do it or you want me to.
 
-Applied. Thanks.
+Okay, I will try your suggestion to reorder patches. There is another minor
+build issue reported by test bots which I will fix as well.
 
--- 
-viresh
+I will send v3 in a couple of days before end-of-week.
+
+Regards,
+Anup
+
+>
+> Thanks!
+>
+> >
+> >  .../bindings/timer/sifive,clint.txt           |  34 +++
+> >  arch/riscv/Kconfig                            |   2 +-
+> >  arch/riscv/include/asm/clint.h                |  39 ---
+> >  arch/riscv/include/asm/smp.h                  |  11 +
+> >  arch/riscv/include/asm/timex.h                |  28 +--
+> >  arch/riscv/kernel/Makefile                    |   2 +-
+> >  arch/riscv/kernel/clint.c                     |  44 ----
+> >  arch/riscv/kernel/sbi.c                       |  14 ++
+> >  arch/riscv/kernel/setup.c                     |   2 -
+> >  arch/riscv/kernel/smp.c                       |  44 ++--
+> >  arch/riscv/kernel/smpboot.c                   |   4 +-
+> >  drivers/clocksource/Kconfig                   |  12 +-
+> >  drivers/clocksource/Makefile                  |   1 +
+> >  drivers/clocksource/timer-clint.c             | 229 ++++++++++++++++++
+> >  drivers/clocksource/timer-riscv.c             |  17 +-
+> >  include/linux/cpuhotplug.h                    |   1 +
+> >  16 files changed, 337 insertions(+), 147 deletions(-)
+> >  create mode 100644 Documentation/devicetree/bindings/timer/sifive,clint.txt
+> >  delete mode 100644 arch/riscv/include/asm/clint.h
+> >  delete mode 100644 arch/riscv/kernel/clint.c
+> >  create mode 100644 drivers/clocksource/timer-clint.c
