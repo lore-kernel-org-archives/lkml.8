@@ -2,113 +2,117 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AF0CC433ED
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 14:23:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71B64C433E5
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 14:23:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6FBC922515
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 14:23:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 432FD22365
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 14:23:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="JMk16yBQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728671AbgGNOXH (ORCPT
+        id S1728813AbgGNOXg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 10:23:07 -0400
-Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:34086 "EHLO
-        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725955AbgGNOXG (ORCPT
+        Tue, 14 Jul 2020 10:23:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53058 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728766AbgGNOX2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 10:23:06 -0400
-Received: from pps.filterd (m0167089.ppops.net [127.0.0.1])
-        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06EEMR2k018763;
-        Tue, 14 Jul 2020 10:22:52 -0400
-Received: from nwd2mta4.analog.com ([137.71.173.58])
-        by mx0a-00128a01.pphosted.com with ESMTP id 327ab4rv35-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 14 Jul 2020 10:22:52 -0400
-Received: from ASHBMBX9.ad.analog.com (ashbmbx9.ad.analog.com [10.64.17.10])
-        by nwd2mta4.analog.com (8.14.7/8.14.7) with ESMTP id 06EEMpOk015305
-        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=FAIL);
-        Tue, 14 Jul 2020 10:22:51 -0400
-Received: from ASHBCASHYB5.ad.analog.com (10.64.17.133) by
- ASHBMBX9.ad.analog.com (10.64.17.10) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1779.2; Tue, 14 Jul 2020 10:22:50 -0400
-Received: from ASHBMBX8.ad.analog.com (10.64.17.5) by
- ASHBCASHYB5.ad.analog.com (10.64.17.133) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1779.2; Tue, 14 Jul 2020 10:22:49 -0400
-Received: from zeus.spd.analog.com (10.64.82.11) by ASHBMBX8.ad.analog.com
- (10.64.17.5) with Microsoft SMTP Server id 15.1.1779.2 via Frontend
- Transport; Tue, 14 Jul 2020 10:22:48 -0400
-Received: from localhost.localdomain ([10.48.65.12])
-        by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 06EEMjUb020477;
-        Tue, 14 Jul 2020 10:22:46 -0400
-From:   Alexandru Ardelean <alexandru.ardelean@analog.com>
-To:     <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-CC:     <jic23@kernel.org>, Lars-Peter Clausen <lars@metafoo.de>,
-        "Alexandru Ardelean" <alexandru.ardelean@analog.com>
-Subject: [PATCH] iio: trigger: Staticise stub functions
-Date:   Tue, 14 Jul 2020 17:24:56 +0300
-Message-ID: <20200714142456.67054-1-alexandru.ardelean@analog.com>
-X-Mailer: git-send-email 2.17.1
+        Tue, 14 Jul 2020 10:23:28 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DD899C061755
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 07:23:27 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id j4so21978955wrp.10
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 07:23:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=+XB0FMKuppgq4ltckLknQrvpl9WV3rgpMyG5Av27BWg=;
+        b=JMk16yBQUPUZ6gxqBeByLmVDx4mOjjb1cQBJz7HbdIRAau3VnH8I3fIB5KgOV9F428
+         jVz+WcRwlk6q7PmehC9LV2k2R3Q239BZKoOp03NTTHlCoubklxgj4X9lx6Hv1DTi2veR
+         6K+iWUCaicRDpcZr1orM7MTz7Lf2ieJCRSPJYj1NaPqRzdsMjsus5LZBSwAcPfnzqc65
+         DCHBqYgBwUJ7V0UUZD9PS8RGH9USZvFwehH/HNEkwMPejvRM4mVUsU8GVM109mcQUxO1
+         9UhyNCvlziedmeMebcDBeo22muADCSJiX0umqAJDV5EVQGp07JJmmuaAUIkOGAS03g0N
+         q6iQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=+XB0FMKuppgq4ltckLknQrvpl9WV3rgpMyG5Av27BWg=;
+        b=d3PRLuha6FbN3NSgpauFM/8LufyA4wXDDIdY6yw2timeo/30P73plKbPtYZAhY4rXb
+         hqMci5p2aGVOVO1tI2rfF7KrNwbbtugkAur1fc++p4xdM0LD4LQ3ImCGQ4/HVad3w+1j
+         RdLx5RuEI1MC/WI8Wwr7WO1rIs5wLDQZ8Ul5SCu6OT3Scq5Qct1PZJb8Z1Cy3STsI22M
+         v3Zal1L2kxc+HoO+waFKkjI+yorlv62iWL3W5T9XimsPsSHZTKp0PgSx0uLtGkHUpn4V
+         Dfs3km+odps7cArgHcIg3DZwv9TLAzVPFEe+FSolBkJ+YdtMYoDMD8T7WUcjK04LX3ST
+         I9hA==
+X-Gm-Message-State: AOAM533b+A2EPM77KNjol5SFG8Oi3ZxXhdjQ/+qyMDE3NAM/Tj+aE4NR
+        PP6U2aGe3lav75bKsYaRkByvlFl/fN4=
+X-Google-Smtp-Source: ABdhPJxhrqDOQ6E+DeR8LfASUhGAMwlZ4Mg3y3JEhR8OJgyB3KcvVv/uXU3ze5rXDoW8FSqffXqNyA==
+X-Received: by 2002:adf:e908:: with SMTP id f8mr5844532wrm.3.1594736606613;
+        Tue, 14 Jul 2020 07:23:26 -0700 (PDT)
+Received: from dell ([2.31.163.61])
+        by smtp.gmail.com with ESMTPSA id j6sm29991962wro.25.2020.07.14.07.23.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 14 Jul 2020 07:23:26 -0700 (PDT)
+Date:   Tue, 14 Jul 2020 15:23:24 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     "Martin K. Petersen" <martin.petersen@oracle.com>
+Cc:     jejb@linux.ibm.com, linux-kernel@vger.kernel.org,
+        linux-scsi@vger.kernel.org, Hannes Reinecke <hare@suse.de>
+Subject: Re: [PATCH v2 05/29] scsi: fcoe: fcoe_ctlr: Fix a myriad of
+ documentation issues
+Message-ID: <20200714142324.GC1398296@dell>
+References: <20200713074645.126138-1-lee.jones@linaro.org>
+ <20200713074645.126138-6-lee.jones@linaro.org>
+ <yq1lfjmqji1.fsf@ca-mkp.ca.oracle.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-ADIRoutedOnPrem: True
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-07-14_04:2020-07-14,2020-07-14 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0
- priorityscore=1501 impostorscore=0 suspectscore=0 mlxlogscore=999
- malwarescore=0 bulkscore=0 adultscore=0 clxscore=1015 lowpriorityscore=0
- mlxscore=0 phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2007140111
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <yq1lfjmqji1.fsf@ca-mkp.ca.oracle.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lars-Peter Clausen <lars@metafoo.de>
+On Tue, 14 Jul 2020, Martin K. Petersen wrote:
 
-Make sure that the trigger function stubs are all static inline. Otherwise
-we'll get linker errors due to multiple definitions of the same function.
+> 
+> Lee,
 
-Fixes f8c6f4e9a40d4: ("iio: trigger: Staticise stub functions")
-Signed-off-by: Lars-Peter Clausen <lars@metafoo.de>
-Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
----
+Ah, you are alive.  I was beginning to worry. :)
 
-FWIW: we can skip the Fixes tag from my side; this has been present for
-a while.
-I just bumped into it while sync-ing the ADI tree with some upstream
-stuff.
+I have more fixes for you, but didn't want to send them until these
+have been merged.
 
- drivers/iio/iio_core_trigger.h | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+> > @@ -3015,9 +3016,8 @@ static void fcoe_ctlr_disc_recv(struct fc_lport *lport, struct fc_frame *fp)
+> >  	fc_frame_free(fp);
+> >  }
+> >  
+> > -/**
+> > +/*
+> >   * fcoe_ctlr_disc_recv - start discovery for VN2VN mode.
+> > - * @fip: The FCoE controller
+> >   *
+> >   * This sets a flag indicating that remote ports should be created
+> >   * and started for the peers we discover.  We use the disc_callback
+> 
+> s/fcoe_ctlr_disc_recv/fcoe_ctlr_disc_start/ ?
 
-diff --git a/drivers/iio/iio_core_trigger.h b/drivers/iio/iio_core_trigger.h
-index 9d1a92cc6480..374816bc3e73 100644
---- a/drivers/iio/iio_core_trigger.h
-+++ b/drivers/iio/iio_core_trigger.h
-@@ -30,7 +30,7 @@ int iio_trigger_detach_poll_func(struct iio_trigger *trig,
-  * iio_device_register_trigger_consumer() - set up an iio_dev to use triggers
-  * @indio_dev: iio_dev associated with the device that will consume the trigger
-  **/
--static int iio_device_register_trigger_consumer(struct iio_dev *indio_dev)
-+static inline int iio_device_register_trigger_consumer(struct iio_dev *indio_dev)
- {
- 	return 0;
- }
-@@ -39,7 +39,7 @@ static int iio_device_register_trigger_consumer(struct iio_dev *indio_dev)
-  * iio_device_unregister_trigger_consumer() - reverse the registration process
-  * @indio_dev: iio_dev associated with the device that consumed the trigger
-  **/
--static void iio_device_unregister_trigger_consumer(struct iio_dev *indio_dev)
-+static inline void iio_device_unregister_trigger_consumer(struct iio_dev *indio_dev)
- {
- }
- 
+Yes, I spotted it.  Hence my earlier comment to Hannes:
+
+ "Look at the function below it (in your local copy). ;)"
+
+Do you want me to fix that up here as well?
+
 -- 
-2.17.1
-
+Lee Jones [李琼斯]
+Senior Technical Lead - Developer Services
+Linaro.org │ Open source software for Arm SoCs
+Follow Linaro: Facebook | Twitter | Blog
