@@ -2,108 +2,132 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D7FEC433E4
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 14:15:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CCC1BC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 14:15:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 399F12242E
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 14:15:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A0D7622447
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 14:15:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fWDJszts"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rOAffERf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728477AbgGNOP4 (ORCPT
+        id S1728284AbgGNOPu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 10:15:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51912 "EHLO
+        Tue, 14 Jul 2020 10:15:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51898 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725803AbgGNOPy (ORCPT
+        with ESMTP id S1725803AbgGNOPt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 10:15:54 -0400
-Received: from mail-qt1-x844.google.com (mail-qt1-x844.google.com [IPv6:2607:f8b0:4864:20::844])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2BD11C061755
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 07:15:54 -0700 (PDT)
-Received: by mail-qt1-x844.google.com with SMTP id a32so12881347qtb.5
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 07:15:54 -0700 (PDT)
+        Tue, 14 Jul 2020 10:15:49 -0400
+Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 85D6AC061755;
+        Tue, 14 Jul 2020 07:15:49 -0700 (PDT)
+Received: by mail-pf1-x441.google.com with SMTP id a24so2024611pfc.10;
+        Tue, 14 Jul 2020 07:15:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=sender:from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=P372NUKZoZ0/nvzVGUuc2s28GruKsUnveXwN5n0Gdac=;
-        b=fWDJsztsy4vHZnJcfhEoivjuDuvY9H6HC+F2NhBdj1E4joBeLZ17Rt2HLiHKkMFDXM
-         BEDbI36VlLMjke+//jmvYPPhNaqi8L7grwEbXPWyvIbZi67K67WAP7/wN+BDoLR6p4tG
-         a5/VDto9JJkkBPm8pXSB98z6lnDQtm7IcPJ9RVBxX7kS4EpJTJm7OcqyxLdSXygdfRle
-         HWvnRjI33sVvNOLATWzYQIjCoOuXmjkeifyMq008/6crfbDFxzZM9FxRAnb05k909OG4
-         AfYJH1kIQaTW+Dw7IQlaudr5Ug6C28xe/jvARrfLBSz3Iyd3XFa66+jxqH776YyDgMuw
-         XS5A==
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=DAio3TnNTOjPe9yDwDItXd0o7RC8Gehby5x/FyQbpyQ=;
+        b=rOAffERfaz2UrV/aTpHlw3LE+qz20urqxX+6me5hpwJ2HDvmNztB9cRc0EXprWkEdM
+         Jlj3whEQl2yiERo84RsgSSoBDw8op80X+CguyWpDzcdtdPIoJNgCQjYSkBQf+pi/RwIG
+         8BfylvHePmpveogaOzrmzbJLa5JX1tKimMPPJHh5X9manHtwJ4pFy7Gr8P0Zv4CMKjJo
+         o49vk16JtSQP8TshZDf7MIOorbkkALU6B6J54U8BPnXpLHclWDfDB3WWQk+W6w4JJuQM
+         /oedkiRJAu+TBuyAIFvy+4DmQcSp0C5gGWc2sGILREgdr3J7Gs53S6OkLm0ifNPALVlL
+         kcJQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:date:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to;
-        bh=P372NUKZoZ0/nvzVGUuc2s28GruKsUnveXwN5n0Gdac=;
-        b=pBDom9CzUR8YxsYkNlo3tZvB7cDbOaLV7pc9W5bh/V/31G0K8J4mFyP0Aq6ht3cLOr
-         eYvwjiNYGX6Nvhd1FVZbZh4F/+j+XEqckzGyrVM1HGwNgBNwVwP5vzhsQ9W7YuEiV4EJ
-         8b5Zdi9YVsLYgmjPyI7drfI7z02P9/LIqkWQ3IdRYJ9RxglBldIZsBw3bet0e//Z9DBh
-         Y7G4jB3hq6uQcurZACNby2pPdPMKhbk2vO86lBXYAuFvrZUuy10FXC2VmppPWxeda4WH
-         dQq3DomlyRg70QqVrrBZaOBJrAyLDN9Hv65Zy9b1NHzoLGGjSqxb6ptSvz6p9hVPoqjF
-         Jxsg==
-X-Gm-Message-State: AOAM5306lML0SDIQC8+qMaJv/qENfWWnk9y/9wF4ppHM6qHFX7tq4kIN
-        slBA5Wv+e0PxClFxTkHghGU=
-X-Google-Smtp-Source: ABdhPJz2n202z1wIcS/YMaunLV4uw0Y5CM/DIPtulElHJdQPSUW6gzU+fr1d3mKFvywCsjIuQUqdPA==
-X-Received: by 2002:ac8:544d:: with SMTP id d13mr4915886qtq.375.1594736152547;
-        Tue, 14 Jul 2020 07:15:52 -0700 (PDT)
-Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
-        by smtp.gmail.com with ESMTPSA id 19sm22696233qke.44.2020.07.14.07.15.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 Jul 2020 07:15:51 -0700 (PDT)
-From:   Arvind Sankar <nivedita@alum.mit.edu>
-X-Google-Original-From: Arvind Sankar <arvind@rani.riverdale.lan>
-Date:   Tue, 14 Jul 2020 10:15:50 -0400
-To:     Sedat Dilek <sedat.dilek@gmail.com>
-Cc:     Arvind Sankar <nivedita@alum.mit.edu>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Fangrui Song <maskray@google.com>,
-        Dmitry Golovin <dima@golovin.in>,
-        Clang-Built-Linux ML <clang-built-linux@googlegroups.com>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Daniel Kiper <daniel.kiper@oracle.com>,
-        Kees Cook <keescook@chromium.org>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        "H . J . Lu" <hjl@sourceware.org>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 0/7] x86/boot: Remove runtime relocations from
- compressed kernel
-Message-ID: <20200714141550.GA329060@rani.riverdale.lan>
-References: <20200629140928.858507-1-nivedita@alum.mit.edu>
- <20200714023836.2310569-1-nivedita@alum.mit.edu>
- <CA+icZUXSPfybFtzQB3wKn9spQmEPnQu_iGPWkRisAmRQbJLWXA@mail.gmail.com>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=DAio3TnNTOjPe9yDwDItXd0o7RC8Gehby5x/FyQbpyQ=;
+        b=djmKuisxoltQoD/a/qWrXWGvjNjQ2vjSQO5ny18gi8VQzXzI/T//ddfFFZmVcgF3GW
+         4oVuxd/D48LmXAC23Zp61xY+LCsV5LjycbATky23wHtpL8jet1dt6/OxSGA1hxu4lNpK
+         0/jsPTDDVAVmAnUl6DZWrikvxmLyV1fw+ejj4nVUq6cPSCHhu+LzALci7CXyLbT1s0co
+         HwMsIymQ19WxG5SPl10TyUQIkEFbWUuhMKZP/KRrsluV/K865w3TvAHj8DKOsp/SrxKX
+         jiKY1HGImlXepOqoVK596JRhffjcH2Jt8ICwoqTN51b0Beb15m8dj4ozzSaBkc9T6CuJ
+         c9jg==
+X-Gm-Message-State: AOAM531xur5WeyDUGGAuEBOfiU+q6qd4HN8YMWiifS3s4US+HLAniRI+
+        lEu2AxW4+dBuY7Hx6cpcilLnniyQ
+X-Google-Smtp-Source: ABdhPJyo3khVV52XT8MCJLPQdOIgAWkQukLAnutLjv1b+w0ozzXXf31UXmKYsEbgAsae5AM27N437w==
+X-Received: by 2002:a05:6a00:2bb:: with SMTP id q27mr4723037pfs.176.1594736148707;
+        Tue, 14 Jul 2020 07:15:48 -0700 (PDT)
+Received: from [10.1.10.11] (c-73-241-150-58.hsd1.ca.comcast.net. [73.241.150.58])
+        by smtp.gmail.com with ESMTPSA id p5sm16337570pgi.83.2020.07.14.07.15.47
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 14 Jul 2020 07:15:47 -0700 (PDT)
+Subject: Re: [PATCH v2] tipc: Don't using smp_processor_id() in preemptible
+ code
+To:     qiang.zhang@windriver.com, jmaloy@redhat.com, davem@davemloft.net,
+        kuba@kernel.org, tuong.t.lien@dektech.com.au,
+        eric.dumazet@gmail.com, ying.xue@windriver.com
+Cc:     netdev@vger.kernel.org, tipc-discussion@lists.sourceforge.net,
+        linux-kernel@vger.kernel.org
+References: <20200714080559.9617-1-qiang.zhang@windriver.com>
+From:   Eric Dumazet <eric.dumazet@gmail.com>
+Message-ID: <bf395370-219a-7c87-deee-7f3edce8c9dc@gmail.com>
+Date:   Tue, 14 Jul 2020 07:15:46 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
+In-Reply-To: <20200714080559.9617-1-qiang.zhang@windriver.com>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <CA+icZUXSPfybFtzQB3wKn9spQmEPnQu_iGPWkRisAmRQbJLWXA@mail.gmail.com>
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 14, 2020 at 03:15:49PM +0200, Sedat Dilek wrote:
+
+
+On 7/14/20 1:05 AM, qiang.zhang@windriver.com wrote:
+> From: Zhang Qiang <qiang.zhang@windriver.com>
 > 
-> How to test this series without building a full new kernel?
+> CPU: 0 PID: 6801 Comm: syz-executor201 Not tainted 5.8.0-rc4-syzkaller #0
+> Hardware name: Google Google Compute Engine/Google Compute Engine,
+> BIOS Google 01/01/2011
 > 
-> make $make_opts vmlinux
+> Fixes: fc1b6d6de2208 ("tipc: introduce TIPC encryption & authentication")
+> Reported-by: syzbot+263f8c0d007dc09b2dda@syzkaller.appspotmail.com
+> Signed-off-by: Zhang Qiang <qiang.zhang@windriver.com>
+> ---
+>  v1->v2:
+>  add fixes tags.
 > 
-> - Sedat -
+>  net/tipc/crypto.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/net/tipc/crypto.c b/net/tipc/crypto.c
+> index 8c47ded2edb6..520af0afe1b3 100644
+> --- a/net/tipc/crypto.c
+> +++ b/net/tipc/crypto.c
+> @@ -399,9 +399,10 @@ static void tipc_aead_users_set(struct tipc_aead __rcu *aead, int val)
+>   */
+>  static struct crypto_aead *tipc_aead_tfm_next(struct tipc_aead *aead)
+>  {
+> -	struct tipc_tfm **tfm_entry = this_cpu_ptr(aead->tfm_entry);
+> +	struct tipc_tfm **tfm_entry = get_cpu_ptr(aead->tfm_entry);
+>  
+>  	*tfm_entry = list_next_entry(*tfm_entry, list);
+> +	put_cpu_ptr(tfm_entry);
+>  	return (*tfm_entry)->tfm;
+>  }
+>  
 > 
 
-Not sure I understood the question: you do have to build a full new
-kernel with this patch series to test it. Since the changes are to the
-compressed kernel, you would need to make bzImage, which is the end
-product of the full kernel build.
+You have not explained why this was safe.
 
-Thanks.
+This seems to hide a real bug.
+
+Presumably callers of this function should have disable preemption, and maybe interrupts as well.
+
+Right after put_cpu_ptr(tfm_entry), this thread could migrate to another cpu, and still access
+data owned by the old cpu.
+
+
