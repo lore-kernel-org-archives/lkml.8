@@ -2,174 +2,102 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8918EC433E2
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 08:03:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFB48C433E5
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 08:07:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 66E9B2075D
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 08:03:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B43621582
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 08:07:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b="El1qSrVl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726252AbgGNIDE convert rfc822-to-8bit (ORCPT
+        id S1726775AbgGNIHT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 04:03:04 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:41728 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725793AbgGNIDD (ORCPT
+        Tue, 14 Jul 2020 04:07:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51312 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726609AbgGNIHP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 04:03:03 -0400
-Received: by mail-ot1-f65.google.com with SMTP id a21so12365281otq.8
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 01:03:02 -0700 (PDT)
+        Tue, 14 Jul 2020 04:07:15 -0400
+Received: from mail-ed1-x542.google.com (mail-ed1-x542.google.com [IPv6:2a00:1450:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 081CCC08C5DE
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 01:07:15 -0700 (PDT)
+Received: by mail-ed1-x542.google.com with SMTP id a1so10709580edt.10
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 01:07:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=szeredi.hu; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=VxG136uE7k/7DQKw2dWH82lAeA2t/fDkcPS0g4RMW9A=;
+        b=El1qSrVlx5j8OzqWY+jAkGIyxjaAfYH+cAXX/jS9K9Nm7LDsD7Ow20X6ZI/9L4i34m
+         i6WsR0CtSO9QTmeXYDIWsjH1tlcEOcfyjR+Yn6OuRbJMAlEjvHkjEtfJJvDtJKZFb57q
+         UXgWM5FxsZRScs6IL4dz92fo4cR62DnQk6wXY=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=sO75H8Yi9AP6nGiM/pURAA2j/eVJB0AD7UzA5jemaZU=;
-        b=Ce9o2hEPMvproraK5pUXLRpvjiHMUx1k6uNHkmyPoChIovdeqoaeHerGzhZiEEIYm4
-         a2OzdfNnA+ogo6O0I4fa21zOVPAl2SGmyi4DYwzNiyMkDQy4LiGFJXWaDe4nZK9pDa0f
-         4iubiEzJbo+dLhlrecqQHb6KjadBr146uHlrkpUE23QISKVZQ52ljWESSSwZ0JV1ztU7
-         MypfNLt1RaHdRgJReSNF25rUnUMlsvmJ3edn+e1ll1H/pOkNdFclhQ57F9VcmVzJWrsI
-         Sygm6N8GHVN9s/Ph8lUrxSIPAh+M5/iwE/5SZrTUDPn+o6uB0s1PDJBB2DCEtQ1CdeEJ
-         e4Mg==
-X-Gm-Message-State: AOAM532X/1HE0WEHb4GvkOAmqUiu+2yqx50E8l2Y0HEkhfJulvHl2ESC
-        M0egQthWQVNhS9I6LKtvQx1O4d9m56vzCR+EILI=
-X-Google-Smtp-Source: ABdhPJyHqmvb+j+yiJ6OucsmNhvRsJX5An91RzeU9k0jTX5Xx2ryv/3ox1213omc5bxB7fjPoUnY4RkAd9z8TTMyGJ0=
-X-Received: by 2002:a9d:1b0d:: with SMTP id l13mr2980819otl.145.1594713782017;
- Tue, 14 Jul 2020 01:03:02 -0700 (PDT)
+         :message-id:subject:to:cc;
+        bh=VxG136uE7k/7DQKw2dWH82lAeA2t/fDkcPS0g4RMW9A=;
+        b=OzOnvbYggekxSyK+TihYgwHZVwDKwPLTKTMvq1vltAsq6Dg/jrEHnpFagHFs2wwADu
+         MCN9OUmoYcU7MJNd5ofO6eCuFnCRCh9xGuPOlmfuyS2lcteypV9pLHt7T9A9YfM+sv9N
+         5ThVXKmJyIVAnIm4qTz982ZJlIU5vt0WYNDes6sJLnKE17m8M7gedOxLEwcp2RkWDdRO
+         EXg9obk/YOCQQPIoybzlopEydK5IEf+6pGIsrP/jzAzDLc2Q6ZnLqLuGLrUt9z+TH5wV
+         X5r3d/57LaplPYl8zgLfhdt+6R1KSI1sChQJ5yT201BYOoVLfDH249PWWbLXcWzYja8U
+         1NIg==
+X-Gm-Message-State: AOAM532dke4HHwZGx1pt92Rw9RJXKQURohUkYicyWw6juk/W9mXwMaZ2
+        Vu9NbU73zxJgVHAW2j9L6ZnO53F3USoBKUlWE4kL0A==
+X-Google-Smtp-Source: ABdhPJzWasYoseKAcvHkcWBtEYPiZDeYidABizN8Y9lJDS4GoTapol5Yea6vIlDc4ozwIskC2c/AS3sLTWFc+1jaNwk=
+X-Received: by 2002:a05:6402:1687:: with SMTP id a7mr3263957edv.358.1594714033497;
+ Tue, 14 Jul 2020 01:07:13 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200626130525.389469-1-lee.jones@linaro.org> <20200626130525.389469-2-lee.jones@linaro.org>
- <CAMuHMdVaO3gABJxRzBL+2U9axfAuBLRghSY0vCc9f8a6huiYZg@mail.gmail.com>
- <20200714074629.GG3500@dell> <CAMuHMdVW_MzdDQk4f0RN-FsaedEr8WHREuTHxymWGpx3CmDX0Q@mail.gmail.com>
- <20200714080112.GJ3500@dell>
-In-Reply-To: <20200714080112.GJ3500@dell>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Tue, 14 Jul 2020 10:02:50 +0200
-Message-ID: <CAMuHMdUxhvhwD+TzfiFSoZD_vy+UemvpgZ5_uXpY00S5ZLLdNQ@mail.gmail.com>
-Subject: Re: [PATCH 01/10] misc: c2port: core: Ensure source size does not
- equal destination size in strncpy()
-To:     Lee Jones <lee.jones@linaro.org>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        "Eurotech S.p.A" <info@eurotech.it>,
-        Rodolfo Giometti <giometti@linux.it>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
+References: <CAODFU0q6CrUB_LkSdrbp5TQ4Jm6Sw=ZepZwD-B7-aFudsOvsig@mail.gmail.com>
+ <20200705115021.GA1227929@kroah.com> <20200714065110.GA8047@amd>
+In-Reply-To: <20200714065110.GA8047@amd>
+From:   Miklos Szeredi <miklos@szeredi.hu>
+Date:   Tue, 14 Jul 2020 10:07:02 +0200
+Message-ID: <CAJfpegu8AXZWQh3W39PriqxVna+t3D2pz23t_4xEVxGcNf1AUA@mail.gmail.com>
+Subject: Re: [PATCH 0/3] readfile(2): a new syscall to make open/read/close faster
+To:     Pavel Machek <pavel@denx.de>
+Cc:     Greg KH <gregkh@linuxfoundation.org>,
+        Jan Ziak <0xe2.0x9a.0x9b@gmail.com>,
+        Linux API <linux-api@vger.kernel.org>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-kselftest@vger.kernel.org,
+        linux-man <linux-man@vger.kernel.org>,
+        Michael Kerrisk <mtk.manpages@gmail.com>, shuah@kernel.org,
+        Al Viro <viro@zeniv.linux.org.uk>, io-uring@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 14, 2020 at 10:01 AM Lee Jones <lee.jones@linaro.org> wrote:
-> On Tue, 14 Jul 2020, Geert Uytterhoeven wrote:
-> > On Tue, Jul 14, 2020 at 9:46 AM Lee Jones <lee.jones@linaro.org> wrote:
-> > > On Mon, 13 Jul 2020, Geert Uytterhoeven wrote:
-> > > > On Fri, Jun 26, 2020 at 3:06 PM Lee Jones <lee.jones@linaro.org> wrote:
-> > > > > We need to ensure there's a place for the NULL terminator.
-> > > >
-> > > > But who's filling that space with a NUL (not NULL) terminator?
-> > > >
-> > > > > Fixes the following W=1 warning(s):
-> > > > >
-> > > > >  In file included from include/linux/bitmap.h:9,
-> > > > >  from include/linux/nodemask.h:95,
-> > > > >  from include/linux/mmzone.h:17,
-> > > > >  from include/linux/gfp.h:6,
-> > > > >  from include/linux/umh.h:4,
-> > > > >  from include/linux/kmod.h:9,
-> > > > >  from include/linux/module.h:16,
-> > > > >  from drivers/misc/c2port/core.c:9:
-> > > > >  In function ‘strncpy’,
-> > > > >  inlined from ‘c2port_device_register’ at drivers/misc/c2port/core.c:926:2:
-> > > > >  include/linux/string.h:297:30: warning: ‘__builtin_strncpy’ specified bound 32 equals destination size [-Wstringop-truncation]
-> > > > >  297 | #define __underlying_strncpy __builtin_strncpy
-> > > > >  | ^
-> > > > >  include/linux/string.h:307:9: note: in expansion of macro ‘__underlying_strncpy’
-> > > > >  307 | return __underlying_strncpy(p, q, size);
-> > > > >  | ^~~~~~~~~~~~~~~~~~~~
-> > > > >
-> > > > > Cc: Rodolfo Giometti <giometti@linux.it>
-> > > > > Cc: "Eurotech S.p.A" <info@eurotech.it>
-> > > > > Signed-off-by: Lee Jones <lee.jones@linaro.org>
-> > > > > ---
-> > > > >  drivers/misc/c2port/core.c | 2 +-
-> > > > >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > > > >
-> > > > > diff --git a/drivers/misc/c2port/core.c b/drivers/misc/c2port/core.c
-> > > > > index 33bba18022892..80d87e8a0bea9 100644
-> > > > > --- a/drivers/misc/c2port/core.c
-> > > > > +++ b/drivers/misc/c2port/core.c
-> > > > > @@ -923,7 +923,7 @@ struct c2port_device *c2port_device_register(char *name,
-> > > > >         }
-> > > > >         dev_set_drvdata(c2dev->dev, c2dev);
-> > > >
-> > > > c2dev is allocated using:
-> > > >
-> > > >         c2dev = kmalloc(sizeof(struct c2port_device), GFP_KERNEL);
-> > > >
-> > > > hence the allocated memory is not zeroed.
-> > > >
-> > > > >
-> > > > > -       strncpy(c2dev->name, name, C2PORT_NAME_LEN);
-> > > > > +       strncpy(c2dev->name, name, C2PORT_NAME_LEN - 1);
-> > > >
-> > > > strncpy()
-> > > >   1. does not terminate the destination with a NUL if the source length
-> > > >       is C2PORT_NAME_LEN - 1,
-> > > >   2. fills all remaining space in the destination buffer with NUL characters.
-> > > >
-> > > > So c2dev.name[C2PORT_NAME_LEN - 1] always contains an uninitialized
-> > > > value.
-> > > >
-> > > > Now, it seems the only caller of c2port_device_register() passes
-> > > > "uc" as the name.  Which means in practice c2dev.name[] will be
-> > > > NUL-terminated. However, the last byte will still be uninitialized, and
-> > > > if the buffer is ever copied to userspace, your patch will have introduced
-> > > > a leak.
-> > >
-> > > Quite right.  Good spot.  I must have made the assumption that the
-> > > destination buffer would be pre-initialised.  Not sure why it's not in
-> > > this case.  Seems like an odd practice.
-> > >
-> > > So we have a choice.  We can either enlarge the destination buffer to
-> > > *actually* allow a full length (32 byte in this case) naming string,
-> > > or zero the buffer.
-> > >
-> > > Or even both!
-> > >
-> > > Do you have a preference?
+On Tue, Jul 14, 2020 at 8:51 AM Pavel Machek <pavel@denx.de> wrote:
+>
+> Hi!
+>
+> > > At first, I thought that the proposed system call is capable of
+> > > reading *multiple* small files using a single system call - which
+> > > would help increase HDD/SSD queue utilization and increase IOPS (I/O
+> > > operations per second) - but that isn't the case and the proposed
+> > > system call can read just a single file.
 > >
-> > Do we know if the buffer or full c2dev struct is ever copied to userspace?
+> > If you want to do this for multple files, use io_ring, that's what it
+> > was designed for.  I think Jens was going to be adding support for the
+> > open/read/close pattern to it as well, after some other more pressing
+> > features/fixes were finished.
 >
-> I don't know that, but I think we should err on the side of caution.
->
-> > If it may be copied => kalloc().
->
-> Do you mean kzalloc()?
+> What about... just using io_uring for single file, too? I'm pretty
+> sure it can be wrapped in a library that is simple to use, avoiding
+> need for new syscall.
 
-Sorry, kzalloc.
+Just wondering:  is there a plan to add strace support to io_uring?
+And I don't just mean the syscalls associated with io_uring, but
+tracing the ring itself.
 
-> > If it will never be copied => strlcpy() (no NUL-padding, only NUL-terminator).
-> >
-> > Oh, and there is a newer one on the block (which I always have to lookup),
-> > which is preferred over strlcpy() and strncpy(): strscpy().
-> > And reading lib/string.c, there's strscpy_pad(), too ;-)
->
-> Let's not get too crazy. ;)
+I think that's quite important as io_uring becomes mainstream.
 
-The side of caution is kzalloc(), so strscpy() is OK.
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Thanks,
+Miklos
