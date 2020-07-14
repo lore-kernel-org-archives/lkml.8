@@ -5,51 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2BC2C433E5
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:56:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85189C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:57:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D469022B30
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:56:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5684322A99
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:57:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594753017;
-	bh=O55MKtwfA5IXcUbKUaOpt+8HOJH5TjW70tZuZMRkTVw=;
+	s=default; t=1594753022;
+	bh=iRx1+1p0vuvi3P51WF8Ek61xIZ9udJj8O2ghz7fif+Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=imw9qbHrbCnrjOgmeU7E1Hi/mv0GTzABhdWMBS8W9v3ajN1/wDFHmceDGTJSN+k9l
-	 cRV+XZDKF0ww4MGj1jY6WCu48AziFWFhGcd0mob9xO+4vveqraXFCWxNaxT7AkVCFe
-	 2nolIlwp213VwUF3R6iN5s/w6L3r4WAK66BHt9oA=
+	b=Tu1ibukCXAotnfmbS2Z6ZgZE4XaVQ0QyYtC7G4Dzlr+wBvnd+n5UD3dEEqAIHDIEk
+	 V4GI3TnFfpFZxNk58iEy+atPgzeNclIxedCzgd0gNqtxJNs3GvFXGlIMQv1tet8DZ8
+	 ZeCix8g8IsawWGlL0xh1Itp0nrA8e/6IJgrpFgJs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731053AbgGNS4w (ORCPT
+        id S1729719AbgGNS5B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 14:56:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54778 "EHLO mail.kernel.org"
+        Tue, 14 Jul 2020 14:57:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54986 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731016AbgGNS4l (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 14:56:41 -0400
+        id S1731044AbgGNS4v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 14:56:51 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7997822B2B;
-        Tue, 14 Jul 2020 18:56:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2F956229CA;
+        Tue, 14 Jul 2020 18:56:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594753000;
-        bh=O55MKtwfA5IXcUbKUaOpt+8HOJH5TjW70tZuZMRkTVw=;
+        s=default; t=1594753011;
+        bh=iRx1+1p0vuvi3P51WF8Ek61xIZ9udJj8O2ghz7fif+Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JlPkGaq5Oa6KE72ItYbZpWMIWsH6yvAn5yG39/JPeeo+L3umgFYL/TPi5y22zEcv4
-         Si2ZtPMexWiAVAoGaKz7airLBQOcaXlB/95TdzBPB6Mi49lQsXAIhIuW+hyE5zOByM
-         JQkoUqKQh/NK1gYxY/JwSgcy+PleGc1E//MUvMug=
+        b=MkteAJYMrzERJ7AUJbYV3xWhX3eXhQGkNE0ieFTxLaTldTCEXUyMqSX2gY7CQBgLg
+         2M0pDfjLKVBLkpLJeo2xd1F5FdXk2nz2Xv+Ff0/pXRfE1IjaB+E3PHAtfd6a8XgLG8
+         6onPx2G0ptDyacImHe8BXaxYzZZ7rsZkJffeb2Ww=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Charles Keepax <ckeepax@opensource.cirrus.com>,
-        Vinod Koul <vkoul@kernel.org>, Takashi Iwai <tiwai@suse.de>,
+        stable@vger.kernel.org, Paul Menzel <pmenzel@molgen.mpg.de>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 081/166] ALSA: compress: fix partial_drain completion state
-Date:   Tue, 14 Jul 2020 20:44:06 +0200
-Message-Id: <20200714184119.729230376@linuxfoundation.org>
+Subject: [PATCH 5.7 085/166] powerpc/64s/exception: Fix 0x1500 interrupt handler crash
+Date:   Tue, 14 Jul 2020 20:44:10 +0200
+Message-Id: <20200714184119.922263353@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200714184115.844176932@linuxfoundation.org>
 References: <20200714184115.844176932@linuxfoundation.org>
@@ -62,88 +61,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vinod Koul <vkoul@kernel.org>
+From: Nicholas Piggin <npiggin@gmail.com>
 
-[ Upstream commit f79a732a8325dfbd570d87f1435019d7e5501c6d ]
+[ Upstream commit 4557ac6b344b8cdf948ff8b007e8e1de34832f2e ]
 
-On partial_drain completion we should be in SNDRV_PCM_STATE_RUNNING
-state, so set that for partially draining streams in
-snd_compr_drain_notify() and use a flag for partially draining streams
+A typo caused the interrupt handler to branch immediately to the
+common "unknown interrupt" handler and skip the special case test for
+denormal cause.
 
-While at it, add locks for stream state change in
-snd_compr_drain_notify() as well.
+This does not affect KVM softpatch handling (e.g., for POWER9 TM
+assist) because the KVM test was moved to common code by commit
+9600f261acaa ("powerpc/64s/exception: Move KVM test to common code")
+just before this bug was introduced.
 
-Fixes: f44f2a5417b2 ("ALSA: compress: fix drain calls blocking other compress functions (v6)")
-Reviewed-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Tested-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Reviewed-by: Charles Keepax <ckeepax@opensource.cirrus.com>
-Tested-by: Charles Keepax <ckeepax@opensource.cirrus.com>
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
-Link: https://lore.kernel.org/r/20200629134737.105993-4-vkoul@kernel.org
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Fixes: 3f7fbd97d07d ("powerpc/64s/exception: Clean up SRR specifiers")
+Reported-by: Paul Menzel <pmenzel@molgen.mpg.de>
+Signed-off-by: Nicholas Piggin <npiggin@gmail.com>
+Tested-by: Paul Menzel <pmenzel@molgen.mpg.de>
+[mpe: Split selftest into a separate patch]
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://lore.kernel.org/r/20200708074942.1713396-1-npiggin@gmail.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/sound/compress_driver.h | 10 +++++++++-
- sound/core/compress_offload.c   |  4 ++++
- 2 files changed, 13 insertions(+), 1 deletion(-)
+ arch/powerpc/kernel/exceptions-64s.S | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/include/sound/compress_driver.h b/include/sound/compress_driver.h
-index 6ce8effa0b128..70cbc5095e725 100644
---- a/include/sound/compress_driver.h
-+++ b/include/sound/compress_driver.h
-@@ -66,6 +66,7 @@ struct snd_compr_runtime {
-  * @direction: stream direction, playback/recording
-  * @metadata_set: metadata set flag, true when set
-  * @next_track: has userspace signal next track transition, true when set
-+ * @partial_drain: undergoing partial_drain for stream, true when set
-  * @private_data: pointer to DSP private data
-  * @dma_buffer: allocated buffer if any
-  */
-@@ -78,6 +79,7 @@ struct snd_compr_stream {
- 	enum snd_compr_direction direction;
- 	bool metadata_set;
- 	bool next_track;
-+	bool partial_drain;
- 	void *private_data;
- 	struct snd_dma_buffer dma_buffer;
- };
-@@ -182,7 +184,13 @@ static inline void snd_compr_drain_notify(struct snd_compr_stream *stream)
- 	if (snd_BUG_ON(!stream))
- 		return;
+diff --git a/arch/powerpc/kernel/exceptions-64s.S b/arch/powerpc/kernel/exceptions-64s.S
+index d9ddce40bed89..fd99d4feec7a4 100644
+--- a/arch/powerpc/kernel/exceptions-64s.S
++++ b/arch/powerpc/kernel/exceptions-64s.S
+@@ -2547,7 +2547,7 @@ EXC_VIRT_NONE(0x5400, 0x100)
+ INT_DEFINE_BEGIN(denorm_exception)
+ 	IVEC=0x1500
+ 	IHSRR=1
+-	IBRANCH_COMMON=0
++	IBRANCH_TO_COMMON=0
+ 	IKVM_REAL=1
+ INT_DEFINE_END(denorm_exception)
  
--	stream->runtime->state = SNDRV_PCM_STATE_SETUP;
-+	/* for partial_drain case we are back to running state on success */
-+	if (stream->partial_drain) {
-+		stream->runtime->state = SNDRV_PCM_STATE_RUNNING;
-+		stream->partial_drain = false; /* clear this flag as well */
-+	} else {
-+		stream->runtime->state = SNDRV_PCM_STATE_SETUP;
-+	}
- 
- 	wake_up(&stream->runtime->sleep);
- }
-diff --git a/sound/core/compress_offload.c b/sound/core/compress_offload.c
-index 509290f2efa8e..0e53f6f319167 100644
---- a/sound/core/compress_offload.c
-+++ b/sound/core/compress_offload.c
-@@ -764,6 +764,9 @@ static int snd_compr_stop(struct snd_compr_stream *stream)
- 
- 	retval = stream->ops->trigger(stream, SNDRV_PCM_TRIGGER_STOP);
- 	if (!retval) {
-+		/* clear flags and stop any drain wait */
-+		stream->partial_drain = false;
-+		stream->metadata_set = false;
- 		snd_compr_drain_notify(stream);
- 		stream->runtime->total_bytes_available = 0;
- 		stream->runtime->total_bytes_transferred = 0;
-@@ -921,6 +924,7 @@ static int snd_compr_partial_drain(struct snd_compr_stream *stream)
- 	if (stream->next_track == false)
- 		return -EPERM;
- 
-+	stream->partial_drain = true;
- 	retval = stream->ops->trigger(stream, SND_COMPR_TRIGGER_PARTIAL_DRAIN);
- 	if (retval) {
- 		pr_debug("Partial drain returned failure\n");
 -- 
 2.25.1
 
