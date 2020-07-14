@@ -7,28 +7,28 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88CE0C433E6
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 12:14:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7586CC433E5
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 12:14:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6D6CE222D9
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 12:14:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 526B2222D9
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 12:14:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728383AbgGNMK7 (ORCPT
+        id S1728643AbgGNMOr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 08:10:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60640 "EHLO
+        Tue, 14 Jul 2020 08:14:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60676 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728272AbgGNMKt (ORCPT
+        with ESMTP id S1728379AbgGNMK7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 08:10:49 -0400
+        Tue, 14 Jul 2020 08:10:59 -0400
 Received: from theia.8bytes.org (8bytes.org [IPv6:2a01:238:4383:600:38bc:a715:4b6d:a889])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1E0D6C061755;
-        Tue, 14 Jul 2020 05:10:49 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F27C4C061794;
+        Tue, 14 Jul 2020 05:10:58 -0700 (PDT)
 Received: from cap.home.8bytes.org (p5b006776.dip0.t-ipconnect.de [91.0.103.118])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
         (No client certificate requested)
-        by theia.8bytes.org (Postfix) with ESMTPSA id 6066F93D;
-        Tue, 14 Jul 2020 14:10:45 +0200 (CEST)
+        by theia.8bytes.org (Postfix) with ESMTPSA id 9AE08F78;
+        Tue, 14 Jul 2020 14:10:53 +0200 (CEST)
 From:   Joerg Roedel <joro@8bytes.org>
 To:     x86@kernel.org
 Cc:     Joerg Roedel <joro@8bytes.org>, Joerg Roedel <jroedel@suse.de>,
@@ -49,9 +49,9 @@ Cc:     Joerg Roedel <joro@8bytes.org>, Joerg Roedel <jroedel@suse.de>,
         Martin Radev <martin.b.radev@gmail.com>,
         linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
         virtualization@lists.linux-foundation.org
-Subject: [PATCH v4 23/75] x86/boot/compressed/64: Unmap GHCB page before booting the kernel
-Date:   Tue, 14 Jul 2020 14:08:25 +0200
-Message-Id: <20200714120917.11253-24-joro@8bytes.org>
+Subject: [PATCH v4 38/75] x86/sev-es: Print SEV-ES info into kernel log
+Date:   Tue, 14 Jul 2020 14:08:40 +0200
+Message-Id: <20200714120917.11253-39-joro@8bytes.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200714120917.11253-1-joro@8bytes.org>
 References: <20200714120917.11253-1-joro@8bytes.org>
@@ -64,110 +64,62 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Joerg Roedel <jroedel@suse.de>
 
-Force a page-fault on any further accesses to the GHCB page when they
-shouldn't happen anymore. This will catch the bugs where a #VC exception
-is raised when no one is expected anymore.
+Refactor the message printed to the kernel log which indicates whether
+SEV or SME is active to print a list of enabled encryption features.
+This will scale better in the future when more memory encryption
+features might be added. Also add SEV-ES to the list of features.
 
 Signed-off-by: Joerg Roedel <jroedel@suse.de>
 ---
- arch/x86/boot/compressed/ident_map_64.c | 17 +++++++++++++++--
- arch/x86/boot/compressed/misc.h         |  6 ++++++
- arch/x86/boot/compressed/sev-es.c       | 14 ++++++++++++++
- 3 files changed, 35 insertions(+), 2 deletions(-)
+ arch/x86/mm/mem_encrypt.c | 29 ++++++++++++++++++++++++++---
+ 1 file changed, 26 insertions(+), 3 deletions(-)
 
-diff --git a/arch/x86/boot/compressed/ident_map_64.c b/arch/x86/boot/compressed/ident_map_64.c
-index 05742f641a06..063a60edcf99 100644
---- a/arch/x86/boot/compressed/ident_map_64.c
-+++ b/arch/x86/boot/compressed/ident_map_64.c
-@@ -298,6 +298,11 @@ int set_page_encrypted(unsigned long address)
- 	return set_clr_page_flags(&mapping_info, address, _PAGE_ENC, 0);
+diff --git a/arch/x86/mm/mem_encrypt.c b/arch/x86/mm/mem_encrypt.c
+index 21be138ceef6..cbf7935c873b 100644
+--- a/arch/x86/mm/mem_encrypt.c
++++ b/arch/x86/mm/mem_encrypt.c
+@@ -408,6 +408,31 @@ void __init mem_encrypt_free_decrypted_mem(void)
+ 	free_init_pages("unused decrypted", vaddr, vaddr_end);
  }
  
-+int set_page_non_present(unsigned long address)
++static void print_mem_encrypt_feature_info(void)
 +{
-+	return set_clr_page_flags(&mapping_info, address, 0, _PAGE_PRESENT);
++	pr_info("AMD Memory Encryption Features active:");
++
++	/* Secure Memory Encryption */
++	if (sme_active()) {
++		/*
++		 * SME is mutually exclusive with any of the SEV
++		 * features below.
++		 */
++		pr_cont(" SME\n");
++		return;
++	}
++
++	/* Secure Encrypted Virtualization */
++	if (sev_active())
++		pr_cont(" SEV");
++
++	/* Encrypted Register State */
++	if (sev_es_active())
++		pr_cont(" SEV-ES");
++
++	pr_cont("\n");
 +}
 +
- static void do_pf_error(const char *msg, unsigned long error_code,
- 			unsigned long address, unsigned long ip)
+ void __init mem_encrypt_init(void)
  {
-@@ -316,8 +321,14 @@ static void do_pf_error(const char *msg, unsigned long error_code,
+ 	if (!sme_me_mask)
+@@ -422,8 +447,6 @@ void __init mem_encrypt_init(void)
+ 	if (sev_active())
+ 		static_branch_enable(&sev_enable_key);
  
- void do_boot_page_fault(struct pt_regs *regs, unsigned long error_code)
- {
--	unsigned long address = native_read_cr2() & PMD_MASK;
--	unsigned long end = address + PMD_SIZE;
-+	unsigned long address = native_read_cr2();
-+	unsigned long end;
-+	bool ghcb_fault;
-+
-+	ghcb_fault = sev_es_check_ghcb_fault(address);
-+
-+	address   &= PMD_MASK;
-+	end        = address + PMD_SIZE;
- 
- 	/*
- 	 * Check for unexpected error codes. Unexpected are:
-@@ -327,6 +338,8 @@ void do_boot_page_fault(struct pt_regs *regs, unsigned long error_code)
- 	 */
- 	if (error_code & (X86_PF_PROT | X86_PF_USER | X86_PF_RSVD))
- 		do_pf_error("Unexpected page-fault:", error_code, address, regs->ip);
-+	else if (ghcb_fault)
-+		do_pf_error("Page-fault on GHCB page:", error_code, address, regs->ip);
- 
- 	/*
- 	 * Error code is sane - now identity map the 2M region around
-diff --git a/arch/x86/boot/compressed/misc.h b/arch/x86/boot/compressed/misc.h
-index 4d37a28370ed..2e5f82acc122 100644
---- a/arch/x86/boot/compressed/misc.h
-+++ b/arch/x86/boot/compressed/misc.h
-@@ -100,6 +100,7 @@ static inline void choose_random_location(unsigned long input,
- #ifdef CONFIG_X86_64
- extern int set_page_decrypted(unsigned long address);
- extern int set_page_encrypted(unsigned long address);
-+extern int set_page_non_present(unsigned long address);
- extern unsigned char _pgtable[];
- #endif
- 
-@@ -117,8 +118,13 @@ void set_sev_encryption_mask(void);
- 
- #ifdef CONFIG_AMD_MEM_ENCRYPT
- void sev_es_shutdown_ghcb(void);
-+extern bool sev_es_check_ghcb_fault(unsigned long address);
- #else
- static inline void sev_es_shutdown_ghcb(void) { }
-+static inline bool sev_es_check_ghcb_fault(unsigned long address)
-+{
-+	return false;
-+}
- #endif
- 
- /* acpi.c */
-diff --git a/arch/x86/boot/compressed/sev-es.c b/arch/x86/boot/compressed/sev-es.c
-index 7e2cec170026..e3abf8737015 100644
---- a/arch/x86/boot/compressed/sev-es.c
-+++ b/arch/x86/boot/compressed/sev-es.c
-@@ -121,6 +121,20 @@ void sev_es_shutdown_ghcb(void)
- 	 */
- 	if (set_page_encrypted((unsigned long)&boot_ghcb_page))
- 		error("Can't map GHCB page encrypted");
-+
-+	/*
-+	 * GHCB page is mapped encrypted again and flushed from the cache.
-+	 * Mark it non-present now to catch bugs when #VC exceptions trigger
-+	 * after this point.
-+	 */
-+	if (set_page_non_present((unsigned long)&boot_ghcb_page))
-+		error("Can't unmap GHCB page");
-+}
-+
-+bool sev_es_check_ghcb_fault(unsigned long address)
-+{
-+	/* Check whether the fault was on the GHCB page */
-+	return ((address & PAGE_MASK) == (unsigned long)&boot_ghcb_page);
+-	pr_info("AMD %s active\n",
+-		sev_active() ? "Secure Encrypted Virtualization (SEV)"
+-			     : "Secure Memory Encryption (SME)");
++	print_mem_encrypt_feature_info();
  }
  
- void do_boot_stage2_vc(struct pt_regs *regs, unsigned long exit_code)
 -- 
 2.27.0
 
