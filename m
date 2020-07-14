@@ -2,170 +2,157 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BEB63C433E4
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 06:47:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8BBDC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 06:48:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8C313221F0
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 06:47:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C0AE2221F0
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 06:48:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mymailcheap.com header.i=@mymailcheap.com header.b="bewZtSkm";
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=flygoat.com header.i=@flygoat.com header.b="YcH1kmUf"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="KnFLWT9e"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726752AbgGNGrb (ORCPT
+        id S1726830AbgGNGs2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 02:47:31 -0400
-Received: from relay3.mymailcheap.com ([217.182.119.157]:34457 "EHLO
-        relay3.mymailcheap.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725945AbgGNGr1 (ORCPT
+        Tue, 14 Jul 2020 02:48:28 -0400
+Received: from mailout1.w1.samsung.com ([210.118.77.11]:51105 "EHLO
+        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725788AbgGNGs1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 02:47:27 -0400
-X-Greylist: delayed 105457 seconds by postgrey-1.27 at vger.kernel.org; Tue, 14 Jul 2020 02:47:25 EDT
-Received: from filter1.mymailcheap.com (filter1.mymailcheap.com [149.56.130.247])
-        by relay3.mymailcheap.com (Postfix) with ESMTPS id C15B03ECDF;
-        Tue, 14 Jul 2020 08:47:23 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-        by filter1.mymailcheap.com (Postfix) with ESMTP id EF7762A3B3;
-        Tue, 14 Jul 2020 02:47:22 -0400 (EDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=mymailcheap.com;
-        s=default; t=1594709243;
-        bh=/2exoZAW+zEogykugQNbSbghfGyyujQ05oJp+Mrxa34=;
-        h=Subject:To:References:From:Date:In-Reply-To:From;
-        b=bewZtSkm0aMCaTvEDCF78Bmlu2AktXPgD7UHZmnZG3IsvgbjVSLuHzlmceWfbMpfI
-         mkup9biNXnpIhtPyQbl6KVbDOlvJdGAI3gTI2Q1OAR0kbKFGp8CdBe7jof30vhjp1y
-         Vg7Ugs+6UPb0oiKfIgy6sRxQpgs4K0AGX7dwkfU8=
-X-Virus-Scanned: Debian amavisd-new at filter1.mymailcheap.com
-Received: from filter1.mymailcheap.com ([127.0.0.1])
-        by localhost (filter1.mymailcheap.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id iE_h8nIxHzDy; Tue, 14 Jul 2020 02:47:21 -0400 (EDT)
-Received: from mail20.mymailcheap.com (mail20.mymailcheap.com [51.83.111.147])
-        (using TLSv1.2 with cipher ADH-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by filter1.mymailcheap.com (Postfix) with ESMTPS;
-        Tue, 14 Jul 2020 02:47:20 -0400 (EDT)
-Received: from [148.251.23.173] (ml.mymailcheap.com [148.251.23.173])
-        by mail20.mymailcheap.com (Postfix) with ESMTP id DD9E540EDE;
-        Tue, 14 Jul 2020 06:47:18 +0000 (UTC)
-Authentication-Results: mail20.mymailcheap.com;
-        dkim=pass (1024-bit key; unprotected) header.d=flygoat.com header.i=@flygoat.com header.b="YcH1kmUf";
-        dkim-atps=neutral
-AI-Spam-Status: Not processed
-Received: from [0.0.0.0] (ec2-18-162-193-254.ap-east-1.compute.amazonaws.com [18.162.193.254])
-        (using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail20.mymailcheap.com (Postfix) with ESMTPSA id 2EEAF40EDE;
-        Tue, 14 Jul 2020 06:45:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=flygoat.com;
-        s=default; t=1594709115;
-        bh=/2exoZAW+zEogykugQNbSbghfGyyujQ05oJp+Mrxa34=;
-        h=Subject:To:References:From:Date:In-Reply-To:From;
-        b=YcH1kmUfbulne5o1nwolTE5qv/lvG67jubOfIvS4lde1eMNozOf71FT3n6Tc+t0q8
-         JYHEmD1lE77IsQVpHp7nkwOPcFwdQfv8enLsKPuRVISnqlnbKLkeFSmcbk4Wx+YBtw
-         BhmZ4lIYYnd7KRnFx+Cxio69KjshKiG3NkJPEYlw=
-Subject: Re: [PATCH] MIPS: Replace HTTP links with HTTPS ones
-To:     "Alexander A. Klimov" <grandmaster@al2klimov.de>,
-        tsbogend@alpha.franken.de, paulburton@kernel.org,
-        linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200713085243.32566-1-grandmaster@al2klimov.de>
-From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
-Message-ID: <59938583-2ce4-c7bf-c454-89a1559be846@flygoat.com>
-Date:   Tue, 14 Jul 2020 14:45:04 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
-MIME-Version: 1.0
-In-Reply-To: <20200713085243.32566-1-grandmaster@al2klimov.de>
-Content-Type: text/plain; charset=gbk; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Rspamd-Queue-Id: DD9E540EDE
-X-Spamd-Result: default: False [-0.10 / 10.00];
-         RCVD_VIA_SMTP_AUTH(0.00)[];
-         ARC_NA(0.00)[];
-         R_DKIM_ALLOW(0.00)[flygoat.com:s=default];
-         FROM_HAS_DN(0.00)[];
-         TO_DN_SOME(0.00)[];
-         TO_MATCH_ENVRCPT_ALL(0.00)[];
-         MIME_GOOD(-0.10)[text/plain];
-         R_SPF_SOFTFAIL(0.00)[~all];
-         RCPT_COUNT_FIVE(0.00)[5];
-         ML_SERVERS(-3.10)[148.251.23.173];
-         DKIM_TRACE(0.00)[flygoat.com:+];
-         DMARC_POLICY_ALLOW(0.00)[flygoat.com,none];
-         DMARC_POLICY_ALLOW_WITH_FAILURES(0.00)[];
-         RCVD_NO_TLS_LAST(0.10)[];
-         FROM_EQ_ENVFROM(0.00)[];
-         MIME_TRACE(0.00)[0:+];
-         ASN(0.00)[asn:24940, ipnet:148.251.0.0/16, country:DE];
-         RCVD_COUNT_TWO(0.00)[2];
-         MID_RHS_MATCH_FROM(0.00)[];
-         HFILTER_HELO_BAREIP(3.00)[148.251.23.173,1]
-X-Rspamd-Server: mail20.mymailcheap.com
+        Tue, 14 Jul 2020 02:48:27 -0400
+Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
+        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20200714064825euoutp01ace822172aae72714c7709af0c460e52~hi6oKJZpk1736317363euoutp018
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 06:48:25 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20200714064825euoutp01ace822172aae72714c7709af0c460e52~hi6oKJZpk1736317363euoutp018
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1594709305;
+        bh=ktQQIQEMhkR4F9kpdyKQJsHX/Rt+fNec/hA6GOQDIDo=;
+        h=From:To:Cc:Subject:Date:References:From;
+        b=KnFLWT9eNSHFdbpy9cpUFYwAWafrfbss2bYHW6WMcqUHuR8oA/4wD3RgLLVaKDsrj
+         oeNKula/6yFuaUGYR/f8OWsWjwwnT716ZLxhwdp5p/aHt5nR73xWJ+g4e7ZRtOoJPe
+         b0fkw3OZXOAgeu7WFSEBCJfpujLazgGJjxNI9SpA=
+Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20200714064824eucas1p26ebecc4a1e3f27faa81ae62b7a853164~hi6npld3e1846918469eucas1p2A;
+        Tue, 14 Jul 2020 06:48:24 +0000 (GMT)
+Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
+        eusmges3new.samsung.com (EUCPMTA) with SMTP id 55.AA.06318.8355D0F5; Tue, 14
+        Jul 2020 07:48:24 +0100 (BST)
+Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
+        20200714064824eucas1p2ea0d2ee2c109c351fe489050905b4104~hi6nRJW4M3028930289eucas1p2F;
+        Tue, 14 Jul 2020 06:48:24 +0000 (GMT)
+Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
+        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20200714064824eusmtrp1acc85bb4bcfb81bf88cd5c6a6bf0ac99~hi6nQflzQ2736027360eusmtrp1q;
+        Tue, 14 Jul 2020 06:48:24 +0000 (GMT)
+X-AuditID: cbfec7f5-38bff700000018ae-a8-5f0d55381fe0
+Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
+        eusmgms2.samsung.com (EUCPMTA) with SMTP id 1E.F6.06017.8355D0F5; Tue, 14
+        Jul 2020 07:48:24 +0100 (BST)
+Received: from AMDC2765.digital.local (unknown [106.120.51.73]) by
+        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20200714064824eusmtip1439d6154bd89a5cef462cde69ec5befc~hi6m2prql0479804798eusmtip19;
+        Tue, 14 Jul 2020 06:48:24 +0000 (GMT)
+From:   Marek Szyprowski <m.szyprowski@samsung.com>
+To:     linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-pm@vger.kernel.org
+Cc:     Marek Szyprowski <m.szyprowski@samsung.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Willy Wolff <willy.mh.wolff.ml@gmail.com>,
+        Marian Mihailescu <mihailescu2m@gmail.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>
+Subject: [PATCH] ARM: dts: exynos: Disable frequency scaling for FSYS bus
+Date:   Tue, 14 Jul 2020 08:47:59 +0200
+Message-Id: <20200714064759.31772-1-m.szyprowski@samsung.com>
+X-Mailer: git-send-email 2.17.1
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrMIsWRmVeSWpSXmKPExsWy7djPc7oWobzxBqtemVlsnLGe1eL6l+es
+        FufPb2C3uLxrDpvF594jjBYzzu9jslh75C67xfppP1ktvp14xOjA6bFz1l12j02rOtk8+ras
+        YvT4vEkugCWKyyYlNSezLLVI3y6BK2Nq5yu2gm98Ffsu3WFpYNzB08XIwSEhYCKxo8m8i5GL
+        Q0hgBaPElXVz2LoYOYGcL4wSayanQCQ+M0rcWdfEAtPQ/jEMIr6cUWLTtIdMEA5Qwy6gq0C6
+        2QQMJbredoFNEhGIl3jUf5cFpIhZoJ9J4vGZrYwgCWEBT4nGVbNYQGwWAVWJXe+7mEBsXgFb
+        iea9X8BqJATkJVZvOMAM0iwhcJ9NYsXPqywQCRegbYeYIGxhiVfHt7BD2DISpyf3sEA0NDNK
+        PDy3lh3C6WGUuNw0A2qstcSdc7/YQB5iFtCUWL9LHyLsKHGns5cV4k8+iRtvBUHCzEDmpG3T
+        mSHCvBIdbUIQ1WoSs46vg1t78MIlZgjbQ+Jt02N2SDDGStyd8oJtAqPcLIRdCxgZVzGKp5YW
+        56anFhvnpZbrFSfmFpfmpesl5+duYgQmhdP/jn/dwbjvT9IhRgEORiUeXgl/nngh1sSy4src
+        Q4wSHMxKIrxOZ0/HCfGmJFZWpRblxxeV5qQWH2KU5mBREuc1XvQyVkggPbEkNTs1tSC1CCbL
+        xMEp1cC47vST0EXt02SnBc1MPp1gr77pfEXFPc7JRddiTL3zJjo4fmo7e5jJUv3N43n3rCPF
+        2xyPW77p8/2WPLfVLy541Y2HYX1LijZz1ZQIpP29VyrvN9Pw/brwvkMRcUn3H6oeD5lg8OnN
+        5Qfhb049znm249TjpetOXO5PnLOuLLFq9erbyndL2u6uV2Ipzkg01GIuKk4EAErnwcwGAwAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrFLMWRmVeSWpSXmKPExsVy+t/xu7oWobzxBlMXyFtsnLGe1eL6l+es
+        FufPb2C3uLxrDpvF594jjBYzzu9jslh75C67xfppP1ktvp14xOjA6bFz1l12j02rOtk8+ras
+        YvT4vEkugCVKz6Yov7QkVSEjv7jEVina0MJIz9DSQs/IxFLP0Ng81srIVEnfziYlNSezLLVI
+        3y5BL2Nq5yu2gm98Ffsu3WFpYNzB08XIwSEhYCLR/jGsi5GLQ0hgKaPEnX9tbF2MnEBxGYmT
+        0xpYIWxhiT/Xutggij4xSsz+fZAdJMEmYCjR9bYLrEFEIFFi9sfZYEXMApOZJM4cPgLWLSzg
+        KdG4ahYLiM0ioCqx630XE4jNK2Ar0bz3CyPEBnmJ1RsOME9g5FnAyLCKUSS1tDg3PbfYSK84
+        Mbe4NC9dLzk/dxMjMBy3Hfu5ZQdj17vgQ4wCHIxKPLwS/jzxQqyJZcWVuYcYJTiYlUR4nc6e
+        jhPiTUmsrEotyo8vKs1JLT7EaAq0fCKzlGhyPjBW8kriDU0NzS0sDc2NzY3NLJTEeTsEDsYI
+        CaQnlqRmp6YWpBbB9DFxcEo1ME6XPSgaOs3ZIndhgoDxjYlz52496L+JbTFr0M85Ezb+Z9B+
+        4DDp9qRH3qXsq9cruH60vhX2x/iQaPefVpZVJS9vK/y7bPnhruMu6XQ+8V2dttNqDFVvpmiE
+        OfI1fS2UTzmi1ZypsFF/1w3bL7eThdp+Zc8vsPhV37QqiWlS1C2uR82uJkm6E5VYijMSDbWY
+        i4oTAV32XFRdAgAA
+X-CMS-MailID: 20200714064824eucas1p2ea0d2ee2c109c351fe489050905b4104
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20200714064824eucas1p2ea0d2ee2c109c351fe489050905b4104
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20200714064824eucas1p2ea0d2ee2c109c351fe489050905b4104
+References: <CGME20200714064824eucas1p2ea0d2ee2c109c351fe489050905b4104@eucas1p2.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Commit 1019fe2c7280 ("ARM: dts: exynos: Adjust bus related OPPs to the
+values correct for Exynos5422 Odroids") changed the parameters of the
+OPPs for the FSYS bus. Besides the frequency adjustments, it also removed
+the 'shared-opp' property from the OPP table used for FSYS_APB and FSYS
+busses.
 
+This revealed that in fact the FSYS bus frequency scaling never worked.
+When one OPP table is marked as 'opp-shared', only the first bus which
+selects the OPP sets the rate of its clock. Then OPP core assumes that
+the other busses have been changed to that OPP and no change to their
+clock rates are needed. Thus when FSYS_APB bus, which was registered
+first, set the rate for its clock, the OPP core did not change the FSYS
+bus clock later.
 
-ÔÚ 2020/7/13 16:52, Alexander A. Klimov Ð´µÀ:
-> Rationale:
-> Reduces attack surface on kernel devs opening the links for MITM
-> as HTTPS traffic is much harder to manipulate.
->
-> Deterministic algorithm:
-> For each file:
->    If not .svg:
->      For each line:
->        If doesn't contain `\bxmlns\b`:
->          For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
-> 	  If neither `\bgnu\.org/license`, nor `\bmozilla\.org/MPL\b`:
->              If both the HTTP and HTTPS versions
->              return 200 OK and serve the same content:
->                Replace HTTP with HTTPS.
->
-> Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
-> ---
->   Continuing my work started at 93431e0607e5.
->   See also: git log --oneline '--author=Alexander A. Klimov <grandmaster@al2klimov.de>' v5.7..master
->   (Actually letting a shell for loop submit all this stuff for me.)
->
->   If there are any URLs to be removed completely or at least not just HTTPSified:
->   Just clearly say so and I'll *undo my change*.
->   See also: https://lkml.org/lkml/2020/6/27/64
->
->   If there are any valid, but yet not changed URLs:
->   See: https://lkml.org/lkml/2020/6/26/837
->
->   If you apply the patch, please let me know.
->
->   Sorry again to all maintainers who complained about subject lines.
->   Now I realized that you want an actually perfect prefixes,
->   not just subsystem ones.
->   I tried my best...
->   And yes, *I could* (at least half-)automate it.
->   Impossible is nothing! :)
->
->
->   arch/mips/Kconfig           | 4 ++--
->   arch/mips/include/asm/war.h | 2 +-
->   2 files changed, 3 insertions(+), 3 deletions(-)
->
-> diff --git a/arch/mips/Kconfig b/arch/mips/Kconfig
-> index 6fee1a133e9d..bdd073a0a67e 100644
-> --- a/arch/mips/Kconfig
-> +++ b/arch/mips/Kconfig
-> @@ -2393,7 +2393,7 @@ config MIPS_MT_SMP
->   	  on cores with the MT ASE and uses the available VPEs to implement
->   	  virtual processors which supports SMP. This is equivalent to the
->   	  Intel Hyperthreading feature. For further information go to
-> -	  <http://www.imgtec.com/mips/mips-multithreading.asp>.
-> +	  <https://www.imgtec.com/mips/mips-multithreading.asp>.
+The mentioned commit removed that behavior, what introduced a regression
+on some OdroidXU3 boards. Frequency scaling of the FSYS bus causes
+instability of the USB host operation, what can be observed as network
+hangs. To restore old behavior, simply disable frequency scaling for the
+FSYS bus.
 
-All MIPS content have been removed from IMGTEC's site, we'd better remove
-this link?
+Reported-by: Willy Wolff <willy.mh.wolff.ml@gmail.com>
+Fixes: 1019fe2c7280 ("ARM: dts: exynos: Adjust bus related OPPs to the values correct for Exynos5422 Odroids")
+Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+---
+ arch/arm/boot/dts/exynos5422-odroid-core.dtsi | 6 ------
+ 1 file changed, 6 deletions(-)
 
-- Jiaxun
+diff --git a/arch/arm/boot/dts/exynos5422-odroid-core.dtsi b/arch/arm/boot/dts/exynos5422-odroid-core.dtsi
+index ab27ff8bc3dc..afe090578e8f 100644
+--- a/arch/arm/boot/dts/exynos5422-odroid-core.dtsi
++++ b/arch/arm/boot/dts/exynos5422-odroid-core.dtsi
+@@ -411,12 +411,6 @@
+ 	status = "okay";
+ };
+ 
+-&bus_fsys {
+-	operating-points-v2 = <&bus_fsys2_opp_table>;
+-	devfreq = <&bus_wcore>;
+-	status = "okay";
+-};
+-
+ &bus_fsys2 {
+ 	operating-points-v2 = <&bus_fsys2_opp_table>;
+ 	devfreq = <&bus_wcore>;
+-- 
+2.17.1
+
