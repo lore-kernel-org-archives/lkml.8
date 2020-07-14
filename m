@@ -2,355 +2,154 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2403C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 16:07:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7814EC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 16:12:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8F2D822515
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 16:07:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E1522075B
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 16:12:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=pesu-pes-edu.20150623.gappssmtp.com header.i=@pesu-pes-edu.20150623.gappssmtp.com header.b="odhsBOK7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726546AbgGNQHG (ORCPT
+        id S1726996AbgGNQMD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 12:07:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38708 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725931AbgGNQHG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 12:07:06 -0400
-Received: from oasis.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9D1D622205;
-        Tue, 14 Jul 2020 16:07:03 +0000 (UTC)
-Date:   Tue, 14 Jul 2020 12:07:01 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     x86@kernel.org, linux-kernel@vger.kernel.org, mhiramat@kernel.org,
-        bristot@redhat.com, jbaron@akamai.com,
-        torvalds@linux-foundation.org, tglx@linutronix.de,
-        mingo@kernel.org, namit@vmware.com, hpa@zytor.com, luto@kernel.org,
-        ard.biesheuvel@linaro.org, jpoimboe@redhat.com,
-        pbonzini@redhat.com, mathieu.desnoyers@efficios.com,
-        linux@rasmusvillemoes.dk
-Subject: Re: [PATCH v6 15/17] static_call: Allow early init
-Message-ID: <20200714120701.332f310d@oasis.local.home>
-In-Reply-To: <20200714155417.GZ10769@hirez.programming.kicks-ass.net>
-References: <20200710133831.943894387@infradead.org>
-        <20200710134337.036717190@infradead.org>
-        <20200710211426.298a3d94@oasis.local.home>
-        <20200711050831.GY597537@hirez.programming.kicks-ass.net>
-        <20200713162419.3a45f334@oasis.local.home>
-        <20200714095117.GS10769@hirez.programming.kicks-ass.net>
-        <20200714101636.5022a558@oasis.local.home>
-        <20200714155417.GZ10769@hirez.programming.kicks-ass.net>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Tue, 14 Jul 2020 12:12:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41732 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725890AbgGNQMC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 12:12:02 -0400
+Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 476D5C061755
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 09:12:02 -0700 (PDT)
+Received: by mail-pj1-x1044.google.com with SMTP id cm21so1823940pjb.3
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 09:12:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=pesu-pes-edu.20150623.gappssmtp.com; s=20150623;
+        h=from:date:to:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=0pMER59zTEFCPAzYOXTvQjgFvMsQNU2wxnyfGlWXCK8=;
+        b=odhsBOK7Dgsk9AwMGr6lT8saTB5fWsOT0qaMckMoW6gEv0VosvdF/0M53UbuqlY+13
+         b6u0P/6n1Iv6RfwD8Bc/WTYPsTkvhKzvh879nKylvzD21IiRuMbX0M7P/Qq5a9Ou86t3
+         tHv3vxSVAgNd+xlKnUkQxu5hfscMjOUmFELAVErVsfbbBFnKvLq1E3NhNuQu176rE9wx
+         lU9ykeW3g9HV1r+lPXz0LELG7I04T3yKx4C9b2OmAy8ljGsh1g6XHppS7V5uM9cFGFdL
+         ixop94+RbLFBWtg5g+zoZYZelkVIg97i3btZZpY4tkKnODWFMYm2JbHbww+x6fZdXJJR
+         4+uA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=0pMER59zTEFCPAzYOXTvQjgFvMsQNU2wxnyfGlWXCK8=;
+        b=c9+Lbk7Gh0rsNkr2swRuGev9dAsQ0thfJY5hAv2H9wlR7H8eGYMx5FO8u4//y4nC9f
+         48FlM15aK1FFWEkfCHGgShIbhcE+JDPGELl4TP5U3Xbw/K93reQo6Alq7eebbrENyHMy
+         Ir1XJTTFI8wG2wgddE7fu+ap4H4NFbDm4LcvJ/DC7M+A1kTqDIxC7Ia70y9xnBkc/kqK
+         ljDbdgIkeTx4IuZmB2h1o7sd2167k5+uZEU0dwPXOtPh3IP4bS/0NiRlrsCx9szuNwMW
+         jR5tTr5aljyDAsi8L9lcPvCYxyA/8ZlQfQQeApVr8ukQhM6qMQ673znsrQdMEwIlsmAz
+         Hqqg==
+X-Gm-Message-State: AOAM531QPMfVtLMsxtnG4/Lcz76SKgMwn+67T8KrGWpfZgtRNZZNQsis
+        CGwITjyN37uMmZFpD06ZLqLaFQ==
+X-Google-Smtp-Source: ABdhPJwGhiWPsgEzHtTjHbl/LDABD/mDIC/JjphsdqGqk9EGUNuep6PXsbtiLe0c0diUGLTwra0wRw==
+X-Received: by 2002:a17:90b:388d:: with SMTP id mu13mr5168726pjb.187.1594743121720;
+        Tue, 14 Jul 2020 09:12:01 -0700 (PDT)
+Received: from localhost ([2406:7400:73:6b0b:fdf7:8080:deab:8a49])
+        by smtp.gmail.com with ESMTPSA id y63sm16208541pgb.49.2020.07.14.09.12.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 14 Jul 2020 09:12:00 -0700 (PDT)
+From:   B K Karthik <bkkarthik@pesu.pes.edu>
+X-Google-Original-From: B K Karthik <karthik.bk2000@live.com>
+Date:   Tue, 14 Jul 2020 12:11:55 -0400
+To:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-media@vger.kernel.org, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v2] staging: media: atomisp: mark some csi_rx.c symbols static
+Message-ID: <20200714161155.bnxojp5ajyaeli5k@pesu-pes-edu>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="mw6ahgc7ryjyq7cq"
+Content-Disposition: inline
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 14 Jul 2020 17:54:17 +0200
-Peter Zijlstra <peterz@infradead.org> wrote:
-> > I guess that is, why did moving the initialization early require an
-> > allocation where initializing it later did not? What allocation are we
-> > avoiding?  
-> 
-> The other way around. Before this patch initialization required an
-> allocation, with this patch init no longer requires one.
-> 
 
-Yeah, that's what I figured. Just didn't express myself that way.
+--mw6ahgc7ryjyq7cq
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> > I'm not seeing why this trick is needed when we moved the init early as
-> > compared to doing the same thing later on.  
-> 
-> We use the trick to avoid the alloc, which is what enables early init.
-> 
-> So, before:
->  - init required alloc
->  - alloc prohibits early use
-> 
-> after:
->  - init no longer require alloc
->    - because horrible pointer reuse
->  - early use possible
-> 
-> > > @@ -192,16 +222,35 @@ static int __static_call_init(struct mod
-> > >                 if (key != prev_key) {
-> > >                         prev_key = key;
-> > >  
-> > > +                       if (!mod) {
-> > > +                               key->sites = site;
-> > > +                               key->type |= 1;
-> > > +                               goto do_transform;
-> > > +                       }
-> > > +  
-> > 
-> > We want to avoid calling kzalloc() early?
-> > 
-> > If so, this should have a comment here stating so and why.  
-> 
-> Fair enough; and I think I even see a further optimiation.
-> 
-> How's this:
-> 
-> ---
-> Subject: static_call: Allow early init
-> From: Peter Zijlstra <peterz@infradead.org>
-> Date: Fri, 4 Oct 17:21:10 CEST 2019
-> 
-> In order to use static_call() to wire up x86_pmu, we need to
-> initialize earlier; copy some of the tricks from jump_label to enable
-> this.
-> 
-> Primarily we overload key->next to store a sites pointer when there
-> are no modules, this avoids having to use kmalloc() to initialize the
-> sites and allows us to run much earlier.
+changed symbols N_SHORT_PACKET_LUT_ENTRIES, N_LONG_PACKET_ENTRIES,
+N_CSI_RX_FE_CTRL_DLANES, N_CSI_RX_BE_SID_WIDTH to static because they
+were not declared earlier.
 
-Can we add a statement that says something like: "Because x86 now calls
-static_call_init() before the setup of the memory allocator, we must
-avoid using kmalloc() and friends for core kernel static calls." ?
+Signed-off-by: B K Karthik <karthik.bk2000@live.com>
+---
+ .../media/atomisp/pci/css_2401_system/host/csi_rx.c       | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-This was the missing piece for me.
+diff --git a/drivers/staging/media/atomisp/pci/css_2401_system/host/csi_rx.=
+c b/drivers/staging/media/atomisp/pci/css_2401_system/host/csi_rx.c
+index 8e661091f7d9..4d2076db1240 100644
+--- a/drivers/staging/media/atomisp/pci/css_2401_system/host/csi_rx.c
++++ b/drivers/staging/media/atomisp/pci/css_2401_system/host/csi_rx.c
+@@ -15,26 +15,26 @@
+=20
+ #include "system_global.h"
+=20
+-const u32 N_SHORT_PACKET_LUT_ENTRIES[N_CSI_RX_BACKEND_ID] =3D {
++static const u32 N_SHORT_PACKET_LUT_ENTRIES[N_CSI_RX_BACKEND_ID] =3D {
+ 	4,	/* 4 entries at CSI_RX_BACKEND0_ID*/
+ 	4,	/* 4 entries at CSI_RX_BACKEND1_ID*/
+ 	4	/* 4 entries at CSI_RX_BACKEND2_ID*/
+ };
+=20
+-const u32 N_LONG_PACKET_LUT_ENTRIES[N_CSI_RX_BACKEND_ID] =3D {
++static const u32 N_LONG_PACKET_LUT_ENTRIES[N_CSI_RX_BACKEND_ID] =3D {
+ 	8,	/* 8 entries at CSI_RX_BACKEND0_ID*/
+ 	4,	/* 4 entries at CSI_RX_BACKEND1_ID*/
+ 	4	/* 4 entries at CSI_RX_BACKEND2_ID*/
+ };
+=20
+-const u32 N_CSI_RX_FE_CTRL_DLANES[N_CSI_RX_FRONTEND_ID] =3D {
++static const u32 N_CSI_RX_FE_CTRL_DLANES[N_CSI_RX_FRONTEND_ID] =3D {
+ 	N_CSI_RX_DLANE_ID,	/* 4 dlanes for CSI_RX_FR0NTEND0_ID */
+ 	N_CSI_RX_DLANE_ID,	/* 4 dlanes for CSI_RX_FR0NTEND1_ID */
+ 	N_CSI_RX_DLANE_ID	/* 4 dlanes for CSI_RX_FR0NTEND2_ID */
+ };
+=20
+ /* sid_width for CSI_RX_BACKEND<N>_ID */
+-const u32 N_CSI_RX_BE_SID_WIDTH[N_CSI_RX_BACKEND_ID] =3D {
++static const u32 N_CSI_RX_BE_SID_WIDTH[N_CSI_RX_BACKEND_ID] =3D {
+ 	3,
+ 	2,
+ 	2
+--=20
+2.20.1
 
-> 
-> (arguably, this is much much earlier than needed for perf, but it
-> might allow other uses.)
-> 
-> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-> ---
->  arch/x86/kernel/setup.c       |    2 +
->  arch/x86/kernel/static_call.c |    8 ++++-
->  include/linux/static_call.h   |   15 ++++++++-
->  kernel/static_call.c          |   67 +++++++++++++++++++++++++++++++++++++++---
->  4 files changed, 85 insertions(+), 7 deletions(-)
-> 
-> --- a/arch/x86/kernel/setup.c
-> +++ b/arch/x86/kernel/setup.c
-> @@ -19,6 +19,7 @@
->  #include <linux/hugetlb.h>
->  #include <linux/tboot.h>
->  #include <linux/usb/xhci-dbgp.h>
-> +#include <linux/static_call.h>
->  
->  #include <uapi/linux/mount.h>
->  
-> @@ -848,6 +849,7 @@ void __init setup_arch(char **cmdline_p)
->  	early_cpu_init();
->  	arch_init_ideal_nops();
->  	jump_label_init();
-> +	static_call_init();
->  	early_ioremap_init();
->  
->  	setup_olpc_ofw_pgd();
-> --- a/arch/x86/kernel/static_call.c
-> +++ b/arch/x86/kernel/static_call.c
-> @@ -11,7 +11,7 @@ enum insn_type {
->  	RET = 3,  /* tramp / site cond-tail-call */
->  };
->  
-> -static void __static_call_transform(void *insn, enum insn_type type, void *func)
-> +static void __ref __static_call_transform(void *insn, enum insn_type type, void *func)
->  {
->  	int size = CALL_INSN_SIZE;
->  	const void *code;
-> @@ -33,11 +33,17 @@ static void __static_call_transform(void
->  		code = text_gen_insn(RET_INSN_OPCODE, insn, func);
->  		size = RET_INSN_SIZE;
->  		break;
-> +
-> +	default: /* GCC is a moron -- it figures @code can be uninitialized below */
-> +		BUG();
->  	}
->  
->  	if (memcmp(insn, code, size) == 0)
->  		return;
->  
-> +	if (unlikely(system_state == SYSTEM_BOOTING))
-> +		return text_poke_early(insn, code, size);
-> +
->  	text_poke_bp(insn, code, size, NULL);
->  }
->  
-> --- a/include/linux/static_call.h
-> +++ b/include/linux/static_call.h
-> @@ -136,6 +136,8 @@ extern void arch_static_call_transform(v
->  
->  #ifdef CONFIG_HAVE_STATIC_CALL_INLINE
->  
-> +extern void __init static_call_init(void);
-> +
->  struct static_call_mod {
->  	struct static_call_mod *next;
->  	struct module *mod; /* for vmlinux, mod == NULL */
-> @@ -144,7 +146,12 @@ struct static_call_mod {
->  
->  struct static_call_key {
->  	void *func;
-> -	struct static_call_mod *mods;
-> +	union {
-> +		/* bit 0: 0 = mods, 1 = sites */
-> +		unsigned long type;
-> +		struct static_call_mod *mods;
-> +		struct static_call_site *sites;
-> +	};
->  };
->  
->  extern void __static_call_update(struct static_call_key *key, void *tramp, void *func);
-> @@ -155,7 +162,7 @@ extern int static_call_text_reserved(voi
->  	DECLARE_STATIC_CALL(name, _func);				\
->  	struct static_call_key STATIC_CALL_KEY(name) = {		\
->  		.func = _func,						\
-> -		.mods = NULL,						\
-> +		.type = 1,						\
->  	};								\
->  	ARCH_DEFINE_STATIC_CALL_TRAMP(name, _func)
->  
-> @@ -180,6 +187,8 @@ extern int static_call_text_reserved(voi
->  
->  #elif defined(CONFIG_HAVE_STATIC_CALL)
->  
-> +static inline void static_call_init(void) { }
-> +
->  struct static_call_key {
->  	void *func;
->  };
-> @@ -225,6 +234,8 @@ static inline int static_call_text_reser
->  
->  #else /* Generic implementation */
->  
-> +static inline void static_call_init(void) { }
-> +
->  struct static_call_key {
->  	void *func;
->  };
-> --- a/kernel/static_call.c
-> +++ b/kernel/static_call.c
-> @@ -94,10 +94,31 @@ static inline void static_call_sort_entr
->  	     static_call_site_cmp, static_call_site_swap);
->  }
->  
-> +static inline bool static_call_key_has_mods(struct static_call_key *key)
-> +{
-> +	return !(key->type & 1);
-> +}
-> +
-> +static inline struct static_call_mod *static_call_key_next(struct static_call_key *key)
-> +{
-> +	if (!static_call_key_has_mods(key))
-> +		return NULL;
-> +
-> +	return key->mods;
-> +}
-> +
-> +static inline struct static_call_site *static_call_key_sites(struct static_call_key *key)
-> +{
-> +	if (static_call_key_has_mods(key))
-> +		return NULL;
-> +
-> +	return (struct static_call_site *)(key->type & ~1);
-> +}
-> +
->  void __static_call_update(struct static_call_key *key, void *tramp, void *func)
->  {
->  	struct static_call_site *site, *stop;
-> -	struct static_call_mod *site_mod;
-> +	struct static_call_mod *site_mod, first;
->  
->  	cpus_read_lock();
->  	static_call_lock();
-> @@ -116,13 +137,22 @@ void __static_call_update(struct static_
->  	if (WARN_ON_ONCE(!static_call_initialized))
->  		goto done;
->  
-> -	for (site_mod = key->mods; site_mod; site_mod = site_mod->next) {
-> +	first = (struct static_call_mod){
-> +		.next = static_call_key_next(key),
-> +		.mod = NULL,
-> +		.sites = static_call_key_sites(key),
-> +	};
-> +
-> +	for (site_mod = &first; site_mod; site_mod = site_mod->next) {
->  		struct module *mod = site_mod->mod;
->  
->  		if (!site_mod->sites) {
->  			/*
->  			 * This can happen if the static call key is defined in
->  			 * a module which doesn't use it.
-> +			 *
-> +			 * It also happens in the has_mods case, where the
-> +			 * 'first' entry has no sites associated with it.
->  			 */
->  			continue;
->  		}
-> @@ -192,16 +222,45 @@ static int __static_call_init(struct mod
->  		if (key != prev_key) {
->  			prev_key = key;
->  
-> +			/*
 
-Can we add to this comment:
+--mw6ahgc7ryjyq7cq
+Content-Type: application/pgp-signature; name="signature.asc"
 
-			 * Some architectures (x86) call this before the memory
-			 * allocator is set up.
-> +			 * For vmlinux (!mod) avoid the allocation by storing
-> +			 * the sites pointer in the key itself. Also see
-> +			 * __static_call_update()'s @first.
+-----BEGIN PGP SIGNATURE-----
 
--- Steve
+iQGzBAEBCgAdFiEEpIrzAt4LvWLJmKjp471Q5AHeZ2oFAl8N2UoACgkQ471Q5AHe
+Z2o8nwv/bHYM3mkUPZQMYVj6GOap6AfTeZIjZsYk9EqSvK93TxVV/IxHnKHBvXER
+6GXyP5tJfgF5SiSC9Fz5wcA6fm7jJ4O7Q4P59Joac/Jcuo04RQ/IbpnMQDVvL2mO
+0AXd/ZKj5Y/FBVHTW2qVyiywLh1eurO4D+q8A85y8DX8utVDk0obA8P3V17DsmIa
+tllk98eCGAnpENnJTAR5JaCvCMtECWrR9qCN2KP1dcaZEJqMo9HUjmNAe/jhalLh
+ofzor8oiyYPMCtOr0OaucpwxHgSAYctFMr5GES3DJcsqd4f5/tVNRzowU39YSfJo
+aJpQGXMQKkyULjr6pSCfgOfsDs1H8+lsP/+6hndV0YMojYntnF5bweLkRdMro7Kb
+6N1btTG1f1pXyDm53KuGAXNPeQrn7LO+mHc7vtOTPLzF8gfQ01TeZEGxfd3Yfblk
+aX/XjWnqwRFC6lN0/ZvDe96/YxJ0QmrudM23iTMG2Fugm6f9bMThtLY5X33j/4vq
+TL2p7CKP
+=4I4M
+-----END PGP SIGNATURE-----
 
-> +			 */
-> +			if (!mod) {
-> +				key->sites = site;
-> +				key->type |= 1;
-> +				goto do_transform;
-> +			}
-> +
->  			site_mod = kzalloc(sizeof(*site_mod), GFP_KERNEL);
->  			if (!site_mod)
->  				return -ENOMEM;
->  
-> +			/*
-> +			 * When the key has a direct sites pointer, extract
-> +			 * that into an explicit struct static_call_mod, so we
-> +			 * can have a list of modules.
-> +			 */
-> +			if (static_call_key_sites(key)) {
-> +				site_mod->mod = NULL;
-> +				site_mod->next = NULL;
-> +				site_mod->sites = static_call_key_sites(key);
-> +
-> +				key->mods = site_mod;
-> +
-> +				site_mod = kzalloc(sizeof(*site_mod), GFP_KERNEL);
-> +				if (!site_mod)
-> +					return -ENOMEM;
-> +			}
-> +
->  			site_mod->mod = mod;
->  			site_mod->sites = site;
-> -			site_mod->next = key->mods;
-> +			site_mod->next = static_call_key_next(key);
->  			key->mods = site_mod;
->  		}
->  
-> +do_transform:
->  		arch_static_call_transform(site_addr, NULL, key->func,
->  				static_call_is_tail(site));
->  	}
-> @@ -348,7 +407,7 @@ int static_call_text_reserved(void *star
->  	return __static_call_mod_text_reserved(start, end);
->  }
->  
-> -static void __init static_call_init(void)
-> +void __init static_call_init(void)
->  {
->  	int ret;
->  
-
+--mw6ahgc7ryjyq7cq--
