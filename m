@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98122C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 19:00:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05DD9C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 19:00:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 73C0A22A99
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 19:00:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB52A22B45
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 19:00:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594753227;
-	bh=xock2xhvXW8AIVet0UfzmThCMeZmRI18CnIIzW3WzgU=;
+	s=default; t=1594753229;
+	bh=QQPLdQsHm8zskkrD67gBus4xmrYf5opoihyze2dADgw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nD0OiP0+T7UHOFHIRr7kwVeczIw5zdClTWUl/ku/F6CY1TCrH1n2WWQ7hwsGnEnOJ
-	 0H+S4WSSjePuy0QSkSA1AEb/w2OVZpenBkLh4N0qO/r8+s74IvT2DJd6gLGjr1Cd+E
-	 Gk2Ya1VBvcWDQqQQWmNrPibr6dJwU7lDjsv7xw/k=
+	b=SpmWE15m0hUQHzL9K3Agvxo2NLJidzIIlidHL3OThGIgDKI5RpRJErlGqnxnovv+y
+	 5Ckr09J+h4R0OSFngLzf0XMxvh3rHwkoug5sj4kk6DrEKaPLULPoDRkdurPiKi7Huh
+	 Udla9iEZSldsI8DzqPrTrlWfR0Ki5C2aIKsITjz0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731366AbgGNTAZ (ORCPT
+        id S1729916AbgGNTA2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 15:00:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59218 "EHLO mail.kernel.org"
+        Tue, 14 Jul 2020 15:00:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59284 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730398AbgGNTAU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 15:00:20 -0400
+        id S1731363AbgGNTAW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 15:00:22 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AF3D4221ED;
-        Tue, 14 Jul 2020 19:00:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 41E5B2240B;
+        Tue, 14 Jul 2020 19:00:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594753219;
-        bh=xock2xhvXW8AIVet0UfzmThCMeZmRI18CnIIzW3WzgU=;
+        s=default; t=1594753221;
+        bh=QQPLdQsHm8zskkrD67gBus4xmrYf5opoihyze2dADgw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZM7N1P8eZNHgvfCx71i0Pox1bIL7CKxU54rgwisj306DLwO+NNNRRCpXK3AzZH+za
-         QVIIYOavPTIg4wMSKAmKN8MckkvHvd2uyaaTakc4YNn505ZGpbjxTtpuc1UxpAnKQv
-         sKnCgA1UDNef3lcNpKVRuDMoTcUfncVC2XUIoRbs=
+        b=HyPRkjm1tUapovJSag/wYAXQe7idOSzrFLtOezPW9uLztLlL1e9hMdFOOO5gWOzt+
+         ojY9CElPuHD/7Rw+uijWFimyVYdCmoleMRFETdYLdqkQpRTBVMiGzVePl/Qv5RWVK6
+         zFAZL/gReaP1bwRYHLS0dx43RXSmrV1vuSoq7PVM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Adrian Hunter <adrian.hunter@intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH 5.7 166/166] perf scripts python: exported-sql-viewer.py: Fix time chart call tree
-Date:   Tue, 14 Jul 2020 20:45:31 +0200
-Message-Id: <20200714184123.778557023@linuxfoundation.org>
+        stable@vger.kernel.org, Marc Zyngier <maz@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Will Deacon <will@kernel.org>
+Subject: [PATCH 5.7 157/166] arm64: Introduce a way to disable the 32bit vdso
+Date:   Tue, 14 Jul 2020 20:45:22 +0200
+Message-Id: <20200714184123.341424853@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200714184115.844176932@linuxfoundation.org>
 References: <20200714184115.844176932@linuxfoundation.org>
@@ -60,75 +60,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Adrian Hunter <adrian.hunter@intel.com>
+From: Marc Zyngier <maz@kernel.org>
 
-commit f18d5cf86cdb58eb50cafb5a5e20943ec7a61b1f upstream.
+commit 97884ca8c2925d14c32188e865069f21378b4b4f upstream.
 
-Using Python version 3.8.2 and PySide2 version 5.14.0, time chart call tree
-would not expand the tree to the result. Fix by using setExpanded().
+We have a class of errata (grouped under the ARM64_WORKAROUND_1418040
+banner) that force the trapping of counter access from 32bit EL0.
 
-Example:
+We would normally disable the whole vdso for such defect, except that
+it would disable it for 64bit userspace as well, which is a shame.
 
-  $ perf record -e intel_pt//u uname
-  Linux
-  [ perf record: Woken up 1 times to write data ]
-  [ perf record: Captured and wrote 0.034 MB perf.data ]
-  $ perf script --itrace=bep -s ~/libexec/perf-core/scripts/python/export-to-sqlite.py perf.data.db branches calls
-  2020-06-26 15:32:14.928997 Creating database ...
-  2020-06-26 15:32:14.933971 Writing records...
-  2020-06-26 15:32:15.535251 Adding indexes
-  2020-06-26 15:32:15.542993 Dropping unused tables
-  2020-06-26 15:32:15.549716 Done
-  $ python3 ~/libexec/perf-core/scripts/python/exported-sql-viewer.py perf.data.db
+Instead, add a new vdso_clock_mode, which signals that the vdso
+isn't usable for compat tasks.  This gets checked in the new
+vdso_clocksource_ok() helper, now provided for the 32bit vdso.
 
-  Select: Charts -> Time chart by CPU
-  Move mouse over middle of chart
-  Right-click and select Show Call Tree
-
-Before: displays Call Tree but not expanded to selected time
-After: displays Call Tree expanded to selected time
-
-Fixes: e69d5df75d74d ("perf scripts python: exported-sql-viewer.py: Add ability for Call tree to open at a specified task and time")
-Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
+Signed-off-by: Marc Zyngier <maz@kernel.org>
+Acked-by: Mark Rutland <mark.rutland@arm.com>
 Cc: stable@vger.kernel.org
-Link: http://lore.kernel.org/lkml/20200629091955.17090-7-adrian.hunter@intel.com
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Link: https://lore.kernel.org/r/20200706163802.1836732-2-maz@kernel.org
+Signed-off-by: Will Deacon <will@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- tools/perf/scripts/python/exported-sql-viewer.py |    4 ++++
- 1 file changed, 4 insertions(+)
+ arch/arm64/include/asm/vdso/clocksource.h         |    7 +++++--
+ arch/arm64/include/asm/vdso/compat_gettimeofday.h |    8 +++++++-
+ 2 files changed, 12 insertions(+), 3 deletions(-)
 
---- a/tools/perf/scripts/python/exported-sql-viewer.py
-+++ b/tools/perf/scripts/python/exported-sql-viewer.py
-@@ -1130,6 +1130,7 @@ class CallTreeWindow(TreeWindowBase):
- 				child = self.model.index(row, 0, parent)
- 				if child.internalPointer().dbid == dbid:
- 					found = True
-+					self.view.setExpanded(parent, True)
- 					self.view.setCurrentIndex(child)
- 					parent = child
- 					break
-@@ -1142,6 +1143,7 @@ class CallTreeWindow(TreeWindowBase):
- 				return
- 			last_child = None
- 			for row in xrange(n):
-+				self.view.setExpanded(parent, True)
- 				child = self.model.index(row, 0, parent)
- 				child_call_time = child.internalPointer().call_time
- 				if child_call_time < time:
-@@ -1154,9 +1156,11 @@ class CallTreeWindow(TreeWindowBase):
- 			if not last_child:
- 				if not found:
- 					child = self.model.index(0, 0, parent)
-+					self.view.setExpanded(parent, True)
- 					self.view.setCurrentIndex(child)
- 				return
- 			found = True
-+			self.view.setExpanded(parent, True)
- 			self.view.setCurrentIndex(last_child)
- 			parent = last_child
+--- a/arch/arm64/include/asm/vdso/clocksource.h
++++ b/arch/arm64/include/asm/vdso/clocksource.h
+@@ -2,7 +2,10 @@
+ #ifndef __ASM_VDSOCLOCKSOURCE_H
+ #define __ASM_VDSOCLOCKSOURCE_H
  
+-#define VDSO_ARCH_CLOCKMODES	\
+-	VDSO_CLOCKMODE_ARCHTIMER
++#define VDSO_ARCH_CLOCKMODES					\
++	/* vdso clocksource for both 32 and 64bit tasks */	\
++	VDSO_CLOCKMODE_ARCHTIMER,				\
++	/* vdso clocksource for 64bit tasks only */		\
++	VDSO_CLOCKMODE_ARCHTIMER_NOCOMPAT
+ 
+ #endif
+--- a/arch/arm64/include/asm/vdso/compat_gettimeofday.h
++++ b/arch/arm64/include/asm/vdso/compat_gettimeofday.h
+@@ -111,7 +111,7 @@ static __always_inline u64 __arch_get_hw
+ 	 * update. Return something. Core will do another round and then
+ 	 * see the mode change and fallback to the syscall.
+ 	 */
+-	if (clock_mode == VDSO_CLOCKMODE_NONE)
++	if (clock_mode != VDSO_CLOCKMODE_ARCHTIMER)
+ 		return 0;
+ 
+ 	/*
+@@ -152,6 +152,12 @@ static __always_inline const struct vdso
+ 	return ret;
+ }
+ 
++static inline bool vdso_clocksource_ok(const struct vdso_data *vd)
++{
++	return vd->clock_mode == VDSO_CLOCKMODE_ARCHTIMER;
++}
++#define vdso_clocksource_ok	vdso_clocksource_ok
++
+ #endif /* !__ASSEMBLY__ */
+ 
+ #endif /* __ASM_VDSO_GETTIMEOFDAY_H */
 
 
