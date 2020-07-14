@@ -2,429 +2,211 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7BE1C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 09:14:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 951E4C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 09:10:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B574121D7D
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 09:14:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B71521D7B
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 09:10:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726845AbgGNJOV (ORCPT
+        id S1727021AbgGNJKD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 05:14:21 -0400
-Received: from smtp09.smtpout.orange.fr ([80.12.242.131]:49336 "EHLO
-        smtp.smtpout.orange.fr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726187AbgGNJOU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 05:14:20 -0400
-Received: from localhost.localdomain ([93.22.39.234])
-        by mwinf5d69 with ME
-        id 2xEE23004537AcD03xEEPM; Tue, 14 Jul 2020 11:14:17 +0200
-X-ME-Helo: localhost.localdomain
-X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
-X-ME-Date: Tue, 14 Jul 2020 11:14:17 +0200
-X-ME-IP: 93.22.39.234
-From:   Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-To:     davem@davemloft.net, jdmason@kudzu.us, kuba@kernel.org,
-        mhabets@solarflare.com, snelson@pensando.io, mst@redhat.com,
-        vaibhavgupta40@gmail.com
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-janitors@vger.kernel.org,
-        Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Subject: [PATCH] net: neterion: vxge: switch from 'pci_' to 'dma_' API
-Date:   Tue, 14 Jul 2020 11:14:12 +0200
-Message-Id: <20200714091412.300211-1-christophe.jaillet@wanadoo.fr>
-X-Mailer: git-send-email 2.25.1
+        Tue, 14 Jul 2020 05:10:03 -0400
+Received: from mga18.intel.com ([134.134.136.126]:60986 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725833AbgGNJKC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 05:10:02 -0400
+IronPort-SDR: b3So7BYwg+/cweAhMf2sHBkbSn/D2Ot4EJZUrj7qUq/JysYAPLlCBH6JPzx846OxHr26a6WNoo
+ DJv5bp2NzPvQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9681"; a="136309703"
+X-IronPort-AV: E=Sophos;i="5.75,350,1589266800"; 
+   d="scan'208";a="136309703"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jul 2020 02:10:00 -0700
+IronPort-SDR: uRYacMGUQQ4eMdjnzew0/ihBYczpfvSx0WaPBQtIehMBIHz0qaDlif8eRpVERR1Ln6j3eE1d78
+ 4YvAuurd9TjQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,350,1589266800"; 
+   d="scan'208";a="485806246"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmsmga005.fm.intel.com with ESMTP; 14 Jul 2020 02:10:00 -0700
+Received: from [10.249.230.149] (abudanko-mobl.ccr.corp.intel.com [10.249.230.149])
+        by linux.intel.com (Postfix) with ESMTP id 4FA07580814;
+        Tue, 14 Jul 2020 02:09:56 -0700 (PDT)
+Subject: [PATCH v11 11/15] perf stat: implement control commands handling
+From:   Alexey Budankov <alexey.budankov@linux.intel.com>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+References: <037d737f-0ada-a9f0-9686-f7521ca6fbc3@linux.intel.com>
+Organization: Intel Corp.
+Message-ID: <c581ac87-298c-2f29-5ef0-21a61f149c78@linux.intel.com>
+Date:   Tue, 14 Jul 2020 12:09:54 +0300
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <037d737f-0ada-a9f0-9686-f7521ca6fbc3@linux.intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The wrappers in include/linux/pci-dma-compat.h should go away.
 
-The patch has been generated with the coccinelle script below. No GFP_
-flag needs to be corrected.
-It has been compile tested.
+Implement handling of 'enable' and 'disable' control commands coming
+from control file descriptor. If poll event splits initiated timeout
+interval then the reminder is calculated and still waited in the
+following evlist__poll() call.
 
-
-@@
-@@
--    PCI_DMA_BIDIRECTIONAL
-+    DMA_BIDIRECTIONAL
-
-@@
-@@
--    PCI_DMA_TODEVICE
-+    DMA_TO_DEVICE
-
-@@
-@@
--    PCI_DMA_FROMDEVICE
-+    DMA_FROM_DEVICE
-
-@@
-@@
--    PCI_DMA_NONE
-+    DMA_NONE
-
-@@
-expression e1, e2, e3;
-@@
--    pci_alloc_consistent(e1, e2, e3)
-+    dma_alloc_coherent(&e1->dev, e2, e3, GFP_)
-
-@@
-expression e1, e2, e3;
-@@
--    pci_zalloc_consistent(e1, e2, e3)
-+    dma_alloc_coherent(&e1->dev, e2, e3, GFP_)
-
-@@
-expression e1, e2, e3, e4;
-@@
--    pci_free_consistent(e1, e2, e3, e4)
-+    dma_free_coherent(&e1->dev, e2, e3, e4)
-
-@@
-expression e1, e2, e3, e4;
-@@
--    pci_map_single(e1, e2, e3, e4)
-+    dma_map_single(&e1->dev, e2, e3, e4)
-
-@@
-expression e1, e2, e3, e4;
-@@
--    pci_unmap_single(e1, e2, e3, e4)
-+    dma_unmap_single(&e1->dev, e2, e3, e4)
-
-@@
-expression e1, e2, e3, e4, e5;
-@@
--    pci_map_page(e1, e2, e3, e4, e5)
-+    dma_map_page(&e1->dev, e2, e3, e4, e5)
-
-@@
-expression e1, e2, e3, e4;
-@@
--    pci_unmap_page(e1, e2, e3, e4)
-+    dma_unmap_page(&e1->dev, e2, e3, e4)
-
-@@
-expression e1, e2, e3, e4;
-@@
--    pci_map_sg(e1, e2, e3, e4)
-+    dma_map_sg(&e1->dev, e2, e3, e4)
-
-@@
-expression e1, e2, e3, e4;
-@@
--    pci_unmap_sg(e1, e2, e3, e4)
-+    dma_unmap_sg(&e1->dev, e2, e3, e4)
-
-@@
-expression e1, e2, e3, e4;
-@@
--    pci_dma_sync_single_for_cpu(e1, e2, e3, e4)
-+    dma_sync_single_for_cpu(&e1->dev, e2, e3, e4)
-
-@@
-expression e1, e2, e3, e4;
-@@
--    pci_dma_sync_single_for_device(e1, e2, e3, e4)
-+    dma_sync_single_for_device(&e1->dev, e2, e3, e4)
-
-@@
-expression e1, e2, e3, e4;
-@@
--    pci_dma_sync_sg_for_cpu(e1, e2, e3, e4)
-+    dma_sync_sg_for_cpu(&e1->dev, e2, e3, e4)
-
-@@
-expression e1, e2, e3, e4;
-@@
--    pci_dma_sync_sg_for_device(e1, e2, e3, e4)
-+    dma_sync_sg_for_device(&e1->dev, e2, e3, e4)
-
-@@
-expression e1, e2;
-@@
--    pci_dma_mapping_error(e1, e2)
-+    dma_mapping_error(&e1->dev, e2)
-
-@@
-expression e1, e2;
-@@
--    pci_set_dma_mask(e1, e2)
-+    dma_set_mask(&e1->dev, e2)
-
-@@
-expression e1, e2;
-@@
--    pci_set_consistent_dma_mask(e1, e2)
-+    dma_set_coherent_mask(&e1->dev, e2)
-
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
 ---
-If needed, see post from Christoph Hellwig on the kernel-janitors ML:
-   https://marc.info/?l=kernel-janitors&m=158745678307186&w=4
----
- .../net/ethernet/neterion/vxge/vxge-config.c  | 42 ++++++------
- .../net/ethernet/neterion/vxge/vxge-main.c    | 64 +++++++++----------
- 2 files changed, 52 insertions(+), 54 deletions(-)
+ tools/perf/builtin-stat.c | 83 ++++++++++++++++++++++++++++++---------
+ 1 file changed, 65 insertions(+), 18 deletions(-)
 
-diff --git a/drivers/net/ethernet/neterion/vxge/vxge-config.c b/drivers/net/ethernet/neterion/vxge/vxge-config.c
-index 51cd57ab3d95..4f1f90f5e178 100644
---- a/drivers/net/ethernet/neterion/vxge/vxge-config.c
-+++ b/drivers/net/ethernet/neterion/vxge/vxge-config.c
-@@ -1102,10 +1102,10 @@ static void __vxge_hw_blockpool_destroy(struct __vxge_hw_blockpool *blockpool)
- 	hldev = blockpool->hldev;
+diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
+index 9d5c503e698f..5280a45af5dc 100644
+--- a/tools/perf/builtin-stat.c
++++ b/tools/perf/builtin-stat.c
+@@ -560,9 +560,61 @@ static bool is_target_alive(struct target *_target,
+ 	return false;
+ }
  
- 	list_for_each_safe(p, n, &blockpool->free_block_list) {
--		pci_unmap_single(hldev->pdev,
--			((struct __vxge_hw_blockpool_entry *)p)->dma_addr,
--			((struct __vxge_hw_blockpool_entry *)p)->length,
--			PCI_DMA_BIDIRECTIONAL);
-+		dma_unmap_single(&hldev->pdev->dev,
-+				 ((struct __vxge_hw_blockpool_entry *)p)->dma_addr,
-+				 ((struct __vxge_hw_blockpool_entry *)p)->length,
-+				 DMA_BIDIRECTIONAL);
+-static int dispatch_events(bool forks, int timeout, int interval, int *times, struct timespec *ts)
++static void process_evlist(struct evlist *evlist, unsigned int interval)
++{
++	enum evlist_ctl_cmd cmd = EVLIST_CTL_CMD_UNSUPPORTED;
++
++	if (evlist__ctlfd_process(evlist, &cmd) > 0) {
++		switch (cmd) {
++		case EVLIST_CTL_CMD_ENABLE:
++			pr_info(EVLIST_ENABLED_MSG);
++			if (interval)
++				process_interval();
++			break;
++		case EVLIST_CTL_CMD_DISABLE:
++			if (interval)
++				process_interval();
++			pr_info(EVLIST_DISABLED_MSG);
++			break;
++		case EVLIST_CTL_CMD_ACK:
++		case EVLIST_CTL_CMD_UNSUPPORTED:
++		default:
++			break;
++		}
++	}
++}
++
++static void compute_tts(struct timespec *time_start, struct timespec *time_stop,
++			int *time_to_sleep)
++{
++	int tts = *time_to_sleep;
++	struct timespec time_diff;
++
++	diff_timespec(&time_diff, time_stop, time_start);
++
++	tts -= time_diff.tv_sec * MSEC_PER_SEC +
++	       time_diff.tv_nsec / NSEC_PER_MSEC;
++
++	if (tts < 0)
++		tts = 0;
++
++	*time_to_sleep = tts;
++}
++
++static int dispatch_events(bool forks, int timeout, int interval, int *times)
+ {
+ 	int child_exited = 0, status = 0;
++	int time_to_sleep, sleep_time;
++	struct timespec time_start, time_stop;
++
++	if (interval)
++		sleep_time = interval;
++	else if (timeout)
++		sleep_time = timeout;
++	else
++		sleep_time = 1000;
++
++	time_to_sleep = sleep_time;
  
- 		vxge_os_dma_free(hldev->pdev,
- 			((struct __vxge_hw_blockpool_entry *)p)->memblock,
-@@ -1178,10 +1178,10 @@ __vxge_hw_blockpool_create(struct __vxge_hw_device *hldev,
- 			goto blockpool_create_exit;
- 		}
- 
--		dma_addr = pci_map_single(hldev->pdev, memblock,
--				VXGE_HW_BLOCK_SIZE, PCI_DMA_BIDIRECTIONAL);
--		if (unlikely(pci_dma_mapping_error(hldev->pdev,
--				dma_addr))) {
-+		dma_addr = dma_map_single(&hldev->pdev->dev, memblock,
-+					  VXGE_HW_BLOCK_SIZE,
-+					  DMA_BIDIRECTIONAL);
-+		if (unlikely(dma_mapping_error(&hldev->pdev->dev, dma_addr))) {
- 			vxge_os_dma_free(hldev->pdev, memblock, &acc_handle);
- 			__vxge_hw_blockpool_destroy(blockpool);
- 			status = VXGE_HW_ERR_OUT_OF_MEMORY;
-@@ -2264,10 +2264,10 @@ static void vxge_hw_blockpool_block_add(struct __vxge_hw_device *devh,
- 		goto exit;
- 	}
- 
--	dma_addr = pci_map_single(devh->pdev, block_addr, length,
--				PCI_DMA_BIDIRECTIONAL);
-+	dma_addr = dma_map_single(&devh->pdev->dev, block_addr, length,
-+				  DMA_BIDIRECTIONAL);
- 
--	if (unlikely(pci_dma_mapping_error(devh->pdev, dma_addr))) {
-+	if (unlikely(dma_mapping_error(&devh->pdev->dev, dma_addr))) {
- 		vxge_os_dma_free(devh->pdev, block_addr, &acc_handle);
- 		blockpool->req_out--;
- 		goto exit;
-@@ -2359,11 +2359,10 @@ static void *__vxge_hw_blockpool_malloc(struct __vxge_hw_device *devh, u32 size,
- 		if (!memblock)
- 			goto exit;
- 
--		dma_object->addr = pci_map_single(devh->pdev, memblock, size,
--					PCI_DMA_BIDIRECTIONAL);
-+		dma_object->addr = dma_map_single(&devh->pdev->dev, memblock,
-+						  size, DMA_BIDIRECTIONAL);
- 
--		if (unlikely(pci_dma_mapping_error(devh->pdev,
--				dma_object->addr))) {
-+		if (unlikely(dma_mapping_error(&devh->pdev->dev, dma_object->addr))) {
- 			vxge_os_dma_free(devh->pdev, memblock,
- 				&dma_object->acc_handle);
- 			memblock = NULL;
-@@ -2410,11 +2409,10 @@ __vxge_hw_blockpool_blocks_remove(struct __vxge_hw_blockpool *blockpool)
- 		if (blockpool->pool_size < blockpool->pool_max)
+ 	while (!done) {
+ 		if (forks)
+@@ -573,9 +625,16 @@ static int dispatch_events(bool forks, int timeout, int interval, int *times, st
+ 		if (child_exited)
  			break;
  
--		pci_unmap_single(
--			(blockpool->hldev)->pdev,
--			((struct __vxge_hw_blockpool_entry *)p)->dma_addr,
--			((struct __vxge_hw_blockpool_entry *)p)->length,
--			PCI_DMA_BIDIRECTIONAL);
-+		dma_unmap_single(&(blockpool->hldev)->pdev->dev,
-+				 ((struct __vxge_hw_blockpool_entry *)p)->dma_addr,
-+				 ((struct __vxge_hw_blockpool_entry *)p)->length,
-+				 DMA_BIDIRECTIONAL);
+-		nanosleep(ts, NULL);
+-		if (timeout || handle_interval(interval, times))
+-			break;
++		clock_gettime(CLOCK_MONOTONIC, &time_start);
++		if (!(evlist__poll(evsel_list, time_to_sleep) > 0)) { /* poll timeout or EINTR */
++			if (timeout || handle_interval(interval, times))
++				break;
++			time_to_sleep = sleep_time;
++		} else { /* fd revent */
++			process_evlist(evsel_list, interval);
++			clock_gettime(CLOCK_MONOTONIC, &time_stop);
++			compute_tts(&time_start, &time_stop, &time_to_sleep);
++		}
+ 	}
  
- 		vxge_os_dma_free(
- 			(blockpool->hldev)->pdev,
-@@ -2445,8 +2443,8 @@ static void __vxge_hw_blockpool_free(struct __vxge_hw_device *devh,
- 	blockpool = &devh->block_pool;
+ 	return status;
+@@ -644,7 +703,6 @@ static int __run_perf_stat(int argc, const char **argv, int run_idx)
+ 	char msg[BUFSIZ];
+ 	unsigned long long t0, t1;
+ 	struct evsel *counter;
+-	struct timespec ts;
+ 	size_t l;
+ 	int status = 0;
+ 	const bool forks = (argc > 0);
+@@ -653,17 +711,6 @@ static int __run_perf_stat(int argc, const char **argv, int run_idx)
+ 	int i, cpu;
+ 	bool second_pass = false;
  
- 	if (size != blockpool->block_size) {
--		pci_unmap_single(devh->pdev, dma_object->addr, size,
--			PCI_DMA_BIDIRECTIONAL);
-+		dma_unmap_single(&devh->pdev->dev, dma_object->addr, size,
-+				 DMA_BIDIRECTIONAL);
- 		vxge_os_dma_free(devh->pdev, memblock, &dma_object->acc_handle);
+-	if (interval) {
+-		ts.tv_sec  = interval / USEC_PER_MSEC;
+-		ts.tv_nsec = (interval % USEC_PER_MSEC) * NSEC_PER_MSEC;
+-	} else if (timeout) {
+-		ts.tv_sec  = timeout / USEC_PER_MSEC;
+-		ts.tv_nsec = (timeout % USEC_PER_MSEC) * NSEC_PER_MSEC;
+-	} else {
+-		ts.tv_sec  = 1;
+-		ts.tv_nsec = 0;
+-	}
+-
+ 	if (forks) {
+ 		if (perf_evlist__prepare_workload(evsel_list, &target, argv, is_pipe,
+ 						  workload_exec_failed_signal) < 0) {
+@@ -821,7 +868,7 @@ static int __run_perf_stat(int argc, const char **argv, int run_idx)
+ 		enable_counters();
+ 
+ 		if (interval || timeout)
+-			status = dispatch_events(forks, timeout, interval, &times, &ts);
++			status = dispatch_events(forks, timeout, interval, &times);
+ 		if (child_pid != -1) {
+ 			if (timeout)
+ 				kill(child_pid, SIGTERM);
+@@ -838,7 +885,7 @@ static int __run_perf_stat(int argc, const char **argv, int run_idx)
+ 			psignal(WTERMSIG(status), argv[0]);
  	} else {
- 
-diff --git a/drivers/net/ethernet/neterion/vxge/vxge-main.c b/drivers/net/ethernet/neterion/vxge/vxge-main.c
-index 5de85b9e9e35..b0faa737b817 100644
---- a/drivers/net/ethernet/neterion/vxge/vxge-main.c
-+++ b/drivers/net/ethernet/neterion/vxge/vxge-main.c
-@@ -241,10 +241,10 @@ static int vxge_rx_map(void *dtrh, struct vxge_ring *ring)
- 	rx_priv = vxge_hw_ring_rxd_private_get(dtrh);
- 
- 	rx_priv->skb_data = rx_priv->skb->data;
--	dma_addr = pci_map_single(ring->pdev, rx_priv->skb_data,
--				rx_priv->data_size, PCI_DMA_FROMDEVICE);
-+	dma_addr = dma_map_single(&ring->pdev->dev, rx_priv->skb_data,
-+				  rx_priv->data_size, DMA_FROM_DEVICE);
- 
--	if (unlikely(pci_dma_mapping_error(ring->pdev, dma_addr))) {
-+	if (unlikely(dma_mapping_error(&ring->pdev->dev, dma_addr))) {
- 		ring->stats.pci_map_fail++;
- 		return -EIO;
- 	}
-@@ -323,8 +323,8 @@ vxge_rx_complete(struct vxge_ring *ring, struct sk_buff *skb, u16 vlan,
- static inline void vxge_re_pre_post(void *dtr, struct vxge_ring *ring,
- 				    struct vxge_rx_priv *rx_priv)
- {
--	pci_dma_sync_single_for_device(ring->pdev,
--		rx_priv->data_dma, rx_priv->data_size, PCI_DMA_FROMDEVICE);
-+	dma_sync_single_for_device(&ring->pdev->dev, rx_priv->data_dma,
-+				   rx_priv->data_size, DMA_FROM_DEVICE);
- 
- 	vxge_hw_ring_rxd_1b_set(dtr, rx_priv->data_dma, rx_priv->data_size);
- 	vxge_hw_ring_rxd_pre_post(ring->handle, dtr);
-@@ -425,8 +425,9 @@ vxge_rx_1b_compl(struct __vxge_hw_ring *ringh, void *dtr,
- 				if (!vxge_rx_map(dtr, ring)) {
- 					skb_put(skb, pkt_length);
- 
--					pci_unmap_single(ring->pdev, data_dma,
--						data_size, PCI_DMA_FROMDEVICE);
-+					dma_unmap_single(&ring->pdev->dev,
-+							 data_dma, data_size,
-+							 DMA_FROM_DEVICE);
- 
- 					vxge_hw_ring_rxd_pre_post(ringh, dtr);
- 					vxge_post(&dtr_cnt, &first_dtr, dtr,
-@@ -458,9 +459,9 @@ vxge_rx_1b_compl(struct __vxge_hw_ring *ringh, void *dtr,
- 				skb_reserve(skb_up,
- 				    VXGE_HW_HEADER_ETHERNET_II_802_3_ALIGN);
- 
--				pci_dma_sync_single_for_cpu(ring->pdev,
--					data_dma, data_size,
--					PCI_DMA_FROMDEVICE);
-+				dma_sync_single_for_cpu(&ring->pdev->dev,
-+							data_dma, data_size,
-+							DMA_FROM_DEVICE);
- 
- 				vxge_debug_mem(VXGE_TRACE,
- 					"%s: %s:%d  skb_up = %p",
-@@ -585,13 +586,13 @@ vxge_xmit_compl(struct __vxge_hw_fifo *fifo_hw, void *dtr,
- 		}
- 
- 		/*  for unfragmented skb */
--		pci_unmap_single(fifo->pdev, txd_priv->dma_buffers[i++],
--				skb_headlen(skb), PCI_DMA_TODEVICE);
-+		dma_unmap_single(&fifo->pdev->dev, txd_priv->dma_buffers[i++],
-+				 skb_headlen(skb), DMA_TO_DEVICE);
- 
- 		for (j = 0; j < frg_cnt; j++) {
--			pci_unmap_page(fifo->pdev,
--					txd_priv->dma_buffers[i++],
--					skb_frag_size(frag), PCI_DMA_TODEVICE);
-+			dma_unmap_page(&fifo->pdev->dev,
-+				       txd_priv->dma_buffers[i++],
-+				       skb_frag_size(frag), DMA_TO_DEVICE);
- 			frag += 1;
- 		}
- 
-@@ -897,10 +898,10 @@ vxge_xmit(struct sk_buff *skb, struct net_device *dev)
- 
- 	first_frg_len = skb_headlen(skb);
- 
--	dma_pointer = pci_map_single(fifo->pdev, skb->data, first_frg_len,
--				PCI_DMA_TODEVICE);
-+	dma_pointer = dma_map_single(&fifo->pdev->dev, skb->data,
-+				     first_frg_len, DMA_TO_DEVICE);
- 
--	if (unlikely(pci_dma_mapping_error(fifo->pdev, dma_pointer))) {
-+	if (unlikely(dma_mapping_error(&fifo->pdev->dev, dma_pointer))) {
- 		vxge_hw_fifo_txdl_free(fifo_hw, dtr);
- 		fifo->stats.pci_map_fail++;
- 		goto _exit0;
-@@ -977,12 +978,12 @@ vxge_xmit(struct sk_buff *skb, struct net_device *dev)
- 	j = 0;
- 	frag = &skb_shinfo(skb)->frags[0];
- 
--	pci_unmap_single(fifo->pdev, txdl_priv->dma_buffers[j++],
--			skb_headlen(skb), PCI_DMA_TODEVICE);
-+	dma_unmap_single(&fifo->pdev->dev, txdl_priv->dma_buffers[j++],
-+			 skb_headlen(skb), DMA_TO_DEVICE);
- 
- 	for (; j < i; j++) {
--		pci_unmap_page(fifo->pdev, txdl_priv->dma_buffers[j],
--			skb_frag_size(frag), PCI_DMA_TODEVICE);
-+		dma_unmap_page(&fifo->pdev->dev, txdl_priv->dma_buffers[j],
-+			       skb_frag_size(frag), DMA_TO_DEVICE);
- 		frag += 1;
+ 		enable_counters();
+-		status = dispatch_events(forks, timeout, interval, &times, &ts);
++		status = dispatch_events(forks, timeout, interval, &times);
  	}
  
-@@ -1012,8 +1013,8 @@ vxge_rx_term(void *dtrh, enum vxge_hw_rxd_state state, void *userdata)
- 	if (state != VXGE_HW_RXD_STATE_POSTED)
- 		return;
- 
--	pci_unmap_single(ring->pdev, rx_priv->data_dma,
--		rx_priv->data_size, PCI_DMA_FROMDEVICE);
-+	dma_unmap_single(&ring->pdev->dev, rx_priv->data_dma,
-+			 rx_priv->data_size, DMA_FROM_DEVICE);
- 
- 	dev_kfree_skb(rx_priv->skb);
- 	rx_priv->skb_data = NULL;
-@@ -1048,12 +1049,12 @@ vxge_tx_term(void *dtrh, enum vxge_hw_txdl_state state, void *userdata)
- 	frag = &skb_shinfo(skb)->frags[0];
- 
- 	/*  for unfragmented skb */
--	pci_unmap_single(fifo->pdev, txd_priv->dma_buffers[i++],
--		skb_headlen(skb), PCI_DMA_TODEVICE);
-+	dma_unmap_single(&fifo->pdev->dev, txd_priv->dma_buffers[i++],
-+			 skb_headlen(skb), DMA_TO_DEVICE);
- 
- 	for (j = 0; j < frg_cnt; j++) {
--		pci_unmap_page(fifo->pdev, txd_priv->dma_buffers[i++],
--			       skb_frag_size(frag), PCI_DMA_TODEVICE);
-+		dma_unmap_page(&fifo->pdev->dev, txd_priv->dma_buffers[i++],
-+			       skb_frag_size(frag), DMA_TO_DEVICE);
- 		frag += 1;
- 	}
- 
-@@ -4387,21 +4388,20 @@ vxge_probe(struct pci_dev *pdev, const struct pci_device_id *pre)
- 		goto _exit0;
- 	}
- 
--	if (!pci_set_dma_mask(pdev, DMA_BIT_MASK(64))) {
-+	if (!dma_set_mask(&pdev->dev, DMA_BIT_MASK(64))) {
- 		vxge_debug_ll_config(VXGE_TRACE,
- 			"%s : using 64bit DMA", __func__);
- 
- 		high_dma = 1;
- 
--		if (pci_set_consistent_dma_mask(pdev,
--						DMA_BIT_MASK(64))) {
-+		if (dma_set_coherent_mask(&pdev->dev, DMA_BIT_MASK(64))) {
- 			vxge_debug_init(VXGE_ERR,
- 				"%s : unable to obtain 64bit DMA for "
- 				"consistent allocations", __func__);
- 			ret = -ENOMEM;
- 			goto _exit1;
- 		}
--	} else if (!pci_set_dma_mask(pdev, DMA_BIT_MASK(32))) {
-+	} else if (!dma_set_mask(&pdev->dev, DMA_BIT_MASK(32))) {
- 		vxge_debug_ll_config(VXGE_TRACE,
- 			"%s : using 32bit DMA", __func__);
- 	} else {
+ 	disable_counters();
 -- 
-2.25.1
+2.24.1
+
 
