@@ -2,192 +2,427 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.4 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39599C433EB
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 09:54:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39199C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 09:50:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 10A2B21D7D
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 09:54:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="uNkBXfsr"
+	by mail.kernel.org (Postfix) with ESMTP id 152E021D7A
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 09:50:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726908AbgGNJyV (ORCPT
+        id S1726785AbgGNJt7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 05:54:21 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:46489 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725884AbgGNJyN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 05:54:13 -0400
-X-UUID: da437b3d2bb548508729edaf0964a43d-20200714
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=EOnqpqtyRMZc50/a4xzdJxk6bVs42IqQ6iAz6guwSpU=;
-        b=uNkBXfsrGz6ePSxmqInaorrGbXXXfv4OlJtFJjcqZYg71bF3v74cGsS29JqoyLFusfT/7SlCTqRUmIVzN1/p29pJrhgOtdE3KdKmEDSleW8CWNJHFweP1aMKY8TzxAYOiNPAozQE7MajsOd3GJZaRs/8kjqBXk9TKPxCvSmAOjI=;
-X-UUID: da437b3d2bb548508729edaf0964a43d-20200714
-Received: from mtkcas07.mediatek.inc [(172.21.101.84)] by mailgw01.mediatek.com
-        (envelope-from <hsin-hsiung.wang@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 1942809739; Tue, 14 Jul 2020 17:54:08 +0800
-Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
- mtkmbs07n2.mediatek.inc (172.21.101.141) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Tue, 14 Jul 2020 17:54:05 +0800
-Received: from mtksdaap41.mediatek.inc (172.21.77.4) by MTKCAS06.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Tue, 14 Jul 2020 17:54:06 +0800
-From:   Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>
-To:     Rob Herring <robh+dt@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Argus Lin <argus.lin@mediatek.com>
-CC:     Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>, <srv_heupstream@mediatek.com>
-Subject: [PATCH 3/3] soc: mediatek: pwrap: add pwrap driver for MT6873/8192 SoCs
-Date:   Tue, 14 Jul 2020 17:53:52 +0800
-Message-ID: <1594720432-19586-4-git-send-email-hsin-hsiung.wang@mediatek.com>
-X-Mailer: git-send-email 2.6.4
-In-Reply-To: <1594720432-19586-1-git-send-email-hsin-hsiung.wang@mediatek.com>
-References: <1594720432-19586-1-git-send-email-hsin-hsiung.wang@mediatek.com>
+        Tue, 14 Jul 2020 05:49:59 -0400
+Received: from mga05.intel.com ([192.55.52.43]:15581 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726252AbgGNJt7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 05:49:59 -0400
+IronPort-SDR: r1Olfr0GnoXm6ueAh4gpt8wUB0OJuUZ1g2I7H1MoRa2kA+XAaJjrgQxMSfU+55yvecp4tVEDLV
+ wqXPrzesVOXQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9681"; a="233719746"
+X-IronPort-AV: E=Sophos;i="5.75,350,1589266800"; 
+   d="scan'208";a="233719746"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jul 2020 02:48:56 -0700
+IronPort-SDR: akKlBNFCW4ZuH30XNmfFDJ/JqfwCotDaiI3gr2N16ft+Ek+Negj/NbNi6qG/3F2eQLTDTFlbPY
+ on5RWH5j+GDw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,350,1589266800"; 
+   d="scan'208";a="459630798"
+Received: from rmarti11-mobl.ger.corp.intel.com (HELO localhost) ([10.252.54.57])
+  by orsmga005.jf.intel.com with ESMTP; 14 Jul 2020 02:48:48 -0700
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Jessica Yu <jeyu@kernel.org>,
+        "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
+        Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Jiri Kosina <jikos@kernel.org>,
+        Miroslav Benes <mbenes@suse.cz>,
+        Petr Mladek <pmladek@suse.com>,
+        Joe Lawrence <joe.lawrence@redhat.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        live-patching@vger.kernel.org (open list:LIVE PATCHING)
+Subject: [PATCH v2 2/3] module: Add lock_modules() and unlock_modules()
+Date:   Tue, 14 Jul 2020 12:45:37 +0300
+Message-Id: <20200714094625.1443261-3-jarkko.sakkinen@linux.intel.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200714094625.1443261-1-jarkko.sakkinen@linux.intel.com>
+References: <20200714094625.1443261-1-jarkko.sakkinen@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-MTK:  N
-Content-Transfer-Encoding: base64
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-TVQ2ODczLzgxOTIgYXJlIGhpZ2hseSBpbnRlZ3JhdGVkIFNvQ3MgYW5kIHVzZSBQTUlDX01UNjM1
-OSBmb3INCnBvd2VyIG1hbmFnZW1lbnQuIFRoaXMgcGF0Y2ggYWRkcyBwd3JhcCBtYXN0ZXIgZHJp
-dmVyIHRvDQphY2Nlc3MgUE1JQ19NVDYzNTkuDQoNClNpZ25lZC1vZmYtYnk6IEhzaW4tSHNpdW5n
-IFdhbmcgPGhzaW4taHNpdW5nLndhbmdAbWVkaWF0ZWsuY29tPg0KLS0tDQogZHJpdmVycy9zb2Mv
-bWVkaWF0ZWsvbXRrLXBtaWMtd3JhcC5jIHwgOTggKysrKysrKysrKysrKysrKysrKysrKysrKysr
-KysrKystLS0tDQogMSBmaWxlIGNoYW5nZWQsIDg3IGluc2VydGlvbnMoKyksIDExIGRlbGV0aW9u
-cygtKQ0KDQpkaWZmIC0tZ2l0IGEvZHJpdmVycy9zb2MvbWVkaWF0ZWsvbXRrLXBtaWMtd3JhcC5j
-IGIvZHJpdmVycy9zb2MvbWVkaWF0ZWsvbXRrLXBtaWMtd3JhcC5jDQppbmRleCBjODk3MjA1Li42
-ZTdmNzk2ZiAxMDA2NDQNCi0tLSBhL2RyaXZlcnMvc29jL21lZGlhdGVrL210ay1wbWljLXdyYXAu
-Yw0KKysrIGIvZHJpdmVycy9zb2MvbWVkaWF0ZWsvbXRrLXBtaWMtd3JhcC5jDQpAQCAtMjQsMTEg
-KzI0LDEzIEBADQogI2RlZmluZSBQV1JBUF9NVDgxMzVfQlJJREdFX1dEVF9TUkNfRU4JCTB4NTQN
-CiANCiAvKiBtYWNybyBmb3Igd3JhcHBlciBzdGF0dXMgKi8NCisjZGVmaW5lIFBXUkFQX0dFVF9T
-V0lORl8yX0ZTTSh4KQkoKCh4KSA+PiAxKSAmIDB4MDAwMDAwMDcpDQogI2RlZmluZSBQV1JBUF9H
-RVRfV0FDU19SREFUQSh4KQkJKCgoeCkgPj4gMCkgJiAweDAwMDBmZmZmKQ0KICNkZWZpbmUgUFdS
-QVBfR0VUX1dBQ1NfRlNNKHgpCQkoKCh4KSA+PiAxNikgJiAweDAwMDAwMDA3KQ0KICNkZWZpbmUg
-UFdSQVBfR0VUX1dBQ1NfUkVRKHgpCQkoKCh4KSA+PiAxOSkgJiAweDAwMDAwMDAxKQ0KICNkZWZp
-bmUgUFdSQVBfU1RBVEVfU1lOQ19JRExFMAkJQklUKDIwKQ0KICNkZWZpbmUgUFdSQVBfU1RBVEVf
-SU5JVF9ET05FMAkJQklUKDIxKQ0KKyNkZWZpbmUgUFdSQVBfU1RBVEVfSU5JVF9ET05FMQkJQklU
-KDE1KQ0KIA0KIC8qIG1hY3JvIGZvciBXQUNTIEZTTSAqLw0KICNkZWZpbmUgUFdSQVBfV0FDU19G
-U01fSURMRQkJMHgwMA0KQEAgLTc0LDYgKzc2LDcgQEANCiAjZGVmaW5lIFBXUkFQX0NBUF9EQ00J
-CUJJVCgyKQ0KICNkZWZpbmUgUFdSQVBfQ0FQX0lOVDFfRU4JQklUKDMpDQogI2RlZmluZSBQV1JB
-UF9DQVBfV0RUX1NSQzEJQklUKDQpDQorI2RlZmluZSBQV1JBUF9DQVBfQVJCCQlCSVQoNSkNCiAN
-CiAvKiBkZWZpbmVzIGZvciBzbGF2ZSBkZXZpY2Ugd3JhcHBlciByZWdpc3RlcnMgKi8NCiBlbnVt
-IGRld19yZWdzIHsNCkBAIC0zNDgsNiArMzUxLDEwIEBAIGVudW0gcHdyYXBfcmVncyB7DQogCVBX
-UkFQX0FEQ19SREFUQV9BRERSMSwNCiAJUFdSQVBfQURDX1JEQVRBX0FERFIyLA0KIA0KKwkvKiBN
-VDY4NzMgb25seSByZWdzICovDQorCVBXUkFQX1NXSU5GXzJfV0RBVEFfMzFfMCwNCisJUFdSQVBf
-U1dJTkZfMl9SREFUQV8zMV8wLA0KKw0KIAkvKiBNVDc2MjIgb25seSByZWdzICovDQogCVBXUkFQ
-X1NUQSwNCiAJUFdSQVBfQ0xSLA0KQEAgLTYyNyw2ICs2MzQsMTcgQEAgc3RhdGljIGludCBtdDY3
-OTdfcmVnc1tdID0gew0KIAlbUFdSQVBfRENNX0RCQ19QUkRdID0JCTB4MUQ0LA0KIH07DQogDQor
-c3RhdGljIGludCBtdDY4NzNfcmVnc1tdID0gew0KKwlbUFdSQVBfSU5JVF9ET05FMl0gPQkJMHgw
-LA0KKwlbUFdSQVBfVElNRVJfRU5dID0JCTB4M0UwLA0KKwlbUFdSQVBfSU5UX0VOXSA9CQkweDQ0
-OCwNCisJW1BXUkFQX1dBQ1MyX0NNRF0gPQkJMHhDODAsDQorCVtQV1JBUF9TV0lORl8yX1dEQVRB
-XzMxXzBdID0JMHhDODQsDQorCVtQV1JBUF9TV0lORl8yX1JEQVRBXzMxXzBdID0JMHhDOTQsDQor
-CVtQV1JBUF9XQUNTMl9WTERDTFJdID0JCTB4Q0E0LA0KKwlbUFdSQVBfV0FDUzJfUkRBVEFdID0J
-CTB4Q0E4LA0KK307DQorDQogc3RhdGljIGludCBtdDc2MjJfcmVnc1tdID0gew0KIAlbUFdSQVBf
-TVVYX1NFTF0gPQkJMHgwLA0KIAlbUFdSQVBfV1JBUF9FTl0gPQkJMHg0LA0KQEAgLTEwNDUsNiAr
-MTA2Myw3IEBAIGVudW0gcHdyYXBfdHlwZSB7DQogCVBXUkFQX01UNjc2NSwNCiAJUFdSQVBfTVQ2
-Nzc5LA0KIAlQV1JBUF9NVDY3OTcsDQorCVBXUkFQX01UNjg3MywNCiAJUFdSQVBfTVQ3NjIyLA0K
-IAlQV1JBUF9NVDgxMzUsDQogCVBXUkFQX01UODE3MywNCkBAIC0xMTA4LDE2ICsxMTI3LDMwIEBA
-IHN0YXRpYyB2b2lkIHB3cmFwX3dyaXRlbChzdHJ1Y3QgcG1pY193cmFwcGVyICp3cnAsIHUzMiB2
-YWwsIGVudW0gcHdyYXBfcmVncyByZWcpDQogDQogc3RhdGljIGJvb2wgcHdyYXBfaXNfZnNtX2lk
-bGUoc3RydWN0IHBtaWNfd3JhcHBlciAqd3JwKQ0KIHsNCi0JdTMyIHZhbCA9IHB3cmFwX3JlYWRs
-KHdycCwgUFdSQVBfV0FDUzJfUkRBVEEpOw0KKwl1MzIgdmFsOw0KKwlib29sIHJldDsNCisNCisJ
-dmFsID0gcHdyYXBfcmVhZGwod3JwLCBQV1JBUF9XQUNTMl9SREFUQSk7DQorCWlmIChIQVNfQ0FQ
-KHdycC0+bWFzdGVyLT5jYXBzLCBQV1JBUF9DQVBfQVJCKSkNCisJCXJldCA9IChQV1JBUF9HRVRf
-U1dJTkZfMl9GU00odmFsKSA9PSBQV1JBUF9XQUNTX0ZTTV9JRExFKTsNCisJZWxzZQ0KKwkJcmV0
-ID0gKFBXUkFQX0dFVF9XQUNTX0ZTTSh2YWwpID09IFBXUkFQX1dBQ1NfRlNNX0lETEUpOw0KIA0K
-LQlyZXR1cm4gUFdSQVBfR0VUX1dBQ1NfRlNNKHZhbCkgPT0gUFdSQVBfV0FDU19GU01fSURMRTsN
-CisJcmV0dXJuIHJldDsNCiB9DQogDQogc3RhdGljIGJvb2wgcHdyYXBfaXNfZnNtX3ZsZGNscihz
-dHJ1Y3QgcG1pY193cmFwcGVyICp3cnApDQogew0KLQl1MzIgdmFsID0gcHdyYXBfcmVhZGwod3Jw
-LCBQV1JBUF9XQUNTMl9SREFUQSk7DQorCXUzMiB2YWw7DQorCWJvb2wgcmV0Ow0KKw0KKwl2YWwg
-PSBwd3JhcF9yZWFkbCh3cnAsIFBXUkFQX1dBQ1MyX1JEQVRBKTsNCisJaWYgKEhBU19DQVAod3Jw
-LT5tYXN0ZXItPmNhcHMsIFBXUkFQX0NBUF9BUkIpKQ0KKwkJcmV0ID0gKFBXUkFQX0dFVF9TV0lO
-Rl8yX0ZTTSh2YWwpID09IFBXUkFQX1dBQ1NfRlNNX1dGVkxEQ0xSKTsNCisJZWxzZQ0KKwkJcmV0
-ID0gKFBXUkFQX0dFVF9XQUNTX0ZTTSh2YWwpID09IFBXUkFQX1dBQ1NfRlNNX1dGVkxEQ0xSKTsN
-CiANCi0JcmV0dXJuIFBXUkFQX0dFVF9XQUNTX0ZTTSh2YWwpID09IFBXUkFQX1dBQ1NfRlNNX1dG
-VkxEQ0xSOw0KKwlyZXR1cm4gcmV0Ow0KIH0NCiANCiAvKg0KQEAgLTExNzIsMTMgKzEyMDUsMjEg
-QEAgc3RhdGljIGludCBwd3JhcF9yZWFkMTYoc3RydWN0IHBtaWNfd3JhcHBlciAqd3JwLCB1MzIg
-YWRyLCB1MzIgKnJkYXRhKQ0KIAkJcmV0dXJuIHJldDsNCiAJfQ0KIA0KLQlwd3JhcF93cml0ZWwo
-d3JwLCAoYWRyID4+IDEpIDw8IDE2LCBQV1JBUF9XQUNTMl9DTUQpOw0KKwlpZiAoSEFTX0NBUCh3
-cnAtPm1hc3Rlci0+Y2FwcywgUFdSQVBfQ0FQX0FSQikpDQorCQlwd3JhcF93cml0ZWwod3JwLCBh
-ZHIsIFBXUkFQX1dBQ1MyX0NNRCk7DQorCWVsc2UNCisJCXB3cmFwX3dyaXRlbCh3cnAsIChhZHIg
-Pj4gMSkgPDwgMTYsIFBXUkFQX1dBQ1MyX0NNRCk7DQogDQogCXJldCA9IHB3cmFwX3dhaXRfZm9y
-X3N0YXRlKHdycCwgcHdyYXBfaXNfZnNtX3ZsZGNscik7DQogCWlmIChyZXQpDQogCQlyZXR1cm4g
-cmV0Ow0KIA0KLQkqcmRhdGEgPSBQV1JBUF9HRVRfV0FDU19SREFUQShwd3JhcF9yZWFkbCh3cnAs
-IFBXUkFQX1dBQ1MyX1JEQVRBKSk7DQorCWlmIChIQVNfQ0FQKHdycC0+bWFzdGVyLT5jYXBzLCBQ
-V1JBUF9DQVBfQVJCKSkNCisJCSpyZGF0YSA9IFBXUkFQX0dFVF9XQUNTX1JEQVRBKHB3cmFwX3Jl
-YWRsKHdycCwNCisJCQkJCSAgICAgIFBXUkFQX1NXSU5GXzJfUkRBVEFfMzFfMCkpOw0KKwllbHNl
-DQorCQkqcmRhdGEgPSBQV1JBUF9HRVRfV0FDU19SREFUQShwd3JhcF9yZWFkbCh3cnAsDQorCQkJ
-CQkgICAgICBQV1JBUF9XQUNTMl9SREFUQSkpOw0KIA0KIAlwd3JhcF93cml0ZWwod3JwLCAxLCBQ
-V1JBUF9XQUNTMl9WTERDTFIpOw0KIA0KQEAgLTEyMjgsOCArMTI2OSwxMyBAQCBzdGF0aWMgaW50
-IHB3cmFwX3dyaXRlMTYoc3RydWN0IHBtaWNfd3JhcHBlciAqd3JwLCB1MzIgYWRyLCB1MzIgd2Rh
-dGEpDQogCQlyZXR1cm4gcmV0Ow0KIAl9DQogDQotCXB3cmFwX3dyaXRlbCh3cnAsICgxIDw8IDMx
-KSB8ICgoYWRyID4+IDEpIDw8IDE2KSB8IHdkYXRhLA0KLQkJICAgICBQV1JBUF9XQUNTMl9DTUQp
-Ow0KKwlpZiAoSEFTX0NBUCh3cnAtPm1hc3Rlci0+Y2FwcywgUFdSQVBfQ0FQX0FSQikpIHsNCisJ
-CXB3cmFwX3dyaXRlbCh3cnAsIHdkYXRhLCBQV1JBUF9TV0lORl8yX1dEQVRBXzMxXzApOw0KKwkJ
-cHdyYXBfd3JpdGVsKHdycCwgQklUKDI5KSB8IGFkciwgUFdSQVBfV0FDUzJfQ01EKTsNCisJfSBl
-bHNlIHsNCisJCXB3cmFwX3dyaXRlbCh3cnAsIEJJVCgzMSkgfCAoKGFkciA+PiAxKSA8PCAxNikg
-fCB3ZGF0YSwNCisJCQkgICAgIFBXUkFQX1dBQ1MyX0NNRCk7DQorCX0NCiANCiAJcmV0dXJuIDA7
-DQogfQ0KQEAgLTE0ODUsNiArMTUzMSw3IEBAIHN0YXRpYyBpbnQgcHdyYXBfaW5pdF9jaXBoZXIo
-c3RydWN0IHBtaWNfd3JhcHBlciAqd3JwKQ0KIAljYXNlIFBXUkFQX01UNzYyMjoNCiAJCXB3cmFw
-X3dyaXRlbCh3cnAsIDAsIFBXUkFQX0NJUEhFUl9FTik7DQogCQlicmVhazsNCisJY2FzZSBQV1JB
-UF9NVDY4NzM6DQogCWNhc2UgUFdSQVBfTVQ4MTgzOg0KIAkJYnJlYWs7DQogCX0NCkBAIC0xOTIx
-LDYgKzE5NjgsMTkgQEAgc3RhdGljIGNvbnN0IHN0cnVjdCBwbWljX3dyYXBwZXJfdHlwZSBwd3Jh
-cF9tdDY3OTcgPSB7DQogCS5pbml0X3NvY19zcGVjaWZpYyA9IE5VTEwsDQogfTsNCiANCitzdGF0
-aWMgc3RydWN0IHBtaWNfd3JhcHBlcl90eXBlIHB3cmFwX210Njg3MyA9IHsNCisJLnJlZ3MgPSBt
-dDY4NzNfcmVncywNCisJLnR5cGUgPSBQV1JBUF9NVDY4NzMsDQorCS5hcmJfZW5fYWxsID0gMHg3
-NzdmLA0KKwkuaW50X2VuX2FsbCA9IEJJVCg0KSB8IEJJVCg1KSwNCisJLmludDFfZW5fYWxsID0g
-MCwNCisJLnNwaV93ID0gUFdSQVBfTUFOX0NNRF9TUElfV1JJVEUsDQorCS53ZHRfc3JjID0gUFdS
-QVBfV0RUX1NSQ19NQVNLX0FMTCwNCisJLmNhcHMgPSBQV1JBUF9DQVBfQVJCLA0KKwkuaW5pdF9y
-ZWdfY2xvY2sgPSBwd3JhcF9jb21tb25faW5pdF9yZWdfY2xvY2ssDQorCS5pbml0X3NvY19zcGVj
-aWZpYyA9IE5VTEwsDQorfTsNCisNCiBzdGF0aWMgY29uc3Qgc3RydWN0IHBtaWNfd3JhcHBlcl90
-eXBlIHB3cmFwX210NzYyMiA9IHsNCiAJLnJlZ3MgPSBtdDc2MjJfcmVncywNCiAJLnR5cGUgPSBQ
-V1JBUF9NVDc2MjIsDQpAQCAtMTk5OSw2ICsyMDU5LDkgQEAgc3RhdGljIGNvbnN0IHN0cnVjdCBv
-Zl9kZXZpY2VfaWQgb2ZfcHdyYXBfbWF0Y2hfdGJsW10gPSB7DQogCQkuY29tcGF0aWJsZSA9ICJt
-ZWRpYXRlayxtdDY3OTctcHdyYXAiLA0KIAkJLmRhdGEgPSAmcHdyYXBfbXQ2Nzk3LA0KIAl9LCB7
-DQorCQkuY29tcGF0aWJsZSA9ICJtZWRpYXRlayxtdDY4NzMtcHdyYXAiLA0KKwkJLmRhdGEgPSAm
-cHdyYXBfbXQ2ODczLA0KKwl9LCB7DQogCQkuY29tcGF0aWJsZSA9ICJtZWRpYXRlayxtdDc2MjIt
-cHdyYXAiLA0KIAkJLmRhdGEgPSAmcHdyYXBfbXQ3NjIyLA0KIAl9LCB7DQpAQCAtMjAyMiw2ICsy
-MDg1LDcgQEAgTU9EVUxFX0RFVklDRV9UQUJMRShvZiwgb2ZfcHdyYXBfbWF0Y2hfdGJsKTsNCiBz
-dGF0aWMgaW50IHB3cmFwX3Byb2JlKHN0cnVjdCBwbGF0Zm9ybV9kZXZpY2UgKnBkZXYpDQogew0K
-IAlpbnQgcmV0LCBpcnE7DQorCXUzMiByZGF0YTsNCiAJc3RydWN0IHBtaWNfd3JhcHBlciAqd3Jw
-Ow0KIAlzdHJ1Y3QgZGV2aWNlX25vZGUgKm5wID0gcGRldi0+ZGV2Lm9mX25vZGU7DQogCWNvbnN0
-IHN0cnVjdCBvZl9kZXZpY2VfaWQgKm9mX3NsYXZlX2lkID0gTlVMTDsNCkBAIC0yMTE2LDE0ICsy
-MTgwLDIyIEBAIHN0YXRpYyBpbnQgcHdyYXBfcHJvYmUoc3RydWN0IHBsYXRmb3JtX2RldmljZSAq
-cGRldikNCiAJCX0NCiAJfQ0KIA0KLQlpZiAoIShwd3JhcF9yZWFkbCh3cnAsIFBXUkFQX1dBQ1My
-X1JEQVRBKSAmIFBXUkFQX1NUQVRFX0lOSVRfRE9ORTApKSB7DQorCWlmICghSEFTX0NBUCh3cnAt
-Pm1hc3Rlci0+Y2FwcywgUFdSQVBfQ0FQX0FSQikpDQorCQlyZGF0YSA9IHB3cmFwX3JlYWRsKHdy
-cCwgUFdSQVBfV0FDUzJfUkRBVEEpICYNCisJCQkJICAgIFBXUkFQX1NUQVRFX0lOSVRfRE9ORTA7
-DQorCWVsc2UNCisJCXJkYXRhID0gcHdyYXBfcmVhZGwod3JwLCBQV1JBUF9XQUNTMl9SREFUQSkg
-Jg0KKwkJCQkgICAgUFdSQVBfU1RBVEVfSU5JVF9ET05FMTsNCisJaWYgKCFyZGF0YSkgew0KIAkJ
-ZGV2X2RiZyh3cnAtPmRldiwgImluaXRpYWxpemF0aW9uIGlzbid0IGZpbmlzaGVkXG4iKTsNCiAJ
-CXJldCA9IC1FTk9ERVY7DQogCQlnb3RvIGVycl9vdXQyOw0KIAl9DQogDQogCS8qIEluaXRpYWxp
-emUgd2F0Y2hkb2csIG1heSBub3QgYmUgZG9uZSBieSB0aGUgYm9vdGxvYWRlciAqLw0KLQlwd3Jh
-cF93cml0ZWwod3JwLCAweGYsIFBXUkFQX1dEVF9VTklUKTsNCisJaWYgKCEoSEFTX0NBUCh3cnAt
-Pm1hc3Rlci0+Y2FwcywgUFdSQVBfQ0FQX0FSQikpKQ0KKwkJcHdyYXBfd3JpdGVsKHdycCwgMHhm
-LCBQV1JBUF9XRFRfVU5JVCk7DQorDQogCS8qDQogCSAqIFNpbmNlIFNUQVVQRCB3YXMgbm90IHVz
-ZWQgb24gbXQ4MTczIHBsYXRmb3JtLA0KIAkgKiBzbyBTVEFVUEQgb2YgV0RUX1NSQyB3aGljaCBz
-aG91bGQgYmUgdHVybmVkIG9mZg0KQEAgLTIxMzIsNyArMjIwNCwxMSBAQCBzdGF0aWMgaW50IHB3
-cmFwX3Byb2JlKHN0cnVjdCBwbGF0Zm9ybV9kZXZpY2UgKnBkZXYpDQogCWlmIChIQVNfQ0FQKHdy
-cC0+bWFzdGVyLT5jYXBzLCBQV1JBUF9DQVBfV0RUX1NSQzEpKQ0KIAkJcHdyYXBfd3JpdGVsKHdy
-cCwgd3JwLT5tYXN0ZXItPndkdF9zcmMsIFBXUkFQX1dEVF9TUkNfRU5fMSk7DQogDQotCXB3cmFw
-X3dyaXRlbCh3cnAsIDB4MSwgUFdSQVBfVElNRVJfRU4pOw0KKwlpZiAoSEFTX0NBUCh3cnAtPm1h
-c3Rlci0+Y2FwcywgUFdSQVBfQ0FQX0FSQikpDQorCQlwd3JhcF93cml0ZWwod3JwLCAweDMsIFBX
-UkFQX1RJTUVSX0VOKTsNCisJZWxzZQ0KKwkJcHdyYXBfd3JpdGVsKHdycCwgMHgxLCBQV1JBUF9U
-SU1FUl9FTik7DQorDQogCXB3cmFwX3dyaXRlbCh3cnAsIHdycC0+bWFzdGVyLT5pbnRfZW5fYWxs
-LCBQV1JBUF9JTlRfRU4pOw0KIAkvKg0KIAkgKiBXZSBhZGQgSU5UMSBpbnRlcnJ1cHQgdG8gaGFu
-ZGxlIHN0YXJ2YXRpb24gYW5kIHJlcXVlc3QgZXhjZXB0aW9uDQotLSANCjIuNi40DQo=
+Add wrappers to take the modules "big lock" in order to encapsulate
+conditional compilation (CONFIG_MODULES) inside the wrapper.
+
+Cc: Andi Kleen <ak@linux.intel.com>
+Suggested-by: Masami Hiramatsu <mhiramat@kernel.org>
+Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+---
+ include/linux/module.h      | 15 ++++++++++
+ kernel/kprobes.c            |  4 +--
+ kernel/livepatch/core.c     |  8 ++---
+ kernel/module.c             | 60 ++++++++++++++++++-------------------
+ kernel/trace/trace_kprobe.c |  4 +--
+ 5 files changed, 53 insertions(+), 38 deletions(-)
+
+diff --git a/include/linux/module.h b/include/linux/module.h
+index 2e6670860d27..857b84bf9e90 100644
+--- a/include/linux/module.h
++++ b/include/linux/module.h
+@@ -902,4 +902,19 @@ static inline bool module_sig_ok(struct module *module)
+ }
+ #endif	/* CONFIG_MODULE_SIG */
+ 
++#ifdef CONFIG_MODULES
++static inline void lock_modules(void)
++{
++	mutex_lock(&module_mutex);
++}
++
++static inline void unlock_modules(void)
++{
++	mutex_unlock(&module_mutex);
++}
++#else
++static inline void lock_modules(void) { }
++static inline void unlock_modules(void) { }
++#endif
++
+ #endif /* _LINUX_MODULE_H */
+diff --git a/kernel/kprobes.c b/kernel/kprobes.c
+index d1c354ec89de..bbe3423cb2b8 100644
+--- a/kernel/kprobes.c
++++ b/kernel/kprobes.c
+@@ -564,7 +564,7 @@ static void kprobe_optimizer(struct work_struct *work)
+ 	cpus_read_lock();
+ 	mutex_lock(&text_mutex);
+ 	/* Lock modules while optimizing kprobes */
+-	mutex_lock(&module_mutex);
++	lock_modules();
+ 
+ 	/*
+ 	 * Step 1: Unoptimize kprobes and collect cleaned (unused and disarmed)
+@@ -589,7 +589,7 @@ static void kprobe_optimizer(struct work_struct *work)
+ 	/* Step 4: Free cleaned kprobes after quiesence period */
+ 	do_free_cleaned_kprobes();
+ 
+-	mutex_unlock(&module_mutex);
++	unlock_modules();
+ 	mutex_unlock(&text_mutex);
+ 	cpus_read_unlock();
+ 
+diff --git a/kernel/livepatch/core.c b/kernel/livepatch/core.c
+index f76fdb925532..d9d9d4973e6b 100644
+--- a/kernel/livepatch/core.c
++++ b/kernel/livepatch/core.c
+@@ -57,7 +57,7 @@ static void klp_find_object_module(struct klp_object *obj)
+ 	if (!klp_is_module(obj))
+ 		return;
+ 
+-	mutex_lock(&module_mutex);
++	lock_modules();
+ 	/*
+ 	 * We do not want to block removal of patched modules and therefore
+ 	 * we do not take a reference here. The patches are removed by
+@@ -74,7 +74,7 @@ static void klp_find_object_module(struct klp_object *obj)
+ 	if (mod && mod->klp_alive)
+ 		obj->mod = mod;
+ 
+-	mutex_unlock(&module_mutex);
++	unlock_modules();
+ }
+ 
+ static bool klp_initialized(void)
+@@ -163,12 +163,12 @@ static int klp_find_object_symbol(const char *objname, const char *name,
+ 		.pos = sympos,
+ 	};
+ 
+-	mutex_lock(&module_mutex);
++	lock_modules();
+ 	if (objname)
+ 		module_kallsyms_on_each_symbol(klp_find_callback, &args);
+ 	else
+ 		kallsyms_on_each_symbol(klp_find_callback, &args);
+-	mutex_unlock(&module_mutex);
++	unlock_modules();
+ 
+ 	/*
+ 	 * Ensure an address was found. If sympos is 0, ensure symbol is unique;
+diff --git a/kernel/module.c b/kernel/module.c
+index bdb3773f3668..3c7001cf754c 100644
+--- a/kernel/module.c
++++ b/kernel/module.c
+@@ -895,7 +895,7 @@ static void module_unload_free(struct module *mod)
+ {
+ 	struct module_use *use, *tmp;
+ 
+-	mutex_lock(&module_mutex);
++	lock_modules();
+ 	list_for_each_entry_safe(use, tmp, &mod->target_list, target_list) {
+ 		struct module *i = use->target;
+ 		pr_debug("%s unusing %s\n", mod->name, i->name);
+@@ -904,7 +904,7 @@ static void module_unload_free(struct module *mod)
+ 		list_del(&use->target_list);
+ 		kfree(use);
+ 	}
+-	mutex_unlock(&module_mutex);
++	unlock_modules();
+ }
+ 
+ #ifdef CONFIG_MODULE_FORCE_UNLOAD
+@@ -1024,7 +1024,7 @@ SYSCALL_DEFINE2(delete_module, const char __user *, name_user,
+ 	if (ret != 0)
+ 		goto out;
+ 
+-	mutex_unlock(&module_mutex);
++	unlock_modules();
+ 	/* Final destruction now no one is using it. */
+ 	if (mod->exit != NULL)
+ 		mod->exit();
+@@ -1043,7 +1043,7 @@ SYSCALL_DEFINE2(delete_module, const char __user *, name_user,
+ 	wake_up_all(&module_wq);
+ 	return 0;
+ out:
+-	mutex_unlock(&module_mutex);
++	unlock_modules();
+ 	return ret;
+ }
+ 
+@@ -1448,7 +1448,7 @@ static const struct kernel_symbol *resolve_symbol(struct module *mod,
+ 	 * in the wait_event_interruptible(), which is harmless.
+ 	 */
+ 	sched_annotate_sleep();
+-	mutex_lock(&module_mutex);
++	lock_modules();
+ 	sym = find_symbol(name, &owner, &crc,
+ 			  !(mod->taints & (1 << TAINT_PROPRIETARY_MODULE)), true);
+ 	if (!sym)
+@@ -1475,7 +1475,7 @@ static const struct kernel_symbol *resolve_symbol(struct module *mod,
+ 	/* We must make copy under the lock if we failed to get ref. */
+ 	strncpy(ownername, module_name(owner), MODULE_NAME_LEN);
+ unlock:
+-	mutex_unlock(&module_mutex);
++	unlock_modules();
+ 	return sym;
+ }
+ 
+@@ -1727,10 +1727,10 @@ static void del_usage_links(struct module *mod)
+ #ifdef CONFIG_MODULE_UNLOAD
+ 	struct module_use *use;
+ 
+-	mutex_lock(&module_mutex);
++	lock_modules();
+ 	list_for_each_entry(use, &mod->target_list, target_list)
+ 		sysfs_remove_link(use->target->holders_dir, mod->name);
+-	mutex_unlock(&module_mutex);
++	unlock_modules();
+ #endif
+ }
+ 
+@@ -1740,14 +1740,14 @@ static int add_usage_links(struct module *mod)
+ #ifdef CONFIG_MODULE_UNLOAD
+ 	struct module_use *use;
+ 
+-	mutex_lock(&module_mutex);
++	lock_modules();
+ 	list_for_each_entry(use, &mod->target_list, target_list) {
+ 		ret = sysfs_create_link(use->target->holders_dir,
+ 					&mod->mkobj.kobj, mod->name);
+ 		if (ret)
+ 			break;
+ 	}
+-	mutex_unlock(&module_mutex);
++	unlock_modules();
+ 	if (ret)
+ 		del_usage_links(mod);
+ #endif
+@@ -2158,9 +2158,9 @@ static void free_module(struct module *mod)
+ 
+ 	/* We leave it in list to prevent duplicate loads, but make sure
+ 	 * that noone uses it while it's being deconstructed. */
+-	mutex_lock(&module_mutex);
++	lock_modules();
+ 	mod->state = MODULE_STATE_UNFORMED;
+-	mutex_unlock(&module_mutex);
++	unlock_modules();
+ 
+ 	/* Remove dynamic debug info */
+ 	ddebug_remove_module(mod->name);
+@@ -2178,7 +2178,7 @@ static void free_module(struct module *mod)
+ 		free_module_elf(mod);
+ 
+ 	/* Now we can delete it from the lists */
+-	mutex_lock(&module_mutex);
++	lock_modules();
+ 	/* Unlink carefully: kallsyms could be walking list. */
+ 	list_del_rcu(&mod->list);
+ 	mod_tree_remove(mod);
+@@ -2186,7 +2186,7 @@ static void free_module(struct module *mod)
+ 	module_bug_cleanup(mod);
+ 	/* Wait for RCU-sched synchronizing before releasing mod->list and buglist. */
+ 	synchronize_rcu();
+-	mutex_unlock(&module_mutex);
++	unlock_modules();
+ 
+ 	/* This may be empty, but that's OK */
+ 	module_arch_freeing_init(mod);
+@@ -3474,10 +3474,10 @@ static bool finished_loading(const char *name)
+ 	 * in the wait_event_interruptible(), which is harmless.
+ 	 */
+ 	sched_annotate_sleep();
+-	mutex_lock(&module_mutex);
++	lock_modules();
+ 	mod = find_module_all(name, strlen(name), true);
+ 	ret = !mod || mod->state == MODULE_STATE_LIVE;
+-	mutex_unlock(&module_mutex);
++	unlock_modules();
+ 
+ 	return ret;
+ }
+@@ -3589,7 +3589,7 @@ static noinline int do_init_module(struct module *mod)
+ 
+ 	ftrace_free_mem(mod, mod->init_layout.base, mod->init_layout.base +
+ 			mod->init_layout.size);
+-	mutex_lock(&module_mutex);
++	lock_modules();
+ 	/* Drop initial reference. */
+ 	module_put(mod);
+ 	trim_init_extable(mod);
+@@ -3621,7 +3621,7 @@ static noinline int do_init_module(struct module *mod)
+ 	if (llist_add(&freeinit->node, &init_free_list))
+ 		schedule_work(&init_free_wq);
+ 
+-	mutex_unlock(&module_mutex);
++	unlock_modules();
+ 	wake_up_all(&module_wq);
+ 
+ 	return 0;
+@@ -3663,12 +3663,12 @@ static int add_unformed_module(struct module *mod)
+ 	mod->state = MODULE_STATE_UNFORMED;
+ 
+ again:
+-	mutex_lock(&module_mutex);
++	lock_modules();
+ 	old = find_module_all(mod->name, strlen(mod->name), true);
+ 	if (old != NULL) {
+ 		if (old->state != MODULE_STATE_LIVE) {
+ 			/* Wait in case it fails to load. */
+-			mutex_unlock(&module_mutex);
++			unlock_modules();
+ 			err = wait_event_interruptible(module_wq,
+ 					       finished_loading(mod->name));
+ 			if (err)
+@@ -3684,7 +3684,7 @@ static int add_unformed_module(struct module *mod)
+ 	err = 0;
+ 
+ out:
+-	mutex_unlock(&module_mutex);
++	unlock_modules();
+ out_unlocked:
+ 	return err;
+ }
+@@ -3693,7 +3693,7 @@ static int complete_formation(struct module *mod, struct load_info *info)
+ {
+ 	int err;
+ 
+-	mutex_lock(&module_mutex);
++	lock_modules();
+ 
+ 	/* Find duplicate symbols (must be called under lock). */
+ 	err = verify_exported_symbols(mod);
+@@ -3710,12 +3710,12 @@ static int complete_formation(struct module *mod, struct load_info *info)
+ 	/* Mark state as coming so strong_try_module_get() ignores us,
+ 	 * but kallsyms etc. can see us. */
+ 	mod->state = MODULE_STATE_COMING;
+-	mutex_unlock(&module_mutex);
++	unlock_modules();
+ 
+ 	return 0;
+ 
+ out:
+-	mutex_unlock(&module_mutex);
++	unlock_modules();
+ 	return err;
+ }
+ 
+@@ -3913,9 +3913,9 @@ static int load_module(struct load_info *info, const char __user *uargs,
+ 	klp_module_going(mod);
+  bug_cleanup:
+ 	/* module_bug_cleanup needs module_mutex protection */
+-	mutex_lock(&module_mutex);
++	lock_modules();
+ 	module_bug_cleanup(mod);
+-	mutex_unlock(&module_mutex);
++	unlock_modules();
+ 
+  ddebug_cleanup:
+ 	ftrace_release_mod(mod);
+@@ -3929,14 +3929,14 @@ static int load_module(struct load_info *info, const char __user *uargs,
+  free_unload:
+ 	module_unload_free(mod);
+  unlink_mod:
+-	mutex_lock(&module_mutex);
++	lock_modules();
+ 	/* Unlink carefully: kallsyms could be walking list. */
+ 	list_del_rcu(&mod->list);
+ 	mod_tree_remove(mod);
+ 	wake_up_all(&module_wq);
+ 	/* Wait for RCU-sched synchronizing before releasing mod->list. */
+ 	synchronize_rcu();
+-	mutex_unlock(&module_mutex);
++	unlock_modules();
+  free_module:
+ 	/* Free lock-classes; relies on the preceding sync_rcu() */
+ 	lockdep_free_key_range(mod->core_layout.base, mod->core_layout.size);
+@@ -4292,7 +4292,7 @@ static char *module_flags(struct module *mod, char *buf)
+ /* Called by the /proc file system to return a list of modules. */
+ static void *m_start(struct seq_file *m, loff_t *pos)
+ {
+-	mutex_lock(&module_mutex);
++	lock_modules();
+ 	return seq_list_start(&modules, *pos);
+ }
+ 
+@@ -4303,7 +4303,7 @@ static void *m_next(struct seq_file *m, void *p, loff_t *pos)
+ 
+ static void m_stop(struct seq_file *m, void *p)
+ {
+-	mutex_unlock(&module_mutex);
++	unlock_modules();
+ }
+ 
+ static int m_show(struct seq_file *m, void *p)
+diff --git a/kernel/trace/trace_kprobe.c b/kernel/trace/trace_kprobe.c
+index aefb6065b508..710ec6a6aa8f 100644
+--- a/kernel/trace/trace_kprobe.c
++++ b/kernel/trace/trace_kprobe.c
+@@ -122,9 +122,9 @@ static nokprobe_inline bool trace_kprobe_module_exist(struct trace_kprobe *tk)
+ 	if (!p)
+ 		return true;
+ 	*p = '\0';
+-	mutex_lock(&module_mutex);
++	lock_modules();
+ 	ret = !!find_module(tk->symbol);
+-	mutex_unlock(&module_mutex);
++	unlock_modules();
+ 	*p = ':';
+ 
+ 	return ret;
+-- 
+2.25.1
 
