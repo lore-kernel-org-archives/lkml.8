@@ -2,93 +2,158 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE8E5C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 09:36:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 350CEC433E4
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 09:36:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9D5A6217A0
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 09:36:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 107DB217A0
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 09:36:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="juo9EVQA"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HDjG8he2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726603AbgGNJgd (ORCPT
+        id S1726776AbgGNJg4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 05:36:33 -0400
-Received: from out1-smtp.messagingengine.com ([66.111.4.25]:59361 "EHLO
-        out1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725816AbgGNJgd (ORCPT
+        Tue, 14 Jul 2020 05:36:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36790 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726762AbgGNJgz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 05:36:33 -0400
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailout.nyi.internal (Postfix) with ESMTP id 044095C0158;
-        Tue, 14 Jul 2020 05:36:32 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute4.internal (MEProxy); Tue, 14 Jul 2020 05:36:32 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=Ikp6IE
-        9N1Xr46q5bU05QaviFnf+U/vK1Pwzbeox1CaY=; b=juo9EVQAOypmGYCFhp1QoT
-        DTEMxgrf4n1cR0nG6Pr+641n41oQYvy5v7/BoUbv7S0E+DZzhILmW0qyO1OE9fXZ
-        uk03BdZ8t+l3aGC6uPt5EGpY2NK5+NG4mFBDXX+EkZ7mWrv0cyXGQG8BuV9VMXtF
-        Re2WNs/i0gKIG2/TdVf4LE9zGa4d8DUSXZZBk90byTZbSBFnYg+5snx2gLLt6zHn
-        2oWPWD642OHJofRXX0/1w4mDTn0ieXeiWXAqIGY1qX8Kj2z5aS0hf3gjZVXk/aBx
-        0F2IA6aqpxsQjEHVI6oFUaXQi0T8LxisvoymoHY2uWPnzWZsKC1OgmF60WKtqfLQ
-        ==
-X-ME-Sender: <xms:n3wNX7QMlr56-Ng-RV56l1s70DxTOZeChbhVfhwEcD3pOubxEL1IEQ>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedrfedtgddulecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecuogfuuhhsphgvtghtffhomhgrihhnucdlgeelmdenuc
-    fjughrpeffhffvuffkfhggtggujgesthdtredttddtvdenucfhrhhomhepkfguohcuufgt
-    hhhimhhmvghluceoihguohhstghhsehiughoshgthhdrohhrgheqnecuggftrfgrthhtvg
-    hrnhephedutdegkeevveettedvteeuveegjeffteekffffhfdvgedugeejteeuvedvteek
-    necuffhomhgrihhnpehkvghrnhgvlhdrohhrghdprghpphhsphhothdrtghomhenucfkph
-    epuddtledrieeirdduledrudeffeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgr
-    mhepmhgrihhlfhhrohhmpehiughoshgthhesihguohhstghhrdhorhhg
-X-ME-Proxy: <xmx:n3wNX8w8MwuZU-2v2XiriVvx9wTiOdvxcCi3aTRdUu10QH_fOgQLcQ>
-    <xmx:n3wNXw2D4LiHuUZWz47oQrLJs6y9-mSysHgqk2ayjI-dNYWKNFQufA>
-    <xmx:n3wNX7DmNMgTbJfvOLqkqVHaqcNu8rbFqZwjoCxnkHGzZ4PyhL5Vyg>
-    <xmx:oHwNX3uLMswQwNL0idO_LFJwQ_Ftfmf_0pAlQh_ZhGRDCHlGgDrb5w>
-Received: from localhost (bzq-109-66-19-133.red.bezeqint.net [109.66.19.133])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 311E03280059;
-        Tue, 14 Jul 2020 05:36:31 -0400 (EDT)
-Date:   Tue, 14 Jul 2020 12:36:28 +0300
-From:   Ido Schimmel <idosch@idosch.org>
-To:     syzbot <syzbot+dd0040db0d77d52f98a5@syzkaller.appspotmail.com>
-Cc:     davem@davemloft.net, jiri@mellanox.com, kuba@kernel.org,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com
-Subject: Re: KASAN: use-after-free Read in devlink_health_reporter_destroy
-Message-ID: <20200714093628.GA274556@shredder>
-References: <000000000000dd436905aa5a9533@google.com>
+        Tue, 14 Jul 2020 05:36:55 -0400
+Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 27D3BC061755;
+        Tue, 14 Jul 2020 02:36:55 -0700 (PDT)
+Received: by mail-lj1-x243.google.com with SMTP id h22so21623762lji.9;
+        Tue, 14 Jul 2020 02:36:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=kY4YX2hIy3ivPBGeD+CPwXcdkRIs2VM7rDcdPR/WlRE=;
+        b=HDjG8he2L90VPS290BuQKswRMt1dfJOQp/N5SM3tNqWBG3I3sMfibTlke3Hvw8Rm4a
+         H8agt4VOrJz+JZ3rmiZn938rB7AUGJCrj8J+oIh8Tei/nhgYPFqKz4NWRzGEu1W7vbNw
+         Ijk47dHwcWcCdhxa+vU1FlIuLI1ufBZuJBt3WRixesxaWleUGsX9YNBLIs0bN6LROT8j
+         Lq8ki9S2a9EA953R1gu3iajngedMwunBKkA0paWsngzDRF4ukd5FlUwQAmBYQdgY5KJF
+         pgh8D+OEp3SqEvMb4sE/teBX/PA+I7f6jBRJXg3p+GCAVvhBRME7GhF3iWt7JlDFSd2b
+         +K6A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=kY4YX2hIy3ivPBGeD+CPwXcdkRIs2VM7rDcdPR/WlRE=;
+        b=VTcEvHmBiIK8RabKb9y+yniVVlGWQL0Mp+3rZU4f7fswaW4hUZ2RNtoy7hvsuAUmzH
+         PyEYZpHF8/PdVLmaQxb1Oj+wpc3X3gvpn2vq7RsA9UC9tEg+Z5bxNifhohwounbtjG8m
+         7TakksNgEDPuzV2vzu5BtNLZGS20d66vikV1ws9U5fX0qHx6gCsxO+lWxNMYGcurBcQS
+         ELZsGYg295vUS4F2/8S9PxqUGtHCSnUsvoTbPTkMyyqY8ZcZuFpgPoQOixMhIJHWS1WN
+         XbNsTt2ckUlkPHgI+ukJAgnSBe6cWdPSI1NIUNYsSYy9lZwt11FL/9uv3F2PVlPs4Isk
+         mRwA==
+X-Gm-Message-State: AOAM532YkQ3b27oDKO+BbKf/gDYdX28zpR+2Ff54VcQK8cpy2eDYuC9c
+        5f4hkvckUHxJG/aaj7ulnfJ3SPnS
+X-Google-Smtp-Source: ABdhPJw88vs/UiQIgGDfGKYqqUL+LavOJZcUM4xAQ0ay4LLCSkEbYdUM12f9PGmO6mPzXa831sGdaQ==
+X-Received: by 2002:a2e:91c4:: with SMTP id u4mr2003431ljg.20.1594719413117;
+        Tue, 14 Jul 2020 02:36:53 -0700 (PDT)
+Received: from [192.168.2.145] (ppp91-79-162-105.pppoe.mtu-net.ru. [91.79.162.105])
+        by smtp.googlemail.com with ESMTPSA id d6sm4553300ljc.23.2020.07.14.02.36.51
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 14 Jul 2020 02:36:52 -0700 (PDT)
+Subject: Re: [PATCH v4] clk: tegra: pll: Improve PLLM enable-state detection
+To:     Jon Hunter <jonathanh@nvidia.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Peter De Schrijver <pdeschrijver@nvidia.com>,
+        Prashant Gaikwad <pgaikwad@nvidia.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>
+Cc:     linux-tegra@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20200709172057.13951-1-digetx@gmail.com>
+ <93106a4c-b0fb-3bbf-49cb-bfe348b1ffc7@nvidia.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <4abe7959-3c69-7b05-e9af-565957bafbcd@gmail.com>
+Date:   Tue, 14 Jul 2020 12:36:51 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <000000000000dd436905aa5a9533@google.com>
+In-Reply-To: <93106a4c-b0fb-3bbf-49cb-bfe348b1ffc7@nvidia.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 13, 2020 at 03:55:21PM -0700, syzbot wrote:
-> Hello,
+14.07.2020 11:20, Jon Hunter пишет:
 > 
-> syzbot found the following crash on:
+> On 09/07/2020 18:20, Dmitry Osipenko wrote:
+>> Power Management Controller (PMC) can override the PLLM clock settings,
+>> including the enable-state. Although PMC could only act as a second level
+>> gate, meaning that PLLM needs to be enabled by the Clock and Reset
+>> Controller (CaR) anyways if we want it to be enabled. Hence, when PLLM is
+>> overridden by PMC, it needs to be enabled by CaR and ungated by PMC in
+>> order to be functional. Please note that this patch doesn't fix any known
+>> problem, and thus, it's merely a minor improvement.
+>>
+>> Link: https://lore.kernel.org/linux-arm-kernel/20191210120909.GA2703785@ulmo/T/
+>> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+>> ---
+>>
+>> Changelog:
+>>
+>> v4: - Renamed pllm_pmc_clk_enabled() to pllm_clk_is_gated_by_pmc() as
+>>       it was suggested by Jon Hunter in the review comment to v3.
+>>
+>> v3: - Dropped unintended code change that was accidentally added to v2.
+>>
+>> v2: - Added clarifying comment to the code.
+>>
+>>     - Prettified the code.
+>>
+>>  drivers/clk/tegra/clk-pll.c | 20 +++++++++++++++-----
+>>  1 file changed, 15 insertions(+), 5 deletions(-)
+>>
+>> diff --git a/drivers/clk/tegra/clk-pll.c b/drivers/clk/tegra/clk-pll.c
+>> index b2d39a66f0fa..ff13b371e176 100644
+>> --- a/drivers/clk/tegra/clk-pll.c
+>> +++ b/drivers/clk/tegra/clk-pll.c
+>> @@ -327,16 +327,26 @@ int tegra_pll_wait_for_lock(struct tegra_clk_pll *pll)
+>>  	return clk_pll_wait_for_lock(pll);
+>>  }
+>>  
+>> +static bool pllm_clk_is_gated_by_pmc(struct tegra_clk_pll *pll)
+>> +{
+>> +	u32 val = readl_relaxed(pll->pmc + PMC_PLLP_WB0_OVERRIDE);
+>> +
+>> +	return (val & PMC_PLLP_WB0_OVERRIDE_PLLM_OVERRIDE) &&
+>> +	      !(val & PMC_PLLP_WB0_OVERRIDE_PLLM_ENABLE);
+>> +}
+>> +
+>>  static int clk_pll_is_enabled(struct clk_hw *hw)
+>>  {
+>>  	struct tegra_clk_pll *pll = to_clk_pll(hw);
+>>  	u32 val;
+>>  
+>> -	if (pll->params->flags & TEGRA_PLLM) {
+>> -		val = readl_relaxed(pll->pmc + PMC_PLLP_WB0_OVERRIDE);
+>> -		if (val & PMC_PLLP_WB0_OVERRIDE_PLLM_OVERRIDE)
+>> -			return val & PMC_PLLP_WB0_OVERRIDE_PLLM_ENABLE ? 1 : 0;
+>> -	}
+>> +	/*
+>> +	 * Power Management Controller (PMC) can override the PLLM clock
+>> +	 * settings, including the enable-state. The PLLM is enabled when
+>> +	 * PLLM's CaR state is ON and when PLLM isn't gated by PMC.
+>> +	 */
+>> +	if ((pll->params->flags & TEGRA_PLLM) && pllm_clk_is_gated_by_pmc(pll))
+>> +		return 0;
+>>  
+>>  	val = pll_readl_base(pll);
 > 
-> HEAD commit:    71930d61 Merge git://git.kernel.org/pub/scm/linux/kernel/g..
-> git tree:       net-next
-> console output: https://syzkaller.appspot.com/x/log.txt?x=10c8d157100000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=4c5bc87125719cf4
-> dashboard link: https://syzkaller.appspot.com/bug?extid=dd0040db0d77d52f98a5
-> compiler:       gcc (GCC) 10.1.0-syz 20200507
-> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1421cd3f100000
-> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=13ccfe4f100000
 > 
-> IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> Reported-by: syzbot+dd0040db0d77d52f98a5@syzkaller.appspotmail.com
+> Thanks! This looks good to me. However, I just want to do a bit of
+> testing on Tegra124 (hopefully this week).
 
-#syz fix: devlink: Fix use-after-free when destroying health reporters
+Okay, thank you :)
