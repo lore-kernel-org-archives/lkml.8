@@ -2,97 +2,146 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64451C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 13:17:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7259AC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 13:19:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 39DF1224B2
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 13:17:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594732665;
-	bh=AYUTme/0NKI8o/8pYHxaWMD/z47b+ayOmouJUcj+GVI=;
-	h=Date:From:To:cc:Subject:In-Reply-To:References:List-ID:From;
-	b=st/VKor2SO6XNI8wyBsz9FFG2+kFC8/XGfKfaFdxMLJuAi5bPaFbtA5djIRDlHLin
-	 BdAYSkm+zYiGmc+J248gZBWGONYZb2cKJ8lxZMMvBMkl+9NQi9ZDtDIOeBTQ09rw6C
-	 kQlYSJV3BqmkfNIHa5xM61CNGhzCLjHKZQzKjIww=
+	by mail.kernel.org (Postfix) with ESMTP id 4DECF224B2
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 13:19:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="nH06SGdj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728421AbgGNNRo (ORCPT
+        id S1728328AbgGNNTx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 09:17:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42506 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727858AbgGNNRn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 09:17:43 -0400
-Received: from pobox.suse.cz (nat1.prg.suse.com [195.250.132.148])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9F95E22203;
-        Tue, 14 Jul 2020 13:17:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594732663;
-        bh=AYUTme/0NKI8o/8pYHxaWMD/z47b+ayOmouJUcj+GVI=;
-        h=Date:From:To:cc:Subject:In-Reply-To:References:From;
-        b=a6xFUfrZ71TQzOZrLO+XjCUFwb34IzEV7AAwHajseJzUS5RTxVPxWp9Ep0iBHppqd
-         CmkW3M2hub/Wpy+nV8GVKLfCBNIARoQietzr++A+tZ7rIbOrhhrgV+jyTQrLrcB1fx
-         qUIq36ao8TJfHdKOeW2C24vW4gktsJRCuJ5FEYl4=
-Date:   Tue, 14 Jul 2020 15:17:39 +0200 (CEST)
-From:   Jiri Kosina <jikos@kernel.org>
-To:     Darren Hart <dvhart@infradead.org>
-cc:     Grant Likely <grant.likely@secretlab.ca>,
-        LKML <linux-kernel@vger.kernel.org>, linux-input@vger.kernel.org,
-        Grant Likely <grant.likely@arm.com>,
-        Darren Hart <darren@dvhart.com>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        stable@vger.kernel.org
-Subject: Re: [PATCH] hid-input: Fix devices that return multiple bytes in
- battery report
-In-Reply-To: <CAJuF2pzvh2G7_2q88a4e=dpB1RATrdF8jsOkpVuuueZLGGbsiQ@mail.gmail.com>
-Message-ID: <nycvar.YFH.7.76.2007141517280.23768@cbobk.fhfr.pm>
-References: <20200710151939.4894-1-grant.likely@arm.com> <CAJuF2pzvh2G7_2q88a4e=dpB1RATrdF8jsOkpVuuueZLGGbsiQ@mail.gmail.com>
-User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
+        Tue, 14 Jul 2020 09:19:53 -0400
+Received: from mail.efficios.com ([167.114.26.124]:32892 "EHLO
+        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726889AbgGNNTw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 09:19:52 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by mail.efficios.com (Postfix) with ESMTP id EB1382BE60C;
+        Tue, 14 Jul 2020 09:19:51 -0400 (EDT)
+Received: from mail.efficios.com ([127.0.0.1])
+        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id xayI0xZlvxfa; Tue, 14 Jul 2020 09:19:51 -0400 (EDT)
+Received: from localhost (localhost [127.0.0.1])
+        by mail.efficios.com (Postfix) with ESMTP id AB7BC2BE165;
+        Tue, 14 Jul 2020 09:19:51 -0400 (EDT)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com AB7BC2BE165
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
+        s=default; t=1594732791;
+        bh=0UYHQAplI6ZwH5L2kpETJucy62xyxgvLq0FyGt1NMmw=;
+        h=Date:From:To:Message-ID:MIME-Version;
+        b=nH06SGdjfmW9ixdEhn/cxqRbbYOTuhL6feo8kzlzBrXu0L3Gx7v55+Gcwp43jrwSY
+         Ktqd6F0NqANCXdPzyBHygs4TvxST+/epA7EKEQbO0qO8Q5sCJg7rU86EgGqvB4Rx/M
+         ClXml5+aXGGcjAyMEmv6DTTIcn89P3a9YvcVM0KorYkA+4uH4c0piDnfM1cqfxWt8e
+         Nhzi/Xjx4OUx3Q5CzujQHH+3TkOWT5451EZwDIW77hxnxBs7J/xk2N9pMz/F/s4WkQ
+         Rm6fqmuut4X4aNrTutD+uGOnU6GE2NCycpufi2Nm2w9uEpHV1V/zL2ZNH0Jx2xwX5b
+         688EYkhhDEdAw==
+X-Virus-Scanned: amavisd-new at efficios.com
+Received: from mail.efficios.com ([127.0.0.1])
+        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id SyMSwQmj9d-i; Tue, 14 Jul 2020 09:19:51 -0400 (EDT)
+Received: from mail03.efficios.com (mail03.efficios.com [167.114.26.124])
+        by mail.efficios.com (Postfix) with ESMTP id 9C09B2BE164;
+        Tue, 14 Jul 2020 09:19:51 -0400 (EDT)
+Date:   Tue, 14 Jul 2020 09:19:51 -0400 (EDT)
+From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+To:     Florian Weimer <fweimer@redhat.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        paulmck <paulmck@linux.ibm.com>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Paul Turner <pjt@google.com>,
+        linux-api <linux-api@vger.kernel.org>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        carlos <carlos@redhat.com>
+Message-ID: <2452161.11491.1594732791558.JavaMail.zimbra@efficios.com>
+In-Reply-To: <87a7028d5u.fsf@oldenburg2.str.redhat.com>
+References: <20200714030348.6214-1-mathieu.desnoyers@efficios.com> <20200714030348.6214-3-mathieu.desnoyers@efficios.com> <87mu42bepq.fsf@oldenburg2.str.redhat.com> <131549905.11442.1594731035989.JavaMail.zimbra@efficios.com> <87a7028d5u.fsf@oldenburg2.str.redhat.com>
+Subject: Re: [RFC PATCH 2/4] rseq: Allow extending struct rseq
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [167.114.26.124]
+X-Mailer: Zimbra 8.8.15_GA_3955 (ZimbraWebClient - FF78 (Linux)/8.8.15_GA_3953)
+Thread-Topic: rseq: Allow extending struct rseq
+Thread-Index: 9tyJaU9TMeuq2KdCvH7TV6HBMkiNfw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 10 Jul 2020, Darren Hart wrote:
+----- On Jul 14, 2020, at 9:00 AM, Florian Weimer fweimer@redhat.com wrote:
 
-> > Some devices, particularly the 3DConnexion Spacemouse wireless 3D
-> > controllers, return more than just the battery capacity in the battery
-> > report. The Spacemouse devices return an additional byte with a device
-> > specific field. However, hidinput_query_battery_capacity() only
-> > requests a 2 byte transfer.
-> >
-> > When a spacemouse is connected via USB (direct wire, no wireless dongle)
-> > and it returns a 3 byte report instead of the assumed 2 byte battery
-> > report the larger transfer confuses and frightens the USB subsystem
-> > which chooses to ignore the transfer. Then after 2 seconds assume the
-> > device has stopped responding and reset it. This can be reproduced
-> > easily by using a wired connection with a wireless spacemouse. The
-> > Spacemouse will enter a loop of resetting every 2 seconds which can be
-> > observed in dmesg.
-> >
-> > This patch solves the problem by increasing the transfer request to 4
-> > bytes instead of 2. The fix isn't particularly elegant, but it is simple
-> > and safe to backport to stable kernels. A further patch will follow to
-> > more elegantly handle battery reports that contain additional data.
-> >
+> * Mathieu Desnoyers:
 > 
-> Applied and tested on 5.8.0-rc4+ (aa0c9086b40c) with a 3Dconnexion
-> SpaceMouse Wireless (tested connected via USB). Observed the same
-> behavior Grant reports before the patch. After the patch, the device stays
-> connected successfully.
+>>> How are extensions going to affect the definition of struct rseq,
+>>> including its alignment?
+>>
+>> The alignment will never decrease. If the structure becomes large enough
+>> its alignment could theoretically increase. Would that be an issue ?
 > 
-> Tested-by: Darren Hart <dvhart@infradead.org>
+> Telling the compiler that struct is larger than it actually is, or that
+> it has more alignment than in memory, results in undefined behavior,
+> even if only fields are accessed in the smaller struct region.
+> 
+> An increase in alignment from 32 to 64 is perhaps not likely to have
+> this effect.  But the undefined behavior is still there, and has been
+> observed for mismatches like 8 vs 16.
 
-Applied, thanks.
+Good points.
+
+> 
+>>> As things stand now, glibc 2.32 will make the size and alignment of
+>>> struct rseq part of its ABI, so it can't really change after that.
+>>
+>> Can the size and alignment of a structure be defined as minimum alignment
+>> and size values ? For instance, those would be invariant for a given glibc
+>> version (if we always use the internal struct rseq declaration), but could
+>> be increased in future versions.
+> 
+> Not if we are talking about a global (TLS) data symbol.  No such changes
+> are possible there.  We have some workarounds for symbols that live
+> exclusively within glibc, but they don't work if there are libraries out
+> there which interpose the symbol.
+
+OK
+
+> 
+>>> With a different approach, we can avoid making the symbol size part of
+>>> the ABI, but then we cannot use the __rseq_abi TLS symbol.  As a result,
+>>> interoperability with early adopters would be lost.
+>>
+>> Do you mean with a function "getter", and then keeping that pointer around
+>> in a per-user TLS ? I would prefer to avoid that because it adds an extra
+>> pointer dereference on a fast path.
+> 
+> My choice would have been a function that returns the offset from the
+> thread pointer (which has to be unchanged regarding all threads).
+
+So AFAIU we would have glibc expose a symbol, e.g.:
+
+off_t rseq_tls_offset(void);
+
+Which would be typically called by user libraries and applications at initialization
+to get the offset of the struct rseq. They should store it in a static variable so
+rseq critical sections can use that offset.
+
+Is there an arch-agnostic way to get the thread pointer from user-space code ? That
+would be needed by all rseq critical section implementations.
+
+Thanks,
+
+Mathieu
 
 -- 
-Jiri Kosina
-SUSE Labs
-
+Mathieu Desnoyers
+EfficiOS Inc.
+http://www.efficios.com
