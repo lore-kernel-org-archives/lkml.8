@@ -7,48 +7,50 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 251B2C433E6
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:56:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22DA9C433E4
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:57:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F083622AAF
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:56:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E51CA22A99
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:57:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594753018;
-	bh=fyIViGjnqT3Isc8lUNNxqQHXm6quHzb/i5mIuWINQ9s=;
+	s=default; t=1594753028;
+	bh=z05sE6uoEfahcLhFFLnVSGhAnM319kCnEXXb1BUsaiI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dsL4evafED0brHXebGOriN/FYKX1eWRo1QtKRuka9WgIEoU+Rqpam42ksRhZxHAu0
-	 yhtS/WoFhmmxtesaCEomh3203ZfQeoLxosQSgK9ceG3YIYwDZue1dQstFOimxthUk+
-	 UaUnSjSvEZDCK2Xu+Ie1CaLRu8vOpPqfKqiiowmY=
+	b=PE8stB1wMfYRsQxDW55xXsu4Z4kRyqyJl9L7T430tfujErPIrzk+eKZAgUinb3aRw
+	 boIW16xUsZCd40B/62qA6ZH+izqUjyb0M4glihxA087/7VSlCFEtTSvPP1wQIGF6Br
+	 M99YbRPcMNP/x202RCaknEAjr0pMs0tsj1UkbSPg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731073AbgGNS4x (ORCPT
+        id S1730468AbgGNS5F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 14:56:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54904 "EHLO mail.kernel.org"
+        Tue, 14 Jul 2020 14:57:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55012 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730217AbgGNS4r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 14:56:47 -0400
+        id S1731088AbgGNS4y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 14:56:54 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ECAC7229CA;
-        Tue, 14 Jul 2020 18:56:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7D7B122A99;
+        Tue, 14 Jul 2020 18:56:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594753006;
-        bh=fyIViGjnqT3Isc8lUNNxqQHXm6quHzb/i5mIuWINQ9s=;
+        s=default; t=1594753014;
+        bh=z05sE6uoEfahcLhFFLnVSGhAnM319kCnEXXb1BUsaiI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OVFtWbRHUm4Pj4kiwluSHPXCPV1PE05g2MceISX6+J5Jn7Y10dZnxz1aLoVKx+Hf8
-         YWRf0hlY/hE3rpzTpypg3Hb3EczEg9H1k72CNq4rhYJxKIjF3j/pJVqDtMK4hMcxX0
-         V+7TxzWEQ/eIWDdThz+pLLhdNCxzLByru89e1YvE=
+        b=lMk6t/I0ZSHcMz8HlbOZrNVz3euTP0P3FrfD8L+AwcxqsPbKPMYzwl9RIlFFG7yIc
+         NbbYur6fbqoJCuvGU7aaNuOXRq7WMpaldoG61bS3vZuZ16e0E7R6eouqd5OsL/XM8a
+         +gSfhvryPNlEQiCIhFIyVrxqO7IRWBNQD9xhbLlA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Alexander Lobakin <alobakin@marvell.com>,
-        Igor Russkikh <irusskikh@marvell.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Jakub Sitnicki <jakub@cloudflare.com>,
+        kernel test robot <rong.a.chen@intel.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Martin KaFai Lau <kafai@fb.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 083/166] net: qed: fix buffer overflow on ethtool -d
-Date:   Tue, 14 Jul 2020 20:44:08 +0200
-Message-Id: <20200714184119.826423080@linuxfoundation.org>
+Subject: [PATCH 5.7 059/166] bpf, sockmap: RCU splat with redirect and strparser error or TLS
+Date:   Tue, 14 Jul 2020 20:43:44 +0200
+Message-Id: <20200714184118.697099943@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200714184115.844176932@linuxfoundation.org>
 References: <20200714184115.844176932@linuxfoundation.org>
@@ -61,105 +63,159 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexander Lobakin <alobakin@marvell.com>
+From: John Fastabend <john.fastabend@gmail.com>
 
-[ Upstream commit da3287111ab43b32cec54d7ca6b48640f210a196 ]
+[ Upstream commit 93dd5f185916b05e931cffae636596f21f98546e ]
 
-When generating debug dump, driver firstly collects all data in binary
-form, and then performs per-feature formatting to human-readable if it
-is supported.
+There are two paths to generate the below RCU splat the first and
+most obvious is the result of the BPF verdict program issuing a
+redirect on a TLS socket (This is the splat shown below). Unlike
+the non-TLS case the caller of the *strp_read() hooks does not
+wrap the call in a rcu_read_lock/unlock. Then if the BPF program
+issues a redirect action we hit the RCU splat.
 
-For ethtool -d, this is roughly incorrect for two reasons. First of all,
-drivers should always provide only original raw dumps to Ethtool without
-any changes.
-The second, and more critical, is that Ethtool's output buffer size is
-strictly determined by ethtool_ops::get_regs_len(), and all data *must*
-fit in it. The current version of driver always returns the size of raw
-data, but the size of the formatted buffer exceeds it in most cases.
-This leads to out-of-bound writes and memory corruption.
+However, in the non-TLS socket case the splat appears to be
+relatively rare, because the skmsg caller into the strp_data_ready()
+is wrapped in a rcu_read_lock/unlock. Shown here,
 
-Address both issues by adding an option to return original, non-formatted
-debug data, and using it for Ethtool case.
+ static void sk_psock_strp_data_ready(struct sock *sk)
+ {
+	struct sk_psock *psock;
 
-v2:
- - Expand commit message to make it more clear;
- - No functional changes.
+	rcu_read_lock();
+	psock = sk_psock(sk);
+	if (likely(psock)) {
+		if (tls_sw_has_ctx_rx(sk)) {
+			psock->parser.saved_data_ready(sk);
+		} else {
+			write_lock_bh(&sk->sk_callback_lock);
+			strp_data_ready(&psock->parser.strp);
+			write_unlock_bh(&sk->sk_callback_lock);
+		}
+	}
+	rcu_read_unlock();
+ }
 
-Fixes: c965db444629 ("qed: Add support for debug data collection")
-Signed-off-by: Alexander Lobakin <alobakin@marvell.com>
-Signed-off-by: Igor Russkikh <irusskikh@marvell.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+If the above was the only way to run the verdict program we
+would be safe. But, there is a case where the strparser may throw an
+ENOMEM error while parsing the skb. This is a result of a failed
+skb_clone, or alloc_skb_for_msg while building a new merged skb when
+the msg length needed spans multiple skbs. This will in turn put the
+skb on the strp_wrk workqueue in the strparser code. The skb will
+later be dequeued and verdict programs run, but now from a
+different context without the rcu_read_lock()/unlock() critical
+section in sk_psock_strp_data_ready() shown above. In practice
+I have not seen this yet, because as far as I know most users of the
+verdict programs are also only working on single skbs. In this case no
+merge happens which could trigger the above ENOMEM errors. In addition
+the system would need to be under memory pressure. For example, we
+can't hit the above case in selftests because we missed having tests
+to merge skbs. (Added in later patch)
+
+To fix the below splat extend the rcu_read_lock/unnlock block to
+include the call to sk_psock_tls_verdict_apply(). This will fix both
+TLS redirect case and non-TLS redirect+error case. Also remove
+psock from the sk_psock_tls_verdict_apply() function signature its
+not used there.
+
+[ 1095.937597] WARNING: suspicious RCU usage
+[ 1095.940964] 5.7.0-rc7-02911-g463bac5f1ca79 #1 Tainted: G        W
+[ 1095.944363] -----------------------------
+[ 1095.947384] include/linux/skmsg.h:284 suspicious rcu_dereference_check() usage!
+[ 1095.950866]
+[ 1095.950866] other info that might help us debug this:
+[ 1095.950866]
+[ 1095.957146]
+[ 1095.957146] rcu_scheduler_active = 2, debug_locks = 1
+[ 1095.961482] 1 lock held by test_sockmap/15970:
+[ 1095.964501]  #0: ffff9ea6b25de660 (sk_lock-AF_INET){+.+.}-{0:0}, at: tls_sw_recvmsg+0x13a/0x840 [tls]
+[ 1095.968568]
+[ 1095.968568] stack backtrace:
+[ 1095.975001] CPU: 1 PID: 15970 Comm: test_sockmap Tainted: G        W         5.7.0-rc7-02911-g463bac5f1ca79 #1
+[ 1095.977883] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.12.0-1 04/01/2014
+[ 1095.980519] Call Trace:
+[ 1095.982191]  dump_stack+0x8f/0xd0
+[ 1095.984040]  sk_psock_skb_redirect+0xa6/0xf0
+[ 1095.986073]  sk_psock_tls_strp_read+0x1d8/0x250
+[ 1095.988095]  tls_sw_recvmsg+0x714/0x840 [tls]
+
+v2: Improve commit message to identify non-TLS redirect plus error case
+    condition as well as more common TLS case. In the process I decided
+    doing the rcu_read_unlock followed by the lock/unlock inside branches
+    was unnecessarily complex. We can just extend the current rcu block
+    and get the same effeective without the shuffling and branching.
+    Thanks Martin!
+
+Fixes: e91de6afa81c1 ("bpf: Fix running sk_skb program types with ktls")
+Reported-by: Jakub Sitnicki <jakub@cloudflare.com>
+Reported-by: kernel test robot <rong.a.chen@intel.com>
+Signed-off-by: John Fastabend <john.fastabend@gmail.com>
+Signed-off-by: Alexei Starovoitov <ast@kernel.org>
+Acked-by: Martin KaFai Lau <kafai@fb.com>
+Acked-by: Jakub Sitnicki <jakub@cloudflare.com>
+Link: https://lore.kernel.org/bpf/159312677907.18340.11064813152758406626.stgit@john-XPS-13-9370
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/qlogic/qed/qed.h       |  2 ++
- drivers/net/ethernet/qlogic/qed/qed_debug.c | 13 ++++++++++++-
- 2 files changed, 14 insertions(+), 1 deletion(-)
+ net/core/skmsg.c | 13 ++++++-------
+ 1 file changed, 6 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/net/ethernet/qlogic/qed/qed.h b/drivers/net/ethernet/qlogic/qed/qed.h
-index fa41bf08a5895..58d6ef489d5bf 100644
---- a/drivers/net/ethernet/qlogic/qed/qed.h
-+++ b/drivers/net/ethernet/qlogic/qed/qed.h
-@@ -880,6 +880,8 @@ struct qed_dev {
- #endif
- 	struct qed_dbg_feature dbg_features[DBG_FEATURE_NUM];
- 	bool disable_ilt_dump;
-+	bool				dbg_bin_dump;
-+
- 	DECLARE_HASHTABLE(connections, 10);
- 	const struct firmware		*firmware;
+diff --git a/net/core/skmsg.c b/net/core/skmsg.c
+index 351afbf6bfbac..c41ab6906b210 100644
+--- a/net/core/skmsg.c
++++ b/net/core/skmsg.c
+@@ -683,7 +683,7 @@ static struct sk_psock *sk_psock_from_strp(struct strparser *strp)
+ 	return container_of(parser, struct sk_psock, parser);
+ }
  
-diff --git a/drivers/net/ethernet/qlogic/qed/qed_debug.c b/drivers/net/ethernet/qlogic/qed/qed_debug.c
-index 3e56b6056b477..03ce18f653932 100644
---- a/drivers/net/ethernet/qlogic/qed/qed_debug.c
-+++ b/drivers/net/ethernet/qlogic/qed/qed_debug.c
-@@ -7506,6 +7506,12 @@ static enum dbg_status format_feature(struct qed_hwfn *p_hwfn,
- 	if (p_hwfn->cdev->dbg_params.print_data)
- 		qed_dbg_print_feature(text_buf, text_size_bytes);
- 
-+	/* Just return the original binary buffer if requested */
-+	if (p_hwfn->cdev->dbg_bin_dump) {
-+		vfree(text_buf);
-+		return DBG_STATUS_OK;
-+	}
-+
- 	/* Free the old dump_buf and point the dump_buf to the newly allocagted
- 	 * and formatted text buffer.
- 	 */
-@@ -7733,7 +7739,9 @@ int qed_dbg_mcp_trace_size(struct qed_dev *cdev)
- #define REGDUMP_HEADER_SIZE_SHIFT		0
- #define REGDUMP_HEADER_SIZE_MASK		0xffffff
- #define REGDUMP_HEADER_FEATURE_SHIFT		24
--#define REGDUMP_HEADER_FEATURE_MASK		0x3f
-+#define REGDUMP_HEADER_FEATURE_MASK		0x1f
-+#define REGDUMP_HEADER_BIN_DUMP_SHIFT		29
-+#define REGDUMP_HEADER_BIN_DUMP_MASK		0x1
- #define REGDUMP_HEADER_OMIT_ENGINE_SHIFT	30
- #define REGDUMP_HEADER_OMIT_ENGINE_MASK		0x1
- #define REGDUMP_HEADER_ENGINE_SHIFT		31
-@@ -7771,6 +7779,7 @@ static u32 qed_calc_regdump_header(struct qed_dev *cdev,
- 			  feature, feature_size);
- 
- 	SET_FIELD(res, REGDUMP_HEADER_FEATURE, feature);
-+	SET_FIELD(res, REGDUMP_HEADER_BIN_DUMP, 1);
- 	SET_FIELD(res, REGDUMP_HEADER_OMIT_ENGINE, omit_engine);
- 	SET_FIELD(res, REGDUMP_HEADER_ENGINE, engine);
- 
-@@ -7794,6 +7803,7 @@ int qed_dbg_all_data(struct qed_dev *cdev, void *buffer)
- 		omit_engine = 1;
- 
- 	mutex_lock(&qed_dbg_lock);
-+	cdev->dbg_bin_dump = true;
- 
- 	org_engine = qed_get_debug_engine(cdev);
- 	for (cur_engine = 0; cur_engine < cdev->num_hwfns; cur_engine++) {
-@@ -7993,6 +8003,7 @@ int qed_dbg_all_data(struct qed_dev *cdev, void *buffer)
- 		       QED_NVM_IMAGE_MDUMP, "QED_NVM_IMAGE_MDUMP", rc);
+-static void sk_psock_skb_redirect(struct sk_psock *psock, struct sk_buff *skb)
++static void sk_psock_skb_redirect(struct sk_buff *skb)
+ {
+ 	struct sk_psock *psock_other;
+ 	struct sock *sk_other;
+@@ -715,12 +715,11 @@ static void sk_psock_skb_redirect(struct sk_psock *psock, struct sk_buff *skb)
  	}
+ }
  
-+	cdev->dbg_bin_dump = false;
- 	mutex_unlock(&qed_dbg_lock);
+-static void sk_psock_tls_verdict_apply(struct sk_psock *psock,
+-				       struct sk_buff *skb, int verdict)
++static void sk_psock_tls_verdict_apply(struct sk_buff *skb, int verdict)
+ {
+ 	switch (verdict) {
+ 	case __SK_REDIRECT:
+-		sk_psock_skb_redirect(psock, skb);
++		sk_psock_skb_redirect(skb);
+ 		break;
+ 	case __SK_PASS:
+ 	case __SK_DROP:
+@@ -741,8 +740,8 @@ int sk_psock_tls_strp_read(struct sk_psock *psock, struct sk_buff *skb)
+ 		ret = sk_psock_bpf_run(psock, prog, skb);
+ 		ret = sk_psock_map_verd(ret, tcp_skb_bpf_redirect_fetch(skb));
+ 	}
++	sk_psock_tls_verdict_apply(skb, ret);
+ 	rcu_read_unlock();
+-	sk_psock_tls_verdict_apply(psock, skb, ret);
+ 	return ret;
+ }
+ EXPORT_SYMBOL_GPL(sk_psock_tls_strp_read);
+@@ -770,7 +769,7 @@ static void sk_psock_verdict_apply(struct sk_psock *psock,
+ 		}
+ 		goto out_free;
+ 	case __SK_REDIRECT:
+-		sk_psock_skb_redirect(psock, skb);
++		sk_psock_skb_redirect(skb);
+ 		break;
+ 	case __SK_DROP:
+ 		/* fall-through */
+@@ -794,8 +793,8 @@ static void sk_psock_strp_read(struct strparser *strp, struct sk_buff *skb)
+ 		ret = sk_psock_bpf_run(psock, prog, skb);
+ 		ret = sk_psock_map_verd(ret, tcp_skb_bpf_redirect_fetch(skb));
+ 	}
+-	rcu_read_unlock();
+ 	sk_psock_verdict_apply(psock, skb, ret);
++	rcu_read_unlock();
+ }
  
- 	return 0;
+ static int sk_psock_strp_read_done(struct strparser *strp, int err)
 -- 
 2.25.1
 
