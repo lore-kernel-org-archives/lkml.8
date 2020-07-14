@@ -2,93 +2,113 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D445C433ED
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 19:12:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD078C433F7
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 19:12:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 36A82221ED
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 19:12:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A145C221ED
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 19:12:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594753963;
+	bh=X8FtHlrJyDItUnN69QmMhvloGFJsAWkk0V7AsUpQpVk=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=SWTlHUwrDgoZ9DntkNyxu0GG24OO/WwAwUlafpeL4bLwuf9TD/sTKfbpjPGVx+ukK
+	 f79P2Vdd+WurNV+b2ziEK1k+1T/HVCqTFksMZZE3pyii5LFzHGHsnnel6mSqisBDkv
+	 CQvI1X5bFqFZANXCar3mZkGZ1J9QDeM78hFg8Se8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730628AbgGNTMi (ORCPT
+        id S1730254AbgGNTMm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 15:12:38 -0400
-Received: from smtp.al2klimov.de ([78.46.175.9]:32920 "EHLO smtp.al2klimov.de"
+        Tue, 14 Jul 2020 15:12:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41484 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728117AbgGNTMf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 15:12:35 -0400
-Received: from authenticated-user (PRIMARY_HOSTNAME [PUBLIC_IP])
-        by smtp.al2klimov.de (Postfix) with ESMTPA id EE3A0BC0D1;
-        Tue, 14 Jul 2020 19:12:32 +0000 (UTC)
-From:   "Alexander A. Klimov" <grandmaster@al2klimov.de>
-To:     tsbogend@alpha.franken.de, grandmaster@al2klimov.de,
-        paulburton@kernel.org, linux-mips@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] mips: Replace HTTP links with HTTPS ones
-Date:   Tue, 14 Jul 2020 21:12:26 +0200
-Message-Id: <20200714191226.48652-1-grandmaster@al2klimov.de>
-In-Reply-To: <59938583-2ce4-c7bf-c454-89a1559be846@flygoat.com>
-References: <59938583-2ce4-c7bf-c454-89a1559be846@flygoat.com>
+        id S1729556AbgGNSql (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 14:46:41 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2D88722AAB;
+        Tue, 14 Jul 2020 18:46:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594752400;
+        bh=X8FtHlrJyDItUnN69QmMhvloGFJsAWkk0V7AsUpQpVk=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=AJH8fIGN1Ke2NnV+zPEx6S+DlL565wa7/NQGjlNFpkGTrticrSjZEp52HTWBFCrgC
+         QRTv019lei+V+4z+9tbv/H6WjUlfTYa91hw5NpRzhd9CUv6QiufP3np48jyRLIB/Dt
+         JQ3ogkjnw/PBZLikv84upooTMWZN4rZDgrqQoYEc=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, maemo-leste@lists.dyne.org,
+        Merlijn Wajer <merlijn@wizzup.org>,
+        Pavel Machek <pavel@ucw.cz>,
+        Sebastian Reichel <sre@kernel.org>,
+        Tony Lindgren <tony@atomide.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 07/58] ARM: dts: omap4-droid4: Fix spi configuration and increase rate
+Date:   Tue, 14 Jul 2020 20:43:40 +0200
+Message-Id: <20200714184056.498066895@linuxfoundation.org>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200714184056.149119318@linuxfoundation.org>
+References: <20200714184056.149119318@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-Spamd-Bar: +++++
-Authentication-Results: smtp.al2klimov.de;
-        auth=pass smtp.auth=aklimov@al2klimov.de smtp.mailfrom=grandmaster@al2klimov.de
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Rationale:
-Reduces attack surface on kernel devs opening the links for MITM
-as HTTPS traffic is much harder to manipulate.
+From: Tony Lindgren <tony@atomide.com>
 
-Deterministic algorithm:
-For each file:
-  If not .svg:
-    For each line:
-      If doesn't contain `\bxmlns\b`:
-        For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
-	  If neither `\bgnu\.org/license`, nor `\bmozilla\.org/MPL\b`:
-            If both the HTTP and HTTPS versions
-            return 200 OK and serve the same content:
-              Replace HTTP with HTTPS.
+[ Upstream commit 0df12a01f4857495816b05f048c4c31439446e35 ]
 
-Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
+We can currently sometimes get "RXS timed out" errors and "EOT timed out"
+errors with spi transfers.
+
+These errors can be made easy to reproduce by reading the cpcap iio
+values in a loop while keeping the CPUs busy by also reading /dev/urandom.
+
+The "RXS timed out" errors we can fix by adding spi-cpol and spi-cpha
+in addition to the spi-cs-high property we already have.
+
+The "EOT timed out" errors we can fix by increasing the spi clock rate
+to 9.6 MHz. Looks similar MC13783 PMIC says it works at spi clock rates
+up to 20 MHz, so let's assume we can pick any rate up to 20 MHz also
+for cpcap.
+
+Cc: maemo-leste@lists.dyne.org
+Cc: Merlijn Wajer <merlijn@wizzup.org>
+Cc: Pavel Machek <pavel@ucw.cz>
+Cc: Sebastian Reichel <sre@kernel.org>
+Signed-off-by: Tony Lindgren <tony@atomide.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/mips/Kconfig           | 2 +-
- arch/mips/include/asm/war.h | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ arch/arm/boot/dts/motorola-cpcap-mapphone.dtsi | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/arch/mips/Kconfig b/arch/mips/Kconfig
-index 6fee1a133e9d..eaf7519e3033 100644
---- a/arch/mips/Kconfig
-+++ b/arch/mips/Kconfig
-@@ -2825,7 +2825,7 @@ config SMP
- 	  Y to "Enhanced Real Time Clock Support", below.
+diff --git a/arch/arm/boot/dts/motorola-cpcap-mapphone.dtsi b/arch/arm/boot/dts/motorola-cpcap-mapphone.dtsi
+index f57acf8f66b95..75de8134b1d1f 100644
+--- a/arch/arm/boot/dts/motorola-cpcap-mapphone.dtsi
++++ b/arch/arm/boot/dts/motorola-cpcap-mapphone.dtsi
+@@ -16,8 +16,10 @@
+ 		#interrupt-cells = <2>;
+ 		#address-cells = <1>;
+ 		#size-cells = <0>;
+-		spi-max-frequency = <3000000>;
++		spi-max-frequency = <9600000>;
+ 		spi-cs-high;
++		spi-cpol;
++		spi-cpha;
  
- 	  See also the SMP-HOWTO available at
--	  <http://www.tldp.org/docs.html#howto>.
-+	  <https://www.tldp.org/docs.html#howto>.
- 
- 	  If you don't know what to do here, say N.
- 
-diff --git a/arch/mips/include/asm/war.h b/arch/mips/include/asm/war.h
-index 1eedd596a064..e43f800e662d 100644
---- a/arch/mips/include/asm/war.h
-+++ b/arch/mips/include/asm/war.h
-@@ -121,7 +121,7 @@
-  * operate correctly if the internal data cache refill buffer is empty.	 These
-  * CACHE instructions should be separated from any potential data cache miss
-  * by a load instruction to an uncached address to empty the response buffer."
-- * (Revision 2.0 device errata from IDT available on http://www.idt.com/
-+ * (Revision 2.0 device errata from IDT available on https://www.idt.com/
-  * in .pdf format.)
-  */
- #ifndef R4600_V2_HIT_CACHEOP_WAR
+ 		cpcap_adc: adc {
+ 			compatible = "motorola,mapphone-cpcap-adc";
 -- 
-2.27.0
+2.25.1
+
+
 
