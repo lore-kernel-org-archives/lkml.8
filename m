@@ -7,24 +7,28 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7527C433EA
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 12:15:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6F34C433E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 12:15:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C5B5A20DD4
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 12:15:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CFC2F20DD4
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 12:15:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728981AbgGNMPh (ORCPT
+        id S1728970AbgGNMPe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 08:15:37 -0400
-Received: from 8bytes.org ([81.169.241.247]:52918 "EHLO theia.8bytes.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728304AbgGNMKx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 08:15:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60650 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728308AbgGNMKx (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 14 Jul 2020 08:10:53 -0400
+Received: from theia.8bytes.org (8bytes.org [IPv6:2a01:238:4383:600:38bc:a715:4b6d:a889])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CC079C061755;
+        Tue, 14 Jul 2020 05:10:52 -0700 (PDT)
 Received: from cap.home.8bytes.org (p5b006776.dip0.t-ipconnect.de [91.0.103.118])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
         (No client certificate requested)
-        by theia.8bytes.org (Postfix) with ESMTPSA id 25E2EE1F;
-        Tue, 14 Jul 2020 14:10:50 +0200 (CEST)
+        by theia.8bytes.org (Postfix) with ESMTPSA id 2398AF19;
+        Tue, 14 Jul 2020 14:10:49 +0200 (CEST)
 From:   Joerg Roedel <joro@8bytes.org>
 To:     x86@kernel.org
 Cc:     Joerg Roedel <joro@8bytes.org>, Joerg Roedel <jroedel@suse.de>,
@@ -45,9 +49,9 @@ Cc:     Joerg Roedel <joro@8bytes.org>, Joerg Roedel <jroedel@suse.de>,
         Martin Radev <martin.b.radev@gmail.com>,
         linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
         virtualization@lists.linux-foundation.org
-Subject: [PATCH v4 32/75] x86/head/64: Load segment registers earlier
-Date:   Tue, 14 Jul 2020 14:08:34 +0200
-Message-Id: <20200714120917.11253-33-joro@8bytes.org>
+Subject: [PATCH v4 30/75] x86/head/64: Install boot GDT
+Date:   Tue, 14 Jul 2020 14:08:32 +0200
+Message-Id: <20200714120917.11253-31-joro@8bytes.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200714120917.11253-1-joro@8bytes.org>
 References: <20200714120917.11253-1-joro@8bytes.org>
@@ -60,85 +64,76 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Joerg Roedel <jroedel@suse.de>
 
-Make sure segments are properly set up before setting up an IDT and
-doing anything that might cause a #VC exception. This is later needed
-for early exception handling.
+Handling exceptions during boot requires a working GDT. The kernel GDT
+is not yet ready for use, so install a temporary boot GDT.
 
 Signed-off-by: Joerg Roedel <jroedel@suse.de>
 ---
- arch/x86/kernel/head_64.S | 52 +++++++++++++++++++--------------------
- 1 file changed, 26 insertions(+), 26 deletions(-)
+ arch/x86/kernel/head64.c  | 19 +++++++++++++++++++
+ arch/x86/kernel/head_64.S | 20 ++++++++++++++++++++
+ 2 files changed, 39 insertions(+)
 
+diff --git a/arch/x86/kernel/head64.c b/arch/x86/kernel/head64.c
+index cbb71c1b574f..51059bfd4b99 100644
+--- a/arch/x86/kernel/head64.c
++++ b/arch/x86/kernel/head64.c
+@@ -61,6 +61,25 @@ unsigned long vmemmap_base __ro_after_init = __VMEMMAP_BASE_L4;
+ EXPORT_SYMBOL(vmemmap_base);
+ #endif
+ 
++/*
++ * GDT used before %gs is set up and the kernel can use gdt_page. Needed for
++ * early exception handling.
++ */
++struct desc_struct boot_gdt[GDT_ENTRIES] = {
++	[GDT_ENTRY_KERNEL32_CS]         = GDT_ENTRY_INIT(0xc09b, 0, 0xfffff),
++	[GDT_ENTRY_KERNEL_CS]           = GDT_ENTRY_INIT(0xa09b, 0, 0xfffff),
++	[GDT_ENTRY_KERNEL_DS]           = GDT_ENTRY_INIT(0xc093, 0, 0xfffff),
++};
++
++/*
++ * Address needs to be set at runtime because it references the boot_gdt while
++ * the kernel still uses a direct mapping.
++ */
++struct desc_ptr boot_gdt_descr = {
++	.size = sizeof(boot_gdt),
++	.address = 0,
++};
++
+ #define __head	__section(.head.text)
+ 
+ static void __head *fixup_pointer(void *ptr, unsigned long physaddr)
 diff --git a/arch/x86/kernel/head_64.S b/arch/x86/kernel/head_64.S
-index 87ea9f540608..61aa1e56fc9c 100644
+index 16da4ac01597..473e60a12e2f 100644
 --- a/arch/x86/kernel/head_64.S
 +++ b/arch/x86/kernel/head_64.S
-@@ -169,6 +169,32 @@ SYM_CODE_START(secondary_startup_64)
- 	movq	%rax, boot_gdt_descr+2(%rip)
- 	lgdt	boot_gdt_descr(%rip)
+@@ -73,6 +73,26 @@ SYM_CODE_START_NOALIGN(startup_64)
+ 	/* Set up the stack for verify_cpu(), similar to initial_stack below */
+ 	leaq	(__end_init_task - SIZEOF_PTREGS)(%rip), %rsp
  
-+	/* set up data segments */
-+	xorl %eax,%eax
-+	movl %eax,%ds
-+	movl %eax,%ss
-+	movl %eax,%es
++	/* Setup boot GDT descriptor and load boot GDT */
++	leaq	boot_gdt(%rip), %rax
++	movq	%rax, boot_gdt_descr+2(%rip)
++	lgdt	boot_gdt_descr(%rip)
 +
-+	/*
-+	 * We don't really need to load %fs or %gs, but load them anyway
-+	 * to kill any stale realmode selectors.  This allows execution
-+	 * under VT hardware.
-+	 */
-+	movl %eax,%fs
-+	movl %eax,%gs
++	/* New GDT is live - reload data segment registers */
++	movl	$__KERNEL_DS, %eax
++	movl	%eax, %ds
++	movl	%eax, %ss
++	movl	%eax, %es
 +
-+	/* Set up %gs.
-+	 *
-+	 * The base of %gs always points to fixed_percpu_data. If the
-+	 * stack protector canary is enabled, it is located at %gs:40.
-+	 * Note that, on SMP, the boot cpu uses init data section until
-+	 * the per cpu areas are set up.
-+	 */
-+	movl	$MSR_GS_BASE,%ecx
-+	movl	initial_gs(%rip),%eax
-+	movl	initial_gs+4(%rip),%edx
-+	wrmsr
++	/* Now switch to __KERNEL_CS so IRET works reliably */
++	pushq	$__KERNEL_CS
++	leaq	.Lon_kernel_cs(%rip), %rax
++	pushq	%rax
++	lretq
 +
- 	/* Check if nx is implemented */
- 	movl	$0x80000001, %eax
- 	cpuid
-@@ -204,32 +230,6 @@ SYM_CODE_START(secondary_startup_64)
- 	 */
- 	lgdt	early_gdt_descr(%rip)
++.Lon_kernel_cs:
++	UNWIND_HINT_EMPTY
++
+ 	/* Sanitize CPU configuration */
+ 	call verify_cpu
  
--	/* set up data segments */
--	xorl %eax,%eax
--	movl %eax,%ds
--	movl %eax,%ss
--	movl %eax,%es
--
--	/*
--	 * We don't really need to load %fs or %gs, but load them anyway
--	 * to kill any stale realmode selectors.  This allows execution
--	 * under VT hardware.
--	 */
--	movl %eax,%fs
--	movl %eax,%gs
--
--	/* Set up %gs.
--	 *
--	 * The base of %gs always points to fixed_percpu_data. If the
--	 * stack protector canary is enabled, it is located at %gs:40.
--	 * Note that, on SMP, the boot cpu uses init data section until
--	 * the per cpu areas are set up.
--	 */
--	movl	$MSR_GS_BASE,%ecx
--	movl	initial_gs(%rip),%eax
--	movl	initial_gs+4(%rip),%edx
--	wrmsr
--
- 	/* rsi is pointer to real mode structure with interesting info.
- 	   pass it to C */
- 	movq	%rsi, %rdi
 -- 
 2.27.0
 
