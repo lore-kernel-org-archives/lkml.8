@@ -2,86 +2,103 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF030C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 10:59:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 893A3C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 10:59:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A9E1122200
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 10:59:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 63FED22200
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 10:59:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Y7Egjcf3"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="ZcQVvzY6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726827AbgGNK7d (ORCPT
+        id S1727078AbgGNK7q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 06:59:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49586 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726041AbgGNK7c (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 06:59:32 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8294AC061755;
-        Tue, 14 Jul 2020 03:59:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
-        References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
-        Content-Type:Content-ID:Content-Description;
-        bh=8kIpdB7MOVPeE6Mtm6qS57nGC+Nbr8eHQGmiVAURoO0=; b=Y7Egjcf3jjfOrfhxpS00WHCSu/
-        7+sVXf5y3GzUV7zX3zJjYmm8deI9zyULqJUYesggLwFRaA+jOjsxongcjp8mxAoAG8K3HDdINJd6Y
-        vpNJTkxpMrx1z7EoGeksBRSNefcuskiLd65m0OFcEBbp3J4vlBaubVusFTxRdWpP4YXOgd3ykjh13
-        0cY6HbeK+wpHET1t/nPFQv6pVsBgQwSTNwIFtZIdVXf2LPGrbKhTmqbBUOuafwzpQ57/9MR+JyPNQ
-        0TVBYyjEfWaK73wyPMWy2TfbXz1SCQ/fGAnTWWvXRC4QEQl48YTr2nCyTzsIvCCaXVmU2MEreblnJ
-        eshrFJFQ==;
-Received: from 089144201169.atnat0010.highway.a1.net ([89.144.201.169] helo=localhost)
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jvIem-0005up-87; Tue, 14 Jul 2020 10:59:28 +0000
-From:   Christoph Hellwig <hch@lst.de>
-To:     Nick Hu <nickhu@andestech.com>, Greentime Hu <green.hu@gmail.com>,
-        Vincent Chen <deanbo422@gmail.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-riscv@lists.infradead.org, linux-arch@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 1/6] syscalls: use uaccess_kernel in addr_limit_user_check
-Date:   Tue, 14 Jul 2020 12:55:00 +0200
-Message-Id: <20200714105505.935079-2-hch@lst.de>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200714105505.935079-1-hch@lst.de>
-References: <20200714105505.935079-1-hch@lst.de>
+        Tue, 14 Jul 2020 06:59:46 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:58017 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726041AbgGNK7p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 06:59:45 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 4B5cwb2qV0z9s1x;
+        Tue, 14 Jul 2020 20:59:43 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1594724383;
+        bh=CaU7hMehrwH/u8zCbwdV66QNc3iG4evLpsX9iI3ZC+Q=;
+        h=Date:From:To:Cc:Subject:From;
+        b=ZcQVvzY6KQEMk0CwfGUxxOYjXPcK05VLW5I2bcw0XwQMqWOhqm6jKRXo+4sgLJbOP
+         yM0KlqRrUQkLiyLqm02ksHByF9A5aOtFP+TOsGyOb1Zow5kHOLTLNzvlu3OKSdFi8t
+         tV05dE6Axo7cVmGMe5TqV8n7a6KbN/3dtE/27Upz/8gHWmlcjpKeZaPajR/7hof0JQ
+         DCeOMEDgGKmaogRoBbT/CDPXFhsGAfrj6kj5wtUuOPDqNoC1N0gKLSsqzxNzhyR62U
+         VTUkpWaKFcVb2BuxXj4glqiwmM28ExAdlKO1kDbSvHuH7XGIOHZWe3FDD1hDryslnb
+         XflqvL8ic4caw==
+Date:   Tue, 14 Jul 2020 20:59:42 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Kalle Valo <kvalo@codeaurora.org>,
+        Wireless <linux-wireless@vger.kernel.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Joseph Chuang <joseph.chuang@cypress.com>,
+        Chi-Hsien Lin <chi-hsien.lin@cypress.com>
+Subject: linux-next: Fixes tag needs some work in the wireless-drivers-next
+ tree
+Message-ID: <20200714205942.26248f1c@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
+Content-Type: multipart/signed; boundary="Sig_/OiDA8Ai=f6igcds2bDJuwLA";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use the uaccess_kernel helper instead of duplicating it.
+--Sig_/OiDA8Ai=f6igcds2bDJuwLA
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
----
- include/linux/syscalls.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Hi all,
 
-diff --git a/include/linux/syscalls.h b/include/linux/syscalls.h
-index b951a87da9877c..e933a43d4a69ac 100644
---- a/include/linux/syscalls.h
-+++ b/include/linux/syscalls.h
-@@ -263,7 +263,7 @@ static inline void addr_limit_user_check(void)
- 		return;
- #endif
- 
--	if (CHECK_DATA_CORRUPTION(!segment_eq(get_fs(), USER_DS),
-+	if (CHECK_DATA_CORRUPTION(uaccess_kernel(),
- 				  "Invalid address limit on user-mode return"))
- 		force_sig(SIGKILL);
- 
--- 
-2.26.2
+In commit
 
+  ad96bc27032c ("brcmfmac: initialize the requested dwell time")
+
+Fixes tag
+
+  Fixes: 4905432b28b7 ("brcmfmac: Fix P2P Group Formation failure via Go-ne=
+g method")
+
+has these problem(s):
+
+  - Target SHA1 does not exist
+
+
+Maybe you meant
+
+Fixes: 9c29da3f4e7e ("brcmfmac: Fix P2P Group Formation failure via Go-neg =
+method")
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/OiDA8Ai=f6igcds2bDJuwLA
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl8NkB4ACgkQAVBC80lX
+0Gw50Af+LW7WJB3/+r+ZbjDE806XKes7SJGPe6XT5WjrV4ULYecYAKRr0v+IZTJr
+V6GzRRJZzQ2KeIeCHSFjekWjsefCRn/Wdd8woFly/lAqWLGXA+t5ma/q4gAFxVOD
+FnER451dMzVpAYyUVI7hcwaQd+W3S1eGBcWNGPDpQ8RU5f/ECQ8N1ushy2Mj0z+L
+5a0XXn6W8DBJLON87dQYBmSubg+d68UMTz0JWP0pPcaoCLGZ/KrGhoHB+VGsMtEi
+zZdk+kGLwpOnm3VACO2OCLd/rMwYB1kdean/n70wt1cJ2lpxxV152QZLCjbKNzbo
+HS07Kz+w01ZP4GK0b50+dzodOiE0IQ==
+=3u/W
+-----END PGP SIGNATURE-----
+
+--Sig_/OiDA8Ai=f6igcds2bDJuwLA--
