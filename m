@@ -2,141 +2,98 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E638C433E4
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 19:48:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86885C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 19:49:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6BAF822BF5
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 19:48:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594756093;
-	bh=J+234yXnA6j89pE+F8uW9diFc8PSR+Bl4nU7j/ItEUI=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:List-ID:From;
-	b=Bp7dtQDSOI4fMxuEzRxaW8SgPRIiQ0vHPsZzhxSXbm7LxuThH7BS3zeXjDcF9FREq
-	 zaPqzFe4fZlcWm+o6OTIJl6XhvVobC5lPmMxnvpK4THNPZCMrVhjM8vXe3BJJIsrK8
-	 vX6veaEeC5T+ynHrvr2sYi/dzrQ1cW89Xyirw8CU=
+	by mail.kernel.org (Postfix) with ESMTP id 646BD22B51
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 19:49:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="pR+q0ltz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729378AbgGNTsM (ORCPT
+        id S1729491AbgGNTtn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 15:48:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53134 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727772AbgGNTsL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 15:48:11 -0400
-Received: from tzanussi-mobl (c-73-211-240-131.hsd1.il.comcast.net [73.211.240.131])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 27EA722B51;
-        Tue, 14 Jul 2020 19:48:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594756091;
-        bh=J+234yXnA6j89pE+F8uW9diFc8PSR+Bl4nU7j/ItEUI=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=DL42HUeMiKm0aVeXdFdBsJbBbQBteBQNgpFb0Kz/Z5agrJEAt8nVy5p8m/gb+j5Iv
-         MbMerZXqO4EY76kcIE3GctunwSJnqVfPwaPSRvxSERciHEnwXXJpuhScw5kDfIq1k6
-         U7/PkqVNvHMD8sTDa/sgSZREn2VbnSuKgjn65TW0=
-Message-ID: <0faffeb615b74212f65b813ffde0b096fa7451be.camel@kernel.org>
-Subject: Re: [ANNOUNCE] 4.19.132-rt59
-From:   Tom Zanussi <zanussi@kernel.org>
-To:     Steven Rostedt <rostedt@goodmis.org>, Pavel Machek <pavel@denx.de>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        linux-rt-users <linux-rt-users@vger.kernel.org>,
+        Tue, 14 Jul 2020 15:49:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48252 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726418AbgGNTtm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 15:49:42 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3E2ACC061755;
+        Tue, 14 Jul 2020 12:49:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=q7NrJBulspMdgxi2cducPGZ39YVyw0D0jNEe7CHNFek=; b=pR+q0ltz9wN4EMOYLJfOx0i96Z
+        fflfRrIqJ/FjDcRjkjnXWWtoHOwwXb5VsxdrGuZS+CvUr+oUVlTyCv7gRGycAnTBa73nx/ZZzxraY
+        82iJarBVL45tJXSN9iBukFBmkrK9TjFwkyynR9lgHVj3P/pTN95GAdES3IngOKWCc/IT/AJeExrws
+        B1iS+MFHhiV2wqkcQPS+4cu4PIVmyzJ5wPbo1+MD1rYtVpUtTpPR4NAyL3Qe+F1StOpbl5ZlMwm/d
+        zltUaTYbLueeel/jU/1kBjn+57c1OiyIkuqs9kUC5wGlwJjyFjRHU5uwW598uj7Fo2AqOiGYpCTQs
+        STKoB0Qw==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=worktop.programming.kicks-ass.net)
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jvQva-0008SY-R4; Tue, 14 Jul 2020 19:49:23 +0000
+Received: by worktop.programming.kicks-ass.net (Postfix, from userid 1000)
+        id CA5909817E0; Tue, 14 Jul 2020 21:49:21 +0200 (CEST)
+Date:   Tue, 14 Jul 2020 21:49:21 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Dave Hansen <dave.hansen@intel.com>
+Cc:     Ira Weiny <ira.weiny@intel.com>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Carsten Emde <C.Emde@osadl.org>,
-        John Kacur <jkacur@redhat.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Daniel Wagner <wagi@monom.org>,
-        Clark Williams <williams@redhat.com>,
-        Kate Stewart <kstewart@linuxfoundation.org>
-Date:   Tue, 14 Jul 2020 14:48:09 -0500
-In-Reply-To: <20200714154352.04794760@oasis.local.home>
-References: <82932b48972f38fccf9920e2ec75b555c2b2494a.camel@kernel.org>
-         <20200714183512.GA18816@duo.ucw.cz>
-         <20200714154352.04794760@oasis.local.home>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Andy Lutomirski <luto@kernel.org>, x86@kernel.org,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Fenghua Yu <fenghua.yu@intel.com>, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-nvdimm@lists.01.org,
+        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+        linux-kselftest@vger.kernel.org
+Subject: Re: [RFC PATCH 12/15] kmap: Add stray write protection for device
+ pages
+Message-ID: <20200714194921.GJ5523@worktop.programming.kicks-ass.net>
+References: <20200714070220.3500839-1-ira.weiny@intel.com>
+ <20200714070220.3500839-13-ira.weiny@intel.com>
+ <20200714084451.GQ10769@hirez.programming.kicks-ass.net>
+ <20200714190615.GC3008823@iweiny-DESK2.sc.intel.com>
+ <20200714192930.GH5523@worktop.programming.kicks-ass.net>
+ <50d472d8-e4d9-dd35-f31f-268aa69c76e2@intel.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <50d472d8-e4d9-dd35-f31f-268aa69c76e2@intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Steve,
+On Tue, Jul 14, 2020 at 12:42:11PM -0700, Dave Hansen wrote:
+> On 7/14/20 12:29 PM, Peter Zijlstra wrote:
+> > On Tue, Jul 14, 2020 at 12:06:16PM -0700, Ira Weiny wrote:
+> >> On Tue, Jul 14, 2020 at 10:44:51AM +0200, Peter Zijlstra wrote:
+> >>> So, if I followed along correctly, you're proposing to do a WRMSR per
+> >>> k{,un}map{_atomic}(), sounds like excellent performance all-round :-(
+> >> Only to pages which have this additional protection, ie not DRAM.
+> >>
+> >> User mappings of this memory is not affected (would be covered by User PKeys if
+> >> desired).  User mappings to persistent memory are the primary use case and the
+> >> performant path.
+> > Because performance to non-volatile memory doesn't matter? I think Dave
+> > has a better answer here ...
+> 
+> So, these WRMSRs are less evil than normal.  They're architecturally
+> non-serializing instructions,
 
-On Tue, 2020-07-14 at 15:43 -0400, Steven Rostedt wrote:
-> On Tue, 14 Jul 2020 20:35:12 +0200
-> Pavel Machek <pavel@denx.de> wrote:
-> 
-> > Hi!
-> > 
-> > > 
-> > > I'm pleased to announce the 4.19.132-rt59 stable release.
-> > > 
-> > > This release is just an update to the new stable 4.19.132
-> > > version and no RT specific changes have been made.
-> > > 
-> > > You can get this release via the git tree at:
-> > > 
-> > >   git://git.kernel.org/pub/scm/linux/kernel/git/rt/linux-stable-
-> > > rt.git
-> > > 
-> > >   branch: v4.19-rt
-> > >   Head SHA1: 1eebf4069aa37e54330cce9a42608517ea6996fe
-> > > 
-> > > Or to build 4.19.132-rt59 directly, the following patches should
-> > > be
-> > > applied:  
-> > 
-> > Thanks a lot.
-> > 
-> > But now I am confused, I completely missed announcements for
-> > v4.19.127-rt55 to v4.19.131-rt58.
-> > 
-> > And for example -rt56 is not listed in
-> > 
-> > 
-https://mirrors.edge.kernel.org/pub/linux/kernel/projects/rt/4.19/older/sha256sums.asc
-> > 
-> > ...aha, and the versions do not have signed tags, either:
-> > 
-> > pavel@amd:~/cip/k$ git show v4.19.131-rt58
-> > fatal: ambiguous argument 'v4.19.131-rt58': unknown revision or
-> > path not in the working tree.
-> > 
-> > Is that because they were created just as quick steps towards
-> > -rt59?
-> > 
-> 
-> Ah, I was about to say this is something that Kate keeps reminding me
-> to add to the wiki, but looking, I already did!
-> 
-> https://wiki.linuxfoundation.org/realtime/documentation/start
-> 
-> "Tagging policy of the PREEMPT_RT stable releases. Each PREEMPT_RT
-> stable release is tagged with the version number of the upstream
-> Linux
-> stable kernel as well as its own “-rt” counter that is appended. The
-> -rt counter will increment for the following:
-> 
->  - When forward ported to the latest upstream Linux stable version.
->  - When any merge with a upstream Linux stable causes a conflict.
->  - When a backport of the PREEMPT_RT development branch is done.
-> 
-> A backport will not be done with a forward port of a stable version.
-> They will be done separately, and tagged separately."
-> 
-> Tom, I sign all tags, we probably should be consistent with that too.
-> 
+Excellent, that should make these a fair bit faster than regular MSRs.
 
-Yeah, so do I, it's just that the srt script doesn't push the
-intervening tags (but does push the release tags).
+> But, either way, this *will* make accessing PMEM more expensive from the
+> kernel.  No escaping that. 
 
-Tom
-
-> -- Steve
-
+There's no free lunch, it's just that regular MSRs are fairly horrible.
