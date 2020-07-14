@@ -2,149 +2,155 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-17.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D66FFC433E2
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 21:12:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AA25C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 21:07:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AF1B12067D
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 21:12:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4691620663
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 21:07:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Yh2iAWYP"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="rywsZE8M"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728262AbgGNVMR (ORCPT
+        id S1728084AbgGNVHW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 17:12:17 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:48032 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726795AbgGNVMR (ORCPT
+        Tue, 14 Jul 2020 17:07:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60376 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728075AbgGNVHV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 17:12:17 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06EKtOu4069740;
-        Tue, 14 Jul 2020 21:12:07 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2020-01-29;
- bh=ntwITgDlCNnMl4sAC0C0ThmwSxWIuQYTwTUOGx4B2X0=;
- b=Yh2iAWYPCxuMrcSHXr6xdbX2bJpucnK7duJ+qcMdhXceR9w7iw5G62yI67IaSRLY8kyQ
- SmtfRuO68fEhKdkoxFHhfPRaI+w68A8rJpdQxjV3MDJWITDJqBhl8uOyyotPQBphq1y/
- 3W29cWBGX9ht1yxZuqjv9w7NKq2zk15O2P1aW64BxefyXNDujPigmr5VbKjBbhIaQPph
- Q4BfYkwpdy9I+DY3jbQnufZKYacS1dAmn6M8hWJMsuIBabYlo2Zr7Wwg83m3awL8LAST
- Hf2rqi49xx429P0ZMDyX/H/XVKiJH3dOIjffuDemA8+M49qxPcVJtudg51+HtmtGN8la VQ== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by aserp2120.oracle.com with ESMTP id 3275cm7v8b-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 14 Jul 2020 21:12:07 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06EKraL0056099;
-        Tue, 14 Jul 2020 21:12:06 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by aserp3020.oracle.com with ESMTP id 327qb58wve-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 14 Jul 2020 21:12:06 +0000
-Received: from abhmp0002.oracle.com (abhmp0002.oracle.com [141.146.116.8])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 06ELC4au006456;
-        Tue, 14 Jul 2020 21:12:04 GMT
-Received: from [192.168.2.112] (/50.38.35.18)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 14 Jul 2020 14:12:04 -0700
-Subject: Re: [PATCH] mm/hugetlb: hide nr_nodes in the internal of
- for_each_node_mask_to_[alloc|free]
-To:     Vlastimil Babka <vbabka@suse.cz>,
-        Wei Yang <richard.weiyang@linux.alibaba.com>
-Cc:     akpm@linux-foundation.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-References: <20200714073404.84863-1-richard.weiyang@linux.alibaba.com>
- <cd1651a0-35c6-7535-5782-ce7e31cc26e8@suse.cz>
- <807a1e32-926b-2882-740b-6484b8dca2b6@suse.cz>
- <20200714095713.GA86690@L-31X9LVDL-1304.local>
- <e0d384a7-34bc-43ce-dc20-db4808b0f736@suse.cz>
-From:   Mike Kravetz <mike.kravetz@oracle.com>
-Message-ID: <694bb1ac-4f9c-a6a5-7c87-1fc0cdd948a6@oracle.com>
-Date:   Tue, 14 Jul 2020 14:12:03 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Tue, 14 Jul 2020 17:07:21 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4CFE8C061755
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 14:07:21 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id z2so237256wrp.2
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 14:07:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=sYFj9/i+aUbs/mCeLmpyFo7UqQJ2JsN4UUIr9kbw2Aw=;
+        b=rywsZE8M6HmZZx8BUzKG7f8USqXKuzqtTTBdSOVOq9PfcUDN4TQq2S0zYrbDxaE2WM
+         cwXoTaSLY5gXyxk+BI5wUN9vOzFmDzQimnepQueuv/xy1D600yK++bFQImfF/vczUkja
+         fX37ngssdzPaI0bcqxt3fOqacIfOSxPuwcru0NaiKFG4zHV5Mp7SZwBk+RQh1AXtANwF
+         TI2PM4Vz0GwyIpsCQJzXFvFmv3iPLdZ6B3sOP/TppkcJECYam1VfhrjC+DZJh07ipkb2
+         i/DNjl5KYdKSKlxw7HCuDo0tvKNZCmmIpc25QcO32wA9IOuzrg+GqYc33ihRaFKgU204
+         s3bQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=sYFj9/i+aUbs/mCeLmpyFo7UqQJ2JsN4UUIr9kbw2Aw=;
+        b=mAZVIK59ChHwlNU8UNS6BImMPl+vvxvZpFxcJpqSQkqHsiJNh31pJsTnSgLtIJg2V3
+         /aq+Q04XkdM2STl6VYCttWQGBkmTgBPsfWyp3PAaohpakUinLDCHsmr+dh7q5KeE3XZf
+         EwEgvoQYSv2hEBvN0KZYhWlCK9dm9L7rPSEm3UAwczqBETi/LSQZgEe8ANTF2aD7OUVC
+         oMqwdoq8m0a016baJVWJGCKtpmZBR2/9wcaSPxVKyEcSfCx32Hlwyk7Qk7Isb7ldGWct
+         OQ3Cbds8KSaXYxKVvrVgyOI5o40sigyRqCM42wOrBu9392iLPLIDH1+KxSH1OzX8lUnw
+         Mrsg==
+X-Gm-Message-State: AOAM531eJuitMx3RP2kjsHDYqKen0qeE7y4ghUBWu7mlAxnVNHb3pGdQ
+        s9vlfnOyPiCVsumYQ5pY15TqLJ88Pkdwcn/kvYf+IVU9ufdONw==
+X-Google-Smtp-Source: ABdhPJwDzDaDsQB8APRfzYyupV70rs9H0ijoNO2+CqK9d2rIzlBSj+qumRJ5mY+ZOVzgmHf1j5i2B5Q2UWNdUhzHSqk=
+X-Received: by 2002:adf:82e1:: with SMTP id 88mr7596337wrc.376.1594760839869;
+ Tue, 14 Jul 2020 14:07:19 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <e0d384a7-34bc-43ce-dc20-db4808b0f736@suse.cz>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9682 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 malwarescore=0
- mlxscore=0 spamscore=0 phishscore=0 suspectscore=2 bulkscore=0
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2007140145
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9682 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=2 priorityscore=1501
- bulkscore=0 adultscore=0 lowpriorityscore=0 phishscore=0 spamscore=0
- impostorscore=0 malwarescore=0 mlxlogscore=999 clxscore=1011 mlxscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2007140145
+References: <20200712132634.138901-1-jolsa@kernel.org> <20200712132634.138901-6-jolsa@kernel.org>
+In-Reply-To: <20200712132634.138901-6-jolsa@kernel.org>
+From:   Ian Rogers <irogers@google.com>
+Date:   Tue, 14 Jul 2020 14:07:08 -0700
+Message-ID: <CAP-5=fX4pjM70pdaUJPqv1x_YWyk2Ua44Q7qVCz-jbtOcwBNAw@mail.gmail.com>
+Subject: Re: [PATCH 05/18] perf metric: Add expr__del_id function
+To:     Jiri Olsa <jolsa@kernel.org>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Michael Petlan <mpetlan@redhat.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Kajol Jain <kjain@linux.ibm.com>,
+        John Garry <john.garry@huawei.com>,
+        "Paul A. Clarke" <pc@us.ibm.com>,
+        Stephane Eranian <eranian@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/14/20 3:02 AM, Vlastimil Babka wrote:
-> On 7/14/20 11:57 AM, Wei Yang wrote:
->> On Tue, Jul 14, 2020 at 11:22:03AM +0200, Vlastimil Babka wrote:
->>> On 7/14/20 11:13 AM, Vlastimil Babka wrote:
->>>> On 7/14/20 9:34 AM, Wei Yang wrote:
->>>>> The second parameter of for_each_node_mask_to_[alloc|free] is a loop
->>>>> variant, which is not used outside of loop iteration.
->>>>>
->>>>> Let's hide this.
->>>>>
->>>>> Signed-off-by: Wei Yang <richard.weiyang@linux.alibaba.com>
->>>>> ---
->>>>>  mm/hugetlb.c | 38 ++++++++++++++++++++------------------
->>>>>  1 file changed, 20 insertions(+), 18 deletions(-)
->>>>>
->>>>> diff --git a/mm/hugetlb.c b/mm/hugetlb.c
->>>>> index 57ece74e3aae..9c3d15fb317e 100644
->>>>> --- a/mm/hugetlb.c
->>>>> +++ b/mm/hugetlb.c
->>>>> @@ -1196,17 +1196,19 @@ static int hstate_next_node_to_free(struct hstate *h, nodemask_t *nodes_allowed)
->>>>>  	return nid;
->>>>>  }
->>>>>  
->>>>> -#define for_each_node_mask_to_alloc(hs, nr_nodes, node, mask)		\
->>>>> -	for (nr_nodes = nodes_weight(*mask);				\
->>>>> -		nr_nodes > 0 &&						\
->>>>> +#define for_each_node_mask_to_alloc(hs, node, mask)			\
->>>>> +	int __nr_nodes;							\
->>>>> +	for (__nr_nodes = nodes_weight(*mask);				\
->>>>
->>>> The problem with this is that if I use the macro twice in the same block, this
->>>> will redefine __nr_nodes and fail to compile, no?
->>>> In that case it's better to avoid setting up this trap, IMHO.
->>>
->>> Ah, and it will also generate the following warning, if the use of for_each*
->>> macro is not the first thing after variable declarations, but there's another
->>> statement before:
->>>
->>> warning: ISO C90 forbids mixed declarations and code [-Wdeclaration-after-statement]
->>>
->>> Instead we should switch to C99 and declare it as "for (int __nr_nodes" :P
->>
->> Hmm... I tried what you suggested, but compiler complains.
->>
->> 'for' loop initial declarations are only allowed in C99 or C11 mode
-> 
-> Yes, by "we should switch to C99" I meant that the kernel kbuild system would
-> need to switch. Not a trivial change...
-> Without that, I don't see how your patch is possible to do safely.
+On Sun, Jul 12, 2020 at 6:27 AM Jiri Olsa <jolsa@kernel.org> wrote:
+>
+> Adding expr__del_id function to remove ID from hashmap.
+> It will save us few lines in following changes.
+>
+> Signed-off-by: Jiri Olsa <jolsa@kernel.org>
 
-Vlastimil, thanks for pointing out future potential issues with this patch.
-I likely would have missed that.
+Acked-by: Ian Rogers <irogers@google.com>
 
-Wei, thanks for taking the time to put together the patch.  However, I tend
-to agree with Vlastimil's assesment.  The cleanup is not worth the risk of
-running into issues if someone uses multiple instances of the macro.
--- 
-Mike Kravetz
+Thanks,
+Ian
+
+> ---
+>  tools/perf/util/expr.c | 21 +++++++++++++--------
+>  tools/perf/util/expr.h |  1 +
+>  2 files changed, 14 insertions(+), 8 deletions(-)
+>
+> diff --git a/tools/perf/util/expr.c b/tools/perf/util/expr.c
+> index 7d02d29286bc..91142d4c3419 100644
+> --- a/tools/perf/util/expr.c
+> +++ b/tools/perf/util/expr.c
+> @@ -75,6 +75,17 @@ int expr__get_id(struct expr_parse_ctx *ctx, const char *id,
+>         return hashmap__find(&ctx->ids, id, (void **)data) ? 0 : -1;
+>  }
+>
+> +void expr__del_id(struct expr_parse_ctx *ctx, const char *id)
+> +{
+> +       struct expr_id_data *old_val = NULL;
+> +       char *old_key = NULL;
+> +
+> +       hashmap__delete(&ctx->ids, id,
+> +                       (const void **)&old_key, (void **)&old_val);
+> +       free(old_key);
+> +       free(old_val);
+> +}
+> +
+>  void expr__ctx_init(struct expr_parse_ctx *ctx)
+>  {
+>         hashmap__init(&ctx->ids, key_hash, key_equal, NULL);
+> @@ -132,16 +143,10 @@ int expr__parse(double *final_val, struct expr_parse_ctx *ctx,
+>  int expr__find_other(const char *expr, const char *one,
+>                      struct expr_parse_ctx *ctx, int runtime)
+>  {
+> -       struct expr_id_data *old_val = NULL;
+> -       char *old_key = NULL;
+>         int ret = __expr__parse(NULL, ctx, expr, EXPR_OTHER, runtime);
+>
+> -       if (one) {
+> -               hashmap__delete(&ctx->ids, one,
+> -                               (const void **)&old_key, (void **)&old_val);
+> -               free(old_key);
+> -               free(old_val);
+> -       }
+> +       if (one)
+> +               expr__del_id(ctx, one);
+>
+>         return ret;
+>  }
+> diff --git a/tools/perf/util/expr.h b/tools/perf/util/expr.h
+> index f38292fdab19..2462abd0ac65 100644
+> --- a/tools/perf/util/expr.h
+> +++ b/tools/perf/util/expr.h
+> @@ -26,6 +26,7 @@ struct expr_scanner_ctx {
+>
+>  void expr__ctx_init(struct expr_parse_ctx *ctx);
+>  void expr__ctx_clear(struct expr_parse_ctx *ctx);
+> +void expr__del_id(struct expr_parse_ctx *ctx, const char *id);
+>  int expr__add_id(struct expr_parse_ctx *ctx, const char *id);
+>  int expr__add_id_val(struct expr_parse_ctx *ctx, const char *id, double val);
+>  int expr__get_id(struct expr_parse_ctx *ctx, const char *id,
+> --
+> 2.25.4
+>
