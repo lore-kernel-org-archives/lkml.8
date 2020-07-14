@@ -2,55 +2,51 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 602B3C433F4
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:58:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 295FDC433F2
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:58:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 38D0522B37
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:58:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 06D0122B4D
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:58:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594753093;
-	bh=I70nf84rWZrSCLQ2NFeB75EIdPZPnGNrLbNIid3wd1Q=;
+	s=default; t=1594753099;
+	bh=pRAM5uxbYFcPLfSBwRsJ+pVFsdxPO7cUTTFpcYq2DkE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=h1Au1YDoDvrE+T9if5F9aezyaoL2FTEkRVdRf0rQmddPQ/85nYmCAzSiGM77ZR4dI
-	 HXRhanA8n1Rx2iinOOEwBduhtGdZujOLwpv6+NQUYjZzf+Na7xXlBJo2gHeMBkbwjY
-	 PGU8lYG36zyMWicEd5LhUivxKPDHrTGylSdEa79o=
+	b=LkFTqDfyM7wKNNgD24gcAp77GMxddE+QgVMtYslHNSV//TUyTYwL5yR7XcCukWkI/
+	 DSiO86Z1IM1kCX58lVHZpcLrSnpidc8EOoun07j1a3w5qHfJ6YTqndQbniiop34op+
+	 jKq/XX81fXnmfhqAig98I3Q/g4Yd6xKPcbD7/R9Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730548AbgGNS6L (ORCPT
+        id S1731198AbgGNS6R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 14:58:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56434 "EHLO mail.kernel.org"
+        Tue, 14 Jul 2020 14:58:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56556 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731174AbgGNS6G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 14:58:06 -0400
+        id S1730555AbgGNS6L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 14:58:11 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BAEBF229CA;
-        Tue, 14 Jul 2020 18:58:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3082C22B37;
+        Tue, 14 Jul 2020 18:58:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594753085;
-        bh=I70nf84rWZrSCLQ2NFeB75EIdPZPnGNrLbNIid3wd1Q=;
+        s=default; t=1594753090;
+        bh=pRAM5uxbYFcPLfSBwRsJ+pVFsdxPO7cUTTFpcYq2DkE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=k8lH/bKULi/GAywnEI1QP62Uyw0eR7gqkhirCSI/vG2LC/4PehoK+wyFY0WGO8X+9
-         PW6Leh+52r87xMTrN6FrAsbEXIuAmfdccBQR9IudP3Xcz1C56OxWFpTfUyqMugE+yf
-         GD/WBKHSW10TwNIWmSL6hfaUprSLcOwgeB5MjHMA=
+        b=e+Ve+CJeSGklC0KCSpODANPF4hEKcVN3mXlZqsqWanP7pagYMmBw2CXXBLjaP+Efy
+         9R6eayZTDz97rxNAdbkVvJ8xXzKCDiMmrd6m/vOhXBLhGDQnzoSMwbeCD3F3cJ6agj
+         73gi255ogicOITnu4ZZGRHRx/ZWRU1f/ZuKWYQWc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jaroslav Kysela <perex@perex.cz>,
-        Kailang Yang <kailang@realtek.com>,
-        Vincent Bernat <vincent@bernat.ch>,
-        Even Brenden <evenbrenden@gmail.com>,
-        Benjamin Poirier <benjamin.poirier@gmail.com>,
-        Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 5.7 113/166] ALSA: hda/realtek - Fix Lenovo Thinkpad X1 Carbon 7th quirk subdevice id
-Date:   Tue, 14 Jul 2020 20:44:38 +0200
-Message-Id: <20200714184121.248208501@linuxfoundation.org>
+        stable@vger.kernel.org, Jian-Hong Pan <jian-hong@endlessm.com>,
+        Daniel Drake <drake@endlessm.com>, Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 5.7 115/166] ALSA: hda/realtek: Enable headset mic of Acer C20-820 with ALC269VC
+Date:   Tue, 14 Jul 2020 20:44:40 +0200
+Message-Id: <20200714184121.342953983@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200714184115.844176932@linuxfoundation.org>
 References: <20200714184115.844176932@linuxfoundation.org>
@@ -63,58 +59,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Benjamin Poirier <benjamin.poirier@gmail.com>
+From: Jian-Hong Pan <jian-hong@endlessm.com>
 
-commit 9774dc218bb628974dcbc76412f970e9258e5f27 upstream.
+commit 6e15d1261d522d1d222f8f89b23c6966905e9049 upstream.
 
-1)
-In snd_hda_pick_fixup(), quirks are first matched by PCI SSID and then, if
-there is no match, by codec SSID. The Lenovo "ThinkPad X1 Carbon 7th" has
-an audio chip with PCI SSID 0x2292 and codec SSID 0x2293[1]. Therefore, fix
-the quirk meant for that device to match on .subdevice == 0x2292.
+The Acer Aspire C20-820 AIO's audio (1025:1065) with ALC269VC can't
+detect the headset microphone until ALC269VC_FIXUP_ACER_HEADSET_MIC
+quirk maps the NID 0x18 as the headset mic pin.
 
-2)
-The "Thinkpad X1 Yoga 7th" does not exist. The companion product to the
-Carbon 7th is the Yoga 4th. That device has an audio chip with PCI SSID
-0x2292 and codec SSID 0x2292[2]. Given the behavior of
-snd_hda_pick_fixup(), it is not possible to have a separate quirk for the
-Yoga based on SSID. Therefore, merge the quirks meant for the Carbon and
-Yoga. This preserves the current behavior for the Yoga.
-
-[1] This is the case on my own machine and can also be checked here
-https://github.com/linuxhw/LsPCI/tree/master/Notebook/Lenovo/ThinkPad
-https://gist.github.com/hamidzr/dd81e429dc86f4327ded7a2030e7d7d9#gistcomment-3225701
-[2]
-https://github.com/linuxhw/LsPCI/tree/master/Convertible/Lenovo/ThinkPad
-https://gist.github.com/hamidzr/dd81e429dc86f4327ded7a2030e7d7d9#gistcomment-3176355
-
-Fixes: d2cd795c4ece ("ALSA: hda - fixup for the bass speaker on Lenovo Carbon X1 7th gen")
-Fixes: 54a6a7dc107d ("ALSA: hda/realtek - Add quirk for the bass speaker on Lenovo Yoga X1 7th gen")
-Cc: Jaroslav Kysela <perex@perex.cz>
-Cc: Kailang Yang <kailang@realtek.com>
-Tested-by: Vincent Bernat <vincent@bernat.ch>
-Tested-by: Even Brenden <evenbrenden@gmail.com>
-Signed-off-by: Benjamin Poirier <benjamin.poirier@gmail.com>
+Signed-off-by: Jian-Hong Pan <jian-hong@endlessm.com>
+Signed-off-by: Daniel Drake <drake@endlessm.com>
 Cc: <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20200703080005.8942-2-benjamin.poirier@gmail.com
+Link: https://lore.kernel.org/r/20200706071826.39726-2-jian-hong@endlessm.com
 Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/pci/hda/patch_realtek.c |    3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ sound/pci/hda/patch_realtek.c |   11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
 --- a/sound/pci/hda/patch_realtek.c
 +++ b/sound/pci/hda/patch_realtek.c
-@@ -7536,8 +7536,7 @@ static const struct snd_pci_quirk alc269
- 	SND_PCI_QUIRK(0x17aa, 0x224c, "Thinkpad", ALC298_FIXUP_TPT470_DOCK),
- 	SND_PCI_QUIRK(0x17aa, 0x224d, "Thinkpad", ALC298_FIXUP_TPT470_DOCK),
- 	SND_PCI_QUIRK(0x17aa, 0x225d, "Thinkpad T480", ALC269_FIXUP_LIMIT_INT_MIC_BOOST),
--	SND_PCI_QUIRK(0x17aa, 0x2292, "Thinkpad X1 Yoga 7th", ALC285_FIXUP_THINKPAD_HEADSET_JACK),
--	SND_PCI_QUIRK(0x17aa, 0x2293, "Thinkpad X1 Carbon 7th", ALC285_FIXUP_THINKPAD_HEADSET_JACK),
-+	SND_PCI_QUIRK(0x17aa, 0x2292, "Thinkpad X1 Carbon 7th", ALC285_FIXUP_THINKPAD_HEADSET_JACK),
- 	SND_PCI_QUIRK(0x17aa, 0x22be, "Thinkpad X1 Carbon 8th", ALC285_FIXUP_THINKPAD_HEADSET_JACK),
- 	SND_PCI_QUIRK(0x17aa, 0x30bb, "ThinkCentre AIO", ALC233_FIXUP_LENOVO_LINE2_MIC_HOTKEY),
- 	SND_PCI_QUIRK(0x17aa, 0x30e2, "ThinkCentre AIO", ALC233_FIXUP_LENOVO_LINE2_MIC_HOTKEY),
+@@ -6115,6 +6115,7 @@ enum {
+ 	ALC298_FIXUP_SAMSUNG_HEADPHONE_VERY_QUIET,
+ 	ALC295_FIXUP_ASUS_MIC_NO_PRESENCE,
+ 	ALC269VC_FIXUP_ACER_VCOPPERBOX_PINS,
++	ALC269VC_FIXUP_ACER_HEADSET_MIC,
+ };
+ 
+ static const struct hda_fixup alc269_fixups[] = {
+@@ -7304,6 +7305,15 @@ static const struct hda_fixup alc269_fix
+ 		.chained = true,
+ 		.chain_id = ALC269_FIXUP_HEADSET_MIC
+ 	},
++	[ALC269VC_FIXUP_ACER_HEADSET_MIC] = {
++		.type = HDA_FIXUP_PINS,
++		.v.pins = (const struct hda_pintbl[]) {
++			{ 0x18, 0x02a11030 }, /* use as headset mic */
++			{ }
++		},
++		.chained = true,
++		.chain_id = ALC269_FIXUP_HEADSET_MIC
++	},
+ };
+ 
+ static const struct snd_pci_quirk alc269_fixup_tbl[] = {
+@@ -7319,6 +7329,7 @@ static const struct snd_pci_quirk alc269
+ 	SND_PCI_QUIRK(0x1025, 0x0775, "Acer Aspire E1-572", ALC271_FIXUP_HP_GATE_MIC_JACK_E1_572),
+ 	SND_PCI_QUIRK(0x1025, 0x079b, "Acer Aspire V5-573G", ALC282_FIXUP_ASPIRE_V5_PINS),
+ 	SND_PCI_QUIRK(0x1025, 0x102b, "Acer Aspire C24-860", ALC286_FIXUP_ACER_AIO_MIC_NO_PRESENCE),
++	SND_PCI_QUIRK(0x1025, 0x1065, "Acer Aspire C20-820", ALC269VC_FIXUP_ACER_HEADSET_MIC),
+ 	SND_PCI_QUIRK(0x1025, 0x106d, "Acer Cloudbook 14", ALC283_FIXUP_CHROME_BOOK),
+ 	SND_PCI_QUIRK(0x1025, 0x1099, "Acer Aspire E5-523G", ALC255_FIXUP_ACER_MIC_NO_PRESENCE),
+ 	SND_PCI_QUIRK(0x1025, 0x110e, "Acer Aspire ES1-432", ALC255_FIXUP_ACER_MIC_NO_PRESENCE),
 
 
