@@ -2,242 +2,80 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF56AC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 05:09:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE77DC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 05:11:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CE802217D9
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 05:09:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9850821D93
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 05:11:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="MiUpwprX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725925AbgGNFJT (ORCPT
+        id S1726252AbgGNFLd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 01:09:19 -0400
-Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:30656 "EHLO
-        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725283AbgGNFJT (ORCPT
+        Tue, 14 Jul 2020 01:11:33 -0400
+Received: from gate2.alliedtelesis.co.nz ([202.36.163.20]:35507 "EHLO
+        gate2.alliedtelesis.co.nz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725778AbgGNFLd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 01:09:19 -0400
-Received: from pps.filterd (m0167088.ppops.net [127.0.0.1])
-        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06E504GT028763;
-        Tue, 14 Jul 2020 01:09:17 -0400
-Received: from nwd2mta4.analog.com ([137.71.173.58])
-        by mx0a-00128a01.pphosted.com with ESMTP id 3279gmfcsv-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 14 Jul 2020 01:09:17 -0400
-Received: from ASHBMBX8.ad.analog.com (ashbmbx8.ad.analog.com [10.64.17.5])
-        by nwd2mta4.analog.com (8.14.7/8.14.7) with ESMTP id 06E59GZ8044566
-        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=FAIL);
-        Tue, 14 Jul 2020 01:09:16 -0400
-Received: from ASHBMBX8.ad.analog.com (10.64.17.5) by ASHBMBX8.ad.analog.com
- (10.64.17.5) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1779.2; Tue, 14 Jul
- 2020 01:09:15 -0400
-Received: from zeus.spd.analog.com (10.64.82.11) by ASHBMBX8.ad.analog.com
- (10.64.17.5) with Microsoft SMTP Server id 15.1.1779.2 via Frontend
- Transport; Tue, 14 Jul 2020 01:09:14 -0400
-Received: from localhost.localdomain ([10.48.65.12])
-        by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 06E59AnP023590;
-        Tue, 14 Jul 2020 01:09:12 -0400
-From:   Alexandru Ardelean <alexandru.ardelean@analog.com>
-To:     <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-CC:     <jic23@kernel.org>,
-        Alexandru Ardelean <alexandru.ardelean@analog.com>
-Subject: [PATCH] iio: adc: ad7124: move chip ID & name on the chip_info table
-Date:   Tue, 14 Jul 2020 08:11:11 +0300
-Message-ID: <20200714051111.17892-1-alexandru.ardelean@analog.com>
-X-Mailer: git-send-email 2.17.1
+        Tue, 14 Jul 2020 01:11:33 -0400
+Received: from mmarshal3.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id 2F3138066C;
+        Tue, 14 Jul 2020 17:11:28 +1200 (NZST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
+        s=mail181024; t=1594703488;
+        bh=O8M/VJRhRxeOoGoN7HkoA71jSzqeM9f2QwrI5HndS4E=;
+        h=From:To:CC:Subject:Date;
+        b=MiUpwprXODEVpSt2aL/+bNETJFa3lfHSjS24FtIEy4bQZnrLvGVhRZakl05UX43kC
+         eN71cpzicQM4kcuUTQttYKk2cIgns2ZYlPeF6nK+kA8YsnRn4dis23cX4ge2+hoBV+
+         BOS86zsODOG4nJyWG+8jVOFZMef7O3ubJJyPBTqPhgMn2cznnXqND+NWSE0+7rb5Q1
+         P2ByZ4Nb89WkGP0ArLVolVRfX7XxeP2Fxr8lVbQgi5jIqfbFivkRyta3f/bknImt0n
+         WnvQPzCxnGqLJ9QK/A/ThQTct+y9K1Cz9Ke72OiycDpRLNinTCUJnRlRLsMirfBz5E
+         K0e24Kg7cHRGw==
+Received: from svr-chch-ex1.atlnz.lc (Not Verified[10.32.16.77]) by mmarshal3.atlnz.lc with Trustwave SEG (v7,5,8,10121)
+        id <B5f0d3e7f0000>; Tue, 14 Jul 2020 17:11:27 +1200
+Received: from svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8:409d:36f5:8899:92e8)
+ by svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8:409d:36f5:8899:92e8) with
+ Microsoft SMTP Server (TLS) id 15.0.1497.2; Tue, 14 Jul 2020 17:11:24 +1200
+Received: from svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8]) by
+ svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8%12]) with mapi id
+ 15.00.1497.006; Tue, 14 Jul 2020 17:11:24 +1200
+From:   Chris Packham <Chris.Packham@alliedtelesis.co.nz>
+To:     Jonathan Corbet <corbet@lwn.net>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+CC:     "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>
+Subject: procfs VmFlags table missing from online docs
+Thread-Topic: procfs VmFlags table missing from online docs
+Thread-Index: AQHWWZ04Axuc9KTu2km08OQff6fL1w==
+Date:   Tue, 14 Jul 2020 05:11:24 +0000
+Message-ID: <8abafee9-e34b-45f6-19a7-3f043ceb5537@alliedtelesis.co.nz>
+Accept-Language: en-NZ, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.32.1.11]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <C41B5694AB920741B5F1DA9FAC79A379@atlnz.lc>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain
-X-ADIRoutedOnPrem: True
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-07-14_01:2020-07-13,2020-07-14 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0
- lowpriorityscore=0 spamscore=0 impostorscore=0 clxscore=1015
- suspectscore=0 priorityscore=1501 mlxscore=0 bulkscore=0 adultscore=0
- mlxlogscore=867 phishscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2006250000 definitions=main-2007140038
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This change does the following:
-* removes the SPI device table in favor of the OF device table
-* adds 'name' && 'chip_id' fields to chip_info
-* implements chip ID & silicon revision checking; the device ID for
-  AD7124-4 is 0x0, so just checking that value can be useless;
-  but at least the silicon revision isn't 0, so a non-zero value can be
-  used to check that "a" device is on the SPI bus; it's probably the best
-  way to narrow it down to one of the 2 AD7124 chip IDs
-
-Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
----
- drivers/iio/adc/ad7124.c | 73 ++++++++++++++++++++++++++++++++--------
- 1 file changed, 59 insertions(+), 14 deletions(-)
-
-diff --git a/drivers/iio/adc/ad7124.c b/drivers/iio/adc/ad7124.c
-index bb53ab265b64..8dce06e9e69c 100644
---- a/drivers/iio/adc/ad7124.c
-+++ b/drivers/iio/adc/ad7124.c
-@@ -12,6 +12,7 @@
- #include <linux/interrupt.h>
- #include <linux/kernel.h>
- #include <linux/module.h>
-+#include <linux/of_device.h>
- #include <linux/regulator/consumer.h>
- #include <linux/spi/spi.h>
- 
-@@ -47,6 +48,15 @@
- #define AD7124_ADC_CTRL_MODE_MSK	GENMASK(5, 2)
- #define AD7124_ADC_CTRL_MODE(x)	FIELD_PREP(AD7124_ADC_CTRL_MODE_MSK, x)
- 
-+/* AD7124 ID */
-+#define AD7124_DEVICE_ID_MSK		GENMASK(7, 4)
-+#define AD7124_DEVICE_ID_GET(x)		FIELD_GET(AD7124_DEVICE_ID_MSK, x)
-+#define AD7124_SILICON_REV_MSK		GENMASK(3, 0)
-+#define AD7124_SILICON_REV_GET(x)	FIELD_GET(AD7124_SILICON_REV_MSK, x)
-+
-+#define CHIPID_AD7124_4			0x0
-+#define CHIPID_AD7124_8			0x1
-+
- /* AD7124_CHANNEL_X */
- #define AD7124_CHANNEL_EN_MSK		BIT(15)
- #define AD7124_CHANNEL_EN(x)		FIELD_PREP(AD7124_CHANNEL_EN_MSK, x)
-@@ -120,6 +130,8 @@ static const char * const ad7124_ref_names[] = {
- };
- 
- struct ad7124_chip_info {
-+	const char *name;
-+	unsigned int chip_id;
- 	unsigned int num_inputs;
- };
- 
-@@ -165,9 +177,13 @@ static const struct iio_chan_spec ad7124_channel_template = {
- 
- static struct ad7124_chip_info ad7124_chip_info_tbl[] = {
- 	[ID_AD7124_4] = {
-+		.name = "ad7127-4",
-+		.chip_id = CHIPID_AD7124_4,
- 		.num_inputs = 8,
- 	},
- 	[ID_AD7124_8] = {
-+		.name = "ad7127-8",
-+		.chip_id = CHIPID_AD7124_8,
- 		.num_inputs = 16,
- 	},
- };
-@@ -503,6 +519,34 @@ static int ad7124_soft_reset(struct ad7124_state *st)
- 	return -EIO;
- }
- 
-+static int ad7124_check_chip_id(struct ad7124_state *st)
-+{
-+	unsigned int readval, chip_id, silicon_rev;
-+	int ret;
-+
-+	ret = ad_sd_read_reg(&st->sd, AD7124_ID, 1, &readval);
-+	if (ret < 0)
-+		return ret;
-+
-+	chip_id = AD7124_DEVICE_ID_GET(readval);
-+	silicon_rev = AD7124_SILICON_REV_GET(readval);
-+
-+	if (chip_id != st->chip_info->chip_id) {
-+		dev_err(&st->sd.spi->dev,
-+			"Chip ID mismatch: expected %u, got %u\n",
-+			st->chip_info->chip_id, chip_id);
-+		return -ENODEV;
-+	}
-+
-+	if (silicon_rev == 0) {
-+		dev_err(&st->sd.spi->dev,
-+			"Silicon revision empty. Chip may not be present\n");
-+		return -ENODEV;
-+	}
-+
-+	return 0;
-+}
-+
- static int ad7124_init_channel_vref(struct ad7124_state *st,
- 				    unsigned int channel_number)
- {
-@@ -665,25 +709,28 @@ static int ad7124_setup(struct ad7124_state *st)
- 
- static int ad7124_probe(struct spi_device *spi)
- {
--	const struct spi_device_id *id;
-+	const struct ad7124_chip_info *info;
- 	struct ad7124_state *st;
- 	struct iio_dev *indio_dev;
- 	int i, ret;
- 
-+	info = of_device_get_match_data(&spi->dev);
-+	if (!info)
-+		return -ENODEV;
-+
- 	indio_dev = devm_iio_device_alloc(&spi->dev, sizeof(*st));
- 	if (!indio_dev)
- 		return -ENOMEM;
- 
- 	st = iio_priv(indio_dev);
- 
--	id = spi_get_device_id(spi);
--	st->chip_info = &ad7124_chip_info_tbl[id->driver_data];
-+	st->chip_info = info;
- 
- 	ad_sd_init(&st->sd, indio_dev, spi, &ad7124_sigma_delta_info);
- 
- 	spi_set_drvdata(spi, indio_dev);
- 
--	indio_dev->name = spi_get_device_id(spi)->name;
-+	indio_dev->name = st->chip_info->name;
- 	indio_dev->modes = INDIO_DIRECT_MODE;
- 	indio_dev->info = &ad7124_info;
- 
-@@ -721,6 +768,10 @@ static int ad7124_probe(struct spi_device *spi)
- 	if (ret < 0)
- 		goto error_clk_disable_unprepare;
- 
-+	ret = ad7124_check_chip_id(st);
-+	if (ret)
-+		goto error_clk_disable_unprepare;
-+
- 	ret = ad7124_setup(st);
- 	if (ret < 0)
- 		goto error_clk_disable_unprepare;
-@@ -768,16 +819,11 @@ static int ad7124_remove(struct spi_device *spi)
- 	return 0;
- }
- 
--static const struct spi_device_id ad7124_id_table[] = {
--	{ "ad7124-4", ID_AD7124_4 },
--	{ "ad7124-8", ID_AD7124_8 },
--	{}
--};
--MODULE_DEVICE_TABLE(spi, ad7124_id_table);
--
- static const struct of_device_id ad7124_of_match[] = {
--	{ .compatible = "adi,ad7124-4" },
--	{ .compatible = "adi,ad7124-8" },
-+	{ .compatible = "adi,ad7124-4",
-+		.data = &ad7124_chip_info_tbl[ID_AD7124_4], },
-+	{ .compatible = "adi,ad7124-8",
-+		.data = &ad7124_chip_info_tbl[ID_AD7124_8], },
- 	{ },
- };
- MODULE_DEVICE_TABLE(of, ad7124_of_match);
-@@ -789,7 +835,6 @@ static struct spi_driver ad71124_driver = {
- 	},
- 	.probe = ad7124_probe,
- 	.remove	= ad7124_remove,
--	.id_table = ad7124_id_table,
- };
- module_spi_driver(ad71124_driver);
- 
--- 
-2.17.1
-
+SGksDQoNCkkgd2FzIGp1c3QgYnJvd3NpbmcgDQpodHRwczovL3d3dy5rZXJuZWwub3JnL2RvYy9o
+dG1sL2xhdGVzdC9maWxlc3lzdGVtcy9wcm9jLmh0bWwNCg0KVGhlICJWbUZsYWdzIiBkZXNjcmlw
+dGlvbiBzZWVtcyB0byBiZSBtaXNzaW5nIGEgdGFibGUuIEl0J3MgdGhlcmUgaW4gDQpEb2N1bWVu
+dGF0aW9uL2ZpbGVzeXN0ZW1zL3Byb2MucnN0IHNvIEkgYXNzdW1lIGl0J3Mgc29tZSBzcGhpbngv
+cnN0IA0KcHJvYmxlbS4gUG9zc2libHkgdGhlIHRhYmxlIGlzIG92ZXIgaW5kZW50ZWQ/DQoNCkFu
+eXdheSBJIHRob3VnaHQgSSdkIGxldCBzb21lb25lIGtub3cuDQoNClJlZ2FyZHMsDQpDaHJpcw0K
