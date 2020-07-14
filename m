@@ -2,312 +2,140 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A12DEC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 06:50:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E395C433E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 06:50:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 78717221E8
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 06:50:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D93BF221E8
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 06:50:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="OM4D/d+v"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="gObMIzel"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726936AbgGNGus (ORCPT
+        id S1726729AbgGNGur (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 02:50:48 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:53912 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725876AbgGNGur (ORCPT
+        Tue, 14 Jul 2020 02:50:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39522 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725925AbgGNGur (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 14 Jul 2020 02:50:47 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 06E6oPFV126323;
-        Tue, 14 Jul 2020 01:50:25 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1594709425;
-        bh=ODFYpNfb9ZJS19+xrm21BXYeqSk4GABYzjm6/wXuBwU=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=OM4D/d+vWkK6IRBWFml+E+C19KBLwEvvtg8OVRiuu1yOGyUuoGBOK3alUf6lfu6LP
-         FiG28327pD7F8TFPfDkr0QIcprxIOYQ8iwclBKVUunN/zIIMhGFWVHYfwrJGEY5fPH
-         ummH7gO7LCjJAeglsVxku+l0soE5WXzpw0S1PhnU=
-Received: from DFLE104.ent.ti.com (dfle104.ent.ti.com [10.64.6.25])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 06E6oPIK105706
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 14 Jul 2020 01:50:25 -0500
-Received: from DFLE105.ent.ti.com (10.64.6.26) by DFLE104.ent.ti.com
- (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Tue, 14
- Jul 2020 01:50:24 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE105.ent.ti.com
- (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Tue, 14 Jul 2020 01:50:24 -0500
-Received: from [127.0.0.1] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 06E6oMV1067549;
-        Tue, 14 Jul 2020 01:50:23 -0500
-Subject: Re: [PATCHv3 3/4] watchdog: rti-wdt: attach to running watchdog
- during probe
-To:     Guenter Roeck <linux@roeck-us.net>, <wim@linux-watchdog.org>,
-        <linux-watchdog@vger.kernel.org>
-CC:     <linux-kernel@vger.kernel.org>, <jan.kiszka@siemens.com>
-References: <20200713131818.825-1-t-kristo@ti.com>
- <20200713131818.825-4-t-kristo@ti.com>
- <0c69734d-b301-7762-7614-0644e2a719ba@roeck-us.net>
-From:   Tero Kristo <t-kristo@ti.com>
-Message-ID: <2a92083c-f8bd-7a42-25e2-ee6ae354a4de@ti.com>
-Date:   Tue, 14 Jul 2020 09:50:22 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DD4F6C061755
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 23:50:46 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id o11so19993369wrv.9
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 23:50:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=Ie2tKNIUSpXCL8eMuklhkWV+j7ugwvMUxgU/Elr/mDw=;
+        b=gObMIzelreR+mXyuBevVcUQKJUctMo8LVwfa0bj5ta43Wr42DmhZWTLmBQGCgGERVv
+         AeLl7z5mEURf1W1Nhb+OozrxYR7OOQNTSuS+ptMbWu5kD4xLsde2yE9ZQZBM1yEnzkf9
+         nfCbuqVS957NAe64H5iCwhGA6S5Hfr7pxoGLfauDooh9UnWfd6uepVEsN60thJyFV/0s
+         8gONykUOGVrmtppFVqfLmuaQTyUSGAD3i1Nt/FnNxyXJ11NbL70RE+CaojFOyRH+IBiv
+         pQhj5ebYR0dOGoaEqzBWGPDOYdeLBrnFLYtOgaq567/ge4OxjgmvBYtwadWdLGCZRSJ5
+         Fy9Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=Ie2tKNIUSpXCL8eMuklhkWV+j7ugwvMUxgU/Elr/mDw=;
+        b=KhfOLkhk/515lR9ioqkl4C4wnoYlbGWuYbLB0PjaVaBMXBDXCr9T6yLnU9ez2thumS
+         kn01J8tP16CwTAuYPQUu8rfVqul2WE8v6XafF6mCB1FRR3jGY3Fn6RJwQoSRd3ZiKpiA
+         ATeMesKtIZ48ryprZ47SxUDPIq9nZ7Sg0X8j4FJMqT6IvfPBllQgebS/SacC3RMog3TN
+         IDqZ4DoRrWQ7p9pr+j3b7rmnej47fwDjYkaat2AzsGr7Yjywo+6kecKCJDnseu7rGw1q
+         Opls13vma9WBSvC7nXtZa3rWYWZL/hVEQmlTOsJvlVWdwUlgeMpxwdqtQBZBUhIjCHOS
+         fh6w==
+X-Gm-Message-State: AOAM530eDxk9FzOMaIMrXlkKyWNM+Fe7OrCXzJZmNysz5x+SVcvEfn1K
+        nGgdzV7Fcz3l028zmOtWkZHsCVuHnWk=
+X-Google-Smtp-Source: ABdhPJz2Q//5iT6QHu6Gf0Je+AZKXd6XtWxRUGp+dxNVwjbuyLgSXOed3tCVHC/lEjCV3QrtZT+fqw==
+X-Received: by 2002:adf:f888:: with SMTP id u8mr3483694wrp.18.1594709445639;
+        Mon, 13 Jul 2020 23:50:45 -0700 (PDT)
+Received: from dell ([2.31.163.61])
+        by smtp.gmail.com with ESMTPSA id p25sm2721548wmg.39.2020.07.13.23.50.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 13 Jul 2020 23:50:45 -0700 (PDT)
+Date:   Tue, 14 Jul 2020 07:50:43 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Xu Yilun <yilun.xu@intel.com>
+Cc:     linux-kernel@vger.kernel.org, trix@redhat.com,
+        matthew.gerlach@linux.intel.com, russell.h.weight@intel.com,
+        lgoncalv@redhat.com, Wu Hao <hao.wu@intel.com>
+Subject: Re: [PATCH 1/2] mfd: intel-m10-bmc: add Max10 BMC chip support for
+ Intel FPGA PAC
+Message-ID: <20200714065043.GF3500@dell>
+References: <1594614896-16606-1-git-send-email-yilun.xu@intel.com>
+ <1594614896-16606-2-git-send-email-yilun.xu@intel.com>
+ <20200713091708.GC3500@dell>
+ <20200714060520.GA27975@yilunxu-OptiPlex-7050>
 MIME-Version: 1.0
-In-Reply-To: <0c69734d-b301-7762-7614-0644e2a719ba@roeck-us.net>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200714060520.GA27975@yilunxu-OptiPlex-7050>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 14/07/2020 08:15, Guenter Roeck wrote:
-> On 7/13/20 6:18 AM, Tero Kristo wrote:
->> If the RTI watchdog is running already during probe, the driver must
->> configure itself to match the HW. Window size and timeout is probed from
->> hardware, and the last keepalive ping is adjusted to match it also.
->>
->> Signed-off-by: Tero Kristo <t-kristo@ti.com>
->> ---
->>   drivers/watchdog/rti_wdt.c | 111 +++++++++++++++++++++++++++++++++----
->>   1 file changed, 101 insertions(+), 10 deletions(-)
->>
->> diff --git a/drivers/watchdog/rti_wdt.c b/drivers/watchdog/rti_wdt.c
->> index d456dd72d99a..45dfc546e371 100644
->> --- a/drivers/watchdog/rti_wdt.c
->> +++ b/drivers/watchdog/rti_wdt.c
->> @@ -35,7 +35,11 @@
->>   
->>   #define RTIWWDRX_NMI	0xa
->>   
->> -#define RTIWWDSIZE_50P	0x50
->> +#define RTIWWDSIZE_50P		0x50
->> +#define RTIWWDSIZE_25P		0x500
->> +#define RTIWWDSIZE_12P5		0x5000
->> +#define RTIWWDSIZE_6P25		0x50000
->> +#define RTIWWDSIZE_3P125	0x500000
->>   
->>   #define WDENABLE_KEY	0xa98559da
->>   
->> @@ -48,7 +52,7 @@
->>   
->>   #define DWDST			BIT(1)
->>   
->> -static int heartbeat;
->> +static int heartbeat = DEFAULT_HEARTBEAT;
->>   
->>   /*
->>    * struct to hold data for each WDT device
->> @@ -79,11 +83,9 @@ static int rti_wdt_start(struct watchdog_device *wdd)
->>   	 * be petted during the open window; not too early or not too late.
->>   	 * The HW configuration options only allow for the open window size
->>   	 * to be 50% or less than that; we obviouly want to configure the open
->> -	 * window as large as possible so we select the 50% option. To avoid
->> -	 * any glitches, we accommodate 5% safety margin also, so we setup
->> -	 * the min_hw_hearbeat at 55% of the timeout period.
->> +	 * window as large as possible so we select the 50% option.
->>   	 */
->> -	wdd->min_hw_heartbeat_ms = 11 * wdd->timeout * 1000 / 20;
->> +	wdd->min_hw_heartbeat_ms = 500 * wdd->timeout;
->>   
->>   	/* Generate NMI when wdt expires */
->>   	writel_relaxed(RTIWWDRX_NMI, wdt->base + RTIWWDRXCTRL);
->> @@ -110,7 +112,48 @@ static int rti_wdt_ping(struct watchdog_device *wdd)
->>   	return 0;
->>   }
->>   
->> -static unsigned int rti_wdt_get_timeleft(struct watchdog_device *wdd)
->> +static int rti_wdt_setup_hw_hb(struct watchdog_device *wdd, u32 wsize)
->> +{
->> +	/*
->> +	 * RTI only supports a windowed mode, where the watchdog can only
->> +	 * be petted during the open window; not too early or not too late.
->> +	 * The HW configuration options only allow for the open window size
->> +	 * to be 50% or less than that.
->> +	 */
->> +	switch (wsize) {
->> +	case RTIWWDSIZE_50P:
->> +		/* 50% open window => 50% min heartbeat */
->> +		wdd->min_hw_heartbeat_ms = 500 * heartbeat;
->> +		break;
->> +
->> +	case RTIWWDSIZE_25P:
->> +		/* 25% open window => 75% min heartbeat */
->> +		wdd->min_hw_heartbeat_ms = 750 * heartbeat;
->> +		break;
->> +
->> +	case RTIWWDSIZE_12P5:
->> +		/* 12.5% open window => 87.5% min heartbeat */
->> +		wdd->min_hw_heartbeat_ms = 875 * heartbeat;
->> +		break;
->> +
->> +	case RTIWWDSIZE_6P25:
->> +		/* 6.5% open window => 93.5% min heartbeat */
->> +		wdd->min_hw_heartbeat_ms = 935 * heartbeat;
->> +		break;
->> +
->> +	case RTIWWDSIZE_3P125:
->> +		/* 3.125% open window => 96.9% min heartbeat */
->> +		wdd->min_hw_heartbeat_ms = 969 * heartbeat;
->> +		break;
->> +
->> +	default:
->> +		return -EINVAL;
->> +	}
->> +
->> +	return 0;
->> +}
->> +
->> +static unsigned int rti_wdt_get_timeleft_ms(struct watchdog_device *wdd)
->>   {
->>   	u64 timer_counter;
->>   	u32 val;
->> @@ -123,11 +166,18 @@ static unsigned int rti_wdt_get_timeleft(struct watchdog_device *wdd)
->>   
->>   	timer_counter = readl_relaxed(wdt->base + RTIDWDCNTR);
->>   
->> +	timer_counter *= 1000;
->> +
->>   	do_div(timer_counter, wdt->freq);
->>   
->>   	return timer_counter;
->>   }
->>   
->> +static unsigned int rti_wdt_get_timeleft(struct watchdog_device *wdd)
->> +{
->> +	return rti_wdt_get_timeleft_ms(wdd) / 1000;
->> +}
->> +
->>   static const struct watchdog_info rti_wdt_info = {
->>   	.options = WDIOF_KEEPALIVEPING,
->>   	.identity = "K3 RTI Watchdog",
->> @@ -148,6 +198,7 @@ static int rti_wdt_probe(struct platform_device *pdev)
->>   	struct watchdog_device *wdd;
->>   	struct rti_wdt_device *wdt;
->>   	struct clk *clk;
->> +	u32 last_ping = 0;
->>   
->>   	wdt = devm_kzalloc(dev, sizeof(*wdt), GFP_KERNEL);
->>   	if (!wdt)
->> @@ -169,6 +220,14 @@ static int rti_wdt_probe(struct platform_device *pdev)
->>   		return -EINVAL;
->>   	}
->>   
->> +	/*
->> +	 * If watchdog is running at 32k clock, it is not accurate.
->> +	 * Adjust frequency down in this case so that we don't pet
->> +	 * the watchdog too often.
->> +	 */
->> +	if (wdt->freq < 32768)
->> +		wdt->freq = wdt->freq * 9 / 10;
->> +
-> 
-> So this is now only a problem is the window size was set restrictively
-> in the BOS/ROMMON. Meaning it is still a problem. How is this better than
-> before ? Why not just always set the window size to something reasonable ?
+On Tue, 14 Jul 2020, Xu Yilun wrote:
 
-Re-programming of the watchdog only takes effect at the next ping, then 
-and only then will it adjust the window size + timeout period.
-
+> On Mon, Jul 13, 2020 at 10:17:08AM +0100, Lee Jones wrote:
+> > On Mon, 13 Jul 2020, Xu Yilun wrote:
+> > 
+> > > This patch implements the basic functions of the BMC chip for some Intel
+> > > FPGA PCIe Acceleration Cards (PAC). The BMC is implemented using the
+> > > intel max10 CPLD.
+> > > 
+> > > This BMC chip is connected to FPGA by a SPI bus. To provide reliable
+> > > register access from FPGA, an Avalon Memory-Mapped (Avmm) transaction
+> > > protocol over the SPI bus is used between host and slave.
+> > > 
+> > > This driver implements the basic register access with the regmap framework.
+> > > The mfd cells array is empty now as a placeholder.
+> > > 
+> > > Signed-off-by: Xu Yilun <yilun.xu@intel.com>
+> > > Signed-off-by: Wu Hao <hao.wu@intel.com>
+> > > Signed-off-by: Matthew Gerlach <matthew.gerlach@linux.intel.com>
+> > > Signed-off-by: Russ Weight <russell.h.weight@intel.com>
+> > > Signed-off-by: Tom Rix <trix@redhat.com>
+> > > ---
+> > >  .../ABI/testing/sysfs-driver-intel-m10-bmc         |  15 +
+> > >  drivers/mfd/Kconfig                                |  13 +
+> > >  drivers/mfd/Makefile                               |   3 +
+> > >  drivers/mfd/intel-m10-bmc-main.c                   | 176 ++++
+> > 
+> > >  drivers/mfd/intel-spi-avmm.c                       | 904 +++++++++++++++++++++
+> > 
+> > This does not belong in MFD.
+> > 
+> > Please consider moving it to drivers/spi.
 > 
+> OK, I could make the intel-spi-avmm.c as a separate module in other
+> folder.
 > 
->>   	pm_runtime_enable(dev);
->>   	ret = pm_runtime_get_sync(dev);
->>   	if (ret) {
->> @@ -185,11 +244,8 @@ static int rti_wdt_probe(struct platform_device *pdev)
->>   	wdd->min_timeout = 1;
->>   	wdd->max_hw_heartbeat_ms = (WDT_PRELOAD_MAX << WDT_PRELOAD_SHIFT) /
->>   		wdt->freq * 1000;
->> -	wdd->timeout = DEFAULT_HEARTBEAT;
->>   	wdd->parent = dev;
->>   
->> -	watchdog_init_timeout(wdd, heartbeat, dev);
->> -
->>   	watchdog_set_drvdata(wdd, wdt);
->>   	watchdog_set_nowayout(wdd, 1);
->>   	watchdog_set_restart_priority(wdd, 128);
->> @@ -201,12 +257,47 @@ static int rti_wdt_probe(struct platform_device *pdev)
->>   		goto err_iomap;
->>   	}
->>   
->> +	if (readl(wdt->base + RTIDWDCTRL) == WDENABLE_KEY) {
->> +		u32 time_left_ms;
->> +		u64 heartbeat_ms;
->> +		u32 wsize;
->> +
->> +		set_bit(WDOG_HW_RUNNING, &wdd->status);
->> +		time_left_ms = rti_wdt_get_timeleft_ms(wdd);
->> +		heartbeat_ms = readl(wdt->base + RTIDWDPRLD);
->> +		heartbeat_ms <<= WDT_PRELOAD_SHIFT;
->> +		heartbeat_ms *= 1000;
->> +		heartbeat_ms /= wdt->freq;
-> 
-> Ah yes, the pitfalls of 64-bit divide operations.
+> Since it is an implementation of regmap, is it better we move it to
+> drivers/base/regmap?
 
-Should I convert this to use do_div? With 64bit archs this code is 
-targeted at it runs just fine.
+Either way, you need to speak to Mark Brown.
 
-> 
->> +		if (heartbeat_ms / 1000 != heartbeat)
->> +			dev_warn(dev, "watchdog already running, ignoring heartbeat config!\n");
->> +
->> +		heartbeat = heartbeat_ms / 1000;
->> +
->> +		wsize = readl(wdt->base + RTIWWDSIZECTRL);
->> +		ret = rti_wdt_setup_hw_hb(wdd, wsize);
->> +		if (ret) {
->> +			dev_err(dev, "bad window size.\n");
->> +			goto err_iomap;
->> +		}
->> +
->> +		last_ping = heartbeat_ms - time_left_ms;
->> +		if (time_left_ms > heartbeat_ms) {
->> +			dev_warn(dev, "time_left > heartbeat? Assuming last ping just before now.\n");
->> +			last_ping = 0;
->> +		}
-> 
-> All that complexity makes me wonder if it wouldn't be better to just reprogram
-> the watchdog if it is already running. Any reason for not doing that ?
+> > >  drivers/mfd/intel-spi-avmm.h                       |  35 +
+> > >  include/linux/mfd/intel-m10-bmc.h                  |  57 ++
+> > >  7 files changed, 1203 insertions(+)
+> > >  create mode 100644 Documentation/ABI/testing/sysfs-driver-intel-m10-bmc
+> > >  create mode 100644 drivers/mfd/intel-m10-bmc-main.c
+> > >  create mode 100644 drivers/mfd/intel-spi-avmm.c
+> > >  create mode 100644 drivers/mfd/intel-spi-avmm.h
+> > >  create mode 100644 include/linux/mfd/intel-m10-bmc.h
+> > 
 
-Well, you can re-program it but... It does not take effect until next 
-window starts, so basically we need to take care of the currently 
-running window anyways after which re-programming it doesn't make much 
-sense anymore. And handling the switch from one setup to next would add 
-extra complexity.
-
--Tero
-
-> 
->> +	}
->> +
->> +	watchdog_init_timeout(wdd, heartbeat, dev);
->> +
->>   	ret = watchdog_register_device(wdd);
->>   	if (ret) {
->>   		dev_err(dev, "cannot register watchdog device\n");
->>   		goto err_iomap;
->>   	}
->>   
->> +	if (last_ping)
->> +		watchdog_set_last_hw_keepalive(wdd, last_ping);
->> +
->>   	return 0;
->>   
->>   err_iomap:
->>
-> 
-
---
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+-- 
+Lee Jones [李琼斯]
+Senior Technical Lead - Developer Services
+Linaro.org │ Open source software for Arm SoCs
+Follow Linaro: Facebook | Twitter | Blog
