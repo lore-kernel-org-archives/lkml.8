@@ -2,128 +2,161 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61E13C433E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 03:46:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0448EC433E2
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 03:47:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 36651206F0
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 03:46:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ErCujttn"
+	by mail.kernel.org (Postfix) with ESMTP id D8FAF206F0
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 03:47:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726762AbgGNDqk (ORCPT
+        id S1726778AbgGNDrW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 23:46:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39562 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726505AbgGNDqj (ORCPT
+        Mon, 13 Jul 2020 23:47:22 -0400
+Received: from mail-pj1-f67.google.com ([209.85.216.67]:50315 "EHLO
+        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726435AbgGNDrW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 23:46:39 -0400
-Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7F3D3C061794
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 20:46:39 -0700 (PDT)
-Received: by mail-pg1-x543.google.com with SMTP id t6so7008435pgq.1
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 20:46:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=DLRiKT8ElQL4w9dBG1pNFf3WLE40Y4LTcfhyA4y89Qg=;
-        b=ErCujttnnbjTupMWYjrWFgnPa1oXUoINHMPQBlPbtAnMaDXkLDbtWq/V+Ugy3P31v9
-         kHcJD5sAtUisZHts9jZ6C+fj3CPgOweMZhm8K2+2q0Fj+/Fd56TdQOK3RIr+J7tXH5Kn
-         gKB75yAzc8Oqp9WaojlhgtbOhjnxnmEbFhWTDVUuSwtfwOt7GYE+12BaMJWdBSP7vcuj
-         aR9AdFjCaS3KhrTLPqNi5bXOojrdm82i532F8H4xOlpfTbEhHU0f3RMS4mQLiPFm6n0Q
-         zfWygUQKn1A0eEK8J3+aLCc/+W//Q2+1tTk9b0nyrfITzsbQZmzlzm43hfb0kPvCRCCq
-         c4Ig==
+        Mon, 13 Jul 2020 23:47:22 -0400
+Received: by mail-pj1-f67.google.com with SMTP id k71so933826pje.0;
+        Mon, 13 Jul 2020 20:47:21 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=DLRiKT8ElQL4w9dBG1pNFf3WLE40Y4LTcfhyA4y89Qg=;
-        b=mMow2isSHYzQ7klLhyAyKZzqU8Y4X8JKe+2JCwxlATXg4XYEFTHfn8iMQnxECciYsx
-         DlIMo6hgEno41f3qyKeXxht4fsd4nqHlWJ2K/SGNk90e85iCF1KfaNkQOtTETry0i75u
-         aIf8UCQsVWCt7sBzltxoW7cXI0aC1vRa4bncNUNmcJF+EcvwnQpbxwPdV8WZxSUXgyc8
-         LDbWYA6nf+Xcv4HGMNav5rWNd4UBuC4m20IoxXFge4INESaAirZC76oa0qSzRPdfc2En
-         O2R+CqWAG5EoShVl5kD4RtpQ9vWmYC+Gjb929fAhwYpKkQjNaxGPgdGJ9JIQ6wjojH2I
-         33Zg==
-X-Gm-Message-State: AOAM5303kORqEHDVCiwYU9RdMe0JjHMDW/uXOONfgY5DRcwk+hV0XwWV
-        Ix9dqg+yATozQXe75wL4tvsMCg==
-X-Google-Smtp-Source: ABdhPJyz3cTpIEc3XjTCeTBHIKlPszPqw/k3+779CPTNFynf8xRq8tfMhpGs7ZQRwryAXZEwCm93gg==
-X-Received: by 2002:aa7:98c1:: with SMTP id e1mr2726090pfm.318.1594698398707;
-        Mon, 13 Jul 2020 20:46:38 -0700 (PDT)
-Received: from localhost ([122.172.34.142])
-        by smtp.gmail.com with ESMTPSA id o2sm15692355pfh.160.2020.07.13.20.46.37
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 13 Jul 2020 20:46:37 -0700 (PDT)
-Date:   Tue, 14 Jul 2020 09:16:35 +0530
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     Jon Hunter <jonathanh@nvidia.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/2] cpufreq: tegra186: Fix initial frequency
-Message-ID: <20200714034635.2zdv3wzmftjg2t4a@vireshk-i7>
-References: <20200712100645.13927-1-jonathanh@nvidia.com>
- <20200713032554.cykywnygxln6ukrl@vireshk-i7>
- <3d6091f2-6b04-185f-6c23-e39a34b87877@nvidia.com>
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=ZW7X7MiMm0piZVcnl+najW7cQiAtAEIaX/u1ZH2T6cM=;
+        b=Bkxhn/73U045pf9sq5AaCbHqGuJz4CSD34ZXPdbHu+w7LT2k9XxWrOOhilvtJmYCyq
+         Wy9GIRbgQmPziLjh0z0nBBtCKilhqawBQ1jRBPhmE6myBr6wNEzlxzwKi3SL4QlkeZSy
+         RC4dGod7P5p5o4m/Czb7WVX6gnyZLNgQ1zVhEmJ/48c8h8EhtZXQpAIKUdzm5YvUsabb
+         tDWRLx1V2u2AbpeZWluO/bPeEcL3LYlb1m/tYSNhgGIu3zrIe5YwwPNuBd0Ug4+gqlwg
+         RfnT7vFkg4nKLcLBH1PSrvmLbIp3RrcR2rBPRL/Q8Y0NPkKv39G7uDukXkfOAebA1wG6
+         Iy0g==
+X-Gm-Message-State: AOAM532XVh2kzQ2/YrGE5/Dgqgmjesm5EpSJ/0qk8Xwcu95xjgLPWBh1
+        BrEp8D1+AUuJBqrbZxlSvLeG1NOP
+X-Google-Smtp-Source: ABdhPJw4nTTlAcX8d+BhUjxjdiFwhbDwVyk1t/I78GmhUejlpVVnVlmgNC4Agenn3OiQSj2VnHfthA==
+X-Received: by 2002:a17:902:a50c:: with SMTP id s12mr2162224plq.119.1594698440688;
+        Mon, 13 Jul 2020 20:47:20 -0700 (PDT)
+Received: from [192.168.50.147] (c-73-241-217-19.hsd1.ca.comcast.net. [73.241.217.19])
+        by smtp.gmail.com with ESMTPSA id az16sm890478pjb.7.2020.07.13.20.47.18
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 13 Jul 2020 20:47:19 -0700 (PDT)
+Subject: Re: [PATCH v2 3/4] ufs: ufs-qcom: Fix a few BUGs in func
+ ufs_qcom_dump_dbg_regs()
+To:     Can Guo <cang@codeaurora.org>, asutoshd@codeaurora.org,
+        nguyenb@codeaurora.org, hongwus@codeaurora.org,
+        rnayak@codeaurora.org, linux-scsi@vger.kernel.org,
+        kernel-team@android.com, saravanak@google.com, salyzyn@google.com
+Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Alim Akhtar <alim.akhtar@samsung.com>,
+        Avri Altman <avri.altman@wdc.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        "open list:ARM/QUALCOMM SUPPORT" <linux-arm-msm@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+References: <1594693693-22466-1-git-send-email-cang@codeaurora.org>
+ <1594693693-22466-4-git-send-email-cang@codeaurora.org>
+From:   Bart Van Assche <bvanassche@acm.org>
+Autocrypt: addr=bvanassche@acm.org; prefer-encrypt=mutual; keydata=
+ mQENBFSOu4oBCADcRWxVUvkkvRmmwTwIjIJvZOu6wNm+dz5AF4z0FHW2KNZL3oheO3P8UZWr
+ LQOrCfRcK8e/sIs2Y2D3Lg/SL7qqbMehGEYcJptu6mKkywBfoYbtBkVoJ/jQsi2H0vBiiCOy
+ fmxMHIPcYxaJdXxrOG2UO4B60Y/BzE6OrPDT44w4cZA9DH5xialliWU447Bts8TJNa3lZKS1
+ AvW1ZklbvJfAJJAwzDih35LxU2fcWbmhPa7EO2DCv/LM1B10GBB/oQB5kvlq4aA2PSIWkqz4
+ 3SI5kCPSsygD6wKnbRsvNn2mIACva6VHdm62A7xel5dJRfpQjXj2snd1F/YNoNc66UUTABEB
+ AAG0JEJhcnQgVmFuIEFzc2NoZSA8YnZhbmFzc2NoZUBhY20ub3JnPokBOQQTAQIAIwUCVI67
+ igIbAwcLCQgHAwIBBhUIAgkKCwQWAgMBAh4BAheAAAoJEHFcPTXFzhAJ8QkH/1AdXblKL65M
+ Y1Zk1bYKnkAb4a98LxCPm/pJBilvci6boefwlBDZ2NZuuYWYgyrehMB5H+q+Kq4P0IBbTqTa
+ jTPAANn62A6jwJ0FnCn6YaM9TZQjM1F7LoDX3v+oAkaoXuq0dQ4hnxQNu792bi6QyVdZUvKc
+ macVFVgfK9n04mL7RzjO3f+X4midKt/s+G+IPr4DGlrq+WH27eDbpUR3aYRk8EgbgGKvQFdD
+ CEBFJi+5ZKOArmJVBSk21RHDpqyz6Vit3rjep7c1SN8s7NhVi9cjkKmMDM7KYhXkWc10lKx2
+ RTkFI30rkDm4U+JpdAd2+tP3tjGf9AyGGinpzE2XY1K5AQ0EVI67igEIAKiSyd0nECrgz+H5
+ PcFDGYQpGDMTl8MOPCKw/F3diXPuj2eql4xSbAdbUCJzk2ETif5s3twT2ER8cUTEVOaCEUY3
+ eOiaFgQ+nGLx4BXqqGewikPJCe+UBjFnH1m2/IFn4T9jPZkV8xlkKmDUqMK5EV9n3eQLkn5g
+ lco+FepTtmbkSCCjd91EfThVbNYpVQ5ZjdBCXN66CKyJDMJ85HVr5rmXG/nqriTh6cv1l1Js
+ T7AFvvPjUPknS6d+BETMhTkbGzoyS+sywEsQAgA+BMCxBH4LvUmHYhpS+W6CiZ3ZMxjO8Hgc
+ ++w1mLeRUvda3i4/U8wDT3SWuHcB3DWlcppECLkAEQEAAYkBHwQYAQIACQUCVI67igIbDAAK
+ CRBxXD01xc4QCZ4dB/0QrnEasxjM0PGeXK5hcZMT9Eo998alUfn5XU0RQDYdwp6/kMEXMdmT
+ oH0F0xB3SQ8WVSXA9rrc4EBvZruWQ+5/zjVrhhfUAx12CzL4oQ9Ro2k45daYaonKTANYG22y
+ //x8dLe2Fv1By4SKGhmzwH87uXxbTJAUxiWIi1np0z3/RDnoVyfmfbbL1DY7zf2hYXLLzsJR
+ mSsED/1nlJ9Oq5fALdNEPgDyPUerqHxcmIub+pF0AzJoYHK5punqpqfGmqPbjxrJLPJfHVKy
+ goMj5DlBMoYqEgpbwdUYkH6QdizJJCur4icy8GUNbisFYABeoJ91pnD4IGei3MTdvINSZI5e
+Message-ID: <7b0f8a73-d49d-eb7d-defe-8e77a49064ae@acm.org>
+Date:   Mon, 13 Jul 2020 20:47:18 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <3d6091f2-6b04-185f-6c23-e39a34b87877@nvidia.com>
-User-Agent: NeoMutt/20180716-391-311a52
+In-Reply-To: <1594693693-22466-4-git-send-email-cang@codeaurora.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 13-07-20, 17:37, Jon Hunter wrote:
+On 2020-07-13 19:28, Can Guo wrote:
+> Dumping testbus registers needs to sleep a bit intermittently as there are
+> too many of them. Skip them for those contexts where sleep is not allowed.
 > 
-> On 13/07/2020 04:25, Viresh Kumar wrote:
-> > On 12-07-20, 11:06, Jon Hunter wrote:
-> >> Commit 6cc3d0e9a097 ("cpufreq: tegra186: add
-> >> CPUFREQ_NEED_INITIAL_FREQ_CHECK flag") fixed CPUFREQ support for
-> >> Tegra186 but as a consequence the following warnings are now seen on
-> >> boot ...
-> >>
-> >>  cpufreq: cpufreq_online: CPU0: Running at unlisted freq: 0 KHz
-> >>  cpufreq: cpufreq_online: CPU0: Unlisted initial frequency changed to: 2035200 KHz
-> >>  cpufreq: cpufreq_online: CPU1: Running at unlisted freq: 0 KHz
-> >>  cpufreq: cpufreq_online: CPU1: Unlisted initial frequency changed to: 2035200 KHz
-> >>  cpufreq: cpufreq_online: CPU2: Running at unlisted freq: 0 KHz
-> >>  cpufreq: cpufreq_online: CPU2: Unlisted initial frequency changed to: 2035200 KHz
-> >>  cpufreq: cpufreq_online: CPU3: Running at unlisted freq: 0 KHz
-> >>  cpufreq: cpufreq_online: CPU3: Unlisted initial frequency changed to: 2035200 KHz
-> >>  cpufreq: cpufreq_online: CPU4: Running at unlisted freq: 0 KHz
-> >>  cpufreq: cpufreq_online: CPU4: Unlisted initial frequency changed to: 2035200 KHz
-> >>  cpufreq: cpufreq_online: CPU5: Running at unlisted freq: 0 KHz
-> >>  cpufreq: cpufreq_online: CPU5: Unlisted initial frequency changed to: 2035200 KHz
-> >>
-> >> Although we could fix this by adding a 'get' operator for the Tegra186
-> >> CPUFREQ driver, there is really little point because the CPUFREQ on
-> >> Tegra186 is set by writing a value stored in the frequency table to a
-> >> register and we just need to set the initial frequency.
-> > 
-> > The hardware still runs at the frequency requested by cpufreq core here, right ?
+> Meanwhile, if ufs_qcom_dump_dbg_regs() calls ufs_qcom_testbus_config() from
+> ufshcd_suspend/resume and/or clk gate/ungate context, pm_runtime_get_sync()
+> and ufshcd_hold() will cause racing problems. Fix it by removing the
+> unnecessary calls of pm_runtime_get_sync() and ufshcd_hold().
 > 
-> Yes.
+> Signed-off-by: Can Guo <cang@codeaurora.org>
+> ---
+>  drivers/scsi/ufs/ufs-qcom.c | 17 +++++++----------
+>  1 file changed, 7 insertions(+), 10 deletions(-)
 > 
-> > It is better to provide the get() callback as it is also used to show the
-> > current frequency in userspace.
-> 
-> I looked at that and I saw that if the get() callback is not provided,
-> the current frequency showed by userspace is policy->cur. For this
-> device, policy->cur is accurate and so if we added the get() callback we
-> essentially just going to return policy->cur. Therefore, given that we
-> already know policy->cur, I did not see the point in adding a device
-> specific handler to do the same thing.
+> diff --git a/drivers/scsi/ufs/ufs-qcom.c b/drivers/scsi/ufs/ufs-qcom.c
+> index 2e6ddb5..3743c17 100644
+> --- a/drivers/scsi/ufs/ufs-qcom.c
+> +++ b/drivers/scsi/ufs/ufs-qcom.c
+> @@ -1604,9 +1604,6 @@ int ufs_qcom_testbus_config(struct ufs_qcom_host *host)
+>  	 */
+>  	}
+>  	mask <<= offset;
+> -
+> -	pm_runtime_get_sync(host->hba->dev);
+> -	ufshcd_hold(host->hba, false);
+>  	ufshcd_rmwl(host->hba, TEST_BUS_SEL,
+>  		    (u32)host->testbus.select_major << 19,
+>  		    REG_UFS_CFG1);
+> @@ -1619,8 +1616,6 @@ int ufs_qcom_testbus_config(struct ufs_qcom_host *host)
+>  	 * committed before returning.
+>  	 */
+>  	mb();
+> -	ufshcd_release(host->hba);
+> -	pm_runtime_put_sync(host->hba->dev);
+>  
+>  	return 0;
+>  }
+> @@ -1658,11 +1653,13 @@ static void ufs_qcom_dump_dbg_regs(struct ufs_hba *hba)
+>  
+>  	/* sleep a bit intermittently as we are dumping too much data */
+>  	ufs_qcom_print_hw_debug_reg_all(hba, NULL, ufs_qcom_dump_regs_wrapper);
+> -	udelay(1000);
+> -	ufs_qcom_testbus_read(hba);
+> -	udelay(1000);
+> -	ufs_qcom_print_unipro_testbus(hba);
+> -	udelay(1000);
+> +	if (in_task()) {
+> +		udelay(1000);
+> +		ufs_qcom_testbus_read(hba);
+> +		udelay(1000);
+> +		ufs_qcom_print_unipro_testbus(hba);
+> +		udelay(1000);
+> +	}
+>  }
 
-The get() callback is supposed to read the frequency from hardware and
-return it, no cached value here. policy->cur may end up being wrong in
-case there is a bug.
+It is not clear to me how udelay() calls can help in code that takes long
+since these functions use busy-waiting? Should the udelay() calls perhaps
+be changed into cond_resched() calls?
 
--- 
-viresh
+Thanks,
+
+Bart.
