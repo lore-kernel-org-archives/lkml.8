@@ -2,165 +2,138 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5936C433E8
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 11:38:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A01FC433E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 11:38:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9E3DE22201
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 11:38:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7839522201
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 11:38:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726771AbgGNLik (ORCPT
+        id S1728084AbgGNLi6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 07:38:40 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:53052 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725905AbgGNLij (ORCPT
+        Tue, 14 Jul 2020 07:38:58 -0400
+Received: from mout.kundenserver.de ([212.227.126.187]:56845 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728066AbgGNLiy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 07:38:39 -0400
-Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06EBWLP1183543;
-        Tue, 14 Jul 2020 07:38:31 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 327tna7s76-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 14 Jul 2020 07:38:31 -0400
-Received: from m0098414.ppops.net (m0098414.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 06EBWSkd185266;
-        Tue, 14 Jul 2020 07:38:31 -0400
-Received: from ppma02fra.de.ibm.com (47.49.7a9f.ip4.static.sl-reverse.com [159.122.73.71])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 327tna7s6h-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 14 Jul 2020 07:38:31 -0400
-Received: from pps.filterd (ppma02fra.de.ibm.com [127.0.0.1])
-        by ppma02fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 06EBPXDf029774;
-        Tue, 14 Jul 2020 11:38:29 GMT
-Received: from b06cxnps3074.portsmouth.uk.ibm.com (d06relay09.portsmouth.uk.ibm.com [9.149.109.194])
-        by ppma02fra.de.ibm.com with ESMTP id 327527ub3d-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 14 Jul 2020 11:38:29 +0000
-Received: from d06av24.portsmouth.uk.ibm.com (d06av24.portsmouth.uk.ibm.com [9.149.105.60])
-        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 06EBcQiW4456718
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 14 Jul 2020 11:38:26 GMT
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 3838F42041;
-        Tue, 14 Jul 2020 11:38:26 +0000 (GMT)
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 9F20842042;
-        Tue, 14 Jul 2020 11:38:17 +0000 (GMT)
-Received: from oc3016276355.ibm.com (unknown [9.145.162.148])
-        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Tue, 14 Jul 2020 11:38:13 +0000 (GMT)
-From:   Pierre Morel <pmorel@linux.ibm.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     pasic@linux.ibm.com, borntraeger@de.ibm.com, frankja@linux.ibm.com,
-        mst@redhat.com, jasowang@redhat.com, cohuck@redhat.com,
-        kvm@vger.kernel.org, linux-s390@vger.kernel.org,
-        virtualization@lists.linux-foundation.org, thomas.lendacky@amd.com,
-        david@gibson.dropbear.id.au, linuxram@us.ibm.com,
-        hca@linux.ibm.com, gor@linux.ibm.com
-Subject: [PATCH v6 0/2] s390: virtio: let arch validate VIRTIO features
-Date:   Tue, 14 Jul 2020 13:38:00 +0200
-Message-Id: <1594726682-12076-1-git-send-email-pmorel@linux.ibm.com>
-X-Mailer: git-send-email 1.8.3.1
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-07-14_02:2020-07-14,2020-07-14 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0
- priorityscore=1501 adultscore=0 bulkscore=0 spamscore=0 phishscore=0
- impostorscore=0 suspectscore=1 lowpriorityscore=0 clxscore=1015 mlxscore=0
- mlxlogscore=947 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2007140085
+        Tue, 14 Jul 2020 07:38:54 -0400
+Received: from mail-qt1-f170.google.com ([209.85.160.170]) by
+ mrelayeu.kundenserver.de (mreue009 [212.227.15.129]) with ESMTPSA (Nemesis)
+ id 1MiagR-1kXvwq33Zf-00fi3t for <linux-kernel@vger.kernel.org>; Tue, 14 Jul
+ 2020 13:38:51 +0200
+Received: by mail-qt1-f170.google.com with SMTP id e12so12449305qtr.9
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 04:38:51 -0700 (PDT)
+X-Gm-Message-State: AOAM530DEuxulI3a9zzNeLwgdaKv+dHaUObPQ/oSTTO7QqGdE7fCOllU
+        XIdJFAtaVRIZMGT2rLJxZn6u2ZxQdi1QDC3V+ko=
+X-Google-Smtp-Source: ABdhPJyFjloVdWL5jLo3wyeFmexBh1mXWt1AZPEWS1RiOfnRkATYWBbKic8D8zZyvKZOoNe2ZbcLezwA1um2pe10fnA=
+X-Received: by 2002:ac8:4ccb:: with SMTP id l11mr4063189qtv.18.1594726730621;
+ Tue, 14 Jul 2020 04:38:50 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200711035544.2832154-1-palmer@dabbelt.com> <20200711035544.2832154-2-palmer@dabbelt.com>
+ <20200713130632.GA29945@infradead.org> <CAK8P3a0F4JSBAG5B=GRFF9Aw0kJaNd=cph86sHqjAtiONUA-Bw@mail.gmail.com>
+ <20200714110549.GA22613@infradead.org>
+In-Reply-To: <20200714110549.GA22613@infradead.org>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Tue, 14 Jul 2020 13:38:34 +0200
+X-Gmail-Original-Message-ID: <CAK8P3a0VEsshmF0d9AhRurME8Jca5MxG3eAsvXYmwfexMrutLg@mail.gmail.com>
+Message-ID: <CAK8P3a0VEsshmF0d9AhRurME8Jca5MxG3eAsvXYmwfexMrutLg@mail.gmail.com>
+Subject: Re: [PATCH 1/3] lib: Add a generic copy_oldmem_page()
+To:     Christoph Hellwig <hch@infradead.org>
+Cc:     Palmer Dabbelt <palmer@dabbelt.com>,
+        Nick Kossifidis <mick@ics.forth.gr>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Gregory Fong <gregory.0xf0@gmail.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Palmer Dabbelt <palmerdabbelt@google.com>,
+        Brendan Higgins <brendanhiggins@google.com>,
+        Marco Elver <elver@google.com>,
+        Alexander Potapenko <glider@google.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Will Deacon <will@kernel.org>, Ingo Molnar <mingo@kernel.org>,
+        "Uwe Kleine-K??nig" <uwe@kleine-koenig.org>,
+        AKASHI Takahiro <takahiro.akashi@linaro.org>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Russell King - ARM Linux <linux@armlinux.org.uk>,
+        Matthew Wilcox <willy@infradead.org>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Android Kernel Team <kernel-team@android.com>,
+        Petr Mladek <pmladek@suse.com>, zaslonko@linux.ibm.com,
+        Kees Cook <keescook@chromium.org>,
+        Mark Brown <broonie@kernel.org>,
+        "Vaittinen, Matti" <matti.vaittinen@fi.rohmeurope.com>,
+        Ben Dooks <ben-linux@fluff.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        David Gow <davidgow@google.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        David Miller <davem@davemloft.net>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:xTSe9ZnQH+hN5QBL1xtuZR/mvbjHEgz1GcNtYWBs0BJ7uGndA/0
+ jk4BDkb4H4OR3xc7y4itgU7TB/hHVN+nhITZ5BY3271w36JKrxWnhcEW4cWlcM4VC1lxkz+
+ lwFc3t9YKzTt1FyOJBWc+CqQGYVNHLl80y2hvdWRqlfi9/wKiDpcdMuNSjqhL1yLkxYb0ut
+ M8uwZsQ9U/U027xzQf3BA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:YVeQ19yVhMU=:VP0j4YRuvsGfc4uFIXX6pY
+ EAQ6HosxpPft81Gg4D2QxCQkfj162rwmWFKFAqTZbpGIUIR89eqE4rMY2tRrXdIJ2SdChdWKp
+ zY7VUA+moJ2U0BjQmYdbLW4TcDPKtDmBrTv0a5LaOHBO2ErDjSrByeduUMD152mqgRTnk1VSZ
+ H6VTEAVCLq5ctqjz8uyyXqZWTJEyDYxbzaTae2khRa+3dSGgFSbxAQdAsUOOwGYiuG1+yYLRm
+ n+JFbsvqWMEYXx446dhK2M/vFGyNXS7trzVHOHM+yKmzY8tjt2CQ6DAi67IW9lT4zMhPPjEfp
+ O0s/y6OJ01SRztS7RxGH2NC2EzBjnFmDsI9JYV/PhVJo+PjURrM4AeSQW4F+tnyT2fftUhMgq
+ RqPQIheOwCjXvMNMz1ttrqjnK2vikcXUKrug5O6SnebctlfthHzsaJuE9/WfjUjRCUdg5k3j3
+ DUUMyz0EciFTE2jKpqv94tM9EljVw3scZJ6TVqH3eDJqLKHQY3DrWbgXxR8gdKATYmsRER1sK
+ y0AijqFozUW81bwg1LVyZ3pThsB8xHnxbj0FfjNWB/3lLAfNxoJBjehGGBUQXStwnS9GrXJsT
+ E6ygE+xXxsqKcEuLqyaVh6OPUdk8al+BIoT1AJ1E/5Kb36smObaJAueXI+MWtLHEDWdFYDLHc
+ VCfEnyDnLnvh27ObjH3nF1eLwrU/1RHucBXMCLLwHv08JkqfqqygaQhgdSHX2QLVCn34sG+j6
+ ZWPRkq8PpI7Ws0AEcJCgR9eXaD6CLFQpp+ScFS6nl9Xg4TYDxCHYMSYKEYm3N8stTZJJU68xl
+ Z7XHRvsVMr2yoh23fLb9feNOB4ZdlBf9ax8/j9PqWYkIWvLvNkjrPOxWMB6+XZooxK+iW49+/
+ 8StSi/cLwh6+XPo9wDHD3o1JuP2Fetj6t0/uPCrQYBdempplJNOjotUdRdmwNawCe+XUwzA54
+ uhzovxkQyw34VPaH9CtUxPmUKr+dv5OtNf6WIelcsQw5sqLPZxjik
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi all,
+On Tue, Jul 14, 2020 at 1:06 PM Christoph Hellwig <hch@infradead.org> wrote:
+> On Mon, Jul 13, 2020 at 03:39:17PM +0200, Arnd Bergmann wrote:
+> > On Mon, Jul 13, 2020 at 3:07 PM Christoph Hellwig <hch@infradead.org> wrote:
+> > > On Fri, Jul 10, 2020 at 08:55:42PM -0700, Palmer Dabbelt wrote:
+> > > > +ssize_t copy_oldmem_page(unsigned long pfn, char *buf,
+> > > > +                      size_t csize, unsigned long offset,
+> > > > +                      int userbuf)
+> > > > +{
+> > > > +     void *vaddr;
+> > > > +
+> > > > +     if (!csize)
+> > > > +             return 0;
+> > > > +
+> > > > +     vaddr = memremap(__pfn_to_phys(pfn), PAGE_SIZE, MEMREMAP_WB);
+> > > > +     if (!vaddr)
+> > > > +             return -ENOMEM;
+> > >
+> > > Doing a memremap for every page is very inefficient.  Also I don't see
+> > > why you'd want to even do that.  All memory is in the direct mapping
+> > > for RISC-V.  For other architecture that support highmem kmap_atomic_pfn
+> > > would do the job, which is what I'd use in a generic version.
+> >
+> > I would expect the 'oldmem' data to not have a 'struct page', which would
+> > be a problem at least for the generic implementation of kmap_atomic_pfn()
+>
+> Why do you expect it to not have a struct page?
 
-The goal of the series is to give a chance to the architecture
-to validate VIRTIO device features.
+I was under the impression that the kdump kernel only accesses a small
+amount of memory itself and would allocate its mem_map to fit that but
+not pages of that were used by the kernel it is dumping.
 
-in this respin:
-
-1) I kept removed the ack from Jason as I reworked the patch
-   @Jason, the nature and goal of the patch did not really changed
-           please can I get back your acked-by with these changes?
-
-2) Rewording for warning messages
-
-Regards,
-Pierre
-
-
-Pierre Morel (2):
-  virtio: let arch validate VIRTIO features
-  s390: virtio: PV needs VIRTIO I/O device protection
-
- arch/s390/mm/init.c           | 28 ++++++++++++++++++++++++++++
- drivers/virtio/virtio.c       | 19 +++++++++++++++++++
- include/linux/virtio_config.h |  1 +
- 3 files changed, 48 insertions(+)
-
--- 
-2.25.1
-
-Changelog
-
-to v6:
-
-- rewording warning messages
-  (Connie, Halil)
-
-to v5:
-
-- return directly from S390 arch_validate_virtio_features()
-  when the guest is not protected.
-  (Connie)
-
-- Somme rewording
-  (Connie, Michael)
-
-- moved back code from arch/s390/ ...kernel/uv.c to ...mm/init.c
-  (Christian)
-
-to v4:
-
-- separate virtio and arch code
-  (Pierre)
-
-- moved code from arch/s390/mm/init.c to arch/s390/kernel/uv.c
-  (as interpreted from Heiko's comment)
-
-- moved validation inside the arch code
-  (Connie)
-
-- moved the call to arch validation before VIRTIO_F_1 test
-  (Michael)
-
-to v3:
-
-- add warning
-  (Connie, Christian)
-
-- add comment
-  (Connie)
-
-- change hook name
-  (Halil, Connie)
-
-to v2:
-
-- put the test in virtio_finalize_features()
-  (Connie)
-
-- put the test inside VIRTIO core
-  (Jason)
-
-- pass a virtio device as parameter
-  (Halil)
-
-
+       Arnd
