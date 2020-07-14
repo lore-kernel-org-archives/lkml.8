@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3EE6C433E4
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:46:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31158C433E5
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:46:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A2F4F22AB0
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:46:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 08E0C22AB0
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:46:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594752393;
-	bh=MSXNpAEhno4g986D8o9A5a+ESTpY1tYD20T+D+8C4+w=;
+	s=default; t=1594752401;
+	bh=ygP+kvB9/t08RSdTKMcD2QE5Gt3TvzBA4D0jbatvNt8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=C+9OYxF8MofVIapw35NRXEHqzqzEsk/v/l+XqNAfPlXFO2Q9jTKR6DDIiJffn1rlT
-	 E8f97kJVtDn7Qa8GG6s3mVCDGqDfYZq9jywh1N546FM1DklJs7KuDFaTUzZQZurUnV
-	 vl6+yoScMkMPE8mj2TTzfBW4ivIuhYd4YinVsWYo=
+	b=EuSqDfCQIuyvYFjF9XF8H2OHCJdwHHvyNrC1QSr0OgW6brK4NNfVf42f0vijHlg3o
+	 RufVdvURHhekQuD48tOATr03zK9mlFdyrQRw/JNZCkCjs8+JA2fHKwXkhdflZuZ2RK
+	 LbpaP75GvntIcCAfMigtIg+aDm4wcQbwppYbSLh0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729505AbgGNSqc (ORCPT
+        id S1729527AbgGNSqe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 14:46:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41064 "EHLO mail.kernel.org"
+        Tue, 14 Jul 2020 14:46:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41256 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729465AbgGNSqY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 14:46:24 -0400
+        id S1729491AbgGNSqa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 14:46:30 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 23AE222282;
-        Tue, 14 Jul 2020 18:46:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 426DC22B2E;
+        Tue, 14 Jul 2020 18:46:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594752384;
-        bh=MSXNpAEhno4g986D8o9A5a+ESTpY1tYD20T+D+8C4+w=;
+        s=default; t=1594752389;
+        bh=ygP+kvB9/t08RSdTKMcD2QE5Gt3TvzBA4D0jbatvNt8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CR2tWKGpMriZmMXSdsK5yyvVMIzCJYbKOoCQZyxXERiyED+Norp0ILJ0pol7PAMtf
-         B1S0Zy5RbhSxfxSK8qwvMnI+iBoFvSw03EgXcH4xAeZHgYTE8Pw620DZl8aJDKrw+R
-         0ozyOTCYmHtBAPrWzedtHuP1B4Vem9a90hFgNQIc=
+        b=bZ/ta7es3635OZiSw7lJ4v5ing+YzqDhBmYnrbdP8o/XRBSb3MVUsGYTL/7aKbawv
+         NYLcA3vu62Fdd7gFGyn70zum1x2prwJvIGs7D4S4L4snmNWJ+m77/VM1O+aLhtGolt
+         MRaJ0LL/AlpIb27uAvxkOVPPw+eZzC6FwbINTMX0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Aditya Pakki <pakki001@umn.edu>,
-        Felipe Balbi <balbi@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 21/58] usb: dwc3: pci: Fix reference count leak in dwc3_pci_resume_work
-Date:   Tue, 14 Jul 2020 20:43:54 +0200
-Message-Id: <20200714184057.196831279@linuxfoundation.org>
+        stable@vger.kernel.org, Max Gurtovoy <maxg@mellanox.com>,
+        Christoph Hellwig <hch@lst.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 23/58] nvme-rdma: assign completion vector correctly
+Date:   Tue, 14 Jul 2020 20:43:56 +0200
+Message-Id: <20200714184057.296932001@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200714184056.149119318@linuxfoundation.org>
 References: <20200714184056.149119318@linuxfoundation.org>
@@ -60,37 +59,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Aditya Pakki <pakki001@umn.edu>
+From: Max Gurtovoy <maxg@mellanox.com>
 
-[ Upstream commit 2655971ad4b34e97dd921df16bb0b08db9449df7 ]
+[ Upstream commit 032a9966a22a3596addf81dacf0c1736dfedc32a ]
 
-dwc3_pci_resume_work() calls pm_runtime_get_sync() that increments
-the reference counter. In case of failure, decrement the reference
-before returning.
+The completion vector index that is given during CQ creation can't
+exceed the number of support vectors by the underlying RDMA device. This
+violation currently can accure, for example, in case one will try to
+connect with N regular read/write queues and M poll queues and the sum
+of N + M > num_supported_vectors. This will lead to failure in establish
+a connection to remote target. Instead, in that case, share a completion
+vector between queues.
 
-Signed-off-by: Aditya Pakki <pakki001@umn.edu>
-Signed-off-by: Felipe Balbi <balbi@kernel.org>
+Signed-off-by: Max Gurtovoy <maxg@mellanox.com>
+Signed-off-by: Christoph Hellwig <hch@lst.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/dwc3/dwc3-pci.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/nvme/host/rdma.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/usb/dwc3/dwc3-pci.c b/drivers/usb/dwc3/dwc3-pci.c
-index b2fd505938a0c..389ec4c689c44 100644
---- a/drivers/usb/dwc3/dwc3-pci.c
-+++ b/drivers/usb/dwc3/dwc3-pci.c
-@@ -204,8 +204,10 @@ static void dwc3_pci_resume_work(struct work_struct *work)
- 	int ret;
+diff --git a/drivers/nvme/host/rdma.c b/drivers/nvme/host/rdma.c
+index 9711bfbdf4316..f393a6193252e 100644
+--- a/drivers/nvme/host/rdma.c
++++ b/drivers/nvme/host/rdma.c
+@@ -447,7 +447,7 @@ static int nvme_rdma_create_queue_ib(struct nvme_rdma_queue *queue)
+ 	 * Spread I/O queues completion vectors according their queue index.
+ 	 * Admin queues can always go on completion vector 0.
+ 	 */
+-	comp_vector = idx == 0 ? idx : idx - 1;
++	comp_vector = (idx == 0 ? idx : idx - 1) % ibdev->num_comp_vectors;
  
- 	ret = pm_runtime_get_sync(&dwc3->dev);
--	if (ret)
-+	if (ret) {
-+		pm_runtime_put_sync_autosuspend(&dwc3->dev);
- 		return;
-+	}
- 
- 	pm_runtime_mark_last_busy(&dwc3->dev);
- 	pm_runtime_put_sync_autosuspend(&dwc3->dev);
+ 	/* +1 for ib_stop_cq */
+ 	queue->ib_cq = ib_alloc_cq(ibdev, queue,
 -- 
 2.25.1
 
