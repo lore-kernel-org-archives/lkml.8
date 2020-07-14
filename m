@@ -2,105 +2,91 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 806B7C433E5
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 16:18:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46B30C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 16:18:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 644D422527
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 16:18:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 205D12251E
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 16:18:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594743535;
+	bh=Arizj3kFgzEcL3Koyf1IoHEpYlDKy+RYAsYt5BODwnc=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=FAs8GJZy9GaujZSGONUBmMn1t8dyQuXYbAttafn1ycMk9iI5Z1nCUtlRKWk3h6LgL
+	 sq8fh6vPFnfNmsDjXwqchPytDsOqr1Uohv6Wzd2zcitTDO9JLp3++Iag43t6eumBVl
+	 P/ODRYgb/DU6s08izQeingIXpIHoAalkgjXGPdzo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728258AbgGNQST (ORCPT
+        id S1728595AbgGNQSy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 12:18:19 -0400
-Received: from mga05.intel.com ([192.55.52.43]:55862 "EHLO mga05.intel.com"
+        Tue, 14 Jul 2020 12:18:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47182 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725876AbgGNQSS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 12:18:18 -0400
-IronPort-SDR: qUaFIV6Ek4VO4F7jEEhBqUESBD1o+iItkVztJPDxdKUcyu5RrtBvgiISvltaqHUefzZQY5wys9
- zLs2xqSzJbsg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9681"; a="233813989"
-X-IronPort-AV: E=Sophos;i="5.75,350,1589266800"; 
-   d="scan'208";a="233813989"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jul 2020 09:18:18 -0700
-IronPort-SDR: HN+vpBCYu9KmC3INIgKGNBMsFh/JR6Q0OcGv5RbozxfE74tRKkf9WfaIPnZmBleoc/bK7AUnqY
- E86DQqdVbCDQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,350,1589266800"; 
-   d="scan'208";a="307928997"
-Received: from djiang5-mobl1.amr.corp.intel.com (HELO [10.209.140.223]) ([10.209.140.223])
-  by fmsmga004.fm.intel.com with ESMTP; 14 Jul 2020 09:18:17 -0700
-Subject: Re: [PATCH v7 05/11] dmaengine: Introduce DMA-device device_caps
- callback
-To:     Vinod Koul <vkoul@kernel.org>
-Cc:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Viresh Kumar <vireshk@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
-        devicetree@vger.kernel.org, dmaengine@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20200709224550.15539-1-Sergey.Semin@baikalelectronics.ru>
- <20200709224550.15539-6-Sergey.Semin@baikalelectronics.ru>
- <20200710084503.GE3703480@smile.fi.intel.com>
- <20200710093834.su3nsjesnhntpd6d@mobilestation>
- <07d4a977-1de6-b611-3d4f-7c7d6cd7fe5f@intel.com>
- <20200714160830.GL34333@vkoul-mobl>
-From:   Dave Jiang <dave.jiang@intel.com>
-Message-ID: <f746fafd-851e-f402-3755-03ef94a65988@intel.com>
-Date:   Tue, 14 Jul 2020 09:18:16 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        id S1726478AbgGNQSx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 12:18:53 -0400
+Received: from mail-lj1-f180.google.com (mail-lj1-f180.google.com [209.85.208.180])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 605622251F;
+        Tue, 14 Jul 2020 16:18:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594743532;
+        bh=Arizj3kFgzEcL3Koyf1IoHEpYlDKy+RYAsYt5BODwnc=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=T+my6tgyXE9IQIVevvThSfjhdhNcDPwiHAF99JP8td1Zbp4KR5sqD9/YD2xWrm7NE
+         8CTBTmZU52RSRd4L/WoM9hOaWIQaquWQ7Xo9JjUzbLP0jQXfn4sKo5bl5eHw4Pz4OY
+         D8r6aXgKdnsXBHBMV/bu2MrBr4sRiqkkzN/8IFQA=
+Received: by mail-lj1-f180.google.com with SMTP id e8so23595707ljb.0;
+        Tue, 14 Jul 2020 09:18:52 -0700 (PDT)
+X-Gm-Message-State: AOAM530l7QIKT++9ZK2mt90lFDekE1KO0T7XPm9vHNO/9tyUHEKiorkM
+        6kIGlKwhxEy921haOFjTEiA4++KQDPoXbEcu8tQ=
+X-Google-Smtp-Source: ABdhPJyZyZCLfuoyTSGGY8RWN0T4zhEj7y1fQH0Eoe71BRYQetrHSV3OxgPcdQvc0QB7QrW9affifMlT3VJPWRtxWxo=
+X-Received: by 2002:a2e:88c6:: with SMTP id a6mr2700501ljk.27.1594743530708;
+ Tue, 14 Jul 2020 09:18:50 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200714160830.GL34333@vkoul-mobl>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200709233545.67954-1-junxiao.bi@oracle.com> <CAPhsuW7seCUnt3zt6A_fjTS2diB7qiTE+SZkM6Vh=G26hdwGtg@mail.gmail.com>
+ <de97a2c1-fba0-5276-7748-f0155088ad0d@oracle.com>
+In-Reply-To: <de97a2c1-fba0-5276-7748-f0155088ad0d@oracle.com>
+From:   Song Liu <song@kernel.org>
+Date:   Tue, 14 Jul 2020 09:18:39 -0700
+X-Gmail-Original-Message-ID: <CAPhsuW4GQK7hS4AOpJJ1mEE8gbFgo+n+XCQ2fvW94QnZhA6ivQ@mail.gmail.com>
+Message-ID: <CAPhsuW4GQK7hS4AOpJJ1mEE8gbFgo+n+XCQ2fvW94QnZhA6ivQ@mail.gmail.com>
+Subject: Re: [PATCH] md: fix deadlock causing by sysfs_notify
+To:     Junxiao Bi <junxiao.bi@oracle.com>
+Cc:     linux-raid <linux-raid@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, Jul 13, 2020 at 11:41 PM Junxiao Bi <junxiao.bi@oracle.com> wrote:
+>
+> On 7/13/20 11:17 PM, Song Liu wrote:
+>
+> > On Thu, Jul 9, 2020 at 4:36 PM Junxiao Bi <junxiao.bi@oracle.com> wrote:
+> >> The following deadlock was captured. The first process is holding 'kernfs_mutex'
+> >> and hung by io. The io was staging in 'r1conf.pending_bio_list' of raid1 device,
+> >> this pending bio list would be flushed by second process 'md127_raid1', but
+> >> it was hung by 'kernfs_mutex'. Using sysfs_notify_dirent_safe() to replace
+> >> sysfs_notify() can fix it. There were other sysfs_notify() invoked from io
+> >> path, removed all of them.
+> >>
+> > [...]
+> >> Cc: stable@vger.kernel.org
+> >> Signed-off-by: Junxiao Bi <junxiao.bi@oracle.com>
+> > Thanks for the patch. It looks good in general. One question though, do we
+> > need the same change the following line in md.c:level_store()?
+> >
+> >      sysfs_notify(&mddev->kobj, NULL, "level");
+>
+> Thanks for the review. This one is not in io path, looks it's safe. I
+> can change it if you want to align it with others.
 
+This one is the only leftover. Let's also change it.
 
-On 7/14/2020 9:08 AM, Vinod Koul wrote:
-> On 13-07-20, 13:55, Dave Jiang wrote:
->>
->>
->> On 7/10/2020 2:38 AM, Serge Semin wrote:
->>> On Fri, Jul 10, 2020 at 11:45:03AM +0300, Andy Shevchenko wrote:
->>>> On Fri, Jul 10, 2020 at 01:45:44AM +0300, Serge Semin wrote:
->>>>> There are DMA devices (like ours version of Synopsys DW DMAC) which have
->>>>> DMA capabilities non-uniformly redistributed between the device channels.
->>>>> In order to provide a way of exposing the channel-specific parameters to
->>>>> the DMA engine consumers, we introduce a new DMA-device callback. In case
->>>>> if provided it gets called from the dma_get_slave_caps() method and is
->>>>> able to override the generic DMA-device capabilities.
->>>>
->>>
->>>> In light of recent developments consider not to add 'slave' and a such words to the kernel.
->>>
->>> As long as the 'slave' word is used in the name of the dma_slave_caps
->>> structure and in the rest of the DMA-engine subsystem, it will be ambiguous
->>> to use some else terminology. If renaming needs to be done, then it should be
->>> done synchronously for the whole subsystem.
->>
->> What about just calling it dma_device_caps? Consider this is a useful
->> function not only slave DMA will utilize this. I can see this being useful
->> for some of my future code with idxd driver.
-> 
-> Some of the caps may make sense to generic dmaengine but few of them do
-> not :) While at it, am planning to make it dmaengine_periph_caps to
-> denote that these are dmaengine peripheral capabilities.
-> 
-
-If the function only passes in periph_caps, how do we allow the non periph DMA 
-utilize this function?
+Thanks,
+Song
