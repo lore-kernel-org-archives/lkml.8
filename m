@@ -2,140 +2,110 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 422D8C433E4
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 15:27:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8932C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 15:28:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1C2A622209
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 15:27:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9EA93221ED
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 15:28:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594740463;
-	bh=QoYjwUwCr8iv3vS0vUx9ZHDJWPjQ+QNqL1IS1uCDfws=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=zNF56enEgg7Hv4OjLg8xzoRVWdSAPrBhYUoP7Ll8QY26FruHXjEhRRuctQTKQ5rrE
-	 oShzqYN8eEcOwa4ZFnlZY8rERm2mRgcMX3gw7dZ3FVr1ZkIzDa9q26JFiFfaMcNeZt
-	 U+wdSaWWjLL3+yHrnWdwnpk/55CdH0ByMzyfxFCA=
+	s=default; t=1594740502;
+	bh=0qquT16fbcjpcUrLJKMrlKrFGQbbIFMbuB4UG5jOkoQ=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=P8EisVnmkTaQWZ/YPRfkZdmFkOLWPc4AxSc8YrmOf6EcDD1FmQDY18ovmA0xvGpRq
+	 zgnGalcR1lvVzhR5dkz4/MgwvmCONAmXbLq4wx3NKZaoKcw5nBEuX2x+r8uBcpSvpL
+	 k6IlqWQiCDdiXpgWbW0DCSOiJ7+D0HsaWO6wjfwM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726831AbgGNP1l (ORCPT
+        id S1727044AbgGNP2V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 11:27:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47622 "EHLO mail.kernel.org"
+        Tue, 14 Jul 2020 11:28:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48328 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725884AbgGNP1k (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 11:27:40 -0400
-Received: from quaco.ghostprotocols.net (unknown [179.97.37.151])
+        id S1725280AbgGNP2V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 11:28:21 -0400
+Received: from localhost (mobile-166-175-191-139.mycingular.net [166.175.191.139])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E4F1F221EF;
-        Tue, 14 Jul 2020 15:27:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 35C4F221EF;
+        Tue, 14 Jul 2020 15:28:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594740460;
-        bh=QoYjwUwCr8iv3vS0vUx9ZHDJWPjQ+QNqL1IS1uCDfws=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=IlF+/jEnPt4EseeRoIoPFjobQsVIxxHoMUxeaU6x4iPB5I+zcKXAo29Qsj3LrlSOt
-         F6aKwji3bHjIa+iFYvuEuppwWSC+Pr6wSidVxI+lDpf5/hUfxbTwvOv1iYZzWp3Zte
-         6KaHlCF6JXLRFZMGMOyPUXEr32zu95cx5ogg8TB4=
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 1478540094; Tue, 14 Jul 2020 12:27:38 -0300 (-03)
-Date:   Tue, 14 Jul 2020 12:27:38 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Alexey Budankov <alexey.budankov@linux.intel.com>,
-        Ravi Bangoria <ravi.bangoria@linux.ibm.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        James Morris <jmorris@namei.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Serge Hallyn <serge@hallyn.com>, Jiri Olsa <jolsa@redhat.com>,
-        Song Liu <songliubraving@fb.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Stephane Eranian <eranian@google.com>,
-        Igor Lubashev <ilubashe@akamai.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        "linux-security-module@vger.kernel.org" 
-        <linux-security-module@vger.kernel.org>,
-        "selinux@vger.kernel.org" <selinux@vger.kernel.org>,
-        "intel-gfx@lists.freedesktop.org" <intel-gfx@lists.freedesktop.org>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        linux-man@vger.kernel.org
-Subject: Re: [PATCH v8 00/12] Introduce CAP_PERFMON to secure system
- performance monitoring and observability
-Message-ID: <20200714152738.GB43671@kernel.org>
-References: <f96f8f8a-e65c-3f36-dc85-fc3f5191e8c5@linux.intel.com>
- <76718dc6-5483-5e2e-85b8-64e70306ee1f@linux.ibm.com>
- <7776fa40-6c65-2aa6-1322-eb3a01201000@linux.intel.com>
- <20200710170911.GD7487@kernel.org>
- <0d2e2306-22b2-a730-dc3f-edb3538b6561@linux.intel.com>
- <20200713121746.GA7029@kernel.org>
- <0fadcf78-8b0e-ed03-a554-cc172b7d249c@linux.intel.com>
- <20200713185152.GA18094@kernel.org>
- <20200714105934.GU10769@hirez.programming.kicks-ass.net>
+        s=default; t=1594740500;
+        bh=0qquT16fbcjpcUrLJKMrlKrFGQbbIFMbuB4UG5jOkoQ=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=s1oowI9A4zRjsuRhByPYU2IrrGnkDzB0e+M9tL3W4uY4Rz+xdKSfXXT4Ue6GjN2qv
+         k3EdVfrMqa/6dnaH9VVyFBbnQlhp00QqYfN6yPhYsbyjQnA/oiP9zs3o9bygbRQqsm
+         +6CcnZaGf485FQr8AgvdkPuTOpEYayWlrnj6c85k=
+Date:   Tue, 14 Jul 2020 10:28:18 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Giovanni Cabiddu <giovanni.cabiddu@intel.com>
+Cc:     alex.williamson@redhat.com, herbert@gondor.apana.org.au,
+        cohuck@redhat.com, nhorman@redhat.com, vdronov@redhat.com,
+        bhelgaas@google.com, mark.a.chambers@intel.com,
+        gordon.mcfadden@intel.com, ahsan.atta@intel.com,
+        qat-linux@intel.com, kvm@vger.kernel.org,
+        linux-crypto@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/5] PCI: Add Intel QuickAssist device IDs
+Message-ID: <20200714152818.GA395763@bjorn-Precision-5520>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200714105934.GU10769@hirez.programming.kicks-ass.net>
-X-Url:  http://acmel.wordpress.com
+In-Reply-To: <20200714063610.849858-2-giovanni.cabiddu@intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Tue, Jul 14, 2020 at 12:59:34PM +0200, Peter Zijlstra escreveu:
-> On Mon, Jul 13, 2020 at 03:51:52PM -0300, Arnaldo Carvalho de Melo wrote:
+On Tue, Jul 14, 2020 at 07:36:06AM +0100, Giovanni Cabiddu wrote:
+> Add device IDs for the following Intel QuickAssist devices: DH895XCC,
+> C3XXX and C62X.
 > 
-> > > > diff --git a/kernel/events/core.c b/kernel/events/core.c
-> > > > index 856d98c36f56..a2397f724c10 100644
-> > > > --- a/kernel/events/core.c
-> > > > +++ b/kernel/events/core.c
-> > > > @@ -11595,7 +11595,7 @@ SYSCALL_DEFINE5(perf_event_open,
-> > > >  		 * perf_event_exit_task() that could imply).
-> > > >  		 */
-> > > >  		err = -EACCES;
-> > > > -		if (!ptrace_may_access(task, PTRACE_MODE_READ_REALCREDS))
-> > > > +		if (!perfmon_capable() && !ptrace_may_access(task, PTRACE_MODE_READ_REALCREDS))
-> > > >  			goto err_cred;
-> > > >  	}
+> The defines in this patch are going to be referenced in two independent
+> drivers, qat and vfio-pci.
+> 
+> Signed-off-by: Giovanni Cabiddu <giovanni.cabiddu@intel.com>
 
-> > > >> makes monitoring simpler and even more secure to use since Perf tool need
-> > > >> not to start/stop/single-step and read/write registers and memory and so on
-> > > >> like a debugger or strace-like tool. What do you think?
+Acked-by: Bjorn Helgaas <bhelgaas@google.com>
 
-> > > > I tend to agree, Peter?
-
-> So this basically says that if CAP_PERFMON, we don't care about the
-> ptrace() permissions? Just like how CAP_SYS_PTRACE would always allow
-> the ptrace checks?
-
-> I suppose that makes sense.
-
-Yeah, it in fact addresses the comment right above it:
-
-        if (task) {
-                err = mutex_lock_interruptible(&task->signal->exec_update_mutex);
-                if (err)
-                        goto err_task;
-
-                /*
-                 * Reuse ptrace permission checks for now.
-                 *
-                 * We must hold exec_update_mutex across this and any potential
-                 * perf_install_in_context() call for this new event to
-                 * serialize against exec() altering our credentials (and the
-                 * perf_event_exit_task() that could imply).
-                 */
-                err = -EACCES;
-                if (!ptrace_may_access(task, PTRACE_MODE_READ_REALCREDS))
-                        goto err_cred;
-        }
-
-
-that "for now" part :-)
-
-Idea is to not require CAP_PTRACE for that, i.e. the attack surface for the
-perf binary is reduced.
-
-- Arnaldo
+> ---
+>  include/linux/pci_ids.h | 6 ++++++
+>  1 file changed, 6 insertions(+)
+> 
+> diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
+> index 0ad57693f392..f3166b1425ca 100644
+> --- a/include/linux/pci_ids.h
+> +++ b/include/linux/pci_ids.h
+> @@ -2659,6 +2659,8 @@
+>  #define PCI_DEVICE_ID_INTEL_80332_1	0x0332
+>  #define PCI_DEVICE_ID_INTEL_80333_0	0x0370
+>  #define PCI_DEVICE_ID_INTEL_80333_1	0x0372
+> +#define PCI_DEVICE_ID_INTEL_QAT_DH895XCC	0x0435
+> +#define PCI_DEVICE_ID_INTEL_QAT_DH895XCC_VF	0x0443
+>  #define PCI_DEVICE_ID_INTEL_82375	0x0482
+>  #define PCI_DEVICE_ID_INTEL_82424	0x0483
+>  #define PCI_DEVICE_ID_INTEL_82378	0x0484
+> @@ -2708,6 +2710,8 @@
+>  #define PCI_DEVICE_ID_INTEL_ALPINE_RIDGE_4C_NHI     0x1577
+>  #define PCI_DEVICE_ID_INTEL_ALPINE_RIDGE_4C_BRIDGE  0x1578
+>  #define PCI_DEVICE_ID_INTEL_80960_RP	0x1960
+> +#define PCI_DEVICE_ID_INTEL_QAT_C3XXX	0x19e2
+> +#define PCI_DEVICE_ID_INTEL_QAT_C3XXX_VF	0x19e3
+>  #define PCI_DEVICE_ID_INTEL_82840_HB	0x1a21
+>  #define PCI_DEVICE_ID_INTEL_82845_HB	0x1a30
+>  #define PCI_DEVICE_ID_INTEL_IOAT	0x1a38
+> @@ -2924,6 +2928,8 @@
+>  #define PCI_DEVICE_ID_INTEL_IOAT_JSF7	0x3717
+>  #define PCI_DEVICE_ID_INTEL_IOAT_JSF8	0x3718
+>  #define PCI_DEVICE_ID_INTEL_IOAT_JSF9	0x3719
+> +#define PCI_DEVICE_ID_INTEL_QAT_C62X	0x37c8
+> +#define PCI_DEVICE_ID_INTEL_QAT_C62X_VF	0x37c9
+>  #define PCI_DEVICE_ID_INTEL_ICH10_0	0x3a14
+>  #define PCI_DEVICE_ID_INTEL_ICH10_1	0x3a16
+>  #define PCI_DEVICE_ID_INTEL_ICH10_2	0x3a18
+> -- 
+> 2.26.2
+> 
