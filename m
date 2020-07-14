@@ -2,291 +2,193 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UPPERCASE_50_75,URIBL_BLOCKED
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4E76C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 21:12:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D756DC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 21:18:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BA26820658
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 21:12:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594761151;
-	bh=555ffu1VVePu0eeyZjDrmVVCXp6JFi7LXltX5kkzFbs=;
-	h=Date:From:To:List-Id:Cc:Subject:References:In-Reply-To:List-ID:
-	 From;
-	b=y0Z3Tcn9tK+JE3qgicZYQWf8yGskSe+LauUtpuaZyaXZbJXvtkaYYw8XIk3Hx3JNp
-	 IKPtIq1jK8t/mkda/3BrwoU5FRbIWnOWHAKRxnkaJl29cwQEbHIJqNpai6s1l07sGY
-	 y9rYOpVGDiah3a7T82DAwEvQ1tH38Qz+Tz3f55rs=
+	by mail.kernel.org (Postfix) with ESMTP id 9B92A20656
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 21:18:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="F3NZpnIv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728268AbgGNVMa (ORCPT
+        id S1728291AbgGNVSI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 17:12:30 -0400
-Received: from mail-il1-f196.google.com ([209.85.166.196]:41220 "EHLO
-        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727925AbgGNVMa (ORCPT
+        Tue, 14 Jul 2020 17:18:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33812 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726446AbgGNVSH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 17:12:30 -0400
-Received: by mail-il1-f196.google.com with SMTP id q3so58025ilt.8;
-        Tue, 14 Jul 2020 14:12:29 -0700 (PDT)
+        Tue, 14 Jul 2020 17:18:07 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 52DC6C061755;
+        Tue, 14 Jul 2020 14:18:07 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id o11so200870wrv.9;
+        Tue, 14 Jul 2020 14:18:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=+lZBBeyUE0lPJ7ofFYfVPRC61PUIwQVU3H14G0pJ7tc=;
+        b=F3NZpnIvV6tqV2q8ALdGW4uRyADrH4iYT2AdqPJNK9HsU8K0tyI4WQv1+Uig6/NNmk
+         qKScQHCi/YEBEAb/zqm1Lu7ne97Bgc9rhgPgJUmbijzfEv888yDzLkyDzccIHEO8KbGR
+         qxFzYZ8t7qwkeZu4D2e4oLdrfdSIZl6H8V74LCrBSVqIQdydQYRdR9gRZ9jRjiwKZRBq
+         ArvQ633flh6Kur0V6qlhpeIbnSw/tHpSwuybMcWheu5IJTq39FxowWwCkF6Oh9Iclg/h
+         NrUdkvAukBfkC1z1NkI6kmqWQ06qAOW1Q6yYiWlTvrUXwlz9h6KBhjnCQlFXJyfuFlLl
+         Hz7g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=S13MP5PonlfNBx38Brx7HPH7gHXZ1ZmRAhb/buFrfQk=;
-        b=bej9e2exjXIcLza7LLRNsxv5tVND07bIYfhBYjTYo9Xc9UBWQOdt7LFw/hLOR9W8//
-         FBtslCFX6nIGQK/uvAlFtIDbsvlxZz+t61Z1THnoIc+0N+nmPz/NImHsIzAilw7VtWA0
-         kO+K7tsUN8ctYMR9zntsy9A6S3xcIPH6XxhMZXgVH8mqkRLNKPCow+s3OT6KhkX7OHT1
-         /6aa/tp35cPeFpngRRvj96J3MFTcw5ChlVxnmc0i17KdmjjRKaT96Ha3wO0zBSG3UabC
-         QNGTGvXjQVr1nRv/PCgjWj8r3khsUiboD3yvSEtrbxLbqezzdv44E8lweBctpdQhKV5r
-         3unQ==
-X-Gm-Message-State: AOAM531VddElLf3aLsPhKyBFncJQigGgAaudgoeCKxK1/3zBTs6rNHsp
-        8QmRsahTYjHjAiQLRG0AnHVSRops7O/n
-X-Google-Smtp-Source: ABdhPJyDNiUPgR201wUJawqLfdOlbMUE19Yu2W+Wctasoh8enVF6bWtaSMKWKLDHb59+amEamS0T3w==
-X-Received: by 2002:a92:8b11:: with SMTP id i17mr6580022ild.212.1594761148802;
-        Tue, 14 Jul 2020 14:12:28 -0700 (PDT)
-Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id l18sm57363ill.56.2020.07.14.14.12.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 Jul 2020 14:12:28 -0700 (PDT)
-Received: (nullmailer pid 2927743 invoked by uid 1000);
-        Tue, 14 Jul 2020 21:12:27 -0000
-Date:   Tue, 14 Jul 2020 15:12:27 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Daniele Alessandrelli <daniele.alessandrelli@linux.intel.com>
-List-Id: <soc.lore.kernel.org>
-Cc:     linux-arm-kernel@lists.infradead.org, SoC Team <soc@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>,
-        Daniele Alessandrelli <daniele.alessandrelli@intel.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Jassi Brar <jassisinghbrar@gmail.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        "Paul J. Murphy" <paul.j.murphy@intel.com>,
-        Dinh Nguyen <dinguyen@kernel.org>
-Subject: Re: [PATCH v3 3/7] dt-bindings: clock: Add Keem Bay clock IDs
-Message-ID: <20200714211227.GA2924943@bogus>
-References: <20200714161305.836348-1-daniele.alessandrelli@linux.intel.com>
- <20200714161305.836348-4-daniele.alessandrelli@linux.intel.com>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=+lZBBeyUE0lPJ7ofFYfVPRC61PUIwQVU3H14G0pJ7tc=;
+        b=QMldNHnDkztlAySfHygh4xhX1mQWZ2EpJVXtf3V4jrpjBa4XJAYVIwnvEvyqXBoaXl
+         DoTZZ9JVS+9/RfGK0ncZn/y9iVdrseWVd90e6Bt0V4w/WYgu9fKjDmJ16FUBENumc/v0
+         Z0xrFFiwCZ/p4+jmo95tZRCJmFwGhBLFWIBqN9WJXlyOcZNdn4lSBU3t0aZ3UxtlFGuY
+         y1FBQnr61aPwgp7rRh0oKyU3nbXcHQd7SuVteW7mGahU161Ww8tEuyU8t9N+/awgyJIl
+         5rLTLeVeEhkIiuoPrsL2Qu5zdIB3xAMcjxnuuotw4db/WfGEksEwkDhj4a8vOxXg8R9d
+         na9A==
+X-Gm-Message-State: AOAM531Q67fqjbOpHozuDoCjuCreJ3FIqnnq3sdjtL8YzArt0sylUtGT
+        +lPIb17dmH9fEYJdDFpS1ETw87BN
+X-Google-Smtp-Source: ABdhPJzDcFTmUmW90ndfjqy6LWZjEbFnjFisW6pTMPwBDeX+av28s7sc1wH8uk2lKXjz1BYHgeNsEw==
+X-Received: by 2002:adf:e908:: with SMTP id f8mr7787367wrm.3.1594761485670;
+        Tue, 14 Jul 2020 14:18:05 -0700 (PDT)
+Received: from [192.168.1.3] (ip68-111-84-250.oc.oc.cox.net. [68.111.84.250])
+        by smtp.gmail.com with ESMTPSA id f14sm34071251wro.90.2020.07.14.14.18.01
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 14 Jul 2020 14:18:04 -0700 (PDT)
+Subject: Re: [PATCH v3 1/9] dt-bindings: reset: Add a binding for the RPi
+ Firmware reset controller
+To:     Rob Herring <robh@kernel.org>,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Cc:     f.fainelli@gmail.com, gregkh@linuxfoundation.org, wahrenst@gmx.net,
+        p.zabel@pengutronix.de, linux-kernel@vger.kernel.org,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        bcm-kernel-feedback-list@broadcom.com,
+        Eric Anholt <eric@anholt.net>, linux-usb@vger.kernel.org,
+        linux-rpi-kernel@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, tim.gover@raspberrypi.org,
+        linux-pci@vger.kernel.org, helgaas@kernel.org,
+        andy.shevchenko@gmail.com, mathias.nyman@linux.intel.com,
+        lorenzo.pieralisi@arm.com, devicetree@vger.kernel.org
+References: <20200612171334.26385-1-nsaenzjulienne@suse.de>
+ <20200612171334.26385-2-nsaenzjulienne@suse.de>
+ <20200713182356.GA413630@bogus>
+ <ed42e27eaf48fd19cc8ccccd15b0b25ba1d836ae.camel@suse.de>
+ <20200714210708.GA2897216@bogus>
+From:   Florian Fainelli <f.fainelli@gmail.com>
+Message-ID: <925bab2c-91e0-bf60-9ec4-286eb53f72ab@gmail.com>
+Date:   Tue, 14 Jul 2020 14:17:59 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Firefox/68.0 Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200714161305.836348-4-daniele.alessandrelli@linux.intel.com>
+In-Reply-To: <20200714210708.GA2897216@bogus>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 14, 2020 at 05:13:01PM +0100, Daniele Alessandrelli wrote:
-> From: Daniele Alessandrelli <daniele.alessandrelli@intel.com>
-> 
-> Add clock dt-bindings for Keem Bay SoC.
 
-Where's the binding schema?
 
+On 7/14/2020 2:07 PM, Rob Herring wrote:
+> On Tue, Jul 14, 2020 at 01:59:21PM +0200, Nicolas Saenz Julienne wrote:
+>> On Mon, 2020-07-13 at 12:23 -0600, Rob Herring wrote:
+>>> On Fri, Jun 12, 2020 at 07:13:25PM +0200, Nicolas Saenz Julienne wrote:
+>>>> The firmware running on the RPi VideoCore can be used to reset and
+>>>> initialize HW controlled by the firmware.
+>>>>
+>>>> Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+>>>> Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
+>>>>
+>>>> ---
+>>>> Changes since v2:
+>>>>  - Add include file for reset IDs
+>>>>
+>>>> Changes since v1:
+>>>>  - Correct cells binding as per Florian's comment
+>>>>  - Change compatible string to be more generic
+>>>>
+>>>>  .../arm/bcm/raspberrypi,bcm2835-firmware.yaml | 21 +++++++++++++++++++
+>>>>  .../reset/raspberrypi,firmware-reset.h        | 13 ++++++++++++
+>>>>  2 files changed, 34 insertions(+)
+>>>>  create mode 100644 include/dt-bindings/reset/raspberrypi,firmware-reset.h
+>>>>
+>>>> diff --git a/Documentation/devicetree/bindings/arm/bcm/raspberrypi,bcm2835-
+>>>> firmware.yaml
+>>>> b/Documentation/devicetree/bindings/arm/bcm/raspberrypi,bcm2835-
+>>>> firmware.yaml
+>>>> index b48ed875eb8e..23a885af3a28 100644
+>>>> --- a/Documentation/devicetree/bindings/arm/bcm/raspberrypi,bcm2835-
+>>>> firmware.yaml
+>>>> +++ b/Documentation/devicetree/bindings/arm/bcm/raspberrypi,bcm2835-
+>>>> firmware.yaml
+>>>> @@ -39,6 +39,22 @@ properties:
+>>>>        - compatible
+>>>>        - "#clock-cells"
+>>>>  
+>>>> +  reset:
+>>>
+>>> I'm not really thrilled how this is evolving with a node per provider. 
+>>> There's no reason you can't just add #clock-cells and #reset-cells to 
+>>> the parent firmware node.
+>>
+>> What are the downsides? The way I see it there is not much difference. And this
+>> way of handling things is feels more intuitive and flexible (overlays can
+>> control what to enable easily, we can take advantage of the platform device
+>> core).
 > 
-> Signed-off-by: Daniele Alessandrelli <daniele.alessandrelli@intel.com>
-> ---
->  include/dt-bindings/clock/keembay-clocks.h | 188 +++++++++++++++++++++
->  1 file changed, 188 insertions(+)
->  create mode 100644 include/dt-bindings/clock/keembay-clocks.h
+> What the OS wants can evolve, so designing around the current needs of 
+> the OS is not how bindings should be done.
 > 
-> diff --git a/include/dt-bindings/clock/keembay-clocks.h b/include/dt-bindings/clock/keembay-clocks.h
-> new file mode 100644
-> index 000000000000..4ad6616ee8e0
-> --- /dev/null
-> +++ b/include/dt-bindings/clock/keembay-clocks.h
-> @@ -0,0 +1,188 @@
-> +/* SPDX-License-Identifier: (GPL-2.0-only OR BSD-3-Clause) */
-> +/*
-> + * Copyright (c) 2020 Intel Corporation.
-> + *
-> + * Device tree defines for clocks in Keem Bay.
-> + */
-> +
-> +#ifndef __DT_BINDINGS_KEEMBAY_CLOCKS_H
-> +#define __DT_BINDINGS_KEEMBAY_CLOCKS_H
-> +
-> +/* CPR_PLL region. CLK_ID: 0 - 11 */
-> +#define KEEM_BAY_A53_PLL_START_ID (0)
-> +#define KEEM_BAY_A53_PLL_0_OUT_0 (KEEM_BAY_A53_PLL_START_ID + 0)
-> +#define KEEM_BAY_A53_PLL_0_OUT_1 (KEEM_BAY_A53_PLL_START_ID + 1)
-> +#define KEEM_BAY_A53_PLL_0_OUT_2 (KEEM_BAY_A53_PLL_START_ID + 2)
-> +#define KEEM_BAY_A53_PLL_0_OUT_3 (KEEM_BAY_A53_PLL_START_ID + 3)
-> +#define KEEM_BAY_A53_PLL_1_OUT_0 (KEEM_BAY_A53_PLL_START_ID + 4)
-> +#define KEEM_BAY_A53_PLL_1_OUT_1 (KEEM_BAY_A53_PLL_START_ID + 5)
-> +#define KEEM_BAY_A53_PLL_1_OUT_2 (KEEM_BAY_A53_PLL_START_ID + 6)
-> +#define KEEM_BAY_A53_PLL_1_OUT_3 (KEEM_BAY_A53_PLL_START_ID + 7)
-> +#define KEEM_BAY_A53_PLL_2_OUT_0 (KEEM_BAY_A53_PLL_START_ID + 8)
-> +#define KEEM_BAY_A53_PLL_2_OUT_1 (KEEM_BAY_A53_PLL_START_ID + 9)
-> +#define KEEM_BAY_A53_PLL_2_OUT_2 (KEEM_BAY_A53_PLL_START_ID + 10)
-> +#define KEEM_BAY_A53_PLL_2_OUT_3 (KEEM_BAY_A53_PLL_START_ID + 11)
-> +#define KEEM_BAY_A53_PLL_MAX_ID (KEEM_BAY_A53_PLL_2_OUT_3)
-> +
-> +/* A53_CPR region. CLK_ID: 12 - 30 */
-> +#define KEEM_BAY_A53_START_ID (KEEM_BAY_A53_PLL_MAX_ID + 1)
-> +#define KEEM_BAY_A53_AON (KEEM_BAY_A53_START_ID + 0)
-> +#define KEEM_BAY_A53_NOC (KEEM_BAY_A53_START_ID + 1)
-> +#define KEEM_BAY_A53_FUSE (KEEM_BAY_A53_START_ID + 2)
-> +#define KEEM_BAY_A53_ROM (KEEM_BAY_A53_START_ID + 3)
-> +#define KEEM_BAY_A53_ICB (KEEM_BAY_A53_START_ID + 4)
-> +#define KEEM_BAY_A53_GIC (KEEM_BAY_A53_START_ID + 5)
-> +#define KEEM_BAY_A53_TIM (KEEM_BAY_A53_START_ID + 6)
-> +#define KEEM_BAY_A53_GPIO (KEEM_BAY_A53_START_ID + 7)
-> +#define KEEM_BAY_A53_JTAG (KEEM_BAY_A53_START_ID + 8)
-> +#define KEEM_BAY_A53_MBIST_0 (KEEM_BAY_A53_START_ID + 9)
-> +#define KEEM_BAY_A53_DSS (KEEM_BAY_A53_START_ID + 10)
-> +#define KEEM_BAY_A53_MSS (KEEM_BAY_A53_START_ID + 11)
-> +#define KEEM_BAY_A53_PSS (KEEM_BAY_A53_START_ID + 12)
-> +#define KEEM_BAY_A53_PCIE (KEEM_BAY_A53_START_ID + 13)
-> +#define KEEM_BAY_A53_VENC (KEEM_BAY_A53_START_ID + 14)
-> +#define KEEM_BAY_A53_VDEC (KEEM_BAY_A53_START_ID + 15)
-> +#define KEEM_BAY_A53_MBIST_1 (KEEM_BAY_A53_START_ID + 16)
-> +#define KEEM_BAY_A53_MBIST_2 (KEEM_BAY_A53_START_ID + 17)
-> +#define KEEM_BAY_A53_MBIST_3 (KEEM_BAY_A53_START_ID + 18)
-> +#define KEEM_BAY_A53_MAX_ID (KEEM_BAY_A53_MBIST_3)
-> +
-> +/* A53_CPR_AUX region. CLK_ID: 31 - 57 */
-> +#define KEEM_BAY_A53_AUX_START_ID (KEEM_BAY_A53_MAX_ID + 1)
-> +#define KEEM_BAY_A53_AUX_32KHZ (KEEM_BAY_A53_AUX_START_ID + 0)
-> +#define KEEM_BAY_A53_AUX_CPR (KEEM_BAY_A53_AUX_START_ID + 1)
-> +#define KEEM_BAY_A53_AUX_TSENS (KEEM_BAY_A53_AUX_START_ID + 2)
-> +#define KEEM_BAY_A53_AUX_GPIO0 (KEEM_BAY_A53_AUX_START_ID + 3)
-> +#define KEEM_BAY_A53_AUX_GPIO1 (KEEM_BAY_A53_AUX_START_ID + 4)
-> +#define KEEM_BAY_A53_AUX_GPIO2 (KEEM_BAY_A53_AUX_START_ID + 5)
-> +#define KEEM_BAY_A53_AUX_GPIO3 (KEEM_BAY_A53_AUX_START_ID + 6)
-> +#define KEEM_BAY_A53_AUX_DDR_REF (KEEM_BAY_A53_AUX_START_ID + 7)
-> +#define KEEM_BAY_A53_AUX_DDR_REF_BYPASS (KEEM_BAY_A53_AUX_START_ID + 8)
-> +#define KEEM_BAY_A53_AUX_RESERVED1 (KEEM_BAY_A53_AUX_START_ID + 9)
-> +#define KEEM_BAY_A53_AUX_VENC (KEEM_BAY_A53_AUX_START_ID + 10)
-> +#define KEEM_BAY_A53_AUX_VDEC (KEEM_BAY_A53_AUX_START_ID + 11)
-> +#define KEEM_BAY_A53_AUX_USOC_USB_CTRL (KEEM_BAY_A53_AUX_START_ID + 12)
-> +#define KEEM_BAY_A53_AUX_USB (KEEM_BAY_A53_AUX_START_ID + 13)
-> +#define KEEM_BAY_A53_AUX_USB_REF (KEEM_BAY_A53_AUX_START_ID + 14)
-> +#define KEEM_BAY_A53_AUX_USB_ALT_REF (KEEM_BAY_A53_AUX_START_ID + 15)
-> +#define KEEM_BAY_A53_AUX_USB_SUSPEND (KEEM_BAY_A53_AUX_START_ID + 16)
-> +#define KEEM_BAY_A53_AUX_RESERVED2 (KEEM_BAY_A53_AUX_START_ID + 17)
-> +#define KEEM_BAY_A53_AUX_PCIE (KEEM_BAY_A53_AUX_START_ID + 18)
-> +#define KEEM_BAY_A53_AUX_DBG_CLK (KEEM_BAY_A53_AUX_START_ID + 19)
-> +#define KEEM_BAY_A53_AUX_DBG_TRACE (KEEM_BAY_A53_AUX_START_ID + 20)
-> +#define KEEM_BAY_A53_AUX_DBG_DAP (KEEM_BAY_A53_AUX_START_ID + 21)
-> +#define KEEM_BAY_A53_AUX_ARM_CLKIN (KEEM_BAY_A53_AUX_START_ID + 22)
-> +#define KEEM_BAY_A53_AUX_ARM_AXI (KEEM_BAY_A53_AUX_START_ID + 23)
-> +#define KEEM_BAY_A53_AUX_USOC (KEEM_BAY_A53_AUX_START_ID + 24)
-> +#define KEEM_BAY_A53_AUX_USOC_REF (KEEM_BAY_A53_AUX_START_ID + 25)
-> +#define KEEM_BAY_A53_AUX_USOC_ALT_REF (KEEM_BAY_A53_AUX_START_ID + 26)
-> +#define KEEM_BAY_A53_AUX_MAX_ID (KEEM_BAY_A53_AUX_USOC_ALT_REF)
-> +
-> +/* PSS_CPR region CLK_ID: CLK_ID: 58 - 82 */
-> +#define KEEM_BAY_PSS_START_ID (KEEM_BAY_A53_AUX_MAX_ID + 1)
-> +#define KEEM_BAY_PSS_I2C0 (KEEM_BAY_PSS_START_ID + 0)
-> +#define KEEM_BAY_PSS_I2C1 (KEEM_BAY_PSS_START_ID + 1)
-> +#define KEEM_BAY_PSS_I2C2 (KEEM_BAY_PSS_START_ID + 2)
-> +#define KEEM_BAY_PSS_I2C3 (KEEM_BAY_PSS_START_ID + 3)
-> +#define KEEM_BAY_PSS_I2C4 (KEEM_BAY_PSS_START_ID + 4)
-> +#define KEEM_BAY_PSS_SD0 (KEEM_BAY_PSS_START_ID + 5)
-> +#define KEEM_BAY_PSS_SD1 (KEEM_BAY_PSS_START_ID + 6)
-> +#define KEEM_BAY_PSS_EMMC (KEEM_BAY_PSS_START_ID + 7)
-> +#define KEEM_BAY_PSS_AXI_DMA (KEEM_BAY_PSS_START_ID + 8)
-> +#define KEEM_BAY_PSS_SPI0 (KEEM_BAY_PSS_START_ID + 9)
-> +#define KEEM_BAY_PSS_SPI1 (KEEM_BAY_PSS_START_ID + 10)
-> +#define KEEM_BAY_PSS_SPI2 (KEEM_BAY_PSS_START_ID + 11)
-> +#define KEEM_BAY_PSS_SPI3 (KEEM_BAY_PSS_START_ID + 12)
-> +#define KEEM_BAY_PSS_I2S0 (KEEM_BAY_PSS_START_ID + 13)
-> +#define KEEM_BAY_PSS_I2S1 (KEEM_BAY_PSS_START_ID + 14)
-> +#define KEEM_BAY_PSS_I2S2 (KEEM_BAY_PSS_START_ID + 15)
-> +#define KEEM_BAY_PSS_I2S3 (KEEM_BAY_PSS_START_ID + 16)
-> +#define KEEM_BAY_PSS_UART0 (KEEM_BAY_PSS_START_ID + 17)
-> +#define KEEM_BAY_PSS_UART1 (KEEM_BAY_PSS_START_ID + 18)
-> +#define KEEM_BAY_PSS_UART2 (KEEM_BAY_PSS_START_ID + 19)
-> +#define KEEM_BAY_PSS_UART3 (KEEM_BAY_PSS_START_ID + 20)
-> +#define KEEM_BAY_PSS_I3C0 (KEEM_BAY_PSS_START_ID + 21)
-> +#define KEEM_BAY_PSS_I3C1 (KEEM_BAY_PSS_START_ID + 22)
-> +#define KEEM_BAY_PSS_I3C2 (KEEM_BAY_PSS_START_ID + 23)
-> +#define KEEM_BAY_PSS_GBE (KEEM_BAY_PSS_START_ID + 24)
-> +#define KEEM_BAY_PSS_MAX_ID (KEEM_BAY_PSS_GBE)
-> +
-> +/* PSS_CPR_AUX region. CLK_ID: 83 - 97 */
-> +#define KEEM_BAY_PSS_AUX_START_ID (KEEM_BAY_PSS_MAX_ID + 1)
-> +#define KEEM_BAY_PSS_AUX_I2S0 (KEEM_BAY_PSS_AUX_START_ID + 0)
-> +#define KEEM_BAY_PSS_AUX_I2S1 (KEEM_BAY_PSS_AUX_START_ID + 1)
-> +#define KEEM_BAY_PSS_AUX_I2S2 (KEEM_BAY_PSS_AUX_START_ID + 2)
-> +#define KEEM_BAY_PSS_AUX_I2S3 (KEEM_BAY_PSS_AUX_START_ID + 3)
-> +#define KEEM_BAY_PSS_AUX_UART0 (KEEM_BAY_PSS_AUX_START_ID + 4)
-> +#define KEEM_BAY_PSS_AUX_UART1 (KEEM_BAY_PSS_AUX_START_ID + 5)
-> +#define KEEM_BAY_PSS_AUX_UART2 (KEEM_BAY_PSS_AUX_START_ID + 6)
-> +#define KEEM_BAY_PSS_AUX_UART3 (KEEM_BAY_PSS_AUX_START_ID + 7)
-> +#define KEEM_BAY_PSS_AUX_SD0 (KEEM_BAY_PSS_AUX_START_ID + 8)
-> +#define KEEM_BAY_PSS_AUX_SD1 (KEEM_BAY_PSS_AUX_START_ID + 9)
-> +#define KEEM_BAY_PSS_AUX_EMMC (KEEM_BAY_PSS_AUX_START_ID + 10)
-> +#define KEEM_BAY_PSS_AUX_TRNG (KEEM_BAY_PSS_AUX_START_ID + 11)
-> +#define KEEM_BAY_PSS_AUX_OCS (KEEM_BAY_PSS_AUX_START_ID + 12)
-> +#define KEEM_BAY_PSS_AUX_GBE_PTP (KEEM_BAY_PSS_AUX_START_ID + 13)
-> +#define KEEM_BAY_PSS_AUX_GBE_TX (KEEM_BAY_PSS_AUX_START_ID + 14)
-> +#define KEEM_BAY_PSS_AUX_MAX_ID (KEEM_BAY_PSS_AUX_GBE_TX)
-> +
-> +/* DSS_CPR region. CLK_ID: 98 - 109 */
-> +#define KEEM_BAY_DSS_START_ID (KEEM_BAY_PSS_AUX_MAX_ID + 1)
-> +#define KEEM_BAY_DSS_SYS (KEEM_BAY_DSS_START_ID + 0)
-> +#define KEEM_BAY_DSS_DEC400 (KEEM_BAY_DSS_START_ID + 1)
-> +#define KEEM_BAY_DSS_TSENSE (KEEM_BAY_DSS_START_ID + 2)
-> +#define KEEM_BAY_DSS_BUS_0 (KEEM_BAY_DSS_START_ID + 3)
-> +#define KEEM_BAY_DSS_CORE_0 (KEEM_BAY_DSS_START_ID + 4)
-> +#define KEEM_BAY_DSS_REF_0 (KEEM_BAY_DSS_START_ID + 5)
-> +#define KEEM_BAY_DSS_REF_BYP_0 (KEEM_BAY_DSS_START_ID + 6)
-> +#define KEEM_BAY_DSS_BUS_1 (KEEM_BAY_DSS_START_ID + 7)
-> +#define KEEM_BAY_DSS_CORE_1 (KEEM_BAY_DSS_START_ID + 8)
-> +#define KEEM_BAY_DSS_REF_1 (KEEM_BAY_DSS_START_ID + 9)
-> +#define KEEM_BAY_DSS_REF_BYP_1 (KEEM_BAY_DSS_START_ID + 10)
-> +#define KEEM_BAY_DSS_MMU500 (KEEM_BAY_DSS_START_ID + 11)
-> +#define KEEM_BAY_DSS_MAX_ID (KEEM_BAY_DSS_MMU500)
-> +
-> +/* USS_CPR region. CLK_ID: 110 - 116 */
-> +#define KEEM_BAY_USS_START_ID (KEEM_BAY_DSS_MAX_ID + 1)
-> +#define KEEM_BAY_USS_SYS (KEEM_BAY_USS_START_ID + 0)
-> +#define KEEM_BAY_USS_REF (KEEM_BAY_USS_START_ID + 1)
-> +#define KEEM_BAY_USS_ALT_REF (KEEM_BAY_USS_START_ID + 2)
-> +#define KEEM_BAY_USS_SUSPEND (KEEM_BAY_USS_START_ID + 3)
-> +#define KEEM_BAY_USS_CORE (KEEM_BAY_USS_START_ID + 4)
-> +#define KEEM_BAY_USS_LOW_JIT (KEEM_BAY_USS_START_ID + 5)
-> +#define KEEM_BAY_USS_PHY_TST (KEEM_BAY_USS_START_ID + 6)
-> +#define KEEM_BAY_USS_MAX_ID (KEEM_BAY_USS_PHY_TST)
-> +
-> +/* MSS_CPR region. CLK_ID: 117 - 129 */
-> +#define KEEM_BAY_MSS_START_ID (KEEM_BAY_USS_MAX_ID + 1)
-> +#define KEEM_BAY_MSS_CPU (KEEM_BAY_MSS_START_ID + 0)
-> +#define KEEM_BAY_MSS_CPU_DSU (KEEM_BAY_MSS_START_ID + 1)
-> +#define KEEM_BAY_MSS_CPU_L2C (KEEM_BAY_MSS_START_ID + 2)
-> +#define KEEM_BAY_MSS_CPU_ICB (KEEM_BAY_MSS_START_ID + 3)
-> +#define KEEM_BAY_MSS_CPU_TIM (KEEM_BAY_MSS_START_ID + 4)
-> +#define KEEM_BAY_MSS_JPGENC (KEEM_BAY_MSS_START_ID + 5)
-> +#define KEEM_BAY_MSS_DTB (KEEM_BAY_MSS_START_ID + 6)
-> +#define KEEM_BAY_MSS_BLT (KEEM_BAY_MSS_START_ID + 7)
-> +#define KEEM_BAY_MSS_UPA (KEEM_BAY_MSS_START_ID + 8)
-> +#define KEEM_BAY_MSS_NCE (KEEM_BAY_MSS_START_ID + 9)
-> +#define KEEM_BAY_MSS_CV (KEEM_BAY_MSS_START_ID + 10)
-> +#define KEEM_BAY_MSS_ISP (KEEM_BAY_MSS_START_ID + 11)
-> +#define KEEM_BAY_MSS_CAM (KEEM_BAY_MSS_START_ID + 12)
-> +#define KEEM_BAY_MSS_MAX_ID (KEEM_BAY_MSS_CAM)
-> +
-> +/* MSS_CPR_AUX region. CLK_ID: 130 - 138 */
-> +#define KEEM_BAY_MSS_AUX_START_ID (KEEM_BAY_MSS_MAX_ID + 1)
-> +#define KEEM_BAY_MSS_AUX_CIF (KEEM_BAY_MSS_AUX_START_ID + 0)
-> +#define KEEM_BAY_MSS_AUX_LCD (KEEM_BAY_MSS_AUX_START_ID + 1)
-> +#define KEEM_BAY_MSS_AUX_SLVDS0 (KEEM_BAY_MSS_AUX_START_ID + 2)
-> +#define KEEM_BAY_MSS_AUX_SLVDS1 (KEEM_BAY_MSS_AUX_START_ID + 3)
-> +#define KEEM_BAY_MSS_AUX_MIPI_TX0 (KEEM_BAY_MSS_AUX_START_ID + 4)
-> +#define KEEM_BAY_MSS_AUX_MIPI_TX1 (KEEM_BAY_MSS_AUX_START_ID + 5)
-> +#define KEEM_BAY_MSS_AUX_MIPI_ECFG (KEEM_BAY_MSS_AUX_START_ID + 6)
-> +#define KEEM_BAY_MSS_AUX_MIPI_CFG (KEEM_BAY_MSS_AUX_START_ID + 7)
-> +#define KEEM_BAY_MSS_AUX_JPGENC (KEEM_BAY_MSS_AUX_START_ID + 8)
-> +#define KEEM_BAY_MSS_AUX_MAX_ID (KEEM_BAY_MSS_AUX_JPGENC)
-> +
-> +#define KEEM_BAY_NUM_CLOCKS (KEEM_BAY_MSS_AUX_MAX_ID + 1)
-> +
-> +#endif /* __DT_BINDINGS_KEEMBAY_CLOCKS_H */
-> -- 
-> 2.26.2
+> Using overlays to add clocks or resets wouldn't really work given they 
+> are spread out over the tree. And with clocks in particular, you'd have 
+> to replace dummy fixed clocks with actual firmware clocks. Sounds 
+> fragile and messy...
 > 
+>>> I probably should have complained with the clocks node, but that's only 
+>>> pending for 5.9.
+>>
+>> Note that there are more users for this pattern: "raspberrypi,firmware-ts" and
+>> "raspberrypi,firmware-gpio". Actually you were the one to originally propose
+>> this it[1]. :P
+> 
+> Sigh, this is why I dislike incomplete examples...
+> 
+> Based on that,
+> 
+> Acked-by: Rob Herring <robh@kernel.org>
+> 
+> And please get gpio and ts converted to schema and referenced here 
+> before the next time I look at this.
+> 
+>> There already is a fair amount of churn in these drivers because of all the DT
+>> changes we did in the past, and if we need to change how we integrate these
+>> again, I'd really like it to be for good.
+>>
+>>> The bigger issue is this stuff is just trickling in one bit at a time 
+>>> which gives no context for review. What's next? Is it really a mystery 
+>>> as to what functions the firmware provides?
+>>
+>> We have no control over it, RPi engineers integrate new designs and new
+>> firmware interfaces show up. This is a good example of it.
+>>
+>> I proposed them to use SCMI as it covers most of what they are already
+>> providing here. But no luck so far.
+> 
+> Once we get tired of supporting all the different firmware interfaces 
+> and the mess they become, we'll just have to start refusing custom ones. 
+> Worked for PSCI.
+
+In this particular case, the Raspberry Pi Foundation VPU firmware should
+just implement SCMI and that would avoid having to write new client
+drivers for Linux, it is not clear to me why this has not been done yet.
+-- 
+Florian
