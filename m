@@ -2,146 +2,97 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7259AC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 13:19:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4390C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 13:21:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4DECF224B2
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 13:19:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="nH06SGdj"
+	by mail.kernel.org (Postfix) with ESMTP id 95EE32242C
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 13:21:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728328AbgGNNTx (ORCPT
+        id S1728471AbgGNNVW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 09:19:53 -0400
-Received: from mail.efficios.com ([167.114.26.124]:32892 "EHLO
-        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726889AbgGNNTw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 09:19:52 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by mail.efficios.com (Postfix) with ESMTP id EB1382BE60C;
-        Tue, 14 Jul 2020 09:19:51 -0400 (EDT)
-Received: from mail.efficios.com ([127.0.0.1])
-        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id xayI0xZlvxfa; Tue, 14 Jul 2020 09:19:51 -0400 (EDT)
-Received: from localhost (localhost [127.0.0.1])
-        by mail.efficios.com (Postfix) with ESMTP id AB7BC2BE165;
-        Tue, 14 Jul 2020 09:19:51 -0400 (EDT)
-DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com AB7BC2BE165
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
-        s=default; t=1594732791;
-        bh=0UYHQAplI6ZwH5L2kpETJucy62xyxgvLq0FyGt1NMmw=;
-        h=Date:From:To:Message-ID:MIME-Version;
-        b=nH06SGdjfmW9ixdEhn/cxqRbbYOTuhL6feo8kzlzBrXu0L3Gx7v55+Gcwp43jrwSY
-         Ktqd6F0NqANCXdPzyBHygs4TvxST+/epA7EKEQbO0qO8Q5sCJg7rU86EgGqvB4Rx/M
-         ClXml5+aXGGcjAyMEmv6DTTIcn89P3a9YvcVM0KorYkA+4uH4c0piDnfM1cqfxWt8e
-         Nhzi/Xjx4OUx3Q5CzujQHH+3TkOWT5451EZwDIW77hxnxBs7J/xk2N9pMz/F/s4WkQ
-         Rm6fqmuut4X4aNrTutD+uGOnU6GE2NCycpufi2Nm2w9uEpHV1V/zL2ZNH0Jx2xwX5b
-         688EYkhhDEdAw==
-X-Virus-Scanned: amavisd-new at efficios.com
-Received: from mail.efficios.com ([127.0.0.1])
-        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id SyMSwQmj9d-i; Tue, 14 Jul 2020 09:19:51 -0400 (EDT)
-Received: from mail03.efficios.com (mail03.efficios.com [167.114.26.124])
-        by mail.efficios.com (Postfix) with ESMTP id 9C09B2BE164;
-        Tue, 14 Jul 2020 09:19:51 -0400 (EDT)
-Date:   Tue, 14 Jul 2020 09:19:51 -0400 (EDT)
-From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-To:     Florian Weimer <fweimer@redhat.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        paulmck <paulmck@linux.ibm.com>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Paul Turner <pjt@google.com>,
-        linux-api <linux-api@vger.kernel.org>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        carlos <carlos@redhat.com>
-Message-ID: <2452161.11491.1594732791558.JavaMail.zimbra@efficios.com>
-In-Reply-To: <87a7028d5u.fsf@oldenburg2.str.redhat.com>
-References: <20200714030348.6214-1-mathieu.desnoyers@efficios.com> <20200714030348.6214-3-mathieu.desnoyers@efficios.com> <87mu42bepq.fsf@oldenburg2.str.redhat.com> <131549905.11442.1594731035989.JavaMail.zimbra@efficios.com> <87a7028d5u.fsf@oldenburg2.str.redhat.com>
-Subject: Re: [RFC PATCH 2/4] rseq: Allow extending struct rseq
+        Tue, 14 Jul 2020 09:21:22 -0400
+Received: from mga17.intel.com ([192.55.52.151]:58115 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727858AbgGNNVW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 09:21:22 -0400
+IronPort-SDR: 0T6wLqTnzwnsgG/OSWQbH/xJUzulFP0jkuWIpBcUiA7inxMvJ/ewff1+PFOHoOVXXQGOFVvdND
+ YL0r3BCD/5WQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9681"; a="128966758"
+X-IronPort-AV: E=Sophos;i="5.75,350,1589266800"; 
+   d="scan'208";a="128966758"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jul 2020 06:21:21 -0700
+IronPort-SDR: kCiMPCl1Qydi60siPoOuJ+7wnu0UGhdD7QYRimAzQ0KV/49J86+Om3E/LrVmec4ZbULeGc3v3S
+ mtFiKLDx4fuA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,350,1589266800"; 
+   d="scan'208";a="281747816"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.152])
+  by orsmga003.jf.intel.com with ESMTP; 14 Jul 2020 06:21:21 -0700
+Date:   Tue, 14 Jul 2020 06:21:21 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Vitaly Kuznetsov <vkuznets@redhat.com>
+Cc:     Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Oliver Upton <oupton@google.com>,
+        Peter Shier <pshier@google.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Subject: Re: [PATCH] KVM: x86: Don't attempt to load PDPTRs when 64-bit mode
+ is enabled
+Message-ID: <20200714132120.GA14404@linux.intel.com>
+References: <20200714015732.32426-1-sean.j.christopherson@intel.com>
+ <87wo36s3wb.fsf@vitty.brq.redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [167.114.26.124]
-X-Mailer: Zimbra 8.8.15_GA_3955 (ZimbraWebClient - FF78 (Linux)/8.8.15_GA_3953)
-Thread-Topic: rseq: Allow extending struct rseq
-Thread-Index: 9tyJaU9TMeuq2KdCvH7TV6HBMkiNfw==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87wo36s3wb.fsf@vitty.brq.redhat.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
------ On Jul 14, 2020, at 9:00 AM, Florian Weimer fweimer@redhat.com wrote:
-
-> * Mathieu Desnoyers:
+On Tue, Jul 14, 2020 at 02:00:04PM +0200, Vitaly Kuznetsov wrote:
+> Sean Christopherson <sean.j.christopherson@intel.com> writes:
+> > diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+> > index 95ef629228691..5f526d94c33f3 100644
+> > --- a/arch/x86/kvm/x86.c
+> > +++ b/arch/x86/kvm/x86.c
+> > @@ -819,22 +819,22 @@ int kvm_set_cr0(struct kvm_vcpu *vcpu, unsigned long cr0)
+> >  	if ((cr0 & X86_CR0_PG) && !(cr0 & X86_CR0_PE))
+> >  		return 1;
+> >  
+> > -	if (cr0 & X86_CR0_PG) {
+> >  #ifdef CONFIG_X86_64
+> > -		if (!is_paging(vcpu) && (vcpu->arch.efer & EFER_LME)) {
+> > -			int cs_db, cs_l;
+> > +	if ((vcpu->arch.efer & EFER_LME) && !is_paging(vcpu) &&
+> > +	    (cr0 & X86_CR0_PG)) {
 > 
->>> How are extensions going to affect the definition of struct rseq,
->>> including its alignment?
->>
->> The alignment will never decrease. If the structure becomes large enough
->> its alignment could theoretically increase. Would that be an issue ?
+> it seems we have more than one occurance of "if (vcpu->arch.efer &
+> EFER_LME)" under "#ifdef CONFIG_X86_64" and we alredy have 
 > 
-> Telling the compiler that struct is larger than it actually is, or that
-> it has more alignment than in memory, results in undefined behavior,
-> even if only fields are accessed in the smaller struct region.
+> static inline int is_long_mode(struct kvm_vcpu *vcpu)
+> {
+> #ifdef CONFIG_X86_64
+>      return vcpu->arch.efer & EFER_LMA;
+> #else
+>      return 0;
+> #endif
+> }
 > 
-> An increase in alignment from 32 to 64 is perhaps not likely to have
-> this effect.  But the undefined behavior is still there, and has been
-> observed for mismatches like 8 vs 16.
+> so if we use this instead, the compilers will just throw away the
+> non-reachable blocks when !(#ifdef CONFIG_X86_64), right?
 
-Good points.
-
-> 
->>> As things stand now, glibc 2.32 will make the size and alignment of
->>> struct rseq part of its ABI, so it can't really change after that.
->>
->> Can the size and alignment of a structure be defined as minimum alignment
->> and size values ? For instance, those would be invariant for a given glibc
->> version (if we always use the internal struct rseq declaration), but could
->> be increased in future versions.
-> 
-> Not if we are talking about a global (TLS) data symbol.  No such changes
-> are possible there.  We have some workarounds for symbols that live
-> exclusively within glibc, but they don't work if there are libraries out
-> there which interpose the symbol.
-
-OK
-
-> 
->>> With a different approach, we can avoid making the symbol size part of
->>> the ABI, but then we cannot use the __rseq_abi TLS symbol.  As a result,
->>> interoperability with early adopters would be lost.
->>
->> Do you mean with a function "getter", and then keeping that pointer around
->> in a per-user TLS ? I would prefer to avoid that because it adds an extra
->> pointer dereference on a fast path.
-> 
-> My choice would have been a function that returns the offset from the
-> thread pointer (which has to be unchanged regarding all threads).
-
-So AFAIU we would have glibc expose a symbol, e.g.:
-
-off_t rseq_tls_offset(void);
-
-Which would be typically called by user libraries and applications at initialization
-to get the offset of the struct rseq. They should store it in a static variable so
-rseq critical sections can use that offset.
-
-Is there an arch-agnostic way to get the thread pointer from user-space code ? That
-would be needed by all rseq critical section implementations.
-
-Thanks,
-
-Mathieu
-
--- 
-Mathieu Desnoyers
-EfficiOS Inc.
-http://www.efficios.com
+EFER.LME vs. EFER.LMA.  The kvm_set_cr0() check is specifically looking at
+the case where EFER.LME=1, EFER.LMA=0, and CR0.PG is being toggled on, i.e.
+long mode is being enabled.  EFER_LMA won't be set until vmx_set_cr0() does
+enter_lmode().
