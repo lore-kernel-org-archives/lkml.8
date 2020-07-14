@@ -2,195 +2,429 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36C42C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 09:13:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7BE1C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 09:14:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 133E02145D
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 09:13:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="q3Kxkk/8"
+	by mail.kernel.org (Postfix) with ESMTP id B574121D7D
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 09:14:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727037AbgGNJNW (ORCPT
+        id S1726845AbgGNJOV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 05:13:22 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:49516 "EHLO m43-7.mailgun.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726766AbgGNJNV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 05:13:21 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1594717999; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=OpGstJziG3b+lewJ4OJkEErFnXU4CBYWekCcjmKdfZw=;
- b=q3Kxkk/80hwnMoni9m2MV8BQxjklWL9s3ik4ErFFl8vDRZOXxuh6oge7jX7QHDSUwsyiKc0d
- 84p5uekVT7jMOnE9rwlpKHveHtH3JhjxXBsjReWny+mazOuMKjJ0EFs5TYC39a+wvxmJDgz1
- kMLXABcFASAFUmdRXy0SdBPIQkw=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n18.prod.us-west-2.postgun.com with SMTP id
- 5f0d772e166c1c5494060807 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 14 Jul 2020 09:13:18
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 452A4C433B1; Tue, 14 Jul 2020 09:13:17 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: cang)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 270ABC433C8;
-        Tue, 14 Jul 2020 09:13:16 +0000 (UTC)
+        Tue, 14 Jul 2020 05:14:21 -0400
+Received: from smtp09.smtpout.orange.fr ([80.12.242.131]:49336 "EHLO
+        smtp.smtpout.orange.fr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726187AbgGNJOU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 05:14:20 -0400
+Received: from localhost.localdomain ([93.22.39.234])
+        by mwinf5d69 with ME
+        id 2xEE23004537AcD03xEEPM; Tue, 14 Jul 2020 11:14:17 +0200
+X-ME-Helo: localhost.localdomain
+X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
+X-ME-Date: Tue, 14 Jul 2020 11:14:17 +0200
+X-ME-IP: 93.22.39.234
+From:   Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+To:     davem@davemloft.net, jdmason@kudzu.us, kuba@kernel.org,
+        mhabets@solarflare.com, snelson@pensando.io, mst@redhat.com,
+        vaibhavgupta40@gmail.com
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-janitors@vger.kernel.org,
+        Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Subject: [PATCH] net: neterion: vxge: switch from 'pci_' to 'dma_' API
+Date:   Tue, 14 Jul 2020 11:14:12 +0200
+Message-Id: <20200714091412.300211-1-christophe.jaillet@wanadoo.fr>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Tue, 14 Jul 2020 17:13:16 +0800
-From:   Can Guo <cang@codeaurora.org>
-To:     Bart Van Assche <bvanassche@acm.org>
-Cc:     asutoshd@codeaurora.org, nguyenb@codeaurora.org,
-        hongwus@codeaurora.org, rnayak@codeaurora.org,
-        linux-scsi@vger.kernel.org, kernel-team@android.com,
-        saravanak@google.com, salyzyn@google.com,
-        Alim Akhtar <alim.akhtar@samsung.com>,
-        Avri Altman <avri.altman@wdc.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Stanley Chu <stanley.chu@mediatek.com>,
-        Nitin Rawat <nitirawa@codeaurora.org>,
-        Tomas Winkler <tomas.winkler@intel.com>,
-        Bean Huo <beanhuo@micron.com>,
-        Satya Tangirala <satyat@google.com>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 4/4] scsi: ufs: Fix up and simplify error recovery
- mechanism
-In-Reply-To: <47e7a4ec9a0404bc6d01818fcdad90eb@codeaurora.org>
-References: <1594693693-22466-1-git-send-email-cang@codeaurora.org>
- <1594693693-22466-5-git-send-email-cang@codeaurora.org>
- <fe00619c-f337-397f-9ccf-7babda095210@acm.org>
- <47e7a4ec9a0404bc6d01818fcdad90eb@codeaurora.org>
-Message-ID: <5fb1e82c97a480e5330337a240a12633@codeaurora.org>
-X-Sender: cang@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Bart,
+The wrappers in include/linux/pci-dma-compat.h should go away.
 
-On 2020-07-14 12:26, Can Guo wrote:
-> Hi Bart,
-> 
-> On 2020-07-14 11:52, Bart Van Assche wrote:
->> On 2020-07-13 19:28, Can Guo wrote:
->>> o Queue eh_work on a single threaded workqueue to avoid concurrency 
->>> between
->>>   eh_works.
->> 
->> Please use another approach (mutex?) to serialize error handling. 
->> There are
->> already way too workqueues in a running Linux system.
->> 
+The patch has been generated with the coccinelle script below. No GFP_
+flag needs to be corrected.
+It has been compile tested.
 
-Yeah, mutex works, but in this change, we need to flush the eh_work. As 
-per
-test, in real cases, flush_work can trigger warnings if the work is 
-queued on
-system_wq. Please check func check_flush_dependency().
 
->>> o According to the UFSHCI JEDEC spec, hibern8 enter/exit error occurs 
->>> when
->>>   the link is broken. This actaully applies to any power mode change
->>>   operations. In this change, if a power mode change operation 
->>> (including
->>>   AH8 enter/exit) fails, mark the link state as UIC_LINK_BROKEN_STATE 
->>> and
->>>   schedule eh_work. eh_work needs to do full reset and restore to 
->>> recover
->>>   the link back to active. Before the link state is recovered to 
->>> active by
->>>   eh_work, any power mode change attempts just return -ENOLINK to 
->>> avoid
->>>   consecutive HW error.
->>> 
->>> o To avoid concurrency between eh_work and link recovery, remove link
->>>   recovery from hibern8 enter/exit func. If hibern8 enter/exit func 
->>> fails,
->>>   simply return error code and let eh_work run in parallel.
->>> 
->>> o Recover UFS hba runtime PM error in eh_work. If 
->>> ufschd_suspend/resume
->>>   fails due to UFS error, e.g. hibern8 enter/exit error and SSU cmd 
->>> error,
->>>   the runtime PM framework saves the error to 
->>> dev.power.runtime_error.
->>>   After that, hba runtime suspend/resume would not be invoked anymore 
->>> until
->>>   dev.power.runtime_error is cleared. The runtime PM error can be 
->>> recovered
->>>   in eh_work by calling pm_runtime_set_active() after reset and 
->>> restore
->>>   succeeds. Meanwhile, if pm_runtime_set_active() returns no error, 
->>> which
->>>   means dev.power.runtime_error is cleared, we also need to 
->>> explicitly
->>>   resume those scsi devices under hba in case any of them has failed 
->>> to be
->>>   resumed due to hba runtime resume error.
->>> 
->>> o Fix a racing problem between eh_work and ufshcd_suspend/resume. In 
->>> the
->>>   old code, it blocks scsi requests before schedules eh_work, but 
->>> when
->>>   eh_work calls pm_runtime_get_sync(), if ufshcd_suspend/resume is 
->>> sending
->>>   a scsi cmd, most likely the SSU cmd, pm_runtime_get_sync() will 
->>> never
->>>   return because scsi requests were blocked. To fix this racing 
->>> problem,
->>>   o Don't block scsi requests before schedule eh_work, but let 
->>> eh_work
->>>     block scsi requests when eh_work is ready to start error 
->>> recovery.
->>>   o Meanwhile, if eh_work is schueduled due to fatal error, don't 
->>> requeue
->>>     the scsi cmds sent from ufshcd_suspend/resume path, but simply 
->>> let the
->>>     scsi cmds fail. If the scsi cmds fail, hba runtime suspend/resume 
->>> fails
->>>     too, but it does hurt since eh_work recovers hba runtime PM 
->>> error.
->>> 
->>> o Move host/regs dump in ufshcd_check_errors() to eh_work because 
->>> heavy
->>>   dump in IRQ context can lead to stability issues. In addition, some 
->>> clean
->>>   up in ufshcd_print_host_regs() and ufshcd_print_host_state().
->> 
->> The above list is a long list. To me that is a sign that this patch 
->> needs to
->> be split into multiple patches.
->> 
->> Thanks,
->> 
->> Bart.
-> 
-> Sure, will split it into a few patches.
-> 
-> Thanks,
-> 
-> Can Guo.
+@@
+@@
+-    PCI_DMA_BIDIRECTIONAL
++    DMA_BIDIRECTIONAL
 
-I tried, but I find it hard to split it as it works as a whole, it is a 
-refactor
-change rather than a mixture of multiple fixes. I will try to refine the 
-commit
-msg in next version. So it goes just as it is now.
+@@
+@@
+-    PCI_DMA_TODEVICE
++    DMA_TO_DEVICE
 
-Thanks,
+@@
+@@
+-    PCI_DMA_FROMDEVICE
++    DMA_FROM_DEVICE
 
-Can Guo.
+@@
+@@
+-    PCI_DMA_NONE
++    DMA_NONE
+
+@@
+expression e1, e2, e3;
+@@
+-    pci_alloc_consistent(e1, e2, e3)
++    dma_alloc_coherent(&e1->dev, e2, e3, GFP_)
+
+@@
+expression e1, e2, e3;
+@@
+-    pci_zalloc_consistent(e1, e2, e3)
++    dma_alloc_coherent(&e1->dev, e2, e3, GFP_)
+
+@@
+expression e1, e2, e3, e4;
+@@
+-    pci_free_consistent(e1, e2, e3, e4)
++    dma_free_coherent(&e1->dev, e2, e3, e4)
+
+@@
+expression e1, e2, e3, e4;
+@@
+-    pci_map_single(e1, e2, e3, e4)
++    dma_map_single(&e1->dev, e2, e3, e4)
+
+@@
+expression e1, e2, e3, e4;
+@@
+-    pci_unmap_single(e1, e2, e3, e4)
++    dma_unmap_single(&e1->dev, e2, e3, e4)
+
+@@
+expression e1, e2, e3, e4, e5;
+@@
+-    pci_map_page(e1, e2, e3, e4, e5)
++    dma_map_page(&e1->dev, e2, e3, e4, e5)
+
+@@
+expression e1, e2, e3, e4;
+@@
+-    pci_unmap_page(e1, e2, e3, e4)
++    dma_unmap_page(&e1->dev, e2, e3, e4)
+
+@@
+expression e1, e2, e3, e4;
+@@
+-    pci_map_sg(e1, e2, e3, e4)
++    dma_map_sg(&e1->dev, e2, e3, e4)
+
+@@
+expression e1, e2, e3, e4;
+@@
+-    pci_unmap_sg(e1, e2, e3, e4)
++    dma_unmap_sg(&e1->dev, e2, e3, e4)
+
+@@
+expression e1, e2, e3, e4;
+@@
+-    pci_dma_sync_single_for_cpu(e1, e2, e3, e4)
++    dma_sync_single_for_cpu(&e1->dev, e2, e3, e4)
+
+@@
+expression e1, e2, e3, e4;
+@@
+-    pci_dma_sync_single_for_device(e1, e2, e3, e4)
++    dma_sync_single_for_device(&e1->dev, e2, e3, e4)
+
+@@
+expression e1, e2, e3, e4;
+@@
+-    pci_dma_sync_sg_for_cpu(e1, e2, e3, e4)
++    dma_sync_sg_for_cpu(&e1->dev, e2, e3, e4)
+
+@@
+expression e1, e2, e3, e4;
+@@
+-    pci_dma_sync_sg_for_device(e1, e2, e3, e4)
++    dma_sync_sg_for_device(&e1->dev, e2, e3, e4)
+
+@@
+expression e1, e2;
+@@
+-    pci_dma_mapping_error(e1, e2)
++    dma_mapping_error(&e1->dev, e2)
+
+@@
+expression e1, e2;
+@@
+-    pci_set_dma_mask(e1, e2)
++    dma_set_mask(&e1->dev, e2)
+
+@@
+expression e1, e2;
+@@
+-    pci_set_consistent_dma_mask(e1, e2)
++    dma_set_coherent_mask(&e1->dev, e2)
+
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+---
+If needed, see post from Christoph Hellwig on the kernel-janitors ML:
+   https://marc.info/?l=kernel-janitors&m=158745678307186&w=4
+---
+ .../net/ethernet/neterion/vxge/vxge-config.c  | 42 ++++++------
+ .../net/ethernet/neterion/vxge/vxge-main.c    | 64 +++++++++----------
+ 2 files changed, 52 insertions(+), 54 deletions(-)
+
+diff --git a/drivers/net/ethernet/neterion/vxge/vxge-config.c b/drivers/net/ethernet/neterion/vxge/vxge-config.c
+index 51cd57ab3d95..4f1f90f5e178 100644
+--- a/drivers/net/ethernet/neterion/vxge/vxge-config.c
++++ b/drivers/net/ethernet/neterion/vxge/vxge-config.c
+@@ -1102,10 +1102,10 @@ static void __vxge_hw_blockpool_destroy(struct __vxge_hw_blockpool *blockpool)
+ 	hldev = blockpool->hldev;
+ 
+ 	list_for_each_safe(p, n, &blockpool->free_block_list) {
+-		pci_unmap_single(hldev->pdev,
+-			((struct __vxge_hw_blockpool_entry *)p)->dma_addr,
+-			((struct __vxge_hw_blockpool_entry *)p)->length,
+-			PCI_DMA_BIDIRECTIONAL);
++		dma_unmap_single(&hldev->pdev->dev,
++				 ((struct __vxge_hw_blockpool_entry *)p)->dma_addr,
++				 ((struct __vxge_hw_blockpool_entry *)p)->length,
++				 DMA_BIDIRECTIONAL);
+ 
+ 		vxge_os_dma_free(hldev->pdev,
+ 			((struct __vxge_hw_blockpool_entry *)p)->memblock,
+@@ -1178,10 +1178,10 @@ __vxge_hw_blockpool_create(struct __vxge_hw_device *hldev,
+ 			goto blockpool_create_exit;
+ 		}
+ 
+-		dma_addr = pci_map_single(hldev->pdev, memblock,
+-				VXGE_HW_BLOCK_SIZE, PCI_DMA_BIDIRECTIONAL);
+-		if (unlikely(pci_dma_mapping_error(hldev->pdev,
+-				dma_addr))) {
++		dma_addr = dma_map_single(&hldev->pdev->dev, memblock,
++					  VXGE_HW_BLOCK_SIZE,
++					  DMA_BIDIRECTIONAL);
++		if (unlikely(dma_mapping_error(&hldev->pdev->dev, dma_addr))) {
+ 			vxge_os_dma_free(hldev->pdev, memblock, &acc_handle);
+ 			__vxge_hw_blockpool_destroy(blockpool);
+ 			status = VXGE_HW_ERR_OUT_OF_MEMORY;
+@@ -2264,10 +2264,10 @@ static void vxge_hw_blockpool_block_add(struct __vxge_hw_device *devh,
+ 		goto exit;
+ 	}
+ 
+-	dma_addr = pci_map_single(devh->pdev, block_addr, length,
+-				PCI_DMA_BIDIRECTIONAL);
++	dma_addr = dma_map_single(&devh->pdev->dev, block_addr, length,
++				  DMA_BIDIRECTIONAL);
+ 
+-	if (unlikely(pci_dma_mapping_error(devh->pdev, dma_addr))) {
++	if (unlikely(dma_mapping_error(&devh->pdev->dev, dma_addr))) {
+ 		vxge_os_dma_free(devh->pdev, block_addr, &acc_handle);
+ 		blockpool->req_out--;
+ 		goto exit;
+@@ -2359,11 +2359,10 @@ static void *__vxge_hw_blockpool_malloc(struct __vxge_hw_device *devh, u32 size,
+ 		if (!memblock)
+ 			goto exit;
+ 
+-		dma_object->addr = pci_map_single(devh->pdev, memblock, size,
+-					PCI_DMA_BIDIRECTIONAL);
++		dma_object->addr = dma_map_single(&devh->pdev->dev, memblock,
++						  size, DMA_BIDIRECTIONAL);
+ 
+-		if (unlikely(pci_dma_mapping_error(devh->pdev,
+-				dma_object->addr))) {
++		if (unlikely(dma_mapping_error(&devh->pdev->dev, dma_object->addr))) {
+ 			vxge_os_dma_free(devh->pdev, memblock,
+ 				&dma_object->acc_handle);
+ 			memblock = NULL;
+@@ -2410,11 +2409,10 @@ __vxge_hw_blockpool_blocks_remove(struct __vxge_hw_blockpool *blockpool)
+ 		if (blockpool->pool_size < blockpool->pool_max)
+ 			break;
+ 
+-		pci_unmap_single(
+-			(blockpool->hldev)->pdev,
+-			((struct __vxge_hw_blockpool_entry *)p)->dma_addr,
+-			((struct __vxge_hw_blockpool_entry *)p)->length,
+-			PCI_DMA_BIDIRECTIONAL);
++		dma_unmap_single(&(blockpool->hldev)->pdev->dev,
++				 ((struct __vxge_hw_blockpool_entry *)p)->dma_addr,
++				 ((struct __vxge_hw_blockpool_entry *)p)->length,
++				 DMA_BIDIRECTIONAL);
+ 
+ 		vxge_os_dma_free(
+ 			(blockpool->hldev)->pdev,
+@@ -2445,8 +2443,8 @@ static void __vxge_hw_blockpool_free(struct __vxge_hw_device *devh,
+ 	blockpool = &devh->block_pool;
+ 
+ 	if (size != blockpool->block_size) {
+-		pci_unmap_single(devh->pdev, dma_object->addr, size,
+-			PCI_DMA_BIDIRECTIONAL);
++		dma_unmap_single(&devh->pdev->dev, dma_object->addr, size,
++				 DMA_BIDIRECTIONAL);
+ 		vxge_os_dma_free(devh->pdev, memblock, &dma_object->acc_handle);
+ 	} else {
+ 
+diff --git a/drivers/net/ethernet/neterion/vxge/vxge-main.c b/drivers/net/ethernet/neterion/vxge/vxge-main.c
+index 5de85b9e9e35..b0faa737b817 100644
+--- a/drivers/net/ethernet/neterion/vxge/vxge-main.c
++++ b/drivers/net/ethernet/neterion/vxge/vxge-main.c
+@@ -241,10 +241,10 @@ static int vxge_rx_map(void *dtrh, struct vxge_ring *ring)
+ 	rx_priv = vxge_hw_ring_rxd_private_get(dtrh);
+ 
+ 	rx_priv->skb_data = rx_priv->skb->data;
+-	dma_addr = pci_map_single(ring->pdev, rx_priv->skb_data,
+-				rx_priv->data_size, PCI_DMA_FROMDEVICE);
++	dma_addr = dma_map_single(&ring->pdev->dev, rx_priv->skb_data,
++				  rx_priv->data_size, DMA_FROM_DEVICE);
+ 
+-	if (unlikely(pci_dma_mapping_error(ring->pdev, dma_addr))) {
++	if (unlikely(dma_mapping_error(&ring->pdev->dev, dma_addr))) {
+ 		ring->stats.pci_map_fail++;
+ 		return -EIO;
+ 	}
+@@ -323,8 +323,8 @@ vxge_rx_complete(struct vxge_ring *ring, struct sk_buff *skb, u16 vlan,
+ static inline void vxge_re_pre_post(void *dtr, struct vxge_ring *ring,
+ 				    struct vxge_rx_priv *rx_priv)
+ {
+-	pci_dma_sync_single_for_device(ring->pdev,
+-		rx_priv->data_dma, rx_priv->data_size, PCI_DMA_FROMDEVICE);
++	dma_sync_single_for_device(&ring->pdev->dev, rx_priv->data_dma,
++				   rx_priv->data_size, DMA_FROM_DEVICE);
+ 
+ 	vxge_hw_ring_rxd_1b_set(dtr, rx_priv->data_dma, rx_priv->data_size);
+ 	vxge_hw_ring_rxd_pre_post(ring->handle, dtr);
+@@ -425,8 +425,9 @@ vxge_rx_1b_compl(struct __vxge_hw_ring *ringh, void *dtr,
+ 				if (!vxge_rx_map(dtr, ring)) {
+ 					skb_put(skb, pkt_length);
+ 
+-					pci_unmap_single(ring->pdev, data_dma,
+-						data_size, PCI_DMA_FROMDEVICE);
++					dma_unmap_single(&ring->pdev->dev,
++							 data_dma, data_size,
++							 DMA_FROM_DEVICE);
+ 
+ 					vxge_hw_ring_rxd_pre_post(ringh, dtr);
+ 					vxge_post(&dtr_cnt, &first_dtr, dtr,
+@@ -458,9 +459,9 @@ vxge_rx_1b_compl(struct __vxge_hw_ring *ringh, void *dtr,
+ 				skb_reserve(skb_up,
+ 				    VXGE_HW_HEADER_ETHERNET_II_802_3_ALIGN);
+ 
+-				pci_dma_sync_single_for_cpu(ring->pdev,
+-					data_dma, data_size,
+-					PCI_DMA_FROMDEVICE);
++				dma_sync_single_for_cpu(&ring->pdev->dev,
++							data_dma, data_size,
++							DMA_FROM_DEVICE);
+ 
+ 				vxge_debug_mem(VXGE_TRACE,
+ 					"%s: %s:%d  skb_up = %p",
+@@ -585,13 +586,13 @@ vxge_xmit_compl(struct __vxge_hw_fifo *fifo_hw, void *dtr,
+ 		}
+ 
+ 		/*  for unfragmented skb */
+-		pci_unmap_single(fifo->pdev, txd_priv->dma_buffers[i++],
+-				skb_headlen(skb), PCI_DMA_TODEVICE);
++		dma_unmap_single(&fifo->pdev->dev, txd_priv->dma_buffers[i++],
++				 skb_headlen(skb), DMA_TO_DEVICE);
+ 
+ 		for (j = 0; j < frg_cnt; j++) {
+-			pci_unmap_page(fifo->pdev,
+-					txd_priv->dma_buffers[i++],
+-					skb_frag_size(frag), PCI_DMA_TODEVICE);
++			dma_unmap_page(&fifo->pdev->dev,
++				       txd_priv->dma_buffers[i++],
++				       skb_frag_size(frag), DMA_TO_DEVICE);
+ 			frag += 1;
+ 		}
+ 
+@@ -897,10 +898,10 @@ vxge_xmit(struct sk_buff *skb, struct net_device *dev)
+ 
+ 	first_frg_len = skb_headlen(skb);
+ 
+-	dma_pointer = pci_map_single(fifo->pdev, skb->data, first_frg_len,
+-				PCI_DMA_TODEVICE);
++	dma_pointer = dma_map_single(&fifo->pdev->dev, skb->data,
++				     first_frg_len, DMA_TO_DEVICE);
+ 
+-	if (unlikely(pci_dma_mapping_error(fifo->pdev, dma_pointer))) {
++	if (unlikely(dma_mapping_error(&fifo->pdev->dev, dma_pointer))) {
+ 		vxge_hw_fifo_txdl_free(fifo_hw, dtr);
+ 		fifo->stats.pci_map_fail++;
+ 		goto _exit0;
+@@ -977,12 +978,12 @@ vxge_xmit(struct sk_buff *skb, struct net_device *dev)
+ 	j = 0;
+ 	frag = &skb_shinfo(skb)->frags[0];
+ 
+-	pci_unmap_single(fifo->pdev, txdl_priv->dma_buffers[j++],
+-			skb_headlen(skb), PCI_DMA_TODEVICE);
++	dma_unmap_single(&fifo->pdev->dev, txdl_priv->dma_buffers[j++],
++			 skb_headlen(skb), DMA_TO_DEVICE);
+ 
+ 	for (; j < i; j++) {
+-		pci_unmap_page(fifo->pdev, txdl_priv->dma_buffers[j],
+-			skb_frag_size(frag), PCI_DMA_TODEVICE);
++		dma_unmap_page(&fifo->pdev->dev, txdl_priv->dma_buffers[j],
++			       skb_frag_size(frag), DMA_TO_DEVICE);
+ 		frag += 1;
+ 	}
+ 
+@@ -1012,8 +1013,8 @@ vxge_rx_term(void *dtrh, enum vxge_hw_rxd_state state, void *userdata)
+ 	if (state != VXGE_HW_RXD_STATE_POSTED)
+ 		return;
+ 
+-	pci_unmap_single(ring->pdev, rx_priv->data_dma,
+-		rx_priv->data_size, PCI_DMA_FROMDEVICE);
++	dma_unmap_single(&ring->pdev->dev, rx_priv->data_dma,
++			 rx_priv->data_size, DMA_FROM_DEVICE);
+ 
+ 	dev_kfree_skb(rx_priv->skb);
+ 	rx_priv->skb_data = NULL;
+@@ -1048,12 +1049,12 @@ vxge_tx_term(void *dtrh, enum vxge_hw_txdl_state state, void *userdata)
+ 	frag = &skb_shinfo(skb)->frags[0];
+ 
+ 	/*  for unfragmented skb */
+-	pci_unmap_single(fifo->pdev, txd_priv->dma_buffers[i++],
+-		skb_headlen(skb), PCI_DMA_TODEVICE);
++	dma_unmap_single(&fifo->pdev->dev, txd_priv->dma_buffers[i++],
++			 skb_headlen(skb), DMA_TO_DEVICE);
+ 
+ 	for (j = 0; j < frg_cnt; j++) {
+-		pci_unmap_page(fifo->pdev, txd_priv->dma_buffers[i++],
+-			       skb_frag_size(frag), PCI_DMA_TODEVICE);
++		dma_unmap_page(&fifo->pdev->dev, txd_priv->dma_buffers[i++],
++			       skb_frag_size(frag), DMA_TO_DEVICE);
+ 		frag += 1;
+ 	}
+ 
+@@ -4387,21 +4388,20 @@ vxge_probe(struct pci_dev *pdev, const struct pci_device_id *pre)
+ 		goto _exit0;
+ 	}
+ 
+-	if (!pci_set_dma_mask(pdev, DMA_BIT_MASK(64))) {
++	if (!dma_set_mask(&pdev->dev, DMA_BIT_MASK(64))) {
+ 		vxge_debug_ll_config(VXGE_TRACE,
+ 			"%s : using 64bit DMA", __func__);
+ 
+ 		high_dma = 1;
+ 
+-		if (pci_set_consistent_dma_mask(pdev,
+-						DMA_BIT_MASK(64))) {
++		if (dma_set_coherent_mask(&pdev->dev, DMA_BIT_MASK(64))) {
+ 			vxge_debug_init(VXGE_ERR,
+ 				"%s : unable to obtain 64bit DMA for "
+ 				"consistent allocations", __func__);
+ 			ret = -ENOMEM;
+ 			goto _exit1;
+ 		}
+-	} else if (!pci_set_dma_mask(pdev, DMA_BIT_MASK(32))) {
++	} else if (!dma_set_mask(&pdev->dev, DMA_BIT_MASK(32))) {
+ 		vxge_debug_ll_config(VXGE_TRACE,
+ 			"%s : using 32bit DMA", __func__);
+ 	} else {
+-- 
+2.25.1
+
