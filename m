@@ -2,219 +2,423 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 436C5C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 10:12:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76A83C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 10:16:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 175B8221FD
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 10:12:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3CAA021D7D
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 10:16:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=intel.onmicrosoft.com header.i=@intel.onmicrosoft.com header.b="xloR6YC+"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=qti.qualcomm.com header.i=@qti.qualcomm.com header.b="bQleqQ6i"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726492AbgGNKMy (ORCPT
+        id S1726768AbgGNKQC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 06:12:54 -0400
-Received: from mga04.intel.com ([192.55.52.120]:5072 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725906AbgGNKMx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 06:12:53 -0400
-IronPort-SDR: sZ1ybuOJyUAC8gP5kUej4GnrmqeB/cWW6N2DhNFGtmO7CPQV1YWzWmKCNTNLMZ6qeE/9DP1tx/
- FEsXnIwj67ZA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9681"; a="146338849"
-X-IronPort-AV: E=Sophos;i="5.75,350,1589266800"; 
-   d="scan'208";a="146338849"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jul 2020 03:12:52 -0700
-IronPort-SDR: AX08XsjGxE2Z7stKMtgs3whgCDfVNWV+h68M4joWz+7DPCAR9/zPy445jWA2W5ZkFX9Z49jO5N
- Y7SFkLbkLcIA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,350,1589266800"; 
-   d="scan'208";a="324502807"
-Received: from orsmsx110.amr.corp.intel.com ([10.22.240.8])
-  by FMSMGA003.fm.intel.com with ESMTP; 14 Jul 2020 03:12:52 -0700
-Received: from ORSEDG002.ED.cps.intel.com (10.7.248.5) by
- ORSMSX110.amr.corp.intel.com (10.22.240.8) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Tue, 14 Jul 2020 03:12:52 -0700
-Received: from NAM11-BN8-obe.outbound.protection.outlook.com (104.47.58.176)
- by edgegateway.intel.com (134.134.137.101) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Tue, 14 Jul 2020 03:12:51 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=E3wuaWb8Zm6k2nKfJf9Qr0Amn+f+zXGPP9HixOG5BDnrHize6g3+7IWIJlr7WMS2Sf6ytWMkHoFhxK6tAoDwxp/XMQ6fCBQCThvUmoSZ6XVLrcSqLUrzRMwQOibDrV9fuApfvQifjFBc4IohKKox7ilgsrdp5CqookpILGlzngROKiRUsRhY8qD204Dp3vaLKXh7dydzbkazKl3FTcxdCWnXkF9Qm0MHkmoqyQgAMTVCmLGvzivZouNzC3rwAd8BOD6WZc8jmZ5ItHzap9v/GOk+Mm3fcPn1Ai1+QtWHyijePYsA21fC54tsj3UjbJBqdG/mGCx1Ot7dT0hRaxUG3Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=kdpXGoK+FFwCBETKvGnURfFxSXfOgV3MDhKEhxgETnQ=;
- b=e+3JelzhsWCDtFSgeyJMrKKEV9xnfG6GDwkQTrMsg0y9J2t7ANCRTTJr4Fa8HxAGjkyfK756sTk2GF2cZd6P/FaFD+sIWXcqT84luFTsnPLSB7jP3r7GQCqFtkFb/bbAPbPw7QWiB4LVBObBEvuOHfLl21Ts7Hup54dc2NWgtDKiUAaG4uS9SREBfu/KlD91YX4lyi91zluzsbe40aX6J1ty95yCmKfJildU2yPgTUOFjY4VSAYr7qimuG4R02Zka6CL7eo5XzIi9YpXtgmCP8SVGxxVVGXamrEuxasML46EguJUAZRchsz/4dbIV52P0Y9tFsDAERXo5o/ry+p/Kw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=intel.onmicrosoft.com;
- s=selector2-intel-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=kdpXGoK+FFwCBETKvGnURfFxSXfOgV3MDhKEhxgETnQ=;
- b=xloR6YC+GGockon40kMndkrh3izdFAEbuU5Q4DEy4VpXjC5Pc+pUx5KiwmulqQA2J4HwVyekjLWggLhAd+rImg1zngCGu2FNxIRPtb9Z4hCLP3Oul0M9KTE791ER3Avhs92SWDHxYzXmbPDNaRlDrrf91Hc6QbpVm+IOA2Q75wA=
-Received: from CY4PR11MB1432.namprd11.prod.outlook.com (2603:10b6:910:5::22)
- by CY4PR11MB1702.namprd11.prod.outlook.com (2603:10b6:903:2e::8) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3174.22; Tue, 14 Jul
- 2020 10:12:49 +0000
-Received: from CY4PR11MB1432.namprd11.prod.outlook.com
- ([fe80::b46e:9dcb:b46b:884a]) by CY4PR11MB1432.namprd11.prod.outlook.com
- ([fe80::b46e:9dcb:b46b:884a%4]) with mapi id 15.20.3174.026; Tue, 14 Jul 2020
- 10:12:49 +0000
-From:   "Liu, Yi L" <yi.l.liu@intel.com>
-To:     Will Deacon <will@kernel.org>
-CC:     "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
-        "eric.auger@redhat.com" <eric.auger@redhat.com>,
-        "baolu.lu@linux.intel.com" <baolu.lu@linux.intel.com>,
-        "joro@8bytes.org" <joro@8bytes.org>,
-        "Tian, Kevin" <kevin.tian@intel.com>,
-        "jacob.jun.pan@linux.intel.com" <jacob.jun.pan@linux.intel.com>,
-        "Raj, Ashok" <ashok.raj@intel.com>,
-        "Tian, Jun J" <jun.j.tian@intel.com>,
-        "Sun, Yi Y" <yi.y.sun@intel.com>,
-        "jean-philippe@linaro.org" <jean-philippe@linaro.org>,
-        "peterx@redhat.com" <peterx@redhat.com>,
-        "Wu, Hao" <hao.wu@intel.com>,
-        "stefanha@gmail.com" <stefanha@gmail.com>,
-        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Robin Murphy <robin.murphy@arm.com>
-Subject: RE: [PATCH v5 03/15] iommu/smmu: Report empty domain nesting info
-Thread-Topic: [PATCH v5 03/15] iommu/smmu: Report empty domain nesting info
-Thread-Index: AQHWWD2lVc+q/avNRU2WMQZyTvsTFakFfrYAgAFdguA=
-Date:   Tue, 14 Jul 2020 10:12:49 +0000
-Message-ID: <CY4PR11MB1432226D0A52D099249E95A0C3610@CY4PR11MB1432.namprd11.prod.outlook.com>
-References: <1594552870-55687-1-git-send-email-yi.l.liu@intel.com>
- <1594552870-55687-4-git-send-email-yi.l.liu@intel.com>
- <20200713131454.GA2739@willie-the-truck>
-In-Reply-To: <20200713131454.GA2739@willie-the-truck>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-dlp-reaction: no-action
-dlp-version: 11.2.0.6
-dlp-product: dlpe-windows
-authentication-results: kernel.org; dkim=none (message not signed)
- header.d=none;kernel.org; dmarc=none action=none header.from=intel.com;
-x-originating-ip: [192.198.147.220]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: eb8a1c13-c6f7-453e-9d53-08d827de7699
-x-ms-traffictypediagnostic: CY4PR11MB1702:
-x-ld-processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <CY4PR11MB17020A1F401752EEA24CAC0EC3610@CY4PR11MB1702.namprd11.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:5797;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: umtRxVfMVBzbhzjE34Rju7JgPpc+tA2fo2GCNWL1SdSgEAKNZPo+hibN1ziO3IBVUkJtFsAvqksRWHVt/e1VNy5+56oRORFhlCiTIytend6R2mXBAiIWT2Zh82SeeVwjxfDFr0GBcp0wsie+3ZJUT6PKToylWM4IwJSPQ04mKcSeMWcOdtc7kmga44DCb+Ku8A8JsayQcj3/EGWygdKRRN8midW800ldntV9uE94OZtKdkQZb29iBSV92WGBTS9KQXj480iN0leJcp0liZprjTYAAEULtA6qRBEw991GLyehQdLtPauRTQHk6MA69zdJJVyOyrTsSoHf8MMj7o9gzA==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CY4PR11MB1432.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(366004)(346002)(376002)(39860400002)(136003)(396003)(2906002)(9686003)(33656002)(8936002)(52536014)(7696005)(66556008)(66476007)(64756008)(66446008)(76116006)(6916009)(66946007)(478600001)(55016002)(83380400001)(6506007)(54906003)(316002)(5660300002)(186003)(26005)(4326008)(8676002)(7416002)(86362001)(71200400001);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: LutDe3Nn90BwVYEuHMm3VUcexDXDUAM+OqPrXtUGNRPRyq3YFrjK2YsYlLHBZolueRfL4Z+wQl3mJ+HaGzA0tef0v13Sk6mXRHP/Mid4X/KgosvQtFOEjZF+BT53uEZOTebmDsYsj1eMPe2pwUtoEKSu8c5uCfJIaFyggaq16wLNNLtSF01rgOmx5tU2f8CDMFar8wv5OvSsq4PVOKo5pd9lvKTafYkMOixKm7UCQfs6QQtnJvol54m7dVAEIxkUguhllFDY6uFm4/dYEMKp1ACt9aN/5+G00X0IkBmqNUwh3GXUv+8yXHyEanMX2JfR/LpQYnY+Yxn+uHBgBoYgRde0vNJW1bmNVxmuAGrME6OViX8mDDrlDKswbbeoDJFlL5GiqLhVLXPobt/xMh97mmBWFFajGAH2DYHXzAyTQCNe8NvRj8YHhqJkyXSRR4T+P1wQbNZP7ed3+/Lukd2r8KLfl/mIss73p+pKJVyCLIlJ2QyoLnA8o/29y3Vl90Se
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: CY4PR11MB1432.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: eb8a1c13-c6f7-453e-9d53-08d827de7699
-X-MS-Exchange-CrossTenant-originalarrivaltime: 14 Jul 2020 10:12:49.7187
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 2gN0RhdRA/UBYovUmejkc8irzvqmPYkkz3Z5nD3SdQnaOVxZRvzq5cYQlXotpbJkjlgPTjZyNo/xtmynixZYvw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR11MB1702
-X-OriginatorOrg: intel.com
+        Tue, 14 Jul 2020 06:16:02 -0400
+Received: from alexa-out.qualcomm.com ([129.46.98.28]:45008 "EHLO
+        alexa-out.qualcomm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725906AbgGNKQC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 06:16:02 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=qti.qualcomm.com; i=@qti.qualcomm.com; q=dns/txt;
+  s=qcdkim; t=1594721762; x=1626257762;
+  h=from:to:cc:subject:date:message-id;
+  bh=mJQgl+Wih/Npohxk2QCbcNtLC2MU8snCzsF5it6GMmE=;
+  b=bQleqQ6i6GEZalmkPAEAnfEKNPyxRZ7II8ItCgfAKsWYSF0NcXvuvIBU
+   nLsIGS7MP4+cRQ2XsDDC0L1jS6S4MMgEBKmWxazNzDq2pqZi+lFhAu6bq
+   z5+PktutNzk7PHOul9CCsPLlWGsa3hDaUIpU/JCVC7cU+lGAs1JccxSgL
+   c=;
+Received: from ironmsg-lv-alpha.qualcomm.com ([10.47.202.13])
+  by alexa-out.qualcomm.com with ESMTP; 14 Jul 2020 03:16:01 -0700
+Received: from ironmsg01-blr.qualcomm.com ([10.86.208.130])
+  by ironmsg-lv-alpha.qualcomm.com with ESMTP/TLS/AES256-SHA; 14 Jul 2020 03:15:59 -0700
+Received: from dikshita-linux.qualcomm.com ([10.204.65.237])
+  by ironmsg01-blr.qualcomm.com with ESMTP; 14 Jul 2020 15:45:43 +0530
+Received: by dikshita-linux.qualcomm.com (Postfix, from userid 347544)
+        id 40C3E411B; Tue, 14 Jul 2020 15:45:42 +0530 (IST)
+From:   Dikshita Agarwal <dikshita@qti.qualcomm.com>
+To:     linux-media@vger.kernel.org, stanimir.varbanov@linaro.org
+Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        vgarodia@codeaurora.org, majja@codeaurora.org, jdas@codeaurora.org,
+        Dikshita Agarwal <dikshita@codeaurora.org>
+Subject: [PATCH v3] venus: move platform specific data to platform file
+Date:   Tue, 14 Jul 2020 15:45:40 +0530
+Message-Id: <1594721740-17617-1-git-send-email-dikshita@qti.qualcomm.com>
+X-Mailer: git-send-email 1.9.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Will,
+From: Dikshita Agarwal <dikshita@codeaurora.org>
 
-> From: Will Deacon <will@kernel.org>
-> Sent: Monday, July 13, 2020 9:15 PM
->=20
-> On Sun, Jul 12, 2020 at 04:20:58AM -0700, Liu Yi L wrote:
-> > This patch is added as instead of returning a boolean for DOMAIN_ATTR_N=
-ESTING,
-> > iommu_domain_get_attr() should return an iommu_nesting_info handle.
-> >
-> > Cc: Will Deacon <will@kernel.org>
-> > Cc: Robin Murphy <robin.murphy@arm.com>
-> > Cc: Eric Auger <eric.auger@redhat.com>
-> > Cc: Jean-Philippe Brucker <jean-philippe@linaro.org>
-> > Suggested-by: Jean-Philippe Brucker <jean-philippe@linaro.org>
-> > Signed-off-by: Liu Yi L <yi.l.liu@intel.com>
-> > Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
-> > ---
-> > v4 -> v5:
-> > *) address comments from Eric Auger.
-> > ---
-> >  drivers/iommu/arm-smmu-v3.c | 29 +++++++++++++++++++++++++++--
-> >  drivers/iommu/arm-smmu.c    | 29 +++++++++++++++++++++++++++--
-> >  2 files changed, 54 insertions(+), 4 deletions(-)
-> >
-> > diff --git a/drivers/iommu/arm-smmu-v3.c b/drivers/iommu/arm-smmu-v3.c
-> > index f578677..ec815d7 100644
-> > --- a/drivers/iommu/arm-smmu-v3.c
-> > +++ b/drivers/iommu/arm-smmu-v3.c
-> > @@ -3019,6 +3019,32 @@ static struct iommu_group
-> *arm_smmu_device_group(struct device *dev)
-> >  	return group;
-> >  }
-> >
-> > +static int arm_smmu_domain_nesting_info(struct arm_smmu_domain
-> *smmu_domain,
-> > +					void *data)
-> > +{
-> > +	struct iommu_nesting_info *info =3D (struct iommu_nesting_info *)data=
-;
-> > +	unsigned int size;
-> > +
-> > +	if (!info || smmu_domain->stage !=3D ARM_SMMU_DOMAIN_NESTED)
-> > +		return -ENODEV;
-> > +
-> > +	size =3D sizeof(struct iommu_nesting_info);
-> > +
-> > +	/*
-> > +	 * if provided buffer size is smaller than expected, should
-> > +	 * return 0 and also the expected buffer size to caller.
-> > +	 */
-> > +	if (info->size < size) {
-> > +		info->size =3D size;
-> > +		return 0;
-> > +	}
-> > +
-> > +	/* report an empty iommu_nesting_info for now */
-> > +	memset(info, 0x0, size);
-> > +	info->size =3D size;
-> > +	return 0;
-> > +}
->=20
-> Have you verified that this doesn't break the existing usage of
-> DOMAIN_ATTR_NESTING in drivers/vfio/vfio_iommu_type1.c?
+Move all data specific to platform into a separate file.
 
-I didn't have ARM machine on my hand. But I contacted with Jean
-Philippe, he confirmed no compiling issue. I didn't see any code
-getting DOMAIN_ATTR_NESTING attr in current drivers/vfio/vfio_iommu_type1.c=
-.
-What I'm adding is to call iommu_domai_get_attr(, DOMAIN_ATTR_NESTIN)
-and won't fail if the iommu_domai_get_attr() returns 0. This patch
-returns an empty nesting info for DOMAIN_ATTR_NESTIN and return
-value is 0 if no error. So I guess it won't fail nesting for ARM.
+Signed-off-by: Dikshita Agarwal <dikshita@codeaurora.org>
+---
+ drivers/media/platform/qcom/venus/Makefile       |  3 +-
+ drivers/media/platform/qcom/venus/core.c         | 20 ++-----
+ drivers/media/platform/qcom/venus/core.h         | 12 +----
+ drivers/media/platform/qcom/venus/helpers.c      | 31 +----------
+ drivers/media/platform/qcom/venus/helpers.h      |  1 -
+ drivers/media/platform/qcom/venus/hfi_platform.c | 66 ++++++++++++++++++++++++
+ drivers/media/platform/qcom/venus/hfi_platform.h | 28 ++++++++++
+ drivers/media/platform/qcom/venus/pm_helpers.c   |  1 +
+ drivers/media/platform/qcom/venus/vdec.c         |  3 +-
+ drivers/media/platform/qcom/venus/venc.c         |  3 +-
+ 10 files changed, 107 insertions(+), 61 deletions(-)
+ create mode 100644 drivers/media/platform/qcom/venus/hfi_platform.c
+ create mode 100644 drivers/media/platform/qcom/venus/hfi_platform.h
 
-@Eric, how about your opinion? your dual-stage vSMMU support may
-also share the vfio_iommu_type1.c code.
+diff --git a/drivers/media/platform/qcom/venus/Makefile b/drivers/media/platform/qcom/venus/Makefile
+index dfc6368..c8f0e39 100644
+--- a/drivers/media/platform/qcom/venus/Makefile
++++ b/drivers/media/platform/qcom/venus/Makefile
+@@ -3,7 +3,8 @@
+ 
+ venus-core-objs += core.o helpers.o firmware.o \
+ 		   hfi_venus.o hfi_msgs.o hfi_cmds.o hfi.o \
+-		   hfi_parser.o pm_helpers.o dbgfs.o
++		   hfi_parser.o pm_helpers.o dbgfs.o \
++		   hfi_platform.o
+ 
+ venus-dec-objs += vdec.o vdec_ctrls.o
+ venus-enc-objs += venc.o venc_ctrls.o
+diff --git a/drivers/media/platform/qcom/venus/core.c b/drivers/media/platform/qcom/venus/core.c
+index bbb394c..2245a0e 100644
+--- a/drivers/media/platform/qcom/venus/core.c
++++ b/drivers/media/platform/qcom/venus/core.c
+@@ -20,6 +20,7 @@
+ #include "core.h"
+ #include "firmware.h"
+ #include "pm_helpers.h"
++#include "hfi_platform.h"
+ 
+ static void venus_event_notify(struct venus_core *core, u32 event)
+ {
+@@ -222,6 +223,8 @@ static int venus_probe(struct platform_device *pdev)
+ 			return ret;
+ 	}
+ 
++	core->hfi_plat = hfi_platform_get(core->res->hfi_version);
++
+ 	ret = dma_set_mask_and_coherent(dev, core->res->dma_mask);
+ 	if (ret)
+ 		return ret;
+@@ -461,17 +464,6 @@ static __maybe_unused int venus_runtime_resume(struct device *dev)
+ 	{  244800, 100000000 },	/* 1920x1080@30 */
+ };
+ 
+-static const struct codec_freq_data sdm845_codec_freq_data[] =  {
+-	{ V4L2_PIX_FMT_H264, VIDC_SESSION_TYPE_ENC, 675, 10 },
+-	{ V4L2_PIX_FMT_HEVC, VIDC_SESSION_TYPE_ENC, 675, 10 },
+-	{ V4L2_PIX_FMT_VP8, VIDC_SESSION_TYPE_ENC, 675, 10 },
+-	{ V4L2_PIX_FMT_MPEG2, VIDC_SESSION_TYPE_DEC, 200, 10 },
+-	{ V4L2_PIX_FMT_H264, VIDC_SESSION_TYPE_DEC, 200, 10 },
+-	{ V4L2_PIX_FMT_HEVC, VIDC_SESSION_TYPE_DEC, 200, 10 },
+-	{ V4L2_PIX_FMT_VP8, VIDC_SESSION_TYPE_DEC, 200, 10 },
+-	{ V4L2_PIX_FMT_VP9, VIDC_SESSION_TYPE_DEC, 200, 10 },
+-};
+-
+ static const struct bw_tbl sdm845_bw_table_enc[] = {
+ 	{ 1944000, 1612000, 0, 2416000, 0 },	/* 3840x2160@60 */
+ 	{  972000,  951000, 0, 1434000, 0 },	/* 3840x2160@30 */
+@@ -493,8 +485,6 @@ static __maybe_unused int venus_runtime_resume(struct device *dev)
+ 	.bw_tbl_enc_size = ARRAY_SIZE(sdm845_bw_table_enc),
+ 	.bw_tbl_dec = sdm845_bw_table_dec,
+ 	.bw_tbl_dec_size = ARRAY_SIZE(sdm845_bw_table_dec),
+-	.codec_freq_data = sdm845_codec_freq_data,
+-	.codec_freq_data_size = ARRAY_SIZE(sdm845_codec_freq_data),
+ 	.clks = {"core", "iface", "bus" },
+ 	.clks_num = 3,
+ 	.vcodec0_clks = { "core", "bus" },
+@@ -516,8 +506,6 @@ static __maybe_unused int venus_runtime_resume(struct device *dev)
+ 	.bw_tbl_enc_size = ARRAY_SIZE(sdm845_bw_table_enc),
+ 	.bw_tbl_dec = sdm845_bw_table_dec,
+ 	.bw_tbl_dec_size = ARRAY_SIZE(sdm845_bw_table_dec),
+-	.codec_freq_data = sdm845_codec_freq_data,
+-	.codec_freq_data_size = ARRAY_SIZE(sdm845_codec_freq_data),
+ 	.clks = {"core", "iface", "bus" },
+ 	.clks_num = 3,
+ 	.vcodec0_clks = { "vcodec0_core", "vcodec0_bus" },
+@@ -562,8 +550,6 @@ static __maybe_unused int venus_runtime_resume(struct device *dev)
+ 	.bw_tbl_enc_size = ARRAY_SIZE(sc7180_bw_table_enc),
+ 	.bw_tbl_dec = sc7180_bw_table_dec,
+ 	.bw_tbl_dec_size = ARRAY_SIZE(sc7180_bw_table_dec),
+-	.codec_freq_data = sdm845_codec_freq_data,
+-	.codec_freq_data_size = ARRAY_SIZE(sdm845_codec_freq_data),
+ 	.clks = {"core", "iface", "bus" },
+ 	.clks_num = 3,
+ 	.vcodec0_clks = { "vcodec0_core", "vcodec0_bus" },
+diff --git a/drivers/media/platform/qcom/venus/core.h b/drivers/media/platform/qcom/venus/core.h
+index 82438f1..c8f0824 100644
+--- a/drivers/media/platform/qcom/venus/core.h
++++ b/drivers/media/platform/qcom/venus/core.h
+@@ -34,13 +34,6 @@ struct reg_val {
+ 	u32 value;
+ };
+ 
+-struct codec_freq_data {
+-	u32 pixfmt;
+-	u32 session_type;
+-	unsigned long vpp_freq;
+-	unsigned long vsp_freq;
+-};
+-
+ struct bw_tbl {
+ 	u32 mbs_per_sec;
+ 	u32 avg;
+@@ -59,8 +52,6 @@ struct venus_resources {
+ 	unsigned int bw_tbl_dec_size;
+ 	const struct reg_val *reg_tbl;
+ 	unsigned int reg_tbl_size;
+-	const struct codec_freq_data *codec_freq_data;
+-	unsigned int codec_freq_data_size;
+ 	const char * const clks[VIDC_CLKS_NUM_MAX];
+ 	unsigned int clks_num;
+ 	const char * const vcodec0_clks[VIDC_VCODEC_CLKS_NUM_MAX];
+@@ -176,6 +167,7 @@ struct venus_core {
+ 	bool sys_error;
+ 	const struct hfi_core_ops *core_ops;
+ 	const struct venus_pm_ops *pm_ops;
++	const struct hfi_platform *hfi_plat;
+ 	struct mutex pm_lock;
+ 	unsigned long enc_codecs;
+ 	unsigned long dec_codecs;
+@@ -256,7 +248,7 @@ struct venus_buffer {
+ struct clock_data {
+ 	u32 core_id;
+ 	unsigned long freq;
+-	const struct codec_freq_data *codec_freq_data;
++	const struct hfi_platform_codec_freq_data *codec_freq_data;
+ };
+ 
+ #define to_venus_buffer(ptr)	container_of(ptr, struct venus_buffer, vb)
+diff --git a/drivers/media/platform/qcom/venus/helpers.c b/drivers/media/platform/qcom/venus/helpers.c
+index 115a9a2..712d0ed 100644
+--- a/drivers/media/platform/qcom/venus/helpers.c
++++ b/drivers/media/platform/qcom/venus/helpers.c
+@@ -14,6 +14,7 @@
+ #include "helpers.h"
+ #include "hfi_helper.h"
+ #include "pm_helpers.h"
++#include "hfi_platform.h"
+ 
+ struct intbuf {
+ 	struct list_head list;
+@@ -801,36 +802,6 @@ int venus_helper_set_work_mode(struct venus_inst *inst, u32 mode)
+ }
+ EXPORT_SYMBOL_GPL(venus_helper_set_work_mode);
+ 
+-int venus_helper_init_codec_freq_data(struct venus_inst *inst)
+-{
+-	const struct codec_freq_data *data;
+-	unsigned int i, data_size;
+-	u32 pixfmt;
+-	int ret = 0;
+-
+-	if (!IS_V4(inst->core))
+-		return 0;
+-
+-	data = inst->core->res->codec_freq_data;
+-	data_size = inst->core->res->codec_freq_data_size;
+-	pixfmt = inst->session_type == VIDC_SESSION_TYPE_DEC ?
+-			inst->fmt_out->pixfmt : inst->fmt_cap->pixfmt;
+-
+-	for (i = 0; i < data_size; i++) {
+-		if (data[i].pixfmt == pixfmt &&
+-		    data[i].session_type == inst->session_type) {
+-			inst->clk_data.codec_freq_data = &data[i];
+-			break;
+-		}
+-	}
+-
+-	if (!inst->clk_data.codec_freq_data)
+-		ret = -EINVAL;
+-
+-	return ret;
+-}
+-EXPORT_SYMBOL_GPL(venus_helper_init_codec_freq_data);
+-
+ int venus_helper_set_num_bufs(struct venus_inst *inst, unsigned int input_bufs,
+ 			      unsigned int output_bufs,
+ 			      unsigned int output2_bufs)
+diff --git a/drivers/media/platform/qcom/venus/helpers.h b/drivers/media/platform/qcom/venus/helpers.h
+index 8fbbda1..9c83c91 100644
+--- a/drivers/media/platform/qcom/venus/helpers.h
++++ b/drivers/media/platform/qcom/venus/helpers.h
+@@ -33,7 +33,6 @@ int venus_helper_set_output_resolution(struct venus_inst *inst,
+ 				       unsigned int width, unsigned int height,
+ 				       u32 buftype);
+ int venus_helper_set_work_mode(struct venus_inst *inst, u32 mode);
+-int venus_helper_init_codec_freq_data(struct venus_inst *inst);
+ int venus_helper_set_num_bufs(struct venus_inst *inst, unsigned int input_bufs,
+ 			      unsigned int output_bufs,
+ 			      unsigned int output2_bufs);
+diff --git a/drivers/media/platform/qcom/venus/hfi_platform.c b/drivers/media/platform/qcom/venus/hfi_platform.c
+new file mode 100644
+index 0000000..5ffadfe
+--- /dev/null
++++ b/drivers/media/platform/qcom/venus/hfi_platform.c
+@@ -0,0 +1,66 @@
++// SPDX-License-Identifier: GPL-2.0-only
++/*
++ * Copyright (c) 2020, The Linux Foundation. All rights reserved.
++ */
++#include "hfi_platform.h"
++#include "core.h"
++
++static struct hfi_platform_codec_freq_data hfi_plat_codec_freq_data_v4[] =  {
++	{ V4L2_PIX_FMT_H264, VIDC_SESSION_TYPE_ENC, 675, 10 },
++	{ V4L2_PIX_FMT_HEVC, VIDC_SESSION_TYPE_ENC, 675, 10 },
++	{ V4L2_PIX_FMT_VP8, VIDC_SESSION_TYPE_ENC, 675, 10 },
++	{ V4L2_PIX_FMT_MPEG2, VIDC_SESSION_TYPE_DEC, 200, 10 },
++	{ V4L2_PIX_FMT_H264, VIDC_SESSION_TYPE_DEC, 200, 10 },
++	{ V4L2_PIX_FMT_HEVC, VIDC_SESSION_TYPE_DEC, 200, 10 },
++	{ V4L2_PIX_FMT_VP8, VIDC_SESSION_TYPE_DEC, 200, 10 },
++	{ V4L2_PIX_FMT_VP9, VIDC_SESSION_TYPE_DEC, 200, 10 },
++};
++
++static const struct hfi_platform hfi_plat_v4 = {
++	.hfi_plat_codec_freq_data = hfi_plat_codec_freq_data_v4,
++	.hfi_plat_codec_freq_data_size =
++		ARRAY_SIZE(hfi_plat_codec_freq_data_v4),
++};
++
++const struct hfi_platform *hfi_platform_get
++	(enum hfi_version version)
++{
++	switch (version) {
++	case HFI_VERSION_4XX:
++		return &hfi_plat_v4;
++	default:
++		return NULL;
++	}
++	return NULL;
++}
++
++int hfi_platform_init_codec_freq_data(struct venus_inst *inst)
++{
++	const struct hfi_platform_codec_freq_data *data;
++	unsigned int i, data_size;
++	u32 pixfmt;
++	int ret = 0;
++
++	if (!IS_V4(inst->core))
++		return 0;
++
++	data = inst->core->hfi_plat->hfi_plat_codec_freq_data;
++	data_size = inst->core->hfi_plat->hfi_plat_codec_freq_data_size;
++
++	pixfmt = inst->session_type == VIDC_SESSION_TYPE_DEC ?
++			inst->fmt_out->pixfmt : inst->fmt_cap->pixfmt;
++
++	for (i = 0; i < data_size; i++) {
++		if (data[i].pixfmt == pixfmt &&
++		    data[i].session_type == inst->session_type) {
++			inst->clk_data.codec_freq_data = &data[i];
++			break;
++		}
++	}
++
++	if (!inst->clk_data.codec_freq_data)
++		ret = -EINVAL;
++
++	return ret;
++}
++EXPORT_SYMBOL_GPL(hfi_platform_init_codec_freq_data);
+diff --git a/drivers/media/platform/qcom/venus/hfi_platform.h b/drivers/media/platform/qcom/venus/hfi_platform.h
+new file mode 100644
+index 0000000..3f869f8
+--- /dev/null
++++ b/drivers/media/platform/qcom/venus/hfi_platform.h
+@@ -0,0 +1,28 @@
++/* SPDX-License-Identifier: GPL-2.0-only */
++/*
++ * Copyright (c) 2020, The Linux Foundation. All rights reserved.
++ */
++
++#ifndef __HFI_PLATFORM_H__
++#define __HFI_PLATFORM_H__
++
++#include "core.h"
++
++struct hfi_platform_codec_freq_data {
++	u32 pixfmt;
++	u32 session_type;
++	unsigned long vpp_freq;
++	unsigned long vsp_freq;
++};
++
++struct hfi_platform {
++	const struct hfi_platform_codec_freq_data *hfi_plat_codec_freq_data;
++	unsigned int hfi_plat_codec_freq_data_size;
++};
++
++const struct hfi_platform *hfi_platform_get
++	(enum hfi_version version);
++int hfi_platform_init_codec_freq_data(struct venus_inst *inst);
++
++#endif
++
+diff --git a/drivers/media/platform/qcom/venus/pm_helpers.c b/drivers/media/platform/qcom/venus/pm_helpers.c
+index f33fc70..7fae9a4 100644
+--- a/drivers/media/platform/qcom/venus/pm_helpers.c
++++ b/drivers/media/platform/qcom/venus/pm_helpers.c
+@@ -17,6 +17,7 @@
+ #include "hfi_parser.h"
+ #include "hfi_venus_io.h"
+ #include "pm_helpers.h"
++#include "hfi_platform.h"
+ 
+ static bool legacy_binding;
+ 
+diff --git a/drivers/media/platform/qcom/venus/vdec.c b/drivers/media/platform/qcom/venus/vdec.c
+index 7959e45..4219ea9 100644
+--- a/drivers/media/platform/qcom/venus/vdec.c
++++ b/drivers/media/platform/qcom/venus/vdec.c
+@@ -21,6 +21,7 @@
+ #include "helpers.h"
+ #include "vdec.h"
+ #include "pm_helpers.h"
++#include "hfi_platform.h"
+ 
+ /*
+  * Three resons to keep MPLANE formats (despite that the number of planes
+@@ -748,7 +749,7 @@ static int vdec_session_init(struct venus_inst *inst)
+ 	if (ret)
+ 		goto deinit;
+ 
+-	ret = venus_helper_init_codec_freq_data(inst);
++	ret = hfi_platform_init_codec_freq_data(inst);
+ 	if (ret)
+ 		goto deinit;
+ 
+diff --git a/drivers/media/platform/qcom/venus/venc.c b/drivers/media/platform/qcom/venus/venc.c
+index c591d00..8f9e2a3 100644
+--- a/drivers/media/platform/qcom/venus/venc.c
++++ b/drivers/media/platform/qcom/venus/venc.c
+@@ -21,6 +21,7 @@
+ #include "helpers.h"
+ #include "venc.h"
+ #include "pm_helpers.h"
++#include "hfi_platform.h"
+ 
+ #define NUM_B_FRAMES_MAX	4
+ 
+@@ -849,7 +850,7 @@ static int venc_init_session(struct venus_inst *inst)
+ 	if (ret)
+ 		goto deinit;
+ 
+-	ret = venus_helper_init_codec_freq_data(inst);
++	ret = hfi_platform_init_codec_freq_data(inst);
+ 	if (ret)
+ 		goto deinit;
+ 
+-- 
+1.9.1
 
-Regards,
-Yi Liu
-
-> Will
