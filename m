@@ -2,92 +2,200 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 343B3C433F1
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 09:55:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B19FC433E2
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 09:57:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F296221897
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 09:55:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594720551;
-	bh=UZOjWIi4ijWMn0kwgVNiDSyEpzUzl1JpAqKYWgcOB40=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=nP87lupUckHTx9h0Np/o4Yo7vKSR6paXX6aAi0tiPktN6wuL5KZ20OY0sDUqH/A+Y
-	 34/PYl271OpsbsOlFtKM3kcfkZ85yBKjtazX1gqRSlqH0Xf6XxJ8aWluaU3425t5uu
-	 fshCGjQTMBNgBzjZaA2Fi+EvofFnSMXyYdLUIRo4=
+	by mail.kernel.org (Postfix) with ESMTP id 6AED5221F7
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 09:57:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727050AbgGNJzt (ORCPT
+        id S1726923AbgGNJ5E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 05:55:49 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:37290 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725884AbgGNJzs (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 05:55:48 -0400
-Received: by mail-lj1-f193.google.com with SMTP id e4so21675164ljn.4;
-        Tue, 14 Jul 2020 02:55:46 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=7JmZ94tGXd3SBERSIl141jP1/VBkw6bU6NXbKGZdMJg=;
-        b=awiqCBwi2yEHBbm1tUDSr1Ew3guPnVN911Hl2pQ6osvLWHAPEY4zmDCz4AZKDIUZt8
-         Rb+NftBDiZGGYO4ZFr4o/TV++E3NWkgFuFtZstUuL4+jAAn4uBMf7aTaiEuDYXh/zwrq
-         bsNmEAvZxbxpTxDLArl1ebKy0o3biORCkSNS8mYamKiz+rQRxjasID/PjQdrAZUR0wYT
-         WYv/KPoOKRrZbMlexp/s7/B2DoesA8x1YDWtHPpmS9VSwUrjI/fcu8TA9wcDBINQtgbe
-         gnAlZ+r/3z1JCgC8W16CrbKDUE5mzSj22kUjehoa4ypYDYn1AF8PJqUSV11I8onjPDKQ
-         /uIg==
-X-Gm-Message-State: AOAM533xU9tHfQWLkrQHMmEGX+8SsQ1kXKqrSGQjXfyZFNaG5G5vAVTf
-        CmVG5kWFqYUX8LNqtN/Mmgg=
-X-Google-Smtp-Source: ABdhPJxLtJsIeNMTvo9ZG9iKC5VbDUDDIZGbPfkIjQ7Ej4GcXMYqme/5bUL+2WJ5Hv5DT9oydNSH6w==
-X-Received: by 2002:a2e:b88f:: with SMTP id r15mr1792878ljp.355.1594720546216;
-        Tue, 14 Jul 2020 02:55:46 -0700 (PDT)
-Received: from xi.terra (c-beaee455.07-184-6d6c6d4.bbcust.telenor.se. [85.228.174.190])
-        by smtp.gmail.com with ESMTPSA id 16sm4524652ljw.127.2020.07.14.02.55.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 Jul 2020 02:55:45 -0700 (PDT)
-Received: from johan by xi.terra with local (Exim 4.93.0.4)
-        (envelope-from <johan@kernel.org>)
-        id 1jvHfI-0006UA-DQ; Tue, 14 Jul 2020 11:55:56 +0200
-Date:   Tue, 14 Jul 2020 11:55:56 +0200
-From:   Johan Hovold <johan@kernel.org>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Johan Hovold <johan@kernel.org>, linux-usb@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] USB: serial: sierra: clean up special-interface handling
-Message-ID: <20200714095556.GA3453@localhost>
-References: <20200713153936.18032-1-johan@kernel.org>
- <20200713155127.GA267581@kroah.com>
+        Tue, 14 Jul 2020 05:57:04 -0400
+Received: from mga12.intel.com ([192.55.52.136]:51072 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725884AbgGNJ5D (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 05:57:03 -0400
+IronPort-SDR: EcITvOj5VfQuIvgfgHsGs3N/s4+JTsHODduuc54jVd5/z9QJOwvUdU+Mi6ouz8kzi/eFi2Iu8V
+ vytuiffvqf8A==
+X-IronPort-AV: E=McAfee;i="6000,8403,9681"; a="128416715"
+X-IronPort-AV: E=Sophos;i="5.75,350,1589266800"; 
+   d="scan'208";a="128416715"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jul 2020 02:57:02 -0700
+IronPort-SDR: vEq2xaUL4KkgSZXXpb1nDACInywqE9LidblzCiR7Zbn6dCU3EYyFwASBbhQvPhA6Kx1vTjAcUL
+ nkzpRITO2OFw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,350,1589266800"; 
+   d="scan'208";a="459636235"
+Received: from rmarti11-mobl.ger.corp.intel.com (HELO localhost) ([10.252.54.57])
+  by orsmga005.jf.intel.com with ESMTP; 14 Jul 2020 02:56:50 -0700
+Date:   Tue, 14 Jul 2020 12:56:49 +0300
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     Jethro Beekman <jethro@fortanix.com>
+Cc:     x86@kernel.org, linux-sgx@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Cedric Xing <cedric.xing@intel.com>, akpm@linux-foundation.org,
+        andriy.shevchenko@linux.intel.com, asapek@google.com, bp@alien8.de,
+        chenalexchen@google.com, conradparker@google.com,
+        cyhanish@google.com, dave.hansen@intel.com, haitao.huang@intel.com,
+        josh@joshtriplett.org, kai.huang@intel.com, kai.svahn@intel.com,
+        kmoy@google.com, ludloff@google.com, luto@kernel.org,
+        nhorman@redhat.com, npmccallum@redhat.com, puiterwijk@redhat.com,
+        rientjes@google.com, tglx@linutronix.de, yaozhangx@google.com
+Subject: Re: [PATCH v35 21/24] x86/vdso: Implement a vDSO for Intel SGX
+ enclave call
+Message-ID: <20200714095649.GC1442951@linux.intel.com>
+References: <20200707033747.142828-1-jarkko.sakkinen@linux.intel.com>
+ <20200707033747.142828-22-jarkko.sakkinen@linux.intel.com>
+ <dcebec2e-ea46-48ec-e49b-292b10282373@fortanix.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200713155127.GA267581@kroah.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <dcebec2e-ea46-48ec-e49b-292b10282373@fortanix.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 13, 2020 at 05:51:27PM +0200, Greg Kroah-Hartman wrote:
-> On Mon, Jul 13, 2020 at 05:39:36PM +0200, Johan Hovold wrote:
-> > Clean up the handling of special interfaces that either should be
-> > ignored or that need a larger number of URBs.
+On Tue, Jul 14, 2020 at 09:30:03AM +0200, Jethro Beekman wrote:
+> On 2020-07-07 05:37, Jarkko Sakkinen wrote:
+> > From: Sean Christopherson <sean.j.christopherson@intel.com>
 > > 
-> > Commit 66f092ed3b94 ("USB: serial: sierra: unify quirk handling logic")
-> > replaced the previous is_blacklisted() and is_highmemory() helpers with
-> > a single is_quirk() helper which made it even harder to understand what
-> > the interface lists were used for.
+> > An SGX runtime must be aware of the exceptions, which happen inside an
+> > enclave. Introduce a vDSO call that wraps EENTER/ERESUME cycle and returns
+> > the CPU exception back to the caller exactly when it happens.
 > > 
-> > Rename the interface-list struct, its members and the interface-lookup
-> > helper and restructure the code somewhat in order to make it more
-> > self-explanatory.
+> > Kernel fixups the exception information to RDI, RSI and RDX. The SGX call
+> > vDSO handler fills this information to the user provided buffer or
+> > alternatively trigger user provided callback at the time of the exception.
+> > 
+> > The calling convention is custom and does not follow System V x86-64 ABI.
+> > 
+> > Suggested-by: Andy Lutomirski <luto@amacapital.net>
+> > Acked-by: Jethro Beekman <jethro@fortanix.com>
+> > Tested-by: Jethro Beekman <jethro@fortanix.com>
+> > Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+> > Co-developed-by: Cedric Xing <cedric.xing@intel.com>
+> > Signed-off-by: Cedric Xing <cedric.xing@intel.com>
+> > Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+> > ---
+> >  arch/x86/entry/vdso/Makefile             |   2 +
+> >  arch/x86/entry/vdso/vdso.lds.S           |   1 +
+> >  arch/x86/entry/vdso/vsgx_enter_enclave.S | 131 +++++++++++++++++++++++
+> >  arch/x86/include/asm/enclu.h             |   8 ++
+> >  arch/x86/include/uapi/asm/sgx.h          |  98 +++++++++++++++++
+> >  5 files changed, 240 insertions(+)
+> >  create mode 100644 arch/x86/entry/vdso/vsgx_enter_enclave.S
+> >  create mode 100644 arch/x86/include/asm/enclu.h
+> > 
+> > diff --git a/arch/x86/entry/vdso/Makefile b/arch/x86/entry/vdso/Makefile
+> > index ebe82b7aecda..f71ad5ebd0c4 100644
+> > --- a/arch/x86/entry/vdso/Makefile
+> > +++ b/arch/x86/entry/vdso/Makefile
+> > @@ -29,6 +29,7 @@ VDSO32-$(CONFIG_IA32_EMULATION)	:= y
+> >  vobjs-y := vdso-note.o vclock_gettime.o vgetcpu.o
+> >  vobjs32-y := vdso32/note.o vdso32/system_call.o vdso32/sigreturn.o
+> >  vobjs32-y += vdso32/vclock_gettime.o
+> > +vobjs-$(VDSO64-y)		+= vsgx_enter_enclave.o
+> >  
+> >  # files to link into kernel
+> >  obj-y				+= vma.o extable.o
+> > @@ -100,6 +101,7 @@ $(vobjs): KBUILD_CFLAGS := $(filter-out $(GCC_PLUGINS_CFLAGS) $(RETPOLINE_CFLAGS
+> >  CFLAGS_REMOVE_vclock_gettime.o = -pg
+> >  CFLAGS_REMOVE_vdso32/vclock_gettime.o = -pg
+> >  CFLAGS_REMOVE_vgetcpu.o = -pg
+> > +CFLAGS_REMOVE_vsgx_enter_enclave.o = -pg
+> >  
+> >  #
+> >  # X32 processes use x32 vDSO to access 64bit kernel data.
+> > diff --git a/arch/x86/entry/vdso/vdso.lds.S b/arch/x86/entry/vdso/vdso.lds.S
+> > index 36b644e16272..4bf48462fca7 100644
+> > --- a/arch/x86/entry/vdso/vdso.lds.S
+> > +++ b/arch/x86/entry/vdso/vdso.lds.S
+> > @@ -27,6 +27,7 @@ VERSION {
+> >  		__vdso_time;
+> >  		clock_getres;
+> >  		__vdso_clock_getres;
+> > +		__vdso_sgx_enter_enclave;
+> >  	local: *;
+> >  	};
+> >  }
+> > diff --git a/arch/x86/entry/vdso/vsgx_enter_enclave.S b/arch/x86/entry/vdso/vsgx_enter_enclave.S
+> > new file mode 100644
+> > index 000000000000..be7e467e1efb
+> > --- /dev/null
+> > +++ b/arch/x86/entry/vdso/vsgx_enter_enclave.S
+> > @@ -0,0 +1,131 @@
+> > +/* SPDX-License-Identifier: GPL-2.0 */
+> > +
+> > +#include <linux/linkage.h>
+> > +#include <asm/export.h>
+> > +#include <asm/errno.h>
+> > +#include <asm/enclu.h>
+> > +
+> > +#include "extable.h"
+> > +
+> > +#define EX_LEAF		0*8
+> > +#define EX_TRAPNR	0*8+4
+> > +#define EX_ERROR_CODE	0*8+6
+> > +#define EX_ADDRESS	1*8
+> > +
+> > +.code64
+> > +.section .text, "ax"
+> > +
+> > +SYM_FUNC_START(__vdso_sgx_enter_enclave)
+> > +	/* Prolog */
+> > +	.cfi_startproc
+> > +	push	%rbp
+> > +	.cfi_adjust_cfa_offset	8
+> > +	.cfi_rel_offset		%rbp, 0
+> > +	mov	%rsp, %rbp
+> > +	.cfi_def_cfa_register	%rbp
+> > +	push	%rbx
+> > +	.cfi_rel_offset		%rbx, -8
+> > +
+> > +	mov	%ecx, %eax
+> > +.Lenter_enclave:
+> > +	/* EENTER <= leaf <= ERESUME */
+> > +	cmp	$EENTER, %eax
+> > +	jb	.Linvalid_leaf
+> > +	cmp	$ERESUME, %eax
+> > +	ja	.Linvalid_leaf
+> > +
+> > +	/* Load TCS and AEP */
+> > +	mov	0x10(%rbp), %rbx
+> > +	lea	.Lasync_exit_pointer(%rip), %rcx
+> > +
+> > +	/* Single ENCLU serving as both EENTER and AEP (ERESUME) */
+> > +.Lasync_exit_pointer:
+> > +.Lenclu_eenter_eresume:
+> > +	enclu
 > 
-> Much better, that was messy, thanks for cleaning this up.
+> After thinking about this some more, I'd like to come back to this
+> setup. Prior discussion at https://lkml.org/lkml/2018/11/2/597 . I
+> hope I'm not derailing the discussion so much as to delay the patch
+> set :(
 > 
-> Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> I previously mentioned “Userspace may want fine-grained control over
+> enclave scheduling” as a reason userspace may want to specify a
+> different AEP, but gave a bad example. Here's a better example: If I'm
+> running my enclave in an M:N threading model (where M user threads run
+> N TCSs, with N > M), an AEX is a good oppurtunity to switch contexts.
+> Yes, I could implement this with alarm() or so, but that adds overhead
+> while missing out on a lot of opportunities for context switching.
 
-Now applied.
+The vDSO interface also provides optional callback. Wonder if that
+works for this or can it be refined to work for this?
 
-Johan
+/Jarkko
