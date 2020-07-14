@@ -2,163 +2,107 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 498B1C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 15:07:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BAE9C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 15:08:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 21D5220663
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 15:07:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="Unde2c2H"
+	by mail.kernel.org (Postfix) with ESMTP id 58A902074A
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 15:08:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728871AbgGNPHt (ORCPT
+        id S1728767AbgGNPI1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 11:07:49 -0400
-Received: from esa2.microchip.iphmx.com ([68.232.149.84]:7943 "EHLO
-        esa2.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727044AbgGNPHs (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 11:07:48 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1594739267; x=1626275267;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=r4E3DoO/243oOPim9W7seyYjqcxT6G/IVb7gOQ45Lro=;
-  b=Unde2c2H4RzcmdcUM7YRZdV4sWorooEnnEm+QKlTwoxd5COaX7NneoYe
-   4K3JRmjJw/WLYJ1Ecm1ndYV4UkW2FDkFaqqS1Euty2ZdOKVTYzRcQqR6j
-   YKP5rZ9/oRip+bM2npaibp0i4odQo8v8PU6CmfUZdOzhLGXI4Nxw7UBgn
-   8mQz6twKxqWebfOoOUIUM36pAlvNWeDR87NQGVHooBin+WhNTSkiZBWeD
-   Jrh3feZYk67zjzR8XSvmVHHMLapBfsTz9EM9PNrT1cvaSbSIfm7ItFhfN
-   PR8gpEa3c9+FgFT9jnuShsiLokQmd+0YAuqiDGNnhJCglIJ6t1qmkshNw
-   Q==;
-IronPort-SDR: xDQSwPuhqU7Ybp5HXbBfTw7cq+gRPc6CJJmlk9FcqnzuBAMlCMPHO4oL+j9RO1j+qZonhl9nQj
- ipIqKBX5v7ZnmdwN6YOdaytNUgEhfZPVoyNncEWAd5S+XdxGVDHzN1sIqxuIYYfCyC1/4JX3SC
- 6BudxW5pHXORtW29hNKBlT+DLq5GE0J9+bluOqhVuNzsxceWDnKlkYoyNclz1AaNMasSh5gqla
- h2o7ousKExjo3i97YlWwdwkyVbrI+N681OYJSq4zLih25GXhxc/UiT9lhTOTUMINVP4BQNDaM8
- ws4=
-X-IronPort-AV: E=Sophos;i="5.75,350,1589266800"; 
-   d="scan'208";a="81800580"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa2.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 14 Jul 2020 08:07:47 -0700
-Received: from chn-vm-ex02.mchp-main.com (10.10.85.144) by
- chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1979.3; Tue, 14 Jul 2020 08:07:46 -0700
-Received: from localhost (10.10.115.15) by chn-vm-ex02.mchp-main.com
- (10.10.85.144) with Microsoft SMTP Server id 15.1.1979.3 via Frontend
- Transport; Tue, 14 Jul 2020 08:07:14 -0700
-Date:   Tue, 14 Jul 2020 17:07:40 +0200
-From:   Horatiu Vultur <horatiu.vultur@microchip.com>
-To:     Nikolay Aleksandrov <nikolay@cumulusnetworks.com>
-CC:     <roopa@cumulusnetworks.com>, <davem@davemloft.net>,
-        <kuba@kernel.org>, <jiri@resnulli.us>, <ivecera@redhat.com>,
-        <andrew@lunn.ch>, <UNGLinuxDriver@microchip.com>,
-        <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <bridge@lists.linux-foundation.org>
-Subject: Re: [PATCH net-next v4 12/12] net: bridge: Add port attribute
- IFLA_BRPORT_MRP_IN_OPEN
-Message-ID: <20200714150740.3ji3qhtvikhrizfn@soft-dev3.localdomain>
-References: <20200714073458.1939574-1-horatiu.vultur@microchip.com>
- <20200714073458.1939574-13-horatiu.vultur@microchip.com>
- <9eeb89c5-865f-2b21-c7c6-7f4479bf4175@cumulusnetworks.com>
+        Tue, 14 Jul 2020 11:08:27 -0400
+Received: from foss.arm.com ([217.140.110.172]:38354 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725876AbgGNPI0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 11:08:26 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id EFDDC30E;
+        Tue, 14 Jul 2020 08:08:25 -0700 (PDT)
+Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9FD5B3F792;
+        Tue, 14 Jul 2020 08:08:24 -0700 (PDT)
+Date:   Tue, 14 Jul 2020 16:08:22 +0100
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Tiezhu Yang <yangtiezhu@loongson.cn>
+Cc:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Rob Herring <robh@kernel.org>, Huacai Chen <chenhc@lemote.com>,
+        Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        linux-mips@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Xuefeng Li <lixuefeng@loongson.cn>
+Subject: Re: [PATCH v2] PCI: loongson: Use DECLARE_PCI_FIXUP_EARLY for
+ bridge_class_quirk()
+Message-ID: <20200714150822.GB14416@e121166-lin.cambridge.arm.com>
+References: <1591925417-27665-1-git-send-email-yangtiezhu@loongson.cn>
+ <43b4409d-ff0f-9711-0b8f-1cfb19d31f24@loongson.cn>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <9eeb89c5-865f-2b21-c7c6-7f4479bf4175@cumulusnetworks.com>
+In-Reply-To: <43b4409d-ff0f-9711-0b8f-1cfb19d31f24@loongson.cn>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The 07/14/2020 16:29, Nikolay Aleksandrov wrote:
-> EXTERNAL EMAIL: Do not click links or open attachments unless you know the content is safe
-> 
-> On 14/07/2020 10:34, Horatiu Vultur wrote:
-> > This patch adds a new port attribute, IFLA_BRPORT_MRP_IN_OPEN, which
-> > allows to notify the userspace when the node lost the contiuity of
-> > MRP_InTest frames.
-> >
-> > Signed-off-by: Horatiu Vultur <horatiu.vultur@microchip.com>
+On Tue, Jul 14, 2020 at 03:37:51PM +0800, Tiezhu Yang wrote:
+> On 06/12/2020 09:30 AM, Tiezhu Yang wrote:
+> > Use DECLARE_PCI_FIXUP_EARLY instead of DECLARE_PCI_FIXUP_HEADER
+> > for bridge_class_quirk() in pci-loongson.c, otherwise the fixup
+> > has no effect.
+> > 
+> > Fixes: 1f58cca5cf2b ("PCI: Add Loongson PCI Controller support")
+> > Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
 > > ---
-> >  include/uapi/linux/if_link.h       | 1 +
-> >  net/bridge/br_netlink.c            | 3 +++
-> >  tools/include/uapi/linux/if_link.h | 1 +
-> >  3 files changed, 5 insertions(+)
-> >
-
-Hi Nik,
-
+> > 
+> > v2:
+> >    - modify the patch subject used with lower case "loongson"
+> > 
+> > This patch is based on mips-next tree.
+> > 
+> >   drivers/pci/controller/pci-loongson.c | 6 +++---
+> >   1 file changed, 3 insertions(+), 3 deletions(-)
+> > 
+> > diff --git a/drivers/pci/controller/pci-loongson.c b/drivers/pci/controller/pci-loongson.c
+> > index 459009c..58b862a 100644
+> > --- a/drivers/pci/controller/pci-loongson.c
+> > +++ b/drivers/pci/controller/pci-loongson.c
+> > @@ -37,11 +37,11 @@ static void bridge_class_quirk(struct pci_dev *dev)
+> >   {
+> >   	dev->class = PCI_CLASS_BRIDGE_PCI << 8;
+> >   }
+> > -DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_LOONGSON,
+> > +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
+> >   			DEV_PCIE_PORT_0, bridge_class_quirk);
+> > -DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_LOONGSON,
+> > +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
+> >   			DEV_PCIE_PORT_1, bridge_class_quirk);
+> > -DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_LOONGSON,
+> > +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
+> >   			DEV_PCIE_PORT_2, bridge_class_quirk);
+> >   static void system_bus_quirk(struct pci_dev *pdev)
 > 
-> It's kind of late by now, but I'd wish these were contained in a nested MRP attribute. :)
-> Horatiu, do you expect to have many more MRP attributes outside of MRP netlink code?
-
-I don't expect to add any other MRP attributes outside of MRP netlink
-code.
-
+> Hi,
 > 
-> Perhaps we should at least dump them only for MRP-aware ports, that should be easy.
-> They make no sense outside of MRP anyway, but increase the size of the dump for all
-> right now.
+> Any comments?
 
-You are right. Then should I first send a fix on the net for this and
-after that I will fix these patches or just fix this in the next patch
-series?
+(1) how was this driver tested if this patch is required ? Is it because
+    you are testing on a different platform ?
+(2) Please explain why it is needed (I mean describe what happens
+    in current code and how this fixes it) in the commit log, it is
+    useful for people who may need to tweak this code further
 
-> 
-> Acked-by: Nikolay Aleksandrov <nikolay@cumulusnetworks.com>
-> 
-> > diff --git a/include/uapi/linux/if_link.h b/include/uapi/linux/if_link.h
-> > index cc185a007ade8..26842ffd0501d 100644
-> > --- a/include/uapi/linux/if_link.h
-> > +++ b/include/uapi/linux/if_link.h
-> > @@ -344,6 +344,7 @@ enum {
-> >       IFLA_BRPORT_ISOLATED,
-> >       IFLA_BRPORT_BACKUP_PORT,
-> >       IFLA_BRPORT_MRP_RING_OPEN,
-> > +     IFLA_BRPORT_MRP_IN_OPEN,
-> >       __IFLA_BRPORT_MAX
-> >  };
-> >  #define IFLA_BRPORT_MAX (__IFLA_BRPORT_MAX - 1)
-> > diff --git a/net/bridge/br_netlink.c b/net/bridge/br_netlink.c
-> > index c532fa65c9834..147d52596e174 100644
-> > --- a/net/bridge/br_netlink.c
-> > +++ b/net/bridge/br_netlink.c
-> > @@ -152,6 +152,7 @@ static inline size_t br_port_info_size(void)
-> >  #endif
-> >               + nla_total_size(sizeof(u16))   /* IFLA_BRPORT_GROUP_FWD_MASK */
-> >               + nla_total_size(sizeof(u8))    /* IFLA_BRPORT_MRP_RING_OPEN */
-> > +             + nla_total_size(sizeof(u8))    /* IFLA_BRPORT_MRP_IN_OPEN */
-> >               + 0;
-> >  }
-> >
-> > @@ -216,6 +217,8 @@ static int br_port_fill_attrs(struct sk_buff *skb,
-> >                      !!(p->flags & BR_NEIGH_SUPPRESS)) ||
-> >           nla_put_u8(skb, IFLA_BRPORT_MRP_RING_OPEN, !!(p->flags &
-> >                                                         BR_MRP_LOST_CONT)) ||
-> > +         nla_put_u8(skb, IFLA_BRPORT_MRP_IN_OPEN,
-> > +                    !!(p->flags & BR_MRP_LOST_IN_CONT)) ||
-> >           nla_put_u8(skb, IFLA_BRPORT_ISOLATED, !!(p->flags & BR_ISOLATED)))
-> >               return -EMSGSIZE;
-> >
-> > diff --git a/tools/include/uapi/linux/if_link.h b/tools/include/uapi/linux/if_link.h
-> > index cafedbbfefbe9..781e482dc499f 100644
-> > --- a/tools/include/uapi/linux/if_link.h
-> > +++ b/tools/include/uapi/linux/if_link.h
-> > @@ -344,6 +344,7 @@ enum {
-> >       IFLA_BRPORT_ISOLATED,
-> >       IFLA_BRPORT_BACKUP_PORT,
-> >       IFLA_BRPORT_MRP_RING_OPEN,
-> > +     IFLA_BRPORT_MRP_IN_OPEN,
-> >       __IFLA_BRPORT_MAX
-> >  };
-> >  #define IFLA_BRPORT_MAX (__IFLA_BRPORT_MAX - 1)
-> >
-> 
+I will apply it then, thanks.
 
--- 
-/Horatiu
+Lorenzo
+
+> Could you please apply this patch?
+> 
+> Thanks,
+> Tiezhu
+> 
