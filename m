@@ -2,105 +2,129 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B78E3C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 02:30:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FE2AC433E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 02:32:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9773B207BB
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 02:30:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F5BD207BB
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 02:32:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594693854;
-	bh=/hS33VdzsRLPV6IWYMz6RL4rg+LZtzUiUyPbAEDJ0TM=;
+	s=default; t=1594693937;
+	bh=4nGR7877OCdvepm+wVfIknTL0sovtu+QqLBubPH8TJA=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=cPyLbQf2YKPr9//7BR+61Md9/Sa2Y9zf8wZLtgo+9l6Ot2xpN8+WlvqwfbHXNy6a+
-	 gZG4XWmZlhAC6qFpizZ1V8CHIN/2RIeQQ0KIhyXS3ed7pisVARlFrsQ8rYPiclT8Ik
-	 APLow64sACWsiow0CccvHSh14Cn9qhTC5sInbzD0=
+	b=CoVmgOtcx2CAzejBnIqy/sKCsfZikN/PU9Mpt5eZmRmbuwCjBNYBbY9N4wlQmngJ5
+	 5xSzQH0vh+Ps6swt1K12Ij0ayUoUNeNoo7yPR7WHvVWr1/SnDrzBk3lAMGuqd7lxfG
+	 F7HFGGFD5hAmXf3wsU+fzwuXMtiH3s9AWdJpUGlQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726619AbgGNCax (ORCPT
+        id S1726661AbgGNCcQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 22:30:53 -0400
-Received: from mail-il1-f195.google.com ([209.85.166.195]:43643 "EHLO
-        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726150AbgGNCax (ORCPT
+        Mon, 13 Jul 2020 22:32:16 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:43147 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726150AbgGNCcP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 22:30:53 -0400
-Received: by mail-il1-f195.google.com with SMTP id i18so13002043ilk.10;
-        Mon, 13 Jul 2020 19:30:52 -0700 (PDT)
+        Mon, 13 Jul 2020 22:32:15 -0400
+Received: by mail-io1-f67.google.com with SMTP id k23so15707754iom.10;
+        Mon, 13 Jul 2020 19:32:14 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=PIQmxPiwEmBfrqbUBFZETE9PAgGB7RmQQ0RmEk0XV2o=;
-        b=RYoG1x2+pv8cg4uWfokhXlJ0T0F6iOIjGOcUkZfgkpxYgbDBzAu5pdZ2I+9jBMJTWo
-         H/sESeoDp/huWygzfpKNeCKf4DmyHxkT2O7MPicDBYKlMefCEq0rZVygncdqnwmIdF52
-         eA4GhGiqTFLO5FBxasW0KLs237Q2B/xhga3GwRBE1t3kBAv8/NbsZGc6PPogJmJEUvpY
-         GxVXAilFM+gYENctPXiGZGwvNc55PiA0Bb7xHjPhfax6moK9Zn1Utbx8xV0N56lwmPbA
-         I8INyFu6k6Zf39B7qmuuOAIErX6RhlzPpgIdIM5p4wV4DC0KTcuXolnvmEDfjAx8opCc
-         Mp3g==
-X-Gm-Message-State: AOAM533xx3RNSDE5t9q2B7JEVVw/bJv+vs1qwsh/Ot/ZFrUSn/rjZYcN
-        U0eUOy5W8/imiwkrstbvEg==
-X-Google-Smtp-Source: ABdhPJxXsnuwtyRrz+snuTSfJAc/5Y1nlNxsR/FuJxzhcyWKWH7prPgt9D2+OmHoYyG5esy2UjixSg==
-X-Received: by 2002:a05:6e02:f85:: with SMTP id v5mr2688806ilo.31.1594693851894;
-        Mon, 13 Jul 2020 19:30:51 -0700 (PDT)
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=vuZsgMdLWQO/ahKQ1C/JJlufkzXzbLL7H9cb+d1HU9k=;
+        b=rqifzt8TD6Mil1azgM6lu7g9q2pS1UiUptIHj2ucwHXY7ZEMkJtypqevom+AVMDkot
+         gnA6HneVk+i2O63rwfhH8tr4uk9G7VQEzhGzCAJaSP224L13gWAjOqD0orBkf1w59x9+
+         gpK6CVFsoaT2YL46qK8MtlaKOx+lvbsDLo1lD+RX6zoKNuMFbs5MdUoJAwU0UQbYE03C
+         EJbCFeQUn6/rKOoWWYsdAvCYMxeOHLRt8SmKUGREVeonsfS2msAEAZhv8gqiHO4aEmRa
+         Sj3qGaksA+Teo3pvmb/BzVell+Z3RcAsqWqIBAjZKr5PkvFYzjOIBhTNVmKIdwqA1iAw
+         W4eg==
+X-Gm-Message-State: AOAM533OBg8A6Kv3imDiScRuY0fPW/McygZzuPvR0/4/xrc5Gffev5R/
+        lGdyO9JJ2Ft/534SYn3sLMS5KOwFr4x1
+X-Google-Smtp-Source: ABdhPJzSiwbxk0e5azgvPYsuI4yurNtqRdxZNnQgVDbStBikimwSnWmtqDpMJgj/pWf09alzKiI/tw==
+X-Received: by 2002:a05:6638:2493:: with SMTP id x19mr3577157jat.53.1594693934506;
+        Mon, 13 Jul 2020 19:32:14 -0700 (PDT)
 Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id b2sm9386188ilf.0.2020.07.13.19.30.49
+        by smtp.gmail.com with ESMTPSA id v5sm8522890ios.54.2020.07.13.19.32.12
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 Jul 2020 19:30:51 -0700 (PDT)
-Received: (nullmailer pid 1161968 invoked by uid 1000);
-        Tue, 14 Jul 2020 02:30:48 -0000
-Date:   Mon, 13 Jul 2020 20:30:48 -0600
+        Mon, 13 Jul 2020 19:32:13 -0700 (PDT)
+Received: (nullmailer pid 1163897 invoked by uid 1000);
+        Tue, 14 Jul 2020 02:32:12 -0000
+Date:   Mon, 13 Jul 2020 20:32:12 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Wolfram Sang <wsa@kernel.org>
-Cc:     Alain Volmat <alain.volmat@st.com>, mark.rutland@arm.com,
-        pierre-yves.mordret@st.com, mcoquelin.stm32@gmail.com,
-        alexandre.torgue@st.com, linux-i2c@vger.kernel.org,
-        devicetree@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        fabrice.gasnier@st.com
-Subject: Re: [PATCH v2 3/4] dt-bindings: i2c-stm32: add SMBus Alert bindings
-Message-ID: <20200714023048.GA1151665@bogus>
-References: <1593070769-9106-1-git-send-email-alain.volmat@st.com>
- <1593070769-9106-4-git-send-email-alain.volmat@st.com>
- <20200630194107.GA999@ninjato>
+To:     =?utf-8?B?5ZGo55Cw5p2wIChaaG91IFlhbmppZSk=?= 
+        <zhouyanjie@wanyeetech.com>
+Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, paul.burton@mips.com,
+        paul@crapouillou.net, tsbogend@alpha.franken.de,
+        ak@linux.intel.com, ebiederm@xmission.com,
+        dongsheng.qiu@ingenic.com, aric.pzqi@ingenic.com,
+        rick.tyliu@ingenic.com, yanfei.li@ingenic.com,
+        sernia.zhou@foxmail.com, zhenwenjin@gmail.com
+Subject: Re: [PATCH v2 2/3] dt-bindings: MIPS: Add Ingenic X1830 based boards.
+Message-ID: <20200714023212.GA1162143@bogus>
+References: <20200625173716.56146-1-zhouyanjie@wanyeetech.com>
+ <20200625173716.56146-3-zhouyanjie@wanyeetech.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200630194107.GA999@ninjato>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200625173716.56146-3-zhouyanjie@wanyeetech.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 30, 2020 at 09:41:07PM +0200, Wolfram Sang wrote:
-> On Thu, Jun 25, 2020 at 09:39:28AM +0200, Alain Volmat wrote:
-> > Add a new binding of the i2c-stm32f7 driver to enable the handling
-> > of the SMBUS-Alert.
-> > 
-> > The I2C/SMBUS framework already provides a mechanism to enable SMBus-Alert
-> > by naming an IRQ line "smbus_alert". However, on stm32, the SMBus-Alert is
-> > part of the i2c IRQ. Using the smbus_alert naming here would lead to having
-> > 2 handlers (the handler of the driver and the smbus_alert handler
-> > from I2C/SMBUS framework) on the unique i2c IRQ of the stm32. Meaning that
-> > the smbus_alert handler would get called for all IRQ generated by the stm32
-> > I2C controller.
-> > 
-> > For that reason, the smbus_alert IRQ naming cannot be used and a dedicated
-> > binding is introduced.
+On Fri, Jun 26, 2020 at 01:37:15AM +0800, 周琰杰 (Zhou Yanjie) wrote:
+> Add bindings for Ingenic X1830 based board, prepare for later dts.
 > 
-> What if we update the core to not register another irq handler if the
-> "smbus_alert" and main irq are the same?
+> Tested-by: 周正 (Zhou Zheng) <sernia.zhou@foxmail.com>
+> Signed-off-by: 周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>
+> ---
 > 
-> I think it could work. However, while trying to make a proof-of-concept,
-> I found that irq descriptions in the generic i2c binding document are
-> probably mixed up. And before fixing that, I'd like to get HostNotify
-> done first.
+> Notes:
+>     v1->v2:
+>     No change.
+> 
+>  Documentation/devicetree/bindings/mips/ingenic/devices.yaml | 12 +++++++++---
+>  1 file changed, 9 insertions(+), 3 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/mips/ingenic/devices.yaml b/Documentation/devicetree/bindings/mips/ingenic/devices.yaml
+> index d1175030781a..feb695be9f66 100644
+> --- a/Documentation/devicetree/bindings/mips/ingenic/devices.yaml
+> +++ b/Documentation/devicetree/bindings/mips/ingenic/devices.yaml
+> @@ -8,7 +8,8 @@ title: Ingenic XBurst based Platforms Device Tree Bindings
+>  
+>  maintainers:
+>    - 周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>
+> -description: |
+> +
+> +description:
+>    Devices with a Ingenic XBurst CPU shall have the following properties.
+>  
+>  properties:
+> @@ -32,8 +33,13 @@ properties:
+>            - const: img,ci20
+>            - const: ingenic,jz4780
+>  
+> -      - description: YSH & ATIL General Board CU Neo
+> +      - description: YSH & ATIL General Board, CU1000 Module with Neo Backplane
+>          items:
+>            - const: yna,cu1000-neo
+> -          - const: ingenic,x1000
+> +          - const: ingenic,x1000e
 
-Why does this even need to be in DT? Can't the driver just register that 
-it supports SMBus alert or have some call to the core signaling an SMBus 
-alert? 
+What's this change? You can't just change bindings.
 
-Rob
+> +
+> +      - description: YSH & ATIL General Board, CU1830 Module with Neo Backplane
+> +        items:
+> +          - const: yna,cu1830-neo
+> +          - const: ingenic,x1830
+>  ...
+> -- 
+> 2.11.0
+> 
