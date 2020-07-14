@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 644D9C433E4
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:48:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CBEBC433E8
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:48:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 32D04222E9
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:48:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3AF6B22B40
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:48:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594752515;
-	bh=sT7ggtf5xuADU4WreWsFa4XiGl6IOswFVMXjHa0dmG8=;
+	s=default; t=1594752518;
+	bh=XQBL9NrEUkiI8wtjcCl9dHlXNWIE2G3UKZK2k4ezkRE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=p9Vs8C4zoy1ccAmG1L/rjuK51+JcvUUF0Lk5s943YAM+QXeWrHBdlCxCBx2nFcoC/
-	 ZDyOTJV9A54MIKzif1YBF2sSXX5uUbLqhDdhXuSTEAzoIOcKSeIZFFqhVdx07aXalT
-	 xZIT8Q/UdQd/YzasQpGjjb0KY7aAjTzFXOtIpUEI=
+	b=nduu2U8pnPxpOSdSnuzF85sJ/LEmpvG3F0pu6JcKQ6bHzHmOxgAimpRXbc4x0mBqv
+	 pjKDEwf0xebPuaoXzJtV3bUMp1J+eDjHlQMAxcabigqnGBgkZD7p6ia/fp2oUATZ9L
+	 Bg87BWSEY73nOqNYT3mhDI5oyu+DtKePO9WDHASc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729971AbgGNSse (ORCPT
+        id S1729981AbgGNSsg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 14:48:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44016 "EHLO mail.kernel.org"
+        Tue, 14 Jul 2020 14:48:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44086 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729366AbgGNSsb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 14:48:31 -0400
+        id S1729970AbgGNSse (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 14:48:34 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 00DBA22B3B;
-        Tue, 14 Jul 2020 18:48:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D6C3922B2B;
+        Tue, 14 Jul 2020 18:48:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594752510;
-        bh=sT7ggtf5xuADU4WreWsFa4XiGl6IOswFVMXjHa0dmG8=;
+        s=default; t=1594752513;
+        bh=XQBL9NrEUkiI8wtjcCl9dHlXNWIE2G3UKZK2k4ezkRE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Vrq0HEsBxuo884Jz56f1X68WGGh6JH1w9GpukQvUDu9jJtm7WQE/+RyLtjXYW+zJD
-         XKWfzzUiVd+58kW7xOGq+hnKmDGi3BQcO/g4QcwOf34A0Y+xbYNrYbN+amz6p4Ntvw
-         sXTeCHAW4LTrDSCxcOrGmkAgcamrVRayu/jJHEec=
+        b=gEj1ShBQpUttUONpGEDKU0vJzRGXCq/sKbbklHDGFRxgzncuq59AjGJAjhdq2F9PT
+         DxqMtD1wqJYTBYocN2ZNy/ghDhZK6X5SOcM8/UP+VvxQrx/61L7YLpjpVsXPMOf8y1
+         ac55u9VHCNh/RI+f6ABN0ZGIvT3VANhoCXAxwvro=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Vladimir Oltean <olteanv@gmail.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
+        stable@vger.kernel.org, Jens Thoms Toerring <jt@toerring.de>,
         Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 003/109] spi: spi-fsl-dspi: Fix lockup if device is removed during SPI transfer
-Date:   Tue, 14 Jul 2020 20:42:57 +0200
-Message-Id: <20200714184105.673355471@linuxfoundation.org>
+Subject: [PATCH 5.4 004/109] regmap: fix alignment issue
+Date:   Tue, 14 Jul 2020 20:42:58 +0200
+Message-Id: <20200714184105.719730471@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200714184105.507384017@linuxfoundation.org>
 References: <20200714184105.507384017@linuxfoundation.org>
@@ -61,55 +60,256 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Krzysztof Kozlowski <krzk@kernel.org>
+From: Jens Thoms Toerring <jt@toerring.de>
 
-[ Upstream commit 7684580d45bd3d84ed9b453a4cadf7a9a5605a3f ]
+[ Upstream commit 53d860952c8215cf9ae1ea33409c8cb71ad6ad3d ]
 
-During device removal, the driver should unregister the SPI controller
-and stop the hardware.  Otherwise the dspi_transfer_one_message() could
-wait on completion infinitely.
+The assembly and disassembly of data to be sent to or received from
+a device invoke functions regmap_format_XX() and regmap_parse_XX()
+that extract or insert data items from or into a buffer, using
+assignments. In some cases the functions are called with a buffer
+pointer with an odd address. On architectures with strict alignment
+requirements this can result in a kernel crash. The assignments
+have been replaced by functions that take alignment into account.
 
-Additionally, calling spi_unregister_controller() first in device
-removal reverse-matches the probe function, where SPI controller is
-registered at the end.
-
-Fixes: 05209f457069 ("spi: fsl-dspi: add missing clk_disable_unprepare() in dspi_remove()")
-Reported-by: Vladimir Oltean <olteanv@gmail.com>
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20200622110543.5035-1-krzk@kernel.org
+Signed-off-by: Jens Thoms Toerring <jt@toerring.de>
+Link: https://lore.kernel.org/r/20200531095300.GA27570@toerring.de
 Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/spi/spi-fsl-dspi.c | 11 ++++++++++-
- 1 file changed, 10 insertions(+), 1 deletion(-)
+ drivers/base/regmap/regmap.c | 100 ++++++++++++++++-------------------
+ 1 file changed, 46 insertions(+), 54 deletions(-)
 
-diff --git a/drivers/spi/spi-fsl-dspi.c b/drivers/spi/spi-fsl-dspi.c
-index e34278a00b708..3e0e27731922e 100644
---- a/drivers/spi/spi-fsl-dspi.c
-+++ b/drivers/spi/spi-fsl-dspi.c
-@@ -1164,11 +1164,20 @@ static int dspi_remove(struct platform_device *pdev)
- 	struct fsl_dspi *dspi = spi_controller_get_devdata(ctlr);
+diff --git a/drivers/base/regmap/regmap.c b/drivers/base/regmap/regmap.c
+index 508bbd6ea4396..320d23de02c29 100644
+--- a/drivers/base/regmap/regmap.c
++++ b/drivers/base/regmap/regmap.c
+@@ -17,6 +17,7 @@
+ #include <linux/delay.h>
+ #include <linux/log2.h>
+ #include <linux/hwspinlock.h>
++#include <asm/unaligned.h>
  
- 	/* Disconnect from the SPI framework */
-+	spi_unregister_controller(dspi->ctlr);
-+
-+	/* Disable RX and TX */
-+	regmap_update_bits(dspi->regmap, SPI_MCR,
-+			   SPI_MCR_DIS_TXF | SPI_MCR_DIS_RXF,
-+			   SPI_MCR_DIS_TXF | SPI_MCR_DIS_RXF);
-+
-+	/* Stop Running */
-+	regmap_update_bits(dspi->regmap, SPI_MCR, SPI_MCR_HALT, SPI_MCR_HALT);
-+
- 	dspi_release_dma(dspi);
- 	if (dspi->irq)
- 		free_irq(dspi->irq, dspi);
- 	clk_disable_unprepare(dspi->clk);
--	spi_unregister_controller(dspi->ctlr);
+ #define CREATE_TRACE_POINTS
+ #include "trace.h"
+@@ -249,22 +250,20 @@ static void regmap_format_8(void *buf, unsigned int val, unsigned int shift)
  
- 	return 0;
+ static void regmap_format_16_be(void *buf, unsigned int val, unsigned int shift)
+ {
+-	__be16 *b = buf;
+-
+-	b[0] = cpu_to_be16(val << shift);
++	put_unaligned_be16(val << shift, buf);
  }
+ 
+ static void regmap_format_16_le(void *buf, unsigned int val, unsigned int shift)
+ {
+-	__le16 *b = buf;
+-
+-	b[0] = cpu_to_le16(val << shift);
++	put_unaligned_le16(val << shift, buf);
+ }
+ 
+ static void regmap_format_16_native(void *buf, unsigned int val,
+ 				    unsigned int shift)
+ {
+-	*(u16 *)buf = val << shift;
++	u16 v = val << shift;
++
++	memcpy(buf, &v, sizeof(v));
+ }
+ 
+ static void regmap_format_24(void *buf, unsigned int val, unsigned int shift)
+@@ -280,43 +279,39 @@ static void regmap_format_24(void *buf, unsigned int val, unsigned int shift)
+ 
+ static void regmap_format_32_be(void *buf, unsigned int val, unsigned int shift)
+ {
+-	__be32 *b = buf;
+-
+-	b[0] = cpu_to_be32(val << shift);
++	put_unaligned_be32(val << shift, buf);
+ }
+ 
+ static void regmap_format_32_le(void *buf, unsigned int val, unsigned int shift)
+ {
+-	__le32 *b = buf;
+-
+-	b[0] = cpu_to_le32(val << shift);
++	put_unaligned_le32(val << shift, buf);
+ }
+ 
+ static void regmap_format_32_native(void *buf, unsigned int val,
+ 				    unsigned int shift)
+ {
+-	*(u32 *)buf = val << shift;
++	u32 v = val << shift;
++
++	memcpy(buf, &v, sizeof(v));
+ }
+ 
+ #ifdef CONFIG_64BIT
+ static void regmap_format_64_be(void *buf, unsigned int val, unsigned int shift)
+ {
+-	__be64 *b = buf;
+-
+-	b[0] = cpu_to_be64((u64)val << shift);
++	put_unaligned_be64((u64) val << shift, buf);
+ }
+ 
+ static void regmap_format_64_le(void *buf, unsigned int val, unsigned int shift)
+ {
+-	__le64 *b = buf;
+-
+-	b[0] = cpu_to_le64((u64)val << shift);
++	put_unaligned_le64((u64) val << shift, buf);
+ }
+ 
+ static void regmap_format_64_native(void *buf, unsigned int val,
+ 				    unsigned int shift)
+ {
+-	*(u64 *)buf = (u64)val << shift;
++	u64 v = (u64) val << shift;
++
++	memcpy(buf, &v, sizeof(v));
+ }
+ #endif
+ 
+@@ -333,35 +328,34 @@ static unsigned int regmap_parse_8(const void *buf)
+ 
+ static unsigned int regmap_parse_16_be(const void *buf)
+ {
+-	const __be16 *b = buf;
+-
+-	return be16_to_cpu(b[0]);
++	return get_unaligned_be16(buf);
+ }
+ 
+ static unsigned int regmap_parse_16_le(const void *buf)
+ {
+-	const __le16 *b = buf;
+-
+-	return le16_to_cpu(b[0]);
++	return get_unaligned_le16(buf);
+ }
+ 
+ static void regmap_parse_16_be_inplace(void *buf)
+ {
+-	__be16 *b = buf;
++	u16 v = get_unaligned_be16(buf);
+ 
+-	b[0] = be16_to_cpu(b[0]);
++	memcpy(buf, &v, sizeof(v));
+ }
+ 
+ static void regmap_parse_16_le_inplace(void *buf)
+ {
+-	__le16 *b = buf;
++	u16 v = get_unaligned_le16(buf);
+ 
+-	b[0] = le16_to_cpu(b[0]);
++	memcpy(buf, &v, sizeof(v));
+ }
+ 
+ static unsigned int regmap_parse_16_native(const void *buf)
+ {
+-	return *(u16 *)buf;
++	u16 v;
++
++	memcpy(&v, buf, sizeof(v));
++	return v;
+ }
+ 
+ static unsigned int regmap_parse_24(const void *buf)
+@@ -376,69 +370,67 @@ static unsigned int regmap_parse_24(const void *buf)
+ 
+ static unsigned int regmap_parse_32_be(const void *buf)
+ {
+-	const __be32 *b = buf;
+-
+-	return be32_to_cpu(b[0]);
++	return get_unaligned_be32(buf);
+ }
+ 
+ static unsigned int regmap_parse_32_le(const void *buf)
+ {
+-	const __le32 *b = buf;
+-
+-	return le32_to_cpu(b[0]);
++	return get_unaligned_le32(buf);
+ }
+ 
+ static void regmap_parse_32_be_inplace(void *buf)
+ {
+-	__be32 *b = buf;
++	u32 v = get_unaligned_be32(buf);
+ 
+-	b[0] = be32_to_cpu(b[0]);
++	memcpy(buf, &v, sizeof(v));
+ }
+ 
+ static void regmap_parse_32_le_inplace(void *buf)
+ {
+-	__le32 *b = buf;
++	u32 v = get_unaligned_le32(buf);
+ 
+-	b[0] = le32_to_cpu(b[0]);
++	memcpy(buf, &v, sizeof(v));
+ }
+ 
+ static unsigned int regmap_parse_32_native(const void *buf)
+ {
+-	return *(u32 *)buf;
++	u32 v;
++
++	memcpy(&v, buf, sizeof(v));
++	return v;
+ }
+ 
+ #ifdef CONFIG_64BIT
+ static unsigned int regmap_parse_64_be(const void *buf)
+ {
+-	const __be64 *b = buf;
+-
+-	return be64_to_cpu(b[0]);
++	return get_unaligned_be64(buf);
+ }
+ 
+ static unsigned int regmap_parse_64_le(const void *buf)
+ {
+-	const __le64 *b = buf;
+-
+-	return le64_to_cpu(b[0]);
++	return get_unaligned_le64(buf);
+ }
+ 
+ static void regmap_parse_64_be_inplace(void *buf)
+ {
+-	__be64 *b = buf;
++	u64 v =  get_unaligned_be64(buf);
+ 
+-	b[0] = be64_to_cpu(b[0]);
++	memcpy(buf, &v, sizeof(v));
+ }
+ 
+ static void regmap_parse_64_le_inplace(void *buf)
+ {
+-	__le64 *b = buf;
++	u64 v = get_unaligned_le64(buf);
+ 
+-	b[0] = le64_to_cpu(b[0]);
++	memcpy(buf, &v, sizeof(v));
+ }
+ 
+ static unsigned int regmap_parse_64_native(const void *buf)
+ {
+-	return *(u64 *)buf;
++	u64 v;
++
++	memcpy(&v, buf, sizeof(v));
++	return v;
+ }
+ #endif
+ 
 -- 
 2.25.1
 
