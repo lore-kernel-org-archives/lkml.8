@@ -2,126 +2,109 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93EF0C433E8
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 15:49:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 394FDC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 15:49:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 692BD22464
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 15:49:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 10ADD22470
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 15:49:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594741787;
-	bh=Ulz6kftsIf17MgM1f0YQJELfS5NjvEeQg+27bJIWgUA=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=DuKNObe+fUxPkVsFD7WxG34r7QAp6jUylTREoEFTAW6eMdYpMRHh6ATs/B+5r4RXG
-	 XCtz4iGDdfmSPMlLak8CGU4Cp0kKIRJ1oMgjvv3F1zWzTJX49AfSxozBwx8huf3UQr
-	 MfqK3PL0BvPRUakctJc+w38esttCxA2/FFvpXbbQ=
+	s=default; t=1594741775;
+	bh=m8ZRITMS+0UsFY3d2kWWVunZaKKwKRhRdIa7BODJcuk=;
+	h=Subject:To:References:Cc:From:Date:In-Reply-To:List-ID:From;
+	b=t547N3rXnutzrjLfnQZxBRVglbOBCGCq/HUVoi53GcYQbkhu5IDYegT501oLn+dEC
+	 ErDjhF4gkE7a8Tw1aHpvw5NmWD6jPEY+zn1y+EnNUkWlvDu8tcYaVzEx8hayIw3CcQ
+	 aDJ3zcpnKoKiFHZUV/QOlhBsoT+ECow3dht4vVJE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728123AbgGNPtq (ORCPT
+        id S1728106AbgGNPtd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 11:49:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56108 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725876AbgGNPtp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 11:49:45 -0400
-Received: from localhost (mobile-166-175-191-139.mycingular.net [166.175.191.139])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C781122464;
-        Tue, 14 Jul 2020 15:49:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594741784;
-        bh=Ulz6kftsIf17MgM1f0YQJELfS5NjvEeQg+27bJIWgUA=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=EaQlvs/TC2yUjHJK6smf4ynxhvgNy5wlI9WFj7L3BfuTU4CDzmYYc6S17Kw23RlD1
-         ane48ARw0DttiT5GA+ADF+3szgTdBi3G/NGuj6uqbXK7TbOGD28k/kXcKTsDcmnQ/H
-         L4Vbv6eXEAxcd1xgmuHjECuy9pqpSHzJy0jUhojw=
-Date:   Tue, 14 Jul 2020 10:49:41 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Saheed Olayemi Bolarinwa <refactormyself@gmail.com>
-Cc:     bjorn@helgaas.com, skhan@linuxfoundation.org,
-        linux-pci@vger.kernel.org,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        linux-kernel@vger.kernel.org,
-        Mike Marciniszyn <mike.marciniszyn@intel.com>,
-        Dennis Dalessandro <dennis.dalessandro@intel.com>,
-        Doug Ledford <dledford@redhat.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>, linux-rdma@vger.kernel.org
-Subject: Re: [PATCH 0/14 v4] PCI: Remove '*val = 0' from
- pcie_capability_read_*()
-Message-ID: <20200714154941.GA396741@bjorn-Precision-5520>
+        Tue, 14 Jul 2020 11:49:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38216 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728066AbgGNPtc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 11:49:32 -0400
+Received: from mail-ot1-x342.google.com (mail-ot1-x342.google.com [IPv6:2607:f8b0:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 22AFDC061794
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 08:49:32 -0700 (PDT)
+Received: by mail-ot1-x342.google.com with SMTP id 95so13370804otw.10
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 08:49:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linuxfoundation.org; s=google;
+        h=subject:to:references:cc:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=6jLgbeQbR2y51QxkPXj1KM5ydm8hN4KlBS47bVAqPbo=;
+        b=bDY4rE0dt2u4c3T1MoOhMWAfTGN7nds8Xy1K6CacPGA+PTYOPZUtoy+jVY7bgXOfGC
+         qYpoFE8UJIdMqcyVmbdu4AdSAKLJS8DCSLEJPAIB72/KgXJjGINSdllY1z4R9llJ+YEq
+         FMMKB+CPbWzO60nbUhygXFx9+AtcKVLPBCoQw=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:references:cc:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=6jLgbeQbR2y51QxkPXj1KM5ydm8hN4KlBS47bVAqPbo=;
+        b=rCzdlQlLwMlltNXlYBAW0HwBYn2bPJig9byCNCacWV/geLZ8EGccBQv5B7a5qAR4Ia
+         6QsYcQtXRYVQADuuRGLU0r1lsOICWigraF2cCjVDBs3bJY/sP6XJt4mB05Rvj2HHBXGd
+         ecmzhWZOaBSvDJtNowRBNOSTX1ZaxVXt98HowllT9/isMGUt/rS8+Qp/+GHhwbggVOCZ
+         nFe2okIk2FNoibYShKe2Cp5Htl4w2J9G7WZHseuwXrdxHFrGU9jhkVSpDQrWO81H/42g
+         oq4IUHCzyzsfCPQi0JUeucPgr2r9MNUQiZ7JCQjjEI7Xao6uKQHHipLIcG61sbU8oFX4
+         Ek3A==
+X-Gm-Message-State: AOAM530o3NqsykoUUNbOkpZ2+nXNf8oRrg6m5ZYqR9sK705uUAR+HF/y
+        x6HXfzpIJbqQrpPoLjA0CrAL8w==
+X-Google-Smtp-Source: ABdhPJyiHPS6sDocyBlmPwMcOK3T5OJvhc9vK7owfgslvoVxglvfp5im8gyurA9CgafUTZMNcrKmRA==
+X-Received: by 2002:a05:6830:198:: with SMTP id q24mr4675315ota.202.1594741771493;
+        Tue, 14 Jul 2020 08:49:31 -0700 (PDT)
+Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net. [24.9.64.241])
+        by smtp.gmail.com with ESMTPSA id a6sm3653744otb.8.2020.07.14.08.49.30
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 14 Jul 2020 08:49:30 -0700 (PDT)
+Subject: Re: [PATCH] tools: usb: usbip: Replace HTTP links with HTTPS ones
+To:     "Alexander A. Klimov" <grandmaster@al2klimov.de>,
+        valentina.manea.m@gmail.com, shuah@kernel.org,
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200711062442.GA2784200@kroah.com>
+ <20200711123906.16325-1-grandmaster@al2klimov.de>
+Cc:     Shuah Khan <skhan@linuxfoundation.org>
+From:   Shuah Khan <skhan@linuxfoundation.org>
+Message-ID: <55e97454-c376-e640-f020-cb297e176681@linuxfoundation.org>
+Date:   Tue, 14 Jul 2020 09:49:29 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200714110445.32605-1-refactormyself@gmail.com>
+In-Reply-To: <20200711123906.16325-1-grandmaster@al2klimov.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 14, 2020 at 01:04:42PM +0200, Saheed Olayemi Bolarinwa wrote:
-> From: Bolarinwa Olayemi Saheed <refactormyself@gmail.com>
-> ...
+On 7/11/20 6:39 AM, Alexander A. Klimov wrote:
+> Rationale:
+> Reduces attack surface on kernel devs opening the links for MITM
+> as HTTPS traffic is much harder to manipulate.
+> 
+> Deterministic algorithm:
+> For each file:
+>    If not .svg:
+>      For each line:
+>        If doesn't contain `\bxmlns\b`:
+>          For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
+> 	  If neither `\bgnu\.org/license`, nor `\bmozilla\.org/MPL\b`:
+>              If both the HTTP and HTTPS versions
+>              return 200 OK and serve the same content:
+>                Replace HTTP with HTTPS.
+> 
+> Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
 
-> Bolarinwa Olayemi Saheed (14):
->   IB/hfi1: Check the return value of pcie_capability_read_*()
->   misc: rtsx: Check the return value of pcie_capability_read_*()
->   ath9k: Check the return value of pcie_capability_read_*()
->   iwlegacy: Check the return value of pcie_capability_read_*()
->   PCI: pciehp: Check the return value of pcie_capability_read_*()
->   PCI: pciehp: Make "Power On" the default 
->   PCI: pciehp: Check the return value of pcie_capability_read_*()
->   PCI/ACPI: Check the return value of pcie_capability_read_*()
->   PCI: pciehp: Check the return value of pcie_capability_read_*()
->   PCI: Check the return value of pcie_capability_read_*()
->   PCI/PM: Check return value of pcie_capability_read_*()
->   PCI/AER: Check the return value of pcie_capability_read_*()
->   PCI/ASPM: Check the return value of pcie_capability_read_*()
->   PCI: Remove '*val = 0' from pcie_capability_read_*()
+Acked-by: Shuah Khan <skhan@linuxfoundation.org>
 
-1) Let's slow down on posting patches.  We need time to think and have
-a conversation about where we're going, and waking up to dozens of new
-patches every day doesn't help.
-
-2) This series claims to have 14 patches, but only 3 made it to the
-list.  I don't know if the others were rejected for too many folks in
-the cc: list or what.  If you only updated these 3, we will still want
-the full set of 14 posted because it's too hard to collect 11 things
-from v3 and 3 things from v4, etc.
-
-  $ b4 am -om/ 20200714110445.32605-1-refactormyself@gmail.com
-  Looking up https://lore.kernel.org/r/20200714110445.32605-1-refactormyself%40gmail.com
-  Grabbing thread from lore.kernel.org/linux-kernel-mentees
-  Analyzing 4 messages in the thread
-  ---
-  Thread incomplete, attempting to backfill
-  Grabbing thread from lore.kernel.org/linux-rdma
-  Grabbing thread from lore.kernel.org/lkml
-  Grabbing thread from lore.kernel.org/linux-pci
-  ---
-  Writing m/v4_20200714_refactormyself_pci_remove_val_0_from_pcie_capability_read.mbx
-    [PATCH 1/14 v4] IB/hfi1: Check the return value of pcie_capability_read_*()
-    ERROR: missing [2/14]!
-    ERROR: missing [3/14]!
-    ERROR: missing [4/14]!
-    ERROR: missing [5/14]!
-    ERROR: missing [6/14]!
-    ERROR: missing [7/14]!
-    ERROR: missing [8/14]!
-    ERROR: missing [9/14]!
-    [PATCH 10/14 v4] PCI: Check return value of pcie_capability_read_*()
-    [PATCH 11/14 v4] PCI/PM: Check return value of pcie_capability_read_*()
-    ERROR: missing [12/14]!
-    ERROR: missing [13/14]!
-    ERROR: missing [14/14]!
-  ---
-  Total patches: 3
-  ---
-  WARNING: Thread incomplete!
-  Cover: m/v4_20200714_refactormyself_pci_remove_val_0_from_pcie_capability_read.cover
-   Link: https://lore.kernel.org/r/20200714110445.32605-1-refactormyself@gmail.com
-   Base: not found
-	 git am m/v4_20200714_refactormyself_pci_remove_val_0_from_pcie_capability_read.mbx
+thanks,
+-- Shuah
 
