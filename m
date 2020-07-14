@@ -2,126 +2,107 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5781DC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 02:55:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8646C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 02:56:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1FA892082E
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 02:55:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C6D4B21974
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 02:56:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="m+urkWke"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IutIsFNF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726809AbgGNCzj (ORCPT
+        id S1726828AbgGNC4d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 22:55:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60002 "EHLO
+        Mon, 13 Jul 2020 22:56:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60142 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726372AbgGNCzi (ORCPT
+        with ESMTP id S1726435AbgGNC4c (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 22:55:38 -0400
-Received: from mail-ed1-x542.google.com (mail-ed1-x542.google.com [IPv6:2a00:1450:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 50017C061755;
-        Mon, 13 Jul 2020 19:55:38 -0700 (PDT)
-Received: by mail-ed1-x542.google.com with SMTP id by13so15563671edb.11;
-        Mon, 13 Jul 2020 19:55:38 -0700 (PDT)
+        Mon, 13 Jul 2020 22:56:32 -0400
+Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A4A1EC061755
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 19:56:32 -0700 (PDT)
+Received: by mail-pf1-x444.google.com with SMTP id a24so1324581pfc.10
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 19:56:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=+TkAPchkeADsCApjDsygzVoXRKX4pEnQNE3pl6BWub8=;
-        b=m+urkWke7MUX4d6AM+4iPZJ2bEo6N+i1IirJQZe99s5uUD9FeWQe3YWMbcqstrViil
-         HNh6OfVb9l2xZUkD7swgnPI5QAX9TULZRcYzBHFBFi23Th8JVG9Rt4Y0LJtIBlKL3Cnc
-         HYHf7HJJz8tl2jufyoA63pmxNER56G7OkM/IcJHtK1ROKGeBlUG42N4XtuKr7ddBt77r
-         a0uByQDuZ8ISqQZ2Cj+Ah4qcNPsSas+V7VA89bSOehTp+80gIIpqqnEcYRLeDyaBr/uL
-         0KTV6MXoQVcw/r4GOiSNPyCu3nVEsUjwFmpYz32cKQbC9aJ/OKac9OrLfVcAn/itkqq3
-         hpAg==
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=GYXfA88REP7Ii+n/TRWlnJSZZVN1GYMTJsLHA5GKXTc=;
+        b=IutIsFNFnLOk4TxOKdywm5EsL4Di+SUjng9rJf9O1FjmjruWa3tdRKdD0rtzb2wTv5
+         w1xulcBvv+aBQ+cOJ0tq236sP4fea3kBz6Zaxdd1eWSGs904og6aAxg7fFPXj/1T3TFq
+         IK8M8Fwo3H7FHhDFBHtSeXkatXF6rO6P7g2ZwPk9esvHvmAqTeITFxGLQ1GgDuUE3sp1
+         SlEE+HV9p8u2C2JrFyOIrcPYNSqWFGQih71F838u9un8n+0A7pSF9Vu1oyiJ/Uro/0V9
+         puvQ9SePEz3fDiCpaEJuYx7bljIF6mZGO0KFwv1BS2qDajlEpIWbSX9zaVpBlmeHSQTE
+         lSRg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=+TkAPchkeADsCApjDsygzVoXRKX4pEnQNE3pl6BWub8=;
-        b=savWuNsxfBy/ZwRGsMMMbVMSs12xJMdTFnUMVKOsLHECpXQgH1a0YCGJF/SfUBIpT8
-         tnp5d/q406ovGP+sQwlSvxVjY6Cc3vF/sp8/Nj2fMlQkVSgTpjFyEgo2JSElrBL42Ek4
-         UWoVLBUqXNFuETpuZ90t3HrhGNBQHopHN8mxVlpML54NyZ8Y0gsSuuR2luRTgn2TP04w
-         +V8Lfmx7vqnDOG9gAUV2QTmKXB1FjwriDUD0zZmvwe+zgZ1zZBcWnlOFV0lVFrkfw8UA
-         LjjCFZROTGEJiXDB2Ma7WF2c9b4MHE25epenzT4HkyJZapdWjT6u7KQyMo6PimnElPrR
-         iU9g==
-X-Gm-Message-State: AOAM5331XJhTHSVmhowhVtxW/n5q0u8+u6PnXm26Keog8ym8iAsYjkEp
-        yNM2tc8nQtEglGPBydVltD8rDz8g
-X-Google-Smtp-Source: ABdhPJzaThfDiSqoyGMSos5gZm5P3BLAPoTw92Y96RGCq/k1+YfWrD3DKnnI09s/5NKpWSNbQK/RaQ==
-X-Received: by 2002:a05:6402:1544:: with SMTP id p4mr2355053edx.334.1594695336677;
-        Mon, 13 Jul 2020 19:55:36 -0700 (PDT)
-Received: from [192.168.1.3] (ip68-111-84-250.oc.oc.cox.net. [68.111.84.250])
-        by smtp.gmail.com with ESMTPSA id 23sm13337493edx.75.2020.07.13.19.55.33
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 13 Jul 2020 19:55:35 -0700 (PDT)
-Subject: Re: [PATCH] net: xilinx: fix potential NULL dereference in
- temac_probe()
-To:     Xu Wang <vulab@iscas.ac.cn>, davem@davemloft.net, kuba@kernel.org,
-        michal.simek@xilinx.com, esben@geanix.com, hkallweit1@gmail.com,
-        weiyongjun1@huawei.com, netdev@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Cc:     linux-kernel@vger.kernel.org
-References: <20200714022304.4003-1-vulab@iscas.ac.cn>
-From:   Florian Fainelli <f.fainelli@gmail.com>
-Message-ID: <683a0713-2587-17e4-6280-b2f905b3a230@gmail.com>
-Date:   Mon, 13 Jul 2020 19:55:32 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Firefox/68.0 Thunderbird/68.10.0
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=GYXfA88REP7Ii+n/TRWlnJSZZVN1GYMTJsLHA5GKXTc=;
+        b=SZIMBXV9rsQWfHQGcyZo1mrq6difF92/oN/kf6EVbW5JaaEz58x7bJXfY+yMT0kboB
+         7EjaBfSITDB6DrNeHX5CVRH2j7VOZjkJ8lc3T0wacJ52j0E03zHdBUnvvsK4Smqm4wm3
+         91dZHpvWpqmxvzJhr7osNZRxb2TvPN0EzsXx/YCqmQ+ryimpqWWx3gg5XsdaFQ4z58sQ
+         MuAYZr453rhGCEnuhFWp+hUMd/BMYyiixTY3hZR6MHT76XBbQRjntkh9O/ZZ9GxTpdbz
+         aO3ygsGNkK7Fewtq0uZK169LCg+jo91mBi/KVhwJwSngQrhz5u8n0NC7x+dlcGFqsGYI
+         8M3g==
+X-Gm-Message-State: AOAM531DIiK7bGjRceXvWBKGeYT0RiT6oQEYl/FE6gFylMZ+nHHJDx8/
+        OuhRscVMRk/ynq3x7jMq3qQ=
+X-Google-Smtp-Source: ABdhPJwdobzTsnXXvwwSwUC7GWjx6B+1yH89Vzmd+jsP5xUlFPAhafRrcAiP8n8pSC+zQnc31qliSQ==
+X-Received: by 2002:a63:1d4:: with SMTP id 203mr1695817pgb.356.1594695392152;
+        Mon, 13 Jul 2020 19:56:32 -0700 (PDT)
+Received: from localhost ([2409:10:2e40:5100:6e29:95ff:fe2d:8f34])
+        by smtp.gmail.com with ESMTPSA id 2sm16048049pfa.110.2020.07.13.19.56.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 13 Jul 2020 19:56:31 -0700 (PDT)
+From:   Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+X-Google-Original-From: Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
+Date:   Tue, 14 Jul 2020 11:56:26 +0900
+To:     John Ogness <john.ogness@linutronix.de>
+Cc:     Petr Mladek <pmladek@suse.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andrea Parri <parri.andrea@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Paul McKenney <paulmck@kernel.org>, kexec@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 0/4] printk: replace ringbuffer
+Message-ID: <20200714025626.GD491026@jagdpanzerIV.localdomain>
+References: <20200707145932.8752-1-john.ogness@linutronix.de>
+ <20200708152005.GF4751@alley>
+ <87wo3d9nlo.fsf@jogness.linutronix.de>
+ <20200710091137.GN4751@alley>
+ <87o8onhf31.fsf@jogness.linutronix.de>
 MIME-Version: 1.0
-In-Reply-To: <20200714022304.4003-1-vulab@iscas.ac.cn>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87o8onhf31.fsf@jogness.linutronix.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 7/13/2020 7:23 PM, Xu Wang wrote:
-> platform_get_resource() may return NULL, add proper
-> check to avoid potential NULL dereferencing.
+On (20/07/10 11:58), John Ogness wrote:
 > 
-> Signed-off-by: Xu Wang <vulab@iscas.ac.cn>
-> ---
+> IMHO users of these sequence number interfaces need to see all the
+> records individually and reassemble the LOG_CONT messages themselves if
+> they want to. I believe that is the only sane path forward. To do this,
+> the caller id will no longer be optional to the sequence number output
+> since that is vital information to re-assemble the LOG_CONT messages.
 
-If you use devm_ioremap_resource() you can remove the !res check
-entirely which would be equally acceptable as a fix.
+Agreed. The caller id thus probably can be extended. Right now it only
+tells us either we are in a process context (PID) or in something else.
+This works sort of fine (I guess) because deeply nested printouts (printks
+from NMI atop of process or irq printks) land in the deferred printk-safe
+buffers, but things will change with the new logbuf (and after removal of
+the logbuf_lock and per-CPU printk-safe buffers).
 
->  drivers/net/ethernet/xilinx/ll_temac_main.c | 4 ++++
->  1 file changed, 4 insertions(+)
-> 
-> diff --git a/drivers/net/ethernet/xilinx/ll_temac_main.c b/drivers/net/ethernet/xilinx/ll_temac_main.c
-> index 929244064abd..85a767fa2ecf 100644
-> --- a/drivers/net/ethernet/xilinx/ll_temac_main.c
-> +++ b/drivers/net/ethernet/xilinx/ll_temac_main.c
-> @@ -1408,6 +1408,8 @@ static int temac_probe(struct platform_device *pdev)
->  
->  	/* map device registers */
->  	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> +	if (!res)
-> +		return -EINVAL;
->  	lp->regs = devm_ioremap(&pdev->dev, res->start,
->  					resource_size(res));
->  	if (!lp->regs) {
-> @@ -1503,6 +1505,8 @@ static int temac_probe(struct platform_device *pdev)
->  	} else if (pdata) {
->  		/* 2nd memory resource specifies DMA registers */
->  		res = platform_get_resource(pdev, IORESOURCE_MEM, 1);
-> +		if (!res)
-> +			return -EINVAL;
->  		lp->sdma_regs = devm_ioremap(&pdev->dev, res->start,
->  						     resource_size(res));
->  		if (!lp->sdma_regs) {
-> 
-
--- 
-Florian
+	-ss
