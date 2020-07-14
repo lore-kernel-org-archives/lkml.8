@@ -2,139 +2,178 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20AB3C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 15:33:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5869C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 15:33:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F19DD22229
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 15:33:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E81E22285
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 15:33:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=cumulusnetworks.com header.i=@cumulusnetworks.com header.b="dUQ7MtvK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727848AbgGNPdC (ORCPT
+        id S1727919AbgGNPd3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 11:33:02 -0400
-Received: from mga12.intel.com ([192.55.52.136]:19794 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725280AbgGNPdC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 11:33:02 -0400
-IronPort-SDR: Fx25YqgNYcYkbhAQ2E7SBzrRBP5zmilBpMw/24mHkwG+Jc+k99BtbuiLuhfQBNZX6uXpLQ+p7Q
- LzQP6vhNuW/A==
-X-IronPort-AV: E=McAfee;i="6000,8403,9681"; a="128495203"
-X-IronPort-AV: E=Sophos;i="5.75,350,1589266800"; 
-   d="scan'208";a="128495203"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jul 2020 08:33:01 -0700
-IronPort-SDR: jpLl8Z91CHrJMTPg3t0J7aTW5y2Vqu6HL+js7/SNral8HdnSKvyg1gNcK1cIg8t/WVHXCucWtk
- kjh/xIzkwcnQ==
-X-IronPort-AV: E=Sophos;i="5.75,350,1589266800"; 
-   d="scan'208";a="317756331"
-Received: from pbusser-mobl1.amr.corp.intel.com (HELO [10.252.136.7]) ([10.252.136.7])
-  by fmsmga002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jul 2020 08:33:00 -0700
-Subject: Re: [PATCH] ASoC: Intel: bytcht_es8316: Add missed put_device()
-To:     Hans de Goede <hdegoede@redhat.com>,
-        Jing Xiangfeng <jingxiangfeng@huawei.com>,
-        cezary.rojewski@intel.com, liam.r.girdwood@linux.intel.com,
-        yang.jie@linux.intel.com, broonie@kernel.org, perex@perex.cz,
-        tiwai@suse.com, kuninori.morimoto.gx@renesas.com,
-        paul@crapouillou.net
-Cc:     alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org
-References: <20200714080918.148196-1-jingxiangfeng@huawei.com>
- <25abce87-5572-a78a-f001-7776f07be4ac@redhat.com>
-From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Message-ID: <48bdc22e-a0fc-0402-a003-1d0736107e8a@linux.intel.com>
-Date:   Tue, 14 Jul 2020 10:32:59 -0500
+        Tue, 14 Jul 2020 11:33:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35694 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725280AbgGNPd2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 11:33:28 -0400
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7C05FC061794
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 08:33:28 -0700 (PDT)
+Received: by mail-wr1-x441.google.com with SMTP id j4so22518245wrp.10
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 08:33:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cumulusnetworks.com; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=ZV/5MnfWGeiQqfjaCqjhBosmdIaJp+dftZ+PZRkEpS8=;
+        b=dUQ7MtvKSup1M8kQBPW+VW+lvzt1lO7sZHZm9EF/2jZHHtXM2s0S6Oz2Q8owzi0TM7
+         dsSlH9pweGgn7xh1ukkA2C1VN3Mx03bsgftFuETOH1x9fKpaAfgrmG7SN1sl1Q0XZvH7
+         wA5+wE332V0zEcqxTumt6y2Q1r/2OZ4OmsBXw=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=ZV/5MnfWGeiQqfjaCqjhBosmdIaJp+dftZ+PZRkEpS8=;
+        b=pmiRAjrGFj2XIXBoWwF2SW5B+0GflGdhUot38PAzIsOHMartNDlPUMrg7/iErs6GRC
+         LSNOS9E4+PDgvYpFMSNbHzrsdZVFfsxIcnF1vF4eztMAsq/HNNTXiJVr1it+fxkwepp4
+         ZtKWFY1kJ+z1cONTNL9aNuVOCrlI/73AsDAwqDZb3mfXjNuVsI/7/H8+jQ4HfD/5eg/E
+         EiXS9yassVimalN1K8EOiKUNu1AN8VJ3qMw5ygRmUIpNQ5/05VMAKzSU016cYi5WIQ7O
+         1vT1tNHX4J2qoYd5x80Fi/LcMWzVH4RBpRSoHlVnDR38kyjIKXoiPJvYO/HZhk41K+Ja
+         Vy/A==
+X-Gm-Message-State: AOAM5333wXzMqIiKvGD2o3czlrVrCxNItPSiVm5BcsJh9ISwaMDYlL7Z
+        /Ey8J2FfJa1mrsvPldF4fymAzg==
+X-Google-Smtp-Source: ABdhPJw7QIq7PKKMCpfby1y5PCR1m53BEi9g8JiyU2dyynkHCDmKyKsirnqTtXj1MUOKCU8yf4oG6w==
+X-Received: by 2002:a5d:4e48:: with SMTP id r8mr6301220wrt.309.1594740807167;
+        Tue, 14 Jul 2020 08:33:27 -0700 (PDT)
+Received: from [192.168.0.109] (84-238-136-197.ip.btc-net.bg. [84.238.136.197])
+        by smtp.gmail.com with ESMTPSA id f12sm29802475wrj.48.2020.07.14.08.33.25
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 14 Jul 2020 08:33:26 -0700 (PDT)
+Subject: Re: [PATCH net-next v4 12/12] net: bridge: Add port attribute
+ IFLA_BRPORT_MRP_IN_OPEN
+To:     Horatiu Vultur <horatiu.vultur@microchip.com>
+Cc:     roopa@cumulusnetworks.com, davem@davemloft.net, kuba@kernel.org,
+        jiri@resnulli.us, ivecera@redhat.com, andrew@lunn.ch,
+        UNGLinuxDriver@microchip.com, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, bridge@lists.linux-foundation.org
+References: <20200714073458.1939574-1-horatiu.vultur@microchip.com>
+ <20200714073458.1939574-13-horatiu.vultur@microchip.com>
+ <9eeb89c5-865f-2b21-c7c6-7f4479bf4175@cumulusnetworks.com>
+ <20200714150740.3ji3qhtvikhrizfn@soft-dev3.localdomain>
+From:   Nikolay Aleksandrov <nikolay@cumulusnetworks.com>
+Message-ID: <a22642aa-63a2-e492-5f64-b344c62d0142@cumulusnetworks.com>
+Date:   Tue, 14 Jul 2020 18:33:25 +0300
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-In-Reply-To: <25abce87-5572-a78a-f001-7776f07be4ac@redhat.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <20200714150740.3ji3qhtvikhrizfn@soft-dev3.localdomain>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 7/14/20 8:33 AM, Hans de Goede wrote:
-> Hi,
-> 
-> On 7/14/20 10:09 AM, Jing Xiangfeng wrote:
->> snd_byt_cht_es8316_mc_probe() misses to call put_device() in an error
->> path. Add the missed function call to fix it.
+On 14/07/2020 18:07, Horatiu Vultur wrote:
+> The 07/14/2020 16:29, Nikolay Aleksandrov wrote:
+>> EXTERNAL EMAIL: Do not click links or open attachments unless you know the content is safe
 >>
->> Fixes: ba49cf6f8e4a ("ASoC: Intel: bytcht_es8316: Add quirk for 
->> inverted jack detect")
->> Signed-off-by: Jing Xiangfeng <jingxiangfeng@huawei.com>
+>> On 14/07/2020 10:34, Horatiu Vultur wrote:
+>>> This patch adds a new port attribute, IFLA_BRPORT_MRP_IN_OPEN, which
+>>> allows to notify the userspace when the node lost the contiuity of
+>>> MRP_InTest frames.
+>>>
+>>> Signed-off-by: Horatiu Vultur <horatiu.vultur@microchip.com>
+>>> ---
+>>>  include/uapi/linux/if_link.h       | 1 +
+>>>  net/bridge/br_netlink.c            | 3 +++
+>>>  tools/include/uapi/linux/if_link.h | 1 +
+>>>  3 files changed, 5 insertions(+)
+>>>
 > 
-> Patch looks good to me:
+> Hi Nik,
 > 
-> Reviewed-by: Hans de Goede <hdegoede@redhat.com>
-
-Actually the existing code looks quite odd to me:
-
-if (cnt) {
-	ret = device_add_properties(codec_dev, props);
-	if (ret)
-		return ret;
-}
-
-devm_acpi_dev_add_driver_gpios(codec_dev, byt_cht_es8316_gpios);
-priv->speaker_en_gpio =
-	gpiod_get_index(codec_dev, "speaker-enable", 0,
-			/* see comment in byt_cht_es8316_resume */
-			GPIOD_OUT_LOW | GPIOD_FLAGS_BIT_NONEXCLUSIVE);
-put_device(codec_dev);
-
-if the first branch is not taken the put_device() will not be balanced.
-
-Shouldn't this be:
-
-if (cnt) {
-	ret = device_add_properties(codec_dev, props);
-	put_device(codec_dev);
-	if (ret)
-		return ret;
-}
-
-devm_acpi_dev_add_driver_gpios(codec_dev, byt_cht_es8316_gpios);
-priv->speaker_en_gpio =
-	gpiod_get_index(codec_dev, "speaker-enable", 0,
-			/* see comment in byt_cht_es8316_resume */
-			GPIOD_OUT_LOW | GPIOD_FLAGS_BIT_NONEXCLUSIVE);
-/* removed put_device(codec_dev); */
-
-> 
-> Regards,
-> 
-> Hans
-> 
-> 
->> ---
->>   sound/soc/intel/boards/bytcht_es8316.c | 4 +++-
->>   1 file changed, 3 insertions(+), 1 deletion(-)
 >>
->> diff --git a/sound/soc/intel/boards/bytcht_es8316.c 
->> b/sound/soc/intel/boards/bytcht_es8316.c
->> index 9e5fc9430628..ecbc58e8a37f 100644
->> --- a/sound/soc/intel/boards/bytcht_es8316.c
->> +++ b/sound/soc/intel/boards/bytcht_es8316.c
->> @@ -543,8 +543,10 @@ static int snd_byt_cht_es8316_mc_probe(struct 
->> platform_device *pdev)
->>       if (cnt) {
->>           ret = device_add_properties(codec_dev, props);
->> -        if (ret)
->> +        if (ret) {
->> +            put_device(codec_dev);
->>               return ret;
->> +        }
->>       }
->>       devm_acpi_dev_add_driver_gpios(codec_dev, byt_cht_es8316_gpios);
+>> It's kind of late by now, but I'd wish these were contained in a nested MRP attribute. :)
+>> Horatiu, do you expect to have many more MRP attributes outside of MRP netlink code?
+> 
+> I don't expect to add any other MRP attributes outside of MRP netlink
+> code.
+> 
+>>
+>> Perhaps we should at least dump them only for MRP-aware ports, that should be easy.
+>> They make no sense outside of MRP anyway, but increase the size of the dump for all
+>> right now.
+> 
+> You are right. Then should I first send a fix on the net for this and
+> after that I will fix these patches or just fix this in the next patch
+> series?
+> 
+
+IMO it's more of an improvement rather than a bug, but since you don't expect to have more
+attributes outside of MRP's netlink I guess we can drop it for now. Up to you.
+
+It definitely shouldn't block this patch-set.
+
+>>
+>> Acked-by: Nikolay Aleksandrov <nikolay@cumulusnetworks.com>
+>>
+>>> diff --git a/include/uapi/linux/if_link.h b/include/uapi/linux/if_link.h
+>>> index cc185a007ade8..26842ffd0501d 100644
+>>> --- a/include/uapi/linux/if_link.h
+>>> +++ b/include/uapi/linux/if_link.h
+>>> @@ -344,6 +344,7 @@ enum {
+>>>       IFLA_BRPORT_ISOLATED,
+>>>       IFLA_BRPORT_BACKUP_PORT,
+>>>       IFLA_BRPORT_MRP_RING_OPEN,
+>>> +     IFLA_BRPORT_MRP_IN_OPEN,
+>>>       __IFLA_BRPORT_MAX
+>>>  };
+>>>  #define IFLA_BRPORT_MAX (__IFLA_BRPORT_MAX - 1)
+>>> diff --git a/net/bridge/br_netlink.c b/net/bridge/br_netlink.c
+>>> index c532fa65c9834..147d52596e174 100644
+>>> --- a/net/bridge/br_netlink.c
+>>> +++ b/net/bridge/br_netlink.c
+>>> @@ -152,6 +152,7 @@ static inline size_t br_port_info_size(void)
+>>>  #endif
+>>>               + nla_total_size(sizeof(u16))   /* IFLA_BRPORT_GROUP_FWD_MASK */
+>>>               + nla_total_size(sizeof(u8))    /* IFLA_BRPORT_MRP_RING_OPEN */
+>>> +             + nla_total_size(sizeof(u8))    /* IFLA_BRPORT_MRP_IN_OPEN */
+>>>               + 0;
+>>>  }
+>>>
+>>> @@ -216,6 +217,8 @@ static int br_port_fill_attrs(struct sk_buff *skb,
+>>>                      !!(p->flags & BR_NEIGH_SUPPRESS)) ||
+>>>           nla_put_u8(skb, IFLA_BRPORT_MRP_RING_OPEN, !!(p->flags &
+>>>                                                         BR_MRP_LOST_CONT)) ||
+>>> +         nla_put_u8(skb, IFLA_BRPORT_MRP_IN_OPEN,
+>>> +                    !!(p->flags & BR_MRP_LOST_IN_CONT)) ||
+>>>           nla_put_u8(skb, IFLA_BRPORT_ISOLATED, !!(p->flags & BR_ISOLATED)))
+>>>               return -EMSGSIZE;
+>>>
+>>> diff --git a/tools/include/uapi/linux/if_link.h b/tools/include/uapi/linux/if_link.h
+>>> index cafedbbfefbe9..781e482dc499f 100644
+>>> --- a/tools/include/uapi/linux/if_link.h
+>>> +++ b/tools/include/uapi/linux/if_link.h
+>>> @@ -344,6 +344,7 @@ enum {
+>>>       IFLA_BRPORT_ISOLATED,
+>>>       IFLA_BRPORT_BACKUP_PORT,
+>>>       IFLA_BRPORT_MRP_RING_OPEN,
+>>> +     IFLA_BRPORT_MRP_IN_OPEN,
+>>>       __IFLA_BRPORT_MAX
+>>>  };
+>>>  #define IFLA_BRPORT_MAX (__IFLA_BRPORT_MAX - 1)
+>>>
 >>
 > 
+
