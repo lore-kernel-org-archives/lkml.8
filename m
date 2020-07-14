@@ -7,28 +7,28 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22874C433FB
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 12:11:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EC7BC43446
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 12:11:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0BB66223AE
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 12:11:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4568F2240B
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 12:11:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728589AbgGNMLT (ORCPT
+        id S1728625AbgGNMLY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 08:11:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60712 "EHLO
+        Tue, 14 Jul 2020 08:11:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60730 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728502AbgGNMLL (ORCPT
+        with ESMTP id S1728541AbgGNMLQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 08:11:11 -0400
+        Tue, 14 Jul 2020 08:11:16 -0400
 Received: from theia.8bytes.org (8bytes.org [IPv6:2a01:238:4383:600:38bc:a715:4b6d:a889])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BE26CC061755;
-        Tue, 14 Jul 2020 05:11:10 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 40E4DC061755;
+        Tue, 14 Jul 2020 05:11:16 -0700 (PDT)
 Received: from cap.home.8bytes.org (p5b006776.dip0.t-ipconnect.de [91.0.103.118])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
         (No client certificate requested)
-        by theia.8bytes.org (Postfix) with ESMTPSA id 696DFFC3;
-        Tue, 14 Jul 2020 14:11:03 +0200 (CEST)
+        by theia.8bytes.org (Postfix) with ESMTPSA id BBDEEFD9;
+        Tue, 14 Jul 2020 14:11:06 +0200 (CEST)
 From:   Joerg Roedel <joro@8bytes.org>
 To:     x86@kernel.org
 Cc:     Joerg Roedel <joro@8bytes.org>, Joerg Roedel <jroedel@suse.de>,
@@ -49,9 +49,9 @@ Cc:     Joerg Roedel <joro@8bytes.org>, Joerg Roedel <jroedel@suse.de>,
         Martin Radev <martin.b.radev@gmail.com>,
         linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
         virtualization@lists.linux-foundation.org
-Subject: [PATCH v4 55/75] x86/sev-es: Handle WBINVD Events
-Date:   Tue, 14 Jul 2020 14:08:57 +0200
-Message-Id: <20200714120917.11253-56-joro@8bytes.org>
+Subject: [PATCH v4 61/75] x86/sev-es: Handle VMMCALL Events
+Date:   Tue, 14 Jul 2020 14:09:03 +0200
+Message-Id: <20200714120917.11253-62-joro@8bytes.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200714120917.11253-1-joro@8bytes.org>
 References: <20200714120917.11253-1-joro@8bytes.org>
@@ -64,42 +64,58 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Tom Lendacky <thomas.lendacky@amd.com>
 
-Implement a handler for #VC exceptions caused by WBINVD instructions.
+Implement a handler for #VC exceptions caused by VMMCALL instructions.
+This patch is only a starting point, VMMCALL emulation under SEV-ES
+needs further hypervisor-specific changes to provide additional state.
 
 Signed-off-by: Tom Lendacky <thomas.lendacky@amd.com>
-[ jroedel@suse.de: Adapt to #VC handling framework ]
+[ jroedel@suse.de: Adapt to #VC handling infrastructure ]
 Co-developed-by: Joerg Roedel <jroedel@suse.de>
 Signed-off-by: Joerg Roedel <jroedel@suse.de>
 ---
- arch/x86/kernel/sev-es.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
+ arch/x86/kernel/sev-es.c | 23 +++++++++++++++++++++++
+ 1 file changed, 23 insertions(+)
 
 diff --git a/arch/x86/kernel/sev-es.c b/arch/x86/kernel/sev-es.c
-index 09738d6fe55e..aa117004fc2e 100644
+index 541f8994eb21..013dcdfeb613 100644
 --- a/arch/x86/kernel/sev-es.c
 +++ b/arch/x86/kernel/sev-es.c
-@@ -853,6 +853,12 @@ static enum es_result vc_handle_dr7_read(struct ghcb *ghcb,
+@@ -895,6 +895,26 @@ static enum es_result vc_handle_mwait(struct ghcb *ghcb,
  	return ES_OK;
  }
  
-+static enum es_result vc_handle_wbinvd(struct ghcb *ghcb,
-+				       struct es_em_ctxt *ctxt)
++static enum es_result vc_handle_vmmcall(struct ghcb *ghcb,
++					struct es_em_ctxt *ctxt)
 +{
-+	return sev_es_ghcb_hv_call(ghcb, ctxt, SVM_EXIT_WBINVD, 0, 0);
++	enum es_result ret;
++
++	ghcb_set_rax(ghcb, ctxt->regs->ax);
++	ghcb_set_cpl(ghcb, user_mode(ctxt->regs) ? 3 : 0);
++
++	ret = sev_es_ghcb_hv_call(ghcb, ctxt, SVM_EXIT_VMMCALL, 0, 0);
++	if (ret != ES_OK)
++		return ret;
++
++	if (!ghcb_is_valid_rax(ghcb))
++		return ES_VMM_ERROR;
++
++	ctxt->regs->ax = ghcb->save.rax;
++
++	return ES_OK;
 +}
 +
  static enum es_result vc_handle_exitcode(struct es_em_ctxt *ctxt,
  					 struct ghcb *ghcb,
  					 unsigned long exit_code)
-@@ -875,6 +881,9 @@ static enum es_result vc_handle_exitcode(struct es_em_ctxt *ctxt,
+@@ -928,6 +948,9 @@ static enum es_result vc_handle_exitcode(struct es_em_ctxt *ctxt,
  	case SVM_EXIT_MSR:
  		result = vc_handle_msr(ghcb, ctxt);
  		break;
-+	case SVM_EXIT_WBINVD:
-+		result = vc_handle_wbinvd(ghcb, ctxt);
++	case SVM_EXIT_VMMCALL:
++		result = vc_handle_vmmcall(ghcb, ctxt);
 +		break;
- 	case SVM_EXIT_NPF:
- 		result = vc_handle_mmio(ghcb, ctxt);
+ 	case SVM_EXIT_WBINVD:
+ 		result = vc_handle_wbinvd(ghcb, ctxt);
  		break;
 -- 
 2.27.0
