@@ -2,102 +2,108 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EEF5EC433F2
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 11:09:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51D49C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 11:10:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CD5FF221FC
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 11:09:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1FCFD2075B
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 11:10:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="lvfy1hdd"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="I23oUhor"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727787AbgGNLJw (ORCPT
+        id S1727844AbgGNLKf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 07:09:52 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:33203 "EHLO m43-7.mailgun.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727047AbgGNLJv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 07:09:51 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1594724990; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=063nsZA+TEvD+EIhBzADv1QQAX7cmYzUzYelnNmmLWM=;
- b=lvfy1hddC1WW/SdttkR7iHVNGstAJo2VzSIxRdKZAv/Lg+v0IgwdUsQ0Y/dMvtTQSsmr1w08
- 1VD8NLRC9TugsFdMXv7x/rRGpSf7HliD3NNl1jWXQY7BfbuGRIKrnavNvDi8qltPkDM5b9PN
- +d2QqNH16x/qt684IJw7HtAGCHw=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n15.prod.us-east-1.postgun.com with SMTP id
- 5f0d927e1e603dbb44cdf4ff (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 14 Jul 2020 11:09:50
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id B4CDEC433C8; Tue, 14 Jul 2020 11:09:49 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: kalyan_t)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id B25B1C433CA;
-        Tue, 14 Jul 2020 11:09:47 +0000 (UTC)
+        Tue, 14 Jul 2020 07:10:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51290 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726252AbgGNLKe (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 07:10:34 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 63AFEC061755;
+        Tue, 14 Jul 2020 04:10:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
+        References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
+        Content-Type:Content-ID:Content-Description;
+        bh=aA679qIodiBpC5vbULiwbVKx3fOumlOYyYuEKhecoTI=; b=I23oUhorQvkUc3pKxqW65dWZKi
+        2fvnRyOEcYQiwRX71KaxF5fb1WDG9GhMZ0whjJ4vniWBpxRO+H4GEqTsMWqFwK88N8jITuk5W5dzq
+        964ngvwoNriO55HokZ0KVUAATgpYwv7/l2gjlugolwHLuVj7WlJlE//60NlcNcyzqauvWByDcKjSJ
+        7Fv51WGpAXn+LU5rCKIO7zOLWNs/SrNcTp5pWrbsbYxma8sEaB72+1iDJlLGTd2VnQ97nIKoe1xMK
+        eTx5w1U1nwg7BYSroNLCMEwFnKIR79GysRyZxtpMg5ya2xRvud3GD+pkGvH1WKaGvX+CzkoWoN/aS
+        XwKN5xUQ==;
+Received: from 089144201169.atnat0010.highway.a1.net ([89.144.201.169] helo=localhost)
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jvIpP-0006Ta-Mr; Tue, 14 Jul 2020 11:10:28 +0000
+From:   Christoph Hellwig <hch@lst.de>
+To:     Nick Hu <nickhu@andestech.com>, Greentime Hu <green.hu@gmail.com>,
+        Vincent Chen <deanbo422@gmail.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-riscv@lists.infradead.org, linux-arch@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 6/6] exec: use force_uaccess_begin during exec and exit
+Date:   Tue, 14 Jul 2020 12:55:05 +0200
+Message-Id: <20200714105505.935079-7-hch@lst.de>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200714105505.935079-1-hch@lst.de>
+References: <20200714105505.935079-1-hch@lst.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Tue, 14 Jul 2020 16:39:47 +0530
-From:   kalyan_t@codeaurora.org
-To:     Matthias Kaehlcke <mka@chromium.org>
-Cc:     dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
-        freedreno@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, robdclark@gmail.com,
-        seanpaul@chromium.org, hoegsberg@chromium.org,
-        dianders@chromium.org, mkrishn@codeaurora.org,
-        travitej@codeaurora.org, nganji@codeaurora.org
-Subject: Re: [v1] drm/msm/dpu: add support for clk and bw scaling for display
-In-Reply-To: <20200714011219.GQ3191083@google.com>
-References: <1592489321-29213-1-git-send-email-kalyan_t@codeaurora.org>
- <20200714011219.GQ3191083@google.com>
-Message-ID: <38dc4bbfd754175e476252c4bc259d55@codeaurora.org>
-X-Sender: kalyan_t@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+Content-Transfer-Encoding: 8bit
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-07-14 06:42, Matthias Kaehlcke wrote:
-> On Thu, Jun 18, 2020 at 07:38:41PM +0530, Kalyan Thota wrote:
->> This change adds support to scale src clk and bandwidth as
->> per composition requirements.
->> 
->> Interconnect registration for bw has been moved to mdp
->> device node from mdss to facilitate the scaling.
->> 
->> Changes in v1:
->>  - Address armv7 compilation issues with the patch (Rob)
->> 
->> Signed-off-by: Kalyan Thota <kalyan_t@codeaurora.org>
-> 
-> It seems this is an evolution of this series:
-> https://patchwork.kernel.org/project/linux-arm-msm/list/?series=265351
-> 
-> Are the DT bits of the series still valid? If so please include them in 
-> the
-> series, otherwise please add DT patches to allow folks to test and 
-> review,
-> and get them landed in Bjorn's tree after the driver changes have 
-> landed.
+Both exec and exit want to ensure that the uaccess routines actually do
+access user pointers.  Use the newly added force_uaccess_begin helper
+instead of an open coded set_fs for that to prepare for kernel builds
+where set_fs() does not exist.
 
-Hi,
+Signed-off-by: Christoph Hellwig <hch@lst.de>
+---
+ fs/exec.c     | 7 ++++++-
+ kernel/exit.c | 2 +-
+ 2 files changed, 7 insertions(+), 2 deletions(-)
 
-Yes the patch is dependent on the DT changes, should i add them with 
-depends tag in the commit text ?
-https://patchwork.kernel.org/patch/11470785/
-https://patchwork.kernel.org/patch/11470789/
+diff --git a/fs/exec.c b/fs/exec.c
+index e6e8a9a7032784..769af470b69124 100644
+--- a/fs/exec.c
++++ b/fs/exec.c
+@@ -1380,7 +1380,12 @@ int begin_new_exec(struct linux_binprm * bprm)
+ 	if (retval)
+ 		goto out_unlock;
+ 
+-	set_fs(USER_DS);
++	/*
++	 * Ensure that the uaccess routines can actually operate on userspace
++	 * pointers:
++	 */
++	force_uaccess_begin();
++
+ 	me->flags &= ~(PF_RANDOMIZE | PF_FORKNOEXEC | PF_KTHREAD |
+ 					PF_NOFREEZE | PF_NO_SETAFFINITY);
+ 	flush_thread();
+diff --git a/kernel/exit.c b/kernel/exit.c
+index 727150f2810338..17d486a20f0dc6 100644
+--- a/kernel/exit.c
++++ b/kernel/exit.c
+@@ -731,7 +731,7 @@ void __noreturn do_exit(long code)
+ 	 * mm_release()->clear_child_tid() from writing to a user-controlled
+ 	 * kernel address.
+ 	 */
+-	set_fs(USER_DS);
++	force_uaccess_begin();
+ 
+ 	if (unlikely(in_atomic())) {
+ 		pr_info("note: %s[%d] exited with preempt_count %d\n",
+-- 
+2.26.2
 
-- Kalyan
