@@ -2,233 +2,110 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DDECC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 01:45:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AFA3C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 01:44:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 42B59217D9
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 01:45:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4144220578
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 01:44:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726795AbgGNBpn (ORCPT
+        id S1726752AbgGNBoi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 21:45:43 -0400
-Received: from mga05.intel.com ([192.55.52.43]:36251 "EHLO mga05.intel.com"
+        Mon, 13 Jul 2020 21:44:38 -0400
+Received: from mail5.windriver.com ([192.103.53.11]:40604 "EHLO mail5.wrs.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726149AbgGNBpn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 21:45:43 -0400
-IronPort-SDR: 49R/pTLZzk5GmOU5JlLXSxrw8vbIjrq/uQseHPNVDaANjzIvIToNuHeuw7AY8xIybi6u9cAyWk
- AKHFg6CYDO5Q==
-X-IronPort-AV: E=McAfee;i="6000,8403,9681"; a="233625380"
-X-IronPort-AV: E=Sophos;i="5.75,349,1589266800"; 
-   d="scan'208";a="233625380"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jul 2020 18:45:42 -0700
-IronPort-SDR: 8KiZszk0n6gHzyqnZmwij3sNxT5adP1q6i8wX4Jtq85W0WKHIFD7Q5NReP7Oo0nbZpBej0kByG
- hl4sCHAr9f7Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,349,1589266800"; 
-   d="scan'208";a="268520726"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.152])
-  by fmsmga007.fm.intel.com with ESMTP; 13 Jul 2020 18:45:40 -0700
-Date:   Mon, 13 Jul 2020 18:45:40 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
-Cc:     Borislav Petkov <bp@alien8.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, x86@kernel.org,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Tony Luck <tony.luck@intel.com>,
-        "Gomez Iglesias, Antonio" <antonio.gomez.iglesias@intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Anthony Steinhauser <asteinhauser@google.com>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Mark Gross <mgross@linux.intel.com>,
-        Waiman Long <longman@redhat.com>, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        Jonathan Corbet <corbet@lwn.net>
-Subject: Re: [PATCH] x86/bugs/multihit: Fix mitigation reporting when KVM is
- not in use
-Message-ID: <20200714014540.GH29725@linux.intel.com>
-References: <267631f4db4fd7e9f7ca789c2efaeab44103f68e.1594689154.git.pawan.kumar.gupta@linux.intel.com>
+        id S1726149AbgGNBoh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jul 2020 21:44:37 -0400
+Received: from ALA-HCB.corp.ad.wrs.com (ala-hcb.corp.ad.wrs.com [147.11.189.41])
+        by mail5.wrs.com (8.15.2/8.15.2) with ESMTPS id 06E1gcr9004332
+        (version=TLSv1 cipher=DHE-RSA-AES256-SHA bits=256 verify=FAIL);
+        Mon, 13 Jul 2020 18:42:48 -0700
+Received: from pek-lpg-core1-vm1.wrs.com (128.224.156.106) by
+ ALA-HCB.corp.ad.wrs.com (147.11.189.41) with Microsoft SMTP Server id
+ 14.3.487.0; Mon, 13 Jul 2020 18:42:15 -0700
+From:   <qiang.zhang@windriver.com>
+To:     <jmaloy@redhat.com>, <ying.xue@windriver.com>,
+        <davem@davemloft.net>, <kuba@kernel.org>,
+        <tuong.t.lien@dektech.com.au>
+CC:     <netdev@vger.kernel.org>, <tipc-discussion@lists.sourceforge.net>,
+        <linux-kernel@vger.kernel.org>
+Subject: [PATCH] tipc: Don't using smp_processor_id() in preemptible code
+Date:   Tue, 14 Jul 2020 09:53:41 +0800
+Message-ID: <20200714015341.27446-1-qiang.zhang@windriver.com>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <267631f4db4fd7e9f7ca789c2efaeab44103f68e.1594689154.git.pawan.kumar.gupta@linux.intel.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 13, 2020 at 06:18:54PM -0700, Pawan Gupta wrote:
-> On systems that have virtualization disabled or KVM module is not
-> loaded, sysfs mitigation state of X86_BUG_ITLB_MULTIHIT is reported
-> incorrectly as:
-> 
->   $ cat /sys/devices/system/cpu/vulnerabilities/itlb_multihit
->   KVM: Vulnerable
-> 
-> System is not vulnerable to DoS attack from a rogue guest when:
->  - KVM module is not loaded or
->  - Virtualization is disabled in the hardware or
->  - Kernel was configured without support for KVM
-> 
-> Change the reporting to "Currently not affected (KVM not in use)" for
-> such cases.
+From: Zhang Qiang <qiang.zhang@windriver.com>
 
-This is all kinds of backwards.  Virtualization being disabled in hardware
-is very, very different than KVM not being loaded.  One requires at the
-very least a kernel reboot to change, the other does not.
+CPU: 0 PID: 6801 Comm: syz-executor201 Not tainted 5.8.0-rc4-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine,
+BIOS Google 01/01/2011
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x18f/0x20d lib/dump_stack.c:118
+ check_preemption_disabled+0x128/0x130 lib/smp_processor_id.c:48
+ tipc_aead_tfm_next net/tipc/crypto.c:402 [inline]
+ tipc_aead_encrypt net/tipc/crypto.c:639 [inline]
+ tipc_crypto_xmit+0x80a/0x2790 net/tipc/crypto.c:1605
+ tipc_bearer_xmit_skb+0x180/0x3f0 net/tipc/bearer.c:523
+ tipc_enable_bearer+0xb1d/0xdc0 net/tipc/bearer.c:331
+ __tipc_nl_bearer_enable+0x2bf/0x390 net/tipc/bearer.c:995
+ __tipc_nl_compat_doit net/tipc/netlink_compat.c:361 [inline]
+ tipc_nl_compat_doit+0x440/0x640 net/tipc/netlink_compat.c:383
+ tipc_nl_compat_handle net/tipc/netlink_compat.c:1268 [inline]
+ tipc_nl_compat_recv+0x4ef/0xb40 net/tipc/netlink_compat.c:1311
+ genl_family_rcv_msg_doit net/netlink/genetlink.c:669 [inline]
+ genl_family_rcv_msg net/netlink/genetlink.c:714 [inline]
+ genl_rcv_msg+0x61d/0x980 net/netlink/genetlink.c:731
+ netlink_rcv_skb+0x15a/0x430 net/netlink/af_netlink.c:2469
+ genl_rcv+0x24/0x40 net/netlink/genetlink.c:742
+ netlink_unicast_kernel net/netlink/af_netlink.c:1303 [inline]
+ netlink_unicast+0x533/0x7d0 net/netlink/af_netlink.c:1329
+ netlink_sendmsg+0x856/0xd90 net/netlink/af_netlink.c:1918
+ sock_sendmsg_nosec net/socket.c:652 [inline]
+ sock_sendmsg+0xcf/0x120 net/socket.c:672
+ ____sys_sendmsg+0x6e8/0x810 net/socket.c:2352
+ ___sys_sendmsg+0xf3/0x170 net/socket.c:2406
+ __sys_sendmsg+0xe5/0x1b0 net/socket.c:2439
+ do_syscall_64+0x60/0xe0 arch/x86/entry/common.c:384
+ entry_SYSCALL_64_after_hwframe+0x44/0xa9
+RIP: 0033:0x4476a9
+Code: Bad RIP value.
+RSP: 002b:00007fff2b6d5168 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
+RAX: ffffffffffffffda RBX: 000000000000
 
-And just because the kernel isn't configured for KVM doesn't mean VMX can't
-be used, there are plenty of out-of-tree hypervisors that utilize VMX.
+Reported-by: syzbot+263f8c0d007dc09b2dda@syzkaller.appspotmail.com
+Signed-off-by: Zhang Qiang <qiang.zhang@windriver.com>
+---
+ net/tipc/crypto.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-Ignoring the above issues, choosing KVM module load as the line in the sand
-where the kernel suddenly becomes vulnerable is arbitrary.  Arguably, KVM
-isn't vulnerable until it actually starts running a guest.
+diff --git a/net/tipc/crypto.c b/net/tipc/crypto.c
+index 8c47ded2edb6..520af0afe1b3 100644
+--- a/net/tipc/crypto.c
++++ b/net/tipc/crypto.c
+@@ -399,9 +399,10 @@ static void tipc_aead_users_set(struct tipc_aead __rcu *aead, int val)
+  */
+ static struct crypto_aead *tipc_aead_tfm_next(struct tipc_aead *aead)
+ {
+-	struct tipc_tfm **tfm_entry = this_cpu_ptr(aead->tfm_entry);
++	struct tipc_tfm **tfm_entry = get_cpu_ptr(aead->tfm_entry);
+ 
+ 	*tfm_entry = list_next_entry(*tfm_entry, list);
++	put_cpu_ptr(tfm_entry);
+ 	return (*tfm_entry)->tfm;
+ }
+ 
+-- 
+2.24.1
 
-IMO, the sane/safe route would be to print e.g. "VMX not supported" when
-VMX isn't supported or is disabled via FEAT_CTL.  And then if you want to
-reflect current state, add another condition that checks hardware CR4.VMXE
-and prints e.g. "VMX currently disabled".  The latter case still seems
-somewhat dubious, but it's a lot better than keying off KVM being loaded.
-
-> Reported-by: Nelson Dsouza <nelson.dsouza@linux.intel.com>
-> Fixes: b8e8c8303ff2 ("kvm: mmu: ITLB_MULTIHIT mitigation")
-> Signed-off-by: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
-> Reviewed-by: Tony Luck <tony.luck@intel.com>
-> ---
->  .../admin-guide/hw-vuln/multihit.rst          |  5 +++-
->  arch/x86/include/asm/processor.h              |  6 +++++
->  arch/x86/kernel/cpu/bugs.c                    | 24 +++++++++----------
->  arch/x86/kvm/mmu/mmu.c                        |  9 +++++--
->  4 files changed, 29 insertions(+), 15 deletions(-)
-> 
-> diff --git a/Documentation/admin-guide/hw-vuln/multihit.rst b/Documentation/admin-guide/hw-vuln/multihit.rst
-> index ba9988d8bce5..842961419f3e 100644
-> --- a/Documentation/admin-guide/hw-vuln/multihit.rst
-> +++ b/Documentation/admin-guide/hw-vuln/multihit.rst
-> @@ -82,7 +82,10 @@ The possible values in this file are:
->         - Software changes mitigate this issue.
->       * - KVM: Vulnerable
->         - The processor is vulnerable, but no mitigation enabled
-> -
-> +     * - Currently not affected (KVM not in use)
-> +       - The processor is vulnerable but no mitigation is required because
-> +         KVM module is not loaded or virtualization is disabled in the hardware or
-> +         kernel was configured without support for KVM.
->  
->  Enumeration of the erratum
->  --------------------------------
-> diff --git a/arch/x86/include/asm/processor.h b/arch/x86/include/asm/processor.h
-> index 03b7c4ca425a..830a3e7725af 100644
-> --- a/arch/x86/include/asm/processor.h
-> +++ b/arch/x86/include/asm/processor.h
-> @@ -989,4 +989,10 @@ enum mds_mitigations {
->  	MDS_MITIGATION_VMWERV,
->  };
->  
-> +enum itlb_multihit_mitigations {
-> +	ITLB_MULTIHIT_MITIGATION_OFF,
-> +	ITLB_MULTIHIT_MITIGATION_FULL,
-> +	ITLB_MULTIHIT_MITIGATION_NO_KVM,
-> +};
-> +
->  #endif /* _ASM_X86_PROCESSOR_H */
-> diff --git a/arch/x86/kernel/cpu/bugs.c b/arch/x86/kernel/cpu/bugs.c
-> index 0b71970d2d3d..97f66a93f2be 100644
-> --- a/arch/x86/kernel/cpu/bugs.c
-> +++ b/arch/x86/kernel/cpu/bugs.c
-> @@ -1395,8 +1395,15 @@ void x86_spec_ctrl_setup_ap(void)
->  		x86_amd_ssb_disable();
->  }
->  
-> -bool itlb_multihit_kvm_mitigation;
-> -EXPORT_SYMBOL_GPL(itlb_multihit_kvm_mitigation);
-> +/* Default to KVM not in use, KVM module changes this later */
-> +enum itlb_multihit_mitigations itlb_multihit_mitigation = ITLB_MULTIHIT_MITIGATION_NO_KVM;
-> +EXPORT_SYMBOL_GPL(itlb_multihit_mitigation);
-> +
-> +static const char * const itlb_multihit_strings[] = {
-> +	[ITLB_MULTIHIT_MITIGATION_OFF]		= "KVM: Vulnerable",
-> +	[ITLB_MULTIHIT_MITIGATION_FULL]		= "KVM: Mitigation: Split huge pages",
-> +	[ITLB_MULTIHIT_MITIGATION_NO_KVM]	= "Currently not affected (KVM not in use)",
-> +};
->  
->  #undef pr_fmt
->  #define pr_fmt(fmt)	"L1TF: " fmt
-> @@ -1553,25 +1560,18 @@ static ssize_t l1tf_show_state(char *buf)
->  		       l1tf_vmx_states[l1tf_vmx_mitigation],
->  		       sched_smt_active() ? "vulnerable" : "disabled");
->  }
-> -
-> -static ssize_t itlb_multihit_show_state(char *buf)
-> -{
-> -	if (itlb_multihit_kvm_mitigation)
-> -		return sprintf(buf, "KVM: Mitigation: Split huge pages\n");
-> -	else
-> -		return sprintf(buf, "KVM: Vulnerable\n");
-> -}
->  #else
->  static ssize_t l1tf_show_state(char *buf)
->  {
->  	return sprintf(buf, "%s\n", L1TF_DEFAULT_MSG);
->  }
-> +#endif
->  
->  static ssize_t itlb_multihit_show_state(char *buf)
->  {
-> -	return sprintf(buf, "Processor vulnerable\n");
-> +	return sprintf(buf, "%s\n",
-> +		       itlb_multihit_strings[itlb_multihit_mitigation]);
->  }
-> -#endif
->  
->  static ssize_t mds_show_state(char *buf)
->  {
-> diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
-> index 6d6a0ae7800c..e089b9e565a5 100644
-> --- a/arch/x86/kvm/mmu/mmu.c
-> +++ b/arch/x86/kvm/mmu/mmu.c
-> @@ -50,7 +50,7 @@
->  #include <asm/kvm_page_track.h>
->  #include "trace.h"
->  
-> -extern bool itlb_multihit_kvm_mitigation;
-> +extern enum itlb_multihit_mitigations itlb_multihit_mitigation;
->  
->  static int __read_mostly nx_huge_pages = -1;
->  #ifdef CONFIG_PREEMPT_RT
-> @@ -6158,7 +6158,12 @@ static bool get_nx_auto_mode(void)
->  
->  static void __set_nx_huge_pages(bool val)
->  {
-> -	nx_huge_pages = itlb_multihit_kvm_mitigation = val;
-> +	nx_huge_pages = val;
-> +
-> +	if (val)
-> +		itlb_multihit_mitigation = ITLB_MULTIHIT_MITIGATION_FULL;
-> +	else
-> +		itlb_multihit_mitigation = ITLB_MULTIHIT_MITIGATION_OFF;
->  }
->  
->  static int set_nx_huge_pages(const char *val, const struct kernel_param *kp)
-> -- 
-> 2.21.3
-> 
