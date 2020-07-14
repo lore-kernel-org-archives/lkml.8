@@ -2,167 +2,79 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C335C4345E
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:17:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AF94C43462
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:17:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 07F272242B
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:17:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 053AB2242E
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:17:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729247AbgGNSRQ (ORCPT
+        id S1729274AbgGNSR2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 14:17:16 -0400
-Received: from smtp-bc0a.mail.infomaniak.ch ([45.157.188.10]:32999 "EHLO
-        smtp-bc0a.mail.infomaniak.ch" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729166AbgGNSQz (ORCPT
+        Tue, 14 Jul 2020 14:17:28 -0400
+Received: from cloudserver094114.home.pl ([79.96.170.134]:62378 "EHLO
+        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729260AbgGNSR1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 14:16:55 -0400
-Received: from smtp-2-0001.mail.infomaniak.ch (unknown [10.5.36.108])
-        by smtp-3-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4B5pd104bdzlhLMx;
-        Tue, 14 Jul 2020 20:16:53 +0200 (CEST)
-Received: from localhost (unknown [94.23.54.103])
-        by smtp-2-0001.mail.infomaniak.ch (Postfix) with ESMTPA id 4B5pd03q4Jzlh8TF;
-        Tue, 14 Jul 2020 20:16:52 +0200 (CEST)
-From:   =?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mic@digikod.net>
-To:     linux-kernel@vger.kernel.org
-Cc:     =?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mic@digikod.net>,
-        Aleksa Sarai <cyphar@cyphar.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Christian Heimes <christian@python.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Deven Bowers <deven.desai@linux.microsoft.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Eric Biggers <ebiggers@kernel.org>,
-        Eric Chiang <ericchiang@google.com>,
-        Florian Weimer <fweimer@redhat.com>,
-        James Morris <jmorris@namei.org>, Jan Kara <jack@suse.cz>,
-        Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
-        Kees Cook <keescook@chromium.org>,
-        Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
-        Matthew Garrett <mjg59@google.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Michael Kerrisk <mtk.manpages@gmail.com>,
-        =?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mickael.salaun@ssi.gouv.fr>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        =?UTF-8?q?Philippe=20Tr=C3=A9buchet?= 
-        <philippe.trebuchet@ssi.gouv.fr>,
-        Scott Shell <scottsh@microsoft.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Steve Dower <steve.dower@python.org>,
-        Steve Grubb <sgrubb@redhat.com>,
-        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
-        Thibaut Sautereau <thibaut.sautereau@ssi.gouv.fr>,
-        Vincent Strubel <vincent.strubel@ssi.gouv.fr>,
-        kernel-hardening@lists.openwall.com, linux-api@vger.kernel.org,
-        linux-integrity@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org
-Subject: [PATCH v6 3/7] exec: Move path_noexec() check earlier
-Date:   Tue, 14 Jul 2020 20:16:34 +0200
-Message-Id: <20200714181638.45751-4-mic@digikod.net>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200714181638.45751-1-mic@digikod.net>
-References: <20200714181638.45751-1-mic@digikod.net>
+        Tue, 14 Jul 2020 14:17:27 -0400
+Received: from 89-64-83-139.dynamic.chello.pl (89.64.83.139) (HELO kreacher.localnet)
+ by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.415)
+ id 5dfe8d161d0ab4fd; Tue, 14 Jul 2020 20:17:24 +0200
+From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
+To:     Linux PM <linux-pm@vger.kernel.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+Subject: [PATCH] cpufreq: intel_pstate: Avoid enabling HWP if EPP is not supported
+Date:   Tue, 14 Jul 2020 20:17:24 +0200
+Message-ID: <1776084.Fkt4dJnx8e@kreacher>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Antivirus: Dr.Web (R) for Unix mail servers drweb plugin ver.6.0.2.8
-X-Antivirus-Code: 0x100000
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kees Cook <keescook@chromium.org>
+From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 
-The path_noexec() check, like the regular file check, was happening too
-late, letting LSMs see impossible execve()s. Check it earlier as well
-in may_open() and collect the redundant fs/exec.c path_noexec() test
-under the same robustness comment as the S_ISREG() check.
+Although there are processors supporting hardware-managed P-states
+(HWP) without the energy-performance preference (EPP) feature, they
+are not expected to be run with HWP enabled (the BIOS should disable
+HWP on those systems).  Missing EPP support generally indicates an
+incomplete HWP implementation and so it is better to avoid using
+HWP on those systems in production.
 
-My notes on the call path, and related arguments, checks, etc:
+However, intel_pstate currently enables HWP on such systems, which
+is questionable, so prevent it from doing that by making it check
+EPP support before enabling HWP and avoid enabling it if EPP is not
+supported by the processor at hand.
 
-do_open_execat()
-    struct open_flags open_exec_flags = {
-        .open_flag = O_LARGEFILE | O_RDONLY | __FMODE_EXEC,
-        .acc_mode = MAY_EXEC,
-        ...
-    do_filp_open(dfd, filename, open_flags)
-        path_openat(nameidata, open_flags, flags)
-            file = alloc_empty_file(open_flags, current_cred());
-            do_open(nameidata, file, open_flags)
-                may_open(path, acc_mode, open_flag)
-                    /* new location of MAY_EXEC vs path_noexec() test */
-                    inode_permission(inode, MAY_OPEN | acc_mode)
-                        security_inode_permission(inode, acc_mode)
-                vfs_open(path, file)
-                    do_dentry_open(file, path->dentry->d_inode, open)
-                        security_file_open(f)
-                        open()
-    /* old location of path_noexec() test */
-
-Signed-off-by: Kees Cook <keescook@chromium.org>
-Acked-by: Mickaël Salaün <mic@digikod.net>
-Link: https://lore.kernel.org/r/20200605160013.3954297-4-keescook@chromium.org
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 ---
- fs/exec.c  | 12 ++++--------
- fs/namei.c |  4 ++++
- 2 files changed, 8 insertions(+), 8 deletions(-)
+ drivers/cpufreq/intel_pstate.c |    7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
-diff --git a/fs/exec.c b/fs/exec.c
-index bdc6a6eb5dce..4eea20c27b01 100644
---- a/fs/exec.c
-+++ b/fs/exec.c
-@@ -147,10 +147,8 @@ SYSCALL_DEFINE1(uselib, const char __user *, library)
- 	 * and check again at the very end too.
- 	 */
- 	error = -EACCES;
--	if (WARN_ON_ONCE(!S_ISREG(file_inode(file)->i_mode)))
--		goto exit;
--
--	if (path_noexec(&file->f_path))
-+	if (WARN_ON_ONCE(!S_ISREG(file_inode(file)->i_mode) ||
-+			 path_noexec(&file->f_path)))
- 		goto exit;
- 
- 	fsnotify_open(file);
-@@ -897,10 +895,8 @@ static struct file *do_open_execat(int fd, struct filename *name, int flags)
- 	 * and check again at the very end too.
- 	 */
- 	err = -EACCES;
--	if (WARN_ON_ONCE(!S_ISREG(file_inode(file)->i_mode)))
--		goto exit;
--
--	if (path_noexec(&file->f_path))
-+	if (WARN_ON_ONCE(!S_ISREG(file_inode(file)->i_mode) ||
-+			 path_noexec(&file->f_path)))
- 		goto exit;
- 
- 	err = deny_write_access(file);
-diff --git a/fs/namei.c b/fs/namei.c
-index a559ad943970..ddc9b25540fe 100644
---- a/fs/namei.c
-+++ b/fs/namei.c
-@@ -2863,6 +2863,10 @@ static int may_open(const struct path *path, int acc_mode, int flag)
- 			return -EACCES;
- 		flag &= ~O_TRUNC;
- 		break;
-+	case S_IFREG:
-+		if ((acc_mode & MAY_EXEC) && path_noexec(path))
-+			return -EACCES;
-+		break;
- 	}
- 
- 	error = inode_permission(inode, MAY_OPEN | acc_mode);
--- 
-2.27.0
+Index: linux-pm/drivers/cpufreq/intel_pstate.c
+===================================================================
+--- linux-pm.orig/drivers/cpufreq/intel_pstate.c
++++ linux-pm/drivers/cpufreq/intel_pstate.c
+@@ -2899,7 +2899,12 @@ static int __init intel_pstate_init(void
+ 	id = x86_match_cpu(hwp_support_ids);
+ 	if (id) {
+ 		copy_cpu_funcs(&core_funcs);
+-		if (!no_hwp) {
++		/*
++		 * Avoid enabling HWP for processors without EPP support,
++		 * because that means incomplete HWP implementation which is a
++		 * corner case and supporting it is generally problematic.
++		 */
++		if (!no_hwp && boot_cpu_has(X86_FEATURE_HWP_EPP)) {
+ 			hwp_active++;
+ 			hwp_mode_bdw = id->driver_data;
+ 			intel_pstate.attr = hwp_cpufreq_attrs;
+
+
 
