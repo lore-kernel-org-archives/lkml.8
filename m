@@ -2,122 +2,78 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B8A7C433EB
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 08:10:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C84AEC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 08:05:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 81D7921582
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 08:10:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AE9F321582
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 08:05:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726794AbgGNIKG convert rfc822-to-8bit (ORCPT
+        id S1726398AbgGNIFp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 04:10:06 -0400
-Received: from eu-smtp-delivery-151.mimecast.com ([185.58.86.151]:21644 "EHLO
-        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726354AbgGNIKF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 04:10:05 -0400
-Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
- TLS) by relay.mimecast.com with ESMTP id
- uk-mta-47-quVXGfyEOkSmpSddwNFlhw-1; Tue, 14 Jul 2020 09:10:01 +0100
-X-MC-Unique: quVXGfyEOkSmpSddwNFlhw-1
-Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
- AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
- Server (TLS) id 15.0.1347.2; Tue, 14 Jul 2020 09:10:01 +0100
-Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
- AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
- Tue, 14 Jul 2020 09:10:01 +0100
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     'Saheed Olayemi Bolarinwa' <refactormyself@gmail.com>,
-        "helgaas@kernel.org" <helgaas@kernel.org>
-CC:     "bjorn@helgaas.com" <bjorn@helgaas.com>,
-        "skhan@linuxfoundation.org" <skhan@linuxfoundation.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-kernel-mentees@lists.linuxfoundation.org" 
-        <linux-kernel-mentees@lists.linuxfoundation.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH 11/14 v3] PCI/PM: Check return value of
- pcie_capability_read_*()
-Thread-Topic: [PATCH 11/14 v3] PCI/PM: Check return value of
- pcie_capability_read_*()
-Thread-Index: AQHWVwhf1JBBv8jM7kKvf2XRj4wYvqkGvVFg
-Date:   Tue, 14 Jul 2020 08:10:00 +0000
-Message-ID: <80c7a253134b43289ba28a320ba99f9c@AcuMS.aculab.com>
-References: <20200710212026.27136-1-refactormyself@gmail.com>
- <20200710212026.27136-12-refactormyself@gmail.com>
-In-Reply-To: <20200710212026.27136-12-refactormyself@gmail.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
+        Tue, 14 Jul 2020 04:05:45 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:7849 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725833AbgGNIFp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 04:05:45 -0400
+Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 5F5CE3D63C8E597CD903;
+        Tue, 14 Jul 2020 16:05:42 +0800 (CST)
+Received: from localhost.localdomain.localdomain (10.175.113.25) by
+ DGGEMS404-HUB.china.huawei.com (10.3.19.204) with Microsoft SMTP Server id
+ 14.3.487.0; Tue, 14 Jul 2020 16:05:31 +0800
+From:   Jing Xiangfeng <jingxiangfeng@huawei.com>
+To:     <cezary.rojewski@intel.com>,
+        <pierre-louis.bossart@linux.intel.com>,
+        <liam.r.girdwood@linux.intel.com>, <yang.jie@linux.intel.com>,
+        <broonie@kernel.org>, <perex@perex.cz>, <tiwai@suse.com>,
+        <hdegoede@redhat.com>, <kuninori.morimoto.gx@renesas.com>,
+        <paul@crapouillou.net>
+CC:     <alsa-devel@alsa-project.org>, <linux-kernel@vger.kernel.org>,
+        <jingxiangfeng@huawei.com>
+Subject: [PATCH] ASoC: Intel: bytcht_es8316: Add missed put_device()
+Date:   Tue, 14 Jul 2020 16:09:18 +0800
+Message-ID: <20200714080918.148196-1-jingxiangfeng@huawei.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Authentication-Results: relay.mimecast.com;
-        auth=pass smtp.auth=C51A453 smtp.mailfrom=david.laight@aculab.com
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: aculab.com
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.175.113.25]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> From: Saheed Olayemi Bolarinwa
-> Sent: 10 July 2020 22:20
-> To: helgaas@kernel.org
-> From: Bolarinwa Olayemi Saheed <refactormyself@gmail.com>
-> 
-> On failure pcie_capability_read_dword() sets it's last parameter,
-> val to 0.
-> However, with Patch 14/14, it is possible that val is set to ~0 on
-> failure. This would introduce a bug because (x & x) == (~0 & x).
-> 
-> This bug can be avoided if the return value of pcie_capability_read_dword
-> is checked to confirm success.
-> 
-> Check the return value of pcie_capability_read_dword() to ensure success.
-> 
-> Suggested-by: Bjorn Helgaas <bjorn@helgaas.com>
-> Signed-off-by: Bolarinwa Olayemi Saheed <refactormyself@gmail.com>
-> ---
->  drivers/pci/pci.c | 52 ++++++++++++++++++++++++++++++-----------------
->  1 file changed, 33 insertions(+), 19 deletions(-)
-> 
-> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-> index ce096272f52b..9f18ffbf7bd4 100644
-> --- a/drivers/pci/pci.c
-> +++ b/drivers/pci/pci.c
-> @@ -3207,6 +3207,7 @@ void pci_configure_ari(struct pci_dev *dev)
->  {
->  	u32 cap;
->  	struct pci_dev *bridge;
-> +	int ret;
-> 
->  	if (pcie_ari_disabled || !pci_is_pcie(dev) || dev->devfn)
->  		return;
-> @@ -3215,8 +3216,8 @@ void pci_configure_ari(struct pci_dev *dev)
->  	if (!bridge)
->  		return;
-> 
-> -	pcie_capability_read_dword(bridge, PCI_EXP_DEVCAP2, &cap);
-> -	if (!(cap & PCI_EXP_DEVCAP2_ARI))
-> +	ret = pcie_capability_read_dword(bridge, PCI_EXP_DEVCAP2, &cap);
-> +	if (ret || !(cap & PCI_EXP_DEVCAP2_ARI))
->  		return;
+snd_byt_cht_es8316_mc_probe() misses to call put_device() in an error
+path. Add the missed function call to fix it.
 
-Why not make the function result 64bit?
-Then you can return ~0ull on failure and the capability value on success.
-Gets rid of the horrid error + return value pair.
+Fixes: ba49cf6f8e4a ("ASoC: Intel: bytcht_es8316: Add quirk for inverted jack detect")
+Signed-off-by: Jing Xiangfeng <jingxiangfeng@huawei.com>
+---
+ sound/soc/intel/boards/bytcht_es8316.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-	David
-
--
-Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
-Registration No: 1397386 (Wales)
+diff --git a/sound/soc/intel/boards/bytcht_es8316.c b/sound/soc/intel/boards/bytcht_es8316.c
+index 9e5fc9430628..ecbc58e8a37f 100644
+--- a/sound/soc/intel/boards/bytcht_es8316.c
++++ b/sound/soc/intel/boards/bytcht_es8316.c
+@@ -543,8 +543,10 @@ static int snd_byt_cht_es8316_mc_probe(struct platform_device *pdev)
+ 
+ 	if (cnt) {
+ 		ret = device_add_properties(codec_dev, props);
+-		if (ret)
++		if (ret) {
++			put_device(codec_dev);
+ 			return ret;
++		}
+ 	}
+ 
+ 	devm_acpi_dev_add_driver_gpios(codec_dev, byt_cht_es8316_gpios);
+-- 
+2.17.1
 
