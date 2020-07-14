@@ -2,184 +2,145 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 019AAC43467
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 07:05:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 836DCC4161F
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 07:05:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D481222205
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 07:05:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6BCC52220F
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 07:05:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727854AbgGNHFa (ORCPT
+        id S1727873AbgGNHFp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 03:05:30 -0400
-Received: from mga17.intel.com ([192.55.52.151]:21384 "EHLO mga17.intel.com"
+        Tue, 14 Jul 2020 03:05:45 -0400
+Received: from mx2.suse.de ([195.135.220.15]:41638 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725788AbgGNHER (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 03:04:17 -0400
-IronPort-SDR: S3sOneSBhYdHhQHq2WiwtLoyzylX0NbxEGkS7VALKPlPSRvrgF29d2yrKNSlF5+SWDnKlXy9xM
- INmBs2wdJzkQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9681"; a="128914560"
-X-IronPort-AV: E=Sophos;i="5.75,350,1589266800"; 
-   d="scan'208";a="128914560"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jul 2020 00:04:14 -0700
-IronPort-SDR: Q2mRak2UgfiLrg3sZxYOuh5J0y3GGbFbI2P9jkFn7i2q77yP2LA96pV7XI2Q2m/00uJqp6RVgw
- jDz7HsCXwj3w==
-X-IronPort-AV: E=Sophos;i="5.75,350,1589266800"; 
-   d="scan'208";a="325755398"
-Received: from iweiny-desk2.sc.intel.com (HELO localhost) ([10.3.52.147])
-  by orsmga007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jul 2020 00:04:13 -0700
-From:   ira.weiny@intel.com
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>
-Cc:     Ira Weiny <ira.weiny@intel.com>, x86@kernel.org,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Fenghua Yu <fenghua.yu@intel.com>, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-nvdimm@lists.01.org,
-        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-        linux-kselftest@vger.kernel.org
-Subject: [RFC PATCH 07/15] Documentation/pkeys: Update documentation for kernel pkeys
-Date:   Tue, 14 Jul 2020 00:02:12 -0700
-Message-Id: <20200714070220.3500839-8-ira.weiny@intel.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200714070220.3500839-1-ira.weiny@intel.com>
-References: <20200714070220.3500839-1-ira.weiny@intel.com>
+        id S1725997AbgGNHFn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 03:05:43 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id A7422AD1E;
+        Tue, 14 Jul 2020 07:05:43 +0000 (UTC)
+Subject: Re: [PATCH v2 12/29] scsi: libfc: fc_fcp: Provide missing and repair
+ existing function documentation
+To:     Lee Jones <lee.jones@linaro.org>, jejb@linux.ibm.com,
+        martin.petersen@oracle.com
+Cc:     linux-kernel@vger.kernel.org, linux-scsi@vger.kernel.org
+References: <20200713074645.126138-1-lee.jones@linaro.org>
+ <20200713074645.126138-13-lee.jones@linaro.org>
+From:   Hannes Reinecke <hare@suse.de>
+Message-ID: <4fa77049-9134-d0b5-5408-66330fdcbd03@suse.de>
+Date:   Tue, 14 Jul 2020 09:05:39 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
+In-Reply-To: <20200713074645.126138-13-lee.jones@linaro.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ira Weiny <ira.weiny@intel.com>
+On 7/13/20 9:46 AM, Lee Jones wrote:
+> Mostly due to descriptions not keeping up with API changes.
+> 
+> Fixes the following W=1 kernel build warning(s):
+> 
+>   drivers/scsi/libfc/fc_fcp.c:299: warning: Function parameter or member 'status_code' not described in 'fc_fcp_retry_cmd'
+>   drivers/scsi/libfc/fc_fcp.c:595: warning: Function parameter or member 'seq' not described in 'fc_fcp_send_data'
+>   drivers/scsi/libfc/fc_fcp.c:595: warning: Excess function parameter 'sp' description in 'fc_fcp_send_data'
+>   drivers/scsi/libfc/fc_fcp.c:1289: warning: Function parameter or member 't' not described in 'fc_lun_reset_send'
+>   drivers/scsi/libfc/fc_fcp.c:1289: warning: Excess function parameter 'data' description in 'fc_lun_reset_send'
+>   drivers/scsi/libfc/fc_fcp.c:1422: warning: Function parameter or member 't' not described in 'fc_fcp_timeout'
+>   drivers/scsi/libfc/fc_fcp.c:1422: warning: Excess function parameter 'data' description in 'fc_fcp_timeout'
+>   drivers/scsi/libfc/fc_fcp.c:1696: warning: Function parameter or member 'code' not described in 'fc_fcp_recovery'
+>   drivers/scsi/libfc/fc_fcp.c:1716: warning: Function parameter or member 'offset' not described in 'fc_fcp_srr'
+>   drivers/scsi/libfc/fc_fcp.c:1859: warning: Function parameter or member 'sc_cmd' not described in 'fc_queuecommand'
+>   drivers/scsi/libfc/fc_fcp.c:1859: warning: Excess function parameter 'cmd' description in 'fc_queuecommand'
+> 
+> Cc: Hannes Reinecke <hare@suse.de>
+> Signed-off-by: Lee Jones <lee.jones@linaro.org>
+> ---
+>   drivers/scsi/libfc/fc_fcp.c | 11 +++++++----
+>   1 file changed, 7 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/scsi/libfc/fc_fcp.c b/drivers/scsi/libfc/fc_fcp.c
+> index bf2cc9656e191..e11d4f002bd49 100644
+> --- a/drivers/scsi/libfc/fc_fcp.c
+> +++ b/drivers/scsi/libfc/fc_fcp.c
+> @@ -289,6 +289,7 @@ static int fc_fcp_send_abort(struct fc_fcp_pkt *fsp)
+>   /**
+>    * fc_fcp_retry_cmd() - Retry a fcp_pkt
+>    * @fsp: The FCP packet to be retried
+> + * @status_code: The FCP status code to set
+>    *
+>    * Sets the status code to be FC_ERROR and then calls
+>    * fc_fcp_complete_locked() which in turn calls fc_io_compl().
+> @@ -580,7 +581,7 @@ static void fc_fcp_recv_data(struct fc_fcp_pkt *fsp, struct fc_frame *fp)
+>   /**
+>    * fc_fcp_send_data() - Send SCSI data to a target
+>    * @fsp:      The FCP packet the data is on
+> - * @sp:	      The sequence the data is to be sent on
+> + * @seq:      The sequence the data is to be sent on
+>    * @offset:   The starting offset for this data request
+>    * @seq_blen: The burst length for this data request
+>    *
+> @@ -1283,7 +1284,7 @@ static int fc_fcp_pkt_abort(struct fc_fcp_pkt *fsp)
+>   
+>   /**
+>    * fc_lun_reset_send() - Send LUN reset command
+> - * @data: The FCP packet that identifies the LUN to be reset
+> + * @t: Timer context used to fetch the FSP packet
+>    */
+>   static void fc_lun_reset_send(struct timer_list *t)
+>   {
+> @@ -1409,7 +1410,7 @@ static void fc_fcp_cleanup(struct fc_lport *lport)
+>   
+>   /**
+>    * fc_fcp_timeout() - Handler for fcp_pkt timeouts
+> - * @data: The FCP packet that has timed out
+> + * @t: Timer context used to fetch the FSP packet
+>    *
+>    * If REC is supported then just issue it and return. The REC exchange will
+>    * complete or time out and recovery can continue at that point. Otherwise,
+> @@ -1691,6 +1692,7 @@ static void fc_fcp_rec_error(struct fc_fcp_pkt *fsp, struct fc_frame *fp)
+>   /**
+>    * fc_fcp_recovery() - Handler for fcp_pkt recovery
+>    * @fsp: The FCP pkt that needs to be aborted
+> + * @code: The FCP status code to set
+>    */
+>   static void fc_fcp_recovery(struct fc_fcp_pkt *fsp, u8 code)
+>   {
+> @@ -1709,6 +1711,7 @@ static void fc_fcp_recovery(struct fc_fcp_pkt *fsp, u8 code)
+>    * fc_fcp_srr() - Send a SRR request (Sequence Retransmission Request)
+>    * @fsp:   The FCP packet the SRR is to be sent on
+>    * @r_ctl: The R_CTL field for the SRR request
+> + * @offset: The SRR relative offset
+>    * This is called after receiving status but insufficient data, or
+>    * when expecting status but the request has timed out.
+>    */
+> @@ -1851,7 +1854,7 @@ static inline int fc_fcp_lport_queue_ready(struct fc_lport *lport)
+>   /**
+>    * fc_queuecommand() - The queuecommand function of the SCSI template
+>    * @shost: The Scsi_Host that the command was issued to
+> - * @cmd:   The scsi_cmnd to be executed
+> + * @sc_cmd:   The scsi_cmnd to be executed
+>    *
+>    * This is the i/o strategy routine, called by the SCSI layer.
+>    */
+> 
+Reviewed-by: Hannes Reinecke <hare@suse.de>
 
-Future Intel CPUS will support Protection Key Supervisor (PKS).
+Cheers,
 
-Update the protection key documentation to cover pkeys on supervisor
-pages.
-
-Signed-off-by: Ira Weiny <ira.weiny@intel.com>
----
- Documentation/core-api/protection-keys.rst | 81 +++++++++++++++++-----
- 1 file changed, 63 insertions(+), 18 deletions(-)
-
-diff --git a/Documentation/core-api/protection-keys.rst b/Documentation/core-api/protection-keys.rst
-index ec575e72d0b2..5ac400a5a306 100644
---- a/Documentation/core-api/protection-keys.rst
-+++ b/Documentation/core-api/protection-keys.rst
-@@ -4,25 +4,33 @@
- Memory Protection Keys
- ======================
- 
--Memory Protection Keys for Userspace (PKU aka PKEYs) is a feature
--which is found on Intel's Skylake (and later) "Scalable Processor"
--Server CPUs. It will be available in future non-server Intel parts
--and future AMD processors.
--
--For anyone wishing to test or use this feature, it is available in
--Amazon's EC2 C5 instances and is known to work there using an Ubuntu
--17.04 image.
--
- Memory Protection Keys provides a mechanism for enforcing page-based
- protections, but without requiring modification of the page tables
--when an application changes protection domains.  It works by
--dedicating 4 previously ignored bits in each page table entry to a
--"protection key", giving 16 possible keys.
-+when an application changes protection domains.
-+
-+PKeys Userspace (PKU) is a feature which is found on Intel's Skylake "Scalable
-+Processor" Server CPUs and later.  And It will be available in future
-+non-server Intel parts and future AMD processors.
-+
-+Future Intel processors will support Protection Keys for Supervisor pages
-+(PKS).
-+
-+For anyone wishing to test or use user space pkeys, it is available in Amazon's
-+EC2 C5 instances and is known to work there using an Ubuntu 17.04 image.
-+
-+pkes work by dedicating 4 previously Reserved bits in each page table entry to
-+a "protection key", giving 16 possible keys.  User and Supervisor pages are
-+treated separately.
- 
--There is also a new user-accessible register (PKRU) with two separate
--bits (Access Disable and Write Disable) for each key.  Being a CPU
--register, PKRU is inherently thread-local, potentially giving each
--thread a different set of protections from every other thread.
-+Protections for each page are controlled with per CPU registers for each type
-+of page User and Supervisor.  Each of these 32 bit register stores two separate
-+bits (Access Disable and Write Disable) for each key.
-+
-+For Userspace the register is user-accessible (rdpkru/wrpkru).  For
-+Supervisor, the register (MSR_IA32_PKRS) is accessible only to the kernel.
-+
-+Being a CPU register, pkes are inherently thread-local, potentially giving
-+each thread an independent set of protections from every other thread.
- 
- There are two new instructions (RDPKRU/WRPKRU) for reading and writing
- to the new register.  The feature is only available in 64-bit mode,
-@@ -30,8 +38,11 @@ even though there is theoretically space in the PAE PTEs.  These
- permissions are enforced on data access only and have no effect on
- instruction fetches.
- 
--Syscalls
--========
-+For kernel space rdmsr/wrmsr are used to access the kernel MSRs.
-+
-+
-+Syscalls for user space keys
-+============================
- 
- There are 3 system calls which directly interact with pkeys::
- 
-@@ -98,3 +109,37 @@ with a read()::
- The kernel will send a SIGSEGV in both cases, but si_code will be set
- to SEGV_PKERR when violating protection keys versus SEGV_ACCERR when
- the plain mprotect() permissions are violated.
-+
-+
-+Kernel API for PKS support
-+==========================
-+
-+PKS is intended to harden against unwanted access to kernel pages.  But it does
-+not completely restrict access under all conditions.  For example the MSR
-+setting is not saved/restored during irqs.  Thus the use of PKS is a mitigation
-+strategy rather than a form of strict security.
-+
-+The following calls are used to allocate, use, and deallocate a pkey which
-+defines a 'protection domain' within the kernel.  Setting a pkey value in a
-+supervisor mapping adds that mapping to the protection domain.  Then calls can be
-+used to enable/disable read and/or write access to all of the pages mapped with
-+that key:
-+
-+        int pks_key_alloc(const char * const pkey_user);
-+        #define PAGE_KERNEL_PKEY(pkey)
-+        #define _PAGE_KEY(pkey)
-+        int pks_update_protection(int pkey, unsigned long protection);
-+        void pks_key_free(int pkey);
-+
-+In-kernel users must be prepared to set PAGE_KERNEL_PKEY() permission in the
-+page table entries for the mappings they want to ptorect.
-+
-+WARNING: It is imperative that callers check for errors from pks_key_alloc()
-+because pkeys are a limited resource and so callers should be prepared to work
-+without PKS support.
-+
-+For admins a debugfs interface provides a list of the current keys in use at:
-+
-+        /sys/kernel/debug/x86/pks_keys_allocated
-+
-+Some example code can be found in lib/pks/pks_test.c
+Hannes
 -- 
-2.25.1
-
+Dr. Hannes Reinecke            Teamlead Storage & Networking
+hare@suse.de                               +49 911 74053 688
+SUSE Software Solutions GmbH, Maxfeldstr. 5, 90409 Nürnberg
+HRB 36809 (AG Nürnberg), Geschäftsführer: Felix Imendörffer
