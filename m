@@ -2,183 +2,107 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78087C433E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 20:19:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BC7DC433E2
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 20:22:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5191A207DD
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 20:19:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 58FEE206F5
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 20:22:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ktzGRdNH"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="P8ibvs29"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729720AbgGNUTq (ORCPT
+        id S1726442AbgGNUWd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 16:19:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53022 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728170AbgGNUTp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 16:19:45 -0400
-Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A1DD8C08C5C1
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 13:19:44 -0700 (PDT)
-Received: by mail-lj1-x242.google.com with SMTP id s9so25217848ljm.11
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 13:19:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=XWpCwFxzq2ITP3K2PgbPEPYflHGc9CASEeamyGhecg4=;
-        b=ktzGRdNHxUc/NOjGB1vSjjeBZhP/eN1zV/MJ3JD8wmxjdxCf0IQ+zpHExTOeKFCy+a
-         lkIxtWm6PjqYkFHafKjnDH7YyMKXwotc5q6DnqSw3TopHIRLxHCs+deg6PTyFFdIXYFv
-         k7EKTWOzzY2ectIvYgQJoT3PC8WtQ36MwQGEEdeS4yRKsH7OHceijsqk6ydBx4RUmYvR
-         IZrllP4JBOp0cXppgKAXu1mmq6yPSvexe7a431gzpco6kw0dfLio0xngHrY49l7HSD+o
-         /v/hKsd9rStGhPgfKDu4Tzc6hz5W+DzX3Fs66+EIKtMQGOTLMOIPGhjlXHu/EB8LfYrq
-         3KdQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=XWpCwFxzq2ITP3K2PgbPEPYflHGc9CASEeamyGhecg4=;
-        b=sg0GVGHmQYSWCgys8kHkoMNGvANYx1QSisTugbSnQCJ//ZWx3r1JjD4OtEa9vlwj8j
-         S5WB6nfkWi2hKqB1/csilQkUiy9Qhawhp9bXfRPz7KUzmjzIvkqJ6Illbr5wkTqiFTct
-         BCJSOffc+uGbOu0Sc1XpaaLpp5RfcZLcv1xzVKD0cQP2vXbqDJeoSG21tLjkz1mYnaU5
-         6Vp700oEPJTdrOpebmQiB0BweYi4bXI1QTa9FutD2LqjnYEFo5G9e0ERBLVagPEIhF6j
-         eId9/esCTDkjB4UTBrlY9dm+4Jvv2znVhUC5PodA7EwbFvMlU/IqvkiO1ZrYDurTMQao
-         cLfQ==
-X-Gm-Message-State: AOAM531B6Yd/ftESwyyQwyzdslJ7t6JtKZ9otzLT1DJY045TQ6COQS9L
-        rI1zGXwmM3Px9IpQa+ysc9EciIcR2DkPumZ6y3qKPA==
-X-Google-Smtp-Source: ABdhPJyog1559G29m5pJ504Xf+0cH4eNg4/1fwwOhATAWoZMeuV+BZE2PrcQIEm6ttR2VLYvOaa4/0qm67q9Isa6wdw=
-X-Received: by 2002:a2e:8199:: with SMTP id e25mr2844648ljg.307.1594757982632;
- Tue, 14 Jul 2020 13:19:42 -0700 (PDT)
+        Tue, 14 Jul 2020 16:22:33 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:52353 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725877AbgGNUWd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 16:22:33 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 4B5sPy5MrBz9sRK;
+        Wed, 15 Jul 2020 06:22:30 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1594758151;
+        bh=m6q0t5rQ4tSfOmMooV1EHEwUQAHvbpn5mjHL15F+qEw=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=P8ibvs29lkUkCz49co9V7WPBcFc/Fsw2a7NNDseIh5Z31qyH7nJnsa3KUz/4KcVHh
+         XKaV46mul9bSfayC/SuC0pMo/cIsabqX0Ssqr3ROzYPLYP/gMlHEo/br7IWo1BN1Zx
+         Yak5pqJreqTXZckh2FJxYNYTd1PgBpsFFWkz3fF4DRMinpALDJsfHr8XH3lXBQW+yq
+         kKRPfE4iZoOHBrWBEqnhLj6TPEtQxPK1BqaYzF9HV2JkfbETO8Q2mWN7b2p7gygoAO
+         /VjzTRywXnwW4StfhKJLmi/P4Khyhzd9ZEZO44JBhvzsww+HRXJO3vRdQjut/W7CDU
+         KBdoxrjfvqg8g==
+Date:   Wed, 15 Jul 2020 06:22:29 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Bixuan Cui <cuibixuan@huawei.com>
+Cc:     <akpm@linux-foundation.org>, <linux-mm@kvack.org>,
+        <linux-kernel@vger.kernel.org>, <linux-next@vger.kernel.org>,
+        <john.wanghui@huawei.com>, Roman Gushchin <guro@fb.com>
+Subject: Re: [PATCH v2] mm/percpu: fix 'defined but not used' warning
+Message-ID: <20200715062229.78591ff9@canb.auug.org.au>
+In-Reply-To: <6f1a8c76-d6d7-1a2c-8b0b-26a4a31f1a19@huawei.com>
+References: <20200714134101.80534-1-cuibixuan@huawei.com>
+        <20200714225311.7aeffffd@canb.auug.org.au>
+        <6f1a8c76-d6d7-1a2c-8b0b-26a4a31f1a19@huawei.com>
 MIME-Version: 1.0
-References: <CACK8Z6F-8OZNJU8wqWuZq=moCaOi+3W=CzBeppfO31VZnkqBrg@mail.gmail.com>
- <20200711195346.GA132330@bjorn-Precision-5520>
-In-Reply-To: <20200711195346.GA132330@bjorn-Precision-5520>
-From:   Rajat Jain <rajatja@google.com>
-Date:   Tue, 14 Jul 2020 13:19:05 -0700
-Message-ID: <CACK8Z6HP1VHs4P=U6-+D_D8HrQ5D1P679P_=saNqUMXE-bNUjg@mail.gmail.com>
-Subject: Re: [PATCH v4 4/4] PCI/ACS: Enable PCI_ACS_TB for untrusted/external-facing
- devices
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     "Raj, Ashok" <ashok.raj@intel.com>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>,
-        "open list:AMD IOMMU (AMD-VI)" <iommu@lists.linux-foundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        "Krishnakumar, Lalithambika" <lalithambika.krishnakumar@intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Jean-Philippe Brucker <jean-philippe@linaro.org>,
-        Prashant Malani <pmalani@google.com>,
-        Benson Leung <bleung@google.com>,
-        Todd Broch <tbroch@google.com>,
-        Alex Levin <levinale@google.com>,
-        Mattias Nissler <mnissler@google.com>,
-        Rajat Jain <rajatxjain@gmail.com>,
-        Bernie Keany <bernie.keany@intel.com>,
-        Aaron Durbin <adurbin@google.com>,
-        Diego Rivas <diegorivas@google.com>,
-        Duncan Laurie <dlaurie@google.com>,
-        Furquan Shaikh <furquan@google.com>,
-        Jesse Barnes <jsbarnes@google.com>,
-        Christian Kellner <christian@kellner.me>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Oliver O'Halloran" <oohall@gmail.com>,
-        Saravana Kannan <saravanak@google.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; boundary="Sig_/PLQTjSuhLZHKFG1.u30PGb4";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jul 11, 2020 at 12:53 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
->
-> On Fri, Jul 10, 2020 at 03:53:59PM -0700, Rajat Jain wrote:
-> > On Fri, Jul 10, 2020 at 2:29 PM Raj, Ashok <ashok.raj@intel.com> wrote:
-> > > On Fri, Jul 10, 2020 at 03:29:22PM -0500, Bjorn Helgaas wrote:
-> > > > On Tue, Jul 07, 2020 at 03:46:04PM -0700, Rajat Jain wrote:
-> > > > > When enabling ACS, enable translation blocking for external facing ports
-> > > > > and untrusted devices.
-> > > > >
-> > > > > Signed-off-by: Rajat Jain <rajatja@google.com>
-> > > > > ---
-> > > > > v4: Add braces to avoid warning from kernel robot
-> > > > >     print warning for only external-facing devices.
-> > > > > v3: print warning if ACS_TB not supported on external-facing/untrusted ports.
-> > > > >     Minor code comments fixes.
-> > > > > v2: Commit log change
-> > > > >
-> > > > >  drivers/pci/pci.c    |  8 ++++++++
-> > > > >  drivers/pci/quirks.c | 15 +++++++++++++++
-> > > > >  2 files changed, 23 insertions(+)
-> > > > >
-> > > > > diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-> > > > > index 73a8627822140..a5a6bea7af7ce 100644
-> > > > > --- a/drivers/pci/pci.c
-> > > > > +++ b/drivers/pci/pci.c
-> > > > > @@ -876,6 +876,14 @@ static void pci_std_enable_acs(struct pci_dev *dev)
-> > > > >     /* Upstream Forwarding */
-> > > > >     ctrl |= (cap & PCI_ACS_UF);
-> > > > >
-> > > > > +   /* Enable Translation Blocking for external devices */
-> > > > > +   if (dev->external_facing || dev->untrusted) {
-> > > > > +           if (cap & PCI_ACS_TB)
-> > > > > +                   ctrl |= PCI_ACS_TB;
-> > > > > +           else if (dev->external_facing)
-> > > > > +                   pci_warn(dev, "ACS: No Translation Blocking on external-facing dev\n");
-> > > > > +   }
-> > > >
-> > > > IIUC, this means that external devices can *never* use ATS and
-> > > > can never cache translations.
-> >
-> > Yes, but it already exists today (and this patch doesn't change that):
-> > 521376741b2c2 "PCI/ATS: Only enable ATS for trusted devices"
-> >
-> > IMHO any external device trying to send ATS traffic despite having ATS
-> > disabled should count as a bad intent. And this patch is trying to
-> > plug that loophole, by blocking the AT traffic from devices that we do
-> > not expect to see AT from anyway.
->
-> Thinking about this some more, I wonder if Linux should:
->
->   - Explicitly disable ATS for every device at enumeration-time, e.g.,
->     in pci_init_capabilities(),
->
->   - Enable PCI_ACS_TB for every device (not just external-facing or
->     untrusted ones),
->
->   - Disable PCI_ACS_TB for the relevant devices along the path only
->     when enabling ATS.
->
-> One nice thing about doing that is that the "untrusted" test would be
-> only in pci_enable_ats(), and we wouldn't need one in
-> pci_std_enable_acs().
+--Sig_/PLQTjSuhLZHKFG1.u30PGb4
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Sent out v5 with this approach here:
-https://patchwork.kernel.org/patch/11663515/
+Hi Bixuan,
 
-Thanks,
+Thanks for this.
 
-Rajat
+On Tue, 14 Jul 2020 21:46:18 +0800 Bixuan Cui <cuibixuan@huawei.com> wrote:
+>
+> Gcc report the following warning without CONFIG_MEMCG_KMEM:
+>=20
+> mm/percpu-internal.h:145:29: warning: 'pcpu_chunk_type' defined
+> but not used [-Wunused-function]
+>  static enum pcpu_chunk_type pcpu_chunk_type(struct pcpu_chunk *chunk)
+>                              ^~~~~~~~~~~~~~~
+>=20
+> Add 'inline' to pcpu_chunk_type(),pcpu_is_memcg_chunk() and
+> pcpu_chunk_list() to clear warning.
+>=20
+> Fixes: 26c99879ef01 ("mm: memcg/percpu: account percpu memory to memory c=
+groups")
+> Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
 
->
->
-> It's possible BIOS gives us devices with ATS enabled, and this might
-> break them, but that seems like something we'd want to find out about.
->
-> Bjorn
+You really should not add SUB lines for others - in  this case a
+Suggested-by is more appropriate.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/PLQTjSuhLZHKFG1.u30PGb4
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl8OFAUACgkQAVBC80lX
+0GwHggf/bNn1uN+FOLwHWa7pt12Gtfv8cZ13520mBvzbvw2hVaoiMGE1xgZuZ6WM
+9VYCtJXLpeFWsHJXOZKBI0HxIjJHkDR5rNZ3fnorDexzBJ0LvjTj/GUMjuUHv1vq
+owAraeXUIsJUDr2jpuRq60+5PUm80F3+YGF35694tl1uHxK8Do/CFM4i7bRz/aQ/
+ynfJNm/hFoR9CbBDISULAujfLnhKHgwR2z7fxgqqSM3Uj3hWZZyTI1GfS6oKVsJz
+XN7UEb95LUCQiCUhsZeU2g4IR/rkXokDwoqDghIEX63zeb5//XJstDKHV7x6Xpgd
+v49A+51vkMXaLbMI0h4C+gXZAETleA==
+=IdV1
+-----END PGP SIGNATURE-----
+
+--Sig_/PLQTjSuhLZHKFG1.u30PGb4--
