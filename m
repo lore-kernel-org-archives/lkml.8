@@ -2,143 +2,196 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DDD70C433E4
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 10:03:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6562C433E4
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 10:04:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BDBCB21D7A
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 10:03:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B608521D7A
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 10:04:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PWuXG4b4"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bJw/CWfE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727065AbgGNKDe (ORCPT
+        id S1727101AbgGNKEe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 06:03:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40908 "EHLO
+        Tue, 14 Jul 2020 06:04:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41074 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725906AbgGNKDd (ORCPT
+        with ESMTP id S1725906AbgGNKEd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 06:03:33 -0400
-Received: from mail-ed1-x541.google.com (mail-ed1-x541.google.com [IPv6:2a00:1450:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5AC7CC061755;
-        Tue, 14 Jul 2020 03:03:33 -0700 (PDT)
-Received: by mail-ed1-x541.google.com with SMTP id e22so16407362edq.8;
-        Tue, 14 Jul 2020 03:03:33 -0700 (PDT)
+        Tue, 14 Jul 2020 06:04:33 -0400
+Received: from mail-ed1-x543.google.com (mail-ed1-x543.google.com [IPv6:2a00:1450:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4EBAEC061755;
+        Tue, 14 Jul 2020 03:04:33 -0700 (PDT)
+Received: by mail-ed1-x543.google.com with SMTP id b15so16402548edy.7;
+        Tue, 14 Jul 2020 03:04:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=MKp4hLtxETvkv2CWahEKcfbp1IqsM/1I1uhcW5o/wdY=;
-        b=PWuXG4b4cpqYFf2T4pSBWibdehnMvZPSt8U8it8Y5Vr8G4jATwgScAO7URB+xYsDIk
-         ko9j8deE86NN89zX1NpP0ZD8NnsgJ0aEsk4cQyxlHIy8LnqMWPhINDEoCUH+Djt7fk/y
-         q304ihm+M83eb/bwQu6b+Toz8dSHDcE0hrBPElnsKJmwQ/199siBC15iLpr7S6Mdo26K
-         vdr863REyILYzvb0IRSz4DmkuUysNw/HjI1lpJ9FWPSxQUoSsDOCsqrIO/oIhPu2wevy
-         DXrW7iyxD/djeMfYG+35wUH6epFRuZ2OkKCh2tIw8JBTqudzg5N70NnfjZTINxnOUN9i
-         HZEg==
+        h=from:to:cc:subject:date:message-id;
+        bh=Z9A/niHETTJ6sG1YCidrVIts+5Cm3jRqOKxgMwZf804=;
+        b=bJw/CWfEaGdgNEsvB+E0Pil+beiADxQRlYxFucL33vnzGqhY657FC8SLKndNCYmWBW
+         RG5pWkJLTJi7uV42p3TsQHKr/zZfidLqtMJ6mhYMNC7lnI8wL9ob0ZHPC/oUfDh7idx9
+         YzZ5BPoKFaD4VIy/72jiqKG0NxCQQ/8/m0foHD5mlcSJx45cFGCE0ILJ//80+HYv7hgW
+         vQPwbztXczFxvfH8naRy5OzPhS16kn4sp5IQ1SShba7JIk1FYKiSmcPbBnzuxhJPin52
+         zs+2qK4Yl/c3Za2m01tJx2/dAlc7v3zAHdgKWQuYZnn8eWzCtCNQsxS2ZxmznDCviBeh
+         Aeng==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=MKp4hLtxETvkv2CWahEKcfbp1IqsM/1I1uhcW5o/wdY=;
-        b=PGluHX4elZ+dcwPspx60tBqVbXgy86oSlzCTXYv3j6X3c/EisdII8vTZzw4GOYaGNd
-         BQpeqiPE2nCq9IZYPkwlr7KhTWRlbLh8oqGhZnLLmq7womYf8PWPU7IUuN0D2VY8JPQS
-         h5eL+Gvo4kt6naDYSBA+Y/9sWfsfOS1p68uq4IezbmNJWsCMCxLJxrEIAYuBjCx99HqK
-         tLkkPLkhGEL2lLlA0ZlexzLm20HnP0YkjvS6Jker7DoYj6CnFgAjQO7+nUYXM9MmHLK+
-         Y0267C1yYAJ2jZpNYKanHN5qyCWVTRT9C0ULXRnjb4kzzIG6wrF4nL7HdbnOeJS01sU6
-         BwZw==
-X-Gm-Message-State: AOAM532UEIib8a1rzLgnGuHW/PaeGVwFKjx3a2f6p//aWmm2WuXlKkIB
-        URgMHG0IaCY/XIJ43Dlx7WW4aZG/bzw+9e8tRUE=
-X-Google-Smtp-Source: ABdhPJzMuF8S5wkwmiZSLv/BO2k8Uh6Rq8XGYvR9lfAW1FMCP6K5LDh1XPrNn+57jDHjM8t8/P6yahksikRVd7DQfbE=
-X-Received: by 2002:a50:d55b:: with SMTP id f27mr3747046edj.312.1594721012001;
- Tue, 14 Jul 2020 03:03:32 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200629114927.17379-1-bruno.thomsen@gmail.com>
- <20200629114927.17379-2-bruno.thomsen@gmail.com> <20200713025246.GY21277@dragon>
-In-Reply-To: <20200713025246.GY21277@dragon>
-From:   Bruno Thomsen <bruno.thomsen@gmail.com>
-Date:   Tue, 14 Jul 2020 12:03:16 +0200
-Message-ID: <CAH+2xPAHKY6YfhO-jXfKN+TRN5LDT1Kkn8a8HUj_EOqFt=75nQ@mail.gmail.com>
-Subject: Re: [PATCH 2/3] ARM: dts: imx7: add support for kamstrup flex concentrator
-To:     Shawn Guo <shawnguo@kernel.org>
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Bruno Thomsen <bth@kamstrup.com>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=Z9A/niHETTJ6sG1YCidrVIts+5Cm3jRqOKxgMwZf804=;
+        b=XuRXw8XqR/Djz3HSx4juHq98axkx/Mwh8ty51ATn0Hx9h0CiYZEEuCBXWRLz8CnIRO
+         gWXw5vBAxy4dQRtIe5ELCc9dThMX8CyRN7PZz10mHi8AeJz6Ux4euMYm/kA3d2uPahXq
+         whcro/SOCP5B0VTVu4nIAEm/ZFOvOX9QDrw65bDj+BXBAB6fLxke/OAe3wJa8EYADMdP
+         47SUbaUOn/34Yyuge6MugsBEa6APZtw2KvNZoxsd+Z+SeyoTbukMntROW44ASow9uE7U
+         ZExIy53JkLZyCjOS/mWWBZ82382TK0xaShgKTnz5BLfUDtNcPTmi0FzctoGaZXPIR5bX
+         BZvQ==
+X-Gm-Message-State: AOAM5333Epmbh62lMNj8C+1zspjPT0EaGyk63vZMZ6DObgjHNjY3+cz7
+        VBQRilY7I3NxL6BU6EYA0Q8=
+X-Google-Smtp-Source: ABdhPJz5BLx6UNGp+PcUoVcl9C9PveBd35/nU0renWNn761chkn0KvLT9qpMImrdubKCO2n43ShSeQ==
+X-Received: by 2002:a05:6402:176e:: with SMTP id da14mr3798086edb.262.1594721071939;
+        Tue, 14 Jul 2020 03:04:31 -0700 (PDT)
+Received: from net.saheed (54007186.dsl.pool.telekom.hu. [84.0.113.134])
+        by smtp.gmail.com with ESMTPSA id bs18sm14137672edb.38.2020.07.14.03.04.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 14 Jul 2020 03:04:31 -0700 (PDT)
+From:   Saheed Olayemi Bolarinwa <refactormyself@gmail.com>
+To:     helgaas@kernel.org
+Cc:     Bolarinwa Olayemi Saheed <refactormyself@gmail.com>,
+        bjorn@helgaas.com, skhan@linuxfoundation.org,
+        linux-pci@vger.kernel.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        linux-kernel@vger.kernel.org,
+        Mike Marciniszyn <mike.marciniszyn@intel.com>,
+        Dennis Dalessandro <dennis.dalessandro@intel.com>,
+        Doug Ledford <dledford@redhat.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>, linux-rdma@vger.kernel.org
+Subject: [PATCH 0/14 v4] PCI: Remove '*val = 0' from pcie_capability_read_*()
+Date:   Tue, 14 Jul 2020 13:04:42 +0200
+Message-Id: <20200714110445.32605-1-refactormyself@gmail.com>
+X-Mailer: git-send-email 2.18.2
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Den man. 13. jul. 2020 kl. 04.52 skrev Shawn Guo <shawnguo@kernel.org>:
->
-> On Mon, Jun 29, 2020 at 01:49:26PM +0200, Bruno Thomsen wrote:
-> > +&fec1 {
-> > +     pinctrl-names = "default";
-> > +     pinctrl-0 = <&pinctrl_enet1>;
-> > +     phy-mode = "rmii";
-> > +     phy-reset-gpios = <&gpio7 15 GPIO_ACTIVE_LOW>;
-> > +     phy-reset-duration = <100>;
-> > +     phy-reset-post-delay = <1000>;
->
-> These properties are deprecated.
+From: Bolarinwa Olayemi Saheed <refactormyself@gmail.com>
 
-Thanks for review Shawn.
+v4 CHANGES:
+- Remove unnecessary boolean conversion
+- fix bugs introduced by previous version in PATCH 11/14
 
-I have not yet been successful in converting the deprecated properties
-to generic phy properties, so hoping I could get a hit.
+v3 CHANGES:
+- Split previous PATCH 6/13 into two : PATCH 6/14 and PATCH 7/14
+- Fix commit message of PATCH 5/14
+- Update Patch numbering and Commit messages
+- Add 'Acked by Greg KH' to PATCH 2/14
+- Add PATCH version
 
-Kernel error messages:
-mdio_bus 30be0000.ethernet-1: MDIO device at address 1 is missing.
-fec 30be0000.ethernet eth0: Unable to connect to phy
+v2 CHANGES:
+- Fix missing comma, causing the email cc error
+- Fix typos and numbering errors in commit messages
+- Add commit message to 13/13
+- Add two more patches: PATCH 3/13 and PATCH 4/13
 
-Updated device tree section:
-&fec1 {
-        pinctrl-names = "default";
-        pinctrl-0 = <&pinctrl_enet1>;
-        phy-mode = "rmii";
-        phy-handle = <&ethphy>;
-        status = "okay";
+MERGING:
+Patch 7/14 depends on Patch 6/14. However Patch 6/14 has no dependency.
+Please, merge PATCH 7/14 only after Patch 6/14.
+Patch 14/14 depend on all preceeding patchs. Except for Patch 6/14 and
+Patch 7/14, all other patches are independent of one another. Hence,
+please merge Patch 14/14 only after other patches in this series have
+been merged.
 
-        mdio {
-                #address-cells = <1>;
-                #size-cells = <0>;
 
-                ethphy: ethernet-phy@1 {
-                        /* Micrel KSZ8051RNLV */
-                        compatible = "ethernet-phy-ieee802.3-c22";
-                        reg = <1>;
-                        max-speed = <100>;
+PATCH 6/14:
+Make the function set status to "Power On" by default and only set to
+Set "Power Off" only if pcie_capability_read_word() is successful and
+(slot_ctrl & PCI_EXP_SLTCTL_PCC) == PCI_EXP_SLTCTL_PWR_OFF. 
 
-                        reset-assert-us = <100000>;
-                        reset-deassert-us = <1000000>;
-                        reset-gpios = <&gpio7 15 GPIO_ACTIVE_LOW>;
-                };
-        };
-};
+PATCH 1/14 to 13/14:
+Check the return value of pcie_capability_read_*() to ensure success or
+confirm failure. While maintaining these functions, this ensures that the
+changes in PATCH 14/14 does not introduce any bug. 
 
-/Bruno
+PATCH 14/14:
+There are several reasons why a PCI capability read may fail whether the
+device is present or not. If this happens, pcie_capability_read_*() will
+return -EINVAL/PCIBIOS_BAD_REGISTER_NUMBER or PCIBIOS_DEVICE_NOT_FOUND
+and *val is set to 0.
 
-> > +     phy-handle = <&ethphy>;
-> > +     status = "okay";
-> > +
-> > +     mdio {
-> > +             #address-cells = <1>;
-> > +             #size-cells = <0>;
-> > +             ethphy: ethernet-phy@1 {
-> > +                     /* Micrel KSZ8051RNLV */
-> > +                     compatible = "ethernet-phy-ieee802.3-c22";
-> > +                     reg = <1>;
-> > +             };
-> > +     };
-> > +};
+This behaviour if further ensured by this code inside
+pcie_capability_read_*()
+
+ ret = pci_read_config_dword(dev, pci_pcie_cap(dev) + pos, val);
+ /*
+  * Reset *val to 0 if pci_read_config_dword() fails, it may
+  * have been written as 0xFFFFFFFF if hardware error happens
+  * during pci_read_config_dword().
+  */
+ if (ret)
+	 *val = 0;
+ return ret;
+
+a) Since all pci_generic_config_read() does is read a register value,
+it may return success after reading a ~0 which *may* have been fabricated
+by the PCI host bridge due to a read timeout. Hence pci_read_config_*() 
+will return success with a fabricated ~0 in *val, indicating a problem.
+In this case, the assumed behaviour of  pcie_capability_read_*() will be
+wrong. To avoid error slipping through, more checks are necessary.
+
+b) pci_read_config_*() will return PCIBIOS_DEVICE_NOT_FOUND only if 
+dev->error_state = pci_channel_io_perm_failure (i.e. 
+pci_dev_is_disconnected()) or if pci_generic_config_read() can't find the
+device. In both cases *val is initially set to ~0 but as shown in the code
+above pcie_capability_read_*() resets it back to 0. Even with this effort,
+drivers still have to perform validation checks more so if 0 is a valid
+value.
+
+Most drivers only consider the case (b) and in some cases, there is the 
+expectation that on timeout *val has a fabricated value of ~0, which *may*
+not always be true as explained in (a).
+
+In any case, checks need to be done to validate the value read and maybe
+confirm which error has occurred. It is better left to the drivers to do.
+
+Check the return value of pcie_capability_read_dword() to ensure success
+and avoid bug as a result of Patch 14/14.
+Remove the reset of *val to 0 when pci_read_config_*() fails.
+
+
+Bolarinwa Olayemi Saheed (14):
+  IB/hfi1: Check the return value of pcie_capability_read_*()
+  misc: rtsx: Check the return value of pcie_capability_read_*()
+  ath9k: Check the return value of pcie_capability_read_*()
+  iwlegacy: Check the return value of pcie_capability_read_*()
+  PCI: pciehp: Check the return value of pcie_capability_read_*()
+  PCI: pciehp: Make "Power On" the default 
+  PCI: pciehp: Check the return value of pcie_capability_read_*()
+  PCI/ACPI: Check the return value of pcie_capability_read_*()
+  PCI: pciehp: Check the return value of pcie_capability_read_*()
+  PCI: Check the return value of pcie_capability_read_*()
+  PCI/PM: Check return value of pcie_capability_read_*()
+  PCI/AER: Check the return value of pcie_capability_read_*()
+  PCI/ASPM: Check the return value of pcie_capability_read_*()
+  PCI: Remove '*val = 0' from pcie_capability_read_*()
+
+ drivers/net/wireless/ath/ath9k/pci.c         | 5 +++--
+ drivers/net/wireless/intel/iwlegacy/common.c | 4 ++--
+ drivers/infiniband/hw/hfi1/aspm.c | 7 ++++---
+ drivers/misc/cardreader/rts5227.c | 5 +++--
+ drivers/misc/cardreader/rts5249.c | 5 +++--
+ drivers/misc/cardreader/rts5260.c | 5 +++--
+ drivers/misc/cardreader/rts5261.c | 5 +++--
+ drivers/pci/pcie/aer.c  |  5 +++--
+ drivers/pci/pcie/aspm.c | 33 +++++++++++++++++----------------
+ drivers/pci/hotplug/pciehp_hpc.c | 47 ++++++++++++++++----------------
+ drivers/pci/pci-acpi.c           | 10 ++++---
+ drivers/pci/probe.c              | 29 ++++++++++++--------
+ drivers/pci/access.c | 14 --------------
+ 13 files changed, 87 insertions(+), 87 deletions(-)
+
+-- 
+2.18.2
+
