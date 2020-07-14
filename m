@@ -2,125 +2,106 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4CBDC433E4
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 08:40:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E533C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 08:41:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 826BC221F2
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 08:40:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DAAE021D6C
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 08:41:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="T2lOnTLd"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="wfr+9nwG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726748AbgGNIkg (ORCPT
+        id S1726770AbgGNIlK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 04:40:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56418 "EHLO
+        Tue, 14 Jul 2020 04:41:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56508 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726384AbgGNIkf (ORCPT
+        with ESMTP id S1726354AbgGNIlK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 04:40:35 -0400
-Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9C543C061755;
-        Tue, 14 Jul 2020 01:40:35 -0700 (PDT)
-Received: by mail-pj1-x1044.google.com with SMTP id md7so1196827pjb.1;
-        Tue, 14 Jul 2020 01:40:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=nYA5e7ARxM6LIN4taGv+yFcdrKzm+MTO5NvTdpW41Ro=;
-        b=T2lOnTLdKYH6OO1hKVWnOfUuo1+qOtx6+BTH4Z1JtU+qqoH+iYiR71ofLyjdn1Hq2d
-         +mgYi4dVqEidffxZhXdFLx824uYHihWjHM7oqNoRfisNq3ZQt4zPA6ZUf9T4yN2dzeXN
-         W4HZLj/2n/czW7sVpgBSyMWqlKX2zXbmgYF0GxYvoG2BPPtu5yf4FqbP0asJUSwnvahc
-         0E0x+XLsSKsfvoj5PA8+NGNMIXtPmQvVZ9oBU+nym+MJ/5wz1ETBDXlVe6+2dCeFG9nW
-         y/jnhzfD8//SByShVty8xDksD8PKBqj9WS5guPELcOy6ivddE7+lokHZUXcGvVFcbFyq
-         Ycsg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=nYA5e7ARxM6LIN4taGv+yFcdrKzm+MTO5NvTdpW41Ro=;
-        b=f3vbucVaeO60cAcCZiHM7T/D/ME64Wzu5GenEyDUwaTMYyzGjfDLsySzXAptOTkdbv
-         QP/5/XscI87T/b8b7LnIksXvBBm1o0/47v1RPSOZp9QR8XALrK5BJF6c2JfqGIt8Vuhc
-         2P14WIX269MoTq/fmHtHleswgs6ejbNIjzQD9RrjtddyPG8Zksj+981xOuyDRw6G43j6
-         EYknnVoiyIGAaFbQdBiJz4DlE3QdDiqB5t8RaTbCrqTLQ5q6ezB1vB6O9SobSqsRLV/K
-         b+RZ1X90YfgUK6Qmtuz0ZRcfOz47Yq24c2x+EEbHkg2anf/l/DesF8653XnGllQrQ7wl
-         f8Yw==
-X-Gm-Message-State: AOAM5308aNHcJ6lLBT9R5BiuI1iU1pFY6G4PP+D8jAeUwJzms8DPw8OV
-        7vJ7iztxCD5Zb+ku2rEEFr0xYrszWZpRI6smIeg=
-X-Google-Smtp-Source: ABdhPJwyHSC2MglEc3MU1qW3Ba6mSuojPSrl7xxdg6zyyzvWhZHwZROYnhBDgZqucI3YJBIFjtYrDUxvZ8yZANTLbkE=
-X-Received: by 2002:a17:90a:a393:: with SMTP id x19mr3597107pjp.228.1594716035169;
- Tue, 14 Jul 2020 01:40:35 -0700 (PDT)
+        Tue, 14 Jul 2020 04:41:10 -0400
+Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C1297C061755;
+        Tue, 14 Jul 2020 01:41:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=7EYMAPkg0epsaMUyGWJdgDKUvk+AqT0tO9qkB/mcaeo=; b=wfr+9nwGB+CdzxX9LElESkKpwK
+        5k6vYKRmT9DWltVSjWYMZnlQ/I7lRShp5WfUSxuESbkpptjM1Zh51DEeu3IE2h70muDG6uMcqNOJs
+        tbUiCnwFTFua/844sZg8NY3KOWNMYBopQOL65ye10DuSJEQrab2Owce2ZJPEvCdclI4nYahvmc+/m
+        EAV1vZjgIkz6FI88PB18iJgnXx5oP3SGBVUT0ldkiYGCcd17mQCOx3Ky+cLShm+MxUZWkyYv8ysI/
+        pC8MiwAVFKfFJndnElLfvG/DprsK6kP6uqUIpq6f1xjuyLepg4kSLDczlLmAkx+6IjVFOvlyQchuw
+        oZXIlvmQ==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jvGUl-0006VI-Lv; Tue, 14 Jul 2020 08:40:59 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 8831E305C22;
+        Tue, 14 Jul 2020 10:40:57 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 7393128B91072; Tue, 14 Jul 2020 10:40:57 +0200 (CEST)
+Date:   Tue, 14 Jul 2020 10:40:57 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     ira.weiny@intel.com
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Andy Lutomirski <luto@kernel.org>, x86@kernel.org,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Fenghua Yu <fenghua.yu@intel.com>, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-nvdimm@lists.01.org,
+        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+        linux-kselftest@vger.kernel.org
+Subject: Re: [RFC PATCH 11/15] memremap: Add zone device access protection
+Message-ID: <20200714084057.GP10769@hirez.programming.kicks-ass.net>
+References: <20200714070220.3500839-1-ira.weiny@intel.com>
+ <20200714070220.3500839-12-ira.weiny@intel.com>
 MIME-Version: 1.0
-References: <20200508021844.6911-1-david.e.box@linux.intel.com> <20200714062323.19990-2-david.e.box@linux.intel.com>
-In-Reply-To: <20200714062323.19990-2-david.e.box@linux.intel.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Tue, 14 Jul 2020 11:40:18 +0300
-Message-ID: <CAHp75VezDB5HqNn+rw72z2yt0buGh+szi4ytOMPejtQWMwr0+w@mail.gmail.com>
-Subject: Re: [PATCH V3 1/3] PCI: Add defines for Designated Vendor-Specific Capability
-To:     "David E. Box" <david.e.box@linux.intel.com>
-Cc:     Lee Jones <lee.jones@linaro.org>,
-        Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>,
-        linux-pci <linux-pci@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200714070220.3500839-12-ira.weiny@intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 14, 2020 at 9:22 AM David E. Box
-<david.e.box@linux.intel.com> wrote:
->
-> Add PCIe DVSEC extended capability ID and defines for the header offsets.
-> Defined in PCIe r5.0, sec 7.9.6.
->
+On Tue, Jul 14, 2020 at 12:02:16AM -0700, ira.weiny@intel.com wrote:
 
-Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-
-> Signed-off-by: David E. Box <david.e.box@linux.intel.com>
-> Acked-by: Bjorn Helgaas <bhelgaas@google.com>
-> ---
->  include/uapi/linux/pci_regs.h | 5 +++++
->  1 file changed, 5 insertions(+)
->
-> diff --git a/include/uapi/linux/pci_regs.h b/include/uapi/linux/pci_regs.h
-> index f9701410d3b5..09daa9f07b6b 100644
-> --- a/include/uapi/linux/pci_regs.h
-> +++ b/include/uapi/linux/pci_regs.h
-> @@ -720,6 +720,7 @@
->  #define PCI_EXT_CAP_ID_DPC     0x1D    /* Downstream Port Containment */
->  #define PCI_EXT_CAP_ID_L1SS    0x1E    /* L1 PM Substates */
->  #define PCI_EXT_CAP_ID_PTM     0x1F    /* Precision Time Measurement */
-> +#define PCI_EXT_CAP_ID_DVSEC   0x23    /* Designated Vendor-Specific */
->  #define PCI_EXT_CAP_ID_DLF     0x25    /* Data Link Feature */
->  #define PCI_EXT_CAP_ID_PL_16GT 0x26    /* Physical Layer 16.0 GT/s */
->  #define PCI_EXT_CAP_ID_MAX     PCI_EXT_CAP_ID_PL_16GT
-> @@ -1062,6 +1063,10 @@
->  #define  PCI_L1SS_CTL1_LTR_L12_TH_SCALE        0xe0000000  /* LTR_L1.2_THRESHOLD_Scale */
->  #define PCI_L1SS_CTL2          0x0c    /* Control 2 Register */
->
-> +/* Designated Vendor-Specific (DVSEC, PCI_EXT_CAP_ID_DVSEC) */
-> +#define PCI_DVSEC_HEADER1              0x4 /* Vendor-Specific Header1 */
-> +#define PCI_DVSEC_HEADER2              0x8 /* Vendor-Specific Header2 */
+> +static pgprot_t dev_protection_enable_get(struct dev_pagemap *pgmap, pgprot_t prot)
+> +{
+> +	if (pgmap->flags & PGMAP_PROT_ENABLED && dev_page_pkey != PKEY_INVALID) {
+> +		pgprotval_t val = pgprot_val(prot);
 > +
->  /* Data Link Feature */
->  #define PCI_DLF_CAP            0x04    /* Capabilities Register */
->  #define  PCI_DLF_EXCHANGE_ENABLE       0x80000000  /* Data Link Feature Exchange Enable */
-> --
-> 2.20.1
->
+> +		mutex_lock(&dev_prot_enable_lock);
+> +		dev_protection_enable++;
+> +		/* Only enable the static branch 1 time */
+> +		if (dev_protection_enable == 1)
+> +			static_branch_enable(&dev_protection_static_key);
+> +		mutex_unlock(&dev_prot_enable_lock);
+> +
+> +		prot = __pgprot(val | _PAGE_PKEY(dev_page_pkey));
+> +	}
+> +	return prot;
+> +}
+> +
+> +static void dev_protection_enable_put(struct dev_pagemap *pgmap)
+> +{
+> +	if (pgmap->flags & PGMAP_PROT_ENABLED && dev_page_pkey != PKEY_INVALID) {
+> +		mutex_lock(&dev_prot_enable_lock);
+> +		dev_protection_enable--;
+> +		if (dev_protection_enable == 0)
+> +			static_branch_disable(&dev_protection_static_key);
+> +		mutex_unlock(&dev_prot_enable_lock);
+> +	}
+> +}
 
+That's an anti-pattern vs static_keys, I'm thinking you actually want
+static_key_slow_{inc,dec}() instead of {enable,disable}().
 
--- 
-With Best Regards,
-Andy Shevchenko
