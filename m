@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FDB7C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:55:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E17A6C433E7
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:55:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4769E21D79
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:55:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B9EC022282
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:55:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594752928;
-	bh=bhSzwi+A4XN32hFzoNnB5HCq3CxGtguLBScwRiUtXq0=;
+	s=default; t=1594752931;
+	bh=kFlVpf3xsjPd5uBp1qmNbTQ/O1AJA5LuZSfT32sZWqQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cl0Lwk/yhLV7dJPuC7yqDCjpLyd2y8s1on5uDCIvA66WPekoqGwNhok5YuJ5mW0fD
-	 iB70nUTFw/uwlpdLlzmpKCJ1yfEIFZkoa74dUm8zhK8T/RyBg+wKWHEgIl/x6pWfNW
-	 QYzh1glR/gsS4iYupTHIkLOs5vK8xdJPFOLyzNiY=
+	b=NByD4lndeEhiblq0QS2JaXWdnoqqJscJsywytn8+GSNpcT/Nv5AVmy9ewVWsHeDda
+	 gadK+DCFad2U58Gz1xedtwlJgbhBcd087amn/8x/+vgYJ3CI2bKGvym3oQmuN8DhlF
+	 9sdvMnjg3pnuGiwUTC91inNjztYocao2Cua9KAoo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730860AbgGNSzV (ORCPT
+        id S1730049AbgGNSz3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 14:55:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52922 "EHLO mail.kernel.org"
+        Tue, 14 Jul 2020 14:55:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53098 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730833AbgGNSzQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 14:55:16 -0400
+        id S1730223AbgGNSzY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 14:55:24 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C5E3A22BEF;
-        Tue, 14 Jul 2020 18:55:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C346B222B9;
+        Tue, 14 Jul 2020 18:55:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594752916;
-        bh=bhSzwi+A4XN32hFzoNnB5HCq3CxGtguLBScwRiUtXq0=;
+        s=default; t=1594752924;
+        bh=kFlVpf3xsjPd5uBp1qmNbTQ/O1AJA5LuZSfT32sZWqQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SGnMxe316GpOWXQqGITaVB3l/AAqb8nqlfyLrNLrXJCOgOcjfVfcBjAyBr6ygF0ED
-         01eCOXj+S5mTKu5Feb5Xa+i9xz3Bpq1m7fWCR14JObsQAunSpQnMTrpPFkaYJT7ww0
-         C0BnYzAJ646jb8xZu67Q3sC/UxzPw6K73D58V+t8=
+        b=V/nIzGaW1hnAueh9v7Fp/dvKiW0wkldy9pM6iJaf8rQL+KVMRgdLEXo5YDFMSLcoJ
+         AkGIMu7JhewlsU6cnzJmCdm1JedsEmifgGswLz2Hz2YWlNbHt8nmcg+RMA0amqPknL
+         veHTq+QGdUJ8kHGbnpdQTvvpnx3nVew0VsKGDqRE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Marek Vasut <marek.vasut@gmail.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        stable@vger.kernel.org, Shengjiu Wang <shengjiu.wang@nxp.com>,
+        Nicolin Chen <nicoleotsuka@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 049/166] gpio: pca953x: Fix direction setting when configure an IRQ
-Date:   Tue, 14 Jul 2020 20:43:34 +0200
-Message-Id: <20200714184118.223750703@linuxfoundation.org>
+Subject: [PATCH 5.7 052/166] ASoC: fsl_mqs: Fix unchecked return value for clk_prepare_enable
+Date:   Tue, 14 Jul 2020 20:43:37 +0200
+Message-Id: <20200714184118.368907272@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200714184115.844176932@linuxfoundation.org>
 References: <20200714184115.844176932@linuxfoundation.org>
@@ -61,54 +61,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+From: Shengjiu Wang <shengjiu.wang@nxp.com>
 
-[ Upstream commit 0b22c25e1b81c5f718e89c4d759e6a359be24417 ]
+[ Upstream commit 15217d170a4461c1d4c1ea7c497e1fc1122e42a9 ]
 
-The commit 0f25fda840a9 ("gpio: pca953x: Zap ad-hoc reg_direction cache")
-seems inadvertently made a typo in pca953x_irq_bus_sync_unlock().
+Fix unchecked return value for clk_prepare_enable, add error
+handler in fsl_mqs_runtime_resume.
 
-When the direction bit is 1 it means input, and the piece of code in question
-was looking for output ones that should be turned to inputs.
-
-Fix direction setting when configure an IRQ by injecting a bitmap complement
-operation.
-
-Fixes: 0f25fda840a9 ("gpio: pca953x: Zap ad-hoc reg_direction cache")
-Depends-on: 35d13d94893f ("gpio: pca953x: convert to use bitmap API")
-Cc: Marek Vasut <marek.vasut@gmail.com>
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Fixes: 9e28f6532c61 ("ASoC: fsl_mqs: Add MQS component driver")
+Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
+Acked-by: Nicolin Chen <nicoleotsuka@gmail.com>
+Link: https://lore.kernel.org/r/5edd68d03def367d96268f1a9a00bd528ea5aaf2.1592888591.git.shengjiu.wang@nxp.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpio/gpio-pca953x.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ sound/soc/fsl/fsl_mqs.c | 14 ++++++++++++--
+ 1 file changed, 12 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/gpio/gpio-pca953x.c b/drivers/gpio/gpio-pca953x.c
-index 8571e54512476..a10411958e3f2 100644
---- a/drivers/gpio/gpio-pca953x.c
-+++ b/drivers/gpio/gpio-pca953x.c
-@@ -686,8 +686,6 @@ static void pca953x_irq_bus_sync_unlock(struct irq_data *d)
- 	DECLARE_BITMAP(reg_direction, MAX_LINE);
- 	int level;
+diff --git a/sound/soc/fsl/fsl_mqs.c b/sound/soc/fsl/fsl_mqs.c
+index b44b134390a39..69aeb0e71844d 100644
+--- a/sound/soc/fsl/fsl_mqs.c
++++ b/sound/soc/fsl/fsl_mqs.c
+@@ -265,10 +265,20 @@ static int fsl_mqs_remove(struct platform_device *pdev)
+ static int fsl_mqs_runtime_resume(struct device *dev)
+ {
+ 	struct fsl_mqs *mqs_priv = dev_get_drvdata(dev);
++	int ret;
  
--	pca953x_read_regs(chip, chip->regs->direction, reg_direction);
--
- 	if (chip->driver_data & PCA_PCAL) {
- 		/* Enable latch on interrupt-enabled inputs */
- 		pca953x_write_regs(chip, PCAL953X_IN_LATCH, chip->irq_mask);
-@@ -698,7 +696,11 @@ static void pca953x_irq_bus_sync_unlock(struct irq_data *d)
- 		pca953x_write_regs(chip, PCAL953X_INT_MASK, irq_mask);
- 	}
+-	clk_prepare_enable(mqs_priv->ipg);
++	ret = clk_prepare_enable(mqs_priv->ipg);
++	if (ret) {
++		dev_err(dev, "failed to enable ipg clock\n");
++		return ret;
++	}
  
-+	/* Switch direction to input if needed */
-+	pca953x_read_regs(chip, chip->regs->direction, reg_direction);
-+
- 	bitmap_or(irq_mask, chip->irq_trig_fall, chip->irq_trig_raise, gc->ngpio);
-+	bitmap_complement(reg_direction, reg_direction, gc->ngpio);
- 	bitmap_and(irq_mask, irq_mask, reg_direction, gc->ngpio);
+-	clk_prepare_enable(mqs_priv->mclk);
++	ret = clk_prepare_enable(mqs_priv->mclk);
++	if (ret) {
++		dev_err(dev, "failed to enable mclk clock\n");
++		clk_disable_unprepare(mqs_priv->ipg);
++		return ret;
++	}
  
- 	/* Look for any newly setup interrupt */
+ 	if (mqs_priv->use_gpr)
+ 		regmap_write(mqs_priv->regmap, IOMUXC_GPR2,
 -- 
 2.25.1
 
