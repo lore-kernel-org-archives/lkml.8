@@ -7,57 +7,50 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71E8BC433EB
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:51:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7731C433FC
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:56:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 460B022B2B
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:51:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 788D022B45
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:56:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594752710;
-	bh=3uf1IuXZh93/qcZAinaEENd95ogQcAx98MOdCIGIPxE=;
+	s=default; t=1594753001;
+	bh=q48lzcsda5IIe9qnR2s7M5wcre/hEwczDqOY/2h///Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KT+bcdQpVrms6f/IaBGcm9N3aqNxW2nX3wwM4jRy63FMs1yN9+MfaNONriDKTKUrk
-	 zQtCBxD3ym5p6Vz/4msJN/rdWEk59fEHqyWRblBgrvbndOwlKA97ig0DF0FfG/pDpD
-	 XmU3mYI1rHo0e7jFm8sx5jw4lHM6MS2Fy8ZNT9ek=
+	b=wEhgHun0ULBbFjosKvhCyRCLGD7HJl8+2cFYWHzcbxlGZvpPVjoWH8KHLPMKjMe3B
+	 ymLG6euVZQ3vBcPvxgOMAO+wlstg77pK87zhNiimLunaCDL8Dr76AffDJ+dpc949RA
+	 P2plIpQWkWkAHwciJpXlHFilySQ0oWcqGhW+LWL0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730435AbgGNSvs (ORCPT
+        id S1731012AbgGNS4j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 14:51:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48286 "EHLO mail.kernel.org"
+        Tue, 14 Jul 2020 14:56:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54644 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730427AbgGNSvp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 14:51:45 -0400
+        id S1730368AbgGNS4g (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 14:56:36 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8041D207F5;
-        Tue, 14 Jul 2020 18:51:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 74E7122B2B;
+        Tue, 14 Jul 2020 18:56:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594752705;
-        bh=3uf1IuXZh93/qcZAinaEENd95ogQcAx98MOdCIGIPxE=;
+        s=default; t=1594752996;
+        bh=q48lzcsda5IIe9qnR2s7M5wcre/hEwczDqOY/2h///Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=q2xgcAC3Ld8q0C8biVM07vG1pzlxRS7BB+/AVLIDnxWK6/nsXyUsCtlhHqvd7XGJP
-         NE5mZVoGlofVa2A53Z0XjMPwiQgQ88IqzS+kVWspUcxCqCccO6NNKKe7ZyhB5YR1qI
-         99NSGeiEZmiFdkafY0V+fYHo+cKGhPE6ysiA6KlY=
+        b=E870+L8WwygmajrwoeTXyp0w1JkCBkPB0PQUvf+IwbK4NJwYfjTZUQ9GLLLGpYBj5
+         y3wAXqIrLP8sppmPVQda+F50LU9QVYOrzrDfFfxehFHdLL+hurAuwpsqVfBBAcLsQJ
+         veuGcc7BjlJtHS1s2yURM6mwuVU+/55uTfdf3d5A=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Wei Li <liwei391@huawei.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Hanjun Guo <guohanjun@huawei.com>,
-        Jin Yao <yao.jin@linux.intel.com>,
-        Mark Rutland <mark.rutland@arm.com>,
+        stable@vger.kernel.org, Huazhong Tan <tanhuazhong@huawei.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 048/109] perf report TUI: Fix segmentation fault in perf_evsel__hists_browse()
-Date:   Tue, 14 Jul 2020 20:43:51 +0200
-Message-Id: <20200714184107.821720203@linuxfoundation.org>
+Subject: [PATCH 5.7 079/166] net: hns3: add a missing uninit debugfs when unload driver
+Date:   Tue, 14 Jul 2020 20:44:04 +0200
+Message-Id: <20200714184119.633369313@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200714184105.507384017@linuxfoundation.org>
-References: <20200714184105.507384017@linuxfoundation.org>
+In-Reply-To: <20200714184115.844176932@linuxfoundation.org>
+References: <20200714184115.844176932@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -67,82 +60,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wei Li <liwei391@huawei.com>
+From: Huazhong Tan <tanhuazhong@huawei.com>
 
-[ Upstream commit d61cbb859b45fdb6b4997f2d51834fae41af0e94 ]
+[ Upstream commit e22b5e728bbb179b912d3a3cd5c25894a89a26a2 ]
 
-The segmentation fault can be reproduced as following steps:
+When unloading driver, if flag HNS3_NIC_STATE_INITED has been
+already cleared, the debugfs will not be uninitialized, so fix it.
 
-1) Executing perf report in tui.
-
-2) Typing '/xxxxx' to filter the symbol to get nothing matched.
-
-3) Pressing enter with no entry selected.
-
-Then it will report a segmentation fault.
-
-It is caused by the lack of check of browser->he_selection when
-accessing it's member res_samples in perf_evsel__hists_browse().
-
-These processes are meaningful for specified samples, so we can skip
-these when nothing is selected.
-
-Fixes: 4968ac8fb7c3 ("perf report: Implement browsing of individual samples")
-Signed-off-by: Wei Li <liwei391@huawei.com>
-Acked-by: Jiri Olsa <jolsa@redhat.com>
-Acked-by: Namhyung Kim <namhyung@kernel.org>
-Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Andi Kleen <ak@linux.intel.com>
-Cc: Hanjun Guo <guohanjun@huawei.com>
-Cc: Jin Yao <yao.jin@linux.intel.com>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Link: http://lore.kernel.org/lkml/20200612094322.39565-1-liwei391@huawei.com
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Fixes: b2292360bb2a ("net: hns3: Add debugfs framework registration")
+Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/ui/browsers/hists.c | 17 +++++++++++------
- 1 file changed, 11 insertions(+), 6 deletions(-)
+ drivers/net/ethernet/hisilicon/hns3/hns3_enet.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/tools/perf/ui/browsers/hists.c b/tools/perf/ui/browsers/hists.c
-index 88c3df24b748c..514cef3a17b40 100644
---- a/tools/perf/ui/browsers/hists.c
-+++ b/tools/perf/ui/browsers/hists.c
-@@ -2224,6 +2224,11 @@ static struct thread *hist_browser__selected_thread(struct hist_browser *browser
- 	return browser->he_selection->thread;
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
+index da98fd7c8eca5..3003eecd5263b 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
+@@ -4153,9 +4153,8 @@ static void hns3_client_uninit(struct hnae3_handle *handle, bool reset)
+ 
+ 	hns3_put_ring_config(priv);
+ 
+-	hns3_dbg_uninit(handle);
+-
+ out_netdev_free:
++	hns3_dbg_uninit(handle);
+ 	free_netdev(netdev);
  }
  
-+static struct res_sample *hist_browser__selected_res_sample(struct hist_browser *browser)
-+{
-+	return browser->he_selection ? browser->he_selection->res_samples : NULL;
-+}
-+
- /* Check whether the browser is for 'top' or 'report' */
- static inline bool is_report_browser(void *timer)
- {
-@@ -3170,16 +3175,16 @@ static int perf_evsel__hists_browse(struct evsel *evsel, int nr_events,
- 					     &options[nr_options], NULL, NULL, evsel);
- 		nr_options += add_res_sample_opt(browser, &actions[nr_options],
- 						 &options[nr_options],
--				 hist_browser__selected_entry(browser)->res_samples,
--				 evsel, A_NORMAL);
-+						 hist_browser__selected_res_sample(browser),
-+						 evsel, A_NORMAL);
- 		nr_options += add_res_sample_opt(browser, &actions[nr_options],
- 						 &options[nr_options],
--				 hist_browser__selected_entry(browser)->res_samples,
--				 evsel, A_ASM);
-+						 hist_browser__selected_res_sample(browser),
-+						 evsel, A_ASM);
- 		nr_options += add_res_sample_opt(browser, &actions[nr_options],
- 						 &options[nr_options],
--				 hist_browser__selected_entry(browser)->res_samples,
--				 evsel, A_SOURCE);
-+						 hist_browser__selected_res_sample(browser),
-+						 evsel, A_SOURCE);
- 		nr_options += add_switch_opt(browser, &actions[nr_options],
- 					     &options[nr_options]);
- skip_scripting:
 -- 
 2.25.1
 
