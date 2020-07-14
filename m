@@ -2,121 +2,237 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E58E8C433E5
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 16:30:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E0FCC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 16:32:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BE630223AB
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 16:30:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="eU49U8Qv"
+	by mail.kernel.org (Postfix) with ESMTP id 427DD22475
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 16:32:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728792AbgGNQaE (ORCPT
+        id S1728001AbgGNQcu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 12:30:04 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:55296 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725890AbgGNQaE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 12:30:04 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06EGGwk0131212;
-        Tue, 14 Jul 2020 16:30:01 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2020-01-29;
- bh=4zHQ+qbqhXQr0oeHM5WRqgkfmxqCrBYvMylcuFCv2s8=;
- b=eU49U8Qv6hRHePqo9ugiHPg5XtBHsq1FFXXc/aWFAreRwSc7EHDfPKyqTpKNQG7Ns/Sg
- 1SsvyqdxJNc9CAuoDUFRxqhzXRDqfX4AUhy4gOSdfBeW4wiGB++0aETihp2FIA2jr5v2
- /WNS4wr8tol3aWEt2syUVMT4dBGAcbPBrhRShlygxJHkdxc06SxaQfh3IalT2TZpqkOU
- gU6xUt1EVYdU6uj8Yv4p4aHCT2BHN/2OY3ewqFABDbLn1PCIwMRPDu0THAiZNXtuzoPW
- XVX+W/nTABjAj+2BKIJulHfRn/nHH2TiPmHn5psWrZyCWRuS+z6t/H+jk06sHzcWXQbX 6A== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by aserp2120.oracle.com with ESMTP id 3275cm6ee6-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 14 Jul 2020 16:30:01 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06EGHbOY095955;
-        Tue, 14 Jul 2020 16:30:01 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by aserp3030.oracle.com with ESMTP id 327q0pj5dt-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 14 Jul 2020 16:30:01 +0000
-Received: from abhmp0020.oracle.com (abhmp0020.oracle.com [141.146.116.26])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 06EGU09I020069;
-        Tue, 14 Jul 2020 16:30:00 GMT
-Received: from dhcp-10-159-135-64.vpn.oracle.com (/10.159.135.64)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 14 Jul 2020 09:30:00 -0700
-Subject: Re: [PATCH] md: fix deadlock causing by sysfs_notify
-To:     Song Liu <song@kernel.org>
-Cc:     linux-raid <linux-raid@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-References: <20200709233545.67954-1-junxiao.bi@oracle.com>
- <CAPhsuW7seCUnt3zt6A_fjTS2diB7qiTE+SZkM6Vh=G26hdwGtg@mail.gmail.com>
- <de97a2c1-fba0-5276-7748-f0155088ad0d@oracle.com>
- <CAPhsuW4GQK7hS4AOpJJ1mEE8gbFgo+n+XCQ2fvW94QnZhA6ivQ@mail.gmail.com>
-From:   Junxiao Bi <junxiao.bi@oracle.com>
-Message-ID: <23a115e4-0d48-9186-c606-89d526649372@oracle.com>
-Date:   Tue, 14 Jul 2020 09:29:41 -0700
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:68.0)
- Gecko/20100101 Thunderbird/68.10.0
+        Tue, 14 Jul 2020 12:32:50 -0400
+Received: from mga03.intel.com ([134.134.136.65]:63516 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726062AbgGNQct (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 12:32:49 -0400
+IronPort-SDR: TBhSCOYiAfpQiyktt+PWuzmEWTFArAYRyBIgxuMsJCl6PciaDARBnS/FRbJYuLsHGFHmbGcJfQ
+ myKhi0rwQ0ww==
+X-IronPort-AV: E=McAfee;i="6000,8403,9681"; a="148957026"
+X-IronPort-AV: E=Sophos;i="5.75,352,1589266800"; 
+   d="scan'208";a="148957026"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jul 2020 09:32:48 -0700
+IronPort-SDR: VIIs1ZhnFb2/oR+R9r078i98dlsTEFvH/PoGIlyJf5/fUblIkEDHEi6vJ4Rx8zhuKXqvbKt5+I
+ Cscr8DBfInkQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,352,1589266800"; 
+   d="scan'208";a="317775607"
+Received: from jacob-builder.jf.intel.com (HELO jacob-builder) ([10.7.199.155])
+  by fmsmga002.fm.intel.com with ESMTP; 14 Jul 2020 09:32:47 -0700
+Date:   Tue, 14 Jul 2020 09:39:09 -0700
+From:   Jacob Pan <jacob.jun.pan@linux.intel.com>
+To:     Lu Baolu <baolu.lu@linux.intel.com>
+Cc:     Joerg Roedel <joro@8bytes.org>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Jean-Philippe Brucker <jean-philippe@linaro.org>,
+        Kevin Tian <kevin.tian@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Ashok Raj <ashok.raj@intel.com>, kvm@vger.kernel.org,
+        Cornelia Huck <cohuck@redhat.com>,
+        linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org,
+        Robin Murphy <robin.murphy@arm.com>,
+        jacob.jun.pan@linux.intel.com
+Subject: Re: [PATCH v3 2/4] iommu: Add iommu_aux_at(de)tach_group()
+Message-ID: <20200714093909.1ab93c9e@jacob-builder>
+In-Reply-To: <20200714055703.5510-3-baolu.lu@linux.intel.com>
+References: <20200714055703.5510-1-baolu.lu@linux.intel.com>
+        <20200714055703.5510-3-baolu.lu@linux.intel.com>
+Organization: OTC
+X-Mailer: Claws Mail 3.13.2 (GTK+ 2.24.30; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <CAPhsuW4GQK7hS4AOpJJ1mEE8gbFgo+n+XCQ2fvW94QnZhA6ivQ@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9681 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 malwarescore=0 spamscore=0
- mlxlogscore=999 bulkscore=0 adultscore=0 phishscore=0 suspectscore=3
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2007140120
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9681 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=3 priorityscore=1501
- bulkscore=0 adultscore=0 lowpriorityscore=0 phishscore=0 spamscore=0
- impostorscore=0 malwarescore=0 mlxlogscore=999 clxscore=1015 mlxscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2007140120
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/14/20 9:18 AM, Song Liu wrote:
+On Tue, 14 Jul 2020 13:57:01 +0800
+Lu Baolu <baolu.lu@linux.intel.com> wrote:
 
-> On Mon, Jul 13, 2020 at 11:41 PM Junxiao Bi <junxiao.bi@oracle.com> wrote:
->> On 7/13/20 11:17 PM, Song Liu wrote:
->>
->>> On Thu, Jul 9, 2020 at 4:36 PM Junxiao Bi <junxiao.bi@oracle.com> wrote:
->>>> The following deadlock was captured. The first process is holding 'kernfs_mutex'
->>>> and hung by io. The io was staging in 'r1conf.pending_bio_list' of raid1 device,
->>>> this pending bio list would be flushed by second process 'md127_raid1', but
->>>> it was hung by 'kernfs_mutex'. Using sysfs_notify_dirent_safe() to replace
->>>> sysfs_notify() can fix it. There were other sysfs_notify() invoked from io
->>>> path, removed all of them.
->>>>
->>> [...]
->>>> Cc: stable@vger.kernel.org
->>>> Signed-off-by: Junxiao Bi <junxiao.bi@oracle.com>
->>> Thanks for the patch. It looks good in general. One question though, do we
->>> need the same change the following line in md.c:level_store()?
->>>
->>>       sysfs_notify(&mddev->kobj, NULL, "level");
->> Thanks for the review. This one is not in io path, looks it's safe. I
->> can change it if you want to align it with others.
-> This one is the only leftover. Let's also change it.
+> This adds two new aux-domain APIs for a use case like vfio/mdev where
+> sub-devices derived from an aux-domain capable device are created and
+> put in an iommu_group.
+> 
+> /**
+>  * iommu_aux_attach_group - attach an aux-domain to an iommu_group
+> which
+>  *                          contains sub-devices (for example mdevs)
+> derived
+>  *                          from @dev.
+>  * @domain: an aux-domain;
+>  * @group:  an iommu_group which contains sub-devices derived from
+> @dev;
+>  * @dev:    the physical device which supports IOMMU_DEV_FEAT_AUX.
+>  *
+>  * Returns 0 on success, or an error value.
+>  */
+> int iommu_aux_attach_group(struct iommu_domain *domain,
+>                            struct iommu_group *group,
+>                            struct device *dev)
+> 
+> /**
+>  * iommu_aux_detach_group - detach an aux-domain from an iommu_group
+>  *
+>  * @domain: an aux-domain;
+>  * @group:  an iommu_group which contains sub-devices derived from
+> @dev;
+>  * @dev:    the physical device which supports IOMMU_DEV_FEAT_AUX.
+>  *
+>  * @domain must have been attached to @group via
+> iommu_aux_attach_group(). */
+> void iommu_aux_detach_group(struct iommu_domain *domain,
+>                             struct iommu_group *group,
+>                             struct device *dev)
+> 
+> It also adds a flag in the iommu_group data structure to identify
+> an iommu_group with aux-domain attached from those normal ones.
+> 
+> Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
+> ---
+>  drivers/iommu/iommu.c | 58
+> +++++++++++++++++++++++++++++++++++++++++++ include/linux/iommu.h |
+> 17 +++++++++++++ 2 files changed, 75 insertions(+)
+> 
+> diff --git a/drivers/iommu/iommu.c b/drivers/iommu/iommu.c
+> index e1fdd3531d65..cad5a19ebf22 100644
+> --- a/drivers/iommu/iommu.c
+> +++ b/drivers/iommu/iommu.c
+> @@ -45,6 +45,7 @@ struct iommu_group {
+>  	struct iommu_domain *default_domain;
+>  	struct iommu_domain *domain;
+>  	struct list_head entry;
+> +	unsigned int aux_domain_attached:1;
+>  };
+>  
+>  struct group_device {
+> @@ -2759,6 +2760,63 @@ int iommu_aux_get_pasid(struct iommu_domain
+> *domain, struct device *dev) }
+>  EXPORT_SYMBOL_GPL(iommu_aux_get_pasid);
+>  
+> +/**
+> + * iommu_aux_attach_group - attach an aux-domain to an iommu_group
+> which
+> + *                          contains sub-devices (for example mdevs)
+> derived
+> + *                          from @dev.
+> + * @domain: an aux-domain;
+> + * @group:  an iommu_group which contains sub-devices derived from
+> @dev;
+> + * @dev:    the physical device which supports IOMMU_DEV_FEAT_AUX.
+> + *
+> + * Returns 0 on success, or an error value.
+> + */
+> +int iommu_aux_attach_group(struct iommu_domain *domain,
+> +			   struct iommu_group *group, struct device
+> *dev) +{
+> +	int ret = -EBUSY;
+> +
+> +	mutex_lock(&group->mutex);
+> +	if (group->domain)
+> +		goto out_unlock;
+> +
+Perhaps I missed something but are we assuming only one mdev per mdev
+group? That seems to change the logic where vfio does:
+iommu_group_for_each_dev()
+	iommu_aux_attach_device()
 
-Sure, i will send a v2.
+> +	ret = iommu_aux_attach_device(domain, dev);
+> +	if (!ret) {
+> +		group->domain = domain;
+> +		group->aux_domain_attached = true;
+> +	}
+> +
+> +out_unlock:
+> +	mutex_unlock(&group->mutex);
+> +	return ret;
+> +}
+> +EXPORT_SYMBOL_GPL(iommu_aux_attach_group);
+> +
+> +/**
+> + * iommu_aux_detach_group - detach an aux-domain from an iommu_group
+> + *
+> + * @domain: an aux-domain;
+> + * @group:  an iommu_group which contains sub-devices derived from
+> @dev;
+> + * @dev:    the physical device which supports IOMMU_DEV_FEAT_AUX.
+> + *
+> + * @domain must have been attached to @group via
+> iommu_aux_attach_group().
+> + */
+> +void iommu_aux_detach_group(struct iommu_domain *domain,
+> +			    struct iommu_group *group, struct device
+> *dev) +{
+> +	mutex_lock(&group->mutex);
+> +
+> +	if (WARN_ON(!group->aux_domain_attached || group->domain !=
+> domain))
+> +		goto out_unlock;
+> +
+> +	iommu_aux_detach_device(domain, dev);
+> +	group->aux_domain_attached = false;
+> +	group->domain = NULL;
+> +
+> +out_unlock:
+> +	mutex_unlock(&group->mutex);
+> +}
+> +EXPORT_SYMBOL_GPL(iommu_aux_detach_group);
+> +
+>  /**
+>   * iommu_sva_bind_device() - Bind a process address space to a device
+>   * @dev: the device
+> diff --git a/include/linux/iommu.h b/include/linux/iommu.h
+> index 5657d4fef9f2..9506551139ab 100644
+> --- a/include/linux/iommu.h
+> +++ b/include/linux/iommu.h
+> @@ -635,6 +635,10 @@ bool iommu_dev_feature_enabled(struct device
+> *dev, enum iommu_dev_features f); int iommu_aux_attach_device(struct
+> iommu_domain *domain, struct device *dev); void
+> iommu_aux_detach_device(struct iommu_domain *domain, struct device
+> *dev); int iommu_aux_get_pasid(struct iommu_domain *domain, struct
+> device *dev); +int iommu_aux_attach_group(struct iommu_domain *domain,
+> +			   struct iommu_group *group, struct device
+> *dev); +void iommu_aux_detach_group(struct iommu_domain *domain,
+> +			   struct iommu_group *group, struct device
+> *dev); 
+>  struct iommu_sva *iommu_sva_bind_device(struct device *dev,
+>  					struct mm_struct *mm,
+> @@ -1023,6 +1027,19 @@ iommu_aux_get_pasid(struct iommu_domain
+> *domain, struct device *dev) return -ENODEV;
+>  }
+>  
+> +static inline int
+> +iommu_aux_attach_group(struct iommu_domain *domain,
+> +		       struct iommu_group *group, struct device *dev)
+> +{
+> +	return -ENODEV;
+> +}
+> +
+> +static inline void
+> +iommu_aux_detach_group(struct iommu_domain *domain,
+> +		       struct iommu_group *group, struct device *dev)
+> +{
+> +}
+> +
+>  static inline struct iommu_sva *
+>  iommu_sva_bind_device(struct device *dev, struct mm_struct *mm, void
+> *drvdata) {
 
-Thanks,
-
-Junxiao.
-
->
-> Thanks,
-> Song
+[Jacob Pan]
