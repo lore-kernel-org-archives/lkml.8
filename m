@@ -2,54 +2,57 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15C42C433E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:51:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9972C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:46:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EC304223B0
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:51:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8949622AAD
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:46:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594752707;
-	bh=kTY2Fjn4gqXaQmk4478iYSdk+A5ULQRdbyTB/5xmTzo=;
+	s=default; t=1594752417;
+	bh=pK5WNn3f2XN+wqZ3aeM424pECkD6yi7cilRcgztjNcc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PJ063fN8UhIvS5Vc3hkqv9TUSMQBldbWZuNAdORj1Lf5/Z7SJUYzqlQnC5pIgBdSE
-	 pU3ermXi28VUp43A6xCjUfX3TRAVlsBUPtYjPwrLt3KomWWSXZv5LVqSFmdy50cjpo
-	 KN/eLqXizlkKc41FpgTDIO8qO85KAqmqvbV6unD0=
+	b=mFvqP7nQnnJ/paLhvVp+yuSxnRQjtYZnBmoutMnq8NSw2IsFnGj22rmxS7aGD8hKc
+	 vWkldEM+wK+8eJiCUglE3WQXBdLWsj/lase6rSYi37yFYKNJuESuOw6kcgpVLBTuy+
+	 FUzTznISJxhHOIShL3DSpDSwJMaR/yw0wlF/p+/o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730429AbgGNSvp (ORCPT
+        id S1729632AbgGNSq4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 14:51:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48238 "EHLO mail.kernel.org"
+        Tue, 14 Jul 2020 14:46:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41766 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729986AbgGNSvn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 14:51:43 -0400
+        id S1729598AbgGNSqy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 14:46:54 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0201122B2A;
-        Tue, 14 Jul 2020 18:51:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5B66522AAD;
+        Tue, 14 Jul 2020 18:46:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594752702;
-        bh=kTY2Fjn4gqXaQmk4478iYSdk+A5ULQRdbyTB/5xmTzo=;
+        s=default; t=1594752413;
+        bh=pK5WNn3f2XN+wqZ3aeM424pECkD6yi7cilRcgztjNcc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=o9sxlssVWti3vjFqBFIMLCfV/JepOOFUZ4wH7EIjXfw5EyetujGrH/2hMh5fwKIIT
-         aFnZICgy5bbvJB4al7ckHPT/cwFAaR1mG3LDpg8oO0r7Cpyxva5yVe/0Ox+LibVoDS
-         5OZlLOb3S3sSXiBn0YmPDNKHrbTyMSoRCTlukTok=
+        b=BptdoYTaHjjTTUaKNgtuuPh+U85Kv/j3Ra4A6TkoFsXrhmNtFyo08go2sMoA5bWhL
+         QJeQfnnuw9ZSbem8YsScQ2XMEaEKKkPioZCIqbfobHCX8g92lObS4cO0UtVASRjgqQ
+         1Yuy50Uk6vZizKDkrvNL6gKFelOXXWFLOpen/2Qk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Pablo Neira Ayuso <pablo@netfilter.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 047/109] netfilter: conntrack: refetch conntrack after nf_conntrack_update()
-Date:   Tue, 14 Jul 2020 20:43:50 +0200
-Message-Id: <20200714184107.774838090@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        syzbot+b8fe393f999a291a9ea6@syzkaller.appspotmail.com,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.19 25/58] net: qrtr: Fix an out of bounds read qrtr_endpoint_post()
+Date:   Tue, 14 Jul 2020 20:43:58 +0200
+Message-Id: <20200714184057.392937689@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200714184105.507384017@linuxfoundation.org>
-References: <20200714184105.507384017@linuxfoundation.org>
+In-Reply-To: <20200714184056.149119318@linuxfoundation.org>
+References: <20200714184056.149119318@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -59,55 +62,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pablo Neira Ayuso <pablo@netfilter.org>
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-[ Upstream commit d005fbb855d3b5660d62ee5a6bd2d99c13ff8cf3 ]
+commit 8ff41cc21714704ef0158a546c3c4d07fae2c952 upstream.
 
-__nf_conntrack_update() might refresh the conntrack object that is
-attached to the skbuff. Otherwise, this triggers UAF.
+This code assumes that the user passed in enough data for a
+qrtr_hdr_v1 or qrtr_hdr_v2 struct, but it's not necessarily true.  If
+the buffer is too small then it will read beyond the end.
 
-[  633.200434] ==================================================================
-[  633.200472] BUG: KASAN: use-after-free in nf_conntrack_update+0x34e/0x770 [nf_conntrack]
-[  633.200478] Read of size 1 at addr ffff888370804c00 by task nfqnl_test/6769
+Reported-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Reported-by: syzbot+b8fe393f999a291a9ea6@syzkaller.appspotmail.com
+Fixes: 194ccc88297a ("net: qrtr: Support decoding incoming v2 packets")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-[  633.200487] CPU: 1 PID: 6769 Comm: nfqnl_test Not tainted 5.8.0-rc2+ #388
-[  633.200490] Hardware name: LENOVO 23259H1/23259H1, BIOS G2ET32WW (1.12 ) 05/30/2012
-[  633.200491] Call Trace:
-[  633.200499]  dump_stack+0x7c/0xb0
-[  633.200526]  ? nf_conntrack_update+0x34e/0x770 [nf_conntrack]
-[  633.200532]  print_address_description.constprop.6+0x1a/0x200
-[  633.200539]  ? _raw_write_lock_irqsave+0xc0/0xc0
-[  633.200568]  ? nf_conntrack_update+0x34e/0x770 [nf_conntrack]
-[  633.200594]  ? nf_conntrack_update+0x34e/0x770 [nf_conntrack]
-[  633.200598]  kasan_report.cold.9+0x1f/0x42
-[  633.200604]  ? call_rcu+0x2c0/0x390
-[  633.200633]  ? nf_conntrack_update+0x34e/0x770 [nf_conntrack]
-[  633.200659]  nf_conntrack_update+0x34e/0x770 [nf_conntrack]
-[  633.200687]  ? nf_conntrack_find_get+0x30/0x30 [nf_conntrack]
-
-Closes: https://bugzilla.netfilter.org/show_bug.cgi?id=1436
-Fixes: ee04805ff54a ("netfilter: conntrack: make conntrack userspace helpers work again")
-Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/netfilter/nf_conntrack_core.c | 2 ++
- 1 file changed, 2 insertions(+)
+ net/qrtr/qrtr.c |    6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/net/netfilter/nf_conntrack_core.c b/net/netfilter/nf_conntrack_core.c
-index 48db4aec02dea..200cdad3ff3ab 100644
---- a/net/netfilter/nf_conntrack_core.c
-+++ b/net/netfilter/nf_conntrack_core.c
-@@ -2012,6 +2012,8 @@ static int nf_conntrack_update(struct net *net, struct sk_buff *skb)
- 		err = __nf_conntrack_update(net, skb, ct, ctinfo);
- 		if (err < 0)
- 			return err;
-+
-+		ct = nf_ct_get(skb, &ctinfo);
- 	}
+--- a/net/qrtr/qrtr.c
++++ b/net/qrtr/qrtr.c
+@@ -266,7 +266,7 @@ int qrtr_endpoint_post(struct qrtr_endpo
+ 	unsigned int ver;
+ 	size_t hdrlen;
  
- 	return nf_confirm_cthelper(skb, ct, ctinfo);
--- 
-2.25.1
-
+-	if (len & 3)
++	if (len == 0 || len & 3)
+ 		return -EINVAL;
+ 
+ 	skb = netdev_alloc_skb(NULL, len);
+@@ -280,6 +280,8 @@ int qrtr_endpoint_post(struct qrtr_endpo
+ 
+ 	switch (ver) {
+ 	case QRTR_PROTO_VER_1:
++		if (len < sizeof(*v1))
++			goto err;
+ 		v1 = data;
+ 		hdrlen = sizeof(*v1);
+ 
+@@ -293,6 +295,8 @@ int qrtr_endpoint_post(struct qrtr_endpo
+ 		size = le32_to_cpu(v1->size);
+ 		break;
+ 	case QRTR_PROTO_VER_2:
++		if (len < sizeof(*v2))
++			goto err;
+ 		v2 = data;
+ 		hdrlen = sizeof(*v2) + v2->optlen;
+ 
 
 
