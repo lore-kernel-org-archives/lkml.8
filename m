@@ -2,104 +2,76 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D3C0C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 14:10:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10536C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 14:10:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5FBF9207FB
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 14:10:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="CRfzDXhA"
+	by mail.kernel.org (Postfix) with ESMTP id E6A2F22515
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 14:10:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726844AbgGNOKU (ORCPT
+        id S1727876AbgGNOKm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 10:10:20 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:52066 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725781AbgGNOKT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 10:10:19 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06EE2tFA063176;
-        Tue, 14 Jul 2020 14:10:15 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
- from : message-id : references : date : in-reply-to : mime-version :
- content-type; s=corp-2020-01-29;
- bh=TzjPuar5m/sU1Kxr0G5mH0KefF/L9/miLnhjaaNayYU=;
- b=CRfzDXhAhkA9dduDfnebqN8nemG7DrdZRi+CNJGu+oXj7buHlq/qoxE7iHMaXZWl9oMC
- 2b060n5j+yAFiQ/vxDtioHdnYxDr7A98O63b9Qj9aKT8UGMu3wmEvfpyFN7y9MAPjsfs
- zRu3E2xDaci9406P3qUWUBMW3FYBDZTstuSojeGaFE4tXrfMMkE+Qac7tEGhjz3lCfw7
- RD9F2TyVqbMAqK1jTUrCDJVomoYlG5iSNcaS2WlBA1hXVpHhdCbGPCAVEFpBMwr3qMkf
- 8KGXzeegOi4u2vvy1otqyO+Pi3M++ASrKRxjqNkcbhyI8s9HHl6bCL4RPGVMqgm8y/Ce RA== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by aserp2120.oracle.com with ESMTP id 3275cm5jey-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 14 Jul 2020 14:10:15 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06EE7Zpo012005;
-        Tue, 14 Jul 2020 14:08:15 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by aserp3020.oracle.com with ESMTP id 327qb469yy-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 14 Jul 2020 14:08:13 +0000
-Received: from abhmp0003.oracle.com (abhmp0003.oracle.com [141.146.116.9])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 06EE8BCe013273;
-        Tue, 14 Jul 2020 14:08:11 GMT
-Received: from ca-mkp.ca.oracle.com (/10.159.214.123)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 14 Jul 2020 07:08:10 -0700
-To:     Lee Jones <lee.jones@linaro.org>
-Cc:     jejb@linux.ibm.com, martin.petersen@oracle.com,
-        linux-kernel@vger.kernel.org, linux-scsi@vger.kernel.org,
-        Hannes Reinecke <hare@suse.de>
-Subject: Re: [PATCH v2 05/29] scsi: fcoe: fcoe_ctlr: Fix a myriad of
- documentation issues
-From:   "Martin K. Petersen" <martin.petersen@oracle.com>
-Organization: Oracle Corporation
-Message-ID: <yq1lfjmqji1.fsf@ca-mkp.ca.oracle.com>
-References: <20200713074645.126138-1-lee.jones@linaro.org>
-        <20200713074645.126138-6-lee.jones@linaro.org>
-Date:   Tue, 14 Jul 2020 10:08:08 -0400
-In-Reply-To: <20200713074645.126138-6-lee.jones@linaro.org> (Lee Jones's
-        message of "Mon, 13 Jul 2020 08:46:21 +0100")
+        Tue, 14 Jul 2020 10:10:42 -0400
+Received: from mx2.suse.de ([195.135.220.15]:57518 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725781AbgGNOKm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 10:10:42 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id E7E22B04F;
+        Tue, 14 Jul 2020 14:10:42 +0000 (UTC)
+Received: by ds.suse.cz (Postfix, from userid 10065)
+        id 2B1DADA790; Tue, 14 Jul 2020 16:10:18 +0200 (CEST)
+Date:   Tue, 14 Jul 2020 16:10:17 +0200
+From:   David Sterba <dsterba@suse.cz>
+To:     trix@redhat.com
+Cc:     clm@fb.com, josef@toxicpanda.com, dsterba@suse.com,
+        linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] btrfs : fix memory leak in add_block_entry
+Message-ID: <20200714141017.GQ3703@twin.jikos.cz>
+Reply-To: dsterba@suse.cz
+Mail-Followup-To: dsterba@suse.cz, trix@redhat.com, clm@fb.com,
+        josef@toxicpanda.com, dsterba@suse.com, linux-btrfs@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20200707132908.10987-1-trix@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9681 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 malwarescore=0
- mlxscore=0 spamscore=0 phishscore=0 suspectscore=5 bulkscore=0
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2007140109
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9681 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=5 priorityscore=1501
- bulkscore=0 adultscore=0 lowpriorityscore=0 phishscore=0 spamscore=0
- impostorscore=0 malwarescore=0 mlxlogscore=999 clxscore=1015 mlxscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2007140108
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200707132908.10987-1-trix@redhat.com>
+User-Agent: Mutt/1.5.23.1-rc1 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Jul 07, 2020 at 06:29:08AM -0700, trix@redhat.com wrote:
+> From: Tom Rix <trix@redhat.com>
+> 
+> clang static analysis flags this error
+> 
+> fs/btrfs/ref-verify.c:290:3: warning: Potential leak of memory pointed to by 're' [unix.Malloc]
+>                 kfree(be);
+>                 ^~~~~
+> The problem is in this block of code
+> 
+> 		if (root_objectid) {
+> 			struct root_entry *exist_re;
+> 
+> 			exist_re = insert_root_entry(&exist->roots, re);
+> 			if (exist_re)
+> 				kfree(re);
+> 		}
+> 
+> There is no 'else' block freeing when root_objectid == 0
+> 
+> So add an 'else'
+> 
+> Fixes: fd708b81d972 ("Btrfs: add a extent ref verify tool")
+> 
+> Signed-off-by: Tom Rix <trix@redhat.com>
 
-Lee,
-
-> @@ -3015,9 +3016,8 @@ static void fcoe_ctlr_disc_recv(struct fc_lport *lport, struct fc_frame *fp)
->  	fc_frame_free(fp);
->  }
->  
-> -/**
-> +/*
->   * fcoe_ctlr_disc_recv - start discovery for VN2VN mode.
-> - * @fip: The FCoE controller
->   *
->   * This sets a flag indicating that remote ports should be created
->   * and started for the peers we discover.  We use the disc_callback
-
-s/fcoe_ctlr_disc_recv/fcoe_ctlr_disc_start/ ?
-
--- 
-Martin K. Petersen	Oracle Linux Engineering
+Added to misc-next, thanks.
