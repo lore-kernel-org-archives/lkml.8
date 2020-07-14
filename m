@@ -2,117 +2,163 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DCF0EC433E2
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 11:56:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0D84C433E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 11:59:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B844922225
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 11:56:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="c9yk2vPj"
+	by mail.kernel.org (Postfix) with ESMTP id A6D1822227
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 11:59:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728099AbgGNL4K (ORCPT
+        id S1727839AbgGNL7Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 07:56:10 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:29925 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728087AbgGNL4J (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 07:56:09 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1594727768;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=ykcZBNksAR9Za8nLz+KVj+UU2/4kb9H0fHJr+dQVzzs=;
-        b=c9yk2vPj410HFFCStjwJ7jZmPsBcK2ffU1Yg6FDFeG/TWbCdZumnRgIbsUy7gGwofTfe2l
-        tJNikpfVhTXDCQEzM0afSFkDKMSmmlBY6cREY8OOStbHLqGDQHaTKm/k4tXHbtfPrMTMlW
-        zLfdPbMFwWR4f5zd/5vBwuMs2FjSFqc=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-407-Odd-OnzdOimKF9ZZRcmQPA-1; Tue, 14 Jul 2020 07:56:06 -0400
-X-MC-Unique: Odd-OnzdOimKF9ZZRcmQPA-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 7A5E08014D7;
-        Tue, 14 Jul 2020 11:56:04 +0000 (UTC)
-Received: from gondolin (ovpn-112-240.ams2.redhat.com [10.36.112.240])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 717F260CD0;
-        Tue, 14 Jul 2020 11:55:58 +0000 (UTC)
-Date:   Tue, 14 Jul 2020 13:55:55 +0200
-From:   Cornelia Huck <cohuck@redhat.com>
-To:     Pierre Morel <pmorel@linux.ibm.com>
-Cc:     linux-kernel@vger.kernel.org, pasic@linux.ibm.com,
-        borntraeger@de.ibm.com, frankja@linux.ibm.com, mst@redhat.com,
-        jasowang@redhat.com, kvm@vger.kernel.org,
-        linux-s390@vger.kernel.org,
-        virtualization@lists.linux-foundation.org, thomas.lendacky@amd.com,
-        david@gibson.dropbear.id.au, linuxram@us.ibm.com,
-        hca@linux.ibm.com, gor@linux.ibm.com
-Subject: Re: [PATCH v6 2/2] s390: virtio: PV needs VIRTIO I/O device
- protection
-Message-ID: <20200714135555.2148fb83.cohuck@redhat.com>
-In-Reply-To: <1594726682-12076-3-git-send-email-pmorel@linux.ibm.com>
-References: <1594726682-12076-1-git-send-email-pmorel@linux.ibm.com>
-        <1594726682-12076-3-git-send-email-pmorel@linux.ibm.com>
-Organization: Red Hat GmbH
+        Tue, 14 Jul 2020 07:59:25 -0400
+Received: from mx2.suse.de ([195.135.220.15]:50290 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726041AbgGNL7Y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 07:59:24 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id 710A2B013;
+        Tue, 14 Jul 2020 11:59:25 +0000 (UTC)
+Message-ID: <ed42e27eaf48fd19cc8ccccd15b0b25ba1d836ae.camel@suse.de>
+Subject: Re: [PATCH v3 1/9] dt-bindings: reset: Add a binding for the RPi
+ Firmware reset controller
+From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+To:     Rob Herring <robh@kernel.org>
+Cc:     f.fainelli@gmail.com, gregkh@linuxfoundation.org, wahrenst@gmx.net,
+        p.zabel@pengutronix.de, linux-kernel@vger.kernel.org,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        bcm-kernel-feedback-list@broadcom.com,
+        Eric Anholt <eric@anholt.net>, linux-usb@vger.kernel.org,
+        linux-rpi-kernel@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, tim.gover@raspberrypi.org,
+        linux-pci@vger.kernel.org, helgaas@kernel.org,
+        andy.shevchenko@gmail.com, mathias.nyman@linux.intel.com,
+        lorenzo.pieralisi@arm.com, devicetree@vger.kernel.org
+Date:   Tue, 14 Jul 2020 13:59:21 +0200
+In-Reply-To: <20200713182356.GA413630@bogus>
+References: <20200612171334.26385-1-nsaenzjulienne@suse.de>
+         <20200612171334.26385-2-nsaenzjulienne@suse.de>
+         <20200713182356.GA413630@bogus>
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-cyjjn9iMFbQ+NRASHXx8"
+User-Agent: Evolution 3.36.4 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 14 Jul 2020 13:38:02 +0200
-Pierre Morel <pmorel@linux.ibm.com> wrote:
 
-> If protected virtualization is active on s390, the virtio queues are
-> not accessible to the host, unless VIRTIO_F_IOMMU_PLATFORM has been
-> negotiated. Use the new arch_validate_virtio_features() interface to
-> fail probe if that's not the case, preventing a host error on access
-> attempt.
-> 
-> Signed-off-by: Pierre Morel <pmorel@linux.ibm.com>
-> Reviewed-by: Cornelia Huck <cohuck@redhat.com>
-> Acked-by: Halil Pasic <pasic@linux.ibm.com>
-> ---
->  arch/s390/mm/init.c | 28 ++++++++++++++++++++++++++++
->  1 file changed, 28 insertions(+)
+--=-cyjjn9iMFbQ+NRASHXx8
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-(...)
+On Mon, 2020-07-13 at 12:23 -0600, Rob Herring wrote:
+> On Fri, Jun 12, 2020 at 07:13:25PM +0200, Nicolas Saenz Julienne wrote:
+> > The firmware running on the RPi VideoCore can be used to reset and
+> > initialize HW controlled by the firmware.
+> >=20
+> > Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+> > Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
+> >=20
+> > ---
+> > Changes since v2:
+> >  - Add include file for reset IDs
+> >=20
+> > Changes since v1:
+> >  - Correct cells binding as per Florian's comment
+> >  - Change compatible string to be more generic
+> >=20
+> >  .../arm/bcm/raspberrypi,bcm2835-firmware.yaml | 21 +++++++++++++++++++
+> >  .../reset/raspberrypi,firmware-reset.h        | 13 ++++++++++++
+> >  2 files changed, 34 insertions(+)
+> >  create mode 100644 include/dt-bindings/reset/raspberrypi,firmware-rese=
+t.h
+> >=20
+> > diff --git a/Documentation/devicetree/bindings/arm/bcm/raspberrypi,bcm2=
+835-
+> > firmware.yaml
+> > b/Documentation/devicetree/bindings/arm/bcm/raspberrypi,bcm2835-
+> > firmware.yaml
+> > index b48ed875eb8e..23a885af3a28 100644
+> > --- a/Documentation/devicetree/bindings/arm/bcm/raspberrypi,bcm2835-
+> > firmware.yaml
+> > +++ b/Documentation/devicetree/bindings/arm/bcm/raspberrypi,bcm2835-
+> > firmware.yaml
+> > @@ -39,6 +39,22 @@ properties:
+> >        - compatible
+> >        - "#clock-cells"
+> > =20
+> > +  reset:
+>=20
+> I'm not really thrilled how this is evolving with a node per provider.=
+=20
+> There's no reason you can't just add #clock-cells and #reset-cells to=20
+> the parent firmware node.
 
-> +int arch_validate_virtio_features(struct virtio_device *dev)
-> +{
-> +	if (!is_prot_virt_guest())
-> +		return 0;
-> +
-> +	if (!virtio_has_feature(dev, VIRTIO_F_VERSION_1)) {
-> +		dev_warn(&dev->dev,
-> +			 "legacy virtio not supported with protected virtualizatio\n");
+What are the downsides? The way I see it there is not much difference. And =
+this
+way of handling things is feels more intuitive and flexible (overlays can
+control what to enable easily, we can take advantage of the platform device
+core).
 
-typo: s/virtualizatio/virtualization/
+> I probably should have complained with the clocks node, but that's only=
+=20
+> pending for 5.9.
 
-> +		return -ENODEV;
-> +	}
-> +
-> +	if (!virtio_has_feature(dev, VIRTIO_F_IOMMU_PLATFORM)) {
-> +		dev_warn(&dev->dev,
-> +			 "support for limited memory access required for protected virtualization\n");
-> +		return -ENODEV;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
->  /* protected virtualization */
->  static void pv_init(void)
->  {
+Note that there are more users for this pattern: "raspberrypi,firmware-ts" =
+and
+"raspberrypi,firmware-gpio". Actually you were the one to originally propos=
+e
+this it[1]. :P
+
+There already is a fair amount of churn in these drivers because of all the=
+ DT
+changes we did in the past, and if we need to change how we integrate these
+again, I'd really like it to be for good.
+
+> The bigger issue is this stuff is just trickling in one bit at a time=20
+> which gives no context for review. What's next? Is it really a mystery=
+=20
+> as to what functions the firmware provides?
+
+We have no control over it, RPi engineers integrate new designs and new
+firmware interfaces show up. This is a good example of it.
+
+I proposed them to use SCMI as it covers most of what they are already
+providing here. But no luck so far.
+
+> You don't have to have a driver in place for every function.
+
+I see your point, it could be more monolithic, that said, having a driver i=
+s
+essential. See the reverts I managed to pull off at the end of the series.
+
+[1] https://patchwork.kernel.org/patch/10166783/#21421571
+
+
+--=-cyjjn9iMFbQ+NRASHXx8
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl8NnhkACgkQlfZmHno8
+x/7gMAf/WpgWrzZn8OWvm5HWyZhbLlpudApJFqIMveDTldhi/2C/3fqEMLewG6PW
+XjENuKydy6YXzpsn4CMxU8M2ELLf8hBU6rN0om2oW9IcQuxbNCT/DLQjjXxkzLkk
+HBZnE4AomVfl9BgNPVHtwodK1tmCuNLSxLggfnCmkgAB5/6mV3/1VhKUEe4AmTba
+/r7ZMNhJJHDdOc5BqCtPLj2MxwNzaFLhEgxR9TmYQuzX66BFJwggq/If8088Ektx
+pk1jTsE+mkRsOUq2Pdu2kl6WQM0mxOyPefDgJDQwry/YePCuVj1JOVeCnKvKgbF5
+JGPa7jelAE3azkvNQOBKXW1HiBYgsQ==
+=tEOc
+-----END PGP SIGNATURE-----
+
+--=-cyjjn9iMFbQ+NRASHXx8--
 
