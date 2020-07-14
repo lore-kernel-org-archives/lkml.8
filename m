@@ -2,111 +2,116 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.5 required=3.0 tests=BAYES_00,
+X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CBD73C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 19:43:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 580EBC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 19:41:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A87D322B4B
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 19:43:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2F14B224F4
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 19:41:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JghOR3/w"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729861AbgGNTn4 convert rfc822-to-8bit (ORCPT
+        id S1730085AbgGNTlT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 15:43:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51166 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729329AbgGNTnz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 15:43:55 -0400
-Received: from oasis.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 337C022B4D;
-        Tue, 14 Jul 2020 19:43:54 +0000 (UTC)
-Date:   Tue, 14 Jul 2020 15:43:52 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Pavel Machek <pavel@denx.de>
-Cc:     Tom Zanussi <zanussi@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-rt-users <linux-rt-users@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Carsten Emde <C.Emde@osadl.org>,
-        John Kacur <jkacur@redhat.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Daniel Wagner <wagi@monom.org>,
-        Clark Williams <williams@redhat.com>,
-        Kate Stewart <kstewart@linuxfoundation.org>
-Subject: Re: [ANNOUNCE] 4.19.132-rt59
-Message-ID: <20200714154352.04794760@oasis.local.home>
-In-Reply-To: <20200714183512.GA18816@duo.ucw.cz>
-References: <82932b48972f38fccf9920e2ec75b555c2b2494a.camel@kernel.org>
-        <20200714183512.GA18816@duo.ucw.cz>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Tue, 14 Jul 2020 15:41:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46960 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729465AbgGNTlT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 15:41:19 -0400
+Received: from mail-io1-xd42.google.com (mail-io1-xd42.google.com [IPv6:2607:f8b0:4864:20::d42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2046DC061755
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 12:41:19 -0700 (PDT)
+Received: by mail-io1-xd42.google.com with SMTP id a12so18541544ion.13
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 12:41:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:from:date:message-id:subject:to:cc;
+        bh=Yfl627IA+B/fjGximssA/R316mc2EfYtR5UACcyTqEU=;
+        b=JghOR3/w/t7Bad3EVRgQFuuTNrxpveb/+pmXcmvRpr8kT3VdS32gz4oS09pbARW9Um
+         mHfVM72pqiTz+45kDF631HpsK0xRi4Xx2fK3udA1l6TWZ+lznhGgzu6zP2x0Z7oSMgZW
+         y9TYbgPVf4sZ3qrb7BaioB7FbUO73nUsGKGqcxAXuvdf2pEryou31b6sNt+Yh/fiHFbk
+         2Mkm6BzFMouPZ0ML54FG1ZxtVydZrETj0xnFK9L2S9F24ILZrHy2PGt7c1MmrS7nqUkd
+         apbUxVSu+mEhD5qpWQxugtFUR3oM6cFtP64o3f40pgP99eajZSBJygzlAKTQTpvvmS4e
+         0Nhw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
+        bh=Yfl627IA+B/fjGximssA/R316mc2EfYtR5UACcyTqEU=;
+        b=lmKr6Iz+ofGyn2slcj4ILW5HhKBflci/fXrshWifHQmvz6+98MqZ+BKayY38wRhGxb
+         dvT/Qtr5lpec2DGpqI0az19LV3Fo+FG4BvmQ6XSv8iELg2lr0oT7WqCzsiCEDgfm0gFP
+         xo2MRv7k3In6IUzK2XbY56PlnBohi5VuffCzpPAWA24ouCJDeBkbHHv4KBpdM3c0ye+R
+         qhwjUhuyDQNuhG+2+cYDQXa3lVEX3VeHtweFSR81dWUGzaNGyhvpfEyLbSrT5uq/wUMT
+         qE/q6CTMZfhyphA9XP8kpDzbVE8yzXHC+w799i/kC6FAighPK3enN9Tie2pHuFp0vY2x
+         9xBA==
+X-Gm-Message-State: AOAM532svSosEaLaDWk31ma5nifotM2Hn10b+h8H1pdrHNkGaAYKrepk
+        mtoDDLSWKOfRObY6Lhhn9APYLuilf68LB1dI7io=
+X-Google-Smtp-Source: ABdhPJzDor833Vb6WahOOibHeQiKHiz9rWxuyRputJFLDlfl9uZc37yxhD6huWFISbKt5Knd+/DlitnTLUK68G8OADM=
+X-Received: by 2002:a05:6602:1555:: with SMTP id h21mr6451215iow.163.1594755678534;
+ Tue, 14 Jul 2020 12:41:18 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+From:   Bernd Amend <bernd.amend@gmail.com>
+Date:   Tue, 14 Jul 2020 21:41:07 +0200
+Message-ID: <CAF31+H5ZB7zn73obrc5svLzgfsTnyYe5TKvr7-6atUOqrRY+2w@mail.gmail.com>
+Subject: Regression: squashfs issues since change "squashfs: migrate from
+ ll_rw_block usage to BIO"
+To:     phillip@squashfs.org.uk, akpm@linux-foundation.org
+Cc:     linux-kernel@vger.kernel.org, Bernd Amend <bernd.amend@gmail.com>,
+        Stefan Rommel <stefanrommel@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 14 Jul 2020 20:35:12 +0200
-Pavel Machek <pavel@denx.de> wrote:
+Hi,
 
-> Hi!
-> 
-> > 
-> > I'm pleased to announce the 4.19.132-rt59 stable release.
-> > 
-> > This release is just an update to the new stable 4.19.132
-> > version and no RT specific changes have been made.
-> > 
-> > You can get this release via the git tree at:
-> > 
-> >   git://git.kernel.org/pub/scm/linux/kernel/git/rt/linux-stable-rt.git
-> > 
-> >   branch: v4.19-rt
-> >   Head SHA1: 1eebf4069aa37e54330cce9a42608517ea6996fe
-> > 
-> > Or to build 4.19.132-rt59 directly, the following patches should be
-> > applied:  
-> 
-> Thanks a lot.
-> 
-> But now I am confused, I completely missed announcements for
-> v4.19.127-rt55 to v4.19.131-rt58.
-> 
-> And for example -rt56 is not listed in
-> 
-> https://mirrors.edge.kernel.org/pub/linux/kernel/projects/rt/4.19/older/sha256sums.asc
-> 
-> ...aha, and the versions do not have signed tags, either:
-> 
-> pavel@amd:~/cip/k$ git show v4.19.131-rt58
-> fatal: ambiguous argument 'v4.19.131-rt58': unknown revision or path not in the working tree.
-> 
-> Is that because they were created just as quick steps towards -rt59?
->
+With the Linux Kernel version 5.8-rc5/master I am unable to mount some
+squashfs filesystems compressed with "-comp lz4".
+If I try to mount them I get the following error:
+[    1.084246] SQUASHFS error: lz4 decompression failed, data probably corrupt
+[    1.084545] SQUASHFS error: Failed to read block 0x873e1001: -5
+[    1.084761] SQUASHFS error: Unable to read metadata cache entry [873e0fff]
+[    1.084983] SQUASHFS error: Unable to read directory block [873e0fff:1586]
+[    1.122564] SQUASHFS error: Unable to read metadata cache entry [873e0fff]
+[    1.122708] SQUASHFS error: Unable to read directory block [873e0fff:1586]
+[    1.122862] Starting init: /sbin/init exists but couldn't execute
+it (error -5)
+[    1.123027] SQUASHFS error: Unable to read metadata cache entry [873e0fff]
+[    1.123152] SQUASHFS error: Unable to read directory block [873e0fff:1586]
+[    1.123279] Starting init: /etc/init exists but couldn't execute it
+(error -5)
+[    1.123444] SQUASHFS error: Unable to read metadata cache entry [873e0fff]
+[    1.123573] SQUASHFS error: Unable to read directory block [873e0fff:1586]
+[    1.123713] Starting init: /bin/init exists but couldn't execute it
+(error -5)
+[    1.123900] SQUASHFS error: Unable to read metadata cache entry [873e0fff]
 
-Ah, I was about to say this is something that Kate keeps reminding me
-to add to the wiki, but looking, I already did!
+or
 
-https://wiki.linuxfoundation.org/realtime/documentation/start
+[ 4960.910693] attempt to access beyond end of device
+[ 4960.910695] loop0: rw=2048, want=46, limit=40
+[ 4960.910696] SQUASHFS error: Failed to read block 0x4001: -5
+[ 4960.910697] SQUASHFS error: Unable to read metadata cache entry [3fff]
+[ 4960.910698] SQUASHFS error: Unable to read inode 0x20c5000c
 
-"Tagging policy of the PREEMPT_RT stable releases. Each PREEMPT_RT
-stable release is tagged with the version number of the upstream Linux
-stable kernel as well as its own “-rt” counter that is appended. The
--rt counter will increment for the following:
+I bisected the issue to the commit "squashfs: migrate from ll_rw_block
+usage to BIO"
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/fs/squashfs?id=93e72b3c612adcaca13d874fcc86c53e6c8da541
 
- - When forward ported to the latest upstream Linux stable version.
- - When any merge with a upstream Linux stable causes a conflict.
- - When a backport of the PREEMPT_RT development branch is done.
+The issue can be reproduced by downloading
+https://theworldsend.eu/demo.squashfs (20K) and the following command
+line.
+# mount demo.squashfs mnt && ls mnt && umount mnt
 
-A backport will not be done with a forward port of a stable version.
-They will be done separately, and tagged separately."
+The same squashfs can be mounted using Linux <=5.7.8.
+The kernel config is identical to the Arch Linux Kernel configuration,
+build using gcc 9 and 10 on x86_64.
 
-Tom, I sign all tags, we probably should be consistent with that too.
-
--- Steve
+Best regards,
+Bernd Amend
