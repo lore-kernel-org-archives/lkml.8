@@ -2,120 +2,122 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DA6CC433E2
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 08:09:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B8A7C433EB
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 08:10:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 04DB721582
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 08:09:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 81D7921582
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 08:10:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726619AbgGNIJj (ORCPT
+        id S1726794AbgGNIKG convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 04:09:39 -0400
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:36962 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725793AbgGNIJi (ORCPT
+        Tue, 14 Jul 2020 04:10:06 -0400
+Received: from eu-smtp-delivery-151.mimecast.com ([185.58.86.151]:21644 "EHLO
+        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726354AbgGNIKF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 04:09:38 -0400
-Received: by mail-oi1-f194.google.com with SMTP id 12so13268749oir.4;
-        Tue, 14 Jul 2020 01:09:37 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=kQd/3+NgYL5ETBCqN/I6t615NftKK//t8YpCv8X+l+8=;
-        b=L79lDTg5z+Wr8CrXu4B47bF4ahswvDDmZ0H/Qy/qa9Fo+XQYlDPLw9aqaQLZXqLQ/2
-         BXkk5/b/9JWNo8aBf0dZ3bNGBz4QCNYoh39pOIiaOfd3ojyTvKUSv+mlF7ByXRarB0m8
-         p0IAsFE2pP+t9NzaUcaeflghIosdBFVXGqkWBwHUvJ+Lx0uG0zmNGOE4sjXI288H39Uh
-         nlIDJJuACYfyKEH7+Qbu/2M2dlJodA+RM0CPznBlF4DI0GnyzJ25FjpDRzQ/ztIB5iNg
-         Izob0WAA1Jw3mXmTKFcyRFd5nkxWo6o3s7QU0ChSVQsC+i0MeScSD5jVw49BJULxQXF6
-         jSfA==
-X-Gm-Message-State: AOAM532Ka1CwR5iO1M7/Vtqob7jdCvTCM6mtMQPM80OJ6rhifWZK1L+J
-        35UC956Ic405nS9CHgjg1s+levydKxXA/lvt4PY=
-X-Google-Smtp-Source: ABdhPJz7hdIV/baG1FFq5NebTyyKrvGlXKfMdm90XT59CL4jYHtqaTc+X/vLw/NAnF5ngIMw26ZC9YKmVtr4fJbw2xI=
-X-Received: by 2002:aca:ac10:: with SMTP id v16mr2565069oie.153.1594714176638;
- Tue, 14 Jul 2020 01:09:36 -0700 (PDT)
+        Tue, 14 Jul 2020 04:10:05 -0400
+Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
+ TLS) by relay.mimecast.com with ESMTP id
+ uk-mta-47-quVXGfyEOkSmpSddwNFlhw-1; Tue, 14 Jul 2020 09:10:01 +0100
+X-MC-Unique: quVXGfyEOkSmpSddwNFlhw-1
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
+ AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
+ Server (TLS) id 15.0.1347.2; Tue, 14 Jul 2020 09:10:01 +0100
+Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
+ AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
+ Tue, 14 Jul 2020 09:10:01 +0100
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     'Saheed Olayemi Bolarinwa' <refactormyself@gmail.com>,
+        "helgaas@kernel.org" <helgaas@kernel.org>
+CC:     "bjorn@helgaas.com" <bjorn@helgaas.com>,
+        "skhan@linuxfoundation.org" <skhan@linuxfoundation.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-kernel-mentees@lists.linuxfoundation.org" 
+        <linux-kernel-mentees@lists.linuxfoundation.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH 11/14 v3] PCI/PM: Check return value of
+ pcie_capability_read_*()
+Thread-Topic: [PATCH 11/14 v3] PCI/PM: Check return value of
+ pcie_capability_read_*()
+Thread-Index: AQHWVwhf1JBBv8jM7kKvf2XRj4wYvqkGvVFg
+Date:   Tue, 14 Jul 2020 08:10:00 +0000
+Message-ID: <80c7a253134b43289ba28a320ba99f9c@AcuMS.aculab.com>
+References: <20200710212026.27136-1-refactormyself@gmail.com>
+ <20200710212026.27136-12-refactormyself@gmail.com>
+In-Reply-To: <20200710212026.27136-12-refactormyself@gmail.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
 MIME-Version: 1.0
-References: <1594676120-5862-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <1594676120-5862-3-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-In-Reply-To: <1594676120-5862-3-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Tue, 14 Jul 2020 10:09:25 +0200
-Message-ID: <CAMuHMdV4zzrk_=-2Cmgq8=PKTeU457iveJ58gYekJ-Z8SXqaCQ@mail.gmail.com>
-Subject: Re: [PATCH 2/9] iommu/ipmmu-vmsa: Hook up R8A774E1 DT matching code
-To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Cc:     Vinod Koul <vkoul@kernel.org>, Rob Herring <robh+dt@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Sergei Shtylyov <sergei.shtylyov@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        dmaengine <dmaengine@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux IOMMU <iommu@lists.linux-foundation.org>,
-        netdev <netdev@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Prabhakar <prabhakar.csengg@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Authentication-Results: relay.mimecast.com;
+        auth=pass smtp.auth=C51A453 smtp.mailfrom=david.laight@aculab.com
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: aculab.com
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Prabhakar,
+> From: Saheed Olayemi Bolarinwa
+> Sent: 10 July 2020 22:20
+> To: helgaas@kernel.org
+> From: Bolarinwa Olayemi Saheed <refactormyself@gmail.com>
+> 
+> On failure pcie_capability_read_dword() sets it's last parameter,
+> val to 0.
+> However, with Patch 14/14, it is possible that val is set to ~0 on
+> failure. This would introduce a bug because (x & x) == (~0 & x).
+> 
+> This bug can be avoided if the return value of pcie_capability_read_dword
+> is checked to confirm success.
+> 
+> Check the return value of pcie_capability_read_dword() to ensure success.
+> 
+> Suggested-by: Bjorn Helgaas <bjorn@helgaas.com>
+> Signed-off-by: Bolarinwa Olayemi Saheed <refactormyself@gmail.com>
+> ---
+>  drivers/pci/pci.c | 52 ++++++++++++++++++++++++++++++-----------------
+>  1 file changed, 33 insertions(+), 19 deletions(-)
+> 
+> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+> index ce096272f52b..9f18ffbf7bd4 100644
+> --- a/drivers/pci/pci.c
+> +++ b/drivers/pci/pci.c
+> @@ -3207,6 +3207,7 @@ void pci_configure_ari(struct pci_dev *dev)
+>  {
+>  	u32 cap;
+>  	struct pci_dev *bridge;
+> +	int ret;
+> 
+>  	if (pcie_ari_disabled || !pci_is_pcie(dev) || dev->devfn)
+>  		return;
+> @@ -3215,8 +3216,8 @@ void pci_configure_ari(struct pci_dev *dev)
+>  	if (!bridge)
+>  		return;
+> 
+> -	pcie_capability_read_dword(bridge, PCI_EXP_DEVCAP2, &cap);
+> -	if (!(cap & PCI_EXP_DEVCAP2_ARI))
+> +	ret = pcie_capability_read_dword(bridge, PCI_EXP_DEVCAP2, &cap);
+> +	if (ret || !(cap & PCI_EXP_DEVCAP2_ARI))
+>  		return;
 
-On Mon, Jul 13, 2020 at 11:35 PM Lad Prabhakar
-<prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
-> From: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
->
-> Add support for RZ/G2H (R8A774E1) SoC IPMMUs.
->
-> Signed-off-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Why not make the function result 64bit?
+Then you can return ~0ull on failure and the capability value on success.
+Gets rid of the horrid error + return value pair.
 
-Thanks for your patch!
+	David
 
-> --- a/drivers/iommu/ipmmu-vmsa.c
-> +++ b/drivers/iommu/ipmmu-vmsa.c
-> @@ -751,6 +751,7 @@ static const struct soc_device_attribute soc_rcar_gen3[] = {
->  static const struct soc_device_attribute soc_rcar_gen3_whitelist[] = {
->         { .soc_id = "r8a774b1", },
->         { .soc_id = "r8a774c0", },
-> +       { .soc_id = "r8a774e1", },
+-
+Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
+Registration No: 1397386 (Wales)
 
-Adding an entry to soc_rcar_gen3_whitelist[] doesn't do anything, unless
-you also add the same entry to soc_rcar_gen3[].
-
->         { .soc_id = "r8a7795", .revision = "ES3.*" },
->         { .soc_id = "r8a77961", },
->         { .soc_id = "r8a77965", },
-> @@ -963,6 +964,9 @@ static const struct of_device_id ipmmu_of_ids[] = {
->         }, {
->                 .compatible = "renesas,ipmmu-r8a774c0",
->                 .data = &ipmmu_features_rcar_gen3,
-> +       }, {
-> +               .compatible = "renesas,ipmmu-r8a774e1",
-> +               .data = &ipmmu_features_rcar_gen3,
->         }, {
->                 .compatible = "renesas,ipmmu-r8a7795",
->                 .data = &ipmmu_features_rcar_gen3,
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
