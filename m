@@ -2,132 +2,166 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2D33C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 01:58:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00B0DC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 01:58:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CDAAA2186A
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 01:58:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BA7E42186A
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 01:58:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eIHVyT3a"
+	dkim=pass (1024-bit key) header.d=mitsubishielectricgroup.onmicrosoft.com header.i=@mitsubishielectricgroup.onmicrosoft.com header.b="Io0sIA30"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726769AbgGNB5t (ORCPT
+        id S1726793AbgGNB6e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 21:57:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51202 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726149AbgGNB5s (ORCPT
+        Mon, 13 Jul 2020 21:58:34 -0400
+Received: from mx05.melco.co.jp ([192.218.140.145]:52276 "EHLO
+        mx05.melco.co.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726602AbgGNB6d (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 21:57:48 -0400
-Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3B7B9C061755
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 18:57:48 -0700 (PDT)
-Received: by mail-pg1-x542.google.com with SMTP id w2so6875493pgg.10
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 18:57:48 -0700 (PDT)
+        Mon, 13 Jul 2020 21:58:33 -0400
+Received: from mr05.melco.co.jp (mr05 [133.141.98.165])
+        by mx05.melco.co.jp (Postfix) with ESMTP id D976E3A461A;
+        Tue, 14 Jul 2020 10:58:30 +0900 (JST)
+Received: from mr05.melco.co.jp (unknown [127.0.0.1])
+        by mr05.imss (Postfix) with ESMTP id 4B5Nw665qBzRjv1;
+        Tue, 14 Jul 2020 10:58:30 +0900 (JST)
+Received: from mf03_second.melco.co.jp (unknown [192.168.20.183])
+        by mr05.melco.co.jp (Postfix) with ESMTP id 4B5Nw65nTHzRjjn;
+        Tue, 14 Jul 2020 10:58:30 +0900 (JST)
+Received: from mf03.melco.co.jp (unknown [133.141.98.183])
+        by mf03_second.melco.co.jp (Postfix) with ESMTP id 4B5Nw65SFWzRjw6;
+        Tue, 14 Jul 2020 10:58:30 +0900 (JST)
+Received: from APC01-HK2-obe.outbound.protection.outlook.com (unknown [104.47.124.58])
+        by mf03.melco.co.jp (Postfix) with ESMTP id 4B5Nw63JNSzRjws;
+        Tue, 14 Jul 2020 10:58:30 +0900 (JST)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=CsOrPXkFUP/kk6eD1PoKUqo4oXdsDgwzm3RFBFePRpaWXGvpZn8JXeChy0usgUENg28TMGzZfrKaxVUpBtya4jzaoNjHhv/763i/O9U5PDHF8sBHOCvea5mNAf6eYSTW37uZ4PxeKV9199zt2rPX4DcIiQgMKDi8EcFu8Yd3XVsdqrh509gmCsqeWFRhHN7ZsUnU1QgW5LG0i0PLwBSqAYGporap7WOdehGvdTCZAjj7PwHFpBSMIYpPUNXDKHaDYbuL7yLvk4HhTaqLgNBKdtMEFxCJeMLKEr8hxtOWzRcrvsxZgUeVgzQESqXDPYNRjSQvvoODhQ/SGGkpwhgteg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=6kjDilVTmpZ1FtZslpqPbA8kRqifqSYZukp2s74RobY=;
+ b=Sy3zwnByN0Tl0P18gJwjqlDNSnmysx6nuhPzSE37h4IDhwkCTw2qrI3glPUoaggUBSWawoH96K+eJSaM3pUBk7MTOuaw5Nf54XOYsPilC4EJvTbMhZMqzvN4J9fN11A/JqDgk8bpHuACJOgHLqMXHqGGBpEPzMc0AFwE+gOTnzDBbaWGn5DtBW7tLzwGTFz+lGqiEy2MlVz6P39osZuCcyA1VPcRLN7ngi7Wrqa93gxBGa+np1VoUTA5nFgtFS1bDXlpqXVQT5XyJkF1ErGE+ibPLzcnM+Ub52vOE4Zo/4wvyd9InwcXvtPL9MZ2np7dYZ7r9Y6SfIU0GaoT+45gEQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=dc.mitsubishielectric.co.jp; dmarc=pass action=none
+ header.from=dc.mitsubishielectric.co.jp; dkim=pass
+ header.d=dc.mitsubishielectric.co.jp; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=nXOSB0ZRPuQ9A1WyrVeJbOY3UGyrJ9rRxSkxDn9MEyE=;
-        b=eIHVyT3adtlj2h9JYse58LLJWVui34c0wGDIWHBfaBpq/wDq697wU/8Enw+qHGz7Ca
-         VDXtNoGCbVzYdceUil0j3FdtRrj6ITD4AZKUm9SLSUHP9bJHKMabvueXMXR4UABfpMZB
-         kZLinypET8hCIJrfsiqtY2tl3PH+ZxMCqw7nHUylXg7hioiR75tK5KhNypydhA/zjE8l
-         Mi/0ToxeE7M1iOsLdo/FmPoxzhvbphWc74tyb6CdCH4diH3RlQrSoNUS+ZweZu8k7DUL
-         LbE2X7aFhPtjVLUgYjCOF88zbiZIve1wq4Rntr6IV4ape8zrprLI0auxDrMbgJc1Red8
-         IGcA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=nXOSB0ZRPuQ9A1WyrVeJbOY3UGyrJ9rRxSkxDn9MEyE=;
-        b=IcIDSKPrR6uG4f8rPetGYx4jbkkm8qSZMPCcKCaTAeGcfygvS3ZHYXWLh2d1wrIA+l
-         Jm9KgIThiAxi7XyaNFn3lwELWxEmESZKdSUt+tHHc0+InJXVvmMrTbZlkiXcnr9NwVSj
-         minLdN0gu2QjDvtiqmNBFudU6wAfNKoqkOYt90cbafp9mzRimJlHAzMUhEpcWaZbKw+A
-         S65BaFPAFeRVq+NQe1Ojci4PaiEk5+8A2LtpV+svrB7ngEoqVuVRRrCf8mdp87wCT/l8
-         s4jHNy3NWOXN8/yVWfIrf9ivt6ZRDIujsU7sOH5nGI5zThoqdSa1ow67yDfL8O1QlH3i
-         rOdA==
-X-Gm-Message-State: AOAM530E17Qp9gj7nhJ7rdQLcRbn1unqaasOR2dcQO2+cho2bHyHcoZ9
-        jHcnAvJMD0YH/jhAmxlojwA=
-X-Google-Smtp-Source: ABdhPJxSqYOpqSYqWpNHoiL1CUeek2IzHty8XoVDrr9WqzlnX+GW7bpH58jk1kffpPFnhJpo4Cvn2g==
-X-Received: by 2002:aa7:9906:: with SMTP id z6mr2407642pff.60.1594691867136;
-        Mon, 13 Jul 2020 18:57:47 -0700 (PDT)
-Received: from gmail.com ([2601:600:9b7f:872e:a655:30fb:7373:c762])
-        by smtp.gmail.com with ESMTPSA id y19sm16772203pfc.135.2020.07.13.18.57.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 Jul 2020 18:57:46 -0700 (PDT)
-Date:   Mon, 13 Jul 2020 18:57:43 -0700
-From:   Andrei Vagin <avagin@gmail.com>
-To:     Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Dmitry Safonov <dima@arista.com>,
-        Christian Brauner <christian.brauner@ubuntu.com>
-Subject: Re: [PATCH v5 0/6] arm64: add the time namespace support
-Message-ID: <20200714015743.GA843937@gmail.com>
-References: <20200624083321.144975-1-avagin@gmail.com>
- <20200705064055.GA28894@gmail.com>
+ d=mitsubishielectricgroup.onmicrosoft.com;
+ s=selector2-mitsubishielectricgroup-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=6kjDilVTmpZ1FtZslpqPbA8kRqifqSYZukp2s74RobY=;
+ b=Io0sIA30jAd5QLPC15xqeQEB+OOnSN04147+72DTbf5kdCKKkNNC7GWnVbVOfEetqHZCUHi+cMSau3wHe878JRPS7AHR8Yq1SbWahzTGLub3OpwLi30q1fgXawAzj26XvfDthiyS9BS5zr1JzKHE+Mjv+tBG1s13uJFXgoiw1Ro=
+Received: from TY2PR01MB2875.jpnprd01.prod.outlook.com (2603:1096:404:6b::11)
+ by TY2PR01MB4105.jpnprd01.prod.outlook.com (2603:1096:404:dc::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3174.21; Tue, 14 Jul
+ 2020 01:58:29 +0000
+Received: from TY2PR01MB2875.jpnprd01.prod.outlook.com
+ ([fe80::51f8:6ee3:3a68:20e6]) by TY2PR01MB2875.jpnprd01.prod.outlook.com
+ ([fe80::51f8:6ee3:3a68:20e6%3]) with mapi id 15.20.3174.025; Tue, 14 Jul 2020
+ 01:58:29 +0000
+From:   "Kohada.Tetsuhiro@dc.MitsubishiElectric.co.jp" 
+        <Kohada.Tetsuhiro@dc.MitsubishiElectric.co.jp>
+To:     'Namjae Jeon' <namjae.jeon@samsung.com>
+CC:     "Mori.Takahiro@ab.MitsubishiElectric.co.jp" 
+        <Mori.Takahiro@ab.MitsubishiElectric.co.jp>,
+        "Motai.Hirotaka@aj.MitsubishiElectric.co.jp" 
+        <Motai.Hirotaka@aj.MitsubishiElectric.co.jp>,
+        'Sungjong Seo' <sj1557.seo@samsung.com>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        'Tetsuhiro Kohada'' <kohada.t2@gmail.com>
+Subject: RE: [PATCH] exfat: retain 'VolumeFlags' properly
+Thread-Topic: [PATCH] exfat: retain 'VolumeFlags' properly
+Thread-Index: AQHWWNF3XIWNewnjOkCXG4imrImUuqkFQdCw
+Date:   Tue, 14 Jul 2020 01:56:23 +0000
+Deferred-Delivery: Tue, 14 Jul 2020 01:58:00 +0000
+Message-ID: <TY2PR01MB2875C88DD10CC13D0C70DE1690610@TY2PR01MB2875.jpnprd01.prod.outlook.com>
+References: <CGME20200708095813epcas1p2277cdf7de6a8bb20c27bcd030eec431f@epcas1p2.samsung.com>
+        <20200708095746.4179-1-kohada.t2@gmail.com>
+ <005101d658d1$7202e5d0$5608b170$@samsung.com>
+In-Reply-To: <005101d658d1$7202e5d0$5608b170$@samsung.com>
+Accept-Language: ja-JP, en-US
+Content-Language: ja-JP
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-melpop: 1
+authentication-results: samsung.com; dkim=none (message not signed)
+ header.d=none;samsung.com; dmarc=none action=none
+ header.from=dc.MitsubishiElectric.co.jp;
+x-originating-ip: [121.80.0.163]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: fb38d36c-53f3-4ce9-6a88-08d8279967c5
+x-ms-traffictypediagnostic: TY2PR01MB4105:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <TY2PR01MB4105C17D5ACB4216EAF057E790610@TY2PR01MB4105.jpnprd01.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8882;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: pvWpeSiK69lzNALC28FIAt1augiqYAGMcg6gC1erFv+cxpxos285Lf6IGyjEWyW4gfXF7Ec6NH6UaO84Y6aoZ+VsWXX9n5XUglacPbFp2j7u/NcdthjllKEsTX0vT2OZry1P4LKHbXJ1XyLYGlEP+fDmz8fl/ClRly97+LLwkA4XF7Bq0DUmd0V3y56hYhGJ1hbsawxRl5JZk8qTBQyPTGdnQgQ59jW0eZQnk3sbgBOPCe7Gq/BXjBhB9Mc1epwwxud0qi0k7yZCwcuisDWtGxNOcGUBPH8STkiwE61wrPhDWo2J6/s/3vR6Maneb6ThVYWfdQnQ8ot+Db5IOoIN4w==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TY2PR01MB2875.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(366004)(136003)(39860400002)(376002)(346002)(396003)(478600001)(6916009)(6506007)(66446008)(66476007)(55016002)(64756008)(66556008)(66946007)(4326008)(76116006)(9686003)(8936002)(52536014)(33656002)(7696005)(71200400001)(83380400001)(8676002)(6666004)(54906003)(2906002)(26005)(316002)(186003)(86362001)(5660300002);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: qY8ckC9fvWczikxlSe2ZZckNh9vOqsdPVmC+oVArTAXGc0iz6n2yxWWXB8gAw5tD+ebX99x6cYgaRHedia16y/iwcTZxuG1jENsKLaIqHoHziUFNJ4sDjhMdBXtl+iZkX11Yx7DwthHmYtV/CoM1L7WVvihM9oIkL6r1YwL2jsmFf0vLk59ibuI99LIZxfSPAgVoODSQaQcWJ0FvuA49MV4j0K5yEUjPVo3DGLQdBW4atPnh+6K+l9RIP60JGP83LJS8s45R6mur6E/kUhNjBHFy2Vn4l02IfCODywE0789fIDH80gBkguDA4TgRIVIyKDIN9BekwCFBC6Ht1BWR9PjZRpcTkKDKHkzt/Vu26U24IYCuoc2XccnbtcLYUJvc3GUGVS7S1TRoNelqYorMNkwjr8f6iJ+qCDEUA2a7LLCekNusiDCEYiChGJqn/xeTdWKx9EAf3qhQf+IJGJOPJHqfUOxeBz6Rucxu/fM0g70=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=koi8-r
-Content-Disposition: inline
-In-Reply-To: <20200705064055.GA28894@gmail.com>
+X-OriginatorOrg: dc.MitsubishiElectric.co.jp
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: TY2PR01MB2875.jpnprd01.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: fb38d36c-53f3-4ce9-6a88-08d8279967c5
+X-MS-Exchange-CrossTenant-originalarrivaltime: 14 Jul 2020 01:58:29.6236
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: c5a75b62-4bff-4c96-a720-6621ce9978e5
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 9i0trMHKIfGC5GGpW7cC6nYrTjj9p2BYtiCwUeorog0BEa8SxwVObKXDyHGT+fsS/uxiJ0RS9dV9WwyBZswIsw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: TY2PR01MB4105
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jul 04, 2020 at 11:40:55PM -0700, Andrei Vagin wrote:
-> On Wed, Jun 24, 2020 at 01:33:15AM -0700, Andrei Vagin wrote:
-> > Allocate the time namespace page among VVAR pages and add the logic
-> > to handle faults on VVAR properly.
-> > 
-> > If a task belongs to a time namespace then the VVAR page which contains
-> > the system wide VDSO data is replaced with a namespace specific page
-> > which has the same layout as the VVAR page. That page has vdso_data->seq
-> > set to 1 to enforce the slow path and vdso_data->clock_mode set to
-> > VCLOCK_TIMENS to enforce the time namespace handling path.
-> > 
-> > The extra check in the case that vdso_data->seq is odd, e.g. a concurrent
-> > update of the VDSO data is in progress, is not really affecting regular
-> > tasks which are not part of a time namespace as the task is spin waiting
-> > for the update to finish and vdso_data->seq to become even again.
-> > 
-> > If a time namespace task hits that code path, it invokes the corresponding
-> > time getter function which retrieves the real VVAR page, reads host time
-> > and then adds the offset for the requested clock which is stored in the
-> > special VVAR page.
-> > 
-> 
-> > v2: Code cleanups suggested by Vincenzo.
-> > v3: add a comment in __arch_get_timens_vdso_data.
-> > v4: - fix an issue reported by the lkp robot.
-> >     - vvar has the same size with/without CONFIG_TIME_NAMESPACE, but the
-> >       timens page isn't allocated on !CONFIG_TIME_NAMESPACE. This
-> >       simplifies criu/vdso migration between different kernel configs.
-> > v5: - Code cleanups suggested by Mark Rutland.
-> >     - In vdso_join_timens, mmap_write_lock is downgraded to
-> >       mmap_read_lock. The VMA list isn't changed there, zap_page_range
-> >       doesn't require mmap_write_lock.
-> > 
-> > Reviewed-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
-> > Reviewed-by: Dmitry Safonov <dima@arista.com>
-> 
-> Hello Will and Catalin,
-> 
-> Have you had a chance to look at this patch set? I think it is ready to be
-> merged. Let me know if you have any questions.
-
-*friendly ping*
-
-If I am doing something wrong, let me know.
-
-> 
-> Thanks,
-> Andrei
-> 
+VGhhbmtzIGZvciB5b3VyIHJlcGx5Lg0KDQo+ID4gQWxzbywgcmVuYW1lIEVSUl9NRURJVU0gdG8g
+TUVEX0ZBSUxVUkUuDQo+IEkgdGhpbmsgdGhhdCBNRURJQV9GQUlMVVJFIGxvb2tzIGJldHRlci4N
+Cg0KSSB0aGluayBzbyB0b28uDQpJZiBzbywgc2hvdWxkIEkgY2hhbmdlIFZPTF9ESVJUWSB0byBW
+T0xVTUVfRElSVFk/DQoNCj4gPiAtaW50IGV4ZmF0X3NldF92b2xfZmxhZ3Moc3RydWN0IHN1cGVy
+X2Jsb2NrICpzYiwgdW5zaWduZWQgc2hvcnQNCj4gPiBuZXdfZmxhZykNCj4gPiAraW50IGV4ZmF0
+X3NldF92b2xfZmxhZ3Moc3RydWN0IHN1cGVyX2Jsb2NrICpzYiwgdW5zaWduZWQgc2hvcnQNCj4g
+PiArbmV3X2ZsYWdzKQ0KPiA+ICB7DQo+ID4gIAlzdHJ1Y3QgZXhmYXRfc2JfaW5mbyAqc2JpID0g
+RVhGQVRfU0Ioc2IpOw0KPiA+ICAJc3RydWN0IGJvb3Rfc2VjdG9yICpwX2Jvb3QgPSAoc3RydWN0
+IGJvb3Rfc2VjdG9yICopc2JpLT5ib290X2JoLT5iX2RhdGE7DQo+ID4gIAlib29sIHN5bmM7DQo+
+IElmIGRpcnR5IGJpdCBpcyBzZXQgaW4gb24tZGlzayB2b2x1bWUgZmxhZ3MsIHdlIGNhbiBqdXN0
+IHJldHVybiAwIGF0IHRoZSBiZWdpbm5pbmcgb2YgdGhpcyBmdW5jdGlvbiA/DQoNClRoYXQncyBy
+aWdodC4NCk5laXRoZXIgJ3NldCBWT0xfRElSVFknIG5vciAnc2V0IFZPTF9DTEVBTicgbWFrZXMg
+YSBjaGFuZ2UgdG8gdm9sdW1lIGZsYWdzLg0KDQoNCj4gPiArCWlmIChuZXdfZmxhZ3MgPT0gVk9M
+X0NMRUFOKQ0KPiA+ICsJCW5ld19mbGFncyA9IChzYmktPnZvbF9mbGFncyAmIH5WT0xfRElSVFkp
+IHwgc2JpLT52b2xfZmxhZ3Nfbm9jbGVhcjsNCj4gPiArCWVsc2UNCj4gPiArCQluZXdfZmxhZ3Mg
+fD0gc2JpLT52b2xfZmxhZ3M7DQo+ID4gKw0KPiA+ICAJLyogZmxhZ3MgYXJlIG5vdCBjaGFuZ2Vk
+ICovDQo+ID4gLQlpZiAoc2JpLT52b2xfZmxhZyA9PSBuZXdfZmxhZykNCj4gPiArCWlmIChzYmkt
+PnZvbF9mbGFncyA9PSBuZXdfZmxhZ3MpDQo+ID4gIAkJcmV0dXJuIDA7DQo+ID4NCj4gPiAtCXNi
+aS0+dm9sX2ZsYWcgPSBuZXdfZmxhZzsNCj4gPiArCXNiaS0+dm9sX2ZsYWdzID0gbmV3X2ZsYWdz
+Ow0KPiA+DQo+ID4gIAkvKiBza2lwIHVwZGF0aW5nIHZvbHVtZSBkaXJ0eSBmbGFnLA0KPiA+ICAJ
+ICogaWYgdGhpcyB2b2x1bWUgaGFzIGJlZW4gbW91bnRlZCB3aXRoIHJlYWQtb25seSBAQCAtMTE0
+LDkgKzExOSw5DQo+ID4gQEAgaW50IGV4ZmF0X3NldF92b2xfZmxhZ3Moc3RydWN0IHN1cGVyX2Js
+b2NrICpzYiwgdW5zaWduZWQgc2hvcnQgbmV3X2ZsYWcpDQo+ID4gIAlpZiAoc2JfcmRvbmx5KHNi
+KSkNCj4gPiAgCQlyZXR1cm4gMDsNCj4gPg0KPiA+IC0JcF9ib290LT52b2xfZmxhZ3MgPSBjcHVf
+dG9fbGUxNihuZXdfZmxhZyk7DQo+ID4gKwlwX2Jvb3QtPnZvbF9mbGFncyA9IGNwdV90b19sZTE2
+KG5ld19mbGFncyk7DQo+IEhvdyBhYm91dCBzZXQgb3IgY2xlYXIgb25seSBkaXJ0eSBiaXQgdG8g
+b24tZGlzayB2b2x1bWUgZmxhZ3MgaW5zdGVhZCBvZiB1c2luZw0KPiBzYmktPnZvbF9mbGFnc19u
+b2NsZWFyID8NCj4gICAgICAgIGlmIChzZXQpDQo+ICAgICAgICAgICAgICAgIHBfYm9vdC0+dm9s
+X2ZsYWdzIHw9IGNwdV90b19sZTE2KFZPTF9ESVJUWSk7DQo+ICAgICAgICBlbHNlDQo+ICAgICAg
+ICAgICAgICAgIHBfYm9vdC0+dm9sX2ZsYWdzICY9IGNwdV90b19sZTE2KH5WT0xfRElSVFkpOw0K
+DQpJbiB0aGlzIHdheSwgdGhlIGluaXRpYWwgIFZPTF9ESVJUWSBjYW5ub3QgYmUgcmV0YWluZWQu
+DQpUaGUgcHVycG9zZSBvZiB0aGlzIHBhdGNoIGlzIHRvIGF2b2lkIGxvc2luZyB0aGUgaW5pdGlh
+bCBWT0xfRElSVFkgYW5kIE1FRF9GQUlMVVJFLg0KRnVydGhlcm1vcmUsIEknbSBhbHNvIHRoaW5r
+aW5nIG9mIHNldHRpbmcgTUVEX0ZBSUxVUkUuDQoNCkhvd2V2ZXIsIHRoZSBmb3JtdWxhIGZvciAn
+bmV3X2ZsYWdzJyBtYXkgYmUgYSBiaXQgY29tcGxpY2F0ZWQuDQpJcyBpdCBiZXR0ZXIgdG8gY2hh
+bmdlIHRvIHRoZSBmb2xsb3dpbmc/DQoNCglpZiAobmV3X2ZsYWdzID09IFZPTF9DTEVBTikNCgkJ
+bmV3X2ZsYWdzID0gc2JpLT52b2xfZmxhZ3MgJiB+Vk9MX0RJUlRZDQoJZWxzZQ0KCQluZXdfZmxh
+Z3MgfD0gc2JpLT52b2xfZmxhZ3M7DQoNCgluZXdfZmxhZ3MgfD0gc2JpLT52b2xfZmxhZ3Nfbm9j
+bGVhcjsNCg0KDQpvbmUgbW9yZSBwb2ludCwNCklzIHRoZXJlIGEgYmV0dGVyIG5hbWUgdGhhbiAn
+dm9sX2ZsYWdzX25vY2xlYXInPw0KKEkgY2FuJ3QgY29tZSB1cCB3aXRoIGEgZ29vZCBuYW1lIGFu
+eW1vcmUpDQoNCkJSDQotLS0NCktvaGFkYSBUZXRzdWhpcm8gPEtvaGFkYS5UZXRzdWhpcm9AZGMu
+TWl0c3ViaXNoaUVsZWN0cmljLmNvLmpwPg0K
