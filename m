@@ -2,112 +2,135 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D918C433E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:42:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F5C9C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:46:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4C7EC229C5
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:42:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VejG7ns5"
+	by mail.kernel.org (Postfix) with ESMTP id 5213F22B48
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:46:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594752419;
+	bh=guW+R+NgHU962CogrYKOHyrmkNm6Y+ppDAjyq2omiG0=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=J6ywh9ybEQaILELvQpHAylnnYSEpLNNNkEwOnsN9X9g2P8AAXSTXKdTjej3+MmGvC
+	 ZajDN8CEOHjA2fG4xgWUN9cRdmu+wFE3ELB0CPVv37h54tyalrlAvpRJP4BkfRI21l
+	 ns06xmxDg7LvCQOzgGFX/MN9zZxKnZWkThzfQFQE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729204AbgGNSl7 (ORCPT
+        id S1729649AbgGNSq6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 14:41:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37644 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726817AbgGNSl6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 14:41:58 -0400
-Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 79C36C061755;
-        Tue, 14 Jul 2020 11:41:58 -0700 (PDT)
-Received: by mail-ej1-x641.google.com with SMTP id w6so23750492ejq.6;
-        Tue, 14 Jul 2020 11:41:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=f70f6IrV0YxEjaCs9DxeSPhQuDdLaxIEZSEaWG88uXA=;
-        b=VejG7ns58/o56wE4RNCvWeVgjvU+LlSoJSfL5d4/jVqlOeuw9g5CUYQ50YHQsdFubO
-         Ha/tpOyW5b8T/y1/g5j25Dy7Stl9LZry22xtj/m8/nOqMpc/fCk+1qjE7uVogVEwusDR
-         MdrLTadVg8Tfor2CQMkYUPeF6CotVCOZnYDiYMxzpT5+FiGYsggCeOtJWuy50S8NnYeA
-         RfW/LG7XaOHQ6LRT9d3xfBPJ70NeCSRtCGUFyCRQ9exbhAh59Bl0S0Hb7uNNsmQ8hc2i
-         nO9UZMEvYBuewr/CkpT34nSSSPnXFAlfdo1tQfc/nxdNZYwWTNErlafBOzZK4GRqr5ub
-         BHKA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=f70f6IrV0YxEjaCs9DxeSPhQuDdLaxIEZSEaWG88uXA=;
-        b=NdB5YC4AY95LbZuW9bpDGpMjoxM5pHrIN8NTn90ViQ7r7BvEfm9JN3xhAtKHy7+XDu
-         SaPrz4LkTFromgwx6pzHAGYBt//MAbYz5Di/o4U5c981suBpHPLKJHO0EIOkxdsNH4c1
-         ynhCKoh8aMyk+ryqmLooxIpmKar4ZBaW7p3GFdBL5KioVcpizGWaSdCqqLjDKzaEo8Pa
-         miwx+Pd2mkRAJ3fHoc4vEn+164mkwnouce/kSlSYK+/QP7tTRaPFYsIFWmPxssqOvEwN
-         xpWAJdM9d9jscRiruxS1UDg0F/jWUxTUD9GrGWzjnxYBlGNvwlEK+SkbKUgsYGo3vOoo
-         XAvg==
-X-Gm-Message-State: AOAM5327QPEPL19XZofxEEeU+Ly4qLvdk9ovQ2ltRYyOHUJmpBtJhDma
-        TfNi4TpFtn7O4YAKm4quYuqBIr21yPXJOjnrx8E=
-X-Google-Smtp-Source: ABdhPJx7APKDvb5pLdspcKbtqQHuogOBvlhkuNQrvEweAhJTwvPQg/Zo30df4jeOKEXwcHuWI25swo7X80ueqGE9D3w=
-X-Received: by 2002:a17:906:4d4c:: with SMTP id b12mr5749555ejv.506.1594752117201;
- Tue, 14 Jul 2020 11:41:57 -0700 (PDT)
+        Tue, 14 Jul 2020 14:46:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41712 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729607AbgGNSqv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 14:46:51 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7D165222E9;
+        Tue, 14 Jul 2020 18:46:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594752411;
+        bh=guW+R+NgHU962CogrYKOHyrmkNm6Y+ppDAjyq2omiG0=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=lIRs8WYRjumfkvuSUvhweC90g06gWAYE3dGnedaWpnuPC50lEk0IQf2xtG5NcHjEz
+         NdprjbQZXMGr/hV2zJ+wHOH6DH4enanD5w9bUl4kzlVTP+jVXBs96p1VUOYoZLEaNp
+         e6O4cCj6e7cPht0mTqN5sEUKhqNuzYmud/U2Rhxo=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        David Hildenbrand <david@redhat.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 01/58] KVM: s390: reduce number of IO pins to 1
+Date:   Tue, 14 Jul 2020 20:43:34 +0200
+Message-Id: <20200714184056.215128125@linuxfoundation.org>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200714184056.149119318@linuxfoundation.org>
+References: <20200714184056.149119318@linuxfoundation.org>
+User-Agent: quilt/0.66
+X-stable: review
+X-Patchwork-Hint: ignore
 MIME-Version: 1.0
-References: <1594733130-398-1-git-send-email-akhilpo@codeaurora.org> <20200714171036.GS3191083@google.com>
-In-Reply-To: <20200714171036.GS3191083@google.com>
-From:   Rob Clark <robdclark@gmail.com>
-Date:   Tue, 14 Jul 2020 11:42:28 -0700
-Message-ID: <CAF6AEGsvbnWiFXQUFR+k-CLJ2CsCEoiVVE8pGVq0X0=VHE3hHA@mail.gmail.com>
-Subject: Re: [PATCH] drm: msm: a6xx: fix gpu failure after system resume
-To:     Matthias Kaehlcke <mka@chromium.org>
-Cc:     Akhil P Oommen <akhilpo@codeaurora.org>,
-        freedreno <freedreno@lists.freedesktop.org>,
-        dri-devel@freedesktop.org,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Jordan Crouse <jcrouse@codeaurora.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, Jonathan <jonathan@marek.ca>,
-        Rajendra Nayak <rnayak@codeaurora.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 14, 2020 at 10:10 AM Matthias Kaehlcke <mka@chromium.org> wrote:
->
-> On Tue, Jul 14, 2020 at 06:55:30PM +0530, Akhil P Oommen wrote:
-> > On targets where GMU is available, GMU takes over the ownership of GX GDSC
-> > during its initialization. So, take a refcount on the GX PD on behalf of
-> > GMU before we initialize it. This makes sure that nobody can collapse the
-> > GX GDSC once GMU owns the GX GDSC. This patch fixes some weird failures
-> > during GPU wake up during system resume.
-> >
-> > Signed-off-by: Akhil P Oommen <akhilpo@codeaurora.org>
->
-> I went through a few dozen suspend/resume cycles on SC7180 and didn't run
-> into the kernel panic that typically occurs after a few iterations without
-> this patch.
->
-> Reported-by: Matthias Kaehlcke <mka@chromium.org>
-> Tested-by: Matthias Kaehlcke <mka@chromium.org>
->
-> On which tree is this patch based on? I had to apply it manually because
-> 'git am' is unhappy when I try to apply it:
->
->   error: sha1 information is lacking or useless (drivers/gpu/drm/msm/adreno/a6xx_gmu.c).
->   error: could not build fake ancestor
->
-> Both upstream and drm-msm are in my remotes and synced, so I suspect it's
-> some private tree. Please make sure to base patches on the corresponding
-> maintainer tree or upstream, whichs makes life easier for maintainers,
-> testers and reviewers.
+From: Christian Borntraeger <borntraeger@de.ibm.com>
 
-I've run into the same issue frequently :-(
+[ Upstream commit 774911290c589e98e3638e73b24b0a4d4530e97c ]
 
-BR,
--R
+The current number of KVM_IRQCHIP_NUM_PINS results in an order 3
+allocation (32kb) for each guest start/restart. This can result in OOM
+killer activity even with free swap when the memory is fragmented
+enough:
+
+kernel: qemu-system-s39 invoked oom-killer: gfp_mask=0x440dc0(GFP_KERNEL_ACCOUNT|__GFP_COMP|__GFP_ZERO), order=3, oom_score_adj=0
+kernel: CPU: 1 PID: 357274 Comm: qemu-system-s39 Kdump: loaded Not tainted 5.4.0-29-generic #33-Ubuntu
+kernel: Hardware name: IBM 8562 T02 Z06 (LPAR)
+kernel: Call Trace:
+kernel: ([<00000001f848fe2a>] show_stack+0x7a/0xc0)
+kernel:  [<00000001f8d3437a>] dump_stack+0x8a/0xc0
+kernel:  [<00000001f8687032>] dump_header+0x62/0x258
+kernel:  [<00000001f8686122>] oom_kill_process+0x172/0x180
+kernel:  [<00000001f8686abe>] out_of_memory+0xee/0x580
+kernel:  [<00000001f86e66b8>] __alloc_pages_slowpath+0xd18/0xe90
+kernel:  [<00000001f86e6ad4>] __alloc_pages_nodemask+0x2a4/0x320
+kernel:  [<00000001f86b1ab4>] kmalloc_order+0x34/0xb0
+kernel:  [<00000001f86b1b62>] kmalloc_order_trace+0x32/0xe0
+kernel:  [<00000001f84bb806>] kvm_set_irq_routing+0xa6/0x2e0
+kernel:  [<00000001f84c99a4>] kvm_arch_vm_ioctl+0x544/0x9e0
+kernel:  [<00000001f84b8936>] kvm_vm_ioctl+0x396/0x760
+kernel:  [<00000001f875df66>] do_vfs_ioctl+0x376/0x690
+kernel:  [<00000001f875e304>] ksys_ioctl+0x84/0xb0
+kernel:  [<00000001f875e39a>] __s390x_sys_ioctl+0x2a/0x40
+kernel:  [<00000001f8d55424>] system_call+0xd8/0x2c8
+
+As far as I can tell s390x does not use the iopins as we bail our for
+anything other than KVM_IRQ_ROUTING_S390_ADAPTER and the chip/pin is
+only used for KVM_IRQ_ROUTING_IRQCHIP. So let us use a small number to
+reduce the memory footprint.
+
+Signed-off-by: Christian Borntraeger <borntraeger@de.ibm.com>
+Reviewed-by: Cornelia Huck <cohuck@redhat.com>
+Reviewed-by: David Hildenbrand <david@redhat.com>
+Link: https://lore.kernel.org/r/20200617083620.5409-1-borntraeger@de.ibm.com
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ arch/s390/include/asm/kvm_host.h | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/arch/s390/include/asm/kvm_host.h b/arch/s390/include/asm/kvm_host.h
+index dad110e9f41b3..be8fa30a6ea6d 100644
+--- a/arch/s390/include/asm/kvm_host.h
++++ b/arch/s390/include/asm/kvm_host.h
+@@ -30,12 +30,12 @@
+ #define KVM_USER_MEM_SLOTS 32
+ 
+ /*
+- * These seem to be used for allocating ->chip in the routing table,
+- * which we don't use. 4096 is an out-of-thin-air value. If we need
+- * to look at ->chip later on, we'll need to revisit this.
++ * These seem to be used for allocating ->chip in the routing table, which we
++ * don't use. 1 is as small as we can get to reduce the needed memory. If we
++ * need to look at ->chip later on, we'll need to revisit this.
+  */
+ #define KVM_NR_IRQCHIPS 1
+-#define KVM_IRQCHIP_NUM_PINS 4096
++#define KVM_IRQCHIP_NUM_PINS 1
+ #define KVM_HALT_POLL_NS_DEFAULT 80000
+ 
+ /* s390-specific vcpu->requests bit members */
+-- 
+2.25.1
+
+
+
