@@ -2,114 +2,79 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39C12C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:27:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93217C433E4
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:27:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 24536227BF
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:27:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6BC48229C4
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:27:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594751255;
+	bh=u/ahli5bacfgvLQRLRo8d+/MPlcd1svqsLIQFen1ioY=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=XVhh8CMrZWodBNzMJz8TF+apmeQMSRzVjSKMm9eq0MDvIFz4FbZv0Sa8g2P/3gUwM
+	 Tc6seGNmJVb03QYd+Ugc8Ao1QV3n4Gedzlg651cDj6oSBucHXjkQjUQobWvoTOu9KQ
+	 cayyNwVp4wvtqjK/RPu+JWqWeND2dUyEc94e1KZQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729030AbgGNS1S (ORCPT
+        id S1729130AbgGNS1d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 14:27:18 -0400
-Received: from gloria.sntech.de ([185.11.138.130]:34362 "EHLO gloria.sntech.de"
+        Tue, 14 Jul 2020 14:27:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34382 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725951AbgGNS1R (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 14:27:17 -0400
-Received: from x2f7fa33.dyn.telefonica.de ([2.247.250.51] helo=phil.localnet)
-        by gloria.sntech.de with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <heiko@sntech.de>)
-        id 1jvPe6-0008DB-1Y; Tue, 14 Jul 2020 20:27:14 +0200
-From:   Heiko Stuebner <heiko@sntech.de>
-To:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
-Cc:     linus.walleij@linaro.org, linux-gpio@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] pinctrl: rockchip: Replace HTTP links with HTTPS ones
-Date:   Tue, 14 Jul 2020 20:27:10 +0200
-Message-ID: <3739981.ORC64qsr6C@phil>
-In-Reply-To: <20200713183541.36963-1-grandmaster@al2klimov.de>
-References: <20200713183541.36963-1-grandmaster@al2klimov.de>
+        id S1725951AbgGNS1c (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 14:27:32 -0400
+Received: from paulmck-ThinkPad-P72.home (50-39-111-31.bvtn.or.frontiernet.net [50.39.111.31])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 76A26227BF;
+        Tue, 14 Jul 2020 18:27:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594751252;
+        bh=u/ahli5bacfgvLQRLRo8d+/MPlcd1svqsLIQFen1ioY=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=wKPY9Ly7FNpA2n5SLz0sefIlx9tmr1enyxhCec8qmDLuezXkMFGRP9ex6+FJg1XIK
+         f5cGoVCDMH47KjkOYKoHPA/Z8K375kTZySrXotJJtfBtKzPL6L8v6MQK3QwLU4yilX
+         YWq9hV2hsgzKNq2tHw4OkJTu3xI4+rbrVLEoA6Pc=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id 619B93522635; Tue, 14 Jul 2020 11:27:32 -0700 (PDT)
+Date:   Tue, 14 Jul 2020 11:27:32 -0700
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc:     mingo@kernel.org, linux-kernel@vger.kernel.org,
+        rcu@vger.kernel.org, arnd@arndb.de, elver@google.com, ethp@qq.com,
+        frederic@kernel.org, jbi.octave@gmail.com, joel@joelfernandes.org,
+        lihaoliang@google.com, madhuparnabhowmik10@gmail.com,
+        mchehab+huawei@kernel.org, peter.enderborg@sony.com,
+        rdunlap@infradead.org, richard.weiyang@linux.alibaba.com,
+        urezki@gmail.com, zou_wei@huawei.com, tglx@linutronix.de
+Subject: Re: [GIT PULL tip/core/rcu] RCU commits for v5.9
+Message-ID: <20200714182732.GU9247@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20200714172701.GA31369@paulmck-ThinkPad-P72>
+ <20200714181426.hhguqzrcqdubyvae@linutronix.de>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200714181426.hhguqzrcqdubyvae@linutronix.de>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am Montag, 13. Juli 2020, 20:35:41 CEST schrieb Alexander A. Klimov:
-> Rationale:
-> Reduces attack surface on kernel devs opening the links for MITM
-> as HTTPS traffic is much harder to manipulate.
+On Tue, Jul 14, 2020 at 08:14:26PM +0200, Sebastian Andrzej Siewior wrote:
+> On 2020-07-14 10:27:01 [-0700], Paul E. McKenney wrote:
+> > Joel Fernandes (Google) (5):
+> >       rcu/tree: Skip entry into the page allocator for PREEMPT_RT
 > 
-> Deterministic algorithm:
-> For each file:
->   If not .svg:
->     For each line:
->       If doesn't contain `\bxmlns\b`:
->         For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
-> 	  If neither `\bgnu\.org/license`, nor `\bmozilla\.org/MPL\b`:
->             If both the HTTP and HTTPS versions
->             return 200 OK and serve the same content:
->               Replace HTTP with HTTPS.
-> 
-> Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
+> If it is too late to drop this then I am going send a revert okay?
 
-At least from my cursory glance the www.samsung.com below
-also behaves the same with both http and https .
+I believe that Ulad and Joel are working on an update.
 
-In general ... I don't really believe anybody would use the rockchip
-pinctrl-driver to access either Linaro nor Samsung, but I don't care that
-much so ;-)
+Now that you mention it Ulad and Joel, how is this coming along?
 
-Acked-by: Heiko Stuebner <heiko@sntech.de>
-
-> ---
->  Continuing my work started at 93431e0607e5.
->  See also: git log --oneline '--author=Alexander A. Klimov <grandmaster@al2klimov.de>' v5.7..master
->  (Actually letting a shell for loop submit all this stuff for me.)
-> 
->  If there are any URLs to be removed completely or at least not just HTTPSified:
->  Just clearly say so and I'll *undo my change*.
->  See also: https://lkml.org/lkml/2020/6/27/64
-> 
->  If there are any valid, but yet not changed URLs:
->  See: https://lkml.org/lkml/2020/6/26/837
-> 
->  If you apply the patch, please let me know.
-> 
->  Sorry again to all maintainers who complained about subject lines.
->  Now I realized that you want an actually perfect prefixes,
->  not just subsystem ones.
->  I tried my best...
->  And yes, *I could* (at least half-)automate it.
->  Impossible is nothing! :)
-> 
-> 
->  drivers/pinctrl/pinctrl-rockchip.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/pinctrl/pinctrl-rockchip.c b/drivers/pinctrl/pinctrl-rockchip.c
-> index c07324d1f265..a94b54636da9 100644
-> --- a/drivers/pinctrl/pinctrl-rockchip.c
-> +++ b/drivers/pinctrl/pinctrl-rockchip.c
-> @@ -9,7 +9,7 @@
->   * Copyright (c) 2012 Samsung Electronics Co., Ltd.
->   *		http://www.samsung.com
->   * Copyright (c) 2012 Linaro Ltd
-> - *		http://www.linaro.org
-> + *		https://www.linaro.org
->   *
->   * and pinctrl-at91:
->   * Copyright (C) 2011-2012 Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
-> 
-
-
-
-
+							Thanx, Paul
