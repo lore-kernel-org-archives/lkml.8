@@ -2,148 +2,104 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48BB6C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 03:52:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82E97C433E8
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 03:52:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 21C7D21D90
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 03:52:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="e4G57ei3"
+	by mail.kernel.org (Postfix) with ESMTP id 6602721927
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 03:52:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726762AbgGNDwP (ORCPT
+        id S1726859AbgGNDwj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 23:52:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40420 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726771AbgGNDwN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 23:52:13 -0400
-Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 97D18C061755;
-        Mon, 13 Jul 2020 20:52:13 -0700 (PDT)
-Received: by mail-pg1-x541.google.com with SMTP id e8so7000822pgc.5;
-        Mon, 13 Jul 2020 20:52:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=GnebsxGNNiOoiYfiC1kn84gDhaBxaLqzjhEh/R1NZTU=;
-        b=e4G57ei3UOCLalrDzEh03NxmlohXTZBoCCWSgitar/EZcG5UL6TMzs+o3S3UlSrZRL
-         WsPz3wA5yv4n/ZTRT8Gy/fJEoiX4xNqx/ik9DBtnRfF6GENhPBQSVhdfbamlZ+WEUEiK
-         rcCV8zYZlVCd+lSJWEQ2CovDKjcb/KPOAMYSF+TVwiqXMygwNKahum0rIeeGfI1goias
-         QYKgjHSQTB6UxMxVECHo0WagC3j9owrRUJ+LnbY+FGnsFOTiRtpH4wLUcX48DiQIEBQp
-         WEFAUOolpMCPgxsI1uC4vHxw+0AQoYtQG065bWm0wt4BXu7S7MaYc64T2zPbW0Gb7KqV
-         k5LA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=GnebsxGNNiOoiYfiC1kn84gDhaBxaLqzjhEh/R1NZTU=;
-        b=nHE+aJXps5s1Zf3WQa7rMEaxGYC9yEXIT7yyyYgbh03r0oxFU07Se7ZFXXckbAZv60
-         NzTFBvqhkwdqrP2xaIwuBN45aj//raHJHZjeYEBvYN/HflyWHwoZzyQ4DKVtVMqevmAC
-         zIQdGTRgoHILv2RoqyAxGvMb2riC9glIPAyYNpAIalZ9czW+BEmip/VmZv0MKJydoI/0
-         0SpNFKXPrrpoaOXNVSKnSF4hBtaSkbArW0ZPGkgwDWLTjGay4mnTaMIPrH/ExOpNOj16
-         /d8k6kXP5vUCmS2FNUommZY7izP1fk398+SIoSQUuR3G+P4Iv3aK6fQHPzohYM3uY22C
-         8+7A==
-X-Gm-Message-State: AOAM533P0hCNRCS81SAvQ5EOdZ2xDkp7UXnomvPWq2bdTCuYQkGtOWVR
-        iMYqy9T4cIv6lqjR1b+huTFvDeL7llo=
-X-Google-Smtp-Source: ABdhPJw9XxcIqQaocq0iMXTMvVlAUSgMG4zI17nmiqc325A24sn+tmIhqUFMdSHtOmt1ZJbCIh7j9g==
-X-Received: by 2002:a63:2b91:: with SMTP id r139mr1946237pgr.61.1594698733164;
-        Mon, 13 Jul 2020 20:52:13 -0700 (PDT)
-Received: from fmin-OptiPlex-7060.nreal.work ([103.206.191.8])
-        by smtp.gmail.com with ESMTPSA id v11sm17595832pfc.108.2020.07.13.20.52.10
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 13 Jul 2020 20:52:12 -0700 (PDT)
-From:   dillon.minfei@gmail.com
-To:     sfr@canb.auug.org.au, bcousson@baylibre.com, tony@atomide.com,
-        robh+dt@kernel.org
-Cc:     linux-omap@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, dillon min <dillon.minfei@gmail.com>
-Subject: [PATCH v3] Since am437x have the same clock structure with am335x [1][2], reuse the code from Tony Lindgren's patch [3] to fix dcan probe failed on am437x platform.
-Date:   Tue, 14 Jul 2020 11:52:06 +0800
-Message-Id: <1594698726-4557-2-git-send-email-dillon.minfei@gmail.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1594698726-4557-1-git-send-email-dillon.minfei@gmail.com>
-References: <1594698726-4557-1-git-send-email-dillon.minfei@gmail.com>
+        Mon, 13 Jul 2020 23:52:39 -0400
+Received: from mga04.intel.com ([192.55.52.120]:33887 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726542AbgGNDwi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jul 2020 23:52:38 -0400
+IronPort-SDR: LFHS7HaIzUNVB09RD+AQp33K2Jvs+lrO6DHG5Kjh74AqNijQp49OHk86K8rFrcoKl/h6moQljJ
+ wcnQJJvP3UFw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9681"; a="146269589"
+X-IronPort-AV: E=Sophos;i="5.75,350,1589266800"; 
+   d="scan'208";a="146269589"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jul 2020 20:52:38 -0700
+IronPort-SDR: huwuz6f1QU/7KnXgcpT+u1B+DoeMeKUYpakVrhoTU582qPP50vBE99ZEoXJsT88NMrfMkjpyVZ
+ 1kbKhglKXSyw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,350,1589266800"; 
+   d="scan'208";a="281623310"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga003.jf.intel.com with ESMTP; 13 Jul 2020 20:52:36 -0700
+Received: from [10.255.133.45] (vramuthx-MOBL1.gar.corp.intel.com [10.255.133.45])
+        by linux.intel.com (Postfix) with ESMTP id 3A017580810;
+        Mon, 13 Jul 2020 20:52:24 -0700 (PDT)
+Reply-To: vadivel.muruganx.ramuthevar@linux.intel.com
+Subject: Re: [PATCH v5 1/2] dt-bindings: phy: Add USB PHY support for Intel
+ LGM SoC
+To:     Rob Herring <robh@kernel.org>
+Cc:     robh+dt@kernel.org, balbi@kernel.org, cheol.yong.kim@intel.com,
+        gregkh@linuxfoundation.org, devicetree@vger.kernel.org,
+        andriy.shevchenko@intel.com, qi-ming.wu@intel.com,
+        p.zabel@pengutronix.de, yin1.li@intel.com, kishon@ti.com,
+        linux-kernel@vger.kernel.org
+References: <20200713085453.7353-1-vadivel.muruganx.ramuthevar@linux.intel.com>
+ <20200713085453.7353-2-vadivel.muruganx.ramuthevar@linux.intel.com>
+ <20200713150713.GA184301@bogus>
+From:   "Ramuthevar, Vadivel MuruganX" 
+        <vadivel.muruganx.ramuthevar@linux.intel.com>
+Message-ID: <9941c14f-50b8-5824-cb65-428aa32b746c@linux.intel.com>
+Date:   Tue, 14 Jul 2020 11:52:15 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
+MIME-Version: 1.0
+In-Reply-To: <20200713150713.GA184301@bogus>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: dillon min <dillon.minfei@gmail.com>
+Hi Rob,
 
+On 13/7/2020 11:07 pm, Rob Herring wrote:
+> On Mon, 13 Jul 2020 16:54:52 +0800, Ramuthevar,Vadivel MuruganX wrote:
+>> From: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
+>>
+>> Add the dt-schema to support USB PHY on Intel LGM SoC
+>>
+>> Signed-off-by: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
+>> Reviewed-by: Rob Herring <robh@kernel.org>
+>> ---
+>>   .../devicetree/bindings/phy/intel,lgm-usb-phy.yaml | 53 ++++++++++++++++++++++
+>>   1 file changed, 53 insertions(+)
+>>   create mode 100644 Documentation/devicetree/bindings/phy/intel,lgm-usb-phy.yaml
+>>
+> 
+> 
+> My bot found errors running 'make dt_binding_check' on your patch:
+> 
+> Documentation/devicetree/bindings/phy/intel,lgm-usb-phy.yaml: $id: relative path/filename doesn't match actual path or filename
+> 	expected: http://devicetree.org/schemas/phy/intel,lgm-usb-phy.yaml#
+> 
+> 
+> See https://patchwork.ozlabs.org/patch/1327785
+> 
+> If you already ran 'make dt_binding_check' and didn't see the above
+> error(s), then make sure dt-schema is up to date:
+> 
+> pip3 install git+https://github.com/devicetree-org/dt-schema.git@master --upgrade
+> 
+> Please check and re-submit.
+Sure, will check and update, Thanks!
 
-[1]: https://www.ti.com/lit/pdf/spruh73 Chapter-23, Figure 23-1. DCAN
-Integration
-[2]: https://www.ti.com/lit/pdf/spruhl7 Chapter-25, Figure 25-1. DCAN
-Integration
-[3]: commit 516f1117d0fb ("ARM: dts: Configure osc clock for d_can on am335x")
-
-Signed-off-by: dillon min <dillon.minfei@gmail.com>
-Fixes: 1a5cd7c23cc5 ("bus: ti-sysc: Enable all clocks directly during init to read revision")
----
-
-Hi Stephen,
-
-This changes correct commit messages based on your reviewing.
-make Fixes tags to oneline.
-make all commit message tags at the end of commit message
-make Fixes tags after Signed-off-by line.
-
- arch/arm/boot/dts/am437x-l4.dtsi | 14 ++++++++++----
- 1 file changed, 10 insertions(+), 4 deletions(-)
-
-diff --git a/arch/arm/boot/dts/am437x-l4.dtsi b/arch/arm/boot/dts/am437x-l4.dtsi
-index 0d0f9fe4a882..4129affde54e 100644
---- a/arch/arm/boot/dts/am437x-l4.dtsi
-+++ b/arch/arm/boot/dts/am437x-l4.dtsi
-@@ -1541,8 +1541,9 @@
- 			reg = <0xcc020 0x4>;
- 			reg-names = "rev";
- 			/* Domains (P, C): per_pwrdm, l4ls_clkdm */
--			clocks = <&l4ls_clkctrl AM4_L4LS_D_CAN0_CLKCTRL 0>;
--			clock-names = "fck";
-+			clocks = <&l4ls_clkctrl AM4_L4LS_D_CAN0_CLKCTRL 0>,
-+			<&dcan0_fck>;
-+			clock-names = "fck", "osc";
- 			#address-cells = <1>;
- 			#size-cells = <1>;
- 			ranges = <0x0 0xcc000 0x2000>;
-@@ -1550,6 +1551,8 @@
- 			dcan0: can@0 {
- 				compatible = "ti,am4372-d_can", "ti,am3352-d_can";
- 				reg = <0x0 0x2000>;
-+				clocks = <&dcan0_fck>;
-+				clock-names = "fck";
- 				syscon-raminit = <&scm_conf 0x644 0>;
- 				interrupts = <GIC_SPI 52 IRQ_TYPE_LEVEL_HIGH>;
- 				status = "disabled";
-@@ -1561,8 +1564,9 @@
- 			reg = <0xd0020 0x4>;
- 			reg-names = "rev";
- 			/* Domains (P, C): per_pwrdm, l4ls_clkdm */
--			clocks = <&l4ls_clkctrl AM4_L4LS_D_CAN1_CLKCTRL 0>;
--			clock-names = "fck";
-+			clocks = <&l4ls_clkctrl AM4_L4LS_D_CAN1_CLKCTRL 0>,
-+			<&dcan1_fck>;
-+			clock-names = "fck", "osc";
- 			#address-cells = <1>;
- 			#size-cells = <1>;
- 			ranges = <0x0 0xd0000 0x2000>;
-@@ -1570,6 +1574,8 @@
- 			dcan1: can@0 {
- 				compatible = "ti,am4372-d_can", "ti,am3352-d_can";
- 				reg = <0x0 0x2000>;
-+				clocks = <&dcan1_fck>;
-+				clock-name = "fck";
- 				syscon-raminit = <&scm_conf 0x644 1>;
- 				interrupts = <GIC_SPI 49 IRQ_TYPE_LEVEL_HIGH>;
- 				status = "disabled";
--- 
-2.7.4
-
+Regards
+Vadivel
+> 
