@@ -2,149 +2,124 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA6F0C433EB
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 09:33:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A20CAC433E4
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 09:34:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CAC4C208C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 09:33:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B647212CC
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 09:34:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PUZRD7Zo"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="aqpdiJTb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726845AbgGNJdC (ORCPT
+        id S1726928AbgGNJeA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 05:33:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36186 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725952AbgGNJdB (ORCPT
+        Tue, 14 Jul 2020 05:34:00 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:25276 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726889AbgGNJd6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 05:33:01 -0400
-Received: from mail-ed1-x543.google.com (mail-ed1-x543.google.com [IPv6:2a00:1450:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B5681C061755;
-        Tue, 14 Jul 2020 02:33:00 -0700 (PDT)
-Received: by mail-ed1-x543.google.com with SMTP id dm19so16325682edb.13;
-        Tue, 14 Jul 2020 02:33:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=4hx30PqqoaKCTO0tMV5MXPy9WV4JOGXHT29cx4BAmGo=;
-        b=PUZRD7ZoJoGcBKUQ//Po15bwuf7dQgrMkN+LsH1vGn+Wu+CPT+g+1ecewCvcnztIQ2
-         Zr4cI4eZ1MrETF11GT/frURS9Hw9hMFiEj2RVZWvs6sjop4lrpEk2ap67NUS7n4q4MpM
-         h7PLhp82Z1DnvX9DQTD3RXo88dBx8f2W4Kjtsawk/okiXD48p9YZzZh4vRdRY7aZUE+t
-         o+oc98a4PzwjA3FoDxNMWnWOrcgD9r1tvaUb2zAGaNFrfsZ4sISFsSkh6zgDFEDdY7UH
-         dIafe65vWNWVDgvxDX5icgA06I7IMkr7Ob2/N82waLw2dR23WPdSpOMrvbWH8pwKsQGr
-         5uwg==
+        Tue, 14 Jul 2020 05:33:58 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1594719236;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=DD/NJLwq0bamxwrGSpcfsRcNRSxti2z+zdKscIzsmx8=;
+        b=aqpdiJTbxSyzYz5A5oM5qGBwedN6Z2XP4krUBoIdGuqI8/RAzX06Ic/k2gil0u0eVB9BgF
+        XPC0VgGtHu9pkvLdW/6KV3xVbsDyanNFMG/LRh61N71X6F+eNZTXzOyyw6mSSvM9/PMCFP
+        LajOPPz1TeZb7IFgq0b4C49EEgzFkkA=
+Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
+ [209.85.221.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-56-IIOjO1v5OfWKNeJr3I5bsQ-1; Tue, 14 Jul 2020 05:33:55 -0400
+X-MC-Unique: IIOjO1v5OfWKNeJr3I5bsQ-1
+Received: by mail-wr1-f69.google.com with SMTP id c6so20895228wru.7
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 02:33:54 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=4hx30PqqoaKCTO0tMV5MXPy9WV4JOGXHT29cx4BAmGo=;
-        b=iH9KBas7rVwtE5c2ouz1GWQ9+jV8L+q7S89moTnS5nN5a+kAJXDC4N6N8D4qkjxzJe
-         PhQmvdJ6RSBnjUtkVGpJHMKTyJNhsonkmz/iv+IiyJTq/giPpiiSEey5iS3pNFFI/DJg
-         87zuZSY+8LoA/PpDIJWZ+TJG1QQLhq5VB4cb/njCcyH6hdR1Ffo2lcFzMPQXertlH1fD
-         xXc61XWbcdSuDqa3j1k9EAJ9wyU8pH07hW201nY62CigwsiFzl0vlNmDQ7N4ZI5JASz6
-         wJ6dSKmz4fF/qvzFgPNkpw40HafOEfwyXzjDwFLjfr8VveNu1dPtD5VcD+xXf10Auyz4
-         dmeQ==
-X-Gm-Message-State: AOAM5326K1wRGXarjQDrb8+RHiQJYzrz8Il8FEtV837Tm5DHIVtTs5dz
-        uWgNJIQV8OBEx1qcZxOKw7E=
-X-Google-Smtp-Source: ABdhPJxQMpKEO/TmGr4t3/ZxNmff8nGv0ouAGV0vHWdU8pzoRUZBJ8ps7/OmisdmObnGZ/BxXqvGAw==
-X-Received: by 2002:a05:6402:1592:: with SMTP id c18mr3741523edv.258.1594719179492;
-        Tue, 14 Jul 2020 02:32:59 -0700 (PDT)
-Received: from localhost ([62.96.65.119])
-        by smtp.gmail.com with ESMTPSA id t6sm12170365ejc.40.2020.07.14.02.32.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 Jul 2020 02:32:57 -0700 (PDT)
-Date:   Tue, 14 Jul 2020 11:32:56 +0200
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Jon Hunter <jonathanh@nvidia.com>
-Cc:     Mathias Nyman <mathias.nyman@intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
-        stable@vger.kernel.org
-Subject: Re: [PATCH 2/2] usb: tegra: Fix zero length memory allocation
-Message-ID: <20200714093256.GG141356@ulmo>
-References: <20200712102837.24340-1-jonathanh@nvidia.com>
- <20200712102837.24340-2-jonathanh@nvidia.com>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=DD/NJLwq0bamxwrGSpcfsRcNRSxti2z+zdKscIzsmx8=;
+        b=EGfkDOQ82R5h48AEp1oihCqIUZVHE03Tke2xhiuDilrfFhEApOOBFB35yeiOG0CGtB
+         iLzSGx0gzNsfrSefRO6yYz/xII/11fLb15CpWZMbTfVoFkZWpqVDdrSDOinZPLI3uszc
+         n5OP7S56MmNYOr/S7lJyOKOdkfNXPTUV3DLBDPPkkpP9+wawSXI9YaI5J1l3IXf1Mqde
+         1SKWaOLLzL22HDY4W9f/wrsoHssS2PaHQOfsm0RFpEy0Jh1ensGo5fzMicPHZDd70yUw
+         l2+qZvViRINkWn85LAa9ozolXpe1ujrBP5NpzwkCBjHchoUAIv8ZJZHNKuxZbG05cSDT
+         Kfpg==
+X-Gm-Message-State: AOAM531JkW2feMx693261L1MGJxeHHzuKs5JKi0X+407eY6M0iIdlILq
+        eI4QsqLAUqP1lgYB/UUQYvenTOANQr5yDaJ0mEEifIegBV3e/Rli36s8piwgx7Dv/ugDmtPKMdO
+        wFJcKyloa9vzVP/ZJOvAWTnX3
+X-Received: by 2002:adf:82f5:: with SMTP id 108mr4055590wrc.218.1594719233554;
+        Tue, 14 Jul 2020 02:33:53 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJw1p/qy7933UavAoXwgcWhVOtbvoAlMJGxZoS0PdD7U/ByU3kIkzqqn/GZmkZDBKPgptMqMYw==
+X-Received: by 2002:adf:82f5:: with SMTP id 108mr4055578wrc.218.1594719233348;
+        Tue, 14 Jul 2020 02:33:53 -0700 (PDT)
+Received: from x1.localdomain (2001-1c00-0c0c-fe00-d2ea-f29d-118b-24dc.cable.dynamic.v6.ziggo.nl. [2001:1c00:c0c:fe00:d2ea:f29d:118b:24dc])
+        by smtp.gmail.com with ESMTPSA id a12sm28522958wrv.41.2020.07.14.02.33.52
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 14 Jul 2020 02:33:52 -0700 (PDT)
+Subject: Re: [PATCH 5.8 regression fix] platform/x86: thinkpad_acpi: Revert:
+ Use strndup_user() in dispatch_proc_write()
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>,
+        Thinkpad-acpi devel ML <ibm-acpi-devel@lists.sourceforge.net>,
+        Platform Driver <platform-driver-x86@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <20200714081510.6070-1-hdegoede@redhat.com>
+ <CAHp75Vd6uGNw5m3-Tc1tkABLT_Wi7CtW2yo8+B5TpYV4U8XE9A@mail.gmail.com>
+ <CAHp75Ve9HF4WVkiUA77s9LsN6d8oaFPRgjLi86FnDSHgmVvTNA@mail.gmail.com>
+From:   Hans de Goede <hdegoede@redhat.com>
+Message-ID: <af1a7c41-071f-4c26-9a9a-7c6ffb5dde88@redhat.com>
+Date:   Tue, 14 Jul 2020 11:33:52 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="DNUSDXU7R7AVVM8C"
-Content-Disposition: inline
-In-Reply-To: <20200712102837.24340-2-jonathanh@nvidia.com>
-User-Agent: Mutt/1.14.4 (2020-06-18)
+In-Reply-To: <CAHp75Ve9HF4WVkiUA77s9LsN6d8oaFPRgjLi86FnDSHgmVvTNA@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi,
 
---DNUSDXU7R7AVVM8C
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On 7/14/20 10:27 AM, Andy Shevchenko wrote:
+> On Tue, Jul 14, 2020 at 11:21 AM Andy Shevchenko
+> <andy.shevchenko@gmail.com> wrote:
+>> On Tue, Jul 14, 2020 at 11:15 AM Hans de Goede <hdegoede@redhat.com> wrote:
+>>>
+>>> Commit 35d13c7a0512 ("platform/x86: thinkpad_acpi: Use strndup_user()
+>>> in dispatch_proc_write()") cleaned up dispatch_proc_write() by replacing
+>>> the code to copy the passed in data from userspae with strndup_user().
+>>
+>> user space
 
-On Sun, Jul 12, 2020 at 11:28:37AM +0100, Jon Hunter wrote:
-> After commit cad064f1bd52 ("devres: handle zero size in devm_kmalloc()")
-> was added system suspend started failing on Tegra186. The kernel log
-> showed that the Tegra XHCI driver was crashing on entry to suspend when
-> attemptin the save the USB context. The problem is caused because we
-> are trying to allocate a zero length array for the IPFS context on
-> Tegra186 and following commit cad064f1bd52 ("devres: handle zero size
-> in devm_kmalloc()") this now causes a NULL pointer deference crash
-> when we try to access the memory. Fix this by only allocating memory
-> for both the IPFS and FPCI contexts when required.
->=20
-> Cc: stable@vger.kernel.org
->=20
-> Fixes: 5c4e8d3781bc ("usb: host: xhci-tegra: Add support for XUSB context=
- save/restore")
->=20
-> Signed-off-by: Jon Hunter <jonathanh@nvidia.com>
-> ---
->  drivers/usb/host/xhci-tegra.c | 22 ++++++++++++++--------
->  1 file changed, 14 insertions(+), 8 deletions(-)
+Ack, do you want me to send a v2, or can you fix this up after applying.
 
-Actually it would seem to me that this is no longer a bug after your fix
-in patch 1. We only ever access tegra->context.ipfs if
-tegra->soc->ipfs.num_offsets > 0, so the special ZERO_SIZE_PTR case will
-not actually cause an issue anymore.
+>>> But strndup_user() expects a 0 terminated input buffer and the buffer
+>>> passed to dispatch_proc_write() is NOT 0 terminated.
+> 
+> Second though, perhaps it's a simple wrong count parameter?
+> strndup_user(..., min(count, PAGE_SIZE)) or so would work?
 
-The reason why this was crashing was because tegra->context.fpci was
-allocated with a zero size (because of the bug that you fixed in patch
-1) and then that zero-size pointer was dereferenced because the code was
-correctly checking for tegra->soc->fpci.num_offsets > 0 in the context
-save and restore.
+I honestly have not looked at a better fix and given that you've just come
+up with 2 suggestions which may or may not work, combined with
+where we are in the 5.8 cycle I believe it would be best to just
+play it safe and go with the revert for 5.8.
 
-So I don't think there's a bug here. It's not wrong to allocate a zero-
-size buffer. It's only a bug to then go and dereference it. Are you
-still seeing the issue if you leave out this patch and only apply patch
-1?
+If you then take a second attempt at cleaning this up for 5.9 and
+send it to me, I can test it for you.
 
-Thierry
+Regards,
 
---DNUSDXU7R7AVVM8C
-Content-Type: application/pgp-signature; name="signature.asc"
+Hans
 
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl8Ne8YACgkQ3SOs138+
-s6FDDg/8CEz3TwFQZ66rzYhrJ454N+7L/iQDGUFwOVWDItvRGvKT/b6mGVa/CA1g
-mAm1dcSUr15ALz9ktJVS1kYlzUQ3XV8gLDtTQz3DPL3IULc75ykyWb6l5P0VMvQH
-s0kPu6SLZE/tLhApcoO3jzoq/m0aj0U1oBm4iDRlh9EbCZip8l4Er6Lcd0j4cRdY
-skYD09DG3v+WW2TVc97nfaWrf+J4e00a+96K/0tuw3WDFMO9CPuHOkAJ+RLVbVbF
-Ct3GDkQcrSeZ2J+ajbwXMPnRED493BJXLBAGfPGCvXh+r3gPCOVWWzFfnaXjs1mt
-m558IaWk5LRlxcKgzVY0L+vXDqBNa4oR5t9KszRosbUXqlg3sbJfIcAT4thelP9x
-1GHPrRmAlb9/Mw0zNsFaJK+O4WqLPMyms0nDHuY8Tcxhckr+vFuqZCdGW3GNI+ON
-fAL+UIr8BHjJ/pBInLe5fwAJImtLpI6o2G7sRlMtOYgnURCZAT/5ZFxlhGH/ShWL
-VVVYvf/M1oExnK4Y8kODARu9cgy1bCzvAMPFYT+Gec+TEECd2YWsPJYmFw91LiDO
-o3TnsA6g2LZmLzDsFfpp/TB+Bn0GcBz2znyncuZJltshMtVPbI4Ai/HXUIfXUMn7
-Ktl/q2KzH5cOrfyVAcn/4cNyOlNt/d9Fq7hU0kJzcooZCLxAgzs=
-=qqmM
------END PGP SIGNATURE-----
-
---DNUSDXU7R7AVVM8C--
