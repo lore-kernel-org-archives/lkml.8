@@ -2,281 +2,183 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE89CC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 02:40:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8CB1C433E7
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 02:38:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8056821789
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 02:40:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FrlaItIQ"
+	by mail.kernel.org (Postfix) with ESMTP id ABFD6207FB
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 02:38:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726962AbgGNCki (ORCPT
+        id S1726858AbgGNCit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 22:40:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57724 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726150AbgGNCki (ORCPT
+        Mon, 13 Jul 2020 22:38:49 -0400
+Received: from mail-qk1-f194.google.com ([209.85.222.194]:34775 "EHLO
+        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726823AbgGNCiq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 22:40:38 -0400
-Received: from mail-qk1-x743.google.com (mail-qk1-x743.google.com [IPv6:2607:f8b0:4864:20::743])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B9141C061755
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 19:40:37 -0700 (PDT)
-Received: by mail-qk1-x743.google.com with SMTP id q198so14334845qka.2
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 19:40:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=message-id:subject:from:to:cc:date:in-reply-to:references
-         :organization:user-agent:mime-version:content-transfer-encoding;
-        bh=VhnzMvRh92bFnB/5JzWL/d0Vx8GKiVAJ76KkNSRUr2c=;
-        b=FrlaItIQduAS/q8vh6uL7Tyi1GyQ/HVTA6SK7who6fyJ+dcqTPFsM0HxWEtovLQ1Mr
-         tjShazsTsayLomr6pmq7Hw9/B4eSwPfhIAKzqgaq0RX0UMJm69bl0UlVUbHV2IBP3ScJ
-         RG0Stwlmm33AbJ32V78v0gMbU+AUykc6Kum7LMlemilraH16BOYOA0bYWKOsscKpqW9j
-         GcBLrqgHZKFEZoUb2Kw5Oz7yPhB0cWl3JKsg2iM0pCdiOBqPlOlYPF3eWT1lAwK/fuwx
-         grrgJYaRwP69bRHmsKXYpnLlge7cydbLTXXiuipJTtkxHTxWARO3SjITTmd9q5kF8qik
-         vg3Q==
+        Mon, 13 Jul 2020 22:38:46 -0400
+Received: by mail-qk1-f194.google.com with SMTP id b185so14346133qkg.1
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 19:38:46 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:organization:user-agent:mime-version
-         :content-transfer-encoding;
-        bh=VhnzMvRh92bFnB/5JzWL/d0Vx8GKiVAJ76KkNSRUr2c=;
-        b=d8Q57VCNhkCgWj+Sf/Lbraj8lH1015Cpr0T+ihT4t19FWhowOUpqBTm9rPhXj9gBCL
-         oWZJuOM2wM/LlpFxEHk5K2l0hKKnRn47BYAUwszTqplley4JYzS5Wf1Q+c+iIyDPycnp
-         2R0HwpRpnfUUhG+7otOUr/GjMJqy92SFZwD/YITBQO4OVpSdKbQat+MiErZKx/T3l1ra
-         JB/TR4qZxeL98JlPf8+vwkLViTtJWqbbA+rysmuxVv7jtvyIzR8dXxzr9NpXLInPNmcZ
-         0WZkiJEycyTDoFz8XBnwywIjLPFObM3dTC7Ix8CvqfVwgWfUNW2+WDV8WpIw4FVxkXSr
-         DqZQ==
-X-Gm-Message-State: AOAM530gSr42NIduwjalEgJ9TDG4jgHngcCt3eJDbtuP9ktTbdnTpd5L
-        bg+S6cHULU69Sszl4nK/WTI=
-X-Google-Smtp-Source: ABdhPJxi0YtrONtF+8IAfqRVT5Lj4N4py9/mZBmawj9Vet9x7vAv3tmeIH/IeS7nBwMCwQoHFVLsKg==
-X-Received: by 2002:a37:d0d:: with SMTP id 13mr2671093qkn.234.1594694436832;
-        Mon, 13 Jul 2020 19:40:36 -0700 (PDT)
-Received: from LeoBras (179-125-193-229.dynamic.desktop.com.br. [179.125.193.229])
-        by smtp.gmail.com with ESMTPSA id r7sm20604694qtm.66.2020.07.13.19.40.33
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=qKCT1M8WWk8srwN5cXiqdOlqm+yOSS4ItsgBsi85XqQ=;
+        b=IfnRDZ+LTkNgwXzTHutsAat094AETvjqIu/D42H3fWD+5kkQOJSSubmy6uXWX71XcB
+         hJAlBusdfn9MbIX/21yaM31ErDJQlnN8SAavOlAP6egfytTwpTg/oyKEFvoZ6D7nWrji
+         o00+kBfQyi+QUjveCqF4ewRcqqgC2bXNdY+l18dvR4w8OsCQJIO81EH109aaYpO+BF/n
+         qNjsOPlXz8+gOhdrbW7512RkeP9+IX0hYxFkAKyE4J6qfbW38MAeWNMjZR/41/6Ua1a2
+         ZB3PwigctZKru1TY09TPxXa/eeL4qPxD/Rh/GAomhbVyWySJJKCM6IBrm+9jOxmMN+3D
+         e4Iw==
+X-Gm-Message-State: AOAM531fmhk5CQqM1Q8nlLDsTJbDPQBm/b1os6gMY2bVjRDd3klAsid3
+        uUSK599ZzUf+hD66canEq4ROMMhntUY=
+X-Google-Smtp-Source: ABdhPJzRuhX/Lf+i8Sm1XCU9GC4HFT2kmmvHpyc3qtupoHxIs66ZwZez6hJfwH8n8w3llhsSBPguew==
+X-Received: by 2002:a37:a444:: with SMTP id n65mr2440899qke.289.1594694325344;
+        Mon, 13 Jul 2020 19:38:45 -0700 (PDT)
+Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
+        by smtp.gmail.com with ESMTPSA id a22sm21046291qka.64.2020.07.13.19.38.44
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 Jul 2020 19:40:36 -0700 (PDT)
-Message-ID: <8c29be499e8741e7d77d53ca005034a2ca0179ac.camel@gmail.com>
-Subject: Re: [PATCH v3 4/6] powerpc/pseries/iommu: Remove default DMA window
- before creating DDW
-From:   Leonardo Bras <leobras.c@gmail.com>
-To:     Alexey Kardashevskiy <aik@ozlabs.ru>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Thiago Jung Bauermann <bauerman@linux.ibm.com>,
-        Ram Pai <linuxram@us.ibm.com>
-Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-Date:   Mon, 13 Jul 2020 23:40:30 -0300
-In-Reply-To: <cc15a81d-04d9-3ee4-4fdb-093618f6e635@ozlabs.ru>
-References: <20200703061844.111865-1-leobras.c@gmail.com>
-         <20200703061844.111865-5-leobras.c@gmail.com>
-         <cc15a81d-04d9-3ee4-4fdb-093618f6e635@ozlabs.ru>
-Organization: IBM
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.34.4 (3.34.4-1.fc31) 
+        Mon, 13 Jul 2020 19:38:44 -0700 (PDT)
+From:   Arvind Sankar <nivedita@alum.mit.edu>
+To:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org
+Cc:     Nick Desaulniers <ndesaulniers@google.com>,
+        Fangrui Song <maskray@google.com>,
+        Dmitry Golovin <dima@golovin.in>,
+        clang-built-linux@googlegroups.com,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Daniel Kiper <daniel.kiper@oracle.com>,
+        Sedat Dilek <sedat.dilek@gmail.com>,
+        Kees Cook <keescook@chromium.org>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        "H . J . Lu" <hjl@sourceware.org>, linux-kernel@vger.kernel.org
+Subject: [PATCH v4 6/7] x86/boot: Remove runtime relocations from head_{32,64}.S
+Date:   Mon, 13 Jul 2020 22:38:35 -0400
+Message-Id: <20200714023836.2310569-7-nivedita@alum.mit.edu>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200629140928.858507-1-nivedita@alum.mit.edu>
+References: <20200629140928.858507-1-nivedita@alum.mit.edu>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Thank you for this feedback Alexey!
+The BFD linker generates runtime relocations for z_input_len and
+z_output_len, even though they are absolute symbols.
 
-On Mon, 2020-07-13 at 17:33 +1000, Alexey Kardashevskiy wrote:
-> [...]
-> > -	int len, ret;
-> > +	int len, ret, reset_win_ext;
-> 
-> Make it "reset_token".
+This is fixed for binutils-2.35 [1]. Work around this for earlier
+versions by defining two variables input_len and output_len in addition
+to the symbols, and use them via position-independent references.
 
-Oh, it's not a token here, it just checks if the reset_win extension
-exists. The token would be returned in *value, but since we did not
-need it here, it's not copied.
+This eliminates the last two runtime relocations in the head code and
+allows us to drop the -z noreloc-overflow flag to the linker.
 
-> > [...]
-> > -out_failed:
-> > +out_restore_defwin:
-> > +	if (default_win && reset_win_ext == 0)
-> 
-> reset_win_ext potentially may be uninitialized here. Yeah I know it is
-> tied to default_win but still.
+[1] https://sourceware.org/bugzilla/show_bug.cgi?id=25754
 
-I can't see it being used uninitialized here, as you said it's tied to
-default_win. 
-Could you please tell me how it can be used uninitialized here, or what
-is bad by doing this way?
+Reviewed-by: Kees Cook <keescook@chromium.org>
+Reviewed-by: Ard Biesheuvel <ardb@kernel.org>
+Reviewed-by: Fangrui Song <maskray@google.com>
+Signed-off-by: Arvind Sankar <nivedita@alum.mit.edu>
+---
+ arch/x86/boot/compressed/Makefile  |  8 --------
+ arch/x86/boot/compressed/head_32.S | 17 ++++++++---------
+ arch/x86/boot/compressed/head_64.S |  4 ++--
+ arch/x86/boot/compressed/mkpiggy.c |  6 ++++++
+ 4 files changed, 16 insertions(+), 19 deletions(-)
 
-> After looking at this function for a few minutes, it could use some
-> refactoring (way too many gotos)  such as:
-
-Yes, I agree.
-
-> 1. move (query.page_size & xx) checks before "if
-> (query.windows_available == 0)"
-
-Moving 'page_size selection' above 'checking windows available' will
-need us to duplicate the 'page_size selection' after the new query,
-inside the if.
-I mean, as query will be done again, it will need to get the (new) page
-size.
-
-> 2. move "win64 = kzalloc(sizeof(struct property), GFP_KERNEL)" before
-> "if (query.windows_available == 0)"
-
-> 3. call "reset_dma_window(dev, pdn)" inside the "if
-> (query.windows_available == 0)" branch.
-
-> Then you can drop all "goto out_restore_defwin" and move default_win and
-> reset_win_ext inside "if (query.windows_available == 0)".
-
-I did all changes suggested locally and did some analysis in the
-result:
-
-I did not see a way to put default_win and reset_win_ext inside 
-"if (query.windows_available == 0)", because if we still need a way to
-know if the default window was removed, and if so, restore in case
-anything ever fails ahead (like creating the node property). 
-
-But from that analysis I noted it's possible to remove all the new
-"goto out_restore_defwin", if we do default_win = NULL if
-ddw_read_ext() fails. 
-
-So testing only default_win should always be enough to say if the
-default window was deleted, and reset_win_ext could be moved inside "if
-(query.windows_available == 0)".
-Also, it would avoid reset_win_ext being 'used uninitialized' and
-"out_restore_defwin:" would not be needed.
-
-Against the current patch, we would have something like this:
-
-#####
-
- static u64 enable_ddw(struct pci_dev *dev, struct device_node *pdn)
- {
--       int len, ret, reset_win_ext;
-+       int len, ret;
-        struct ddw_query_response query;
-        struct ddw_create_response create;
-        int page_shift;
-@@ -1173,25 +1173,28 @@ static u64 enable_ddw(struct pci_dev *dev,
-struct device_node *pdn)
-         * for extensions presence.
-         */
-        if (query.windows_available == 0) {
-+               int reset_win_ext;
-                default_win = of_find_property(pdn, "ibm,dma-window",
-NULL);
-                if (!default_win)
-                        goto out_failed;
+diff --git a/arch/x86/boot/compressed/Makefile b/arch/x86/boot/compressed/Makefile
+index c829d874dcac..7cd9a2870f7c 100644
+--- a/arch/x86/boot/compressed/Makefile
++++ b/arch/x86/boot/compressed/Makefile
+@@ -51,15 +51,7 @@ UBSAN_SANITIZE :=n
+ KBUILD_LDFLAGS := -m elf_$(UTS_MACHINE)
+ # Compressed kernel should be built as PIE since it may be loaded at any
+ # address by the bootloader.
+-ifeq ($(CONFIG_X86_32),y)
+ KBUILD_LDFLAGS += $(call ld-option, -pie) $(call ld-option, --no-dynamic-linker)
+-else
+-# To build 64-bit compressed kernel as PIE, we disable relocation
+-# overflow check to avoid relocation overflow error with a new linker
+-# command-line option, -z noreloc-overflow.
+-KBUILD_LDFLAGS += $(shell $(LD) --help 2>&1 | grep -q "\-z noreloc-overflow" \
+-	&& echo "-z noreloc-overflow -pie --no-dynamic-linker")
+-endif
+ LDFLAGS_vmlinux := -T
  
-                reset_win_ext = ddw_read_ext(pdn,
-DDW_EXT_RESET_DMA_WIN, NULL);
--               if (reset_win_ext)
-+               if (reset_win_ext){
-+                       default_win = NULL;
-                        goto out_failed;
-+               }
+ hostprogs	:= mkpiggy
+diff --git a/arch/x86/boot/compressed/head_32.S b/arch/x86/boot/compressed/head_32.S
+index 8c1a4f5610f5..659fad53ca82 100644
+--- a/arch/x86/boot/compressed/head_32.S
++++ b/arch/x86/boot/compressed/head_32.S
+@@ -178,18 +178,17 @@ SYM_FUNC_START_LOCAL_NOALIGN(.Lrelocated)
+ /*
+  * Do the extraction, and jump to the new kernel..
+  */
+-				/* push arguments for extract_kernel: */
+-	pushl	$z_output_len	/* decompressed length, end of relocs */
++	/* push arguments for extract_kernel: */
  
-                remove_dma_window(pdn, ddw_avail, default_win);
+-	pushl	%ebp		/* output address */
+-
+-	pushl	$z_input_len	/* input_len */
++	pushl	output_len@GOTOFF(%ebx)	/* decompressed length, end of relocs */
++	pushl	%ebp			/* output address */
++	pushl	input_len@GOTOFF(%ebx)	/* input_len */
+ 	leal	input_data@GOTOFF(%ebx), %eax
+-	pushl	%eax		/* input_data */
++	pushl	%eax			/* input_data */
+ 	leal	boot_heap@GOTOFF(%ebx), %eax
+-	pushl	%eax		/* heap area */
+-	pushl	%esi		/* real mode pointer */
+-	call	extract_kernel	/* returns kernel location in %eax */
++	pushl	%eax			/* heap area */
++	pushl	%esi			/* real mode pointer */
++	call	extract_kernel		/* returns kernel location in %eax */
+ 	addl	$24, %esp
  
-                /* Query again, to check if the window is available */
-                ret = query_ddw(dev, ddw_avail, &query, pdn);
-                if (ret != 0)
--                       goto out_restore_defwin;
-+                       goto out_failed;
+ /*
+diff --git a/arch/x86/boot/compressed/head_64.S b/arch/x86/boot/compressed/head_64.S
+index 11429092c224..9e46729cf162 100644
+--- a/arch/x86/boot/compressed/head_64.S
++++ b/arch/x86/boot/compressed/head_64.S
+@@ -534,9 +534,9 @@ SYM_FUNC_START_LOCAL_NOALIGN(.Lrelocated)
+ 	movq	%rsi, %rdi		/* real mode address */
+ 	leaq	boot_heap(%rip), %rsi	/* malloc area for uncompression */
+ 	leaq	input_data(%rip), %rdx  /* input_data */
+-	movl	$z_input_len, %ecx	/* input_len */
++	movl	input_len(%rip), %ecx	/* input_len */
+ 	movq	%rbp, %r8		/* output target address */
+-	movl	$z_output_len, %r9d	/* decompressed length, end of relocs */
++	movl	output_len(%rip), %r9d	/* decompressed length, end of relocs */
+ 	call	extract_kernel		/* returns kernel location in %rax */
+ 	popq	%rsi
  
-                if (query.windows_available == 0) {
-                        /* no windows are available for this device. */
-                        dev_dbg(&dev->dev, "no free dynamic windows");
--                       goto out_restore_defwin;
-+                       goto out_failed;
-                }
-        }
-        if (query.page_size & 4) {
-@@ -1203,7 +1206,7 @@ static u64 enable_ddw(struct pci_dev *dev, struct
-device_node *pdn)
-        } else {
-                dev_dbg(&dev->dev, "no supported direct page size in
-mask %x",
-                          query.page_size);
--               goto out_restore_defwin;
-+               goto out_failed;
-        }
-        /* verify the window * number of ptes will map the partition */
-        /* check largest block * page size > max memory hotplug addr */
-@@ -1212,14 +1215,14 @@ static u64 enable_ddw(struct pci_dev *dev,
-struct device_node *pdn)
-                dev_dbg(&dev->dev, "can't map partition max 0x%llx with
-%llu "
-                          "%llu-sized pages\n",
-max_addr,  query.largest_available_block,
-                          1ULL << page_shift);
--               goto out_restore_defwin;
-+               goto out_failed;
-        }
-        len = order_base_2(max_addr);
-        win64 = kzalloc(sizeof(struct property), GFP_KERNEL);
-        if (!win64) {
-                dev_info(&dev->dev,
-                        "couldn't allocate property for 64bit dma
-window\n");
--               goto out_restore_defwin;
-+               goto out_failed;
-        }
-        win64->name = kstrdup(DIRECT64_PROPNAME, GFP_KERNEL);
-        win64->value = ddwprop = kmalloc(sizeof(*ddwprop), GFP_KERNEL);
-@@ -1282,11 +1285,10 @@ static u64 enable_ddw(struct pci_dev *dev,
-struct device_node *pdn)
-        kfree(win64->value);
-        kfree(win64);
+diff --git a/arch/x86/boot/compressed/mkpiggy.c b/arch/x86/boot/compressed/mkpiggy.c
+index 7e01248765b2..52aa56cdbacc 100644
+--- a/arch/x86/boot/compressed/mkpiggy.c
++++ b/arch/x86/boot/compressed/mkpiggy.c
+@@ -60,6 +60,12 @@ int main(int argc, char *argv[])
+ 	printf(".incbin \"%s\"\n", argv[1]);
+ 	printf("input_data_end:\n");
  
--out_restore_defwin:
--       if (default_win && reset_win_ext == 0)
-+out_failed:
-+       if (default_win)
-                reset_dma_window(dev, pdn);
- 
--out_failed:
-        fpdn = kzalloc(sizeof(*fpdn), GFP_KERNEL);
-        if (!fpdn)
-                goto out_unlock;
-
-#####
-
-What do you think?
-
-
-
-> The rest of the series is good as it is,
-
-Thank you :)
-
->  however it may conflict with
-> https://patchwork.ozlabs.org/project/linuxppc-dev/patch/20200713062348.100552-1-aik@ozlabs.ru/
-> and the patchset it is made on top of -
-> https://patchwork.ozlabs.org/project/linuxppc-dev/list/?series=188385 .
-
-<From the message of the first link>
-> (do not rush, let me finish reviewing this first) 
-
-Ok, I have no problem rebasing on top of those patchsets, but what
-would you suggest to be done?
-
-Would it be ok doing a big multi-author patchset, so we guarantee it
-being applied in the correct order?
-
-(You probably want me to rebase my patchset on top of Hellwig + yours,
-right?) 
-
-
-> thanks,
-Thank you!
-
-
++	printf(".section \".rodata\",\"a\",@progbits\n");
++	printf(".globl input_len\n");
++	printf("input_len:\n\t.long %lu\n", ilen);
++	printf(".globl output_len\n");
++	printf("output_len:\n\t.long %lu\n", (unsigned long)olen);
++
+ 	retval = 0;
+ bail:
+ 	if (f)
+-- 
+2.26.2
 
