@@ -2,99 +2,134 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A925C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 07:07:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99241C433F4
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 07:08:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5D2C22076D
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 07:07:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7166D221FD
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 07:08:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="agPnpXFU";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="SO9e64r7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726944AbgGNHHn (ORCPT
+        id S1727050AbgGNHIX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 03:07:43 -0400
-Received: from mx2.suse.de ([195.135.220.15]:42586 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725925AbgGNHHn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 03:07:43 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 9B451B145;
-        Tue, 14 Jul 2020 07:07:43 +0000 (UTC)
-Subject: Re: [PATCH v2 20/29] scsi: aic7xxx: aic7xxx_osm: Remove unused
- variable 'targ'
-To:     Lee Jones <lee.jones@linaro.org>, jejb@linux.ibm.com,
-        martin.petersen@oracle.com
-Cc:     linux-kernel@vger.kernel.org, linux-scsi@vger.kernel.org,
-        Hannes Reinecke <hare@suse.com>,
-        "Daniel M. Eischen" <deischen@iworks.InterWorks.org>,
-        Doug Ledford <dledford@redhat.com>
-References: <20200713074645.126138-1-lee.jones@linaro.org>
- <20200713074645.126138-21-lee.jones@linaro.org>
-From:   Hannes Reinecke <hare@suse.de>
-Message-ID: <2c38b2b2-d6b4-8a3e-3dd5-8bd511d8396a@suse.de>
-Date:   Tue, 14 Jul 2020 09:07:38 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Tue, 14 Jul 2020 03:08:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42276 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725925AbgGNHIW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 03:08:22 -0400
+Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 467C1C061755
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 00:08:22 -0700 (PDT)
+Date:   Tue, 14 Jul 2020 09:08:11 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1594710500;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=jPRRFki10EiKd1lhNuS/YJXha59CcEIMe6vwOhimWWM=;
+        b=agPnpXFUrnQRVkS/UHW2Ri+kLt1+TXg2coqyXzHiJh6ez1+2izW5ch9kTbN6sDhSmcAv0Q
+        xW6SybTM06IcugrE7LQc6Y9fqcXD1n5dzKApwDwv94nDaPMnNalPAyPQluIeXU9mnwoHRi
+        +vBfsPVQwd5yXhFRg7F8OegfWFhjZ0qncXCHx2/70yIdqEJdnp3tQlMdwbpWLBQVBNfTSS
+        aS9pmoNd+E513An4urR4P5fVI+35/W6vcHC4YoX6Xn2rS69mHqBtanLleFWJEQZb/jzwkq
+        yI0985rFANY8zCd4hBIGHTpsp8mQ1iVcojTJCU/SGna7QfRIXEUZEDLHQhA4XQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1594710500;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=jPRRFki10EiKd1lhNuS/YJXha59CcEIMe6vwOhimWWM=;
+        b=SO9e64r7iyJZGDcire0q/B7Iq/vHZCokDD3nW6yL7fxR/IHz5Wb97m0US0xyVvHqXLyHA3
+        UkoMeD0LFxTSOJCw==
+From:   Anna-Maria Behnsen <anna-maria@linutronix.de>
+To:     Frederic Weisbecker <frederic@kernel.org>
+cc:     linux-kernel@vger.kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [PATCH] timers: Use only bucket expiry for base->next_expiry
+ value
+In-Reply-To: <20200710214458.GA31351@lenoir>
+Message-ID: <alpine.DEB.2.21.2007140853310.17878@somnus>
+References: <20200710154622.14989-1-anna-maria@linutronix.de> <20200710214458.GA31351@lenoir>
 MIME-Version: 1.0
-In-Reply-To: <20200713074645.126138-21-lee.jones@linaro.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/13/20 9:46 AM, Lee Jones wrote:
-> Looks like checking the 'targ' was removed in 2005.
-> 
-> Fixes the following W=1 kernel build warning(s):
-> 
->   drivers/scsi/aic7xxx/aic7xxx_osm.c: In function ‘ahc_send_async’:
->   drivers/scsi/aic7xxx/aic7xxx_osm.c:1604:28: warning: variable ‘targ’ set but not used [-Wunused-but-set-variable]
->   1604 | struct ahc_linux_target *targ;
->   | ^~~~
-> 
-> Cc: Hannes Reinecke <hare@suse.com>
-> Cc: "Daniel M. Eischen" <deischen@iworks.InterWorks.org>
-> Cc: Doug Ledford <dledford@redhat.com>
-> Signed-off-by: Lee Jones <lee.jones@linaro.org>
-> ---
->   drivers/scsi/aic7xxx/aic7xxx_osm.c | 2 --
->   1 file changed, 2 deletions(-)
-> 
-> diff --git a/drivers/scsi/aic7xxx/aic7xxx_osm.c b/drivers/scsi/aic7xxx/aic7xxx_osm.c
-> index cc4c7b1781466..ed437c16de881 100644
-> --- a/drivers/scsi/aic7xxx/aic7xxx_osm.c
-> +++ b/drivers/scsi/aic7xxx/aic7xxx_osm.c
-> @@ -1592,7 +1592,6 @@ ahc_send_async(struct ahc_softc *ahc, char channel,
->   	case AC_TRANSFER_NEG:
->   	{
->   		struct	scsi_target *starget;
-> -		struct	ahc_linux_target *targ;
->   		struct	ahc_initiator_tinfo *tinfo;
->   		struct	ahc_tmode_tstate *tstate;
->   		int	target_offset;
-> @@ -1626,7 +1625,6 @@ ahc_send_async(struct ahc_softc *ahc, char channel,
->   		starget = ahc->platform_data->starget[target_offset];
->   		if (starget == NULL)
->   			break;
-> -		targ = scsi_transport_target_data(starget);
->   
->   		target_ppr_options =
->   			(spi_dt(starget) ? MSG_EXT_PPR_DT_REQ : 0)
-> 
-Reviewed-by: Hannes Reinecke <hare@suse.de>
+Hi Frederic,
 
-Cheers,
+On Fri, 10 Jul 2020, Frederic Weisbecker wrote:
 
-Hannes
--- 
-Dr. Hannes Reinecke            Teamlead Storage & Networking
-hare@suse.de                               +49 911 74053 688
-SUSE Software Solutions GmbH, Maxfeldstr. 5, 90409 Nürnberg
-HRB 36809 (AG Nürnberg), Geschäftsführer: Felix Imendörffer
+> Hi Anna-Maria,
+> 
+> Nice change, it indeed makes more sense that way.
+> Just a few details below:
+> 
+> On Fri, Jul 10, 2020 at 05:46:22PM +0200, Anna-Maria Behnsen wrote:
+> > Use the expiry value of the bucket into which the timer is queued to
+> > do the new first timer check. This fixes the base->clk going backward
+> > problem and also prevents unnecessary softirq invocations when the
+> > timer->expiry is not equal to the bucket expiry time in case of a new
+> > first timer which is queued in a secondary wheel level.
+> 
+> I think there shouldn't be such unecessary softirq invocations. Either they
+> fire at the bucket expiry time or the timer expiry time, it doesn't make
+> much difference.
+
+It will make a difference but only with your queue (I had the changes of
+your queue already in mind, when writing the commit message)... I will
+remove this.
+
+> More important below:
+> 
+> > -static int calc_wheel_index(unsigned long expires, unsigned long clk)
+> > +static int calc_wheel_index(unsigned long expires, unsigned long clk,
+> > +			    unsigned long *bucket_expiry)
+> >  {
+> >  	unsigned long delta = expires - clk;
+> >  	unsigned int idx;
+> >  
+> >  	if (delta < LVL_START(1)) {
+> > -		idx = calc_index(expires, 0);
+> > +		idx = calc_index(expires, 0, bucket_expiry);
+> >  	} else if (delta < LVL_START(2)) {
+> > -		idx = calc_index(expires, 1);
+> > +		idx = calc_index(expires, 1, bucket_expiry);
+> >  	} else if (delta < LVL_START(3)) {
+> > -		idx = calc_index(expires, 2);
+> > +		idx = calc_index(expires, 2, bucket_expiry);
+> >  	} else if (delta < LVL_START(4)) {
+> > -		idx = calc_index(expires, 3);
+> > +		idx = calc_index(expires, 3, bucket_expiry);
+> >  	} else if (delta < LVL_START(5)) {
+> > -		idx = calc_index(expires, 4);
+> > +		idx = calc_index(expires, 4, bucket_expiry);
+> >  	} else if (delta < LVL_START(6)) {
+> > -		idx = calc_index(expires, 5);
+> > +		idx = calc_index(expires, 5, bucket_expiry);
+> >  	} else if (delta < LVL_START(7)) {
+> > -		idx = calc_index(expires, 6);
+> > +		idx = calc_index(expires, 6, bucket_expiry);
+> >  	} else if (LVL_DEPTH > 8 && delta < LVL_START(8)) {
+> > -		idx = calc_index(expires, 7);
+> > +		idx = calc_index(expires, 7, bucket_expiry);
+> >  	} else if ((long) delta < 0) {
+> >  		idx = clk & LVL_MASK;
+> 
+> You also need to handle that part. That's in fact the critical one  :)
+> 
+
+damn... too many idx here...
+
+Thanks,
+
+	Anna-Maria
+
