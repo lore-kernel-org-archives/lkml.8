@@ -2,211 +2,143 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70643C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:20:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4129C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:20:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3838622596
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:20:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 81F0320EDD
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:20:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YgGQaKPE"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="JB+J/nyt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728995AbgGNSUN (ORCPT
+        id S1729136AbgGNSUZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 14:20:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34236 "EHLO
+        Tue, 14 Jul 2020 14:20:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34274 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726989AbgGNSUM (ORCPT
+        with ESMTP id S1729030AbgGNSUX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 14:20:12 -0400
-Received: from mail-il1-x143.google.com (mail-il1-x143.google.com [IPv6:2607:f8b0:4864:20::143])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 44931C061755
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 11:20:12 -0700 (PDT)
-Received: by mail-il1-x143.google.com with SMTP id t4so15051511iln.1
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 11:20:12 -0700 (PDT)
+        Tue, 14 Jul 2020 14:20:23 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C4954C08C5DD
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 11:20:22 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id k6so23839984wrn.3
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 11:20:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:reply-to:from:date:message-id
-         :subject:to:cc;
-        bh=LBM8mZ5TU62dVovLrevNINwnFxRJdGHmD0tUrxeo9bA=;
-        b=YgGQaKPEOmvcQOyPiDG6H54qBUMxmOa9APfc6QP93a9cVxaGD1EwsdbxcjmTF8LhyI
-         Y872ffWWDPqAxdyYNiGeVwdvQC19MdpEZMBOX9eoS6mH9pZesXywgOrkhkS3KITmUk4W
-         Z9dOj8YFJ9QV2lh4vXq2K8R0ZNSWkS8nGlRbrrzaH5SUnfOHAiB1qleAySu5Cy3oY4Uk
-         5uxmPvlx6i9XYRAEsqOyGgZAgRSdIfl/jQf+XS5kpeGeXWSsEfO5aarZGprO+LmS3jFd
-         S06ZrSUQVBdJW2VfAn3bOcqP/CoLJen36e0VN5Bw1BhsNzvu8oGa66t164DdvUOZzmNx
-         aAFA==
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=HPlGFdGBPdOOnjWNIrp7n7fX2f6c5N2cri07SgmWmTg=;
+        b=JB+J/nyt6TfGmfP1FNHzDlP0adDJxkUGVFw5/aitKXAyBNMl8DYy62MiTBc8Rk1QD+
+         rm4HViH+6fsIyde6WYByrD91wRfXvfHvxs/vnOJ8wI0lqj0DgxgzvyrBe4aTsR1yCrzx
+         47P82a7vcihTMuj/258naogm0mSiGnyx4C/10=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:reply-to
-         :from:date:message-id:subject:to:cc;
-        bh=LBM8mZ5TU62dVovLrevNINwnFxRJdGHmD0tUrxeo9bA=;
-        b=E/AP9aMd7S+6wSIXaZYDTWK8jiPatdKRPBmp9/tryUNIxWep8MRi4JsyjxfyJUUtpU
-         2uxgHHhTH9HcCFGjFqLU6pWMHTuD9jKm5F7wzieblnr2l2KRo7tDvF+Vhpv4qTzDwb/M
-         48tItXXICuHiEV2Mc1ZlQtYNWmoXbsjGCn4/fSPE73m5A+ugoeeSQ1lRx2p/q457z8vq
-         jp9tgC49BTfo9zCGf04oiQ1U91fnEsacCqQyr0aT8Csf4IQx+uIFMHwgL+JAHGAxbmw3
-         mYIZJ86Guk6FdOXL2l1bXtE5UlmyhkRjQFF/xYNrXJH+xnS5vbYlbhjIc3wVgGYh82g/
-         WWoQ==
-X-Gm-Message-State: AOAM5323zugQOSv8RdbRcI23L108Py9zJv15bt7FGv0eKgn0on4ha3zC
-        VNEGb0kwr6u4ostELW7PtdYIxxUWQso4hLs7nmI=
-X-Google-Smtp-Source: ABdhPJzMp8f1ZYsA+NPqsWgoz/btZaewhlW6Krb1Gw9Ul9uLTmz79yG70LVh7EN0MW9KtgDy81QQ0RVD+6O7dMHvmOQ=
-X-Received: by 2002:a92:dc09:: with SMTP id t9mr6142976iln.226.1594750811549;
- Tue, 14 Jul 2020 11:20:11 -0700 (PDT)
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=HPlGFdGBPdOOnjWNIrp7n7fX2f6c5N2cri07SgmWmTg=;
+        b=B+5C0PXZFoyFoXYAH1w3+NV52MDDxdXYG9jm5pAA4TehDbrvq8oseuD0pytmcemQsp
+         n/FFhRHkXWW6S9Y5/7LM37+sph/AX20juVrpAYSuF5pIpIr0aR7uMeE08RtEgvADpmXa
+         g2HnTH/O88fdBUy8TLNSXIH0nrlj47rsoD5pxr+nbVLnD7RCI9Y+gqDfkKpRYhDrpk2o
+         VUZqkghS8Ghitvlk6clgKvk8CGxtNjmRi4QFte2Or+/qDBBDjsX8N5s5L9X+YXgJZVwu
+         vwnz1nYx7E7U6wK4ZMcSRKEwCZE+LVkXlLy/2/g1mr6Elq8zmNyAohdSrVqthlyWigci
+         X8jQ==
+X-Gm-Message-State: AOAM533QDhrvIPQxzErmobqHPcRJYafjl0BX0KfKUt5Po3aX6Ks0hvJ3
+        hfHGs57HmTPt+tewkjXiqYthw1DExjUDxHtcM4hS4A==
+X-Google-Smtp-Source: ABdhPJzTRetuwJgvNgpbAVJcEpxdMAupdArwCBSPE038dmzCtxo8SQiUfeNuFojjgzmNMeBkMFoGBcaYJM2tZf4UVL4=
+X-Received: by 2002:a5d:4a45:: with SMTP id v5mr7440248wrs.228.1594750821121;
+ Tue, 14 Jul 2020 11:20:21 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200714111103.14591-1-sedat.dilek@gmail.com> <CAKwvOdk3WSMhMxxaWfFeWYkR=xYgwrREckS+X5Yg5QeC48UVrg@mail.gmail.com>
-In-Reply-To: <CAKwvOdk3WSMhMxxaWfFeWYkR=xYgwrREckS+X5Yg5QeC48UVrg@mail.gmail.com>
-Reply-To: sedat.dilek@gmail.com
-From:   Sedat Dilek <sedat.dilek@gmail.com>
-Date:   Tue, 14 Jul 2020 20:19:59 +0200
-Message-ID: <CA+icZUUBvSzbG9CXSzdtphotmFhG-5y5aXgDFwjwx7_QeE5hvg@mail.gmail.com>
-Subject: Re: [PATCH v2] x86/entry: Fix vectors to IDTENTRY_SYSVEC for CONFIG_HYPERV
-To:     Nick Desaulniers <ndesaulniers@google.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Alexandre Chartre <alexandre.chartre@oracle.com>,
-        Wei Liu <wei.liu@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Jian Cai <caij2003@gmail.com>,
-        Nathan Chancellor <natechancellor@gmail.com>
+References: <20200709182642.1773477-1-keescook@chromium.org> <20200709182642.1773477-9-keescook@chromium.org>
+In-Reply-To: <20200709182642.1773477-9-keescook@chromium.org>
+From:   Will Drewry <wad@chromium.org>
+Date:   Tue, 14 Jul 2020 13:20:08 -0500
+Message-ID: <CAAFS_9Gx1=ytAqTPE3ygh6euJqDObcdg70-gzUuq3eHeWHR2HQ@mail.gmail.com>
+Subject: Re: [PATCH v7 8/9] seccomp: Introduce addfd ioctl to seccomp user notifier
+To:     Kees Cook <keescook@chromium.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Sargun Dhillon <sargun@sargun.me>,
+        Matt Denton <mpdenton@google.com>,
+        Christian Brauner <christian@brauner.io>,
+        Tycho Andersen <tycho@tycho.ws>,
+        David Laight <David.Laight@aculab.com>,
+        Christoph Hellwig <hch@lst.de>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Aleksa Sarai <cyphar@cyphar.com>, Jann Horn <jannh@google.com>,
+        Chris Palmer <palmer@google.com>,
+        Robert Sesek <rsesek@google.com>,
+        Giuseppe Scrivano <gscrivan@redhat.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Shuah Khan <shuah@kernel.org>, netdev@vger.kernel.org,
+        containers@lists.linux-foundation.org, linux-api@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kselftest@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 14, 2020 at 7:46 PM Nick Desaulniers
-<ndesaulniers@google.com> wrote:
+On Thu, Jul 9, 2020 at 1:26 PM Kees Cook <keescook@chromium.org> wrote:
 >
-> On Tue, Jul 14, 2020 at 4:11 AM Sedat Dilek <sedat.dilek@gmail.com> wrote:
-> >
-> > When using Clang's Integrated Assembler (LLVM_IAS=1) we fell over
-> > ClangBuiltLinux (CBL) issue #1043 where Jian Cai provided a patch.
-> >
-> > With Jian's patch applied another issue raised up when CONFIG_HYPERV=m.
-> >
-> > It turned out that the conversion of vectors to IDTENTRY_SYSVEC in
-> > case of CONFIG_HYPERV was incomplete and fails with a build error:
-> >
-> > <instantiation>:9:6: error: expected absolute expression
-> >  .if HYPERVISOR_REENLIGHTENMENT_VECTOR == 3
-> >      ^
-> > <instantiation>:1:1: note: while in macro instantiation
-> > idtentry HYPERVISOR_REENLIGHTENMENT_VECTOR asm_sysvec_hyperv_reenlightenment sysvec_hyperv_reenlightenment has_error_code=0
-> > ^
-> > ./arch/x86/include/asm/idtentry.h:627:1: note: while in macro instantiation
-> > idtentry_sysvec HYPERVISOR_REENLIGHTENMENT_VECTOR sysvec_hyperv_reenlightenment;
-> > ^
-> > <instantiation>:9:6: error: expected absolute expression
-> >  .if HYPERVISOR_STIMER0_VECTOR == 3
-> >      ^
-> > <instantiation>:1:1: note: while in macro instantiation
-> > idtentry HYPERVISOR_STIMER0_VECTOR asm_sysvec_hyperv_stimer0 sysvec_hyperv_stimer0 has_error_code=0
-> > ^
-> > ./arch/x86/include/asm/idtentry.h:628:1: note: while in macro instantiation
-> > idtentry_sysvec HYPERVISOR_STIMER0_VECTOR sysvec_hyperv_stimer0;
-> >
-> > I and Nathan double-checked the hyperv(isor) vectors:
-> >
-> > $ rg --no-heading "HYPERVISOR_REENLIGHTENMENT_VECTOR|HYPERVISOR_STIMER0_VECTOR"
-> > $ rg --no-heading "HYPERV_REENLIGHTENMENT_VECTOR|HYPERV_STIMER0_VECTOR"
-> >
-> > Fix these typos in arch/x86/include/asm/idtentry.h:
-> >
-> > HYPERVISOR_REENLIGHTENMENT_VECTOR -> HYPERV_REENLIGHTENMENT_VECTOR
-> > HYPERVISOR_STIMER0_VECTOR         -> HYPERV_STIMER0_VECTOR
-> >
-> > For more details see CBL issue #1088.
-> >
-> > With both fixes applied I was able to build/assemble with a snapshot
-> > version of LLVM/Clang from Debian/experimental.
-> >
-> > NOTE: My patch is independent from Jian's patch and should be applied separately.
+> From: Sargun Dhillon <sargun@sargun.me>
 >
-> Hi Sedat,
-> Thanks for the patch!  Nice job finding the fix.
+> The current SECCOMP_RET_USER_NOTIF API allows for syscall supervision over
+> an fd. It is often used in settings where a supervising task emulates
+> syscalls on behalf of a supervised task in userspace, either to further
+> restrict the supervisee's syscall abilities or to circumvent kernel
+> enforced restrictions the supervisor deems safe to lift (e.g. actually
+> performing a mount(2) for an unprivileged container).
 >
-> I would like to see a v3 with the commit message trimmed a bit.  In
-> particular, you mention that Jian's patch is unrelated.  In that case,
-> please don't mention it in the commit message, drop the link to issue
-> #1043, and drop the lore link.  I think if the commit was just simply:
+> While SECCOMP_RET_USER_NOTIF allows for the interception of any syscall,
+> only a certain subset of syscalls could be correctly emulated. Over the
+> last few development cycles, the set of syscalls which can't be emulated
+> has been reduced due to the addition of pidfd_getfd(2). With this we are
+> now able to, for example, intercept syscalls that require the supervisor
+> to operate on file descriptors of the supervisee such as connect(2).
 >
-> ```
-> x86/entry: Fix vectors to IDTENTRY_SYSVEC for CONFIG_HYPERV
+> However, syscalls that cause new file descriptors to be installed can not
+> currently be correctly emulated since there is no way for the supervisor
+> to inject file descriptors into the supervisee. This patch adds a
+> new addfd ioctl to remove this restriction by allowing the supervisor to
+> install file descriptors into the intercepted task. By implementing this
+> feature via seccomp the supervisor effectively instructs the supervisee
+> to install a set of file descriptors into its own file descriptor table
+> during the intercepted syscall. This way it is possible to intercept
+> syscalls such as open() or accept(), and install (or replace, like
+> dup2(2)) the supervisor's resulting fd into the supervisee. One
+> replacement use-case would be to redirect the stdout and stderr of a
+> supervisee into log file descriptors opened by the supervisor.
 >
-> When assembling with Clang via `make LLVM_IAS=1`, we observe the
-> following error:
-> <instantiation>:9:6: error: expected absolute expression
-> <rest of the diagnostic>
+> The ioctl handling is based on the discussions[1] of how Extensible
+> Arguments should interact with ioctls. Instead of building size into
+> the addfd structure, make it a function of the ioctl command (which
+> is how sizes are normally passed to ioctls). To support forward and
+> backward compatibility, just mask out the direction and size, and match
+> everything. The size (and any future direction) checks are done along
+> with copy_struct_from_user() logic.
 >
-> This is caused by typos in arch/x86/include/asm/idtentry.h:
+> As a note, the seccomp_notif_addfd structure is laid out based on 8-byte
+> alignment without requiring packing as there have been packing issues
+> with uapi highlighted before[2][3]. Although we could overload the
+> newfd field and use -1 to indicate that it is not to be used, doing
+> so requires changing the size of the fd field, and introduces struct
+> packing complexity.
 >
-> HYPERVISOR_REENLIGHTENMENT_VECTOR -> HYPERV_REENLIGHTENMENT_VECTOR
-> HYPERVISOR_STIMER0_VECTOR         -> HYPERV_STIMER0_VECTOR
-> ```
-> Then the tags you have below minus the unrelated ones.
+> [1]: https://lore.kernel.org/lkml/87o8w9bcaf.fsf@mid.deneb.enyo.de/
+> [2]: https://lore.kernel.org/lkml/a328b91d-fd8f-4f27-b3c2-91a9c45f18c0@rasmusvillemoes.dk/
+> [3]: https://lore.kernel.org/lkml/20200612104629.GA15814@ircssh-2.c.rugged-nimbus-611.internal
 >
-> >
-> > Cc: Jian Cai <caij2003@gmail.com>
-> > Cc: clang-built-linux@googlegroups.com
-> > Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
-> > Reviewed-by: Wei Liu <wei.liu@kernel.org>
-> > Fixes: a16be368dd3f ("x86/entry: Convert various hypervisor vectors to IDTENTRY_SYSVEC")
-> > Link: https://github.com/ClangBuiltLinux/linux/issues/1043
-> > Link: https://lore.kernel.org/patchwork/patch/1272115/
-> > Link: https://github.com/ClangBuiltLinux/linux/issues/1088
-> > Signed-off-by: Sedat Dilek <sedat.dilek@gmail.com>
-> > ---
->
-> Otherwise you can put some additional info here "below the fold."  It
-> doesn't hurt to say "I also need Jian's patch to completely build with
-> LLVM_IAS=1" but I don't think that should be in the message that gets
-> committed per se.  Sorry to be a pedant about this.  With those
-> changes, I'd be happy to sign off on the patch.
->
+> Suggested-by: Matt Denton <mpdenton@google.com>
+> Link: https://lore.kernel.org/r/20200603011044.7972-4-sargun@sargun.me
+> Signed-off-by: Sargun Dhillon <sargun@sargun.me>
+> Co-developed-by: Kees Cook <keescook@chromium.org>
+> Signed-off-by: Kees Cook <keescook@chromium.org>
 
-Yeah, that sounds like good compromise.
-
-Without Jian's fix/patch we did not found the issue.
-I wanted to respect this.
-
-I will send out a v3 soonish.
-
-- Sedat -
-
-> > Changes v1->v2:
-> > - Add Wei Liu's Reviewed-by
-> > - Add note to clarify my patch is independent from Jian's patch
-> > - Add link to latest version of Jian's patch
-> >
-> >  arch/x86/include/asm/idtentry.h | 4 ++--
-> >  1 file changed, 2 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/arch/x86/include/asm/idtentry.h b/arch/x86/include/asm/idtentry.h
-> > index eeac6dc2adaa..d79541bfc36f 100644
-> > --- a/arch/x86/include/asm/idtentry.h
-> > +++ b/arch/x86/include/asm/idtentry.h
-> > @@ -626,8 +626,8 @@ DECLARE_IDTENTRY_SYSVEC(POSTED_INTR_NESTED_VECTOR,  sysvec_kvm_posted_intr_nested
-> >
-> >  #if IS_ENABLED(CONFIG_HYPERV)
-> >  DECLARE_IDTENTRY_SYSVEC(HYPERVISOR_CALLBACK_VECTOR,    sysvec_hyperv_callback);
-> > -DECLARE_IDTENTRY_SYSVEC(HYPERVISOR_REENLIGHTENMENT_VECTOR,     sysvec_hyperv_reenlightenment);
-> > -DECLARE_IDTENTRY_SYSVEC(HYPERVISOR_STIMER0_VECTOR,     sysvec_hyperv_stimer0);
-> > +DECLARE_IDTENTRY_SYSVEC(HYPERV_REENLIGHTENMENT_VECTOR, sysvec_hyperv_reenlightenment);
-> > +DECLARE_IDTENTRY_SYSVEC(HYPERV_STIMER0_VECTOR, sysvec_hyperv_stimer0);
-> >  #endif
-> >
-> >  #if IS_ENABLED(CONFIG_ACRN_GUEST)
-> > --
->
-> --
-> Thanks,
-> ~Nick Desaulniers
+Reviewed-by: Will Drewry <wad@chromium.org>
