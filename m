@@ -2,98 +2,190 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B12D4C433E8
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 13:16:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F16C4C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 13:16:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 86F5D22203
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 13:16:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594732586;
-	bh=tjX0MbSJHwZiiSETyIgBYZu7PkEuxvO4/mytPtTy6h8=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=CC28yyxHqRT8ptDdEFe212EHJhXEhABGfWOmoCqgEmnkb4XbIU4e1EoOTzU6/49yb
-	 jDabILBkUi+2Sh87e8TRdPKs0Dbx1umJ5wtkZeyB1NCGYL7Ifw6TbxIML0NY7ONhMK
-	 g83l0tNbDBZPLGm1pZPGfAWk1v0mdoA/rWhjc/Wc=
+	by mail.kernel.org (Postfix) with ESMTP id C12F9224B2
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 13:16:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=cumulusnetworks.com header.i=@cumulusnetworks.com header.b="IKJTtDfz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728685AbgGNNQZ (ORCPT
+        id S1728707AbgGNNQe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 09:16:25 -0400
-Received: from mail-oo1-f66.google.com ([209.85.161.66]:45893 "EHLO
-        mail-oo1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727863AbgGNNQZ (ORCPT
+        Tue, 14 Jul 2020 09:16:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42790 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728006AbgGNNQe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 09:16:25 -0400
-Received: by mail-oo1-f66.google.com with SMTP id a9so3325523oof.12;
-        Tue, 14 Jul 2020 06:16:24 -0700 (PDT)
+        Tue, 14 Jul 2020 09:16:34 -0400
+Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BAA67C061794
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 06:16:33 -0700 (PDT)
+Received: by mail-wm1-x344.google.com with SMTP id w3so5850421wmi.4
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 06:16:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cumulusnetworks.com; s=google;
+        h=subject:to:references:from:message-id:date:user-agent:mime-version
+         :in-reply-to:content-language:content-transfer-encoding;
+        bh=nYoU871Umg8pEf23KuBXa9TezOsCAc9WN1U0Sl9RtIM=;
+        b=IKJTtDfzeJQfWdYO3heTD4AUKay2Q9U3WgHKSIs9DMTrGNvvwvNPspmItSSofgH85t
+         DeknG4Z2W7z2mUjqPiyM5SdQ4yzp4iuRqD2aT130/Lfl1oBY4MhW/IAltTMHMHlhtD84
+         YPNNvDxICENWTM3CaBygQGClu7JAVS22NxZPo=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=SAHonr/EX22GXSSLURAad0tCboLdlq1IazrJJKl7ts0=;
-        b=LVLaIuZ2S40c8xPpdboqQI/u5JVSNoFZ8WbCWoSEXmoy2MOJes/PBIWQAtSoQeSAa2
-         u5oms+grOjP7HtoR8n5mKUQeN/+dHjc7OUbw3Z31PgkPl73iOELH7xwa1LxDwD5sLyms
-         30VNzu7iDMdFD27Dem7+B8RUUJoeSRvSvuVw5dqzQLxnMDZyK/Ng6VkZlhQScFYGlLxX
-         Ye+fDKd8Jqpad70FTkaGlpxJwf3OWFcX+UASJV5HWQKZf8oKsmT7Hr7QluFhG/weV2nu
-         xkop6ifgfNc4JPh2g2QNb9L3bdGkecQ55FHw8x2qQv0rNERxQdRbyjNuRkO1Xwu6u22O
-         tvvg==
-X-Gm-Message-State: AOAM532ycATd7lxtmpTLt7Uy6G+4CzuBhVpp90cpBlJKxzZdnQiMXtcK
-        a4P5gbP4RYtj+wnwKp3DylYJXCTs3u0xDPZvs5JRaA==
-X-Google-Smtp-Source: ABdhPJwKDy9QlQ4NrEX6WcDj3pqOx8svRxGgJkWilKCvk0x1maAoDZON3QHgO5KTT1zd+BIgIaQbDUWN1zTsBZf5jlE=
-X-Received: by 2002:a4a:2459:: with SMTP id v25mr4419978oov.75.1594732583976;
- Tue, 14 Jul 2020 06:16:23 -0700 (PDT)
+        h=x-gm-message-state:subject:to:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=nYoU871Umg8pEf23KuBXa9TezOsCAc9WN1U0Sl9RtIM=;
+        b=LrJoNT98++myVe+3Q0YPAhI6kUnAZFB0VXbkB5Vj/1/6ICW3mZCpl2KyQHoylODHp/
+         oLbaI+1cXBoKdBm928KJsoHzyxH8j8ByF4AGpITgmt0kJy4kCOKh/NU3j/uaDdyuHs1S
+         N73ABzOaXbIZr9r9s0AwCtM5ZAdhzW1fyZoI4xtsfHkNLPCjxZhQyd8fbIuDwLGHM/Cb
+         bMf8DdW+vXRisVS+hzlyxSsgHFMT4dy5Cj54Wuj0x8eK+h6eXpXjX3ms9Iewj9e9VXE7
+         7UYpBjB8CheTUxqe7c4x50DGygKEcqPhKFHCRqYLqGESlYMEF+MNjm6xr4MOheOM24cA
+         Nlig==
+X-Gm-Message-State: AOAM5320J/zDcHQ+xPV2oAMJm8uyZOsdQ049F52jEcjolHT1CzaYwMI/
+        zCFipLMQgl0ZtHDti+TfCh4eFw==
+X-Google-Smtp-Source: ABdhPJx2+hIbBipTOTBqyZESIrUYMjNFLrUQaLsYApDK0bO3zAQw1RUetedd+46eFbD8/1i6TrTWQw==
+X-Received: by 2002:a1c:80d3:: with SMTP id b202mr4598568wmd.111.1594732592441;
+        Tue, 14 Jul 2020 06:16:32 -0700 (PDT)
+Received: from [192.168.0.109] (84-238-136-197.ip.btc-net.bg. [84.238.136.197])
+        by smtp.gmail.com with ESMTPSA id f15sm4364597wmj.44.2020.07.14.06.16.30
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 14 Jul 2020 06:16:31 -0700 (PDT)
+Subject: Re: [PATCH net-next v4 07/12] bridge: switchdev: mrp: Extend MRP API
+ for switchdev for MRP Interconnect
+To:     Horatiu Vultur <horatiu.vultur@microchip.com>,
+        roopa@cumulusnetworks.com, davem@davemloft.net, kuba@kernel.org,
+        jiri@resnulli.us, ivecera@redhat.com, andrew@lunn.ch,
+        UNGLinuxDriver@microchip.com, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, bridge@lists.linux-foundation.org
+References: <20200714073458.1939574-1-horatiu.vultur@microchip.com>
+ <20200714073458.1939574-8-horatiu.vultur@microchip.com>
+From:   Nikolay Aleksandrov <nikolay@cumulusnetworks.com>
+Message-ID: <f0c67d68-b181-4a79-9d7c-a8810c3bfd70@cumulusnetworks.com>
+Date:   Tue, 14 Jul 2020 16:16:30 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-References: <20200714125625.2584-1-geert+renesas@glider.be>
-In-Reply-To: <20200714125625.2584-1-geert+renesas@glider.be>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Tue, 14 Jul 2020 15:16:11 +0200
-Message-ID: <CAJZ5v0j9=R+_-Js6C79yom7wbwnaF4TE1ggryUtCWHFnnqjA0w@mail.gmail.com>
-Subject: Re: [PATCH] PM / Domains: Restore comment indentation for generic_pm_domain.child_links
-To:     Geert Uytterhoeven <geert+renesas@glider.be>
-Cc:     "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Kevin Hilman <khilman@kernel.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Kees Cook <keescook@chromium.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200714073458.1939574-8-horatiu.vultur@microchip.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 14, 2020 at 2:56 PM Geert Uytterhoeven
-<geert+renesas@glider.be> wrote:
->
-> The rename of generic_pm_domain.slave_links to
-> generic_pm_domain.child_links accidentally dropped the TAB to align the
-> member's comment.  Re-add the lost TAB to restore indentation.
->
-> Fixes: 8d87ae48ced2dffd ("PM: domains: Fix up terminology with parent/child")
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+On 14/07/2020 10:34, Horatiu Vultur wrote:
+> Implement the MRP API for interconnect switchdev. Similar with the other
+> br_mrp_switchdev function, these function will just eventually call the
+> switchdev functions: switchdev_port_obj_add/del.
+> 
+> Signed-off-by: Horatiu Vultur <horatiu.vultur@microchip.com>
 > ---
-> Feel free to fold into the original, if deemed appropriate.
-> ---
->  include/linux/pm_domain.h | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/include/linux/pm_domain.h b/include/linux/pm_domain.h
-> index 574a1fadb1e50631..ee11502a575b0eca 100644
-> --- a/include/linux/pm_domain.h
-> +++ b/include/linux/pm_domain.h
-> @@ -96,7 +96,7 @@ struct generic_pm_domain {
->         struct dev_pm_domain domain;    /* PM domain operations */
->         struct list_head gpd_list_node; /* Node in the global PM domains list */
->         struct list_head parent_links;  /* Links with PM domain as a parent */
-> -       struct list_head child_links;/* Links with PM domain as a child */
-> +       struct list_head child_links;   /* Links with PM domain as a child */
->         struct list_head dev_list;      /* List of devices */
->         struct dev_power_governor *gov;
->         struct work_struct power_off_work;
-> --
+>  net/bridge/br_mrp_switchdev.c | 62 +++++++++++++++++++++++++++++++++++
+>  net/bridge/br_private_mrp.h   |  7 ++++
+>  2 files changed, 69 insertions(+)
+> 
 
-Applied with a minor edit in the subject, thanks!
+Acked-by: Nikolay Aleksandrov <nikolay@cumulusnetworks.com>
+
+> diff --git a/net/bridge/br_mrp_switchdev.c b/net/bridge/br_mrp_switchdev.c
+> index 0da68a0da4b5a..ed547e03ace17 100644
+> --- a/net/bridge/br_mrp_switchdev.c
+> +++ b/net/bridge/br_mrp_switchdev.c
+> @@ -107,6 +107,68 @@ int br_mrp_switchdev_set_ring_state(struct net_bridge *br,
+>  	return 0;
+>  }
+>  
+> +int br_mrp_switchdev_set_in_role(struct net_bridge *br, struct br_mrp *mrp,
+> +				 u16 in_id, u32 ring_id,
+> +				 enum br_mrp_in_role_type role)
+> +{
+> +	struct switchdev_obj_in_role_mrp mrp_role = {
+> +		.obj.orig_dev = br->dev,
+> +		.obj.id = SWITCHDEV_OBJ_ID_IN_ROLE_MRP,
+> +		.in_role = role,
+> +		.in_id = mrp->in_id,
+> +		.ring_id = mrp->ring_id,
+> +		.i_port = rtnl_dereference(mrp->i_port)->dev,
+> +	};
+> +	int err;
+> +
+> +	if (role == BR_MRP_IN_ROLE_DISABLED)
+> +		err = switchdev_port_obj_del(br->dev, &mrp_role.obj);
+> +	else
+> +		err = switchdev_port_obj_add(br->dev, &mrp_role.obj, NULL);
+> +
+> +	return err;
+> +}
+> +
+> +int br_mrp_switchdev_set_in_state(struct net_bridge *br, struct br_mrp *mrp,
+> +				  enum br_mrp_in_state_type state)
+> +{
+> +	struct switchdev_obj_in_state_mrp mrp_state = {
+> +		.obj.orig_dev = br->dev,
+> +		.obj.id = SWITCHDEV_OBJ_ID_IN_STATE_MRP,
+> +		.in_state = state,
+> +		.in_id = mrp->in_id,
+> +	};
+> +	int err;
+> +
+> +	err = switchdev_port_obj_add(br->dev, &mrp_state.obj, NULL);
+> +
+> +	if (err && err != -EOPNOTSUPP)
+> +		return err;
+> +
+> +	return 0;
+> +}
+> +
+> +int br_mrp_switchdev_send_in_test(struct net_bridge *br, struct br_mrp *mrp,
+> +				  u32 interval, u8 max_miss, u32 period)
+> +{
+> +	struct switchdev_obj_in_test_mrp test = {
+> +		.obj.orig_dev = br->dev,
+> +		.obj.id = SWITCHDEV_OBJ_ID_IN_TEST_MRP,
+> +		.interval = interval,
+> +		.max_miss = max_miss,
+> +		.in_id = mrp->in_id,
+> +		.period = period,
+> +	};
+> +	int err;
+> +
+> +	if (interval == 0)
+> +		err = switchdev_port_obj_del(br->dev, &test.obj);
+> +	else
+> +		err = switchdev_port_obj_add(br->dev, &test.obj, NULL);
+> +
+> +	return err;
+> +}
+> +
+>  int br_mrp_port_switchdev_set_state(struct net_bridge_port *p,
+>  				    enum br_mrp_port_state_type state)
+>  {
+> diff --git a/net/bridge/br_private_mrp.h b/net/bridge/br_private_mrp.h
+> index 23da2f956ad0e..0d554ef88db85 100644
+> --- a/net/bridge/br_private_mrp.h
+> +++ b/net/bridge/br_private_mrp.h
+> @@ -72,6 +72,13 @@ int br_mrp_port_switchdev_set_state(struct net_bridge_port *p,
+>  				    enum br_mrp_port_state_type state);
+>  int br_mrp_port_switchdev_set_role(struct net_bridge_port *p,
+>  				   enum br_mrp_port_role_type role);
+> +int br_mrp_switchdev_set_in_role(struct net_bridge *br, struct br_mrp *mrp,
+> +				 u16 in_id, u32 ring_id,
+> +				 enum br_mrp_in_role_type role);
+> +int br_mrp_switchdev_set_in_state(struct net_bridge *br, struct br_mrp *mrp,
+> +				  enum br_mrp_in_state_type state);
+> +int br_mrp_switchdev_send_in_test(struct net_bridge *br, struct br_mrp *mrp,
+> +				  u32 interval, u8 max_miss, u32 period);
+>  
+>  /* br_mrp_netlink.c  */
+>  int br_mrp_ring_port_open(struct net_device *dev, u8 loc);
+> 
+
