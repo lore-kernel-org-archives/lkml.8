@@ -2,119 +2,117 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19879C433E7
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 11:56:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DCF0EC433E2
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 11:56:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EC8B322224
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 11:56:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B844922225
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 11:56:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b="BWruN3AF"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="c9yk2vPj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728037AbgGNL4F (ORCPT
+        id S1728099AbgGNL4K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 07:56:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58316 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726889AbgGNL4D (ORCPT
+        Tue, 14 Jul 2020 07:56:10 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:29925 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728087AbgGNL4J (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 07:56:03 -0400
-Received: from mail-ed1-x542.google.com (mail-ed1-x542.google.com [IPv6:2a00:1450:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0BF16C061794
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 04:56:03 -0700 (PDT)
-Received: by mail-ed1-x542.google.com with SMTP id a8so16764455edy.1
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 04:56:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=szeredi.hu; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=+sjMIjM2/JFepdRAXpOHb7ghC5LhQeVZQ0Kayo5azeY=;
-        b=BWruN3AFlA46ZLoJRaXr2SIqdS24ok0rzjPKi9syKMhMKh0JxzioNs8EdhKj+fmaW8
-         LtFlAX3lpklg05W9WQ2EZYCE821vzWc7x2++w2jVILwn2boWbSBMsrC6/5ApTmFgISg3
-         lazdTrnPmPdLzow7yla7Nzl2D4pVlMvE8cJJk=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=+sjMIjM2/JFepdRAXpOHb7ghC5LhQeVZQ0Kayo5azeY=;
-        b=tD9el2SetmXU88awBYcL46bhV7ULgQ5VPGdCUxhUJLnAj5ZXkUNCpoyKAbJ9EtJXSL
-         XA7ytEid3XD32ndo7yrt1Re9Sl8x80emv8E8I77cYFJT6VFdhZoPAPrG/8hyVdv2I3iO
-         jQKbf1Zbo+rnfQG6bwz13715A8i/XCb4AmAv4aRsQn9nUd9YDLaarkHbF9JxrTaSIHiZ
-         eENWIXqbLmkMO/atxrBn+Ue++WOeLxhjM7aaA3C5hCPNmRVxHRFZzV1tgakaMdcywdmT
-         KHw15sB/3RUepVlHG6r+dJZwhETTB5AULV+Bjga82NUhUiG57TOTX/VIH8moE3p5KVR3
-         gjUQ==
-X-Gm-Message-State: AOAM533+1hjz29aeDfQhtnKoypAWuR1mhBbB53n7cFpm72v6dnNOtI8T
-        KOGrvJC2zARLT7CfRdzYScho8xLS6k9p5TAhsaSFdA==
-X-Google-Smtp-Source: ABdhPJx7T4CbUMQ5B2n8Maq8US8S/XJNlgydPVNLLLOLr6IH9mheDQ+RV1Tk59Uievz5SqNyI1kTrxdL9hey9Cb11rE=
-X-Received: by 2002:a05:6402:1d0b:: with SMTP id dg11mr3988736edb.212.1594727761659;
- Tue, 14 Jul 2020 04:56:01 -0700 (PDT)
+        Tue, 14 Jul 2020 07:56:09 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1594727768;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=ykcZBNksAR9Za8nLz+KVj+UU2/4kb9H0fHJr+dQVzzs=;
+        b=c9yk2vPj410HFFCStjwJ7jZmPsBcK2ffU1Yg6FDFeG/TWbCdZumnRgIbsUy7gGwofTfe2l
+        tJNikpfVhTXDCQEzM0afSFkDKMSmmlBY6cREY8OOStbHLqGDQHaTKm/k4tXHbtfPrMTMlW
+        zLfdPbMFwWR4f5zd/5vBwuMs2FjSFqc=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-407-Odd-OnzdOimKF9ZZRcmQPA-1; Tue, 14 Jul 2020 07:56:06 -0400
+X-MC-Unique: Odd-OnzdOimKF9ZZRcmQPA-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 7A5E08014D7;
+        Tue, 14 Jul 2020 11:56:04 +0000 (UTC)
+Received: from gondolin (ovpn-112-240.ams2.redhat.com [10.36.112.240])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 717F260CD0;
+        Tue, 14 Jul 2020 11:55:58 +0000 (UTC)
+Date:   Tue, 14 Jul 2020 13:55:55 +0200
+From:   Cornelia Huck <cohuck@redhat.com>
+To:     Pierre Morel <pmorel@linux.ibm.com>
+Cc:     linux-kernel@vger.kernel.org, pasic@linux.ibm.com,
+        borntraeger@de.ibm.com, frankja@linux.ibm.com, mst@redhat.com,
+        jasowang@redhat.com, kvm@vger.kernel.org,
+        linux-s390@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, thomas.lendacky@amd.com,
+        david@gibson.dropbear.id.au, linuxram@us.ibm.com,
+        hca@linux.ibm.com, gor@linux.ibm.com
+Subject: Re: [PATCH v6 2/2] s390: virtio: PV needs VIRTIO I/O device
+ protection
+Message-ID: <20200714135555.2148fb83.cohuck@redhat.com>
+In-Reply-To: <1594726682-12076-3-git-send-email-pmorel@linux.ibm.com>
+References: <1594726682-12076-1-git-send-email-pmorel@linux.ibm.com>
+        <1594726682-12076-3-git-send-email-pmorel@linux.ibm.com>
+Organization: Red Hat GmbH
 MIME-Version: 1.0
-References: <CAODFU0q6CrUB_LkSdrbp5TQ4Jm6Sw=ZepZwD-B7-aFudsOvsig@mail.gmail.com>
- <20200705115021.GA1227929@kroah.com> <20200714065110.GA8047@amd>
- <CAJfpegu8AXZWQh3W39PriqxVna+t3D2pz23t_4xEVxGcNf1AUA@mail.gmail.com> <4e92b851-ce9a-e2f6-3f9a-a4d47219d320@gmail.com>
-In-Reply-To: <4e92b851-ce9a-e2f6-3f9a-a4d47219d320@gmail.com>
-From:   Miklos Szeredi <miklos@szeredi.hu>
-Date:   Tue, 14 Jul 2020 13:55:50 +0200
-Message-ID: <CAJfpegvroouw5ndHv+395w5PP1c+pUyp=-T8qhhvSnFbhbRehg@mail.gmail.com>
-Subject: Re: [PATCH 0/3] readfile(2): a new syscall to make open/read/close faster
-To:     Pavel Begunkov <asml.silence@gmail.com>
-Cc:     Pavel Machek <pavel@denx.de>, Greg KH <gregkh@linuxfoundation.org>,
-        Jan Ziak <0xe2.0x9a.0x9b@gmail.com>,
-        Linux API <linux-api@vger.kernel.org>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-kselftest@vger.kernel.org,
-        linux-man <linux-man@vger.kernel.org>,
-        Michael Kerrisk <mtk.manpages@gmail.com>, shuah@kernel.org,
-        Al Viro <viro@zeniv.linux.org.uk>, io-uring@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 14, 2020 at 1:36 PM Pavel Begunkov <asml.silence@gmail.com> wrote:
->
-> On 14/07/2020 11:07, Miklos Szeredi wrote:
-> > On Tue, Jul 14, 2020 at 8:51 AM Pavel Machek <pavel@denx.de> wrote:
-> >>
-> >> Hi!
-> >>
-> >>>> At first, I thought that the proposed system call is capable of
-> >>>> reading *multiple* small files using a single system call - which
-> >>>> would help increase HDD/SSD queue utilization and increase IOPS (I/O
-> >>>> operations per second) - but that isn't the case and the proposed
-> >>>> system call can read just a single file.
-> >>>
-> >>> If you want to do this for multple files, use io_ring, that's what it
-> >>> was designed for.  I think Jens was going to be adding support for the
-> >>> open/read/close pattern to it as well, after some other more pressing
-> >>> features/fixes were finished.
-> >>
-> >> What about... just using io_uring for single file, too? I'm pretty
-> >> sure it can be wrapped in a library that is simple to use, avoiding
-> >> need for new syscall.
-> >
-> > Just wondering:  is there a plan to add strace support to io_uring?
-> > And I don't just mean the syscalls associated with io_uring, but
-> > tracing the ring itself.
->
-> What kind of support do you mean? io_uring is asynchronous in nature
-> with all intrinsic tracing/debugging/etc. problems of such APIs.
-> And there are a lot of handy trace points, are those not enough?
->
-> Though, this can be an interesting project to rethink how async
-> APIs are worked with.
+On Tue, 14 Jul 2020 13:38:02 +0200
+Pierre Morel <pmorel@linux.ibm.com> wrote:
 
-Yeah, it's an interesting problem.  The uring has the same events, as
-far as I understand, that are recorded in a multithreaded strace
-output (syscall entry, syscall exit); nothing more is needed.
+> If protected virtualization is active on s390, the virtio queues are
+> not accessible to the host, unless VIRTIO_F_IOMMU_PLATFORM has been
+> negotiated. Use the new arch_validate_virtio_features() interface to
+> fail probe if that's not the case, preventing a host error on access
+> attempt.
+> 
+> Signed-off-by: Pierre Morel <pmorel@linux.ibm.com>
+> Reviewed-by: Cornelia Huck <cohuck@redhat.com>
+> Acked-by: Halil Pasic <pasic@linux.ibm.com>
+> ---
+>  arch/s390/mm/init.c | 28 ++++++++++++++++++++++++++++
+>  1 file changed, 28 insertions(+)
 
-I do think this needs to be integrated into strace(1), otherwise the
-usefulness of that tool (which I think is *very* high) would go down
-drastically as io_uring usage goes up.
+(...)
 
-Thanks,
-Miklos
+> +int arch_validate_virtio_features(struct virtio_device *dev)
+> +{
+> +	if (!is_prot_virt_guest())
+> +		return 0;
+> +
+> +	if (!virtio_has_feature(dev, VIRTIO_F_VERSION_1)) {
+> +		dev_warn(&dev->dev,
+> +			 "legacy virtio not supported with protected virtualizatio\n");
+
+typo: s/virtualizatio/virtualization/
+
+> +		return -ENODEV;
+> +	}
+> +
+> +	if (!virtio_has_feature(dev, VIRTIO_F_IOMMU_PLATFORM)) {
+> +		dev_warn(&dev->dev,
+> +			 "support for limited memory access required for protected virtualization\n");
+> +		return -ENODEV;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+>  /* protected virtualization */
+>  static void pv_init(void)
+>  {
+
