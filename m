@@ -2,54 +2,54 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FD17C433E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:49:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F00D9C433E7
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:49:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7702F22AAA
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:49:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CD26122AAA
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:49:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594752597;
-	bh=SVDxlP2uLDDOHzFOKptNsOHDJMLgiSIc7YutqWD0JoQ=;
+	s=default; t=1594752599;
+	bh=ulh+Y9k0zhb+VF/lb5LN+NNdvm4f5LP91jW79/pDudI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=aHGTSrd/VGDGnz7nbihUN23d04IHt3x03m7F7n2IRC70q/aF15GK0SFqMdNnqL4GR
-	 fpXnX/7tNrP4vGt0ep0LMzz+186OvSdPf5gBUAXmikdZqwy3a18eLewUezhHxh5ya0
-	 TqR9DBTQqXyBKcj+Cq35Sekzgq66Lt+cUJ+PFBFE=
+	b=erGN0GMW4DGQoqO4xTpPYs86bwTrN3l9y+aDX57k0OfRlQqP0gzRj1qCcvxprpLo/
+	 qq5skA0WnVjA79L3ZC2kqCmjJnt+6M/1xDzSyCwLHoSmr/FUzO4SLCp/5QpmStFWs3
+	 Q+Uh6yyj1ZvWfsGiAQXWj+5uW6utaDfYdxmBBfsU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730231AbgGNSt4 (ORCPT
+        id S1730237AbgGNSt6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 14:49:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45798 "EHLO mail.kernel.org"
+        Tue, 14 Jul 2020 14:49:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45854 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730213AbgGNStv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 14:49:51 -0400
+        id S1729668AbgGNSty (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 14:49:54 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C6ABC22AAA;
-        Tue, 14 Jul 2020 18:49:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3947A22B2C;
+        Tue, 14 Jul 2020 18:49:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594752591;
-        bh=SVDxlP2uLDDOHzFOKptNsOHDJMLgiSIc7YutqWD0JoQ=;
+        s=default; t=1594752593;
+        bh=ulh+Y9k0zhb+VF/lb5LN+NNdvm4f5LP91jW79/pDudI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HFirly/S+lCGcZxK2CMn0N3zf3tjeuzICxBQ3FwVyeo40Pp7byez2BS0zfZtu1lDl
-         Fh+ZTTwPLMZNlAVeLkUtSGIh/tYTDsBii+NBm7wmI/EwqgxlbcEzTXtTa10bAqguqx
-         j2+VI4KjRXLV3dAg0EvygFiRL9fdFan2Xh21/BHE=
+        b=uUEivQTN+9B81p7nz6eXOlRr/eDrp22zJD/Omz7kbTBxQXQ0zuYefMArTFSWS0Vif
+         9pxYjfjuxjV4tDeAxWKMv6q6Ydkbk56dD3J0592+9No4ebJ0tZGo/7mXp/QynO3eJ5
+         Tej3jtq+XZAq2ePB199FSCtoKEPPjBu7B/l/fBQg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        syzbot+b8fe393f999a291a9ea6@syzkaller.appspotmail.com,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.4 035/109] net: qrtr: Fix an out of bounds read qrtr_endpoint_post()
-Date:   Tue, 14 Jul 2020 20:43:38 +0200
-Message-Id: <20200714184107.201437055@linuxfoundation.org>
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 036/109] gpio: pca953x: Override IRQ for one of the expanders on Galileo Gen 2
+Date:   Tue, 14 Jul 2020 20:43:39 +0200
+Message-Id: <20200714184107.248758442@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200714184105.507384017@linuxfoundation.org>
 References: <20200714184105.507384017@linuxfoundation.org>
@@ -62,53 +62,129 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Carpenter <dan.carpenter@oracle.com>
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-commit 8ff41cc21714704ef0158a546c3c4d07fae2c952 upstream.
+[ Upstream commit ba8c90c6184784b397807b72403656085ac2f8c1 ]
 
-This code assumes that the user passed in enough data for a
-qrtr_hdr_v1 or qrtr_hdr_v2 struct, but it's not necessarily true.  If
-the buffer is too small then it will read beyond the end.
+ACPI table on Intel Galileo Gen 2 has wrong pin number for IRQ resource
+of one of the I²C GPIO expanders. Since we know what that number is and
+luckily have GPIO bases fixed for SoC's controllers, we may use a simple
+DMI quirk to match the platform and retrieve GpioInt() pin on it for
+the expander in question.
 
-Reported-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Reported-by: syzbot+b8fe393f999a291a9ea6@syzkaller.appspotmail.com
-Fixes: 194ccc88297a ("net: qrtr: Support decoding incoming v2 packets")
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Mika suggested the way to avoid a quirk in the GPIO ACPI library and
+here is the second, almost rewritten version of it.
 
+Fixes: f32517bf1ae0 ("gpio: pca953x: support ACPI devices found on Galileo Gen2")
+Depends-on: 25e3ef894eef ("gpio: acpi: Split out acpi_gpio_get_irq_resource() helper")
+Suggested-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/qrtr/qrtr.c |    6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ drivers/gpio/gpio-pca953x.c | 79 +++++++++++++++++++++++++++++++++++++
+ 1 file changed, 79 insertions(+)
 
---- a/net/qrtr/qrtr.c
-+++ b/net/qrtr/qrtr.c
-@@ -259,7 +259,7 @@ int qrtr_endpoint_post(struct qrtr_endpo
- 	unsigned int ver;
- 	size_t hdrlen;
+diff --git a/drivers/gpio/gpio-pca953x.c b/drivers/gpio/gpio-pca953x.c
+index 29ba26742c8f5..c935019c0257c 100644
+--- a/drivers/gpio/gpio-pca953x.c
++++ b/drivers/gpio/gpio-pca953x.c
+@@ -107,6 +107,79 @@ static const struct i2c_device_id pca953x_id[] = {
+ };
+ MODULE_DEVICE_TABLE(i2c, pca953x_id);
  
--	if (len & 3)
-+	if (len == 0 || len & 3)
- 		return -EINVAL;
++#ifdef CONFIG_GPIO_PCA953X_IRQ
++
++#include <linux/dmi.h>
++#include <linux/gpio.h>
++#include <linux/list.h>
++
++static const struct dmi_system_id pca953x_dmi_acpi_irq_info[] = {
++	{
++		/*
++		 * On Intel Galileo Gen 2 board the IRQ pin of one of
++		 * the I²C GPIO expanders, which has GpioInt() resource,
++		 * is provided as an absolute number instead of being
++		 * relative. Since first controller (gpio-sch.c) and
++		 * second (gpio-dwapb.c) are at the fixed bases, we may
++		 * safely refer to the number in the global space to get
++		 * an IRQ out of it.
++		 */
++		.matches = {
++			DMI_EXACT_MATCH(DMI_BOARD_NAME, "GalileoGen2"),
++		},
++	},
++	{}
++};
++
++#ifdef CONFIG_ACPI
++static int pca953x_acpi_get_pin(struct acpi_resource *ares, void *data)
++{
++	struct acpi_resource_gpio *agpio;
++	int *pin = data;
++
++	if (acpi_gpio_get_irq_resource(ares, &agpio))
++		*pin = agpio->pin_table[0];
++	return 1;
++}
++
++static int pca953x_acpi_find_pin(struct device *dev)
++{
++	struct acpi_device *adev = ACPI_COMPANION(dev);
++	int pin = -ENOENT, ret;
++	LIST_HEAD(r);
++
++	ret = acpi_dev_get_resources(adev, &r, pca953x_acpi_get_pin, &pin);
++	acpi_dev_free_resource_list(&r);
++	if (ret < 0)
++		return ret;
++
++	return pin;
++}
++#else
++static inline int pca953x_acpi_find_pin(struct device *dev) { return -ENXIO; }
++#endif
++
++static int pca953x_acpi_get_irq(struct device *dev)
++{
++	int pin, ret;
++
++	pin = pca953x_acpi_find_pin(dev);
++	if (pin < 0)
++		return pin;
++
++	dev_info(dev, "Applying ACPI interrupt quirk (GPIO %d)\n", pin);
++
++	if (!gpio_is_valid(pin))
++		return -EINVAL;
++
++	ret = gpio_request(pin, "pca953x interrupt");
++	if (ret)
++		return ret;
++
++	return gpio_to_irq(pin);
++}
++#endif
++
+ static const struct acpi_device_id pca953x_acpi_ids[] = {
+ 	{ "INT3491", 16 | PCA953X_TYPE | PCA_LATCH_INT, },
+ 	{ }
+@@ -772,6 +845,12 @@ static int pca953x_irq_setup(struct pca953x_chip *chip,
+ 	u8 reg_direction[MAX_BANK];
+ 	int ret, i;
  
- 	skb = netdev_alloc_skb(NULL, len);
-@@ -273,6 +273,8 @@ int qrtr_endpoint_post(struct qrtr_endpo
++	if (dmi_first_match(pca953x_dmi_acpi_irq_info)) {
++		ret = pca953x_acpi_get_irq(&client->dev);
++		if (ret > 0)
++			client->irq = ret;
++	}
++
+ 	if (!client->irq)
+ 		return 0;
  
- 	switch (ver) {
- 	case QRTR_PROTO_VER_1:
-+		if (len < sizeof(*v1))
-+			goto err;
- 		v1 = data;
- 		hdrlen = sizeof(*v1);
- 
-@@ -286,6 +288,8 @@ int qrtr_endpoint_post(struct qrtr_endpo
- 		size = le32_to_cpu(v1->size);
- 		break;
- 	case QRTR_PROTO_VER_2:
-+		if (len < sizeof(*v2))
-+			goto err;
- 		v2 = data;
- 		hdrlen = sizeof(*v2) + v2->optlen;
- 
+-- 
+2.25.1
+
 
 
