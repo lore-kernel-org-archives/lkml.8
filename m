@@ -2,95 +2,134 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE1EEC433E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 09:51:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3989C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 09:51:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9858B20EDD
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 09:51:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9FE8820EDD
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 09:51:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="qfW5FZaR"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="S/eqTvsz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726893AbgGNJvJ (ORCPT
+        id S1726932AbgGNJvj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 05:51:09 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:14517 "EHLO m43-7.mailgun.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725955AbgGNJvJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 05:51:09 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1594720268; h=Date: Message-Id: Cc: To: References:
- In-Reply-To: From: Subject: Content-Transfer-Encoding: MIME-Version:
- Content-Type: Sender; bh=dHOZ0Og//JCRtETsRCjH9YVR+seeMRizqUL3UEZLAgI=;
- b=qfW5FZaRrfW3jgNBVSz+lNVGWXjiJzGp2DdxoQa6qn6+NUIvqxYMk9/wzNZWCYi4pqUxjCya
- vccg3KG5IEmTaP0XF0qKg3gvKCDCfzWP47yfbtN5f1Q9F/0AZwTZPGqPz9gL3aLiyvXJKGqe
- aJp+EwNKDFINSdHVXPnYACcHha8=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n16.prod.us-west-2.postgun.com with SMTP id
- 5f0d8003ee86618575bfe741 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 14 Jul 2020 09:50:59
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id A7004C433AD; Tue, 14 Jul 2020 09:50:58 +0000 (UTC)
-Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
+        Tue, 14 Jul 2020 05:51:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39066 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726062AbgGNJvj (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 05:51:39 -0400
+Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3A728C061755
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 02:51:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=qpflADDB8duWFPNOBOGruujNU1s0jhnlL6Ni9lBcoy8=; b=S/eqTvsz67ItruD2u3IIIM0G56
+        mf9aMboJoJ9XM3/qQEwdbDJDWwTH3rJALOF2fMRsn6bPMLixgR/kD37OtdbhUbsb+rCS6GP+s2JJt
+        4QazkH2mGIx/TausVc/S/XR5Ri6K0mJNH5jCNaFa34oEs4U5Cx1mW4oXkouugxS3KUYyAzwN9FYOA
+        BoEq5rb/QkX8mG6PFWx19yCYeGuOA1z5c7BeaM65s3TSi0iNmPUBqyArUzNvQwf0BRgI1dGWW6uRw
+        Tuvkatu0HRF93CNVYBxRvDmJqPTo4132bCLpiQqb1n1CdVcJxOvuD50yvoUtKwEUNsyq3SGnhUq0P
+        4rXGKoeA==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jvHat-0000PN-8H; Tue, 14 Jul 2020 09:51:23 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: kvalo)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 89E5EC433C8;
-        Tue, 14 Jul 2020 09:50:54 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 89E5EC433C8
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
-Content-Type: text/plain; charset="utf-8"
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id A27CB300455;
+        Tue, 14 Jul 2020 11:51:17 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 8A03D28B91079; Tue, 14 Jul 2020 11:51:17 +0200 (CEST)
+Date:   Tue, 14 Jul 2020 11:51:17 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     x86@kernel.org, linux-kernel@vger.kernel.org, mhiramat@kernel.org,
+        bristot@redhat.com, jbaron@akamai.com,
+        torvalds@linux-foundation.org, tglx@linutronix.de,
+        mingo@kernel.org, namit@vmware.com, hpa@zytor.com, luto@kernel.org,
+        ard.biesheuvel@linaro.org, jpoimboe@redhat.com,
+        pbonzini@redhat.com, mathieu.desnoyers@efficios.com,
+        linux@rasmusvillemoes.dk
+Subject: Re: [PATCH v6 15/17] static_call: Allow early init
+Message-ID: <20200714095117.GS10769@hirez.programming.kicks-ass.net>
+References: <20200710133831.943894387@infradead.org>
+ <20200710134337.036717190@infradead.org>
+ <20200710211426.298a3d94@oasis.local.home>
+ <20200711050831.GY597537@hirez.programming.kicks-ass.net>
+ <20200713162419.3a45f334@oasis.local.home>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: Re: [PATCH v3] brcmfmac: Transform compatible string for FW loading
-From:   Kalle Valo <kvalo@codeaurora.org>
-In-Reply-To: <20200701112201.6449-1-matthias.bgg@kernel.org>
-References: <20200701112201.6449-1-matthias.bgg@kernel.org>
-To:     matthias.bgg@kernel.org
-Cc:     arend.vanspriel@broadcom.com, davem@davemloft.net, kuba@kernel.org,
-        brcm80211-dev-list.pdl@broadcom.com, mbrugger@suse.com,
-        netdev@vger.kernel.org, chi-hsien.lin@cypress.com,
-        linux-wireless@vger.kernel.org, hante.meuleman@broadcom.com,
-        linux-kernel@vger.kernel.org, hdegoede@redhat.com,
-        wright.feng@cypress.com, matthias.bgg@kernel.org,
-        brcm80211-dev-list@cypress.com, franky.lin@broadcom.com
-User-Agent: pwcli/0.1.0-git (https://github.com/kvalo/pwcli/) Python/3.5.2
-Message-Id: <20200714095058.A7004C433AD@smtp.codeaurora.org>
-Date:   Tue, 14 Jul 2020 09:50:58 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200713162419.3a45f334@oasis.local.home>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-matthias.bgg@kernel.org wrote:
-
-> From: Matthias Brugger <mbrugger@suse.com>
+On Mon, Jul 13, 2020 at 04:24:19PM -0400, Steven Rostedt wrote:
+> On Sat, 11 Jul 2020 07:08:31 +0200
+> Peter Zijlstra <peterz@infradead.org> wrote:
 > 
-> The driver relies on the compatible string from DT to determine which
-> FW configuration file it should load. The DTS spec allows for '/' as
-> part of the compatible string. We change this to '-' so that we will
-> still be able to load the config file, even when the compatible has a
-> '/'. This fixes explicitly the firmware loading for
-> "solidrun,cubox-i/q".
+> > On Fri, Jul 10, 2020 at 09:14:26PM -0400, Steven Rostedt wrote:
+> > > On Fri, 10 Jul 2020 15:38:46 +0200
+> > > Peter Zijlstra <peterz@infradead.org> wrote:
+> > >   
+> > > > In order to use static_call() to wire up x86_pmu, we need to
+> > > > initialize earlier; copy some of the tricks from jump_label to enable
+> > > > this.
+> > > > 
+> > > > Primarily we overload key->next to store a sites pointer when there
+> > > > are no modules, this avoids having to use kmalloc() to initialize the
+> > > > sites and allows us to run much earlier.
+> > > >   
+> > > 
+> > > I'm confused. What was the need to have key->next store site pointers
+> > > in order to move it up earlier?  
+> > 
+> > The critical part was to not need an allocation.
 > 
-> Signed-off-by: Matthias Brugger <mbrugger@suse.com>
-> Reviewed-by: Hans deGoede <hdegoede@redhat.com>
+> Why is an allocation needed? What's different about calling it early
+> that we need an allocation or this trick?
+> 
+> The two paragraphs above seem totally disconnected.
+> 
+> "In order to use static_call() to wire up x86_pmu, we need to
+> initialize earlier; copy some of the tricks from jump_label to enable
+> this."
+> 
+> What tricks were copied?
+> 
+> "Primarily we overload key->next to store a sites pointer when there
 
-Patch applied to wireless-drivers-next.git, thanks.
+^^ this trick...
 
-29e354ebeeec brcmfmac: Transform compatible string for FW loading
++	union {
++		/* bit 0: 0 = mods, 1 = sites */
++		unsigned long type;
++		struct static_call_mod *mods;
++		struct static_call_site *sites;
++	};
 
--- 
-https://patchwork.kernel.org/patch/11636153/
+If that isn't a trick, I don't know ;-)
 
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+> are no modules, this avoids having to use kmalloc() to initialize the
+> sites and allows us to run much earlier."
+> 
+> Why is kmalloc() (or this trick) needed to initialize the sites?
+
+That's just how the code was; it treated vmlinux as the NULL module, and
+as such needed a static_call_mod allocated to host the static_call_sites
+pointer.
+
+That is, the static_call_key has a single linked list pointer to
+static_call_mod, and every module has an entry on that list with a
+pointer to their sites. Very simple and straight forward.
+
+Except it requires an allocation to set up, which is a pain is you want
+it initialized very early.
 
