@@ -2,252 +2,92 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9CC7C433F7
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 07:39:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09C6DC433E7
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 07:39:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9312F2084D
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 07:39:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="bh9h2yWK"
+	by mail.kernel.org (Postfix) with ESMTP id E15E82084C
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 07:39:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727108AbgGNHjh (ORCPT
+        id S1727850AbgGNHjr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 03:39:37 -0400
-Received: from esa6.microchip.iphmx.com ([216.71.154.253]:43825 "EHLO
-        esa6.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727065AbgGNHj1 (ORCPT
+        Tue, 14 Jul 2020 03:39:47 -0400
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:41212 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727119AbgGNHjk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 03:39:27 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1594712366; x=1626248366;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=BbeLW9UFW6nT1q3GYOn5N1tTxHNfvT3usXjhXTuBW6M=;
-  b=bh9h2yWK1/DvipSeTHRjoTCeO6uRsg0V7LaiPv4UCQTrTR2fVAcHpiyV
-   kDCEx2oj8YcQHdgKYjm+kYSa7fgeWTD2ObkTebkF/+RC1Za9XTnNEw0xE
-   8XlftzJZhf+a+Ndx7Z3E9DiYssoJML7zpQ8DV1u6GeGa6q7GlMK0rHcsd
-   FpEympzGzz+rOYbNR2fNdLojG//FKRPuJEAc1kORPdm/XYbCJMiZ7B4C+
-   z5vNgCDcv1svtX4EjTWHIwxD82tlnab27It7yQr8sX1smRi2g+f0rC8YW
-   Jk8XV7k7TsDSVKiHdFpk36uELM9Aud5u8a/wZqRjTcwuaFGFnc4h0e3Cu
-   w==;
-IronPort-SDR: 7sEV7XBHpZ5blYp6MZJNJMSnV/Bn2bnYpJ7kBh7zCV64oSw2jVxhQU0CLFdYwqw9lq8gfkebNK
- SdNhPJ65BKYFsqo9ZO3udOhdE2VFVaY7Mvnq0qiLAHu6ThNKdU0IftAEQqV5tC9QBmPah48n6h
- lZyh+kNpBVfK8VxuUbKEdTcQUna7v8VeAenOTxWbyErmioZVGOsHScZH8TRDmgE8iswcu4+ve9
- X2WIwB1QZAuI/6La0fs9RhR14AzDjVYh7MKLdr75BXS8T/l22hoioSB0eXuuhrOgOu6Pt7IYun
- Aw4=
-X-IronPort-AV: E=Sophos;i="5.75,350,1589266800"; 
-   d="scan'208";a="19100009"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa6.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 14 Jul 2020 00:39:26 -0700
-Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
- chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1979.3; Tue, 14 Jul 2020 00:39:26 -0700
-Received: from soft-dev3.localdomain (10.10.115.15) by
- chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server id
- 15.1.1979.3 via Frontend Transport; Tue, 14 Jul 2020 00:39:23 -0700
-From:   Horatiu Vultur <horatiu.vultur@microchip.com>
-To:     <nikolay@cumulusnetworks.com>, <roopa@cumulusnetworks.com>,
-        <davem@davemloft.net>, <kuba@kernel.org>, <jiri@resnulli.us>,
-        <ivecera@redhat.com>, <andrew@lunn.ch>,
-        <UNGLinuxDriver@microchip.com>, <netdev@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <bridge@lists.linux-foundation.org>
-CC:     Horatiu Vultur <horatiu.vultur@microchip.com>
-Subject: [PATCH net-next v4 09/12] bridge: mrp: Extend MRP netlink interface for configuring MRP interconnect
-Date:   Tue, 14 Jul 2020 09:34:55 +0200
-Message-ID: <20200714073458.1939574-10-horatiu.vultur@microchip.com>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200714073458.1939574-1-horatiu.vultur@microchip.com>
-References: <20200714073458.1939574-1-horatiu.vultur@microchip.com>
+        Tue, 14 Jul 2020 03:39:40 -0400
+Received: by mail-oi1-f193.google.com with SMTP id y22so13188853oie.8;
+        Tue, 14 Jul 2020 00:39:39 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=dCYnWiBfrUG0V4QV9bfy3mtM9Gw/6z5cymsRyqfOxPU=;
+        b=qH/1FIlN+DJH4FNmhUoS7tmmK6M/URGpHYWNJAy3Mb44wZiS8hmILq834C2QfxiBev
+         5wxeR/tplU0cLeQwL7TOwORTx/No9dbYn/O12Ben4/WH6T2x+l7f2jjmmyc7cV+gykT2
+         7lGobbFVkO0qGam55RFFxM/fv/oNdLJDtwqYjoI/oEivY9y2xdGNE2KML9la63CrzeQ9
+         EbiBQWVhMZSafn2O0Mv6Ub1fZQgMymQ8dmBXLuU9UygADKTYbbz+YzsyeNdDlw1TiCM+
+         wfYhL2VoViWMzpQGMCmYq12J3CQILK5yXMWscylb8Te0URo+EaSkWnnc09LMK0nZHfAh
+         EIAg==
+X-Gm-Message-State: AOAM53284iKjupKdrQ1a0mF9Os3HxzeD1yPYYctW9K9oAaD0F2TfCtv7
+        VM0H6Z96FW4XYXy3kqjsG8ftuuzCC9n/hgIgt9A=
+X-Google-Smtp-Source: ABdhPJx5dphEyeiFZMm6iXlEYQPyjm7HBBuh4FxBXEBpFTIMln0CZySUEMQ/80bez3KevRXtht7yiFFsC0OTtXhX8oU=
+X-Received: by 2002:aca:5c41:: with SMTP id q62mr2546599oib.148.1594712379512;
+ Tue, 14 Jul 2020 00:39:39 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
+References: <1594676120-5862-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <1594676120-5862-5-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <1594676120-5862-5-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Tue, 14 Jul 2020 09:39:28 +0200
+Message-ID: <CAMuHMdVyJTZ2-YS-WvjAr0ca_EfNdLk3+PEOSK8L5vShd97VWg@mail.gmail.com>
+Subject: Re: [PATCH 4/9] dt-bindings: dma: renesas,rcar-dmac: Document
+ R8A774E1 bindings
+To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Cc:     Vinod Koul <vkoul@kernel.org>, Rob Herring <robh+dt@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Sergei Shtylyov <sergei.shtylyov@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        dmaengine <dmaengine@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux IOMMU <iommu@lists.linux-foundation.org>,
+        netdev <netdev@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Prabhakar <prabhakar.csengg@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch extends the existing MRP netlink interface with the following
-attributes: IFLA_BRIDGE_MRP_IN_ROLE, IFLA_BRIDGE_MRP_IN_STATE and
-IFLA_BRIDGE_MRP_START_IN_TEST. These attributes are similar with their
-ring attributes but they apply to the interconnect port.
+On Mon, Jul 13, 2020 at 11:35 PM Lad Prabhakar
+<prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
+> Renesas RZ/G2H (R8A774E1) SoC also has the R-Car gen3 compatible
+> DMA controllers, therefore document RZ/G2H specific bindings.
+>
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 
-Signed-off-by: Horatiu Vultur <horatiu.vultur@microchip.com>
----
- net/bridge/br_mrp_netlink.c | 140 ++++++++++++++++++++++++++++++++++++
- 1 file changed, 140 insertions(+)
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-diff --git a/net/bridge/br_mrp_netlink.c b/net/bridge/br_mrp_netlink.c
-index 4bf7aaeb29152..a006e0771e8d3 100644
---- a/net/bridge/br_mrp_netlink.c
-+++ b/net/bridge/br_mrp_netlink.c
-@@ -14,6 +14,9 @@ static const struct nla_policy br_mrp_policy[IFLA_BRIDGE_MRP_MAX + 1] = {
- 	[IFLA_BRIDGE_MRP_RING_STATE]	= { .type = NLA_NESTED },
- 	[IFLA_BRIDGE_MRP_RING_ROLE]	= { .type = NLA_NESTED },
- 	[IFLA_BRIDGE_MRP_START_TEST]	= { .type = NLA_NESTED },
-+	[IFLA_BRIDGE_MRP_IN_ROLE]	= { .type = NLA_NESTED },
-+	[IFLA_BRIDGE_MRP_IN_STATE]	= { .type = NLA_NESTED },
-+	[IFLA_BRIDGE_MRP_START_IN_TEST]	= { .type = NLA_NESTED },
- };
- 
- static const struct nla_policy
-@@ -235,6 +238,121 @@ static int br_mrp_start_test_parse(struct net_bridge *br, struct nlattr *attr,
- 	return br_mrp_start_test(br, &test);
- }
- 
-+static const struct nla_policy
-+br_mrp_in_state_policy[IFLA_BRIDGE_MRP_IN_STATE_MAX + 1] = {
-+	[IFLA_BRIDGE_MRP_IN_STATE_UNSPEC]	= { .type = NLA_REJECT },
-+	[IFLA_BRIDGE_MRP_IN_STATE_IN_ID]	= { .type = NLA_U32 },
-+	[IFLA_BRIDGE_MRP_IN_STATE_STATE]	= { .type = NLA_U32 },
-+};
-+
-+static int br_mrp_in_state_parse(struct net_bridge *br, struct nlattr *attr,
-+				 struct netlink_ext_ack *extack)
-+{
-+	struct nlattr *tb[IFLA_BRIDGE_MRP_IN_STATE_MAX + 1];
-+	struct br_mrp_in_state state;
-+	int err;
-+
-+	err = nla_parse_nested(tb, IFLA_BRIDGE_MRP_IN_STATE_MAX, attr,
-+			       br_mrp_in_state_policy, extack);
-+	if (err)
-+		return err;
-+
-+	if (!tb[IFLA_BRIDGE_MRP_IN_STATE_IN_ID] ||
-+	    !tb[IFLA_BRIDGE_MRP_IN_STATE_STATE]) {
-+		NL_SET_ERR_MSG_MOD(extack,
-+				   "Missing attribute: IN_ID or STATE");
-+		return -EINVAL;
-+	}
-+
-+	memset(&state, 0x0, sizeof(state));
-+
-+	state.in_id = nla_get_u32(tb[IFLA_BRIDGE_MRP_IN_STATE_IN_ID]);
-+	state.in_state = nla_get_u32(tb[IFLA_BRIDGE_MRP_IN_STATE_STATE]);
-+
-+	return br_mrp_set_in_state(br, &state);
-+}
-+
-+static const struct nla_policy
-+br_mrp_in_role_policy[IFLA_BRIDGE_MRP_IN_ROLE_MAX + 1] = {
-+	[IFLA_BRIDGE_MRP_IN_ROLE_UNSPEC]	= { .type = NLA_REJECT },
-+	[IFLA_BRIDGE_MRP_IN_ROLE_RING_ID]	= { .type = NLA_U32 },
-+	[IFLA_BRIDGE_MRP_IN_ROLE_IN_ID]		= { .type = NLA_U16 },
-+	[IFLA_BRIDGE_MRP_IN_ROLE_ROLE]		= { .type = NLA_U32 },
-+	[IFLA_BRIDGE_MRP_IN_ROLE_I_IFINDEX]	= { .type = NLA_U32 },
-+};
-+
-+static int br_mrp_in_role_parse(struct net_bridge *br, struct nlattr *attr,
-+				struct netlink_ext_ack *extack)
-+{
-+	struct nlattr *tb[IFLA_BRIDGE_MRP_IN_ROLE_MAX + 1];
-+	struct br_mrp_in_role role;
-+	int err;
-+
-+	err = nla_parse_nested(tb, IFLA_BRIDGE_MRP_IN_ROLE_MAX, attr,
-+			       br_mrp_in_role_policy, extack);
-+	if (err)
-+		return err;
-+
-+	if (!tb[IFLA_BRIDGE_MRP_IN_ROLE_RING_ID] ||
-+	    !tb[IFLA_BRIDGE_MRP_IN_ROLE_IN_ID] ||
-+	    !tb[IFLA_BRIDGE_MRP_IN_ROLE_I_IFINDEX] ||
-+	    !tb[IFLA_BRIDGE_MRP_IN_ROLE_ROLE]) {
-+		NL_SET_ERR_MSG_MOD(extack,
-+				   "Missing attribute: RING_ID or ROLE or IN_ID or I_IFINDEX");
-+		return -EINVAL;
-+	}
-+
-+	memset(&role, 0x0, sizeof(role));
-+
-+	role.ring_id = nla_get_u32(tb[IFLA_BRIDGE_MRP_IN_ROLE_RING_ID]);
-+	role.in_id = nla_get_u16(tb[IFLA_BRIDGE_MRP_IN_ROLE_IN_ID]);
-+	role.i_ifindex = nla_get_u32(tb[IFLA_BRIDGE_MRP_IN_ROLE_I_IFINDEX]);
-+	role.in_role = nla_get_u32(tb[IFLA_BRIDGE_MRP_IN_ROLE_ROLE]);
-+
-+	return br_mrp_set_in_role(br, &role);
-+}
-+
-+static const struct nla_policy
-+br_mrp_start_in_test_policy[IFLA_BRIDGE_MRP_START_IN_TEST_MAX + 1] = {
-+	[IFLA_BRIDGE_MRP_START_IN_TEST_UNSPEC]	= { .type = NLA_REJECT },
-+	[IFLA_BRIDGE_MRP_START_IN_TEST_IN_ID]	= { .type = NLA_U32 },
-+	[IFLA_BRIDGE_MRP_START_IN_TEST_INTERVAL]	= { .type = NLA_U32 },
-+	[IFLA_BRIDGE_MRP_START_IN_TEST_MAX_MISS]	= { .type = NLA_U32 },
-+	[IFLA_BRIDGE_MRP_START_IN_TEST_PERIOD]	= { .type = NLA_U32 },
-+};
-+
-+static int br_mrp_start_in_test_parse(struct net_bridge *br,
-+				      struct nlattr *attr,
-+				      struct netlink_ext_ack *extack)
-+{
-+	struct nlattr *tb[IFLA_BRIDGE_MRP_START_IN_TEST_MAX + 1];
-+	struct br_mrp_start_in_test test;
-+	int err;
-+
-+	err = nla_parse_nested(tb, IFLA_BRIDGE_MRP_START_IN_TEST_MAX, attr,
-+			       br_mrp_start_in_test_policy, extack);
-+	if (err)
-+		return err;
-+
-+	if (!tb[IFLA_BRIDGE_MRP_START_IN_TEST_IN_ID] ||
-+	    !tb[IFLA_BRIDGE_MRP_START_IN_TEST_INTERVAL] ||
-+	    !tb[IFLA_BRIDGE_MRP_START_IN_TEST_MAX_MISS] ||
-+	    !tb[IFLA_BRIDGE_MRP_START_IN_TEST_PERIOD]) {
-+		NL_SET_ERR_MSG_MOD(extack,
-+				   "Missing attribute: RING_ID or INTERVAL or MAX_MISS or PERIOD");
-+		return -EINVAL;
-+	}
-+
-+	memset(&test, 0x0, sizeof(test));
-+
-+	test.in_id = nla_get_u32(tb[IFLA_BRIDGE_MRP_START_IN_TEST_IN_ID]);
-+	test.interval = nla_get_u32(tb[IFLA_BRIDGE_MRP_START_IN_TEST_INTERVAL]);
-+	test.max_miss = nla_get_u32(tb[IFLA_BRIDGE_MRP_START_IN_TEST_MAX_MISS]);
-+	test.period = nla_get_u32(tb[IFLA_BRIDGE_MRP_START_IN_TEST_PERIOD]);
-+
-+	return br_mrp_start_in_test(br, &test);
-+}
-+
- int br_mrp_parse(struct net_bridge *br, struct net_bridge_port *p,
- 		 struct nlattr *attr, int cmd, struct netlink_ext_ack *extack)
- {
-@@ -301,6 +419,28 @@ int br_mrp_parse(struct net_bridge *br, struct net_bridge_port *p,
- 			return err;
- 	}
- 
-+	if (tb[IFLA_BRIDGE_MRP_IN_STATE]) {
-+		err = br_mrp_in_state_parse(br, tb[IFLA_BRIDGE_MRP_IN_STATE],
-+					    extack);
-+		if (err)
-+			return err;
-+	}
-+
-+	if (tb[IFLA_BRIDGE_MRP_IN_ROLE]) {
-+		err = br_mrp_in_role_parse(br, tb[IFLA_BRIDGE_MRP_IN_ROLE],
-+					   extack);
-+		if (err)
-+			return err;
-+	}
-+
-+	if (tb[IFLA_BRIDGE_MRP_START_IN_TEST]) {
-+		err = br_mrp_start_in_test_parse(br,
-+						 tb[IFLA_BRIDGE_MRP_START_IN_TEST],
-+						 extack);
-+		if (err)
-+			return err;
-+	}
-+
- 	return 0;
- }
- 
+Gr{oetje,eeting}s,
+
+                        Geert
+
 -- 
-2.27.0
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
