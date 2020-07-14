@@ -2,114 +2,109 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B192C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 12:16:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89CA9C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 12:16:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 637E12068F
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 12:16:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 616682068F
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 12:16:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728829AbgGNMQu (ORCPT
+        id S1728925AbgGNMQ4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 08:16:50 -0400
-Received: from mx3.molgen.mpg.de ([141.14.17.11]:40297 "EHLO mx1.molgen.mpg.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728471AbgGNMQs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 08:16:48 -0400
-Received: from [192.168.0.4] (ip5f5af29b.dynamic.kabel-deutschland.de [95.90.242.155])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        Tue, 14 Jul 2020 08:16:56 -0400
+Received: from 8bytes.org ([81.169.241.247]:52864 "EHLO theia.8bytes.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728246AbgGNMKp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 08:10:45 -0400
+Received: from cap.home.8bytes.org (p5b006776.dip0.t-ipconnect.de [91.0.103.118])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: pmenzel)
-        by mx.molgen.mpg.de (Postfix) with ESMTPSA id B7E0220643C4C;
-        Tue, 14 Jul 2020 14:16:44 +0200 (CEST)
-Subject: Re: [PATCH 00/22] add support for Clang LTO
-To:     Sami Tolvanen <samitolvanen@google.com>
-Cc:     Masahiro Yamada <masahiroy@kernel.org>,
-        Will Deacon <will@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
+        by theia.8bytes.org (Postfix) with ESMTPSA id 2E6786B4;
+        Tue, 14 Jul 2020 14:10:43 +0200 (CEST)
+From:   Joerg Roedel <joro@8bytes.org>
+To:     x86@kernel.org
+Cc:     Joerg Roedel <joro@8bytes.org>, Joerg Roedel <jroedel@suse.de>,
+        hpa@zytor.com, Andy Lutomirski <luto@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Jiri Slaby <jslaby@suse.cz>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Juergen Gross <jgross@suse.com>,
         Kees Cook <keescook@chromium.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        clang-built-linux@googlegroups.com,
-        Kernel Hardening <kernel-hardening@lists.openwall.com>,
-        linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kbuild <linux-kbuild@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, linux-pci@vger.kernel.org,
-        x86@kernel.org
-References: <20200624203200.78870-1-samitolvanen@google.com>
- <671d8923-ed43-4600-2628-33ae7cb82ccb@molgen.mpg.de>
- <CABCJKuedpxAqndgL=jHT22KtjnLkb1dsYaM6hQYyhqrWjkEe6A@mail.gmail.com>
-From:   Paul Menzel <pmenzel@molgen.mpg.de>
-Message-ID: <2ac9e722-949b-aa92-3553-df1bf69bf9e5@molgen.mpg.de>
-Date:   Tue, 14 Jul 2020 14:16:44 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        David Rientjes <rientjes@google.com>,
+        Cfir Cohen <cfir@google.com>,
+        Erdem Aktas <erdemaktas@google.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Mike Stunes <mstunes@vmware.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Martin Radev <martin.b.radev@gmail.com>,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        virtualization@lists.linux-foundation.org
+Subject: [PATCH v4 19/75] x86/boot/compressed/64: Call set_sev_encryption_mask earlier
+Date:   Tue, 14 Jul 2020 14:08:21 +0200
+Message-Id: <20200714120917.11253-20-joro@8bytes.org>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200714120917.11253-1-joro@8bytes.org>
+References: <20200714120917.11253-1-joro@8bytes.org>
 MIME-Version: 1.0
-In-Reply-To: <CABCJKuedpxAqndgL=jHT22KtjnLkb1dsYaM6hQYyhqrWjkEe6A@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Dear Sami,
+From: Joerg Roedel <jroedel@suse.de>
 
+Call set_sev_encryption_mask() while still on the stage 1 #VC-handler,
+because the stage 2 handler needs our own page-tables to be set up, to
+which calling set_sev_encryption_mask() is a prerequisite.
 
-Am 13.07.20 um 01:34 schrieb Sami Tolvanen:
-> On Sat, Jul 11, 2020 at 9:32 AM Paul Menzel <pmenzel@molgen.mpg.de> wrote:
->> Thank you very much for sending these changes.
->>
->> Do you have a branch, where your current work can be pulled from? Your
->> branch on GitHub [1] seems 15 months old.
-> 
-> The clang-lto branch is rebased regularly on top of Linus' tree.
-> GitHub just looks at the commit date of the last commit in the tree,
-> which isn't all that informative.
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
+---
+ arch/x86/boot/compressed/head_64.S      | 8 +++++++-
+ arch/x86/boot/compressed/ident_map_64.c | 3 ---
+ 2 files changed, 7 insertions(+), 4 deletions(-)
 
-Thank you for clearing this up, and sorry for not checking myself.
+diff --git a/arch/x86/boot/compressed/head_64.S b/arch/x86/boot/compressed/head_64.S
+index 36f18d5592f4..963bf2ce11cf 100644
+--- a/arch/x86/boot/compressed/head_64.S
++++ b/arch/x86/boot/compressed/head_64.S
+@@ -543,9 +543,15 @@ SYM_FUNC_START_LOCAL_NOALIGN(.Lrelocated)
+ 	rep	stosq
+ 
+ /*
+- * Load stage2 IDT and switch to our own page-table
++ * If running as an SEV guest, the encryption mask is required in the
++ * page-table setup code below. When the guest also has SEV-ES enabled
++ * set_sev_encryption_mask() will cause #VC exceptions, but the stage2
++ * handler can't map its GHCB because the page-table is not set up yet.
++ * So set up the encryption mask here while still on the stage1 #VC
++ * handler. Then load stage2 IDT and switch to our own page-table.
+  */
+ 	pushq	%rsi
++	call	set_sev_encryption_mask
+ 	call	load_stage2_idt
+ 	call	initialize_identity_maps
+ 	popq	%rsi
+diff --git a/arch/x86/boot/compressed/ident_map_64.c b/arch/x86/boot/compressed/ident_map_64.c
+index 62e42c11a336..b4f2a5f503cd 100644
+--- a/arch/x86/boot/compressed/ident_map_64.c
++++ b/arch/x86/boot/compressed/ident_map_64.c
+@@ -105,9 +105,6 @@ static void add_identity_map(unsigned long start, unsigned long end)
+ /* Locates and clears a region for a new top level page table. */
+ void initialize_identity_maps(void)
+ {
+-	/* If running as an SEV guest, the encryption mask is required. */
+-	set_sev_encryption_mask();
+-
+ 	/* Exclude the encryption mask from __PHYSICAL_MASK */
+ 	physical_mask &= ~sme_me_mask;
+ 
+-- 
+2.27.0
 
->> Out of curiosity, I applied the changes, allowed the selection for i386
->> (x86), and with Clang 1:11~++20200701093119+ffee8040534-1~exp1 from
->> Debian experimental, it failed with `Invalid absolute R_386_32
->> relocation: KERNEL_PAGES`:
-> 
-> I haven't looked at getting this to work on i386, which is why we only
-> select ARCH_SUPPORTS_LTO for x86_64. I would expect there to be a few
-> issues to address.
-> 
->>>    arch/x86/tools/relocs vmlinux > arch/x86/boot/compressed/vmlinux.relocs;arch/x86/tools/relocs --abs-relocs vmlinux
->>> Invalid absolute R_386_32 relocation: KERNEL_PAGES
-> 
-> KERNEL_PAGES looks like a constant, so it's probably safe to ignore
-> the absolute relocation in tools/relocs.c.
-
-Thank you for pointing me to the right direction. I am happy to report, 
-that with the diff below (no idea to what list to add the string), Linux 
-5.8-rc5 with the LLVM/Clang/LTO patches on top, builds and boots on the 
-ASRock E350M1.
-
-```
-diff --git a/arch/x86/tools/relocs.c b/arch/x86/tools/relocs.c
-index 8f3bf34840cef..e91af127ed3c0 100644
---- a/arch/x86/tools/relocs.c
-+++ b/arch/x86/tools/relocs.c
-@@ -79,6 +79,7 @@ static const char * const 
-sym_regex_kernel[S_NSYMTYPES] = {
-         "__end_rodata_hpage_align|"
-  #endif
-         "__vvar_page|"
-+       "KERNEL_PAGES|"
-         "_end)$"
-  };
-```
-
-
-Kind regards,
-
-Paul
