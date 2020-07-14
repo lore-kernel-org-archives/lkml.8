@@ -2,281 +2,225 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E3ACC433E7
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 14:51:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C090BC433E6
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 14:52:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3C8DA21D6C
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 14:51:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="YEcBJ/q7"
+	by mail.kernel.org (Postfix) with ESMTP id 98ABB21D6C
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 14:52:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594738320;
+	bh=yBb5NwYoawydc+4SE8fRGu7VyXAWbEb+g0AP6WC6mFc=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=Vf3o0+ODAV4z1I4+KVNdmuyutN7CmJQF28pGHTQgVEi564Q+vNLvFTgrgzrM1nSSc
+	 WYLYNAvYPqHsAu6qvcxBPn5W/Gqa09oOgf5nHegfE66a2wO5YD0i0CefFiBWVpBOoi
+	 K6zSNH+p+ptrXCQdC1OPXKzhq3WEzuBP+sV40cAo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729022AbgGNOvn (ORCPT
+        id S1728892AbgGNOv7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 10:51:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57296 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728410AbgGNOu4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 10:50:56 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B055DC061794
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 07:50:55 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id f18so22197212wrs.0
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 07:50:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=ihjHslCIw8qoMVK4GXrRB+3Lj/xZDniOVXUYfLOZNm8=;
-        b=YEcBJ/q7/mLdEyofaH1QpMzFdOfql2c06Deu4Gj8zwMCMhKcM5c8YQYC+jEM7HJq2u
-         liLKBjUuGd8RudZiUYzZrrWTRL/RaYpcFJ1xzgCLo9lbT2hEK4trRnz+BCDJx2QAz3M0
-         nIw/VRbG5eFVnIz7UzRsPMth8wn9XdhvZsGxmaOgGGldEVpyDiIZSKn/Gy1//wNd5tcF
-         gelOWreE6XE15uo39TT7C5n8hnFfJCn8mhhn99cu5DUJMAYAL4RB1/HndMjU7qi3rhye
-         brmqOvYtDeXs6fO08TuvEMIW3EMKQzskdg4lh+AhfPJMUzslv3vPIwI7fNtv9NhKbGcH
-         adIg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=ihjHslCIw8qoMVK4GXrRB+3Lj/xZDniOVXUYfLOZNm8=;
-        b=ap8h8quGGeXH+l0vOBfj3lH3jiVhrCIHS++wviKl+bnpkLYi6QuB09ZfMIyJgvSiip
-         cmdX2NZv0O3+1V6DMUiU7MCzmSe0LJPvjN/f6QsCPQvpGbcXTvkxYJbfXU2bgm0wurSk
-         oKWy43qrx5kWh9Vo/OHj7Yz3EfhzbwTZWSopfODmKXDb0lc/AzlC86O0uVWOIEEvwlll
-         kAhRXkzHEFxvu66VNJgQfWbr4/HuEwOomQnEjz3W7U9QnAK8OgqQMfvg8gOhJAazIoO+
-         iAy4gjJIzN/G5v46/vX5JyxRIF/flQtd25DiddrtvgJWe5xnbUUaW0b/hpY33s0+Fm5Z
-         DuOA==
-X-Gm-Message-State: AOAM530PQv6m+G8Yl1X+32SGqCAogu0xh+0hHPMJh7Ll4y0j+TPj8z34
-        oU7ECmam7dquK+tyqoPi9FYeeg==
-X-Google-Smtp-Source: ABdhPJwzq69EoF6A0ryhfZcTCDHp9k1EFZj2+M3oKKC0bVvjPj1f1QUC3IU6l7A16+RPYZFneZO5UA==
-X-Received: by 2002:adf:f18c:: with SMTP id h12mr5882500wro.375.1594738254389;
-        Tue, 14 Jul 2020 07:50:54 -0700 (PDT)
-Received: from localhost.localdomain ([2.31.163.61])
-        by smtp.gmail.com with ESMTPSA id a84sm4653305wmh.47.2020.07.14.07.50.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 Jul 2020 07:50:53 -0700 (PDT)
-From:   Lee Jones <lee.jones@linaro.org>
-To:     rjw@rjwysocki.net, viresh.kumar@linaro.org
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org, Lee Jones <lee.jones@linaro.org>,
-        Dominik Brodowski <linux@brodo.de>,
-        Ashok Raj <ashok.raj@intel.com>,
-        Jacob Shin <jacob.shin@amd.com>
-Subject: [PATCH 02/13] cpufreq: cpufreq: Demote lots of function headers unworthy of kerneldoc status
-Date:   Tue, 14 Jul 2020 15:50:38 +0100
-Message-Id: <20200714145049.2496163-3-lee.jones@linaro.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200714145049.2496163-1-lee.jones@linaro.org>
-References: <20200714145049.2496163-1-lee.jones@linaro.org>
+        Tue, 14 Jul 2020 10:51:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34938 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728410AbgGNOv6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 10:51:58 -0400
+Received: from mail-ot1-f47.google.com (mail-ot1-f47.google.com [209.85.210.47])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id DF73C21973;
+        Tue, 14 Jul 2020 14:51:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594738318;
+        bh=yBb5NwYoawydc+4SE8fRGu7VyXAWbEb+g0AP6WC6mFc=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=ExIYtMs8JLqxwbj6nNae6eHnbYrvDYP541mY1ltF6anHWu+bVCKIuwonfQ8bolWwo
+         M1jqUoMWjVDZ0zMdYu2r22PNYJKQP0HIX7KUKdoB0lkauYgHJcWb/YtvIkeWpiIll/
+         /hGntYFS6PsAi0fD5K6FyrdUTkfYQoDbDfYu4BWo=
+Received: by mail-ot1-f47.google.com with SMTP id n24so13192540otr.13;
+        Tue, 14 Jul 2020 07:51:57 -0700 (PDT)
+X-Gm-Message-State: AOAM532SXy19f2eUz7X/OHR52VEtv1vNeRuT6+iNJnlp9Rwr638ofLIS
+        S7hpEK3yTK+2AD9yt/MGzcmNlF/eoXjAmXqK4g==
+X-Google-Smtp-Source: ABdhPJxu9bDpxj3Hu09V0IUmiMju7QCn1apEa8gYBelufC7LjqgI1XuYmXKWxWiuIqZ3DwQLWjG/IWRcqN1eIQ909Gg=
+X-Received: by 2002:a9d:2646:: with SMTP id a64mr4155072otb.107.1594738317260;
+ Tue, 14 Jul 2020 07:51:57 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200708074035.31595-1-luca@lucaceresoli.net> <20200708074035.31595-4-luca@lucaceresoli.net>
+ <20200714031109.GA1210492@bogus> <6177ebd1-b39a-3b53-3f5b-92f8d1f9881b@lucaceresoli.net>
+In-Reply-To: <6177ebd1-b39a-3b53-3f5b-92f8d1f9881b@lucaceresoli.net>
+From:   Rob Herring <robh@kernel.org>
+Date:   Tue, 14 Jul 2020 08:51:45 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqKCQJjAoZciQOv+Ksb885E9MSR9FB1dEAkUh7DbqM_gcg@mail.gmail.com>
+Message-ID: <CAL_JsqKCQJjAoZciQOv+Ksb885E9MSR9FB1dEAkUh7DbqM_gcg@mail.gmail.com>
+Subject: Re: [PATCH v2 4/4] dt-bindings: clk: versaclock5: convert to yaml
+To:     Luca Ceresoli <luca@lucaceresoli.net>
+Cc:     linux-clk <linux-clk@vger.kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>, devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Marek Vasut <marek.vasut@gmail.com>,
+        Adam Ford <aford173@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Also provide missing function parameter description for 'cpu' and 'policy'.
+On Tue, Jul 14, 2020 at 3:15 AM Luca Ceresoli <luca@lucaceresoli.net> wrote:
+>
+> Hi Rob,
+>
+> thanks for you review!
+>
+> On 14/07/20 05:11, Rob Herring wrote:
+> > On Wed, Jul 08, 2020 at 09:40:35AM +0200, Luca Ceresoli wrote:
+> >> Convert to yaml the VersaClock bindings document. The mapping between
+> >> clock specifier and physical pins cannot be described formally in yaml
+> >> schema, then keep it verbatim in the description field.
+> >>
+> >> Signed-off-by: Luca Ceresoli <luca@lucaceresoli.net>
+>
+> [...]
+>
+> >> +  reg:
+> >> +    maxItems: 1
+> >> +    description: I2C device address, shall be 0x68 or 0x6a.
+> >
+> > Can be a schema:
+> >
+> > enum: [ 0x68, 0x6a ]
+>
+> Nice, will fix.
+>
+> >> +
+> >> +  '#clock-cells':
+> >> +    const: 1
+> >> +
+> >> +patternProperties:
+> >> +  "^OUT[1-4]$":
+> >> +    type: object
+> >> +    description:
+> >> +      Description of one of the outputs (OUT1..OUT4). See "Clock1 Output
+> >> +      Configuration" in the Versaclock 5/6/6E Family Register Description
+> >> +      and Programming Guide.
+> >> +    properties:
+> >> +      idt,mode:
+> >> +        description:
+> >> +          The output drive mode. Values defined in dt-bindings/clk/versaclock.h
+> >> +        enum:
+> >> +          - VC5_LVPECL
+> >
+> > This is defining a string. Can't use defines here.
+>
+> How do I use the defines from include/dt-bindings then? Or should I just
+> use the numeric values then, like:
+>
+>   idt,mode:
+>     description:
+>       The output drive mode. Values defined in
+>       dt-bindings/clk/versaclock.h
+>     minimum: 0
+>     maximum: 6
+>
+> ?
 
-Fixes the following W=1 kernel build warning(s):
+Yes.
 
- drivers/cpufreq/cpufreq.c:60: warning: cannot understand function prototype: 'struct cpufreq_driver *cpufreq_driver; '
- drivers/cpufreq/cpufreq.c:90: warning: Function parameter or member 'cpufreq_policy_notifier_list' not described in 'BLOCKING_NOTIFIER_HEAD'
- drivers/cpufreq/cpufreq.c:312: warning: Function parameter or member 'val' not described in 'adjust_jiffies'
- drivers/cpufreq/cpufreq.c:312: warning: Function parameter or member 'ci' not described in 'adjust_jiffies'
- drivers/cpufreq/cpufreq.c:538: warning: Function parameter or member 'policy' not described in 'cpufreq_driver_resolve_freq'
- drivers/cpufreq/cpufreq.c:686: warning: Function parameter or member 'file_name' not described in 'show_one'
- drivers/cpufreq/cpufreq.c:686: warning: Function parameter or member 'object' not described in 'show_one'
- drivers/cpufreq/cpufreq.c:731: warning: Function parameter or member 'file_name' not described in 'store_one'
- drivers/cpufreq/cpufreq.c:731: warning: Function parameter or member 'object' not described in 'store_one'
- drivers/cpufreq/cpufreq.c:741: warning: Function parameter or member 'policy' not described in 'show_cpuinfo_cur_freq'
- drivers/cpufreq/cpufreq.c:741: warning: Function parameter or member 'buf' not described in 'show_cpuinfo_cur_freq'
- drivers/cpufreq/cpufreq.c:754: warning: Function parameter or member 'policy' not described in 'show_scaling_governor'
- drivers/cpufreq/cpufreq.c:754: warning: Function parameter or member 'buf' not described in 'show_scaling_governor'
- drivers/cpufreq/cpufreq.c:770: warning: Function parameter or member 'policy' not described in 'store_scaling_governor'
- drivers/cpufreq/cpufreq.c:770: warning: Function parameter or member 'buf' not described in 'store_scaling_governor'
- drivers/cpufreq/cpufreq.c:770: warning: Function parameter or member 'count' not described in 'store_scaling_governor'
- drivers/cpufreq/cpufreq.c:806: warning: Function parameter or member 'policy' not described in 'show_scaling_driver'
- drivers/cpufreq/cpufreq.c:806: warning: Function parameter or member 'buf' not described in 'show_scaling_driver'
- drivers/cpufreq/cpufreq.c:815: warning: Function parameter or member 'policy' not described in 'show_scaling_available_governors'
- drivers/cpufreq/cpufreq.c:815: warning: Function parameter or member 'buf' not described in 'show_scaling_available_governors'
- drivers/cpufreq/cpufreq.c:859: warning: Function parameter or member 'policy' not described in 'show_related_cpus'
- drivers/cpufreq/cpufreq.c:859: warning: Function parameter or member 'buf' not described in 'show_related_cpus'
- drivers/cpufreq/cpufreq.c:867: warning: Function parameter or member 'policy' not described in 'show_affected_cpus'
- drivers/cpufreq/cpufreq.c:867: warning: Function parameter or member 'buf' not described in 'show_affected_cpus'
- drivers/cpufreq/cpufreq.c:901: warning: Function parameter or member 'policy' not described in 'show_bios_limit'
- drivers/cpufreq/cpufreq.c:901: warning: Function parameter or member 'buf' not described in 'show_bios_limit'
- drivers/cpufreq/cpufreq.c:1625: warning: Function parameter or member 'dev' not described in 'cpufreq_remove_dev'
- drivers/cpufreq/cpufreq.c:1625: warning: Function parameter or member 'sif' not described in 'cpufreq_remove_dev'
- drivers/cpufreq/cpufreq.c:2380: warning: Function parameter or member 'cpu' not described in 'cpufreq_get_policy'
- drivers/cpufreq/cpufreq.c:2771: warning: Function parameter or member 'driver' not described in 'cpufreq_unregister_driver'
+>
+> >> +      idt,voltage-microvolts:
+> >> +        description: The output drive voltage.
+> >> +        $ref: /schemas/types.yaml#/definitions/uint32
+> >
+> > Standard unit suffixes have a type already, so drop.
+>
+> Ok.
+>
+> >> +allOf:
+> >> +  - if:
+> >> +      properties:
+> >> +        compatible:
+> >> +          contains:
+> >> +            enum:
+> >> +              - idt,5p49v5933
+> >> +              - idt,5p49v5935
+> >> +    then:
+> >> +      # Devices with builtin crystal, optional external input
+> >> +      properties:
+> >> +        clock-names:
+> >> +          const: clkin
+> >> +        clocks:
+> >> +          maxItems: 1
+> >> +    else:
+> >> +      # Devices without builtin crystal
+> >> +      properties:
+> >> +        clock-names:
+> >> +          anyOf:
+> >> +            - required: [ xin ]
+> >> +            - required: [ clkin ]
+> >
+> > This isn't valid. I think you want:
+> >
+> > clock-names:
+> >   minItems: 1
+> >   items:
+> >     - const: xin
+> >     - const: clkin
+> >
+> > This would mean 'xin' is always required, clkin is optional.
+>
+> No, what I wanted to mean is that allowed cases are:
+>  * for idt,5p49v5933 and idt,5p49v5935:
+>    - only 'xin' (required)
 
-Cc: Dominik Brodowski <linux@brodo.de>
-Cc: Ashok Raj <ashok.raj@intel.com>
-Cc: Jacob Shin <jacob.shin@amd.com>
-Signed-off-by: Lee Jones <lee.jones@linaro.org>
----
- drivers/cpufreq/cpufreq.c | 32 +++++++++++++++++---------------
- 1 file changed, 17 insertions(+), 15 deletions(-)
+For this you need an if/then schema. There are plenty of examples in
+the tree, but this is what you need:
 
-diff --git a/drivers/cpufreq/cpufreq.c b/drivers/cpufreq/cpufreq.c
-index 036f4cc42ede2..17c1c3becd925 100644
---- a/drivers/cpufreq/cpufreq.c
-+++ b/drivers/cpufreq/cpufreq.c
-@@ -52,7 +52,7 @@ static LIST_HEAD(cpufreq_governor_list);
- 
- static char default_governor[CPUFREQ_NAME_LEN];
- 
--/**
-+/*
-  * The "cpufreq driver" - the arch- or hardware-dependent low
-  * level driver of CPUFreq support, and its spinlock. This lock
-  * also protects the cpufreq_cpu_data array.
-@@ -80,7 +80,7 @@ static int cpufreq_set_policy(struct cpufreq_policy *policy,
- 			      struct cpufreq_governor *new_gov,
- 			      unsigned int new_pol);
- 
--/**
-+/*
-  * Two notifier lists: the "policy" list is involved in the
-  * validation process for a new CPU frequency policy; the
-  * "transition" list for kernel code that needs to handle
-@@ -300,7 +300,7 @@ struct cpufreq_policy *cpufreq_cpu_acquire(unsigned int cpu)
-  *            EXTERNALLY AFFECTING FREQUENCY CHANGES                 *
-  *********************************************************************/
- 
--/**
-+/*
-  * adjust_jiffies - adjust the system "loops_per_jiffy"
-  *
-  * This function alters the system "loops_per_jiffy" for the clock
-@@ -526,6 +526,7 @@ EXPORT_SYMBOL_GPL(cpufreq_disable_fast_switch);
- /**
-  * cpufreq_driver_resolve_freq - Map a target frequency to a driver-supported
-  * one.
-+ * @policy: associated policy to interrogate
-  * @target_freq: target frequency to resolve.
-  *
-  * The target to driver frequency mapping is cached in the policy.
-@@ -670,7 +671,7 @@ static struct cpufreq_governor *cpufreq_parse_governor(char *str_governor)
- 	return get_governor(str_governor);
- }
- 
--/**
-+/*
-  * cpufreq_per_cpu_attr_read() / show_##file_name() -
-  * print out cpufreq information
-  *
-@@ -712,7 +713,7 @@ static ssize_t show_scaling_cur_freq(struct cpufreq_policy *policy, char *buf)
- 	return ret;
- }
- 
--/**
-+/*
-  * cpufreq_per_cpu_attr_write() / store_##file_name() - sysfs write access
-  */
- #define store_one(file_name, object)			\
-@@ -733,7 +734,7 @@ static ssize_t store_##file_name					\
- store_one(scaling_min_freq, min);
- store_one(scaling_max_freq, max);
- 
--/**
-+/*
-  * show_cpuinfo_cur_freq - current CPU frequency as detected by hardware
-  */
- static ssize_t show_cpuinfo_cur_freq(struct cpufreq_policy *policy,
-@@ -747,7 +748,7 @@ static ssize_t show_cpuinfo_cur_freq(struct cpufreq_policy *policy,
- 	return sprintf(buf, "<unknown>\n");
- }
- 
--/**
-+/*
-  * show_scaling_governor - show the current policy for the specified CPU
-  */
- static ssize_t show_scaling_governor(struct cpufreq_policy *policy, char *buf)
-@@ -762,7 +763,7 @@ static ssize_t show_scaling_governor(struct cpufreq_policy *policy, char *buf)
- 	return -EINVAL;
- }
- 
--/**
-+/*
-  * store_scaling_governor - store policy for the specified CPU
-  */
- static ssize_t store_scaling_governor(struct cpufreq_policy *policy,
-@@ -799,7 +800,7 @@ static ssize_t store_scaling_governor(struct cpufreq_policy *policy,
- 	return ret ? ret : count;
- }
- 
--/**
-+/*
-  * show_scaling_driver - show the cpufreq driver currently loaded
-  */
- static ssize_t show_scaling_driver(struct cpufreq_policy *policy, char *buf)
-@@ -807,7 +808,7 @@ static ssize_t show_scaling_driver(struct cpufreq_policy *policy, char *buf)
- 	return scnprintf(buf, CPUFREQ_NAME_PLEN, "%s\n", cpufreq_driver->name);
- }
- 
--/**
-+/*
-  * show_scaling_available_governors - show the available CPUfreq governors
-  */
- static ssize_t show_scaling_available_governors(struct cpufreq_policy *policy,
-@@ -851,7 +852,7 @@ ssize_t cpufreq_show_cpus(const struct cpumask *mask, char *buf)
- }
- EXPORT_SYMBOL_GPL(cpufreq_show_cpus);
- 
--/**
-+/*
-  * show_related_cpus - show the CPUs affected by each transition even if
-  * hw coordination is in use
-  */
-@@ -860,7 +861,7 @@ static ssize_t show_related_cpus(struct cpufreq_policy *policy, char *buf)
- 	return cpufreq_show_cpus(policy->related_cpus, buf);
- }
- 
--/**
-+/*
-  * show_affected_cpus - show the CPUs affected by each transition
-  */
- static ssize_t show_affected_cpus(struct cpufreq_policy *policy, char *buf)
-@@ -894,7 +895,7 @@ static ssize_t show_scaling_setspeed(struct cpufreq_policy *policy, char *buf)
- 	return policy->governor->show_setspeed(policy, buf);
- }
- 
--/**
-+/*
-  * show_bios_limit - show the current cpufreq HW/BIOS limitation
-  */
- static ssize_t show_bios_limit(struct cpufreq_policy *policy, char *buf)
-@@ -1616,7 +1617,7 @@ static int cpufreq_offline(unsigned int cpu)
- 	return 0;
- }
- 
--/**
-+/*
-  * cpufreq_remove_dev - remove a CPU device
-  *
-  * Removes the cpufreq interface for a CPU device.
-@@ -2373,6 +2374,7 @@ EXPORT_SYMBOL_GPL(cpufreq_unregister_governor);
-  * cpufreq_get_policy - get the current cpufreq_policy
-  * @policy: struct cpufreq_policy into which the current cpufreq_policy
-  *	is written
-+ * @cpu: CPU to find the policy for
-  *
-  * Reads the current cpufreq policy.
-  */
-@@ -2759,7 +2761,7 @@ int cpufreq_register_driver(struct cpufreq_driver *driver_data)
- }
- EXPORT_SYMBOL_GPL(cpufreq_register_driver);
- 
--/**
-+/*
-  * cpufreq_unregister_driver - unregister the current CPUFreq driver
-  *
-  * Unregister the current CPUFreq driver. Only call this if you have
--- 
-2.25.1
+if:
+  properties:
+    compatible:
+      enum:
+        - idt,5p49v5933
+        - idt,5p49v5935
+then:
+  properties:
+    clocks:
+      maxItems: 1
+    clock-names:
+      const: xin
 
+>  * for the other parts one of these:
+>    - only 'xin'
+>    - only 'clkin'
+>    - both 'xin' and 'clkin'
+>
+> How do I express that?
+
+For the 2nd part:
+
+clock-names:
+  minItems: 1
+  maxItems: 2
+  items:
+    enum: [ xin, clkin ]
+
+> A general note: as a newcomer to yaml bindings I found a steep learning
+> curve. Finding a correct construct (not to mention the best one) for
+> each situation is time consuming and frustrating. I've been looking at
+> existing files for suitable examples but it doesn't work very well.
+>
+> Is there any guide to yaml bindings for beginners with examples of
+> typical cases? It would greatly help in producing better patches and
+> saving time for everybody.
+
+bindings/example-schema.yaml is intended to do that. No doubt it could
+use more examples. Though from my perspective people already don't
+read and follow things it says there.
+
+The problem I think is not the typical cases, but the atypical ones. I
+don't think we can enumerate all the atypical cases. At that point you
+really need some understanding of json-schema which I agree has a bit
+of a learning curve if you've never used anything like it (I hadn't).
+
+Rob
