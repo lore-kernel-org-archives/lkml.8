@@ -3,120 +3,131 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74737C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:12:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86104C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:13:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 57A6B20760
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:12:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 60CB320760
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:13:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="dq68p4Oe"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XnYy2yXl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729090AbgGNSMr (ORCPT
+        id S1729116AbgGNSN1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 14:12:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33052 "EHLO
+        Tue, 14 Jul 2020 14:13:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33156 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728370AbgGNSMq (ORCPT
+        with ESMTP id S1727772AbgGNSN0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 14:12:46 -0400
-Received: from mail-il1-x143.google.com (mail-il1-x143.google.com [IPv6:2607:f8b0:4864:20::143])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 94F91C061794
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 11:12:46 -0700 (PDT)
-Received: by mail-il1-x143.google.com with SMTP id p15so7382308ilh.13
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 11:12:46 -0700 (PDT)
+        Tue, 14 Jul 2020 14:13:26 -0400
+Received: from mail-io1-xd43.google.com (mail-io1-xd43.google.com [IPv6:2607:f8b0:4864:20::d43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 93012C061755
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 11:13:26 -0700 (PDT)
+Received: by mail-io1-xd43.google.com with SMTP id f23so18305995iof.6
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 11:13:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=XgMYLghS9qV+zQ3j/AEHdigXuQT8tk2Ry048DCv3WNo=;
-        b=dq68p4Oe6FTibRT0OKXe06CPAge1OFrmt3gile+/qSYXPHXUtOKRn0era1397ge7iu
-         SG0nsm4H7K+6hZKM5Vkb9MlBteNDRdUG8mrLYIN7NPDfr5s5pRLh9h6UcW6OI3ZCFfXb
-         Xd09xrFtLNw2jIxhB4wLLFDrF+rMXW9ILgVMY=
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:reply-to:from:date:message-id
+         :subject:to:cc;
+        bh=DkaDz2vQpSy5XI1g9Hw7BaXUJBJ+MBpnR3NMIQZfDRQ=;
+        b=XnYy2yXleZye8c+VETEcwH80zwMNR3nr9eif0Wzo7JSdEClHNSE12TUJ1PbAwivEye
+         2zRCazYW0wztkcByTKdsg7Wh8JR0X8qZuRD43vBWCUsVRPykqNSY38hDq4sHNvm7e91L
+         hlZFRkX0eLcoCCtCBZjmD0+Sl3vN+E6hRowfOFlBP/1H7ppKql0wtAnIyhOROmGmxp93
+         tEL6m0i/F/faqSrh3Eb4dTZ6epUQSfDpTuG3Z+L6jow044fRrO2eaw/D9WNtqMYhcpxf
+         PcJzaHNXo4l7wCq7pkHOKSC/tcav1qJ/28Um26umY/bOAMQ1zZCBGvfROInM/0WhcjLj
+         Dc5g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=XgMYLghS9qV+zQ3j/AEHdigXuQT8tk2Ry048DCv3WNo=;
-        b=M1DVtxIjDkvbR4usU0SMWJGw2c4+leRSYHqZIqzG9VlZk/WVHprXpcoFVuHxYsAjZf
-         ej4l6ePDyL/bsxf2QP7JfU2ZUot2+LCACuescBXhWTEznk+zExTAGnkBxK1/+dGXbfNT
-         5x0eP9i4HE3W38bA/cnojBFX5p/nApSFAlCF83Q6r5FWZeTAhWNqEE3qIFH2ID8LvUX+
-         DZcx6f1pB7rJpY9uUHsFKwjrdMaSQIDMWrko+CcsUU+BFNVSa97kPeA2Ty457rwBHj18
-         3TKO4u1vHEdGPD8JE6nLnpZjFk2kky5f7ox9+rg7LiBEqvATwXvQit+Y7KBzOQRdA4MO
-         sWCQ==
-X-Gm-Message-State: AOAM530EC9m3e4x66SzlldgrGd9lOV/5zFTPQkfPmWLMODJM8XxegLqW
-        QblOWsc9n2PDNFZfI0+qJPy14GKHdRQJEhwFi9oMiQ==
-X-Google-Smtp-Source: ABdhPJxZh9UtdKz/96YNIgTICaWWllWK6qo3ibzuoBpQ/DEDx3DUR9Zka1P+EnolKivtnMEOWWuJNr7z5hjeAlsuqI0=
-X-Received: by 2002:a92:cf42:: with SMTP id c2mr6263546ilr.13.1594750365698;
- Tue, 14 Jul 2020 11:12:45 -0700 (PDT)
+        h=x-gm-message-state:mime-version:references:in-reply-to:reply-to
+         :from:date:message-id:subject:to:cc;
+        bh=DkaDz2vQpSy5XI1g9Hw7BaXUJBJ+MBpnR3NMIQZfDRQ=;
+        b=udUeRWb0v146vq2u1Xm6BRTDHEXk/q1pXrgMSRzCWU6glKr11OxxvXO6Q7rDVLHATW
+         COQBkgrSLsBu+1rfm25nfPZOy90s+Y2Qk+dNhKFUQyu5a0aoSXYmrjy6X075seQwg+Fj
+         0UPYneI4dch+LLX337Dt6/rT5K1MbIxIZkA1a9afw85POmPeoLjE7Th9zFmBgOa9iRTw
+         l6DQr/KuBQadQtHGpvGSA/6QuNo71JAXrISmPUL8OsK+kVZw24ebkz/+k1AgTLoT1yBp
+         WFXfAp4xLvJBH7UgzDSN1nJ5eu505prwhrJgMab4JdveCruStwiAEWVLOSMNgdmJl3JA
+         05dw==
+X-Gm-Message-State: AOAM530ajUg7jugVx6ee2hAn2kR0BTqIvp5ed6ikXgGe8UcdnGiT2agW
+        QFE1QTP1KQBY8e5Qzud4fOzV/gXZhbMR+L/2bXs=
+X-Google-Smtp-Source: ABdhPJzBJvCjQCUWkrn9IEwod7frezCfISaypAwCT64tMY71YH+PE51CXhhpH621VDCfOOdld75CMnv/xSGc8eMeG1c=
+X-Received: by 2002:a02:a909:: with SMTP id n9mr7259618jam.70.1594750405993;
+ Tue, 14 Jul 2020 11:13:25 -0700 (PDT)
 MIME-Version: 1.0
-References: <CA+G9fYt+6OeibZMD0fP=O3nqFbcN3O4xcLkjq0mpQbZJ2uxB9w@mail.gmail.com>
- <CAHk-=wgRcFSnQt=T95S+1dPkyvCuVAVGQ37JDvRg41h8hRqO3Q@mail.gmail.com>
- <CA+G9fYuL=xJPLbQJVzDfXB8uNiCWdXpL=joDsnATEFCzyFh_1g@mail.gmail.com>
- <CAHk-=wgB6Ds6yqbZZmscKNuAiNR2J0Pf3a8UrbdfewYxHE7SbA@mail.gmail.com>
- <20200712215041.GA3644504@google.com> <CAHk-=whxP0Gj70pJN5R7Qec4qjrGr+G9Ex7FJi7=_fPcdQ2ocQ@mail.gmail.com>
- <20200714073306.kq4zikkphqje2yzb@box> <20200714160843.GA1685150@google.com> <CAHk-=wjffJ=EBrLjsz=KUFyPXVQUO03L=VJmHnLhVr4XvT3Mpw@mail.gmail.com>
-In-Reply-To: <CAHk-=wjffJ=EBrLjsz=KUFyPXVQUO03L=VJmHnLhVr4XvT3Mpw@mail.gmail.com>
-From:   Joel Fernandes <joel@joelfernandes.org>
-Date:   Tue, 14 Jul 2020 14:12:33 -0400
-Message-ID: <CAEXW_YRTnCb-z6TeboA3OCYv8eoX8UiCNn7K1hGMX+41Zdz8Og@mail.gmail.com>
-Subject: Re: WARNING: at mm/mremap.c:211 move_page_tables in i386
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     "Kirill A. Shutemov" <kirill@shutemov.name>,
-        Naresh Kamboju <naresh.kamboju@linaro.org>,
-        linux- stable <stable@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        linux-mm <linux-mm@kvack.org>, Arnd Bergmann <arnd@arndb.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Roman Gushchin <guro@fb.com>, Michal Hocko <mhocko@kernel.org>,
-        lkft-triage@lists.linaro.org, Chris Down <chris@chrisdown.name>,
-        Michel Lespinasse <walken@google.com>,
-        Fan Yang <Fan_Yang@sjtu.edu.cn>,
-        Brian Geffon <bgeffon@google.com>,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>, pugaowei@gmail.com,
-        Jerome Glisse <jglisse@redhat.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Hugh Dickins <hughd@google.com>,
-        Al Viro <viro@zeniv.linux.org.uk>, Tejun Heo <tj@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
+References: <20200629140928.858507-1-nivedita@alum.mit.edu>
+ <20200714023836.2310569-1-nivedita@alum.mit.edu> <CA+icZUXSPfybFtzQB3wKn9spQmEPnQu_iGPWkRisAmRQbJLWXA@mail.gmail.com>
+ <20200714141550.GA329060@rani.riverdale.lan>
+In-Reply-To: <20200714141550.GA329060@rani.riverdale.lan>
+Reply-To: sedat.dilek@gmail.com
+From:   Sedat Dilek <sedat.dilek@gmail.com>
+Date:   Tue, 14 Jul 2020 20:13:14 +0200
+Message-ID: <CA+icZUU88wYmyycthW7AQUZ72HGa9RWPZmxVS5Gm6UW=6ES9kA@mail.gmail.com>
+Subject: Re: [PATCH v4 0/7] x86/boot: Remove runtime relocations from
+ compressed kernel
+To:     Arvind Sankar <nivedita@alum.mit.edu>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Fangrui Song <maskray@google.com>,
+        Dmitry Golovin <dima@golovin.in>,
+        Clang-Built-Linux ML <clang-built-linux@googlegroups.com>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Daniel Kiper <daniel.kiper@oracle.com>,
+        Kees Cook <keescook@chromium.org>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        "H . J . Lu" <hjl@sourceware.org>, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 14, 2020 at 12:11 PM Linus Torvalds
-<torvalds@linux-foundation.org> wrote:
+On Tue, Jul 14, 2020 at 4:15 PM Arvind Sankar <nivedita@alum.mit.edu> wrote:
 >
-> On Tue, Jul 14, 2020 at 9:08 AM Joel Fernandes <joel@joelfernandes.org> wrote:
+> On Tue, Jul 14, 2020 at 03:15:49PM +0200, Sedat Dilek wrote:
 > >
-> > I was thinking we should not call move_page_tables() with overlapping ranges
-> > at all, just to keep things simple.
+> > How to test this series without building a full new kernel?
+> >
+> > make $make_opts vmlinux
+> >
+> > - Sedat -
+> >
 >
-> No, we're not breaking the existing stack movement code just to keep
-> things simple.
+> Not sure I understood the question: you do have to build a full new
+> kernel with this patch series to test it. Since the changes are to the
+> compressed kernel, you would need to make bzImage, which is the end
+> product of the full kernel build.
 >
-> The rule is "make it as simple as possible, but no simpler".
+> Thanks.
 >
-> And "as possible" in the case of Linux means "no breaking of old
-> interfaces". The stack randomization movement most certainly counts.
 
-Hi Linus,
-I think you misunderstood me. I was not advocating breaking the stack
-movement code or breaking stack randomization, I was going to try to
-see if I could keep that working while not having to do an overlapping
-move. That would be what I would do in the future patch (until which
-as you mentioned, you would switch the WARN_ON to WARN_ON_ONCE).
+Thanks for the informations.
 
-I agree with you that we keep things as simple as possible while not
-breaking functionality.
+make bzImage
 
-Cheers,
+...was the last I tried - gasped 15mins on this - after gasping 30mins on
 
- - Joel
+make vmlinux
+
+I did a full new build...
+
+...and it fails with ld.lld-11 as linker:
+
+ld.lld-11 -m elf_x86_64 -pie  --no-dynamic-linker -r -o
+arch/x86/boot/compressed/.tmp_misc.o arch/x86/boot/compressed/misc.o
+-T arch/x86/boot/compressed/.tmp_misc.ver; mv -f
+arch/x86/boot/compressed/.tmp_misc.o arch/x86/boot/compressed/misc.o;
+rm -f arch/x86/boot/compressed/.tmp_misc.ver; fi
+*** ld.lld-11: error: -r and -pie may not be used together ***
+make[5]: *** [scripts/Makefile.build:281:
+arch/x86/boot/compressed/misc.o] Error 1
+
+It's annoying to fail on the last minutes of a build.
+Sorry for being very honest.
+
+- Sedat -
