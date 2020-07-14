@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E537C433FE
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 19:12:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39FCDC43459
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 19:12:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 23104221ED
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 19:12:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 112B3221ED
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 19:12:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594753941;
-	bh=eybEVYZ0H2G8SQhFRuRRNr1i0BUSzfEQItUdB7NkyYo=;
+	s=default; t=1594753945;
+	bh=0h57/4cEmpbCtd0i2AE4Ga9/ywob8IbzLAAgx5cINko=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NpFkYo+9ON1iFyXAAPjgaP0TmQ+bl8DiYO/HbSDsqFWs763Io6cK2fNiDD0hqT7dB
-	 qer6H4QLkavoUiQWmGW7MIsHjrre9GOwxf9KjGap3wmcv6RO4fAe1HpSgkWiMmIBu0
-	 NsrbTqd/iwBx9ybq5/sGHSOsT060jcq6jR0yGlRU=
+	b=Mg3gj+SOyCSsAYtvVx0ImZRz+52kUhS9tkPJ5iu5OXKt7pKTkeL0Iy3xzZ7wgYiw7
+	 C1c0bUUQ6KnyKEnY0/F9GBXL+FQEdacpPPJNEFwIqgU/Iuc2ySutZ0sj4JM6QNyM5R
+	 4E/j8yL3IjBu3Zxo1Q4vWlI34Uz0RxQ01x062bG0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730593AbgGNTMT (ORCPT
+        id S1730834AbgGNTMY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 15:12:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42230 "EHLO mail.kernel.org"
+        Tue, 14 Jul 2020 15:12:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42206 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729696AbgGNSrO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 14:47:14 -0400
+        id S1729662AbgGNSrL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 14:47:11 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 64E8C22AAE;
-        Tue, 14 Jul 2020 18:47:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D9F2422AAA;
+        Tue, 14 Jul 2020 18:47:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594752434;
-        bh=eybEVYZ0H2G8SQhFRuRRNr1i0BUSzfEQItUdB7NkyYo=;
+        s=default; t=1594752431;
+        bh=0h57/4cEmpbCtd0i2AE4Ga9/ywob8IbzLAAgx5cINko=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xysHCSUv1M3HPKvzGp2hshq7Toks8SczF0DgUYnaq8ST9yXmiLGRRlxXWG+89eacy
-         BpIjHGkkD3hP+ja/tp/kFp8aums04bYEHQExyoAZgw6whtFw5i7IbUESjBQrI1SI2v
-         Z+qXYdxg1hgw4cUcJNCKZZWqo9RmOFmvS/1NwT78=
+        b=oUT7adSiowomrb9d08Mbz0bNlHiJFP+RU5pAcNTeZgm9BRONwTUvc+gq+YD3Q2f91
+         7cOonIzaymLo/Zqw1i/NIDb+tPETFgMg/hscTyDa5S79f8O9Py3rT1Ic6OSeSRx4BD
+         X2OxAtXZQzD/j73X8Un+x5Rit0AklkTVu/uI4L2c=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Marc Zyngier <maz@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        James Morse <james.morse@arm.com>,
-        Will Deacon <will@kernel.org>
-Subject: [PATCH 4.19 41/58] KVM: arm64: Fix definition of PAGE_HYP_DEVICE
-Date:   Tue, 14 Jul 2020 20:44:14 +0200
-Message-Id: <20200714184058.162642865@linuxfoundation.org>
+        stable@vger.kernel.org, Hector Martin <marcan@marcan.st>,
+        Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 4.19 40/58] ALSA: usb-audio: add quirk for MacroSilicon MS2109
+Date:   Tue, 14 Jul 2020 20:44:13 +0200
+Message-Id: <20200714184058.116108080@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200714184056.149119318@linuxfoundation.org>
 References: <20200714184056.149119318@linuxfoundation.org>
@@ -61,41 +59,81 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Will Deacon <will@kernel.org>
+From: Hector Martin <marcan@marcan.st>
 
-commit 68cf617309b5f6f3a651165f49f20af1494753ae upstream.
+commit e337bf19f6af38d5c3fa6d06cd594e0f890ca1ac upstream.
 
-PAGE_HYP_DEVICE is intended to encode attribute bits for an EL2 stage-1
-pte mapping a device. Unfortunately, it includes PROT_DEVICE_nGnRE which
-encodes attributes for EL1 stage-1 mappings such as UXN and nG, which are
-RES0 for EL2, and DBM which is meaningless as TCR_EL2.HD is not set.
+These devices claim to be 96kHz mono, but actually are 48kHz stereo with
+swapped channels and unaligned transfers.
 
-Fix the definition of PAGE_HYP_DEVICE so that it doesn't set RES0 bits
-at EL2.
-
-Acked-by: Marc Zyngier <maz@kernel.org>
-Cc: Marc Zyngier <maz@kernel.org>
-Cc: Catalin Marinas <catalin.marinas@arm.com>
-Cc: James Morse <james.morse@arm.com>
-Cc: <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20200708162546.26176-1-will@kernel.org
-Signed-off-by: Will Deacon <will@kernel.org>
+Cc: stable@vger.kernel.org
+Signed-off-by: Hector Martin <marcan@marcan.st>
+Link: https://lore.kernel.org/r/20200702071433.237843-1-marcan@marcan.st
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/arm64/include/asm/pgtable-prot.h |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ sound/usb/quirks-table.h |   52 +++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 52 insertions(+)
 
---- a/arch/arm64/include/asm/pgtable-prot.h
-+++ b/arch/arm64/include/asm/pgtable-prot.h
-@@ -65,7 +65,7 @@
- #define PAGE_HYP		__pgprot(_HYP_PAGE_DEFAULT | PTE_HYP | PTE_HYP_XN)
- #define PAGE_HYP_EXEC		__pgprot(_HYP_PAGE_DEFAULT | PTE_HYP | PTE_RDONLY)
- #define PAGE_HYP_RO		__pgprot(_HYP_PAGE_DEFAULT | PTE_HYP | PTE_RDONLY | PTE_HYP_XN)
--#define PAGE_HYP_DEVICE		__pgprot(PROT_DEVICE_nGnRE | PTE_HYP)
-+#define PAGE_HYP_DEVICE		__pgprot(_PROT_DEFAULT | PTE_ATTRINDX(MT_DEVICE_nGnRE) | PTE_HYP | PTE_HYP_XN)
+--- a/sound/usb/quirks-table.h
++++ b/sound/usb/quirks-table.h
+@@ -3460,4 +3460,56 @@ ALC1220_VB_DESKTOP(0x26ce, 0x0a01), /* A
+ 	}
+ },
  
- #define PAGE_S2_MEMATTR(attr)						\
- 	({								\
++/*
++ * MacroSilicon MS2109 based HDMI capture cards
++ *
++ * These claim 96kHz 1ch in the descriptors, but are actually 48kHz 2ch.
++ * They also need QUIRK_AUDIO_ALIGN_TRANSFER, which makes one wonder if
++ * they pretend to be 96kHz mono as a workaround for stereo being broken
++ * by that...
++ *
++ * They also have swapped L-R channels, but that's for userspace to deal
++ * with.
++ */
++{
++	USB_DEVICE(0x534d, 0x2109),
++	.driver_info = (unsigned long) &(const struct snd_usb_audio_quirk) {
++		.vendor_name = "MacroSilicon",
++		.product_name = "MS2109",
++		.ifnum = QUIRK_ANY_INTERFACE,
++		.type = QUIRK_COMPOSITE,
++		.data = &(const struct snd_usb_audio_quirk[]) {
++			{
++				.ifnum = 2,
++				.type = QUIRK_AUDIO_ALIGN_TRANSFER,
++			},
++			{
++				.ifnum = 2,
++				.type = QUIRK_AUDIO_STANDARD_MIXER,
++			},
++			{
++				.ifnum = 3,
++				.type = QUIRK_AUDIO_FIXED_ENDPOINT,
++				.data = &(const struct audioformat) {
++					.formats = SNDRV_PCM_FMTBIT_S16_LE,
++					.channels = 2,
++					.iface = 3,
++					.altsetting = 1,
++					.altset_idx = 1,
++					.attributes = 0,
++					.endpoint = 0x82,
++					.ep_attr = USB_ENDPOINT_XFER_ISOC |
++						USB_ENDPOINT_SYNC_ASYNC,
++					.rates = SNDRV_PCM_RATE_CONTINUOUS,
++					.rate_min = 48000,
++					.rate_max = 48000,
++				}
++			},
++			{
++				.ifnum = -1
++			}
++		}
++	}
++},
++
+ #undef USB_DEVICE_VENDOR_SPEC
 
 
