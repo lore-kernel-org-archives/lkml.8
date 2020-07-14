@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C4F7C433E4
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:45:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63FF4C433E5
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:46:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0CB8C2231B
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:45:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 37BCB22A99
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:46:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594752359;
-	bh=v7i3vODcfsNt9qz80CBL3nKZlwMLOBfzh+PZ/J8FKLU=;
+	s=default; t=1594752361;
+	bh=+FFRpCGBVYGGelObaKd24kLkurRJe2LrOSrGWEhyLSE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rxGrEdc1Gm+3RuFGnGFQw5Ilkg9fyHUSbA5INfCj8oXp55r0/CpUvJD9lbJ1YRbfy
-	 wI0L5dxKI2wnsSC/viaDVQQhiEh/p0EuKHwPRBeS+oSikeg7CyoUU5zUPXhi6DvHjv
-	 rE2Sc7d4O61hqZEXQvFKV2CzlpbeOuVVtxEaX4gM=
+	b=Hk6tBv0qsAvDm7xhPhT+W9cpJNbAasd1PaGrVkEt93dk/HYpEeeosgI37YL6tcSwE
+	 cOF5Vupd4FnmXkpo4wqmrYtoDsEvQRR9xiVINgBzqsjI19Bdk5xMu30uVAiU2soRym
+	 4ZjGH/uSzXQCndl1QtHjU1QFJFkMYqGqyLMrweLQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729282AbgGNSp4 (ORCPT
+        id S1729304AbgGNSp7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 14:45:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40378 "EHLO mail.kernel.org"
+        Tue, 14 Jul 2020 14:45:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40448 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728948AbgGNSpy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 14:45:54 -0400
+        id S1729280AbgGNSp5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 14:45:57 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CCAA9222E9;
-        Tue, 14 Jul 2020 18:45:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2EE5E2231B;
+        Tue, 14 Jul 2020 18:45:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594752354;
-        bh=v7i3vODcfsNt9qz80CBL3nKZlwMLOBfzh+PZ/J8FKLU=;
+        s=default; t=1594752356;
+        bh=+FFRpCGBVYGGelObaKd24kLkurRJe2LrOSrGWEhyLSE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BEP6KLJ/V/ftyPDIQqiLUt7DAMtYFJKByLrAFfAUW5FxsLYt0Sr9ZF53ZEwk4g4b0
-         R42vQjdqc5Ubd4QTwpjxEqq6ryJMjZqzcLJgTx7SdZM2u/DzSttyqUnHXGi0epgrt/
-         mLmr+kSTr+/KhwxXRCtwkZqyJF5MkVKayBeNXUy4=
+        b=rNklDT9KtNFrBU/wJ+Vumx01f1N8/ewEV+r8GK5eYCCXkTc5GbhOeSdzcpWLfVX0X
+         UrkWpKFH7U8VGPdU7E0anfPrdhOOdFs/Qv0nT8J62DeWjSwZwn6HBgAUBn1cpLIf6+
+         6D1z6YESjfVQmBBhyKcO9IL4bIdWoaA2usW3MRnI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Peng Ma <peng.ma@nxp.com>,
+        stable@vger.kernel.org, Zhenzhong Duan <zhenzhong.duan@gmail.com>,
         Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 02/58] spi: spi-fsl-dspi: Adding shutdown hook
-Date:   Tue, 14 Jul 2020 20:43:35 +0200
-Message-Id: <20200714184056.265252863@linuxfoundation.org>
+Subject: [PATCH 4.19 11/58] spi: spidev: fix a potential use-after-free in spidev_release()
+Date:   Tue, 14 Jul 2020 20:43:44 +0200
+Message-Id: <20200714184056.698700464@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200714184056.149119318@linuxfoundation.org>
 References: <20200714184056.149119318@linuxfoundation.org>
@@ -60,76 +60,73 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peng Ma <peng.ma@nxp.com>
+From: Zhenzhong Duan <zhenzhong.duan@gmail.com>
 
-[ Upstream commit dc234825997ec6ff05980ca9e2204f4ac3f8d695 ]
+[ Upstream commit 06096cc6c5a84ced929634b0d79376b94c65a4bd ]
 
-We need to ensure dspi controller could be stopped in order for kexec
-to start the next kernel.
-So add the shutdown operation support.
+If an spi device is unbounded from the driver before the release
+process, there will be an NULL pointer reference when it's
+referenced in spi_slave_abort().
 
-Signed-off-by: Peng Ma <peng.ma@nxp.com>
-Link: https://lore.kernel.org/r/20200424061216.27445-1-peng.ma@nxp.com
+Fix it by checking it's already freed before reference.
+
+Signed-off-by: Zhenzhong Duan <zhenzhong.duan@gmail.com>
+Link: https://lore.kernel.org/r/20200618032125.4650-2-zhenzhong.duan@gmail.com
 Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/spi/spi-fsl-dspi.c | 23 +++++++++++++++++++++++
- 1 file changed, 23 insertions(+)
+ drivers/spi/spidev.c | 20 ++++++++++----------
+ 1 file changed, 10 insertions(+), 10 deletions(-)
 
-diff --git a/drivers/spi/spi-fsl-dspi.c b/drivers/spi/spi-fsl-dspi.c
-index 3082e72e4f6c6..9296bcbbd32ce 100644
---- a/drivers/spi/spi-fsl-dspi.c
-+++ b/drivers/spi/spi-fsl-dspi.c
-@@ -1,6 +1,7 @@
- // SPDX-License-Identifier: GPL-2.0+
- //
- // Copyright 2013 Freescale Semiconductor, Inc.
-+// Copyright 2020 NXP
- //
- // Freescale DSPI driver
- // This file contains a driver for the Freescale DSPI
-@@ -43,6 +44,9 @@
- #define SPI_MCR_CLR_TXF	(1 << 11)
- #define SPI_MCR_CLR_RXF	(1 << 10)
- #define SPI_MCR_XSPI		(1 << 3)
-+#define SPI_MCR_DIS_TXF		(1 << 13)
-+#define SPI_MCR_DIS_RXF		(1 << 12)
-+#define SPI_MCR_HALT		(1 << 0)
+diff --git a/drivers/spi/spidev.c b/drivers/spi/spidev.c
+index 5edf4029a3486..167047760d79a 100644
+--- a/drivers/spi/spidev.c
++++ b/drivers/spi/spidev.c
+@@ -607,15 +607,20 @@ err_find_dev:
+ static int spidev_release(struct inode *inode, struct file *filp)
+ {
+ 	struct spidev_data	*spidev;
++	int			dofree;
  
- #define SPI_TCR			0x08
- #define SPI_TCR_GET_TCNT(x)	(((x) & 0xffff0000) >> 16)
-@@ -1140,6 +1144,24 @@ static int dspi_remove(struct platform_device *pdev)
- 	return 0;
- }
+ 	mutex_lock(&device_list_lock);
+ 	spidev = filp->private_data;
+ 	filp->private_data = NULL;
  
-+static void dspi_shutdown(struct platform_device *pdev)
-+{
-+	struct spi_controller *ctlr = platform_get_drvdata(pdev);
-+	struct fsl_dspi *dspi = spi_controller_get_devdata(ctlr);
++	spin_lock_irq(&spidev->spi_lock);
++	/* ... after we unbound from the underlying device? */
++	dofree = (spidev->spi == NULL);
++	spin_unlock_irq(&spidev->spi_lock);
 +
-+	/* Disable RX and TX */
-+	regmap_update_bits(dspi->regmap, SPI_MCR,
-+			   SPI_MCR_DIS_TXF | SPI_MCR_DIS_RXF,
-+			   SPI_MCR_DIS_TXF | SPI_MCR_DIS_RXF);
-+
-+	/* Stop Running */
-+	regmap_update_bits(dspi->regmap, SPI_MCR, SPI_MCR_HALT, SPI_MCR_HALT);
-+
-+	dspi_release_dma(dspi);
-+	clk_disable_unprepare(dspi->clk);
-+	spi_unregister_controller(dspi->master);
-+}
-+
- static struct platform_driver fsl_dspi_driver = {
- 	.driver.name    = DRIVER_NAME,
- 	.driver.of_match_table = fsl_dspi_dt_ids,
-@@ -1147,6 +1169,7 @@ static struct platform_driver fsl_dspi_driver = {
- 	.driver.pm = &dspi_pm,
- 	.probe          = dspi_probe,
- 	.remove		= dspi_remove,
-+	.shutdown	= dspi_shutdown,
- };
- module_platform_driver(fsl_dspi_driver);
+ 	/* last close? */
+ 	spidev->users--;
+ 	if (!spidev->users) {
+-		int		dofree;
+ 
+ 		kfree(spidev->tx_buffer);
+ 		spidev->tx_buffer = NULL;
+@@ -623,19 +628,14 @@ static int spidev_release(struct inode *inode, struct file *filp)
+ 		kfree(spidev->rx_buffer);
+ 		spidev->rx_buffer = NULL;
+ 
+-		spin_lock_irq(&spidev->spi_lock);
+-		if (spidev->spi)
+-			spidev->speed_hz = spidev->spi->max_speed_hz;
+-
+-		/* ... after we unbound from the underlying device? */
+-		dofree = (spidev->spi == NULL);
+-		spin_unlock_irq(&spidev->spi_lock);
+-
+ 		if (dofree)
+ 			kfree(spidev);
++		else
++			spidev->speed_hz = spidev->spi->max_speed_hz;
+ 	}
+ #ifdef CONFIG_SPI_SLAVE
+-	spi_slave_abort(spidev->spi);
++	if (!dofree)
++		spi_slave_abort(spidev->spi);
+ #endif
+ 	mutex_unlock(&device_list_lock);
  
 -- 
 2.25.1
