@@ -2,84 +2,130 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 342A4C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 16:46:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BEF4C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 16:49:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0E25E2242C
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 16:46:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5646F2256F
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 16:49:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728156AbgGNQqP (ORCPT
+        id S1728518AbgGNQtP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 12:46:15 -0400
-Received: from mga02.intel.com ([134.134.136.20]:63426 "EHLO mga02.intel.com"
+        Tue, 14 Jul 2020 12:49:15 -0400
+Received: from mga07.intel.com ([134.134.136.100]:24475 "EHLO mga07.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726062AbgGNQqO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 12:46:14 -0400
-IronPort-SDR: 9AspnhHnJKxdjgvKNxAcbIGKlh8Lj+n1Sbv4yQcJZ6L4JBinBPzZAA2xbjlZG8jP/PJSfbyv4f
- YRvw2kX+PD/g==
-X-IronPort-AV: E=McAfee;i="6000,8403,9681"; a="137096649"
+        id S1726062AbgGNQtO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 12:49:14 -0400
+IronPort-SDR: sG6FR9LDdBAh9OFAZbydWojuVPv7uSudemPznpiYhU/zXx/PO4KyYptqLgrE2rHEnP2mgLwH33
+ uDmIjofcdWuQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9681"; a="213748140"
 X-IronPort-AV: E=Sophos;i="5.75,352,1589266800"; 
-   d="scan'208";a="137096649"
+   d="scan'208";a="213748140"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jul 2020 09:46:14 -0700
-IronPort-SDR: 0zIglL1rGjfXbMiyccoWIdYK7nyGnLsYlddSeTXk2lQJMEzThC5kWDM/9+ts/3x4JBnBUVHkha
- DaQY8d300C2w==
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jul 2020 09:49:13 -0700
+IronPort-SDR: 43WJZfLT0kjZUqlt8ocOMEylSo7SumVMqMI+Ur3jhEQ0x0Y3UBB1QpGj1WRuq+4bxI2fLMDprb
+ Ztv5v9RASv+A==
+X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.75,352,1589266800"; 
-   d="scan'208";a="316437149"
-Received: from agluck-desk2.sc.intel.com (HELO agluck-desk2.amr.corp.intel.com) ([10.3.52.68])
-  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jul 2020 09:46:13 -0700
-Date:   Tue, 14 Jul 2020 09:46:12 -0700
-From:   "Luck, Tony" <tony.luck@intel.com>
-To:     Chris Down <chris@chrisdown.name>
-Cc:     Borislav Petkov <bp@alien8.de>, linux-kernel@vger.kernel.org,
-        sean.j.christopherson@intel.com, torvalds@linux-foundation.org,
-        x86@kernel.org, kernel-team@fb.com,
-        Matthew Garrett <matthewgarrett@google.com>
-Subject: Re: [PATCH -v2.1] x86/msr: Filter MSR writes
-Message-ID: <20200714164612.GA28474@agluck-desk2.amr.corp.intel.com>
-References: <20200615063837.GA14668@zn.tnic>
- <20200714121955.GA2080@chrisdown.name>
- <20200714154728.GA3101@nazgul.tnic>
- <20200714160448.GC2080@chrisdown.name>
+   d="scan'208";a="307939488"
+Received: from djiang5-mobl1.amr.corp.intel.com (HELO [10.209.140.223]) ([10.209.140.223])
+  by fmsmga004.fm.intel.com with ESMTP; 14 Jul 2020 09:49:12 -0700
+Subject: Re: [PATCH v7 05/11] dmaengine: Introduce DMA-device device_caps
+ callback
+To:     Serge Semin <fancer.lancer@gmail.com>
+Cc:     Vinod Koul <vkoul@kernel.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Viresh Kumar <vireshk@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
+        devicetree@vger.kernel.org, dmaengine@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20200709224550.15539-1-Sergey.Semin@baikalelectronics.ru>
+ <20200709224550.15539-6-Sergey.Semin@baikalelectronics.ru>
+ <20200710084503.GE3703480@smile.fi.intel.com>
+ <20200710093834.su3nsjesnhntpd6d@mobilestation>
+ <07d4a977-1de6-b611-3d4f-7c7d6cd7fe5f@intel.com>
+ <20200714160830.GL34333@vkoul-mobl>
+ <f746fafd-851e-f402-3755-03ef94a65988@intel.com>
+ <20200714162953.2333hke6pfvovjuk@mobilestation>
+From:   Dave Jiang <dave.jiang@intel.com>
+Message-ID: <7d1a9ae9-0a95-cba5-be62-4493501039e7@intel.com>
+Date:   Tue, 14 Jul 2020 09:49:12 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200714160448.GC2080@chrisdown.name>
+In-Reply-To: <20200714162953.2333hke6pfvovjuk@mobilestation>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 14, 2020 at 05:04:48PM +0100, Chris Down wrote:
-> Borislav Petkov writes:
-> > On Tue, Jul 14, 2020 at 01:19:55PM +0100, Chris Down wrote:
-> > > That is, even with pr_err_ratelimited, we still end up logging on basically
-> > > every single write, even though it's from the same TGID writing to the same
-> > > MSRs, and end up becoming >80% of kmsg.
-> > > 
-> > > Of course, one can boot with `allow_writes=1` to avoid these messages at
-> > 
-> > Yes, use that.
-> > 
-> > From a quick scan over that "tool" you pointed me at, it pokes at some
-> > MSRs from userspace which the kernel *also* writes to and this is
-> > exactly what should not be allowed.
+
+
+On 7/14/2020 9:29 AM, Serge Semin wrote:
+> On Tue, Jul 14, 2020 at 09:18:16AM -0700, Dave Jiang wrote:
+>>
+>>
+>> On 7/14/2020 9:08 AM, Vinod Koul wrote:
+>>> On 13-07-20, 13:55, Dave Jiang wrote:
+>>>>
+>>>>
+>>>> On 7/10/2020 2:38 AM, Serge Semin wrote:
+>>>>> On Fri, Jul 10, 2020 at 11:45:03AM +0300, Andy Shevchenko wrote:
+>>>>>> On Fri, Jul 10, 2020 at 01:45:44AM +0300, Serge Semin wrote:
+>>>>>>> There are DMA devices (like ours version of Synopsys DW DMAC) which have
+>>>>>>> DMA capabilities non-uniformly redistributed between the device channels.
+>>>>>>> In order to provide a way of exposing the channel-specific parameters to
+>>>>>>> the DMA engine consumers, we introduce a new DMA-device callback. In case
+>>>>>>> if provided it gets called from the dma_get_slave_caps() method and is
+>>>>>>> able to override the generic DMA-device capabilities.
+>>>>>>
+>>>>>
+>>>>>> In light of recent developments consider not to add 'slave' and a such words to the kernel.
+>>>>>
+>>>>> As long as the 'slave' word is used in the name of the dma_slave_caps
+>>>>> structure and in the rest of the DMA-engine subsystem, it will be ambiguous
+>>>>> to use some else terminology. If renaming needs to be done, then it should be
+>>>>> done synchronously for the whole subsystem.
+>>>>
+>>>> What about just calling it dma_device_caps? Consider this is a useful
+>>>> function not only slave DMA will utilize this. I can see this being useful
+>>>> for some of my future code with idxd driver.
+>>>
+>>> Some of the caps may make sense to generic dmaengine but few of them do
+>>> not :) While at it, am planning to make it dmaengine_periph_caps to
+>>> denote that these are dmaengine peripheral capabilities.
+>>>
+>>
 > 
-> I don't think we're in disagreement about that. My concern is strictly about
-> the amount of spam caused for some of those existing use cases during the
-> transition phase. People should know that their tools would break, but there
-> shouldn't be so many messages generated that it inevitably pushes other
-> useful information out of the kmsg buffer.
+>> If the function only passes in periph_caps, how do we allow the non periph
+>> DMA utilize this function?
+> 
+> Hello Dave. That seems reasonable. "dma_device_caps" or even "dma_chan_caps"
+> might be more suitable seeing after this patchset merged in the "dma_slave_caps"
+> may really provide the DMA channel-specific configs. Moreover that structure is
+> accessible only by means of the dma_chan descriptor:
+> 
+> int dma_get_slave_caps(struct dma_chan *chan, struct dma_slave_caps *caps);
+> 
+> which makes those caps being the channel-specific even without this patchset.
+> 
+> So as I see it "dma_chan_caps" might be the better choice.
 
-Maybe we just need smarter filtering of warnings.  It doesn't
-seem at all useful to warn for the same MSR 1000's of times.
-Maybe keep a count of warnings for each MSR and just stop
-all reports when reach a threshold?
+Hi Sergey. Yes I think that sounds pretty good. Especially seeing there are DMA 
+engines that have channels with different/asymmetric capabilities now.
 
--Tony
+> 
+> -Sergey
+> 
