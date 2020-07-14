@@ -7,49 +7,48 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21930C433EC
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:56:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16F35C433EA
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:56:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E6A45229CA
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:56:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EBF3722B39
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:56:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594752985;
-	bh=uH0PDz0zA3uX9zg+dvKMu8xWqiGXeFBXQbz58FsVmRs=;
+	s=default; t=1594752988;
+	bh=QuTUpPj32od8xKGnqQ9wp9FMjS5Eo+apjOKbMlh7Uxw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mgVCMDI1lDkgtZQ2+nZE6xXN3VrwyZwD+4z9NHFxYuZFdeWXJZJerXG/xvcPQI6fY
-	 J2HhvqKHR8rAznGCB5yT+CUstagNzJ7gLbiaG9m3vY040XgFznf/x++uZurACUt0Du
-	 hVol66xQFEcx14RlBQ/xRJZuyHnacWX8AeKuvnjY=
+	b=G9r4SZ9h7eD1wOGT8Xh/f1zOiXS13Ky040wGwiHh+XtxKE5e6o0vThsXu6t2xZGa5
+	 Zg1F+20pXqbC57TrJeFc+su+00908FIMJOSdhKyUisFlVC2WYyLw0A167xLh5VdCHj
+	 mIdABYvy+e79/wkqt1B8b5nepoYsjcvuUKNUE0H8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730971AbgGNS4X (ORCPT
+        id S1730978AbgGNS4Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 14:56:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54248 "EHLO mail.kernel.org"
+        Tue, 14 Jul 2020 14:56:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54304 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730970AbgGNS4U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 14:56:20 -0400
+        id S1730103AbgGNS4X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 14:56:23 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ACD4A222B9;
-        Tue, 14 Jul 2020 18:56:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 73DEA229CA;
+        Tue, 14 Jul 2020 18:56:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594752980;
-        bh=uH0PDz0zA3uX9zg+dvKMu8xWqiGXeFBXQbz58FsVmRs=;
+        s=default; t=1594752983;
+        bh=QuTUpPj32od8xKGnqQ9wp9FMjS5Eo+apjOKbMlh7Uxw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TqVC7l7MRPMI7gN4HUTb1KwoFUJMTmYZBIy0N72NwjZsvROTGk4v27AVkBqokM5Uq
-         fcqOW3UqnBsno8u0O50N95BLBRCbE3T62hStwC0XlDtRc+F+QgdKH4FxdaJ1xrncyq
-         9LTq5cbusgchT0OzeDLj8xw5b9mYSjLv5NR1l934=
+        b=SEUt72RnedHF8H1/3nTpp/eO9YDksmhhLUzvUCRLe4a7fJKwBOe0Ny7p8Yeq0TBFR
+         UGnwVgf+XdL4oxjk+pdd4IgN6bNQwwA+6gIi5sXbKCGXqM+h7K0wtPOk8CddB0Zlye
+         jw8/rqzqQ93VZsP0N70ENOf6h5R7ljIbI4SFtQs8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Adrian Hunter <adrian.hunter@intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Luwei Kang <luwei.kang@intel.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        stable@vger.kernel.org, Andre Edich <andre.edich@microchip.com>,
+        Parthiban Veerasooran <Parthiban.Veerasooran@microchip.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 074/166] perf intel-pt: Fix PEBS sample for XMM registers
-Date:   Tue, 14 Jul 2020 20:43:59 +0200
-Message-Id: <20200714184119.398711366@linuxfoundation.org>
+Subject: [PATCH 5.7 075/166] smsc95xx: check return value of smsc95xx_reset
+Date:   Tue, 14 Jul 2020 20:44:00 +0200
+Message-Id: <20200714184119.445973386@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200714184115.844176932@linuxfoundation.org>
 References: <20200714184115.844176932@linuxfoundation.org>
@@ -62,47 +61,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Adrian Hunter <adrian.hunter@intel.com>
+From: Andre Edich <andre.edich@microchip.com>
 
-[ Upstream commit 4c95ad261cfac120dd66238fcae222766754c219 ]
+[ Upstream commit 7c8b1e855f94f88a0c569be6309fc8d5c8844cd1 ]
 
-The condition to add XMM registers was missing, the regs array needed to
-be in the outer scope, and the size of the regs array was too small.
+The return value of the function smsc95xx_reset() must be checked
+to avoid returning false success from the function smsc95xx_bind().
 
-Fixes: 143d34a6b387b ("perf intel-pt: Add XMM registers to synthesized PEBS sample")
-Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Luwei Kang <luwei.kang@intel.com>
-Link: http://lore.kernel.org/lkml/20200630133935.11150-4-adrian.hunter@intel.com
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Fixes: 2f7ca802bdae2 ("net: Add SMSC LAN9500 USB2.0 10/100 ethernet adapter driver")
+Signed-off-by: Andre Edich <andre.edich@microchip.com>
+Signed-off-by: Parthiban Veerasooran <Parthiban.Veerasooran@microchip.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/util/intel-pt.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ drivers/net/usb/smsc95xx.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/tools/perf/util/intel-pt.c b/tools/perf/util/intel-pt.c
-index 23c8289c2472d..545d1cdc0ec87 100644
---- a/tools/perf/util/intel-pt.c
-+++ b/tools/perf/util/intel-pt.c
-@@ -1731,6 +1731,7 @@ static int intel_pt_synth_pebs_sample(struct intel_pt_queue *ptq)
- 	u64 sample_type = evsel->core.attr.sample_type;
- 	u64 id = evsel->core.id[0];
- 	u8 cpumode;
-+	u64 regs[8 * sizeof(sample.intr_regs.mask)];
+diff --git a/drivers/net/usb/smsc95xx.c b/drivers/net/usb/smsc95xx.c
+index 3cf4dc3433f91..eb404bb74e18e 100644
+--- a/drivers/net/usb/smsc95xx.c
++++ b/drivers/net/usb/smsc95xx.c
+@@ -1287,6 +1287,8 @@ static int smsc95xx_bind(struct usbnet *dev, struct usb_interface *intf)
  
- 	if (intel_pt_skip_event(pt))
- 		return 0;
-@@ -1780,8 +1781,8 @@ static int intel_pt_synth_pebs_sample(struct intel_pt_queue *ptq)
- 	}
+ 	/* Init all registers */
+ 	ret = smsc95xx_reset(dev);
++	if (ret)
++		goto free_pdata;
  
- 	if (sample_type & PERF_SAMPLE_REGS_INTR &&
--	    items->mask[INTEL_PT_GP_REGS_POS]) {
--		u64 regs[sizeof(sample.intr_regs.mask)];
-+	    (items->mask[INTEL_PT_GP_REGS_POS] ||
-+	     items->mask[INTEL_PT_XMM_POS])) {
- 		u64 regs_mask = evsel->core.attr.sample_regs_intr;
- 		u64 *pos;
+ 	/* detect device revision as different features may be available */
+ 	ret = smsc95xx_read_reg(dev, ID_REV, &val);
+@@ -1317,6 +1319,10 @@ static int smsc95xx_bind(struct usbnet *dev, struct usb_interface *intf)
+ 	schedule_delayed_work(&pdata->carrier_check, CARRIER_CHECK_DELAY);
  
+ 	return 0;
++
++free_pdata:
++	kfree(pdata);
++	return ret;
+ }
+ 
+ static void smsc95xx_unbind(struct usbnet *dev, struct usb_interface *intf)
 -- 
 2.25.1
 
