@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EAC5C433EC
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:49:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6453C433EB
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:49:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 194DB222E9
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:49:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C763D222E9
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:49:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594752557;
-	bh=YHKa8RG9o2SwjzDhGkEBQV+2nfixb9+G7I7bZc8Oe1k=;
+	s=default; t=1594752558;
+	bh=lYrltIfxijH5Z0usjkpTShBJCrgEMq7QguhwwhPHI4k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0dimG9B2dGlDrhvdsbaDR3rtOQKSsqb74cTdUwjzB9q7YhQtH3g3/+xESQCjUoRL6
-	 CFSPzjci6rf1ibo5RklTN9JjGfZi719CoqHsD5X1jf7Cq3O7jH03lMqAPWovDwouC5
-	 4Qrz+XO+MnDgoZNyljw7wZlDRu6M90EJ+CDcC0lo=
+	b=g2xFDSUfsYLzp2aRxjjZ6ZNRUeXT23VtZnbQbpyK53iEZOzl+3zVI6YskkrJaxMjI
+	 ys/hWMf7jfYDiEGwPNZO7gHFPa74q7ARqqXjOlC9LxR+puxWTrZ5zYzLewByuwEAVH
+	 2iwdlcpU+/bdCssPwIhXKKMHg5eHzsbGlypzXNjU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730098AbgGNStP (ORCPT
+        id S1730106AbgGNStR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 14:49:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44868 "EHLO mail.kernel.org"
+        Tue, 14 Jul 2020 14:49:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44978 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730071AbgGNStJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 14:49:09 -0400
+        id S1730094AbgGNStP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 14:49:15 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 27B37222E9;
-        Tue, 14 Jul 2020 18:49:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6C8BA22AB9;
+        Tue, 14 Jul 2020 18:49:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594752549;
-        bh=YHKa8RG9o2SwjzDhGkEBQV+2nfixb9+G7I7bZc8Oe1k=;
+        s=default; t=1594752554;
+        bh=lYrltIfxijH5Z0usjkpTShBJCrgEMq7QguhwwhPHI4k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CgfjhmsurLaSrJpo3CnqBbojcA13E2Lu3fZnlbD6evvo+qnUfwNaepqD5L7n2yfdC
-         VLsTc4TZzmXZepJu1v+aBiSawU32o3mXz5T50vtt7jGsg+9ZNW8BuvUkJ9kry2Kku6
-         UusXMxRCNGx5mE4PF8Ub38v/nZB6CGNgqmFujUYY=
+        b=ZuHu3T62nEfYpwGu6ptcXs69LvsVx4Ypzr2uTk39pJ5lvLrnfZHq4RNvW5qRsOp/U
+         4ZBmgXmJKQuUg7IGt3qb5jgWNuCAjFe+z+Jg+8CBhgileox7+t5Mvf6B/bsTiyCiRn
+         TUgS51EpIfswhxsamFj4CkC31IFbBiyqFuXUOCdQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dany Madden <drt@linux.ibm.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 020/109] ibmvnic: continue to init in CRQ reset returns H_CLOSED
-Date:   Tue, 14 Jul 2020 20:43:23 +0200
-Message-Id: <20200714184106.495400608@linuxfoundation.org>
+        stable@vger.kernel.org, Rajat Jain <rajatja@google.com>,
+        Ashok Raj <ashok.raj@intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Joerg Roedel <jroedel@suse.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 022/109] iommu/vt-d: Dont apply gfx quirks to untrusted devices
+Date:   Tue, 14 Jul 2020 20:43:25 +0200
+Message-Id: <20200714184106.591180922@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200714184105.507384017@linuxfoundation.org>
 References: <20200714184105.507384017@linuxfoundation.org>
@@ -60,46 +62,111 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dany Madden <drt@linux.ibm.com>
+From: Rajat Jain <rajatja@google.com>
 
-[ Upstream commit 8b40eb73509f5704a0e8cd25de0163876299f1a7 ]
+[ Upstream commit 67e8a5b18d41af9298db5c17193f671f235cce01 ]
 
-Continue the reset path when partner adapter is not ready or H_CLOSED is
-returned from reset crq. This patch allows the CRQ init to proceed to
-establish a valid CRQ for traffic to flow after reset.
+Currently, an external malicious PCI device can masquerade the VID:PID
+of faulty gfx devices, and thus apply iommu quirks to effectively
+disable the IOMMU restrictions for itself.
 
-Signed-off-by: Dany Madden <drt@linux.ibm.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Thus we need to ensure that the device we are applying quirks to, is
+indeed an internal trusted device.
+
+Signed-off-by: Rajat Jain <rajatja@google.com>
+Reviewed-by: Ashok Raj <ashok.raj@intel.com>
+Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+Acked-by: Lu Baolu <baolu.lu@linux.intel.com>
+Link: https://lore.kernel.org/r/20200622231345.29722-4-baolu.lu@linux.intel.com
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/ibm/ibmvnic.c | 9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
+ drivers/iommu/intel-iommu.c | 37 +++++++++++++++++++++++++++++++++++++
+ 1 file changed, 37 insertions(+)
 
-diff --git a/drivers/net/ethernet/ibm/ibmvnic.c b/drivers/net/ethernet/ibm/ibmvnic.c
-index 4f503b9a674c4..d585973606990 100644
---- a/drivers/net/ethernet/ibm/ibmvnic.c
-+++ b/drivers/net/ethernet/ibm/ibmvnic.c
-@@ -1878,13 +1878,18 @@ static int do_reset(struct ibmvnic_adapter *adapter,
- 			release_sub_crqs(adapter, 1);
- 		} else {
- 			rc = ibmvnic_reset_crq(adapter);
--			if (!rc)
-+			if (rc == H_CLOSED || rc == H_SUCCESS) {
- 				rc = vio_enable_interrupts(adapter->vdev);
-+				if (rc)
-+					netdev_err(adapter->netdev,
-+						   "Reset failed to enable interrupts. rc=%d\n",
-+						   rc);
-+			}
- 		}
+diff --git a/drivers/iommu/intel-iommu.c b/drivers/iommu/intel-iommu.c
+index 6366b5fbb3a46..cdc1f4736a116 100644
+--- a/drivers/iommu/intel-iommu.c
++++ b/drivers/iommu/intel-iommu.c
+@@ -5962,6 +5962,23 @@ static bool intel_iommu_is_attach_deferred(struct iommu_domain *domain,
+ 	return dev->archdata.iommu == DEFER_DEVICE_DOMAIN_INFO;
+ }
  
- 		if (rc) {
- 			netdev_err(adapter->netdev,
--				   "Couldn't initialize crq. rc=%d\n", rc);
-+				   "Reset couldn't initialize crq. rc=%d\n", rc);
- 			goto out;
- 		}
++/*
++ * Check that the device does not live on an external facing PCI port that is
++ * marked as untrusted. Such devices should not be able to apply quirks and
++ * thus not be able to bypass the IOMMU restrictions.
++ */
++static bool risky_device(struct pci_dev *pdev)
++{
++	if (pdev->untrusted) {
++		pci_info(pdev,
++			 "Skipping IOMMU quirk for dev [%04X:%04X] on untrusted PCI link\n",
++			 pdev->vendor, pdev->device);
++		pci_info(pdev, "Please check with your BIOS/Platform vendor about this\n");
++		return true;
++	}
++	return false;
++}
++
+ const struct iommu_ops intel_iommu_ops = {
+ 	.capable		= intel_iommu_capable,
+ 	.domain_alloc		= intel_iommu_domain_alloc,
+@@ -5990,6 +6007,9 @@ const struct iommu_ops intel_iommu_ops = {
  
+ static void quirk_iommu_igfx(struct pci_dev *dev)
+ {
++	if (risky_device(dev))
++		return;
++
+ 	pci_info(dev, "Disabling IOMMU for graphics on this chipset\n");
+ 	dmar_map_gfx = 0;
+ }
+@@ -6031,6 +6051,9 @@ DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x163D, quirk_iommu_igfx);
+ 
+ static void quirk_iommu_rwbf(struct pci_dev *dev)
+ {
++	if (risky_device(dev))
++		return;
++
+ 	/*
+ 	 * Mobile 4 Series Chipset neglects to set RWBF capability,
+ 	 * but needs it. Same seems to hold for the desktop versions.
+@@ -6061,6 +6084,9 @@ static void quirk_calpella_no_shadow_gtt(struct pci_dev *dev)
+ {
+ 	unsigned short ggc;
+ 
++	if (risky_device(dev))
++		return;
++
+ 	if (pci_read_config_word(dev, GGC, &ggc))
+ 		return;
+ 
+@@ -6094,6 +6120,12 @@ static void __init check_tylersburg_isoch(void)
+ 	pdev = pci_get_device(PCI_VENDOR_ID_INTEL, 0x3a3e, NULL);
+ 	if (!pdev)
+ 		return;
++
++	if (risky_device(pdev)) {
++		pci_dev_put(pdev);
++		return;
++	}
++
+ 	pci_dev_put(pdev);
+ 
+ 	/* System Management Registers. Might be hidden, in which case
+@@ -6103,6 +6135,11 @@ static void __init check_tylersburg_isoch(void)
+ 	if (!pdev)
+ 		return;
+ 
++	if (risky_device(pdev)) {
++		pci_dev_put(pdev);
++		return;
++	}
++
+ 	if (pci_read_config_dword(pdev, 0x188, &vtisochctrl)) {
+ 		pci_dev_put(pdev);
+ 		return;
 -- 
 2.25.1
 
