@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31158C433E5
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:46:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B6E0C43445
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:46:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 08E0C22AB0
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:46:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F01172231B
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:46:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594752401;
-	bh=ygP+kvB9/t08RSdTKMcD2QE5Gt3TvzBA4D0jbatvNt8=;
+	s=default; t=1594752403;
+	bh=TBbQn+etMoDwuMvwPuEKZvhf+pALDsm9CwIkR1OVwSA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EuSqDfCQIuyvYFjF9XF8H2OHCJdwHHvyNrC1QSr0OgW6brK4NNfVf42f0vijHlg3o
-	 RufVdvURHhekQuD48tOATr03zK9mlFdyrQRw/JNZCkCjs8+JA2fHKwXkhdflZuZ2RK
-	 LbpaP75GvntIcCAfMigtIg+aDm4wcQbwppYbSLh0=
+	b=KjP6CFDZQ7EPU6i03QEorNAGJINAT/fUOR3G9Jcm/hAM4XhordZ69GSwTyvt+iICN
+	 843Zuuvh0dCAvViOcaKVB8tTuk3vzoVit5YO7kQ5qM/vNV2231J/01ldWPNdOwISPY
+	 GGbd+qMUWBiGIXzLHh/0OuhBTx/VQSV2O7RW2BKs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729527AbgGNSqe (ORCPT
+        id S1729563AbgGNSqm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 14:46:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41256 "EHLO mail.kernel.org"
+        Tue, 14 Jul 2020 14:46:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41386 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729491AbgGNSqa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 14:46:30 -0400
+        id S1729534AbgGNSqf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 14:46:35 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 426DC22B2E;
-        Tue, 14 Jul 2020 18:46:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C2C8C2231B;
+        Tue, 14 Jul 2020 18:46:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594752389;
-        bh=ygP+kvB9/t08RSdTKMcD2QE5Gt3TvzBA4D0jbatvNt8=;
+        s=default; t=1594752395;
+        bh=TBbQn+etMoDwuMvwPuEKZvhf+pALDsm9CwIkR1OVwSA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bZ/ta7es3635OZiSw7lJ4v5ing+YzqDhBmYnrbdP8o/XRBSb3MVUsGYTL/7aKbawv
-         NYLcA3vu62Fdd7gFGyn70zum1x2prwJvIGs7D4S4L4snmNWJ+m77/VM1O+aLhtGolt
-         MRaJ0LL/AlpIb27uAvxkOVPPw+eZzC6FwbINTMX0=
+        b=oJvgaad8ooynnOHSUr/4oASBMqZzZpAwT6W8V5uXtSuYdhAMMgT/hx0fwGBS+L6DV
+         84jY+AxwDMTt0IA75lfGszAedeuaehjipDT0P+YnPSp8moNeqFcLOgR1rHG64eTw1t
+         y1/V0asMgGIcrUcW2T4M/ulaiuVUUen9uAPEr8LA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Max Gurtovoy <maxg@mellanox.com>,
-        Christoph Hellwig <hch@lst.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 23/58] nvme-rdma: assign completion vector correctly
-Date:   Tue, 14 Jul 2020 20:43:56 +0200
-Message-Id: <20200714184057.296932001@linuxfoundation.org>
+        stable@vger.kernel.org, Krzysztof Kozlowski <krzk@kernel.org>,
+        Vladimir Oltean <vladimir.oltean@nxp.com>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 05/58] spi: spi-fsl-dspi: Fix external abort on interrupt in resume or exit paths
+Date:   Tue, 14 Jul 2020 20:43:38 +0200
+Message-Id: <20200714184056.409888312@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200714184056.149119318@linuxfoundation.org>
 References: <20200714184056.149119318@linuxfoundation.org>
@@ -59,38 +61,124 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Max Gurtovoy <maxg@mellanox.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
 
-[ Upstream commit 032a9966a22a3596addf81dacf0c1736dfedc32a ]
+[ Upstream commit 3d87b613d6a3c6f0980e877ab0895785a2dde581 ]
 
-The completion vector index that is given during CQ creation can't
-exceed the number of support vectors by the underlying RDMA device. This
-violation currently can accure, for example, in case one will try to
-connect with N regular read/write queues and M poll queues and the sum
-of N + M > num_supported_vectors. This will lead to failure in establish
-a connection to remote target. Instead, in that case, share a completion
-vector between queues.
+If shared interrupt comes late, during probe error path or device remove
+(could be triggered with CONFIG_DEBUG_SHIRQ), the interrupt handler
+dspi_interrupt() will access registers with the clock being disabled.
+This leads to external abort on non-linefetch on Toradex Colibri VF50
+module (with Vybrid VF5xx):
 
-Signed-off-by: Max Gurtovoy <maxg@mellanox.com>
-Signed-off-by: Christoph Hellwig <hch@lst.de>
+    $ echo 4002d000.spi > /sys/devices/platform/soc/40000000.bus/4002d000.spi/driver/unbind
+
+    Unhandled fault: external abort on non-linefetch (0x1008) at 0x8887f02c
+    Internal error: : 1008 [#1] ARM
+    Hardware name: Freescale Vybrid VF5xx/VF6xx (Device Tree)
+    Backtrace:
+      (regmap_mmio_read32le)
+      (regmap_mmio_read)
+      (_regmap_bus_reg_read)
+      (_regmap_read)
+      (regmap_read)
+      (dspi_interrupt)
+      (free_irq)
+      (devm_irq_release)
+      (release_nodes)
+      (devres_release_all)
+      (device_release_driver_internal)
+
+The resource-managed framework should not be used for shared interrupt
+handling, because the interrupt handler might be called after releasing
+other resources and disabling clocks.
+
+Similar bug could happen during suspend - the shared interrupt handler
+could be invoked after suspending the device.  Each device sharing this
+interrupt line should disable the IRQ during suspend so handler will be
+invoked only in following cases:
+1. None suspended,
+2. All devices resumed.
+
+Fixes: 349ad66c0ab0 ("spi:Add Freescale DSPI driver for Vybrid VF610 platform")
+Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+Tested-by: Vladimir Oltean <vladimir.oltean@nxp.com>
+Reviewed-by: Vladimir Oltean <vladimir.oltean@nxp.com>
+Cc: <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20200622110543.5035-3-krzk@kernel.org
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/nvme/host/rdma.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/spi/spi-fsl-dspi.c | 17 +++++++++++++----
+ 1 file changed, 13 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/nvme/host/rdma.c b/drivers/nvme/host/rdma.c
-index 9711bfbdf4316..f393a6193252e 100644
---- a/drivers/nvme/host/rdma.c
-+++ b/drivers/nvme/host/rdma.c
-@@ -447,7 +447,7 @@ static int nvme_rdma_create_queue_ib(struct nvme_rdma_queue *queue)
- 	 * Spread I/O queues completion vectors according their queue index.
- 	 * Admin queues can always go on completion vector 0.
- 	 */
--	comp_vector = idx == 0 ? idx : idx - 1;
-+	comp_vector = (idx == 0 ? idx : idx - 1) % ibdev->num_comp_vectors;
+diff --git a/drivers/spi/spi-fsl-dspi.c b/drivers/spi/spi-fsl-dspi.c
+index 9ab8c52a5ba6d..2844c9a72a980 100644
+--- a/drivers/spi/spi-fsl-dspi.c
++++ b/drivers/spi/spi-fsl-dspi.c
+@@ -897,6 +897,8 @@ static int dspi_suspend(struct device *dev)
+ 	struct spi_master *master = dev_get_drvdata(dev);
+ 	struct fsl_dspi *dspi = spi_master_get_devdata(master);
  
- 	/* +1 for ib_stop_cq */
- 	queue->ib_cq = ib_alloc_cq(ibdev, queue,
++	if (dspi->irq)
++		disable_irq(dspi->irq);
+ 	spi_master_suspend(master);
+ 	clk_disable_unprepare(dspi->clk);
+ 
+@@ -917,6 +919,8 @@ static int dspi_resume(struct device *dev)
+ 	if (ret)
+ 		return ret;
+ 	spi_master_resume(master);
++	if (dspi->irq)
++		enable_irq(dspi->irq);
+ 
+ 	return 0;
+ }
+@@ -1094,8 +1098,8 @@ static int dspi_probe(struct platform_device *pdev)
+ 		goto out_clk_put;
+ 	}
+ 
+-	ret = devm_request_irq(&pdev->dev, dspi->irq, dspi_interrupt,
+-			       IRQF_SHARED, pdev->name, dspi);
++	ret = request_threaded_irq(dspi->irq, dspi_interrupt, NULL,
++				   IRQF_SHARED, pdev->name, dspi);
+ 	if (ret < 0) {
+ 		dev_err(&pdev->dev, "Unable to attach DSPI interrupt\n");
+ 		goto out_clk_put;
+@@ -1105,7 +1109,7 @@ static int dspi_probe(struct platform_device *pdev)
+ 		ret = dspi_request_dma(dspi, res->start);
+ 		if (ret < 0) {
+ 			dev_err(&pdev->dev, "can't get dma channels\n");
+-			goto out_clk_put;
++			goto out_free_irq;
+ 		}
+ 	}
+ 
+@@ -1118,11 +1122,14 @@ static int dspi_probe(struct platform_device *pdev)
+ 	ret = spi_register_master(master);
+ 	if (ret != 0) {
+ 		dev_err(&pdev->dev, "Problem registering DSPI master\n");
+-		goto out_clk_put;
++		goto out_free_irq;
+ 	}
+ 
+ 	return ret;
+ 
++out_free_irq:
++	if (dspi->irq)
++		free_irq(dspi->irq, dspi);
+ out_clk_put:
+ 	clk_disable_unprepare(dspi->clk);
+ out_master_put:
+@@ -1148,6 +1155,8 @@ static int dspi_remove(struct platform_device *pdev)
+ 	regmap_update_bits(dspi->regmap, SPI_MCR, SPI_MCR_HALT, SPI_MCR_HALT);
+ 
+ 	dspi_release_dma(dspi);
++	if (dspi->irq)
++		free_irq(dspi->irq, dspi);
+ 	clk_disable_unprepare(dspi->clk);
+ 
+ 	return 0;
 -- 
 2.25.1
 
