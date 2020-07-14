@@ -2,91 +2,125 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0632C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 21:47:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DCA7C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 21:42:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D3D1F206D9
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 21:47:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB6A02065E
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 21:42:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rHWw0+X+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728043AbgGNVrL (ORCPT
+        id S1728188AbgGNVmw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 17:47:11 -0400
-Received: from ms.lwn.net ([45.79.88.28]:42786 "EHLO ms.lwn.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726710AbgGNVrK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 17:47:10 -0400
-Received: from lwn.net (localhost [127.0.0.1])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ms.lwn.net (Postfix) with ESMTPSA id 35E9260C;
-        Tue, 14 Jul 2020 21:47:10 +0000 (UTC)
-Date:   Tue, 14 Jul 2020 15:47:08 -0600
-From:   Jonathan Corbet <corbet@lwn.net>
-To:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
-Cc:     torvalds@linux-foundation.org, ribalda@kernel.org,
-        viro@zeniv.linux.org.uk, mchehab+samsung@kernel.org,
-        luis.f.correia@gmail.com, geert+renesas@glider.be,
-        paulburton@kernel.org, cyphar@cyphar.com, martink@posteo.de,
-        davej@codemonkey.org.uk, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] CREDITS: remove link http://www.dementia.org/~shadow
-Message-ID: <20200714154708.71b3efe2@lwn.net>
-In-Reply-To: <20200714193805.49746-1-grandmaster@al2klimov.de>
-References: <20200713114321.783f0ae6@lwn.net>
-        <20200714193805.49746-1-grandmaster@al2klimov.de>
-Organization: LWN.net
+        Tue, 14 Jul 2020 17:42:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37658 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726710AbgGNVmw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 17:42:52 -0400
+Received: from mail-qt1-x844.google.com (mail-qt1-x844.google.com [IPv6:2607:f8b0:4864:20::844])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DDFA9C061755;
+        Tue, 14 Jul 2020 14:42:51 -0700 (PDT)
+Received: by mail-qt1-x844.google.com with SMTP id d27so108241qtg.4;
+        Tue, 14 Jul 2020 14:42:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=dch/WtmoKPQg8SRn/xT9XuWPxCjeN6BPw/5vBDMLPao=;
+        b=rHWw0+X+zL9ddXJHGLNV7xjzS0eiiSQzcypjCMxbHGz22QkSRGXXtGnRd5MDjvk7/w
+         yqnU0NnbElreflfaS590bj4ZlPOfQscv9mmhaLuVFnjCnnX70y93TcNWen9KB9qA3j6v
+         5k5zMDHrlXQtdJev+EzUYEg+wSUacBRYApl4QSD7d5UsB+Pz9ekk4+G1TEvXZI6WctXq
+         mzuyNHyN5CBkVGUnVqAPJHAlOqVM/pngl0NgtFvLyiOIgHpmzhu1Hub6OG/TkCjExFRo
+         Oc2xQIjZmNemXiXFrUkSzaIN9xnFuR1cD4FUPOSS4OOBE2IiALEb0VieY+zVzgse88y5
+         gCVg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:date:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to;
+        bh=dch/WtmoKPQg8SRn/xT9XuWPxCjeN6BPw/5vBDMLPao=;
+        b=qKTt6KyquWNTXQJfh/zwxaHVpnQ0FQbVG/4bKxNaA5PBXaatmOHh55NsgyanQ/BNBP
+         AmfEJb7LxqTItFa9IoIh7uxP0MhCb2NwHJ5shZR4TF+CDs0h8X2AN5fT5UlziOz59Am6
+         AooPg/Vr30ePKouPXspyvyandYusdJirLb8HUdzdkRGHVpn8bJ8neo+Fk2LOM+8J1NrC
+         Pwra3QNajB5qLVJf1tI3oQPvL+gM23KgEI5KiC6bT2FayB6InHuskLDN5krDg+JAjNsa
+         6QOEYOY23+3pF/YHOR2XtQnIKpIE1nR6LeBhSsUkbTovHnsj5m3gcuAUgfA46Uhx/LNZ
+         NijQ==
+X-Gm-Message-State: AOAM533L7uaUhsEa0SkpL18TvjXTL/+nqma/6pQE2Pc7PcWVMzC7Y6aZ
+        Gt0jW+DELYFnPpW7XK47VrE=
+X-Google-Smtp-Source: ABdhPJzqJXUtDidVRHkXV4qNzeWa0YUAEGGmGN/8NWsY3UrCM6YCDQc4K/5yU4yxaXRn7gQCKKxL2A==
+X-Received: by 2002:ac8:4ccb:: with SMTP id l11mr6786726qtv.18.1594762964831;
+        Tue, 14 Jul 2020 14:42:44 -0700 (PDT)
+Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
+        by smtp.gmail.com with ESMTPSA id q28sm377002qtk.13.2020.07.14.14.42.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 14 Jul 2020 14:42:44 -0700 (PDT)
+From:   Arvind Sankar <nivedita@alum.mit.edu>
+X-Google-Original-From: Arvind Sankar <arvind@rani.riverdale.lan>
+Date:   Tue, 14 Jul 2020 17:42:42 -0400
+To:     Nick Terrell <nickrterrell@gmail.com>
+Cc:     Borislav Petkov <bp@alien8.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-kernel@vger.kernel.org, Chris Mason <clm@fb.com>,
+        linux-kbuild@vger.kernel.org, x86@kernel.org,
+        gregkh@linuxfoundation.org, Petr Malat <oss@malat.biz>,
+        Kees Cook <keescook@chromium.org>,
+        Kernel Team <Kernel-team@fb.com>,
+        Adam Borowski <kilobyte@angband.pl>,
+        Patrick Williams <patrickw3@fb.com>, rmikey@fb.com,
+        mingo@kernel.org, Patrick Williams <patrick@stwcx.xyz>,
+        Sedat Dilek <sedat.dilek@gmail.com>,
+        Norbert Lange <nolange79@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alex Xu <alex_y_xu@yahoo.ca>, Nick Terrell <terrelln@fb.com>
+Subject: Re: [PATCH v7 2/7] lib: add zstd support to decompress
+Message-ID: <20200714214242.GA1000731@rani.riverdale.lan>
+References: <20200708185024.2767937-1-nickrterrell@gmail.com>
+ <20200708185024.2767937-3-nickrterrell@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200708185024.2767937-3-nickrterrell@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 14 Jul 2020 21:38:05 +0200
-"Alexander A. Klimov" <grandmaster@al2klimov.de> wrote:
-
-> Rationale:
-> The way it redirects looks like a fallback from a dead URL to a generic one.
+On Wed, Jul 08, 2020 at 11:50:19AM -0700, Nick Terrell wrote:
+> From: Nick Terrell <terrelln@fb.com>
 > 
-> Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
-> ---
->  Yes, I noted that some of the links removed by these "CREDITS: remove link:"
->  patches have email addresses with the same domain nearby.
+> * Add unzstd() and the zstd decompress interface.
+> * Add zstd support to decompress_method().
 > 
->  Don't worry, I'll take care of them together with all other
->  dead email addresses - but not right now.
+> The decompress_method() and unzstd() functions are used to decompress
+> the initramfs and the initrd. The __decompress() function is used in
+> the preboot environment to decompress a zstd compressed kernel.
 > 
+> The zstd decompression function allows the input and output buffers to
+> overlap because that is used by x86 kernel decompression.
 > 
->  CREDITS | 1 -
->  1 file changed, 1 deletion(-)
-> 
-> diff --git a/CREDITS b/CREDITS
-> index 0787b5872906..92ad22b7ef56 100644
-> --- a/CREDITS
-> +++ b/CREDITS
-> @@ -483,7 +483,6 @@ D: Intel Wireless WiMAX Connection 2400 SDIO driver
->  
->  N: Derrick J. Brashear
->  E: shadow@dementia.org
-> -W: http://www.dementia.org/~shadow
+> Reviewed-by: Kees Cook <keescook@chromium.org>
+> Tested-by: Sedat Dilek <sedat.dilek@gmail.com>
+> Signed-off-by: Nick Terrell <terrelln@fb.com>
+> + *
+> + * __DISABLE_EXPORTS stops zstd and xxhash from declaring themselves
+> + * as modules by disabling the EXPORT_SYMBOL macro.
+> + */
 
-So thanks for addressing these.  That said, I do wonder if this is quite
-the right thing to do.  I'm assuming that the old sites still exist in the
-wayback machine somewhere, and somebody might actually want to find them.
-Pity the poor anthropologist researching the origins of the the
-billion-line, free-software kernels widely used in the 2500's...
+Hi Nick, this doesn't actually work, because misc.c includes export.h
+via
+	"misc.h" -> <linux/linkage.h> -> <linux/export.h>
+and EXPORT_SYMBOL is already defined before __DISABLE_EXPORTS is defined
+here.
 
-So maybe we should either mark it as "[BROKEN]" or make a direct link into
-the wayback machine instead?  That would enable the suitably motivated to
-go after the content that once existed.
+Adding -D__EXPORT_SYMBOLS to KBUILD_CFLAGS in arch/x86/boot/compressed/Makefile
+fixes that, and then you don't have to define it here.
 
-Thoughts anybody?
-
-Thanks,
-
-jon
+Also, __DISABLE_EXPORTS does not currently inhibit MODULE_INFO, so a
+.modinfo section gets emitted into misc.o. I *think* this is harmless
+and it will get discarded when building compressed/vmlinux, but thought
+I'd point it out.
