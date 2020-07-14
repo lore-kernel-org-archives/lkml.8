@@ -2,87 +2,122 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68BD0C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 00:01:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DCC01C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 00:02:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 53A7E218AC
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 00:01:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B5FE721883
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 00:02:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Uo6J2KIa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726963AbgGNABe (ORCPT
+        id S1726999AbgGNACH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 20:01:34 -0400
-Received: from alexa-out-sd-01.qualcomm.com ([199.106.114.38]:39815 "EHLO
-        alexa-out-sd-01.qualcomm.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726150AbgGNABd (ORCPT
+        Mon, 13 Jul 2020 20:02:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33430 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726150AbgGNACH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 20:01:33 -0400
-Received: from unknown (HELO ironmsg01-sd.qualcomm.com) ([10.53.140.141])
-  by alexa-out-sd-01.qualcomm.com with ESMTP; 13 Jul 2020 17:01:33 -0700
-Received: from gurus-linux.qualcomm.com ([10.46.162.81])
-  by ironmsg01-sd.qualcomm.com with ESMTP; 13 Jul 2020 17:01:31 -0700
-Received: by gurus-linux.qualcomm.com (Postfix, from userid 383780)
-        id A5C241ADD; Mon, 13 Jul 2020 17:01:30 -0700 (PDT)
-From:   Guru Das Srinagesh <gurus@codeaurora.org>
-To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        linux-arm-msm@vger.kernel.org
-Cc:     Subbaraman Narayanamurthy <subbaram@codeaurora.org>,
-        David Collins <collinsd@codeaurora.org>,
-        linux-kernel@vger.kernel.org,
-        Guru Das Srinagesh <gurus@codeaurora.org>
-Subject: [PATCH v1 1/1] nvmem: qcom-spmi-sdam: Enable multiple devices
-Date:   Mon, 13 Jul 2020 17:01:28 -0700
-Message-Id: <1594684888-19090-1-git-send-email-gurus@codeaurora.org>
-X-Mailer: git-send-email 2.7.4
+        Mon, 13 Jul 2020 20:02:07 -0400
+Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BC251C061755;
+        Mon, 13 Jul 2020 17:02:06 -0700 (PDT)
+Received: by mail-lj1-x241.google.com with SMTP id d17so20285670ljl.3;
+        Mon, 13 Jul 2020 17:02:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=t0cfrkzzv7XgU7cyUuzXAx+2nPotIXfhcv+12wgA2PU=;
+        b=Uo6J2KIaVi5iU9mYcgcqzhVJBqxlVa4sYe1wJAUnnbea4/LUpZMBgnxgFadQoedtGJ
+         OuH4hfjd0FSrVHyokDb3dobfnJ4J13kG23lMdkYO87RuDq5eac/8AGiIFFKlkS3C5Wat
+         71/xV22dzhJL5hiXv1sFI0Yayeo3aVTr3ML24asM2kGs0bkESZ8meoTLnDt6nH2byEfk
+         DnQ5PvOffeJq+oYlmdPsY52SsgTrCBY4M2PQxlbrsztQxfE6rg+fYiqUc7JodnftFm9k
+         ai34hbCWTYyLZc5L3zMpszTx2mAqL94AsWYfx5vlF+X27gkfbH8ZhjWwUt+5oW0T1fMN
+         HIPQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=t0cfrkzzv7XgU7cyUuzXAx+2nPotIXfhcv+12wgA2PU=;
+        b=gWxEDg768C8cFiD/pSziQoX/m/+LyaCZGnazjkTcU86OO5yCYuuSdC9q6eabLVDcPu
+         kmGvETX0z3SkmPO9j0R6sDi43wC7CilTd5dQ7iWtRsCoNR8Lp8QNka+up3e6VVoLY2dF
+         xxOkXc4gzCMw2sKwWKsSHpl0HIRAIRyR8QBjzau6j5zyTutTHFH08kFhUc665S5x5Z94
+         GsHSY8WRkZO5RqHIWhP3UVNeoPXoSlX5i3y3cU4lpUMjIiDtqfH2bl0jzqJDNUtvcaAf
+         jVQbeuUPZdPomb1SeCfNJzCmrs5yuFpidDL7OaLZI8RzRTTJGCv8vu90TBCgShnJEBV+
+         Xjqg==
+X-Gm-Message-State: AOAM530dvNfNOgO+MrdBhPQ8ZFXFqYO2O6ngiyzudmmAocTtlulF6vIC
+        xmIvuPeO5V0pPWQ4WrhNSc+SSwqTgAlo56YKfRY=
+X-Google-Smtp-Source: ABdhPJyWXrP4OKhLSQynsQ3WHaYu7RkyIxlewG61uW/dnYgJxXYryPcW5+IGLewX0Oxs/Mz1G5tjSbXwF94RYlStLms=
+X-Received: by 2002:a2e:8216:: with SMTP id w22mr985388ljg.2.1594684925231;
+ Mon, 13 Jul 2020 17:02:05 -0700 (PDT)
+MIME-Version: 1.0
+References: <1594641154-18897-1-git-send-email-alan.maguire@oracle.com>
+In-Reply-To: <1594641154-18897-1-git-send-email-alan.maguire@oracle.com>
+From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Date:   Mon, 13 Jul 2020 17:01:53 -0700
+Message-ID: <CAADnVQ+zBgz0DBJr0sLK3PsfCYgfSLp6fZMh=m7XtMKfSOupEQ@mail.gmail.com>
+Subject: Re: [PATCH v3 bpf-next 0/2] bpf: fix use of trace_printk() in BPF
+To:     Alan Maguire <alan.maguire@oracle.com>
+Cc:     Steven Rostedt <rostedt@goodmis.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        KP Singh <kpsingh@chromium.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Network Development <netdev@vger.kernel.org>,
+        bpf <bpf@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Specifying the name of the nvmem device while registering it with the
-nvmem framework has the side effect of causing the second instance of a
-device using this driver to fail probe with the following error message:
+On Mon, Jul 13, 2020 at 4:53 AM Alan Maguire <alan.maguire@oracle.com> wrote:
+>
+> Steven suggested a way to resolve the appearance of the warning banner
+> that appears as a result of using trace_printk() in BPF [1].
+> Applying the patch and testing reveals all works as expected; we
+> can call bpf_trace_printk() and see the trace messages in
+> /sys/kernel/debug/tracing/trace_pipe and no banner message appears.
+>
+> Also add a test prog to verify basic bpf_trace_printk() helper behaviour.
+>
+> Changes since v2:
+>
+> - fixed stray newline in bpf_trace_printk(), use sizeof(buf)
+>   rather than #defined value in vsnprintf() (Daniel, patch 1)
+> - Daniel also pointed out that vsnprintf() returns 0 on error rather
+>   than a negative value; also turns out that a null byte is not
+>   appended if the length of the string written is zero, so to fix
+>   for cases where the string to be traced is zero length we set the
+>   null byte explicitly (Daniel, patch 1)
+> - switch to using getline() for retrieving lines from trace buffer
+>   to ensure we don't read a portion of the search message in one
+>   read() operation and then fail to find it (Andrii, patch 2)
+>
+> Changes since v1:
+>
+> - reorder header inclusion in bpf_trace.c (Steven, patch 1)
+> - trace zero-length messages also (Andrii, patch 1)
+> - use a raw spinlock to ensure there are no issues for PREMMPT_RT
+>   kernels when using bpf_trace_printk() within other raw spinlocks
+>   (Steven, patch 1)
+> - always enable bpf_trace_printk() tracepoint when loading programs
+>   using bpf_trace_printk() as this will ensure that a user disabling
+>   that tracepoint will not prevent tracing output from being logged
+>   (Steven, patch 1)
+> - use "tp/raw_syscalls/sys_enter" and a usleep(1) to trigger events
+>   in the selftest ensuring test runs faster (Andrii, patch 2)
+>
+> [1]  https://lore.kernel.org/r/20200628194334.6238b933@oasis.local.home
 
-  sysfs: cannot create duplicate filename '/bus/nvmem/devices/spmi_sdam'
-
-Removing the name allows the nvmem framework to assign a monotonically
-increasing integer id to each instance of this driver automatically,
-like so:
-
-  /sys/bus/nvmem/devices # ls
-  nvmem0  nvmem1  nvmem2
-
-Signed-off-by: Guru Das Srinagesh <gurus@codeaurora.org>
----
- drivers/nvmem/qcom-spmi-sdam.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
-
-diff --git a/drivers/nvmem/qcom-spmi-sdam.c b/drivers/nvmem/qcom-spmi-sdam.c
-index 8682cda..6275f14 100644
---- a/drivers/nvmem/qcom-spmi-sdam.c
-+++ b/drivers/nvmem/qcom-spmi-sdam.c
-@@ -1,6 +1,6 @@
- // SPDX-License-Identifier: GPL-2.0-only
- /*
-- * Copyright (c) 2017 The Linux Foundation. All rights reserved.
-+ * Copyright (c) 2017, 2020 The Linux Foundation. All rights reserved.
-  */
- 
- #include <linux/device.h>
-@@ -140,8 +140,6 @@ static int sdam_probe(struct platform_device *pdev)
- 	sdam->size = val * 32;
- 
- 	sdam->sdam_config.dev = &pdev->dev;
--	sdam->sdam_config.name = "spmi_sdam";
--	sdam->sdam_config.id = pdev->id;
- 	sdam->sdam_config.owner = THIS_MODULE,
- 	sdam->sdam_config.stride = 1;
- 	sdam->sdam_config.word_size = 1;
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
-
+Applied. Thanks
