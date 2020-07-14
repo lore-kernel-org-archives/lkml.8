@@ -7,24 +7,28 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B0FFC433E5
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 12:16:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A19C8C433E7
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 12:16:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D354E207FB
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 12:16:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8586A2068F
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 12:16:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728601AbgGNMQd (ORCPT
+        id S1728212AbgGNMQf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 08:16:33 -0400
-Received: from 8bytes.org ([81.169.241.247]:52918 "EHLO theia.8bytes.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728248AbgGNMKp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 08:16:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60624 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728250AbgGNMKp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 14 Jul 2020 08:10:45 -0400
+Received: from theia.8bytes.org (8bytes.org [IPv6:2a01:238:4383:600:38bc:a715:4b6d:a889])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0BED3C08C5C1;
+        Tue, 14 Jul 2020 05:10:45 -0700 (PDT)
 Received: from cap.home.8bytes.org (p5b006776.dip0.t-ipconnect.de [91.0.103.118])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
         (No client certificate requested)
-        by theia.8bytes.org (Postfix) with ESMTPSA id B74997DD;
-        Tue, 14 Jul 2020 14:10:43 +0200 (CEST)
+        by theia.8bytes.org (Postfix) with ESMTPSA id 87F996B2;
+        Tue, 14 Jul 2020 14:10:41 +0200 (CEST)
 From:   Joerg Roedel <joro@8bytes.org>
 To:     x86@kernel.org
 Cc:     Joerg Roedel <joro@8bytes.org>, Joerg Roedel <jroedel@suse.de>,
@@ -45,9 +49,9 @@ Cc:     Joerg Roedel <joro@8bytes.org>, Joerg Roedel <jroedel@suse.de>,
         Martin Radev <martin.b.radev@gmail.com>,
         linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
         virtualization@lists.linux-foundation.org
-Subject: [PATCH v4 20/75] x86/boot/compressed/64: Check return value of kernel_ident_mapping_init()
-Date:   Tue, 14 Jul 2020 14:08:22 +0200
-Message-Id: <20200714120917.11253-21-joro@8bytes.org>
+Subject: [PATCH v4 16/75] x86/boot/compressed/64: Don't pre-map memory in KASLR code
+Date:   Tue, 14 Jul 2020 14:08:18 +0200
+Message-Id: <20200714120917.11253-17-joro@8bytes.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200714120917.11253-1-joro@8bytes.org>
 References: <20200714120917.11253-1-joro@8bytes.org>
@@ -60,39 +64,118 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Joerg Roedel <jroedel@suse.de>
 
-The function can fail to create an identity mapping, check for that
-and bail out if it happens.
+With the page-fault handler in place the identity mapping can be built
+on-demand. So remove the code which manually creates the mappings and
+unexport/remove the functions used for it.
 
 Signed-off-by: Joerg Roedel <jroedel@suse.de>
 ---
- arch/x86/boot/compressed/ident_map_64.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ arch/x86/boot/compressed/ident_map_64.c |  6 ++----
+ arch/x86/boot/compressed/kaslr.c        | 24 +-----------------------
+ arch/x86/boot/compressed/misc.h         | 10 ----------
+ 3 files changed, 3 insertions(+), 37 deletions(-)
 
 diff --git a/arch/x86/boot/compressed/ident_map_64.c b/arch/x86/boot/compressed/ident_map_64.c
-index b4f2a5f503cd..aa91bebc0fe9 100644
+index ecf9353b064d..c63257bf8373 100644
 --- a/arch/x86/boot/compressed/ident_map_64.c
 +++ b/arch/x86/boot/compressed/ident_map_64.c
-@@ -91,6 +91,8 @@ static struct x86_mapping_info mapping_info;
-  */
- static void add_identity_map(unsigned long start, unsigned long end)
- {
-+	int ret;
-+
- 	/* Align boundary to 2M. */
- 	start = round_down(start, PMD_SIZE);
- 	end = round_up(end, PMD_SIZE);
-@@ -98,8 +100,9 @@ static void add_identity_map(unsigned long start, unsigned long end)
- 		return;
+@@ -87,11 +87,9 @@ phys_addr_t physical_mask = (1ULL << __PHYSICAL_MASK_SHIFT) - 1;
+ static struct x86_mapping_info mapping_info;
  
- 	/* Build the mapping. */
--	kernel_ident_mapping_init(&mapping_info, (pgd_t *)top_level_pgt,
--				  start, end);
-+	ret = kernel_ident_mapping_init(&mapping_info, (pgd_t *)top_level_pgt, start, end);
-+	if (ret)
-+		error("Error: kernel_ident_mapping_init() failed\n");
+ /*
+- * Adds the specified range to what will become the new identity mappings.
+- * Once all ranges have been added, the new mapping is activated by calling
+- * finalize_identity_maps() below.
++ * Adds the specified range to the identity mappings.
+  */
+-void add_identity_map(unsigned long start, unsigned long size)
++static void add_identity_map(unsigned long start, unsigned long size)
+ {
+ 	unsigned long end = start + size;
+ 
+diff --git a/arch/x86/boot/compressed/kaslr.c b/arch/x86/boot/compressed/kaslr.c
+index 856dc1c9bb0d..c466fb738de0 100644
+--- a/arch/x86/boot/compressed/kaslr.c
++++ b/arch/x86/boot/compressed/kaslr.c
+@@ -399,8 +399,6 @@ static void mem_avoid_init(unsigned long input, unsigned long input_size,
+ 	 */
+ 	mem_avoid[MEM_AVOID_ZO_RANGE].start = input;
+ 	mem_avoid[MEM_AVOID_ZO_RANGE].size = (output + init_size) - input;
+-	add_identity_map(mem_avoid[MEM_AVOID_ZO_RANGE].start,
+-			 mem_avoid[MEM_AVOID_ZO_RANGE].size);
+ 
+ 	/* Avoid initrd. */
+ 	initrd_start  = (u64)boot_params->ext_ramdisk_image << 32;
+@@ -420,14 +418,10 @@ static void mem_avoid_init(unsigned long input, unsigned long input_size,
+ 		;
+ 	mem_avoid[MEM_AVOID_CMDLINE].start = cmd_line;
+ 	mem_avoid[MEM_AVOID_CMDLINE].size = cmd_line_size;
+-	add_identity_map(mem_avoid[MEM_AVOID_CMDLINE].start,
+-			 mem_avoid[MEM_AVOID_CMDLINE].size);
+ 
+ 	/* Avoid boot parameters. */
+ 	mem_avoid[MEM_AVOID_BOOTPARAMS].start = (unsigned long)boot_params;
+ 	mem_avoid[MEM_AVOID_BOOTPARAMS].size = sizeof(*boot_params);
+-	add_identity_map(mem_avoid[MEM_AVOID_BOOTPARAMS].start,
+-			 mem_avoid[MEM_AVOID_BOOTPARAMS].size);
+ 
+ 	/* We don't need to set a mapping for setup_data. */
+ 
+@@ -436,11 +430,6 @@ static void mem_avoid_init(unsigned long input, unsigned long input_size,
+ 
+ 	/* Enumerate the immovable memory regions */
+ 	num_immovable_mem = count_immovable_mem_regions();
+-
+-#ifdef CONFIG_X86_VERBOSE_BOOTUP
+-	/* Make sure video RAM can be used. */
+-	add_identity_map(0, PMD_SIZE);
+-#endif
  }
  
- /* Locates and clears a region for a new top level page table. */
+ /*
+@@ -919,19 +908,8 @@ void choose_random_location(unsigned long input,
+ 		warn("Physical KASLR disabled: no suitable memory region!");
+ 	} else {
+ 		/* Update the new physical address location. */
+-		if (*output != random_addr) {
+-			add_identity_map(random_addr, output_size);
++		if (*output != random_addr)
+ 			*output = random_addr;
+-		}
+-
+-		/*
+-		 * This loads the identity mapping page table.
+-		 * This should only be done if a new physical address
+-		 * is found for the kernel, otherwise we should keep
+-		 * the old page table to make it be like the "nokaslr"
+-		 * case.
+-		 */
+-		finalize_identity_maps();
+ 	}
+ 
+ 
+diff --git a/arch/x86/boot/compressed/misc.h b/arch/x86/boot/compressed/misc.h
+index 345c90fbc500..ea6174bad699 100644
+--- a/arch/x86/boot/compressed/misc.h
++++ b/arch/x86/boot/compressed/misc.h
+@@ -98,17 +98,7 @@ static inline void choose_random_location(unsigned long input,
+ #endif
+ 
+ #ifdef CONFIG_X86_64
+-void initialize_identity_maps(void);
+-void add_identity_map(unsigned long start, unsigned long size);
+-void finalize_identity_maps(void);
+ extern unsigned char _pgtable[];
+-#else
+-static inline void initialize_identity_maps(void)
+-{ }
+-static inline void add_identity_map(unsigned long start, unsigned long size)
+-{ }
+-static inline void finalize_identity_maps(void)
+-{ }
+ #endif
+ 
+ #ifdef CONFIG_EARLY_PRINTK
 -- 
 2.27.0
 
