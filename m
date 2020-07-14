@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54AC0C433E5
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 19:08:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91E17C433FE
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 19:08:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2C7E921D79
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 19:08:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6DE3521D79
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 19:08:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594753712;
-	bh=ZaXnKVv036WIEZxAKuXBF80BGpN2iXc9gZtAy+/Mtrc=;
+	s=default; t=1594753714;
+	bh=w1saTiJ4092Q9Rc1+4AWTRTNFivBt5Fd42VK/TVq+gw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VYMtYr9cpq4mqm7a6i78IFh1zkF+RGlpzsEEAhRDzPd/vRHivqh5G6E5PyeB4QFkc
-	 DDSIsqUyEdqjSlwEGIX+gBGd0soEeLKf6G5Fz1FQA2wklRiWyXnopOJDZfH4mis1Ek
-	 qb3rE+g7yzqbh5r2K2XMwh2gZvRM4PkaL9XU877U=
+	b=nBQ2wjvuhuIymfTv0yYdx+CSlxjSEBi7/mSTNeZLDP7IBh92zdzzJj96Dy4b1nydf
+	 2kIMhpaTY+XaPCTfFqlhWA9VdvhVH5+F1O7T8IIja8bM8h4hdw7hxXuA0crUV8MFN6
+	 XGQ+0jVj8gvqNrERrN34fh1qhRWAO1JH73tZ+KWY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729138AbgGNSuT (ORCPT
+        id S1729734AbgGNSuO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 14:50:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46286 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730284AbgGNSuO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 14 Jul 2020 14:50:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46180 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730268AbgGNSuJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 14:50:09 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 000AA22AAA;
-        Tue, 14 Jul 2020 18:50:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 106C121835;
+        Tue, 14 Jul 2020 18:50:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594752613;
-        bh=ZaXnKVv036WIEZxAKuXBF80BGpN2iXc9gZtAy+/Mtrc=;
+        s=default; t=1594752608;
+        bh=w1saTiJ4092Q9Rc1+4AWTRTNFivBt5Fd42VK/TVq+gw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qRvfGjH1RQOurOG7FqsxpJdAAUPzxRCBsCrBFe9eXi1Yg9Z0+rwRDwwzs4hAu2gvQ
-         xk+eI+DQ3oxsC/gTtIL1YTEcZQN+THQKvXzW+Lmme+lOL8RMQ/acW8lsQFxkDlSFvh
-         LQlFs05AdKY/g56o1q1avHG8rhISDc8jSEop/5b8=
+        b=Ewk43zSr82kOvUvvqMiGHXXIbZEtJL5a/Y4JTXBxkF0woScXNPxJNogmX36Dt3zaI
+         NS/3fWvmuEepu/X+lJQniQlSydGSwA2Y5SNWmCA5WzM53t91jL9lHdHLdKUUpJSaAN
+         c7bAMbQ9bAEl7bMv4z6w+IUcjAr/SuKeOnMRkCjA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Zhenzhong Duan <zhenzhong.duan@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
+        stable@vger.kernel.org, John Fastabend <john.fastabend@gmail.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Martin KaFai Lau <kafai@fb.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 014/109] spi: spidev: fix a race between spidev_release and spidev_remove
-Date:   Tue, 14 Jul 2020 20:43:17 +0200
-Message-Id: <20200714184106.203830082@linuxfoundation.org>
+Subject: [PATCH 5.4 041/109] bpf, sockmap: RCU dereferenced psock may be used outside RCU block
+Date:   Tue, 14 Jul 2020 20:43:44 +0200
+Message-Id: <20200714184107.488252468@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200714184105.507384017@linuxfoundation.org>
 References: <20200714184105.507384017@linuxfoundation.org>
@@ -60,60 +61,91 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Zhenzhong Duan <zhenzhong.duan@gmail.com>
+From: John Fastabend <john.fastabend@gmail.com>
 
-[ Upstream commit abd42781c3d2155868821f1b947ae45bbc33330d ]
+[ Upstream commit 8025751d4d55a2f32be6bdf825b6a80c299875f5 ]
 
-Imagine below scene, spidev is referenced after it's freed.
+If an ingress verdict program specifies message sizes greater than
+skb->len and there is an ENOMEM error due to memory pressure we
+may call the rcv_msg handler outside the strp_data_ready() caller
+context. This is because on an ENOMEM error the strparser will
+retry from a workqueue. The caller currently protects the use of
+psock by calling the strp_data_ready() inside a rcu_read_lock/unlock
+block.
 
-spidev_release()                spidev_remove()
-...
-                                spin_lock_irq(&spidev->spi_lock);
-                                    spidev->spi = NULL;
-                                spin_unlock_irq(&spidev->spi_lock);
-mutex_lock(&device_list_lock);
-dofree = (spidev->spi == NULL);
-if (dofree)
-    kfree(spidev);
-mutex_unlock(&device_list_lock);
-                                mutex_lock(&device_list_lock);
-                                list_del(&spidev->device_entry);
-                                device_destroy(spidev_class, spidev->devt);
-                                clear_bit(MINOR(spidev->devt), minors);
-                                if (spidev->users == 0)
-                                    kfree(spidev);
-                                mutex_unlock(&device_list_lock);
+But, in above workqueue error case the psock is accessed outside
+the read_lock/unlock block of the caller. So instead of using
+psock directly we must do a look up against the sk again to
+ensure the psock is available.
 
-Fix it by resetting spidev->spi in device_list_lock's protection.
+There is an an ugly piece here where we must handle
+the case where we paused the strp and removed the psock. On
+psock removal we first pause the strparser and then remove
+the psock. If the strparser is paused while an skb is
+scheduled on the workqueue the skb will be dropped on the
+flow and kfree_skb() is called. If the workqueue manages
+to get called before we pause the strparser but runs the rcvmsg
+callback after the psock is removed we will hit the unlikely
+case where we run the sockmap rcvmsg handler but do not have
+a psock. For now we will follow strparser logic and drop the
+skb on the floor with skb_kfree(). This is ugly because the
+data is dropped. To date this has not caused problems in practice
+because either the application controlling the sockmap is
+coordinating with the datapath so that skbs are "flushed"
+before removal or we simply wait for the sock to be closed before
+removing it.
 
-Signed-off-by: Zhenzhong Duan <zhenzhong.duan@gmail.com>
-Link: https://lore.kernel.org/r/20200618032125.4650-1-zhenzhong.duan@gmail.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+This patch fixes the describe RCU bug and dropping the skb doesn't
+make things worse. Future patches will improve this by allowing
+the normal case where skbs are not merged to skip the strparser
+altogether. In practice many (most?) use cases have no need to
+merge skbs so its both a code complexity hit as seen above and
+a performance issue. For example, in the Cilium case we always
+set the strparser up to return sbks 1:1 without any merging and
+have avoided above issues.
+
+Fixes: e91de6afa81c1 ("bpf: Fix running sk_skb program types with ktls")
+Signed-off-by: John Fastabend <john.fastabend@gmail.com>
+Signed-off-by: Alexei Starovoitov <ast@kernel.org>
+Acked-by: Martin KaFai Lau <kafai@fb.com>
+Link: https://lore.kernel.org/bpf/159312679888.18340.15248924071966273998.stgit@john-XPS-13-9370
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/spi/spidev.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ net/core/skmsg.c | 10 +++++++++-
+ 1 file changed, 9 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/spi/spidev.c b/drivers/spi/spidev.c
-index ab2c3848f5bf8..88d0976215fac 100644
---- a/drivers/spi/spidev.c
-+++ b/drivers/spi/spidev.c
-@@ -783,13 +783,13 @@ static int spidev_remove(struct spi_device *spi)
+diff --git a/net/core/skmsg.c b/net/core/skmsg.c
+index 70ea352e3a3b6..118cf1ace43a6 100644
+--- a/net/core/skmsg.c
++++ b/net/core/skmsg.c
+@@ -785,11 +785,18 @@ static void sk_psock_verdict_apply(struct sk_psock *psock,
+ 
+ static void sk_psock_strp_read(struct strparser *strp, struct sk_buff *skb)
  {
- 	struct spidev_data	*spidev = spi_get_drvdata(spi);
+-	struct sk_psock *psock = sk_psock_from_strp(strp);
++	struct sk_psock *psock;
+ 	struct bpf_prog *prog;
+ 	int ret = __SK_DROP;
++	struct sock *sk;
  
-+	/* prevent new opens */
-+	mutex_lock(&device_list_lock);
- 	/* make sure ops on existing fds can abort cleanly */
- 	spin_lock_irq(&spidev->spi_lock);
- 	spidev->spi = NULL;
- 	spin_unlock_irq(&spidev->spi_lock);
+ 	rcu_read_lock();
++	sk = strp->sk;
++	psock = sk_psock(sk);
++	if (unlikely(!psock)) {
++		kfree_skb(skb);
++		goto out;
++	}
+ 	prog = READ_ONCE(psock->progs.skb_verdict);
+ 	if (likely(prog)) {
+ 		skb_orphan(skb);
+@@ -798,6 +805,7 @@ static void sk_psock_strp_read(struct strparser *strp, struct sk_buff *skb)
+ 		ret = sk_psock_map_verd(ret, tcp_skb_bpf_redirect_fetch(skb));
+ 	}
+ 	sk_psock_verdict_apply(psock, skb, ret);
++out:
+ 	rcu_read_unlock();
+ }
  
--	/* prevent new opens */
--	mutex_lock(&device_list_lock);
- 	list_del(&spidev->device_entry);
- 	device_destroy(spidev_class, spidev->devt);
- 	clear_bit(MINOR(spidev->devt), minors);
 -- 
 2.25.1
 
