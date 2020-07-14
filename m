@@ -2,96 +2,140 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CD48C433E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 12:57:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F6E6C433E5
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 12:58:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D203C22464
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 12:57:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VQWr3OUL"
+	by mail.kernel.org (Postfix) with ESMTP id 38BB32247F
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 12:58:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728246AbgGNM5n (ORCPT
+        id S1728317AbgGNM6A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 08:57:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39858 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726352AbgGNM5n (ORCPT
+        Tue, 14 Jul 2020 08:58:00 -0400
+Received: from mail.baikalelectronics.com ([87.245.175.226]:33156 "EHLO
+        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726354AbgGNM57 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 08:57:43 -0400
-Received: from mail-il1-x141.google.com (mail-il1-x141.google.com [IPv6:2607:f8b0:4864:20::141])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ECC66C061755;
-        Tue, 14 Jul 2020 05:57:42 -0700 (PDT)
-Received: by mail-il1-x141.google.com with SMTP id i18so14096364ilk.10;
-        Tue, 14 Jul 2020 05:57:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:reply-to:from:date:message-id
-         :subject:to:cc;
-        bh=tpy10WfAX1z1P9FVWP37eg4rB5eaWpDttxXVOTpuTN0=;
-        b=VQWr3OUL+Tw7NvsiDWjYGOi2Y/vfT0dY1jb07fuNs/RI+zXm/++xC+VDvD/Npiuut+
-         dTTBZtpE9v8FIGhnxywnkwBuInIrScxL0ok6fZONyCuIJ1LA+NyOtUqkubnAkaG2hgkk
-         2mOMpwtskfuUpDD5WYvCd4PsoBX8jt7gN1ezE+eJX/bOggAfp+JTHvBXMznowQlfM7Fe
-         2hYEeP2P6wzDOZ6xISPS94FaRA78Kjv6E+aywxfv9mYsRxLPlghYiQ/pcWpfIHINmxhn
-         Pw+xEs8m/z2vZfoclDFEw0bEtpFqlsoB5Rx4NICICV7huYYfl8bz6JsG6+USI1zzhBM2
-         GPaw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:reply-to
-         :from:date:message-id:subject:to:cc;
-        bh=tpy10WfAX1z1P9FVWP37eg4rB5eaWpDttxXVOTpuTN0=;
-        b=PKSCtqSlBsgHkiqCCuqKXJjMGDxKSYHfxwijVu5r7RDwvHjK0fM/5nmz2amHruiEm7
-         uunJpI/c2VOgjcjCoAAfDzORpz1CnokOpam9bF8ZUC0zvtxqBfILM5YFg+BNswEr6c/3
-         uXCWEQeayE6Oa0a+OTyUkCayLJLwKSR38wWk17Gu+nen9FSv/R1yEjvoQZZDjT2YPCFQ
-         IU5JvaWsF+zelwX7nOlQmEQVMuCx6JQ/3ThdkgGPaqabRAagYv3AbsddLzTB4HIepEkq
-         y+D3nzwv0tug4jb6+tBNqNDQGhf1cux8mO4gSu98zUuYsm6Tw8WHvzplrhEZJ+HnalLf
-         MjkQ==
-X-Gm-Message-State: AOAM533IDSnGvvqhZwD9di6QRtRO77rydGSbg7mcgLEWmhZAP8lBMprO
-        wfklCpkBtm2SJlISgUj9gacr/lzrGa6Ti3itefg=
-X-Google-Smtp-Source: ABdhPJz1Shw/+QySeLYjrkVPP/h07k/H6RrpTQq2av+wXlP2/uAQgBICNQC+qP14iFQk3R1mNYpVoNBIkPtZLLXspVU=
-X-Received: by 2002:a92:8b11:: with SMTP id i17mr4587786ild.212.1594731462385;
- Tue, 14 Jul 2020 05:57:42 -0700 (PDT)
+        Tue, 14 Jul 2020 08:57:59 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id 40D3F803202D;
+        Tue, 14 Jul 2020 12:57:57 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at baikalelectronics.ru
+Received: from mail.baikalelectronics.ru ([127.0.0.1])
+        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id K7s5e5sHAy-0; Tue, 14 Jul 2020 15:57:56 +0300 (MSK)
+From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
+To:     Thomas Gleixner <tglx@linutronix.de>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Paul Burton <paulburton@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>
+CC:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>, James Hogan <jhogan@kernel.org>,
+        <linux-mips@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, Rob Herring <robh@kernel.org>
+Subject: [PATCH v5 1/6] dt-bindings: power: Convert mti,mips-cpc to DT schema
+Date:   Tue, 14 Jul 2020 15:57:47 +0300
+Message-ID: <20200714125753.22466-2-Sergey.Semin@baikalelectronics.ru>
+In-Reply-To: <20200714125753.22466-1-Sergey.Semin@baikalelectronics.ru>
+References: <20200714125753.22466-1-Sergey.Semin@baikalelectronics.ru>
 MIME-Version: 1.0
-References: <2733b41a-b4c6-be94-0118-a1a8d6f26eec@virtuozzo.com>
- <d6e8ef46-c311-b993-909c-4ae2823e2237@virtuozzo.com> <CAJfpegupeWA_dFi5Q4RBSdHFAkutEeRk3Z1KZ5mtfkFn-ROo=A@mail.gmail.com>
- <8da94b27-484c-98e4-2152-69d282bcfc50@virtuozzo.com> <CAJfpegvU2JQcNM+0mcMPk-_e==RcT0xjqYUHCTzx3g0oCw6RiA@mail.gmail.com>
- <CA+icZUXtYt6LtaB4Fc3UWS0iCOZPV1ExaZgc-1-cD6TBw29Q8A@mail.gmail.com> <CAJfpegs+hN2G02qigUyQMp=0Ev+t_vYHmK5kh3z+U1GkSuLH-w@mail.gmail.com>
-In-Reply-To: <CAJfpegs+hN2G02qigUyQMp=0Ev+t_vYHmK5kh3z+U1GkSuLH-w@mail.gmail.com>
-Reply-To: sedat.dilek@gmail.com
-From:   Sedat Dilek <sedat.dilek@gmail.com>
-Date:   Tue, 14 Jul 2020 14:57:30 +0200
-Message-ID: <CA+icZUWSeUJwtymRL2MXXCRy3SyhQ9LraQAzUwCB2my09BWRcA@mail.gmail.com>
-Subject: Re: [PATCH] fuse_writepages_fill() optimization to avoid WARN_ON in tree_insert
-To:     Miklos Szeredi <miklos@szeredi.hu>
-Cc:     Vasily Averin <vvs@virtuozzo.com>, linux-fsdevel@vger.kernel.org,
-        Maxim Patlasov <maximvp@gmail.com>,
-        Kirill Tkhai <ktkhai@virtuozzo.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 14, 2020 at 2:53 PM Miklos Szeredi <miklos@szeredi.hu> wrote:
->
-> On Tue, Jul 14, 2020 at 2:40 PM Sedat Dilek <sedat.dilek@gmail.com> wrote:
->
-> > Did you sent out a new version of your patch?
-> > If yes, where can I get it from?
->
-> Just pushed a bunch of fixes including this one to
->
-> git://git.kernel.org/pub/scm/linux/kernel/git/mszeredi/fuse.git#for-next
->
+It's a Cluster Power Controller embedded into the MIPS IP cores.
+Currently the corresponding dts node is supposed to have compatible
+and reg properties.
 
-Just-In-Time... I stopped my kernel-build and applied from <fuse.git#for-next>.
+Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Reviewed-by: Rob Herring <robh@kernel.org>
+Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
 
-Thanks.
+---
 
-- Sedat -
+Changelog prev:
+- Reword the changelog summary - use shorter version.
+- Lowercase the example hex'es.
+
+Changelog v5:
+- Consider address and size cells being <1> by default for the examples.
+---
+ .../bindings/power/mti,mips-cpc.txt           |  8 -----
+ .../bindings/power/mti,mips-cpc.yaml          | 35 +++++++++++++++++++
+ 2 files changed, 35 insertions(+), 8 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/power/mti,mips-cpc.txt
+ create mode 100644 Documentation/devicetree/bindings/power/mti,mips-cpc.yaml
+
+diff --git a/Documentation/devicetree/bindings/power/mti,mips-cpc.txt b/Documentation/devicetree/bindings/power/mti,mips-cpc.txt
+deleted file mode 100644
+index c6b82511ae8a..000000000000
+--- a/Documentation/devicetree/bindings/power/mti,mips-cpc.txt
++++ /dev/null
+@@ -1,8 +0,0 @@
+-Binding for MIPS Cluster Power Controller (CPC).
+-
+-This binding allows a system to specify where the CPC registers are
+-located.
+-
+-Required properties:
+-compatible : Should be "mti,mips-cpc".
+-regs: Should describe the address & size of the CPC register region.
+diff --git a/Documentation/devicetree/bindings/power/mti,mips-cpc.yaml b/Documentation/devicetree/bindings/power/mti,mips-cpc.yaml
+new file mode 100644
+index 000000000000..ccdeaece169e
+--- /dev/null
++++ b/Documentation/devicetree/bindings/power/mti,mips-cpc.yaml
+@@ -0,0 +1,35 @@
++# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/power/mti,mips-cpc.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: MIPS Cluster Power Controller
++
++description: |
++  Defines a location of the MIPS Cluster Power Controller registers.
++
++maintainers:
++  - Paul Burton <paulburton@kernel.org>
++
++properties:
++  compatible:
++    const: mti,mips-cpc
++
++  reg:
++    description: |
++      Base address and size of an unoccupied memory region, which will be
++      used to map the MIPS CPC registers block.
++    maxItems: 1
++
++required:
++  - compatible
++  - reg
++
++examples:
++  - |
++    cpc@1bde0000 {
++      compatible = "mti,mips-cpc";
++      reg = <0x1bde0000 0x8000>;
++    };
++...
+-- 
+2.26.2
+
