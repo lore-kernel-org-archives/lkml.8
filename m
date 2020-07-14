@@ -2,149 +2,115 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AAB17C433E7
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 19:04:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44332C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 19:04:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8686C2240B
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 19:04:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594753473;
-	bh=tq0ZgPpb1UjGyzLqz8Drb8E6aQgtxe36pAXvAlHP1pc=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BGaZsKkxSiEX6DjvKGMBIr2d++95cs2Mbx+uTqtnklwWFea74zVZOil+C1Wl4AAOi
-	 gpDxqK0LkuLaBlShcCKwlBBA/QWEFQBIxwzp13opq7Cod5eIYwLWaIRpeor+3C/MsA
-	 qmyb1oJqabDd1uurzinuJ1loQxVooxSXaJDwW5P8=
+	by mail.kernel.org (Postfix) with ESMTP id 1FE3B2240B
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 19:04:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731303AbgGNTEb (ORCPT
+        id S1731328AbgGNTEo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 15:04:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53798 "EHLO mail.kernel.org"
+        Tue, 14 Jul 2020 15:04:44 -0400
+Received: from gloria.sntech.de ([185.11.138.130]:34614 "EHLO gloria.sntech.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730934AbgGNS4A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 14:56:00 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2A276229CA;
-        Tue, 14 Jul 2020 18:55:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594752959;
-        bh=tq0ZgPpb1UjGyzLqz8Drb8E6aQgtxe36pAXvAlHP1pc=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=B54VyKLclmrqTmWe2Pr4pF0N5csPeNS2iFgv2GQomSnIQZyd2QFzk+wRspYXf+xgR
-         /cq6mpdu0CwKFPGw3b54kHII2UpcYmcPhBHnVBHVvlzKwk/hW25RcCvxoL4KImvDJD
-         VLo8Uk8XCDkxxChD5pv9FXXHe2MrnFYq2Sf85qrY=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Christian Hewitt <christianshewitt@gmail.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 066/166] drm/meson: viu: fix setting the OSD burst length in VIU_OSD1_FIFO_CTRL_STAT
-Date:   Tue, 14 Jul 2020 20:43:51 +0200
-Message-Id: <20200714184119.025517936@linuxfoundation.org>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200714184115.844176932@linuxfoundation.org>
-References: <20200714184115.844176932@linuxfoundation.org>
-User-Agent: quilt/0.66
+        id S1730335AbgGNTEm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 15:04:42 -0400
+Received: from x2f7fa33.dyn.telefonica.de ([2.247.250.51] helo=phil.localnet)
+        by gloria.sntech.de with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <heiko@sntech.de>)
+        id 1jvQEI-0000LX-HB; Tue, 14 Jul 2020 21:04:38 +0200
+From:   Heiko Stuebner <heiko@sntech.de>
+To:     Jagan Teki <jagan@amarulasolutions.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Suniel Mahesh <sunil@amarulasolutions.com>,
+        Michael Trimarchi <michael@amarulasolutions.com>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        linux-amarula <linux-amarula@amarulasolutions.com>
+Subject: Re: [PATCH v5 1/4] arm64: dts: rockchip: Trivial cleanups for RockPI N10
+Date:   Tue, 14 Jul 2020 21:04:37 +0200
+Message-ID: <21801049.BKhHgEE1TG@phil>
+In-Reply-To: <20200709100756.42384-2-jagan@amarulasolutions.com>
+References: <20200709100756.42384-1-jagan@amarulasolutions.com> <20200709100756.42384-2-jagan@amarulasolutions.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Am Donnerstag, 9. Juli 2020, 12:07:53 CEST schrieb Jagan Teki:
+> Radxa dalang carrier boards are used to mount vmarc SoM's
+> of rk3399pro and rk3288 to make complete SBC.
+> 
+> So, this patch adds trivial changes to properties.
+> - move common properties into radxa dalang carrier dtsi.
+> - maintain ascending order for nodes, properties.
+> - change the order of dtsi include so-that common properties
+>   will reflect in main dts.
+> - drop unnecessary header includes.
 
-[ Upstream commit 17f64701ea6f541db7eb5d7423a830cb929b3052 ]
+can you please split this patch into bits at these marks?
+(1) moving common
+(2) sorting
+...
 
-The burst length is configured in VIU_OSD1_FIFO_CTRL_STAT[31] and
-VIU_OSD1_FIFO_CTRL_STAT[11:10]. The public S905D3 datasheet describes
-this as:
-- 0x0 = up to 24 per burst
-- 0x1 = up to 32 per burst
-- 0x2 = up to 48 per burst
-- 0x3 = up to 64 per burst
-- 0x4 = up to 96 per burst
-- 0x5 = up to 128 per burst
+It's hard to follow and especially verify.
 
-The lower two bits map to VIU_OSD1_FIFO_CTRL_STAT[11:10] while the upper
-bit maps to VIU_OSD1_FIFO_CTRL_STAT[31].
 
-Replace meson_viu_osd_burst_length_reg() with pre-defined macros which
-set these values. meson_viu_osd_burst_length_reg() always returned 0
-(for the two used values: 32 and 64 at least) and thus incorrectly set
-the burst size to 24.
 
-Fixes: 147ae1cbaa1842 ("drm: meson: viu: use proper macros instead of magic constants")
-Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
-Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
-Tested-by: Christian Hewitt <christianshewitt@gmail.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20200620155752.21065-1-martin.blumenstingl@googlemail.com
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/gpu/drm/meson/meson_registers.h |  6 ++++++
- drivers/gpu/drm/meson/meson_viu.c       | 11 ++---------
- 2 files changed, 8 insertions(+), 9 deletions(-)
+> diff --git a/arch/arm64/boot/dts/rockchip/rk3399pro-vmarc-som.dtsi b/arch/arm64/boot/dts/rockchip/rk3399pro-vmarc-som.dtsi
+> index 0a516334f15f..9ed5b27d715c 100644
+> --- a/arch/arm64/boot/dts/rockchip/rk3399pro-vmarc-som.dtsi
+> +++ b/arch/arm64/boot/dts/rockchip/rk3399pro-vmarc-som.dtsi
+> @@ -7,35 +7,12 @@
+>  
+>  #include <dt-bindings/gpio/gpio.h>
+>  #include <dt-bindings/pinctrl/rockchip.h>
+> -#include <dt-bindings/pwm/pwm.h>
+>  
+>  / {
+>  	compatible = "vamrs,rk3399pro-vmarc-som", "rockchip,rk3399pro";
+>  
+> -	clkin_gmac: external-gmac-clock {
+> -		compatible = "fixed-clock";
+> -		clock-frequency = <125000000>;
+> -		clock-output-names = "clkin_gmac";
+> -		#clock-cells = <0>;
+> -	};
+> -
+> -	vcc12v_dcin: vcc12v-dcin-regulator {
+> -		compatible = "regulator-fixed";
+> -		regulator-name = "vcc12v_dcin";
+> -		regulator-always-on;
+> -		regulator-boot-on;
+> -		regulator-min-microvolt = <12000000>;
+> -		regulator-max-microvolt = <12000000>;
+> -	};
+> -
+> -	vcc5v0_sys: vcc5v0-sys-regulator {
+> -		compatible = "regulator-fixed";
+> -		regulator-name = "vcc5v0_sys";
+> -		regulator-always-on;
+> -		regulator-boot-on;
+> -		regulator-min-microvolt = <5000000>;
+> -		regulator-max-microvolt = <5000000>;
+> -		vin-supply = <&vcc12v_dcin>;
+> +	chosen {
+> +		stdout-path = "serial2:1500000n8";
 
-diff --git a/drivers/gpu/drm/meson/meson_registers.h b/drivers/gpu/drm/meson/meson_registers.h
-index 8ea00546cd4e2..049c4bfe2a3ae 100644
---- a/drivers/gpu/drm/meson/meson_registers.h
-+++ b/drivers/gpu/drm/meson/meson_registers.h
-@@ -261,6 +261,12 @@
- #define VIU_OSD_FIFO_DEPTH_VAL(val)      ((val & 0x7f) << 12)
- #define VIU_OSD_WORDS_PER_BURST(words)   (((words & 0x4) >> 1) << 22)
- #define VIU_OSD_FIFO_LIMITS(size)        ((size & 0xf) << 24)
-+#define VIU_OSD_BURST_LENGTH_24          (0x0 << 31 | 0x0 << 10)
-+#define VIU_OSD_BURST_LENGTH_32          (0x0 << 31 | 0x1 << 10)
-+#define VIU_OSD_BURST_LENGTH_48          (0x0 << 31 | 0x2 << 10)
-+#define VIU_OSD_BURST_LENGTH_64          (0x0 << 31 | 0x3 << 10)
-+#define VIU_OSD_BURST_LENGTH_96          (0x1 << 31 | 0x0 << 10)
-+#define VIU_OSD_BURST_LENGTH_128         (0x1 << 31 | 0x1 << 10)
- 
- #define VD1_IF0_GEN_REG 0x1a50
- #define VD1_IF0_CANVAS0 0x1a51
-diff --git a/drivers/gpu/drm/meson/meson_viu.c b/drivers/gpu/drm/meson/meson_viu.c
-index 304f8ff1339cb..aede0c67a57f0 100644
---- a/drivers/gpu/drm/meson/meson_viu.c
-+++ b/drivers/gpu/drm/meson/meson_viu.c
-@@ -411,13 +411,6 @@ void meson_viu_gxm_disable_osd1_afbc(struct meson_drm *priv)
- 			    priv->io_base + _REG(VIU_MISC_CTRL1));
- }
- 
--static inline uint32_t meson_viu_osd_burst_length_reg(uint32_t length)
--{
--	uint32_t val = (((length & 0x80) % 24) / 12);
--
--	return (((val & 0x3) << 10) | (((val & 0x4) >> 2) << 31));
--}
--
- void meson_viu_init(struct meson_drm *priv)
- {
- 	uint32_t reg;
-@@ -444,9 +437,9 @@ void meson_viu_init(struct meson_drm *priv)
- 		VIU_OSD_FIFO_LIMITS(2);      /* fifo_lim: 2*16=32 */
- 
- 	if (meson_vpu_is_compatible(priv, VPU_COMPATIBLE_G12A))
--		reg |= meson_viu_osd_burst_length_reg(32);
-+		reg |= VIU_OSD_BURST_LENGTH_32;
- 	else
--		reg |= meson_viu_osd_burst_length_reg(64);
-+		reg |= VIU_OSD_BURST_LENGTH_64;
- 
- 	writel_relaxed(reg, priv->io_base + _REG(VIU_OSD1_FIFO_CTRL_STAT));
- 	writel_relaxed(reg, priv->io_base + _REG(VIU_OSD2_FIFO_CTRL_STAT));
--- 
-2.25.1
+isn't chosen more a property of the individual board combination?
+So to me this should live in the  rk3399pro-rock-pi-n10.dts .
+As other board even using the rk3399pro variant may want to use
+a different uart for serial output.
 
+Heiko
 
 
