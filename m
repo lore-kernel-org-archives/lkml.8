@@ -7,24 +7,24 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DAEAC433ED
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 12:17:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2790CC433F1
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 12:17:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 41F952068F
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 12:17:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 06FC02068F
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 12:17:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728720AbgGNMRN (ORCPT
+        id S1728806AbgGNMRR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 08:17:13 -0400
-Received: from 8bytes.org ([81.169.241.247]:52918 "EHLO theia.8bytes.org"
+        Tue, 14 Jul 2020 08:17:17 -0400
+Received: from 8bytes.org ([81.169.241.247]:52864 "EHLO theia.8bytes.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728214AbgGNMKm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728199AbgGNMKm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 14 Jul 2020 08:10:42 -0400
 Received: from cap.home.8bytes.org (p5b006776.dip0.t-ipconnect.de [91.0.103.118])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
         (No client certificate requested)
-        by theia.8bytes.org (Postfix) with ESMTPSA id 7C9B3638;
-        Tue, 14 Jul 2020 14:10:40 +0200 (CEST)
+        by theia.8bytes.org (Postfix) with ESMTPSA id 737065DF;
+        Tue, 14 Jul 2020 14:10:39 +0200 (CEST)
 From:   Joerg Roedel <joro@8bytes.org>
 To:     x86@kernel.org
 Cc:     Joerg Roedel <joro@8bytes.org>, Joerg Roedel <jroedel@suse.de>,
@@ -45,9 +45,9 @@ Cc:     Joerg Roedel <joro@8bytes.org>, Joerg Roedel <jroedel@suse.de>,
         Martin Radev <martin.b.radev@gmail.com>,
         linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
         virtualization@lists.linux-foundation.org
-Subject: [PATCH v4 14/75] x86/boot/compressed/64: Add page-fault handler
-Date:   Tue, 14 Jul 2020 14:08:16 +0200
-Message-Id: <20200714120917.11253-15-joro@8bytes.org>
+Subject: [PATCH v4 12/75] x86/boot/compressed/64: Add IDT Infrastructure
+Date:   Tue, 14 Jul 2020 14:08:14 +0200
+Message-Id: <20200714120917.11253-13-joro@8bytes.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200714120917.11253-1-joro@8bytes.org>
 References: <20200714120917.11253-1-joro@8bytes.org>
@@ -60,123 +60,259 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Joerg Roedel <jroedel@suse.de>
 
-Install a page-fault handler to add an identity mapping to addresses
-not yet mapped. Also do some checking whether the error code is sane.
+Add code needed to setup an IDT in the early pre-decompression
+boot-code. The IDT is loaded first in startup_64, which is after
+EfiExitBootServices() has been called, and later reloaded when the
+kernel image has been relocated to the end of the decompression area.
 
-This makes non SEV-ES machines use the exception handling
-infrastructure in the pre-decompressions boot code too, making it less
-likely to break in the future.
+This allows to setup different IDT handlers before and after the
+relocation.
 
 Signed-off-by: Joerg Roedel <jroedel@suse.de>
 ---
- arch/x86/boot/compressed/ident_map_64.c    | 39 ++++++++++++++++++++++
- arch/x86/boot/compressed/idt_64.c          |  2 ++
- arch/x86/boot/compressed/idt_handlers_64.S |  2 ++
- arch/x86/boot/compressed/misc.h            |  6 ++++
- 4 files changed, 49 insertions(+)
+ arch/x86/boot/compressed/Makefile          |  1 +
+ arch/x86/boot/compressed/head_64.S         | 25 +++++++-
+ arch/x86/boot/compressed/idt_64.c          | 44 ++++++++++++++
+ arch/x86/boot/compressed/idt_handlers_64.S | 70 ++++++++++++++++++++++
+ arch/x86/boot/compressed/misc.h            |  5 ++
+ arch/x86/include/asm/desc_defs.h           |  3 +
+ 6 files changed, 147 insertions(+), 1 deletion(-)
+ create mode 100644 arch/x86/boot/compressed/idt_64.c
+ create mode 100644 arch/x86/boot/compressed/idt_handlers_64.S
 
-diff --git a/arch/x86/boot/compressed/ident_map_64.c b/arch/x86/boot/compressed/ident_map_64.c
-index d9932a133ac9..e3d980ae9c2b 100644
---- a/arch/x86/boot/compressed/ident_map_64.c
-+++ b/arch/x86/boot/compressed/ident_map_64.c
-@@ -19,10 +19,13 @@
- /* No PAGE_TABLE_ISOLATION support needed either: */
- #undef CONFIG_PAGE_TABLE_ISOLATION
+diff --git a/arch/x86/boot/compressed/Makefile b/arch/x86/boot/compressed/Makefile
+index 95ac85b8ef27..46928cb90d19 100644
+--- a/arch/x86/boot/compressed/Makefile
++++ b/arch/x86/boot/compressed/Makefile
+@@ -84,6 +84,7 @@ vmlinux-objs-$(CONFIG_EARLY_PRINTK) += $(obj)/early_serial_console.o
+ vmlinux-objs-$(CONFIG_RANDOMIZE_BASE) += $(obj)/kaslr.o
+ ifdef CONFIG_X86_64
+ 	vmlinux-objs-$(CONFIG_RANDOMIZE_BASE) += $(obj)/kaslr_64.o
++	vmlinux-objs-y += $(obj)/idt_64.o $(obj)/idt_handlers_64.o
+ 	vmlinux-objs-y += $(obj)/mem_encrypt.o
+ 	vmlinux-objs-y += $(obj)/pgtable_64.o
+ endif
+diff --git a/arch/x86/boot/compressed/head_64.S b/arch/x86/boot/compressed/head_64.S
+index 97d37f0a34f5..4174d2f97b29 100644
+--- a/arch/x86/boot/compressed/head_64.S
++++ b/arch/x86/boot/compressed/head_64.S
+@@ -33,6 +33,7 @@
+ #include <asm/processor-flags.h>
+ #include <asm/asm-offsets.h>
+ #include <asm/bootparam.h>
++#include <asm/desc_defs.h>
+ #include "pgtable.h"
  
-+#include "error.h"
- #include "misc.h"
+ /*
+@@ -410,6 +411,10 @@ SYM_CODE_START(startup_64)
  
- /* These actually do the work of building the kernel identity maps. */
- #include <linux/pgtable.h>
-+#include <asm/trap_pf.h>
-+#include <asm/trapnr.h>
- #include <asm/init.h>
- /* Use the static base for this part of the boot process */
- #undef __PAGE_OFFSET
-@@ -160,3 +163,39 @@ void finalize_identity_maps(void)
- {
- 	write_cr3(top_level_pgt);
- }
+ .Lon_kernel_cs:
+ 
++	pushq	%rsi
++	call	load_stage1_idt
++	popq	%rsi
 +
-+static void do_pf_error(const char *msg, unsigned long error_code,
-+			unsigned long address, unsigned long ip)
-+{
-+	error_putstr(msg);
+ 	/*
+ 	 * paging_prepare() sets up the trampoline and checks if we need to
+ 	 * enable 5-level paging.
+@@ -537,6 +542,13 @@ SYM_FUNC_START_LOCAL_NOALIGN(.Lrelocated)
+ 	shrq	$3, %rcx
+ 	rep	stosq
+ 
++/*
++ * Load stage2 IDT
++ */
++	pushq	%rsi
++	call	load_stage2_idt
++	popq	%rsi
 +
-+	error_putstr("\nError Code: ");
-+	error_puthex(error_code);
-+	error_putstr("\nCR2: 0x");
-+	error_puthex(address);
-+	error_putstr("\nRIP relative to _head: 0x");
-+	error_puthex(ip - (unsigned long)_head);
-+	error_putstr("\n");
+ /*
+  * Do the extraction, and jump to the new kernel..
+  */
+@@ -690,10 +702,21 @@ SYM_DATA_START_LOCAL(gdt)
+ 	.quad   0x0000000000000000	/* TS continued */
+ SYM_DATA_END_LABEL(gdt, SYM_L_LOCAL, gdt_end)
+ 
++SYM_DATA_START(boot_idt_desc)
++	.word	boot_idt_end - boot_idt
++	.quad	0
++SYM_DATA_END(boot_idt_desc)
++	.balign 8
++SYM_DATA_START(boot_idt)
++	.rept	BOOT_IDT_ENTRIES
++	.quad	0
++	.quad	0
++	.endr
++SYM_DATA_END_LABEL(boot_idt, SYM_L_GLOBAL, boot_idt_end)
 +
-+	error("Stopping.\n");
-+}
-+
-+void do_boot_page_fault(struct pt_regs *regs, unsigned long error_code)
-+{
-+	unsigned long address = native_read_cr2();
-+
-+	/*
-+	 * Check for unexpected error codes. Unexpected are:
-+	 *	- Faults on present pages
-+	 *	- User faults
-+	 *	- Reserved bits set
-+	 */
-+	if (error_code & (X86_PF_PROT | X86_PF_USER | X86_PF_RSVD))
-+		do_pf_error("Unexpected page-fault:", error_code, address, regs->ip);
-+
-+	/*
-+	 * Error code is sane - now identity map the 2M region around
-+	 * the faulting address.
-+	 */
-+	add_identity_map(address & PMD_MASK, PMD_SIZE);
-+}
+ #ifdef CONFIG_EFI_STUB
+ SYM_DATA(image_offset, .long 0)
+ #endif
+-
+ #ifdef CONFIG_EFI_MIXED
+ SYM_DATA_LOCAL(efi32_boot_args, .long 0, 0, 0)
+ SYM_DATA(efi_is64, .byte 1)
 diff --git a/arch/x86/boot/compressed/idt_64.c b/arch/x86/boot/compressed/idt_64.c
-index 082cd6bca033..5f083092a86d 100644
---- a/arch/x86/boot/compressed/idt_64.c
+new file mode 100644
+index 000000000000..082cd6bca033
+--- /dev/null
 +++ b/arch/x86/boot/compressed/idt_64.c
-@@ -40,5 +40,7 @@ void load_stage2_idt(void)
- {
- 	boot_idt_desc.address = (unsigned long)boot_idt;
- 
-+	set_idt_entry(X86_TRAP_PF, boot_page_fault);
+@@ -0,0 +1,44 @@
++// SPDX-License-Identifier: GPL-2.0-only
++#include <asm/trap_pf.h>
++#include <asm/segment.h>
++#include <asm/trapnr.h>
++#include "misc.h"
 +
- 	load_boot_idt(&boot_idt_desc);
- }
++static void set_idt_entry(int vector, void (*handler)(void))
++{
++	unsigned long address = (unsigned long)handler;
++	gate_desc entry;
++
++	memset(&entry, 0, sizeof(entry));
++
++	entry.offset_low    = (u16)(address & 0xffff);
++	entry.segment       = __KERNEL_CS;
++	entry.bits.type     = GATE_TRAP;
++	entry.bits.p        = 1;
++	entry.offset_middle = (u16)((address >> 16) & 0xffff);
++	entry.offset_high   = (u32)(address >> 32);
++
++	memcpy(&boot_idt[vector], &entry, sizeof(entry));
++}
++
++/* Have this here so we don't need to include <asm/desc.h> */
++static void load_boot_idt(const struct desc_ptr *dtr)
++{
++	asm volatile("lidt %0"::"m" (*dtr));
++}
++
++/* Setup IDT before kernel jumping to  .Lrelocated */
++void load_stage1_idt(void)
++{
++	boot_idt_desc.address = (unsigned long)boot_idt;
++
++	load_boot_idt(&boot_idt_desc);
++}
++
++/* Setup IDT after kernel jumping to  .Lrelocated */
++void load_stage2_idt(void)
++{
++	boot_idt_desc.address = (unsigned long)boot_idt;
++
++	load_boot_idt(&boot_idt_desc);
++}
 diff --git a/arch/x86/boot/compressed/idt_handlers_64.S b/arch/x86/boot/compressed/idt_handlers_64.S
-index 36dee2f40a8b..b20e57504a94 100644
---- a/arch/x86/boot/compressed/idt_handlers_64.S
+new file mode 100644
+index 000000000000..36dee2f40a8b
+--- /dev/null
 +++ b/arch/x86/boot/compressed/idt_handlers_64.S
-@@ -68,3 +68,5 @@ SYM_FUNC_END(\name)
- 
- 	.text
- 	.code64
+@@ -0,0 +1,70 @@
++/* SPDX-License-Identifier: GPL-2.0-only */
++/*
++ * Early IDT handler entry points
++ *
++ * Copyright (C) 2019 SUSE
++ *
++ * Author: Joerg Roedel <jroedel@suse.de>
++ */
 +
-+EXCEPTION_HANDLER	boot_page_fault do_boot_page_fault error_code=1
++#include <asm/segment.h>
++
++/* For ORIG_RAX */
++#include "../../entry/calling.h"
++
++.macro EXCEPTION_HANDLER name function error_code=0
++SYM_FUNC_START(\name)
++
++	/* Build pt_regs */
++	.if \error_code == 0
++	pushq   $0
++	.endif
++
++	pushq   %rdi
++	pushq   %rsi
++	pushq   %rdx
++	pushq   %rcx
++	pushq   %rax
++	pushq   %r8
++	pushq   %r9
++	pushq   %r10
++	pushq   %r11
++	pushq   %rbx
++	pushq   %rbp
++	pushq   %r12
++	pushq   %r13
++	pushq   %r14
++	pushq   %r15
++
++	/* Call handler with pt_regs */
++	movq    %rsp, %rdi
++	/* Error code is second parameter */
++	movq	ORIG_RAX(%rsp), %rsi
++	call    \function
++
++	/* Restore regs */
++	popq    %r15
++	popq    %r14
++	popq    %r13
++	popq    %r12
++	popq    %rbp
++	popq    %rbx
++	popq    %r11
++	popq    %r10
++	popq    %r9
++	popq    %r8
++	popq    %rax
++	popq    %rcx
++	popq    %rdx
++	popq    %rsi
++	popq    %rdi
++
++	/* Remove error code and return */
++	addq    $8, %rsp
++
++	iretq
++SYM_FUNC_END(\name)
++	.endm
++
++	.text
++	.code64
 diff --git a/arch/x86/boot/compressed/misc.h b/arch/x86/boot/compressed/misc.h
-index 3a030a878d53..345c90fbc500 100644
+index 726e264410ff..062ae3ae6930 100644
 --- a/arch/x86/boot/compressed/misc.h
 +++ b/arch/x86/boot/compressed/misc.h
-@@ -37,6 +37,9 @@
- #define memptr unsigned
+@@ -23,6 +23,7 @@
+ #include <asm/page.h>
+ #include <asm/boot.h>
+ #include <asm/bootparam.h>
++#include <asm/desc_defs.h>
+ 
+ #define BOOT_CTYPE_H
+ #include <linux/acpi.h>
+@@ -133,4 +134,8 @@ int count_immovable_mem_regions(void);
+ static inline int count_immovable_mem_regions(void) { return 0; }
  #endif
  
-+/* boot/compressed/vmlinux start and end markers */
-+extern char _head[], _end[];
-+
- /* misc.c */
- extern memptr free_mem_ptr;
- extern memptr free_mem_end_ptr;
-@@ -146,4 +149,7 @@ extern pteval_t __default_kernel_pte_mask;
- extern gate_desc boot_idt[BOOT_IDT_ENTRIES];
- extern struct desc_ptr boot_idt_desc;
- 
-+/* IDT Entry Points */
-+void boot_page_fault(void);
++/* idt_64.c */
++extern gate_desc boot_idt[BOOT_IDT_ENTRIES];
++extern struct desc_ptr boot_idt_desc;
 +
  #endif /* BOOT_COMPRESSED_MISC_H */
+diff --git a/arch/x86/include/asm/desc_defs.h b/arch/x86/include/asm/desc_defs.h
+index a91f3b6e4f2a..5621fb3f2d1a 100644
+--- a/arch/x86/include/asm/desc_defs.h
++++ b/arch/x86/include/asm/desc_defs.h
+@@ -109,6 +109,9 @@ struct desc_ptr {
+ 
+ #endif /* !__ASSEMBLY__ */
+ 
++/* Boot IDT definitions */
++#define	BOOT_IDT_ENTRIES	32
++
+ /* Access rights as returned by LAR */
+ #define AR_TYPE_RODATA		(0 * (1 << 9))
+ #define AR_TYPE_RWDATA		(1 * (1 << 9))
 -- 
 2.27.0
 
