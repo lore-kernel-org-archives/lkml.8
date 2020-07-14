@@ -2,152 +2,81 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B3E4C433F1
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 06:02:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 154E4C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 06:05:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5C87021D93
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 06:02:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DF3F621927
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 06:05:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726932AbgGNGCF (ORCPT
+        id S1726370AbgGNGFT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 02:02:05 -0400
-Received: from mga03.intel.com ([134.134.136.65]:3745 "EHLO mga03.intel.com"
+        Tue, 14 Jul 2020 02:05:19 -0400
+Received: from mga01.intel.com ([192.55.52.88]:33546 "EHLO mga01.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726891AbgGNGCC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 02:02:02 -0400
-IronPort-SDR: SgZvQydhEvoCWj3cQ8nk0SwqF9yZCcXHq6bvLM4Pemhs43drDwzAdlWo48BBfSzZUpZnUqQm8g
- XRRXbHy7i5uA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9681"; a="148812793"
+        id S1725283AbgGNGFS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 02:05:18 -0400
+IronPort-SDR: pUkNnsfPJJCCdg4uSwZYGjkex70pmyxQt5oUQeXatznnOboG2/GCfKLL8bklQoa8By5HEaC1Ki
+ tRiRvhbWpeQQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9681"; a="166922467"
 X-IronPort-AV: E=Sophos;i="5.75,350,1589266800"; 
-   d="scan'208";a="148812793"
+   d="scan'208";a="166922467"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jul 2020 23:02:02 -0700
-IronPort-SDR: sROqWG6d4AFrPOSmY+gwkD+CtO1ZhCUGL8UHxl19xBSHuzj7kxFNhObfuFz5vi4aN0TkNYscBU
- i2Wd11r1qm1Q==
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jul 2020 23:05:17 -0700
+IronPort-SDR: HZ5ONaUZk2NcuqcnMUCSoeA6IkdolHNVFUioiP5YxUkmGzxelBocDrUEKStlthXaj0wb4oS/VP
+ 4i6iId8BGY1g==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.75,350,1589266800"; 
-   d="scan'208";a="324450220"
-Received: from allen-box.sh.intel.com ([10.239.159.139])
-  by FMSMGA003.fm.intel.com with ESMTP; 13 Jul 2020 23:01:58 -0700
-From:   Lu Baolu <baolu.lu@linux.intel.com>
-To:     Joerg Roedel <joro@8bytes.org>,
-        Alex Williamson <alex.williamson@redhat.com>
-Cc:     Robin Murphy <robin.murphy@arm.com>,
-        Jean-Philippe Brucker <jean-philippe@linaro.org>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Kevin Tian <kevin.tian@intel.com>,
-        Ashok Raj <ashok.raj@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Liu Yi L <yi.l.liu@intel.com>,
-        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org, Lu Baolu <baolu.lu@linux.intel.com>
-Subject: [PATCH v3 4/4] vfio/type1: Use iommu_aux_at(de)tach_group() APIs
-Date:   Tue, 14 Jul 2020 13:57:03 +0800
-Message-Id: <20200714055703.5510-5-baolu.lu@linux.intel.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200714055703.5510-1-baolu.lu@linux.intel.com>
-References: <20200714055703.5510-1-baolu.lu@linux.intel.com>
+   d="scan'208";a="299428436"
+Received: from yilunxu-optiplex-7050.sh.intel.com (HELO localhost) ([10.239.159.141])
+  by orsmga002.jf.intel.com with ESMTP; 13 Jul 2020 23:05:15 -0700
+Date:   Tue, 14 Jul 2020 14:01:08 +0800
+From:   Xu Yilun <yilun.xu@intel.com>
+To:     Tom Rix <trix@redhat.com>
+Cc:     mdf@kernel.org, linux-fpga@vger.kernel.org,
+        linux-kernel@vger.kernel.org, lgoncalv@redhat.com,
+        Wu Hao <hao.wu@intel.com>,
+        Matthew Gerlach <matthew.gerlach@linux.intel.com>,
+        Russ Weight <russell.h.weight@intel.com>
+Subject: Re: [PATCH v2] fpga: dfl: pci: add device id for Intel FPGA PAC N3000
+Message-ID: <20200714060108.GA27430@yilunxu-OptiPlex-7050>
+References: <1594604866-30877-1-git-send-email-yilun.xu@intel.com>
+ <4efe6ee9-4e88-5b31-01a2-414f752a3d2e@redhat.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <4efe6ee9-4e88-5b31-01a2-414f752a3d2e@redhat.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Replace iommu_aux_at(de)tach_device() with iommu_aux_at(de)tach_group().
-It also saves the IOMMU_DEV_FEAT_AUX-capable physcail device in the
-vfio_group data structure so that it could be reused in other places.
+On Mon, Jul 13, 2020 at 07:36:26AM -0700, Tom Rix wrote:
+> 
+> > @@ -64,6 +64,7 @@ static void cci_pci_free_irq(struct pci_dev *pcidev)
+> >  #define PCIE_DEVICE_ID_PF_INT_5_X	0xBCBD
+> >  #define PCIE_DEVICE_ID_PF_INT_6_X	0xBCC0
+> >  #define PCIE_DEVICE_ID_PF_DSC_1_X	0x09C4
+> > +#define PCIE_DEVICE_ID_INTEL_PAC_N3000	0x0B30
+> 
+> My point about consistency.  These are all intel  and all should have their pf parts removed.
+> 
+>  #define PCIE_DEVICE_ID_INTEL_INT_5_X	0xBCBD
+>  #define PCIE_DEVICE_ID_INTEL_INT_6_X	0xBCC0
+>  #define PCIE_DEVICE_ID_INTEL_DSC_1_X	0x09C4
+> 
+> Let's revisit this for the d5005.
 
-Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
----
- drivers/vfio/vfio_iommu_type1.c | 44 ++++++---------------------------
- 1 file changed, 7 insertions(+), 37 deletions(-)
+I agree that we should be consistent on the naming. I think we could
+reconsider the naming of previous cards and submit a new patch for them.
 
-diff --git a/drivers/vfio/vfio_iommu_type1.c b/drivers/vfio/vfio_iommu_type1.c
-index 5e556ac9102a..f8812e68de77 100644
---- a/drivers/vfio/vfio_iommu_type1.c
-+++ b/drivers/vfio/vfio_iommu_type1.c
-@@ -100,6 +100,7 @@ struct vfio_dma {
- struct vfio_group {
- 	struct iommu_group	*iommu_group;
- 	struct list_head	next;
-+	struct device		*iommu_device;
- 	bool			mdev_group;	/* An mdev group */
- 	bool			pinned_page_dirty_scope;
- };
-@@ -1627,45 +1628,13 @@ static struct device *vfio_mdev_get_iommu_device(struct device *dev)
- 	return NULL;
- }
- 
--static int vfio_mdev_attach_domain(struct device *dev, void *data)
--{
--	struct iommu_domain *domain = data;
--	struct device *iommu_device;
--
--	iommu_device = vfio_mdev_get_iommu_device(dev);
--	if (iommu_device) {
--		if (iommu_dev_feature_enabled(iommu_device, IOMMU_DEV_FEAT_AUX))
--			return iommu_aux_attach_device(domain, iommu_device);
--		else
--			return iommu_attach_device(domain, iommu_device);
--	}
--
--	return -EINVAL;
--}
--
--static int vfio_mdev_detach_domain(struct device *dev, void *data)
--{
--	struct iommu_domain *domain = data;
--	struct device *iommu_device;
--
--	iommu_device = vfio_mdev_get_iommu_device(dev);
--	if (iommu_device) {
--		if (iommu_dev_feature_enabled(iommu_device, IOMMU_DEV_FEAT_AUX))
--			iommu_aux_detach_device(domain, iommu_device);
--		else
--			iommu_detach_device(domain, iommu_device);
--	}
--
--	return 0;
--}
--
- static int vfio_iommu_attach_group(struct vfio_domain *domain,
- 				   struct vfio_group *group)
- {
- 	if (group->mdev_group)
--		return iommu_group_for_each_dev(group->iommu_group,
--						domain->domain,
--						vfio_mdev_attach_domain);
-+		return iommu_aux_attach_group(domain->domain,
-+					      group->iommu_group,
-+					      group->iommu_device);
- 	else
- 		return iommu_attach_group(domain->domain, group->iommu_group);
- }
-@@ -1674,8 +1643,8 @@ static void vfio_iommu_detach_group(struct vfio_domain *domain,
- 				    struct vfio_group *group)
- {
- 	if (group->mdev_group)
--		iommu_group_for_each_dev(group->iommu_group, domain->domain,
--					 vfio_mdev_detach_domain);
-+		iommu_aux_detach_group(domain->domain, group->iommu_group,
-+				       group->iommu_device);
- 	else
- 		iommu_detach_group(domain->domain, group->iommu_group);
- }
-@@ -2007,6 +1976,7 @@ static int vfio_iommu_type1_attach_group(void *iommu_data,
- 			return 0;
- 		}
- 
-+		group->iommu_device = iommu_device;
- 		bus = iommu_device->bus;
- 	}
- 
--- 
-2.17.1
-
+> 
+> trix
+> 
