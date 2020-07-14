@@ -2,166 +2,172 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 064F3C433E7
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 14:27:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9186EC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 14:35:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CF9C022515
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 14:27:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 660CF20657
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 14:35:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="irFkq8f9"
+	dkim=pass (1024-bit key) header.d=intel.onmicrosoft.com header.i=@intel.onmicrosoft.com header.b="aWICJJV4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728760AbgGNO1q (ORCPT
+        id S1726930AbgGNOfX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 10:27:46 -0400
-Received: from mail-am6eur05on2055.outbound.protection.outlook.com ([40.107.22.55]:53280
-        "EHLO EUR05-AM6-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726187AbgGNO1p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 10:27:45 -0400
+        Tue, 14 Jul 2020 10:35:23 -0400
+Received: from mga09.intel.com ([134.134.136.24]:37616 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725876AbgGNOfV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 10:35:21 -0400
+IronPort-SDR: Pri9Y1iY5evbDoMtzIg4VpqYfB50nykbhW1/Sw4ZbiZod+q1geuWjO86uTFbqNk1NyUHg1oliD
+ gWsImO8/6R2A==
+X-IronPort-AV: E=McAfee;i="6000,8403,9681"; a="150333831"
+X-IronPort-AV: E=Sophos;i="5.75,350,1589266800"; 
+   d="scan'208";a="150333831"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jul 2020 07:35:20 -0700
+IronPort-SDR: HppNEoFOk/fvoZ7X8Y/KMpOxkpML023p/3aVl0pDj6XGRtanwEjVplVXlo1DD9KrUh8qUUeKCT
+ Br7I6Ubkl9Rw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,350,1589266800"; 
+   d="scan'208";a="360402449"
+Received: from fmsmsx105.amr.corp.intel.com ([10.18.124.203])
+  by orsmga001.jf.intel.com with ESMTP; 14 Jul 2020 07:35:20 -0700
+Received: from fmsmsx151.amr.corp.intel.com (10.18.125.4) by
+ FMSMSX105.amr.corp.intel.com (10.18.124.203) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Tue, 14 Jul 2020 07:35:19 -0700
+Received: from FMSEDG002.ED.cps.intel.com (10.1.192.134) by
+ FMSMSX151.amr.corp.intel.com (10.18.125.4) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Tue, 14 Jul 2020 07:35:19 -0700
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (104.47.59.170)
+ by edgegateway.intel.com (192.55.55.69) with Microsoft SMTP Server (TLS) id
+ 14.3.439.0; Tue, 14 Jul 2020 07:35:19 -0700
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=XyXXAHKnKp8mPz8LtJPAHLqlwPDHxLywuIGDTEZ0W7We3Lqh9d8mbv2vCYoWbWVy+3wUpINFUOwJyZyjtOjuroddQXpwkXQfCP3wHgU+D01dvYpyvbDGpa553GpCLo4xXMakA0pI9fa2naMFuUQE41xDoXVdFSPFAIZTlPaO3FWgRLZHpd1ODFq4F3Fy9O+cnavXLmD31l6HF/gExNusFLDYCDs2QAEhNvF5NmvRmmNJF5KIJwNYhnkB+AC3FuOxuVO9JesKODrU9JqQpF+GGZyw1eEynnxNsGZC4EcafGELgQcQVpVuVCrv4WVdqCu02K1ZfughTdybghDcTgZStA==
+ b=Jxht6DnvJnW8LiUIs57SL+UMYlw/qgjZ/zOX1lMn2OtuXE/6LU8M+vNKFlzynMwL/e6qft4CWozry+q0vjG4leZGBUajHz7vjsSWIZIsTUXlbJ+Fp8aiY3vT0xoVrA3tfCaOzBGPtv7ShrR51KRByM0A66qEOAwbqzgEa5lisdUjhv5mj0kiY/KWCSl8C8CIuzcXUgiLJq4AXNLG6A0xoY35yrVuITtVc0XCqOf+fmivwPemSUIJF4DrbFGiAvR68KhGX9ueel5xiejTNrNA2XBLGT2mOe1ppixqcPonotxGgejaEyillHNRPFp72HHLC/4Gs+qjtanoc6sPfZZh0A==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=aXPsGLyv0p8r01R6bHSA+EPNXQCzOyAKDkuBTxMhb7g=;
- b=gqEZzvG35tsJiGWp9m7VpWfzA9k/We6pYYbm7ld3oeRUq/2DrjSNvEBcR1ELaT/N7LssG63uG3p5lkaFs2fzbAuuKzGkkh3/dzCZ04LVx33v5Elyv1bBvzcO1t9kGmDZ6Gk6p/zMtNrmhmEcwxGkEaLEbp6gpa2y8lrZR5jpdr5KwLuCL2rZyzXQSdnXsR5pg9w2vrHgWxYNswveO+1SuBTWE7UwmmFZTxrkF3oOm8oPN6c8RQ7ncpiBZ7PDqR68yZ7hg/nKFJr5jfaDnPhBIbcLYQ7ejVc2YT2QwhHXmFD1ODQII/qcWusM+hP7HmBHVBo6vaxpGcw9GoNlu5I5FQ==
+ bh=nRojEnh3iYG11a0DkoUlHhEh8nPchMq6Ux2IJncGMZI=;
+ b=UzoOwl5hT83Ez054CDeymRm+PRSqzXEt3kATRawFnNwwHqkA9Wh7E0rKfNGg6EcBn0HNTUskqDpXJvx0UvUneCJp+RxJkxUgzfpbkFn+E6WhTAn+7V8BHvnxc3lBohG6BHJi3tIi0IjzfInwn7Okxyuf8WMSpSXdJzoyyynd1sOFkH7XJvUq26FoR7KD72fsPzUaLpxMTl0WiKSi1OeO/Dx+GJSIvq1MNaLC0pHfCGO+4tivlm4ZqaG6awbN9Aduo1La+By0H+GJQLIXueSMIkBnKUEPxb5wIcse6Xno/dFakfzGOYMCKjGnf5RLRGzUQri648URKaAj0j1kNMPWaQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=intel.onmicrosoft.com;
+ s=selector2-intel-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=aXPsGLyv0p8r01R6bHSA+EPNXQCzOyAKDkuBTxMhb7g=;
- b=irFkq8f9MToq0rYssSmTrXbeBUsL34W77EnYsMh3cZoKRRiGjVkUWAeqHyeZDRWJiIonTcu3tlk/iMbfA7B9zq8xccwErXoSzyzTReQetGYbrw4fTBUE09gm2MQK5pud3oOhw8auY1pHB6Q5VpIOy2MtjY1PR/yjinOgjJba33Q=
-Authentication-Results: vger.kernel.org; dkim=none (message not signed)
- header.d=none;vger.kernel.org; dmarc=none action=none header.from=nxp.com;
-Received: from AM6PR04MB4038.eurprd04.prod.outlook.com (2603:10a6:209:44::24)
- by AM6PR04MB4966.eurprd04.prod.outlook.com (2603:10a6:20b:2::14) with
+ bh=nRojEnh3iYG11a0DkoUlHhEh8nPchMq6Ux2IJncGMZI=;
+ b=aWICJJV4w/Wk0/TKI6p/z6wLnQcwdwsuUQhPDu0v2A9KHWNqvhF28tSbXlDI90VGa4TTUw86u007Dn+TVaSsZkfu72S8y8mPHr38LRe5/FI4wPbFLfhYI+cs+8gb5bWJbUsmioSnVa5ZUpl9yyF9gYaHTxuFEdCFSn87MoEkTkQ=
+Received: from CY4PR11MB1253.namprd11.prod.outlook.com (2603:10b6:903:2d::7)
+ by CY4PR11MB2040.namprd11.prod.outlook.com (2603:10b6:903:29::14) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3174.21; Tue, 14 Jul
- 2020 14:27:42 +0000
-Received: from AM6PR04MB4038.eurprd04.prod.outlook.com
- ([fe80::3880:77f6:c5ed:6ee2]) by AM6PR04MB4038.eurprd04.prod.outlook.com
- ([fe80::3880:77f6:c5ed:6ee2%7]) with mapi id 15.20.3174.026; Tue, 14 Jul 2020
- 14:27:42 +0000
-Subject: Re: [PATCH v3 5/5] hwrng: imx-rngc: enable driver for i.MX6
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Rob Herring <robh+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Matt Mackall <mpm@selenic.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        DTML <devicetree@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Martin Kaiser <martin@kaiser.cx>,
-        Marco Felsch <m.felsch@pengutronix.de>,
-        Franck Lenormand <franck.lenormand@nxp.com>,
-        Iuliana Prodan <iuliana.prodan@nxp.com>,
-        Silvano Di Ninno <silvano.dininno@nxp.com>,
-        "open list:HARDWARE RANDOM NUMBER GENERATOR CORE" 
-        <linux-crypto@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <20200714123920.23711-1-horia.geanta@nxp.com>
- <20200714123920.23711-6-horia.geanta@nxp.com>
- <CAK8P3a3eQ2a3QV=0XAumHAOssddAZ_sBs=Y0D736Sp7_P8Jvuw@mail.gmail.com>
-From:   =?UTF-8?Q?Horia_Geant=c4=83?= <horia.geanta@nxp.com>
-Message-ID: <dae0aa53-dd6f-0ca1-4170-908d66342eb4@nxp.com>
-Date:   Tue, 14 Jul 2020 17:27:39 +0300
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
-In-Reply-To: <CAK8P3a3eQ2a3QV=0XAumHAOssddAZ_sBs=Y0D736Sp7_P8Jvuw@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3174.23; Tue, 14 Jul
+ 2020 14:35:17 +0000
+Received: from CY4PR11MB1253.namprd11.prod.outlook.com
+ ([fe80::a420:1acb:6c09:c5a8]) by CY4PR11MB1253.namprd11.prod.outlook.com
+ ([fe80::a420:1acb:6c09:c5a8%9]) with mapi id 15.20.3174.025; Tue, 14 Jul 2020
+ 14:35:17 +0000
+From:   "Ooi, Joyce" <joyce.ooi@intel.com>
+To:     Jakub Kicinski <kuba@kernel.org>
+CC:     Thor Thayer <thor.thayer@linux.intel.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Dalon Westergreen" <dalon.westergreen@linux.intel.com>,
+        "Tan, Ley Foon" <ley.foon.tan@intel.com>,
+        "See, Chin Liang" <chin.liang.see@intel.com>,
+        "Nguyen, Dinh" <dinh.nguyen@intel.com>,
+        "Westergreen, Dalon" <dalon.westergreen@intel.com>
+Subject: RE: [PATCH v4 09/10] net: eth: altera: add msgdma prefetcher
+Thread-Topic: [PATCH v4 09/10] net: eth: altera: add msgdma prefetcher
+Thread-Index: AQHWVPkVfRS7e+4eCk6tElo6txFdaaj+OToAgAj0JEA=
+Date:   Tue, 14 Jul 2020 14:35:16 +0000
+Message-ID: <CY4PR11MB12537DA07C73574B82A239BDF2610@CY4PR11MB1253.namprd11.prod.outlook.com>
+References: <20200708072401.169150-1-joyce.ooi@intel.com>
+        <20200708072401.169150-10-joyce.ooi@intel.com>
+ <20200708144900.058a8b25@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+In-Reply-To: <20200708144900.058a8b25@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: AM0PR08CA0028.eurprd08.prod.outlook.com
- (2603:10a6:208:d2::41) To AM6PR04MB4038.eurprd04.prod.outlook.com
- (2603:10a6:209:44::24)
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+dlp-product: dlpe-windows
+dlp-reaction: no-action
+dlp-version: 11.2.0.6
+authentication-results: kernel.org; dkim=none (message not signed)
+ header.d=none;kernel.org; dmarc=none action=none header.from=intel.com;
+x-originating-ip: [1.9.122.68]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: ea084ed9-d205-46a6-d87f-08d82803209e
+x-ms-traffictypediagnostic: CY4PR11MB2040:
+x-ld-processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <CY4PR11MB2040CEC31C37CB2852B48DF7F2610@CY4PR11MB2040.namprd11.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:6790;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: dwdDbKxeFx+h5/ru10y56K71DQs0sGQ0qISt0tdaJQZRj6o0RkfAWX0Yof46dOZAn/CVudI7cu5QiCkHTgF8GYPlI8170Unh7VJSFCd3NbzdWlY1aBQFlGK+ZTBjyRjmZklgXPcQ00gJ0aIFM22nMJJgS+P5z2c35qyaL5QvmKyQ1MZWLL0GrowvHpxSo04rqwO454i0RKqmjPB60JRU/oaeMHfS7MwaKXJonkunmGxC4WMADxeOi4/vB89aIHr0ZTxTpo3oVdNmMsFjPrvD/guGNtGd3hxrccuOf044CRB3mAVqbqVCMPNsPlGdy50kZATg+9NSOma5dyvSmnl1MA==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CY4PR11MB1253.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(39860400002)(396003)(136003)(376002)(346002)(366004)(2906002)(6916009)(316002)(186003)(83380400001)(76116006)(26005)(66476007)(64756008)(9686003)(66946007)(55016002)(66556008)(86362001)(478600001)(66446008)(5660300002)(52536014)(8676002)(71200400001)(54906003)(55236004)(7696005)(33656002)(8936002)(53546011)(4326008)(6506007);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: PBaavtzrdoOeOHyMPCfLBpTdgf/TJF9RZSik9e2HPe1HwHGjxJCn9jfrZCkpWTQLadOIBIP1dkM0IqHg/0OLOuZtcwcdzKoPYEl9/rNUPTXKBz6Z8KViaZdvF+u759LHh/a0NAdRew0sK7uZKttFMuFMhYxaG3dzTQjU6m3fmrt9So/3rxDcaFUxU5gDMqT7aD5pkc2wmOMH/o0SOwiwjDbRdNIpNPGXvSslTm/XmaH9UAmf7OFnoCI7L+rgmhj4jVzj7y4FOO9GQcOQfZiERiGhvoeK4YNfVNxxPAbkAQDDcPykau/ZsMMkL6HsrutNx5om21C8kBFjsoZa5VvF2cQcf4hdHIsEWLUtrKntAbS/a8lxxJEV2JcPfVdbCAsxIuMvwp3n/SKGVTfAwoWobruqgAGwmmJIKyY1kSjT2wDgSzYaslfoBrCAq7Uhp5aIVbHALXGe/ltsXSxHQbHU04Nict7PtIRsygoZbQ0OdqA=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from [192.168.0.129] (84.117.251.185) by AM0PR08CA0028.eurprd08.prod.outlook.com (2603:10a6:208:d2::41) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3174.21 via Frontend Transport; Tue, 14 Jul 2020 14:27:41 +0000
-X-Originating-IP: [84.117.251.185]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 004c405c-807e-4e0c-aea3-08d8280211ac
-X-MS-TrafficTypeDiagnostic: AM6PR04MB4966:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <AM6PR04MB49665EC030DEEE847936719D98610@AM6PR04MB4966.eurprd04.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:8273;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 3t54enaVhxe2AcXCKIUTVeHsMkfAoQBO/1J9Xf3a5MXKzqxM+1Kz0RCAG5JczvEQRQ0j9S9nLiAz2VPIys+O9S2KfW5GitA9O7+61hYeYqvrj3RPGLNZQnyNcUp278/tkPYAOrmL5/NCDagB0hY8kofwYHPsZvx7xDpHukAv9odSdOcoc1bHAGPCk/eumCdCu7pHwcz/UDGxkQREdYHtac4ABznditNoJV/DbVH/aJVWa3ZU+8HJ8EKzXwX7BBZBOdeWNvvArgBQ8Lr+iJnyWfwxNnJybcXliOMjKrXTXhdoiv9KA6axjeHz0hj0QvFXmYCsJL00Rw/9/sGd2hvgONyOdGB+AvKgCuheDbV9kGlL0Ujm6IzNUwDx3BYSzmu4cHWTS1Tm0iDtAvT0L2BwBov2IOOY+u8yXR30wLbZ6nhj6ilWxO6fadw+EwZl8nNNovcDXTexFpbKxAw/3YS77g==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM6PR04MB4038.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(366004)(66946007)(36756003)(66476007)(83380400001)(66556008)(7416002)(6916009)(498600001)(966005)(6486002)(31686004)(54906003)(16576012)(53546011)(52116002)(5660300002)(31696002)(8676002)(956004)(8936002)(2616005)(186003)(26005)(86362001)(2906002)(4326008)(16526019)(43740500002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: WZolsLEc9yBL4tJRlGzKcvlerB08MWApAy182WSDIpUzin/YNRDTbKkh2cISms+cXpGgNvzderUK9mJsEIjgKYizQntSYtV//shfZMUZAJNffplh6/4bL+ioDtg/qwezU03M9dMwQxIclvhQPie2QXsob/QcFvCjrG+OzAgCs6xHAlekFXsrbNKGMwC1sDH2r4dOwmkp4LKDibkHjqBsdSoatAC00FNVnWBRsE8Z8cRDCD0dkz3Sc46WE8hXSL+vZjDZT9u8P+LAzUJ8WmLkSBsigpxXn0e/kxdEMS0Gn2N24SiKxAPpq2El47bbiMwEKpbeIMuGGpJ8pcVhp4cP7OtEJI+owZAVLEMBS7dqYQ7XdG7N7DZTu2OZI5r9CiDdGrb6i/A5IemWcsmNxEyRFtE4wXJlEjmPs+o6DLkurtm9tazqZ/rfnePj2Qzu8Kn1NpbKR+oMYWriljk6qrgDVEcvHRgjP554tL1mgLXMKgWvLUWx5NbsnbPjinHVzZke
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 004c405c-807e-4e0c-aea3-08d8280211ac
-X-MS-Exchange-CrossTenant-AuthSource: AM6PR04MB4038.eurprd04.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Jul 2020 14:27:42.6469
+X-MS-Exchange-CrossTenant-AuthSource: CY4PR11MB1253.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: ea084ed9-d205-46a6-d87f-08d82803209e
+X-MS-Exchange-CrossTenant-originalarrivaltime: 14 Jul 2020 14:35:16.8599
  (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: Fw1spowGOOZJIMmS3TfZt8peAAuHb7bbEZi2O2+IqaZl091CJjH3u1Ytoma9mhMGYr3kGs1qyEoHHr43osmftg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR04MB4966
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: ofra6ByhKqI9BqVFpUj7OxqH9klBY2CBZP6O6+iH9fJSzkR1yauIT6Hk2Ex8UjdA+azPXl9Qz+qEC5V3MjaeUA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR11MB2040
+X-OriginatorOrg: intel.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/14/2020 3:48 PM, Arnd Bergmann wrote:
-> On Tue, Jul 14, 2020 at 2:39 PM Horia Geantă <horia.geanta@nxp.com> wrote:
->> diff --git a/drivers/char/hw_random/Kconfig b/drivers/char/hw_random/Kconfig
->> index 8478eb757f3c..98f95a09ce55 100644
->> --- a/drivers/char/hw_random/Kconfig
->> +++ b/drivers/char/hw_random/Kconfig
->> @@ -255,7 +255,7 @@ config HW_RANDOM_MXC_RNGA
->>  config HW_RANDOM_IMX_RNGC
->>         tristate "Freescale i.MX RNGC Random Number Generator"
->>         depends on HAS_IOMEM && HAVE_CLK
->> -       depends on SOC_IMX25 || COMPILE_TEST
->> +       depends on SOC_IMX25 || SOC_IMX6SL || SOC_IMX6SLL || SOC_IMX6UL || COMPILE_TEST
->>         default HW_RANDOM
-> 
-> Are these the only chips that have it? If other i.MX variations have
-> the same block,
-> or might have it in the future, maybe just generialize the dependency
-> to SOC_IMX6
-> or ARCH_IMX?
-> 
-Fabio also suggested this during v1, see discussion here:
-https://lore.kernel.org/linux-crypto/292aafd1-7249-5b76-ccc3-77b153594ef9@nxp.com
+> -----Original Message-----
+> From: Jakub Kicinski <kuba@kernel.org>
+> Sent: Thursday, July 9, 2020 5:49 AM
+> To: Ooi, Joyce <joyce.ooi@intel.com>
+> Cc: Thor Thayer <thor.thayer@linux.intel.com>; David S . Miller
+> <davem@davemloft.net>; netdev@vger.kernel.org; linux-
+> kernel@vger.kernel.org; Dalon Westergreen
+> <dalon.westergreen@linux.intel.com>; Tan, Ley Foon
+> <ley.foon.tan@intel.com>; See, Chin Liang <chin.liang.see@intel.com>;
+> Nguyen, Dinh <dinh.nguyen@intel.com>; Westergreen, Dalon
+> <dalon.westergreen@intel.com>
+> Subject: Re: [PATCH v4 09/10] net: eth: altera: add msgdma prefetcher
+>=20
+> On Wed,  8 Jul 2020 15:24:00 +0800 Ooi, Joyce wrote:
+> > +		/* get prefetcher rx poll frequency from device tree */
+> > +		if (of_property_read_u32(pdev->dev.of_node, "rx-poll-
+> freq",
+> > +					 &priv->rx_poll_freq)) {
+> > +			dev_info(&pdev->dev, "Defaulting RX Poll Frequency
+> to 128\n");
+> > +			priv->rx_poll_freq =3D 128;
+> > +		}
+> > +
+> > +		/* get prefetcher rx poll frequency from device tree */
+> > +		if (of_property_read_u32(pdev->dev.of_node, "tx-poll-
+> freq",
+> > +					 &priv->tx_poll_freq)) {
+> > +			dev_info(&pdev->dev, "Defaulting TX Poll Frequency
+> to 128\n");
+> > +			priv->tx_poll_freq =3D 128;
+> > +		}
+>=20
+> I'm no device tree expert but these look like config options rather than =
+HW
+> description. They also don't appear to be documented in the next patch.
 
-The SoC list is relatively stable, to the best of my knowledge.
+The poll_freq are part of the msgdma prefetcher IP, whereby it specifies th=
+e frequency of descriptor polling operation.
+I can add the poll_freq description in the next patch.
 
->> diff --git a/drivers/char/hw_random/imx-rngc.c b/drivers/char/hw_random/imx-rngc.c
->> index 9c47e431ce90..84576d2fbf8c 100644
->> --- a/drivers/char/hw_random/imx-rngc.c
->> +++ b/drivers/char/hw_random/imx-rngc.c
->> @@ -350,6 +350,9 @@ static SIMPLE_DEV_PM_OPS(imx_rngc_pm_ops, imx_rngc_suspend, imx_rngc_resume);
->>
->>  static const struct of_device_id imx_rngc_dt_ids[] = {
->>         { .compatible = "fsl,imx25-rngb", .data = NULL, },
->> +       { .compatible = "fsl,imx6sl-rngb", .data = NULL, },
->> +       { .compatible = "fsl,imx6sll-rngb", .data = NULL, },
->> +       { .compatible = "fsl,imx6ull-rngb", .data = NULL, },
->>         { /* sentinel */ }
-> 
-> In the .dts file you describe the devices as compatible with fsl,imx25-rngb,
-> so this change is not really needed, unless you want to add non-NULL
-> .data fields in a follow-up. It is usually a good idea to have the more
-> specialized compatible strings in the DT, but the driver change won't
-> do anything here.
-> 
-Indeed, this isn't needed.
-Will remove it in v4.
-
-Thanks,
-Horia
