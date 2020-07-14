@@ -2,70 +2,71 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED033C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 20:08:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A6A9C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 20:10:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C8494207BB
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 20:08:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 13496207BB
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 20:10:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qa5xbbgS"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NwWt2Olm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729021AbgGNUIR (ORCPT
+        id S1726602AbgGNUK0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 16:08:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51222 "EHLO
+        Tue, 14 Jul 2020 16:10:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51548 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726400AbgGNUIQ (ORCPT
+        with ESMTP id S1725945AbgGNUK0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 16:08:16 -0400
-Received: from mail-io1-xd41.google.com (mail-io1-xd41.google.com [IPv6:2607:f8b0:4864:20::d41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DE63BC061755
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 13:08:16 -0700 (PDT)
-Received: by mail-io1-xd41.google.com with SMTP id v8so18687643iox.2
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 13:08:16 -0700 (PDT)
+        Tue, 14 Jul 2020 16:10:26 -0400
+Received: from mail-il1-x142.google.com (mail-il1-x142.google.com [IPv6:2607:f8b0:4864:20::142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3268FC061755
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 13:10:26 -0700 (PDT)
+Received: by mail-il1-x142.google.com with SMTP id x9so15321968ila.3
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 13:10:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:reply-to:from:date:message-id
          :subject:to:cc;
-        bh=7R3dCXqsSoyh387FNpg7of+Vy2Uow0OshGTXM3A59Lo=;
-        b=qa5xbbgSqDFSqHmM56KWb16bYK0iDbPVkZs70iYrW4xgJyjSKR/5uqwiLmSlmoCLD9
-         /4wNRu7Jy4WdnXZk+YtEC9lEYRjwP60InPz+yhlBVv/xKq/+AFvNv/g7xYLFGs++7V4Q
-         EOApNkQiaQV20m1vFh8bJBgBCEP+mZd8wb/VEOnQ4fGygVqEDV8zQxIKGun8GwWZ5xay
-         dN++q5KoeejqFDJD/jhkYjkuYrJqBzy3m7PcimIFSz9P2nzhZrLfJzqh7+y+vLqsbvd8
-         wImg9/1/81zcreyoQLJzYKEM7unzDAjUfhdMT47DS8NQRt4DLo5FzJ+qY/95TSucfoFT
-         0TyQ==
+        bh=/s7mXKyDFtdZcyZoCObU9RfK9Dh7wLJ8B6HW6u/J2Dc=;
+        b=NwWt2Olm2sU+Bt83UQdFbInvtNIkq5uAkS1dHp6eu5V0+V9Wuj0MubDVIL9WRZx3qn
+         raAz9LogpCZBPPy4F3OHtT6ivp6EII+5HHL3ArWAMQNpl9W8eYGYGaDJZg1PDkpG/I1T
+         qGC0CRAPdxNST1HIScfM+CsOzrF3hN2sUANtvVY1rw5nLMk+Kc/8zl6hZQvyn5iqlXCB
+         71CvbycTuuMmP4oS5LZwkPjXtkLKMlRqGeFnHgzwGBN400zuuMGApCnHFTD0/9/pGxEg
+         BC8iQTcjq20ez5s3CJ1YdqoMnlCZBaGvoiAGbl4nSafnJ00yKuPZDdLjE7MuaAgkFlLN
+         Q0wQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:reply-to
          :from:date:message-id:subject:to:cc;
-        bh=7R3dCXqsSoyh387FNpg7of+Vy2Uow0OshGTXM3A59Lo=;
-        b=k1iahIeGVjcZSgv2Jehi68jwfgybmUdD0BTqPgiq07bIQKiyvHIzKK3nAlY+G+OCtl
-         UaCif/m+xrjG1VrTw/i3McuZX0q/+mU7GV2pZCk7dF+lGb7aisZ0b92p5lvBnnAVqKZc
-         8NAgW1g/SkuNXxOpTZX2yr5Ltfa6SAYoSnI5idloXNBCFjCmlbHVC6BUau91g4pfUOVA
-         OSXVerBzWttWva6KWLgMGKwjEVFfKTiKW+i3gJKrGcD2rj4gqtbREwWWtEaJSICHXHgh
-         E4VoabQ7XAwkQ1bRBBTRCdZvPhevKrfzYo+9ZZGt6VeBPPcl3jTpRYOOk5fc/LQHlN/G
-         e+Sw==
-X-Gm-Message-State: AOAM5310HAjfuZ/Mlau5L+7wf2icDKeTx2vGeMKImrp5rkbpQGkX6jHq
-        rddiV4W90tu/rbCWh2XwrSaEgZNR+g0H44Vd+2E=
-X-Google-Smtp-Source: ABdhPJx/gIy10Ng7jj3gTMeo9keifXcqF57WgPcsgQR230AKnJadvsLxkWcobRw8wQBX3Wrt45FDeFS0loW5eB++FKM=
-X-Received: by 2002:a05:6638:2591:: with SMTP id s17mr7925053jat.23.1594757296233;
- Tue, 14 Jul 2020 13:08:16 -0700 (PDT)
+        bh=/s7mXKyDFtdZcyZoCObU9RfK9Dh7wLJ8B6HW6u/J2Dc=;
+        b=s8zjSIf5926VamjEXZh27NHmIyt7iRtLBpQJRDqBclweRGwFVv+v8pjZmBKw5uuv2J
+         UOjUt+C1JQyToMeLtu42PHFtZIuR6FtaGcfuFCRLT5VP9slfjhNZwS8HnuuoObIpCEqn
+         W0t5mr2KVL9m5EXhhNyS7W1QKwz3ZfZW6EG3IOGIYxxTU9iGsH8vidIBAI0xaEOi5Ugj
+         ctNxotmbJ67O6FiRSRwvRveYBZyaXpvJROoxkUIJO2wh/MSUtUMMC2Kuq5ZVWk3Z0NZF
+         qOdLXlfGImltKhvQdVuQS10PUBnflm5P/LCBjFKCj3joFtv4EMIw7Tg1eCD/LAU1ZJ4Q
+         pjgw==
+X-Gm-Message-State: AOAM531FixyEthOWdmHjkG45IKqBTj8UYhfDoDaY9My8Z3Y5033azu6u
+        zr+Cvq02pOorzGnhHel1G3uPOPVzFJXp7Bf9GRw=
+X-Google-Smtp-Source: ABdhPJztz5j8hd6Frw031lswxBaRu7sEmqbqOHhAF4c98XXJRr6f95DsIo794YH2x+vPaRsOOPQXZNd/htGpEHXovSg=
+X-Received: by 2002:a92:290a:: with SMTP id l10mr6797006ilg.204.1594757425513;
+ Tue, 14 Jul 2020 13:10:25 -0700 (PDT)
 MIME-Version: 1.0
 References: <20200629140928.858507-1-nivedita@alum.mit.edu>
  <20200714023836.2310569-1-nivedita@alum.mit.edu> <CA+icZUXSPfybFtzQB3wKn9spQmEPnQu_iGPWkRisAmRQbJLWXA@mail.gmail.com>
  <20200714141550.GA329060@rani.riverdale.lan> <CA+icZUU88wYmyycthW7AQUZ72HGa9RWPZmxVS5Gm6UW=6ES9kA@mail.gmail.com>
  <CA+icZUWHdsk9+wkTZOdDghM7pRZyk2vHgxpYx62vPooqohzbYw@mail.gmail.com>
  <20200714192956.GA689174@rani.riverdale.lan> <CA+icZUXoZzhUMRsVVexazd=oFK4vKa1KJN5=_KXz+fcYxcA4Rw@mail.gmail.com>
-In-Reply-To: <CA+icZUXoZzhUMRsVVexazd=oFK4vKa1KJN5=_KXz+fcYxcA4Rw@mail.gmail.com>
+ <20200714200728.GA894572@rani.riverdale.lan>
+In-Reply-To: <20200714200728.GA894572@rani.riverdale.lan>
 Reply-To: sedat.dilek@gmail.com
 From:   Sedat Dilek <sedat.dilek@gmail.com>
-Date:   Tue, 14 Jul 2020 22:08:04 +0200
-Message-ID: <CA+icZUXBggJtwtWmyXEwgu1WztrcTiLrZCW1_QqSw2SiThOkfQ@mail.gmail.com>
+Date:   Tue, 14 Jul 2020 22:10:14 +0200
+Message-ID: <CA+icZUV9_ox9q+yANQQ-6X41fRb5K7mMn3NSh0_E9R1hO4oC4g@mail.gmail.com>
 Subject: Re: [PATCH v4 0/7] x86/boot: Remove runtime relocations from
  compressed kernel
 To:     Arvind Sankar <nivedita@alum.mit.edu>
@@ -89,69 +90,28 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 14, 2020 at 9:53 PM Sedat Dilek <sedat.dilek@gmail.com> wrote:
+On Tue, Jul 14, 2020 at 10:07 PM Arvind Sankar <nivedita@alum.mit.edu> wrote:
 >
-> On Tue, Jul 14, 2020 at 9:29 PM Arvind Sankar <nivedita@alum.mit.edu> wrote:
+> On Tue, Jul 14, 2020 at 09:53:19PM +0200, Sedat Dilek wrote:
 > >
-> > On Tue, Jul 14, 2020 at 08:30:14PM +0200, Sedat Dilek wrote:
-> > > > I did a full new build...
-> > > >
-> > > > ...and it fails with ld.lld-11 as linker:
-> > > >
-> > > > ld.lld-11 -m elf_x86_64 -pie  --no-dynamic-linker -r -o
-> > > > arch/x86/boot/compressed/.tmp_misc.o arch/x86/boot/compressed/misc.o
-> > > > -T arch/x86/boot/compressed/.tmp_misc.ver; mv -f
-> > > > arch/x86/boot/compressed/.tmp_misc.o arch/x86/boot/compressed/misc.o;
-> > > > rm -f arch/x86/boot/compressed/.tmp_misc.ver; fi
-> > > > *** ld.lld-11: error: -r and -pie may not be used together ***
-> > > > make[5]: *** [scripts/Makefile.build:281:
-> > > > arch/x86/boot/compressed/misc.o] Error 1
-> > > >
-> > > > It's annoying to fail on the last minutes of a build.
-> > > > Sorry for being very honest.
-> > > >
-> > >
-> > > I applied this diff...
-> > >
-> > > $ git diff arch/x86/boot/compressed/Makefile
-> > > diff --git a/arch/x86/boot/compressed/Makefile
-> > > b/arch/x86/boot/compressed/Makefile
-> > > index 789d5d14d8b0..9ba52a656838 100644
-> > > --- a/arch/x86/boot/compressed/Makefile
-> > > +++ b/arch/x86/boot/compressed/Makefile
-> > > @@ -51,7 +51,10 @@ UBSAN_SANITIZE :=n
-> > >  KBUILD_LDFLAGS := -m elf_$(UTS_MACHINE)
-> > >  # Compressed kernel should be built as PIE since it may be loaded at any
-> > >  # address by the bootloader.
-> > > +# LLD linker does not allow -r and -pie options to be used together.
-> > > +ifndef CONFIG_LD_IS_LLD
-> > >  KBUILD_LDFLAGS += -pie $(call ld-option, --no-dynamic-linker)
-> > > +endif
-> > >  LDFLAGS_vmlinux := -T
-> > >
-> > >  hostprogs      := mkpiggy
-> > >
-> > > ...and was able to build, assemble, link arch/x86/boot/compressed/*.
-> > >
-> > > - Sedat -
+> > Hmm, you might be right with moving to LDFLAGS_vmlinux.
 > >
-> > Thanks for the test.
+> > Attached are my linux-config and dmesg-output.
 > >
-> > Can you share your .config? The error messages look like they're coming
-> > from running modversions on misc.o, which is unexpected as it shouldn't
-> > have any exported symbols, and it doesn't in my builds.
-> >
-> > In any case, I think the right fix here would be to add -pie and
-> > --no-dynamic-linker to LDFLAGS_vmlinux instead of KBUILD_LDFLAGS.
+> > - Sedat -
 >
-> Hmm, you might be right with moving to LDFLAGS_vmlinux.
+> Which tree are you building against? I notice you have KERNEL_ZSTD
+> enabled, which hasn't been merged yet.
 >
+> Are you using Nick's series [v7]?
+>
+> Also from the naming -- are you using LLVM_IAS=1 with some patches to
+> make it work?
+>
+> [v7] https://lore.kernel.org/lkml/20200708185024.2767937-1-nickrterrell@gmail.com/
 
-We will need the "ifndef CONFIG_LD_IS_LLD" as -r and -pie cannot be
-used together.
-Is that the or not the fact when moving to LDFLAGS_vmlinux?
-
-I cannot test as I modified my local Git and re-invoking my
-build-script is doing a whole new build-dance.
+Sorry for not telling you the full story.
+Yes, I have some additional patches like Nick T. "zstd-v7" which
+should IMHO not touch this area.
 
 - Sedat -
