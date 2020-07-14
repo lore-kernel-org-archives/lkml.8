@@ -2,104 +2,175 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72D87C433E6
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 10:35:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E592C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 10:36:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4DEB822202
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 10:35:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594722948;
-	bh=3/kOijZ2Jqvx9fV509wbaqAHppjbu3yqiHK4P0pxR9Q=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Q45ymEaDqHZMx2t33IRYIn4Mh80iczEYVAJbsxXL/tEN3sQRDX2io43mkPDrrB4IR
-	 VMrou/RT3xgyTlk3Ok4DLvHloKoEvZJB0tU2nn1SQsBe2os1400rV0lOGakpIU4ElD
-	 9i/nMo1MFneb9+2YaByHmxshu1uRCaHgmRN9Tpnk=
+	by mail.kernel.org (Postfix) with ESMTP id E727122209
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 10:36:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726736AbgGNKfr (ORCPT
+        id S1726856AbgGNKgg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 06:35:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44254 "EHLO mail.kernel.org"
+        Tue, 14 Jul 2020 06:36:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44686 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725955AbgGNKfq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 06:35:46 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        id S1725841AbgGNKgg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 06:36:36 -0400
+Received: from gaia (unknown [95.146.230.158])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 60FE622206;
-        Tue, 14 Jul 2020 10:35:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594722945;
-        bh=3/kOijZ2Jqvx9fV509wbaqAHppjbu3yqiHK4P0pxR9Q=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=pjY7E3V0aZv5d0i3fKoYwYgQvjmUZbyEsIzYHmUq5g14ANKoqVoX++pY66mGoIIUJ
-         qwVw/Ls9ErxPp2BfWk5o7i5uEDzud+LydFzgGusYIheTZtJvHqESSAn44tOWSiIkr8
-         OfL3jLVRUDbrvwVY6WgKIlFeRs5I5yKR5zbIyxmo=
-Date:   Tue, 14 Jul 2020 11:35:36 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     qiao mnlife <mnlife.qiao@gmail.com>
-Cc:     "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
-        Jaroslav Kysela <perex@perex.cz>,
-        open list <linux-kernel@vger.kernel.org>,
-        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
-        =?utf-8?B?5LmU5pif?= <mnlife@foxmail.com>
-Subject: Re: [PATCH] soc jack: When snd_soc_card_jack_new is not called or
- the call fails, calling this function causes a null pointer access
-Message-ID: <20200714103536.GC4900@sirena.org.uk>
-References: <5f087f1b.1c69fb81.2a42.d99fSMTPIN_ADDED_MISSING@mx.google.com>
- <DM6PR12MB4122CBAFE14C28D7302272E3F9650@DM6PR12MB4122.namprd12.prod.outlook.com>
+        by mail.kernel.org (Postfix) with ESMTPSA id B8C0222202;
+        Tue, 14 Jul 2020 10:36:32 +0000 (UTC)
+Date:   Tue, 14 Jul 2020 11:36:30 +0100
+From:   Catalin Marinas <catalin.marinas@arm.com>
+To:     Zhenyu Ye <yezhenyu2@huawei.com>
+Cc:     will@kernel.org, suzuki.poulose@arm.com, maz@kernel.org,
+        steven.price@arm.com, guohanjun@huawei.com, olof@lixom.net,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-arch@vger.kernel.org, linux-mm@kvack.org, arm@kernel.org,
+        xiexiangyou@huawei.com, prime.zeng@hisilicon.com,
+        zhangshaokun@hisilicon.com, kuhn.chenqun@huawei.com
+Subject: Re: [PATCH v2 2/2] arm64: tlb: Use the TLBI RANGE feature in arm64
+Message-ID: <20200714103629.GA18793@gaia>
+References: <20200710094420.517-1-yezhenyu2@huawei.com>
+ <20200710094420.517-3-yezhenyu2@huawei.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="pAwQNkOnpTn9IO2O"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <DM6PR12MB4122CBAFE14C28D7302272E3F9650@DM6PR12MB4122.namprd12.prod.outlook.com>
-X-Cookie: Your password is pitifully obvious.
+In-Reply-To: <20200710094420.517-3-yezhenyu2@huawei.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, Jul 10, 2020 at 05:44:20PM +0800, Zhenyu Ye wrote:
+> +#define __TLBI_RANGE_PAGES(num, scale)	(((num) + 1) << (5 * (scale) + 1))
+> +#define MAX_TLBI_RANGE_PAGES		__TLBI_RANGE_PAGES(31, 3)
+> +
+> +#define TLBI_RANGE_MASK			GENMASK_ULL(4, 0)
+> +#define __TLBI_RANGE_NUM(range, scale)	\
+> +	(((range) >> (5 * (scale) + 1)) & TLBI_RANGE_MASK)
+[...]
+> +	int num = 0;
+> +	int scale = 0;
+[...]
+> +			start += __TLBI_RANGE_PAGES(num, scale) << PAGE_SHIFT;
+[...]
 
---pAwQNkOnpTn9IO2O
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Since num is an int, __TLBI_RANGE_PAGES is still an int. Shifting it by
+PAGE_SHIFT can overflow as the maximum would be 8GB for 4K pages (or
+128GB for 64K pages). I think we probably get away with this because of
+some implicit type conversion but I'd rather make __TLBI_RANGE_PAGES an
+explicit unsigned long:
 
-On Fri, Jul 10, 2020 at 02:56:03PM +0000, qiao mnlife wrote:
-> ________________________________
-> From: mnlife <mnlife@foxmail.com>
-> Sent: Friday, July 10, 2020 10:45:42 PM
-> To: mnlife.qiao@gmail.com <mnlife.qiao@gmail.com>
-> Cc: mnlife <mnlife@foxmail.com>
-> Subject: [PATCH] When snd_soc_card_jack_new is not called or the call fai=
-ls, calling this function causes a null pointer access
->=20
-> Signed-off-by: mnlife <mnlife@foxmail.com>
+#define __TLBI_RANGE_PAGES(num, scale)	((unsigned long)((num) + 1) << (5 * (scale) + 1))
 
-This looks good but it's a bit mangled in submission - can you please
-try to resend using something closer to the format in
-submitting-patches.rst?  The changelog should be in the body of the mail
-and there should be a patch subject in a similar format to to the other
-patches in git.
+Without this change, the CBMC check fails (see below for the test). In
+the kernel, we don't have this problem as we encode the address via
+__TLBI_VADDR_RANGE and it doesn't overflow.
 
---pAwQNkOnpTn9IO2O
-Content-Type: application/pgp-signature; name="signature.asc"
+The good part is that CBMC reckons the algorithm is correct ;).
 
------BEGIN PGP SIGNATURE-----
+---------------8<------tlbinval.c---------------------------
+// SPDX-License-Identifier: GPL-2.0-only
+/*
+ * Check with:
+ *   cbmc --unwind 6 tlbinval.c
+ */
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl8NingACgkQJNaLcl1U
-h9BIMQf/Yem6Wc8n49m8Tf5PlTiHnGyVemElmr6g1eJO0rZT66Dm+8tiK6ep0MHa
-OWFTmZPF0oec1a2jQgLEgDw9WwMXlNvYoBp6UFPEkS0hJafnRl5Xq0F19CyrSHTr
-H9yLrzFlAoiCfv0jiOQFiCIyCFdOapUQpe0T81jlG8cXh/UIXGs2AKRdbNAmVUFX
-zVPVtFzfK0XHMpoVZv9qS4EvyaAzd7KKAjzGJsri7OrbBAxbjTETz3wKdKwMGnCe
-jRM0DkTEOYPD0ZeOFqquloDz/q3u3gs1VcKaWaxwWoW1Vjg/aOi4v2XHqTZfmysO
-a1PNiLk+AjAGnIx6YMAqzjXHp9MVBg==
-=+aKm
------END PGP SIGNATURE-----
+#define PAGE_SHIFT	(12)
+#define PAGE_SIZE	(1 << PAGE_SHIFT)
+#define VA_RANGE	(1UL << 48)
 
---pAwQNkOnpTn9IO2O--
+#define __round_mask(x, y) ((__typeof__(x))((y)-1))
+#define round_up(x, y) ((((x)-1) | __round_mask(x, y))+1)
+#define round_down(x, y) ((x) & ~__round_mask(x, y))
+
+#define __TLBI_RANGE_PAGES(num, scale)	((unsigned long)((num) + 1) << (5 * (scale) + 1))
+#define MAX_TLBI_RANGE_PAGES		__TLBI_RANGE_PAGES(31, 3)
+
+#define TLBI_RANGE_MASK			0x1fUL
+#define __TLBI_RANGE_NUM(pages, scale)	\
+	((((pages) >> (5 * (scale) + 1)) & TLBI_RANGE_MASK) - 1)
+
+static unsigned long inval_start;
+static unsigned long inval_end;
+
+static void tlbi(unsigned long start, unsigned long size)
+{
+	unsigned long end = start + size;
+
+	if (inval_end == 0) {
+		inval_start = start;
+		inval_end = end;
+		return;
+	}
+
+	/* contiguous ranges in ascending order only */
+	__CPROVER_assert(start == inval_end, "Contiguous TLBI ranges");
+
+	inval_end = end;
+}
+
+static void __flush_tlb_range(unsigned long start, unsigned long end,
+			      unsigned long stride)
+{
+	int num = 0;
+	int scale = 0;
+	unsigned long pages;
+
+	start = round_down(start, stride);
+	end = round_up(end, stride);
+	pages = (end - start) >> PAGE_SHIFT;
+
+	if (pages >= MAX_TLBI_RANGE_PAGES) {
+		tlbi(0, VA_RANGE);
+		return;
+	}
+
+	while (pages > 0) {
+		__CPROVER_assert(scale <= 3, "Scale in range");
+		if (pages % 2 == 1) {
+			tlbi(start, stride);
+			start += stride;
+			pages -= stride >> PAGE_SHIFT;
+			continue;
+		}
+
+		num = __TLBI_RANGE_NUM(pages, scale);
+		__CPROVER_assert(num <= 30, "Num in range");
+		if (num >= 0) {
+			tlbi(start, __TLBI_RANGE_PAGES(num, scale) << PAGE_SHIFT);
+			start += __TLBI_RANGE_PAGES(num, scale) << PAGE_SHIFT;
+			pages -= __TLBI_RANGE_PAGES(num, scale);
+		}
+		scale++;
+	}
+}
+
+static unsigned long nondet_ulong(void);
+
+int main(void)
+{
+	unsigned long stride = nondet_ulong();
+	unsigned long start = round_down(nondet_ulong(), stride);
+	unsigned long end = round_up(nondet_ulong(), stride);
+
+	__CPROVER_assume(stride == PAGE_SIZE ||
+			 stride == PAGE_SIZE << (PAGE_SHIFT - 3) ||
+			 stride == PAGE_SIZE << (2 * (PAGE_SHIFT - 3)));
+	__CPROVER_assume(start < end);
+	__CPROVER_assume(end <= VA_RANGE);
+
+	__flush_tlb_range(start, end, stride);
+
+	__CPROVER_assert((inval_start == 0 && inval_end == VA_RANGE) ||
+			 (inval_start == start && inval_end == end),
+			 "Correct invalidation");
+
+	return 0;
+}
