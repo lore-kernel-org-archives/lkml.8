@@ -2,88 +2,195 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72801C433E6
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 09:13:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36C42C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 09:13:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4210521D7B
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 09:13:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 133E02145D
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 09:13:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="RK1/AHX1";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="UF/8CrTM"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="q3Kxkk/8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727098AbgGNJN3 (ORCPT
+        id S1727037AbgGNJNW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 05:13:29 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:42426 "EHLO
-        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727081AbgGNJN2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 05:13:28 -0400
-From:   Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1594718006;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=8ad5Ds6y4Cwxz0EA9bWnm/7kcoiw95HIzl75sRuD+Ac=;
-        b=RK1/AHX1Rve2bsD2WogQoxhSXwX9sHKm7rT41BX+73vjXmCqdEynjA8IQj8sv9s/3MRJkl
-        7wsONs10Lnv6MxBX8s3p0LVcNZI7hiUXqFGcWPjPdinhNN16X8KpS71PVSUoBtz4j6dOxQ
-        tlRnv6LI3eewOUpA85L6bGhr/sUEhcvrry5tUswQ7krfEMAWLvSFUx5pUZ5TZjFgEoHNMo
-        SkAwHf/xxr5XA34UaVcmCuD7P9KDGK4C+5iMRD2WT1IVIK8HFezod7Fmk4umFc884QNUgg
-        KT/+MGsgLEiwV34COnPbAfvYmgVfH3x7XAI2FPdc40OlkVIQ8CIT0V8YEpoxsQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1594718006;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=8ad5Ds6y4Cwxz0EA9bWnm/7kcoiw95HIzl75sRuD+Ac=;
-        b=UF/8CrTM1V/tJQbuBTT0/KNsCOaRx49ZdJWeyJxpZ0WhtFKXq6SR6DuOscvYQbSmZ8sw7b
-        uITmx7VQkw60JaAA==
-To:     Frederic Weisbecker <frederic@kernel.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Anna-Maria Gleixner <anna-maria@linutronix.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Juri Lelli <juri.lelli@redhat.com>
-Subject: Re: [PATCH 2/9] timer: Add comments about calc_index() ceiling work
-In-Reply-To: <20200707013253.26770-3-frederic@kernel.org>
-References: <20200707013253.26770-1-frederic@kernel.org> <20200707013253.26770-3-frederic@kernel.org>
-Date:   Tue, 14 Jul 2020 11:13:26 +0200
-Message-ID: <87tuyav4qx.fsf@nanos.tec.linutronix.de>
+        Tue, 14 Jul 2020 05:13:22 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:49516 "EHLO m43-7.mailgun.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726766AbgGNJNV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 05:13:21 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1594717999; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=OpGstJziG3b+lewJ4OJkEErFnXU4CBYWekCcjmKdfZw=;
+ b=q3Kxkk/80hwnMoni9m2MV8BQxjklWL9s3ik4ErFFl8vDRZOXxuh6oge7jX7QHDSUwsyiKc0d
+ 84p5uekVT7jMOnE9rwlpKHveHtH3JhjxXBsjReWny+mazOuMKjJ0EFs5TYC39a+wvxmJDgz1
+ kMLXABcFASAFUmdRXy0SdBPIQkw=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n18.prod.us-west-2.postgun.com with SMTP id
+ 5f0d772e166c1c5494060807 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 14 Jul 2020 09:13:18
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 452A4C433B1; Tue, 14 Jul 2020 09:13:17 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: cang)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 270ABC433C8;
+        Tue, 14 Jul 2020 09:13:16 +0000 (UTC)
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Tue, 14 Jul 2020 17:13:16 +0800
+From:   Can Guo <cang@codeaurora.org>
+To:     Bart Van Assche <bvanassche@acm.org>
+Cc:     asutoshd@codeaurora.org, nguyenb@codeaurora.org,
+        hongwus@codeaurora.org, rnayak@codeaurora.org,
+        linux-scsi@vger.kernel.org, kernel-team@android.com,
+        saravanak@google.com, salyzyn@google.com,
+        Alim Akhtar <alim.akhtar@samsung.com>,
+        Avri Altman <avri.altman@wdc.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Stanley Chu <stanley.chu@mediatek.com>,
+        Nitin Rawat <nitirawa@codeaurora.org>,
+        Tomas Winkler <tomas.winkler@intel.com>,
+        Bean Huo <beanhuo@micron.com>,
+        Satya Tangirala <satyat@google.com>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 4/4] scsi: ufs: Fix up and simplify error recovery
+ mechanism
+In-Reply-To: <47e7a4ec9a0404bc6d01818fcdad90eb@codeaurora.org>
+References: <1594693693-22466-1-git-send-email-cang@codeaurora.org>
+ <1594693693-22466-5-git-send-email-cang@codeaurora.org>
+ <fe00619c-f337-397f-9ccf-7babda095210@acm.org>
+ <47e7a4ec9a0404bc6d01818fcdad90eb@codeaurora.org>
+Message-ID: <5fb1e82c97a480e5330337a240a12633@codeaurora.org>
+X-Sender: cang@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Frederic Weisbecker <frederic@kernel.org> writes:
->  static inline unsigned calc_index(unsigned expires, unsigned lvl)
->  {
-> +	/*
-> +	 * Time may have past since the clock last reached an index of
-> +	 * this @lvl. And that time, below LVL_GRAN(@lvl), is going to
-> +	 * be substracted from the delta until we reach @expires. To
-> +	 * fix that we must add one level granularity unit to make sure
-> +	 * we rather expire late than early. Prefer ceil over floor.
+Hi Bart,
 
-This comment confuses the hell out of me.
+On 2020-07-14 12:26, Can Guo wrote:
+> Hi Bart,
+> 
+> On 2020-07-14 11:52, Bart Van Assche wrote:
+>> On 2020-07-13 19:28, Can Guo wrote:
+>>> o Queue eh_work on a single threaded workqueue to avoid concurrency 
+>>> between
+>>>   eh_works.
+>> 
+>> Please use another approach (mutex?) to serialize error handling. 
+>> There are
+>> already way too workqueues in a running Linux system.
+>> 
 
-        /*
-         * The timer wheel has to guarantee that a timer does not fire
-         * early. Early expiry can happen due to:
-         * - Timer is armed at the edge of a tick
-         * - Truncation of the expiry time in the outer wheel levels
-         *
-         * Round up with level granularity to prevent this.
-         */
+Yeah, mutex works, but in this change, we need to flush the eh_work. As 
+per
+test, in real cases, flush_work can trigger warnings if the work is 
+queued on
+system_wq. Please check func check_flush_dependency().
 
-Hmm?
+>>> o According to the UFSHCI JEDEC spec, hibern8 enter/exit error occurs 
+>>> when
+>>>   the link is broken. This actaully applies to any power mode change
+>>>   operations. In this change, if a power mode change operation 
+>>> (including
+>>>   AH8 enter/exit) fails, mark the link state as UIC_LINK_BROKEN_STATE 
+>>> and
+>>>   schedule eh_work. eh_work needs to do full reset and restore to 
+>>> recover
+>>>   the link back to active. Before the link state is recovered to 
+>>> active by
+>>>   eh_work, any power mode change attempts just return -ENOLINK to 
+>>> avoid
+>>>   consecutive HW error.
+>>> 
+>>> o To avoid concurrency between eh_work and link recovery, remove link
+>>>   recovery from hibern8 enter/exit func. If hibern8 enter/exit func 
+>>> fails,
+>>>   simply return error code and let eh_work run in parallel.
+>>> 
+>>> o Recover UFS hba runtime PM error in eh_work. If 
+>>> ufschd_suspend/resume
+>>>   fails due to UFS error, e.g. hibern8 enter/exit error and SSU cmd 
+>>> error,
+>>>   the runtime PM framework saves the error to 
+>>> dev.power.runtime_error.
+>>>   After that, hba runtime suspend/resume would not be invoked anymore 
+>>> until
+>>>   dev.power.runtime_error is cleared. The runtime PM error can be 
+>>> recovered
+>>>   in eh_work by calling pm_runtime_set_active() after reset and 
+>>> restore
+>>>   succeeds. Meanwhile, if pm_runtime_set_active() returns no error, 
+>>> which
+>>>   means dev.power.runtime_error is cleared, we also need to 
+>>> explicitly
+>>>   resume those scsi devices under hba in case any of them has failed 
+>>> to be
+>>>   resumed due to hba runtime resume error.
+>>> 
+>>> o Fix a racing problem between eh_work and ufshcd_suspend/resume. In 
+>>> the
+>>>   old code, it blocks scsi requests before schedules eh_work, but 
+>>> when
+>>>   eh_work calls pm_runtime_get_sync(), if ufshcd_suspend/resume is 
+>>> sending
+>>>   a scsi cmd, most likely the SSU cmd, pm_runtime_get_sync() will 
+>>> never
+>>>   return because scsi requests were blocked. To fix this racing 
+>>> problem,
+>>>   o Don't block scsi requests before schedule eh_work, but let 
+>>> eh_work
+>>>     block scsi requests when eh_work is ready to start error 
+>>> recovery.
+>>>   o Meanwhile, if eh_work is schueduled due to fatal error, don't 
+>>> requeue
+>>>     the scsi cmds sent from ufshcd_suspend/resume path, but simply 
+>>> let the
+>>>     scsi cmds fail. If the scsi cmds fail, hba runtime suspend/resume 
+>>> fails
+>>>     too, but it does hurt since eh_work recovers hba runtime PM 
+>>> error.
+>>> 
+>>> o Move host/regs dump in ufshcd_check_errors() to eh_work because 
+>>> heavy
+>>>   dump in IRQ context can lead to stability issues. In addition, some 
+>>> clean
+>>>   up in ufshcd_print_host_regs() and ufshcd_print_host_state().
+>> 
+>> The above list is a long list. To me that is a sign that this patch 
+>> needs to
+>> be split into multiple patches.
+>> 
+>> Thanks,
+>> 
+>> Bart.
+> 
+> Sure, will split it into a few patches.
+> 
+> Thanks,
+> 
+> Can Guo.
+
+I tried, but I find it hard to split it as it works as a whole, it is a 
+refactor
+change rather than a mixture of multiple fixes. I will try to refine the 
+commit
+msg in next version. So it goes just as it is now.
 
 Thanks,
 
-        tglx
+Can Guo.
