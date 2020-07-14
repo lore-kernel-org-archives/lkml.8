@@ -7,35 +7,35 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2015C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 13:35:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53FCCC433E7
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 13:35:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C0B8B2065D
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 13:35:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3C50F22314
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 13:35:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728607AbgGNNfV (ORCPT
+        id S1728639AbgGNNfX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 09:35:21 -0400
-Received: from inva021.nxp.com ([92.121.34.21]:48226 "EHLO inva021.nxp.com"
+        Tue, 14 Jul 2020 09:35:23 -0400
+Received: from inva021.nxp.com ([92.121.34.21]:48266 "EHLO inva021.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727950AbgGNNfR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 09:35:17 -0400
+        id S1728200AbgGNNfS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 09:35:18 -0400
 Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 710BB201016;
-        Tue, 14 Jul 2020 15:35:15 +0200 (CEST)
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 5F0CE201024;
+        Tue, 14 Jul 2020 15:35:16 +0200 (CEST)
 Received: from inva024.eu-rdc02.nxp.com (inva024.eu-rdc02.nxp.com [134.27.226.22])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 654262001B2;
-        Tue, 14 Jul 2020 15:35:15 +0200 (CEST)
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 52B032001B2;
+        Tue, 14 Jul 2020 15:35:16 +0200 (CEST)
 Received: from fsr-ub1864-126.ea.freescale.net (fsr-ub1864-126.ea.freescale.net [10.171.82.212])
-        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id 26AC3205A4;
-        Tue, 14 Jul 2020 15:35:15 +0200 (CEST)
+        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id 128A6205A4;
+        Tue, 14 Jul 2020 15:35:16 +0200 (CEST)
 From:   Ioana Ciornei <ioana.ciornei@nxp.com>
 To:     gregkh@linuxfoundation.org
 Cc:     linux-kernel@vger.kernel.org, devel@driverdev.osuosl.org,
         Ioana Ciornei <ioana.ciornei@nxp.com>
-Subject: [PATCH 1/6] staging: dpaa2-ethsw: fix reported link state
-Date:   Tue, 14 Jul 2020 16:34:26 +0300
-Message-Id: <20200714133431.17532-2-ioana.ciornei@nxp.com>
+Subject: [PATCH 4/6] staging: dpaa2-ethsw: disable switch ports are probe time
+Date:   Tue, 14 Jul 2020 16:34:29 +0300
+Message-Id: <20200714133431.17532-5-ioana.ciornei@nxp.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200714133431.17532-1-ioana.ciornei@nxp.com>
 References: <20200714133431.17532-1-ioana.ciornei@nxp.com>
@@ -45,33 +45,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On the .ndo_open() callback set netif_carrier_off() until the link state
-interrupt is received so that the LOWER_UP flag does not show up
-incorrectly in the output of 'ip link show'.
+The MC firmware will enable the switch interfaces at DPSW creation
+without waiting for an 'ifconfig up' on the switch interfaces. When this
+happens, the states held by the Linux software vs the firmware are not
+in sync. Make sure to disable the switch ports at probe time to not
+encounter this issue.
 
 Signed-off-by: Ioana Ciornei <ioana.ciornei@nxp.com>
 ---
- drivers/staging/fsl-dpaa2/ethsw/ethsw.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+ drivers/staging/fsl-dpaa2/ethsw/ethsw.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
 diff --git a/drivers/staging/fsl-dpaa2/ethsw/ethsw.c b/drivers/staging/fsl-dpaa2/ethsw/ethsw.c
-index 546ad376df99..46aa37093e86 100644
+index a1917842536e..f283ce195c1e 100644
 --- a/drivers/staging/fsl-dpaa2/ethsw/ethsw.c
 +++ b/drivers/staging/fsl-dpaa2/ethsw/ethsw.c
-@@ -473,6 +473,13 @@ static int port_open(struct net_device *netdev)
- 	/* No need to allow Tx as control interface is disabled */
- 	netif_tx_stop_all_queues(netdev);
+@@ -1672,6 +1672,10 @@ static int ethsw_probe(struct fsl_mc_device *sw_dev)
+ 		goto err_free_ports;
+ 	}
  
-+	/* Explicitly set carrier off, otherwise
-+	 * netif_carrier_ok() will return true and cause 'ip link show'
-+	 * to report the LOWER_UP flag, even though the link
-+	 * notification wasn't even received.
-+	 */
-+	netif_carrier_off(netdev);
++	/* Make sure the switch ports are disabled at probe time */
++	for (i = 0; i < ethsw->sw_attr.num_ifs; i++)
++		dpsw_if_disable(ethsw->mc_io, 0, ethsw->dpsw_handle, i);
 +
- 	err = dpsw_if_enable(port_priv->ethsw_data->mc_io, 0,
- 			     port_priv->ethsw_data->dpsw_handle,
- 			     port_priv->idx);
+ 	/* Setup IRQs */
+ 	err = ethsw_setup_irqs(sw_dev);
+ 	if (err)
 -- 
 2.25.1
 
