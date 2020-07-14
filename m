@@ -2,109 +2,90 @@ Return-Path: <SRS0=kup7=A2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,DATE_IN_PAST_06_12,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EABE5C433E5
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 09:32:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1838C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 09:32:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CB20B206D5
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 09:32:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="kgCdXMjb"
+	by mail.kernel.org (Postfix) with ESMTP id 9B99C206D5
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 09:32:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730773AbgGOJcR (ORCPT
+        id S1730754AbgGOJcJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 05:32:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33802 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730759AbgGOJcP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 05:32:15 -0400
-Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 305E0C08C5C1
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 02:32:14 -0700 (PDT)
-Received: by mail-wm1-x342.google.com with SMTP id q15so4689099wmj.2
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 02:32:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=easFprA1rlXP+l9tcr/n/hbQjfY4p+URdQB+bt/vLVk=;
-        b=kgCdXMjbGP82TXbjFkxf/2lpaClvJKN/LS7/ueUYl0t9EesCTDJfExfKSVdPJyLnpI
-         mNcg+6XK9vjLQBI0TmsKAlocgw/bqTjmQHBO0KtCWxV1u5kdLAavgH1N/J3AWWNmzmvN
-         +zjfJ100UTrvp4EJ/cExnGTPeICQKkKq5igA0enZNlm78zQVXTzpS6ZjnNTZlLxw31S+
-         +HXFBE/AsjuKE/OD1e1P8Bs5M0+RG7GdA27HkDiSKQHJ+xI23vDB/wQbucsQJzCFFNvW
-         RYobiCqAlVK2T63+0sgwVQU26AvHkqo6Vq0OQ79jEojfAL4V6fsjjUH/KVhlr3WgRwRl
-         xewg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=easFprA1rlXP+l9tcr/n/hbQjfY4p+URdQB+bt/vLVk=;
-        b=hCufuGk1MriAhuHjZa/ddLf5HyjozKXSDtIQycVBR2Ed2GhWWmXlAdj51yfrYFPZ0B
-         8Nf2fLF6AYMdBMqQO8yvhvn9hORVJCjc2zgUl5OSsWu/dl88oBO/aCgy0FEB9GCdVFMo
-         Dji5CD1pucYnWkftJj1OiejJ0RILIV1BOb9qjQA8tEWP0ekaQ87d7W8BL7x+Lc7TYkZ9
-         CWioJdU1iRApw+W5BeCZyle/k0umFT1FFs7iG9+H+pElF/yhCVt8iEl+U5rgRJFOdR7K
-         uxzi5a+uk6O0qq1Z8BweXiHyAz1NDWN5hg73OtU/p+iJyBlwUxWMi0g8fxW0gYwKr43z
-         8Avw==
-X-Gm-Message-State: AOAM5321L3IbdmKZAhNR8uiF3ZN960vRPQxJdz6KMO+ueTNzDBUsulz+
-        7d52GBifMrKN/7MR80Q9rhhMYQ==
-X-Google-Smtp-Source: ABdhPJwg8dRgDgK/PgoS2WBYF+uhV5nacvXxeFhiZpmGdsw3/hGyoVy0nupsk/XEgqvxhoGTIjI46Q==
-X-Received: by 2002:a1c:7d85:: with SMTP id y127mr7961510wmc.181.1594805532762;
-        Wed, 15 Jul 2020 02:32:12 -0700 (PDT)
-Received: from localhost.localdomain ([2.31.163.61])
-        by smtp.gmail.com with ESMTPSA id s203sm2686991wms.32.2020.07.15.02.32.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 15 Jul 2020 02:32:12 -0700 (PDT)
-From:   Lee Jones <lee.jones@linaro.org>
-To:     gregkh@linuxfoundation.org
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-usb@vger.kernel.org, Lee Jones <lee.jones@linaro.org>
-Subject: [PATCH v2 0/8] Mop-up left-behind fixes for W=1 warnings in USB
-Date:   Wed, 15 Jul 2020 10:32:01 +0100
-Message-Id: <20200715093209.3165641-1-lee.jones@linaro.org>
-X-Mailer: git-send-email 2.25.1
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+        Wed, 15 Jul 2020 05:32:09 -0400
+Received: from mga11.intel.com ([192.55.52.93]:1641 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725885AbgGOJcJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jul 2020 05:32:09 -0400
+IronPort-SDR: XMz8KE0gUkaoZHq6yTYZ5YiKSEHbM2I/+lIkXA9hbU+uPEn4dcGdcNLBBEa5kxGOl8YrKkGE6n
+ i/gE1WaIzGqw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9682"; a="147119296"
+X-IronPort-AV: E=Sophos;i="5.75,354,1589266800"; 
+   d="scan'208";a="147119296"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jul 2020 02:32:08 -0700
+IronPort-SDR: EtDtJlDPlYRIvJKIg68eUFrdOu7QMbSIatFBXmGn53ww/n7xu+OopTBBKPtm7jdA3AcPlsuqEC
+ 9qRoD13YJ1tA==
+X-IronPort-AV: E=Sophos;i="5.75,354,1589266800"; 
+   d="scan'208";a="460006248"
+Received: from bard-ubuntu.sh.intel.com ([10.239.13.33])
+  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jul 2020 02:32:04 -0700
+From:   Bard Liao <yung-chuan.liao@linux.intel.com>
+To:     alsa-devel@alsa-project.org, vkoul@kernel.org
+Cc:     vinod.koul@linaro.org, linux-kernel@vger.kernel.org, tiwai@suse.de,
+        broonie@kernel.org, gregkh@linuxfoundation.org, jank@cadence.com,
+        srinivas.kandagatla@linaro.org, rander.wang@linux.intel.com,
+        ranjani.sridharan@linux.intel.com, hui.wang@canonical.com,
+        pierre-louis.bossart@linux.intel.com, sanyog.r.kale@intel.com,
+        slawomir.blauciak@intel.com, mengdong.lin@intel.com,
+        bard.liao@intel.com
+Subject: [PATCH 2/2] soundwire: sdw.h: fix indentation
+Date:   Wed, 15 Jul 2020 05:37:44 +0800
+Message-Id: <20200714213744.24674-3-yung-chuan.liao@linux.intel.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200714213744.24674-1-yung-chuan.liao@linux.intel.com>
+References: <20200714213744.24674-1-yung-chuan.liao@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is the last of them.
+From: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
 
-Some have been re-written, others fixed-up.
+Not sure how this went undetected for years.
 
-See the in-patch changelog for the details.
+Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Reviewed-by: Guennadi Liakhovetski <guennadi.liakhovetski@linux.intel.com>
+Reviewed-by: Rander Wang <rander.wang@linux.intel.com>
+Signed-off-by: Bard Liao <yung-chuan.liao@linux.intel.com>
+---
+ include/linux/soundwire/sdw.h | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-Lee Jones (8):
-  usb: dwc2: gadget: Make use of GINTMSK2
-  usb: dwc2: gadget: Avoid pointless read of EP control register
-  usb: mtu3: mtu3_trace: Function headers are not suitable for kerneldoc
-  usb: mtu3: mtu3_trace: Supply missing mtu3_debug.h include file
-  usb: class: cdc-wdm: Provide description for usb_cdc_wdm_register()'s
-    manage_power arg
-  usb: c67x00: c67x00-hcd: Demote obvious misuse of kerneldoc to
-    standard comment blocks
-  usb: misc: sisusbvga: sisusb_init: Remove genunine unused static const
-    arrays
-  usb: misc: sisusbvga: Move static const tables out to different
-    include file
-
- drivers/usb/c67x00/c67x00-hcd.c            |   6 +-
- drivers/usb/class/cdc-wdm.c                |   3 +-
- drivers/usb/dwc2/gadget.c                  |   3 +-
- drivers/usb/misc/sisusbvga/sisusb_init.c   |   1 +
- drivers/usb/misc/sisusbvga/sisusb_init.h   | 662 --------------------
- drivers/usb/misc/sisusbvga/sisusb_tables.h | 688 +++++++++++++++++++++
- drivers/usb/mtu3/mtu3_trace.c              |   3 +-
- 7 files changed, 697 insertions(+), 669 deletions(-)
- create mode 100644 drivers/usb/misc/sisusbvga/sisusb_tables.h
-
+diff --git a/include/linux/soundwire/sdw.h b/include/linux/soundwire/sdw.h
+index 6452bac957b3..76052f12c9f7 100644
+--- a/include/linux/soundwire/sdw.h
++++ b/include/linux/soundwire/sdw.h
+@@ -88,10 +88,10 @@ enum sdw_slave_status {
+  * @SDW_CLK_POST_DEPREPARE: post clock stop de-prepare
+  */
+ enum sdw_clk_stop_type {
+-	       SDW_CLK_PRE_PREPARE = 0,
+-	       SDW_CLK_POST_PREPARE,
+-	       SDW_CLK_PRE_DEPREPARE,
+-	       SDW_CLK_POST_DEPREPARE,
++	SDW_CLK_PRE_PREPARE = 0,
++	SDW_CLK_POST_PREPARE,
++	SDW_CLK_PRE_DEPREPARE,
++	SDW_CLK_POST_DEPREPARE,
+ };
+ 
+ /**
 -- 
-2.25.1
+2.17.1
 
