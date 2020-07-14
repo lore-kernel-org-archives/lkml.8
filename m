@@ -7,52 +7,50 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9972C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:46:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CC54C433E5
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:52:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8949622AAD
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:46:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 13C1F22B3B
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:52:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594752417;
-	bh=pK5WNn3f2XN+wqZ3aeM424pECkD6yi7cilRcgztjNcc=;
+	s=default; t=1594752728;
+	bh=2tzLPYymZ+SPgvAJBgfgZt5Grrz9/AAZo6OAnnOuI/4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mFvqP7nQnnJ/paLhvVp+yuSxnRQjtYZnBmoutMnq8NSw2IsFnGj22rmxS7aGD8hKc
-	 vWkldEM+wK+8eJiCUglE3WQXBdLWsj/lase6rSYi37yFYKNJuESuOw6kcgpVLBTuy+
-	 FUzTznISJxhHOIShL3DSpDSwJMaR/yw0wlF/p+/o=
+	b=pNKuUTnLrCQi5thFjprpyRgAg0v4VOjLtTe1YoLWLUoY6BnfwCJw7zgpeyL8TlUBt
+	 W5C4QCG3adsw1Fql2mR1qX5PW8t33Hf+f98uKK86ymmJI4dbIALqCdiVxBogDh2ojP
+	 s8po5P2fnNWXK5yf7zW+XvM7+D+mNzjtY9omsK5E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729632AbgGNSq4 (ORCPT
+        id S1730477AbgGNSwG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 14:46:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41766 "EHLO mail.kernel.org"
+        Tue, 14 Jul 2020 14:52:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48602 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729598AbgGNSqy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 14:46:54 -0400
+        id S1730448AbgGNSwB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 14:52:01 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5B66522AAD;
-        Tue, 14 Jul 2020 18:46:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 81E9922B45;
+        Tue, 14 Jul 2020 18:52:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594752413;
-        bh=pK5WNn3f2XN+wqZ3aeM424pECkD6yi7cilRcgztjNcc=;
+        s=default; t=1594752721;
+        bh=2tzLPYymZ+SPgvAJBgfgZt5Grrz9/AAZo6OAnnOuI/4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BptdoYTaHjjTTUaKNgtuuPh+U85Kv/j3Ra4A6TkoFsXrhmNtFyo08go2sMoA5bWhL
-         QJeQfnnuw9ZSbem8YsScQ2XMEaEKKkPioZCIqbfobHCX8g92lObS4cO0UtVASRjgqQ
-         1Yuy50Uk6vZizKDkrvNL6gKFelOXXWFLOpen/2Qk=
+        b=hB6+cK8THDBc35RyiSID8iX/RTTXvGyhnQ6MS7Gf4ihE9WSyFRoyvSQ5BK5694Jrw
+         q9fN8q6CdW3pMv87Qen+ZH2Je4eCDOzf9NAAozzwXX8ukgaqzpOQ3HV1EqOKofSXpF
+         dF5SBSPjtxjd7w/lYTDqrFsMkI7UscVlkMjMqMQY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        syzbot+b8fe393f999a291a9ea6@syzkaller.appspotmail.com,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.19 25/58] net: qrtr: Fix an out of bounds read qrtr_endpoint_post()
-Date:   Tue, 14 Jul 2020 20:43:58 +0200
-Message-Id: <20200714184057.392937689@linuxfoundation.org>
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Subject: [PATCH 5.4 085/109] KVM: x86: Mark CR4.TSD as being possibly owned by the guest
+Date:   Tue, 14 Jul 2020 20:44:28 +0200
+Message-Id: <20200714184109.619867462@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200714184056.149119318@linuxfoundation.org>
-References: <20200714184056.149119318@linuxfoundation.org>
+In-Reply-To: <20200714184105.507384017@linuxfoundation.org>
+References: <20200714184105.507384017@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -62,53 +60,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Carpenter <dan.carpenter@oracle.com>
+From: Sean Christopherson <sean.j.christopherson@intel.com>
 
-commit 8ff41cc21714704ef0158a546c3c4d07fae2c952 upstream.
+commit 7c83d096aed055a7763a03384f92115363448b71 upstream.
 
-This code assumes that the user passed in enough data for a
-qrtr_hdr_v1 or qrtr_hdr_v2 struct, but it's not necessarily true.  If
-the buffer is too small then it will read beyond the end.
+Mark CR4.TSD as being possibly owned by the guest as that is indeed the
+case on VMX.  Without TSD being tagged as possibly owned by the guest, a
+targeted read of CR4 to get TSD could observe a stale value.  This bug
+is benign in the current code base as the sole consumer of TSD is the
+emulator (for RDTSC) and the emulator always "reads" the entirety of CR4
+when grabbing bits.
 
-Reported-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Reported-by: syzbot+b8fe393f999a291a9ea6@syzkaller.appspotmail.com
-Fixes: 194ccc88297a ("net: qrtr: Support decoding incoming v2 packets")
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Add a build-time assertion in to ensure VMX doesn't hand over more CR4
+bits without also updating x86.
+
+Fixes: 52ce3c21aec3 ("x86,kvm,vmx: Don't trap writes to CR4.TSD")
+Cc: stable@vger.kernel.org
+Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+Message-Id: <20200703040422.31536-2-sean.j.christopherson@intel.com>
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- net/qrtr/qrtr.c |    6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ arch/x86/kvm/kvm_cache_regs.h |    2 +-
+ arch/x86/kvm/vmx/vmx.c        |    2 ++
+ 2 files changed, 3 insertions(+), 1 deletion(-)
 
---- a/net/qrtr/qrtr.c
-+++ b/net/qrtr/qrtr.c
-@@ -266,7 +266,7 @@ int qrtr_endpoint_post(struct qrtr_endpo
- 	unsigned int ver;
- 	size_t hdrlen;
+--- a/arch/x86/kvm/kvm_cache_regs.h
++++ b/arch/x86/kvm/kvm_cache_regs.h
+@@ -7,7 +7,7 @@
+ #define KVM_POSSIBLE_CR0_GUEST_BITS X86_CR0_TS
+ #define KVM_POSSIBLE_CR4_GUEST_BITS				  \
+ 	(X86_CR4_PVI | X86_CR4_DE | X86_CR4_PCE | X86_CR4_OSFXSR  \
+-	 | X86_CR4_OSXMMEXCPT | X86_CR4_LA57 | X86_CR4_PGE)
++	 | X86_CR4_OSXMMEXCPT | X86_CR4_LA57 | X86_CR4_PGE | X86_CR4_TSD)
  
--	if (len & 3)
-+	if (len == 0 || len & 3)
- 		return -EINVAL;
+ #define BUILD_KVM_GPR_ACCESSORS(lname, uname)				      \
+ static __always_inline unsigned long kvm_##lname##_read(struct kvm_vcpu *vcpu)\
+--- a/arch/x86/kvm/vmx/vmx.c
++++ b/arch/x86/kvm/vmx/vmx.c
+@@ -3913,6 +3913,8 @@ void vmx_set_constant_host_state(struct
  
- 	skb = netdev_alloc_skb(NULL, len);
-@@ -280,6 +280,8 @@ int qrtr_endpoint_post(struct qrtr_endpo
- 
- 	switch (ver) {
- 	case QRTR_PROTO_VER_1:
-+		if (len < sizeof(*v1))
-+			goto err;
- 		v1 = data;
- 		hdrlen = sizeof(*v1);
- 
-@@ -293,6 +295,8 @@ int qrtr_endpoint_post(struct qrtr_endpo
- 		size = le32_to_cpu(v1->size);
- 		break;
- 	case QRTR_PROTO_VER_2:
-+		if (len < sizeof(*v2))
-+			goto err;
- 		v2 = data;
- 		hdrlen = sizeof(*v2) + v2->optlen;
- 
+ void set_cr4_guest_host_mask(struct vcpu_vmx *vmx)
+ {
++	BUILD_BUG_ON(KVM_CR4_GUEST_OWNED_BITS & ~KVM_POSSIBLE_CR4_GUEST_BITS);
++
+ 	vmx->vcpu.arch.cr4_guest_owned_bits = KVM_CR4_GUEST_OWNED_BITS;
+ 	if (enable_ept)
+ 		vmx->vcpu.arch.cr4_guest_owned_bits |= X86_CR4_PGE;
 
 
