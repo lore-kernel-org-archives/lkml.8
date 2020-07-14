@@ -2,208 +2,170 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3294BC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 19:55:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2576EC433E2
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 19:51:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F11A422B51
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 19:55:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E46AD22B51
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 19:51:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fs4fvydG"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="D7G6DnxR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729732AbgGNTzD (ORCPT
+        id S1730103AbgGNTvK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 15:55:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49110 "EHLO
+        Tue, 14 Jul 2020 15:51:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48430 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729465AbgGNTzD (ORCPT
+        with ESMTP id S1726634AbgGNTun (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 15:55:03 -0400
-Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 20754C061755;
-        Tue, 14 Jul 2020 12:55:03 -0700 (PDT)
-Received: by mail-pf1-x443.google.com with SMTP id m9so8042681pfh.0;
-        Tue, 14 Jul 2020 12:55:03 -0700 (PDT)
+        Tue, 14 Jul 2020 15:50:43 -0400
+Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7B980C08C5DE
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 12:50:42 -0700 (PDT)
+Received: by mail-pl1-x644.google.com with SMTP id w17so7445987ply.11
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 12:50:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=JYMRhwsu+Sb7OdIXTr+m2jcY6PaVT0jbYkR2hlBIQac=;
-        b=fs4fvydGVNvlk5nD87KZFP08JqelxL90HPPkjS2E4M1OFRJ8jvE23FFOO6XgUs+EdC
-         zz9EDAHIdKWW9SjezQFxrX2LzMxaOS4r37lvUaibE+hLSWKbTDdQHf1S3c2Rk3Y2aDch
-         +IqWejNVTpOIfjj6tqwlzSI+JD2dkDI93kixcYJznNmSlHmV91Cw93Okv4rBTTW2I0fp
-         9pDNi7fAjNtQfnPsnSaFVAT0D9iS6Af5T/vm+E1a2ZX2rTZiv3AxUGPm2QrOZMM7Grhi
-         OZ0e7UrNfkMAFwrkALZm3hpOPt02D8g6TC9uOoOBDqQIlI8pfED8r5BnDPx3S9CRblfR
-         Oysw==
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=jY+hhKB0ddRkOQj+QLLC4GBsl3mMolKfuwtvmOZ1afk=;
+        b=D7G6DnxRXvBsUxmYZu4OCJ1QzqB/HUCmIZPe6CGSR7XUDniZ5vTvX/eldrgOyDqZMC
+         gg/vlKlxk3G9ckQFvjxqJrtLSdCInI6qFOZoQrAxPra//+Ai0qDJ77SQfpDUv6Ha2Ib3
+         9MBBDih8VptIniwyjNclOpZFUSUoOSOR3DzNhuAXBcBQnXQ+bH7ieqNmTXFZ4s0qcPuT
+         DiVWGg39TXGZhWtllo6aq5WNL7ki4uBIlNq+PTrQoWYlGwX/Leavv+8y+QWDnAKg/LvX
+         ca1QFmOfMF6feCcna9vVM5/Lxi+Q9bPmHaDNwPV0k9AeBS//7/7XYjyk1G4tWtgpZHfn
+         FUNA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=JYMRhwsu+Sb7OdIXTr+m2jcY6PaVT0jbYkR2hlBIQac=;
-        b=e9i+INIaY2rubZ9/4OdgVVqLOdhxecESmOIxQptklGoowMiTN60z0KqwJgwbBVTcwg
-         QRyFkTp9gT876c1O2NhZ40jqeXo7XxuRqMB4Od3H3IR//iiYek6yfN555/jZLYVFRwCh
-         OM8jB9ijI2uwdkBQhCUfnuYGfxAPqf7hqgQh/UKssi89ekKgxEYaUAau3xb/ZLhPMuiD
-         UaDqU/IkzqgcUScuxqDO9JZqBNkciSI9vrpvisjL/k3CxPAfxSPHd/FRsGbJIq3lA+kJ
-         pb8+ACWv+214imWrT+dhHPtTOjcGnf+UBpN0CC3qlfN8fqSc3/Wz2h18jCUZK5ehGxp3
-         swgQ==
-X-Gm-Message-State: AOAM53285KV4RdfCVuv2Pf+lWhHprioMsisrLK+08hAJWKompqngdp5d
-        P/1huMnfNaHNH1KW5zL5ZTIXkJ/A803auQ==
-X-Google-Smtp-Source: ABdhPJw/oO8x2DZghTsWUoMl473fHwCIUH5VYDjbimv6MY0MoeAVVAqLzc8Q/q4VrjOK+4DFIOHUgA==
-X-Received: by 2002:a05:6a00:2292:: with SMTP id f18mr5729482pfe.192.1594756502680;
-        Tue, 14 Jul 2020 12:55:02 -0700 (PDT)
-Received: from blackclown ([103.88.82.145])
-        by smtp.gmail.com with ESMTPSA id e20sm13898pfl.212.2020.07.14.12.54.59
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 14 Jul 2020 12:55:01 -0700 (PDT)
-Date:   Wed, 15 Jul 2020 01:24:56 +0530
-From:   Suraj Upadhyay <usuraj35@gmail.com>
-To:     Joe Perches <joe@perches.com>
-Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
-        GR-Linux-NIC-Dev@marvell.com, gregkh@linuxfoundation.org,
-        devel@driverdev.osuosl.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 6/6] staging: qlge: qlge_ethtool: Remove one byte memset.
-Message-ID: <20200714195456.GB14742@blackclown>
-References: <cover.1594642213.git.usuraj35@gmail.com>
- <b5eb87576cef4bf1b968481d6341013e6c7e9650.1594642213.git.usuraj35@gmail.com>
- <20200713141749.GU2549@kadam>
- <a323c1e47e8de871ff7bb72289740cb0bc2d27f8.camel@perches.com>
- <20200714190602.GA14742@blackclown>
- <ce637b26b496dd99be8f272e6ec82333338321dc.camel@perches.com>
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=jY+hhKB0ddRkOQj+QLLC4GBsl3mMolKfuwtvmOZ1afk=;
+        b=Mr/iaJGUsouY3TEq1l7PMMTY3Z+sz1r8fRhyxsSAARWUCoC4Wo0Z/G2Fv2jBgpkPKI
+         uuQ2hnS9IjLcMmxtdlEmTFq6ZbmzHhmTxV1P/DR+SJLyqVjCZb9nk7d8r/Pze3f7uh2t
+         7594JDYrOCdAjSLpEFVG/SUOopyjtYjLsl8D7P0E14wSA5VKwDdUq570vGTQATVXnO08
+         L/OoprhUW1Re0YirylcTkcejoXZu2kPsitIf3OKRKF92tSWImKsHjz5jT7ut0GsMmq4d
+         e6O7eXRkwq+lInEN9gXpDA2GxC+u0VFGNSzu0UP0elE+Ia+f4lnkK4QHecvvFK9aPfba
+         6Ofw==
+X-Gm-Message-State: AOAM5334GSnYub2/YK1y7yzXhZXT41DbB2KBGFaWeTV1R+y3NUIh9T4P
+        DTfebQhPU9X4He2/NCPEhD88Du5mnIw=
+X-Google-Smtp-Source: ABdhPJy0+Yjbb5Wid6Xe48CAfbptCtTGZF2jm/cc4qS7GYa62Ba4oin3KhNDZYaiwhjeq0d2EOcfYw==
+X-Received: by 2002:a17:90b:4b0c:: with SMTP id lx12mr5659999pjb.133.1594756242037;
+        Tue, 14 Jul 2020 12:50:42 -0700 (PDT)
+Received: from xps15.cg.shawcable.net (S0106002369de4dac.cg.shawcable.net. [68.147.8.254])
+        by smtp.gmail.com with ESMTPSA id g8sm16736689pgr.70.2020.07.14.12.50.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 14 Jul 2020 12:50:41 -0700 (PDT)
+From:   Mathieu Poirier <mathieu.poirier@linaro.org>
+To:     ohad@wizery.com, bjorn.andersson@linaro.org
+Cc:     linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v6 4/9] remoteproc: Introducing function rproc_actuate()
+Date:   Tue, 14 Jul 2020 13:50:30 -0600
+Message-Id: <20200714195035.1426873-5-mathieu.poirier@linaro.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200714195035.1426873-1-mathieu.poirier@linaro.org>
+References: <20200714195035.1426873-1-mathieu.poirier@linaro.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="1LKvkjL3sHcu1TtY"
-Content-Disposition: inline
-In-Reply-To: <ce637b26b496dd99be8f272e6ec82333338321dc.camel@perches.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Introduce function rproc_actuate() that provides the same
+functionatlity as rproc_fw_boot(), but without the steps that
+involve interaction with the firmware image.  That way we can
+deal with scenarios where the remoteproc core is attaching
+to a remote processor that has already been started by another
+entity.
 
---1LKvkjL3sHcu1TtY
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+Reviewed-by: Arnaud Pouliquen <arnaud.pouliquen@st.com>
+Tested-by: Arnaud Pouliquen <arnaud.pouliquen@st.com>
+---
+ drivers/remoteproc/remoteproc_core.c | 59 +++++++++++++++++++++++++++-
+ 1 file changed, 58 insertions(+), 1 deletion(-)
 
-On Tue, Jul 14, 2020 at 12:22:05PM -0700, Joe Perches wrote:
-> On Wed, 2020-07-15 at 00:36 +0530, Suraj Upadhyay wrote:
-> > On Tue, Jul 14, 2020 at 11:57:23AM -0700, Joe Perches wrote:
-> > > On Mon, 2020-07-13 at 17:17 +0300, Dan Carpenter wrote:
-> > > > On Mon, Jul 13, 2020 at 05:52:22PM +0530, Suraj Upadhyay wrote:
-> > > > > Use direct assignment instead of using memset with just one byte =
-as an
-> > > > > argument.
-> > > > > Issue found by checkpatch.pl.
-> > > > >=20
-> > > > > Signed-off-by: Suraj Upadhyay <usuraj35@gmail.com>
-> > > > > ---
-> > > > > Hii Maintainers,
-> > > > > 	Please correct me if I am wrong here.
-> > > > > ---
-> > > > >=20
-> > > > >  drivers/staging/qlge/qlge_ethtool.c | 4 ++--
-> > > > >  1 file changed, 2 insertions(+), 2 deletions(-)
-> > > > >=20
-> > > > > diff --git a/drivers/staging/qlge/qlge_ethtool.c b/drivers/stagin=
-g/qlge/qlge_ethtool.c
-> > > > > index 16fcdefa9687..d44b2dae9213 100644
-> > > > > --- a/drivers/staging/qlge/qlge_ethtool.c
-> > > > > +++ b/drivers/staging/qlge/qlge_ethtool.c
-> > > > > @@ -516,8 +516,8 @@ static void ql_create_lb_frame(struct sk_buff=
- *skb,
-> > > > >  	memset(skb->data, 0xFF, frame_size);
-> > > > >  	frame_size &=3D ~1;
-> > > > >  	memset(&skb->data[frame_size / 2], 0xAA, frame_size / 2 - 1);
-> > > > > -	memset(&skb->data[frame_size / 2 + 10], 0xBE, 1);
-> > > > > -	memset(&skb->data[frame_size / 2 + 12], 0xAF, 1);
-> > > > > +	skb->data[frame_size / 2 + 10] =3D (unsigned char)0xBE;
-> > > > > +	skb->data[frame_size / 2 + 12] =3D (unsigned char)0xAF;
-> > > >=20
-> > > > Remove the casting.
-> > > >=20
-> > > > I guess this is better than the original because now it looks like
-> > > > ql_check_lb_frame().  It's still really weird looking though.
-> > >=20
-> > > There are several of these in the intel drivers too:
-> > >=20
-> > > drivers/net/ethernet/intel/e1000/e1000_ethtool.c:       memset(&skb->=
-data[frame_size / 2 + 10], 0xBE, 1);
-> > > drivers/net/ethernet/intel/e1000/e1000_ethtool.c:       memset(&skb->=
-data[frame_size / 2 + 12], 0xAF, 1);
-> > > drivers/net/ethernet/intel/e1000e/ethtool.c:    memset(&skb->data[fra=
-me_size / 2 + 10], 0xBE, 1);
-> > > drivers/net/ethernet/intel/e1000e/ethtool.c:    memset(&skb->data[fra=
-me_size / 2 + 12], 0xAF, 1);
-> > > drivers/net/ethernet/intel/igb/igb_ethtool.c:   memset(&skb->data[fra=
-me_size + 10], 0xBE, 1);
-> > > drivers/net/ethernet/intel/igb/igb_ethtool.c:   memset(&skb->data[fra=
-me_size + 12], 0xAF, 1);
-> > > drivers/net/ethernet/intel/ixgbe/ixgbe_ethtool.c:       memset(&skb->=
-data[frame_size + 10], 0xBE, 1);
-> > > drivers/net/ethernet/intel/ixgbe/ixgbe_ethtool.c:       memset(&skb->=
-data[frame_size + 12], 0xAF, 1);
-> > > drivers/staging/qlge/qlge_ethtool.c:    memset(&skb->data[frame_size =
-/ 2 + 10], 0xBE, 1);
-> > > drivers/staging/qlge/qlge_ethtool.c:    memset(&skb->data[frame_size =
-/ 2 + 12], 0xAF, 1);
-> >=20
-> > Thanks to point this out,
-> > 	I will be sending a patchset for that soon.
->=20
->=20
-> It _might_ be useful to create and use a standard
-> mechanism for the loopback functions:
->=20
-> 	<foo>create_lbtest_frame
-> and
-> 	<foo>check_lbtest_frame
->=20
-> Maybe use something like:
->=20
-> 	ether_loopback_frame_create
-> and
-> 	ether_loopback_frame_check
->=20
-I thought about it=A0 but then again the fram_size is sometimes divided by =
-two
+diff --git a/drivers/remoteproc/remoteproc_core.c b/drivers/remoteproc/remoteproc_core.c
+index 1e8e66a25bd6..fd424662801f 100644
+--- a/drivers/remoteproc/remoteproc_core.c
++++ b/drivers/remoteproc/remoteproc_core.c
+@@ -1369,7 +1369,7 @@ static int rproc_start(struct rproc *rproc, const struct firmware *fw)
+ 	return ret;
+ }
+ 
+-static int __maybe_unused rproc_attach(struct rproc *rproc)
++static int rproc_attach(struct rproc *rproc)
+ {
+ 	struct device *dev = &rproc->dev;
+ 	int ret;
+@@ -1490,6 +1490,63 @@ static int rproc_fw_boot(struct rproc *rproc, const struct firmware *fw)
+ 	return ret;
+ }
+ 
++/*
++ * Attach to remote processor - similar to rproc_fw_boot() but without
++ * the steps that deal with the firmware image.
++ */
++static int __maybe_unused rproc_actuate(struct rproc *rproc)
++{
++	struct device *dev = &rproc->dev;
++	int ret;
++
++	/*
++	 * if enabling an IOMMU isn't relevant for this rproc, this is
++	 * just a nop
++	 */
++	ret = rproc_enable_iommu(rproc);
++	if (ret) {
++		dev_err(dev, "can't enable iommu: %d\n", ret);
++		return ret;
++	}
++
++	/* reset max_notifyid */
++	rproc->max_notifyid = -1;
++
++	/* reset handled vdev */
++	rproc->nb_vdev = 0;
++
++	/*
++	 * Handle firmware resources required to attach to a remote processor.
++	 * Because we are attaching rather than booting the remote processor,
++	 * we expect the platform driver to properly set rproc->table_ptr.
++	 */
++	ret = rproc_handle_resources(rproc, rproc_loading_handlers);
++	if (ret) {
++		dev_err(dev, "Failed to process resources: %d\n", ret);
++		goto disable_iommu;
++	}
++
++	/* Allocate carveout resources associated to rproc */
++	ret = rproc_alloc_registered_carveouts(rproc);
++	if (ret) {
++		dev_err(dev, "Failed to allocate associated carveouts: %d\n",
++			ret);
++		goto clean_up_resources;
++	}
++
++	ret = rproc_attach(rproc);
++	if (ret)
++		goto clean_up_resources;
++
++	return 0;
++
++clean_up_resources:
++	rproc_resource_cleanup(rproc);
++disable_iommu:
++	rproc_disable_iommu(rproc);
++	return ret;
++}
++
+ /*
+  * take a firmware and boot it up.
+  *
+-- 
+2.25.1
 
-e.g. `frame_size /=3D 2;` or `frame_size >>=3D 1;`.
-
-and sometimes it is subtracted by one. i.e. `frame_size &=3D ~1;`.
-
-Anyway, I sent my layman patchset to the lkml and intel maintainers.
-
-Forgive my brevity.
-
-Thanks,=A0
-
-Suraj Upadhyay.=20
-
---1LKvkjL3sHcu1TtY
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEE7AbCa0kOsMJ4cx0j+gRsbIfe744FAl8ODYgACgkQ+gRsbIfe
-744oCRAAqrqADv/xB4JVPjjXz492plNFNWc8LGb+FfE8WO/fXyAdP6QlihH6yTK/
-wf77xEFSJOao6VFX501O5KqklsWkNZ+FFs49mMcDdo6qXjlezHp0/4J6NFI+bn5g
-OXjshxMZpjyGI4wT03QHxP2dvhIVxEt+2FY44DzOT/vtsVYRKInLK3nTjS4f7Wdp
-yqgSmI831AWcoPYZd3PkZLneXDbFi2CSPBBMREmiP1N735WfXSZqEACPYRtKVj2f
-62QgFz6S8AWb0OYB/I67OUDFDDnufchuGa22SJNmv3HxYbMpF9QlhovCK2XfUT6/
-30UzieYqCPd+IIccn1iWtbFhMl5wa0bTTZRL3D8Zt7P3J7dxrb9wHZyjkt2baqhj
-+n+GW4nfSoCVCDqJMr/AopOfIL0FS2eqvmkVsohOpneuElfYf6M+1AcH0kprADHW
-js9OomrTXRkanNAk1fjxPhItfVqqka8sT+dmYsVmfZMTDuytS6nxx55zwGSFuuzA
-BgTLJ0fNLrS7E7hrPyoc9/O2xktZ4DsWuFZYiB8SMz5F8nH1hG2VGsYOGjs+L7WS
-bFAau0a0f+GNRYj2TztM3Jq2Y393xBNBquUMaOAA6MXNd5InFZBb39L5dGuLmaXQ
-UyObb7g20JD6D8bJCBA+Jx4G4vGR3Qqvu9kbabnC6mINzK1AzyY=
-=iZ2l
------END PGP SIGNATURE-----
-
---1LKvkjL3sHcu1TtY--
