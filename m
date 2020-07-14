@@ -2,102 +2,93 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB8CCC433E8
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 13:35:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D363BC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 13:37:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B8A8B224D2
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 13:35:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A81302065D
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 13:37:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728693AbgGNNfi (ORCPT
+        id S1726542AbgGNNha (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 09:35:38 -0400
-Received: from inva020.nxp.com ([92.121.34.13]:49972 "EHLO inva020.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728187AbgGNNfS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 09:35:18 -0400
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 11A481A01FC;
-        Tue, 14 Jul 2020 15:35:16 +0200 (CEST)
-Received: from inva024.eu-rdc02.nxp.com (inva024.eu-rdc02.nxp.com [134.27.226.22])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 052921A01E7;
-        Tue, 14 Jul 2020 15:35:16 +0200 (CEST)
-Received: from fsr-ub1864-126.ea.freescale.net (fsr-ub1864-126.ea.freescale.net [10.171.82.212])
-        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id C18EA205A4;
-        Tue, 14 Jul 2020 15:35:15 +0200 (CEST)
-From:   Ioana Ciornei <ioana.ciornei@nxp.com>
-To:     gregkh@linuxfoundation.org
-Cc:     linux-kernel@vger.kernel.org, devel@driverdev.osuosl.org,
-        Ioana Ciornei <ioana.ciornei@nxp.com>
-Subject: [PATCH 3/6] staging: dpaa2-ethsw: use netif_running when checking for port up
-Date:   Tue, 14 Jul 2020 16:34:28 +0300
-Message-Id: <20200714133431.17532-4-ioana.ciornei@nxp.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200714133431.17532-1-ioana.ciornei@nxp.com>
-References: <20200714133431.17532-1-ioana.ciornei@nxp.com>
-X-Virus-Scanned: ClamAV using ClamSMTP
+        Tue, 14 Jul 2020 09:37:30 -0400
+Received: from www262.sakura.ne.jp ([202.181.97.72]:52875 "EHLO
+        www262.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726050AbgGNNh3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 09:37:29 -0400
+Received: from fsav301.sakura.ne.jp (fsav301.sakura.ne.jp [153.120.85.132])
+        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id 06EDbQxS094750;
+        Tue, 14 Jul 2020 22:37:26 +0900 (JST)
+        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
+Received: from www262.sakura.ne.jp (202.181.97.72)
+ by fsav301.sakura.ne.jp (F-Secure/fsigk_smtp/550/fsav301.sakura.ne.jp);
+ Tue, 14 Jul 2020 22:37:26 +0900 (JST)
+X-Virus-Status: clean(F-Secure/fsigk_smtp/550/fsav301.sakura.ne.jp)
+Received: from [192.168.1.9] (M106072142033.v4.enabler.ne.jp [106.72.142.33])
+        (authenticated bits=0)
+        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id 06EDbQm9094743
+        (version=TLSv1.2 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO);
+        Tue, 14 Jul 2020 22:37:26 +0900 (JST)
+        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
+Subject: Re: [PATCH] fbdev: Detect integer underflow at "struct
+ fbcon_ops"->clear_margins.
+From:   Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
+To:     Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>, linux-fbdev@vger.kernel.org,
+        dri-devel@lists.freedesktop.org,
+        Dmitry Vyukov <dvyukov@google.com>,
+        linux-kernel@vger.kernel.org,
+        George Kennedy <george.kennedy@oracle.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>
+References: <189fc902-db7c-9886-cc31-c0348435303a@i-love.sakura.ne.jp>
+ <20200712111013.11881-1-penguin-kernel@I-love.SAKURA.ne.jp>
+ <20200712111013.11881-2-penguin-kernel@I-love.SAKURA.ne.jp>
+ <CGME20200714072231eucas1p17c53f0a661346ebfd316ebd5796ca346@eucas1p1.samsung.com>
+ <db4b3346-b9f8-a428-1445-1fcbd8521e1d@samsung.com>
+ <e00078d1-e5fb-a019-3036-cb182ed2e40b@i-love.sakura.ne.jp>
+Message-ID: <adff5d10-fe35-62d4-74c5-182958c5ada7@i-love.sakura.ne.jp>
+Date:   Tue, 14 Jul 2020 22:37:27 +0900
+User-Agent: Mozilla/5.0 (Windows NT 6.3; Win64; x64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
+MIME-Version: 1.0
+In-Reply-To: <e00078d1-e5fb-a019-3036-cb182ed2e40b@i-love.sakura.ne.jp>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There are some cases where the switch interface needs to be disabled so
-that changes in the configuration can be made. In such cases, we should
-check for a running interface (bit __LINK_STATE_START of the netdev)
-instead of netif_carrier_ok(). This is because on open() we enable the
-switch interface even though the link up has not come out yet.
+On 2020/07/14 19:27, Tetsuo Handa wrote:
+> On 2020/07/14 16:22, Bartlomiej Zolnierkiewicz wrote:
+>> How does this patch relate to:
+>>
+>> 	https://marc.info/?l=linux-fbdev&m=159415024816722&w=2
+>>
+>> ?
+>>
+>> It seems to address the same issue, I've added George and Dan to Cc:.
+> 
+> George Kennedy's patch does not help for my case.
+> 
 
-Signed-off-by: Ioana Ciornei <ioana.ciornei@nxp.com>
----
- drivers/staging/fsl-dpaa2/ethsw/ethsw.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+OK. You can add
 
-diff --git a/drivers/staging/fsl-dpaa2/ethsw/ethsw.c b/drivers/staging/fsl-dpaa2/ethsw/ethsw.c
-index b57bc705c2ee..a1917842536e 100644
---- a/drivers/staging/fsl-dpaa2/ethsw/ethsw.c
-+++ b/drivers/staging/fsl-dpaa2/ethsw/ethsw.c
-@@ -48,7 +48,7 @@ static int ethsw_port_set_pvid(struct ethsw_port_priv *port_priv, u16 pvid)
- 	struct ethsw_core *ethsw = port_priv->ethsw_data;
- 	struct net_device *netdev = port_priv->netdev;
- 	struct dpsw_tci_cfg tci_cfg = { 0 };
--	bool is_oper;
-+	bool up;
- 	int err, ret;
- 
- 	err = dpsw_if_get_tci(ethsw->mc_io, 0, ethsw->dpsw_handle,
-@@ -61,8 +61,8 @@ static int ethsw_port_set_pvid(struct ethsw_port_priv *port_priv, u16 pvid)
- 	tci_cfg.vlan_id = pvid;
- 
- 	/* Interface needs to be down to change PVID */
--	is_oper = netif_oper_up(netdev);
--	if (is_oper) {
-+	up = netif_running(netdev);
-+	if (up) {
- 		err = dpsw_if_disable(ethsw->mc_io, 0,
- 				      ethsw->dpsw_handle,
- 				      port_priv->idx);
-@@ -85,7 +85,7 @@ static int ethsw_port_set_pvid(struct ethsw_port_priv *port_priv, u16 pvid)
- 	port_priv->pvid = pvid;
- 
- set_tci_error:
--	if (is_oper) {
-+	if (up) {
- 		ret = dpsw_if_enable(ethsw->mc_io, 0,
- 				     ethsw->dpsw_handle,
- 				     port_priv->idx);
-@@ -188,7 +188,7 @@ static int ethsw_port_set_stp_state(struct ethsw_port_priv *port_priv, u8 state)
- 	};
- 	int err;
- 
--	if (!netif_oper_up(port_priv->netdev) || state == port_priv->stp_state)
-+	if (!netif_running(port_priv->netdev) || state == port_priv->stp_state)
- 		return 0;	/* Nothing to do */
- 
- 	err = dpsw_if_set_stp(port_priv->ethsw_data->mc_io, 0,
--- 
-2.25.1
+Reported-and-tested-by: syzbot <syzbot+e5fd3e65515b48c02a30@syzkaller.appspotmail.com>
 
+to my patch.
+
+By the way, if
+
+  /* bitfill_aligned() assumes that it's at least 8x8 */
+
+is true, don't we need to also check that the rect to fill is at least
+8x8 in bit_clear_margins() ? (Well, I feel did it mean multiple of 8x8 ?
+Then, what is bitfill_unaligned() for ?)
