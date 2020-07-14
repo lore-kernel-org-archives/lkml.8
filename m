@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C796C433E8
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:49:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EAC5C433EC
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:49:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4830B22AAA
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:49:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 194DB222E9
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:49:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594752553;
-	bh=MVAnC1VvfZxuXdIRo29VFm9919FcQ7IIv6dwWV0OXBU=;
+	s=default; t=1594752557;
+	bh=YHKa8RG9o2SwjzDhGkEBQV+2nfixb9+G7I7bZc8Oe1k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=d42tEWSaJXxXa6x7ylwaA460/jjbpXg3yFds5a6SAtTeGCwMijQAr2HsSTlpaMw+N
-	 AOL6VJLWs93kW7sOaylbjYP/M5FqrKMQStJiTaZcHfM8xrIPOu+bh314Ae+Jat9bNP
-	 /8fp1jOHKnNU3AVajo5R763YtwFLKrLq5b6v4mPg=
+	b=0dimG9B2dGlDrhvdsbaDR3rtOQKSsqb74cTdUwjzB9q7YhQtH3g3/+xESQCjUoRL6
+	 CFSPzjci6rf1ibo5RklTN9JjGfZi719CoqHsD5X1jf7Cq3O7jH03lMqAPWovDwouC5
+	 4Qrz+XO+MnDgoZNyljw7wZlDRu6M90EJ+CDcC0lo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730078AbgGNStL (ORCPT
+        id S1730098AbgGNStP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 14:49:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44842 "EHLO mail.kernel.org"
+        Tue, 14 Jul 2020 14:49:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44868 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730067AbgGNStH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 14:49:07 -0400
+        id S1730071AbgGNStJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 14:49:09 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 74B1222B2A;
-        Tue, 14 Jul 2020 18:49:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 27B37222E9;
+        Tue, 14 Jul 2020 18:49:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594752547;
-        bh=MVAnC1VvfZxuXdIRo29VFm9919FcQ7IIv6dwWV0OXBU=;
+        s=default; t=1594752549;
+        bh=YHKa8RG9o2SwjzDhGkEBQV+2nfixb9+G7I7bZc8Oe1k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DUP6vguM9DMWRh/2MUHmz2RVSZr7isKAr7FSUuyjZ6sG8ND7skBM+Klil28dWwUZt
-         rQqOme+bQmsaBFPLnWVYPm380/95DyKxIXb+CJbmTAkjRmV6/dVvFMuPADxJAWN/H6
-         t4SUEK8KP4T0Q+hrRJmfQM+7/LWhR1n6f5iTCuww=
+        b=CgfjhmsurLaSrJpo3CnqBbojcA13E2Lu3fZnlbD6evvo+qnUfwNaepqD5L7n2yfdC
+         VLsTc4TZzmXZepJu1v+aBiSawU32o3mXz5T50vtt7jGsg+9ZNW8BuvUkJ9kry2Kku6
+         UusXMxRCNGx5mE4PF8Ub38v/nZB6CGNgqmFujUYY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ciara Loftus <ciara.loftus@intel.com>,
-        Andrew Bowers <andrewx.bowers@intel.com>,
-        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
+        stable@vger.kernel.org, Dany Madden <drt@linux.ibm.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 019/109] i40e: protect ring accesses with READ- and WRITE_ONCE
-Date:   Tue, 14 Jul 2020 20:43:22 +0200
-Message-Id: <20200714184106.439526532@linuxfoundation.org>
+Subject: [PATCH 5.4 020/109] ibmvnic: continue to init in CRQ reset returns H_CLOSED
+Date:   Tue, 14 Jul 2020 20:43:23 +0200
+Message-Id: <20200714184106.495400608@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200714184105.507384017@linuxfoundation.org>
 References: <20200714184105.507384017@linuxfoundation.org>
@@ -61,108 +60,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ciara Loftus <ciara.loftus@intel.com>
+From: Dany Madden <drt@linux.ibm.com>
 
-[ Upstream commit d59e267912cd90b0adf33b4659050d831e746317 ]
+[ Upstream commit 8b40eb73509f5704a0e8cd25de0163876299f1a7 ]
 
-READ_ONCE should be used when reading rings prior to accessing the
-statistics pointer. Introduce this as well as the corresponding WRITE_ONCE
-usage when allocating and freeing the rings, to ensure protected access.
+Continue the reset path when partner adapter is not ready or H_CLOSED is
+returned from reset crq. This patch allows the CRQ init to proceed to
+establish a valid CRQ for traffic to flow after reset.
 
-Signed-off-by: Ciara Loftus <ciara.loftus@intel.com>
-Tested-by: Andrew Bowers <andrewx.bowers@intel.com>
-Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
+Signed-off-by: Dany Madden <drt@linux.ibm.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/intel/i40e/i40e_main.c | 29 ++++++++++++++-------
- 1 file changed, 19 insertions(+), 10 deletions(-)
+ drivers/net/ethernet/ibm/ibmvnic.c | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/ethernet/intel/i40e/i40e_main.c b/drivers/net/ethernet/intel/i40e/i40e_main.c
-index a8dd0228b6787..095ed81cc0ba4 100644
---- a/drivers/net/ethernet/intel/i40e/i40e_main.c
-+++ b/drivers/net/ethernet/intel/i40e/i40e_main.c
-@@ -458,11 +458,15 @@ static void i40e_get_netdev_stats_struct(struct net_device *netdev,
- 		i40e_get_netdev_stats_struct_tx(ring, stats);
- 
- 		if (i40e_enabled_xdp_vsi(vsi)) {
--			ring++;
-+			ring = READ_ONCE(vsi->xdp_rings[i]);
-+			if (!ring)
-+				continue;
- 			i40e_get_netdev_stats_struct_tx(ring, stats);
+diff --git a/drivers/net/ethernet/ibm/ibmvnic.c b/drivers/net/ethernet/ibm/ibmvnic.c
+index 4f503b9a674c4..d585973606990 100644
+--- a/drivers/net/ethernet/ibm/ibmvnic.c
++++ b/drivers/net/ethernet/ibm/ibmvnic.c
+@@ -1878,13 +1878,18 @@ static int do_reset(struct ibmvnic_adapter *adapter,
+ 			release_sub_crqs(adapter, 1);
+ 		} else {
+ 			rc = ibmvnic_reset_crq(adapter);
+-			if (!rc)
++			if (rc == H_CLOSED || rc == H_SUCCESS) {
+ 				rc = vio_enable_interrupts(adapter->vdev);
++				if (rc)
++					netdev_err(adapter->netdev,
++						   "Reset failed to enable interrupts. rc=%d\n",
++						   rc);
++			}
  		}
  
--		ring++;
-+		ring = READ_ONCE(vsi->rx_rings[i]);
-+		if (!ring)
-+			continue;
- 		do {
- 			start   = u64_stats_fetch_begin_irq(&ring->syncp);
- 			packets = ring->stats.packets;
-@@ -806,6 +810,8 @@ static void i40e_update_vsi_stats(struct i40e_vsi *vsi)
- 	for (q = 0; q < vsi->num_queue_pairs; q++) {
- 		/* locate Tx ring */
- 		p = READ_ONCE(vsi->tx_rings[q]);
-+		if (!p)
-+			continue;
- 
- 		do {
- 			start = u64_stats_fetch_begin_irq(&p->syncp);
-@@ -819,8 +825,11 @@ static void i40e_update_vsi_stats(struct i40e_vsi *vsi)
- 		tx_linearize += p->tx_stats.tx_linearize;
- 		tx_force_wb += p->tx_stats.tx_force_wb;
- 
--		/* Rx queue is part of the same block as Tx queue */
--		p = &p[1];
-+		/* locate Rx ring */
-+		p = READ_ONCE(vsi->rx_rings[q]);
-+		if (!p)
-+			continue;
-+
- 		do {
- 			start = u64_stats_fetch_begin_irq(&p->syncp);
- 			packets = p->stats.packets;
-@@ -10816,10 +10825,10 @@ static void i40e_vsi_clear_rings(struct i40e_vsi *vsi)
- 	if (vsi->tx_rings && vsi->tx_rings[0]) {
- 		for (i = 0; i < vsi->alloc_queue_pairs; i++) {
- 			kfree_rcu(vsi->tx_rings[i], rcu);
--			vsi->tx_rings[i] = NULL;
--			vsi->rx_rings[i] = NULL;
-+			WRITE_ONCE(vsi->tx_rings[i], NULL);
-+			WRITE_ONCE(vsi->rx_rings[i], NULL);
- 			if (vsi->xdp_rings)
--				vsi->xdp_rings[i] = NULL;
-+				WRITE_ONCE(vsi->xdp_rings[i], NULL);
+ 		if (rc) {
+ 			netdev_err(adapter->netdev,
+-				   "Couldn't initialize crq. rc=%d\n", rc);
++				   "Reset couldn't initialize crq. rc=%d\n", rc);
+ 			goto out;
  		}
- 	}
- }
-@@ -10853,7 +10862,7 @@ static int i40e_alloc_rings(struct i40e_vsi *vsi)
- 		if (vsi->back->hw_features & I40E_HW_WB_ON_ITR_CAPABLE)
- 			ring->flags = I40E_TXR_FLAGS_WB_ON_ITR;
- 		ring->itr_setting = pf->tx_itr_default;
--		vsi->tx_rings[i] = ring++;
-+		WRITE_ONCE(vsi->tx_rings[i], ring++);
  
- 		if (!i40e_enabled_xdp_vsi(vsi))
- 			goto setup_rx;
-@@ -10871,7 +10880,7 @@ static int i40e_alloc_rings(struct i40e_vsi *vsi)
- 			ring->flags = I40E_TXR_FLAGS_WB_ON_ITR;
- 		set_ring_xdp(ring);
- 		ring->itr_setting = pf->tx_itr_default;
--		vsi->xdp_rings[i] = ring++;
-+		WRITE_ONCE(vsi->xdp_rings[i], ring++);
- 
- setup_rx:
- 		ring->queue_index = i;
-@@ -10884,7 +10893,7 @@ setup_rx:
- 		ring->size = 0;
- 		ring->dcb_tc = 0;
- 		ring->itr_setting = pf->rx_itr_default;
--		vsi->rx_rings[i] = ring;
-+		WRITE_ONCE(vsi->rx_rings[i], ring);
- 	}
- 
- 	return 0;
 -- 
 2.25.1
 
