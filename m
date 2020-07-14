@@ -2,89 +2,176 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07280C433E6
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 02:38:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6632C433E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 02:38:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CF61320791
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 02:38:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594694318;
-	bh=51FBegSLb8zjqOHPKmcVZpdFJ/EQu52yY4tZBqDJraA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=1JYdTWVka1YNn1JOKko2TQkqirvviTcdX4hu4n+FC4MVvF5ChMBsi1fA0TUAin/Nh
-	 rCc0bHCGPf30tDnGriPqM+gwIooFbgTd4DYiA04nEOIfUR2TUI+VfuIgSz3Dg/lzHQ
-	 qq0YQAcmAdDsOHZvnVv5FIRPmd39YSd6Q2wRTno4=
+	by mail.kernel.org (Postfix) with ESMTP id ACB55207D4
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 02:38:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726736AbgGNCii (ORCPT
+        id S1726777AbgGNCil (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 22:38:38 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:46418 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726150AbgGNCih (ORCPT
+        Mon, 13 Jul 2020 22:38:41 -0400
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:37902 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726150AbgGNCik (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 22:38:37 -0400
-Received: by mail-io1-f66.google.com with SMTP id a12so15706059ion.13;
-        Mon, 13 Jul 2020 19:38:36 -0700 (PDT)
+        Mon, 13 Jul 2020 22:38:40 -0400
+Received: by mail-qk1-f193.google.com with SMTP id e13so14338027qkg.5
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Jul 2020 19:38:39 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=4Gg8DYJFGz0ri+pNHJ3d+QdBSaSue9B9wGaWAqzH7gE=;
-        b=cDzmnpZqLIr89deEgp39vsGloYK7iVfJ623XNV4qDAXKBbcKr3RgQ+mDtNCSh6FiBs
-         qc7YOrRRB6ebCpJL2Acr+ihYQo6mvJ/hHsv3oTjn7aqahjG8F9RkSKJ7ufkaH1BGvN15
-         AZqnpe99/iBWluuePChy59IT95dojhJzyDPi3/th+2GZSkWueDIRloM7yvLVIroKtkLy
-         y8HGpzxRKMljNMM4gapq4lm+INy2CpYwKBI/RfYTkp8/8cUfFqI6TIy9c3VSmx1ymJWN
-         uqBnKZZmr7zHcjccH6sINhbtqVdPPb+Zjtu1Zjom3M+gk+IkuG0vhB18+UqwCp03NRjq
-         eY8g==
-X-Gm-Message-State: AOAM5324DEydaH5vS2GlYkj7Bi9HEY6AoCTRNlNvoWEdR0zMS6YU8qio
-        AkmA2lvQi8bsnZEc+QdTSg==
-X-Google-Smtp-Source: ABdhPJwZqnw3INgfD6Hay7X47f+EZmXP1MZ7Ywp8k31VukJNIC1u1XNf6R93i8iUljLxukbnVOSYfg==
-X-Received: by 2002:a5d:9590:: with SMTP id a16mr2767645ioo.150.1594694316558;
-        Mon, 13 Jul 2020 19:38:36 -0700 (PDT)
-Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id d6sm9425301ilq.27.2020.07.13.19.38.35
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=aLJKGhiT24jFn5bdFjl0Bt69kYs80uYBlHCplcAgbAg=;
+        b=BOg3oHgerH0GOc9V1UJ4i/Br0UAYsjN+tF7J0NgQcUurylRFItPbR+zbCkhQRa0tdf
+         ANe29aCkTxF2Ft9lA0hjmICJV5IQwA3FE2Jb+Bq14bD7nkW0qJoPBuxWmtmeGRAz+8jI
+         FfYKjjQUHVVBxcreyeX69VHYmHmZcoyUc5JrztKiDtfd1COEsZ7pWiX18FKbjLfs+iqs
+         8CP7RWp3OID7Ivy0VZrgbKKnDf1x2IjSvYjZ1U2hoAT0hMQ6QeTsQySIOksSR1UBRYRQ
+         pb9PAhCsguH/M/eCiiNzYbL40v2XO2a5simwx6xjd3wVQHAC5CqBkZVt+ZuaCe61viej
+         1CnA==
+X-Gm-Message-State: AOAM530WRKIIZsILDLDWtnr5LO00Bj+Vw/R2ILpxuBsPTlX4eBjHyJPB
+        YZg2tvpS4Z0KbApnO9cs/48=
+X-Google-Smtp-Source: ABdhPJwwWGQKFP/kuSLuULMzOl9sz5eyAdvNuNU3nvwI0/HEjBbeSLL65ep5Q5yLMMHhd+6ego9bNQ==
+X-Received: by 2002:a37:7d86:: with SMTP id y128mr2285057qkc.343.1594694318979;
+        Mon, 13 Jul 2020 19:38:38 -0700 (PDT)
+Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
+        by smtp.gmail.com with ESMTPSA id a22sm21046291qka.64.2020.07.13.19.38.37
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 Jul 2020 19:38:35 -0700 (PDT)
-Received: (nullmailer pid 1172482 invoked by uid 1000);
-        Tue, 14 Jul 2020 02:38:35 -0000
-Date:   Mon, 13 Jul 2020 20:38:35 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Paul Cercueil <paul@crapouillou.net>
-Cc:     Daniel Vetter <daniel@ffwll.ch>, dri-devel@lists.freedesktop.org,
-        David Airlie <airlied@linux.ie>, linux-mips@vger.kernel.org,
-        Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, od@zcrc.me
-Subject: Re: [PATCH v2 02/10] dt-bindings: display: Add ingenic,ipu.yaml
-Message-ID: <20200714023835.GA1172429@bogus>
-References: <20200629235210.441709-1-paul@crapouillou.net>
- <20200629235210.441709-2-paul@crapouillou.net>
+        Mon, 13 Jul 2020 19:38:38 -0700 (PDT)
+From:   Arvind Sankar <nivedita@alum.mit.edu>
+To:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org
+Cc:     Nick Desaulniers <ndesaulniers@google.com>,
+        Fangrui Song <maskray@google.com>,
+        Dmitry Golovin <dima@golovin.in>,
+        clang-built-linux@googlegroups.com,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Daniel Kiper <daniel.kiper@oracle.com>,
+        Sedat Dilek <sedat.dilek@gmail.com>,
+        Kees Cook <keescook@chromium.org>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        "H . J . Lu" <hjl@sourceware.org>, linux-kernel@vger.kernel.org
+Subject: [PATCH v4 0/7] x86/boot: Remove runtime relocations from compressed kernel
+Date:   Mon, 13 Jul 2020 22:38:29 -0400
+Message-Id: <20200714023836.2310569-1-nivedita@alum.mit.edu>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200629140928.858507-1-nivedita@alum.mit.edu>
+References: <20200629140928.858507-1-nivedita@alum.mit.edu>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200629235210.441709-2-paul@crapouillou.net>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 30 Jun 2020 01:52:02 +0200, Paul Cercueil wrote:
-> Add documentation of the Device Tree bindings for the Image Processing
-> Unit (IPU) found in most Ingenic SoCs.
-> 
-> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
-> ---
-> 
-> Notes:
->     v2: Add missing 'const' in items list
-> 
->  .../bindings/display/ingenic,ipu.yaml         | 65 +++++++++++++++++++
->  1 file changed, 65 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/display/ingenic,ipu.yaml
-> 
+The compressed kernel currently contains bogus runtime relocations in
+the startup code in head_{32,64}.S, which are generated by the linker,
+but must not actually be processed at runtime.
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+This generates warnings when linking with the BFD linker, and errors
+with LLD, which defaults to erroring on runtime relocations in read-only
+sections. It also requires the -z noreloc-overflow hack for the 64-bit
+kernel, which prevents us from linking it as -pie on an older BFD linker
+(<= 2.26) or on LLD, because the locations that are to be apparently
+relocated are only 32-bits in size and so cannot really have
+R_X86_64_RELATIVE relocations.
+
+This series aims to get rid of these relocations. I've build- and
+boot-tested with combinations of clang/gcc-10 with lld/bfd-2.34, and
+gcc-4.9.0 with bfd-2.24, skipping clang on 32-bit because it currently
+has other issues [0].
+
+The first three patches by Ard remove indirection via the GOT from the
+compressed kernel code.
+
+The next patch is an independent fix for LLD, to avoid an orphan
+section in arch/x86/boot/setup.elf.
+
+The fifth patch gets rid of almost all the relocations. It uses
+standard PIC addressing technique for 32-bit, i.e. loading a register
+with the address of _GLOBAL_OFFSET_TABLE_ and then using GOTOFF
+references to access variables. For 64-bit, there is 32-bit code that
+cannot use RIP-relative addressing, and also cannot use the 32-bit
+method, since GOTOFF references are 64-bit only. This is instead handled
+using a macro to replace a reference like gdt with (gdt-startup_32)
+instead. The assembler will generate a PC32 relocation entry, with
+addend set to (.-startup_32), and these will be replaced with constants
+at link time. This works as long as all the code using such references
+lives in the same section as startup_32, i.e. in .head.text.
+
+The sixth patch addresses a remaining issue with the BFD linker, which
+generates runtime relocations for absolute symbols. We use z_input_len
+and z_output_len, defined in the generated piggy.S file, as symbols
+whose absolute "addresses" are actually the size of the compressed
+payload and the size of the decompressed kernel image respectively. LLD
+does not generate relocations for these two symbols, but the BFD linker
+does, prior to the upcoming 2.35. To get around this, piggy.S is
+extended to also define two u32 variables (in .rodata) with the lengths,
+and the head code is modified to use those instead of the symbol
+addresses.
+
+An alternative way to handle z_input_len/z_output_len would be to just
+include piggy.S in head_{32,64}.S instead of as a separate object file,
+since the GNU assembler doesn't generate relocations for symbols set to
+constants.
+
+The last patch adds a check in the linker script to ensure that no
+runtime relocations get reintroduced.
+
+[0] https://lore.kernel.org/lkml/20200504230309.237398-1-ndesaulniers@google.com/
+
+Changes from v3:
+- Move hidden.h to include/linux so the EFI stub and the compressed
+  kernel can share the same file
+
+Changes from v2:
+- Incorporate Ard's patches for eliminating GOT references into this
+  series
+- Rebase on v5.8-rc3
+
+v2: https://lore.kernel.org/lkml/20200525225918.1624470-1-nivedita@alum.mit.edu/
+
+Changes from v1:
+- Add .text.* to setup.ld instead of just .text.startup
+- Rename the la() macro introduced in the second patch for 64-bit to
+  rva(), and rework the explanatory comment.
+- In the last patch, check both .rel.dyn and .rela.dyn, instead of just
+  one per arch.
+
+
+Ard Biesheuvel (3):
+  x86/boot/compressed: Move .got.plt entries out of the .got section
+  x86/boot/compressed: Force hidden visibility for all symbol references
+  x86/boot/compressed: Get rid of GOT fixup code
+
+Arvind Sankar (4):
+  x86/boot: Add .text.* to setup.ld
+  x86/boot: Remove run-time relocations from .head.text code
+  x86/boot: Remove runtime relocations from head_{32,64}.S
+  x86/boot: Check that there are no runtime relocations
+
+ arch/x86/boot/compressed/Makefile      |  37 +-----
+ arch/x86/boot/compressed/head_32.S     |  99 +++++----------
+ arch/x86/boot/compressed/head_64.S     | 165 ++++++++++---------------
+ arch/x86/boot/compressed/mkpiggy.c     |   6 +
+ arch/x86/boot/compressed/vmlinux.lds.S |  24 +++-
+ arch/x86/boot/setup.ld                 |   2 +-
+ drivers/firmware/efi/libstub/Makefile  |   2 +-
+ drivers/firmware/efi/libstub/hidden.h  |   6 -
+ include/linux/hidden.h                 |  19 +++
+ 9 files changed, 152 insertions(+), 208 deletions(-)
+ delete mode 100644 drivers/firmware/efi/libstub/hidden.h
+ create mode 100644 include/linux/hidden.h
+
+
+base-commit: 11ba468877bb23f28956a35e896356252d63c983
+-- 
+2.26.2
+
