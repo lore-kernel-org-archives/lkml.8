@@ -2,117 +2,76 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B2A9C433E4
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 10:56:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71830C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 10:56:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E430F22209
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 10:56:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 58A1D22208
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 10:56:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727114AbgGNK4X (ORCPT
+        id S1727833AbgGNK4s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 06:56:23 -0400
-Received: from mx2.suse.de ([195.135.220.15]:33508 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726729AbgGNK4X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 06:56:23 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 47770AD1A;
-        Tue, 14 Jul 2020 10:56:24 +0000 (UTC)
-Date:   Tue, 14 Jul 2020 12:56:21 +0200 (CEST)
-From:   Miroslav Benes <mbenes@suse.cz>
-To:     Josh Poimboeuf <jpoimboe@redhat.com>
-cc:     Randy Dunlap <rdunlap@infradead.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>, pmladek@suse.cz,
-        live-patching@vger.kernel.org
-Subject: Re: linux-next: Tree for Jun 23 (objtool (2))
-In-Reply-To: <20200702123555.bjioosahrs5vjovu@treble>
-Message-ID: <alpine.LSU.2.21.2007141240540.5393@pobox.suse.cz>
-References: <20200623162820.3f45feae@canb.auug.org.au> <61df2e8f-75e8-d233-9c3c-5b4fa2b7fbdc@infradead.org> <20200702123555.bjioosahrs5vjovu@treble>
-User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+        Tue, 14 Jul 2020 06:56:48 -0400
+Received: from emcscan.emc.com.tw ([192.72.220.5]:30348 "EHLO
+        emcscan.emc.com.tw" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726352AbgGNK4r (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 06:56:47 -0400
+X-IronPort-AV: E=Sophos;i="5.56,253,1539619200"; 
+   d="scan'208";a="36424500"
+Received: from unknown (HELO webmail.emc.com.tw) ([192.168.10.1])
+  by emcscan.emc.com.tw with ESMTP; 14 Jul 2020 18:56:43 +0800
+Received: from 192.168.10.23
+        by webmail.emc.com.tw with MailAudit ESMTP Server V5.0(69270:0:AUTH_RELAY)
+        (envelope-from <jingle.wu@emc.com.tw>); Tue, 14 Jul 2020 18:56:42 +0800 (CST)
+Received: from 101.12.45.92
+        by webmail.emc.com.tw with Mail2000 ESMTPA Server V7.00(2477:1:AUTH_LOGIN)
+        (envelope-from <jingle.wu@emc.com.tw>); Tue, 14 Jul 2020 18:56:42 +0800 (CST)
+From:   Jingle Wu <jingle.wu@emc.com.tw>
+To:     linux-kernel@vger.kernel.org, linux-input@vger.kernel.org,
+        dmitry.torokhov@gmail.com
+Cc:     phoenix@emc.com.tw, josh.chen@emc.com.tw, jingle.wu@emc.com.tw,
+        kai.heng.feng@canonical.com
+Subject: [PATCH 1/2] Input: elan_i2c - Add ic type 0x11, 0x13, 0x14.
+Date:   Tue, 14 Jul 2020 06:56:33 -0400
+Message-Id: <20200714105633.15099-1-jingle.wu@emc.com.tw>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2 Jul 2020, Josh Poimboeuf wrote:
+Add ic type 0x11, 0x13, 0x14 page sizes for update firmware.
 
-> On Tue, Jun 23, 2020 at 08:06:07AM -0700, Randy Dunlap wrote:
-> > On 6/22/20 11:28 PM, Stephen Rothwell wrote:
-> > > Hi all,
-> > > 
-> > > Changes since 20200622:
-> > > 
-> > 
-> > on x86_64:
-> > 
-> > arch/x86/kernel/cpu/mce/core.o: warning: objtool: mce_timed_out()+0x24: unreachable instruction
-> > kernel/exit.o: warning: objtool: __x64_sys_exit_group()+0x14: unreachable instruction
-> > 
-> > Full randconfig file is attached.
-> 
-> More livepatch...
-
-Correct.
-
-Both are known and I thought Josh had fixes queued somewhere for both, but 
-my memory fails me quite often. See below.
-
-However, I think it is time to decide how to approach this whole saga. It 
-seems that there are not so many places in the kernel in need of 
-__noreturn annotation in the end and as jikos argued at least some of 
-those should be fixed regardless. Josh, should I prepare proper patches 
-and submit them to relevant maintainers to see where this path is going?
-
-It would be much better to fix it in GCC, but it has been like banging 
-one's head against a wall so far. Josh, you wanted to create a bug 
-for GCC in this respect in the past? Has that happened?
-
-If I remember correctly, we discussed briefly a possibility to cope with 
-that in objtool, but no solution was presented.
-
-Removing -flive-patching is also a possibility. I don't like it much, but 
-we discussed it with Petr M. a couple of months ago and it might be a way 
-too.
-
-Thanks
-Miroslav
-
+Signed-off-by: Jingle Wu <jingle.wu@emc.com.tw>.
 ---
+ drivers/input/mouse/elan_i2c_core.c | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-diff --git a/arch/x86/kernel/cpu/mce/core.c b/arch/x86/kernel/cpu/mce/core.c
-index 14e4b4d17ee5..469a71ecea3c 100644
---- a/arch/x86/kernel/cpu/mce/core.c
-+++ b/arch/x86/kernel/cpu/mce/core.c
-@@ -279,7 +279,7 @@ static int fake_panic;
- static atomic_t mce_fake_panicked;
- 
- /* Panic in progress. Enable interrupts and wait for final IPI */
--static void wait_for_panic(void)
-+static void __noreturn wait_for_panic(void)
- {
-        long timeout = PANIC_TIMEOUT*USEC_PER_SEC;
- 
-diff --git a/kernel/exit.c b/kernel/exit.c
-index 727150f28103..570649152e7f 100644
---- a/kernel/exit.c
-+++ b/kernel/exit.c
-@@ -877,7 +877,7 @@ SYSCALL_DEFINE1(exit, int, error_code)
-  * as well as by sys_exit_group (below).
-  */
- void
--do_group_exit(int exit_code)
-+__noreturn do_group_exit(int exit_code)
- {
-        struct signal_struct *sig = current->signal;
+diff --git a/drivers/input/mouse/elan_i2c_core.c b/drivers/input/mouse/elan_i2c_core.c
+index 3f9354baac4b..e90beada0ecf 100644
+--- a/drivers/input/mouse/elan_i2c_core.c
++++ b/drivers/input/mouse/elan_i2c_core.c
+@@ -126,6 +126,15 @@ static int elan_get_fwinfo(u16 ic_type, u16 *validpage_count,
+ 	case 0x10:
+ 		*validpage_count = 1024;
+ 		break;
++	case 0x11:
++		*validpage_count = 1280;
++		break;
++	case 0x13:
++		*validpage_count = 2048;
++		break;
++	case 0x14:
++		*validpage_count = 1024;
++		break;
+ 	default:
+ 		/* unknown ic type clear value */
+ 		*validpage_count = 0;
+-- 
+2.17.1
 
