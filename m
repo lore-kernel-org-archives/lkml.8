@@ -7,32 +7,33 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FF97C433E5
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 19:40:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CE5EC433E4
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 19:39:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 61B8222B3A
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 19:40:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D09422B3A
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 19:39:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729890AbgGNTkD (ORCPT
+        id S1729852AbgGNTjy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 15:40:03 -0400
-Received: from smtp.al2klimov.de ([78.46.175.9]:40740 "EHLO smtp.al2klimov.de"
+        Tue, 14 Jul 2020 15:39:54 -0400
+Received: from smtp.al2klimov.de ([78.46.175.9]:40542 "EHLO smtp.al2klimov.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729832AbgGNTkC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 15:40:02 -0400
+        id S1729829AbgGNTjx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 15:39:53 -0400
 Received: from authenticated-user (PRIMARY_HOSTNAME [PUBLIC_IP])
-        by smtp.al2klimov.de (Postfix) with ESMTPA id 10AE0BC070;
-        Tue, 14 Jul 2020 19:39:59 +0000 (UTC)
+        by smtp.al2klimov.de (Postfix) with ESMTPA id 003CBBC0CA;
+        Tue, 14 Jul 2020 19:39:50 +0000 (UTC)
 From:   "Alexander A. Klimov" <grandmaster@al2klimov.de>
-To:     torvalds@linux-foundation.org, corbet@lwn.net, f4bug@amsat.org,
-        geert+renesas@glider.be, paulburton@kernel.org,
-        mchehab+samsung@kernel.org, ribalda@kernel.org, martink@posteo.de,
-        cyphar@cyphar.com, davej@codemonkey.org.uk,
+To:     torvalds@linux-foundation.org, corbet@lwn.net,
+        tsbogend@alpha.franken.de, f4bug@amsat.org,
+        luis.f.correia@gmail.com, cyphar@cyphar.com, ribalda@kernel.org,
+        davej@codemonkey.org.uk, mchehab+samsung@kernel.org,
+        martink@posteo.de, paulburton@kernel.org, geert+renesas@glider.be,
         linux-kernel@vger.kernel.org
 Cc:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
-Subject: [PATCH] CREDITS: remove link: http://www.andante.org
-Date:   Tue, 14 Jul 2020 21:39:54 +0200
-Message-Id: <20200714193954.49979-1-grandmaster@al2klimov.de>
+Subject: [PATCH] CREDITS: remove link http://www.mathematik.uni-stuttgart.de/~floeff
+Date:   Tue, 14 Jul 2020 21:39:45 +0200
+Message-Id: <20200714193945.49915-1-grandmaster@al2klimov.de>
 In-Reply-To: <20200714175528.46712-1-grandmaster@al2klimov.de>
 References: <20200714175528.46712-1-grandmaster@al2klimov.de>
 MIME-Version: 1.0
@@ -47,7 +48,7 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 Rationale:
-A completely white page with just an <iframe> in the <body>.
+The way it redirects looks like a fallback from a dead URL to a generic one.
 
 Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
 ---
@@ -62,17 +63,17 @@ Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
  1 file changed, 1 deletion(-)
 
 diff --git a/CREDITS b/CREDITS
-index 0787b5872906..ed58df9db15b 100644
+index 0787b5872906..151083e4245d 100644
 --- a/CREDITS
 +++ b/CREDITS
-@@ -4113,7 +4113,6 @@ S: Japan
+@@ -2241,7 +2241,6 @@ S: France
  
- N: Eric Youngdale
- E: eric@andante.org
--W: http://www.andante.org
- D: General kernel hacker
- D: SCSI iso9660 and ELF
- S: 6389 Hawk View Lane
+ N: Siegfried "Frieder" Loeffler (dg1sek)
+ E: floeff@tunix.mathematik.uni-stuttgart.de, fl@LF.net
+-W: http://www.mathematik.uni-stuttgart.de/~floeff
+ D: Busmaster driver for HP 10/100 Mbit Network Adapters
+ S: University of Stuttgart, Germany and
+ S: Ecole Nationale Superieure des Telecommunications, Paris
 -- 
 2.27.0
 
