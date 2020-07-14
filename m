@@ -2,106 +2,169 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB7BFC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:56:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11412C433F7
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:56:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C6680229CA
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:56:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="r4bMcrj+"
+	by mail.kernel.org (Postfix) with ESMTP id E41D922B39
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:55:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594752959;
+	bh=7zdd0PcQ35w9v/t6v5HtqSm+Hj/p439jpivZTh3Po5w=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=i7SkWqr9kv1P2FzVrzK27qVzPlxgwqHPgC69Ug/kAAY+utG1al4pdtcRpaz5+psZj
+	 HfAn3JMs5HbyX1D52sNsmYfx3e34nfNi2LRtQH+gLvAVTTBlLh/+wIgE7Oac0qgAQp
+	 +Rkc6sSSVCiKdJnnbIgYOY2KN0CZUwKgBwVW1ceg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729633AbgGNS4G (ORCPT
+        id S1730929AbgGNSz6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 14:56:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39840 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730930AbgGNSz6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 14 Jul 2020 14:55:58 -0400
-Received: from mail-io1-xd44.google.com (mail-io1-xd44.google.com [IPv6:2607:f8b0:4864:20::d44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EFDDCC061794
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 11:55:57 -0700 (PDT)
-Received: by mail-io1-xd44.google.com with SMTP id d18so18460579ion.0
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 11:55:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=IwJUAiA8BpGrXQ3dlTzGVWDeFkGjuEAAOtgnYtpstag=;
-        b=r4bMcrj+DSWRX7zW5bEHa64p7BZKCexjM5C4F9d6hvYG8IFfMmB4cCzIi/uwzjXpLL
-         2wIMBo0RJEmz/dP13ZjdgKfDTzbgglyD/ChLlc75bmsM+GfDL4uaBba7dmOrzsimJ2fv
-         mYX8o5YlWF67g7gb04WcxMWJ5IybOK47ZP8FKo2YoDzLx3o2rkgVxpIcC2Is+ZmU5bg+
-         H2lNsMgB33s6V5s5pSj4VGXILNQRkaRYYMTQG0pqRiCtDNKIKER0bBcnz1s2ntTyM3rV
-         n812s2eeZ2rB9k++XZb556z2QXI9NauLo9sgEZEFt9JX7DQRPwdOR6nRt2Sx73ojA0Fz
-         oulg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=IwJUAiA8BpGrXQ3dlTzGVWDeFkGjuEAAOtgnYtpstag=;
-        b=uMW/O90C59OpovZmAze7BFu+WSXsL366WX3BgbPhsMcwdRB0APck9y9VL+b/judNYQ
-         wEyHQhq1tjNTrkFGezmWBWD2mtSbqrLV4NvU/MK6uzVPYs9ubnqq10KSAM2aKm76WlYV
-         KFhY0HXH8SFDlVpY/1GTbDyRVPo0wygZE+jALx+7nCBZNWRn+1szVMFjhMO25x7WgH8V
-         /rdjQhrmT8w6zFgs75N092gyPVlhGaHcyH/Wh+SZ/849kmhfAoiKbCuxnjXwi8q0lkho
-         X9hB5snFSsBkbFBQ0lKHxyXC3dg4h039496W3urEseP4jfL6AHbsre4c348wN+oh6yIV
-         4nRg==
-X-Gm-Message-State: AOAM5307MoYboUTrPEJ29HBr6BhMjOU6MBRgaXuZtACwJSfL8YGKo+Sp
-        ear3TuEBenj5b/wFhEnnnTYEKamMgJnycYbHdjHBkA==
-X-Google-Smtp-Source: ABdhPJzXOZOKkN0bh6O7BSXC9478lsDVT3KH6Z0MLS3oc5Y1KTkC/sprReNUZ4+9oQ8cDYDBfWIXZrUdPNW/oCsLVxU=
-X-Received: by 2002:a05:6638:118:: with SMTP id x24mr7612352jao.48.1594752956875;
- Tue, 14 Jul 2020 11:55:56 -0700 (PDT)
+Received: from mail.kernel.org ([198.145.29.99]:53666 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730020AbgGNSzz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 14:55:55 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C3E8D229CA;
+        Tue, 14 Jul 2020 18:55:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594752954;
+        bh=7zdd0PcQ35w9v/t6v5HtqSm+Hj/p439jpivZTh3Po5w=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=VeA+M/JGVhMS5gv5ch5ykVyoD7zpkqpUqM9L6rfwwdcSan0JFiDpdTKMA/G4/5oHP
+         IE0oUcjlvw7TPkc5U/e6Lk4KHEj1FCXJdrHeWyhlr8mtP2yI0JBvejGiYoHNdV8H4f
+         lKX9XPZBjoBf8OafNKpMZMhYAfYS3ZPCaHHwl3qY=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Ciara Loftus <ciara.loftus@intel.com>,
+        Andrew Bowers <andrewx.bowers@intel.com>,
+        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.7 023/166] i40e: protect ring accesses with READ- and WRITE_ONCE
+Date:   Tue, 14 Jul 2020 20:43:08 +0200
+Message-Id: <20200714184116.991440945@linuxfoundation.org>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200714184115.844176932@linuxfoundation.org>
+References: <20200714184115.844176932@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-References: <20200714015732.32426-1-sean.j.christopherson@intel.com>
-In-Reply-To: <20200714015732.32426-1-sean.j.christopherson@intel.com>
-From:   Jim Mattson <jmattson@google.com>
-Date:   Tue, 14 Jul 2020 11:55:45 -0700
-Message-ID: <CALMp9eQ1-6GEiSh55-NXgjuq3EOwP9VWNMeriH_J64p9JMjN0g@mail.gmail.com>
-Subject: Re: [PATCH] KVM: x86: Don't attempt to load PDPTRs when 64-bit mode
- is enabled
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Joerg Roedel <joro@8bytes.org>, kvm list <kvm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Oliver Upton <oupton@google.com>,
-        Peter Shier <pshier@google.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 13, 2020 at 6:57 PM Sean Christopherson
-<sean.j.christopherson@intel.com> wrote:
->
-> Don't attempt to load PDPTRs if EFER.LME=1, i.e. if 64-bit mode is
-> enabled.  A recent change to reload the PDTPRs when CR0.CD or CR0.NW is
-> toggled botched the EFER.LME handling and sends KVM down the PDTPR path
-> when is_paging() is true, i.e. when the guest toggles CD/NW in 64-bit
-> mode.
+From: Ciara Loftus <ciara.loftus@intel.com>
 
-Oops!
+[ Upstream commit d59e267912cd90b0adf33b4659050d831e746317 ]
 
-I don't think "is_paging()" is relevant here, so much as "EFER.LME=1."
-As you note below, KVM *should* go down the PDPTR path when
-is_paging() is true and EFER.LME=0.
+READ_ONCE should be used when reading rings prior to accessing the
+statistics pointer. Introduce this as well as the corresponding WRITE_ONCE
+usage when allocating and freeing the rings, to ensure protected access.
 
-> Split the CR0 checks for 64-bit vs. 32-bit PAE into separate paths.  The
-> 64-bit path is specifically checking state when paging is toggled on,
-> i.e. CR0.PG transititions from 0->1.  The PDPTR path now needs to run if
-> the new CR0 state has paging enabled, irrespective of whether paging was
-> already enabled.  Trying to shave a few cycles to make the PDPTR path an
-> "else if" case is a mess.
->
-> Fixes: d42e3fae6faed ("kvm: x86: Read PDPTEs on CR0.CD and CR0.NW changes")
-> Cc: Jim Mattson <jmattson@google.com>
-> Cc: Oliver Upton <oupton@google.com>
-> Cc: Peter Shier <pshier@google.com>
-> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-Reviewed-by: Jim Mattson <jmattson@google.com>
+Signed-off-by: Ciara Loftus <ciara.loftus@intel.com>
+Tested-by: Andrew Bowers <andrewx.bowers@intel.com>
+Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/net/ethernet/intel/i40e/i40e_main.c | 29 ++++++++++++++-------
+ 1 file changed, 19 insertions(+), 10 deletions(-)
+
+diff --git a/drivers/net/ethernet/intel/i40e/i40e_main.c b/drivers/net/ethernet/intel/i40e/i40e_main.c
+index 2a037ec244b94..80dc5fcb82db7 100644
+--- a/drivers/net/ethernet/intel/i40e/i40e_main.c
++++ b/drivers/net/ethernet/intel/i40e/i40e_main.c
+@@ -439,11 +439,15 @@ static void i40e_get_netdev_stats_struct(struct net_device *netdev,
+ 		i40e_get_netdev_stats_struct_tx(ring, stats);
+ 
+ 		if (i40e_enabled_xdp_vsi(vsi)) {
+-			ring++;
++			ring = READ_ONCE(vsi->xdp_rings[i]);
++			if (!ring)
++				continue;
+ 			i40e_get_netdev_stats_struct_tx(ring, stats);
+ 		}
+ 
+-		ring++;
++		ring = READ_ONCE(vsi->rx_rings[i]);
++		if (!ring)
++			continue;
+ 		do {
+ 			start   = u64_stats_fetch_begin_irq(&ring->syncp);
+ 			packets = ring->stats.packets;
+@@ -787,6 +791,8 @@ static void i40e_update_vsi_stats(struct i40e_vsi *vsi)
+ 	for (q = 0; q < vsi->num_queue_pairs; q++) {
+ 		/* locate Tx ring */
+ 		p = READ_ONCE(vsi->tx_rings[q]);
++		if (!p)
++			continue;
+ 
+ 		do {
+ 			start = u64_stats_fetch_begin_irq(&p->syncp);
+@@ -800,8 +806,11 @@ static void i40e_update_vsi_stats(struct i40e_vsi *vsi)
+ 		tx_linearize += p->tx_stats.tx_linearize;
+ 		tx_force_wb += p->tx_stats.tx_force_wb;
+ 
+-		/* Rx queue is part of the same block as Tx queue */
+-		p = &p[1];
++		/* locate Rx ring */
++		p = READ_ONCE(vsi->rx_rings[q]);
++		if (!p)
++			continue;
++
+ 		do {
+ 			start = u64_stats_fetch_begin_irq(&p->syncp);
+ 			packets = p->stats.packets;
+@@ -10816,10 +10825,10 @@ static void i40e_vsi_clear_rings(struct i40e_vsi *vsi)
+ 	if (vsi->tx_rings && vsi->tx_rings[0]) {
+ 		for (i = 0; i < vsi->alloc_queue_pairs; i++) {
+ 			kfree_rcu(vsi->tx_rings[i], rcu);
+-			vsi->tx_rings[i] = NULL;
+-			vsi->rx_rings[i] = NULL;
++			WRITE_ONCE(vsi->tx_rings[i], NULL);
++			WRITE_ONCE(vsi->rx_rings[i], NULL);
+ 			if (vsi->xdp_rings)
+-				vsi->xdp_rings[i] = NULL;
++				WRITE_ONCE(vsi->xdp_rings[i], NULL);
+ 		}
+ 	}
+ }
+@@ -10853,7 +10862,7 @@ static int i40e_alloc_rings(struct i40e_vsi *vsi)
+ 		if (vsi->back->hw_features & I40E_HW_WB_ON_ITR_CAPABLE)
+ 			ring->flags = I40E_TXR_FLAGS_WB_ON_ITR;
+ 		ring->itr_setting = pf->tx_itr_default;
+-		vsi->tx_rings[i] = ring++;
++		WRITE_ONCE(vsi->tx_rings[i], ring++);
+ 
+ 		if (!i40e_enabled_xdp_vsi(vsi))
+ 			goto setup_rx;
+@@ -10871,7 +10880,7 @@ static int i40e_alloc_rings(struct i40e_vsi *vsi)
+ 			ring->flags = I40E_TXR_FLAGS_WB_ON_ITR;
+ 		set_ring_xdp(ring);
+ 		ring->itr_setting = pf->tx_itr_default;
+-		vsi->xdp_rings[i] = ring++;
++		WRITE_ONCE(vsi->xdp_rings[i], ring++);
+ 
+ setup_rx:
+ 		ring->queue_index = i;
+@@ -10884,7 +10893,7 @@ setup_rx:
+ 		ring->size = 0;
+ 		ring->dcb_tc = 0;
+ 		ring->itr_setting = pf->rx_itr_default;
+-		vsi->rx_rings[i] = ring;
++		WRITE_ONCE(vsi->rx_rings[i], ring);
+ 	}
+ 
+ 	return 0;
+-- 
+2.25.1
+
+
+
