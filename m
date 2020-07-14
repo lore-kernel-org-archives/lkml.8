@@ -2,122 +2,135 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A70BC433E6
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 08:33:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1199C433E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 08:34:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 11B4A21D90
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 08:33:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="fx6MU4ki"
+	by mail.kernel.org (Postfix) with ESMTP id BA3EC21BE5
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 08:34:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726609AbgGNIdI (ORCPT
+        id S1726675AbgGNIeI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 04:33:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55276 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725884AbgGNIdH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 04:33:07 -0400
-Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9ADDAC061755
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 01:33:07 -0700 (PDT)
-Received: by mail-wm1-x342.google.com with SMTP id f139so4024755wmf.5
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 01:33:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=vZ8sXgc4O5wGM0NeFKNvAvgtUFt05AlY27etdLwPk2Q=;
-        b=fx6MU4kioiP6of1mQ5lTe4Cl3aouCNyDNnbyUmwK/RifMwXKHl9bs9si+sWPZzt5Sd
-         3gqxr4buJJ5xI6DGT2EBPeA7/ftd8qJHdomouQvdc7LV2TeWvqLrv1tukJO84iC+9QP/
-         tKNsEKjDUrg/A4DIQY8b8eQxOEBi1Fkf8YxifHrRP3IBACBYDJsLZDBLUwAQgyK6HwyR
-         UR7g6xxbLICF6EZuMpsNRWknFs0shMHL87qOQEuybZRmwqGgBwUb+NTNMlKDsWqogt+m
-         Pcbd539UYPRISXXO57GEWVMIvNdqZ++8MMwGFYA/xBiUsXBnQXmQ8cda87X33keO9282
-         QAqQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=vZ8sXgc4O5wGM0NeFKNvAvgtUFt05AlY27etdLwPk2Q=;
-        b=JDY0lJ7FPdWS3Qp0IQutAKegm5ca62+tDOQOMEwlUCT5NFNPdinIj/zqnvqVZkH/Qp
-         SoEsI8RyhunT567QyN81rHOdNIXZrbLyT3aoD0fuVHM1yAdmARkNHAwBc38nGgkp3ITr
-         63jxCLn62psx75EQF68PuiOcM+pEj4ojO0PiB4DV8MR4ZKKm+F+mAEuMX7ZlTSIfxaQG
-         YF7A93KOonC7h413lUngQpi1vVDfvyQvweTS3qAcKru83kN1+bd7xCjCutC4Nbiac7dn
-         vaFisAyFBlPYfjqD10+aVDEorg36QGeAOg8Em3UgE/n+i2BRmgEG7cM8rfijjWN9Dfsg
-         CSHA==
-X-Gm-Message-State: AOAM532fDJ1Hjwdokn3WzWUtEaGnMbg+fbEZGR3NUjkXAATO2jRGhh39
-        8dQ0+hDyw8NjBKc3HVdS5Xs7xA==
-X-Google-Smtp-Source: ABdhPJycHx3NV6xfOaylzcYOnFH7Ad981YfRgvOt73meNM8CdcaMXW/nM44A30Yt/V+OFsAxoNVvbA==
-X-Received: by 2002:a1c:acc3:: with SMTP id v186mr3269476wme.79.1594715586356;
-        Tue, 14 Jul 2020 01:33:06 -0700 (PDT)
-Received: from localhost.localdomain ([2.31.163.61])
-        by smtp.gmail.com with ESMTPSA id u10sm3188209wml.29.2020.07.14.01.33.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 Jul 2020 01:33:05 -0700 (PDT)
-From:   Lee Jones <lee.jones@linaro.org>
-To:     arnd@arndb.de, gregkh@linuxfoundation.org
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Lee Jones <lee.jones@linaro.org>,
-        Rodolfo Giometti <giometti@enneenne.com>,
-        "Eurotech S.p.A" <info@eurotech.it>,
-        Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH 1/1] misc: c2port: core: Make copying name from userspace more secure
-Date:   Tue, 14 Jul 2020 09:32:59 +0100
-Message-Id: <20200714083259.1313267-1-lee.jones@linaro.org>
-X-Mailer: git-send-email 2.25.1
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Tue, 14 Jul 2020 04:34:08 -0400
+Received: from mail.loongson.cn ([114.242.206.163]:57054 "EHLO loongson.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725884AbgGNIeH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 04:34:07 -0400
+Received: from ticat.localdomain (unknown [113.200.148.30])
+        by mail.loongson.cn (Coremail) with SMTP id AQAAf9Cxr9b5bQ1fM1MEAA--.5354S2;
+        Tue, 14 Jul 2020 16:34:02 +0800 (CST)
+From:   Peng Fan <fanpeng@loongson.cn>
+To:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] mips/vdso: Fix resource leaks in genvdso.c
+Date:   Tue, 14 Jul 2020 16:34:01 +0800
+Message-Id: <1594715641-8492-1-git-send-email-fanpeng@loongson.cn>
+X-Mailer: git-send-email 2.1.0
+X-CM-TRANSID: AQAAf9Cxr9b5bQ1fM1MEAA--.5354S2
+X-Coremail-Antispam: 1UD129KBjvJXoW7Cr4xCrWkur17WrykXr43Jrb_yoW8ZFW7pF
+        s5uFyv9rZ2kFy7tw45J34j9FZ5AFn7XryUWr4kA3yDZFZ5X3sFy3y8GFyrtFy5Ar9Iq3yS
+        9anruFZ5AFs7trJanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDU0xBIdaVrnRJUUUySb7Iv0xC_Cr1lb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I2
+        0VC2zVCF04k26cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rw
+        A2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xII
+        jxv20xvEc7CjxVAFwI0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwV
+        C2z280aVCY1x0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC
+        0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Gr0_Cr
+        1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JMxAIw28IcxkI7VAKI48JMxC2
+        0s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI
+        0_JrI_JrWlx4CE17CEb7AF67AKxVWUXVWUAwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE
+        14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw20EY4v20x
+        vaj40_WFyUJVCq3wCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v2
+        6r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07jFfO7UUUUU=
+X-CM-SenderInfo: xidq1vtqj6z05rqj20fqof0/
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently the 'c2dev' device data is not zeroed when its allocated.
-Coupled with the fact strncpy() *may not* provide a NUL terminator
-means that a 1-byte leak would be possible *if* this was ever copied
-to userspace.
+Close "fd" before the return of map_vdso() and close "out_file"
+in main().
 
-To prevent such a failing, let's first ensure the 'c2dev' device data
-area is fully zeroed out and ensure the buffer will always be NUL
-terminated by using the kernel's strscpy() which a) uses the
-destination (instead of the source) size as the bytes to copy and b)
-is *always* NUL terminated.
-
-Cc: Rodolfo Giometti <giometti@enneenne.com>
-Cc: "Eurotech S.p.A" <info@eurotech.it>
-Reported-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Signed-off-by: Lee Jones <lee.jones@linaro.org>
+Signed-off-by: Peng Fan <fanpeng@loongson.cn>
 ---
- drivers/misc/c2port/core.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/mips/vdso/genvdso.c | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-diff --git a/drivers/misc/c2port/core.c b/drivers/misc/c2port/core.c
-index 80d87e8a0bea9..0de538a1cc1c6 100644
---- a/drivers/misc/c2port/core.c
-+++ b/drivers/misc/c2port/core.c
-@@ -899,7 +899,7 @@ struct c2port_device *c2port_device_register(char *name,
- 		unlikely(!ops->c2d_get) || unlikely(!ops->c2d_set))
- 		return ERR_PTR(-EINVAL);
- 
--	c2dev = kmalloc(sizeof(struct c2port_device), GFP_KERNEL);
-+	c2dev = kzalloc(sizeof(struct c2port_device), GFP_KERNEL);
- 	if (unlikely(!c2dev))
- 		return ERR_PTR(-ENOMEM);
- 
-@@ -923,7 +923,7 @@ struct c2port_device *c2port_device_register(char *name,
+diff --git a/arch/mips/vdso/genvdso.c b/arch/mips/vdso/genvdso.c
+index be57b832..f459c7a 100644
+--- a/arch/mips/vdso/genvdso.c
++++ b/arch/mips/vdso/genvdso.c
+@@ -122,6 +122,7 @@ static void *map_vdso(const char *path, size_t *_size)
+ 	if (fstat(fd, &stat) != 0) {
+ 		fprintf(stderr, "%s: Failed to stat '%s': %s\n", program_name,
+ 			path, strerror(errno));
++		close(fd);
+ 		return NULL;
  	}
- 	dev_set_drvdata(c2dev->dev, c2dev);
  
--	strncpy(c2dev->name, name, C2PORT_NAME_LEN - 1);
-+	strscpy(c2dev->name, name, sizeof(c2dev->name));
- 	c2dev->ops = ops;
- 	mutex_init(&c2dev->mutex);
+@@ -130,6 +131,7 @@ static void *map_vdso(const char *path, size_t *_size)
+ 	if (addr == MAP_FAILED) {
+ 		fprintf(stderr, "%s: Failed to map '%s': %s\n", program_name,
+ 			path, strerror(errno));
++		close(fd);
+ 		return NULL;
+ 	}
  
+@@ -139,6 +141,7 @@ static void *map_vdso(const char *path, size_t *_size)
+ 	if (memcmp(ehdr->e_ident, ELFMAG, SELFMAG) != 0) {
+ 		fprintf(stderr, "%s: '%s' is not an ELF file\n", program_name,
+ 			path);
++		close(fd);
+ 		return NULL;
+ 	}
+ 
+@@ -150,6 +153,7 @@ static void *map_vdso(const char *path, size_t *_size)
+ 	default:
+ 		fprintf(stderr, "%s: '%s' has invalid ELF class\n",
+ 			program_name, path);
++		close(fd);
+ 		return NULL;
+ 	}
+ 
+@@ -161,6 +165,7 @@ static void *map_vdso(const char *path, size_t *_size)
+ 	default:
+ 		fprintf(stderr, "%s: '%s' has invalid ELF data order\n",
+ 			program_name, path);
++		close(fd);
+ 		return NULL;
+ 	}
+ 
+@@ -168,15 +173,18 @@ static void *map_vdso(const char *path, size_t *_size)
+ 		fprintf(stderr,
+ 			"%s: '%s' has invalid ELF machine (expected EM_MIPS)\n",
+ 			program_name, path);
++		close(fd);
+ 		return NULL;
+ 	} else if (swap_uint16(ehdr->e_type) != ET_DYN) {
+ 		fprintf(stderr,
+ 			"%s: '%s' has invalid ELF type (expected ET_DYN)\n",
+ 			program_name, path);
++		close(fd);
+ 		return NULL;
+ 	}
+ 
+ 	*_size = stat.st_size;
++	close(fd);
+ 	return addr;
+ }
+ 
+@@ -297,6 +305,7 @@ int main(int argc, char **argv)
+ 	}
+ 
+ 	fprintf(out_file, "};\n");
++	fclose(out_file);
+ 
+ 	return EXIT_SUCCESS;
+ }
 -- 
-2.25.1
+2.1.0
 
