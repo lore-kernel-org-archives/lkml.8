@@ -2,148 +2,122 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A60FEC433E4
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 03:23:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59CA0C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 03:32:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7FA57206D9
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 03:23:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2CD47217A0
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 03:32:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="I3Ozj2Ld"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EhaRIst/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726758AbgGNDX2 (ORCPT
+        id S1726619AbgGNDc0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jul 2020 23:23:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35990 "EHLO
+        Mon, 13 Jul 2020 23:32:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37360 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726435AbgGNDX0 (ORCPT
+        with ESMTP id S1726432AbgGNDc0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jul 2020 23:23:26 -0400
+        Mon, 13 Jul 2020 23:32:26 -0400
 Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1B70FC061755;
-        Mon, 13 Jul 2020 20:23:26 -0700 (PDT)
-Received: by mail-pg1-x541.google.com with SMTP id s189so1924484pgc.13;
-        Mon, 13 Jul 2020 20:23:26 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 31829C061755;
+        Mon, 13 Jul 2020 20:32:26 -0700 (PDT)
+Received: by mail-pg1-x541.google.com with SMTP id g67so6979613pgc.8;
+        Mon, 13 Jul 2020 20:32:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=xW5/BabNEIvpDOfbtUR9xY+c9eab4OK4y+/ElG/HHWo=;
-        b=I3Ozj2LdraXWTsbMzEfYCxicSyC/Sa7NMra7F1PtGAGy9xQZj+TC61P3+F9caJO819
-         QDws7LMCyA/0it6sG30unvvKnxU55JR+zndf0Gozr7NVKte/zyNwbaHotdglzIKmeStv
-         IkJHwcyCQ2pCWNBhWzfZlVLIdAELN5FkHm7KiaOXwjsUQBag2g4DlP2Qp5qHw2vi/HWh
-         ZchcetBT9Y+hiP4LjVclRVQA4q2WNUyqo1/srwUgEIchWX5Lr3hjzR6hW/ktHZFVR+5m
-         5VIoOEk0OsZ5tXB8mHhnjPBHuT5P48vdDsSoHXrIlUxjCx6mTdnm4WS7KRFFRI6B+z4n
-         JiKA==
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=vp2v7K/jVQL/hTXnKmTvc6QUZyaIGxTNQsGNS514dBY=;
+        b=EhaRIst/9s8/73496IxrX3ukNwxDGYHYNp7A8n9b7Wn85bUFYu4mDclfBE+bx38tRb
+         EVSRrwDMBi4h1E5SN9hRGHRgFUXbA8F3/wnzUfhN1Djh9WDw4QnRwHyWR6AovTlKyzvJ
+         Xq88m9aJl+qQCwu7xVQcT5wMI/M5uOohJaoeiYMkVLPOuuCDgq3ZmTL02hnnZ06MbyJO
+         I+fHaJbFOUXN5usf3ckirjeB170OYtdvZFTV3RsStmsRC6d9qx9yhZgT9PhVeXoyyB3I
+         IODf/aE24JYz5jBfsGSToxm9+BJASaWMdDzKRYIeAzy7yF8RsxYUPhLQOxATtV5VZjnQ
+         uceg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=xW5/BabNEIvpDOfbtUR9xY+c9eab4OK4y+/ElG/HHWo=;
-        b=qiatt0cI0Mn6JHAfqTAJu7GdvVLSbWfMQ9AvW5BKC4/Cgl3mnH9j5PXKQDSucXXF/g
-         G0fP3/Kru6fFbAll4nYJxK8FsLojkRc+nG/t10YKqddZpecAeFxLGMFzRkpfCYFj8ZV9
-         fXyxv43FetGRM9jYtCn6Fe+gRWcK++9WtJzVrF8BpF1x2G7KB6ZKaKSScWDIm/sefkgt
-         fInKDuBPT+T0+8lLxI/D0DlR5meNzDo17yW74SlyiRu6X9duS1VsQxcshOcwSLqlpFdV
-         dko1K8d+itGdPStuTTp/esw3BpbaNGU+dthxla5pTLIIL22iR5TUZsr8I+WjKGvsni2o
-         Ye1A==
-X-Gm-Message-State: AOAM5309WhYtpOMhwYIdMWRmRX70eMLvaPL5rjtIkJJh81yyDJOpaMJc
-        Lod7mYGvX3TsURhJWKOPOVUNbXkSaZg=
-X-Google-Smtp-Source: ABdhPJxxORme6Q3TuPJzp9CBnVooakCTgBJw/bYUDbA95N5iNpBAUOq8mPtWEX4loWdX/M44VdDqdg==
-X-Received: by 2002:a63:d74c:: with SMTP id w12mr1852456pgi.260.1594697005581;
-        Mon, 13 Jul 2020 20:23:25 -0700 (PDT)
-Received: from fmin-OptiPlex-7060.nreal.work ([103.206.191.8])
-        by smtp.gmail.com with ESMTPSA id c139sm15243184pfb.65.2020.07.13.20.23.23
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 13 Jul 2020 20:23:25 -0700 (PDT)
-From:   dillon.minfei@gmail.com
-To:     sfr@canb.auug.org.au, bcousson@baylibre.com, tony@atomide.com,
-        robh+dt@kernel.org
-Cc:     linux-omap@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, dillon min <dillon.minfei@gmail.com>
-Subject: [PATCH v2] Since am437x have the same clock structure with am335x [1][2], reuse the code from Tony Lindgren's patch [3] to fix dcan probe failed on am437x platform.
-Date:   Tue, 14 Jul 2020 11:23:18 +0800
-Message-Id: <1594696998-3995-2-git-send-email-dillon.minfei@gmail.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1594696998-3995-1-git-send-email-dillon.minfei@gmail.com>
-References: <1594696998-3995-1-git-send-email-dillon.minfei@gmail.com>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=vp2v7K/jVQL/hTXnKmTvc6QUZyaIGxTNQsGNS514dBY=;
+        b=Lbraf8dAwIezIStozFsefPOjU7XkxDB/DqeA+fnbFW5SpdC/UqYuHaxolIUI940bZJ
+         55blX7b5UPPzqPo7cz9S1jSZ2KJg9xaYxYSgOqfHvjBRRTRXh7oXtGsonv0wO7UU8QMj
+         uGMgKbXBEmiqdDcsWhfGjFITO23KLaeTbWbXOQXAhRLPBK43n0Zd2iMEnyxjf7GlPu3g
+         ixz6NA/udN1S++uYboAmIyStjXCwXoAraKnQZLIyVNRR6ebOVJoEk8/+6kvMGx9CZPPA
+         GTulLp8jS9My+o4nI7MKulbJL/HPtqyWQmUV1VBTSqQ7gZixoslZ9VKCeBgrUA/p/PUe
+         6ERg==
+X-Gm-Message-State: AOAM532/Q5bx7AoOwGFhCimoFuApYqJ3Gs3P4Q2182bUhnLtT8WqVLIr
+        +JhpUr0F2nhVKmm29LkLeDySOWg6
+X-Google-Smtp-Source: ABdhPJz4ILMyUxmgCof18nPJDV+MwbkqgBGtucF52k2b5Sg2NtCHQxbLc+W+8ruVuJPt9JJG5vWRuA==
+X-Received: by 2002:a62:788d:: with SMTP id t135mr2369420pfc.315.1594697545371;
+        Mon, 13 Jul 2020 20:32:25 -0700 (PDT)
+Received: from [10.1.10.11] (c-73-241-150-58.hsd1.ca.comcast.net. [73.241.150.58])
+        by smtp.gmail.com with ESMTPSA id c1sm852591pje.9.2020.07.13.20.32.23
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 13 Jul 2020 20:32:24 -0700 (PDT)
+Subject: Re: [PATCH] tipc: Don't using smp_processor_id() in preemptible code
+To:     qiang.zhang@windriver.com, jmaloy@redhat.com,
+        ying.xue@windriver.com, davem@davemloft.net, kuba@kernel.org,
+        tuong.t.lien@dektech.com.au
+Cc:     netdev@vger.kernel.org, tipc-discussion@lists.sourceforge.net,
+        linux-kernel@vger.kernel.org
+References: <20200714015341.27446-1-qiang.zhang@windriver.com>
+From:   Eric Dumazet <eric.dumazet@gmail.com>
+Message-ID: <5cdd5051-7c7f-6686-88bd-4061f529c064@gmail.com>
+Date:   Mon, 13 Jul 2020 20:32:23 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
+MIME-Version: 1.0
+In-Reply-To: <20200714015341.27446-1-qiang.zhang@windriver.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: dillon min <dillon.minfei@gmail.com>
-
-Fixes: 1a5cd7c23cc5 ("bus: ti-sysc: Enable all clocks directly during init to read revision")
-
-[1]: https://www.ti.com/lit/pdf/spruh73 Chapter-23, Figure 23-1. DCAN
-Integration
-[2]: https://www.ti.com/lit/pdf/spruhl7 Chapter-25, Figure 25-1. DCAN
-Integration
-[3]: commit 516f1117d0fb ("ARM: dts: Configure osc clock for d_can on am335x")
-
-Signed-off-by: dillon min <dillon.minfei@gmail.com>
----
-
-Hi Stephen,
-
-This changes correct commit messages based on your reviewing.
-make Fixes tags to oneline.
-make all commit message tags at the end of commit message
 
 
- arch/arm/boot/dts/am437x-l4.dtsi | 14 ++++++++++----
- 1 file changed, 10 insertions(+), 4 deletions(-)
+On 7/13/20 6:53 PM, qiang.zhang@windriver.com wrote:
+> From: Zhang Qiang <qiang.zhang@windriver.com>
+> 
+> CPU: 0 PID: 6801 Comm: syz-executor201 Not tainted 5.8.0-rc4-syzkaller #0
+> Hardware name: Google Google Compute Engine/Google Compute Engine,
+> BIOS Google 01/01/2011
+>
+> Reported-by: syzbot+263f8c0d007dc09b2dda@syzkaller.appspotmail.com
+> Signed-off-by: Zhang Qiang <qiang.zhang@windriver.com>
+> ---
+>  net/tipc/crypto.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/net/tipc/crypto.c b/net/tipc/crypto.c
+> index 8c47ded2edb6..520af0afe1b3 100644
+> --- a/net/tipc/crypto.c
+> +++ b/net/tipc/crypto.c
+> @@ -399,9 +399,10 @@ static void tipc_aead_users_set(struct tipc_aead __rcu *aead, int val)
+>   */
+>  static struct crypto_aead *tipc_aead_tfm_next(struct tipc_aead *aead)
+>  {
+> -	struct tipc_tfm **tfm_entry = this_cpu_ptr(aead->tfm_entry);
+> +	struct tipc_tfm **tfm_entry = get_cpu_ptr(aead->tfm_entry);
+>  
+>  	*tfm_entry = list_next_entry(*tfm_entry, list);
+> +	put_cpu_ptr(tfm_entry);
+>  	return (*tfm_entry)->tfm;
+>  }
+>  
+> 
 
-diff --git a/arch/arm/boot/dts/am437x-l4.dtsi b/arch/arm/boot/dts/am437x-l4.dtsi
-index 0d0f9fe4a882..4129affde54e 100644
---- a/arch/arm/boot/dts/am437x-l4.dtsi
-+++ b/arch/arm/boot/dts/am437x-l4.dtsi
-@@ -1541,8 +1541,9 @@
- 			reg = <0xcc020 0x4>;
- 			reg-names = "rev";
- 			/* Domains (P, C): per_pwrdm, l4ls_clkdm */
--			clocks = <&l4ls_clkctrl AM4_L4LS_D_CAN0_CLKCTRL 0>;
--			clock-names = "fck";
-+			clocks = <&l4ls_clkctrl AM4_L4LS_D_CAN0_CLKCTRL 0>,
-+			<&dcan0_fck>;
-+			clock-names = "fck", "osc";
- 			#address-cells = <1>;
- 			#size-cells = <1>;
- 			ranges = <0x0 0xcc000 0x2000>;
-@@ -1550,6 +1551,8 @@
- 			dcan0: can@0 {
- 				compatible = "ti,am4372-d_can", "ti,am3352-d_can";
- 				reg = <0x0 0x2000>;
-+				clocks = <&dcan0_fck>;
-+				clock-names = "fck";
- 				syscon-raminit = <&scm_conf 0x644 0>;
- 				interrupts = <GIC_SPI 52 IRQ_TYPE_LEVEL_HIGH>;
- 				status = "disabled";
-@@ -1561,8 +1564,9 @@
- 			reg = <0xd0020 0x4>;
- 			reg-names = "rev";
- 			/* Domains (P, C): per_pwrdm, l4ls_clkdm */
--			clocks = <&l4ls_clkctrl AM4_L4LS_D_CAN1_CLKCTRL 0>;
--			clock-names = "fck";
-+			clocks = <&l4ls_clkctrl AM4_L4LS_D_CAN1_CLKCTRL 0>,
-+			<&dcan1_fck>;
-+			clock-names = "fck", "osc";
- 			#address-cells = <1>;
- 			#size-cells = <1>;
- 			ranges = <0x0 0xd0000 0x2000>;
-@@ -1570,6 +1574,8 @@
- 			dcan1: can@0 {
- 				compatible = "ti,am4372-d_can", "ti,am3352-d_can";
- 				reg = <0x0 0x2000>;
-+				clocks = <&dcan1_fck>;
-+				clock-name = "fck";
- 				syscon-raminit = <&scm_conf 0x644 1>;
- 				interrupts = <GIC_SPI 49 IRQ_TYPE_LEVEL_HIGH>;
- 				status = "disabled";
--- 
-2.7.4
+This seems to hide a real bug.
 
+Presumably callers of this function should have disable preemption, and maybe interrupts as well.
+
+In any case, a Fixes: tag would be welcomed.
