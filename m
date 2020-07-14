@@ -2,188 +2,298 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1802AC433E2
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 10:48:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A93ECC433E2
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 10:52:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E271122203
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 10:48:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LhvDXOLX"
+	by mail.kernel.org (Postfix) with ESMTP id 88C9B22200
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 10:52:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726970AbgGNKsX (ORCPT
+        id S1726568AbgGNKwo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 06:48:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47882 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725884AbgGNKsW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 06:48:22 -0400
-Received: from mail-il1-x142.google.com (mail-il1-x142.google.com [IPv6:2607:f8b0:4864:20::142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AF86FC061755
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 03:48:22 -0700 (PDT)
-Received: by mail-il1-x142.google.com with SMTP id t4so13821911iln.1
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 03:48:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:reply-to:from:date:message-id
-         :subject:to:cc;
-        bh=j480OKWckVZikzkVrQF0UpbXQk/7Ivom1NgwihHXWGM=;
-        b=LhvDXOLXaVDHVU8ajuzmqlL9SoxGOPLslqB0pbwYs60rzpWn7nw6/gElog4dUe6S9m
-         1/tujllMZZxlam6WnKSPBgv26+uvqLi0TxYSKGfh6Z0kOdEnUx1jb08Md5ydY9tVSjVj
-         6SwwJ5pLJMqZn9Yv25nfiWDYtPUl1Nm5Q93uXMT6ctPS/LXuCmcb0DXW2/KLa+U3BGUg
-         uSz8NK+m5b5RojkzQitGq8UZd0bWxSeWsOm9EFJzq69ozx2WJImdq0HzyppBoOpnIGyM
-         +Gc3ekX55Dd4zjqafS4aXnjVvuPuXvn/E7FZfRgcdjfuDfxLcDb65ffAPskv0KBUAurN
-         3BFQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:reply-to
-         :from:date:message-id:subject:to:cc;
-        bh=j480OKWckVZikzkVrQF0UpbXQk/7Ivom1NgwihHXWGM=;
-        b=cZpsisSNHw1U689R/TwpkQ4fa9gzqbA9mN9wFqywGnU+UACxZxqrWc4/H+EnYjnnX+
-         CWCsu/ceyqDwMKNvZkEqFqslgA0ZoiCQ0m6xspMZKlDC22RaUzD57bo/3zdmZZ3N3Eep
-         EEym5IoLpMGZcxai2PuovF5AZurMCx9nn9OByav3GS6WGgpZrPXAKttuSJvtu1YQ64Us
-         Dxi/NlHsBlmHn031n56aRmSwVv/ONtS8V2a7+IyMSPrSwyJVNWlTvpzxtWqn04gzTEWP
-         f8HuaR/5u2vJtunK/Ke3hgDx5OlGf9ZgIHy6TeJtzb+eAmDTtddvctZHsQ437oB9Uhcy
-         WCjw==
-X-Gm-Message-State: AOAM532+hp9yKksDnecMXrCAfSb6wgsH4uKzszy401HVUEr0Q+/mPJEj
-        nnVMEX+QwlNooXBwS1tho9a3vTejrCW1vRHn3tE=
-X-Google-Smtp-Source: ABdhPJxW+MGW5u6p+9YUVJ07c0R2O0FEuEjvgdBkj1nx4Q7PqhjH4w2oISTRb03U5EhJO1PMGghp2iikAjM/7iFECqc=
-X-Received: by 2002:a92:dc09:: with SMTP id t9mr4281512iln.226.1594723702039;
- Tue, 14 Jul 2020 03:48:22 -0700 (PDT)
+        Tue, 14 Jul 2020 06:52:44 -0400
+Received: from ms-10.1blu.de ([178.254.4.101]:58174 "EHLO ms-10.1blu.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726041AbgGNKwn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 06:52:43 -0400
+Received: from [78.43.71.214] (helo=marius.fritz.box)
+        by ms-10.1blu.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.90_1)
+        (envelope-from <mail@mariuszachmann.de>)
+        id 1jvIY7-0004mQ-De; Tue, 14 Jul 2020 12:52:35 +0200
+From:   Marius Zachmann <mail@mariuszachmann.de>
+To:     Guenter Roeck <linux@roeck-us.net>
+Cc:     Marius Zachmann <mail@mariuszachmann.de>,
+        Jean Delvare <jdelvare@suse.com>,
+        Jonathan Corbet <corbet@lwn.net>, linux-hwmon@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] hwmon: corsair-cpro: Change to hid driver
+Date:   Tue, 14 Jul 2020 12:52:30 +0200
+Message-Id: <20200714105230.3126-1-mail@mariuszachmann.de>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-References: <20200713012428.1039487-1-caij2003@gmail.com> <20200713224020.1297154-1-caij2003@gmail.com>
- <CA+icZUUXZmDLOXbcj6vZi6+ZTC41VbH77CViHFRmQfxiMBqYtw@mail.gmail.com>
-In-Reply-To: <CA+icZUUXZmDLOXbcj6vZi6+ZTC41VbH77CViHFRmQfxiMBqYtw@mail.gmail.com>
-Reply-To: sedat.dilek@gmail.com
-From:   Sedat Dilek <sedat.dilek@gmail.com>
-Date:   Tue, 14 Jul 2020 12:48:10 +0200
-Message-ID: <CA+icZUVEr5Fi7XGfTJOw2U9ABHnWiirPqphnFapSDz9tzfjXGw@mail.gmail.com>
-Subject: Re: [PATCH] x86/entry: add compatibility with IAS
-To:     Jian Cai <caij2003@gmail.com>
-Cc:     jiancai@google.com, Nick Desaulniers <ndesaulniers@google.com>,
-        manojgupta@google.com, Brian Gerst <brgerst@gmail.com>,
-        Arvind Sankar <nivedita@alum.mit.edu>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Alexandre Chartre <alexandre.chartre@oracle.com>,
-        linux-kernel@vger.kernel.org,
-        Clang-Built-Linux ML <clang-built-linux@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-Con-Id: 241080
+X-Con-U: 0-mail
+X-Originating-IP: 78.43.71.214
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 14, 2020 at 11:34 AM Sedat Dilek <sedat.dilek@gmail.com> wrote:
->
-> On Tue, Jul 14, 2020 at 12:40 AM Jian Cai <caij2003@gmail.com> wrote:
-> >
-> > Clang's integrated assembler does not allow symbols with non-absolute
-> > values to be reassigned. This patch allows the affected code to be
-> > compatible with IAS.
-> >
-> > Link: https://github.com/ClangBuiltLinux/linux/issues/1043
-> > Reported-by: Nick Desaulniers <ndesaulniers@google.com>
-> > Reported-by: Sedat Dilek <sedat.dilek@gmail.com>
-> > Suggested-by: Nick Desaulniers <ndesaulniers@google.com>
-> > Suggested-by: Brian Gerst <brgerst@gmail.com>
-> > Suggested-by: Arvind Sankar <nivedita@alum.mit.edu>
-> > Tested-by: Sedat Dilek <sedat.dilek@gmail.com>
-> > Signed-off-by: Jian Cai <caij2003@gmail.com>
->
-> Hi Jian,
->
-> thanks for the update!
->
-> I am glad to see that some Linux/x86 assembler "monsters" jumped on the train.
->
-> So, your patch with reviewer's comment got several iterations?
-> Not sure if you are aware of the process of submitting patches (see [1])?
->
-> It is common to add a ChangeLog below commit-message-body and diffstat
-> means add below "--".
-> Something like:
-> --
-> Changes v1 -> v2:
-> - I did some cool stuff to improve this
->
-> While at it... Please add your version-of-patch to the subject-line:
-> You can do this via "git format-patch --signoff --subject-prefix="PATCH v2".
-> There might be other cool git tricks I do not know.
->
-> Hope I was no "Uberlehrer".
->
-> - Sedat -
->
-> [1] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/process/submitting-patches.rst
->
-> > ---
-> >  arch/x86/include/asm/idtentry.h | 14 ++++++--------
-> >  1 file changed, 6 insertions(+), 8 deletions(-)
-> >
-> > diff --git a/arch/x86/include/asm/idtentry.h b/arch/x86/include/asm/idtentry.h
-> > index f3d70830bf2a..5efaaed34eda 100644
-> > --- a/arch/x86/include/asm/idtentry.h
-> > +++ b/arch/x86/include/asm/idtentry.h
-> > @@ -469,16 +469,15 @@ __visible noinstr void func(struct pt_regs *regs,                 \
-> >         .align 8
-> >  SYM_CODE_START(irq_entries_start)
-> >      vector=FIRST_EXTERNAL_VECTOR
-> > -    pos = .
-> >      .rept (FIRST_SYSTEM_VECTOR - FIRST_EXTERNAL_VECTOR)
-> >         UNWIND_HINT_IRET_REGS
-> > +0 :
-> >         .byte   0x6a, vector
-> >         jmp     asm_common_interrupt
-> >         nop
-> >         /* Ensure that the above is 8 bytes max */
-> > -       . = pos + 8
-> > -    pos=pos+8
-> > -    vector=vector+1
-> > +       . = 0b + 8
-> > +       vector = vector+1
-> >      .endr
-> >  SYM_CODE_END(irq_entries_start)
-> >
-> > @@ -486,16 +485,15 @@ SYM_CODE_END(irq_entries_start)
-> >         .align 8
-> >  SYM_CODE_START(spurious_entries_start)
-> >      vector=FIRST_SYSTEM_VECTOR
-> > -    pos = .
-> >      .rept (NR_VECTORS - FIRST_SYSTEM_VECTOR)
-> >         UNWIND_HINT_IRET_REGS
-> > +0 :
-> >         .byte   0x6a, vector
-> >         jmp     asm_spurious_interrupt
-> >         nop
-> >         /* Ensure that the above is 8 bytes max */
-> > -       . = pos + 8
-> > -    pos=pos+8
-> > -    vector=vector+1
-> > +       . = 0b + 8
-> > +       vector = vector+1
-> >      .endr
-> >  SYM_CODE_END(spurious_entries_start)
-> >  #endif
-> > --
-> > 2.27.0.383.g050319c2ae-goog
-> >
+I found a project which uses hidraw to communicate with the device.
+Because I do not want to break any existing userspace code, I
+changed this to a hid driver, so hidraw can still be used.
+Do I need to include the hid maintainers for the undo in hid-quirks?
 
-Stolen the patch from [1].
+Signed-off-by: Marius Zachmann <mail@mariuszachmann.de>
+---
+ drivers/hid/hid-quirks.c     |   2 -
+ drivers/hwmon/Kconfig        |   4 +-
+ drivers/hwmon/corsair-cpro.c | 114 ++++++++++++++++++++++++++---------
+ 3 files changed, 86 insertions(+), 34 deletions(-)
 
-Tested-by: Sedat Dilek <sedat.dilek@gmail.com> #
-Compile-/Assemble-tested against Linux v5.8-rc5 with LLVM/Clang
-v11.0.0-git
+diff --git a/drivers/hid/hid-quirks.c b/drivers/hid/hid-quirks.c
+index 7b7bc7737c53..ca8b5c261c7c 100644
+--- a/drivers/hid/hid-quirks.c
++++ b/drivers/hid/hid-quirks.c
+@@ -699,8 +699,6 @@ static const struct hid_device_id hid_ignore_list[] = {
+ 	{ HID_USB_DEVICE(USB_VENDOR_ID_AXENTIA, USB_DEVICE_ID_AXENTIA_FM_RADIO) },
+ 	{ HID_USB_DEVICE(USB_VENDOR_ID_BERKSHIRE, USB_DEVICE_ID_BERKSHIRE_PCWD) },
+ 	{ HID_USB_DEVICE(USB_VENDOR_ID_CIDC, 0x0103) },
+-	{ HID_USB_DEVICE(USB_VENDOR_ID_CORSAIR, 0x0c10) },
+-	{ HID_USB_DEVICE(USB_VENDOR_ID_CORSAIR, 0x1d00) },
+ 	{ HID_USB_DEVICE(USB_VENDOR_ID_CYGNAL, USB_DEVICE_ID_CYGNAL_RADIO_SI470X) },
+ 	{ HID_USB_DEVICE(USB_VENDOR_ID_CYGNAL, USB_DEVICE_ID_CYGNAL_RADIO_SI4713) },
+ 	{ HID_USB_DEVICE(USB_VENDOR_ID_CMEDIA, USB_DEVICE_ID_CM109) },
+diff --git a/drivers/hwmon/Kconfig b/drivers/hwmon/Kconfig
+index 8b046a5dfa40..c603d8c8e3d2 100644
+--- a/drivers/hwmon/Kconfig
++++ b/drivers/hwmon/Kconfig
+@@ -441,7 +441,7 @@ config SENSORS_BT1_PVT_ALARMS
 
-- Sedat -
+ config SENSORS_CORSAIR_CPRO
+ 	tristate "Corsair Commander Pro controller"
+-	depends on USB
++	depends on HID
+ 	help
+ 	  If you say yes here you get support for the Corsair Commander Pro
+ 	  controller.
+@@ -1716,7 +1716,7 @@ config SENSORS_ADS7871
 
-[1] https://lore.kernel.org/patchwork/patch/1272115/
+ config SENSORS_AMC6821
+ 	tristate "Texas Instruments AMC6821"
+-	depends on I2C
++	depends on I2C
+ 	help
+ 	  If you say yes here you get support for the Texas Instruments
+ 	  AMC6821 hardware monitoring chips.
+diff --git a/drivers/hwmon/corsair-cpro.c b/drivers/hwmon/corsair-cpro.c
+index fe625190e3a1..4310ee5aca24 100644
+--- a/drivers/hwmon/corsair-cpro.c
++++ b/drivers/hwmon/corsair-cpro.c
+@@ -5,13 +5,14 @@
+  */
+
+ #include <linux/bitops.h>
++#include <linux/completion.h>
++#include <linux/hid.h>
+ #include <linux/hwmon.h>
+ #include <linux/kernel.h>
+ #include <linux/module.h>
+ #include <linux/mutex.h>
+ #include <linux/slab.h>
+ #include <linux/types.h>
+-#include <linux/usb.h>
+
+ #define USB_VENDOR_ID_CORSAIR			0x1b1c
+ #define USB_PRODUCT_ID_CORSAIR_COMMANDERPRO	0x0c10
+@@ -62,7 +63,8 @@
+ #define NUM_TEMP_SENSORS	4
+
+ struct ccp_device {
+-	struct usb_device *udev;
++	struct hid_device *hdev;
++	struct completion wait_input_report;
+ 	struct mutex mutex; /* whenever buffer is used, lock before send_usb_cmd */
+ 	u8 *buffer;
+ 	int pwm[6];
+@@ -75,7 +77,7 @@ struct ccp_device {
+ /* send command, check for error in response, response in ccp->buffer */
+ static int send_usb_cmd(struct ccp_device *ccp, u8 command, u8 byte1, u8 byte2, u8 byte3)
+ {
+-	int actual_length;
++	unsigned long t;
+ 	int ret;
+
+ 	memset(ccp->buffer, 0x00, OUT_BUFFER_SIZE);
+@@ -84,26 +86,39 @@ static int send_usb_cmd(struct ccp_device *ccp, u8 command, u8 byte1, u8 byte2,
+ 	ccp->buffer[2] = byte2;
+ 	ccp->buffer[3] = byte3;
+
+-	ret = usb_bulk_msg(ccp->udev, usb_sndintpipe(ccp->udev, 2), ccp->buffer, OUT_BUFFER_SIZE,
+-			   &actual_length, 1000);
+-	if (ret)
+-		return ret;
++	reinit_completion(&ccp->wait_input_report);
+
+-	/* response needs to be received every time */
+-	ret = usb_bulk_msg(ccp->udev, usb_rcvintpipe(ccp->udev, 1), ccp->buffer, IN_BUFFER_SIZE,
+-			   &actual_length, 1000);
+-	if (ret)
++	ret = hid_hw_output_report(ccp->hdev, ccp->buffer, OUT_BUFFER_SIZE);
++	if (ret < 0)
+ 		return ret;
+
++	t = wait_for_completion_timeout(&ccp->wait_input_report, msecs_to_jiffies(300));
++	if (!t)
++		return -ETIMEDOUT;
++
+ 	/* first byte of response is error code */
+ 	if (ccp->buffer[0] != 0x00) {
+-		dev_dbg(&ccp->udev->dev, "device response error: %d", ccp->buffer[0]);
++		hid_dbg(ccp->hdev, "device response error: %d", ccp->buffer[0]);
+ 		return -EIO;
+ 	}
+
+ 	return 0;
+ }
+
++static int ccp_raw_event(struct hid_device *hdev, struct hid_report *report, u8 *data, int size)
++{
++	struct ccp_device *ccp = hid_get_drvdata(hdev);
++
++	/* only copy buffer when requested */
++	if (completion_done(&ccp->wait_input_report))
++		return 0;
++
++	memcpy(ccp->buffer, data, min(IN_BUFFER_SIZE, size));
++	complete(&ccp->wait_input_report);
++
++	return 0;
++}
++
+ /* requests and returns single data values depending on channel */
+ static int get_data(struct ccp_device *ccp, int command, int channel)
+ {
+@@ -437,57 +452,96 @@ static int get_temp_cnct(struct ccp_device *ccp)
+ 	return 0;
+ }
+
+-static int ccp_probe(struct usb_interface *intf, const struct usb_device_id *id)
++static int ccp_probe(struct hid_device *hdev, const struct hid_device_id *id)
+ {
+ 	struct device *hwmon_dev;
+ 	struct ccp_device *ccp;
+ 	int ret;
+
+-	ccp = devm_kzalloc(&intf->dev, sizeof(*ccp), GFP_KERNEL);
++	ccp = devm_kzalloc(&hdev->dev, sizeof(*ccp), GFP_KERNEL);
+ 	if (!ccp)
+ 		return -ENOMEM;
+
+-	ccp->buffer = devm_kmalloc(&intf->dev, OUT_BUFFER_SIZE, GFP_KERNEL);
++	ccp->buffer = devm_kmalloc(&hdev->dev, OUT_BUFFER_SIZE, GFP_KERNEL);
+ 	if (!ccp->buffer)
+ 		return -ENOMEM;
+
++	ret = hid_parse(hdev);
++	if (ret)
++		return ret;
++
++	ret = hid_hw_start(hdev, HID_CONNECT_HIDRAW);
++	if (ret)
++		return ret;
++
++	ret = hid_hw_open(hdev);
++	if (ret)
++		goto out_hw_stop;
++
++	ccp->hdev = hdev;
++	hid_set_drvdata(hdev, ccp);
+ 	mutex_init(&ccp->mutex);
++	init_completion(&ccp->wait_input_report);
+
+-	ccp->udev = interface_to_usbdev(intf);
++	hid_device_io_start(hdev);
+
+ 	/* temp and fan connection status only updates when device is powered on */
+ 	ret = get_temp_cnct(ccp);
+ 	if (ret)
+-		return ret;
++		goto out_hw_close;
+
+ 	ret = get_fan_cnct(ccp);
+ 	if (ret)
+-		return ret;
+-
+-	hwmon_dev = devm_hwmon_device_register_with_info(&intf->dev, "corsaircpro", ccp,
++		goto out_hw_close;
++	hwmon_dev = devm_hwmon_device_register_with_info(&hdev->dev, "corsaircpro", ccp,
+ 							 &ccp_chip_info, 0);
++	if (IS_ERR(hwmon_dev)) {
++		ret = PTR_ERR(hwmon_dev);
++		goto out_hw_close;
++	}
++
++	return 0;
+
+-	return PTR_ERR_OR_ZERO(hwmon_dev);
++out_hw_close:
++	hid_hw_close(hdev);
++out_hw_stop:
++	hid_hw_stop(hdev);
++	return ret;
+ }
+
+-static void ccp_disconnect(struct usb_interface *intf)
++static void ccp_remove(struct hid_device *hdev)
+ {
++	hid_hw_close(hdev);
++	hid_hw_stop(hdev);
+ }
+
+-static const struct usb_device_id ccp_devices[] = {
+-	{ USB_DEVICE(USB_VENDOR_ID_CORSAIR, USB_PRODUCT_ID_CORSAIR_COMMANDERPRO) },
+-	{ USB_DEVICE(USB_VENDOR_ID_CORSAIR, USB_PRODUCT_ID_CORSAIR_1000D) },
++static const struct hid_device_id ccp_devices[] = {
++	{ HID_USB_DEVICE(USB_VENDOR_ID_CORSAIR, USB_PRODUCT_ID_CORSAIR_COMMANDERPRO) },
++	{ HID_USB_DEVICE(USB_VENDOR_ID_CORSAIR, USB_PRODUCT_ID_CORSAIR_1000D) },
+ 	{ }
+ };
+
+-static struct usb_driver ccp_driver = {
++static struct hid_driver ccp_driver = {
+ 	.name = "corsair-cpro",
++	.id_table = ccp_devices,
+ 	.probe = ccp_probe,
+-	.disconnect = ccp_disconnect,
+-	.id_table = ccp_devices
++	.remove = ccp_remove,
++	.raw_event = ccp_raw_event,
+ };
+
+-MODULE_DEVICE_TABLE(usb, ccp_devices);
++MODULE_DEVICE_TABLE(hid, ccp_devices);
+ MODULE_LICENSE("GPL");
+
+-module_usb_driver(ccp_driver);
++static int __init ccp_init(void)
++{
++	return hid_register_driver(&ccp_driver);
++}
++
++static void __exit ccp_exit(void)
++{
++	hid_unregister_driver(&ccp_driver);
++}
++
++/* make sure, it is loaded after hid */
++late_initcall(ccp_init);
++module_exit(ccp_exit);
+--
+2.27.0
