@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57B3FC433F2
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:50:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08AC6C433E6
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:50:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2C680208C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:50:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D4D0121D7B
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:50:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594752624;
-	bh=lB/TV7OaebSpgcZCywI1o/AcmKyEEY97WqjSnD6Z+2k=;
+	s=default; t=1594752629;
+	bh=tdynT2JV7a0+gxRc6IFSgh5pZhbM6pNqj5JJ3tzCOCs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hbWOYRwyt1RgFHq/3O7M/T85/dscY6LwQ28J9C29gGc5iFyr/F8r91rvzKJmDoYnm
-	 arlXeWWZ/FR5TdyPSYBQMUu5WS0pagaof8WLE14flg3k8EaD9egFqAMHAanHzd1riH
-	 6QuZTmr9GhT2psoQP8RcNLQv75VNErFU+LSQ90fw=
+	b=cYZMtCx7+KdStJ+7zZVyRbdY+SIK8uZQDb6HMFNumt25NrGQ9MsaKQTntVDYUF4nW
+	 braImcdlkjCu9e0Bzn+MyG36tuA5ujDUjHonw7ZTylfZokv2j1IOAxV72Pu9G3FTEf
+	 evigGL0wgsussTBRMj++JNfip2sXANx2U2Kh18wE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730295AbgGNSuX (ORCPT
+        id S1730299AbgGNSu2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 14:50:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46340 "EHLO mail.kernel.org"
+        Tue, 14 Jul 2020 14:50:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46454 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730292AbgGNSuQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 14:50:16 -0400
+        id S1729728AbgGNSuV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 14:50:21 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7DD2921835;
-        Tue, 14 Jul 2020 18:50:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5EADE208C3;
+        Tue, 14 Jul 2020 18:50:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594752616;
-        bh=lB/TV7OaebSpgcZCywI1o/AcmKyEEY97WqjSnD6Z+2k=;
+        s=default; t=1594752621;
+        bh=tdynT2JV7a0+gxRc6IFSgh5pZhbM6pNqj5JJ3tzCOCs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Th4NOsN0WJMWZLkuGf2W62JpYrnsrBUJ26j9VFWoB64XFQglQ05HMEu+/xxRglvl+
-         6jYUC3f5UGkYvGLgb8PrI2sHgliBMkD5OpD7yGknRwa2q1qKH4eEhVujWojaD3A/ea
-         1OfWVhJBRyPsxKsQgGb6k0JCjWrRFZrF7vxAFl6w=
+        b=b873GxQdZ0zJBe44dzwG6bDftHftplueN2/cx+oJ2xUbpB1C75NMqh2JRSVY1TTzv
+         tdvlqCk3D2k9pCWRTT9KpgWurAqUftdI79GCLvdG1Wd6i6i3C43BU7a//AMd1Kjh9J
+         Djny2vjiwCxJ0sI5eFJeU/Nx/9hHhXwFkHvME/Lk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Zhenzhong Duan <zhenzhong.duan@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
+        stable@vger.kernel.org, Sascha Hauer <s.hauer@pengutronix.de>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 015/109] spi: spidev: fix a potential use-after-free in spidev_release()
-Date:   Tue, 14 Jul 2020 20:43:18 +0200
-Message-Id: <20200714184106.251697280@linuxfoundation.org>
+Subject: [PATCH 5.4 017/109] net: ethernet: mvneta: Add 2500BaseX support for SoCs without comphy
+Date:   Tue, 14 Jul 2020 20:43:20 +0200
+Message-Id: <20200714184106.347160297@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200714184105.507384017@linuxfoundation.org>
 References: <20200714184105.507384017@linuxfoundation.org>
@@ -60,74 +60,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Zhenzhong Duan <zhenzhong.duan@gmail.com>
+From: Sascha Hauer <s.hauer@pengutronix.de>
 
-[ Upstream commit 06096cc6c5a84ced929634b0d79376b94c65a4bd ]
+[ Upstream commit 1a642ca7f38992b086101fe204a1ae3c90ed8016 ]
 
-If an spi device is unbounded from the driver before the release
-process, there will be an NULL pointer reference when it's
-referenced in spi_slave_abort().
+The older SoCs like Armada XP support a 2500BaseX mode in the datasheets
+referred to as DR-SGMII (Double rated SGMII) or HS-SGMII (High Speed
+SGMII). This is an upclocked 1000BaseX mode, thus
+PHY_INTERFACE_MODE_2500BASEX is the appropriate mode define for it.
+adding support for it merely means writing the correct magic value into
+the MVNETA_SERDES_CFG register.
 
-Fix it by checking it's already freed before reference.
-
-Signed-off-by: Zhenzhong Duan <zhenzhong.duan@gmail.com>
-Link: https://lore.kernel.org/r/20200618032125.4650-2-zhenzhong.duan@gmail.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Sascha Hauer <s.hauer@pengutronix.de>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/spi/spidev.c | 20 ++++++++++----------
- 1 file changed, 10 insertions(+), 10 deletions(-)
+ drivers/net/ethernet/marvell/mvneta.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/drivers/spi/spidev.c b/drivers/spi/spidev.c
-index 88d0976215fac..ac6bf1fbbfe68 100644
---- a/drivers/spi/spidev.c
-+++ b/drivers/spi/spidev.c
-@@ -605,15 +605,20 @@ err_find_dev:
- static int spidev_release(struct inode *inode, struct file *filp)
- {
- 	struct spidev_data	*spidev;
-+	int			dofree;
- 
- 	mutex_lock(&device_list_lock);
- 	spidev = filp->private_data;
- 	filp->private_data = NULL;
- 
-+	spin_lock_irq(&spidev->spi_lock);
-+	/* ... after we unbound from the underlying device? */
-+	dofree = (spidev->spi == NULL);
-+	spin_unlock_irq(&spidev->spi_lock);
+diff --git a/drivers/net/ethernet/marvell/mvneta.c b/drivers/net/ethernet/marvell/mvneta.c
+index b0599b205b36e..9799253948281 100644
+--- a/drivers/net/ethernet/marvell/mvneta.c
++++ b/drivers/net/ethernet/marvell/mvneta.c
+@@ -108,6 +108,7 @@
+ #define MVNETA_SERDES_CFG			 0x24A0
+ #define      MVNETA_SGMII_SERDES_PROTO		 0x0cc7
+ #define      MVNETA_QSGMII_SERDES_PROTO		 0x0667
++#define      MVNETA_HSGMII_SERDES_PROTO		 0x1107
+ #define MVNETA_TYPE_PRIO                         0x24bc
+ #define      MVNETA_FORCE_UNI                    BIT(21)
+ #define MVNETA_TXQ_CMD_1                         0x24e4
+@@ -3199,6 +3200,11 @@ static int mvneta_config_interface(struct mvneta_port *pp,
+ 			mvreg_write(pp, MVNETA_SERDES_CFG,
+ 				    MVNETA_SGMII_SERDES_PROTO);
+ 			break;
 +
- 	/* last close? */
- 	spidev->users--;
- 	if (!spidev->users) {
--		int		dofree;
- 
- 		kfree(spidev->tx_buffer);
- 		spidev->tx_buffer = NULL;
-@@ -621,19 +626,14 @@ static int spidev_release(struct inode *inode, struct file *filp)
- 		kfree(spidev->rx_buffer);
- 		spidev->rx_buffer = NULL;
- 
--		spin_lock_irq(&spidev->spi_lock);
--		if (spidev->spi)
--			spidev->speed_hz = spidev->spi->max_speed_hz;
--
--		/* ... after we unbound from the underlying device? */
--		dofree = (spidev->spi == NULL);
--		spin_unlock_irq(&spidev->spi_lock);
--
- 		if (dofree)
- 			kfree(spidev);
-+		else
-+			spidev->speed_hz = spidev->spi->max_speed_hz;
- 	}
- #ifdef CONFIG_SPI_SLAVE
--	spi_slave_abort(spidev->spi);
-+	if (!dofree)
-+		spi_slave_abort(spidev->spi);
- #endif
- 	mutex_unlock(&device_list_lock);
- 
++		case PHY_INTERFACE_MODE_2500BASEX:
++			mvreg_write(pp, MVNETA_SERDES_CFG,
++				    MVNETA_HSGMII_SERDES_PROTO);
++			break;
+ 		default:
+ 			return -EINVAL;
+ 		}
 -- 
 2.25.1
 
