@@ -2,114 +2,201 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7123FC433E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 07:57:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C8FFC433E4
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 07:58:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5623E2145D
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 07:57:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 759002145D
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 07:58:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="C+EG+XoG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726770AbgGNH46 (ORCPT
+        id S1725801AbgGNH6i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 03:56:58 -0400
-Received: from mail5.windriver.com ([192.103.53.11]:45414 "EHLO mail5.wrs.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725801AbgGNH46 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 03:56:58 -0400
-Received: from ALA-HCA.corp.ad.wrs.com (ala-hca.corp.ad.wrs.com [147.11.189.40])
-        by mail5.wrs.com (8.15.2/8.15.2) with ESMTPS id 06E7sd8g016084
-        (version=TLSv1 cipher=DHE-RSA-AES256-SHA bits=256 verify=FAIL);
-        Tue, 14 Jul 2020 00:54:49 -0700
-Received: from pek-lpg-core1-vm1.wrs.com (128.224.156.106) by
- ALA-HCA.corp.ad.wrs.com (147.11.189.40) with Microsoft SMTP Server id
- 14.3.487.0; Tue, 14 Jul 2020 00:54:29 -0700
-From:   <qiang.zhang@windriver.com>
-To:     <jmaloy@redhat.com>, <davem@davemloft.net>, <kuba@kernel.org>,
-        <tuong.t.lien@dektech.com.au>, <eric.dumazet@gmail.com>,
-        <ying.xue@windriver.com>
-CC:     <netdev@vger.kernel.org>, <tipc-discussion@lists.sourceforge.net>,
-        <linux-kernel@vger.kernel.org>
-Subject: [PATCH v2] tipc: Don't using smp_processor_id() in preemptible code
-Date:   Tue, 14 Jul 2020 16:05:59 +0800
-Message-ID: <20200714080559.9617-1-qiang.zhang@windriver.com>
-X-Mailer: git-send-email 2.24.1
+        Tue, 14 Jul 2020 03:58:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49962 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726352AbgGNH6h (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 03:58:37 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 466BFC061794
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 00:58:37 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id s10so20116219wrw.12
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 00:58:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=WP+E7Gzj6PVJ2ddQoR4ENITwGviQMzkXLlWTSG6P9Wo=;
+        b=C+EG+XoGDXZrOgdAVgjPyky+0C6vdaorrTtzP3C/Y5N+uJsfKIvb9HFoGrqJd3JJJS
+         zQQ0YlYcf2eyOurqx5DAktYbsTuudnF48MCpO35LuMskDlu9Y8OPPf5Y8fQ2lbQf2eoW
+         7+OAeMacDBFcJ0maVzCc90g0+HXvWxMscpC8CeJIy5qS7FpB4ZLFn7D0ZHybbjI9Ka3v
+         nKgoH3uIRALzDmTA3gcaEXlwhHCimXtD7UD4MmWwh51kwH+81RXXdEgn7LENyBogKdsR
+         Glu8uf88aM1ggL0cYFm9Tj4r7tzepxRQzDWmZTEPCO0HJC6vnacoP+mDNo4WGwBhQhXw
+         /+cg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=WP+E7Gzj6PVJ2ddQoR4ENITwGviQMzkXLlWTSG6P9Wo=;
+        b=GRUkA3lFq8DEUmaO5BfZPa4n/KSCGNHfnzan1F8LOvfURLVl2uqPsW8aLEUUR+GPUD
+         kjDulKc/s2yDDe2PE2oaaypib6U5aXMxKLQbY++cARvqpxXrxakHsz8fYU9HzWzQ9BcO
+         67XR5NJ9sbgAs5RZnI2YGC7TWjCaT1dGAZHrEY+JUqlUfyuDueVvh2l1noAer6SrrzCu
+         /maCxqYJkWIIuqot4DZqFR4UUCQULMIVc72ssdSRxo6aG1KSsK9JfoRqp7ekLDmYDo3x
+         jpJJLvbPvqP+hH8y+pmeWlYW4Cir3ERTFYBGxw+1nNukg2sRD4ytVXm8SABtqo9tJ4e7
+         emFg==
+X-Gm-Message-State: AOAM531AiXW7waTNP/EYB+povzQRwiaPlLfwzXG6bH9jBVB53LJWM6Va
+        pW7LSo3Uc00Az3OycitbQld8EQ==
+X-Google-Smtp-Source: ABdhPJweYtmFzDu77mUI7cZCU7+sT8sw1/UUcOD2+1eMC6c1lKqU0h8wdN3UEKHZtnX3gh4GdOA4og==
+X-Received: by 2002:a5d:40ca:: with SMTP id b10mr4027551wrq.56.1594713515787;
+        Tue, 14 Jul 2020 00:58:35 -0700 (PDT)
+Received: from dell ([2.31.163.61])
+        by smtp.gmail.com with ESMTPSA id g195sm3011377wme.38.2020.07.14.00.58.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 14 Jul 2020 00:58:35 -0700 (PDT)
+Date:   Tue, 14 Jul 2020 08:58:33 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Hannes Reinecke <hare@suse.de>
+Cc:     jejb@linux.ibm.com, martin.petersen@oracle.com,
+        linux-kernel@vger.kernel.org, linux-scsi@vger.kernel.org
+Subject: Re: [PATCH v2 04/29] scsi: fcoe: fcoe: Fix various kernel-doc
+ infringements
+Message-ID: <20200714075833.GI3500@dell>
+References: <20200713074645.126138-1-lee.jones@linaro.org>
+ <20200713074645.126138-5-lee.jones@linaro.org>
+ <06bc5e03-04b0-7e09-18f4-d9fd536b714b@suse.de>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <06bc5e03-04b0-7e09-18f4-d9fd536b714b@suse.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Zhang Qiang <qiang.zhang@windriver.com>
+On Tue, 14 Jul 2020, Hannes Reinecke wrote:
 
-CPU: 0 PID: 6801 Comm: syz-executor201 Not tainted 5.8.0-rc4-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine,
-BIOS Google 01/01/2011
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x18f/0x20d lib/dump_stack.c:118
- check_preemption_disabled+0x128/0x130 lib/smp_processor_id.c:48
- tipc_aead_tfm_next net/tipc/crypto.c:402 [inline]
- tipc_aead_encrypt net/tipc/crypto.c:639 [inline]
- tipc_crypto_xmit+0x80a/0x2790 net/tipc/crypto.c:1605
- tipc_bearer_xmit_skb+0x180/0x3f0 net/tipc/bearer.c:523
- tipc_enable_bearer+0xb1d/0xdc0 net/tipc/bearer.c:331
- __tipc_nl_bearer_enable+0x2bf/0x390 net/tipc/bearer.c:995
- __tipc_nl_compat_doit net/tipc/netlink_compat.c:361 [inline]
- tipc_nl_compat_doit+0x440/0x640 net/tipc/netlink_compat.c:383
- tipc_nl_compat_handle net/tipc/netlink_compat.c:1268 [inline]
- tipc_nl_compat_recv+0x4ef/0xb40 net/tipc/netlink_compat.c:1311
- genl_family_rcv_msg_doit net/netlink/genetlink.c:669 [inline]
- genl_family_rcv_msg net/netlink/genetlink.c:714 [inline]
- genl_rcv_msg+0x61d/0x980 net/netlink/genetlink.c:731
- netlink_rcv_skb+0x15a/0x430 net/netlink/af_netlink.c:2469
- genl_rcv+0x24/0x40 net/netlink/genetlink.c:742
- netlink_unicast_kernel net/netlink/af_netlink.c:1303 [inline]
- netlink_unicast+0x533/0x7d0 net/netlink/af_netlink.c:1329
- netlink_sendmsg+0x856/0xd90 net/netlink/af_netlink.c:1918
- sock_sendmsg_nosec net/socket.c:652 [inline]
- sock_sendmsg+0xcf/0x120 net/socket.c:672
- ____sys_sendmsg+0x6e8/0x810 net/socket.c:2352
- ___sys_sendmsg+0xf3/0x170 net/socket.c:2406
- __sys_sendmsg+0xe5/0x1b0 net/socket.c:2439
- do_syscall_64+0x60/0xe0 arch/x86/entry/common.c:384
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
-RIP: 0033:0x4476a9
-Code: Bad RIP value.
-RSP: 002b:00007fff2b6d5168 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
-RAX: ffffffffffffffda RBX: 000000000000
+> On 7/13/20 9:46 AM, Lee Jones wrote:
+> > A couple of headers make no attempt to document their associated function
+> > parameters.  Others looks as if they are suffering with a little bitrot.
+> > 
+> > Fixes the following W=1 kernel build warning(s):
+> > 
+> >   drivers/scsi/fcoe/fcoe.c:654: warning: Function parameter or member 'lport' not described in 'fcoe_netdev_features_change'
+> >   drivers/scsi/fcoe/fcoe.c:654: warning: Function parameter or member 'netdev' not described in 'fcoe_netdev_features_change'
+> >   drivers/scsi/fcoe/fcoe.c:2039: warning: Function parameter or member 'ctlr_dev' not described in 'fcoe_ctlr_mode'
+> >   drivers/scsi/fcoe/fcoe.c:2039: warning: Excess function parameter 'cdev' description in 'fcoe_ctlr_mode'
+> >   drivers/scsi/fcoe/fcoe.c:2144: warning: Function parameter or member 'fcoe' not described in 'fcoe_dcb_create'
+> >   drivers/scsi/fcoe/fcoe.c:2144: warning: Excess function parameter 'netdev' description in 'fcoe_dcb_create'
+> >   drivers/scsi/fcoe/fcoe.c:2144: warning: Excess function parameter 'port' description in 'fcoe_dcb_create'
+> >   drivers/scsi/fcoe/fcoe.c:2627: warning: Function parameter or member 'lport' not described in 'fcoe_elsct_send'
+> >   drivers/scsi/fcoe/fcoe.c:2627: warning: Function parameter or member 'did' not described in 'fcoe_elsct_send'
+> >   drivers/scsi/fcoe/fcoe.c:2627: warning: Function parameter or member 'fp' not described in 'fcoe_elsct_send'
+> >   drivers/scsi/fcoe/fcoe.c:2627: warning: Function parameter or member 'op' not described in 'fcoe_elsct_send'
+> >   drivers/scsi/fcoe/fcoe.c:2627: warning: Function parameter or member 'resp' not described in 'fcoe_elsct_send'
+> >   drivers/scsi/fcoe/fcoe.c:2627: warning: Function parameter or member 'arg' not described in 'fcoe_elsct_send'
+> >   drivers/scsi/fcoe/fcoe.c:2627: warning: Function parameter or member 'timeout' not described in 'fcoe_elsct_send'
+> > 
+> > Cc: Hannes Reinecke <hare@suse.de>
+> > Signed-off-by: Lee Jones <lee.jones@linaro.org>
+> > ---
+> >   drivers/scsi/fcoe/fcoe.c | 10 ++++------
+> >   1 file changed, 4 insertions(+), 6 deletions(-)
+> > 
+> > diff --git a/drivers/scsi/fcoe/fcoe.c b/drivers/scsi/fcoe/fcoe.c
+> > index cb41d166e0c0f..0f9274960dc6b 100644
+> > --- a/drivers/scsi/fcoe/fcoe.c
+> > +++ b/drivers/scsi/fcoe/fcoe.c
+> > @@ -645,7 +645,7 @@ static int fcoe_lport_config(struct fc_lport *lport)
+> >   	return 0;
+> >   }
+> > -/**
+> > +/*
+> >    * fcoe_netdev_features_change - Updates the lport's offload flags based
+> >    * on the LLD netdev's FCoE feature flags
+> >    */
+> > @@ -2029,7 +2029,7 @@ static int fcoe_ctlr_enabled(struct fcoe_ctlr_device *cdev)
+> >   /**
+> >    * fcoe_ctlr_mode() - Switch FIP mode
+> > - * @cdev: The FCoE Controller that is being modified
+> > + * @ctlr_dev: The FCoE Controller that is being modified
+> >    *
+> >    * When the FIP mode has been changed we need to update
+> >    * the multicast addresses to ensure we get the correct
+> > @@ -2136,9 +2136,7 @@ static bool fcoe_match(struct net_device *netdev)
+> >   /**
+> >    * fcoe_dcb_create() - Initialize DCB attributes and hooks
+> > - * @netdev: The net_device object of the L2 link that should be queried
+> > - * @port: The fcoe_port to bind FCoE APP priority with
+> > - * @
+> > + * @fcoe:   The new FCoE interface
+> >    */
+> >   static void fcoe_dcb_create(struct fcoe_interface *fcoe)
+> >   {
+> > @@ -2609,7 +2607,7 @@ static void fcoe_logo_resp(struct fc_seq *seq, struct fc_frame *fp, void *arg)
+> >   	fc_lport_logo_resp(seq, fp, lport);
+> >   }
+> > -/**
+> > +/*
+> >    * fcoe_elsct_send - FCoE specific ELS handler
+> >    *
+> >    * This does special case handling of FIP encapsualted ELS exchanges for FCoE,
+> > 
+> I'd rather convert this and the fcoe_netdev_features_change to proper
+> kerneldocs:
+> 
+> diff --git a/drivers/scsi/fcoe/fcoe.c b/drivers/scsi/fcoe/fcoe.c
+> index cb41d166e0c0..151fe4c53b07 100644
+> --- a/drivers/scsi/fcoe/fcoe.c
+> +++ b/drivers/scsi/fcoe/fcoe.c
+> @@ -646,8 +646,12 @@ static int fcoe_lport_config(struct fc_lport *lport)
+>  }
+> 
+>  /**
+> - * fcoe_netdev_features_change - Updates the lport's offload flags based
+> - * on the LLD netdev's FCoE feature flags
+> + * fcoe_netdev_features_change - Updates the lport's offload flags
+> + * @lport:  The local port that is associated with the net device
+> + * @netdev: The associated net device
+> + *
+> + * Update the @lport offload flags based on the FCoE feature flags
+> + * from the LLD @netdev.
+>   */
+>  static void fcoe_netdev_features_change(struct fc_lport *lport,
+>                                         struct net_device *netdev)
+> @@ -2611,6 +2615,13 @@ static void fcoe_logo_resp(struct fc_seq *seq, struct
+> fc_frame *fp, void *arg)
+> 
+>  /**
+>   * fcoe_elsct_send - FCoE specific ELS handler
+> + * @lport: Local port
+> + * @did: Destination ID
+> + * @fp: FCoE frame
+> + * @op: ELS operation
+> + * @resp: Response callback
+> + * @arg: Argument for the response callback
+> + * @timeout: Timeout for the ELS response
+>   *
+>   * This does special case handling of FIP encapsualted ELS exchanges for
+> FCoE,
+>   * using FCoE specific response handlers and passing the FIP controller as
 
-Fixes: fc1b6d6de2208 ("tipc: introduce TIPC encryption & authentication")
-Reported-by: syzbot+263f8c0d007dc09b2dda@syzkaller.appspotmail.com
-Signed-off-by: Zhang Qiang <qiang.zhang@windriver.com>
----
- v1->v2:
- add fixes tags.
+I don't want to steal your work.
 
- net/tipc/crypto.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+Why don't you send this and a follow-up to fix the broken header for
+fcoe_ctlr_disc_start() as follow-ups?
 
-diff --git a/net/tipc/crypto.c b/net/tipc/crypto.c
-index 8c47ded2edb6..520af0afe1b3 100644
---- a/net/tipc/crypto.c
-+++ b/net/tipc/crypto.c
-@@ -399,9 +399,10 @@ static void tipc_aead_users_set(struct tipc_aead __rcu *aead, int val)
-  */
- static struct crypto_aead *tipc_aead_tfm_next(struct tipc_aead *aead)
- {
--	struct tipc_tfm **tfm_entry = this_cpu_ptr(aead->tfm_entry);
-+	struct tipc_tfm **tfm_entry = get_cpu_ptr(aead->tfm_entry);
- 
- 	*tfm_entry = list_next_entry(*tfm_entry, list);
-+	put_cpu_ptr(tfm_entry);
- 	return (*tfm_entry)->tfm;
- }
- 
+It also saves me from having to submit a v3 of this entire set.
+
 -- 
-2.24.1
-
+Lee Jones [李琼斯]
+Senior Technical Lead - Developer Services
+Linaro.org │ Open source software for Arm SoCs
+Follow Linaro: Facebook | Twitter | Blog
