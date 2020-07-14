@@ -2,105 +2,106 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7796C433E5
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 16:14:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B11CC433E7
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 16:15:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 920712077D
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 16:14:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 56DE820758
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 16:15:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="qnXT67KX"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KRO1zevJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728762AbgGNQOe (ORCPT
+        id S1728163AbgGNQPZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 12:14:34 -0400
-Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:7132 "EHLO
-        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726817AbgGNQOd (ORCPT
+        Tue, 14 Jul 2020 12:15:25 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:55897 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727774AbgGNQPY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 12:14:33 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5f0dd9af0001>; Tue, 14 Jul 2020 09:13:35 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Tue, 14 Jul 2020 09:14:33 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Tue, 14 Jul 2020 09:14:33 -0700
-Received: from [10.24.37.103] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 14 Jul
- 2020 16:14:25 +0000
-Subject: Re: [TEGRA194_CPUFREQ PATCH v5 1/4] dt-bindings: arm: Add t194 ccplex
- compatible and bpmp property
-To:     Rob Herring <robh@kernel.org>
-CC:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        "Will Deacon" <will@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>,
-        <devicetree@vger.kernel.org>, Jon Hunter <jonathanh@nvidia.com>,
-        Timo Alho <talho@nvidia.com>,
-        "open list:THERMAL" <linux-pm@vger.kernel.org>,
-        linux-tegra <linux-tegra@vger.kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        <bbasu@nvidia.com>, Mikko Perttunen <mperttunen@nvidia.com>,
-        Sumit Gupta <sumitg@nvidia.com>
-References: <1594649209-29394-1-git-send-email-sumitg@nvidia.com>
- <1594649209-29394-2-git-send-email-sumitg@nvidia.com>
- <20200713164214.GA341271@bogus>
- <70a0a8ee-b79a-2a05-5150-2ee0faaf2730@nvidia.com>
- <CAL_JsqL1CuumdT1CZiofEZw9j+3gsir8JwSrZVfcxFxEB=bavQ@mail.gmail.com>
-From:   Sumit Gupta <sumitg@nvidia.com>
-Message-ID: <ebc98e4b-1f94-e9a5-cad4-0677f4e440f7@nvidia.com>
-Date:   Tue, 14 Jul 2020 21:44:22 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Tue, 14 Jul 2020 12:15:24 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1594743323;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=ALhmT8jchXhi6XVATYAgVqRU6YHCRQ16pk3Thsq6jqw=;
+        b=KRO1zevJsuM7aCLWH9iK/la1EW3cpXLCTeSV0ODRSVQT2BF2xwogU7gUSsFfsV1PsO6X3i
+        Og1vT2am3dRKzD6nspp+3SchYOHF7oh/W/u0HQH1vw+sah/FVwUsnNTZsmba2RP7Y2mDxR
+        AhpMszts5DKizorXJH9yAHwAQulhmgY=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-76-wfCja4aTOWiv3tRLrvVHMg-1; Tue, 14 Jul 2020 12:15:21 -0400
+X-MC-Unique: wfCja4aTOWiv3tRLrvVHMg-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id DABEA8027E3;
+        Tue, 14 Jul 2020 16:15:19 +0000 (UTC)
+Received: from krava (unknown [10.40.193.14])
+        by smtp.corp.redhat.com (Postfix) with SMTP id CBEB6710AD;
+        Tue, 14 Jul 2020 16:15:16 +0000 (UTC)
+Date:   Tue, 14 Jul 2020 18:15:15 +0200
+From:   Jiri Olsa <jolsa@redhat.com>
+To:     Alexey Budankov <alexey.budankov@linux.intel.com>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>
+Subject: Re: [PATCH v11 00/15] perf: support enable and disable commands in
+ stat and record modes
+Message-ID: <20200714161515.GL183694@krava>
+References: <037d737f-0ada-a9f0-9686-f7521ca6fbc3@linux.intel.com>
+ <CAM9d7cgv1dbLMmtUYWXEvoSUC_NQuBpJ9JRBn3tXJ+S5PX+8TQ@mail.gmail.com>
+ <20200714151634.GA43671@kernel.org>
+ <aaec7646-a032-7457-4283-50037d83ec88@linux.intel.com>
 MIME-Version: 1.0
-In-Reply-To: <CAL_JsqL1CuumdT1CZiofEZw9j+3gsir8JwSrZVfcxFxEB=bavQ@mail.gmail.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1594743215; bh=/P5rK0jFQFtvkIppoDEAhZsCXMc8C/ph5QwjUSI4HQ0=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=qnXT67KX8RhTnD9Mtxu7mrWphK73FS5l7mjJnHIsqSG9tbjQb7ko+f0DYypkxpLHm
-         rpe5+GOZTFm1wUAS21fajtoShYzYPPwG/CbHvmrZS0pmGZYuq2uW3VVYlnx29Kx+YV
-         10a1ykGV9l8+dfkSelN0X8dmhwh7mrC7d2IAqUfBnRvXiVHAbDmktMh3O0zoNA01dr
-         LZuZufNgUIODZ2nK9n/u164NghxnC5Cj68CGIVQvPP7g3OwSIq75hWlnCU1mhdBQTs
-         U+9F8+6jTUWjphsqvWEk8ThW6qOZejOUfENRPotDupikT+QIb3nuQEorKD8bmCMIza
-         9ByB+YNPkASkw==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aaec7646-a032-7457-4283-50037d83ec88@linux.intel.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
->>>
->>> The cpus.yaml binding documents what's in 'cpu' nodes, not 'cpus'
->>> node. AIUI, the latter is what you want. You should do your own schema
->>> file here.
->>>
->> Do you mean to change existing file name from 'cpus.yaml' to 'cpu.yaml'
->> and create new 'cpus.yaml' file?
->> I think it's better to incorporate the change in existing 'cpus.yaml'
->> file to keep both cpu@X and cpus node details together. Please suggest.
+On Tue, Jul 14, 2020 at 06:53:26PM +0300, Alexey Budankov wrote:
 > 
-> No, I'm suggesting you create nvidia,tegra194-ccplex.yaml.
+> On 14.07.2020 18:16, Arnaldo Carvalho de Melo wrote:
+> > Em Tue, Jul 14, 2020 at 09:05:10PM +0900, Namhyung Kim escreveu:
+> >> Hello,
+> >>
+> >> On Tue, Jul 14, 2020 at 5:37 PM Alexey Budankov
+> >> <alexey.budankov@linux.intel.com> wrote:
+> >>>
+> >>>
+> >>> Changes in v11:
+> >>> - added comments to struct ctl_fd
+> >>> - explicitly coded data_size decrement
+> >>
+> >> Acked-by: Namhyung Kim <namhyung@kernel.org>
+> > 
+> > So, I think v10 had Jiri's Acked-by, right? Or was it a reviewed-by?
+> > Please next time collect those, helps with reviewing, Jiri?
 > 
-Have posted new version of only this patch with new schema file.
-Please review.
+> Right, v10 has got Acked-by Jiri Olsa [1]. 
 
-Thanks,
-Sumit
+yes, I ack-ed it
+
+jirka
+
+> I should have already learned this lesson on CAP_PERFMON patches
+> so will try my best to get this done thus far.
+> 
+> Thanks,
+> Alexei
+> 
+> [1] https://lore.kernel.org/lkml/20200712211204.GA156308@krava/
+> 
+
