@@ -2,405 +2,136 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-20.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 868CDC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 23:11:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6749C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 23:12:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4E8432071B
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 23:11:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 793712065E
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 23:12:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="YcEGuE0F"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="dEQTueqR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727030AbgGNXLX (ORCPT
+        id S1727085AbgGNXMM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 19:11:23 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:60816 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726479AbgGNXLX (ORCPT
+        Tue, 14 Jul 2020 19:12:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51346 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726446AbgGNXML (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 19:11:23 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06EN7GGg052015;
-        Tue, 14 Jul 2020 23:11:18 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id : mime-version : content-transfer-encoding;
- s=corp-2020-01-29; bh=THfw4ZvQ8Vip0ti/cAI2901+RlkftzrO8gLUBYRC4I4=;
- b=YcEGuE0FNhRXTNvBp52hKWv7x+XnhK80FAoFjPOirlqUIeF8fs8x7Ti+SJ4vtMtVSPuu
- WE9o/A/qApMvZTv8s1S4C11MpvUcjHMr8ZfYtxsZkvqu3Ypy8OeByLu+ERP+7jNl9xOe
- DHnC8AyUOTlOhFF7Rcw3H7uJtiLBJqFDPvM5LQGhWxFKOmNmBI5g1hMXLZQp6Gwq4LTw
- BK+Qa+C0A6U1buyXwPVOS3cxIO68dMvy19lg/e2fk9kIlkw6p1WZpHjDvl2CVBs0Vv46
- glPLzWGCdpOwyb2DKIKo0+I5nkF923llII6l98eEesQ0nk+fGlSOy6VEzXdtyVxpUKwl jA== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2120.oracle.com with ESMTP id 32762ng3yv-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 14 Jul 2020 23:11:18 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06EN7bv1046565;
-        Tue, 14 Jul 2020 23:11:18 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by userp3020.oracle.com with ESMTP id 327q6t7mqa-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 14 Jul 2020 23:11:18 +0000
-Received: from abhmp0012.oracle.com (abhmp0012.oracle.com [141.146.116.18])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 06ENBHWr027369;
-        Tue, 14 Jul 2020 23:11:17 GMT
-Received: from dhcp-10-159-135-64.vpn.oracle.com (/10.159.135.64)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 14 Jul 2020 16:11:16 -0700
-From:   Junxiao Bi <junxiao.bi@oracle.com>
-To:     linux-raid@vger.kernel.org
-Cc:     song@kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH V2] md: fix deadlock causing by sysfs_notify
-Date:   Tue, 14 Jul 2020 16:10:26 -0700
-Message-Id: <20200714231026.67443-1-junxiao.bi@oracle.com>
-X-Mailer: git-send-email 2.20.1 (Apple Git-117)
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9682 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 suspectscore=21
- phishscore=0 malwarescore=0 mlxlogscore=999 bulkscore=0 mlxscore=0
- spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2007140160
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9682 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 malwarescore=0 spamscore=0
- clxscore=1015 priorityscore=1501 mlxlogscore=999 lowpriorityscore=0
- bulkscore=0 suspectscore=21 phishscore=0 adultscore=0 impostorscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2007140160
+        Tue, 14 Jul 2020 19:12:11 -0400
+Received: from mail-pl1-x649.google.com (mail-pl1-x649.google.com [IPv6:2607:f8b0:4864:20::649])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5588FC061755
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 16:12:11 -0700 (PDT)
+Received: by mail-pl1-x649.google.com with SMTP id p6so258164plo.8
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 16:12:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=chN9U6tpxCfckDUNNU18y7SVrqm9xZV0m+x825P3r0o=;
+        b=dEQTueqRLSny57pwj434YuhnitD6MKepF+k1g6zl5SccL/wliNZK35pU17wTKGZl+j
+         7YNJukf1Ffmk/9riYWiPrvdzer0KYDYH2ObrySyZ2alp8Jxy6jgZ5FhS54AQaVkcoA7l
+         EML2B3izEEB4Q9pWOIq0WsP103zgPyt5JE4zt5NYC0ojboe4C+Xapw2BCfL8tJ7tuTmp
+         P2Ad8NyAhM+Q+KRGiLIhZeCNO7GbPErNSfze8uBzXizn1WQWYhyvwGRDZ52moAdYllrG
+         sVHckxf8iEfJkwoHuh6szlclO2FqkKE6ZO+krfyQ4u3WI25bPgxtfKmCC1BTjpawh+lW
+         UxWw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=chN9U6tpxCfckDUNNU18y7SVrqm9xZV0m+x825P3r0o=;
+        b=pGYGR+8O6nSBN2uQWWqIRwKoUogeG5MVaMJrOsvEFInJcc2HhtUvHeS47WNqJX5EkU
+         XP6CyXQ0WiOLQnYJctbf1mjvvbkyyhsI3o2QpcnxgOE5INdZ1+jxreFoKkEQo6zznv4h
+         ftSa/NaBe88oefJFy6S4y+MB2G8KfEBMxRLPxxCwj2OqZyZNModefRRTIhjzJqqOSmHA
+         cQNY9hRodSs6ojrBFygs8aGhFRP5Rzl7qnKHvjVJYNGEqioRS7jgFbIFsMDcOToJ2lx7
+         VsdeSjWvpTW1suIqluOP4OP1oDDgAM2Wz7m9kDQtokKdP5CnvnXKr6a4Cl00HyG4Q895
+         2I0g==
+X-Gm-Message-State: AOAM533LipBqJuU6GPayqTVR/5XjlOfqdFQ3CcfrCaeknFC7FWfQMRNS
+        aSThq9GBikP2JZXnp5sn5TuXQznl5bw=
+X-Google-Smtp-Source: ABdhPJwjKijxN9AEMbvNsFbXib2bpwfc/x2S5LPdWpmUNtz+/3/rae6cm2l4J9odI9jJ6aUcEV2DzyC+fV0=
+X-Received: by 2002:a17:90b:1292:: with SMTP id fw18mr6945316pjb.3.1594768330671;
+ Tue, 14 Jul 2020 16:12:10 -0700 (PDT)
+Date:   Tue, 14 Jul 2020 16:12:05 -0700
+Message-Id: <20200714231207.866838-1-badhri@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.27.0.389.gc38d7665816-goog
+Subject: [PATCH 1/3 v2] usb: typec: tcpci: Support BIST test data mode for compliance.
+From:   Badhri Jagan Sridharan <badhri@google.com>
+To:     Guenter Roeck <linux@roeck-us.net>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        reg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Badhri Jagan Sridharan <badhri@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following deadlock was captured. The first process is holding 'kernfs_mutex'
-and hung by io. The io was staging in 'r1conf.pending_bio_list' of raid1 device,
-this pending bio list would be flushed by second process 'md127_raid1', but
-it was hung by 'kernfs_mutex'. Using sysfs_notify_dirent_safe() to replace
-sysfs_notify() can fix it. There were other sysfs_notify() invoked from io
-path, removed all of them.
+Quoting from TCPCI spec:
+"Setting this bit to 1 is intended to be used only when a USB compliance
+tester is using USB BIST Test Data to test the PHY layer of the TCPC. The
+TCPM should clear this bit when a disconnect is detected.
+0: Normal Operation. Incoming messages enabled by RECEIVE_DETECT
+passed to TCPM via Alert.
+1: BIST Test Mode. Incoming messages enabled by RECEIVE_DETECT
+result in GoodCRC response but may not be passed to the TCPM via
+Alert."
 
- PID: 40430  TASK: ffff8ee9c8c65c40  CPU: 29  COMMAND: "probe_file"
-  #0 [ffffb87c4df37260] __schedule at ffffffff9a8678ec
-  #1 [ffffb87c4df372f8] schedule at ffffffff9a867f06
-  #2 [ffffb87c4df37310] io_schedule at ffffffff9a0c73e6
-  #3 [ffffb87c4df37328] __dta___xfs_iunpin_wait_3443 at ffffffffc03a4057 [xfs]
-  #4 [ffffb87c4df373a0] xfs_iunpin_wait at ffffffffc03a6c79 [xfs]
-  #5 [ffffb87c4df373b0] __dta_xfs_reclaim_inode_3357 at ffffffffc039a46c [xfs]
-  #6 [ffffb87c4df37400] xfs_reclaim_inodes_ag at ffffffffc039a8b6 [xfs]
-  #7 [ffffb87c4df37590] xfs_reclaim_inodes_nr at ffffffffc039bb33 [xfs]
-  #8 [ffffb87c4df375b0] xfs_fs_free_cached_objects at ffffffffc03af0e9 [xfs]
-  #9 [ffffb87c4df375c0] super_cache_scan at ffffffff9a287ec7
- #10 [ffffb87c4df37618] shrink_slab at ffffffff9a1efd93
- #11 [ffffb87c4df37700] shrink_node at ffffffff9a1f5968
- #12 [ffffb87c4df37788] do_try_to_free_pages at ffffffff9a1f5ea2
- #13 [ffffb87c4df377f0] try_to_free_mem_cgroup_pages at ffffffff9a1f6445
- #14 [ffffb87c4df37880] try_charge at ffffffff9a26cc5f
- #15 [ffffb87c4df37920] memcg_kmem_charge_memcg at ffffffff9a270f6a
- #16 [ffffb87c4df37958] new_slab at ffffffff9a251430
- #17 [ffffb87c4df379c0] ___slab_alloc at ffffffff9a251c85
- #18 [ffffb87c4df37a80] __slab_alloc at ffffffff9a25635d
- #19 [ffffb87c4df37ac0] kmem_cache_alloc at ffffffff9a251f89
- #20 [ffffb87c4df37b00] alloc_inode at ffffffff9a2a2b10
- #21 [ffffb87c4df37b20] iget_locked at ffffffff9a2a4854
- #22 [ffffb87c4df37b60] kernfs_get_inode at ffffffff9a311377
- #23 [ffffb87c4df37b80] kernfs_iop_lookup at ffffffff9a311e2b
- #24 [ffffb87c4df37ba8] lookup_slow at ffffffff9a290118
- #25 [ffffb87c4df37c10] walk_component at ffffffff9a291e83
- #26 [ffffb87c4df37c78] path_lookupat at ffffffff9a293619
- #27 [ffffb87c4df37cd8] filename_lookup at ffffffff9a2953af
- #28 [ffffb87c4df37de8] user_path_at_empty at ffffffff9a295566
- #29 [ffffb87c4df37e10] vfs_statx at ffffffff9a289787
- #30 [ffffb87c4df37e70] SYSC_newlstat at ffffffff9a289d5d
- #31 [ffffb87c4df37f18] sys_newlstat at ffffffff9a28a60e
- #32 [ffffb87c4df37f28] do_syscall_64 at ffffffff9a003949
- #33 [ffffb87c4df37f50] entry_SYSCALL_64_after_hwframe at ffffffff9aa001ad
-     RIP: 00007f617a5f2905  RSP: 00007f607334f838  RFLAGS: 00000246
-     RAX: ffffffffffffffda  RBX: 00007f6064044b20  RCX: 00007f617a5f2905
-     RDX: 00007f6064044b20  RSI: 00007f6064044b20  RDI: 00007f6064005890
-     RBP: 00007f6064044aa0   R8: 0000000000000030   R9: 000000000000011c
-     R10: 0000000000000013  R11: 0000000000000246  R12: 00007f606417e6d0
-     R13: 00007f6064044aa0  R14: 00007f6064044b10  R15: 00000000ffffffff
-     ORIG_RAX: 0000000000000006  CS: 0033  SS: 002b
-
- PID: 927    TASK: ffff8f15ac5dbd80  CPU: 42  COMMAND: "md127_raid1"
-  #0 [ffffb87c4df07b28] __schedule at ffffffff9a8678ec
-  #1 [ffffb87c4df07bc0] schedule at ffffffff9a867f06
-  #2 [ffffb87c4df07bd8] schedule_preempt_disabled at ffffffff9a86825e
-  #3 [ffffb87c4df07be8] __mutex_lock at ffffffff9a869bcc
-  #4 [ffffb87c4df07ca0] __mutex_lock_slowpath at ffffffff9a86a013
-  #5 [ffffb87c4df07cb0] mutex_lock at ffffffff9a86a04f
-  #6 [ffffb87c4df07cc8] kernfs_find_and_get_ns at ffffffff9a311d83
-  #7 [ffffb87c4df07cf0] sysfs_notify at ffffffff9a314b3a
-  #8 [ffffb87c4df07d18] md_update_sb at ffffffff9a688696
-  #9 [ffffb87c4df07d98] md_update_sb at ffffffff9a6886d5
- #10 [ffffb87c4df07da8] md_check_recovery at ffffffff9a68ad9c
- #11 [ffffb87c4df07dd0] raid1d at ffffffffc01f0375 [raid1]
- #12 [ffffb87c4df07ea0] md_thread at ffffffff9a680348
- #13 [ffffb87c4df07f08] kthread at ffffffff9a0b8005
- #14 [ffffb87c4df07f50] ret_from_fork at ffffffff9aa00344
-
-Signed-off-by: Junxiao Bi <junxiao.bi@oracle.com>
+Signed-off-by: Badhri Jagan Sridharan <badhri@google.com>
 ---
-v2 <- v1
-- fix sysfs_notify for sysfs file 'level' to align styles with others.
-
+Version history:
+Changes since V1:(Guenter's suggestions)
+- Split the change into two: TCPM and TCPCI
+- Move BIST log to TCPM log
+- Alignment and column count changes
 ---
- drivers/md/md-bitmap.c |  2 +-
- drivers/md/md.c        | 44 ++++++++++++++++++++++++++++--------------
- drivers/md/md.h        |  8 +++++++-
- drivers/md/raid10.c    |  2 +-
- drivers/md/raid5.c     |  6 +++---
- 5 files changed, 42 insertions(+), 20 deletions(-)
+ drivers/usb/typec/tcpm/tcpci.c | 9 +++++++++
+ drivers/usb/typec/tcpm/tcpci.h | 1 +
+ 2 files changed, 10 insertions(+)
 
-diff --git a/drivers/md/md-bitmap.c b/drivers/md/md-bitmap.c
-index 95a5f3757fa3..d61b524ae440 100644
---- a/drivers/md/md-bitmap.c
-+++ b/drivers/md/md-bitmap.c
-@@ -1631,7 +1631,7 @@ void md_bitmap_cond_end_sync(struct bitmap *bitmap, sector_t sector, bool force)
- 		s += blocks;
- 	}
- 	bitmap->last_end_sync = jiffies;
--	sysfs_notify(&bitmap->mddev->kobj, NULL, "sync_completed");
-+	sysfs_notify_dirent_safe(bitmap->mddev->sysfs_completed);
+diff --git a/drivers/usb/typec/tcpm/tcpci.c b/drivers/usb/typec/tcpm/tcpci.c
+index 753645bb25273a..f57d91fd0e0924 100644
+--- a/drivers/usb/typec/tcpm/tcpci.c
++++ b/drivers/usb/typec/tcpm/tcpci.c
+@@ -227,6 +227,14 @@ static int tcpci_set_vconn(struct tcpc_dev *tcpc, bool enable)
+ 				enable ? TCPC_POWER_CTRL_VCONN_ENABLE : 0);
  }
- EXPORT_SYMBOL(md_bitmap_cond_end_sync);
  
-diff --git a/drivers/md/md.c b/drivers/md/md.c
-index f567f536b529..fee8943ead7b 100644
---- a/drivers/md/md.c
-+++ b/drivers/md/md.c
-@@ -2444,6 +2444,10 @@ static int bind_rdev_to_array(struct md_rdev *rdev, struct mddev *mddev)
- 	if (sysfs_create_link(&rdev->kobj, ko, "block"))
- 		/* failure here is OK */;
- 	rdev->sysfs_state = sysfs_get_dirent_safe(rdev->kobj.sd, "state");
-+	rdev->sysfs_unack_badblocks =
-+		sysfs_get_dirent_safe(rdev->kobj.sd, "unacknowledged_bad_blocks");
-+	rdev->sysfs_badblocks =
-+		sysfs_get_dirent_safe(rdev->kobj.sd, "bad_blocks");
- 
- 	list_add_rcu(&rdev->same_set, &mddev->disks);
- 	bd_link_disk_holder(rdev->bdev, mddev->gendisk);
-@@ -2477,7 +2481,11 @@ static void unbind_rdev_from_array(struct md_rdev *rdev)
- 	rdev->mddev = NULL;
- 	sysfs_remove_link(&rdev->kobj, "block");
- 	sysfs_put(rdev->sysfs_state);
-+	sysfs_put(rdev->sysfs_unack_badblocks);
-+	sysfs_put(rdev->sysfs_badblocks);
- 	rdev->sysfs_state = NULL;
-+	rdev->sysfs_unack_badblocks = NULL;
-+	rdev->sysfs_badblocks = NULL;
- 	rdev->badblocks.count = 0;
- 	/* We need to delay this, otherwise we can deadlock when
- 	 * writing to 'remove' to "dev/state".  We also need
-@@ -2822,7 +2830,7 @@ void md_update_sb(struct mddev *mddev, int force_change)
- 		goto repeat;
- 	wake_up(&mddev->sb_wait);
- 	if (test_bit(MD_RECOVERY_RUNNING, &mddev->recovery))
--		sysfs_notify(&mddev->kobj, NULL, "sync_completed");
-+		sysfs_notify_dirent_safe(mddev->sysfs_completed);
- 
- 	rdev_for_each(rdev, mddev) {
- 		if (test_and_clear_bit(FaultRecorded, &rdev->flags))
-@@ -4075,7 +4083,7 @@ level_store(struct mddev *mddev, const char *buf, size_t len)
- 	mddev_resume(mddev);
- 	if (!mddev->thread)
- 		md_update_sb(mddev, 1);
--	sysfs_notify(&mddev->kobj, NULL, "level");
-+	sysfs_notify_dirent_safe(mddev->sysfs_level);
- 	md_new_event(mddev);
- 	rv = len;
- out_unlock:
-@@ -4828,7 +4836,7 @@ action_store(struct mddev *mddev, const char *page, size_t len)
- 		}
- 		if (err)
- 			return err;
--		sysfs_notify(&mddev->kobj, NULL, "degraded");
-+		sysfs_notify_dirent_safe(mddev->sysfs_degraded);
- 	} else {
- 		if (cmd_match(page, "check"))
- 			set_bit(MD_RECOVERY_CHECK, &mddev->recovery);
-@@ -5534,6 +5542,13 @@ static void md_free(struct kobject *ko)
- 
- 	if (mddev->sysfs_state)
- 		sysfs_put(mddev->sysfs_state);
-+	if (mddev->sysfs_completed)
-+		sysfs_put(mddev->sysfs_completed);
-+	if (mddev->sysfs_degraded)
-+		sysfs_put(mddev->sysfs_degraded);
-+	if (mddev->sysfs_level)
-+		sysfs_put(mddev->sysfs_level);
++static int tcpci_set_bist_data(struct tcpc_dev *tcpc, bool enable)
++{
++	struct tcpci *tcpci = tcpc_to_tcpci(tcpc);
 +
++	return regmap_update_bits(tcpci->regmap, TCPC_TCPC_CTRL, TCPC_TCPC_CTRL_BIST_TM,
++				 enable ? TCPC_TCPC_CTRL_BIST_TM : 0);
++}
++
+ static int tcpci_set_roles(struct tcpc_dev *tcpc, bool attached,
+ 			   enum typec_role role, enum typec_data_role data)
+ {
+@@ -530,6 +538,7 @@ struct tcpci *tcpci_register_port(struct device *dev, struct tcpci_data *data)
+ 	tcpci->tcpc.set_pd_rx = tcpci_set_pd_rx;
+ 	tcpci->tcpc.set_roles = tcpci_set_roles;
+ 	tcpci->tcpc.pd_transmit = tcpci_pd_transmit;
++	tcpci->tcpc.set_bist_data = tcpci_set_bist_data;
  
- 	if (mddev->gendisk)
- 		del_gendisk(mddev->gendisk);
-@@ -5695,6 +5710,9 @@ static int md_alloc(dev_t dev, char *name)
- 	if (!error && mddev->kobj.sd) {
- 		kobject_uevent(&mddev->kobj, KOBJ_ADD);
- 		mddev->sysfs_state = sysfs_get_dirent_safe(mddev->kobj.sd, "array_state");
-+		mddev->sysfs_completed = sysfs_get_dirent_safe(mddev->kobj.sd, "sync_completed");
-+		mddev->sysfs_degraded = sysfs_get_dirent_safe(mddev->kobj.sd, "degraded");
-+		mddev->sysfs_level = sysfs_get_dirent_safe(mddev->kobj.sd, "level");
- 	}
- 	mddev_put(mddev);
- 	return error;
-@@ -6049,7 +6067,7 @@ static int do_md_run(struct mddev *mddev)
- 	kobject_uevent(&disk_to_dev(mddev->gendisk)->kobj, KOBJ_CHANGE);
- 	sysfs_notify_dirent_safe(mddev->sysfs_state);
- 	sysfs_notify_dirent_safe(mddev->sysfs_action);
--	sysfs_notify(&mddev->kobj, NULL, "degraded");
-+	sysfs_notify_dirent_safe(mddev->sysfs_degraded);
- out:
- 	clear_bit(MD_NOT_READY, &mddev->flags);
- 	return err;
-@@ -8767,7 +8785,7 @@ void md_do_sync(struct md_thread *thread)
- 	} else
- 		mddev->curr_resync = 3; /* no longer delayed */
- 	mddev->curr_resync_completed = j;
--	sysfs_notify(&mddev->kobj, NULL, "sync_completed");
-+	sysfs_notify_dirent_safe(mddev->sysfs_completed);
- 	md_new_event(mddev);
- 	update_time = jiffies;
+ 	err = tcpci_parse_config(tcpci);
+ 	if (err < 0)
+diff --git a/drivers/usb/typec/tcpm/tcpci.h b/drivers/usb/typec/tcpm/tcpci.h
+index 303ebde265465c..11c36d086c8608 100644
+--- a/drivers/usb/typec/tcpm/tcpci.h
++++ b/drivers/usb/typec/tcpm/tcpci.h
+@@ -36,6 +36,7 @@
  
-@@ -8795,7 +8813,7 @@ void md_do_sync(struct md_thread *thread)
- 				mddev->recovery_cp = j;
- 			update_time = jiffies;
- 			set_bit(MD_SB_CHANGE_CLEAN, &mddev->sb_flags);
--			sysfs_notify(&mddev->kobj, NULL, "sync_completed");
-+			sysfs_notify_dirent_safe(mddev->sysfs_completed);
- 		}
+ #define TCPC_TCPC_CTRL			0x19
+ #define TCPC_TCPC_CTRL_ORIENTATION	BIT(0)
++#define TCPC_TCPC_CTRL_BIST_TM		BIT(1)
  
- 		while (j >= mddev->resync_max &&
-@@ -8902,7 +8920,7 @@ void md_do_sync(struct md_thread *thread)
- 	    !test_bit(MD_RECOVERY_INTR, &mddev->recovery) &&
- 	    mddev->curr_resync > 3) {
- 		mddev->curr_resync_completed = mddev->curr_resync;
--		sysfs_notify(&mddev->kobj, NULL, "sync_completed");
-+		sysfs_notify_dirent_safe(mddev->sysfs_completed);
- 	}
- 	mddev->pers->sync_request(mddev, max_sectors, &skipped);
- 
-@@ -9032,7 +9050,7 @@ static int remove_and_add_spares(struct mddev *mddev,
- 	}
- 
- 	if (removed && mddev->kobj.sd)
--		sysfs_notify(&mddev->kobj, NULL, "degraded");
-+		sysfs_notify_dirent_safe(mddev->sysfs_degraded);
- 
- 	if (this && removed)
- 		goto no_add;
-@@ -9315,8 +9333,7 @@ void md_reap_sync_thread(struct mddev *mddev)
- 		/* success...*/
- 		/* activate any spares */
- 		if (mddev->pers->spare_active(mddev)) {
--			sysfs_notify(&mddev->kobj, NULL,
--				     "degraded");
-+			sysfs_notify_dirent_safe(mddev->sysfs_degraded);
- 			set_bit(MD_SB_CHANGE_DEVS, &mddev->sb_flags);
- 		}
- 	}
-@@ -9406,8 +9423,7 @@ int rdev_set_badblocks(struct md_rdev *rdev, sector_t s, int sectors,
- 	if (rv == 0) {
- 		/* Make sure they get written out promptly */
- 		if (test_bit(ExternalBbl, &rdev->flags))
--			sysfs_notify(&rdev->kobj, NULL,
--				     "unacknowledged_bad_blocks");
-+			sysfs_notify_dirent_safe(rdev->sysfs_unack_badblocks);
- 		sysfs_notify_dirent_safe(rdev->sysfs_state);
- 		set_mask_bits(&mddev->sb_flags, 0,
- 			      BIT(MD_SB_CHANGE_CLEAN) | BIT(MD_SB_CHANGE_PENDING));
-@@ -9428,7 +9444,7 @@ int rdev_clear_badblocks(struct md_rdev *rdev, sector_t s, int sectors,
- 		s += rdev->data_offset;
- 	rv = badblocks_clear(&rdev->badblocks, s, sectors);
- 	if ((rv == 0) && test_bit(ExternalBbl, &rdev->flags))
--		sysfs_notify(&rdev->kobj, NULL, "bad_blocks");
-+		sysfs_notify_dirent_safe(rdev->sysfs_badblocks);
- 	return rv;
- }
- EXPORT_SYMBOL_GPL(rdev_clear_badblocks);
-@@ -9658,7 +9674,7 @@ static int read_rdev(struct mddev *mddev, struct md_rdev *rdev)
- 	if (rdev->recovery_offset == MaxSector &&
- 	    !test_bit(In_sync, &rdev->flags) &&
- 	    mddev->pers->spare_active(mddev))
--		sysfs_notify(&mddev->kobj, NULL, "degraded");
-+		sysfs_notify_dirent_safe(mddev->sysfs_degraded);
- 
- 	put_page(swapout);
- 	return 0;
-diff --git a/drivers/md/md.h b/drivers/md/md.h
-index 612814d07d35..1f6b89483bcf 100644
---- a/drivers/md/md.h
-+++ b/drivers/md/md.h
-@@ -126,7 +126,10 @@ struct md_rdev {
- 
- 	struct kernfs_node *sysfs_state; /* handle for 'state'
- 					   * sysfs entry */
--
-+	/* handle for 'unacknowledged_bad_blocks' sysfs dentry */
-+	struct kernfs_node *sysfs_unack_badblocks;
-+	/* handle for 'bad_blocks' sysfs dentry */
-+	struct kernfs_node *sysfs_badblocks;
- 	struct badblocks badblocks;
- 
- 	struct {
-@@ -420,6 +423,9 @@ struct mddev {
- 							 * file in sysfs.
- 							 */
- 	struct kernfs_node		*sysfs_action;  /* handle for 'sync_action' */
-+	struct kernfs_node		*sysfs_completed;	/*handle for 'sync_completed' */
-+	struct kernfs_node		*sysfs_degraded;	/*handle for 'degraded' */
-+	struct kernfs_node		*sysfs_level;		/*handle for 'level' */
- 
- 	struct work_struct del_work;	/* used for delayed sysfs removal */
- 
-diff --git a/drivers/md/raid10.c b/drivers/md/raid10.c
-index ec136e44aef7..b2de47eac238 100644
---- a/drivers/md/raid10.c
-+++ b/drivers/md/raid10.c
-@@ -4454,7 +4454,7 @@ static sector_t reshape_request(struct mddev *mddev, sector_t sector_nr,
- 			sector_nr = conf->reshape_progress;
- 		if (sector_nr) {
- 			mddev->curr_resync_completed = sector_nr;
--			sysfs_notify(&mddev->kobj, NULL, "sync_completed");
-+			sysfs_notify_dirent_safe(mddev->sysfs_completed);
- 			*skipped = 1;
- 			return sector_nr;
- 		}
-diff --git a/drivers/md/raid5.c b/drivers/md/raid5.c
-index ab8067f9ce8c..09f59611dd9b 100644
---- a/drivers/md/raid5.c
-+++ b/drivers/md/raid5.c
-@@ -5799,7 +5799,7 @@ static sector_t reshape_request(struct mddev *mddev, sector_t sector_nr, int *sk
- 		sector_div(sector_nr, new_data_disks);
- 		if (sector_nr) {
- 			mddev->curr_resync_completed = sector_nr;
--			sysfs_notify(&mddev->kobj, NULL, "sync_completed");
-+			sysfs_notify_dirent_safe(mddev->sysfs_completed);
- 			*skipped = 1;
- 			retn = sector_nr;
- 			goto finish;
-@@ -5913,7 +5913,7 @@ static sector_t reshape_request(struct mddev *mddev, sector_t sector_nr, int *sk
- 		conf->reshape_safe = mddev->reshape_position;
- 		spin_unlock_irq(&conf->device_lock);
- 		wake_up(&conf->wait_for_overlap);
--		sysfs_notify(&mddev->kobj, NULL, "sync_completed");
-+		sysfs_notify_dirent_safe(mddev->sysfs_completed);
- 	}
- 
- 	INIT_LIST_HEAD(&stripes);
-@@ -6020,7 +6020,7 @@ static sector_t reshape_request(struct mddev *mddev, sector_t sector_nr, int *sk
- 		conf->reshape_safe = mddev->reshape_position;
- 		spin_unlock_irq(&conf->device_lock);
- 		wake_up(&conf->wait_for_overlap);
--		sysfs_notify(&mddev->kobj, NULL, "sync_completed");
-+		sysfs_notify_dirent_safe(mddev->sysfs_completed);
- 	}
- ret:
- 	return retn;
+ #define TCPC_ROLE_CTRL			0x1a
+ #define TCPC_ROLE_CTRL_DRP		BIT(6)
 -- 
-2.20.1 (Apple Git-117)
+2.27.0.389.gc38d7665816-goog
 
