@@ -2,171 +2,76 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A3B6C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 12:16:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0007FC433E2
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 12:16:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 45A8D2068F
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 12:16:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DDB88207FB
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 12:16:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728772AbgGNMQL (ORCPT
+        id S1728888AbgGNMQY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 08:16:11 -0400
-Received: from 8bytes.org ([81.169.241.247]:53376 "EHLO theia.8bytes.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728262AbgGNMKu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 08:10:50 -0400
-Received: from cap.home.8bytes.org (p5b006776.dip0.t-ipconnect.de [91.0.103.118])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (No client certificate requested)
-        by theia.8bytes.org (Postfix) with ESMTPSA id 850F39B5;
-        Tue, 14 Jul 2020 14:10:46 +0200 (CEST)
-From:   Joerg Roedel <joro@8bytes.org>
-To:     x86@kernel.org
-Cc:     Joerg Roedel <joro@8bytes.org>, Joerg Roedel <jroedel@suse.de>,
-        hpa@zytor.com, Andy Lutomirski <luto@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Jiri Slaby <jslaby@suse.cz>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Juergen Gross <jgross@suse.com>,
-        Kees Cook <keescook@chromium.org>,
-        David Rientjes <rientjes@google.com>,
-        Cfir Cohen <cfir@google.com>,
-        Erdem Aktas <erdemaktas@google.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Mike Stunes <mstunes@vmware.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Martin Radev <martin.b.radev@gmail.com>,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        virtualization@lists.linux-foundation.org
-Subject: [PATCH v4 25/75] x86/fpu: Move xgetbv()/xsetbv() into separate header
-Date:   Tue, 14 Jul 2020 14:08:27 +0200
-Message-Id: <20200714120917.11253-26-joro@8bytes.org>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200714120917.11253-1-joro@8bytes.org>
-References: <20200714120917.11253-1-joro@8bytes.org>
+        Tue, 14 Jul 2020 08:16:24 -0400
+Received: from mail.loongson.cn ([114.242.206.163]:39378 "EHLO loongson.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728541AbgGNMQU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 08:16:20 -0400
+Received: by ajax-webmail-mail.loongson.cn (Coremail) ; Tue, 14 Jul 2020
+ 20:16:13 +0800 (GMT+08:00)
+X-Originating-IP: [113.200.148.30]
+Date:   Tue, 14 Jul 2020 20:16:13 +0800 (GMT+08:00)
+X-CM-HeaderCharset: UTF-8
+From:   "Qing Zhang" <zhangqing@loongson.cn>
+To:     "Mark Brown" <broonie@kernel.org>
+Cc:     linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "Xuefeng Li" <lixuefeng@loongson.cn>,
+        "Tiezhu Yang" <yangtiezhu@loongson.cn>
+Subject: Re: Re: [PATCH] spi: Use clk_prepare_enable and
+ clk_disable_unprepare
+X-Priority: 3
+X-Mailer: Coremail Webmail Server Version XT5.0.10a build 20191018(4c4f6d15)
+ Copyright (c) 2002-2020 www.mailtech.cn .loongson.cn
+In-Reply-To: <20200714094406.GA4900@sirena.org.uk>
+References: <1594717754-25428-1-git-send-email-zhangqing@loongson.cn>
+ <20200714094406.GA4900@sirena.org.uk>
+Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=UTF-8
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Message-ID: <5614bc2e.1259.1734d41040f.Coremail.zhangqing@loongson.cn>
+X-Coremail-Locale: en_US
+X-CM-TRANSID: AQAAf9Dxvx8Oog1fSm8EAA--.1037W
+X-CM-SenderInfo: x2kd0wptlqwqxorr0wxvrqhubq/1tbiAQARBV3QvMCRdgAGsF
+X-Coremail-Antispam: 1Ur529EdanIXcx71UUUUU7IcSsGvfJ3iIAIbVAYjsxI4VW5Jw
+        CS07vEb4IE77IF4wCS07vE1I0E4x80FVAKz4kxMIAIbVAFxVCaYxvI4VCIwcAKzIAtYxBI
+        daVFxhVjvjDU=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Joerg Roedel <jroedel@suse.de>
-
-The xgetbv() function is needed in pre-decompression boot code, but
-asm/fpu/internal.h can't be included there directly. Doing so opens
-the door to include-hell due to various include-magic in
-boot/compressed/misc.h.
-
-Avoid that by moving xgetbv()/xsetbv() to a separate header file and
-include this instead.
-
-Signed-off-by: Joerg Roedel <jroedel@suse.de>
----
- arch/x86/include/asm/fpu/internal.h | 33 +------------------------
- arch/x86/include/asm/fpu/xcr.h      | 37 +++++++++++++++++++++++++++++
- 2 files changed, 38 insertions(+), 32 deletions(-)
- create mode 100644 arch/x86/include/asm/fpu/xcr.h
-
-diff --git a/arch/x86/include/asm/fpu/internal.h b/arch/x86/include/asm/fpu/internal.h
-index 845e7481ab77..1c724bbace04 100644
---- a/arch/x86/include/asm/fpu/internal.h
-+++ b/arch/x86/include/asm/fpu/internal.h
-@@ -19,6 +19,7 @@
- #include <asm/user.h>
- #include <asm/fpu/api.h>
- #include <asm/fpu/xstate.h>
-+#include <asm/fpu/xcr.h>
- #include <asm/cpufeature.h>
- #include <asm/trace/fpu.h>
- 
-@@ -619,36 +620,4 @@ static inline void switch_fpu_finish(struct fpu *new_fpu)
- 	__write_pkru(pkru_val);
- }
- 
--/*
-- * MXCSR and XCR definitions:
-- */
--
--static inline void ldmxcsr(u32 mxcsr)
--{
--	asm volatile("ldmxcsr %0" :: "m" (mxcsr));
--}
--
--extern unsigned int mxcsr_feature_mask;
--
--#define XCR_XFEATURE_ENABLED_MASK	0x00000000
--
--static inline u64 xgetbv(u32 index)
--{
--	u32 eax, edx;
--
--	asm volatile(".byte 0x0f,0x01,0xd0" /* xgetbv */
--		     : "=a" (eax), "=d" (edx)
--		     : "c" (index));
--	return eax + ((u64)edx << 32);
--}
--
--static inline void xsetbv(u32 index, u64 value)
--{
--	u32 eax = value;
--	u32 edx = value >> 32;
--
--	asm volatile(".byte 0x0f,0x01,0xd1" /* xsetbv */
--		     : : "a" (eax), "d" (edx), "c" (index));
--}
--
- #endif /* _ASM_X86_FPU_INTERNAL_H */
-diff --git a/arch/x86/include/asm/fpu/xcr.h b/arch/x86/include/asm/fpu/xcr.h
-new file mode 100644
-index 000000000000..d8e8fafebfdc
---- /dev/null
-+++ b/arch/x86/include/asm/fpu/xcr.h
-@@ -0,0 +1,37 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#ifndef _ASM_X86_FPU_XCR_H
-+#define _ASM_X86_FPU_XCR_H
-+
-+/*
-+ * MXCSR and XCR definitions:
-+ */
-+
-+static inline void ldmxcsr(u32 mxcsr)
-+{
-+	asm volatile("ldmxcsr %0" :: "m" (mxcsr));
-+}
-+
-+extern unsigned int mxcsr_feature_mask;
-+
-+#define XCR_XFEATURE_ENABLED_MASK	0x00000000
-+
-+static inline u64 xgetbv(u32 index)
-+{
-+	u32 eax, edx;
-+
-+	asm volatile(".byte 0x0f,0x01,0xd0" /* xgetbv */
-+		     : "=a" (eax), "=d" (edx)
-+		     : "c" (index));
-+	return eax + ((u64)edx << 32);
-+}
-+
-+static inline void xsetbv(u32 index, u64 value)
-+{
-+	u32 eax = value;
-+	u32 edx = value >> 32;
-+
-+	asm volatile(".byte 0x0f,0x01,0xd1" /* xsetbv */
-+		     : : "a" (eax), "d" (edx), "c" (index));
-+}
-+
-+#endif /* _ASM_X86_FPU_XCR_H */
--- 
-2.27.0
-
+CgoKJmd0OyAtLS0tLU9yaWdpbmFsIE1lc3NhZ2VzLS0tLS0KJmd0OyBGcm9tOiAiTWFyayBCcm93
+biIgPGJyb29uaWVAa2VybmVsLm9yZz4KJmd0OyBTZW50IFRpbWU6IDIwMjAtMDctMTQgMTc6NDQ6
+MDYgKFR1ZXNkYXkpCiZndDsgVG86ICJRaW5nIFpoYW5nIiA8emhhbmdxaW5nQGxvb25nc29uLmNu
+PgomZ3Q7IENjOiBsaW51eC1zcGlAdmdlci5rZXJuZWwub3JnLCBsaW51eC1rZXJuZWxAdmdlci5r
+ZXJuZWwub3JnLCAiWHVlZmVuZyBMaSIgPGxpeHVlZmVuZ0Bsb29uZ3Nvbi5jbj4sICJUaWV6aHUg
+WWFuZyIgPHlhbmd0aWV6aHVAbG9vbmdzb24uY24+CiZndDsgU3ViamVjdDogUmU6IFtQQVRDSF0g
+c3BpOiBVc2UgY2xrX3ByZXBhcmVfZW5hYmxlIGFuZCBjbGtfZGlzYWJsZV91bnByZXBhcmUKJmd0
+OyAKJmd0OyBPbiBUdWUsIEp1bCAxNCwgMjAyMCBhdCAwNTowOToxNFBNICswODAwLCBRaW5nIFpo
+YW5nIHdyb3RlOgomZ3Q7ICZndDsgQ29udmVydCBjbGtfZW5hYmxlL2Nsa19kaXNhYmxlIHRvIGNs
+a19wcmVwYXJlX2VuYWJsZS9jbGtfZGlzYWJsZV91bnByZXBhcmUKJmd0OyAmZ3Q7IGNhbGxzIGFz
+IHJlcXVpcmVkIGJ5IGNvbW1vbiBjbG9jayBmcmFtZXdvcmsuCiZndDsgJmd0OyAKJmd0OyAmZ3Q7
+IFNpZ25lZC1vZmYtYnk6IFFpbmcgWmhhbmcgPHpoYW5ncWluZ0Bsb29uZ3Nvbi5jbj4KJmd0OyAm
+Z3Q7IC0tLQomZ3Q7ICZndDsgIGRyaXZlcnMvc3BpL3NwaS1jb2xkZmlyZS1xc3BpLmMgfCA0ICsr
+LS0KJmd0OyAKJmd0OyBBcmUgeW91IHN1cmUgdGhhdCBDb2xkRmlyZSB1c2VzIHRoZSBjb21tb24g
+Y2xvY2sgZnJhbWV3b3JrPwomZ3Q7IAomZ3Q7ICZndDsgIGRyaXZlcnMvc3BpL3NwaS1vbWFwLXV3
+aXJlLmMgICAgfCA0ICsrLS0KJmd0OyAKJmd0OyBJdCBtYWtlcyBsaWZlIGVhc2llciBpZiB5b3Ug
+c2VuZCBwZXItZHJpdmVyIHBhdGNoZXMsIHRoYXQgbWFrZXMgaXQKJmd0OyBlYXNpZXIgZm9yIGRy
+aXZlciBtYWludGFpbmVycyB0byByZXZpZXcgdGhpbmdzIGFuZCBtZWFucyB0aGF0IGlzc3Vlcwom
+Z3Q7IHdpdGggYSBjaGFuZ2UgaW4gb25lIGRyaXZlciB3b24ndCBob2xkIHVwIGFub3RoZXIuCgoK
+SGkgTWFyaywKCgpUaGFuayB5b3UgZm9yIHlvdXIgc3VnZ2VzdGlvbi4KCkkgd2lsbCBzcGxpdCB0
+aGlzIHBhdGNoIGludG8gdHdvIHBhdGNoZXMgYW5kIHRoZW4gc2VuZCB2Mi4gCjwvemhhbmdxaW5n
+QGxvb25nc29uLmNuPjwveWFuZ3RpZXpodUBsb29uZ3Nvbi5jbj48L2xpeHVlZmVuZ0Bsb29uZ3Nv
+bi5jbj48L3poYW5ncWluZ0Bsb29uZ3Nvbi5jbj48L2Jyb29uaWVAa2VybmVsLm9yZz4=
