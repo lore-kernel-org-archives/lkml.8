@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D43A3C433F1
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:59:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1C64C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:59:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B0217229CA
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:59:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 78ED522507
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:59:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594753156;
-	bh=/SwL4lhyb9H479yrYfVEdAQXaqBeWOFBvjRzYCTP14M=;
+	s=default; t=1594753158;
+	bh=X/IC48WbTd3ilrpMEuVJHlFQ8+HOo4HRvoUoEGbs6D4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KEgbM2I7+XXBlmNhr0j2oQLK4mEF6aXM9e88z9vHob3h2zL6H3pwThRpsnUiJ0H+y
-	 8Ao5j/L3oLgkKcb09JNyp2q0dNXfMGBo1s0S/EWnrq0aurbFKK4y3MlqnC7GkLPB2D
-	 nlYZjCONQ3dvejGwuvMeU0cTcuZQJkxdObmFFbF8=
+	b=hSB+QvZ+IzPS0ZMECcBqLK0/app/fdFowWwME3+4v9eMJSCi/kt2ztw1ZfvcNcTrf
+	 Ym4Cp4xYbeKKS6euSZW/MGVXw3I6R2+4bQ+4Wncr4p8kLzXkfiipq8yS5UEA2tCPHF
+	 R7exkoDmxzWvIfMs0Ys1d4EM8uiUsLGu0FZ/2G40=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730047AbgGNS7P (ORCPT
+        id S1730724AbgGNS7R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 14:59:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57586 "EHLO mail.kernel.org"
+        Tue, 14 Jul 2020 14:59:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57742 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731067AbgGNS7C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 14:59:02 -0400
+        id S1730680AbgGNS7K (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 14:59:10 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 93ACE229CA;
-        Tue, 14 Jul 2020 18:59:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 69B40229CA;
+        Tue, 14 Jul 2020 18:59:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594753142;
-        bh=/SwL4lhyb9H479yrYfVEdAQXaqBeWOFBvjRzYCTP14M=;
+        s=default; t=1594753150;
+        bh=X/IC48WbTd3ilrpMEuVJHlFQ8+HOo4HRvoUoEGbs6D4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NYPk0qNhqoNvX2WHbor0HWuhyARbH8n5oGNT8GcV1RL661+k+GKTyEMzApIN44oXA
-         pDm3GbozZbUZJpymm65mSXTvJi+jltUu2myfQ2r1OniGuWOkATcseGbKD0zpYC9roO
-         63TZRCl+Jjf0xvVnbcqR5tpciPkd+Q9lBfsb1zpY=
+        b=R91qpM+atylo6hSA3uxlsz0D3PsYPoWWDeTEfbgylFQW0BxMHjFyk+Woj1eatNCS7
+         fdJtTHdTzKXeHf5xuKA7n6rPcx9NJJc5aOfMhptBbvTc8GsxOnx9KcWXRhQVdMa2y5
+         YONkODbPklZFw8scbD/cgkoKiCcYKBt8n/1b0dAo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Marcos Paulo de Souza <mpdesouza@suse.com>,
-        Anand Jain <anand.jain@oracle.com>, Qu Wenruo <wqu@suse.com>,
-        David Sterba <dsterba@suse.com>
-Subject: [PATCH 5.7 136/166] btrfs: discard: add missing put when grabbing block group from unused list
-Date:   Tue, 14 Jul 2020 20:45:01 +0200
-Message-Id: <20200714184122.344961940@linuxfoundation.org>
+        stable@vger.kernel.org, Chris Wilson <chris@chris-wilson.co.uk>,
+        Tvrtko Ursulin <tvrtko.ursulin@intel.com>,
+        Matthew Auld <matthew.auld@intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>
+Subject: [PATCH 5.7 139/166] drm/i915/gt: Pin the rings before marking active
+Date:   Tue, 14 Jul 2020 20:45:04 +0200
+Message-Id: <20200714184122.488639251@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200714184115.844176932@linuxfoundation.org>
 References: <20200714184115.844176932@linuxfoundation.org>
@@ -60,104 +61,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qu Wenruo <wqu@suse.com>
+From: Chris Wilson <chris@chris-wilson.co.uk>
 
-commit 04e484c5973ed0f9234c97685c3c5e1ebf0d6eb6 upstream.
+commit 5a383d443b29a140094430f3ad1d02fa1acc2b80 upstream.
 
-[BUG]
-The following small test script can trigger ASSERT() at unmount time:
+On eviction, we acquire the vm->mutex and then wait on the vma->active.
+Therefore when binding and pinning the vma, we must follow the same
+sequence, lock/pin the vma then mark it active. Otherwise, we mark the
+vma as active, then wait for the vm->mutex, and meanwhile the evictor
+holding the mutex waits upon us to complete our activity.
 
-  mkfs.btrfs -f $dev
-  mount $dev $mnt
-  mount -o remount,discard=async $mnt
-  umount $mnt
-
-The call trace:
-  assertion failed: atomic_read(&block_group->count) == 1, in fs/btrfs/block-group.c:3431
-  ------------[ cut here ]------------
-  kernel BUG at fs/btrfs/ctree.h:3204!
-  invalid opcode: 0000 [#1] PREEMPT SMP NOPTI
-  CPU: 4 PID: 10389 Comm: umount Tainted: G           O      5.8.0-rc3-custom+ #68
-  Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 0.0.0 02/06/2015
-  Call Trace:
-   btrfs_free_block_groups.cold+0x22/0x55 [btrfs]
-   close_ctree+0x2cb/0x323 [btrfs]
-   btrfs_put_super+0x15/0x17 [btrfs]
-   generic_shutdown_super+0x72/0x110
-   kill_anon_super+0x18/0x30
-   btrfs_kill_super+0x17/0x30 [btrfs]
-   deactivate_locked_super+0x3b/0xa0
-   deactivate_super+0x40/0x50
-   cleanup_mnt+0x135/0x190
-   __cleanup_mnt+0x12/0x20
-   task_work_run+0x64/0xb0
-   __prepare_exit_to_usermode+0x1bc/0x1c0
-   __syscall_return_slowpath+0x47/0x230
-   do_syscall_64+0x64/0xb0
-   entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-The code:
-                ASSERT(atomic_read(&block_group->count) == 1);
-                btrfs_put_block_group(block_group);
-
-[CAUSE]
-Obviously it's some btrfs_get_block_group() call doesn't get its put
-call.
-
-The offending btrfs_get_block_group() happens here:
-
-  void btrfs_mark_bg_unused(struct btrfs_block_group *bg)
-  {
-  	if (list_empty(&bg->bg_list)) {
-  		btrfs_get_block_group(bg);
-		list_add_tail(&bg->bg_list, &fs_info->unused_bgs);
-  	}
-  }
-
-So every call sites removing the block group from unused_bgs list should
-reduce the ref count of that block group.
-
-However for async discard, it didn't follow the call convention:
-
-  void btrfs_discard_punt_unused_bgs_list(struct btrfs_fs_info *fs_info)
-  {
-  	list_for_each_entry_safe(block_group, next, &fs_info->unused_bgs,
-  				 bg_list) {
-  		list_del_init(&block_group->bg_list);
-  		btrfs_discard_queue_work(&fs_info->discard_ctl, block_group);
-  	}
-  }
-
-And in btrfs_discard_queue_work(), it doesn't call
-btrfs_put_block_group() either.
-
-[FIX]
-Fix the problem by reducing the reference count when we grab the block
-group from unused_bgs list.
-
-Reported-by: Marcos Paulo de Souza <mpdesouza@suse.com>
-Fixes: 6e80d4f8c422 ("btrfs: handle empty block_group removal for async discard")
-CC: stable@vger.kernel.org # 5.6+
-Tested-by: Marcos Paulo de Souza <mpdesouza@suse.com>
-Reviewed-by: Anand Jain <anand.jain@oracle.com>
-Signed-off-by: Qu Wenruo <wqu@suse.com>
-Reviewed-by: David Sterba <dsterba@suse.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
+Fixes: 8ccfc20a7d56 ("drm/i915/gt: Mark ring->vma as active while pinned")
+Signed-off-by: Chris Wilson <chris@chris-wilson.co.uk>
+Cc: Tvrtko Ursulin <tvrtko.ursulin@intel.com>
+Cc: <stable@vger.kernel.org> # v5.6+
+Reviewed-by: Matthew Auld <matthew.auld@intel.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20200706170138.8993-1-chris@chris-wilson.co.uk
+(cherry picked from commit 8567774e87e23a57155e5102f81208729b992ae6)
+Signed-off-by: Rodrigo Vivi <rodrigo.vivi@intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/btrfs/discard.c |    1 +
- 1 file changed, 1 insertion(+)
+ drivers/gpu/drm/i915/gt/intel_context.c |   12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
---- a/fs/btrfs/discard.c
-+++ b/fs/btrfs/discard.c
-@@ -619,6 +619,7 @@ void btrfs_discard_punt_unused_bgs_list(
- 	list_for_each_entry_safe(block_group, next, &fs_info->unused_bgs,
- 				 bg_list) {
- 		list_del_init(&block_group->bg_list);
-+		btrfs_put_block_group(block_group);
- 		btrfs_discard_queue_work(&fs_info->discard_ctl, block_group);
- 	}
- 	spin_unlock(&fs_info->unused_bgs_lock);
+--- a/drivers/gpu/drm/i915/gt/intel_context.c
++++ b/drivers/gpu/drm/i915/gt/intel_context.c
+@@ -201,25 +201,25 @@ static int __ring_active(struct intel_ri
+ {
+ 	int err;
+ 
+-	err = i915_active_acquire(&ring->vma->active);
++	err = intel_ring_pin(ring);
+ 	if (err)
+ 		return err;
+ 
+-	err = intel_ring_pin(ring);
++	err = i915_active_acquire(&ring->vma->active);
+ 	if (err)
+-		goto err_active;
++		goto err_pin;
+ 
+ 	return 0;
+ 
+-err_active:
+-	i915_active_release(&ring->vma->active);
++err_pin:
++	intel_ring_unpin(ring);
+ 	return err;
+ }
+ 
+ static void __ring_retire(struct intel_ring *ring)
+ {
+-	intel_ring_unpin(ring);
+ 	i915_active_release(&ring->vma->active);
++	intel_ring_unpin(ring);
+ }
+ 
+ __i915_active_call
 
 
