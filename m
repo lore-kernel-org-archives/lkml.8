@@ -2,146 +2,71 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E102DC433E2
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 12:50:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61BFBC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 12:46:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B9EBA22263
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 12:50:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="k9lkooh3"
+	by mail.kernel.org (Postfix) with ESMTP id 4971522409
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 12:46:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728050AbgGNMui (ORCPT
+        id S1728245AbgGNMqD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 08:50:38 -0400
-Received: from mail.efficios.com ([167.114.26.124]:52120 "EHLO
-        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726352AbgGNMui (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 08:50:38 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by mail.efficios.com (Postfix) with ESMTP id 99DB42BE09A;
-        Tue, 14 Jul 2020 08:50:36 -0400 (EDT)
-Received: from mail.efficios.com ([127.0.0.1])
-        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id zXOl0ZI5svpu; Tue, 14 Jul 2020 08:50:36 -0400 (EDT)
-Received: from localhost (localhost [127.0.0.1])
-        by mail.efficios.com (Postfix) with ESMTP id 2941A2BE099;
-        Tue, 14 Jul 2020 08:50:36 -0400 (EDT)
-DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com 2941A2BE099
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
-        s=default; t=1594731036;
-        bh=nvIDjmTX+khpvKBvlnyZZH5+M6lszAXQGxYRoBA/rj8=;
-        h=Date:From:To:Message-ID:MIME-Version;
-        b=k9lkooh3wWIP7V6Jx5Fm6vj0aPq5o7RkXYGf7rPEISHmgM516kNWHVKsh1UtXVWiR
-         3H95Z1KvWFmHNyOXAFq59NcxuQoKPsPpTbZNFCkJ8cu77Tpiin5W8eISX83+WqLk1m
-         +RsaLVSAGrgNKDXAG4P1j7KrfZzjUUf4v+SbtDjt7/EeGSHuXJg3r3tgkbThFJarL0
-         tAlgXlgMy2QEY+Rlw7LkRrw+URztr9M4ZYgOyb/KTPZwAIM+C3Ws00NJcaXiZ392Mf
-         jFVrrNmDy23hbhBntIar0CfHY707s36xY3cV+u+M2olLnKihel++pwPeT5DYVQPQkN
-         uu7wxrY6yy7aA==
-X-Virus-Scanned: amavisd-new at efficios.com
-Received: from mail.efficios.com ([127.0.0.1])
-        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id xcJDdzIqV-Ep; Tue, 14 Jul 2020 08:50:36 -0400 (EDT)
-Received: from mail03.efficios.com (mail03.efficios.com [167.114.26.124])
-        by mail.efficios.com (Postfix) with ESMTP id 174372BE193;
-        Tue, 14 Jul 2020 08:50:36 -0400 (EDT)
-Date:   Tue, 14 Jul 2020 08:50:35 -0400 (EDT)
-From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-To:     Florian Weimer <fweimer@redhat.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        paulmck <paulmck@linux.ibm.com>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Paul Turner <pjt@google.com>,
-        linux-api <linux-api@vger.kernel.org>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        carlos <carlos@redhat.com>
-Message-ID: <131549905.11442.1594731035989.JavaMail.zimbra@efficios.com>
-In-Reply-To: <87mu42bepq.fsf@oldenburg2.str.redhat.com>
-References: <20200714030348.6214-1-mathieu.desnoyers@efficios.com> <20200714030348.6214-3-mathieu.desnoyers@efficios.com> <87mu42bepq.fsf@oldenburg2.str.redhat.com>
-Subject: Re: [RFC PATCH 2/4] rseq: Allow extending struct rseq
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [167.114.26.124]
-X-Mailer: Zimbra 8.8.15_GA_3955 (ZimbraWebClient - FF78 (Linux)/8.8.15_GA_3953)
-Thread-Topic: rseq: Allow extending struct rseq
-Thread-Index: blo1BcVxD31RP8IJoOel3hXCDJsknQ==
+        Tue, 14 Jul 2020 08:46:03 -0400
+Received: from foss.arm.com ([217.140.110.172]:51060 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726352AbgGNMqD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 08:46:03 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C6F8A1FB;
+        Tue, 14 Jul 2020 05:46:02 -0700 (PDT)
+Received: from usa.arm.com (e103737-lin.cambridge.arm.com [10.1.197.49])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id D86643F73D;
+        Tue, 14 Jul 2020 05:46:01 -0700 (PDT)
+From:   Sudeep Holla <sudeep.holla@arm.com>
+To:     linux-rtc@vger.kernel.org
+Cc:     Sudeep Holla <sudeep.holla@arm.com>, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>
+Subject: [PATCH] rtc: pl031: fix set_alarm by adding back call to alarm_irq_enable
+Date:   Tue, 14 Jul 2020 13:45:56 +0100
+Message-Id: <20200714124556.20294-1-sudeep.holla@arm.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
------ On Jul 14, 2020, at 5:58 AM, Florian Weimer fweimer@redhat.com wrote:
+Commit c8ff5841a90b ("rtc: pl031: switch to rtc_time64_to_tm/rtc_tm_to_time64")
+seemed to have accidentally removed the call to pl031_alarm_irq_enable
+from pl031_set_alarm while switching to 64-bit apis.
 
-> * Mathieu Desnoyers:
-> 
->> +	/*
->> +	 * Very last field of the structure, to calculate size excluding padding
->> +	 * with offsetof().
->> +	 */
->> +	char end[];
->>  } __attribute__((aligned(4 * sizeof(__u64))));
-> 
-> This makes the header incompatible with standard C++.
+Let us add back the same to get the set alarm functionality back.
 
-One alternative would be to add a helper to compute the effective size on c++, e.g.:
+Fixes: c8ff5841a90b ("rtc: pl031: switch to rtc_time64_to_tm/rtc_tm_to_time64")
+Cc: Linus Walleij <linus.walleij@linaro.org>
+Cc: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
+---
+ drivers/rtc/rtc-pl031.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-/* Always updated with struct rseq_cs declaration.  */
-#define rseq_last_field kernel_size
-
-static inline size_t rseq_effective_size(void)
-{
-    return offsetof(struct rseq, rseq_last_field) + sizeof(((struct rseq *)NULL)->rseq_last_field);
-}
-
-> 
-> How are extensions going to affect the definition of struct rseq,
-> including its alignment?
-
-The alignment will never decrease. If the structure becomes large enough
-its alignment could theoretically increase. Would that be an issue ?
-
-
-> As things stand now, glibc 2.32 will make the size and alignment of
-> struct rseq part of its ABI, so it can't really change after that.
-
-Can the size and alignment of a structure be defined as minimum alignment
-and size values ? For instance, those would be invariant for a given glibc
-version (if we always use the internal struct rseq declaration), but could
-be increased in future versions.
-
-> With a different approach, we can avoid making the symbol size part of
-> the ABI, but then we cannot use the __rseq_abi TLS symbol.  As a result,
-> interoperability with early adopters would be lost.
-
-Do you mean with a function "getter", and then keeping that pointer around
-in a per-user TLS ? I would prefer to avoid that because it adds an extra
-pointer dereference on a fast path.
-
-> One way to avoid this problem would be for every library to register its
-> own rseq area, of the appropriate size.  Then process-wide coordination
-> in userspace would not be needed.
-
-I did propose the code to do just that in my initial rseq implementations, but
-the idea was shutdown by kernel maintainers because it required the kernel to
-handle a linked-list of rseq areas per thread, which was more complex within
-the kernel.
-
-Thanks,
-
-Mathieu
-
-> 
-> Thanks,
-> Florian
-
+diff --git a/drivers/rtc/rtc-pl031.c b/drivers/rtc/rtc-pl031.c
+index 40d7450a1ce4..c6b89273feba 100644
+--- a/drivers/rtc/rtc-pl031.c
++++ b/drivers/rtc/rtc-pl031.c
+@@ -275,6 +275,7 @@ static int pl031_set_alarm(struct device *dev, struct rtc_wkalrm *alarm)
+ 	struct pl031_local *ldata = dev_get_drvdata(dev);
+ 
+ 	writel(rtc_tm_to_time64(&alarm->time), ldata->base + RTC_MR);
++	pl031_alarm_irq_enable(dev, alarm->enabled);
+ 
+ 	return 0;
+ }
 -- 
-Mathieu Desnoyers
-EfficiOS Inc.
-http://www.efficios.com
+2.17.1
+
