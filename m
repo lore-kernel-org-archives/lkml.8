@@ -2,108 +2,94 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1C22C433F7
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 19:09:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1DA1C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 19:10:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 836C222AAE
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 19:09:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="HgymRxLH"
+	by mail.kernel.org (Postfix) with ESMTP id CC4D522AAE
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 19:10:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730512AbgGNTJi (ORCPT
+        id S1730441AbgGNTKI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 15:09:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41962 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730074AbgGNTJY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 15:09:24 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 748B7C08C5DF;
-        Tue, 14 Jul 2020 12:09:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
-        References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
-        Content-Type:Content-ID:Content-Description;
-        bh=K4dikGL6u3RwHx28hPRDI4chJ8W10j0njE5MaHZR3f8=; b=HgymRxLHxdaSCUuRhwS7AZGyDe
-        WILDssGJY7BRG4JPOkLmQWKkqQiqWrB2foel/5S3TTwGG4z4jCNZBsp7QfgCVNb8efffwHLScalLX
-        jwFAUQRHFo1AniHwAwnOJQu3FmQkbhxsz6U2dkQbz0zL4+Np1NbHoRRWHwGJQ8Suz9fDQJjSgmvhr
-        /vnuuaZr+r5la/MS0U1YJg+qOO3f2wj3WvFoUo2u2KM9dFd3Xcri1zJEjX40G+A5bI25IaIdbCMkY
-        4suFjjBUJPD4YjpHUrPA+onyOWLnTHkVJGQn2Eas+P4vng1L2oWspxAOgcALbA5ZvawxrEU+Y0gkC
-        wVs7z8Lw==;
-Received: from [2001:4bb8:188:5f50:f037:8cfe:627e:7028] (helo=localhost)
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jvQIr-0005uv-LU; Tue, 14 Jul 2020 19:09:22 +0000
-From:   Christoph Hellwig <hch@lst.de>
-To:     linux-kernel@vger.kernel.org
-Cc:     "H. Peter Anvin" <hpa@zytor.com>, Song Liu <song@kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-raid@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Subject: [PATCH 23/23] fs: remove ksys_ioctl
-Date:   Tue, 14 Jul 2020 21:04:27 +0200
-Message-Id: <20200714190427.4332-24-hch@lst.de>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200714190427.4332-1-hch@lst.de>
-References: <20200714190427.4332-1-hch@lst.de>
+        Tue, 14 Jul 2020 15:10:08 -0400
+Received: from mga09.intel.com ([134.134.136.24]:65171 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730189AbgGNTJw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 15:09:52 -0400
+IronPort-SDR: 9Bfeb0/0Naw0dTcYqAOMzBFQIbwFhqES6uIjGLDuwYS6ZDA9k7rTiIx6IdmO+QnHqP7wxi5UuR
+ 3y9gI5QUBFDA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9682"; a="150426923"
+X-IronPort-AV: E=Sophos;i="5.75,352,1589266800"; 
+   d="scan'208";a="150426923"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jul 2020 12:09:46 -0700
+IronPort-SDR: F5+6TagJ+l1griOYsZtzQkFGRpSQRa2AcrvfdSOx4vFmi7tumHZNFRIJUHlFtNvtasUh0ZpCV3
+ s3kdDTQFO7MA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,352,1589266800"; 
+   d="scan'208";a="285855453"
+Received: from iweiny-desk2.sc.intel.com ([10.3.52.147])
+  by orsmga006.jf.intel.com with ESMTP; 14 Jul 2020 12:09:45 -0700
+Date:   Tue, 14 Jul 2020 12:09:45 -0700
+From:   Ira Weiny <ira.weiny@intel.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Andy Lutomirski <luto@kernel.org>,
+        Fenghua Yu <fenghua.yu@intel.com>, x86@kernel.org,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-nvdimm@lists.01.org, linux-fsdevel@vger.kernel.org,
+        linux-mm@kvack.org, linux-kselftest@vger.kernel.org
+Subject: Re: [RFC PATCH 04/15] x86/pks: Preserve the PKRS MSR on context
+ switch
+Message-ID: <20200714190945.GD3008823@iweiny-DESK2.sc.intel.com>
+References: <20200714070220.3500839-1-ira.weiny@intel.com>
+ <20200714070220.3500839-5-ira.weiny@intel.com>
+ <20200714082701.GO10769@hirez.programming.kicks-ass.net>
+ <20200714185322.GB3008823@iweiny-DESK2.sc.intel.com>
+ <20200714190539.GG5523@worktop.programming.kicks-ass.net>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200714190539.GG5523@worktop.programming.kicks-ass.net>
+User-Agent: Mutt/1.11.1 (2018-12-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fold it into the only remaining caller.
+On Tue, Jul 14, 2020 at 09:05:39PM +0200, Peter Zijlstra wrote:
+> On Tue, Jul 14, 2020 at 11:53:22AM -0700, Ira Weiny wrote:
+> > On Tue, Jul 14, 2020 at 10:27:01AM +0200, Peter Zijlstra wrote:
+> > > On Tue, Jul 14, 2020 at 12:02:09AM -0700, ira.weiny@intel.com wrote:
+> > > > From: Ira Weiny <ira.weiny@intel.com>
+> > > > 
+> > > > The PKRS MSR is defined as a per-core register.  This isolates memory
+> > > > access by CPU.  Unfortunately, the MSR is not preserved by XSAVE.
+> > > > Therefore, We must preserve the protections for individual tasks even if
+> > > > they are context switched out and placed on another cpu later.
+> > > 
+> > > This is a contradiction and utter trainwreck.
+> > 
+> > I don't understand where there is a contradiction?  Perhaps I should have said
+> > the MSR is not XSAVE managed vs 'preserved'?
+> 
+> You're stating the MSR is per-*CORE*, and then continue to talk about
+> per-task state.
+> 
+> We've had a bunch of MSRs have exactly that problem recently, and it's
+> not fun. We're not going to do that again.
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
----
- fs/ioctl.c               | 7 +------
- include/linux/syscalls.h | 1 -
- 2 files changed, 1 insertion(+), 7 deletions(-)
+Ah sorry, my mistake yes I meant 'per-logical-processor' like Dave said.  I'll
+update the commit message.
 
-diff --git a/fs/ioctl.c b/fs/ioctl.c
-index d69786d1dd9115..4e6cc0a7d69c9f 100644
---- a/fs/ioctl.c
-+++ b/fs/ioctl.c
-@@ -736,7 +736,7 @@ static int do_vfs_ioctl(struct file *filp, unsigned int fd,
- 	return -ENOIOCTLCMD;
- }
- 
--int ksys_ioctl(unsigned int fd, unsigned int cmd, unsigned long arg)
-+SYSCALL_DEFINE3(ioctl, unsigned int, fd, unsigned int, cmd, unsigned long, arg)
- {
- 	struct fd f = fdget(fd);
- 	int error;
-@@ -757,11 +757,6 @@ int ksys_ioctl(unsigned int fd, unsigned int cmd, unsigned long arg)
- 	return error;
- }
- 
--SYSCALL_DEFINE3(ioctl, unsigned int, fd, unsigned int, cmd, unsigned long, arg)
--{
--	return ksys_ioctl(fd, cmd, arg);
--}
--
- #ifdef CONFIG_COMPAT
- /**
-  * compat_ptr_ioctl - generic implementation of .compat_ioctl file operation
-diff --git a/include/linux/syscalls.h b/include/linux/syscalls.h
-index 39ff738997a172..5b0f1fca4cfb9d 100644
---- a/include/linux/syscalls.h
-+++ b/include/linux/syscalls.h
-@@ -1241,7 +1241,6 @@ int ksys_chroot(const char __user *filename);
- ssize_t ksys_write(unsigned int fd, const char __user *buf, size_t count);
- int ksys_chdir(const char __user *filename);
- int ksys_fchown(unsigned int fd, uid_t user, gid_t group);
--int ksys_ioctl(unsigned int fd, unsigned int cmd, unsigned long arg);
- ssize_t ksys_read(unsigned int fd, char __user *buf, size_t count);
- void ksys_sync(void);
- int ksys_unshare(unsigned long unshare_flags);
--- 
-2.27.0
-
+Ira
