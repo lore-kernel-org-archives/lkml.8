@@ -2,78 +2,88 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C84AEC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 08:05:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5550DC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 08:13:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AE9F321582
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 08:05:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 35DC1217D8
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 08:13:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726398AbgGNIFp (ORCPT
+        id S1726431AbgGNINm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 04:05:45 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:7849 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725833AbgGNIFp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 04:05:45 -0400
-Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 5F5CE3D63C8E597CD903;
-        Tue, 14 Jul 2020 16:05:42 +0800 (CST)
-Received: from localhost.localdomain.localdomain (10.175.113.25) by
- DGGEMS404-HUB.china.huawei.com (10.3.19.204) with Microsoft SMTP Server id
- 14.3.487.0; Tue, 14 Jul 2020 16:05:31 +0800
-From:   Jing Xiangfeng <jingxiangfeng@huawei.com>
-To:     <cezary.rojewski@intel.com>,
-        <pierre-louis.bossart@linux.intel.com>,
-        <liam.r.girdwood@linux.intel.com>, <yang.jie@linux.intel.com>,
-        <broonie@kernel.org>, <perex@perex.cz>, <tiwai@suse.com>,
-        <hdegoede@redhat.com>, <kuninori.morimoto.gx@renesas.com>,
-        <paul@crapouillou.net>
-CC:     <alsa-devel@alsa-project.org>, <linux-kernel@vger.kernel.org>,
-        <jingxiangfeng@huawei.com>
-Subject: [PATCH] ASoC: Intel: bytcht_es8316: Add missed put_device()
-Date:   Tue, 14 Jul 2020 16:09:18 +0800
-Message-ID: <20200714080918.148196-1-jingxiangfeng@huawei.com>
-X-Mailer: git-send-email 2.20.1
+        Tue, 14 Jul 2020 04:13:42 -0400
+Received: from host-88-217-225-28.customer.m-online.net ([88.217.225.28]:33747
+        "EHLO mail.dev.tdt.de" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725816AbgGNINl (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 04:13:41 -0400
+X-Greylist: delayed 388 seconds by postgrey-1.27 at vger.kernel.org; Tue, 14 Jul 2020 04:13:41 EDT
+Received: from mail.dev.tdt.de (localhost [IPv6:::1])
+        by mail.dev.tdt.de (Postfix) with ESMTP id 373D420D83;
+        Tue, 14 Jul 2020 08:07:10 +0000 (UTC)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.175.113.25]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Tue, 14 Jul 2020 10:07:10 +0200
+From:   Martin Schiller <ms@dev.tdt.de>
+To:     Xie He <xie.he.0141@gmail.com>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Shannon Nelson <snelson@pensando.io>,
+        Martin Habets <mhabets@solarflare.com>,
+        "Michael S. Tsirkin" <mst@redhat.com>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Linux X25 <linux-x25@vger.kernel.org>
+Subject: Re: [PATCH] drivers/net/wan/x25_asy: Fix to make it work
+Organization: TDT AG
+In-Reply-To: <CAJht_EOqgWh0dShG258C3uoYdQga+EUae34tvL9HhqpztAv1PQ@mail.gmail.com>
+References: <20200708043754.46554-1-xie.he.0141@gmail.com>
+ <20200708.101321.1049330296069021543.davem@davemloft.net>
+ <CAJht_EOqgWh0dShG258C3uoYdQga+EUae34tvL9HhqpztAv1PQ@mail.gmail.com>
+Message-ID: <490146353e9225245d8165b6edade1a9@dev.tdt.de>
+X-Sender: ms@dev.tdt.de
+User-Agent: Roundcube Webmail/1.1.5
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-snd_byt_cht_es8316_mc_probe() misses to call put_device() in an error
-path. Add the missed function call to fix it.
+On 2020-07-08 21:04, Xie He wrote:
+> From: David Miller <davem@davemloft.net>
+> Date: Wed, Jul 8, 2020 at 10:13 AM -0700
+>> Something's not right, because I find it hard to believe this has been
+>> so fundamentally broken for such a long period of time.
+>> 
+>> Maybe the drivers all handle things differently, and whilst your 
+>> change
+>> might fix some drivers, it will break others.
+>> 
+>> I'm not applying this until this situation is better understood.
+> 
+> Yes, it was hard for me to believe, too.
+> 
+> At first when I tried this driver, it was silently not able to 
+> establish
+> LAPB connections, I found that it was because it was ignoring
+> 2-byte frames. I changed it to make 2-byte frames pass. Then I
+> encountered kernel panic. I don't know how to solve it, so I looked
+> at the way "lapbether" does things and changed this driver according
+> to the "lapbether" driver. And it worked.
+> 
+> The "lapbether" driver and this driver both use the "lapb" module to
+> implement the LAPB protocol, so they should implement LAPB-related
+> code in the same way.
+> 
+> This patch only changes this driver and does not affect other drivers.
+> 
+> I don't know how I can better explain this situation. Please tell me
+> anything I can do to help. Thanks!
 
-Fixes: ba49cf6f8e4a ("ASoC: Intel: bytcht_es8316: Add quirk for inverted jack detect")
-Signed-off-by: Jing Xiangfeng <jingxiangfeng@huawei.com>
----
- sound/soc/intel/boards/bytcht_es8316.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+It really seems very strange that this driver seems to contain such
+fundamental errors. I have never used it.
 
-diff --git a/sound/soc/intel/boards/bytcht_es8316.c b/sound/soc/intel/boards/bytcht_es8316.c
-index 9e5fc9430628..ecbc58e8a37f 100644
---- a/sound/soc/intel/boards/bytcht_es8316.c
-+++ b/sound/soc/intel/boards/bytcht_es8316.c
-@@ -543,8 +543,10 @@ static int snd_byt_cht_es8316_mc_probe(struct platform_device *pdev)
- 
- 	if (cnt) {
- 		ret = device_add_properties(codec_dev, props);
--		if (ret)
-+		if (ret) {
-+			put_device(codec_dev);
- 			return ret;
-+		}
- 	}
- 
- 	devm_acpi_dev_add_driver_gpios(codec_dev, byt_cht_es8316_gpios);
--- 
-2.17.1
-
+But the explanations and fixes look plausible to me.
