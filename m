@@ -2,54 +2,51 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6115FC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:58:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BA77C433E4
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:58:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3B693207F5
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:58:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7353822507
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 18:58:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594753112;
-	bh=ZFlzZIRCz3wduxIYaFB+Mm1OQLBJ+1JrMJ1NTx1mBso=;
+	s=default; t=1594753115;
+	bh=9QAtD4QYQW1SlkZkkh5EJ3lPChvmKTyOqkTQIYB0UHY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=k5Ika27CeW+BgMx1DwfwdXDGWSMytNuYczD1cyrQ3qT1XhoDo5F0BC5M8fPZTt5X6
-	 4vT+QtoB9YBbuah0PfSHIGAwLUWC/8TnZl9Xg1/RyFacnyfWGCw4vGx6NMwZ5SXjly
-	 2TiOruk5UfdN5Ocu/jS8nHX396hUQFbYLGBOLiD4=
+	b=XZE5VDz8YT9ZnYWBhybywaYVQ6Jj/8mKWg0rpNs3Er0vAFcrDrhdAT1LEw5NCR2Sn
+	 j+9f5d+7JCPfaBOu0G4wqrB1MoFZmJ7CLlda8oyT8WVzNYKUyWvhboiHZlNoIRaPcU
+	 o4duTL0myn05D4/xiN+o7KWSzrqReGfaKC0YikvU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731215AbgGNS6a (ORCPT
+        id S1731218AbgGNS6d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 14:58:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56780 "EHLO mail.kernel.org"
+        Tue, 14 Jul 2020 14:58:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56886 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730813AbgGNS6V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 14:58:21 -0400
+        id S1731196AbgGNS60 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 14:58:26 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5DA5522B4E;
-        Tue, 14 Jul 2020 18:58:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 25AAA22A99;
+        Tue, 14 Jul 2020 18:58:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594753100;
-        bh=ZFlzZIRCz3wduxIYaFB+Mm1OQLBJ+1JrMJ1NTx1mBso=;
+        s=default; t=1594753105;
+        bh=9QAtD4QYQW1SlkZkkh5EJ3lPChvmKTyOqkTQIYB0UHY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=E3AM4Up9ZWgVDOKI0GSLDEWbhgUv7hYM3Y0KPdQazlAbWGeitjNTSA0u+XxKOaCGz
-         4oJJp7OKGVK7+KlqFfrqZ4Y5zQUCcxSQaZTRuSJWRDQ5t2LYEfpcITdEguqM9afIEO
-         5K7nVo+w+uY3Wc0uhKOTHQmNbPzf1Q/ubAIs8epY=
+        b=Vdf3GeH1+U5aPhxPKOhUx6t7X9kj53QLb7ksrpJMgtEJWl5wILH6FKKXbZt2EeS6d
+         qzBqqWqmmA9LO5kAQZwTQLsVwIUZdf4T4TC4eZBOiXhojo4BzEyEZMRqKzCfIZQW6U
+         WYbVMDY0tFERG3pWKVHXLzrYWs+lDuT3uzm5J74I=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Sudarsana Reddy Kalluru <skalluru@marvell.com>,
-        Igor Russkikh <irusskikh@marvell.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 092/166] qed: Populate nvm-file attributes while reading nvm config partition.
-Date:   Tue, 14 Jul 2020 20:44:17 +0200
-Message-Id: <20200714184120.249982350@linuxfoundation.org>
+        stable@vger.kernel.org, Nadav Amit <namit@vmware.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Subject: [PATCH 5.7 120/166] KVM: x86: bit 8 of non-leaf PDPEs is not reserved
+Date:   Tue, 14 Jul 2020 20:44:45 +0200
+Message-Id: <20200714184121.583040678@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200714184115.844176932@linuxfoundation.org>
 References: <20200714184115.844176932@linuxfoundation.org>
@@ -62,129 +59,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sudarsana Reddy Kalluru <skalluru@marvell.com>
+From: Paolo Bonzini <pbonzini@redhat.com>
 
-[ Upstream commit 13cf8aab7425a253070433b5a55b4209ceac8b19 ]
+commit 5ecad245de2ae23dc4e2dbece92f8ccfbaed2fa7 upstream.
 
-NVM config file address will be modified when the MBI image is upgraded.
-Driver would return stale config values if user reads the nvm-config
-(via ethtool -d) in this state. The fix is to re-populate nvm attribute
-info while reading the nvm config values/partition.
+Bit 8 would be the "global" bit, which does not quite make sense for non-leaf
+page table entries.  Intel ignores it; AMD ignores it in PDEs and PDPEs, but
+reserves it in PML4Es.
 
-Changes from previous version:
--------------------------------
-v3: Corrected the formatting in 'Fixes' tag.
-v2: Added 'Fixes' tag.
+Probably, earlier versions of the AMD manual documented it as reserved in PDPEs
+as well, and that behavior made it into KVM as well as kvm-unit-tests; fix it.
 
-Fixes: 1ac4329a1cff ("qed: Add configuration information to register dump and debug data")
-Signed-off-by: Sudarsana Reddy Kalluru <skalluru@marvell.com>
-Signed-off-by: Igor Russkikh <irusskikh@marvell.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Cc: stable@vger.kernel.org
+Reported-by: Nadav Amit <namit@vmware.com>
+Fixes: a0c0feb57992 ("KVM: x86: reserve bit 8 of non-leaf PDPEs and PML4Es in 64-bit mode on AMD", 2014-09-03)
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/net/ethernet/qlogic/qed/qed_debug.c |  4 ++++
- drivers/net/ethernet/qlogic/qed/qed_dev.c   | 12 +++---------
- drivers/net/ethernet/qlogic/qed/qed_mcp.c   |  7 +++++++
- drivers/net/ethernet/qlogic/qed/qed_mcp.h   |  7 +++++++
- 4 files changed, 21 insertions(+), 9 deletions(-)
+ arch/x86/kvm/mmu/mmu.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/qlogic/qed/qed_debug.c b/drivers/net/ethernet/qlogic/qed/qed_debug.c
-index 03ce18f653932..25745b75daf32 100644
---- a/drivers/net/ethernet/qlogic/qed/qed_debug.c
-+++ b/drivers/net/ethernet/qlogic/qed/qed_debug.c
-@@ -7941,6 +7941,10 @@ int qed_dbg_all_data(struct qed_dev *cdev, void *buffer)
- 		DP_ERR(cdev, "qed_dbg_mcp_trace failed. rc = %d\n", rc);
- 	}
- 
-+	/* Re-populate nvm attribute info */
-+	qed_mcp_nvm_info_free(p_hwfn);
-+	qed_mcp_nvm_info_populate(p_hwfn);
-+
- 	/* nvm cfg1 */
- 	rc = qed_dbg_nvm_image(cdev,
- 			       (u8 *)buffer + offset +
-diff --git a/drivers/net/ethernet/qlogic/qed/qed_dev.c b/drivers/net/ethernet/qlogic/qed/qed_dev.c
-index 9b00988fb77e1..58913fe4f3457 100644
---- a/drivers/net/ethernet/qlogic/qed/qed_dev.c
-+++ b/drivers/net/ethernet/qlogic/qed/qed_dev.c
-@@ -4466,12 +4466,6 @@ static int qed_get_dev_info(struct qed_hwfn *p_hwfn, struct qed_ptt *p_ptt)
- 	return 0;
- }
- 
--static void qed_nvm_info_free(struct qed_hwfn *p_hwfn)
--{
--	kfree(p_hwfn->nvm_info.image_att);
--	p_hwfn->nvm_info.image_att = NULL;
--}
--
- static int qed_hw_prepare_single(struct qed_hwfn *p_hwfn,
- 				 void __iomem *p_regview,
- 				 void __iomem *p_doorbells,
-@@ -4556,7 +4550,7 @@ static int qed_hw_prepare_single(struct qed_hwfn *p_hwfn,
- 	return rc;
- err3:
- 	if (IS_LEAD_HWFN(p_hwfn))
--		qed_nvm_info_free(p_hwfn);
-+		qed_mcp_nvm_info_free(p_hwfn);
- err2:
- 	if (IS_LEAD_HWFN(p_hwfn))
- 		qed_iov_free_hw_info(p_hwfn->cdev);
-@@ -4617,7 +4611,7 @@ int qed_hw_prepare(struct qed_dev *cdev,
- 		if (rc) {
- 			if (IS_PF(cdev)) {
- 				qed_init_free(p_hwfn);
--				qed_nvm_info_free(p_hwfn);
-+				qed_mcp_nvm_info_free(p_hwfn);
- 				qed_mcp_free(p_hwfn);
- 				qed_hw_hwfn_free(p_hwfn);
- 			}
-@@ -4651,7 +4645,7 @@ void qed_hw_remove(struct qed_dev *cdev)
- 
- 	qed_iov_free_hw_info(cdev);
- 
--	qed_nvm_info_free(p_hwfn);
-+	qed_mcp_nvm_info_free(p_hwfn);
- }
- 
- static void qed_chain_free_next_ptr(struct qed_dev *cdev,
-diff --git a/drivers/net/ethernet/qlogic/qed/qed_mcp.c b/drivers/net/ethernet/qlogic/qed/qed_mcp.c
-index 280527cc05781..99548d5b44ea1 100644
---- a/drivers/net/ethernet/qlogic/qed/qed_mcp.c
-+++ b/drivers/net/ethernet/qlogic/qed/qed_mcp.c
-@@ -3151,6 +3151,13 @@ int qed_mcp_nvm_info_populate(struct qed_hwfn *p_hwfn)
- 	return rc;
- }
- 
-+void qed_mcp_nvm_info_free(struct qed_hwfn *p_hwfn)
-+{
-+	kfree(p_hwfn->nvm_info.image_att);
-+	p_hwfn->nvm_info.image_att = NULL;
-+	p_hwfn->nvm_info.valid = false;
-+}
-+
- int
- qed_mcp_get_nvm_image_att(struct qed_hwfn *p_hwfn,
- 			  enum qed_nvm_images image_id,
-diff --git a/drivers/net/ethernet/qlogic/qed/qed_mcp.h b/drivers/net/ethernet/qlogic/qed/qed_mcp.h
-index 9c4c2763de8d7..e38297383b007 100644
---- a/drivers/net/ethernet/qlogic/qed/qed_mcp.h
-+++ b/drivers/net/ethernet/qlogic/qed/qed_mcp.h
-@@ -1192,6 +1192,13 @@ void qed_mcp_read_ufp_config(struct qed_hwfn *p_hwfn, struct qed_ptt *p_ptt);
-  */
- int qed_mcp_nvm_info_populate(struct qed_hwfn *p_hwfn);
- 
-+/**
-+ * @brief Delete nvm info shadow in the given hardware function
-+ *
-+ * @param p_hwfn
-+ */
-+void qed_mcp_nvm_info_free(struct qed_hwfn *p_hwfn);
-+
- /**
-  * @brief Get the engine affinity configuration.
-  *
--- 
-2.25.1
-
+--- a/arch/x86/kvm/mmu/mmu.c
++++ b/arch/x86/kvm/mmu/mmu.c
+@@ -4484,7 +4484,7 @@ __reset_rsvds_bits_mask(struct kvm_vcpu
+ 			nonleaf_bit8_rsvd | rsvd_bits(7, 7) |
+ 			rsvd_bits(maxphyaddr, 51);
+ 		rsvd_check->rsvd_bits_mask[0][2] = exb_bit_rsvd |
+-			nonleaf_bit8_rsvd | gbpages_bit_rsvd |
++			gbpages_bit_rsvd |
+ 			rsvd_bits(maxphyaddr, 51);
+ 		rsvd_check->rsvd_bits_mask[0][1] = exb_bit_rsvd |
+ 			rsvd_bits(maxphyaddr, 51);
 
 
