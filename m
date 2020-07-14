@@ -4,53 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EACC0C433EA
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 14:39:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF1B2C4345E
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 14:40:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BCCE122571
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 14:39:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 847EE2251F
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 14:40:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594737591;
-	bh=hhuOWuHf7e1hRbr1agT3ODhnh3OFAi7Fw/8QD9fmEfE=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=B2Gi+io/zprFxhg7xZ1P3xpbpkreel8yMmJuZHUy/uuvHduVkwcwBAk3ljcow9avg
-	 qolK1Sm7fALJvRoJC6GdDSm6WVEfAjkRG1iaRfWZr8cde7/F2pTCg0VC82J+BtawXa
-	 7soEOw+ml5E2YJIoJ6ZxCqiIPPDvd9txjiqFSUCM=
+	s=default; t=1594737604;
+	bh=9V3jjgTzpelnI6wTA+g02EGTVUqj+7Cr04JWKXdlAQQ=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=x5wzLH5GlK/crwsPEo2N+DuaYO/7WMloDX+r28J990y06jvwe+7kDoG+nBX6Q+Bp9
+	 bqtnb7KgiUbgZHVDfCOZo4/Sbo5WfN8Ola+uFhwpF3HyJTDU/KCAJx9nAwGJQU7e60
+	 kX9oxapM4q7W4H4bZrd0Ml45f1emviSoVux0yn/g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729143AbgGNOju (ORCPT
+        id S1729221AbgGNOkD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 10:39:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55198 "EHLO mail.kernel.org"
+        Tue, 14 Jul 2020 10:40:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55522 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729093AbgGNOjp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 10:39:45 -0400
+        id S1729179AbgGNOj4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 10:39:56 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7732B22571;
-        Tue, 14 Jul 2020 14:39:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8AFDF229C4;
+        Tue, 14 Jul 2020 14:39:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594737584;
-        bh=hhuOWuHf7e1hRbr1agT3ODhnh3OFAi7Fw/8QD9fmEfE=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qu6bXv7fCu2BQN4KoSVPSLCjPFeOJ8w+FLkbT9C1YwwVI//MPpFrx9xw7Jfcof3rU
-         L/EWoLGUrRbZY9dYBy22oDkVtYPbeLdiRpm9pPUDT/6Hm5DqTJyw/zREqoipBO1J5r
-         L8GXDM9gsMoIS3uO5qNHPCCXLVTuOgMcs9BOK+Dg=
+        s=default; t=1594737596;
+        bh=9V3jjgTzpelnI6wTA+g02EGTVUqj+7Cr04JWKXdlAQQ=;
+        h=From:To:Cc:Subject:Date:From;
+        b=Yda9WA7xbzAobMRELZRaPwHJZ0YpfzuysjEJzW5FwxBtxJPgBkwBauqHiic87+7t7
+         zMZRvMvVwhVYTeK3w4vgQNozFAF2TqBez7PuodkZKe3F6libEMYEdulWfrgxGfXtX2
+         zkEcq/+rWWz1jLhBJs+suQ9J1HNNQjlqdaAmOUKs=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Tom Rix <trix@redhat.com>, James Bottomley <jejb@linux.ibm.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org,
-        clang-built-linux@googlegroups.com
-Subject: [PATCH AUTOSEL 4.19 05/13] scsi: scsi_transport_spi: Fix function pointer check
-Date:   Tue, 14 Jul 2020 10:39:29 -0400
-Message-Id: <20200714143937.4035685-5-sashal@kernel.org>
+Cc:     Navid Emamdoost <navid.emamdoost@gmail.com>,
+        Charles Keepax <ckeepax@opensource.cirrus.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Sasha Levin <sashal@kernel.org>, patches@opensource.cirrus.com,
+        linux-gpio@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 01/12] gpio: arizona: handle pm_runtime_get_sync failure case
+Date:   Tue, 14 Jul 2020 10:39:43 -0400
+Message-Id: <20200714143954.4035840-1-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200714143937.4035685-1-sashal@kernel.org>
-References: <20200714143937.4035685-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -60,48 +59,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tom Rix <trix@redhat.com>
+From: Navid Emamdoost <navid.emamdoost@gmail.com>
 
-[ Upstream commit 5aee52c44d9170591df65fafa1cd408acc1225ce ]
+[ Upstream commit e6f390a834b56583e6fc0949822644ce92fbb107 ]
 
-clang static analysis flags several null function pointer problems.
+Calling pm_runtime_get_sync increments the counter even in case of
+failure, causing incorrect ref count. Call pm_runtime_put if
+pm_runtime_get_sync fails.
 
-drivers/scsi/scsi_transport_spi.c:374:1: warning: Called function pointer is null (null dereference) [core.CallAndMessage]
-spi_transport_max_attr(offset, "%d\n");
-^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-Reviewing the store_spi_store_max macro
-
-	if (i->f->set_##field)
-		return -EINVAL;
-
-should be
-
-	if (!i->f->set_##field)
-		return -EINVAL;
-
-Link: https://lore.kernel.org/r/20200627133242.21618-1-trix@redhat.com
-Reviewed-by: James Bottomley <jejb@linux.ibm.com>
-Signed-off-by: Tom Rix <trix@redhat.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
+Acked-by: Charles Keepax <ckeepax@opensource.cirrus.com>
+Link: https://lore.kernel.org/r/20200605025207.65719-1-navid.emamdoost@gmail.com
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/scsi_transport_spi.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/gpio/gpio-arizona.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/scsi/scsi_transport_spi.c b/drivers/scsi/scsi_transport_spi.c
-index 40b85b752b794..69213842e63e0 100644
---- a/drivers/scsi/scsi_transport_spi.c
-+++ b/drivers/scsi/scsi_transport_spi.c
-@@ -352,7 +352,7 @@ store_spi_transport_##field(struct device *dev, 			\
- 	struct spi_transport_attrs *tp					\
- 		= (struct spi_transport_attrs *)&starget->starget_data;	\
- 									\
--	if (i->f->set_##field)						\
-+	if (!i->f->set_##field)						\
- 		return -EINVAL;						\
- 	val = simple_strtoul(buf, NULL, 0);				\
- 	if (val > tp->max_##field)					\
+diff --git a/drivers/gpio/gpio-arizona.c b/drivers/gpio/gpio-arizona.c
+index d4e6ba0301bc3..e09834b91ea52 100644
+--- a/drivers/gpio/gpio-arizona.c
++++ b/drivers/gpio/gpio-arizona.c
+@@ -111,6 +111,7 @@ static int arizona_gpio_direction_out(struct gpio_chip *chip,
+ 		ret = pm_runtime_get_sync(chip->parent);
+ 		if (ret < 0) {
+ 			dev_err(chip->parent, "Failed to resume: %d\n", ret);
++			pm_runtime_put(chip->parent);
+ 			return ret;
+ 		}
+ 	}
 -- 
 2.25.1
 
