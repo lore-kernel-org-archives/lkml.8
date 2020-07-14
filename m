@@ -2,83 +2,91 @@ Return-Path: <SRS0=dAmO=AZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB3DAC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 19:03:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE9FBC433E4
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 19:02:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BEA2C22B51
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 19:03:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="mghMUxtJ";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="pLUMCIIO"
+	by mail.kernel.org (Postfix) with ESMTP id AE0FE22B4E
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jul 2020 19:02:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594753377;
+	bh=iYiwePp934ix+9yWuEcbluFpzpyu+MCl53X7RGFu3GI=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=T8cibBb3Tb/gXobmQv6cRBQ/20twHfaEW6DObS+miNME3tckhjMQZek71jbLmnf9v
+	 bEq09YB+p+YrfJHIeVe7c3ciH/czETrT8hPyOU2HZ5494ezxx2oByhhRtHYLA5NGRL
+	 0KqB7couZBal+IPH4cXbUhXCKCPQkOhLsI2VdAeE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730862AbgGNTDA (ORCPT
+        id S1730957AbgGNTC4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 15:03:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40920 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730825AbgGNTC4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 14 Jul 2020 15:02:56 -0400
-Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DF07DC061755;
-        Tue, 14 Jul 2020 12:02:56 -0700 (PDT)
-Date:   Tue, 14 Jul 2020 21:02:53 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1594753375;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=D5hF4twVv5HhwhE7NRxkaBM2XMg1Sfjm24WE5eOk48k=;
-        b=mghMUxtJm8hieMhzxLu5CerE0Pb2DYjrakx+pa3Am3jPdlCvZUIrG6FHe8zemEN3OgSGsL
-        oaTpO4Lnjb9Suti0+9hwP/Xh2pRPwpQKKYmEruzKcgvU0ACEDi3qh8OGLUwiNXC466ZTnm
-        HNvr1S1YCv/rLVPWYQk9iogWGyYZBHwbUI2fmUSYoQHmcpYaDa+Qh4/OqsRLSaF0/1xrE9
-        ZEbkvsgCLulWMuH1QSHjorYrJNSYidUd/iL4rdeXO47C18SUNqdA4Skif8FpDzZzb35yHI
-        ngfYroqncdmsGZMna5vXqTOnWEOwWqWijnzHjt6PEzC2Pic3RHKxD/F3GqIBUg==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1594753375;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=D5hF4twVv5HhwhE7NRxkaBM2XMg1Sfjm24WE5eOk48k=;
-        b=pLUMCIIOM723c3dWn2+rwO0l91r2lz11nnKA1HLCnh5e9PJtpBvMKx0tE3gNPsduT6GvIu
-        7UV0830Gzi0alABg==
-From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-To:     "Paul E. McKenney" <paulmck@kernel.org>
-Cc:     mingo@kernel.org, linux-kernel@vger.kernel.org,
-        rcu@vger.kernel.org, arnd@arndb.de, elver@google.com, ethp@qq.com,
-        frederic@kernel.org, jbi.octave@gmail.com, joel@joelfernandes.org,
-        lihaoliang@google.com, madhuparnabhowmik10@gmail.com,
-        mchehab+huawei@kernel.org, peter.enderborg@sony.com,
-        rdunlap@infradead.org, richard.weiyang@linux.alibaba.com,
-        urezki@gmail.com, zou_wei@huawei.com, tglx@linutronix.de
-Subject: Re: [GIT PULL tip/core/rcu] RCU commits for v5.9
-Message-ID: <20200714190253.ylqjif7frqs2rq7x@linutronix.de>
-References: <20200714172701.GA31369@paulmck-ThinkPad-P72>
- <20200714181426.hhguqzrcqdubyvae@linutronix.de>
- <20200714182732.GU9247@paulmck-ThinkPad-P72>
+Received: from mail.kernel.org ([198.145.29.99]:56232 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731152AbgGNS5y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 14:57:54 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 28753207F5;
+        Tue, 14 Jul 2020 18:57:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594753074;
+        bh=iYiwePp934ix+9yWuEcbluFpzpyu+MCl53X7RGFu3GI=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=JcQTcHQQQMb7oK1mEpnGLimDv6Rp2mGDWuvqlSy3JOXXysqlZfxQhLgljSlV0TaVK
+         QjPA0N8OkspdJ74CrDNBzOafAave+uOzam1ZDwuWhut0Jr+j7M7NQMShV/MhWIRJeV
+         gUlJJ6S3c7Fr/fGPpaxtGCFYmD4LaAPK3dvM5Xlk=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, xidongwang <wangxidong_97@163.com>,
+        Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 5.7 109/166] ALSA: opl3: fix infoleak in opl3
+Date:   Tue, 14 Jul 2020 20:44:34 +0200
+Message-Id: <20200714184121.056904592@linuxfoundation.org>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200714184115.844176932@linuxfoundation.org>
+References: <20200714184115.844176932@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200714182732.GU9247@paulmck-ThinkPad-P72>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-07-14 11:27:32 [-0700], Paul E. McKenney wrote:
-> I believe that Ulad and Joel are working on an update.
+From: xidongwang <wangxidong_97@163.com>
 
-I expressed multiple times that I am unhappy with the raw_spinlock_t
-which both want to keep. It is important to be future proof but at the
-same time I am not sure if they know how many in-hardirq kmalloc() or
-kfree() invocation we have as of today in PREEMPT_RT.
-I also had a patch in my series to keep the lock/unlock path symmetrical
-and it I think that I the only one that is missing it.
+commit ad155712bb1ea2151944cf06a0e08c315c70c1e3 upstream.
 
-> 							Thanx, Paul
+The stack object “info” in snd_opl3_ioctl() has a leaking problem.
+It has 2 padding bytes which are not initialized and leaked via
+“copy_to_user”.
 
-Sebastian
+Signed-off-by: xidongwang <wangxidong_97@163.com>
+Cc: <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/1594006058-30362-1-git-send-email-wangxidong_97@163.com
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ sound/drivers/opl3/opl3_synth.c |    2 ++
+ 1 file changed, 2 insertions(+)
+
+--- a/sound/drivers/opl3/opl3_synth.c
++++ b/sound/drivers/opl3/opl3_synth.c
+@@ -91,6 +91,8 @@ int snd_opl3_ioctl(struct snd_hwdep * hw
+ 		{
+ 			struct snd_dm_fm_info info;
+ 
++			memset(&info, 0, sizeof(info));
++
+ 			info.fm_mode = opl3->fm_mode;
+ 			info.rhythm = opl3->rhythm;
+ 			if (copy_to_user(argp, &info, sizeof(struct snd_dm_fm_info)))
+
+
