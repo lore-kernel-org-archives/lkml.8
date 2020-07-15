@@ -2,94 +2,140 @@ Return-Path: <SRS0=kup7=A2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E48C9C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 22:16:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81BC0C433E2
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 22:19:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AC5AF2064C
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 22:16:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 571862064C
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 22:19:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="LRzofQ3L"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="f7/jal1v"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727906AbgGOWQ5 (ORCPT
+        id S1727034AbgGOWTO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 18:16:57 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:34614 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726370AbgGOWQ5 (ORCPT
+        Wed, 15 Jul 2020 18:19:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39280 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726356AbgGOWTN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 18:16:57 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06FMCXVs045436;
-        Wed, 15 Jul 2020 22:16:49 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id : in-reply-to : references : mime-version :
- content-transfer-encoding; s=corp-2020-01-29;
- bh=hajTQxL3DfoG2UFqfGqAJwoaAVaavS6nPH9dcC+/GFg=;
- b=LRzofQ3LbQ8pQPCmZHh6VugyCeTmHZEBsD9FyYraIxInlcqc6BkvTJAAVzYpel6P8lDr
- EPpaiENxpBMsvI+j0gQO2Po+hZaxDgZhoMRnHtNjAobMw7uF1cVnlNe32UaRWM1b0Yg5
- sTd8RJlQahqeWgdM7z1zKZ7HEkx5gIhvL9LZ+N+S81tR+bhjV1cBgjdwV4oLwVrX6aA8
- SQLm3mWlpuJBFz0c3bX+XeueK50AMUWlhKZbR95WeP2pBcAEzAENXNDA0YucaIc28Oz0
- L0N2gH1+5Dg/i34PFUjVpQmNqWOwMToAZSguTsDdoNjNmX14pmOggAZJCfLHuHtEIPbn xg== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2130.oracle.com with ESMTP id 3274ure3qv-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 15 Jul 2020 22:16:49 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06FMDfrS152242;
-        Wed, 15 Jul 2020 22:14:49 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by aserp3030.oracle.com with ESMTP id 327q0s3mnj-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 15 Jul 2020 22:14:48 +0000
-Received: from abhmp0015.oracle.com (abhmp0015.oracle.com [141.146.116.21])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 06FMEjhC001059;
-        Wed, 15 Jul 2020 22:14:45 GMT
-Received: from ca-mkp.ca.oracle.com (/10.156.108.201)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 15 Jul 2020 15:14:45 -0700
-From:   "Martin K. Petersen" <martin.petersen@oracle.com>
-To:     jejb@linux.ibm.com, YueHaibing <yuehaibing@huawei.com>,
-        damien.lemoal@wdc.com, axboe@kernel.dk, johannes.thumshirn@wdc.com
-Cc:     "Martin K . Petersen" <martin.petersen@oracle.com>,
-        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH -next] scsi: sd_zbc: Remove unused inline functions
-Date:   Wed, 15 Jul 2020 18:14:37 -0400
-Message-Id: <159484884354.21107.18007748350394908907.b4-ty@oracle.com>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200715025523.34620-1-yuehaibing@huawei.com>
-References: <20200715025523.34620-1-yuehaibing@huawei.com>
+        Wed, 15 Jul 2020 18:19:13 -0400
+Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 930A4C061755;
+        Wed, 15 Jul 2020 15:19:13 -0700 (PDT)
+Received: by mail-pf1-x443.google.com with SMTP id s26so2721395pfm.4;
+        Wed, 15 Jul 2020 15:19:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=L5GmY7L5HiAC8HqdYtfQXZjWPSkTCivraVGIeIH6xEE=;
+        b=f7/jal1vkki2RMNvTtMvqlOoaX3OnyJjnqEf2IOuHHcNk+elT7V1peCYtakcnQKvYz
+         39UUvOvtcTCYIB+/jO1Jf4tjL8ODVmiqKj9ck5jrqyXMND8A4CjUVcduigaso+4NfTd6
+         TB+GHfya+bAw1mZrIKRkTf9IShgncIbmPM5TRxpHKQwaQ8HNL6SaMkja76angsIUZqrF
+         Y65OiLeLbz5HB7rgtYxavkaQY6VgFVbM7f/ZC2hI0fXc/uF0yAHfcHbAkdeui+/jBIxj
+         /PcrpON+lxb9qnc9pag2p7b3+GoCZ4W/FHQ8hNnfm6FuwF1YeQAAT4AVkX7HEY3r/yL9
+         iGKA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=L5GmY7L5HiAC8HqdYtfQXZjWPSkTCivraVGIeIH6xEE=;
+        b=E1bgmzGLQf4bxFutbI5TzhxbOx1wZvfeD7pXVWf2oVbjXhkvjkU2F1dwMEVFyxpEZ4
+         qhBZdg0aY2AQh3wX9jT89d6ES1NYw/ffsu8uxI5xnlh9RayarnRjUqNVQLTbxqsdYU67
+         BvlOttxdacxEV8zdYpplqVg/e52r1nk4wHz3S8F7xA+asrOPjVtwiSXqg43Tagt3pouh
+         3aq+Bx71YebHwueQv5I790tut7K1TxZjp1ZIPRaxYm1bHQtLa9OrHudPoFxnFvnUmbsU
+         epUb1CCiDQ7XGQAInkwzrVAGPFN07m0EqcP8mCWeNRJNmyAMgQZKTo7D2b6YR9QkoV5S
+         YTLg==
+X-Gm-Message-State: AOAM532ewkC445dPJx8nKrX7IjzUL/6w9QTUN0GIOgmJOKFU3kXLlsJt
+        R5gGiwbeguZpTzuMKt7YSXM=
+X-Google-Smtp-Source: ABdhPJzHPKvV0aI6JxTWi/oUAVWq5l+4QlNduI5iAu8bPUuehKV+rdPs5HKsHkBQkH22ybvdvFQBOw==
+X-Received: by 2002:a63:6884:: with SMTP id d126mr1530707pgc.341.1594851553028;
+        Wed, 15 Jul 2020 15:19:13 -0700 (PDT)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id m68sm3299747pje.24.2020.07.15.15.19.12
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 15 Jul 2020 15:19:12 -0700 (PDT)
+Date:   Wed, 15 Jul 2020 15:19:11 -0700
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Rob Herring <robh@kernel.org>
+Cc:     "Daniel M. Weeks" <dan@danweeks.net>, jdelvare@suse.com,
+        linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] dt-bindings: hwmon: Correct vendor for mcp980x
+Message-ID: <20200715221911.GA231856@roeck-us.net>
+References: <20200703153748.GA16156@dev.danweeks.net>
+ <20200715213917.GA818608@bogus>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9683 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 malwarescore=0 spamscore=0
- mlxlogscore=949 bulkscore=0 adultscore=0 phishscore=0 suspectscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2007150165
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9683 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 lowpriorityscore=0 impostorscore=0
- suspectscore=0 phishscore=0 spamscore=0 mlxlogscore=971 malwarescore=0
- mlxscore=0 priorityscore=1501 adultscore=0 bulkscore=0 clxscore=1011
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2007150165
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200715213917.GA818608@bogus>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 15 Jul 2020 10:55:23 +0800, YueHaibing wrote:
+On Wed, Jul 15, 2020 at 03:39:17PM -0600, Rob Herring wrote:
+> On Fri, Jul 03, 2020 at 11:37:48AM -0400, Daniel M. Weeks wrote:
+> > Signed-off-by: Daniel M. Weeks <dan@danweeks.net>
+> 
+> Commit message? Isn't this going to break any users? Or we rely on i2c 
+> stripping the vendor?
+> 
+Looks like there are no in-kernel users.
 
-> They are never used, so can remove it.
+Guenter
 
-Applied to 5.9/scsi-queue, thanks!
-
-[1/1] scsi: sd_zbc: Remove unused inline functions
-      https://git.kernel.org/mkp/scsi/c/ca0800a68ac7
-
--- 
-Martin K. Petersen	Oracle Linux Engineering
+> > ---
+> >  Documentation/devicetree/bindings/hwmon/lm75.txt | 2 +-
+> >  drivers/hwmon/lm75.c                             | 8 ++++----
+> >  2 files changed, 5 insertions(+), 5 deletions(-)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/hwmon/lm75.txt b/Documentation/devicetree/bindings/hwmon/lm75.txt
+> > index 273616702c51..e5bb554cd2c3 100644
+> > --- a/Documentation/devicetree/bindings/hwmon/lm75.txt
+> > +++ b/Documentation/devicetree/bindings/hwmon/lm75.txt
+> > @@ -14,10 +14,10 @@ Required properties:
+> >  		"maxim,max6626",
+> >  		"maxim,max31725",
+> >  		"maxim,max31726",
+> > -		"maxim,mcp980x",
+> >  		"nxp,pct2075",
+> >  		"st,stds75",
+> >  		"st,stlm75",
+> > +		"microchip,mcp980x",
+> >  		"microchip,tcn75",
+> >  		"ti,tmp100",
+> >  		"ti,tmp101",
+> > diff --git a/drivers/hwmon/lm75.c b/drivers/hwmon/lm75.c
+> > index ba0be48aeadd..a8cfc7e4a685 100644
+> > --- a/drivers/hwmon/lm75.c
+> > +++ b/drivers/hwmon/lm75.c
+> > @@ -690,10 +690,6 @@ static const struct of_device_id __maybe_unused lm75_of_match[] = {
+> >  		.compatible = "maxim,max31726",
+> >  		.data = (void *)max31725
+> >  	},
+> > -	{
+> > -		.compatible = "maxim,mcp980x",
+> > -		.data = (void *)mcp980x
+> > -	},
+> >  	{
+> >  		.compatible = "nxp,pct2075",
+> >  		.data = (void *)pct2075
+> > @@ -706,6 +702,10 @@ static const struct of_device_id __maybe_unused lm75_of_match[] = {
+> >  		.compatible = "st,stlm75",
+> >  		.data = (void *)stlm75
+> >  	},
+> > +	{
+> > +		.compatible = "microchip,mcp980x",
+> > +		.data = (void *)mcp980x
+> > +	},
+> >  	{
+> >  		.compatible = "microchip,tcn75",
+> >  		.data = (void *)tcn75
+> > -- 
+> > Daniel M. Weeks
