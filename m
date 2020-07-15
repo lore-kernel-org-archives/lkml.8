@@ -2,106 +2,105 @@ Return-Path: <SRS0=kup7=A2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08604C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 15:27:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EE3AC433E2
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 15:27:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D10FF206E9
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 15:27:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="RCbJcu1q"
+	by mail.kernel.org (Postfix) with ESMTP id 3C63D206D5
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 15:27:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726894AbgGOP1Q (ORCPT
+        id S1726942AbgGOP1U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 11:27:16 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:59558 "EHLO m43-7.mailgun.net"
+        Wed, 15 Jul 2020 11:27:20 -0400
+Received: from inva021.nxp.com ([92.121.34.21]:54262 "EHLO inva021.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725881AbgGOP1Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 11:27:16 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1594826835; h=Content-Type: MIME-Version: Message-ID:
- In-Reply-To: Date: References: Subject: Cc: To: From: Sender;
- bh=OS9jfqCnxLfBYtRX/l34nJHSA0Qibt4senv0rOAx718=; b=RCbJcu1qj3ZqZZImlhDi/8sVe4EChlTyI6bSky/Nweqs5lZ/YTbNfKoeBoj+ftQOoIqMxSIf
- IQtiItQ2i7KHJ1Tfbb43VGKvJHMz+uF6x1+CvtpaMX/2HKcwzH85EGSVDDVT5wTqpurHRj0p
- w+e8uezY5G7glhVFKsT4BndPItE=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n07.prod.us-east-1.postgun.com with SMTP id
- 5f0f2046f9ca681bd0a4dd9c (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Wed, 15 Jul 2020 15:27:02
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id B13B4C43391; Wed, 15 Jul 2020 15:27:01 +0000 (UTC)
-Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: kvalo)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 080D3C433C9;
-        Wed, 15 Jul 2020 15:26:58 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 080D3C433C9
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
-From:   Kalle Valo <kvalo@codeaurora.org>
-To:     Zekun Shen <bruceshenzk@gmail.com>
-Cc:     security@kernel.org, netdev@vger.kernel.org,
-        linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
-        ath10k@lists.infradead.org, Jakub Kicinski <kuba@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: Re: [PATCH] net: ath10k: fix OOB: __ath10k_htt_rx_ring_fill_n
-References: <20200623221105.3486-1-bruceshenzk@gmail.com>
-Date:   Wed, 15 Jul 2020 18:26:56 +0300
-In-Reply-To: <20200623221105.3486-1-bruceshenzk@gmail.com> (Zekun Shen's
-        message of "Tue, 23 Jun 2020 18:11:05 -0400")
-Message-ID: <87mu4094u7.fsf@codeaurora.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/24.5 (gnu/linux)
+        id S1726332AbgGOP1R (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jul 2020 11:27:17 -0400
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 947F9200334;
+        Wed, 15 Jul 2020 17:27:14 +0200 (CEST)
+Received: from inva024.eu-rdc02.nxp.com (inva024.eu-rdc02.nxp.com [134.27.226.22])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 847A9200319;
+        Wed, 15 Jul 2020 17:27:14 +0200 (CEST)
+Received: from fsr-ub1864-014.ea.freescale.net (fsr-ub1864-014.ea.freescale.net [10.171.95.219])
+        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id C6229205C8;
+        Wed, 15 Jul 2020 17:27:13 +0200 (CEST)
+From:   =?UTF-8?q?Horia=20Geant=C4=83?= <horia.geanta@nxp.com>
+To:     Rob Herring <robh+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Matt Mackall <mpm@selenic.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>
+Cc:     Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Martin Kaiser <martin@kaiser.cx>,
+        Marco Felsch <m.felsch@pengutronix.de>,
+        Franck Lenormand <franck.lenormand@nxp.com>,
+        Iuliana Prodan <iuliana.prodan@nxp.com>,
+        Silvano Di Ninno <silvano.dininno@nxp.com>,
+        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v4 0/5] hwrng: add support for i.MX6 rngb
+Date:   Wed, 15 Jul 2020 18:25:59 +0300
+Message-Id: <20200715152604.10407-1-horia.geanta@nxp.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Zekun Shen <bruceshenzk@gmail.com> writes:
+Add support for RNGB found in some i.MX6 SoCs (6SL, 6SLL, 6ULL, 6ULZ),
+based on RNGC driver (drivers/char/hw_random/imx-rngc.c).
 
-> The idx in __ath10k_htt_rx_ring_fill_n function lives in
-> consistent dma region writable by the device. Malfunctional
-> or malicious device could manipulate such idx to have a OOB
-> write. Either by
->     htt->rx_ring.netbufs_ring[idx] = skb;
-> or by
->     ath10k_htt_set_paddrs_ring(htt, paddr, idx);
->
-> The idx can also be negative as it's signed, giving a large
-> memory space to write to.
->
-> It's possibly exploitable by corruptting a legit pointer with
-> a skb pointer. And then fill skb with payload as rougue object.
->
-> Signed-off-by: Zekun Shen <bruceshenzk@gmail.com>
-> ---
-> Part of the log here. Sometimes it appears as UAF when writing 
-> to a freed memory by chance.
->
->  [   15.594376] BUG: unable to handle page fault for address: ffff887f5c1804f0
->  [   15.595483] #PF: supervisor write access in kernel mode
->  [   15.596250] #PF: error_code(0x0002) - not-present page
->  [   15.597013] PGD 0 P4D 0
->  [   15.597395] Oops: 0002 [#1] SMP KASAN PTI
->  [   15.597967] CPU: 0 PID: 82 Comm: kworker/u2:2 Not tainted 5.6.0 #69
->  [   15.598843] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), 
->  BIOS rel-1.12.1-0-ga5cab58e9a3f-prebuilt.qemu.org 04/01/2014
->  [   15.600438] Workqueue: ath10k_wq ath10k_core_register_work [ath10k_core]
->  [   15.601389] RIP: 0010:__ath10k_htt_rx_ring_fill_n 
->  (linux/drivers/net/wireless/ath/ath10k/htt_rx.c:173) ath10k_core
+This driver claims support also for RNGB (besides RNGC),
+and is currently used only by i.MX25.
 
-I added the log to the commit log as it looks useful.
+Note:
 
-Also I made minor changes to the title and to the error message.
+Several NXP SoC from QorIQ family (P1010, P1023, P4080, P3041, P5020)
+also have a RNGB, however it's part of the CAAM
+(Cryptograhic Accelerator and Assurance Module) crypto accelerator.
+In this case, RNGB is managed in the caam driver
+(drivers/crypto/caam/), since it's tightly related to
+the caam "job ring" interface, not to mention CAAM internally relying on
+RNGB as source of randomness.
+
+On the other hand, the i.MX6 SoCs with RNGB have a DCP
+(Data Co-Processor) crypto accelerator and this block and RNGB
+are independent.
+
+Changelog:
+v4
+-remove unneeded compatible strings from the driver
+v3
+-mention in the DT binding the compatibility with "fsl,imx25-rngb"
+-collected Reviewed-by
+v2
+-update rngb DT binding with compatible strings for i.MX6 SoCs
+
+Horia Geantă (5):
+  dt-bindings: rng: add RNGB compatibles for i.MX6 SoCs
+  ARM: dts: imx6sl: fix rng node
+  ARM: dts: imx6sll: add rng
+  ARM: dts: imx6ull: add rng
+  hwrng: imx-rngc: enable driver for i.MX6
+
+ Documentation/devicetree/bindings/rng/imx-rng.txt | 3 +++
+ arch/arm/boot/dts/imx6sl.dtsi                     | 2 ++
+ arch/arm/boot/dts/imx6sll.dtsi                    | 7 +++++++
+ arch/arm/boot/dts/imx6ull.dtsi                    | 7 +++++++
+ drivers/char/hw_random/Kconfig                    | 2 +-
+ 5 files changed, 20 insertions(+), 1 deletion(-)
 
 -- 
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+2.17.1
+
