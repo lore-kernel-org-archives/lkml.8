@@ -2,86 +2,115 @@ Return-Path: <SRS0=kup7=A2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52E7FC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 19:32:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C4DAC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 19:32:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2D7562065D
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 19:32:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594841541;
-	bh=dtECZ0kC7iNUK10l063g4A60tnTMlXraYIp1udcyfFc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=a9Ftt0H15ni+IXttar2hU6yKcJBZLWtI8MiFrB6I8oQalIXbcV2yfs2gJURz7SVHA
-	 P42UK3gS3wjSwOo0EHXv1z71nXu68Ztqn2Anq0y48j9GFx5D0VJGxRT1oL7m3nyxYR
-	 mkCNrb7nit0gnEj45K5V/9DkYs4S6nEs70SnkGGk=
+	by mail.kernel.org (Postfix) with ESMTP id F06B820663
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 19:32:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="km99CtKF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726765AbgGOTcU (ORCPT
+        id S1726929AbgGOTcf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 15:32:20 -0400
-Received: from mail-il1-f196.google.com ([209.85.166.196]:33079 "EHLO
-        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726479AbgGOTcT (ORCPT
+        Wed, 15 Jul 2020 15:32:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41828 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726479AbgGOTce (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 15:32:19 -0400
-Received: by mail-il1-f196.google.com with SMTP id a11so3041310ilk.0;
-        Wed, 15 Jul 2020 12:32:19 -0700 (PDT)
+        Wed, 15 Jul 2020 15:32:34 -0400
+Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 33568C061755;
+        Wed, 15 Jul 2020 12:32:34 -0700 (PDT)
+Received: by mail-ej1-x643.google.com with SMTP id n26so3430982ejx.0;
+        Wed, 15 Jul 2020 12:32:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=+qRKnkS0l/5+dReHrPFaB3lJpeJ/drPMSf8yw4099q4=;
+        b=km99CtKFXqmaMoFN/9hZ2vfU3M9rn9VXa0Wddi68s8J9FsBJ8mWSLNO5DBIuGn65+P
+         Laa+wzzJWf4NO8vfEFptU9T1uqWWVuMD88WeO+GvXICa6TSRX0pG0CqHSLS5IILRGOPK
+         N0sVitdg01ogrDBvGLmTD4fPMmZjj1mpWEfa3ZCaH/3GaYyF5UeOyJjp+KheigZ6YrMZ
+         mkJtq8+gfL+RUteDOpmEBaV2JtHCvmkZ4t+FW3Usy5KZ7oPyHC20bf8t3AvIds2VLQ+T
+         lmgvOvSsDG6j3j30M+znQ5JbDeJvCAnT/HR4Uqlw2hi0XKpMvmzErSL0+FQpc4jSTfOU
+         Up7A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=Fm0BJxhDtxgCQwxltRyCdPVib98HJFWxC3xrwVYYVeM=;
-        b=ACQPraeyMHlltlN/yuvGKhMw479wolUFh9f/MSNhlhI0VhpL4tQtuCcbzQ4x6vkrRt
-         7rZArOWNqdI4mNU9UzxmpKl4D6f8cqfgDQg5P6JlLbn2iYwGV59ibejHjtMNNV8dIGjh
-         2yCMvU0DP5bqrhnNQVAtq9MQmGiGoCCI+LAZvupk4DM2bYvp5C3g2UqlUBe97NHM+jnI
-         jApGulosBMasFtWkL/jUg6uwo7jTCgD8s05E1hoge0KsU85EB4B2DhvJq2oI7Cmao1N0
-         tUG0+7UEfTpFxscjYnopm3TkGw8QWXwwdDONMbrQ9SGpaQ33+E21CRuY8C9UUjQR1ZXZ
-         AHkA==
-X-Gm-Message-State: AOAM531vkATPwOMvAbp4ivoxLImbyjzZzrA8ADVVFtfTuTm/X8+ZpAR3
-        odCkm6mAcnOE5uKZGCP/1A==
-X-Google-Smtp-Source: ABdhPJxZZ3CA0GjhVDdP1Px9lfAUwoboMTg7JHz3I2tEnQLo4i2chUuvIXIFIKSq20QRzkLi0WuH7w==
-X-Received: by 2002:a05:6e02:14c2:: with SMTP id o2mr1093123ilk.54.1594841538920;
-        Wed, 15 Jul 2020 12:32:18 -0700 (PDT)
-Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id c7sm1556191ilo.85.2020.07.15.12.32.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 15 Jul 2020 12:32:18 -0700 (PDT)
-Received: (nullmailer pid 689607 invoked by uid 1000);
-        Wed, 15 Jul 2020 19:32:17 -0000
-Date:   Wed, 15 Jul 2020 13:32:17 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc:     linux-arm-kernel@lists.infradead.org,
-        Frank Rowand <frowand.list@gmail.com>,
-        linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH] dt-bindings: reset: Convert UniPhier reset to json-schema
-Message-ID: <20200715193217.GA689533@bogus>
-References: <20200622114826.450442-1-yamada.masahiro@socionext.com>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=+qRKnkS0l/5+dReHrPFaB3lJpeJ/drPMSf8yw4099q4=;
+        b=EYYyl7DZp3cyECvpQ/U1MzxO+R9cyfFX3LGe5ElRvcVK6wlkuNTHmndzsln/q8GbVF
+         c1jkejYGSF+I8UZuNJWFUkt2NIoRxHLSe4ZjqLatrLZmxHXeU4oPrQx0s0KVc/PR59v+
+         BBehOkmNtXPfCmzLpBPD8VQmyeHB0gedCOySbv6ikZoNOZ6FpjOSefGSKJKFQMRrptGn
+         670AOh4BMDz7sohb4TIuwWIL1yQG83aQk6QX89E/vwkTPk/+q/dQ6LTxq19tAffzzUih
+         MDr1cLmvFwTUHg2m2tUH8Nz5/JM6TON/CKP58c7GZdUVCcxy3p1iOik2x45+exZlYCCr
+         kzow==
+X-Gm-Message-State: AOAM5329bzPmacQShMTzu29LpuN/QosadCMg5oZMOshoXgPLQruvBUjG
+        iK/gIVoozqRlIDkZssoy9kqae1o4
+X-Google-Smtp-Source: ABdhPJyg6GYM0hmAM0FigvjKQ2H3ifxf3ZIbxnOmQoCXVh4NMOSzihd1rNORYEVslV757YPGB1xB9A==
+X-Received: by 2002:a17:906:6dda:: with SMTP id j26mr518486ejt.336.1594841551741;
+        Wed, 15 Jul 2020 12:32:31 -0700 (PDT)
+Received: from ?IPv6:2a01:110f:b59:fd00:4863:80a3:c4db:39e? ([2a01:110f:b59:fd00:4863:80a3:c4db:39e])
+        by smtp.gmail.com with ESMTPSA id a25sm2989970eds.77.2020.07.15.12.32.30
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 15 Jul 2020 12:32:30 -0700 (PDT)
+Subject: Re: [PATCH] leds: add NCT6795D driver
+To:     Alexandre Courbot <gnurou@gmail.com>, Pavel Machek <pavel@ucw.cz>
+Cc:     Dan Murphy <dmurphy@ti.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-leds@vger.kernel.org
+References: <20200713134114.137265-1-gnurou@gmail.com>
+ <20200714223344.GA20740@amd>
+ <CAAVeFuKomLcAue9rGXhK3Uc=H+v9ZLBA84Ozr_rZDRQMYeC=dg@mail.gmail.com>
+From:   Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Message-ID: <17fe52a2-73ff-b547-8a59-5df009c929c8@gmail.com>
+Date:   Wed, 15 Jul 2020 21:32:28 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200622114826.450442-1-yamada.masahiro@socionext.com>
+In-Reply-To: <CAAVeFuKomLcAue9rGXhK3Uc=H+v9ZLBA84Ozr_rZDRQMYeC=dg@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 22 Jun 2020 20:48:26 +0900, Masahiro Yamada wrote:
-> Convert the UniPhier reset controller binding to DT schema format.
-> I excluded the glue resets because their bindings are too different.
-> 
-> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-> ---
-> 
->  .../reset/socionext,uniphier-reset.yaml       | 112 ++++++++++++++++
->  .../bindings/reset/uniphier-reset.txt         | 121 +-----------------
->  2 files changed, 113 insertions(+), 120 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/reset/socionext,uniphier-reset.yaml
-> 
+Hi Alexandre,
 
-Applied, thanks!
+On 7/15/20 3:54 AM, Alexandre Courbot wrote:
+> Hi Pavel,
+> 
+> On Wed, Jul 15, 2020 at 7:33 AM Pavel Machek <pavel@ucw.cz> wrote:
+>>
+>> Hi!
+>>
+>>> Add support for the LED feature of the NCT6795D chip found on some
+>>> motherboards, notably MSI ones. The LEDs are typically used using a
+>>> RGB connector so this driver creates one LED device for each color
+>>> component.
+>>
+>> Ok, let me take a look. What entries does it present in /sys?
+> 
+> Right now these 3 directories in /sys/class/leds:
+> 
+> nct6795d:blue:
+> nct6795d:green:
+> nct6795d:red:
+> 
+> with the usual suspects `brightness` and `max_brightness` in each. I
+> am not 100% sure I got the names right so please let me know if that
+> is not correct.
+
+You miss LED function, that should be in the second section.
+
+-- 
+Best regards,
+Jacek Anaszewski
