@@ -2,94 +2,100 @@ Return-Path: <SRS0=kup7=A2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-18.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD6A5C433E4
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 09:04:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84381C433E3
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 09:04:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 94F722064C
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 09:04:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5DCDE2064C
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 09:04:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730356AbgGOJEO (ORCPT
+        id S1730298AbgGOJEK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 05:04:14 -0400
-Received: from smtprelay0078.hostedemail.com ([216.40.44.78]:43546 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729856AbgGOJEL (ORCPT
+        Wed, 15 Jul 2020 05:04:10 -0400
+Received: from lucky1.263xmail.com ([211.157.147.134]:36356 "EHLO
+        lucky1.263xmail.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729856AbgGOJEI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 05:04:11 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay08.hostedemail.com (Postfix) with ESMTP id 1BD8A182CED5B;
-        Wed, 15 Jul 2020 09:04:10 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: crowd16_1d14ee826ef8
-X-Filterd-Recvd-Size: 2534
-Received: from XPS-9350.home (unknown [47.151.133.149])
-        (Authenticated sender: joe@perches.com)
-        by omf05.hostedemail.com (Postfix) with ESMTPA;
-        Wed, 15 Jul 2020 09:04:08 +0000 (UTC)
-Message-ID: <128a9f7de9885257736b3bb2648ea90bcbc2c760.camel@perches.com>
-Subject: Re: [PATCH v2] staging: gasket: core: Fix a coding style issue in
- gasket_core.c
-From:   Joe Perches <joe@perches.com>
-To:     Dan Carpenter <dan.carpenter@oracle.com>,
-        Greg KH <gregkh@linuxfoundation.org>
-Cc:     devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
-        Zhixu Zhao <zhixu001@126.com>, rcy@google.com,
-        rspringer@google.com, toddpoynor@google.com
-Date:   Wed, 15 Jul 2020 02:04:06 -0700
-In-Reply-To: <20200715083727.GY2549@kadam>
-References: <20200617161127.32006-1-zhixu001@126.com>
-         <20200714234440.27009-1-zhixu001@126.com>
-         <20200715071748.GC2305231@kroah.com>
-         <23ef3ca9616418b702df891443d0f4864edd58ff.camel@perches.com>
-         <20200715075755.GA2516028@kroah.com> <20200715083727.GY2549@kadam>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.36.3-0ubuntu1 
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        Wed, 15 Jul 2020 05:04:08 -0400
+Received: from localhost (unknown [192.168.167.209])
+        by lucky1.263xmail.com (Postfix) with ESMTP id B908AC0BF3;
+        Wed, 15 Jul 2020 17:04:00 +0800 (CST)
+X-MAIL-GRAY: 0
+X-MAIL-DELIVERY: 1
+X-ADDR-CHECKED4: 1
+X-ANTISPAM-LEVEL: 2
+X-ABS-CHECKED: 0
+Received: from localhost.localdomain (unknown [58.22.7.114])
+        by smtp.263.net (postfix) whith ESMTP id P9169T139648078694144S1594803824986898_;
+        Wed, 15 Jul 2020 17:04:00 +0800 (CST)
+X-IP-DOMAINF: 1
+X-UNIQUE-TAG: <dc9a3c295fada8eb12c36cc25202647b>
+X-RL-SENDER: yifeng.zhao@rock-chips.com
+X-SENDER: zyf@rock-chips.com
+X-LOGIN-NAME: yifeng.zhao@rock-chips.com
+X-FST-TO: miquel.raynal@bootlin.com
+X-SENDER-IP: 58.22.7.114
+X-ATTACHMENT-NUM: 0
+X-DNS-TYPE: 0
+X-System-Flag: 0
+From:   Yifeng Zhao <yifeng.zhao@rock-chips.com>
+To:     miquel.raynal@bootlin.com, richard@nod.at, vigneshr@ti.com,
+        robh+dt@kernel.org
+Cc:     devicetree@vger.kernel.org, linux-mtd@lists.infradead.org,
+        heiko@sntech.de, linux-rockchip@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Yifeng Zhao <yifeng.zhao@rock-chips.com>
+Subject: [PATCH v7 3/8] MAINTAINERS: add maintainers to ROCKCHIP NFC
+Date:   Wed, 15 Jul 2020 17:03:41 +0800
+Message-Id: <20200715090342.28339-4-yifeng.zhao@rock-chips.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200715090342.28339-1-yifeng.zhao@rock-chips.com>
+References: <20200715090342.28339-1-yifeng.zhao@rock-chips.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2020-07-15 at 11:37 +0300, Dan Carpenter wrote:
-> On Wed, Jul 15, 2020 at 09:57:55AM +0200, Greg KH wrote:
-> > On Wed, Jul 15, 2020 at 12:24:22AM -0700, Joe Perches wrote:
-> > > On Wed, 2020-07-15 at 09:17 +0200, Greg KH wrote:
-> > > > On Wed, Jul 15, 2020 at 07:44:40AM +0800, Zhixu Zhao wrote:
-> > > > > On Thu, Jun 18, 2020 at 12:11:27AM +0800, Zhixu Zhao wrote:
-> > > > > > A coding alignment issue is found by checkpatch.pl.
-> > > > > > Fix it by using a temporary for gasket_dev->bar_data[bar_num].
-> > > > > > 
-> > > > > > Signed-off-by: Zhixu Zhao <zhixu001@126.com>
-> > > > > 
-> > > > > Hi, there~
-> > > > > 
-> > > > > Does anybody have any further comments on this?
-> > > > > Can it be merged?
-> > > > 
-> > > > I never saw the first version of this, are you sure it got sent to the
-> > > > mailing list?  It's not in any archives anywhere.
-> > > 
-> > > I saw it.  It's here:
-> > > https://lore.kernel.org/lkml/20200617161127.32006-1-zhixu001@126.com/
-> > 
-> > Ah, doh, sorry.
-> > 
-> > Zhixu, please address the comments given to you on the series and resend
-> > it as a new version.
-> 
-> He responded but not as a reply to my email.  It turns out I made a
-> mistake.
-> 
-> Anyway, just resend, Zhixu.
+Add maintainers to ROCKCHIP NFC.
 
-It's a pity a resend is being requested.
+Signed-off-by: Yifeng Zhao <yifeng.zhao@rock-chips.com>
+---
 
-It'd be a better process if the original patch could
-be applied via the link akin to a git pull.
+Changes in v7: None
+Changes in v6: None
+Changes in v5: None
+Changes in v4: None
+Changes in v3: None
+Changes in v2: None
+
+ MAINTAINERS | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 1d4aa7f942de..187634a085a7 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -2344,12 +2344,12 @@ L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
+ L:	linux-rockchip@lists.infradead.org
+ S:	Maintained
+ T:	git git://git.kernel.org/pub/scm/linux/kernel/git/mmind/linux-rockchip.git
++F:	Documentation/devicetree/bindings/*/*rockchip*.yaml
+ F:	Documentation/devicetree/bindings/i2c/i2c-rk3x.yaml
+-F:	Documentation/devicetree/bindings/mmc/rockchip-dw-mshc.yaml
+-F:	Documentation/devicetree/bindings/spi/spi-rockchip.yaml
+ F:	arch/arm/boot/dts/rk3*
+ F:	arch/arm/boot/dts/rv1108*
+ F:	arch/arm/mach-rockchip/
++F:	drivers/*/*/*/*rockchip*
+ F:	drivers/*/*/*rockchip*
+ F:	drivers/*/*rockchip*
+ F:	drivers/clk/rockchip/
+-- 
+2.17.1
+
 
 
