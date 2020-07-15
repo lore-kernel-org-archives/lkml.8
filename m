@@ -4,60 +4,60 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E27FC433E5
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 07:07:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A667C433EA
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 07:07:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3316D2067D
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 07:07:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F13CC20663
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 07:07:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=semihalf-com.20150623.gappssmtp.com header.i=@semihalf-com.20150623.gappssmtp.com header.b="ROeZDbiY"
+	dkim=pass (2048-bit key) header.d=semihalf-com.20150623.gappssmtp.com header.i=@semihalf-com.20150623.gappssmtp.com header.b="gF+PCH8l"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728973AbgGOHHF (ORCPT
+        id S1729013AbgGOHHH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 03:07:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39492 "EHLO
+        Wed, 15 Jul 2020 03:07:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39502 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725852AbgGOHHD (ORCPT
+        with ESMTP id S1728952AbgGOHHE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 03:07:03 -0400
-Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 94327C061755
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 00:07:02 -0700 (PDT)
-Received: by mail-lj1-x242.google.com with SMTP id e4so1397788ljn.4
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 00:07:02 -0700 (PDT)
+        Wed, 15 Jul 2020 03:07:04 -0400
+Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1E7DCC08C5C1
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 00:07:04 -0700 (PDT)
+Received: by mail-lj1-x241.google.com with SMTP id h22so1351375lji.9
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 00:07:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=semihalf-com.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=rDtvw0IlmYfY+jCdx2Lo57EMXtb9r+H9pF0oFjzHHyo=;
-        b=ROeZDbiYc0S1qiJ+zPLW4iZ2xz7bxM4vKz+szew4oa0S3/i4Tsj9Db1Djs8wqhrDPA
-         wJVmm30Nnb2KdsbXPrZWchGqSXHO720gjZZkro0giw2+zCmubxZOI5ILdKnQ3th9Xdgz
-         l/awUtt1Ygeq4YioavlodnaPxhV7HYI8iIqmhbGdcs1ZMKNyL751oDG7y1lUrJTmJkwj
-         0tq+FC77087fb7ayIUN30UuhGJcEX2m20NDwm58NrsDBJIIpNiD8XN94SUyUxYRa3PD1
-         4ayfacD0RrkjIymW0xkigMB25F+DaQAQ5F3f4ISektuOrjdIKKU4GzSmG++qj2D1fL7X
-         wfEg==
+        bh=XKlU4lKdj3Ftg6VNKCWCajRZmLcVTJL9ntL6mukO1Xo=;
+        b=gF+PCH8lg8YMRFFsAE56yzhfmMGgdqCwmFwD+TI9qs4NjXA1tiHS6Ng9cBRIlXAV0+
+         WCkjEPG3UJIHt6DeJHB/FjIubAtTL7CyxsoPExKei5HJM7ySufym6lJ+h8iRL9+vTUsw
+         ISdsHJA9pYutZad938G9Urv189itUM0pmpe5WHRkQeLIjIhFcCykEhxNOtkdVMccCWtz
+         EaTHFk3ScQ1oGdXiGcH/YtvSNom4QWkw2pEzygUwSi6xF6IHglEVq5V0amRAeFsVCEkZ
+         +HTLxpKlANISyR6cgjlLextWUoGANjHqlz0Lv5HJ6im9wyutODiiMlXFlGzJTSIoqyIs
+         zuAg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=rDtvw0IlmYfY+jCdx2Lo57EMXtb9r+H9pF0oFjzHHyo=;
-        b=PyJbXT2cXEneI4k8wOIfV2Y/USvTJ2ELd9xiKcjoX0pNizOgq7CDM0Mw5az540Fk67
-         FAo3uB4/nr27eEk0a2k7iAP8fVSYMcuHTeTaS5or5y3DDrUw9Bs/wvNeZkhOxb/bX+KE
-         YfkX/eaphC9bKc1k2aEUsz0YhM+76h6b5QakH0B7Ou4RmLS+fvqJYBU3qik3TmOmQ3Km
-         usvZir35K/Z3kwQDNdGryuXXw1fBKFc2uYOF/t+IukdFSoHmHx5w63WTbdZTFLDet/0Y
-         DsYGtrua5SdjrGnRxCRkjQ7YjyoUCN3jT6bQN1wrmtBVEGHEdrpa7SH+hw0hQvieDOIN
-         WFug==
-X-Gm-Message-State: AOAM530goke3Kc862lTZQ3jTVjF0FKtSBWzIC97JehSksGtbyXDInA1R
-        H4njWoh/SCeuAzG3P9CoTTZqew==
-X-Google-Smtp-Source: ABdhPJydCAuceNb5bOv6bKj797GCX8yDPnodbrk36mq0CVMxEl0bcpvWYkELgCrKsdNuJMCF/cXNlg==
-X-Received: by 2002:a2e:3619:: with SMTP id d25mr4044931lja.204.1594796821024;
-        Wed, 15 Jul 2020 00:07:01 -0700 (PDT)
+        bh=XKlU4lKdj3Ftg6VNKCWCajRZmLcVTJL9ntL6mukO1Xo=;
+        b=NHhbkGr+xkMYfizvZNEshEyN1Dh6N615z7FDhLyEklW+TQTIx3rLx/rRJetnc/ct9B
+         EGZQ9l5GUK+3G66jvT5Q4FaURZG6XeyiHgDLtvHcdUrWzbbkDVgjB6MNONrXcf5z+I++
+         t64huIOcDfqnTdP597xbofIawR7KFOFfaHq2XEnvkUqHS650poG28Ub4saV8M2fL1WV8
+         oHcm0OpmTOJaFH1gJmZIewWc6AM04+uXsiwGrDc9+PvTsK3ZVmQgbXL3zu7HFHhDMAJV
+         9loO5oQJX2vc0eW+HtDKssd4ofQpyfWqd3zO4CU32rACYsgCSJTEE8622IizMeRiYe5n
+         Wecg==
+X-Gm-Message-State: AOAM530DvWfrZpc4QHMtdpEe1xu5fal0yZp/nM2p16hg94cqAvrK978q
+        Pl1vTurDt9s+Tcng0o3gQ2OX+w==
+X-Google-Smtp-Source: ABdhPJyht9u1Fi6qxzop87V103kj55HzGKn38flKrFtKPYX7IW+C8BjpSSZJXdo5uDLpBlP6rEyH7Q==
+X-Received: by 2002:a2e:9585:: with SMTP id w5mr3671931ljh.58.1594796822599;
+        Wed, 15 Jul 2020 00:07:02 -0700 (PDT)
 Received: from localhost.localdomain ([83.68.95.66])
-        by smtp.gmail.com with ESMTPSA id 83sm276040ljj.51.2020.07.15.00.06.59
+        by smtp.gmail.com with ESMTPSA id 83sm276040ljj.51.2020.07.15.00.07.01
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 15 Jul 2020 00:07:00 -0700 (PDT)
+        Wed, 15 Jul 2020 00:07:01 -0700 (PDT)
 From:   Tomasz Nowicki <tn@semihalf.com>
 To:     will@kernel.org, robin.murphy@arm.com, joro@8bytes.org,
         gregory.clement@bootlin.com, robh+dt@kernel.org, hannah@marvell.com
@@ -65,9 +65,9 @@ Cc:     linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org,
         devicetree@vger.kernel.org, catalin.marinas@arm.com,
         nadavh@marvell.com, linux-arm-kernel@lists.infradead.org,
         mw@semihalf.com, Tomasz Nowicki <tn@semihalf.com>
-Subject: [PATCH v4 1/4] iommu/arm-smmu: Call configuration impl hook before consuming features
-Date:   Wed, 15 Jul 2020 09:06:46 +0200
-Message-Id: <20200715070649.18733-2-tn@semihalf.com>
+Subject: [PATCH v4 2/4] iommu/arm-smmu: Workaround for Marvell Armada-AP806 SoC erratum #582743
+Date:   Wed, 15 Jul 2020 09:06:47 +0200
+Message-Id: <20200715070649.18733-3-tn@semihalf.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200715070649.18733-1-tn@semihalf.com>
 References: <20200715070649.18733-1-tn@semihalf.com>
@@ -76,57 +76,104 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-'cfg_probe' hook is called at the very end of configuration probing
-procedure and therefore features override and workaround may become
-complex like for ID register fixups. In preparation for adding Marvell
-errata move 'cfg_probe' a bit earlier to have chance to adjust
-the detected features before we start consuming them.
+From: Hanna Hawa <hannah@marvell.com>
 
-Since the Cavium quirk (the only user) does not alter features
-it is safe to do so.
+Due to erratum #582743, the Marvell Armada-AP806 can't access 64bit to
+ARM SMMUv2 registers.
 
-Suggested-by: Robin Murphy <robin.murphy@arm.com>
+Provide implementation relevant hooks:
+- split the writeq/readq to two accesses of writel/readl.
+- mask the MMU_IDR2.PTFSv8 fields to not use AArch64 format (but
+only AARCH32_L) since with AArch64 format 32 bits access is not supported.
+
+Note that most 64-bit registers like TTBRn can be accessed as two 32-bit
+halves without issue, and AArch32 format ensures that the register writes
+which must be atomic (for TLBI etc.) need only be 32-bit.
+
+Signed-off-by: Hanna Hawa <hannah@marvell.com>
+Signed-off-by: Gregory CLEMENT <gregory.clement@bootlin.com>
 Signed-off-by: Tomasz Nowicki <tn@semihalf.com>
 ---
- drivers/iommu/arm-smmu.c | 11 +++++++----
- 1 file changed, 7 insertions(+), 4 deletions(-)
+ Documentation/arm64/silicon-errata.rst |  3 ++
+ drivers/iommu/arm-smmu-impl.c          | 45 ++++++++++++++++++++++++++
+ 2 files changed, 48 insertions(+)
 
-diff --git a/drivers/iommu/arm-smmu.c b/drivers/iommu/arm-smmu.c
-index 243bc4cb2705..19f906de6420 100644
---- a/drivers/iommu/arm-smmu.c
-+++ b/drivers/iommu/arm-smmu.c
-@@ -1728,7 +1728,7 @@ static int arm_smmu_device_cfg_probe(struct arm_smmu_device *smmu)
- 	unsigned int size;
- 	u32 id;
- 	bool cttw_reg, cttw_fw = smmu->features & ARM_SMMU_FEAT_COHERENT_WALK;
--	int i;
-+	int i, ret;
+diff --git a/Documentation/arm64/silicon-errata.rst b/Documentation/arm64/silicon-errata.rst
+index 936cf2a59ca4..157214d3abe1 100644
+--- a/Documentation/arm64/silicon-errata.rst
++++ b/Documentation/arm64/silicon-errata.rst
+@@ -125,6 +125,9 @@ stable kernels.
+ | Cavium         | ThunderX2 Core  | #219            | CAVIUM_TX2_ERRATUM_219      |
+ +----------------+-----------------+-----------------+-----------------------------+
+ +----------------+-----------------+-----------------+-----------------------------+
++| Marvell        | ARM-MMU-500     | #582743         | N/A                         |
+++----------------+-----------------+-----------------+-----------------------------+
+++----------------+-----------------+-----------------+-----------------------------+
+ | Freescale/NXP  | LS2080A/LS1043A | A-008585        | FSL_ERRATUM_A008585         |
+ +----------------+-----------------+-----------------+-----------------------------+
+ +----------------+-----------------+-----------------+-----------------------------+
+diff --git a/drivers/iommu/arm-smmu-impl.c b/drivers/iommu/arm-smmu-impl.c
+index c75b9d957b70..59422cb92488 100644
+--- a/drivers/iommu/arm-smmu-impl.c
++++ b/drivers/iommu/arm-smmu-impl.c
+@@ -147,6 +147,48 @@ static const struct arm_smmu_impl arm_mmu500_impl = {
+ 	.reset = arm_mmu500_reset,
+ };
  
- 	dev_notice(smmu->dev, "probing hardware configuration...\n");
- 	dev_notice(smmu->dev, "SMMUv%d with:\n",
-@@ -1891,6 +1891,12 @@ static int arm_smmu_device_cfg_probe(struct arm_smmu_device *smmu)
- 			smmu->features |= ARM_SMMU_FEAT_FMT_AARCH64_64K;
- 	}
- 
-+	if (smmu->impl && smmu->impl->cfg_probe) {
-+		ret = smmu->impl->cfg_probe(smmu);
-+		if (ret)
-+			return ret;
-+	}
++static u64 mrvl_mmu500_readq(struct arm_smmu_device *smmu, int page, int off)
++{
++	/*
++	 * Marvell Armada-AP806 erratum #582743.
++	 * Split all the readq to double readl
++	 */
++	return hi_lo_readq_relaxed(arm_smmu_page(smmu, page) + off);
++}
 +
- 	/* Now we've corralled the various formats, what'll it do? */
- 	if (smmu->features & ARM_SMMU_FEAT_FMT_AARCH32_S)
- 		smmu->pgsize_bitmap |= SZ_4K | SZ_64K | SZ_1M | SZ_16M;
-@@ -1918,9 +1924,6 @@ static int arm_smmu_device_cfg_probe(struct arm_smmu_device *smmu)
- 		dev_notice(smmu->dev, "\tStage-2: %lu-bit IPA -> %lu-bit PA\n",
- 			   smmu->ipa_size, smmu->pa_size);
++static void mrvl_mmu500_writeq(struct arm_smmu_device *smmu, int page, int off,
++			       u64 val)
++{
++	/*
++	 * Marvell Armada-AP806 erratum #582743.
++	 * Split all the writeq to double writel
++	 */
++	hi_lo_writeq_relaxed(val, arm_smmu_page(smmu, page) + off);
++}
++
++static int mrvl_mmu500_cfg_probe(struct arm_smmu_device *smmu)
++{
++
++	/*
++	 * Armada-AP806 erratum #582743.
++	 * Hide the SMMU_IDR2.PTFSv8 fields to sidestep the AArch64
++	 * formats altogether and allow using 32 bits access on the
++	 * interconnect.
++	 */
++	smmu->features &= ~(ARM_SMMU_FEAT_FMT_AARCH64_4K |
++			    ARM_SMMU_FEAT_FMT_AARCH64_16K |
++			    ARM_SMMU_FEAT_FMT_AARCH64_64K);
++
++	return 0;
++}
++
++static const struct arm_smmu_impl mrvl_mmu500_impl = {
++	.read_reg64 = mrvl_mmu500_readq,
++	.write_reg64 = mrvl_mmu500_writeq,
++	.cfg_probe = mrvl_mmu500_cfg_probe,
++	.reset = arm_mmu500_reset,
++};
++
  
--	if (smmu->impl && smmu->impl->cfg_probe)
--		return smmu->impl->cfg_probe(smmu);
--
- 	return 0;
+ struct arm_smmu_device *arm_smmu_impl_init(struct arm_smmu_device *smmu)
+ {
+@@ -175,5 +217,8 @@ struct arm_smmu_device *arm_smmu_impl_init(struct arm_smmu_device *smmu)
+ 	    of_device_is_compatible(np, "qcom,sc7180-smmu-500"))
+ 		return qcom_smmu_impl_init(smmu);
+ 
++	if (of_device_is_compatible(np, "marvell,ap806-smmu-500"))
++		smmu->impl = &mrvl_mmu500_impl;
++
+ 	return smmu;
  }
- 
 -- 
 2.17.1
 
