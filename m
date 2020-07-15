@@ -4,116 +4,127 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 575ADC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 05:45:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA102C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 05:50:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2A3032067D
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 05:45:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A467620657
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 05:50:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DDi4dM3M"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pErLhR4H"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728651AbgGOFpO (ORCPT
+        id S1728421AbgGOFuW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 01:45:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55122 "EHLO
+        Wed, 15 Jul 2020 01:50:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55906 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725832AbgGOFpN (ORCPT
+        with ESMTP id S1725850AbgGOFuU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 01:45:13 -0400
-Received: from mail-il1-x143.google.com (mail-il1-x143.google.com [IPv6:2607:f8b0:4864:20::143])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 65044C061755;
-        Tue, 14 Jul 2020 22:45:13 -0700 (PDT)
-Received: by mail-il1-x143.google.com with SMTP id t18so972519ilh.2;
-        Tue, 14 Jul 2020 22:45:13 -0700 (PDT)
+        Wed, 15 Jul 2020 01:50:20 -0400
+Received: from mail-wm1-x331.google.com (mail-wm1-x331.google.com [IPv6:2a00:1450:4864:20::331])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E39ADC061755
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 22:50:19 -0700 (PDT)
+Received: by mail-wm1-x331.google.com with SMTP id f139so4098644wmf.5
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 22:50:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=JhRZT9i1v7GcuLm6ORXS3TFTt48PH6OqHbkbULMIMhE=;
-        b=DDi4dM3MTBZWg5lQ0l1BAgKMQWlhelIBmL8Kv18f5ui4wVhzSYdfsb/0Oi1pDYOrwA
-         Z14/bJpZRuWX8afZKsabJtfVtD3gL8gzL+NFpAbsqam5X2Pg+yKnO/uYVUspe95k/Mhs
-         4Ir2oUOtnKi4+uKHOfYrEEQ5RrbQ/9JHZlyaS65gecDAqeE+f6TI8/e2AWTMOYSnPlG7
-         wuFnoVDwZSa/ntYmcrli5Wnlh1svthhxMCoFHCkcQDg6MfoIusoqbSGuPQRTfzrlSKAg
-         r8mJUtyHsOei1aCxVEQFKaAISA0Z94DzKq2OGp1dqjAF2ZLv42czTbfgzoh0ZrsNfdxi
-         wz5Q==
+        h=mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=v9XpoCRErdQKlje05DdI9K8GPmjX+TCTG9yW8JIzc6s=;
+        b=pErLhR4HgD3IKP7X/yDYv8kJ7YXjEB6T9EUOW4DRawm+guQh6l1q/2c1IfUCM8bBc5
+         TiEbgnrwBtZsUcT/W5IQL3N24Yx9rHT7yjhhuVfoNgeW7ZiMDAUIZlieq+WQIK/CgaZQ
+         Ab/Hu+jXrP1MnjbeaLGXRRoy2ZPuYTi2SqZmEFvede8j26OTmSnWHGfaJyUPl40kl48r
+         ncgpMP/8dq7+R3oKVsUSbhDLDAgfbw0sRoe+/j1Z13b8B4gO6IFwGuwI83EiEhOEwvXb
+         H6MKpQLVaQ/afX03PplzhgypYAN3K45zTAyO2OJU3Vu4Cx9vwseltCt7JWRAMAQmG2o2
+         B/uA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=JhRZT9i1v7GcuLm6ORXS3TFTt48PH6OqHbkbULMIMhE=;
-        b=behEU6CXZnCIqzmuP/NmRIZjTH/m5FEgqF5vl3MTxJ/LkOEgbne4cgtHs927Gs1DwD
-         rybRQK/FL0p+i5VKLF1ffeTu95lIu+eHgAzbPmpzQBvj+qYhYw2pdClAE2L3WfNnSH75
-         tMW3bPEK7zl34/ALdOXKgUAuKYD5huh8kwlx5M4F0loiblMlpKYOy+gSjdzdX07I9/62
-         Dl9mLjNYv+QaJzOOw/xTtf2eeElNBOy1e8UaxWgq9pLyj7LmL8my4y3uz3GpsZgX+Ypp
-         +RUkJYv5R7lIBk8WCUNNZ9cR98hBmEKWzg0kl2h47X1XSYNgPPyb6s+EiHQ85uLe8Rbp
-         tjww==
-X-Gm-Message-State: AOAM531gAyXliQwlKEHCsIuOX+sdG4roy8DZgkd9vZ5g5Bc7lZH7j+eh
-        6zyJ0kLqM1B1ZyCThyNz9I2vnmuOiZphuigKY/Y=
-X-Google-Smtp-Source: ABdhPJwbZMNVuswFRSky8i6X0mphBIbKGgbHA4lUZxGuiHM3oqApfKubXm9Xg98rz1c8w2EIFzibzqwOkSZbnMN3fnU=
-X-Received: by 2002:a05:6e02:147:: with SMTP id j7mr8400611ilr.22.1594791912788;
- Tue, 14 Jul 2020 22:45:12 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200715014930.323472-1-chenweilong@huawei.com>
-In-Reply-To: <20200715014930.323472-1-chenweilong@huawei.com>
-From:   Cong Wang <xiyou.wangcong@gmail.com>
-Date:   Tue, 14 Jul 2020 22:45:01 -0700
-Message-ID: <CAM_iQpUgkVnYh=ETvbqEiXSD8kS22Xc10JA6HU5W9nXNMzaJJg@mail.gmail.com>
-Subject: Re: [PATCH v4 net] rtnetlink: Fix memory(net_device) leak when
- ->newlink fails
-To:     Weilong Chen <chenweilong@huawei.com>
-Cc:     David Miller <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Jiri Pirko <jiri@mellanox.com>,
-        Eric Dumazet <edumazet@google.com>,
-        Linux Kernel Network Developers <netdev@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=v9XpoCRErdQKlje05DdI9K8GPmjX+TCTG9yW8JIzc6s=;
+        b=e+8u3vASdHrfvp2pT6ch5AHquW4dByQcbjS05M9XWe/6K51cLgZehwiHd4vGmb4woD
+         SWcmeE+Zm4YjueRfa/FapZAw/sYvTNuER96PcE8AlM0A1H9WcB6busbBvImGpCAAN3Sq
+         zyRXScsdRtRpAOSNqy9cY1/+nPEwzUwBSPF8hzPXMRe8DyW6G3koVEO6XXz8fuVP4N6d
+         y2sqJ7HcKad49myrQyJfPbtTWUHP0nZ16q+nCKpZVr5X/hZDAgTMyMsYPDcbV3VBkMzx
+         7c12asviTxlBc29wE36tg+hBeH8w1eb1VonIOcMe9j6IJoP59gjbnInH6nM6/k52Sbyh
+         Nvgw==
+X-Gm-Message-State: AOAM531rnsUhdfzvKg3HLL7WvZ+6HnG/JxWGY3B0WrNX8PRP6JSDZrZy
+        e/DOl1B4oEweouxJpP9XX5c=
+X-Google-Smtp-Source: ABdhPJyqyGRvwzyVsAs1Mk8/SBEm3V+AqEwb2wYIm/O2wBiEA0tk4WPA3hU3RYUmR+dg3OzxgQcHaQ==
+X-Received: by 2002:a05:600c:2483:: with SMTP id 3mr6845792wms.120.1594792217594;
+        Tue, 14 Jul 2020 22:50:17 -0700 (PDT)
+Received: from [10.11.11.4] ([178.254.237.20])
+        by smtp.gmail.com with ESMTPSA id s8sm1743728wru.38.2020.07.14.22.50.15
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 14 Jul 2020 22:50:16 -0700 (PDT)
+Content-Type: text/plain;
+        charset=utf-8
+Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.80.23.2.2\))
+Subject: Re: Bug Report High CPU Usage events_power_efficient
+From:   Martin Zaharinov <micron10@gmail.com>
+In-Reply-To: <20200708092848.GB405531@kroah.com>
+Date:   Wed, 15 Jul 2020 08:50:13 +0300
+Cc:     "linux-kernel@vger kernel. org" <linux-kernel@vger.kernel.org>,
+        Florian Westphal <fw@strlen.de>,
+        Eric Dumazet <edumazet@google.com>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <B525BA20-4B39-4B31-9535-28A93C5B8332@gmail.com>
+References: <E2C5FE67-C85E-469C-9B81-10F7555F836B@gmail.com>
+ <91805D0F-2D74-4EA3-A2D7-13E4FBBEAB51@gmail.com>
+ <6AD52867-83C1-4C6C-A0AE-4DE0D6C16310@gmail.com>
+ <C89D167C-E03F-4116-9647-F50607DF3A45@gmail.com>
+ <20200708070912.GA351187@kroah.com>
+ <CALidq=UYNMxLQTT_D=EOESUxr82LYH04YCjT6igwqdnw3YwyiA@mail.gmail.com>
+ <20200708092848.GB405531@kroah.com>
+To:     Greg KH <gregkh@linuxfoundation.org>
+X-Mailer: Apple Mail (2.3608.80.23.2.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 14, 2020 at 6:27 PM Weilong Chen <chenweilong@huawei.com> wrote:
->
-> When vlan_newlink call register_vlan_dev fails, it might return error
-> with dev->reg_state = NETREG_UNREGISTERED. The rtnl_newlink should
-> free the memory. But currently rtnl_newlink only free the memory which
-> state is NETREG_UNINITIALIZED.
->
-> BUG: memory leak
-> unreferenced object 0xffff8881051de000 (size 4096):
->   comm "syz-executor139", pid 560, jiffies 4294745346 (age 32.445s)
->   hex dump (first 32 bytes):
->     76 6c 61 6e 32 00 00 00 00 00 00 00 00 00 00 00  vlan2...........
->     00 45 28 03 81 88 ff ff 00 00 00 00 00 00 00 00  .E(.............
->   backtrace:
->     [<0000000047527e31>] kmalloc_node include/linux/slab.h:578 [inline]
->     [<0000000047527e31>] kvmalloc_node+0x33/0xd0 mm/util.c:574
->     [<000000002b59e3bc>] kvmalloc include/linux/mm.h:753 [inline]
->     [<000000002b59e3bc>] kvzalloc include/linux/mm.h:761 [inline]
->     [<000000002b59e3bc>] alloc_netdev_mqs+0x83/0xd90 net/core/dev.c:9929
->     [<000000006076752a>] rtnl_create_link+0x2c0/0xa20 net/core/rtnetlink.c:3067
->     [<00000000572b3be5>] __rtnl_newlink+0xc9c/0x1330 net/core/rtnetlink.c:3329
->     [<00000000e84ea553>] rtnl_newlink+0x66/0x90 net/core/rtnetlink.c:3397
->     [<0000000052c7c0a9>] rtnetlink_rcv_msg+0x540/0x990 net/core/rtnetlink.c:5460
->     [<000000004b5cb379>] netlink_rcv_skb+0x12b/0x3a0 net/netlink/af_netlink.c:2469
->     [<00000000c71c20d3>] netlink_unicast_kernel net/netlink/af_netlink.c:1303 [inline]
->     [<00000000c71c20d3>] netlink_unicast+0x4c6/0x690 net/netlink/af_netlink.c:1329
->     [<00000000cca72fa9>] netlink_sendmsg+0x735/0xcc0 net/netlink/af_netlink.c:1918
->     [<000000009221ebf7>] sock_sendmsg_nosec net/socket.c:652 [inline]
->     [<000000009221ebf7>] sock_sendmsg+0x109/0x140 net/socket.c:672
->     [<000000001c30ffe4>] ____sys_sendmsg+0x5f5/0x780 net/socket.c:2352
->     [<00000000b71ca6f3>] ___sys_sendmsg+0x11d/0x1a0 net/socket.c:2406
->     [<0000000007297384>] __sys_sendmsg+0xeb/0x1b0 net/socket.c:2439
->     [<000000000eb29b11>] do_syscall_64+0x56/0xa0 arch/x86/entry/common.c:359
->     [<000000006839b4d0>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
->
-> Fixes: e51fb152318ee6 ("rtnetlink: fix a memory leak when ->newlink fails")
+Hi=20
 
-This bug is apparently not introduced by my commit above.
+Oki i find the problem is come from nf_conntrack_core=20
 
-It should be commit cb626bf566eb4433318d35681286c494f0,
-right? That commit introduced NETREG_UNREGISTERED on the path.
+I isolate problem in this part :
+
+queue_delayed_work(system_power_efficient_wq, &conntrack_gc_work.dwork, =
+HZ);
+
+
+When package go to queue delayed in one moment if connection track is to =
+big process to delayed go to lock and start high cpu load.
+
+This is need to check and find solution=E2=80=A6
+
+For now I remove queue_delayed_work and wait to check machine and will =
+write status.
+
+Martin
+
+> On 8 Jul 2020, at 12:28, Greg KH <gregkh@linuxfoundation.org> wrote:
+>=20
+>=20
+> A: Because it messes up the order in which people normally read text.
+> Q: Why is top-posting such a bad thing?
+> A: Top-posting.
+> Q: What is the most annoying thing in e-mail?
+> A: No.
+> Q: Should I include quotations after my reply?
+>=20
+> http://daringfireball.net/2007/07/on_top
+>=20
+> On Wed, Jul 08, 2020 at 11:34:52AM +0300, Martin Zaharinov wrote:
+>> Yes i search but not find any information.
+>=20
+> Please do the testing yourself, using 'git bisect' to find the =
+offending
+> commit.
+>=20
+> thanks,
+>=20
+> greg k-h
+
