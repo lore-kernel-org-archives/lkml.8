@@ -2,170 +2,192 @@ Return-Path: <SRS0=kup7=A2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CEE3BC433E2
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 19:50:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51550C433E7
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 19:50:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A212C2065F
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 19:50:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ucHZ+pFs"
+	by mail.kernel.org (Postfix) with ESMTP id 39EFA2065F
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 19:50:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727839AbgGOTuD (ORCPT
+        id S1727942AbgGOTuT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 15:50:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44576 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726986AbgGOTuC (ORCPT
+        Wed, 15 Jul 2020 15:50:19 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:65184 "EHLO
+        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726852AbgGOTuS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 15:50:02 -0400
-Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B63B1C061755;
-        Wed, 15 Jul 2020 12:50:02 -0700 (PDT)
-Received: by mail-pf1-x443.google.com with SMTP id m9so2557434pfh.0;
-        Wed, 15 Jul 2020 12:50:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:autocrypt:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=nzMCxXIb1CZNelAhevV8cRZiqty4DF8B33TdTJ4+WY4=;
-        b=ucHZ+pFszf+J+TIqeYoAWKQwewbznQITtqZ6V0PQDW3MvzrGuqfSjnnpKPEauQMa+V
-         aGnCZelsynpKX0O5oNlueBo4oA1V/ZxUJ1hN6VUpCr1Bwm5xo8vcDmT9CJGB2r+nV0Or
-         ZZBP7x1Igu+lJ0fckLUz1IEDE5Q6GWE2yPwULWxHZrMs8KRvtfS5gzBFkIYsHvAYAEad
-         fMdFld8+Y22QD/5hCeMqh+U8uzaQAXw1Nuk5Gk7FnPY3RGImsTJg3tkqlHf4bGrqS8S7
-         +uAUAmEba+UMCRoovJYnjRmqoTsIcW3qoXuXiPo2i7wkcNl7bz31UTmcUqgyU8U5eyT9
-         kMtw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=nzMCxXIb1CZNelAhevV8cRZiqty4DF8B33TdTJ4+WY4=;
-        b=UUxQVnzvaJLq6QfBTm1dZagf4AhxNt5AnNSxoQkHrzCPy4bAG1hPHiYbs9zYbkgOXf
-         Gym7WZyo5yXRx3jOT1LPEq1pekGpZVNbgB4LDx0DMFAmUCpRu5PA+ANHV8mnYYKob5u1
-         1WrX6VQadnSg1PVjk12UmbUnI4RxXo47UYyOlEa64hKHEi9S9gKzXMUjFJ3On7ahE7a7
-         kCCe8HQeuzWki/vJpTE4iZkscCy8mAwNCox6D6WBN4O9eOg4jR7lbikx92mYx19F8ejm
-         UUysDABgGn0GPCsTCtGjXmdd/nS+Rziaq0EOUt2MOei9rEt2qER9AC56JkJfMHQSl7uW
-         7SCg==
-X-Gm-Message-State: AOAM532sitKHJs03A7Sq+APvyyzaW2T2azbdcmt/DkS7RrtYeuCe68Pl
-        jpzvTvPg9pqHFBA+/hxkjPzPUsNS
-X-Google-Smtp-Source: ABdhPJzfiqnXY/VFZ9GpseRPCHHnoM1kztw79UU+8GLXqQdduVmPjtcpblebKMiIUnypLbyKFjh22g==
-X-Received: by 2002:a63:d40d:: with SMTP id a13mr1147806pgh.225.1594842602101;
-        Wed, 15 Jul 2020 12:50:02 -0700 (PDT)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id nk22sm2810794pjb.51.2020.07.15.12.50.00
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 15 Jul 2020 12:50:01 -0700 (PDT)
-Subject: Re: [PATCH v2] hwmon: corsair-cpro: Change to HID driver
-To:     Marius Zachmann <mail@mariuszachmann.de>
-Cc:     Jean Delvare <jdelvare@suse.com>, linux-hwmon@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20200715151419.43134-1-mail@mariuszachmann.de>
- <f17c4888-4f5f-0a51-304f-54efd601f00a@roeck-us.net>
- <51449356.7lugSRDzgr@marius>
-From:   Guenter Roeck <linux@roeck-us.net>
-Autocrypt: addr=linux@roeck-us.net; keydata=
- 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
- mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
-Message-ID: <9fc09eec-7921-68ab-b3c7-1d83d3e09817@roeck-us.net>
-Date:   Wed, 15 Jul 2020 12:49:59 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Wed, 15 Jul 2020 15:50:18 -0400
+Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06FJWwfH080464;
+        Wed, 15 Jul 2020 15:49:44 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 32a7hmsem7-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 15 Jul 2020 15:49:44 -0400
+Received: from m0098417.ppops.net (m0098417.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 06FJX4wk081184;
+        Wed, 15 Jul 2020 15:49:43 -0400
+Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 32a7hmsek9-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 15 Jul 2020 15:49:43 -0400
+Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
+        by ppma03ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 06FJjdho014553;
+        Wed, 15 Jul 2020 19:49:41 GMT
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (d06relay10.portsmouth.uk.ibm.com [9.149.109.195])
+        by ppma03ams.nl.ibm.com with ESMTP id 327527vtr1-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 15 Jul 2020 19:49:40 +0000
+Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 06FJncK964749592
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 15 Jul 2020 19:49:38 GMT
+Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 1E57652051;
+        Wed, 15 Jul 2020 19:49:38 +0000 (GMT)
+Received: from linux.ibm.com (unknown [9.148.203.215])
+        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTPS id D84D25204E;
+        Wed, 15 Jul 2020 19:49:34 +0000 (GMT)
+Date:   Wed, 15 Jul 2020 22:49:33 +0300
+From:   Mike Rapoport <rppt@linux.ibm.com>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        linux-kernel@vger.kernel.org, x86@vger.kernel.org,
+        Andi Kleen <ak@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
+        Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Jessica Yu <jeyu@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+        Will Deacon <will@kernel.org>,
+        Sami Tolvanen <samitolvanen@google.com>,
+        Alexandre Ghiti <alex@ghiti.fr>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Peter Collingbourne <pcc@google.com>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>, Stephen Boyd <sboyd@kernel.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Miroslav Benes <mbenes@suse.cz>,
+        Babu Moger <Babu.Moger@amd.com>,
+        Omar Sandoval <osandov@fb.com>,
+        Nayna Jain <nayna@linux.ibm.com>,
+        Marco Elver <elver@google.com>,
+        Brian Gerst <brgerst@gmail.com>, Jiri Kosina <jkosina@suse.cz>,
+        Joe Lawrence <joe.lawrence@redhat.com>
+Subject: Re: [PATCH v3 1/3] kprobes: Add text_alloc() and text_free()
+Message-ID: <20200715194933.GC1166045@linux.ibm.com>
+References: <20200714223239.1543716-1-jarkko.sakkinen@linux.intel.com>
+ <20200714223239.1543716-2-jarkko.sakkinen@linux.intel.com>
+ <202007151232.0DA220B2@keescook>
 MIME-Version: 1.0
-In-Reply-To: <51449356.7lugSRDzgr@marius>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <202007151232.0DA220B2@keescook>
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-07-15_12:2020-07-15,2020-07-15 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 clxscore=1011
+ impostorscore=0 malwarescore=0 adultscore=0 phishscore=0
+ priorityscore=1501 mlxlogscore=999 bulkscore=0 suspectscore=5
+ lowpriorityscore=0 mlxscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2006250000 definitions=main-2007150149
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/15/20 12:12 PM, Marius Zachmann wrote:
-> On 15.07.20 at 17:35:08 CEST, Guenter Roeck wrote
->> On 7/15/20 8:14 AM, Marius Zachmann wrote:
->>> This changes corsair-cpro to a hid driver using hid reports.
->>>
->>> Signed-off-by: Marius Zachmann <mail@mariuszachmann.de>
->>>
->>> ---
->>
-> ...
->>> -module_usb_driver(ccp_driver);
->>> +static int __init ccp_init(void)
->>> +{
->>> +	return hid_register_driver(&ccp_driver);
->>> +}
->>> +
->>> +static void __exit ccp_exit(void)
->>> +{
->>> +	hid_unregister_driver(&ccp_driver);
->>> +}
->>> +
->>> +/* make sure it is loaded after hid */
->>> +late_initcall(ccp_init);
->>> +module_exit(ccp_exit);
->>
->> Sorry for not noticing before, but can you use module_hid_driver() ?
->> That seems to work for other hid drivers.
->>
->> Thanks,
->> Guenter
->>
+On Wed, Jul 15, 2020 at 12:36:02PM -0700, Kees Cook wrote:
+> On Wed, Jul 15, 2020 at 01:32:27AM +0300, Jarkko Sakkinen wrote:
+> > Introduce new API for allocating space for code generaed at run-time
+> > leveraging from module_alloc() and module_memfree() code. Use this to
+> > perform memory allocations in the kprobes code in order to loose the
+> > bound between kprobes and modules subsystem.
+> > 
+> > Initially, use this API only with arch/x86 and define a new config
+> > flag CONFIG_ARCH_HAS_TEXT_ALLOC to promote the availability of the
+> > new API.
+> > [...]
+> > diff --git a/include/linux/text.h b/include/linux/text.h
+> > new file mode 100644
+> > index 000000000000..a27d4a42ecda
+> > --- /dev/null
+> > +++ b/include/linux/text.h
+> > @@ -0,0 +1,17 @@
+> > +/* SPDX-License-Identifier: GPL-2.0-only */
+> > +
+> > +#ifndef _LINUX_TEXT_H
+> > +#define _LINUX_TEXT_H
+> > +
+> > +/*
+> > + * An allocator used for allocating modules, core sections and init sections.
+> > + * Returns NULL on failure.
+> > + */
+> > +void *text_alloc(unsigned long size);
+> > +
+> > +/*
+> > + * Free memory returned from text_alloc().
+> > + */
+> > +void text_free(void *region);
+> > +
+> > +#endif /* _LINUX_TEXT_H */
+> > diff --git a/kernel/kprobes.c b/kernel/kprobes.c
+> > index 2e97febeef77..fa7687eb0c0e 100644
+> > --- a/kernel/kprobes.c
+> > +++ b/kernel/kprobes.c
+> > @@ -35,6 +35,7 @@
+> >  #include <linux/ftrace.h>
+> >  #include <linux/cpu.h>
+> >  #include <linux/jump_label.h>
+> > +#include <linux/text.h>
+> >  
+> >  #include <asm/sections.h>
+> >  #include <asm/cacheflush.h>
+> > @@ -111,12 +112,20 @@ enum kprobe_slot_state {
+> >  
+> >  void __weak *alloc_insn_page(void)
+> >  {
+> > +#ifdef CONFIG_ARCH_HAS_TEXT_ALLOC
+> > +	return text_alloc(PAGE_SIZE);
+> > +#else
+> >  	return module_alloc(PAGE_SIZE);
+> > +#endif
 > 
-> When using module_hid_driver() and compiling the driver as built-in
-> the driver init function will get called before hid and fail registering
-> the driver. late_initcall forces it to be loaded after hid.
+> This seems like it shouldn't be needed. I think text_alloc() should
+> always be visible. In the ARCH_HAS... case it will call the arch
+> implementation, and without it should just call module_alloc():
 > 
+> For example:
+> void *text_alloc(unsigned long size)
+> {
+> #ifdef CONFIG_ARCH_HAS_TEXT_ALLOC
+> 	return arch_text_alloc(size);
+> #else
+> 	return module_alloc(size);
+> #endif
+> }
 
-That seems odd. Why does no other hid driver have that problem ?
-Your argument is pretty much that module_hid_driver() would not work,
-which seems unlikely.
+This inverts the dependcy chain, IMHO, module_alloc() is a special case
+of text_alloc() and not vice versa.
 
-Thanks,
-Guenter
+The addition of #ifdefs to alloc_insn_page() is not needed because it is
+anyway overriden on x86, so I don't see a point in added #ifdefs until
+another arch will enable ARCH_HAS_TEXT_ALLOC.
+
+> -- 
+> Kees Cook
+
+-- 
+Sincerely yours,
+Mike.
