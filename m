@@ -2,131 +2,129 @@ Return-Path: <SRS0=kup7=A2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 925C3C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 07:26:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6618C433E6
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 07:26:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 73852206F4
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 07:26:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mysnt.onmicrosoft.com header.i=@mysnt.onmicrosoft.com header.b="bn1M78PE"
+	by mail.kernel.org (Postfix) with ESMTP id 9F3CE2072E
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 07:26:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594797985;
+	bh=ZpiHR6wascbUFsqR/cVbZM3RZsRux+aJpc8cRpN1gbo=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=fZlt52/CpKx+B51xEF4zVD82I9LXKVCI38lVbhki/QPYkjlzrvyWh2tISl27ZJil/
+	 AIf3Gwnigt8OPz69sjnrzw8IuIbSA2Udc2u2Ou78yz0JwcMwohcqzVMorfc3pNtWYQ
+	 lGk6NlI4ZnUuOeO3XiowsEA3HyDENZ/7W+3zcNU8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729313AbgGOH0g (ORCPT
+        id S1729296AbgGOHWt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 03:26:36 -0400
-Received: from mail-eopbgr70097.outbound.protection.outlook.com ([40.107.7.97]:40384
-        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729283AbgGOH0f (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 03:26:35 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=IiLHEYVfHMLN6w6soDJ7T0FttL6OwDlmIENNu5Gpc4kgA3WEjqCysvVCvi9MnXLguVvrUoOQM5ok3ryeOn25kk5L2OqcL0Dp4xbGKkstfJ/FflEuoHGuyGiaVs4kHCeX3FobPvrdpPgLsiXOSWxEJMjnxzwwRQ9GS/DaZZsvwLjULeNxPajjkR4JJrze/xEmKBjV3uRg4yK9nl/54WDrdFpc4rQDxMN8xRMPtBInNIhLQwEEjvvJlhmjEhlrzWx5JX/nO+0SISZ3Ugxc8biIdVvlG7FF4LBFppqOcMH+pDj01LdPSC6gnfB+9TEcYIVlNkjmZZ/sCRScCoXQnnYNUQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=cnunhXK7BmdUXfkEGB8BFFuOlWT46F78/xfRgN58jXQ=;
- b=CQm5mvbg4iukPaP82JbdKSM32XdoQbAsOW0ozAJJ00bBcgHIyotgAKXPIjmCFUhIZh9VVcwenK107plySAW8Ip1PBHv9+Qqi/AuRd9u7vp0zN7kKVO3toR/Z4A0taCVSNoPP8Ul4CbLydx1CNJumrbZ/WELJtAJqqj9nr8ybS0LqR4OBtdYDQ8F1XqYkIaARz/isAnEjewG9XTB+z4+w6s4PMHa9iKgunrzbRG8N8pRaWfF+QfpoEbInOrenA+iGblkqnDyMjPBIN5nqdgKYq7+Yg3nsJ+mchgNDBVuimAZ7GfAoxCAg2IeJ64ThCtDF45YUsfuhGWPFQHXiroE7dg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=kontron.de; dmarc=pass action=none header.from=kontron.de;
- dkim=pass header.d=kontron.de; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mysnt.onmicrosoft.com;
- s=selector2-mysnt-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=cnunhXK7BmdUXfkEGB8BFFuOlWT46F78/xfRgN58jXQ=;
- b=bn1M78PEWN5JIehnBjXgPBKUADso+SnyZlsSt5vpdm20atlPIK0drK5TFL6WPKXarwz47jEo/cNiy/efRp8VtoA2NIEaEqkiNqWp1qBBl9xUyY5y8INbeHBZoKQWg1q8Cxvjd6qKIC652fj3a212h3CaqU6qP9bq8fXJmzFXvyQ=
-Authentication-Results: vger.kernel.org; dkim=none (message not signed)
- header.d=none;vger.kernel.org; dmarc=none action=none header.from=kontron.de;
-Received: from DB7PR10MB2490.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:10:50::12)
- by DB6PR1001MB0984.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:4:63::15) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3174.23; Wed, 15 Jul
- 2020 07:26:30 +0000
-Received: from DB7PR10MB2490.EURPRD10.PROD.OUTLOOK.COM
- ([fe80::ac04:ef33:baf3:36f3]) by DB7PR10MB2490.EURPRD10.PROD.OUTLOOK.COM
- ([fe80::ac04:ef33:baf3:36f3%4]) with mapi id 15.20.3174.026; Wed, 15 Jul 2020
- 07:26:30 +0000
-Subject: Re: [PATCH] spi: spidev: Add compatible for external SPI ports on
- Kontron boards
-To:     Mark Brown <broonie@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org
-References: <20200702141846.7752-1-frieder.schrempf@kontron.de>
- <20200702142511.GF4483@sirena.org.uk>
- <24ec4eed-de01-28df-ee1f-f7bcfc80051a@kontron.de>
- <20200702150725.GI4483@sirena.org.uk>
- <479d566a-213f-4e33-8ac7-7637ae88e31c@kontron.de>
- <a5b88ad9-3884-1d9c-c4ad-057266f84261@kontron.de>
- <20200713151108.GB4420@sirena.org.uk>
- <2eb6971b-7ea4-c9c8-5452-6f4b17e8860a@kontron.de>
- <20200714192907.GJ4900@sirena.org.uk>
-From:   Frieder Schrempf <frieder.schrempf@kontron.de>
-Message-ID: <16825a78-8eb0-90f2-433a-d1ae6eed6ba8@kontron.de>
-Date:   Wed, 15 Jul 2020 09:26:29 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
-In-Reply-To: <20200714192907.GJ4900@sirena.org.uk>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: AM0PR03CA0080.eurprd03.prod.outlook.com
- (2603:10a6:208:69::21) To DB7PR10MB2490.EURPRD10.PROD.OUTLOOK.COM
- (2603:10a6:10:50::12)
+        Wed, 15 Jul 2020 03:22:49 -0400
+Received: from conssluserg-01.nifty.com ([210.131.2.80]:22991 "EHLO
+        conssluserg-01.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729247AbgGOHWr (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jul 2020 03:22:47 -0400
+Received: from mail-ua1-f48.google.com (mail-ua1-f48.google.com [209.85.222.48]) (authenticated)
+        by conssluserg-01.nifty.com with ESMTP id 06F7M7QO031597;
+        Wed, 15 Jul 2020 16:22:07 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-01.nifty.com 06F7M7QO031597
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1594797728;
+        bh=w3JbW09mtoeE98TWzXBL1LmtIUCrjbrYaU4GyXXoQ4A=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=KE7n4oSkpr4uW9J+/oFTuVtoFLcgVoosn+86ciSZgCJ1HtPLFYm8CHSnvqnhfjUJC
+         5sf/Nc8t+ReC9oUEKvMQVFsDFgnYnE/HrO29qiI+P/ogTZTdxqhSoo0wnEUHIyDH9M
+         CmJ5+g4DLGNFsrBMvSzqOhTfJixzKqXhJfzhL8FTqBjg6ng+1/Hs9QBKCBaozSsawx
+         PzSHCqfb/9AAxEhT9bHlrGp2lgdyveQ0yH3eIPf11hWEs1K9dUaP7uGmdumdsCO3//
+         9f1UNKqdJQjDaTrJBQt9ussCzwf4C4w/3KMGxaEPzmUrTsBvJQCVHfrJnKLAEgOnhl
+         cOW7MuoJ7HcFQ==
+X-Nifty-SrcIP: [209.85.222.48]
+Received: by mail-ua1-f48.google.com with SMTP id g4so280210uaq.10;
+        Wed, 15 Jul 2020 00:22:07 -0700 (PDT)
+X-Gm-Message-State: AOAM53272+RRs5bisZutAcQknJrmeIJ8SC2MGFfb85CqyaVeFvd32zAs
+        Kj/2Nddz1ryStE/odyuWLVz4FTN+X8twzVfndvU=
+X-Google-Smtp-Source: ABdhPJzniKddUQu2JP4MRRzQSLJmu66OKv+Gt9OUATG6zNkhKWMie+WW0snL77VGMIYWVgVjhoN2r9IkM4IAsJ9NJ8Q=
+X-Received: by 2002:ab0:44e5:: with SMTP id n92mr6138229uan.121.1594797726600;
+ Wed, 15 Jul 2020 00:22:06 -0700 (PDT)
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from [192.168.10.17] (109.250.128.36) by AM0PR03CA0080.eurprd03.prod.outlook.com (2603:10a6:208:69::21) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3195.17 via Frontend Transport; Wed, 15 Jul 2020 07:26:30 +0000
-X-Originating-IP: [109.250.128.36]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 39c83a16-f50e-4765-ea85-08d8289064ea
-X-MS-TrafficTypeDiagnostic: DB6PR1001MB0984:
-X-Microsoft-Antispam-PRVS: <DB6PR1001MB0984B70946C80D44C4752374E97E0@DB6PR1001MB0984.EURPRD10.PROD.OUTLOOK.COM>
-X-MS-Oob-TLC-OOBClassifiers: OLM:8882;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 505f54hriWc64sBVpYU1kM/qapJi5WJH3Faz9YVgCjD5R6kF2B2O/rDV7sOfvkQGTB1HQtsEJn1gm15osDuC+C0K7Y09DL8dPa3cg7/vDLlJ2VRizr+gvwokAkU9J7ma8o385ez1aNjkE6h7OLILF7WohbElyeWoT+wXB2PCYCstfcERDKpTTmgSgpJ0GXgXntNmJcf5DcvF5KKKaZC1GqVtvo7/ZDECTswjEomRj+VC6WW0d1EtZIg9md8cFjZ8VaUNIWUNZssWajkcO0HctJWlYPh2r+Y8JlukEUe96YycU/xOooAzCjQy6pHAH6pD7sFvFKU25W6uXlxZWa3dDSAQ4azDSvnVlSKo9Bg98wjQ1WH/L9bgbFZULlpzcFub
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB7PR10MB2490.EURPRD10.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(396003)(39850400004)(136003)(376002)(346002)(366004)(316002)(16576012)(5660300002)(66556008)(66476007)(26005)(956004)(2616005)(2906002)(31686004)(83380400001)(53546011)(8676002)(4326008)(66946007)(8936002)(36756003)(16526019)(6486002)(478600001)(186003)(86362001)(44832011)(6916009)(31696002)(52116002)(43740500002);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData: iCN1NspopIPfr3dBjsLi42tty/0gJ55VdrKSJF63QYReZT2tv9aK2c3o1kXWZJeb5vYn62nVWvNwWW0KzzOvrPxVFF6IkdjkZ7/zEd1zcWSe8kFWbNzNN3egHGVteUSUNjJxaxTFzFVx8VX9YuWB9iaW+QjbWvBJ81Uds20SjKyGl9bI3BanSRm8sp21eF7dr6Q/c0Yra7EsONrLPCoV2CpNwxDlI3OICtIv/rmi/9IkbL9DIysTI+HUDJpK1gGzEyZkJTONs8ym4P48s36YS7hI6Wb8bupTlaC2b8hGb6GF65RpGnE1nLYLv3dsouv7JLbY76lC46XMWpf/uMjuzqPa/90N+zqLfIT5XYda14EqjhDVgtwtbUNDXr5SFSbJyDAZrY+ubuwXlEFcT3daEqyBuEeQjS2IWIgs/VxvOBZjOAj+sUJoWcWd0l4NmVqUy79NwS5ti7SiFQ7DeOV4jPCnqOLf6aSyJSBPjJcZ5Gg=
-X-OriginatorOrg: kontron.de
-X-MS-Exchange-CrossTenant-Network-Message-Id: 39c83a16-f50e-4765-ea85-08d8289064ea
-X-MS-Exchange-CrossTenant-AuthSource: DB7PR10MB2490.EURPRD10.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Jul 2020 07:26:30.7733
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 8c9d3c97-3fd9-41c8-a2b1-646f3942daf1
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: SX3pMUu8kDHJu8Y7KZsTigHGNWR0yRylMi6YRXWQ+WjaMkBpbo6EJzhvcfVGadc5b8P2MnkJzqq2VG15kvjByHOq3xnLN9KPJvcLmxqvSoc=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB6PR1001MB0984
+References: <20200715032631.1562882-1-nivedita@alum.mit.edu>
+In-Reply-To: <20200715032631.1562882-1-nivedita@alum.mit.edu>
+From:   Masahiro Yamada <masahiroy@kernel.org>
+Date:   Wed, 15 Jul 2020 16:21:30 +0900
+X-Gmail-Original-Message-ID: <CAK7LNARqLfYmEomDyzc9iXrk7hKKpGg-nKXpM22V4UYCrXzXAg@mail.gmail.com>
+Message-ID: <CAK7LNARqLfYmEomDyzc9iXrk7hKKpGg-nKXpM22V4UYCrXzXAg@mail.gmail.com>
+Subject: Re: [PATCH] arch/x86/boot: Don't add the EFI stub to targets
+To:     Arvind Sankar <nivedita@alum.mit.edu>
+Cc:     X86 ML <x86@kernel.org>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        linux-efi <linux-efi@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 14.07.20 21:29, Mark Brown wrote:
-> On Tue, Jul 14, 2020 at 10:54:15AM +0200, Frieder Schrempf wrote:
-> 
->> It would still be quite nice to benefit from the flexibility of DT overlays
->> not only for the SPI use case. But before I come up with any custom
->> solution, for now I will rather have the device in the DT statically.
-> 
->> I just wonder if I need to keep the DT node for the device in a separate
->> patch in our own tree, or if a node with a custom compatible string like for
->> example "kontron,user-spi" would be accepted upstream, without a matching
->> driver?
-> 
-> I'm having a hard time getting enthusiastic about it TBH - can you not
-> just use spidev and live with the warning?
+On Wed, Jul 15, 2020 at 12:26 PM Arvind Sankar <nivedita@alum.mit.edu> wrote:
+>
+> vmlinux-objs-y is added to targets, which currently means that the EFI
+> stub gets added to the targets as well. It shouldn't be added since it
+> is built elsewhere.
+>
+> This confuses Makefile.build which interprets the EFI stub as a target
+>         $(obj)/$(objtree)/drivers/firmware/efi/libstub/lib.a
+> and will create drivers/firmware/efi/libstub/ underneath
+> arch/x86/boot/compressed, to hold this supposed target, if building
+> out-of-tree. [0]
+>
+> Fix this by pulling the stub out of vmlinux-objs-y into efi-obj-y.
+>
+> [0] See scripts/Makefile.build near the end:
+>     # Create directories for object files if they do not exist
+>
+> Signed-off-by: Arvind Sankar <nivedita@alum.mit.edu>
+> ---
 
-Ok, I can do that, but when I resend my patches and add "compatible = 
-'spidev'" to my DT I expect someone to complain again as my DT does not 
-describe the hardware.
 
-Seeing that there are quite a few DTs that still do it like this, I 
-probably will try it still and also keep a patch in our tree to remove 
-the warning so customers won't be getting worried.
+Reviewed-by: Masahiro Yamada <masahiroy@kernel.org>
 
-But for obvious reasons this can't be considered a good solution and it 
-seems somewhat disturbing that the maintainer needs to propose it 
-because of lack of proper solutions ;)
+
+
+>  arch/x86/boot/compressed/Makefile | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+>
+> diff --git a/arch/x86/boot/compressed/Makefile b/arch/x86/boot/compressed/Makefile
+> index 7619742f91c9..5a828fde7a42 100644
+> --- a/arch/x86/boot/compressed/Makefile
+> +++ b/arch/x86/boot/compressed/Makefile
+> @@ -90,8 +90,8 @@ endif
+>
+>  vmlinux-objs-$(CONFIG_ACPI) += $(obj)/acpi.o
+>
+> -vmlinux-objs-$(CONFIG_EFI_STUB) += $(objtree)/drivers/firmware/efi/libstub/lib.a
+>  vmlinux-objs-$(CONFIG_EFI_MIXED) += $(obj)/efi_thunk_$(BITS).o
+> +efi-obj-$(CONFIG_EFI_STUB) = $(objtree)/drivers/firmware/efi/libstub/lib.a
+>
+>  # The compressed kernel is built with -fPIC/-fPIE so that a boot loader
+>  # can place it anywhere in memory and it will still run. However, since
+> @@ -115,7 +115,7 @@ endef
+>  quiet_cmd_check-and-link-vmlinux = LD      $@
+>        cmd_check-and-link-vmlinux = $(cmd_check_data_rel); $(cmd_ld)
+>
+> -$(obj)/vmlinux: $(vmlinux-objs-y) FORCE
+> +$(obj)/vmlinux: $(vmlinux-objs-y) $(efi-obj-y) FORCE
+>         $(call if_changed,check-and-link-vmlinux)
+>
+>  OBJCOPYFLAGS_vmlinux.bin :=  -R .comment -S
+> --
+> 2.26.2
+>
+
+
+-- 
+Best Regards
+Masahiro Yamada
