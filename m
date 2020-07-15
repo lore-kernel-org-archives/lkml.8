@@ -2,350 +2,139 @@ Return-Path: <SRS0=kup7=A2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FD55C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 14:39:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96336C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 14:37:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3350E20658
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 14:39:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FoPDpx4K"
+	by mail.kernel.org (Postfix) with ESMTP id 7949A20658
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 14:37:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729376AbgGOOjS (ORCPT
+        id S1728833AbgGOOhT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 10:39:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52848 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726086AbgGOOjR (ORCPT
+        Wed, 15 Jul 2020 10:37:19 -0400
+Received: from outpost1.zedat.fu-berlin.de ([130.133.4.66]:57261 "EHLO
+        outpost1.zedat.fu-berlin.de" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727044AbgGOOhS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 10:39:17 -0400
-Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3E341C061755;
-        Wed, 15 Jul 2020 07:39:17 -0700 (PDT)
-Received: by mail-pj1-x1044.google.com with SMTP id b92so3065672pjc.4;
-        Wed, 15 Jul 2020 07:39:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=EVN7Krk9aNTG/z7sMpZMy2uuZmAuzY7KaEATKxotU1g=;
-        b=FoPDpx4KS5fWCAIvVn/3fMAKlv8fX9JtX44+85EjJjy+iQvQPDaikDsW8UwLd8iS+K
-         wKZa8IazArQedHRLeYHprQGTwtRKoJEa1g/2XpPV3lrsN8cyucJY5L2ixhwzTPfLRLxL
-         6vk10DvmH4mSz1+DTV1Jzg6J7pV7fBvbCwqJ+XRVJcCL4LqTFkZ14JgYklZtMN8ZrY3D
-         hbEFdxW7gSlNi3xFN56IceAsQXFb0xswXSaMVzH07eO/Sd9kZR/09VO2L6hhE+ITgWtU
-         70oCUoX5OKRXIzk67r825JSurCRkG9leE/rsRBuGmUvgMYTSyLD7wgapx+GwT6pc8M77
-         19TA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=EVN7Krk9aNTG/z7sMpZMy2uuZmAuzY7KaEATKxotU1g=;
-        b=kUVwywqaguFsvFJl/3/ssX5dVl3Nbm+AU0KCU7hfcwRNhcTnqQNyaQZljaQ5X3H9eW
-         uRNv1e9P9/nNemWWeinIjKnaMOG/+6MgVfXfXwbuMLzQQ6Wtamf4O6AHepJ6vDDYNsJL
-         DBNg/gL3ucaCo0b8FZToUjo4dAwO2wsBYtlE0ZZLwNJfTxBVreZdcGicAPII1USmzZ/3
-         tRlJXR2OFtnYzE4tx2dUaf9i/wwHyK89xvWRMhN2mjkDRx14mTRmuqSzL342YxV2Cp3V
-         PFGNey3Nl7x149dXXOJCWDOS1MArYPeHTtZGtYGegYcFEhDOkINAa9k5AtgQlTcwgxAd
-         icAA==
-X-Gm-Message-State: AOAM531IprSDmAxj4qYsbdnb9UzIeeaDiua6FMEXvWyASKY88uXL/bgN
-        Yta3M5pDdD79eI45WXx1q+A=
-X-Google-Smtp-Source: ABdhPJzg80x8u9C+GDJM7SQiyhcUli6IaUbI2vnMSddTmuAKkdzPJh8YJRYNBDpjPe5ywDFVmkQNqQ==
-X-Received: by 2002:a17:90b:24a:: with SMTP id fz10mr10471964pjb.36.1594823956583;
-        Wed, 15 Jul 2020 07:39:16 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id w29sm2306247pfq.128.2020.07.15.07.39.15
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 15 Jul 2020 07:39:15 -0700 (PDT)
-Date:   Wed, 15 Jul 2020 07:39:14 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Marius Zachmann <mail@mariuszachmann.de>
-Cc:     Jean Delvare <jdelvare@suse.com>, Jonathan Corbet <corbet@lwn.net>,
-        linux-hwmon@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] hwmon: corsair-cpro: Change to hid driver
-Message-ID: <20200715143914.GB201840@roeck-us.net>
-References: <20200714105230.3126-1-mail@mariuszachmann.de>
+        Wed, 15 Jul 2020 10:37:18 -0400
+Received: from inpost2.zedat.fu-berlin.de ([130.133.4.69])
+          by outpost.zedat.fu-berlin.de (Exim 4.93)
+          with esmtps (TLS1.2)
+          tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+          (envelope-from <glaubitz@zedat.fu-berlin.de>)
+          id 1jviX5-002jxV-Eb; Wed, 15 Jul 2020 16:37:15 +0200
+Received: from p57bd93f9.dip0.t-ipconnect.de ([87.189.147.249] helo=[192.168.178.139])
+          by inpost2.zedat.fu-berlin.de (Exim 4.93)
+          with esmtpsa (TLS1.2)
+          tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+          (envelope-from <glaubitz@physik.fu-berlin.de>)
+          id 1jviX5-002GxL-7D; Wed, 15 Jul 2020 16:37:15 +0200
+Subject: Re: ioremap and dma cleanups and fixes for superh (2nd resend)
+From:   John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Rich Felker <dalias@libc.org>, Christoph Hellwig <hch@lst.de>,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Linux-sh list <linux-sh@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <20200714121856.955680-1-hch@lst.de>
+ <b0745e43-0ff1-58f7-70d5-60b9c8b8d81b@physik.fu-berlin.de>
+ <20200714155914.GA24404@brightrain.aerifal.cx>
+ <8cbf2963-d0e4-0ca8-4ffe-c2057694447f@physik.fu-berlin.de>
+ <011f29e6-ad71-366e-dbff-bc8471f3da60@physik.fu-berlin.de>
+ <CAMuHMdUre2-fRgLP8YiwjAKN6J=m1vGhPSMMUdpof7jPJfcWuw@mail.gmail.com>
+ <def65208-a38b-8663-492a-cae150027003@physik.fu-berlin.de>
+ <b5f1853e-031d-c09d-57d2-fb4baffa01ea@physik.fu-berlin.de>
+ <CAMuHMdW8RtJKk3u7RWQKP2tA3AYT2rB2aqhUT1KnJ4tJwWWKDA@mail.gmail.com>
+ <b5cd845f-7b5e-af8e-a15d-3ede7e61ced4@physik.fu-berlin.de>
+Autocrypt: addr=glaubitz@physik.fu-berlin.de; keydata=
+ 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
+ scOkTAZQGVpD/8AaLH4v1w==
+Message-ID: <0322def7-fc16-c805-8f2b-c88fffce2f1e@physik.fu-berlin.de>
+Date:   Wed, 15 Jul 2020 16:37:14 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200714105230.3126-1-mail@mariuszachmann.de>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <b5cd845f-7b5e-af8e-a15d-3ede7e61ced4@physik.fu-berlin.de>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Original-Sender: glaubitz@physik.fu-berlin.de
+X-Originating-IP: 87.189.147.249
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 14, 2020 at 12:52:30PM +0200, Marius Zachmann wrote:
-> I found a project which uses hidraw to communicate with the device.
-> Because I do not want to break any existing userspace code, I
-> changed this to a hid driver, so hidraw can still be used.
-> Do I need to include the hid maintainers for the undo in hid-quirks?
+Hi Geert!
 
-I think I'll squash this patch with the others.
+On 7/15/20 10:27 AM, John Paul Adrian Glaubitz wrote:
+>> Lemme gues: does commit 002ae7057069538a ("mm, dump_page(): do not crash
+>> with invalid mapping pointer") in v5.8-rc1 help?
+> 
+> Hmm, it seems I already have that patch (I'm using Linus' main tree):
+> 
+> commit 002ae7057069538aa3afd500f6f60a429cb948b2
+> Author: Vlastimil Babka <vbabka@suse.cz>
+> Date:   Mon Jun 1 21:46:03 2020 -0700
+> 
+>     mm, dump_page(): do not crash with invalid mapping pointer
 
-> 
-> Signed-off-by: Marius Zachmann <mail@mariuszachmann.de>
-> ---
->  drivers/hid/hid-quirks.c     |   2 -
->  drivers/hwmon/Kconfig        |   4 +-
->  drivers/hwmon/corsair-cpro.c | 114 ++++++++++++++++++++++++++---------
->  3 files changed, 86 insertions(+), 34 deletions(-)
-> 
-> diff --git a/drivers/hid/hid-quirks.c b/drivers/hid/hid-quirks.c
-> index 7b7bc7737c53..ca8b5c261c7c 100644
-> --- a/drivers/hid/hid-quirks.c
-> +++ b/drivers/hid/hid-quirks.c
-> @@ -699,8 +699,6 @@ static const struct hid_device_id hid_ignore_list[] = {
->  	{ HID_USB_DEVICE(USB_VENDOR_ID_AXENTIA, USB_DEVICE_ID_AXENTIA_FM_RADIO) },
->  	{ HID_USB_DEVICE(USB_VENDOR_ID_BERKSHIRE, USB_DEVICE_ID_BERKSHIRE_PCWD) },
->  	{ HID_USB_DEVICE(USB_VENDOR_ID_CIDC, 0x0103) },
-> -	{ HID_USB_DEVICE(USB_VENDOR_ID_CORSAIR, 0x0c10) },
-> -	{ HID_USB_DEVICE(USB_VENDOR_ID_CORSAIR, 0x1d00) },
->  	{ HID_USB_DEVICE(USB_VENDOR_ID_CYGNAL, USB_DEVICE_ID_CYGNAL_RADIO_SI470X) },
->  	{ HID_USB_DEVICE(USB_VENDOR_ID_CYGNAL, USB_DEVICE_ID_CYGNAL_RADIO_SI4713) },
->  	{ HID_USB_DEVICE(USB_VENDOR_ID_CMEDIA, USB_DEVICE_ID_CM109) },
-> diff --git a/drivers/hwmon/Kconfig b/drivers/hwmon/Kconfig
-> index 8b046a5dfa40..c603d8c8e3d2 100644
-> --- a/drivers/hwmon/Kconfig
-> +++ b/drivers/hwmon/Kconfig
-> @@ -441,7 +441,7 @@ config SENSORS_BT1_PVT_ALARMS
-> 
->  config SENSORS_CORSAIR_CPRO
->  	tristate "Corsair Commander Pro controller"
-> -	depends on USB
-> +	depends on HID
->  	help
->  	  If you say yes here you get support for the Corsair Commander Pro
->  	  controller.
-> @@ -1716,7 +1716,7 @@ config SENSORS_ADS7871
-> 
->  config SENSORS_AMC6821
->  	tristate "Texas Instruments AMC6821"
-> -	depends on I2C
-> +	depends on I2C
+Okay, kernel 5.0.0 does not suffer from this bug. So I should be able to bisect
+this particular issue.
 
-Unrelated change; please drop.
+I'm glad I don't have to start bisecting with earlier kernels because these
+won't build easily with my current toolchain based on gcc-9.
 
->  	help
->  	  If you say yes here you get support for the Texas Instruments
->  	  AMC6821 hardware monitoring chips.
-> diff --git a/drivers/hwmon/corsair-cpro.c b/drivers/hwmon/corsair-cpro.c
-> index fe625190e3a1..4310ee5aca24 100644
-> --- a/drivers/hwmon/corsair-cpro.c
-> +++ b/drivers/hwmon/corsair-cpro.c
-> @@ -5,13 +5,14 @@
->   */
-> 
->  #include <linux/bitops.h>
-> +#include <linux/completion.h>
-> +#include <linux/hid.h>
->  #include <linux/hwmon.h>
->  #include <linux/kernel.h>
->  #include <linux/module.h>
->  #include <linux/mutex.h>
->  #include <linux/slab.h>
->  #include <linux/types.h>
-> -#include <linux/usb.h>
-> 
->  #define USB_VENDOR_ID_CORSAIR			0x1b1c
->  #define USB_PRODUCT_ID_CORSAIR_COMMANDERPRO	0x0c10
-> @@ -62,7 +63,8 @@
->  #define NUM_TEMP_SENSORS	4
-> 
->  struct ccp_device {
-> -	struct usb_device *udev;
-> +	struct hid_device *hdev;
-> +	struct completion wait_input_report;
->  	struct mutex mutex; /* whenever buffer is used, lock before send_usb_cmd */
->  	u8 *buffer;
->  	int pwm[6];
-> @@ -75,7 +77,7 @@ struct ccp_device {
->  /* send command, check for error in response, response in ccp->buffer */
->  static int send_usb_cmd(struct ccp_device *ccp, u8 command, u8 byte1, u8 byte2, u8 byte3)
->  {
-> -	int actual_length;
-> +	unsigned long t;
->  	int ret;
-> 
->  	memset(ccp->buffer, 0x00, OUT_BUFFER_SIZE);
-> @@ -84,26 +86,39 @@ static int send_usb_cmd(struct ccp_device *ccp, u8 command, u8 byte1, u8 byte2,
->  	ccp->buffer[2] = byte2;
->  	ccp->buffer[3] = byte3;
-> 
-> -	ret = usb_bulk_msg(ccp->udev, usb_sndintpipe(ccp->udev, 2), ccp->buffer, OUT_BUFFER_SIZE,
-> -			   &actual_length, 1000);
-> -	if (ret)
-> -		return ret;
-> +	reinit_completion(&ccp->wait_input_report);
-> 
-> -	/* response needs to be received every time */
-> -	ret = usb_bulk_msg(ccp->udev, usb_rcvintpipe(ccp->udev, 1), ccp->buffer, IN_BUFFER_SIZE,
-> -			   &actual_length, 1000);
-> -	if (ret)
-> +	ret = hid_hw_output_report(ccp->hdev, ccp->buffer, OUT_BUFFER_SIZE);
-> +	if (ret < 0)
->  		return ret;
-> 
-> +	t = wait_for_completion_timeout(&ccp->wait_input_report, msecs_to_jiffies(300));
+Will report once I found the bad commit that introduced the problem.
 
-Please use a define for the timeout.
+Adrian
 
-> +	if (!t)
-> +		return -ETIMEDOUT;
-
-
-> +
->  	/* first byte of response is error code */
->  	if (ccp->buffer[0] != 0x00) {
-> -		dev_dbg(&ccp->udev->dev, "device response error: %d", ccp->buffer[0]);
-> +		hid_dbg(ccp->hdev, "device response error: %d", ccp->buffer[0]);
->  		return -EIO;
->  	}
-> 
->  	return 0;
->  }
-> 
-> +static int ccp_raw_event(struct hid_device *hdev, struct hid_report *report, u8 *data, int size)
-> +{
-> +	struct ccp_device *ccp = hid_get_drvdata(hdev);
-> +
-> +	/* only copy buffer when requested */
-> +	if (completion_done(&ccp->wait_input_report))
-> +		return 0;
-> +
-> +	memcpy(ccp->buffer, data, min(IN_BUFFER_SIZE, size));
-> +	complete(&ccp->wait_input_report);
-> +
-> +	return 0;
-> +}
-> +
->  /* requests and returns single data values depending on channel */
->  static int get_data(struct ccp_device *ccp, int command, int channel)
->  {
-> @@ -437,57 +452,96 @@ static int get_temp_cnct(struct ccp_device *ccp)
->  	return 0;
->  }
-> 
-> -static int ccp_probe(struct usb_interface *intf, const struct usb_device_id *id)
-> +static int ccp_probe(struct hid_device *hdev, const struct hid_device_id *id)
->  {
->  	struct device *hwmon_dev;
->  	struct ccp_device *ccp;
->  	int ret;
-> 
-> -	ccp = devm_kzalloc(&intf->dev, sizeof(*ccp), GFP_KERNEL);
-> +	ccp = devm_kzalloc(&hdev->dev, sizeof(*ccp), GFP_KERNEL);
->  	if (!ccp)
->  		return -ENOMEM;
-> 
-> -	ccp->buffer = devm_kmalloc(&intf->dev, OUT_BUFFER_SIZE, GFP_KERNEL);
-> +	ccp->buffer = devm_kmalloc(&hdev->dev, OUT_BUFFER_SIZE, GFP_KERNEL);
->  	if (!ccp->buffer)
->  		return -ENOMEM;
-> 
-> +	ret = hid_parse(hdev);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret = hid_hw_start(hdev, HID_CONNECT_HIDRAW);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret = hid_hw_open(hdev);
-> +	if (ret)
-> +		goto out_hw_stop;
-> +
-> +	ccp->hdev = hdev;
-> +	hid_set_drvdata(hdev, ccp);
->  	mutex_init(&ccp->mutex);
-> +	init_completion(&ccp->wait_input_report);
-> 
-> -	ccp->udev = interface_to_usbdev(intf);
-> +	hid_device_io_start(hdev);
-> 
->  	/* temp and fan connection status only updates when device is powered on */
->  	ret = get_temp_cnct(ccp);
->  	if (ret)
-> -		return ret;
-> +		goto out_hw_close;
-> 
->  	ret = get_fan_cnct(ccp);
->  	if (ret)
-> -		return ret;
-> -
-> -	hwmon_dev = devm_hwmon_device_register_with_info(&intf->dev, "corsaircpro", ccp,
-> +		goto out_hw_close;
-> +	hwmon_dev = devm_hwmon_device_register_with_info(&hdev->dev, "corsaircpro", ccp,
->  							 &ccp_chip_info, 0);
-
-You'll have to use hwmon_device_register_with_info() and call the remove
-function explicitly in ccp_remove() to avoid race conditions.
-Alternatively, you could use devm_add_action_or_reset() to handle
-hid_hw_close() and hid_hw_stop(), but that would probably not be worth
-the added complexity.
-
-> +	if (IS_ERR(hwmon_dev)) {
-> +		ret = PTR_ERR(hwmon_dev);
-> +		goto out_hw_close;
-> +	}
-> +
-> +	return 0;
-> 
-> -	return PTR_ERR_OR_ZERO(hwmon_dev);
-> +out_hw_close:
-> +	hid_hw_close(hdev);
-> +out_hw_stop:
-> +	hid_hw_stop(hdev);
-> +	return ret;
->  }
-> 
-> -static void ccp_disconnect(struct usb_interface *intf)
-> +static void ccp_remove(struct hid_device *hdev)
->  {
-> +	hid_hw_close(hdev);
-> +	hid_hw_stop(hdev);
->  }
-> 
-> -static const struct usb_device_id ccp_devices[] = {
-> -	{ USB_DEVICE(USB_VENDOR_ID_CORSAIR, USB_PRODUCT_ID_CORSAIR_COMMANDERPRO) },
-> -	{ USB_DEVICE(USB_VENDOR_ID_CORSAIR, USB_PRODUCT_ID_CORSAIR_1000D) },
-> +static const struct hid_device_id ccp_devices[] = {
-> +	{ HID_USB_DEVICE(USB_VENDOR_ID_CORSAIR, USB_PRODUCT_ID_CORSAIR_COMMANDERPRO) },
-> +	{ HID_USB_DEVICE(USB_VENDOR_ID_CORSAIR, USB_PRODUCT_ID_CORSAIR_1000D) },
->  	{ }
->  };
-> 
-> -static struct usb_driver ccp_driver = {
-> +static struct hid_driver ccp_driver = {
->  	.name = "corsair-cpro",
-> +	.id_table = ccp_devices,
->  	.probe = ccp_probe,
-> -	.disconnect = ccp_disconnect,
-> -	.id_table = ccp_devices
-> +	.remove = ccp_remove,
-> +	.raw_event = ccp_raw_event,
->  };
-> 
-> -MODULE_DEVICE_TABLE(usb, ccp_devices);
-> +MODULE_DEVICE_TABLE(hid, ccp_devices);
->  MODULE_LICENSE("GPL");
-> 
-> -module_usb_driver(ccp_driver);
-> +static int __init ccp_init(void)
-> +{
-> +	return hid_register_driver(&ccp_driver);
-> +}
-> +
-> +static void __exit ccp_exit(void)
-> +{
-> +	hid_unregister_driver(&ccp_driver);
-> +}
-> +
-> +/* make sure, it is loaded after hid */
-> +late_initcall(ccp_init);
-> +module_exit(ccp_exit);
-> --
-> 2.27.0
+-- 
+ .''`.  John Paul Adrian Glaubitz
+: :' :  Debian Developer - glaubitz@debian.org
+`. `'   Freie Universitaet Berlin - glaubitz@physik.fu-berlin.de
+  `-    GPG: 62FF 8A75 84E0 2956 9546  0006 7426 3B37 F5B5 F913
