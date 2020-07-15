@@ -2,204 +2,313 @@ Return-Path: <SRS0=kup7=A2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7893C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 16:29:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96094C433E6
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 16:29:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AA94E2065E
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 16:29:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E79220663
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 16:29:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="owe9lWhy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727052AbgGOQ3F (ORCPT
+        id S1727081AbgGOQ3O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 12:29:05 -0400
-Received: from mail.baikalelectronics.com ([87.245.175.226]:37930 "EHLO
-        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725866AbgGOQ3E (ORCPT
+        Wed, 15 Jul 2020 12:29:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41800 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726820AbgGOQ3M (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 12:29:04 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id 1C2E980307C2;
-        Wed, 15 Jul 2020 16:28:56 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at baikalelectronics.ru
-Received: from mail.baikalelectronics.ru ([127.0.0.1])
-        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id R4yGKnKOMh8D; Wed, 15 Jul 2020 19:28:54 +0300 (MSK)
-Date:   Wed, 15 Jul 2020 19:28:52 +0300
-From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
-To:     Claire Chang <tientzu@chromium.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>
-CC:     Daniel Winkler <danielwinkler@google.com>,
-        Nicolas Boichat <drinkcat@google.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Aaron Sierra <asierra@xes-inc.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Lukas Wunner <lukas@wunner.de>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        <linux-serial@vger.kernel.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        BlueZ <linux-bluetooth@vger.kernel.org>,
-        chromeos-bluetooth-upstreaming 
-        <chromeos-bluetooth-upstreaming@chromium.org>,
-        <abhishekpandit@chromium.org>, <stable@vger.kernel.org>,
-        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
-        lkml <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] serial: 8250_mtk: Fix high-speed baud rates clamping
-Message-ID: <20200715162852.5ykgubvoc7tvbfhc@mobilestation>
-References: <20200714124113.20918-1-Sergey.Semin@baikalelectronics.ru>
- <CAP2xMbvwxYaGPPCDWY2LWUc2te8kS9t-+A0zieYp3RiGMJR6ng@mail.gmail.com>
- <CALiNf2-mmC1ueeiQ6xh5BPzCH_ratYPpeW1Rq=EHsA7+e6yK0A@mail.gmail.com>
+        Wed, 15 Jul 2020 12:29:12 -0400
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [IPv6:2001:4b98:dc2:55:216:3eff:fef7:d647])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 09167C061755;
+        Wed, 15 Jul 2020 09:29:12 -0700 (PDT)
+Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 95092564;
+        Wed, 15 Jul 2020 18:29:08 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1594830548;
+        bh=J0RmO1M1ihQJvW/q2HS1HUBA5UiJRDYlOCO40ivrSEM=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=owe9lWhyAxGIol67u3m6+OzIMITqa7IUxf6V+vB33ABRw2f+wURJr7dmS9lLqHJFd
+         aBE5vdEQvPBId8ywbjMCtAGMweNKtXe1C5aCP1Gfyyf/H2VmL+Zi9x41lJkV+DTz1q
+         GMJNQnSuXf49Gq9xxHJdOLXXTEHNcnplNZ2IoQds=
+Date:   Wed, 15 Jul 2020 19:29:01 +0300
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Vishal Sagar <vishal.sagar@xilinx.com>
+Cc:     Rob Herring <robh@kernel.org>, hyunk@xilinx.com,
+        hverkuil@xs4all.nl, mchehab@kernel.org, mark.rutland@arm.com,
+        michals@xilinx.com, linux-media@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, joe@perches.com, sandipk@xilinx.com,
+        dineshk@xilinx.com
+Subject: Re: [PATCH v3 2/3] media: dt-bindings: media: xilinx: Add Xilinx
+ UHD-SDI Receiver Subsystem
+Message-ID: <20200715162901.GE6144@pendragon.ideasonboard.com>
+References: <20200618053304.14551-1-vishal.sagar@xilinx.com>
+ <20200618053304.14551-3-vishal.sagar@xilinx.com>
+ <20200713185447.GA531731@bogus>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <CALiNf2-mmC1ueeiQ6xh5BPzCH_ratYPpeW1Rq=EHsA7+e6yK0A@mail.gmail.com>
-X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
+In-Reply-To: <20200713185447.GA531731@bogus>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 15, 2020 at 01:36:04PM +0800, Claire Chang wrote:
-> On Wed, Jul 15, 2020 at 4:45 AM Daniel Winkler <danielwinkler@google.com> wrote:
-> >
-> > Thank you Sergey for looking into this. Adding folks working on this
-> > platform to perform validation of the proposed patch.
-> >
-> > Best,
-> > Daniel
-> >
-> > On Tue, Jul 14, 2020 at 5:41 AM Serge Semin
-> > <Sergey.Semin@baikalelectronics.ru> wrote:
-> > >
-> > > Commit 7b668c064ec3 ("serial: 8250: Fix max baud limit in generic 8250
-> > > port") fixed limits of a baud rate setting for a generic 8250 port.
-> > > In other words since that commit the baud rate has been permitted to be
-> > > within [uartclk / 16 / UART_DIV_MAX; uartclk / 16], which is absolutely
-> > > normal for a standard 8250 UART port. But there are custom 8250 ports,
-> > > which provide extended baud rate limits. In particular the Mediatek 8250
-> > > port can work with baud rates up to "uartclk" speed.
-> > >
-> > > Normally that and any other peculiarity is supposed to be handled in a
-> > > custom set_termios() callback implemented in the vendor-specific
-> > > 8250-port glue-driver. Currently that is how it's done for the most of
-> > > the vendor-specific 8250 ports, but for some reason for Mediatek a
-> > > solution has been spread out to both the glue-driver and to the generic
-> > > 8250-port code. Due to that a bug has been introduced, which permitted the
-> > > extended baud rate limit for all even for standard 8250-ports. The bug
-> > > has been fixed by the commit 7b668c064ec3 ("serial: 8250: Fix max baud
-> > > limit in generic 8250 port") by narrowing the baud rates limit back down to
-> > > the normal bounds. Unfortunately by doing so we also broke the
-> > > Mediatek-specific extended bauds feature.
-> > >
-> > > A fix of the problem described above is twofold. First since we can't get
-> > > back the extended baud rate limits feature to the generic set_termios()
-> > > function and that method supports only a standard baud rates range, the
-> > > requested baud rate must be locally stored before calling it and then
-> > > restored back to the new termios structure after the generic set_termios()
-> > > finished its magic business. By doing so we still use the
-> > > serial8250_do_set_termios() method to set the LCR/MCR/FCR/etc. registers,
-> > > while the extended baud rate setting procedure will be performed later in
-> > > the custom Mediatek-specific set_termios() callback. Second since a true
-> > > baud rate is now fully calculated in the custom set_termios() method we
-> > > need to locally update the port timeout by calling the
-> > > uart_update_timeout() function. After the fixes described above are
-> > > implemented in the 8250_mtk.c driver, the Mediatek 8250-port should
-> > > get back to normally working with extended baud rates.
-> > >
-> > > Link: https://lore.kernel.org/linux-serial/20200701211337.3027448-1-danielwinkler@google.com
-> > >
-> > > Fixes: 7b668c064ec3 ("serial: 8250: Fix max baud limit in generic 8250 port")
-> > > Reported-by: Daniel Winkler <danielwinkler@google.com>
-> > > Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Hi Vishal,
 
-> Tested-by: Claire Chang <tientzu@chromium.org>
-> > >
-> > > ---
-> > >
-> > > Folks, sorry for a delay with the problem fix. A solution is turned out to
-> > > be a bit more complicated than I originally thought in my comment to the
-> > > Daniel revert-patch.
-> > >
-> > > Please also note, that I don't have a Mediatek hardware to test the
-> > > solution suggested in the patch. The code is written as on so called
-> > > the tip of the pen after digging into the 8250_mtk.c and 8250_port.c
-> > > drivers code. So please Daniel or someone with Mediatek 8250-port
-> > > available on a board test this patch first and report about the results in
-> > > reply to this emailing thread. After that, if your conclusion is positive
-> > > and there is no objection against the solution design the patch can be
-> > > merged in.
-> I tested it with mt8183 + QCA6174.
-> The UART Bluetooth works fine with this fix.
-> Thanks!
+Thank you for the patch.
 
-Great! Thanks.
+On Mon, Jul 13, 2020 at 12:54:47PM -0600, Rob Herring wrote:
+> On Thu, Jun 18, 2020 at 11:03:03AM +0530, Vishal Sagar wrote:
+> > Add bindings documentation for Xilinx UHD-SDI Receiver Subsystem.
+> > 
+> > The Xilinx UHD-SDI Receiver Subsystem consists of SMPTE UHD-SDI (RX) IP
+> > core, an SDI RX to Video Bridge IP core to convert SDI video to native
+> > video and a Video In to AXI4-Stream IP core to convert native video to
+> > AXI4-Stream.
+> > 
+> > Signed-off-by: Vishal Sagar <vishal.sagar@xilinx.com>
+> > ---
+> > v3
+> > - bpc instead of bpp
+> > - removed bpc as required property (default to 10 bpc)
+> > - add dt-bindings/media/xilinx-sdi.h
+> > - made line-rate as u32 instead of string
+> > - fixed reg
+> > - fixed s/upto/up to/
+> > 
+> > v2
+> > - Removed references to xlnx,video*
+> > - Fixed as per Sakari Ailus and Rob Herring's comments
+> > - Converted to yaml format
+> > 
+> >  .../bindings/media/xilinx/xlnx,sdirxss.yaml   | 132 ++++++++++++++++++
+> >  include/dt-bindings/media/xilinx-sdi.h        |  20 +++
+> >  2 files changed, 152 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/media/xilinx/xlnx,sdirxss.yaml
+> >  create mode 100644 include/dt-bindings/media/xilinx-sdi.h
+> > 
+> > diff --git a/Documentation/devicetree/bindings/media/xilinx/xlnx,sdirxss.yaml b/Documentation/devicetree/bindings/media/xilinx/xlnx,sdirxss.yaml
+> > new file mode 100644
+> > index 000000000000..6cfc18ca435f
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/media/xilinx/xlnx,sdirxss.yaml
+> > @@ -0,0 +1,132 @@
+> > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> > +%YAML 1.2
+> > +---
+> > +$id: http://devicetree.org/schemas/media/xilinx/xlnx,sdirxss.yaml#
+> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > +
+> > +
 
-Greg, Jiri, Matthias since a test's showed the patch correctness you may now
-merge it in if you are ok with its design. It shall fix the problem Daniel
-reported.
+I think a single blank line is enough.
 
--Sergey
+> > +title: Xilinx SMPTE UHD-SDI Receiver Subsystem
+> > +
+> > +maintainers:
+> > +  - Vishal Sagar <vishal.sagar@xilinx.com>
+> > +
+> > +description: |
+> > +  The SMPTE UHD-SDI Receiver (RX) Subsystem allows you to quickly create systems
+> > +  based on SMPTE SDI protocols. It receives unaligned native SDI streams from
+> > +  the SDI GT PHY and outputs an AXI4-Stream video stream, native video, or
+> > +  native SDI using Xilinx transceivers as the physical layer.
+> > +
+> > +  The subsystem consists of
+> > +  1 - SMPTE UHD-SDI Rx
+> > +  2 - SDI Rx to Native Video Bridge
+> > +  3 - Video In to AXI4-Stream Bridge
+> > +
+> > +  The subsystem can capture SDI streams in up to 12G mode 8 data streams and output
+> > +  a dual pixel per clock RGB/YUV444,422/420 10/12 bits per component AXI4-Stream.
+> > +
+> > +properties:
+> > +  compatible:
+> > +    items:
+> > +      - enum:
+> > +        - xlnx,v-smpte-uhdsdi-rx-ss-2.0
+> 
+> Should be indented 2 more spaces.
 
-> > >
-> > > Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
-> > > Cc: Daniel Winkler <danielwinkler@google.com>
-> > > Cc: Aaron Sierra <asierra@xes-inc.com>
-> > > Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> > > Cc: Lukas Wunner <lukas@wunner.de>
-> > > Cc: Vignesh Raghavendra <vigneshr@ti.com>
-> > > Cc: linux-serial@vger.kernel.org
-> > > Cc: linux-mediatek@lists.infradead.org
-> > > Cc: BlueZ <linux-bluetooth@vger.kernel.org>
-> > > Cc: chromeos-bluetooth-upstreaming <chromeos-bluetooth-upstreaming@chromium.org>
-> > > Cc: abhishekpandit@chromium.org
-> > > Cc: stable@vger.kernel.org
-> > > ---
-> > >  drivers/tty/serial/8250/8250_mtk.c | 18 ++++++++++++++++++
-> > >  1 file changed, 18 insertions(+)
-> > >
-> > > diff --git a/drivers/tty/serial/8250/8250_mtk.c b/drivers/tty/serial/8250/8250_mtk.c
-> > > index f839380c2f4c..98b8a3e30733 100644
-> > > --- a/drivers/tty/serial/8250/8250_mtk.c
-> > > +++ b/drivers/tty/serial/8250/8250_mtk.c
-> > > @@ -306,8 +306,21 @@ mtk8250_set_termios(struct uart_port *port, struct ktermios *termios,
-> > >         }
-> > >  #endif
-> > >
-> > > +       /*
-> > > +        * Store the requested baud rate before calling the generic 8250
-> > > +        * set_termios method. Standard 8250 port expects bauds to be
-> > > +        * no higher than (uartclk / 16) so the baud will be clamped if it
-> > > +        * gets out of that bound. Mediatek 8250 port supports speed
-> > > +        * higher than that, therefore we'll get original baud rate back
-> > > +        * after calling the generic set_termios method and recalculate
-> > > +        * the speed later in this method.
-> > > +        */
-> > > +       baud = tty_termios_baud_rate(termios);
-> > > +
-> > >         serial8250_do_set_termios(port, termios, old);
-> > >
-> > > +       tty_termios_encode_baud_rate(termios, baud, baud);
-> > > +
-> > >         /*
-> > >          * Mediatek UARTs use an extra highspeed register (MTK_UART_HIGHS)
-> > >          *
-> > > @@ -339,6 +352,11 @@ mtk8250_set_termios(struct uart_port *port, struct ktermios *termios,
-> > >          */
-> > >         spin_lock_irqsave(&port->lock, flags);
-> > >
-> > > +       /*
-> > > +        * Update the per-port timeout.
-> > > +        */
-> > > +       uart_update_timeout(port, termios->c_cflag, baud);
-> > > +
-> > >         /* set DLAB we have cval saved in up->lcr from the call to the core */
-> > >         serial_port_out(port, UART_LCR, up->lcr | UART_LCR_DLAB);
-> > >         serial_dl_write(up, quot);
-> > > --
-> > > 2.26.2
-> > >
+Or you could simply use
+
+properties:
+  compatible:
+    const: xlnx,v-smpte-uhdsdi-rx-ss-2.0
+
+> > +
+> > +  reg:
+> > +    maxItems: 1
+> > +
+> > +  interrupts:
+> > +    maxItems: 1
+> > +
+> > +  clocks:
+> > +    description: List of clock specifiers
+> 
+> Drop. That's every 'clocks' property.
+> 
+> > +    items:
+> > +      - description: AXI4-Lite clock
+> > +      - description: SMPTE UHD-SDI Rx core clock
+> > +      - description: Video clock
+> > +
+> > +  clock-names:
+> > +    items:
+> > +      - const: s_axi_aclk
+> > +      - const: sdi_rx_clk
+> > +      - const: video_out_clk
+> > +
+> > +  xlnx,bpc:
+> > +    description: Bits per component supported. Can be 10 or 12 bits per component only.
+> > +    allOf:
+> 
+> You can drop the 'allOf' now.
+> 
+> > +      - $ref: "/schemas/types.yaml#/definitions/uint32"
+> > +      - enum: [10, 12]
+> 
+> Seems like this should be a standard property?
+
+Rob, if my understanding is correct, this tells for how many bits per
+component the IP core has been synthesized. I think it qualifies as a
+vendor property, as how to express constraints on supported formats (for
+IP cores that can be synthesized with different options) is highly
+vendor-specific.
+
+Vishal, I think the question I asked in the review of v2 fell through
+the cracks. Is the documentation for the new IP core version available ?
+Should this property only be allowed for the new version, given that in
+v2.0 the BPC is fixed to 10 ?
+
+> > +
+> > +  xlnx,line-rate:
+> > +    description: |
+> > +      The maximum mode supported by the design. Possible values are as below
+> > +      0 - XSDI_STD_3G      -  3G mode
+> > +      1 - XSDI_STD_6G      -  6G mode
+> > +      2 - XSDI_STD_12G_8DS - 12G mode with 8 data streams
+> > +    allOf:
+> > +      - $ref: "/schemas/types.yaml#/definitions/uint32"
+> > +      - enum: [0, 1, 2]
+> 
+> Standard?
+
+For this one, I'm not sure. There's little support for SDI in the
+kernel, and I'm sure we'll get this wrong the first time. I'd rather try
+not to over-standardize properties before we have more examples.
+
+> > +
+> > +  xlnx,include-edh:
+> > +    type: boolean
+> > +    description: |
+> > +      This is present when the Error Detection and Handling processor is
+> > +      enabled in design.
+> > +
+> > +  ports:
+> > +    type: object
+> > +    description: |
+> > +      Generally the SDI port is connected to a device like SDI Broadcast camera
+> > +      which is independently controlled. Hence port@0 is a source port which can be
+> > +      connected to downstream IP which can work with AXI4 Stream data.
+> > +    properties:
+> > +      port@0:
+> > +        type: object
+> > +        description: Source port
+> > +        properties:
+> > +          reg:
+> > +            const: 0
+> > +          endpoint:
+> > +            type: object
+> > +            properties:
+> > +              remote-endpoint: true
+> > +            required:
+> > +              - remote-endpoint
+> > +            additionalProperties: false
+> > +        additionalProperties: false
+
+Same here, I explained in the review of v2 that we should have an input
+port.
+
+> > +
+> > +required:
+> > +  - compatible
+> > +  - reg
+> > +  - interrupts
+> > +  - clocks
+> > +  - clock-names
+> > +  - xlnx,line-rate
+> > +  - ports
+> > +
+> > +additionalProperties: false
+> > +
+> > +examples:
+> > +  - |
+> > +    #include <dt-bindings/media/xilinx-sdi.h>
+> > +    uhdsdirxss: v-smpte-uhdsdi-rxss@80000000 {
+
+The label is not used, you can drop it.
+
+> > +      compatible = "xlnx,v-smpte-uhdsdi-rx-ss-2.0";
+> > +      interrupt-parent = <&gic>;
+> > +      interrupts = <0 89 4>;
+> > +      reg = <0x80000000 0x10000>;
+> > +      xlnx,include-edh;
+> > +      xlnx,line-rate = <XSDI_STD_12G_8DS>;
+> > +      clocks = <&clk_1>, <&si570_1>, <&clk_2>;
+> > +      clock-names = "s_axi_aclk", "sdi_rx_clk", "video_out_clk";
+> > +      xlnx,bpc = <10>;
+
+I would group the xlnx,* properties after the standard properties.
+
+> > +
+> > +      ports {
+> > +        #address-cells = <1>;
+> > +        #size-cells = <0>;
+> > +        port@0 {
+> > +          reg = <0>;
+> > +          sdirx_out: endpoint {
+> > +            remote-endpoint = <&vcap_sdirx_in>;
+> > +          };
+> > +        };
+> > +      };
+> > +    };
+> > +...
+> > diff --git a/include/dt-bindings/media/xilinx-sdi.h b/include/dt-bindings/media/xilinx-sdi.h
+> > new file mode 100644
+> > index 000000000000..11938fade041
+> > --- /dev/null
+> > +++ b/include/dt-bindings/media/xilinx-sdi.h
+> > @@ -0,0 +1,20 @@
+> > +/* SPDX-License-Identifier: GPL-2.0 */
+> > +/*
+> > + * Xilinx SDI device tree bindings
+> > + *
+> > + * Copyright (C) 2020 Xilinx, Inc.
+> > + *
+> > + * Contacts: Vishal Sagar <vishal.sagar@xilinx.com>
+> > + */
+> > +
+> > +#ifndef __DT_BINDINGS_MEDIA_XILINX_SDI_H__
+> > +#define __DT_BINDINGS_MEDIA_XILINX_SDI_H__
+> > +
+> > +/*
+> > + * SDI Configurations
+> > + */
+> > +#define XSDI_STD_3G		0
+> > +#define XSDI_STD_6G		1
+> > +#define XSDI_STD_12G_8DS	2
+> > +
+> > +#endif /* __DT_BINDINGS_MEDIA_XILINX_SDI_H__ */
+
+-- 
+Regards,
+
+Laurent Pinchart
