@@ -2,130 +2,106 @@ Return-Path: <SRS0=kup7=A2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DC20C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 18:44:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DBA76C43446
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 18:45:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1EC8A2065F
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 18:44:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA5C3207BC
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 18:45:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="Er8ZL3yL"
+	dkim=pass (2048-bit key) header.d=mawsonlakes-org.20150623.gappssmtp.com header.i=@mawsonlakes-org.20150623.gappssmtp.com header.b="qMz7WzoA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727026AbgGOSok (ORCPT
+        id S1726796AbgGOSp4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 14:44:40 -0400
-Received: from mout.web.de ([212.227.15.14]:38197 "EHLO mout.web.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726354AbgGOSoj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 14:44:39 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1594838637;
-        bh=8Ci8b/F3b3a9B5srIUO2+DS4WNXDQJU4PdLdQTSSiyU=;
-        h=X-UI-Sender-Class:Cc:Subject:To:From:Date;
-        b=Er8ZL3yLQQIgW18mzom3kT2tcj3LN2KaJbIdywLVUReAgh8znYOzl/dlHoJ7f84TE
-         44VIH0Xeklwq/jZx09kyMbPQQyM4JqzWgc5zscoRPHPc5LjqXQ1UFZJDBidJJT9Pz2
-         WI5XUapE28cSBf/jsBQ3RFncrb9ZIPaf71lbVjos=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.2] ([93.133.102.166]) by smtp.web.de (mrweb005
- [213.165.67.108]) with ESMTPSA (Nemesis) id 1N8Vsr-1kzcbt3bA9-014QIG; Wed, 15
- Jul 2020 20:43:56 +0200
-Cc:     linux-kernel@vger.kernel.org,
-        "David S. Miller" <davem@davemloft.net>,
-        Eric Dumazet <eric.dumazet@gmail.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Jon Maloy <jmaloy@redhat.com>,
-        Tuong Lien <tuong.t.lien@dektech.com.au>,
-        Ying Xue <ying.xue@windriver.com>
-Subject: Re: [PATCH v2] tipc: Don't using smp_processor_id() in preemptible
- code
-To:     Zhang Qiang <qiang.zhang@windriver.com>, netdev@vger.kernel.org,
-        tipc-discussion@lists.sourceforge.net
-From:   Markus Elfring <Markus.Elfring@web.de>
-Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
- 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 FEE=
-Message-ID: <bedc4dad-c7e9-2100-9133-e72c40894a9d@web.de>
-Date:   Wed, 15 Jul 2020 20:43:52 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Wed, 15 Jul 2020 14:45:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34662 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726354AbgGOSpz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jul 2020 14:45:55 -0400
+Received: from mail-vs1-xe44.google.com (mail-vs1-xe44.google.com [IPv6:2607:f8b0:4864:20::e44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 951DEC061755
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 11:45:55 -0700 (PDT)
+Received: by mail-vs1-xe44.google.com with SMTP id k7so1662036vso.2
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 11:45:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=mawsonlakes-org.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=XvKf4QD1e5O7xyUYt/0sELdWgljCyGRaCSrceoWQt+Q=;
+        b=qMz7WzoAHpsJJrp8HFvA2RJHHayfYpLkrZ2VGJROXNjNKwGEc1InvqQjzcvig7RMCc
+         SRYf+8np+N1CjIW+QUWaQXp7Tw3Nohx16STAfRbZDKL9T8ubj0qDren8vLkXZ2dY/j3X
+         aggeOSCux0cuE34yxYkfw+vy5lcUje7zql/rxFSl31FQuhG4niYng+7EkiJTSfNfRIMw
+         K507Y7FhFdRV1mzECF34upLleiUqmDTQDs8+h9kzjUjKWLpNY6P/YPmraumK07HLZW5R
+         2JelTDSxBPny1dfNxx6UcgpmDxZBod/4v50ZDJg6OAhF2AjGWx4jq8dDiztrAXOgrb5Y
+         /PFQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=XvKf4QD1e5O7xyUYt/0sELdWgljCyGRaCSrceoWQt+Q=;
+        b=BYS+h//PcVoLE8fQWRDcshdET9ManJOmdxwIW6JEz/CC4vn++FMgpofydnaCZmm6lF
+         sEjsjlcW+pynHLyQSlsDeqfjNmcpM89mKhjs1JVWv3M9U6EuGoljHkUnN9QCCE074Rwe
+         GuW6p9Ca6ZIurXYPBrFeaQ3TPh5MgTDqxhbFrlYa/iey4HfNoSickDOE6sCLCkyzZ28z
+         VaarTLPWhgBnCmgLRfOXPjDAf8igUozNnowtdxyAH+FUjGpfC/0935f6XMg0Sk6QwRSp
+         F9hvgkVSwRg4hQj+gdaj6k6WUSc8JFeKUrE81K6Ycih+bxr8ApQ4ooDZswsiqhopqb/3
+         Eh+A==
+X-Gm-Message-State: AOAM533ytNsrSFxCrw2RG3WzaOnyjo0GghNmuIw3tW6hvjA9ISeIeFnx
+        6wce76oHPRaQLIOIDkibDJQ0zDW9vZXoL42fy791rnkhqvD/qw==
+X-Google-Smtp-Source: ABdhPJxWUmHU1k1z8iNd6QtA/VdH/Ye9kFZeDhtORdjCPldH03OKv8sfwI/GmuMB09HPERbxJH21y2IViwrM1khuRW4=
+X-Received: by 2002:a67:ecc4:: with SMTP id i4mr477621vsp.228.1594838754652;
+ Wed, 15 Jul 2020 11:45:54 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-X-Provags-ID: V03:K1:l2QZm4ctJL7PE9EH1e0iHpynfqbkQBKyh0fLNPfAMD6GeCY6VBg
- hGF6L/R71su6tQOb5mDe+hZ39f1gQuOCop7D5QSqY71bGHJspR1E7XL9OwT5jTI0bLABhPg
- +AhJAQT0qM2sPcVzZsJmuswY04FQn3A73DXDU2NCbGd2XKQW4Sptn72txzUbpwsaixeyI6H
- h88ndeBXfkiJshdj2cBDA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:heAufnYgSlU=:Si4Xu2TUJ2CScKWFey2v6T
- oy5NSiCVRWtUMcxLxqw0NhhO4UZ5BJiTxTJxdCXIUpMmNpgMIZugJjSLpUK/LkGqK9dHn8+Qw
- AQmdodsXtp3tFRIVfswvswSe116RT1dzBsJHtqog/GzDSOkbrmlNU7mLOg4eb0OA+t+3TlqjN
- SIrAjnAgcaDvztLsHVAuaFevxT3LPFeCdzLAjtcgU9EdXDkkbupRmMcZNeWq+oI8lLYtPfKNJ
- ger1cWZTpnnHu5OjwAm7AXGanbjTYrvCgPUts5yPHSP3KRyX+UG5EJpoB9zrNig5FJeY4PKVL
- Z1vW2x15aflxZJVWkcCm8MJ8JDDeSqRGX1QVIhg0UOAV+FUkidQfjEjGZHKxws+fnmS3sd7yQ
- 8T6xPXNkiDEKbXun0eMXE4/DwIQV0BbkBcDK3GASsW1IkN9++tTH8HAkJNka2bfXGr06Zb88C
- MzxC+WFIwjxkzxosolvvuj5yE4sCMnAjEajQJ+COS68SMAAlJst+aofzJVNu+8XD26iO9PZEJ
- tTOKmc+rLHSpH25LgGlNGt4F9rq0AYEuYx5NPxx9MdeZs7iBvOjvqxoY0hswqqKMHRj4xinOQ
- PXTlKwE74Blxujw3LZcj9ZIt3Qe9ClSh7OuCD3vKPJoAG/ZC0is/qD0d8wa4mGPWQxR427S/o
- 0nlDI0ut9hI+/i0Yqcbyv5nlbTiE16L4TWY8Y9FBR3qiZixPaMG1gsFpUa/58aabfzlWS4SeT
- dsXqqkGuppHSdyw8bO8mx0ktRPNIFBQ6CCbtlYSsS4e+c+0H70Cy6TyOIGQJZXiYNjUMN/LG+
- suxUdLBTXVcTTVwZHTEAq1qftvHKh6kZLnH7tgs0fXZ/1BvgHviv/t9aRYRrtilKfEzFaf79R
- rHPLJNHhgzbNMvhEHUCkaGyPcHp0HHvblrHFdBRrmRias6sMmmlDbBNee239xSYkmHU+iwSHb
- F60MA42tKgh2OmUDQSVCv/HyIbR7MgjacZLBpTRz3CMUZlVPB8FgO+uL+o7Lcst+DF8x1zv64
- sJ+tJIfwUuYOvmxN4PBo/qP+DmUNvPlihK4lAVN07IaYL9WMD0ikcsBUrVtsNynpR850Y8RjG
- Fgq9JkgXVKlsIF+XAjs+ehoNbPAo2ZeslUTTDpqj94f9IPwnn+RKZUkZwuTAmuqypPJSKOUC0
- xywEpwstQ4CsS4Epxm/a5U75jLb5SWDp2xoAUOYyfRmsbDfGqIFKi180aL6sq6LJIx83MC3F5
- 7g/fr1U1SYDGiVguVoDbGSNO564ZjlOUxAmbffw==
+References: <20200715162204.104646-1-paul@mawsonlakes.org> <20200715114032.057fd63d@lwn.net>
+ <CAGt04nb7Z436TWRWGuphQO2MzfwbZch3kUFqK4jy-9ib+JF2EA@mail.gmail.com>
+In-Reply-To: <CAGt04nb7Z436TWRWGuphQO2MzfwbZch3kUFqK4jy-9ib+JF2EA@mail.gmail.com>
+From:   Paul Schulz <paul@mawsonlakes.org>
+Date:   Thu, 16 Jul 2020 04:15:43 +0930
+Message-ID: <CAGt04nZLViVautnbeFFMbx=_=0eNbW3fz5AAVKi6wCXDHZn2rA@mail.gmail.com>
+Subject: Re: [PATCH] sound/pci/hda: Changes 'blacklist/whitelist' to 'blocklist/allowlist'
+To:     Jonathan Corbet <corbet@lwn.net>
+Cc:     linux-kernel@vger.kernel.org, Jaroslav Kysela <perex@perex.cz>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* I find the patch subject improvable.
+Good news is that appears to be the only case of this particular usage
+with MODULE_PARM_DESC
+Searching for 'blacklist' and MODULE_PARM gives the following:
 
-* Please add a change description for the desired commit.
+sound/pci/hda/hda_intel.c:183:MODULE_PARM_DESC(pm_blacklist, "Enable
+power-management blacklist");
+arch/x86/crypto/camellia_glue.c:1473:MODULE_PARM_DESC(force, "Force
+module load, ignore CPU blacklist");
+arch/x86/crypto/twofish_glue_3way.c:251:MODULE_PARM_DESC(force, "Force
+module load, ignore CPU blacklist");
+arch/x86/crypto/des3_ede_glue.c:467:MODULE_PARM_DESC(force, "Force
+module load, ignore CPU blacklist");
+arch/x86/crypto/blowfish_glue.c:423:MODULE_PARM_DESC(force, "Force
+module load, ignore CPU blacklist");
 
-Regards,
-Markus
+On Thu, 16 Jul 2020 at 03:45, Paul Schulz <paul@mawsonlakes.org> wrote:
+>
+> Yep. +1 for logic
+>
+> On Thu, 16 Jul 2020 at 03:11, Jonathan Corbet <corbet@lwn.net> wrote:
+> >
+> > On Thu, 16 Jul 2020 01:52:04 +0930
+> > Paul Schulz <paul@mawsonlakes.org> wrote:
+> >
+> > > -static bool pm_blacklist = true;
+> > > -module_param(pm_blacklist, bool, 0644);
+> > > -MODULE_PARM_DESC(pm_blacklist, "Enable power-management blacklist");
+> > > +static bool pm_blocklist = true;
+> > > +module_param(pm_blocklist, bool, 0644);
+> > > +MODULE_PARM_DESC(pm_blocklist, "Enable power-management blocklist");
+> >
+> > This will break any user specifying this parameter now, which isn't
+> > something you want to do, methinks...
+> >
+> > jon
