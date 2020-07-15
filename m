@@ -2,136 +2,348 @@ Return-Path: <SRS0=kup7=A2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 788FBC433E3
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 02:44:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72EC0C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 02:40:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 56D4C20663
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 02:44:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="q9VDXdFx"
+	by mail.kernel.org (Postfix) with ESMTP id 447D620663
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 02:40:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728329AbgGOCoi (ORCPT
+        id S1728150AbgGOCkL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 22:44:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55624 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727071AbgGOCoh (ORCPT
+        Tue, 14 Jul 2020 22:40:11 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:61054 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726768AbgGOCkL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 22:44:37 -0400
-Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6F985C061794
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 19:44:37 -0700 (PDT)
-Received: by mail-pf1-x442.google.com with SMTP id a14so1054067pfi.2
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 19:44:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=utvICfuCuFlpiRHbwei80u9bDXZsdPiuf5g3t7ZMbnw=;
-        b=q9VDXdFxBzmlMiYI3UsBHH3betTklXyYxBHHqFrQ6SgA8JyMP1H+mDPADCjVosU175
-         bnhS5f4vcP3eqm6d90YE2DOYNk0da4OTbHSOc+gFy4W9F7r+LBTM6z0IqOMjWGyRfVVy
-         SjE+QoJg/fdyEh2XmKlmYcF0jaXvxJ10BM43abBoK6Rhcvza+1A07hHChN9CXp0pkkpa
-         HaavUTGRheQoo3BNJNnv1ttuyYK2vlXsGMCiplQODLfs62C4FpoL3nqYWIfpZ3OWZ522
-         9sCA4UKf09ZTnVhaVqsAYXQbgPw0KCqnzARdx1kHy2B4ONjo/Jk+SKmXW9Vfr4xZMHvn
-         x1+g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=utvICfuCuFlpiRHbwei80u9bDXZsdPiuf5g3t7ZMbnw=;
-        b=VvnnifwQyXHttfkbYskosAy0vnEG1AW/lp8ah9o4EBgEvotaBm56l69QVoklxslOmT
-         7BJVMfTwTv6dLgNCqlonPmeTLOboeVIqbbi+h1DdD1JOWKDjimbgSw0kPWdEulGmu2Jp
-         V8rMPlN1er8wA/AWmJ+cz35bUaBJpa342AOgv9AOltLPpFs+1VUsBuCVTJFYYh+fbeJn
-         wiegjgJDo2Tzyspe6oRA7IPKKG/MtapEk8bU5JYBQrj/PZC86ywGFHLoMoHfjWKocAce
-         aMB6u78mXRuo0oaMnchfFZMYz8y/2Taa0kdpWWoZ+gPrzPSRBNKSWH3arx4PKcuF6XG2
-         aoTw==
-X-Gm-Message-State: AOAM531Vih6EHHoi0GW5cc+I52KfzWEwIiYnvoVLRf0nftwRBFZudWob
-        yY2pehg8LqT3aOzBgHYKngU8Vtn257k=
-X-Google-Smtp-Source: ABdhPJyRJ0HV5M9ZKqN55OluXspx9XGOP93G5a6RQoMdeI3te8Tt8fRFF+88f39xp71NRuYXVUzQTA==
-X-Received: by 2002:aa7:9424:: with SMTP id y4mr644985pfo.287.1594781076764;
-        Tue, 14 Jul 2020 19:44:36 -0700 (PDT)
-Received: from localhost ([122.172.34.142])
-        by smtp.gmail.com with ESMTPSA id s194sm408224pgs.24.2020.07.14.19.44.35
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 14 Jul 2020 19:44:36 -0700 (PDT)
-Date:   Wed, 15 Jul 2020 08:14:34 +0530
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     Lee Jones <lee.jones@linaro.org>
-Cc:     rjw@rjwysocki.net, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-        Dominik Brodowski <linux@brodo.de>
-Subject: Re: [PATCH 01/13] cpufreq: freq_table: Demote obvious misuse of
- kerneldoc to standard comment blocks
-Message-ID: <20200715024434.ttnkq7mfwylgkiec@vireshk-i7>
-References: <20200714145049.2496163-1-lee.jones@linaro.org>
- <20200714145049.2496163-2-lee.jones@linaro.org>
+        Tue, 14 Jul 2020 22:40:11 -0400
+Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06F2Ws38173010;
+        Tue, 14 Jul 2020 22:39:56 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 327tnaudmn-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 14 Jul 2020 22:39:56 -0400
+Received: from m0098414.ppops.net (m0098414.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 06F2ZH36178263;
+        Tue, 14 Jul 2020 22:39:55 -0400
+Received: from ppma04wdc.us.ibm.com (1a.90.2fa9.ip4.static.sl-reverse.com [169.47.144.26])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 327tnaudme-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 14 Jul 2020 22:39:55 -0400
+Received: from pps.filterd (ppma04wdc.us.ibm.com [127.0.0.1])
+        by ppma04wdc.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 06F2Z7NS002784;
+        Wed, 15 Jul 2020 02:39:55 GMT
+Received: from b01cxnp23032.gho.pok.ibm.com (b01cxnp23032.gho.pok.ibm.com [9.57.198.27])
+        by ppma04wdc.us.ibm.com with ESMTP id 327528w4qq-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 15 Jul 2020 02:39:55 +0000
+Received: from b01ledav005.gho.pok.ibm.com (b01ledav005.gho.pok.ibm.com [9.57.199.110])
+        by b01cxnp23032.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 06F2dstr48300518
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 15 Jul 2020 02:39:54 GMT
+Received: from b01ledav005.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id C401AAE05C;
+        Wed, 15 Jul 2020 02:39:54 +0000 (GMT)
+Received: from b01ledav005.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 445DAAE05F;
+        Wed, 15 Jul 2020 02:39:50 +0000 (GMT)
+Received: from morokweng.localdomain (unknown [9.163.66.159])
+        by b01ledav005.gho.pok.ibm.com (Postfix) with ESMTPS;
+        Wed, 15 Jul 2020 02:39:49 +0000 (GMT)
+References: <159466074408.24747.10036072269371204890.stgit@hbathini.in.ibm.com> <159466088775.24747.1248185448154277951.stgit@hbathini.in.ibm.com>
+User-agent: mu4e 1.2.0; emacs 26.3
+From:   Thiago Jung Bauermann <bauerman@linux.ibm.com>
+To:     Hari Bathini <hbathini@linux.ibm.com>
+Cc:     Michael Ellerman <mpe@ellerman.id.au>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Pingfan Liu <piliu@redhat.com>,
+        Kexec-ml <kexec@lists.infradead.org>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        Nayna Jain <nayna@linux.ibm.com>,
+        Petr Tesarik <ptesarik@suse.cz>,
+        Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
+        Sourabh Jain <sourabhjain@linux.ibm.com>,
+        lkml <linux-kernel@vger.kernel.org>,
+        linuxppc-dev <linuxppc-dev@ozlabs.org>,
+        Eric Biederman <ebiederm@xmission.com>,
+        Dave Young <dyoung@redhat.com>, Vivek Goyal <vgoyal@redhat.com>
+Subject: Re: [PATCH v3 04/12] ppc64/kexec_file: avoid stomping memory used by special regions
+In-reply-to: <159466088775.24747.1248185448154277951.stgit@hbathini.in.ibm.com>
+Date:   Tue, 14 Jul 2020 23:39:45 -0300
+Message-ID: <87365t8pse.fsf@morokweng.localdomain>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200714145049.2496163-2-lee.jones@linaro.org>
-User-Agent: NeoMutt/20180716-391-311a52
+Content-Type: text/plain
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-07-14_10:2020-07-14,2020-07-14 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0
+ priorityscore=1501 adultscore=0 bulkscore=0 spamscore=0 phishscore=0
+ impostorscore=0 suspectscore=0 lowpriorityscore=0 clxscore=1015 mlxscore=0
+ mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2007150016
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 14-07-20, 15:50, Lee Jones wrote:
-> No attempt has been made to document any of the demoted functions here.
-> 
-> Fixes the following W=1 kernel build warning(s):
-> 
->  drivers/cpufreq/freq_table.c:229: warning: Function parameter or member 'policy' not described in 'show_available_freqs'
->  drivers/cpufreq/freq_table.c:229: warning: Function parameter or member 'buf' not described in 'show_available_freqs'
->  drivers/cpufreq/freq_table.c:229: warning: Function parameter or member 'show_boost' not described in 'show_available_freqs'
->  drivers/cpufreq/freq_table.c:269: warning: Function parameter or member 'policy' not described in 'scaling_available_frequencies_show'
->  drivers/cpufreq/freq_table.c:269: warning: Function parameter or member 'buf' not described in 'scaling_available_frequencies_show'
->  drivers/cpufreq/freq_table.c:281: warning: Function parameter or member 'policy' not described in 'scaling_boost_frequencies_show'
->  drivers/cpufreq/freq_table.c:281: warning: Function parameter or member 'buf' not described in 'scaling_boost_frequencies_show'
-> 
-> Cc: Dominik Brodowski <linux@brodo.de>
-> Signed-off-by: Lee Jones <lee.jones@linaro.org>
-> ---
->  drivers/cpufreq/freq_table.c | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/cpufreq/freq_table.c b/drivers/cpufreq/freq_table.c
-> index e117b0059123e..f839dc9852c08 100644
-> --- a/drivers/cpufreq/freq_table.c
-> +++ b/drivers/cpufreq/freq_table.c
-> @@ -221,7 +221,7 @@ int cpufreq_frequency_table_get_index(struct cpufreq_policy *policy,
->  }
->  EXPORT_SYMBOL_GPL(cpufreq_frequency_table_get_index);
->  
-> -/**
-> +/*
->   * show_available_freqs - show available frequencies for the specified CPU
->   */
->  static ssize_t show_available_freqs(struct cpufreq_policy *policy, char *buf,
-> @@ -260,7 +260,7 @@ static ssize_t show_available_freqs(struct cpufreq_policy *policy, char *buf,
->  struct freq_attr cpufreq_freq_attr_##_name##_freqs =     \
->  __ATTR_RO(_name##_frequencies)
->  
-> -/**
-> +/*
->   * show_scaling_available_frequencies - show available normal frequencies for
->   * the specified CPU
->   */
-> @@ -272,7 +272,7 @@ static ssize_t scaling_available_frequencies_show(struct cpufreq_policy *policy,
->  cpufreq_attr_available_freq(scaling_available);
->  EXPORT_SYMBOL_GPL(cpufreq_freq_attr_scaling_available_freqs);
->  
-> -/**
-> +/*
->   * show_available_boost_freqs - show available boost frequencies for
->   * the specified CPU
->   */
 
-Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
+Hari Bathini <hbathini@linux.ibm.com> writes:
 
--- 
-viresh
+> diff --git a/arch/powerpc/include/asm/crashdump-ppc64.h b/arch/powerpc/include/asm/crashdump-ppc64.h
+> new file mode 100644
+> index 0000000..90deb46
+> --- /dev/null
+> +++ b/arch/powerpc/include/asm/crashdump-ppc64.h
+> @@ -0,0 +1,10 @@
+> +/* SPDX-License-Identifier: GPL-2.0-only */
+> +#ifndef _ASM_POWERPC_CRASHDUMP_PPC64_H
+> +#define _ASM_POWERPC_CRASHDUMP_PPC64_H
+> +
+> +/* min & max addresses for kdump load segments */
+> +#define KDUMP_BUF_MIN		(crashk_res.start)
+> +#define KDUMP_BUF_MAX		((crashk_res.end < ppc64_rma_size) ? \
+> +				 crashk_res.end : (ppc64_rma_size - 1))
+> +
+> +#endif /* __ASM_POWERPC_CRASHDUMP_PPC64_H */
+> diff --git a/arch/powerpc/include/asm/kexec.h b/arch/powerpc/include/asm/kexec.h
+> index 7008ea1..bf47a01 100644
+> --- a/arch/powerpc/include/asm/kexec.h
+> +++ b/arch/powerpc/include/asm/kexec.h
+> @@ -100,14 +100,16 @@ void relocate_new_kernel(unsigned long indirection_page, unsigned long reboot_co
+>  #ifdef CONFIG_KEXEC_FILE
+>  extern const struct kexec_file_ops kexec_elf64_ops;
+>
+> -#ifdef CONFIG_IMA_KEXEC
+>  #define ARCH_HAS_KIMAGE_ARCH
+>
+>  struct kimage_arch {
+> +	struct crash_mem *exclude_ranges;
+> +
+> +#ifdef CONFIG_IMA_KEXEC
+>  	phys_addr_t ima_buffer_addr;
+>  	size_t ima_buffer_size;
+> -};
+>  #endif
+> +};
+>
+>  int setup_purgatory(struct kimage *image, const void *slave_code,
+>  		    const void *fdt, unsigned long kernel_load_addr,
+> @@ -125,6 +127,7 @@ int setup_new_fdt_ppc64(const struct kimage *image, void *fdt,
+>  			unsigned long initrd_load_addr,
+>  			unsigned long initrd_len, const char *cmdline);
+>  #endif /* CONFIG_PPC64 */
+> +
+>  #endif /* CONFIG_KEXEC_FILE */
+>
+>  #else /* !CONFIG_KEXEC_CORE */
+> diff --git a/arch/powerpc/kexec/elf_64.c b/arch/powerpc/kexec/elf_64.c
+> index 23ad04c..c695f94 100644
+> --- a/arch/powerpc/kexec/elf_64.c
+> +++ b/arch/powerpc/kexec/elf_64.c
+> @@ -22,6 +22,7 @@
+>  #include <linux/of_fdt.h>
+>  #include <linux/slab.h>
+>  #include <linux/types.h>
+> +#include <asm/crashdump-ppc64.h>
+>
+>  static void *elf64_load(struct kimage *image, char *kernel_buf,
+>  			unsigned long kernel_len, char *initrd,
+> @@ -46,6 +47,12 @@ static void *elf64_load(struct kimage *image, char *kernel_buf,
+>  	if (ret)
+>  		goto out;
+>
+> +	if (image->type == KEXEC_TYPE_CRASH) {
+> +		/* min & max buffer values for kdump case */
+> +		kbuf.buf_min = pbuf.buf_min = KDUMP_BUF_MIN;
+> +		kbuf.buf_max = pbuf.buf_max = KDUMP_BUF_MAX;
+
+This is only my personal opinion and an actual maintainer may disagree,
+but just looking at the lines above, I would assume that KDUMP_BUF_MIN
+and KDUMP_BUF_MAX were constants, when in fact they aren't.
+
+I suggest using static inline macros in <asm/crashdump-ppc64.h>, for
+example:
+
+static inline resource_size_t get_kdump_buf_min(void)
+{
+	return crashk_res.start;
+}
+
+static inline resource_size_t get_kdump_buf_max(void)
+{
+	return (crashk_res.end < ppc64_rma_size) ? \
+		 crashk_res.end : (ppc64_rma_size - 1)
+}
+
+
+> +	}
+> +
+>  	ret = kexec_elf_load(image, &ehdr, &elf_info, &kbuf, &kernel_load_addr);
+>  	if (ret)
+>  		goto out;
+
+<snip>
+
+> +/**
+> + * __locate_mem_hole_top_down - Looks top down for a large enough memory hole
+> + *                              in the memory regions between buf_min & buf_max
+> + *                              for the buffer. If found, sets kbuf->mem.
+> + * @kbuf:                       Buffer contents and memory parameters.
+> + * @buf_min:                    Minimum address for the buffer.
+> + * @buf_max:                    Maximum address for the buffer.
+> + *
+> + * Returns 0 on success, negative errno on error.
+> + */
+> +static int __locate_mem_hole_top_down(struct kexec_buf *kbuf,
+> +				      u64 buf_min, u64 buf_max)
+> +{
+> +	int ret = -EADDRNOTAVAIL;
+> +	phys_addr_t start, end;
+> +	u64 i;
+> +
+> +	for_each_mem_range_rev(i, &memblock.memory, NULL, NUMA_NO_NODE,
+> +			       MEMBLOCK_NONE, &start, &end, NULL) {
+> +		if (start > buf_max)
+> +			continue;
+> +
+> +		/* Memory hole not found */
+> +		if (end < buf_min)
+> +			break;
+> +
+> +		/* Adjust memory region based on the given range */
+> +		if (start < buf_min)
+> +			start = buf_min;
+> +		if (end > buf_max)
+> +			end = buf_max;
+> +
+> +		start = ALIGN(start, kbuf->buf_align);
+> +		if (start < end && (end - start + 1) >= kbuf->memsz) {
+
+This is why I dislike using start and end to express address ranges:
+
+While struct resource seems to use the [address, end] convention, my
+reading of memblock code is that it uses [addres, end). This is
+guaranteed to lead to bugs. So the above has an off-by-one error. To
+calculate the size of the current range, you need to use `end - start`.
+
+> +			/* Suitable memory range found. Set kbuf->mem */
+> +			kbuf->mem = ALIGN_DOWN(end - kbuf->memsz + 1,
+
+Similarly, I believe the `+ 1` here is wrong.
+
+> +					       kbuf->buf_align);
+> +			ret = 0;
+> +			break;
+> +		}
+> +	}
+> +
+> +	return ret;
+> +}
+> +
+> +/**
+> + * locate_mem_hole_top_down_ppc64 - Skip special memory regions to find a
+> + *                                  suitable buffer with top down approach.
+> + * @kbuf:                           Buffer contents and memory parameters.
+> + * @buf_min:                        Minimum address for the buffer.
+> + * @buf_max:                        Maximum address for the buffer.
+> + * @emem:                           Exclude memory ranges.
+> + *
+> + * Returns 0 on success, negative errno on error.
+> + */
+> +static int locate_mem_hole_top_down_ppc64(struct kexec_buf *kbuf,
+> +					  u64 buf_min, u64 buf_max,
+> +					  const struct crash_mem *emem)
+> +{
+> +	int i, ret = 0, err = -EADDRNOTAVAIL;
+> +	u64 start, end, tmin, tmax;
+> +
+> +	tmax = buf_max;
+> +	for (i = (emem->nr_ranges - 1); i >= 0; i--) {
+> +		start = emem->ranges[i].start;
+> +		end = emem->ranges[i].end;
+> +
+> +		if (start > tmax)
+> +			continue;
+> +
+> +		if (end < tmax) {
+> +			tmin = (end < buf_min ? buf_min : end + 1);
+> +			ret = __locate_mem_hole_top_down(kbuf, tmin, tmax);
+> +			if (!ret)
+> +				return 0;
+> +		}
+> +
+> +		tmax = start - 1;
+> +
+> +		if (tmax < buf_min) {
+> +			ret = err;
+> +			break;
+> +		}
+> +		ret = 0;
+> +	}
+> +
+> +	if (!ret) {
+> +		tmin = buf_min;
+> +		ret = __locate_mem_hole_top_down(kbuf, tmin, tmax);
+> +	}
+> +	return ret;
+> +}
+> +
+> +/**
+> + * __locate_mem_hole_bottom_up - Looks bottom up for a large enough memory hole
+> + *                               in the memory regions between buf_min & buf_max
+> + *                               for the buffer. If found, sets kbuf->mem.
+> + * @kbuf:                        Buffer contents and memory parameters.
+> + * @buf_min:                     Minimum address for the buffer.
+> + * @buf_max:                     Maximum address for the buffer.
+> + *
+> + * Returns 0 on success, negative errno on error.
+> + */
+> +static int __locate_mem_hole_bottom_up(struct kexec_buf *kbuf,
+> +				       u64 buf_min, u64 buf_max)
+> +{
+> +	int ret = -EADDRNOTAVAIL;
+> +	phys_addr_t start, end;
+> +	u64 i;
+> +
+> +	for_each_mem_range(i, &memblock.memory, NULL, NUMA_NO_NODE,
+> +			   MEMBLOCK_NONE, &start, &end, NULL) {
+> +		if (end < buf_min)
+> +			continue;
+> +
+> +		/* Memory hole not found */
+> +		if (start > buf_max)
+> +			break;
+> +
+> +		/* Adjust memory region based on the given range */
+> +		if (start < buf_min)
+> +			start = buf_min;
+> +		if (end > buf_max)
+> +			end = buf_max;
+
+buf_max is an inclusive end address, right? Then this should read
+`end = buf_max + 1`. Same thing in the top-down version above.
+
+> +
+> +		start = ALIGN(start, kbuf->buf_align);
+> +		if (start < end && (end - start + 1) >= kbuf->memsz) {
+
+Same off-by-one problem. There shouldn't be a `+ 1` here.
+
+> +			/* Suitable memory range found. Set kbuf->mem */
+> +			kbuf->mem = start;
+> +			ret = 0;
+> +			break;
+> +		}
+> +	}
+> +
+> +	return ret;
+> +}
+
+
+--
+Thiago Jung Bauermann
+IBM Linux Technology Center
