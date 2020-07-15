@@ -2,94 +2,106 @@ Return-Path: <SRS0=kup7=A2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F4103C433E3
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 13:07:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45878C433E4
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 13:10:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D658020657
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 13:07:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 20DD120658
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 13:10:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594818645;
+	bh=pY2aTpiDZTdC6aeil7mlvqDRiK5xcbKTqBLafGtkabk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=G2B+n0i2N3SlFfs34e0BvcSnW5pPosDykusU0B3gZPp4qJaxXE+CWqdaN+JQ/X9qe
+	 zMdLAaituAb801aI34PjDegGM2mA2KGOPj2TIl+J0KVzQc8eoi896f6plQTwXecbHe
+	 tXPOhWtyRqy3gqS1G0+GgPv5k/PN7yLFX+Yy/hX0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731420AbgGONHD (ORCPT
+        id S1731485AbgGONKo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 09:07:03 -0400
-Received: from mga04.intel.com ([192.55.52.120]:61454 "EHLO mga04.intel.com"
+        Wed, 15 Jul 2020 09:10:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57694 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729900AbgGONHD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 09:07:03 -0400
-IronPort-SDR: 4mlgv5VBAoy8aa4TriM1ER9YbZiCJUaFgSrqzmqErlz5fj35Pq434hoWCeJgxkBqVZhgXdSdAf
- 1uG3YgL/avQQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9682"; a="146648471"
-X-IronPort-AV: E=Sophos;i="5.75,355,1589266800"; 
-   d="scan'208";a="146648471"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jul 2020 06:07:02 -0700
-IronPort-SDR: E3pA83vvknl1Df5oHsY6r61hOoIDzniJHE8XzU9CoYabakhau/AgfLvtlpy6dDBj35AO9l6AFY
- apgQ9NUm9/LQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,355,1589266800"; 
-   d="scan'208";a="324828700"
-Received: from brentlu-desk0.itwn.intel.com ([10.5.253.11])
-  by FMSMGA003.fm.intel.com with ESMTP; 15 Jul 2020 06:06:55 -0700
-From:   Brent Lu <brent.lu@intel.com>
-To:     alsa-devel@alsa-project.org
-Cc:     Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Kai Vehmanen <kai.vehmanen@linux.intel.com>,
-        =?UTF-8?q?Amadeusz=20S=C5=82awi=C5=84ski?= 
-        <amadeuszx.slawinski@linux.intel.com>,
-        Guennadi Liakhovetski <guennadi.liakhovetski@linux.intel.com>,
-        Brent Lu <brent.lu@intel.com>, linux-kernel@vger.kernel.org
-Subject: [PATCH] ASoC: hdac_hdmi: remove cancel_work_sync in runtime suspend
-Date:   Wed, 15 Jul 2020 21:01:50 +0800
-Message-Id: <1594818110-786-1-git-send-email-brent.lu@intel.com>
-X-Mailer: git-send-email 2.7.4
+        id S1730868AbgGONKn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jul 2020 09:10:43 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id ECE0420657;
+        Wed, 15 Jul 2020 13:10:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594818643;
+        bh=pY2aTpiDZTdC6aeil7mlvqDRiK5xcbKTqBLafGtkabk=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=kXC8jjMMtnAd9ik+gnB9/r9quQXE3QeBEZcJ1nxHvMccL0X4h0jsV3MocfmE4FpxF
+         y+7qXsyurvVnIn3T/s1ewHbCiJopITtuIJEb17kRSoeOqz3JaeGZttxZNTEvhFZcqR
+         tN5zvFQaUnqRIRP37BwpMrxsM4PEro9ATXlkCx/8=
+Date:   Wed, 15 Jul 2020 14:10:33 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Frieder Schrempf <frieder.schrempf@kontron.de>
+Cc:     linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org
+Subject: Re: [PATCH] spi: spidev: Add compatible for external SPI ports on
+ Kontron boards
+Message-ID: <20200715131033.GF5431@sirena.org.uk>
+References: <24ec4eed-de01-28df-ee1f-f7bcfc80051a@kontron.de>
+ <20200702150725.GI4483@sirena.org.uk>
+ <479d566a-213f-4e33-8ac7-7637ae88e31c@kontron.de>
+ <a5b88ad9-3884-1d9c-c4ad-057266f84261@kontron.de>
+ <20200713151108.GB4420@sirena.org.uk>
+ <2eb6971b-7ea4-c9c8-5452-6f4b17e8860a@kontron.de>
+ <20200714192907.GJ4900@sirena.org.uk>
+ <16825a78-8eb0-90f2-433a-d1ae6eed6ba8@kontron.de>
+ <20200715113609.GD5431@sirena.org.uk>
+ <824b8479-e204-d087-7887-a2dbefa0f844@kontron.de>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="3oCie2+XPXTnK5a5"
+Content-Disposition: inline
+In-Reply-To: <824b8479-e204-d087-7887-a2dbefa0f844@kontron.de>
+X-Cookie: 40 isn't old.  If you're a tree.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-A deadlock is identified when there are three contexts running at the
-same time:
-- a HDMI jack work which is calling snd_soc_dapm_sync().
-- user space is calling snd_pcm_release() to close pcm device.
-- pm is calling runtime suspend function of HDMI codec driver.
 
-By removing the clear_dapm_works() invocation in the
-hdac_hdmi_runtime_suspend() function, the snd_pcm_release() could
-always returns from dapm_power_widgets() function call without
-blocking the hdac_hdmi_jack_dapm_work() work thread or being blocked
-by the hdac_hdmi_runtime_suspend() function. The purpose of the jack
-work is to enable/disable the dapm jack pin so it's not necessary to
-cancel the work in runtime suspend function which is usually called
-when pcm device is closed.
+--3oCie2+XPXTnK5a5
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Signed-off-by: Brent Lu <brent.lu@intel.com>
----
- sound/soc/codecs/hdac_hdmi.c | 2 --
- 1 file changed, 2 deletions(-)
+On Wed, Jul 15, 2020 at 01:45:51PM +0200, Frieder Schrempf wrote:
+> On 15.07.20 13:36, Mark Brown wrote:
 
-diff --git a/sound/soc/codecs/hdac_hdmi.c b/sound/soc/codecs/hdac_hdmi.c
-index f26b77f..9052edd 100644
---- a/sound/soc/codecs/hdac_hdmi.c
-+++ b/sound/soc/codecs/hdac_hdmi.c
-@@ -2097,8 +2097,6 @@ static int hdac_hdmi_runtime_suspend(struct device *dev)
- 	if (!bus)
- 		return 0;
- 
--	clear_dapm_works(hdev);
--
- 	/*
- 	 * Power down afg.
- 	 * codec_read is preferred over codec_write to set the power state.
--- 
-2.7.4
+> > Hey, I proposed other solutions you didn't want to implement!
 
+> Right, but you have to admit that the other solutions turned out to be
+> rather out of scope for someone like me who merely wants to use the spidev
+> driver.
+
+> But I don't blame you. I'm now having a better idea of how things are (or
+> aren't) supposed to look like. So thanks for your patience!
+
+I'm not sure platforms like this are a great fit for DT TBH - the
+trouble with DT is that it turns things into ABIs regardless of if it's
+really a finished thing, platform data based systems were a lot more
+flexible here.
+
+--3oCie2+XPXTnK5a5
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl8PAEkACgkQJNaLcl1U
+h9Ao7Af+ILdbHVUAjGqFK0kjVIvRBVQmrtMuVvJUElx26xVjUNSaA9pPaUpWVQMU
+3kvIuwar56ByNPhPH+FJ7+NoE88dySjua0+mrLbufymXgD58aIzWPQoLPakoDg5y
+TXB3bJ1bTbg6GOZQ3AVJ/hr8wbl13tqgX0/NGy2XCCrMvholDmiXGCGSwiFm09tj
+dzvPrE6qWk5w1h8A9gD0fvtNb9WREq2ePDedQNmi0IByRYl1DVIbfa5+CHVurPDS
+zgtw4XwVgOFNAS8EJoRXGcQmFi+qZWROQ3N9geLAIopwCz1/Tp6jk+EQ1nk7jnux
+gInzPWYYlJ6/hnK+zfw3YHozO5DnYA==
+=BSsn
+-----END PGP SIGNATURE-----
+
+--3oCie2+XPXTnK5a5--
