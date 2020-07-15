@@ -2,106 +2,133 @@ Return-Path: <SRS0=kup7=A2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CF4CC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 13:31:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18B1AC433E2
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 13:31:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5E80C206F5
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 13:31:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED8EF206E9
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 13:31:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="fChuM0sc"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="RpSImJzM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731820AbgGONb1 (ORCPT
+        id S1731862AbgGONbi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 09:31:27 -0400
-Received: from mail.efficios.com ([167.114.26.124]:55356 "EHLO
-        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731629AbgGONbZ (ORCPT
+        Wed, 15 Jul 2020 09:31:38 -0400
+Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:19993 "EHLO
+        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730872AbgGONbi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 09:31:25 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by mail.efficios.com (Postfix) with ESMTP id 6F6FF281BB5;
-        Wed, 15 Jul 2020 09:31:24 -0400 (EDT)
-Received: from mail.efficios.com ([127.0.0.1])
-        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id x456bqztpUaV; Wed, 15 Jul 2020 09:31:24 -0400 (EDT)
-Received: from localhost (localhost [127.0.0.1])
-        by mail.efficios.com (Postfix) with ESMTP id 2CDA8281D33;
-        Wed, 15 Jul 2020 09:31:24 -0400 (EDT)
-DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com 2CDA8281D33
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
-        s=default; t=1594819884;
-        bh=oiV20TFEdg/WOjUfdcRO5DKrVFJm+7E+Ps+0ZX3tPDU=;
-        h=Date:From:To:Message-ID:MIME-Version;
-        b=fChuM0scw5yPL3HRGW6aeXy1V5SY4zG8eVVUidUGRxoCvWlWzTozGvyw24z07q0yE
-         yivaIoBlBe7zZzo+Ag8yDbpNyJrQGHuYRFnrjR/wc6WMRyd2pZti88UoPlOqMYXZzz
-         L0wNSO3vfI3UAjo27v2TxsMZu2yq8SkDuZ0pXN4nzMjCTbOkn4Vf2wZiRKGnvk1pex
-         2+KFt2eD523DXEQb5qHPEhdxKLPze58Kkc/f0CC7ux7ooWyRC63mbQphOG16OR/Swl
-         3COZ1UK+9AqgSmQMysU3cl8PUYQWEfRpbgOA19Z9/pNDsYlJ+rqq2NVYIROFxRm7q5
-         egSHsn4sI2EMw==
-X-Virus-Scanned: amavisd-new at efficios.com
-Received: from mail.efficios.com ([127.0.0.1])
-        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id 3oemUUox7m-y; Wed, 15 Jul 2020 09:31:24 -0400 (EDT)
-Received: from mail03.efficios.com (mail03.efficios.com [167.114.26.124])
-        by mail.efficios.com (Postfix) with ESMTP id 1FC062819DC;
-        Wed, 15 Jul 2020 09:31:24 -0400 (EDT)
-Date:   Wed, 15 Jul 2020 09:31:24 -0400 (EDT)
-From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-To:     Florian Weimer <fweimer@redhat.com>
-Cc:     carlos <carlos@redhat.com>, Peter Zijlstra <peterz@infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        paulmck <paulmck@linux.ibm.com>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Paul Turner <pjt@google.com>,
-        linux-api <linux-api@vger.kernel.org>,
-        Christian Brauner <christian.brauner@ubuntu.com>
-Message-ID: <882700738.14181.1594819884049.JavaMail.zimbra@efficios.com>
-In-Reply-To: <87y2nk29rp.fsf@oldenburg2.str.redhat.com>
-References: <20200714030348.6214-1-mathieu.desnoyers@efficios.com> <87mu42bepq.fsf@oldenburg2.str.redhat.com> <131549905.11442.1594731035989.JavaMail.zimbra@efficios.com> <87a7028d5u.fsf@oldenburg2.str.redhat.com> <2452161.11491.1594732791558.JavaMail.zimbra@efficios.com> <71f08b3a-56f5-0e0f-53b0-cc680f7e8181@redhat.com> <2053637148.14136.1594818777608.JavaMail.zimbra@efficios.com> <87y2nk29rp.fsf@oldenburg2.str.redhat.com>
-Subject: Re: [RFC PATCH 2/4] rseq: Allow extending struct rseq
+        Wed, 15 Jul 2020 09:31:38 -0400
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5f0f052c0003>; Wed, 15 Jul 2020 06:31:24 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Wed, 15 Jul 2020 06:31:37 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Wed, 15 Jul 2020 06:31:37 -0700
+Received: from HQMAIL111.nvidia.com (172.20.187.18) by HQMAIL111.nvidia.com
+ (172.20.187.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 15 Jul
+ 2020 13:31:32 +0000
+Received: from rnnvemgw01.nvidia.com (10.128.109.123) by HQMAIL111.nvidia.com
+ (172.20.187.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Wed, 15 Jul 2020 13:31:32 +0000
+Received: from sumitg-l4t.nvidia.com (Not Verified[10.24.37.103]) by rnnvemgw01.nvidia.com with Trustwave SEG (v7,5,8,10121)
+        id <B5f0f05300001>; Wed, 15 Jul 2020 06:31:31 -0700
+From:   Sumit Gupta <sumitg@nvidia.com>
+To:     <rjw@rjwysocki.net>, <viresh.kumar@linaro.org>,
+        <catalin.marinas@arm.com>, <will@kernel.org>,
+        <thierry.reding@gmail.com>, <robh+dt@kernel.org>,
+        <mirq-linux@rere.qmqm.pl>, <devicetree@vger.kernel.org>,
+        <jonathanh@nvidia.com>, <talho@nvidia.com>,
+        <linux-pm@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     <bbasu@nvidia.com>, <sumitg@nvidia.com>, <mperttunen@nvidia.com>
+Subject: [TEGRA194_CPUFREQ PATCH v6 0/3] Add cpufreq driver for Tegra194 
+Date:   Wed, 15 Jul 2020 19:01:22 +0530
+Message-ID: <1594819885-31016-1-git-send-email-sumitg@nvidia.com>
+X-Mailer: git-send-email 2.7.4
+X-NVConfidentiality: public
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [167.114.26.124]
-X-Mailer: Zimbra 8.8.15_GA_3955 (ZimbraWebClient - FF78 (Linux)/8.8.15_GA_3953)
-Thread-Topic: rseq: Allow extending struct rseq
-Thread-Index: V96wiIe8u1FFBKTMqXUWPRUhLORLEA==
+Content-Type: text/plain
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1594819885; bh=WTUIqvfTFFpJnkH2n1zUFiz0tjU+/4uyluowU1GJEtQ=;
+        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
+         X-NVConfidentiality:MIME-Version:Content-Type;
+        b=RpSImJzMyW2BDMCE4bSK5VZwzXCjM7mkstKHXBIdWsB26Yeji/Pqf6sCb4oGYzjS+
+         VeXbiGdfbaSocZPTkAG1AB4Ody5yYEeY7CyXCSRlF4+hseb2hzxLy/A6z79VH0mlsi
+         hKTJBiAmCdCuGrsUtkZngqhDcuUR85azvtZ6h59MQe94kQzUP0phO4D8Ff2VT5clqG
+         wpv5iuvuTiU5sNMUEI+E4ugL0k6f1SJFC2xtvuv6tItdjtPigoojMZnfhgaLkxU3rq
+         inej/VKTMCKMiOa/lryWAZlawZcqsdeSJ51lyZ6DX0/Ukq0i5vM/Lq8iVUxYCduTnx
+         xbYvnN+i19/cA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
------ On Jul 15, 2020, at 9:22 AM, Florian Weimer fweimer@redhat.com wrote:
+Hi Viresh & Rob,
 
-> * Mathieu Desnoyers:
-> 
->> Practically speaking, I suspect this would mean postponing availability of
->> rseq for widely deployed applications for a few more years ?
-> 
-> There is no rseq support in GCC today, so you have to write assembler
-> code anyway.
+Have made the changes as per feedback.
+Please review/ack and consider this patch set for merging in 5.9.
 
-Assembler code is only needed for the rseq critical sections, not for accessing
-the __rseq_abi. Use-cases like getting the current cpu number do not currently
-require any assembler for instance.
+Thank you,
+Sumit
+---
 
-So indeed it could be done today without upgrading the toolchains by writing
-custom assembler for each architecture to get the thread's struct rseq. AFAIU
-the ABI to access the thread pointer is fixed for each architecture, right ?
+The patch series adds cpufreq driver for Tegra194 SOC.
 
-How would this allow early-rseq-adopter libraries to interact with glibc ?
+v5[5] -> v6
+- Add new schema file for 'nvidia,tegra194-ccplex'[Rob].
+- Minor changes suggested in cpufreq driver[Viresh].
 
-Thanks,
+v4[4] -> v5
+- Don't call destroy_workqueue() if alloc_workqueue() fails[Viresh]
+- Move CONFIG_ARM_TEGRA194_CPUFREQ enabling to soc/tegra/Kconfig[Viresh]
+- Add dependency of 'nvidia,bpmp' on 'compatible' in yaml file[Michal]
+- Fix typo in description causing dt_binding_check bot failure[Rob]
 
-Mathieu
+v3[3] -> v4
+- Open code LOOP_FOR_EACH_CPU_OF_CLUSTER macro[Viresh]
+- Delete unused funciton map_freq_to_ndiv[Viresh, kernel test bot]
+- Remove flush_workqueue from free_resources[Viresh]
+
+v2[2] -> v3
+- Set same policy for all cpus in a cluster[Viresh].
+- Add compatible string for CPU Complex under cpus node[Thierry].
+- Add reference to bpmp node under cpus node[Thierry].
+- Bind cpufreq driver to CPU Complex compatible string[Thierry].
+- Remove patch to get bpmp data as now using cpus node to get that[Thierry].
+
+v1[1] -> v2:
+- Remove cpufreq_lock mutex from tegra194_cpufreq_set_target [Viresh].
+- Remove CPUFREQ_ASYNC_NOTIFICATION flag [Viresh].
+- Remove redundant _begin|end() call from tegra194_cpufreq_set_target.
+- Rename opp_table to freq_table [Viresh].
 
 
+Sumit Gupta (3):
+  dt-bindings: arm: Add NVIDIA Tegra194 CPU Complex binding
+  arm64: tegra: Add t194 ccplex compatible and bpmp property
+  cpufreq: Add Tegra194 cpufreq driver
+
+ .../bindings/arm/nvidia,tegra194-ccplex.yaml       |  69 ++++
+ arch/arm64/boot/dts/nvidia/tegra194.dtsi           |   2 +
+ drivers/cpufreq/Kconfig.arm                        |   7 +
+ drivers/cpufreq/Makefile                           |   1 +
+ drivers/cpufreq/tegra194-cpufreq.c                 | 397 +++++++++++++++++++++
+ 5 files changed, 476 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/arm/nvidia,tegra194-ccplex.yaml
+ create mode 100644 drivers/cpufreq/tegra194-cpufreq.c
+
+[1] https://marc.info/?t=157539452300001&r=1&w=2
+[2] https://marc.info/?l=linux-tegra&m=158602857106213&w=2
+[3] https://marc.info/?l=linux-pm&m=159283376010084&w=2
+[4] https://marc.info/?l=linux-tegra&m=159318640622917&w=2
+[5] https://marc.info/?l=linux-tegra&m=159465409805593&w=2 
 -- 
-Mathieu Desnoyers
-EfficiOS Inc.
-http://www.efficios.com
+2.7.4
+
