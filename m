@@ -2,103 +2,160 @@ Return-Path: <SRS0=kup7=A2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4FB4C433E3
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 15:37:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FD62C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 15:38:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A4E822065E
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 15:37:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 450222065E
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 15:38:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mV2pcg1F"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="FZDdVDJV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726603AbgGOPh3 (ORCPT
+        id S1726859AbgGOPiG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 11:37:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33756 "EHLO
+        Wed, 15 Jul 2020 11:38:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33850 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725770AbgGOPh3 (ORCPT
+        with ESMTP id S1725770AbgGOPiF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 11:37:29 -0400
-Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BEB0CC061755
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 08:37:28 -0700 (PDT)
-Received: by mail-wm1-x343.google.com with SMTP id g10so3722862wmc.1
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 08:37:28 -0700 (PDT)
+        Wed, 15 Jul 2020 11:38:05 -0400
+Received: from mail-il1-x134.google.com (mail-il1-x134.google.com [IPv6:2607:f8b0:4864:20::134])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1F0E4C061755
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 08:38:05 -0700 (PDT)
+Received: by mail-il1-x134.google.com with SMTP id a11so2373883ilk.0
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 08:38:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=2Je4T8z/w322fxOUCkiwVBCB1R8T4g7KUgJ9ivXdC54=;
-        b=mV2pcg1F1aIcUk+DLzQEo+MAWNQ+9PrKfD0mHv/xMs+Zo3xFO7vnIzCL2hx3luthr9
-         E19+CaAT6rzLFbghnD1ivXmqYl00TBVPWlUCNVzNzqyEJ0OhdLAz57AHmXwmAYgYQulz
-         yKH++yAHrFj2LNcT+D/wGA9BbLXjODS3ipwCSqZxfoNy95RGooNgSkRMmHk4zCZXj2MH
-         MI7pA8lUosPGjIw6voiU/tjOj1LqD8tULchQBDWmI8x1kiz/FIHp0ZGR9eCWUd5bp9ow
-         LJSV6ApJuAXQRzIZHkxfmL5WAh21DPvwdKG3pDxSntkZ7drWyoWmRteWcQ4Sk9oDO/Lp
-         CKvw==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=WfIdeZLZov6NfnmmqQlv+Rb5MpsRzDo+FOzJR5t4gYs=;
+        b=FZDdVDJVoiLHHzBHe0aiqJLbmNlC5iFh+SkgJid8YYrKUrtn5IIpqkkHxbpsO0BySp
+         smbOSz9A1X2dJzpEWh/Da6y1WA2oHs20ODbqX5GILpc2tesIM9rkvrG8BRNGet3UbnWP
+         PqCrbtSwGqB+tdxzVM83L2Bdn1hHSMwxg57uooz9i+FqavIrMK0RNhqIori25jLjcmZW
+         lbkCd8E7f64sNSnYZXht8XHFVYVKwGKPSXwZIt0wjdIFsvAx3623oR82Gv3NpS+0mDLw
+         vigttZlP4vpQlVNufIFNphlm8dnsk74Z5kW0AbOwi7N8AyE5ycFuoI9kZPTHJodHnE77
+         2OKw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=2Je4T8z/w322fxOUCkiwVBCB1R8T4g7KUgJ9ivXdC54=;
-        b=dGg5IbcKhliN7xKZhpTInB1IMW+cW+8b6uf4tXHstqcCWO9fztgsAipEZ/C++JT5pC
-         tH08L7LI/uazMDxGbsjKimlkfBNZNkZVf8UkP9X+ZY7PkRPUsFFdH16YCEt5DbKzMRkj
-         USKkAZ+5Mj6x1VFbPdUcEIM2K3j2U1sHo+gRdM5Qsk2brZsM6HF4cuPvHEFuasqwnyDk
-         OFdB0mV5z3wwo0oMvRA6jQMPuDVG9NEEptqpavvcrAaUOOU1ZcPPDFe1WEumG9KPdap4
-         sdV06EZ6joeOxQtbOh4vo05AtGn1yoRm151KMwRtIrtuOKsZG/ZIWX2Et/0u643LfwMJ
-         fNlQ==
-X-Gm-Message-State: AOAM532WI/5FTqEbYyOHb/X4dJt2a6LQxciEpfkkxGKye8hoAhiYIIMJ
-        9k1xfmx2zXWAlsOXgZbnwzgSRg==
-X-Google-Smtp-Source: ABdhPJwFsRC9h0/qpemmdCtzkg1WNsyzY0pDmoXoAcVsFn3mA3VMdNn/N97b8wMFmFHTu+Eh1VAQsg==
-X-Received: by 2002:a1c:3dc3:: with SMTP id k186mr95213wma.66.1594827447500;
-        Wed, 15 Jul 2020 08:37:27 -0700 (PDT)
-Received: from dell ([2.31.163.61])
-        by smtp.gmail.com with ESMTPSA id r1sm4073872wrt.73.2020.07.15.08.37.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 15 Jul 2020 08:37:26 -0700 (PDT)
-Date:   Wed, 15 Jul 2020 16:37:25 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Vinod Koul <vkoul@kernel.org>
-Cc:     dan.j.williams@intel.com, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org
-Subject: Re: [PATCH 00/17] Rid W=1 warnings in DMA
-Message-ID: <20200715153725.GJ3165313@dell>
-References: <20200714111546.1755231-1-lee.jones@linaro.org>
- <20200715152923.GB52592@vkoul-mobl>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=WfIdeZLZov6NfnmmqQlv+Rb5MpsRzDo+FOzJR5t4gYs=;
+        b=rFOTupF8yoTwSNDmjIFTEYYDdOXAU0dMJIQ4cIo3bpChX/pQCYeZtb3Ywj+7+8t/9R
+         ygFEDZqwSPBP3hpDz41xyd5RHC6lYECT0XkSM6MHhiFsNpQXRN0uzc2Gr2uKyW+HSBhW
+         OywlORHmBEeFytKEEQuy/Q/3uVyvzGvdHs3dy7OEyDuKvt+2Kq73QAYsysiRmeumiWJd
+         Ix6gm/8ix4AIRBin1bl7NvRUZVW3ktroU4A8ATvH9eAmJD3twamMfIqJejKfa9rYrJ0V
+         b1DHAA9nQymo4ZyyNHRHLADJDzXyoIfLQCH1/jzh5siu+2pFcff3qfK0MGOPJwF0cl3K
+         Jgxg==
+X-Gm-Message-State: AOAM531VMZ3Cv/dUUl/K0CaonGyTk0dlimFXk1eCylzhTaVjr0daSkB8
+        9t+EI40uuuBbSE5z/q9hTz6SJSxm6PuTMBZSQsPy
+X-Google-Smtp-Source: ABdhPJxud2/xIlpsVfp7fb8qx4o80lN+0L3wBqYefFShxcH/lWMl7pHBhLw9qMKvJ6fWnwdbgV2B8bJ28ovfgpeXfmU=
+X-Received: by 2002:a92:6a02:: with SMTP id f2mr102523ilc.68.1594827484238;
+ Wed, 15 Jul 2020 08:38:04 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200715152923.GB52592@vkoul-mobl>
+References: <5f99bc07-9b56-04c0-f022-3cbde3af5bb4@gmail.com>
+In-Reply-To: <5f99bc07-9b56-04c0-f022-3cbde3af5bb4@gmail.com>
+From:   Bjorn Helgaas <bhelgaas@google.com>
+Date:   Wed, 15 Jul 2020 10:37:53 -0500
+Message-ID: <CAErSpo5sTeK_my1dEhWp7aHD0xOp87+oHYWkTjbL7ALgDbXo-Q@mail.gmail.com>
+Subject: Fwd: Hybrid graphics regression in 5.4.49+ [bisected]
+To:     Linux PCI <linux-pci@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Cc:     Bjorn Helgaas <bjorn@helgaas.com>,
+        Patrick Volkerding <volkerdi@gmail.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 15 Jul 2020, Vinod Koul wrote:
+---------- Forwarded message ---------
+From: Patrick Volkerding <volkerdi@gmail.com>
+Date: Tue, Jul 14, 2020 at 2:22 PM
+Subject: Hybrid graphics regression in 5.4.49+ [bisected]
+To: Bjorn Helgaas <bhelgaas@google.com>, Mika Westerberg
+<mika.westerberg@linux.intel.com>
+Cc: Patrick Volkerding <volkerdi@gmail.com>
 
-> Hi Lee,
-> 
-> On 14-07-20, 12:15, Lee Jones wrote:
-> > This set is part of a larger effort attempting to clean-up W=1
-> > kernel builds, which are currently overwhelmingly riddled with
-> > niggly little warnings.
-> > 
-> > After these patches are applied, the build system no longer
-> > complains about any W=0 nor W=1 level warnings in drivers/dma.
-> > 
-> > Hurrah!
-> 
-> Yes indeed, thanks for fixing these up. I have changed the subsystem
-> name to dmaengine: and applied all
 
-Much obliged.  Thank you Vinod.
+Hello,
 
--- 
-Lee Jones [李琼斯]
-Senior Technical Lead - Developer Services
-Linaro.org │ Open source software for Arm SoCs
-Follow Linaro: Facebook | Twitter | Blog
+I ran into a problem recently with a laptop with hybrid graphics. Here
+are the specs of the machine:
+
+OS: Slackware 14.2 x86_64 (post 14.2 -current) x86_64
+Host: 20QV000GUS ThinkPad X1 Extreme 2nd
+CPU: Intel i7-9850H (12) @ 4.600GHz
+GPU: NVIDIA GeForce GTX 1650 Mobile / Max-Q
+GPU: Intel UHD Graphics 630
+
+The graphics are set to hybrid in the BIOS, and no proprietary drivers
+are in use.
+
+With 5.4.48, starting X from a console works as expected and the Intel
+UHD Graphics 630 is used.
+
+Starting with 5.4.49, attempting to start X from a console causes the
+machine to become unresponsive, and thousands of these messages are
+found in the syslog:
+
+Jul  1 14:39:26 z-mp kernel: [ 1657.318941] nouveau 0000:01:00.0: fifo:
+PBDMA0: 01000000 [] ch 0 [00ff992000 DRM] subc 0 mthd 0008 data 00000000
+
+A git bisect between 5.4.48 and 5.4.49 pointed to the commit
+[828b192c57e8f4fee77f7a34bd19c1b58b049dad] PCI/PM: Assume ports without
+DLL Link Active train links in 100 ms.
+
+The commit reverts cleanly from 5.4.51, and then that kernel works as
+expected. Additionally I should note that an unmodified kernel 5.7.7
+also works as expected.
+
+Happy to help test any proposed fix.
+
+Here's the git bisect log:
+
+git bisect start
+# good: [67cb016870e2fa9ffc8d34cf20db5331e6f2cf4d] Linux 5.4.48
+git bisect good 67cb016870e2fa9ffc8d34cf20db5331e6f2cf4d
+# good: [67cb016870e2fa9ffc8d34cf20db5331e6f2cf4d] Linux 5.4.48
+git bisect good 67cb016870e2fa9ffc8d34cf20db5331e6f2cf4d
+# bad: [99705220b22ca116457edeae51ae817d056a6622] net: core:
+device_rename: Use rwsem instead of a seqcount
+git bisect bad 99705220b22ca116457edeae51ae817d056a6622
+# bad: [7454c171a88c188583bbfe17db1f9e6e75723b5f] tty: n_gsm: Fix bogus
+i++ in gsm_data_kick
+git bisect bad 7454c171a88c188583bbfe17db1f9e6e75723b5f
+# good: [390f1688fb4648474b29c8ea6c2c710b689cd669] f2fs: handle readonly
+filesystem in f2fs_ioc_shutdown()
+git bisect good 390f1688fb4648474b29c8ea6c2c710b689cd669
+# good: [9eb54d0e8962d2f5d7a430f3a245037c990e3b42] PCI: v3-semi: Fix a
+memory leak in v3_pci_probe() error handling paths
+git bisect good 9eb54d0e8962d2f5d7a430f3a245037c990e3b42
+# good: [4536dbe64bd17b7d16cb0da56a15616dda247940] USB: ohci-sm501: fix
+error return code in ohci_hcd_sm501_drv_probe()
+git bisect good 4536dbe64bd17b7d16cb0da56a15616dda247940
+# bad: [b1bc8753eefc82b79e285977c6177c67bc17344e] ipmi: use vzalloc
+instead of kmalloc for user creation
+git bisect bad b1bc8753eefc82b79e285977c6177c67bc17344e
+# good: [860b8717f7247384e500ba15c89e9b5327d00423] tty: n_gsm: Fix
+waking up upper tty layer when room available
+git bisect good 860b8717f7247384e500ba15c89e9b5327d00423
+# good: [c6737f3a1b01120ce0991bb0b6b4c8da2b086f1e] HID: Add quirks for
+Trust Panora Graphic Tablet
+git bisect good c6737f3a1b01120ce0991bb0b6b4c8da2b086f1e
+# bad: [5c2207ba2394ee6c2dd7383890818aca89ff4b9b] habanalabs: increase
+timeout during reset
+git bisect bad 5c2207ba2394ee6c2dd7383890818aca89ff4b9b
+# bad: [828b192c57e8f4fee77f7a34bd19c1b58b049dad] PCI/PM: Assume ports
+without DLL Link Active train links in 100 ms
+git bisect bad 828b192c57e8f4fee77f7a34bd19c1b58b049dad
+# first bad commit: [828b192c57e8f4fee77f7a34bd19c1b58b049dad] PCI/PM:
+Assume ports without DLL Link Active train links in 100 ms
+
+Best regards,
+
+Pat
