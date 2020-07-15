@@ -2,183 +2,118 @@ Return-Path: <SRS0=kup7=A2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E2CEC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 21:36:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C31D4C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 21:36:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0205F206F5
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 21:36:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="LFEls2Wq"
+	by mail.kernel.org (Postfix) with ESMTP id A48372065D
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 21:36:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727067AbgGOVgU (ORCPT
+        id S1727112AbgGOVgl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 17:36:20 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:49264 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726356AbgGOVgU (ORCPT
+        Wed, 15 Jul 2020 17:36:41 -0400
+Received: from out30-133.freemail.mail.aliyun.com ([115.124.30.133]:42300 "EHLO
+        out30-133.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726370AbgGOVgl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 17:36:20 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1594848978;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=laVjfN93leH1cHQFouR1JF4R0wX0uRpHtRImBzwzE/k=;
-        b=LFEls2WqSvZ9ZKLk/KuIXKE1GPX8K4VJjhS1ZV4f0K1tZQUq2+546qLwKFqdw0KW2P6q1R
-        0uaMNdgEvKlI+KFjL3QksS5wSOVML3o4G+48CHoxY8xSd7bijsKTVsuflQuQCpx1tnfPtz
-        MG8ZeIaakUPMkDEb5zEX6zNKn6n19uQ=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-245-D2yIgBykNZGkAJ9ePuRXPw-1; Wed, 15 Jul 2020 17:36:15 -0400
-X-MC-Unique: D2yIgBykNZGkAJ9ePuRXPw-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B8428100CCC1;
-        Wed, 15 Jul 2020 21:36:13 +0000 (UTC)
-Received: from krava (unknown [10.40.194.44])
-        by smtp.corp.redhat.com (Postfix) with SMTP id DD1426FDD1;
-        Wed, 15 Jul 2020 21:36:10 +0000 (UTC)
-Date:   Wed, 15 Jul 2020 23:36:09 +0200
-From:   Jiri Olsa <jolsa@redhat.com>
-To:     Ian Rogers <irogers@google.com>
-Cc:     Jiri Olsa <jolsa@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Michael Petlan <mpetlan@redhat.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Kajol Jain <kjain@linux.ibm.com>,
-        John Garry <john.garry@huawei.com>,
-        "Paul A. Clarke" <pc@us.ibm.com>,
-        Stephane Eranian <eranian@google.com>
-Subject: Re: [PATCH 11/18] perf metric: Add referenced metrics to hash data
-Message-ID: <20200715213609.GV183694@krava>
-References: <20200712132634.138901-1-jolsa@kernel.org>
- <20200712132634.138901-12-jolsa@kernel.org>
- <CAP-5=fW2wknhCEQ8cPtmup6vQgWC45s9a0WJ+NsYt9Uu-Qm3Mw@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAP-5=fW2wknhCEQ8cPtmup6vQgWC45s9a0WJ+NsYt9Uu-Qm3Mw@mail.gmail.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+        Wed, 15 Jul 2020 17:36:41 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R811e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04426;MF=yang.shi@linux.alibaba.com;NM=1;PH=DS;RN=9;SR=0;TI=SMTPD_---0U2qCi.P_1594848990;
+Received: from localhost(mailfrom:yang.shi@linux.alibaba.com fp:SMTPD_---0U2qCi.P_1594848990)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Thu, 16 Jul 2020 05:36:38 +0800
+From:   Yang Shi <yang.shi@linux.alibaba.com>
+To:     hannes@cmpxchg.org, catalin.marinas@arm.com, will.deacon@arm.com,
+        akpm@linux-foundation.org
+Cc:     yang.shi@linux.alibaba.com, xuyu@linux.alibaba.com,
+        linux-mm@kvack.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: [v2 PATCH] mm: avoid access flag update TLB flush for retried page fault
+Date:   Thu, 16 Jul 2020 05:36:30 +0800
+Message-Id: <1594848990-55657-1-git-send-email-yang.shi@linux.alibaba.com>
+X-Mailer: git-send-email 1.8.3.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 15, 2020 at 11:25:14AM -0700, Ian Rogers wrote:
-> On Sun, Jul 12, 2020 at 6:27 AM Jiri Olsa <jolsa@kernel.org> wrote:
+Recently we found regression when running will_it_scale/page_fault3 test
+on ARM64.  Over 70% down for the multi processes cases and over 20% down
+for the multi threads cases.  It turns out the regression is caused by commit
+89b15332af7c0312a41e50846819ca6613b58b4c ("mm: drop mmap_sem before
+calling balance_dirty_pages() in write fault").
 
-SNIP
+The test mmaps a memory size file then write to the mapping, this would
+make all memory dirty and trigger dirty pages throttle, that upstream
+commit would release mmap_sem then retry the page fault.  The retried
+page fault would see correct PTEs installed by the first try then update
+dirty bit and clear read-only bit and flush TLBs for ARM.  The regression is
+caused by the excessive TLB flush.  It is fine on x86 since x86 doesn't
+clear read-only bit so there is no need to flush TLB for this case.
 
-> > +int expr__add_ref(struct expr_parse_ctx *ctx, struct metric_ref *ref)
-> > +{
-> > +       struct expr_id_data *data_ptr = NULL, *old_data = NULL;
-> > +       char *old_key = NULL;
-> > +       char *name;
-> > +       int ret;
-> > +
-> > +       data_ptr = zalloc(sizeof(*data_ptr));
-> > +       if (!data_ptr)
-> > +               return -ENOMEM;
-> > +
-> > +       name = strdup(ref->metric_name);
-> > +       if (!name) {
-> > +               free(data_ptr);
-> > +               return -ENOMEM;
-> > +       }
-> > +
-> > +       data_ptr->ref.metric_name = ref->metric_name;
-> > +       data_ptr->ref.metric_expr = ref->metric_expr;
-> 
-> Having one owned string and one unowned makes the memory management
-> here somewhat complicated. Perhaps dupe both?
+The page fault would be retried due to:
+1. Waiting for page readahead
+2. Waiting for page swapped in
+3. Waiting for dirty pages throttling
 
-right, will check on this
+The first two cases don't have PTEs set up at all, so the retried page
+fault would install the PTEs, so they don't reach there.  But the #3
+case usually has PTEs installed, the retried page fault would reach the
+dirty bit and read-only bit update.  But it seems not necessary to
+modify those bits again for #3 since they should be already set by the
+first page fault try.
 
-> 
-> > +       data_ptr->is_ref = true;
-> > +
-> > +       ret = hashmap__set(&ctx->ids, name, data_ptr,
-> > +                          (const void **)&old_key, (void **)&old_data);
-> > +
-> > +       pr_debug2("adding ref metric %s: %s\n",
-> > +                 ref->metric_name, ref->metric_expr);
-> > +
-> > +       free(old_key);
-> > +       free(old_data);
-> > +       return ret;
-> > +}
-> > +
-> >  int expr__get_id(struct expr_parse_ctx *ctx, const char *id,
-> >                  struct expr_id_data **data)
-> >  {
-> > diff --git a/tools/perf/util/expr.h b/tools/perf/util/expr.h
-> > index 2462abd0ac65..d19e66915228 100644
-> > --- a/tools/perf/util/expr.h
-> > +++ b/tools/perf/util/expr.h
-> > @@ -11,12 +11,22 @@
-> >  #include "util/hashmap.h"
-> >  //#endif
-> >
-> > +struct metric_ref;
-> > +
-> >  struct expr_parse_ctx {
-> >         struct hashmap ids;
-> >  };
-> >
-> >  struct expr_id_data {
-> > -       double  val;
-> > +       bool    is_ref;
-> 
-> nit: place at the end to avoid padding?
+Of course the parallel page fault may set up PTEs, but we just need care
+about write fault.  If the parallel page fault setup a writable and dirty
+PTE then the retried fault doesn't need do anything extra.  If the
+parallel page fault setup a clean read-only PTE, the retried fault should
+just call do_wp_page() then return as the below code snippet shows:
 
-ok
+if (vmf->flags & FAULT_FLAG_WRITE) {
+        if (!pte_write(entry))
+            return do_wp_page(vmf);
+}
 
-> 
-> > +
-> > +       union {
-> > +               double  val;
-> > +               struct {
-> > +                       const char *metric_name;
-> > +                       const char *metric_expr;
-> > +               } ref;
-> > +       };
-> >  };
-> >
-> >  struct expr_scanner_ctx {
-> > @@ -29,6 +39,7 @@ void expr__ctx_clear(struct expr_parse_ctx *ctx);
-> >  void expr__del_id(struct expr_parse_ctx *ctx, const char *id);
-> >  int expr__add_id(struct expr_parse_ctx *ctx, const char *id);
-> >  int expr__add_id_val(struct expr_parse_ctx *ctx, const char *id, double val);
-> > +int expr__add_ref(struct expr_parse_ctx *ctx, struct metric_ref *ref);
-> >  int expr__get_id(struct expr_parse_ctx *ctx, const char *id,
-> >                  struct expr_id_data **data);
-> >  int expr__parse(double *final_val, struct expr_parse_ctx *ctx,
-> > diff --git a/tools/perf/util/stat-shadow.c b/tools/perf/util/stat-shadow.c
-> > index fc9ac4b4218e..e1ba6c1b916a 100644
-> > --- a/tools/perf/util/stat-shadow.c
-> > +++ b/tools/perf/util/stat-shadow.c
-> > @@ -731,13 +731,14 @@ static void print_smi_cost(struct perf_stat_config *config,
-> >  }
-> >
-> >  static int prepare_metric(struct evsel **metric_events,
-> > +                         struct metric_ref *metric_refs,
-> 
-> nit: the plural on refs confused me at first, perhaps a comment that
-> this is the array of referenced metrics.
+With this fix the test result get back to normal.
 
-I'll add the comment
+Fixes: 89b15332af7c ("mm: drop mmap_sem before calling balance_dirty_pages() in write fault")
+Cc: Catalin Marinas <catalin.marinas@arm.com>
+Cc: Will Deacon <will.deacon@arm.com>
+Cc: Johannes Weiner <hannes@cmpxchg.org>
+Reported-by: Xu Yu <xuyu@linux.alibaba.com>
+Debugged-by: Xu Yu <xuyu@linux.alibaba.com>
+Tested-by: Xu Yu <xuyu@linux.alibaba.com>
+Signed-off-by: Yang Shi <yang.shi@linux.alibaba.com>
+---
+v2: * Incorporated the comment from Will Deacon.
+    * Updated the commit log per the discussion.
 
-thanks,
-jirka
+ mm/memory.c | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
+
+diff --git a/mm/memory.c b/mm/memory.c
+index 87ec87c..e93e1da 100644
+--- a/mm/memory.c
++++ b/mm/memory.c
+@@ -4241,8 +4241,14 @@ static vm_fault_t handle_pte_fault(struct vm_fault *vmf)
+ 	if (vmf->flags & FAULT_FLAG_WRITE) {
+ 		if (!pte_write(entry))
+ 			return do_wp_page(vmf);
+-		entry = pte_mkdirty(entry);
+ 	}
++
++	if (vmf->flags & FAULT_FLAG_TRIED)
++		goto unlock;
++
++	if (vmf->flags & FAULT_FLAG_WRITE)
++		entry = pte_mkdirty(entry);
++
+ 	entry = pte_mkyoung(entry);
+ 	if (ptep_set_access_flags(vmf->vma, vmf->address, vmf->pte, entry,
+ 				vmf->flags & FAULT_FLAG_WRITE)) {
+-- 
+1.8.3.1
 
