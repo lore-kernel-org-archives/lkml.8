@@ -2,192 +2,76 @@ Return-Path: <SRS0=kup7=A2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55625C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 06:33:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1284FC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 06:33:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3490E20663
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 06:33:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="h4/iE3yx"
+	by mail.kernel.org (Postfix) with ESMTP id E0252206F4
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 06:33:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728640AbgGOGdQ (ORCPT
+        id S1728666AbgGOGdk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 02:33:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34248 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725823AbgGOGdP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 02:33:15 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4414BC061755
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 23:33:15 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id f2so1148451wrp.7
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 23:33:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=y2qcTFRplfCRbFvrbAjUi/DYmcVFTMj5+qY7L5YUn3g=;
-        b=h4/iE3yxYK2RYq6qpnojpD6+UR6MvFYLI+m+LMjY3IiZ31k0422hJntIJgNyudY6Mr
-         +2mRz6PdJyKG6sp16kW8JHuEkSyk5dn7gJs4yHaPj57fCMkHuPWy64zn/JjB60ShP5RO
-         YXsTdIYy4WCBuE9kcKFwRmmZSFvlM/ZeJ0pYS1hQ+DkU8ESol734oWaCOXrxrY0xOoSt
-         lBHGH9st9rHW7LnOtIxDPj4SGE8xhb296UajDEpMqg2BzcVlbtwrLSaS9UfJIcHy3o8G
-         xSRKrtE5qXquE8ZoHoa5tZabj1UUClxA5eqa7A/bS0PUWsBcjzvy5Cm1+s5grty0Ieh/
-         M4Ww==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=y2qcTFRplfCRbFvrbAjUi/DYmcVFTMj5+qY7L5YUn3g=;
-        b=gj2Iu4NV+WSVIE+Uau4TSrvg0CEPmw5Ltdq2tFjKhkFeGY2LiAO7VXw/73IpHSvlu3
-         UjhPTewiOodQF5i1cnIlFjUmOJ8ZQOEgW4dG8y8VLWynK+LrT+U+1WPfvsO/L8LZf0Eh
-         q95n4DlrSnOUd1DsDa1brl//h/2lDINrws+baPQBLbeRVzN3el0IC7eGDSB1/we4y7C7
-         axhgbeziRT4h2R1R4NpoNtnTK55uKMS5GHSJ7AoGHwC0ktQyg+yhy4eKLMbfeNyqbf+b
-         IGmRY7+7ojV2wWxMXmAvXy2GmVf9eHUzPo4lJNIKMSDJLS4PAaGPviTj+tCFRTMKoI0m
-         Y6Pw==
-X-Gm-Message-State: AOAM531j9qADBoIkgf4DYGwprhOI0M2/KoC7G4WYVTNDC2AQJHry8JfE
-        fatvvzVjDMGYPWBGc5vw5g0seg==
-X-Google-Smtp-Source: ABdhPJxgAooVf8n6ZWE9GYzvdRZD0S2ak/Kw75UBc2D120epcdLLt5p8ihYwrvyL1wj8a8x4nZJYXQ==
-X-Received: by 2002:a5d:6651:: with SMTP id f17mr10310242wrw.29.1594794793952;
-        Tue, 14 Jul 2020 23:33:13 -0700 (PDT)
-Received: from dell ([2.31.163.61])
-        by smtp.gmail.com with ESMTPSA id o21sm1868151wmh.18.2020.07.14.23.33.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 Jul 2020 23:33:13 -0700 (PDT)
-Date:   Wed, 15 Jul 2020 07:33:11 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Olof Johansson <olof@lixom.net>
-Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        viresh kumar <viresh.kumar@linaro.org>,
-        Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-pm@vger.kernel.org, Michael Ellerman <mpe@ellerman.id.au>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
-Subject: Re: [PATCH 05/13] cpufreq/arch: powerpc: pasemi: Move prototypes to
- shared header
-Message-ID: <20200715063311.GP1398296@dell>
-References: <20200714145049.2496163-1-lee.jones@linaro.org>
- <20200714145049.2496163-6-lee.jones@linaro.org>
- <CAOesGMjCZMyWLe+tpNFstC88odeSCKS8bM6Oj9cpaj6j7U94rQ@mail.gmail.com>
+        Wed, 15 Jul 2020 02:33:40 -0400
+Received: from albireo.enyo.de ([37.24.231.21]:44584 "EHLO albireo.enyo.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725823AbgGOGdj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jul 2020 02:33:39 -0400
+Received: from [172.17.203.2] (helo=deneb.enyo.de)
+        by albireo.enyo.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        id 1jvayt-0000Pz-3w; Wed, 15 Jul 2020 06:33:27 +0000
+Received: from fw by deneb.enyo.de with local (Exim 4.92)
+        (envelope-from <fw@deneb.enyo.de>)
+        id 1jvawb-00039g-W6; Wed, 15 Jul 2020 08:31:05 +0200
+From:   Florian Weimer <fw@deneb.enyo.de>
+To:     Chris Kennelly <ckennelly@google.com>
+Cc:     Peter Oskolkov <posk@google.com>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Peter Oskolkov <posk@posk.io>,
+        Peter Zijlstra <peterz@infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        paulmck <paulmck@linux.ibm.com>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Paul Turner <pjt@google.com>,
+        linux-api <linux-api@vger.kernel.org>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        carlos <carlos@redhat.com>
+Subject: Re: [RFC PATCH 2/4] rseq: Allow extending struct rseq
+References: <20200714030348.6214-1-mathieu.desnoyers@efficios.com>
+        <20200714030348.6214-3-mathieu.desnoyers@efficios.com>
+        <CAFTs51UHaUqaKj5bEj0vQtEZrww9gnrqb-kGVk7DAgQJPBAR+w@mail.gmail.com>
+        <775688146.12145.1594748580461.JavaMail.zimbra@efficios.com>
+        <CAPNVh5fiCCJpyeLj_ciWzFrO4fasVXZNhpfKXJhJWJirXdJOjQ@mail.gmail.com>
+        <CAEE+ybmt4BredezuTPdh-vf=FkKtu0yAhWuf+0daUe89AnbmPg@mail.gmail.com>
+Date:   Wed, 15 Jul 2020 08:31:05 +0200
+In-Reply-To: <CAEE+ybmt4BredezuTPdh-vf=FkKtu0yAhWuf+0daUe89AnbmPg@mail.gmail.com>
+        (Chris Kennelly's message of "Tue, 14 Jul 2020 22:34:38 -0400")
+Message-ID: <87k0z5xpau.fsf@mid.deneb.enyo.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAOesGMjCZMyWLe+tpNFstC88odeSCKS8bM6Oj9cpaj6j7U94rQ@mail.gmail.com>
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 14 Jul 2020, Olof Johansson wrote:
+* Chris Kennelly:
 
-> On Tue, Jul 14, 2020 at 7:50 AM Lee Jones <lee.jones@linaro.org> wrote:
-> >
-> > If function callers and providers do not share the same prototypes the
-> > compiler complains of missing prototypes.  Fix this by moving the
-> > already existing prototypes out to a mutually convenient location.
-> >
-> > Fixes the following W=1 kernel build warning(s):
-> >
-> >  drivers/cpufreq/pasemi-cpufreq.c:109:5: warning: no previous prototype for ‘check_astate’ [-Wmissing-prototypes]
-> >  109 | int check_astate(void)
-> >  | ^~~~~~~~~~~~
-> >  drivers/cpufreq/pasemi-cpufreq.c:114:6: warning: no previous prototype for ‘restore_astate’ [-Wmissing-prototypes]
-> >  114 | void restore_astate(int cpu)
-> >  | ^~~~~~~~~~~~~~
-> >
-> > Cc: Olof Johansson <olof@lixom.net>
-> > Cc: Michael Ellerman <mpe@ellerman.id.au>
-> > Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-> > Cc: Paul Mackerras <paulus@samba.org>
-> > Cc: linuxppc-dev@lists.ozlabs.org
-> > Signed-off-by: Lee Jones <lee.jones@linaro.org>
-> > ---
-> >  arch/powerpc/platforms/pasemi/pasemi.h    | 15 ------------
-> >  arch/powerpc/platforms/pasemi/powersave.S |  2 ++
-> >  drivers/cpufreq/pasemi-cpufreq.c          |  1 +
-> >  include/linux/platform_data/pasemi.h      | 28 +++++++++++++++++++++++
-> >  4 files changed, 31 insertions(+), 15 deletions(-)
-> >  create mode 100644 include/linux/platform_data/pasemi.h
-> >
-> > diff --git a/arch/powerpc/platforms/pasemi/pasemi.h b/arch/powerpc/platforms/pasemi/pasemi.h
-> > index 70b56048ed1be..528d81ef748ad 100644
-> > --- a/arch/powerpc/platforms/pasemi/pasemi.h
-> > +++ b/arch/powerpc/platforms/pasemi/pasemi.h
-> > @@ -15,21 +15,6 @@ extern void __init pasemi_map_registers(void);
-> >  extern void idle_spin(void);
-> >  extern void idle_doze(void);
-> >
-> > -/* Restore astate to last set */
-> > -#ifdef CONFIG_PPC_PASEMI_CPUFREQ
-> > -extern int check_astate(void);
-> > -extern void restore_astate(int cpu);
-> > -#else
-> > -static inline int check_astate(void)
-> > -{
-> > -       /* Always return >0 so we never power save */
-> > -       return 1;
-> > -}
-> > -static inline void restore_astate(int cpu)
-> > -{
-> > -}
-> > -#endif
-> > -
-> >  extern struct pci_controller_ops pasemi_pci_controller_ops;
-> >
-> >  #endif /* _PASEMI_PASEMI_H */
-> > diff --git a/arch/powerpc/platforms/pasemi/powersave.S b/arch/powerpc/platforms/pasemi/powersave.S
-> > index d0215d5329ca7..7747b48963286 100644
-> > --- a/arch/powerpc/platforms/pasemi/powersave.S
-> > +++ b/arch/powerpc/platforms/pasemi/powersave.S
-> > @@ -5,6 +5,8 @@
-> >   * Maintained by: Olof Johansson <olof@lixom.net>
-> >   */
-> >
-> > +#include <linux/platform_data/pasemi.h>
-> > +
-> >  #include <asm/processor.h>
-> >  #include <asm/page.h>
-> >  #include <asm/ppc_asm.h>
-> > diff --git a/drivers/cpufreq/pasemi-cpufreq.c b/drivers/cpufreq/pasemi-cpufreq.c
-> > index c66f566a854cb..c6bb3ecc90ef3 100644
-> > --- a/drivers/cpufreq/pasemi-cpufreq.c
-> > +++ b/drivers/cpufreq/pasemi-cpufreq.c
-> > @@ -15,6 +15,7 @@
-> >  #include <linux/timer.h>
-> >  #include <linux/module.h>
-> >  #include <linux/of_address.h>
-> > +#include <linux/platform_data/pasemi.h>
-> >
-> >  #include <asm/hw_irq.h>
-> >  #include <asm/io.h>
-> > diff --git a/include/linux/platform_data/pasemi.h b/include/linux/platform_data/pasemi.h
-> > new file mode 100644
-> > index 0000000000000..3fed0687fcc9a
-> > --- /dev/null
-> > +++ b/include/linux/platform_data/pasemi.h
-> > @@ -0,0 +1,28 @@
-> > +/* SPDX-License-Identifier: GPL-2.0-only */
-> > +/*
-> > + * Copyright (C) 2020 Linaro Ltd.
-> > + *
-> > + * Author: Lee Jones <lee.jones@linaro.org>
-> > + */
-> 
-> Absolutely not. It's neither your copyright, nor your authorship.
+> When glibc provides registration, is the anticipated use case that a
+> library would unregister and reregister each thread to "upgrade" it to
+> the most modern version of interface it knows about provided by the
+> kernel?
 
-The file was new.  Anyway, the point is now moot.
+Absolutely not, that is likely to break other consumers because an
+expected rseq area becomes dormant instead.
 
--- 
-Lee Jones [李琼斯]
-Senior Technical Lead - Developer Services
-Linaro.org │ Open source software for Arm SoCs
-Follow Linaro: Facebook | Twitter | Blog
+> There, I could assume an all-or-nothing registration of the new
+> feature--limited only by kernel availability for thread
+> homogeneity--but inconsistencies across early adopter libraries would
+> mean each thread would have to examine its own TLS to determine if a
+> feature were available.
+
+Exactly.  Certain uses of seccomp can also have this effect,
+presenting a non-homogeneous view.
