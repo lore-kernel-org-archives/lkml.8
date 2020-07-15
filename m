@@ -2,100 +2,232 @@ Return-Path: <SRS0=kup7=A2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68AA0C433E7
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 09:46:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E723CC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 09:47:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3937A2067D
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 09:46:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C22052067D
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 09:47:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="z1cupcai"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="cELMly7a"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730807AbgGOJqh (ORCPT
+        id S1730819AbgGOJrJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 05:46:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36036 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729592AbgGOJqg (ORCPT
+        Wed, 15 Jul 2020 05:47:09 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:41295 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1729592AbgGOJrJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 05:46:36 -0400
-Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2E3A6C061755
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 02:46:36 -0700 (PDT)
-Received: by mail-pj1-x1044.google.com with SMTP id mn17so2814656pjb.4
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 02:46:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=aWnhM4Btcn3KfukFrZhTbpY1jJowoLtpnNYgibe0Pxs=;
-        b=z1cupcai6HHUX//qj/D4T1z0bqa+rnb8fjTtufSVinJuRHpi/N41f5hA2qY4tthIto
-         Yf9o+zwKieu/jQxj4hPFUp3nn3Iagk6vS0YcWV0DjFzXyg6UOwxrH6dVWIK8PaDH4A4I
-         pSSeTCk3O27Gp6HYNvH9GennQjh5iz9vbHSmSmP7wH6XQSrDlNW8i/NMgDdGfK5bqUFt
-         82HrkqRQvCnSoIlFGdC05B2GeBnTK4cxtAmfBUItbjBFxx/WCEzbPUaFpR7ToXuYmoZX
-         MjSfh6oYYVzgAj24toqUyKYxEA7cOaTydj81Un4gsCHQbZrgR7D0x032z5wRj7aM4xnp
-         vJ7Q==
+        Wed, 15 Jul 2020 05:47:09 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1594806426;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=fgFwB4sgqMo4IjWK8xGAhUdyzExkJ8Foocx1qbcXFec=;
+        b=cELMly7a7cu/U3++mhRx3DvvxB8801E/9dv+HuXSSa8JWwFJ524sGgtRrJECXwElPwMHLD
+        Xu0uCOv/gYMEJ3W9rTY6aAkxPsmv7pgqHDugdcVhwgp9j5wFwb745eVoINRjYM0VoOGu8b
+        KvWPyELcMtPYj9HK3uutmSk858bEhsM=
+Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
+ [209.85.128.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-474-gcmcvveNNEOEIZrtVKauMw-1; Wed, 15 Jul 2020 05:47:05 -0400
+X-MC-Unique: gcmcvveNNEOEIZrtVKauMw-1
+Received: by mail-wm1-f71.google.com with SMTP id t18so439926wmj.5
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 02:47:04 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=aWnhM4Btcn3KfukFrZhTbpY1jJowoLtpnNYgibe0Pxs=;
-        b=JudiAVHfbCKj9r2ZBYoGygwRnhlpeW9Cd709RSOBu3OWNLIZyl2M+P4XFJwQW7Svf8
-         0npAjlE+Xkk0Xf3/+uSR1tg9n/9CxaUPE0vGiphIDFbgg8BTdFIgwfbb6x/4mpGj/P75
-         p1WiC8go2ltv1MuN8Dgn7Lj9A5kGr3D4y4k2JL8MQP5zLRFHoMolWcRA12/KijdcGXN5
-         FP3j6Urc6s/GkCmY41KI5tan4TH1j+BXopubH3rfmluJfaxBUMewZ2q+y022n96jRweI
-         ib10BA9OE3hxpenfbyRaOGMsiK9HoG8iUXeVdXnDsZr1aa8IfuvLlmeSn4yRNLGIP0Jz
-         oFsQ==
-X-Gm-Message-State: AOAM533ryFt3YH2hYER6iA2yuBSLUgQCEMmCviFYAu09XFSoUhTgcWiv
-        YNxkvFzwfOk+MWwK9t/ooTOlUw==
-X-Google-Smtp-Source: ABdhPJyvmICM19LIRTnE4F/GGqLFbGi1ZydK84ycWBO8vErTCcVb4+nGPrhOrY44n3iA0Sn1KjiLWA==
-X-Received: by 2002:a17:90b:3750:: with SMTP id ne16mr9222121pjb.6.1594806395785;
-        Wed, 15 Jul 2020 02:46:35 -0700 (PDT)
-Received: from localhost ([122.172.34.142])
-        by smtp.gmail.com with ESMTPSA id f14sm1543484pjq.36.2020.07.15.02.46.34
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 15 Jul 2020 02:46:35 -0700 (PDT)
-Date:   Wed, 15 Jul 2020 15:16:33 +0530
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     Lee Jones <lee.jones@linaro.org>
-Cc:     rjw@rjwysocki.net, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org
-Subject: Re: [PATCH v2 00/13] Rid W=1 warnings in CPUFreq
-Message-ID: <20200715094633.s2xyn4wetafphpdt@vireshk-i7>
-References: <20200715082634.3024816-1-lee.jones@linaro.org>
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=fgFwB4sgqMo4IjWK8xGAhUdyzExkJ8Foocx1qbcXFec=;
+        b=IcqJgYA2IyUDHeoGininp+9C56HCVdMf4W3nYgp1yEa6Ck0vGPE/mhzgL7XxuOYrE6
+         9w9FAEHNy85iTFxcqFcEeOMM3276934T+ekuRKYFgpgJA3XYNSfIUHI6ZW5b2jw6Kdh7
+         mVOnNq8MtRa+y6fZYiJNv0QdRYG6O96PZiPqr28hgDzwlM6HrEO03k1EYsXvlt+8TSlq
+         tn/l3KlS11bjIBB59FlFycUdZVvUleb4+ZxqzgPuYWIvPEGh4cBSA3Lj1QKLiQ6lsj7D
+         V7CF6WldBwFrCYsfXiNtkM1r8gC8C0RImts1B9JrX49jKS9wQB3CnruV63447fUjFNUE
+         XuJw==
+X-Gm-Message-State: AOAM532G7SlxYh/c+4RZnG5rtQ79dSkxMRsUGKwJ0Wy76xvU0i5D5SA+
+        0nJTvHphK8vUXnX5wszJzLwyVpYodV6y/NfRlKUP1slJfiAsV5Mo1Jmi8oukdmMM0WvHjJyf67A
+        /HbirMXImzZH9lk4fEpA8o7PN
+X-Received: by 2002:a5d:4bc4:: with SMTP id l4mr9855663wrt.97.1594806423954;
+        Wed, 15 Jul 2020 02:47:03 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJwHDUVU4AP3hlp5Siz7vKq3EW4crKSR0xnUKkeLjfUiJpc4ShpyJMTGyZWh8XxJyKnOOZ6fMA==
+X-Received: by 2002:a5d:4bc4:: with SMTP id l4mr9855634wrt.97.1594806423671;
+        Wed, 15 Jul 2020 02:47:03 -0700 (PDT)
+Received: from redhat.com (bzq-79-180-10-140.red.bezeqint.net. [79.180.10.140])
+        by smtp.gmail.com with ESMTPSA id j75sm2897436wrj.22.2020.07.15.02.47.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 15 Jul 2020 02:47:02 -0700 (PDT)
+Date:   Wed, 15 Jul 2020 05:46:59 -0400
+From:   "Michael S. Tsirkin" <mst@redhat.com>
+To:     Alexander Duyck <alexander.duyck@gmail.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>, stable@vger.kernel.org,
+        David Hildenbrand <david@redhat.com>,
+        Jason Wang <jasowang@redhat.com>,
+        virtualization@lists.linux-foundation.org
+Subject: Re: [PATCH] virtio_balloon: clear modern features under legacy
+Message-ID: <20200715053808-mutt-send-email-mst@kernel.org>
+References: <20200710113046.421366-1-mst@redhat.com>
+ <CAKgT0UeZN+mOWNhgiT0btZTyki3TPoj7pbqA+__GkCxoifPqeg@mail.gmail.com>
+ <20200712105926-mutt-send-email-mst@kernel.org>
+ <CAKgT0UdY1xpEH1Hg4HWJEkGwH5s64sm1y4O_XmHe8P_f=tDhpg@mail.gmail.com>
+ <20200714044017-mutt-send-email-mst@kernel.org>
+ <CAKgT0Ud_AFpB-=uCB_3qY8pFvG9Kj7OFSmFG76LZC9K91oUG2w@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200715082634.3024816-1-lee.jones@linaro.org>
-User-Agent: NeoMutt/20180716-391-311a52
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAKgT0Ud_AFpB-=uCB_3qY8pFvG9Kj7OFSmFG76LZC9K91oUG2w@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 15-07-20, 09:26, Lee Jones wrote:
-> This set is part of a larger effort attempting to clean-up W=1
-> kernel builds, which are currently overwhelmingly riddled with
-> niggly little warnings.
+On Tue, Jul 14, 2020 at 10:31:56AM -0700, Alexander Duyck wrote:
+> On Tue, Jul 14, 2020 at 1:45 AM Michael S. Tsirkin <mst@redhat.com> wrote:
+> >
+> > On Mon, Jul 13, 2020 at 08:10:14AM -0700, Alexander Duyck wrote:
+> > > On Sun, Jul 12, 2020 at 8:10 AM Michael S. Tsirkin <mst@redhat.com> wrote:
+> > > >
+> > > > On Fri, Jul 10, 2020 at 09:13:41AM -0700, Alexander Duyck wrote:
+> > > > > On Fri, Jul 10, 2020 at 4:31 AM Michael S. Tsirkin <mst@redhat.com> wrote:
+> > > > > >
 > 
-> After these patches are applied, the build system no longer
-> complains about any W=0 nor W=1 level warnings in drivers/cpufreq.
+> <snip>
 > 
-> Hurrah!
+> > > > As you say correctly the command id is actually assumed native endian:
+> > > >
+> > > >
+> > > > static u32 virtio_balloon_cmd_id_received(struct virtio_balloon *vb)
+> > > > {
+> > > >         if (test_and_clear_bit(VIRTIO_BALLOON_CONFIG_READ_CMD_ID,
+> > > >                                &vb->config_read_bitmap))
+> > > >                 virtio_cread(vb->vdev, struct virtio_balloon_config,
+> > > >                              free_page_hint_cmd_id,
+> > > >                              &vb->cmd_id_received_cache);
+> > > >
+> > > >         return vb->cmd_id_received_cache;
+> > > > }
+> > > >
+> > > >
+> > > > So guest assumes native, host assumes LE.
+> > >
+> > > This wasn't even the one I was talking about, but now that you point
+> > > it out this is definately bug. The command ID I was talking about was
+> > > the one being passed via the descriptor ring. That one I believe is
+> > > native on both sides.
+> >
+> > Well qemu swaps it for modern devices:
+> >
+> >         virtio_tswap32s(vdev, &id);
+> >
+> > guest swaps it too:
+> >         vb->cmd_id_active = cpu_to_virtio32(vb->vdev,
+> >                                         virtio_balloon_cmd_id_received(vb));
+> >         sg_init_one(&sg, &vb->cmd_id_active, sizeof(vb->cmd_id_active));
+> >         err = virtqueue_add_outbuf(vq, &sg, 1, &vb->cmd_id_active, GFP_KERNEL);
+> >
+> > So it's native for legacy.
 > 
-> Changelog
+> Okay, that makes sense. I just wasn't familiar with the virtio32 type.
 > 
-> v1 => v2:
->  - Collect *-bys
->  - Use __maybe_unused instead of removing device IDs
->  - Use __always_unused instead of using unused variables
->  - Include architecture header instead of creating new include file
+> I guess that just means we need to fix the original issue you found
+> where the guest was assuming native for the command ID in the config.
+> Do you plan to patch that or should I?
 
-Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
+I'll do it.
+
+
+> > > >
+> > > >
+> > > >
+> > > > > > ---
+> > > > > >  drivers/virtio/virtio_balloon.c | 9 +++++++++
+> > > > > >  1 file changed, 9 insertions(+)
+> > > > > >
+> > > > > > diff --git a/drivers/virtio/virtio_balloon.c b/drivers/virtio/virtio_balloon.c
+> > > > > > index 5d4b891bf84f..b9bc03345157 100644
+> > > > > > --- a/drivers/virtio/virtio_balloon.c
+> > > > > > +++ b/drivers/virtio/virtio_balloon.c
+> > > > > > @@ -1107,6 +1107,15 @@ static int virtballoon_restore(struct virtio_device *vdev)
+> > > > > >
+> > > > > >  static int virtballoon_validate(struct virtio_device *vdev)
+> > > > > >  {
+> > > > > > +       /*
+> > > > > > +        * Legacy devices never specified how modern features should behave.
+> > > > > > +        * E.g. which endian-ness to use? Better not to assume anything.
+> > > > > > +        */
+> > > > > > +       if (!virtio_has_feature(vdev, VIRTIO_F_VERSION_1)) {
+> > > > > > +               __virtio_clear_bit(vdev, VIRTIO_BALLOON_F_FREE_PAGE_HINT);
+> > > > > > +               __virtio_clear_bit(vdev, VIRTIO_BALLOON_F_PAGE_POISON);
+> > > > > > +               __virtio_clear_bit(vdev, VIRTIO_BALLOON_F_REPORTING);
+> > > > > > +       }
+> > > > > >         /*
+> > > > > >          * Inform the hypervisor that our pages are poisoned or
+> > > > > >          * initialized. If we cannot do that then we should disable
+> > > > >
+> > > > > The patch content itself I am fine with since odds are nobody would
+> > > > > expect to use these features with a legacy device.
+> > > > >
+> > > > > Acked-by: Alexander Duyck <alexander.h.duyck@linux.intel.com>
+> > > >
+> > > > Hmm so now you pointed out it's just cmd id, maybe I should just fix it
+> > > > instead? what do you say?
+> > >
+> > > So the config issues are bugs, but I don't think you saw the one I was
+> > > talking about. In the function send_cmd_id_start the cmd_id_active
+> > > value which is initialized as a virtio32 is added as a sg entry and
+> > > then sent as an outbuf to the device. I'm assuming virtio32 is a host
+> > > native byte ordering.
+> >
+> > IIUC it isn't :) virtio32 is guest native if device is legacy, and LE if
+> > device is modern.
+> 
+> Okay. So I should probably document that for the spec I have been
+> working on. It looks like there is an example of similar documentation
+> for the memory statistics so it should be pretty straight forward.
+> 
+> Thanks.
+> 
+> - Alex
+
+"guest native if device is legacy, and LE if device is modern"
+is a standard virtio thing. Balloon has special language saying
+its config space is always LE.
+
+
+2.4.3
+
+Legacy Interface: A Note on Device Configuration Space endian-ness
+Note that for legacy interfaces, device configuration space is generally the guest’s native endian, rather than
+PCI’s little-endian. The correct endian-ness is documented for each device.
+
+
+This language could use some tweaking: e.g. "PCI" here refers to the time when
+PCI was the only transport. And most devices don't document endianness
+so just rely on standard one.
+
+
+Similarly:
+
+2.6.3
+
+Legacy Interfaces: A Note on Virtqueue Endianness
+
+Note that when using the legacy interface, transitional devices and drivers MUST use the native endian of
+the guest as the endian of fields and in the virtqueue. This is opposed to little-endian for non-legacy interface
+as specified by this standard. It is assumed that the host is already aware of the guest endian.
+
+
+Could use some love too, e.g. host -> device, guest -> driver.
+
+
 
 -- 
-viresh
+MST
+
