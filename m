@@ -2,153 +2,94 @@ Return-Path: <SRS0=kup7=A2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A4E4C433E5
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 21:32:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C64E8C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 21:32:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EC7182065F
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 21:32:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A23DE2067D
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 21:32:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=beagleboard-org.20150623.gappssmtp.com header.i=@beagleboard-org.20150623.gappssmtp.com header.b="wKKvAWhb"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dkTKJ6aj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727060AbgGOVcL (ORCPT
+        id S1727104AbgGOVcz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 17:32:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60262 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726998AbgGOVcJ (ORCPT
+        Wed, 15 Jul 2020 17:32:55 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:52035 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726670AbgGOVcz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 17:32:09 -0400
-Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 94A19C08C5CE
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 14:32:09 -0700 (PDT)
-Received: by mail-wm1-x341.google.com with SMTP id o2so7693651wmh.2
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 14:32:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=beagleboard-org.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=xBQDfVfj7jVd5q1Z7DUJytLJRXAUVyPchfWSKcEiidM=;
-        b=wKKvAWhbIOGuT1WASkV4LvqzLA0Zv0x2m8Nwk6wRJkg4gE7pNdCYPt+AdS90IlQaIM
-         Nzcl2lwkD3LoPZ8bF5ALatUnatULp2Bn5/CUNG7X+VLqrUxtADV6a747KGhm6+NoH1QZ
-         ft5ET3hyn81yG5M+gDoweEZClfAQ1h+HWI3gJh2l9k6HyFR4HjtWKKhbXcZrNZC8+GXO
-         29VbKG8+4257sY2bj7atKlJXyHsyoaPkCxFyhXsjoeQ2wegGaPLj9LFe0GtBdC/BRjU1
-         9MmtkPGAyn3L9YrWf+cUdr+oTfbeUlaHjNw4HPhm0nnyEx2r+BWUKa2VKvf9Cdgf9Ry0
-         Bolg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=xBQDfVfj7jVd5q1Z7DUJytLJRXAUVyPchfWSKcEiidM=;
-        b=QE5RvoWFCtlCzdoOV89C5HV8BsJ7HXtBz05sjBhTlocAyFpGtUgkdN3571sNv7jZxf
-         heL+JytsRSoOksinWsDarZZqkTYP6wtNGLw7Yj4jLUVDWot4UBnY1OTDkyoJz9213eZR
-         hsltVHFMjkD6clquT7bVFvk9UHtgYYhCPkiY4u6IuCpL3LYioWKdK8ACl0sS6oBxAzEO
-         MUdaxDI8EiigHlQu2F+g1MogeGRqrp7F9bcfCbzxpfOHKy+L7eYmXHKPanX8iN9Rtmh1
-         Q37fGMYAyTTeq5m3OMDMvfxKMcA++qgXICtcvSGMdPSRpBLiOt8BrZFAM2/WfnOHM12J
-         nzIA==
-X-Gm-Message-State: AOAM531VK0hFNSD54u//yJ/z8FZUO+6UXniUni35ZaZVyP9xfM9VSyId
-        qkbmd63ydzf2AgQHTfosYvvHiQ==
-X-Google-Smtp-Source: ABdhPJzXxMM86KFYQzvo2fHgX1DfzzmFi79lPdbOcM5GbNb7mdCXrWM7MkQPBJxQPlDJMPLB8DU8sQ==
-X-Received: by 2002:a1c:1d04:: with SMTP id d4mr1545579wmd.156.1594848728233;
-        Wed, 15 Jul 2020 14:32:08 -0700 (PDT)
-Received: from x1 (63.red-95-125-106.dynamicip.rima-tde.net. [95.125.106.63])
-        by smtp.gmail.com with ESMTPSA id 1sm4912324wmf.0.2020.07.15.14.32.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 15 Jul 2020 14:32:07 -0700 (PDT)
-Date:   Wed, 15 Jul 2020 23:32:03 +0200
-From:   Drew Fustini <drew@beagleboard.org>
-To:     Grygorii Strashko <grygorii.strashko@ti.com>
-Cc:     Tony Lindgren <tony@atomide.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Santosh Shilimkar <ssantosh@kernel.org>,
-        Kevin Hilman <khilman@kernel.org>, linux-omap@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] gpio: omap: handle pin config bias flags
-Message-ID: <20200715213203.GA1639870@x1>
-References: <20200709223401.780051-1-drew@beagleboard.org>
- <1a0180f3-7693-672a-8070-7032854bb73c@ti.com>
+        Wed, 15 Jul 2020 17:32:55 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1594848774;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=Cn1SaLSQDstiuAexdYduLBKyM4+JRq+aaTbG/223jGk=;
+        b=dkTKJ6ajvmetaFTdmDGtluvnnPwAXnOGt2SSzdvSV0tWyrwsdTECTXWnytHfbZ5ezacq9F
+        3HujWAV5arxxi/IfmH5RxSEkGwqg5yfaz19xNpBR880d+weMyHp4w7rs3ccoGwm+a5z64b
+        vobBWVQ+zTu+RQ+pOA6+QMrPabUJgE4=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-366-qJjMikuUMN2bAQwFkmw12Q-1; Wed, 15 Jul 2020 17:32:50 -0400
+X-MC-Unique: qJjMikuUMN2bAQwFkmw12Q-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 3957680572E;
+        Wed, 15 Jul 2020 21:32:48 +0000 (UTC)
+Received: from krava (unknown [10.40.194.44])
+        by smtp.corp.redhat.com (Postfix) with SMTP id 65127757DF;
+        Wed, 15 Jul 2020 21:32:45 +0000 (UTC)
+Date:   Wed, 15 Jul 2020 23:32:44 +0200
+From:   Jiri Olsa <jolsa@redhat.com>
+To:     Ian Rogers <irogers@google.com>
+Cc:     Jiri Olsa <jolsa@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Michael Petlan <mpetlan@redhat.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Kajol Jain <kjain@linux.ibm.com>,
+        John Garry <john.garry@huawei.com>,
+        "Paul A. Clarke" <pc@us.ibm.com>,
+        Stephane Eranian <eranian@google.com>
+Subject: Re: [PATCH 18/18] perf metric: Rename group_list to list
+Message-ID: <20200715213244.GU183694@krava>
+References: <20200712132634.138901-1-jolsa@kernel.org>
+ <20200712132634.138901-19-jolsa@kernel.org>
+ <CAP-5=fW6OyM1UPZ0HmxjJbHTiag+mCAWd70WO+DJFtBTjsxFHg@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1a0180f3-7693-672a-8070-7032854bb73c@ti.com>
+In-Reply-To: <CAP-5=fW6OyM1UPZ0HmxjJbHTiag+mCAWd70WO+DJFtBTjsxFHg@mail.gmail.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 15, 2020 at 01:09:12PM +0300, Grygorii Strashko wrote:
+On Wed, Jul 15, 2020 at 11:04:08AM -0700, Ian Rogers wrote:
+> On Sun, Jul 12, 2020 at 6:27 AM Jiri Olsa <jolsa@kernel.org> wrote:
+> >
+> > Following the previous change that rename egroup
+> > to metric, there's no reason to call the list
+> > 'group_list' anymore, renaming it to list.
 > 
-> 
-> On 10/07/2020 01:34, Drew Fustini wrote:
-> > Modify omap_gpio_set_config() to handle pin config bias flags by calling
-> > gpiochip_generic_config().
-> > 
-> > The pin group for the gpio line must have the corresponding pinconf
-> > properties:
-> > 
-> > PIN_CONFIG_BIAS_PULL_UP requires "pinctrl-single,bias-pullup"
-> > PIN_CONFIG_BIAS_PULL_DOWN requires "pinctrl-single,bias-pulldown"
-> > 
-> > This is necessary for pcs_pinconf_set() to find the requested bias
-> > parameter in the PIN_MAP_TYPE_CONFIGS_GROUP pinctrl map.
-> > 
-> > Signed-off-by: Drew Fustini <drew@beagleboard.org>
-> > ---
-> >   drivers/gpio/gpio-omap.c | 21 +++++++++++++++++----
-> >   1 file changed, 17 insertions(+), 4 deletions(-)
-> > 
-> > diff --git a/drivers/gpio/gpio-omap.c b/drivers/gpio/gpio-omap.c
-> > index b8e2ecc3eade..a471a152f318 100644
-> > --- a/drivers/gpio/gpio-omap.c
-> > +++ b/drivers/gpio/gpio-omap.c
-> > @@ -896,12 +896,25 @@ static int omap_gpio_set_config(struct gpio_chip *chip, unsigned offset,
-> >   				unsigned long config)
-> >   {
-> >   	u32 debounce;
-> > +	int ret;
-> 
-> ret =  -ENOTSUPP;
-> 
-> > -	if (pinconf_to_config_param(config) != PIN_CONFIG_INPUT_DEBOUNCE)
-> > -		return -ENOTSUPP;
-> > +	if ((pinconf_to_config_param(config) == PIN_CONFIG_BIAS_DISABLE) ||
-> > +	    (pinconf_to_config_param(config) == PIN_CONFIG_BIAS_PULL_UP) ||
-> > +	    (pinconf_to_config_param(config) == PIN_CONFIG_BIAS_PULL_DOWN))
-> > +	{
-> > +		ret = gpiochip_generic_config(chip, offset, config);
-> > +	}
-> > +	else if (pinconf_to_config_param(config) == PIN_CONFIG_INPUT_DEBOUNCE)
-> > +	{
-> > +		debounce = pinconf_to_config_argument(config);
-> > +		ret = omap_gpio_debounce(chip, offset, debounce);
-> > +	}
-> > +	else
-> > +	{
-> > +		ret = -ENOTSUPP;
-> > +	}
-> 
-> drop above "else"?
-> 
-> > -	debounce = pinconf_to_config_argument(config);
-> > -	return omap_gpio_debounce(chip, offset, debounce);
-> > +	return ret;
-> >   }
-> >   static void omap_gpio_set(struct gpio_chip *chip, unsigned offset, int value)
-> > 
-> 
-> Minor comment, Otherwise:
-> Acked-by: Grygorii Strashko <grygorii.strashko@ti.com>
-> 
-> -- 
-> Best regards,
-> grygorii
+> List doesn't seem to be adding information beyond the data type. I
+> would prefer something like metric_list as it gives a clue what's in
+> the list. It's a shame we can't have templated lists, if we did then
+> my data type argument would apply and so maybe output_list would add
+> information. Probably to save space metric_list is best.
 
-Thanks for reviewing.  I'll post a new version with the return value
-improvement per your suggestion.
+ok, will change to metric_list
 
--Drew
+thanks,
+jirka
+
