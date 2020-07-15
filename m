@@ -2,103 +2,86 @@ Return-Path: <SRS0=kup7=A2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F1F8C433E3
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 19:29:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52E7FC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 19:32:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 31F882065D
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 19:29:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2D7562065D
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 19:32:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594841380;
-	bh=R7q+QrjteQ4SIK04XXZ+1xGD6XAv+4HFsuzeTFoQ00c=;
+	s=default; t=1594841541;
+	bh=dtECZ0kC7iNUK10l063g4A60tnTMlXraYIp1udcyfFc=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=L7NVhdtneALpyB3Rxm/0Ix5rRxfUKJmJkOUoM5rscbBHZiBMfYkX6SXJlgDIuib11
-	 1ayRRBRPFrBKh4RQdQrGAIdNojaBOAIl86U3AACdhm250fPZugl9crR90f/aWWeMLf
-	 v8Zb2HMfY6jNUpM/bP7YLVmuZv53nQwD6ExQxbOE=
+	b=a9Ftt0H15ni+IXttar2hU6yKcJBZLWtI8MiFrB6I8oQalIXbcV2yfs2gJURz7SVHA
+	 P42UK3gS3wjSwOo0EHXv1z71nXu68Ztqn2Anq0y48j9GFx5D0VJGxRT1oL7m3nyxYR
+	 mkCNrb7nit0gnEj45K5V/9DkYs4S6nEs70SnkGGk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726870AbgGOT3j (ORCPT
+        id S1726765AbgGOTcU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 15:29:39 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:42238 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726650AbgGOT3i (ORCPT
+        Wed, 15 Jul 2020 15:32:20 -0400
+Received: from mail-il1-f196.google.com ([209.85.166.196]:33079 "EHLO
+        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726479AbgGOTcT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 15:29:38 -0400
-Received: by mail-io1-f66.google.com with SMTP id c16so3465185ioi.9;
-        Wed, 15 Jul 2020 12:29:37 -0700 (PDT)
+        Wed, 15 Jul 2020 15:32:19 -0400
+Received: by mail-il1-f196.google.com with SMTP id a11so3041310ilk.0;
+        Wed, 15 Jul 2020 12:32:19 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=D93LZtUoWQhV2+rIxfU+EXRRqA3Mro73jmOIm4SVUSI=;
-        b=pcszeq7ox6V6qOFBHI6Wp3AwdIevHLGDfKXhil2+IVGlO71DcU36dhYQbHZJbkQaXM
-         D/PEH/lc2x2sRXn8hQNmmPprqdWLV6PKCyell3b1Yvt0CeEe6AhSfpftXVt5mZW41K5y
-         4GVAAABc1pOWdFWoGK5eVCChQd5mvAQrZb4nwg+4h1JTjWYJMDb35POgvm8xGWSMhAPa
-         MlM6rC0xUCdhthnKHclpvjG8QC5j+J8yzfgLrTMDxHnh+hJRPcTooPealf7iZgeHI/4L
-         mYihwb031b7NSTsaA8KmPSTObIXDEYrTUnGwyOlWBW8M0uIsbisAxmutZyqnlgN70VDd
-         sJiA==
-X-Gm-Message-State: AOAM533LdKvWAPj+dXFGSB0ymMF1MqxNupS1cr7BV8OEi6EuHdedtSDH
-        HwdLVJ/Q9r2xNW4WIXSZZA==
-X-Google-Smtp-Source: ABdhPJz5CUXWiXyWIo2GOUgX7pfaopKLNbdwnQHpV8DX2NGyQLQJHDI2yPF3P1/t/oFO9FJXZ4UerQ==
-X-Received: by 2002:a6b:6b18:: with SMTP id g24mr873118ioc.8.1594841377213;
-        Wed, 15 Jul 2020 12:29:37 -0700 (PDT)
+        bh=Fm0BJxhDtxgCQwxltRyCdPVib98HJFWxC3xrwVYYVeM=;
+        b=ACQPraeyMHlltlN/yuvGKhMw479wolUFh9f/MSNhlhI0VhpL4tQtuCcbzQ4x6vkrRt
+         7rZArOWNqdI4mNU9UzxmpKl4D6f8cqfgDQg5P6JlLbn2iYwGV59ibejHjtMNNV8dIGjh
+         2yCMvU0DP5bqrhnNQVAtq9MQmGiGoCCI+LAZvupk4DM2bYvp5C3g2UqlUBe97NHM+jnI
+         jApGulosBMasFtWkL/jUg6uwo7jTCgD8s05E1hoge0KsU85EB4B2DhvJq2oI7Cmao1N0
+         tUG0+7UEfTpFxscjYnopm3TkGw8QWXwwdDONMbrQ9SGpaQ33+E21CRuY8C9UUjQR1ZXZ
+         AHkA==
+X-Gm-Message-State: AOAM531vkATPwOMvAbp4ivoxLImbyjzZzrA8ADVVFtfTuTm/X8+ZpAR3
+        odCkm6mAcnOE5uKZGCP/1A==
+X-Google-Smtp-Source: ABdhPJxZZ3CA0GjhVDdP1Px9lfAUwoboMTg7JHz3I2tEnQLo4i2chUuvIXIFIKSq20QRzkLi0WuH7w==
+X-Received: by 2002:a05:6e02:14c2:: with SMTP id o2mr1093123ilk.54.1594841538920;
+        Wed, 15 Jul 2020 12:32:18 -0700 (PDT)
 Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id q2sm1515657ilp.82.2020.07.15.12.29.36
+        by smtp.gmail.com with ESMTPSA id c7sm1556191ilo.85.2020.07.15.12.32.17
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 15 Jul 2020 12:29:36 -0700 (PDT)
-Received: (nullmailer pid 685623 invoked by uid 1000);
-        Wed, 15 Jul 2020 19:29:35 -0000
-Date:   Wed, 15 Jul 2020 13:29:35 -0600
+        Wed, 15 Jul 2020 12:32:18 -0700 (PDT)
+Received: (nullmailer pid 689607 invoked by uid 1000);
+        Wed, 15 Jul 2020 19:32:17 -0000
+Date:   Wed, 15 Jul 2020 13:32:17 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Johan Jonker <jbx6244@gmail.com>
-Cc:     heiko@sntech.de, linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH v1 1/2] dt-bindings: arm: rockchip: add A95X Z2
- description
-Message-ID: <20200715192935.GA684031@bogus>
-References: <20200620134659.4592-1-jbx6244@gmail.com>
- <20200620134659.4592-2-jbx6244@gmail.com>
+To:     Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc:     linux-arm-kernel@lists.infradead.org,
+        Frank Rowand <frowand.list@gmail.com>,
+        linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        devicetree@vger.kernel.org
+Subject: Re: [PATCH] dt-bindings: reset: Convert UniPhier reset to json-schema
+Message-ID: <20200715193217.GA689533@bogus>
+References: <20200622114826.450442-1-yamada.masahiro@socionext.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200620134659.4592-2-jbx6244@gmail.com>
+In-Reply-To: <20200622114826.450442-1-yamada.masahiro@socionext.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jun 20, 2020 at 03:46:58PM +0200, Johan Jonker wrote:
-> Add A95X Z2 description for a board with rk3318 processor.
+On Mon, 22 Jun 2020 20:48:26 +0900, Masahiro Yamada wrote:
+> Convert the UniPhier reset controller binding to DT schema format.
+> I excluded the glue resets because their bindings are too different.
 > 
-> Signed-off-by: Johan Jonker <jbx6244@gmail.com>
+> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
 > ---
->  Documentation/devicetree/bindings/arm/rockchip.yaml | 5 +++++
->  1 file changed, 5 insertions(+)
 > 
-> diff --git a/Documentation/devicetree/bindings/arm/rockchip.yaml b/Documentation/devicetree/bindings/arm/rockchip.yaml
-> index d4a404509..3d44b3cf0 100644
-> --- a/Documentation/devicetree/bindings/arm/rockchip.yaml
-> +++ b/Documentation/devicetree/bindings/arm/rockchip.yaml
-> @@ -25,6 +25,11 @@ properties:
->            - const: vamrs,rock960
->            - const: rockchip,rk3399
->  
-> +      - description: A95X Z2
-> +        items:
-> +          - const: a95x,z2
-
-Need to document vendor prefix.
-
-> +          - const: rockchip,rk3318
-> +
->        - description: Amarula Vyasa RK3288
->          items:
->            - const: amarula,vyasa-rk3288
-> -- 
-> 2.11.0
+>  .../reset/socionext,uniphier-reset.yaml       | 112 ++++++++++++++++
+>  .../bindings/reset/uniphier-reset.txt         | 121 +-----------------
+>  2 files changed, 113 insertions(+), 120 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/reset/socionext,uniphier-reset.yaml
 > 
+
+Applied, thanks!
