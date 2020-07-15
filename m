@@ -2,91 +2,90 @@ Return-Path: <SRS0=kup7=A2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8A76C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 21:44:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 773B5C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 21:50:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CD98D206F5
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 21:44:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 551CE20657
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 21:50:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594849829;
+	bh=jcjAxZmKJJTwqKKwtlJsxKTyNX+JVLzNUQNQzuKFFD0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=tRnJcBxqZ+7zaNjj4zRQKQS7eWOc3cYqIjmZJ1b7PYVCC9le3Tjujawin6NgO+Nkm
+	 NzhHwsvGmlqJEIgtmVI7eyqCBs3jwPD9sPPZT5j2+Mq8BJ5Dee93Vmc9xSuUMXL2ID
+	 E4rxwzU0tntVrX5Ltu22MJhWCSbsC6DVKTGa7ddY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727901AbgGOVom (ORCPT
+        id S1726832AbgGOVu2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 17:44:42 -0400
-Received: from relay4-d.mail.gandi.net ([217.70.183.196]:49211 "EHLO
-        relay4-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726370AbgGOVol (ORCPT
+        Wed, 15 Jul 2020 17:50:28 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:35669 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726356AbgGOVu1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 17:44:41 -0400
-X-Originating-IP: 90.65.108.121
-Received: from localhost (lfbn-lyo-1-1676-121.w90-65.abo.wanadoo.fr [90.65.108.121])
-        (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay4-d.mail.gandi.net (Postfix) with ESMTPSA id 1CA45E0005;
-        Wed, 15 Jul 2020 21:44:38 +0000 (UTC)
-Date:   Wed, 15 Jul 2020 23:44:38 +0200
-From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
-To:     =?utf-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>
-Cc:     Cristian Birsan <cristian.birsan@microchip.com>,
-        Felipe Balbi <balbi@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Ludovic Desroches <ludovic.desroches@microchip.com>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Songjun Wu <songjun.wu@atmel.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-usb@vger.kernel.org
-Subject: Re: [PATCH RESEND 1/3] usb: gadget: udc: atmel: remove outdated
- comment in usba_ep_disable()
-Message-ID: <20200715214438.GE23553@piout.net>
-References: <cover.1594231056.git.mirq-linux@rere.qmqm.pl>
- <ab8ef3e2bf15fa75572f9ad51d6e7b10c67cb494.1594231056.git.mirq-linux@rere.qmqm.pl>
+        Wed, 15 Jul 2020 17:50:27 -0400
+Received: by mail-io1-f65.google.com with SMTP id v8so3923137iox.2;
+        Wed, 15 Jul 2020 14:50:26 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=vtsf3o1eYBAy/nkaF79NS+N7y25ekYe59y/m9iX3KAs=;
+        b=GLPGnAXqc2IAHuZ8Tr4fuWHS5aD68xeEnG7rQP8iMcNiSeMZxX/ZdJKzV8/DYTEns+
+         zlXjbQeum116kbsl4jIgALPfikaClN8FW2LQd7GB+IkGRWqv/1qCFEV1ZkXfmdJopDIy
+         WNo8csgCPzVpXXf/rCsOi1byDPoj9V6AgPorgTVsvYs8QF0BpSJx7b1UitcmFL1bHZ04
+         uRumMFdKZEir1zmQiyTPv/jph+QVNfH3Mgt2dSpd1H2VAhF13qdRj/vZpuw3b2mOrwZ+
+         UUtpsxTj846BCZH22eMX0ONRf3cW+MdJSgesXZvgDdGXhRRA6lWsGgz1Bbh8JipQ9TAs
+         7cow==
+X-Gm-Message-State: AOAM531Mu8uC50/cxTcc+4H0r04V8Xs7KfihdFqFXI2BRCxFvgleVk6Z
+        Tc6R7CyWYNCLcAODSPTmF4B8TQaRGh2f
+X-Google-Smtp-Source: ABdhPJxGRVUsg6IBa7QL/kosfRlrx9cJWUaL0BDSLMS3jigu0Nv2//AFuQr0jb/1bRVhIahCHXZ7yQ==
+X-Received: by 2002:a6b:ba06:: with SMTP id k6mr1388146iof.101.1594849825905;
+        Wed, 15 Jul 2020 14:50:25 -0700 (PDT)
+Received: from xps15 ([64.188.179.252])
+        by smtp.gmail.com with ESMTPSA id s11sm1705927ili.79.2020.07.15.14.50.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 15 Jul 2020 14:50:25 -0700 (PDT)
+Received: (nullmailer pid 878244 invoked by uid 1000);
+        Wed, 15 Jul 2020 21:50:23 -0000
+Date:   Wed, 15 Jul 2020 15:50:23 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Sivaprakash Murugesan <sivaprak@codeaurora.org>
+Cc:     svarbanov@mm-sol.com, sboyd@kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
+        varada@codeaurora.org, smuthayy@codeaurora.org, agross@kernel.org,
+        p.zabel@pengutronix.de, robh+dt@kernel.org,
+        mturquette@baylibre.com, bhelgaas@google.com, kishon@ti.com,
+        linux-pci@vger.kernel.org, lorenzo.pieralisi@arm.com,
+        linux-arm-msm@vger.kernel.org, bjorn.andersson@linaro.org,
+        Selvam Sathappan Periakaruppan <speriaka@codeaurora.org>,
+        vkoul@kernel.org, mgautam@codeaurora.org
+Subject: Re: [PATCH 1/9] dt-bindings: pci: Add ipq8074 gen3 pci compatible
+Message-ID: <20200715215023.GA878186@bogus>
+References: <1593940680-2363-1-git-send-email-sivaprak@codeaurora.org>
+ <1593940680-2363-2-git-send-email-sivaprak@codeaurora.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <ab8ef3e2bf15fa75572f9ad51d6e7b10c67cb494.1594231056.git.mirq-linux@rere.qmqm.pl>
+In-Reply-To: <1593940680-2363-2-git-send-email-sivaprak@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 08/07/2020 20:04:09+0200, Michał Mirosław wrote:
-> Fixed commit removed the offending behaviour from the driver, but missed
-> the comment and associated test. Remove them now.
+On Sun, 05 Jul 2020 14:47:52 +0530, Sivaprakash Murugesan wrote:
+> ipq8074 has two PCIe ports while the support for gen2 pcie port is
+> already available add the support for gen3 binding.
 > 
-> Fixes: 38e58986e6fc ("usb: gadget: udc: atmel: don't disable enpdoints we don't own")
-> Signed-off-by: Michał Mirosław <mirq-linux@rere.qmqm.pl>
-Acked-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
-
+> Co-developed-by: Selvam Sathappan Periakaruppan <speriaka@codeaurora.org>
+> Signed-off-by: Selvam Sathappan Periakaruppan <speriaka@codeaurora.org>
+> Signed-off-by: Sivaprakash Murugesan <sivaprak@codeaurora.org>
 > ---
->  drivers/usb/gadget/udc/atmel_usba_udc.c | 8 +-------
->  1 file changed, 1 insertion(+), 7 deletions(-)
-> 
-> diff --git a/drivers/usb/gadget/udc/atmel_usba_udc.c b/drivers/usb/gadget/udc/atmel_usba_udc.c
-> index d69f61ff0181..9153e220848d 100644
-> --- a/drivers/usb/gadget/udc/atmel_usba_udc.c
-> +++ b/drivers/usb/gadget/udc/atmel_usba_udc.c
-> @@ -676,13 +676,7 @@ static int usba_ep_disable(struct usb_ep *_ep)
->  
->  	if (!ep->ep.desc) {
->  		spin_unlock_irqrestore(&udc->lock, flags);
-> -		/* REVISIT because this driver disables endpoints in
-> -		 * reset_all_endpoints() before calling disconnect(),
-> -		 * most gadget drivers would trigger this non-error ...
-> -		 */
-> -		if (udc->gadget.speed != USB_SPEED_UNKNOWN)
-> -			DBG(DBG_ERR, "ep_disable: %s not enabled\n",
-> -					ep->ep.name);
-> +		DBG(DBG_ERR, "ep_disable: %s not enabled\n", ep->ep.name);
->  		return -EINVAL;
->  	}
->  	ep->ep.desc = NULL;
-> -- 
-> 2.20.1
+>  .../devicetree/bindings/pci/qcom,pcie.yaml         | 47 ++++++++++++++++++++++
+>  1 file changed, 47 insertions(+)
 > 
 
--- 
-Alexandre Belloni, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+Reviewed-by: Rob Herring <robh@kernel.org>
