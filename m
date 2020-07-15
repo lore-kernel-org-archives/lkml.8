@@ -2,135 +2,109 @@ Return-Path: <SRS0=kup7=A2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 446D5C433E4
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 23:15:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FAE1C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 23:19:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 20EFE2065D
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 23:15:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Ts3s5J/0"
+	by mail.kernel.org (Postfix) with ESMTP id E0D0A2065D
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 23:19:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594855145;
+	bh=W6Z0YoOVNGNNfBaV7CBv/DlakUfCXA4pAaebjJuAm1I=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=qnL5stsle7LMGNxNTT2UQQJ6mgara1PC5xN9aZB9TvdTJFwjfvwX8ORN8mKdmnqAE
+	 8lHNrV3vBb7RYwnzknGccyMv8LolahYxpX9kdjz69BcNGBWSFwmSF5L1vgR2t0CxyM
+	 9hXuYUeYfBND2peJGUZ1XEHluh3XH2Fokav42Z2k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727839AbgGOXPD (ORCPT
+        id S1726908AbgGOXTE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 19:15:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47882 "EHLO
+        Wed, 15 Jul 2020 19:19:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48488 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726965AbgGOXPC (ORCPT
+        with ESMTP id S1726770AbgGOXTE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 19:15:02 -0400
-Received: from mail-qk1-x743.google.com (mail-qk1-x743.google.com [IPv6:2607:f8b0:4864:20::743])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A842EC08C5DB
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 16:15:02 -0700 (PDT)
-Received: by mail-qk1-x743.google.com with SMTP id e11so3696684qkm.3
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 16:15:02 -0700 (PDT)
+        Wed, 15 Jul 2020 19:19:04 -0400
+Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DB4B0C061755
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 16:19:03 -0700 (PDT)
+Received: by mail-lf1-x144.google.com with SMTP id t9so2109335lfl.5
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 16:19:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=Xd3yKqfzGmIuyChmnHGbxGkkq4tAYE3GR+3CE+pvQXg=;
-        b=Ts3s5J/0Jn86cWG4tF6CjMnwblbzfZlvMliTt+poHpAG7orVq3o3nSe6n6Q1EYPvYa
-         5QSUhh8VkISuEaFNLQ0Nq89faKdYqhaCqvSyPDIKMhJFeMis5CXzx3OzzvMWT5OYXkEG
-         Wx4NhgyxGnvXNO151lP+C0lffDejUl1x+1SXEXqWE+cQjQDKFy5ffljzNj6ryf1HznNK
-         jlebn5peyRii0ZNLjeLReRyhUhDGqBX/hlxs9n0twT5nWn2AKG4yhGKX670b5nh5Y73S
-         NPGhHXQpPmIAxzDFnHK8GzrJvS/dsx1QYdmOgOTEP2xaaIud7o7YYvdDZ9gC431R3Hu8
-         vEkA==
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=z1+a/ObNZL3+vD2m0kxRuakdnVXRAY/0dRWxur7hS3o=;
+        b=Bw6ZnFqi0LokptDDvPQkvwYgLM4EwcHyG/o1zG9i4eCycUy4CxjKWFX4GltGI5Ntwu
+         d442hjcpYOB0MC20Fn5HvhtSFP67sPkKUNqyOYJDbwzwjKHb6eHI5uKTOfpagqPhVox0
+         RzQODZFbGnNBc7po2varkk7q5GTekjF4CDpbw=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=Xd3yKqfzGmIuyChmnHGbxGkkq4tAYE3GR+3CE+pvQXg=;
-        b=cQ+P1B9Friv9aA1LTvPMryJUciuZyzxlLXn5o2kFPJL2U+bHHP0HdozepMxC3nyuAC
-         seH1c1eifzb1tL2OQj9WJXoiUwUy2ovTPamv0zYop4NLsLj/kIva7Xj9Eb0TLbQyp+Ku
-         6KNwKQ9k0ZYdM93VAX/yJYseAUa0ZXDYJ4z79CReXiDEMDbeT7NLeOVln5G00psVSt6e
-         JzEj5/faeenIjOuE+d8DsLvrNx2f9o6KIMC5N0Fo0EsUqyoAKYpF0E/Vu/JQg90tq4OL
-         OycSIEHu2Gcn/upuquQmnd58TEvzGjfvHy0mrwzPc1FuZKKJFweVeyDuxfaDeJBvhBsk
-         x0UQ==
-X-Gm-Message-State: AOAM531enFrBrW4m8zEZxHImxnqbRmNxjBIwk7vFoGx/PbwxP0FgiN95
-        UwLmEBH7U6NudsyFGO9QA0T4CIAO+6s=
-X-Google-Smtp-Source: ABdhPJzszqQUB8jmldBHMhwuFEBC+z8WHjXAb/q6EGDZuz6YCf/xKyIqVeXUt0vagEfU/5DMKL7TpQ==
-X-Received: by 2002:a05:620a:2002:: with SMTP id c2mr1314654qka.35.1594854901466;
-        Wed, 15 Jul 2020 16:15:01 -0700 (PDT)
-Received: from [192.168.1.92] (pool-71-255-246-27.washdc.fios.verizon.net. [71.255.246.27])
-        by smtp.gmail.com with ESMTPSA id o187sm4343607qke.76.2020.07.15.16.15.00
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=z1+a/ObNZL3+vD2m0kxRuakdnVXRAY/0dRWxur7hS3o=;
+        b=uAnnujZ1kXkaClgBKx7Y/ocVQlKcw//KnixtlzIVFeLr+kSTksNOKjHzrWpQ5gpOBr
+         LOzz6GRY8O6m5yM1FaS1S06+ZW6A3xTWZ8xZXhY9LV+JnaxeLRpIzZZVixFfwd2SPjCf
+         Zgo/94cLHDu0p3W/0WKIfMgohBxaR7XwuAPXOz+d7QrqbMsbAfbmrZqfNRSZ3DllLlet
+         zeMLgyPayAWl3yMUuCdd7b5UYOf11AYsXjYBilzCPhSfT78RBn9oF6Q4qKvUXaOSyPlC
+         gzMR9NRPWM+xcNY7c6eyx+rIQqAPFwkl+639mSnYxdmbCsphWIAf8RqS/zA7L/bPwb11
+         UP8g==
+X-Gm-Message-State: AOAM530UayUDFncRzerrLaKeZfXx/c7P5xX+5K6lH4KT4UrDBiFJi9UB
+        otOH26Dt/v/eswgVHrPjBjM2ppf8rw4=
+X-Google-Smtp-Source: ABdhPJxOyCAHNOelvlKIEMrQjti1+d7OzciFoEaC0a5Y2bkvk7Rx07obkaiG9I8y+WXxuSfNSYG4QA==
+X-Received: by 2002:a19:8055:: with SMTP id b82mr634420lfd.178.1594855141802;
+        Wed, 15 Jul 2020 16:19:01 -0700 (PDT)
+Received: from mail-lj1-f175.google.com (mail-lj1-f175.google.com. [209.85.208.175])
+        by smtp.gmail.com with ESMTPSA id w5sm693919lji.49.2020.07.15.16.19.00
+        for <linux-kernel@vger.kernel.org>
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 15 Jul 2020 16:15:00 -0700 (PDT)
-Subject: Re: [RFC PATCH 3/4] thermal:core:Add genetlink notifications for
- monitoring falling temperature
-To:     Zhang Rui <rui.zhang@intel.com>, daniel.lezcano@linaro.org,
-        robh+dt@kernel.org
-Cc:     linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20200710135154.181454-1-thara.gopinath@linaro.org>
- <20200710135154.181454-4-thara.gopinath@linaro.org>
- <746420e6b213985518d8b314018e32dc3438e9af.camel@intel.com>
-From:   Thara Gopinath <thara.gopinath@linaro.org>
-Message-ID: <021bec8e-2cf7-99fb-d224-e16796b95567@linaro.org>
-Date:   Wed, 15 Jul 2020 19:15:00 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Wed, 15 Jul 2020 16:19:00 -0700 (PDT)
+Received: by mail-lj1-f175.google.com with SMTP id z24so4726250ljn.8
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 16:19:00 -0700 (PDT)
+X-Received: by 2002:a2e:760b:: with SMTP id r11mr668699ljc.285.1594855140186;
+ Wed, 15 Jul 2020 16:19:00 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <746420e6b213985518d8b314018e32dc3438e9af.camel@intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200715135011.42743-1-kirill.shutemov@linux.intel.com>
+ <CAHk-=wh4pB-jRngOjcGxpc8=NPds3jWqJwDMUWC3-OEo4dRiKg@mail.gmail.com>
+ <20200715205428.GA201569@google.com> <CAHk-=wg-_Oof43pKUHMk4ySdLwpYi7+shFg+aeV18UP2Akiv8g@mail.gmail.com>
+ <CAHk-=wg+iVwK7MDXB+BPbhTmP-1eBa-y4vxRNr_G8ETnzv5pZg@mail.gmail.com>
+ <20200715222228.jf2pv5u2wyhtc5o5@box> <CAHk-=wgp-ZJ+J250DMaJFBDU2hnhUUqXcUnVnZZ1iFQEK6O-jg@mail.gmail.com>
+ <CAHk-=wh3jD4dwXWWFors9OnYp-YCzYN2bCGs9HDxrtZ=TiFyDQ@mail.gmail.com>
+In-Reply-To: <CAHk-=wh3jD4dwXWWFors9OnYp-YCzYN2bCGs9HDxrtZ=TiFyDQ@mail.gmail.com>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Wed, 15 Jul 2020 16:18:44 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wjw2yuQjP1rqB=ocr9W3=ak+6h4XygoFTAgM5meiM1Q0A@mail.gmail.com>
+Message-ID: <CAHk-=wjw2yuQjP1rqB=ocr9W3=ak+6h4XygoFTAgM5meiM1Q0A@mail.gmail.com>
+Subject: Re: [PATCHv2] mm: Fix warning in move_normal_pmd()
+To:     "Kirill A. Shutemov" <kirill@shutemov.name>
+Cc:     Joel Fernandes <joel@joelfernandes.org>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linux-MM <linux-mm@kvack.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Naresh Kamboju <naresh.kamboju@linaro.org>,
+        William Kucharski <william.kucharski@oracle.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Jul 15, 2020 at 4:04 PM Linus Torvalds
+<torvalds@linux-foundation.org> wrote:
+>
+> It *might* be as simple as this incremental thing on top
 
+No, it needs to be
 
-On 7/15/20 4:46 AM, Zhang Rui wrote:
-> On Fri, 2020-07-10 at 09:51 -0400, Thara Gopinath wrote:
->> Add notification calls for trip type THERMAL_TRIP_COLD when
->> temperature
->> crosses the trip point in either direction.
->>
->> Signed-off-by: Thara Gopinath <thara.gopinath@linaro.org>
->> ---
->>   drivers/thermal/thermal_core.c | 21 +++++++++++++++------
->>   1 file changed, 15 insertions(+), 6 deletions(-)
->>
->> diff --git a/drivers/thermal/thermal_core.c
->> b/drivers/thermal/thermal_core.c
->> index 750a89f0c20a..e2302ca1cd3b 100644
->> --- a/drivers/thermal/thermal_core.c
->> +++ b/drivers/thermal/thermal_core.c
->> @@ -429,12 +429,21 @@ static void handle_thermal_trip(struct
->> thermal_zone_device *tz, int trip)
->>   		tz->ops->get_trip_hyst(tz, trip, &hyst);
->>   
->>   	if (tz->last_temperature != THERMAL_TEMP_INVALID) {
->> -		if (tz->last_temperature < trip_temp &&
->> -		    tz->temperature >= trip_temp)
->> -			thermal_notify_tz_trip_up(tz->id, trip);
->> -		if (tz->last_temperature >= trip_temp &&
->> -		    tz->temperature < (trip_temp - hyst))
->> -			thermal_notify_tz_trip_down(tz->id, trip);
->> +		if (type == THERMAL_TRIP_COLD) {
->> +			if (tz->last_temperature > trip_temp &&
->> +			    tz->temperature <= trip_temp)
->> +				thermal_notify_tz_trip_down(tz->id,
->> trip);
-> 
-> trip_type should also be part of the event because trip_down/trip_up
-> for hot trip and cold trip have different meanings.
-> Or can we use some more generic names like trip_on/trip_off? trip_on
-> means the trip point is violated or actions need to be taken for the
-> specific trip points, for both hot and cold trips. I know
-> trip_on/trip_off doesn't represent what I mean clearly, but surely you
-> can find a better name.
++       if (*old_addr + *len < old->vm_end)
++               return;
 
-Makes sense.. I will fix this in the next version. I don't have a good 
-name at the moment but will think of something!
+in try_to_align_end(), of course.
 
+Now I'm going for a lie-down, because this cross-eyed thing isn't working.
 
--- 
-Warm Regards
-Thara
+              Linus
