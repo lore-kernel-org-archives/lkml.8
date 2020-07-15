@@ -2,71 +2,122 @@ Return-Path: <SRS0=kup7=A2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39DEAC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 02:52:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EDDEBC433E4
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 02:52:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1B66D20663
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 02:52:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C82EE20663
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 02:52:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="fNlgkfmD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728354AbgGOCw0 (ORCPT
+        id S1728379AbgGOCw4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 22:52:26 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:7853 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726687AbgGOCw0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 22:52:26 -0400
-Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 19767E055D47C59AA819;
-        Wed, 15 Jul 2020 10:52:22 +0800 (CST)
-Received: from localhost (10.174.179.108) by DGGEMS405-HUB.china.huawei.com
- (10.3.19.205) with Microsoft SMTP Server id 14.3.487.0; Wed, 15 Jul 2020
- 10:52:06 +0800
-From:   YueHaibing <yuehaibing@huawei.com>
-To:     <edumazet@google.com>, <davem@davemloft.net>,
-        <herbert@gondor.apana.org.au>
-CC:     <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
-        YueHaibing <yuehaibing@huawei.com>
-Subject: [PATCH net-next] netpoll: Remove unused inline function netpoll_netdev_init()
-Date:   Wed, 15 Jul 2020 10:52:03 +0800
-Message-ID: <20200715025203.10260-1-yuehaibing@huawei.com>
-X-Mailer: git-send-email 2.10.2.windows.1
+        Tue, 14 Jul 2020 22:52:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56880 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727942AbgGOCwz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 22:52:55 -0400
+Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 679C7C061794
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 19:52:53 -0700 (PDT)
+Received: by mail-pl1-x644.google.com with SMTP id d1so1228587plr.8
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 19:52:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=0glwH8EcqSXFTX4S1OVt6no4ymJBSG2idjiGE4hkLiM=;
+        b=fNlgkfmDwYPu+1TiJmpDeFF7yvT0rvgUsFCO2nrvBJaQERLj46VXGKvjkn30DcvkQx
+         zv2oZ4Tn09R9NJe9ZBdZXwZBwzH3GOIUYa8BpGzc6ce9ukSog16/HMFN2UseUIs6V3lA
+         jjDePlp2R50dpqk6z08fu2ddB3kYIAjl3tnVaEiTudbKk4ilWGqHvC4JDmZTlHzZhMYG
+         /YfaLq9Zom+2U+6CZgKLQl+T598KbR/cG3WDcXYudSy3hQJiKILRH5MgMksYh5rzQ+Be
+         cqW32qVqKgrBPU4LvKh2fbjg0enYvkU0AB5/NJQPnxLlkSq40vK4wZSAgNe6uCcLoYnv
+         EaCQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=0glwH8EcqSXFTX4S1OVt6no4ymJBSG2idjiGE4hkLiM=;
+        b=rAX0VddV+sHGLJtwNiR0F6qcrMkLSDK2LdMfJUIDEdD0cxjX+KQS/jhlGySckEtEd7
+         Fu9u4N5N32MHWQNdTl4yBcKtz0JESWovgJiPq4Ix3tMKuBRHx9CMynL9/Ddk8Bw4RvgR
+         tdyggTHqFekACWEkwn/+aIcOoK4m6MMNyAwdspTZCPa6UKM2dJEvoOrTNqwfu0VEXLRM
+         O+QPo2DI6AIh0WzgHCJmVedO4/aH4PCdJMni7TJlIYm1DamgDuQ5hXw9eGEnH6euz+Eb
+         Ngals2RqE2EpWnnqZIox+PtNx84KLNsv7NyA+rs6OvTgZMy9wVaenfjx+3WVFKsULnLx
+         u4Ew==
+X-Gm-Message-State: AOAM532B9rSFrunivtAjWwmz/vtnLk7TN5Opj++8TmwSUp304OYPkgaW
+        v6E39kyHCZUGTCY7Cy5IaJ79ow==
+X-Google-Smtp-Source: ABdhPJywnJogb+vLoV2wTh6Hylf/9jv+Y4yT1XFZa3VwwHYObsWDA0rKozjggr2ARVQoMr/+ykEg3Q==
+X-Received: by 2002:a17:902:7790:: with SMTP id o16mr5915781pll.299.1594781572913;
+        Tue, 14 Jul 2020 19:52:52 -0700 (PDT)
+Received: from localhost ([122.172.34.142])
+        by smtp.gmail.com with ESMTPSA id r9sm360441pje.12.2020.07.14.19.52.51
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 14 Jul 2020 19:52:52 -0700 (PDT)
+Date:   Wed, 15 Jul 2020 08:22:49 +0530
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     rjw@rjwysocki.net, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        Venkatesh Pallipadi <venkatesh.pallipadi@intel.com>,
+        Jun Nakajima <jun.nakajima@intel.com>,
+        Alexander Clouter <alex@digriz.org.uk>
+Subject: Re: [PATCH 03/13] cpufreq: cpufreq_governor: Demote
+ store_sampling_rate() header to standard comment block
+Message-ID: <20200715025249.ukoqup4piqiz5lim@vireshk-i7>
+References: <20200714145049.2496163-1-lee.jones@linaro.org>
+ <20200714145049.2496163-4-lee.jones@linaro.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.174.179.108]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200714145049.2496163-4-lee.jones@linaro.org>
+User-Agent: NeoMutt/20180716-391-311a52
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-commit d565b0a1a9b6 ("net: Add Generic Receive Offload infrastructure")
-left behind this, remove it.
+On 14-07-20, 15:50, Lee Jones wrote:
+> There is no need for this to be denoted as kerneldoc.
+> 
+> Fixes the following W=1 kernel build warning(s):
+> 
+>  drivers/cpufreq/cpufreq_governor.c:46: warning: Function parameter or member 'attr_set' not described in 'store_sampling_rate'
+>  drivers/cpufreq/cpufreq_governor.c:46: warning: Function parameter or member 'buf' not described in 'store_sampling_rate'
+>  drivers/cpufreq/cpufreq_governor.c:46: warning: Function parameter or member 'count' not described in 'store_sampling_rate'
+> 
+> Cc: Venkatesh Pallipadi <venkatesh.pallipadi@intel.com>
+> Cc: Jun Nakajima <jun.nakajima@intel.com>
+> Cc: Alexander Clouter <alex@digriz.org.uk>
+> Signed-off-by: Lee Jones <lee.jones@linaro.org>
+> ---
+>  drivers/cpufreq/cpufreq_governor.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/cpufreq/cpufreq_governor.c b/drivers/cpufreq/cpufreq_governor.c
+> index f99ae45efaea7..63f7c219062b9 100644
+> --- a/drivers/cpufreq/cpufreq_governor.c
+> +++ b/drivers/cpufreq/cpufreq_governor.c
+> @@ -26,7 +26,7 @@ static DEFINE_PER_CPU(struct cpu_dbs_info, cpu_dbs);
+>  static DEFINE_MUTEX(gov_dbs_data_mutex);
+>  
+>  /* Common sysfs tunables */
+> -/**
+> +/*
 
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
----
- include/linux/netpoll.h | 3 ---
- 1 file changed, 3 deletions(-)
+This is an important routine with good documentation details already
+there, though internal to governors and so I would rather keep it.
 
-diff --git a/include/linux/netpoll.h b/include/linux/netpoll.h
-index f47af135bd56..e6a2d72e0dc7 100644
---- a/include/linux/netpoll.h
-+++ b/include/linux/netpoll.h
-@@ -102,9 +102,6 @@ static inline void *netpoll_poll_lock(struct napi_struct *napi)
- static inline void netpoll_poll_unlock(void *have)
- {
- }
--static inline void netpoll_netdev_init(struct net_device *dev)
--{
--}
- static inline bool netpoll_tx_running(struct net_device *dev)
- {
- 	return false;
+>   * store_sampling_rate - update sampling rate effective immediately if needed.
+>   *
+>   * If new rate is smaller than the old, simply updating
+> -- 
+> 2.25.1
+
 -- 
-2.17.1
-
-
+viresh
