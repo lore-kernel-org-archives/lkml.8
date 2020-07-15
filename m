@@ -2,140 +2,106 @@ Return-Path: <SRS0=kup7=A2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DFF9C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 15:26:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08604C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 15:27:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 57C9020663
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 15:26:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D10FF206E9
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 15:27:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="BNbb8FUQ"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="RCbJcu1q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726863AbgGOP0h (ORCPT
+        id S1726894AbgGOP1Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 11:26:37 -0400
-Received: from mail.efficios.com ([167.114.26.124]:41338 "EHLO
-        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725900AbgGOP0g (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 11:26:36 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by mail.efficios.com (Postfix) with ESMTP id 29CAE28294D;
-        Wed, 15 Jul 2020 11:26:35 -0400 (EDT)
-Received: from mail.efficios.com ([127.0.0.1])
-        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id grExVuNJRgRK; Wed, 15 Jul 2020 11:26:34 -0400 (EDT)
-Received: from localhost (localhost [127.0.0.1])
-        by mail.efficios.com (Postfix) with ESMTP id C097328294C;
-        Wed, 15 Jul 2020 11:26:34 -0400 (EDT)
-DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com C097328294C
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
-        s=default; t=1594826794;
-        bh=ixzZEBN0XBAyYhSOviuo0tkp9cwyUFPD/5SBxNhupsc=;
-        h=Date:From:To:Message-ID:MIME-Version;
-        b=BNbb8FUQ2MgZ6UOsSMy5Au51v/ciP5PXPhZskRzaG86CQlYP+Nbj3InoGpKW3KaqG
-         xCx7zPb4KWo5axCYCPZLGbAUv++GdwJ0YbYTKjM4CmCuIFJOJAwWBfGcPC1cQS2JRU
-         Ynu+TB9zyoujWk/yliuZUUal4XrbPIMTrx99hmCL18LtZBMobp08xEEQJFWvI+zTo1
-         leIVGf4h5emkgm3oOqL/9Pw3Wke6QTfF5Xpu+PTZUaM/XP93QdZuMzSQrBp1jCg2Hj
-         Wzqp6QuURNu7YjFoTyaYwwwE+92mEH5r0uyV0TZet/sWgPJIHC2KyIlmMzYaT/5Fxz
-         a0RyecZNnhtjA==
-X-Virus-Scanned: amavisd-new at efficios.com
-Received: from mail.efficios.com ([127.0.0.1])
-        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id dZoND3EixLPp; Wed, 15 Jul 2020 11:26:34 -0400 (EDT)
-Received: from mail03.efficios.com (mail03.efficios.com [167.114.26.124])
-        by mail.efficios.com (Postfix) with ESMTP id AF5BD28294B;
-        Wed, 15 Jul 2020 11:26:34 -0400 (EDT)
-Date:   Wed, 15 Jul 2020 11:26:34 -0400 (EDT)
-From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-To:     Florian Weimer <fweimer@redhat.com>
-Cc:     carlos <carlos@redhat.com>, Peter Zijlstra <peterz@infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        paulmck <paulmck@linux.ibm.com>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Paul Turner <pjt@google.com>,
-        linux-api <linux-api@vger.kernel.org>,
-        Christian Brauner <christian.brauner@ubuntu.com>
-Message-ID: <1506932521.14341.1594826794611.JavaMail.zimbra@efficios.com>
-In-Reply-To: <87k0z4zuxq.fsf@oldenburg2.str.redhat.com>
-References: <20200714030348.6214-1-mathieu.desnoyers@efficios.com> <71f08b3a-56f5-0e0f-53b0-cc680f7e8181@redhat.com> <2053637148.14136.1594818777608.JavaMail.zimbra@efficios.com> <87y2nk29rp.fsf@oldenburg2.str.redhat.com> <882700738.14181.1594819884049.JavaMail.zimbra@efficios.com> <87mu4028uk.fsf@oldenburg2.str.redhat.com> <1481331967.14276.1594824846736.JavaMail.zimbra@efficios.com> <87k0z4zuxq.fsf@oldenburg2.str.redhat.com>
-Subject: Re: [RFC PATCH 2/4] rseq: Allow extending struct rseq
+        Wed, 15 Jul 2020 11:27:16 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:59558 "EHLO m43-7.mailgun.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725881AbgGOP1Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jul 2020 11:27:16 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1594826835; h=Content-Type: MIME-Version: Message-ID:
+ In-Reply-To: Date: References: Subject: Cc: To: From: Sender;
+ bh=OS9jfqCnxLfBYtRX/l34nJHSA0Qibt4senv0rOAx718=; b=RCbJcu1qj3ZqZZImlhDi/8sVe4EChlTyI6bSky/Nweqs5lZ/YTbNfKoeBoj+ftQOoIqMxSIf
+ IQtiItQ2i7KHJ1Tfbb43VGKvJHMz+uF6x1+CvtpaMX/2HKcwzH85EGSVDDVT5wTqpurHRj0p
+ w+e8uezY5G7glhVFKsT4BndPItE=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n07.prod.us-east-1.postgun.com with SMTP id
+ 5f0f2046f9ca681bd0a4dd9c (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Wed, 15 Jul 2020 15:27:02
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id B13B4C43391; Wed, 15 Jul 2020 15:27:01 +0000 (UTC)
+Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: kvalo)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 080D3C433C9;
+        Wed, 15 Jul 2020 15:26:58 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 080D3C433C9
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
+From:   Kalle Valo <kvalo@codeaurora.org>
+To:     Zekun Shen <bruceshenzk@gmail.com>
+Cc:     security@kernel.org, netdev@vger.kernel.org,
+        linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
+        ath10k@lists.infradead.org, Jakub Kicinski <kuba@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: Re: [PATCH] net: ath10k: fix OOB: __ath10k_htt_rx_ring_fill_n
+References: <20200623221105.3486-1-bruceshenzk@gmail.com>
+Date:   Wed, 15 Jul 2020 18:26:56 +0300
+In-Reply-To: <20200623221105.3486-1-bruceshenzk@gmail.com> (Zekun Shen's
+        message of "Tue, 23 Jun 2020 18:11:05 -0400")
+Message-ID: <87mu4094u7.fsf@codeaurora.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/24.5 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [167.114.26.124]
-X-Mailer: Zimbra 8.8.15_GA_3955 (ZimbraWebClient - FF78 (Linux)/8.8.15_GA_3953)
-Thread-Topic: rseq: Allow extending struct rseq
-Thread-Index: KF0DmHs4TFAoijps0DhfMC1cmdpo+Q==
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
------ On Jul 15, 2020, at 10:58 AM, Florian Weimer fweimer@redhat.com wrote:
+Zekun Shen <bruceshenzk@gmail.com> writes:
 
-> * Mathieu Desnoyers:
-> 
->> ----- On Jul 15, 2020, at 9:42 AM, Florian Weimer fweimer@redhat.com wrote:
->>> * Mathieu Desnoyers:
->>> 
->> [...]
->>>> How would this allow early-rseq-adopter libraries to interact with
->>>> glibc ?
->>> 
->>> Under all extension proposals I've seen so far, early adopters are
->>> essentially incompatible with glibc rseq registration.  I don't think
->>> you can have it both ways.
->>
->> The basic question I'm not sure about is whether we are allowed to increase
->> the size and alignement of __rseq_abi from e.g. glibc 2.32 to glibc 2.33.
-> 
-> With the current mechanism (global TLS data symbol), we can do that
-> using symbol versioning.  That means that we can only do this on a
-> release boundary,
+> The idx in __ath10k_htt_rx_ring_fill_n function lives in
+> consistent dma region writable by the device. Malfunctional
+> or malicious device could manipulate such idx to have a OOB
+> write. Either by
+>     htt->rx_ring.netbufs_ring[idx] = skb;
+> or by
+>     ath10k_htt_set_paddrs_ring(htt, paddr, idx);
+>
+> The idx can also be negative as it's signed, giving a large
+> memory space to write to.
+>
+> It's possibly exploitable by corruptting a legit pointer with
+> a skb pointer. And then fill skb with payload as rougue object.
+>
+> Signed-off-by: Zekun Shen <bruceshenzk@gmail.com>
+> ---
+> Part of the log here. Sometimes it appears as UAF when writing 
+> to a freed memory by chance.
+>
+>  [   15.594376] BUG: unable to handle page fault for address: ffff887f5c1804f0
+>  [   15.595483] #PF: supervisor write access in kernel mode
+>  [   15.596250] #PF: error_code(0x0002) - not-present page
+>  [   15.597013] PGD 0 P4D 0
+>  [   15.597395] Oops: 0002 [#1] SMP KASAN PTI
+>  [   15.597967] CPU: 0 PID: 82 Comm: kworker/u2:2 Not tainted 5.6.0 #69
+>  [   15.598843] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), 
+>  BIOS rel-1.12.1-0-ga5cab58e9a3f-prebuilt.qemu.org 04/01/2014
+>  [   15.600438] Workqueue: ath10k_wq ath10k_core_register_work [ath10k_core]
+>  [   15.601389] RIP: 0010:__ath10k_htt_rx_ring_fill_n 
+>  (linux/drivers/net/wireless/ath/ath10k/htt_rx.c:173) ath10k_core
 
-That should not be a problem.
+I added the log to the commit log as it looks useful.
 
-> and that it's incompatible with other libraries which
-> use an interposing unversioned symbol.
-
-We have the freedom to define the ABI of this shared __rseq_abi symbol
-right now. Maybe it's not such a good thing to let early adopters use
-unversioned __rseq_abi symbols.
-
-Let me wrap my head around this scenario then, please let me know if
-I'm misunderstanding something:
-
-1) glibc 2.32 exposes:
-   __rseq_abi (GLIBC_2.32) with size == 32.
-   __rseq_abi with size == 32 is available as a private symbol within glibc
-   - both symbols alias the same contents.
-
-2) glibc 2.33 exposes:
-   __rseq_abi (GLIBC_2.32) with size == 32.
-   __rseq_abi (GLIBC_2.33) with size == 64.
-   __rseq_abi with size == 64 is available as a private symbol within glibc
-   - the three symbols alias the same contents.
-
-Then what happens if we have a program or preloaded library defining
-__rseq_abi (without version) with size == 32 loaded with a glibc 2.33 ?
-
-Or what happens if we have a program or preloaded libary defining
-__rseq_abi (GLIBC_2.32) with size == 32 loaded with a glibc 2.33 ?
-
-I wonder if "GLIBC_*" is the right version namespace for this. Considering
-that the layout of this structure is defined by the Linux kernel UAPI, maybe
-we'd want version named as "RSEQ_1.0", "RSEQ_2.0" or something similar.
-
-Thanks,
-
-Mathieu
+Also I made minor changes to the title and to the error message.
 
 -- 
-Mathieu Desnoyers
-EfficiOS Inc.
-http://www.efficios.com
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
