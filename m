@@ -2,98 +2,297 @@ Return-Path: <SRS0=kup7=A2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 984E9C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 21:13:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2031C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 21:13:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 62B412072E
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 21:13:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 707BA20672
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 21:13:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="mrXN+dy1"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="bV0BJ9dV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726908AbgGOVNP (ORCPT
+        id S1726968AbgGOVNp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 17:13:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57378 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725917AbgGOVNO (ORCPT
+        Wed, 15 Jul 2020 17:13:45 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:52911 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726929AbgGOVNo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 17:13:14 -0400
-Received: from mail-lj1-x22a.google.com (mail-lj1-x22a.google.com [IPv6:2a00:1450:4864:20::22a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AFF57C061755
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 14:13:13 -0700 (PDT)
-Received: by mail-lj1-x22a.google.com with SMTP id e4so4339997ljn.4
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 14:13:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=shutemov-name.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=40EEju4zhqJNrLfahZyvepUCR8xy5Lu2ucbT1r8p0F0=;
-        b=mrXN+dy1yUMmabC3DbDw1XiQjq2v4RTo4FewptRgSRsKZaezXTLKzGQsdD2IK2Lw4o
-         ylOOtZ9Wku93bV570PsOKqjeYOQyiBgg2w9hC6iZALlL8Oz3scyc3iSz2QJDTU7drBQX
-         nN44CCsIqw7tc9YR/DGGT/hQ7jDupBu42eszm91Mo9plmbHtq9/v8ZtkKb4r+TGVZK/s
-         9qTUQ1K9texzP7W8vFwC+tbJfkMpl0Rl+QBhHahf9RnHxtN3jATVi3rH//8aL73Pa7pZ
-         my87Wq2fK5ApE2hvH7buO2uLfaGZ7xlEukhxstbwuCCM/6kwsmdpzh5Dk0GXNqtn3Vxw
-         30PA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=40EEju4zhqJNrLfahZyvepUCR8xy5Lu2ucbT1r8p0F0=;
-        b=fI3CWD6NF//yBfyWBoNF+7pDeVsZvE0Y4CJ87crdZBDVEpXweKsWHDg/Aea1/X1Of8
-         ExwPNNF/wI1io5InPQ8Kq5j5Jew365lLq7VEWVYXQ7l3s3hqrgUtBG4O3M7pBhSBswYV
-         yTGgWEH/xCzE7LwM7Z1QSVjIL3WdxI5mYxmX5kaWtqivAhMzjQeyHB/pBM/J7CQwd/M1
-         ZJjvPSh30CIalAtzP6T4GCC2PtiezFa5TAa2EFmmD4xfJoxl9g7P+m5yHhlCLxZgjxtQ
-         LPFF6hbph0F+Z2eP6B8DStWlAbEpt8CFlUP2+nM2XkOiUb2d5p2lHtyeniJeB+PzmhKG
-         4RuA==
-X-Gm-Message-State: AOAM531DAVc5ZeG5TQHdQROHjRvg9vbNR8oi69bbazlawFvMSg+uDjUA
-        AShhHA34/0nJMNj5Dmez8hsnCB/9EEY=
-X-Google-Smtp-Source: ABdhPJxUsPALjvyqqoh3klOIbksCl3fNYezR8nEYz/TKInS5zb4Btyj6cdvMN2tAyk/SnqE3Qd7sEQ==
-X-Received: by 2002:a2e:9dc6:: with SMTP id x6mr441174ljj.94.1594847592248;
-        Wed, 15 Jul 2020 14:13:12 -0700 (PDT)
-Received: from box.localdomain ([86.57.175.117])
-        by smtp.gmail.com with ESMTPSA id u25sm791726lju.54.2020.07.15.14.13.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 15 Jul 2020 14:13:11 -0700 (PDT)
-Received: by box.localdomain (Postfix, from userid 1000)
-        id E10BE102143; Thu, 16 Jul 2020 00:13:17 +0300 (+03)
-Date:   Thu, 16 Jul 2020 00:13:17 +0300
-From:   "Kirill A. Shutemov" <kirill@shutemov.name>
-To:     Joel Fernandes <joel@joelfernandes.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linux-MM <linux-mm@kvack.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Naresh Kamboju <naresh.kamboju@linaro.org>,
-        William Kucharski <william.kucharski@oracle.com>
-Subject: Re: [PATCHv2] mm: Fix warning in move_normal_pmd()
-Message-ID: <20200715211317.hxw724qajn7ksioo@box>
-References: <20200715135011.42743-1-kirill.shutemov@linux.intel.com>
- <CAHk-=wh4pB-jRngOjcGxpc8=NPds3jWqJwDMUWC3-OEo4dRiKg@mail.gmail.com>
- <20200715205428.GA201569@google.com>
+        Wed, 15 Jul 2020 17:13:44 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1594847620;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=IdMRdm6egSWyWBEKkyFj3q3OxoU4alwAcP1Td/hH5vc=;
+        b=bV0BJ9dV+6UhFxEoYyOpFP/7vqblxe1skwvGs05OqnHJM4lijgB2/QzR26oy1VjuE8fD1B
+        YVLzdEH6iYguwFN11yKoiKPUDO0GTDm2tMPgM5sEZKfreFrSrNy5K9i4vU8coIrgG8KOS5
+        tvE4OZ6u8FKD6Z50Vup/ws+C6F4Xlik=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-185-uM95gTZhOb61h5k9j6KTYA-1; Wed, 15 Jul 2020 17:13:36 -0400
+X-MC-Unique: uM95gTZhOb61h5k9j6KTYA-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 891271083;
+        Wed, 15 Jul 2020 21:13:34 +0000 (UTC)
+Received: from krava (unknown [10.40.194.44])
+        by smtp.corp.redhat.com (Postfix) with SMTP id 6F8E82C24F;
+        Wed, 15 Jul 2020 21:13:31 +0000 (UTC)
+Date:   Wed, 15 Jul 2020 23:13:30 +0200
+From:   Jiri Olsa <jolsa@redhat.com>
+To:     Ian Rogers <irogers@google.com>
+Cc:     Jiri Olsa <jolsa@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Michael Petlan <mpetlan@redhat.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Kajol Jain <kjain@linux.ibm.com>,
+        John Garry <john.garry@huawei.com>,
+        "Paul A. Clarke" <pc@us.ibm.com>,
+        Stephane Eranian <eranian@google.com>
+Subject: Re: [PATCH 09/18] perf metric: Collect referenced metrics in struct
+ metric_ref_node
+Message-ID: <20200715211330.GR183694@krava>
+References: <20200712132634.138901-1-jolsa@kernel.org>
+ <20200712132634.138901-10-jolsa@kernel.org>
+ <CAP-5=fUa0TKW5U3hivu4HMi+9s+9BEygPhGUNRDM-oAH-BOSsw@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200715205428.GA201569@google.com>
+In-Reply-To: <CAP-5=fUa0TKW5U3hivu4HMi+9s+9BEygPhGUNRDM-oAH-BOSsw@mail.gmail.com>
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 15, 2020 at 04:54:28PM -0400, Joel Fernandes wrote:
-> Hi Linus,
+On Tue, Jul 14, 2020 at 05:07:04PM -0700, Ian Rogers wrote:
+> On Sun, Jul 12, 2020 at 6:27 AM Jiri Olsa <jolsa@kernel.org> wrote:
+> >
+> > Collecting referenced metrics in struct metric_ref_node object,
+> > so we can process them later on.
+> >
+> > The change will parse nested metric names out of expression and
+> > 'resolve' them.
+> >
+> > All referenced metrics are dissolved into one context, meaning all
+> > nested metrics events and added to the parent context.
+> >
+> > Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+> > ---
+> >  tools/perf/util/metricgroup.c | 147 ++++++++++++++++++++++++++++++----
+> >  1 file changed, 132 insertions(+), 15 deletions(-)
+> >
+> > diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.c
+> > index f0b0a053bfd2..9923eef1e2d4 100644
+> > --- a/tools/perf/util/metricgroup.c
+> > +++ b/tools/perf/util/metricgroup.c
+> > @@ -102,12 +102,20 @@ void metricgroup__rblist_exit(struct rblist *metric_events)
+> >         rblist__exit(metric_events);
+> >  }
+> >
+> > +struct metric_ref_node {
+> > +       const char *metric_name;
+> > +       const char *metric_expr;
+> > +       struct list_head list;
+> > +};
 > 
-> On Wed, Jul 15, 2020 at 11:36:59AM -0700, Linus Torvalds wrote:
-> Regarding the ADDR_AFTER_NEXT checks, shouldn't you check for:
+> Perhaps a comment like this above:
+> /* A node in the list of referenced metrics. metric_expr is held as a
+> convenience to avoid a search through the metric list. */
+
+sounds good
+
 > 
-> 	if (ADDR_AFTER_NEXT(ALIGN(*old_addr + *len, PMD_SIZE), old))
-> 		return;
+> > +
+> >  struct egroup {
+> >         struct list_head nd;
+> >         struct expr_parse_ctx pctx;
+> >         const char *metric_name;
+> >         const char *metric_expr;
+> >         const char *metric_unit;
+> > +       struct list_head refs;
+> > +       int refs_cnt;
+> 
+> A comment would be nice here as refs is a pretty overloaded term. For
+> example, is refs_cnt a reference count for memory management or the
+> length of the refs list? I'm unpopular and would use a long variable
+> name here of something like referenced_metrics for the list.
 
-See comment to ADDR_AFTER_NEXT().
+how about metric_refs ? ;-)
 
--- 
- Kirill A. Shutemov
+> 
+> >         int runtime;
+> >         bool has_constraint;
+> >  };
+> > @@ -574,27 +582,66 @@ int __weak arch_get_runtimeparam(void)
+> >  static int __add_metric(struct list_head *group_list,
+> >                         struct pmu_event *pe,
+> >                         bool metric_no_group,
+> > -                       int runtime)
+> > +                       int runtime,
+> > +                       struct egroup **egp)
+> 
+> Rather than egp perhaps parent_eg or parent_metric?
+
+I'm changing that later on, but perhaps not to parent_metric,
+which sounds good, I'll check
+
+> 
+> >  {
+> > +       struct metric_ref_node *ref;
+> >         struct egroup *eg;
+> >
+> > -       eg = malloc(sizeof(*eg));
+> > -       if (!eg)
+> > -               return -ENOMEM;
+> > +       if (*egp == NULL) {
+> > +               /*
+> > +                * We got in here for the master group,
+> > +                * allocate it and put it on the list.
+> > +                */
+> > +               eg = malloc(sizeof(*eg));
+> > +               if (!eg)
+> > +                       return -ENOMEM;
+> > +
+> > +               expr__ctx_init(&eg->pctx);
+> > +               eg->metric_name = pe->metric_name;
+> > +               eg->metric_expr = pe->metric_expr;
+> > +               eg->metric_unit = pe->unit;
+> > +               eg->runtime = runtime;
+> > +               eg->has_constraint = metric_no_group || metricgroup__has_constraint(pe);
+> > +               INIT_LIST_HEAD(&eg->refs);
+> > +               eg->refs_cnt = 0;
+> > +               *egp = eg;
+> > +       } else {
+> > +               /*
+> > +                * We got here for the referenced metric, via the
+> > +                * recursive metricgroup__add_metric call, add
+> > +                * it to the master group.
+> 
+> Probably want to avoid the term master here and below:
+> https://www.kernel.org/doc/html/latest/process/coding-style.html?highlight=language%20master#naming
+> Perhaps parent or referencing metric?
+
+right.. will change
+
+> 
+> > +                */
+> > +               eg = *egp;
+> > +
+> > +               ref = malloc(sizeof(*ref));
+> > +               if (!ref)
+> > +                       return -ENOMEM;
+> >
+> > -       expr__ctx_init(&eg->pctx);
+> > -       eg->metric_name = pe->metric_name;
+> > -       eg->metric_expr = pe->metric_expr;
+> > -       eg->metric_unit = pe->unit;
+> > -       eg->runtime = runtime;
+> > -       eg->has_constraint = metric_no_group || metricgroup__has_constraint(pe);
+> > +               ref->metric_name = pe->metric_name;
+> > +               ref->metric_expr = pe->metric_expr;
+> > +               list_add(&ref->list, &eg->refs);
+> > +               eg->refs_cnt++;
+> > +               eg->has_constraint |= metricgroup__has_constraint(pe);
+> 
+> Why not metric_no_group here? Perhaps use a function to avoid
+> duplication with the code above.
+
+oops, I think that has_constraint update should not be there at al,
+just for the 'parent' metric, thanks!
+
+> 
+> > +       }
+> >
+> > +       /*
+> > +        * For both the master and referenced metrics, we parse
+> > +        * all the metric's IDs and add it to the parent context.
+> > +        */
+> >         if (expr__find_other(pe->metric_expr, NULL, &eg->pctx, runtime) < 0) {
+> >                 expr__ctx_clear(&eg->pctx);
+> >                 free(eg);
+> >                 return -EINVAL;
+> >         }
+> >
+> > +       /*
+> > +        * We add new group only in the 'master' call,
+> > +        * so bail out for referenced metric case.
+> > +        */
+> > +       if (eg->refs_cnt)
+> > +               return 0;
+> > +
+> >         if (list_empty(group_list))
+> >                 list_add(&eg->nd, group_list);
+> >         else {
+> > @@ -636,14 +683,63 @@ static struct pmu_event *find_metric(const char *metric, struct pmu_events_map *
+> >
+> >  static int add_metric(struct list_head *group_list,
+> >                       struct pmu_event *pe,
+> > -                     bool metric_no_group)
+> > +                     bool metric_no_group,
+> > +                     struct egroup **egp);
+> > +
+> > +static int resolve_metric(struct egroup *eg,
+> > +                         bool metric_no_group,
+> > +                         struct list_head *group_list,
+> > +                         struct pmu_events_map *map)
+> > +{
+> > +       struct hashmap_entry *cur;
+> > +       size_t bkt;
+> > +       bool all;
+> > +       int ret;
+> > +
+> > +       /*
+> > +        * Iterate all the parsed IDs and if there's metric,
+> > +        * add it to the context.
+> > +        */
+> 
+> Does this mean that the ID doesn't need to begin "metric:" to
+> reference a different metric as per Andi Kleen's request?
+
+correct, that's why I separated find_metric function earlier,
+now I see I did not put this to the changelog :-\ sry
+
+> 
+> > +       do {
+> > +               all = true;
+> > +               hashmap__for_each_entry((&eg->pctx.ids), cur, bkt) {
+> > +                       struct pmu_event *pe;
+> > +
+> > +                       pe = find_metric(cur->key, map);
+> > +                       if (!pe)
+> > +                               continue;
+> > +
+> > +                       all = false;
+> > +                       /* The metric key itself needs to go out.. */
+> > +                       expr__del_id(&eg->pctx, cur->key);
+> > +
+> > +                       /* ... and it gets resolved to the parent context. */
+> > +                       ret = add_metric(group_list, pe, metric_no_group, &eg);
+> > +                       if (ret)
+> > +                               return ret;
+> > +
+> > +                       /*
+> > +                        * We added new metric to hashmap, so we need
+> > +                        * to break the iteration and start over.
+> > +                        */
+> > +                       break;
+> > +               }
+> > +       } while (!all);
+> > +
+> > +       return 0;
+> > +}
+
+SNIP
+
