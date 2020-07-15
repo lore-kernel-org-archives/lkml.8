@@ -2,76 +2,117 @@ Return-Path: <SRS0=kup7=A2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1284FC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 06:33:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15417C433E5
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 06:33:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E0252206F4
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 06:33:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF7562067D
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 06:33:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728666AbgGOGdk (ORCPT
+        id S1728712AbgGOGdo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 02:33:40 -0400
-Received: from albireo.enyo.de ([37.24.231.21]:44584 "EHLO albireo.enyo.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725823AbgGOGdj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 02:33:39 -0400
-Received: from [172.17.203.2] (helo=deneb.enyo.de)
-        by albireo.enyo.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        id 1jvayt-0000Pz-3w; Wed, 15 Jul 2020 06:33:27 +0000
-Received: from fw by deneb.enyo.de with local (Exim 4.92)
-        (envelope-from <fw@deneb.enyo.de>)
-        id 1jvawb-00039g-W6; Wed, 15 Jul 2020 08:31:05 +0200
-From:   Florian Weimer <fw@deneb.enyo.de>
-To:     Chris Kennelly <ckennelly@google.com>
-Cc:     Peter Oskolkov <posk@google.com>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Peter Oskolkov <posk@posk.io>,
-        Peter Zijlstra <peterz@infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        paulmck <paulmck@linux.ibm.com>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Paul Turner <pjt@google.com>,
-        linux-api <linux-api@vger.kernel.org>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        carlos <carlos@redhat.com>
-Subject: Re: [RFC PATCH 2/4] rseq: Allow extending struct rseq
-References: <20200714030348.6214-1-mathieu.desnoyers@efficios.com>
-        <20200714030348.6214-3-mathieu.desnoyers@efficios.com>
-        <CAFTs51UHaUqaKj5bEj0vQtEZrww9gnrqb-kGVk7DAgQJPBAR+w@mail.gmail.com>
-        <775688146.12145.1594748580461.JavaMail.zimbra@efficios.com>
-        <CAPNVh5fiCCJpyeLj_ciWzFrO4fasVXZNhpfKXJhJWJirXdJOjQ@mail.gmail.com>
-        <CAEE+ybmt4BredezuTPdh-vf=FkKtu0yAhWuf+0daUe89AnbmPg@mail.gmail.com>
-Date:   Wed, 15 Jul 2020 08:31:05 +0200
-In-Reply-To: <CAEE+ybmt4BredezuTPdh-vf=FkKtu0yAhWuf+0daUe89AnbmPg@mail.gmail.com>
-        (Chris Kennelly's message of "Tue, 14 Jul 2020 22:34:38 -0400")
-Message-ID: <87k0z5xpau.fsf@mid.deneb.enyo.de>
+        Wed, 15 Jul 2020 02:33:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34322 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725823AbgGOGdo (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jul 2020 02:33:44 -0400
+Received: from smtp.al2klimov.de (smtp.al2klimov.de [IPv6:2a01:4f8:c0c:1465::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 301E4C061755;
+        Tue, 14 Jul 2020 23:33:44 -0700 (PDT)
+Received: from authenticated-user (PRIMARY_HOSTNAME [PUBLIC_IP])
+        by smtp.al2klimov.de (Postfix) with ESMTPA id 06794BC069;
+        Wed, 15 Jul 2020 06:33:39 +0000 (UTC)
+Subject: Re: [PATCH] Replace HTTP links with HTTPS ones: Xilinx video IP cores
+To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc:     hyun.kwon@xilinx.com, mchehab@kernel.org, robh+dt@kernel.org,
+        michal.simek@xilinx.com, linux-media@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+References: <20200705075524.22657-1-grandmaster@al2klimov.de>
+ <20200714235724.GR5854@pendragon.ideasonboard.com>
+From:   "Alexander A. Klimov" <grandmaster@al2klimov.de>
+Message-ID: <5fca4c17-9e83-3936-0d8f-ad73ae760033@al2klimov.de>
+Date:   Wed, 15 Jul 2020 08:33:35 +0200
 MIME-Version: 1.0
-Content-Type: text/plain
+In-Reply-To: <20200714235724.GR5854@pendragon.ideasonboard.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Spamd-Bar: +
+Authentication-Results: smtp.al2klimov.de;
+        auth=pass smtp.auth=aklimov@al2klimov.de smtp.mailfrom=grandmaster@al2klimov.de
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* Chris Kennelly:
 
-> When glibc provides registration, is the anticipated use case that a
-> library would unregister and reregister each thread to "upgrade" it to
-> the most modern version of interface it knows about provided by the
-> kernel?
 
-Absolutely not, that is likely to break other consumers because an
-expected rseq area becomes dormant instead.
+Am 15.07.20 um 01:57 schrieb Laurent Pinchart:
+> Hi Alexander,
+> 
+> Thank you for the patch.
+> 
+> The subject line should be
+> 
+> dt-bindings: media: xilinx: Replace HTTP links with HTTPS ones
+> 
+> On Sun, Jul 05, 2020 at 09:55:24AM +0200, Alexander A. Klimov wrote:
+>> Rationale:
+>> Reduces attack surface on kernel devs opening the links for MITM
+>> as HTTPS traffic is much harder to manipulate.
+>>
+>> Deterministic algorithm:
+>> For each file:
+>>    If not .svg:
+>>      For each line:
+>>        If doesn't contain `\bxmlns\b`:
+>>          For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
+>>            If both the HTTP and HTTPS versions
+>>            return 200 OK and serve the same content:
+>>              Replace HTTP with HTTPS.
+>>
+>> Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
+> 
+> Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> 
+> Will you get this patch merged as part of a bigger series, or do you
+> expect us to take care of it ? In the latter case, if you agree with the
+I've just followed the patch submission instructions as for any 
+non-treewide patch. So yes, I assume the people I write to take care of 
+the patch.
 
-> There, I could assume an all-or-nothing registration of the new
-> feature--limited only by kernel availability for thread
-> homogeneity--but inconsistencies across early adopter libraries would
-> mean each thread would have to examine its own TLS to determine if a
-> feature were available.
+> subject line change, there's no need to resubmit, I can fix this when
+> applying the patch.
+OK.
 
-Exactly.  Certain uses of seccomp can also have this effect,
-presenting a non-homogeneous view.
+> 
+>> ---
+>>   Continuing my work started at 93431e0607e5.
+>>
+>>   If there are any URLs to be removed completely or at least not HTTPSified:
+>>   Just clearly say so and I'll *undo my change*.
+>>   See also https://lkml.org/lkml/2020/6/27/64
+>>
+>>   If there are any valid, but yet not changed URLs:
+>>   See https://lkml.org/lkml/2020/6/26/837
+>>
+>>   Documentation/devicetree/bindings/media/xilinx/video.txt | 2 +-
+>>   1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/Documentation/devicetree/bindings/media/xilinx/video.txt b/Documentation/devicetree/bindings/media/xilinx/video.txt
+>> index 68ac210e688e..d0335ca0cd57 100644
+>> --- a/Documentation/devicetree/bindings/media/xilinx/video.txt
+>> +++ b/Documentation/devicetree/bindings/media/xilinx/video.txt
+>> @@ -32,4 +32,4 @@ The following properties are common to all Xilinx video IP cores.
+>>     defaults to "mono".
+>>   
+>>   
+>> -[UG934] http://www.xilinx.com/support/documentation/ip_documentation/axi_videoip/v1_0/ug934_axi_videoIP.pdf
+>> +[UG934] https://www.xilinx.com/support/documentation/ip_documentation/axi_videoip/v1_0/ug934_axi_videoIP.pdf
+> 
