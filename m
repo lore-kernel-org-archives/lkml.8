@@ -5,68 +5,69 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EE7FC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 23:49:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B219C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 23:46:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 76A5E206F5
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 23:49:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D89862071B
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 23:46:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ggTz5Yh+"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="iqVybj+N"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727787AbgGOXti (ORCPT
+        id S1726984AbgGOXqe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 19:49:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53136 "EHLO
+        Wed, 15 Jul 2020 19:46:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52674 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726770AbgGOXth (ORCPT
+        with ESMTP id S1726770AbgGOXqd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 19:49:37 -0400
-Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AFE4AC061755
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 16:49:37 -0700 (PDT)
-Received: by mail-pj1-x1042.google.com with SMTP id md7so3775077pjb.1
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 16:49:37 -0700 (PDT)
+        Wed, 15 Jul 2020 19:46:33 -0400
+Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AB400C061755
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 16:46:33 -0700 (PDT)
+Received: by mail-pf1-x441.google.com with SMTP id x72so2811042pfc.6
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 16:46:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=NnY25f3xKxvnucN24PYy68sMkiT/GStHrAMkI/Vdf8g=;
-        b=ggTz5Yh+TfVJlYfDOzLu592eNQskGEZRmumjTBvwsNzVL62VrkVUCUyanQxabxfpzI
-         MiT0FhbLWCMkAsAqNYZs+iGO1ddB3GzqUhdUQwSudgjGpxKD1OqkGLZd6XMlVNmgcFJj
-         IoLA7TaoQajpYRAVsU+u5A3vV1SizxvVZADxk=
+        bh=p5jorZC1TkH3ISm4S95AAjWEBEpsvo8bCA396VWT6Ds=;
+        b=iqVybj+NsR/y+uI9GLbCm957UqnhBLZOXRPv8IVn2eHO98vAKndW8AkW3UE0GbuyB+
+         8XRPwqdUAwz5b7Agz2a5r20JI0fB/uSSlhQBQftNGJAwlxnmY2FHRUXDe3nDoZZAPF2Q
+         jN4LDK+FdcNo1yUVKL7gfSqRgv5mGGr/emRL4=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=NnY25f3xKxvnucN24PYy68sMkiT/GStHrAMkI/Vdf8g=;
-        b=TStCk2GvRrR4bgrsxTFqaIHbwxCiP1ygkwobQiUQkjdDa0T5iSTDuLCqB1IFY9baBV
-         SVQGdpaWKuscJOq/WpiwH0wFmTGkvGnZcF+czFFe9tV8pF8k36b53TMoYgtI4RykW+Qp
-         1RrKhnmA/md2xoZ8T+cu/nWuynkb+UEniRuclvPgOmByPbPHTV9e7qE/n2BcirxuPv7s
-         IQiqx2Mt4nl/QNhwDbe86p6NmY7EBt0f2JGUToEMKI4WIPY/hhQYhPzWBGoXGSmc2azR
-         KqhbMYLibcMgfTlKWu9bVwUEAKK5jg8Kfctxy2EpCyl4QngN0VPun/2OytWsXZikFLBr
-         PxrA==
-X-Gm-Message-State: AOAM5312zOxOwHRCf3ZLh2hBsKHLW0xJOnf8Tu2VfK6fB7vVQdZmr3q3
-        34g8KgyHFj3EuEaLWB/r6/IER5NPDIk=
-X-Google-Smtp-Source: ABdhPJzy12ejJD/X5OflbpT+RhzpF6wd2yvkZRCc7hMp8lz/ey/PfBFsdeAkmEqe/6VupYCxWFp2VA==
-X-Received: by 2002:a17:902:c391:: with SMTP id g17mr1508535plg.330.1594856976810;
-        Wed, 15 Jul 2020 16:49:36 -0700 (PDT)
-Received: from pmalani2.mtv.corp.google.com ([2620:15c:202:201:a28c:fdff:fef0:49dd])
-        by smtp.gmail.com with ESMTPSA id a26sm2978157pgm.20.2020.07.15.16.49.35
+        bh=p5jorZC1TkH3ISm4S95AAjWEBEpsvo8bCA396VWT6Ds=;
+        b=bzNPNpKbAkYGHp3xl3O+kuvuUGTV39FYAkESURHIIHcMYHCEtgBU1vVqeP4jC9gBgp
+         m1JFvw809PfNmA7gyNWYPU5Dw+syinT5aSc2vdJycewdRJABg5CScNuBJHthFpbjynyQ
+         3YBuCyTo99VO7mlkyrmStL+PsrRg/I6z+puCuUW/KLd32MFZoP5+V7ExHiBOgMyY5W0U
+         Qk97qDWdctpS22+kXSPgBg4XhErQpTMZ63iuk+h9a35W9/E/meGb7FLz48OKxZN4ZX52
+         knMMh3qYqcOkTakkR5+Nvbb6YWWGKv46vSLXdfGkywfbALXEKX/BJgTp+MxwSB335na6
+         1CxQ==
+X-Gm-Message-State: AOAM531dz/tjvVTdZsI/N0EVzu+TARdvZ5x/0A+0vMF9chtQ4wT284Zo
+        8Ggv42PWC0GjoL/GHfuYOg6Chg==
+X-Google-Smtp-Source: ABdhPJwFl2N0BOA5livG8Sss2jFK57hegzDrN7WQsB/aTtqUX8jnsaqbVioZt9UU0BW5sS75mSkbyA==
+X-Received: by 2002:a63:84c3:: with SMTP id k186mr1803546pgd.394.1594856793107;
+        Wed, 15 Jul 2020 16:46:33 -0700 (PDT)
+Received: from tictac2.mtv.corp.google.com ([2620:15c:202:1:42b0:34ff:fe3d:58e6])
+        by smtp.gmail.com with ESMTPSA id a19sm3010706pfn.136.2020.07.15.16.46.32
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 15 Jul 2020 16:49:36 -0700 (PDT)
-From:   Prashant Malani <pmalani@chromium.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     heikki.krogerus@linux.intel.com,
-        Prashant Malani <pmalani@chromium.org>,
-        Benson Leung <bleung@chromium.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Guenter Roeck <groeck@chromium.org>
-Subject: [PATCH] platform/chrome: cros_ec_typec: Unregister partner on error
-Date:   Wed, 15 Jul 2020 16:49:28 -0700
-Message-Id: <20200715234928.3090367-1-pmalani@chromium.org>
-X-Mailer: git-send-email 2.27.0.389.gc38d7665816-goog
+        Wed, 15 Jul 2020 16:46:32 -0700 (PDT)
+From:   Douglas Anderson <dianders@chromium.org>
+To:     Mark Brown <broonie@kernel.org>
+Cc:     Rohit Kumar <rohitkr@codeaurora.org>,
+        Douglas Anderson <dianders@chromium.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Richard Fitzgerald <rf@opensource.wolfsonmicro.com>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] regmap: debugfs: Don't sleep while atomic for fast_io regmaps
+Date:   Wed, 15 Jul 2020 16:46:15 -0700
+Message-Id: <20200715164611.1.I35b3533e8a80efde0cec1cc70f71e1e74b2fa0da@changeid>
+X-Mailer: git-send-email 2.28.0.rc0.105.gf9edc3c819-goog
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -74,130 +75,129 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When port update is called during probe(), any error with setting the
-Type C muxes results in an errno being returned to probe(), which promptly
-returns that itself. Ensure that we unregister any registered partners
-when doing so, to prevent orphaned partners on the Type C connector
-class framework.
+If a regmap has "fast_io" set then its lock function uses a spinlock.
+That doesn't work so well with the functions:
+* regmap_cache_only_write_file()
+* regmap_cache_bypass_write_file()
 
-Move the cros_typec_add_partner() and cros_typec_remove_partner() code
-together to higher up in the file, so that they are together, and we can
-call cros_typec_remove_partner() from cros_unregister_ports().
+Both of the above functions have the pattern:
+1. Lock the regmap.
+2. Call:
+   debugfs_write_file_bool()
+     copy_from_user()
+       __might_fault()
+         __might_sleep()
 
-Fixes: 7e7def15fa4b ("platform/chrome: cros_ec_typec: Add USB mux control")
-Signed-off-by: Prashant Malani <pmalani@chromium.org>
+Let's reorder things a bit so that we do all of our sleepable
+functions before we grab the lock.
+
+Fixes: d3dc5430d68f ("regmap: debugfs: Allow writes to cache state settings")
+Signed-off-by: Douglas Anderson <dianders@chromium.org>
 ---
- drivers/platform/chrome/cros_ec_typec.c | 83 +++++++++++++------------
- 1 file changed, 42 insertions(+), 41 deletions(-)
 
-diff --git a/drivers/platform/chrome/cros_ec_typec.c b/drivers/platform/chrome/cros_ec_typec.c
-index 0c041b79cbba..43e7cf367a07 100644
---- a/drivers/platform/chrome/cros_ec_typec.c
-+++ b/drivers/platform/chrome/cros_ec_typec.c
-@@ -140,6 +140,47 @@ static int cros_typec_get_switch_handles(struct cros_typec_port *port,
- 	return -ENODEV;
- }
- 
-+static int cros_typec_add_partner(struct cros_typec_data *typec, int port_num,
-+				  bool pd_en)
-+{
-+	struct cros_typec_port *port = typec->ports[port_num];
-+	struct typec_partner_desc p_desc = {
-+		.usb_pd = pd_en,
-+	};
-+	int ret = 0;
-+
-+	/*
-+	 * Fill an initial PD identity, which will then be updated with info
-+	 * from the EC.
-+	 */
-+	p_desc.identity = &port->p_identity;
-+
-+	port->partner = typec_register_partner(port->port, &p_desc);
-+	if (IS_ERR(port->partner)) {
-+		ret = PTR_ERR(port->partner);
-+		port->partner = NULL;
-+	}
-+
-+	return ret;
-+}
-+
-+static void cros_typec_remove_partner(struct cros_typec_data *typec,
-+				     int port_num)
-+{
-+	struct cros_typec_port *port = typec->ports[port_num];
-+
-+	port->state.alt = NULL;
-+	port->state.mode = TYPEC_STATE_USB;
-+	port->state.data = NULL;
-+
-+	usb_role_switch_set_role(port->role_sw, USB_ROLE_NONE);
-+	typec_switch_set(port->ori_sw, TYPEC_ORIENTATION_NONE);
-+	typec_mux_set(port->mux, &port->state);
-+
-+	typec_unregister_partner(port->partner);
-+	port->partner = NULL;
-+}
-+
- static void cros_unregister_ports(struct cros_typec_data *typec)
+ drivers/base/regmap/regmap-debugfs.c | 52 ++++++++++++++++------------
+ 1 file changed, 29 insertions(+), 23 deletions(-)
+
+diff --git a/drivers/base/regmap/regmap-debugfs.c b/drivers/base/regmap/regmap-debugfs.c
+index 089e5dc7144a..f58baff2be0a 100644
+--- a/drivers/base/regmap/regmap-debugfs.c
++++ b/drivers/base/regmap/regmap-debugfs.c
+@@ -463,29 +463,31 @@ static ssize_t regmap_cache_only_write_file(struct file *file,
  {
- 	int i;
-@@ -147,6 +188,7 @@ static void cros_unregister_ports(struct cros_typec_data *typec)
- 	for (i = 0; i < typec->num_ports; i++) {
- 		if (!typec->ports[i])
- 			continue;
-+		cros_typec_remove_partner(typec, i);
- 		usb_role_switch_put(typec->ports[i]->role_sw);
- 		typec_switch_put(typec->ports[i]->ori_sw);
- 		typec_mux_put(typec->ports[i]->mux);
-@@ -285,47 +327,6 @@ static int cros_typec_ec_command(struct cros_typec_data *typec,
- 	return ret;
- }
+ 	struct regmap *map = container_of(file->private_data,
+ 					  struct regmap, cache_only);
+-	ssize_t result;
+-	bool was_enabled, require_sync = false;
++	bool new_val, require_sync = false;
+ 	int err;
  
--static int cros_typec_add_partner(struct cros_typec_data *typec, int port_num,
--				  bool pd_en)
--{
--	struct cros_typec_port *port = typec->ports[port_num];
--	struct typec_partner_desc p_desc = {
--		.usb_pd = pd_en,
--	};
--	int ret = 0;
--
--	/*
--	 * Fill an initial PD identity, which will then be updated with info
--	 * from the EC.
--	 */
--	p_desc.identity = &port->p_identity;
--
--	port->partner = typec_register_partner(port->port, &p_desc);
--	if (IS_ERR(port->partner)) {
--		ret = PTR_ERR(port->partner);
--		port->partner = NULL;
+-	map->lock(map->lock_arg);
++	err = kstrtobool_from_user(user_buf, count, &new_val);
++	/* Ignore malforned data like debugfs_write_file_bool() */
++	if (err)
++		return count;
+ 
+-	was_enabled = map->cache_only;
++	err = debugfs_file_get(file->f_path.dentry);
++	if (err)
++		return err;
+ 
+-	result = debugfs_write_file_bool(file, user_buf, count, ppos);
+-	if (result < 0) {
+-		map->unlock(map->lock_arg);
+-		return result;
 -	}
--
--	return ret;
--}
--
--static void cros_typec_remove_partner(struct cros_typec_data *typec,
--				     int port_num)
--{
--	struct cros_typec_port *port = typec->ports[port_num];
--
--	port->state.alt = NULL;
--	port->state.mode = TYPEC_STATE_USB;
--	port->state.data = NULL;
--
--	usb_role_switch_set_role(port->role_sw, USB_ROLE_NONE);
--	typec_switch_set(port->ori_sw, TYPEC_ORIENTATION_NONE);
--	typec_mux_set(port->mux, &port->state);
--
--	typec_unregister_partner(port->partner);
--	port->partner = NULL;
--}
--
- static void cros_typec_set_port_params_v0(struct cros_typec_data *typec,
- 		int port_num, struct ec_response_usb_pd_control *resp)
++	map->lock(map->lock_arg);
+ 
+-	if (map->cache_only && !was_enabled) {
++	if (new_val && !map->cache_only) {
+ 		dev_warn(map->dev, "debugfs cache_only=Y forced\n");
+ 		add_taint(TAINT_USER, LOCKDEP_STILL_OK);
+-	} else if (!map->cache_only && was_enabled) {
++	} else if (!new_val && map->cache_only) {
+ 		dev_warn(map->dev, "debugfs cache_only=N forced: syncing cache\n");
+ 		require_sync = true;
+ 	}
++	map->cache_only = new_val;
+ 
+ 	map->unlock(map->lock_arg);
++	debugfs_file_put(file->f_path.dentry);
+ 
+ 	if (require_sync) {
+ 		err = regcache_sync(map);
+@@ -493,7 +495,7 @@ static ssize_t regmap_cache_only_write_file(struct file *file,
+ 			dev_err(map->dev, "Failed to sync cache %d\n", err);
+ 	}
+ 
+-	return result;
++	return count;
+ }
+ 
+ static const struct file_operations regmap_cache_only_fops = {
+@@ -508,28 +510,32 @@ static ssize_t regmap_cache_bypass_write_file(struct file *file,
  {
+ 	struct regmap *map = container_of(file->private_data,
+ 					  struct regmap, cache_bypass);
+-	ssize_t result;
+-	bool was_enabled;
++	bool new_val;
++	int err;
+ 
+-	map->lock(map->lock_arg);
++	err = kstrtobool_from_user(user_buf, count, &new_val);
++	/* Ignore malforned data like debugfs_write_file_bool() */
++	if (err)
++		return count;
+ 
+-	was_enabled = map->cache_bypass;
++	err = debugfs_file_get(file->f_path.dentry);
++	if (err)
++		return err;
+ 
+-	result = debugfs_write_file_bool(file, user_buf, count, ppos);
+-	if (result < 0)
+-		goto out;
++	map->lock(map->lock_arg);
+ 
+-	if (map->cache_bypass && !was_enabled) {
++	if (new_val && !map->cache_bypass) {
+ 		dev_warn(map->dev, "debugfs cache_bypass=Y forced\n");
+ 		add_taint(TAINT_USER, LOCKDEP_STILL_OK);
+-	} else if (!map->cache_bypass && was_enabled) {
++	} else if (!new_val && map->cache_bypass) {
+ 		dev_warn(map->dev, "debugfs cache_bypass=N forced\n");
+ 	}
++	map->cache_bypass = new_val;
+ 
+-out:
+ 	map->unlock(map->lock_arg);
++	debugfs_file_put(file->f_path.dentry);
+ 
+-	return result;
++	return count;
+ }
+ 
+ static const struct file_operations regmap_cache_bypass_fops = {
 -- 
-2.27.0.389.gc38d7665816-goog
+2.28.0.rc0.105.gf9edc3c819-goog
 
