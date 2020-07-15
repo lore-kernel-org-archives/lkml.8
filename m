@@ -2,37 +2,38 @@ Return-Path: <SRS0=kup7=A2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3F3DC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 04:27:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59706C433E3
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 04:27:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8EFB12067D
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 04:27:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 424762082F
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 04:27:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726652AbgGOE11 (ORCPT
+        id S1727825AbgGOE1c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 00:27:27 -0400
+        Wed, 15 Jul 2020 00:27:32 -0400
 Received: from mga05.intel.com ([192.55.52.43]:59539 "EHLO mga05.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725770AbgGOE11 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726023AbgGOE11 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 15 Jul 2020 00:27:27 -0400
-IronPort-SDR: 1myXmjA3WpzCTn8bKX2UnmSqPQiJCt6TAvHd7WUOrDOrFcW4hLBCC1rVAQPJ+oMU2UtSk+jXVl
- 6UWHSSe7wLeA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9682"; a="233936293"
+IronPort-SDR: rdKDBCCr0sQNNk++uBrIur9cfBae2UiSmnL9e3xxeXejqYE9kRMbeTOVZ6GPCp6NcD6hTmDA+k
+ bBvehhDYzs1g==
+X-IronPort-AV: E=McAfee;i="6000,8403,9682"; a="233936294"
 X-IronPort-AV: E=Sophos;i="5.75,354,1589266800"; 
-   d="scan'208";a="233936293"
+   d="scan'208";a="233936294"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from fmsmga004.fm.intel.com ([10.253.24.48])
   by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jul 2020 21:27:26 -0700
-IronPort-SDR: yYi6MGSXlFAUgYHAavn7DNXJz8sblz4eHr1QSjSPTnAAwL+UU2MJqDmHiBsBLaw30xLzyHH2CO
- dZJlNyRonj2Q==
+IronPort-SDR: DNE1cujfr2YcOX6Y8wIRz+c51jOPkd1aM06hjDa0GiaU/wlWW0/H97wHq1+QkQ3uAJ/ShSDN6z
+ Dj5rKSlifSMA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.75,354,1589266800"; 
-   d="scan'208";a="308118773"
+   d="scan'208";a="308118775"
 Received: from sjchrist-coffee.jf.intel.com ([10.54.74.152])
   by fmsmga004.fm.intel.com with ESMTP; 14 Jul 2020 21:27:26 -0700
 From:   Sean Christopherson <sean.j.christopherson@intel.com>
@@ -43,10 +44,12 @@ Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
         Jim Mattson <jmattson@google.com>,
         Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
         linux-kernel@vger.kernel.org, Junaid Shahid <junaids@google.com>
-Subject: [PATCH 0/8] KVM: x86/mmu: ITLB multi-hit workaround fixes
-Date:   Tue, 14 Jul 2020 21:27:17 -0700
-Message-Id: <20200715042725.10961-1-sean.j.christopherson@intel.com>
+Subject: [PATCH 1/8] KVM: x86/mmu: Commit zap of remaining invalid pages when recovering lpages
+Date:   Tue, 14 Jul 2020 21:27:18 -0700
+Message-Id: <20200715042725.10961-2-sean.j.christopherson@intel.com>
 X-Mailer: git-send-email 2.26.0
+In-Reply-To: <20200715042725.10961-1-sean.j.christopherson@intel.com>
+References: <20200715042725.10961-1-sean.j.christopherson@intel.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -54,50 +57,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Patch 1 is a minor fix for a very theoretical bug where KVM could skip
-the final "commit zap" when recovering shadow pages for the NX huge
-page mitigation.
+Call kvm_mmu_commit_zap_page() after exiting the "prepare zap" loop in
+kvm_recover_nx_lpages() to finish zapping pages in the unlikely event
+that the loop exited due to lpage_disallowed_mmu_pages being empty.
+Because the recovery thread drops mmu_lock() when rescheduling, it's
+possible that lpage_disallowed_mmu_pages could be emptied by a different
+thread without to_zap reaching zero despite to_zap being derived from
+the number of disallowed lpages.
 
-Patch 2 is cleanup that's made possible by patch 1.
+Fixes: 1aa9b9572b105 ("kvm: x86: mmu: Recovery of shattered NX large pages")
+Cc: Junaid Shahid <junaids@google.com>
+Cc: stable@vger.kernel.org
+Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+---
+ arch/x86/kvm/mmu/mmu.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-Patches 3-5 are the main course and fix bugs in the NX huge page
-accounting where shadow pages are incorrectly added to the list of
-disallowed huge pages.  KVM doesn't actually check to see if the page
-could actually have been a large page when adding to the disallowed list.
-This result in what are effectively spurious zaps.  The biggest issue is
-likely with shadow pages in the upper levels, i.e. levels 3 and 4, as they
-are either unlikely to be huge (1gb) or flat out can't be huge (512tb).
-And because of the way KVM zaps, the upper levels will be zapped first,
-i.e. KVM is likely zapping and rebuilding a decent number of its shadow
-pages for zero benefit.
-
-Ideally, patches 3-5 would be a single patch to ease backporting.  In the
-end, I decided the change is probably not suitable for stable as at worst
-it creates an infrequent performance spike (assuming the admin isn't going
-crazy with the recovery frequency), and it's far from straightforward or
-risk free.  Cramming everything into a single patch was a mess.
-
-Patches 6-8 are cleanups in related code.  The 'hlevel' name in particular
-has been on my todo list for a while.
-
-Sean Christopherson (8):
-  KVM: x86/mmu: Commit zap of remaining invalid pages when recovering
-    lpages
-  KVM: x86/mmu: Refactor the zap loop for recovering NX lpages
-  KVM: x86/mmu: Move "huge page disallowed" calculation into mapping
-    helpers
-  KVM: x86/mmu: Capture requested page level before NX huge page
-    workaround
-  KVM: x86/mmu: Account NX huge page disallowed iff huge page was
-    requested
-  KVM: x86/mmu: Rename 'hlevel' to 'level' in FNAME(fetch)
-  KVM: x86/mmu: Hoist ITLB multi-hit workaround check up a level
-  KVM: x86/mmu: Track write/user faults using bools
-
- arch/x86/kvm/mmu/mmu.c         | 58 +++++++++++++++++++++-------------
- arch/x86/kvm/mmu/paging_tmpl.h | 39 ++++++++++++-----------
- 2 files changed, 57 insertions(+), 40 deletions(-)
-
+diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
+index 77810ce66bdb4..48be51027af64 100644
+--- a/arch/x86/kvm/mmu/mmu.c
++++ b/arch/x86/kvm/mmu/mmu.c
+@@ -6340,6 +6340,7 @@ static void kvm_recover_nx_lpages(struct kvm *kvm)
+ 				cond_resched_lock(&kvm->mmu_lock);
+ 		}
+ 	}
++	kvm_mmu_commit_zap_page(kvm, &invalid_list);
+ 
+ 	spin_unlock(&kvm->mmu_lock);
+ 	srcu_read_unlock(&kvm->srcu, rcu_idx);
 -- 
 2.26.0
 
