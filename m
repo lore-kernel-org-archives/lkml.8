@@ -2,203 +2,298 @@ Return-Path: <SRS0=kup7=A2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CD33C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 19:43:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 111EDC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 19:46:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D35D420657
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 19:43:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B6C0120657
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 19:46:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ExaZGhoD"
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="Uj9FeJ9Y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726941AbgGOTnz (ORCPT
+        id S1726970AbgGOTqB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 15:43:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43578 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726661AbgGOTny (ORCPT
+        Wed, 15 Jul 2020 15:46:01 -0400
+Received: from smtp-fw-33001.amazon.com ([207.171.190.10]:54807 "EHLO
+        smtp-fw-33001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726661AbgGOTqA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 15:43:54 -0400
-Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C6356C061755;
-        Wed, 15 Jul 2020 12:43:53 -0700 (PDT)
-Received: by mail-ej1-x644.google.com with SMTP id ga4so3417798ejb.11;
-        Wed, 15 Jul 2020 12:43:53 -0700 (PDT)
+        Wed, 15 Jul 2020 15:46:00 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=to:cc:references:from:autocrypt:subject:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=iaLGexaSw4FQvPhMT9GEqm7GZkiMzvFUAf6J/Ie1zOA=;
-        b=ExaZGhoDR2ndnOqNntbrwWNIBpldsMx/kGfINn/oieckd2ZAnOdyl8/0/8NgHgHHeC
-         onOQwXpudiyWKJ+I0SkS0OveCxqZMjrrZgN7gD6tleGHGZBaaR1axLFbbrO6QCnCO4xP
-         1FKB4tJpPwaXljdhatldDhQH3ASqG9HqU7vyD5QClCxfZNfLKFSbPq0oDDR8wsWv5Dij
-         BPasKLZwzd44d/jwCpQhs37K0FROo0KEPrMVLTa7TYZdTt+7Y5pHoWFnYVNqwQaMR+Eh
-         9ozGo+/geqdnLHZAulFsZ/02Mrasqt7Sk0Rc9NJlYzdahvbizQbjPF9adHNZJqq9PzgD
-         puRw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:to:cc:references:from:autocrypt:subject
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=iaLGexaSw4FQvPhMT9GEqm7GZkiMzvFUAf6J/Ie1zOA=;
-        b=OAFWkX+9bG6MMfYehZdwCDGN38sL9jvVtGnrba4CqrFWOX05TAdupHVKX3x/3d+LAS
-         ZSK764MtqdW1Jeju79j2CVakYlIjuZTTnBGDZweDnUZ518l2aYTZxldO+E8S33b0IIQ+
-         IadP6sw3vByMNrqdOCVH9o6zh5AjrAiqRmdFdzCaQMbDEUmbF40YrN+jgx0Tt9NkFKJF
-         iKCQkxWSgJJH/UwdKfunt5EF26KprV2FV76aNgzlrDY+YaYcZx2EMjEpu3mvwUbectbn
-         qryclx1OBO7IQjz3o0E/m0g9EhtqK9GwIEUNr183vfTaq/xIshzANnek+zwp0tGUjzgV
-         VkCA==
-X-Gm-Message-State: AOAM531fi2+tLtWahqrbDj3oq+8H28SANoxaKanI66CdIaDDpi2fTyOZ
-        73vRZN0MMDwth9bM1S4UEINNdrPgXog=
-X-Google-Smtp-Source: ABdhPJyzNKFw1M0wjMMFZxBhJp2hgNFM/MGMacBI9InXmClalXZd3CNIgy0jyccKprE3eYn0Z7dOWA==
-X-Received: by 2002:a17:906:1402:: with SMTP id p2mr528029ejc.126.1594842232060;
-        Wed, 15 Jul 2020 12:43:52 -0700 (PDT)
-Received: from [192.168.43.238] ([5.100.193.69])
-        by smtp.gmail.com with ESMTPSA id o6sm3112602edr.94.2020.07.15.12.43.50
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 15 Jul 2020 12:43:51 -0700 (PDT)
-To:     Matthew Wilcox <willy@infradead.org>,
-        Andy Lutomirski <luto@amacapital.net>
-Cc:     Stefano Garzarella <sgarzare@redhat.com>,
-        Miklos Szeredi <miklos@szeredi.hu>,
-        Kees Cook <keescook@chromium.org>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        strace-devel@lists.strace.io, io-uring@vger.kernel.org,
-        Linux API <linux-api@vger.kernel.org>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <CAJfpegu3EwbBFTSJiPhm7eMyTK2MzijLUp1gcboOo3meMF_+Qg@mail.gmail.com>
- <D9FAB37B-D059-4137-A115-616237D78640@amacapital.net>
- <20200715171130.GG12769@casper.infradead.org>
-From:   Pavel Begunkov <asml.silence@gmail.com>
-Autocrypt: addr=asml.silence@gmail.com; prefer-encrypt=mutual; keydata=
- mQINBFmKBOQBEAC76ZFxLAKpDw0bKQ8CEiYJRGn8MHTUhURL02/7n1t0HkKQx2K1fCXClbps
- bdwSHrhOWdW61pmfMbDYbTj6ZvGRvhoLWfGkzujB2wjNcbNTXIoOzJEGISHaPf6E2IQx1ik9
- 6uqVkK1OMb7qRvKH0i7HYP4WJzYbEWVyLiAxUj611mC9tgd73oqZ2pLYzGTqF2j6a/obaqha
- +hXuWTvpDQXqcOZJXIW43atprH03G1tQs7VwR21Q1eq6Yvy2ESLdc38EqCszBfQRMmKy+cfp
- W3U9Mb1w0L680pXrONcnlDBCN7/sghGeMHjGKfNANjPc+0hzz3rApPxpoE7HC1uRiwC4et83
- CKnncH1l7zgeBT9Oa3qEiBlaa1ZCBqrA4dY+z5fWJYjMpwI1SNp37RtF8fKXbKQg+JuUjAa9
- Y6oXeyEvDHMyJYMcinl6xCqCBAXPHnHmawkMMgjr3BBRzODmMr+CPVvnYe7BFYfoajzqzq+h
- EyXSl3aBf0IDPTqSUrhbmjj5OEOYgRW5p+mdYtY1cXeK8copmd+fd/eTkghok5li58AojCba
- jRjp7zVOLOjDlpxxiKhuFmpV4yWNh5JJaTbwCRSd04sCcDNlJj+TehTr+o1QiORzc2t+N5iJ
- NbILft19Izdn8U39T5oWiynqa1qCLgbuFtnYx1HlUq/HvAm+kwARAQABtDFQYXZlbCBCZWd1
- bmtvdiAoc2lsZW5jZSkgPGFzbWwuc2lsZW5jZUBnbWFpbC5jb20+iQJOBBMBCAA4FiEE+6Ju
- PTjTbx479o3OWt5b1Glr+6UFAlmKBOQCGwMFCwkIBwIGFQgJCgsCBBYCAwECHgECF4AACgkQ
- Wt5b1Glr+6WxZA//QueaKHzgdnOikJ7NA/Vq8FmhRlwgtP0+E+w93kL+ZGLzS/cUCIjn2f4Q
- Mcutj2Neg0CcYPX3b2nJiKr5Vn0rjJ/suiaOa1h1KzyNTOmxnsqE5fmxOf6C6x+NKE18I5Jy
- xzLQoktbdDVA7JfB1itt6iWSNoOTVcvFyvfe5ggy6FSCcP+m1RlR58XxVLH+qlAvxxOeEr/e
- aQfUzrs7gqdSd9zQGEZo0jtuBiB7k98t9y0oC9Jz0PJdvaj1NZUgtXG9pEtww3LdeXP/TkFl
- HBSxVflzeoFaj4UAuy8+uve7ya/ECNCc8kk0VYaEjoVrzJcYdKP583iRhOLlZA6HEmn/+Gh9
- 4orG67HNiJlbFiW3whxGizWsrtFNLsSP1YrEReYk9j1SoUHHzsu+ZtNfKuHIhK0sU07G1OPN
- 2rDLlzUWR9Jc22INAkhVHOogOcc5ajMGhgWcBJMLCoi219HlX69LIDu3Y34uIg9QPZIC2jwr
- 24W0kxmK6avJr7+n4o8m6sOJvhlumSp5TSNhRiKvAHB1I2JB8Q1yZCIPzx+w1ALxuoWiCdwV
- M/azguU42R17IuBzK0S3hPjXpEi2sK/k4pEPnHVUv9Cu09HCNnd6BRfFGjo8M9kZvw360gC1
- reeMdqGjwQ68o9x0R7NBRrtUOh48TDLXCANAg97wjPoy37dQE7e5Ag0EWYoE5AEQAMWS+aBV
- IJtCjwtfCOV98NamFpDEjBMrCAfLm7wZlmXy5I6o7nzzCxEw06P2rhzp1hIqkaab1kHySU7g
- dkpjmQ7Jjlrf6KdMP87mC/Hx4+zgVCkTQCKkIxNE76Ff3O9uTvkWCspSh9J0qPYyCaVta2D1
- Sq5HZ8WFcap71iVO1f2/FEHKJNz/YTSOS/W7dxJdXl2eoj3gYX2UZNfoaVv8OXKaWslZlgqN
- jSg9wsTv1K73AnQKt4fFhscN9YFxhtgD/SQuOldE5Ws4UlJoaFX/yCoJL3ky2kC0WFngzwRF
- Yo6u/KON/o28yyP+alYRMBrN0Dm60FuVSIFafSqXoJTIjSZ6olbEoT0u17Rag8BxnxryMrgR
- dkccq272MaSS0eOC9K2rtvxzddohRFPcy/8bkX+t2iukTDz75KSTKO+chce62Xxdg62dpkZX
- xK+HeDCZ7gRNZvAbDETr6XI63hPKi891GeZqvqQVYR8e+V2725w+H1iv3THiB1tx4L2bXZDI
- DtMKQ5D2RvCHNdPNcZeldEoJwKoA60yg6tuUquvsLvfCwtrmVI2rL2djYxRfGNmFMrUDN1Xq
- F3xozA91q3iZd9OYi9G+M/OA01husBdcIzj1hu0aL+MGg4Gqk6XwjoSxVd4YT41kTU7Kk+/I
- 5/Nf+i88ULt6HanBYcY/+Daeo/XFABEBAAGJAjYEGAEIACAWIQT7om49ONNvHjv2jc5a3lvU
- aWv7pQUCWYoE5AIbDAAKCRBa3lvUaWv7pfmcEACKTRQ28b1y5ztKuLdLr79+T+LwZKHjX++P
- 4wKjEOECCcB6KCv3hP+J2GCXDOPZvdg/ZYZafqP68Yy8AZqkfa4qPYHmIdpODtRzZSL48kM8
- LRzV8Rl7J3ItvzdBRxf4T/Zseu5U6ELiQdCUkPGsJcPIJkgPjO2ROG/ZtYa9DvnShNWPlp+R
- uPwPccEQPWO/NP4fJl2zwC6byjljZhW5kxYswGMLBwb5cDUZAisIukyAa8Xshdan6C2RZcNs
- rB3L7vsg/R8UCehxOH0C+NypG2GqjVejNZsc7bgV49EOVltS+GmGyY+moIzxsuLmT93rqyII
- 5rSbbcTLe6KBYcs24XEoo49Zm9oDA3jYvNpeYD8rDcnNbuZh9kTgBwFN41JHOPv0W2FEEWqe
- JsCwQdcOQ56rtezdCJUYmRAt3BsfjN3Jn3N6rpodi4Dkdli8HylM5iq4ooeb5VkQ7UZxbCWt
- UVMKkOCdFhutRmYp0mbv2e87IK4erwNHQRkHUkzbsuym8RVpAZbLzLPIYK/J3RTErL6Z99N2
- m3J6pjwSJY/zNwuFPs9zGEnRO4g0BUbwGdbuvDzaq6/3OJLKohr5eLXNU3JkT+3HezydWm3W
- OPhauth7W0db74Qd49HXK0xe/aPrK+Cp+kU1HRactyNtF8jZQbhMCC8vMGukZtWaAwpjWiiH bA==
-Subject: Re: strace of io_uring events?
-Message-ID: <7c09f6af-653f-db3f-2378-02dca2bc07f7@gmail.com>
-Date:   Wed, 15 Jul 2020 22:42:04 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1594842360; x=1626378360;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=07ZiHsSJNDyPfOvpZkEmwAGWdhDd52BASM8p6D09UtE=;
+  b=Uj9FeJ9YvPAofU/XH9a9oeNz68jep07n0ALYYrJCnuJs3XbkefTQnIQa
+   VVUCQvPY97qST+oSZMTWO2YX+2pOGRtlyRuLb+kHU+hr2g2DNQyz/ECKy
+   3bzPP7TMHq9RR7Bvr3SDdS2F+sxtRRFDknvpVUPAgHASs3iCUOGKRPHUA
+   I=;
+IronPort-SDR: m0FYBS1y8EPqixIZ3YB7F4fCUkllhYZ4p53vgtEm/8Lyndake2gOPVevlm0oFKIsow/+PrT+ZJ
+ 4fK+gMGx78qw==
+X-IronPort-AV: E=Sophos;i="5.75,356,1589241600"; 
+   d="scan'208";a="58896902"
+Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-2b-c300ac87.us-west-2.amazon.com) ([10.47.23.38])
+  by smtp-border-fw-out-33001.sea14.amazon.com with ESMTP; 15 Jul 2020 19:45:57 +0000
+Received: from EX13MTAUEA002.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan2.pdx.amazon.com [10.170.41.162])
+        by email-inbound-relay-2b-c300ac87.us-west-2.amazon.com (Postfix) with ESMTPS id 30B69A25AA;
+        Wed, 15 Jul 2020 19:45:57 +0000 (UTC)
+Received: from EX13D16EUB001.ant.amazon.com (10.43.166.28) by
+ EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Wed, 15 Jul 2020 19:45:56 +0000
+Received: from 38f9d34ed3b1.ant.amazon.com (10.43.161.214) by
+ EX13D16EUB001.ant.amazon.com (10.43.166.28) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Wed, 15 Jul 2020 19:45:46 +0000
+From:   Andra Paraschiv <andraprs@amazon.com>
+To:     <linux-kernel@vger.kernel.org>
+CC:     Anthony Liguori <aliguori@amazon.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Colm MacCarthaigh <colmmacc@amazon.com>,
+        "David Duncan" <davdunc@amazon.com>,
+        Bjoern Doebel <doebel@amazon.de>,
+        "David Woodhouse" <dwmw@amazon.co.uk>,
+        Frank van der Linden <fllinden@amazon.com>,
+        Alexander Graf <graf@amazon.de>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        "Karen Noel" <knoel@redhat.com>,
+        Martin Pohlack <mpohlack@amazon.de>,
+        Matt Wilson <msw@amazon.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Balbir Singh <sblbir@amazon.com>,
+        Stefano Garzarella <sgarzare@redhat.com>,
+        "Stefan Hajnoczi" <stefanha@redhat.com>,
+        Stewart Smith <trawets@amazon.com>,
+        "Uwe Dannowski" <uwed@amazon.de>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>, <kvm@vger.kernel.org>,
+        <ne-devel-upstream@amazon.com>,
+        Andra Paraschiv <andraprs@amazon.com>
+Subject: [PATCH v5 00/18] Add support for Nitro Enclaves
+Date:   Wed, 15 Jul 2020 22:45:22 +0300
+Message-ID: <20200715194540.45532-1-andraprs@amazon.com>
+X-Mailer: git-send-email 2.20.1 (Apple Git-117)
 MIME-Version: 1.0
-In-Reply-To: <20200715171130.GG12769@casper.infradead.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.43.161.214]
+X-ClientProxiedBy: EX13D46UWB002.ant.amazon.com (10.43.161.70) To
+ EX13D16EUB001.ant.amazon.com (10.43.166.28)
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 15/07/2020 20:11, Matthew Wilcox wrote:
-> On Wed, Jul 15, 2020 at 07:35:50AM -0700, Andy Lutomirski wrote:
->>> On Jul 15, 2020, at 4:12 AM, Miklos Szeredi <miklos@szeredi.hu> wrote:
->>>
->>> <feff>Hi,
-> 
-> feff?  Are we doing WTF-16 in email now?  ;-)
-> 
->>>
->>> This thread is to discuss the possibility of stracing requests
->>> submitted through io_uring.   I'm not directly involved in io_uring
->>> development, so I'm posting this out of  interest in using strace on
->>> processes utilizing io_uring.
->>>
->>> io_uring gives the developer a way to bypass the syscall interface,
->>> which results in loss of information when tracing.  This is a strace
->>> fragment on  "io_uring-cp" from liburing:
->>>
->>> io_uring_enter(5, 40, 0, 0, NULL, 8)    = 40
->>> io_uring_enter(5, 1, 0, 0, NULL, 8)     = 1
->>> io_uring_enter(5, 1, 0, 0, NULL, 8)     = 1
->>> ...
->>>
->>> What really happens are read + write requests.  Without that
->>> information the strace output is mostly useless.
->>>
->>> This loss of information is not new, e.g. calls through the vdso or
->>> futext fast paths are also invisible to strace.  But losing filesystem
->>> I/O calls are a major blow, imo.
+Nitro Enclaves (NE) is a new Amazon Elastic Compute Cloud (EC2) capability
+that allows customers to carve out isolated compute environments within EC2
+instances [1].
 
-To clear details for those who are not familiar with io_uring:
+For example, an application that processes sensitive data and runs in a VM,
+can be separated from other applications running in the same VM. This
+application then runs in a separate VM than the primary VM, namely an enclave.
 
-io_uring has a pair of queues, submission (SQ) and completion queues (CQ),
-both shared between kernel and user spaces. The userspace submits requests
-by filling a chunk of memory in SQ. The kernel picks up SQ entries in
-(syscall io_uring_enter) or asynchronously by polling SQ.
+An enclave runs alongside the VM that spawned it. This setup matches low latency
+applications needs. The resources that are allocated for the enclave, such as
+memory and CPUs, are carved out of the primary VM. Each enclave is mapped to a
+process running in the primary VM, that communicates with the NE driver via an
+ioctl interface.
 
-CQ entries are filled by the kernel completely asynchronously and
-in parallel. Some users just poll CQ to get them, but also have a way
-to wait for them.
+In this sense, there are two components:
 
->>>
->>> What do people think?
->>>
->>> From what I can tell, listing the submitted requests on
->>> io_uring_enter() would not be hard.  Request completion is
->>> asynchronous, however, and may not require  io_uring_enter() syscall.
->>> Am I correct?
+1. An enclave abstraction process - a user space process running in the primary
+VM guest that uses the provided ioctl interface of the NE driver to spawn an
+enclave VM (that's 2 below).
 
-Both, submission and completion sides may not require a syscall.
+There is a NE emulated PCI device exposed to the primary VM. The driver for this
+new PCI device is included in the NE driver.
 
->>>
->>> Is there some existing tracing infrastructure that strace could use to
->>> get async completion events?  Should we be introducing one?
+The ioctl logic is mapped to PCI device commands e.g. the NE_START_ENCLAVE ioctl
+maps to an enclave start PCI command. The PCI device commands are then
+translated into  actions taken on the hypervisor side; that's the Nitro
+hypervisor running on the host where the primary VM is running. The Nitro
+hypervisor is based on core KVM technology.
 
-There are static trace points covering all needs.
+2. The enclave itself - a VM running on the same host as the primary VM that
+spawned it. Memory and CPUs are carved out of the primary VM and are dedicated
+for the enclave VM. An enclave does not have persistent storage attached.
 
-And if not used the whole thing have to be zero-overhead. Otherwise
-there is perf, which is zero-overhead, and this IMHO won't fly. 
+The memory regions carved out of the primary VM and given to an enclave need to
+be aligned 2 MiB / 1 GiB physically contiguous memory regions (or multiple of
+this size e.g. 8 MiB). The memory can be allocated e.g. by using hugetlbfs from
+user space [2][3]. The memory size for an enclave needs to be at least 64 MiB.
+The enclave memory and CPUs need to be from the same NUMA node.
 
->>
->> Let’s add some seccomp folks. We probably also want to be able to run
->> seccomp-like filters on io_uring requests. So maybe io_uring should
->> call into seccomp-and-tracing code for each action.
-> 
-> Adding Stefano since he had a complementary proposal for iouring
-> restrictions that weren't exactly seccomp.
-> 
+An enclave runs on dedicated cores. CPU 0 and its CPU siblings need to remain
+available for the primary VM. A CPU pool has to be set for NE purposes by an
+user with admin capability. See the cpu list section from the kernel
+documentation [4] for how a CPU pool format looks.
+
+An enclave communicates with the primary VM via a local communication channel,
+using virtio-vsock [5]. The primary VM has virtio-pci vsock emulated device,
+while the enclave VM has a virtio-mmio vsock emulated device. The vsock device
+uses eventfd for signaling. The enclave VM sees the usual interfaces - local
+APIC and IOAPIC - to get interrupts from virtio-vsock device. The virtio-mmio
+device is placed in memory below the typical 4 GiB.
+
+The application that runs in the enclave needs to be packaged in an enclave
+image together with the OS ( e.g. kernel, ramdisk, init ) that will run in the
+enclave VM. The enclave VM has its own kernel and follows the standard Linux
+boot protocol.
+
+The kernel bzImage, the kernel command line, the ramdisk(s) are part of the
+Enclave Image Format (EIF); plus an EIF header including metadata such as magic
+number, eif version, image size and CRC.
+
+Hash values are computed for the entire enclave image (EIF), the kernel and
+ramdisk(s). That's used, for example, to check that the enclave image that is
+loaded in the enclave VM is the one that was intended to be run.
+
+These crypto measurements are included in a signed attestation document
+generated by the Nitro Hypervisor and further used to prove the identity of the
+enclave; KMS is an example of service that NE is integrated with and that checks
+the attestation doc.
+
+The enclave image (EIF) is loaded in the enclave memory at offset 8 MiB. The
+init process in the enclave connects to the vsock CID of the primary VM and a
+predefined port - 9000 - to send a heartbeat value - 0xb7. This mechanism is
+used to check in the primary VM that the enclave has booted.
+
+If the enclave VM crashes or gracefully exits, an interrupt event is received by
+the NE driver. This event is sent further to the user space enclave process
+running in the primary VM via a poll notification mechanism. Then the user space
+enclave process can exit.
+
+Thank you.
+
+Andra
+
+[1] https://aws.amazon.com/ec2/nitro/nitro-enclaves/
+[2] https://www.kernel.org/doc/Documentation/vm/hugetlbpage.txt
+[3] https://lwn.net/Articles/807108/
+[4] https://www.kernel.org/doc/html/latest/admin-guide/kernel-parameters.html
+[5] https://man7.org/linux/man-pages/man7/vsock.7.html
+
+---
+
+Patch Series Changelog
+
+The patch series is built on top of v5.8-rc5.
+
+v4 -> v5
+
+* Rebase on top of v5.8-rc5.
+* Add more details about the ioctl calls usage e.g. error codes.
+* Update the ioctl to set an enclave vCPU to not return a fd.
+* Add specific NE error codes.
+* Split the NE CPU pool in CPU cores cpumasks.
+* Remove log on copy_from_user() / copy_to_user() failure.
+* Release the reference to the NE PCI device on failure paths.
+* Close enclave fd on copy_to_user() failure.
+* Set empty string in case of invalid NE CPU pool sysfs value.
+* Early exit on NE CPU pool setup if enclave(s) already running.
+* Add more sanity checks for provided vCPUs e.g. maximum possible value.
+* Split logic for checking if a vCPU is in pool / getting a vCPU from pool.
+* Exit without unpinning the pages on NE PCI dev request failure.
+* Add check for the memory region user space address alignment.
+* Update the logic to set memory region to not have a hardcoded check for 2 MiB.
+* Add arch dependency for Arm / x86.
+* v4: https://lore.kernel.org/lkml/20200622200329.52996-1-andraprs@amazon.com/
+
+v3 -> v4
+
+* Rebase on top of v5.8-rc2.
+* Add NE API version and the corresponding ioctl call.
+* Add enclave / image load flags options.
+* Decouple NE ioctl interface from KVM API.
+* Remove the "packed" attribute and include padding in the NE data structures.
+* Update documentation based on the changes from v4.
+* Update sample to match the updates in v4.
+* Remove the NE CPU pool init during NE kernel module loading.
+* Setup the NE CPU pool at runtime via a sysfs file for the kernel parameter.
+* Check if the enclave memory and CPUs are from the same NUMA node.
+* Add minimum enclave memory size definition.
+* v3: https://lore.kernel.org/lkml/20200525221334.62966-1-andraprs@amazon.com/ 
+
+v2 -> v3
+
+* Rebase on top of v5.7-rc7.
+* Add changelog to each patch in the series.
+* Remove "ratelimited" from the logs that are not in the ioctl call paths.
+* Update static calls sanity checks.
+* Remove file ops that do nothing for now.
+* Remove GPL additional wording as SPDX-License-Identifier is already in place.
+* v2: https://lore.kernel.org/lkml/20200522062946.28973-1-andraprs@amazon.com/
+
+v1 -> v2
+
+* Rebase on top of v5.7-rc6.
+* Adapt codebase based on feedback from v1.
+* Update ioctl number definition - major and minor.
+* Add sample / documentation for the ioctl interface basic flow usage.
+* Update cover letter to include more context on the NE overall.
+* Add fix for the enclave / vcpu fd creation error cleanup path.
+* Add fix reported by kbuild test robot <lkp@intel.com>.
+* v1: https://lore.kernel.org/lkml/20200421184150.68011-1-andraprs@amazon.com/
+
+---
+
+Andra Paraschiv (18):
+  nitro_enclaves: Add ioctl interface definition
+  nitro_enclaves: Define the PCI device interface
+  nitro_enclaves: Define enclave info for internal bookkeeping
+  nitro_enclaves: Init PCI device driver
+  nitro_enclaves: Handle PCI device command requests
+  nitro_enclaves: Handle out-of-band PCI device events
+  nitro_enclaves: Init misc device providing the ioctl interface
+  nitro_enclaves: Add logic for creating an enclave VM
+  nitro_enclaves: Add logic for setting an enclave vCPU
+  nitro_enclaves: Add logic for getting the enclave image load info
+  nitro_enclaves: Add logic for setting an enclave memory region
+  nitro_enclaves: Add logic for starting an enclave
+  nitro_enclaves: Add logic for terminating an enclave
+  nitro_enclaves: Add Kconfig for the Nitro Enclaves driver
+  nitro_enclaves: Add Makefile for the Nitro Enclaves driver
+  nitro_enclaves: Add sample for ioctl interface usage
+  nitro_enclaves: Add overview documentation
+  MAINTAINERS: Add entry for the Nitro Enclaves driver
+
+ Documentation/nitro_enclaves/ne_overview.rst  |   87 ++
+ .../userspace-api/ioctl/ioctl-number.rst      |    5 +-
+ MAINTAINERS                                   |   13 +
+ drivers/virt/Kconfig                          |    2 +
+ drivers/virt/Makefile                         |    2 +
+ drivers/virt/nitro_enclaves/Kconfig           |   16 +
+ drivers/virt/nitro_enclaves/Makefile          |   11 +
+ drivers/virt/nitro_enclaves/ne_misc_dev.c     | 1385 +++++++++++++++++
+ drivers/virt/nitro_enclaves/ne_misc_dev.h     |  106 ++
+ drivers/virt/nitro_enclaves/ne_pci_dev.c      |  565 +++++++
+ drivers/virt/nitro_enclaves/ne_pci_dev.h      |  265 ++++
+ include/linux/nitro_enclaves.h                |   11 +
+ include/uapi/linux/nitro_enclaves.h           |  244 +++
+ samples/nitro_enclaves/.gitignore             |    2 +
+ samples/nitro_enclaves/Makefile               |   16 +
+ samples/nitro_enclaves/ne_ioctl_sample.c      |  628 ++++++++
+ 16 files changed, 3357 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/nitro_enclaves/ne_overview.rst
+ create mode 100644 drivers/virt/nitro_enclaves/Kconfig
+ create mode 100644 drivers/virt/nitro_enclaves/Makefile
+ create mode 100644 drivers/virt/nitro_enclaves/ne_misc_dev.c
+ create mode 100644 drivers/virt/nitro_enclaves/ne_misc_dev.h
+ create mode 100644 drivers/virt/nitro_enclaves/ne_pci_dev.c
+ create mode 100644 drivers/virt/nitro_enclaves/ne_pci_dev.h
+ create mode 100644 include/linux/nitro_enclaves.h
+ create mode 100644 include/uapi/linux/nitro_enclaves.h
+ create mode 100644 samples/nitro_enclaves/.gitignore
+ create mode 100644 samples/nitro_enclaves/Makefile
+ create mode 100644 samples/nitro_enclaves/ne_ioctl_sample.c
 
 -- 
-Pavel Begunkov
+2.20.1 (Apple Git-117)
+
+
+
+
+Amazon Development Center (Romania) S.R.L. registered office: 27A Sf. Lazar Street, UBC5, floor 2, Iasi, Iasi County, 700045, Romania. Registered in Romania. Registration number J22/2621/2005.
+
