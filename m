@@ -2,39 +2,39 @@ Return-Path: <SRS0=kup7=A2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4CE7C433ED
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 14:26:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20018C433F1
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 14:26:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BF1732065D
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 14:26:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E87AD205CB
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 14:26:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nic.cz header.i=@nic.cz header.b="EyDL/Axz"
+	dkim=pass (1024-bit key) header.d=nic.cz header.i=@nic.cz header.b="HYUl/mJ3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728620AbgGOO0V (ORCPT
+        id S1728601AbgGOO0U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 10:26:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50816 "EHLO
+        Wed, 15 Jul 2020 10:26:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50814 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728414AbgGOO0B (ORCPT
+        with ESMTP id S1728412AbgGOO0B (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 15 Jul 2020 10:26:01 -0400
 Received: from mail.nic.cz (lists.nic.cz [IPv6:2001:1488:800:400::400])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6551EC08C5DB
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5E719C061755
         for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 07:26:01 -0700 (PDT)
 Received: from dellmb.labs.office.nic.cz (unknown [IPv6:2001:1488:fffe:6:cac7:3539:7f1f:463])
-        by mail.nic.cz (Postfix) with ESMTP id 0AD0113FC1A;
+        by mail.nic.cz (Postfix) with ESMTP id 50B2E140A51;
         Wed, 15 Jul 2020 16:25:58 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=nic.cz; s=default;
-        t=1594823158; bh=Dmmq7c83omCyHjmVGSlaEZEbm4AR1uYjTQdEkSn1A6Y=;
+        t=1594823158; bh=keURn+22u253qVA/hwtaY7TRtboxhUkiOumfUMd4baA=;
         h=From:To:Date;
-        b=EyDL/AxzXK8CilzzMj58XhdopH7oDBuHAZIp+gObouVHtWUad46wexw9nG/syQG6t
-         RKFv+WwGHuRMjfaU0x4QAnNzQbHo0IuV3qFOaXPG4ltt9UvJnnovOgMG3wtr5U1yvs
-         rDX0c2S3hUooXtf5RfhPqTZ5/rAEd7YzzXKOLhjE=
+        b=HYUl/mJ3o5KBM3YacMPRiu5S1O2iHhqHTQUlts0pF/3ISXfoBh4yNBfbNWAqv5mil
+         7aUNiIt9vl7BrHwktWtDXh08y5xnpA2QsGdp54xV4aeDd9OLXcdH6VZeILhzqG3rda
+         tFKWDTlUBZc2kOiWT5L9uckmWxSoawEcIuyTV0XI=
 From:   =?UTF-8?q?Marek=20Beh=C3=BAn?= <marek.behun@nic.cz>
 To:     linux-pci@vger.kernel.org
 Cc:     Tomasz Maciej Nowak <tmn505@gmail.com>,
@@ -43,11 +43,14 @@ Cc:     Tomasz Maciej Nowak <tmn505@gmail.com>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
         linux-kernel@vger.kernel.org, Andrew Lunn <andrew@lunn.ch>,
         Xogium <contact@xogium.me>,
+        =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>,
         =?UTF-8?q?Marek=20Beh=C3=BAn?= <marek.behun@nic.cz>
-Subject: [PATCH 0/5] PCIe aardvark controller improvements
-Date:   Wed, 15 Jul 2020 16:25:52 +0200
-Message-Id: <20200715142557.17115-1-marek.behun@nic.cz>
+Subject: [PATCH 2/5] PCI: aardvark: Check for errors from pci_bridge_emul_init() call
+Date:   Wed, 15 Jul 2020 16:25:54 +0200
+Message-Id: <20200715142557.17115-3-marek.behun@nic.cz>
 X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200715142557.17115-1-marek.behun@nic.cz>
+References: <20200715142557.17115-1-marek.behun@nic.cz>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -59,31 +62,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+From: Pali Rohár <pali@kernel.org>
 
-we have some more improvements for PCIe aardvark controller (Armada 3720
-SOC - EspressoBIN and Turris MOX).
+Function pci_bridge_emul_init() may fail so correctly check for errors.
 
-The main improvement is that with these patches the driver can be compiled
-as a module, and can be reloaded at runtime.
+Fixes: 8a3ebd8de328 ("PCI: aardvark: Implement emulated root PCI bridge config space")
+Signed-off-by: Pali Rohár <pali@kernel.org>
+Reviewed-by: Marek Behún <marek.behun@nic.cz>
+---
+ drivers/pci/controller/pci-aardvark.c | 11 +++++++----
+ 1 file changed, 7 insertions(+), 4 deletions(-)
 
-This series applies on top of Linus' master branch.
-
-Marek & Pali
-
-Pali Rohár (5):
-  PCI: aardvark: Fix compilation on s390
-  PCI: aardvark: Check for errors from pci_bridge_emul_init() call
-  PCI: pci-bridge-emul: Export API functions
-  PCI: aardvark: Implement driver 'remove' function and allow to build
-    it as module
-  PCI: aardvark: Move PCIe reset card code to advk_pcie_train_link()
-
- drivers/pci/controller/Kconfig        |   2 +-
- drivers/pci/controller/pci-aardvark.c | 102 ++++++++++++++++----------
- drivers/pci/pci-bridge-emul.c         |   4 +
- 3 files changed, 69 insertions(+), 39 deletions(-)
-
+diff --git a/drivers/pci/controller/pci-aardvark.c b/drivers/pci/controller/pci-aardvark.c
+index 8caa80b19cf8..d5f58684d962 100644
+--- a/drivers/pci/controller/pci-aardvark.c
++++ b/drivers/pci/controller/pci-aardvark.c
+@@ -608,7 +608,7 @@ static struct pci_bridge_emul_ops advk_pci_bridge_emul_ops = {
+  * Initialize the configuration space of the PCI-to-PCI bridge
+  * associated with the given PCIe interface.
+  */
+-static void advk_sw_pci_bridge_init(struct advk_pcie *pcie)
++static int advk_sw_pci_bridge_init(struct advk_pcie *pcie)
+ {
+ 	struct pci_bridge_emul *bridge = &pcie->bridge;
+ 
+@@ -634,8 +634,7 @@ static void advk_sw_pci_bridge_init(struct advk_pcie *pcie)
+ 	bridge->data = pcie;
+ 	bridge->ops = &advk_pci_bridge_emul_ops;
+ 
+-	pci_bridge_emul_init(bridge, 0);
+-
++	return pci_bridge_emul_init(bridge, 0);
+ }
+ 
+ static bool advk_pcie_valid_device(struct advk_pcie *pcie, struct pci_bus *bus,
+@@ -1169,7 +1168,11 @@ static int advk_pcie_probe(struct platform_device *pdev)
+ 
+ 	advk_pcie_setup_hw(pcie);
+ 
+-	advk_sw_pci_bridge_init(pcie);
++	ret = advk_sw_pci_bridge_init(pcie);
++	if (ret) {
++		dev_err(dev, "Failed to register emulated root PCI bridge\n");
++		return ret;
++	}
+ 
+ 	ret = advk_pcie_init_irq_domain(pcie);
+ 	if (ret) {
 -- 
 2.26.2
 
