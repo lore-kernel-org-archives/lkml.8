@@ -2,160 +2,127 @@ Return-Path: <SRS0=kup7=A2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25CC0C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 16:06:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 362C7C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 16:02:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ECA5E2071B
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 16:06:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="A/Eaj5VO"
+	by mail.kernel.org (Postfix) with ESMTP id 0B22C20658
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 16:02:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594828929;
+	bh=CeX0MHTmJsHaAB/QS6BONJpBk2doOHrMWAlokkPu28o=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=H2i0enXbbRuFbwrID9GzMOaCLs575+1FlRdVDrppD2lfwQP0QMkRxcsoC2Htdl1H/
+	 PUsIC5lFA2i6h4ackg5wOrHw8VKyKF8QypHTDcH09RpUpmlYZQny0RqwF+QxagHuBn
+	 g6e6ZRs8Yilq5iBFl8ZfzLTqRPe6oaQjwMDFWvE4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726770AbgGOQGp (ORCPT
+        id S1725922AbgGOQBr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 12:06:45 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:33400 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726506AbgGOQGT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 12:06:19 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06FFlE3M035510;
-        Wed, 15 Jul 2020 16:05:32 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
- mime-version : subject : from : in-reply-to : date : cc :
- content-transfer-encoding : message-id : references : to;
- s=corp-2020-01-29; bh=Ho0h/PXvKNz4buENJQeQYv8x5o54xLFUN6ZESVyWhjo=;
- b=A/Eaj5VOsDmdEKpvjnf/Ad8EhW0tXGtYkap9cQxzxnfTP5RCKlYtx943NImRisqEXxvq
- QYXNapoBkdIY9+SBnQGNgVaILPSxlEftfNfuI3vXpXvr3zNRXdpQZmk3uinn7wiCBImg
- MMZIFZ0+EOSu4GdZ0fT8jP1TA5n9p0CJBkmbNKkuZlt2U34BJJimc4bi9pcqboOGMcN2
- 5dUv2PCJ9gsBoWWvVMFQYxvD/6No2A3EaSmMZrhsqtuIYWMQUA8L4q/Hpn0t8sVSczxH
- 5K2GEtYKnj3y8EniLZcUUUjyDZmc3ybwmCNo/+2J5frLUAP008Xb3vC1zLZvPRvRWm6Y MA== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by aserp2120.oracle.com with ESMTP id 3275cmcb1m-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 15 Jul 2020 16:05:32 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06FFlq5b114720;
-        Wed, 15 Jul 2020 16:05:32 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by userp3020.oracle.com with ESMTP id 32a4cqt8vm-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 15 Jul 2020 16:05:29 +0000
-Received: from abhmp0001.oracle.com (abhmp0001.oracle.com [141.146.116.7])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 06FG5Nal007365;
-        Wed, 15 Jul 2020 16:05:23 GMT
-Received: from anon-dhcp-152.1015granger.net (/68.61.232.219)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 15 Jul 2020 09:05:21 -0700
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.80.23.2.2\))
-Subject: Re: xprtrdma: Prevent inline overflow
-From:   Chuck Lever <chuck.lever@oracle.com>
-In-Reply-To: <ac00f855-e67c-b3d5-2be8-a18b07fcc8f8@canonical.com>
-Date:   Wed, 15 Jul 2020 12:05:19 -0400
-Cc:     Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <anna.schumaker@netapp.com>,
-        Bruce Fields <bfields@fieldses.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <239E2F87-E595-4132-B133-504EFF9103B8@oracle.com>
-References: <ac00f855-e67c-b3d5-2be8-a18b07fcc8f8@canonical.com>
-To:     Colin Ian King <colin.king@canonical.com>
-X-Mailer: Apple Mail (2.3608.80.23.2.2)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9683 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 mlxlogscore=999 spamscore=0
- suspectscore=0 bulkscore=0 adultscore=0 phishscore=0 malwarescore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2007150126
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9683 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 priorityscore=1501
- bulkscore=0 adultscore=0 lowpriorityscore=0 phishscore=0 spamscore=0
- impostorscore=0 malwarescore=0 mlxlogscore=999 clxscore=1011 mlxscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2007150126
+        Wed, 15 Jul 2020 12:01:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54336 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726437AbgGOQAl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jul 2020 12:00:41 -0400
+Received: from localhost.localdomain (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 53555206D5;
+        Wed, 15 Jul 2020 16:00:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594828841;
+        bh=CeX0MHTmJsHaAB/QS6BONJpBk2doOHrMWAlokkPu28o=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=IcW2cUilMfq0VRhyOLmDIS6q/a9gLEqOf5YNsxgDpWJG7OctqnXrYujqMVqxgpXip
+         26GLAx2IQ9jfkGpzb/tO4j55Jh7cCK1v6YW68iE6tk2xwD9azHtaY8Cb5OZPuqC/lf
+         cvSGtsqinIbMwrQWf9m5/3qO1VFtw0w5bx/AReXU=
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     Alistair Delva <adelva@google.com>, mhiramat@kernel.org,
+        linux-doc@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+Subject: [PATCH 2/3] tools/bootconfig: Add testcases for value override operator
+Date:   Thu, 16 Jul 2020 01:00:38 +0900
+Message-Id: <159482883824.126704.2166030493721357163.stgit@devnote2>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <159482882056.126704.15508672095852220119.stgit@devnote2>
+References: <159482882056.126704.15508672095852220119.stgit@devnote2>
+User-Agent: StGit/0.19
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Add some testcases and examples for value override operator.
 
+Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
+---
+ tools/bootconfig/samples/bad-override.bconf  |    3 +++
+ tools/bootconfig/samples/bad-override2.bconf |    3 +++
+ tools/bootconfig/samples/good-override.bconf |    6 ++++++
+ tools/bootconfig/test-bootconfig.sh          |   13 +++++++++++++
+ 4 files changed, 25 insertions(+)
+ create mode 100644 tools/bootconfig/samples/bad-override.bconf
+ create mode 100644 tools/bootconfig/samples/bad-override2.bconf
+ create mode 100644 tools/bootconfig/samples/good-override.bconf
 
-> On Jul 15, 2020, at 11:56 AM, Colin Ian King =
-<colin.king@canonical.com> wrote:
->=20
-> Hi,
->=20
-> Static analysis with Coverity has found a potential issue with the
-> header size calculations in source net/sunrpc/xprtrdma/rpc_rdma.c in
-> functions rpcrdma_max_call_header_size and =
-rpcrdma_max_reply_header_size.
->=20
-> The commit in question is relatively old:
->=20
-> commit 302d3deb20682a076e1ab551821cacfdc81c5e4f
-> Author: Chuck Lever <chuck.lever@oracle.com>
-> Date:   Mon May 2 14:41:05 2016 -0400
->=20
->    xprtrdma: Prevent inline overflow
->=20
-> The two issues are as follows:
->=20
-> Issue #1:
->=20
-> 66 static unsigned int rpcrdma_max_call_header_size(unsigned int =
-maxsegs)
-> 67 {
-> 68        unsigned int size;
-> 69
-> 70        /* Fixed header fields and list discriminators */
->=20
-> Unused value (UNUSED_VALUE)
->=20
-> 71        size =3D RPCRDMA_HDRLEN_MIN;
-> 72
-> 73        /* Maximum Read list size */
-> 74        size =3D maxsegs * rpcrdma_readchunk_maxsz * sizeof(__be32);
-> 75
->=20
-> should the size assignment on line 74 be instead:
->=20
-> 	size +=3D maxsegs * rpcrdma_readchunk_maxsz * sizeof(__be32);
->=20
->=20
-> Issue #2:
->=20
-> 89 static unsigned int rpcrdma_max_reply_header_size(unsigned int =
-maxsegs)
-> 90 {
-> 91        unsigned int size;
-> 92
-> 93        /* Fixed header fields and list discriminators */
->=20
-> Unused value (UNUSED_VALUE)
->=20
-> 94        size =3D RPCRDMA_HDRLEN_MIN;
-> 95
-> 96        /* Maximum Write list size */
-> 97        size =3D sizeof(__be32);          /* segment count */
->=20
-> should the size assignment in line 97 be instead:
->=20
-> 	size +=3D sizeof(__be32)?
-
-Colin, Yes to both questions. Can you send a fix to Anna?
-
---
-Chuck Lever
-
-
+diff --git a/tools/bootconfig/samples/bad-override.bconf b/tools/bootconfig/samples/bad-override.bconf
+new file mode 100644
+index 000000000000..fde6c561512e
+--- /dev/null
++++ b/tools/bootconfig/samples/bad-override.bconf
+@@ -0,0 +1,3 @@
++key.subkey = value
++# We can not override pre-defined subkeys with value
++key := value
+diff --git a/tools/bootconfig/samples/bad-override2.bconf b/tools/bootconfig/samples/bad-override2.bconf
+new file mode 100644
+index 000000000000..688587cb023c
+--- /dev/null
++++ b/tools/bootconfig/samples/bad-override2.bconf
+@@ -0,0 +1,3 @@
++key = value
++# We can not override pre-defined value with subkey
++key.subkey := value
+diff --git a/tools/bootconfig/samples/good-override.bconf b/tools/bootconfig/samples/good-override.bconf
+new file mode 100644
+index 000000000000..7d31d5f8fbd8
+--- /dev/null
++++ b/tools/bootconfig/samples/good-override.bconf
+@@ -0,0 +1,6 @@
++# Override the value
++key.word = 1,2,4
++key.word := 2,3
++
++# No pre-defined key
++key.new.word := "new"
+diff --git a/tools/bootconfig/test-bootconfig.sh b/tools/bootconfig/test-bootconfig.sh
+index 3c2ab9e75730..56284b98d8f0 100755
+--- a/tools/bootconfig/test-bootconfig.sh
++++ b/tools/bootconfig/test-bootconfig.sh
+@@ -117,6 +117,19 @@ xpass grep -q "bar" $OUTFILE
+ xpass grep -q "baz" $OUTFILE
+ xpass grep -q "qux" $OUTFILE
+ 
++echo "Override same-key values"
++cat > $TEMPCONF << EOF
++key = bar, baz
++key := qux
++EOF
++echo > $INITRD
++
++xpass $BOOTCONF -a $TEMPCONF $INITRD
++$BOOTCONF $INITRD > $OUTFILE
++xfail grep -q "bar" $OUTFILE
++xfail grep -q "baz" $OUTFILE
++xpass grep -q "qux" $OUTFILE
++
+ echo "Double/single quotes test"
+ echo "key = '\"string\"';" > $TEMPCONF
+ $BOOTCONF -a $TEMPCONF $INITRD
 
