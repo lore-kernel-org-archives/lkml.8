@@ -2,101 +2,166 @@ Return-Path: <SRS0=kup7=A2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61A33C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 12:14:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12BD7C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 12:11:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 46B9C2070E
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 12:14:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E5C8C2071B
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 12:11:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594815086;
+	bh=EXu1kOfMT0TfeYMt5SaQKguRAQVoN7/43lBZkGikHUM=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=gVc3lCJM/bFExdNEC3kLMOXSmmQ/jBEPLDwA2imZcOSoNVR+0jEq8H5zF7SqEZJyY
+	 ZFgmRiUvRO4N3U/gLrxLq/O3Eh1bdWjQ2+N+6kKPh3x+0iCpsnJA1NbJDLi2Km2rdr
+	 SNfjXnyjoWifUYj2/maWVujgnGLCcA2FW5u9chjU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730858AbgGOMOh (ORCPT
+        id S1730816AbgGOML0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 08:14:37 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:46038 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728866AbgGOMOg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 08:14:36 -0400
-Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 63CC3A091324B8FB5E4A;
-        Wed, 15 Jul 2020 20:14:33 +0800 (CST)
-Received: from localhost (10.175.101.6) by DGGEMS410-HUB.china.huawei.com
- (10.3.19.210) with Microsoft SMTP Server id 14.3.487.0; Wed, 15 Jul 2020
- 20:14:27 +0800
-From:   Weilong Chen <chenweilong@huawei.com>
-To:     <davem@davemloft.net>, <kuba@kernel.org>, <jiri@mellanox.com>,
-        <edumazet@google.com>, <chenweilong@huawei.com>
-CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH v5 net] rtnetlink: Fix memory(net_device) leak when ->newlink fails
-Date:   Wed, 15 Jul 2020 20:58:10 +0800
-Message-ID: <20200715125810.59760-1-chenweilong@huawei.com>
-X-Mailer: git-send-email 2.17.1
+        Wed, 15 Jul 2020 08:11:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37178 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728801AbgGOMLZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jul 2020 08:11:25 -0400
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 205922065D;
+        Wed, 15 Jul 2020 12:11:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594815084;
+        bh=EXu1kOfMT0TfeYMt5SaQKguRAQVoN7/43lBZkGikHUM=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=vifp9O6mgxoldHa1gdB3O/MPEwFJarzgHlOglCwDg9iGGVKJFT6kaHW3mtbCPcPHj
+         ETtBNeazYeFCsIRnLJHRJkQvbfHKEQHuMI+BRs4ePqhh2ebe3lGLThb0Rdi/tdRoeY
+         pwvyzapVPMv9HuWGVMQuVNk12A8vuHsvcL2fQu6w=
+Date:   Wed, 15 Jul 2020 13:11:21 +0100
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Alexandru Ardelean <alexandru.ardelean@analog.com>
+Cc:     <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <lars@metafoo.de>
+Subject: Re: [PATCH] iio: buffer: fix attach/detach pollfunc order
+Message-ID: <20200715131121.23f5a952@archlinux>
+In-Reply-To: <20200715041629.81435-1-alexandru.ardelean@analog.com>
+References: <20200715041629.81435-1-alexandru.ardelean@analog.com>
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.175.101.6]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When vlan_newlink call register_vlan_dev fails, it might return error
-with dev->reg_state = NETREG_UNREGISTERED. The rtnl_newlink should
-free the memory. But currently rtnl_newlink only free the memory which
-state is NETREG_UNINITIALIZED.
+On Wed, 15 Jul 2020 07:16:29 +0300
+Alexandru Ardelean <alexandru.ardelean@analog.com> wrote:
 
-BUG: memory leak
-unreferenced object 0xffff8881051de000 (size 4096):
-  comm "syz-executor139", pid 560, jiffies 4294745346 (age 32.445s)
-  hex dump (first 32 bytes):
-    76 6c 61 6e 32 00 00 00 00 00 00 00 00 00 00 00  vlan2...........
-    00 45 28 03 81 88 ff ff 00 00 00 00 00 00 00 00  .E(.............
-  backtrace:
-    [<0000000047527e31>] kmalloc_node include/linux/slab.h:578 [inline]
-    [<0000000047527e31>] kvmalloc_node+0x33/0xd0 mm/util.c:574
-    [<000000002b59e3bc>] kvmalloc include/linux/mm.h:753 [inline]
-    [<000000002b59e3bc>] kvzalloc include/linux/mm.h:761 [inline]
-    [<000000002b59e3bc>] alloc_netdev_mqs+0x83/0xd90 net/core/dev.c:9929
-    [<000000006076752a>] rtnl_create_link+0x2c0/0xa20 net/core/rtnetlink.c:3067
-    [<00000000572b3be5>] __rtnl_newlink+0xc9c/0x1330 net/core/rtnetlink.c:3329
-    [<00000000e84ea553>] rtnl_newlink+0x66/0x90 net/core/rtnetlink.c:3397
-    [<0000000052c7c0a9>] rtnetlink_rcv_msg+0x540/0x990 net/core/rtnetlink.c:5460
-    [<000000004b5cb379>] netlink_rcv_skb+0x12b/0x3a0 net/netlink/af_netlink.c:2469
-    [<00000000c71c20d3>] netlink_unicast_kernel net/netlink/af_netlink.c:1303 [inline]
-    [<00000000c71c20d3>] netlink_unicast+0x4c6/0x690 net/netlink/af_netlink.c:1329
-    [<00000000cca72fa9>] netlink_sendmsg+0x735/0xcc0 net/netlink/af_netlink.c:1918
-    [<000000009221ebf7>] sock_sendmsg_nosec net/socket.c:652 [inline]
-    [<000000009221ebf7>] sock_sendmsg+0x109/0x140 net/socket.c:672
-    [<000000001c30ffe4>] ____sys_sendmsg+0x5f5/0x780 net/socket.c:2352
-    [<00000000b71ca6f3>] ___sys_sendmsg+0x11d/0x1a0 net/socket.c:2406
-    [<0000000007297384>] __sys_sendmsg+0xeb/0x1b0 net/socket.c:2439
-    [<000000000eb29b11>] do_syscall_64+0x56/0xa0 arch/x86/entry/common.c:359
-    [<000000006839b4d0>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
+> The original patch was error-ed by the submitter (me) and not by the author
+> (Lars).
+> After looking through the discussion logs (on email), it seems that this
+> order was wrong for the start, even though the order implemented in the
+> drivers was correct.
+> 
+> Discussions:
+> - first RFC: https://lore.kernel.org/linux-iio/20180622135322.3459-1-alexandru.ardelean@analog.com/
+> - 2nd patch: https://lore.kernel.org/linux-iio/20181219140912.22582-1-alexandru.ardelean@analog.com/
+> - final patch-sets:
+>   https://lore.kernel.org/linux-iio/20200522104632.517470-1-alexandru.ardelean@analog.com/
+>   https://lore.kernel.org/linux-iio/20200525113855.178821-1-alexandru.ardelean@analog.com/
+> 
+> The last one was applied.
+> 
+> The idea is that pollfunc should be attached before calling the
+> 'indio_dev->setup_ops->postenable' hook and should be detached after
+> calling the 'indio_dev->setup_ops->predisable' hook.
+> 
+> While the drivers were updated to take this into account, the change to the
+> IIO core was somehow omitted and was made wrong.
+> 
+> This change fixes the order to the proper form.
+> 
+> Fixes f11d59d87b862: ("iio: Move attach/detach of the poll func to the core")
+> Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+Great thanks.
 
-Fixes: cb626bf566eb ("net-sysfs: Fix reference count leak")
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: Weilong Chen <chenweilong@huawei.com>
----
- net/core/rtnetlink.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+Applied to the togreg branch of iio.git. 
 
-diff --git a/net/core/rtnetlink.c b/net/core/rtnetlink.c
-index 9aedc15736ad..85a4b0101f76 100644
---- a/net/core/rtnetlink.c
-+++ b/net/core/rtnetlink.c
-@@ -3343,7 +3343,8 @@ static int __rtnl_newlink(struct sk_buff *skb, struct nlmsghdr *nlh,
- 		 */
- 		if (err < 0) {
- 			/* If device is not registered at all, free it now */
--			if (dev->reg_state == NETREG_UNINITIALIZED)
-+			if (dev->reg_state == NETREG_UNINITIALIZED ||
-+			    dev->reg_state == NETREG_UNREGISTERED)
- 				free_netdev(dev);
- 			goto out;
- 		}
--- 
-2.17.1
+Thanks,
+
+Jonathan
+
+> ---
+>  drivers/iio/industrialio-buffer.c | 31 ++++++++++++++++++-------------
+>  1 file changed, 18 insertions(+), 13 deletions(-)
+> 
+> diff --git a/drivers/iio/industrialio-buffer.c b/drivers/iio/industrialio-buffer.c
+> index 2aec8b85f40d..a7d7e5143ed2 100644
+> --- a/drivers/iio/industrialio-buffer.c
+> +++ b/drivers/iio/industrialio-buffer.c
+> @@ -971,24 +971,29 @@ static int iio_enable_buffers(struct iio_dev *indio_dev,
+>  			goto err_disable_buffers;
+>  	}
+>  
+> +	if (indio_dev->currentmode == INDIO_BUFFER_TRIGGERED) {
+> +		ret = iio_trigger_attach_poll_func(indio_dev->trig,
+> +						   indio_dev->pollfunc);
+> +		if (ret)
+> +			goto err_disable_buffers;
+> +	}
+> +
+>  	if (indio_dev->setup_ops->postenable) {
+>  		ret = indio_dev->setup_ops->postenable(indio_dev);
+>  		if (ret) {
+>  			dev_dbg(&indio_dev->dev,
+>  			       "Buffer not started: postenable failed (%d)\n", ret);
+> -			goto err_disable_buffers;
+> +			goto err_detach_pollfunc;
+>  		}
+>  	}
+>  
+> -	if (indio_dev->currentmode == INDIO_BUFFER_TRIGGERED) {
+> -		ret = iio_trigger_attach_poll_func(indio_dev->trig,
+> -						   indio_dev->pollfunc);
+> -		if (ret)
+> -			goto err_disable_buffers;
+> -	}
+> -
+>  	return 0;
+>  
+> +err_detach_pollfunc:
+> +	if (indio_dev->currentmode == INDIO_BUFFER_TRIGGERED) {
+> +		iio_trigger_detach_poll_func(indio_dev->trig,
+> +					     indio_dev->pollfunc);
+> +	}
+>  err_disable_buffers:
+>  	list_for_each_entry_continue_reverse(buffer, &iio_dev_opaque->buffer_list,
+>  					     buffer_list)
+> @@ -1014,11 +1019,6 @@ static int iio_disable_buffers(struct iio_dev *indio_dev)
+>  	if (list_empty(&iio_dev_opaque->buffer_list))
+>  		return 0;
+>  
+> -	if (indio_dev->currentmode == INDIO_BUFFER_TRIGGERED) {
+> -		iio_trigger_detach_poll_func(indio_dev->trig,
+> -					     indio_dev->pollfunc);
+> -	}
+> -
+>  	/*
+>  	 * If things go wrong at some step in disable we still need to continue
+>  	 * to perform the other steps, otherwise we leave the device in a
+> @@ -1032,6 +1032,11 @@ static int iio_disable_buffers(struct iio_dev *indio_dev)
+>  			ret = ret2;
+>  	}
+>  
+> +	if (indio_dev->currentmode == INDIO_BUFFER_TRIGGERED) {
+> +		iio_trigger_detach_poll_func(indio_dev->trig,
+> +					     indio_dev->pollfunc);
+> +	}
+> +
+>  	list_for_each_entry(buffer, &iio_dev_opaque->buffer_list, buffer_list) {
+>  		ret2 = iio_buffer_disable(buffer, indio_dev);
+>  		if (ret2 && !ret)
 
