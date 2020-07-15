@@ -3,94 +3,86 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65D9DC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 21:01:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E3BCC433E3
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 21:03:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2FA422065D
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 21:01:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="b41Y3YFq"
+	by mail.kernel.org (Postfix) with ESMTP id E02112067D
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 21:03:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594847001;
+	bh=Vlh6jq3CeiOB+eIOnC5hyz2iGa+kf3f418QAJcxuIGg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=2W7ftpa+uffWUo+qFfdnOCn4s9Za1AtKzYxK2V1H98ctWNADVDzH+0y6Czkxwf3Iq
+	 6v9m299YF6W38L3Fl2AFDM3bmeb9xHpSVDP0xsY0M5rzB1H89BDprHoxj4KL2LzEjv
+	 TAudairh4/RZeBd0TUEFsU3VDK67+1LtLgrpzp7Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726796AbgGOVB3 (ORCPT
+        id S1726942AbgGOVDU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 17:01:29 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:33319 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726356AbgGOVB3 (ORCPT
+        Wed, 15 Jul 2020 17:03:20 -0400
+Received: from mail-il1-f196.google.com ([209.85.166.196]:33568 "EHLO
+        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726803AbgGOVDT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 17:01:29 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1594846888;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=OH200y1oPX+RP3T1aRFymBiTupL+7e3hrQnJD2zNgsc=;
-        b=b41Y3YFq3uZXMYFO77Vkw0sWIRQ3ypMdvSw0l4QumU6jDoYUVwl273GCLoKHUGhDXI0Jvj
-        abynFDFQXQPUM7b+b4+OyWhHHlUkIpla736sOdNJ86+PEJe7kQvJYs1YxiJvAO1iJif/JG
-        fkeQ/kAiuj7pD01GQjZXHaYUvbURC1o=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-216-i2Q5c5bhPJaSJSgVHjJDuA-1; Wed, 15 Jul 2020 17:01:26 -0400
-X-MC-Unique: i2Q5c5bhPJaSJSgVHjJDuA-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D0E6419067E0;
-        Wed, 15 Jul 2020 21:01:23 +0000 (UTC)
-Received: from krava (unknown [10.40.194.44])
-        by smtp.corp.redhat.com (Postfix) with SMTP id EEE3C60C05;
-        Wed, 15 Jul 2020 21:01:20 +0000 (UTC)
-Date:   Wed, 15 Jul 2020 23:01:20 +0200
-From:   Jiri Olsa <jolsa@redhat.com>
-To:     Ian Rogers <irogers@google.com>
-Cc:     Jiri Olsa <jolsa@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Michael Petlan <mpetlan@redhat.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Kajol Jain <kjain@linux.ibm.com>,
-        John Garry <john.garry@huawei.com>,
-        "Paul A. Clarke" <pc@us.ibm.com>,
-        Stephane Eranian <eranian@google.com>
-Subject: Re: [PATCH 07/18] perf metric: Add add_metric function
-Message-ID: <20200715210120.GQ183694@krava>
-References: <20200712132634.138901-1-jolsa@kernel.org>
- <20200712132634.138901-8-jolsa@kernel.org>
- <CAP-5=fUdSGvd9DYoFM5eGU8itjER=AYXcL33vDWDMTP3GZfZJg@mail.gmail.com>
+        Wed, 15 Jul 2020 17:03:19 -0400
+Received: by mail-il1-f196.google.com with SMTP id a11so3263213ilk.0;
+        Wed, 15 Jul 2020 14:03:18 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=GWDZepDoncsEaTMC4EtAIVPS29rg6+akZDaq58u8hqs=;
+        b=Vg4IqM0JjAVxKTl92q2Ivw7uzXy7frBWL4IQE628k6as5i0XubgNnpkLl9eunNsiHR
+         LeV/KZDrIGrtfgda0uOrRw4SICjDmA6iGKN2/w0Z6FUrVWFxsCoujz8LTZxPD5gVXIzh
+         bPST3Jt3hWRJROeAzCSfTrJSDn/KIPsaXORFRBS3Zr8nfErmNRddkSmyi7exigNrsKPe
+         piREuaR3ManQ1TKChUWFeDf8r9NftIFyZE4wdYH+koxcHXkH/k3uaPGR7udQDb7zBDm1
+         J8uMbK4iRuweGOdWfg7LPhdh2qTRIbB6WG0bDhwP66hOOKadsf+a08AJlb3O0X7+lebD
+         FK7w==
+X-Gm-Message-State: AOAM531IHXovbKEk1l9dLinDVwY33gRyXQIsuY8ryBJiCPxq4m6yAn++
+        HUt/dH/lzGO/+IRGUAOnk/ERffAYN/IA
+X-Google-Smtp-Source: ABdhPJwBYLdvUXEXFEUAVM6usSlJJ9M/lybrTM4uUutDaLWTKuqsiNxb1k9dpnNAJ8CbXwx8r57ECw==
+X-Received: by 2002:a92:cf51:: with SMTP id c17mr1328712ilr.122.1594846998231;
+        Wed, 15 Jul 2020 14:03:18 -0700 (PDT)
+Received: from xps15 ([64.188.179.252])
+        by smtp.gmail.com with ESMTPSA id y2sm1721651iox.22.2020.07.15.14.03.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 15 Jul 2020 14:03:17 -0700 (PDT)
+Received: (nullmailer pid 811841 invoked by uid 1000);
+        Wed, 15 Jul 2020 21:03:16 -0000
+Date:   Wed, 15 Jul 2020 15:03:16 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Benjamin Gaignard <benjamin.gaignard@st.com>
+Cc:     robh+dt@kernel.org, devicetree@vger.kernel.org,
+        alexandre.torgue@st.com, linux-stm32@st-md-mailman.stormreply.com,
+        linux-kernel@vger.kernel.org, mcoquelin.stm32@gmail.com,
+        lee.jones@linaro.org, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH 1/5] dt-bingings: arm: stm32: Add compatibles for syscon
+ nodes
+Message-ID: <20200715210316.GA811477@bogus>
+References: <20200703095520.30264-1-benjamin.gaignard@st.com>
+ <20200703095520.30264-2-benjamin.gaignard@st.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAP-5=fUdSGvd9DYoFM5eGU8itjER=AYXcL33vDWDMTP3GZfZJg@mail.gmail.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+In-Reply-To: <20200703095520.30264-2-benjamin.gaignard@st.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 14, 2020 at 02:11:02PM -0700, Ian Rogers wrote:
-> On Sun, Jul 12, 2020 at 6:27 AM Jiri Olsa <jolsa@kernel.org> wrote:
-> >
-> > Decouple metric adding login into add_metric function,
+On Fri, 03 Jul 2020 11:55:16 +0200, Benjamin Gaignard wrote:
+> Since commit ad440432d1f9 ("dt-bindings: mfd: Ensure 'syscon' has a more specific compatible")
+> it is required to provide at least 2 compatibles string for syscon node.
+> This patch document the missing compatibles for stm32 SoCs.
 > 
-> s/login/logging/ ?
-
-ugh yes
-
+> Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
+> ---
+>  .../devicetree/bindings/arm/stm32/st,stm32-syscon.yaml     | 14 +++++++++++++-
+>  1 file changed, 13 insertions(+), 1 deletion(-)
 > 
-> > so it can be used from other places in following changes.
-> >
-> > Signed-off-by: Jiri Olsa <jolsa@kernel.org>
-> 
-> Acked-by: Ian Rogers <irogers@google.com>
 
-thanks,
-jirka
+Typo in the subject, otherwise:
 
+Reviewed-by: Rob Herring <robh@kernel.org>
