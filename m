@@ -2,260 +2,112 @@ Return-Path: <SRS0=kup7=A2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 289B7C433E5
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 20:51:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58AC6C433E3
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 20:51:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E536020672
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 20:51:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="BtYr5FPV"
+	by mail.kernel.org (Postfix) with ESMTP id 378782065D
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 20:51:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594846285;
+	bh=7K2AKFplTVr819ofOXAFAyKxxpTCjfqstUP/bwMZbFw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=QDqsiMK4AkVEBv4ENplVZK3K5sUr/iqDpXszx5NOY7cT58R9Y57QMW5gnPqGubRLJ
+	 DC9A3Je648GYI/BU74GrySDEgMW9I+5fHH6yQseBfsHwhBTH1m2XgkcX0b1VfciH/N
+	 iyL+bVUp/pn2lgMDtUeD+52s7IohacvrDOGXYspA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726947AbgGOUu6 (ORCPT
+        id S1726984AbgGOUvX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 16:50:58 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:35636 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725917AbgGOUuz (ORCPT
+        Wed, 15 Jul 2020 16:51:23 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:40700 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726356AbgGOUvX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 16:50:55 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06FKWKj1066227;
-        Wed, 15 Jul 2020 20:50:15 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2020-01-29;
- bh=JvYRaru1KyYvRqOyLFyBN0GUWD3NhbyrMdaoHytyByQ=;
- b=BtYr5FPVDBA0xZ3ZC5s7rA9zlu4IMZKwCOpKP8o4mKoCgEhKuDLX+jys8JSOT68qZ706
- e0aIdV9/NT5XqvrPwVWccCbGkewNxOMAdYI/TH7IY6/G7LEI5z3VsGkRmOpPtowp/s4Y
- y0BzoU7Sbhe1/BHk5LNpq/isGw/ELrGnOdPTb/QpfqpIIVwesbt6kZr7I8Ne1Ha8kw/l
- n1lp7ZG3rP9nSczU7NwVmYUB+bde3OmiHxgAqlyR778p8tTKC2+V9g5KEIs4qA+qVi42
- e5vbUn2XZWYPeOC+N1WZHY1brO5USwU8uSsr4nqBpxEz2HfZL9qJLCKw+Z+nV0vX5gCn gg== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2130.oracle.com with ESMTP id 3274urdt23-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 15 Jul 2020 20:50:15 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06FKXeaD171549;
-        Wed, 15 Jul 2020 20:50:14 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by aserp3030.oracle.com with ESMTP id 327q0ryurw-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 15 Jul 2020 20:50:14 +0000
-Received: from abhmp0016.oracle.com (abhmp0016.oracle.com [141.146.116.22])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 06FKo8kx002016;
-        Wed, 15 Jul 2020 20:50:08 GMT
-Received: from [10.39.217.130] (/10.39.217.130)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 15 Jul 2020 13:50:08 -0700
-Subject: Re: [PATCH v2 00/11] Fix PM hibernation in Xen guests
-To:     Anchal Agarwal <anchalag@amazon.com>
-Cc:     "tglx@linutronix.de" <tglx@linutronix.de>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "bp@alien8.de" <bp@alien8.de>, "hpa@zytor.com" <hpa@zytor.com>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "jgross@suse.com" <jgross@suse.com>,
-        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "Kamata, Munehisa" <kamatam@amazon.com>,
-        "sstabellini@kernel.org" <sstabellini@kernel.org>,
-        "konrad.wilk@oracle.com" <konrad.wilk@oracle.com>,
-        "roger.pau@citrix.com" <roger.pau@citrix.com>,
-        "axboe@kernel.dk" <axboe@kernel.dk>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "rjw@rjwysocki.net" <rjw@rjwysocki.net>,
-        "len.brown@intel.com" <len.brown@intel.com>,
-        "pavel@ucw.cz" <pavel@ucw.cz>,
-        "peterz@infradead.org" <peterz@infradead.org>,
-        "Valentin, Eduardo" <eduval@amazon.com>,
-        "Singh, Balbir" <sblbir@amazon.com>,
-        "xen-devel@lists.xenproject.org" <xen-devel@lists.xenproject.org>,
-        "vkuznets@redhat.com" <vkuznets@redhat.com>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Woodhouse, David" <dwmw@amazon.co.uk>,
-        "benh@kernel.crashing.org" <benh@kernel.crashing.org>
-References: <cover.1593665947.git.anchalag@amazon.com>
- <324020A7-996F-4CF8-A2F4-46957CEA5F0C@amazon.com>
- <c6688a0c-7fec-97d2-3dcc-e160e97206e6@oracle.com>
- <20200715194933.GA17938@dev-dsk-anchalag-2a-9c2d1d96.us-west-2.amazon.com>
-From:   Boris Ostrovsky <boris.ostrovsky@oracle.com>
-Autocrypt: addr=boris.ostrovsky@oracle.com; keydata=
- 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
- Jg6OxFYd01z+a+oL
-Message-ID: <6145a0d9-fd4e-a739-407e-97f7261eecd8@oracle.com>
-Date:   Wed, 15 Jul 2020 16:49:57 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Wed, 15 Jul 2020 16:51:23 -0400
+Received: by mail-io1-f66.google.com with SMTP id l17so3728614iok.7;
+        Wed, 15 Jul 2020 13:51:22 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=q9ACE8nvrxYAkV7UmkgZ6sY12qZMuGAXz/YkNp21cP8=;
+        b=LpBQtXg04ocu1/Q8mGVkib+W0iU7MtYouSSSgQ/34Boyh+bpLQ7p/GovdOggOwulsU
+         vhE6CIKFThZx+KzEpBGD3cSlpOeMrBXSF3AK8FcId3FyNiFZIFww/RDZ32ra1r5pLVj3
+         2PTRvBMJw2wyfVU51b14qX3xBIIRB8hwROwQq4QxQypIRV52Dq1pvHXRBX/XgQmXBEAp
+         E5Pnfgd5Af078PGV7G5pZxAXt5dI5iYN/QIUBahTc/8EsAWVHf/WISeduP3npOhJUpQp
+         LyA/nMH0jgL8LVOwLaGKkUsprr884+CoOCLgpz82HpZeyGeUXXXYlozhltIXoK41oOnB
+         Hf4Q==
+X-Gm-Message-State: AOAM531xyvCulBgRrh5OYmx9dZ3QXvy9FynsAXHx4Kch5v3DlNEkbWhf
+        iJYcL+Aglj4ys0Pb7cZvdFXp5ctCrg==
+X-Google-Smtp-Source: ABdhPJwJgZBHTochu4o5lfkCZewGDWCyBkruv1P6g3YXlsJ82fsfdRZEt+/xHnCbpv9RpaMjsjLcFw==
+X-Received: by 2002:a6b:4409:: with SMTP id r9mr1160938ioa.158.1594846282053;
+        Wed, 15 Jul 2020 13:51:22 -0700 (PDT)
+Received: from xps15 ([64.188.179.252])
+        by smtp.gmail.com with ESMTPSA id s18sm1576592ilj.63.2020.07.15.13.51.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 15 Jul 2020 13:51:21 -0700 (PDT)
+Received: (nullmailer pid 795410 invoked by uid 1000);
+        Wed, 15 Jul 2020 20:51:20 -0000
+Date:   Wed, 15 Jul 2020 14:51:20 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Miles Chen <miles.chen@mediatek.com>
+Cc:     Joerg Roedel <joro@8bytes.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        iommu@lists.linux-foundation.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, wsd_upstream@mediatek.com,
+        Yong Wu <yong.wu@mediatek.com>,
+        Chao Hao <chao.hao@mediatek.com>,
+        Yingjoe Chen <yingjoe.chen@mediatek.com>
+Subject: Re: [PATCH 1/4] dt-bindings: mediatek: add mediatek,infracfg phandle
+Message-ID: <20200715205120.GA778876@bogus>
+References: <20200702093721.6063-1-miles.chen@mediatek.com>
 MIME-Version: 1.0
-In-Reply-To: <20200715194933.GA17938@dev-dsk-anchalag-2a-9c2d1d96.us-west-2.amazon.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Content-Language: en-US
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9683 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 malwarescore=0 spamscore=0
- mlxlogscore=999 bulkscore=0 adultscore=0 phishscore=0 suspectscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2007150158
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9683 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 lowpriorityscore=0 impostorscore=0
- suspectscore=0 phishscore=0 spamscore=0 mlxlogscore=999 malwarescore=0
- mlxscore=0 priorityscore=1501 adultscore=0 bulkscore=0 clxscore=1015
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2007150158
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200702093721.6063-1-miles.chen@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/15/20 3:49 PM, Anchal Agarwal wrote:
-> On Mon, Jul 13, 2020 at 03:43:33PM -0400, Boris Ostrovsky wrote:
->> CAUTION: This email originated from outside of the organization. Do no=
-t click links or open attachments unless you can confirm the sender and k=
-now the content is safe.
->>
->>
->>
->> On 7/10/20 2:17 PM, Agarwal, Anchal wrote:
->>> Gentle ping on this series.
->>
->> Have you tested save/restore?
->>
-> No, not with the last few series. But a good point, I will test that an=
-d get
-> back to you. Do you see anything specific in the series that suggests o=
-therwise?
+On Thu, Jul 02, 2020 at 05:37:17PM +0800, Miles Chen wrote:
+> Add a description for mediatek,infracfg. We can check if 4GB mode
+> is enable by reading it instead of checking the unexported
+> symbol "max_pfn".
+> 
+> This is a step towards building mtk_iommu as a kernel module.
+
+You determined this before without DT, so it is an OS problem and 
+shouldn't need a DT update.
+
+I'd assume there's only one instance of the node mediatek,infracfg 
+points to, so just search for it if you want to get the info from DT.
 
 
-root@ovs104> xl save pvh saved
-Saving to saved new xl format (info 0x3/0x0/1699)
-xc: info: Saving domain 3, type x86 HVM
-xc: Frames: 1044480/1044480=C2=A0 100%
-xc: End of stream: 0/0=C2=A0=C2=A0=C2=A0 0%
-root@ovs104> xl restore saved
-Loading new save file saved (new xl fmt info 0x3/0x0/1699)
-=C2=A0Savefile contains xl domain config in JSON format
-Parsing config from <saved>
-xc: info: Found x86 HVM domain from Xen 4.13
-xc: info: Restoring domain
-xc: info: Restore successful
-xc: info: XenStore: mfn 0xfeffc, dom 0, evt 1
-xc: info: Console: mfn 0xfefff, dom 0, evt 2
-root@ovs104> xl console pvh
-[=C2=A0 139.943872] ------------[ cut here ]------------
-[=C2=A0 139.943872] kernel BUG at arch/x86/xen/enlighten.c:205!
-[=C2=A0 139.943872] invalid opcode: 0000 [#1] SMP PTI
-[=C2=A0 139.943872] CPU: 0 PID: 11 Comm: migration/0 Not tainted 5.8.0-rc=
-5 #26
-[=C2=A0 139.943872] RIP: 0010:xen_vcpu_setup+0x16d/0x180
-[=C2=A0 139.943872] Code: 4a 8b 14 f5 40 c9 1b 82 48 89 d8 48 89 2c 02 8b=
- 05
-a4 d4 40 01 85 c0 0f 85 15 ff ff ff 4a 8b 04 f5 40 c9 1b 82 e9 f4 fe ff
-ff <0f> 0b b8 ed ff ff ff e9 14 ff ff ff e8 12 4f 86 00 66 90 66 66 66
-[=C2=A0 139.943872] RSP: 0018:ffffc9000006bdb0 EFLAGS: 00010046
-[=C2=A0 139.943872] RAX: 0000000000000000 RBX: ffffc9000014fe00 RCX:
-0000000000000000
-[=C2=A0 139.943872] RDX: ffff88803fc00000 RSI: 0000000000016128 RDI:
-0000000000000000
-[=C2=A0 139.943872] RBP: 0000000000000000 R08: 0000000000000000 R09:
-0000000000000000
-[=C2=A0 139.943872] R10: ffffffff826174a0 R11: ffffc9000006bcb4 R12:
-0000000000016120
-[=C2=A0 139.943872] R13: 0000000000016120 R14: 0000000000016128 R15:
-0000000000000000
-[=C2=A0 139.943872] FS:=C2=A0 0000000000000000(0000) GS:ffff88803fc00000(=
-0000)
-knlGS:0000000000000000
-[=C2=A0 139.943872] CS:=C2=A0 0010 DS: 0000 ES: 0000 CR0: 000000008005003=
-3
-[=C2=A0 139.943872] CR2: 00007f704be8b000 CR3: 000000003901a004 CR4:
-00000000000606f0
-[=C2=A0 139.943872] Call Trace:
-[=C2=A0 139.943872]=C2=A0 ? __kmalloc+0x167/0x260
-[=C2=A0 139.943872]=C2=A0 ? xen_manage_runstate_time+0x14a/0x170
-[=C2=A0 139.943872]=C2=A0 xen_vcpu_restore+0x134/0x170
-[=C2=A0 139.943872]=C2=A0 xen_hvm_post_suspend+0x1d/0x30
-[=C2=A0 139.943872]=C2=A0 xen_arch_post_suspend+0x13/0x30
-[=C2=A0 139.943872]=C2=A0 xen_suspend+0x87/0x190
-[=C2=A0 139.943872]=C2=A0 multi_cpu_stop+0x6d/0x110
-[=C2=A0 139.943872]=C2=A0 ? stop_machine_yield+0x10/0x10
-[=C2=A0 139.943872]=C2=A0 cpu_stopper_thread+0x47/0x100
-[=C2=A0 139.943872]=C2=A0 smpboot_thread_fn+0xc5/0x160
-[=C2=A0 139.943872]=C2=A0 ? sort_range+0x20/0x20
-[=C2=A0 139.943872]=C2=A0 kthread+0xfe/0x140
-[=C2=A0 139.943872]=C2=A0 ? kthread_park+0x90/0x90
-[=C2=A0 139.943872]=C2=A0 ret_from_fork+0x22/0x30
-[=C2=A0 139.943872] Modules linked in:
-[=C2=A0 139.943872] ---[ end trace 74716859a6b4f0a8 ]---
-[=C2=A0 139.943872] RIP: 0010:xen_vcpu_setup+0x16d/0x180
-[=C2=A0 139.943872] Code: 4a 8b 14 f5 40 c9 1b 82 48 89 d8 48 89 2c 02 8b=
- 05
-a4 d4 40 01 85 c0 0f 85 15 ff ff ff 4a 8b 04 f5 40 c9 1b 82 e9 f4 fe ff
-ff <0f> 0b b8 ed ff ff ff e9 14 ff ff ff e8 12 4f 86 00 66 90 66 66 66
-[=C2=A0 139.943872] RSP: 0018:ffffc9000006bdb0 EFLAGS: 00010046
-[=C2=A0 139.943872] RAX: 0000000000000000 RBX: ffffc9000014fe00 RCX:
-0000000000000000
-[=C2=A0 139.943872] RDX: ffff88803fc00000 RSI: 0000000000016128 RDI:
-0000000000000000
-[=C2=A0 139.943872] RBP: 0000000000000000 R08: 0000000000000000 R09:
-0000000000000000
-[=C2=A0 139.943872] R10: ffffffff826174a0 R11: ffffc9000006bcb4 R12:
-0000000000016120
-[=C2=A0 139.943872] R13: 0000000000016120 R14: 0000000000016128 R15:
-0000000000000000
-[=C2=A0 139.943872] FS:=C2=A0 0000000000000000(0000) GS:ffff88803fc00000(=
-0000)
-knlGS:0000000000000000
-[=C2=A0 139.943872] CS:=C2=A0 0010 DS: 0000 ES: 0000 CR0: 000000008005003=
-3
-[=C2=A0 139.943872] CR2: 00007f704be8b000 CR3: 000000003901a004 CR4:
-00000000000606f0
-[=C2=A0 139.943872] Kernel panic - not syncing: Fatal exception
-[=C2=A0 139.943872] Shutting down cpus with NMI
-[=C2=A0 143.927559] Kernel Offset: disabled
-root@ovs104>
-
+> 
+> Cc: Yong Wu <yong.wu@mediatek.com>
+> Signed-off-by: Miles Chen <miles.chen@mediatek.com>
+> ---
+>  Documentation/devicetree/bindings/iommu/mediatek,iommu.txt | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/iommu/mediatek,iommu.txt b/Documentation/devicetree/bindings/iommu/mediatek,iommu.txt
+> index ce59a505f5a4..a7881deabcca 100644
+> --- a/Documentation/devicetree/bindings/iommu/mediatek,iommu.txt
+> +++ b/Documentation/devicetree/bindings/iommu/mediatek,iommu.txt
+> @@ -74,6 +74,8 @@ Required properties:
+>  - mediatek,larbs : List of phandle to the local arbiters in the current Socs.
+>  	Refer to bindings/memory-controllers/mediatek,smi-larb.txt. It must sort
+>  	according to the local arbiter index, like larb0, larb1, larb2...
+> +- mediatek,infracfg: a phandle to infracfg. It is used to confirm if 4GB mode is set.
+> +	It is an optional property, add it when the SoC have 4g mode.
+>  - iommu-cells : must be 1. This is the mtk_m4u_id according to the HW.
+>  	Specifies the mtk_m4u_id as defined in
+>  	dt-binding/memory/mt2701-larb-port.h for mt2701, mt7623
+> -- 
+> 2.18.0
