@@ -2,89 +2,110 @@ Return-Path: <SRS0=kup7=A2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1986DC433E6
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 21:08:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6644DC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 21:12:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E414F206F4
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 21:08:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594847294;
-	bh=3UppoNNwKMXLdLk5u9lvAw5TVm2v1jZiZbsZwq71SGA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=BVZcjk3s/6VMqr4cjsLEVQlZV3VFf+YlrM8jrnnbPKCiMs5IsZ/+Bh+LAc1RQ8PgB
-	 TUp5Pk33ncbeYYj3D9GFYgRr2cOwuGPv1r9d67g6oQ4wAxvCvZL0SLehl9hX7TBwUc
-	 JhCOMtNIEDTdRcJvSzls/zO3gd24l3uVr/BgCuhg=
+	by mail.kernel.org (Postfix) with ESMTP id 0F6F32065D
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 21:12:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=octiron.net header.i=@octiron.net header.b="ecj/kQR7";
+	dkim=pass (2048-bit key) header.d=octiron.net header.i=@octiron.net header.b="ylJXN1zV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726977AbgGOVIN (ORCPT
+        id S1726796AbgGOVMz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 17:08:13 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:41651 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725917AbgGOVIM (ORCPT
+        Wed, 15 Jul 2020 17:12:55 -0400
+Received: from djelibeybi.uuid.uk ([45.91.101.70]:53750 "EHLO
+        djelibeybi.uuid.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725917AbgGOVMz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 17:08:12 -0400
-Received: by mail-io1-f67.google.com with SMTP id p205so3772292iod.8;
-        Wed, 15 Jul 2020 14:08:12 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=7ce/Bq1o7yEqQQK6FgxS9uN15O5xH+F17AS3S7KI8Vg=;
-        b=DO/H9JPlFOsIQIp192MKbA31f4/vLytQ3XWV6Rw18vgVsfj/SdwSKTfvlMuo7CX/Hz
-         HBqRCEp8pYvVSpN1ngpayvIY4xUWLBrfj9kzAeAym+ExNoVML3I5nCifo1cJg7zIRetK
-         oMM70K2iWGzG8X+eYYb0hO+J61mvPUiC04In7AZDoyn/Nde3ynEGxKiTL+3yH8vhDgOc
-         5MLusGAFpDsrNGVJZMIUiEgZMYQDdhGEFUy8Jt6n8S94uxXrJFuXrFV2CHve+asIGlBr
-         4oNkOCVbzDw9PkJIx1ehtOcIey8C+6WX08zspW13PuGCIigVqYn/wacuuoeZ/1ms5jZH
-         Aelg==
-X-Gm-Message-State: AOAM532yEKBxJ6EoRgNdNS2pe7xssSy3P1BVlfyiCOYfEaKo1BZAxXeH
-        yOOSr362ebQ/G+0VuzAYlQ==
-X-Google-Smtp-Source: ABdhPJwM+3L0XK9qzuogwnohPengqtYGvTuWHpQABVodDZphoyDXMBLQgcx/tGvu3sZZW/bNk2odhg==
-X-Received: by 2002:a02:c785:: with SMTP id n5mr1431788jao.75.1594847291926;
-        Wed, 15 Jul 2020 14:08:11 -0700 (PDT)
-Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id i11sm1817513iow.19.2020.07.15.14.08.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 15 Jul 2020 14:08:11 -0700 (PDT)
-Received: (nullmailer pid 818449 invoked by uid 1000);
-        Wed, 15 Jul 2020 21:08:10 -0000
-Date:   Wed, 15 Jul 2020 15:08:10 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Ondrej Jirman <megous@megous.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Fabio Estevam <festevam@gmail.com>,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        dri-devel@lists.freedesktop.org,
-        Guido =?iso-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>,
-        David Airlie <airlied@linux.ie>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Robert Chiras <robert.chiras@nxp.com>,
-        Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH 2/2] dt-binding: display: Allow a single port node on
- rocktech, jh057n00900
-Message-ID: <20200715210810.GA818399@bogus>
-References: <20200703114717.2140832-1-megous@megous.com>
- <20200703114717.2140832-3-megous@megous.com>
+        Wed, 15 Jul 2020 17:12:55 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=octiron.net
+        ; s=20180214; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:
+        MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender:Reply-To:
+        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+        Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=EhgG2CTQfcvprQjhPT7XeqhEzStobaQ7jP786fGmLKY=; b=ecj/kQR7Z70erhemGvXu4P1wac
+        FrdBrZo2hm4RJgYaWBumHD6y6PPBslakIDNWE1jBYowKPGzO2QvkY8xa3cDtcjo5ORYYokRW/4IRB
+        PQyENqCxANS3GY7cyi3uO3CSAFO75oel29TJINAs55gKJNlXB0hkErgaRZwACcpRwTUkiT4MgaMxd
+        6K+ddxICXUOeNkRkqWA7zj0Hy1jPyuBr2ryTMK8waGoag3trr3PUpL/rcyq/7WcW74reRU08J8E2M
+        TZcDfXnNWLNVPUUYL8lJz4SHE97VAh/gflLyQHZ9xLXg3bXThfmHRAfPp9JRXZbzMSIUhnxB1Rcc7
+        REwfLN9w==;
+Received: by djelibeybi.uuid.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.90_1)
+        (envelope-from <simon@octiron.net>)
+        id 1jvohp-0005vV-Rx; Wed, 15 Jul 2020 22:12:52 +0100
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=octiron.net
+        ; s=20180214; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:
+        MIME-Version:Date:Message-ID:From:References:Cc:To:Subject;
+        bh=EhgG2CTQfcvprQjhPT7XeqhEzStobaQ7jP786fGmLKY=; b=ylJXN1zVTcXtEUvEGvkox9xu9i
+        tyvpJWVYWnL8ErM+Bqe1FHnNZGBJaSpN3xUwnv7uMdmeSPzrfNl0nfTLXqX9wYKRlp4kX2PanCJb9
+        fWrqk4HxWdX+kR3fJPgUlKyEYlM7CUw6hfkGuhWwzdJUk1lL60FXatLkLzN5xvQSDvQuGymhsLL60
+        B7kO7/Xa8dWys2KB13+xnMXH46LTZ5ZCIrgX8g2R92TGrJXVJVZe0njteSqYQ9rGzUEUXSEM8FGpv
+        bLsjD/utnPizQp6PU1vuPJSF7HDwLaisPDOB1lHVgGbB4g9rB0hjFWMtmQHC7aP0sOhOvv8nHDl3w
+        qEw+mXcQ==;
+Received: by tsort.uuid.uk with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <simon@octiron.net>)
+        id 1jvohn-0008II-40; Wed, 15 Jul 2020 22:12:43 +0100
+Subject: Re: [PATCH] ata: Disable queued TRIM for Samsung 860 SSDs
+To:     "Martin K. Petersen" <martin.petersen@oracle.com>
+Cc:     Jens Axboe <axboe@kernel.dk>, linux-ide@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Park Ju Hyung <qkrwngud825@gmail.com>,
+        Tejun Heo <tj@kernel.org>
+References: <9324ef33-eedd-b965-37e8-b82e06778aab@0882a8b5-c6c3-11e9-b005-00805fc181fe>
+ <yq1blkgo6y0.fsf@ca-mkp.ca.oracle.com>
+From:   Simon Arlott <simon@octiron.net>
+Message-ID: <5059c002-2452-f427-76da-7b08a02748dc@0882a8b5-c6c3-11e9-b005-00805fc181fe>
+Date:   Wed, 15 Jul 2020 22:12:43 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200703114717.2140832-3-megous@megous.com>
+In-Reply-To: <yq1blkgo6y0.fsf@ca-mkp.ca.oracle.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 03 Jul 2020 13:47:17 +0200, Ondrej Jirman wrote:
-> The display has one port. Allow it in the binding.
+On 15/07/2020 21:53, Martin K. Petersen wrote:
+>> Despite the unsubstantiated claim from Samsung that "the improved
+>> queued trim enhances Linux compatibility" this does not appear to be
+>> true, even on Intel SATA controllers:
 > 
-> Signed-off-by: Ondrej Jirman <megous@megous.com>
-> ---
->  .../devicetree/bindings/display/panel/rocktech,jh057n00900.yaml  | 1 +
->  1 file changed, 1 insertion(+)
+> I am aware of several people using 860 drives with queued TRIM. And I
+> haven't heard any complaints outside of the bug you referenced.
 > 
+> Also, I have tested both 860 2.5" Pro and 860 mSATA EVO on a few
+> different systems in my lab without any problems. See:
+> 
+>     https://lore.kernel.org/stable/yq1h87du82d.fsf@oracle.com/T/
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+I've just checked and it happens on both my SATA 860s:
+  860 EVO 2TB (RVT04B6Q) on Intel Z170
+  860 PRO 1TB (RVM02B6Q) on Intel H170
+
+> I really wish we had some more data to work with :(
+
+Is there a reliable way of reproducing this?
+
+I have a Marvell 88SE9235 that I could try with the EVO.
+
+> Lacking a proper heuristic I guess we don't have any choice to disable
+> the feature. But that's sad news for the people who currently don't have
+> problems since their performance will inevitably suffer.
+
+Samsung need to identify what the problem is before claiming that their
+Linux support is better, especially if specific chipsets are known to
+have issues...
+
+-- 
+Simon Arlott
