@@ -2,121 +2,214 @@ Return-Path: <SRS0=kup7=A2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F29FC433E8
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C1F1C433EA
 	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 08:28:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3C0F6206F4
+	by mail.kernel.org (Postfix) with ESMTP id 1BE95206D5
 	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 08:28:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="V2Eh8BkZ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594801702;
+	bh=dtSoXoDw5TRazofpD4GoYVQBaKWq3l3Qpu/CHC6RCVE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=ifOWCT2Vqh03bMFN6PYsWFBjeZicMJQHuXDaolEHHqP29ufvwsm3jGFOt2v+7bcdW
+	 58eXGyK9MqPChIrkTgRYZ/p5UeLP5Nj3blppeMpt1vm/bRYtE5YITAf7qFFtPbvT2F
+	 ScM/1XU9TGlAeR5kOi+oMiUXmFdYqkl6PsFME8KQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729982AbgGOI1W (ORCPT
+        id S1730077AbgGOI2U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 04:27:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51828 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729876AbgGOI0q (ORCPT
+        Wed, 15 Jul 2020 04:28:20 -0400
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:41079 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730058AbgGOI2R (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 04:26:46 -0400
-Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 866E4C061755
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 01:26:45 -0700 (PDT)
-Received: by mail-wm1-x342.google.com with SMTP id f18so4686141wml.3
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 01:26:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=MCk19GsQjhT9V6ZH5VfzAX6PQXTZggJu/iEJMuF5hMQ=;
-        b=V2Eh8BkZ8dcCa53IaQSf1cFlilO/zt8ksPMcm3ZyMf7Kh+zTEEuh90evBOvEi61Q2K
-         54BEgKiKD5KhfqA0S1X2/Xd7JybfTairskcEafqLYETq1pXo/nwW50FaHThpGQJCKMDn
-         N3w4k2sMMWuls8XD56YVqhTbHLtGtFTQdrBDWb/tFACe+fXHnJj4BsEkhGl8V6oDKxYs
-         xzRwW8j16fa41Zbo1mO6xdgn8cV+YCawvLHsJt/E0QV8Vg3yLLpnjDCgblt7FADeb/9C
-         es0UE0y/wxLnmsVmvRJLRckXYkWxyYcO5DGgT7rfz45lcFYKT+dOAz1YXilbEV5zMmX7
-         /WFg==
+        Wed, 15 Jul 2020 04:28:17 -0400
+Received: by mail-ed1-f66.google.com with SMTP id e22so958605edq.8;
+        Wed, 15 Jul 2020 01:28:15 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=MCk19GsQjhT9V6ZH5VfzAX6PQXTZggJu/iEJMuF5hMQ=;
-        b=qy/e3SRkT2VQPIUz6PbkysZGyDIeinaoZ3j/+cpCGGC0oVFAU7tj9dspHwMYDPEvZL
-         7AQ6f4qXDF6UIaImLkCtrtOsC+vHch7QqnrDqgbOuRrwP4z/Our3yk2e/TFjKIIiFtHh
-         ta/3EKp4MQBY+w4Fanl3xR7mC+HE1zp5Ys5EBooCcJjL++gHgl4CwHsi+NR5RLQthNrr
-         F7jdACHq6ddesCqZigKyAn12Y2dp8Fh/nzaIzputdH/ReVFz29jCB58kzoQbSevTK0Fa
-         plEIgLFXsTA64HrLzmDkXI6rJEgEu/2FuGf9l5MRhYokdAh5+E1VwKU6hbL8UDCihWhs
-         WCjQ==
-X-Gm-Message-State: AOAM532ufqzDhdQl8izpzhNDgw1UZLNFwEP88b0XV9E01OUgyLkQ52Jb
-        C/IN96FnU5t9J/33YVGYpWkpwQ==
-X-Google-Smtp-Source: ABdhPJwMbYK/KKybcySvzNfcd30nLvna3tfOpKszLpsbnWbTflEcZDNIxJlMqKGZU3TgUfFpWQURiw==
-X-Received: by 2002:a1c:6354:: with SMTP id x81mr7228802wmb.98.1594801604289;
-        Wed, 15 Jul 2020 01:26:44 -0700 (PDT)
-Received: from localhost.localdomain ([2.31.163.61])
-        by smtp.gmail.com with ESMTPSA id h13sm2400361wml.42.2020.07.15.01.26.43
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=oZ21mSnPalCDyZJRBXz6beFTnZl6MlEpDn98/WJ6aVk=;
+        b=HLjDK7sUUFheiKuhwwiyk5o4LlkpxLALWX+wvcKGvQY+5NUyhvnD9ApM2T2ESyIY8S
+         U2Y823w+LbjjVCHwhUcYmftqJY2KUszVygdetrYJ8/G4mhghq5NSpbcaLbksIpQ/m7p0
+         oH8rbhZpKw3WEAV3YzJ6nVTTnmn0bIMHUCjMjHyv4grTNT1918xEuF/PwQN6qesG7eJq
+         kNyUc7MMPUPJtYpV1lbgjhWtJ8Ml/SPtTPQLsjDEBmy/butbjumYt6GlKHblpGbu6KC0
+         O6yXNMqeJRvP627bTufHSjyFW6qfWA6cl5oiXn5LkfUKQfU7aFDT4IxqHCVUrXcsBreM
+         usFg==
+X-Gm-Message-State: AOAM533SS24sv9nusOxFsqqA0M+W+b8sXZAayTfb2AXgzHcb7P/k/03l
+        CRmJI3SlOAvfQOFtCK9lMlQ=
+X-Google-Smtp-Source: ABdhPJx2NyCCKKPhJFFeXgZeW596eU5ArCMhpEYnf1D02xQP3M2UhZ/zPOfS+KfAap43eDl6NHVlFQ==
+X-Received: by 2002:a05:6402:a58:: with SMTP id bt24mr8754330edb.333.1594801694308;
+        Wed, 15 Jul 2020 01:28:14 -0700 (PDT)
+Received: from localhost (ip-37-188-169-187.eurotel.cz. [37.188.169.187])
+        by smtp.gmail.com with ESMTPSA id w24sm1452324edt.28.2020.07.15.01.28.13
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 15 Jul 2020 01:26:43 -0700 (PDT)
-From:   Lee Jones <lee.jones@linaro.org>
-To:     rjw@rjwysocki.net, viresh.kumar@linaro.org
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org, Lee Jones <lee.jones@linaro.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        linuxppc-dev@lists.ozlabs.org, Olof Johansson <olof@lixom.net>
-Subject: [PATCH v2 05/13] cpufreq: pasemi: Include header file for {check,restore}_astate prototypes
-Date:   Wed, 15 Jul 2020 09:26:26 +0100
-Message-Id: <20200715082634.3024816-6-lee.jones@linaro.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200715082634.3024816-1-lee.jones@linaro.org>
-References: <20200715082634.3024816-1-lee.jones@linaro.org>
+        Wed, 15 Jul 2020 01:28:13 -0700 (PDT)
+Date:   Wed, 15 Jul 2020 10:28:12 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     js1304@gmail.com
+Cc:     Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, kernel-team@lge.com,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Christoph Hellwig <hch@infradead.org>,
+        Roman Gushchin <guro@fb.com>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>,
+        "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>, stable@vger.kernel.org
+Subject: Re: [PATCH 1/4] mm/page_alloc: fix non cma alloc context
+Message-ID: <20200715082812.GD5451@dhcp22.suse.cz>
+References: <1594789529-6206-1-git-send-email-iamjoonsoo.kim@lge.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1594789529-6206-1-git-send-email-iamjoonsoo.kim@lge.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If function callers and providers do not share the same prototypes the
-compiler complains of missing prototypes.  Fix this by including the
-correct platforms header file.
+On Wed 15-07-20 14:05:26, Joonsoo Kim wrote:
+> From: Joonsoo Kim <iamjoonsoo.kim@lge.com>
+> 
+> Currently, preventing cma area in page allocation is implemented by using
+> current_gfp_context(). However, there are two problems of this
+> implementation.
+> 
+> First, this doesn't work for allocation fastpath. In the fastpath,
+> original gfp_mask is used since current_gfp_context() is introduced in
+> order to control reclaim and it is on slowpath.
+> Second, clearing __GFP_MOVABLE has a side effect to exclude the memory
+> on the ZONE_MOVABLE for allocation target.
 
-Fixes the following W=1 kernel build warning(s):
+This can be especially a problem with movable_node configurations where
+a large portion of the memory is in movable zones.
 
- drivers/cpufreq/pasemi-cpufreq.c:109:5: warning: no previous prototype for ‘check_astate’ [-Wmissing-prototypes]
- 109 | int check_astate(void)
- | ^~~~~~~~~~~~
- drivers/cpufreq/pasemi-cpufreq.c:114:6: warning: no previous prototype for ‘restore_astate’ [-Wmissing-prototypes]
- 114 | void restore_astate(int cpu)
- | ^~~~~~~~~~~~~~
+> To fix these problems, this patch changes the implementation to exclude
+> cma area in page allocation. Main point of this change is using the
+> alloc_flags. alloc_flags is mainly used to control allocation so it fits
+> for excluding cma area in allocation.
 
-Cc: Michael Ellerman <mpe@ellerman.id.au>
-Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Cc: Paul Mackerras <paulus@samba.org>
-Cc: linuxppc-dev@lists.ozlabs.org
-Suggested-by: Olof Johansson <olof@lixom.net>
-Signed-off-by: Lee Jones <lee.jones@linaro.org>
----
- drivers/cpufreq/pasemi-cpufreq.c | 2 ++
- 1 file changed, 2 insertions(+)
+The approach is sensible and the patch makes sense to me from a quick
+glance but I am not really familiar with all subtle details about cma
+integration with the allocator so I do not feel confident to provide my
+ack.
 
-diff --git a/drivers/cpufreq/pasemi-cpufreq.c b/drivers/cpufreq/pasemi-cpufreq.c
-index c66f566a854cb..815645170c4de 100644
---- a/drivers/cpufreq/pasemi-cpufreq.c
-+++ b/drivers/cpufreq/pasemi-cpufreq.c
-@@ -22,6 +22,8 @@
- #include <asm/time.h>
- #include <asm/smp.h>
- 
-+#include <platforms/pasemi/pasemi.h>
-+
- #define SDCASR_REG		0x0100
- #define SDCASR_REG_STRIDE	0x1000
- #define SDCPWR_CFGA0_REG	0x0100
+Thanks!
+
+> Fixes: d7fefcc (mm/cma: add PF flag to force non cma alloc)
+> Cc: <stable@vger.kernel.org>
+> Signed-off-by: Joonsoo Kim <iamjoonsoo.kim@lge.com>
+> ---
+>  include/linux/sched/mm.h |  4 ----
+>  mm/page_alloc.c          | 27 +++++++++++++++------------
+>  2 files changed, 15 insertions(+), 16 deletions(-)
+> 
+> diff --git a/include/linux/sched/mm.h b/include/linux/sched/mm.h
+> index 44ad5b7..a73847a 100644
+> --- a/include/linux/sched/mm.h
+> +++ b/include/linux/sched/mm.h
+> @@ -191,10 +191,6 @@ static inline gfp_t current_gfp_context(gfp_t flags)
+>  			flags &= ~(__GFP_IO | __GFP_FS);
+>  		else if (pflags & PF_MEMALLOC_NOFS)
+>  			flags &= ~__GFP_FS;
+> -#ifdef CONFIG_CMA
+> -		if (pflags & PF_MEMALLOC_NOCMA)
+> -			flags &= ~__GFP_MOVABLE;
+> -#endif
+>  	}
+>  	return flags;
+>  }
+> diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+> index 6416d08..cd53894 100644
+> --- a/mm/page_alloc.c
+> +++ b/mm/page_alloc.c
+> @@ -2791,7 +2791,7 @@ __rmqueue(struct zone *zone, unsigned int order, int migratetype,
+>  	 * allocating from CMA when over half of the zone's free memory
+>  	 * is in the CMA area.
+>  	 */
+> -	if (migratetype == MIGRATE_MOVABLE &&
+> +	if (alloc_flags & ALLOC_CMA &&
+>  	    zone_page_state(zone, NR_FREE_CMA_PAGES) >
+>  	    zone_page_state(zone, NR_FREE_PAGES) / 2) {
+>  		page = __rmqueue_cma_fallback(zone, order);
+> @@ -2802,7 +2802,7 @@ __rmqueue(struct zone *zone, unsigned int order, int migratetype,
+>  retry:
+>  	page = __rmqueue_smallest(zone, order, migratetype);
+>  	if (unlikely(!page)) {
+> -		if (migratetype == MIGRATE_MOVABLE)
+> +		if (alloc_flags & ALLOC_CMA)
+>  			page = __rmqueue_cma_fallback(zone, order);
+>  
+>  		if (!page && __rmqueue_fallback(zone, order, migratetype,
+> @@ -3502,11 +3502,9 @@ static inline long __zone_watermark_unusable_free(struct zone *z,
+>  	if (likely(!alloc_harder))
+>  		unusable_free += z->nr_reserved_highatomic;
+>  
+> -#ifdef CONFIG_CMA
+>  	/* If allocation can't use CMA areas don't use free CMA pages */
+> -	if (!(alloc_flags & ALLOC_CMA))
+> +	if (IS_ENABLED(CONFIG_CMA) && !(alloc_flags & ALLOC_CMA))
+>  		unusable_free += zone_page_state(z, NR_FREE_CMA_PAGES);
+> -#endif
+>  
+>  	return unusable_free;
+>  }
+> @@ -3693,6 +3691,16 @@ alloc_flags_nofragment(struct zone *zone, gfp_t gfp_mask)
+>  	return alloc_flags;
+>  }
+>  
+> +static inline void current_alloc_flags(gfp_t gfp_mask,
+> +				unsigned int *alloc_flags)
+> +{
+> +	unsigned int pflags = READ_ONCE(current->flags);
+> +
+> +	if (!(pflags & PF_MEMALLOC_NOCMA) &&
+> +		gfp_migratetype(gfp_mask) == MIGRATE_MOVABLE)
+> +		*alloc_flags |= ALLOC_CMA;
+> +}
+> +
+>  /*
+>   * get_page_from_freelist goes through the zonelist trying to allocate
+>   * a page.
+> @@ -3706,6 +3714,8 @@ get_page_from_freelist(gfp_t gfp_mask, unsigned int order, int alloc_flags,
+>  	struct pglist_data *last_pgdat_dirty_limit = NULL;
+>  	bool no_fallback;
+>  
+> +	current_alloc_flags(gfp_mask, &alloc_flags);
+> +
+>  retry:
+>  	/*
+>  	 * Scan zonelist, looking for a zone with enough free.
+> @@ -4339,10 +4349,6 @@ gfp_to_alloc_flags(gfp_t gfp_mask)
+>  	} else if (unlikely(rt_task(current)) && !in_interrupt())
+>  		alloc_flags |= ALLOC_HARDER;
+>  
+> -#ifdef CONFIG_CMA
+> -	if (gfp_migratetype(gfp_mask) == MIGRATE_MOVABLE)
+> -		alloc_flags |= ALLOC_CMA;
+> -#endif
+>  	return alloc_flags;
+>  }
+>  
+> @@ -4808,9 +4814,6 @@ static inline bool prepare_alloc_pages(gfp_t gfp_mask, unsigned int order,
+>  	if (should_fail_alloc_page(gfp_mask, order))
+>  		return false;
+>  
+> -	if (IS_ENABLED(CONFIG_CMA) && ac->migratetype == MIGRATE_MOVABLE)
+> -		*alloc_flags |= ALLOC_CMA;
+> -
+>  	return true;
+>  }
+>  
+> -- 
+> 2.7.4
+
 -- 
-2.25.1
-
+Michal Hocko
+SUSE Labs
