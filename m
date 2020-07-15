@@ -2,111 +2,224 @@ Return-Path: <SRS0=kup7=A2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA599C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 15:13:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1B24C433E4
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 15:13:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 88CA420658
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 15:13:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 760AD20658
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 15:13:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HjIdtSu3"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="gl5bB9+M"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726402AbgGOPNd (ORCPT
+        id S1726465AbgGOPNh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 11:13:33 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:46936 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725835AbgGOPNc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 11:13:32 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1594826011;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=SLr4XU8Zt9nR4MhV7pccKhkMvz8sYtWmhpN/hWtv1I8=;
-        b=HjIdtSu3TbqrW8Y7vX/kDOuW3LpJmfcGE/r+ZrvTwNW2f4tfVrQbYIH1n5ac3+0aO0FvD/
-        u3aZyyKX6VkKURVX/9+4//rb+xa4QwShSISc6dRyAzWAY7DccWBsOgZtkbEN7QfP2c3LkI
-        9hVnaGdaU809nEWgkxLZRpa6ukb/yI8=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-428-mZSMVSBVMIe8Af8C462YOA-1; Wed, 15 Jul 2020 11:13:08 -0400
-X-MC-Unique: mZSMVSBVMIe8Af8C462YOA-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Wed, 15 Jul 2020 11:13:37 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:11929 "EHLO m43-7.mailgun.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725834AbgGOPNg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jul 2020 11:13:36 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1594826014; h=Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Message-ID: In-Reply-To: Date: References: Subject: Cc:
+ To: From: Sender; bh=SSjNXt42DQxpNXXA7N1+wh/xYOkbNXGPf32vrswsm9M=; b=gl5bB9+MCdIyLbHQ1mLkxPUsSR+mPKq+esIEeqpzhb3tSs8DN5vaGOWoLHcPV9tzxe04i94z
+ ItpoWAxULysOmjOEVE7ZUlWDz6KC9widRS9kKRhDDh431zsyYBfB1buwA2yWZUa9lmtuw3/y
+ PJN54FSg89VcTGEghpfWFnkxOpE=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n02.prod.us-east-1.postgun.com with SMTP id
+ 5f0f1d0df9ca681bd099b737 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Wed, 15 Jul 2020 15:13:17
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 19850C433AD; Wed, 15 Jul 2020 15:13:17 +0000 (UTC)
+Received: from tynnyri.adurom.net (tynnyri.adurom.net [51.15.11.48])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 5C43A800597;
-        Wed, 15 Jul 2020 15:13:06 +0000 (UTC)
-Received: from oldenburg2.str.redhat.com (ovpn-112-228.ams2.redhat.com [10.36.112.228])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id CA32379D06;
-        Wed, 15 Jul 2020 15:13:00 +0000 (UTC)
-From:   Florian Weimer <fweimer@redhat.com>
-To:     Carlos O'Donell <carlos@redhat.com>
-Cc:     Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        "Paul E . McKenney" <paulmck@linux.ibm.com>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        "H . Peter Anvin" <hpa@zytor.com>, Paul Turner <pjt@google.com>,
-        linux-api@vger.kernel.org,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Florian Weimer <fw@deneb.enyo.de>
-Subject: Re: [RFC PATCH 0/4] rseq: Introduce extensible struct rseq
-References: <20200714030348.6214-1-mathieu.desnoyers@efficios.com>
-        <e7ede994-ebec-8022-b12b-ac7147641ffb@redhat.com>
-Date:   Wed, 15 Jul 2020 17:12:59 +0200
-In-Reply-To: <e7ede994-ebec-8022-b12b-ac7147641ffb@redhat.com> (Carlos
-        O'Donell's message of "Tue, 14 Jul 2020 16:55:11 -0400")
-Message-ID: <87a700zu9w.fsf@oldenburg2.str.redhat.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.3 (gnu/linux)
+        (Authenticated sender: kvalo)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 78FF5C433C6;
+        Wed, 15 Jul 2020 15:13:13 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 78FF5C433C6
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
+From:   Kalle Valo <kvalo@codeaurora.org>
+To:     Viktor =?utf-8?B?SsOkZ2Vyc2vDvHBwZXI=?= 
+        <viktor_jaegerskuepper@freenet.de>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Gabriel C <nix.or.die@googlemail.com>,
+        Jiri Slaby <jirislaby@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        stable <stable@vger.kernel.org>, lwn@lwn.net,
+        angrypenguinpoland@gmail.com, Qiujun Huang <hqjagain@gmail.com>,
+        ath9k-devel <ath9k-devel@qca.qualcomm.com>,
+        "linux-wireless\@vger.kernel.org" <linux-wireless@vger.kernel.org>
+Subject: Re: ath9k broken [was: Linux 5.7.3]
+References: <1592410366125160@kroah.com>
+        <CAEJqkgjV8p6LtBV8YUGbNb0vYzKOQt4-AMAvYw5mzFr3eicyTg@mail.gmail.com>
+        <b7993e83-1df7-0c93-f6dd-dba9dc10e27a@kernel.org>
+        <CAEJqkggG2ZB8De_zbP2W7Z9eRYve2br8jALaLRhjC33ksLZpTw@mail.gmail.com>
+        <CAEJqkgj4LS7M3zYK51Vagt4rWC9A7uunA+7CvX0Qv=57Or3Ngg@mail.gmail.com>
+        <CAEJqkghJWGsLCj2Wvt-yhzMewjXwrXhSEDpar6rbDpbSA6R8kQ@mail.gmail.com>
+        <20200626133959.GA4024297@kroah.com>
+        <CAEJqkgiACMar-iWsWQgJPAViBBURaNpcOD4FKtp6M8Aw_D4FOw@mail.gmail.com>
+        <CAEJqkgg4Ka8oNL7ELoJrR0-Abz3=caLns48KyDC=DQcym6SRvA@mail.gmail.com>
+        <20200707141100.GE4064836@kroah.com>
+        <07c8d8fa-8bbc-0b4e-191c-b2635214e8b9@freenet.de>
+Date:   Wed, 15 Jul 2020 18:13:08 +0300
+In-Reply-To: <07c8d8fa-8bbc-0b4e-191c-b2635214e8b9@freenet.de> ("Viktor
+        \=\?utf-8\?Q\?J\=C3\=A4gersk\=C3\=BCpper\=22's\?\= message of "Tue, 7 Jul 2020
+ 22:20:41 +0200")
+Message-ID: <87ft9sbym3.fsf@tynnyri.adurom.net>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* Carlos O'Donell:
+Viktor J=C3=A4gersk=C3=BCpper <viktor_jaegerskuepper@freenet.de> writes:
 
-> On 7/13/20 11:03 PM, Mathieu Desnoyers wrote:
->> Recent discussion led to a solution for extending struct rseq. This is
->> an implementation of the proposed solution.
->> 
->> Now is a good time to agree on this scheme before the release of glibc
->> 2.32, just in case there are small details to fix on the user-space
->> side in order to allow extending struct rseq.
+> Greg Kroah-Hartman wrote:
+>> On Fri, Jun 26, 2020 at 04:40:18PM +0200, Gabriel C wrote:
+>>> Am Fr., 26. Juni 2020 um 15:51 Uhr schrieb Gabriel C
+>>> <nix.or.die@googlemail.com>:
+>>>>
+>>>> Am Fr., 26. Juni 2020 um 15:40 Uhr schrieb Greg Kroah-Hartman
+>>>> <gregkh@linuxfoundation.org>:
+>>>>>
+>>>>> On Fri, Jun 26, 2020 at 01:48:59PM +0200, Gabriel C wrote:
+>>>>>> Am Do., 25. Juni 2020 um 12:52 Uhr schrieb Gabriel C
+>>>>>> <nix.or.die@googlemail.com>:
+>>>>>>>
+>>>>>>> Am Do., 25. Juni 2020 um 12:48 Uhr schrieb Gabriel C
+>>>>>>> <nix.or.die@googlemail.com>:
+>>>>>>>>
+>>>>>>>> Am Do., 25. Juni 2020 um 06:57 Uhr schrieb Jiri Slaby <jirislaby@k=
+ernel.org>:
+>>>>>>>>>
+>>>>>>>>> On 25. 06. 20, 0:05, Gabriel C wrote:
+>>>>>>>>>> Am Mi., 17. Juni 2020 um 18:13 Uhr schrieb Greg Kroah-Hartman
+>>>>>>>>>> <gregkh@linuxfoundation.org>:
+>>>>>>>>>>>
+>>>>>>>>>>> I'm announcing the release of the 5.7.3 kernel.
+>>>>>>>>>>>
+>>>>>>>>>>
+>>>>>>>>>> Hello Greg,
+>>>>>>>>>>
+>>>>>>>>>>> Qiujun Huang (5):
+>>>>>>>>>>>       ath9k: Fix use-after-free Read in htc_connect_service
+>>>>>>>>>>>       ath9k: Fix use-after-free Read in ath9k_wmi_ctrl_rx
+>>>>>>>>>>>       ath9k: Fix use-after-free Write in ath9k_htc_rx_msg
+>>>>>>>>>>>       ath9x: Fix stack-out-of-bounds Write in ath9k_hif_usb_rx_=
+cb
+>>>>>>>>>>>       ath9k: Fix general protection fault in ath9k_hif_usb_rx_cb
+>>>>>>>>>>>
+>>>>>>>>>>
+>>>>>>>>>> We got a report on IRC about 5.7.3+ breaking a USB ath9k Wifi Do=
+ngle,
+>>>>>>>>>> while working fine on <5.7.3.
+>>>>>>>>>>
+>>>>>>>>>> I don't have myself such HW, and the reported doesn't have any e=
+xperience
+>>>>>>>>>> in bisecting the kernel, so we build kernels, each with one of t=
+he
+>>>>>>>>>> above commits reverted,
+>>>>>>>>>> to find the bad commit.
+>>>>>>>>>>
+>>>>>>>>>> The winner is:
+>>>>>>>>>>
+>>>>>>>>>> commit 6602f080cb28745259e2fab1a4cf55eeb5894f93
+>>>>>>>>>> Author: Qiujun Huang <hqjagain@gmail.com>
+>>>>>>>>>> Date:   Sat Apr 4 12:18:38 2020 +0800
+>>>>>>>>>>
+>>>>>>>>>>     ath9k: Fix general protection fault in ath9k_hif_usb_rx_cb
+>>>>>>>>>>
+>>>>>>>>>>     commit 2bbcaaee1fcbd83272e29f31e2bb7e70d8c49e05 upstream.
+>>>>>>>>>> ...
+>>>>>>>>>>
+>>>>>>>>>> Reverting this one fixed his problem.
+>>>>>>>>>
+>>>>>>>>> Obvious question: is 5.8-rc1 (containing the commit) broken too?
+>>>>>>>>
+>>>>>>>> Yes, it does, just checked.
+>>>>>>>>
+>>>>>>>> git tag --contains 2bbcaaee1fcbd83272e29f31e2bb7e70d8c49e05
+>>>>>>>> v5.8-rc1
+>>>>>>>> v5.8-rc2
+>>>>>>>>
+>>>>>>>
+>>>>>>> Sorry, I read the wrong, I just woke up.
+>>>>>>>
+>>>>>>> We didn't test 5.8-rc{1,2} yet but we will today and let you know.
+>>>>>>>
+>>>>>>
+>>>>>> We tested 5.8-rc2 and it is broken too.
+>>>>>>
+>>>>>> The exact HW name is:
+>>>>>>
+>>>>>> TP-link tl-wn722n (Atheros AR9271 chip)
+>>>>>
+>>>>> Great!
+>>>>>
+>>>>> Can you work with the developers to fix this in Linus's tree first?
+>>>>
+>>>> I'm the man in the middle, but sure we will try patches or any suggest=
+ions
+>>>> from developers to identify and fix the problem.
+>>>>
+>>>>>
+>>>>> I bet they want to see the output of 'lsusb -v' for this device to see
+>>>>> if the endpoint calculations are correct...
+>>>>>
+>>>>
+>>>> Working on it. As soon the reporter gives me the output, I will post i=
+t here.
+>>>> I've told him to run it on a broken and one working kernel.
+>>>
+>>> That is from a good kernel with reverted commit
+>>> https://gist.github.com/AngryPenguinPL/07c8e2abd3b103eaf8978a39ad8577d1
+>>>
+>>> That is from the broken kernel without the commit reverted
+>>> https://gist.github.com/AngryPenguinPL/5cdc0dd16ce5e59ff3c32c048e2f5111
+>>>
+>>> This is from 5.7.5 kernel, I don't have yet a 5.8-rc2 package with the
+>>> reverted commit.
+>>=20
+>> Did this ever get resolved?
+>>=20
+>> thanks,
+>>=20
+>> greg k-h
+>>=20
 >
-> Adding extensibility to the rseq registration process would be great,
-> but we are out of time for the glibc 2.32 release.
+> This bug was also reported on the thread where it had been posted origina=
+lly:
+> https://lore.kernel.org/linux-wireless/20200621020428.6417d6fb@natsu/
 >
-> Should we revert rseq for glibc 2.32 and spend quality time discussing
-> the implications of an extensible design, something that Google already
-> says they are doing?
->
-> We can, with a clear head, and an agreed upon extension mechanism
-> include rseq in glibc 2.33 (release scheduled for Feburary 1st 2021).
-> We release time boxed every 6 months, no deviation, so you know when
-> your next merge window will be.
->
-> We have already done the hard work of fixing the nesting signal
-> handler issues, and glibc integration. If we revert today that will 
-> also give time for Firefox and Chrome to adjust their sandboxes.
->
-> Do you wish to go forward with rseq as we have it in glibc 2.32,
-> or do you wish to revert rseq from glibc 2.32, discuss the extension
-> mechanism, and put it back into glibc 2.33 with adjustments?
+> I am waiting for Kalle Valo to accept my patch (v2) which reverts the abo=
+ve
+> mentioned commit and which looks correct according to him. He wrote that =
+he
+> would take a closer look at this as soon as he could.
 
-I posted the glibc revert:
+Mark posted a patch which I'm hoping to fix the issue:
 
-  <https://sourceware.org/pipermail/libc-alpha/2020-July/116368.html>
+[1/1] ath9k: Fix regression with Atheros 9271
 
-I do not think we have any other choice at this point.
+https://patchwork.kernel.org/patch/11657669/
 
-Thanks,
-Florian
+Can someone confirm this, please? I would rather take Mark's fix than
+the revert.
 
+--=20
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatc=
+hes
