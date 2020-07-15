@@ -2,165 +2,157 @@ Return-Path: <SRS0=kup7=A2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16D03C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 10:06:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BAB44C433E7
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 10:06:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E0796206F5
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 10:06:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 96DD7206D5
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 10:06:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lGi5aMLs"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="TLz/uX6v"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728162AbgGOKGf (ORCPT
+        id S1730719AbgGOKGt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 06:06:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39118 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725838AbgGOKGe (ORCPT
+        Wed, 15 Jul 2020 06:06:49 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:30450 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728244AbgGOKGs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 06:06:34 -0400
-Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5583AC061755;
-        Wed, 15 Jul 2020 03:06:34 -0700 (PDT)
-Received: by mail-pg1-x543.google.com with SMTP id p3so2853105pgh.3;
-        Wed, 15 Jul 2020 03:06:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=nslPGXdZu/5gZ5LlNT5PDYtuT1891xRHJ5/j3FOie1I=;
-        b=lGi5aMLs/XECgYs1wjj1xEt4khF6eXDc9MZM4ewiJLheR5G3ao1sYAmrUhdh7KXPcL
-         N6dQzwyW9m6us8VZmLnPPJpjkrv9ufJmvRv+Q+UCvXFuBMNUpK6iB+guhv62D02FCqK/
-         kuT/aUv1WV+QLRY2CCUeMYSCqH2WMIjPQ2rtjxKl0Sh9tlIShNgdE8nabYy521Cu+MhU
-         E6RItElbkHkx98ZUqFwCPlEWRf1R5yzTu0KqqPgeghlii8qfT3M6qN1v6eNWFqhIjzo7
-         MZ9JoFRHHLm8NMzXcF/f5jPeK83cOF95eZys0+WOuqGqVFcSxYa5GpWuRVTpp+qV0s94
-         UKCQ==
+        Wed, 15 Jul 2020 06:06:48 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1594807607;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=xBNcpWQc4Ly7N1dkjlNTikVzXMkApkE+anJ2teQxPYU=;
+        b=TLz/uX6vjmPAjbSEsmE94IKYRud7aZVqKI3FMsIHHlzVnkkibiZQMqcs4idZXpts/o62kB
+        Ut+cCIqG50pV48k0I73UtEy7Dgf+mOTwH9xHQ9JB36aixFoKJEUksDi8+hzWdZxkMvdfSn
+        UaUdDEBHCslLp7eN97dCcEIQl3EJLYU=
+Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
+ [209.85.221.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-441-U6flhRmtMjeDvoiuK8DmzA-1; Wed, 15 Jul 2020 06:06:41 -0400
+X-MC-Unique: U6flhRmtMjeDvoiuK8DmzA-1
+Received: by mail-wr1-f72.google.com with SMTP id z1so761176wrn.18
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 03:06:40 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=nslPGXdZu/5gZ5LlNT5PDYtuT1891xRHJ5/j3FOie1I=;
-        b=XK/nXCzQa/4CIh6ic447VH7zCaB5sYGrqGKGPqO/UQ1mhWRuELHJHfPShvl4CF/r9W
-         KxUjZB+VcD5DXyQQRjX8X/P2th0l0NotxKmfXer/C8K8oRxEi/Zl0d/fczCrJzY/sYhn
-         v9SzCyOn2cxxKX8jEOHVCTzxlayAFP1TEAsZEQvNWNNJPdAw9psc4TtTcmiDZVRGFm/w
-         pCDgTtYXGcUGA/nfCtntPOMa9KOn4FfLh2Av58ZdiPC0RlxeftF/m3cAIWFTWpleD1HL
-         wj51es+Kj9RtrooNt3hE0EpNP5PTUsTYMxi0wwEYQ2s7l6bf06odOBnCH3H7RQg29ABl
-         eNPg==
-X-Gm-Message-State: AOAM5324UJaJQM8t86i+du1R/fc+8TrKVZIV7bqNISxoScJBGKYFwnjl
-        A9Xm5IN0xy3RCjSR8PFQrXLB4vYEkWo=
-X-Google-Smtp-Source: ABdhPJx4DFc/ox8E65aNHtbWuNDIZGW4YupywrWlghgOOC0Ec9nmXuyti1B4p7PC6lB/hhLKUpWmrw==
-X-Received: by 2002:a65:4bc8:: with SMTP id p8mr7337634pgr.418.1594807593570;
-        Wed, 15 Jul 2020 03:06:33 -0700 (PDT)
-Received: from ?IPv6:2404:7a87:83e0:f800:355c:1e73:d0e6:d45f? ([2404:7a87:83e0:f800:355c:1e73:d0e6:d45f])
-        by smtp.gmail.com with ESMTPSA id 22sm1690145pfx.94.2020.07.15.03.06.31
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 15 Jul 2020 03:06:33 -0700 (PDT)
-Subject: Re: [PATCH] exfat: retain 'VolumeFlags' properly
-To:     Namjae Jeon <namjae.jeon@samsung.com>,
-        Kohada.Tetsuhiro@dc.MitsubishiElectric.co.jp
-Cc:     Mori.Takahiro@ab.MitsubishiElectric.co.jp,
-        Motai.Hirotaka@aj.MitsubishiElectric.co.jp,
-        'Sungjong Seo' <sj1557.seo@samsung.com>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <CGME20200708095813epcas1p2277cdf7de6a8bb20c27bcd030eec431f@epcas1p2.samsung.com>
- <20200708095746.4179-1-kohada.t2@gmail.com>
- <005101d658d1$7202e5d0$5608b170$@samsung.com>
- <TY2PR01MB2875C88DD10CC13D0C70DE1690610@TY2PR01MB2875.jpnprd01.prod.outlook.com>
- <015801d65a4a$ebedd380$c3c97a80$@samsung.com>
-From:   Tetsuhiro Kohada <kohada.t2@gmail.com>
-Message-ID: <ad0beeab-48ba-ee6d-f4cf-de19ec35a405@gmail.com>
-Date:   Wed, 15 Jul 2020 19:06:24 +0900
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=xBNcpWQc4Ly7N1dkjlNTikVzXMkApkE+anJ2teQxPYU=;
+        b=ujPDnE3X0odUxemnlIXxoIT7QX+n1aSrsXhMk4KMQG/hG6XRx81UsB1Ed4+/VLeIF8
+         reqJ+G5YqGoOUGqHmVR+j+/mknhaAg+MaSgQYw2ZSbTK628ffT08O9jxd9nEbbnmLyRI
+         xKh6D0Zc0BrWcR3EaSXGQASTfzpQboO8iM/lavYwlMQQqzgjwaMK/2GEJgAQmAKbAewf
+         TKbg800NHawDgHARvvkGAw3Zu3PJWyT95OtbZ8sspZQOgfxbNsL8S7RM3maZdd5AXP0m
+         P4bqm+v9R+VTI/B4jaT81UKzWJmXezB1JEc2FR8mynd2Wew3cLgopjjuY7Trmxb7T98O
+         dR5g==
+X-Gm-Message-State: AOAM530I2tecHcrnzWw5Jol9EKj2wTJ0UcccAsXpEiTh70ZpBJxrzC3a
+        kShkc5BBLGz0eptHg9dT9RuI9A6JAfHilUJ4n6BaV9n1tj+mz0yrbc/eTx4XFhjsVzccvmgFHlq
+        hp+J2X+ayodvTl9HueGlx8e0T
+X-Received: by 2002:a5d:6846:: with SMTP id o6mr10603204wrw.370.1594807599931;
+        Wed, 15 Jul 2020 03:06:39 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJwea8LjSmMMg83WCulVLpJxzWYofbQm7iliNTI4DNdbx1Z3ZYCaB7MdTPLhYSHvHIsiYhllvA==
+X-Received: by 2002:a5d:6846:: with SMTP id o6mr10603175wrw.370.1594807599711;
+        Wed, 15 Jul 2020 03:06:39 -0700 (PDT)
+Received: from redhat.com (bzq-79-180-10-140.red.bezeqint.net. [79.180.10.140])
+        by smtp.gmail.com with ESMTPSA id u15sm2743100wrm.64.2020.07.15.03.06.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 15 Jul 2020 03:06:38 -0700 (PDT)
+Date:   Wed, 15 Jul 2020 06:06:14 -0400
+From:   "Michael S. Tsirkin" <mst@redhat.com>
+To:     Maxim Levitsky <mlevitsk@redhat.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Stefan Hajnoczi <stefanha@redhat.com>,
+        "open list:BLOCK LAYER" <linux-block@vger.kernel.org>,
+        "open list:VIRTIO CORE AND NET DRIVERS" 
+        <virtualization@lists.linux-foundation.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Jason Wang <jasowang@redhat.com>, Jens Axboe <axboe@kernel.dk>
+Subject: Re: [PATCH] virtio-blk: check host supplied logical block size
+Message-ID: <20200715060233-mutt-send-email-mst@kernel.org>
+References: <20200715095518.3724-1-mlevitsk@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <015801d65a4a$ebedd380$c3c97a80$@samsung.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200715095518.3724-1-mlevitsk@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Jul 15, 2020 at 12:55:18PM +0300, Maxim Levitsky wrote:
+> Linux kernel only supports logical block sizes which are power of two,
+> at least 512 bytes and no more that PAGE_SIZE.
+> 
+> Check this instead of crashing later on.
+> 
+> Note that there is no need to check physical block size since it is
+> only a hint, and virtio-blk already only supports power of two values.
+> 
+> Bugzilla link: https://bugzilla.redhat.com/show_bug.cgi?id=1664619
+> 
+> Signed-off-by: Maxim Levitsky <mlevitsk@redhat.com>
+> ---
+>  drivers/block/virtio_blk.c | 20 ++++++++++++++++++--
+>  1 file changed, 18 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/block/virtio_blk.c b/drivers/block/virtio_blk.c
+> index 980df853ee497..36dda31cc4e96 100644
+> --- a/drivers/block/virtio_blk.c
+> +++ b/drivers/block/virtio_blk.c
+> @@ -681,6 +681,12 @@ static const struct blk_mq_ops virtio_mq_ops = {
+>  static unsigned int virtblk_queue_depth;
+>  module_param_named(queue_depth, virtblk_queue_depth, uint, 0444);
+>  
+> +
+> +static bool virtblk_valid_block_size(unsigned int blksize)
+> +{
+> +	return blksize >= 512 && blksize <= PAGE_SIZE && is_power_of_2(blksize);
+> +}
+> +
 
->>>> Also, rename ERR_MEDIUM to MED_FAILURE.
->>> I think that MEDIA_FAILURE looks better.
->>
->> I think so too.
->> If so, should I change VOL_DIRTY to VOLUME_DIRTY?
-> Yes, maybe.
+Is this a blk core assumption? in that case, does not this belong
+in blk core?
 
-OK.
-I'll rename both in v2.
+>  static int virtblk_probe(struct virtio_device *vdev)
+>  {
+>  	struct virtio_blk *vblk;
+> @@ -809,9 +815,16 @@ static int virtblk_probe(struct virtio_device *vdev)
+>  	err = virtio_cread_feature(vdev, VIRTIO_BLK_F_BLK_SIZE,
+>  				   struct virtio_blk_config, blk_size,
+>  				   &blk_size);
+> -	if (!err)
+> +	if (!err) {
+> +		if (!virtblk_valid_block_size(blk_size)) {
+> +			dev_err(&vdev->dev,
+> +				"%s failure: unsupported logical block size %d\n",
+> +				__func__, blk_size);
+> +			err = -EINVAL;
+> +			goto out_cleanup_queue;
+> +		}
+>  		blk_queue_logical_block_size(q, blk_size);
+> -	else
+> +	} else
+>  		blk_size = queue_logical_block_size(q);
+>  
+>  	/* Use topology information if available */
 
+OK so if we are doing this pls add {} around  blk_size = queue_logical_block_size(q);
+too.
 
->>>> -	p_boot->vol_flags = cpu_to_le16(new_flag);
->>>> +	p_boot->vol_flags = cpu_to_le16(new_flags);
->>> How about set or clear only dirty bit to on-disk volume flags instead
->>> of using
->>> sbi->vol_flags_noclear ?
->>>         if (set)
->>>                 p_boot->vol_flags |= cpu_to_le16(VOL_DIRTY);
->>>         else
->>>                 p_boot->vol_flags &= cpu_to_le16(~VOL_DIRTY);
+> @@ -872,6 +885,9 @@ static int virtblk_probe(struct virtio_device *vdev)
+>  	device_add_disk(&vdev->dev, vblk->disk, virtblk_attr_groups);
+>  	return 0;
+>  
+> +out_cleanup_queue:
+> +	blk_cleanup_queue(vblk->disk->queue);
+> +	vblk->disk->queue = NULL;
+>  out_free_tags:
+>  	blk_mq_free_tag_set(&vblk->tag_set);
+>  out_put_disk:
+> -- 
+> 2.26.2
 
-Please let me know about this code.
-Does this code assume that 'sbi->vol_flags'(last vol_flag value) is not used?
-
-If you use sbi->vol_flags, I think the original idea is fine.
-
-         sbi-> vol_flags = new_flag;
-	p_boot->vol_flags = cpu_to_le16(new_flag);
-
-
->> In this way, the initial  VOL_DIRTY cannot be retained.
->> The purpose of this patch is to avoid losing the initial VOL_DIRTY and MED_FAILURE.
->> Furthermore, I'm also thinking of setting MED_FAILURE.
-> I know what you do. I mean this function does not need to be called if volume dirty
-> Is already set on on-disk volume flags as I said earlier.
-
-Hmm?
-Does it mean the caller check that volume was dirty at mount, and caller determine
-whether to call exfat_set_vol_flags() or not?
-If so, MEDIA_FAILUR needs to be set independently of the volume-dirty state.
-
-
->> However, the formula for 'new_flags' may be a bit complicated.
->> Is it better to change to the following?
->>
->> 	if (new_flags == VOL_CLEAN)
->> 		new_flags = sbi->vol_flags & ~VOL_DIRTY
->> 	else
->> 		new_flags |= sbi->vol_flags;
->>
->> 	new_flags |= sbi->vol_flags_noclear;
->>
->>
->> one more point,
->> Is there a better name than 'vol_flags_noclear'?
->> (I can't come up with a good name anymore)
-> It looks complicated. It would be better to simply set/clear VOLUME DIRTY bit.
-
-I think exfat_set_vol_flags() gets a little complicated,
-because it needs the followings (with bit operation)
-  a) Set/Clear VOLUME_DIRTY.
-  b) Set MEDIA_FAILUR.
-  c) Do not change other flags.
-  d) Retain VOLUME_DIRTY/MEDIA_FAILUR as it is when mounted.
-
-'vol_flags_noclear' is used for d).
-
-Bit-by-bit operation makes the code redundant.
-I think it's not a bad way to handle multiple bits.
-
-What do you think?
-
-
-BR
----
-Tetsuhiro Kohada <kohada.t2@gmail.com>
