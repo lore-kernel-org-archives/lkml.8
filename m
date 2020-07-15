@@ -2,127 +2,120 @@ Return-Path: <SRS0=kup7=A2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-14.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 793C6C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 21:41:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94ACCC433E5
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 21:43:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5463A2072E
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 21:41:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594849311;
-	bh=M0vdn4ImpbRmLWUHprEfsOm1Lnqfa4MWsb7TRDWyk04=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=uGsPkgS7NiOGtBI2lALQy/kqlgCu6A0//2yhhNDKLn8X2g29oP3/5ANJpBBhWJB9G
-	 LK246+n+rM1qFNJfEyUBZytbXJHFiFZ1e0wGLe6LyjoH6ZInMzontDaPTeYhDN8hXS
-	 POql2t/kNc0mGDBU/VPxAIPWsfT++T+5/gCeZ8sI=
+	by mail.kernel.org (Postfix) with ESMTP id 6EC75206F5
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 21:43:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="PvN9qtLW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727075AbgGOVlu (ORCPT
+        id S1727096AbgGOVnU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 17:41:50 -0400
-Received: from mail-il1-f196.google.com ([209.85.166.196]:38875 "EHLO
-        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726796AbgGOVlq (ORCPT
+        Wed, 15 Jul 2020 17:43:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33768 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727090AbgGOVnS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 17:41:46 -0400
-Received: by mail-il1-f196.google.com with SMTP id s21so3318449ilk.5;
-        Wed, 15 Jul 2020 14:41:46 -0700 (PDT)
+        Wed, 15 Jul 2020 17:43:18 -0400
+Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BB263C08C5CE
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 14:43:18 -0700 (PDT)
+Received: by mail-yb1-xb49.google.com with SMTP id s9so4573523ybj.18
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 14:43:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=WPW2jthcymgJJnDe4srAy8GflGzwLl52ZFtIA0Ixzqw=;
+        b=PvN9qtLWYSDsNHkgj/A27DsYxbLZ/Xnm+V0boSzvB8ey5BIexmosCy7fP6UkN8Zb4C
+         sjRU/+R5zu11ex3BuKYJXCu8Ou4nJO1JBvDeL/VWYvR9Ex4e5VutdUb9RQCUUB8sYUag
+         2w+3i8jQdmRvbG9KhMIy39jcQELLbsG//2Iy5fj3qTFiC12LFmrkC3diSfvc5Yuxy/9F
+         KtwNHAQwI/2lNQ+CS57Ti7gxaqePN96jkHJ039IoZCkJHRp1e/E5SdJmPZj6+/Kr/vMy
+         7T5pI1oyS6yTvXp3k+5+h5huvsrNOh7L4gpAnasiC27Ib9QLtf6R2tjZRCDElxuZLeOS
+         18uQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=yRYOnV/rwceyYZSpb8vUPcnarY2UGlhf4+zHnRr772I=;
-        b=Z4iMVplNS11Ou1PFGpPb9WbTEZtkvOxW/QxPURoIqbs+tLx7LGZ92qvBvnBp9ANpl3
-         MFPlPpA3HjR3avMzGfJ3Q++tSyniun5dV3EJRnBoja79q4pkSm+qUJvLhKrtKsR7OWqH
-         Trre+NumzvNPO2l7P6RSpy+M09dxqzDJfjddwZy0ZPCYLDUAoTECDRBk2QQGupSd9EAC
-         MqOnKDT6pn22P2QbC5a4s4XQq/hzACXc4yRxqn/p5gNjMVRMR+O0MuBigA1By9PbC1gN
-         SE3S/2dIutMIg5f3X61dfou535q22+6u9bltQmdnqff7O1BI5ZMprun5Z217MqinaQdC
-         Ok3g==
-X-Gm-Message-State: AOAM532j1i6AzDQ+ecC+ZypHxwgu3gbAeknfXjXtwsrCwRY2t5B6Qe+D
-        J3Jec7hHQOBjMpjZyUj/IQ==
-X-Google-Smtp-Source: ABdhPJwcFZ4oF6Mja4fmrG4CbiHZsJ4kXTXf9mMj+xjeoPfczGS+I+7x/BP3inh5UC1cBFaPibzm1w==
-X-Received: by 2002:a92:db06:: with SMTP id b6mr1627423iln.228.1594849305560;
-        Wed, 15 Jul 2020 14:41:45 -0700 (PDT)
-Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id l17sm1615289ilm.70.2020.07.15.14.41.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 15 Jul 2020 14:41:44 -0700 (PDT)
-Received: (nullmailer pid 865406 invoked by uid 1000);
-        Wed, 15 Jul 2020 21:41:44 -0000
-Date:   Wed, 15 Jul 2020 15:41:44 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Guenter Roeck <linux@roeck-us.net>
-Cc:     "Daniel M. Weeks" <dan@danweeks.net>, jdelvare@suse.com,
-        linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] dt-bindings: hwmon: Correct vendor for mcp980x
-Message-ID: <20200715214144.GB818608@bogus>
-References: <20200703153748.GA16156@dev.danweeks.net>
- <4884254c-4406-5c04-3df7-030541b7c201@roeck-us.net>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <4884254c-4406-5c04-3df7-030541b7c201@roeck-us.net>
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=WPW2jthcymgJJnDe4srAy8GflGzwLl52ZFtIA0Ixzqw=;
+        b=CfviIi+BHHindIRPg1r6xZRKcRKz6sPpTnj7D901ekDw+fgDJI3SzXBktyxt0XKDge
+         L8svuwRYta59A9s2sf0PohGKIDP1f3vzT3OmSO/p3QqIOrXyblJ0K0Rfik18fcuhZBGS
+         fXjLXeVzIWELOWXQW3/0DXFI02EGbL8rkonjuOg16QInVOw0I/FuOLkjBnziCSpgGM9b
+         CybSPXDAUGg1pJogokjjwvmoHrAyp+TPgbTdIVMV1ZkNGmBIosdToLdcxu7imoWWZaqF
+         xZA8Jqszm2wRVYoGBc/vEbbOISbOX0250QBro3mWSPHtouAIzuXoa60kp+4KrAMM8tqd
+         bKHg==
+X-Gm-Message-State: AOAM531IFvLCJNYR1WMbjKCU6dTiPS/wIkcyS/wk+1/1GVMoLz5kPTri
+        ZeQ1Dy6htoosv6U/yu77VuHo9xrxyKM=
+X-Google-Smtp-Source: ABdhPJz/qTdRjOyD9NiyHcxQ5X4u25G5pK7DjjWbH8sfOQ6b1U0bIDyl+0KlG5qp/aUt1V0yHVOLYZN+VVE=
+X-Received: by 2002:a25:6c57:: with SMTP id h84mr1497780ybc.211.1594849397781;
+ Wed, 15 Jul 2020 14:43:17 -0700 (PDT)
+Date:   Wed, 15 Jul 2020 14:43:10 -0700
+Message-Id: <20200715214312.2266839-1-haoluo@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.27.0.389.gc38d7665816-goog
+Subject: [RFC PATCH bpf-next 0/2] BTF support for ksyms
+From:   Hao Luo <haoluo@google.com>
+To:     netdev@vger.kernel.org, bpf@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
+Cc:     Shuah Khan <shuah@kernel.org>, Alexei Starovoitov <ast@kernel.org>,
+        Andrii Nakryiko <andriin@fb.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        KP Singh <kpsingh@chromium.org>,
+        Stanislav Fomichev <sdf@google.com>,
+        Quentin Monnet <quentin@isovalent.com>,
+        Hao Luo <haoluo@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 03, 2020 at 02:59:12PM -0700, Guenter Roeck wrote:
-> On 7/3/20 8:37 AM, Daniel M. Weeks wrote:
-> > Signed-off-by: Daniel M. Weeks <dan@danweeks.net>
-> > ---
-> >  Documentation/devicetree/bindings/hwmon/lm75.txt | 2 +-
-> >  drivers/hwmon/lm75.c                             | 8 ++++----
-> >  2 files changed, 5 insertions(+), 5 deletions(-)
-> > 
-> > diff --git a/Documentation/devicetree/bindings/hwmon/lm75.txt b/Documentation/devicetree/bindings/hwmon/lm75.txt
-> > index 273616702c51..e5bb554cd2c3 100644
-> > --- a/Documentation/devicetree/bindings/hwmon/lm75.txt
-> > +++ b/Documentation/devicetree/bindings/hwmon/lm75.txt
-> > @@ -14,10 +14,10 @@ Required properties:
-> >  		"maxim,max6626",
-> >  		"maxim,max31725",
-> >  		"maxim,max31726",
-> > -		"maxim,mcp980x",
-> >  		"nxp,pct2075",
-> >  		"st,stds75",
-> >  		"st,stlm75",
-> > +		"microchip,mcp980x",
-> >  		"microchip,tcn75",
-> >  		"ti,tmp100",
-> >  		"ti,tmp101",
-> > diff --git a/drivers/hwmon/lm75.c b/drivers/hwmon/lm75.c
-> > index ba0be48aeadd..a8cfc7e4a685 100644
-> > --- a/drivers/hwmon/lm75.c
-> > +++ b/drivers/hwmon/lm75.c
-> > @@ -690,10 +690,6 @@ static const struct of_device_id __maybe_unused lm75_of_match[] = {
-> >  		.compatible = "maxim,max31726",
-> >  		.data = (void *)max31725
-> >  	},
-> > -	{
-> > -		.compatible = "maxim,mcp980x",
-> > -		.data = (void *)mcp980x
-> > -	},
-> >  	{
-> >  		.compatible = "nxp,pct2075",
-> >  		.data = (void *)pct2075
-> > @@ -706,6 +702,10 @@ static const struct of_device_id __maybe_unused lm75_of_match[] = {
-> >  		.compatible = "st,stlm75",
-> >  		.data = (void *)stlm75
-> >  	},
-> > +	{
-> > +		.compatible = "microchip,mcp980x",
-> > +		.data = (void *)mcp980x
-> 
-> Hmm, makes me wonder if we should replace this with correct chip names
-> since we are at it. After all, it only includes mcp980{0,1,2,3} and not mcp9805.
-> 
-> Rob, any thoughts ?
+This patch series extends the previously add __ksym externs with btf
+info.
 
-Do we need to distinguish the chips? Aren't there existing users?
+Right now the __ksym externs are treated as pure 64-bit scalar value.
+Libbpf replaces ld_imm64 insn of __ksym by its kernel address at load
+time. This patch series extend those extern with their btf info. Note
+that btf support for __ksym must come with the btf that has VARs encoded
+to work properly. Therefore, these patches are tested against a btf
+generated by a patched pahole, whose change will available in released
+pahole soon.
 
-Rob
+There are a couple of design choices that I would like feedbacks from
+bpf/btf experts.
+
+ 1. Because the newly added pseudo_btf_id needs to carry both a kernel
+    address (64 bits) and a btf id (32 bits), I used the 'off' fields
+    of ld_imm insn to carry btf id. I wonder if this breaks anything or
+    if there is a better idea.
+ 2. Since only a subset of vars are going to be encoded into the new
+    btf, if a ksym that doesn't find its btf id, it doesn't get
+    converted into pseudo_btf_id. It is still treated as pure scalar
+    value. But we require kernel btf to be loaded in libbpf if there is
+    any ksym in the bpf prog.
+
+This is RFC as it requires pahole changes that encode kernel vars into
+btf.
+
+Hao Luo (2):
+  bpf: BTF support for __ksym externs
+  selftests/bpf: Test __ksym externs with BTF
+
+ include/uapi/linux/bpf.h                      | 37 ++++++++++----
+ kernel/bpf/verifier.c                         | 26 ++++++++--
+ tools/include/uapi/linux/bpf.h                | 37 ++++++++++----
+ tools/lib/bpf/libbpf.c                        | 50 ++++++++++++++++++-
+ .../testing/selftests/bpf/prog_tests/ksyms.c  |  2 +
+ .../testing/selftests/bpf/progs/test_ksyms.c  | 14 ++++++
+ 6 files changed, 143 insertions(+), 23 deletions(-)
+
+-- 
+2.27.0.389.gc38d7665816-goog
+
