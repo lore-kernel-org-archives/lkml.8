@@ -2,31 +2,32 @@ Return-Path: <SRS0=kup7=A2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E05DC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 11:09:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6526CC433EA
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 11:09:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 38F462071B
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 11:09:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 47B582071B
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 11:09:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731426AbgGOLJU (ORCPT
+        id S1731467AbgGOLJd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 07:09:20 -0400
+        Wed, 15 Jul 2020 07:09:33 -0400
 Received: from relmlor1.renesas.com ([210.160.252.171]:37974 "EHLO
         relmlie5.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729356AbgGOLJT (ORCPT
+        by vger.kernel.org with ESMTP id S1728871AbgGOLJa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 07:09:19 -0400
+        Wed, 15 Jul 2020 07:09:30 -0400
 X-IronPort-AV: E=Sophos;i="5.75,355,1589209200"; 
-   d="scan'208";a="52194034"
+   d="scan'208";a="52194052"
 Received: from unknown (HELO relmlir5.idc.renesas.com) ([10.200.68.151])
-  by relmlie5.idc.renesas.com with ESMTP; 15 Jul 2020 20:09:16 +0900
+  by relmlie5.idc.renesas.com with ESMTP; 15 Jul 2020 20:09:28 +0900
 Received: from localhost.localdomain (unknown [10.226.36.204])
-        by relmlir5.idc.renesas.com (Postfix) with ESMTP id 8A99F4006CDA;
-        Wed, 15 Jul 2020 20:09:11 +0900 (JST)
+        by relmlir5.idc.renesas.com (Postfix) with ESMTP id 35D514006CDA;
+        Wed, 15 Jul 2020 20:09:23 +0900 (JST)
 From:   Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 To:     Geert Uytterhoeven <geert+renesas@glider.be>,
         Wolfram Sang <wsa+renesas@sang-engineering.com>,
@@ -52,68 +53,36 @@ Cc:     Daniel Lezcano <daniel.lezcano@linaro.org>,
         linux-watchdog@vger.kernel.org,
         Prabhakar <prabhakar.csengg@gmail.com>,
         Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Subject: [PATCH 00/20] Add support for [H]SCIF/TMU/CMT/THS/SDHI/MSIOF/CAN[FD]/I2C/IIC/RWDT on R8A774E1
-Date:   Wed, 15 Jul 2020 12:08:50 +0100
-Message-Id: <1594811350-14066-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+Subject: [PATCH 02/20] dt-bindings: thermal: rcar-gen3-thermal: Add r8a774e1 support
+Date:   Wed, 15 Jul 2020 12:08:52 +0100
+Message-Id: <1594811350-14066-3-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
 X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1594811350-14066-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+References: <1594811350-14066-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi All,
+Document RZ/G2H (R8A774E1) SoC bindings.
 
-This patch series enables support for following on RZ/G2H SoC,
-* CPU OPP
-* THS
-* CMT/TMU
-* I2C/IIC
-* MSIOF
-* RWDT
-* SDHI
-* SCIF/HSCIF
-* CAN/CANFD
+Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+---
+ Documentation/devicetree/bindings/thermal/rcar-gen3-thermal.yaml | 1 +
+ 1 file changed, 1 insertion(+)
 
-Cheers,
-Prabhakar
-
-Lad Prabhakar (14):
-  dt-bindings: thermal: rcar-gen3-thermal: Add r8a774e1 support
-  dt-bindings: timer: renesas,cmt: Document r8a774e1 CMT support
-  arm64: dts: renesas: r8a774e1: Add SCIF and HSCIF nodes
-  arm64: dts: renesas: r8a774e1: Add SDHI nodes
-  dt-bindings: i2c: renesas,i2c: Document r8a774e1 support
-  dt-bindings: i2c: renesas,iic: Document r8a774e1 support
-  arm64: dts: renesas: r8a774e1: Add I2C and IIC-DVFS support
-  dt-bindings: spi: renesas,sh-msiof: Add r8a774e1 support
-  arm64: dts: renesas: r8a774e1: Add MSIOF nodes
-  dt-bindings: watchdog: renesas,wdt: Document r8a774e1 support
-  arm64: dts: renesas: r8a774e1: Add RWDT node
-  dt-bindings: can: rcar_can: Document r8a774e1 support
-  dt-bindings: can: rcar_canfd: Document r8a774e1 support
-  arm64: dts: renesas: r8a774e1: Add CAN[FD] support
-
-Marian-Cristian Rotariu (6):
-  arm64: dts: renesas: r8a774e1: Add operating points
-  thermal: rcar_gen3_thermal: Add r8a774e1 support
-  arm64: dts: renesas: r8a774e1: Add RZ/G2H thermal support
-  arm64: dts: renesas: r8a774e1: Add CMT device nodes
-  dt-bindings: timer: renesas,tmu: Document r8a774e1 bindings
-  arm64: dts: renesas: r8a774e1: Add TMU device nodes
-
- .../devicetree/bindings/i2c/renesas,i2c.txt   |   1 +
- .../devicetree/bindings/i2c/renesas,iic.txt   |   1 +
- .../devicetree/bindings/net/can/rcar_can.txt  |   1 +
- .../bindings/net/can/rcar_canfd.txt           |   1 +
- .../bindings/spi/renesas,sh-msiof.yaml        |   1 +
- .../bindings/thermal/rcar-gen3-thermal.yaml   |   1 +
- .../bindings/timer/renesas,cmt.yaml           |   2 +
- .../devicetree/bindings/timer/renesas,tmu.txt |   1 +
- .../bindings/watchdog/renesas,wdt.yaml        |   1 +
- arch/arm64/boot/dts/renesas/r8a774e1.dtsi     | 713 +++++++++++++++++-
- drivers/thermal/rcar_gen3_thermal.c           |   4 +
- 11 files changed, 715 insertions(+), 12 deletions(-)
-
+diff --git a/Documentation/devicetree/bindings/thermal/rcar-gen3-thermal.yaml b/Documentation/devicetree/bindings/thermal/rcar-gen3-thermal.yaml
+index b1a55ae497de..f386f2a7c06c 100644
+--- a/Documentation/devicetree/bindings/thermal/rcar-gen3-thermal.yaml
++++ b/Documentation/devicetree/bindings/thermal/rcar-gen3-thermal.yaml
+@@ -20,6 +20,7 @@ properties:
+     enum:
+       - renesas,r8a774a1-thermal # RZ/G2M
+       - renesas,r8a774b1-thermal # RZ/G2N
++      - renesas,r8a774e1-thermal # RZ/G2H
+       - renesas,r8a7795-thermal  # R-Car H3
+       - renesas,r8a7796-thermal  # R-Car M3-W
+       - renesas,r8a77961-thermal # R-Car M3-W+
 -- 
 2.17.1
 
