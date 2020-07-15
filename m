@@ -2,119 +2,98 @@ Return-Path: <SRS0=kup7=A2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20785C433E7
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 08:46:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B006C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 08:48:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 04C7C2065D
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 08:46:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 05EDF2065D
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 08:48:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="O3RcdCC8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730382AbgGOIq5 (ORCPT
+        id S1730429AbgGOIsK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 04:46:57 -0400
-Received: from mga11.intel.com ([192.55.52.93]:61786 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729377AbgGOIq4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 04:46:56 -0400
-IronPort-SDR: AVBd4w/lewG8wnDfAgIeB6mv+zgzyBqn7bjk41JbB9qb2ClgbQ0Vnh8G3dNZXONfW7HAGLrRwh
- QmrTP2vASdHA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9682"; a="147113218"
-X-IronPort-AV: E=Sophos;i="5.75,354,1589266800"; 
-   d="scan'208";a="147113218"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jul 2020 01:46:56 -0700
-IronPort-SDR: DXexAs8H1P9V9yOFnm7lrcgiUiXuzWp57mJFBrWKsRwwIaSGj+DcHhlB7ITlgE7qWM2rj3LQsj
- K6bIgPBigxIg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,354,1589266800"; 
-   d="scan'208";a="299819931"
-Received: from yren3-mobl.ccr.corp.intel.com ([10.249.174.224])
-  by orsmga002.jf.intel.com with ESMTP; 15 Jul 2020 01:46:54 -0700
-Message-ID: <746420e6b213985518d8b314018e32dc3438e9af.camel@intel.com>
-Subject: Re: [RFC PATCH 3/4] thermal:core:Add genetlink notifications for
- monitoring falling temperature
-From:   Zhang Rui <rui.zhang@intel.com>
-To:     Thara Gopinath <thara.gopinath@linaro.org>,
-        daniel.lezcano@linaro.org, robh+dt@kernel.org
-Cc:     linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Date:   Wed, 15 Jul 2020 16:46:53 +0800
-In-Reply-To: <20200710135154.181454-4-thara.gopinath@linaro.org>
-References: <20200710135154.181454-1-thara.gopinath@linaro.org>
-         <20200710135154.181454-4-thara.gopinath@linaro.org>
+        Wed, 15 Jul 2020 04:48:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55206 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729377AbgGOIsK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jul 2020 04:48:10 -0400
+Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 557C6C061755
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 01:48:10 -0700 (PDT)
+Received: by mail-pl1-x644.google.com with SMTP id x8so2102217plm.10
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 01:48:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=qnhFJ16AfACROoupr0uxF/NZlSmJRV5Jft/zULE7Grs=;
+        b=O3RcdCC88GcY5PgG/zjp9j2CcHjun8IZ9uMwrKE6MWEOzk230IMFzETWYRcSKfTV5A
+         85TsDtwcOJ7PCfxQyoQmHOLjNxvwcxG+ExC6FOhjh/+ql/QocaUIWanPqkmld2yJ6Iid
+         BeR6Ib1B07VjOljCk4b1zGEg8poa+4oE/d/9A7aHkZySar42854CbnvFXDZWOCi21uV5
+         3/QWaOP3Ubt4K/FfPG7QuEUL3lBP8ehxxFh8l40P5VihCHWv7DnFBfHcQy3q1+nkiUnL
+         CUeEZ5a/i3HfuzB6rPkB2o5gEJcgF+56XJ6jeO2ZSZbDiG2Z1i+eczsy1CBEKWTYvJiD
+         mdjw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=qnhFJ16AfACROoupr0uxF/NZlSmJRV5Jft/zULE7Grs=;
+        b=BuSewW6lN4LFGBEonVUvlkAADkucad+4lWmhzHpiu+0w5IYTp+v0oF8t+ECTNDyJHv
+         EdGcialx9Z1T8ljnMUQKrXgBgEY2SN2bPyZXMPHB3sT9Q3e68VG5Pcz0ueSzoln9csV5
+         nHA5VDkBF53oe05WRd2IR1EO2ACywSb0ApfQJX/31G1TduODpWPvHmFFM6oLTMX4JFH8
+         v3yiXt008az0DUhgIBJwNFJ8kQIAkR7KaqsriSaaen8ZwLIX6sA7Tth3tqmUmT5pDp4c
+         RN/c4nm3wAqGtuCLWApbB6ONOR5tdCUUitwSF8nMh8FSNP5zlxGoUpZkIrN87qKZc1mv
+         epCA==
+X-Gm-Message-State: AOAM530f8RSPv6I/xJITm1x3YMKO8Nw9oWMWw2cZK5gajmjsa9F6yTow
+        xD/+IkcPQxtcnYaV4RadSM3AQOUbdvnf3XxN2DEf6A==
+X-Google-Smtp-Source: ABdhPJw5R4cBnytLiHdmHwQG46XxUk2XZbBfEfz2tLVcCRJCRBBkJN2wVHhhhxfv4yMNwTMYljTgJPlOgjfSqFOWIZA=
+X-Received: by 2002:a17:90a:cc03:: with SMTP id b3mr8285727pju.80.1594802889678;
+ Wed, 15 Jul 2020 01:48:09 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200704085213.444645-1-ignat@cloudflare.com> <20200704085213.444645-3-ignat@cloudflare.com>
+ <8b168d8c-f526-42b4-7cec-ec7c26c64122@cambridgegreys.com> <CALrw=nFaeMPH9GbMWwiT4rV32=uLKa3ZOYpmnkKTA3bvMiyXYg@mail.gmail.com>
+ <72b84dca-e285-bb1f-1b69-5b29c70806d8@cambridgegreys.com> <54c5ffb6416bf59f2f287762820ce84d8ad9b495.camel@sipsolutions.net>
+In-Reply-To: <54c5ffb6416bf59f2f287762820ce84d8ad9b495.camel@sipsolutions.net>
+From:   Brendan Higgins <brendanhiggins@google.com>
+Date:   Wed, 15 Jul 2020 01:47:58 -0700
+Message-ID: <CAFd5g47ZOpxjmFGnq+EXrnbT4HEziH3WVZGoFtaqBPBNN+gdWA@mail.gmail.com>
+Subject: Re: [PATCH v2 2/3] um: some fixes to build UML with musl
+To:     Johannes Berg <johannes@sipsolutions.net>
+Cc:     Anton Ivanov <anton.ivanov@cambridgegreys.com>,
+        Ignat Korchagin <ignat@cloudflare.com>,
+        kernel-team <kernel-team@cloudflare.com>,
+        Richard Weinberger <richard@nod.at>,
+        Jeff Dike <jdike@addtoit.com>,
+        linux-um <linux-um@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 2020-07-10 at 09:51 -0400, Thara Gopinath wrote:
-> Add notification calls for trip type THERMAL_TRIP_COLD when
-> temperature
-> crosses the trip point in either direction.
-> 
-> Signed-off-by: Thara Gopinath <thara.gopinath@linaro.org>
-> ---
->  drivers/thermal/thermal_core.c | 21 +++++++++++++++------
->  1 file changed, 15 insertions(+), 6 deletions(-)
-> 
-> diff --git a/drivers/thermal/thermal_core.c
-> b/drivers/thermal/thermal_core.c
-> index 750a89f0c20a..e2302ca1cd3b 100644
-> --- a/drivers/thermal/thermal_core.c
-> +++ b/drivers/thermal/thermal_core.c
-> @@ -429,12 +429,21 @@ static void handle_thermal_trip(struct
-> thermal_zone_device *tz, int trip)
->  		tz->ops->get_trip_hyst(tz, trip, &hyst);
->  
->  	if (tz->last_temperature != THERMAL_TEMP_INVALID) {
-> -		if (tz->last_temperature < trip_temp &&
-> -		    tz->temperature >= trip_temp)
-> -			thermal_notify_tz_trip_up(tz->id, trip);
-> -		if (tz->last_temperature >= trip_temp &&
-> -		    tz->temperature < (trip_temp - hyst))
-> -			thermal_notify_tz_trip_down(tz->id, trip);
-> +		if (type == THERMAL_TRIP_COLD) {
-> +			if (tz->last_temperature > trip_temp &&
-> +			    tz->temperature <= trip_temp)
-> +				thermal_notify_tz_trip_down(tz->id,
-> trip);
+On Tue, Jul 14, 2020 at 9:02 AM Johannes Berg <johannes@sipsolutions.net> wrote:
+>
+> On Tue, 2020-07-14 at 11:43 +0100, Anton Ivanov wrote:
+>
+> > Patch is OK with me, should not read patches before the 3rd double espresso next time.
+> >
+> > I will +1 it, Richard, Johannes, what do you think?
+>
+> I got dropped off the list in "The Great Infradead Purge" but I see it
+> in patchwork ;)
+>
+> Not sure we should modify cc-can-link.sh without at least CC'ing
+> Masahiro Yamada?
+>
+> But yeah, looks fine to me. Not that I have any interest in static
+> linking.
 
-trip_type should also be part of the event because trip_down/trip_up
-for hot trip and cold trip have different meanings.
-Or can we use some more generic names like trip_on/trip_off? trip_on
-means the trip point is violated or actions need to be taken for the
-specific trip points, for both hot and cold trips. I know
-trip_on/trip_off doesn't represent what I mean clearly, but surely you
-can find a better name.
-
-thanks,
-rui
-
-> +			if (tz->last_temperature <= trip_temp &&
-> +			    tz->temperature > (trip_temp + hyst))
-> +				thermal_notify_tz_trip_up(tz->id,
-> trip);
-> +		} else {
-> +			if (tz->last_temperature < trip_temp &&
-> +			    tz->temperature >= trip_temp)
-> +				thermal_notify_tz_trip_up(tz->id,
-> trip);
-> +			if (tz->last_temperature >= trip_temp &&
-> +			    tz->temperature < (trip_temp - hyst))
-> +				thermal_notify_tz_trip_down(tz->id,
-> trip);
-> +		}
->  	}
->  
->  	if (type == THERMAL_TRIP_CRITICAL || type == THERMAL_TRIP_HOT)
-
+Yeah, looks good to me as well, but I think the others here know the
+drivers here better than I.
