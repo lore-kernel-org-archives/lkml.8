@@ -2,166 +2,87 @@ Return-Path: <SRS0=kup7=A2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7ED5EC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 18:54:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16D9BC433E2
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 18:56:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 630D420656
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 18:54:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB45B20809
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 18:56:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Suf3P2jx"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="R4D+AiV2";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="BYgsGz19"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726829AbgGOSyh (ORCPT
+        id S1726770AbgGOS4c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 14:54:37 -0400
-Received: from aserp2130.oracle.com ([141.146.126.79]:51412 "EHLO
-        aserp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726491AbgGOSyg (ORCPT
+        Wed, 15 Jul 2020 14:56:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36314 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726086AbgGOS4b (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 14:54:36 -0400
-Received: from pps.filterd (aserp2130.oracle.com [127.0.0.1])
-        by aserp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06FIpufU015158;
-        Wed, 15 Jul 2020 18:54:34 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
- mime-version : subject : from : in-reply-to : date : cc :
- content-transfer-encoding : message-id : references : to;
- s=corp-2020-01-29; bh=8nMMglpPtmSbuRefk5IkxI40fcsel9sw4WlVCU3Fnfg=;
- b=Suf3P2jxUi0QTi7RwFtfQiTN1r7HSXl1/QC/gCvYi2GQ2SS7Qx96u+jeCEUwcCRMVXfp
- q7bqx/X5wqqsobRSUILsRmGJ2zi5UTETwwPVmeYgiopiqpM0iKtElDc7VkhT7YdDPfMd
- kX/PAQV+gZfjCKxfhZ3oyniQtlr0xur5+O79NIjkpst7tbWptrYp0vbvfuyqI1cdg2ks
- j8grbl8y8SXAGuLyTYMBMnngMvoiCM/EKehs0ECypGz7DPBG5js7SCLbSwVFAxHSXfTY
- 41DVqVyDqLe2v5NOJJFQPpg6QQlDOHytfNiPuacg5awNJbveQdkWG4FTArAuOkYICXAM SA== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by aserp2130.oracle.com with ESMTP id 327s65kfhm-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 15 Jul 2020 18:54:34 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06FImgC2056404;
-        Wed, 15 Jul 2020 18:54:33 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by userp3030.oracle.com with ESMTP id 327qc1gxmg-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 15 Jul 2020 18:54:33 +0000
-Received: from abhmp0010.oracle.com (abhmp0010.oracle.com [141.146.116.16])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 06FIsWWg026388;
-        Wed, 15 Jul 2020 18:54:32 GMT
-Received: from anon-dhcp-152.1015granger.net (/68.61.232.219)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 15 Jul 2020 11:54:32 -0700
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.80.23.2.2\))
-Subject: Re: [Regression] "SUNRPC: Add "@len" parameter to gss_unwrap()"
- breaks NFS Kerberos on upstream stable 5.4.y
-From:   Chuck Lever <chuck.lever@oracle.com>
-In-Reply-To: <7042081C-27B3-4024-BA34-7146B459F8B4@oracle.com>
-Date:   Wed, 15 Jul 2020 14:54:30 -0400
-Cc:     matthew.ruffell@canonical.com,
-        linux-stable <stable@vger.kernel.org>,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
-        "open list:NETWORKING DRIVERS" <netdev@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <3884DFB0-D276-442D-8199-8FC77A40F1E5@oracle.com>
-References: <309E203B-8818-4E33-87F0-017E127788E2@canonical.com>
- <424D9E36-C51B-46E8-9A07-D329821F2647@oracle.com>
- <6E0D09F1-601B-432B-81EE-9858EC1AF1DE@canonical.com>
- <7042081C-27B3-4024-BA34-7146B459F8B4@oracle.com>
-To:     Kai-Heng Feng <kai.heng.feng@canonical.com>
-X-Mailer: Apple Mail (2.3608.80.23.2.2)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9683 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 spamscore=0
- mlxlogscore=999 bulkscore=0 malwarescore=0 mlxscore=0 phishscore=0
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2007150145
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9683 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 malwarescore=0
- phishscore=0 mlxscore=0 priorityscore=1501 lowpriorityscore=0 spamscore=0
- clxscore=1015 bulkscore=0 mlxlogscore=999 impostorscore=0 suspectscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2007150145
+        Wed, 15 Jul 2020 14:56:31 -0400
+Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B0D78C061755;
+        Wed, 15 Jul 2020 11:56:31 -0700 (PDT)
+Date:   Wed, 15 Jul 2020 20:56:28 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1594839390;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=2PN8gG1ug5BCAvCUnGhwhg5gYQ43BA/zafzatUzWINU=;
+        b=R4D+AiV2imCWssvgqXOuVrfKHCQtMW+CVuWoK3NtD2qZklOSLot8laIhJ9mJeLlGyf0uax
+        yzX6CyIiRxUMJ6rjtf8109vdayCECBU56t5ZlQ2nJfYq5HivepxGvBG1xJ5w5FGnL2IltR
+        D5MSBBbDlceV8dQRmru3wnT18irOKyEi/OU/ZptBkF/uu+EpJkYE5Kae6k80rfNUnYnVwo
+        ln41llnDzcrNIagkKDtPklwBwqXQmrYFGJMMAe5gbXuom/pxIWxHJxWObWa/kgmJdAJL/Q
+        MRvuTDvfhWZ3B5MpEI1rrkP6y735RUNe3Io1T4u9TjYFDG9k/bs3WN86F0wAsg==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1594839390;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=2PN8gG1ug5BCAvCUnGhwhg5gYQ43BA/zafzatUzWINU=;
+        b=BYgsGz19jrlreZ3rVkXyiR3JGReye/jbdQZdcxicBlFNJqUSI7TCoFuncbKXVcW9rG55m/
+        Fs4+kWRGKkBNRVBw==
+From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To:     "Uladzislau Rezki (Sony)" <urezki@gmail.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>, RCU <rcu@vger.kernel.org>,
+        linux-mm@kvack.org, "Paul E . McKenney" <paulmck@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "Theodore Y . Ts'o" <tytso@mit.edu>,
+        Matthew Wilcox <willy@infradead.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Oleksiy Avramchenko <oleksiy.avramchenko@sonymobile.com>
+Subject: Re: [PATCH 1/1] rcu/tree: Drop the lock before entering to page
+ allocator
+Message-ID: <20200715185628.7b4k3o5efp4gnbla@linutronix.de>
+References: <20200715183537.4010-1-urezki@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200715183537.4010-1-urezki@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 2020-07-15 20:35:37 [+0200], Uladzislau Rezki (Sony) wrote:
+> @@ -3306,6 +3307,9 @@ kvfree_call_rcu_add_ptr_to_bulk(struct kfree_rcu_cpu *krcp, void *ptr)
+>  			if (IS_ENABLED(CONFIG_PREEMPT_RT))
+>  				return false;
+>  
+> +			preempt_disable();
+> +			krc_this_cpu_unlock(*krcp, *flags);
 
+Now you enter memory allocator with disabled preemption. This isn't any
+better but we don't have a warning for this yet.
+What happened to the part where I asked for a spinlock_t?
 
-> On Jul 15, 2020, at 11:14 AM, Chuck Lever <chuck.lever@oracle.com> =
-wrote:
->=20
->=20
->=20
->> On Jul 15, 2020, at 11:08 AM, Kai-Heng Feng =
-<kai.heng.feng@canonical.com> wrote:
->>=20
->>> On Jul 15, 2020, at 23:02, Chuck Lever <chuck.lever@oracle.com> =
-wrote:
->>>=20
->>>> On Jul 15, 2020, at 10:48 AM, Kai-Heng Feng =
-<kai.heng.feng@canonical.com> wrote:
->>>>=20
->>>> Hi,
->>>>=20
->>>> Multiple users reported NFS causes NULL pointer dereference [1] on =
-Ubuntu, due to commit "SUNRPC: Add "@len" parameter to gss_unwrap()" and =
-commit "SUNRPC: Fix GSS privacy computation of auth->au_ralign".
->>>>=20
->>>> The same issue happens on upstream stable 5.4.y branch.
->>>> The mainline kernel doesn't have this issue though.
->>>>=20
->>>> Should we revert them? Or is there any missing commits need to be =
-backported to v5.4?
->>>>=20
->>>> [1] https://bugs.launchpad.net/bugs/1886277
->>>>=20
->>>> Kai-Heng
->>>=20
->>> 31c9590ae468 ("SUNRPC: Add "@len" parameter to gss_unwrap()") is a =
-refactoring
->>> change. It shouldn't have introduced any behavior difference. But in =
-theory,
->>> practice and theory should be the same...
->>>=20
->>> Check if 0a8e7b7d0846 ("SUNRPC: Revert 241b1f419f0e ("SUNRPC: Remove =
-xdr_buf_trim()")")
->>> is also applied to 5.4.0-40-generic.
->>=20
->> Yes, it's included. The commit is part of upstream stable 5.4.
->>=20
->>>=20
->>> It would help to know if v5.5 stable is working for you. I haven't =
-had any
->>> problems with it.
->>=20
->> I'll ask users to test it out.=20
->> Thanks for you quick reply!
->=20
-> Another thought: Please ask what encryption type is in use. The
-> kerberos_v1 enctypes might exercise a code path I wasn't able to
-> test.
+> +
+>  			/*
+>  			 * NOTE: For one argument of kvfree_rcu() we can
+>  			 * drop the lock and get the page in sleepable
 
-OK.
-
-v5.4.40 does not have 31c9590ae468 and friends, but the claim is this
-one crashes?
-
-And v5.4.51 has those three and 89a3c9f5b9f0, which Pierre claims fixes
-the problem for him; but another commenter says v5.4.51 still crashes.
-
-So we're getting inconsistent problem reports.
-
-Have the testers enable memory debugging : KASAN or SLUB debugging
-might provide more information. I might have some time later this week
-to try reproducing on upstream stable, but no guarantees.
-
-
---
-Chuck Lever
-
-
-
+Sebastian
