@@ -2,85 +2,140 @@ Return-Path: <SRS0=kup7=A2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C1F2C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 19:37:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1075CC433E3
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 19:38:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E38B420657
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 19:37:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594841858;
-	bh=Hwuppz8tb26UpW8WeKn+TE5VN9M/qmS/s+jNssBtRIE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=asrmHgwAIYjHh3IYfM0fnVRqNWCcxwW9cP4EUsxvjxramFX1rioWL6J7YRNBXBtCo
-	 iWKIDMye6htIgTBhOZu2Ko9WfIl4ofmOSbh4HuBo+aEFdlmsz6/CayOmP1QwP6QKgv
-	 bU/DeN54Pj5sj5POOMvN2Ulws7RIB0XOYJ2v055I=
+	by mail.kernel.org (Postfix) with ESMTP id E711220657
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 19:38:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="NFYcAm9w"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727114AbgGOThh (ORCPT
+        id S1727123AbgGOTiX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 15:37:37 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:41270 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726479AbgGOThf (ORCPT
+        Wed, 15 Jul 2020 15:38:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42734 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726670AbgGOTiW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 15:37:35 -0400
-Received: by mail-io1-f66.google.com with SMTP id p205so3501166iod.8;
-        Wed, 15 Jul 2020 12:37:35 -0700 (PDT)
+        Wed, 15 Jul 2020 15:38:22 -0400
+Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2F13BC061755
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 12:38:22 -0700 (PDT)
+Received: by mail-pj1-x1043.google.com with SMTP id gc9so3574477pjb.2
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 12:38:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=RKh/vY0BHfd36chDiUTxPLIe+Y+K5A1kkjp71EXwdcE=;
+        b=NFYcAm9wvunsDT3O6rABAEXZUTIq2xx4gdZaR6QtXqGqFitWX01bZktZ25OsD3VwlD
+         3/RQ9NAAf/BOwnZdQd94jtfO4wkkgYuv4pcx1BtleMgckxJL01rUX371k90SIoMIb9ib
+         X+OmPNF1QYkG3wvnjg47HV51rzX9ADmRkZVR0=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=6yPEJQ72Q1EfjEQSdgbDJUxAG/Z1XD+AX4bIWkXOAZg=;
-        b=AVTLuYLkPR5aLldQKyhzl1xhO0zyByUQyDzIwaTjSXN9NKZ1HeAAYHB53RUYVcawoN
-         1L0QtA+CWR03pv+uIqmuHUUHDRmLvqQ5qO8GZLXBP2PszKaqQTwZLyJPtDyRgLDYpu3t
-         nVyir8swxNBOiCeXUR0ny6SFUdnLxxzV+TSL+AUZxSKST487kznsl18W8xMEQnH5CIrQ
-         yZV4H2kNgUIO9SVfFD8ShDeAcRI7h2GqqER2Yj2KOA7d2WNlswIYWP2zYnGmMfW5YESN
-         fkehtTt0womhSDOXQytp/QQSXxQR3oi87qm7fdLTBmQC8n9Y5it484K2YO9mu68k0O6q
-         zVOg==
-X-Gm-Message-State: AOAM530TqD6B3NCae2XYUibUQNXeul2jQdRW9AGEf+1c68ZMDnklghxk
-        gq7MdZdLo24NItHJSXL+HQNOPT2u8A==
-X-Google-Smtp-Source: ABdhPJzuQ0nT4s41jp1YOfkEXOeSdQsfn/Wq2jydOXxQtQlEud9sRPHgTsAshlMejXSjulz4/siM4g==
-X-Received: by 2002:a02:cc58:: with SMTP id i24mr1143377jaq.38.1594841855092;
-        Wed, 15 Jul 2020 12:37:35 -0700 (PDT)
-Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id c16sm1506198ilh.54.2020.07.15.12.37.33
+        bh=RKh/vY0BHfd36chDiUTxPLIe+Y+K5A1kkjp71EXwdcE=;
+        b=qrWAhoGQpbpzst7NddyAXrnfZshct1nGSGJdxrHOadFp8L1U0d4rfAUz4XrJ2nBdrb
+         A5vZWlFLQy/G53mRBvpLdbaZV3c/tOrX+RmpNt9Pm1bHP5wyNiBsjgBEIy4A6sqGX3cV
+         D9bFOKfHuTsVslhWXy3/MjzCiIW9Fthpl28/x6Z1ZHoQRxYTMtC31tMZ/y9KnB5B/ztW
+         DSJo68Q0Ek7RtrTMAnZPOY5YaYaoYS2keP/lOM/RLHkNmAZDNMBOhE3DbLV36iTgQYHl
+         ZpW2EhCN68pIG8Dly4KbvEW/MtHwM+FJVHcSxIhxlzuu0NUTyK8+XWqaQ38MntwPhqf5
+         65WA==
+X-Gm-Message-State: AOAM533i+5pmOAP5p9IaoH8kT4I777UagU1I/b8b6Ub3WsWOnRpmd0CB
+        rT2YELCcVX6VWqD8nsvu/7Hnjg==
+X-Google-Smtp-Source: ABdhPJw6vSWEWFqHuZieSwcjX3DLbGLbjeUzcn/asl0tR48MGys8ddiDMSEPELGGAFn+G+XeWmPXBQ==
+X-Received: by 2002:a17:902:6b8c:: with SMTP id p12mr857212plk.192.1594841901705;
+        Wed, 15 Jul 2020 12:38:21 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id y10sm2800537pfn.121.2020.07.15.12.38.20
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 15 Jul 2020 12:37:34 -0700 (PDT)
-Received: (nullmailer pid 696944 invoked by uid 1000);
-        Wed, 15 Jul 2020 19:37:33 -0000
-Date:   Wed, 15 Jul 2020 13:37:33 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Paul Cercueil <paul@crapouillou.net>
-Cc:     =?utf-8?B?5ZGo55Cw5p2w?= <zhouyanjie@wanyeetech.com>, od@zcrc.me,
-        devicetree@vger.kernel.org,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        linux-mips@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 3/7] dt-bindings: timer/ingenic,tcu: Add compatible
- strings for JZ4725B SoC
-Message-ID: <20200715193733.GA696896@bogus>
-References: <20200623182432.187843-1-paul@crapouillou.net>
- <20200623182432.187843-3-paul@crapouillou.net>
+        Wed, 15 Jul 2020 12:38:20 -0700 (PDT)
+Date:   Wed, 15 Jul 2020 12:38:19 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Masami Hiramatsu <mhiramat@kernel.org>
+Cc:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        linux-kernel@vger.kernel.org, x86@vger.kernel.org,
+        Andi Kleen <ak@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
+        Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jessica Yu <jeyu@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+        Will Deacon <will@kernel.org>,
+        Sami Tolvanen <samitolvanen@google.com>,
+        Alexandre Ghiti <alex@ghiti.fr>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Peter Collingbourne <pcc@google.com>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>, Stephen Boyd <sboyd@kernel.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Miroslav Benes <mbenes@suse.cz>,
+        Babu Moger <Babu.Moger@amd.com>,
+        Omar Sandoval <osandov@fb.com>,
+        Nayna Jain <nayna@linux.ibm.com>,
+        Marco Elver <elver@google.com>,
+        Brian Gerst <brgerst@gmail.com>, Jiri Kosina <jkosina@suse.cz>,
+        Joe Lawrence <joe.lawrence@redhat.com>,
+        Mike Rapoport <rppt@linux.ibm.com>
+Subject: Re: [PATCH v3 1/3] kprobes: Add text_alloc() and text_free()
+Message-ID: <202007151236.FE6CA96261@keescook>
+References: <20200714223239.1543716-1-jarkko.sakkinen@linux.intel.com>
+ <20200714223239.1543716-2-jarkko.sakkinen@linux.intel.com>
+ <20200715172732.35110a4e53e84fcec9aeac83@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200623182432.187843-3-paul@crapouillou.net>
+In-Reply-To: <20200715172732.35110a4e53e84fcec9aeac83@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 23 Jun 2020 20:24:28 +0200, Paul Cercueil wrote:
-> Add compatible strings for the PWM and watchdog IPs on the Ingenic
-> JZ4725B SoC.
+On Wed, Jul 15, 2020 at 05:27:32PM +0900, Masami Hiramatsu wrote:
 > 
-> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
-> ---
->  Documentation/devicetree/bindings/timer/ingenic,tcu.yaml | 5 ++++-
->  1 file changed, 4 insertions(+), 1 deletion(-)
+> On Wed, 15 Jul 2020 01:32:27 +0300
+> Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com> wrote:
+> > [...]
+> > -void *module_alloc(unsigned long size)
+> > -{
+> > -	void *p;
+> > -
+> > -	if (PAGE_ALIGN(size) > MODULES_LEN)
+> > -		return NULL;
+> > -
+> > -	p = __vmalloc_node_range(size, MODULE_ALIGN,
+> > -				    MODULES_VADDR + get_module_load_offset(),
+> > -				    MODULES_END, GFP_KERNEL,
+> > -				    PAGE_KERNEL, 0, NUMA_NO_NODE,
+> > -				    __builtin_return_address(0));
+> > -	if (p && (kasan_module_alloc(p, size) < 0)) {
+> > -		vfree(p);
+> > -		return NULL;
+> > -	}
+> > -
+> > -	return p;
+> > -}
 > 
+> Please don't touch this module_alloc() at all. Then we can
+> just call __vmalloc_node_range() in the text_alloc().
 
-Acked-by: Rob Herring <robh@kernel.org>
+Hm? I thought the requirement was that trampolines needed to stay within
+a certain distance of kernel text and that the module_alloc() enforced
+that?
+
+-- 
+Kees Cook
