@@ -2,296 +2,96 @@ Return-Path: <SRS0=kup7=A2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UPPERCASE_50_75 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F26A5C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 10:44:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A343C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 10:46:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D163320656
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 10:44:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 77DEE206F4
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 10:46:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=126.com header.i=@126.com header.b="qNZeMWYC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729273AbgGOKos (ORCPT
+        id S1729334AbgGOKqB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 06:44:48 -0400
-Received: from mga09.intel.com ([134.134.136.24]:18308 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729010AbgGOKos (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 06:44:48 -0400
-IronPort-SDR: 4vXpUeJopZYf3sd/k6hdx7yi+R8D/V3B871M/ONw8zJKXqj4bKLeI5MYInaRWX3CS+yxtbcrBo
- CAnogoeMfG9g==
-X-IronPort-AV: E=McAfee;i="6000,8403,9682"; a="150530771"
-X-IronPort-AV: E=Sophos;i="5.75,355,1589266800"; 
-   d="scan'208";a="150530771"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jul 2020 03:44:46 -0700
-IronPort-SDR: 7cS6YQkoQUIPWsYASnXWxUfEK+lcJaGjrqTWf+9d2Jhqg8F9QqUAMSz/AL0yv4sOZM+uBSw0iS
- AF1DY3epn51w==
-X-IronPort-AV: E=Sophos;i="5.75,355,1589266800"; 
-   d="scan'208";a="308210603"
-Received: from ykazandz-mobl1.ger.corp.intel.com ([10.251.85.102])
-  by fmsmga004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jul 2020 03:44:42 -0700
-Message-ID: <a86909a94351ae25c936d639aa87ccacb4d737e6.camel@linux.intel.com>
-Subject: Re: [PATCH v3 3/7] dt-bindings: clock: Add Keem Bay clock IDs
-From:   Daniele Alessandrelli <daniele.alessandrelli@linux.intel.com>
-To:     Rob Herring <robh@kernel.org>
-List-Id: <soc.lore.kernel.org>
-Cc:     linux-arm-kernel@lists.infradead.org, SoC Team <soc@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Jassi Brar <jassisinghbrar@gmail.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        "Paul J. Murphy" <paul.j.murphy@intel.com>,
-        Dinh Nguyen <dinguyen@kernel.org>,
-        Daniele Alessandrelli <daniele.alessandrelli@intel.com>
-Date:   Wed, 15 Jul 2020 11:44:33 +0100
-In-Reply-To: <20200714211227.GA2924943@bogus>
-References: <20200714161305.836348-1-daniele.alessandrelli@linux.intel.com>
-         <20200714161305.836348-4-daniele.alessandrelli@linux.intel.com>
-         <20200714211227.GA2924943@bogus>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.36.3 (3.36.3-1.fc32) 
+        Wed, 15 Jul 2020 06:46:01 -0400
+Received: from m1546.mail.126.com ([220.181.15.46]:63461 "EHLO
+        m1546.mail.126.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729284AbgGOKqA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jul 2020 06:46:00 -0400
+X-Greylist: delayed 386 seconds by postgrey-1.27 at vger.kernel.org; Wed, 15 Jul 2020 06:45:57 EDT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=126.com;
+        s=s110527; h=Date:From:Subject:MIME-Version:Message-ID; bh=mzvz0
+        4rM4BvMtyWqIGQECIt7tv5mDfJVjcsxyqY3H0w=; b=qNZeMWYCP4rUjNwW77aMr
+        qbGJyq14PmXoECL0tiUlo3dTL4htcqVYKCtMVNms2ZXxa7VBkCLt0w5qq43q3Cwi
+        QiqHQKmw8dBgzQd9SCa103QnGa1RZXzpRkO6WoAmBFDmjzRJSaa1ETK9eqBzzq0B
+        POGTQIQ6zajAFIqh4IX/bg=
+Received: from zhixu001$126.com ( [209.8.147.252] ) by ajax-webmail-wmsvr46
+ (Coremail) ; Wed, 15 Jul 2020 18:45:21 +0800 (CST)
+X-Originating-IP: [209.8.147.252]
+Date:   Wed, 15 Jul 2020 18:45:21 +0800 (CST)
+From:   Zhao <zhixu001@126.com>
+To:     "Joe Perches" <joe@perches.com>,
+        "Dan Carpenter" <dan.carpenter@oracle.com>,
+        "Greg KH" <gregkh@linuxfoundation.org>
+Cc:     devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
+        rcy@google.com, rspringer@google.com, toddpoynor@google.com
+Subject: Re:Re: [PATCH v2] staging: gasket: core: Fix a coding style issue
+ in gasket_core.c
+X-Priority: 3
+X-Mailer: Coremail Webmail Server Version XT5.0.10 build 20190724(ac680a23)
+ Copyright (c) 2002-2020 www.mailtech.cn 126com
+In-Reply-To: <128a9f7de9885257736b3bb2648ea90bcbc2c760.camel@perches.com>
+References: <20200617161127.32006-1-zhixu001@126.com>
+ <20200714234440.27009-1-zhixu001@126.com>
+ <20200715071748.GC2305231@kroah.com>
+ <23ef3ca9616418b702df891443d0f4864edd58ff.camel@perches.com>
+ <20200715075755.GA2516028@kroah.com> <20200715083727.GY2549@kadam>
+ <128a9f7de9885257736b3bb2648ea90bcbc2c760.camel@perches.com>
+Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=GBK
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Message-ID: <7d0444ff.5c46.17352142e11.Coremail.zhixu001@126.com>
+X-Coremail-Locale: zh_CN
+X-CM-TRANSID: LsqowADnPQVB3g5f9grRAA--.30433W
+X-CM-SenderInfo: x2kl53qqqrqiyswou0bp/1tbiZwBifF16eYfrGQACsQ
+X-Coremail-Antispam: 1U5529EdanIXcx71UUUUU7vcSsGvfC2KfnxnUU==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2020-07-14 at 15:12 -0600, Rob Herring wrote:
-> On Tue, Jul 14, 2020 at 05:13:01PM +0100, Daniele Alessandrelli
-> wrote:
-> > From: Daniele Alessandrelli <daniele.alessandrelli@intel.com>
-> > 
-> > Add clock dt-bindings for Keem Bay SoC.
-> 
-> Where's the binding schema?
-
-I should have specified that they are SCMI clocks.
-
-Anyway, when I split the original patchset (change done in v2) I had to
-remove SCMI support from the DT, so these bindings (and the power
-domain ones) are currently unused. So, probably, the right thing to do
-is to drop them for now. I'll do that in v4.
-
-> 
-> > Signed-off-by: Daniele Alessandrelli <
-> > daniele.alessandrelli@intel.com>
-> > ---
-> >  include/dt-bindings/clock/keembay-clocks.h | 188
-> > +++++++++++++++++++++
-> >  1 file changed, 188 insertions(+)
-> >  create mode 100644 include/dt-bindings/clock/keembay-clocks.h
-> > 
-> > diff --git a/include/dt-bindings/clock/keembay-clocks.h
-> > b/include/dt-bindings/clock/keembay-clocks.h
-> > new file mode 100644
-> > index 000000000000..4ad6616ee8e0
-> > --- /dev/null
-> > +++ b/include/dt-bindings/clock/keembay-clocks.h
-> > @@ -0,0 +1,188 @@
-> > +/* SPDX-License-Identifier: (GPL-2.0-only OR BSD-3-Clause) */
-> > +/*
-> > + * Copyright (c) 2020 Intel Corporation.
-> > + *
-> > + * Device tree defines for clocks in Keem Bay.
-> > + */
-> > +
-> > +#ifndef __DT_BINDINGS_KEEMBAY_CLOCKS_H
-> > +#define __DT_BINDINGS_KEEMBAY_CLOCKS_H
-> > +
-> > +/* CPR_PLL region. CLK_ID: 0 - 11 */
-> > +#define KEEM_BAY_A53_PLL_START_ID (0)
-> > +#define KEEM_BAY_A53_PLL_0_OUT_0 (KEEM_BAY_A53_PLL_START_ID + 0)
-> > +#define KEEM_BAY_A53_PLL_0_OUT_1 (KEEM_BAY_A53_PLL_START_ID + 1)
-> > +#define KEEM_BAY_A53_PLL_0_OUT_2 (KEEM_BAY_A53_PLL_START_ID + 2)
-> > +#define KEEM_BAY_A53_PLL_0_OUT_3 (KEEM_BAY_A53_PLL_START_ID + 3)
-> > +#define KEEM_BAY_A53_PLL_1_OUT_0 (KEEM_BAY_A53_PLL_START_ID + 4)
-> > +#define KEEM_BAY_A53_PLL_1_OUT_1 (KEEM_BAY_A53_PLL_START_ID + 5)
-> > +#define KEEM_BAY_A53_PLL_1_OUT_2 (KEEM_BAY_A53_PLL_START_ID + 6)
-> > +#define KEEM_BAY_A53_PLL_1_OUT_3 (KEEM_BAY_A53_PLL_START_ID + 7)
-> > +#define KEEM_BAY_A53_PLL_2_OUT_0 (KEEM_BAY_A53_PLL_START_ID + 8)
-> > +#define KEEM_BAY_A53_PLL_2_OUT_1 (KEEM_BAY_A53_PLL_START_ID + 9)
-> > +#define KEEM_BAY_A53_PLL_2_OUT_2 (KEEM_BAY_A53_PLL_START_ID + 10)
-> > +#define KEEM_BAY_A53_PLL_2_OUT_3 (KEEM_BAY_A53_PLL_START_ID + 11)
-> > +#define KEEM_BAY_A53_PLL_MAX_ID (KEEM_BAY_A53_PLL_2_OUT_3)
-> > +
-> > +/* A53_CPR region. CLK_ID: 12 - 30 */
-> > +#define KEEM_BAY_A53_START_ID (KEEM_BAY_A53_PLL_MAX_ID + 1)
-> > +#define KEEM_BAY_A53_AON (KEEM_BAY_A53_START_ID + 0)
-> > +#define KEEM_BAY_A53_NOC (KEEM_BAY_A53_START_ID + 1)
-> > +#define KEEM_BAY_A53_FUSE (KEEM_BAY_A53_START_ID + 2)
-> > +#define KEEM_BAY_A53_ROM (KEEM_BAY_A53_START_ID + 3)
-> > +#define KEEM_BAY_A53_ICB (KEEM_BAY_A53_START_ID + 4)
-> > +#define KEEM_BAY_A53_GIC (KEEM_BAY_A53_START_ID + 5)
-> > +#define KEEM_BAY_A53_TIM (KEEM_BAY_A53_START_ID + 6)
-> > +#define KEEM_BAY_A53_GPIO (KEEM_BAY_A53_START_ID + 7)
-> > +#define KEEM_BAY_A53_JTAG (KEEM_BAY_A53_START_ID + 8)
-> > +#define KEEM_BAY_A53_MBIST_0 (KEEM_BAY_A53_START_ID + 9)
-> > +#define KEEM_BAY_A53_DSS (KEEM_BAY_A53_START_ID + 10)
-> > +#define KEEM_BAY_A53_MSS (KEEM_BAY_A53_START_ID + 11)
-> > +#define KEEM_BAY_A53_PSS (KEEM_BAY_A53_START_ID + 12)
-> > +#define KEEM_BAY_A53_PCIE (KEEM_BAY_A53_START_ID + 13)
-> > +#define KEEM_BAY_A53_VENC (KEEM_BAY_A53_START_ID + 14)
-> > +#define KEEM_BAY_A53_VDEC (KEEM_BAY_A53_START_ID + 15)
-> > +#define KEEM_BAY_A53_MBIST_1 (KEEM_BAY_A53_START_ID + 16)
-> > +#define KEEM_BAY_A53_MBIST_2 (KEEM_BAY_A53_START_ID + 17)
-> > +#define KEEM_BAY_A53_MBIST_3 (KEEM_BAY_A53_START_ID + 18)
-> > +#define KEEM_BAY_A53_MAX_ID (KEEM_BAY_A53_MBIST_3)
-> > +
-> > +/* A53_CPR_AUX region. CLK_ID: 31 - 57 */
-> > +#define KEEM_BAY_A53_AUX_START_ID (KEEM_BAY_A53_MAX_ID + 1)
-> > +#define KEEM_BAY_A53_AUX_32KHZ (KEEM_BAY_A53_AUX_START_ID + 0)
-> > +#define KEEM_BAY_A53_AUX_CPR (KEEM_BAY_A53_AUX_START_ID + 1)
-> > +#define KEEM_BAY_A53_AUX_TSENS (KEEM_BAY_A53_AUX_START_ID + 2)
-> > +#define KEEM_BAY_A53_AUX_GPIO0 (KEEM_BAY_A53_AUX_START_ID + 3)
-> > +#define KEEM_BAY_A53_AUX_GPIO1 (KEEM_BAY_A53_AUX_START_ID + 4)
-> > +#define KEEM_BAY_A53_AUX_GPIO2 (KEEM_BAY_A53_AUX_START_ID + 5)
-> > +#define KEEM_BAY_A53_AUX_GPIO3 (KEEM_BAY_A53_AUX_START_ID + 6)
-> > +#define KEEM_BAY_A53_AUX_DDR_REF (KEEM_BAY_A53_AUX_START_ID + 7)
-> > +#define KEEM_BAY_A53_AUX_DDR_REF_BYPASS (KEEM_BAY_A53_AUX_START_ID
-> > + 8)
-> > +#define KEEM_BAY_A53_AUX_RESERVED1 (KEEM_BAY_A53_AUX_START_ID + 9)
-> > +#define KEEM_BAY_A53_AUX_VENC (KEEM_BAY_A53_AUX_START_ID + 10)
-> > +#define KEEM_BAY_A53_AUX_VDEC (KEEM_BAY_A53_AUX_START_ID + 11)
-> > +#define KEEM_BAY_A53_AUX_USOC_USB_CTRL (KEEM_BAY_A53_AUX_START_ID
-> > + 12)
-> > +#define KEEM_BAY_A53_AUX_USB (KEEM_BAY_A53_AUX_START_ID + 13)
-> > +#define KEEM_BAY_A53_AUX_USB_REF (KEEM_BAY_A53_AUX_START_ID + 14)
-> > +#define KEEM_BAY_A53_AUX_USB_ALT_REF (KEEM_BAY_A53_AUX_START_ID +
-> > 15)
-> > +#define KEEM_BAY_A53_AUX_USB_SUSPEND (KEEM_BAY_A53_AUX_START_ID +
-> > 16)
-> > +#define KEEM_BAY_A53_AUX_RESERVED2 (KEEM_BAY_A53_AUX_START_ID +
-> > 17)
-> > +#define KEEM_BAY_A53_AUX_PCIE (KEEM_BAY_A53_AUX_START_ID + 18)
-> > +#define KEEM_BAY_A53_AUX_DBG_CLK (KEEM_BAY_A53_AUX_START_ID + 19)
-> > +#define KEEM_BAY_A53_AUX_DBG_TRACE (KEEM_BAY_A53_AUX_START_ID +
-> > 20)
-> > +#define KEEM_BAY_A53_AUX_DBG_DAP (KEEM_BAY_A53_AUX_START_ID + 21)
-> > +#define KEEM_BAY_A53_AUX_ARM_CLKIN (KEEM_BAY_A53_AUX_START_ID +
-> > 22)
-> > +#define KEEM_BAY_A53_AUX_ARM_AXI (KEEM_BAY_A53_AUX_START_ID + 23)
-> > +#define KEEM_BAY_A53_AUX_USOC (KEEM_BAY_A53_AUX_START_ID + 24)
-> > +#define KEEM_BAY_A53_AUX_USOC_REF (KEEM_BAY_A53_AUX_START_ID + 25)
-> > +#define KEEM_BAY_A53_AUX_USOC_ALT_REF (KEEM_BAY_A53_AUX_START_ID +
-> > 26)
-> > +#define KEEM_BAY_A53_AUX_MAX_ID (KEEM_BAY_A53_AUX_USOC_ALT_REF)
-> > +
-> > +/* PSS_CPR region CLK_ID: CLK_ID: 58 - 82 */
-> > +#define KEEM_BAY_PSS_START_ID (KEEM_BAY_A53_AUX_MAX_ID + 1)
-> > +#define KEEM_BAY_PSS_I2C0 (KEEM_BAY_PSS_START_ID + 0)
-> > +#define KEEM_BAY_PSS_I2C1 (KEEM_BAY_PSS_START_ID + 1)
-> > +#define KEEM_BAY_PSS_I2C2 (KEEM_BAY_PSS_START_ID + 2)
-> > +#define KEEM_BAY_PSS_I2C3 (KEEM_BAY_PSS_START_ID + 3)
-> > +#define KEEM_BAY_PSS_I2C4 (KEEM_BAY_PSS_START_ID + 4)
-> > +#define KEEM_BAY_PSS_SD0 (KEEM_BAY_PSS_START_ID + 5)
-> > +#define KEEM_BAY_PSS_SD1 (KEEM_BAY_PSS_START_ID + 6)
-> > +#define KEEM_BAY_PSS_EMMC (KEEM_BAY_PSS_START_ID + 7)
-> > +#define KEEM_BAY_PSS_AXI_DMA (KEEM_BAY_PSS_START_ID + 8)
-> > +#define KEEM_BAY_PSS_SPI0 (KEEM_BAY_PSS_START_ID + 9)
-> > +#define KEEM_BAY_PSS_SPI1 (KEEM_BAY_PSS_START_ID + 10)
-> > +#define KEEM_BAY_PSS_SPI2 (KEEM_BAY_PSS_START_ID + 11)
-> > +#define KEEM_BAY_PSS_SPI3 (KEEM_BAY_PSS_START_ID + 12)
-> > +#define KEEM_BAY_PSS_I2S0 (KEEM_BAY_PSS_START_ID + 13)
-> > +#define KEEM_BAY_PSS_I2S1 (KEEM_BAY_PSS_START_ID + 14)
-> > +#define KEEM_BAY_PSS_I2S2 (KEEM_BAY_PSS_START_ID + 15)
-> > +#define KEEM_BAY_PSS_I2S3 (KEEM_BAY_PSS_START_ID + 16)
-> > +#define KEEM_BAY_PSS_UART0 (KEEM_BAY_PSS_START_ID + 17)
-> > +#define KEEM_BAY_PSS_UART1 (KEEM_BAY_PSS_START_ID + 18)
-> > +#define KEEM_BAY_PSS_UART2 (KEEM_BAY_PSS_START_ID + 19)
-> > +#define KEEM_BAY_PSS_UART3 (KEEM_BAY_PSS_START_ID + 20)
-> > +#define KEEM_BAY_PSS_I3C0 (KEEM_BAY_PSS_START_ID + 21)
-> > +#define KEEM_BAY_PSS_I3C1 (KEEM_BAY_PSS_START_ID + 22)
-> > +#define KEEM_BAY_PSS_I3C2 (KEEM_BAY_PSS_START_ID + 23)
-> > +#define KEEM_BAY_PSS_GBE (KEEM_BAY_PSS_START_ID + 24)
-> > +#define KEEM_BAY_PSS_MAX_ID (KEEM_BAY_PSS_GBE)
-> > +
-> > +/* PSS_CPR_AUX region. CLK_ID: 83 - 97 */
-> > +#define KEEM_BAY_PSS_AUX_START_ID (KEEM_BAY_PSS_MAX_ID + 1)
-> > +#define KEEM_BAY_PSS_AUX_I2S0 (KEEM_BAY_PSS_AUX_START_ID + 0)
-> > +#define KEEM_BAY_PSS_AUX_I2S1 (KEEM_BAY_PSS_AUX_START_ID + 1)
-> > +#define KEEM_BAY_PSS_AUX_I2S2 (KEEM_BAY_PSS_AUX_START_ID + 2)
-> > +#define KEEM_BAY_PSS_AUX_I2S3 (KEEM_BAY_PSS_AUX_START_ID + 3)
-> > +#define KEEM_BAY_PSS_AUX_UART0 (KEEM_BAY_PSS_AUX_START_ID + 4)
-> > +#define KEEM_BAY_PSS_AUX_UART1 (KEEM_BAY_PSS_AUX_START_ID + 5)
-> > +#define KEEM_BAY_PSS_AUX_UART2 (KEEM_BAY_PSS_AUX_START_ID + 6)
-> > +#define KEEM_BAY_PSS_AUX_UART3 (KEEM_BAY_PSS_AUX_START_ID + 7)
-> > +#define KEEM_BAY_PSS_AUX_SD0 (KEEM_BAY_PSS_AUX_START_ID + 8)
-> > +#define KEEM_BAY_PSS_AUX_SD1 (KEEM_BAY_PSS_AUX_START_ID + 9)
-> > +#define KEEM_BAY_PSS_AUX_EMMC (KEEM_BAY_PSS_AUX_START_ID + 10)
-> > +#define KEEM_BAY_PSS_AUX_TRNG (KEEM_BAY_PSS_AUX_START_ID + 11)
-> > +#define KEEM_BAY_PSS_AUX_OCS (KEEM_BAY_PSS_AUX_START_ID + 12)
-> > +#define KEEM_BAY_PSS_AUX_GBE_PTP (KEEM_BAY_PSS_AUX_START_ID + 13)
-> > +#define KEEM_BAY_PSS_AUX_GBE_TX (KEEM_BAY_PSS_AUX_START_ID + 14)
-> > +#define KEEM_BAY_PSS_AUX_MAX_ID (KEEM_BAY_PSS_AUX_GBE_TX)
-> > +
-> > +/* DSS_CPR region. CLK_ID: 98 - 109 */
-> > +#define KEEM_BAY_DSS_START_ID (KEEM_BAY_PSS_AUX_MAX_ID + 1)
-> > +#define KEEM_BAY_DSS_SYS (KEEM_BAY_DSS_START_ID + 0)
-> > +#define KEEM_BAY_DSS_DEC400 (KEEM_BAY_DSS_START_ID + 1)
-> > +#define KEEM_BAY_DSS_TSENSE (KEEM_BAY_DSS_START_ID + 2)
-> > +#define KEEM_BAY_DSS_BUS_0 (KEEM_BAY_DSS_START_ID + 3)
-> > +#define KEEM_BAY_DSS_CORE_0 (KEEM_BAY_DSS_START_ID + 4)
-> > +#define KEEM_BAY_DSS_REF_0 (KEEM_BAY_DSS_START_ID + 5)
-> > +#define KEEM_BAY_DSS_REF_BYP_0 (KEEM_BAY_DSS_START_ID + 6)
-> > +#define KEEM_BAY_DSS_BUS_1 (KEEM_BAY_DSS_START_ID + 7)
-> > +#define KEEM_BAY_DSS_CORE_1 (KEEM_BAY_DSS_START_ID + 8)
-> > +#define KEEM_BAY_DSS_REF_1 (KEEM_BAY_DSS_START_ID + 9)
-> > +#define KEEM_BAY_DSS_REF_BYP_1 (KEEM_BAY_DSS_START_ID + 10)
-> > +#define KEEM_BAY_DSS_MMU500 (KEEM_BAY_DSS_START_ID + 11)
-> > +#define KEEM_BAY_DSS_MAX_ID (KEEM_BAY_DSS_MMU500)
-> > +
-> > +/* USS_CPR region. CLK_ID: 110 - 116 */
-> > +#define KEEM_BAY_USS_START_ID (KEEM_BAY_DSS_MAX_ID + 1)
-> > +#define KEEM_BAY_USS_SYS (KEEM_BAY_USS_START_ID + 0)
-> > +#define KEEM_BAY_USS_REF (KEEM_BAY_USS_START_ID + 1)
-> > +#define KEEM_BAY_USS_ALT_REF (KEEM_BAY_USS_START_ID + 2)
-> > +#define KEEM_BAY_USS_SUSPEND (KEEM_BAY_USS_START_ID + 3)
-> > +#define KEEM_BAY_USS_CORE (KEEM_BAY_USS_START_ID + 4)
-> > +#define KEEM_BAY_USS_LOW_JIT (KEEM_BAY_USS_START_ID + 5)
-> > +#define KEEM_BAY_USS_PHY_TST (KEEM_BAY_USS_START_ID + 6)
-> > +#define KEEM_BAY_USS_MAX_ID (KEEM_BAY_USS_PHY_TST)
-> > +
-> > +/* MSS_CPR region. CLK_ID: 117 - 129 */
-> > +#define KEEM_BAY_MSS_START_ID (KEEM_BAY_USS_MAX_ID + 1)
-> > +#define KEEM_BAY_MSS_CPU (KEEM_BAY_MSS_START_ID + 0)
-> > +#define KEEM_BAY_MSS_CPU_DSU (KEEM_BAY_MSS_START_ID + 1)
-> > +#define KEEM_BAY_MSS_CPU_L2C (KEEM_BAY_MSS_START_ID + 2)
-> > +#define KEEM_BAY_MSS_CPU_ICB (KEEM_BAY_MSS_START_ID + 3)
-> > +#define KEEM_BAY_MSS_CPU_TIM (KEEM_BAY_MSS_START_ID + 4)
-> > +#define KEEM_BAY_MSS_JPGENC (KEEM_BAY_MSS_START_ID + 5)
-> > +#define KEEM_BAY_MSS_DTB (KEEM_BAY_MSS_START_ID + 6)
-> > +#define KEEM_BAY_MSS_BLT (KEEM_BAY_MSS_START_ID + 7)
-> > +#define KEEM_BAY_MSS_UPA (KEEM_BAY_MSS_START_ID + 8)
-> > +#define KEEM_BAY_MSS_NCE (KEEM_BAY_MSS_START_ID + 9)
-> > +#define KEEM_BAY_MSS_CV (KEEM_BAY_MSS_START_ID + 10)
-> > +#define KEEM_BAY_MSS_ISP (KEEM_BAY_MSS_START_ID + 11)
-> > +#define KEEM_BAY_MSS_CAM (KEEM_BAY_MSS_START_ID + 12)
-> > +#define KEEM_BAY_MSS_MAX_ID (KEEM_BAY_MSS_CAM)
-> > +
-> > +/* MSS_CPR_AUX region. CLK_ID: 130 - 138 */
-> > +#define KEEM_BAY_MSS_AUX_START_ID (KEEM_BAY_MSS_MAX_ID + 1)
-> > +#define KEEM_BAY_MSS_AUX_CIF (KEEM_BAY_MSS_AUX_START_ID + 0)
-> > +#define KEEM_BAY_MSS_AUX_LCD (KEEM_BAY_MSS_AUX_START_ID + 1)
-> > +#define KEEM_BAY_MSS_AUX_SLVDS0 (KEEM_BAY_MSS_AUX_START_ID + 2)
-> > +#define KEEM_BAY_MSS_AUX_SLVDS1 (KEEM_BAY_MSS_AUX_START_ID + 3)
-> > +#define KEEM_BAY_MSS_AUX_MIPI_TX0 (KEEM_BAY_MSS_AUX_START_ID + 4)
-> > +#define KEEM_BAY_MSS_AUX_MIPI_TX1 (KEEM_BAY_MSS_AUX_START_ID + 5)
-> > +#define KEEM_BAY_MSS_AUX_MIPI_ECFG (KEEM_BAY_MSS_AUX_START_ID + 6)
-> > +#define KEEM_BAY_MSS_AUX_MIPI_CFG (KEEM_BAY_MSS_AUX_START_ID + 7)
-> > +#define KEEM_BAY_MSS_AUX_JPGENC (KEEM_BAY_MSS_AUX_START_ID + 8)
-> > +#define KEEM_BAY_MSS_AUX_MAX_ID (KEEM_BAY_MSS_AUX_JPGENC)
-> > +
-> > +#define KEEM_BAY_NUM_CLOCKS (KEEM_BAY_MSS_AUX_MAX_ID + 1)
-> > +
-> > +#endif /* __DT_BINDINGS_KEEMBAY_CLOCKS_H */
-> > -- 
-> > 2.26.2
-> > 
-
+QXQgMjAyMC0wNy0xNSAxNzowNDowNiwgIkpvZSBQZXJjaGVzIiA8am9lQHBlcmNoZXMuY29tPiB3
+cm90ZToKPk9uIFdlZCwgMjAyMC0wNy0xNSBhdCAxMTozNyArMDMwMCwgRGFuIENhcnBlbnRlciB3
+cm90ZToKPj4gT24gV2VkLCBKdWwgMTUsIDIwMjAgYXQgMDk6NTc6NTVBTSArMDIwMCwgR3JlZyBL
+SCB3cm90ZToKPj4gPiBPbiBXZWQsIEp1bCAxNSwgMjAyMCBhdCAxMjoyNDoyMkFNIC0wNzAwLCBK
+b2UgUGVyY2hlcyB3cm90ZToKPj4gPiA+IE9uIFdlZCwgMjAyMC0wNy0xNSBhdCAwOToxNyArMDIw
+MCwgR3JlZyBLSCB3cm90ZToKPj4gPiA+ID4gT24gV2VkLCBKdWwgMTUsIDIwMjAgYXQgMDc6NDQ6
+NDBBTSArMDgwMCwgWmhpeHUgWmhhbyB3cm90ZToKPj4gPiA+ID4gPiBPbiBUaHUsIEp1biAxOCwg
+MjAyMCBhdCAxMjoxMToyN0FNICswODAwLCBaaGl4dSBaaGFvIHdyb3RlOgo+PiA+ID4gPiA+ID4g
+QSBjb2RpbmcgYWxpZ25tZW50IGlzc3VlIGlzIGZvdW5kIGJ5IGNoZWNrcGF0Y2gucGwuCj4+ID4g
+PiA+ID4gPiBGaXggaXQgYnkgdXNpbmcgYSB0ZW1wb3JhcnkgZm9yIGdhc2tldF9kZXYtPmJhcl9k
+YXRhW2Jhcl9udW1dLgo+PiA+ID4gPiA+ID4gCj4+ID4gPiA+ID4gPiBTaWduZWQtb2ZmLWJ5OiBa
+aGl4dSBaaGFvIDx6aGl4dTAwMUAxMjYuY29tPgo+PiA+ID4gPiA+IAo+PiA+ID4gPiA+IEhpLCB0
+aGVyZX4KPj4gPiA+ID4gPiAKPj4gPiA+ID4gPiBEb2VzIGFueWJvZHkgaGF2ZSBhbnkgZnVydGhl
+ciBjb21tZW50cyBvbiB0aGlzPwo+PiA+ID4gPiA+IENhbiBpdCBiZSBtZXJnZWQ/Cj4+ID4gPiA+
+IAo+PiA+ID4gPiBJIG5ldmVyIHNhdyB0aGUgZmlyc3QgdmVyc2lvbiBvZiB0aGlzLCBhcmUgeW91
+IHN1cmUgaXQgZ290IHNlbnQgdG8gdGhlCj4+ID4gPiA+IG1haWxpbmcgbGlzdD8gIEl0J3Mgbm90
+IGluIGFueSBhcmNoaXZlcyBhbnl3aGVyZS4KPj4gPiA+IAo+PiA+ID4gSSBzYXcgaXQuICBJdCdz
+IGhlcmU6Cj4+ID4gPiBodHRwczovL2xvcmUua2VybmVsLm9yZy9sa21sLzIwMjAwNjE3MTYxMTI3
+LjMyMDA2LTEtemhpeHUwMDFAMTI2LmNvbS8KPj4gPiAKPj4gPiBBaCwgZG9oLCBzb3JyeS4KPj4g
+PiAKPj4gPiBaaGl4dSwgcGxlYXNlIGFkZHJlc3MgdGhlIGNvbW1lbnRzIGdpdmVuIHRvIHlvdSBv
+biB0aGUgc2VyaWVzIGFuZCByZXNlbmQKPj4gPiBpdCBhcyBhIG5ldyB2ZXJzaW9uLgo+PiAKPj4g
+SGUgcmVzcG9uZGVkIGJ1dCBub3QgYXMgYSByZXBseSB0byBteSBlbWFpbC4gIEl0IHR1cm5zIG91
+dCBJIG1hZGUgYQo+PiBtaXN0YWtlLgo+PiAKPj4gQW55d2F5LCBqdXN0IHJlc2VuZCwgWmhpeHUu
+Cj4KPkl0J3MgYSBwaXR5IGEgcmVzZW5kIGlzIGJlaW5nIHJlcXVlc3RlZC4KPgo+SXQnZCBiZSBh
+IGJldHRlciBwcm9jZXNzIGlmIHRoZSBvcmlnaW5hbCBwYXRjaCBjb3VsZAo+YmUgYXBwbGllZCB2
+aWEgdGhlIGxpbmsgYWtpbiB0byBhIGdpdCBwdWxsLgo+CgpZZXMuIEFsbCBjb21tZW50cyBoYXZl
+IGJlZW4gcmVzb2x2ZWQgYnkgbm93LiBQYXRjaCB2MiBpcyBzdWZmaWNpZW50LgoKQXMgRGFuIHNh
+aWQsIHRoZXJlIHdhcyBhIHRhaWxpbmcgdGhyZWFkIGJlY2F1c2UgSSBtaXMtcmVwbGllZCBoaXMg
+bWFpbC4KIEkganVzdCBub3cgcmVwbGllZCB0aGF0IG1haWwgd2l0aCBhIHJlZmVyZW5jZSB0byB0
+aGUgZmluYWwgcmVzb2x1dGlvbiBtYWlsLgo=
