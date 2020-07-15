@@ -7,51 +7,51 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9E75C43457
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 11:25:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1BFBC433FE
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 11:25:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8DD502071B
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 11:25:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B20A20658
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 11:25:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="yWP74iEa"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="fsWK58n4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730205AbgGOLZW (ORCPT
+        id S1730245AbgGOLZa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 07:25:22 -0400
-Received: from esa4.microchip.iphmx.com ([68.232.154.123]:9388 "EHLO
-        esa4.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730070AbgGOLZU (ORCPT
+        Wed, 15 Jul 2020 07:25:30 -0400
+Received: from esa3.microchip.iphmx.com ([68.232.153.233]:62526 "EHLO
+        esa3.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730224AbgGOLZ1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 07:25:20 -0400
+        Wed, 15 Jul 2020 07:25:27 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
   d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1594812319; x=1626348319;
+  t=1594812327; x=1626348327;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version;
-  bh=O+1T42XSlUiG0+oiLASSxwZu94UMyF4dX0dctZLAHIQ=;
-  b=yWP74iEa0qC6iiD1NSZfPrU2qLqgZunO08b+Z8FyX/T43RveuDWgnJlq
-   LJxedM28f/puu4Q0bs5NVC8JI6IIGQsYOlptGdPHu4rM2cPQ3UBB4NM+9
-   zVzKu4bQ0Z3xCiIlQJLk1M5jTorOhUuJH+7Xh+bPy8zKMyLZuKvO7P3bG
-   KuFbfIGkeG9I7OrJfIIez2b9+TAqml694Y+sHKmFIv9X8PAUzXLTl3LSK
-   V9v5eEgkOKkAddDL1OLVX66IbuPYd4wqTGDpfEBsaB4LXv3pHATwZbkWA
-   nmvr69a9G6D7loSlucVH0IRUFa+cBSb7JIC95BINlB0pCsgMsZEQZySIg
-   w==;
-IronPort-SDR: dMZP/xjxhtBuwOvXVyelGJGNw5GvEOyCaDPgGe/3bs81nBrpTIxWHvzYyhkgZYsF42rGpja7PQ
- JqC4b1YxOnTGvLu+KYRvZKwMNX1+cdeCWCFfLbyXd+zPZlriCACgHgcsyzfhGlXO4ggnOgEcED
- iLpYQsRbEIOXdGJRytbwdUtVrUfHuxqZRkgch5AxMTeQ+s9TchaycQ8Fp6RAXiJeBaLlSeCEDv
- ybICFMXcY5QRbnkd9qLbBZbG9cwLwwa4lNk7s8EXqqjdiZNCek6iE2YwZkzhKfDcvxTlOYiB7C
- EWg=
+  bh=oURAU4DGWL3mFMY+Lw1NVxLEsg2r2biBRPsLMwX3NXw=;
+  b=fsWK58n4YPMlwCDBQqooZrtEg9eQsTGif7I0AJuqthB/G1l9cYT0xeWU
+   DAfvery6lf3RCMCrd/EtF4H9nEiutnaeVusfVKCL9WpchWYfV5XCJbiKL
+   /z32guBJW83hUmLNtkERVYbp8EZtKbjdToOfRbGUh21G8EOrqBsDT4U9J
+   BIeJ8C0NHMg+AmtE76jOM/6Kz4hGRpsPYtp5LOu5235EEePqsdVXNkcKO
+   +Es1E7nt4ffAG6IL0S4UypbFxnMOyipNtkzJpdtwWDy5RVMiSrSQdOTvH
+   PEkzKJAF+MBnHuwGQheGMwmV0QklIvuliiKRKruXh9/hCCeTxc+TiWAM+
+   g==;
+IronPort-SDR: 3omDv9oRlwjTkqwHEdELlwkXQEc6SBwtFhvOgUP86jV4h4AlrR73ZC2UhRDCpQgM7okeBUmIL6
+ h3dad6FxvtEWMGlKT8ksTGDylWlMleg+qDcyC57AM+ZShTQr4RDT18AWWMz9R0M9ymS1MtmBPi
+ EZ7iE19A4OfPBs+421y7VcA9bR5MJ32aGeAbCc+Qb3iIk2FK4ZOkfrwuLVOYegdXGcyG4psFnB
+ fO1rX1GmBo98e0e9G+5bNWo97zcJEDn9xzlywr0xicndxwiKjo1GofxIozME52G8cHQIQiWp/O
+ lpM=
 X-IronPort-AV: E=Sophos;i="5.75,355,1589266800"; 
-   d="scan'208";a="79986154"
+   d="scan'208";a="83962917"
 Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa4.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 15 Jul 2020 04:25:18 -0700
+  by esa3.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 15 Jul 2020 04:25:26 -0700
 Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
- chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server
+ chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1979.3; Wed, 15 Jul 2020 04:24:46 -0700
+ 15.1.1979.3; Wed, 15 Jul 2020 04:25:26 -0700
 Received: from m18063-ThinkPad-T460p.microchip.com (10.10.115.15) by
  chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server id
- 15.1.1979.3 via Frontend Transport; Wed, 15 Jul 2020 04:24:43 -0700
+ 15.1.1979.3 via Frontend Transport; Wed, 15 Jul 2020 04:24:51 -0700
 From:   Claudiu Beznea <claudiu.beznea@microchip.com>
 To:     <mturquette@baylibre.com>, <sboyd@kernel.org>,
         <nicolas.ferre@microchip.com>, <alexandre.belloni@bootlin.com>,
@@ -60,9 +60,9 @@ CC:     <bbrezillon@kernel.org>, <linux-kernel@vger.kernel.org>,
         <linux-clk@vger.kernel.org>,
         <linux-arm-kernel@lists.infradead.org>,
         "Claudiu Beznea" <claudiu.beznea@microchip.com>
-Subject: [PATCH 11/19] clk: at91: clk-generated: pass the id of changeable parent at registration
-Date:   Wed, 15 Jul 2020 14:24:19 +0300
-Message-ID: <1594812267-6697-12-git-send-email-claudiu.beznea@microchip.com>
+Subject: [PATCH 13/19] clk: at91: clk-master: add master clock support for SAMA7G5
+Date:   Wed, 15 Jul 2020 14:24:21 +0300
+Message-ID: <1594812267-6697-14-git-send-email-claudiu.beznea@microchip.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1594812267-6697-1-git-send-email-claudiu.beznea@microchip.com>
 References: <1594812267-6697-1-git-send-email-claudiu.beznea@microchip.com>
@@ -73,228 +73,403 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Pass the ID of changeable parent at registration. This will allow
-the scalability of this clock driver with regards to the changeable
-parent ID for versions of this IP where changeable parent is not the
-last one in the parents list (e.g. SAMA7G5). In
-clk_generated_best_diff() the *best_diff variable is check against
-tmp_diff variable using ">=" operator instead of ">" so that in case
-the requested frequency could be obtained using fix parents + gck
-dividers but the clock also supports changeable parent to be able
-to force the usage of the changeable parent.
+Add master clock support (MCK1..4) for SAMA7G5. SAMA7G5's PMC has
+multiple master clocks feeding different subsystems. One of them
+feeds image subsystem and is changeable based on image subsystem
+needs.
 
 Signed-off-by: Claudiu Beznea <claudiu.beznea@microchip.com>
 ---
- drivers/clk/at91/clk-generated.c | 26 ++++++++++++++------------
- drivers/clk/at91/dt-compat.c     |  8 +++++---
- drivers/clk/at91/pmc.h           |  4 ++--
- drivers/clk/at91/sam9x60.c       |  3 +--
- drivers/clk/at91/sama5d2.c       | 31 +++++++++++++++----------------
- 5 files changed, 37 insertions(+), 35 deletions(-)
+ drivers/clk/at91/clk-master.c | 310 +++++++++++++++++++++++++++++++++++++++++-
+ drivers/clk/at91/pmc.h        |   7 +
+ include/linux/clk/at91_pmc.h  |   1 +
+ 3 files changed, 313 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/clk/at91/clk-generated.c b/drivers/clk/at91/clk-generated.c
-index 2448bdc63425..f9ca04c97128 100644
---- a/drivers/clk/at91/clk-generated.c
-+++ b/drivers/clk/at91/clk-generated.c
-@@ -18,8 +18,6 @@
+diff --git a/drivers/clk/at91/clk-master.c b/drivers/clk/at91/clk-master.c
+index 88d545b1698c..bd0d8a69a2cf 100644
+--- a/drivers/clk/at91/clk-master.c
++++ b/drivers/clk/at91/clk-master.c
+@@ -17,30 +17,49 @@
+ #define MASTER_DIV_SHIFT	8
+ #define MASTER_DIV_MASK		0x3
  
- #define GENERATED_MAX_DIV	255
++#define PMC_MCR			0x30
++#define PMC_MCR_ID_MSK		GENMASK(3, 0)
++#define PMC_MCR_CMD		BIT(7)
++#define PMC_MCR_DIV		GENMASK(10, 8)
++#define PMC_MCR_CSS		GENMASK(20, 16)
++#define PMC_MCR_CSS_SHIFT	(16)
++#define PMC_MCR_EN		BIT(28)
++
++#define PMC_MCR_ID(x)		((x) & PMC_MCR_ID_MSK)
++
++#define MASTER_MAX_ID		4
++
+ #define to_clk_master(hw) container_of(hw, struct clk_master, hw)
  
--#define GCK_INDEX_DT_AUDIO_PLL	5
--
- struct clk_generated {
+ struct clk_master {
  	struct clk_hw hw;
  	struct regmap *regmap;
-@@ -29,7 +27,7 @@ struct clk_generated {
- 	u32 gckdiv;
- 	const struct clk_pcr_layout *layout;
- 	u8 parent_id;
--	bool audio_pll_allowed;
++	spinlock_t *lock;
+ 	const struct clk_master_layout *layout;
+ 	const struct clk_master_characteristics *characteristics;
++	u32 *mux_table;
+ 	u32 mckr;
 +	int chg_pid;
++	u8 id;
++	u8 parent;
++	u8 div;
  };
  
- #define to_clk_generated(hw) \
-@@ -109,7 +107,7 @@ static void clk_generated_best_diff(struct clk_rate_request *req,
- 		tmp_rate = parent_rate / div;
- 	tmp_diff = abs(req->rate - tmp_rate);
+-static inline bool clk_master_ready(struct regmap *regmap)
++static inline bool clk_master_ready(struct clk_master *master)
+ {
++	unsigned int bit = master->id ? AT91_PMC_MCKXRDY : AT91_PMC_MCKRDY;
+ 	unsigned int status;
  
--	if (*best_diff < 0 || *best_diff > tmp_diff) {
+-	regmap_read(regmap, AT91_PMC_SR, &status);
++	regmap_read(master->regmap, AT91_PMC_SR, &status);
+ 
+-	return !!(status & AT91_PMC_MCKRDY);
++	return !!(status & bit);
+ }
+ 
+ static int clk_master_prepare(struct clk_hw *hw)
+ {
+ 	struct clk_master *master = to_clk_master(hw);
+ 
+-	while (!clk_master_ready(master->regmap))
++	while (!clk_master_ready(master))
+ 		cpu_relax();
+ 
+ 	return 0;
+@@ -50,7 +69,7 @@ static int clk_master_is_prepared(struct clk_hw *hw)
+ {
+ 	struct clk_master *master = to_clk_master(hw);
+ 
+-	return clk_master_ready(master->regmap);
++	return clk_master_ready(master);
+ }
+ 
+ static unsigned long clk_master_recalc_rate(struct clk_hw *hw,
+@@ -143,6 +162,287 @@ at91_clk_register_master(struct regmap *regmap,
+ 	return hw;
+ }
+ 
++static unsigned long
++clk_sama7g5_master_recalc_rate(struct clk_hw *hw,
++			       unsigned long parent_rate)
++{
++	struct clk_master *master = to_clk_master(hw);
++
++	return DIV_ROUND_CLOSEST_ULL(parent_rate, (1 << master->div));
++}
++
++static void clk_sama7g5_master_best_diff(struct clk_rate_request *req,
++					 struct clk_hw *parent,
++					 unsigned long parent_rate,
++					 long *best_rate,
++					 long *best_diff,
++					 u32 div)
++{
++	unsigned long tmp_rate, tmp_diff;
++
++	if (div == MASTER_PRES_MAX)
++		tmp_rate = parent_rate / 3;
++	else
++		tmp_rate = parent_rate >> div;
++
++	tmp_diff = abs(req->rate - tmp_rate);
++
 +	if (*best_diff < 0 || *best_diff >= tmp_diff) {
- 		*best_rate = tmp_rate;
- 		*best_diff = tmp_diff;
- 		req->best_parent_rate = parent_rate;
-@@ -129,7 +127,10 @@ static int clk_generated_determine_rate(struct clk_hw *hw,
- 	int i;
- 	u32 div;
- 
--	for (i = 0; i < clk_hw_get_num_parents(hw) - 1; i++) {
++		*best_rate = tmp_rate;
++		*best_diff = tmp_diff;
++		req->best_parent_rate = parent_rate;
++		req->best_parent_hw = parent;
++	}
++}
++
++static int clk_sama7g5_master_determine_rate(struct clk_hw *hw,
++					     struct clk_rate_request *req)
++{
++	struct clk_master *master = to_clk_master(hw);
++	struct clk_rate_request req_parent = *req;
++	struct clk_hw *parent;
++	long best_rate = LONG_MIN, best_diff = LONG_MIN;
++	unsigned long parent_rate;
++	unsigned int div, i;
++
++	/* First: check the dividers of MCR. */
 +	for (i = 0; i < clk_hw_get_num_parents(hw); i++) {
-+		if (gck->chg_pid == i)
++		parent = clk_hw_get_parent_by_index(hw, i);
++		if (!parent)
 +			continue;
 +
- 		parent = clk_hw_get_parent_by_index(hw, i);
- 		if (!parent)
- 			continue;
-@@ -161,10 +162,10 @@ static int clk_generated_determine_rate(struct clk_hw *hw,
- 	 * that the only clks able to modify gck rate are those of audio IPs.
- 	 */
- 
--	if (!gck->audio_pll_allowed)
-+	if (gck->chg_pid < 0)
- 		goto end;
- 
--	parent = clk_hw_get_parent_by_index(hw, GCK_INDEX_DT_AUDIO_PLL);
-+	parent = clk_hw_get_parent_by_index(hw, gck->chg_pid);
- 	if (!parent)
- 		goto end;
- 
-@@ -272,8 +273,8 @@ struct clk_hw * __init
- at91_clk_register_generated(struct regmap *regmap, spinlock_t *lock,
- 			    const struct clk_pcr_layout *layout,
- 			    const char *name, const char **parent_names,
--			    u8 num_parents, u8 id, bool pll_audio,
--			    const struct clk_range *range)
-+			    u8 num_parents, u8 id,
-+			    const struct clk_range *range, int chg_pid)
- {
- 	struct clk_generated *gck;
- 	struct clk_init_data init;
-@@ -288,15 +289,16 @@ at91_clk_register_generated(struct regmap *regmap, spinlock_t *lock,
- 	init.ops = &generated_ops;
- 	init.parent_names = parent_names;
- 	init.num_parents = num_parents;
--	init.flags = CLK_SET_RATE_GATE | CLK_SET_PARENT_GATE |
--		CLK_SET_RATE_PARENT;
++		parent_rate = clk_hw_get_rate(parent);
++		if (!parent_rate)
++			continue;
++
++		for (div = 0; div < MASTER_PRES_MAX + 1; div++) {
++			clk_sama7g5_master_best_diff(req, parent, parent_rate,
++						     &best_rate, &best_diff,
++						     div);
++			if (!best_diff)
++				break;
++		}
++
++		if (!best_diff)
++			break;
++	}
++
++	/* Second: try to request rate form changeable parent. */
++	if (master->chg_pid < 0)
++		goto end;
++
++	parent = clk_hw_get_parent_by_index(hw, master->chg_pid);
++	if (!parent)
++		goto end;
++
++	for (div = 0; div < MASTER_PRES_MAX + 1; div++) {
++		if (div == MASTER_PRES_MAX)
++			req_parent.rate = req->rate * 3;
++		else
++			req_parent.rate = req->rate << div;
++
++		if (__clk_determine_rate(parent, &req_parent))
++			continue;
++
++		clk_sama7g5_master_best_diff(req, parent, req_parent.rate,
++					     &best_rate, &best_diff, div);
++
++		if (!best_diff)
++			break;
++	}
++
++end:
++	pr_debug("MCK: %s, best_rate = %ld, parent clk: %s @ %ld\n",
++		 __func__, best_rate,
++		 __clk_get_name((req->best_parent_hw)->clk),
++		req->best_parent_rate);
++
++	if (best_rate < 0)
++		return -EINVAL;
++
++	req->rate = best_rate;
++
++	return 0;
++}
++
++static u8 clk_sama7g5_master_get_parent(struct clk_hw *hw)
++{
++	struct clk_master *master = to_clk_master(hw);
++	unsigned long flags;
++	u8 index;
++
++	spin_lock_irqsave(master->lock, flags);
++	index = clk_mux_val_to_index(&master->hw, master->mux_table, 0,
++				     master->parent);
++	spin_unlock_irqrestore(master->lock, flags);
++
++	return index;
++}
++
++static int clk_sama7g5_master_set_parent(struct clk_hw *hw, u8 index)
++{
++	struct clk_master *master = to_clk_master(hw);
++	unsigned long flags;
++
++	if (index >= clk_hw_get_num_parents(hw))
++		return -EINVAL;
++
++	spin_lock_irqsave(master->lock, flags);
++	master->parent = clk_mux_index_to_val(master->mux_table, 0, index);
++	spin_unlock_irqrestore(master->lock, flags);
++
++	return 0;
++}
++
++static int clk_sama7g5_master_enable(struct clk_hw *hw)
++{
++	struct clk_master *master = to_clk_master(hw);
++	unsigned long flags;
++	unsigned int val, cparent;
++
++	spin_lock_irqsave(master->lock, flags);
++
++	regmap_write(master->regmap, PMC_MCR, PMC_MCR_ID(master->id));
++	regmap_read(master->regmap, PMC_MCR, &val);
++	regmap_update_bits(master->regmap, PMC_MCR,
++			   PMC_MCR_EN | PMC_MCR_CSS | PMC_MCR_DIV |
++			   PMC_MCR_CMD | PMC_MCR_ID_MSK,
++			   PMC_MCR_EN | (master->parent << PMC_MCR_CSS_SHIFT) |
++			   (master->div << MASTER_DIV_SHIFT) |
++			   PMC_MCR_CMD | PMC_MCR_ID(master->id));
++
++	cparent = (val & PMC_MCR_CSS) >> PMC_MCR_CSS_SHIFT;
++
++	/* Wait here only if parent is being changed. */
++	while ((cparent != master->parent) && !clk_master_ready(master))
++		cpu_relax();
++
++	spin_unlock_irqrestore(master->lock, flags);
++
++	return 0;
++}
++
++static void clk_sama7g5_master_disable(struct clk_hw *hw)
++{
++	struct clk_master *master = to_clk_master(hw);
++	unsigned long flags;
++
++	spin_lock_irqsave(master->lock, flags);
++
++	regmap_write(master->regmap, PMC_MCR, master->id);
++	regmap_update_bits(master->regmap, PMC_MCR,
++			   PMC_MCR_EN | PMC_MCR_CMD | PMC_MCR_ID_MSK,
++			   PMC_MCR_CMD | PMC_MCR_ID(master->id));
++
++	spin_unlock_irqrestore(master->lock, flags);
++}
++
++static int clk_sama7g5_master_is_enabled(struct clk_hw *hw)
++{
++	struct clk_master *master = to_clk_master(hw);
++	unsigned long flags;
++	unsigned int val;
++
++	spin_lock_irqsave(master->lock, flags);
++
++	regmap_write(master->regmap, PMC_MCR, master->id);
++	regmap_read(master->regmap, PMC_MCR, &val);
++
++	spin_unlock_irqrestore(master->lock, flags);
++
++	return !!(val & PMC_MCR_EN);
++}
++
++static int clk_sama7g5_master_set_rate(struct clk_hw *hw, unsigned long rate,
++				       unsigned long parent_rate)
++{
++	struct clk_master *master = to_clk_master(hw);
++	unsigned long div, flags;
++
++	div = DIV_ROUND_CLOSEST(parent_rate, rate);
++	if ((div > (1 << (MASTER_PRES_MAX - 1))) || (div & (div - 1)))
++		return -EINVAL;
++
++	if (div == 3)
++		div = MASTER_PRES_MAX;
++	else
++		div = ffs(div) - 1;
++
++	spin_lock_irqsave(master->lock, flags);
++	master->div = div;
++	spin_unlock_irqrestore(master->lock, flags);
++
++	return 0;
++}
++
++static const struct clk_ops sama7g5_master_ops = {
++	.enable = clk_sama7g5_master_enable,
++	.disable = clk_sama7g5_master_disable,
++	.is_enabled = clk_sama7g5_master_is_enabled,
++	.recalc_rate = clk_sama7g5_master_recalc_rate,
++	.determine_rate = clk_sama7g5_master_determine_rate,
++	.set_rate = clk_sama7g5_master_set_rate,
++	.get_parent = clk_sama7g5_master_get_parent,
++	.set_parent = clk_sama7g5_master_set_parent,
++};
++
++struct clk_hw * __init
++at91_clk_sama7g5_register_master(struct regmap *regmap,
++				 const char *name, int num_parents,
++				 const char **parent_names,
++				 u32 *mux_table,
++				 spinlock_t *lock, u8 id,
++				 bool critical, int chg_pid)
++{
++	struct clk_master *master;
++	struct clk_hw *hw;
++	struct clk_init_data init;
++	unsigned long flags;
++	unsigned int val;
++	int ret;
++
++	if (!name || !num_parents || !parent_names || !mux_table ||
++	    !lock || id > MASTER_MAX_ID)
++		return ERR_PTR(-EINVAL);
++
++	master = kzalloc(sizeof(*master), GFP_KERNEL);
++	if (!master)
++		return ERR_PTR(-ENOMEM);
++
++	init.name = name;
++	init.ops = &sama7g5_master_ops;
++	init.parent_names = parent_names;
++	init.num_parents = num_parents;
 +	init.flags = CLK_SET_RATE_GATE | CLK_SET_PARENT_GATE;
 +	if (chg_pid >= 0)
 +		init.flags |= CLK_SET_RATE_PARENT;
- 
- 	gck->id = id;
- 	gck->hw.init = &init;
- 	gck->regmap = regmap;
- 	gck->lock = lock;
- 	gck->range = *range;
--	gck->audio_pll_allowed = pll_audio;
-+	gck->chg_pid = chg_pid;
- 	gck->layout = layout;
- 
- 	clk_generated_startup(gck);
-diff --git a/drivers/clk/at91/dt-compat.c b/drivers/clk/at91/dt-compat.c
-index aa1754eac59f..8a652c44c25a 100644
---- a/drivers/clk/at91/dt-compat.c
-+++ b/drivers/clk/at91/dt-compat.c
-@@ -22,6 +22,8 @@
- 
- #define SYSTEM_MAX_ID		31
- 
-+#define GCK_INDEX_DT_AUDIO_PLL	5
++	if (critical)
++		init.flags |= CLK_IS_CRITICAL;
 +
- #ifdef CONFIG_HAVE_AT91_AUDIO_PLL
- static void __init of_sama5d2_clk_audio_pll_frac_setup(struct device_node *np)
- {
-@@ -135,7 +137,7 @@ static void __init of_sama5d2_clk_generated_setup(struct device_node *np)
- 		return;
- 
- 	for_each_child_of_node(np, gcknp) {
--		bool pll_audio = false;
-+		int chg_pid = INT_MIN;
- 
- 		if (of_property_read_u32(gcknp, "reg", &id))
- 			continue;
-@@ -152,12 +154,12 @@ static void __init of_sama5d2_clk_generated_setup(struct device_node *np)
- 		if (of_device_is_compatible(np, "atmel,sama5d2-clk-generated") &&
- 		    (id == GCK_ID_I2S0 || id == GCK_ID_I2S1 ||
- 		     id == GCK_ID_CLASSD))
--			pll_audio = true;
-+			chg_pid = GCK_INDEX_DT_AUDIO_PLL;
- 
- 		hw = at91_clk_register_generated(regmap, &pmc_pcr_lock,
- 						 &dt_pcr_layout, name,
- 						 parent_names, num_parents,
--						 id, pll_audio, &range);
-+						 id, &range, chg_pid);
- 		if (IS_ERR(hw))
- 			continue;
- 
++	master->hw.init = &init;
++	master->regmap = regmap;
++	master->id = id;
++	master->chg_pid = chg_pid;
++	master->lock = lock;
++	master->mux_table = mux_table;
++
++	spin_lock_irqsave(master->lock, flags);
++	regmap_write(master->regmap, PMC_MCR, master->id);
++	regmap_read(master->regmap, PMC_MCR, &val);
++	master->parent = (val & PMC_MCR_CSS) >> PMC_MCR_CSS_SHIFT;
++	master->div = (val & PMC_MCR_DIV) >> MASTER_DIV_SHIFT;
++	spin_unlock_irqrestore(master->lock, flags);
++
++	hw = &master->hw;
++	ret = clk_hw_register(NULL, &master->hw);
++	if (ret) {
++		kfree(master);
++		hw = ERR_PTR(ret);
++	}
++
++	return hw;
++}
++
+ const struct clk_master_layout at91rm9200_master_layout = {
+ 	.mask = 0x31F,
+ 	.pres_shift = 2,
 diff --git a/drivers/clk/at91/pmc.h b/drivers/clk/at91/pmc.h
-index df616f2937e7..949b1a7b91e5 100644
+index 2bfe1405f9f8..29d150feaa46 100644
 --- a/drivers/clk/at91/pmc.h
 +++ b/drivers/clk/at91/pmc.h
-@@ -122,8 +122,8 @@ struct clk_hw * __init
- at91_clk_register_generated(struct regmap *regmap, spinlock_t *lock,
- 			    const struct clk_pcr_layout *layout,
- 			    const char *name, const char **parent_names,
--			    u8 num_parents, u8 id, bool pll_audio,
--			    const struct clk_range *range);
-+			    u8 num_parents, u8 id,
-+			    const struct clk_range *range, int chg_pid);
+@@ -155,6 +155,13 @@ at91_clk_register_master(struct regmap *regmap, const char *name,
+ 			 const struct clk_master_characteristics *characteristics);
  
  struct clk_hw * __init
- at91_clk_register_h32mx(struct regmap *regmap, const char *name,
-diff --git a/drivers/clk/at91/sam9x60.c b/drivers/clk/at91/sam9x60.c
-index c8703d2a0886..c4e34c0909e3 100644
---- a/drivers/clk/at91/sam9x60.c
-+++ b/drivers/clk/at91/sam9x60.c
-@@ -290,8 +290,7 @@ static void __init sam9x60_pmc_setup(struct device_node *np)
- 						 sam9x60_gck[i].n,
- 						 parent_names, 6,
- 						 sam9x60_gck[i].id,
--						 false,
--						 &sam9x60_gck[i].r);
-+						 &sam9x60_gck[i].r, INT_MIN);
- 		if (IS_ERR(hw))
- 			goto err_free;
++at91_clk_sama7g5_register_master(struct regmap *regmap,
++				 const char *name, int num_parents,
++				 const char **parent_names, u32 *mux_table,
++				 spinlock_t *lock, u8 id, bool critical,
++				 int chg_pid);
++
++struct clk_hw * __init
+ at91_clk_register_peripheral(struct regmap *regmap, const char *name,
+ 			     const char *parent_name, u32 id);
+ struct clk_hw * __init
+diff --git a/include/linux/clk/at91_pmc.h b/include/linux/clk/at91_pmc.h
+index 49a53a137610..77d6dabc4c3c 100644
+--- a/include/linux/clk/at91_pmc.h
++++ b/include/linux/clk/at91_pmc.h
+@@ -174,6 +174,7 @@
+ #define		AT91_PMC_MOSCRCS	(1 << 17)		/* Main On-Chip RC [some SAM9] */
+ #define		AT91_PMC_CFDEV		(1 << 18)		/* Clock Failure Detector Event [some SAM9] */
+ #define		AT91_PMC_GCKRDY		(1 << 24)		/* Generated Clocks */
++#define		AT91_PMC_MCKXRDY	(1 << 26)		/* Master Clock x [x=1..4] Ready Status */
+ #define	AT91_PMC_IMR		0x6c			/* Interrupt Mask Register */
  
-diff --git a/drivers/clk/at91/sama5d2.c b/drivers/clk/at91/sama5d2.c
-index d69421d71daf..42637d9531d3 100644
---- a/drivers/clk/at91/sama5d2.c
-+++ b/drivers/clk/at91/sama5d2.c
-@@ -116,21 +116,20 @@ static const struct {
- 	char *n;
- 	u8 id;
- 	struct clk_range r;
--	bool pll;
-+	int chg_pid;
- } sama5d2_gck[] = {
--	{ .n = "sdmmc0_gclk", .id = 31, },
--	{ .n = "sdmmc1_gclk", .id = 32, },
--	{ .n = "tcb0_gclk",   .id = 35, .r = { .min = 0, .max = 83000000 }, },
--	{ .n = "tcb1_gclk",   .id = 36, .r = { .min = 0, .max = 83000000 }, },
--	{ .n = "pwm_gclk",    .id = 38, .r = { .min = 0, .max = 83000000 }, },
--	{ .n = "isc_gclk",    .id = 46, },
--	{ .n = "pdmic_gclk",  .id = 48, },
--	{ .n = "i2s0_gclk",   .id = 54, .pll = true },
--	{ .n = "i2s1_gclk",   .id = 55, .pll = true },
--	{ .n = "can0_gclk",   .id = 56, .r = { .min = 0, .max = 80000000 }, },
--	{ .n = "can1_gclk",   .id = 57, .r = { .min = 0, .max = 80000000 }, },
--	{ .n = "classd_gclk", .id = 59, .r = { .min = 0, .max = 100000000 },
--	  .pll = true },
-+	{ .n = "sdmmc0_gclk", .id = 31, .chg_pid = INT_MIN, },
-+	{ .n = "sdmmc1_gclk", .id = 32, .chg_pid = INT_MIN, },
-+	{ .n = "tcb0_gclk",   .id = 35, .chg_pid = INT_MIN, .r = { .min = 0, .max = 83000000 }, },
-+	{ .n = "tcb1_gclk",   .id = 36, .chg_pid = INT_MIN, .r = { .min = 0, .max = 83000000 }, },
-+	{ .n = "pwm_gclk",    .id = 38, .chg_pid = INT_MIN, .r = { .min = 0, .max = 83000000 }, },
-+	{ .n = "isc_gclk",    .id = 46, .chg_pid = INT_MIN, },
-+	{ .n = "pdmic_gclk",  .id = 48, .chg_pid = INT_MIN, },
-+	{ .n = "i2s0_gclk",   .id = 54, .chg_pid = 5, },
-+	{ .n = "i2s1_gclk",   .id = 55, .chg_pid = 5, },
-+	{ .n = "can0_gclk",   .id = 56, .chg_pid = INT_MIN, .r = { .min = 0, .max = 80000000 }, },
-+	{ .n = "can1_gclk",   .id = 57, .chg_pid = INT_MIN, .r = { .min = 0, .max = 80000000 }, },
-+	{ .n = "classd_gclk", .id = 59, .chg_pid = 5, .r = { .min = 0, .max = 100000000 }, },
- };
- 
- static const struct clk_programmable_layout sama5d2_programmable_layout = {
-@@ -324,8 +323,8 @@ static void __init sama5d2_pmc_setup(struct device_node *np)
- 						 sama5d2_gck[i].n,
- 						 parent_names, 6,
- 						 sama5d2_gck[i].id,
--						 sama5d2_gck[i].pll,
--						 &sama5d2_gck[i].r);
-+						 &sama5d2_gck[i].r,
-+						 sama5d2_gck[i].chg_pid);
- 		if (IS_ERR(hw))
- 			goto err_free;
- 
+ #define AT91_PMC_FSMR		0x70		/* Fast Startup Mode Register */
 -- 
 2.7.4
 
