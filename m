@@ -7,50 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E51EEC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 16:44:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75E5BC433E6
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 16:44:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B59F720658
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 16:44:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 44A4C206D5
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 16:44:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="rzkUCCsL"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="UyT29T+C"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727975AbgGOQoZ (ORCPT
+        id S1727909AbgGOQnp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 12:44:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44072 "EHLO
+        Wed, 15 Jul 2020 12:43:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43980 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727873AbgGOQne (ORCPT
+        with ESMTP id S1726848AbgGOQnC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 12:43:34 -0400
+        Wed, 15 Jul 2020 12:43:02 -0400
 Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CC679C061755;
-        Wed, 15 Jul 2020 09:43:33 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1BC03C08C5DD;
+        Wed, 15 Jul 2020 09:43:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
         References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
         Content-Type:Content-ID:Content-Description;
-        bh=MW9P+vg1GZKyWc3VgtDlMrW2L1NHiHjl6pMxRzrg0vo=; b=rzkUCCsL7TBCmVkmEmfzE0LLYu
-        YiP77DnYATWcjvziPG94QWlHMZfiVXql3qk9Y2aoLSchJQDsddSIsZI3xCW+zF7i9NxPWKcg8G+K9
-        9tRgV9QkP3U4/qqpReTEO/oYmk2SQ1UE33U3MRKiy7EPoyiy1KLV275CZEkcelwGUnwlik+r+YRO8
-        +Wy0XgL84KaucfbFlOvarUirvJZST5kW0QTJxUpZ3+2+Pz6iqNd9eV70xZ/EWxiQjOW53dCYoVUSs
-        ti7V2dwRpgzV0+TQfbUDaT6ai0zz7hcceQa+TBuS8zNBoMsfwOQDdR4C7316v6ghJszmTcamiK/hu
-        Dob7LGNQ==;
+        bh=rVogcT426PGyLvoUNdTgr7VENg0eIIZYWQNj2Y9szTg=; b=UyT29T+CfhuGwocKjAuPAoT3Me
+        urnys3Tm0QaAmf9KtBCldbm7CY70Azn/6Fq8iJ0uwagPj3nUXgFfAcuv0AjiNQoiXclXuYYOPM1iV
+        uvdhIsHnC6yTuCRNBitmUEeBGSEA7MGSSpI/aTaCDhRFn/Asflurvq3mj61+C6CFYDJCHRLntkQCo
+        UQX5DWe63beKLP18Xyy2pi4toP+5TRdBV4ZMiTvsTxCGRCresfEj0AHY5MXHAvVYXt3xRjwJ1MVWb
+        QOe2WBixkjxtIqUkrIbJfSdyjqc6IphTUhNcD30QfPiLh2xlrdWA9PevSPiKM7RofqFBFMohDooeg
+        dzYcs5hQ==;
 Received: from [2601:1c0:6280:3f0::19c2] (helo=smtpauth.infradead.org)
         by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jvkVI-0000EP-2r; Wed, 15 Jul 2020 16:43:32 +0000
+        id 1jvkUm-0000Bh-7v; Wed, 15 Jul 2020 16:43:00 +0000
 From:   Randy Dunlap <rdunlap@infradead.org>
 To:     linux-kernel@vger.kernel.org
-Cc:     Randy Dunlap <rdunlap@infradead.org>, netdev@vger.kernel.org,
-        Kalle Valo <kvalo@codeaurora.org>,
-        linux-wireless@vger.kernel.org,
-        Johannes Berg <johannes@sipsolutions.net>
-Subject: [PATCH 3/5 -next] net/wireless: cfg80211.h: drop duplicate words in comments
-Date:   Wed, 15 Jul 2020 09:43:23 -0700
-Message-Id: <20200715164325.9109-3-rdunlap@infradead.org>
+Cc:     Randy Dunlap <rdunlap@infradead.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH 6/9 v2 net-next] net: dsa.h: drop duplicate word in comment
+Date:   Wed, 15 Jul 2020 09:42:43 -0700
+Message-Id: <20200715164246.9054-6-rdunlap@infradead.org>
 X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200715164325.9109-1-rdunlap@infradead.org>
-References: <20200715164325.9109-1-rdunlap@infradead.org>
+In-Reply-To: <20200715164246.9054-1-rdunlap@infradead.org>
+References: <20200715164246.9054-1-rdunlap@infradead.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -58,35 +57,26 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Drop doubled word "by" in a comment.
-Change "operate in in" to "operate with in" as is used below.
+Drop doubled word "to" in a comment.
 
 Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+Cc: "David S. Miller" <davem@davemloft.net>
+Cc: Jakub Kicinski <kuba@kernel.org>
 Cc: netdev@vger.kernel.org
-Cc: Kalle Valo <kvalo@codeaurora.org>
-Cc: linux-wireless@vger.kernel.org
-Cc: Johannes Berg <johannes@sipsolutions.net>
 ---
- include/net/cfg80211.h |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+v2: move wireless patches to a separate patch series.
 
---- linux-next-20200714.orig/include/net/cfg80211.h
-+++ linux-next-20200714/include/net/cfg80211.h
-@@ -423,7 +423,7 @@ struct ieee80211_edmg {
-  * This structure describes a frequency band a wiphy
-  * is able to operate in.
-  *
-- * @channels: Array of channels the hardware can operate in
-+ * @channels: Array of channels the hardware can operate with
-  *	in this band.
-  * @band: the band this structure represents
-  * @n_channels: Number of channels in @channels
-@@ -5510,7 +5510,7 @@ static inline int ieee80211_data_to_8023
-  *
-  * @skb: The input A-MSDU frame without any headers.
-  * @list: The output list of 802.3 frames. It must be allocated and
-- *	initialized by by the caller.
-+ *	initialized by the caller.
-  * @addr: The device MAC address.
-  * @iftype: The device interface type.
-  * @extra_headroom: The hardware extra headroom for SKBs in the @list.
+ include/net/dsa.h |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+--- linux-next-20200714.orig/include/net/dsa.h
++++ linux-next-20200714/include/net/dsa.h
+@@ -612,7 +612,7 @@ struct dsa_switch_ops {
+ 	 * MTU change functionality. Switches can also adjust their MRU through
+ 	 * this method. By MTU, one understands the SDU (L2 payload) length.
+ 	 * If the switch needs to account for the DSA tag on the CPU port, this
+-	 * method needs to to do so privately.
++	 * method needs to do so privately.
+ 	 */
+ 	int	(*port_change_mtu)(struct dsa_switch *ds, int port,
+ 				   int new_mtu);
