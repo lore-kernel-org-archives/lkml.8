@@ -2,234 +2,195 @@ Return-Path: <SRS0=kup7=A2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52000C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 19:17:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0550C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 19:17:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 32F792076C
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 19:17:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="AtQ4ANyq"
+	by mail.kernel.org (Postfix) with ESMTP id CD2092076C
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 19:17:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594840621;
+	bh=bS6Zlw5a8pnZ+kGAgptHo8NYI67fecSpN3EPQ25iOdk=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=I+2gsqxzl6DyUqV0AvRjm+UCzV3RKzvJeLPeBqlghLxdSTZX6bDE05MUeZ8FrBy8E
+	 GONzzHcuET6qLaaLHuUFDrnZ6bxYo2kd6GB/1xL4zsKv/G8/bHEL/MHaev1GZJvYDc
+	 TuuYWqQ3VXUv/eL2ltywf4nP5scKvxBhEtBgbKbM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726917AbgGOTRK (ORCPT
+        id S1726472AbgGOTQr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 15:17:10 -0400
-Received: from linux.microsoft.com ([13.77.154.182]:44234 "EHLO
-        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726742AbgGOTQq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 15:16:46 -0400
-Received: from sequoia (162-237-133-238.lightspeed.rcsntx.sbcglobal.net [162.237.133.238])
-        by linux.microsoft.com (Postfix) with ESMTPSA id 57B7F20B4908;
-        Wed, 15 Jul 2020 12:16:19 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 57B7F20B4908
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1594840580;
-        bh=UWGs7/duiBxGsOajSPhznATeEZNTIvIT7z0CfurjKPs=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=AtQ4ANyqaj6Uj0YRg8qc9b5pYtQCaff87NoEQAxW5c0zBREGYQuchjVgHQdDCj8oM
-         /GvJb8FSUQuvO/e1TwLqtK8//i2IhlFHexBR2+P58o2riBIsAF4Gvi6F/j2S118bl7
-         +6zBiYPodt/qIGlByb78XSsNS1/Ui3BltYWOBlnY=
-Date:   Wed, 15 Jul 2020 14:16:17 -0500
-From:   Tyler Hicks <tyhicks@linux.microsoft.com>
-To:     deven.desai@linux.microsoft.com
-Cc:     agk@redhat.com, axboe@kernel.dk, snitzer@redhat.com,
-        jmorris@namei.org, serge@hallyn.com, zohar@linux.ibm.com,
-        linux-integrity@vger.kernel.org,
-        linux-security-module@vger.kernel.org, dm-devel@redhat.com,
-        linux-block@vger.kernel.org, jannh@google.com,
-        pasha.tatashin@soleen.com, sashal@kernel.org,
-        jaskarankhurana@linux.microsoft.com, nramas@linux.microsoft.com,
-        mdsakib@linux.microsoft.com, linux-kernel@vger.kernel.org,
-        corbet@lwn.net
-Subject: Re: [RFC PATCH v3 03/12] security: add ipe lsm policy parser and
- policy loading
-Message-ID: <20200715191617.GD3673@sequoia>
-References: <20200415162550.2324-1-deven.desai@linux.microsoft.com>
- <20200415162550.2324-4-deven.desai@linux.microsoft.com>
+        Wed, 15 Jul 2020 15:16:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41856 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726821AbgGOTPP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jul 2020 15:15:15 -0400
+Received: from [192.168.1.30] (cpe-70-114-128-244.austin.res.rr.com [70.114.128.244])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A2B912076C;
+        Wed, 15 Jul 2020 19:14:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594840493;
+        bh=bS6Zlw5a8pnZ+kGAgptHo8NYI67fecSpN3EPQ25iOdk=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=hPK6ggqTLfHVGCixV/YOD1nEDtNvW1uCBZWZatJ5MEpl3N7JKXsd44ZZq6wF/llBA
+         bDc/yf9VZt7g9LtmMOwiPIfppHmrQFiHaj22boygV9OxMxYntW5MVISIssdhojZsYZ
+         tVoDEZyRFG9/KGcU/XLDpfvpOhTb0Hwo3iKJPWBc=
+Subject: Re: linux-next: Fixes tags need some work in the arm-soc-fixes tree
+To:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>,
+        ARM <linux-arm-kernel@lists.infradead.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>
+References: <20200714075729.68b92239@canb.auug.org.au>
+From:   Dinh Nguyen <dinguyen@kernel.org>
+Autocrypt: addr=dinguyen@kernel.org; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <1381a6c0-22fe-a175-f649-ea49da3451da@kernel.org>
+Date:   Wed, 15 Jul 2020 14:14:51 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200415162550.2324-4-deven.desai@linux.microsoft.com>
+In-Reply-To: <20200714075729.68b92239@canb.auug.org.au>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-04-15 09:25:41, deven.desai@linux.microsoft.com wrote:
-> From: Deven Bowers <deven.desai@linux.microsoft.com>
-> 
-> Adds the policy parser and the policy loading to IPE, along with the
-> related sysfs, securityfs entries, and audit events.
-> 
-> Signed-off-by: Deven Bowers <deven.desai@linux.microsoft.com>
-> ---
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA512
 
-...
+Hi,
 
-> diff --git a/security/ipe/ipe-sysfs.c b/security/ipe/ipe-sysfs.c
-> index 1c65185c531d..a250da29c3b5 100644
-> --- a/security/ipe/ipe-sysfs.c
-> +++ b/security/ipe/ipe-sysfs.c
-> @@ -5,6 +5,7 @@
->  
->  #include "ipe.h"
->  #include "ipe-audit.h"
-> +#include "ipe-secfs.h"
->  
->  #include <linux/sysctl.h>
->  #include <linux/fs.h>
-> @@ -45,6 +46,79 @@ static int ipe_switch_mode(struct ctl_table *table, int write,
->  
->  #endif /* CONFIG_SECURITY_IPE_PERMISSIVE_SWITCH */
->  
-> +#ifdef CONFIG_SECURITYFS
-> +
-> +/**
-> + * ipe_switch_active_policy: Handler to switch the policy IPE is enforcing.
-> + * @table: Sysctl table entry from the variable, sysctl_table.
-> + * @write: Integer indicating whether this is a write or a read.
-> + * @buffer: Data passed to sysctl. This is the policy id to activate,
-> + *	    for this function.
-> + * @lenp: Pointer to the size of @buffer.
-> + * @ppos: Offset into @buffer.
-> + *
-> + * This wraps proc_dointvec_minmax, and if there's a change, emits an
-> + * audit event.
-> + *
-> + * Return:
-> + * 0 - OK
-> + * -ENOMEM - Out of memory
-> + * -ENOENT - Policy identified by @id does not exist
-> + * Other - See proc_dostring and retrieve_backed_dentry
-> + */
-> +static int ipe_switch_active_policy(struct ctl_table *table, int write,
-> +				    void __user *buffer, size_t *lenp,
-> +				    loff_t *ppos)
-> +{
-> +	int rc = 0;
-> +	char *id = NULL;
-> +	size_t size = 0;
-> +
-> +	if (write) {
+I apologize for this! I have an updated branch that fixes these tags.
+Let me know if I need to respin the pull request.
 
-I see that the policy files in securityfs, such as new_policy, are
-checking for CAP_MAC_ADMIN but there's no check here for CAP_MAC_ADMIN
-when switching the active policy. I think we should enforce that cap
-here, too.
+Thanks,
+Dinh
 
-Thinking about it some more, I find it a little odd that we're spreading
-the files necessary to update a policy across both procfs (sysctl) and
-securityfs. It looks like procfs will have different semantics than
-securityfs after looking at proc_sys_permission(). I suggest moving
-strict_parse and active_policy under securityfs for a unified experience
-and common location when updating policy.
+On 7/13/20 4:57 PM, Stephen Rothwell wrote:
+> Hi all,
+>
+> In commit
+>
+> 3e189a193471 ("ARM: dts: socfpga: Align L2 cache-controller
+> nodename with dtschema")
+>
+> Fixes tag
+>
+> Fixes: 475dc86d08de ("arm: dts: socfpga: Add a base DTSI for
+> Altera's Arria10
+>
+> has these problem(s):
+>
+> - Subject has leading but no trailing parentheses - Subject has
+> leading but no trailing quotes
+>
+> In commit
+>
+> 8e343e71b092 ("arm64: dts: stratix10: increase QSPI reg address in
+> nand dts file")
+>
+> Fixes tag
+>
+> Fixes: 80f132d73709 ("arm64: dts: increase the QSPI reg address for
+> Stratix10
+>
+> has these problem(s):
+>
+> - Subject has leading but no trailing parentheses - Subject has
+> leading but no trailing quotes
+>
+> In commit
+>
+> c188c8348836 ("arm64: dts: stratix10: add status to qspi dts
+> node")
+>
+> Fixes tag
+>
+> Fixes: 0cb140d07fc75 ("arm64: dts: stratix10: Add QSPI support for
+>
+> has these problem(s):
+>
+> - Subject has leading but no trailing parentheses - Subject has
+> leading but no trailing quotes
+>
+> In commit
+>
+> 390a90089db5 ("arm64: dts: agilex: add status to qspi dts node")
+>
+> Fixes tag
+>
+> Fixes: c4c8757b2d895 ("arm64: dts: agilex: add QSPI support for
+> Intel
+>
+> has these problem(s):
+>
+> - Subject has leading but no trailing parentheses - Subject has
+> leading but no trailing quotes
+>
+> Please do not split Fixes tags over more than one line.
+>
+-----BEGIN PGP SIGNATURE-----
 
-Tyler
-
-> +		id = kzalloc((*lenp) + 1, GFP_KERNEL);
-> +		if (!id)
-> +			return -ENOMEM;
-> +
-> +		table->data = id;
-> +		table->maxlen = (*lenp) + 1;
-> +
-> +		rc = proc_dostring(table, write, buffer, lenp, ppos);
-> +		if (rc != 0)
-> +			goto out;
-> +
-> +		rc = ipe_set_active_policy(id, strlen(id));
-> +	} else {
-> +		if (!rcu_access_pointer(ipe_active_policy)) {
-> +			table->data = "";
-> +			table->maxlen = 1;
-> +			return proc_dostring(table, write, buffer, lenp, ppos);
-> +		}
-> +
-> +		rcu_read_lock();
-> +		size = strlen(rcu_dereference(ipe_active_policy)->policy_name);
-> +		rcu_read_unlock();
-> +
-> +		id = kzalloc(size + 1, GFP_KERNEL);
-> +		if (!id)
-> +			return -ENOMEM;
-> +
-> +		rcu_read_lock();
-> +		strncpy(id, rcu_dereference(ipe_active_policy)->policy_name,
-> +			size);
-> +		rcu_read_unlock();
-> +
-> +		table->data = id;
-> +		table->maxlen = size;
-> +
-> +		rc = proc_dostring(table, write, buffer, lenp, ppos);
-> +	}
-> +out:
-> +	kfree(id);
-> +	return rc;
-> +}
-> +
-> +#endif /* CONFIG_SECURITYFS */
-> +
->  static struct ctl_table_header *sysctl_header;
->  
->  static const struct ctl_path sysctl_path[] = {
-> @@ -75,6 +149,24 @@ static struct ctl_table sysctl_table[] = {
->  		.extra1 = SYSCTL_ZERO,
->  		.extra2 = SYSCTL_ONE,
->  	},
-> +#ifdef CONFIG_SECURITYFS
-> +	{
-> +		.procname = "strict_parse",
-> +		.data = &ipe_strict_parse,
-> +		.maxlen = sizeof(int),
-> +		.mode = 0644,
-> +		.proc_handler = proc_dointvec_minmax,
-> +		.extra1 = SYSCTL_ZERO,
-> +		.extra2 = SYSCTL_ONE,
-> +	},
-> +	{
-> +		.procname = "active_policy",
-> +		.data = NULL,
-> +		.maxlen = 0,
-> +		.mode = 0644,
-> +		.proc_handler = ipe_switch_active_policy,
-> +	},
-> +#endif /* CONFIG_SECURITYFS */
->  	{}
->  };
->  
-> diff --git a/security/ipe/ipe.c b/security/ipe/ipe.c
-> index b6553e370f98..07f855ffb79a 100644
-> --- a/security/ipe/ipe.c
-> +++ b/security/ipe/ipe.c
-> @@ -6,6 +6,7 @@
->  #include "ipe.h"
->  #include "ipe-policy.h"
->  #include "ipe-hooks.h"
-> +#include "ipe-secfs.h"
->  #include "ipe-sysfs.h"
->  
->  #include <linux/module.h>
-> @@ -60,3 +61,4 @@ DEFINE_LSM(ipe) = {
->  
->  int ipe_enforce = 1;
->  int ipe_success_audit;
-> +int ipe_strict_parse;
-> diff --git a/security/ipe/ipe.h b/security/ipe/ipe.h
-> index 6a47f55b05d9..bf6cf7744b0e 100644
-> --- a/security/ipe/ipe.h
-> +++ b/security/ipe/ipe.h
-> @@ -16,5 +16,6 @@
->  
->  extern int ipe_enforce;
->  extern int ipe_success_audit;
-> +extern int ipe_strict_parse;
->  
->  #endif /* IPE_H */
-> -- 
-> 2.26.0
+iQIzBAEBCgAdFiEEoHhMeiyk5VmwVMwNGZQEC4GjKPQFAl8PVaQACgkQGZQEC4Gj
+KPSLEw//VBkdiYVC0tiIgVumxbIg8ySSPWtsMv9uQ9lL/gx/96OAu6QgHfnUTEYK
+aBiFnN0xvIY8BNITF3bDT1FNRbQaZKrr/tXxY3HW9Re0j7izk+p5e524b6u5RO0f
+Buoz/zAFif7SW3ZYlX1y/L4QpUIzsK+uOtE6RSUY2mwBoZ5li14LQruTjfU+nWLo
+noWxVxIyRmT9AjNvaN282Rvyhbc3YKZ1vemy+DcKzh/wRLXsP/tMP/eXFmrvbwFP
+O4cq/HPthwenhEpqWqDWq43SiZKwqVwQmNzJ3+yfTTdbF/hgmPazKSH1vRvrixfB
+V0/g8uFigigE2Oniwu238NFHOJ9ZnWQKBiZEKlGG/SZZJE7u/fYYYVjX0/4t//n6
+JX9dQEIaHPX95nkAdMWIQdlkW96yzPmf0X864oaahc1GrMJUEPXNjuuVs7nTEXuy
+Srfl4TpXUp8FHVjyz/SjG9etw0h1moJuRyTS/SlJMoGGM4fuIKTrJWh3EUwjIq9w
+U1gAT//6/D5RvfRKo+6l+OHJrX47wSAbPMFtEUcKXnejib6YJkGk7Xyvc2gPNC9b
+J7xYbUV+i2Aedm28ijwPrAZ9mud8+/A9q2mCWmreGiRQShiNHRCoDE9G2z1dIl48
+RVVj7R2nbVqw3/oZ+13vwfu9Nl6KMjHkU1W/wHIKpghwZXIdLkA=
+=yd8H
+-----END PGP SIGNATURE-----
