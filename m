@@ -2,78 +2,114 @@ Return-Path: <SRS0=kup7=A2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB592C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 09:51:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC26DC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 09:51:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BD23B2064B
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 09:51:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 953D72064B
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 09:51:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="oOXeAQid"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730913AbgGOJvR (ORCPT
+        id S1730895AbgGOJvx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 05:51:17 -0400
-Received: from [195.135.220.15] ([195.135.220.15]:53436 "EHLO mx2.suse.de"
-        rhost-flags-FAIL-FAIL-OK-OK) by vger.kernel.org with ESMTP
-        id S1730905AbgGOJvR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 05:51:17 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 4F4A5AF85;
-        Wed, 15 Jul 2020 09:51:19 +0000 (UTC)
-Subject: Re: [PATCH 3/4] mm/hugetlb: make hugetlb migration callback CMA aware
-To:     js1304@gmail.com, Andrew Morton <akpm@linux-foundation.org>
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        kernel-team@lge.com, Christoph Hellwig <hch@infradead.org>,
-        Roman Gushchin <guro@fb.com>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>,
-        Michal Hocko <mhocko@suse.com>,
-        "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>
-References: <1594789529-6206-1-git-send-email-iamjoonsoo.kim@lge.com>
- <1594789529-6206-3-git-send-email-iamjoonsoo.kim@lge.com>
-From:   Vlastimil Babka <vbabka@suse.cz>
-Message-ID: <d2a26d81-ce9a-c24c-a2f7-d3b1fa2184d4@suse.cz>
-Date:   Wed, 15 Jul 2020 11:51:14 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Wed, 15 Jul 2020 05:51:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36856 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730000AbgGOJvx (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jul 2020 05:51:53 -0400
+Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BC46FC061755;
+        Wed, 15 Jul 2020 02:51:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=B3ZNXMdtzOl2XokoISBREh8d9nxYCRmNefNrJYQQBSo=; b=oOXeAQidbZzyeFE7UCspW3f0W4
+        m/ZqHaKOVyZU8GAiIVD/XTz1oC1UtT6Uct1DxIuhk+QPUKXVLxCvDYtgYxRRYvVs6QmHhBp0iexPP
+        aQW5P9xuX40hne6bOHhDOckCvOT1dHZnfrmtOu8jvk8GL0CHPWwoOpDHJy7QMjliPOex2KX6XaFfb
+        FQt8+A49iiYfOkZNp3ScqoSUXajHVGSPqZwYtOPnECivFAM2uMjf/iDKcQbzKM8/MMP2sDK7RaKpw
+        n2LYSmhZGN7Pq8tS0xmFttoaQaO8EXQ1k+K9IOf8wshHtE36RNC6oYGijMMSpXyDHLq5NKaH5fAgq
+        29Nm+15w==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jve4i-0000jr-Gx; Wed, 15 Jul 2020 09:51:40 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id B344B3028C8;
+        Wed, 15 Jul 2020 11:51:36 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 9CC92203A5F41; Wed, 15 Jul 2020 11:51:36 +0200 (CEST)
+Date:   Wed, 15 Jul 2020 11:51:36 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Joerg Roedel <jroedel@suse.de>
+Cc:     Joerg Roedel <joro@8bytes.org>, x86@kernel.org, hpa@zytor.com,
+        Andy Lutomirski <luto@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Jiri Slaby <jslaby@suse.cz>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Juergen Gross <jgross@suse.com>,
+        Kees Cook <keescook@chromium.org>,
+        David Rientjes <rientjes@google.com>,
+        Cfir Cohen <cfir@google.com>,
+        Erdem Aktas <erdemaktas@google.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Mike Stunes <mstunes@vmware.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Martin Radev <martin.b.radev@gmail.com>,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        virtualization@lists.linux-foundation.org
+Subject: Re: [PATCH v4 63/75] x86/sev-es: Handle #DB Events
+Message-ID: <20200715095136.GG10769@hirez.programming.kicks-ass.net>
+References: <20200714120917.11253-1-joro@8bytes.org>
+ <20200714120917.11253-64-joro@8bytes.org>
+ <20200715084752.GD10769@hirez.programming.kicks-ass.net>
+ <20200715091337.GI16200@suse.de>
 MIME-Version: 1.0
-In-Reply-To: <1594789529-6206-3-git-send-email-iamjoonsoo.kim@lge.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200715091337.GI16200@suse.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/15/20 7:05 AM, js1304@gmail.com wrote:
-> From: Joonsoo Kim <iamjoonsoo.kim@lge.com>
+On Wed, Jul 15, 2020 at 11:13:37AM +0200, Joerg Roedel wrote:
+> On Wed, Jul 15, 2020 at 10:47:52AM +0200, Peter Zijlstra wrote:
+> > On Tue, Jul 14, 2020 at 02:09:05PM +0200, Joerg Roedel wrote:
+> > 
+> > > @@ -1028,6 +1036,16 @@ DEFINE_IDTENTRY_VC_SAFE_STACK(exc_vmm_communication)
+> > >  	struct ghcb *ghcb;
+> > >  
+> > >  	lockdep_assert_irqs_disabled();
+> > > +
+> > > +	/*
+> > > +	 * #DB is special and needs to be handled outside of the intrumentation_begin()/end().
+> > > +	 * Otherwise the #VC handler could be raised recursivly.
+> > > +	 */
+> > > +	if (error_code == SVM_EXIT_EXCP_BASE + X86_TRAP_DB) {
+> > > +		vc_handle_trap_db(regs);
+> > > +		return;
+> > > +	}
+> > > +
+> > >  	instrumentation_begin();
+> > 
+> > Wait what?! That makes no sense what so ever.
 > 
-> new_non_cma_page() in gup.c requires to allocate the new page that is not
-> on the CMA area. new_non_cma_page() implements it by using allocation
-> scope APIs.
-> 
-> However, there is a work-around for hugetlb. Normal hugetlb page
-> allocation API for migration is alloc_huge_page_nodemask(). It consists
-> of two steps. First is dequeing from the pool. Second is, if there is no
-> available page on the queue, allocating by using the page allocator.
-> 
-> new_non_cma_page() can't use this API since first step (deque) isn't
-> aware of scope API to exclude CMA area. So, new_non_cma_page() exports
-> hugetlb internal function for the second step, alloc_migrate_huge_page(),
-> to global scope and uses it directly. This is suboptimal since hugetlb
-> pages on the queue cannot be utilized.
-> 
-> This patch tries to fix this situation by making the deque function on
-> hugetlb CMA aware. In the deque function, CMA memory is skipped if
-> PF_MEMALLOC_NOCMA flag is found.
-> 
-> Acked-by: Mike Kravetz <mike.kravetz@oracle.com>
-> Signed-off-by: Joonsoo Kim <iamjoonsoo.kim@lge.com>
+> Then my understanding of intrumentation_begin/end() is wrong, I thought
+> that the kernel will forbid setting breakpoints before
+> instrumentation_begin(), which is necessary here because a break-point
+> in the #VC handler might cause recursive #VC-exceptions when #DB is
+> intercepted.
+> Maybe you can elaborate on why this makes no sense?
 
-Acked-by: Vlastimil Babka <vbabka@suse.cz>
+Kernel avoids breakpoints in any noinstr text, irrespective of
+instrumentation_begin().
+
+instrumentation_begin() merely allows one to call !noinstr functions.
