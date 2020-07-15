@@ -2,82 +2,164 @@ Return-Path: <SRS0=kup7=A2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EBCFC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 00:24:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5EB3C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 00:37:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6CE642071B
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 00:24:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ADC722075B
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 00:37:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sS8jnJuf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727090AbgGOAYL (ORCPT
+        id S1728104AbgGOAhe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 20:24:11 -0400
-Received: from www262.sakura.ne.jp ([202.181.97.72]:53878 "EHLO
-        www262.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726142AbgGOAYL (ORCPT
+        Tue, 14 Jul 2020 20:37:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36126 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726603AbgGOAhc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 20:24:11 -0400
-Received: from fsav401.sakura.ne.jp (fsav401.sakura.ne.jp [133.242.250.100])
-        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id 06F0O9m6009533;
-        Wed, 15 Jul 2020 09:24:09 +0900 (JST)
-        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
-Received: from www262.sakura.ne.jp (202.181.97.72)
- by fsav401.sakura.ne.jp (F-Secure/fsigk_smtp/550/fsav401.sakura.ne.jp);
- Wed, 15 Jul 2020 09:24:09 +0900 (JST)
-X-Virus-Status: clean(F-Secure/fsigk_smtp/550/fsav401.sakura.ne.jp)
-Received: from [192.168.1.9] (M106072142033.v4.enabler.ne.jp [106.72.142.33])
-        (authenticated bits=0)
-        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id 06F0O80A009529
-        (version=TLSv1.2 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO);
-        Wed, 15 Jul 2020 09:24:09 +0900 (JST)
-        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
-Subject: Re: [PATCH] fbdev: Detect integer underflow at "struct
- fbcon_ops"->clear_margins.
-To:     George Kennedy <george.kennedy@oracle.com>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>, linux-fbdev@vger.kernel.org,
-        dri-devel@lists.freedesktop.org,
-        Dmitry Vyukov <dvyukov@google.com>,
-        linux-kernel@vger.kernel.org,
-        Dan Carpenter <dan.carpenter@oracle.com>
-References: <189fc902-db7c-9886-cc31-c0348435303a@i-love.sakura.ne.jp>
- <20200712111013.11881-1-penguin-kernel@I-love.SAKURA.ne.jp>
- <20200712111013.11881-2-penguin-kernel@I-love.SAKURA.ne.jp>
- <CGME20200714072231eucas1p17c53f0a661346ebfd316ebd5796ca346@eucas1p1.samsung.com>
- <db4b3346-b9f8-a428-1445-1fcbd8521e1d@samsung.com>
- <e00078d1-e5fb-a019-3036-cb182ed2e40b@i-love.sakura.ne.jp>
- <c5bf6d5c-8d0a-8df5-2a11-38bf37a11d67@oracle.com>
-From:   Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
-Message-ID: <a2433659-4f95-d508-11de-8273fd2b6632@i-love.sakura.ne.jp>
-Date:   Wed, 15 Jul 2020 09:24:06 +0900
-User-Agent: Mozilla/5.0 (Windows NT 6.3; Win64; x64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Tue, 14 Jul 2020 20:37:32 -0400
+Received: from mail-pj1-x102f.google.com (mail-pj1-x102f.google.com [IPv6:2607:f8b0:4864:20::102f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 29961C061755;
+        Tue, 14 Jul 2020 17:37:32 -0700 (PDT)
+Received: by mail-pj1-x102f.google.com with SMTP id cm21so697039pjb.3;
+        Tue, 14 Jul 2020 17:37:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=0d8lgGWp3yT9RktjxMAvaiqBLoWz3hFyt3U4v25jxeA=;
+        b=sS8jnJufruUkvnsojmPjKIRSOHh7VIVZ7zbND0Y3TAZWO/tul0vNDtJjFlXMf2NuNl
+         PyOl63gKpchRxR/DGPMK+8bCepYSz83F6w3IZ+kRcrc+wDkrvYDJc9L18fwUfJ4R3sel
+         IhU1bIRPXPeTySu5ja2yaMlkHcePst+YLBw43kEPt5wpi/h5oIEn6dJvV5/2Yc36BEV/
+         EA2VNNojBUnhuSDObVJ0ITq+0DUMGVsFZJFNNzGeZB8ZzJmEv1R8v0ZlMSWUu9xGgU/P
+         4ZgeAIe+EWGK0j2gFy1hDFDSBI9on9kx8viuw0llZFETth6Gdncn31DDnR3EJmMcdOtR
+         pPcQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=0d8lgGWp3yT9RktjxMAvaiqBLoWz3hFyt3U4v25jxeA=;
+        b=c5Bnzk1OfhxcuUClM84E7cdC7+Qx3bQD3IYneDefIkJHZRtHPuGEA5JjUd+2yqhald
+         cr2mBX6Eg3ObOwotsNNXy+XSKyDqPSNI1TZbAFfr+oeUDOPER0nmj2TLSR8+0YN8bTa/
+         2y+Ul20buqBdMYYlfOMDEmOESRBHN6lEVGHif2teHsD81D7AnoNAWLXX0j/oTt5iSRBu
+         NlIZPYTDyrFJke+zAaAThFxShlEDkyJJeGsgQPKX6PjqyddHlx6iMUHdpnGrwqnU9lIu
+         in46+vJnXe0cKAREdtrgMR67u7pJbxBIS4DQyzlwhaoYtqfbqQDDmeTqIBRpOcR1KSCJ
+         XioA==
+X-Gm-Message-State: AOAM531AxogsktbAtfpoeDegNIdqK2/3FY9FURn8NB0YDAtMRPnt7GMp
+        PvKvhG3P4urgN0LUDCvY9fI=
+X-Google-Smtp-Source: ABdhPJyhy0IZNy2r60ubEp+cU+tNGhJpKg1e8Xtbaa0LZXxBASDuTA64k4DDn+q/FKE1JmsOrx0NYQ==
+X-Received: by 2002:a17:90b:4b12:: with SMTP id lx18mr7855878pjb.156.1594773451627;
+        Tue, 14 Jul 2020 17:37:31 -0700 (PDT)
+Received: from xiaomi.mioffice.cn ([43.224.245.179])
+        by smtp.gmail.com with ESMTPSA id t126sm266156pfd.214.2020.07.14.17.37.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 14 Jul 2020 17:37:31 -0700 (PDT)
+From:   Qiwu Huang <yanziily@gmail.com>
+To:     sre@kernel.org
+Cc:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        gregkh@linuxfoundation.org, jiangfei1@xiaomi.com,
+        Qiwu Huang <huangqiwu@xiaomi.com>
+Subject: [PATCH v3 1/5] power: supply: core: add quick charge type property
+Date:   Wed, 15 Jul 2020 08:35:19 +0800
+Message-Id: <40809c9b859c086ba6aec56b24402d41c60d6e71.1594726859.git.huangqiwu@xiaomi.com>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <cover.1594726859.git.huangqiwu@xiaomi.com>
+References: <cover.1594726859.git.huangqiwu@xiaomi.com>
 MIME-Version: 1.0
-In-Reply-To: <c5bf6d5c-8d0a-8df5-2a11-38bf37a11d67@oracle.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/07/15 2:15, George Kennedy wrote:
-> Can you try the a.out built from the original Syzkaller modified repro C program? It walks 0-7 through xres and yres of the fb_var_screeninfo struct.
+From: Qiwu Huang <huangqiwu@xiaomi.com>
 
-I'm not familiar with exploit code. What do you want to explain via this program?
+Reports the kind of quick charge type based on
+different adapter power. UI will show different
+animation effect for different quick charge type.
 
->   struct fb_var_screeninfo *varp = (struct fb_var_screeninfo *)0x200001c0;
->   struct fb_var_screeninfo *starting_varp = malloc(sizeof(struct fb_var_screeninfo *));
+Signed-off-by: Qiwu Huang <huangqiwu@xiaomi.com>
+---
+ Documentation/ABI/testing/sysfs-class-power | 21 +++++++++++++++++++++
+ drivers/power/supply/power_supply_sysfs.c   |  1 +
+ include/linux/power_supply.h                | 10 ++++++++++
+ 3 files changed, 32 insertions(+)
 
->     memcpy(starting_varp, varp, sizeof(struct fb_var_screeninfo));
-
->             memcpy(varp, starting_varp, sizeof(struct fb_var_screeninfo));
-
-At least, I suspect there is a memory corruption bug in this program
-because of malloc()ing only sizeof(struct fb_var_screeninfo *) bytes.
+diff --git a/Documentation/ABI/testing/sysfs-class-power b/Documentation/ABI/testing/sysfs-class-power
+index 216d61a22f1e..dd3773dcf16a 100644
+--- a/Documentation/ABI/testing/sysfs-class-power
++++ b/Documentation/ABI/testing/sysfs-class-power
+@@ -708,3 +708,24 @@ Description:
+ 
+ 		Access: Read
+ 		Valid values: 1-31
++
++What:		/sys/class/power_supply/<supply_name>/quick_charge_type
++Date:		Jul 2020
++Contact:	Fei Jiang <jiangfei1@xiaomi.com>
++		Description:
++		Reports the kind of quick charge type based on different adapter power.
++		Different quick charge type represent different charging power.
++		QUICK_CHARGE_NORMAL : Charging Power <= 10W
++		QUICK_CHARGE_FAST : 10W < Charging Power <= 20W
++		QUICK_CHARGE_FLASH : 20W < Charging Power <= 30W
++		QUICK_CHARGE_TURBE : 30W < Charging Power <= 50W
++		QUICK_CHARGE_SUPER : Charging Power > 50W
++
++		Access: Read-Only
++		Valid values:
++			0: QUICK_CHARGE_NORMAL,
++			1: QUICK_CHARGE_FAST,
++			2: QUICK_CHARGE_FLASH,
++			3: QUICK_CHARGE_TURBE,
++			4: QUICK_CHARGE_SUPER.
++
+diff --git a/drivers/power/supply/power_supply_sysfs.c b/drivers/power/supply/power_supply_sysfs.c
+index bc79560229b5..9554d7907373 100644
+--- a/drivers/power/supply/power_supply_sysfs.c
++++ b/drivers/power/supply/power_supply_sysfs.c
+@@ -206,6 +206,7 @@ static struct power_supply_attr power_supply_attrs[] = {
+ 	POWER_SUPPLY_ATTR(MODEL_NAME),
+ 	POWER_SUPPLY_ATTR(MANUFACTURER),
+ 	POWER_SUPPLY_ATTR(SERIAL_NUMBER),
++	POWER_SUPPLY_ATTR(QUICK_CHARGE_TYPE),
+ };
+ 
+ static struct attribute *
+diff --git a/include/linux/power_supply.h b/include/linux/power_supply.h
+index ac1345a48ad0..f35c661a2544 100644
+--- a/include/linux/power_supply.h
++++ b/include/linux/power_supply.h
+@@ -167,6 +167,7 @@ enum power_supply_property {
+ 	POWER_SUPPLY_PROP_MODEL_NAME,
+ 	POWER_SUPPLY_PROP_MANUFACTURER,
+ 	POWER_SUPPLY_PROP_SERIAL_NUMBER,
++	POWER_SUPPLY_PROP_QUICK_CHARGE_TYPE,
+ };
+ 
+ enum power_supply_type {
+@@ -197,6 +198,15 @@ enum power_supply_usb_type {
+ 	POWER_SUPPLY_USB_TYPE_APPLE_BRICK_ID,	/* Apple Charging Method */
+ };
+ 
++enum power_supply_quick_charge_type {
++	QUICK_CHARGE_NORMAL = 0,		/* Charging Power <= 10W */
++	QUICK_CHARGE_FAST,			/* 10W < Charging Power <= 20W */
++	QUICK_CHARGE_FLASH,			/* 20W < Charging Power <= 30W */
++	QUICK_CHARGE_TURBE,			/* 30W < Charging Power <= 50W */
++	QUICK_CHARGE_SUPER,			/* Charging Power > 50W */
++	QUICK_CHARGE_MAX,
++};
++
+ enum power_supply_notifier_events {
+ 	PSY_EVENT_PROP_CHANGED,
+ };
+-- 
+2.27.0
 
