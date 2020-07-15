@@ -2,129 +2,114 @@ Return-Path: <SRS0=kup7=A2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2ACBC433E3
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 14:20:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6B04C433E2
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 14:20:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A026F206F5
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 14:20:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C71C42064B
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 14:20:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="NQOp04me"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="i/guopJy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728188AbgGOOUT (ORCPT
+        id S1728234AbgGOOUU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 10:20:19 -0400
-Received: from mail.efficios.com ([167.114.26.124]:42852 "EHLO
-        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726834AbgGOOUS (ORCPT
+        Wed, 15 Jul 2020 10:20:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49932 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728153AbgGOOUR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 10:20:18 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by mail.efficios.com (Postfix) with ESMTP id BA731282582;
-        Wed, 15 Jul 2020 10:20:16 -0400 (EDT)
-Received: from mail.efficios.com ([127.0.0.1])
-        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id eZg8zfz8LZ71; Wed, 15 Jul 2020 10:20:16 -0400 (EDT)
-Received: from localhost (localhost [127.0.0.1])
-        by mail.efficios.com (Postfix) with ESMTP id 63C86282581;
-        Wed, 15 Jul 2020 10:20:16 -0400 (EDT)
-DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com 63C86282581
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
-        s=default; t=1594822816;
-        bh=8pyjh3w3gqmbApSqfgRB3ksH58blRuuNrO9qaoBB2P8=;
-        h=Date:From:To:Message-ID:MIME-Version;
-        b=NQOp04meYobOrNmaL5O+BPNwVBabfCQhcnNrZ30VkCIserTPFvBIu8bKMXfyaARMk
-         my4A6xnXOOVbqsNTiZ0qH/+76r7xVJ3UX0zWkYcbF+YYPVBOcZ8ZuUsi8YPYYfw6lR
-         mhRFFbO+JNHo8j4MvP25Ia06jlh3khYCXQyYzceFb45uxDtRewmnOolVFLluS9xz8A
-         DiWCEz7H/6RjWNVVxtHxs1CQGMTA8vJQYqZLixXz2e67TmyIUAsL/I3pNhTqsJg+jX
-         JSN+NoUEQuhuqr94Lycw1GfwCw5DCelZ9g9zIZUFquatV953iKHbYfXaYCTqTca5lG
-         tfNyFO5vlhuvQ==
-X-Virus-Scanned: amavisd-new at efficios.com
-Received: from mail.efficios.com ([127.0.0.1])
-        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id uVk_T4vgAKIJ; Wed, 15 Jul 2020 10:20:16 -0400 (EDT)
-Received: from mail03.efficios.com (mail03.efficios.com [167.114.26.124])
-        by mail.efficios.com (Postfix) with ESMTP id 557522823A1;
-        Wed, 15 Jul 2020 10:20:16 -0400 (EDT)
-Date:   Wed, 15 Jul 2020 10:20:16 -0400 (EDT)
-From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-To:     Christian Brauner <christian.brauner@ubuntu.com>
-Cc:     Florian Weimer <fweimer@redhat.com>, carlos <carlos@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        paulmck <paulmck@linux.ibm.com>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Paul Turner <pjt@google.com>,
-        linux-api <linux-api@vger.kernel.org>
-Message-ID: <1765484769.14232.1594822816264.JavaMail.zimbra@efficios.com>
-In-Reply-To: <20200715135554.4q6aamx4iqd4mnqh@wittgenstein>
-References: <20200714030348.6214-1-mathieu.desnoyers@efficios.com> <2452161.11491.1594732791558.JavaMail.zimbra@efficios.com> <71f08b3a-56f5-0e0f-53b0-cc680f7e8181@redhat.com> <2053637148.14136.1594818777608.JavaMail.zimbra@efficios.com> <87y2nk29rp.fsf@oldenburg2.str.redhat.com> <882700738.14181.1594819884049.JavaMail.zimbra@efficios.com> <87mu4028uk.fsf@oldenburg2.str.redhat.com> <20200715135554.4q6aamx4iqd4mnqh@wittgenstein>
-Subject: Re: [RFC PATCH 2/4] rseq: Allow extending struct rseq
+        Wed, 15 Jul 2020 10:20:17 -0400
+Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 23AA3C061755;
+        Wed, 15 Jul 2020 07:20:16 -0700 (PDT)
+Received: by mail-lj1-x243.google.com with SMTP id x9so2790012ljc.5;
+        Wed, 15 Jul 2020 07:20:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=cvmC5haUsj6mD/QlGqPWHxsvGR5ylAYh/s0gDOMIuPQ=;
+        b=i/guopJyhuve8jzIeXmqbKMVeFCTd6qre1GGKHpxlntPlk++FNW6lCWSuBvbeWZ4cD
+         pNDKiOEaMa40hjmsxXUx1N4Uhv7KQXCAxSve0V+9QWxo6RSLR42uxxBgZV8n0e/0F55W
+         F7RwybcyUJsdm+8hJHZQIBi8Z6Y1QoBIyvBo8sR8t/OeYXoyc7XiSJb3rmqHJ8Gkwuqr
+         opRYa8A0SMpvF1B7ovVQe4D4HwstxnPv6rjQFDLaYplYv0K80bNZA35MQNUEmeoTgiQZ
+         wQNcbIVzI1HuaBv+0KrKEsIvuR4oIM6gDKX63Hik8LiXrmQFXMwzPUkGV7cf9YjJo0ij
+         qodQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=cvmC5haUsj6mD/QlGqPWHxsvGR5ylAYh/s0gDOMIuPQ=;
+        b=O4GJyrac6lNDUIrcwVIVPh8kJTrpN/kd2qNk4I8w0dkPYGfAs0boskyi4nv57sd3OW
+         wxR38CyBOugf86LsR84PSBnTf7+/3RtMmgSYQn2gJqHZHNXQtktgBmTkWBz93B8/U6H3
+         tRb9QI9xtop+yjqI741YIReZ8H60OjKPvn2OmDlvJ5ZiPRNVv5prNzVuNZ/K5A4jQbeV
+         XtooQIN32pXNN1zHJEPlA2ybD5WM/l4QWQ1sz12PHtNX8+zrFUPyaGHuryqgvpCHxURv
+         3WyDAILFPREHAlGug/nuH1zlj4kJ1ZJ0kyJ9wbbj6+fX5sPHbVuQuV5LeK89SIhYoXue
+         1uVw==
+X-Gm-Message-State: AOAM533R7MdUoJpxo+aBCaOK1gmS2a7fz/Ux/x3l0pFLiJZm5Zlq8+qJ
+        C2SbtEMwTVGbHeS/ypSsLq8=
+X-Google-Smtp-Source: ABdhPJzvlfsSM7ba1UIgmK1uKciFvQmZZhfiGnd/sNQAofgyGvZMzN/1z2mwWTrhLJhIHD07R9q57Q==
+X-Received: by 2002:a2e:6806:: with SMTP id c6mr4462638lja.219.1594822814615;
+        Wed, 15 Jul 2020 07:20:14 -0700 (PDT)
+Received: from pc636 (h5ef52e31.seluork.dyn.perspektivbredband.net. [94.245.46.49])
+        by smtp.gmail.com with ESMTPSA id q13sm524522lfb.55.2020.07.15.07.20.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 15 Jul 2020 07:20:11 -0700 (PDT)
+From:   Uladzislau Rezki <urezki@gmail.com>
+X-Google-Original-From: Uladzislau Rezki <urezki@pc636>
+Date:   Wed, 15 Jul 2020 16:20:09 +0200
+To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc:     Uladzislau Rezki <urezki@gmail.com>, paulmck@kernel.org,
+        joel@joelfernandes.org, rcu@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kernel-team@fb.com, mingo@kernel.org,
+        jiangshanlai@gmail.com, dipankar@in.ibm.com,
+        akpm@linux-foundation.org, mathieu.desnoyers@efficios.com,
+        josh@joshtriplett.org, tglx@linutronix.de, peterz@infradead.org,
+        rostedt@goodmis.org, dhowells@redhat.com, edumazet@google.com,
+        fweisbec@gmail.com, oleg@redhat.com
+Subject: Re: [PATCH tip/core/rcu 03/17] rcu/tree: Skip entry into the page
+ allocator for PREEMPT_RT
+Message-ID: <20200715142009.GA25196@pc636>
+References: <20200624201200.GA28901@paulmck-ThinkPad-P72>
+ <20200624201226.21197-3-paulmck@kernel.org>
+ <20200630164543.4mdcf6zb4zfclhln@linutronix.de>
+ <20200715133808.GA24778@pc636>
+ <20200715141622.zd2h3mnhd7ypd2fp@linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [167.114.26.124]
-X-Mailer: Zimbra 8.8.15_GA_3955 (ZimbraWebClient - FF78 (Linux)/8.8.15_GA_3953)
-Thread-Topic: rseq: Allow extending struct rseq
-Thread-Index: dcnj3oHgdUUwDl0MIo+e+CqqnEuWyQ==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200715141622.zd2h3mnhd7ypd2fp@linutronix.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
------ On Jul 15, 2020, at 9:55 AM, Christian Brauner christian.brauner@ubuntu.com wrote:
-
-> On Wed, Jul 15, 2020 at 03:42:11PM +0200, Florian Weimer wrote:
->> * Mathieu Desnoyers:
->> 
->> > So indeed it could be done today without upgrading the toolchains by
->> > writing custom assembler for each architecture to get the thread's
->> > struct rseq. AFAIU the ABI to access the thread pointer is fixed for
->> > each architecture, right ?
->> 
->> Yes, determining the thread pointer and access initial-exec TLS
->> variables is baked into the ABI.
->> 
->> > How would this allow early-rseq-adopter libraries to interact with
->> > glibc ?
->> 
->> Under all extension proposals I've seen so far, early adopters are
->> essentially incompatible with glibc rseq registration.  I don't think
->> you can have it both ways.
+On Wed, Jul 15, 2020 at 04:16:22PM +0200, Sebastian Andrzej Siewior wrote:
+> On 2020-07-15 15:38:08 [+0200], Uladzislau Rezki wrote:
+> > > As of -rc3 it should complain about printk() which is why it is still disabled by default.
+> > >
+> > Have you tried to trigger a "complain" you are talking about?
 > 
-> Who are the early adopters? And if we aren't being compatible with them
-> under the extensible schemes proposed we should be able to achieve
-> compatibility with non-early adopters, right? Which I guess is more
-> important. (I still struggle to make sense what qualifies as an early
-> adopter/what the difference to a non-early adopter is.)
+> No, but I is wrong because a raw_spinlock_t is acquired followed by a
+> spinlock_t.
+>
+Right. According to documentation CONFIG_PROVE_RAW_LOCK_NESTING is used
+to detect raw_spinlock vs. spinlock nesting usage.
 
-Early adopter libraries and applications are meant to be able to use rseq
-without requiring upgrade of the entire environment to a newer glibc.
+> 
+> > I suspect to get some trace dump when CONFIG_PROVE_RAW_LOCK_NESTING=y.
+> 
+> You should get one if you haven't received any splat earlier (like from
+> printk code because it only triggers once).
+> 
+Got it.
 
-I maintain early adopter projects (liburcu, lttng-ust) which postpone using
-rseq outside of prototype branches until we agree on an ABI to share
-__rseq_abi between glibc and early adopter libraries. The last thing I
-want is for those projects to break when an end-user upgrades their
-glibc. tcmalloc is another early adopter which have less strict
-compatibility requirements: they are OK with breaking changes requiring
-upgrading and rebuilding tcmalloc.
+Thanks! 
 
-Indeed, until we cast in stone the layout of struct rseq as exposed by
-glibc, I think we have some freedom in our definition of "early adopter",
-because pretty much every relevant open source project which want to use
-rseq is waiting on glibc to define that ABI, to use rseq either as an
-early-adopter or through a dependency on newer glibc.
-
-Thanks,
-
-Mathieu
-
-
--- 
-Mathieu Desnoyers
-EfficiOS Inc.
-http://www.efficios.com
+--
+Vlad Rezki
