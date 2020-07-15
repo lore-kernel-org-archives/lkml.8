@@ -2,177 +2,165 @@ Return-Path: <SRS0=kup7=A2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC367C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 11:51:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E1BAC433F8
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 11:52:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A428B20658
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 11:51:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Ry0B7kwB"
+	by mail.kernel.org (Postfix) with ESMTP id 569BA2070E
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 11:52:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730489AbgGOLvj (ORCPT
+        id S1730531AbgGOLwW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 07:51:39 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:24933 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728766AbgGOLvj (ORCPT
+        Wed, 15 Jul 2020 07:52:22 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:2458 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1730512AbgGOLwV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 07:51:39 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1594813897;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=r3FX3UuRCTo9UAVThurv1D/BIiQ0N6rOrGTWl0O4StY=;
-        b=Ry0B7kwBPvO8OEY3orXXuVTOZhRxZ13ApjRYCZkoujMjI7mp9lKT+2beW1fRzvG9XFSSXv
-        TAV88+Xp65xoReQeRZFbZHY9Cc6dNjQsK+1aVdwqWxvKxBxPxN2au9U4nMXcSebkuf6LyH
-        ms3iho9oIUOhVrnMWm6mf0me8l+i9kA=
-Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com
- [209.85.222.198]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-489-RbIuBzCWPIyGmZ1lRFm4GA-1; Wed, 15 Jul 2020 07:51:36 -0400
-X-MC-Unique: RbIuBzCWPIyGmZ1lRFm4GA-1
-Received: by mail-qk1-f198.google.com with SMTP id 204so1281781qki.20
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 04:51:36 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=r3FX3UuRCTo9UAVThurv1D/BIiQ0N6rOrGTWl0O4StY=;
-        b=PkQiBPr66tXS+1BLZwKAP1G16IC9eREKXOjIB/+mvu8sjwwaFlEO9mueZ8tX36t4mA
-         PwXwLxOykvoP+mzQtAooQKaq/fYeJI1pEAMewDgnyN8hi8ReG7/wkCDFvPL56DHI6HnZ
-         +w0W1+KwCDJ1giJ4W5R1gBkdyy8ZvK0oEgUcbBXy/CNGVqVkPrXYowSaYyoJIna4R5e0
-         hkqPhN4ZMrgOZNTjUHqNrRBJLTMM2sEVFl66LID1jC6gmjqh/swerCI52KLzpDCIwAVS
-         vpv/7SsfVYRZkBItog2aYnLPzHL0i0SrUHUYn1PLlkgVqrGpshTZYpl+EdKae8zXC8fZ
-         98JQ==
-X-Gm-Message-State: AOAM532FgiDexosVDQ3A4AUTn1BpzWITYdb96xZF2GhJmg/gAwnzZZ6O
-        bPVf16cdpQDeQZ128BNcz7AQcX7IVJknQs8RSEKZYSFAbG29n9TSQI1NILO+6FLfrCFdcvL20AJ
-        Msl5QSnLen4jXF+j9x/qUHqyQ
-X-Received: by 2002:a37:4249:: with SMTP id p70mr8978824qka.496.1594813895585;
-        Wed, 15 Jul 2020 04:51:35 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJyx1aUJiCqHYur0Jh6ZYxhkiq8X5xdMXXfCrNDK8eHV+0xFXx7Y6LeDlwk29NTSE0FYz2C5zw==
-X-Received: by 2002:a37:4249:: with SMTP id p70mr8978802qka.496.1594813895270;
-        Wed, 15 Jul 2020 04:51:35 -0700 (PDT)
-Received: from redhat.com (bzq-79-180-10-140.red.bezeqint.net. [79.180.10.140])
-        by smtp.gmail.com with ESMTPSA id n64sm2006264qke.77.2020.07.15.04.51.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 15 Jul 2020 04:51:34 -0700 (PDT)
-Date:   Wed, 15 Jul 2020 07:51:28 -0400
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     Jason Wang <jasowang@redhat.com>
-Cc:     Pierre Morel <pmorel@linux.ibm.com>, linux-kernel@vger.kernel.org,
-        pasic@linux.ibm.com, borntraeger@de.ibm.com, frankja@linux.ibm.com,
-        cohuck@redhat.com, kvm@vger.kernel.org, linux-s390@vger.kernel.org,
-        virtualization@lists.linux-foundation.org, thomas.lendacky@amd.com,
-        david@gibson.dropbear.id.au, linuxram@us.ibm.com,
-        hca@linux.ibm.com, gor@linux.ibm.com
-Subject: Re: [PATCH v7 2/2] s390: virtio: PV needs VIRTIO I/O device
- protection
-Message-ID: <20200715074917-mutt-send-email-mst@kernel.org>
-References: <1594801869-13365-1-git-send-email-pmorel@linux.ibm.com>
- <1594801869-13365-3-git-send-email-pmorel@linux.ibm.com>
- <20200715054807-mutt-send-email-mst@kernel.org>
- <bc5e09ad-faaf-8b38-83e0-5f4a4b1daeb0@redhat.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <bc5e09ad-faaf-8b38-83e0-5f4a4b1daeb0@redhat.com>
+        Wed, 15 Jul 2020 07:52:21 -0400
+Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06FBYM84047694;
+        Wed, 15 Jul 2020 07:52:14 -0400
+Received: from ppma05fra.de.ibm.com (6c.4a.5195.ip4.static.sl-reverse.com [149.81.74.108])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 3298ebmcbp-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 15 Jul 2020 07:52:14 -0400
+Received: from pps.filterd (ppma05fra.de.ibm.com [127.0.0.1])
+        by ppma05fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 06FBjuJk003424;
+        Wed, 15 Jul 2020 11:52:12 GMT
+Received: from b06cxnps4076.portsmouth.uk.ibm.com (d06relay13.portsmouth.uk.ibm.com [9.149.109.198])
+        by ppma05fra.de.ibm.com with ESMTP id 327q2y1v9j-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 15 Jul 2020 11:52:11 +0000
+Received: from d06av24.portsmouth.uk.ibm.com (mk.ibm.com [9.149.105.60])
+        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 06FBq9eH48955640
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 15 Jul 2020 11:52:09 GMT
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id E72AD4203F;
+        Wed, 15 Jul 2020 11:52:08 +0000 (GMT)
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id AD19742041;
+        Wed, 15 Jul 2020 11:52:07 +0000 (GMT)
+Received: from swastik.ibm.com (unknown [9.160.119.166])
+        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Wed, 15 Jul 2020 11:52:07 +0000 (GMT)
+From:   Nayna Jain <nayna@linux.ibm.com>
+To:     linuxppc-dev@ozlabs.org
+Cc:     Michael Ellerman <mpe@ellerman.id.au>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        Daniel Axtens <dja@axtens.net>, linux-kernel@vger.kernel.org,
+        Nayna Jain <nayna@linux.ibm.com>
+Subject: [PATCH v3] powerpc/pseries: detect secure and trusted boot state of the system.
+Date:   Wed, 15 Jul 2020 07:52:01 -0400
+Message-Id: <1594813921-12425-1-git-send-email-nayna@linux.ibm.com>
+X-Mailer: git-send-email 1.8.3.1
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-07-15_10:2020-07-15,2020-07-15 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ adultscore=0 lowpriorityscore=0 impostorscore=0 malwarescore=0 spamscore=0
+ mlxscore=0 phishscore=0 bulkscore=0 mlxlogscore=999 suspectscore=1
+ clxscore=1011 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2007150093
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 15, 2020 at 06:16:59PM +0800, Jason Wang wrote:
-> 
-> On 2020/7/15 下午5:50, Michael S. Tsirkin wrote:
-> > On Wed, Jul 15, 2020 at 10:31:09AM +0200, Pierre Morel wrote:
-> > > If protected virtualization is active on s390, the virtio queues are
-> > > not accessible to the host, unless VIRTIO_F_IOMMU_PLATFORM has been
-> > > negotiated. Use the new arch_validate_virtio_features() interface to
-> > > fail probe if that's not the case, preventing a host error on access
-> > > attempt.
-> > > 
-> > > Signed-off-by: Pierre Morel <pmorel@linux.ibm.com>
-> > > Reviewed-by: Cornelia Huck <cohuck@redhat.com>
-> > > Acked-by: Halil Pasic <pasic@linux.ibm.com>
-> > > Acked-by: Christian Borntraeger <borntraeger@de.ibm.com>
-> > > ---
-> > >   arch/s390/mm/init.c | 28 ++++++++++++++++++++++++++++
-> > >   1 file changed, 28 insertions(+)
-> > > 
-> > > diff --git a/arch/s390/mm/init.c b/arch/s390/mm/init.c
-> > > index 6dc7c3b60ef6..d39af6554d4f 100644
-> > > --- a/arch/s390/mm/init.c
-> > > +++ b/arch/s390/mm/init.c
-> > > @@ -45,6 +45,7 @@
-> > >   #include <asm/kasan.h>
-> > >   #include <asm/dma-mapping.h>
-> > >   #include <asm/uv.h>
-> > > +#include <linux/virtio_config.h>
-> > >   pgd_t swapper_pg_dir[PTRS_PER_PGD] __section(.bss..swapper_pg_dir);
-> > > @@ -161,6 +162,33 @@ bool force_dma_unencrypted(struct device *dev)
-> > >   	return is_prot_virt_guest();
-> > >   }
-> > > +/*
-> > > + * arch_validate_virtio_features
-> > > + * @dev: the VIRTIO device being added
-> > > + *
-> > > + * Return an error if required features are missing on a guest running
-> > > + * with protected virtualization.
-> > > + */
-> > > +int arch_validate_virtio_features(struct virtio_device *dev)
-> > > +{
-> > > +	if (!is_prot_virt_guest())
-> > > +		return 0;
-> > > +
-> > > +	if (!virtio_has_feature(dev, VIRTIO_F_VERSION_1)) {
-> > > +		dev_warn(&dev->dev,
-> > > +			 "legacy virtio not supported with protected virtualization\n");
-> > > +		return -ENODEV;
-> > > +	}
-> > > +
-> > > +	if (!virtio_has_feature(dev, VIRTIO_F_IOMMU_PLATFORM)) {
-> > > +		dev_warn(&dev->dev,
-> > > +			 "support for limited memory access required for protected virtualization\n");
-> > > +		return -ENODEV;
-> > > +	}
-> > > +
-> > > +	return 0;
-> > > +}
-> > > +
-> > >   /* protected virtualization */
-> > >   static void pv_init(void)
-> > >   {
-> > What bothers me here is that arch code depends on virtio now.
-> > It works even with a modular virtio when functions are inline,
-> > but it seems fragile: e.g. it breaks virtio as an out of tree module,
-> > since layout of struct virtio_device can change.
-> 
-> 
-> The code was only called from virtio.c so it should be fine.
-> 
-> And my understanding is that we don't need to care about the kABI issue
-> during upstream development?
-> 
-> Thanks
+The device-tree property to check secure and trusted boot state is
+different for guests(pseries) compared to baremetal(powernv).
 
-No, but so far it has been convenient at least for me, for development,
-to just be able to unload all of virtio and load a different version.
+This patch updates the existing is_ppc_secureboot_enabled() and
+is_ppc_trustedboot_enabled() functions to add support for pseries.
 
+The secureboot and trustedboot state are exposed via device-tree property:
+/proc/device-tree/ibm,secure-boot and /proc/device-tree/ibm,trusted-boot
 
-> 
-> > 
-> > I'm not sure what to do with this yet, will try to think about it
-> > over the weekend. Thanks!
-> > 
-> > 
-> > > -- 
-> > > 2.25.1
+The values of ibm,secure-boot under pseries are interpreted as:
+
+0 - Disabled
+1 - Enabled in Log-only mode. This patch interprets this value as
+disabled, since audit mode is currently not supported for Linux.
+2 - Enabled and enforced.
+3-9 - Enabled and enforcing; requirements are at the discretion of the
+operating system.
+
+The values of ibm,trusted-boot under pseries are interpreted as:
+0 - Disabled
+1 - Enabled
+
+Signed-off-by: Nayna Jain <nayna@linux.ibm.com>
+Reviewed-by: Daniel Axtens <dja@axtens.net>
+---
+v3:
+* fixed double check. Thanks Daniel for noticing it.
+* updated patch description.
+
+v2:
+* included Michael Ellerman's feedback.
+* added Daniel Axtens's Reviewed-by.
+
+ arch/powerpc/kernel/secure_boot.c | 19 +++++++++++++++++--
+ 1 file changed, 17 insertions(+), 2 deletions(-)
+
+diff --git a/arch/powerpc/kernel/secure_boot.c b/arch/powerpc/kernel/secure_boot.c
+index 4b982324d368..118bcb5f79c4 100644
+--- a/arch/powerpc/kernel/secure_boot.c
++++ b/arch/powerpc/kernel/secure_boot.c
+@@ -6,6 +6,7 @@
+ #include <linux/types.h>
+ #include <linux/of.h>
+ #include <asm/secure_boot.h>
++#include <asm/machdep.h>
+ 
+ static struct device_node *get_ppc_fw_sb_node(void)
+ {
+@@ -23,12 +24,19 @@ bool is_ppc_secureboot_enabled(void)
+ {
+ 	struct device_node *node;
+ 	bool enabled = false;
++	u32 secureboot;
+ 
+ 	node = get_ppc_fw_sb_node();
+ 	enabled = of_property_read_bool(node, "os-secureboot-enforcing");
+-
+ 	of_node_put(node);
+ 
++	if (enabled)
++		goto out;
++
++	if (!of_property_read_u32(of_root, "ibm,secure-boot", &secureboot))
++		enabled = (secureboot > 1);
++
++out:
+ 	pr_info("Secure boot mode %s\n", enabled ? "enabled" : "disabled");
+ 
+ 	return enabled;
+@@ -38,12 +46,19 @@ bool is_ppc_trustedboot_enabled(void)
+ {
+ 	struct device_node *node;
+ 	bool enabled = false;
++	u32 trustedboot;
+ 
+ 	node = get_ppc_fw_sb_node();
+ 	enabled = of_property_read_bool(node, "trusted-enabled");
+-
+ 	of_node_put(node);
+ 
++	if (enabled)
++		goto out;
++
++	if (!of_property_read_u32(of_root, "ibm,trusted-boot", &trustedboot))
++		enabled = (trustedboot > 0);
++
++out:
+ 	pr_info("Trusted boot mode %s\n", enabled ? "enabled" : "disabled");
+ 
+ 	return enabled;
+-- 
+2.26.2
 
