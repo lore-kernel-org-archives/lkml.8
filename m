@@ -2,117 +2,100 @@ Return-Path: <SRS0=kup7=A2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E0BEC433E8
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 08:31:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0925FC433E3
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 08:33:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1F0F020663
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 08:31:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594801910;
-	bh=yiJirQWg9zviSkJbXACuIur4MPrAwCoUUHNi4tNnYFg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=HoCW+xx+meLE6SJqVl7KejwNMbndHlIFpNplPx43uuLFNU8sBvO+P5p5PNCwvb4P1
-	 WDnHD+xTXhB51mw/7iz1qWoKzNRELCe3qZNZ5/w/0shcxSFNw6zaZeF26fnScQKxiE
-	 aVX5L40yVC5U5SSYCnboLAypPNE+UU22Kx+AuAFo=
+	by mail.kernel.org (Postfix) with ESMTP id E6BF52076D
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 08:33:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730098AbgGOIbt (ORCPT
+        id S1728827AbgGOIdH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 04:31:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39304 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728626AbgGOIbs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 04:31:48 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8DBF620657;
-        Wed, 15 Jul 2020 08:31:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594801908;
-        bh=yiJirQWg9zviSkJbXACuIur4MPrAwCoUUHNi4tNnYFg=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=QDgFNGtzY6hhT0au1lwQAZoZYeOutZO1dNWi+TzklJXkHm0K8yoe8CgBFrF6bZjrt
-         x4icQi7Qn1aOHEg5jsxqTU0ws/FI8X7zj/XgTzdFzIGkhpp4tixfQ0opMzxHQVz4kt
-         kzzAIXM/piLhm7hOZS1O6DVm3C8g4z6KyBpGxvTQ=
-Date:   Wed, 15 Jul 2020 10:31:44 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     B K Karthik <bkkarthik@pesu.pes.edu>
-Cc:     Ian Abbott <abbotti@mev.co.uk>,
-        H Hartley Sweeten <hsweeten@visionengravers.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Xiyu Yang <xiyuyang19@fudan.edu.cn>,
-        Michel Lespinasse <walken@google.com>,
-        Divyansh Kamboj <kambojdivyansh2000@gmail.com>,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] staging: comedi: comedi_fops.c: changed type in
- assignment to unsigned int *
-Message-ID: <20200715083144.GA2716443@kroah.com>
-References: <20200715044813.fww3regsgsbgyp7b@pesu-pes-edu>
- <20200715070842.GA2303720@kroah.com>
- <CAAhDqq3u_0wCRGDaWRGgtC6bkx6t+AubAXfnX_f7V0t10BRuuA@mail.gmail.com>
+        Wed, 15 Jul 2020 04:33:07 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:37977 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726034AbgGOIdH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jul 2020 04:33:07 -0400
+Received: by mail-ot1-f66.google.com with SMTP id t18so849002otq.5;
+        Wed, 15 Jul 2020 01:33:06 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=o5sAqUgn9cvxe+xg29sqCECVsVXdkGKTE+GopvFS8Qg=;
+        b=C/uPXLFdBFEYtcdajfHjCu7IaWrTLH04H5KC1xTdjmDSaxkWCmz6mJO1e3qcITZPHT
+         1LDmMGcNKjcHQriJnOX+uZfkDmnwLA0glozQyqmn5HOysXqDvDgBAErGmyxO5ucqmB0l
+         RDKHFuU1sUIuU4cDWL+/dGeobJtkStSAxTG4eTeKvZemEFuRIJAyZFbVLUGvplT1A1hw
+         UfQ+To7zesobhAE7M5RzKqCBHOUDXT0D2j1meW37KUn1PISv85IkrX8L8y3+SgJhNcfc
+         sKmLEo5IT+27SewyIWoFovvJ0EFVoj+bvEMubQZ9q82cyly2xB0WW8+531jnUT/agUEi
+         iPFQ==
+X-Gm-Message-State: AOAM532CGm9kWqZQYZzTdh9UUTnrzo3I/oFhmRpfVg+e0rxvaJiOvNeL
+        WYt4UWA2+LGpeEVWcYQpijLQlPBsxun3TnM9rdk=
+X-Google-Smtp-Source: ABdhPJxRf7X46l9/RuxnR97QYrbp+tXYdwoLbtediLsDriX3jmkzvVFsmx9ys9vBTFJoKvIU4nKd978smmCpgCdrPLg=
+X-Received: by 2002:a9d:2646:: with SMTP id a64mr7340091otb.107.1594801986000;
+ Wed, 15 Jul 2020 01:33:06 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAAhDqq3u_0wCRGDaWRGgtC6bkx6t+AubAXfnX_f7V0t10BRuuA@mail.gmail.com>
+References: <20200714123419.3390-1-aford173@gmail.com> <20200714123419.3390-2-aford173@gmail.com>
+ <c2e52f87-b2cf-ca36-7780-5e206f065d40@cogentembedded.com>
+In-Reply-To: <c2e52f87-b2cf-ca36-7780-5e206f065d40@cogentembedded.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Wed, 15 Jul 2020 10:32:54 +0200
+Message-ID: <CAMuHMdUYdGD2Us8W8FvSi-2MTJbDOvW4k_eC+YrTgdmZS97LCQ@mail.gmail.com>
+Subject: Re: [PATCH V2 2/2] dt-bindings: arm: renesas: Document beacon-rzg2m
+To:     Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Cc:     Adam Ford <aford173@gmail.com>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Adam Ford-BE <aford@beaconembedded.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 15, 2020 at 01:56:45PM +0530, B K Karthik wrote:
-> On Wed, Jul 15, 2020, 12:38 PM Greg Kroah-Hartman <
-> gregkh@linuxfoundation.org> wrote:
-> 
-> > On Wed, Jul 15, 2020 at 12:48:13AM -0400, B K Karthik wrote:
-> > > fixed a sparse warning by changing the type in
-> > > assignment from void [noderef] __user * to unsigned int *
-> > > (different address space)
-> > >
-> > > Signed-off-by: B K Karthik <karthik.bk2000@live.com>
-> > > ---
-> > >  drivers/staging/comedi/comedi_fops.c | 2 +-
-> > >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > >
-> > > diff --git a/drivers/staging/comedi/comedi_fops.c
-> > b/drivers/staging/comedi/comedi_fops.c
-> > > index 3f70e5dfac39..4cc012e231b7 100644
-> > > --- a/drivers/staging/comedi/comedi_fops.c
-> > > +++ b/drivers/staging/comedi/comedi_fops.c
-> > > @@ -2956,7 +2956,7 @@ static int get_compat_cmd(struct comedi_cmd *cmd,
-> > >       cmd->scan_end_arg = v32.scan_end_arg;
-> > >       cmd->stop_src = v32.stop_src;
-> > >       cmd->stop_arg = v32.stop_arg;
-> > > -     cmd->chanlist = compat_ptr(v32.chanlist);
-> > > +     cmd->chanlist = (unsigned int *) compat_ptr(v32.chanlist);
-> > >       cmd->chanlist_len = v32.chanlist_len;
-> > >       cmd->data = compat_ptr(v32.data);
-> > >       cmd->data_len = v32.data_len;
+Hi Sergei,
+
+On Wed, Jul 15, 2020 at 10:16 AM Sergei Shtylyov
+<sergei.shtylyov@cogentembedded.com> wrote:
+> On 14.07.2020 15:34, Adam Ford wrote:
+> > Beacon EmbeddedWorks in introducing a development kit based on the
+> > Renesas RZ/G2M platform.  This patch adds the entry to the bindings
+> > list.
 > >
-> > Always run your patches through checkpatch before sending them, so you
-> > do not have a grumpy maintainer telling you that you have to run
-> > checkpatch on your patch before sending them.
-> >
-> 
-> I will. Sorry for that.
-> 
-> But the error that's being shown in this patch is something that comes up
-> on its own.
+> > Signed-off-by: Adam Ford <aford173@gmail.com>
 
-No it is not.
+> > --- a/Documentation/devicetree/bindings/arm/renesas.yaml
+> > +++ b/Documentation/devicetree/bindings/arm/renesas.yaml
+> > @@ -118,6 +118,7 @@ properties:
+> >           items:
+> >             - enum:
+> >                 - hoperun,hihope-rzg2m # HopeRun HiHope RZ/G2M platform
+> > +              - beacon,beacon-rzg2m # Beacon EmbeddedWorks RZ/G2M Kit
+>
+>     Why the vendor-prefixes.yaml file calls it Compass Electronics Group?
 
-> git format-patch leaves trailing whitespace in blank lines.
+See commit f756619f26edf74a ("dt-bindings: vendor-prefixes: Add Beacon
+vendor prefix"):
 
-It does?  Where is any trailing whitespace here?  That's not the issue.
+    Beacon EmebeddedWorks is the brand owned by Compass Electronics Group,
+    LLC based out of the United States.
 
-> It has been reported to the maintainers.
+Gr{oetje,eeting}s,
 
-It was?  Where?
+                        Geert
 
-thanks,
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
-greg k-h
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
