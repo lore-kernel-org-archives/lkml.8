@@ -7,53 +7,53 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 615C9C433E8
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DFD9C433E6
 	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 23:30:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 42251206D5
+	by mail.kernel.org (Postfix) with ESMTP id 1CE0F20658
 	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 23:30:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="e8cqtuVA"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="TsPBifbo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727810AbgGOXag (ORCPT
+        id S1727112AbgGOXaf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 19:30:36 -0400
-Received: from esa3.hgst.iphmx.com ([216.71.153.141]:49845 "EHLO
+        Wed, 15 Jul 2020 19:30:35 -0400
+Received: from esa3.hgst.iphmx.com ([216.71.153.141]:49850 "EHLO
         esa3.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726770AbgGOXad (ORCPT
+        with ESMTP id S1727047AbgGOXae (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 19:30:33 -0400
+        Wed, 15 Jul 2020 19:30:34 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
   d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1594855833; x=1626391833;
+  t=1594855834; x=1626391834;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=5kQrWwHrAj/YyBZ09Df67BPo3nptH7Z6t1IAIOeIJ0Q=;
-  b=e8cqtuVAjexuflWwLObcn+APMsqjtoOl5wCLSaf7wN7Lh9y5fpW/mZZ1
-   R/Q6PcT9Et5bCIEtXGLiwoDYS8fEJ1bLJWK7U4XhHyNnAazkkQgEA1Ljw
-   RxvimJSwlUP+qQF/NonfaJkhJdQH7zOnQ/q/lmlBGRlmrBqs/YP9Q6WnM
-   SfbBRXvNpfTTuCVnTTRyWYw8QXuKe3DPk0lqHKKIrN63vZ7qnAhhuqtsm
-   fhaPIdq81RVKMHOKBBI/UOmO4ADFRYrGzuxnq1/tw9kA9faQWLuQ1Xc7w
-   l3BgGCCVa4vjjZlu/6jnpSKHWX+i+aI/EKbs1kMzlEwXuQAYwrPDYC+2w
-   Q==;
-IronPort-SDR: MBqbzWLwu3+0tOVvw/gbAjFxBQ7WkHMitFCxHQrObE8Vlos/qhyihg3+4k/g5J0uq+13gkMpV2
- hbT/EIS12qAQfglQZKkpJxjeyTXUyVEBDeXupu2uArcTxFO57KttwM1z8IDASYMTFZqAFEuaDj
- 6PhEOD9//NQtHM5EPs9LkUzITMONckybIAX0frzUpZ6pUp6ZGWXM/EbP8iNu9L2uiqYrpUqCib
- Qiz09PUYE6+8mqGK2LEns22wWt7AQQkzHjnfthfXEZ+Qmd++Ustliw0v9BdGDf7mzYLqtKXu+u
- AJI=
+  bh=1WUJsuuWe1ZBua62bFIdOijTgWGShB9OAlNDVmWfFmY=;
+  b=TsPBifboiuVFCCuQ4BhaQF8e9Y9VJxJX1Yem1CL9I6hQt5Mbya3yK4Al
+   eXgL9xTA0mqltFMzsyZaY7jLCqg3kOZT69qTWGo7GcLO4q5/LPTr3iHZC
+   JWIUIyFuRlIr5UQvJp+Lw3EAnHmFDJAF7JD+kJ4ROS5Eg3ZkDFe9RWVwU
+   aNg3CtgIULZCV/aZ369FzYo68OQLUsxUmCu+GCYxyj9brzJ/pbU1nmM4A
+   me+2JyD+JANzpWCkDIShmwlbkH31VRT+umPWsqTP2KUG/iT1q8x5F4Obg
+   0HgHKnf7/x1cLvEqdR1ScMACS1SNyUabYBpmfNCq6vH1xgNmLft9pYFt9
+   w==;
+IronPort-SDR: VRG942NGLmNjMASHaJzkBluPVMBpTqhtym6MtWUapENhFBtqCh+SZU378lH49vFH/Y6XXU1iMV
+ af27qBOz7aHpnfvqPVs/7O8MTCVxemGSmJMx3DeP2/sm9Rq6zq9G3jlJwZhnpLmliRbKfGxCoG
+ TwbCX0p90u0aLJOIVvdmLTRJNnkF+fLccf6VP0tZghpOBjhKGvu4FKYq0vw/r//eKDW/tb4GYv
+ gf6CRKrIdZpVLsqy+XGOZnapxw7UO/AcPqZMlPxCgHlVgGkwlqed7s6KB0bbjGu2CgkTqwBxZA
+ 7Ow=
 X-IronPort-AV: E=Sophos;i="5.75,357,1589212800"; 
-   d="scan'208";a="146868541"
+   d="scan'208";a="146868544"
 Received: from uls-op-cesaip01.wdc.com (HELO uls-op-cesaep01.wdc.com) ([199.255.45.14])
-  by ob1.hgst.iphmx.com with ESMTP; 16 Jul 2020 07:30:19 +0800
-IronPort-SDR: B5mmnYotYoHoJWTllCVoF3OCWyZuHY+PMTjhxeL3Kt6GCqwppWMdnzwMNf2mGcIyI6BjNtfPUC
- FYQBApjTU+hA+NLVM5ZwDspGj5ydywl1U=
+  by ob1.hgst.iphmx.com with ESMTP; 16 Jul 2020 07:30:23 +0800
+IronPort-SDR: 23mcAq4JMdd+m6NbmF+zNTphh6dgWPkayNMYKsaVJZQmfp0VecHPvIMRxPoWnWL2KcWH5zFsO6
+ x4yMDcC9NlHxpxJW3S45q/fJkxqKvbRMk=
 Received: from uls-op-cesaip01.wdc.com ([10.248.3.36])
-  by uls-op-cesaep01.wdc.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jul 2020 16:18:43 -0700
-IronPort-SDR: E0hQIX7CydO5HGsevPgVvucJmOwMETCcCXqbbTiK7oZt6znBE0XEHaqeqCDlPrG9tXKWpG8heY
- QC3A6nrTbKlQ==
+  by uls-op-cesaep01.wdc.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jul 2020 16:18:48 -0700
+IronPort-SDR: jolcTqH56Kqn7iIi8sFylTtgUKK7/Idjrhr2qok3aASAzRD1+74v7auysvNA/+tadSVs44nyYc
+ W3zYMoqRAm7g==
 WDCIronportException: Internal
 Received: from cnf009656.ad.shared (HELO jedi-01.hgst.com) ([10.86.58.5])
-  by uls-op-cesaip01.wdc.com with ESMTP; 15 Jul 2020 16:30:18 -0700
+  by uls-op-cesaip01.wdc.com with ESMTP; 15 Jul 2020 16:30:21 -0700
 From:   Atish Patra <atish.patra@wdc.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     Atish Patra <atish.patra@wdc.com>,
@@ -66,9 +66,9 @@ Cc:     Atish Patra <atish.patra@wdc.com>,
         Sudeep Holla <sudeep.holla@arm.com>,
         Vincent Chen <vincent.chen@sifive.com>,
         Zong Li <zong.li@sifive.com>
-Subject: [PATCH 2/4] RISC-V: Set maximum number of mapped pages correctly
-Date:   Wed, 15 Jul 2020 16:30:07 -0700
-Message-Id: <20200715233009.27183-3-atish.patra@wdc.com>
+Subject: [PATCH 4/4] riscv: Parse all memory blocks to remove unusable memory
+Date:   Wed, 15 Jul 2020 16:30:09 -0700
+Message-Id: <20200715233009.27183-5-atish.patra@wdc.com>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20200715233009.27183-1-atish.patra@wdc.com>
 References: <20200715233009.27183-1-atish.patra@wdc.com>
@@ -79,34 +79,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently, maximum number of mapper pages are set to the pfn calculated
-from the memblock size of the memblock containing kernel. This will work
-until that memblock spans the entire memory. However, it will be set to
-a wrong value if there are multiple memblocks defined in kernel
-(e.g. with efi runtime services).
+Currently, maximum physical memory allowed is equal to -PAGE_OFFSET.
+That's why we remove any memory blocks spanning beyond that size. However,
+it is done only for memblock containing linux kernel which will not work
+if there are multiple memblocks.
 
-Set the the maximum value to the pfn calculated from dram size.
+Process all memory blocks to figure out how much memory needs to be removed
+and remove at the end instead of updating the memblock list in place.
 
 Signed-off-by: Atish Patra <atish.patra@wdc.com>
 ---
- arch/riscv/mm/init.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/riscv/mm/init.c | 31 +++++++++++++++++--------------
+ 1 file changed, 17 insertions(+), 14 deletions(-)
 
 diff --git a/arch/riscv/mm/init.c b/arch/riscv/mm/init.c
-index f4adb3684f3d..8d22973bde40 100644
+index f818a47a72d1..79e9d55bdf1a 100644
 --- a/arch/riscv/mm/init.c
 +++ b/arch/riscv/mm/init.c
-@@ -150,9 +150,9 @@ void __init setup_bootmem(void)
+@@ -147,26 +147,29 @@ void __init setup_bootmem(void)
+ {
+ 	struct memblock_region *reg;
+ 	phys_addr_t mem_size = 0;
++	phys_addr_t total_mem = 0;
++	phys_addr_t mem_start, end = 0;
+ 	phys_addr_t vmlinux_end = __pa_symbol(&_end);
+ 	phys_addr_t vmlinux_start = __pa_symbol(&_start);
+ 
+ 	/* Find the memory region containing the kernel */
+ 	for_each_memblock(memory, reg) {
+-		phys_addr_t end = reg->base + reg->size;
+-
+-		if (reg->base <= vmlinux_start && vmlinux_end <= end) {
+-			mem_size = min(reg->size, (phys_addr_t)-PAGE_OFFSET);
+-
+-			/*
+-			 * Remove memblock from the end of usable area to the
+-			 * end of region
+-			 */
+-			if (reg->base + mem_size < end)
+-				memblock_remove(reg->base + mem_size,
+-						end - reg->base - mem_size);
+-		}
++		end = reg->base + reg->size;
++		if (!total_mem)
++			mem_start = reg->base;
++		if (reg->base <= vmlinux_start && vmlinux_end <= end)
++			BUG_ON(reg->size == 0);
++		total_mem = total_mem + reg->size;
+ 	}
+-	BUG_ON(mem_size == 0);
++
++	/*
++	 * Remove memblock from the end of usable area to the
++	 * end of region
++	 */
++	mem_size = min(total_mem, (phys_addr_t)-PAGE_OFFSET);
++	if (mem_start + mem_size < end)
++		memblock_remove(mem_start + mem_size,
++				end - mem_start - mem_size);
+ 
  	/* Reserve from the start of the kernel to the end of the kernel */
  	memblock_reserve(vmlinux_start, vmlinux_end - vmlinux_start);
- 
--	set_max_mapnr(PFN_DOWN(mem_size));
- 	max_pfn = PFN_DOWN(memblock_end_of_DRAM());
- 	max_low_pfn = max_pfn;
-+	set_max_mapnr(max_low_pfn);
- 
- #ifdef CONFIG_BLK_DEV_INITRD
- 	setup_initrd();
 -- 
 2.24.0
 
