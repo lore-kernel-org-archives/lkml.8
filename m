@@ -2,126 +2,108 @@ Return-Path: <SRS0=kup7=A2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9DD6C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 13:24:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F621C433E4
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 13:27:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 97871206D5
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 13:24:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594819450;
-	bh=0ySNGf0015Xk70pMqOWm7F13UdGwLRL7LAS7WodGYLI=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=pU0PTGeiighIHy2jk7M7Z+WiNFw5abTbp0TUVN3yF9dmTzW16/ykZTw3Mc/uW1Juk
-	 XrsToaAvlMrEeLT/vP7ePGS3+JR5nKnQPP/KFaUxrhlBNn8DuPDDGfAFCl6hHZ6jRV
-	 zn07DDUh7AgrJG2lmCjKLc23zGA1gyKJC6t/TKL8=
+	by mail.kernel.org (Postfix) with ESMTP id 6E6C020578
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 13:27:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iDq2OQUo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731846AbgGONYJ (ORCPT
+        id S1731758AbgGON1a (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 09:24:09 -0400
-Received: from mail-oo1-f65.google.com ([209.85.161.65]:35394 "EHLO
-        mail-oo1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730868AbgGONYI (ORCPT
+        Wed, 15 Jul 2020 09:27:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41766 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730868AbgGON13 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 09:24:08 -0400
-Received: by mail-oo1-f65.google.com with SMTP id w1so457900ooj.2;
-        Wed, 15 Jul 2020 06:24:07 -0700 (PDT)
+        Wed, 15 Jul 2020 09:27:29 -0400
+Received: from mail-il1-x143.google.com (mail-il1-x143.google.com [IPv6:2607:f8b0:4864:20::143])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5627BC061755;
+        Wed, 15 Jul 2020 06:27:29 -0700 (PDT)
+Received: by mail-il1-x143.google.com with SMTP id s21so1945172ilk.5;
+        Wed, 15 Jul 2020 06:27:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=PbxQ2FDotI1NR/7QgrtYPUlW34gpA/IpqMQYvPXzsaU=;
+        b=iDq2OQUoCKcNJHDuF1T6d6391NGSAhrjIFSytd7aoJCNDirq1KL+Psa6IKX5H6ipVM
+         8EveZhhHNSyKFw/tzyQaOtNXZeQzcR0GF/MIV9VZCU3jRmVk/X8xXOqb+mrXQZdVOiU8
+         sgMdsj24bA2TqMGMWY7Lz/L3AMdEsknaRLHa5wY5RUFh0epZQ4o8wNzCv5KSgdgGlBB9
+         +RS2abuIaRFEy8FXo+KOu/hb9/fZigZCnkQeXHTxpJ4YqlMWMYl++BVLzDnQ9W7RuCH7
+         jioDJ281lKpUYjK63GolcPL8BXF8eNMnTqSrgNmhHV2xS43l9OL+oaM5EOLOuNDBUEG4
+         Abog==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=ybTRMRwTXg8GftT6GqtnDN/MiNSxSxn6EjDTyKGp5Qk=;
-        b=j9DyxIOxG7B7a8H7FBQ/VbVPWsPA3d+bE/nAUMv3sjVGijrnOrpul8BoA0Xl6WdZJw
-         Cfn/58PQytWwq6oC3TZpE2EYj8xBQ4mrzM3UIvJC+iU86Mhjs96Q5pk960HzFVZgLhT5
-         I3Ff5iC49c6BOKcBEDyWx5pygZPCAlTHPmD40NMhxRdVEboLtytoym/uxWJvicrsNUV9
-         j9NL/wgO14tZxnj5iArdsIVkA/DOiMUVMSH4FjjBe9kAfF1hyZcEDjgpnxXJmAH+zP7+
-         TbkubSsrY2WR9tQp19XVrqIEuyvhGN3JwwKuglk6nLISKgaW0H9D8MEzbH0CQtHAsN68
-         iJqw==
-X-Gm-Message-State: AOAM532pzmwJMyRlIh00HneA/eg5Pc9pb3yp2vJaXd2RkSnQkRlXrBad
-        m5ZpoYS86p5J3WwCSJyf5/Ptdo+vJP6HpVB5Bd0=
-X-Google-Smtp-Source: ABdhPJxMCfbP+2jw0s4zpYMWrMAbGRmywLWYB0Np/Uh44G/h6/hOUJM7OZKrC4qaIHoEibMSyvOp3EYnmEaG8iTzlPA=
-X-Received: by 2002:a4a:2459:: with SMTP id v25mr9382879oov.75.1594819447535;
- Wed, 15 Jul 2020 06:24:07 -0700 (PDT)
+        bh=PbxQ2FDotI1NR/7QgrtYPUlW34gpA/IpqMQYvPXzsaU=;
+        b=iJzW6yLowkHcRJe1k04k03mYRvyXpkn8IyqtsYCaiFMjXs2YBRg+qEPzcY51A69nBF
+         EGm7qkXhmD8NR1itV/eAUrkVCfVsVOg8GPHE9kNx8h/rQ+gCi8nVGAtNQvz/WQz0nuCN
+         nA7v2XO6CtHB2NYxEBrHYRx9y7WWWOhK7x+Mk7vf9fODrZdwqHaEWbZAHC4DGsRap7nh
+         UZMv79NmM3xrmIk5Jz8535WUg+a8u77Njt5Ciu1vAXqBSPg8Vf29I4qeVsLPj2aCeol3
+         M2jWa9jD/w8iMEAWRt3HKkkw+srgx1Eu7n7UK/nO8OzuUa0CRRaVFvMCCbDn1ljo3eYN
+         TcoA==
+X-Gm-Message-State: AOAM5309QliQa93XSQ6I9C7UBAqnfU7NJB4NFXCfDK/r23rG24VxiE1k
+        vSCJMOL1jKaWqhj7gGLdTxpGZeAR2hZmGxILS+Pepw==
+X-Google-Smtp-Source: ABdhPJwdqZKNGvFCLxnhq+oCKi4llzKqdgvXEJwMn81yXVIrPJa37UczDq1B8Jt5nKtorIFiwpB6OK09gkPFEMUZ+x4=
+X-Received: by 2002:a92:5a52:: with SMTP id o79mr8892696ilb.89.1594819648301;
+ Wed, 15 Jul 2020 06:27:28 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200715082634.3024816-1-lee.jones@linaro.org>
-In-Reply-To: <20200715082634.3024816-1-lee.jones@linaro.org>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Wed, 15 Jul 2020 15:23:56 +0200
-Message-ID: <CAJZ5v0jra1Q=L9H-9jJTFERbwSt5t4iF=vmtv9_01roa6bPB3A@mail.gmail.com>
-Subject: Re: [PATCH v2 00/13] Rid W=1 warnings in CPUFreq
-To:     Lee Jones <lee.jones@linaro.org>
-Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>
+References: <20200714123419.3390-1-aford173@gmail.com> <20200714123419.3390-2-aford173@gmail.com>
+ <CAMuHMdVS6Hf344EbyroGCWR_yxtO3DZh=JUJhauy5OeVG2hajA@mail.gmail.com>
+In-Reply-To: <CAMuHMdVS6Hf344EbyroGCWR_yxtO3DZh=JUJhauy5OeVG2hajA@mail.gmail.com>
+From:   Adam Ford <aford173@gmail.com>
+Date:   Wed, 15 Jul 2020 08:27:16 -0500
+Message-ID: <CAHCN7xKpXErWc8Bjji1==8+AL-9oeFn3QsP-qmE4QD2NpGt=3Q@mail.gmail.com>
+Subject: Re: [PATCH V2 2/2] dt-bindings: arm: renesas: Document beacon-rzg2m
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Adam Ford-BE <aford@beaconembedded.com>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 15, 2020 at 10:27 AM Lee Jones <lee.jones@linaro.org> wrote:
+On Wed, Jul 15, 2020 at 3:58 AM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
 >
-> This set is part of a larger effort attempting to clean-up W=1
-> kernel builds, which are currently overwhelmingly riddled with
-> niggly little warnings.
+> On Tue, Jul 14, 2020 at 2:34 PM Adam Ford <aford173@gmail.com> wrote:
+> > Beacon EmbeddedWorks in introducing a development kit based on the
+> > Renesas RZ/G2M platform.  This patch adds the entry to the bindings
+> > list.
+> >
+> > Signed-off-by: Adam Ford <aford173@gmail.com>
 >
-> After these patches are applied, the build system no longer
-> complains about any W=0 nor W=1 level warnings in drivers/cpufreq.
+> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> i.e. will queue in renesas-devel for v5.9, with the typo pointed out
+> by Sergei fixed.
+
+Since you pointed out some stuff I should correct in patch 1/2.
+Should I just re-submit the first patch by itself, or do you want me
+to submit 2/2 with these fixes?
+
+adam
+
 >
-> Hurrah!
+> Gr{oetje,eeting}s,
 >
-> Changelog
->
-> v1 => v2:
->  - Collect *-bys
->  - Use __maybe_unused instead of removing device IDs
->  - Use __always_unused instead of using unused variables
->  - Include architecture header instead of creating new include file
->
-> Lee Jones (13):
->   cpufreq: freq_table: Demote obvious misuse of kerneldoc to standard
->     comment blocks
->   cpufreq: cpufreq: Demote lots of function headers unworthy of
->     kerneldoc status
->   cpufreq: cpufreq_governor: Demote store_sampling_rate() header to
->     standard comment block
->   cpufreq: sti-cpufreq: Fix some formatting and misspelling issues
->   cpufreq: pasemi: Include header file for {check,restore}_astate
->     prototypes
->   cpufreq: powernv-cpufreq: Functions only used in call-backs should be
->     static
->   cpufreq: powernv-cpufreq: Fix a bunch of kerneldoc related issues
->   cpufreq: acpi-cpufreq: Mark 'dummy' variable as __always_unused
->   cpufreq: acpi-cpufreq: Mark sometimes used ID structs as
->     __maybe_unused
->   cpufreq: powernow-k8: Mark 'hi' and 'lo' dummy variables as
->     __always_unused
->   cpufreq: pcc-cpufreq: Mark sometimes used ID structs as __maybe_unused
->   cpufreq: intel_pstate: Supply struct attribute description for
->     get_aperf_mperf_shift()
->   cpufreq: amd_freq_sensitivity: Mark sometimes used ID structs as
->     __maybe_unused
->
->  drivers/cpufreq/acpi-cpufreq.c         |  8 +++----
->  drivers/cpufreq/amd_freq_sensitivity.c |  2 +-
->  drivers/cpufreq/cpufreq.c              | 32 ++++++++++++++------------
->  drivers/cpufreq/cpufreq_governor.c     |  2 +-
->  drivers/cpufreq/freq_table.c           |  6 ++---
->  drivers/cpufreq/intel_pstate.c         |  2 ++
->  drivers/cpufreq/pasemi-cpufreq.c       |  2 ++
->  drivers/cpufreq/pcc-cpufreq.c          |  2 +-
->  drivers/cpufreq/powernow-k8.c          |  4 ++--
->  drivers/cpufreq/powernv-cpufreq.c      | 15 ++++++------
->  drivers/cpufreq/sti-cpufreq.c          |  8 +++----
->  11 files changed, 45 insertions(+), 38 deletions(-)
+>                         Geert
 >
 > --
-
-All patches except for the [04/13] (applied by Viresh) and [06/13]
-(requested to be ignored) applied as 5.9 material with the ACKs from
-Viresh, thanks!
+> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+>
+> In personal conversations with technical people, I call myself a hacker. But
+> when I'm talking to journalists I just say "programmer" or something like that.
+>                                 -- Linus Torvalds
