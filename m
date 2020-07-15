@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CDF9C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 16:44:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08853C433E3
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 16:44:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 17ED82071B
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 16:44:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D923220658
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 16:44:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="X02g21ms"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="L4aE+Yg3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726837AbgGOQoH (ORCPT
+        id S1727978AbgGOQoM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 12:44:07 -0400
+        Wed, 15 Jul 2020 12:44:12 -0400
 Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43974 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726859AbgGOQnE (ORCPT
+        with ESMTP id S1726941AbgGOQnH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 12:43:04 -0400
+        Wed, 15 Jul 2020 12:43:07 -0400
 Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D1417C061755;
-        Wed, 15 Jul 2020 09:43:03 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 566DCC061755;
+        Wed, 15 Jul 2020 09:43:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
         References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
         Content-Type:Content-ID:Content-Description;
-        bh=w7JZTeu1VBjKmQFYJ4UVm6XlML5JSLLBrBKAwYZP1sI=; b=X02g21msjtU7jGCjpEDQiNzSrT
-        FJRhv38+J9cMCp7ng59RZkr+tH0CxVIgEacZqXmN99+zowP5jeFQv6RjRuhPwKtFQ6ZeLYvIATMfM
-        PZWQBjtGTL738U+QyR7zOubsL5bbfL7ffnvF9A8mq7hL9f7Z15U8bnmluTTq0O/ZGKu/qpxiP9AB/
-        pSe4fMUnz1YNijQAROdVn6EjnyNw1B/p3hkb5fAnqSDBPfm7etmvY6NFy1NbqgVbIlLh5GjvsynyT
-        dWKOjmtuUbXS/l/oY9O94JhCp8yoMgCYuxwiVeRTFTg8sNq/OMmqaVFmKICNi9w9wrpZiHxCHP+St
-        3piHEE0w==;
+        bh=fhXbIAxOvLawpatfmd6lRi0iAaY9jxDHPqpleO//3Xk=; b=L4aE+Yg3g1NbIvla3uOY8nNuvv
+        xHro/LRvFK2/1oCCYve7o20YWbymTbGUTb3U6vqrRMEQKc8zf6LCT7YbKi0iN7hnr55biodcie9+g
+        0pftmi5/kQpan8J/DPjOGJMmohAANrK19Wv1ZB7vxwCRflQluT09FtXcAD7WOcsVe6aw8j4K2/l0F
+        WsA6LanSiURbIVRjsEnD2lZsEeFjw+PdjFfxFRpTumFToHQUo6igYc2x9ZsIvt7nUwDR5L+7KUalY
+        skYi/R+8rR+IIF2p2EkNiOM9l+wJ2yc71Kfc87zkutPDMy9WTV5ZyBiXr1bZ6JDTIjpftevy/8CuO
+        wB7Pr/OQ==;
 Received: from [2601:1c0:6280:3f0::19c2] (helo=smtpauth.infradead.org)
         by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jvkUo-0000Bh-22; Wed, 15 Jul 2020 16:43:02 +0000
+        id 1jvkUr-0000Bh-Gd; Wed, 15 Jul 2020 16:43:06 +0000
 From:   Randy Dunlap <rdunlap@infradead.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Randy Dunlap <rdunlap@infradead.org>,
         "David S. Miller" <davem@davemloft.net>,
         Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH 7/9 v2 net-next] net: ip6_fib.h: drop duplicate word in comment
-Date:   Wed, 15 Jul 2020 09:42:44 -0700
-Message-Id: <20200715164246.9054-7-rdunlap@infradead.org>
+Subject: [PATCH 9/9 v2 net-next] net: ipv6: drop duplicate word in comment
+Date:   Wed, 15 Jul 2020 09:42:46 -0700
+Message-Id: <20200715164246.9054-9-rdunlap@infradead.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200715164246.9054-1-rdunlap@infradead.org>
 References: <20200715164246.9054-1-rdunlap@infradead.org>
@@ -57,26 +57,27 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Drop doubled word "the" in a comment.
+Drop the doubled word "by" in a comment.
 
 Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
 Cc: "David S. Miller" <davem@davemloft.net>
 Cc: Jakub Kicinski <kuba@kernel.org>
 Cc: netdev@vger.kernel.org
 ---
-v2: move wireless patches to a separate patch series.
+v2: move wireless patches to a separate patch series, though this one
+    is a new patch.
 
- include/net/ip6_fib.h |    2 +-
+ include/linux/ipv6.h |    2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
---- linux-next-20200714.orig/include/net/ip6_fib.h
-+++ linux-next-20200714/include/net/ip6_fib.h
-@@ -166,7 +166,7 @@ struct fib6_info {
- 	struct fib6_node __rcu		*fib6_node;
+--- linux-next-20200714.orig/include/linux/ipv6.h
++++ linux-next-20200714/include/linux/ipv6.h
+@@ -223,7 +223,7 @@ struct ipv6_pinfo {
  
- 	/* Multipath routes:
--	 * siblings is a list of fib6_info that have the the same metric/weight,
-+	 * siblings is a list of fib6_info that have the same metric/weight,
- 	 * destination, but not the same gateway. nsiblings is just a cache
- 	 * to speed up lookup.
+ 	/*
+ 	 * Packed in 16bits.
+-	 * Omit one shift by by putting the signed field at MSB.
++	 * Omit one shift by putting the signed field at MSB.
  	 */
+ #if defined(__BIG_ENDIAN_BITFIELD)
+ 	__s16			hop_limit:9;
