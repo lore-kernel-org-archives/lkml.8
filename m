@@ -7,106 +7,108 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34D7DC433E2
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 06:54:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3E53C433E7
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 06:54:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 108932067D
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 06:54:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A00A72067D
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 06:54:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="ezeH0RHS"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="BfnsMFmO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728925AbgGOGyW (ORCPT
+        id S1728965AbgGOGyn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 02:54:22 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:16207 "EHLO m43-7.mailgun.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727913AbgGOGyW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 02:54:22 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1594796061; h=Message-Id: Date: Subject: Cc: To: From:
- Sender; bh=wGkt8FklgMD72eMdPvilVWPxJAyUfs6VLEOtcOaSnKk=; b=ezeH0RHSQs6AKVw7TRxkgd5X50qzj8fKRD6ZheNMzBulX1yF2etw4ixjrY4ITTQEn0kM7uNB
- ZyREoJa3BNohW5V/SCoVGjGaTF55eEnVj5OEkHVEpfRqWvIPfYCb4+0UDjti2aW70xAqf6ox
- fQxPsGmT7cSO1K0eeVTMA4byJ5w=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n03.prod.us-west-2.postgun.com with SMTP id
- 5f0ea81c512812c0708aa6f7 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Wed, 15 Jul 2020 06:54:20
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 7AF5FC43395; Wed, 15 Jul 2020 06:54:20 +0000 (UTC)
-Received: from tdas-linux.qualcomm.com (unknown [202.46.22.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: tdas)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id E09E5C433C8;
-        Wed, 15 Jul 2020 06:54:16 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org E09E5C433C8
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=tdas@codeaurora.org
-From:   Taniya Das <tdas@codeaurora.org>
-To:     Stephen Boyd <sboyd@kernel.org>,
-        =?UTF-8?q?Michael=20Turquette=20=C2=A0?= <mturquette@baylibre.com>
-Cc:     David Brown <david.brown@linaro.org>,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
-        evgreen@google.com, Taniya Das <tdas@codeaurora.org>
-Subject: [PATCH v0] clk: qcom: gcc: Update disp gpll0 branch for 7180/845
-Date:   Wed, 15 Jul 2020 12:24:10 +0530
-Message-Id: <1594796050-14511-1-git-send-email-tdas@codeaurora.org>
-X-Mailer: git-send-email 2.7.4
+        Wed, 15 Jul 2020 02:54:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37582 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728948AbgGOGym (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jul 2020 02:54:42 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 21B0AC061755;
+        Tue, 14 Jul 2020 23:54:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
+        References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
+        Content-Type:Content-ID:Content-Description;
+        bh=CpKccRUj/EuaoDj7R7PuZcQepyFmkA8DPqq/K86MqLk=; b=BfnsMFmOQCJh97HQsNBH05fn8s
+        ++Uh0aAWxXcwfIlV9f2jLy5hWDPZBGveopAULXGEcaxGXXz61oSNcJukYJYg1s0uu4Wo4r8cC8dKI
+        KakbJcFdon3o4IrEL+DZthCTmhIN1g2WZW9A7O/G6XycyuIiWLQQ3DrgRYa5B+ApRVMyLqu5pTpV9
+        7WW7mCBnRBAfCwic03cNqoM4vAWtMmlOugdxn9fhlT7cszypYcgRFREpA4EfhcWPKbkRQkGSi5RVm
+        e1+kCk4qAPwltKMsquxcKQDP+SoWTjSGRG4kcI2WdgYwlKFBQhQeRqXxq5keAUcjGhQo0tRR427Ao
+        iHGQARUA==;
+Received: from [2001:4bb8:105:4a81:1c8f:d581:a5f2:bdb7] (helo=localhost)
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jvbJP-0001kD-U8; Wed, 15 Jul 2020 06:54:40 +0000
+From:   Christoph Hellwig <hch@lst.de>
+To:     Al Viro <viro@zeniv.linux.org.uk>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 3/4] fs: expose utimes_common
+Date:   Wed, 15 Jul 2020 08:54:33 +0200
+Message-Id: <20200715065434.2550-4-hch@lst.de>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200715065434.2550-1-hch@lst.de>
+References: <20200715065434.2550-1-hch@lst.de>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The display gpll0 branch clock needs to be always left enabled, thus
-move the clock ops to _aon branch ops.
+Rename utimes_common to vfs_utimes and make it available outside of
+utimes.c.  This will be used by the initramfs unpacking code.
 
-Signed-off-by: Taniya Das <tdas@codeaurora.org>
+Signed-off-by: Christoph Hellwig <hch@lst.de>
 ---
- drivers/clk/qcom/gcc-sc7180.c | 2 +-
- drivers/clk/qcom/gcc-sdm845.c | 4 ++--
- 2 files changed, 3 insertions(+), 3 deletions(-)
+ fs/utimes.c        | 6 +++---
+ include/linux/fs.h | 1 +
+ 2 files changed, 4 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/clk/qcom/gcc-sc7180.c b/drivers/clk/qcom/gcc-sc7180.c
-index ca4383e..538677b 100644
---- a/drivers/clk/qcom/gcc-sc7180.c
-+++ b/drivers/clk/qcom/gcc-sc7180.c
-@@ -1061,7 +1061,7 @@ static struct clk_branch gcc_disp_gpll0_clk_src = {
- 				.hw = &gpll0.clkr.hw,
- 			},
- 			.num_parents = 1,
--			.ops = &clk_branch2_ops,
-+			.ops = &clk_branch2_aon_ops,
- 		},
- 	},
- };
-diff --git a/drivers/clk/qcom/gcc-sdm845.c b/drivers/clk/qcom/gcc-sdm845.c
-index f6ce888..90f7feb 100644
---- a/drivers/clk/qcom/gcc-sdm845.c
-+++ b/drivers/clk/qcom/gcc-sdm845.c
-@@ -1,6 +1,6 @@
- // SPDX-License-Identifier: GPL-2.0
- /*
-- * Copyright (c) 2018, The Linux Foundation. All rights reserved.
-+ * Copyright (c) 2018, 2020, The Linux Foundation. All rights reserved.
-  */
-
- #include <linux/kernel.h>
-@@ -1344,7 +1344,7 @@ static struct clk_branch gcc_disp_gpll0_clk_src = {
- 				"gpll0",
- 			},
- 			.num_parents = 1,
--			.ops = &clk_branch2_ops,
-+			.ops = &clk_branch2_aon_ops,
- 		},
- 	},
- };
---
-Qualcomm INDIA, on behalf of Qualcomm Innovation Center, Inc.is a member
-of the Code Aurora Forum, hosted by the  Linux Foundation.
+diff --git a/fs/utimes.c b/fs/utimes.c
+index 441c7fb54053ca..12dba0741e1a71 100644
+--- a/fs/utimes.c
++++ b/fs/utimes.c
+@@ -16,7 +16,7 @@ static bool nsec_valid(long nsec)
+ 	return nsec >= 0 && nsec <= 999999999;
+ }
+ 
+-static int utimes_common(const struct path *path, struct timespec64 *times)
++int vfs_utimes(const struct path *path, struct timespec64 *times)
+ {
+ 	int error;
+ 	struct iattr newattrs;
+@@ -94,7 +94,7 @@ static int do_utimes_path(int dfd, const char __user *filename,
+ 	if (error)
+ 		return error;
+ 
+-	error = utimes_common(&path, times);
++	error = vfs_utimes(&path, times);
+ 	path_put(&path);
+ 	if (retry_estale(error, lookup_flags)) {
+ 		lookup_flags |= LOOKUP_REVAL;
+@@ -115,7 +115,7 @@ static int do_utimes_fd(int fd, struct timespec64 *times, int flags)
+ 	f = fdget(fd);
+ 	if (!f.file)
+ 		return -EBADF;
+-	error = utimes_common(&f.file->f_path, times);
++	error = vfs_utimes(&f.file->f_path, times);
+ 	fdput(f);
+ 	return error;
+ }
+diff --git a/include/linux/fs.h b/include/linux/fs.h
+index 635086726f2053..a1d2685a487868 100644
+--- a/include/linux/fs.h
++++ b/include/linux/fs.h
+@@ -1746,6 +1746,7 @@ int vfs_mkobj(struct dentry *, umode_t,
+ 
+ int vfs_fchown(struct file *file, uid_t user, gid_t group);
+ int vfs_fchmod(struct file *file, umode_t mode);
++int vfs_utimes(const struct path *path, struct timespec64 *times);
+ 
+ extern long vfs_ioctl(struct file *file, unsigned int cmd, unsigned long arg);
+ 
+-- 
+2.27.0
 
