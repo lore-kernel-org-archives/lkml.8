@@ -2,95 +2,65 @@ Return-Path: <SRS0=kup7=A2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D17A7C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 21:24:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65D5EC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 21:25:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B8C592067D
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 21:24:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 438D520672
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 21:25:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726968AbgGOVYr (ORCPT
+        id S1727034AbgGOVZH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 17:24:47 -0400
-Received: from relay4-d.mail.gandi.net ([217.70.183.196]:53619 "EHLO
-        relay4-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726356AbgGOVYq (ORCPT
+        Wed, 15 Jul 2020 17:25:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59182 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726356AbgGOVZG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 17:24:46 -0400
-X-Originating-IP: 90.65.108.121
-Received: from localhost (lfbn-lyo-1-1676-121.w90-65.abo.wanadoo.fr [90.65.108.121])
-        (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay4-d.mail.gandi.net (Postfix) with ESMTPSA id 43E79E0003;
-        Wed, 15 Jul 2020 21:24:44 +0000 (UTC)
-Date:   Wed, 15 Jul 2020 23:24:43 +0200
-From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
-To:     Lee Jones <lee.jones@linaro.org>
-Cc:     broonie@kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org,
-        Radu Pirea <radu_nicolae.pirea@upb.ro>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Ludovic Desroches <ludovic.desroches@microchip.com>
-Subject: Re: [PATCH 12/14] spi: spi-at91-usart: Make use of the defined
- 'struct of_device_id'
-Message-ID: <20200715212443.GC23553@piout.net>
-References: <20200715150632.409077-1-lee.jones@linaro.org>
- <20200715150632.409077-13-lee.jones@linaro.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200715150632.409077-13-lee.jones@linaro.org>
+        Wed, 15 Jul 2020 17:25:06 -0400
+Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9964AC061755;
+        Wed, 15 Jul 2020 14:25:06 -0700 (PDT)
+Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 0625A11E45909;
+        Wed, 15 Jul 2020 14:25:02 -0700 (PDT)
+Date:   Wed, 15 Jul 2020 14:24:59 -0700 (PDT)
+Message-Id: <20200715.142459.1215411672362681844.davem@davemloft.net>
+To:     asmadeus@codewreck.org
+Cc:     hch@lst.de, nazard@nazar.ca, ericvh@gmail.com, lucho@ionkov.net,
+        v9fs-developer@lists.sourceforge.net, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        syzbot+e6f77e16ff68b2434a2c@syzkaller.appspotmail.com
+Subject: Re: [PATCH] net/9p: validate fds in p9_fd_open
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20200715134756.GB22828@nautica>
+References: <20200711104923.GA6584@nautica>
+        <20200715073715.GA22899@lst.de>
+        <20200715134756.GB22828@nautica>
+X-Mailer: Mew version 6.8 on Emacs 26.3
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Wed, 15 Jul 2020 14:25:03 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Lee,
+From: Dominique Martinet <asmadeus@codewreck.org>
+Date: Wed, 15 Jul 2020 15:47:56 +0200
 
-On 15/07/2020 16:06:30+0100, Lee Jones wrote:
-> It's there so why not use it.
-> 
+> It's honestly just a warn on something that would fail anyway so I'd
+> rather let it live in -next first, I don't get why syzbot is so verbose
+> about this - it sent a mail when it found a c repro and one more once it
+> bisected the commit yesterday but it should not be sending more?
 
-Is that the correct resolution? Isn't the proper thing to do simply
-removing at91_usart_spi_dt_ids as the only way it will ever be probed is
-through drivers/mfd/at91-usart.c and I would think matching the driver
-name is enough.
+I honestly find it hard to understand the resistence to fixing the
+warning in mainline.
 
-> Fixes the following W=1 kernel build warning(s):
-> 
->  drivers/spi/spi-at91-usart.c:684:34: warning: ‘at91_usart_spi_dt_ids’ defined but not used [-Wunused-const-variable=]
->  684 | static const struct of_device_id at91_usart_spi_dt_ids[] = {
->  | ^~~~~~~~~~~~~~~~~~~~~
-> 
-> Cc: Radu Pirea <radu_nicolae.pirea@upb.ro>
-> Cc: Nicolas Ferre <nicolas.ferre@microchip.com>
-> Cc: Alexandre Belloni <alexandre.belloni@bootlin.com>
-> Cc: Ludovic Desroches <ludovic.desroches@microchip.com>
-> Signed-off-by: Lee Jones <lee.jones@linaro.org>
-> ---
->  drivers/spi/spi-at91-usart.c | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/drivers/spi/spi-at91-usart.c b/drivers/spi/spi-at91-usart.c
-> index 88033422a42ae..d47a20be43ccd 100644
-> --- a/drivers/spi/spi-at91-usart.c
-> +++ b/drivers/spi/spi-at91-usart.c
-> @@ -692,6 +692,7 @@ static struct platform_driver at91_usart_spi_driver = {
->  	.driver = {
->  		.name = "at91_usart_spi",
->  		.pm = &at91_usart_spi_pm_ops,
-> +		.of_match_table = at91_usart_spi_dt_ids,
->  	},
->  	.probe = at91_usart_spi_probe,
->  	.remove = at91_usart_spi_remove,
-> -- 
-> 2.25.1
-> 
-
--- 
-Alexandre Belloni, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+I merge such fixes aggressively.
