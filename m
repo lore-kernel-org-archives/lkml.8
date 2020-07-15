@@ -2,115 +2,116 @@ Return-Path: <SRS0=kup7=A2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F3A0C433E3
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 08:16:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE986C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 08:17:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4E0DC206D5
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 08:16:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cogentembedded-com.20150623.gappssmtp.com header.i=@cogentembedded-com.20150623.gappssmtp.com header.b="Gzz92IMQ"
+	by mail.kernel.org (Postfix) with ESMTP id D1021206D5
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 08:17:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594801073;
+	bh=SvP8iyns00kbpVs5yBcwZXOYmwphb3eMqVXOlGWTykA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=1kv11NhwySzGNn7v311buQzmIjEM3/QOcw0lqmCXLU+IxNFkpFtzmXGtXy/wSmAzH
+	 oBwiabQOhG4BCla/1XFtbJFjmgYmxOKBoAGdr2TRjXZ5X/LLaonh9oVWgXDnwXrdJ3
+	 EMJKIAWXdSszDhjJ5vrzGgk7FmqeEpJLn8F5WypE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729708AbgGOIQy (ORCPT
+        id S1729730AbgGOIRx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 04:16:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50292 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729698AbgGOIQx (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 04:16:53 -0400
-Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5A6C8C08C5DB
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 01:16:53 -0700 (PDT)
-Received: by mail-lj1-x241.google.com with SMTP id s9so1534137ljm.11
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 01:16:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cogentembedded-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=I5qZejAIQq++nnd7O7LL3lalpe7lhmzwl0tFbvuobuo=;
-        b=Gzz92IMQX2sC0iZHXUrf4B54p2Nu5HGb/sJFPOgQq/1UflTk9/FKdYY4lLrTSNXu0w
-         PZN0c2ABgKSbYHv6Pk3shycPo/BkbFCLufjq+5DxgjtfF6Y44ScQw0h3wcp2SDV5hze0
-         mJ2CokvBuuotOUOH2z2rRknfxowQNuJvGIIbapp+TCfchXKrHXUVJ+ikCKtPEly8PAFu
-         mWsTFK2Ois6xOffKQEnyDkNZoCDqzhkzRnmW5AKy2HcZdHHjLVEbTkkurQKD1wK2d+EY
-         eSfpJaCrVpm8ocppmWIqUU0veC6tkc/CyNJLg+RKJfRNVvZG+LapQef0T6N81JNR0Khq
-         Ud+A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=I5qZejAIQq++nnd7O7LL3lalpe7lhmzwl0tFbvuobuo=;
-        b=PdyYTqIhye4B9v8L4JawvfbBfpnLwYW6//mHPDcV8IpML9shM9ee5yQi2NdTm9IIEt
-         WTWPyLnUDiAcQC8ycotgLmgDufZwJBEIPkCZeh2UGp9IBtvK7dajiXX7sdbnH8g9Kb7F
-         G6ygT7mVexjWtr5s6l9JgiU6nNvFbI84jFActnrUBknqLS/XzvD/TovZ5eeACBGTVDMJ
-         KjnVF8N39AlI45tWvQNoQkunTNorUXKPfv1Ri/jYrJ/au57Iz4ioKgcJZJrSiYUsjwO3
-         9s5KwIsz+RGHL6jCpoNdEcH56YSVqY849l5mom4Y3pOSuT2qT8/S/uWvZyajwwIzb2PL
-         yZrA==
-X-Gm-Message-State: AOAM533IyylJgOuHT04tOvjHlFet1sd4VXc3PC5pIe+1821x9liSaLx6
-        ZJVM4BPZaaqn+l+fv92S0DsQ/yAMLe0=
-X-Google-Smtp-Source: ABdhPJxqAFU9d9qG0B2IeCGOTGsnjaqirHnR+hmZdY7Fok6nHXNjd8zVRcxq89X/7K/8CQUFnp9PAQ==
-X-Received: by 2002:a2e:850b:: with SMTP id j11mr4605072lji.30.1594801011614;
-        Wed, 15 Jul 2020 01:16:51 -0700 (PDT)
-Received: from ?IPv6:2a00:1fa0:42dd:3c8c:7d45:c199:bbef:e36? ([2a00:1fa0:42dd:3c8c:7d45:c199:bbef:e36])
-        by smtp.gmail.com with ESMTPSA id w24sm338403lfl.17.2020.07.15.01.16.50
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 15 Jul 2020 01:16:50 -0700 (PDT)
-Subject: Re: [PATCH V2 2/2] dt-bindings: arm: renesas: Document beacon-rzg2m
-To:     Adam Ford <aford173@gmail.com>, linux-renesas-soc@vger.kernel.org
-Cc:     aford@beaconembedded.com,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
+        Wed, 15 Jul 2020 04:17:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34480 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729609AbgGOIRw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jul 2020 04:17:52 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6AA6C2067D;
+        Wed, 15 Jul 2020 08:17:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594801072;
+        bh=SvP8iyns00kbpVs5yBcwZXOYmwphb3eMqVXOlGWTykA=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=HhHhjzla7+qt5CngL6tg5OM8+pscX43/hxhpf0kHJwQsQVuNpjZXwGmgSDYsq3RXV
+         6dC1i4zALOwOJ56/cRJoVeZYfrOnPlYBKn4tJURD3URn3WDl4n2UBrZfMzXMP9LxeC
+         T+xIJs1imS7+nrpQajRxS2+QjIWt3dX/+1R0/IKI=
+Date:   Wed, 15 Jul 2020 10:17:46 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Michal Miroslaw <mirq-linux@rere.qmqm.pl>
+Cc:     Chen Yu <yu.c.chen@intel.com>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Len Brown <len.brown@intel.com>,
+        Zhang Rui <rui.zhang@intel.com>, linux-pm@vger.kernel.org,
         linux-kernel@vger.kernel.org
-References: <20200714123419.3390-1-aford173@gmail.com>
- <20200714123419.3390-2-aford173@gmail.com>
-From:   Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Message-ID: <c2e52f87-b2cf-ca36-7780-5e206f065d40@cogentembedded.com>
-Date:   Wed, 15 Jul 2020 11:16:43 +0300
-User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+Subject: Re: [PATCH 2/2][RESEND v3] PM-runtime: change the tracepoints to
+ cover all usage_count
+Message-ID: <20200715081746.GA2616388@kroah.com>
+References: <cover.1594790493.git.yu.c.chen@intel.com>
+ <395187057e486df9a4328bc6d7d4ee912967fdb3.1594790493.git.yu.c.chen@intel.com>
+ <20200715070614.GA2297388@kroah.com>
+ <20200715072728.GA18147@qmqm.qmqm.pl>
 MIME-Version: 1.0
-In-Reply-To: <20200714123419.3390-2-aford173@gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200715072728.GA18147@qmqm.qmqm.pl>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello!
-
-On 14.07.2020 15:34, Adam Ford wrote:
-
-> Beacon EmbeddedWorks in introducing a development kit based on the
-
-    s/in/is/?
-
-> Renesas RZ/G2M platform.  This patch adds the entry to the bindings
-> list.
+On Wed, Jul 15, 2020 at 09:27:28AM +0200, Michal Miroslaw wrote:
+> On Wed, Jul 15, 2020 at 09:06:14AM +0200, Greg Kroah-Hartman wrote:
+> > On Wed, Jul 15, 2020 at 02:28:03PM +0800, Chen Yu wrote:
+> > > Commit d229290689ae ("PM-runtime: add tracepoints for usage_count changes")
+> > > has added some tracepoints to monitor the change of runtime usage, and
+> > > there is something to improve:
+> > > 1. There are some places that adjust the usage count not
+> > >    been traced yet. For example, pm_runtime_get_noresume() and
+> > >    pm_runtime_put_noidle()
+> > > 2. The change of the usage count will not be tracked if decreased
+> > >    from 1 to 0.
+> > > 
+> > > This patch intends to adjust the logic to be consistent with the
+> > > change of usage_counter, that is to say, only after the counter has
+> > > been possibly modified, we record it. Besides, all usage changes will
+> > > be shown using rpm_usage even if included by other trace points.
+> > > And these changes has helped track down the e1000e runtime issue.
+> > > 
+> > > Reviewed-by: Michał Mirosław <mirq-linux@rere.qmqm.pl>
+> > > Signed-off-by: Chen Yu <yu.c.chen@intel.com>
+> > > ---
+> > >  drivers/base/power/runtime.c | 38 +++++++++++++++++++++++-------------
+> > >  1 file changed, 24 insertions(+), 14 deletions(-)
+> > > 
+> > > diff --git a/drivers/base/power/runtime.c b/drivers/base/power/runtime.c
+> > > index 85a248e196ca..5789d2624513 100644
+> > > --- a/drivers/base/power/runtime.c
+> > > +++ b/drivers/base/power/runtime.c
+> > > @@ -1004,10 +1004,11 @@ int __pm_runtime_idle(struct device *dev, int rpmflags)
+> > >  	int retval;
+> > >  
+> > >  	if (rpmflags & RPM_GET_PUT) {
+> > > -		if (!atomic_dec_and_test(&dev->power.usage_count)) {
+> > > -			trace_rpm_usage_rcuidle(dev, rpmflags);
+> > > +		bool non_zero = !atomic_dec_and_test(&dev->power.usage_count);
+> > > +
+> > > +		trace_rpm_usage_rcuidle(dev, rpmflags);
+> > 
+> > Why not just call trace everywhere before you do the atomic operations?
+> > Why does the trace need to be called after the operation everywhere?
 > 
-> Signed-off-by: Adam Ford <aford173@gmail.com>
-> ---
-> V2:	New to series
-> 
-> diff --git a/Documentation/devicetree/bindings/arm/renesas.yaml b/Documentation/devicetree/bindings/arm/renesas.yaml
-> index d8fd25bccbf5..0d4dabb4a164 100644
-> --- a/Documentation/devicetree/bindings/arm/renesas.yaml
-> +++ b/Documentation/devicetree/bindings/arm/renesas.yaml
-> @@ -118,6 +118,7 @@ properties:
->           items:
->             - enum:
->                 - hoperun,hihope-rzg2m # HopeRun HiHope RZ/G2M platform
-> +              - beacon,beacon-rzg2m # Beacon EmbeddedWorks RZ/G2M Kit
+> I would argue that this is easier mentally: We trace what state the
+> device is in from now on (a "current state" for the time being) instead
+> of tracing what it was before (an information that has just expired).
 
-    Why the vendor-prefixes.yaml file calls it Compass Electronics Group?
+Is that really the case here and you look at that atomic value somehow
+in the trace and need it?
 
-[...]
+thanks,
 
-MBR, Sergei
+greg k-h
