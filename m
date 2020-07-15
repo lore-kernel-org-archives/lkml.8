@@ -2,146 +2,92 @@ Return-Path: <SRS0=kup7=A2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D0E2C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 01:04:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FA53C433E2
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 01:04:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 036542072D
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 01:04:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="WwupWKzZ"
+	by mail.kernel.org (Postfix) with ESMTP id 74BDE2072D
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 01:04:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727790AbgGOBEc (ORCPT
+        id S1727857AbgGOBEl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 21:04:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40236 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726965AbgGOBEc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 21:04:32 -0400
-Received: from ozlabs.org (ozlabs.org [IPv6:2401:3900:2:1::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DAE82C061755;
-        Tue, 14 Jul 2020 18:04:31 -0700 (PDT)
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 4B5zgH5lGlz9sQt;
-        Wed, 15 Jul 2020 11:04:27 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
-        s=201909; t=1594775068;
-        bh=DRW9yi5rJrMkAE9FJwWBtPJ4PTfLdPhmlR2SiTJPUEA=;
-        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-        b=WwupWKzZobPRuA0ewfQ/OibLdE136XZAxIa6okCeJFSZDbAOw/ndIILKb5eMGYCkY
-         zHhUoRY/HBoO/u7mhE256GPlkDqO7dzJwO9S3/JM6Wlzm509/x6ZSNqD6yFyr0E3pr
-         tMQlga8blXrq4k1TCuRJYTO5WNX8EnD85h6WLusGlw241MRKDzTGFt/AdxNJjkAXe+
-         ixTMKNB6sGuB/35Yx/+fubQLUq+s1LANQJpO/VRS1wTcCGjSUyGxW/RJxc6dFtwFVl
-         hsvo5DxpXVwVHbqXrNveC3J7JJMB5S/HkD5xRJeETKKxfGGKxPh4nXzlGzkkInSc5E
-         /tRwbikclFpbw==
-From:   Michael Ellerman <mpe@ellerman.id.au>
-To:     Christophe Leroy <christophe.leroy@c-s.fr>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>, nathanl@linux.ibm.com
-Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        arnd@arndb.de, tglx@linutronix.de, vincenzo.frascino@arm.com,
-        luto@kernel.org, linux-arch@vger.kernel.org,
-        Tulio Magno Quites Machado Filho <tuliom@linux.ibm.com>
-Subject: Re: [PATCH v8 5/8] powerpc/vdso: Prepare for switching VDSO to generic C implementation.
-In-Reply-To: <2a67c333893454868bbfda773ba4b01c20272a5d.1588079622.git.christophe.leroy@c-s.fr>
-References: <cover.1588079622.git.christophe.leroy@c-s.fr> <2a67c333893454868bbfda773ba4b01c20272a5d.1588079622.git.christophe.leroy@c-s.fr>
-Date:   Wed, 15 Jul 2020 11:04:26 +1000
-Message-ID: <878sflvbad.fsf@mpe.ellerman.id.au>
+        Tue, 14 Jul 2020 21:04:41 -0400
+Received: from mga04.intel.com ([192.55.52.120]:29311 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726962AbgGOBEk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 21:04:40 -0400
+IronPort-SDR: zVKxatvGwfhciKZvFCykYATBurvA8doSX6RumBn/EPvcZkUkarm86IYsHDERMxHMr4OhGPDl8W
+ 9+uvHk6BpHgQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9682"; a="146563181"
+X-IronPort-AV: E=Sophos;i="5.75,353,1589266800"; 
+   d="scan'208";a="146563181"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jul 2020 18:04:38 -0700
+IronPort-SDR: gbYlDs4Ly5SqxpHpBIogAaCvu597r+FyU8UGFhHgLyt2iKxmSwIjEagGJ2FHxrymAQvdzZX+Ad
+ hhl4enV8Ea0w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,353,1589266800"; 
+   d="scan'208";a="459891197"
+Received: from allen-box.sh.intel.com (HELO [10.239.159.139]) ([10.239.159.139])
+  by orsmga005.jf.intel.com with ESMTP; 14 Jul 2020 18:04:36 -0700
+Cc:     baolu.lu@linux.intel.com,
+        Jean-Philippe Brucker <jean-philippe@linaro.org>,
+        Kevin Tian <kevin.tian@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Ashok Raj <ashok.raj@intel.com>, kvm@vger.kernel.org,
+        Cornelia Huck <cohuck@redhat.com>,
+        linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Robin Murphy <robin.murphy@arm.com>
+Subject: Re: [PATCH v3 4/4] vfio/type1: Use iommu_aux_at(de)tach_group() APIs
+To:     Jacob Pan <jacob.jun.pan@linux.intel.com>,
+        Christoph Hellwig <hch@infradead.org>
+References: <20200714055703.5510-1-baolu.lu@linux.intel.com>
+ <20200714055703.5510-5-baolu.lu@linux.intel.com>
+ <20200714082514.GA30622@infradead.org>
+ <20200714092930.4b61b77c@jacob-builder>
+From:   Lu Baolu <baolu.lu@linux.intel.com>
+Message-ID: <ac4507d5-a5fc-d078-9bfc-f9e9fd1244e7@linux.intel.com>
+Date:   Wed, 15 Jul 2020 09:00:00 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain
+In-Reply-To: <20200714092930.4b61b77c@jacob-builder>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Christophe Leroy <christophe.leroy@c-s.fr> writes:
-> Prepare for switching VDSO to generic C implementation in following
-> patch. Here, we:
-> - Modify __get_datapage() to take an offset
-> - Prepare the helpers to call the C VDSO functions
-> - Prepare the required callbacks for the C VDSO functions
-> - Prepare the clocksource.h files to define VDSO_ARCH_CLOCKMODES
-> - Add the C trampolines to the generic C VDSO functions
->
-> powerpc is a bit special for VDSO as well as system calls in the
-> way that it requires setting CR SO bit which cannot be done in C.
-> Therefore, entry/exit needs to be performed in ASM.
->
-> Implementing __arch_get_vdso_data() would clobber the link register,
-> requiring the caller to save it. As the ASM calling function already
-> has to set a stack frame and saves the link register before calling
-> the C vdso function, retriving the vdso data pointer there is lighter.
-...
+Hi Christoph and Jacob,
 
-> diff --git a/arch/powerpc/include/asm/vdso/gettimeofday.h b/arch/powerpc/include/asm/vdso/gettimeofday.h
-> new file mode 100644
-> index 000000000000..4452897f9bd8
-> --- /dev/null
-> +++ b/arch/powerpc/include/asm/vdso/gettimeofday.h
-> @@ -0,0 +1,175 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +#ifndef __ASM_VDSO_GETTIMEOFDAY_H
-> +#define __ASM_VDSO_GETTIMEOFDAY_H
-> +
-> +#include <asm/ptrace.h>
-> +
-> +#ifdef __ASSEMBLY__
-> +
-> +.macro cvdso_call funct
-> +  .cfi_startproc
-> +	PPC_STLU	r1, -STACK_FRAME_OVERHEAD(r1)
-> +	mflr		r0
-> +  .cfi_register lr, r0
-> +	PPC_STL		r0, STACK_FRAME_OVERHEAD + PPC_LR_STKOFF(r1)
+On 7/15/20 12:29 AM, Jacob Pan wrote:
+> On Tue, 14 Jul 2020 09:25:14 +0100
+> Christoph Hellwig<hch@infradead.org>  wrote:
+> 
+>> On Tue, Jul 14, 2020 at 01:57:03PM +0800, Lu Baolu wrote:
+>>> Replace iommu_aux_at(de)tach_device() with
+>>> iommu_aux_at(de)tach_group(). It also saves the
+>>> IOMMU_DEV_FEAT_AUX-capable physcail device in the vfio_group data
+>>> structure so that it could be reused in other places.
+>> This removes the last user of iommu_aux_attach_device and
+>> iommu_aux_detach_device, which can be removed now.
+> it is still used in patch 2/4 inside iommu_aux_attach_group(), right?
+> 
 
-This doesn't work for me on ppc64(le) with glibc.
+There is a need to use this interface. For example, an aux-domain is
+attached to a subset of a physical device and used in the kernel. In
+this usage scenario, there's no need to use vfio/mdev. The device driver
+could just allocate an aux-domain and call iommu_aux_attach_device() to
+setup the iommu.
 
-glibc doesn't create a stack frame before making the VDSO call, so the
-store of r0 (LR) goes into the caller's frame, corrupting the saved LR,
-leading to an infinite loop.
-
-This is an example from a statically built program that calls
-clock_gettime():
-
-0000000010030cb0 <__clock_gettime>:
-    10030cb0:   0e 10 40 3c     lis     r2,4110
-    10030cb4:   00 7a 42 38     addi    r2,r2,31232
-    10030cb8:   a6 02 08 7c     mflr    r0
-    10030cbc:   ff ff 22 3d     addis   r9,r2,-1
-    10030cc0:   58 6d 29 39     addi    r9,r9,27992
-    10030cc4:   f0 ff c1 fb     std     r30,-16(r1)			<-- redzone store
-    10030cc8:   78 23 9e 7c     mr      r30,r4
-    10030ccc:   f8 ff e1 fb     std     r31,-8(r1)			<-- redzone store
-    10030cd0:   78 1b 7f 7c     mr      r31,r3
-    10030cd4:   10 00 01 f8     std     r0,16(r1)			<-- save LR to caller's frame
-    10030cd8:   00 00 09 e8     ld      r0,0(r9)
-    10030cdc:   00 00 20 2c     cmpdi   r0,0
-    10030ce0:   50 00 82 41     beq     10030d30 <__clock_gettime+0x80>
-    10030ce4:   a6 03 09 7c     mtctr   r0
-    10030ce8:   21 04 80 4e     bctrl					<-- vdso call
-    10030cec:   26 00 00 7c     mfcr    r0
-    10030cf0:   00 10 09 74     andis.  r9,r0,4096
-    10030cf4:   78 1b 69 7c     mr      r9,r3
-    10030cf8:   28 00 82 40     bne     10030d20 <__clock_gettime+0x70>
-    10030cfc:   b4 07 23 7d     extsw   r3,r9
-    10030d00:   10 00 01 e8     ld      r0,16(r1)			<-- load saved LR, since clobbered by the VDSO
-    10030d04:   f0 ff c1 eb     ld      r30,-16(r1)
-    10030d08:   f8 ff e1 eb     ld      r31,-8(r1)
-    10030d0c:   a6 03 08 7c     mtlr    r0				<-- restore LR
-    10030d10:   20 00 80 4e     blr					<-- jumps to 10030cec
-
-
-I'm kind of confused how it worked for you on 32-bit.
-
-There's also no code to load/restore the TOC pointer on BE, which I
-think we'll need to handle.
-
-cheers
+Best regards,
+baolu
