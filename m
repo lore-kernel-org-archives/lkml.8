@@ -2,313 +2,145 @@ Return-Path: <SRS0=kup7=A2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96094C433E6
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 16:29:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0067C433E2
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 16:31:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6E79220663
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 16:29:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8ADFE2065E
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 16:31:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="owe9lWhy"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="TPcNI+yE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727081AbgGOQ3O (ORCPT
+        id S1725900AbgGOQb3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 12:29:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41800 "EHLO
+        Wed, 15 Jul 2020 12:31:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42146 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726820AbgGOQ3M (ORCPT
+        with ESMTP id S1725792AbgGOQb2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 12:29:12 -0400
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [IPv6:2001:4b98:dc2:55:216:3eff:fef7:d647])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 09167C061755;
-        Wed, 15 Jul 2020 09:29:12 -0700 (PDT)
-Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 95092564;
-        Wed, 15 Jul 2020 18:29:08 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1594830548;
-        bh=J0RmO1M1ihQJvW/q2HS1HUBA5UiJRDYlOCO40ivrSEM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=owe9lWhyAxGIol67u3m6+OzIMITqa7IUxf6V+vB33ABRw2f+wURJr7dmS9lLqHJFd
-         aBE5vdEQvPBId8ywbjMCtAGMweNKtXe1C5aCP1Gfyyf/H2VmL+Zi9x41lJkV+DTz1q
-         GMJNQnSuXf49Gq9xxHJdOLXXTEHNcnplNZ2IoQds=
-Date:   Wed, 15 Jul 2020 19:29:01 +0300
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Vishal Sagar <vishal.sagar@xilinx.com>
-Cc:     Rob Herring <robh@kernel.org>, hyunk@xilinx.com,
-        hverkuil@xs4all.nl, mchehab@kernel.org, mark.rutland@arm.com,
-        michals@xilinx.com, linux-media@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, joe@perches.com, sandipk@xilinx.com,
-        dineshk@xilinx.com
-Subject: Re: [PATCH v3 2/3] media: dt-bindings: media: xilinx: Add Xilinx
- UHD-SDI Receiver Subsystem
-Message-ID: <20200715162901.GE6144@pendragon.ideasonboard.com>
-References: <20200618053304.14551-1-vishal.sagar@xilinx.com>
- <20200618053304.14551-3-vishal.sagar@xilinx.com>
- <20200713185447.GA531731@bogus>
+        Wed, 15 Jul 2020 12:31:28 -0400
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 19386C061755
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 09:31:28 -0700 (PDT)
+Received: by mail-wr1-x441.google.com with SMTP id z13so3383616wrw.5
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 09:31:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=HR86dtd69KxS8U5z7Eh67ZbzR9hjXJRAZgL6KZAW0g0=;
+        b=TPcNI+yEKzMqIgrrareTRt4MvTwnIGlgTKAnFdP4TsDKZ7MOVwibtqy/t5J7XD6Pfn
+         Nfq3mvK4Mh5jtQx7D4XXaBRUmr5c80bJ3pekWEMY7wkkPLNO+tvQIyuAq8lk5bGXWGzy
+         f68Iao1ZBCUH9Pu5YBEpzA4VBlN9SOz6bX94l49ycLHqIjFihkR9c3/aYoaU9LAquVWo
+         5wROvDaRNqyV40NSOOEIyM6kjtRl++kKGC0An9loLa/XSM1eFmRhXIIunwOwq9S2/E0O
+         IiBXQ4DnzHFw1v9DBbj+6bZj/nUzywjB4ubl0x/KNPxiBaNETGoS4bAZ6K/Cx+0/cM/j
+         ZSRw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=HR86dtd69KxS8U5z7Eh67ZbzR9hjXJRAZgL6KZAW0g0=;
+        b=DnNCon7pBsPFA65CuTv/MSTVuMovh2e1oMc/eNIuB/devuSexa+7N8WXLgPpxMMP1X
+         6RJlu+4/FZdDIpYNxh6CKOwLcqZiTRkpRm8OhkiPoCfWGw8s+RIynx52aOC+Kfudtd6e
+         74ZSwF2exC/JqnkgYehkH4Yocxh+M3iILGxRJdHy7lU/+f4nRTFKkE5SvjOwTBVBm9wM
+         3cCQFmMfX6EO/8Ex9I3l2TBYCFw8PqXiuegDKp5RzCKzQlYUNp41i5DatCLiBww8kA3h
+         lkBE0MNuYrZgIA9mlfpGaTNNnnUQ6d7Gf6ReWaZumQRFOEaShYWOf7xjm4YX4w8979Gu
+         ZIgw==
+X-Gm-Message-State: AOAM530E6I5SUcsbzomgFjBNyXdO8pMjUO5JLVaBGzsfHl4zy6k8nwae
+        Zu9ikVmaGoJQ0sor4yffI6J0hcgTee5H0LU0sf0fSQ==
+X-Google-Smtp-Source: ABdhPJxuro4/NbgOc/TLRc0mVw5pRIq4w1ip/4/RcpD+99LsLWJ/9hDTEwuSXXaVbGTVa3TeGNFLn2Tm8AL4/szaX+M=
+X-Received: by 2002:a5d:4bd2:: with SMTP id l18mr182700wrt.119.1594830686491;
+ Wed, 15 Jul 2020 09:31:26 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200713185447.GA531731@bogus>
+References: <20200715023401.23988-1-leo.yan@linaro.org>
+In-Reply-To: <20200715023401.23988-1-leo.yan@linaro.org>
+From:   Ian Rogers <irogers@google.com>
+Date:   Wed, 15 Jul 2020 09:31:14 -0700
+Message-ID: <CAP-5=fVaLA8C5Cd=jLR1TeCe9ktF5eqMmE++Wb4JHmJxrcfsJg@mail.gmail.com>
+Subject: Re: [PATCH v1 0/3] Perf tool: Enable Arm arch timer counter and
+ arm-spe's timestamp
+To:     Leo Yan <leo.yan@linaro.org>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Kemeng Shi <shikemeng@huawei.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Igor Lubashev <ilubashe@akamai.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Jin Yao <yao.jin@linux.intel.com>,
+        James Clark <james.clark@arm.com>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Vishal,
+On Tue, Jul 14, 2020 at 7:34 PM Leo Yan <leo.yan@linaro.org> wrote:
+>
+> This patch set is to enable Arm arch timer counter and Arm SPE is the
+> first customer to use arch timer counter for its timestamp.
+>
+> The patch 01 is to retrieve arch timer's parameters from mmaped page;
+> patch 02 provides APIs for the conversion between arch timer's counter
+> and time; patch 03 is to enable timestamp based on the new introduced
+> APIs for timestamp related calculation.
+>
+> Note, this patch set is depend on the kernel changes for "arm64: perf:
+> Proper cap_user_time* support" [1].
+>
+> This patch set has been rebased on mainline kernel with the latest
+> commit 11ba468877bb ("Linux 5.8-rc5") and also applied on top of patch
+> set [1].  After enabling the timestamp, the samples can show the
+> timestamp, and the timestamp is consistent with the kernel's timestamp
+> by checking the kernel log:
+>
+>   $ perf script -F,+time
+>     dd  6799 [034] 25496.733475:          1              l1d-access:      ffff87f37b88 _dl_start+0x288 (/usr/lib/aarch64-linux-gnu/ld-2.28.so)
+>     dd  6799 [034] 25496.733475:          1              tlb-access:      ffff87f37b88 _dl_start+0x288 (/usr/lib/aarch64-linux-gnu/ld-2.28.so)
+>     dd  6799 [034] 25496.733479:          1              l1d-access:      ffff87f37c74 _dl_start+0x374 (/usr/lib/aarch64-linux-gnu/ld-2.28.so)
+>     dd  6799 [034] 25496.733479:          1              tlb-access:      ffff87f37c74 _dl_start+0x374 (/usr/lib/aarch64-linux-gnu/ld-2.28.so)
+>     dd  6799 [034] 25496.733485:          1              l1d-access:      ffff87f49af4 __GI___tunables_init+0x3c (/usr/lib/aarch64-linux-gnu/ld-2.28.so)
+>     dd  6799 [034] 25496.733485:          1              tlb-access:      ffff87f49af4 __GI___tunables_init+0x3c (/usr/lib/aarch64-linux-gnu/ld-2.28.so)
+>
+> [1] https://patchwork.kernel.org/project/linux-arm-kernel/list/?series=318401
 
-Thank you for the patch.
+This looks good to me! Would it be possible to add a test on the
+functionality? It's possible to add a C test in
+tools/perf/arch/arm64/tests or something related to you perf script
+command line in tools/perf/tests/shell.
 
-On Mon, Jul 13, 2020 at 12:54:47PM -0600, Rob Herring wrote:
-> On Thu, Jun 18, 2020 at 11:03:03AM +0530, Vishal Sagar wrote:
-> > Add bindings documentation for Xilinx UHD-SDI Receiver Subsystem.
-> > 
-> > The Xilinx UHD-SDI Receiver Subsystem consists of SMPTE UHD-SDI (RX) IP
-> > core, an SDI RX to Video Bridge IP core to convert SDI video to native
-> > video and a Video In to AXI4-Stream IP core to convert native video to
-> > AXI4-Stream.
-> > 
-> > Signed-off-by: Vishal Sagar <vishal.sagar@xilinx.com>
-> > ---
-> > v3
-> > - bpc instead of bpp
-> > - removed bpc as required property (default to 10 bpc)
-> > - add dt-bindings/media/xilinx-sdi.h
-> > - made line-rate as u32 instead of string
-> > - fixed reg
-> > - fixed s/upto/up to/
-> > 
-> > v2
-> > - Removed references to xlnx,video*
-> > - Fixed as per Sakari Ailus and Rob Herring's comments
-> > - Converted to yaml format
-> > 
-> >  .../bindings/media/xilinx/xlnx,sdirxss.yaml   | 132 ++++++++++++++++++
-> >  include/dt-bindings/media/xilinx-sdi.h        |  20 +++
-> >  2 files changed, 152 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/media/xilinx/xlnx,sdirxss.yaml
-> >  create mode 100644 include/dt-bindings/media/xilinx-sdi.h
-> > 
-> > diff --git a/Documentation/devicetree/bindings/media/xilinx/xlnx,sdirxss.yaml b/Documentation/devicetree/bindings/media/xilinx/xlnx,sdirxss.yaml
-> > new file mode 100644
-> > index 000000000000..6cfc18ca435f
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/media/xilinx/xlnx,sdirxss.yaml
-> > @@ -0,0 +1,132 @@
-> > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> > +%YAML 1.2
-> > +---
-> > +$id: http://devicetree.org/schemas/media/xilinx/xlnx,sdirxss.yaml#
-> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > +
-> > +
+Thanks,
+Ian
 
-I think a single blank line is enough.
-
-> > +title: Xilinx SMPTE UHD-SDI Receiver Subsystem
-> > +
-> > +maintainers:
-> > +  - Vishal Sagar <vishal.sagar@xilinx.com>
-> > +
-> > +description: |
-> > +  The SMPTE UHD-SDI Receiver (RX) Subsystem allows you to quickly create systems
-> > +  based on SMPTE SDI protocols. It receives unaligned native SDI streams from
-> > +  the SDI GT PHY and outputs an AXI4-Stream video stream, native video, or
-> > +  native SDI using Xilinx transceivers as the physical layer.
-> > +
-> > +  The subsystem consists of
-> > +  1 - SMPTE UHD-SDI Rx
-> > +  2 - SDI Rx to Native Video Bridge
-> > +  3 - Video In to AXI4-Stream Bridge
-> > +
-> > +  The subsystem can capture SDI streams in up to 12G mode 8 data streams and output
-> > +  a dual pixel per clock RGB/YUV444,422/420 10/12 bits per component AXI4-Stream.
-> > +
-> > +properties:
-> > +  compatible:
-> > +    items:
-> > +      - enum:
-> > +        - xlnx,v-smpte-uhdsdi-rx-ss-2.0
-> 
-> Should be indented 2 more spaces.
-
-Or you could simply use
-
-properties:
-  compatible:
-    const: xlnx,v-smpte-uhdsdi-rx-ss-2.0
-
-> > +
-> > +  reg:
-> > +    maxItems: 1
-> > +
-> > +  interrupts:
-> > +    maxItems: 1
-> > +
-> > +  clocks:
-> > +    description: List of clock specifiers
-> 
-> Drop. That's every 'clocks' property.
-> 
-> > +    items:
-> > +      - description: AXI4-Lite clock
-> > +      - description: SMPTE UHD-SDI Rx core clock
-> > +      - description: Video clock
-> > +
-> > +  clock-names:
-> > +    items:
-> > +      - const: s_axi_aclk
-> > +      - const: sdi_rx_clk
-> > +      - const: video_out_clk
-> > +
-> > +  xlnx,bpc:
-> > +    description: Bits per component supported. Can be 10 or 12 bits per component only.
-> > +    allOf:
-> 
-> You can drop the 'allOf' now.
-> 
-> > +      - $ref: "/schemas/types.yaml#/definitions/uint32"
-> > +      - enum: [10, 12]
-> 
-> Seems like this should be a standard property?
-
-Rob, if my understanding is correct, this tells for how many bits per
-component the IP core has been synthesized. I think it qualifies as a
-vendor property, as how to express constraints on supported formats (for
-IP cores that can be synthesized with different options) is highly
-vendor-specific.
-
-Vishal, I think the question I asked in the review of v2 fell through
-the cracks. Is the documentation for the new IP core version available ?
-Should this property only be allowed for the new version, given that in
-v2.0 the BPC is fixed to 10 ?
-
-> > +
-> > +  xlnx,line-rate:
-> > +    description: |
-> > +      The maximum mode supported by the design. Possible values are as below
-> > +      0 - XSDI_STD_3G      -  3G mode
-> > +      1 - XSDI_STD_6G      -  6G mode
-> > +      2 - XSDI_STD_12G_8DS - 12G mode with 8 data streams
-> > +    allOf:
-> > +      - $ref: "/schemas/types.yaml#/definitions/uint32"
-> > +      - enum: [0, 1, 2]
-> 
-> Standard?
-
-For this one, I'm not sure. There's little support for SDI in the
-kernel, and I'm sure we'll get this wrong the first time. I'd rather try
-not to over-standardize properties before we have more examples.
-
-> > +
-> > +  xlnx,include-edh:
-> > +    type: boolean
-> > +    description: |
-> > +      This is present when the Error Detection and Handling processor is
-> > +      enabled in design.
-> > +
-> > +  ports:
-> > +    type: object
-> > +    description: |
-> > +      Generally the SDI port is connected to a device like SDI Broadcast camera
-> > +      which is independently controlled. Hence port@0 is a source port which can be
-> > +      connected to downstream IP which can work with AXI4 Stream data.
-> > +    properties:
-> > +      port@0:
-> > +        type: object
-> > +        description: Source port
-> > +        properties:
-> > +          reg:
-> > +            const: 0
-> > +          endpoint:
-> > +            type: object
-> > +            properties:
-> > +              remote-endpoint: true
-> > +            required:
-> > +              - remote-endpoint
-> > +            additionalProperties: false
-> > +        additionalProperties: false
-
-Same here, I explained in the review of v2 that we should have an input
-port.
-
-> > +
-> > +required:
-> > +  - compatible
-> > +  - reg
-> > +  - interrupts
-> > +  - clocks
-> > +  - clock-names
-> > +  - xlnx,line-rate
-> > +  - ports
-> > +
-> > +additionalProperties: false
-> > +
-> > +examples:
-> > +  - |
-> > +    #include <dt-bindings/media/xilinx-sdi.h>
-> > +    uhdsdirxss: v-smpte-uhdsdi-rxss@80000000 {
-
-The label is not used, you can drop it.
-
-> > +      compatible = "xlnx,v-smpte-uhdsdi-rx-ss-2.0";
-> > +      interrupt-parent = <&gic>;
-> > +      interrupts = <0 89 4>;
-> > +      reg = <0x80000000 0x10000>;
-> > +      xlnx,include-edh;
-> > +      xlnx,line-rate = <XSDI_STD_12G_8DS>;
-> > +      clocks = <&clk_1>, <&si570_1>, <&clk_2>;
-> > +      clock-names = "s_axi_aclk", "sdi_rx_clk", "video_out_clk";
-> > +      xlnx,bpc = <10>;
-
-I would group the xlnx,* properties after the standard properties.
-
-> > +
-> > +      ports {
-> > +        #address-cells = <1>;
-> > +        #size-cells = <0>;
-> > +        port@0 {
-> > +          reg = <0>;
-> > +          sdirx_out: endpoint {
-> > +            remote-endpoint = <&vcap_sdirx_in>;
-> > +          };
-> > +        };
-> > +      };
-> > +    };
-> > +...
-> > diff --git a/include/dt-bindings/media/xilinx-sdi.h b/include/dt-bindings/media/xilinx-sdi.h
-> > new file mode 100644
-> > index 000000000000..11938fade041
-> > --- /dev/null
-> > +++ b/include/dt-bindings/media/xilinx-sdi.h
-> > @@ -0,0 +1,20 @@
-> > +/* SPDX-License-Identifier: GPL-2.0 */
-> > +/*
-> > + * Xilinx SDI device tree bindings
-> > + *
-> > + * Copyright (C) 2020 Xilinx, Inc.
-> > + *
-> > + * Contacts: Vishal Sagar <vishal.sagar@xilinx.com>
-> > + */
-> > +
-> > +#ifndef __DT_BINDINGS_MEDIA_XILINX_SDI_H__
-> > +#define __DT_BINDINGS_MEDIA_XILINX_SDI_H__
-> > +
-> > +/*
-> > + * SDI Configurations
-> > + */
-> > +#define XSDI_STD_3G		0
-> > +#define XSDI_STD_6G		1
-> > +#define XSDI_STD_12G_8DS	2
-> > +
-> > +#endif /* __DT_BINDINGS_MEDIA_XILINX_SDI_H__ */
-
--- 
-Regards,
-
-Laurent Pinchart
+> Leo Yan (3):
+>   perf tools: Support Arm arch timer counter
+>   perf arm_arch_timer: Convert between counter and timestamp
+>   perf arm-spe: Enable timestamp with arch timer counter
+>
+>  tools/perf/arch/arm64/util/Build        |  1 +
+>  tools/perf/arch/arm64/util/arch_timer.c | 50 +++++++++++++++++++++++++
+>  tools/perf/arch/arm64/util/arm-spe.c    | 17 +++++++++
+>  tools/perf/util/Build                   |  1 +
+>  tools/perf/util/arm-spe.c               | 16 +++++++-
+>  tools/perf/util/arm-spe.h               |  5 +++
+>  tools/perf/util/arm_arch_timer.c        | 28 ++++++++++++++
+>  tools/perf/util/arm_arch_timer.h        | 23 ++++++++++++
+>  8 files changed, 139 insertions(+), 2 deletions(-)
+>  create mode 100644 tools/perf/arch/arm64/util/arch_timer.c
+>  create mode 100644 tools/perf/util/arm_arch_timer.c
+>  create mode 100644 tools/perf/util/arm_arch_timer.h
+>
+> --
+> 2.17.1
+>
