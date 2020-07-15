@@ -2,106 +2,241 @@ Return-Path: <SRS0=kup7=A2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF755C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 10:22:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19812C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 10:23:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 96476205CB
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 10:22:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D9049205CB
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 10:23:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="k2zBvo+w"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="Z2qKm0LS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731119AbgGOKWe (ORCPT
+        id S1731146AbgGOKXA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 06:22:34 -0400
-Received: from mail29.static.mailgun.info ([104.130.122.29]:32171 "EHLO
-        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728205AbgGOKWd (ORCPT
+        Wed, 15 Jul 2020 06:23:00 -0400
+Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:15423 "EHLO
+        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728205AbgGOKW7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 06:22:33 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1594808552; h=Date: Message-Id: Cc: To: References:
- In-Reply-To: From: Subject: Content-Transfer-Encoding: MIME-Version:
- Content-Type: Sender; bh=ko3g57NhBIWKq4qu1jUjxFkit/z6wz9jriCusjnaDMU=;
- b=k2zBvo+wkpht987ZAEJgrFwLxhS3Jy4pTn1WcljCJLdD63yLDZyuqBuLmbLKHMxIXt/F12eY
- ivdg4PupZp0mkHtknR1q6J6wPNd1vSRabNiMSNgcCfj12XIQNh2Gz8IHS0kRKPwDhv3bnEyg
- FdYZhnKwO7YUQceCF5TmRh3Wnoo=
-X-Mailgun-Sending-Ip: 104.130.122.29
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n12.prod.us-west-2.postgun.com with SMTP id
- 5f0ed8d2512812c070cbee85 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Wed, 15 Jul 2020 10:22:10
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id F36A3C433BA; Wed, 15 Jul 2020 10:22:09 +0000 (UTC)
-Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: kvalo)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 9BB90C433C9;
-        Wed, 15 Jul 2020 10:22:04 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 9BB90C433C9
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
-Content-Type: text/plain; charset="utf-8"
+        Wed, 15 Jul 2020 06:22:59 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5f0ed8c80000>; Wed, 15 Jul 2020 03:22:00 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Wed, 15 Jul 2020 03:22:58 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Wed, 15 Jul 2020 03:22:58 -0700
+Received: from [10.24.37.103] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 15 Jul
+ 2020 10:22:51 +0000
+Subject: Re: [TEGRA194_CPUFREQ PATCH v6 1/4] dt-bindings: arm: Add NVIDIA
+ Tegra194 CPU Complex binding
+To:     Rob Herring <robh@kernel.org>
+CC:     <rjw@rjwysocki.net>, <viresh.kumar@linaro.org>,
+        <catalin.marinas@arm.com>, <will@kernel.org>,
+        <thierry.reding@gmail.com>, <mirq-linux@rere.qmqm.pl>,
+        <devicetree@vger.kernel.org>, <jonathanh@nvidia.com>,
+        <talho@nvidia.com>, <linux-pm@vger.kernel.org>,
+        <linux-tegra@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <bbasu@nvidia.com>,
+        <mperttunen@nvidia.com>, Sumit Gupta <sumitg@nvidia.com>
+References: <CAL_JsqL1CuumdT1CZiofEZw9j+3gsir8JwSrZVfcxFxEB=bavQ@mail.gmail.com>
+ <1594742870-19957-1-git-send-email-sumitg@nvidia.com>
+ <20200714204742.GA2875540@bogus>
+From:   Sumit Gupta <sumitg@nvidia.com>
+Message-ID: <a5b83dc3-63b9-9140-a7fe-52841d079141@nvidia.com>
+Date:   Wed, 15 Jul 2020 15:52:48 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
+In-Reply-To: <20200714204742.GA2875540@bogus>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-Subject: Re: [PATCH 05/17] drivers: net: Fix trivial spelling
-From:   Kalle Valo <kvalo@codeaurora.org>
-In-Reply-To: <20200609124610.3445662-6-kieran.bingham+renesas@ideasonboard.com>
-References: <20200609124610.3445662-6-kieran.bingham+renesas@ideasonboard.com>
-To:     Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
-Cc:     Kieran Bingham <kieran.bingham@ideasonboard.com>,
-        linux-renesas-soc@vger.kernel.org,
-        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Jiri Kosina <trivial@kernel.org>,
-        Martin Habets <mhabets@solarflare.com>,
-        Shannon Nelson <snelson@pensando.io>,
-        Colin Ian King <colin.king@canonical.com>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Eric Dumazet <edumazet@google.com>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Wenwen Wang <wenwen@cs.uga.edu>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        netdev@vger.kernel.org (open list:NETWORKING DRIVERS),
-        linux-kernel@vger.kernel.org (open list),
-        ath10k@lists.infradead.org (open list:QUALCOMM ATHEROS ATH10K WIRELESS
-        DRIVER),
-        linux-wireless@vger.kernel.org (open list:NETWORKING DRIVERS (WIRELESS))
-User-Agent: pwcli/0.1.0-git (https://github.com/kvalo/pwcli/) Python/3.5.2
-Message-Id: <20200715102209.F36A3C433BA@smtp.codeaurora.org>
-Date:   Wed, 15 Jul 2020 10:22:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1594808520; bh=yKUyW+CknpzoQCQidsJMAoY5rvG/iaJnlvE4IRnqLV4=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=Z2qKm0LSpfvnHREtzkU2lOvqF8Gz4OH+wAHdBZihmJADIHhV6KcfoWt7S96f5nhPN
+         eZ4Cp/J1KjKebsBr8xrKsPzK12Y3/w1zFPNmQ1PPey6Lsf391z11bPFmrBh8PFon8L
+         wnZeQzqIDeoMz+74p0q+1N76leIfRT96ccQsV9QFnAsYfMNnuZRERPkBsz5h76bcvG
+         S+etb2C9E5EoW9f4gLtjBEIXgHJoF+FS+/4rKKD+3fVyHJUs0XgQ9tb+uvO3gjs1bA
+         6zNH7WE3KEe31w2VmMO+O2AeP5ljH/77dR6RxIkyJdx4ej6p9H89W5pUv4uFlwetfN
+         Ts06A0XyMTDpQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Kieran Bingham <kieran.bingham+renesas@ideasonboard.com> wrote:
+Thank you for the review.
 
-> The word 'descriptor' is misspelled throughout the tree.
+>> Add device-tree binding documentation to represent Tegra194
+>> CPU Complex with compatible string under 'cpus' node. This
+>> can be used by drivers like cpufreq which don't have their
+>> node or CPU Complex node to bind to. Also, documenting
+>> 'nvidia,bpmp' property which points to BPMP device.
+>>
+>> Signed-off-by: Sumit Gupta <sumitg@nvidia.com>
+>> ---
+>>   .../bindings/arm/nvidia,tegra194-ccplex.yaml       | 106 +++++++++++++++++++++
+>>   1 file changed, 106 insertions(+)
+>>   create mode 100644 Documentation/devicetree/bindings/arm/nvidia,tegra194-ccplex.yaml
+>>
+>> diff --git a/Documentation/devicetree/bindings/arm/nvidia,tegra194-ccplex.yaml b/Documentation/devicetree/bindings/arm/nvidia,tegra194-ccplex.yaml
+>> new file mode 100644
+>> index 0000000..06dbdaa
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/arm/nvidia,tegra194-ccplex.yaml
+>> @@ -0,0 +1,106 @@
+>> +# SPDX-License-Identifier: GPL-2.0
 > 
-> Fix it up accordingly:
->     decriptors -> descriptors
+> Dual license please.
 > 
-> Signed-off-by: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
+Ok.
 
-I recommend splitting wan and wireless changes to separate patches as I
-cannot take changes to wan subsystem.
+>> +%YAML 1.2
+>> +---
+>> +$id: "http://devicetree.org/schemas/arm/nvidia,tegra194-ccplex.yaml#"
+>> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
+>> +
+>> +title: NVIDIA Tegra194 CPU Complex device tree bindings
+>> +
+>> +maintainers:
+>> +  - Thierry Reding <thierry.reding@gmail.com>
+>> +  - Jonathan Hunter <jonathanh@nvidia.com>
+>> +  - Sumit Gupta <sumitg@nvidia.com>
+>> +
+>> +description: |+
+>> +  Tegra194 SOC has homogeneous architecture where each cluster has two
+>> +  symmetric cores. Compatible string in "cpus" node represents the CPU
+>> +  Complex having all clusters.
+>> +
+>> +properties:
+> 
+> $nodename:
+>    const: cpus
+> 
+Ok.
 
-Patch set to Changes Requested.
+>> +  compatible:
+>> +    enum:
+>> +      - nvidia,tegra194-ccplex
+>> +
+>> +  nvidia,bpmp:
+>> +    $ref: '/schemas/types.yaml#/definitions/phandle'
+>> +    description: |
+>> +      Specifies the bpmp node that needs to be queried to get
+>> +      operating point data for all CPUs.
+>> +
+>> +      Optional for systems that have a "compatible"
+>> +      property value of "nvidia,tegra194-ccplex".
+> 
+> The schema says this already.
+> 
+Removed this text from here.
 
--- 
-https://patchwork.kernel.org/patch/11595487/
+>> +
+>> +  "#address-cells":
+>> +    const: 1
+> 
+> This is wrong. The binding says it's 2 cells on aarch64 cpus though we
+> don't enforce that.
+>Removed.
 
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+>> +
+>> +  "#size-cells":
+>> +    const: 0
+>> +
+>> +dependencies:
+>> +  nvidia,bpmp: [compatible]
+> 
+> This is kind of redundant as 'compatible' is required in order to apply
+> the schema.
+>
+Removed this as well.
 
+>> +
+>> +examples:
+>> +  - |
+>> +    cpus {
+>> +      compatible = "nvidia,tegra194-ccplex";
+>> +      nvidia,bpmp = <&bpmp>;
+>> +      #address-cells = <1>;
+>> +      #size-cells = <0>;
+>> +
+>> +      cpu0_0: cpu@0 {
+>> +        compatible = "nvidia,tegra194-carmel";
+>> +        device_type = "cpu";
+>> +        reg = <0x0>;
+>> +        enable-method = "psci";
+>> +      };
+>> +
+>> +      cpu0_1: cpu@1 {
+>> +        compatible = "nvidia,tegra194-carmel";
+>> +        device_type = "cpu";
+>> +        reg = <0x001>;
+>> +        enable-method = "psci";
+>> +      };
+>> +
+>> +      cpu1_0: cpu@100 {
+>> +        compatible = "nvidia,tegra194-carmel";
+>> +        device_type = "cpu";
+>> +        reg = <0x100>;
+>> +        enable-method = "psci";
+>> +      };
+>> +
+>> +      cpu1_1: cpu@101 {
+>> +        compatible = "nvidia,tegra194-carmel";
+>> +        device_type = "cpu";
+>> +        reg = <0x101>;
+>> +        enable-method = "psci";
+>> +      };
+>> +
+>> +      cpu2_0: cpu@200 {
+>> +        compatible = "nvidia,tegra194-carmel";
+>> +        device_type = "cpu";
+>> +        reg = <0x200>;
+>> +        enable-method = "psci";
+>> +      };
+>> +
+>> +      cpu2_1: cpu@201 {
+>> +        compatible = "nvidia,tegra194-carmel";
+>> +        device_type = "cpu";
+>> +        reg = <0x201>;
+>> +        enable-method = "psci";
+>> +      };
+>> +
+>> +      cpu3_0: cpu@300 {
+>> +        compatible = "nvidia,tegra194-carmel";
+>> +        device_type = "cpu";
+>> +        reg = <0x300>;
+>> +        enable-method = "psci";
+>> +      };
+>> +
+>> +      cpu3_1: cpu@301 {
+>> +        compatible = "nvidia,tegra194-carmel";
+>> +        device_type = "cpu";
+>> +        reg = <0x301>;
+>> +        enable-method = "psci";
+>> +       };
+> 
+> Not really that useful describing all these cpus.
+> 
+Ok. Kept first four cpu nodes only.
+
+>> +    };
+>> +...
+>> --
+>> 2.7.4
+>>
