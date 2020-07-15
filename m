@@ -2,108 +2,79 @@ Return-Path: <SRS0=kup7=A2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FE83C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 10:03:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FF36C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 10:04:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 10DA42064C
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 10:03:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hzWPutTj"
+	by mail.kernel.org (Postfix) with ESMTP id 6217F206F4
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 10:04:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730978AbgGOKD5 (ORCPT
+        id S1730987AbgGOKEG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 06:03:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38716 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726023AbgGOKD5 (ORCPT
+        Wed, 15 Jul 2020 06:04:06 -0400
+Received: from mail-il1-f198.google.com ([209.85.166.198]:40320 "EHLO
+        mail-il1-f198.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726023AbgGOKEF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 06:03:57 -0400
-Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F2239C061755;
-        Wed, 15 Jul 2020 03:03:56 -0700 (PDT)
-Received: by mail-pg1-x541.google.com with SMTP id t6so2846342pgq.1;
-        Wed, 15 Jul 2020 03:03:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=YEDOjAgTw7zWY0d0LxzHZsYswYj4Ul+PN0OhtVXriQ0=;
-        b=hzWPutTj0Fti6f4zw9K6dbh2iH0O0m4N+pltRPKsukA1jSQzrwpy+yyxi8hlKNmzsV
-         +Itu+yaBZIAzKqIool5HxKLkpq7qRbxnbcM0RmxUlvZFuF6g3nse8lwfjaj22uqi46cg
-         CQMRbeeTZc4vMgCFn1B8G2y1FM51sl/dE4JhsjvV6WoHvdsozw3Toi2ECZmrBZDZuxMy
-         q8s74jqC8TXh3c5FMTYw5fLpnjG+eBaXsiF6kOw2fmrp8HQwlRLkVCEuaByZzlmu2ELX
-         Afx1F4KjU6b6np5efpG4F0Q1O4/d5/akx5+ca0gPKJmkia0duLZkO2j+sIhI9bPriCR+
-         Nbsg==
+        Wed, 15 Jul 2020 06:04:05 -0400
+Received: by mail-il1-f198.google.com with SMTP id z16so1034575ill.7
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 03:04:04 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=YEDOjAgTw7zWY0d0LxzHZsYswYj4Ul+PN0OhtVXriQ0=;
-        b=a18PG+U5ZvObsJBXva+ZBPPIzA7Y5AfAEMtnJFN+YttlVbsD64r2Zsl1JfQ9glgzUv
-         C9Vrr6beY+UfTPqKpCaQVnVRR6p7Uad2pHRv32wrLKBlYxoBvAh9Td8wt9OtG39U8KIT
-         WRvOuL8QFXaJuUKtYbireRcuFByDzPOIEgbz6/Pef4guaCAuDhHF+SSc+NExuNUEsi6r
-         KK4G6Tf0M1CUesRD0jUeCnNQRgXvhOj1oI+7xhx+njHkHrCGCQY7dR0tpbxmGUnaK0AT
-         9zO+nU/8PyjfFyVCo2TP5ZzuZVE/N53ocw4MEPaZC8dGXDSSNOv/sIyuOQy0bWcI2pc4
-         qiNw==
-X-Gm-Message-State: AOAM530/kw+racTnjhs8oiRe6XZ294dyzarYXOBJRAv8aK9fcNrt/JYU
-        OfGj0/YbICG0P3eXqj3tDjaNLZSPyk1bj8cucB4=
-X-Google-Smtp-Source: ABdhPJwoHaK/Y4fa9fYzVDnlHksNchcL936VYGXOcGuNji60pcafGnsrIQX1Ybx6Y7K7CJxyN4PFOoRXrd716iJ7Ktk=
-X-Received: by 2002:aa7:8bcb:: with SMTP id s11mr7914531pfd.170.1594807436560;
- Wed, 15 Jul 2020 03:03:56 -0700 (PDT)
+        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
+         :from:to;
+        bh=lZUjqSiBJwDYPm36WdPBclDG5mrQQmRv25qcSv9nR2k=;
+        b=WJHUusYBbACk3i29yrWFCeiGO2SXxKs3AixwNb51v4RjQnOcrj5a0Slu0OrWTQn8W2
+         BQufMWqqm4KNekdYtb7CxME8usrqFF2TRaqo92p+JRgu77o8oVaYBsL4KpBlcTO+qOQ0
+         gT5zeLcj5hOEXU8PqLsa9ZHcdpl76HiaboTaG43XW01JmaInzVtwpCtHUsRIFrvi8311
+         dkBjFR9kfXn4HzbWRnTITyhLn5Y9WWnzptNUQjqGdOO1FPmYp3M/VYgAuWSSZaiTgUIJ
+         h+zO1RIMQ8A044d6UZGGnaUOFiWhm6M/rVnd5y/BeIrZ6EHWw1XepWU/Mtuvmr+S8IiJ
+         8X3A==
+X-Gm-Message-State: AOAM530m19I4XPp0aSKi8L1Plt49qGUCgUt+eBL7283OBgxF8hTR8la7
+        CXmoko+rrhRaABwghfJTi0dsdz76uJoTeVb8LuiyTZv08YVf
+X-Google-Smtp-Source: ABdhPJyycIp0AkfnugimTuwXQFSQQrRqDsnXwJhn4PoiwmUZVLf3foo73PthW2MSKGMpHMirmBnKlHZU4uzD7gjkdcVFSe3C9xDx
 MIME-Version: 1.0
-References: <CAHp75Ve2pPGN3BtMw6x1xR5Cyv8VP=KMJMMJ9qao29ArrxPo9w@mail.gmail.com>
- <20200714190657.47527-1-grandmaster@al2klimov.de>
-In-Reply-To: <20200714190657.47527-1-grandmaster@al2klimov.de>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Wed, 15 Jul 2020 13:03:40 +0300
-Message-ID: <CAHp75VcZ5f0xw9RbV0OZ0DuE6JqCfkTExqO=MJ9AE0TFdCV8Xg@mail.gmail.com>
-Subject: Re: [PATCH] platform/x86: acerhdf: Replace HTTP links with HTTPS ones
-To:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
-Cc:     Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Ayman Bagabas <ayman.bagabas@gmail.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+X-Received: by 2002:a92:7309:: with SMTP id o9mr8619036ilc.5.1594807444150;
+ Wed, 15 Jul 2020 03:04:04 -0700 (PDT)
+Date:   Wed, 15 Jul 2020 03:04:04 -0700
+In-Reply-To: <000000000000e6807f05aa4608b7@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <00000000000031a14405aa780bdb@google.com>
+Subject: Re: WARNING in kthread_queue_work
+From:   syzbot <syzbot+fa64e680a1ff32087778@syzkaller.appspotmail.com>
+To:     akpm@linux-foundation.org, axboe@kernel.dk,
+        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        pmladek@suse.com, qiang.zhang@windriver.com, sfr@canb.auug.org.au,
+        syzkaller-bugs@googlegroups.com
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 14, 2020 at 10:07 PM Alexander A. Klimov
-<grandmaster@al2klimov.de> wrote:
->
-> Rationale:
-> Reduces attack surface on kernel devs opening the links for MITM
-> as HTTPS traffic is much harder to manipulate.
->
-> Deterministic algorithm:
-> For each file:
->   If not .svg:
->     For each line:
->       If doesn't contain `\bxmlns\b`:
->         For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
->           If neither `\bgnu\.org/license`, nor `\bmozilla\.org/MPL\b`:
->             If both the HTTP and HTTPS versions
->             return 200 OK and serve the same content:
->               Replace HTTP with HTTPS.
+syzbot has bisected this issue to:
 
-So, please unify two Acer patches now into one.
+commit 4977caef05aa154f5e45a232fc4f0e1c74a0c739
+Author: Zhang Qiang <qiang.zhang@windriver.com>
+Date:   Tue Jul 7 02:29:47 2020 +0000
 
-(And don't forget to provide proper version of the patch)
+    kthread: work could not be queued when worker being destroyed
 
-Thanks!
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=12c58f57100000
+start commit:   89032636 Add linux-next specific files for 20200708
+git tree:       linux-next
+final oops:     https://syzkaller.appspot.com/x/report.txt?x=11c58f57100000
+console output: https://syzkaller.appspot.com/x/log.txt?x=16c58f57100000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=64a250ebabc6c320
+dashboard link: https://syzkaller.appspot.com/bug?extid=fa64e680a1ff32087778
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=16bf9f2f100000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=118380ed100000
 
--- 
-With Best Regards,
-Andy Shevchenko
+Reported-by: syzbot+fa64e680a1ff32087778@syzkaller.appspotmail.com
+Fixes: 4977caef05aa ("kthread: work could not be queued when worker being destroyed")
+
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
