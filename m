@@ -2,145 +2,134 @@ Return-Path: <SRS0=kup7=A2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 442A6C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 14:22:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1ECABC433E3
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 14:22:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1DDEF2064B
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 14:22:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lCcrKo0G"
+	by mail.kernel.org (Postfix) with ESMTP id F130D2064B
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 14:22:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728295AbgGOOWN (ORCPT
+        id S1728347AbgGOOWe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 10:22:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50228 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728121AbgGOOWN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 10:22:13 -0400
-Received: from mail-ed1-x543.google.com (mail-ed1-x543.google.com [IPv6:2a00:1450:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A1DDEC061755;
-        Wed, 15 Jul 2020 07:22:12 -0700 (PDT)
-Received: by mail-ed1-x543.google.com with SMTP id e22so1741283edq.8;
-        Wed, 15 Jul 2020 07:22:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=J4YLq7ad8Ku7+EWFa0/mgk39lvRv5vsUDuPSLGAmMis=;
-        b=lCcrKo0G+0r8E1QGKPPSeKTD6jPE8Sc6irv4/pOM95bnJP53927eRuCyYXGeGkV9fd
-         4mAETYDfMMhmValjwwKkzgyw6wNRUSM7HPaYym0azD4zlCU3nckTdg4+j1Wc53w3nOHA
-         O1x4YZWvOSoxt6Ki5XkR4PxFJ2sl5ih71h1LHgcgiViNmWv4Groshm3PXgvKN4TJT7MH
-         8TG+hVZ4AaNClt0XH3+2cPGeaAwLX9Nb/XP5ixDGbggf5vtZTfFJFyppqTL9x3mDCHfO
-         b4nFyNmrOU8X1KLO5q+5txBX/3CO8n6xnjqpC15H43ua/BRMEViLX4C0QztCHodDD7LN
-         K3Lg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=J4YLq7ad8Ku7+EWFa0/mgk39lvRv5vsUDuPSLGAmMis=;
-        b=QnnOxpkqv+u1t8KK3xMYa9Yrr8zxinQg/TiQhXW6HKaqXwTb8YDuxcwcpMg/uSMX8C
-         mGJXWH7TrPxXfPxxzI2Y/L9CXae1Z+GCBQseMxcC/sWEe03Qi5pKjiPRxasWZpKlpOfA
-         68lV9obOIVHdNEa/A8f/qVSgeBi+0l6agET/daP1o4n7GdHJvGlm1KgmO52NAulYf7E3
-         P1nLpLCujJSq8f3c3bUZXr0Xw/XfaKjfU+WUcxmv4hDxB40X3C+p22FHKSiSn7hI2RKm
-         ExQRNotLtXYo9lLhlhjG59xNTkCA73A+3qYwg2te5zU3k9tDXdaU3/0G63uhAyoZT7R0
-         KW/Q==
-X-Gm-Message-State: AOAM530TkmiGvG4+pfIc07Q4Nd9IQ9Ay98/lTwLnRsug4gZmdJm6JKgD
-        PR0cQs8nBPpItyZb3qEDKqApGXadPN4DDq3Oxuo=
-X-Google-Smtp-Source: ABdhPJw5Rrl8VSXS3LDJXAXOUm42CTHm9/tBMgf95ADIskpTsgsl8yCwuH0vzZ6Rb7gKkig3GTgv+diJgyCwmRsxUnA=
-X-Received: by 2002:aa7:c3d7:: with SMTP id l23mr9596809edr.18.1594822931168;
- Wed, 15 Jul 2020 07:22:11 -0700 (PDT)
+        Wed, 15 Jul 2020 10:22:34 -0400
+Received: from mga18.intel.com ([134.134.136.126]:27565 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728086AbgGOOWe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jul 2020 10:22:34 -0400
+IronPort-SDR: qhl1A9ke0D2uwj8Iup3cMrkOU/yIzW2ch506eHNya3L6vIuZLNcYfirnsBEHMrIzhYCRUzmNP5
+ +yB2ZVFNooBQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9682"; a="136608590"
+X-IronPort-AV: E=Sophos;i="5.75,355,1589266800"; 
+   d="scan'208";a="136608590"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jul 2020 07:22:33 -0700
+IronPort-SDR: 80v3gF12OrUgc3oIBjWlwM2wEEYcTwJALfOy+mW5YqBibu2SxXytSH25abnfa12TbAfIiwqCna
+ 9SiWcSQ/Gm+Q==
+X-IronPort-AV: E=Sophos;i="5.75,355,1589266800"; 
+   d="scan'208";a="460106447"
+Received: from sjeong-mobl.amr.corp.intel.com (HELO [10.255.231.101]) ([10.255.231.101])
+  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jul 2020 07:22:32 -0700
+Subject: Re: [PATCH 8/9] soundwire: intel: add wake interrupt support
+To:     Vinod Koul <vkoul@kernel.org>
+Cc:     Bard Liao <yung-chuan.liao@linux.intel.com>,
+        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
+        tiwai@suse.de, broonie@kernel.org, gregkh@linuxfoundation.org,
+        jank@cadence.com, srinivas.kandagatla@linaro.org,
+        rander.wang@linux.intel.com, ranjani.sridharan@linux.intel.com,
+        hui.wang@canonical.com, sanyog.r.kale@intel.com,
+        slawomir.blauciak@intel.com, mengdong.lin@intel.com,
+        bard.liao@intel.com
+References: <20200623173546.21870-1-yung-chuan.liao@linux.intel.com>
+ <20200623173546.21870-9-yung-chuan.liao@linux.intel.com>
+ <20200630165126.GT2599@vkoul-mobl>
+ <a69aa5d0-613a-6ef6-9263-378b1e99770a@linux.intel.com>
+ <20200701055654.GW2599@vkoul-mobl>
+ <81a33798-0667-9a4f-9916-eb157ad5514d@linux.intel.com>
+ <20200715045011.GO34333@vkoul-mobl>
+From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Message-ID: <2832a0d0-dd19-9532-2c6e-814b796b4e20@linux.intel.com>
+Date:   Wed, 15 Jul 2020 09:22:31 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-References: <20200629114927.17379-1-bruno.thomsen@gmail.com>
- <20200629114927.17379-2-bruno.thomsen@gmail.com> <20200713025246.GY21277@dragon>
- <CAH+2xPAHKY6YfhO-jXfKN+TRN5LDT1Kkn8a8HUj_EOqFt=75nQ@mail.gmail.com> <CAOMZO5DsyqRgD8n-w=6OmnXuMX+1T2DDOjQLNK133=FaqtWXVQ@mail.gmail.com>
-In-Reply-To: <CAOMZO5DsyqRgD8n-w=6OmnXuMX+1T2DDOjQLNK133=FaqtWXVQ@mail.gmail.com>
-From:   Bruno Thomsen <bruno.thomsen@gmail.com>
-Date:   Wed, 15 Jul 2020 16:21:55 +0200
-Message-ID: <CAH+2xPD31bdb_ZjAi6qo5n25K469Ak-qt2GJCcppHk4FZChdeg@mail.gmail.com>
-Subject: Re: [PATCH 2/3] ARM: dts: imx7: add support for kamstrup flex concentrator
-To:     Fabio Estevam <festevam@gmail.com>
-Cc:     Shawn Guo <shawnguo@kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Bruno Thomsen <bth@kamstrup.com>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200715045011.GO34333@vkoul-mobl>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Den tir. 14. jul. 2020 kl. 13.54 skrev Fabio Estevam <festevam@gmail.com>:
->
-> Hi Bruno,
->
-> On Tue, Jul 14, 2020 at 7:03 AM Bruno Thomsen <bruno.thomsen@gmail.com> wrote:
->
-> > I have not yet been successful in converting the deprecated properties
-> > to generic phy properties, so hoping I could get a hit.
-> >
-> > Kernel error messages:
-> > mdio_bus 30be0000.ethernet-1: MDIO device at address 1 is missing.
->
-> Please double-check whether 1 is the correct address for the KSZ8051
-> Ethernet PHY as per your schematics.
 
-Hi Fabio,
 
-Thanks for the hints.
+On 7/14/20 11:50 PM, Vinod Koul wrote:
+> On 01-07-20, 10:25, Pierre-Louis Bossart wrote:
+>>
+>>>>>> +	 * wake up master and slave so that slave can notify master
+>>>>>> +	 * the wakeen event and let codec driver check codec status
+>>>>>> +	 */
+>>>>>> +	list_for_each_entry(slave, &bus->slaves, node) {
+>>>>>> +		/*
+>>>>>> +		 * discard devices that are defined in ACPI tables but
+>>>>>> +		 * not physically present and devices that cannot
+>>>>>> +		 * generate wakes
+>>>>>> +		 */
+>>>>>> +		if (slave->dev_num_sticky && slave->prop.wake_capable)
+>>>>>> +			pm_request_resume(&slave->dev);
+>>>>>
+>>>>> Hmmm, shouldn't slave do this? would it not make sense to notify the
+>>>>> slave thru callback and then slave decides to resume or not..?
+>>>>
+>>>> In this mode, the bus is clock-stop mode, and events are detected with level
+>>>> detector tied to PCI events. The master and slave devices are all in
+>>>> pm_runtime suspended states. The codec cannot make any decisions on its own
+>>>> since the bus is stopped, it needs to first resume, which assumes that the
+>>>> master resumes first and the enumeration re-done before it can access any of
+>>>> its registers.
+>>>>
+>>>> By looping through the list of devices that can generate events, you end-up
+>>>> first forcing the master to resume, and then each slave resumes and can
+>>>> check who generated the event and what happened while suspended. if the
+>>>> codec didn't generate the event it will go back to suspended mode after the
+>>>> usual timeout.
+>>>>
+>>>> We can add a callback but that callback would only be used for Intel
+>>>> solutions, but internally it would only do a pm_request_resume() since the
+>>>> codec cannot make any decisions before first resuming. In other words, it
+>>>> would be an Intel-specific callback that is implemented using generic resume
+>>>> operations. It's probably better to keep this in Intel-specific code, no?
+>>>
+>>> I do not like the idea that a device would be woken up, that kind of
+>>> defeats the whole idea behind the runtime pm. Waking up a device to
+>>> check the events is a generic sdw concept, I don't see that as Intel
+>>> specific one.
+>>
+>> In this case, this in an Intel-specific mode that's beyond what MIPI
+>> defined. This is not the traditional in-band SoundWire wake defined in the
+>> SoundWire specification. The bus is completely down, the master IP is
+>> powered-off and all context lost. There is still the ability for a Slave
+>> device to throw a wake as defined by MIPI in clock-stop-mode1, but this is
+>> handled with a separate level detector and the wake detection is handled by
+>> the PCI subsystem. On a wake, the master IP needs to be powered-up, the
+>> entire bus needs to be restarted and the Slave devices re-enumerated.
+> 
+> Right and I would expect that Slave device would do runtime_get_sync()
+> first thing in the callback. That would ensure that the Master is
+> powered up, Slave is powered up, all enumeration is complete. This is
+> more standard way to deal with this, we expect devices to be so we
+> low powered or off so cannot do read/write unless we resume.
 
-Yes, the address is correct and configured with external resistors,
-but just realised that I wrote the wrong device name in the comment,
-it's actually KSZ8081RNB.
+As shared privately with you, we don't need to deal with device PM or 
+add a callback, it's enough to resume the master, which will indirectly 
+restart the bus and result in devices being resumed when they report 
+their interrupt status. We'll share the update from [1] in the v2.
 
-Ethernet has been working with multiple mainline kernel versions
-(latest being 5.7.8)
-for the last year or so when using the DTS in patch. So I am pretty sure
-hardware and setup of mux is correct'ish.
+[1] https://github.com/thesofproject/linux/pull/2247
 
-Kernel trace from patch version:
-kernel: Micrel KSZ8081 or KSZ8091 30be0000.ethernet-1:01: attached PHY driver
- [Micrel KSZ8081 or KSZ8091] (mii_bus:phy_addr=30be0000.ethernet-1:01, irq=POLL)
-
-Error first occurs when switching from fec phy reset to mdio phy reset
-code path,
-I understand that the fec phy reset is obsolete as phy properties was wrongly
-added to the mac and of course should be part of the phy (separate chip).
-
-When debugging it I end up with the get_phy_device() call not working
-inside of_mdiobus_register_phy().
-
-Workaround at the moment seems to be extending compatible with
-"ethernet-phy-id0022.1560" to disable auto detection of phy type,
-and then Ethernet works again. At least the same PHY driver trace
-can be found and full transmission speed can be used without packet
-errors/loss.
-
-> Are there external pull-up/pull-down resistors for strapping the
-> various configuration pins for the PHY? Or are the pull-up/pull-down
-> provided by the i.MX7D pins?
-
-Config strapping is done with external resistors.
-
-> If there are no external pull-ups, please make sure to configure the
-> pinctrl_enet1 accordingly, so that the Ethernet PHY address can be
-> properly configured and then mdio_bus driver can find it at the
-> correct address.
->
-> Please check in arch/arm/boot/dts/imx6qdl-sr-som.dtsi for an example
-> on how to configure the Ethernet PHY pin strapping via iMX IOMUX.
-
-Thanks, good examples can be hard to find.
-
-/Bruno
