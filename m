@@ -2,147 +2,139 @@ Return-Path: <SRS0=kup7=A2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D372C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 15:45:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B8B4C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 15:47:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 42C2D2065E
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 15:45:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6635E2065E
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 15:47:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="O0ngZE5Y"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uAmWLwE/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726633AbgGOPp2 (ORCPT
+        id S1726722AbgGOPrH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 11:45:28 -0400
-Received: from aserp2130.oracle.com ([141.146.126.79]:50996 "EHLO
-        aserp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725798AbgGOPp1 (ORCPT
+        Wed, 15 Jul 2020 11:47:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35276 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725798AbgGOPrG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 11:45:27 -0400
-X-Greylist: delayed 1710 seconds by postgrey-1.27 at vger.kernel.org; Wed, 15 Jul 2020 11:45:26 EDT
-Received: from pps.filterd (aserp2130.oracle.com [127.0.0.1])
-        by aserp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06FF1rhZ064552;
-        Wed, 15 Jul 2020 15:16:55 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
- mime-version : subject : from : in-reply-to : date : cc :
- content-transfer-encoding : message-id : references : to;
- s=corp-2020-01-29; bh=dE2+XAhVZ3ELSojoIO+9JYurWJh0dM6wVluR2D7xeL4=;
- b=O0ngZE5YBhuV8ifHX7+fJJrWxHZHX60tohL8NZE8Gw9kTS/8ztKLV2AUKFf3rTftVeXm
- nLeiZGtY4hjs4vrEzrryGEmHgNNyn6gi4i4mHh73tT+1slLnkWIyd4HpQoej3VRQ4aQC
- BFHSQo+QWGCYApQoer0un93OBxcFjIDsIOevbJWiqw2qFBMu9oZGuD9sVFR01KEjLiMj
- YwnpX92Qo6999waUfjgcRRRg3HuPEVkISagfmc1y5OrJUgZ4rTk73RqFjgVzZLPYx5aa
- Sc2UwL3DDk+4ed5NsuwM1494Ucy8NzLzeG6whjj1TqZYI1Sf1Pr0IJV0pfBWK9ZfsOPA 3g== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by aserp2130.oracle.com with ESMTP id 327s65j9y0-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 15 Jul 2020 15:16:54 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06FF3fw8011650;
-        Wed, 15 Jul 2020 15:14:54 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by aserp3030.oracle.com with ESMTP id 327q0rdww0-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 15 Jul 2020 15:14:54 +0000
-Received: from abhmp0008.oracle.com (abhmp0008.oracle.com [141.146.116.14])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 06FFErBA030894;
-        Wed, 15 Jul 2020 15:14:53 GMT
-Received: from anon-dhcp-152.1015granger.net (/68.61.232.219)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 15 Jul 2020 08:14:53 -0700
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.80.23.2.2\))
-Subject: Re: [Regression] "SUNRPC: Add "@len" parameter to gss_unwrap()"
- breaks NFS Kerberos on upstream stable 5.4.y
-From:   Chuck Lever <chuck.lever@oracle.com>
-In-Reply-To: <6E0D09F1-601B-432B-81EE-9858EC1AF1DE@canonical.com>
-Date:   Wed, 15 Jul 2020 11:14:52 -0400
-Cc:     matthew.ruffell@canonical.com,
-        linux-stable <stable@vger.kernel.org>,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
-        "open list:NETWORKING DRIVERS" <netdev@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <7042081C-27B3-4024-BA34-7146B459F8B4@oracle.com>
-References: <309E203B-8818-4E33-87F0-017E127788E2@canonical.com>
- <424D9E36-C51B-46E8-9A07-D329821F2647@oracle.com>
- <6E0D09F1-601B-432B-81EE-9858EC1AF1DE@canonical.com>
-To:     Kai-Heng Feng <kai.heng.feng@canonical.com>
-X-Mailer: Apple Mail (2.3608.80.23.2.2)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9683 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 malwarescore=0 spamscore=0
- mlxlogscore=999 bulkscore=0 adultscore=0 phishscore=0 suspectscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2007150124
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9683 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 malwarescore=0
- phishscore=0 mlxscore=0 priorityscore=1501 lowpriorityscore=0 spamscore=0
- clxscore=1015 bulkscore=0 mlxlogscore=999 impostorscore=0 suspectscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2007150124
+        Wed, 15 Jul 2020 11:47:06 -0400
+Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9C088C061755
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 08:47:06 -0700 (PDT)
+Received: by mail-pj1-x1043.google.com with SMTP id b92so3157996pjc.4
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 08:47:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=sLH6sJiQXmgSukJgX8/DO69X96LYF+NzNLc7t6L2/Sg=;
+        b=uAmWLwE/X7tejts48oDLWu0N6J93qGudNux6Py3WgedC2uNFNKbkxWa4xcuJj8DSNJ
+         WCmMZk7dNnRWhN8uwqZsSYcpSXoq2ffwYgs1/2uwBDpmB2OM3EWvKDeS/CGdwcwd/qkN
+         2y9RqYoC3ANMVx2b4g20hxXBH/jgNBuiZ3oQOljHnsWA7JF3/m2eMeA4hDCq71NYJtY7
+         zw4on+IR8Rs9jUyRk+NpBkFyjF/iZawih3U0wO8Z/VpTlk8LfeBsfOP0gyfQJGfxvqvm
+         88uude+3Opu9bwq/gsHcN0Z5KYVj/rBh4zq0sjSiWMQkZWsCPo2KYdkBF4lctkwU4JIi
+         xIVQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=sLH6sJiQXmgSukJgX8/DO69X96LYF+NzNLc7t6L2/Sg=;
+        b=iIFujEreSwQAVJCmG2gSdbj2YX/4JVrKVD8B4iRW35PO2eQ9iLemoRu9tiZqNbhq+v
+         u1nXrFKj7iDc1LKxGvltDzuMfY7Q4XZOzNk9qpU9aTJj2TKgIQMEMAu1lBOqSfRL1rU4
+         j6y2CbOy3l7s9VpcokioIq9XDebp/4lkDIH2ppzP6v0zNg9nNFl/rzEbY5BtGFreR50B
+         UxOjuFnBwFdZr5lhFvMDIe8NgGAiekmUE2egPK/AR574Bpbr5ygm4RcdyQbC6IVbjALv
+         U17oNzJ3Mgws+iRmk5ejhrh/tTrnda8quiY/NeGvHw2SSSaSdgG8MXBeYgkMKMzhuxqY
+         dL+Q==
+X-Gm-Message-State: AOAM530UljkTwYkEzuGjGgI09UlrdpL+/kYSmLaBfV4frKkUsvvaV/0G
+        kk69BXIzmnplF2NbzG7JLm8RDmRU+cCEXQ==
+X-Google-Smtp-Source: ABdhPJxxYu7No5w89yfleDz0iprY6cdSbOIG/ccb39GlpAwOINaCRTj9MkoTwMfKq+GPxG/gu1MM0g==
+X-Received: by 2002:a17:902:680c:: with SMTP id h12mr99767plk.142.1594828026116;
+        Wed, 15 Jul 2020 08:47:06 -0700 (PDT)
+Received: from arpitha-Inspiron-7570.lan ([49.206.11.188])
+        by smtp.gmail.com with ESMTPSA id g26sm2446064pfq.205.2020.07.15.08.47.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 15 Jul 2020 08:47:05 -0700 (PDT)
+From:   Arpitha Raghunandan <98.arpi@gmail.com>
+To:     Larry.Finger@lwfinger.net, gregkh@linuxfoundation.org,
+        puranjay12@gmail.com, yepeilin.cs@gmail.com
+Cc:     Arpitha Raghunandan <98.arpi@gmail.com>,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v3] staging: rtl8188eu: core: fix coding style issues
+Date:   Wed, 15 Jul 2020 21:16:23 +0530
+Message-Id: <20200715154623.78315-1-98.arpi@gmail.com>
+X-Mailer: git-send-email 2.25.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Fixing WARNING: Prefer using '"%s...", __func__' to using 'function_name'
+in a string in rtw_ioctl_set.c
 
+Signed-off-by: Arpitha Raghunandan <98.arpi@gmail.com>
+---
+Changes v2->v3:
+- Added information about what changed from previous versions
+Changes v1->v2:
+- Added full name in From and Signed-off-by
 
-> On Jul 15, 2020, at 11:08 AM, Kai-Heng Feng =
-<kai.heng.feng@canonical.com> wrote:
->=20
->> On Jul 15, 2020, at 23:02, Chuck Lever <chuck.lever@oracle.com> =
-wrote:
->>=20
->>> On Jul 15, 2020, at 10:48 AM, Kai-Heng Feng =
-<kai.heng.feng@canonical.com> wrote:
->>>=20
->>> Hi,
->>>=20
->>> Multiple users reported NFS causes NULL pointer dereference [1] on =
-Ubuntu, due to commit "SUNRPC: Add "@len" parameter to gss_unwrap()" and =
-commit "SUNRPC: Fix GSS privacy computation of auth->au_ralign".
->>>=20
->>> The same issue happens on upstream stable 5.4.y branch.
->>> The mainline kernel doesn't have this issue though.
->>>=20
->>> Should we revert them? Or is there any missing commits need to be =
-backported to v5.4?
->>>=20
->>> [1] https://bugs.launchpad.net/bugs/1886277
->>>=20
->>> Kai-Heng
->>=20
->> 31c9590ae468 ("SUNRPC: Add "@len" parameter to gss_unwrap()") is a =
-refactoring
->> change. It shouldn't have introduced any behavior difference. But in =
-theory,
->> practice and theory should be the same...
->>=20
->> Check if 0a8e7b7d0846 ("SUNRPC: Revert 241b1f419f0e ("SUNRPC: Remove =
-xdr_buf_trim()")")
->> is also applied to 5.4.0-40-generic.
->=20
-> Yes, it's included. The commit is part of upstream stable 5.4.
->=20
->>=20
->> It would help to know if v5.5 stable is working for you. I haven't =
-had any
->> problems with it.
->=20
-> I'll ask users to test it out.=20
-> Thanks for you quick reply!
+ drivers/staging/rtl8188eu/core/rtw_ioctl_set.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-Another thought: Please ask what encryption type is in use. The
-kerberos_v1 enctypes might exercise a code path I wasn't able to
-test.
-
-
---
-Chuck Lever
-
-
+diff --git a/drivers/staging/rtl8188eu/core/rtw_ioctl_set.c b/drivers/staging/rtl8188eu/core/rtw_ioctl_set.c
+index 9cc77ab4fd6b..fa88e8b2852d 100644
+--- a/drivers/staging/rtl8188eu/core/rtw_ioctl_set.c
++++ b/drivers/staging/rtl8188eu/core/rtw_ioctl_set.c
+@@ -44,12 +44,12 @@ u8 rtw_do_join(struct adapter *padapter)
+ 
+ 		if (!pmlmepriv->LinkDetectInfo.bBusyTraffic ||
+ 		    pmlmepriv->to_roaming > 0) {
+-			RT_TRACE(_module_rtl871x_ioctl_set_c_, _drv_info_, ("rtw_do_join(): site survey if scanned_queue is empty\n."));
++			RT_TRACE(_module_rtl871x_ioctl_set_c_, _drv_info_, ("%s: site survey if scanned_queue is empty\n.", __func__));
+ 			/*  submit site_survey_cmd */
+ 			ret = rtw_sitesurvey_cmd(padapter, &pmlmepriv->assoc_ssid, 1, NULL, 0);
+ 			if (ret != _SUCCESS) {
+ 				pmlmepriv->to_join = false;
+-				RT_TRACE(_module_rtl871x_ioctl_set_c_, _drv_err_, ("rtw_do_join(): site survey return error\n."));
++				RT_TRACE(_module_rtl871x_ioctl_set_c_, _drv_err_, ("%s: site survey return error\n.", __func__));
+ 			}
+ 		} else {
+ 			pmlmepriv->to_join = false;
+@@ -313,7 +313,7 @@ u8 rtw_set_802_11_infrastructure_mode(struct adapter *padapter,
+ 	enum ndis_802_11_network_infra *pold_state = &cur_network->network.InfrastructureMode;
+ 
+ 	RT_TRACE(_module_rtl871x_ioctl_set_c_, _drv_notice_,
+-		 ("+rtw_set_802_11_infrastructure_mode: old =%d new =%d fw_state = 0x%08x\n",
++		 ("+%s: old =%d new =%d fw_state = 0x%08x\n", __func__,
+ 		  *pold_state, networktype, get_fwstate(pmlmepriv)));
+ 
+ 	if (*pold_state != networktype) {
+@@ -496,7 +496,7 @@ u8 rtw_set_802_11_add_wep(struct adapter *padapter, struct ndis_802_11_wep *wep)
+ 		break;
+ 	}
+ 	RT_TRACE(_module_rtl871x_ioctl_set_c_, _drv_info_,
+-		 ("rtw_set_802_11_add_wep:before memcpy, wep->KeyLength = 0x%x wep->KeyIndex = 0x%x  keyid =%x\n",
++		 ("%s:before memcpy, wep->KeyLength = 0x%x wep->KeyIndex = 0x%x  keyid =%x\n", __func__,
+ 		 wep->KeyLength, wep->KeyIndex, keyid));
+ 
+ 	memcpy(&psecuritypriv->dot11DefKey[keyid].skey[0],
+@@ -507,7 +507,7 @@ u8 rtw_set_802_11_add_wep(struct adapter *padapter, struct ndis_802_11_wep *wep)
+ 	psecuritypriv->dot11PrivacyKeyIndex = keyid;
+ 
+ 	RT_TRACE(_module_rtl871x_ioctl_set_c_, _drv_info_,
+-		 ("rtw_set_802_11_add_wep:security key material : %x %x %x %x %x %x %x %x %x %x %x %x %x\n",
++		 ("%s:security key material : %x %x %x %x %x %x %x %x %x %x %x %x %x\n", __func__,
+ 		 psecuritypriv->dot11DefKey[keyid].skey[0],
+ 		 psecuritypriv->dot11DefKey[keyid].skey[1],
+ 		 psecuritypriv->dot11DefKey[keyid].skey[2],
+-- 
+2.25.1
 
