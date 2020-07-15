@@ -7,35 +7,35 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1744C433E3
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 04:06:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0942C433E5
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 04:06:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BE76C206F5
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 04:06:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 901C2206F5
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 04:06:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726988AbgGOEGK (ORCPT
+        id S1728712AbgGOEGO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 00:06:10 -0400
+        Wed, 15 Jul 2020 00:06:14 -0400
 Received: from mga17.intel.com ([192.55.52.151]:16670 "EHLO mga17.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725980AbgGOEGD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 00:06:03 -0400
-IronPort-SDR: YVH6ViBrl/AJ3E3MxSKn7cpkxYK9Z9/dKVwm5P+kf0ZP6P9HTa3gMOXXb+3eOA9GUmQaL3H8HQ
- wXrDlLQ0h7hg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9682"; a="129167486"
+        id S1726160AbgGOEGF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jul 2020 00:06:05 -0400
+IronPort-SDR: C9m4PEjapDzBOeeY73VOPll7FvKsPzobKdxHRvLxGyxm+lu+WrL3lLJx0lwYBliOkuWE1t6juq
+ k2lXhtbm4ciw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9682"; a="129167487"
 X-IronPort-AV: E=Sophos;i="5.75,353,1589266800"; 
-   d="scan'208";a="129167486"
+   d="scan'208";a="129167487"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from fmsmga006.fm.intel.com ([10.253.24.20])
   by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jul 2020 21:06:03 -0700
-IronPort-SDR: 14tQVUJqoTUwoWBKb9RejmYG0x2tdKbE7FGGXpkyFzfBq22hJdG7sHrwcc7yfz/u7JQkQmIDof
- y+UA/KObHVvw==
+IronPort-SDR: MbssNKGmOLgp4+iuIgCJlNq0VZ+9/tKannUVxw9XEwu6VhjIpFgjRdcSJz0g0FAfzNliXDLnS5
+ xuqrdcl2Zjjw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.75,353,1589266800"; 
-   d="scan'208";a="485587029"
+   d="scan'208";a="485587033"
 Received: from sjchrist-coffee.jf.intel.com ([10.54.74.152])
-  by fmsmga006.fm.intel.com with ESMTP; 14 Jul 2020 21:06:02 -0700
+  by fmsmga006.fm.intel.com with ESMTP; 14 Jul 2020 21:06:03 -0700
 From:   Sean Christopherson <sean.j.christopherson@intel.com>
 To:     Paolo Bonzini <pbonzini@redhat.com>
 Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
@@ -45,9 +45,9 @@ Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
         Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
         linux-kernel@vger.kernel.org, Dan Cross <dcross@google.com>,
         Peter Shier <pshier@google.com>
-Subject: [PATCH 6/7] KVM: nVMX: Drop redundant VMCS switch and free_nested() call
-Date:   Tue, 14 Jul 2020 21:05:56 -0700
-Message-Id: <20200715040557.5889-7-sean.j.christopherson@intel.com>
+Subject: [PATCH 7/7] KVM: nVMX: WARN on attempt to switch the currently loaded VMCS
+Date:   Tue, 14 Jul 2020 21:05:57 -0700
+Message-Id: <20200715040557.5889-8-sean.j.christopherson@intel.com>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200715040557.5889-1-sean.j.christopherson@intel.com>
 References: <20200715040557.5889-1-sean.j.christopherson@intel.com>
@@ -58,29 +58,31 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Remove the explicit switch to vmcs01 and the call to free_nested() in
-nested_vmx_free_vcpu().  free_nested(), which is called unconditionally
-by vmx_leave_nested(), ensures vmcs01 is loaded prior to freeing vmcs02
-and friends.
+WARN if KVM attempts to switch to the currently loaded VMCS.  Now that
+nested_vmx_free_vcpu() doesn't blindly call vmx_switch_vmcs(), all paths
+that lead to vmx_switch_vmcs() are implicitly guarded by guest vs. host
+mode, e.g. KVM should never emulate VMX instructions when guest mode is
+active, and nested_vmx_vmexit() should never be called when host mode is
+active.
 
 Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
 ---
- arch/x86/kvm/vmx/nested.c | 2 --
- 1 file changed, 2 deletions(-)
+ arch/x86/kvm/vmx/nested.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/arch/x86/kvm/vmx/nested.c b/arch/x86/kvm/vmx/nested.c
-index 5734bff1a5907..66ed449f0d59f 100644
+index 66ed449f0d59f..023055e636d61 100644
 --- a/arch/x86/kvm/vmx/nested.c
 +++ b/arch/x86/kvm/vmx/nested.c
-@@ -326,8 +326,6 @@ void nested_vmx_free_vcpu(struct kvm_vcpu *vcpu)
- {
- 	vcpu_load(vcpu);
- 	vmx_leave_nested(vcpu);
--	vmx_switch_vmcs(vcpu, &to_vmx(vcpu)->vmcs01);
--	free_nested(vcpu);
- 	vcpu_put(vcpu);
- }
+@@ -258,7 +258,7 @@ static void vmx_switch_vmcs(struct kvm_vcpu *vcpu, struct loaded_vmcs *vmcs)
+ 	struct loaded_vmcs *prev;
+ 	int cpu;
  
+-	if (vmx->loaded_vmcs == vmcs)
++	if (WARN_ON_ONCE(vmx->loaded_vmcs == vmcs))
+ 		return;
+ 
+ 	cpu = get_cpu();
 -- 
 2.26.0
 
