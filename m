@@ -2,187 +2,594 @@ Return-Path: <SRS0=kup7=A2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12A0EC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 19:51:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4ACA9C433E2
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 19:55:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DBDF72065F
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 19:51:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="jbY1Z/ME"
+	by mail.kernel.org (Postfix) with ESMTP id 22D1E2065F
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 19:55:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594842935;
+	bh=vJV0Gdr4dY5aTFPdeUdfdmawj3ibnxFTEFYvKTWt3e0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=wZ8P+96ynjRZyJIg+TUxKa+xhKGgX0oZmQFeK2MNLyBQ53Yai3gwcsc4VFEKDJwt8
+	 2IO+Y/ggkn/NaMhZfPw+ATgqoa1E4dl484ui9/cDyizGsME5HhG0V6WIuC/5j4jsLZ
+	 3mF/+TAeMY+kQDW8M1YLVUin+hZlj4i1TE7UDdgs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727043AbgGOTv0 (ORCPT
+        id S1726932AbgGOTze (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 15:51:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44792 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726864AbgGOTvZ (ORCPT
+        Wed, 15 Jul 2020 15:55:34 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:37047 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726650AbgGOTzd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 15:51:25 -0400
-Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 86467C08C5CE
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 12:51:25 -0700 (PDT)
-Received: by mail-pf1-x443.google.com with SMTP id a14so2550442pfi.2
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 12:51:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=9JohOJfniBpoVsObcPj1lUWx7GOTVdGb79jGgvP71lo=;
-        b=jbY1Z/MEEo7lZDPPFvdqaESsTErbULuzQ2o7XOJQEu3R7wPlnDYtTP0kbWlMVoJQ1i
-         /k1apyD0iOzOuWoUP9wFyrQE7izrWG9QaJbvN1bsKY3OdWcAvYVZ8ILLhC9aNjofvZv/
-         iS1hlqyDWhpIZ6w8peHSwSjNTfMnQ/gI9hMN4=
+        Wed, 15 Jul 2020 15:55:33 -0400
+Received: by mail-io1-f66.google.com with SMTP id v6so3582345iob.4;
+        Wed, 15 Jul 2020 12:55:31 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=9JohOJfniBpoVsObcPj1lUWx7GOTVdGb79jGgvP71lo=;
-        b=sKU/LpkLyI2+n3Go7ZV7v6B+iqtaATbdMU/5hF5jsb7C1HlTOspsakg6vnwzwGvHkx
-         RT/x/se1RS1FZHJscqVNSkD7CTEoXW/1s76fYwP5Me7O7J9/dgZvHnN4wbpaYhu4li/h
-         sti5jOyFv5JbYTy6Hjvlc3HhYZDyKJy3ljSlPBed40HE+FCvSlDeivM6lPJEHRPXOLXg
-         Wt56p6p+KwdD+sHAmfSIKiM+Iy/Ui950Uz6IkcDLqcJoOAW/EXdINMH0yBX39lf3u4ye
-         R1azCvyTzVcR0VdXEhztAuazZ2ngObrYgWpbCPSdmEG/Vtf90oF0CWtI0SYjEYCO/IC7
-         w8yw==
-X-Gm-Message-State: AOAM531phVgsU1LGmvcvvuX1rjgEALZ/ldX6mzTXS4c3DQ5ZSeDdjPFt
-        95xr+LM8ZeAWQHXQuv70Y7xiYA==
-X-Google-Smtp-Source: ABdhPJxBdP0fkixBEZUc7Sl0daIrNJeBbWdZ0nIQHwF8G8KVbUQSAXDkVIZfhtO4DSSxZK7C2l+rDw==
-X-Received: by 2002:a62:7790:: with SMTP id s138mr699734pfc.65.1594842685051;
-        Wed, 15 Jul 2020 12:51:25 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id 16sm2794211pjb.48.2020.07.15.12.51.23
+        bh=wwLSc8ACOFK5x6W6Wvc0FQ/VTmCQze+BtXUUtGB4oGs=;
+        b=Nu7O4X1RDHmNsyZ406/6JhkNjwV9+v31JLfRLDpZAhFFhc2pc6uflmIpYa9wqrJZlo
+         JhcmWXfCDmvzFTQW2459T0B19dsCqENVhO2548AZozqVvm/mir0dTsRrYMCRNKV6MSZE
+         kmqLB8vlyyuiPD62aJXvmf3tnpBiMeI+j2xB0TsOqBMNJ+XL+52jViUJbN7BG9oqqRXn
+         FohWKtaaDttbLWKBbZdxRZ9MuDCZAdgW5cku3x6fzmlA61E/wGy7SnuY1brZOYcETWNb
+         J3JNkNfgJsQ9Ruf+4wYzgV/6Ik6PVP/Y9K+fpiO45pwmVVOFEchEfYc5RuIPxaZ4aIs4
+         2n6A==
+X-Gm-Message-State: AOAM533DrcHnwgzsJkFKYz9Aklhin7oy/B5VhYmEAOqrJDegLsBjghH0
+        XZIrrog4v9tOcAI00RwlpQ==
+X-Google-Smtp-Source: ABdhPJzbwNj6HZcfmjrTSF00MePBWZMUTjuo0Qfo+4m272Hj76BlzCDEDKDNRCkcQY54y9jeKs+5XA==
+X-Received: by 2002:a02:b0d5:: with SMTP id w21mr1176522jah.27.1594842931059;
+        Wed, 15 Jul 2020 12:55:31 -0700 (PDT)
+Received: from xps15 ([64.188.179.252])
+        by smtp.gmail.com with ESMTPSA id t7sm1579252iol.2.2020.07.15.12.55.30
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 15 Jul 2020 12:51:24 -0700 (PDT)
-Date:   Wed, 15 Jul 2020 12:51:23 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Mike Rapoport <rppt@linux.ibm.com>
-Cc:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        linux-kernel@vger.kernel.org, x86@vger.kernel.org,
-        Andi Kleen <ak@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
-        Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Jessica Yu <jeyu@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
-        Will Deacon <will@kernel.org>,
-        Sami Tolvanen <samitolvanen@google.com>,
-        Alexandre Ghiti <alex@ghiti.fr>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Peter Collingbourne <pcc@google.com>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>, Stephen Boyd <sboyd@kernel.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Miroslav Benes <mbenes@suse.cz>,
-        Babu Moger <Babu.Moger@amd.com>,
-        Omar Sandoval <osandov@fb.com>,
-        Nayna Jain <nayna@linux.ibm.com>,
-        Marco Elver <elver@google.com>,
-        Brian Gerst <brgerst@gmail.com>, Jiri Kosina <jkosina@suse.cz>,
-        Joe Lawrence <joe.lawrence@redhat.com>
-Subject: Re: [PATCH v3 1/3] kprobes: Add text_alloc() and text_free()
-Message-ID: <202007151250.DE6C4B417@keescook>
-References: <20200714223239.1543716-1-jarkko.sakkinen@linux.intel.com>
- <20200714223239.1543716-2-jarkko.sakkinen@linux.intel.com>
- <202007151232.0DA220B2@keescook>
- <20200715194933.GC1166045@linux.ibm.com>
+        Wed, 15 Jul 2020 12:55:30 -0700 (PDT)
+Received: (nullmailer pid 720192 invoked by uid 1000);
+        Wed, 15 Jul 2020 19:55:29 -0000
+Date:   Wed, 15 Jul 2020 13:55:29 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Sivaprakash Murugesan <sivaprak@codeaurora.org>
+Cc:     agross@kernel.org, bjorn.andersson@linaro.org, bhelgaas@google.com,
+        linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] dt-bindings: pci: convert QCOM pci bindings to YAML
+Message-ID: <20200715195529.GA710312@bogus>
+References: <1592982124-27160-1-git-send-email-sivaprak@codeaurora.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200715194933.GC1166045@linux.ibm.com>
+In-Reply-To: <1592982124-27160-1-git-send-email-sivaprak@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 15, 2020 at 10:49:33PM +0300, Mike Rapoport wrote:
-> On Wed, Jul 15, 2020 at 12:36:02PM -0700, Kees Cook wrote:
-> > On Wed, Jul 15, 2020 at 01:32:27AM +0300, Jarkko Sakkinen wrote:
-> > > Introduce new API for allocating space for code generaed at run-time
-> > > leveraging from module_alloc() and module_memfree() code. Use this to
-> > > perform memory allocations in the kprobes code in order to loose the
-> > > bound between kprobes and modules subsystem.
-> > > 
-> > > Initially, use this API only with arch/x86 and define a new config
-> > > flag CONFIG_ARCH_HAS_TEXT_ALLOC to promote the availability of the
-> > > new API.
-> > > [...]
-> > > diff --git a/include/linux/text.h b/include/linux/text.h
-> > > new file mode 100644
-> > > index 000000000000..a27d4a42ecda
-> > > --- /dev/null
-> > > +++ b/include/linux/text.h
-> > > @@ -0,0 +1,17 @@
-> > > +/* SPDX-License-Identifier: GPL-2.0-only */
-> > > +
-> > > +#ifndef _LINUX_TEXT_H
-> > > +#define _LINUX_TEXT_H
-> > > +
-> > > +/*
-> > > + * An allocator used for allocating modules, core sections and init sections.
-> > > + * Returns NULL on failure.
-> > > + */
-> > > +void *text_alloc(unsigned long size);
-> > > +
-> > > +/*
-> > > + * Free memory returned from text_alloc().
-> > > + */
-> > > +void text_free(void *region);
-> > > +
-> > > +#endif /* _LINUX_TEXT_H */
-> > > diff --git a/kernel/kprobes.c b/kernel/kprobes.c
-> > > index 2e97febeef77..fa7687eb0c0e 100644
-> > > --- a/kernel/kprobes.c
-> > > +++ b/kernel/kprobes.c
-> > > @@ -35,6 +35,7 @@
-> > >  #include <linux/ftrace.h>
-> > >  #include <linux/cpu.h>
-> > >  #include <linux/jump_label.h>
-> > > +#include <linux/text.h>
-> > >  
-> > >  #include <asm/sections.h>
-> > >  #include <asm/cacheflush.h>
-> > > @@ -111,12 +112,20 @@ enum kprobe_slot_state {
-> > >  
-> > >  void __weak *alloc_insn_page(void)
-> > >  {
-> > > +#ifdef CONFIG_ARCH_HAS_TEXT_ALLOC
-> > > +	return text_alloc(PAGE_SIZE);
-> > > +#else
-> > >  	return module_alloc(PAGE_SIZE);
-> > > +#endif
-> > 
-> > This seems like it shouldn't be needed. I think text_alloc() should
-> > always be visible. In the ARCH_HAS... case it will call the arch
-> > implementation, and without it should just call module_alloc():
-> > 
-> > For example:
-> > void *text_alloc(unsigned long size)
-> > {
-> > #ifdef CONFIG_ARCH_HAS_TEXT_ALLOC
-> > 	return arch_text_alloc(size);
-> > #else
-> > 	return module_alloc(size);
-> > #endif
-> > }
+On Wed, Jun 24, 2020 at 12:32:04PM +0530, Sivaprakash Murugesan wrote:
+> Convert QCOM pci bindings to YAML schema
 > 
-> This inverts the dependcy chain, IMHO, module_alloc() is a special case
-> of text_alloc() and not vice versa.
+> Signed-off-by: Sivaprakash Murugesan <sivaprak@codeaurora.org>
+> ---
+>  .../devicetree/bindings/pci/qcom,pcie.txt          | 330 ---------------
+>  .../devicetree/bindings/pci/qcom,pcie.yaml         | 470 +++++++++++++++++++++
+>  2 files changed, 470 insertions(+), 330 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/pci/qcom,pcie.txt
+>  create mode 100644 Documentation/devicetree/bindings/pci/qcom,pcie.yaml
 
-Okay, sure. That's fine too. Whatever the case is, I want to make sure
-we keep the KASLR offset though. I don't think that should be unique to
-the modules logic.
 
--- 
-Kees Cook
+> diff --git a/Documentation/devicetree/bindings/pci/qcom,pcie.yaml b/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
+> new file mode 100644
+> index 000000000000..b119ce4711b4
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
+> @@ -0,0 +1,470 @@
+> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> +
+> +%YAML 1.2
+> +---
+> +$id: "http://devicetree.org/schemas/pci/qcom,pcie.yaml#"
+> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
+> +
+> +title: Qualcomm PCI express root complex
+> +
+> +maintainers:
+> +  - Sivaprakash Murugesan <sivaprak@codeaurora.org>
+> +
+> +description:
+> +  QCOM PCIe controller uses Designware IP with Qualcomm specific hardware
+> +  wrappers.
+> +
+
+Need to reference pci-bus.yaml.
+
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - qcom,pcie-apq8064
+> +      - qcom,pcie-apq8084
+> +      - qcom,pcie-ipq4019
+> +      - qcom,pcie-ipq8064
+> +      - qcom,pcie-ipq8074
+> +      - qcom,pcie-msm8996
+> +      - qcom,pcie-qcs404
+> +      - qcom,pcie-sdm845
+> +
+> +  reg:
+> +    description: Register ranges as listed in the reg-names property
+> +    maxItems: 4
+> +
+> +  reg-names:
+> +    items:
+> +      - const: dbi
+> +      - const: elbi
+> +      - const: parf
+> +      - const: config
+> +
+
+> +  "#size-cells":
+> +    const: 2
+> +
+> +  device_type:
+> +    items:
+> +      - const: pci
+> +
+> +  "#address-cells":
+> +    const: 3
+
+Drop these, pci-bus.yaml covers them.
+
+> +
+> +  ranges:
+> +    maxItems: 2
+> +
+> +  interrupts:
+> +    items:
+> +      - description: MSI interrupts
+> +
+> +  interrupt-names:
+> +    const: msi
+> +
+> +  "#interrupt-cells":
+> +    const: 1
+> +
+> +  interrupt-map-mask:
+> +    items:
+> +      - description: standard PCI properties to define mapping of PCIe
+> +                     interface to interrupt numbers.
+> +
+> +  interrupt-map:
+> +    maxItems: 4
+> +
+> +  clocks:
+> +    minItems: 1
+> +    maxItems: 7
+> +
+> +  clock-names:
+> +    minItems: 1
+> +    maxItems: 7
+> +
+> +  resets:
+> +    minItems: 1
+> +    maxItems: 12
+> +
+> +  reset-names:
+> +    minItems: 1
+> +    maxItems: 12
+> +
+> +  power-domains:
+> +    items:
+> +      - description: phandle to the power domain responsible for collapsing
+> +                     and restoring power to peripherals
+
+Just 'maxItems: 1'. No need for generic descriptions.
+
+> +
+> +  vdda-supply:
+> +    items:
+> +      - description: phandle to power supply
+
+*-supply is not an array.
+
+> +
+> +  vdda_phy-supply:
+> +    items:
+> +      - description: phandle to the power supply to PHY
+> +
+> +  vdda_refclk-supply:
+> +    items:
+> +      - description: phandle to power supply for ref clock generator
+> +
+> +  vddpe-3v3-supply:
+> +    items:
+> +      - description: PCIe endpoint power supply
+> +
+> +  phys:
+> +    items:
+> +      - description: phandle to the PHY block
+
+maxItems: 1
+
+> +
+> +  phy-names:
+> +    const: pciephy
+> +
+> +  perst-gpios:
+> +    description: Endpoint reset signal line
+
+Add 'maxItems: 1' as *-gpios is an array.
+
+> +
+> +  bus-range:
+> +    description: Range of bus numbers associated with this controller
+
+Can drop.
+
+> +
+> +  num-lanes:
+> +    const: 1
+> +
+> +  linux,pci-domain:
+> +    description: pci host bridge domain number
+
+Can drop.
+
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - reg-names
+> +  - device_type
+> +  - "#address-cells"
+> +  - "#size-cells"
+> +  - ranges
+> +  - interrupts
+> +  - interrupt-names
+> +  - "#interrupt-cells"
+> +  - interrupt-map-mask
+> +  - interrupt-map
+> +  - clocks
+> +  - clock-names
+> +  - resets
+> +  - reset-names
+> +  - phys
+> +  - phy-names
+
+Can drop everything pci-bus.yaml says is required.
+
+> +
+> +additionalProperties: false
+
+Will need to be 'unevaluatedProperties: false' with pci-bus.yaml 
+referenced.
+
+> +
+> +allOf:
+> + - if:
+> +     properties:
+> +       compatible:
+> +         contains:
+> +           enum:
+> +             - qcom,pcie-apq8064
+> +   then:
+> +     properties:
+> +       clocks:
+> +         items:
+> +           - description: clock for pcie hw block
+> +           - description: clock for pcie phy block
+> +       clock-names:
+> +         items:
+> +           - const: core
+> +           - const: phy
+> +       resets:
+> +         items:
+> +           - description: AXI reset
+> +           - description: AHB reset
+> +           - description: POR reset
+> +           - description: PCI reset
+> +           - description: PHY reset
+> +       reset-names:
+> +         items:
+> +           - const: axi
+> +           - const: ahb
+> +           - const: por
+> +           - const: pci
+> +           - const: phy
+> + - if:
+> +     properties:
+> +       compatible:
+> +         contains:
+> +           enum:
+> +             - qcom,pcie-apq8084
+> +   then:
+> +     properties:
+> +       clocks:
+> +         items:
+> +           - description: AUX clock
+> +           - description: Master AXI clock
+> +           - description: Slave AXI clock
+> +       clock-names:
+> +         items:
+> +           - const: aux
+> +           - const: bus_master
+> +           - const: bus_slave
+> +       resets:
+> +         items:
+> +           - description: core reset
+> +       reset-names:
+> +         items:
+> +           - const: core
+> + - if:
+> +     properties:
+> +       compatible:
+> +         contains:
+> +           enum:
+> +             - qcom,pcie-ipq4019
+> +   then:
+> +     properties:
+> +       clocks:
+> +         items:
+> +           - description: AUX clock
+> +           - description: Master AXI clock
+> +           - description: Slave AXI clock
+> +       clock-names:
+> +         items:
+> +           - const: aux
+> +           - const: master_bus
+> +           - const: master_slave
+> +       resets:
+> +         items:
+> +           - description: AXI master reset
+> +           - description: AXI slave reset
+> +           - description: PCIE pipe reset
+> +           - description: AXI vmid reset
+> +           - description: AXI XPU reset
+> +           - description: parf reset
+> +           - description: PHY reset
+> +           - description: AXI master sticky reset
+> +           - description: PCIE pipe sticky reset
+> +           - description: pwr reset
+> +           - description: AHB reset
+> +           - description: PHY AHB reset
+> +       reset-names:
+> +         items:
+> +           - const: axi_m
+> +           - const: axi_s
+> +           - const: pipe
+> +           - const: axi_m_vmid
+> +           - const: axi_s_xpu
+> +           - const: parf
+> +           - const: phy
+> +           - const: axi_m_sticky
+> +           - const: pipe_sticky
+> +           - const: pwr
+> +           - const: ahb
+> +           - const: phy_ahb
+> + - if:
+> +     properties:
+> +       compatible:
+> +         contains:
+> +           enum:
+> +             - qcom,pcie-ipq8064
+> +   then:
+> +     properties:
+> +       clocks:
+> +         items:
+> +           - description: core clock
+> +           - description: interface clock
+> +           - description: phy clock
+> +           - description: Auxilary clock
+> +           - description: reference clock
+> +       clock-names:
+> +         items:
+> +           - const: core
+> +           - const: iface
+> +           - const: phy
+> +           - const: aux
+> +           - const: ref
+> +       resets:
+> +         items:
+> +           - description: AXI reset
+> +           - description: AHB reset
+> +           - description: POR reset
+> +           - description: PCI reset
+> +           - description: PHY reset
+> +           - description: External reset
+> +       reset-names:
+> +         items:
+> +           - const: axi
+> +           - const: ahb
+> +           - const: por
+> +           - const: pci
+> +           - const: phy
+> +           - const: ext
+> + - if:
+> +     properties:
+> +       compatible:
+> +         contains:
+> +           enum:
+> +             - qcom,pcie-ipq8074
+> +   then:
+> +     properties:
+> +       clocks:
+> +         items:
+> +           - description: sys noc interface clock
+> +           - description: AXI master clock
+> +           - description: AXI slave clock
+> +           - description: AHB clock
+> +           - description: Auxilary clock
+> +       clock-names:
+> +         items:
+> +           - const: iface
+> +           - const: axi_m
+> +           - const: axi_s
+> +           - const: ahb
+> +           - const: aux
+> +       resets:
+> +         items:
+> +           - description: PIPE reset
+> +           - description: PCIe sleep reset
+> +           - description: PCIe sticky reset
+> +           - description: AXI master reset
+> +           - description: AXI slave reset
+> +           - description: AHB reset
+> +           - description: AXI master sticky reset
+> +       reset-names:
+> +         items:
+> +           - const: pipe
+> +           - const: sleep
+> +           - const: sticky
+> +           - const: axi_m
+> +           - const: axi_s
+> +           - const: ahb
+> +           - const: axi_m_sticky
+> + - if:
+> +     properties:
+> +       compatible:
+> +         contains:
+> +           enum:
+> +             - qcom,pcie-msm8996
+> +   then:
+> +     properties:
+> +       clocks:
+> +         items:
+> +           - description: PCIe pipe clock
+> +           - description: Auxilary clock
+> +           - description: AHB config clock
+> +           - description: AXI master clock
+> +           - description: AXI slave clock
+> +       clock-names:
+> +         items:
+> +           - const: pipe
+> +           - const: aux
+> +           - const: cfg
+> +           - const: bus_master
+> +           - const: bus_slave
+> + - if:
+> +     properties:
+> +       compatible:
+> +         contains:
+> +           enum:
+> +             - qcom,pcie-qcs404
+> +   then:
+> +     properties:
+> +       clocks:
+> +         items:
+> +           - description: interface clock
+> +           - description: Auxilary clock
+> +           - description: AXI master clock
+> +           - description: AXI slave clock
+> +       clock-names:
+> +         items:
+> +           - const: iface
+> +           - const: aux
+> +           - const: master_bus
+> +           - const: slave_bus
+> +       resets:
+> +         items:
+> +           - description: AXI master reset
+> +           - description: AXI slave reset
+> +           - description: AXI master sticky reset
+> +           - description: PCIe pipe sticky reset
+> +           - description: power reset
+> +           - description: AHB reset
+> +       reset-names:
+> +         items:
+> +           - const: axi_m
+> +           - const: axi_s
+> +           - const: axi_m_sticky
+> +           - const: pipe_sticky
+> +           - const: pwr
+> +           - const: ahb
+> + - if:
+> +     properties:
+> +       compatible:
+> +         contains:
+> +           enum:
+> +             - qcom,pcie-sdm845
+> +   then:
+> +     properties:
+> +       clocks:
+> +         items:
+> +           - description: PCIE pipe clock
+> +           - description: Auxilary clock
+> +           - description: AHB config clock
+> +           - description: AXI Master clock
+> +           - description: AXI Slave clock
+> +           - description: AXI Slave Q2A clock
+> +           - description: NOC TBU clock
+> +       clock-names:
+> +         items:
+> +           - const: pipe
+> +           - const: aux
+> +           - const: cfg
+> +           - const: bus_master
+> +           - const: bus_slave
+> +           - const: slave_q2a
+> +           - const: tbu
+> +       resets:
+> +         items:
+> +           - description: PCI reset
+> +       reset-names:
+> +         items:
+> +           - const: pci
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/clock/qcom,gcc-qcs404.h>
+> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
+> +    pcie: pci@10000000 {
+> +        compatible = "qcom,pcie-qcs404";
+> +        reg =  <0x10000000 0xf1d>,
+> +               <0x10000f20 0xa8>,
+> +               <0x07780000 0x2000>,
+> +               <0x10001000 0x2000>;
+> +        reg-names = "dbi", "elbi", "parf", "config";
+> +        device_type = "pci";
+> +        linux,pci-domain = <0>;
+> +        bus-range = <0x00 0xff>;
+> +        num-lanes = <1>;
+> +        #address-cells = <3>;
+> +        #size-cells = <2>;
+> +
+> +        ranges = <0x01000000 0 0          0x10003000 0 0x00010000>, /* I/O */
+> +                 <0x02000000 0 0x10013000 0x10013000 0 0x007ed000>; /* memory */
+> +
+> +        interrupts = <GIC_SPI 266 IRQ_TYPE_LEVEL_HIGH>;
+> +        interrupt-names = "msi";
+> +        #interrupt-cells = <1>;
+> +        interrupt-map-mask = <0 0 0 0x7>;
+> +        interrupt-map = <0 0 0 1 &intc GIC_SPI 68 IRQ_TYPE_LEVEL_HIGH>, /* int_a */
+> +                        <0 0 0 2 &intc GIC_SPI 224 IRQ_TYPE_LEVEL_HIGH>, /* int_b */
+> +                        <0 0 0 3 &intc GIC_SPI 267 IRQ_TYPE_LEVEL_HIGH>, /* int_c */
+> +                        <0 0 0 4 &intc GIC_SPI 268 IRQ_TYPE_LEVEL_HIGH>; /* int_d */
+> +        clocks = <&gcc GCC_PCIE_0_CFG_AHB_CLK>,
+> +                 <&gcc GCC_PCIE_0_AUX_CLK>,
+> +                 <&gcc GCC_PCIE_0_MSTR_AXI_CLK>,
+> +                 <&gcc GCC_PCIE_0_SLV_AXI_CLK>;
+> +        clock-names = "iface", "aux", "master_bus", "slave_bus";
+> +
+> +        resets = <&gcc 18>,
+> +                 <&gcc 17>,
+> +                 <&gcc 15>,
+> +                 <&gcc 19>,
+> +                 <&gcc GCC_PCIE_0_BCR>,
+> +                 <&gcc 16>;
+> +        reset-names = "axi_m",
+> +                      "axi_s",
+> +                      "axi_m_sticky",
+> +                      "pipe_sticky",
+> +                      "pwr",
+> +                      "ahb";
+> +
+> +        phys = <&pcie_phy>;
+> +        phy-names = "pciephy";
+> +
+> +    };
+> -- 
+> 2.7.4
+> 
