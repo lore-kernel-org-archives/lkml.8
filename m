@@ -2,122 +2,97 @@ Return-Path: <SRS0=kup7=A2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E9C2C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 21:07:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA2B6C433E5
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 21:08:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 040F820657
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 21:07:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 99531206F4
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 21:08:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594847282;
+	bh=EBmLbTlSMK0R6vQ7jmSE2L4gma2Vkoyzioh0GCdfGY8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=taHyWfv7V+Xg7wI0e1Koa83l72jEOfnxbNjh/ynAqE7sZyA5UeFPHrBzuoPoOkzcq
+	 /wmnrOWXUnOkzBxnGkdzxsgndZnS9VO4pbOJiuEdRzGkT7X0mMJeRRPGIO1VVzsjZu
+	 yzj2dB2kSjcivAcS0mWgg9YJAWCSZHrLjH83Vojc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726894AbgGOVHZ (ORCPT
+        id S1726942AbgGOVIB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 17:07:25 -0400
-Received: from www62.your-server.de ([213.133.104.62]:51196 "EHLO
-        www62.your-server.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725917AbgGOVHY (ORCPT
+        Wed, 15 Jul 2020 17:08:01 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:39900 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725917AbgGOVIA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 17:07:24 -0400
-Received: from sslproxy02.your-server.de ([78.47.166.47])
-        by www62.your-server.de with esmtpsa (TLSv1.2:DHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.89_1)
-        (envelope-from <daniel@iogearbox.net>)
-        id 1jvocY-0003ol-AP; Wed, 15 Jul 2020 23:07:18 +0200
-Received: from [178.196.57.75] (helo=pc-9.home)
-        by sslproxy02.your-server.de with esmtpsa (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <daniel@iogearbox.net>)
-        id 1jvocY-000Rp7-0q; Wed, 15 Jul 2020 23:07:18 +0200
-Subject: Re: [Linux-kernel-mentees] [PATCH v3] bpf: Fix NULL pointer
- dereference in __btf_resolve_helper_id()
-To:     Peilin Ye <yepeilin.cs@gmail.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        Alexei Starovoitov <ast@kernel.org>
-Cc:     Martin KaFai Lau <kafai@fb.com>, Song Liu <songliubraving@fb.com>,
-        Yonghong Song <yhs@fb.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@chromium.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        netdev@vger.kernel.org, bpf@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com
-References: <CAADnVQ+jUPGJapkvKW=AfXESD6Vz2iuONvJm8eJm5Yd+u9mJ+w@mail.gmail.com>
- <20200714180904.277512-1-yepeilin.cs@gmail.com>
-From:   Daniel Borkmann <daniel@iogearbox.net>
-Message-ID: <3b97c5bf-9f07-0353-ea4d-f90574fbcdc0@iogearbox.net>
-Date:   Wed, 15 Jul 2020 23:07:17 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Wed, 15 Jul 2020 17:08:00 -0400
+Received: by mail-io1-f65.google.com with SMTP id f23so3773269iof.6;
+        Wed, 15 Jul 2020 14:08:00 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=KjCMCoW7QDdmcFgzIcem7O98IMC/DL0hnlshYNlIU/Q=;
+        b=FI3nxx3ezb4/JJRc4X9SmY1Qr7EPITBu8Ij7zRVLLL2IbgpTZZbPCOjuOZEvmz+9OP
+         dFZV1sGbegRBQyDSL8eHC09gbv5GJbOa1vScToPsOFMZDDM7IEyeLmKtzu7R5kGEQ/a0
+         HlKCSBtqJQE3mg9XIIga6VAp9tVV58X5BZzGBJ314i+K+LTa2Lqaelu4BJnib/OiTgcq
+         5dfotMMe5+/FhqeKuBc/FY5MAE6rhJ+7z2WQ8DfoaUR/x1U8XpA4BsxvQRsuu/m8XglS
+         fQlpX90utEL7580ATaTx0NlnmpclR+ro05tz9p8vvN6cAug+KSVqe8iqqJrHyopviS3Y
+         3sGQ==
+X-Gm-Message-State: AOAM530+J3uFGAdD/rh9D/z7MnK7Ia+JzMUlAnyooeEIy7tCPB4Gck7e
+        mGIl0UOKsyTW9XeZST5cbQ==
+X-Google-Smtp-Source: ABdhPJzEQjcFBWmWE376+W3/jvXjGaojoc/mmDz/tY6q3QXK03YBPeISo9pECab3cFblZ38C0GtHEw==
+X-Received: by 2002:a02:9f8e:: with SMTP id a14mr1443823jam.95.1594847279881;
+        Wed, 15 Jul 2020 14:07:59 -0700 (PDT)
+Received: from xps15 ([64.188.179.252])
+        by smtp.gmail.com with ESMTPSA id u5sm1663421ili.33.2020.07.15.14.07.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 15 Jul 2020 14:07:59 -0700 (PDT)
+Received: (nullmailer pid 818071 invoked by uid 1000);
+        Wed, 15 Jul 2020 21:07:58 -0000
+Date:   Wed, 15 Jul 2020 15:07:58 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Ondrej Jirman <megous@megous.com>
+Cc:     Fabio Estevam <festevam@gmail.com>,
+        Sam Ravnborg <sam@ravnborg.org>, linux-kernel@vger.kernel.org,
+        dri-devel@lists.freedesktop.org,
+        Guido =?iso-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        David Airlie <airlied@linux.ie>,
+        Rob Herring <robh+dt@kernel.org>,
+        Robert Chiras <robert.chiras@nxp.com>,
+        devicetree@vger.kernel.org,
+        Thierry Reding <thierry.reding@gmail.com>
+Subject: Re: [PATCH 1/2] dt-bindings: display: Fix example in nwl-dsi.yaml
+Message-ID: <20200715210758.GA818016@bogus>
+References: <20200703114717.2140832-1-megous@megous.com>
+ <20200703114717.2140832-2-megous@megous.com>
 MIME-Version: 1.0
-In-Reply-To: <20200714180904.277512-1-yepeilin.cs@gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Authenticated-Sender: daniel@iogearbox.net
-X-Virus-Scanned: Clear (ClamAV 0.102.3/25874/Wed Jul 15 16:18:08 2020)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200703114717.2140832-2-megous@megous.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/14/20 8:09 PM, Peilin Ye wrote:
-> Prevent __btf_resolve_helper_id() from dereferencing `btf_vmlinux`
-> as NULL. This patch fixes the following syzbot bug:
+On Fri, 03 Jul 2020 13:47:16 +0200, Ondrej Jirman wrote:
+> The example is now validated against rocktech,jh057n00900 schema
+> that was ported to yaml, and didn't validate with:
 > 
->      https://syzkaller.appspot.com/bug?id=f823224ada908fa5c207902a5a62065e53ca0fcc
+> - '#address-cells', '#size-cells', 'port@0' do not match any of
+>   the regexes: 'pinctrl-[0-9]+'
+> - 'vcc-supply' is a required property
+> - 'iovcc-supply' is a required property
+> - 'reset-gpios' is a required property
 > 
-> Reported-by: syzbot+ee09bda7017345f1fbe6@syzkaller.appspotmail.com
-> Signed-off-by: Peilin Ye <yepeilin.cs@gmail.com>
-
-Looks good, applied, thanks! As far as I can tell all the other occurrences are
-gated behind btf_parse_vmlinux() where we also init struct_opts, etc.
-
-So for bpf-next this would then end up looking like ...
-
-int btf_resolve_helper_id(struct bpf_verifier_log *log,
-                           const struct bpf_func_proto *fn, int arg)
-{
-         int id;
-
-         if (fn->arg_type[arg] != ARG_PTR_TO_BTF_ID)
-                 return -EINVAL;
-         id = fn->btf_id[arg];
-         if (!id || !btf_vmlinux || id > btf_vmlinux->nr_types)
-                 return -EINVAL;
-         return id;
-}
-
+> Fix it.
+> 
+> Signed-off-by: Ondrej Jirman <megous@megous.com>
 > ---
-> Sorry, I got the link wrong. Thank you for pointing that out.
-> 
-> Change in v3:
->      - Fix incorrect syzbot dashboard link.
-> 
-> Change in v2:
->      - Split NULL and IS_ERR cases.
-> 
->   kernel/bpf/btf.c | 5 +++++
->   1 file changed, 5 insertions(+)
-> 
-> diff --git a/kernel/bpf/btf.c b/kernel/bpf/btf.c
-> index 30721f2c2d10..092116a311f4 100644
-> --- a/kernel/bpf/btf.c
-> +++ b/kernel/bpf/btf.c
-> @@ -4088,6 +4088,11 @@ static int __btf_resolve_helper_id(struct bpf_verifier_log *log, void *fn,
->   	const char *tname, *sym;
->   	u32 btf_id, i;
->   
-> +	if (!btf_vmlinux) {
-> +		bpf_log(log, "btf_vmlinux doesn't exist\n");
-> +		return -EINVAL;
-> +	}
-> +
->   	if (IS_ERR(btf_vmlinux)) {
->   		bpf_log(log, "btf_vmlinux is malformed\n");
->   		return -EINVAL;
+>  .../devicetree/bindings/display/bridge/nwl-dsi.yaml      | 9 +++++----
+>  1 file changed, 5 insertions(+), 4 deletions(-)
 > 
 
+Reviewed-by: Rob Herring <robh@kernel.org>
