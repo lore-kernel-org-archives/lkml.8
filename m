@@ -2,69 +2,108 @@ Return-Path: <SRS0=kup7=A2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CF84C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 04:40:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EFF6C433E3
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 04:41:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 025AB206F4
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 04:40:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594788025;
-	bh=7Cps2deu5EEozoenVkm17f1pN+4mr3/yXYH71x07wzk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=LcUBQ4DSvjfQ8JpnbT6hMxWTGsSvxCNOgFfipYYj7ukeIKVaBwa0mK+XS9FptHkM7
-	 CkDgSUJylSCzZxC0n5x/GEoeCAXEx43ntENsX8w6N0LhSOoCJEmDIn/DYPJPju1YKX
-	 2DaIOWtrT/bI7ATxb8uzJ9xPrfCf+xYN/+1LDfZU=
+	by mail.kernel.org (Postfix) with ESMTP id 46210206D5
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 04:41:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726811AbgGOEkX (ORCPT
+        id S1727030AbgGOEla (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 00:40:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37996 "EHLO mail.kernel.org"
+        Wed, 15 Jul 2020 00:41:30 -0400
+Received: from mga02.intel.com ([134.134.136.20]:62528 "EHLO mga02.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726396AbgGOEkX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 00:40:23 -0400
-Received: from localhost (unknown [122.171.202.192])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F3389205CB;
-        Wed, 15 Jul 2020 04:40:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594788022;
-        bh=7Cps2deu5EEozoenVkm17f1pN+4mr3/yXYH71x07wzk=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=oFh1f10zR9kh4Pz8bmNgMzuyp8S15g4/wa7BsBvRatoqWBVcva4m2lWza1hm6e7Vh
-         O2l96/rTU2pcgG7DUfAAOVDmGF3t1+6b/vxB2FUcWuXtmL3spVGPED5MPuMxb0Bokj
-         XB9++x4dIfmZtJYWwziq4D5PFZtY2CP49mLuVWrY=
-Date:   Wed, 15 Jul 2020 10:10:19 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Bard Liao <yung-chuan.liao@linux.intel.com>
-Cc:     alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
-        tiwai@suse.de, broonie@kernel.org, gregkh@linuxfoundation.org,
-        jank@cadence.com, srinivas.kandagatla@linaro.org,
-        rander.wang@linux.intel.com, ranjani.sridharan@linux.intel.com,
-        hui.wang@canonical.com, pierre-louis.bossart@linux.intel.com,
-        sanyog.r.kale@intel.com, slawomir.blauciak@intel.com,
-        mengdong.lin@intel.com, bard.liao@intel.com
-Subject: Re: [PATCH v2 0/5] soundwire: handle stream at the dailink level
-Message-ID: <20200715044019.GN34333@vkoul-mobl>
-References: <20200630184356.24939-1-yung-chuan.liao@linux.intel.com>
+        id S1725770AbgGOEla (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jul 2020 00:41:30 -0400
+IronPort-SDR: 12fOklgYhmPLyeChR9kPLnlROqNds6tjyEVEu3JgxyKgt2a6P4TLBibmDNAuMwj1E4bHNA2dbS
+ TiZdQs3/MgKg==
+X-IronPort-AV: E=McAfee;i="6000,8403,9682"; a="137210660"
+X-IronPort-AV: E=Sophos;i="5.75,354,1589266800"; 
+   d="scan'208";a="137210660"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jul 2020 21:41:30 -0700
+IronPort-SDR: tPAxt0Zb++8MhxgPdx85urOug4eGehmIUtSsXwHJnIU25SvJTEXBjkPDzwgnNFwqot1XcoyHDU
+ qgn6I8SLpFow==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,354,1589266800"; 
+   d="scan'208";a="326050554"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.152])
+  by orsmga007.jf.intel.com with ESMTP; 14 Jul 2020 21:41:29 -0700
+Date:   Tue, 14 Jul 2020 21:41:29 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     "Andersen, John" <john.s.andersen@intel.com>
+Cc:     Andy Lutomirski <luto@kernel.org>,
+        Arvind Sankar <nivedita@alum.mit.edu>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        X86 ML <x86@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Liran Alon <liran.alon@oracle.com>,
+        Andrew Jones <drjones@redhat.com>,
+        Rick Edgecombe <rick.p.edgecombe@intel.com>,
+        Kristen Carlson Accardi <kristen@linux.intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+        Juergen Gross <jgross@suse.com>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Oliver Neukum <oneukum@suse.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Fenghua Yu <fenghua.yu@intel.com>, reinette.chatre@intel.com,
+        vineela.tummalapalli@intel.com,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Arjan van de Ven <arjan@linux.intel.com>,
+        caoj.fnst@cn.fujitsu.com, Baoquan He <bhe@redhat.com>,
+        Kees Cook <keescook@chromium.org>,
+        Dan Williams <dan.j.williams@intel.com>, eric.auger@redhat.com,
+        aaronlewis@google.com, Peter Xu <peterx@redhat.com>,
+        makarandsonare@google.com,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        kvm list <kvm@vger.kernel.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        Kernel Hardening <kernel-hardening@lists.openwall.com>
+Subject: Re: [PATCH 2/4] KVM: x86: Introduce paravirt feature CR0/CR4 pinning
+Message-ID: <20200715044129.GA11248@linux.intel.com>
+References: <124a59a3-a603-701b-e3bb-61e83d70b20d@intel.com>
+ <20200707211244.GN20096@linux.intel.com>
+ <19b97891-bbb0-1061-5971-549a386f7cfb@intel.com>
+ <31eb5b00-9e2a-aa10-0f20-4abc3cd35112@redhat.com>
+ <20200709154412.GA25@64c96d3be97b>
+ <af6ac772-318d-aab0-ce5f-55cf92f6e96d@intel.com>
+ <CALCETrWxt0CHUoonWX1fgbM46ydJPQZhj8Q=G+45EG4wW3wZqQ@mail.gmail.com>
+ <6040c3b3-cac9-cc0e-f0de-baaa274920a2@intel.com>
+ <CALCETrUHcpqjDfAM9SbrZUM7xcS2wkVm=r1Nb1JmxV7A-KAeUQ@mail.gmail.com>
+ <20200714053930.GC25@760745902f30>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200630184356.24939-1-yung-chuan.liao@linux.intel.com>
+In-Reply-To: <20200714053930.GC25@760745902f30>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 01-07-20, 02:43, Bard Liao wrote:
-> Currently, stream is handled at the dai level. But we have to handle
-> stream at the dailink level in the multi-cpu dailink usage.
+On Tue, Jul 14, 2020 at 05:39:30AM +0000, Andersen, John wrote:
+> With regards to FSGSBASE, are we open to validating and adding that to the
+> DEFAULT set as a part of a separate patchset? This patchset is focused on
+> replicating the functionality we already have natively.
 
-Applied, thanks
-
--- 
-~Vinod
+Kees added FSGSBASE pinning in commit a13b9d0b97211 ("x86/cpu: Use pinning
+mask for CR4 bits needing to be 0"), so I believe it's a done deal already.
