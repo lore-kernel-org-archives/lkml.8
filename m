@@ -2,168 +2,94 @@ Return-Path: <SRS0=kup7=A2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD56EC433E3
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 10:56:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A066BC433E7
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 10:57:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BF36A206F5
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 10:56:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B4DA206E9
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 10:57:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="BGOcXPSi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729657AbgGOK4y (ORCPT
+        id S1731337AbgGOK5K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 06:56:54 -0400
-Received: from foss.arm.com ([217.140.110.172]:39850 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726201AbgGOK4y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 06:56:54 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3CEA430E;
-        Wed, 15 Jul 2020 03:56:53 -0700 (PDT)
-Received: from [192.168.1.84] (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 100403F718;
-        Wed, 15 Jul 2020 03:56:51 -0700 (PDT)
-Subject: Re: [PATCH 2/3] firmware: arm_scmi: Remove unneeded __packed
- attribute
-To:     Cristian Marussi <cristian.marussi@arm.com>
-Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        arnd@arndb.de, sudeep.holla@arm.com
-References: <20200710133919.39792-1-cristian.marussi@arm.com>
- <20200710133919.39792-2-cristian.marussi@arm.com>
- <751ee628-ff38-a383-5832-aab4905af32b@arm.com>
- <20200713130749.GA31938@e119603-lin.cambridge.arm.com>
-From:   Steven Price <steven.price@arm.com>
-Message-ID: <310a7e5a-2d6a-313a-4020-362703ceb1b8@arm.com>
-Date:   Wed, 15 Jul 2020 11:56:46 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Wed, 15 Jul 2020 06:57:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46866 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726201AbgGOK5K (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jul 2020 06:57:10 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B6200C061755;
+        Wed, 15 Jul 2020 03:57:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=K8h4KI86Mzb6BYGGyc/D5d7vo4fVAFqxYqHc3CALsmU=; b=BGOcXPSin+HC2fF1VqIS2IqzXw
+        YGPNLIs6u0i4juJ6jLImClXgjkl/hxvLhGvj1eiIwTuEcj2kgDhn5u6DM88nmQDKbFGgiCcgyySpw
+        gParcOSrVYvhyiZNKOn+DfeACZ9Ocs9TrRzsRLcdRCSbsWrIdTBx760Ir3sQ8gWmYlxLt0/+sxfVx
+        xxVGGbbbEmmWZBphVSBO7n8aI+TQanyTc0mG+sXVGwxO2ubsUUdrGKoi+fVxeddBO1jINLWyEN1oh
+        TbLk/A4GJCz6hdj/J7aX87Yc7dq8bkDqmHIJpZx96V571lVNVCldLVdBsHS0jFDf2l7fkWXQZ7K9g
+        XGLSiGaw==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jvf5V-0006Ya-Er; Wed, 15 Jul 2020 10:56:37 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id B5DEA300446;
+        Wed, 15 Jul 2020 12:56:29 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id A5F9C203A6143; Wed, 15 Jul 2020 12:56:29 +0200 (CEST)
+Date:   Wed, 15 Jul 2020 12:56:29 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Joerg Roedel <jroedel@suse.de>
+Cc:     Joerg Roedel <joro@8bytes.org>, x86@kernel.org, hpa@zytor.com,
+        Andy Lutomirski <luto@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Jiri Slaby <jslaby@suse.cz>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Juergen Gross <jgross@suse.com>,
+        Kees Cook <keescook@chromium.org>,
+        David Rientjes <rientjes@google.com>,
+        Cfir Cohen <cfir@google.com>,
+        Erdem Aktas <erdemaktas@google.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Mike Stunes <mstunes@vmware.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Martin Radev <martin.b.radev@gmail.com>,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        virtualization@lists.linux-foundation.org
+Subject: Re: [PATCH v4 45/75] x86/sev-es: Adjust #VC IST Stack on entering
+ NMI handler
+Message-ID: <20200715105629.GK10769@hirez.programming.kicks-ass.net>
+References: <20200714120917.11253-1-joro@8bytes.org>
+ <20200714120917.11253-46-joro@8bytes.org>
+ <20200715094702.GF10769@hirez.programming.kicks-ass.net>
+ <20200715102653.GN16200@suse.de>
 MIME-Version: 1.0
-In-Reply-To: <20200713130749.GA31938@e119603-lin.cambridge.arm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200715102653.GN16200@suse.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 13/07/2020 14:07, Cristian Marussi wrote:
-> Hi Steven
-> 
-> thanks for the review.
-> 
-> On Mon, Jul 13, 2020 at 12:20:43PM +0100, Steven Price wrote:
->> On 10/07/2020 14:39, Cristian Marussi wrote:
->>> Remove __packed attribute from struct scmi_event_header.
->>>
->>> Signed-off-by: Cristian Marussi <cristian.marussi@arm.com>
->>
->> A drive-by review. But this doesn't look safe to me. sizeof(struct
->> scmi_event_header) is used in several places and this change will modify
->> that from 13 to 16, but leave the structure members at the same offset (as
->> the members are naturally aligned). In particular the naï¿½ve header size is
->> now bigger than the offset to payld.
->>
->> What is the justification for __packed being 'unneeded'?
->>
-> 
-> Arnd pointed out at first that this structure in the original series had a mix of
-> fixed and non-fixed types in its fields and that the __packed rendered some fields
-> misaglined.
-> 
-> Removing that as it is, in fact left also some unexplained implicit padding which is
-> at odd for a struct containing fixed-sized types.
-> 
-> In a following fix in the series I have indeed moved this struct's fields  and others
-> to generic non fixed type fields and shuffled around the fields to avoid misalignment
-> and implicit internal padding (except for the trailing padding due to the variable
-> size array)
-> 
-> It was probably better to squash also this patch in that following patch.
-> 
-> This structure is used internally to push variable-sized (through the means of the payld[])
-> events descriptors through a fifo from the ISR to the deferred workqueus, so that's whhy I
-> originally thought to avoid to carry around unneeded padding into the fifos and use the
-> __packed.
-> 
-> On the correctness side, as you pointed out, the header with padding is now 16 so when
-> I push thorugh the kfifos this header and the payload there's a hole in the data as
-> represented in the fifo buffer as such
-> 
-> @end_of hdr+payld kfifo writes:
->    kifo_in(fifo, h, sizeof(*h)) + kfifo_in(fifo, payld, h->payld_sz)
-> 
-> 0       14   16
-> +-------+----+------------
-> |header - pad| payload...
-> -------------------------
->          ^
-> 	|
-> 	.payld
-> 
-> (Note that header and payload comes from two distinct place so I have push it with two kfifo_in()
-> in order to avoid a redundant memcpy on an intermediate buffer to collate them...thing
-> that was pointed out as undesirable in a review)
-> 
-> and when I read it back from the fifo such hole is just transparently overwritten:
-> 
-> @header read:
->   kfifo_out(fifo, h, sizeof(*h))
-> 
-> 0       14   16
-> +-------+----+--------------
-> |header - pad|
-> ----------------------------
-> 
-> @payload_read:
->   kfifo_out(fifo, h->payld, h->payld_sz)
-> 
-> 0       14
-> +-------+----+--------------
-> |header | payload....
-> ----------------------------
->          ^
-> 	|
-> 	.payld
-> 
-> So since anyway the drawback of packing is that the misaglined access potentially slows down the
-> reads, I was not sure anymore it was worth to pack and misalign, and, given that it seemed not
-> to be liked so much, I dropped it and moved to generic non-fixed types without packing.
+On Wed, Jul 15, 2020 at 12:26:53PM +0200, Joerg Roedel wrote:
+> On Wed, Jul 15, 2020 at 11:47:02AM +0200, Peter Zijlstra wrote:
 
-Thanks for the explanation - it sounds like the change is correct.
+> > That's pretty disguisting :-(
+> 
+> Yeah, but its needed because ... IST :(
+> I am open for suggestions on how to make it less disgusting. Or maybe
+> you like it more if you think of it as a software implementation of what
+> hardware should actually do to make IST less painful.
 
-However, from the description above it sounds like splitting the header 
-and payload into separate types would be clearer. I'm not sure the 
-flexible length array is adding to code clarity here. In particular the 
-'pad' being put into the fifo is actually going to be a (truncated) copy 
-of the payload.
+No bright ideas, sadly..
 
-There is also a trick with an unnamed internal struct which gets the 
-padding in the correct place...
-
-	struct scmi_event_header {
-		struct {
-			u64	timestamp;
-			u8	evt_id;
-			size_t	payld_sz;
-		}
-		u8	payld[];
-	};
-
-...with that then...
-
-	offsetof(struct scmi_event_header, payld) ==
-		sizeof(struct scmi_event_header)
-
-...which avoids the need for kfifo_out having to overwrite the padding.
-
-> A better (and shorter) explanation of all of the above is possibly needed (but I'd still prefer
-> the fixed sized typing and __packed 'holeless' approach...)
-
-Fixed sized types and __packed is easier to reason about, but obviously 
-naturally aligned types do tend to be faster.
-
-Steve
