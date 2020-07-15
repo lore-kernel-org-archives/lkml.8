@@ -7,35 +7,35 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8232AC433E4
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 04:06:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1744C433E3
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 04:06:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6915B206F5
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 04:06:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE76C206F5
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 04:06:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726784AbgGOEGH (ORCPT
+        id S1726988AbgGOEGK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 00:06:07 -0400
+        Wed, 15 Jul 2020 00:06:10 -0400
 Received: from mga17.intel.com ([192.55.52.151]:16670 "EHLO mga17.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725909AbgGOEGC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 00:06:02 -0400
-IronPort-SDR: WEP/xs9huEb771/CYLVstow7nnrwcI0V19U3EW98Z/MNIfRIrqXwWsY0NWyReTYHSOA9BQWvcW
- 9SDzAToH5y2Q==
-X-IronPort-AV: E=McAfee;i="6000,8403,9682"; a="129167482"
+        id S1725980AbgGOEGD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jul 2020 00:06:03 -0400
+IronPort-SDR: YVH6ViBrl/AJ3E3MxSKn7cpkxYK9Z9/dKVwm5P+kf0ZP6P9HTa3gMOXXb+3eOA9GUmQaL3H8HQ
+ wXrDlLQ0h7hg==
+X-IronPort-AV: E=McAfee;i="6000,8403,9682"; a="129167486"
 X-IronPort-AV: E=Sophos;i="5.75,353,1589266800"; 
-   d="scan'208";a="129167482"
+   d="scan'208";a="129167486"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jul 2020 21:06:02 -0700
-IronPort-SDR: dwTjIZzEyrANaCF4WHn26lOxGI30xrCnmKWGWEUKv6bulHMuQf6Yls6GZl/jMWMBE9tvOecMbO
- 1UT/2EgXjPag==
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jul 2020 21:06:03 -0700
+IronPort-SDR: 14tQVUJqoTUwoWBKb9RejmYG0x2tdKbE7FGGXpkyFzfBq22hJdG7sHrwcc7yfz/u7JQkQmIDof
+ y+UA/KObHVvw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.75,353,1589266800"; 
-   d="scan'208";a="485587016"
+   d="scan'208";a="485587029"
 Received: from sjchrist-coffee.jf.intel.com ([10.54.74.152])
-  by fmsmga006.fm.intel.com with ESMTP; 14 Jul 2020 21:06:01 -0700
+  by fmsmga006.fm.intel.com with ESMTP; 14 Jul 2020 21:06:02 -0700
 From:   Sean Christopherson <sean.j.christopherson@intel.com>
 To:     Paolo Bonzini <pbonzini@redhat.com>
 Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
@@ -45,9 +45,9 @@ Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
         Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
         linux-kernel@vger.kernel.org, Dan Cross <dcross@google.com>,
         Peter Shier <pshier@google.com>
-Subject: [PATCH 3/7] KVM: nVMX: Explicitly check for valid guest state for !unrestricted guest
-Date:   Tue, 14 Jul 2020 21:05:53 -0700
-Message-Id: <20200715040557.5889-4-sean.j.christopherson@intel.com>
+Subject: [PATCH 6/7] KVM: nVMX: Drop redundant VMCS switch and free_nested() call
+Date:   Tue, 14 Jul 2020 21:05:56 -0700
+Message-Id: <20200715040557.5889-7-sean.j.christopherson@intel.com>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200715040557.5889-1-sean.j.christopherson@intel.com>
 References: <20200715040557.5889-1-sean.j.christopherson@intel.com>
@@ -58,94 +58,29 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Call guest_state_valid() directly instead of querying emulation_required
-when checking if L1 is attempting VM-Enter with invalid guest state.
-If emulate_invalid_guest_state is false, KVM will fixup segment regs to
-avoid emulation and will never set emulation_required, i.e. KVM will
-incorrectly miss the associated consistency checks because the nested
-path stuffs segments directly into vmcs02.
+Remove the explicit switch to vmcs01 and the call to free_nested() in
+nested_vmx_free_vcpu().  free_nested(), which is called unconditionally
+by vmx_leave_nested(), ensures vmcs01 is loaded prior to freeing vmcs02
+and friends.
 
-Opportunsitically add Consistency Check tracing to make future debug
-suck a little less.
-
-Fixes: 2bb8cafea80bf ("KVM: vVMX: signal failure for nested VMEntry if emulation_required")
-Fixes: 3184a995f782c ("KVM: nVMX: fix vmentry failure code when L2 state would require emulation")
-Cc: stable@vger.kernel.org
 Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
 ---
- arch/x86/kvm/vmx/nested.c |  2 +-
- arch/x86/kvm/vmx/vmx.c    |  8 ++------
- arch/x86/kvm/vmx/vmx.h    | 10 ++++++++++
- 3 files changed, 13 insertions(+), 7 deletions(-)
+ arch/x86/kvm/vmx/nested.c | 2 --
+ 1 file changed, 2 deletions(-)
 
 diff --git a/arch/x86/kvm/vmx/nested.c b/arch/x86/kvm/vmx/nested.c
-index 8cbf7bd3a7aa3..7d4457aaab2ef 100644
+index 5734bff1a5907..66ed449f0d59f 100644
 --- a/arch/x86/kvm/vmx/nested.c
 +++ b/arch/x86/kvm/vmx/nested.c
-@@ -2572,7 +2572,7 @@ static int prepare_vmcs02(struct kvm_vcpu *vcpu, struct vmcs12 *vmcs12,
- 	 * which means L1 attempted VMEntry to L2 with invalid state.
- 	 * Fail the VMEntry.
- 	 */
--	if (vmx->emulation_required) {
-+	if (CC(!vmx_guest_state_valid(vcpu))) {
- 		*entry_failure_code = ENTRY_FAIL_DEFAULT;
- 		return -EINVAL;
- 	}
-diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-index 1bb59ae5016dc..92c5f7cbf2389 100644
---- a/arch/x86/kvm/vmx/vmx.c
-+++ b/arch/x86/kvm/vmx/vmx.c
-@@ -340,7 +340,6 @@ static const struct kernel_param_ops vmentry_l1d_flush_ops = {
- };
- module_param_cb(vmentry_l1d_flush, &vmentry_l1d_flush_ops, NULL, 0644);
- 
--static bool guest_state_valid(struct kvm_vcpu *vcpu);
- static u32 vmx_segment_access_rights(struct kvm_segment *var);
- static __always_inline void vmx_disable_intercept_for_msr(unsigned long *msr_bitmap,
- 							  u32 msr, int type);
-@@ -1414,7 +1413,7 @@ static void vmx_vcpu_put(struct kvm_vcpu *vcpu)
- 
- static bool emulation_required(struct kvm_vcpu *vcpu)
+@@ -326,8 +326,6 @@ void nested_vmx_free_vcpu(struct kvm_vcpu *vcpu)
  {
--	return emulate_invalid_guest_state && !guest_state_valid(vcpu);
-+	return emulate_invalid_guest_state && !vmx_guest_state_valid(vcpu);
+ 	vcpu_load(vcpu);
+ 	vmx_leave_nested(vcpu);
+-	vmx_switch_vmcs(vcpu, &to_vmx(vcpu)->vmcs01);
+-	free_nested(vcpu);
+ 	vcpu_put(vcpu);
  }
  
- unsigned long vmx_get_rflags(struct kvm_vcpu *vcpu)
-@@ -3501,11 +3500,8 @@ static bool cs_ss_rpl_check(struct kvm_vcpu *vcpu)
-  * not.
-  * We assume that registers are always usable
-  */
--static bool guest_state_valid(struct kvm_vcpu *vcpu)
-+bool __vmx_guest_state_valid(struct kvm_vcpu *vcpu)
- {
--	if (enable_unrestricted_guest)
--		return true;
--
- 	/* real mode guest state checks */
- 	if (!is_protmode(vcpu) || (vmx_get_rflags(vcpu) & X86_EFLAGS_VM)) {
- 		if (!rmode_segment_valid(vcpu, VCPU_SREG_CS))
-diff --git a/arch/x86/kvm/vmx/vmx.h b/arch/x86/kvm/vmx/vmx.h
-index 0d06951e607ce..467716e61292d 100644
---- a/arch/x86/kvm/vmx/vmx.h
-+++ b/arch/x86/kvm/vmx/vmx.h
-@@ -342,6 +342,16 @@ void vmx_load_mmu_pgd(struct kvm_vcpu *vcpu, unsigned long cr3);
- void ept_save_pdptrs(struct kvm_vcpu *vcpu);
- void vmx_get_segment(struct kvm_vcpu *vcpu, struct kvm_segment *var, int seg);
- void vmx_set_segment(struct kvm_vcpu *vcpu, struct kvm_segment *var, int seg);
-+
-+bool __vmx_guest_state_valid(struct kvm_vcpu *vcpu);
-+static inline bool vmx_guest_state_valid(struct kvm_vcpu *vcpu)
-+{
-+	if (enable_unrestricted_guest)
-+		return true;
-+
-+	return __vmx_guest_state_valid(vcpu);
-+}
-+
- u64 construct_eptp(struct kvm_vcpu *vcpu, unsigned long root_hpa);
- void update_exception_bitmap(struct kvm_vcpu *vcpu);
- void vmx_update_msr_bitmap(struct kvm_vcpu *vcpu);
 -- 
 2.26.0
 
