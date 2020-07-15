@@ -2,145 +2,120 @@ Return-Path: <SRS0=kup7=A2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E89DC433E2
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 08:33:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 241A3C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 08:34:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 77908206D5
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 08:33:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594802036;
-	bh=yJ25XsOgrvtzDWGEQ2WlZvT86/GEzbZcNWXj3DwVecg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=YkJsULlVGTrV9IakyZcq6ChW0FyuA4Ln/RhhGprKPGyX7W6mzFLPdboSlUVjynwLH
-	 gnBDEqMyvakhRJ3NVq8BXmj+rQ8B1llIVd8yjrnVcMo1/u0PaezbxflAJ9EPPD3TQZ
-	 DNNewkTjzokI5B/TXmbVXtifT7+elU0By4K1EBUA=
+	by mail.kernel.org (Postfix) with ESMTP id F064120672
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 08:34:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="g0dl2GAQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730146AbgGOIdz (ORCPT
+        id S1730100AbgGOIej (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 04:33:55 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:41276 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726034AbgGOIdz (ORCPT
+        Wed, 15 Jul 2020 04:34:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53074 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728672AbgGOIei (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 04:33:55 -0400
-Received: by mail-wr1-f68.google.com with SMTP id z15so1482228wrl.8
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 01:33:53 -0700 (PDT)
+        Wed, 15 Jul 2020 04:34:38 -0400
+Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CF128C08C5C1
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 01:34:37 -0700 (PDT)
+Received: by mail-pj1-x1043.google.com with SMTP id f16so2638287pjt.0
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 01:34:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=amarulasolutions.com; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=p3/g5pBdwctLUOCwSdPBoGPRKOqAUmY4r4AcqDeitio=;
+        b=g0dl2GAQ7AbUARAnjHGrGX5sQyyoB5GtmWTM/fF7pnGl1QmW5qRvJFgJJVxF0lcgAf
+         mLKfgE0i0ivFFqfgVjqd13+/RQV8/OEIQo1GbOzCrvdVT4T1UsUcXesuzXRmpwey7m1d
+         oEccPkvbJkp6adxmtuROIyn1qf1ZtSEklEyhs=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=UogqZ/2X6MWGX1K8GDMtBTIuBPUjas+5dLb7mmibZ5Y=;
-        b=XA9Hb34GIYql3PjLBmiH/I5XF4aY9nIAQnQSazPp4cXieHBZ0k7dyNGoeDgfjaWdeQ
-         5NuGWx6Gmx5YPuO1rZsqgq8chQ1EULGtv+J28amflDBtj5cxEU3IVCS0a+KrB1aEZDJm
-         Dmw47UdbSgKNGtQQWQUh6udV2Bg2b44Z57iRf3TnsjZzei7GfWxw8fD7PdlKWcdV97pd
-         iI7vibSssr4WyAp1r6yHqcASOSN+sKszUJRR0cgWmxzCiRkNqT7i2txj1PV7i1Fncq9S
-         uuo8XdM/uaZG7uSFKpBI4vTULxDmz1Z2TsbZ4aTqT9LotiXvWK6qbXADRFnscValvcav
-         jwCg==
-X-Gm-Message-State: AOAM531Hsz8yaUioQini1hBHj9PPd0JbIWBYjmqGPmHWt/z83H2nFnIT
-        eRvCGLRFr64l2j5g2yj2HUA=
-X-Google-Smtp-Source: ABdhPJyeTXlojCPm2UkniYD8Z6F3TBatG36bOsrE5NFr5E+FztEte+oHjdrUX4/BSwJ1nfJn9oc3PA==
-X-Received: by 2002:a5d:5642:: with SMTP id j2mr10071811wrw.19.1594802032784;
-        Wed, 15 Jul 2020 01:33:52 -0700 (PDT)
-Received: from localhost (ip-37-188-169-187.eurotel.cz. [37.188.169.187])
-        by smtp.gmail.com with ESMTPSA id m10sm2229049wru.4.2020.07.15.01.33.51
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=p3/g5pBdwctLUOCwSdPBoGPRKOqAUmY4r4AcqDeitio=;
+        b=AkZBAaof7yQXd45NhLdkG+uzQHhl0BZ/9fuQCupwwfV1a9vDOd4utjYsxAYl5McGj2
+         L2pE5ewCyCPZqonfuWfONA7W0ZphzYiZxIYSx5seTzQttJ8esJfKiugyKSyL2l0B5iKV
+         nv7Lv4dECHreqcoSZj7y6CqztgMF4E0fJF5A9DuKhJ9M9EkgX98h7VJuw8f/PhWP8Ktk
+         XND3LXExlIcs2YkkwVK4UBUW1SCdrSv/CJ/+tOhrvKoph6OCPhCJBwt9e0YGvidcZKZf
+         9uhB162N6Z/OkdmLgDRzvEBxZK4ynF1ojJl/7JmK66j6BE1RNqxs/4tey64OkpGNvXhs
+         9dXw==
+X-Gm-Message-State: AOAM532Ebfxqp0Uw/GDt/lw+3jLo/t44b1x480I/Wj2k7AAW4rzJnjBX
+        +7tS7P8IuauuBepW/0ClZjVL7vF0XNo=
+X-Google-Smtp-Source: ABdhPJzT/XPdHsngU3nPDlYS7eR0QDTsrvncjmFDFCOwrj+0ecRs7jcXs6QR+A7ljF/nryO44UM0Sg==
+X-Received: by 2002:a17:902:fe0d:: with SMTP id g13mr7561561plj.326.1594802076265;
+        Wed, 15 Jul 2020 01:34:36 -0700 (PDT)
+Received: from localhost.localdomain ([2405:201:c809:c7d5:9887:56a8:c916:cfdb])
+        by smtp.gmail.com with ESMTPSA id m92sm1467584pje.13.2020.07.15.01.34.26
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 15 Jul 2020 01:33:52 -0700 (PDT)
-Date:   Wed, 15 Jul 2020 10:33:51 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     js1304@gmail.com
-Cc:     Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, kernel-team@lge.com,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Christoph Hellwig <hch@infradead.org>,
-        Roman Gushchin <guro@fb.com>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>,
-        "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>
-Subject: Re: [PATCH 3/4] mm/hugetlb: make hugetlb migration callback CMA aware
-Message-ID: <20200715083351.GE5451@dhcp22.suse.cz>
-References: <1594789529-6206-1-git-send-email-iamjoonsoo.kim@lge.com>
- <1594789529-6206-3-git-send-email-iamjoonsoo.kim@lge.com>
+        Wed, 15 Jul 2020 01:34:35 -0700 (PDT)
+From:   Jagan Teki <jagan@amarulasolutions.com>
+To:     Heiko Stuebner <heiko@sntech.de>, Rob Herring <robh+dt@kernel.org>
+Cc:     Suniel Mahesh <sunil@amarulasolutions.com>,
+        Michael Trimarchi <michael@amarulasolutions.com>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        linux-amarula <linux-amarula@amarulasolutions.com>,
+        Jagan Teki <jagan@amarulasolutions.com>
+Subject: [PATCH v6 0/7] ARM: dts: rockchip: Radxa Rock Pi N8 initial support
+Date:   Wed, 15 Jul 2020 14:04:11 +0530
+Message-Id: <20200715083418.112003-1-jagan@amarulasolutions.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1594789529-6206-3-git-send-email-iamjoonsoo.kim@lge.com>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed 15-07-20 14:05:28, Joonsoo Kim wrote:
-> From: Joonsoo Kim <iamjoonsoo.kim@lge.com>
-> 
-> new_non_cma_page() in gup.c requires to allocate the new page that is not
-> on the CMA area. new_non_cma_page() implements it by using allocation
-> scope APIs.
-> 
-> However, there is a work-around for hugetlb. Normal hugetlb page
-> allocation API for migration is alloc_huge_page_nodemask(). It consists
-> of two steps. First is dequeing from the pool. Second is, if there is no
-> available page on the queue, allocating by using the page allocator.
-> 
-> new_non_cma_page() can't use this API since first step (deque) isn't
-> aware of scope API to exclude CMA area. So, new_non_cma_page() exports
-> hugetlb internal function for the second step, alloc_migrate_huge_page(),
-> to global scope and uses it directly. This is suboptimal since hugetlb
-> pages on the queue cannot be utilized.
-> 
-> This patch tries to fix this situation by making the deque function on
-> hugetlb CMA aware. In the deque function, CMA memory is skipped if
-> PF_MEMALLOC_NOCMA flag is found.
+Rock Pi N8 is a Rockchip RK3288 based SBC, which has
+- VMARC RK3288 SOM (as per SMARC standard) from Vamrs.
+- Compatible carrier board from Radxa.
 
-Now that this is in sync with the global case I do not have any
-objections.
+VMARC RK3288 SOM need to mount on top of dalang carrier
+board for making Rock PI N8 SBC.
 
-> Acked-by: Mike Kravetz <mike.kravetz@oracle.com>
-> Signed-off-by: Joonsoo Kim <iamjoonsoo.kim@lge.com>
+Changes for v6:
+- spilt the trivial patch into multiple patches
+- collect Rob review tag
+Changes for v5:
+- drop redundent hym8563_int pin in rk3399pro dtsi
+Changes for v4:
+- move i2c2 from carrier board to rk3399pro dtsi
+Changes for v3:
+- move hym8563_int pin to rk3399pro dtsi
+Changes for v2:
+- add more trivial cleanups
+- update commit message
 
-Acked-by: Michal Hocko <mhocko@suse.com>
+Jagan Teki (7):
+  ARM: dts: rockchip: dalang-carrier: Move i2c nodes into SOM
+  arm64: dts: rk3399pro: vmarc-som: Fix sorting nodes, properties
+  arm64: dts: rk3399pro: vmarc-som: Move supply regulators into Carrier
+  arm64: dts: rk3399pro: vmarc-som: Move common properties into Carrier
+  dt-bindings: arm: rockchip: Add Rock Pi N8 binding
+  ARM: dts: rockchip: Add VMARC RK3288 SOM initial support
+  ARM: dts: rockchip: Add Radxa Rock Pi N8 initial support
 
-Minor nit below
-
-[...]
-> @@ -1036,10 +1037,16 @@ static void enqueue_huge_page(struct hstate *h, struct page *page)
->  static struct page *dequeue_huge_page_node_exact(struct hstate *h, int nid)
->  {
->  	struct page *page;
-> +	bool nocma = !!(READ_ONCE(current->flags) & PF_MEMALLOC_NOCMA);
-
-READ_ONCE is not really needed because current->flags are always set on
-the current so no race is possible.
-
-> +
-> +	list_for_each_entry(page, &h->hugepage_freelists[nid], lru) {
-> +		if (nocma && is_migrate_cma_page(page))
-> +			continue;
->  
-> -	list_for_each_entry(page, &h->hugepage_freelists[nid], lru)
->  		if (!PageHWPoison(page))
->  			break;
-> +	}
-> +
->  	/*
->  	 * if 'non-isolated free hugepage' not found on the list,
->  	 * the allocation fails.
-> @@ -1928,7 +1935,7 @@ static struct page *alloc_surplus_huge_page(struct hstate *h, gfp_t gfp_mask,
->  	return page;
->  }
->  
-> -struct page *alloc_migrate_huge_page(struct hstate *h, gfp_t gfp_mask,
-> +static struct page *alloc_migrate_huge_page(struct hstate *h, gfp_t gfp_mask,
->  				     int nid, nodemask_t *nmask)
->  {
->  	struct page *page;
-> -- 
-> 2.7.4
+ .../devicetree/bindings/arm/rockchip.yaml     |   6 +
+ arch/arm/boot/dts/Makefile                    |   1 +
+ arch/arm/boot/dts/rk3288-rock-pi-n8.dts       |  17 ++
+ arch/arm/boot/dts/rk3288-vmarc-som.dtsi       | 270 ++++++++++++++++++
+ .../dts/rockchip-radxa-dalang-carrier.dtsi    |  67 +++--
+ .../dts/rockchip/rk3399pro-rock-pi-n10.dts    |   6 +-
+ .../dts/rockchip/rk3399pro-vmarc-som.dtsi     |  92 +++---
+ 7 files changed, 376 insertions(+), 83 deletions(-)
+ create mode 100644 arch/arm/boot/dts/rk3288-rock-pi-n8.dts
+ create mode 100644 arch/arm/boot/dts/rk3288-vmarc-som.dtsi
 
 -- 
-Michal Hocko
-SUSE Labs
+2.25.1
+
