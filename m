@@ -2,139 +2,4709 @@ Return-Path: <SRS0=kup7=A2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44BCEC433E3
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 07:49:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 911A4C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 07:51:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 25D2C206F4
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 07:49:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Yfvzjf4u"
+	by mail.kernel.org (Postfix) with ESMTP id 491E020672
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 07:51:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729481AbgGOHtW (ORCPT
+        id S1729380AbgGOHvy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 03:49:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46040 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728888AbgGOHtV (ORCPT
+        Wed, 15 Jul 2020 03:51:54 -0400
+Received: from outpost1.zedat.fu-berlin.de ([130.133.4.66]:48423 "EHLO
+        outpost1.zedat.fu-berlin.de" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728888AbgGOHvx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 03:49:21 -0400
-Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 97019C061755
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 00:49:21 -0700 (PDT)
-Received: by mail-pg1-x544.google.com with SMTP id s189so2660713pgc.13
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 00:49:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=AvUYaZdTBJOJT4skplAAvkJuJ1Wq6R9AP4tH75ZrRy8=;
-        b=Yfvzjf4uQhFQ3iiZ5Gopk0tjd4eTIzdPUwdWjIhr83TAMELSaGbvOPrOOcdrLn+8Ag
-         W3UC77VHMkmg0jEQ6MY6S8qFzt4J4KBytWDGraf+22OAp9jVSpoO++6zNHYM2JPgi3eF
-         0dzNj78rTpDvxvwNT+eEwUlOEO2c44ExSxuhA=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=AvUYaZdTBJOJT4skplAAvkJuJ1Wq6R9AP4tH75ZrRy8=;
-        b=H8Kr7FYYeVopx5Vlj1BzNwPLS+BUnFOShwuEvissJn0P9VW6UW04/ozkTh9v53WYyk
-         aM8xJE4jxUxwRxs3kuHl0jX9ryLcwKfNOI77H7A0T7rcOY7QfNeO80uTIqxhatqaWNLW
-         DhPdUQquJXOWe30VErCeIMsH4thDb0J2xYnuswnNdpf9HQqwtXIyOU8uXTZNFd1AFwFt
-         hnSMMemW4pRV+5eeYMYu219UA1S9dCTQA+YbYKUwiiH2isq0ErskV24wy4KDyaP4hy2z
-         pVblrkMsHcG4D1JGs7hwIXPiZ6YeuxWMHYGIzCGcak2zKFl3ih4jX7bhzuWZ1lTPu6Xu
-         BzcA==
-X-Gm-Message-State: AOAM531T/AoNYCtgT4f+OcNuVMeL7RVQ0RL7yUJ8/x+fpTlVfHRz4nXW
-        u49Ad3P9qJK2OELy3vZlMXH7Ic/djyQ=
-X-Google-Smtp-Source: ABdhPJzL1M78tbYggyyVZ6z0szvFqkdhrNRhCxOjhcPk+1HQ4/2RhGd7uaOXdyjkI7gmrmd1BvGCmw==
-X-Received: by 2002:a62:3587:: with SMTP id c129mr7799705pfa.212.1594799361142;
-        Wed, 15 Jul 2020 00:49:21 -0700 (PDT)
-Received: from bhanumaiya-glaptop.hsd1.ca.comcast.net ([2601:646:9500:590:250:b6ff:fe8e:b459])
-        by smtp.gmail.com with ESMTPSA id ci23sm1203329pjb.29.2020.07.15.00.49.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 15 Jul 2020 00:49:20 -0700 (PDT)
-From:   Bhanu Prakash Maiya <bhanumaiya@chromium.org>
-X-Google-Original-From: Bhanu Prakash Maiya <bhanumaiya@google.com>
-To:     linux-arm-kernel@lists.infradead.org
-Cc:     Lee Jones <lee.jones@linaro.org>,
-        Furquan Shaikh <furquan@chromium.org>,
-        Raul E Rangel <rrangel@chromium.org>,
-        Eric Peers <epeers@google.com>,
-        Duncan Laurie <dlaurie@google.com>,
-        Benson Leung <bleung@chromium.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Bhanu Prakash Maiya <bhanumaiya@chromium.org>,
-        Guenter Roeck <groeck@chromium.org>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        "David S . Miller" <davem@davemloft.net>,
-        Rob Herring <robh@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        devicetree@vger.kernel.org, linux-kernel@vger.Kernel.org,
-        Bhanu Prakash Maiya <bhanumaiya@google.com>
-Subject: [PATCH v2 2/2] dt-bindings: mfd: Add DT compatible string "google,cros_ec_uart"
-Date:   Wed, 15 Jul 2020 00:49:07 -0700
-Message-Id: <20200715074907.1756034-2-bhanumaiya@google.com>
-X-Mailer: git-send-email 2.27.0.389.gc38d7665816-goog
-In-Reply-To: <20200715074907.1756034-1-bhanumaiya@google.com>
-References: <20200715074907.1756034-1-bhanumaiya@google.com>
+        Wed, 15 Jul 2020 03:51:53 -0400
+Received: from inpost2.zedat.fu-berlin.de ([130.133.4.69])
+          by outpost.zedat.fu-berlin.de (Exim 4.93)
+          with esmtps (TLS1.2)
+          tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+          (envelope-from <glaubitz@zedat.fu-berlin.de>)
+          id 1jvcCR-003aQf-CR; Wed, 15 Jul 2020 09:51:31 +0200
+Received: from p57bd93f9.dip0.t-ipconnect.de ([87.189.147.249] helo=[192.168.178.139])
+          by inpost2.zedat.fu-berlin.de (Exim 4.93)
+          with esmtpsa (TLS1.2)
+          tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+          (envelope-from <glaubitz@physik.fu-berlin.de>)
+          id 1jvcCQ-001Ahz-Ni; Wed, 15 Jul 2020 09:51:31 +0200
+Subject: Re: ioremap and dma cleanups and fixes for superh (2nd resend)
+From:   John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Rich Felker <dalias@libc.org>, Christoph Hellwig <hch@lst.de>,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Linux-sh list <linux-sh@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <20200714121856.955680-1-hch@lst.de>
+ <b0745e43-0ff1-58f7-70d5-60b9c8b8d81b@physik.fu-berlin.de>
+ <20200714155914.GA24404@brightrain.aerifal.cx>
+ <8cbf2963-d0e4-0ca8-4ffe-c2057694447f@physik.fu-berlin.de>
+ <011f29e6-ad71-366e-dbff-bc8471f3da60@physik.fu-berlin.de>
+ <CAMuHMdUre2-fRgLP8YiwjAKN6J=m1vGhPSMMUdpof7jPJfcWuw@mail.gmail.com>
+ <def65208-a38b-8663-492a-cae150027003@physik.fu-berlin.de>
+Autocrypt: addr=glaubitz@physik.fu-berlin.de; keydata=
+ mQINBE3JE9wBEADMrYGNfz3oz6XLw9XcWvuIxIlPWoTyw9BxTicfGAv0d87wngs9U+d52t/R
+ EggPePf34gb7/k8FBY1IgyxnZEB5NxUb1WtW0M3GUxpPx6gBZqOm7SK1ZW3oSORw+T7Aezl3
+ Zq4Nr4Nptqx7fnLpXfRDs5iYO/GX8WuL8fkGS/gIXtxKewd0LkTlb6jq9KKq8qn8/BN5YEKq
+ JlM7jsENyA5PIe2npN3MjEg6p+qFrmrzJRuFjjdf5vvGfzskrXCAKGlNjMMA4TgZvugOFmBI
+ /iSyV0IOaj0uKhes0ZNX+lQFrOB4j6I5fTBy7L/T3W/pCWo3wVkknNYa8TDYT73oIZ7Aimv+
+ k7OzRfnxsSOAZT8Re1Yt8mvzr6FHVFjr/VdyTtO5JgQZ6LEmvo4Ro+2ByBmCHORCQ0NJhD1U
+ 3avjGfvfslG999W0WEZLTeaGkBAN1yG/1bgGAytQQkD9NsVXqBy7S3LVv9bB844ysW5Aj1nv
+ tgIz14E2WL8rbpfjJMXi7B5ha6Lxf3rFOgxpr6ZoEn+bGG4hmrO+/ReA4SerfMqwSTnjZsZv
+ xMJsx2B9c8DaZE8GsA4I6lsihbJmXhw8i7Cta8Dx418wtEbXhL6m/UEk60O7QD1VBgGqDMnJ
+ DFSlvKa9D+tZde/kHSNmQmLLzxtDbNgBgmR0jUlmxirijnm8bwARAQABtFRKb2huIFBhdWwg
+ QWRyaWFuIEdsYXViaXR6IChGcmVpZSBVbml2ZXJzaXRhZXQgQmVybGluKSA8Z2xhdWJpdHpA
+ cGh5c2lrLmZ1LWJlcmxpbi5kZT6JAlEEEwEIADsCGwMFCwkIBwMFFQoJCAsFFgIDAQACHgEC
+ F4AWIQRi/4p1hOApVpVGAAZ0Jjs39bX5EwUCWhQoUgIZAQAKCRB0Jjs39bX5Ez/ID/98r9c4
+ WUSgOHVPSMVcOVziMOi+zPWfF1OhOXW+atpTM4LSSp66196xOlDFHOdNNmO6kxckXAX9ptvp
+ Bc0mRxa7OrC168fKzqR7P75eTsJnVaOu+uI/vvgsbUIosYdkkekCxDAbYCUwmzNotIspnFbx
+ iSPMNrpw7Ud/yQkS9TDYeXnrZDhBp7p5+naWCD/yMvh7yVCA4Ea8+xDVoX+kjv6EHJrwVupO
+ pMa39cGs2rKYZbWTazcflKH+bXG3FHBrwh9XRjA6A1CTeC/zTVNgGF6wvw/qT2x9tS7WeeZ1
+ jvBCJub2cb07qIfuvxXiGcYGr+W4z9GuLCiWsMmoff/Gmo1aeMZDRYKLAZLGlEr6zkYh1Abt
+ iz0YLqIYVbZAnf8dCjmYhuwPq77IeqSjqUqI2Cb0oOOlwRKVWDlqAeo0Bh8DrvZvBAojJf4H
+ nQZ/pSz0yaRed/0FAmkVfV+1yR6BtRXhkRF6NCmguSITC96IzE26C6n5DBb43MR7Ga/mof4M
+ UufnKADNG4qz57CBwENHyx6ftWJeWZNdRZq10o0NXuCJZf/iulHCWS/hFOM5ygfONq1Vsj2Z
+ DSWvVpSLj+Ufd2QnmsnrCr1ZGcl72OC24AmqFWJY+IyReHWpuABEVZVeVDQooJ0K4yqucmrF
+ R7HyH7oZGgR0CgYHCI+9yhrXHrQpyLkCDQRNyRQuARAArCaWhVbMXw9iHmMH0BN/TuSmeKtV
+ h/+QOT5C5Uw+XJ3A+OHr9rB+SpndJEcDIhv70gLrpEuloXhZI9VYazfTv6lrkCZObXq/NgDQ
+ Mnu+9E/E/PE9irqnZZOMWpurQRh41MibRii0iSr+AH2IhRL6CN2egZID6f93Cdu7US53ZqIx
+ bXoguqGB2CK115bcnsswMW9YiVegFA5J9dAMsCI9/6M8li+CSYICi9gq0LdpODdsVfaxmo4+
+ xYFdXoDN33b8Yyzhbh/I5gtVIRpfL+Yjfk8xAsfz78wzifSDckSB3NGPAXvs6HxKc50bvf+P
+ 6t2tLpmB/KrpozlZazq16iktY97QulyEY9JWCiEgDs6EKb4wTx+lUe4yS9eo95cBV+YlL+BX
+ kJSAMyxgSOy35BeBaeUSIrYqfHpbNn6/nidwDhg/nxyJs8mPlBvHiCLwotje2AhtYndDEhGQ
+ KEtEaMQEhDi9MsCGHe+00QegCv3FRveHwzGphY1YlRItLjF4TcFz1SsHn30e7uLTDe/pUMZU
+ Kd1xU73WWr0NlWG1g49ITyaBpwdv/cs/RQ5laYYeivnag81TcPCDbTm7zXiwo53aLQOZj4u3
+ gSQvAUhgYTQUstMdkOMOn0PSIpyVAq3zrEFEYf7bNSTcdGrgwCuCBe4DgI3Vu4LOoAeI428t
+ 2dj1K1EAEQEAAYkCHwQYAQgACQUCTckULgIbDAAKCRB0Jjs39bX5E683EAC1huywL4BlxTj7
+ FTm7FiKd5/KEH5/oaxLQN26mn8yRkP/L3xwiqXxdd0hnrPyUe8mUOrSg7KLMul+pSRxPgaHA
+ xt1I1hQZ30cJ1j/SkDIV2ImSf75Yzz5v72fPiYLq9+H3qKZwrgof9yM/s0bfsSX/GWyFatvo
+ Koo+TgrE0rmtQw82vv7/cbDAYceQm1bRB8Nr8agPyGXYcjohAj7NJcra4hnu1wUw3yD05p/B
+ Rntv7NvPWV3Oo7DKCWIS4RpEd6I6E+tN3GCePqROeK1nDv+FJWLkyvwLigfNaCLro6/292YK
+ VMdBISNYN4s6IGPrXGGvoDwo9RVo6kBhlYEfg6+2eaPCwq40IVfKbYNwLLB2MR2ssL4yzmDo
+ OR3rQFDPj+QcDvH4/0gCQ+qRpYATIegS8zU5xQ8nPL8lba9YNejaOMzw8RB80g+2oPOJ3Wzx
+ oMsmw8taUmd9TIw/bJ2VO1HniiJUGUXCqoeg8homvBOQ0PmWAWIwjC6nf6CIuIM4Egu2I5Kl
+ jEF9ImTPcYZpw5vhdyPwBdXW2lSjV3EAqknWujRgcsm84nycuJnImwJptR481EWmtuH6ysj5
+ YhRVGbQPfdsjVUQfZdRdkEv4CZ90pdscBi1nRqcqANtzC+WQFwekDzk2lGqNRDg56s+q0KtY
+ scOkTAZQGVpD/8AaLH4v1w==
+Message-ID: <b5f1853e-031d-c09d-57d2-fb4baffa01ea@physik.fu-berlin.de>
+Date:   Wed, 15 Jul 2020 09:51:29 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <def65208-a38b-8663-492a-cae150027003@physik.fu-berlin.de>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Original-Sender: glaubitz@physik.fu-berlin.de
+X-Originating-IP: 87.189.147.249
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bhanu Prakash Maiya <bhanumaiya@chromium.org>
+On 7/15/20 9:46 AM, John Paul Adrian Glaubitz wrote:
+> Indeed, it does. This patch should be picked up as well.
+> 
+> Kernel boots without any errors now.
 
-Add DT compatible string in
-Documentation/devicetree/bindings/mfd/cros_ec.txt
+Btw, booting with systemd as init causes a lot of hickups which I didn't see with 3.16:
 
-Series-to: LKML <linux-kernel@vger.kernel.org>
-Series-cc: Raul E Rangel <rrangel@chromium.org>, Furquan Shaikh <furquan@chromium.org>, Duncan Laurie <dlaurie@google.com>, Eric Peers <epeers@google.com>, Benson Leung <bleung@chromium.org>, Enric Balletbo i Serra <enric.balletbo@collabora.com>, Guenter Roeck <groeck@chromium.org>, linux-kernel@vger.kernel.org, Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
+[   25.184000] 9d903e2c 
+[   25.184000] 8062124c 
+[   25.184000] 9d903e50 
+[   25.184000] 
+[   25.184000] 3e20: 
+[   25.184000] 800d91c0 
+[   25.184000] 9d903eac 
+[   25.184000] 9d879d80 
+[   25.184000] 80002f38 
+[   25.184000] 800c6366 
+[   25.184000] 9d903e40 
+[   25.184000] 7b998000 
+[   25.184000] 7b800000 
+[   25.184000] 
+[   25.184000] 3e40: 
+[   25.184000] ffffffff 
+[   25.184000] 00000000 
+[   25.184000] 00000000 
+[   25.184000] 7b997fff 
+[   25.184000] 7b998000 
+[   25.184000] 7b997fff 
+[   25.184000] 800c6456 
+[   25.184000] 9d903e78 
+[   25.184000] 
+[   25.184000] 3e60: 
+[   25.184000] 9d932c60 
+[   25.184000] 9d932c60 
+[   25.184000] 9d932c60 
+[   25.184000] 800d2d88 
+[   25.184000] 800cc334 
+[   25.184000] 00400000 
+[   25.184000] 00000000 
+[   25.184000] 00000000 
+[   25.184000] 
+[   25.184000] 3e80: 
+[   25.184000] 00000000 
+[   25.184000] 9d903eac 
+[   25.184000] 7b977000 
+[   25.184000] c578e659 
+[   25.184000] 800cda8e 
+[   25.184000] 9d903eac 
+[   25.184000] 9d903eb4 
+[   25.184000] 800cbd44 
+[   25.184000] 
+[   25.184000] 3ea0: 
+[   25.184000] 00100000 
+[   25.184000] 00000000 
+[   25.184000] 9d879d80 
+[   25.184000] 9d8de480 
+[   25.184000] ffffffff 
+[   25.184000] ffffffff 
+[   25.184000] 00000001 
+[   25.184000] 00000002 
+[   25.184000] 
+[   25.184000] 3ec0: 
+[   25.184000] 9d907000 
+[   25.184000] 9d8fb000 
+[   25.184000] 00000000 
+[   25.184000] 00000008 
+[   25.184000] 9fb8ce60 
+[   25.184000] 9fb8ce40 
+[   25.184000] 9fb8ce20 
+[   25.184000] 9fb8ce00 
+[   25.184000] 
+[   25.184000] 3ee0: 
+[   25.184000] 9fb93120 
+[   25.184000] 9fb93140 
+[   25.184000] 9fb93160 
+[   25.184000] 9fb93180 
+[   25.184000] c578e659 
+[   25.184000] 80011066 
+[   25.184000] 9d903f14 
+[   25.184000] 00000000 
+[   25.184000] 
+[   25.184000] 3f00: 
+[   25.184000] 9d8b49bc 
+[   25.184000] 00000000 
+[   25.184000] 9d8de4cc 
+[   25.184000] 00000000 
+[   25.184000] 9d8de480 
+[   25.184000] 80015940 
+[   25.184000] 9d903f24 
+[   25.184000] 9d8de480 
+[   25.184000] 
+[   25.184000] 3f20: 
+[   25.184000] 9d8b4700 
+[   25.184000] 00000000 
+[   25.184000] 00000000 
+[   25.184000] 00000000 
+[   25.184000] 9d8b4bbc 
+[   25.184000] 00000000 
+[   25.184000] 9d8b497c 
+[   25.184000] 00000000 
+[   25.184000] 
+[   25.184000] 3f40: 
+[   25.184000] 00000000 
+[   25.184000] 9d8b4afc 
+[   25.184000] 9d903f64 
+[   25.184000] 9d903fe4 
+[   25.184000] 9d8de480 
+[   25.184000] 00000000 
+[   25.184000] c578e659 
+[   25.184000] 80016c56 
+[   25.184000] 
+[   25.184000] 3f60: 
+[   25.184000] 9d903f7c 
+[   25.184000] 00000000 
+[   25.184000] 296de284 
+[   25.184000] 00000000 
+[   25.184000] 00000071 
+[   25.184000] 9d893160 
+[   25.184000] 00000000 
+[   25.184000] 80016cca 
+[   25.184000] 
+[   25.184000] 3f80: 
+[   25.184000] 9d903f90 
+[   25.184000] 00000071 
+[   25.184000] 00000100 
+[   25.184000] 80016cbc 
+[   25.184000] 8000727e 
+[   25.184000] 00000000 
+[   25.184000] 00000010 
+[   25.184000] 00000000 
+[   25.184000] 
+[   25.184000] 3fa0: 
+[   25.184000] fffff000 
+[   25.184000] 00000010 
+[   25.184000] 00000000 
+[   25.184000] fffff000 
+[   25.184000] 000000fc 
+[   25.184000] 00000000 
+[   25.184000] 00000000 
+[   25.184000] 2957bd28 
+[   25.184000] 
+[   25.184000] 3fc0: 
+[   25.184000] 000000fc 
+[   25.184000] 296de264 
+[   25.184000] 296de264 
+[   25.184000] 296de388 
+[   25.184000] 00000002 
+[   25.184000] 296de284 
+[   25.184000] 00000000 
+[   25.184000] 00000000 
+[   25.184000] 
+[   25.184000] 3fe0: 
+[   25.184000] 7b997d20 
+[   25.184000] 29630ba4 
+[   25.184000] 295c8490 
+[   25.184000] 00000101 
+[   25.184000] 2957bd18 
+[   25.184000] 00000000 
+[   25.184000] 00000000 
+[   25.184000] 00000044 
+[   25.184000] 
+[   25.184000] 
+[   25.184000] Call trace:
+[   25.184000]  [<(ptrval)>] dump_stack+0x1a/0x30
+[   25.184000]  [<(ptrval)>] bad_page+0x9e/0x104
+[   25.184000]  [<(ptrval)>] arch_local_irq_restore+0x0/0x2c
+[   25.184000]  [<(ptrval)>] check_free_page_bad+0x28/0x74
+[   25.184000]  [<(ptrval)>] free_pcppages_bulk+0x13e/0x388
+[   25.184000]  [<(ptrval)>] free_unref_page_commit.isra.0+0x6c/0x88
+[   25.184000]  [<(ptrval)>] free_unref_page_commit.isra.0+0x0/0x88
+[   25.184000]  [<(ptrval)>] free_unref_page_list+0xca/0x138
+[   25.184000]  [<(ptrval)>] release_pages+0x20a/0x2e4
+[   25.184000]  [<(ptrval)>] free_pages_and_swap_cache+0x48/0xd4
+[   25.184000]  [<(ptrval)>] tlb_batch_pages_flush+0x2a/0x50
+[   25.184000]  [<(ptrval)>] free_pages_and_swap_cache+0x0/0xd4
+[   25.184000]  [<(ptrval)>] tlb_finish_mmu+0x52/0x128
+[   25.184000]  [<(ptrval)>] free_pages+0x0/0x1c
+[   25.184000]  [<(ptrval)>] arch_local_irq_restore+0x0/0x2c
+[   25.184000]  [<(ptrval)>] free_pgd_range+0x292/0x2c8
+[   25.184000]  [<(ptrval)>] free_pgtables+0xba/0xe4
+[   25.184000]  [<(ptrval)>] unlink_anon_vmas+0x0/0x150
+[   25.184000]  [<(ptrval)>] unlink_file_vma+0x0/0x58
+[   25.184000]  [<(ptrval)>] exit_mmap+0xaa/0x1a4
+[   25.184000]  [<(ptrval)>] remove_vma+0x0/0x50
+[   25.184000]  [<(ptrval)>] mmput+0x3a/0xd4
+[   25.184000]  [<(ptrval)>] do_exit+0x278/0x984
+[   25.184000]  [<(ptrval)>] do_group_exit+0x2e/0x94
+[   25.184000]  [<(ptrval)>] sys_exit_group+0xe/0x14
+[   25.184000]  [<(ptrval)>] sys_exit_group+0x0/0x14
+[   25.184000]  [<(ptrval)>] syscall_call+0x18/0x1e
+[   25.184000] 
+[   25.184000] BUG: Bad page state in process systemd-hiberna  pfn:5d91a
+[   25.184000] page:9ff32340 refcount:0 mapcount:1026 mapping:(ptrval) index:0x0
+[   25.184000] mapping->a_ops:0x0
+[   25.184000] flags: 0x5c000000()
+[   25.184000] raw: 5c000000 00000100 00000122 9f403580 00000000 00000000 00000401 00000000
+[   25.184000] page dumped because: non-NULL mapping
+[   25.184000] Modules linked in:
+[   25.184000] CPU: 0 PID: 578 Comm: systemd-hiberna Tainted: G    B             5.8.0-rc5-00028-g7bc20f6563b4 #7
+[   25.184000] Stack: (0x9d903cec to 0x9d904000)
+[   25.184000] 3ce0: 
+[   25.184000]          
+[   25.184000]          
+[   25.184000]          
+[   25.184000] 8025dc12 
+[   25.184000] 9d903d00 
+[   25.184000] 8069bf34 
+[   25.184000] 9fff4000 
+[   25.184000] 805a6ed0 
+[   25.184000] 
+[   25.184000] 3d00: 
+[   25.184000] 800d7706 
+[   25.184000] 9d903d0c 
+[   25.184000] 9ff32340 
+[   25.184000] 80002f38 
+[   25.184000] 800d7794 
+[   25.184000] 9d903d30 
+[   25.184000] 9fff400c 
+[   25.184000] 00000014 
+[   25.184000] 
+[   25.184000] 3d20: 
+[   25.184000] 9fff4010 
+[   25.184000] 00000001 
+[   25.184000] 9fff4000 
+[   25.184000] 00000008 
+[   25.184000] 800d826e 
+[   25.184000] 9d903d38 
+[   25.184000] 9ff3be00 
+[   25.184000] 00000000 
+[   25.184000] 
+[   25.184000] 3d40: 
+[   25.184000] 00000000 
+[   25.184000] 00000122 
+[   25.184000] 00000100 
+[   25.184000] 80650b5c 
+[   25.184000] 8069c07c 
+[   25.184000] 00000000 
+[   25.184000] 0005ddf8 
+[   25.184000] 80650990 
+[   25.184000] 
+[   25.184000] 3d60: 
+[   25.184000] 9d903d64 
+[   25.184000] 9ff3bd84 
+[   25.184000] 9ff32ac4 
+[   25.184000] c578e659 
+[   25.184000] 800d8668 
+[   25.184000] 9d903d90 
+[   25.184000] 00000007 
+[   25.184000] 00000000 
+[   25.184000] 
+[   25.184000] 3d80: 
+[   25.184000] 800d85fc 
+[   25.184000] 00000000 
+[   25.184000] 9d903dc0 
+[   25.184000] 9ff32cc0 
+[   25.184000] 800d953a 
+[   25.184000] 9d903d98 
+[   25.184000] 9ff32200 
+[   25.184000] 800b098e 
+[   25.184000] 
+[   25.184000] 3da0: 
+[   25.184000] 9d903dbc 
+[   25.184000] 00000000 
+[   25.184000] 00000014 
+[   25.184000] 000001ca 
+[   25.184000] 9d907734 
+[   25.184000] 000001ca 
+[   25.184000] 9ff32680 
+[   25.184000] 80650990 
+[   25.184000] 
+[   25.184000] 3dc0: 
+[   25.184000] 9ff32684 
+[   25.184000] 9ff3f464 
+[   25.184000] c578e659 
+[   25.184000] 800de48c 
+[   25.184000] 9d903dec 
+[   25.184000] 00000400 
+[   25.184000] 000001ca 
+[   25.184000] 00080000 
+[   25.184000] 
+[   25.184000] 3de0: 
+[   25.184000] 9d90700c 
+[   25.184000] 9d907734 
+[   25.184000] 9ff32680 
+[   25.184000] 9fff53c0 
+[   25.184000] 800cf856 
+[   25.184000] 9d903e10 
+[   25.184000] 8062124c 
+[   25.184000] 9d903ec4 
+[   25.184000] 
+[   25.184000] 3e00: 
+[   25.184000] 9d903eac 
+[   25.184000] 800de444 
+[   25.184000] 00000000 
+[   25.184000] 9d907000 
+[   25.184000] 800cfa9e 
+[   25.184000] 9d903e2c 
+[   25.184000] 8062124c 
+[   25.184000] 9d903e50 
+[   25.184000] 
+[   25.184000] 3e20: 
+[   25.184000] 800d91c0 
+[   25.184000] 9d903eac 
+[   25.184000] 9d879d80 
+[   25.184000] 80002f38 
+[   25.184000] 800c6366 
+[   25.184000] 9d903e40 
+[   25.184000] 7b998000 
+[   25.184000] 7b800000 
+[   25.184000] 
+[   25.184000] 3e40: 
+[   25.184000] ffffffff 
+[   25.184000] 00000000 
+[   25.184000] 00000000 
+[   25.184000] 7b997fff 
+[   25.184000] 7b998000 
+[   25.184000] 7b997fff 
+[   25.184000] 800c6456 
+[   25.184000] 9d903e78 
+[   25.184000] 
+[   25.184000] 3e60: 
+[   25.184000] 9d932c60 
+[   25.184000] 9d932c60 
+[   25.184000] 9d932c60 
+[   25.184000] 800d2d88 
+[   25.184000] 800cc334 
+[   25.184000] 00400000 
+[   25.184000] 00000000 
+[   25.184000] 00000000 
+[   25.184000] 
+[   25.184000] 3e80: 
+[   25.184000] 00000000 
+[   25.184000] 9d903eac 
+[   25.184000] 7b977000 
+[   25.184000] c578e659 
+[   25.184000] 800cda8e 
+[   25.184000] 9d903eac 
+[   25.184000] 9d903eb4 
+[   25.184000] 800cbd44 
+[   25.184000] 
+[   25.184000] 3ea0: 
+[   25.184000] 00100000 
+[   25.184000] 00000000 
+[   25.184000] 9d879d80 
+[   25.184000] 9d8de480 
+[   25.184000] ffffffff 
+[   25.184000] ffffffff 
+[   25.184000] 00000001 
+[   25.184000] 00000002 
+[   25.184000] 
+[   25.184000] 3ec0: 
+[   25.184000] 9d907000 
+[   25.184000] 9d8fb000 
+[   25.184000] 00000000 
+[   25.184000] 00000008 
+[   25.184000] 9fb8ce60 
+[   25.184000] 9fb8ce40 
+[   25.184000] 9fb8ce20 
+[   25.184000] 9fb8ce00 
+[   25.184000] 
+[   25.184000] 3ee0: 
+[   25.184000] 9fb93120 
+[   25.184000] 9fb93140 
+[   25.184000] 9fb93160 
+[   25.184000] 9fb93180 
+[   25.184000] c578e659 
+[   25.184000] 80011066 
+[   25.184000] 9d903f14 
+[   25.184000] 00000000 
+[   25.184000] 
+[   25.184000] 3f00: 
+[   25.184000] 9d8b49bc 
+[   25.184000] 00000000 
+[   25.184000] 9d8de4cc 
+[   25.184000] 00000000 
+[   25.184000] 9d8de480 
+[   25.184000] 80015940 
+[   25.184000] 9d903f24 
+[   25.184000] 9d8de480 
+[   25.184000] 
+[   25.184000] 3f20: 
+[   25.184000] 9d8b4700 
+[   25.184000] 00000000 
+[   25.184000] 00000000 
+[   25.184000] 00000000 
+[   25.184000] 9d8b4bbc 
+[   25.184000] 00000000 
+[   25.184000] 9d8b497c 
+[   25.184000] 00000000 
+[   25.184000] 
+[   25.184000] 3f40: 
+[   25.184000] 00000000 
+[   25.184000] 9d8b4afc 
+[   25.184000] 9d903f64 
+[   25.184000] 9d903fe4 
+[   25.184000] 9d8de480 
+[   25.184000] 00000000 
+[   25.184000] c578e659 
+[   25.184000] 80016c56 
+[   25.184000] 
+[   25.184000] 3f60: 
+[   25.184000] 9d903f7c 
+[   25.184000] 00000000 
+[   25.184000] 296de284 
+[   25.184000] 00000000 
+[   25.184000] 00000071 
+[   25.184000] 9d893160 
+[   25.184000] 00000000 
+[   25.184000] 80016cca 
+[   25.184000] 
+[   25.184000] 3f80: 
+[   25.184000] 9d903f90 
+[   25.184000] 00000071 
+[   25.184000] 00000100 
+[   25.184000] 80016cbc 
+[   25.184000] 8000727e 
+[   25.184000] 00000000 
+[   25.184000] 00000010 
+[   25.184000] 00000000 
+[   25.184000] 
+[   25.184000] 3fa0: 
+[   25.184000] fffff000 
+[   25.184000] 00000010 
+[   25.184000] 00000000 
+[   25.184000] fffff000 
+[   25.184000] 000000fc 
+[   25.184000] 00000000 
+[   25.184000] 00000000 
+[   25.184000] 2957bd28 
+[   25.184000] 
+[   25.184000] 3fc0: 
+[   25.184000] 000000fc 
+[   25.184000] 296de264 
+[   25.184000] 296de264 
+[   25.184000] 296de388 
+[   25.184000] 00000002 
+[   25.184000] 296de284 
+[   25.184000] 00000000 
+[   25.184000] 00000000 
+[   25.184000] 
+[   25.184000] 3fe0: 
+[   25.184000] 7b997d20 
+[   25.184000] 29630ba4 
+[   25.184000] 295c8490 
+[   25.184000] 00000101 
+[   25.184000] 2957bd18 
+[   25.184000] 00000000 
+[   25.184000] 00000000 
+[   25.184000] 00000044 
+[   25.184000] 
+[   25.184000] 
+[   25.184000] Call trace:
+[   25.184000]  [<(ptrval)>] dump_stack+0x1a/0x30
+[   25.184000]  [<(ptrval)>] bad_page+0x9e/0x104
+[   25.184000]  [<(ptrval)>] arch_local_irq_restore+0x0/0x2c
+[   25.184000]  [<(ptrval)>] check_free_page_bad+0x28/0x74
+[   25.184000]  [<(ptrval)>] free_pcppages_bulk+0x13e/0x388
+[   25.184000]  [<(ptrval)>] free_unref_page_commit.isra.0+0x6c/0x88
+[   25.184000]  [<(ptrval)>] free_unref_page_commit.isra.0+0x0/0x88
+[   25.184000]  [<(ptrval)>] free_unref_page_list+0xca/0x138
+[   25.184000]  [<(ptrval)>] release_pages+0x20a/0x2e4
+[   25.184000]  [<(ptrval)>] free_pages_and_swap_cache+0x48/0xd4
+[   25.184000]  [<(ptrval)>] tlb_batch_pages_flush+0x2a/0x50
+[   25.184000]  [<(ptrval)>] free_pages_and_swap_cache+0x0/0xd4
+[   25.184000]  [<(ptrval)>] tlb_finish_mmu+0x52/0x128
+[   25.184000]  [<(ptrval)>] free_pages+0x0/0x1c
+[   25.184000]  [<(ptrval)>] arch_local_irq_restore+0x0/0x2c
+[   25.184000]  [<(ptrval)>] free_pgd_range+0x292/0x2c8
+[   25.184000]  [<(ptrval)>] free_pgtables+0xba/0xe4
+[   25.184000]  [<(ptrval)>] unlink_anon_vmas+0x0/0x150
+[   25.184000]  [<(ptrval)>] unlink_file_vma+0x0/0x58
+[   25.184000]  [<(ptrval)>] exit_mmap+0xaa/0x1a4
+[   25.184000]  [<(ptrval)>] remove_vma+0x0/0x50
+[   25.184000]  [<(ptrval)>] mmput+0x3a/0xd4
+[   25.184000]  [<(ptrval)>] do_exit+0x278/0x984
+[   25.184000]  [<(ptrval)>] do_group_exit+0x2e/0x94
+[   25.184000]  [<(ptrval)>] sys_exit_group+0xe/0x14
+[   25.184000]  [<(ptrval)>] sys_exit_group+0x0/0x14
+[   25.184000]  [<(ptrval)>] syscall_call+0x18/0x1e
+[   25.184000] 
+[   28.212000] BUG: Bad page state in process systemd-system-  pfn:5d933
+[   28.212000] page:9ff32660 refcount:0 mapcount:2 mapping:(ptrval) index:0x0
+[   28.212000] mapping->a_ops:0x0
+[   28.212000] flags: 0x5c000000()
+[   28.212000] raw: 5c000000 00000100 00000122 9f403580 00000000 00000000 00000001 00000000
+[   28.212000] page dumped because: non-NULL mapping
+[   28.212000] Modules linked in:
+[   28.212000] CPU: 0 PID: 581 Comm: systemd-system- Tainted: G    B             5.8.0-rc5-00028-g7bc20f6563b4 #7
+[   28.212000] Stack: (0x9d951cec to 0x9d952000)
+[   28.212000] 1ce0: 
+[   28.212000]          
+[   28.212000]          
+[   28.212000]          
+[   28.212000] 8025dc12 
+[   28.212000] 9d951d00 
+[   28.212000] 8069bf34 
+[   28.212000] 9fff4000 
+[   28.212000] 805a6ed0 
+[   28.212000] 
+[   28.212000] 1d00: 
+[   28.212000] 800d7706 
+[   28.212000] 9d951d0c 
+[   28.212000] 9ff32660 
+[   28.212000] 9d951d18 
+[   28.212000] 800d7794 
+[   28.212000] 9d951d30 
+[   28.212000] 9fff400c 
+[   28.212000] 0000001e 
+[   28.212000] 
+[   28.212000] 1d20: 
+[   28.212000] 9fff4010 
+[   28.212000] 00000002 
+[   28.212000] 9fff4000 
+[   28.212000] 00000001 
+[   28.212000] 800d826e 
+[   28.212000] 9d951d38 
+[   28.212000] 9ff3da00 
+[   28.212000] 00000000 
+[   28.212000] 
+[   28.212000] 1d40: 
+[   28.212000] 00000000 
+[   28.212000] 00000122 
+[   28.212000] 00000100 
+[   28.212000] 80650b5c 
+[   28.212000] 8069c07c 
+[   28.212000] 00000000 
+[   28.212000] 0005ded0 
+[   28.212000] 80650990 
+[   28.212000] 
+[   28.212000] 1d60: 
+[   28.212000] 9d951d64 
+[   28.212000] 9ff3f384 
+[   28.212000] 9ff3f384 
+[   28.212000] bc536903 
+[   28.212000] 800d8668 
+[   28.212000] 9d951d90 
+[   28.212000] 0000001e 
+[   28.212000] 00000000 
+[   28.212000] 
+[   28.212000] 1d80: 
+[   28.212000] 800d85fc 
+[   28.212000] 00000000 
+[   28.212000] 9d951dc0 
+[   28.212000] 9ff3fc80 
+[   28.212000] 800d953a 
+[   28.212000] 9d951d98 
+[   28.212000] 9ff32780 
+[   28.212000] 800b098e 
+[   28.212000] 
+[   28.212000] 1da0: 
+[   28.212000] 9d951dbc 
+[   28.212000] 00000000 
+[   28.212000] 00000014 
+[   28.212000] 000001ca 
+[   28.212000] 9d8f8734 
+[   28.212000] 000001ca 
+[   28.212000] 9ff32660 
+[   28.212000] 80650990 
+[   28.212000] 
+[   28.212000] 1dc0: 
+[   28.212000] 9ff32664 
+[   28.212000] 9ff3f804 
+[   28.212000] bc536903 
+[   28.212000] 800de48c 
+[   28.212000] 9d951dec 
+[   28.212000] 00000400 
+[   28.212000] 000001ca 
+[   28.212000] 00080000 
+[   28.212000] 
+[   28.212000] 1de0: 
+[   28.212000] 9d8f800c 
+[   28.212000] 9d8f8734 
+[   28.212000] 9ff32660 
+[   28.212000] 9fff53c0 
+[   28.212000] 800cf856 
+[   28.212000] 9d951e10 
+[   28.212000] 8062124c 
+[   28.212000] 9d951ec4 
+[   28.212000] 
+[   28.212000] 1e00: 
+[   28.212000] 9d951eac 
+[   28.212000] 800de444 
+[   28.212000] 00000000 
+[   28.212000] 9d8f8000 
+[   28.212000] 800cfa9e 
+[   28.212000] 9d951e2c 
+[   28.212000] 8062124c 
+[   28.212000] 9d951e50 
+[   28.212000] 
+[   28.212000] 1e20: 
+[   28.212000] 800d91c0 
+[   28.212000] 9d951eac 
+[   28.212000] 9d948ba0 
+[   28.212000] 80002f38 
+[   28.212000] 800c6366 
+[   28.212000] 9d951e40 
+[   28.212000] 7bedf000 
+[   28.212000] 7be00000 
+[   28.212000] 
+[   28.212000] 1e40: 
+[   28.212000] ffffffff 
+[   28.212000] 00000000 
+[   28.212000] 00000000 
+[   28.212000] 7bedefff 
+[   28.212000] 7bedf000 
+[   28.212000] 7bedefff 
+[   28.212000] 800c6456 
+[   28.212000] 9d951e78 
+[   28.212000] 
+[   28.212000] 1e60: 
+[   28.212000] 9d93db00 
+[   28.212000] 9d93db00 
+[   28.212000] 9d93db00 
+[   28.212000] 800d2d88 
+[   28.212000] 800cc334 
+[   28.212000] 00400000 
+[   28.212000] 00000000 
+[   28.212000] 00000000 
+[   28.212000] 
+[   28.212000] 1e80: 
+[   28.212000] 00000000 
+[   28.212000] 9d951eac 
+[   28.212000] 7bebe000 
+[   28.212000] bc536903 
+[   28.212000] 800cda8e 
+[   28.212000] 9d951eac 
+[   28.212000] 9d951eb4 
+[   28.212000] 800cbd44 
+[   28.212000] 
+[   28.212000] 1ea0: 
+[   28.212000] 00100000 
+[   28.212000] 00000000 
+[   28.212000] 9d948ba0 
+[   28.212000] 9d962b00 
+[   28.212000] ffffffff 
+[   28.212000] ffffffff 
+[   28.212000] 00000001 
+[   28.212000] 00000002 
+[   28.212000] 
+[   28.212000] 1ec0: 
+[   28.212000] 9d8f8000 
+[   28.212000] 9d8dd000 
+[   28.212000] 00000000 
+[   28.212000] 00000008 
+[   28.212000] 9fb8ce60 
+[   28.212000] 9fb8ce40 
+[   28.212000] 9fb8ce20 
+[   28.212000] 9fb8ce00 
+[   28.212000] 
+[   28.212000] 1ee0: 
+[   28.212000] 9fb93120 
+[   28.212000] 9fb93140 
+[   28.212000] 9fb93160 
+[   28.212000] 9fb93180 
+[   28.212000] bc536903 
+[   28.212000] 80011066 
+[   28.212000] 9d951f14 
+[   28.212000] 00000000 
+[   28.212000] 
+[   28.212000] 1f00: 
+[   28.212000] 9d92755c 
+[   28.212000] 00000000 
+[   28.212000] 9d962b4c 
+[   28.212000] 00000000 
+[   28.212000] 9d962b00 
+[   28.212000] 80015940 
+[   28.212000] 9d951f24 
+[   28.212000] 9d962b00 
+[   28.212000] 
+[   28.212000] 1f20: 
+[   28.212000] 9d9272a0 
+[   28.212000] 00000000 
+[   28.212000] 00000000 
+[   28.212000] 00000000 
+[   28.212000] 9d92775c 
+[   28.212000] 00000000 
+[   28.212000] 9d92751c 
+[   28.212000] 00000000 
+[   28.212000] 
+[   28.212000] 1f40: 
+[   28.212000] 00000000 
+[   28.212000] 9d92769c 
+[   28.212000] 9d951f64 
+[   28.212000] 9d951fe4 
+[   28.212000] 9d962b00 
+[   28.212000] 00000000 
+[   28.212000] bc536903 
+[   28.212000] 80016c56 
+[   28.212000] 
+[   28.212000] 1f60: 
+[   28.212000] 9d951f7c 
+[   28.212000] 00000000 
+[   28.212000] 296de284 
+[   28.212000] 00000000 
+[   28.212000] 00000071 
+[   28.212000] 9d892920 
+[   28.212000] 00000000 
+[   28.212000] 80016cca 
+[   28.212000] 
+[   28.212000] 1f80: 
+[   28.212000] 9d951f90 
+[   28.212000] 00000071 
+[   28.212000] 00000100 
+[   28.212000] 80016cbc 
+[   28.212000] 8000727e 
+[   28.212000] 00000000 
+[   28.212000] 00000010 
+[   28.212000] 00000000 
+[   28.212000] 
+[   28.212000] 1fa0: 
+[   28.212000] fffff000 
+[   28.212000] 00000010 
+[   28.212000] 00000000 
+[   28.212000] fffff000 
+[   28.212000] 000000fc 
+[   28.212000] 00000000 
+[   28.212000] 00000000 
+[   28.212000] 2957bd28 
+[   28.212000] 
+[   28.212000] 1fc0: 
+[   28.212000] 000000fc 
+[   28.212000] 296de264 
+[   28.212000] 296de264 
+[   28.212000] 296de388 
+[   28.212000] 00000002 
+[   28.212000] 296de284 
+[   28.212000] 00000000 
+[   28.212000] 00000000 
+[   28.212000] 
+[   28.212000] 1fe0: 
+[   28.212000] 7beded20 
+[   28.212000] 29630ba4 
+[   28.212000] 295c8490 
+[   28.212000] 00000101 
+[   28.212000] 2957bd18 
+[   28.212000] 00000000 
+[   28.212000] 00000000 
+[   28.212000] 00000044 
+[   28.212000] 
+[   28.212000] 
+[   28.212000] Call trace:
+[   28.212000]  [<(ptrval)>] dump_stack+0x1a/0x30
+[   28.212000]  [<(ptrval)>] bad_page+0x9e/0x104
+[   28.212000]  [<(ptrval)>] check_free_page_bad+0x28/0x74
+[   28.212000]  [<(ptrval)>] free_pcppages_bulk+0x13e/0x388
+[   28.212000]  [<(ptrval)>] free_unref_page_commit.isra.0+0x6c/0x88
+[   28.212000]  [<(ptrval)>] free_unref_page_commit.isra.0+0x0/0x88
+[   28.212000]  [<(ptrval)>] free_unref_page_list+0xca/0x138
+[   28.212000]  [<(ptrval)>] release_pages+0x20a/0x2e4
+[   28.212000]  [<(ptrval)>] free_pages_and_swap_cache+0x48/0xd4
+[   28.212000]  [<(ptrval)>] tlb_batch_pages_flush+0x2a/0x50
+[   28.212000]  [<(ptrval)>] free_pages_and_swap_cache+0x0/0xd4
+[   28.212000]  [<(ptrval)>] tlb_finish_mmu+0x52/0x128
+[   28.212000]  [<(ptrval)>] free_pages+0x0/0x1c
+[   28.212000]  [<(ptrval)>] arch_local_irq_restore+0x0/0x2c
+[   28.212000]  [<(ptrval)>] free_pgd_range+0x292/0x2c8
+[   28.212000]  [<(ptrval)>] free_pgtables+0xba/0xe4
+[   28.212000]  [<(ptrval)>] unlink_anon_vmas+0x0/0x150
+[   28.212000]  [<(ptrval)>] unlink_file_vma+0x0/0x58
+[   28.212000]  [<(ptrval)>] exit_mmap+0xaa/0x1a4
+[   28.212000]  [<(ptrval)>] remove_vma+0x0/0x50
+[   28.212000]  [<(ptrval)>] mmput+0x3a/0xd4
+[   28.212000]  [<(ptrval)>] do_exit+0x278/0x984
+[   28.212000]  [<(ptrval)>] do_group_exit+0x2e/0x94
+[   28.212000]  [<(ptrval)>] sys_exit_group+0xe/0x14
+[   28.212000]  [<(ptrval)>] sys_exit_group+0x0/0x14
+[   28.212000]  [<(ptrval)>] syscall_call+0x18/0x1e
+[   28.212000] 
+[   28.212000] BUG: Bad page state in process systemd-system-  pfn:5d940
+[   28.212000] page:9ff32800 refcount:0 mapcount:2 mapping:(ptrval) index:0x0
+[   28.212000] mapping->a_ops:0x0
+[   28.212000] flags: 0x5c000000()
+[   28.212000] raw: 5c000000 00000100 00000122 9f403580 00000000 00000000 00000001 00000000
+[   28.212000] page dumped because: non-NULL mapping
+[   28.212000] Modules linked in:
+[   28.212000] CPU: 0 PID: 581 Comm: systemd-system- Tainted: G    B             5.8.0-rc5-00028-g7bc20f6563b4 #7
+[   28.212000] Stack: (0x9d951cec to 0x9d952000)
+[   28.212000] 1ce0: 
+[   28.212000]          
+[   28.212000]          
+[   28.212000]          
+[   28.212000] 8025dc12 
+[   28.212000] 9d951d00 
+[   28.212000] 8069bf34 
+[   28.212000] 9fff4000 
+[   28.212000] 805a6ed0 
+[   28.212000] 
+[   28.212000] 1d00: 
+[   28.212000] 800d7706 
+[   28.212000] 9d951d0c 
+[   28.212000] 9ff32800 
+[   28.212000] 9d951d18 
+[   28.212000] 800d7794 
+[   28.212000] 9d951d30 
+[   28.212000] 9fff400c 
+[   28.212000] 0000001a 
+[   28.212000] 
+[   28.212000] 1d20: 
+[   28.212000] 9fff4010 
+[   28.212000] 00000001 
+[   28.212000] 9fff4000 
+[   28.212000] 00000004 
+[   28.212000] 800d826e 
+[   28.212000] 9d951d38 
+[   28.212000] 9ff3da00 
+[   28.212000] 00000000 
+[   28.212000] 
+[   28.212000] 1d40: 
+[   28.212000] 00000000 
+[   28.212000] 00000122 
+[   28.212000] 00000100 
+[   28.212000] 80650b5c 
+[   28.212000] 8069c07c 
+[   28.212000] 00000000 
+[   28.212000] 0005ded0 
+[   28.212000] 80650990 
+[   28.212000] 
+[   28.212000] 1d60: 
+[   28.212000] 9d951d64 
+[   28.212000] 9ff3f384 
+[   28.212000] 9ff32584 
+[   28.212000] bc536903 
+[   28.212000] 800d8668 
+[   28.212000] 9d951d90 
+[   28.212000] 0000001e 
+[   28.212000] 00000000 
+[   28.212000] 
+[   28.212000] 1d80: 
+[   28.212000] 800d85fc 
+[   28.212000] 00000000 
+[   28.212000] 9d951dc0 
+[   28.212000] 9ff3fc80 
+[   28.212000] 800d953a 
+[   28.212000] 9d951d98 
+[   28.212000] 9ff32780 
+[   28.212000] 800b098e 
+[   28.212000] 
+[   28.212000] 1da0: 
+[   28.212000] 9d951dbc 
+[   28.212000] 00000000 
+[   28.212000] 00000014 
+[   28.212000] 000001ca 
+[   28.212000] 9d8f8734 
+[   28.212000] 000001ca 
+[   28.212000] 9ff32660 
+[   28.212000] 80650990 
+[   28.212000] 
+[   28.212000] 1dc0: 
+[   28.212000] 9ff32664 
+[   28.212000] 9ff3f804 
+[   28.212000] bc536903 
+[   28.212000] 800de48c 
+[   28.212000] 9d951dec 
+[   28.212000] 00000400 
+[   28.212000] 000001ca 
+[   28.212000] 00080000 
+[   28.212000] 
+[   28.212000] 1de0: 
+[   28.212000] 9d8f800c 
+[   28.212000] 9d8f8734 
+[   28.212000] 9ff32660 
+[   28.212000] 9fff53c0 
+[   28.212000] 800cf856 
+[   28.212000] 9d951e10 
+[   28.212000] 8062124c 
+[   28.212000] 9d951ec4 
+[   28.212000] 
+[   28.212000] 1e00: 
+[   28.212000] 9d951eac 
+[   28.212000] 800de444 
+[   28.212000] 00000000 
+[   28.212000] 9d8f8000 
+[   28.212000] 800cfa9e 
+[   28.212000] 9d951e2c 
+[   28.212000] 8062124c 
+[   28.212000] 9d951e50 
+[   28.212000] 
+[   28.212000] 1e20: 
+[   28.212000] 800d91c0 
+[   28.212000] 9d951eac 
+[   28.212000] 9d948ba0 
+[   28.212000] 80002f38 
+[   28.212000] 800c6366 
+[   28.212000] 9d951e40 
+[   28.212000] 7bedf000 
+[   28.212000] 7be00000 
+[   28.212000] 
+[   28.212000] 1e40: 
+[   28.212000] ffffffff 
+[   28.212000] 00000000 
+[   28.212000] 00000000 
+[   28.212000] 7bedefff 
+[   28.212000] 7bedf000 
+[   28.212000] 7bedefff 
+[   28.212000] 800c6456 
+[   28.212000] 9d951e78 
+[   28.212000] 
+[   28.212000] 1e60: 
+[   28.212000] 9d93db00 
+[   28.212000] 9d93db00 
+[   28.212000] 9d93db00 
+[   28.212000] 800d2d88 
+[   28.212000] 800cc334 
+[   28.212000] 00400000 
+[   28.212000] 00000000 
+[   28.212000] 00000000 
+[   28.212000] 
+[   28.212000] 1e80: 
+[   28.212000] 00000000 
+[   28.212000] 9d951eac 
+[   28.212000] 7bebe000 
+[   28.212000] bc536903 
+[   28.212000] 800cda8e 
+[   28.212000] 9d951eac 
+[   28.212000] 9d951eb4 
+[   28.212000] 800cbd44 
+[   28.212000] 
+[   28.212000] 1ea0: 
+[   28.212000] 00100000 
+[   28.212000] 00000000 
+[   28.212000] 9d948ba0 
+[   28.212000] 9d962b00 
+[   28.212000] ffffffff 
+[   28.212000] ffffffff 
+[   28.212000] 00000001 
+[   28.212000] 00000002 
+[   28.212000] 
+[   28.212000] 1ec0: 
+[   28.212000] 9d8f8000 
+[   28.212000] 9d8dd000 
+[   28.212000] 00000000 
+[   28.212000] 00000008 
+[   28.212000] 9fb8ce60 
+[   28.212000] 9fb8ce40 
+[   28.212000] 9fb8ce20 
+[   28.212000] 9fb8ce00 
+[   28.212000] 
+[   28.212000] 1ee0: 
+[   28.212000] 9fb93120 
+[   28.212000] 9fb93140 
+[   28.212000] 9fb93160 
+[   28.212000] 9fb93180 
+[   28.212000] bc536903 
+[   28.212000] 80011066 
+[   28.212000] 9d951f14 
+[   28.212000] 00000000 
+[   28.212000] 
+[   28.212000] 1f00: 
+[   28.212000] 9d92755c 
+[   28.212000] 00000000 
+[   28.212000] 9d962b4c 
+[   28.212000] 00000000 
+[   28.212000] 9d962b00 
+[   28.212000] 80015940 
+[   28.212000] 9d951f24 
+[   28.212000] 9d962b00 
+[   28.212000] 
+[   28.212000] 1f20: 
+[   28.212000] 9d9272a0 
+[   28.212000] 00000000 
+[   28.212000] 00000000 
+[   28.212000] 00000000 
+[   28.212000] 9d92775c 
+[   28.212000] 00000000 
+[   28.212000] 9d92751c 
+[   28.212000] 00000000 
+[   28.212000] 
+[   28.212000] 1f40: 
+[   28.212000] 00000000 
+[   28.212000] 9d92769c 
+[   28.212000] 9d951f64 
+[   28.212000] 9d951fe4 
+[   28.212000] 9d962b00 
+[   28.212000] 00000000 
+[   28.212000] bc536903 
+[   28.212000] 80016c56 
+[   28.212000] 
+[   28.212000] 1f60: 
+[   28.212000] 9d951f7c 
+[   28.212000] 00000000 
+[   28.212000] 296de284 
+[   28.212000] 00000000 
+[   28.212000] 00000071 
+[   28.212000] 9d892920 
+[   28.212000] 00000000 
+[   28.212000] 80016cca 
+[   28.212000] 
+[   28.212000] 1f80: 
+[   28.212000] 9d951f90 
+[   28.212000] 00000071 
+[   28.212000] 00000100 
+[   28.212000] 80016cbc 
+[   28.212000] 8000727e 
+[   28.212000] 00000000 
+[   28.212000] 00000010 
+[   28.212000] 00000000 
+[   28.212000] 
+[   28.212000] 1fa0: 
+[   28.212000] fffff000 
+[   28.212000] 00000010 
+[   28.212000] 00000000 
+[   28.212000] fffff000 
+[   28.212000] 000000fc 
+[   28.212000] 00000000 
+[   28.212000] 00000000 
+[   28.212000] 2957bd28 
+[   28.212000] 
+[   28.212000] 1fc0: 
+[   28.212000] 000000fc 
+[   28.212000] 296de264 
+[   28.212000] 296de264 
+[   28.212000] 296de388 
+[   28.212000] 00000002 
+[   28.212000] 296de284 
+[   28.212000] 00000000 
+[   28.212000] 00000000 
+[   28.212000] 
+[   28.212000] 1fe0: 
+[   28.212000] 7beded20 
+[   28.212000] 29630ba4 
+[   28.212000] 295c8490 
+[   28.212000] 00000101 
+[   28.212000] 2957bd18 
+[   28.212000] 00000000 
+[   28.212000] 00000000 
+[   28.212000] 00000044 
+[   28.212000] 
+[   28.212000] 
+[   28.212000] Call trace:
+[   28.212000]  [<(ptrval)>] dump_stack+0x1a/0x30
+[   28.212000]  [<(ptrval)>] bad_page+0x9e/0x104
+[   28.212000]  [<(ptrval)>] check_free_page_bad+0x28/0x74
+[   28.212000]  [<(ptrval)>] free_pcppages_bulk+0x13e/0x388
+[   28.212000]  [<(ptrval)>] free_unref_page_commit.isra.0+0x6c/0x88
+[   28.212000]  [<(ptrval)>] free_unref_page_commit.isra.0+0x0/0x88
+[   28.212000]  [<(ptrval)>] free_unref_page_list+0xca/0x138
+[   28.212000]  [<(ptrval)>] release_pages+0x20a/0x2e4
+[   28.212000]  [<(ptrval)>] free_pages_and_swap_cache+0x48/0xd4
+[   28.212000]  [<(ptrval)>] tlb_batch_pages_flush+0x2a/0x50
+[   28.212000]  [<(ptrval)>] free_pages_and_swap_cache+0x0/0xd4
+[   28.212000]  [<(ptrval)>] tlb_finish_mmu+0x52/0x128
+[   28.212000]  [<(ptrval)>] free_pages+0x0/0x1c
+[   28.212000]  [<(ptrval)>] arch_local_irq_restore+0x0/0x2c
+[   28.212000]  [<(ptrval)>] free_pgd_range+0x292/0x2c8
+[   28.212000]  [<(ptrval)>] free_pgtables+0xba/0xe4
+[   28.212000]  [<(ptrval)>] unlink_anon_vmas+0x0/0x150
+[   28.212000]  [<(ptrval)>] unlink_file_vma+0x0/0x58
+[   28.212000]  [<(ptrval)>] exit_mmap+0xaa/0x1a4
+[   28.212000]  [<(ptrval)>] remove_vma+0x0/0x50
+[   28.212000]  [<(ptrval)>] mmput+0x3a/0xd4
+[   28.212000]  [<(ptrval)>] do_exit+0x278/0x984
+[   28.212000]  [<(ptrval)>] do_group_exit+0x2e/0x94
+[   28.212000]  [<(ptrval)>] sys_exit_group+0xe/0x14
+[   28.212000]  [<(ptrval)>] sys_exit_group+0x0/0x14
+[   28.212000]  [<(ptrval)>] syscall_call+0x18/0x1e
+[   28.212000] 
+[   28.212000] BUG: Bad page state in process systemd-system-  pfn:5d8c9
+[   28.212000] page:9ff31920 refcount:0 mapcount:1026 mapping:(ptrval) index:0x0
+[   28.212000] mapping->a_ops:0x0
+[   28.212000] flags: 0x5c000000()
+[   28.212000] raw: 5c000000 00000100 00000122 9f403580 00000000 00000000 00000401 00000000
+[   28.212000] page dumped because: non-NULL mapping
+[   28.212000] Modules linked in:
+[   28.212000] CPU: 0 PID: 581 Comm: systemd-system- Tainted: G    B             5.8.0-rc5-00028-g7bc20f6563b4 #7
+[   28.212000] Stack: (0x9d951cec to 0x9d952000)
+[   28.212000] 1ce0: 
+[   28.212000]          
+[   28.212000]          
+[   28.212000]          
+[   28.212000] 8025dc12 
+[   28.212000] 9d951d00 
+[   28.212000] 8069bf34 
+[   28.212000] 9fff4000 
+[   28.212000] 805a6ed0 
+[   28.212000] 
+[   28.212000] 1d00: 
+[   28.212000] 800d7706 
+[   28.212000] 9d951d0c 
+[   28.212000] 9ff31920 
+[   28.212000] 9d951d18 
+[   28.212000] 800d7794 
+[   28.212000] 9d951d30 
+[   28.212000] 9fff400c 
+[   28.212000] 00000018 
+[   28.212000] 
+[   28.212000] 1d20: 
+[   28.212000] 9fff4010 
+[   28.212000] 00000002 
+[   28.212000] 9fff4000 
+[   28.212000] 00000005 
+[   28.212000] 800d826e 
+[   28.212000] 9d951d38 
+[   28.212000] 9ff3da00 
+[   28.212000] 00000000 
+[   28.212000] 
+[   28.212000] 1d40: 
+[   28.212000] 00000000 
+[   28.212000] 00000122 
+[   28.212000] 00000100 
+[   28.212000] 80650b5c 
+[   28.212000] 8069c07c 
+[   28.212000] 00000000 
+[   28.212000] 0005ded0 
+[   28.212000] 80650990 
+[   28.212000] 
+[   28.212000] 1d60: 
+[   28.212000] 9d951d64 
+[   28.212000] 9ff3f384 
+[   28.212000] 9ff3ebe4 
+[   28.212000] bc536903 
+[   28.212000] 800d8668 
+[   28.212000] 9d951d90 
+[   28.212000] 0000001e 
+[   28.212000] 00000000 
+[   28.212000] 
+[   28.212000] 1d80: 
+[   28.212000] 800d85fc 
+[   28.212000] 00000000 
+[   28.212000] 9d951dc0 
+[   28.212000] 9ff3fc80 
+[   28.212000] 800d953a 
+[   28.212000] 9d951d98 
+[   28.212000] 9ff32780 
+[   28.212000] 800b098e 
+[   28.212000] 
+[   28.212000] 1da0: 
+[   28.212000] 9d951dbc 
+[   28.212000] 00000000 
+[   28.212000] 00000014 
+[   28.212000] 000001ca 
+[   28.212000] 9d8f8734 
+[   28.212000] 000001ca 
+[   28.212000] 9ff32660 
+[   28.212000] 80650990 
+[   28.212000] 
+[   28.212000] 1dc0: 
+[   28.212000] 9ff32664 
+[   28.212000] 9ff3f804 
+[   28.212000] bc536903 
+[   28.212000] 800de48c 
+[   28.212000] 9d951dec 
+[   28.212000] 00000400 
+[   28.212000] 000001ca 
+[   28.212000] 00080000 
+[   28.212000] 
+[   28.212000] 1de0: 
+[   28.212000] 9d8f800c 
+[   28.212000] 9d8f8734 
+[   28.212000] 9ff32660 
+[   28.212000] 9fff53c0 
+[   28.212000] 800cf856 
+[   28.212000] 9d951e10 
+[   28.212000] 8062124c 
+[   28.212000] 9d951ec4 
+[   28.212000] 
+[   28.212000] 1e00: 
+[   28.212000] 9d951eac 
+[   28.212000] 800de444 
+[   28.212000] 00000000 
+[   28.212000] 9d8f8000 
+[   28.212000] 800cfa9e 
+[   28.212000] 9d951e2c 
+[   28.212000] 8062124c 
+[   28.212000] 9d951e50 
+[   28.212000] 
+[   28.212000] 1e20: 
+[   28.212000] 800d91c0 
+[   28.212000] 9d951eac 
+[   28.212000] 9d948ba0 
+[   28.212000] 80002f38 
+[   28.212000] 800c6366 
+[   28.212000] 9d951e40 
+[   28.212000] 7bedf000 
+[   28.212000] 7be00000 
+[   28.212000] 
+[   28.212000] 1e40: 
+[   28.212000] ffffffff 
+[   28.212000] 00000000 
+[   28.212000] 00000000 
+[   28.212000] 7bedefff 
+[   28.212000] 7bedf000 
+[   28.212000] 7bedefff 
+[   28.212000] 800c6456 
+[   28.212000] 9d951e78 
+[   28.212000] 
+[   28.212000] 1e60: 
+[   28.212000] 9d93db00 
+[   28.212000] 9d93db00 
+[   28.212000] 9d93db00 
+[   28.212000] 800d2d88 
+[   28.212000] 800cc334 
+[   28.212000] 00400000 
+[   28.212000] 00000000 
+[   28.212000] 00000000 
+[   28.212000] 
+[   28.212000] 1e80: 
+[   28.212000] 00000000 
+[   28.212000] 9d951eac 
+[   28.212000] 7bebe000 
+[   28.212000] bc536903 
+[   28.212000] 800cda8e 
+[   28.212000] 9d951eac 
+[   28.212000] 9d951eb4 
+[   28.212000] 800cbd44 
+[   28.212000] 
+[   28.212000] 1ea0: 
+[   28.212000] 00100000 
+[   28.212000] 00000000 
+[   28.212000] 9d948ba0 
+[   28.212000] 9d962b00 
+[   28.212000] ffffffff 
+[   28.212000] ffffffff 
+[   28.212000] 00000001 
+[   28.212000] 00000002 
+[   28.212000] 
+[   28.212000] 1ec0: 
+[   28.212000] 9d8f8000 
+[   28.212000] 9d8dd000 
+[   28.212000] 00000000 
+[   28.212000] 00000008 
+[   28.212000] 9fb8ce60 
+[   28.212000] 9fb8ce40 
+[   28.212000] 9fb8ce20 
+[   28.212000] 9fb8ce00 
+[   28.212000] 
+[   28.212000] 1ee0: 
+[   28.212000] 9fb93120 
+[   28.212000] 9fb93140 
+[   28.212000] 9fb93160 
+[   28.212000] 9fb93180 
+[   28.212000] bc536903 
+[   28.212000] 80011066 
+[   28.212000] 9d951f14 
+[   28.212000] 00000000 
+[   28.212000] 
+[   28.212000] 1f00: 
+[   28.212000] 9d92755c 
+[   28.212000] 00000000 
+[   28.212000] 9d962b4c 
+[   28.212000] 00000000 
+[   28.212000] 9d962b00 
+[   28.212000] 80015940 
+[   28.212000] 9d951f24 
+[   28.212000] 9d962b00 
+[   28.212000] 
+[   28.212000] 1f20: 
+[   28.212000] 9d9272a0 
+[   28.212000] 00000000 
+[   28.212000] 00000000 
+[   28.212000] 00000000 
+[   28.212000] 9d92775c 
+[   28.212000] 00000000 
+[   28.212000] 9d92751c 
+[   28.212000] 00000000 
+[   28.212000] 
+[   28.212000] 1f40: 
+[   28.212000] 00000000 
+[   28.212000] 9d92769c 
+[   28.212000] 9d951f64 
+[   28.212000] 9d951fe4 
+[   28.212000] 9d962b00 
+[   28.212000] 00000000 
+[   28.212000] bc536903 
+[   28.212000] 80016c56 
+[   28.212000] 
+[   28.212000] 1f60: 
+[   28.212000] 9d951f7c 
+[   28.212000] 00000000 
+[   28.212000] 296de284 
+[   28.212000] 00000000 
+[   28.212000] 00000071 
+[   28.212000] 9d892920 
+[   28.212000] 00000000 
+[   28.212000] 80016cca 
+[   28.212000] 
+[   28.212000] 1f80: 
+[   28.212000] 9d951f90 
+[   28.212000] 00000071 
+[   28.212000] 00000100 
+[   28.212000] 80016cbc 
+[   28.212000] 8000727e 
+[   28.212000] 00000000 
+[   28.212000] 00000010 
+[   28.212000] 00000000 
+[   28.212000] 
+[   28.212000] 1fa0: 
+[   28.212000] fffff000 
+[   28.212000] 00000010 
+[   28.212000] 00000000 
+[   28.212000] fffff000 
+[   28.212000] 000000fc 
+[   28.212000] 00000000 
+[   28.212000] 00000000 
+[   28.212000] 2957bd28 
+[   28.212000] 
+[   28.212000] 1fc0: 
+[   28.212000] 000000fc 
+[   28.212000] 296de264 
+[   28.212000] 296de264 
+[   28.212000] 296de388 
+[   28.212000] 00000002 
+[   28.212000] 296de284 
+[   28.212000] 00000000 
+[   28.212000] 00000000 
+[   28.212000] 
+[   28.212000] 1fe0: 
+[   28.212000] 7beded20 
+[   28.212000] 29630ba4 
+[   28.212000] 295c8490 
+[   28.212000] 00000101 
+[   28.212000] 2957bd18 
+[   28.212000] 00000000 
+[   28.212000] 00000000 
+[   28.212000] 00000044 
+[   28.212000] 
+[   28.212000] 
+[   28.212000] Call trace:
+[   28.212000]  [<(ptrval)>] dump_stack+0x1a/0x30
+[   28.212000]  [<(ptrval)>] bad_page+0x9e/0x104
+[   28.212000]  [<(ptrval)>] check_free_page_bad+0x28/0x74
+[   28.212000]  [<(ptrval)>] free_pcppages_bulk+0x13e/0x388
+[   28.212000]  [<(ptrval)>] free_unref_page_commit.isra.0+0x6c/0x88
+[   28.212000]  [<(ptrval)>] free_unref_page_commit.isra.0+0x0/0x88
+[   28.212000]  [<(ptrval)>] free_unref_page_list+0xca/0x138
+[   28.212000]  [<(ptrval)>] release_pages+0x20a/0x2e4
+[   28.212000]  [<(ptrval)>] free_pages_and_swap_cache+0x48/0xd4
+[   28.212000]  [<(ptrval)>] tlb_batch_pages_flush+0x2a/0x50
+[   28.212000]  [<(ptrval)>] free_pages_and_swap_cache+0x0/0xd4
+[   28.212000]  [<(ptrval)>] tlb_finish_mmu+0x52/0x128
+[   28.212000]  [<(ptrval)>] free_pages+0x0/0x1c
+[   28.212000]  [<(ptrval)>] arch_local_irq_restore+0x0/0x2c
+[   28.212000]  [<(ptrval)>] free_pgd_range+0x292/0x2c8
+[   28.212000]  [<(ptrval)>] free_pgtables+0xba/0xe4
+[   28.212000]  [<(ptrval)>] unlink_anon_vmas+0x0/0x150
+[   28.212000]  [<(ptrval)>] unlink_file_vma+0x0/0x58
+[   28.212000]  [<(ptrval)>] exit_mmap+0xaa/0x1a4
+[   28.212000]  [<(ptrval)>] remove_vma+0x0/0x50
+[   28.212000]  [<(ptrval)>] mmput+0x3a/0xd4
+[   28.212000]  [<(ptrval)>] do_exit+0x278/0x984
+[   28.212000]  [<(ptrval)>] do_group_exit+0x2e/0x94
+[   28.212000]  [<(ptrval)>] sys_exit_group+0xe/0x14
+[   28.212000]  [<(ptrval)>] sys_exit_group+0x0/0x14
+[   28.212000]  [<(ptrval)>] syscall_call+0x18/0x1e
+[   28.212000] 
+[   28.212000] BUG: Bad page state in process systemd-system-  pfn:5d944
+[   28.212000] page:9ff32880 refcount:0 mapcount:1026 mapping:(ptrval) index:0x0
+[   28.212000] mapping->a_ops:0x0
+[   28.212000] flags: 0x5c000000()
+[   28.212000] raw: 5c000000 00000100 00000122 9f403580 00000000 00000000 00000401 00000000
+[   28.212000] page dumped because: non-NULL mapping
+[   28.212000] Modules linked in:
+[   28.212000] CPU: 0 PID: 581 Comm: systemd-system- Tainted: G    B             5.8.0-rc5-00028-g7bc20f6563b4 #7
+[   28.212000] Stack: (0x9d951cec to 0x9d952000)
+[   28.212000] 1ce0: 
+[   28.212000]          
+[   28.212000]          
+[   28.212000]          
+[   28.212000] 8025dc12 
+[   28.212000] 9d951d00 
+[   28.212000] 8069bf34 
+[   28.212000] 9fff4000 
+[   28.212000] 805a6ed0 
+[   28.212000] 
+[   28.212000] 1d00: 
+[   28.212000] 800d7706 
+[   28.212000] 9d951d0c 
+[   28.212000] 9ff32880 
+[   28.212000] 9d951d18 
+[   28.212000] 800d7794 
+[   28.212000] 9d951d30 
+[   28.212000] 9fff400c 
+[   28.212000] 00000017 
+[   28.212000] 
+[   28.212000] 1d20: 
+[   28.212000] 9fff4010 
+[   28.212000] 00000001 
+[   28.212000] 9fff4000 
+[   28.212000] 00000005 
+[   28.212000] 800d826e 
+[   28.212000] 9d951d38 
+[   28.212000] 9ff3da00 
+[   28.212000] 00000000 
+[   28.212000] 
+[   28.212000] 1d40: 
+[   28.212000] 00000000 
+[   28.212000] 00000122 
+[   28.212000] 00000100 
+[   28.212000] 80650b5c 
+[   28.212000] 8069c07c 
+[   28.212000] 00000000 
+[   28.212000] 0005ded0 
+[   28.212000] 80650990 
+[   28.212000] 
+[   28.212000] 1d60: 
+[   28.212000] 9d951d64 
+[   28.212000] 9ff3f384 
+[   28.212000] 9ff3ebe4 
+[   28.212000] bc536903 
+[   28.212000] 800d8668 
+[   28.212000] 9d951d90 
+[   28.212000] 0000001e 
+[   28.212000] 00000000 
+[   28.212000] 
+[   28.212000] 1d80: 
+[   28.212000] 800d85fc 
+[   28.212000] 00000000 
+[   28.212000] 9d951dc0 
+[   28.212000] 9ff3fc80 
+[   28.212000] 800d953a 
+[   28.212000] 9d951d98 
+[   28.212000] 9ff32780 
+[   28.212000] 800b098e 
+[   28.212000] 
+[   28.212000] 1da0: 
+[   28.212000] 9d951dbc 
+[   28.212000] 00000000 
+[   28.212000] 00000014 
+[   28.212000] 000001ca 
+[   28.212000] 9d8f8734 
+[   28.212000] 000001ca 
+[   28.212000] 9ff32660 
+[   28.212000] 80650990 
+[   28.212000] 
+[   28.212000] 1dc0: 
+[   28.212000] 9ff32664 
+[   28.212000] 9ff3f804 
+[   28.212000] bc536903 
+[   28.212000] 800de48c 
+[   28.212000] 9d951dec 
+[   28.212000] 00000400 
+[   28.212000] 000001ca 
+[   28.212000] 00080000 
+[   28.212000] 
+[   28.212000] 1de0: 
+[   28.212000] 9d8f800c 
+[   28.212000] 9d8f8734 
+[   28.212000] 9ff32660 
+[   28.212000] 9fff53c0 
+[   28.212000] 800cf856 
+[   28.212000] 9d951e10 
+[   28.212000] 8062124c 
+[   28.212000] 9d951ec4 
+[   28.212000] 
+[   28.212000] 1e00: 
+[   28.212000] 9d951eac 
+[   28.212000] 800de444 
+[   28.212000] 00000000 
+[   28.212000] 9d8f8000 
+[   28.212000] 800cfa9e 
+[   28.212000] 9d951e2c 
+[   28.212000] 8062124c 
+[   28.212000] 9d951e50 
+[   28.212000] 
+[   28.212000] 1e20: 
+[   28.212000] 800d91c0 
+[   28.212000] 9d951eac 
+[   28.212000] 9d948ba0 
+[   28.212000] 80002f38 
+[   28.212000] 800c6366 
+[   28.212000] 9d951e40 
+[   28.212000] 7bedf000 
+[   28.212000] 7be00000 
+[   28.212000] 
+[   28.212000] 1e40: 
+[   28.212000] ffffffff 
+[   28.212000] 00000000 
+[   28.212000] 00000000 
+[   28.212000] 7bedefff 
+[   28.212000] 7bedf000 
+[   28.212000] 7bedefff 
+[   28.212000] 800c6456 
+[   28.212000] 9d951e78 
+[   28.212000] 
+[   28.212000] 1e60: 
+[   28.212000] 9d93db00 
+[   28.212000] 9d93db00 
+[   28.212000] 9d93db00 
+[   28.212000] 800d2d88 
+[   28.212000] 800cc334 
+[   28.212000] 00400000 
+[   28.212000] 00000000 
+[   28.212000] 00000000 
+[   28.212000] 
+[   28.212000] 1e80: 
+[   28.212000] 00000000 
+[   28.212000] 9d951eac 
+[   28.212000] 7bebe000 
+[   28.212000] bc536903 
+[   28.212000] 800cda8e 
+[   28.212000] 9d951eac 
+[   28.212000] 9d951eb4 
+[   28.212000] 800cbd44 
+[   28.212000] 
+[   28.212000] 1ea0: 
+[   28.212000] 00100000 
+[   28.212000] 00000000 
+[   28.212000] 9d948ba0 
+[   28.212000] 9d962b00 
+[   28.212000] ffffffff 
+[   28.212000] ffffffff 
+[   28.212000] 00000001 
+[   28.212000] 00000002 
+[   28.212000] 
+[   28.212000] 1ec0: 
+[   28.212000] 9d8f8000 
+[   28.212000] 9d8dd000 
+[   28.212000] 00000000 
+[   28.212000] 00000008 
+[   28.212000] 9fb8ce60 
+[   28.212000] 9fb8ce40 
+[   28.212000] 9fb8ce20 
+[   28.212000] 9fb8ce00 
+[   28.212000] 
+[   28.212000] 1ee0: 
+[   28.212000] 9fb93120 
+[   28.212000] 9fb93140 
+[   28.212000] 9fb93160 
+[   28.212000] 9fb93180 
+[   28.212000] bc536903 
+[   28.212000] 80011066 
+[   28.212000] 9d951f14 
+[   28.212000] 00000000 
+[   28.212000] 
+[   28.212000] 1f00: 
+[   28.212000] 9d92755c 
+[   28.212000] 00000000 
+[   28.212000] 9d962b4c 
+[   28.212000] 00000000 
+[   28.212000] 9d962b00 
+[   28.212000] 80015940 
+[   28.212000] 9d951f24 
+[   28.212000] 9d962b00 
+[   28.212000] 
+[   28.212000] 1f20: 
+[   28.212000] 9d9272a0 
+[   28.212000] 00000000 
+[   28.212000] 00000000 
+[   28.212000] 00000000 
+[   28.212000] 9d92775c 
+[   28.212000] 00000000 
+[   28.212000] 9d92751c 
+[   28.212000] 00000000 
+[   28.212000] 
+[   28.212000] 1f40: 
+[   28.212000] 00000000 
+[   28.212000] 9d92769c 
+[   28.212000] 9d951f64 
+[   28.212000] 9d951fe4 
+[   28.212000] 9d962b00 
+[   28.212000] 00000000 
+[   28.212000] bc536903 
+[   28.212000] 80016c56 
+[   28.212000] 
+[   28.212000] 1f60: 
+[   28.212000] 9d951f7c 
+[   28.212000] 00000000 
+[   28.212000] 296de284 
+[   28.212000] 00000000 
+[   28.212000] 00000071 
+[   28.212000] 9d892920 
+[   28.212000] 00000000 
+[   28.212000] 80016cca 
+[   28.212000] 
+[   28.212000] 1f80: 
+[   28.212000] 9d951f90 
+[   28.212000] 00000071 
+[   28.212000] 00000100 
+[   28.212000] 80016cbc 
+[   28.212000] 8000727e 
+[   28.212000] 00000000 
+[   28.212000] 00000010 
+[   28.212000] 00000000 
+[   28.212000] 
+[   28.212000] 1fa0: 
+[   28.212000] fffff000 
+[   28.212000] 00000010 
+[   28.212000] 00000000 
+[   28.212000] fffff000 
+[   28.212000] 000000fc 
+[   28.212000] 00000000 
+[   28.212000] 00000000 
+[   28.212000] 2957bd28 
+[   28.212000] 
+[   28.212000] 1fc0: 
+[   28.212000] 000000fc 
+[   28.212000] 296de264 
+[   28.212000] 296de264 
+[   28.212000] 296de388 
+[   28.212000] 00000002 
+[   28.212000] 296de284 
+[   28.212000] 00000000 
+[   28.212000] 00000000 
+[   28.212000] 
+[   28.212000] 1fe0: 
+[   28.212000] 7beded20 
+[   28.212000] 29630ba4 
+[   28.212000] 295c8490 
+[   28.212000] 00000101 
+[   28.212000] 2957bd18 
+[   28.212000] 00000000 
+[   28.212000] 00000000 
+[   28.212000] 00000044 
+[   28.212000] 
+[   28.212000] 
+[   28.212000] Call trace:
+[   28.212000]  [<(ptrval)>] dump_stack+0x1a/0x30
+[   28.212000]  [<(ptrval)>] bad_page+0x9e/0x104
+[   28.212000]  [<(ptrval)>] check_free_page_bad+0x28/0x74
+[   28.212000]  [<(ptrval)>] free_pcppages_bulk+0x13e/0x388
+[   28.212000]  [<(ptrval)>] free_unref_page_commit.isra.0+0x6c/0x88
+[   28.212000]  [<(ptrval)>] free_unref_page_commit.isra.0+0x0/0x88
+[   28.212000]  [<(ptrval)>] free_unref_page_list+0xca/0x138
+[   28.212000]  [<(ptrval)>] release_pages+0x20a/0x2e4
+[   28.212000]  [<(ptrval)>] free_pages_and_swap_cache+0x48/0xd4
+[   28.212000]  [<(ptrval)>] tlb_batch_pages_flush+0x2a/0x50
+[   28.212000]  [<(ptrval)>] free_pages_and_swap_cache+0x0/0xd4
+[   28.212000]  [<(ptrval)>] tlb_finish_mmu+0x52/0x128
+[   28.212000]  [<(ptrval)>] free_pages+0x0/0x1c
+[   28.212000]  [<(ptrval)>] arch_local_irq_restore+0x0/0x2c
+[   28.212000]  [<(ptrval)>] free_pgd_range+0x292/0x2c8
+[   28.212000]  [<(ptrval)>] free_pgtables+0xba/0xe4
+[   28.212000]  [<(ptrval)>] unlink_anon_vmas+0x0/0x150
+[   28.212000]  [<(ptrval)>] unlink_file_vma+0x0/0x58
+[   28.212000]  [<(ptrval)>] exit_mmap+0xaa/0x1a4
+[   28.212000]  [<(ptrval)>] remove_vma+0x0/0x50
+[   28.212000]  [<(ptrval)>] mmput+0x3a/0xd4
+[   28.212000]  [<(ptrval)>] do_exit+0x278/0x984
+[   28.212000]  [<(ptrval)>] do_group_exit+0x2e/0x94
+[   28.212000]  [<(ptrval)>] sys_exit_group+0xe/0x14
+[   28.212000]  [<(ptrval)>] sys_exit_group+0x0/0x14
+[   28.212000]  [<(ptrval)>] syscall_call+0x18/0x1e
+[   28.212000] 
+[   28.212000] BUG: Bad page state in process systemd-system-  pfn:5d8d6
+[   28.212000] page:9ff31ac0 refcount:0 mapcount:1026 mapping:(ptrval) index:0x0
+[   28.212000] mapping->a_ops:0x0
+[   28.212000] flags: 0x5c000000()
+[   28.212000] raw: 5c000000 00000100 00000122 9f403580 00000000 00000000 00000401 00000000
+[   28.212000] page dumped because: non-NULL mapping
+[   28.212000] Modules linked in:
+[   28.212000] CPU: 0 PID: 581 Comm: systemd-system- Tainted: G    B             5.8.0-rc5-00028-g7bc20f6563b4 #7
+[   28.212000] Stack: (0x9d951cec to 0x9d952000)
+[   28.212000] 1ce0: 
+[   28.212000]          
+[   28.212000]          
+[   28.212000]          
+[   28.212000] 8025dc12 
+[   28.212000] 9d951d00 
+[   28.212000] 8069bf34 
+[   28.212000] 9fff4000 
+[   28.212000] 805a6ed0 
+[   28.212000] 
+[   28.212000] 1d00: 
+[   28.212000] 800d7706 
+[   28.212000] 9d951d0c 
+[   28.212000] 9ff31ac0 
+[   28.212000] 9d951d18 
+[   28.212000] 800d7794 
+[   28.212000] 9d951d30 
+[   28.212000] 9fff400c 
+[   28.212000] 00000011 
+[   28.212000] 
+[   28.212000] 1d20: 
+[   28.212000] 9fff4010 
+[   28.212000] 00000001 
+[   28.212000] 9fff4000 
+[   28.212000] 0000000a 
+[   28.212000] 800d826e 
+[   28.212000] 9d951d38 
+[   28.212000] 9ff3da00 
+[   28.212000] 00000000 
+[   28.212000] 
+[   28.212000] 1d40: 
+[   28.212000] 00000000 
+[   28.212000] 00000122 
+[   28.212000] 00000100 
+[   28.212000] 80650b5c 
+[   28.212000] 8069c07c 
+[   28.212000] 00000000 
+[   28.212000] 0005ded0 
+[   28.212000] 80650990 
+[   28.212000] 
+[   28.212000] 1d60: 
+[   28.212000] 9d951d64 
+[   28.212000] 9ff3f384 
+[   28.212000] 9ff32364 
+[   28.212000] bc536903 
+[   28.212000] 800d8668 
+[   28.212000] 9d951d90 
+[   28.212000] 0000001e 
+[   28.212000] 00000000 
+[   28.212000] 
+[   28.212000] 1d80: 
+[   28.212000] 800d85fc 
+[   28.212000] 00000000 
+[   28.212000] 9d951dc0 
+[   28.212000] 9ff3fc80 
+[   28.212000] 800d953a 
+[   28.212000] 9d951d98 
+[   28.212000] 9ff32780 
+[   28.212000] 800b098e 
+[   28.212000] 
+[   28.212000] 1da0: 
+[   28.212000] 9d951dbc 
+[   28.212000] 00000000 
+[   28.212000] 00000014 
+[   28.212000] 000001ca 
+[   28.212000] 9d8f8734 
+[   28.212000] 000001ca 
+[   28.212000] 9ff32660 
+[   28.212000] 80650990 
+[   28.212000] 
+[   28.212000] 1dc0: 
+[   28.212000] 9ff32664 
+[   28.212000] 9ff3f804 
+[   28.212000] bc536903 
+[   28.212000] 800de48c 
+[   28.212000] 9d951dec 
+[   28.212000] 00000400 
+[   28.212000] 000001ca 
+[   28.212000] 00080000 
+[   28.212000] 
+[   28.212000] 1de0: 
+[   28.212000] 9d8f800c 
+[   28.212000] 9d8f8734 
+[   28.212000] 9ff32660 
+[   28.212000] 9fff53c0 
+[   28.212000] 800cf856 
+[   28.212000] 9d951e10 
+[   28.212000] 8062124c 
+[   28.212000] 9d951ec4 
+[   28.212000] 
+[   28.212000] 1e00: 
+[   28.212000] 9d951eac 
+[   28.212000] 800de444 
+[   28.212000] 00000000 
+[   28.212000] 9d8f8000 
+[   28.212000] 800cfa9e 
+[   28.212000] 9d951e2c 
+[   28.212000] 8062124c 
+[   28.212000] 9d951e50 
+[   28.212000] 
+[   28.212000] 1e20: 
+[   28.212000] 800d91c0 
+[   28.212000] 9d951eac 
+[   28.212000] 9d948ba0 
+[   28.212000] 80002f38 
+[   28.212000] 800c6366 
+[   28.212000] 9d951e40 
+[   28.212000] 7bedf000 
+[   28.212000] 7be00000 
+[   28.212000] 
+[   28.212000] 1e40: 
+[   28.212000] ffffffff 
+[   28.212000] 00000000 
+[   28.212000] 00000000 
+[   28.212000] 7bedefff 
+[   28.212000] 7bedf000 
+[   28.212000] 7bedefff 
+[   28.212000] 800c6456 
+[   28.212000] 9d951e78 
+[   28.212000] 
+[   28.212000] 1e60: 
+[   28.212000] 9d93db00 
+[   28.212000] 9d93db00 
+[   28.212000] 9d93db00 
+[   28.212000] 800d2d88 
+[   28.212000] 800cc334 
+[   28.212000] 00400000 
+[   28.212000] 00000000 
+[   28.212000] 00000000 
+[   28.212000] 
+[   28.212000] 1e80: 
+[   28.212000] 00000000 
+[   28.212000] 9d951eac 
+[   28.212000] 7bebe000 
+[   28.212000] bc536903 
+[   28.212000] 800cda8e 
+[   28.212000] 9d951eac 
+[   28.212000] 9d951eb4 
+[   28.212000] 800cbd44 
+[   28.212000] 
+[   28.212000] 1ea0: 
+[   28.212000] 00100000 
+[   28.212000] 00000000 
+[   28.212000] 9d948ba0 
+[   28.212000] 9d962b00 
+[   28.212000] ffffffff 
+[   28.212000] ffffffff 
+[   28.212000] 00000001 
+[   28.212000] 00000002 
+[   28.212000] 
+[   28.212000] 1ec0: 
+[   28.212000] 9d8f8000 
+[   28.212000] 9d8dd000 
+[   28.212000] 00000000 
+[   28.212000] 00000008 
+[   28.212000] 9fb8ce60 
+[   28.212000] 9fb8ce40 
+[   28.212000] 9fb8ce20 
+[   28.212000] 9fb8ce00 
+[   28.212000] 
+[   28.212000] 1ee0: 
+[   28.212000] 9fb93120 
+[   28.212000] 9fb93140 
+[   28.212000] 9fb93160 
+[   28.212000] 9fb93180 
+[   28.212000] bc536903 
+[   28.212000] 80011066 
+[   28.212000] 9d951f14 
+[   28.212000] 00000000 
+[   28.212000] 
+[   28.212000] 1f00: 
+[   28.212000] 9d92755c 
+[   28.212000] 00000000 
+[   28.212000] 9d962b4c 
+[   28.212000] 00000000 
+[   28.212000] 9d962b00 
+[   28.212000] 80015940 
+[   28.212000] 9d951f24 
+[   28.212000] 9d962b00 
+[   28.212000] 
+[   28.212000] 1f20: 
+[   28.212000] 9d9272a0 
+[   28.212000] 00000000 
+[   28.212000] 00000000 
+[   28.212000] 00000000 
+[   28.212000] 9d92775c 
+[   28.212000] 00000000 
+[   28.212000] 9d92751c 
+[   28.212000] 00000000 
+[   28.212000] 
+[   28.212000] 1f40: 
+[   28.212000] 00000000 
+[   28.212000] 9d92769c 
+[   28.212000] 9d951f64 
+[   28.212000] 9d951fe4 
+[   28.212000] 9d962b00 
+[   28.212000] 00000000 
+[   28.212000] bc536903 
+[   28.212000] 80016c56 
+[   28.212000] 
+[   28.212000] 1f60: 
+[   28.212000] 9d951f7c 
+[   28.212000] 00000000 
+[   28.212000] 296de284 
+[   28.212000] 00000000 
+[   28.212000] 00000071 
+[   28.212000] 9d892920 
+[   28.212000] 00000000 
+[   28.212000] 80016cca 
+[   28.212000] 
+[   28.212000] 1f80: 
+[   28.212000] 9d951f90 
+[   28.212000] 00000071 
+[   28.212000] 00000100 
+[   28.212000] 80016cbc 
+[   28.212000] 8000727e 
+[   28.212000] 00000000 
+[   28.212000] 00000010 
+[   28.212000] 00000000 
+[   28.212000] 
+[   28.212000] 1fa0: 
+[   28.212000] fffff000 
+[   28.212000] 00000010 
+[   28.212000] 00000000 
+[   28.212000] fffff000 
+[   28.212000] 000000fc 
+[   28.212000] 00000000 
+[   28.212000] 00000000 
+[   28.212000] 2957bd28 
+[   28.212000] 
+[   28.212000] 1fc0: 
+[   28.212000] 000000fc 
+[   28.212000] 296de264 
+[   28.212000] 296de264 
+[   28.212000] 296de388 
+[   28.212000] 00000002 
+[   28.212000] 296de284 
+[   28.212000] 00000000 
+[   28.212000] 00000000 
+[   28.212000] 
+[   28.212000] 1fe0: 
+[   28.212000] 7beded20 
+[   28.212000] 29630ba4 
+[   28.212000] 295c8490 
+[   28.212000] 00000101 
+[   28.212000] 2957bd18 
+[   28.212000] 00000000 
+[   28.212000] 00000000 
+[   28.212000] 00000044 
+[   28.212000] 
+[   28.212000] 
+[   28.212000] Call trace:
+[   28.212000]  [<(ptrval)>] dump_stack+0x1a/0x30
+[   28.212000]  [<(ptrval)>] bad_page+0x9e/0x104
+[   28.212000]  [<(ptrval)>] check_free_page_bad+0x28/0x74
+[   28.212000]  [<(ptrval)>] free_pcppages_bulk+0x13e/0x388
+[   28.212000]  [<(ptrval)>] free_unref_page_commit.isra.0+0x6c/0x88
+[   28.212000]  [<(ptrval)>] free_unref_page_commit.isra.0+0x0/0x88
+[   28.212000]  [<(ptrval)>] free_unref_page_list+0xca/0x138
+[   28.212000]  [<(ptrval)>] release_pages+0x20a/0x2e4
+[   28.212000]  [<(ptrval)>] free_pages_and_swap_cache+0x48/0xd4
+[   28.212000]  [<(ptrval)>] tlb_batch_pages_flush+0x2a/0x50
+[   28.212000]  [<(ptrval)>] free_pages_and_swap_cache+0x0/0xd4
+[   28.212000]  [<(ptrval)>] tlb_finish_mmu+0x52/0x128
+[   28.212000]  [<(ptrval)>] free_pages+0x0/0x1c
+[   28.212000]  [<(ptrval)>] arch_local_irq_restore+0x0/0x2c
+[   28.212000]  [<(ptrval)>] free_pgd_range+0x292/0x2c8
+[   28.212000]  [<(ptrval)>] free_pgtables+0xba/0xe4
+[   28.212000]  [<(ptrval)>] unlink_anon_vmas+0x0/0x150
+[   28.212000]  [<(ptrval)>] unlink_file_vma+0x0/0x58
+[   28.212000]  [<(ptrval)>] exit_mmap+0xaa/0x1a4
+[   28.212000]  [<(ptrval)>] remove_vma+0x0/0x50
+[   28.212000]  [<(ptrval)>] mmput+0x3a/0xd4
+[   28.212000]  [<(ptrval)>] do_exit+0x278/0x984
+[   28.212000]  [<(ptrval)>] do_group_exit+0x2e/0x94
+[   28.212000]  [<(ptrval)>] sys_exit_group+0xe/0x14
+[   28.212000]  [<(ptrval)>] sys_exit_group+0x0/0x14
+[   28.212000]  [<(ptrval)>] syscall_call+0x18/0x1e
+[   28.212000] 
+[   31.976000] BUG: Bad page state in process systemd-rc-loca  pfn:5d936
+[   31.976000] page:9ff326c0 refcount:0 mapcount:2 mapping:(ptrval) index:0x0
+[   31.976000] mapping->a_ops:0x0
+[   31.976000] flags: 0x5c000000()
+[   31.976000] raw: 5c000000 00000100 00000122 9f403580 00000000 00000000 00000001 00000000
+[   31.976000] page dumped because: non-NULL mapping
+[   31.976000] Modules linked in:
+[   31.976000] CPU: 0 PID: 579 Comm: systemd-rc-loca Tainted: G    B             5.8.0-rc5-00028-g7bc20f6563b4 #7
+[   31.976000] Stack: (0x9d923cec to 0x9d924000)
+[   31.976000] 3ce0: 
+[   31.976000]          
+[   31.976000]          
+[   31.976000]          
+[   31.976000] 8025dc12 
+[   31.976000] 9d923d00 
+[   31.976000] 8069bf34 
+[   31.976000] 9fff4000 
+[   31.976000] 805a6ed0 
+[   31.976000] 
+[   31.976000] 3d00: 
+[   31.976000] 800d7706 
+[   31.976000] 9d923d0c 
+[   31.976000] 9ff326c0 
+[   31.976000] 80069584 
+[   31.976000] 800d7794 
+[   31.976000] 9d923d30 
+[   31.976000] 9fff400c 
+[   31.976000] 00000017 
+[   31.976000] 
+[   31.976000] 3d20: 
+[   31.976000] 9fff4010 
+[   31.976000] 00000001 
+[   31.976000] 9fff4000 
+[   31.976000] 00000008 
+[   31.976000] 800d826e 
+[   31.976000] 9d923d38 
+[   31.976000] 9ff3d700 
+[   31.976000] 00000000 
+[   31.976000] 
+[   31.976000] 3d40: 
+[   31.976000] 00000000 
+[   31.976000] 00000122 
+[   31.976000] 00000100 
+[   31.976000] 80650b5c 
+[   31.976000] 8069c07c 
+[   31.976000] 00000000 
+[   31.976000] 0005deba 
+[   31.976000] 80650990 
+[   31.976000] 
+[   31.976000] 3d60: 
+[   31.976000] 9d923d64 
+[   31.976000] 9ff3d764 
+[   31.976000] 9ff4fe04 
+[   31.976000] 01287640 
+[   31.976000] 800d8668 
+[   31.976000] 9d923d90 
+[   31.976000] 00000010 
+[   31.976000] 00000000 
+[   31.976000] 
+[   31.976000] 3d80: 
+[   31.976000] 800d85fc 
+[   31.976000] 00000000 
+[   31.976000] 9d923dc0 
+[   31.976000] 9ff3f940 
+[   31.976000] 800d953a 
+[   31.976000] 9d923d98 
+[   31.976000] 9ff32740 
+[   31.976000] 800b098e 
+[   31.976000] 
+[   31.976000] 3da0: 
+[   31.976000] 9d923dbc 
+[   31.976000] 00000000 
+[   31.976000] 00000014 
+[   31.976000] 000001e9 
+[   31.976000] 9e7f77b0 
+[   31.976000] 000001e9 
+[   31.976000] 9ff326c0 
+[   31.976000] 80650990 
+[   31.976000] 
+[   31.976000] 3dc0: 
+[   31.976000] 9ff326c4 
+[   31.976000] 9ff3f604 
+[   31.976000] 01287640 
+[   31.976000] 800de48c 
+[   31.976000] 9d923dec 
+[   31.976000] 00000400 
+[   31.976000] 000001e9 
+[   31.976000] 00080000 
+[   31.976000] 
+[   31.976000] 3de0: 
+[   31.976000] 9e7f700c 
+[   31.976000] 9e7f77b0 
+[   31.976000] 9ff326c0 
+[   31.976000] 9fff53c0 
+[   31.976000] 800cf856 
+[   31.976000] 9d923e10 
+[   31.976000] 8062124c 
+[   31.976000] 9d923ec4 
+[   31.976000] 
+[   31.976000] 3e00: 
+[   31.976000] 9d923eac 
+[   31.976000] 800de444 
+[   31.976000] 00000000 
+[   31.976000] 9e7f7000 
+[   31.976000] 800cfa9e 
+[   31.976000] 9d923e2c 
+[   31.976000] 8062124c 
+[   31.976000] 9d923e50 
+[   31.976000] 
+[   31.976000] 3e20: 
+[   31.976000] 800d91c0 
+[   31.976000] 9d923eac 
+[   31.976000] 9d917740 
+[   31.976000] 80002f38 
+[   31.976000] 800c6366 
+[   31.976000] 9d923e40 
+[   31.976000] 7bc55000 
+[   31.976000] 7bc00000 
+[   31.976000] 
+[   31.976000] 3e40: 
+[   31.976000] ffffffff 
+[   31.976000] 00000000 
+[   31.976000] 00000000 
+[   31.976000] 7bc54fff 
+[   31.976000] 7bc55000 
+[   31.976000] 7bc54fff 
+[   31.976000] 800c6456 
+[   31.976000] 9d923e78 
+[   31.976000] 
+[   31.976000] 3e60: 
+[   31.976000] 9d932c00 
+[   31.976000] 9d932c00 
+[   31.976000] 9d932c00 
+[   31.976000] 800d2d88 
+[   31.976000] 800cc334 
+[   31.976000] 00400000 
+[   31.976000] 00000000 
+[   31.976000] 00000000 
+[   31.976000] 
+[   31.976000] 3e80: 
+[   31.976000] 00000000 
+[   31.976000] 9d923eac 
+[   31.976000] 7bc34000 
+[   31.976000] 01287640 
+[   31.976000] 800cda8e 
+[   31.976000] 9d923eac 
+[   31.976000] 9d923eb4 
+[   31.976000] 800cbd44 
+[   31.976000] 
+[   31.976000] 3ea0: 
+[   31.976000] 00100000 
+[   31.976000] 00000000 
+[   31.976000] 9d917740 
+[   31.976000] 9d8de260 
+[   31.976000] ffffffff 
+[   31.976000] ffffffff 
+[   31.976000] 00000001 
+[   31.976000] 00000002 
+[   31.976000] 
+[   31.976000] 3ec0: 
+[   31.976000] 9e7f7000 
+[   31.976000] 9e7f5000 
+[   31.976000] 00000000 
+[   31.976000] 00000008 
+[   31.976000] 9fb8ce60 
+[   31.976000] 9fb8ce40 
+[   31.976000] 9fb8ce20 
+[   31.976000] 9fb8ce00 
+[   31.976000] 
+[   31.976000] 3ee0: 
+[   31.976000] 9fb93120 
+[   31.976000] 9fb93140 
+[   31.976000] 9fb93160 
+[   31.976000] 9fb93180 
+[   31.976000] 01287640 
+[   31.976000] 80011066 
+[   31.976000] 9d923f14 
+[   31.976000] 00000000 
+[   31.976000] 
+[   31.976000] 3f00: 
+[   31.976000] 9d8b43fc 
+[   31.976000] 00000000 
+[   31.976000] 9d8de2ac 
+[   31.976000] 00000000 
+[   31.976000] 9d8de260 
+[   31.976000] 80015940 
+[   31.976000] 9d923f24 
+[   31.976000] 9d8de260 
+[   31.976000] 
+[   31.976000] 3f20: 
+[   31.976000] 9d8b4140 
+[   31.976000] 00000000 
+[   31.976000] 00000000 
+[   31.976000] 00000000 
+[   31.976000] 9d8b45fc 
+[   31.976000] 00000000 
+[   31.976000] 9d8b43bc 
+[   31.976000] 00000000 
+[   31.976000] 
+[   31.976000] 3f40: 
+[   31.976000] 00000000 
+[   31.976000] 9d8b453c 
+[   31.976000] 9d923f64 
+[   31.976000] 9d923fe4 
+[   31.976000] 9d8de260 
+[   31.976000] 00000000 
+[   31.976000] 01287640 
+[   31.976000] 80016c56 
+[   31.976000] 
+[   31.976000] 3f60: 
+[   31.976000] 9d923f7c 
+[   31.976000] 00000000 
+[   31.976000] 296de284 
+[   31.976000] 00000000 
+[   31.976000] 00000071 
+[   31.976000] 9d892ea0 
+[   31.976000] 00000000 
+[   31.976000] 80016cca 
+[   31.976000] 
+[   31.976000] 3f80: 
+[   31.976000] 9d923f90 
+[   31.976000] 00000071 
+[   31.976000] 00000100 
+[   31.976000] 80016cbc 
+[   31.976000] 8000727e 
+[   31.976000] 00000000 
+[   31.976000] 00000010 
+[   31.976000] 00000000 
+[   31.976000] 
+[   31.976000] 3fa0: 
+[   31.976000] fffff000 
+[   31.976000] 00000010 
+[   31.976000] 00000000 
+[   31.976000] fffff000 
+[   31.976000] 000000fc 
+[   31.976000] 00000000 
+[   31.976000] 00000000 
+[   31.976000] 2957bd28 
+[   31.976000] 
+[   31.976000] 3fc0: 
+[   31.976000] 000000fc 
+[   31.976000] 296de264 
+[   31.976000] 296de264 
+[   31.976000] 296de388 
+[   31.976000] 00000002 
+[   31.976000] 296de284 
+[   31.976000] 00000000 
+[   31.976000] 00000000 
+[   31.976000] 
+[   31.976000] 3fe0: 
+[   31.976000] 7bc54d30 
+[   31.976000] 29630ba4 
+[   31.976000] 295c8490 
+[   31.976000] 00000101 
+[   31.976000] 2957bd18 
+[   31.976000] 00000000 
+[   31.976000] 00000000 
+[   31.976000] 00000044 
+[   31.976000] 
+[   31.976000] 
+[   31.976000] Call trace:
+[   31.976000]  [<(ptrval)>] dump_stack+0x1a/0x30
+[   31.976000]  [<(ptrval)>] bad_page+0x9e/0x104
+[   31.976000]  [<(ptrval)>] clockevents_program_event+0x94/0x180
+[   31.976000]  [<(ptrval)>] check_free_page_bad+0x28/0x74
+[   31.976000]  [<(ptrval)>] free_pcppages_bulk+0x13e/0x388
+[   31.976000]  [<(ptrval)>] free_unref_page_commit.isra.0+0x6c/0x88
+[   31.976000]  [<(ptrval)>] free_unref_page_commit.isra.0+0x0/0x88
+[   31.976000]  [<(ptrval)>] free_unref_page_list+0xca/0x138
+[   31.976000]  [<(ptrval)>] release_pages+0x20a/0x2e4
+[   31.976000]  [<(ptrval)>] free_pages_and_swap_cache+0x48/0xd4
+[   31.976000]  [<(ptrval)>] tlb_batch_pages_flush+0x2a/0x50
+[   31.976000]  [<(ptrval)>] free_pages_and_swap_cache+0x0/0xd4
+[   31.976000]  [<(ptrval)>] tlb_finish_mmu+0x52/0x128
+[   31.976000]  [<(ptrval)>] free_pages+0x0/0x1c
+[   31.976000]  [<(ptrval)>] arch_local_irq_restore+0x0/0x2c
+[   31.976000]  [<(ptrval)>] free_pgd_range+0x292/0x2c8
+[   31.976000]  [<(ptrval)>] free_pgtables+0xba/0xe4
+[   31.976000]  [<(ptrval)>] unlink_anon_vmas+0x0/0x150
+[   31.976000]  [<(ptrval)>] unlink_file_vma+0x0/0x58
+[   31.976000]  [<(ptrval)>] exit_mmap+0xaa/0x1a4
+[   31.976000]  [<(ptrval)>] remove_vma+0x0/0x50
+[   31.976000]  [<(ptrval)>] mmput+0x3a/0xd4
+[   31.976000]  [<(ptrval)>] do_exit+0x278/0x984
+[   31.976000]  [<(ptrval)>] do_group_exit+0x2e/0x94
+[   31.976000]  [<(ptrval)>] sys_exit_group+0xe/0x14
+[   31.976000]  [<(ptrval)>] sys_exit_group+0x0/0x14
+[   31.976000]  [<(ptrval)>] syscall_call+0x18/0x1e
+[   31.976000] 
+[   31.976000] BUG: Bad page state in process systemd-rc-loca  pfn:5d90b
+[   31.976000] page:9ff32160 refcount:0 mapcount:2 mapping:(ptrval) index:0x0
+[   31.976000] mapping->a_ops:0x0
+[   31.976000] flags: 0x5c000000()
+[   31.976000] raw: 5c000000 00000100 00000122 9f403580 00000000 00000000 00000001 00000000
+[   31.976000] page dumped because: non-NULL mapping
+[   31.976000] Modules linked in:
+[   31.976000] CPU: 0 PID: 579 Comm: systemd-rc-loca Tainted: G    B             5.8.0-rc5-00028-g7bc20f6563b4 #7
+[   31.976000] Stack: (0x9d923cec to 0x9d924000)
+[   31.976000] 3ce0: 
+[   31.976000]          
+[   31.976000]          
+[   31.976000]          
+[   31.976000] 8025dc12 
+[   31.976000] 9d923d00 
+[   31.976000] 8069bf34 
+[   31.976000] 9fff4000 
+[   31.976000] 805a6ed0 
+[   31.976000] 
+[   31.976000] 3d00: 
+[   31.976000] 800d7706 
+[   31.976000] 9d923d0c 
+[   31.976000] 9ff32160 
+[   31.976000] 80069584 
+[   31.976000] 800d7794 
+[   31.976000] 9d923d30 
+[   31.976000] 9fff400c 
+[   31.976000] 00000012 
+[   31.976000] 
+[   31.976000] 3d20: 
+[   31.976000] 9fff4010 
+[   31.976000] 00000002 
+[   31.976000] 9fff4000 
+[   31.976000] 0000000c 
+[   31.976000] 800d826e 
+[   31.976000] 9d923d38 
+[   31.976000] 9ff3d700 
+[   31.976000] 00000000 
+[   31.976000] 
+[   31.976000] 3d40: 
+[   31.976000] 00000000 
+[   31.976000] 00000122 
+[   31.976000] 00000100 
+[   31.976000] 80650b5c 
+[   31.976000] 8069c07c 
+[   31.976000] 00000000 
+[   31.976000] 0005deba 
+[   31.976000] 80650990 
+[   31.976000] 
+[   31.976000] 3d60: 
+[   31.976000] 9d923d64 
+[   31.976000] 9ff3d764 
+[   31.976000] 9ff3fe64 
+[   31.976000] 01287640 
+[   31.976000] 800d8668 
+[   31.976000] 9d923d90 
+[   31.976000] 00000010 
+[   31.976000] 00000000 
+[   31.976000] 
+[   31.976000] 3d80: 
+[   31.976000] 800d85fc 
+[   31.976000] 00000000 
+[   31.976000] 9d923dc0 
+[   31.976000] 9ff3f940 
+[   31.976000] 800d953a 
+[   31.976000] 9d923d98 
+[   31.976000] 9ff32740 
+[   31.976000] 800b098e 
+[   31.976000] 
+[   31.976000] 3da0: 
+[   31.976000] 9d923dbc 
+[   31.976000] 00000000 
+[   31.976000] 00000014 
+[   31.976000] 000001e9 
+[   31.976000] 9e7f77b0 
+[   31.976000] 000001e9 
+[   31.976000] 9ff326c0 
+[   31.976000] 80650990 
+[   31.976000] 
+[   31.976000] 3dc0: 
+[   31.976000] 9ff326c4 
+[   31.976000] 9ff3f604 
+[   31.976000] 01287640 
+[   31.976000] 800de48c 
+[   31.976000] 9d923dec 
+[   31.976000] 00000400 
+[   31.976000] 000001e9 
+[   31.976000] 00080000 
+[   31.976000] 
+[   31.976000] 3de0: 
+[   31.976000] 9e7f700c 
+[   31.976000] 9e7f77b0 
+[   31.976000] 9ff326c0 
+[   31.976000] 9fff53c0 
+[   31.976000] 800cf856 
+[   31.976000] 9d923e10 
+[   31.976000] 8062124c 
+[   31.976000] 9d923ec4 
+[   31.976000] 
+[   31.976000] 3e00: 
+[   31.976000] 9d923eac 
+[   31.976000] 800de444 
+[   31.976000] 00000000 
+[   31.976000] 9e7f7000 
+[   31.976000] 800cfa9e 
+[   31.976000] 9d923e2c 
+[   31.976000] 8062124c 
+[   31.976000] 9d923e50 
+[   31.976000] 
+[   31.976000] 3e20: 
+[   31.976000] 800d91c0 
+[   31.976000] 9d923eac 
+[   31.976000] 9d917740 
+[   31.976000] 80002f38 
+[   31.976000] 800c6366 
+[   31.976000] 9d923e40 
+[   31.976000] 7bc55000 
+[   31.976000] 7bc00000 
+[   31.976000] 
+[   31.976000] 3e40: 
+[   31.976000] ffffffff 
+[   31.976000] 00000000 
+[   31.976000] 00000000 
+[   31.976000] 7bc54fff 
+[   31.976000] 7bc55000 
+[   31.976000] 7bc54fff 
+[   31.976000] 800c6456 
+[   31.976000] 9d923e78 
+[   31.976000] 
+[   31.976000] 3e60: 
+[   31.976000] 9d932c00 
+[   31.976000] 9d932c00 
+[   31.976000] 9d932c00 
+[   31.976000] 800d2d88 
+[   31.976000] 800cc334 
+[   31.976000] 00400000 
+[   31.976000] 00000000 
+[   31.976000] 00000000 
+[   31.976000] 
+[   31.976000] 3e80: 
+[   31.976000] 00000000 
+[   31.976000] 9d923eac 
+[   31.976000] 7bc34000 
+[   31.976000] 01287640 
+[   31.976000] 800cda8e 
+[   31.976000] 9d923eac 
+[   31.976000] 9d923eb4 
+[   31.976000] 800cbd44 
+[   31.976000] 
+[   31.976000] 3ea0: 
+[   31.976000] 00100000 
+[   31.976000] 00000000 
+[   31.976000] 9d917740 
+[   31.976000] 9d8de260 
+[   31.976000] ffffffff 
+[   31.976000] ffffffff 
+[   31.976000] 00000001 
+[   31.976000] 00000002 
+[   31.976000] 
+[   31.976000] 3ec0: 
+[   31.976000] 9e7f7000 
+[   31.976000] 9e7f5000 
+[   31.976000] 00000000 
+[   31.976000] 00000008 
+[   31.976000] 9fb8ce60 
+[   31.976000] 9fb8ce40 
+[   31.976000] 9fb8ce20 
+[   31.976000] 9fb8ce00 
+[   31.976000] 
+[   31.976000] 3ee0: 
+[   31.976000] 9fb93120 
+[   31.976000] 9fb93140 
+[   31.976000] 9fb93160 
+[   31.976000] 9fb93180 
+[   31.976000] 01287640 
+[   31.976000] 80011066 
+[   31.976000] 9d923f14 
+[   31.976000] 00000000 
+[   31.976000] 
+[   31.976000] 3f00: 
+[   31.976000] 9d8b43fc 
+[   31.976000] 00000000 
+[   31.976000] 9d8de2ac 
+[   31.976000] 00000000 
+[   31.976000] 9d8de260 
+[   31.976000] 80015940 
+[   31.976000] 9d923f24 
+[   31.976000] 9d8de260 
+[   31.976000] 
+[   31.976000] 3f20: 
+[   31.976000] 9d8b4140 
+[   31.976000] 00000000 
+[   31.976000] 00000000 
+[   31.976000] 00000000 
+[   31.976000] 9d8b45fc 
+[   31.976000] 00000000 
+[   31.976000] 9d8b43bc 
+[   31.976000] 00000000 
+[   31.976000] 
+[   31.976000] 3f40: 
+[   31.976000] 00000000 
+[   31.976000] 9d8b453c 
+[   31.976000] 9d923f64 
+[   31.976000] 9d923fe4 
+[   31.976000] 9d8de260 
+[   31.976000] 00000000 
+[   31.976000] 01287640 
+[   31.976000] 80016c56 
+[   31.976000] 
+[   31.976000] 3f60: 
+[   31.976000] 9d923f7c 
+[   31.976000] 00000000 
+[   31.976000] 296de284 
+[   31.976000] 00000000 
+[   31.976000] 00000071 
+[   31.976000] 9d892ea0 
+[   31.976000] 00000000 
+[   31.976000] 80016cca 
+[   31.976000] 
+[   31.976000] 3f80: 
+[   31.976000] 9d923f90 
+[   31.976000] 00000071 
+[   31.976000] 00000100 
+[   31.976000] 80016cbc 
+[   31.976000] 8000727e 
+[   31.976000] 00000000 
+[   31.976000] 00000010 
+[   31.976000] 00000000 
+[   31.976000] 
+[   31.976000] 3fa0: 
+[   31.976000] fffff000 
+[   31.976000] 00000010 
+[   31.976000] 00000000 
+[   31.976000] fffff000 
+[   31.976000] 000000fc 
+[   31.976000] 00000000 
+[   31.976000] 00000000 
+[   31.976000] 2957bd28 
+[   31.976000] 
+[   31.976000] 3fc0: 
+[   31.976000] 000000fc 
+[   31.976000] 296de264 
+[   31.976000] 296de264 
+[   31.976000] 296de388 
+[   31.976000] 00000002 
+[   31.976000] 296de284 
+[   31.976000] 00000000 
+[   31.976000] 00000000 
+[   31.976000] 
+[   31.976000] 3fe0: 
+[   31.976000] 7bc54d30 
+[   31.976000] 29630ba4 
+[   31.976000] 295c8490 
+[   31.976000] 00000101 
+[   31.976000] 2957bd18 
+[   31.976000] 00000000 
+[   31.976000] 00000000 
+[   31.976000] 00000044 
+[   31.976000] 
+[   31.976000] 
+[   31.976000] Call trace:
+[   31.976000]  [<(ptrval)>] dump_stack+0x1a/0x30
+[   31.976000]  [<(ptrval)>] bad_page+0x9e/0x104
+[   31.976000]  [<(ptrval)>] clockevents_program_event+0x94/0x180
+[   31.976000]  [<(ptrval)>] check_free_page_bad+0x28/0x74
+[   31.976000]  [<(ptrval)>] free_pcppages_bulk+0x13e/0x388
+[   31.976000]  [<(ptrval)>] free_unref_page_commit.isra.0+0x6c/0x88
+[   31.976000]  [<(ptrval)>] free_unref_page_commit.isra.0+0x0/0x88
+[   31.976000]  [<(ptrval)>] free_unref_page_list+0xca/0x138
+[   31.976000]  [<(ptrval)>] release_pages+0x20a/0x2e4
+[   31.976000]  [<(ptrval)>] free_pages_and_swap_cache+0x48/0xd4
+[   31.976000]  [<(ptrval)>] tlb_batch_pages_flush+0x2a/0x50
+[   31.976000]  [<(ptrval)>] free_pages_and_swap_cache+0x0/0xd4
+[   31.976000]  [<(ptrval)>] tlb_finish_mmu+0x52/0x128
+[   31.976000]  [<(ptrval)>] free_pages+0x0/0x1c
+[   31.976000]  [<(ptrval)>] arch_local_irq_restore+0x0/0x2c
+[   31.976000]  [<(ptrval)>] free_pgd_range+0x292/0x2c8
+[   31.976000]  [<(ptrval)>] free_pgtables+0xba/0xe4
+[   31.976000]  [<(ptrval)>] unlink_anon_vmas+0x0/0x150
+[   31.976000]  [<(ptrval)>] unlink_file_vma+0x0/0x58
+[   31.976000]  [<(ptrval)>] exit_mmap+0xaa/0x1a4
+[   31.976000]  [<(ptrval)>] remove_vma+0x0/0x50
+[   31.976000]  [<(ptrval)>] mmput+0x3a/0xd4
+[   31.976000]  [<(ptrval)>] do_exit+0x278/0x984
+[   31.976000]  [<(ptrval)>] do_group_exit+0x2e/0x94
+[   31.976000]  [<(ptrval)>] sys_exit_group+0xe/0x14
+[   31.976000]  [<(ptrval)>] sys_exit_group+0x0/0x14
+[   31.976000]  [<(ptrval)>] syscall_call+0x18/0x1e
+[   31.976000] 
+[   31.976000] BUG: Bad page state in process systemd-rc-loca  pfn:5d8df
+[   31.976000] page:9ff31be0 refcount:0 mapcount:1026 mapping:(ptrval) index:0x0
+[   31.976000] mapping->a_ops:0x0
+[   31.976000] flags: 0x5c000000()
+[   31.976000] raw: 5c000000 00000100 00000122 9f403580 00000000 00000000 00000401 00000000
+[   31.976000] page dumped because: non-NULL mapping
+[   31.976000] Modules linked in:
+[   31.976000] CPU: 0 PID: 579 Comm: systemd-rc-loca Tainted: G    B             5.8.0-rc5-00028-g7bc20f6563b4 #7
+[   31.976000] Stack: (0x9d923cec to 0x9d924000)
+[   31.976000] 3ce0: 
+[   31.976000]          
+[   31.976000]          
+[   31.976000]          
+[   31.976000] 8025dc12 
+[   31.976000] 9d923d00 
+[   31.976000] 8069bf34 
+[   31.976000] 9fff4000 
+[   31.976000] 805a6ed0 
+[   31.976000] 
+[   31.976000] 3d00: 
+[   31.976000] 800d7706 
+[   31.976000] 9d923d0c 
+[   31.976000] 9ff31be0 
+[   31.976000] 80069584 
+[   31.976000] 800d7794 
+[   31.976000] 9d923d30 
+[   31.976000] 9fff400c 
+[   31.976000] 0000000f 
+[   31.976000] 
+[   31.976000] 3d20: 
+[   31.976000] 9fff4010 
+[   31.976000] 00000002 
+[   31.976000] 9fff4000 
+[   31.976000] 0000000e 
+[   31.976000] 800d826e 
+[   31.976000] 9d923d38 
+[   31.976000] 9ff3d700 
+[   31.976000] 00000000 
+[   31.976000] 
+[   31.976000] 3d40: 
+[   31.976000] 00000000 
+[   31.976000] 00000122 
+[   31.976000] 00000100 
+[   31.976000] 80650b5c 
+[   31.976000] 8069c07c 
+[   31.976000] 00000000 
+[   31.976000] 0005deba 
+[   31.976000] 80650990 
+[   31.976000] 
+[   31.976000] 3d60: 
+[   31.976000] 9d923d64 
+[   31.976000] 9ff3d764 
+[   31.976000] 9ff3f9c4 
+[   31.976000] 01287640 
+[   31.976000] 800d8668 
+[   31.976000] 9d923d90 
+[   31.976000] 00000010 
+[   31.976000] 00000000 
+[   31.976000] 
+[   31.976000] 3d80: 
+[   31.976000] 800d85fc 
+[   31.976000] 00000000 
+[   31.976000] 9d923dc0 
+[   31.976000] 9ff3f940 
+[   31.976000] 800d953a 
+[   31.976000] 9d923d98 
+[   31.976000] 9ff32740 
+[   31.976000] 800b098e 
+[   31.976000] 
+[   31.976000] 3da0: 
+[   31.976000] 9d923dbc 
+[   31.976000] 00000000 
+[   31.976000] 00000014 
+[   31.976000] 000001e9 
+[   31.976000] 9e7f77b0 
+[   31.976000] 000001e9 
+[   31.976000] 9ff326c0 
+[   31.976000] 80650990 
+[   31.976000] 
+[   31.976000] 3dc0: 
+[   31.976000] 9ff326c4 
+[   31.976000] 9ff3f604 
+[   31.976000] 01287640 
+[   31.976000] 800de48c 
+[   31.976000] 9d923dec 
+[   31.976000] 00000400 
+[   31.976000] 000001e9 
+[   31.976000] 00080000 
+[   31.976000] 
+[   31.976000] 3de0: 
+[   31.976000] 9e7f700c 
+[   31.976000] 9e7f77b0 
+[   31.976000] 9ff326c0 
+[   31.976000] 9fff53c0 
+[   31.976000] 800cf856 
+[   31.976000] 9d923e10 
+[   31.976000] 8062124c 
+[   31.976000] 9d923ec4 
+[   31.976000] 
+[   31.976000] 3e00: 
+[   31.976000] 9d923eac 
+[   31.976000] 800de444 
+[   31.976000] 00000000 
+[   31.976000] 9e7f7000 
+[   31.976000] 800cfa9e 
+[   31.976000] 9d923e2c 
+[   31.976000] 8062124c 
+[   31.976000] 9d923e50 
+[   31.976000] 
+[   31.976000] 3e20: 
+[   31.976000] 800d91c0 
+[   31.976000] 9d923eac 
+[   31.976000] 9d917740 
+[   31.976000] 80002f38 
+[   31.976000] 800c6366 
+[   31.976000] 9d923e40 
+[   31.976000] 7bc55000 
+[   31.976000] 7bc00000 
+[   31.976000] 
+[   31.976000] 3e40: 
+[   31.976000] ffffffff 
+[   31.976000] 00000000 
+[   31.976000] 00000000 
+[   31.976000] 7bc54fff 
+[   31.976000] 7bc55000 
+[   31.976000] 7bc54fff 
+[   31.976000] 800c6456 
+[   31.976000] 9d923e78 
+[   31.976000] 
+[   31.976000] 3e60: 
+[   31.976000] 9d932c00 
+[   31.976000] 9d932c00 
+[   31.976000] 9d932c00 
+[   31.976000] 800d2d88 
+[   31.976000] 800cc334 
+[   31.976000] 00400000 
+[   31.976000] 00000000 
+[   31.976000] 00000000 
+[   31.976000] 
+[   31.976000] 3e80: 
+[   31.976000] 00000000 
+[   31.976000] 9d923eac 
+[   31.976000] 7bc34000 
+[   31.976000] 01287640 
+[   31.976000] 800cda8e 
+[   31.976000] 9d923eac 
+[   31.976000] 9d923eb4 
+[   31.976000] 800cbd44 
+[   31.976000] 
+[   31.976000] 3ea0: 
+[   31.976000] 00100000 
+[   31.976000] 00000000 
+[   31.976000] 9d917740 
+[   31.976000] 9d8de260 
+[   31.976000] ffffffff 
+[   31.976000] ffffffff 
+[   31.976000] 00000001 
+[   31.976000] 00000002 
+[   31.976000] 
+[   31.976000] 3ec0: 
+[   31.976000] 9e7f7000 
+[   31.976000] 9e7f5000 
+[   31.976000] 00000000 
+[   31.976000] 00000008 
+[   31.976000] 9fb8ce60 
+[   31.976000] 9fb8ce40 
+[   31.976000] 9fb8ce20 
+[   31.976000] 9fb8ce00 
+[   31.976000] 
+[   31.976000] 3ee0: 
+[   31.976000] 9fb93120 
+[   31.976000] 9fb93140 
+[   31.976000] 9fb93160 
+[   31.976000] 9fb93180 
+[   31.976000] 01287640 
+[   31.976000] 80011066 
+[   31.976000] 9d923f14 
+[   31.976000] 00000000 
+[   31.976000] 
+[   31.976000] 3f00: 
+[   31.976000] 9d8b43fc 
+[   31.976000] 00000000 
+[   31.976000] 9d8de2ac 
+[   31.976000] 00000000 
+[   31.976000] 9d8de260 
+[   31.976000] 80015940 
+[   31.976000] 9d923f24 
+[   31.976000] 9d8de260 
+[   31.976000] 
+[   31.976000] 3f20: 
+[   31.976000] 9d8b4140 
+[   31.976000] 00000000 
+[   31.976000] 00000000 
+[   31.976000] 00000000 
+[   31.976000] 9d8b45fc 
+[   31.976000] 00000000 
+[   31.976000] 9d8b43bc 
+[   31.976000] 00000000 
+[   31.976000] 
+[   31.976000] 3f40: 
+[   31.976000] 00000000 
+[   31.976000] 9d8b453c 
+[   31.976000] 9d923f64 
+[   31.976000] 9d923fe4 
+[   31.976000] 9d8de260 
+[   31.976000] 00000000 
+[   31.976000] 01287640 
+[   31.976000] 80016c56 
+[   31.976000] 
+[   31.976000] 3f60: 
+[   31.976000] 9d923f7c 
+[   31.976000] 00000000 
+[   31.976000] 296de284 
+[   31.976000] 00000000 
+[   31.976000] 00000071 
+[   31.976000] 9d892ea0 
+[   31.976000] 00000000 
+[   31.976000] 80016cca 
+[   31.976000] 
+[   31.976000] 3f80: 
+[   31.976000] 9d923f90 
+[   31.976000] 00000071 
+[   31.976000] 00000100 
+[   31.976000] 80016cbc 
+[   31.976000] 8000727e 
+[   31.976000] 00000000 
+[   31.976000] 00000010 
+[   31.976000] 00000000 
+[   31.976000] 
+[   31.976000] 3fa0: 
+[   31.976000] fffff000 
+[   31.976000] 00000010 
+[   31.976000] 00000000 
+[   31.976000] fffff000 
+[   31.976000] 000000fc 
+[   31.976000] 00000000 
+[   31.976000] 00000000 
+[   31.976000] 2957bd28 
+[   31.976000] 
+[   31.976000] 3fc0: 
+[   31.976000] 000000fc 
+[   31.976000] 296de264 
+[   31.976000] 296de264 
+[   31.976000] 296de388 
+[   31.976000] 00000002 
+[   31.976000] 296de284 
+[   31.976000] 00000000 
+[   31.976000] 00000000 
+[   31.976000] 
+[   31.976000] 3fe0: 
+[   31.976000] 7bc54d30 
+[   31.976000] 29630ba4 
+[   31.976000] 295c8490 
+[   31.976000] 00000101 
+[   31.976000] 2957bd18 
+[   31.976000] 00000000 
+[   31.976000] 00000000 
+[   31.976000] 00000044 
+[   31.976000] 
+[   31.976000] 
+[   31.976000] Call trace:
+[   31.976000]  [<(ptrval)>] dump_stack+0x1a/0x30
+[   31.976000]  [<(ptrval)>] bad_page+0x9e/0x104
+[   31.976000]  [<(ptrval)>] clockevents_program_event+0x94/0x180
+[   31.976000]  [<(ptrval)>] check_free_page_bad+0x28/0x74
+[   31.976000]  [<(ptrval)>] free_pcppages_bulk+0x13e/0x388
+[   31.976000]  [<(ptrval)>] free_unref_page_commit.isra.0+0x6c/0x88
+[   31.976000]  [<(ptrval)>] free_unref_page_commit.isra.0+0x0/0x88
+[   31.976000]  [<(ptrval)>] free_unref_page_list+0xca/0x138
+[   31.976000]  [<(ptrval)>] release_pages+0x20a/0x2e4
+[   31.976000]  [<(ptrval)>] free_pages_and_swap_cache+0x48/0xd4
+[   31.976000]  [<(ptrval)>] tlb_batch_pages_flush+0x2a/0x50
+[   31.976000]  [<(ptrval)>] free_pages_and_swap_cache+0x0/0xd4
+[   31.976000]  [<(ptrval)>] tlb_finish_mmu+0x52/0x128
+[   31.976000]  [<(ptrval)>] free_pages+0x0/0x1c
+[   31.976000]  [<(ptrval)>] arch_local_irq_restore+0x0/0x2c
+[   31.976000]  [<(ptrval)>] free_pgd_range+0x292/0x2c8
+[   31.976000]  [<(ptrval)>] free_pgtables+0xba/0xe4
+[   31.976000]  [<(ptrval)>] unlink_anon_vmas+0x0/0x150
+[   31.976000]  [<(ptrval)>] unlink_file_vma+0x0/0x58
+[   31.976000]  [<(ptrval)>] exit_mmap+0xaa/0x1a4
+[   31.976000]  [<(ptrval)>] remove_vma+0x0/0x50
+[   31.976000]  [<(ptrval)>] mmput+0x3a/0xd4
+[   31.976000]  [<(ptrval)>] do_exit+0x278/0x984
+[   31.976000]  [<(ptrval)>] do_group_exit+0x2e/0x94
+[   31.976000]  [<(ptrval)>] sys_exit_group+0xe/0x14
+[   31.976000]  [<(ptrval)>] sys_exit_group+0x0/0x14
+[   31.976000]  [<(ptrval)>] syscall_call+0x18/0x1e
+[   31.976000] 
+[   31.976000] BUG: Bad page state in process systemd-rc-loca  pfn:5d8f9
+[   31.976000] page:9ff31f20 refcount:0 mapcount:1026 mapping:(ptrval) index:0x0
+[   31.976000] mapping->a_ops:0x0
+[   31.976000] flags: 0x5c000000()
+[   31.976000] raw: 5c000000 00000100 00000122 9f403580 00000000 00000000 00000401 00000000
+[   31.976000] page dumped because: non-NULL mapping
+[   31.976000] Modules linked in:
+[   31.976000] CPU: 0 PID: 579 Comm: systemd-rc-loca Tainted: G    B             5.8.0-rc5-00028-g7bc20f6563b4 #7
+[   31.976000] Stack: (0x9d923cec to 0x9d924000)
+[   31.976000] 3ce0: 
+[   31.976000]          
+[   31.976000]          
+[   31.976000]          
+[   31.976000] 8025dc12 
+[   31.976000] 9d923d00 
+[   31.976000] 8069bf34 
+[   31.976000] 9fff4000 
+[   31.976000] 805a6ed0 
+[   31.976000] 
+[   31.976000] 3d00: 
+[   31.976000] 800d7706 
+[   31.976000] 9d923d0c 
+[   31.976000] 9ff31f20 
+[   31.976000] 80069584 
+[   31.976000] 800d7794 
+[   31.976000] 9d923d30 
+[   31.976000] 9fff400c 
+[   31.976000] 0000000c 
+[   31.976000] 
+[   31.976000] 3d20: 
+[   31.976000] 9fff4010 
+[   31.976000] 00000002 
+[   31.976000] 9fff4000 
+[   31.976000] 00000010 
+[   31.976000] 800d826e 
+[   31.976000] 9d923d38 
+[   31.976000] 9ff3d700 
+[   31.976000] 00000000 
+[   31.976000] 
+[   31.976000] 3d40: 
+[   31.976000] 00000000 
+[   31.976000] 00000122 
+[   31.976000] 00000100 
+[   31.976000] 80650b5c 
+[   31.976000] 8069c07c 
+[   31.976000] 00000000 
+[   31.976000] 0005deba 
+[   31.976000] 80650990 
+[   31.976000] 
+[   31.976000] 3d60: 
+[   31.976000] 9d923d64 
+[   31.976000] 9ff3d764 
+[   31.976000] 9ff3f484 
+[   31.976000] 01287640 
+[   31.976000] 800d8668 
+[   31.976000] 9d923d90 
+[   31.976000] 00000010 
+[   31.976000] 00000000 
+[   31.976000] 
+[   31.976000] 3d80: 
+[   31.976000] 800d85fc 
+[   31.976000] 00000000 
+[   31.976000] 9d923dc0 
+[   31.976000] 9ff3f940 
+[   31.976000] 800d953a 
+[   31.976000] 9d923d98 
+[   31.976000] 9ff32740 
+[   31.976000] 800b098e 
+[   31.976000] 
+[   31.976000] 3da0: 
+[   31.976000] 9d923dbc 
+[   31.976000] 00000000 
+[   31.976000] 00000014 
+[   31.976000] 000001e9 
+[   31.976000] 9e7f77b0 
+[   31.976000] 000001e9 
+[   31.976000] 9ff326c0 
+[   31.976000] 80650990 
+[   31.976000] 
+[   31.976000] 3dc0: 
+[   31.976000] 9ff326c4 
+[   31.976000] 9ff3f604 
+[   31.976000] 01287640 
+[   31.976000] 800de48c 
+[   31.976000] 9d923dec 
+[   31.976000] 00000400 
+[   31.976000] 000001e9 
+[   31.976000] 00080000 
+[   31.976000] 
+[   31.976000] 3de0: 
+[   31.976000] 9e7f700c 
+[   31.976000] 9e7f77b0 
+[   31.976000] 9ff326c0 
+[   31.976000] 9fff53c0 
+[   31.976000] 800cf856 
+[   31.976000] 9d923e10 
+[   31.976000] 8062124c 
+[   31.976000] 9d923ec4 
+[   31.976000] 
+[   31.976000] 3e00: 
+[   31.976000] 9d923eac 
+[   31.976000] 800de444 
+[   31.976000] 00000000 
+[   31.976000] 9e7f7000 
+[   31.976000] 800cfa9e 
+[   31.976000] 9d923e2c 
+[   31.976000] 8062124c 
+[   31.976000] 9d923e50 
+[   31.976000] 
+[   31.976000] 3e20: 
+[   31.976000] 800d91c0 
+[   31.976000] 9d923eac 
+[   31.976000] 9d917740 
+[   31.976000] 80002f38 
+[   31.976000] 800c6366 
+[   31.976000] 9d923e40 
+[   31.976000] 7bc55000 
+[   31.976000] 7bc00000 
+[   31.976000] 
+[   31.976000] 3e40: 
+[   31.976000] ffffffff 
+[   31.976000] 00000000 
+[   31.976000] 00000000 
+[   31.976000] 7bc54fff 
+[   31.976000] 7bc55000 
+[   31.976000] 7bc54fff 
+[   31.976000] 800c6456 
+[   31.976000] 9d923e78 
+[   31.976000] 
+[   31.976000] 3e60: 
+[   31.976000] 9d932c00 
+[   31.976000] 9d932c00 
+[   31.976000] 9d932c00 
+[   31.976000] 800d2d88 
+[   31.976000] 800cc334 
+[   31.976000] 00400000 
+[   31.976000] 00000000 
+[   31.976000] 00000000 
+[   31.976000] 
+[   31.976000] 3e80: 
+[   31.976000] 00000000 
+[   31.976000] 9d923eac 
+[   31.976000] 7bc34000 
+[   31.976000] 01287640 
+[   31.976000] 800cda8e 
+[   31.976000] 9d923eac 
+[   31.976000] 9d923eb4 
+[   31.976000] 800cbd44 
+[   31.976000] 
+[   31.976000] 3ea0: 
+[   31.976000] 00100000 
+[   31.976000] 00000000 
+[   31.976000] 9d917740 
+[   31.976000] 9d8de260 
+[   31.976000] ffffffff 
+[   31.976000] ffffffff 
+[   31.976000] 00000001 
+[   31.976000] 00000002 
+[   31.976000] 
+[   31.976000] 3ec0: 
+[   31.976000] 9e7f7000 
+[   31.976000] 9e7f5000 
+[   31.976000] 00000000 
+[   31.976000] 00000008 
+[   31.976000] 9fb8ce60 
+[   31.976000] 9fb8ce40 
+[   31.976000] 9fb8ce20 
+[   31.976000] 9fb8ce00 
+[   31.976000] 
+[   31.976000] 3ee0: 
+[   31.976000] 9fb93120 
+[   31.976000] 9fb93140 
+[   31.976000] 9fb93160 
+[   31.976000] 9fb93180 
+[   31.976000] 01287640 
+[   31.976000] 80011066 
+[   31.976000] 9d923f14 
+[   31.976000] 00000000 
+[   31.976000] 
+[   31.976000] 3f00: 
+[   31.976000] 9d8b43fc 
+[   31.976000] 00000000 
+[   31.976000] 9d8de2ac 
+[   31.976000] 00000000 
+[   31.976000] 9d8de260 
+[   31.976000] 80015940 
+[   31.976000] 9d923f24 
+[   31.976000] 9d8de260 
+[   31.976000] 
+[   31.976000] 3f20: 
+[   31.976000] 9d8b4140 
+[   31.976000] 00000000 
+[   31.976000] 00000000 
+[   31.976000] 00000000 
+[   31.976000] 9d8b45fc 
+[   31.976000] 00000000 
+[   31.976000] 9d8b43bc 
+[   31.976000] 00000000 
+[   31.976000] 
+[   31.976000] 3f40: 
+[   31.976000] 00000000 
+[   31.976000] 9d8b453c 
+[   31.976000] 9d923f64 
+[   31.976000] 9d923fe4 
+[   31.976000] 9d8de260 
+[   31.976000] 00000000 
+[   31.976000] 01287640 
+[   31.976000] 80016c56 
+[   31.976000] 
+[   31.976000] 3f60: 
+[   31.976000] 9d923f7c 
+[   31.976000] 00000000 
+[   31.976000] 296de284 
+[   31.976000] 00000000 
+[   31.976000] 00000071 
+[   31.976000] 9d892ea0 
+[   31.976000] 00000000 
+[   31.976000] 80016cca 
+[   31.976000] 
+[   31.976000] 3f80: 
+[   31.976000] 9d923f90 
+[   31.976000] 00000071 
+[   31.976000] 00000100 
+[   31.976000] 80016cbc 
+[   31.976000] 8000727e 
+[   31.976000] 00000000 
+[   31.976000] 00000010 
+[   31.976000] 00000000 
+[   31.976000] 
+[   31.976000] 3fa0: 
+[   31.976000] fffff000 
+[   31.976000] 00000010 
+[   31.976000] 00000000 
+[   31.976000] fffff000 
+[   31.976000] 000000fc 
+[   31.976000] 00000000 
+[   31.976000] 00000000 
+[   31.976000] 2957bd28 
+[   31.976000] 
+[   31.976000] 3fc0: 
+[   31.976000] 000000fc 
+[   31.976000] 296de264 
+[   31.976000] 296de264 
+[   31.976000] 296de388 
+[   31.976000] 00000002 
+[   31.976000] 296de284 
+[   31.976000] 00000000 
+[   31.976000] 00000000 
+[   31.976000] 
+[   31.976000] 3fe0: 
+[   31.976000] 7bc54d30 
+[   31.976000] 29630ba4 
+[   31.976000] 295c8490 
+[   31.976000] 00000101 
+[   31.976000] 2957bd18 
+[   31.976000] 00000000 
+[   31.976000] 00000000 
+[   31.976000] 00000044 
+[   31.976000] 
+[   31.976000] 
+[   31.976000] Call trace:
+[   31.976000]  [<(ptrval)>] dump_stack+0x1a/0x30
+[   31.976000]  [<(ptrval)>] bad_page+0x9e/0x104
+[   31.976000]  [<(ptrval)>] clockevents_program_event+0x94/0x180
+[   31.976000]  [<(ptrval)>] check_free_page_bad+0x28/0x74
+[   31.976000]  [<(ptrval)>] free_pcppages_bulk+0x13e/0x388
+[   31.976000]  [<(ptrval)>] free_unref_page_commit.isra.0+0x6c/0x88
+[   31.976000]  [<(ptrval)>] free_unref_page_commit.isra.0+0x0/0x88
+[   31.976000]  [<(ptrval)>] free_unref_page_list+0xca/0x138
+[   31.976000]  [<(ptrval)>] release_pages+0x20a/0x2e4
+[   31.976000]  [<(ptrval)>] free_pages_and_swap_cache+0x48/0xd4
+[   31.976000]  [<(ptrval)>] tlb_batch_pages_flush+0x2a/0x50
+[   31.976000]  [<(ptrval)>] free_pages_and_swap_cache+0x0/0xd4
+[   31.976000]  [<(ptrval)>] tlb_finish_mmu+0x52/0x128
+[   31.976000]  [<(ptrval)>] free_pages+0x0/0x1c
+[   31.976000]  [<(ptrval)>] arch_local_irq_restore+0x0/0x2c
+[   31.976000]  [<(ptrval)>] free_pgd_range+0x292/0x2c8
+[   31.976000]  [<(ptrval)>] free_pgtables+0xba/0xe4
+[   31.976000]  [<(ptrval)>] unlink_anon_vmas+0x0/0x150
+[   31.976000]  [<(ptrval)>] unlink_file_vma+0x0/0x58
+[   31.976000]  [<(ptrval)>] exit_mmap+0xaa/0x1a4
+[   31.976000]  [<(ptrval)>] remove_vma+0x0/0x50
+[   31.976000]  [<(ptrval)>] mmput+0x3a/0xd4
+[   31.976000]  [<(ptrval)>] do_exit+0x278/0x984
+[   31.976000]  [<(ptrval)>] do_group_exit+0x2e/0x94
+[   31.976000]  [<(ptrval)>] sys_exit_group+0xe/0x14
+[   31.976000]  [<(ptrval)>] sys_exit_group+0x0/0x14
+[   31.976000]  [<(ptrval)>] syscall_call+0x18/0x1e
+[   31.976000] 
+[   35.760000] BUG: Bad page state in process systemd-gpt-aut  pfn:5d904
+[   35.760000] page:9ff32080 refcount:0 mapcount:2 mapping:(ptrval) index:0x0
+[   35.760000] mapping->a_ops:0x0
+[   35.760000] flags: 0x5c000000()
+[   35.760000] raw: 5c000000 00000100 00000122 9f403580 00000000 00000000 00000001 00000000
+[   35.760000] page dumped because: non-NULL mapping
+[   35.760000] Modules linked in:
+[   35.760000] CPU: 0 PID: 577 Comm: systemd-gpt-aut Tainted: G    B             5.8.0-rc5-00028-g7bc20f6563b4 #7
+[   35.760000] Stack: (0x9d8fdcec to 0x9d8fe000)
+[   35.760000] dce0: 
+[   35.760000]          
+[   35.760000]          
+[   35.760000]          
+[   35.760000] 8025dc12 
+[   35.760000] 9d8fdd00 
+[   35.760000] 8069bf34 
+[   35.760000] 9fff4000 
+[   35.760000] 805a6ed0 
+[   35.760000] 
+[   35.760000] dd00: 
+[   35.760000] 800d7706 
+[   35.760000] 9d8fdd0c 
+[   35.760000] 9ff32080 
+[   35.760000] 9d8fdd10 
+[   35.760000] 800d7794 
+[   35.760000] 9d8fdd30 
+[   35.760000] 9fff400c 
+[   35.760000] 0000001e 
+[   35.760000] 
+[   35.760000] dd20: 
+[   35.760000] 9fff4010 
+[   35.760000] 00000002 
+[   35.760000] 9fff4000 
+[   35.760000] 00000001 
+[   35.760000] 800d826e 
+[   35.760000] 9d8fdd38 
+[   35.760000] 9ff3c880 
+[   35.760000] 00000000 
+[   35.760000] 
+[   35.760000] dd40: 
+[   35.760000] 00000000 
+[   35.760000] 00000122 
+[   35.760000] 00000100 
+[   35.760000] 80650b5c 
+[   35.760000] 8069c07c 
+[   35.760000] 00000000 
+[   35.760000] 0005de44 
+[   35.760000] 80650990 
+[   35.760000] 
+[   35.760000] dd60: 
+[   35.760000] 9d8fdd64 
+[   35.760000] 9ff3c8a4 
+[   35.760000] 9ff3c8a4 
+[   35.760000] e8b51f6f 
+[   35.760000] 800d8668 
+[   35.760000] 9d8fdd90 
+[   35.760000] 00000018 
+[   35.760000] 00000000 
+[   35.760000] 
+[   35.760000] dd80: 
+[   35.760000] 800d85fc 
+[   35.760000] 00000000 
+[   35.760000] 9d8fddc0 
+[   35.760000] 9ff3a980 
+[   35.760000] 800d953a 
+[   35.760000] 9d8fdd98 
+[   35.760000] 9ff320a0 
+[   35.760000] 800b098e 
+[   35.760000] 
+[   35.760000] dda0: 
+[   35.760000] 9d8fddbc 
+[   35.760000] 00000000 
+[   35.760000] 00000020 
+[   35.760000] 00000256 
+[   35.760000] 9d8bc964 
+[   35.760000] 00000256 
+[   35.760000] 9ff32080 
+[   35.760000] 80650990 
+[   35.760000] 
+[   35.760000] ddc0: 
+[   35.760000] 9ff32084 
+[   35.760000] 9ff3d224 
+[   35.760000] e8b51f6f 
+[   35.760000] 800de48c 
+[   35.760000] 9d8fddec 
+[   35.760000] 00000400 
+[   35.760000] 00000256 
+[   35.760000] 00080000 
+[   35.760000] 
+[   35.760000] dde0: 
+[   35.760000] 9d8bc00c 
+[   35.760000] 9d8bc964 
+[   35.760000] 9ff32080 
+[   35.760000] 00100cca 
+[   35.760000] 800cf856 
+[   35.760000] 9d8fde10 
+[   35.760000] 8062124c 
+[   35.760000] 9d8fdec4 
+[   35.760000] 
+[   35.760000] de00: 
+[   35.760000] 9d8fdeac 
+[   35.760000] 800de444 
+[   35.760000] 00000000 
+[   35.760000] 9d8bc000 
+[   35.760000] 800cfa9e 
+[   35.760000] 9d8fde2c 
+[   35.760000] 8062124c 
+[   35.760000] 9d8fde50 
+[   35.760000] 
+[   35.760000] de20: 
+[   35.760000] 800d91c0 
+[   35.760000] 9d8fdeac 
+[   35.760000] 9d8eca80 
+[   35.760000] 80002f38 
+[   35.760000] 800c6366 
+[   35.760000] 9d8fde40 
+[   35.760000] 7bfba000 
+[   35.760000] 7be00000 
+[   35.760000] 
+[   35.760000] de40: 
+[   35.760000] ffffffff 
+[   35.760000] 00000000 
+[   35.760000] 00000000 
+[   35.760000] 7bfb9fff 
+[   35.760000] 7bfba000 
+[   35.760000] 7bfb9fff 
+[   35.760000] 800c6456 
+[   35.760000] 9d8fde78 
+[   35.760000] 
+[   35.760000] de60: 
+[   35.760000] 9d8f4ce0 
+[   35.760000] 9d8f4ce0 
+[   35.760000] 9d8f4ce0 
+[   35.760000] 800d2d88 
+[   35.760000] 800cc334 
+[   35.760000] 00400000 
+[   35.760000] 00000000 
+[   35.760000] 00000000 
+[   35.760000] 
+[   35.760000] de80: 
+[   35.760000] 00000000 
+[   35.760000] 9d8fdeac 
+[   35.760000] 7bf99000 
+[   35.760000] e8b51f6f 
+[   35.760000] 800cda8e 
+[   35.760000] 9d8fdeac 
+[   35.760000] 9d8fdeb4 
+[   35.760000] 800cbd44 
+[   35.760000] 
+[   35.760000] dea0: 
+[   35.760000] 00100000 
+[   35.760000] 00000000 
+[   35.760000] 9d8eca80 
+[   35.760000] 9eb27240 
+[   35.760000] ffffffff 
+[   35.760000] ffffffff 
+[   35.760000] 00000001 
+[   35.760000] 00000002 
+[   35.760000] 
+[   35.760000] dec0: 
+[   35.760000] 9d8bc000 
+[   35.760000] 9ed65000 
+[   35.760000] 00000000 
+[   35.760000] 00000008 
+[   35.760000] 9fb8ce60 
+[   35.760000] 9fb8ce40 
+[   35.760000] 9fb8ce20 
+[   35.760000] 9fb8ce00 
+[   35.760000] 
+[   35.760000] dee0: 
+[   35.760000] 9fb93120 
+[   35.760000] 9fb93140 
+[   35.760000] 9fb93160 
+[   35.760000] 9fb93180 
+[   35.760000] e8b51f6f 
+[   35.760000] 80011066 
+[   35.760000] 9d8fdf14 
+[   35.760000] 00000000 
+[   35.760000] 
+[   35.760000] df00: 
+[   35.760000] 9d8b4f7c 
+[   35.760000] 00000000 
+[   35.760000] 9eb2728c 
+[   35.760000] 00000000 
+[   35.760000] 9eb27240 
+[   35.760000] 80015940 
+[   35.760000] 9d8fdf24 
+[   35.760000] 9eb27240 
+[   35.760000] 
+[   35.760000] df20: 
+[   35.760000] 9d8b4cc0 
+[   35.760000] 00000000 
+[   35.760000] 00000000 
+[   35.760000] 00000000 
+[   35.760000] 9d8b517c 
+[   35.760000] 00000000 
+[   35.760000] 9d8b4f3c 
+[   35.760000] 00000000 
+[   35.760000] 
+[   35.760000] df40: 
+[   35.760000] 00000000 
+[   35.760000] 9d8b50bc 
+[   35.760000] 9d8fdf64 
+[   35.760000] 9d8fdfe4 
+[   35.760000] 9eb27240 
+[   35.760000] 00000000 
+[   35.760000] e8b51f6f 
+[   35.760000] 80016c56 
+[   35.760000] 
+[   35.760000] df60: 
+[   35.760000] 9d8fdf7c 
+[   35.760000] 00000000 
+[   35.760000] 296de284 
+[   35.760000] 00000000 
+[   35.760000] 00000071 
+[   35.760000] 9d893420 
+[   35.760000] 00000000 
+[   35.760000] 80016cca 
+[   35.760000] 
+[   35.760000] df80: 
+[   35.760000] 9d8fdf90 
+[   35.760000] 00000071 
+[   35.760000] 00000100 
+[   35.760000] 80016cbc 
+[   35.760000] 8000727e 
+[   35.760000] 00000000 
+[   35.760000] 00000010 
+[   35.760000] 00000000 
+[   35.760000] 
+[   35.760000] dfa0: 
+[   35.760000] fffff000 
+[   35.760000] 00000010 
+[   35.760000] 00000000 
+[   35.760000] fffff000 
+[   35.760000] 000000fc 
+[   35.760000] 00000000 
+[   35.760000] 00000000 
+[   35.760000] 2957bd38 
+[   35.760000] 
+[   35.760000] dfc0: 
+[   35.760000] 000000fc 
+[   35.760000] 296de264 
+[   35.760000] 296de264 
+[   35.760000] 296de388 
+[   35.760000] 00000002 
+[   35.760000] 296de284 
+[   35.760000] 00000000 
+[   35.760000] 00000000 
+[   35.760000] 
+[   35.760000] dfe0: 
+[   35.760000] 7bfb9d30 
+[   35.760000] 29630ba4 
+[   35.760000] 295c8490 
+[   35.760000] 00008101 
+[   35.760000] 2957bd28 
+[   35.760000] 00000000 
+[   35.760000] 00000000 
+[   35.760000] 00000044 
+[   35.760000] 
+[   35.760000] 
+[   35.760000] Call trace:
+[   35.760000]  [<(ptrval)>] dump_stack+0x1a/0x30
+[   35.760000]  [<(ptrval)>] bad_page+0x9e/0x104
+[   35.760000]  [<(ptrval)>] check_free_page_bad+0x28/0x74
+[   35.760000]  [<(ptrval)>] free_pcppages_bulk+0x13e/0x388
+[   35.760000]  [<(ptrval)>] free_unref_page_commit.isra.0+0x6c/0x88
+[   35.760000]  [<(ptrval)>] free_unref_page_commit.isra.0+0x0/0x88
+[   35.760000]  [<(ptrval)>] free_unref_page_list+0xca/0x138
+[   35.760000]  [<(ptrval)>] release_pages+0x20a/0x2e4
+[   35.760000]  [<(ptrval)>] free_pages_and_swap_cache+0x48/0xd4
+[   35.760000]  [<(ptrval)>] tlb_batch_pages_flush+0x2a/0x50
+[   35.760000]  [<(ptrval)>] free_pages_and_swap_cache+0x0/0xd4
+[   35.760000]  [<(ptrval)>] tlb_finish_mmu+0x52/0x128
+[   35.760000]  [<(ptrval)>] free_pages+0x0/0x1c
+[   35.760000]  [<(ptrval)>] arch_local_irq_restore+0x0/0x2c
+[   35.760000]  [<(ptrval)>] free_pgd_range+0x292/0x2c8
+[   35.760000]  [<(ptrval)>] free_pgtables+0xba/0xe4
+[   35.760000]  [<(ptrval)>] unlink_anon_vmas+0x0/0x150
+[   35.760000]  [<(ptrval)>] unlink_file_vma+0x0/0x58
+[   35.760000]  [<(ptrval)>] exit_mmap+0xaa/0x1a4
+[   35.760000]  [<(ptrval)>] remove_vma+0x0/0x50
+[   35.760000]  [<(ptrval)>] mmput+0x3a/0xd4
+[   35.760000]  [<(ptrval)>] do_exit+0x278/0x984
+[   35.760000]  [<(ptrval)>] do_group_exit+0x2e/0x94
+[   35.760000]  [<(ptrval)>] sys_exit_group+0xe/0x14
+[   35.760000]  [<(ptrval)>] sys_exit_group+0x0/0x14
+[   35.760000]  [<(ptrval)>] syscall_call+0x18/0x1e
+[   35.760000] 
+[   35.760000] BUG: Bad page state in process systemd-gpt-aut  pfn:5d8a6
+[   35.760000] page:9ff314c0 refcount:0 mapcount:2 mapping:(ptrval) index:0x0
+[   35.760000] mapping->a_ops:0x0
+[   35.760000] flags: 0x5c000000()
+[   35.760000] raw: 5c000000 00000100 00000122 9f403580 00000000 00000000 00000001 00000000
+[   35.760000] page dumped because: non-NULL mapping
+[   35.760000] Modules linked in:
+[   35.760000] CPU: 0 PID: 577 Comm: systemd-gpt-aut Tainted: G    B             5.8.0-rc5-00028-g7bc20f6563b4 #7
+[   35.760000] Stack: (0x9d8fdcec to 0x9d8fe000)
+[   35.760000] dce0: 
+[   35.760000]          
+[   35.760000]          
+[   35.760000]          
+[   35.760000] 8025dc12 
+[   35.760000] 9d8fdd00 
+[   35.760000] 8069bf34 
+[   35.760000] 9fff4000 
+[   35.760000] 805a6ed0 
+[   35.760000] 
+[   35.760000] dd00: 
+[   35.760000] 800d7706 
+[   35.760000] 9d8fdd0c 
+[   35.760000] 9ff314c0 
+[   35.760000] 9d8fdd10 
+[   35.760000] 800d7794 
+[   35.760000] 9d8fdd30 
+[   35.760000] 9fff400c 
+[   35.760000] 0000001a 
+[   35.760000] 
+[   35.760000] dd20: 
+[   35.760000] 9fff4010 
+[   35.760000] 00000001 
+[   35.760000] 9fff4000 
+[   35.760000] 00000004 
+[   35.760000] 800d826e 
+[   35.760000] 9d8fdd38 
+[   35.760000] 9ff3c880 
+[   35.760000] 00000000 
+[   35.760000] 
+[   35.760000] dd40: 
+[   35.760000] 00000000 
+[   35.760000] 00000122 
+[   35.760000] 00000100 
+[   35.760000] 80650b5c 
+[   35.760000] 8069c07c 
+[   35.760000] 00000000 
+[   35.760000] 0005de44 
+[   35.760000] 80650990 
+[   35.760000] 
+[   35.760000] dd60: 
+[   35.760000] 9d8fdd64 
+[   35.760000] 9ff3c8a4 
+[   35.760000] 9ff32104 
+[   35.760000] e8b51f6f 
+[   35.760000] 800d8668 
+[   35.760000] 9d8fdd90 
+[   35.760000] 00000018 
+[   35.760000] 00000000 
+[   35.760000] 
+[   35.760000] dd80: 
+[   35.760000] 800d85fc 
+[   35.760000] 00000000 
+[   35.760000] 9d8fddc0 
+[   35.760000] 9ff3a980 
+[   35.760000] 800d953a 
+[   35.760000] 9d8fdd98 
+[   35.760000] 9ff320a0 
+[   35.760000] 800b098e 
+[   35.760000] 
+[   35.760000] dda0: 
+[   35.760000] 9d8fddbc 
+[   35.760000] 00000000 
+[   35.760000] 00000020 
+[   35.760000] 00000256 
+[   35.760000] 9d8bc964 
+[   35.760000] 00000256 
+[   35.760000] 9ff32080 
+[   35.760000] 80650990 
+[   35.760000] 
+[   35.760000] ddc0: 
+[   35.760000] 9ff32084 
+[   35.760000] 9ff3d224 
+[   35.760000] e8b51f6f 
+[   35.760000] 800de48c 
+[   35.760000] 9d8fddec 
+[   35.760000] 00000400 
+[   35.760000] 00000256 
+[   35.760000] 00080000 
+[   35.760000] 
+[   35.760000] dde0: 
+[   35.760000] 9d8bc00c 
+[   35.760000] 9d8bc964 
+[   35.760000] 9ff32080 
+[   35.760000] 00100cca 
+[   35.760000] 800cf856 
+[   35.760000] 9d8fde10 
+[   35.760000] 8062124c 
+[   35.760000] 9d8fdec4 
+[   35.760000] 
+[   35.760000] de00: 
+[   35.760000] 9d8fdeac 
+[   35.760000] 800de444 
+[   35.760000] 00000000 
+[   35.760000] 9d8bc000 
+[   35.760000] 800cfa9e 
+[   35.760000] 9d8fde2c 
+[   35.760000] 8062124c 
+[   35.760000] 9d8fde50 
+[   35.760000] 
+[   35.760000] de20: 
+[   35.760000] 800d91c0 
+[   35.760000] 9d8fdeac 
+[   35.760000] 9d8eca80 
+[   35.760000] 80002f38 
+[   35.760000] 800c6366 
+[   35.760000] 9d8fde40 
+[   35.760000] 7bfba000 
+[   35.760000] 7be00000 
+[   35.760000] 
+[   35.760000] de40: 
+[   35.760000] ffffffff 
+[   35.760000] 00000000 
+[   35.760000] 00000000 
+[   35.760000] 7bfb9fff 
+[   35.760000] 7bfba000 
+[   35.760000] 7bfb9fff 
+[   35.760000] 800c6456 
+[   35.760000] 9d8fde78 
+[   35.760000] 
+[   35.760000] de60: 
+[   35.760000] 9d8f4ce0 
+[   35.760000] 9d8f4ce0 
+[   35.760000] 9d8f4ce0 
+[   35.760000] 800d2d88 
+[   35.760000] 800cc334 
+[   35.760000] 00400000 
+[   35.760000] 00000000 
+[   35.760000] 00000000 
+[   35.760000] 
+[   35.760000] de80: 
+[   35.760000] 00000000 
+[   35.760000] 9d8fdeac 
+[   35.760000] 7bf99000 
+[   35.760000] e8b51f6f 
+[   35.760000] 800cda8e 
+[   35.760000] 9d8fdeac 
+[   35.760000] 9d8fdeb4 
+[   35.760000] 800cbd44 
+[   35.760000] 
+[   35.760000] dea0: 
+[   35.760000] 00100000 
+[   35.760000] 00000000 
+[   35.760000] 9d8eca80 
+[   35.760000] 9eb27240 
+[   35.760000] ffffffff 
+[   35.760000] ffffffff 
+[   35.760000] 00000001 
+[   35.760000] 00000002 
+[   35.760000] 
+[   35.760000] dec0: 
+[   35.760000] 9d8bc000 
+[   35.760000] 9ed65000 
+[   35.760000] 00000000 
+[   35.760000] 00000008 
+[   35.760000] 9fb8ce60 
+[   35.760000] 9fb8ce40 
+[   35.760000] 9fb8ce20 
+[   35.760000] 9fb8ce00 
+[   35.760000] 
+[   35.760000] dee0: 
+[   35.760000] 9fb93120 
+[   35.760000] 9fb93140 
+[   35.760000] 9fb93160 
+[   35.760000] 9fb93180 
+[   35.760000] e8b51f6f 
+[   35.760000] 80011066 
+[   35.760000] 9d8fdf14 
+[   35.760000] 00000000 
+[   35.760000] 
+[   35.760000] df00: 
+[   35.760000] 9d8b4f7c 
+[   35.760000] 00000000 
+[   35.760000] 9eb2728c 
+[   35.760000] 00000000 
+[   35.760000] 9eb27240 
+[   35.760000] 80015940 
+[   35.760000] 9d8fdf24 
+[   35.760000] 9eb27240 
+[   35.760000] 
+[   35.760000] df20: 
+[   35.760000] 9d8b4cc0 
+[   35.760000] 00000000 
+[   35.760000] 00000000 
+[   35.760000] 00000000 
+[   35.760000] 9d8b517c 
+[   35.760000] 00000000 
+[   35.760000] 9d8b4f3c 
+[   35.760000] 00000000 
+[   35.760000] 
+[   35.760000] df40: 
+[   35.760000] 00000000 
+[   35.760000] 9d8b50bc 
+[   35.760000] 9d8fdf64 
+[   35.760000] 9d8fdfe4 
+[   35.760000] 9eb27240 
+[   35.760000] 00000000 
+[   35.760000] e8b51f6f 
+[   35.760000] 80016c56 
+[   35.760000] 
+[   35.760000] df60: 
+[   35.760000] 9d8fdf7c 
+[   35.760000] 00000000 
+[   35.760000] 296de284 
+[   35.760000] 00000000 
+[   35.760000] 00000071 
+[   35.760000] 9d893420 
+[   35.760000] 00000000 
+[   35.760000] 80016cca 
+[   35.760000] 
+[   35.760000] df80: 
+[   35.760000] 9d8fdf90 
+[   35.760000] 00000071 
+[   35.760000] 00000100 
+[   35.760000] 80016cbc 
+[   35.760000] 8000727e 
+[   35.760000] 00000000 
+[   35.760000] 00000010 
+[   35.760000] 00000000 
+[   35.760000] 
+[   35.760000] dfa0: 
+[   35.760000] fffff000 
+[   35.760000] 00000010 
+[   35.760000] 00000000 
+[   35.760000] fffff000 
+[   35.760000] 000000fc 
+[   35.760000] 00000000 
+[   35.760000] 00000000 
+[   35.760000] 2957bd38 
+[   35.760000] 
+[   35.760000] dfc0: 
+[   35.760000] 000000fc 
+[   35.760000] 296de264 
+[   35.760000] 296de264 
+[   35.760000] 296de388 
+[   35.760000] 00000002 
+[   35.760000] 296de284 
+[   35.760000] 00000000 
+[   35.760000] 00000000 
+[   35.760000] 
+[   35.760000] dfe0: 
+[   35.760000] 7bfb9d30 
+[   35.760000] 29630ba4 
+[   35.760000] 295c8490 
+[   35.760000] 00008101 
+[   35.760000] 2957bd28 
+[   35.760000] 00000000 
+[   35.760000] 00000000 
+[   35.760000] 00000044 
+[   35.760000] 
+[   35.760000] 
+[   35.760000] Call trace:
+[   35.760000]  [<(ptrval)>] dump_stack+0x1a/0x30
+[   35.760000]  [<(ptrval)>] bad_page+0x9e/0x104
+[   35.760000]  [<(ptrval)>] check_free_page_bad+0x28/0x74
+[   35.760000]  [<(ptrval)>] free_pcppages_bulk+0x13e/0x388
+[   35.760000]  [<(ptrval)>] free_unref_page_commit.isra.0+0x6c/0x88
+[   35.760000]  [<(ptrval)>] free_unref_page_commit.isra.0+0x0/0x88
+[   35.760000]  [<(ptrval)>] free_unref_page_list+0xca/0x138
+[   35.760000]  [<(ptrval)>] release_pages+0x20a/0x2e4
+[   35.760000]  [<(ptrval)>] free_pages_and_swap_cache+0x48/0xd4
+[   35.760000]  [<(ptrval)>] tlb_batch_pages_flush+0x2a/0x50
+[   35.760000]  [<(ptrval)>] free_pages_and_swap_cache+0x0/0xd4
+[   35.760000]  [<(ptrval)>] tlb_finish_mmu+0x52/0x128
+[   35.760000]  [<(ptrval)>] free_pages+0x0/0x1c
+[   35.760000]  [<(ptrval)>] arch_local_irq_restore+0x0/0x2c
+[   35.760000]  [<(ptrval)>] free_pgd_range+0x292/0x2c8
+[   35.760000]  [<(ptrval)>] free_pgtables+0xba/0xe4
+[   35.760000]  [<(ptrval)>] unlink_anon_vmas+0x0/0x150
+[   35.760000]  [<(ptrval)>] unlink_file_vma+0x0/0x58
+[   35.760000]  [<(ptrval)>] exit_mmap+0xaa/0x1a4
+[   35.760000]  [<(ptrval)>] remove_vma+0x0/0x50
+[   35.760000]  [<(ptrval)>] mmput+0x3a/0xd4
+[   35.760000]  [<(ptrval)>] do_exit+0x278/0x984
+[   35.760000]  [<(ptrval)>] do_group_exit+0x2e/0x94
+[   35.760000]  [<(ptrval)>] sys_exit_group+0xe/0x14
+[   35.760000]  [<(ptrval)>] sys_exit_group+0x0/0x14
+[   35.760000]  [<(ptrval)>] syscall_call+0x18/0x1e
+[   35.760000] 
+[   37.444000] BUG: Bad page state in process systemd-sysv-ge  pfn:5d92d
+[   37.444000] page:9ff325a0 refcount:0 mapcount:2 mapping:(ptrval) index:0x0
+[   37.444000] mapping->a_ops:0x0
+[   37.444000] flags: 0x5c000000()
+[   37.444000] raw: 5c000000 00000100 00000122 9f403580 00000000 00000000 00000001 00000000
+[   37.444000] page dumped because: non-NULL mapping
+[   37.444000] Modules linked in:
+[   37.444000] CPU: 0 PID: 582 Comm: systemd-sysv-ge Tainted: G    B             5.8.0-rc5-00028-g7bc20f6563b4 #7
+[   37.444000] Stack: (0x9d955cec to 0x9d956000)
+[   37.444000] 5ce0: 
+[   37.444000]          
+[   37.444000]          
+[   37.444000]          
+[   37.444000] 8025dc12 
+[   37.444000] 9d955d00 
+[   37.444000] 8069bf34 
+[   37.444000] 9fff4000 
+[   37.444000] 805a6ed0 
+[   37.444000] 
+[   37.444000] 5d00: 
+[   37.444000] 800d7706 
+[   37.444000] 9d955d0c 
+[   37.444000] 9ff325a0 
+[   37.444000] 8026f2fc 
+[   37.444000] 800d7794 
+[   37.444000] 9d955d30 
+[   37.444000] 9fff400c 
+[   37.444000] 00000006 
+[   37.444000] 
+[   37.444000] 5d20: 
+[   37.444000] 9fff4010 
+[   37.444000] 00000002 
+[   37.444000] 9fff4000 
+[   37.444000] 00000019 
+[   37.444000] 800d826e 
+[   37.444000] 9d955d38 
+[   37.444000] 9ff29000 
+[   37.444000] 00000000 
+[   37.444000] 
+[   37.444000] 5d40: 
+[   37.444000] 00000000 
+[   37.444000] 00000122 
+[   37.444000] 00000100 
+[   37.444000] 80650b5c 
+[   37.444000] 8069c07c 
+[   37.444000] 00000000 
+[   37.444000] 0005d480 
+[   37.444000] 80650990 
+[   37.444000] 
+[   37.444000] 5d60: 
+[   37.444000] 9d955d64 
+[   37.444000] 9ff39664 
+[   37.444000] 9ff3af84 
+[   37.444000] e84bb10d 
+[   37.444000] 800d8668 
+[   37.444000] 9d955d90 
+[   37.444000] 0000000a 
+[   37.444000] 00000000 
+[   37.444000] 
+[   37.444000] 5d80: 
+[   37.444000] 800d85fc 
+[   37.444000] 00000000 
+[   37.444000] 9d955dc0 
+[   37.444000] 9ff321e0 
+[   37.444000] 800d953a 
+[   37.444000] 9d955d98 
+[   37.444000] 9ff32620 
+[   37.444000] 800b098e 
+[   37.444000] 
+[   37.444000] 5da0: 
+[   37.444000] 9d955dbc 
+[   37.444000] 00000000 
+[   37.444000] 0000001f 
+[   37.444000] 0000021a 
+[   37.444000] 9f648874 
+[   37.444000] 0000021a 
+[   37.444000] 9ff325a0 
+[   37.444000] 80650990 
+[   37.444000] 
+[   37.444000] 5dc0: 
+[   37.444000] 9ff325a4 
+[   37.444000] 9ff3fba4 
+[   37.444000] e84bb10d 
+[   37.444000] 800de48c 
+[   37.444000] 9d955dec 
+[   37.444000] 00000400 
+[   37.444000] 0000021a 
+[   37.444000] 00080000 
+[   37.444000] 
+[   37.444000] 5de0: 
+[   37.444000] 9f64800c 
+[   37.444000] 9f648874 
+[   37.444000] 9ff325a0 
+[   37.444000] 9fff53c0 
+[   37.444000] 800cf856 
+[   37.444000] 9d955e10 
+[   37.444000] 8062124c 
+[   37.444000] 9d955ec4 
+[   37.444000] 
+[   37.444000] 5e00: 
+[   37.444000] 9d955eac 
+[   37.444000] 800de444 
+[   37.444000] 00000000 
+[   37.444000] 9f648000 
+[   37.444000] 800cfa9e 
+[   37.444000] 9d955e2c 
+[   37.444000] 8062124c 
+[   37.444000] 9d955e50 
+[   37.444000] 
+[   37.444000] 5e20: 
+[   37.444000] 800d91c0 
+[   37.444000] 9d955eac 
+[   37.444000] 9d918140 
+[   37.444000] 80002f38 
+[   37.444000] 800c6366 
+[   37.444000] 9d955e40 
+[   37.444000] 7bf25000 
+[   37.444000] 7be00000 
+[   37.444000] 
+[   37.444000] 5e40: 
+[   37.444000] ffffffff 
+[   37.444000] 00000000 
+[   37.444000] 00000000 
+[   37.444000] 7bf24fff 
+[   37.444000] 7bf25000 
+[   37.444000] 7bf24fff 
+[   37.444000] 800c6456 
+[   37.444000] 9d955e78 
+[   37.444000] 
+[   37.444000] 5e60: 
+[   37.444000] 9d93daa0 
+[   37.444000] 9d93daa0 
+[   37.444000] 9d93daa0 
+[   37.444000] 800d2d88 
+[   37.444000] 800cc334 
+[   37.444000] 00400000 
+[   37.444000] 00000000 
+[   37.444000] 00000000 
+[   37.444000] 
+[   37.444000] 5e80: 
+[   37.444000] 00000000 
+[   37.444000] 9d955eac 
+[   37.444000] 7bf04000 
+[   37.444000] e84bb10d 
+[   37.444000] 800cda8e 
+[   37.444000] 9d955eac 
+[   37.444000] 9d955eb4 
+[   37.444000] 800cbd44 
+[   37.444000] 
+[   37.444000] 5ea0: 
+[   37.444000] 00100000 
+[   37.444000] 00000000 
+[   37.444000] 9d918140 
+[   37.444000] 9d8de6a0 
+[   37.444000] ffffffff 
+[   37.444000] ffffffff 
+[   37.444000] 00000001 
+[   37.444000] 00000002 
+[   37.444000] 
+[   37.444000] 5ec0: 
+[   37.444000] 9f648000 
+[   37.444000] 9f69d000 
+[   37.444000] 00000000 
+[   37.444000] 00000008 
+[   37.444000] 9fb8ce60 
+[   37.444000] 9fb8ce40 
+[   37.444000] 9fb8ce20 
+[   37.444000] 9fb8ce00 
+[   37.444000] 
+[   37.444000] 5ee0: 
+[   37.444000] 9fb93120 
+[   37.444000] 9fb93140 
+[   37.444000] 9fb93160 
+[   37.444000] 9fb93180 
+[   37.444000] e84bb10d 
+[   37.444000] 80011066 
+[   37.444000] 9d955f14 
+[   37.444000] 00000000 
+[   37.444000] 
+[   37.444000] 5f00: 
+[   37.444000] 9d926f9c 
+[   37.444000] 00000000 
+[   37.444000] 9d8de6ec 
+[   37.444000] 00000000 
+[   37.444000] 9d8de6a0 
+[   37.444000] 80015940 
+[   37.444000] 9d955f24 
+[   37.444000] 9d8de6a0 
+[   37.444000] 
+[   37.444000] 5f20: 
+[   37.444000] 9d926ce0 
+[   37.444000] 00000000 
+[   37.444000] 00000000 
+[   37.444000] 00000000 
+[   37.444000] 9d92719c 
+[   37.444000] 00000000 
+[   37.444000] 9d926f5c 
+[   37.444000] 00000000 
+[   37.444000] 
+[   37.444000] 5f40: 
+[   37.444000] 00000000 
+[   37.444000] 9d9270dc 
+[   37.444000] 9d955f64 
+[   37.444000] 9d955fe4 
+[   37.444000] 9d8de6a0 
+[   37.444000] 00000000 
+[   37.444000] e84bb10d 
+[   37.444000] 80016c56 
+[   37.444000] 
+[   37.444000] 5f60: 
+[   37.444000] 9d955f7c 
+[   37.444000] 00000000 
+[   37.444000] 296de284 
+[   37.444000] 00000000 
+[   37.444000] 00000071 
+[   37.444000] 9d892660 
+[   37.444000] 00000000 
+[   37.444000] 80016cca 
+[   37.444000] 
+[   37.444000] 5f80: 
+[   37.444000] 9d955f90 
+[   37.444000] 00000071 
+[   37.444000] 00000100 
+[   37.444000] 80016cbc 
+[   37.444000] 8000727e 
+[   37.444000] 00000000 
+[   37.444000] 00000010 
+[   37.444000] 00000000 
+[   37.444000] 
+[   37.444000] 5fa0: 
+[   37.444000] fffff000 
+[   37.444000] 00000010 
+[   37.444000] 00000000 
+[   37.444000] fffff000 
+[   37.444000] 000000fc 
+[   37.444000] 00000000 
+[   37.444000] 00000000 
+[   37.444000] 2957bd38 
+[   37.444000] 
+[   37.444000] 5fc0: 
+[   37.444000] 000000fc 
+[   37.444000] 296de264 
+[   37.444000] 296de264 
+[   37.444000] 296de388 
+[   37.444000] 00000002 
+[   37.444000] 296de284 
+[   37.444000] 00000000 
+[   37.444000] 00000000 
+[   37.444000] 
+[   37.444000] 5fe0: 
+[   37.444000] 7bf24d30 
+[   37.444000] 29630ba4 
+[   37.444000] 295c8490 
+[   37.444000] 00000101 
+[   37.444000] 2957bd28 
+[   37.444000] 00000002 
+[   37.444000] 00000000 
+[   37.444000] 00000044 
+[   37.444000] 
+[   37.444000] 
+[   37.444000] Call trace:
+[   37.444000]  [<(ptrval)>] dump_stack+0x1a/0x30
+[   37.444000]  [<(ptrval)>] bad_page+0x9e/0x104
+[   37.444000]  [<(ptrval)>] xas_store+0x0/0x4c0
+[   37.444000]  [<(ptrval)>] check_free_page_bad+0x28/0x74
+[   37.444000]  [<(ptrval)>] free_pcppages_bulk+0x13e/0x388
+[   37.444000]  [<(ptrval)>] free_unref_page_commit.isra.0+0x6c/0x88
+[   37.444000]  [<(ptrval)>] free_unref_page_commit.isra.0+0x0/0x88
+[   37.444000]  [<(ptrval)>] free_unref_page_list+0xca/0x138
+[   37.444000]  [<(ptrval)>] release_pages+0x20a/0x2e4
+[   37.444000]  [<(ptrval)>] free_pages_and_swap_cache+0x48/0xd4
+[   37.444000]  [<(ptrval)>] tlb_batch_pages_flush+0x2a/0x50
+[   37.444000]  [<(ptrval)>] free_pages_and_swap_cache+0x0/0xd4
+[   37.444000]  [<(ptrval)>] tlb_finish_mmu+0x52/0x128
+[   37.444000]  [<(ptrval)>] free_pages+0x0/0x1c
+[   37.444000]  [<(ptrval)>] arch_local_irq_restore+0x0/0x2c
+[   37.444000]  [<(ptrval)>] free_pgd_range+0x292/0x2c8
+[   37.444000]  [<(ptrval)>] free_pgtables+0xba/0xe4
+[   37.444000]  [<(ptrval)>] unlink_anon_vmas+0x0/0x150
+[   37.444000]  [<(ptrval)>] unlink_file_vma+0x0/0x58
+[   37.444000]  [<(ptrval)>] exit_mmap+0xaa/0x1a4
+[   37.444000]  [<(ptrval)>] remove_vma+0x0/0x50
+[   37.444000]  [<(ptrval)>] mmput+0x3a/0xd4
+[   37.444000]  [<(ptrval)>] do_exit+0x278/0x984
+[   37.444000]  [<(ptrval)>] do_group_exit+0x2e/0x94
+[   37.444000]  [<(ptrval)>] sys_exit_group+0xe/0x14
+[   37.444000]  [<(ptrval)>] sys_exit_group+0x0/0x14
+[   37.444000]  [<(ptrval)>] syscall_call+0x18/0x1e
+[   37.444000] 
+[   37.444000] BUG: Bad page state in process systemd-sysv-ge  pfn:5d91e
+[   37.444000] page:9ff323c0 refcount:0 mapcount:1026 mapping:(ptrval) index:0x0
+[   37.444000] mapping->a_ops:0x0
+[   37.444000] flags: 0x5c000000()
+[   37.444000] raw: 5c000000 00000100 00000122 9f403580 00000000 00000000 00000401 00000000
+[   37.444000] page dumped because: non-NULL mapping
+[   37.444000] Modules linked in:
+[   37.444000] CPU: 0 PID: 582 Comm: systemd-sysv-ge Tainted: G    B             5.8.0-rc5-00028-g7bc20f6563b4 #7
+[   37.444000] Stack: (0x9d955cec to 0x9d956000)
+[   37.444000] 5ce0: 
+[   37.444000]          
+[   37.444000]          
+[   37.444000]          
+[   37.444000] 8025dc12 
+[   37.444000] 9d955d00 
+[   37.444000] 8069bf34 
+[   37.444000] 9fff4000 
+[   37.444000] 805a6ed0 
+[   37.444000] 
+[   37.444000] 5d00: 
+[   37.444000] 800d7706 
+[   37.444000] 9d955d0c 
+[   37.444000] 9ff323c0 
+[   37.444000] 8026f2fc 
+[   37.444000] 800d7794 
+[   37.444000] 9d955d30 
+[   37.444000] 9fff400c 
+[   37.444000] 00000003 
+[   37.444000] 
+[   37.444000] 5d20: 
+[   37.444000] 9fff4010 
+[   37.444000] 00000002 
+[   37.444000] 9fff4000 
+[   37.444000] 0000001b 
+[   37.444000] 800d826e 
+[   37.444000] 9d955d38 
+[   37.444000] 9ff29000 
+[   37.444000] 00000000 
+[   37.444000] 
+[   37.444000] 5d40: 
+[   37.444000] 00000000 
+[   37.444000] 00000122 
+[   37.444000] 00000100 
+[   37.444000] 80650b5c 
+[   37.444000] 8069c07c 
+[   37.444000] 00000000 
+[   37.444000] 0005d480 
+[   37.444000] 80650990 
+[   37.444000] 
+[   37.444000] 5d60: 
+[   37.444000] 9d955d64 
+[   37.444000] 9ff39664 
+[   37.444000] 9ff3af64 
+[   37.444000] e84bb10d 
+[   37.444000] 800d8668 
+[   37.444000] 9d955d90 
+[   37.444000] 0000000a 
+[   37.444000] 00000000 
+[   37.444000] 
+[   37.444000] 5d80: 
+[   37.444000] 800d85fc 
+[   37.444000] 00000000 
+[   37.444000] 9d955dc0 
+[   37.444000] 9ff321e0 
+[   37.444000] 800d953a 
+[   37.444000] 9d955d98 
+[   37.444000] 9ff32620 
+[   37.444000] 800b098e 
+[   37.444000] 
+[   37.444000] 5da0: 
+[   37.444000] 9d955dbc 
+[   37.444000] 00000000 
+[   37.444000] 0000001f 
+[   37.444000] 0000021a 
+[   37.444000] 9f648874 
+[   37.444000] 0000021a 
+[   37.444000] 9ff325a0 
+[   37.444000] 80650990 
+[   37.444000] 
+[   37.444000] 5dc0: 
+[   37.444000] 9ff325a4 
+[   37.444000] 9ff3fba4 
+[   37.444000] e84bb10d 
+[   37.444000] 800de48c 
+[   37.444000] 9d955dec 
+[   37.444000] 00000400 
+[   37.444000] 0000021a 
+[   37.444000] 00080000 
+[   37.444000] 
+[   37.444000] 5de0: 
+[   37.444000] 9f64800c 
+[   37.444000] 9f648874 
+[   37.444000] 9ff325a0 
+[   37.444000] 9fff53c0 
+[   37.444000] 800cf856 
+[   37.444000] 9d955e10 
+[   37.444000] 8062124c 
+[   37.444000] 9d955ec4 
+[   37.444000] 
+[   37.444000] 5e00: 
+[   37.444000] 9d955eac 
+[   37.444000] 800de444 
+[   37.444000] 00000000 
+[   37.444000] 9f648000 
+[   37.444000] 800cfa9e 
+[   37.444000] 9d955e2c 
+[   37.444000] 8062124c 
+[   37.444000] 9d955e50 
+[   37.444000] 
+[   37.444000] 5e20: 
+[   37.444000] 800d91c0 
+[   37.444000] 9d955eac 
+[   37.444000] 9d918140 
+[   37.444000] 80002f38 
+[   37.444000] 800c6366 
+[   37.444000] 9d955e40 
+[   37.444000] 7bf25000 
+[   37.444000] 7be00000 
+[   37.444000] 
+[   37.444000] 5e40: 
+[   37.444000] ffffffff 
+[   37.444000] 00000000 
+[   37.444000] 00000000 
+[   37.444000] 7bf24fff 
+[   37.444000] 7bf25000 
+[   37.444000] 7bf24fff 
+[   37.444000] 800c6456 
+[   37.444000] 9d955e78 
+[   37.444000] 
+[   37.444000] 5e60: 
+[   37.444000] 9d93daa0 
+[   37.444000] 9d93daa0 
+[   37.444000] 9d93daa0 
+[   37.444000] 800d2d88 
+[   37.444000] 800cc334 
+[   37.444000] 00400000 
+[   37.444000] 00000000 
+[   37.444000] 00000000 
+[   37.444000] 
+[   37.444000] 5e80: 
+[   37.444000] 00000000 
+[   37.444000] 9d955eac 
+[   37.444000] 7bf04000 
+[   37.444000] e84bb10d 
+[   37.444000] 800cda8e 
+[   37.444000] 9d955eac 
+[   37.444000] 9d955eb4 
+[   37.444000] 800cbd44 
+[   37.444000] 
+[   37.444000] 5ea0: 
+[   37.444000] 00100000 
+[   37.444000] 00000000 
+[   37.444000] 9d918140 
+[   37.444000] 9d8de6a0 
+[   37.444000] ffffffff 
+[   37.444000] ffffffff 
+[   37.444000] 00000001 
+[   37.444000] 00000002 
+[   37.444000] 
+[   37.444000] 5ec0: 
+[   37.444000] 9f648000 
+[   37.444000] 9f69d000 
+[   37.444000] 00000000 
+[   37.444000] 00000008 
+[   37.444000] 9fb8ce60 
+[   37.444000] 9fb8ce40 
+[   37.444000] 9fb8ce20 
+[   37.444000] 9fb8ce00 
+[   37.444000] 
+[   37.444000] 5ee0: 
+[   37.444000] 9fb93120 
+[   37.444000] 9fb93140 
+[   37.444000] 9fb93160 
+[   37.444000] 9fb93180 
+[   37.444000] e84bb10d 
+[   37.444000] 80011066 
+[   37.444000] 9d955f14 
+[   37.444000] 00000000 
+[   37.444000] 
+[   37.444000] 5f00: 
+[   37.444000] 9d926f9c 
+[   37.444000] 00000000 
+[   37.444000] 9d8de6ec 
+[   37.444000] 00000000 
+[   37.444000] 9d8de6a0 
+[   37.444000] 80015940 
+[   37.444000] 9d955f24 
+[   37.444000] 9d8de6a0 
+[   37.444000] 
+[   37.444000] 5f20: 
+[   37.444000] 9d926ce0 
+[   37.444000] 00000000 
+[   37.444000] 00000000 
+[   37.444000] 00000000 
+[   37.444000] 9d92719c 
+[   37.444000] 00000000 
+[   37.444000] 9d926f5c 
+[   37.444000] 00000000 
+[   37.444000] 
+[   37.444000] 5f40: 
+[   37.444000] 00000000 
+[   37.444000] 9d9270dc 
+[   37.444000] 9d955f64 
+[   37.444000] 9d955fe4 
+[   37.444000] 9d8de6a0 
+[   37.444000] 00000000 
+[   37.444000] e84bb10d 
+[   37.444000] 80016c56 
+[   37.444000] 
+[   37.444000] 5f60: 
+[   37.444000] 9d955f7c 
+[   37.444000] 00000000 
+[   37.444000] 296de284 
+[   37.444000] 00000000 
+[   37.444000] 00000071 
+[   37.444000] 9d892660 
+[   37.444000] 00000000 
+[   37.444000] 80016cca 
+[   37.444000] 
+[   37.444000] 5f80: 
+[   37.444000] 9d955f90 
+[   37.444000] 00000071 
+[   37.444000] 00000100 
+[   37.444000] 80016cbc 
+[   37.444000] 8000727e 
+[   37.444000] 00000000 
+[   37.444000] 00000010 
+[   37.444000] 00000000 
+[   37.444000] 
+[   37.444000] 5fa0: 
+[   37.444000] fffff000 
+[   37.444000] 00000010 
+[   37.444000] 00000000 
+[   37.444000] fffff000 
+[   37.444000] 000000fc 
+[   37.444000] 00000000 
+[   37.444000] 00000000 
+[   37.444000] 2957bd38 
+[   37.444000] 
+[   37.444000] 5fc0: 
+[   37.444000] 000000fc 
+[   37.444000] 296de264 
+[   37.444000] 296de264 
+[   37.444000] 296de388 
+[   37.444000] 00000002 
+[   37.444000] 296de284 
+[   37.444000] 00000000 
+[   37.444000] 00000000 
+[   37.444000] 
+[   37.444000] 5fe0: 
+[   37.444000] 7bf24d30 
+[   37.444000] 29630ba4 
+[   37.444000] 295c8490 
+[   37.444000] 00000101 
+[   37.444000] 2957bd28 
+[   37.444000] 00000002 
+[   37.444000] 00000000 
+[   37.444000] 00000044 
+[   37.444000] 
+[   37.444000] 
+[   37.444000] Call trace:
+[   37.444000]  [<(ptrval)>] dump_stack+0x1a/0x30
+[   37.444000]  [<(ptrval)>] bad_page+0x9e/0x104
+[   37.444000]  [<(ptrval)>] xas_store+0x0/0x4c0
+[   37.444000]  [<(ptrval)>] check_free_page_bad+0x28/0x74
+[   37.444000]  [<(ptrval)>] free_pcppages_bulk+0x13e/0x388
+[   37.444000]  [<(ptrval)>] free_unref_page_commit.isra.0+0x6c/0x88
+[   37.444000]  [<(ptrval)>] free_unref_page_commit.isra.0+0x0/0x88
+[   37.444000]  [<(ptrval)>] free_unref_page_list+0xca/0x138
+[   37.444000]  [<(ptrval)>] release_pages+0x20a/0x2e4
+[   37.444000]  [<(ptrval)>] free_pages_and_swap_cache+0x48/0xd4
+[   37.444000]  [<(ptrval)>] tlb_batch_pages_flush+0x2a/0x50
+[   37.444000]  [<(ptrval)>] free_pages_and_swap_cache+0x0/0xd4
+[   37.444000]  [<(ptrval)>] tlb_finish_mmu+0x52/0x128
+[   37.444000]  [<(ptrval)>] free_pages+0x0/0x1c
+[   37.444000]  [<(ptrval)>] arch_local_irq_restore+0x0/0x2c
+[   37.444000]  [<(ptrval)>] free_pgd_range+0x292/0x2c8
+[   37.444000]  [<(ptrval)>] free_pgtables+0xba/0xe4
+[   37.444000]  [<(ptrval)>] unlink_anon_vmas+0x0/0x150
+[   37.444000]  [<(ptrval)>] unlink_file_vma+0x0/0x58
+[   37.444000]  [<(ptrval)>] exit_mmap+0xaa/0x1a4
+[   37.444000]  [<(ptrval)>] remove_vma+0x0/0x50
+[   37.444000]  [<(ptrval)>] mmput+0x3a/0xd4
+[   37.444000]  [<(ptrval)>] do_exit+0x278/0x984
+[   37.444000]  [<(ptrval)>] do_group_exit+0x2e/0x94
+[   37.444000]  [<(ptrval)>] sys_exit_group+0xe/0x14
+[   37.444000]  [<(ptrval)>] sys_exit_group+0x0/0x14
+[   37.444000]  [<(ptrval)>] syscall_call+0x18/0x1e
+[   37.444000] 
+[   37.444000] BUG: Bad page state in process systemd-sysv-ge  pfn:5d90e
+[   37.444000] page:9ff321c0 refcount:0 mapcount:2 mapping:(ptrval) index:0x0
+[   37.444000] mapping->a_ops:0x0
+[   37.444000] flags: 0x5c000000()
+[   37.444000] raw: 5c000000 00000100 00000122 9f403580 00000000 00000000 00000001 00000000
+[   37.444000] page dumped because: non-NULL mapping
+[   37.444000] Modules linked in:
+[   37.444000] CPU: 0 PID: 582 Comm: systemd-sysv-ge Tainted: G    B             5.8.0-rc5-00028-g7bc20f6563b4 #7
+[   37.444000] Stack: (0x9d955cec to 0x9d956000)
+[   37.444000] 5ce0: 
+[   37.444000]          
+[   37.444000]          
+[   37.444000]          
+[   37.444000] 8025dc12 
+[   37.444000] 9d955d00 
+[   37.444000] 8069bf34 
+[   37.444000] 9fff4000 
+[   37.444000] 805a6ed0 
+[   37.444000] 
+[   37.444000] 5d00: 
+[   37.444000] 800d7706 
+[   37.444000] 9d955d0c 
+[   37.444000] 9ff321c0 
+[   37.444000] 8026f2fc 
+[   37.444000] 800d7794 
+[   37.444000] 9d955d30 
+[   37.444000] 9fff400c 
+[   37.444000] 00000002 
+[   37.444000] 
+[   37.444000] 5d20: 
+[   37.444000] 9fff4010 
+[   37.444000] 00000001 
+[   37.444000] 9fff4000 
+[   37.444000] 0000001b 
+[   37.444000] 800d826e 
+[   37.444000] 9d955d38 
+[   37.444000] 9ff29000 
+[   37.444000] 00000000 
+[   37.444000] 
+[   37.444000] 5d40: 
+[   37.444000] 00000000 
+[   37.444000] 00000122 
+[   37.444000] 00000100 
+[   37.444000] 80650b5c 
+[   37.444000] 8069c07c 
+[   37.444000] 00000000 
+[   37.444000] 0005d480 
+[   37.444000] 80650990 
+[   37.444000] 
+[   37.444000] 5d60: 
+[   37.444000] 9d955d64 
+[   37.444000] 9ff39664 
+[   37.444000] 9ff3af64 
+[   37.444000] e84bb10d 
+[   37.444000] 800d8668 
+[   37.444000] 9d955d90 
+[   37.444000] 0000000a 
+[   37.444000] 00000000 
+[   37.444000] 
+[   37.444000] 5d80: 
+[   37.444000] 800d85fc 
+[   37.444000] 00000000 
+[   37.444000] 9d955dc0 
+[   37.444000] 9ff321e0 
+[   37.444000] 800d953a 
+[   37.444000] 9d955d98 
+[   37.444000] 9ff32620 
+[   37.444000] 800b098e 
+[   37.444000] 
+[   37.444000] 5da0: 
+[   37.444000] 9d955dbc 
+[   37.444000] 00000000 
+[   37.444000] 0000001f 
+[   37.444000] 0000021a 
+[   37.444000] 9f648874 
+[   37.444000] 0000021a 
+[   37.444000] 9ff325a0 
+[   37.444000] 80650990 
+[   37.444000] 
+[   37.444000] 5dc0: 
+[   37.444000] 9ff325a4 
+[   37.444000] 9ff3fba4 
+[   37.444000] e84bb10d 
+[   37.444000] 800de48c 
+[   37.444000] 9d955dec 
+[   37.444000] 00000400 
+[   37.444000] 0000021a 
+[   37.444000] 00080000 
+[   37.444000] 
+[   37.444000] 5de0: 
+[   37.444000] 9f64800c 
+[   37.444000] 9f648874 
+[   37.444000] 9ff325a0 
+[   37.444000] 9fff53c0 
+[   37.444000] 800cf856 
+[   37.444000] 9d955e10 
+[   37.444000] 8062124c 
+[   37.444000] 9d955ec4 
+[   37.444000] 
+[   37.444000] 5e00: 
+[   37.444000] 9d955eac 
+[   37.444000] 800de444 
+[   37.444000] 00000000 
+[   37.444000] 9f648000 
+[   37.444000] 800cfa9e 
+[   37.444000] 9d955e2c 
+[   37.444000] 8062124c 
+[   37.444000] 9d955e50 
+[   37.444000] 
+[   37.444000] 5e20: 
+[   37.444000] 800d91c0 
+[   37.444000] 9d955eac 
+[   37.444000] 9d918140 
+[   37.444000] 80002f38 
+[   37.444000] 800c6366 
+[   37.444000] 9d955e40 
+[   37.444000] 7bf25000 
+[   37.444000] 7be00000 
+[   37.444000] 
+[   37.444000] 5e40: 
+[   37.444000] ffffffff 
+[   37.444000] 00000000 
+[   37.444000] 00000000 
+[   37.444000] 7bf24fff 
+[   37.444000] 7bf25000 
+[   37.444000] 7bf24fff 
+[   37.444000] 800c6456 
+[   37.444000] 9d955e78 
+[   37.444000] 
+[   37.444000] 5e60: 
+[   37.444000] 9d93daa0 
+[   37.444000] 9d93daa0 
+[   37.444000] 9d93daa0 
+[   37.444000] 800d2d88 
+[   37.444000] 800cc334 
+[   37.444000] 00400000 
+[   37.444000] 00000000 
+[   37.444000] 00000000 
+[   37.444000] 
+[   37.444000] 5e80: 
+[   37.444000] 00000000 
+[   37.444000] 9d955eac 
+[   37.444000] 7bf04000 
+[   37.444000] e84bb10d 
+[   37.444000] 800cda8e 
+[   37.444000] 9d955eac 
+[   37.444000] 9d955eb4 
+[   37.444000] 800cbd44 
+[   37.444000] 
+[   37.444000] 5ea0: 
+[   37.444000] 00100000 
+[   37.444000] 00000000 
+[   37.444000] 9d918140 
+[   37.444000] 9d8de6a0 
+[   37.444000] ffffffff 
+[   37.444000] ffffffff 
+[   37.444000] 00000001 
+[   37.444000] 00000002 
+[   37.444000] 
+[   37.444000] 5ec0: 
+[   37.444000] 9f648000 
+[   37.444000] 9f69d000 
+[   37.444000] 00000000 
+[   37.444000] 00000008 
+[   37.444000] 9fb8ce60 
+[   37.444000] 9fb8ce40 
+[   37.444000] 9fb8ce20 
+[   37.444000] 9fb8ce00 
+[   37.444000] 
+[   37.444000] 5ee0: 
+[   37.444000] 9fb93120 
+[   37.444000] 9fb93140 
+[   37.444000] 9fb93160 
+[   37.444000] 9fb93180 
+[   37.444000] e84bb10d 
+[   37.444000] 80011066 
+[   37.444000] 9d955f14 
+[   37.444000] 00000000 
+[   37.444000] 
+[   37.444000] 5f00: 
+[   37.444000] 9d926f9c 
+[   37.444000] 00000000 
+[   37.444000] 9d8de6ec 
+[   37.444000] 00000000 
+[   37.444000] 9d8de6a0 
+[   37.444000] 80015940 
+[   37.444000] 9d955f24 
+[   37.444000] 9d8de6a0 
+[   37.444000] 
+[   37.444000] 5f20: 
+[   37.444000] 9d926ce0 
+[   37.444000] 00000000 
+[   37.444000] 00000000 
+[   37.444000] 00000000 
+[   37.444000] 9d92719c 
+[   37.444000] 00000000 
+[   37.444000] 9d926f5c 
+[   37.444000] 00000000 
+[   37.444000] 
+[   37.444000] 5f40: 
+[   37.444000] 00000000 
+[   37.444000] 9d9270dc 
+[   37.444000] 9d955f64 
+[   37.444000] 9d955fe4 
+[   37.444000] 9d8de6a0 
+[   37.444000] 00000000 
+[   37.444000] e84bb10d 
+[   37.444000] 80016c56 
+[   37.444000] 
+[   37.444000] 5f60: 
+[   37.444000] 9d955f7c 
+[   37.444000] 00000000 
+[   37.444000] 296de284 
+[   37.444000] 00000000 
+[   37.444000] 00000071 
+[   37.444000] 9d892660 
+[   37.444000] 00000000 
+[   37.444000] 80016cca 
+[   37.444000] 
+[   37.444000] 5f80: 
+[   37.444000] 9d955f90 
+[   37.444000] 00000071 
+[   37.444000] 00000100 
+[   37.444000] 80016cbc 
+[   37.444000] 8000727e 
+[   37.444000] 00000000 
+[   37.444000] 00000010 
+[   37.444000] 00000000 
+[   37.444000] 
+[   37.444000] 5fa0: 
+[   37.444000] fffff000 
+[   37.444000] 00000010 
+[   37.444000] 00000000 
+[   37.444000] fffff000 
+[   37.444000] 000000fc 
+[   37.444000] 00000000 
+[   37.444000] 00000000 
+[   37.444000] 2957bd38 
+[   37.444000] 
+[   37.444000] 5fc0: 
+[   37.444000] 000000fc 
+[   37.444000] 296de264 
+[   37.444000] 296de264 
+[   37.444000] 296de388 
+[   37.444000] 00000002 
+[   37.444000] 296de284 
+[   37.444000] 00000000 
+[   37.444000] 00000000 
+[   37.444000] 
+[   37.444000] 5fe0: 
+[   37.444000] 7bf24d30 
+[   37.444000] 29630ba4 
+[   37.444000] 295c8490 
+[   37.444000] 00000101 
+[   37.444000] 2957bd28 
+[   37.444000] 00000002 
+[   37.444000] 00000000 
+[   37.444000] 00000044 
+[   37.444000] 
+[   37.444000] 
+[   37.444000] Call trace:
+[   37.444000]  [<(ptrval)>] dump_stack+0x1a/0x30
+[   37.444000]  [<(ptrval)>] bad_page+0x9e/0x104
+[   37.444000]  [<(ptrval)>] xas_store+0x0/0x4c0
+[   37.444000]  [<(ptrval)>] check_free_page_bad+0x28/0x74
+[   37.444000]  [<(ptrval)>] free_pcppages_bulk+0x13e/0x388
+[   37.444000]  [<(ptrval)>] free_unref_page_commit.isra.0+0x6c/0x88
+[   37.444000]  [<(ptrval)>] free_unref_page_commit.isra.0+0x0/0x88
+[   37.444000]  [<(ptrval)>] free_unref_page_list+0xca/0x138
+[   37.444000]  [<(ptrval)>] release_pages+0x20a/0x2e4
+[   37.444000]  [<(ptrval)>] free_pages_and_swap_cache+0x48/0xd4
+[   37.444000]  [<(ptrval)>] tlb_batch_pages_flush+0x2a/0x50
+[   37.444000]  [<(ptrval)>] free_pages_and_swap_cache+0x0/0xd4
+[   37.444000]  [<(ptrval)>] tlb_finish_mmu+0x52/0x128
+[   37.444000]  [<(ptrval)>] free_pages+0x0/0x1c
+[   37.444000]  [<(ptrval)>] arch_local_irq_restore+0x0/0x2c
+[   37.444000]  [<(ptrval)>] free_pgd_range+0x292/0x2c8
+[   37.444000]  [<(ptrval)>] free_pgtables+0xba/0xe4
+[   37.444000]  [<(ptrval)>] unlink_anon_vmas+0x0/0x150
+[   37.444000]  [<(ptrval)>] unlink_file_vma+0x0/0x58
+[   37.444000]  [<(ptrval)>] exit_mmap+0xaa/0x1a4
+[   37.444000]  [<(ptrval)>] remove_vma+0x0/0x50
+[   37.444000]  [<(ptrval)>] mmput+0x3a/0xd4
+[   37.444000]  [<(ptrval)>] do_exit+0x278/0x984
+[   37.444000]  [<(ptrval)>] do_group_exit+0x2e/0x94
+[   37.444000]  [<(ptrval)>] sys_exit_group+0xe/0x14
+[   37.444000]  [<(ptrval)>] sys_exit_group+0x0/0x14
+[   37.444000]  [<(ptrval)>] syscall_call+0x18/0x1e
+[   37.444000] 
+[   39.712000] BUG: Bad page state in process systemd-run-gen  pfn:5d963
+[   39.712000] page:9ff32c60 refcount:0 mapcount:2 mapping:(ptrval) index:0x0
+[   39.712000] mapping->a_ops:0x0
+[   39.712000] flags: 0x5c000000()
+[   39.712000] raw: 5c000000 00000100 00000122 9f403580 00000000 00000000 00000001 00000000
+[   39.712000] page dumped because: non-NULL mapping
+[   39.712000] Modules linked in:
+[   39.712000] CPU: 0 PID: 580 Comm: systemd-run-gen Tainted: G    B             5.8.0-rc5-00028-g7bc20f6563b4 #7
+[   39.712000] Stack: (0x9d929cec to 0x9d92a000)
+[   39.712000] 9ce0: 
+[   39.712000]          
+[   39.712000]          
+[   39.712000]          
+[   39.712000] 8025dc12 
+[   39.712000] 9d929d00 
+[   39.712000] 8069bf34 
+[   39.712000] 9fff4000 
+[   39.712000] 805a6ed0 
+[   39.712000] 
+[   39.712000] 9d00: 
+[   39.712000] 800d7706 
+[   39.712000] 9d929d0c 
+[   39.712000] 9ff32c60 
+[   39.712000] 9d929d10 
+[   39.712000] 800d7794 
+[   39.712000] 9d929d30 
+[   39.712000] 9fff400c 
+[   39.712000] 0000001e 
+[   39.712000] 
+[   39.712000] 9d20: 
+[   39.712000] 9fff4010 
+[   39.712000] 00000002 
+[   39.712000] 9fff4000 
+[   39.712000] 00000001 
+[   39.712000] 800d826e 
+[   39.712000] 9d929d38 
+[   39.712000] 9ff39540 
+[   39.712000] 00000000 
+[   39.712000] 
+[   39.712000] 9d40: 
+[   39.712000] 00000000 
+[   39.712000] 00000122 
+[   39.712000] 00000100 
+[   39.712000] 80650b5c 
+[   39.712000] 8069c07c 
+[   39.712000] 00000000 
+[   39.712000] 0005dcaa 
+[   39.712000] 80650990 
+[   39.712000] 
+[   39.712000] 9d60: 
+[   39.712000] 9d929d64 
+[   39.712000] 9ff39544 
+[   39.712000] 9ff39544 
+[   39.712000] 0cc2e822 
+[   39.712000] 800d8668 
+[   39.712000] 9d929d90 
+[   39.712000] 00000002 
+[   39.712000] 00000000 
+[   39.712000] 
+[   39.712000] 9d80: 
+[   39.712000] 800d85fc 
+[   39.712000] 00000000 
+[   39.712000] 9d929dc0 
+[   39.712000] 9ff323e0 
+[   39.712000] 800d953a 
+[   39.712000] 9d929d98 
+[   39.712000] 9ff32ca0 
+[   39.712000] 800b098e 
+[   39.712000] 
+[   39.712000] 9da0: 
+[   39.712000] 9d929dbc 
+[   39.712000] 00000000 
+[   39.712000] 00000014 
+[   39.712000] 000001cb 
+[
 
-Signed-off-by: Bhanu Prakash Maiya <bhanumaiya@chromium.org>
-Change-Id: Icfeab15fa04daaffc61280faf5a75cd9b23ee822
-Signed-off-by: Bhanu Prakash Maiya <bhanumaiya@google.com>
----
- Documentation/devicetree/bindings/mfd/cros-ec.txt | 9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
+Adrian
 
-diff --git a/Documentation/devicetree/bindings/mfd/cros-ec.txt b/Documentation/devicetree/bindings/mfd/cros-ec.txt
-index 4860eabd0f729..ec8c5d7ecc266 100644
---- a/Documentation/devicetree/bindings/mfd/cros-ec.txt
-+++ b/Documentation/devicetree/bindings/mfd/cros-ec.txt
-@@ -3,7 +3,7 @@ ChromeOS Embedded Controller
- Google's ChromeOS EC is a Cortex-M device which talks to the AP and
- implements various function such as keyboard and battery charging.
- 
--The EC can be connect through various means (I2C, SPI, LPC, RPMSG) and the
-+The EC can be connect through various means (I2C, SPI, UART, LPC, RPMSG) and the
- compatible string used depends on the interface. Each connection method has
- its own driver which connects to the top level interface-agnostic EC driver.
- Other Linux driver (such as cros-ec-keyb for the matrix keyboard) connect to
-@@ -17,6 +17,10 @@ Required properties (SPI):
- - compatible: "google,cros-ec-spi"
- - reg: SPI chip select
- 
-+Required properties (UART):
-+- compatible: "google,cros-ec-uart"
-+- reg: UART baudrate, flowcontrol
-+
- Required properties (RPMSG):
- - compatible: "google,cros-ec-rpmsg"
- 
-@@ -72,5 +76,6 @@ spi@131b0000 {
- 	};
- };
- 
--
- Example for LPC is not supplied as it is not yet implemented.
-+
-+Example for UART is not supplied as it is not yet implemented.
 -- 
-2.27.0.389.gc38d7665816-goog
-
+ .''`.  John Paul Adrian Glaubitz
+: :' :  Debian Developer - glaubitz@debian.org
+`. `'   Freie Universitaet Berlin - glaubitz@physik.fu-berlin.de
+  `-    GPG: 62FF 8A75 84E0 2956 9546  0006 7426 3B37 F5B5 F913
