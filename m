@@ -2,129 +2,114 @@ Return-Path: <SRS0=kup7=A2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B39B2C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 20:47:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CC37C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 20:48:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8B4122065F
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 20:47:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 24A282065F
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 20:48:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="thUctRax"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WfhBj627"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727953AbgGOUrJ (ORCPT
+        id S1726831AbgGOUsf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 16:47:09 -0400
-Received: from gate2.alliedtelesis.co.nz ([202.36.163.20]:37278 "EHLO
-        gate2.alliedtelesis.co.nz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726491AbgGOUrI (ORCPT
+        Wed, 15 Jul 2020 16:48:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53608 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726356AbgGOUse (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 16:47:08 -0400
-Received: from mmarshal3.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id D83E28066C;
-        Thu, 16 Jul 2020 08:47:04 +1200 (NZST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
-        s=mail181024; t=1594846024;
-        bh=xYjQmOzUOIm5kT8Zig5PiQTexa7vxIbVqh1eqFRlffc=;
-        h=From:To:CC:Subject:Date:References:In-Reply-To;
-        b=thUctRaxUB1YKZHrK+eoZzth6hBOlFS5sVaDMFcJMwUgHrXoRFp+CAL4AGs2P/Cj5
-         pa8kVUs06T0g8xWRZyTOyF4tNI2R/PKWmQz/B9YiYvx0K2o7XkLiTRJdNXHc8SCx79
-         ct3wHuKITeWkOEZic6cJoUlqraNiLJ212Gbqkbxim25P5djCuxKZwrDoPebTFhqztn
-         o18cJmZkpiOgrReMB5aMwKkf91T3oO0zu4Qlm7Y5DBmNClRwHeD3yy8TIP4lCSHi16
-         ZGS6gT3y/I/WZ2MMZJXKgZaj3pXcCHJRfAjsbON5jsXq7wXyj8uqVO5nCOdaULkXof
-         BynWKh+pL1fng==
-Received: from svr-chch-ex1.atlnz.lc (Not Verified[10.32.16.77]) by mmarshal3.atlnz.lc with Trustwave SEG (v7,5,8,10121)
-        id <B5f0f6b480001>; Thu, 16 Jul 2020 08:47:04 +1200
-Received: from svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8:409d:36f5:8899:92e8)
- by svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8:409d:36f5:8899:92e8) with
- Microsoft SMTP Server (TLS) id 15.0.1497.2; Thu, 16 Jul 2020 08:47:04 +1200
-Received: from svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8]) by
- svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8%12]) with mapi id
- 15.00.1497.006; Thu, 16 Jul 2020 08:47:04 +1200
-From:   Chris Packham <Chris.Packham@alliedtelesis.co.nz>
-To:     "adobriyan@gmail.com" <adobriyan@gmail.com>,
-        "corbet@lwn.net" <corbet@lwn.net>,
-        "mchehab+huawei@kernel.org" <mchehab+huawei@kernel.org>
-CC:     "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 2/2] doc: filesystems: proc: Fix literal blocks
-Thread-Topic: [PATCH 2/2] doc: filesystems: proc: Fix literal blocks
-Thread-Index: AQHWWb4eYHrpPXxu80uMSkHErpHI+akIVYmA
-Date:   Wed, 15 Jul 2020 20:47:03 +0000
-Message-ID: <3d80a1ae-ba46-1840-a4a4-4046413d1c1c@alliedtelesis.co.nz>
-References: <20200714090644.13011-1-chris.packham@alliedtelesis.co.nz>
- <20200714090644.13011-2-chris.packham@alliedtelesis.co.nz>
-In-Reply-To: <20200714090644.13011-2-chris.packham@alliedtelesis.co.nz>
-Accept-Language: en-NZ, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.32.1.11]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <E76B2716FF9D464DACD6EDC91AA457F6@atlnz.lc>
-Content-Transfer-Encoding: base64
+        Wed, 15 Jul 2020 16:48:34 -0400
+Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A213AC061755
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 13:48:34 -0700 (PDT)
+Received: by mail-pj1-x1044.google.com with SMTP id mn17so3688784pjb.4
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 13:48:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=YwtQ+qIZRMu1aHjFHPtF40fPrwJ9tfeRwj/jvnsJYBE=;
+        b=WfhBj627Y0WOtyr1wRjCUf4CYVWiv9xzOas2x0/JPpSflqWZmNEp95WvwJiPslkU2d
+         Kios/eGN2XcbMmUIQ9klS1VhHOTkfjtPmpIyJJFaAHb8FJTBq5kGR2CZ5/HY+l2RjpVi
+         i2grx16HFurjU299NUhstWKgdpL5bNT08QT9ZevBaeFxDI/+RZ00qhq2VPxTxwsiKmce
+         UdGnoQzlQXNtlhig++nO4/kAuwBPXjZL9/gLz8HWgggqzUUDW+WHz1bxHPcvq1ta8lSr
+         6+f9FCbLIynLkNZbyxGHPGbSHsrIRaKOoIb8D841N/GpaWFnWcg4hUlqmD0RJpDt+jrL
+         bWAw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=YwtQ+qIZRMu1aHjFHPtF40fPrwJ9tfeRwj/jvnsJYBE=;
+        b=lEdiy4XyhrbGGJScG6MhH43PY4ou1Hq1U8bXEnEx67mlcleVBb3oPuchOHPkr847nN
+         VVDo9VXNqwZDR2F53vopI8NtdpxNqENEgyddbchHe5+lhN79Q36i3wd71MipgdW+mzgR
+         Te1ke16H825JAUx5YjKlZ/V/IvQnL1rj/d9KAiB6avr4u/J01cwXYwqT8w8TPWwOn45X
+         1AJnW62qskgJ5uJQEUuqRvjFqokpAP7VeyXH7hGua5iHXMJFRQPgvxzyqqNKp8sf/mcZ
+         E7QG2tLKf+M3Ocnnd0oqt6W3jkbmHk0apZc/Rz+mXYswocU0Em3aw1E2dWL4W1QXIJAJ
+         JM7Q==
+X-Gm-Message-State: AOAM530VUdBELtvWyhemNV3cxp5w6YiOtGaNQ20luD81x+i2j0HzBTLs
+        KIe0f6WWv7xMNPfkbpw/Yr4=
+X-Google-Smtp-Source: ABdhPJz1GJ2Ik7lZDPIUXV5ePwyu/YwogLbPU4apDaOlkhisq+aJKtFRAA1r//dZtZBvcY/zN4hOBQ==
+X-Received: by 2002:a17:90a:a413:: with SMTP id y19mr1460097pjp.59.1594846114095;
+        Wed, 15 Jul 2020 13:48:34 -0700 (PDT)
+Received: from Asurada-Nvidia (searspoint.nvidia.com. [216.228.112.21])
+        by smtp.gmail.com with ESMTPSA id w9sm2983563pja.39.2020.07.15.13.48.33
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 15 Jul 2020 13:48:33 -0700 (PDT)
+Date:   Wed, 15 Jul 2020 13:48:09 -0700
+From:   Nicolin Chen <nicoleotsuka@gmail.com>
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     broonie@kernel.org, lgirdwood@gmail.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        alsa-devel@alsa-project.org, Timur Tabi <timur@kernel.org>,
+        Xiubo Li <Xiubo.Lee@gmail.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        linuxppc-dev@lists.ozlabs.org
+Subject: Re: [PATCH v2 1/1] ASoC: fsl: fsl-asoc-card: Trivial: Fix
+ misspelling of 'exists'
+Message-ID: <20200715204809.GA14565@Asurada-Nvidia>
+References: <20200715150009.407442-1-lee.jones@linaro.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200715150009.407442-1-lee.jones@linaro.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgSm9uLA0KDQpPbiAxNC8wNy8yMCA5OjA2IHBtLCBDaHJpcyBQYWNraGFtIHdyb3RlOg0KPiBT
-cGhpbnggY29tcGxhaW5zDQo+DQo+ICAgIERvY3VtZW50YXRpb24vZmlsZXN5c3RlbXMvcHJvYy5y
-c3Q6MjE5NDogV0FSTklORzogSW5jb25zaXN0ZW50IGxpdGVyYWwgYmxvY2sgcXVvdGluZy4NCj4N
-Cj4gVXBkYXRlIHRoZSBjb21tYW5kIGxpbmUgc25pcHBldHMgdG8gYmUgcHJvcGVybHkgZm9ybWVk
-IGxpdGVyYWwgYmxvY2tzLg0KPg0KPiBTaWduZWQtb2ZmLWJ5OiBDaHJpcyBQYWNraGFtIDxjaHJp
-cy5wYWNraGFtQGFsbGllZHRlbGVzaXMuY28ubno+DQo+IC0tLQ0KPiAgIERvY3VtZW50YXRpb24v
-ZmlsZXN5c3RlbXMvcHJvYy5yc3QgfCAzOCArKysrKysrKysrKysrKysrKy0tLS0tLS0tLS0tLS0N
-Cj4gICAxIGZpbGUgY2hhbmdlZCwgMjEgaW5zZXJ0aW9ucygrKSwgMTcgZGVsZXRpb25zKC0pDQo+
-DQo+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2ZpbGVzeXN0ZW1zL3Byb2MucnN0IGIvRG9j
-dW1lbnRhdGlvbi9maWxlc3lzdGVtcy9wcm9jLnJzdA0KPiBpbmRleCA1M2EwMjMwYTA4ZTIuLjYw
-MjdkYzk0NzU1ZiAxMDA2NDQNCj4gLS0tIGEvRG9jdW1lbnRhdGlvbi9maWxlc3lzdGVtcy9wcm9j
-LnJzdA0KPiArKysgYi9Eb2N1bWVudGF0aW9uL2ZpbGVzeXN0ZW1zL3Byb2MucnN0DQo+IEBAIC0y
-MTkwLDI1ICsyMTkwLDI3IEBAIG1vdW50cG9pbnRzIHdpdGhpbiB0aGUgc2FtZSBuYW1lc3BhY2Uu
-DQo+ICAgDQo+ICAgOjoNCj4gICANCj4gLSMgZ3JlcCBecHJvYyAvcHJvYy9tb3VudHMNCj4gLXBy
-b2MgL3Byb2MgcHJvYyBydyxyZWxhdGltZSxoaWRlcGlkPTIgMCAwDQo+ICsgIyBncmVwIF5wcm9j
-IC9wcm9jL21vdW50cw0KPiArIHByb2MgL3Byb2MgcHJvYyBydyxyZWxhdGltZSxoaWRlcGlkPTIg
-MCAwDQo+ICAgDQo+IC0jIHN0cmFjZSAtZSBtb3VudCBtb3VudCAtbyBoaWRlcGlkPTEgLXQgcHJv
-YyBwcm9jIC90bXAvcHJvYw0KPiAtbW91bnQoInByb2MiLCAiL3RtcC9wcm9jIiwgInByb2MiLCAw
-LCAiaGlkZXBpZD0xIikgPSAwDQo+IC0rKysgZXhpdGVkIHdpdGggMCArKysNCj4gKyAjIHN0cmFj
-ZSAtZSBtb3VudCBtb3VudCAtbyBoaWRlcGlkPTEgLXQgcHJvYyBwcm9jIC90bXAvcHJvYw0KPiAr
-IG1vdW50KCJwcm9jIiwgIi90bXAvcHJvYyIsICJwcm9jIiwgMCwgImhpZGVwaWQ9MSIpID0gMA0K
-PiArICsrKyBleGl0ZWQgd2l0aCAwICsrKw0KPiAgIA0KPiAtIyBncmVwIF5wcm9jIC9wcm9jL21v
-dW50cw0KPiAtcHJvYyAvcHJvYyBwcm9jIHJ3LHJlbGF0aW1lLGhpZGVwaWQ9MiAwIDANCj4gLXBy
-b2MgL3RtcC9wcm9jIHByb2MgcncscmVsYXRpbWUsaGlkZXBpZD0yIDAgMA0KPiArICMgZ3JlcCBe
-cHJvYyAvcHJvYy9tb3VudHMNCj4gKyBwcm9jIC9wcm9jIHByb2MgcncscmVsYXRpbWUsaGlkZXBp
-ZD0yIDAgMA0KPiArIHByb2MgL3RtcC9wcm9jIHByb2MgcncscmVsYXRpbWUsaGlkZXBpZD0yIDAg
-MA0KPiAgIA0KPiAgIGFuZCBvbmx5IGFmdGVyIHJlbW91bnRpbmcgcHJvY2ZzIG1vdW50IG9wdGlv
-bnMgd2lsbCBjaGFuZ2UgYXQgYWxsDQo+ICAgbW91bnRwb2ludHMuDQo+ICAgDQo+IC0jIG1vdW50
-IC1vIHJlbW91bnQsaGlkZXBpZD0xIC10IHByb2MgcHJvYyAvdG1wL3Byb2MNCj4gKzo6DQo+ICsN
-Cj4gKyAjIG1vdW50IC1vIHJlbW91bnQsaGlkZXBpZD0xIC10IHByb2MgcHJvYyAvdG1wL3Byb2MN
-Cj4gICANCj4gLSMgZ3JlcCBecHJvYyAvcHJvYy9tb3VudHMNCj4gLXByb2MgL3Byb2MgcHJvYyBy
-dyxyZWxhdGltZSxoaWRlcGlkPTEgMCAwDQo+IC1wcm9jIC90bXAvcHJvYyBwcm9jIHJ3LHJlbGF0
-aW1lLGhpZGVwaWQ9MSAwIDANCj4gKyAjIGdyZXAgXnByb2MgL3Byb2MvbW91bnRzDQo+ICsgcHJv
-YyAvcHJvYyBwcm9jIHJ3LHJlbGF0aW1lLGhpZGVwaWQ9MSAwIDANCj4gKyBwcm9jIC90bXAvcHJv
-YyBwcm9jIHJ3LHJlbGF0aW1lLGhpZGVwaWQ9MSAwIDANCj4gICANCj4gICBUaGlzIGJlaGF2aW9y
-IGlzIGRpZmZlcmVudCBmcm9tIHRoZSBiZWhhdmlvciBvZiBvdGhlciBmaWxlc3lzdGVtcy4NCj4g
-ICANCj4gQEAgLTIyMTcsOCArMjIxOSwxMCBAQCBjcmVhdGVzIGEgbmV3IHByb2NmcyBpbnN0YW5j
-ZS4gTW91bnQgb3B0aW9ucyBhZmZlY3Qgb3duIHByb2NmcyBpbnN0YW5jZS4NCj4gICBJdCBtZWFu
-cyB0aGF0IGl0IGJlY2FtZSBwb3NzaWJsZSB0byBoYXZlIHNldmVyYWwgcHJvY2ZzIGluc3RhbmNl
-cw0KPiAgIGRpc3BsYXlpbmcgdGFza3Mgd2l0aCBkaWZmZXJlbnQgZmlsdGVyaW5nIG9wdGlvbnMg
-aW4gb25lIHBpZCBuYW1lc3BhY2UuDQo+ICAgDQo+IC0jIG1vdW50IC1vIGhpZGVwaWQ9aW52aXNp
-YmxlIC10IHByb2MgcHJvYyAvcHJvYw0KPiAtIyBtb3VudCAtbyBoaWRlcGlkPW5vYWNjZXNzIC10
-IHByb2MgcHJvYyAvdG1wL3Byb2MNCj4gLSMgZ3JlcCBecHJvYyAvcHJvYy9tb3VudHMNCj4gLXBy
-b2MgL3Byb2MgcHJvYyBydyxyZWxhdGltZSxoaWRlcGlkPWludmlzaWJsZSAwIDANCj4gLXByb2Mg
-L3RtcC9wcm9jIHByb2MgcncscmVsYXRpbWUsaGlkZXBpZD1ub2FjY2VzcyAwIDANCj4gKzo6DQo+
-ICsNCj4gKyAjIG1vdW50IC1vIGhpZGVwaWQ9aW52aXNpYmxlIC10IHByb2MgcHJvYyAvcHJvYw0K
-PiArICMgbW91bnQgLW8gaGlkZXBpZD1ub2FjY2VzcyAtdCBwcm9jIHByb2MgL3RtcC9wcm9jDQo+
-ICsgIyBncmVwIF5wcm9jIC9wcm9jL21vdW50cw0KPiArIHByb2MgL3Byb2MgcHJvYyBydyxyZWxh
-dGltZSxoaWRlcGlkPWludmlzaWJsZSAwIDANCj4gKyBwcm9jIC90bXAvcHJvYyBwcm9jIHJ3LHJl
-bGF0aW1lLGhpZGVwaWQ9bm9hY2Nlc3MgMCAwDQoNCkxvb2tzIGxpa2UgTWF1cm8gYWxzbyBmaXhl
-ZCB0aGlzIHNvIHRoaXMgY2FuIGJlIGRyb3BwZWQgdG9vLg0K
+On Wed, Jul 15, 2020 at 04:00:09PM +0100, Lee Jones wrote:
+> Cc: Timur Tabi <timur@kernel.org>
+> Cc: Nicolin Chen <nicoleotsuka@gmail.com>
+
+Acked-by: Nicolin Chen <nicoleotsuka@gmail.com>
+
+> Cc: Xiubo Li <Xiubo.Lee@gmail.com>
+> Cc: Fabio Estevam <festevam@gmail.com>
+> Cc: linuxppc-dev@lists.ozlabs.org
+> Signed-off-by: Lee Jones <lee.jones@linaro.org>
+> ---
+>  sound/soc/fsl/fsl-asoc-card.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/sound/soc/fsl/fsl-asoc-card.c b/sound/soc/fsl/fsl-asoc-card.c
+> index faac6ce9a82cb..dbacdd25dfe76 100644
+> --- a/sound/soc/fsl/fsl-asoc-card.c
+> +++ b/sound/soc/fsl/fsl-asoc-card.c
+> @@ -92,7 +92,7 @@ struct fsl_asoc_card_priv {
+>  };
+>  
+>  /*
+> - * This dapm route map exits for DPCM link only.
+> + * This dapm route map exists for DPCM link only.
+>   * The other routes shall go through Device Tree.
+>   *
+>   * Note: keep all ASRC routes in the second half
+> -- 
+> 2.25.1
+> 
