@@ -2,109 +2,201 @@ Return-Path: <SRS0=kup7=A2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01B53C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 01:50:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B3A7C433E4
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 01:51:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C71D92071B
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 01:50:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="e/O8NquH"
+	by mail.kernel.org (Postfix) with ESMTP id 75B2F2071B
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 01:51:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728056AbgGOBuv (ORCPT
+        id S1728112AbgGOBvp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 21:50:51 -0400
-Received: from ozlabs.org ([203.11.71.1]:36569 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726356AbgGOBuu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 21:50:50 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 4B60hm1Rxmz9s1x;
-        Wed, 15 Jul 2020 11:50:46 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1594777849;
-        bh=4QgHxfCAQBboonG2XX1+XZjhqDoWr3MhkyKnkmbrqvc=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=e/O8NquH9L2YcbTBxTk5J/DJuooPWI11QHJ7eDSoHTvcXByO5KA5gTz6dJLOf+2Vz
-         AWTwtQNSu7FDZwj6HoxS1BK6d/lyNjiidpngIHU58n5bxTYrbx0hSpVoKr0BckbVqS
-         pSoIKW9zyAHn1gI1xclLE3+gEbbRQQnPGWIS+Ba1Gg/XyWf4Le7aWO5NSg2T23/PM0
-         UWZQclpDPHvYreF7ox5Xr+iDnZbxkC5ct+Npj7Zv7ta8MDFqmpGyjV6z6Dtw60MU8K
-         dAEBthn5jvMajMxi1jFtQFTuxVOqO4sKlVEx8fvAAREyyfZ5/fSo17f5fIqOK6okJH
-         kxUI0YSkJ++1Q==
-Date:   Wed, 15 Jul 2020 11:50:43 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Bixuan Cui <cuibixuan@huawei.com>
-Cc:     <akpm@linux-foundation.org>, <linux-mm@kvack.org>,
-        <linux-kernel@vger.kernel.org>, <linux-next@vger.kernel.org>,
-        <john.wanghui@huawei.com>, Roman Gushchin <guro@fb.com>
-Subject: Re: [PATCH v3] mm/percpu: fix 'defined but not used' warning
-Message-ID: <20200715115043.45a505ca@canb.auug.org.au>
-In-Reply-To: <6d41b939-a741-b521-a7a2-e7296ec16219@huawei.com>
-References: <20200714134101.80534-1-cuibixuan@huawei.com>
-        <20200714225311.7aeffffd@canb.auug.org.au>
-        <6f1a8c76-d6d7-1a2c-8b0b-26a4a31f1a19@huawei.com>
-        <20200715062229.78591ff9@canb.auug.org.au>
-        <6d41b939-a741-b521-a7a2-e7296ec16219@huawei.com>
-MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/qGFqx0dYRdKvwv3VGvg/U.H";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+        Tue, 14 Jul 2020 21:51:45 -0400
+Received: from www262.sakura.ne.jp ([202.181.97.72]:61614 "EHLO
+        www262.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726356AbgGOBvp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 21:51:45 -0400
+Received: from fsav302.sakura.ne.jp (fsav302.sakura.ne.jp [153.120.85.133])
+        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id 06F1p74Y092199;
+        Wed, 15 Jul 2020 10:51:07 +0900 (JST)
+        (envelope-from penguin-kernel@I-love.SAKURA.ne.jp)
+Received: from www262.sakura.ne.jp (202.181.97.72)
+ by fsav302.sakura.ne.jp (F-Secure/fsigk_smtp/550/fsav302.sakura.ne.jp);
+ Wed, 15 Jul 2020 10:51:07 +0900 (JST)
+X-Virus-Status: clean(F-Secure/fsigk_smtp/550/fsav302.sakura.ne.jp)
+Received: from localhost.localdomain (M106072142033.v4.enabler.ne.jp [106.72.142.33])
+        (authenticated bits=0)
+        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id 06F1p2pR092141
+        (version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
+        Wed, 15 Jul 2020 10:51:07 +0900 (JST)
+        (envelope-from penguin-kernel@I-love.SAKURA.ne.jp)
+From:   Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+To:     Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        George Kennedy <george.kennedy@oracle.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
+        syzbot <syzbot+e5fd3e65515b48c02a30@syzkaller.appspotmail.com>
+Subject: [PATCH v2] fbdev: Detect integer underflow at "struct fbcon_ops"->clear_margins.
+Date:   Wed, 15 Jul 2020 10:51:02 +0900
+Message-Id: <20200715015102.3814-1-penguin-kernel@I-love.SAKURA.ne.jp>
+X-Mailer: git-send-email 2.18.4
+In-Reply-To: <adff5d10-fe35-62d4-74c5-182958c5ada7@i-love.sakura.ne.jp>
+References: <adff5d10-fe35-62d4-74c5-182958c5ada7@i-love.sakura.ne.jp>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/qGFqx0dYRdKvwv3VGvg/U.H
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+syzbot is reporting general protection fault in bitfill_aligned() [1]
+caused by integer underflow in bit_clear_margins(). The cause of this
+problem is when and how do_vc_resize() updates vc->vc_{cols,rows}.
 
-Hi all,
+If vc_do_resize() fails (e.g. kzalloc() fails) when var.xres or var.yres
+is going to shrink, vc->vc_{cols,rows} will not be updated. This allows
+bit_clear_margins() to see info->var.xres < (vc->vc_cols * cw) or
+info->var.yres < (vc->vc_rows * ch). Unexpectedly large rw or bh will
+try to overrun the __iomem region and causes general protection fault.
 
-On Wed, 15 Jul 2020 08:25:19 +0800 Bixuan Cui <cuibixuan@huawei.com> wrote:
->
-> Gcc report the following warning without CONFIG_MEMCG_KMEM:
->=20
-> mm/percpu-internal.h:145:29: warning: 'pcpu_chunk_type' defined
-> but not used [-Wunused-function]
->  static enum pcpu_chunk_type pcpu_chunk_type(struct pcpu_chunk *chunk)
->                              ^~~~~~~~~~~~~~~
->=20
-> Add 'inline' to pcpu_chunk_type(),pcpu_is_memcg_chunk() and
-> pcpu_chunk_list() to clear warning.
->=20
-> Acked-by: Roman Gushchin <guro@fb.com>
-> Suggested-by: Stephen Rothwell <sfr@canb.auug.org.au>
-> Signed-off-by: Bixuan Cui <cuibixuan@huawei.com>
-> ---
->  mm/percpu-internal.h | 10 +++++-----
->  1 file changed, 5 insertions(+), 5 deletions(-)
+Also, vc_resize(vc, 0, 0) does not set vc->vc_{cols,rows} = 0 due to
 
-I have added this patch to linux-next today.
+  new_cols = (cols ? cols : vc->vc_cols);
+  new_rows = (lines ? lines : vc->vc_rows);
 
---=20
-Cheers,
-Stephen Rothwell
+exception. Since cols and lines are calculated as
 
---Sig_/qGFqx0dYRdKvwv3VGvg/U.H
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+  cols = FBCON_SWAP(ops->rotate, info->var.xres, info->var.yres);
+  rows = FBCON_SWAP(ops->rotate, info->var.yres, info->var.xres);
+  cols /= vc->vc_font.width;
+  rows /= vc->vc_font.height;
+  vc_resize(vc, cols, rows);
 
------BEGIN PGP SIGNATURE-----
+in fbcon_modechanged(), var.xres < vc->vc_font.width makes cols = 0
+and var.yres < vc->vc_font.height makes rows = 0. This means that
 
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl8OYPMACgkQAVBC80lX
-0Gz2pQf/RlRCbFlqoCB/Vwd97ITx6U2YwfBhztTNFDbws8aJ3nRMj4REvOrhGtHG
-PTjMJXbTdMb7bHWgPs0gIP9R8ohGb9XI1srw3ModYUCD3Hvyja3Y5Ov7nqsEtu4Z
-S9Pl4ziV0UIWCZGDGYdeY2zTbMxwRD345TEqlYoZxmQT4Szpttlvbe84+Z4FLMxj
-p39hOvyzu66fBWoIGfWZRIsCVDWskY2iSrp6webdeir4Ueoyn0sN0oLwS4NOryHH
-a8glYhfm/tlNkONOQIDa63KX8YT8PFnb1xxUvJg5+6pNaYloS9b6XOKd+ZQ6u6vl
-IvKzf7F4w4/6fmctufaQY+kX4y6YgA==
-=HC4M
------END PGP SIGNATURE-----
+  const int fd = open("/dev/fb0", O_ACCMODE);
+  struct fb_var_screeninfo var = { };
+  ioctl(fd, FBIOGET_VSCREENINFO, &var);
+  var.xres = var.yres = 1;
+  ioctl(fd, FBIOPUT_VSCREENINFO, &var);
 
---Sig_/qGFqx0dYRdKvwv3VGvg/U.H--
+easily reproduces integer underflow bug explained above.
+
+Of course, callers of vc_resize() are not handling vc_do_resize() failure
+is bad. But we can't avoid vc_resize(vc, 0, 0) which returns 0. Therefore,
+as a band-aid workaround, this patch checks integer underflow in
+"struct fbcon_ops"->clear_margins call, assuming that
+vc->vc_cols * vc->vc_font.width and vc->vc_rows * vc->vc_font.heigh do not
+cause integer overflow.
+
+[1] https://syzkaller.appspot.com/bug?id=a565882df74fa76f10d3a6fec4be31098dbb37c6
+
+Reported-and-tested-by: syzbot <syzbot+e5fd3e65515b48c02a30@syzkaller.appspotmail.com>
+Signed-off-by: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+---
+ drivers/video/fbdev/core/bitblit.c   | 4 ++--
+ drivers/video/fbdev/core/fbcon_ccw.c | 4 ++--
+ drivers/video/fbdev/core/fbcon_cw.c  | 4 ++--
+ drivers/video/fbdev/core/fbcon_ud.c  | 4 ++--
+ 4 files changed, 8 insertions(+), 8 deletions(-)
+
+diff --git a/drivers/video/fbdev/core/bitblit.c b/drivers/video/fbdev/core/bitblit.c
+index ca935c09a261..35ebeeccde4d 100644
+--- a/drivers/video/fbdev/core/bitblit.c
++++ b/drivers/video/fbdev/core/bitblit.c
+@@ -216,7 +216,7 @@ static void bit_clear_margins(struct vc_data *vc, struct fb_info *info,
+ 	region.color = color;
+ 	region.rop = ROP_COPY;
+ 
+-	if (rw && !bottom_only) {
++	if ((int) rw > 0 && !bottom_only) {
+ 		region.dx = info->var.xoffset + rs;
+ 		region.dy = 0;
+ 		region.width = rw;
+@@ -224,7 +224,7 @@ static void bit_clear_margins(struct vc_data *vc, struct fb_info *info,
+ 		info->fbops->fb_fillrect(info, &region);
+ 	}
+ 
+-	if (bh) {
++	if ((int) bh > 0) {
+ 		region.dx = info->var.xoffset;
+ 		region.dy = info->var.yoffset + bs;
+ 		region.width = rs;
+diff --git a/drivers/video/fbdev/core/fbcon_ccw.c b/drivers/video/fbdev/core/fbcon_ccw.c
+index dfa9a8aa4509..78f3a5621478 100644
+--- a/drivers/video/fbdev/core/fbcon_ccw.c
++++ b/drivers/video/fbdev/core/fbcon_ccw.c
+@@ -201,7 +201,7 @@ static void ccw_clear_margins(struct vc_data *vc, struct fb_info *info,
+ 	region.color = color;
+ 	region.rop = ROP_COPY;
+ 
+-	if (rw && !bottom_only) {
++	if ((int) rw > 0 && !bottom_only) {
+ 		region.dx = 0;
+ 		region.dy = info->var.yoffset;
+ 		region.height = rw;
+@@ -209,7 +209,7 @@ static void ccw_clear_margins(struct vc_data *vc, struct fb_info *info,
+ 		info->fbops->fb_fillrect(info, &region);
+ 	}
+ 
+-	if (bh) {
++	if ((int) bh > 0) {
+ 		region.dx = info->var.xoffset + bs;
+ 		region.dy = 0;
+                 region.height = info->var.yres_virtual;
+diff --git a/drivers/video/fbdev/core/fbcon_cw.c b/drivers/video/fbdev/core/fbcon_cw.c
+index ce08251bfd38..fd098ff17574 100644
+--- a/drivers/video/fbdev/core/fbcon_cw.c
++++ b/drivers/video/fbdev/core/fbcon_cw.c
+@@ -184,7 +184,7 @@ static void cw_clear_margins(struct vc_data *vc, struct fb_info *info,
+ 	region.color = color;
+ 	region.rop = ROP_COPY;
+ 
+-	if (rw && !bottom_only) {
++	if ((int) rw > 0 && !bottom_only) {
+ 		region.dx = 0;
+ 		region.dy = info->var.yoffset + rs;
+ 		region.height = rw;
+@@ -192,7 +192,7 @@ static void cw_clear_margins(struct vc_data *vc, struct fb_info *info,
+ 		info->fbops->fb_fillrect(info, &region);
+ 	}
+ 
+-	if (bh) {
++	if ((int) bh > 0) {
+ 		region.dx = info->var.xoffset;
+ 		region.dy = info->var.yoffset;
+                 region.height = info->var.yres;
+diff --git a/drivers/video/fbdev/core/fbcon_ud.c b/drivers/video/fbdev/core/fbcon_ud.c
+index 1936afc78fec..e165a3fad29a 100644
+--- a/drivers/video/fbdev/core/fbcon_ud.c
++++ b/drivers/video/fbdev/core/fbcon_ud.c
+@@ -231,7 +231,7 @@ static void ud_clear_margins(struct vc_data *vc, struct fb_info *info,
+ 	region.color = color;
+ 	region.rop = ROP_COPY;
+ 
+-	if (rw && !bottom_only) {
++	if ((int) rw > 0 && !bottom_only) {
+ 		region.dy = 0;
+ 		region.dx = info->var.xoffset;
+ 		region.width  = rw;
+@@ -239,7 +239,7 @@ static void ud_clear_margins(struct vc_data *vc, struct fb_info *info,
+ 		info->fbops->fb_fillrect(info, &region);
+ 	}
+ 
+-	if (bh) {
++	if ((int) bh > 0) {
+ 		region.dy = info->var.yoffset;
+ 		region.dx = info->var.xoffset;
+                 region.height  = bh;
+-- 
+2.18.4
+
