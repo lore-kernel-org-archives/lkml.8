@@ -2,179 +2,147 @@ Return-Path: <SRS0=kup7=A2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9A85C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 19:02:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30794C433E4
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 19:02:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D00D720657
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 19:02:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 14F5C20657
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 19:02:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ASTb52Ia"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726821AbgGOTCU (ORCPT
+        id S1726766AbgGOTCP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 15:02:20 -0400
-Received: from mail-io1-f72.google.com ([209.85.166.72]:33588 "EHLO
-        mail-io1-f72.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726761AbgGOTCS (ORCPT
+        Wed, 15 Jul 2020 15:02:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37188 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726650AbgGOTCO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 15:02:18 -0400
-Received: by mail-io1-f72.google.com with SMTP id a12so1995505ioo.0
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 12:02:17 -0700 (PDT)
+        Wed, 15 Jul 2020 15:02:14 -0400
+Received: from mail-vk1-xa41.google.com (mail-vk1-xa41.google.com [IPv6:2607:f8b0:4864:20::a41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 31FCBC08C5CE
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 12:02:14 -0700 (PDT)
+Received: by mail-vk1-xa41.google.com with SMTP id h1so728765vkn.12
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 12:02:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=PmtQ0FrsBiOsqRJiGiTNFNGrmIx+8RMusU8KDu9T4aY=;
+        b=ASTb52Iah2njRL2ETx3AA40ICz/qZGc0YsZ4RTzCHytuyNKqdrkSTbsaUPy6zkttzt
+         S0MEohrvEOeRRGxXFQp93vIfJK+w3YIv6+8lc3P+gfKEBlEbAj93X2DRVgyxa9eN6HIB
+         Wn7Yifou3j68JRXTW7Fq30Bc0R2f+cTkHEa1U=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=IvBAlDcCZSy6gieOWJ3Kbyh8aqBj4OB6TL5Ylx9sPEE=;
-        b=G4rNJJToqo8BFN3oaVVwMJGzp+fFMM6X1BapVh1TpU7D+fbgq7/QtMeTsg2CbcWUKw
-         wxqIwKDuFI2igcW4JX06kYU4tHSHXkw0ESzPGZTPqzJojKJ2DPoBMkaV37xpRzrYSKUV
-         e7ZBbuZPgDCGh24EeZhUX04HNHNbujhhS/6nNdDOExOKrNb0/AIM2wjvR22f8LantlYx
-         8mlHLRe9ZeGzaHX3H6YSdFRz1ghVlwEszjhUOVejKW1bhFYPoV33VeEqqlRtH6gKUNhU
-         y+YYnXN67mClU5sqiFgMMaZ8INHDnU5I70l5teVuMpdn+ZnTAG4a4Egx/ITMocAF/c6N
-         iJbw==
-X-Gm-Message-State: AOAM533NtlG6iJAx27wUyOkUru7LSrhTExDi4MKGksCbPXgxUyLoEHRa
-        NEQ2qOx2LIhuRMeznKVaQY5ZS0ogRmWsx35YBWcF4v1b5vA9
-X-Google-Smtp-Source: ABdhPJz8udE03kBEjB3evt74sZ2m5j1npU80K8rneJClVSbdZLksXrPdiIpSAdIWyqbtvvi+uXJ3t7+pwzWCIZNvGcvMPrwcx/mN
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=PmtQ0FrsBiOsqRJiGiTNFNGrmIx+8RMusU8KDu9T4aY=;
+        b=tjRowsZRVF9ShFzQ58mXkm9w7X4MKJa+typjELUU6A4M4s+ISTUOhpsBUrdn3A+RIN
+         0FR/EqxoyWrX8UDg7hudsOWGA1YhK2SpAwNYHBb04Ho1ieQVpHZKnVsSrd0eqkKFuVgO
+         RSbEugeZ1Wgi66c6Ubl2hdp1mZ3vvaX0HXQnZ3/5MjckqPw0jcTZo3qXT3/CoJ52p1nm
+         uJTTj4oGbGQV0WUfGk1ooiWBBAFvzlo+ByfIeCpwH5qJJNEOgrG9OQ5iIGBFD9fMAxYX
+         SkHCtDWtdiJATk5VFaRe3WVBgt2L0F/fFTGxXAHafXl5hyuEmqEYrX1UIaBEwZf/xYaf
+         eJoA==
+X-Gm-Message-State: AOAM5305JiNRrWFA6603mjSutHC4avrMpaJNaJLtYwXQY75XRXhQZAKk
+        dzLkfhkAPkpqpwxGsmiv/zyVAb62g4k=
+X-Google-Smtp-Source: ABdhPJzA7oqzci4xxrt4xwtDv8MqYdm28Gl8Eh/WVwmIQw3nH1QZEG4l0zkbdpaiAe4SVoIqbFh/Ew==
+X-Received: by 2002:a1f:a18f:: with SMTP id k137mr444207vke.69.1594839732872;
+        Wed, 15 Jul 2020 12:02:12 -0700 (PDT)
+Received: from mail-vk1-f178.google.com (mail-vk1-f178.google.com. [209.85.221.178])
+        by smtp.gmail.com with ESMTPSA id f69sm434568vkf.4.2020.07.15.12.02.11
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 15 Jul 2020 12:02:12 -0700 (PDT)
+Received: by mail-vk1-f178.google.com with SMTP id h190so731547vkh.6
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 12:02:11 -0700 (PDT)
+X-Received: by 2002:a1f:3d4a:: with SMTP id k71mr443715vka.65.1594839731375;
+ Wed, 15 Jul 2020 12:02:11 -0700 (PDT)
 MIME-Version: 1.0
-X-Received: by 2002:a92:150d:: with SMTP id v13mr865761ilk.297.1594839737406;
- Wed, 15 Jul 2020 12:02:17 -0700 (PDT)
-Date:   Wed, 15 Jul 2020 12:02:17 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000059b7205aa7f906f@google.com>
-Subject: KASAN: use-after-free Read in __xfrm6_tunnel_spi_lookup
-From:   syzbot <syzbot+72ff2fa98097767b5a27@syzkaller.appspotmail.com>
-To:     davem@davemloft.net, herbert@gondor.apana.org.au, kuba@kernel.org,
-        kuznet@ms2.inr.ac.ru, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, steffen.klassert@secunet.com,
-        syzkaller-bugs@googlegroups.com, yoshfuji@linux-ipv6.org
+References: <1594615586-17055-1-git-send-email-pillair@codeaurora.org>
+In-Reply-To: <1594615586-17055-1-git-send-email-pillair@codeaurora.org>
+From:   Doug Anderson <dianders@chromium.org>
+Date:   Wed, 15 Jul 2020 12:01:59 -0700
+X-Gmail-Original-Message-ID: <CAD=FV=XtBhM_CSQM63LCiVDR0oPAAyEr5bG_FRt1tdwpw5OPKQ@mail.gmail.com>
+Message-ID: <CAD=FV=XtBhM_CSQM63LCiVDR0oPAAyEr5bG_FRt1tdwpw5OPKQ@mail.gmail.com>
+Subject: Re: [PATCH v2] arm64: dts: qcom: sc7180: Add missing properties for
+ Wifi node
+To:     Rakesh Pillai <pillair@codeaurora.org>
+Cc:     "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, Evan Green <evgreen@chromium.org>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+Hi,
 
-syzbot found the following issue on:
+On Sun, Jul 12, 2020 at 9:46 PM Rakesh Pillai <pillair@codeaurora.org> wrote:
+>
+> The wlan firmware memory is statically mapped in
+> the Trusted Firmware, hence the wlan driver does
+> not need to map/unmap this region dynamically.
+>
+> Hence add the property to indicate the wlan driver
+> to not map/unamp the firmware memory region
+> dynamically.
+>
+> Also add the chain1 voltage supply for wlan.
+>
+> Signed-off-by: Rakesh Pillai <pillair@codeaurora.org>
+> ---
+> Changes from v1:
+> - Add the wifi mac alias
+>
+> This patch is created on top of the change by
+> Douglas Anderson.
+> https://lkml.org/lkml/2020/6/25/817
+>
+> Also the dt-bindings for the chain1 voltage supply
+> is added by the below patch series:
+> https://patchwork.kernel.org/project/linux-wireless/list/?series=309137
+> ---
+>  arch/arm64/boot/dts/qcom/sc7180-idp.dts | 3 +++
+>  1 file changed, 3 insertions(+)
+>
+> diff --git a/arch/arm64/boot/dts/qcom/sc7180-idp.dts b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
+> index 472f7f4..c042d61 100644
+> --- a/arch/arm64/boot/dts/qcom/sc7180-idp.dts
+> +++ b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
+> @@ -19,6 +19,7 @@
+>
+>         aliases {
+>                 bluetooth0 = &bluetooth;
+> +               wifi0 = &wifi;
+>                 hsuart0 = &uart3;
+>                 serial0 = &uart8;
 
-HEAD commit:    5fb3d604 Add linux-next specific files for 20200714
-git tree:       linux-next
-console output: https://syzkaller.appspot.com/x/log.txt?x=1107074f100000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=2c76d72659687242
-dashboard link: https://syzkaller.appspot.com/bug?extid=72ff2fa98097767b5a27
-compiler:       gcc (GCC) 10.1.0-syz 20200507
+Could you alphabetize?
 
-Unfortunately, I don't have any reproducer for this issue yet.
+>         };
+> @@ -391,10 +392,12 @@
+>
+>  &wifi {
+>         status = "okay";
+> +       qcom,msa-fixed-perm;
+>         vdd-0.8-cx-mx-supply = <&vreg_l9a_0p6>;
+>         vdd-1.8-xo-supply = <&vreg_l1c_1p8>;
+>         vdd-1.3-rfa-supply = <&vreg_l2c_1p3>;
+>         vdd-3.3-ch0-supply = <&vreg_l10c_3p3>;
+> +       vdd-3.3-ch1-supply = <&vreg_l11c_3p3>;
+>         wifi-firmware {
+>                 iommus = <&apps_smmu 0xc2 0x1>;
+>         };
 
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+72ff2fa98097767b5a27@syzkaller.appspotmail.com
+Other than the alphabetical order:
 
-==================================================================
-BUG: KASAN: use-after-free in __xfrm6_tunnel_spi_lookup+0x3a9/0x3b0 net/ipv6/xfrm6_tunnel.c:79
-Read of size 8 at addr ffff88809b08a228 by task syz-executor.4/3359
-CPU: 0 PID: 3359 Comm: syz-executor.4 Not tainted 5.8.0-rc5-next-20200714-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x18f/0x20d lib/dump_stack.c:118
- print_address_description.constprop.0.cold+0xae/0x497 mm/kasan/report.c:383
- __kasan_report mm/kasan/report.c:513 [inline]
- kasan_report.cold+0x1f/0x37 mm/kasan/report.c:530
- __xfrm6_tunnel_spi_lookup+0x3a9/0x3b0 net/ipv6/xfrm6_tunnel.c:79
- xfrm6_tunnel_spi_lookup+0x8a/0x1d0 net/ipv6/xfrm6_tunnel.c:95
- xfrmi6_rcv_tunnel+0xb9/0x100 net/xfrm/xfrm_interface.c:810
- tunnel46_rcv+0xef/0x2b0 net/ipv6/tunnel6.c:193
- ip6_protocol_deliver_rcu+0x2e8/0x1670 net/ipv6/ip6_input.c:433
- ip6_input_finish+0x7f/0x160 net/ipv6/ip6_input.c:474
- NF_HOOK include/linux/netfilter.h:307 [inline]
- NF_HOOK include/linux/netfilter.h:301 [inline]
- ip6_input+0x9c/0xd0 net/ipv6/ip6_input.c:483
- dst_input include/net/dst.h:449 [inline]
- ip6_rcv_finish net/ipv6/ip6_input.c:76 [inline]
- NF_HOOK include/linux/netfilter.h:307 [inline]
- NF_HOOK include/linux/netfilter.h:301 [inline]
- ipv6_rcv+0x28e/0x3c0 net/ipv6/ip6_input.c:307
- __netif_receive_skb_one_core+0x114/0x180 net/core/dev.c:5287
- __netif_receive_skb+0x27/0x1c0 net/core/dev.c:5401
- netif_receive_skb_internal net/core/dev.c:5503 [inline]
- netif_receive_skb+0x159/0x990 net/core/dev.c:5562
- tun_rx_batched.isra.0+0x460/0x720 drivers/net/tun.c:1518
- tun_get_user+0x23b2/0x35b0 drivers/net/tun.c:1972
- tun_chr_write_iter+0xba/0x151 drivers/net/tun.c:2001
- call_write_iter include/linux/fs.h:1879 [inline]
- new_sync_write+0x422/0x650 fs/read_write.c:515
- vfs_write+0x59d/0x6b0 fs/read_write.c:595
- ksys_write+0x12d/0x250 fs/read_write.c:648
- do_syscall_64+0x60/0xe0 arch/x86/entry/common.c:384
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
-RIP: 0033:0x416661
-Code: Bad RIP value.
-RSP: 002b:00007f9187100c60 EFLAGS: 00000293 ORIG_RAX: 0000000000000001
-RAX: ffffffffffffffda RBX: 000000000050ac20 RCX: 0000000000416661
-RDX: 000000000000004a RSI: 0000000020000340 RDI: 00000000000000f0
-RBP: 000000000078bf00 R08: 0000000000000000 R09: 0000000000000000
-R10: 00007f91871019d0 R11: 0000000000000293 R12: 00000000ffffffff
-R13: 0000000000000c36 R14: 00000000004ce81f R15: 00007f91871016d4
-Allocated by task 3905:
- kasan_save_stack+0x1b/0x40 mm/kasan/common.c:48
- kasan_set_track mm/kasan/common.c:56 [inline]
- __kasan_kmalloc.constprop.0+0xbf/0xd0 mm/kasan/common.c:461
- __do_kmalloc mm/slab.c:3655 [inline]
- __kmalloc+0x1a8/0x320 mm/slab.c:3664
- kmalloc include/linux/slab.h:559 [inline]
- tomoyo_realpath_from_path+0xc3/0x620 security/tomoyo/realpath.c:254
- tomoyo_get_realpath security/tomoyo/file.c:151 [inline]
- tomoyo_path_perm+0x212/0x3f0 security/tomoyo/file.c:822
- security_inode_getattr+0xcf/0x140 security/security.c:1287
- vfs_getattr fs/stat.c:121 [inline]
- vfs_statx+0x170/0x390 fs/stat.c:206
- vfs_lstat include/linux/fs.h:3176 [inline]
- __do_sys_newlstat+0x91/0x110 fs/stat.c:374
- do_syscall_64+0x60/0xe0 arch/x86/entry/common.c:384
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
-Freed by task 3905:
- kasan_save_stack+0x1b/0x40 mm/kasan/common.c:48
- kasan_set_track+0x1c/0x30 mm/kasan/common.c:56
- kasan_set_free_info+0x1b/0x30 mm/kasan/generic.c:355
- __kasan_slab_free+0xd8/0x120 mm/kasan/common.c:422
- __cache_free mm/slab.c:3418 [inline]
- kfree+0x103/0x2c0 mm/slab.c:3756
- tomoyo_realpath_from_path+0x191/0x620 security/tomoyo/realpath.c:291
- tomoyo_get_realpath security/tomoyo/file.c:151 [inline]
- tomoyo_path_perm+0x212/0x3f0 security/tomoyo/file.c:822
- security_inode_getattr+0xcf/0x140 security/security.c:1287
- vfs_getattr fs/stat.c:121 [inline]
- vfs_statx+0x170/0x390 fs/stat.c:206
- vfs_lstat include/linux/fs.h:3176 [inline]
- __do_sys_newlstat+0x91/0x110 fs/stat.c:374
- do_syscall_64+0x60/0xe0 arch/x86/entry/common.c:384
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
-The buggy address belongs to the object at ffff88809b08a000
- which belongs to the cache kmalloc-4k of size 4096
-The buggy address is located 552 bytes inside of
- 4096-byte region [ffff88809b08a000, ffff88809b08b000)
-The buggy address belongs to the page:
-page:000000003cd8428c refcount:1 mapcount:0 mapping:0000000000000000 index:0x0 pfn:0x9b08a
-head:000000003cd8428c order:1 compound_mapcount:0
-flags: 0xfffe0000010200(slab|head)
-raw: 00fffe0000010200 ffffea00027afa88 ffffea00016acc88 ffff8880aa000900
-raw: 0000000000000000 ffff88809b08a000 0000000100000001 0000000000000000
-page dumped because: kasan: bad access detected
-Memory state around the buggy address:
- ffff88809b08a100: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
- ffff88809b08a180: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
->ffff88809b08a200: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-                                  ^
- ffff88809b08a280: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
- ffff88809b08a300: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-==================================================================
-
-
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+Reviewed-by: Douglas Anderson <dianders@chromium.org>
