@@ -2,129 +2,105 @@ Return-Path: <SRS0=kup7=A2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C92C6C433E3
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 16:21:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4461EC433E2
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 16:22:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B11212065E
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 16:21:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 15BB720663
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 16:22:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594830134;
+	bh=eT6BTd/Zx8Q5ccT8rkBpk/1FMwIdvf+1GrdYf74olgc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=W4umFlEOJbRyLjBsdQhbAqVXk7QWiy9WwSb65euVh0nVMos62myw3xiEf7H7WYfy7
+	 t8DwVJLwQq/B7ncEf2PmCtopzGyI7+Y9imyEB93w0ayYl3otuD/blpGf0Ds8/6c8dl
+	 WMMalxAaFJtwhUC+KcqnQGrjWbANyl5yC7MgiePM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726768AbgGOQVN (ORCPT
+        id S1726634AbgGOQWM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 12:21:13 -0400
-Received: from foss.arm.com ([217.140.110.172]:54384 "EHLO foss.arm.com"
+        Wed, 15 Jul 2020 12:22:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35506 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725792AbgGOQVN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 12:21:13 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7F3E531B;
-        Wed, 15 Jul 2020 09:21:12 -0700 (PDT)
-Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 119153F718;
-        Wed, 15 Jul 2020 09:21:10 -0700 (PDT)
-Date:   Wed, 15 Jul 2020 17:21:08 +0100
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>
-Cc:     Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Andrew Murray <amurray@thegoodpenguin.co.uk>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Marek =?iso-8859-1?Q?Beh=FAn?= <marek.behun@nic.cz>,
-        Remi Pommarel <repk@triplefau.lt>,
-        Tomasz Maciej Nowak <tmn505@gmail.com>,
-        Xogium <contact@xogium.me>, linux-pci@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3] PCI: aardvark: Don't touch PCIe registers if no card
- connected
-Message-ID: <20200715162108.GB3432@e121166-lin.cambridge.arm.com>
-References: <20200528143141.29956-1-pali@kernel.org>
- <20200702083036.12230-1-pali@kernel.org>
- <20200709113509.GB19638@e121166-lin.cambridge.arm.com>
- <20200709122208.rmfeuu6zgbwh3fr5@pali>
- <20200709144701.GA21760@e121166-lin.cambridge.arm.com>
- <20200709150959.wq6zfkcy4m6hvvpl@pali>
- <20200710091800.GA3419@e121166-lin.cambridge.arm.com>
- <20200713082747.e3q3ml3wpbszn4j7@pali>
- <20200713112325.GA25865@e121166-lin.cambridge.arm.com>
- <20200715121726.eh4xglkdbcqkh7td@pali>
+        id S1725770AbgGOQWM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jul 2020 12:22:12 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 607842065E;
+        Wed, 15 Jul 2020 16:22:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594830131;
+        bh=eT6BTd/Zx8Q5ccT8rkBpk/1FMwIdvf+1GrdYf74olgc=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=xtBMl1Lkp2tHTt9F0hewQXObOrrserzLr+rKu4S4aktKmcNKltsAmxyGYDskLoMTt
+         dS2nIL8K+eHBckSCxbCGTXI6Fd3LDmfG8htgV9VTM58BKQOSCTt6zz9+n+kNxjkREB
+         I6JgfGJRBr9lKocj0owTpglgIJ5owpryEeTDW/hY=
+Date:   Wed, 15 Jul 2020 17:22:02 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Arnaud Ferraris <arnaud.ferraris@collabora.com>
+Cc:     Nicolin Chen <nicoleotsuka@gmail.com>, alsa-devel@alsa-project.org,
+        Timur Tabi <timur@kernel.org>, Xiubo Li <Xiubo.Lee@gmail.com>,
+        linux-kernel@vger.kernel.org, Takashi Iwai <tiwai@suse.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>, kernel@collabora.com,
+        Fabio Estevam <festevam@gmail.com>
+Subject: Re: [PATCH 0/4] ASoC: fsl_asrc: allow selecting arbitrary clocks
+Message-ID: <20200715162202.GJ5431@sirena.org.uk>
+References: <20200702142235.235869-1-arnaud.ferraris@collabora.com>
+ <20200702184226.GA23935@Asurada-Nvidia>
+ <3f39a0bb-a766-f646-28b3-a51cf9983c6b@collabora.com>
+ <3fea8912-63df-ff27-0c29-6284a85107ab@collabora.com>
+ <20200714201544.GA10501@Asurada-Nvidia>
+ <20200714202753.GM4900@sirena.org.uk>
+ <20200714205050.GB10501@Asurada-Nvidia>
+ <20200715140519.GH5431@sirena.org.uk>
+ <0a56326b-27a9-d9f4-3923-8773963d7548@collabora.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="+9faIjRurCDpBc7U"
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200715121726.eh4xglkdbcqkh7td@pali>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <0a56326b-27a9-d9f4-3923-8773963d7548@collabora.com>
+X-Cookie: 40 isn't old.  If you're a tree.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 15, 2020 at 02:17:26PM +0200, Pali Rohár wrote:
-> On Monday 13 July 2020 12:23:25 Lorenzo Pieralisi wrote:
-> > On Mon, Jul 13, 2020 at 10:27:47AM +0200, Pali Rohár wrote:
-> > > On Friday 10 July 2020 10:18:00 Lorenzo Pieralisi wrote:
-> > > > On Thu, Jul 09, 2020 at 05:09:59PM +0200, Pali Rohár wrote:
-> > > > > > I understand that but the bridge bus resource can be trimmed to just
-> > > > > > contain the root bus because that's the only one where there is a
-> > > > > > chance you can enumerate a device.
-> > > > > 
-> > > > > It is possible to register only root bridge without endpoint?
-> > > > 
-> > > > It is possible to register the root bridge with a trimmed IORESOURCE_BUS
-> > > > so that you don't enumerate anything other than the root port.
-> > > 
-> > > Hello Lorenzo! I really do not know how to achieve it. From code it
-> > > looks like that pci/probe.c scans child buses unconditionally.
-> > > 
-> > > pci-aardvark.c calls pci_host_probe() which calls functions
-> > > pci_scan_root_bus_bridge() which calls pci_scan_child_bus() which calls
-> > > pci_scan_child_bus_extend() which calls pci_scan_bridge_extend() (bridge
-> > > needs to be reconfigured) which then try to probe child bus via
-> > > pci_scan_child_bus_extend() because bridge is not card bus.
-> > > 
-> > > In function pci_scan_bridge_extend() I do not see a way how to skip
-> > > probing for child buses which would avoid enumerating aardvark root
-> > > bridge when PCIe device is not connected.
-> > > 
-> > > dmesg output contains:
-> > > 
-> > >   advk-pcie d0070000.pcie: link never came up
-> > >   advk-pcie d0070000.pcie: PCI host bridge to bus 0000:00
-> > >   pci_bus 0000:00: root bus resource [bus 00-ff]
-> > 
-> > This resource can be limited to the root bus number only before calling
-> > pci_host_probe() (ie see pci_parse_request_of_pci_ranges() and code in
-> > pci_scan_bridge_extend() that programs primary/secondary/subordinate
-> > busses) but I think that only papers over the issue, it does not fix it.
-> 
-> I looked at the code in pci/probe.c again and I do not think it is
-> possible to avoid scanning devices. pci_scan_child_bus_extend() is
-> unconditionally calling pci_scan_slot() for devfn=0 as the first thing.
-> And this function unconditionally calls pci_scan_device() which is
-> directly trying to read vendor id from config register.
-> 
-> So for me it looks like that kernel expects that can read vendor id and
-> device id from config register for device which is not connected.
 
-Not if it is connected to a bus that the root port does not decode,
-that's what I am saying.
+--+9faIjRurCDpBc7U
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> And trying to read config register would cause those timeouts in
-> aardvark.
+On Wed, Jul 15, 2020 at 06:18:38PM +0200, Arnaud Ferraris wrote:
+> Le 15/07/2020 =E0 16:05, Mark Brown a =E9crit=A0:
 
-The root port (which effectively works as PCI bridge from this
-standpoint) does not issue config cycles for busses that aren't within
-its decoded bus range, which in turn is determined by the firmware
-IORESOURCE_BUS resource.
+> > Honestly for anything that fun it tends to be a custom machine driver.
+> > A property would seem reasonable though.
 
-This issue is caused by devices that are connected downstream to
-the root port.
+> I think so, does my initial implementation of the properties look
+> sensible to you? ("fsl,asrc-input-clock" & "fsl,asrc-output-clock")
 
-Anyway - patch merged but I would be happy to keep this discussion
-going, somehow.
+Those look reasonable enough off the top of my head, not that I've
+really looked at the hardware.
 
-If the LPC20 VFIO/IOMMU/PCI microconference is approved it can be a
-good venue for this to happen.
+--+9faIjRurCDpBc7U
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Lorenzo
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl8PLSkACgkQJNaLcl1U
+h9BkmAf/Z0V1Eb+A2EGmiFuW+ziL7yJnYp0req34SxMFVo/WgQPUOSpA8ioVX/a+
+xt5KVDHCN9FmjHphFHf6t+t7XJjEtnlfrKyoAhJlmu30K4Hyw6YeFnACEr2gQzcL
+qJYhS22uU76Jrgk0l11rvDlX3pAsGrjEwBo+INsYdix6x339mi3cVc8dNQp76lPO
+OiGE+vnHKqbtw71caWc+No4JXPVm0W8FD/ovs52fvWEg1mjHKXENDMaxAWvXEMo/
+fvx9P5LgACTfmclCzh+Iub3Qz+ETuUreytKgi8I647DAO2pMxul9HuxlZ8ZmcvTP
+Ibm55Iff0fv/6vg5p7ze/mxldgAN9A==
+=un2V
+-----END PGP SIGNATURE-----
+
+--+9faIjRurCDpBc7U--
