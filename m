@@ -2,87 +2,104 @@ Return-Path: <SRS0=kup7=A2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 315B4C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 08:04:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D492C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 08:04:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0D89520663
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 08:04:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594800244;
-	bh=HIG91/ioMlIScqdxhHK1XI6hYx30577FlENF9j/AlEw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=sqn6LW9xmVbMw4b8ajvF1CWyT2HGyp8ez5PF+Wgck+OzaPavIwILhn1M6gGvqudDv
-	 LoiZWmyQH2RxIr3ZO8XHVYVu8g+ESs9N5GMYtcPTdHJsDg+67psvwrGHDwk9U/+yg3
-	 bmp3IphytLkBJ6q501pmTUseiOtTsp0ExJRevuIE=
+	by mail.kernel.org (Postfix) with ESMTP id EBFC72064C
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 08:04:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729595AbgGOIED (ORCPT
+        id S1729610AbgGOIEx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 04:04:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58852 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729001AbgGOIEC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 04:04:02 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9B5BE2064C;
-        Wed, 15 Jul 2020 08:04:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594800242;
-        bh=HIG91/ioMlIScqdxhHK1XI6hYx30577FlENF9j/AlEw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=bfepzjD7u8Mx9WRTyJYUr0DmmMF7Fe3KKrMrTFDZnsH4TrYXAvF1hg/OpTq0XbmWP
-         Cr6KfiadSdvxq7c0jZlsW/nZKBVwjtIlUggx4lQcpnclJrcTreRe80E9c1NLx3J9Kf
-         wTrqHuXAdpBeVGbS7Q924vpShEv7DcwHRUrlcPLM=
-Date:   Wed, 15 Jul 2020 10:03:58 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Dominique Martinet <asmadeus@codewreck.org>
-Cc:     Eric Biggers <ebiggers@kernel.org>,
-        Victor Hsieh <victorhsieh@google.com>,
-        v9fs-developer@lists.sourceforge.net,
-        Eric Van Hensbergen <ericvh@gmail.com>,
-        Latchesar Ionkov <lucho@ionkov.net>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        stable@vger.kernel.org
-Subject: Re: [PATCH] fs/9p: Fix TCREATE's fid in protocol
-Message-ID: <20200715080358.GA2521386@kroah.com>
-References: <20200713215759.3701482-1-victorhsieh@google.com>
- <20200714121249.GA21928@nautica>
- <20200714205401.GE1064009@gmail.com>
+        Wed, 15 Jul 2020 04:04:53 -0400
+Received: from [195.135.220.15] ([195.135.220.15]:42724 "EHLO mx2.suse.de"
+        rhost-flags-FAIL-FAIL-OK-OK) by vger.kernel.org with ESMTP
+        id S1729001AbgGOIEx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jul 2020 04:04:53 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id A5443AE51;
+        Wed, 15 Jul 2020 08:04:54 +0000 (UTC)
+Received: by quack2.suse.cz (Postfix, from userid 1000)
+        id 5B05E1E12C9; Wed, 15 Jul 2020 10:04:51 +0200 (CEST)
+Date:   Wed, 15 Jul 2020 10:04:51 +0200
+From:   Jan Kara <jack@suse.cz>
+To:     Tom Rix <trix@redhat.com>
+Cc:     Matthew Wilcox <willy@infradead.org>, jack@suse.cz,
+        william.kucharski@oracle.com, jeffm@suse.com,
+        joseph.qi@linux.alibaba.com, liao.pingfang@zte.com.cn,
+        reiserfs-devel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] reiserfs : fix improper free in reiserfs_get_block
+Message-ID: <20200715080451.GK23073@quack2.suse.cz>
+References: <20200714130509.11791-1-trix@redhat.com>
+ <20200714131043.GB12769@casper.infradead.org>
+ <bc5a13bd-54c4-509d-7202-20c93f43e2f6@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200714205401.GE1064009@gmail.com>
+In-Reply-To: <bc5a13bd-54c4-509d-7202-20c93f43e2f6@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 14, 2020 at 01:54:01PM -0700, Eric Biggers wrote:
-> On Tue, Jul 14, 2020 at 02:12:49PM +0200, Dominique Martinet wrote:
-> > 
-> > > Fixes: 5643135a2846 ("fs/9p: This patch implements TLCREATE for 9p2000.L protocol.")
-> > > Signed-off-by: Victor Hsieh <victorhsieh@google.com>
-> > > Cc: stable@vger.kernel.org
-> > 
-> > (afaiu it is normally frowned upon for developers to add this cc (I can
-> > understand stable@ not wanting spam discussing issues left and right
-> > before maintainers agreed on them!) ; I can add it to the commit itself
-> > if requested but they normally pick most such fixes pretty nicely for
-> > backport anyway; I see most 9p patches backported as long as the patch
-> > applies cleanly which is pretty much all the time.
-> > Please let me know if I understood that incorrectly)
+On Tue 14-07-20 06:12:47, Tom Rix wrote:
+> 
+> On 7/14/20 6:10 AM, Matthew Wilcox wrote:
+> > On Tue, Jul 14, 2020 at 06:05:09AM -0700, trix@redhat.com wrote:
+> >> From: Tom Rix <trix@redhat.com>
+> >>
+> >> clang static analysis flags this error
+> >>
+> >> inode.c:1083:5: warning: Argument to kfree() is the address of the
+> >>   local variable 'unf_single', which is not memory allocated by
+> >>   malloc() [unix.Malloc]
+> >>                                 kfree(un);
+> >>                                 ^~~~~~~~~
+> >> Assignment of 'un'
+> >>
+> >> 	/*
+> >> 	 * We use this in case we need to allocate
+> >> 	 * only one block which is a fastpath
+> >> 	 */
+> >> 	unp_t unf_single = 0;
+> >>
+> >> 	...
+> >>
+> >> 	if (blocks_needed == 1) {
+> >> 		un = &unf_single;
+> >> 	} else {
+> >> 		un = kcalloc(min(blocks_needed, max_to_insert),
+> >> 			     UNFM_P_SIZE, GFP_NOFS);
+> >> 		if (!un) {
+> >> 			un = &unf_single;
+> >> 			blocks_needed = 1;
+> >> 			max_to_insert = 0;
+> >> 		}
+> >> 	}
+> >>
+> >> The logic to free 'un'
+> >>
+> >> 	if (blocks_needed != 1)
+> >> 		kfree(un);
+> >>
+> >> Because the kcalloc failure falls back to using unf_single,
+> >> the if-check for the free is wrong.
+> > I think you mean "Because clang's static analysis is limited, it
+> > warns incorrectly about this".  There's no path to get to the
+> > kfree with blocks_needed != 1 and un being equal to &unf_single.
+> 
+> Ok.
 
-As Eric says, this is fine to cc: stable with this kind of thing.  It's
-good to get a "heads up" on patches that are coming, and Sasha runs some
-tests on them as well to make sure that they really are going to apply
-to what trees you think they should apply to.
+I agree with Matthew the patch will make the code more obviously correct so
+it's a sensible cleanup. But the changelog needs to redone to reflect this
+is just a cleanup before the patch can be merged.
 
-thanks,
-
-greg k-h
+									Honza
+-- 
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
