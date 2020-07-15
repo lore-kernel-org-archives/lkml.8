@@ -7,37 +7,37 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9ADD4C433E8
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 14:14:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0E3FC433E5
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 14:13:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 763CC2065D
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 14:14:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D8524206E9
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 14:13:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727983AbgGOOOC (ORCPT
+        id S1727924AbgGOON5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 10:14:02 -0400
-Received: from inva021.nxp.com ([92.121.34.21]:43420 "EHLO inva021.nxp.com"
+        Wed, 15 Jul 2020 10:13:57 -0400
+Received: from inva020.nxp.com ([92.121.34.13]:49520 "EHLO inva020.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726720AbgGOONx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 10:13:53 -0400
-Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 800B9200307;
-        Wed, 15 Jul 2020 16:13:51 +0200 (CEST)
+        id S1727771AbgGOONy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jul 2020 10:13:54 -0400
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 9267F1A1442;
+        Wed, 15 Jul 2020 16:13:52 +0200 (CEST)
 Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 2FF932002F8;
-        Wed, 15 Jul 2020 16:13:46 +0200 (CEST)
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 0F4A31A0241;
+        Wed, 15 Jul 2020 16:13:47 +0200 (CEST)
 Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 6759540305;
-        Wed, 15 Jul 2020 22:13:39 +0800 (SGT)
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id A6A80402C1;
+        Wed, 15 Jul 2020 22:13:40 +0800 (SGT)
 From:   Shengjiu Wang <shengjiu.wang@nxp.com>
 To:     perex@perex.cz, tiwai@suse.com, lgirdwood@gmail.com,
         broonie@kernel.org, alsa-devel@alsa-project.org,
         robh+dt@kernel.org, devicetree@vger.kernel.org, timur@kernel.org,
         nicoleotsuka@gmail.com, Xiubo.Lee@gmail.com, festevam@gmail.com
 Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Subject: [PATCH v2 2/3] ASoC: bindings: fsl-asoc-card: Support hp-det-gpio and mic-det-gpio
-Date:   Wed, 15 Jul 2020 22:09:38 +0800
-Message-Id: <1594822179-1849-3-git-send-email-shengjiu.wang@nxp.com>
+Subject: [PATCH v2 3/3] ASoC: fsl-asoc-card: Support Headphone and Microphone Jack detection
+Date:   Wed, 15 Jul 2020 22:09:39 +0800
+Message-Id: <1594822179-1849-4-git-send-email-shengjiu.wang@nxp.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1594822179-1849-1-git-send-email-shengjiu.wang@nxp.com>
 References: <1594822179-1849-1-git-send-email-shengjiu.wang@nxp.com>
@@ -47,29 +47,148 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add headphone and microphone detection GPIO support.
-These properties are optional.
+Use asoc_simple_init_jack function from simple card to implement
+the Headphone and Microphone detection.
+Register notifier to disable Speaker when Headphone is plugged in
+and enable Speaker when Headphone is unplugged.
+Register notifier to disable Digital Microphone when Analog Microphone
+is plugged in and enable DMIC when Analog Microphone is unplugged.
 
 Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
 Acked-by: Nicolin Chen <nicoleotsuka@gmail.com>
 ---
- Documentation/devicetree/bindings/sound/fsl-asoc-card.txt | 3 +++
- 1 file changed, 3 insertions(+)
+ sound/soc/fsl/Kconfig         |  1 +
+ sound/soc/fsl/fsl-asoc-card.c | 77 ++++++++++++++++++++++++++++++++++-
+ 2 files changed, 76 insertions(+), 2 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/sound/fsl-asoc-card.txt b/Documentation/devicetree/bindings/sound/fsl-asoc-card.txt
-index 133d7e14a4d0..8a6a3d0fda5e 100644
---- a/Documentation/devicetree/bindings/sound/fsl-asoc-card.txt
-+++ b/Documentation/devicetree/bindings/sound/fsl-asoc-card.txt
-@@ -69,6 +69,9 @@ Optional properties:
- 			        coexisting in order to support the old bindings
- 				of wm8962 and sgtl5000.
+diff --git a/sound/soc/fsl/Kconfig b/sound/soc/fsl/Kconfig
+index ea7b4787a8af..1c4ca5ec8caf 100644
+--- a/sound/soc/fsl/Kconfig
++++ b/sound/soc/fsl/Kconfig
+@@ -315,6 +315,7 @@ config SND_SOC_FSL_ASOC_CARD
+ 	depends on OF && I2C
+ 	# enforce SND_SOC_FSL_ASOC_CARD=m if SND_AC97_CODEC=m:
+ 	depends on SND_AC97_CODEC || SND_AC97_CODEC=n
++	select SND_SIMPLE_CARD_UTILS
+ 	select SND_SOC_IMX_AUDMUX
+ 	select SND_SOC_IMX_PCM_DMA
+ 	select SND_SOC_FSL_ESAI
+diff --git a/sound/soc/fsl/fsl-asoc-card.c b/sound/soc/fsl/fsl-asoc-card.c
+index faac6ce9a82c..f0cde3ecb5b7 100644
+--- a/sound/soc/fsl/fsl-asoc-card.c
++++ b/sound/soc/fsl/fsl-asoc-card.c
+@@ -15,6 +15,8 @@
+ #endif
+ #include <sound/pcm_params.h>
+ #include <sound/soc.h>
++#include <sound/jack.h>
++#include <sound/simple_card_utils.h>
  
-+  - hp-det-gpio		: The GPIO that detect headphones are plugged in
-+  - mic-det-gpio	: The GPIO that detect microphones are plugged in
+ #include "fsl_esai.h"
+ #include "fsl_sai.h"
+@@ -65,6 +67,8 @@ struct cpu_priv {
+ /**
+  * struct fsl_asoc_card_priv - Freescale Generic ASOC card private data
+  * @dai_link: DAI link structure including normal one and DPCM link
++ * @hp_jack: Headphone Jack structure
++ * @mic_jack: Microphone Jack structure
+  * @pdev: platform device pointer
+  * @codec_priv: CODEC private data
+  * @cpu_priv: CPU private data
+@@ -79,6 +83,8 @@ struct cpu_priv {
+ 
+ struct fsl_asoc_card_priv {
+ 	struct snd_soc_dai_link dai_link[3];
++	struct asoc_simple_jack hp_jack;
++	struct asoc_simple_jack mic_jack;
+ 	struct platform_device *pdev;
+ 	struct codec_priv codec_priv;
+ 	struct cpu_priv cpu_priv;
+@@ -445,6 +451,44 @@ static int fsl_asoc_card_audmux_init(struct device_node *np,
+ 	return 0;
+ }
+ 
++static int hp_jack_event(struct notifier_block *nb, unsigned long event,
++			 void *data)
++{
++	struct snd_soc_jack *jack = (struct snd_soc_jack *)data;
++	struct snd_soc_dapm_context *dapm = &jack->card->dapm;
 +
- Optional unless SSI is selected as a CPU DAI:
++	if (event & SND_JACK_HEADPHONE)
++		/* Disable speaker if headphone is plugged in */
++		snd_soc_dapm_disable_pin(dapm, "Ext Spk");
++	else
++		snd_soc_dapm_enable_pin(dapm, "Ext Spk");
++
++	return 0;
++}
++
++static struct notifier_block hp_jack_nb = {
++	.notifier_call = hp_jack_event,
++};
++
++static int mic_jack_event(struct notifier_block *nb, unsigned long event,
++			  void *data)
++{
++	struct snd_soc_jack *jack = (struct snd_soc_jack *)data;
++	struct snd_soc_dapm_context *dapm = &jack->card->dapm;
++
++	if (event & SND_JACK_MICROPHONE)
++		/* Disable dmic if microphone is plugged in */
++		snd_soc_dapm_disable_pin(dapm, "DMIC");
++	else
++		snd_soc_dapm_enable_pin(dapm, "DMIC");
++
++	return 0;
++}
++
++static struct notifier_block mic_jack_nb = {
++	.notifier_call = mic_jack_event,
++};
++
+ static int fsl_asoc_card_late_probe(struct snd_soc_card *card)
+ {
+ 	struct fsl_asoc_card_priv *priv = snd_soc_card_get_drvdata(card);
+@@ -745,8 +789,37 @@ static int fsl_asoc_card_probe(struct platform_device *pdev)
+ 	snd_soc_card_set_drvdata(&priv->card, priv);
  
-   - mux-int-port	: The internal port of the i.MX audio muxer (AUDMUX)
+ 	ret = devm_snd_soc_register_card(&pdev->dev, &priv->card);
+-	if (ret && ret != -EPROBE_DEFER)
+-		dev_err(&pdev->dev, "snd_soc_register_card failed (%d)\n", ret);
++	if (ret) {
++		if (ret != -EPROBE_DEFER)
++			dev_err(&pdev->dev, "snd_soc_register_card failed (%d)\n", ret);
++		goto asrc_fail;
++	}
++
++	/*
++	 * Properties "hp-det-gpio" and "mic-det-gpio" are optional, and
++	 * asoc_simple_init_jack uses these properties for creating
++	 * Headphone Jack and Microphone Jack.
++	 *
++	 * The notifier is initialized in snd_soc_card_jack_new(), then
++	 * snd_soc_jack_notifier_register can be called.
++	 */
++	if (of_property_read_bool(np, "hp-det-gpio")) {
++		ret = asoc_simple_init_jack(&priv->card, &priv->hp_jack,
++					    1, NULL, "Headphone Jack");
++		if (ret)
++			goto asrc_fail;
++
++		snd_soc_jack_notifier_register(&priv->hp_jack.jack, &hp_jack_nb);
++	}
++
++	if (of_property_read_bool(np, "mic-det-gpio")) {
++		ret = asoc_simple_init_jack(&priv->card, &priv->mic_jack,
++					    0, NULL, "Mic Jack");
++		if (ret)
++			goto asrc_fail;
++
++		snd_soc_jack_notifier_register(&priv->mic_jack.jack, &mic_jack_nb);
++	}
+ 
+ asrc_fail:
+ 	of_node_put(asrc_np);
 -- 
 2.27.0
 
