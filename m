@@ -2,100 +2,142 @@ Return-Path: <SRS0=kup7=A2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-18.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84381C433E3
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 09:04:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DB62C433FB
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 09:04:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5DCDE2064C
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 09:04:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0E25F20657
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 09:04:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="YEe2issc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730298AbgGOJEK (ORCPT
+        id S1730493AbgGOJEz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 05:04:10 -0400
-Received: from lucky1.263xmail.com ([211.157.147.134]:36356 "EHLO
-        lucky1.263xmail.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729856AbgGOJEI (ORCPT
+        Wed, 15 Jul 2020 05:04:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57790 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730475AbgGOJEv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 05:04:08 -0400
-Received: from localhost (unknown [192.168.167.209])
-        by lucky1.263xmail.com (Postfix) with ESMTP id B908AC0BF3;
-        Wed, 15 Jul 2020 17:04:00 +0800 (CST)
-X-MAIL-GRAY: 0
-X-MAIL-DELIVERY: 1
-X-ADDR-CHECKED4: 1
-X-ANTISPAM-LEVEL: 2
-X-ABS-CHECKED: 0
-Received: from localhost.localdomain (unknown [58.22.7.114])
-        by smtp.263.net (postfix) whith ESMTP id P9169T139648078694144S1594803824986898_;
-        Wed, 15 Jul 2020 17:04:00 +0800 (CST)
-X-IP-DOMAINF: 1
-X-UNIQUE-TAG: <dc9a3c295fada8eb12c36cc25202647b>
-X-RL-SENDER: yifeng.zhao@rock-chips.com
-X-SENDER: zyf@rock-chips.com
-X-LOGIN-NAME: yifeng.zhao@rock-chips.com
-X-FST-TO: miquel.raynal@bootlin.com
-X-SENDER-IP: 58.22.7.114
-X-ATTACHMENT-NUM: 0
-X-DNS-TYPE: 0
-X-System-Flag: 0
-From:   Yifeng Zhao <yifeng.zhao@rock-chips.com>
-To:     miquel.raynal@bootlin.com, richard@nod.at, vigneshr@ti.com,
-        robh+dt@kernel.org
-Cc:     devicetree@vger.kernel.org, linux-mtd@lists.infradead.org,
-        heiko@sntech.de, linux-rockchip@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Yifeng Zhao <yifeng.zhao@rock-chips.com>
-Subject: [PATCH v7 3/8] MAINTAINERS: add maintainers to ROCKCHIP NFC
-Date:   Wed, 15 Jul 2020 17:03:41 +0800
-Message-Id: <20200715090342.28339-4-yifeng.zhao@rock-chips.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200715090342.28339-1-yifeng.zhao@rock-chips.com>
-References: <20200715090342.28339-1-yifeng.zhao@rock-chips.com>
+        Wed, 15 Jul 2020 05:04:51 -0400
+Received: from mail-il1-x142.google.com (mail-il1-x142.google.com [IPv6:2607:f8b0:4864:20::142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 53603C08C5C1
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 02:04:51 -0700 (PDT)
+Received: by mail-il1-x142.google.com with SMTP id o3so1308002ilo.12
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 02:04:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=q4dxg/x+C61ezLjqHNaCCzjzXw07QWDdBXsi9fVkAUU=;
+        b=YEe2issca20y2/l73T3sa81rOD0zgi1OUm8I/tbIAEmNaSjKhPdRRwJBKafc2gc3jk
+         xDQYds+jIMarrr7rQWr59jGk4zxqH1Wu2H5gqoNbIV8k/iPjTfSnbsRa7W3NEOcMK3up
+         2LgACIRQucnwj+gcTH6lQJtscwwtIK86qjmEo=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=q4dxg/x+C61ezLjqHNaCCzjzXw07QWDdBXsi9fVkAUU=;
+        b=MbDHgLfgofs/+wBH7Ap43JftKaVLo5FgvTH3IGIB1A/mn3N/2bjnc0yjiEaR96yCBx
+         ZySqn08nwISCpeeOSxCvEF827IACJ9I58CqaO21y5a7YXXGGjQLP4dQAD3r0aVN+3mdK
+         W4PrOW0GZhJfiZZ3fR4dlGbFXPM7pm0ZR13jHhMQ2teU9hT8ujv5Z3gu989+IE++nSXH
+         XWyDJRE74V3dVD+VGJT6Qv+K/NeLD73tfXjOyBJA7jvAgFowUZQIIRqvVgirnQMtCxIX
+         J4Y22wiZ9maM3nL9dS294vnTWznPrygtiMmY/GPw2tuc0oiqJ83T7Wmaj+sqtf8V72Ui
+         EcdQ==
+X-Gm-Message-State: AOAM533j+nfKpV+Sy9pQPBMTbwVT8lTBOSCQKzbui1vcWM60VrSDC/J4
+        6Bm1DDtx5lMPW3Ba5SfYCTFRUenmPng=
+X-Google-Smtp-Source: ABdhPJxrlHdiHSw4qIAQozA6QPaLfo4sO39kilXZXIAzNFNdnarBA3GONzBTywg63aHdEirQDHzWOQ==
+X-Received: by 2002:a05:6e02:487:: with SMTP id b7mr9294174ils.100.1594803889939;
+        Wed, 15 Jul 2020 02:04:49 -0700 (PDT)
+Received: from mail-il1-f182.google.com (mail-il1-f182.google.com. [209.85.166.182])
+        by smtp.gmail.com with ESMTPSA id t11sm818572ils.3.2020.07.15.02.04.48
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 15 Jul 2020 02:04:48 -0700 (PDT)
+Received: by mail-il1-f182.google.com with SMTP id a11so1360556ilk.0
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 02:04:48 -0700 (PDT)
+X-Received: by 2002:a92:de42:: with SMTP id e2mr8593960ilr.189.1594803887732;
+ Wed, 15 Jul 2020 02:04:47 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200713091211.2183368-1-tientzu@chromium.org>
+ <20200713091211.2183368-2-tientzu@chromium.org> <4a2451f9-57d8-2e83-e1d6-f144f37173c0@arm.com>
+ <20200714110141.GD16178@lst.de> <CALiNf2-9b5LMjv+KCqFJ9oz2FocT6oQ1zVY_MBaFgNG1DQxZ=Q@mail.gmail.com>
+In-Reply-To: <CALiNf2-9b5LMjv+KCqFJ9oz2FocT6oQ1zVY_MBaFgNG1DQxZ=Q@mail.gmail.com>
+From:   Claire Chang <tientzu@chromium.org>
+Date:   Wed, 15 Jul 2020 17:04:36 +0800
+X-Gmail-Original-Message-ID: <CALiNf28LVobHKLuXAf7P7Avi6n1oU+tbbFJ55ZPanJuq8Q1Ysg@mail.gmail.com>
+Message-ID: <CALiNf28LVobHKLuXAf7P7Avi6n1oU+tbbFJ55ZPanJuq8Q1Ysg@mail.gmail.com>
+Subject: Re: [PATCH 1/4] dma-mapping: Add bounced DMA ops
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Robin Murphy <robin.murphy@arm.com>,
+        Rob Herring <robh+dt@kernel.org>, frowand.list@gmail.com,
+        m.szyprowski@samsung.com, treding@nvidia.com,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Saravana Kannan <saravanak@google.com>, suzuki.poulose@arm.com,
+        dan.j.williams@intel.com, heikki.krogerus@linux.intel.com,
+        bgolaszewski@baylibre.com, devicetree@vger.kernel.org,
+        lkml <linux-kernel@vger.kernel.org>,
+        iommu@lists.linux-foundation.org, tfiga@chromium.org,
+        Nicolas Boichat <drinkcat@chromium.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add maintainers to ROCKCHIP NFC.
+On Wed, Jul 15, 2020 at 11:46 AM Claire Chang <tientzu@chromium.org> wrote:
+>
+> On Tue, Jul 14, 2020 at 7:01 PM Christoph Hellwig <hch@lst.de> wrote:
+> >
+> > On Mon, Jul 13, 2020 at 12:55:43PM +0100, Robin Murphy wrote:
+> > > On 2020-07-13 10:12, Claire Chang wrote:
+> > >> The bounced DMA ops provide an implementation of DMA ops that bounce
+> > >> streaming DMA in and out of a specially allocated region. Only the
+> > >> operations relevant to streaming DMA are supported.
+> > >
+> > > I think there are too many implicit assumptions here - apparently that
+> > > coherent allocations will always be intercepted by
+> > > dma_*_from_dev_coherent(), and that calling into dma-direct won't actually
+> > > bounce things a second time beyond where you thought they were going,
+> > > manage coherency for a different address, and make it all go subtly wrong.
+> > > Consider "swiotlb=force", for instance...
+If I understand it correctly, reusing SWIOTLB won't prevent the
+coherent allocations
+from always being intercepted by dma_*_from_dev_coherent(), right?
+Since we can't bounce the coherent memory, we still need to rely on
+dma_*_from_dev_coherent() and a reserved-memory region for coherent DMA to
+restrict the device DMA access.
 
-Signed-off-by: Yifeng Zhao <yifeng.zhao@rock-chips.com>
----
+As for calling into dma-direct, in this version, I use set_dma_ops to set the
+dma_bounced_ops, so I just bypass dma-direct and SWIOTLB. "swiotlb=force"
+won't bounce things a second time and the data will still be bounced
+to the region
+set in dts.
+Besides, I did a quick search and found that only two *-iommu.c directly use
+dma_direct_map_page.
+https://elixir.bootlin.com/linux/latest/C/ident/dma_direct_map_page
+Since bounced DMA is to mitigate the lack of DMA access control on systems
+without an IOMMU (see patch#4, only call of_dma_set_bounce_buffer for the
+devices not behind an IOMMU), can we assume no one will use dma-direct?
+(I understand that if we build bounced DMA on top of SWIOTLB, we don't need
+to worry about this.)
 
-Changes in v7: None
-Changes in v6: None
-Changes in v5: None
-Changes in v4: None
-Changes in v3: None
-Changes in v2: None
+> > >
+> > > Again, plumbing this straight into dma-direct so that SWIOTLB can simply
+> > > target a different buffer and always bounce regardless of masks would seem
+> > > a far better option.
+> >
+> > I haven't really had time to read through the details, but I agree that
+> > any bouncing scheme should reuse the swiotlb code and not invent a
+> > parallel infrastructure.
+> Thanks for the feedback. I'll try to reuse SWIOTLB.
+My current plan is to first change the buffers management logic in SWIOTLB to
+use gen_pool like this patch (i.e., gen_pool_dma_alloc, gen_pool_free, ect), and
+then make SWIOTLB use the device's private pool for regular DMA to/from system
+memory if possible.
+Does this sound right?
 
- MAINTAINERS | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 1d4aa7f942de..187634a085a7 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -2344,12 +2344,12 @@ L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
- L:	linux-rockchip@lists.infradead.org
- S:	Maintained
- T:	git git://git.kernel.org/pub/scm/linux/kernel/git/mmind/linux-rockchip.git
-+F:	Documentation/devicetree/bindings/*/*rockchip*.yaml
- F:	Documentation/devicetree/bindings/i2c/i2c-rk3x.yaml
--F:	Documentation/devicetree/bindings/mmc/rockchip-dw-mshc.yaml
--F:	Documentation/devicetree/bindings/spi/spi-rockchip.yaml
- F:	arch/arm/boot/dts/rk3*
- F:	arch/arm/boot/dts/rv1108*
- F:	arch/arm/mach-rockchip/
-+F:	drivers/*/*/*/*rockchip*
- F:	drivers/*/*/*rockchip*
- F:	drivers/*/*rockchip*
- F:	drivers/clk/rockchip/
--- 
-2.17.1
-
-
-
+Thanks!
