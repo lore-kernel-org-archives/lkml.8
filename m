@@ -2,161 +2,83 @@ Return-Path: <SRS0=kup7=A2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0CA8C433F4
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 04:28:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E939C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 04:36:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A19EA2067D
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 04:28:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 56D2A206D5
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 04:36:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728297AbgGOE2E (ORCPT
+        id S1726358AbgGOEgM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 00:28:04 -0400
-Received: from mga05.intel.com ([192.55.52.43]:59540 "EHLO mga05.intel.com"
+        Wed, 15 Jul 2020 00:36:12 -0400
+Received: from mga02.intel.com ([134.134.136.20]:62154 "EHLO mga02.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726780AbgGOE12 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 00:27:28 -0400
-IronPort-SDR: H7eK1RSY1BZZagiC3h5/Jpbj99JPH4F+JQ1xlgzJPe1VHK17CcR2xgKjgSqv49tRg/JOYe9gXt
- MalkdKGVNosQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9682"; a="233936297"
+        id S1725770AbgGOEgL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jul 2020 00:36:11 -0400
+IronPort-SDR: zzn39vgLgbXi0qnq6hOxjYSxFTUfMnOeTLbcYbVZadbehq2g6ta/TZK+unV7F7eQaVyIplwS+R
+ U5cYyt2lTHeA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9682"; a="137209908"
 X-IronPort-AV: E=Sophos;i="5.75,354,1589266800"; 
-   d="scan'208";a="233936297"
+   d="scan'208";a="137209908"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jul 2020 21:27:27 -0700
-IronPort-SDR: 4b5FfUz1z2vyggpQuTzBGG5pbJLZUer9B/ILHKL5vCY3QJpNVVrpJSUEeZKkF663KHcIJbdQ+S
- 41dbgY74ibTg==
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jul 2020 21:36:11 -0700
+IronPort-SDR: FrWtwjUjHLiCzh7e6Apd6mNCDEQYWBCNGa+rOe2YiIz9CR54NKkx394U05SrAObHpbfVCiQy6y
+ p14f+Ww3D/yA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.75,354,1589266800"; 
-   d="scan'208";a="308118786"
-Received: from sjchrist-coffee.jf.intel.com ([10.54.74.152])
-  by fmsmga004.fm.intel.com with ESMTP; 14 Jul 2020 21:27:26 -0700
+   d="scan'208";a="429992962"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.152])
+  by orsmga004.jf.intel.com with ESMTP; 14 Jul 2020 21:36:11 -0700
+Date:   Tue, 14 Jul 2020 21:36:11 -0700
 From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
+To:     Vitaly Kuznetsov <vkuznets@redhat.com>
+Cc:     kvm@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
         Wanpeng Li <wanpengli@tencent.com>,
         Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Junaid Shahid <junaids@google.com>
-Subject: [PATCH 4/8] KVM: x86/mmu: Capture requested page level before NX huge page workaround
-Date:   Tue, 14 Jul 2020 21:27:21 -0700
-Message-Id: <20200715042725.10961-5-sean.j.christopherson@intel.com>
-X-Mailer: git-send-email 2.26.0
-In-Reply-To: <20200715042725.10961-1-sean.j.christopherson@intel.com>
-References: <20200715042725.10961-1-sean.j.christopherson@intel.com>
+        Junaid Shahid <junaids@google.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 5/9] KVM: nSVM: introduce
+ nested_svm_load_cr3()/nested_npt_enabled()
+Message-ID: <20200715043609.GF14404@linux.intel.com>
+References: <20200710141157.1640173-1-vkuznets@redhat.com>
+ <20200710141157.1640173-6-vkuznets@redhat.com>
+ <20200713223814.GG29725@linux.intel.com>
+ <87zh82s5gf.fsf@vitty.brq.redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87zh82s5gf.fsf@vitty.brq.redhat.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Apply the "huge page disallowed" adjustment of the max level only after
-capturing the original requested level.  The requested level will be
-used in a future patch to skip adding pages to the list of disallowed
-huge pages if a huge page wasn't possible anyways, e.g. if the page
-isn't mapped as a huge page in the host.
+On Tue, Jul 14, 2020 at 01:26:24PM +0200, Vitaly Kuznetsov wrote:
+> Sean Christopherson <sean.j.christopherson@intel.com> writes:
+> > IMO the addition of nested_npt_enabled() should be a separate patch, and
+> > the additoin of @nested_npt should be in patch 7.
+> >
+> > Hypothetically speaking, if nested_npt_enabled() is inaccurate at the call
+> > site in nested_prepare_vmcb_save(), then this patch is technically wrong
+> > even though it doesn't introduce a bug.  Given that the call site of
+> > nested_svm_load_cr3() is moved in patch 7, I don't see any value in adding
+> > the placeholder parameter early.
+> >
+> 
+> I see and I mostly agree, I put it here to avoid the unneeded churn and
+> make it easier to review the whole thing: this patch is technically a
+> nop so it can be reviewed in "doesn't change anything" mode and patches
+> which actually change things are smaller.
+> 
+> Paolo already said 'queued' here and your comments can't be addressed in
+> a follow-up patch but I can certainly do v5 if needed.
 
-No functional change intended.
-
-Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
----
- arch/x86/kvm/mmu/mmu.c         | 22 +++++++++++++++-------
- arch/x86/kvm/mmu/paging_tmpl.h |  8 +++-----
- 2 files changed, 18 insertions(+), 12 deletions(-)
-
-diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
-index bbd7e8be2b936..974c9a89c2454 100644
---- a/arch/x86/kvm/mmu/mmu.c
-+++ b/arch/x86/kvm/mmu/mmu.c
-@@ -3238,7 +3238,8 @@ static int host_pfn_mapping_level(struct kvm_vcpu *vcpu, gfn_t gfn,
- }
- 
- static int kvm_mmu_hugepage_adjust(struct kvm_vcpu *vcpu, gfn_t gfn,
--				   int max_level, kvm_pfn_t *pfnp)
-+				   int max_level, kvm_pfn_t *pfnp,
-+				   bool huge_page_disallowed, int *req_level)
- {
- 	struct kvm_memory_slot *slot;
- 	struct kvm_lpage_info *linfo;
-@@ -3246,6 +3247,8 @@ static int kvm_mmu_hugepage_adjust(struct kvm_vcpu *vcpu, gfn_t gfn,
- 	kvm_pfn_t mask;
- 	int level;
- 
-+	*req_level = PG_LEVEL_4K;
-+
- 	if (unlikely(max_level == PG_LEVEL_4K))
- 		return PG_LEVEL_4K;
- 
-@@ -3270,7 +3273,14 @@ static int kvm_mmu_hugepage_adjust(struct kvm_vcpu *vcpu, gfn_t gfn,
- 	if (level == PG_LEVEL_4K)
- 		return level;
- 
--	level = min(level, max_level);
-+	*req_level = level = min(level, max_level);
-+
-+	/*
-+	 * Enforce the iTLB multihit workaround after capturing the requested
-+	 * level, which will be used to do precise, accurate accounting.
-+	 */
-+	if (huge_page_disallowed)
-+		return PG_LEVEL_4K;
- 
- 	/*
- 	 * mmu_notifier_retry() was successful and mmu_lock is held, so
-@@ -3316,17 +3326,15 @@ static int __direct_map(struct kvm_vcpu *vcpu, gpa_t gpa, u32 error_code,
- 	bool huge_page_disallowed = exec && nx_huge_page_workaround_enabled;
- 	struct kvm_shadow_walk_iterator it;
- 	struct kvm_mmu_page *sp;
--	int level, ret;
-+	int level, req_level, ret;
- 	gfn_t gfn = gpa >> PAGE_SHIFT;
- 	gfn_t base_gfn = gfn;
- 
- 	if (WARN_ON(!VALID_PAGE(vcpu->arch.mmu->root_hpa)))
- 		return RET_PF_RETRY;
- 
--	if (huge_page_disallowed)
--		max_level = PG_LEVEL_4K;
--
--	level = kvm_mmu_hugepage_adjust(vcpu, gfn, max_level, &pfn);
-+	level = kvm_mmu_hugepage_adjust(vcpu, gfn, max_level, &pfn,
-+					huge_page_disallowed, &req_level);
- 
- 	trace_kvm_mmu_spte_requested(gpa, level, pfn);
- 	for_each_shadow_entry(vcpu, gpa, it) {
-diff --git a/arch/x86/kvm/mmu/paging_tmpl.h b/arch/x86/kvm/mmu/paging_tmpl.h
-index 5536b2004dac8..b92d936c0900d 100644
---- a/arch/x86/kvm/mmu/paging_tmpl.h
-+++ b/arch/x86/kvm/mmu/paging_tmpl.h
-@@ -636,7 +636,7 @@ static int FNAME(fetch)(struct kvm_vcpu *vcpu, gpa_t addr,
- 	struct kvm_mmu_page *sp = NULL;
- 	struct kvm_shadow_walk_iterator it;
- 	unsigned direct_access, access = gw->pt_access;
--	int top_level, hlevel, ret;
-+	int top_level, hlevel, req_level, ret;
- 	gfn_t base_gfn = gw->gfn;
- 
- 	direct_access = gw->pte_access;
-@@ -682,10 +682,8 @@ static int FNAME(fetch)(struct kvm_vcpu *vcpu, gpa_t addr,
- 			link_shadow_page(vcpu, it.sptep, sp);
- 	}
- 
--	if (huge_page_disallowed)
--		max_level = PG_LEVEL_4K;
--
--	hlevel = kvm_mmu_hugepage_adjust(vcpu, gw->gfn, max_level, &pfn);
-+	hlevel = kvm_mmu_hugepage_adjust(vcpu, gw->gfn, max_level, &pfn,
-+					 huge_page_disallowed, &req_level);
- 
- 	trace_kvm_mmu_spte_requested(addr, gw->level, pfn);
- 
--- 
-2.26.0
-
+Eh, not necessary, I didn't see that the series was in kvm/queue until after
+I hit send.  Thanks!
