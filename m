@@ -2,105 +2,102 @@ Return-Path: <SRS0=kup7=A2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0026EC433E2
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 07:06:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E15CAC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 07:12:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D369B20663
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 07:06:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594796781;
-	bh=5SKEybmNPZ9vGQObkBpkzVnRI16H5OZzmLLIoHERkUo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Ong2LIbDk+qUXmH0zCKiaXdsyqRVWYE+VPQsZt1E9NSCytLfeBkw9fgRjHonclpAx
-	 WpunB6pw9vI2kDCc5FnkRRLt9rc1KY0tnnatBme+ylwUUza1OFvjXwBL5004y3TerZ
-	 zCb4zTq9JI2nKkUFPu1k0dW3NOk0O6pVeZYmiMzo=
+	by mail.kernel.org (Postfix) with ESMTP id B9AC22065E
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 07:12:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728660AbgGOHGU (ORCPT
+        id S1729108AbgGOHMK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 03:06:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55556 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725852AbgGOHGU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 03:06:20 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 35EF12065E;
-        Wed, 15 Jul 2020 07:06:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594796779;
-        bh=5SKEybmNPZ9vGQObkBpkzVnRI16H5OZzmLLIoHERkUo=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=II8/IwKrHJw8tg2OyVy2S1RfQO2+9lm2GjOzWPo6tHg1P9ubopcnwN9v1WkYRxmQN
-         WCRgyaZnmWCIW/B+MJBO4mBPy21jPdtd+QYGBqBeoOBbeFCT79dMy6WGGma03dUPDu
-         vOjfdsHD0XaoCRsakt/uGWkyaiIcOl82UtfAUap4=
-Date:   Wed, 15 Jul 2020 09:06:14 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Chen Yu <yu.c.chen@intel.com>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        Len Brown <len.brown@intel.com>,
-        Michal Miroslaw <mirq-linux@rere.qmqm.pl>,
-        Zhang Rui <rui.zhang@intel.com>, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/2][RESEND v3] PM-runtime: change the tracepoints to
- cover all usage_count
-Message-ID: <20200715070614.GA2297388@kroah.com>
-References: <cover.1594790493.git.yu.c.chen@intel.com>
- <395187057e486df9a4328bc6d7d4ee912967fdb3.1594790493.git.yu.c.chen@intel.com>
+        Wed, 15 Jul 2020 03:12:10 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:7316 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725852AbgGOHMK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jul 2020 03:12:10 -0400
+Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 61AE4A5AF7F51AD256AB;
+        Wed, 15 Jul 2020 15:12:02 +0800 (CST)
+Received: from [127.0.0.1] (10.174.177.219) by DGGEMS402-HUB.china.huawei.com
+ (10.3.19.202) with Microsoft SMTP Server id 14.3.487.0; Wed, 15 Jul 2020
+ 15:11:57 +0800
+Subject: Re: [PATCH v4 net] rtnetlink: Fix memory(net_device) leak when
+ ->newlink fails
+To:     Cong Wang <xiyou.wangcong@gmail.com>
+CC:     David Miller <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        "Jiri Pirko" <jiri@mellanox.com>,
+        Eric Dumazet <edumazet@google.com>,
+        "Linux Kernel Network Developers" <netdev@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+References: <20200715014930.323472-1-chenweilong@huawei.com>
+ <CAM_iQpUgkVnYh=ETvbqEiXSD8kS22Xc10JA6HU5W9nXNMzaJJg@mail.gmail.com>
+From:   Weilong Chen <chenweilong@huawei.com>
+Message-ID: <1b62058a-8f49-bb5e-685f-48da16f1fb1e@huawei.com>
+Date:   Wed, 15 Jul 2020 15:11:56 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <395187057e486df9a4328bc6d7d4ee912967fdb3.1594790493.git.yu.c.chen@intel.com>
+In-Reply-To: <CAM_iQpUgkVnYh=ETvbqEiXSD8kS22Xc10JA6HU5W9nXNMzaJJg@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.174.177.219]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 15, 2020 at 02:28:03PM +0800, Chen Yu wrote:
-> Commit d229290689ae ("PM-runtime: add tracepoints for usage_count changes")
-> has added some tracepoints to monitor the change of runtime usage, and
-> there is something to improve:
-> 1. There are some places that adjust the usage count not
->    been traced yet. For example, pm_runtime_get_noresume() and
->    pm_runtime_put_noidle()
-> 2. The change of the usage count will not be tracked if decreased
->    from 1 to 0.
+On 2020/7/15 13:45, Cong Wang wrote:
+> On Tue, Jul 14, 2020 at 6:27 PM Weilong Chen <chenweilong@huawei.com> wrote:
+>>
+>> When vlan_newlink call register_vlan_dev fails, it might return error
+>> with dev->reg_state = NETREG_UNREGISTERED. The rtnl_newlink should
+>> free the memory. But currently rtnl_newlink only free the memory which
+>> state is NETREG_UNINITIALIZED.
+>>
+>> BUG: memory leak
+>> unreferenced object 0xffff8881051de000 (size 4096):
+>>   comm "syz-executor139", pid 560, jiffies 4294745346 (age 32.445s)
+>>   hex dump (first 32 bytes):
+>>     76 6c 61 6e 32 00 00 00 00 00 00 00 00 00 00 00  vlan2...........
+>>     00 45 28 03 81 88 ff ff 00 00 00 00 00 00 00 00  .E(.............
+>>   backtrace:
+>>     [<0000000047527e31>] kmalloc_node include/linux/slab.h:578 [inline]
+>>     [<0000000047527e31>] kvmalloc_node+0x33/0xd0 mm/util.c:574
+>>     [<000000002b59e3bc>] kvmalloc include/linux/mm.h:753 [inline]
+>>     [<000000002b59e3bc>] kvzalloc include/linux/mm.h:761 [inline]
+>>     [<000000002b59e3bc>] alloc_netdev_mqs+0x83/0xd90 net/core/dev.c:9929
+>>     [<000000006076752a>] rtnl_create_link+0x2c0/0xa20 net/core/rtnetlink.c:3067
+>>     [<00000000572b3be5>] __rtnl_newlink+0xc9c/0x1330 net/core/rtnetlink.c:3329
+>>     [<00000000e84ea553>] rtnl_newlink+0x66/0x90 net/core/rtnetlink.c:3397
+>>     [<0000000052c7c0a9>] rtnetlink_rcv_msg+0x540/0x990 net/core/rtnetlink.c:5460
+>>     [<000000004b5cb379>] netlink_rcv_skb+0x12b/0x3a0 net/netlink/af_netlink.c:2469
+>>     [<00000000c71c20d3>] netlink_unicast_kernel net/netlink/af_netlink.c:1303 [inline]
+>>     [<00000000c71c20d3>] netlink_unicast+0x4c6/0x690 net/netlink/af_netlink.c:1329
+>>     [<00000000cca72fa9>] netlink_sendmsg+0x735/0xcc0 net/netlink/af_netlink.c:1918
+>>     [<000000009221ebf7>] sock_sendmsg_nosec net/socket.c:652 [inline]
+>>     [<000000009221ebf7>] sock_sendmsg+0x109/0x140 net/socket.c:672
+>>     [<000000001c30ffe4>] ____sys_sendmsg+0x5f5/0x780 net/socket.c:2352
+>>     [<00000000b71ca6f3>] ___sys_sendmsg+0x11d/0x1a0 net/socket.c:2406
+>>     [<0000000007297384>] __sys_sendmsg+0xeb/0x1b0 net/socket.c:2439
+>>     [<000000000eb29b11>] do_syscall_64+0x56/0xa0 arch/x86/entry/common.c:359
+>>     [<000000006839b4d0>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
+>>
+>> Fixes: e51fb152318ee6 ("rtnetlink: fix a memory leak when ->newlink fails")
 > 
-> This patch intends to adjust the logic to be consistent with the
-> change of usage_counter, that is to say, only after the counter has
-> been possibly modified, we record it. Besides, all usage changes will
-> be shown using rpm_usage even if included by other trace points.
-> And these changes has helped track down the e1000e runtime issue.
+> This bug is apparently not introduced by my commit above.
 > 
-> Reviewed-by: Michał Mirosław <mirq-linux@rere.qmqm.pl>
-> Signed-off-by: Chen Yu <yu.c.chen@intel.com>
-> ---
->  drivers/base/power/runtime.c | 38 +++++++++++++++++++++++-------------
->  1 file changed, 24 insertions(+), 14 deletions(-)
+> It should be commit cb626bf566eb4433318d35681286c494f0,
+> right? That commit introduced NETREG_UNREGISTERED on the path.
 > 
-> diff --git a/drivers/base/power/runtime.c b/drivers/base/power/runtime.c
-> index 85a248e196ca..5789d2624513 100644
-> --- a/drivers/base/power/runtime.c
-> +++ b/drivers/base/power/runtime.c
-> @@ -1004,10 +1004,11 @@ int __pm_runtime_idle(struct device *dev, int rpmflags)
->  	int retval;
->  
->  	if (rpmflags & RPM_GET_PUT) {
-> -		if (!atomic_dec_and_test(&dev->power.usage_count)) {
-> -			trace_rpm_usage_rcuidle(dev, rpmflags);
-> +		bool non_zero = !atomic_dec_and_test(&dev->power.usage_count);
-> +
-> +		trace_rpm_usage_rcuidle(dev, rpmflags);
+Yes, you'er right, I'll resubmit.
+Thanks.
+> .
+> 
 
-Why not just call trace everywhere before you do the atomic operations?
-Why does the trace need to be called after the operation everywhere?
-
-thanks,
-
-greg k-h
