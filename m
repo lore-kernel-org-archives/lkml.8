@@ -2,168 +2,128 @@ Return-Path: <SRS0=kup7=A2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DEDD4C433E6
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 15:00:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E5B5C433E5
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 15:04:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B6B93206D5
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 15:00:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C226206D5
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 15:04:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pve2dJx8"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="W1LSiDUw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727856AbgGOPAt (ORCPT
+        id S1727818AbgGOPEL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 11:00:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56234 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727049AbgGOPAs (ORCPT
+        Wed, 15 Jul 2020 11:04:11 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:44134 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725811AbgGOPEK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 11:00:48 -0400
-Received: from mail-pl1-x62f.google.com (mail-pl1-x62f.google.com [IPv6:2607:f8b0:4864:20::62f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BB01EC061755;
-        Wed, 15 Jul 2020 08:00:48 -0700 (PDT)
-Received: by mail-pl1-x62f.google.com with SMTP id x9so2508798plr.2;
-        Wed, 15 Jul 2020 08:00:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=PyZvckAjalYpEVUTRpJhb3SKOfP7lUmnicUZX0+4jdM=;
-        b=pve2dJx83Ddjv6Utq4oCow6ZdxjjT1Kqmy/tJLv/iVdTWP5yQlY+o63YQUcrr8odBs
-         8ud0mWoQzd7MIbt96Bl0r3/v82OPy60LAX+DnIsHOVyLcumwfkbOpMjSCNzNmx6xp+PP
-         O3YXpBk7PTsgFrkhbMR98nPYS1L2iihLDc4tZySrMr7Mla5tbj6IOQRwLVUX4CY4pb9S
-         egFhHQ8eFTCQZQ/LyDQN2rJE/L8lCJkMZeprrOlTgrGwcz4GHg6L8WmXs78eF5w71vu7
-         OGv0xH+2FAnhCwhFtnC84WtUz07W+gNJnuuBhiV7w+e4tOF+p6+TS+LiOieqxYWHKFsj
-         LkfA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=PyZvckAjalYpEVUTRpJhb3SKOfP7lUmnicUZX0+4jdM=;
-        b=d89P4XvnDFD8ZR88DVLuzmFEPgWZgqD3VtQVjLYKJkfvWKcZ4PAR/VUZjR54lJciYY
-         ZckuTarFisVXIPBXzMSOj2DSW7utXH4Hw6HgYEVowxc7gIEpy/BROrnR5Hd0PrEnFvJr
-         AS7gM6/ygJ3b1g3lZYK+M6wD/cz8SkTXTwCBNkeP/VgqHv/pKRHF5qPqY6wPN4B2wF3g
-         +ZxnrXbzP0DTzqW+BgxXLzfxxAezYxaJhqDZVwBqvGmQreOiuiPxkmcQJ52wnpjZJRMS
-         Axxw94GYXGhSXEGrUrA6PdqG9NerLdENtquXEIvAe3avAny1oxro9b7B3CbqJ8COwirI
-         p3sA==
-X-Gm-Message-State: AOAM5305lTMRkxy0/3YpymJJ/v3GRty3C7aG2Vd7rad89VXUCH1ZV9yG
-        CqOQz+be3p56dmYJ4nYd2tM=
-X-Google-Smtp-Source: ABdhPJyUw09w57UjhtR78T3NcaMKWAbNcNl9uUQJklcEpqGfP5VCZY2ZOvRoRgaFPoXrJagLon1rWw==
-X-Received: by 2002:a17:902:9f8e:: with SMTP id g14mr5873452plq.248.1594825248042;
-        Wed, 15 Jul 2020 08:00:48 -0700 (PDT)
-Received: from localhost.localdomain (2001-b011-5c02-f0e1-dcc0-f223-b5cd-3164.dynamic-ip6.hinet.net. [2001:b011:5c02:f0e1:dcc0:f223:b5cd:3164])
-        by smtp.googlemail.com with ESMTPSA id j2sm2665pjy.1.2020.07.15.08.00.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 15 Jul 2020 08:00:47 -0700 (PDT)
-From:   Crag Wang <crag0715@gmail.com>
-X-Google-Original-From: Crag Wang <crag.wang@dell.com>
-To:     Sebastian Reichel <sre@kernel.org>
-Cc:     mathewk@chromium.org, mario.limonciello@dell.com,
-        campello@google.com, Crag Wang <crag.wang@dell.com>,
-        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH RESEND 1/1] power_supply: wilco_ec: Add permanent long life charging mode
-Date:   Wed, 15 Jul 2020 22:55:12 +0800
-Message-Id: <20200715145511.9464-1-crag.wang@dell.com>
-X-Mailer: git-send-email 2.20.1
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Wed, 15 Jul 2020 11:04:10 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06FF28PN058008;
+        Wed, 15 Jul 2020 15:04:07 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
+ mime-version : subject : from : in-reply-to : date : cc :
+ content-transfer-encoding : message-id : references : to;
+ s=corp-2020-01-29; bh=DD4W8IxdwHhBImQ38dCQSbHYl/4/M9t0RzXrlshPkRQ=;
+ b=W1LSiDUwvjnhHON4NQzG7EJBBZa6POUpYK5CN+CGasjjUfDPq7KMcalyy5ictAUVGjXN
+ fAUK1tVq72sBW/yoY03rafkzS8/UV7Cg7yZfGZfiwzHgsJYUNJpVaRrueyLTPk4KGUzL
+ Tg2Y3AJpW5gPIJ/qcFH9pWtVOtaJJltwBG9dNuy/1MJ00oDuUvQs3kjlS/2gDifKYTz9
+ kzrKmp3qXXbjokBUtBbVxg+62ZuTcyyPeY++i8eDDz5XJKXLbDsUuTl1Gnx9iSBsdGm4
+ JhTvT5KbKKxHrRvxZtWa9d+w4YUMv4f2X2jPpu3iuICuPVACQgDXwDsuHGDbZUOcdaYh pA== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2130.oracle.com with ESMTP id 3274urc06g-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 15 Jul 2020 15:04:05 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06FEveIf103834;
+        Wed, 15 Jul 2020 15:02:05 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by userp3020.oracle.com with ESMTP id 327q6unc30-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 15 Jul 2020 15:02:03 +0000
+Received: from abhmp0005.oracle.com (abhmp0005.oracle.com [141.146.116.11])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 06FF22QX005651;
+        Wed, 15 Jul 2020 15:02:02 GMT
+Received: from anon-dhcp-152.1015granger.net (/68.61.232.219)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 15 Jul 2020 08:02:02 -0700
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.80.23.2.2\))
+Subject: Re: [Regression] "SUNRPC: Add "@len" parameter to gss_unwrap()"
+ breaks NFS Kerberos on upstream stable 5.4.y
+From:   Chuck Lever <chuck.lever@oracle.com>
+In-Reply-To: <309E203B-8818-4E33-87F0-017E127788E2@canonical.com>
+Date:   Wed, 15 Jul 2020 11:02:00 -0400
+Cc:     matthew.ruffell@canonical.com,
+        linux-stable <stable@vger.kernel.org>,
+        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
+        "open list:NETWORKING DRIVERS" <netdev@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <424D9E36-C51B-46E8-9A07-D329821F2647@oracle.com>
+References: <309E203B-8818-4E33-87F0-017E127788E2@canonical.com>
+To:     Kai-Heng Feng <kai.heng.feng@canonical.com>
+X-Mailer: Apple Mail (2.3608.80.23.2.2)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9683 signatures=668680
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 suspectscore=0
+ phishscore=0 malwarescore=0 mlxlogscore=999 bulkscore=0 mlxscore=0
+ spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2007150123
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9683 signatures=668680
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 lowpriorityscore=0 impostorscore=0
+ suspectscore=0 phishscore=0 spamscore=0 mlxlogscore=999 malwarescore=0
+ mlxscore=0 priorityscore=1501 adultscore=0 bulkscore=0 clxscore=1011
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2007150124
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is a long life mode set in the factory for extended warranty
-battery, the power charging rate is customized so that battery at
-work last longer.
 
-Presently switching to a different battery charging mode is through
-EC PID 0x0710 to configure the battery firmware, this operation will
-be blocked by EC with failure code 0x01 when PLL mode is already
-in use.
 
-Signed-off-by: Crag Wang <crag.wang@dell.com>
----
- Documentation/ABI/testing/sysfs-class-power-wilco | 3 +++
- drivers/power/supply/power_supply_sysfs.c         | 1 +
- drivers/power/supply/wilco-charger.c              | 5 +++++
- include/linux/power_supply.h                      | 1 +
- 4 files changed, 10 insertions(+)
+> On Jul 15, 2020, at 10:48 AM, Kai-Heng Feng =
+<kai.heng.feng@canonical.com> wrote:
+>=20
+> Hi,
+>=20
+> Multiple users reported NFS causes NULL pointer dereference [1] on =
+Ubuntu, due to commit "SUNRPC: Add "@len" parameter to gss_unwrap()" and =
+commit "SUNRPC: Fix GSS privacy computation of auth->au_ralign".
+>=20
+> The same issue happens on upstream stable 5.4.y branch.
+> The mainline kernel doesn't have this issue though.
+>=20
+> Should we revert them? Or is there any missing commits need to be =
+backported to v5.4?
+>=20
+> [1] https://bugs.launchpad.net/bugs/1886277
+>=20
+> Kai-Heng
 
-diff --git a/Documentation/ABI/testing/sysfs-class-power-wilco b/Documentation/ABI/testing/sysfs-class-power-wilco
-index da1d6ffe5e3c..1c91b17b6fd4 100644
---- a/Documentation/ABI/testing/sysfs-class-power-wilco
-+++ b/Documentation/ABI/testing/sysfs-class-power-wilco
-@@ -14,6 +14,9 @@ Description:
- 			Charging begins when level drops below
- 			charge_control_start_threshold, and ceases when
- 			level is above charge_control_end_threshold.
-+		Permanent Long Life: Last longer battery life, this mode
-+			is programmed once in the factory. Switching to a
-+			different mode is unavailable.
- 
- What:		/sys/class/power_supply/wilco-charger/charge_control_start_threshold
- Date:		April 2019
-diff --git a/drivers/power/supply/power_supply_sysfs.c b/drivers/power/supply/power_supply_sysfs.c
-index bc79560229b5..af3884015ad8 100644
---- a/drivers/power/supply/power_supply_sysfs.c
-+++ b/drivers/power/supply/power_supply_sysfs.c
-@@ -87,6 +87,7 @@ static const char * const POWER_SUPPLY_CHARGE_TYPE_TEXT[] = {
- 	[POWER_SUPPLY_CHARGE_TYPE_STANDARD]	= "Standard",
- 	[POWER_SUPPLY_CHARGE_TYPE_ADAPTIVE]	= "Adaptive",
- 	[POWER_SUPPLY_CHARGE_TYPE_CUSTOM]	= "Custom",
-+	[POWER_SUPPLY_CHARGE_TYPE_LONGLIFE]	= "Permanent Long Life",
- };
- 
- static const char * const POWER_SUPPLY_HEALTH_TEXT[] = {
-diff --git a/drivers/power/supply/wilco-charger.c b/drivers/power/supply/wilco-charger.c
-index b3c6d7cdd731..713c3018652f 100644
---- a/drivers/power/supply/wilco-charger.c
-+++ b/drivers/power/supply/wilco-charger.c
-@@ -27,6 +27,7 @@ enum charge_mode {
- 	CHARGE_MODE_AC = 3,	/* Mostly AC use, used for Trickle */
- 	CHARGE_MODE_AUTO = 4,	/* Used for Adaptive */
- 	CHARGE_MODE_CUSTOM = 5,	/* Used for Custom */
-+	CHARGE_MODE_LONGLIFE = 6, /* Used for Permanent Long Life */
- };
- 
- #define CHARGE_LOWER_LIMIT_MIN	50
-@@ -48,6 +49,8 @@ static int psp_val_to_charge_mode(int psp_val)
- 		return CHARGE_MODE_AUTO;
- 	case POWER_SUPPLY_CHARGE_TYPE_CUSTOM:
- 		return CHARGE_MODE_CUSTOM;
-+	case POWER_SUPPLY_CHARGE_TYPE_LONGLIFE:
-+		return CHARGE_MODE_LONGLIFE;
- 	default:
- 		return -EINVAL;
- 	}
-@@ -67,6 +70,8 @@ static int charge_mode_to_psp_val(enum charge_mode mode)
- 		return POWER_SUPPLY_CHARGE_TYPE_ADAPTIVE;
- 	case CHARGE_MODE_CUSTOM:
- 		return POWER_SUPPLY_CHARGE_TYPE_CUSTOM;
-+	case CHARGE_MODE_LONGLIFE:
-+		return POWER_SUPPLY_CHARGE_TYPE_LONGLIFE;
- 	default:
- 		return -EINVAL;
- 	}
-diff --git a/include/linux/power_supply.h b/include/linux/power_supply.h
-index ac1345a48ad0..528a3eaa2320 100644
---- a/include/linux/power_supply.h
-+++ b/include/linux/power_supply.h
-@@ -48,6 +48,7 @@ enum {
- 	POWER_SUPPLY_CHARGE_TYPE_STANDARD,	/* normal speed */
- 	POWER_SUPPLY_CHARGE_TYPE_ADAPTIVE,	/* dynamically adjusted speed */
- 	POWER_SUPPLY_CHARGE_TYPE_CUSTOM,	/* use CHARGE_CONTROL_* props */
-+	POWER_SUPPLY_CHARGE_TYPE_LONGLIFE,	/* slow speed, longer life */
- };
- 
- enum {
--- 
-2.17.1
+31c9590ae468 ("SUNRPC: Add "@len" parameter to gss_unwrap()") is a =
+refactoring
+change. It shouldn't have introduced any behavior difference. But in =
+theory,
+practice and theory should be the same...
 
----
-The original author, Nick no longer being around and that's why he's not on CC.
+Check if 0a8e7b7d0846 ("SUNRPC: Revert 241b1f419f0e ("SUNRPC: Remove =
+xdr_buf_trim()")")
+is also applied to 5.4.0-40-generic.
+
+It would help to know if v5.5 stable is working for you. I haven't had =
+any
+problems with it.
+
+
+--
+Chuck Lever
+
+
+
