@@ -2,114 +2,232 @@ Return-Path: <SRS0=kup7=A2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CC37C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 20:48:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18A7CC433E4
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 20:50:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 24A282065F
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 20:48:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E5BBB2065F
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 20:50:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WfhBj627"
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="rHcL5k2E"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726831AbgGOUsf (ORCPT
+        id S1726905AbgGOUuA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 16:48:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53608 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726356AbgGOUse (ORCPT
+        Wed, 15 Jul 2020 16:50:00 -0400
+Received: from smtp-fw-6002.amazon.com ([52.95.49.90]:24689 "EHLO
+        smtp-fw-6002.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725917AbgGOUuA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 16:48:34 -0400
-Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A213AC061755
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 13:48:34 -0700 (PDT)
-Received: by mail-pj1-x1044.google.com with SMTP id mn17so3688784pjb.4
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 13:48:34 -0700 (PDT)
+        Wed, 15 Jul 2020 16:50:00 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=YwtQ+qIZRMu1aHjFHPtF40fPrwJ9tfeRwj/jvnsJYBE=;
-        b=WfhBj627Y0WOtyr1wRjCUf4CYVWiv9xzOas2x0/JPpSflqWZmNEp95WvwJiPslkU2d
-         Kios/eGN2XcbMmUIQ9klS1VhHOTkfjtPmpIyJJFaAHb8FJTBq5kGR2CZ5/HY+l2RjpVi
-         i2grx16HFurjU299NUhstWKgdpL5bNT08QT9ZevBaeFxDI/+RZ00qhq2VPxTxwsiKmce
-         UdGnoQzlQXNtlhig++nO4/kAuwBPXjZL9/gLz8HWgggqzUUDW+WHz1bxHPcvq1ta8lSr
-         6+f9FCbLIynLkNZbyxGHPGbSHsrIRaKOoIb8D841N/GpaWFnWcg4hUlqmD0RJpDt+jrL
-         bWAw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=YwtQ+qIZRMu1aHjFHPtF40fPrwJ9tfeRwj/jvnsJYBE=;
-        b=lEdiy4XyhrbGGJScG6MhH43PY4ou1Hq1U8bXEnEx67mlcleVBb3oPuchOHPkr847nN
-         VVDo9VXNqwZDR2F53vopI8NtdpxNqENEgyddbchHe5+lhN79Q36i3wd71MipgdW+mzgR
-         Te1ke16H825JAUx5YjKlZ/V/IvQnL1rj/d9KAiB6avr4u/J01cwXYwqT8w8TPWwOn45X
-         1AJnW62qskgJ5uJQEUuqRvjFqokpAP7VeyXH7hGua5iHXMJFRQPgvxzyqqNKp8sf/mcZ
-         E7QG2tLKf+M3Ocnnd0oqt6W3jkbmHk0apZc/Rz+mXYswocU0Em3aw1E2dWL4W1QXIJAJ
-         JM7Q==
-X-Gm-Message-State: AOAM530VUdBELtvWyhemNV3cxp5w6YiOtGaNQ20luD81x+i2j0HzBTLs
-        KIe0f6WWv7xMNPfkbpw/Yr4=
-X-Google-Smtp-Source: ABdhPJz1GJ2Ik7lZDPIUXV5ePwyu/YwogLbPU4apDaOlkhisq+aJKtFRAA1r//dZtZBvcY/zN4hOBQ==
-X-Received: by 2002:a17:90a:a413:: with SMTP id y19mr1460097pjp.59.1594846114095;
-        Wed, 15 Jul 2020 13:48:34 -0700 (PDT)
-Received: from Asurada-Nvidia (searspoint.nvidia.com. [216.228.112.21])
-        by smtp.gmail.com with ESMTPSA id w9sm2983563pja.39.2020.07.15.13.48.33
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 15 Jul 2020 13:48:33 -0700 (PDT)
-Date:   Wed, 15 Jul 2020 13:48:09 -0700
-From:   Nicolin Chen <nicoleotsuka@gmail.com>
-To:     Lee Jones <lee.jones@linaro.org>
-Cc:     broonie@kernel.org, lgirdwood@gmail.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        alsa-devel@alsa-project.org, Timur Tabi <timur@kernel.org>,
-        Xiubo Li <Xiubo.Lee@gmail.com>,
-        Fabio Estevam <festevam@gmail.com>,
-        linuxppc-dev@lists.ozlabs.org
-Subject: Re: [PATCH v2 1/1] ASoC: fsl: fsl-asoc-card: Trivial: Fix
- misspelling of 'exists'
-Message-ID: <20200715204809.GA14565@Asurada-Nvidia>
-References: <20200715150009.407442-1-lee.jones@linaro.org>
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1594846198; x=1626382198;
+  h=date:from:to:cc:message-id:references:mime-version:
+   content-transfer-encoding:in-reply-to:subject;
+  bh=Z0Bj5n1UQ2ZkITPj7VMLUCR260N7o5zgaQh0zJTjo9w=;
+  b=rHcL5k2EM9ZnAeTwmLHvVfBzhBqtXI1Rl1pkYVHndn+SimCjMfAyYbvm
+   LkIed8BdWvtvlWzoVFr0fnFWPLWUh51en8D7+XKd6fvXgNSA4xfxVi77k
+   wcMvUuFYp8S4c/5hPcoN7ccBPq0+YxzqUPJGGK7/Td2cKpyti0+KJf3qJ
+   s=;
+IronPort-SDR: egCxTTQAJwMI43/0aX/z8oXu3NQj1TiM9Enuy46fU6CQHIN1t4Iofu4RMoWeW9abbFwiF0d9Lw
+ DMcfZ+o0VE1A==
+X-IronPort-AV: E=Sophos;i="5.75,356,1589241600"; 
+   d="scan'208";a="42136950"
+Subject: Re: [PATCH v2 01/11] xen/manage: keep track of the on-going suspend mode
+Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-2a-119b4f96.us-west-2.amazon.com) ([10.43.8.6])
+  by smtp-border-fw-out-6002.iad6.amazon.com with ESMTP; 15 Jul 2020 20:49:55 +0000
+Received: from EX13MTAUWB001.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan2.pdx.amazon.com [10.170.41.162])
+        by email-inbound-relay-2a-119b4f96.us-west-2.amazon.com (Postfix) with ESMTPS id 75ECA1A289B;
+        Wed, 15 Jul 2020 20:49:53 +0000 (UTC)
+Received: from EX13D01UWB004.ant.amazon.com (10.43.161.157) by
+ EX13MTAUWB001.ant.amazon.com (10.43.161.207) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Wed, 15 Jul 2020 20:49:44 +0000
+Received: from EX13MTAUWB001.ant.amazon.com (10.43.161.207) by
+ EX13d01UWB004.ant.amazon.com (10.43.161.157) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Wed, 15 Jul 2020 20:49:44 +0000
+Received: from dev-dsk-anchalag-2a-9c2d1d96.us-west-2.amazon.com
+ (172.22.96.68) by mail-relay.amazon.com (10.43.161.249) with Microsoft SMTP
+ Server id 15.0.1497.2 via Frontend Transport; Wed, 15 Jul 2020 20:49:43 +0000
+Received: by dev-dsk-anchalag-2a-9c2d1d96.us-west-2.amazon.com (Postfix, from userid 4335130)
+        id A13584E7C6; Wed, 15 Jul 2020 20:49:43 +0000 (UTC)
+Date:   Wed, 15 Jul 2020 20:49:43 +0000
+From:   Anchal Agarwal <anchalag@amazon.com>
+To:     Boris Ostrovsky <boris.ostrovsky@oracle.com>
+CC:     <tglx@linutronix.de>, <mingo@redhat.com>, <bp@alien8.de>,
+        <hpa@zytor.com>, <x86@kernel.org>, <jgross@suse.com>,
+        <linux-pm@vger.kernel.org>, <linux-mm@kvack.org>,
+        <kamatam@amazon.com>, <sstabellini@kernel.org>,
+        <konrad.wilk@oracle.com>, <roger.pau@citrix.com>,
+        <axboe@kernel.dk>, <davem@davemloft.net>, <rjw@rjwysocki.net>,
+        <len.brown@intel.com>, <pavel@ucw.cz>, <peterz@infradead.org>,
+        <eduval@amazon.com>, <sblbir@amazon.com>,
+        <xen-devel@lists.xenproject.org>, <vkuznets@redhat.com>,
+        <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <dwmw@amazon.co.uk>, <benh@kernel.crashing.org>,
+        <anchalag@amazon.com>
+Message-ID: <20200715204943.GB17938@dev-dsk-anchalag-2a-9c2d1d96.us-west-2.amazon.com>
+References: <cover.1593665947.git.anchalag@amazon.com>
+ <20200702182136.GA3511@dev-dsk-anchalag-2a-9c2d1d96.us-west-2.amazon.com>
+ <50298859-0d0e-6eb0-029b-30df2a4ecd63@oracle.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="utf-8"
 Content-Disposition: inline
-In-Reply-To: <20200715150009.407442-1-lee.jones@linaro.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <50298859-0d0e-6eb0-029b-30df2a4ecd63@oracle.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 15, 2020 at 04:00:09PM +0100, Lee Jones wrote:
-> Cc: Timur Tabi <timur@kernel.org>
-> Cc: Nicolin Chen <nicoleotsuka@gmail.com>
-
-Acked-by: Nicolin Chen <nicoleotsuka@gmail.com>
-
-> Cc: Xiubo Li <Xiubo.Lee@gmail.com>
-> Cc: Fabio Estevam <festevam@gmail.com>
-> Cc: linuxppc-dev@lists.ozlabs.org
-> Signed-off-by: Lee Jones <lee.jones@linaro.org>
-> ---
->  sound/soc/fsl/fsl-asoc-card.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+On Mon, Jul 13, 2020 at 11:52:01AM -0400, Boris Ostrovsky wrote:
+> CAUTION: This email originated from outside of the organization. Do not click links or open attachments unless you can confirm the sender and know the content is safe.
 > 
-> diff --git a/sound/soc/fsl/fsl-asoc-card.c b/sound/soc/fsl/fsl-asoc-card.c
-> index faac6ce9a82cb..dbacdd25dfe76 100644
-> --- a/sound/soc/fsl/fsl-asoc-card.c
-> +++ b/sound/soc/fsl/fsl-asoc-card.c
-> @@ -92,7 +92,7 @@ struct fsl_asoc_card_priv {
->  };
->  
->  /*
-> - * This dapm route map exits for DPCM link only.
-> + * This dapm route map exists for DPCM link only.
->   * The other routes shall go through Device Tree.
->   *
->   * Note: keep all ASRC routes in the second half
-> -- 
-> 2.25.1
+> 
+> 
+> On 7/2/20 2:21 PM, Anchal Agarwal wrote:
+> > From: Munehisa Kamata <kamatam@amazon.com>
+> >
+> > Guest hibernation is different from xen suspend/resume/live migration.
+> > Xen save/restore does not use pm_ops as is needed by guest hibernation.
+> > Hibernation in guest follows ACPI path and is guest inititated , the
+> > hibernation image is saved within guest as compared to later modes
+> > which are xen toolstack assisted and image creation/storage is in
+> > control of hypervisor/host machine.
+> > To differentiate between Xen suspend and PM hibernation, keep track
+> > of the on-going suspend mode by mainly using a new PM notifier.
+> > Introduce simple functions which help to know the on-going suspend mode
+> > so that other Xen-related code can behave differently according to the
+> > current suspend mode.
+> > Since Xen suspend doesn't have corresponding PM event, its main logic
+> > is modfied to acquire pm_mutex and set the current mode.
+> >
+> > Though, acquirng pm_mutex is still right thing to do, we may
+> > see deadlock if PM hibernation is interrupted by Xen suspend.
+> > PM hibernation depends on xenwatch thread to process xenbus state
+> > transactions, but the thread will sleep to wait pm_mutex which is
+> > already held by PM hibernation context in the scenario. Xen shutdown
+> > code may need some changes to avoid the issue.
+> >
+> > [Anchal Agarwal: Changelog]:
+> >  RFC v1->v2: Code refactoring
+> >  v1->v2:     Remove unused functions for PM SUSPEND/PM hibernation
+> >
+> > Signed-off-by: Anchal Agarwal <anchalag@amazon.com>
+> > Signed-off-by: Munehisa Kamata <kamatam@amazon.com>
+> > ---
+> >  drivers/xen/manage.c  | 60 +++++++++++++++++++++++++++++++++++++++++++
+> >  include/xen/xen-ops.h |  1 +
+> >  2 files changed, 61 insertions(+)
+> >
+> > diff --git a/drivers/xen/manage.c b/drivers/xen/manage.c
+> > index cd046684e0d1..69833fd6cfd1 100644
+> > --- a/drivers/xen/manage.c
+> > +++ b/drivers/xen/manage.c
+> > @@ -14,6 +14,7 @@
+> >  #include <linux/freezer.h>
+> >  #include <linux/syscore_ops.h>
+> >  #include <linux/export.h>
+> > +#include <linux/suspend.h>
+> >
+> >  #include <xen/xen.h>
+> >  #include <xen/xenbus.h>
+> > @@ -40,6 +41,20 @@ enum shutdown_state {
+> >  /* Ignore multiple shutdown requests. */
+> >  static enum shutdown_state shutting_down = SHUTDOWN_INVALID;
+> >
+> > +enum suspend_modes {
+> > +     NO_SUSPEND = 0,
+> > +     XEN_SUSPEND,
+> > +     PM_HIBERNATION,
+> > +};
+> > +
+> > +/* Protected by pm_mutex */
+> > +static enum suspend_modes suspend_mode = NO_SUSPEND;
+> > +
+> > +bool xen_is_xen_suspend(void)
+> 
+> 
+> Weren't you going to call this pv suspend? (And also --- is this suspend
+> or hibernation? Your commit messages and cover letter talk about fixing
+> hibernation).
+> 
+> 
+This is for hibernation is for pvhvm/hvm/pv-on-hvm guests as you may call it.
+The method is just there to check if "xen suspend" is in progress.
+I do not see "xen_suspend" differentiating between pv or hvm
+domain until later in the code hence, I abstracted it to xen_is_xen_suspend.
+> > +{
+> > +     return suspend_mode == XEN_SUSPEND;
+> > +}
+> > +
+> 
+> 
+> 
+> > +
+> > +static int xen_pm_notifier(struct notifier_block *notifier,
+> > +                     unsigned long pm_event, void *unused)
+> > +{
+> > +     switch (pm_event) {
+> > +     case PM_SUSPEND_PREPARE:
+> > +     case PM_HIBERNATION_PREPARE:
+> > +     case PM_RESTORE_PREPARE:
+> > +             suspend_mode = PM_HIBERNATION;
+> 
+> 
+> Do you ever use this mode? It seems to me all you care about is whether
+> or not we are doing XEN_SUSPEND. And so perhaps suspend_mode could
+> become a boolean. And then maybe even drop it altogether because it you
+> should be able to key off (shutting_down == SHUTDOWN_SUSPEND).
+> 
+> 
+The mode was left there in case its needed for restore prepare cases. But you
+are right the only thing I currently care about whether shutting_down ==
+SHUTDOWN_SUSPEND. Infact, the notifier may not be needed in first place.
+xen_is_xen_suspend could work right off the bat using 'shutting_down' variable
+itself. *I think so* I will test it on my end and send an updated patch.
+> > +             break;
+> > +     case PM_POST_SUSPEND:
+> > +     case PM_POST_RESTORE:
+> > +     case PM_POST_HIBERNATION:
+> > +             /* Set back to the default */
+> > +             suspend_mode = NO_SUSPEND;
+> > +             break;
+> > +     default:
+> > +             pr_warn("Receive unknown PM event 0x%lx\n", pm_event);
+> > +             return -EINVAL;
+> > +     }
+> > +
+> > +     return 0;
+> > +};
+> 
+> 
+> 
+> > +static int xen_setup_pm_notifier(void)
+> > +{
+> > +     if (!xen_hvm_domain())
+> > +             return -ENODEV;
+> 
+> 
+> I forgot --- what did we decide about non-x86 (i.e. ARM)?
+It would be great to support that however, its  out of
+scope for this patch set.
+I’ll be happy to discuss it separately.
+> 
+> 
+> And PVH dom0.
+That's another good use case to make it work with however, I still
+think that should be tested/worked upon separately as the feature itself
+(PVH Dom0) is very new.
+> 
+> 
+Thanks,
+Anchal
+> -boris
+> 
+> 
 > 
