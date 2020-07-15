@@ -2,129 +2,106 @@ Return-Path: <SRS0=kup7=A2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C3D6C433E3
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 13:50:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01B3FC433E7
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 13:51:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5FC24206E9
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 13:50:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D071C20658
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 13:51:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594821118;
+	bh=/bT6w4f5A2YqDbGUjn8qK0yZTKezWpn570rvkh4CPno=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Kh4QEm+Eq+4/JAt6Ip+ATtX5LakL8jLKwcDNzkEfHsE1JOdLc1vYd3Y78QXTYM2hH
+	 gYmFXDBlVnpJ6ZgRGij5NRLLcPOVqSgx0iLO6nxusWcUGDQWRR/eXOB+hbZWcSyaCM
+	 6kGsYpyLxtUlOBiUOkDVL35ZzWot99Pc9f6ZUBZg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731946AbgGONuR (ORCPT
+        id S1731871AbgGONv5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 09:50:17 -0400
-Received: from mga09.intel.com ([134.134.136.24]:36587 "EHLO mga09.intel.com"
+        Wed, 15 Jul 2020 09:51:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46222 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729086AbgGONuQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 09:50:16 -0400
-IronPort-SDR: Mw6I9VVgcTZ0j0ub+FXnw+O/JfIYU+xh9Vc45w926/ncjloNNvuxiV1n3Izc85Pl8U6xlTOmsg
- UjAvHRVM2XSg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9682"; a="150556596"
-X-IronPort-AV: E=Sophos;i="5.75,355,1589266800"; 
-   d="scan'208";a="150556596"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jul 2020 06:50:15 -0700
-IronPort-SDR: HGWwevdqxTxDRDHxu6Loac2IHFbvALH+N778mrEpxGQOVurNvv8tjElWvYNleM189heoRQy4oy
- DriO0I4yhElA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,355,1589266800"; 
-   d="scan'208";a="282095027"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by orsmga003.jf.intel.com with ESMTP; 15 Jul 2020 06:50:13 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1000)
-        id EA8C476; Wed, 15 Jul 2020 16:50:12 +0300 (EEST)
-From:   "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Naresh Kamboju <naresh.kamboju@linaro.org>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        William Kucharski <william.kucharski@oracle.com>
-Subject: [PATCHv2] mm: Fix warning in move_normal_pmd()
-Date:   Wed, 15 Jul 2020 16:50:11 +0300
-Message-Id: <20200715135011.42743-1-kirill.shutemov@linux.intel.com>
-X-Mailer: git-send-email 2.27.0
+        id S1729086AbgGONv4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jul 2020 09:51:56 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 29BD620657;
+        Wed, 15 Jul 2020 13:51:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594821115;
+        bh=/bT6w4f5A2YqDbGUjn8qK0yZTKezWpn570rvkh4CPno=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=tZHzSmPW6RxO6+AeMs5azY0kFob3acvs6hccoS8+7AaCqxhkGsr1EAz1rTr4OoaTW
+         GzdGM7BqSU8L3jkomLXG59g9M1u0axICkVKONip1bH9DTzj+vpwdwVPBR1TUCCYmZQ
+         GWmB0C26qLaOYmhRO9Z4B+/MiJTt90IQY5ToZM3U=
+Date:   Wed, 15 Jul 2020 14:51:46 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Frieder Schrempf <frieder.schrempf@kontron.de>
+Cc:     linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org
+Subject: Re: [PATCH] spi: spidev: Add compatible for external SPI ports on
+ Kontron boards
+Message-ID: <20200715135146.GG5431@sirena.org.uk>
+References: <479d566a-213f-4e33-8ac7-7637ae88e31c@kontron.de>
+ <a5b88ad9-3884-1d9c-c4ad-057266f84261@kontron.de>
+ <20200713151108.GB4420@sirena.org.uk>
+ <2eb6971b-7ea4-c9c8-5452-6f4b17e8860a@kontron.de>
+ <20200714192907.GJ4900@sirena.org.uk>
+ <16825a78-8eb0-90f2-433a-d1ae6eed6ba8@kontron.de>
+ <20200715113609.GD5431@sirena.org.uk>
+ <824b8479-e204-d087-7887-a2dbefa0f844@kontron.de>
+ <20200715131033.GF5431@sirena.org.uk>
+ <ce532200-a18c-d618-7f73-6f6ac8f8522e@kontron.de>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="3xoW37o/FfUZJwQG"
+Content-Disposition: inline
+In-Reply-To: <ce532200-a18c-d618-7f73-6f6ac8f8522e@kontron.de>
+X-Cookie: 40 isn't old.  If you're a tree.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-mremap(2) does not allow source and destination regions to overlap, but
-shift_arg_pages() calls move_page_tables() directly and in this case the
-source and destination overlap often. It confuses move_normal_pmd():
 
-  WARNING: CPU: 3 PID: 27091 at mm/mremap.c:211 move_page_tables+0x6ef/0x720
+--3xoW37o/FfUZJwQG
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-move_normal_pmd() expects the destination PMD to be empty, but when
-ranges overlap nobody removes PTE page tables on source side.
-move_ptes() only removes PTE entries, leaving tables behind.
-When the source PMD becomes destination and alignment/size is right we
-step onto the warning.
+On Wed, Jul 15, 2020 at 03:48:37PM +0200, Frieder Schrempf wrote:
+> On 15.07.20 15:10, Mark Brown wrote:
 
-The warning is harmless: kernel correctly fallbacks to handle entries on
-per-entry basis.
+> > I'm not sure platforms like this are a great fit for DT TBH - the
+> > trouble with DT is that it turns things into ABIs regardless of if it's
+> > really a finished thing, platform data based systems were a lot more
+> > flexible here.
 
-The fix is to avoid move_normal_pmd() if we see that source and
-destination ranges overlap.
+> I see your point. Still it seems like the overlays would provide a
+> sufficient alternative in matters of flexibility. Raspberry Pi uses it for
+> years, which made me assume that some generic loading API is available. But
+> it seems like everything is RPi-specific and downstream.
 
-Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-Fixes: 2c91bd4a4e2e ("mm: speed up mremap by 20x on large regions")
-Link: https://lore.kernel.org/lkml/20200713025354.GB3644504@google.com/
-Reported-and-tested-by: Naresh Kamboju <naresh.kamboju@linaro.org>
-Reviewed-by: Joel Fernandes (Google) <joel@joelfernandes.org>
-Cc: William Kucharski <william.kucharski@oracle.com>
----
- mm/mremap.c | 22 +++++++++++++++++++++-
- 1 file changed, 21 insertions(+), 1 deletion(-)
+Yes, overlays would be fine if there were a way to use them for
+connectors like this.  The connectors are a real problem, it's not just
+RPi that has their own loaders/infrastructure downstream.
 
-diff --git a/mm/mremap.c b/mm/mremap.c
-index 5dd572d57ca9..340a96a29cbb 100644
---- a/mm/mremap.c
-+++ b/mm/mremap.c
-@@ -245,6 +245,26 @@ unsigned long move_page_tables(struct vm_area_struct *vma,
- 	unsigned long extent, next, old_end;
- 	struct mmu_notifier_range range;
- 	pmd_t *old_pmd, *new_pmd;
-+	bool overlaps;
-+
-+	/*
-+	 * shift_arg_pages() can call move_page_tables() on overlapping ranges.
-+	 * In this case we cannot use move_normal_pmd() because destination pmd
-+	 * might be established page table: move_ptes() doesn't free page
-+	 * table.
-+	 */
-+	if (old_addr > new_addr) {
-+		overlaps = old_addr - new_addr < len;
-+	} else {
-+		overlaps = new_addr - old_addr < len;
-+
-+		/*
-+		 * We are interating over ranges forward. It means we cannot
-+		 * handle overlapping ranges with new_addr > old_addr without
-+		 * risking data corruption. Don't do this.
-+		 */
-+		WARN_ON(overlaps);
-+	}
- 
- 	old_end = old_addr + len;
- 	flush_cache_range(vma, old_addr, old_end);
-@@ -282,7 +302,7 @@ unsigned long move_page_tables(struct vm_area_struct *vma,
- 			split_huge_pmd(vma, old_pmd, old_addr);
- 			if (pmd_trans_unstable(old_pmd))
- 				continue;
--		} else if (extent == PMD_SIZE) {
-+		} else if (!overlaps && extent == PMD_SIZE) {
- #ifdef CONFIG_HAVE_MOVE_PMD
- 			/*
- 			 * If the extent is PMD-sized, try to speed the move by
--- 
-2.26.2
+--3xoW37o/FfUZJwQG
+Content-Type: application/pgp-signature; name="signature.asc"
 
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl8PCfEACgkQJNaLcl1U
+h9ClAQf7BaOgQgQ4X3u/iwrjv7DwfTmsmVKjeYTdVQS2HW1v7PpY8xIHLc+Dh8tJ
+Pb87yfYyyk7YPIxjSFVL9Xfr5BObBkmGGRAozk9dN78KFZiWJP4Q08ZLAwzD8prX
++e27N1pSBWlZPIvxDpMe88nQrHVc9Cp8EytYCTU+uZn+IiFCzAE534mMcRgPvrAn
+bcYgIWm60d7qDjdQJDj7ByN4TXQmAm0nQj5V0/qqf88aQ7cVk65nvzgun6ExE0ZO
+Gng9RRfpmwD4w/6bbrEPFL2AO3jmKb2L48gtRsUBn348nvwGFCJ7dnmVNIR4IAxS
+eOYOnjK/EmS3Qg1suU2eW/PJ1CYSlQ==
+=Cwx6
+-----END PGP SIGNATURE-----
+
+--3xoW37o/FfUZJwQG--
