@@ -2,150 +2,75 @@ Return-Path: <SRS0=kup7=A2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 908CEC433E6
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 12:11:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EFB8C433E2
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 12:13:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 71BB02065D
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 12:11:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594815098;
-	bh=rIjcU5BPnmY4uK3zj+p+fgmUWHz7mKvqX7fU0IC1020=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=i+dFmtIo023jacdk1qK99UP0bbOZD8mxe3E6zF/W4Xu/NkRt51Jz7UcDex/plZ7JX
-	 cc4yAAAgTdi/O/SdEiAtbmuod6xFSVwulPDRDvRfVOckjMt9HuqkcMKJmO3sQlDiuC
-	 qJ0isk0uSPJ7YOxGGHlWV90nZ/kbchytkS6w5LBE=
+	by mail.kernel.org (Postfix) with ESMTP id E3D252065D
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 12:13:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730852AbgGOMLh convert rfc822-to-8bit (ORCPT
+        id S1728769AbgGOMNw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 08:11:37 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:42544 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728801AbgGOMLg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 08:11:36 -0400
-Received: by mail-ot1-f68.google.com with SMTP id g37so1250187otb.9;
-        Wed, 15 Jul 2020 05:11:36 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=3cag8LrwMjM3xe6EZSlrz4EBUBRpTmPKD/ABz0zsn30=;
-        b=jEJzl2u/jvooFwgPzbcGNhIyAKUL/N2Uxdfo3SoIEnEI0D1Eml/Lm/8fSkBiGPFWWZ
-         YktRJGKZ1Se099A+RQmwzuquJfJWr2Ahnor2Lvqs84gePsruUtA7XfX3V8LoKuodHIzz
-         GiEMCzFLwEaI6UDww6jtA5tQlZgmfXMkP4e76HPakFXZUmgyVuDVBycGFRC2TIvzEVXG
-         9Or/xTN63OCbReUII5LU6xVPHcodco1bybCAmwquseQ7+oMDPLKr6uBsBggwGxRABZLq
-         GPM5zIIgLYrmSO2FBxfaS47h8rU0ZDk93JjXZ5GdAKdDi3rJIEFH8V+C77hbXr8xdR8A
-         B7pQ==
-X-Gm-Message-State: AOAM530boF05xDlLhMRvjKfQCc2T03vQuJaMi/bt3UgACQ4Up1oG/gPz
-        91hyVbbYLEj+D6CdnXP5y79W2CfG3rBgfcm/Crk=
-X-Google-Smtp-Source: ABdhPJwHW42/HPcNLnkN0GUVwuSkpH45wKSqeoBtesXsaKKCMSGwCyfwn0t0YZsdDwmvmoGpSB8/H5RWdVb+nY27lUg=
-X-Received: by 2002:a9d:590a:: with SMTP id t10mr8619498oth.262.1594815095838;
- Wed, 15 Jul 2020 05:11:35 -0700 (PDT)
+        Wed, 15 Jul 2020 08:13:52 -0400
+Received: from foss.arm.com ([217.140.110.172]:50084 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726437AbgGOMNw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jul 2020 08:13:52 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 582E230E;
+        Wed, 15 Jul 2020 05:13:51 -0700 (PDT)
+Received: from e119603-lin.cambridge.arm.com (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id AACF93F66E;
+        Wed, 15 Jul 2020 05:13:49 -0700 (PDT)
+Date:   Wed, 15 Jul 2020 13:13:38 +0100
+From:   Cristian Marussi <cristian.marussi@arm.com>
+To:     linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org
+Cc:     jdelvare@suse.com, linux@roeck-us.net, cristian.marussi@arm.com,
+        sudeep.holla@arm.com
+Subject: [RESEND][PATCH] hwmon: scmi: fix potential buffer overflow in
+ scmi_hwmon_probe()
+Message-ID: <20200715121338.GA18761@e119603-lin.cambridge.arm.com>
 MIME-Version: 1.0
-References: <20200714145049.2496163-1-lee.jones@linaro.org>
- <20200714145049.2496163-10-lee.jones@linaro.org> <CAJZ5v0iB0K6H28DSDQj9T7k_kV10THxV6-HwN9qfmkLsYNHfiA@mail.gmail.com>
- <20200714210340.GJ1398296@dell> <20200715032442.gh2cliiddhv35fdj@vireshk-i7>
- <20200715032718.2zlo2eurhkpoayya@vireshk-i7> <CAJZ5v0jHJDLt6QFWG9FOpqmWMXAUuSEPHdHbVgFWcwR6FQD57Q@mail.gmail.com>
- <20200715113433.GB3165313@dell> <CAJZ5v0gFwYj7KKKj806s5SdWO1Wu5exiwObKKAdQWQEKg+2CJA@mail.gmail.com>
- <20200715115029.GC3165313@dell> <20200715120742.GD3165313@dell>
-In-Reply-To: <20200715120742.GD3165313@dell>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Wed, 15 Jul 2020 14:11:24 +0200
-Message-ID: <CAJZ5v0jVvzCuxOa=xDXWw4Js0J5PfKb6aM4W-g=bAPz43JNqQg@mail.gmail.com>
-Subject: Re: [PATCH 09/13] cpufreq: acpi-cpufreq: Remove unused ID structs
-To:     Lee Jones <lee.jones@linaro.org>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Dominik Brodowski <linux@brodo.de>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+X-Mailer: git-send-email 2.17.1
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 15, 2020 at 2:07 PM Lee Jones <lee.jones@linaro.org> wrote:
->
-> On Wed, 15 Jul 2020, Lee Jones wrote:
->
-> > On Wed, 15 Jul 2020, Rafael J. Wysocki wrote:
-> >
-> > > On Wed, Jul 15, 2020 at 1:34 PM Lee Jones <lee.jones@linaro.org> wrote:
-> > > >
-> > > > On Wed, 15 Jul 2020, Rafael J. Wysocki wrote:
-> > > >
-> > > > > On Wed, Jul 15, 2020 at 5:27 AM Viresh Kumar <viresh.kumar@linaro.org> wrote:
-> > > > > >
-> > > > > > On 15-07-20, 08:54, Viresh Kumar wrote:
-> > > > > > > On 14-07-20, 22:03, Lee Jones wrote:
-> > > > > > > > On Tue, 14 Jul 2020, Rafael J. Wysocki wrote:
-> > > > > > > >
-> > > > > > > > > On Tue, Jul 14, 2020 at 4:51 PM Lee Jones <lee.jones@linaro.org> wrote:
-> > > > > > > > > >
-> > > > > > > > > > Can't see them being used anywhere and the compiler doesn't complain
-> > > > > > > > > > that they're missing, so ...
-> > > > > > > > >
-> > > > > > > > > Aren't they needed for automatic module loading in certain configurations?
-> > > > > > > >
-> > > > > > > > Any idea how that works, or where the code is for that?
-> > > > > > >
-> > > > > > > The MODULE_DEVICE_TABLE() thingy creates a map of vendor-id,
-> > > > > > > product-id that the kernel keeps after boot (and so there is no static
-> > > > > > > reference of it for the compiler), later when a device is hotplugged
-> > > > > > > into the kernel it refers to the map to find the related driver for it
-> > > > > > > and loads it if it isn't already loaded.
-> > > > > > >
-> > > > > > > This has some of it, search for MODULE_DEVICE_TABLE() in it.
-> > > > > > > Documentation/driver-api/usb/hotplug.rst
-> > > > > >
-> > > > > > And you just need to add __maybe_unused to them to suppress the
-> > > > > > warning.
-> > > > >
-> > > > > Wouldn't that cause the compiler to optimize them away if it doesn't
-> > > > > see any users?
-> > > >
-> > > > It looks like they're only unused when !MODULE,
-> > >
-> > > OK
-> > >
-> > > > in which case optimising them away would be the correct thing to do, no?
-> >
-> > It would be good if someone with a little more knowledge could provide
-> > a second opinion though.  I would think (hope) that the compiler would
-> > be smart enough to see when its actually in use.  After all, it is the
-> > compiler that places the information into the device table.
-> >
-> > If that is not the case, then the MODULE_DEVICE_TABLE() magic is
-> > broken and will need fixing.  Removing boiler-plate is good, but not
-> > at the expense of obfuscation.
->
-> Okay, I'm satisfied.  This test build is without __maybe_unused:
->
-> # All configs built as modules (MODULE) - the compiler knows to use the tables
->
->  $ ccache make -f Makefile -j24 KBUILD_OUTPUT=../builds/build-x86 allmodconfig
->  $ ccache make -f Makefile -j24 KBUILD_OUTPUT=../builds/build-x86  W=1  drivers/cpufreq/
->  [...]
->    CC [M]  drivers/cpufreq/pcc-cpufreq.o
->
-> # All configs built-in (!MODULE) - the compiler sees that they are unused
->
->  $ ccache make -f Makefile -j24 KBUILD_OUTPUT=../builds/build-x86 allyesconfig
->  $ ccache make -f Makefile -j24 KBUILD_OUTPUT=../builds/build-x86  W=1  drivers/cpufreq/
->    CC      drivers/cpufreq/pcc-cpufreq.o
->   drivers/cpufreq/pcc-cpufreq.c:619:36: warning: ‘processor_device_ids’ defined but not used [-Wunused-const-variable=]
->   619 | static const struct acpi_device_id processor_device_ids[] = {
->       |                                    ^~~~~~~~~~~~~~~~~~~~
->
+SMATCH detected a potential buffer overflow in the manipulation of
+hwmon_attributes array inside the scmi_hwmon_probe function:
 
-OK
+drivers/hwmon/scmi-hwmon.c:226
+ scmi_hwmon_probe() error: buffer overflow 'hwmon_attributes' 6 <= 9
 
-I thought that this would be the case. :-)
+Fix it by statically declaring the size of the array as the maximum
+possible as defined by hwmon_max define.
+
+Signed-off-by: Cristian Marussi <cristian.marussi@arm.com>
+---
+ drivers/hwmon/scmi-hwmon.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/hwmon/scmi-hwmon.c b/drivers/hwmon/scmi-hwmon.c
+index 281454c5c5b1..758f66fc9afe 100644
+--- a/drivers/hwmon/scmi-hwmon.c
++++ b/drivers/hwmon/scmi-hwmon.c
+@@ -149,7 +149,7 @@ static enum hwmon_sensor_types scmi_types[] = {
+ 	[ENERGY] = hwmon_energy,
+ };
+ 
+-static u32 hwmon_attributes[] = {
++static u32 hwmon_attributes[hwmon_max] = {
+ 	[hwmon_chip] = HWMON_C_REGISTER_TZ,
+ 	[hwmon_temp] = HWMON_T_INPUT | HWMON_T_LABEL,
+ 	[hwmon_in] = HWMON_I_INPUT | HWMON_I_LABEL,
+-- 
+2.17.1
+
