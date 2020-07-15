@@ -2,167 +2,74 @@ Return-Path: <SRS0=kup7=A2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02711C433EA
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 18:46:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DFE0AC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 18:53:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B0A6320672
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 18:46:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LM4EpI6W"
+	by mail.kernel.org (Postfix) with ESMTP id BF71D20656
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 18:53:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727065AbgGOSqZ (ORCPT
+        id S1726765AbgGOSxR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 14:46:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34734 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726670AbgGOSqZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 14:46:25 -0400
-Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B5723C061755;
-        Wed, 15 Jul 2020 11:46:24 -0700 (PDT)
-Received: by mail-ej1-x643.google.com with SMTP id y10so3253665eje.1;
-        Wed, 15 Jul 2020 11:46:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=tH8EzGJuAour5Ld/OHQpx0CjdtDcUT29EPy3vJhSCcs=;
-        b=LM4EpI6WESzvFBV5KCoWIUoYciSkG1zCTp8PijtNtaAS47DCVASxc7lTLJ8wt89gE0
-         lAMuHq9biKyfGvR6PFATVXcDzGzSPpoLYxQddlzyerPZO5Uit50kJjvx+hmrG+NMdfOR
-         UZg6dFsem1/sVYfej3/+w7dD/pP+HZGRrmFrExI5HLbDuSC3wCLEyfeyglpyRsYaM6we
-         eclcyCWci9mvFugI+DQH57aZ1/Gou2EUnk0qh3lHHDh8ToNdbiEuk1gcIYy4mnGcpoll
-         1c99s5rlY+vBSI2qh9X16D/4wjw3MjOkpeZbrw+qdyCntZIfmggBVozUqcOEa0dU9E4+
-         OgJg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=tH8EzGJuAour5Ld/OHQpx0CjdtDcUT29EPy3vJhSCcs=;
-        b=mo/d1vu4C/+6idNxMAlVRV6avvkiE0aGXE1NP+ROLSsIONBPaF4OJUnk6AXqcDG8x7
-         NKw18XKl+yTSr9ncSdeQBoQCS+teUGEaxa52/0takQpoFq83h6ekArlob6khf+9/7Q5w
-         1EG/eYC2ed3GppTWrjZLURQX6xULNHCdxt8qlYznTImfxlJ9fuN9K+u2jS+zCKoSclWH
-         eNklbtdPzPm28L0G7pm54EQKOAjXL0qDQBpIQxkb8/mFmMXWxZdmQwjIpgZrZSQFugDy
-         lmRyWgbAulfN4XLyBCauslFLlVxBvALQpOBth8rMoBmtdqoZD0WAoJGWsIyJqA5pF5sq
-         Ertg==
-X-Gm-Message-State: AOAM533+pj/L5YSbH/8Q6eSFZw1HrEfIKgZa3B51ESkZqx3BgkVf/vJL
-        NTsiHntP0ibqvxxWHnExpo9OPPr5O5ux8qcjtEE=
-X-Google-Smtp-Source: ABdhPJzo1fPucvEyPoQ56QHlEooluADNY4aAMZoA7854MihhEUE5Vf3uZG9kkSEm4QEumz/qM7DPbtqljfwTeHzRHIg=
-X-Received: by 2002:a17:906:328d:: with SMTP id 13mr323194ejw.71.1594838783369;
- Wed, 15 Jul 2020 11:46:23 -0700 (PDT)
+        Wed, 15 Jul 2020 14:53:17 -0400
+Received: from correo.us.es ([193.147.175.20]:41242 "EHLO mail.us.es"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726086AbgGOSxQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jul 2020 14:53:16 -0400
+Received: from antivirus1-rhel7.int (unknown [192.168.2.11])
+        by mail.us.es (Postfix) with ESMTP id D46E1DA3D0
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 20:53:14 +0200 (CEST)
+Received: from antivirus1-rhel7.int (localhost [127.0.0.1])
+        by antivirus1-rhel7.int (Postfix) with ESMTP id C5BC6DA852
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 20:53:14 +0200 (CEST)
+Received: by antivirus1-rhel7.int (Postfix, from userid 99)
+        id BAC06DA797; Wed, 15 Jul 2020 20:53:14 +0200 (CEST)
+Received: from antivirus1-rhel7.int (localhost [127.0.0.1])
+        by antivirus1-rhel7.int (Postfix) with ESMTP id 70991DA78A;
+        Wed, 15 Jul 2020 20:53:12 +0200 (CEST)
+Received: from 192.168.1.97 (192.168.1.97)
+ by antivirus1-rhel7.int (F-Secure/fsigk_smtp/550/antivirus1-rhel7.int);
+ Wed, 15 Jul 2020 20:53:12 +0200 (CEST)
+X-Virus-Status: clean(F-Secure/fsigk_smtp/550/antivirus1-rhel7.int)
+Received: from us.es (unknown [90.77.255.23])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: 1984lsi)
+        by entrada.int (Postfix) with ESMTPSA id 3A91B4265A32;
+        Wed, 15 Jul 2020 20:53:12 +0200 (CEST)
+Date:   Wed, 15 Jul 2020 20:53:11 +0200
+X-SMTPAUTHUS: auth mail.us.es
+From:   Pablo Neira Ayuso <pablo@netfilter.org>
+To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc:     Jozsef Kadlecsik <kadlec@netfilter.org>,
+        Florian Westphal <fw@strlen.de>,
+        Roopa Prabhu <roopa@cumulusnetworks.com>,
+        Nikolay Aleksandrov <nikolay@cumulusnetworks.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
+        bridge@lists.linux-foundation.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2][next] netfilter: Use fallthrough pseudo-keyword
+Message-ID: <20200715185311.GA19462@salvia>
+References: <20200708200939.GA32508@embeddedor>
 MIME-Version: 1.0
-References: <20200715182955.3081774-1-robdclark@gmail.com> <baef95e0-e44f-be7d-f60f-0ba75b550050@marek.ca>
-In-Reply-To: <baef95e0-e44f-be7d-f60f-0ba75b550050@marek.ca>
-From:   Rob Clark <robdclark@gmail.com>
-Date:   Wed, 15 Jul 2020 11:46:55 -0700
-Message-ID: <CAF6AEGt7b+9jGGARTEGiuNQMPTqixXWfvJ5CygU+2h-qL34pBg@mail.gmail.com>
-Subject: Re: [PATCH] drm/msm/adreno: fix gpu probe if no interconnect-names
-To:     Jonathan Marek <jonathan@marek.ca>
-Cc:     dri-devel <dri-devel@lists.freedesktop.org>,
-        Rob Clark <robdclark@chromium.org>,
-        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Jordan Crouse <jcrouse@codeaurora.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Brian Masney <masneyb@onstation.org>,
-        John Stultz <john.stultz@linaro.org>,
-        "open list:DRM DRIVER FOR MSM ADRENO GPU" 
-        <linux-arm-msm@vger.kernel.org>,
-        "open list:DRM DRIVER FOR MSM ADRENO GPU" 
-        <freedreno@lists.freedesktop.org>,
-        open list <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200708200939.GA32508@embeddedor>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 15, 2020 at 11:37 AM Jonathan Marek <jonathan@marek.ca> wrote:
->
-> On 7/15/20 2:29 PM, Rob Clark wrote:
-> > From: Rob Clark <robdclark@chromium.org>
-> >
-> > If there is no interconnect-names, but there is an interconnects
-> > property, then of_icc_get(dev, "gfx-mem"); would return an error
-> > rather than NULL.
-> >
-> > Also, if there is no interconnect-names property, there will never
-> > be a ocmem path.  But of_icc_get(dev, "ocmem") would return -EINVAL
-> > instead of -ENODATA.  Just don't bother trying in this case.
-> >
-> > Fixes: 8e29fb37b301 ("drm/msm: handle for EPROBE_DEFER for of_icc_get")
-> > Signed-off-by: Rob Clark <robdclark@chromium.org>
-> > ---
-> >   drivers/gpu/drm/msm/adreno/adreno_gpu.c | 8 ++++++--
-> >   1 file changed, 6 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/drivers/gpu/drm/msm/adreno/adreno_gpu.c b/drivers/gpu/drm/msm/adreno/adreno_gpu.c
-> > index 0527e85184e1..c4ac998b90c8 100644
-> > --- a/drivers/gpu/drm/msm/adreno/adreno_gpu.c
-> > +++ b/drivers/gpu/drm/msm/adreno/adreno_gpu.c
-> > @@ -979,6 +979,7 @@ int adreno_gpu_init(struct drm_device *drm, struct platform_device *pdev,
-> >       struct adreno_platform_config *config = dev->platform_data;
-> >       struct msm_gpu_config adreno_gpu_config  = { 0 };
-> >       struct msm_gpu *gpu = &adreno_gpu->base;
-> > +     bool has_interconnect_names = true;
-> >       int ret;
-> >
-> >       adreno_gpu->funcs = funcs;
-> > @@ -1005,12 +1006,13 @@ int adreno_gpu_init(struct drm_device *drm, struct platform_device *pdev,
-> >
-> >       /* Check for an interconnect path for the bus */
-> >       gpu->icc_path = of_icc_get(dev, "gfx-mem");
-> > -     if (!gpu->icc_path) {
-> > +     if (IS_ERR_OR_NULL(gpu->icc_path)) {
-> >               /*
-> >                * Keep compatbility with device trees that don't have an
-> >                * interconnect-names property.
-> >                */
-> >               gpu->icc_path = of_icc_get(dev, NULL);
->
-> This is misleading because if it gets a EPROBE_DEFER error (or any other
-> error), it will hit this path. Maybe there's a specific error you can
-> check for instead to identify the "no-interconnect-names" case?
+On Wed, Jul 08, 2020 at 03:09:39PM -0500, Gustavo A. R. Silva wrote:
+> Replace the existing /* fall through */ comments and its variants with
+> the new pseudo-keyword macro fallthrough[1]. Also, remove unnecessary
+> fall-through markings when it is the case.
 
-good point, we should probably instead just explicitly check with
-of_find_property("interconnect-names")
-
-fwiw, of_icc_get() returns:
-
-  - NULL if icc disabled, or no "interconnects" property
-  - -EINVAL if name!=NULL and no "interconnect-names"
-  - and looks like -ENODATA if name!=NULL but no match in
-    interconnect-names
-
-The specific error returns aren't really called out in the API comment
-block, so not really sure how much we should rely on them not being
-implementation details.
-
-BR,
--R
-
-> Also don't think its a good idea to be calling of_icc_get(dev, NULL)
-> again when there's a EPROBE_DEFER, the interconnect driver could come up
-> between the two calls
->
-> > +             has_interconnect_names = false;
-> >       }
-> >       if (IS_ERR(gpu->icc_path)) {
-> >               ret = PTR_ERR(gpu->icc_path);
-> > @@ -1018,7 +1020,9 @@ int adreno_gpu_init(struct drm_device *drm, struct platform_device *pdev,
-> >               return ret;
-> >       }
-> >
-> > -     gpu->ocmem_icc_path = of_icc_get(dev, "ocmem");
-> > +     if (has_interconnect_names)
-> > +             gpu->ocmem_icc_path = of_icc_get(dev, "ocmem");
-> > +
-> >       if (IS_ERR(gpu->ocmem_icc_path)) {
-> >               ret = PTR_ERR(gpu->ocmem_icc_path);
-> >               gpu->ocmem_icc_path = NULL;
-> >
+Applied, thanks.
