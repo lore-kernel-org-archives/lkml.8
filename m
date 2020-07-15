@@ -2,84 +2,193 @@ Return-Path: <SRS0=kup7=A2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08287C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 19:13:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C892CC433E3
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 19:14:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E8A322076C
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 19:13:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A4B7D2076C
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 19:14:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594840489;
+	bh=Q92CGkbFmN831vkgF0i/MWKGtX3Qsl9FAaCQx2Pt9DY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=N8qQQ5JK2UPpjx/HP842iEd/zvhdDIvHOMsqbh5orEGVpI0AQCYaipHb4mhXIqIwi
+	 p/XBR9NRnpKm9w0d2blAS+ZpszFiJzWlAs30E8p0y4XSmKm3DG3Mr4Bnx5Jbhljvzv
+	 0pacMWKGuMMIRk3jbcVw2L1L7VvqbQzDDxf7DR8U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726758AbgGOTNw (ORCPT
+        id S1726796AbgGOTOr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 15:13:52 -0400
-Received: from ms-10.1blu.de ([178.254.4.101]:44324 "EHLO ms-10.1blu.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726568AbgGOTNM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 15:13:12 -0400
-Received: from [78.43.71.214] (helo=marius.localnet)
-        by ms-10.1blu.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.90_1)
-        (envelope-from <mail@mariuszachmann.de>)
-        id 1jvmps-0005GQ-BN; Wed, 15 Jul 2020 21:12:56 +0200
-From:   Marius Zachmann <mail@mariuszachmann.de>
-To:     Guenter Roeck <linux@roeck-us.net>
-Cc:     Jean Delvare <jdelvare@suse.com>, linux-hwmon@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] hwmon: corsair-cpro: Change to HID driver
-Date:   Wed, 15 Jul 2020 21:12:55 +0200
-Message-ID: <51449356.7lugSRDzgr@marius>
-In-Reply-To: <f17c4888-4f5f-0a51-304f-54efd601f00a@roeck-us.net>
-References: <20200715151419.43134-1-mail@mariuszachmann.de> <f17c4888-4f5f-0a51-304f-54efd601f00a@roeck-us.net>
+        Wed, 15 Jul 2020 15:14:47 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:34637 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726491AbgGOTOk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jul 2020 15:14:40 -0400
+Received: by mail-io1-f67.google.com with SMTP id q74so3481687iod.1;
+        Wed, 15 Jul 2020 12:14:40 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=uAYhyJcJRVka9ydt6uo/YHKiTlbjPRvSn1YwW+mkzCw=;
+        b=OlBgYq8k0O+iHOS7TQDylL0OsEDDRYkUWcXljhHrPtyCkT7RsLrXKHwoxDLm2RM2M9
+         N/eNHv98NctvsVcIsNHYK5v0lD2AnGqwDzr9f+XBz10C0mvf4Ed9CaMsB00qpMb/Y9S7
+         DOFFy1aPMTwRHBEuLMDvoBzXN+J7ltLpmnuLjh7Tq1jfKiI25VPshV5/Cz5CgikXs7YQ
+         X0OLKUlWxVq1iK0SCRgRA6q+Kj4FjdXn5Ob5tTneXUykgw2o3Nxv9egtJ6MNa60WxD0/
+         udKvd6TE+inPddSo7dX23jSpCMtD/vBfs3VvnmA8aa/1nku+c8sDP2IBCFMtAoFhitjz
+         P8xg==
+X-Gm-Message-State: AOAM532dTMGvaL2zXyDfv25luTlXk+ygw46uw1m33+uY61zo2AVB7x90
+        XG3YDFfozO+kWMrwlJxFMg==
+X-Google-Smtp-Source: ABdhPJxgvH2KybKM2cWCk8cIHsLk9UbkbEjCygxMcdbxSXzyladjhwGB4UwgszPdx59ugl221+sjgA==
+X-Received: by 2002:a6b:6b18:: with SMTP id g24mr814518ioc.8.1594840479773;
+        Wed, 15 Jul 2020 12:14:39 -0700 (PDT)
+Received: from xps15 ([64.188.179.252])
+        by smtp.gmail.com with ESMTPSA id u3sm1530228iol.41.2020.07.15.12.14.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 15 Jul 2020 12:14:38 -0700 (PDT)
+Received: (nullmailer pid 661854 invoked by uid 1000);
+        Wed, 15 Jul 2020 19:14:37 -0000
+Date:   Wed, 15 Jul 2020 13:14:37 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Kathiravan T <kathirav@codeaurora.org>
+Cc:     agross@kernel.org, bjorn.andersson@linaro.org, lgirdwood@gmail.com,
+        broonie@kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        sivaprak@codeaurora.org
+Subject: Re: [PATCH 1/6] dt-bindings: soc: qcom: add YAML schema for SMD-RPM
+ driver
+Message-ID: <20200715191437.GA656528@bogus>
+References: <1592550307-11040-1-git-send-email-kathirav@codeaurora.org>
+ <1592550307-11040-2-git-send-email-kathirav@codeaurora.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
-X-Con-Id: 241080
-X-Con-U: 0-mail
-X-Originating-IP: 78.43.71.214
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1592550307-11040-2-git-send-email-kathirav@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 15.07.20 at 17:35:08 CEST, Guenter Roeck wrote
-> On 7/15/20 8:14 AM, Marius Zachmann wrote:
-> > This changes corsair-cpro to a hid driver using hid reports.
-> > 
-> > Signed-off-by: Marius Zachmann <mail@mariuszachmann.de>
-> > 
-> > ---
-> 
-...
-> > -module_usb_driver(ccp_driver);
-> > +static int __init ccp_init(void)
-> > +{
-> > +	return hid_register_driver(&ccp_driver);
-> > +}
-> > +
-> > +static void __exit ccp_exit(void)
-> > +{
-> > +	hid_unregister_driver(&ccp_driver);
-> > +}
-> > +
-> > +/* make sure it is loaded after hid */
-> > +late_initcall(ccp_init);
-> > +module_exit(ccp_exit);
-> 
-> Sorry for not noticing before, but can you use module_hid_driver() ?
-> That seems to work for other hid drivers.
-> 
-> Thanks,
-> Guenter
-> 
+On Fri, Jun 19, 2020 at 12:35:02PM +0530, Kathiravan T wrote:
+> Add YAML schema for the devitree properties used in the SMD-RPM driver.
 
-When using module_hid_driver() and compiling the driver as built-in
-the driver init function will get called before hid and fail registering
-the driver. late_initcall forces it to be loaded after hid.
+This is converting, not adding...
 
-Greetings,
-Marius
+> 
+> Signed-off-by: Kathiravan T <kathirav@codeaurora.org>
+> ---
+>  .../devicetree/bindings/soc/qcom/qcom,smd-rpm.txt  | 62 ---------------
+>  .../devicetree/bindings/soc/qcom/qcom,smd-rpm.yaml | 91 ++++++++++++++++++++++
+>  2 files changed, 91 insertions(+), 62 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/soc/qcom/qcom,smd-rpm.txt
+>  create mode 100644 Documentation/devicetree/bindings/soc/qcom/qcom,smd-rpm.yaml
 
 
+> diff --git a/Documentation/devicetree/bindings/soc/qcom/qcom,smd-rpm.yaml b/Documentation/devicetree/bindings/soc/qcom/qcom,smd-rpm.yaml
+> new file mode 100644
+> index 00000000..5b33def
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/soc/qcom/qcom,smd-rpm.yaml
+> @@ -0,0 +1,91 @@
+> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: "http://devicetree.org/schemas/soc/qcom/qcom,smd-rpm.yaml#"
+> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
+> +
+> +title: Qualcomm Resource Power Manager (RPM) over SMD
+> +
+> +description: |
+> +  This driver is used to interface with the Resource Power Manager (RPM) found
+> +  in various Qualcomm platforms. The RPM allows each component in the system
+> +  to vote for state of the system resources, such as clocks, regulators and bus
+> +  frequencies.
+> +
+> +  The SMD information for the RPM edge should be filled out.  See qcom,smd.txt
+> +  for the required edge properties.  All SMD related properties will reside
+> +  within the RPM node itself.
+> +
+> +  The RPM exposes resources to its subnodes.  The rpm_requests node must be
+> +  present and this subnode may contain children that designate regulator
+> +  resources.
+> +
+> +  Refer to Documentation/devicetree/bindings/regulator/qcom,smd-rpm-regulator.txt
+> +  for information on the regulator subnodes that can exist under the
+> +  rpm_requests.
+> +
+> +maintainers:
+> +  - Kathiravan T <kathirav@codeaurora.org>
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - qcom,rpm-apq8084
+> +      - qcom,rpm-msm8916
+> +      - qcom,rpm-msm8974
+> +      - qcom,rpm-msm8976
+> +      - qcom,rpm-msm8996
+> +      - qcom,rpm-msm8998
+> +      - qcom,rpm-sdm660
+> +      - qcom,rpm-qcs404
+> +
+> +  qcom,smd-channels:
+> +    $ref: /schemas/types.yaml#/definitions/string-array
+> +    description: Channel name used for the RPM communication
+> +    items:
+> +      - const: rpm_requests
+> +
+> +if:
+> +  properties:
+> +    compatible:
+> +      contains:
+> +        enum:
+> +          - qcom,rpm-apq8084
+> +          - qcom,rpm-msm8916
+> +          - qcom,rpm-msm8974
+> +then:
+> +  required:
+> +    - qcom,smd-channels
+> +
+> +required:
+> +  - compatible
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    soc {
+> +        #address-cells = <1>;
+> +        #size-cells = <1>;
+> +        apcs: syscon@f9011000 {
+> +              compatible = "syscon";
+> +              reg = <0xf9011000 0x1000>;
+> +        };
+> +    };
+
+Drop this node. The use of 'syscon' alone is not valid and will now 
+generate warnings with what I have queued for 5.9.
+
+> +    smd {
+> +        compatible = "qcom,smd";
+> +
+> +        rpm {
+> +            interrupts = <0 168 1>;
+> +            qcom,ipc = <&apcs 8 0>;
+> +            qcom,smd-edge = <15>;
+> +
+> +                rpm_requests {
+> +                        compatible = "qcom,rpm-msm8974";
+> +                        qcom,smd-channels = "rpm_requests";
+> +
+> +                        /* Regulator nodes to follow */
+> +                };
+> +            };
+> +     };
+> +...
+> -- 
+> QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
+> 
