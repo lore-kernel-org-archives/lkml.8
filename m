@@ -2,550 +2,217 @@ Return-Path: <SRS0=kup7=A2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84B23C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 15:28:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EEA2BC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 15:28:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5725020663
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 15:28:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BC97320663
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 15:28:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="ZHV+t1AS"
+	dkim=pass (2048-bit key) header.d=bytedance-com.20150623.gappssmtp.com header.i=@bytedance-com.20150623.gappssmtp.com header.b="DwcwzyBk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726759AbgGOP2K (ORCPT
+        id S1726766AbgGOP2s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 11:28:10 -0400
-Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:13014 "EHLO
-        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725811AbgGOP2J (ORCPT
+        Wed, 15 Jul 2020 11:28:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60642 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725770AbgGOP2r (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 11:28:09 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5f0f20170000>; Wed, 15 Jul 2020 08:26:15 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Wed, 15 Jul 2020 08:28:09 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Wed, 15 Jul 2020 08:28:09 -0700
-Received: from [10.24.37.103] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 15 Jul
- 2020 15:27:59 +0000
-Subject: Re: [TEGRA194_CPUFREQ PATCH v6 3/3] cpufreq: Add Tegra194 cpufreq
- driver
-To:     Jon Hunter <jonathanh@nvidia.com>, <rjw@rjwysocki.net>,
-        <viresh.kumar@linaro.org>, <catalin.marinas@arm.com>,
-        <will@kernel.org>, <thierry.reding@gmail.com>,
-        <robh+dt@kernel.org>, <mirq-linux@rere.qmqm.pl>,
-        <devicetree@vger.kernel.org>, <talho@nvidia.com>,
-        <linux-pm@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>
-CC:     <bbasu@nvidia.com>, <mperttunen@nvidia.com>,
-        Sumit Gupta <sumitg@nvidia.com>
-References: <1594819885-31016-1-git-send-email-sumitg@nvidia.com>
- <1594819885-31016-4-git-send-email-sumitg@nvidia.com>
- <d0a4a28a-f471-22bd-273a-dc5c62a79051@nvidia.com>
-From:   Sumit Gupta <sumitg@nvidia.com>
-Message-ID: <78636522-c433-a015-e4f3-02843ce58139@nvidia.com>
-Date:   Wed, 15 Jul 2020 20:57:57 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Wed, 15 Jul 2020 11:28:47 -0400
+Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C97CEC061755
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 08:28:47 -0700 (PDT)
+Received: by mail-pl1-x642.google.com with SMTP id b9so2531769plx.6
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 08:28:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bytedance-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=yg6NTbSkGtSEF4rrYCXrVAXjXqS7dlpNJawysR5Obt4=;
+        b=DwcwzyBkeoGAVivAhQIX1ILJZAxzWHTRHzq3hDK4Qct5A+85N306PVgPU5TI6sH4p4
+         RtyGFzG2R6Be01CKNJYrfPZtNBBKBfm6m1ePOfDM2q2mcARomxu4KqDiPGvNu0NobTEQ
+         q9TOOuTzjdJRVR/MQfHeyKMkIAT6m2R96v3Lb16YObODRKQq3nq8O2wL8bqaR0Nv6bN7
+         E4Ka3VtU4XiZSARo9NI77LC52iu5fIcCgwo9d/Qyw+vPSiRZnfS/iBwS9jXQwOXuvWj5
+         Ny3TWLMHxGi4WUokqI8hPmYhT1AwcTo52U8eNamM6+ZhdrKWBJhruGdBGa69NxabCMAP
+         DlwQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=yg6NTbSkGtSEF4rrYCXrVAXjXqS7dlpNJawysR5Obt4=;
+        b=AH2m7bbVxe5WYSct/I6Lprpo1k8ag0qoVOWb13MdlsgpHFtMPz7r5H6osseDeH4XdX
+         fsLOe26tWJ13wVHM5bJr1lkVkQnlJtVBKaTBCDyZXQncAdx91sUoYhDOL5c+ZXGDnMuw
+         glMQd/QAIIgsdxzXL8iBqexDvbqnqk3v5b4kBTO/5MTIRE+xQrW/9Qrl2akrZMDQGJrT
+         eIzE5HqLgYzz8ST5TvgWihn2DswXlHoWGCLyH5nnal6bEHBh/u1Qdc220UNdOnNGUU1D
+         CsgKNXqwG190O7ecxFLVrt5T3cbaT0lKVQ/5p9P/9YroD4kkVZyCCG9+kxrCc+Ri4lUa
+         bOeA==
+X-Gm-Message-State: AOAM532fGTQV5ofglABEvnfre1H2wq6HM3sVb432G/60g5GlYTZrrJPT
+        zs5IKFiFGipyqA1X+q6LHdE7kNyF4wW8Lh0n7v03yw==
+X-Google-Smtp-Source: ABdhPJzOId+r2GHh+iy3UX+vzodA8HqQiE7YfGpNGY3GDVnFlCAkVKSS1N/bVbhlDqE77Ph6vB/UW5Wxa6+kogN0LFk=
+X-Received: by 2002:a17:90a:20e9:: with SMTP id f96mr171461pjg.13.1594826927168;
+ Wed, 15 Jul 2020 08:28:47 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <d0a4a28a-f471-22bd-273a-dc5c62a79051@nvidia.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1594826775; bh=FU3Lq6vEQlxiV18k+vxvlgIEx/xFTBrI3LpcMUWgWDc=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=ZHV+t1ASpEqJF44EJGTYT/YbSE+HmnNBd1oYvb5Bg4rQaSiFBJZ9NdJ/Bjw5e9gdH
-         yeDW1Mg0aqre5v8Y/V539PiqcysBpzWMWuy8rhbdEvFHnK+fWMPHdwOOX/nm3kTz3A
-         Gn8jIdjQ5blVuTqkWSx03TOt0iycyXH6LcP/BzXeDw4ApQxwn3O4vHgbw3tyFgc2RJ
-         sewjws/L77S6FZdouJwpQaIOtYDj0asP+rmIwjb32KScBKzBjHF9SKMAWhn3uAwrs7
-         mvW3yyDz4ondpZ8pfWtfpfbZeUtSHq8Lh2RNCu4EP4YnQhhhlAqo7PH+zaNfMC6HV/
-         cSV0OdWXwDXkw==
+References: <20200707062754.8383-1-songmuchun@bytedance.com> <CALvZod7E7zcEY-rr20wzE6b+EGVNdrnfrBW7F-nKR8dNh-=h1w@mail.gmail.com>
+In-Reply-To: <CALvZod7E7zcEY-rr20wzE6b+EGVNdrnfrBW7F-nKR8dNh-=h1w@mail.gmail.com>
+From:   Muchun Song <songmuchun@bytedance.com>
+Date:   Wed, 15 Jul 2020 23:28:11 +0800
+Message-ID: <CAMZfGtUjVzxpuLpBzhgZtoTQ7mJSNU=FgHHDtD+Zx7kgFo7NaA@mail.gmail.com>
+Subject: Re: [External] Re: [PATCH v5.4.y, v4.19.y] mm: memcg/slab: fix memory
+ leak at non-root kmem_cache destroy
+To:     Shakeel Butt <shakeelb@google.com>
+Cc:     Christoph Lameter <cl@linux.com>,
+        Pekka Enberg <penberg@kernel.org>,
+        David Rientjes <rientjes@google.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linux MM <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Jul 15, 2020 at 11:21 PM Shakeel Butt <shakeelb@google.com> wrote:
+>
+> Sorry I missed this email.
+>
+>
+> On Mon, Jul 6, 2020 at 11:28 PM Muchun Song <songmuchun@bytedance.com> wrote:
+> >
+> > If the kmem_cache refcount is greater than one, we should not
+> > mark the root kmem_cache as dying. If we mark the root kmem_cache
+> > dying incorrectly, the non-root kmem_cache can never be destroyed.
+> > It resulted in memory leak when memcg was destroyed. We can use the
+> > following steps to reproduce.
+> >
+> >   1) Use kmem_cache_create() to create a new kmem_cache named A.
+> >   2) Coincidentally, the kmem_cache A is an alias for kmem_cache B,
+> >      so the refcount of B is just increased.
+>
+> I definitely missed the alias kmem cache case.
+>
+> >   3) Use kmem_cache_destroy() to destroy the kmem_cache A, just
+> >      decrease the B's refcount but mark the B as dying.
+> >   4) Create a new memory cgroup and alloc memory from the kmem_cache
+> >      A. It leads to create a non-root kmem_cache for allocating.
+>
+> I think in (4) you meant alloc memory from kmem_cache B instead of A.
+> There should not be any allocation from A after kmem_cache_destroy()
+> in (3).
 
->> Add support for CPU frequency scaling on Tegra194. The frequency
->> of each core can be adjusted by writing a clock divisor value to
->> a MSR on the core. The range of valid divisors is queried from
->> the BPMP.
->>
->> Signed-off-by: Mikko Perttunen <mperttunen@nvidia.com>
->> Signed-off-by: Sumit Gupta <sumitg@nvidia.com>
->> ---
->>   drivers/cpufreq/Kconfig.arm        |   7 +
->>   drivers/cpufreq/Makefile           |   1 +
->>   drivers/cpufreq/tegra194-cpufreq.c | 397 +++++++++++++++++++++++++++++++++++++
->>   3 files changed, 405 insertions(+)
->>   create mode 100644 drivers/cpufreq/tegra194-cpufreq.c
->>
->> diff --git a/drivers/cpufreq/Kconfig.arm b/drivers/cpufreq/Kconfig.arm
->> index 15c1a12..7e99a46 100644
->> --- a/drivers/cpufreq/Kconfig.arm
->> +++ b/drivers/cpufreq/Kconfig.arm
->> @@ -314,6 +314,13 @@ config ARM_TEGRA186_CPUFREQ
->>   	help
->>   	  This adds the CPUFreq driver support for Tegra186 SOCs.
->>   
->> +config ARM_TEGRA194_CPUFREQ
->> +	tristate "Tegra194 CPUFreq support"
->> +	depends on ARCH_TEGRA_194_SOC && TEGRA_BPMP
->> +	default y
->> +	help
->> +	  This adds CPU frequency driver support for Tegra194 SOCs.
->> +
->>   config ARM_TI_CPUFREQ
->>   	bool "Texas Instruments CPUFreq support"
->>   	depends on ARCH_OMAP2PLUS
->> diff --git a/drivers/cpufreq/Makefile b/drivers/cpufreq/Makefile
->> index f6670c4..66b5563 100644
->> --- a/drivers/cpufreq/Makefile
->> +++ b/drivers/cpufreq/Makefile
->> @@ -83,6 +83,7 @@ obj-$(CONFIG_ARM_TANGO_CPUFREQ)		+= tango-cpufreq.o
->>   obj-$(CONFIG_ARM_TEGRA20_CPUFREQ)	+= tegra20-cpufreq.o
->>   obj-$(CONFIG_ARM_TEGRA124_CPUFREQ)	+= tegra124-cpufreq.o
->>   obj-$(CONFIG_ARM_TEGRA186_CPUFREQ)	+= tegra186-cpufreq.o
->> +obj-$(CONFIG_ARM_TEGRA194_CPUFREQ)	+= tegra194-cpufreq.o
->>   obj-$(CONFIG_ARM_TI_CPUFREQ)		+= ti-cpufreq.o
->>   obj-$(CONFIG_ARM_VEXPRESS_SPC_CPUFREQ)	+= vexpress-spc-cpufreq.o
->>   
->> diff --git a/drivers/cpufreq/tegra194-cpufreq.c b/drivers/cpufreq/tegra194-cpufreq.c
->> new file mode 100644
->> index 0000000..b52a5e2
->> --- /dev/null
->> +++ b/drivers/cpufreq/tegra194-cpufreq.c
->> @@ -0,0 +1,397 @@
->> +// SPDX-License-Identifier: GPL-2.0
->> +/*
->> + * Copyright (c) 2020, NVIDIA CORPORATION. All rights reserved
->> + */
->> +
->> +#include <linux/cpu.h>
->> +#include <linux/cpufreq.h>
->> +#include <linux/delay.h>
->> +#include <linux/dma-mapping.h>
->> +#include <linux/module.h>
->> +#include <linux/of.h>
->> +#include <linux/of_platform.h>
->> +#include <linux/platform_device.h>
->> +#include <linux/slab.h>
->> +
->> +#include <asm/smp_plat.h>
->> +
->> +#include <soc/tegra/bpmp.h>
->> +#include <soc/tegra/bpmp-abi.h>
->> +
->> +#define KHZ                     1000
->> +#define REF_CLK_MHZ             408 /* 408 MHz */
->> +#define US_DELAY                500
->> +#define US_DELAY_MIN            2
->> +#define CPUFREQ_TBL_STEP_HZ     (50 * KHZ * KHZ)
->> +#define MAX_CNT                 ~0U
->> +
->> +/* cpufreq transisition latency */
->> +#define TEGRA_CPUFREQ_TRANSITION_LATENCY (300 * 1000) /* unit in nanoseconds */
->> +
->> +enum cluster {
->> +	CLUSTER0,
->> +	CLUSTER1,
->> +	CLUSTER2,
->> +	CLUSTER3,
->> +	MAX_CLUSTERS,
->> +};
->> +
->> +struct tegra194_cpufreq_data {
->> +	void __iomem *regs;
->> +	size_t num_clusters;
->> +	struct cpufreq_frequency_table **tables;
->> +};
->> +
->> +struct tegra_cpu_ctr {
->> +	u32 cpu;
->> +	u32 delay;
->> +	u32 coreclk_cnt, last_coreclk_cnt;
->> +	u32 refclk_cnt, last_refclk_cnt;
->> +};
->> +
->> +struct read_counters_work {
->> +	struct work_struct work;
->> +	struct tegra_cpu_ctr c;
->> +};
->> +
->> +static struct workqueue_struct *read_counters_wq;
->> +
->> +static enum cluster get_cpu_cluster(u8 cpu)
->> +{
->> +	return MPIDR_AFFINITY_LEVEL(cpu_logical_map(cpu), 1);
->> +}
->> +
->> +/*
->> + * Read per-core Read-only system register NVFREQ_FEEDBACK_EL1.
->> + * The register provides frequency feedback information to
->> + * determine the average actual frequency a core has run at over
->> + * a period of time.
->> + *	[31:0] PLLP counter: Counts at fixed frequency (408 MHz)
->> + *	[63:32] Core clock counter: counts on every core clock cycle
->> + *			where the core is architecturally clocking
->> + */
->> +static u64 read_freq_feedback(void)
->> +{
->> +	u64 val = 0;
->> +
->> +	asm volatile("mrs %0, s3_0_c15_c0_5" : "=r" (val) : );
->> +
->> +	return val;
->> +}
->> +
->> +static inline u32 map_ndiv_to_freq(struct mrq_cpu_ndiv_limits_response
->> +				   *nltbl, u16 ndiv)
->> +{
->> +	return nltbl->ref_clk_hz / KHZ * ndiv / (nltbl->pdiv * nltbl->mdiv);
->> +}
->> +
->> +static void tegra_read_counters(struct work_struct *work)
->> +{
->> +	struct read_counters_work *read_counters_work;
->> +	struct tegra_cpu_ctr *c;
->> +	u64 val;
->> +
->> +	/*
->> +	 * ref_clk_counter(32 bit counter) runs on constant clk,
->> +	 * pll_p(408MHz).
->> +	 * It will take = 2 ^ 32 / 408 MHz to overflow ref clk counter
->> +	 *              = 10526880 usec = 10.527 sec to overflow
->> +	 *
->> +	 * Like wise core_clk_counter(32 bit counter) runs on core clock.
->> +	 * It's synchronized to crab_clk (cpu_crab_clk) which runs at
->> +	 * freq of cluster. Assuming max cluster clock ~2000MHz,
->> +	 * It will take = 2 ^ 32 / 2000 MHz to overflow core clk counter
->> +	 *              = ~2.147 sec to overflow
->> +	 */
->> +	read_counters_work = container_of(work, struct read_counters_work,
->> +					  work);
->> +	c = &read_counters_work->c;
->> +
->> +	val = read_freq_feedback();
->> +	c->last_refclk_cnt = lower_32_bits(val);
->> +	c->last_coreclk_cnt = upper_32_bits(val);
->> +	udelay(c->delay);
->> +	val = read_freq_feedback();
->> +	c->refclk_cnt = lower_32_bits(val);
->> +	c->coreclk_cnt = upper_32_bits(val);
->> +}
->> +
->> +/*
->> + * Return instantaneous cpu speed
->> + * Instantaneous freq is calculated as -
->> + * -Takes sample on every query of getting the freq.
->> + *	- Read core and ref clock counters;
->> + *	- Delay for X us
->> + *	- Read above cycle counters again
->> + *	- Calculates freq by subtracting current and previous counters
->> + *	  divided by the delay time or eqv. of ref_clk_counter in delta time
->> + *	- Return Kcycles/second, freq in KHz
->> + *
->> + *	delta time period = x sec
->> + *			  = delta ref_clk_counter / (408 * 10^6) sec
->> + *	freq in Hz = cycles/sec
->> + *		   = (delta cycles / x sec
->> + *		   = (delta cycles * 408 * 10^6) / delta ref_clk_counter
->> + *	in KHz	   = (delta cycles * 408 * 10^3) / delta ref_clk_counter
->> + *
->> + * @cpu - logical cpu whose freq to be updated
->> + * Returns freq in KHz on success, 0 if cpu is offline
->> + */
->> +static unsigned int tegra194_get_speed_common(u32 cpu, u32 delay)
->> +{
->> +	struct read_counters_work read_counters_work;
->> +	struct tegra_cpu_ctr c;
->> +	u32 delta_refcnt;
->> +	u32 delta_ccnt;
->> +	u32 rate_mhz;
->> +
->> +	/*
->> +	 * udelay() is required to reconstruct cpu frequency over an
->> +	 * observation window. Using workqueue to call udelay() with
->> +	 * interrupts enabled.
->> +	 */
->> +	read_counters_work.c.cpu = cpu;
->> +	read_counters_work.c.delay = delay;
->> +	INIT_WORK_ONSTACK(&read_counters_work.work, tegra_read_counters);
->> +	queue_work_on(cpu, read_counters_wq, &read_counters_work.work);
->> +	flush_work(&read_counters_work.work);
->> +	c = read_counters_work.c;
->> +
->> +	if (c.coreclk_cnt < c.last_coreclk_cnt)
->> +		delta_ccnt = c.coreclk_cnt + (MAX_CNT - c.last_coreclk_cnt);
->> +	else
->> +		delta_ccnt = c.coreclk_cnt - c.last_coreclk_cnt;
->> +	if (!delta_ccnt)
->> +		return 0;
->> +
->> +	/* ref clock is 32 bits */
->> +	if (c.refclk_cnt < c.last_refclk_cnt)
->> +		delta_refcnt = c.refclk_cnt + (MAX_CNT - c.last_refclk_cnt);
->> +	else
->> +		delta_refcnt = c.refclk_cnt - c.last_refclk_cnt;
->> +	if (!delta_refcnt) {
->> +		pr_debug("cpufreq: %d is idle, delta_refcnt: 0\n", cpu);
->> +		return 0;
->> +	}
->> +	rate_mhz = ((unsigned long)(delta_ccnt * REF_CLK_MHZ)) / delta_refcnt;
->> +
->> +	return (rate_mhz * KHZ); /* in KHz */
->> +}
->> +
->> +static unsigned int tegra194_get_speed(u32 cpu)
->> +{
->> +	return tegra194_get_speed_common(cpu, US_DELAY);
->> +}
->> +
->> +static unsigned int tegra194_fast_get_speed(u32 cpu)
->> +{
->> +	return tegra194_get_speed_common(cpu, US_DELAY_MIN);
->> +}
-> 
-> Personally, I would not bother with the above function as it is only
-> used in one place.
-> 
-Kept the function for better readability. Ok, will open code it.
+Yeah, here is a typo. I will fix it in the next version patch.
 
->> +
->> +static int tegra194_cpufreq_init(struct cpufreq_policy *policy)
->> +{
->> +	struct tegra194_cpufreq_data *data = cpufreq_get_driver_data();
->> +	int cl = get_cpu_cluster(policy->cpu);
->> +	u32 cpu;
->> +
->> +	if (cl >= data->num_clusters)
->> +		return -EINVAL;
->> +
->> +	policy->cur = tegra194_fast_get_speed(policy->cpu); /* boot freq */
->> +
->> +	/* set same policy for all cpus in a cluster */
->> +	for (cpu = (cl * 2); cpu < ((cl + 1) * 2); cpu++)
->> +		cpumask_set_cpu(cpu, policy->cpus);
->> +
->> +	policy->freq_table = data->tables[cl];
->> +	policy->cpuinfo.transition_latency = TEGRA_CPUFREQ_TRANSITION_LATENCY;
->> +
->> +	return 0;
->> +}
->> +
->> +static void set_cpu_ndiv(void *data)
->> +{
->> +	struct cpufreq_frequency_table *tbl = data;
->> +	u64 ndiv_val = (u64)tbl->driver_data;
->> +
->> +	asm volatile("msr s3_0_c15_c0_4, %0" : : "r" (ndiv_val));
->> +}
->> +
->> +static int tegra194_cpufreq_set_target(struct cpufreq_policy *policy,
->> +				       unsigned int index)
->> +{
->> +	struct cpufreq_frequency_table *tbl = policy->freq_table + index;
->> +
->> +	/*
->> +	 * Each core writes frequency in per core register. Then both cores
->> +	 * in a cluster run at same frequency which is the maximum frequency
->> +	 * request out of the values requested by both cores in that cluster.
->> +	 */
->> +	on_each_cpu_mask(policy->cpus, set_cpu_ndiv, tbl, true);
->> +
->> +	return 0;
->> +}
->> +
->> +static struct cpufreq_driver tegra194_cpufreq_driver = {
->> +	.name = "tegra194",
->> +	.flags = CPUFREQ_STICKY | CPUFREQ_CONST_LOOPS |
->> +		CPUFREQ_NEED_INITIAL_FREQ_CHECK,
->> +	.verify = cpufreq_generic_frequency_table_verify,
->> +	.target_index = tegra194_cpufreq_set_target,
->> +	.get = tegra194_get_speed,
->> +	.init = tegra194_cpufreq_init,
->> +	.attr = cpufreq_generic_attr,
->> +};
->> +
->> +static void tegra194_cpufreq_free_resources(void)
->> +{
->> +	destroy_workqueue(read_counters_wq);
->> +}
-> 
-> I would not bother with adding this function either.
-> 
-This function is used from remove call also.
+>
+> >   5) When destroy the memory cgroup created in the step 4), the
+> >      non-root kmem_cache can never be destroyed.
+> >
+> > If we repeat steps 4) and 5), this will cause a lot of memory leak.
+> > So only when refcount reach zero, we mark the root kmem_cache as dying.
+> >
+> > Fixes: 92ee383f6daa ("mm: fix race between kmem_cache destroy, create and deactivate")
+> > Signed-off-by: Muchun Song <songmuchun@bytedance.com>
+>
+> The patch looks fine.
+>
+> Reviewed-by: Shakeel Butt <shakeelb@google.com>
+>
+> > ---
+> >  mm/slab_common.c | 43 +++++++++++++++++++++++++++++++++++++++++--
+> >  1 file changed, 41 insertions(+), 2 deletions(-)
+> >
+> > diff --git a/mm/slab_common.c b/mm/slab_common.c
+> > index 8c1ffbf7de45..83ee6211aec7 100644
+> > --- a/mm/slab_common.c
+> > +++ b/mm/slab_common.c
+> > @@ -258,6 +258,11 @@ static void memcg_unlink_cache(struct kmem_cache *s)
+> >                 list_del(&s->memcg_params.kmem_caches_node);
+> >         }
+> >  }
+> > +
+> > +static inline bool memcg_kmem_cache_dying(struct kmem_cache *s)
+> > +{
+> > +       return is_root_cache(s) && s->memcg_params.dying;
+> > +}
+> >  #else
+> >  static inline int init_memcg_params(struct kmem_cache *s,
+> >                                     struct kmem_cache *root_cache)
+> > @@ -272,6 +277,11 @@ static inline void destroy_memcg_params(struct kmem_cache *s)
+> >  static inline void memcg_unlink_cache(struct kmem_cache *s)
+> >  {
+> >  }
+> > +
+> > +static inline bool memcg_kmem_cache_dying(struct kmem_cache *s)
+> > +{
+> > +       return false;
+> > +}
+> >  #endif /* CONFIG_MEMCG_KMEM */
+> >
+> >  /*
+> > @@ -326,6 +336,13 @@ int slab_unmergeable(struct kmem_cache *s)
+> >         if (s->refcount < 0)
+> >                 return 1;
+> >
+> > +       /*
+> > +        * If the kmem_cache is dying. We should also skip this
+> > +        * kmem_cache.
+> > +        */
+> > +       if (memcg_kmem_cache_dying(s))
+> > +               return 1;
+> > +
+> >         return 0;
+> >  }
+> >
+> > @@ -944,8 +961,6 @@ void kmem_cache_destroy(struct kmem_cache *s)
+> >         if (unlikely(!s))
+> >                 return;
+> >
+> > -       flush_memcg_workqueue(s);
+> > -
+> >         get_online_cpus();
+> >         get_online_mems();
+> >
+> > @@ -955,6 +970,30 @@ void kmem_cache_destroy(struct kmem_cache *s)
+> >         if (s->refcount)
+> >                 goto out_unlock;
+> >
+> > +#ifdef CONFIG_MEMCG_KMEM
+> > +       mutex_unlock(&slab_mutex);
+> > +
+> > +       put_online_mems();
+> > +       put_online_cpus();
+> > +
+> > +       flush_memcg_workqueue(s);
+> > +
+> > +       get_online_cpus();
+> > +       get_online_mems();
+> > +
+> > +       mutex_lock(&slab_mutex);
+> > +
+> > +       if (WARN(s->refcount,
+> > +                "kmem_cache_destroy %s: Slab cache is still referenced\n",
+> > +                s->name)) {
+> > +               /*
+> > +                * Reset the dying flag setted by flush_memcg_workqueue().
+> > +                */
+> > +               s->memcg_params.dying = false;
+> > +               goto out_unlock;
+> > +       }
+> > +#endif
+> > +
+> >         err = shutdown_memcg_caches(s);
+> >         if (!err)
+> >                 err = shutdown_cache(s);
+> > --
+> > 2.11.0
+> >
 
->> +
->> +static struct cpufreq_frequency_table *
->> +init_freq_table(struct platform_device *pdev, struct tegra_bpmp *bpmp,
->> +		unsigned int cluster_id)
->> +{
->> +	struct cpufreq_frequency_table *freq_table;
->> +	struct mrq_cpu_ndiv_limits_response resp;
->> +	unsigned int num_freqs, ndiv, delta_ndiv;
->> +	struct mrq_cpu_ndiv_limits_request req;
->> +	struct tegra_bpmp_message msg;
->> +	u16 freq_table_step_size;
->> +	int err, index;
->> +
->> +	memset(&req, 0, sizeof(req));
->> +	req.cluster_id = cluster_id;
->> +
->> +	memset(&msg, 0, sizeof(msg));
->> +	msg.mrq = MRQ_CPU_NDIV_LIMITS;
->> +	msg.tx.data = &req;
->> +	msg.tx.size = sizeof(req);
->> +	msg.rx.data = &resp;
->> +	msg.rx.size = sizeof(resp);
->> +
->> +	err = tegra_bpmp_transfer(bpmp, &msg);
->> +	if (err)
->> +		return ERR_PTR(err);
->> +
->> +	/*
->> +	 * Make sure frequency table step is a multiple of mdiv to match
->> +	 * vhint table granularity.
->> +	 */
->> +	freq_table_step_size = resp.mdiv *
->> +			DIV_ROUND_UP(CPUFREQ_TBL_STEP_HZ, resp.ref_clk_hz);
->> +
->> +	dev_dbg(&pdev->dev, "cluster %d: frequency table step size: %d\n",
->> +		cluster_id, freq_table_step_size);
->> +
->> +	delta_ndiv = resp.ndiv_max - resp.ndiv_min;
->> +
->> +	if (unlikely(delta_ndiv == 0)) {
->> +		num_freqs = 1;
->> +	} else {
->> +		/* We store both ndiv_min and ndiv_max hence the +1 */
->> +		num_freqs = delta_ndiv / freq_table_step_size + 1;
->> +	}
->> +
->> +	num_freqs += (delta_ndiv % freq_table_step_size) ? 1 : 0;
->> +
->> +	freq_table = devm_kcalloc(&pdev->dev, num_freqs + 1,
->> +				  sizeof(*freq_table), GFP_KERNEL);
->> +	if (!freq_table)
->> +		return ERR_PTR(-ENOMEM);
->> +
->> +	for (index = 0, ndiv = resp.ndiv_min;
->> +			ndiv < resp.ndiv_max;
->> +			index++, ndiv += freq_table_step_size) {
->> +		freq_table[index].driver_data = ndiv;
->> +		freq_table[index].frequency = map_ndiv_to_freq(&resp, ndiv);
->> +	}
->> +
->> +	freq_table[index].driver_data = resp.ndiv_max;
->> +	freq_table[index++].frequency = map_ndiv_to_freq(&resp, resp.ndiv_max);
->> +	freq_table[index].frequency = CPUFREQ_TABLE_END;
->> +
->> +	return freq_table;
->> +}
->> +
->> +static int tegra194_cpufreq_probe(struct platform_device *pdev)
->> +{
->> +	struct tegra194_cpufreq_data *data;
->> +	struct tegra_bpmp *bpmp;
->> +	int err, i;
->> +
->> +	data = devm_kzalloc(&pdev->dev, sizeof(*data), GFP_KERNEL);
->> +	if (!data)
->> +		return -ENOMEM;
->> +
->> +	data->num_clusters = MAX_CLUSTERS;
->> +	data->tables = devm_kcalloc(&pdev->dev, data->num_clusters,
->> +				    sizeof(*data->tables), GFP_KERNEL);
->> +	if (!data->tables)
->> +		return -ENOMEM;
->> +
->> +	platform_set_drvdata(pdev, data);
->> +
->> +	bpmp = tegra_bpmp_get(&pdev->dev);
->> +	if (IS_ERR(bpmp))
->> +		return PTR_ERR(bpmp);
->> +
->> +	read_counters_wq = alloc_workqueue("read_counters_wq", __WQ_LEGACY, 1);
->> +	if (!read_counters_wq) {
->> +		dev_err(&pdev->dev, "fail to create_workqueue\n");
->> +		err = -EINVAL;
->> +		goto put_bpmp;
->> +	}
->> +
->> +	for (i = 0; i < data->num_clusters; i++) {
->> +		data->tables[i] = init_freq_table(pdev, bpmp, i);
->> +		if (IS_ERR(data->tables[i])) {
->> +			err = PTR_ERR(data->tables[i]);
->> +			goto err_free_res;
->> +		}
->> +	}
->> +
->> +	tegra194_cpufreq_driver.driver_data = data;
->> +
->> +	err = cpufreq_register_driver(&tegra194_cpufreq_driver);
->> +	if (err)
->> +		goto err_free_res;
-> 
-> You don't need the above if statement now you added the below.
-> 
-Sorry, missed to remove this. Will wait if any other comments before 
-re-spin.
 
->> +
->> +	if (!err)
->> +		goto put_bpmp;
->> +
->> +err_free_res:
->> +	tegra194_cpufreq_free_resources();
->> +put_bpmp:
->> +	tegra_bpmp_put(bpmp);
->> +	return err;
->> +}
->> +
->> +static int tegra194_cpufreq_remove(struct platform_device *pdev)
->> +{
->> +	cpufreq_unregister_driver(&tegra194_cpufreq_driver);
->> +	tegra194_cpufreq_free_resources();
->> +
->> +	return 0;
->> +}
->> +
->> +static const struct of_device_id tegra194_cpufreq_of_match[] = {
->> +	{ .compatible = "nvidia,tegra194-ccplex", },
->> +	{ /* sentinel */ }
->> +};
->> +MODULE_DEVICE_TABLE(of, tegra194_cpufreq_of_match);
->> +
->> +static struct platform_driver tegra194_ccplex_driver = {
->> +	.driver = {
->> +		.name = "tegra194-cpufreq",
->> +		.of_match_table = tegra194_cpufreq_of_match,
->> +	},
->> +	.probe = tegra194_cpufreq_probe,
->> +	.remove = tegra194_cpufreq_remove,
->> +};
->> +module_platform_driver(tegra194_ccplex_driver);
->> +
->> +MODULE_AUTHOR("Mikko Perttunen <mperttunen@nvidia.com>");
->> +MODULE_AUTHOR("Sumit Gupta <sumitg@nvidia.com>");
->> +MODULE_DESCRIPTION("NVIDIA Tegra194 cpufreq driver");
->> +MODULE_LICENSE("GPL v2");
->>
-> 
-> Cheers
-> Jon
-> 
+
+-- 
+Yours,
+Muchun
