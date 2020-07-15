@@ -2,93 +2,98 @@ Return-Path: <SRS0=kup7=A2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55BC1C433EA
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 06:38:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E52A7C433E2
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 06:39:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 32D30206D5
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 06:38:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD74420663
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 06:39:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Nrld92ni"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="WTpGJqyv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728912AbgGOGiS (ORCPT
+        id S1728372AbgGOGje (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 02:38:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35038 "EHLO
+        Wed, 15 Jul 2020 02:39:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35232 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728297AbgGOGiS (ORCPT
+        with ESMTP id S1728083AbgGOGjd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 02:38:18 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 51FF8C061755;
-        Tue, 14 Jul 2020 23:38:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Reply-To:Message-ID:Subject:Cc:To:From:Date:Sender:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=JjVa0h4uFSr2pzBmFgAMpiW1sZBe7zjYlnhnjdkNvjg=; b=Nrld92niBIg4BKo4cgE4ZelgP1
-        innve4muRc5oAjEgDb57YCbrEE7Qhj1OHEYntVm8RUPhrwuYfkfwbJi9Oyr0v+kS5H7cWJ28EIcDu
-        eBk4EMFXio/feaPCuFfNKiqK+oK+b0sReMiV39yvKE2ck5BsAgomojcLfYg+EbPZQnR8VozRs8Qo4
-        y9prd7gaPANubKbwYqofAG9GYDcftRZz0Je5yJrlzZWJaApD/582jp3jEOcLN3eR96aQjAnzeKb1B
-        s90pKPMZye8LhKiBd14Zdj/Fk2Z02lLSAYHqzJ3lsDft+djoqBJF0ov6Tq61SvUg2t9zpoSQQ0RxM
-        9XqazZHA==;
-Received: from hch by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jvb3Y-00010O-1N; Wed, 15 Jul 2020 06:38:16 +0000
-Date:   Wed, 15 Jul 2020 07:38:15 +0100
-From:   Christoph Hellwig <hch@infradead.org>
-To:     "Eric W. Biederman" <ebiederm@xmission.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Kees Cook <keescook@chromium.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        linux-fsdevel@vger.kernel.org,
-        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
-        linux-security-module@vger.kernel.org,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        James Morris <jmorris@namei.org>,
-        Kentaro Takeda <takedakn@nttdata.co.jp>,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        John Johansen <john.johansen@canonical.com>,
-        Christoph Hellwig <hch@infradead.org>
-Subject: Re: [PATCH 6/7] exec: Factor bprm_stack_limits out of
- prepare_arg_pages
-Message-ID: <20200715063815.GF32470@infradead.org>
-Reply-To: Iha@infradead.org
-References: <871rle8bw2.fsf@x220.int.ebiederm.org>
- <87365u6x60.fsf@x220.int.ebiederm.org>
+        Wed, 15 Jul 2020 02:39:33 -0400
+Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7B844C061794
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 23:39:32 -0700 (PDT)
+Received: by mail-pj1-x1043.google.com with SMTP id o22so2494777pjw.2
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 23:39:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=K1kqfp/kSgMwqPN12bKZZ//tfp2BxSTq1mD1swS+LDI=;
+        b=WTpGJqyvZjouFkCmi9zC/0IzuJwZoNFGlTzKYuYnoDp3GznjB6msDkhLTTTBu81Esi
+         VaiNpYKxJmEPniJqqf09uJdBkXcLEIlWpbN9YChqtejiEx5VVXwlAWq9RvVYA9F10bOq
+         Z4rxBdm44p8Cq8K/f5i74jWh1LV9csMsmEbFW+oFQ7/MxGBvm9QESsA11YtoP9tSC7bH
+         x1n3ZtXcPmgWKB1GOyjfJWyZgff0uRvK/uNOG0z5TdlWF1Pg47pEK57j4UjItuoeS2h8
+         JuwpEwZ9zcTL4k5YVHLs72Ty+YvrUQtNDOpdd243y3StSD5cGBZqDxK0RP+egFp0dBq6
+         OIuA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=K1kqfp/kSgMwqPN12bKZZ//tfp2BxSTq1mD1swS+LDI=;
+        b=WePjddguEDEixVvRMi5mmdIYwi1P+CmMSTLOgV8Bmonp/wnw9Fvg3JxBD8xhbRRosg
+         nE79nqGw9Mw9XHpF48SUD0Vn8/Lb2QNBc2taeZk92DuczSKDvbNaOmiLbfGefKDK7oqE
+         QwtW6Xy0llEUkGCBTmXg86bDOAa2yVIxzYmNvzJ/0p43rJPwbSCboxoPuYleSG5+JUGQ
+         hXf2qKXVISSHMjudt5lhtCJAJu0ovvYpg3+VrQaCdu1CJX2yK1k9fngeq/s12fAq/AMg
+         iLWy0uflstie+bPUDYwPuS33ebWhKZ9s2uK5AdEJz43jA+KlqOc7rDpNq4MQ6TWTuDOl
+         tuGA==
+X-Gm-Message-State: AOAM533vXitwjBWDVQNBwbuSW1bfT4kibA2REw40b1mIstyGpipk+fF5
+        +JgLe7y18oa5xivm8STUxuSIPA==
+X-Google-Smtp-Source: ABdhPJxLbshzrCuRoNXOv/ZJi7ksi9A0wHLDGdlFvXgLu4FgBdgA0IgbBWVDw+UxdqJZWSCcNXm/wQ==
+X-Received: by 2002:a17:90a:368c:: with SMTP id t12mr8639149pjb.90.1594795171879;
+        Tue, 14 Jul 2020 23:39:31 -0700 (PDT)
+Received: from localhost ([122.172.34.142])
+        by smtp.gmail.com with ESMTPSA id d190sm1013466pfd.199.2020.07.14.23.39.30
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 14 Jul 2020 23:39:31 -0700 (PDT)
+Date:   Wed, 15 Jul 2020 12:09:29 +0530
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     Olof Johansson <olof@lixom.net>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-pm@vger.kernel.org, Michael Ellerman <mpe@ellerman.id.au>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
+Subject: Re: [PATCH 05/13] cpufreq/arch: powerpc: pasemi: Move prototypes to
+ shared header
+Message-ID: <20200715063929.42p5ljlcuwie7pmz@vireshk-i7>
+References: <20200714145049.2496163-1-lee.jones@linaro.org>
+ <20200714145049.2496163-6-lee.jones@linaro.org>
+ <20200715030706.prxya7fyylscoy25@vireshk-i7>
+ <CAOesGMi1dfqPbFJ8YoUoJ75NdU1=XiNoYx+6+JLu44a4LuuYGA@mail.gmail.com>
+ <20200715063607.GQ1398296@dell>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <87365u6x60.fsf@x220.int.ebiederm.org>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
+In-Reply-To: <20200715063607.GQ1398296@dell>
+User-Agent: NeoMutt/20180716-391-311a52
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 14, 2020 at 08:31:03AM -0500, Eric W. Biederman wrote:
-> 
-> In preparation for implementiong kernel_execve (which will take kernel
-> pointers not userspace pointers) factor out bprm_stack_limits out of
-> prepare_arg_pages.  This separates the counting which depends upon the
-> getting data from userspace from the calculations of the stack limits
-> which is usable in kernel_execve.
-> 
-> The remove prepare_args_pages and compute bprm->argc and bprm->envc
-> directly in do_execveat_common, before bprm_stack_limits is called.
-> 
-> Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
-> ---
+On 15-07-20, 07:36, Lee Jones wrote:
+> I searched for "include.*platforms/" in drivers/, and was scared off
+> this method since no one else does this.
 
-This looks basically identical to my "exec: split prepare_arg_pages".
-I slightly prefer the version I had, but this looks ok as well:
+Yeah its not right for generic drivers, but this is very much platform
+specific so it is fine here.
 
-Reviewed-by: Christoph Hellwig <hch@lst.de>
+-- 
+viresh
