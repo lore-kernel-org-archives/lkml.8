@@ -2,197 +2,72 @@ Return-Path: <SRS0=kup7=A2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25F17C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 06:26:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17364C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 06:27:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0D7CC20663
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 06:26:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EAA1220663
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 06:27:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728657AbgGOG0t (ORCPT
+        id S1728679AbgGOG1P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 02:26:49 -0400
-Received: from mga12.intel.com ([192.55.52.136]:37382 "EHLO mga12.intel.com"
+        Wed, 15 Jul 2020 02:27:15 -0400
+Received: from verein.lst.de ([213.95.11.211]:57655 "EHLO verein.lst.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725823AbgGOG0t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 02:26:49 -0400
-IronPort-SDR: NeMlR0ECTuY5F83ySKZsgQ1xOS3ZsurH2vQ2NlHPI3OHK0/Xai/Jm2Rdgh3VJHWcVwvPfxQPcr
- HR6OZYEGA1kg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9682"; a="128653576"
-X-IronPort-AV: E=Sophos;i="5.75,354,1589266800"; 
-   d="scan'208";a="128653576"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jul 2020 23:26:48 -0700
-IronPort-SDR: M9uLcZxTsXLulIi+jrO0+1t0W8JaYYGNdr+4FtwqsF7PmNWJID38zjJlmTt061ePX3N5L1n21D
- xdskanoS3TIw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,354,1589266800"; 
-   d="scan'208";a="281986346"
-Received: from chenyu-office.sh.intel.com ([10.239.158.173])
-  by orsmga003.jf.intel.com with ESMTP; 14 Jul 2020 23:26:46 -0700
-From:   Chen Yu <yu.c.chen@intel.com>
-To:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        Len Brown <len.brown@intel.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Michal Miroslaw" <mirq-linux@rere.qmqm.pl>,
-        Zhang Rui <rui.zhang@intel.com>, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Chen Yu <yu.c.chen@intel.com>
-Subject: [PATCH 2/2][RESEND v3] PM-runtime: change the tracepoints to cover all usage_count
-Date:   Wed, 15 Jul 2020 14:28:03 +0800
-Message-Id: <395187057e486df9a4328bc6d7d4ee912967fdb3.1594790493.git.yu.c.chen@intel.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <cover.1594790493.git.yu.c.chen@intel.com>
-References: <cover.1594790493.git.yu.c.chen@intel.com>
+        id S1725823AbgGOG1P (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jul 2020 02:27:15 -0400
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id 15E5467357; Wed, 15 Jul 2020 08:27:12 +0200 (CEST)
+Date:   Wed, 15 Jul 2020 08:27:11 +0200
+From:   Christoph Hellwig <hch@lst.de>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Christoph Hellwig <hch@lst.de>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>, Song Liu <song@kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>, linux-raid@vger.kernel.org,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>
+Subject: Re: [PATCH 17/23] initramfs: switch initramfs unpacking to struct
+ file based APIs
+Message-ID: <20200715062711.GA21447@lst.de>
+References: <20200714190427.4332-1-hch@lst.de> <20200714190427.4332-18-hch@lst.de> <CAHk-=whDbHL7x5Jx-CSz97=nVg4V_q45DsokX+X-Y-yZV4rPvw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHk-=whDbHL7x5Jx-CSz97=nVg4V_q45DsokX+X-Y-yZV4rPvw@mail.gmail.com>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit d229290689ae ("PM-runtime: add tracepoints for usage_count changes")
-has added some tracepoints to monitor the change of runtime usage, and
-there is something to improve:
-1. There are some places that adjust the usage count not
-   been traced yet. For example, pm_runtime_get_noresume() and
-   pm_runtime_put_noidle()
-2. The change of the usage count will not be tracked if decreased
-   from 1 to 0.
+On Tue, Jul 14, 2020 at 12:31:01PM -0700, Linus Torvalds wrote:
+> That "vcollected" is ugly and broken, and seems oh-so-wrong.
+> 
+> Because it's only use is:
+> 
+> 
+> > -               ksys_close(wfd);
+> > +               fput(wfile);
+> >                 do_utime(vcollected, mtime);
+> >                 kfree(vcollected);
+> 
+> which should just have done the exact same thing that you did with
+> vfs_chown() and friends: we already have a "utimes_common()" that
+> takes a path, and it could have been made into "vfs_utimes()", and
+> then this whole vcollected confusion would go away and be replaced by
+> 
+>         vfs_truncate(&wfile->f_path, mtime);
+> 
+> (ok, with all the "timespec64 t[2]" things going on that do_utime()
+> does now, but you get the idea).
+> 
+> Talk about de-crufting that initramfs unpacking..
+> 
+> But I don't hate this patch, I'm just pointing out that there's room
+> for improvement.
 
-This patch intends to adjust the logic to be consistent with the
-change of usage_counter, that is to say, only after the counter has
-been possibly modified, we record it. Besides, all usage changes will
-be shown using rpm_usage even if included by other trace points.
-And these changes has helped track down the e1000e runtime issue.
-
-Reviewed-by: Michał Mirosław <mirq-linux@rere.qmqm.pl>
-Signed-off-by: Chen Yu <yu.c.chen@intel.com>
----
- drivers/base/power/runtime.c | 38 +++++++++++++++++++++++-------------
- 1 file changed, 24 insertions(+), 14 deletions(-)
-
-diff --git a/drivers/base/power/runtime.c b/drivers/base/power/runtime.c
-index 85a248e196ca..5789d2624513 100644
---- a/drivers/base/power/runtime.c
-+++ b/drivers/base/power/runtime.c
-@@ -1004,10 +1004,11 @@ int __pm_runtime_idle(struct device *dev, int rpmflags)
- 	int retval;
- 
- 	if (rpmflags & RPM_GET_PUT) {
--		if (!atomic_dec_and_test(&dev->power.usage_count)) {
--			trace_rpm_usage_rcuidle(dev, rpmflags);
-+		bool non_zero = !atomic_dec_and_test(&dev->power.usage_count);
-+
-+		trace_rpm_usage_rcuidle(dev, rpmflags);
-+		if (non_zero)
- 			return 0;
--		}
- 	}
- 
- 	might_sleep_if(!(rpmflags & RPM_ASYNC) && !dev->power.irq_safe);
-@@ -1038,10 +1039,12 @@ int __pm_runtime_suspend(struct device *dev, int rpmflags)
- 	int retval;
- 
- 	if (rpmflags & RPM_GET_PUT) {
--		if (!atomic_dec_and_test(&dev->power.usage_count)) {
--			trace_rpm_usage_rcuidle(dev, rpmflags);
-+		bool non_zero = !atomic_dec_and_test(&dev->power.usage_count);
-+
-+		trace_rpm_usage_rcuidle(dev, rpmflags);
-+		if (non_zero)
- 			return 0;
--		}
-+
- 	}
- 
- 	might_sleep_if(!(rpmflags & RPM_ASYNC) && !dev->power.irq_safe);
-@@ -1073,8 +1076,10 @@ int __pm_runtime_resume(struct device *dev, int rpmflags)
- 	might_sleep_if(!(rpmflags & RPM_ASYNC) && !dev->power.irq_safe &&
- 			dev->power.runtime_status != RPM_ACTIVE);
- 
--	if (rpmflags & RPM_GET_PUT)
-+	if (rpmflags & RPM_GET_PUT) {
- 		atomic_inc(&dev->power.usage_count);
-+		trace_rpm_usage_rcuidle(dev, rpmflags);
-+	}
- 
- 	spin_lock_irqsave(&dev->power.lock, flags);
- 	retval = rpm_resume(dev, rpmflags);
-@@ -1433,6 +1438,7 @@ void pm_runtime_forbid(struct device *dev)
- 
- 	dev->power.runtime_auto = false;
- 	atomic_inc(&dev->power.usage_count);
-+	trace_rpm_usage_rcuidle(dev, 0);
- 	rpm_resume(dev, 0);
- 
-  out:
-@@ -1448,16 +1454,17 @@ EXPORT_SYMBOL_GPL(pm_runtime_forbid);
-  */
- void pm_runtime_allow(struct device *dev)
- {
-+	bool is_zero;
-+
- 	spin_lock_irq(&dev->power.lock);
- 	if (dev->power.runtime_auto)
- 		goto out;
- 
- 	dev->power.runtime_auto = true;
--	if (atomic_dec_and_test(&dev->power.usage_count))
-+	is_zero = atomic_dec_and_test(&dev->power.usage_count);
-+	trace_rpm_usage_rcuidle(dev, RPM_AUTO | RPM_ASYNC);
-+	if (is_zero)
- 		rpm_idle(dev, RPM_AUTO | RPM_ASYNC);
--	else
--		trace_rpm_usage_rcuidle(dev, RPM_AUTO | RPM_ASYNC);
--
-  out:
- 	spin_unlock_irq(&dev->power.lock);
- }
-@@ -1523,9 +1530,8 @@ static void update_autosuspend(struct device *dev, int old_delay, int old_use)
- 		/* If it used to be allowed then prevent it. */
- 		if (!old_use || old_delay >= 0) {
- 			atomic_inc(&dev->power.usage_count);
--			rpm_resume(dev, 0);
--		} else {
- 			trace_rpm_usage_rcuidle(dev, 0);
-+			rpm_resume(dev, 0);
- 		}
- 	}
- 
-@@ -1533,8 +1539,10 @@ static void update_autosuspend(struct device *dev, int old_delay, int old_use)
- 	else {
- 
- 		/* If it used to be prevented then allow it. */
--		if (old_use && old_delay < 0)
-+		if (old_use && old_delay < 0) {
- 			atomic_dec(&dev->power.usage_count);
-+			trace_rpm_usage_rcuidle(dev, 0);
-+		}
- 
- 		/* Maybe we can autosuspend now. */
- 		rpm_idle(dev, RPM_AUTO);
-@@ -1741,12 +1749,14 @@ void pm_runtime_drop_link(struct device *dev)
- void pm_runtime_get_noresume(struct device *dev)
- {
- 	atomic_inc(&dev->power.usage_count);
-+	trace_rpm_usage_rcuidle(dev, 0);
- }
- EXPORT_SYMBOL_GPL(pm_runtime_get_noresume);
- 
- void pm_runtime_put_noidle(struct device *dev)
- {
- 	atomic_add_unless(&dev->power.usage_count, -1, 0);
-+	trace_rpm_usage_rcuidle(dev, 0);
- }
- EXPORT_SYMBOL_GPL(pm_runtime_put_noidle);
- 
--- 
-2.17.1
-
+I'll send another series to clean this up.  I had a few utimes related
+patch in a later series and this fits in pretty well with those.
