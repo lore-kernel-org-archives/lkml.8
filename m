@@ -6,92 +6,93 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
 	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD9F8C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 16:47:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 848E1C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 16:48:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8CBD52065D
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 16:47:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 622FD2065D
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 16:48:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="AqujZETE"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="UILAKYkp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727851AbgGOQry (ORCPT
+        id S1726785AbgGOQsg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 12:47:54 -0400
+        Wed, 15 Jul 2020 12:48:36 -0400
 Received: from mail29.static.mailgun.info ([104.130.122.29]:33685 "EHLO
         mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725834AbgGOQrx (ORCPT
+        by vger.kernel.org with ESMTP id S1725770AbgGOQse (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 12:47:53 -0400
+        Wed, 15 Jul 2020 12:48:34 -0400
 DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1594831673; h=Date: Message-Id: Cc: To: References:
+ s=smtp; t=1594831714; h=Date: Message-Id: Cc: To: References:
  In-Reply-To: From: Subject: Content-Transfer-Encoding: MIME-Version:
- Content-Type: Sender; bh=0YNgags7lBPRj9aPsnUXN6sVUi5iHlWg3RNlkFMPnIg=;
- b=AqujZETEar7TLAmlO/QkX7hrE7wSo2eAwuB5m0CJ+YjTbD+DiQI8amHFKCuFfFcNxJkzsrf5
- +cW/kcX+GbaJBqz2fbA18VIqvZX8s3fGWlAHcNDI5wUpWuYZJFMYNTQpTd/gdeaZOENx9rOO
- hXL9ZY5AE/FcXF1C3F8zkeAS4uo=
+ Content-Type: Sender; bh=Gk5I0Q4UUjtMKZvYOanMDGLRBzXb4Zpiap8jy7XxLrw=;
+ b=UILAKYkp3yYajj9ocEfO3FOPQ8z7EcWosanHXd5Uaggv/pAKgOJYg/9leH6k8AP6sZy8IAHM
+ xgwesLiG6jQTl9cgYUjmrXiNvkvyVfPVQASDKJS/ORXb/kDfpDHWoeIL56ghu4tl1nP2kipa
+ i98n1QGWRQQYmz3xayCqRPvzP5Y=
 X-Mailgun-Sending-Ip: 104.130.122.29
 X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
 Received: from smtp.codeaurora.org
  (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n16.prod.us-west-2.postgun.com with SMTP id
- 5f0f3338512812c070a22a49 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Wed, 15 Jul 2020 16:47:52
+ smtp-out-n13.prod.us-west-2.postgun.com with SMTP id
+ 5f0f335f166c1c54946e32b4 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Wed, 15 Jul 2020 16:48:31
  GMT
 Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 8CED9C43391; Wed, 15 Jul 2020 16:47:52 +0000 (UTC)
+        id 54DE0C43395; Wed, 15 Jul 2020 16:48:31 +0000 (UTC)
 Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
         (Authenticated sender: kvalo)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 57945C433C9;
-        Wed, 15 Jul 2020 16:47:50 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 57945C433C9
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id A843BC433C9;
+        Wed, 15 Jul 2020 16:48:27 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org A843BC433C9
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
-Subject: Re: [PATCH 4/14 v3] iwlegacy: Check the return value of
- pcie_capability_read_*()
+Subject: Re: [PATCH v2 4/8] wireless: Fix trivial spelling
 From:   Kalle Valo <kvalo@codeaurora.org>
-In-Reply-To: <20200713175529.29715-3-refactormyself@gmail.com>
-References: <20200713175529.29715-3-refactormyself@gmail.com>
-To:     "Saheed O. Bolarinwa" <refactormyself@gmail.com>
-Cc:     skhan@linuxfoundation.org, linux-pci@vger.kernel.org,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        linux-kernel@vger.kernel.org, Stanislaw Gruszka <stf_xl@wp.pl>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        Bolarinwa Olayemi Saheed <refactormyself@gmail.com>
+In-Reply-To: <20200715124839.252822-5-kieran.bingham+renesas@ideasonboard.com>
+References: <20200715124839.252822-5-kieran.bingham+renesas@ideasonboard.com>
+To:     Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
+Cc:     trivial@kernel.org,
+        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Wenwen Wang <wenwen@cs.uga.edu>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        ath10k@lists.infradead.org (open list:QUALCOMM ATHEROS ATH10K WIRELESS
+        DRIVER),
+        linux-wireless@vger.kernel.org (open list:NETWORKING DRIVERS (WIRELESS)),
+        netdev@vger.kernel.org (open list:NETWORKING DRIVERS),
+        linux-kernel@vger.kernel.org (open list)
 User-Agent: pwcli/0.1.0-git (https://github.com/kvalo/pwcli/) Python/3.5.2
-Message-Id: <20200715164752.8CED9C43391@smtp.codeaurora.org>
-Date:   Wed, 15 Jul 2020 16:47:52 +0000 (UTC)
+Message-Id: <20200715164831.54DE0C43395@smtp.codeaurora.org>
+Date:   Wed, 15 Jul 2020 16:48:31 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-"Saheed O. Bolarinwa" <refactormyself@gmail.com> wrote:
+Kieran Bingham <kieran.bingham+renesas@ideasonboard.com> wrote:
 
-> From: Bolarinwa Olayemi Saheed <refactormyself@gmail.com>
+> The word 'descriptor' is misspelled throughout the tree.
 > 
-> On failure pcie_capability_read_dword() sets it's last parameter, val
-> to 0. However, with Patch 14/14, it is possible that val is set to ~0 on
-> failure. This would introduce a bug because (x & x) == (~0 & x).
+> Fix it up accordingly:
+>     decriptors -> descriptors
 > 
-> This bug can be avoided without changing the function's behaviour if the
-> return value of pcie_capability_read_dword is checked to confirm success.
-> 
-> Check the return value of pcie_capability_read_dword() to ensure success.
-> 
-> Suggested-by: Bjorn Helgaas <bjorn@helgaas.com>
-> Signed-off-by: Bolarinwa Olayemi Saheed <refactormyself@gmail.com>
+> Signed-off-by: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
 
 Patch applied to wireless-drivers-next.git, thanks.
 
-9018fd7f2a73 iwlegacy: Check the return value of pcie_capability_read_*()
+0e20c3e10333 wireless: Fix trivial spelling
 
 -- 
-https://patchwork.kernel.org/patch/11660739/
+https://patchwork.kernel.org/patch/11665283/
 
 https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
 
