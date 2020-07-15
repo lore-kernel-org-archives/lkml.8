@@ -2,151 +2,178 @@ Return-Path: <SRS0=kup7=A2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AD33C433E3
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 20:21:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D03D1C433E5
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 20:22:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0235020657
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 20:21:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594844507;
-	bh=VQli7jtE5T/1SYWklpK2VCHwm8hJkAqOYFW8SlVpDJ0=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=tpS65Mdi/cYd+ZuGnibCIVEhsvSdEkXFKlMj33RfoyVKrt6rx73UG9gGgmggPFiBZ
-	 JV+R+kLfK07V3QWhpEjRD0wKjLQA4n4cKn9zipS2TAO/QYvZDHiDpj+/Q7VmZr3hcg
-	 nNoemEV48J2fLvE0l55YbgC09b0kzPYAypAROzLc=
+	by mail.kernel.org (Postfix) with ESMTP id A93C220657
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 20:22:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VMH8w1bQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727090AbgGOUVp (ORCPT
+        id S1727104AbgGOUWQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 16:21:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58164 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726370AbgGOUVo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 16:21:44 -0400
-Received: from kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com (unknown [163.114.132.4])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B209320657;
-        Wed, 15 Jul 2020 20:21:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594844504;
-        bh=VQli7jtE5T/1SYWklpK2VCHwm8hJkAqOYFW8SlVpDJ0=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=Yu9VK1c6Pq0Q4zp0DjbR6qa28sZfUiRyQIeX5Qlc7Q1aGH/Ly5XlPtofF7ct7+HgH
-         U5eiDd7kibMnusLyA2PK+HltG5eZp8baVIOdimQiu2PTQ7irKwXIuG2J6oc8d+VCXY
-         JQGTi+Re6xVngnPDUCw3tBLdsBt0tp8abdeupdoA=
-Date:   Wed, 15 Jul 2020 13:21:41 -0700
-From:   Jakub Kicinski <kuba@kernel.org>
-To:     John Ogness <john.ogness@linutronix.de>,
-        Willem de Bruijn <willemb@google.com>
-Cc:     "David S . Miller" <davem@davemloft.net>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Thomas Gleixner <tglx@linutronix.de>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] af_packet: TPACKET_V3: replace busy-wait loop
-Message-ID: <20200715132141.2c72ae75@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-In-Reply-To: <20200707152204.10314-1-john.ogness@linutronix.de>
-References: <20200707152204.10314-1-john.ogness@linutronix.de>
+        Wed, 15 Jul 2020 16:22:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49526 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726370AbgGOUWP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jul 2020 16:22:15 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 782FFC061755;
+        Wed, 15 Jul 2020 13:22:15 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id q5so4219736wru.6;
+        Wed, 15 Jul 2020 13:22:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=URALWEs+XcPWn9St74refXDTS7tb3CQXdmDiQmChFKs=;
+        b=VMH8w1bQ9RpybO9OXCjLsfWWQQwaYL38wcsbjsppO2NfY4VTDQAdApi1V391AzQiHx
+         6EtRlmLiWutVTrDMDh8KutyPHcFTiUNuCs8YoeQDelC3OfYnhD3zQK6dxK6TUKhq4C2T
+         EhaXq82oFM/5PE6AXZvl7QyidXuKb93aYUKb4TSI1WejzFqWcUsIhQJQ6XOdRq+ILlgU
+         qN5F4E2w06LWOp1UZeeCc6Pdf79b6KpwqwTJp9zwQW0oJfr4qLYowxmUBOEWXzVYsN3v
+         5+hse+6dCf3ncxRBfFvnF/BB7cwUqKXn+5YOT4LndO+Kct2qc/ynM9CCxIxb1X03VVzc
+         WYag==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=URALWEs+XcPWn9St74refXDTS7tb3CQXdmDiQmChFKs=;
+        b=g0jCEzWv7NxK4AtUdusH+cgXhxH5HT8oH0p5YNX5Vjk4rFfcpjnR+iRmL3w3gavF/c
+         3+r/f0BVxETAtU+FmbsLWZ5ROZ2UDn+XchdQU7SXFdIBaZuofuzPJ4mc7TOZRDsA2lt3
+         /HcnAvaEciRPGgElGFpwmLyYftd7nwJvIOaHcRKMUlwzOT6UQxu8yK0Oj5NR2AbQ1KHL
+         Bw64pDQNx30GCF3IjHCJzQJP5wQb/MWcG4+NrbdTiy4Ow7GtqTD+P66oRM1LAEjJo/2K
+         CO3ZOFNk7aRSvY6ehpzFUqx3nEJ8OYE+P+O/EQQZhXJ0tea4Msa6vOHvrYYXQYwrS1H+
+         lv8Q==
+X-Gm-Message-State: AOAM531U0VCWEFPV3wIdjLTeuBfMkabrbTOz5391klSwGTsqbl8ioxr5
+        ZBKO0IiuU7mHnYZl2Ksh/F8Vz/ijQck=
+X-Google-Smtp-Source: ABdhPJz3S5rUtZd2JHpfw8gwhMToTCLlgxAjMxjfX0Ej+130XeF17IxfjLBOuE64P2byx9hPady+Cw==
+X-Received: by 2002:adf:fc90:: with SMTP id g16mr1226547wrr.42.1594844533888;
+        Wed, 15 Jul 2020 13:22:13 -0700 (PDT)
+Received: from [192.168.43.238] ([5.100.193.69])
+        by smtp.gmail.com with ESMTPSA id b184sm5221900wmc.20.2020.07.15.13.22.12
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 15 Jul 2020 13:22:13 -0700 (PDT)
+Subject: Re: strace of io_uring events?
+To:     Miklos Szeredi <miklos@szeredi.hu>
+Cc:     Matthew Wilcox <willy@infradead.org>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Stefano Garzarella <sgarzare@redhat.com>,
+        Kees Cook <keescook@chromium.org>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        strace-devel@lists.strace.io, io-uring@vger.kernel.org,
+        Linux API <linux-api@vger.kernel.org>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <CAJfpegu3EwbBFTSJiPhm7eMyTK2MzijLUp1gcboOo3meMF_+Qg@mail.gmail.com>
+ <D9FAB37B-D059-4137-A115-616237D78640@amacapital.net>
+ <20200715171130.GG12769@casper.infradead.org>
+ <7c09f6af-653f-db3f-2378-02dca2bc07f7@gmail.com>
+ <CAJfpegt9=p4uo5U2GXqc-rwqOESzZCWAkGMRTY1r8H6fuXx96g@mail.gmail.com>
+From:   Pavel Begunkov <asml.silence@gmail.com>
+Autocrypt: addr=asml.silence@gmail.com; prefer-encrypt=mutual; keydata=
+ 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 bA==
+Message-ID: <48cc7eea-5b28-a584-a66c-4eed3fac5e76@gmail.com>
+Date:   Wed, 15 Jul 2020 23:20:26 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <CAJfpegt9=p4uo5U2GXqc-rwqOESzZCWAkGMRTY1r8H6fuXx96g@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue,  7 Jul 2020 17:28:04 +0206 John Ogness wrote:
-> A busy-wait loop is used to implement waiting for bits to be copied
-> from the skb to the kernel buffer before retiring a block. This is
-> a problem on PREEMPT_RT because the copying task could be preempted
-> by the busy-waiting task and thus live lock in the busy-wait loop.
+On 15/07/2020 23:09, Miklos Szeredi wrote:
+> On Wed, Jul 15, 2020 at 9:43 PM Pavel Begunkov <asml.silence@gmail.com> wrote:
+>>
+>> To clear details for those who are not familiar with io_uring:
+>>
+>> io_uring has a pair of queues, submission (SQ) and completion queues (CQ),
+>> both shared between kernel and user spaces. The userspace submits requests
+>> by filling a chunk of memory in SQ. The kernel picks up SQ entries in
+>> (syscall io_uring_enter) or asynchronously by polling SQ.
+>>
+>> CQ entries are filled by the kernel completely asynchronously and
+>> in parallel. Some users just poll CQ to get them, but also have a way
+>> to wait for them.
+>>
+>>>>>
+>>>>> What do people think?
+>>>>>
+>>>>> From what I can tell, listing the submitted requests on
+>>>>> io_uring_enter() would not be hard.  Request completion is
+>>>>> asynchronous, however, and may not require  io_uring_enter() syscall.
+>>>>> Am I correct?
+>>
+>> Both, submission and completion sides may not require a syscall.
 > 
-> Replace the busy-wait logic with an rwlock_t. This provides lockdep
-> coverage and makes the code RT ready.
+> Okay.
 > 
-> Signed-off-by: John Ogness <john.ogness@linutronix.de>
+>>>>> Is there some existing tracing infrastructure that strace could use to
+>>>>> get async completion events?  Should we be introducing one?
+>>
+>> There are static trace points covering all needs.
+> 
+> This needs to be unprivileged, or its usefulness is again compromized.
+> 
+>>
+>> And if not used the whole thing have to be zero-overhead. Otherwise
+>> there is perf, which is zero-overhead, and this IMHO won't fly.
+> 
+> Obviously it needs to be zero overhead if not tracing.
+> 
+> What won't fly?
+Any approach that is not "zero-overhead if not used". 
 
-Is taking a lock and immediately releasing it better than a completion?
-Seems like the lock is guaranteed to dirty a cache line, which would
-otherwise be avoided here.
-
-Willem, would you be able to take a look as well? Is this path
-performance sensitive in real life?
-
-> diff --git a/net/packet/af_packet.c b/net/packet/af_packet.c
-> index 29bd405adbbd..dd1eec2dd6ef 100644
-> --- a/net/packet/af_packet.c
-> +++ b/net/packet/af_packet.c
-> @@ -593,6 +593,7 @@ static void init_prb_bdqc(struct packet_sock *po,
->  						req_u->req3.tp_block_size);
->  	p1->tov_in_jiffies = msecs_to_jiffies(p1->retire_blk_tov);
->  	p1->blk_sizeof_priv = req_u->req3.tp_sizeof_priv;
-> +	rwlock_init(&p1->blk_fill_in_prog_lock);
->  
->  	p1->max_frame_len = p1->kblk_size - BLK_PLUS_PRIV(p1->blk_sizeof_priv);
->  	prb_init_ft_ops(p1, req_u);
-> @@ -659,10 +660,9 @@ static void prb_retire_rx_blk_timer_expired(struct timer_list *t)
->  	 *
->  	 */
->  	if (BLOCK_NUM_PKTS(pbd)) {
-> -		while (atomic_read(&pkc->blk_fill_in_prog)) {
-> -			/* Waiting for skb_copy_bits to finish... */
-> -			cpu_relax();
-> -		}
-> +		/* Waiting for skb_copy_bits to finish... */
-> +		write_lock(&pkc->blk_fill_in_prog_lock);
-> +		write_unlock(&pkc->blk_fill_in_prog_lock);
->  	}
->  
->  	if (pkc->last_kactive_blk_num == pkc->kactive_blk_num) {
-> @@ -921,10 +921,9 @@ static void prb_retire_current_block(struct tpacket_kbdq_core *pkc,
->  		 * the timer-handler already handled this case.
->  		 */
->  		if (!(status & TP_STATUS_BLK_TMO)) {
-> -			while (atomic_read(&pkc->blk_fill_in_prog)) {
-> -				/* Waiting for skb_copy_bits to finish... */
-> -				cpu_relax();
-> -			}
-> +			/* Waiting for skb_copy_bits to finish... */
-> +			write_lock(&pkc->blk_fill_in_prog_lock);
-> +			write_unlock(&pkc->blk_fill_in_prog_lock);
->  		}
->  		prb_close_block(pkc, pbd, po, status);
->  		return;
-> @@ -944,7 +943,8 @@ static int prb_queue_frozen(struct tpacket_kbdq_core *pkc)
->  static void prb_clear_blk_fill_status(struct packet_ring_buffer *rb)
->  {
->  	struct tpacket_kbdq_core *pkc  = GET_PBDQC_FROM_RB(rb);
-> -	atomic_dec(&pkc->blk_fill_in_prog);
-> +
-> +	read_unlock(&pkc->blk_fill_in_prog_lock);
->  }
->  
->  static void prb_fill_rxhash(struct tpacket_kbdq_core *pkc,
-> @@ -998,7 +998,7 @@ static void prb_fill_curr_block(char *curr,
->  	pkc->nxt_offset += TOTAL_PKT_LEN_INCL_ALIGN(len);
->  	BLOCK_LEN(pbd) += TOTAL_PKT_LEN_INCL_ALIGN(len);
->  	BLOCK_NUM_PKTS(pbd) += 1;
-> -	atomic_inc(&pkc->blk_fill_in_prog);
-> +	read_lock(&pkc->blk_fill_in_prog_lock);
->  	prb_run_all_ft_ops(pkc, ppd);
->  }
->  
-> diff --git a/net/packet/internal.h b/net/packet/internal.h
-> index 907f4cd2a718..fd41ecb7f605 100644
-> --- a/net/packet/internal.h
-> +++ b/net/packet/internal.h
-> @@ -39,7 +39,7 @@ struct tpacket_kbdq_core {
->  	char		*nxt_offset;
->  	struct sk_buff	*skb;
->  
-> -	atomic_t	blk_fill_in_prog;
-> +	rwlock_t	blk_fill_in_prog_lock;
->  
->  	/* Default is set to 8ms */
->  #define DEFAULT_PRB_RETIRE_TOV	(8)
-
+-- 
+Pavel Begunkov
