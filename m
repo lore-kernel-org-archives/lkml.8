@@ -2,106 +2,156 @@ Return-Path: <SRS0=kup7=A2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01B3FC433E7
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 13:51:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9098DC433E2
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 13:51:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D071C20658
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 13:51:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594821118;
-	bh=/bT6w4f5A2YqDbGUjn8qK0yZTKezWpn570rvkh4CPno=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Kh4QEm+Eq+4/JAt6Ip+ATtX5LakL8jLKwcDNzkEfHsE1JOdLc1vYd3Y78QXTYM2hH
-	 gYmFXDBlVnpJ6ZgRGij5NRLLcPOVqSgx0iLO6nxusWcUGDQWRR/eXOB+hbZWcSyaCM
-	 6kGsYpyLxtUlOBiUOkDVL35ZzWot99Pc9f6ZUBZg=
+	by mail.kernel.org (Postfix) with ESMTP id 743ED20657
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 13:51:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731871AbgGONv5 (ORCPT
+        id S1729703AbgGONvw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 09:51:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46222 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729086AbgGONv4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 09:51:56 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 29BD620657;
-        Wed, 15 Jul 2020 13:51:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594821115;
-        bh=/bT6w4f5A2YqDbGUjn8qK0yZTKezWpn570rvkh4CPno=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=tZHzSmPW6RxO6+AeMs5azY0kFob3acvs6hccoS8+7AaCqxhkGsr1EAz1rTr4OoaTW
-         GzdGM7BqSU8L3jkomLXG59g9M1u0axICkVKONip1bH9DTzj+vpwdwVPBR1TUCCYmZQ
-         GWmB0C26qLaOYmhRO9Z4B+/MiJTt90IQY5ToZM3U=
-Date:   Wed, 15 Jul 2020 14:51:46 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Frieder Schrempf <frieder.schrempf@kontron.de>
-Cc:     linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org
-Subject: Re: [PATCH] spi: spidev: Add compatible for external SPI ports on
- Kontron boards
-Message-ID: <20200715135146.GG5431@sirena.org.uk>
-References: <479d566a-213f-4e33-8ac7-7637ae88e31c@kontron.de>
- <a5b88ad9-3884-1d9c-c4ad-057266f84261@kontron.de>
- <20200713151108.GB4420@sirena.org.uk>
- <2eb6971b-7ea4-c9c8-5452-6f4b17e8860a@kontron.de>
- <20200714192907.GJ4900@sirena.org.uk>
- <16825a78-8eb0-90f2-433a-d1ae6eed6ba8@kontron.de>
- <20200715113609.GD5431@sirena.org.uk>
- <824b8479-e204-d087-7887-a2dbefa0f844@kontron.de>
- <20200715131033.GF5431@sirena.org.uk>
- <ce532200-a18c-d618-7f73-6f6ac8f8522e@kontron.de>
+        Wed, 15 Jul 2020 09:51:52 -0400
+Received: from relay7-d.mail.gandi.net ([217.70.183.200]:39503 "EHLO
+        relay7-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729086AbgGONvw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jul 2020 09:51:52 -0400
+X-Originating-IP: 93.29.109.196
+Received: from aptenodytes (196.109.29.93.rev.sfr.net [93.29.109.196])
+        (Authenticated sender: paul.kocialkowski@bootlin.com)
+        by relay7-d.mail.gandi.net (Postfix) with ESMTPSA id B7D4820008;
+        Wed, 15 Jul 2020 13:51:46 +0000 (UTC)
+Date:   Wed, 15 Jul 2020 15:51:45 +0200
+From:   Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+To:     Ezequiel Garcia <ezequiel@collabora.com>
+Cc:     Nicolas Dufresne <nicolas.dufresne@collabora.com>,
+        Hans Verkuil <hverkuil@xs4all.nl>, stable@vger.kernel.org,
+        kernel@collabora.com, Maxime Ripard <mripard@kernel.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Chen-Yu Tsai <wens@csie.org>, linux-media@vger.kernel.org,
+        devel@driverdev.osuosl.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] media: cedrus: Propagate OUTPUT resolution to CAPTURE
+Message-ID: <20200715135145.GA2019248@aptenodytes>
+References: <20200514153903.341287-1-nicolas.dufresne@collabora.com>
+ <3c8a235ebb0bf76bcffeb8c6b983cd4c95d77459.camel@collabora.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="3xoW37o/FfUZJwQG"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="n8g4imXOkfNTN/H1"
 Content-Disposition: inline
-In-Reply-To: <ce532200-a18c-d618-7f73-6f6ac8f8522e@kontron.de>
-X-Cookie: 40 isn't old.  If you're a tree.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <3c8a235ebb0bf76bcffeb8c6b983cd4c95d77459.camel@collabora.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---3xoW37o/FfUZJwQG
-Content-Type: text/plain; charset=us-ascii
+--n8g4imXOkfNTN/H1
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Jul 15, 2020 at 03:48:37PM +0200, Frieder Schrempf wrote:
-> On 15.07.20 15:10, Mark Brown wrote:
+Hi,
 
-> > I'm not sure platforms like this are a great fit for DT TBH - the
-> > trouble with DT is that it turns things into ABIs regardless of if it's
-> > really a finished thing, platform data based systems were a lot more
-> > flexible here.
+On Wed 15 Jul 20, 08:57, Ezequiel Garcia wrote:
+> It seems this one felt thru the cracks. Sorry for the delay.
+>=20
+> On Thu, 2020-05-14 at 11:39 -0400, Nicolas Dufresne wrote:
+> > As per spec, the CAPTURE resolution should be automatically set based on
+> > the OTUPUT resolution. This patch properly propagate width/height to the
+> > capture when the OUTPUT format is set and override the user provided
+> > width/height with configured OUTPUT resolution when the CAPTURE fmt is
+> > updated.
+> >=20
+> > This also prevents userspace from selecting a CAPTURE resolution that is
+> > too small, avoiding unwanted page faults.
+> >=20
+> > Signed-off-by: Nicolas Dufresne <nicolas.dufresne@collabora.com>
+>=20
+> This looks correct.
 
-> I see your point. Still it seems like the overlays would provide a
-> sufficient alternative in matters of flexibility. Raspberry Pi uses it for
-> years, which made me assume that some generic loading API is available. But
-> it seems like everything is RPi-specific and downstream.
+Looks like there's no issue with alignment (that will get applied as well),
+which was a possible concern.
 
-Yes, overlays would be fine if there were a way to use them for
-connectors like this.  The connectors are a real problem, it's not just
-RPi that has their own loaders/infrastructure downstream.
+Thanks for reviewing!
 
---3xoW37o/FfUZJwQG
+Acked-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+
+Cheers,
+
+Paul
+
+> Reviewed-by: Ezequiel Garcia <ezequiel@collabora.com>
+>=20
+> Thanks,
+> Ezequiel
+>=20
+> > ---
+> >  drivers/staging/media/sunxi/cedrus/cedrus_video.c | 7 ++++++-
+> >  1 file changed, 6 insertions(+), 1 deletion(-)
+> >=20
+> > diff --git a/drivers/staging/media/sunxi/cedrus/cedrus_video.c b/driver=
+s/staging/media/sunxi/cedrus/cedrus_video.c
+> > index 16d82309e7b6..a6d6b15adc2e 100644
+> > --- a/drivers/staging/media/sunxi/cedrus/cedrus_video.c
+> > +++ b/drivers/staging/media/sunxi/cedrus/cedrus_video.c
+> > @@ -247,6 +247,8 @@ static int cedrus_try_fmt_vid_cap(struct file *file=
+, void *priv,
+> >  		return -EINVAL;
+> > =20
+> >  	pix_fmt->pixelformat =3D fmt->pixelformat;
+> > +	pix_fmt->width =3D ctx->src_fmt.width;
+> > +	pix_fmt->height =3D ctx->src_fmt.height;
+> >  	cedrus_prepare_format(pix_fmt);
+> > =20
+> >  	return 0;
+> > @@ -319,11 +321,14 @@ static int cedrus_s_fmt_vid_out(struct file *file=
+, void *priv,
+> >  		break;
+> >  	}
+> > =20
+> > -	/* Propagate colorspace information to capture. */
+> > +	/* Propagate format information to capture. */
+> >  	ctx->dst_fmt.colorspace =3D f->fmt.pix.colorspace;
+> >  	ctx->dst_fmt.xfer_func =3D f->fmt.pix.xfer_func;
+> >  	ctx->dst_fmt.ycbcr_enc =3D f->fmt.pix.ycbcr_enc;
+> >  	ctx->dst_fmt.quantization =3D f->fmt.pix.quantization;
+> > +	ctx->dst_fmt.width =3D ctx->src_fmt.width;
+> > +	ctx->dst_fmt.height =3D ctx->src_fmt.height;
+> > +	cedrus_prepare_format(&ctx->dst_fmt);
+> > =20
+> >  	return 0;
+> >  }
+> > --=20
+> > 2.26.2
+> >=20
+> >=20
+>=20
+>=20
+
+--=20
+Paul Kocialkowski, Bootlin
+Embedded Linux and kernel engineering
+https://bootlin.com
+
+--n8g4imXOkfNTN/H1
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl8PCfEACgkQJNaLcl1U
-h9ClAQf7BaOgQgQ4X3u/iwrjv7DwfTmsmVKjeYTdVQS2HW1v7PpY8xIHLc+Dh8tJ
-Pb87yfYyyk7YPIxjSFVL9Xfr5BObBkmGGRAozk9dN78KFZiWJP4Q08ZLAwzD8prX
-+e27N1pSBWlZPIvxDpMe88nQrHVc9Cp8EytYCTU+uZn+IiFCzAE534mMcRgPvrAn
-bcYgIWm60d7qDjdQJDj7ByN4TXQmAm0nQj5V0/qqf88aQ7cVk65nvzgun6ExE0ZO
-Gng9RRfpmwD4w/6bbrEPFL2AO3jmKb2L48gtRsUBn348nvwGFCJ7dnmVNIR4IAxS
-eOYOnjK/EmS3Qg1suU2eW/PJ1CYSlQ==
-=Cwx6
+iQEzBAEBCAAdFiEEJZpWjZeIetVBefti3cLmz3+fv9EFAl8PCfAACgkQ3cLmz3+f
+v9Hn4Af9EzN5gnaUQKr1CzXC653L4rnjwlGYHhQ1ctQj7EtF8LgF6iugRO1UMIF9
+nKLxp3yyElrKlWAE3DpaVDmb4cilu8IzSeO3T6f9XtUwaAhJcsmP+QEeQ3QLT2R/
+yclIp4Nv7u93jYLvPDXKLf4BPQ1Gjrrhh1R9fEda+GV/lVkaY6jzFBoGwPRCr7Ix
+t0FWyHNrOH+FfAAWm+gmqWB4Molnl3cd1vYcvWBbM8Yf7VbDL3DyvUA6NhUCcs64
+f5OUBpJVGArH7HxL/sHB7pmqG4pcsQeljXE1GPuV77+/AJ/AlvpVslpWyC4sOx1C
+PdDbVhi/dtKugkhQNAtUN2fnmFHRAg==
+=49po
 -----END PGP SIGNATURE-----
 
---3xoW37o/FfUZJwQG--
+--n8g4imXOkfNTN/H1--
