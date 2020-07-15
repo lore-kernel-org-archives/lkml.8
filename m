@@ -2,95 +2,94 @@ Return-Path: <SRS0=kup7=A2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35D26C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 14:26:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EACC4C433E2
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 14:27:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 06063205CB
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 14:26:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LqWxujlr"
+	by mail.kernel.org (Postfix) with ESMTP id B9E2C2064B
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 14:27:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594823222;
+	bh=2qpN2cOs0v8OgbKiTCEOLREVstlLLC76OJcC/cCHwQw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=GqmP16PMET4ikjd+r6vEi0XHuBVv1efM1928Bc5JIKlHr4qPX4ag9FNb/Jpp1aIDV
+	 FINm9ckrIeO0onRiaewV3aOsnZwP0PhYlSFStd2JYpp4MPxeL7TcRLW2DHYuG5+X8A
+	 sQtc7fM4plbZoQhK8sz4+/vwSdNqR5/fVwxxa5J4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728657AbgGOO0j (ORCPT
+        id S1728679AbgGOO1B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 10:26:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50914 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728414AbgGOO0j (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 10:26:39 -0400
-Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 216C9C061755;
-        Wed, 15 Jul 2020 07:26:39 -0700 (PDT)
-Received: by mail-pl1-x641.google.com with SMTP id x8so2452353plm.10;
-        Wed, 15 Jul 2020 07:26:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition;
-        bh=Cf7VzUGNcVW14TxQ7W+i6Ijja36UwcJjRErcM4N9znc=;
-        b=LqWxujlr5FI8tOftLMXDC2FrO1bETiMZL5N/zvR32Cr+VM9Qa7FxhZ0D0v1C4gbMVt
-         RALDAW9w8pHRhDIbqWX7d8HR3ArZPW9CObUh3arqYIGcOdYqK63kfiRLx8l6nj9b1Yi9
-         MRkrKug2lXN4V/2r6Z8EYQFuzZGQz1KjVowvR/2YS62NiYpNlXINwvk6HPmHJol8do56
-         vudp7YV+bgjbWgRKwxomyR4wc8ZSxBXvWfNM4gDdzs8vFX0SDeVRJr+JX7eVU85nBFnY
-         SfWy3yDl+aHjP3ThhfYX6BLpo/r+4Yl1xh7A0YLjOkfj6FdjEDTe5w37Q4xqd6qlrdrC
-         9biw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition;
-        bh=Cf7VzUGNcVW14TxQ7W+i6Ijja36UwcJjRErcM4N9znc=;
-        b=f4mQSu0jnkBm6IJKJAUN7pKs8q8z8lAyggP8psguxaCJril9Ssqhvul966eT5qrTl4
-         HxhtVbmIujYj03iUpVNqwoJLXOAU0+/4B0DGHp5Z4TLH0Yjw+p5fSLj4xBacrrMeNaV7
-         iA5aKizC6kLEmExK1uyncBSv0vQaxArkp9KNh0ie3l9DTTRmQu2EYacFsH/czQku0y+h
-         t3TnrN8dxhdHbl0nFIgNrPaexq8BFwiF8MSoVlTHusePFWY2YbUrxhE3Nv2lpDshmTvY
-         XritN7UacARTl2vSGDUUbziZC5uIoV8fC47m7wbYdNhrt7Cfm9tr6t45uvzYSnxTKKHm
-         nmrQ==
-X-Gm-Message-State: AOAM532tCsm/NRIkE2xwC+5o76maASWws+0HnA+g20lli9MGqT4QFcMo
-        Io/vbE5eMr3UZKf63X+DBCc=
-X-Google-Smtp-Source: ABdhPJxc+PcUyRXPFSiepL+frTS2yx9txd8EAmyAZUd70euDlFa2pRe1xLDwQfwe4R+3T7s6lvZg4g==
-X-Received: by 2002:a17:90b:4910:: with SMTP id kr16mr10502482pjb.126.1594823198263;
-        Wed, 15 Jul 2020 07:26:38 -0700 (PDT)
-Received: from mritunjay-Lenovo-Yoga-S740-14IIL ([2405:201:6402:aeae:6d34:5d62:d650:d199])
-        by smtp.gmail.com with ESMTPSA id q13sm2639207pfk.8.2020.07.15.07.26.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 15 Jul 2020 07:26:37 -0700 (PDT)
-Date:   Wed, 15 Jul 2020 19:56:31 +0530
-From:   Mritunjay Sharma <mritunjaysharma394@gmail.com>
-To:     masahiroy@kernel.org, michal.lkml@markovi.net
-Cc:     linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
-        clang-built-linux@googlegroups.com
-Subject: [PATCH] Modified Makefile to print -eudyptula in the version string
-Message-ID: <20200715142631.GA3721@mritunjay-Lenovo-Yoga-S740-14IIL>
+        Wed, 15 Jul 2020 10:27:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59672 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728162AbgGOO1B (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jul 2020 10:27:01 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5078B205CB;
+        Wed, 15 Jul 2020 14:27:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594823220;
+        bh=2qpN2cOs0v8OgbKiTCEOLREVstlLLC76OJcC/cCHwQw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=DtX+/tccMlVeMNKiozjp+uC/QzIQ1f5ReA3ZExvuVyNGw7we44RduABqcmoZCDDTW
+         Yzotqw74bb233t4PKstgZM/1zygsYv/Qh2xv2TfbzbNK1RRDl96p13D4q6Shjmt1T7
+         POLd33Hw9krqvH6eIAcns0jJpXABgnfIgVr5iNJ0=
+Date:   Wed, 15 Jul 2020 15:26:51 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     lgirdwood@gmail.com, alsa-devel@alsa-project.org,
+        Timur Tabi <timur@kernel.org>, Xiubo Li <Xiubo.Lee@gmail.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        Nicolin Chen <nicoleotsuka@gmail.com>,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH 1/1] ASoC: fsl: fsl-asoc-card: Trivial: Fix misspelling
+ of 'exists'
+Message-ID: <20200715142651.GA44014@sirena.org.uk>
+References: <20200715094447.3170843-1-lee.jones@linaro.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="3V7upXqbjpZ4EhLz"
 Content-Disposition: inline
+In-Reply-To: <20200715094447.3170843-1-lee.jones@linaro.org>
+X-Cookie: Minimum charge for booths.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Signed-off-by: Mritunjay Sharma <mritunjaysharma394@gmail.com>
----
- Makefile | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/Makefile b/Makefile
-index 0b5f8538bde5..d7897ce5ab23 100644
---- a/Makefile
-+++ b/Makefile
-@@ -2,7 +2,7 @@
- VERSION = 5
- PATCHLEVEL = 8
- SUBLEVEL = 0
--EXTRAVERSION = -rc5
-+EXTRAVERSION = -rc5-eudyptula
- NAME = Kleptomaniac Octopus
- 
- # *DOCUMENTATION*
--- 
-2.25.1
+--3V7upXqbjpZ4EhLz
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
+On Wed, Jul 15, 2020 at 10:44:47AM +0100, Lee Jones wrote:
+
+>  /*
+> - * This dapm route map exits for DPCM link only.
+> + * This dapm route map exists for DPCM link only.
+>   * The other routes shall go through Device Tree.
+
+This doesn't apply against current code, please check and resend.
+
+--3V7upXqbjpZ4EhLz
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl8PEioACgkQJNaLcl1U
+h9DvQAf/f/u76ASoswKuqEP0xg72QuhZGUj08nlVQnAV1civDdfyjXZEc45CEfoX
+SBrMdVIMfvk8oxGZIsgRkhW+QimcJLr5rsyO7RylN6YZsXysfG0GqDbuH9WvgGSJ
+yTggaet7yI6gAlbjos476ee+yrzNSssnBzOpxuk5pXCYxDkEf0lgclfQY21oOG/t
+8F1tzjQjJ8kXcfYfnBofJFJPqi5EA2DbogxL0bH+7/ndzpuo4BNVb4463SuG7CXy
+upIOZq7CFRlVOY4Izb27YyFAeq3SnigakVEBJrkFeKsOECP6gTBHSbZGrydD2NrO
+2K6J+fPzeGcdXutqMeP+n2ke/vXxLw==
+=viwB
+-----END PGP SIGNATURE-----
+
+--3V7upXqbjpZ4EhLz--
