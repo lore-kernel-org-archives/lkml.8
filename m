@@ -2,113 +2,139 @@ Return-Path: <SRS0=kup7=A2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2545C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 11:44:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BD5AC433E2
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 11:45:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 82917206E9
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 11:44:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594813456;
-	bh=BaBDIw1z/eEqdf0QQ4ZUt0oW4z4lCjYpMBZZDcbuR0c=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=jz0ZLFYSYvebqRK+YpVJhc21eRUIF35gCZI3j8IFSSfgtqQnHXWJMKFT2p2s2RFRy
-	 qDRzx7vEpRQlnBHzMMbrYuURCl40u0arPsikg6q4ftxQn4HYKgXNChegZRfprKtE6f
-	 WN4SMshH/8T2mV309lfBFMZkSk0RQXRG8UQcKLVk=
+	by mail.kernel.org (Postfix) with ESMTP id 6380D206E9
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 11:45:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=mysnt.onmicrosoft.com header.i=@mysnt.onmicrosoft.com header.b="l/bjSlcF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729517AbgGOLoP (ORCPT
+        id S1729699AbgGOLp6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 07:44:15 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:36055 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729402AbgGOLoO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 07:44:14 -0400
-Received: by mail-ot1-f68.google.com with SMTP id 72so1215033otc.3;
-        Wed, 15 Jul 2020 04:44:13 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=BaBDIw1z/eEqdf0QQ4ZUt0oW4z4lCjYpMBZZDcbuR0c=;
-        b=RrtCkGNRfH3fAsP1WY6uPp7osIGCxNk8Tm6aqLZWdMTXfwTpMFhnluX/Nq/gJghiSK
-         5Lblc8Zn0QOqpxvlA/Qq3ZORXjUicOyxJSgF9ffio5/frR8QNEOfNc0pBv3Z8Ffldj+w
-         oAHFROAcRvC25+JAu4OJkdHwAlZYvSLSxQFpL4uwincr/N/5ZjV27iuuZWIJ6XiF/Mup
-         4hkfP8R3xVppNM94d9TGftX0tDOx7G2pOdZH2sV6laQL3RrvBP4kpE/18y5bGCPKxsk3
-         kRtDVTl/AVKVRIrsxv354n3fvL0F3g8v7VlqxyX2gGcLEs1S4iRNPrvl3rcyBcWjpRAh
-         9xUQ==
-X-Gm-Message-State: AOAM533VDzvw7e1pe2BF8txx1kJAxV6MubGCHYyMLnkE0yVJnDzgF3xm
-        Q+ouXuogLQDbxt/+kxoITWapWe5AnnDuAvj6S1w=
-X-Google-Smtp-Source: ABdhPJxEcoP6okwQqNr/RlRkCB0Aw3hNucn3W2acw4J2SJUqB280r/rPKtFMA2T/K62rr7Bm4/+fKhqo/8OcKnWTGb0=
-X-Received: by 2002:a9d:1c82:: with SMTP id l2mr8192356ota.167.1594813453344;
- Wed, 15 Jul 2020 04:44:13 -0700 (PDT)
+        Wed, 15 Jul 2020 07:45:58 -0400
+Received: from mail-vi1eur05on2112.outbound.protection.outlook.com ([40.107.21.112]:22971
+        "EHLO EUR05-VI1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729546AbgGOLp5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jul 2020 07:45:57 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=FATbkbSZsVzlzILW503Cx3Me75ZPlFfSETDAB3GSXS3GTjEUfHFgvj3vwI9qO6quwESfOT0QFr8Fu/2Uu+NaYJYmrFst7PMSTgKTsvyjdMuJSBm2pO5qRt/uHmhVgYniWIh7wNRE7ouCPORCQoQboER+Pdsjc6+vv3vLub2SrPvuo6XFXv85rd9E5WJCX/T8IkJcNYfwfcqDkbFEtn4xCqV2pIGRfwrK3KrrJm0vKFVhSNbMt+Y9HiRr/Fah8XZD5FJ9LLQJ121qfJgGw59RqZSTNjLiMlpETcFmMQ9BQSxuomsyrHk5OvbvxDjBrm2rk6VNEqdGOD21xq2fE+cV0g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=EPFb3buB86fU5NePK+V2bYP4aXx9AJqRozT56I/Okog=;
+ b=NHt1rvvFvImuQRQelCgVZQYGkKHJLoge6Q3thlBTV3p0p7aYhWCWlJot2Ie2F8jxW9XHPt+/c/3EoEKED0H0REpX7pWrVTUIxnYdCVR5fLxM+SaGjGneMRSpliOy/y6+wp3qd4PySwE4zI5xh++I5TO3QQq8mAroRMs3xctmni4a4Ta01HqIAMBbq7RdChhD8WZoGS31OisNulyeR+p1fRndWDWXPQXzacmHRo8i5u7PLRtbf/9UCjjEMepwF1+h4lVLk6nbbQ0EyfMdM3PRqbkAgly2v9pJYB8Eo6HNB0CM1YsIF77GjJCqhiZG/JGaHHPxBUdWx4Wp5ZH5c231Wg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=kontron.de; dmarc=pass action=none header.from=kontron.de;
+ dkim=pass header.d=kontron.de; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mysnt.onmicrosoft.com;
+ s=selector2-mysnt-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=EPFb3buB86fU5NePK+V2bYP4aXx9AJqRozT56I/Okog=;
+ b=l/bjSlcFlX/RoEdkPC3n6hhIdVo8IVcTrEWO5F41xVEKfQoHgPGIZIxvV1zq52UcAWPQVjwn1kezyS0oEIunQcSFMHRrAEEHV0mKtC3isblSAjTpVfDREfKjNoMn4hENIcgI+U1cAmPyEif0I253mjzAm/ELX+tm34yrd9XJUYA=
+Authentication-Results: vger.kernel.org; dkim=none (message not signed)
+ header.d=none;vger.kernel.org; dmarc=none action=none header.from=kontron.de;
+Received: from DB7PR10MB2490.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:10:50::12)
+ by DB7PR10MB2042.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:5:c::16) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.3195.18; Wed, 15 Jul 2020 11:45:52 +0000
+Received: from DB7PR10MB2490.EURPRD10.PROD.OUTLOOK.COM
+ ([fe80::ac04:ef33:baf3:36f3]) by DB7PR10MB2490.EURPRD10.PROD.OUTLOOK.COM
+ ([fe80::ac04:ef33:baf3:36f3%4]) with mapi id 15.20.3174.026; Wed, 15 Jul 2020
+ 11:45:52 +0000
+Subject: Re: [PATCH] spi: spidev: Add compatible for external SPI ports on
+ Kontron boards
+To:     Mark Brown <broonie@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org
+References: <20200702141846.7752-1-frieder.schrempf@kontron.de>
+ <20200702142511.GF4483@sirena.org.uk>
+ <24ec4eed-de01-28df-ee1f-f7bcfc80051a@kontron.de>
+ <20200702150725.GI4483@sirena.org.uk>
+ <479d566a-213f-4e33-8ac7-7637ae88e31c@kontron.de>
+ <a5b88ad9-3884-1d9c-c4ad-057266f84261@kontron.de>
+ <20200713151108.GB4420@sirena.org.uk>
+ <2eb6971b-7ea4-c9c8-5452-6f4b17e8860a@kontron.de>
+ <20200714192907.GJ4900@sirena.org.uk>
+ <16825a78-8eb0-90f2-433a-d1ae6eed6ba8@kontron.de>
+ <20200715113609.GD5431@sirena.org.uk>
+From:   Frieder Schrempf <frieder.schrempf@kontron.de>
+Message-ID: <824b8479-e204-d087-7887-a2dbefa0f844@kontron.de>
+Date:   Wed, 15 Jul 2020 13:45:51 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
+In-Reply-To: <20200715113609.GD5431@sirena.org.uk>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: AM0PR05CA0095.eurprd05.prod.outlook.com
+ (2603:10a6:208:136::35) To DB7PR10MB2490.EURPRD10.PROD.OUTLOOK.COM
+ (2603:10a6:10:50::12)
 MIME-Version: 1.0
-References: <20200714145049.2496163-1-lee.jones@linaro.org>
- <20200714145049.2496163-10-lee.jones@linaro.org> <CAJZ5v0iB0K6H28DSDQj9T7k_kV10THxV6-HwN9qfmkLsYNHfiA@mail.gmail.com>
- <20200714210340.GJ1398296@dell> <20200715032442.gh2cliiddhv35fdj@vireshk-i7>
- <20200715032718.2zlo2eurhkpoayya@vireshk-i7> <CAJZ5v0jHJDLt6QFWG9FOpqmWMXAUuSEPHdHbVgFWcwR6FQD57Q@mail.gmail.com>
- <20200715113433.GB3165313@dell>
-In-Reply-To: <20200715113433.GB3165313@dell>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Wed, 15 Jul 2020 13:44:01 +0200
-Message-ID: <CAJZ5v0gFwYj7KKKj806s5SdWO1Wu5exiwObKKAdQWQEKg+2CJA@mail.gmail.com>
-Subject: Re: [PATCH 09/13] cpufreq: acpi-cpufreq: Remove unused ID structs
-To:     Lee Jones <lee.jones@linaro.org>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Andy Grover <andrew.grover@intel.com>,
-        Paul Diefenbaugh <paul.s.diefenbaugh@intel.com>,
-        Dominik Brodowski <linux@brodo.de>,
-        Denis Sadykov <denis.m.sadykov@intel.com>
-Content-Type: text/plain; charset="UTF-8"
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from [192.168.10.17] (109.250.128.36) by AM0PR05CA0095.eurprd05.prod.outlook.com (2603:10a6:208:136::35) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3195.18 via Frontend Transport; Wed, 15 Jul 2020 11:45:52 +0000
+X-Originating-IP: [109.250.128.36]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: c1fc5dd2-01c4-4713-f0a8-08d828b4a08b
+X-MS-TrafficTypeDiagnostic: DB7PR10MB2042:
+X-Microsoft-Antispam-PRVS: <DB7PR10MB2042358677889DEA5D88B63AE97E0@DB7PR10MB2042.EURPRD10.PROD.OUTLOOK.COM>
+X-MS-Oob-TLC-OOBClassifiers: OLM:6108;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: DZCKcjrMNED0JGxqGnNpbTbIdFSNYshQERBXyBNm2mTAUdiBkqpJ5rznXgZ9q0/WdF8HKeCwRJncFEmo1CJLPRKvBw9R7/QYU/wHNb6TjLwha5icQfc/c0WFB/zXD1IZfqoFTMZMQtSWA7Yn4dTMs45m8WQLchmCUDugWJ06NSmKU+N1vnvujjL6n/mPkohBxTGDrszE7kk4KymRUAyBnF9e0JPJAP5a+x64zH1omaf2/MulKB16/lpHEKg5mrJAzoTwGZ0hgsjm8iT1v0cY8mDdjijPwS5UWO2uktEvrmMhgcrWrcj3XFQ5m+CQ4CvGRjadaQ3BspihairammfNriB+RCOCpagjokAUnq9iPtHmGRPFeLgWS0THPZ/J50k0
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB7PR10MB2490.EURPRD10.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(376002)(396003)(346002)(366004)(136003)(39860400002)(2906002)(16576012)(83380400001)(478600001)(4326008)(316002)(66556008)(66476007)(66946007)(36756003)(6486002)(26005)(8676002)(86362001)(16526019)(186003)(31696002)(31686004)(8936002)(53546011)(5660300002)(6916009)(2616005)(956004)(52116002)(44832011)(43740500002);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData: egCfqU1mAyyvoa/QPsmztyJwTBgZh2bZYpDTQhYEA06E+MPb6SRiUNVQ0i3lIFhqd1WhtvHA9eDCDxrDumCaAaqCqb4PITEMibqYgRoKHjoDGboHPWWbACRLavccgCscsXaj/bH6kiS/7l6inBOk95qRxxGwbaGewQjNjfKBuMChehbp/vBnGJPlSIcTVXP2q+waY22WzvBiX4k8/qjsR1XObtI4fbtdd7H5MWPV8VatO1Rt43Db/B5Al+EJ9z0q3VzV4EgH2PK19LopGb66+r9ojGQptbvFK3zN8NQ1XsszccPttTqxgGWGdqF4wPQZNvXhHyl/8iU/d+yO3rMcMow5QxgxAETDJwZY5/eqTI35dA2N1ZXgfhH3WSfyPQiEmdTb2BHdUb3ntitxG0wi/L8MQP3sWe7YrFUX4O+C/NsArtIUZwd/3o38bwQ0ytFgQHkV1OQ8iwmQOUPGoH5mj0J2cZFkj0HfKlQAX2z1dzY=
+X-OriginatorOrg: kontron.de
+X-MS-Exchange-CrossTenant-Network-Message-Id: c1fc5dd2-01c4-4713-f0a8-08d828b4a08b
+X-MS-Exchange-CrossTenant-AuthSource: DB7PR10MB2490.EURPRD10.PROD.OUTLOOK.COM
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Jul 2020 11:45:52.7124
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 8c9d3c97-3fd9-41c8-a2b1-646f3942daf1
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: wSS42lDRYQv1SEny9yaXRDs69+fn1baMT8peQQFl442gr4phb8uAmDdsM6088j/7pSyuXrMFCpV3TmNwXfWdlBxrHVYwbWAyI2bIGGZoCP4=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB7PR10MB2042
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 15, 2020 at 1:34 PM Lee Jones <lee.jones@linaro.org> wrote:
->
-> On Wed, 15 Jul 2020, Rafael J. Wysocki wrote:
->
-> > On Wed, Jul 15, 2020 at 5:27 AM Viresh Kumar <viresh.kumar@linaro.org> wrote:
-> > >
-> > > On 15-07-20, 08:54, Viresh Kumar wrote:
-> > > > On 14-07-20, 22:03, Lee Jones wrote:
-> > > > > On Tue, 14 Jul 2020, Rafael J. Wysocki wrote:
-> > > > >
-> > > > > > On Tue, Jul 14, 2020 at 4:51 PM Lee Jones <lee.jones@linaro.org> wrote:
-> > > > > > >
-> > > > > > > Can't see them being used anywhere and the compiler doesn't complain
-> > > > > > > that they're missing, so ...
-> > > > > >
-> > > > > > Aren't they needed for automatic module loading in certain configurations?
-> > > > >
-> > > > > Any idea how that works, or where the code is for that?
-> > > >
-> > > > The MODULE_DEVICE_TABLE() thingy creates a map of vendor-id,
-> > > > product-id that the kernel keeps after boot (and so there is no static
-> > > > reference of it for the compiler), later when a device is hotplugged
-> > > > into the kernel it refers to the map to find the related driver for it
-> > > > and loads it if it isn't already loaded.
-> > > >
-> > > > This has some of it, search for MODULE_DEVICE_TABLE() in it.
-> > > > Documentation/driver-api/usb/hotplug.rst
-> > >
-> > > And you just need to add __maybe_unused to them to suppress the
-> > > warning.
-> >
-> > Wouldn't that cause the compiler to optimize them away if it doesn't
-> > see any users?
->
-> It looks like they're only unused when !MODULE,
+On 15.07.20 13:36, Mark Brown wrote:
+> On Wed, Jul 15, 2020 at 09:26:29AM +0200, Frieder Schrempf wrote:
+>> On 14.07.20 21:29, Mark Brown wrote:
+>>> On Tue, Jul 14, 2020 at 10:54:15AM +0200, Frieder Schrempf wrote:
+> 
+>>>> patch in our own tree, or if a node with a custom compatible string like for
+>>>> example "kontron,user-spi" would be accepted upstream, without a matching
+>>>> driver?
+> 
+>>> I'm having a hard time getting enthusiastic about it TBH - can you not
+>>> just use spidev and live with the warning?
+> 
+>> Ok, I can do that, but when I resend my patches and add "compatible =
+>> 'spidev'" to my DT I expect someone to complain again as my DT does not
+>> describe the hardware.
+> 
+> That's the issue with kontron,user-spi too though :/
 
-OK
+Yes, true.
 
-> in which case optimising them away would be the correct thing to do, no?
+> 
+>> But for obvious reasons this can't be considered a good solution and it
+>> seems somewhat disturbing that the maintainer needs to propose it because of
+>> lack of proper solutions ;)
+> 
+> Hey, I proposed other solutions you didn't want to implement!
+
+Right, but you have to admit that the other solutions turned out to be 
+rather out of scope for someone like me who merely wants to use the 
+spidev driver.
+
+But I don't blame you. I'm now having a better idea of how things are 
+(or aren't) supposed to look like. So thanks for your patience!
