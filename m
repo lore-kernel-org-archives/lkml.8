@@ -2,179 +2,130 @@ Return-Path: <SRS0=kup7=A2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1858CC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 00:52:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 257CDC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 01:00:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F14792071B
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 00:52:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0224E2071B
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 01:00:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727794AbgGOAwS (ORCPT
+        id S1726836AbgGOBAs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 20:52:18 -0400
-Received: from mga01.intel.com ([192.55.52.88]:45873 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726945AbgGOAwS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 20:52:18 -0400
-IronPort-SDR: YOcMRjkm70L7UG+T+Z2Gvp6TA+w+7VYE+v1Vd7bjXmXsO7CTS0cahZTGdXPjj0WSRB2SynQIwA
- uUzQwNJ3Yrgw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9682"; a="167172993"
-X-IronPort-AV: E=Sophos;i="5.75,353,1589266800"; 
-   d="scan'208";a="167172993"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jul 2020 17:52:16 -0700
-IronPort-SDR: uhH6lET2YrhupXWXMzYx7R/jUmdJmYQ7JIo1C7WeccSnrlffgZt3YYJCEeUD5ZwxTuQehJiY1N
- PUcBc0Tyq3fQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,353,1589266800"; 
-   d="scan'208";a="459888717"
-Received: from allen-box.sh.intel.com (HELO [10.239.159.139]) ([10.239.159.139])
-  by orsmga005.jf.intel.com with ESMTP; 14 Jul 2020 17:52:13 -0700
-Cc:     baolu.lu@linux.intel.com, Joerg Roedel <joro@8bytes.org>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Jean-Philippe Brucker <jean-philippe@linaro.org>,
-        Kevin Tian <kevin.tian@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Ashok Raj <ashok.raj@intel.com>, kvm@vger.kernel.org,
-        Cornelia Huck <cohuck@redhat.com>,
-        linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org,
-        Robin Murphy <robin.murphy@arm.com>
-Subject: Re: [PATCH v3 2/4] iommu: Add iommu_aux_at(de)tach_group()
-To:     Jacob Pan <jacob.jun.pan@linux.intel.com>
-References: <20200714055703.5510-1-baolu.lu@linux.intel.com>
- <20200714055703.5510-3-baolu.lu@linux.intel.com>
- <20200714093909.1ab93c9e@jacob-builder>
-From:   Lu Baolu <baolu.lu@linux.intel.com>
-Message-ID: <b5b22e01-4a51-8dfe-9ba4-aeca783740f1@linux.intel.com>
-Date:   Wed, 15 Jul 2020 08:47:36 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Tue, 14 Jul 2020 21:00:48 -0400
+Received: from szxga03-in.huawei.com ([45.249.212.189]:2541 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726356AbgGOBAr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 21:00:47 -0400
+Received: from DGGEMM403-HUB.china.huawei.com (unknown [172.30.72.55])
+        by Forcepoint Email with ESMTP id D712171674DF9AAF01CF;
+        Wed, 15 Jul 2020 09:00:45 +0800 (CST)
+Received: from dggeme758-chm.china.huawei.com (10.3.19.104) by
+ DGGEMM403-HUB.china.huawei.com (10.3.20.211) with Microsoft SMTP Server (TLS)
+ id 14.3.487.0; Wed, 15 Jul 2020 09:00:45 +0800
+Received: from [10.174.61.242] (10.174.61.242) by
+ dggeme758-chm.china.huawei.com (10.3.19.104) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.1913.5; Wed, 15 Jul 2020 09:00:44 +0800
+Subject: Re: [PATCH net-next v2] hinic: add firmware update support
+To:     Jakub Kicinski <kuba@kernel.org>
+CC:     <davem@davemloft.net>, <linux-kernel@vger.kernel.org>,
+        <netdev@vger.kernel.org>, <luoxianjun@huawei.com>,
+        <yin.yinshi@huawei.com>, <cloud.wangxiaoyun@huawei.com>,
+        <chiqijun@huawei.com>
+References: <20200714125433.18126-1-luobin9@huawei.com>
+ <20200714113711.32107a16@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+From:   "luobin (L)" <luobin9@huawei.com>
+Message-ID: <0025d09b-589e-a68e-7e17-a3c5558e0565@huawei.com>
+Date:   Wed, 15 Jul 2020 09:00:44 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
 MIME-Version: 1.0
-In-Reply-To: <20200714093909.1ab93c9e@jacob-builder>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <20200714113711.32107a16@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+Content-Type: text/plain; charset="utf-8"
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.174.61.242]
+X-ClientProxiedBy: dggeme708-chm.china.huawei.com (10.1.199.104) To
+ dggeme758-chm.china.huawei.com (10.3.19.104)
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jacob,
-
-On 7/15/20 12:39 AM, Jacob Pan wrote:
-> On Tue, 14 Jul 2020 13:57:01 +0800
-> Lu Baolu<baolu.lu@linux.intel.com>  wrote:
+On 2020/7/15 2:37, Jakub Kicinski wrote:
+> On Tue, 14 Jul 2020 20:54:33 +0800 Luo bin wrote:
+>> add support to update firmware by the devlink flashing API
+>>
+>> Signed-off-by: Luo bin <luobin9@huawei.com>
 > 
->> This adds two new aux-domain APIs for a use case like vfio/mdev where
->> sub-devices derived from an aux-domain capable device are created and
->> put in an iommu_group.
->>
->> /**
->>   * iommu_aux_attach_group - attach an aux-domain to an iommu_group
->> which
->>   *                          contains sub-devices (for example mdevs)
->> derived
->>   *                          from @dev.
->>   * @domain: an aux-domain;
->>   * @group:  an iommu_group which contains sub-devices derived from
->> @dev;
->>   * @dev:    the physical device which supports IOMMU_DEV_FEAT_AUX.
->>   *
->>   * Returns 0 on success, or an error value.
->>   */
->> int iommu_aux_attach_group(struct iommu_domain *domain,
->>                             struct iommu_group *group,
->>                             struct device *dev)
->>
->> /**
->>   * iommu_aux_detach_group - detach an aux-domain from an iommu_group
->>   *
->>   * @domain: an aux-domain;
->>   * @group:  an iommu_group which contains sub-devices derived from
->> @dev;
->>   * @dev:    the physical device which supports IOMMU_DEV_FEAT_AUX.
->>   *
->>   * @domain must have been attached to @group via
->> iommu_aux_attach_group(). */
->> void iommu_aux_detach_group(struct iommu_domain *domain,
->>                              struct iommu_group *group,
->>                              struct device *dev)
->>
->> It also adds a flag in the iommu_group data structure to identify
->> an iommu_group with aux-domain attached from those normal ones.
->>
->> Signed-off-by: Lu Baolu<baolu.lu@linux.intel.com>
->> ---
->>   drivers/iommu/iommu.c | 58
->> +++++++++++++++++++++++++++++++++++++++++++ include/linux/iommu.h |
->> 17 +++++++++++++ 2 files changed, 75 insertions(+)
->>
->> diff --git a/drivers/iommu/iommu.c b/drivers/iommu/iommu.c
->> index e1fdd3531d65..cad5a19ebf22 100644
->> --- a/drivers/iommu/iommu.c
->> +++ b/drivers/iommu/iommu.c
->> @@ -45,6 +45,7 @@ struct iommu_group {
->>   	struct iommu_domain *default_domain;
->>   	struct iommu_domain *domain;
->>   	struct list_head entry;
->> +	unsigned int aux_domain_attached:1;
->>   };
->>   
->>   struct group_device {
->> @@ -2759,6 +2760,63 @@ int iommu_aux_get_pasid(struct iommu_domain
->> *domain, struct device *dev) }
->>   EXPORT_SYMBOL_GPL(iommu_aux_get_pasid);
->>   
->> +/**
->> + * iommu_aux_attach_group - attach an aux-domain to an iommu_group
->> which
->> + *                          contains sub-devices (for example mdevs)
->> derived
->> + *                          from @dev.
->> + * @domain: an aux-domain;
->> + * @group:  an iommu_group which contains sub-devices derived from
->> @dev;
->> + * @dev:    the physical device which supports IOMMU_DEV_FEAT_AUX.
->> + *
->> + * Returns 0 on success, or an error value.
->> + */
->> +int iommu_aux_attach_group(struct iommu_domain *domain,
->> +			   struct iommu_group *group, struct device
->> *dev) +{
->> +	int ret = -EBUSY;
->> +
->> +	mutex_lock(&group->mutex);
->> +	if (group->domain)
->> +		goto out_unlock;
->> +
-> Perhaps I missed something but are we assuming only one mdev per mdev
-> group? That seems to change the logic where vfio does:
-> iommu_group_for_each_dev()
-> 	iommu_aux_attach_device()
+> Minor nits below, otherwise I think this looks good.
 > 
-
-It has been changed in PATCH 4/4:
-
-static int vfio_iommu_attach_group(struct vfio_domain *domain,
-                                    struct vfio_group *group)
-{
-         if (group->mdev_group)
-                 return iommu_aux_attach_group(domain->domain,
-                                               group->iommu_group,
-                                               group->iommu_device);
-         else
-                 return iommu_attach_group(domain->domain, 
-group->iommu_group);
-}
-
-So, for both normal domain and aux-domain, we use the same concept:
-attach a domain to a group.
-
-Best regards,
-baolu
+>> +static int hinic_firmware_update(struct hinic_devlink_priv *priv,
+>> +				 const struct firmware *fw)
+>> +{
+>> +	struct host_image_st host_image;
+>> +	int err;
+>> +
+>> +	memset(&host_image, 0, sizeof(struct host_image_st));
+>> +
+>> +	if (!check_image_valid(priv, fw->data, fw->size, &host_image) ||
+>> +	    !check_image_integrity(priv, &host_image, FW_UPDATE_COLD) ||
+>> +	    !check_image_device_type(priv, host_image.device_id))
+> 
+> These helpers should also set an appropriate message in extack, so the
+> user can see it on the command line / inside their application.
+> 
+>> +		return -EINVAL;
+>> +
+>> +	dev_info(&priv->hwdev->hwif->pdev->dev, "Flash firmware begin\n");
+>> +
+>> +	err = hinic_flash_fw(priv, fw->data, &host_image);
+>> +	if (err) {
+>> +		if (err == HINIC_FW_DISMATCH_ERROR)
+>> +			dev_err(&priv->hwdev->hwif->pdev->dev, "Firmware image doesn't match this card, please use newer image, err: %d\n",
+> 
+> Here as well - please make sure to return an error messages through
+> extack.
+> 
+>> +				err);
+>> +		else
+>> +			dev_err(&priv->hwdev->hwif->pdev->dev, "Send firmware image data failed, err: %d\n",
+>> +				err);
+>> +		return err;
+>> +	}
+>> +
+>> +	dev_info(&priv->hwdev->hwif->pdev->dev, "Flash firmware end\n");
+>> +
+>> +	return 0;
+>> +}
+> 
+>> @@ -1086,6 +1090,17 @@ static int nic_dev_init(struct pci_dev *pdev)
+>>  		return PTR_ERR(hwdev);
+>>  	}
+>>  
+>> +	devlink = hinic_devlink_alloc();
+>> +	if (!devlink) {
+>> +		dev_err(&pdev->dev, "Hinic devlink alloc failed\n");
+>> +		err = -ENOMEM;
+>> +		goto err_devlink_alloc;
+>> +	}
+>> +
+>> +	priv = devlink_priv(devlink);
+>> +	priv->hwdev = hwdev;
+>> +	priv->devlink = devlink;
+> 
+> No need to remember the devlink pointer here, you can use
+> priv_to_devlink(priv) to go from priv to devlink.
+> 
+>> +
+>>  	num_qps = hinic_hwdev_num_qps(hwdev);
+>>  	if (num_qps <= 0) {
+>>  		dev_err(&pdev->dev, "Invalid number of QPS\n");
+> .
+> 
+Will fix all. Thanks for your review.
