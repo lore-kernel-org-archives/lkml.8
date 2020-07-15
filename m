@@ -2,165 +2,164 @@ Return-Path: <SRS0=kup7=A2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5469C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 04:14:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 737B1C433E2
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 04:19:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7CFE6206F0
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 04:14:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 511AB2070E
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 04:19:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bQAhGIZJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727068AbgGOEOk (ORCPT
+        id S1727814AbgGOETB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 00:14:40 -0400
-Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:30824 "EHLO
-        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725977AbgGOEOj (ORCPT
+        Wed, 15 Jul 2020 00:19:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41880 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725824AbgGOETA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 00:14:39 -0400
-Received: from pps.filterd (m0167088.ppops.net [127.0.0.1])
-        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06F4ADUS011648;
-        Wed, 15 Jul 2020 00:14:24 -0400
-Received: from nwd2mta4.analog.com ([137.71.173.58])
-        by mx0a-00128a01.pphosted.com with ESMTP id 3279gmjwhr-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 15 Jul 2020 00:14:24 -0400
-Received: from ASHBMBX9.ad.analog.com (ashbmbx9.ad.analog.com [10.64.17.10])
-        by nwd2mta4.analog.com (8.14.7/8.14.7) with ESMTP id 06F4ENvk019877
-        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=FAIL);
-        Wed, 15 Jul 2020 00:14:23 -0400
-Received: from ASHBMBX8.ad.analog.com (10.64.17.5) by ASHBMBX9.ad.analog.com
- (10.64.17.10) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1779.2; Wed, 15 Jul
- 2020 00:14:22 -0400
-Received: from zeus.spd.analog.com (10.64.82.11) by ASHBMBX8.ad.analog.com
- (10.64.17.5) with Microsoft SMTP Server id 15.1.1779.2 via Frontend
- Transport; Wed, 15 Jul 2020 00:14:22 -0400
-Received: from localhost.localdomain ([10.48.65.12])
-        by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 06F4EIVr029729;
-        Wed, 15 Jul 2020 00:14:19 -0400
-From:   Alexandru Ardelean <alexandru.ardelean@analog.com>
-To:     <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-CC:     <jic23@kernel.org>, <lars@metafoo.de>,
-        Alexandru Ardelean <alexandru.ardelean@analog.com>
-Subject: [PATCH] iio: buffer: fix attach/detach pollfunc order
-Date:   Wed, 15 Jul 2020 07:16:29 +0300
-Message-ID: <20200715041629.81435-1-alexandru.ardelean@analog.com>
-X-Mailer: git-send-email 2.17.1
+        Wed, 15 Jul 2020 00:19:00 -0400
+Received: from mail-il1-x142.google.com (mail-il1-x142.google.com [IPv6:2607:f8b0:4864:20::142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 73673C061755;
+        Tue, 14 Jul 2020 21:19:00 -0700 (PDT)
+Received: by mail-il1-x142.google.com with SMTP id s21so824827ilk.5;
+        Tue, 14 Jul 2020 21:19:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=+vY2OIlneWe5ztE2bvwwhli0jm6HqPh+OWIpoUB8BSw=;
+        b=bQAhGIZJE7XGnGYhwL0/1olYisauxe9ymI6u2tgG5vEOuz2Nq+QlDtF7dhHuDuByuD
+         qW96jNuM4d+gf7D3wc8J8orrZQS9iM0Icv2ATeffIzl0qNeTkHmX83cMCjFi8nTTJm5v
+         7ig6QsacBF0GCuiO/mGKrMcs7KLcULwA6yDS5Bhdj00wAveDS58I1htt6LsbCi5aopAo
+         94cRQMbn77WvY0ntAe3eMQsVBODihtWQxeS8Nk4f6gtDn95RBRSxHL19GMAyBDy2dM6S
+         N6sPHPVxHB/cnaCH/kcUf5eC7pYe8YR2n8bCiJu6OiN1Jb3CBLYelLNvpnWbwRHuU5zs
+         q8/Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=+vY2OIlneWe5ztE2bvwwhli0jm6HqPh+OWIpoUB8BSw=;
+        b=BOWJX3NgFQ2+4r50NHnYqGctDdbAW6O9OdStbysncoLz1ieX2ggmbhtxnpam+Nf/Of
+         Z+E9A42x5WhUraIybx4ZrOuzfikRVuOH75y82agNs0DqcAtstkKI3Q3+6HD34YbESbKF
+         hrQL/t1Nq/CIeMSz9vAFipi8XFc6j3RrbbiD+BzpYt2nbZsfDm5+gv+jYABqRo6ETLB/
+         /NWezqjD8wQ5f8/qlLspnhQ2U2GAIYF//SVZ5Qg2vTSdo8aD5o1Q0jGfl7ZaslB7k3LG
+         n0nuttBl7gKBP0OLGFw30HQHmnusOS+8lNdD0DuFlEFdaGN2JE02nF8VGGN1S+Ho842i
+         tFzQ==
+X-Gm-Message-State: AOAM5308dqJN0GErgcjMKhBzDXt5JMKRPj4f5xwWiUgku3KVKg1WEtXR
+        vsN5HUcAm/RSXbAwgTrb7NQ4X4vmEN93vIHL3tc=
+X-Google-Smtp-Source: ABdhPJxbEVXkXtWoblqKfj5L8JbBLsjm2+xbwAB3m5diPF3AzSD/1a23QyEn3OuWSfYYBfrU93OGI/PkJJ/ZoDLhhcU=
+X-Received: by 2002:a92:9a97:: with SMTP id c23mr8119143ill.258.1594786739362;
+ Tue, 14 Jul 2020 21:18:59 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-ADIRoutedOnPrem: True
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-07-15_02:2020-07-14,2020-07-15 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0
- lowpriorityscore=0 spamscore=0 impostorscore=0 clxscore=1015
- suspectscore=0 priorityscore=1501 mlxscore=0 bulkscore=0 adultscore=0
- mlxlogscore=999 phishscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2006250000 definitions=main-2007150033
+References: <CAK8P3a3NWSZw6678k1O2eJ6-c5GuW7484PRvEzU9MEPPrCD-yw@mail.gmail.com>
+ <20200714184550.GA397277@bjorn-Precision-5520> <CAK8P3a3EZX8=649R9cYF6_=ivh1Xyrgsc5mUtS=d5yvQ3doZaQ@mail.gmail.com>
+In-Reply-To: <CAK8P3a3EZX8=649R9cYF6_=ivh1Xyrgsc5mUtS=d5yvQ3doZaQ@mail.gmail.com>
+From:   "Oliver O'Halloran" <oohall@gmail.com>
+Date:   Wed, 15 Jul 2020 14:18:47 +1000
+Message-ID: <CAOSf1CEviMYySQhyQGks8hHjST-85wGpxEBasuxwSX_homBJ2A@mail.gmail.com>
+Subject: Re: [RFC PATCH 00/35] Move all PCIBIOS* definitions into arch/x86
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Bjorn Helgaas <helgaas@kernel.org>,
+        Keith Busch <kbusch@kernel.org>,
+        Paul Mackerras <paulus@samba.org>,
+        sparclinux <sparclinux@vger.kernel.org>,
+        Toan Le <toan@os.amperecomputing.com>,
+        Greg Ungerer <gerg@linux-m68k.org>,
+        Marek Vasut <marek.vasut+renesas@gmail.com>,
+        Rob Herring <robh@kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        Russell King <linux@armlinux.org.uk>,
+        Ley Foon Tan <ley.foon.tan@intel.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Kevin Hilman <khilman@baylibre.com>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Matt Turner <mattst88@gmail.com>,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        Guenter Roeck <linux@roeck-us.net>,
+        Ray Jui <rjui@broadcom.com>, Jens Axboe <axboe@fb.com>,
+        Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
+        Shuah Khan <skhan@linuxfoundation.org>, bjorn@helgaas.com,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Richard Henderson <rth@twiddle.net>,
+        Juergen Gross <jgross@suse.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Scott Branden <sbranden@broadcom.com>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        "Saheed O. Bolarinwa" <refactormyself@gmail.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Heiner Kallweit <hkallweit1@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The original patch was error-ed by the submitter (me) and not by the author
-(Lars).
-After looking through the discussion logs (on email), it seems that this
-order was wrong for the start, even though the order implemented in the
-drivers was correct.
+On Wed, Jul 15, 2020 at 8:03 AM Arnd Bergmann <arnd@arndb.de> wrote:
+>
+> - Most error checking is static: PCIBIOS_BAD_REGISTER_NUMBER
+>   only happens if you pass an invalid register number, but most
+>   callers pass a compile-time constant register number that is
+>   known to be correct, or the driver would never work. Similarly,
+>   PCIBIOS_DEVICE_NOT_FOUND wouldn't normally happen
+>   since you pass a valid pci_device pointer that was already
+>   probed.
 
-Discussions:
-- first RFC: https://lore.kernel.org/linux-iio/20180622135322.3459-1-alexandru.ardelean@analog.com/
-- 2nd patch: https://lore.kernel.org/linux-iio/20181219140912.22582-1-alexandru.ardelean@analog.com/
-- final patch-sets:
-  https://lore.kernel.org/linux-iio/20200522104632.517470-1-alexandru.ardelean@analog.com/
-  https://lore.kernel.org/linux-iio/20200525113855.178821-1-alexandru.ardelean@analog.com/
+Having some feedback about obvious programming errors is still useful
+when doing driver development. Reporting those via printk() would
+probably be more useful to those who care though.
 
-The last one was applied.
+> - config space accesses are very rare compared to memory
+>   space access and on the hardware side the error handling
+>   would be similar, but readl/writel don't return errors, they just
+>   access wrong registers or return 0xffffffff.
+>   arch/powerpc/kernel/eeh.c has a ton extra code written to
+>   deal with it, but no other architectures do.
 
-The idea is that pollfunc should be attached before calling the
-'indio_dev->setup_ops->postenable' hook and should be detached after
-calling the 'indio_dev->setup_ops->predisable' hook.
+TBH the EEH MMIO hooks were probably a mistake to begin with. Errors
+detected via MMIO are almost always asynchronous to the error itself
+so you usually just wind up with a misleading stack trace rather than
+any kind of useful synchronous error reporting. It seems like most
+drivers don't bother checking for 0xFFs either and rely on the
+asynchronous reporting via .error_detected() instead, so I have to
+wonder what the point is. I've been thinking of removing the MMIO
+hooks and using a background poller to check for errors on each PHB
+periodically (assuming we don't have an EEH interrupt) instead. That
+would remove the requirement for eeh_dev_check_failure() to be
+interrupt safe too, so it might even let us fix all the godawful races
+in EEH.
 
-While the drivers were updated to take this into account, the change to the
-IIO core was somehow omitted and was made wrong.
+> - If we add code to detect errors in pci_read_config_*
+>   and do some of the stuff from powerpc's
+>   eeh_dev_check_failure(), we are more likely to catch
+>   intermittent failures when drivers don't check, or bugs
+>   with invalid arguments in device drivers than relying on
+>   drivers to get their error handling right when those code
+>   paths don't ever get covered in normal testing.
 
-This change fixes the order to the proper form.
+Adding some kind of error detection to the generic config accessors
+wouldn't hurt, but detection is only half the problem. The main job of
+eeh_dev_check_failure() is waking up the EEH recovery thread which
+actually handles notifying drivers, device resets, etc and you'd want
+something in the PCI core. Right now there's two implementations of
+that reporting logic: one for EEH in arch/powerpc/eeh_driver.c and one
+for AER/DPC in drivers/pci/pcie/err.c. I think the latter could be
+moved into the PCI core easily enough since there's not much about it
+that's really specific to PCIe. Ideally we could drop the EEH specific
+one too, but I'm not sure how to implement that without it devolving
+into callback spaghetti.
 
-Fixes f11d59d87b862: ("iio: Move attach/detach of the poll func to the core")
-Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
----
- drivers/iio/industrialio-buffer.c | 31 ++++++++++++++++++-------------
- 1 file changed, 18 insertions(+), 13 deletions(-)
-
-diff --git a/drivers/iio/industrialio-buffer.c b/drivers/iio/industrialio-buffer.c
-index 2aec8b85f40d..a7d7e5143ed2 100644
---- a/drivers/iio/industrialio-buffer.c
-+++ b/drivers/iio/industrialio-buffer.c
-@@ -971,24 +971,29 @@ static int iio_enable_buffers(struct iio_dev *indio_dev,
- 			goto err_disable_buffers;
- 	}
- 
-+	if (indio_dev->currentmode == INDIO_BUFFER_TRIGGERED) {
-+		ret = iio_trigger_attach_poll_func(indio_dev->trig,
-+						   indio_dev->pollfunc);
-+		if (ret)
-+			goto err_disable_buffers;
-+	}
-+
- 	if (indio_dev->setup_ops->postenable) {
- 		ret = indio_dev->setup_ops->postenable(indio_dev);
- 		if (ret) {
- 			dev_dbg(&indio_dev->dev,
- 			       "Buffer not started: postenable failed (%d)\n", ret);
--			goto err_disable_buffers;
-+			goto err_detach_pollfunc;
- 		}
- 	}
- 
--	if (indio_dev->currentmode == INDIO_BUFFER_TRIGGERED) {
--		ret = iio_trigger_attach_poll_func(indio_dev->trig,
--						   indio_dev->pollfunc);
--		if (ret)
--			goto err_disable_buffers;
--	}
--
- 	return 0;
- 
-+err_detach_pollfunc:
-+	if (indio_dev->currentmode == INDIO_BUFFER_TRIGGERED) {
-+		iio_trigger_detach_poll_func(indio_dev->trig,
-+					     indio_dev->pollfunc);
-+	}
- err_disable_buffers:
- 	list_for_each_entry_continue_reverse(buffer, &iio_dev_opaque->buffer_list,
- 					     buffer_list)
-@@ -1014,11 +1019,6 @@ static int iio_disable_buffers(struct iio_dev *indio_dev)
- 	if (list_empty(&iio_dev_opaque->buffer_list))
- 		return 0;
- 
--	if (indio_dev->currentmode == INDIO_BUFFER_TRIGGERED) {
--		iio_trigger_detach_poll_func(indio_dev->trig,
--					     indio_dev->pollfunc);
--	}
--
- 	/*
- 	 * If things go wrong at some step in disable we still need to continue
- 	 * to perform the other steps, otherwise we leave the device in a
-@@ -1032,6 +1032,11 @@ static int iio_disable_buffers(struct iio_dev *indio_dev)
- 			ret = ret2;
- 	}
- 
-+	if (indio_dev->currentmode == INDIO_BUFFER_TRIGGERED) {
-+		iio_trigger_detach_poll_func(indio_dev->trig,
-+					     indio_dev->pollfunc);
-+	}
-+
- 	list_for_each_entry(buffer, &iio_dev_opaque->buffer_list, buffer_list) {
- 		ret2 = iio_buffer_disable(buffer, indio_dev);
- 		if (ret2 && !ret)
--- 
-2.17.1
-
+Oliver
