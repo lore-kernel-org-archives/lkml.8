@@ -2,152 +2,135 @@ Return-Path: <SRS0=kup7=A2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25E39C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 22:16:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 895FDC433E2
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 22:22:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0010D2067D
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 22:16:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594851376;
-	bh=AduDpuP4BuNgA0+vcxsVbUCT/F7CI9dj/FjNHV2Uc+Q=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=loJIChbVhuVeLD1lACtW9h1Qdnup/Exd0rVVJxTxGTiIfwWWfiTWkJk7jOWLv5diO
-	 HlejWszxlREgkepx2nUEJmOiBqLLzcHbsYKbwN8ILl3DA69hkKsD+HecDacGb21SH8
-	 j8K4BA3LgcodMEtk0oJcvKENNBc7KyG/s3638hZk=
+	by mail.kernel.org (Postfix) with ESMTP id 67D602067D
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 22:22:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="t6qmthfa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727927AbgGOWQO (ORCPT
+        id S1726929AbgGOWWZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 18:16:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36312 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726660AbgGOWQO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 18:16:14 -0400
-Received: from localhost (lfbn-ncy-1-317-216.w83-196.abo.wanadoo.fr [83.196.152.216])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4816B2064C;
-        Wed, 15 Jul 2020 22:16:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594851373;
-        bh=AduDpuP4BuNgA0+vcxsVbUCT/F7CI9dj/FjNHV2Uc+Q=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=MBIPXYF0vN7qpDTm/mSfI5fR9iVNwpI6ea/FEqvK8YNM/M5Ar+GlxMwguV+OUSnD/
-         JnqGTsblfMth1GRyguJGjinZNXstKgOE4BmXDV4LKvKys4mgaZrraSWQTzwb/PzCIL
-         QDkHkrThhwuiiANvS333UlFcKk1CNj5UeCWuiM/w=
-Date:   Thu, 16 Jul 2020 00:16:11 +0200
-From:   Frederic Weisbecker <frederic@kernel.org>
-To:     Anna-Maria Behnsen <anna-maria@linutronix.de>
-Cc:     linux-kernel@vger.kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>
-Subject: [PATCH] timer: Preserve higher bits of expiration on index
- calculation
-Message-ID: <20200715221610.GC16227@lenoir>
-References: <20200714072924.6810-1-anna-maria@linutronix.de>
+        Wed, 15 Jul 2020 18:22:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39770 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726356AbgGOWWY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jul 2020 18:22:24 -0400
+Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1FB40C061755
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 15:22:24 -0700 (PDT)
+Received: by mail-lj1-x242.google.com with SMTP id z24so4535041ljn.8
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 15:22:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=shutemov-name.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=QQLzvz01x+b8v3+Cnyl7jGabL4vkvUR6NP/JnDRqN14=;
+        b=t6qmthfa2lAn6qPwWRBsl1GYTeI7O9H+AGbAsb4IxmUyvEHHu7fJK1c224oXidHvmZ
+         5AMdfkj6yFJC2kHTm4TOyTPpVtA2o/xE9NjwHt7C60xpdfuBkE/teayYJacmxzGDOdZW
+         oJbqNFfuBFbWTh5wzW6rl26wHAx82ioSAM5EtzXQUes5raOLOCYfkroCswbzjPxIlBUT
+         /8QKGEclyi661apiOLbs3iuEf1mkRSBXZ/CqUrMD38x7aMkQz2OTITKPPn//QaYzYJfo
+         W/iI5R7wgEGjK8RrMtshOmUBj6wl1smJGLhCZOoaQnxKC1hX619J7iHFGarIIARs5hPn
+         5exw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=QQLzvz01x+b8v3+Cnyl7jGabL4vkvUR6NP/JnDRqN14=;
+        b=aDWQVAHykqkOmxXBw1GkToBGcshoZrfbpda2V2PNxgukWeSoGbzMue78WQYvx9PaB4
+         t6+6iKYvAwiMi/5POgXKy2a6XwfVJy4u8Wg8X3C5CWdHhm+PpbGtON9NMQu2+tc8ILo4
+         zSSR6H5asLCHGmBBOune/cuVG6zxBZhiOuJBfZap475F37gJDY16MlflIEa8cLDTZOsR
+         09ZqRHJzh+fjDk1flgLxRpY2QbakAV98E6GpfMEiHopO75InpHjPSXklI6F+rRS36M9B
+         9tvBQJQaMpKsfyFE2J8d1SI+7uLJmlwhQyx3mO+LymQ9zGcC2Tb2rWBdaBiYXcN9zsOn
+         WSxw==
+X-Gm-Message-State: AOAM531/IVczgRpFYOA2I+T2QfhTF3CzXXDmh7emh6+k6lW4ugDI0ix2
+        Owj6aTAgVC3S5TAD+4E1Z35j2g==
+X-Google-Smtp-Source: ABdhPJyj3VFOBx+30maf++ddl657sJxm7UjHak+BcLiZlBDP5KWvcTAUDiP0zVjwmsERLy3vKL2u3Q==
+X-Received: by 2002:a2e:8046:: with SMTP id p6mr616358ljg.100.1594851742568;
+        Wed, 15 Jul 2020 15:22:22 -0700 (PDT)
+Received: from box.localdomain ([86.57.175.117])
+        by smtp.gmail.com with ESMTPSA id b16sm669040ljp.124.2020.07.15.15.22.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 15 Jul 2020 15:22:22 -0700 (PDT)
+Received: by box.localdomain (Postfix, from userid 1000)
+        id 5CB9C102143; Thu, 16 Jul 2020 01:22:28 +0300 (+03)
+Date:   Thu, 16 Jul 2020 01:22:28 +0300
+From:   "Kirill A. Shutemov" <kirill@shutemov.name>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Joel Fernandes <joel@joelfernandes.org>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linux-MM <linux-mm@kvack.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Naresh Kamboju <naresh.kamboju@linaro.org>,
+        William Kucharski <william.kucharski@oracle.com>
+Subject: Re: [PATCHv2] mm: Fix warning in move_normal_pmd()
+Message-ID: <20200715222228.jf2pv5u2wyhtc5o5@box>
+References: <20200715135011.42743-1-kirill.shutemov@linux.intel.com>
+ <CAHk-=wh4pB-jRngOjcGxpc8=NPds3jWqJwDMUWC3-OEo4dRiKg@mail.gmail.com>
+ <20200715205428.GA201569@google.com>
+ <CAHk-=wg-_Oof43pKUHMk4ySdLwpYi7+shFg+aeV18UP2Akiv8g@mail.gmail.com>
+ <CAHk-=wg+iVwK7MDXB+BPbhTmP-1eBa-y4vxRNr_G8ETnzv5pZg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="Dxnq1zWXvFF0Q93v"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200714072924.6810-1-anna-maria@linutronix.de>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <CAHk-=wg+iVwK7MDXB+BPbhTmP-1eBa-y4vxRNr_G8ETnzv5pZg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
---Dxnq1zWXvFF0Q93v
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-On Tue, Jul 14, 2020 at 09:29:24AM +0200, Anna-Maria Behnsen wrote:
-> The bucket expiry time is the effective expriy time of timers and is
-> greater than or equal to the requested timer expiry time. This is due
-> to the guarantee that timers never expire early and the reduced expiry
-> granularity in the secondary wheel levels.
+On Wed, Jul 15, 2020 at 02:43:00PM -0700, Linus Torvalds wrote:
+> On Wed, Jul 15, 2020 at 2:31 PM Linus Torvalds
+> <torvalds@linux-foundation.org> wrote:
+> >
+> > Naresh - don't test that version. The bugs Joel found just make the
+> > math wrong, so it won't work.
 > 
-> When a timer is enqueued, trigger_dyntick_cpu() checks whether the
-> timer is the new first timer. This check compares next_expiry with
-> the requested timer expiry value and not with the effective expiry
-> value of the bucket into which the timer was queued.
+> Here's a new version with the thing that Joel and Kirill both noticed
+> hopefully fixed.
 > 
-> Storing the requested timer expiry value in base->next_expiry can lead
-> to base->clk going backwards if the requested timer expiry value is
-> smaller than base->clk. Commit 30c66fc30ee7 ("timer: Prevent base->clk
-> from moving backward") worked around this by preventing the store when
-> timer->expiry is before base->clk, but did not fix the underlying
-> problem.
-> 
-> Use the expiry value of the bucket into which the timer is queued to
-> do the new first timer check. This fixes the base->clk going backward
-> problem.
-> 
-> The workaround of commit 30c66fc30ee7 ("timer: Prevent base->clk from
-> moving backward") in trigger_dyntick_cpu() is not longer necessary as the
-> timers bucket expiry is guaranteed to be greater than or equal base->clk.
-> 
-> Signed-off-by: Anna-Maria Behnsen <anna-maria@linutronix.de>
-> Cc: Frederic Weisbecker <frederic@kernel.org>
-> Cc: Peter Zijlstra <peterz@infradead.org>
-> Cc: Juri Lelli <juri.lelli@redhat.com>
-> Cc: Thomas Gleixner <tglx@linutronix.de>
+> But I probably screwed it up again. I guess I should test it, but I
+> don't have any really relevant environment (the plain mremap() case
+> should have shown the obvious bugs, though, so that's just an excuse
+> for my laziness)
 
-Actually I triggered the nasty warning in forward_timer_base()
-with base->next_expiry < base->clk.
+Sorry, but the patch is broken.
 
-You'll need to first apply the following before your patch:
+It overcopies entires in some cases. It doesn't handles correctly if you
+try to move PTEs from the middle of VMA.
+
+The test case below rightly sigfaults without the patch when trying access
+DST_ADDR[0], but not with the patch. It creates PTE entry at DST_ADDR that
+doesn't belong to any VMA. :/
+
+#define _GNU_SOURCE
+#include <stdio.h>
+#include <string.h>
+#include <sys/mman.h>
+
+#define SRC_ADDR ((char *)(4UL << 30))
+#define DST_ADDR ((char *)(5UL << 30))
 
 
---Dxnq1zWXvFF0Q93v
-Content-Type: text/x-diff; charset=us-ascii
-Content-Disposition: attachment; filename="0001-timer-Preserve-higher-bits-of-expiration-on-index-ca.patch"
+int main(void)
+{
+	mmap(SRC_ADDR, 2UL << 20, PROT_READ | PROT_WRITE,
+		 MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
+	madvise(SRC_ADDR, 2UL << 20, MADV_NOHUGEPAGE);
+	memset(SRC_ADDR, 0x33, 2UL << 20);
 
-From 9770c3de69749cc2b8d1f295cecf12848212360e Mon Sep 17 00:00:00 2001
-From: Frederic Weisbecker <frederic@kernel.org>
-Date: Wed, 15 Jul 2020 23:49:09 +0200
-Subject: [PATCH] timer: Preserve higher bits of expiration on index
- calculation
+	mremap(SRC_ADDR + 4096, 4096, 4096, MREMAP_MAYMOVE | MREMAP_FIXED,
+		     DST_ADDR + 4096);
+	printf("0: %#x 4096: %#x\n", DST_ADDR[0], DST_ADDR[4096]);
+	return 0;
+}
 
-The higher bits of the timer expiration are cropped while calling
-calc_index() due to the implicit cast from unsigned long to unsigned int.
-
-This loss shouldn't have consequences on the current code since all the
-computation to calculate the index is done on the lower 32 bits.
-
-However we are preparing to return the actual bucket expiration from
-calc_index() in order to properly fix base->next_expiry updates.
-Preserving the higher bits is a requirement to achieve that.
-
-Signed-off-by: Frederic Weisbecker <frederic@kernel.org>
-Cc: Frederic Weisbecker <frederic@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Juri Lelli <juri.lelli@redhat.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Anna-Maria Behnsen <anna-maria@linutronix.de>
----
- kernel/time/timer.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/kernel/time/timer.c b/kernel/time/timer.c
-index 9a838d38dbe6..95e0b66f81ec 100644
---- a/kernel/time/timer.c
-+++ b/kernel/time/timer.c
-@@ -487,7 +487,7 @@ static inline void timer_set_idx(struct timer_list *timer, unsigned int idx)
-  * Helper function to calculate the array index for a given expiry
-  * time.
-  */
--static inline unsigned calc_index(unsigned expires, unsigned lvl)
-+static inline unsigned calc_index(unsigned long expires, unsigned lvl)
- {
- 	expires = (expires + LVL_GRAN(lvl)) >> LVL_SHIFT(lvl);
- 	return LVL_OFFS(lvl) + (expires & LVL_MASK);
 -- 
-2.26.2
-
-
---Dxnq1zWXvFF0Q93v--
+ Kirill A. Shutemov
