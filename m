@@ -2,225 +2,106 @@ Return-Path: <SRS0=kup7=A2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5161C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 20:24:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DB04C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 20:26:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 751F620672
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 20:24:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594844658;
-	bh=xKIjM/u2ZV5/ZVHHdr3yArLrJ0mFFAdEAGTdmT/JkeI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=B6GGmTK+T8bPDon5iERqarnq33DX7JPXpZE78WuC/e1TTPB4ob1BFTOSbpKRj0LjO
-	 8+sFRt4NjffKHDpITtZuNdnY60hluGEI0xcb2pXvM/LSEmddzzPIqkCfdM6c334IuD
-	 pkxa5C/7xSs6bAr1W/BSjjc6Bmw2vvbDPCc3ZJLk=
+	by mail.kernel.org (Postfix) with ESMTP id 26CDA20657
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 20:26:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="xgv/D8j3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728092AbgGOUYR (ORCPT
+        id S1726878AbgGOU0m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 16:24:17 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:44158 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726780AbgGOUYQ (ORCPT
+        Wed, 15 Jul 2020 16:26:42 -0400
+Received: from aserp2130.oracle.com ([141.146.126.79]:44752 "EHLO
+        aserp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726650AbgGOU0l (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 16:24:16 -0400
-Received: by mail-io1-f68.google.com with SMTP id i4so3631169iov.11;
-        Wed, 15 Jul 2020 13:24:15 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=YRcdiJ2FPTXeGzSkfMOBjoMowJyaYinCBAoTEPC8AHs=;
-        b=OlYPTYGkwBOYxPM2PMZ9FfEP4L+KUD7DaGtaopJ/MqoF92sKz+HH1sM0S3MFeSqqW2
-         c+SVw7s0qFWbamb6D7XS41t6g7GevwPo6jLvZGAFpvHyWhzvXkk7X2/5reljCZ3OOUuW
-         AqHF88JdVWISS6OcxRes3UuRQvcpKQaq9x+eeDNx1GQM8cAd/UsLRVgZqR2pzhr3TDVw
-         6HCwZOgbkwvOm4P/9cN2BR7KP21wBxg5i6hf8faRshHz6LxJKXgTXAksDPW1HLUUUhRE
-         woVKa8i7n4IWPTkidLMP3xvsW7dcUEuYgbm6W194RkRHef4ttTmRPJBQewd5qQV/Bzw/
-         6OdA==
-X-Gm-Message-State: AOAM532JLSw4wFDiubg/wPnETpsGbMTHtq0Yg6r7m4FcHtUsyI95Jmai
-        D3QnkOMeZf/ibbCNC7qDDQ==
-X-Google-Smtp-Source: ABdhPJzKWnU/+FFE65Xzq4yXLoe1Fc03MGcI5KHKCUyztM16Oy06SY3YlA5bmZB3zcUbL63ysDl3Mw==
-X-Received: by 2002:a02:b897:: with SMTP id p23mr1327031jam.32.1594844655421;
-        Wed, 15 Jul 2020 13:24:15 -0700 (PDT)
-Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id h1sm1688516iob.8.2020.07.15.13.24.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 15 Jul 2020 13:24:14 -0700 (PDT)
-Received: (nullmailer pid 758498 invoked by uid 1000);
-        Wed, 15 Jul 2020 20:24:13 -0000
-Date:   Wed, 15 Jul 2020 14:24:13 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Bartosz Dudziak <bartosz.dudziak@snejp.pl>
-Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Andy Gross <agross@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/2] dt-bindings: pinctrl: qcom: Add msm8226 pinctrl
- bindings
-Message-ID: <20200715202413.GA755488@bogus>
-References: <20200627192833.217531-1-bartosz.dudziak@snejp.pl>
- <20200627192833.217531-2-bartosz.dudziak@snejp.pl>
+        Wed, 15 Jul 2020 16:26:41 -0400
+Received: from pps.filterd (aserp2130.oracle.com [127.0.0.1])
+        by aserp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06FKMCqn138840;
+        Wed, 15 Jul 2020 20:26:37 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
+ from : message-id : references : date : in-reply-to : mime-version :
+ content-type; s=corp-2020-01-29;
+ bh=mimElBGzRy++HHr8M1BmEAFebpsIASVMSvpGFuvyC9o=;
+ b=xgv/D8j35MegC9dWwKwQATBSnLryPKBXKAwk1HfXq182J38cdJ6K8crPsqnDB3LGgfBq
+ 4g4eqr25nVdNCtX3CyYw4KONNY1NuZW2dwsJfufzcJkz41uwhgqRzvnYnn5RYc2nQLrz
+ FW+nFFSrhXzvWZaT4FTjboCoOrRoUlA0XaMlKfXAGez2TAz1NH4Dt5SWjMbhr9toaGRO
+ v1rqgtQuAQWExJtOo91GmyJatymfAcKdew1SncwCrL1k3aTOVhnDO/zClQTpkLEDPPNj
+ naUH0GAgJvcbqK9XH+mvZg7sLjrU2mHJ5uJQ1RebPaV+YMjVQ+LcDmgAcbVONbvp8cDw zQ== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by aserp2130.oracle.com with ESMTP id 327s65kwkk-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 15 Jul 2020 20:26:37 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06FKHeK6190290;
+        Wed, 15 Jul 2020 20:26:37 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by aserp3020.oracle.com with ESMTP id 327qb8qxxp-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 15 Jul 2020 20:26:37 +0000
+Received: from abhmp0007.oracle.com (abhmp0007.oracle.com [141.146.116.13])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 06FKQaP1010372;
+        Wed, 15 Jul 2020 20:26:36 GMT
+Received: from ca-mkp.ca.oracle.com (/10.159.214.123)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 15 Jul 2020 13:26:36 -0700
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     jejb@linux.ibm.com, martin.petersen@oracle.com,
+        linux-kernel@vger.kernel.org, linux-scsi@vger.kernel.org,
+        support@areca.com.tw
+Subject: Re: [PATCH 16/30] scsi: arcmsr: arcmsr_hba: Make room for the
+ trailing NULL, even if it is over-written
+From:   "Martin K. Petersen" <martin.petersen@oracle.com>
+Organization: Oracle Corporation
+Message-ID: <yq1h7u8o7ck.fsf@ca-mkp.ca.oracle.com>
+References: <20200708120221.3386672-1-lee.jones@linaro.org>
+        <20200708120221.3386672-17-lee.jones@linaro.org>
+Date:   Wed, 15 Jul 2020 16:26:33 -0400
+In-Reply-To: <20200708120221.3386672-17-lee.jones@linaro.org> (Lee Jones's
+        message of "Wed, 8 Jul 2020 13:02:07 +0100")
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200627192833.217531-2-bartosz.dudziak@snejp.pl>
+Content-Type: text/plain
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9683 signatures=668680
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 malwarescore=0
+ mlxscore=0 spamscore=0 phishscore=0 suspectscore=1 bulkscore=0
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2007150156
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9683 signatures=668680
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 malwarescore=0
+ phishscore=0 mlxscore=0 priorityscore=1501 lowpriorityscore=0 spamscore=0
+ clxscore=1011 bulkscore=0 mlxlogscore=999 impostorscore=0 suspectscore=1
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2007150156
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jun 27, 2020 at 09:28:30PM +0200, Bartosz Dudziak wrote:
-> Add device tree binding Documentation details for Qualcomm msm8226
-> pinctrl driver.
-> 
-> - Bindings documentation was based on qcom,sm8250-pinctrl.yaml by
->   Bjorn Andersson <bjorn.andersson@linaro.org> and then modified for
->   msm8226 content
-> 
-> Signed-off-by: Bartosz Dudziak <bartosz.dudziak@snejp.pl>
-> ---
->  .../pinctrl/qcom,msm8226-pinctrl.yaml         | 123 ++++++++++++++++++
->  1 file changed, 123 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/pinctrl/qcom,msm8226-pinctrl.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,msm8226-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/qcom,msm8226-pinctrl.yaml
-> new file mode 100644
-> index 0000000000..8d8dc15718
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/pinctrl/qcom,msm8226-pinctrl.yaml
-> @@ -0,0 +1,123 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/pinctrl/qcom,msm8226-pinctrl.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Qualcomm Technologies, Inc. MSM8226 TLMM block
-> +
-> +maintainers:
-> +  - Bjorn Andersson <bjorn.andersson@linaro.org>
-> +
-> +description: |
-> +  This binding describes the Top Level Mode Multiplexer block found in the
-> +  MSM8226 platform.
-> +
-> +properties:
-> +  compatible:
-> +    const: qcom,msm8226-pinctrl
-> +
-> +  reg:
-> +    description: Specifies the base address and size of the TLMM register space
-> +    maxItems: 1
-> +
-> +  interrupts:
-> +    description: Specifies the TLMM summary IRQ
-> +    maxItems: 1
-> +
-> +  interrupt-controller: true
-> +
-> +  '#interrupt-cells':
-> +    description: Specifies the PIN numbers and Flags, as defined in
-> +      include/dt-bindings/interrupt-controller/irq.h
-> +    const: 2
-> +
-> +  gpio-controller: true
-> +
-> +  '#gpio-cells':
-> +    description: Specifying the pin number and flags, as defined in
-> +      include/dt-bindings/gpio/gpio.h
-> +    const: 2
-> +
-> +  gpio-ranges:
-> +    maxItems: 1
-> +
-> +  gpio-reserved-ranges:
-> +    maxItems: 1
-> +
-> +#PIN CONFIGURATION NODES
-> +patternProperties:
-> +  '^.*$':
-> +    if:
-> +      type: object
 
-For new bindings, do '-pins$' for the node name pattern so we don't have 
-to do this hack.
+Lee,
 
-> +    then:
-> +      properties:
-> +        pins:
-> +          description:
-> +            List of gpio pins affected by the properties specified in this
-> +            subnode.
-> +          items:
-> +            oneOf:
-> +              - pattern: "^gpio([0-9]|[1-9][0-9]|1[0-1][0-6])$"
-> +              - enum: [ sdc1_clk, sdc1_cmd, sdc1_data, sdc2_clk, sdc2_cmd, sdc2_data ]
-> +          minItems: 1
-> +          maxItems: 36
-> +
-> +        function:
-> +          description:
-> +            Specify the alternative function to be configured for the specified
-> +            pins. Functions are only valid for gpio pins.
-> +
-> +          enum: [ gpio, cci_i2c0, blsp_uim1, blsp_uim2, blsp_uim3, blsp_uim5,
-> +            blsp_i2c1, blsp_i2c2, blsp_i2c3, blsp_i2c5, blsp_spi1,
-> +            blsp_spi2, blsp_spi3, blsp_spi5, blsp_uart1, blsp_uart2,
-> +            blsp_uart3, blsp_uart5, cam_mclk0, cam_mclk1, wlan ]
-> +
-> +        drive-strength:
-> +          enum: [2, 4, 6, 8, 10, 12, 14, 16]
-> +          default: 2
-> +          description:
-> +            Selects the drive strength for the specified pins, in mA.
-> +
-> +        bias-pull-down: true
-> +
-> +        bias-pull-up: true
-> +
-> +        bias-disable: true
-> +
-> +        output-high: true
-> +
-> +        output-low: true
-> +
-> +      required:
-> +        - pins
-> +        - function
-> +
-> +      additionalProperties: false
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - interrupts
-> +  - interrupt-controller
-> +  - '#interrupt-cells'
-> +  - gpio-controller
-> +  - '#gpio-cells'
-> +  - gpio-ranges
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +        #include <dt-bindings/interrupt-controller/arm-gic.h>
-> +        msmgpio: pinctrl@fd510000 {
-> +                compatible = "qcom,msm8226-pinctrl";
-> +                reg = <0xfd510000 0x4000>;
-> +
-> +                gpio-controller;
-> +                #gpio-cells = <2>;
-> +                gpio-ranges = <&msmgpio 0 0 117>;
-> +                interrupt-controller;
-> +                #interrupt-cells = <2>;
-> +                interrupts = <GIC_SPI 208 IRQ_TYPE_LEVEL_HIGH>;
-> +        };
-> -- 
-> 2.25.1
-> 
+> Ensure we do not copy the final one (which is not overwitten).
+>
+> -		strncpy(&inqdata[8], "Areca   ", 8);
+> +		strncpy(&inqdata[8], "Areca   ", 9);
+>  		/* Vendor Identification */
+> -		strncpy(&inqdata[16], "RAID controller ", 16);
+> +		strncpy(&inqdata[16], "RAID controller ", 17);
+>  		/* Product Identification */
+> -		strncpy(&inqdata[32], "R001", 4); /* Product Revision */
+> +		strncpy(&inqdata[32], "R001", 5); /* Product Revision */
+
+SCSI INQUIRY strings are fixed length and not NULL-terminated. Please
+address this warning using either memcpy() or strlcpy().
+
+Thanks!
+
+-- 
+Martin K. Petersen	Oracle Linux Engineering
