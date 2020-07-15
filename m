@@ -2,76 +2,86 @@ Return-Path: <SRS0=kup7=A2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99833C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 18:19:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B266AC433E2
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 18:21:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 771A72064B
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 18:19:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 962182065F
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 18:21:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="n386cJ2x"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726827AbgGOSTy (ORCPT
+        id S1726837AbgGOSVE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 14:19:54 -0400
-Received: from verein.lst.de ([213.95.11.211]:60094 "EHLO verein.lst.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725861AbgGOSTx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 14:19:53 -0400
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id 254CC68AFE; Wed, 15 Jul 2020 20:19:50 +0200 (CEST)
-Date:   Wed, 15 Jul 2020 20:19:49 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     Dominique Martinet <asmadeus@codewreck.org>
-Cc:     Christoph Hellwig <hch@lst.de>, Doug Nazar <nazard@nazar.ca>,
-        ericvh@gmail.com, lucho@ionkov.net,
-        v9fs-developer@lists.sourceforge.net, netdev@vger.kernel.org,
+        Wed, 15 Jul 2020 14:21:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59068 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726402AbgGOSVD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jul 2020 14:21:03 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 67CBDC061755;
+        Wed, 15 Jul 2020 11:21:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=/PGzMxiRs3LntzWdZ9BnnwhzRWaZLNAopFC1UTRKht4=; b=n386cJ2xX5uIHAjX8MFywK56Cj
+        pEKViQSpn12oXPq+h8K3cwBZdII+6juPIXizsdN0DLdJ4Rc1NyN592FdP5uqCk+B/xYa2yhYae9cT
+        +0JnimG086wSG0LSReTbBoW4ePpClWtyrlGO5FDh3oY5xRiddhoKYaF3ifM6HcOCIyKcTeCxf1oWU
+        OHFEvG1qnhnWp3FwkmcJ8/lakxMfoKo9R/XX34BEDiEy9UhTONH3wJ9yW6YdgOxeuUHJzU48+HKNw
+        bi2lOezBfZ2/Srt2KpxfXCeQk8TME8Vhf22lkWNDDSi2xh5BPfBHe100mnJPi5X+nOp+x0e/rjolf
+        NFdarelA==;
+Received: from hch by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jvm1W-0005BZ-1A; Wed, 15 Jul 2020 18:20:54 +0000
+Date:   Wed, 15 Jul 2020 19:20:53 +0100
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Christoph Hellwig <hch@infradead.org>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
         linux-kernel@vger.kernel.org,
-        syzbot+e6f77e16ff68b2434a2c@syzkaller.appspotmail.com
-Subject: Re: [PATCH] net/9p: validate fds in p9_fd_open
-Message-ID: <20200715181949.GA31172@lst.de>
-References: <20200710085722.435850-1-hch@lst.de> <5bee3e33-2400-2d85-080e-d10cd82b0d85@nazar.ca> <20200711104923.GA6584@nautica> <20200715073715.GA22899@lst.de> <20200715134756.GB22828@nautica>
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        linux-fsdevel@vger.kernel.org,
+        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
+        linux-security-module@vger.kernel.org,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        James Morris <jmorris@namei.org>,
+        Kentaro Takeda <takedakn@nttdata.co.jp>,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        John Johansen <john.johansen@canonical.com>
+Subject: Re: [PATCH 7/7] exec: Implement kernel_execve
+Message-ID: <20200715182053.GA18278@infradead.org>
+References: <871rle8bw2.fsf@x220.int.ebiederm.org>
+ <87wo365ikj.fsf@x220.int.ebiederm.org>
+ <202007141446.A72A4437C@keescook>
+ <20200715064248.GH32470@infradead.org>
+ <202007150758.3D1597C6D@keescook>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200715134756.GB22828@nautica>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+In-Reply-To: <202007150758.3D1597C6D@keescook>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 15, 2020 at 03:47:56PM +0200, Dominique Martinet wrote:
-> Christoph Hellwig wrote on Wed, Jul 15, 2020:
-> > FYI, this is now generating daily syzbot reports, so I'd love to see
-> > the fix going into Linus' tree ASAP..
-> 
-> Yes, I'm getting some syzbot warnings as well now.
-> 
-> I had however only planned to get this in linux-next, since that is what
-> the syzbot mails were complaining about, but I see this got into -rc5...
-> 
-> 
-> It's honestly just a warn on something that would fail anyway so I'd
-> rather let it live in -next first, I don't get why syzbot is so verbose
-> about this - it sent a mail when it found a c repro and one more once it
-> bisected the commit yesterday but it should not be sending more?
+On Wed, Jul 15, 2020 at 08:00:16AM -0700, Kees Cook wrote:
+> Heh, yes please. :) (Which branch is this from?
 
-Yes, I agree that this is just a warning on existing behavior.  But then
-again these constant syzbot reports are pretty annoying..
+http://git.infradead.org/users/hch/misc.git/shortlog/refs/heads/exec-cleanup
 
-> (likewise it should pick up the fix tag even if it only gets in -next,
-> or would it keep being noisy unless this gets merged to mainline?)
-> 
-> 
-> FWIW this is along with the 5 other patches I have queued for 5.9
-> waiting for my tests as my infra is still down, I've stopped trying to
-> make promises, but I could push at least just this one to -next if that
-> really helps.
-> Sorry for that, things should be smoother once I've taken the time to
-> put things back in place.
+> Are yours and Eric's
+> tree going to collide?)
 
-No need to be sorry, just through it might be worth to ping you.
-
-Thanks for all your help!
+Yes, badly.
