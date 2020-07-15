@@ -2,200 +2,77 @@ Return-Path: <SRS0=kup7=A2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BFC31C433E6
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 17:30:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF538C433E3
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 17:32:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9DC112065D
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 17:30:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594834244;
-	bh=4T6S2epKi2ENJEC3KsYLtzEaf+uX57nEZeTJaHpHW8Q=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=2upZaRq+mmxu3CaLTQgz1xQZ8JEpbDiKtEYJ2SL4WWEnsU9SsrcV6WHrj4eWq1vyR
-	 wXI7n2i9pbZr7cz8iCsQfpzK0RzvY13raoy/qhDK5JJIQGtr9lUD3DSa/E1G6jMpNs
-	 R4dcI2PoK2dfAtGc9Qa0Ke950shfDtf6KEzy9GJw=
+	by mail.kernel.org (Postfix) with ESMTP id AE7492065D
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 17:32:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726086AbgGORan (ORCPT
+        id S1726634AbgGORcS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 13:30:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47508 "EHLO mail.kernel.org"
+        Wed, 15 Jul 2020 13:32:18 -0400
+Received: from muru.com ([72.249.23.125]:37046 "EHLO muru.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725861AbgGORam (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 13:30:42 -0400
-Received: from mail-oi1-f169.google.com (mail-oi1-f169.google.com [209.85.167.169])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 990D02065D;
-        Wed, 15 Jul 2020 17:30:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594834241;
-        bh=4T6S2epKi2ENJEC3KsYLtzEaf+uX57nEZeTJaHpHW8Q=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=UGHUsR7BJPApYZexFuAAHrBmRxmIAKgVSeA6cL9K/upaRAeFUcZHrQLGgvS+7p5F3
-         6hvgH5plDm73aCY/VvnLmFS0Iaslye8woDqCku7pQDoa+9S8jLe4ZuFWd7MlnWOIAO
-         vqFWOiHuJh5mvdnEdK89U+IhikuPR54noxKyGrjI=
-Received: by mail-oi1-f169.google.com with SMTP id j11so2809795oiw.12;
-        Wed, 15 Jul 2020 10:30:41 -0700 (PDT)
-X-Gm-Message-State: AOAM532jxJh+Xw/HOtWoJW4m9UGaQJ5WbpwryfKKGCB5Q7AjWVzRpWgz
-        r03eNrLCPT6ycOYXwtPanm5neQw6O2pNFRzs+A==
-X-Google-Smtp-Source: ABdhPJwVPF7yPW/4Xav5tdTwLAAlgry1UaSHbNVOcYXq6cWPmc2b5sYdGrcceGq9vFN8OCcKMceTZ8Ekrz+Jdd7ZRTE=
-X-Received: by 2002:aca:bb82:: with SMTP id l124mr693571oif.106.1594834240916;
- Wed, 15 Jul 2020 10:30:40 -0700 (PDT)
+        id S1726396AbgGORcR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jul 2020 13:32:17 -0400
+Received: from atomide.com (localhost [127.0.0.1])
+        by muru.com (Postfix) with ESMTPS id 9845B8120;
+        Wed, 15 Jul 2020 17:32:13 +0000 (UTC)
+Date:   Wed, 15 Jul 2020 10:32:11 -0700
+From:   Tony Lindgren <tony@atomide.com>
+To:     Grygorii Strashko <grygorii.strashko@ti.com>
+Cc:     Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, Carlos Hernandez <ceh@ti.com>
+Subject: Re: [PATCH] clocksource/drivers/timer-ti-dm: Fix suspend and resume
+ for am3 and am4
+Message-ID: <20200715173211.GA10993@atomide.com>
+References: <20200713162601.6829-1-tony@atomide.com>
+ <1972bace-e9d1-b901-eb33-b4081a4b175d@ti.com>
 MIME-Version: 1.0
-References: <20200710230224.2265647-1-dianders@chromium.org>
- <CAL_JsqKC5WtHb-coMCxMTDJ7CJcjVXcAxDT4J9N-Xyr=0uuURA@mail.gmail.com>
- <CAD=FV=XWKoTd_t2uRGpw3oa0Nij2EPeAJpOHhUipXFW07JN2qw@mail.gmail.com>
- <CAL_JsqLJM5nwNSdugMBLDVtjP97dikCm_AiHjnDs1jqBOFoaaQ@mail.gmail.com>
- <CAD=FV=UP0AHWr22U69TKcwwAefPCYMsfzymobczqmrdB6BOOhA@mail.gmail.com>
- <CAOCk7NoX-XAXy2WaYGjGOtEmypis-DO-W1cfU0wnucHH0oZrqg@mail.gmail.com>
- <CAL_Jsq+Nys+ry-3D07e-68e=9Pb34C9Js6piAnzwd1gXf_DmTw@mail.gmail.com> <20200714225220.GI388985@builder.lan>
-In-Reply-To: <20200714225220.GI388985@builder.lan>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Wed, 15 Jul 2020 11:30:29 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqKU7X5f-Dt67N_yFQUUVuXrZYomB-n=dKyUqD94OXFyJQ@mail.gmail.com>
-Message-ID: <CAL_JsqKU7X5f-Dt67N_yFQUUVuXrZYomB-n=dKyUqD94OXFyJQ@mail.gmail.com>
-Subject: Re: [Freedreno] [PATCH 0/9] drm/msm: Avoid possible infinite probe
- deferral and speed booting
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     Jeffrey Hugo <jeffrey.l.hugo@gmail.com>,
-        Doug Anderson <dianders@chromium.org>,
-        freedreno <freedreno@lists.freedesktop.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, David Airlie <airlied@linux.ie>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Rob Clark <robdclark@gmail.com>,
-        Andy Gross <agross@kernel.org>,
-        Daniel Vetter <daniel@ffwll.ch>, Sean Paul <sean@poorly.run>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1972bace-e9d1-b901-eb33-b4081a4b175d@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 14, 2020 at 4:54 PM Bjorn Andersson
-<bjorn.andersson@linaro.org> wrote:
->
-> On Tue 14 Jul 15:13 PDT 2020, Rob Herring wrote:
->
-> > On Tue, Jul 14, 2020 at 10:33 AM Jeffrey Hugo <jeffrey.l.hugo@gmail.com> wrote:
-> > >
-> > > On Mon, Jul 13, 2020 at 5:50 PM Doug Anderson <dianders@chromium.org> wrote:
-> > > >
-> > > > Hi,
-> > > >
-> > > > On Mon, Jul 13, 2020 at 1:25 PM Rob Herring <robh+dt@kernel.org> wrote:
-> > > > >
-> > > > > On Mon, Jul 13, 2020 at 9:08 AM Doug Anderson <dianders@chromium.org> wrote:
-> > > > > >
-> > > > > > Hi,
-> > > > > >
-> > > > > > On Mon, Jul 13, 2020 at 7:11 AM Rob Herring <robh+dt@kernel.org> wrote:
-> > > > > > >
-> > > > > > > On Fri, Jul 10, 2020 at 5:02 PM Douglas Anderson <dianders@chromium.org> wrote:
-> > > > > > > >
-> > > > > > > > I found that if I ever had a little mistake in my kernel config,
-> > > > > > > > or device tree, or graphics driver that my system would sit in a loop
-> > > > > > > > at bootup trying again and again and again.  An example log was:
-> > > > > > >
-> > > > > > > Why do we care about optimizing the error case?
-> > > > > >
-> > > > > > It actually results in a _fully_ infinite loop.  That is: if anything
-> > > > > > small causes a component of DRM to fail to probe then the whole system
-> > > > > > doesn't boot because it just loops trying to probe over and over
-> > > > > > again.  The messages I put in the commit message are printed over and
-> > > > > > over and over again.
-> > > > >
-> > > > > Sounds like a bug as that's not what should happen.
-> > > > >
-> > > > > If you defer during boot (initcalls), then you'll be on the deferred
-> > > > > list until late_initcall and everything is retried. After
-> > > > > late_initcall, only devices getting added should trigger probing. But
-> > > > > maybe the adding and then removing a device is causing a re-trigger.
-> > > >
-> > > > Right, I'm nearly certain that the adding and then removing is causing
-> > > > a re-trigger.  I believe the loop would happen for any case where we
-> > > > have a probe function that:
-> > > >
-> > > > 1. Adds devices.
-> > > > 2. After adding devices it decides that it needs to defer.
-> > > > 3. Removes the devices it added.
-> > > > 4. Return -EPROBE_DEFER from its probe function.
-> > > >
-> > > > Specifically from what I know about how -EPROBE_DEFER works I'm not
-> > > > sure how it wouldn't cause an infinite loop in that case.
-> > > >
-> > > > Perhaps the missing part of my explanation, though, is why it never
-> > > > gets out of this infinite loop.  In my case I purposely made the
-> > > > bridge chip "ti-sn65dsi86.c" return an error (-EINVAL) in its probe
-> > > > every time.  Obviously I wasn't going to get a display up like this,
-> > > > but I just wanted to not loop forever at bootup.  I tracked down
-> > > > exactly why we get an - EPROBE_DEFER over and over in this case.
-> > > >
-> > > > You can see it in msm_dsi_host_register().  If some components haven't
-> > > > shown up when that function runs it will _always_ return
-> > > > -EPROBE_DEFER.
-> > > >
-> > > > In my case, since I caused the bridge to fail to probe, those
-> > > > components will _never_ show up.  That means that
-> > > > msm_dsi_host_register() will _always_ return -EPROBE_DEFER.
-> > > >
-> > > > I haven't dug through all the DRM code enough, but it doesn't
-> > > > necessarily seem like the wrong behavior.  If the bridge driver or a
-> > > > panel was a module then (presumably) they could show up later and so
-> > > > it should be OK for it to defer, right?
-> > > >
-> > > > So with all that, it doesn't really feel like this is a bug so much as
-> > > > it's an unsupported use case.  The current deferral logic simply can't
-> > > > handle the case we're throwing at it.  You cannot return -EPROBE_DEFER
-> > > > if your probe function adds devices each time through the probe
-> > > > function.
-> > > >
-> > > > Assuming all the above makes sense, that means we're stuck with:
-> > > >
-> > > > a) This patch series, which makes us not add devices.
-> > > >
-> > > > b) Some other patch series which rearchitects the MSM graphics stack
-> > > > to not return -EPROBE_DEFER in this case.
-> > >
-> > > This isn't a MSM specific issue.  This is an issue with how the DSI
-> > > interface works, and how software is structured in Linux.  I would
-> > > expect that pretty much any DSI host in the kernel would have some
-> > > version of this issue.
-> > >
-> > > The problem is that DSI is not "hot pluggable", so to give the DRM
-> > > stack the info it needs, we need both the DSI controller (aka the MSM
-> > > graphics stack in your case), and the thing it connects to (in your
-> > > case, the TI bridge, normally the actual panel) because the DRM stack
-> > > expects that if init completes, it has certain information
-> > > (resolution, etc), and some of that information is in the DSI
-> > > controller, and some of it is on the DSI device.
-> >
-> > Ah yes, DRM's lack of hot-plug and discrete component support... Is
-> > that not improved with some of the bridge rework?
-> >
-> > Anyways, given there is a child dependency on the parent, I don't
-> > think we should work-around DRM deficiencies in DT.
-> >
-> > BTW, There's also a deferred probe timeout you can use which stops
-> > deferring probe some number of seconds after late_initcall.
-> >
->
-> I don't think we can rely on the deferred probe timeout, given that it
-> was reverted back to 0 seconds past late_initcall - which given that
-> most of the involved components are modules, means that without the
-> opt-in command line option we would likely fail to bring up the display.
+* Grygorii Strashko <grygorii.strashko@ti.com> [200715 10:17]:
+> On 13/07/2020 19:26, Tony Lindgren wrote:
+> > @@ -653,8 +679,8 @@ static int __init dmtimer_clocksource_init(struct device_node *np)
+> >   	dev->mask = CLOCKSOURCE_MASK(32);
+> >   	dev->flags = CLOCK_SOURCE_IS_CONTINUOUS;
+> > -	if (of_device_is_compatible(np, "ti,am33xx") ||
+> > -	    of_device_is_compatible(np, "ti,am43")) {
+> > +	/* Unlike for clockevent, legacy code sets suspend only for am4 */
+> > +	if (of_machine_is_compatible("ti,am43")) {
+> >   		dev->suspend = dmtimer_clocksource_suspend;
+> >   		dev->resume = dmtimer_clocksource_resume;
+> >   	}
+> > 
+> 
+> It might be better to use SOC_BUS infra here, which is available on OMAP platforms by default,
+> instead if DT. What do you think?
 
-I meant just as a way to make progress booting in this case where the
-display is never coming up. We're talking only about a better
-experience for an error case.
+Well we have time_init() run very early, and some SoCs have only external
+timers. So timer-ti-dm-systimer must be initialized early. And I think
+soc_device_match() depends on soc_bus_register() that runs later at
+core_initcall().
 
-Maybe a simple solution is just having some delay inserted between
-delayed probe triggers so progress is made.
+If you are thinking of something else, or we can use soc_device_match()
+early, sure :) But sounds like that change should be a separate patch
+then.
 
-Rob
+The reason for why we need to check for the SoC, we have the compatible
+for ti,am335x-timer already in use on am3/4 and dm814x, so we can't use
+TIMER_OF_DECLARE alone here.
+
+Regards,
+
+Tony
