@@ -2,90 +2,101 @@ Return-Path: <SRS0=kup7=A2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61E62C433E6
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 09:13:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63EF7C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 09:14:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4496320672
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 09:13:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 43EA4206F4
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 09:14:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="vzb3APOc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730576AbgGOJNm (ORCPT
+        id S1730584AbgGOJOF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 05:13:42 -0400
-Received: from [195.135.220.15] ([195.135.220.15]:55238 "EHLO mx2.suse.de"
-        rhost-flags-FAIL-FAIL-OK-OK) by vger.kernel.org with ESMTP
-        id S1728672AbgGOJNl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 05:13:41 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 1D30FAF69;
-        Wed, 15 Jul 2020 09:13:43 +0000 (UTC)
-Date:   Wed, 15 Jul 2020 11:13:37 +0200
-From:   Joerg Roedel <jroedel@suse.de>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Joerg Roedel <joro@8bytes.org>, x86@kernel.org, hpa@zytor.com,
-        Andy Lutomirski <luto@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Jiri Slaby <jslaby@suse.cz>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Juergen Gross <jgross@suse.com>,
-        Kees Cook <keescook@chromium.org>,
-        David Rientjes <rientjes@google.com>,
-        Cfir Cohen <cfir@google.com>,
-        Erdem Aktas <erdemaktas@google.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Mike Stunes <mstunes@vmware.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Martin Radev <martin.b.radev@gmail.com>,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        virtualization@lists.linux-foundation.org
-Subject: Re: [PATCH v4 63/75] x86/sev-es: Handle #DB Events
-Message-ID: <20200715091337.GI16200@suse.de>
-References: <20200714120917.11253-1-joro@8bytes.org>
- <20200714120917.11253-64-joro@8bytes.org>
- <20200715084752.GD10769@hirez.programming.kicks-ass.net>
+        Wed, 15 Jul 2020 05:14:05 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:53074 "EHLO m43-7.mailgun.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730543AbgGOJOE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jul 2020 05:14:04 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1594804443; h=Date: Message-Id: Cc: To: References:
+ In-Reply-To: From: Subject: Content-Transfer-Encoding: MIME-Version:
+ Content-Type: Sender; bh=GRTuG2zSQXreG8H4pH5m/X55HMkiymrlS19uFqhJn94=;
+ b=vzb3APOcixKjDAFsuPgIABF+h/gMxF55eQS5uNp3RGuD5rUj8ExKSYDLyPwpY2tCpaSenBr4
+ sG70Vk6QU+NE1hA+PLFW3aioa/WdAVSfviVNsa9Hs1+xn4jAIp8c1byYA5WrjlhqJjpVcStc
+ Db/ah3vuTuJG69GdeVntxo6ZoZc=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n05.prod.us-west-2.postgun.com with SMTP id
+ 5f0ec8b22991e765cd5b8d47 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Wed, 15 Jul 2020 09:13:22
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id DE825C433CB; Wed, 15 Jul 2020 09:13:21 +0000 (UTC)
+Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: kvalo)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id EBCC4C433C9;
+        Wed, 15 Jul 2020 09:13:19 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org EBCC4C433C9
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200715084752.GD10769@hirez.programming.kicks-ass.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH] mwifiex: Fix reporting 'operation not supported' error
+ code
+From:   Kalle Valo <kvalo@codeaurora.org>
+In-Reply-To: <20200703112151.18917-1-pali@kernel.org>
+References: <20200703112151.18917-1-pali@kernel.org>
+To:     =?utf-8?q?Pali_Roh=C3=A1r?= <pali@kernel.org>
+Cc:     Ganapathi Bhat <ganapathi.bhat@nxp.com>,
+        Amitkumar Karwar <amitkarwar@gmail.com>,
+        Xinming Hu <huxinming820@gmail.com>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+User-Agent: pwcli/0.1.0-git (https://github.com/kvalo/pwcli/) Python/3.5.2
+Message-Id: <20200715091321.DE825C433CB@smtp.codeaurora.org>
+Date:   Wed, 15 Jul 2020 09:13:21 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 15, 2020 at 10:47:52AM +0200, Peter Zijlstra wrote:
-> On Tue, Jul 14, 2020 at 02:09:05PM +0200, Joerg Roedel wrote:
+Pali Rohár <pali@kernel.org> wrote:
+
+> ENOTSUPP (double PP) is internal linux kernel code 524 available only in
+> kernel include file linux/errno.h and not exported to userspace.
 > 
-> > @@ -1028,6 +1036,16 @@ DEFINE_IDTENTRY_VC_SAFE_STACK(exc_vmm_communication)
-> >  	struct ghcb *ghcb;
-> >  
-> >  	lockdep_assert_irqs_disabled();
-> > +
-> > +	/*
-> > +	 * #DB is special and needs to be handled outside of the intrumentation_begin()/end().
-> > +	 * Otherwise the #VC handler could be raised recursivly.
-> > +	 */
-> > +	if (error_code == SVM_EXIT_EXCP_BASE + X86_TRAP_DB) {
-> > +		vc_handle_trap_db(regs);
-> > +		return;
-> > +	}
-> > +
-> >  	instrumentation_begin();
+> EOPNOTSUPP (OP; double PP) is standard code 95 for reporting 'operation not
+> supported' available via kernel include file uapi/asm-generic/errno.h.
 > 
-> Wait what?! That makes no sense what so ever.
+> ENOTSUP (single P) is alias for EOPNOTSUPP defined only in userspace
+> include file bits/errno.h and not available in kernel.
+> 
+> Because Linux kernel does not support ENOTSUP (single P) and because
+> userspace does not support ENOTSUPP (double PP), report error code for
+> 'operation not supported' via EOPNOTSUPP macro.
+> 
+> This patch fixes problem that mwifiex kernel driver sends to userspace
+> unsupported error codes like: "failed: -524 (No error information)".
+> After applying this patch userspace see: "failed: -95 (Not supported)".
+> 
+> Signed-off-by: Pali Rohár <pali@kernel.org>
+> Acked-by: Ganapathi Bhat <ganapathi.bhat@nxp.com>
 
-Then my understanding of intrumentation_begin/end() is wrong, I thought
-that the kernel will forbid setting breakpoints before
-instrumentation_begin(), which is necessary here because a break-point
-in the #VC handler might cause recursive #VC-exceptions when #DB is
-intercepted.
-Maybe you can elaborate on why this makes no sense?
+Patch applied to wireless-drivers-next.git, thanks.
 
-Regards,
+9187f4e84092 mwifiex: Fix reporting 'operation not supported' error code
 
-	Joerg
+-- 
+https://patchwork.kernel.org/patch/11641737/
+
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+
