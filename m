@@ -2,133 +2,131 @@ Return-Path: <SRS0=kup7=A2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11384C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 08:26:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59EA5C433E4
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 08:26:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E4BB320657
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 08:26:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D68420657
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 08:26:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Y7XBEzNJ"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ljxiYm+v"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729855AbgGOI0k (ORCPT
+        id S1729874AbgGOI0o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 04:26:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51794 "EHLO
+        Wed, 15 Jul 2020 04:26:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51804 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728250AbgGOI0k (ORCPT
+        with ESMTP id S1728250AbgGOI0l (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 04:26:40 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A01FEC061755
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 01:26:39 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id f7so1515838wrw.1
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 01:26:39 -0700 (PDT)
+        Wed, 15 Jul 2020 04:26:41 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F23D8C08C5C1
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 01:26:40 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id f7so1515914wrw.1
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 01:26:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=BobjFLO4jAQDqgFYhhcPSkxXTsZfQxwIQ+LKOwR6wxQ=;
-        b=Y7XBEzNJjKc0Iuki0fXG/IizMD/riuqZahAKVS5ebLIzW5x2fZVTWpy6exLgM6WY7l
-         MF9LP/7Xb73DNN2spvTOF9U36s88+O3xtWMOpIrpF6Sfgc6j8e7zmWpbIi/9xhjsLvTN
-         bj2xzlqQnQVI1Z1Lxz4/XkyLus0x8gaJZGHsyxNwKzOK2WqczCwK17WtLXmLVOLbx18H
-         XCI7GnBRBA9oT6RsfcnuGN0ieJqplA8sZb+RI6WQ9nCptOpGfXGMqYhszYvn5o/NwNuZ
-         UERu0D4MChT9C/fh+6wACJzJYspQllNfLiFilJvDcQnAJPp0/4qiGdv3Z94HEh1VkFTk
-         57Gg==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=1LJ0wihOBVHPIGemJGX58TPrv3uF5xWaa7cKhOONWPg=;
+        b=ljxiYm+vN9KkU8J2YlA1xo2jW+OJL7zYylIepuzU7NoryNA4YAXH7bYPteN60yXtEn
+         hfSFIN/cOX7tEUohsIXs0F/GgCd3GKKtuthbueKyvrI1U/lxQEF4VvR8A2tjQyvXbR2R
+         VeSPnORSvMphuW5BfwzDDB5TIOmffT1Kk0oGb8oZbmBbVIvPtfWh6RXPfPZnfdrGylZs
+         9b2iHT6/rWMNnkB9bbJbfe35FsmMQ5d1t09jupstSL7KFJx1lmivT8f3uPRgmmxso48w
+         ATJ17hH8EV/Bpj6CFqYI2jgsmsxIlQy3Swwqkz4YM03QiYDyBspOyHnFL7VuYHDX83cp
+         f2pA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=BobjFLO4jAQDqgFYhhcPSkxXTsZfQxwIQ+LKOwR6wxQ=;
-        b=tQgMqxvlbJKVg+vEXO1IG+x+o1eU7aXjZ2yShsL8MAdCOKWkkXb5+zdJWFoqhVC1t7
-         J/9a5xKT1Nf+Gif15HwfZLKfqAiOy0kdxGIVC73iT4rGWE4lGie3w+K6/91fD9lsFZ56
-         HYKa/3/sU+cPZXbp2TyK4RlB5meqcQ/sC8NfpOmi4u0n8gCg0fwdX3u1x4ei+/fDJUAi
-         KsCRQ4NXT8fwGtqkTuHpOqeBnPOl3k++gWAW8SsADTefUAtp09dJOnGTSePZuq0u3YTr
-         f42uPDbLKb5zl9K1/33xnA6RB7LSkkz2NPAQ3hHQxqLe5oa63JrxEXOMFGEVb2R8DVYx
-         OolQ==
-X-Gm-Message-State: AOAM531NmkTyCT3nBxPqPXebJhsZIfdQr7Oso4o5gsdhgzW7xc5JA9xi
-        lOw2dGde/0zf7cjFPrSRh4Xu6A==
-X-Google-Smtp-Source: ABdhPJxavdVbilJtal4t/mMwWHDIMZMCfoDSecxBHUP8XJKJCPrqVA0w2Y2RAT0AGordCCwSHDd0xA==
-X-Received: by 2002:a05:6000:86:: with SMTP id m6mr9906018wrx.173.1594801598417;
-        Wed, 15 Jul 2020 01:26:38 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=1LJ0wihOBVHPIGemJGX58TPrv3uF5xWaa7cKhOONWPg=;
+        b=GibeWeR9wE8Tm3AGR3e+6UUYPaK9EIRiYFEHBhQ9TnJiMWcibC9vufOUdnNMwPon8A
+         7PoyMUeTMcordGSwtfXPaWPSUwzNYTttLtzbeeTHrxyAEL3Hx6D0ocrf8FMg6xZ+ejha
+         KG6gvb4lUaluKEFutxgAX0yx7RFMsyGaubGQfpseySMr8YYJP97f3PThpNLoSs75oG9h
+         Sq5XooZtmSZ/0bvHC5jh8VabWchQjBtE0IhhqeiAs8MnTq9/pYYKXoIoe4J4HWnTHf6u
+         gXwf2ZLC3lmNSvQxS8zzHp7WsT64dFYXv7TvHwRebIgOMXJaiDlaFww5NKynZ6CXDi9/
+         vK3A==
+X-Gm-Message-State: AOAM532s4RnV5/S5Oe/QZ/lPjZSRLzRPo5U4++ROqfxuWcOI3emAM9Js
+        WJBmobkNamI4h/oVFIjmafOd5g==
+X-Google-Smtp-Source: ABdhPJzcOOGWhEpLdUwy55/6zbutR/7JAw/U/qyLamUdWJ+qquIDGdIzfYQX+nQnfGZXlKDRzrkowQ==
+X-Received: by 2002:a5d:698e:: with SMTP id g14mr10754265wru.301.1594801599673;
+        Wed, 15 Jul 2020 01:26:39 -0700 (PDT)
 Received: from localhost.localdomain ([2.31.163.61])
-        by smtp.gmail.com with ESMTPSA id h13sm2400361wml.42.2020.07.15.01.26.37
+        by smtp.gmail.com with ESMTPSA id h13sm2400361wml.42.2020.07.15.01.26.38
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 15 Jul 2020 01:26:37 -0700 (PDT)
+        Wed, 15 Jul 2020 01:26:38 -0700 (PDT)
 From:   Lee Jones <lee.jones@linaro.org>
 To:     rjw@rjwysocki.net, viresh.kumar@linaro.org
 Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org, Lee Jones <lee.jones@linaro.org>
-Subject: [PATCH v2 00/13] Rid W=1 warnings in CPUFreq
-Date:   Wed, 15 Jul 2020 09:26:21 +0100
-Message-Id: <20200715082634.3024816-1-lee.jones@linaro.org>
+        linux-pm@vger.kernel.org, Lee Jones <lee.jones@linaro.org>,
+        Dominik Brodowski <linux@brodo.de>
+Subject: [PATCH v2 01/13] cpufreq: freq_table: Demote obvious misuse of kerneldoc to standard comment blocks
+Date:   Wed, 15 Jul 2020 09:26:22 +0100
+Message-Id: <20200715082634.3024816-2-lee.jones@linaro.org>
 X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200715082634.3024816-1-lee.jones@linaro.org>
+References: <20200715082634.3024816-1-lee.jones@linaro.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This set is part of a larger effort attempting to clean-up W=1
-kernel builds, which are currently overwhelmingly riddled with
-niggly little warnings.
+No attempt has been made to document any of the demoted functions here.
 
-After these patches are applied, the build system no longer
-complains about any W=0 nor W=1 level warnings in drivers/cpufreq.
+Fixes the following W=1 kernel build warning(s):
 
-Hurrah!
+ drivers/cpufreq/freq_table.c:229: warning: Function parameter or member 'policy' not described in 'show_available_freqs'
+ drivers/cpufreq/freq_table.c:229: warning: Function parameter or member 'buf' not described in 'show_available_freqs'
+ drivers/cpufreq/freq_table.c:229: warning: Function parameter or member 'show_boost' not described in 'show_available_freqs'
+ drivers/cpufreq/freq_table.c:269: warning: Function parameter or member 'policy' not described in 'scaling_available_frequencies_show'
+ drivers/cpufreq/freq_table.c:269: warning: Function parameter or member 'buf' not described in 'scaling_available_frequencies_show'
+ drivers/cpufreq/freq_table.c:281: warning: Function parameter or member 'policy' not described in 'scaling_boost_frequencies_show'
+ drivers/cpufreq/freq_table.c:281: warning: Function parameter or member 'buf' not described in 'scaling_boost_frequencies_show'
 
-Changelog
+Cc: Dominik Brodowski <linux@brodo.de>
+Signed-off-by: Lee Jones <lee.jones@linaro.org>
+Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
+---
+ drivers/cpufreq/freq_table.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-v1 => v2:
- - Collect *-bys
- - Use __maybe_unused instead of removing device IDs
- - Use __always_unused instead of using unused variables
- - Include architecture header instead of creating new include file
-
-Lee Jones (13):
-  cpufreq: freq_table: Demote obvious misuse of kerneldoc to standard
-    comment blocks
-  cpufreq: cpufreq: Demote lots of function headers unworthy of
-    kerneldoc status
-  cpufreq: cpufreq_governor: Demote store_sampling_rate() header to
-    standard comment block
-  cpufreq: sti-cpufreq: Fix some formatting and misspelling issues
-  cpufreq: pasemi: Include header file for {check,restore}_astate
-    prototypes
-  cpufreq: powernv-cpufreq: Functions only used in call-backs should be
-    static
-  cpufreq: powernv-cpufreq: Fix a bunch of kerneldoc related issues
-  cpufreq: acpi-cpufreq: Mark 'dummy' variable as __always_unused
-  cpufreq: acpi-cpufreq: Mark sometimes used ID structs as
-    __maybe_unused
-  cpufreq: powernow-k8: Mark 'hi' and 'lo' dummy variables as
-    __always_unused
-  cpufreq: pcc-cpufreq: Mark sometimes used ID structs as __maybe_unused
-  cpufreq: intel_pstate: Supply struct attribute description for
-    get_aperf_mperf_shift()
-  cpufreq: amd_freq_sensitivity: Mark sometimes used ID structs as
-    __maybe_unused
-
- drivers/cpufreq/acpi-cpufreq.c         |  8 +++----
- drivers/cpufreq/amd_freq_sensitivity.c |  2 +-
- drivers/cpufreq/cpufreq.c              | 32 ++++++++++++++------------
- drivers/cpufreq/cpufreq_governor.c     |  2 +-
- drivers/cpufreq/freq_table.c           |  6 ++---
- drivers/cpufreq/intel_pstate.c         |  2 ++
- drivers/cpufreq/pasemi-cpufreq.c       |  2 ++
- drivers/cpufreq/pcc-cpufreq.c          |  2 +-
- drivers/cpufreq/powernow-k8.c          |  4 ++--
- drivers/cpufreq/powernv-cpufreq.c      | 15 ++++++------
- drivers/cpufreq/sti-cpufreq.c          |  8 +++----
- 11 files changed, 45 insertions(+), 38 deletions(-)
-
+diff --git a/drivers/cpufreq/freq_table.c b/drivers/cpufreq/freq_table.c
+index e117b0059123e..f839dc9852c08 100644
+--- a/drivers/cpufreq/freq_table.c
++++ b/drivers/cpufreq/freq_table.c
+@@ -221,7 +221,7 @@ int cpufreq_frequency_table_get_index(struct cpufreq_policy *policy,
+ }
+ EXPORT_SYMBOL_GPL(cpufreq_frequency_table_get_index);
+ 
+-/**
++/*
+  * show_available_freqs - show available frequencies for the specified CPU
+  */
+ static ssize_t show_available_freqs(struct cpufreq_policy *policy, char *buf,
+@@ -260,7 +260,7 @@ static ssize_t show_available_freqs(struct cpufreq_policy *policy, char *buf,
+ struct freq_attr cpufreq_freq_attr_##_name##_freqs =     \
+ __ATTR_RO(_name##_frequencies)
+ 
+-/**
++/*
+  * show_scaling_available_frequencies - show available normal frequencies for
+  * the specified CPU
+  */
+@@ -272,7 +272,7 @@ static ssize_t scaling_available_frequencies_show(struct cpufreq_policy *policy,
+ cpufreq_attr_available_freq(scaling_available);
+ EXPORT_SYMBOL_GPL(cpufreq_freq_attr_scaling_available_freqs);
+ 
+-/**
++/*
+  * show_available_boost_freqs - show available boost frequencies for
+  * the specified CPU
+  */
 -- 
 2.25.1
 
