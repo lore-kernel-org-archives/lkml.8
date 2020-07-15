@@ -2,302 +2,94 @@ Return-Path: <SRS0=kup7=A2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9901CC433E2
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 10:18:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88E10C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 10:19:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 708BF2072E
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 10:18:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="DxeRERli"
+	by mail.kernel.org (Postfix) with ESMTP id 6DE4420720
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 10:19:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730815AbgGOKSF (ORCPT
+        id S1730870AbgGOKTL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 06:18:05 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:52918 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730701AbgGOKSE (ORCPT
+        Wed, 15 Jul 2020 06:19:11 -0400
+Received: from mail-oo1-f66.google.com ([209.85.161.66]:44296 "EHLO
+        mail-oo1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726998AbgGOKTK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 06:18:04 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 06FAHgbr054639;
-        Wed, 15 Jul 2020 05:17:42 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1594808262;
-        bh=Up3QyoD3htP0Yn63py82spUaeZ79B1A9FQjizztRVTc=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=DxeRERlij2Pxa6pby3dpUtwvixxuVMNn/v+gqu4qQPbDuHd30a2kxlKOzkofO/hWK
-         MA9wNmsfO/Sx2LIELxaS0XvT4Yu1r2hL5E2H1DETcBU2q2rSzD/R3zdkbA43lMXnEW
-         1EHslCw5Xf9ATUNVS8k2ygEG8R8DWgHWgshjK/H8=
-Received: from DLEE105.ent.ti.com (dlee105.ent.ti.com [157.170.170.35])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 06FAHgXm033111
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 15 Jul 2020 05:17:42 -0500
-Received: from DLEE100.ent.ti.com (157.170.170.30) by DLEE105.ent.ti.com
- (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Wed, 15
- Jul 2020 05:17:42 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE100.ent.ti.com
- (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Wed, 15 Jul 2020 05:17:41 -0500
-Received: from [10.250.100.73] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 06FAHdlo058017;
-        Wed, 15 Jul 2020 05:17:40 -0500
-Subject: Re: [PATCH] clocksource/drivers/timer-ti-dm: Fix suspend and resume
- for am3 and am4
-To:     Tony Lindgren <tony@atomide.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>
-CC:     <linux-kernel@vger.kernel.org>, <linux-omap@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        Carlos Hernandez <ceh@ti.com>
-References: <20200713162601.6829-1-tony@atomide.com>
-From:   Grygorii Strashko <grygorii.strashko@ti.com>
-Message-ID: <1972bace-e9d1-b901-eb33-b4081a4b175d@ti.com>
-Date:   Wed, 15 Jul 2020 13:17:33 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Wed, 15 Jul 2020 06:19:10 -0400
+Received: by mail-oo1-f66.google.com with SMTP id o36so350247ooi.11;
+        Wed, 15 Jul 2020 03:19:09 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=NAkHhGCBdih32hqt76V0j8Veg+fQ7FChhZOK219jyyg=;
+        b=HRl5wwAxXD3aa/M3k9gHxLMLja++2JYkfphFhp49MwX5QEZUmB01bmHiL6U3AQQgBp
+         PYp5mlL2JZ7HMDdwcnYGMgzNidvq+hlxlN+KYwRMfYNEK8jRY3kv4uxzLzR6glqm+cjT
+         716mYGZsVXpB/1BPXJQp/GXAdPhQPFPmT7s+PL5g/oOT5/iWo77xm71I25Uon9OS10J8
+         OxvlqgjypZC+KzrPnkceZRtZ0Kck5G73NdRpsz/VX9fqc9kpJPvjBtbGEXLUBmmQTgAz
+         B2Df6nNlqWpjFd3eO+0wEj6MpLlJaQTRYw/JxbJ4HmbZVCLYyh2mHA6G9at/DWYvoIPE
+         pT/g==
+X-Gm-Message-State: AOAM533FxjB8VOE1z/8HBpDOqPY0GWlsiZ2NcMjiGqnlqS6oYrFAmEKQ
+        pQG0hAowT0O/CYR/o7yAxJ6uAdX+Ziuj0EX7jaA=
+X-Google-Smtp-Source: ABdhPJwSAaZJfpGKxkLLTXuhq5d9bq9sTol7NAMegIgcAukEn+36YLrrN0ajD7D+Vfxo36peiJOo78hXGiX/3pGPC7k=
+X-Received: by 2002:a4a:9552:: with SMTP id n18mr8646494ooi.1.1594808349233;
+ Wed, 15 Jul 2020 03:19:09 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200713162601.6829-1-tony@atomide.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+References: <1594676120-5862-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <1594676120-5862-4-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <1594676120-5862-4-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Wed, 15 Jul 2020 12:18:58 +0200
+Message-ID: <CAMuHMdUH4yVek8Fn2z1xneTS0Y_vkMv+w7VwEDJvCUXR9qVQRw@mail.gmail.com>
+Subject: Re: [PATCH 3/9] arm64: dts: renesas: r8a774e1: Add IPMMU device nodes
+To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Cc:     Vinod Koul <vkoul@kernel.org>, Rob Herring <robh+dt@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Sergei Shtylyov <sergei.shtylyov@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        dmaengine <dmaengine@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux IOMMU <iommu@lists.linux-foundation.org>,
+        netdev <netdev@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Prabhakar <prabhakar.csengg@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, Jul 13, 2020 at 11:35 PM Lad Prabhakar
+<prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
+> From: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
+>
+> Add RZ/G2H (R8A774E1) IPMMU nodes.
+>
+> Signed-off-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+i.e. will queue in renesas-devel for v5.9.
 
-On 13/07/2020 19:26, Tony Lindgren wrote:
-> Carlos Hernandez <ceh@ti.com> reported that we now have a suspend and
-> resume regresssion on am3 and am4 compared to the earlier kernels. While
-> suspend and resume works with v5.8-rc3, we now get errors with rtcwake:
-> 
-> pm33xx pm33xx: PM: Could not transition all powerdomains to target state
-> ...
-> rtcwake: write error
-> 
-> This is because we now fail to idle the system timer clocks that the
-> idle code checks and the error gets propagated to the rtcwake.
-> 
-> Turns out there are several issues that need to be fixed:
-> 
-> 1. Ignore no-idle and no-reset configured timers for the ti-sysc
->     interconnect target driver as otherwise it will keep the system timer
->     clocks enabled
-> 
-> 2. Toggle the system timer functional clock for suspend for am3 and am4
->     (but not for clocksource on am3)
-> 
-> 3. Only reconfigure type1 timers in dmtimer_systimer_disable()
-> 
-> 4. Use of_machine_is_compatible() instead of of_device_is_compatible()
->     for checking the SoC type
-> 
-> Fixes: 52762fbd1c47 ("clocksource/drivers/timer-ti-dm: Add clockevent and clocksource support")
-> Reported-by: Carlos Hernandez <ceh@ti.com>
-> Signed-off-by: Tony Lindgren <tony@atomide.com>
-> ---
->   drivers/bus/ti-sysc.c                      | 22 +++++++++++
->   drivers/clocksource/timer-ti-dm-systimer.c | 46 +++++++++++++++++-----
->   2 files changed, 58 insertions(+), 10 deletions(-)
-> 
-> diff --git a/drivers/bus/ti-sysc.c b/drivers/bus/ti-sysc.c
-> --- a/drivers/bus/ti-sysc.c
-> +++ b/drivers/bus/ti-sysc.c
-> @@ -2877,6 +2877,24 @@ static int sysc_check_disabled_devices(struct sysc *ddata)
->   	return error;
->   }
->   
-> +/*
-> + * Ignore timers tagged with no-reset and no-idle. These are likely in use,
-> + * for example by drivers/clocksource/timer-ti-dm-systimer.c. If more checks
-> + * are needed, we could also look at the timer register configuration.
-> + */
-> +static int sysc_check_active_timer(struct sysc *ddata)
-> +{
-> +	if (ddata->cap->type != TI_SYSC_OMAP2_TIMER &&
-> +	    ddata->cap->type != TI_SYSC_OMAP4_TIMER)
-> +		return 0;
-> +
-> +	if ((ddata->cfg.quirks & SYSC_QUIRK_NO_RESET_ON_INIT) &&
-> +	    (ddata->cfg.quirks & SYSC_QUIRK_NO_IDLE))
-> +		return -EBUSY;
-> +
-> +	return 0;
-> +}
-> +
->   static const struct of_device_id sysc_match_table[] = {
->   	{ .compatible = "simple-bus", },
->   	{ /* sentinel */ },
-> @@ -2933,6 +2951,10 @@ static int sysc_probe(struct platform_device *pdev)
->   	if (error)
->   		return error;
->   
-> +	error = sysc_check_active_timer(ddata);
-> +	if (error)
-> +		return error;
-> +
->   	error = sysc_get_clocks(ddata);
->   	if (error)
->   		return error;
-> diff --git a/drivers/clocksource/timer-ti-dm-systimer.c b/drivers/clocksource/timer-ti-dm-systimer.c
-> --- a/drivers/clocksource/timer-ti-dm-systimer.c
-> +++ b/drivers/clocksource/timer-ti-dm-systimer.c
-> @@ -19,7 +19,7 @@
->   /* For type1, set SYSC_OMAP2_CLOCKACTIVITY for fck off on idle, l4 clock on */
->   #define DMTIMER_TYPE1_ENABLE	((1 << 9) | (SYSC_IDLE_SMART << 3) | \
->   				 SYSC_OMAP2_ENAWAKEUP | SYSC_OMAP2_AUTOIDLE)
-> -
-> +#define DMTIMER_TYPE1_DISABLE	(SYSC_OMAP2_SOFTRESET | SYSC_OMAP2_AUTOIDLE)
->   #define DMTIMER_TYPE2_ENABLE	(SYSC_IDLE_SMART_WKUP << 2)
->   #define DMTIMER_RESET_WAIT	100000
->   
-> @@ -44,6 +44,8 @@ struct dmtimer_systimer {
->   	u8 ctrl;
->   	u8 wakeup;
->   	u8 ifctrl;
-> +	struct clk *fck;
-> +	struct clk *ick;
->   	unsigned long rate;
->   };
->   
-> @@ -298,16 +300,20 @@ static void __init dmtimer_systimer_select_best(void)
->   }
->   
->   /* Interface clocks are only available on some SoCs variants */
-> -static int __init dmtimer_systimer_init_clock(struct device_node *np,
-> +static int __init dmtimer_systimer_init_clock(struct dmtimer_systimer *t,
-> +					      struct device_node *np,
->   					      const char *name,
->   					      unsigned long *rate)
->   {
->   	struct clk *clock;
->   	unsigned long r;
-> +	bool is_ick = false;
->   	int error;
->   
-> +	is_ick = !strncmp(name, "ick", 3);
-> +
->   	clock = of_clk_get_by_name(np, name);
-> -	if ((PTR_ERR(clock) == -EINVAL) && !strncmp(name, "ick", 3))
-> +	if ((PTR_ERR(clock) == -EINVAL) && is_ick)
->   		return 0;
->   	else if (IS_ERR(clock))
->   		return PTR_ERR(clock);
-> @@ -320,6 +326,11 @@ static int __init dmtimer_systimer_init_clock(struct device_node *np,
->   	if (!r)
->   		return -ENODEV;
->   
-> +	if (is_ick)
-> +		t->ick = clock;
-> +	else
-> +		t->fck = clock;
-> +
->   	*rate = r;
->   
->   	return 0;
-> @@ -339,7 +350,10 @@ static void dmtimer_systimer_enable(struct dmtimer_systimer *t)
->   
->   static void dmtimer_systimer_disable(struct dmtimer_systimer *t)
->   {
-> -	writel_relaxed(0, t->base + t->sysc);
-> +	if (!dmtimer_systimer_revision1(t))
-> +		return;
-> +
-> +	writel_relaxed(DMTIMER_TYPE1_DISABLE, t->base + t->sysc);
->   }
->   
->   static int __init dmtimer_systimer_setup(struct device_node *np,
-> @@ -366,13 +380,13 @@ static int __init dmtimer_systimer_setup(struct device_node *np,
->   		pr_err("%s: clock source init failed: %i\n", __func__, error);
->   
->   	/* For ti-sysc, we have timer clocks at the parent module level */
-> -	error = dmtimer_systimer_init_clock(np->parent, "fck", &rate);
-> +	error = dmtimer_systimer_init_clock(t, np->parent, "fck", &rate);
->   	if (error)
->   		goto err_unmap;
->   
->   	t->rate = rate;
->   
-> -	error = dmtimer_systimer_init_clock(np->parent, "ick", &rate);
-> +	error = dmtimer_systimer_init_clock(t, np->parent, "ick", &rate);
->   	if (error)
->   		goto err_unmap;
->   
-> @@ -496,12 +510,18 @@ static void omap_clockevent_idle(struct clock_event_device *evt)
->   	struct dmtimer_systimer *t = &clkevt->t;
->   
->   	dmtimer_systimer_disable(t);
-> +	clk_disable(t->fck);
->   }
->   
->   static void omap_clockevent_unidle(struct clock_event_device *evt)
->   {
->   	struct dmtimer_clockevent *clkevt = to_dmtimer_clockevent(evt);
->   	struct dmtimer_systimer *t = &clkevt->t;
-> +	int error;
-> +
-> +	error = clk_enable(t->fck);
-> +	if (error)
-> +		pr_err("could not enable timer fck on resume: %i\n", error);
->   
->   	dmtimer_systimer_enable(t);
->   	writel_relaxed(OMAP_TIMER_INT_OVERFLOW, t->base + t->irq_ena);
-> @@ -570,8 +590,8 @@ static int __init dmtimer_clockevent_init(struct device_node *np)
->   					3, /* Timer internal resynch latency */
->   					0xffffffff);
->   
-> -	if (of_device_is_compatible(np, "ti,am33xx") ||
-> -	    of_device_is_compatible(np, "ti,am43")) {
-> +	if (of_machine_is_compatible("ti,am33xx") ||
-> +	    of_machine_is_compatible("ti,am43")) {
->   		dev->suspend = omap_clockevent_idle;
->   		dev->resume = omap_clockevent_unidle;
->   	}
-> @@ -616,12 +636,18 @@ static void dmtimer_clocksource_suspend(struct clocksource *cs)
->   
->   	clksrc->loadval = readl_relaxed(t->base + t->counter);
->   	dmtimer_systimer_disable(t);
-> +	clk_disable(t->fck);
->   }
->   
->   static void dmtimer_clocksource_resume(struct clocksource *cs)
->   {
->   	struct dmtimer_clocksource *clksrc = to_dmtimer_clocksource(cs);
->   	struct dmtimer_systimer *t = &clksrc->t;
-> +	int error;
-> +
-> +	error = clk_enable(t->fck);
-> +	if (error)
-> +		pr_err("could not enable timer fck on resume: %i\n", error);
->   
->   	dmtimer_systimer_enable(t);
->   	writel_relaxed(clksrc->loadval, t->base + t->counter);
-> @@ -653,8 +679,8 @@ static int __init dmtimer_clocksource_init(struct device_node *np)
->   	dev->mask = CLOCKSOURCE_MASK(32);
->   	dev->flags = CLOCK_SOURCE_IS_CONTINUOUS;
->   
-> -	if (of_device_is_compatible(np, "ti,am33xx") ||
-> -	    of_device_is_compatible(np, "ti,am43")) {
-> +	/* Unlike for clockevent, legacy code sets suspend only for am4 */
-> +	if (of_machine_is_compatible("ti,am43")) {
->   		dev->suspend = dmtimer_clocksource_suspend;
->   		dev->resume = dmtimer_clocksource_resume;
->   	}
-> 
+Gr{oetje,eeting}s,
 
-It might be better to use SOC_BUS infra here, which is available on OMAP platforms by default,
-instead if DT. What do you think?
+                        Geert
 
 -- 
-Best regards,
-grygorii
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
