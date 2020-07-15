@@ -2,195 +2,160 @@ Return-Path: <SRS0=kup7=A2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D177C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 16:36:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1E6BC433E4
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 16:36:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 00F5020658
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 16:36:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 89EE620658
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 16:36:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="izvgTdok"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726070AbgGOQgc (ORCPT
+        id S1726431AbgGOQg4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 12:36:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42930 "EHLO
+        Wed, 15 Jul 2020 12:36:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43014 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725792AbgGOQgb (ORCPT
+        with ESMTP id S1725838AbgGOQgy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 12:36:31 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 971D0C061755
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 09:36:31 -0700 (PDT)
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1jvkOQ-0001Gr-Qt; Wed, 15 Jul 2020 18:36:26 +0200
-Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1jvkOK-0000PJ-M9; Wed, 15 Jul 2020 18:36:20 +0200
-Date:   Wed, 15 Jul 2020 18:36:20 +0200
-From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To:     Michael Walle <michael@walle.cc>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org,
-        linux-pwm@vger.kernel.org, linux-watchdog@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Lee Jones <lee.jones@linaro.org>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: Re: [PATCH v5 07/13] pwm: add support for sl28cpld PWM controller
-Message-ID: <20200715163620.xhi24mct5b64qpyp@pengutronix.de>
-References: <20200706175353.16404-1-michael@walle.cc>
- <20200706175353.16404-8-michael@walle.cc>
- <20200709085006.b54ype3p4yu64upl@pengutronix.de>
- <72858253a9094074e9c8cd7a4e1db09f@walle.cc>
- <20200713084750.qj4hquzd6uz6y526@pengutronix.de>
- <c0594c34c712ce26b3936d42c92d2361@walle.cc>
- <20200714160856.rjqi7lv63geil3hm@pengutronix.de>
- <eedceb44cba9b54e0634f0e8e4f96f70@walle.cc>
+        Wed, 15 Jul 2020 12:36:54 -0400
+Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 19A39C061755
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 09:36:54 -0700 (PDT)
+Received: by mail-lj1-x241.google.com with SMTP id h22so3281319lji.9
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 09:36:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=eCQSS5Z/XAuJJ0ObjR5nRfl8x7vpuq0gBBiMlc5n388=;
+        b=izvgTdokwsQbPkEHKbGYg+vgL3PLbT710ndTtF+lw0QVNhZPDQQjkr8aN4juyq1ITY
+         yQaBTbw4G262maEKv7mI6zKBmKapyRz7IN5soCyNo1VZQX2zOEPVC7DSLWN/JmKEwdA5
+         lI8Oeb9+QNbM582nfIuOILLRmXR0wXZ8dtVMWeD5p77C+CgAO3F/4N3Oz+huCpu3K9Vc
+         OTktHziUeHCrwlIub3z5XnFu/xigyh3HdjfxCrAXVzW9vuSRzKqfZ0DvNEKYGC28/++q
+         gYM+2CZgooNe3NtWog1NoDMOmCYr8FS9mjj8RmfHzJ1TEOktmvCLP6r3NgZXZhU/gB35
+         sxGQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=eCQSS5Z/XAuJJ0ObjR5nRfl8x7vpuq0gBBiMlc5n388=;
+        b=CGMkqam7IlSaaTPsyYRlQuX6Nu1h6RFdMzkINVsc/KHvU7KNSM7LUl3r0SnZwjrzrZ
+         rTfR4h3+Nxa4l8s6w1X894QQZfK2Ja0mo5wOdQcw/0bCFZh5VZ+ivCMIlaIjQCByUcNX
+         5FVC4arojQCPTnlPW7YOUi3LbTkeAvI1BLmyEr3zjlWAiUYc9Y8DHlRAUa9HqTr5cayg
+         6RWjoZuq5dESMhKTCYwyl+D4J+NkkOzvvXIGPXBQNRUeE+MUkJj7pmVN+b8LSBp7Uyf5
+         vx/qlywy7mmvTHkq5F8yP7hczSPEcAi80BP000zwlh2obj61YiIchS2enxbmmKECbj/Z
+         KAMw==
+X-Gm-Message-State: AOAM533zeiwN0sc/MD32k1ZK36ymG+rjWberxbxVrFHtqMebH6Pfjxeg
+        /Bzz8EQaPRtWvwouLmEAziZlACZ9Vw9uAZgVjDehtQ==
+X-Google-Smtp-Source: ABdhPJxkvCC8/QXGjTsKModznq9Sitpzv8TpZrU2xepInx6yXDiYQJ55n1/Rgdh/Jkbnh3Eg86yNuwgRgkS6wU5FZEc=
+X-Received: by 2002:a2e:9585:: with SMTP id w5mr24703ljh.58.1594831012200;
+ Wed, 15 Jul 2020 09:36:52 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="43ja544hwta6zjxk"
-Content-Disposition: inline
-In-Reply-To: <eedceb44cba9b54e0634f0e8e4f96f70@walle.cc>
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+References: <1585649077-10896-1-git-send-email-laoar.shao@gmail.com>
+In-Reply-To: <1585649077-10896-1-git-send-email-laoar.shao@gmail.com>
+From:   Shakeel Butt <shakeelb@google.com>
+Date:   Wed, 15 Jul 2020 09:36:41 -0700
+Message-ID: <CALvZod6Yn=_fYEM+xN3a+4W2e5CCLkvMXZg_txD3j+dZieX-CQ@mail.gmail.com>
+Subject: Re: [PATCH v2 0/2] psi: enhance psi with the help of ebpf
+To:     Yafang Shao <laoar.shao@gmail.com>
+Cc:     Johannes Weiner <hannes@cmpxchg.org>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linux MM <linux-mm@kvack.org>,
+        "open list:BLOCK LAYER" <linux-block@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Yafang,
 
---43ja544hwta6zjxk
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Tue, Mar 31, 2020 at 3:05 AM Yafang Shao <laoar.shao@gmail.com> wrote:
+>
+> PSI gives us a powerful way to anaylze memory pressure issue, but we can
+> make it more powerful with the help of tracepoint, kprobe, ebpf and etc.
+> Especially with ebpf we can flexiblely get more details of the memory
+> pressure.
+>
+> In orderc to achieve this goal, a new parameter is added into
+> psi_memstall_{enter, leave}, which indicates the specific type of a
+> memstall. There're totally ten memstalls by now,
+>         MEMSTALL_KSWAPD
+>         MEMSTALL_RECLAIM_DIRECT
+>         MEMSTALL_RECLAIM_MEMCG
+>         MEMSTALL_RECLAIM_HIGH
+>         MEMSTALL_KCOMPACTD
+>         MEMSTALL_COMPACT
+>         MEMSTALL_WORKINGSET_REFAULT
+>         MEMSTALL_WORKINGSET_THRASH
+>         MEMSTALL_MEMDELAY
+>         MEMSTALL_SWAPIO
+> With the help of kprobe or tracepoint to trace this newly added agument we
+> can know which type of memstall it is and then do corresponding
+> improvement. I can also help us to analyze the latency spike caused by
+> memory pressure.
+>
+> But note that we can't use it to build memory pressure for a specific type
+> of memstall, e.g. memcg pressure, compaction pressure and etc, because it
+> doesn't implement various types of task->in_memstall, e.g.
+> task->in_memcgstall, task->in_compactionstall and etc.
+>
+> Although there're already some tracepoints can help us to achieve this
+> goal, e.g.
+>         vmscan:mm_vmscan_kswapd_{wake, sleep}
+>         vmscan:mm_vmscan_direct_reclaim_{begin, end}
+>         vmscan:mm_vmscan_memcg_reclaim_{begin, end}
+>         /* no tracepoint for memcg high reclaim*/
+>         compcation:mm_compaction_kcompactd_{wake, sleep}
+>         compcation:mm_compaction_begin_{begin, end}
+>         /* no tracepoint for workingset refault */
+>         /* no tracepoint for workingset thrashing */
+>         /* no tracepoint for use memdelay */
+>         /* no tracepoint for swapio */
+> but psi_memstall_{enter, leave} gives us a unified entrance for all
+> types of memstall and we don't need to add many begin and end tracepoints
+> that hasn't been implemented yet.
+>
+> Patch #2 gives us an example of how to use it with ebpf. With the help of
+> ebpf we can trace a specific task, application, container and etc. It also
+> can help us to analyze the spread of latencies and whether they were
+> clustered at a point of time or spread out over long periods of time.
+>
+> To summarize, with the pressure data in /proc/pressure/memroy we know that
+> the system is under memory pressure, and then with the newly added tracing
+> facility in this patchset we can get the reason of this memory pressure,
+> and then thinks about how to make the change.
+> The workflow can be illustrated as bellow.
+>
+>                    REASON         ACTION
+>                  | compcation   | improve compcation    |
+>                  | vmscan       | improve vmscan        |
+> Memory pressure -| workingset   | improve workingset    |
+>                  | etc          | ...                   |
+>
 
-Hello Michael,
+I have not looked at the patch series in detail but I wanted to get
+your thoughts if it is possible to achieve what I am trying to do with
+this patch series.
 
-On Tue, Jul 14, 2020 at 11:09:28PM +0200, Michael Walle wrote:
-> > My wishlist (just as it comes to my mind, so no guarantee of
-> > completeness):
-> >=20
-> >  - can do 0% duty cycle for all supported period lengths
-> >  - can do 100% duty cycle for all supported period lengths
-> >  - supports both polarities
-> >  - supports immediate change of configuration and after completion of
-> >    the currently running period
-> >  - atomic update (i.e. if you go from configuration A to configuration B
-> >    the hardware guarantees to only emit periods of type A and then type
-> >    B. (Depending on the item above, the last A period might be cut off.)
->=20
-> We actually discussed this, because the implementation would be easier. B=
-ut
-> if the change takes place immediately you might end up with a longer duty
-> cycle. Assume the PWM runs at 80% duty cycle and starts with the on-perio=
-d.
-> If you now change that to 50% you might end up with one successive duty
-> cycle of "130%". Eg. the 80% of the old and right after that you switch to
-> the new 50% and then you'd have a high output which corresponds to a 130%
-> cycle. I don't know if that is acceptable for all applications.
+At the moment I am only interested in global reclaim and I wanted to
+enable alerts like "alert if there is process stuck in global reclaim
+for x seconds in last y seconds window" or "alert if all the processes
+are stuck in global reclaim for some z seconds".
 
-I thought this is a "change takes place immediately" implementation?! So
-these problems are actually real here. (And this not happening is exactly
-my wish here. Is there a mis-understanding?)
+I see that using this series I can identify global reclaim but I am
+wondering if alert or notifications are possible. Android is using psi
+monitors for such alerts but it does not use cgroups, so, most of the
+memstalls are related to global reclaim stall. For cgroup environment,
+do we need for add support to psi monitor similar to this patch
+series?
 
-> >  - emits an irq when configuration changes
->=20
-> Why would you need the interrupt?
-
-To know that the new setting is active. Currently Thierry's ideal PWM
-implementation blocks in pwm_apply_state() until the new setting is
-active. So some signaling is nice.=20
-
-> > > > If you change only cycle but not mode, does the hardware complete t=
-he
-> > > > currently running period?
-> > >=20
-> > > No it does not.
-> >=20
-> > Please document this as a Limitation.
->=20
-> I've discussed this internally, for now its a limitation. In the worst
-> case you'd do one 100% duty cycle. Maybe we can fix the hardware. I
-> acknowledge that this is a severe limitation, esp. if you use the PWM
-> for controlling stuff (for now its only LCD backlight.. so thats ok).
-
-That happens if you reduce the duty cycle from A to B and the counter is
-already bigger than B but smaller than A, right? The fix would be to
-compare for counter >=3D match instead of counter =3D match. (Which then
-would result in a period with a duty cycle bigger than B but smaller
-than A. Also not ideal, but probably better.)
-
-> > > > What about disable()?
-> > >=20
-> > > Mhh well, it would do one 100% cycle.. mhh ;) Lets see if there we can
-> > > fix that (in hardware), not much we can do in the driver here. We are
-> > > _very_ constraint in size, therefore all that little edge cases fall
-> > > off
-> > > the table.
-> >=20
-> > You're saying that on disable the hardware emits a constant high level
-> > for one cycle? I hope not ...
->=20
-> Mh, I was mistaken, disabling the PWM will turn it off immediately, but
-
-And does turn off mean, the output gets inactive?
-If so you might also disable the hardware if a 0% duty cycle is
-configured assuming this saves some energy without modifying the
-resulting wave form.
-
-> one 100% duty cycle may happen if you change from a higher to a lower
-> duty cycle setting. See above.
->=20
-> > I never programmed a CPLD to emulate a hardware PWM, but I wonder if
-> > these are really edge cases that increase the size of the binary?!
->=20
-> At the moment there is only one 8bit register which stores the value
-> which is used for matching. If you want to change that setting after
-> a whole cycle, you'd use another 8bit register to cache the new value.
-> So this would at least needs 8 additional flip-flops. This doesn't
-> sound much, but we are already near 100% usage of the CPLD. So its
-> hard to convince people why this is really necessary.
-
-OK. (Maybe there is enough space to allow implementing 100% for mode 0?)
-
-Best regards
-Uwe
-
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
-
---43ja544hwta6zjxk
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAl8PMIEACgkQwfwUeK3K
-7AmkoQf/Xsa5eWznePZ+LGv5Ny4n0jnjIKQDxCWubAooelGqLEF0EsNjO6hA2ShJ
-0/Bkwa4V22BFbXS2s4Ai4KcM6kEqxytEADlIAVvcfDxTq6aFqYrrNt+gYTLyFJvr
-7WkzW1Jh1FZpqTQck7bUAyOd9VA9Y8aEwnqDnZbUrEctYnhylTz0ogj6RLw2EZqL
-lT/EWHA461DnNoJ19v1QNBTolcDgOBMTZuk8bUBtYAJhf3Zf4m+YOYxTiOgNGOaQ
-yKB5hXTsyURWKJhf0+0pDtWry6Dl2B6xCLa/rLbfkAMx00kaKGRCSd2o7bw+mCj5
-71RVew6wqS5+tx2hi20V582pM4qAnA==
-=G5tl
------END PGP SIGNATURE-----
-
---43ja544hwta6zjxk--
+thanks,
+Shakeel
