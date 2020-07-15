@@ -2,96 +2,138 @@ Return-Path: <SRS0=kup7=A2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8C31C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 08:35:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90966C433FE
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 08:35:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C7C77206F4
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 08:35:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6DA402065D
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 08:35:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="rIuuNw8p"
+	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="Gq7wo52x"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730226AbgGOIf3 (ORCPT
+        id S1730207AbgGOIfR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 04:35:29 -0400
-Received: from mail29.static.mailgun.info ([104.130.122.29]:57043 "EHLO
-        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730210AbgGOIf1 (ORCPT
+        Wed, 15 Jul 2020 04:35:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53202 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729199AbgGOIfQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 04:35:27 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1594802126; h=Date: Message-Id: Cc: To: References:
- In-Reply-To: From: Subject: Content-Transfer-Encoding: MIME-Version:
- Content-Type: Sender; bh=h+ddvCJz2+eIJsGbCmIQ+4rTo2OVcXt1uczscOrvqEg=;
- b=rIuuNw8pHzgtoh4zaarJ1vqmjClMdNeSperZI1Eq7M0MJOyJG1zd/EXV3dsyHsd5ZArf8DG7
- XSIdUAC8fhGj+ZjR33ShNlpK8Jsa4DA8NWQQY7DCZZcuVJNOif+2KmxcVIqMF28tuIlmR4nU
- n9N0SxclSikbP6lPY9/G/woFFvs=
-X-Mailgun-Sending-Ip: 104.130.122.29
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n14.prod.us-west-2.postgun.com with SMTP id
- 5f0ebfb7b35196d59d30e7ae (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Wed, 15 Jul 2020 08:35:03
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id E84A2C433B1; Wed, 15 Jul 2020 08:35:02 +0000 (UTC)
-Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: kvalo)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id ED8CBC433CB;
-        Wed, 15 Jul 2020 08:34:57 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org ED8CBC433CB
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
-Content-Type: text/plain; charset="utf-8"
+        Wed, 15 Jul 2020 04:35:16 -0400
+Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 34BB3C061755
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 01:35:16 -0700 (PDT)
+Received: by mail-pf1-x444.google.com with SMTP id m9so1796903pfh.0
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 01:35:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=amarulasolutions.com; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=WPolAUEN8R+26Nb1p0YR+16g+IcA7gsrUiiI7xSTFn8=;
+        b=Gq7wo52xCqehQ6QK/f2liMmmxxUT5CSK8hJv2qgPncNQnTQn3pGDoSbccnMYQPC3Ml
+         fUaTM8lUFNIsaA/w4hoWS0GxLPNzSTDRuGYwsvh+G5WVXWKoQ+aWaAARX8UUMNAzxr3t
+         nUIKNkVrkGhszsESFqPHATprCHgotgLFyLTYA=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=WPolAUEN8R+26Nb1p0YR+16g+IcA7gsrUiiI7xSTFn8=;
+        b=tIvIcyGgI4jPx/ZwZh/l3C7KZy9PQBhMncAqsOcgNlVx40Y9wFzAJow74+CZ1awhTh
+         79QXnZAOM7OHvjRuwqQgSNW6EdU0glTHqOVO7GauDXbYf2Oz+eTM5LUot9QXi0VWXPJU
+         l4mjJbEyw20iNBNs2RJtxFLMC1KxZYBe5vucY1rYfACOH1Ge7yah5OD3N1BPdilc5oh+
+         ssMRFb1C6T9NOhE8y0vgN8x2oz4qVEHcn1/u4eDSoW0TT+pf026nb33e5khsMox34Ka+
+         x4UHysRZBOuApN5jz1fRGk3Sayil/ZRk1UDCUnwASQ+OKr5I7I+INH+auaY3lpS+b75g
+         6q8A==
+X-Gm-Message-State: AOAM531I2SLuk4Mj9dFcMY9zWCGwOkpO2wCOhOM6krLRKDejsOT23kyg
+        cQgDyDtQ6igaOQHVWkFP+m5b3g==
+X-Google-Smtp-Source: ABdhPJyYzrJs37beWQwtGNYJoh/xqyO8utCUQ58r7LA3J+ThvdUHJeGggZl5mk14AlpcbBbfuvbXNw==
+X-Received: by 2002:a63:c947:: with SMTP id y7mr6972752pgg.357.1594802115768;
+        Wed, 15 Jul 2020 01:35:15 -0700 (PDT)
+Received: from localhost.localdomain ([2405:201:c809:c7d5:9887:56a8:c916:cfdb])
+        by smtp.gmail.com with ESMTPSA id m92sm1467584pje.13.2020.07.15.01.35.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 15 Jul 2020 01:35:14 -0700 (PDT)
+From:   Jagan Teki <jagan@amarulasolutions.com>
+To:     Heiko Stuebner <heiko@sntech.de>, Rob Herring <robh+dt@kernel.org>
+Cc:     Suniel Mahesh <sunil@amarulasolutions.com>,
+        Michael Trimarchi <michael@amarulasolutions.com>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        linux-amarula <linux-amarula@amarulasolutions.com>,
+        Jagan Teki <jagan@amarulasolutions.com>
+Subject: [PATCH v6 7/7] ARM: dts: rockchip: Add Radxa Rock Pi N8 initial support
+Date:   Wed, 15 Jul 2020 14:04:18 +0530
+Message-Id: <20200715083418.112003-8-jagan@amarulasolutions.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200715083418.112003-1-jagan@amarulasolutions.com>
+References: <20200715083418.112003-1-jagan@amarulasolutions.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: Re: [PATCH] wlcore: mesh: handle failure case of pm_runtime_get_sync
-From:   Kalle Valo <kvalo@codeaurora.org>
-In-Reply-To: <20200605032733.49846-1-navid.emamdoost@gmail.com>
-References: <20200605032733.49846-1-navid.emamdoost@gmail.com>
-To:     Navid Emamdoost <navid.emamdoost@gmail.com>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        Johannes Berg <johannes.berg@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Hari Nagalla <hnagalla@gmail.com>,
-        "Jason A. Donenfeld" <Jason@zx2c4.com>,
-        Emmanuel Grumbach <emmanuel.grumbach@intel.com>,
-        Maital Hahn <maitalm@ti.com>,
-        Fuqian Huang <huangfq.daxian@gmail.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Navid Emamdoost <navid.emamdoost@gmail.com>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, emamd001@umn.edu, wu000273@umn.edu,
-        kjlu@umn.edu, smccaman@umn.edu
-User-Agent: pwcli/0.1.0-git (https://github.com/kvalo/pwcli/) Python/3.5.2
-Message-Id: <20200715083502.E84A2C433B1@smtp.codeaurora.org>
-Date:   Wed, 15 Jul 2020 08:35:02 +0000 (UTC)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Navid Emamdoost <navid.emamdoost@gmail.com> wrote:
+Rock Pi N8 is a Rockchip RK3288 based SBC, which has
+- VMARC RK3288 SOM (as per SMARC standard) from Vamrs.
+- Compatible carrier board from Radxa.
 
-> Calling pm_runtime_get_sync increments the counter even in case of
-> failure, causing incorrect ref count. Call pm_runtime_put if
-> pm_runtime_get_sync fails.
-> 
-> Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
+VAMRC RK3288 SOM need to mount on top of radxa dalang
+carrier board for making Rock Pi N8 SBC.
 
-Already fixed by another patch.
+So, add initial support for Rock Pi N8 by including rk3288,
+rk3288 vamrc-som and raxda dalang carrier board dtsi files.
 
-Patch set to Rejected.
+Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
+---
+Changes for v6:
+- none
 
+ arch/arm/boot/dts/Makefile              |  1 +
+ arch/arm/boot/dts/rk3288-rock-pi-n8.dts | 17 +++++++++++++++++
+ 2 files changed, 18 insertions(+)
+ create mode 100644 arch/arm/boot/dts/rk3288-rock-pi-n8.dts
+
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index e8dd99201397..1d1b6ac26394 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -964,6 +964,7 @@ dtb-$(CONFIG_ARCH_ROCKCHIP) += \
+ 	rk3288-popmetal.dtb \
+ 	rk3288-r89.dtb \
+ 	rk3288-rock2-square.dtb \
++	rk3288-rock-pi-n8.dtb \
+ 	rk3288-tinker.dtb \
+ 	rk3288-tinker-s.dtb \
+ 	rk3288-veyron-brain.dtb \
+diff --git a/arch/arm/boot/dts/rk3288-rock-pi-n8.dts b/arch/arm/boot/dts/rk3288-rock-pi-n8.dts
+new file mode 100644
+index 000000000000..b19593021713
+--- /dev/null
++++ b/arch/arm/boot/dts/rk3288-rock-pi-n8.dts
+@@ -0,0 +1,17 @@
++// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
++/*
++ * Copyright (c) 2019 Fuzhou Rockchip Electronics Co., Ltd
++ * Copyright (c) 2019 Vamrs Limited
++ * Copyright (c) 2019 Amarula Solutions(India)
++ */
++
++/dts-v1/;
++#include "rk3288.dtsi"
++#include <arm/rockchip-radxa-dalang-carrier.dtsi>
++#include "rk3288-vmarc-som.dtsi"
++
++/ {
++	model = "Radxa ROCK Pi N8";
++	compatible = "radxa,rockpi-n8", "vamrs,rk3288-vmarc-som",
++		     "rockchip,rk3288";
++};
 -- 
-https://patchwork.kernel.org/patch/11588923/
-
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+2.25.1
 
