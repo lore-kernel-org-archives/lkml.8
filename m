@@ -7,23 +7,23 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC6BFC433E8
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 20:23:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5195AC433E2
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 20:23:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 90A0720672
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 20:23:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 37B3320657
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 20:23:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727907AbgGOUXM (ORCPT
+        id S1727815AbgGOUXA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 16:23:12 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:37128 "EHLO
+        Wed, 15 Jul 2020 16:23:00 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:37100 "EHLO
         bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727828AbgGOUXK (ORCPT
+        with ESMTP id S1726370AbgGOUW7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 16:23:10 -0400
+        Wed, 15 Jul 2020 16:22:59 -0400
 Received: from [127.0.0.1] (localhost [127.0.0.1])
         (Authenticated sender: ezequiel)
-        with ESMTPSA id 102692A5175
+        with ESMTPSA id 8B7842A5182
 From:   Ezequiel Garcia <ezequiel@collabora.com>
 To:     linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
 Cc:     Tomasz Figa <tfiga@chromium.org>, kernel@collabora.com,
@@ -35,10 +35,11 @@ Cc:     Tomasz Figa <tfiga@chromium.org>, kernel@collabora.com,
         Philipp Zabel <p.zabel@pengutronix.de>,
         Maxime Ripard <mripard@kernel.org>,
         Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
         Ezequiel Garcia <ezequiel@collabora.com>
-Subject: [PATCH 03/10] media: uapi: h264: Split prediction weight parameters
-Date:   Wed, 15 Jul 2020 17:22:26 -0300
-Message-Id: <20200715202233.185680-4-ezequiel@collabora.com>
+Subject: [PATCH 01/10] media: uapi: h264: Update reference lists
+Date:   Wed, 15 Jul 2020 17:22:24 -0300
+Message-Id: <20200715202233.185680-2-ezequiel@collabora.com>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200715202233.185680-1-ezequiel@collabora.com>
 References: <20200715202233.185680-1-ezequiel@collabora.com>
@@ -49,167 +50,159 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The prediction weight parameters are only required under
-certain conditions, which depend on slice header parameters.
+From: Jernej Skrabec <jernej.skrabec@siol.net>
 
-The slice header syntax specifies that the prediction
-weight table is present if:
+When dealing with with interlaced frames, reference lists must tell if
+each particular reference is meant for top or bottom field. This info
+is currently not provided at all in the H264 related controls.
 
-((weighted_pred_flag && (slice_type == P || slice_type == SP)) || \
-(weighted_bipred_idc == 1 && slice_type == B))
+Make reference lists hold a structure which will also hold flags along
+index into DPB array. Flags will tell if reference is meant for top or
+bottom field.
 
-Given its size, it makes sense to move this table to its control,
-so applications can avoid passing it if the slice doesn't specify it.
+Currently the only user of these lists is Cedrus which is just compile
+fixed here. Actual usage of newly introduced flags will come in
+following commit.
 
-Before this change struct v4l2_ctrl_h264_slice_params was 960 bytes.
-With this change, it's 188 bytes and struct v4l2_ctrl_h264_pred_weight
-is 772 bytes.
-
+Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
+Reviewed-by: Nicolas Dufresne <nicolas.dufresne@collabora.com>
+[Ezequiel: Use a macro for the reference picture list length]
 Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
 ---
- .../userspace-api/media/v4l/ext-ctrls-codec.rst    | 14 +++++++++-----
- drivers/media/v4l2-core/v4l2-ctrls.c               |  6 ++++++
- drivers/staging/media/sunxi/cedrus/cedrus.h        |  1 +
- drivers/staging/media/sunxi/cedrus/cedrus_dec.c    |  2 ++
- drivers/staging/media/sunxi/cedrus/cedrus_h264.c   |  6 ++----
- include/media/h264-ctrls.h                         |  5 +++--
- 6 files changed, 23 insertions(+), 11 deletions(-)
+ .../media/v4l/ext-ctrls-codec.rst             | 40 ++++++++++++++++++-
+ .../staging/media/sunxi/cedrus/cedrus_h264.c  |  6 +--
+ include/media/h264-ctrls.h                    | 20 +++++++---
+ 3 files changed, 55 insertions(+), 11 deletions(-)
 
 diff --git a/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst b/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst
-index 16bfc98ab2f6..d1695ae96700 100644
+index d0d506a444b1..c2e17c02f77e 100644
 --- a/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst
 +++ b/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst
-@@ -1879,18 +1879,22 @@ enum v4l2_mpeg_video_h264_hierarchical_coding_type -
-       - 0x00000008
+@@ -1843,10 +1843,10 @@ enum v4l2_mpeg_video_h264_hierarchical_coding_type -
+     * - __u32
+       - ``slice_group_change_cycle``
+       -
+-    * - __u8
++    * - struct :c:type:`v4l2_h264_reference`
+       - ``ref_pic_list0[32]``
+       - Reference picture list after applying the per-slice modifications
+-    * - __u8
++    * - struct :c:type:`v4l2_h264_reference`
+       - ``ref_pic_list1[32]``
+       - Reference picture list after applying the per-slice modifications
+     * - __u32
+@@ -1926,6 +1926,42 @@ enum v4l2_mpeg_video_h264_hierarchical_coding_type -
+       - ``chroma_offset[32][2]``
        -
  
--``Prediction Weight Table``
--
--    The bitstream parameters are defined according to :ref:`h264`,
-+``V4L2_CID_MPEG_VIDEO_H264_PRED_WEIGHT (struct)``
-+    Prediction weight table defined according to :ref:`h264`,
-     section 7.4.3.2 "Prediction Weight Table Semantics". For further
-     documentation, refer to the above specification, unless there is
-     an explicit comment stating otherwise.
- 
--.. c:type:: v4l2_h264_pred_weight_table
-+    .. note::
++``Picture Reference``
 +
-+       This compound control is not yet part of the public kernel API and
-+       it is expected to change.
++.. c:type:: v4l2_h264_reference
 +
-+.. c:type:: v4l2_ctrl_h264_pred_weight
- 
- .. cssclass:: longtable
- 
--.. flat-table:: struct v4l2_h264_pred_weight_table
-+.. flat-table:: struct v4l2_ctrl_h264_pred_weight
-     :header-rows:  0
-     :stub-columns: 0
-     :widths:       1 1 2
-diff --git a/drivers/media/v4l2-core/v4l2-ctrls.c b/drivers/media/v4l2-core/v4l2-ctrls.c
-index 3f3fbcd60cc6..3a8a23e34c70 100644
---- a/drivers/media/v4l2-core/v4l2-ctrls.c
-+++ b/drivers/media/v4l2-core/v4l2-ctrls.c
-@@ -1412,6 +1412,9 @@ void v4l2_ctrl_fill(u32 id, const char **name, enum v4l2_ctrl_type *type,
- 	case V4L2_CID_MPEG_VIDEO_H264_DECODE_PARAMS:
- 		*type = V4L2_CTRL_TYPE_H264_DECODE_PARAMS;
- 		break;
-+	case V4L2_CID_MPEG_VIDEO_H264_PRED_WEIGHT:
-+		*type = V4L2_CTRL_TYPE_H264_PRED_WEIGHT;
-+		break;
- 	case V4L2_CID_MPEG_VIDEO_VP8_FRAME_HEADER:
- 		*type = V4L2_CTRL_TYPE_VP8_FRAME_HEADER;
- 		break;
-@@ -2553,6 +2556,9 @@ static struct v4l2_ctrl *v4l2_ctrl_new(struct v4l2_ctrl_handler *hdl,
- 	case V4L2_CTRL_TYPE_H264_DECODE_PARAMS:
- 		elem_size = sizeof(struct v4l2_ctrl_h264_decode_params);
- 		break;
-+	case V4L2_CTRL_TYPE_H264_PRED_WEIGHT:
-+		elem_size = sizeof(struct v4l2_ctrl_h264_pred_weight);
-+		break;
- 	case V4L2_CTRL_TYPE_VP8_FRAME_HEADER:
- 		elem_size = sizeof(struct v4l2_ctrl_vp8_frame_header);
- 		break;
-diff --git a/drivers/staging/media/sunxi/cedrus/cedrus.h b/drivers/staging/media/sunxi/cedrus/cedrus.h
-index 96765555ab8a..80a0ecffa384 100644
---- a/drivers/staging/media/sunxi/cedrus/cedrus.h
-+++ b/drivers/staging/media/sunxi/cedrus/cedrus.h
-@@ -62,6 +62,7 @@ struct cedrus_h264_run {
- 	const struct v4l2_ctrl_h264_scaling_matrix	*scaling_matrix;
- 	const struct v4l2_ctrl_h264_slice_params	*slice_params;
- 	const struct v4l2_ctrl_h264_sps			*sps;
-+	const struct v4l2_ctrl_h264_pred_weight		*pred_weight;
- };
- 
- struct cedrus_mpeg2_run {
-diff --git a/drivers/staging/media/sunxi/cedrus/cedrus_dec.c b/drivers/staging/media/sunxi/cedrus/cedrus_dec.c
-index 58c48e4fdfe9..047f773f64f9 100644
---- a/drivers/staging/media/sunxi/cedrus/cedrus_dec.c
-+++ b/drivers/staging/media/sunxi/cedrus/cedrus_dec.c
-@@ -57,6 +57,8 @@ void cedrus_device_run(void *priv)
- 			V4L2_CID_MPEG_VIDEO_H264_SLICE_PARAMS);
- 		run.h264.sps = cedrus_find_control_data(ctx,
- 			V4L2_CID_MPEG_VIDEO_H264_SPS);
-+		run.h264.pred_weight = cedrus_find_control_data(ctx,
-+			V4L2_CID_MPEG_VIDEO_H264_PRED_WEIGHT);
- 		break;
- 
- 	case V4L2_PIX_FMT_HEVC_SLICE:
++.. cssclass:: longtable
++
++.. flat-table:: struct v4l2_h264_reference
++    :header-rows:  0
++    :stub-columns: 0
++    :widths:       1 1 2
++
++    * - __u16
++      - ``flags``
++      - See :ref:`Picture Reference Flags <h264_reference_flags>`
++    * - __u8
++      - ``index``
++      - Index into the :c:type:`v4l2_ctrl_h264_decode_params`.dpb array.
++
++.. _h264_reference_flags:
++
++``Picture Reference Flags``
++
++.. cssclass:: longtable
++
++.. flat-table::
++    :header-rows:  0
++    :stub-columns: 0
++    :widths:       1 1 2
++
++    * - ``V4L2_H264_REFERENCE_FLAG_TOP_FIELD``
++      - 0x00000001
++      -
++    * - ``V4L2_H264_REFERENCE_FLAG_BOTTOM_FIELD``
++      - 0x00000002
++      -
++
+ ``V4L2_CID_MPEG_VIDEO_H264_DECODE_PARAMS (struct)``
+     Specifies the decode parameters (as extracted from the bitstream)
+     for the associated H264 slice data. This includes the necessary
 diff --git a/drivers/staging/media/sunxi/cedrus/cedrus_h264.c b/drivers/staging/media/sunxi/cedrus/cedrus_h264.c
-index cce527bbdf86..614b1b496e40 100644
+index 54ee2aa423e2..cce527bbdf86 100644
 --- a/drivers/staging/media/sunxi/cedrus/cedrus_h264.c
 +++ b/drivers/staging/media/sunxi/cedrus/cedrus_h264.c
-@@ -256,10 +256,8 @@ static void cedrus_write_scaling_lists(struct cedrus_ctx *ctx,
- static void cedrus_write_pred_weight_table(struct cedrus_ctx *ctx,
- 					   struct cedrus_run *run)
- {
--	const struct v4l2_ctrl_h264_slice_params *slice =
--		run->h264.slice_params;
--	const struct v4l2_h264_pred_weight_table *pred_weight =
--		&slice->pred_weight_table;
-+	const struct v4l2_ctrl_h264_pred_weight *pred_weight =
-+		run->h264.pred_weight;
- 	struct cedrus_dev *dev = ctx->dev;
- 	int i, j, k;
+@@ -166,8 +166,8 @@ static void cedrus_write_frame_list(struct cedrus_ctx *ctx,
  
+ static void _cedrus_write_ref_list(struct cedrus_ctx *ctx,
+ 				   struct cedrus_run *run,
+-				   const u8 *ref_list, u8 num_ref,
+-				   enum cedrus_h264_sram_off sram)
++				   const struct v4l2_h264_reference *ref_list,
++				   u8 num_ref, enum cedrus_h264_sram_off sram)
+ {
+ 	const struct v4l2_ctrl_h264_decode_params *decode = run->h264.decode_params;
+ 	struct vb2_queue *cap_q;
+@@ -188,7 +188,7 @@ static void _cedrus_write_ref_list(struct cedrus_ctx *ctx,
+ 		int buf_idx;
+ 		u8 dpb_idx;
+ 
+-		dpb_idx = ref_list[i];
++		dpb_idx = ref_list[i].index;
+ 		dpb = &decode->dpb[dpb_idx];
+ 
+ 		if (!(dpb->flags & V4L2_H264_DPB_ENTRY_FLAG_ACTIVE))
 diff --git a/include/media/h264-ctrls.h b/include/media/h264-ctrls.h
-index bca4a9887e7e..da2ffb77b491 100644
+index 080fd1293c42..bca4a9887e7e 100644
 --- a/include/media/h264-ctrls.h
 +++ b/include/media/h264-ctrls.h
-@@ -36,6 +36,7 @@
- #define V4L2_CID_MPEG_VIDEO_H264_DECODE_PARAMS	(V4L2_CID_MPEG_BASE+1004)
- #define V4L2_CID_MPEG_VIDEO_H264_DECODE_MODE	(V4L2_CID_MPEG_BASE+1005)
- #define V4L2_CID_MPEG_VIDEO_H264_START_CODE	(V4L2_CID_MPEG_BASE+1006)
-+#define V4L2_CID_MPEG_VIDEO_H264_PRED_WEIGHT	(V4L2_CID_MPEG_BASE+1007)
+@@ -19,6 +19,8 @@
+  */
+ #define V4L2_H264_NUM_DPB_ENTRIES 16
  
- /* enum v4l2_ctrl_type type values */
- #define V4L2_CTRL_TYPE_H264_SPS			0x0110
-@@ -43,6 +44,7 @@
- #define V4L2_CTRL_TYPE_H264_SCALING_MATRIX	0x0112
- #define V4L2_CTRL_TYPE_H264_SLICE_PARAMS	0x0113
- #define V4L2_CTRL_TYPE_H264_DECODE_PARAMS	0x0114
-+#define V4L2_CTRL_TYPE_H264_PRED_WEIGHT		0x0115
++#define V4L2_H264_REF_LIST_LEN (2 * V4L2_H264_NUM_DPB_ENTRIES)
++
+ /* Our pixel format isn't stable at the moment */
+ #define V4L2_PIX_FMT_H264_SLICE v4l2_fourcc('S', '2', '6', '4') /* H264 parsed slices */
  
- enum v4l2_mpeg_video_h264_decode_mode {
- 	V4L2_MPEG_VIDEO_H264_DECODE_MODE_SLICE_BASED,
-@@ -125,7 +127,7 @@ struct v4l2_h264_weight_factors {
- 	__s16 chroma_offset[32][2];
+@@ -140,6 +142,16 @@ struct v4l2_h264_pred_weight_table {
+ #define V4L2_H264_SLICE_FLAG_DIRECT_SPATIAL_MV_PRED	0x04
+ #define V4L2_H264_SLICE_FLAG_SP_FOR_SWITCH		0x08
+ 
++#define V4L2_H264_REFERENCE_FLAG_TOP_FIELD		0x01
++#define V4L2_H264_REFERENCE_FLAG_BOTTOM_FIELD		0x02
++
++struct v4l2_h264_reference {
++	__u8 flags;
++
++	/* Index into v4l2_ctrl_h264_decode_params.dpb[] */
++	__u8 index;
++};
++
+ struct v4l2_ctrl_h264_slice_params {
+ 	/* Size in bytes, including header */
+ 	__u32 size;
+@@ -178,12 +190,8 @@ struct v4l2_ctrl_h264_slice_params {
+ 	__u8 num_ref_idx_l1_active_minus1;
+ 	__u32 slice_group_change_cycle;
+ 
+-	/*
+-	 * Entries on each list are indices into
+-	 * v4l2_ctrl_h264_decode_params.dpb[].
+-	 */
+-	__u8 ref_pic_list0[32];
+-	__u8 ref_pic_list1[32];
++	struct v4l2_h264_reference ref_pic_list0[V4L2_H264_REF_LIST_LEN];
++	struct v4l2_h264_reference ref_pic_list1[V4L2_H264_REF_LIST_LEN];
+ 
+ 	__u32 flags;
  };
- 
--struct v4l2_h264_pred_weight_table {
-+struct v4l2_ctrl_h264_pred_weight {
- 	__u16 luma_log2_weight_denom;
- 	__u16 chroma_log2_weight_denom;
- 	struct v4l2_h264_weight_factors weight_factors[2];
-@@ -174,7 +176,6 @@ struct v4l2_ctrl_h264_slice_params {
- 	__s32 delta_pic_order_cnt0;
- 	__s32 delta_pic_order_cnt1;
- 
--	struct v4l2_h264_pred_weight_table pred_weight_table;
- 	/* Size in bits of dec_ref_pic_marking() syntax element. */
- 	__u32 dec_ref_pic_marking_bit_size;
- 	/* Size in bits of pic order count syntax. */
 -- 
 2.27.0
 
