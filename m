@@ -2,265 +2,547 @@ Return-Path: <SRS0=kup7=A2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51EFBC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 12:31:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 521B5C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 12:33:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2593C206E9
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 12:31:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="pA2DMnNn"
+	by mail.kernel.org (Postfix) with ESMTP id 27D532071B
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 12:33:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730885AbgGOMbR (ORCPT
+        id S1730969AbgGOMde (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 08:31:17 -0400
-Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:9678 "EHLO
-        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728461AbgGOMbQ (ORCPT
+        Wed, 15 Jul 2020 08:33:34 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:45772 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726652AbgGOMdd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 08:31:16 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5f0ef6d90000>; Wed, 15 Jul 2020 05:30:17 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Wed, 15 Jul 2020 05:31:15 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Wed, 15 Jul 2020 05:31:15 -0700
-Received: from [10.24.37.103] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 15 Jul
- 2020 12:31:07 +0000
-Subject: Re: [TEGRA194_CPUFREQ PATCH v5 3/4] cpufreq: Add Tegra194 cpufreq
- driver
-To:     Viresh Kumar <viresh.kumar@linaro.org>
-CC:     <rjw@rjwysocki.net>, <catalin.marinas@arm.com>, <will@kernel.org>,
-        <thierry.reding@gmail.com>, <robh+dt@kernel.org>,
-        <mirq-linux@rere.qmqm.pl>, <devicetree@vger.kernel.org>,
-        <jonathanh@nvidia.com>, <talho@nvidia.com>,
-        <linux-pm@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <bbasu@nvidia.com>,
-        <mperttunen@nvidia.com>
-References: <1594649209-29394-1-git-send-email-sumitg@nvidia.com>
- <1594649209-29394-4-git-send-email-sumitg@nvidia.com>
- <20200715111631.o46qgajh56pjkwfo@vireshk-i7>
-From:   Sumit Gupta <sumitg@nvidia.com>
-Message-ID: <f2cbe396-6c55-3e22-84b6-fd93db88fab7@nvidia.com>
-Date:   Wed, 15 Jul 2020 18:01:03 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Wed, 15 Jul 2020 08:33:33 -0400
+Received: from ip5f5af08c.dynamic.kabel-deutschland.de ([95.90.240.140] helo=wittgenstein)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1jvgbE-0004UJ-FS; Wed, 15 Jul 2020 12:33:24 +0000
+Date:   Wed, 15 Jul 2020 14:33:23 +0200
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Florian Weimer <fw@deneb.enyo.de>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        "Paul E . McKenney" <paulmck@linux.ibm.com>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        "H . Peter Anvin" <hpa@zytor.com>, Paul Turner <pjt@google.com>,
+        linux-api@vger.kernel.org, carlos@redhat.com
+Subject: Re: [RFC PATCH 2/4] rseq: Allow extending struct rseq
+Message-ID: <20200715123323.vrmblagnvkdp4pyy@wittgenstein>
+References: <20200714030348.6214-1-mathieu.desnoyers@efficios.com>
+ <20200714030348.6214-3-mathieu.desnoyers@efficios.com>
+ <20200715113849.yy6amhynxya64arv@wittgenstein>
 MIME-Version: 1.0
-In-Reply-To: <20200715111631.o46qgajh56pjkwfo@vireshk-i7>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1594816217; bh=VQDWxbcw8MKnUsRvwe8qTIxaVj+CvfrrW9jG8J1GFd8=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=pA2DMnNnByRrm1aSJm2+u4d+QnShXpHPDhLjcDDyZLf1/X3D4evn4++cN6DmExGu8
-         FgN9INQv++2mJzzoeWVMM0QcZjX/GIFnN/8TcK15ZKjHFCKks/SdsHu1KvR0A8afHh
-         LNquFB0OyV8w5HVwanZNEnyIDQUDEyiNy+NgX9UIaeCkml7+nxTg/Q7rZnq4grJtdv
-         aM5AGhzxIrVswIEA4eZhunPnQFWlh9Ryz9KppVW4UzjuY1b4r8KixZmw+ZVPDnKSus
-         lW0mOLR26vlG7axPq9VxWpcvSa37rjsPhIL6a6jLLIn3akMQINVauoZ/tjLptg7H3U
-         8K+IISsoaqQnw==
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200715113849.yy6amhynxya64arv@wittgenstein>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Thank you for the review,
+On Wed, Jul 15, 2020 at 01:38:51PM +0200, Christian Brauner wrote:
+> On Mon, Jul 13, 2020 at 11:03:46PM -0400, Mathieu Desnoyers wrote:
+> > Add a __rseq_abi.flags "RSEQ_TLS_FLAG_SIZE", which indicates support for
+> > extending struct rseq. This adds two new fields to struct rseq:
+> > user_size and kernel_size.
+> > 
+> > The user_size field allows the size of the __rseq_abi definition (which
+> > can be overridden by symbol interposition either by a preloaded library
+> > or by the application) to be handed over to the kernel at registration.
+> > This registration can be performed by a library, e.g. glibc, which does
+> > not know there is interposition taking place.
+> > 
+> > The kernel_size is populated by the kernel when the "RSEQ_TLS_FLAG_SIZE"
+> > flag is set in __rseq_abi.flags to the minimum between user_size and
+> > the offset of the "end" field of struct rseq as known by the kernel.
+> > This allows user-space to query which fields are effectively populated
+> > by the kernel.
+> > 
+> > A rseq_size field is added to the task struct to keep track of the
+> > "kernel_size" effective for each thread.
+> > 
+> > Signed-off-by: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+> > ---
+> >  include/linux/sched.h     |  4 ++++
+> >  include/uapi/linux/rseq.h | 37 ++++++++++++++++++++++++++++++++--
+> >  kernel/rseq.c             | 42 +++++++++++++++++++++++++++++++++------
+> >  3 files changed, 75 insertions(+), 8 deletions(-)
+> > 
+> > diff --git a/include/linux/sched.h b/include/linux/sched.h
+> > index 692e327d7455..5d61a3197987 100644
+> > --- a/include/linux/sched.h
+> > +++ b/include/linux/sched.h
+> > @@ -1147,6 +1147,7 @@ struct task_struct {
+> >  #ifdef CONFIG_RSEQ
+> >  	struct rseq __user *rseq;
+> >  	u32 rseq_sig;
+> > +	u32 rseq_size;
+> >  	/*
+> >  	 * RmW on rseq_event_mask must be performed atomically
+> >  	 * with respect to preemption.
+> > @@ -1976,10 +1977,12 @@ static inline void rseq_fork(struct task_struct *t, unsigned long clone_flags)
+> >  	if (clone_flags & CLONE_VM) {
+> >  		t->rseq = NULL;
+> >  		t->rseq_sig = 0;
+> > +		t->rseq_size = 0;
+> >  		t->rseq_event_mask = 0;
+> >  	} else {
+> >  		t->rseq = current->rseq;
+> >  		t->rseq_sig = current->rseq_sig;
+> > +		t->rseq_size = current->rseq_size;
+> >  		t->rseq_event_mask = current->rseq_event_mask;
+> >  	}
+> >  }
+> > @@ -1988,6 +1991,7 @@ static inline void rseq_execve(struct task_struct *t)
+> >  {
+> >  	t->rseq = NULL;
+> >  	t->rseq_sig = 0;
+> > +	t->rseq_size = 0;
+> >  	t->rseq_event_mask = 0;
+> >  }
+> >  
+> > diff --git a/include/uapi/linux/rseq.h b/include/uapi/linux/rseq.h
+> > index e11d9df5e564..03c0b5e9a859 100644
+> > --- a/include/uapi/linux/rseq.h
+> > +++ b/include/uapi/linux/rseq.h
+> > @@ -37,6 +37,15 @@ enum rseq_cs_flags {
+> >  		(1U << RSEQ_CS_FLAG_NO_RESTART_ON_MIGRATE_BIT),
+> >  };
+> >  
+> > +enum rseq_tls_flags_bit {
+> > +	/* enum rseq_cs_flags reserves bits 0-2. */
+> > +	RSEQ_TLS_FLAG_SIZE_BIT = 3,
+> > +};
+> > +
+> > +enum rseq_tls_flags {
+> > +	RSEQ_TLS_FLAG_SIZE = (1U << RSEQ_TLS_FLAG_SIZE_BIT),
+> > +};
+> > +
+> >  /* The rseq_len expected by rseq registration is always 32 bytes. */
+> >  enum rseq_len_expected {
+> >  	RSEQ_LEN_EXPECTED = 32,
+> > @@ -133,8 +142,9 @@ struct rseq {
+> >  	 *
+> >  	 * This field should only be updated by the thread which
+> >  	 * registered this data structure. Read by the kernel.
+> > -	 * Mainly used for single-stepping through rseq critical sections
+> > -	 * with debuggers.
+> > +	 *
+> > +	 * The RSEQ_CS flags are mainly used for single-stepping through rseq
+> > +	 * critical sections with debuggers.
+> >  	 *
+> >  	 * - RSEQ_CS_FLAG_NO_RESTART_ON_PREEMPT
+> >  	 *     Inhibit instruction sequence block restart on preemption
+> > @@ -145,8 +155,31 @@ struct rseq {
+> >  	 * - RSEQ_CS_FLAG_NO_RESTART_ON_MIGRATE
+> >  	 *     Inhibit instruction sequence block restart on migration for
+> >  	 *     this thread.
+> > +	 *
+> > +	 * - RSEQ_TLS_FLAG_SIZE
+> > +	 *     Extensible struct rseq ABI. This flag should be statically
+> > +	 *     initialized.
+> >  	 */
+> >  	__u32 flags;
+> > +	/*
+> > +	 * With __rseq_abi.flags RSEQ_TLS_FLAG_SIZE set, user_size should be
+> > +	 * statically initialized to offsetof(struct rseq, end).
+> > +	 */
+> > +	__u16 user_size;
+> > +	/*
+> > +	 * With __rseq_abi.flags RSEQ_TLS_FLAG_SIZE set, if the kernel supports
+> > +	 * extensible struct rseq ABI, the kernel_size field is populated by
+> > +	 * the kernel to the minimum between user_size and the offset of the
+> > +	 * "end" field within the struct rseq supported by the kernel on
+> > +	 * successful registration. Should be initialized to 0.
+> > +	 */
+> > +	__u16 kernel_size;
+> 
+> (Btw, this what I suggested - minus the user_size part - when I said
+> "expose the size of struct rseq" the kernel knows about. The approach
+> here is of course more general.)
+> 
+> It's pretty uncommon to use __u16 for sizes at least in public facing
+> structs. I'd suggest to use __u32 user_size and __u32 kernel_size and if
+> needed, insert padding. Seems you have done this in your union above
+> already.
+> 
+> > +
+> > +	/*
+> > +	 * Very last field of the structure, to calculate size excluding padding
+> > +	 * with offsetof().
+> > +	 */
+> > +	char end[];
+> 
+> Hm, could this mess with alignment or break making the struct
+> extensible? Feels like you're adding new members always before this
+> which is also pretty non-standard in terms of how we'd usually extend
+> structs.
+> 
+> >  } __attribute__((aligned(4 * sizeof(__u64))));
+> >  
+> >  #endif /* _UAPI_LINUX_RSEQ_H */
+> > diff --git a/kernel/rseq.c b/kernel/rseq.c
+> > index a4f86a9d6937..bbc57fc18573 100644
+> > --- a/kernel/rseq.c
+> > +++ b/kernel/rseq.c
+> > @@ -96,6 +96,7 @@ static int rseq_update_cpu_id(struct task_struct *t)
+> >  static int rseq_reset_rseq_cpu_id(struct task_struct *t)
+> >  {
+> >  	u32 cpu_id_start = 0, cpu_id = RSEQ_CPU_ID_UNINITIALIZED;
+> > +	u16 kernel_size = 0;
+> >  
+> >  	/*
+> >  	 * Reset cpu_id_start to its initial state (0).
+> > @@ -109,6 +110,11 @@ static int rseq_reset_rseq_cpu_id(struct task_struct *t)
+> >  	 */
+> >  	if (put_user(cpu_id, &t->rseq->cpu_id))
+> >  		return -EFAULT;
+> > +	/*
+> > +	 * Reset kernel_size to its initial state (0).
+> > +	 */
+> > +	if (put_user(kernel_size, &t->rseq->kernel_size))
+> > +		return -EFAULT;
+> >  	return 0;
+> >  }
+> >  
+> > @@ -266,7 +272,7 @@ void __rseq_handle_notify_resume(struct ksignal *ksig, struct pt_regs *regs)
+> >  
+> >  	if (unlikely(t->flags & PF_EXITING))
+> >  		return;
+> > -	if (unlikely(!access_ok(t->rseq, sizeof(*t->rseq))))
+> > +	if (unlikely(!access_ok(t->rseq, t->rseq_size)))
+> >  		goto error;
+> >  	ret = rseq_ip_fixup(regs);
+> >  	if (unlikely(ret < 0))
+> > @@ -294,7 +300,7 @@ void rseq_syscall(struct pt_regs *regs)
+> >  
+> >  	if (!t->rseq)
+> >  		return;
+> > -	if (!access_ok(t->rseq, sizeof(*t->rseq)) ||
+> > +	if (!access_ok(t->rseq, t->rseq_size) ||
+> >  	    rseq_get_rseq_cs(t, &rseq_cs) || in_rseq_cs(ip, &rseq_cs))
+> >  		force_sig(SIGSEGV);
+> >  }
+> > @@ -308,6 +314,7 @@ SYSCALL_DEFINE4(rseq, struct rseq __user *, rseq, u32, rseq_len,
+> >  		int, flags, u32, sig)
+> >  {
+> >  	int ret;
+> > +	u32 tls_flags;
+> >  
+> >  	if (flags & RSEQ_FLAG_UNREGISTER) {
+> >  		if (flags & ~RSEQ_FLAG_UNREGISTER)
+> > @@ -315,7 +322,7 @@ SYSCALL_DEFINE4(rseq, struct rseq __user *, rseq, u32, rseq_len,
+> >  		/* Unregister rseq for current thread. */
+> >  		if (current->rseq != rseq || !current->rseq)
+> >  			return -EINVAL;
+> > -		if (rseq_len != sizeof(*rseq))
+> > +		if (rseq_len != RSEQ_LEN_EXPECTED)
+> 
+> So I have to say that I think it's not a great to fix the length of the
+> rseq_len argument basically making it somewhat a nop. If I recall
+> correctly Florian said something about the rseq_len becoming part of the
+> glibc abi and that's why it can't be changed?
+> Is there any way we can avoid that so we can use the rseq_len argument
+> to have userspace pass down the size of struct rseq they know about?
+> 
+> It's really unintuitive to pass down an extensible struct but the length
+> argument associated with it is fixed.
+> 
+> I also think there should be some compile-time sanity checks here
+> similar to what we do in other places see e.g.
+> 
+> 	BUILD_BUG_ON(sizeof(struct clone_args) != CLONE_ARGS_SIZE_VER2);
+> 
+> So here should at least be sm like:
+> 
+> 	BUILD_BUG_ON(sizeof(struct rseq) != RSEQ_LEN_EXPECTED);
+> 
 
->> Add support for CPU frequency scaling on Tegra194. The frequency
->> of each core can be adjusted by writing a clock divisor value to
->> a MSR on the core. The range of valid divisors is queried from
->> the BPMP.
->>
->> Signed-off-by: Mikko Perttunen <mperttunen@nvidia.com>
->> Signed-off-by: Sumit Gupta <sumitg@nvidia.com>
->> ---
->>   drivers/cpufreq/Kconfig.arm        |   6 +
->>   drivers/cpufreq/Makefile           |   1 +
->>   drivers/cpufreq/tegra194-cpufreq.c | 397 +++++++++++++++++++++++++++++++++++++
->>   3 files changed, 404 insertions(+)
->>   create mode 100644 drivers/cpufreq/tegra194-cpufreq.c
->>
->> diff --git a/drivers/cpufreq/Kconfig.arm b/drivers/cpufreq/Kconfig.arm
->> index 15c1a12..f3d8f09 100644
->> --- a/drivers/cpufreq/Kconfig.arm
->> +++ b/drivers/cpufreq/Kconfig.arm
->> @@ -314,6 +314,12 @@ config ARM_TEGRA186_CPUFREQ
->>        help
->>          This adds the CPUFreq driver support for Tegra186 SOCs.
->>
->> +config ARM_TEGRA194_CPUFREQ
->> +     tristate "Tegra194 CPUFreq support"
->> +     depends on ARCH_TEGRA && TEGRA_BPMP
-> 
-> Shouldn't this depend on ARCH_TEGRA_194_SOC instead ? And I asked you
-> to add a default y here itself instead of patch 4/4.
-> 
-Ok.
+So here's a very free-wheeling draft of roughly what I had in mind. Not
+even compile-tested just to illustrate what I'd change and sorry if that
+code will make you sob in your hands:
 
->> +     help
->> +       This adds CPU frequency driver support for Tegra194 SOCs.
->> +
->>   config ARM_TI_CPUFREQ
->>        bool "Texas Instruments CPUFreq support"
->>        depends on ARCH_OMAP2PLUS
->> diff --git a/drivers/cpufreq/Makefile b/drivers/cpufreq/Makefile
->> index f6670c4..66b5563 100644
->> --- a/drivers/cpufreq/Makefile
->> +++ b/drivers/cpufreq/Makefile
->> @@ -83,6 +83,7 @@ obj-$(CONFIG_ARM_TANGO_CPUFREQ)             += tango-cpufreq.o
->>   obj-$(CONFIG_ARM_TEGRA20_CPUFREQ)    += tegra20-cpufreq.o
->>   obj-$(CONFIG_ARM_TEGRA124_CPUFREQ)   += tegra124-cpufreq.o
->>   obj-$(CONFIG_ARM_TEGRA186_CPUFREQ)   += tegra186-cpufreq.o
->> +obj-$(CONFIG_ARM_TEGRA194_CPUFREQ)   += tegra194-cpufreq.o
->>   obj-$(CONFIG_ARM_TI_CPUFREQ)         += ti-cpufreq.o
->>   obj-$(CONFIG_ARM_VEXPRESS_SPC_CPUFREQ)       += vexpress-spc-cpufreq.o
->>
->> diff --git a/drivers/cpufreq/tegra194-cpufreq.c b/drivers/cpufreq/tegra194-cpufreq.c
->> +static struct cpufreq_frequency_table *
->> +init_freq_table(struct platform_device *pdev, struct tegra_bpmp *bpmp,
->> +             unsigned int cluster_id)
->> +{
->> +     struct cpufreq_frequency_table *freq_table;
->> +     struct mrq_cpu_ndiv_limits_response resp;
->> +     unsigned int num_freqs, ndiv, delta_ndiv;
->> +     struct mrq_cpu_ndiv_limits_request req;
->> +     struct tegra_bpmp_message msg;
->> +     u16 freq_table_step_size;
->> +     int err, index;
->> +
->> +     memset(&req, 0, sizeof(req));
->> +     req.cluster_id = cluster_id;
->> +
->> +     memset(&msg, 0, sizeof(msg));
->> +     msg.mrq = MRQ_CPU_NDIV_LIMITS;
->> +     msg.tx.data = &req;
->> +     msg.tx.size = sizeof(req);
->> +     msg.rx.data = &resp;
->> +     msg.rx.size = sizeof(resp);
->> +
->> +     err = tegra_bpmp_transfer(bpmp, &msg);
->> +     if (err)
->> +             return ERR_PTR(err);
->> +
->> +     /*
->> +      * Make sure frequency table step is a multiple of mdiv to match
->> +      * vhint table granularity.
->> +      */
->> +     freq_table_step_size = resp.mdiv *
->> +                     DIV_ROUND_UP(CPUFREQ_TBL_STEP_HZ, resp.ref_clk_hz);
->> +
->> +     dev_dbg(&pdev->dev, "cluster %d: frequency table step size: %d\n",
->> +             cluster_id, freq_table_step_size);
->> +
->> +     delta_ndiv = resp.ndiv_max - resp.ndiv_min;
->> +
->> +     if (unlikely(delta_ndiv == 0))
->> +             num_freqs = 1;
->> +     else
->> +             /* We store both ndiv_min and ndiv_max hence the +1 */
->> +             num_freqs = delta_ndiv / freq_table_step_size + 1;
-> 
-> You need {} in the if else blocks here because of the comment here.
-> 
-Ok.
+From 2879e3c30dbe6ba0fc53884b1c41deaa444924a8 Mon Sep 17 00:00:00 2001
+From: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Date: Mon, 13 Jul 2020 23:03:46 -0400
+Subject: [PATCH] [UNTESTED] rseq: Allow extending struct rseq
 
->> +
->> +     num_freqs += (delta_ndiv % freq_table_step_size) ? 1 : 0;
->> +
->> +     freq_table = devm_kcalloc(&pdev->dev, num_freqs + 1,
->> +                               sizeof(*freq_table), GFP_KERNEL);
->> +     if (!freq_table)
->> +             return ERR_PTR(-ENOMEM);
->> +
->> +     for (index = 0, ndiv = resp.ndiv_min;
->> +                     ndiv < resp.ndiv_max;
->> +                     index++, ndiv += freq_table_step_size) {
->> +             freq_table[index].driver_data = ndiv;
->> +             freq_table[index].frequency = map_ndiv_to_freq(&resp, ndiv);
->> +     }
->> +
->> +     freq_table[index].driver_data = resp.ndiv_max;
->> +     freq_table[index++].frequency = map_ndiv_to_freq(&resp, resp.ndiv_max);
->> +     freq_table[index].frequency = CPUFREQ_TABLE_END;
->> +
->> +     return freq_table;
->> +}
->> +
->> +static int tegra194_cpufreq_probe(struct platform_device *pdev)
->> +{
->> +     struct tegra194_cpufreq_data *data;
->> +     struct tegra_bpmp *bpmp;
->> +     int err, i;
->> +
->> +     data = devm_kzalloc(&pdev->dev, sizeof(*data), GFP_KERNEL);
->> +     if (!data)
->> +             return -ENOMEM;
->> +
->> +     data->num_clusters = MAX_CLUSTERS;
->> +     data->tables = devm_kcalloc(&pdev->dev, data->num_clusters,
->> +                                 sizeof(*data->tables), GFP_KERNEL);
->> +     if (!data->tables)
->> +             return -ENOMEM;
->> +
->> +     platform_set_drvdata(pdev, data);
->> +
->> +     bpmp = tegra_bpmp_get(&pdev->dev);
->> +     if (IS_ERR(bpmp))
->> +             return PTR_ERR(bpmp);
->> +
->> +     read_counters_wq = alloc_workqueue("read_counters_wq", __WQ_LEGACY, 1);
->> +     if (!read_counters_wq) {
->> +             dev_err(&pdev->dev, "fail to create_workqueue\n");
->> +             err = -EINVAL;
->> +             goto put_bpmp;
->> +     }
->> +
->> +     for (i = 0; i < data->num_clusters; i++) {
->> +             data->tables[i] = init_freq_table(pdev, bpmp, i);
->> +             if (IS_ERR(data->tables[i])) {
->> +                     err = PTR_ERR(data->tables[i]);
->> +                     goto err_free_res;
->> +             }
->> +     }
->> +
->> +     tegra194_cpufreq_driver.driver_data = data;
->> +
->> +     err = cpufreq_register_driver(&tegra194_cpufreq_driver);
->> +     if (err)
->> +             goto err_free_res;
->> +
->> +     tegra_bpmp_put(bpmp);
->> +
->> +     return err;
-> 
-> rather just do:
-> 
-> if (!err)
->          goto put_bpmp;
-> 
-Sure, will add in next version.
+Add a __rseq_abi.flags "RSEQ_TLS_FLAG_SIZE", which indicates support for
+extending struct rseq. This adds two new fields to struct rseq:
+user_size and kernel_size.
 
->> +
->> +err_free_res:
->> +     tegra194_cpufreq_free_resources();
->> +put_bpmp:
->> +     tegra_bpmp_put(bpmp);
->> +     return err;
->> +}
-> --
-> viresh
-> 
+The user_size field allows the size of the __rseq_abi definition (which
+can be overridden by symbol interposition either by a preloaded library
+or by the application) to be handed over to the kernel at registration.
+This registration can be performed by a library, e.g. glibc, which does
+not know there is interposition taking place.
+
+The kernel_size is populated by the kernel when the "RSEQ_TLS_FLAG_SIZE"
+flag is set in __rseq_abi.flags to the minimum between user_size and
+the offset of the "end" field of struct rseq as known by the kernel.
+This allows user-space to query which fields are effectively populated
+by the kernel.
+
+A rseq_size field is added to the task struct to keep track of the
+"kernel_size" effective for each thread.
+
+Signed-off-by: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Signed-off-by: Christian Brauner <christian.brauner@ubuntu.com>
+---
+ include/linux/sched.h     |  4 +++
+ include/uapi/linux/rseq.h | 36 ++++++++++++++++++--
+ kernel/rseq.c             | 72 ++++++++++++++++++++++++++++++++++++---
+ 3 files changed, 105 insertions(+), 7 deletions(-)
+
+diff --git a/include/linux/sched.h b/include/linux/sched.h
+index 692e327d7455..5d61a3197987 100644
+--- a/include/linux/sched.h
++++ b/include/linux/sched.h
+@@ -1147,6 +1147,7 @@ struct task_struct {
+ #ifdef CONFIG_RSEQ
+ 	struct rseq __user *rseq;
+ 	u32 rseq_sig;
++	u32 rseq_size;
+ 	/*
+ 	 * RmW on rseq_event_mask must be performed atomically
+ 	 * with respect to preemption.
+@@ -1976,10 +1977,12 @@ static inline void rseq_fork(struct task_struct *t, unsigned long clone_flags)
+ 	if (clone_flags & CLONE_VM) {
+ 		t->rseq = NULL;
+ 		t->rseq_sig = 0;
++		t->rseq_size = 0;
+ 		t->rseq_event_mask = 0;
+ 	} else {
+ 		t->rseq = current->rseq;
+ 		t->rseq_sig = current->rseq_sig;
++		t->rseq_size = current->rseq_size;
+ 		t->rseq_event_mask = current->rseq_event_mask;
+ 	}
+ }
+@@ -1988,6 +1991,7 @@ static inline void rseq_execve(struct task_struct *t)
+ {
+ 	t->rseq = NULL;
+ 	t->rseq_sig = 0;
++	t->rseq_size = 0;
+ 	t->rseq_event_mask = 0;
+ }
+ 
+diff --git a/include/uapi/linux/rseq.h b/include/uapi/linux/rseq.h
+index 9a402fdb60e9..f10ce38d9712 100644
+--- a/include/uapi/linux/rseq.h
++++ b/include/uapi/linux/rseq.h
+@@ -37,6 +37,15 @@ enum rseq_cs_flags {
+ 		(1U << RSEQ_CS_FLAG_NO_RESTART_ON_MIGRATE_BIT),
+ };
+ 
++enum rseq_tls_flags_bit {
++	/* enum rseq_cs_flags reserves bits 0-2. */
++	RSEQ_TLS_FLAG_SIZE_BIT = 3,
++};
++
++enum rseq_tls_flags {
++	RSEQ_TLS_FLAG_SIZE = (1U << RSEQ_TLS_FLAG_SIZE_BIT),
++};
++
+ /*
+  * struct rseq_cs is aligned on 4 * 8 bytes to ensure it is always
+  * contained within a single cache-line. It is usually declared as
+@@ -128,8 +137,9 @@ struct rseq {
+ 	 *
+ 	 * This field should only be updated by the thread which
+ 	 * registered this data structure. Read by the kernel.
+-	 * Mainly used for single-stepping through rseq critical sections
+-	 * with debuggers.
++	 *
++	 * The RSEQ_CS flags are mainly used for single-stepping through rseq
++	 * critical sections with debuggers.
+ 	 *
+ 	 * - RSEQ_CS_FLAG_NO_RESTART_ON_PREEMPT
+ 	 *     Inhibit instruction sequence block restart on preemption
+@@ -140,8 +150,30 @@ struct rseq {
+ 	 * - RSEQ_CS_FLAG_NO_RESTART_ON_MIGRATE
+ 	 *     Inhibit instruction sequence block restart on migration for
+ 	 *     this thread.
++	 *
++	 * - RSEQ_TLS_FLAG_SIZE
++	 *     Extensible struct rseq ABI. This flag should be statically
++	 *     initialized.
+ 	 */
+ 	__u32 flags;
++	/*
++	 * With __rseq_abi.flags RSEQ_TLS_FLAG_SIZE set, user_size should be
++	 * statically initialized to offsetof(struct rseq, end).
++	 */
++	__u32 user_size;
++	/*
++	 * With __rseq_abi.flags RSEQ_TLS_FLAG_SIZE set, if the kernel supports
++	 * extensible struct rseq ABI, the kernel_size field is populated by
++	 * the kernel to the minimum between user_size and the offset of the
++	 * "end" field within the struct rseq supported by the kernel on
++	 * successful registration. Should be initialized to 0.
++	 */
++	__u32 kernel_size;
++	__u32 active_size;
+ } __attribute__((aligned(4 * sizeof(__u64))));
+ 
++#define RSEQ_SIZE_VER0 24 /* sizeof first published struct */
++#define RSEQ_SIZE_VER1 32 /* sizeof second published struct */
++#define RSEQ_SIZE_LATEST RSEQ_SIZE_VER1 /* sizeof last published struct */
++
+ #endif /* _UAPI_LINUX_RSEQ_H */
+diff --git a/kernel/rseq.c b/kernel/rseq.c
+index a4f86a9d6937..9d28b41a99cd 100644
+--- a/kernel/rseq.c
++++ b/kernel/rseq.c
+@@ -96,6 +96,7 @@ static int rseq_update_cpu_id(struct task_struct *t)
+ static int rseq_reset_rseq_cpu_id(struct task_struct *t)
+ {
+ 	u32 cpu_id_start = 0, cpu_id = RSEQ_CPU_ID_UNINITIALIZED;
++	u16 kernel_size = 0;
+ 
+ 	/*
+ 	 * Reset cpu_id_start to its initial state (0).
+@@ -109,6 +110,11 @@ static int rseq_reset_rseq_cpu_id(struct task_struct *t)
+ 	 */
+ 	if (put_user(cpu_id, &t->rseq->cpu_id))
+ 		return -EFAULT;
++	/*
++	 * Reset kernel_size to its initial state (0).
++	 */
++	if (put_user(kernel_size, &t->rseq->kernel_size))
++		return -EFAULT;
+ 	return 0;
+ }
+ 
+@@ -266,7 +272,7 @@ void __rseq_handle_notify_resume(struct ksignal *ksig, struct pt_regs *regs)
+ 
+ 	if (unlikely(t->flags & PF_EXITING))
+ 		return;
+-	if (unlikely(!access_ok(t->rseq, sizeof(*t->rseq))))
++	if (unlikely(!access_ok(t->rseq, t->rseq_size)))
+ 		goto error;
+ 	ret = rseq_ip_fixup(regs);
+ 	if (unlikely(ret < 0))
+@@ -294,7 +300,7 @@ void rseq_syscall(struct pt_regs *regs)
+ 
+ 	if (!t->rseq)
+ 		return;
+-	if (!access_ok(t->rseq, sizeof(*t->rseq)) ||
++	if (!access_ok(t->rseq, t->rseq_size) ||
+ 	    rseq_get_rseq_cs(t, &rseq_cs) || in_rseq_cs(ip, &rseq_cs))
+ 		force_sig(SIGSEGV);
+ }
+@@ -308,6 +314,11 @@ SYSCALL_DEFINE4(rseq, struct rseq __user *, rseq, u32, rseq_len,
+ 		int, flags, u32, sig)
+ {
+ 	int ret;
++	u32 tls_flags;
++
++	BUILD_BUG_ON(offsetofend(struct rseq, flags) != RSEQ_SIZE_VER0);
++	BUILD_BUG_ON(offsetofend(struct rseq, active_size) != RSEQ_SIZE_VER1);
++	BUILD_BUG_ON(sizeof(struct rseq) != RSEQ_SIZE_LATEST);
+ 
+ 	if (flags & RSEQ_FLAG_UNREGISTER) {
+ 		if (flags & ~RSEQ_FLAG_UNREGISTER)
+@@ -315,14 +326,17 @@ SYSCALL_DEFINE4(rseq, struct rseq __user *, rseq, u32, rseq_len,
+ 		/* Unregister rseq for current thread. */
+ 		if (current->rseq != rseq || !current->rseq)
+ 			return -EINVAL;
+-		if (rseq_len != sizeof(*rseq))
++		if (rseq_len < RSEQ_SIZE_VER0)
+ 			return -EINVAL;
++		if (!access_ok(rseq, rseq_len))
++			return -EFAULT;
+ 		if (current->rseq_sig != sig)
+ 			return -EPERM;
+ 		ret = rseq_reset_rseq_cpu_id(current);
+ 		if (ret)
+ 			return ret;
+ 		current->rseq = NULL;
++		current->rseq_size = 0;
+ 		current->rseq_sig = 0;
+ 		return 0;
+ 	}
+@@ -336,7 +350,7 @@ SYSCALL_DEFINE4(rseq, struct rseq __user *, rseq, u32, rseq_len,
+ 		 * the provided address differs from the prior
+ 		 * one.
+ 		 */
+-		if (current->rseq != rseq || rseq_len != sizeof(*rseq))
++		if (current->rseq != rseq || rseq_len != RSEQ_LEN_EXPECTED)
+ 			return -EINVAL;
+ 		if (current->rseq_sig != sig)
+ 			return -EPERM;
+@@ -349,10 +363,58 @@ SYSCALL_DEFINE4(rseq, struct rseq __user *, rseq, u32, rseq_len,
+ 	 * ensure the provided rseq is properly aligned and valid.
+ 	 */
+ 	if (!IS_ALIGNED((unsigned long)rseq, __alignof__(*rseq)) ||
+-	    rseq_len != sizeof(*rseq))
++	    rseq_len < RSEQ_SIZE_VER0)
+ 		return -EINVAL;
+ 	if (!access_ok(rseq, rseq_len))
+ 		return -EFAULT;
++
++	/* Handle extensible struct rseq ABI. */
++	ret = get_user(tls_flags, &rseq->flags);
++	if (ret)
++		return ret;
++	if (tls_flags & RSEQ_TLS_FLAG_SIZE) {
++		u32 user_size, kernel_size, active_size;
++
++		/* Can probably be made nicer by using check_zeroed_user(). */
++		ret = get_user(user_size, &rseq->user_size);
++		if (ret)
++			return ret;
++		if (user_size != 0)
++			return -EINVAL;
++
++		ret = get_user(active_size, &rseq->active_size);
++		if (ret)
++			return ret;
++		if (active_size != 0)
++			return -EINVAL;
++
++		ret = get_user(active_size, &rseq->kernel_size);
++		if (ret)
++			return ret;
++		if (kernel_size != 0)
++			return -EINVAL;
++
++		/* Calculate the useable size. */
++		active_size = min_t(u32, rseq_len, RSEQ_SIZE_LATEST);
++		ret = put_user(active_size, &rseq->active_size);
++		if (ret)
++			return ret;
++
++		/* Let other users know what userspace used to register. */
++		ret = put_user(rseq_len, &rseq->user_size);
++		if (ret)
++			return -EFAULT;
++
++		/* Let other users know what size the kernel supports. */
++		ret = put_user(RSEQ_SIZE_LATEST, &rseq->kernel_size);
++		if (ret)
++			return -EFAULT;
++
++		current->rseq_size = active_size;
++	} else {
++		current->rseq_size = RSEQ_SIZE_VER0;
++	}
++
+ 	current->rseq = rseq;
+ 	current->rseq_sig = sig;
+ 	/*
+-- 
+2.27.0
+
+
+
