@@ -2,122 +2,86 @@ Return-Path: <SRS0=kup7=A2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07D12C433E3
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 20:26:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76CF8C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 20:27:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D5CC720672
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 20:26:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="PpmzzilW"
+	by mail.kernel.org (Postfix) with ESMTP id 4D05720657
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 20:27:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594844846;
+	bh=1XriL811AeVvdrQBcfpHdqhiUnKrJIY5s1lHezFVnoI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=bfDWbPjdCjF4lB418XiH10K53QyETxKtkvp2g+gafTlV/KAgbE3yT8gzgzM8pKe15
+	 DlJgYUuglI4Rb1dQ/FsSg6VUkFrOoSK+0kAJIKcPEL4Qf1OIaELZ5y93rSmLSob8Ar
+	 xHAYoaCT4qwx+waWMQX+xaEPdvluaRCvoMigNyKE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727050AbgGOU0v (ORCPT
+        id S1727820AbgGOU1Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 16:26:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50226 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727037AbgGOU0u (ORCPT
+        Wed, 15 Jul 2020 16:27:25 -0400
+Received: from mail-il1-f196.google.com ([209.85.166.196]:38816 "EHLO
+        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727037AbgGOU1Y (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 16:26:50 -0400
-Received: from mail-io1-xd41.google.com (mail-io1-xd41.google.com [IPv6:2607:f8b0:4864:20::d41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F2949C08C5CE
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 13:26:49 -0700 (PDT)
-Received: by mail-io1-xd41.google.com with SMTP id f23so3653729iof.6
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 13:26:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=Ef4z+9Yicabx/PBiZK3UH32DMjpUIF0+c5gTonOKaqA=;
-        b=PpmzzilWUzM1i/qTP1Ch+MKMpdOU0msPV2HQZbI56F4OnSxOQ8SwWWVRNy6yrunVFH
-         /w24G6AhWABCKBxq6W9DTrAwMGwhOuy74V6lF49lC3Dn3xWDMQqxDo1EWGsZ5dGjALMH
-         eKhOy4CqgkZMRcuq/fqcecn9cyJ7H+Yv1MO8xjTUKm4TuhrfEkgXklAPRnIuQcUzN8xr
-         vKSGMpt1eM60SB5Fe5mTpyKY675HJSLlKGPjEdl6bOa6o0Fpqvzrih5jCMxo5TfUO56l
-         5MIg7m2BAdA0m8B3lbtrPoqhWKvHW7RheAaBBo/OMNlQqwmamVkGPYNgmo7HwR9BQ84h
-         kPBg==
+        Wed, 15 Jul 2020 16:27:24 -0400
+Received: by mail-il1-f196.google.com with SMTP id s21so3154131ilk.5;
+        Wed, 15 Jul 2020 13:27:23 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=Ef4z+9Yicabx/PBiZK3UH32DMjpUIF0+c5gTonOKaqA=;
-        b=GyprRtOa/2HcozbZ08D2iexL0IXBJscJQpZ6tFir8fwvNeMh6u0ddNRVxxMvJH1NBC
-         MvDnmMWTRDWXhgFrbtd9qY5EpBzRpY4G8IZR5rNktaSqur0bdJSPx4tQnHy0GAZ/Jtwc
-         uBXZdAPgTcsw+ccvU6aQGYLvjQUAPk/FSuGrQLRbdv5XJJv6Y+obNNed69xy8nZ2x6+C
-         d1GuwHuavE3ek2DPoA3PPdtTO5BkdAYP5Y3VLl9AbGsejv6q6vETk8r+tyv+8wiZkEGl
-         X9/UZCLiK49mkX2UrU+bDZkLXvpw8doC47jT3BZ5fGD8eH5uUYCSiLr1O3YGfD1Qe1r2
-         3Ysw==
-X-Gm-Message-State: AOAM533htKlSwf/QmMCAxynT8dLzSr5MC1hlJOFDDT7Hh63p0D6Xk3kD
-        Zk+yM6+8Hfxffjyj06gwq/Wzeg==
-X-Google-Smtp-Source: ABdhPJxIVAK2QRW9sFfypKnRyRWe+EJVbCx66CK31VkDVrrWNAVS7DR5AIM8zVPWgrqC3n6xFAXg0A==
-X-Received: by 2002:a6b:640f:: with SMTP id t15mr1044364iog.175.1594844809116;
-        Wed, 15 Jul 2020 13:26:49 -0700 (PDT)
-Received: from [192.168.1.58] ([65.144.74.34])
-        by smtp.gmail.com with ESMTPSA id a11sm1736327iow.26.2020.07.15.13.26.48
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 15 Jul 2020 13:26:48 -0700 (PDT)
-Subject: Re: [PATCH v3 0/2] Export max open zones and max active zones to
- sysfs
-To:     Niklas Cassel <niklas.cassel@wdc.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Keith Busch <kbusch@kernel.org>,
-        Christoph Hellwig <hch@lst.de>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>
-Cc:     linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-block@vger.kernel.org, linux-nvme@lists.infradead.org,
-        linux-scsi@vger.kernel.org
-References: <20200714211824.759224-1-niklas.cassel@wdc.com>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <58eac7f6-ab09-7f96-eb02-a19e8153e89a@kernel.dk>
-Date:   Wed, 15 Jul 2020 14:26:47 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=hp5HmzJiHOmmnapmKHc4+WA+MfvOrYT+drbJbUm7gKg=;
+        b=UvWVrXvG5O1ipP0/BuhJSeUTg2w4NuvDm5/CRk/3oPyGdD6kZlv+dUwY6NqyTx0Hmo
+         aG27HDF4gDLI1MFbZsEoURGvTUdDOGiVPwM85HsZb5rUHPJir6ceIWSToVAHnq+JSo80
+         G+4b+4eIpuiUxMpKmMQIwE3nnoxMKna4h8YyAwcAHN7Q/A/223+Z0xOtdMPGkPLxN+EJ
+         o/Epsj8Emw/NK+Y5JKn0gmLZqsH0afDGxkqkyPlyPtsOvSHJcA5F6T8f8F1px4/Gl1wE
+         FMU94I1fBZoNxsj5lm0I2z7FwKVwVD1aZm4Hk6CB66haopqcoa4JSmc9jptrtlsbtNQQ
+         D3RA==
+X-Gm-Message-State: AOAM533MDQNGOj2VfwLNbR8bAyys7kPWpTvfiKA/dpuzrKIjGZLP7PN6
+        /9LXkWQw67Hz/cJi/TndItyJalotdg==
+X-Google-Smtp-Source: ABdhPJxXvFJvhAfWEuKEbOGO1wNXti8nZgtJ+L13uNRdVTDvDYHxTrzya0aAkmOv1Hxo8Ie4S8fOww==
+X-Received: by 2002:a05:6e02:13e2:: with SMTP id w2mr1283656ilj.9.1594844843463;
+        Wed, 15 Jul 2020 13:27:23 -0700 (PDT)
+Received: from xps15 ([64.188.179.252])
+        by smtp.gmail.com with ESMTPSA id c16sm1563716ilh.54.2020.07.15.13.27.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 15 Jul 2020 13:27:23 -0700 (PDT)
+Received: (nullmailer pid 762998 invoked by uid 1000);
+        Wed, 15 Jul 2020 20:27:22 -0000
+Date:   Wed, 15 Jul 2020 14:27:22 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Krzysztof Kozlowski <krzk@kernel.org>
+Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, Kukjin Kim <kgene@kernel.org>,
+        linux-samsung-soc@vger.kernel.org, Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH] dt-bindings: arm: samsung: Do not require clkout on
+ Exynos5260 and Exynos7
+Message-ID: <20200715202722.GA762968@bogus>
+References: <20200629203859.17298-1-krzk@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20200714211824.759224-1-niklas.cassel@wdc.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200629203859.17298-1-krzk@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/14/20 3:18 PM, Niklas Cassel wrote:
-> Export max open zones and max active zones to sysfs.
+On Mon, 29 Jun 2020 22:38:59 +0200, Krzysztof Kozlowski wrote:
+> The PMU (Power Management Unit) driver is a clkout clock provider (for
+> clock signal monitoring) only for certain Exynos SoCs.  It was never
+> implemented for Exynos5260 and Exynos7.  This fixes dtschema validator
+> warnings like:
 > 
-> This patch series in based on Jens's linux-block/for-next branch.
+>     system-controller@105c0000: '#clock-cells' is a required property
 > 
-> All zoned block devices in the kernel utilize the "zoned block device
-> support" (CONFIG_BLK_DEV_ZONED).
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> ---
+>  .../devicetree/bindings/arm/samsung/pmu.yaml  | 22 ++++++++++++++++---
+>  1 file changed, 19 insertions(+), 3 deletions(-)
 > 
-> The Zoned Namespace Command Set Specification defines two different
-> resource limits: Max Open Resources and Max Active Resources.
-> 
-> The ZAC and ZBC standards define a MAXIMUM NUMBER OF OPEN SEQUENTIAL WRITE
-> REQUIRED ZONES field.
-> 
-> 
-> Since the ZNS Max Open Resources field has the same purpose as the ZAC/ZBC
-> field, (the ZNS field is 0's based, the ZAC/ZBC field isn't), create a
-> common "max_open_zones" definition in the sysfs documentation, and export
-> both the ZNS field and the ZAC/ZBC field according to this new common
-> definition.
-> 
-> The ZNS Max Active Resources field does not have an equivalent field in
-> ZAC/ZBC, however, since both ZAC/ZBC and ZNS utilize the "zoned block
-> device support" in the kernel, create a "max_active_zones" definition in
-> the sysfs documentation, similar to "max_open_zones", and export it
-> according to this new definition. For ZAC/ZBC devices, this field will be
-> exported as 0, meaning "no limit".
 
-Applied, thanks.
-
--- 
-Jens Axboe
-
+Reviewed-by: Rob Herring <robh@kernel.org>
