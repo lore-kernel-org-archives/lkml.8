@@ -7,102 +7,115 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F417C433F7
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 09:32:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E0C9C433F8
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 09:32:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7CB102071B
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 09:32:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 66CC12071B
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 09:32:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ot1YDljs"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="B9eGyNDC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730857AbgGOJcq (ORCPT
+        id S1730866AbgGOJcv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 05:32:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33820 "EHLO
+        Wed, 15 Jul 2020 05:32:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33814 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730777AbgGOJcS (ORCPT
+        with ESMTP id S1730769AbgGOJcR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 05:32:18 -0400
-Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C08E5C08C5C1
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 02:32:17 -0700 (PDT)
-Received: by mail-wm1-x342.google.com with SMTP id o2so4889796wmh.2
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 02:32:17 -0700 (PDT)
+        Wed, 15 Jul 2020 05:32:17 -0400
+Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 971C2C08C5C1
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 02:32:16 -0700 (PDT)
+Received: by mail-wm1-x341.google.com with SMTP id o2so4889734wmh.2
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 02:32:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=9PiTITbm2Lxqlt8bG5B7tvFplfBvl1yIo6Kmzl56a8E=;
-        b=ot1YDljse6ITmipQNFdp/KcP8xZbzbxOBK4qefcNjgnfHxNw60L2lro5mVv0rW9trB
-         xr2Npa1kR2uT7uymOuPRZNgM2ZhGFlMSbV0mo3Kgzya3FmBYENGlsCqMUYUQgp1d9tvr
-         /P8dABajdryamvwlrBC+ByuqqP+zC6hXna+N5dwZL1CFNdhB3gD4golA6UMyTdyuNmv0
-         0ZlgVVU6O5mQfZbJm3f0Ky3AsQphpOiLi455stO9nHMXi4mJSLcGSN6Rf0yi1F/4c8pH
-         DQnX4W7hWsD9tMc5lpqioldm4TvV3YYEVULshS4NijjO70jTD/tcHlIWD+pWrJ0VZ0AY
-         LL2g==
+        bh=aGkX+E1EBfqRr0rfaGdLhwyAcBiQ16E9WQER7VbVHB0=;
+        b=B9eGyNDCvcRazQ5Vt4bCO10YvxegSYTM59WaGhCMmKF1ntTqI0zxMbYoNhBkEWX6+u
+         Q/bcBNCzP/NiyAp1huYTJNpJcx0WdrEb56Rkp5DQRWi7GJPA4qNC2nOe1shHedItKyw6
+         3OrZOdisEymzmeJLiYQ+pmiZ96mEIhootgO4sR9Ci94A0kJzd3MQ7+em+CZmN+XMU0bv
+         Itkn84N4qTA3X3ge6IF1QJwxgLZ5oB523cWAJtAWZa9ztHkAhjwA+FMCGpHv3mFGJeGh
+         bAIgVniOn+Dt6KpDNO9N3MtF4zQRMy+UZcXk9qotI5EeRahzIe/Gmm3D4sIsBdKJt4Km
+         jJXQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=9PiTITbm2Lxqlt8bG5B7tvFplfBvl1yIo6Kmzl56a8E=;
-        b=bYyMGAp8nhridBq32+4+XpazCduSetE4k1E9Y2k0pC/cdwnXkFtcXWbqeZDHvkNBDA
-         mg7C5MhyyI3bZwJysgBw8mRUTBjo5zPehypTw8YfFQUmTKCTb3UrWG5aLlOy3EWBVzLp
-         u7h2i0tjR1hgRt4rimSpjjEGHFyLpQSYz2ESN1IUU0TZemOs4GL43Hpt3RaCFHyR0YmN
-         o/GCPw9Z9x6aJXJzlzRtbYi9AYlpJPuBgeNz+1+hcX+IgImnH6ruxRLGf/D8HSTqNPlW
-         cpsPXfxiBjTw2sYkaEpb2yQ5ivTWMgVSYNegL1eSByajG9gfuXQWcaRLy+1f/7MvmNck
-         AvAw==
-X-Gm-Message-State: AOAM530dMz/lbOHFaLcKVSPs1QM4xks75W5UK8W0NzDVfvxzpo6zae7b
-        5i4JjeT50GPTCuulFGij0VfVqyzcClE=
-X-Google-Smtp-Source: ABdhPJzLcC4/hBG4W1UXFYDrQ8+TkBT6n/tQXy5dSXrQ+pSmxaZ5D+Fy9bfnLvg14NXYp0de96+xHg==
-X-Received: by 2002:a1c:44e:: with SMTP id 75mr7879408wme.139.1594805536549;
-        Wed, 15 Jul 2020 02:32:16 -0700 (PDT)
-Received: from localhost.localdomain ([2.31.163.61])
-        by smtp.gmail.com with ESMTPSA id s203sm2686991wms.32.2020.07.15.02.32.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        bh=aGkX+E1EBfqRr0rfaGdLhwyAcBiQ16E9WQER7VbVHB0=;
+        b=aDDoRPMI4w7USjWRSNFqEcDyZhbfktyoPmDn3sb6R3Q+gFQ3l716ZLXWvdsauJZTJO
+         1x2JweRmbVcoXEPOfP9Mp5n9B9+mp8CBuT2yWs9SGjN9A7W4EjB1O/lE0wpLqqskGvFd
+         azODGAhavHy2vx7xsNS75bWdHETviGWFg9nOkGPc+NzVDmv9l6r+RUakcsD2QY3Uurro
+         3eJMNWwj8Iu7VLOpKg3zVxgdn/7DY7egMm9O/rkVLYsTCuIUGG+UNAJZ0JKPh7+oLamh
+         z9GmWq5CEb+RLcLWZELH4XMSVmoxsxoNvrGB9An3CiNA8/hGT+7Asy6jP42kqP1wrowN
+         oMIQ==
+X-Gm-Message-State: AOAM533TP8B0u/WWQc1+Znme58ed7YQrEjtKDSAVV5MRX2cpWMLJ/V4y
+        3+gnbDkJtzyPRXKy7CBtOf96eInWEr8=
+X-Google-Smtp-Source: ABdhPJzy0kAtC0mAb9N9Nk0jBlEslSi+EyKpZKizI1grPl6nIG7Ij66G9kluURFmeTpNfzFWlDbOcQ==
+X-Received: by 2002:a05:600c:2050:: with SMTP id p16mr7507657wmg.44.1594805535285;
         Wed, 15 Jul 2020 02:32:15 -0700 (PDT)
+Received: from localhost.localdomain ([2.31.163.61])
+        by smtp.gmail.com with ESMTPSA id s203sm2686991wms.32.2020.07.15.02.32.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 15 Jul 2020 02:32:14 -0700 (PDT)
 From:   Lee Jones <lee.jones@linaro.org>
 To:     gregkh@linuxfoundation.org
 Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         linux-usb@vger.kernel.org, Lee Jones <lee.jones@linaro.org>,
-        Chunfeng Yun <chunfeng.yun@mediatek.com>,
-        linux-mediatek@lists.infradead.org
-Subject: [PATCH v2 3/8] usb: mtu3: mtu3_trace: Function headers are not suitable for kerneldoc
-Date:   Wed, 15 Jul 2020 10:32:04 +0100
-Message-Id: <20200715093209.3165641-4-lee.jones@linaro.org>
+        Ben Dooks <ben@simtec.co.uk>,
+        Minas Harutyunyan <hminas@synopsys.com>
+Subject: [PATCH v2 2/8] usb: dwc2: gadget: Avoid pointless read of EP control register
+Date:   Wed, 15 Jul 2020 10:32:03 +0100
+Message-Id: <20200715093209.3165641-3-lee.jones@linaro.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200715093209.3165641-1-lee.jones@linaro.org>
 References: <20200715093209.3165641-1-lee.jones@linaro.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Kerneldoc headers should only be used to document functions and data
-structures.
+Commit ec1f9d9f01384 ("usb: dwc2: gadget: parity fix in isochronous mode") moved
+these checks to dwc2_hsotg_change_ep_iso_parity() back in 2015.  The assigned
+value hasn't been read back since.  Let's remove the unnecessary H/W read.
 
-Cc: Chunfeng Yun <chunfeng.yun@mediatek.com>
-Cc: linux-mediatek@lists.infradead.org
+Fixes the following W=1 warning:
+
+ drivers/usb/dwc2/gadget.c: In function ‘dwc2_hsotg_epint’:
+ drivers/usb/dwc2/gadget.c:2981:6: warning: variable ‘ctrl’ set but not used [-Wunused-but-set-variable]
+ 2981 | u32 ctrl;
+ | ^~~~
+
+Cc: Ben Dooks <ben@simtec.co.uk>
 Signed-off-by: Lee Jones <lee.jones@linaro.org>
+Acked-by: Minas Harutyunyan <hminas@synopsys.com>
 ---
 Changelog
 
-v2: Removed unrelated reference to build warning
+v2: No change - added Acked-by
 
- drivers/usb/mtu3/mtu3_trace.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+drivers/usb/dwc2/gadget.c | 2 --
+ 1 file changed, 2 deletions(-)
 
-diff --git a/drivers/usb/mtu3/mtu3_trace.c b/drivers/usb/mtu3/mtu3_trace.c
-index 4f5e7857ec312..155eae126e5e2 100644
---- a/drivers/usb/mtu3/mtu3_trace.c
-+++ b/drivers/usb/mtu3/mtu3_trace.c
-@@ -1,5 +1,5 @@
- // SPDX-License-Identifier: GPL-2.0
--/**
-+/*
-  * mtu3_trace.c - trace support
-  *
-  * Copyright (C) 2019 MediaTek Inc.
+diff --git a/drivers/usb/dwc2/gadget.c b/drivers/usb/dwc2/gadget.c
+index 03cf1fa856219..5b9d23991c99d 100644
+--- a/drivers/usb/dwc2/gadget.c
++++ b/drivers/usb/dwc2/gadget.c
+@@ -2978,10 +2978,8 @@ static void dwc2_hsotg_epint(struct dwc2_hsotg *hsotg, unsigned int idx,
+ 	u32 epctl_reg = dir_in ? DIEPCTL(idx) : DOEPCTL(idx);
+ 	u32 epsiz_reg = dir_in ? DIEPTSIZ(idx) : DOEPTSIZ(idx);
+ 	u32 ints;
+-	u32 ctrl;
+ 
+ 	ints = dwc2_gadget_read_ep_interrupts(hsotg, idx, dir_in);
+-	ctrl = dwc2_readl(hsotg, epctl_reg);
+ 
+ 	/* Clear endpoint interrupts */
+ 	dwc2_writel(hsotg, ints, epint_reg);
 -- 
 2.25.1
 
