@@ -2,111 +2,131 @@ Return-Path: <SRS0=kup7=A2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6500BC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 12:53:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CCF8C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 12:56:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3B5D82078C
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 12:53:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="MkAgYiOv"
+	by mail.kernel.org (Postfix) with ESMTP id 5A72820720
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 12:56:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594817785;
+	bh=AL0SGIl71lSGZkEwc2Wef9IV3iCoPeybLKFPjUI675c=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=dvV8fM72a5EuRhvKaaK9o8OJNDyeMS+7N2ApXmjq4d9+P6aqUs0oh8ay/gX9xSblC
+	 5stucklddAHHghBuBrR1z17HOh8WjZMPSPDJzgMhFvr4DXGT9NLR8j6Ia+sLod1JA9
+	 w4U8TkizR31llAZP6VkxwW2mbTf4sJQx682Yps+s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730975AbgGOMxp (ORCPT
+        id S1731131AbgGOM4X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 08:53:45 -0400
-Received: from smtp-fw-9101.amazon.com ([207.171.184.25]:44529 "EHLO
-        smtp-fw-9101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726335AbgGOMxp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 08:53:45 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1594817626; x=1626353626;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   mime-version;
-  bh=c56rH68Z45pjMbUku60zAt3+Wn6ginlmdSE+4jUBfnM=;
-  b=MkAgYiOvVxgXt0ZutloT4Ig8yD3h7ESmUvhm1v8gV7YKv7DCVkq3terg
-   KsR5YklQMB5gN0wW4u1gieOBWw1xG68E8m2OqDGOAI/oQP/N8hqQeG/PC
-   ewP+TQIitS4Uzd6YKkSmlAw4bp+ZZu1Rl9RHNDuQ/scR4A0lSMBJp/pwg
-   I=;
-IronPort-SDR: lqe7EmNGVa6k7hM2W++M9ciRxUSkVmexvwrN+uhNBVzHRuibhQiAUDHQUXnymd1BvSdGto2lpa
- wEHO7d9xjynA==
-X-IronPort-AV: E=Sophos;i="5.75,355,1589241600"; 
-   d="scan'208";a="51809946"
-Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-1d-2c665b5d.us-east-1.amazon.com) ([10.47.23.38])
-  by smtp-border-fw-out-9101.sea19.amazon.com with ESMTP; 15 Jul 2020 12:53:43 +0000
-Received: from EX13MTAUEA002.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan2.iad.amazon.com [10.40.159.162])
-        by email-inbound-relay-1d-2c665b5d.us-east-1.amazon.com (Postfix) with ESMTPS id 5E95CA1D65;
-        Wed, 15 Jul 2020 12:53:40 +0000 (UTC)
-Received: from EX13D31EUA004.ant.amazon.com (10.43.165.161) by
- EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Wed, 15 Jul 2020 12:53:39 +0000
-Received: from u886c93fd17d25d.ant.amazon.com (10.43.160.100) by
- EX13D31EUA004.ant.amazon.com (10.43.165.161) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Wed, 15 Jul 2020 12:53:34 +0000
-From:   SeongJae Park <sjpark@amazon.com>
-To:     Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
-CC:     <trivial@kernel.org>, Andrew Morton <akpm@linux-foundation.org>,
-        "Colin Ian King" <colin.king@canonical.com>,
-        =?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>,
-        Xiong <xndchn@gmail.com>, SeongJae Park <sjpark@amazon.de>,
-        Luca Ceresoli <luca@lucaceresoli.net>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 8/8] scripts/spelling.txt: Add descriptors correction
-Date:   Wed, 15 Jul 2020 14:53:18 +0200
-Message-ID: <20200715125318.8550-1-sjpark@amazon.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200715124839.252822-9-kieran.bingham+renesas@ideasonboard.com> (raw)
+        Wed, 15 Jul 2020 08:56:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54110 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726335AbgGOM4W (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jul 2020 08:56:22 -0400
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id F033420657;
+        Wed, 15 Jul 2020 12:56:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594817782;
+        bh=AL0SGIl71lSGZkEwc2Wef9IV3iCoPeybLKFPjUI675c=;
+        h=From:To:Cc:Subject:Date:From;
+        b=f0pkn+jtKuJ3I4+c47glHA/NWWQAzvmOyjMSGN6kSCg1hlyLHJc5rQOKTi/+EWR69
+         JJK1ReTlt8pvUuZPEAYD+aujPfSL6gjooQkZWSkco1D1Rg6CTxPYTJTguxohGQwMW7
+         50kwSDXL7u4G2RoLsEyWRXJzVE2tbLxBKmQ0BDc4=
+Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=why.lan)
+        by disco-boy.misterjones.org with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <maz@kernel.org>)
+        id 1jvgxQ-00Bzgo-Ay; Wed, 15 Jul 2020 13:56:20 +0100
+From:   Marc Zyngier <maz@kernel.org>
+To:     gregkh@linuxfoundation.org, stable@vger.kernel.org
+Cc:     arnd@arndb.de, sashal@kernel.org, naresh.kamboju@linaro.org,
+        Mark Rutland <mark.rutland@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Russell King <linux@arm.linux.org.uk>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        kernel-team@android.com
+Subject: [Stable-5.4][PATCH 0/3] arm64: Allow the compat vdso to be disabled at runtime
+Date:   Wed, 15 Jul 2020 13:56:11 +0100
+Message-Id: <20200715125614.3240269-1-maz@kernel.org>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.43.160.100]
-X-ClientProxiedBy: EX13D18UWA003.ant.amazon.com (10.43.160.238) To
- EX13D31EUA004.ant.amazon.com (10.43.165.161)
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 62.31.163.78
+X-SA-Exim-Rcpt-To: gregkh@linuxfoundation.org, stable@vger.kernel.org, arnd@arndb.de, sashal@kernel.org, naresh.kamboju@linaro.org, mark.rutland@arm.com, will@kernel.org, catalin.marinas@arm.com, daniel.lezcano@linaro.org, vincenzo.frascino@arm.com, linux@arm.linux.org.uk, tglx@linutronix.de, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, kernel-team@android.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 15 Jul 2020 13:48:39 +0100 Kieran Bingham <kieran.bingham+renesas@ideasonboard.com> wrote:
+This is a backport of the series that recently went into 5.8. Note
+that the first patch is more a complete rewriting than a backport, as
+the vdso implementation in 5.4 doesn't have much in common with
+mainline. This affects the 32bit arch code in a benign way.
 
-> After coming across the s/decriptors/descriptors/ spelling error twice,
-> a scan of the tree showed it was a pervasive mistake.
-> 
-> Update the spelling suggestions database to prevent it in both singular
-> and plural form.
-> 
-> Signed-off-by: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
+It has seen very little testing, as I don't have the HW that triggers
+this issue. I have run it in VMs by faking the CPU MIDR, and nothing
+caught fire. Famous last words.
 
-Reviewed-by: SeongJae Park <sjpark@amazon.de>
+The original cover letter follows.
+
+	M.
+
+The relatively recent introduction of the compat vdso on arm64 has
+overlooked its interactions with some of the interesting errata
+workarounds, such as ARM64_ERRATUM_1418040 (and its older 1188873
+incarnation).
+
+This erratum requires the 64bit kernel to trap 32bit accesses to the
+virtual counter and emulate it. When the workaround was introduced,
+the compat vdso simply wasn't a thing. Now that the patches have
+landed in mainline, we trap the CVTVCT accesses from the vdso.
+
+This can end-up in a nasty loop in the vdso, where the sequence number
+changes on each trap, never stabilising, and leaving userspace in a
+bit of a funny state (which is why we disable the vdso in most similar
+cases). This erratum mentionned above is a bit special in the sense
+that in only requires to trap AArch32 accesses, and 64bit tasks can be
+left alone. Consequently, the vdso is never disabled and AArch32 tasks
+are affected.
+
+Obviously, we really want to retain the 64bit vdso in this case. To
+that effect, this series offers a way to disable the 32bit view of the
+vdso without impacting its 64bit counterpart, by providing a
+"no-compat" vdso clock_mode, and plugging this feature into the
+1418040 detection code.
 
 
-Thanks,
-SeongJae Park
+Marc Zyngier (3):
+  arm64: Introduce a way to disable the 32bit vdso
+  arm64: arch_timer: Allow an workaround descriptor to disable compat
+    vdso
+  arm64: arch_timer: Disable the compat vdso for cores affected by
+    ARM64_WORKAROUND_1418040
 
-> 
-> ---
-> v2:
->  - Use both singular and plural form.
-> ---
->  scripts/spelling.txt | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/scripts/spelling.txt b/scripts/spelling.txt
-> index c45e9afaab2d..c56a6c36e6f2 100644
-> --- a/scripts/spelling.txt
-> +++ b/scripts/spelling.txt
-> @@ -406,6 +406,8 @@ decendants||descendants
->  decompres||decompress
->  decsribed||described
->  decription||description
-> +decriptor||descriptor
-> +decriptors||descriptors
->  dectected||detected
->  defailt||default
->  deferal||deferral
-> -- 
-> 2.25.1
+ arch/arm/include/asm/clocksource.h            | 11 ++++++++++-
+ arch/arm/kernel/vdso.c                        |  2 +-
+ arch/arm64/include/asm/arch_timer.h           |  1 +
+ arch/arm64/include/asm/clocksource.h          |  5 ++++-
+ arch/arm64/include/asm/vdso/clocksource.h     | 14 ++++++++++++++
+ .../include/asm/vdso/compat_gettimeofday.h    |  5 +++--
+ arch/arm64/include/asm/vdso/gettimeofday.h    |  6 ++++--
+ arch/arm64/include/asm/vdso/vsyscall.h        |  4 +---
+ drivers/clocksource/arm_arch_timer.c          | 19 +++++++++++++++----
+ 9 files changed, 53 insertions(+), 14 deletions(-)
+ create mode 100644 arch/arm64/include/asm/vdso/clocksource.h
+
+-- 
+2.27.0
+
