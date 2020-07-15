@@ -2,111 +2,140 @@ Return-Path: <SRS0=kup7=A2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0576DC433E4
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 03:46:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BE25C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 03:47:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D0E282074B
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 03:46:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 115922076D
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 03:47:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="PA0lyJmm"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="b5kE0esf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728654AbgGODqU (ORCPT
+        id S1728658AbgGODrZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 23:46:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36844 "EHLO
+        Tue, 14 Jul 2020 23:47:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37012 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728199AbgGODqT (ORCPT
+        with ESMTP id S1726893AbgGODrY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 23:46:19 -0400
-Received: from mail-il1-x144.google.com (mail-il1-x144.google.com [IPv6:2607:f8b0:4864:20::144])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7770FC061794
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 20:46:19 -0700 (PDT)
-Received: by mail-il1-x144.google.com with SMTP id s21so780346ilk.5
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 20:46:19 -0700 (PDT)
+        Tue, 14 Jul 2020 23:47:24 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B811BC061794
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 20:47:24 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id f18so934064wrs.0
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 20:47:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
+        d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=TsOL0cHZgNHHXdS8EKSurkqDwkh4q7dcMdF14rSf6+4=;
-        b=PA0lyJmmqv3z1yng5c+bbC+Fd2sF2bB+Z0yAb13o6k76rebaVXD1D3fb41re4Ihvq+
-         hivlxR8HzDkiHGmh0l8EEY9XgRAXgoQEKAMqW+d1+qsPz3YGnYvKzC5wsCQDWpkMhiX8
-         pQ/KWP1oW9UejrUN609DKt62AESXiboSQaStU=
+        bh=80hgB3Fq3XFIKiId7PbT4ZtffySmJWFsmTxk7R8Jg78=;
+        b=b5kE0esfW+M+PVUtyf+1XnxZWg/JuNQGk9B30zFKSWwurrF2Da7rR/RbN+1Bsb5aak
+         6KCFwvBiX1KbZ/IogP3pgSu/O8PM6byEbFMOnbofAE3e1bqbESydmUgbJoT2RamHCP3e
+         7v/euNreVZcaLhwBYqZjk2NGFCoTAsl0SrlER1JeMtgBdpcy+r18pjhL7vJV/dsDXyoO
+         FUrWxn5TvZREZUQE4uNfw4jrxhuCA4zh+n6XztLstMWmDrC+KPeKPxvwWVCLv2faVPb+
+         /nh1TAQA68sOIRN8bgOsMTmahPxi+zieMcpGMPPMLaHf9LVlWYr2Tb582/rfA9b77/Yz
+         B/Wg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=TsOL0cHZgNHHXdS8EKSurkqDwkh4q7dcMdF14rSf6+4=;
-        b=d6+qU32gBIMR6auF49kwPrItjMTf8rrnZFcc0RGtCDGSNiR24SsUdXViLwdSIZ1Dma
-         cAomhkbZAQMebmrLSKbcIcV3+QkF97pBPfosoG7lQXPtLuGXKZRmYN2icwmNFARMgFUn
-         F+ndxeuHCUNQK112jOT0Sg0+LOLaWTFqJD51NqaYd6mg76MSpKkkbEdkxN8WkvyqEDut
-         zl+CBvVtz8dvznX0yPhm1ckHfz/9+R3dEUsgL6njmnpI/ANOFN6uEMzsOKT0xZ+e7vwq
-         e9ycjMGclJMWx3Qwg2NwtAntKOrxptl20WyHGItOaNDqkmugayUBjupJCDYr7++qQvCx
-         3+JQ==
-X-Gm-Message-State: AOAM5312PEjpmASrn6BPt141RKohFSlGvzCtxoDG0a7T6s5H7XDaRHDv
-        ppyeCktjEcSmo1EoVzoQCviTUFidI3Y=
-X-Google-Smtp-Source: ABdhPJxlJ7Lnej1Ay35xzFGxj9kLl+4IBDAQpBKOCBwdVGA1KISNw8BYs2kF1QYx4HDaHYlbxOiChw==
-X-Received: by 2002:a92:d30b:: with SMTP id x11mr8163139ila.175.1594784778087;
-        Tue, 14 Jul 2020 20:46:18 -0700 (PDT)
-Received: from mail-il1-f181.google.com (mail-il1-f181.google.com. [209.85.166.181])
-        by smtp.gmail.com with ESMTPSA id b21sm505534ioc.36.2020.07.14.20.46.16
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 14 Jul 2020 20:46:17 -0700 (PDT)
-Received: by mail-il1-f181.google.com with SMTP id i18so753364ilk.10
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 20:46:16 -0700 (PDT)
-X-Received: by 2002:a92:a196:: with SMTP id b22mr7685147ill.303.1594784776244;
- Tue, 14 Jul 2020 20:46:16 -0700 (PDT)
+        bh=80hgB3Fq3XFIKiId7PbT4ZtffySmJWFsmTxk7R8Jg78=;
+        b=GknQn7qRXX3l0cRFWDI+q0LHKEZodxLzMH+US2e1BDbF40Z6/ROEey/ed5ZYaA1UYv
+         NCdBXokwaAkyDSlXJAmKk4c6dSdZ5o3LRBemaVwLN+EZQk0SomuTwAv9fl7ZqGWCpnHQ
+         CX4xqX+MGBugS1fjBYc9vD3pufkmP8dxuOMuD4dW1VLQMQ7sOl7kUiq68OkPD3VhxQMh
+         KeHZb1Q/LQblw/VPs2wUoaTh4wvH9vTiik2nRK9JXXUZA59Z1vE1M7v6cB0rXxuClr7J
+         V4HiOgBLg3cFP1BQzmIBtkaUtj+vWVDx8hBd9S6fjnTyBCqOojW86vKH9uTYX1WPEIhz
+         EN0g==
+X-Gm-Message-State: AOAM530WNj2jckWVjx5m0LejryOmQpKW98/Xwv9qKF0My09V5S29PbOR
+        /zKDJNYqdBiRFoaLFHPZ2dGgM77W8aQRjXezmop3+Q==
+X-Google-Smtp-Source: ABdhPJw9P2wWnLC30qk6qeKsB/4onQBt5QQ/Ff4rue+kzOL0Dw7pLXwt158nTqEpcLRe3Tk+o/VWZozgd5+OwoBRTJ8=
+X-Received: by 2002:a05:6000:cf:: with SMTP id q15mr9253893wrx.203.1594784843205;
+ Tue, 14 Jul 2020 20:47:23 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200713091211.2183368-1-tientzu@chromium.org>
- <20200713091211.2183368-2-tientzu@chromium.org> <4a2451f9-57d8-2e83-e1d6-f144f37173c0@arm.com>
- <20200714110141.GD16178@lst.de>
-In-Reply-To: <20200714110141.GD16178@lst.de>
-From:   Claire Chang <tientzu@chromium.org>
-Date:   Wed, 15 Jul 2020 11:46:05 +0800
-X-Gmail-Original-Message-ID: <CALiNf2-9b5LMjv+KCqFJ9oz2FocT6oQ1zVY_MBaFgNG1DQxZ=Q@mail.gmail.com>
-Message-ID: <CALiNf2-9b5LMjv+KCqFJ9oz2FocT6oQ1zVY_MBaFgNG1DQxZ=Q@mail.gmail.com>
-Subject: Re: [PATCH 1/4] dma-mapping: Add bounced DMA ops
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Robin Murphy <robin.murphy@arm.com>,
-        Rob Herring <robh+dt@kernel.org>, frowand.list@gmail.com,
-        m.szyprowski@samsung.com, treding@nvidia.com,
-        Greg KH <gregkh@linuxfoundation.org>, saravanak@google.com,
-        suzuki.poulose@arm.com, dan.j.williams@intel.com,
-        heikki.krogerus@linux.intel.com, bgolaszewski@baylibre.com,
-        devicetree@vger.kernel.org, lkml <linux-kernel@vger.kernel.org>,
-        iommu@lists.linux-foundation.org, tfiga@chromium.org,
-        Nicolas Boichat <drinkcat@chromium.org>
+References: <20200715031120.1002016-1-vitor@massaru.org>
+In-Reply-To: <20200715031120.1002016-1-vitor@massaru.org>
+From:   David Gow <davidgow@google.com>
+Date:   Wed, 15 Jul 2020 11:47:11 +0800
+Message-ID: <CABVgOSkBAiMSMzCx62_CRo_0e2SGdvRWZ0dSC4t628YJBw-3Aw@mail.gmail.com>
+Subject: Re: [RFC 0/3] kunit: add support to use modules
+To:     Vitor Massaru Iha <vitor@massaru.org>
+Cc:     KUnit Development <kunit-dev@googlegroups.com>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Brendan Higgins <brendanhiggins@google.com>,
+        Kees Cook <keescook@chromium.org>,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        linux-kernel-mentees@lists.linuxfoundation.org
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 14, 2020 at 7:01 PM Christoph Hellwig <hch@lst.de> wrote:
+On Wed, Jul 15, 2020 at 11:11 AM Vitor Massaru Iha <vitor@massaru.org> wrote:
 >
-> On Mon, Jul 13, 2020 at 12:55:43PM +0100, Robin Murphy wrote:
-> > On 2020-07-13 10:12, Claire Chang wrote:
-> >> The bounced DMA ops provide an implementation of DMA ops that bounce
-> >> streaming DMA in and out of a specially allocated region. Only the
-> >> operations relevant to streaming DMA are supported.
-> >
-> > I think there are too many implicit assumptions here - apparently that
-> > coherent allocations will always be intercepted by
-> > dma_*_from_dev_coherent(), and that calling into dma-direct won't actually
-> > bounce things a second time beyond where you thought they were going,
-> > manage coherency for a different address, and make it all go subtly wrong.
-> > Consider "swiotlb=force", for instance...
-> >
-> > Again, plumbing this straight into dma-direct so that SWIOTLB can simply
-> > target a different buffer and always bounce regardless of masks would seem
-> > a far better option.
+> Currently, KUnit does not allow the use of tests as a module.
+> This prevents the implementation of tests that require userspace.
+
+If this is what I think it is, thanks! I'll hopefully get a chance to
+play with it over the next few days.
+
+Can we clarify what this means: the current description is a little
+misleading, as KUnit tests can already be built and run as modules,
+and "tests that require userspace" is a bit broad.
+
+As I understand it, this patchset does three things:
+- Let kunit_tool install modules to a root filesystem and boot UML
+with that filesystem.
+- Have tests inherit the mm of the process that started them, which
+(if the test is in a module), provides a user-space memory context so
+that copy_{from,to}_user() works.
+- Port the test_user_copy.c tests to KUnit, using this new feature.
+
+A few comments from my quick glance over it:
+- The rootfs support is useful: I'm curious how it'll interact with
+non-UML architectures in [1]. It'd be nice for this to be extensible
+and to not explicitly state UML where possible.
+- The inheriting of the mm stuff still means that
+copy_{from,to}_user() will only work if loaded as a module. This
+really needs to be documented. (Ideally, we'd find a way of having
+this work even for built-in tests, but I don't have any real ideas as
+to how that could be done).
+- It'd be nice to split the test_user_copy.c test port into a separate
+commit. In fact, it may make sense to also split the kunit_tool
+changes and the mm changes into separate series, as they're both quite
+useful independently.
+
+Cheers,
+-- David
+
+> This patchset makes this possible by introducing the use of
+> the root filesystem in KUnit. And it allows the use of tests
+> that can be compiled as a module
 >
-> I haven't really had time to read through the details, but I agree that
-> any bouncing scheme should reuse the swiotlb code and not invent a
-> parallel infrastructure.
-Thanks for the feedback. I'll try to reuse SWIOTLB.
+> Vitor Massaru Iha (3):
+>   kunit: tool: Add support root filesystem in kunit-tool
+>   lib: Allows to borrow mm in userspace on KUnit
+>   lib: Convert test_user_copy to KUnit test
+>
+>  include/kunit/test.h                        |   1 +
+>  lib/Kconfig.debug                           |  17 ++
+>  lib/Makefile                                |   2 +-
+>  lib/kunit/try-catch.c                       |  15 +-
+>  lib/{test_user_copy.c => user_copy_kunit.c} | 196 +++++++++-----------
+>  tools/testing/kunit/kunit.py                |  37 +++-
+>  tools/testing/kunit/kunit_kernel.py         | 105 +++++++++--
+>  7 files changed, 238 insertions(+), 135 deletions(-)
+>  rename lib/{test_user_copy.c => user_copy_kunit.c} (55%)
+>
+>
+> base-commit: 725aca9585956676687c4cb803e88f770b0df2b2
+> prerequisite-patch-id: 582b6d9d28ce4b71628890ec832df6522ca68de0
+> --
+> 2.26.2
+>
