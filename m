@@ -2,232 +2,187 @@ Return-Path: <SRS0=kup7=A2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F8CCC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 17:56:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D70BAC433E3
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 17:54:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 019B920663
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 17:56:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B404F2065E
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 17:54:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Yo/iLTkC"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="xYrPmKxG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726898AbgGOR4Y (ORCPT
+        id S1726780AbgGORyO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 13:56:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55290 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725882AbgGOR4U (ORCPT
+        Wed, 15 Jul 2020 13:54:14 -0400
+Received: from aserp2130.oracle.com ([141.146.126.79]:45690 "EHLO
+        aserp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725861AbgGORyN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 13:56:20 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1EF8AC061755;
-        Wed, 15 Jul 2020 10:56:20 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id f2so3658681wrp.7;
-        Wed, 15 Jul 2020 10:56:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=txrkPrZiEn1pbT9kzdmetNqwIC2PvBGCwV/yJihymvQ=;
-        b=Yo/iLTkCOqUsykROi54kl7CXKAvBJVM2tFfbAhRX6TsblZCX1MJMyvsJbGn/NkBDzC
-         KCnCXJ5z+Tyhy4z2tC+xHjEouoz2j3ja0nn/o7PJhs4U2OilX6G8RW82mNk/g+0JLzFI
-         cAB9eabMoNyIpuwspNK7eEbw9oxRpVXgGwLs9YnQRQ8fcuhKhGmCqUjkqv84V00u/BKv
-         9S+a/zpoyykQ6RlHPPoNe8fckniBZpWZtSm1Lm+Mg4qJMRWP9nDnp/acCVZRrYml3EVE
-         xXcIp1cJet4qX3zvzmHXDDGSfkQcwKb59CVUwWpepUhoB3ACIQ9/N8UazhKz4FpCH/XJ
-         f4uQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=txrkPrZiEn1pbT9kzdmetNqwIC2PvBGCwV/yJihymvQ=;
-        b=a91XXjrWXj+72Sz9tv/5hRLXcIL6slpZ9gtqCi1DuXzPmDN+Z6eki+5XL07gMBunyN
-         UgeVU+EUnl07jfwbjehPotrocKbmdc7PfYxgZ/BdLagQxZnTGRq+LunSW97TaFvdC5SC
-         6L/LxY4S7L0BaQgXCj9fKqNm9BfqXH07n2/SpiXB/QQdQ42Njen1S/P9lZHAvA9I5zaP
-         ++UFoa4j48I5e5DKT+/NBcqsCo05C2qaOYRDzPB4KOzdEh1HmKztvj9TaRYe/eckRkJ7
-         NU9hOSSNfNEQOlXuXt0u82Xp5UB3Y7f7UbY87+B3YAMnX0PSa5fUy84m8NdQ+s64wMN+
-         2uAw==
-X-Gm-Message-State: AOAM532SR5rjfYjHtKyxDxNAouXIbj9H1epPLxlVrHZJDf4ceky47fT8
-        IeEOGYiWYNAr+BeyIQt0MHlWQ6v+JuVnOkcMLww=
-X-Google-Smtp-Source: ABdhPJwKTDDMyra+aSCx70aaxxEryoqGVH2kq/Vy70Lnm2CkKYtD0NcGtJo864aQiOBDMkj1VN7eSL+yNdnVk5jeG8k=
-X-Received: by 2002:adf:82b8:: with SMTP id 53mr614398wrc.172.1594835778778;
- Wed, 15 Jul 2020 10:56:18 -0700 (PDT)
+        Wed, 15 Jul 2020 13:54:13 -0400
+Received: from pps.filterd (aserp2130.oracle.com [127.0.0.1])
+        by aserp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06FGvwPu045673;
+        Wed, 15 Jul 2020 16:59:33 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2020-01-29;
+ bh=ySvnLAKibIKrCI95yKZmOin0mAO3iUBF2SDonTOgiX0=;
+ b=xYrPmKxGZfvFxOqIpElVFiktRYwsOKkT0bHSmvjM8NifpdUwKjJixyRVC1y+mFoZTVV0
+ jRayhCHA7dLI/G6zYZpnKRj0Nc6XACkYUy+ay+gfe3ui2XOW5pnroxxXAESX2mrPuAsC
+ d9nm0TMw6eHQbfXgH0i6l//QzxBTbQTE67cYV8nbuXmj8VZW+pHRyKfHcroqQhryWdpJ
+ Q/YJF+NEZn6ZQS6FWYabg4cb/VNbT1eEa0aakt6wLISjSg9DgOZzum966IgmGBFaq+LM
+ J8bLbZeKF/unOaRxLPNxhlQz4dHszcTx+AWjNrvzav3TIIJH9GXDbM08wfuRh8aRsuYJ Zw== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by aserp2130.oracle.com with ESMTP id 327s65jvdh-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 15 Jul 2020 16:59:33 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06FGwh9Y004902;
+        Wed, 15 Jul 2020 16:59:32 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by userp3030.oracle.com with ESMTP id 327qc1b55g-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 15 Jul 2020 16:59:32 +0000
+Received: from abhmp0010.oracle.com (abhmp0010.oracle.com [141.146.116.16])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 06FGxQq3009148;
+        Wed, 15 Jul 2020 16:59:27 GMT
+Received: from [192.168.2.112] (/50.38.35.18)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 15 Jul 2020 09:59:26 -0700
+Subject: Re: [PATCH v3] mm/hugetlb: split hugetlb_cma in nodes with memory
+To:     Will Deacon <will@kernel.org>
+Cc:     Barry Song <song.bao.hua@hisilicon.com>, akpm@linux-foundation.org,
+        x86@kernel.org, linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        linuxarm@huawei.com, linux-arm-kernel@lists.infradead.org,
+        Roman Gushchin <guro@fb.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H.Peter Anvin" <hpa@zytor.com>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Anshuman Khandual <anshuman.khandual@arm.com>,
+        Jonathan Cameron <jonathan.cameron@huawei.com>
+References: <20200710120950.37716-1-song.bao.hua@hisilicon.com>
+ <359ea1d0-b1fd-d09f-d28a-a44655834277@oracle.com>
+ <20200715081822.GA5683@willie-the-truck>
+From:   Mike Kravetz <mike.kravetz@oracle.com>
+Message-ID: <5724f1f8-63a6-ee0f-018c-06fb259b6290@oracle.com>
+Date:   Wed, 15 Jul 2020 09:59:24 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-References: <20200713183711.762244-1-luke.r.nels@gmail.com>
-In-Reply-To: <20200713183711.762244-1-luke.r.nels@gmail.com>
-From:   =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn.topel@gmail.com>
-Date:   Wed, 15 Jul 2020 19:56:06 +0200
-Message-ID: <CAJ+HfNg_qV=umB9T1U9vRo2pUpmUFfBN44WpAOfMoi75Ymh2dw@mail.gmail.com>
-Subject: Re: [RFC PATCH bpf-next 0/3] bpf, riscv: Add compressed instructions
- to rv64 JIT
-To:     Luke Nelson <lukenels@cs.washington.edu>
-Cc:     bpf <bpf@vger.kernel.org>, Luke Nelson <luke.r.nels@gmail.com>,
-        Xi Wang <xi.wang@gmail.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@chromium.org>,
-        Netdev <netdev@vger.kernel.org>,
-        linux-riscv <linux-riscv@lists.infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200715081822.GA5683@willie-the-truck>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9683 signatures=668680
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 spamscore=0
+ mlxlogscore=999 bulkscore=0 malwarescore=0 mlxscore=0 phishscore=0
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2007150132
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9683 signatures=668680
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 malwarescore=0
+ phishscore=0 mlxscore=0 priorityscore=1501 lowpriorityscore=0 spamscore=0
+ clxscore=1015 bulkscore=0 mlxlogscore=999 impostorscore=0 suspectscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2007150132
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 13 Jul 2020 at 20:37, Luke Nelson <lukenels@cs.washington.edu> wrot=
-e:
->
-> This patch series enables using compressed riscv (RVC) instructions
-> in the rv64 BPF JIT.
->
+On 7/15/20 1:18 AM, Will Deacon wrote:
+>> diff --git a/mm/hugetlb.c b/mm/hugetlb.c
+>> index f24acb3af741..a0007d1d12d2 100644
+>> --- a/mm/hugetlb.c
+>> +++ b/mm/hugetlb.c
+>> @@ -3273,6 +3273,9 @@ void __init hugetlb_add_hstate(unsigned int order)
+>>  	snprintf(h->name, HSTATE_NAME_LEN, "hugepages-%lukB",
+>>  					huge_page_size(h)/1024);
+> 
+> (nit: you can also make hugetlb_cma_reserve() static and remote its function
+> prototypes from hugetlb.h)
 
-First of all; Really nice work. I like this, and it makes the code
-easier to read as well (e.g. emit_mv). I'm a bit curious why you only
-did it for RV64, and not RV32? I have some minor comments on the
-patches. I strongly encourage you to submit this as a proper (non-RFC)
-set for bpf-next.
+Yes thanks.  I threw this together pretty quickly.
 
+> 
+>> +	if (order >= MAX_ORDER && hugetlb_cma_size)
+>> +		hugetlb_cma_reserve(order);
+> 
+> Although I really like the idea of moving this out of the arch code, I don't
+> quite follow the check against MAX_ORDER here -- it looks like a bit of a
+> hack to try to intercept the "PUD_SHIFT - PAGE_SHIFT" order which we
+> currently pass to hugetlb_cma_reserve(). Maybe we could instead have
+> something like:
+> 
+> 	#ifndef HUGETLB_CMA_ORDER
+> 	#define HUGETLB_CMA_ORDER	(PUD_SHIFT - PAGE_SHIFT)
+> 	#endif
+> 
+> and then just do:
+> 
+> 	if (order == HUGETLB_CMA_ORDER)
+> 		hugetlb_cma_reserve(order);
+> 
+> ? Is there something else I'm missing?
+> 
 
-Cheers,
-Bj=C3=B6rn
+Well, the current hugetlb CMA code only kicks in for gigantic pages as
+defined by the hugetlb code. For example, the code to allocate a page
+from CMA is in the routine alloc_gigantic_page().  alloc_gigantic_page()
+is called from alloc_fresh_huge_page() which starts with:
 
-> RVC is a standard riscv extension that adds a set of compressed,
-> 2-byte instructions that can replace some regular 4-byte instructions
-> for improved code density.
->
-> This series first modifies the JIT to support using 2-byte instructions
-> (e.g., in jump offset computations), then adds RVC encoding and
-> helper functions, and finally uses the helper functions to optimize
-> the rv64 JIT.
->
-> I used our formal verification framework, Serval, to verify the
-> correctness of the RVC encodings and their uses in the rv64 JIT.
->
-> The JIT continues to pass all tests in lib/test_bpf.c, and introduces
-> no new failures to test_verifier; both with and without RVC being enabled=
-.
->
-> The following are examples of the JITed code for the verifier selftest
-> "direct packet read test#3 for CGROUP_SKB OK", without and with RVC
-> enabled, respectively. The former uses 178 bytes, and the latter uses 112=
-,
-> for a ~37% reduction in code size for this example.
->
-> Without RVC:
->
->    0: 02000813    addi  a6,zero,32
->    4: fd010113    addi  sp,sp,-48
->    8: 02813423    sd    s0,40(sp)
->    c: 02913023    sd    s1,32(sp)
->   10: 01213c23    sd    s2,24(sp)
->   14: 01313823    sd    s3,16(sp)
->   18: 01413423    sd    s4,8(sp)
->   1c: 03010413    addi  s0,sp,48
->   20: 03056683    lwu   a3,48(a0)
->   24: 02069693    slli  a3,a3,0x20
->   28: 0206d693    srli  a3,a3,0x20
->   2c: 03456703    lwu   a4,52(a0)
->   30: 02071713    slli  a4,a4,0x20
->   34: 02075713    srli  a4,a4,0x20
->   38: 03856483    lwu   s1,56(a0)
->   3c: 02049493    slli  s1,s1,0x20
->   40: 0204d493    srli  s1,s1,0x20
->   44: 03c56903    lwu   s2,60(a0)
->   48: 02091913    slli  s2,s2,0x20
->   4c: 02095913    srli  s2,s2,0x20
->   50: 04056983    lwu   s3,64(a0)
->   54: 02099993    slli  s3,s3,0x20
->   58: 0209d993    srli  s3,s3,0x20
->   5c: 09056a03    lwu   s4,144(a0)
->   60: 020a1a13    slli  s4,s4,0x20
->   64: 020a5a13    srli  s4,s4,0x20
->   68: 00900313    addi  t1,zero,9
->   6c: 006a7463    bgeu  s4,t1,0x74
->   70: 00000a13    addi  s4,zero,0
->   74: 02d52823    sw    a3,48(a0)
->   78: 02e52a23    sw    a4,52(a0)
->   7c: 02952c23    sw    s1,56(a0)
->   80: 03252e23    sw    s2,60(a0)
->   84: 05352023    sw    s3,64(a0)
->   88: 00000793    addi  a5,zero,0
->   8c: 02813403    ld    s0,40(sp)
->   90: 02013483    ld    s1,32(sp)
->   94: 01813903    ld    s2,24(sp)
->   98: 01013983    ld    s3,16(sp)
->   9c: 00813a03    ld    s4,8(sp)
->   a0: 03010113    addi  sp,sp,48
->   a4: 00078513    addi  a0,a5,0
->   a8: 00008067    jalr  zero,0(ra)
->
-> With RVC:
->
->    0:   02000813    addi    a6,zero,32
->    4:   7179        c.addi16sp  sp,-48
->    6:   f422        c.sdsp  s0,40(sp)
->    8:   f026        c.sdsp  s1,32(sp)
->    a:   ec4a        c.sdsp  s2,24(sp)
->    c:   e84e        c.sdsp  s3,16(sp)
->    e:   e452        c.sdsp  s4,8(sp)
->   10:   1800        c.addi4spn  s0,sp,48
->   12:   03056683    lwu     a3,48(a0)
->   16:   1682        c.slli  a3,0x20
->   18:   9281        c.srli  a3,0x20
->   1a:   03456703    lwu     a4,52(a0)
->   1e:   1702        c.slli  a4,0x20
->   20:   9301        c.srli  a4,0x20
->   22:   03856483    lwu     s1,56(a0)
->   26:   1482        c.slli  s1,0x20
->   28:   9081        c.srli  s1,0x20
->   2a:   03c56903    lwu     s2,60(a0)
->   2e:   1902        c.slli  s2,0x20
->   30:   02095913    srli    s2,s2,0x20
->   34:   04056983    lwu     s3,64(a0)
->   38:   1982        c.slli  s3,0x20
->   3a:   0209d993    srli    s3,s3,0x20
->   3e:   09056a03    lwu     s4,144(a0)
->   42:   1a02        c.slli  s4,0x20
->   44:   020a5a13    srli    s4,s4,0x20
->   48:   4325        c.li    t1,9
->   4a:   006a7363    bgeu    s4,t1,0x50
->   4e:   4a01        c.li    s4,0
->   50:   d914        c.sw    a3,48(a0)
->   52:   d958        c.sw    a4,52(a0)
->   54:   dd04        c.sw    s1,56(a0)
->   56:   03252e23    sw      s2,60(a0)
->   5a:   05352023    sw      s3,64(a0)
->   5e:   4781        c.li    a5,0
->   60:   7422        c.ldsp  s0,40(sp)
->   62:   7482        c.ldsp  s1,32(sp)
->   64:   6962        c.ldsp  s2,24(sp)
->   66:   69c2        c.ldsp  s3,16(sp)
->   68:   6a22        c.ldsp  s4,8(sp)
->   6a:   6145        c.addi16sp  sp,48
->   6c:   853e        c.mv    a0,a5
->   6e:   8082        c.jr    ra
->
-> Luke Nelson (3):
->   bpf, riscv: Modify JIT ctx to support compressed instructions
->   bpf, riscv: Add encodings for compressed instructions
->   bpf, riscv: Use compressed instructions in the rv64 JIT
->
->  arch/riscv/net/bpf_jit.h        | 495 +++++++++++++++++++++++++++++++-
->  arch/riscv/net/bpf_jit_comp32.c |  14 +-
->  arch/riscv/net/bpf_jit_comp64.c | 287 +++++++++---------
->  arch/riscv/net/bpf_jit_core.c   |   6 +-
->  4 files changed, 650 insertions(+), 152 deletions(-)
->
-> --
-> 2.25.1
->
+        if (hstate_is_gigantic(h))
+                page = alloc_gigantic_page(h, gfp_mask, nid, nmask);
+        else
+                page = alloc_buddy_huge_page(h, gfp_mask,
+                                nid, nmask, node_alloc_noretry);
+
+and, hstate_is_gigantic is,
+
+static inline bool hstate_is_gigantic(struct hstate *h)
+{
+        return huge_page_order(h) >= MAX_ORDER;
+}
+
+So, everything in the existing code really depends on the hugetlb definition
+of gigantic page (order >= MAX_ORDER).  The code to check for
+'order >= MAX_ORDER' in my proposed patch is just following the same
+convention.
+
+I think the current dependency on the hugetlb definition of gigantic page
+may be too simplistic if using CMA for huegtlb pages becomes more common.
+Some architectures (sparc, powerpc) have more than one gigantic pages size.
+Currently there is no way to specify that CMA should be used for one and
+not the other.  In addition, I could imagine someone wanting to reserve/use
+CMA for non-gigantic (PMD) sized pages.  There is no mechainsm for that today.
+
+I honestly have not heard about many use cases for this CMA functionality.
+When support was initially added, it was driven by a specific use case and
+the 'all gigantic pages use CMA if defined' implementation was deemed
+sufficient.  If there are more use cases, or this seems too simple we can
+revisit that decision.
+
+>> +
+>>  	parsed_hstate = h;
+>>  }
+>>  
+>> @@ -5647,7 +5650,10 @@ void __init hugetlb_cma_reserve(int order)
+>>  	unsigned long size, reserved, per_node;
+>>  	int nid;
+>>  
+>> -	cma_reserve_called = true;
+>> +	if (cma_reserve_called)
+>> +		return;
+>> +	else
+>> +		cma_reserve_called = true;
+> 
+> (nit: don't need the 'else' here)
+
+Yes, duh!
+
+-- 
+Mike Kravetz
