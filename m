@@ -7,62 +7,61 @@ X-Spam-Status: No, score=-17.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6AC9C433E3
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 17:40:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 091C1C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 17:42:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 833192065F
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 17:40:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D11EB2065F
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 17:42:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="qmjPpZ9t"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="BXZ7xTgy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726761AbgGORk4 (ORCPT
+        id S1726778AbgGORm2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 13:40:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52924 "EHLO
+        Wed, 15 Jul 2020 13:42:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53160 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725861AbgGORky (ORCPT
+        with ESMTP id S1725861AbgGORm2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 13:40:54 -0400
-Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8686EC061755
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 10:40:54 -0700 (PDT)
-Received: by mail-wm1-x344.google.com with SMTP id g10so3935002wmc.1
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 10:40:54 -0700 (PDT)
+        Wed, 15 Jul 2020 13:42:28 -0400
+Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A81B6C061755
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 10:42:27 -0700 (PDT)
+Received: by mail-wm1-x342.google.com with SMTP id w3so6646865wmi.4
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 10:42:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=a5dAbehsONAnf555F6gUEG/pckD1sIKjgptiB9KxRXw=;
-        b=qmjPpZ9tA0RveGWwAZzwymhGlqja9OPvpWMHTpwSp6BxnLkJ4tEBBJ8cD3i8KVrZBy
-         6cylbdwmw/A+/tKPLeKhV7hdpmNx2RxUmVtdy/lEm5Ga533p/qS/B7P76S0RCOUoharX
-         EQzlNhowv0IREjvsmqGO7wL9d6zIZSWp6SpWqwIWqH0vrJwIkvPqV7sp5cNBZJekk5K1
-         L7zruLM5Lk65GY15c6CDNn3tfzh2TliWxxpCjwyCGagdjuYnDKNC1SDLhyWdjwJHWmQ0
-         VMFFH+2Z6M1LPJEx9g14OdCxsuABJmnvKqjthHguPyB6edFAUXCtvvyv6JFTSuzScGiG
-         5Zrg==
+        bh=Xg2xS7FLFiGq3fXGz7uNXfj9GuJsc/dqXv3ZQu72lRE=;
+        b=BXZ7xTgyk+lhw86JGcCjIUnN5lEdbc/2F23x74vsCBxE6KnXVnAWDLcYky8TtokEm3
+         34zXSAK0gsH5dRUc5Hft6CnroqVAfqg0LC2Mf0nF7HxtZhlvwHAzh9Zo0a10idZWm9ls
+         qIAQtvd4mHPg7ydgi6n5PPl/K5q3Xsde8syyiO89nLLj45vC6eGpYmYSziydmAulvJsz
+         am8KffoAVicYpi83DhqsoEC2vXf14vsodhqfJ27DAzsJH8OXm9tYaSByTaVHQxb4IGc5
+         qSoQah4bBi/NC9ihpxcXUF81KVW10IjGOMMWUqq+hmEvaxC8IR/IDoLuejYggzpRRGPV
+         P1ww==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=a5dAbehsONAnf555F6gUEG/pckD1sIKjgptiB9KxRXw=;
-        b=XQOQVwuFIbFCQTcpB1OrhcHAB9URfRvUvdEdCTdSv6y1p5SZYZxMY0m/NikkpQAltI
-         rAxcZviqAC57h1Fl1z/mfGVnlX7mdFshdBiG519TjJDAnrfp3tkD6Xg0Kt5xCLSjOb76
-         hVB5VERfXfMYVm30szxxW3w3XIFcnhHTbx9v2DNrODa0x+LUGO910NFzUM6iTjvp5fBR
-         KQVxztQYn48keGTLbrAt5Eyo7jUcMqn3PE0I2mKL/FAt6DnhpFl2a4Ip6YVjT04wCXPI
-         GYb6RUq+2cdKHN38fni0GTkRY51Qb7Wr8B/hr6Df+KffVRvSHoJaLs1TpZ7DTabmrG+4
-         5Png==
-X-Gm-Message-State: AOAM5327Iet0WP/R9lHvCJZs4jzUAJbE2q2n+tbhsdMWgqLgP+6FaOKb
-        bKvd1hH37qIQbd3SpG+r28ADWbfaFrk0WLLJ1wrfQeya/0RyWA==
-X-Google-Smtp-Source: ABdhPJwfbFF2XmyJA9h3zQko5IagYXwHq06XlTvDBBB+OyeXg8CfzhooBOb8HvzTlMgxLGPKyHOuqz7940aFIPwGq1Y=
-X-Received: by 2002:a05:600c:2295:: with SMTP id 21mr493594wmf.87.1594834852908;
- Wed, 15 Jul 2020 10:40:52 -0700 (PDT)
+        bh=Xg2xS7FLFiGq3fXGz7uNXfj9GuJsc/dqXv3ZQu72lRE=;
+        b=gZHl4/rAfal4bjA6IJKxVtXxqCm/GVizZKsbVQGp77NO+5+NrePOao6dKOn8A0h5Kt
+         vTKPnKRSgNguvQ9Q84+ftLmNd4Y6GvumrUSoSWsFFll9HUX0QsJqKS1GmqEIjdDje6zY
+         MVIq3HoR+JaP8BxiZ0TcjbrJvKPiVCDm33W2jx4+nXUghg8tZ78g11RqsNIwu0WJPmHS
+         pL901CmsIbcAo3SQZ4iNwOky/z2Dpn6XVn0CBb1NrZPRBQlfMvVWCD0/DUHTR6PZ+rar
+         IxQGBpOu9aQ3Jk8/m+d9p5dk+FdHcMeRfz07mTf6lE9RjOZcSDCMa2hgjGUh6kt2v/Mg
+         12Bg==
+X-Gm-Message-State: AOAM533+qGqS+MimUoezBgVnbcMv1gKR6dPzou7m0YsbkbgHHUKcr12x
+        ThZ28RHvlWgzMSu+bK0Z8ZGjoUlO2Zmm9XrATuCNug==
+X-Google-Smtp-Source: ABdhPJyFnHO6IMw8xaJOIhhBcLfPl0giUS6A0GMWqY95K9KVfA+xUZqLt23NrWRDCF95LN2Qt/VdfDQ1i7rPnAAhgEQ=
+X-Received: by 2002:a1c:19c5:: with SMTP id 188mr536824wmz.124.1594834946021;
+ Wed, 15 Jul 2020 10:42:26 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200712132634.138901-1-jolsa@kernel.org> <20200712132634.138901-17-jolsa@kernel.org>
-In-Reply-To: <20200712132634.138901-17-jolsa@kernel.org>
+References: <20200712132634.138901-1-jolsa@kernel.org> <20200712132634.138901-18-jolsa@kernel.org>
+In-Reply-To: <20200712132634.138901-18-jolsa@kernel.org>
 From:   Ian Rogers <irogers@google.com>
-Date:   Wed, 15 Jul 2020 10:40:41 -0700
-Message-ID: <CAP-5=fUdUKmsGMxsyxxZCzmwRAumLmj6LgGrXWe7APPZRRC=WA@mail.gmail.com>
-Subject: Re: [PATCH 16/18] perf metric: Add recursion check when processing
- nested metrics
+Date:   Wed, 15 Jul 2020 10:42:14 -0700
+Message-ID: <CAP-5=fUZcETzK=LFX=d-PQ7QfeGR+i=DDyyc621=HjFCr0AcXg@mail.gmail.com>
+Subject: Re: [PATCH 17/18] perf metric: Rename struct egroup to metric
 To:     Jiri Olsa <jolsa@kernel.org>
 Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
         lkml <linux-kernel@vger.kernel.org>,
@@ -84,362 +83,439 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 On Sun, Jul 12, 2020 at 6:27 AM Jiri Olsa <jolsa@kernel.org> wrote:
 >
-> Keeping the stack of nested metrics via 'struct expr_id' objecs
-
-s/objecs/objects/
-
-> and checking if we are in recursion via already processed metric.
->
-> The stack is implemented as static array within the struct egroup
-> with 100 entries, which should be enough nesting depth for any
-> metric we have or plan to have at the moment.
->
-> Adding test that simulates the recursion and checks we can
-> detect it.
+> Renaming struct egroup to metric, because it seems
+> to make more sense. Plus renaming all the variables
+> that hold egroup to appropriate names.
 >
 > Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+
+Awesome, thanks for improving readability!
+
+Acked-by: Ian Rogers <irogers@google.com>
+
 > ---
->  tools/perf/tests/parse-metric.c |  27 ++++++++-
->  tools/perf/util/expr.c          |   2 +
->  tools/perf/util/expr.h          |   9 ++-
->  tools/perf/util/metricgroup.c   | 101 +++++++++++++++++++++++++++++---
->  4 files changed, 128 insertions(+), 11 deletions(-)
->
-> diff --git a/tools/perf/tests/parse-metric.c b/tools/perf/tests/parse-metric.c
-> index b50e2a3f3b73..238a805edd55 100644
-> --- a/tools/perf/tests/parse-metric.c
-> +++ b/tools/perf/tests/parse-metric.c
-> @@ -57,6 +57,14 @@ static struct pmu_event pme_test[] = {
->         .metric_expr    = "d_ratio(DCache_L2_All_Miss, DCache_L2_All)",
->         .metric_name    = "DCache_L2_Misses",
->  },
-> +{
-> +       .metric_expr    = "IPC + M2",
-> +       .metric_name    = "M1",
-> +},
-> +{
-> +       .metric_expr    = "IPC + M1",
-> +       .metric_name    = "M2",
-> +},
->  };
-
-Perhaps add a test on simple recursion too:
-{
-  .metric_expr = "1/M1",
-  .metric_name = "M1",
-}
-
->  static struct pmu_events_map map = {
-> @@ -139,8 +147,8 @@ static int compute_metric(const char *name, struct value *vals, double *ratio)
->         err = metricgroup__parse_groups_test(evlist, &map, name,
->                                              false, false,
->                                              &metric_events);
-> -
-> -       TEST_ASSERT_VAL("failed to parse metric", err == 0);
-> +       if (err)
-> +               return err;
->
->         if (perf_evlist__alloc_stats(evlist, false))
->                 return -1;
-> @@ -264,11 +272,26 @@ static int test_dcache_l2(void)
->         return 0;
->  }
->
-> +static int test_recursion_fail(void)
-> +{
-> +       double ratio;
-> +       struct value vals[] = {
-> +               { .event = "inst_retired.any",        .val = 300 },
-> +               { .event = "cpu_clk_unhalted.thread", .val = 200 },
-> +               { 0 },
-> +       };
-> +
-> +       TEST_ASSERT_VAL("failed to find recursion",
-> +                       compute_metric("M1", vals, &ratio) == -1);
-> +       return 0;
-> +}
-> +
->  int test__parse_metric(struct test *test __maybe_unused, int subtest __maybe_unused)
->  {
->         TEST_ASSERT_VAL("IPC failed", test_ipc() == 0);
->         TEST_ASSERT_VAL("frontend failed", test_frontend() == 0);
->         TEST_ASSERT_VAL("cache_miss_cycles failed", test_cache_miss_cycles() == 0);
->         TEST_ASSERT_VAL("DCache_L2 failed", test_dcache_l2() == 0);
-> +       TEST_ASSERT_VAL("recursion fail failed", test_recursion_fail() == 0);
->         return 0;
->  }
-> diff --git a/tools/perf/util/expr.c b/tools/perf/util/expr.c
-> index 2784df38f8c2..d23d8897bc61 100644
-> --- a/tools/perf/util/expr.c
-> +++ b/tools/perf/util/expr.c
-> @@ -45,6 +45,8 @@ int expr__add_id(struct expr_parse_ctx *ctx, const char *id)
->         if (!data_ptr)
->                 return -ENOMEM;
->
-> +       data_ptr->parent = ctx->parent;
-> +
->         ret = hashmap__set(&ctx->ids, id, data_ptr,
->                            (const void **)&old_key, (void **)&old_data);
->         free(old_key);
-> diff --git a/tools/perf/util/expr.h b/tools/perf/util/expr.h
-> index b6d1fba64eaa..e5fdeab928c7 100644
-> --- a/tools/perf/util/expr.h
-> +++ b/tools/perf/util/expr.h
-> @@ -13,8 +13,14 @@
->
->  struct metric_ref;
->
-> +struct expr_id {
-> +       char            *id;
-> +       struct expr_id  *parent;
-> +};
-> +
->  struct expr_parse_ctx {
-> -       struct hashmap ids;
-> +       struct hashmap   ids;
-> +       struct expr_id  *parent;
->  };
->
->  struct expr_id_data {
-> @@ -27,6 +33,7 @@ struct expr_id_data {
->                         const char *metric_expr;
->                         bool counted;
->                 } ref;
-> +               struct expr_id  *parent;
->         };
->  };
+>  tools/perf/util/metricgroup.c | 158 +++++++++++++++++-----------------
+>  1 file changed, 79 insertions(+), 79 deletions(-)
 >
 > diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.c
-> index 66f25362702d..69ec20dd737b 100644
+> index 69ec20dd737b..9b880a5fb52b 100644
 > --- a/tools/perf/util/metricgroup.c
 > +++ b/tools/perf/util/metricgroup.c
-> @@ -24,6 +24,7 @@
->  #include <subcmd/parse-options.h>
->  #include <api/fs/fs.h>
->  #include "util.h"
-> +#include <asm/bug.h>
+> @@ -112,7 +112,7 @@ struct metric_ref_node {
 >
->  struct metric_event *metricgroup__lookup(struct rblist *metric_events,
->                                          struct evsel *evsel,
-> @@ -109,6 +110,8 @@ struct metric_ref_node {
->         struct list_head list;
->  };
+>  #define RECURSION_ID_MAX 100
 >
-> +#define RECURSION_ID_MAX 100
-> +
->  struct egroup {
+> -struct egroup {
+> +struct metric {
 >         struct list_head nd;
 >         struct expr_parse_ctx pctx;
-> @@ -119,6 +122,11 @@ struct egroup {
->         int refs_cnt;
->         int runtime;
->         bool has_constraint;
-> +
-> +       struct {
-> +               struct expr_id  id[RECURSION_ID_MAX];
-> +               int             cnt;
-> +       } recursion;
->  };
-
-Rather than place this in the egroup why not pass a "visited" array to
-add metric. This would be more in keeping with Tarjan's algorithm
-(although the SCC isn't needed in this case):
-https://en.wikipedia.org/wiki/Tarjan%27s_strongly_connected_components_algorithm
-
-Thanks,
-Ian
-
-
+>         const char *metric_name;
+> @@ -242,7 +242,7 @@ static int metricgroup__setup_events(struct list_head *groups,
+>         struct metric_expr *expr;
+>         int i = 0;
+>         int ret = 0;
+> -       struct egroup *eg;
+> +       struct metric *m;
+>         struct evsel *evsel, *tmp;
+>         unsigned long *evlist_used;
 >
->  /**
-> @@ -609,7 +617,8 @@ static int __add_metric(struct list_head *group_list,
+> @@ -250,23 +250,23 @@ static int metricgroup__setup_events(struct list_head *groups,
+>         if (!evlist_used)
+>                 return -ENOMEM;
+>
+> -       list_for_each_entry (eg, groups, nd) {
+> +       list_for_each_entry (m, groups, nd) {
+>                 struct evsel **metric_events;
+>                 struct metric_ref *metric_refs = NULL;
+>
+>                 metric_events = calloc(sizeof(void *),
+> -                               hashmap__size(&eg->pctx.ids) + 1);
+> +                               hashmap__size(&m->pctx.ids) + 1);
+>                 if (!metric_events) {
+>                         ret = -ENOMEM;
+>                         break;
+>                 }
+> -               evsel = find_evsel_group(perf_evlist, &eg->pctx,
+> +               evsel = find_evsel_group(perf_evlist, &m->pctx,
+>                                          metric_no_merge,
+> -                                        eg->has_constraint, metric_events,
+> +                                        m->has_constraint, metric_events,
+>                                          evlist_used);
+>                 if (!evsel) {
+>                         pr_debug("Cannot resolve %s: %s\n",
+> -                                       eg->metric_name, eg->metric_expr);
+> +                                       m->metric_name, m->metric_expr);
+>                         free(metric_events);
+>                         continue;
+>                 }
+> @@ -289,10 +289,10 @@ static int metricgroup__setup_events(struct list_head *groups,
+>                  * Collect and store collected nested expressions
+>                  * for metric processing.
+>                  */
+> -               if (eg->refs_cnt) {
+> +               if (m->refs_cnt) {
+>                         struct metric_ref_node *ref;
+>
+> -                       metric_refs = zalloc(sizeof(struct metric_ref) * (eg->refs_cnt + 1));
+> +                       metric_refs = zalloc(sizeof(struct metric_ref) * (m->refs_cnt + 1));
+>                         if (!metric_refs) {
+>                                 ret = -ENOMEM;
+>                                 free(metric_events);
+> @@ -300,7 +300,7 @@ static int metricgroup__setup_events(struct list_head *groups,
+>                         }
+>
+>                         i = 0;
+> -                       list_for_each_entry(ref, &eg->refs, list) {
+> +                       list_for_each_entry(ref, &m->refs, list) {
+>                                 metric_refs[i].metric_name = ref->metric_name;
+>                                 metric_refs[i].metric_expr = ref->metric_expr;
+>                                 i++;
+> @@ -308,11 +308,11 @@ static int metricgroup__setup_events(struct list_head *groups,
+>                 };
+>
+>                 expr->metric_refs = metric_refs;
+> -               expr->metric_expr = eg->metric_expr;
+> -               expr->metric_name = eg->metric_name;
+> -               expr->metric_unit = eg->metric_unit;
+> +               expr->metric_expr = m->metric_expr;
+> +               expr->metric_name = m->metric_name;
+> +               expr->metric_unit = m->metric_unit;
+>                 expr->metric_events = metric_events;
+> -               expr->runtime = eg->runtime;
+> +               expr->runtime = m->runtime;
+>                 list_add(&expr->nd, &me->head);
+>         }
+>
+> @@ -617,38 +617,38 @@ static int __add_metric(struct list_head *group_list,
 >                         struct pmu_event *pe,
 >                         bool metric_no_group,
 >                         int runtime,
-> -                       struct egroup **egp)
-> +                       struct egroup **egp,
-> +                       struct expr_id *parent)
+> -                       struct egroup **egp,
+> +                       struct metric **mp,
+>                         struct expr_id *parent)
 >  {
 >         struct metric_ref_node *ref;
->         struct egroup *eg;
-> @@ -619,7 +628,7 @@ static int __add_metric(struct list_head *group_list,
+> -       struct egroup *eg;
+> +       struct metric *m;
+>
+> -       if (*egp == NULL) {
+> +       if (*mp == NULL) {
+>                 /*
 >                  * We got in here for the master group,
 >                  * allocate it and put it on the list.
 >                  */
-> -               eg = malloc(sizeof(*eg));
-> +               eg = zalloc(sizeof(*eg));
->                 if (!eg)
+> -               eg = zalloc(sizeof(*eg));
+> -               if (!eg)
+> +               m = zalloc(sizeof(*m));
+> +               if (!m)
 >                         return -ENOMEM;
 >
-> @@ -632,6 +641,16 @@ static int __add_metric(struct list_head *group_list,
->                 INIT_LIST_HEAD(&eg->refs);
->                 eg->refs_cnt = 0;
->                 *egp = eg;
-> +
-> +               /* Initialize first recursion exr id with base name. */
-> +               parent = &eg->recursion.id[0];
-> +               eg->recursion.cnt = 1;
-> +
-> +               parent->id = strdup(pe->metric_name);
-> +               if (!parent->id) {
-> +                       free(eg);
-> +                       return -ENOMEM;
-> +               }
+> -               expr__ctx_init(&eg->pctx);
+> -               eg->metric_name = pe->metric_name;
+> -               eg->metric_expr = pe->metric_expr;
+> -               eg->metric_unit = pe->unit;
+> -               eg->runtime = runtime;
+> -               eg->has_constraint = metric_no_group || metricgroup__has_constraint(pe);
+> -               INIT_LIST_HEAD(&eg->refs);
+> -               eg->refs_cnt = 0;
+> -               *egp = eg;
+> +               expr__ctx_init(&m->pctx);
+> +               m->metric_name = pe->metric_name;
+> +               m->metric_expr = pe->metric_expr;
+> +               m->metric_unit = pe->unit;
+> +               m->runtime = runtime;
+> +               m->has_constraint = metric_no_group || metricgroup__has_constraint(pe);
+> +               INIT_LIST_HEAD(&m->refs);
+> +               m->refs_cnt = 0;
+> +               *mp = m;
+>
+>                 /* Initialize first recursion exr id with base name. */
+> -               parent = &eg->recursion.id[0];
+> -               eg->recursion.cnt = 1;
+> +               parent = &m->recursion.id[0];
+> +               m->recursion.cnt = 1;
+>
+>                 parent->id = strdup(pe->metric_name);
+>                 if (!parent->id) {
+> -                       free(eg);
+> +                       free(m);
+>                         return -ENOMEM;
+>                 }
 >         } else {
->                 /*
->                  * We got here for the referenced metric, via the
-> @@ -651,6 +670,10 @@ static int __add_metric(struct list_head *group_list,
->                 eg->has_constraint |= metricgroup__has_constraint(pe);
+> @@ -657,7 +657,7 @@ static int __add_metric(struct list_head *group_list,
+>                  * recursive metricgroup__add_metric call, add
+>                  * it to the master group.
+>                  */
+> -               eg = *egp;
+> +               m = *mp;
+>
+>                 ref = malloc(sizeof(*ref));
+>                 if (!ref)
+> @@ -665,22 +665,22 @@ static int __add_metric(struct list_head *group_list,
+>
+>                 ref->metric_name = pe->metric_name;
+>                 ref->metric_expr = pe->metric_expr;
+> -               list_add(&ref->list, &eg->refs);
+> -               eg->refs_cnt++;
+> -               eg->has_constraint |= metricgroup__has_constraint(pe);
+> +               list_add(&ref->list, &m->refs);
+> +               m->refs_cnt++;
+> +               m->has_constraint |= metricgroup__has_constraint(pe);
 >         }
 >
-> +       /* Force all found IDs in metric to have us as parent ID. */
-> +       WARN_ON_ONCE(!parent);
-> +       eg->pctx.parent = parent;
-> +
+>         /* Force all found IDs in metric to have us as parent ID. */
+>         WARN_ON_ONCE(!parent);
+> -       eg->pctx.parent = parent;
+> +       m->pctx.parent = parent;
+>
 >         /*
 >          * For both the master and referenced metrics, we parse
 >          * all the metric's IDs and add it to the parent context.
-> @@ -707,10 +730,56 @@ static struct pmu_event *find_metric(const char *metric, struct pmu_events_map *
+>          */
+> -       if (expr__find_other(pe->metric_expr, NULL, &eg->pctx, runtime) < 0) {
+> -               expr__ctx_clear(&eg->pctx);
+> -               free(eg);
+> +       if (expr__find_other(pe->metric_expr, NULL, &m->pctx, runtime) < 0) {
+> +               expr__ctx_clear(&m->pctx);
+> +               free(m);
+>                 return -EINVAL;
+>         }
+>
+> @@ -688,23 +688,23 @@ static int __add_metric(struct list_head *group_list,
+>          * We add new group only in the 'master' call,
+>          * so bail out for referenced metric case.
+>          */
+> -       if (eg->refs_cnt)
+> +       if (m->refs_cnt)
+>                 return 0;
+>
+>         if (list_empty(group_list))
+> -               list_add(&eg->nd, group_list);
+> +               list_add(&m->nd, group_list);
+>         else {
+>                 struct list_head *pos;
+>
+>                 /* Place the largest groups at the front. */
+>                 list_for_each_prev(pos, group_list) {
+> -                       struct egroup *old = list_entry(pos, struct egroup, nd);
+> +                       struct metric *old = list_entry(pos, struct metric, nd);
+>
+> -                       if (hashmap__size(&eg->pctx.ids) <=
+> +                       if (hashmap__size(&m->pctx.ids) <=
+>                             hashmap__size(&old->pctx.ids))
+>                                 break;
+>                 }
+> -               list_add(&eg->nd, pos);
+> +               list_add(&m->nd, pos);
+>         }
+>
+>         return 0;
+> @@ -730,7 +730,7 @@ static struct pmu_event *find_metric(const char *metric, struct pmu_events_map *
 >         return NULL;
 >  }
 >
-> +static int recursion_check(struct egroup *eg, const char *id, struct expr_id **parent)
-> +{
-> +       struct expr_id_data *data;
-> +       struct expr_id *p;
-> +       int ret;
-> +
-> +       /*
-> +        * We get the parent referenced by 'id' argument and
-> +        * traverse through all the parent object IDs to check
-> +        * if we already processed 'id', if we did, it's recursion
-> +        * and we fail.
-> +        */
-> +       ret = expr__get_id(&eg->pctx, id, &data);
-> +       if (ret)
-> +               return ret;
-> +
-> +       p = data->parent;
-> +
-> +       while (p->parent) {
-> +               if (!strcmp(p->id, id)) {
-> +                       pr_err("failed: recursion detected for %s\n", id);
-> +                       return -1;
-> +               }
-> +               p = p->parent;
-> +       }
-> +
-> +       /*
-> +        * If we are over the limit of static entris, the metric
-> +        * is too difficult/nested to process, fail as well.
-> +        */
-> +       if (eg->recursion.cnt + 1 >= RECURSION_ID_MAX) {
-> +               pr_err("failed: too many nested metrics\n");
-> +               return -EINVAL;
-> +       }
-> +
-> +       p = &eg->recursion.id[eg->recursion.cnt];
-> +       eg->recursion.cnt++;
-> +
-> +       p->id     = strdup(id);
-> +       p->parent = data->parent;
-> +       *parent   = p;
-> +
-> +       return p->id ? 0 : -ENOMEM;
-> +}
-> +
->  static int add_metric(struct list_head *group_list,
->                       struct pmu_event *pe,
->                       bool metric_no_group,
-> -                     struct egroup **egp);
-> +                     struct egroup **egp,
-> +                     struct expr_id *parent);
->
->  static int resolve_metric(struct egroup *eg,
->                           bool metric_no_group,
-> @@ -729,18 +798,23 @@ static int resolve_metric(struct egroup *eg,
->         do {
->                 all = true;
->                 hashmap__for_each_entry((&eg->pctx.ids), cur, bkt) {
-> +                       struct expr_id *parent;
->                         struct pmu_event *pe;
->
->                         pe = find_metric(cur->key, map);
->                         if (!pe)
->                                 continue;
->
-> +                       ret = recursion_check(eg, cur->key, &parent);
-> +                       if (ret)
-> +                               return ret;
-> +
->                         all = false;
->                         /* The metric key itself needs to go out.. */
->                         expr__del_id(&eg->pctx, cur->key);
->
->                         /* ... and it gets resolved to the parent context. */
-> -                       ret = add_metric(group_list, pe, metric_no_group, &eg);
-> +                       ret = add_metric(group_list, pe, metric_no_group, &eg, parent);
->                         if (ret)
->                                 return ret;
->
-> @@ -758,14 +832,15 @@ static int resolve_metric(struct egroup *eg,
->  static int add_metric(struct list_head *group_list,
->                       struct pmu_event *pe,
->                       bool metric_no_group,
-> -                     struct egroup **egp)
-> +                     struct egroup **egp,
-> +                     struct expr_id *parent)
+> -static int recursion_check(struct egroup *eg, const char *id, struct expr_id **parent)
+> +static int recursion_check(struct metric *m, const char *id, struct expr_id **parent)
 >  {
->         int ret = 0;
->
->         pr_debug("metric expr %s for %s\n", pe->metric_expr, pe->metric_name);
->
->         if (!strstr(pe->metric_expr, "?")) {
-> -               ret = __add_metric(group_list, pe, metric_no_group, 1, egp);
-> +               ret = __add_metric(group_list, pe, metric_no_group, 1, egp, parent);
->         } else {
->                 int j, count;
->
-> @@ -777,7 +852,7 @@ static int add_metric(struct list_head *group_list,
->                  */
->
->                 for (j = 0; j < count && !ret; j++) {
-> -                       ret = __add_metric(group_list, pe, metric_no_group, j, egp);
-> +                       ret = __add_metric(group_list, pe, metric_no_group, j, egp, parent);
->                 }
->         }
->
-> @@ -798,7 +873,7 @@ static int metricgroup__add_metric(const char *metric, bool metric_no_group,
->         if (!pe)
->                 return -EINVAL;
->
-> -       ret = add_metric(group_list, pe, metric_no_group, &eg);
-> +       ret = add_metric(group_list, pe, metric_no_group, &eg, NULL);
+>         struct expr_id_data *data;
+>         struct expr_id *p;
+> @@ -742,7 +742,7 @@ static int recursion_check(struct egroup *eg, const char *id, struct expr_id **p
+>          * if we already processed 'id', if we did, it's recursion
+>          * and we fail.
+>          */
+> -       ret = expr__get_id(&eg->pctx, id, &data);
+> +       ret = expr__get_id(&m->pctx, id, &data);
 >         if (ret)
 >                 return ret;
 >
-> @@ -871,11 +946,21 @@ static void egroup__free_refs(struct egroup *egroup)
+> @@ -760,13 +760,13 @@ static int recursion_check(struct egroup *eg, const char *id, struct expr_id **p
+>          * If we are over the limit of static entris, the metric
+>          * is too difficult/nested to process, fail as well.
+>          */
+> -       if (eg->recursion.cnt + 1 >= RECURSION_ID_MAX) {
+> +       if (m->recursion.cnt + 1 >= RECURSION_ID_MAX) {
+>                 pr_err("failed: too many nested metrics\n");
+>                 return -EINVAL;
+>         }
+>
+> -       p = &eg->recursion.id[eg->recursion.cnt];
+> -       eg->recursion.cnt++;
+> +       p = &m->recursion.id[m->recursion.cnt];
+> +       m->recursion.cnt++;
+>
+>         p->id     = strdup(id);
+>         p->parent = data->parent;
+> @@ -778,10 +778,10 @@ static int recursion_check(struct egroup *eg, const char *id, struct expr_id **p
+>  static int add_metric(struct list_head *group_list,
+>                       struct pmu_event *pe,
+>                       bool metric_no_group,
+> -                     struct egroup **egp,
+> +                     struct metric **mp,
+>                       struct expr_id *parent);
+>
+> -static int resolve_metric(struct egroup *eg,
+> +static int resolve_metric(struct metric *m,
+>                           bool metric_no_group,
+>                           struct list_head *group_list,
+>                           struct pmu_events_map *map)
+> @@ -797,7 +797,7 @@ static int resolve_metric(struct egroup *eg,
+>          */
+>         do {
+>                 all = true;
+> -               hashmap__for_each_entry((&eg->pctx.ids), cur, bkt) {
+> +               hashmap__for_each_entry((&m->pctx.ids), cur, bkt) {
+>                         struct expr_id *parent;
+>                         struct pmu_event *pe;
+>
+> @@ -805,16 +805,16 @@ static int resolve_metric(struct egroup *eg,
+>                         if (!pe)
+>                                 continue;
+>
+> -                       ret = recursion_check(eg, cur->key, &parent);
+> +                       ret = recursion_check(m, cur->key, &parent);
+>                         if (ret)
+>                                 return ret;
+>
+>                         all = false;
+>                         /* The metric key itself needs to go out.. */
+> -                       expr__del_id(&eg->pctx, cur->key);
+> +                       expr__del_id(&m->pctx, cur->key);
+>
+>                         /* ... and it gets resolved to the parent context. */
+> -                       ret = add_metric(group_list, pe, metric_no_group, &eg, parent);
+> +                       ret = add_metric(group_list, pe, metric_no_group, &m, parent);
+>                         if (ret)
+>                                 return ret;
+>
+> @@ -832,7 +832,7 @@ static int resolve_metric(struct egroup *eg,
+>  static int add_metric(struct list_head *group_list,
+>                       struct pmu_event *pe,
+>                       bool metric_no_group,
+> -                     struct egroup **egp,
+> +                     struct metric **m,
+>                       struct expr_id *parent)
+>  {
+>         int ret = 0;
+> @@ -840,7 +840,7 @@ static int add_metric(struct list_head *group_list,
+>         pr_debug("metric expr %s for %s\n", pe->metric_expr, pe->metric_name);
+>
+>         if (!strstr(pe->metric_expr, "?")) {
+> -               ret = __add_metric(group_list, pe, metric_no_group, 1, egp, parent);
+> +               ret = __add_metric(group_list, pe, metric_no_group, 1, m, parent);
+>         } else {
+>                 int j, count;
+>
+> @@ -852,7 +852,7 @@ static int add_metric(struct list_head *group_list,
+>                  */
+>
+>                 for (j = 0; j < count && !ret; j++) {
+> -                       ret = __add_metric(group_list, pe, metric_no_group, j, egp, parent);
+> +                       ret = __add_metric(group_list, pe, metric_no_group, j, m, parent);
+>                 }
+>         }
+>
+> @@ -865,7 +865,7 @@ static int metricgroup__add_metric(const char *metric, bool metric_no_group,
+>                                    struct pmu_events_map *map)
+>
+>  {
+> -       struct egroup *eg = NULL;
+> +       struct metric *m = NULL;
+>         struct pmu_event *pe;
+>         int ret;
+>
+> @@ -873,7 +873,7 @@ static int metricgroup__add_metric(const char *metric, bool metric_no_group,
+>         if (!pe)
+>                 return -EINVAL;
+>
+> -       ret = add_metric(group_list, pe, metric_no_group, &eg, NULL);
+> +       ret = add_metric(group_list, pe, metric_no_group, &m, NULL);
+>         if (ret)
+>                 return ret;
+>
+> @@ -881,7 +881,7 @@ static int metricgroup__add_metric(const char *metric, bool metric_no_group,
+>          * Process any possible referenced metrics
+>          * included in the expression.
+>          */
+> -       ret = resolve_metric(eg, metric_no_group,
+> +       ret = resolve_metric(m, metric_no_group,
+>                              group_list, map);
+>         if (ret)
+>                 return ret;
+> @@ -893,12 +893,12 @@ static int metricgroup__add_metric(const char *metric, bool metric_no_group,
+>          * Even if we add multiple groups through the runtime
+>          * param, they share same events.
+>          */
+> -       if (eg->has_constraint) {
+> +       if (m->has_constraint) {
+>                 metricgroup__add_metric_non_group(events,
+> -                                                 &eg->pctx);
+> +                                                 &m->pctx);
+>         } else {
+>                 metricgroup__add_metric_weak_group(events,
+> -                                                  &eg->pctx);
+> +                                                  &m->pctx);
+>         }
+>         return 0;
+>  }
+> @@ -936,35 +936,35 @@ static int metricgroup__add_metric_list(const char *list, bool metric_no_group,
+>         return ret;
+>  }
+>
+> -static void egroup__free_refs(struct egroup *egroup)
+> +static void metric__free_refs(struct metric *metric)
+>  {
+>         struct metric_ref_node *ref, *tmp;
+>
+> -       list_for_each_entry_safe(ref, tmp, &egroup->refs, list) {
+> +       list_for_each_entry_safe(ref, tmp, &metric->refs, list) {
+>                 list_del(&ref->list);
+>                 free(ref);
 >         }
 >  }
 >
-> +static void egroup__free_recursion(struct egroup *egroup)
-> +{
-> +       int i;
-> +
-> +       for (i = 0; i < egroup->recursion.cnt; i++) {
-> +               free(egroup->recursion.id[i].id);
-> +       }
-> +}
-> +
->  static void metricgroup__free_egroups(struct list_head *group_list)
+> -static void egroup__free_recursion(struct egroup *egroup)
+> +static void metric__free_recursion(struct metric *metric)
 >  {
->         struct egroup *eg, *egtmp;
+>         int i;
 >
->         list_for_each_entry_safe (eg, egtmp, group_list, nd) {
-> +               egroup__free_recursion(eg);
->                 egroup__free_refs(eg);
->                 expr__ctx_clear(&eg->pctx);
->                 list_del_init(&eg->nd);
+> -       for (i = 0; i < egroup->recursion.cnt; i++) {
+> -               free(egroup->recursion.id[i].id);
+> +       for (i = 0; i < metric->recursion.cnt; i++) {
+> +               free(metric->recursion.id[i].id);
+>         }
+>  }
+>
+> -static void metricgroup__free_egroups(struct list_head *group_list)
+> +static void metricgroup__free_metrics(struct list_head *group_list)
+>  {
+> -       struct egroup *eg, *egtmp;
+> -
+> -       list_for_each_entry_safe (eg, egtmp, group_list, nd) {
+> -               egroup__free_recursion(eg);
+> -               egroup__free_refs(eg);
+> -               expr__ctx_clear(&eg->pctx);
+> -               list_del_init(&eg->nd);
+> -               free(eg);
+> +       struct metric *m, *tmp;
+> +
+> +       list_for_each_entry_safe (m, tmp, group_list, nd) {
+> +               metric__free_recursion(m);
+> +               metric__free_refs(m);
+> +               expr__ctx_clear(&m->pctx);
+> +               list_del_init(&m->nd);
+> +               free(m);
+>         }
+>  }
+>
+> @@ -997,7 +997,7 @@ static int parse_groups(struct evlist *perf_evlist, const char *str,
+>         ret = metricgroup__setup_events(&group_list, metric_no_merge,
+>                                         perf_evlist, metric_events);
+>  out:
+> -       metricgroup__free_egroups(&group_list);
+> +       metricgroup__free_metrics(&group_list);
+>         return ret;
+>  }
+>
 > --
 > 2.25.4
 >
