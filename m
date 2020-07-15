@@ -2,273 +2,183 @@ Return-Path: <SRS0=kup7=A2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A6D1C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 09:40:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3B89C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 09:41:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 251C52064B
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 09:40:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 96D762064C
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 09:41:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="XyNfuSTQ"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="bkNDVDfw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730662AbgGOJkZ (ORCPT
+        id S1730684AbgGOJla (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 05:40:25 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:48968 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728043AbgGOJkZ (ORCPT
+        Wed, 15 Jul 2020 05:41:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35232 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728043AbgGOJl3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 05:40:25 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 06F9eLJD024509;
-        Wed, 15 Jul 2020 04:40:21 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1594806021;
-        bh=dovjsIZCextFaV96o/guHAk9LrwZpGqEDI3F/jS8NlE=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=XyNfuSTQHWjGvwXYiSkgDbb5VFV39qeOBXzMkGJnUAJmMn968w95r9Wy/vAp2Xo6D
-         ea7m0W/v2SsuQUY0AQ5afihcXZqOXDP9Qw+nygze9RSz/pPIROUP9G80sCbwiBWdCY
-         AF90RroCythT/14EkAQ2Mns2f7C0mrFuYubsaAhE=
-Received: from DFLE104.ent.ti.com (dfle104.ent.ti.com [10.64.6.25])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 06F9eKc7109581
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 15 Jul 2020 04:40:20 -0500
-Received: from DFLE113.ent.ti.com (10.64.6.34) by DFLE104.ent.ti.com
- (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Wed, 15
- Jul 2020 04:40:19 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE113.ent.ti.com
- (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Wed, 15 Jul 2020 04:40:20 -0500
-Received: from [10.250.100.73] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 06F9eHtV026277;
-        Wed, 15 Jul 2020 04:40:17 -0500
-Subject: Re: [PATCH next 1/6] dt-bindings: soc: ti: k3-ringacc: convert
- bindings to json-schema
-To:     Rob Herring <robh+dt@kernel.org>,
-        Santosh Shilimkar <ssantosh@kernel.org>
-CC:     Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Vinod Koul <vkoul@kernel.org>, Sekhar Nori <nsekhar@ti.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        <dmaengine@vger.kernel.org>
-References: <20200701103030.29684-1-grygorii.strashko@ti.com>
- <20200701103030.29684-2-grygorii.strashko@ti.com>
-From:   Grygorii Strashko <grygorii.strashko@ti.com>
-Message-ID: <ecf68230-4ae9-e768-424c-8510bd2bf4f1@ti.com>
-Date:   Wed, 15 Jul 2020 12:40:11 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Wed, 15 Jul 2020 05:41:29 -0400
+Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CBEADC08C5C1
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 02:41:28 -0700 (PDT)
+Received: by mail-lf1-x142.google.com with SMTP id s16so700932lfp.12
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 02:41:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=k1aB59xJzzV9Zgka5kmL2bgePHq7UP95SPUQANhn3lY=;
+        b=bkNDVDfwdUPMmXauAUFTxo1rAPhNE72iTW4BCL8OCMD5iQw4E7xMAr+aXLcVnKx9Jj
+         YD+j/VUN7IIwTlUPxVvaaNphv7aHSZHn8NFoQ6iqHokGrmxx17+G7263R6adbOZowbnw
+         S2TWnaCyaXqAN2Z+icpQyBAfsziTjlMuzEJ7D1xWrU5hfcpHxj/eijd2KGwD7W6K/+h6
+         MdKHtNYgr4VGmF8x+8xfhOPJZ/FqnpzSmjGCeiQP560uokoeo4ALR5uy1NVU0iNSrhnE
+         Vny8JMBoNBUKHNvDMvrri/Jt1sIkQu8CEXZltxHkKcdVWPzIKQnD1wDpvtggcUbDu+CO
+         I+Ig==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=k1aB59xJzzV9Zgka5kmL2bgePHq7UP95SPUQANhn3lY=;
+        b=d1Q4o4bpmwWDflpNqbfZ7pgGYZJHrO7M9GrQh35Uy8kkKUywqVmgZfkjKiSngEuS1n
+         KY5ek+0uOQAMnShxsnHHXeDsxUB+cAC2DYUkj9S/na0ga07cyuU3BBW+3TeeX10i2DNR
+         h5eq+S5nP2cyxHL6BZspQqWGUuR3MwAGuT20aB1uZW+hIuCpz8eAzzu96FRt81hoYD+p
+         pkrEwQ1l19HgWfXS0q91o5bPtUzN2em7V4iW49JhSCTrPOS6wFPDagfYQOhAkjjHpilo
+         VNg0DeCnkHwr4V2VjGjHeBOvxifVP5Vi1j6Te+tGOmcEIV2cLEU/fEEIuCu6O5mg3Jre
+         L0Vw==
+X-Gm-Message-State: AOAM532kJN22gqKrGGvUrVgv5KSuvJE/z4z9+ydZDvinZ3XQU5ob+Los
+        GPqYD6yXztgLqljkkF3B4yeY4UgF70ba38jct4+H8Q==
+X-Google-Smtp-Source: ABdhPJw3G7L5gZTWxkRfp4kncFkH4fBbb2QptrMvbD/7lSCGCCpOwSWcEyUcCV4SeuQni2N8/XwPVvNEOzq7Zr9bhZQ=
+X-Received: by 2002:a19:2292:: with SMTP id i140mr4252097lfi.95.1594806087007;
+ Wed, 15 Jul 2020 02:41:27 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200701103030.29684-2-grygorii.strashko@ti.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+References: <20200714184056.149119318@linuxfoundation.org>
+In-Reply-To: <20200714184056.149119318@linuxfoundation.org>
+From:   Naresh Kamboju <naresh.kamboju@linaro.org>
+Date:   Wed, 15 Jul 2020 15:11:15 +0530
+Message-ID: <CA+G9fYuicrgx6sPfovfzMX4W31HPE=LbxXtBKB5M-M+2sz+sXA@mail.gmail.com>
+Subject: Re: [PATCH 4.19 00/58] 4.19.133-rc1 review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     open list <linux-kernel@vger.kernel.org>,
+        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
+        lkft-triage@lists.linaro.org,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>,
+        linux- stable <stable@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Guenter Roeck <linux@roeck-us.net>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Rob,
+On Wed, 15 Jul 2020 at 00:16, Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
+>
+> This is the start of the stable review cycle for the 4.19.133 release.
+> There are 58 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+>
+> Responses should be made by Thu, 16 Jul 2020 18:40:38 +0000.
+> Anything received after that time might be too late.
+>
+> The whole patch series can be found in one patch at:
+>         https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-=
+4.19.133-rc1.gz
+> or in the git tree and branch at:
+>         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
+-rc.git linux-4.19.y
+> and the diffstat can be found below.
+>
+> thanks,
+>
+> greg k-h
 
-On 01/07/2020 13:30, Grygorii Strashko wrote:
-> Convert the K3 NavigatorSS Ring Accelerator bindings documentation to
-> json-schema.
-> 
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
-> ---
->   .../devicetree/bindings/soc/ti/k3-ringacc.txt |  59 ----------
->   .../bindings/soc/ti/k3-ringacc.yaml           | 102 ++++++++++++++++++
->   2 files changed, 102 insertions(+), 59 deletions(-)
->   delete mode 100644 Documentation/devicetree/bindings/soc/ti/k3-ringacc.txt
->   create mode 100644 Documentation/devicetree/bindings/soc/ti/k3-ringacc.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/soc/ti/k3-ringacc.txt b/Documentation/devicetree/bindings/soc/ti/k3-ringacc.txt
-> deleted file mode 100644
-> index 59758ccce809..000000000000
-> --- a/Documentation/devicetree/bindings/soc/ti/k3-ringacc.txt
-> +++ /dev/null
-> @@ -1,59 +0,0 @@
-> -* Texas Instruments K3 NavigatorSS Ring Accelerator
-> -
-> -The Ring Accelerator (RA) is a machine which converts read/write accesses
-> -from/to a constant address into corresponding read/write accesses from/to a
-> -circular data structure in memory. The RA eliminates the need for each DMA
-> -controller which needs to access ring elements from having to know the current
-> -state of the ring (base address, current offset). The DMA controller
-> -performs a read or write access to a specific address range (which maps to the
-> -source interface on the RA) and the RA replaces the address for the transaction
-> -with a new address which corresponds to the head or tail element of the ring
-> -(head for reads, tail for writes).
-> -
-> -The Ring Accelerator is a hardware module that is responsible for accelerating
-> -management of the packet queues. The K3 SoCs can have more than one RA instances
-> -
-> -Required properties:
-> -- compatible	: Must be "ti,am654-navss-ringacc";
-> -- reg		: Should contain register location and length of the following
-> -		  named register regions.
-> -- reg-names	: should be
-> -		  "rt" - The RA Ring Real-time Control/Status Registers
-> -		  "fifos" - The RA Queues Registers
-> -		  "proxy_gcfg" - The RA Proxy Global Config Registers
-> -		  "proxy_target" - The RA Proxy Datapath Registers
-> -- ti,num-rings	: Number of rings supported by RA
-> -- ti,sci-rm-range-gp-rings : TI-SCI RM subtype for GP ring range
-> -- ti,sci	: phandle on TI-SCI compatible System controller node
-> -- ti,sci-dev-id	: TI-SCI device id of the ring accelerator
-> -- msi-parent	: phandle for "ti,sci-inta" interrupt controller
-> -
-> -Optional properties:
-> - -- ti,dma-ring-reset-quirk : enable ringacc / udma ring state interoperability
-> -		  issue software w/a
-> -
-> -Example:
-> -
-> -ringacc: ringacc@3c000000 {
-> -	compatible = "ti,am654-navss-ringacc";
-> -	reg =	<0x0 0x3c000000 0x0 0x400000>,
-> -		<0x0 0x38000000 0x0 0x400000>,
-> -		<0x0 0x31120000 0x0 0x100>,
-> -		<0x0 0x33000000 0x0 0x40000>;
-> -	reg-names = "rt", "fifos",
-> -		    "proxy_gcfg", "proxy_target";
-> -	ti,num-rings = <818>;
-> -	ti,sci-rm-range-gp-rings = <0x2>; /* GP ring range */
-> -	ti,dma-ring-reset-quirk;
-> -	ti,sci = <&dmsc>;
-> -	ti,sci-dev-id = <187>;
-> -	msi-parent = <&inta_main_udmass>;
-> -};
-> -
-> -client:
-> -
-> -dma_ipx: dma_ipx@<addr> {
-> -	...
-> -	ti,ringacc = <&ringacc>;
-> -	...
-> -}
-> diff --git a/Documentation/devicetree/bindings/soc/ti/k3-ringacc.yaml b/Documentation/devicetree/bindings/soc/ti/k3-ringacc.yaml
-> new file mode 100644
-> index 000000000000..ae33fc957141
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/soc/ti/k3-ringacc.yaml
-> @@ -0,0 +1,102 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +# Copyright (C) 2020 Texas Instruments Incorporated - http://www.ti.com/
-> +%YAML 1.2
-> +---
-> +$id: "http://devicetree.org/schemas/soc/ti/k3-ringacc.yaml#"
-> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
-> +
-> +title: Texas Instruments K3 NavigatorSS Ring Accelerator
-> +
-> +maintainers:
-> +  - Santosh Shilimkar <ssantosh@kernel.org>
-> +  - Grygorii Strashko <grygorii.strashko@ti.com>
-> +
-> +description: |
-> +  The Ring Accelerator (RA) is a machine which converts read/write accesses
-> +  from/to a constant address into corresponding read/write accesses from/to a
-> +  circular data structure in memory. The RA eliminates the need for each DMA
-> +  controller which needs to access ring elements from having to know the current
-> +  state of the ring (base address, current offset). The DMA controller
-> +  performs a read or write access to a specific address range (which maps to the
-> +  source interface on the RA) and the RA replaces the address for the transaction
-> +  with a new address which corresponds to the head or tail element of the ring
-> +  (head for reads, tail for writes).
-> +
-> +  The Ring Accelerator is a hardware module that is responsible for accelerating
-> +  management of the packet queues. The K3 SoCs can have more than one RA instances
-> +
-> +properties:
-> +  compatible:
-> +    items:
-> +      - const: ti,am654-navss-ringacc
-> +
-> +  reg:
-> +    items:
-> +      - description: real time registers regions
-> +      - description: fifos registers regions
-> +      - description: proxy gcfg registers regions
-> +      - description: proxy target registers regions
-> +
-> +  reg-names:
-> +    items:
-> +      - const: rt
-> +      - const: fifos
-> +      - const: proxy_gcfg
-> +      - const: proxy_target
-> +
-> +  msi-parent: true
-> +
-> +  ti,num-rings:
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-> +    description: Number of rings supported by RA
-> +
-> +  ti,sci-rm-range-gp-rings:
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-> +    description: TI-SCI RM subtype for GP ring range
-> +
-> +  ti,sci:
-> +    $ref: /schemas/types.yaml#definitions/phandle-array
-> +    description: phandle on TI-SCI compatible System controller node
-> +
-> +  ti,sci-dev-id:
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-> +    description: TI-SCI device id of the ring accelerator
-> +
-> +  ti,dma-ring-reset-quirk:
-> +    $ref: /schemas/types.yaml#definitions/flag
-> +    description: |
-> +      enable ringacc/udma ring state interoperability issue software w/a
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - reg-names
-> +  - msi-parent
-> +  - ti,num-rings
-> +  - ti,sci-rm-range-gp-rings
-> +  - ti,sci
-> +  - ti,sci-dev-id
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    bus {
-> +        #address-cells = <2>;
-> +        #size-cells = <2>;
-> +
-> +        ringacc: ringacc@3c000000 {
-> +            compatible = "ti,am654-navss-ringacc";
-> +            reg = <0x0 0x3c000000 0x0 0x400000>,
-> +                  <0x0 0x38000000 0x0 0x400000>,
-> +                  <0x0 0x31120000 0x0 0x100>,
-> +                  <0x0 0x33000000 0x0 0x40000>;
-> +            reg-names = "rt", "fifos", "proxy_gcfg", "proxy_target";
-> +            ti,num-rings = <818>;
-> +            ti,sci-rm-range-gp-rings = <0x2>; /* GP ring range */
-> +            ti,dma-ring-reset-quirk;
-> +            ti,sci = <&dmsc>;
-> +            ti,sci-dev-id = <187>;
-> +            msi-parent = <&inta_main_udmass>;
-> +        };
-> +    };
-> 
+Results from Linaro=E2=80=99s test farm.
+No regressions on arm64, arm, x86_64, and i386.
 
-I'd be very appreciated if you can provide your feedback here.
+Summary
+------------------------------------------------------------------------
 
--- 
-Best regards,
-grygorii
+kernel: 4.19.133-rc1
+git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
+le-rc.git
+git branch: linux-4.19.y
+git commit: 4e2a5cde3f03246325a5db594e9aff787b2b7fab
+git describe: v4.19.132-59-g4e2a5cde3f03
+Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-4.19-oe/bu=
+ild/v4.19.132-59-g4e2a5cde3f03
+
+No regressions (compared to build v4.19.132)
+
+No fixes (compared to build v4.19.132)
+
+Ran 30760 total tests in the following environments and test suites.
+
+Environments
+--------------
+- dragonboard-410c - arm64
+- hi6220-hikey - arm64
+- i386
+- juno-r2 - arm64
+- juno-r2-compat
+- juno-r2-kasan
+- qemu_arm
+- qemu_arm64
+- qemu_i386
+- qemu_x86_64
+- x15 - arm
+- x86_64
+- x86-kasan
+
+Test Suites
+-----------
+* build
+* install-android-platform-tools-r2600
+* install-android-platform-tools-r2800
+* kselftest
+* kselftest/drivers
+* kselftest/filesystems
+* kselftest/net
+* libhugetlbfs
+* linux-log-parser
+* ltp-cap_bounds-tests
+* ltp-controllers-tests
+* ltp-cpuhotplug-tests
+* ltp-crypto-tests
+* ltp-fcntl-locktests-tests
+* ltp-filecaps-tests
+* ltp-fs_bind-tests
+* ltp-fs_perms_simple-tests
+* ltp-fsx-tests
+* ltp-ipc-tests
+* ltp-nptl-tests
+* ltp-pty-tests
+* ltp-securebits-tests
+* perf
+* v4l2-compliance
+* kvm-unit-tests
+* ltp-commands-tests
+* ltp-containers-tests
+* ltp-cve-tests
+* ltp-dio-tests
+* ltp-fs-tests
+* ltp-hugetlb-tests
+* ltp-io-tests
+* ltp-math-tests
+* ltp-mm-tests
+* ltp-sched-tests
+* ltp-syscalls-tests
+* network-basic-tests
+* ltp-open-posix-tests
+
+--=20
+Linaro LKFT
+https://lkft.linaro.org
