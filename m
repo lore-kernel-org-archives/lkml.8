@@ -2,112 +2,144 @@ Return-Path: <SRS0=kup7=A2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FEDCC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 16:42:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AF77C433E3
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 16:42:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0DDA820672
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 16:42:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594831349;
-	bh=ED5t9A4zYRl2ppiYuYOQoWbYJVj84a6IYOD4Vjh9qcw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=elDFeEPO0McgJ9Yz4JIlOchALfif4qE3qUAU+JbVH1edvtgrwOC/yYKG3MpnTxI+y
-	 eImccbMNufncqagO4uVK3OVUC7Y5lQODddbcqgeqfnmm89WddoKGjx7xfFgf5FaBtS
-	 XXfotZJ6nH4mUN2MWYHEBCs9wGRbccXFdAjBE46o=
+	by mail.kernel.org (Postfix) with ESMTP id 44DBD20658
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 16:42:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kK1h06ni"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726034AbgGOQmZ (ORCPT
+        id S1726648AbgGOQmv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 12:42:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44200 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725834AbgGOQmX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 12:42:23 -0400
-Received: from sol.localdomain (c-107-3-166-239.hsd1.ca.comcast.net [107.3.166.239])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3798120658;
-        Wed, 15 Jul 2020 16:42:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594831342;
-        bh=ED5t9A4zYRl2ppiYuYOQoWbYJVj84a6IYOD4Vjh9qcw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=dQA5TiCjdpTjdRjyFo64GaYmcJ38VZ98DmESuH3bIc7IwBm+v5kPqFNCfamABR9ad
-         juc1949N82lTQqEXq8UtZ8CEbj9YS6CApPxNuKJZjUnXctZlMrROfyWVI3oPc7nkke
-         bgJOSl8Vf6rDJvb6pGJKcpTQJ6zKF3hQOrGgCfOk=
-Date:   Wed, 15 Jul 2020 09:42:20 -0700
-From:   Eric Biggers <ebiggers@kernel.org>
-To:     Daeho Jeong <daeho43@gmail.com>
-Cc:     Chao Yu <yuchao0@huawei.com>, Jaegeuk Kim <jaegeuk@kernel.org>,
-        linux-f2fs-devel@lists.sourceforge.net, kernel-team@android.com,
-        Daeho Jeong <daehojeong@google.com>,
+        Wed, 15 Jul 2020 12:42:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43918 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726132AbgGOQmm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jul 2020 12:42:42 -0400
+Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1F6C8C061755;
+        Wed, 15 Jul 2020 09:42:42 -0700 (PDT)
+Received: by mail-pj1-x1043.google.com with SMTP id cm21so3341743pjb.3;
+        Wed, 15 Jul 2020 09:42:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:subject:to:cc:references:from:autocrypt:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=TE8Srq9R6RDWDktkA2m0k6rXncEK9nNn1xHMZss383U=;
+        b=kK1h06ni8VhuteeWHT0mmYxUAFm+ijDRKLvK4f9HaHi1NVCGMouoxOfxgU5iTQC0d4
+         zJqXXpzmNv1iOIjMYH9Ys0R0UEWtN3dPkA3uWL3gTIFoAHF6rpGkQ1TPuMyPKU1Wl+GP
+         9R7XmbooTfRAvvv6dVIkr8PVikU50uF4fKYR8xQurRflwhTlltOFsBd4hX2Vp8nQx6/7
+         ue/FWpghMdUCyx9X7QBjfAPf/WUKxd/49tu9S+fB+0OSvMXHN8RXdtpMAgJ1jdCMtH+O
+         KqQNfevxW9SBL/Dgm3JhlqmJQ8qGoe483Jmve7xYqCjRbPCPwlmbE7vd5z8wtwZcsTE2
+         6PEA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=TE8Srq9R6RDWDktkA2m0k6rXncEK9nNn1xHMZss383U=;
+        b=Vw35isZtPfFYELADVj223HWSWopzZ9ioHyJ7UMXTLXWgo0oOt/FIb06F5NjLJWsVGW
+         CymsaotnXpzlPQs96uZudVtIzqubP0ZocqHejy+9SMQVnvqFmVQEA0dhNn0RoFO8N0AQ
+         K2fI1Vrx9OjIU3dbjxhr0isG03hGjFEBqexFuNe1+z2IoKI74TVGZf3vZqjP8ALbSeOP
+         c6COCddKtSLXBr+clmmjd9/3lrrUEagswzaPV5hHsMMmYnyG9XyaJ85Lk6Tx+01xF/oR
+         RkW9R4AvNYkKzOpjJSI+a8Oep9vid/hdn6UCTHcq0TUs3prTCLHyGLof5d5hijCSxD9F
+         XKfA==
+X-Gm-Message-State: AOAM533iGLzuuLkUZqoFFsPCUtputzhJKrfJR9ud0fWrYmAhOoRHUm7d
+        iDmvCATkPkxzxerKwLYz/DbdR3Tw
+X-Google-Smtp-Source: ABdhPJzSfU947BmbChX1feHM1cyU0Rcs0abjKJ54S7G0hzE73gs/1IU+65Vnm6JzHC3/F8TqBlgujA==
+X-Received: by 2002:a17:902:b905:: with SMTP id bf5mr261798plb.250.1594831361554;
+        Wed, 15 Jul 2020 09:42:41 -0700 (PDT)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id j5sm2551830pfa.5.2020.07.15.09.42.40
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 15 Jul 2020 09:42:41 -0700 (PDT)
+Subject: Re: [PATCH 4.19 00/58] 4.19.133-rc1 review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         linux-kernel@vger.kernel.org
-Subject: Re: [f2fs-dev] [PATCH v2] f2fs: change the way of handling range.len
- in F2FS_IOC_SEC_TRIM_FILE
-Message-ID: <20200715164220.GC1167@sol.localdomain>
-References: <20200713031252.3873546-1-daeho43@gmail.com>
- <20200713181152.GC2910046@google.com>
- <3b02263d-a5e1-136c-40ed-514d34e4c895@huawei.com>
- <CACOAw_wBD_ourGJSdRTDM-wzeH97aGE966QDB6bpjiyXRrh47A@mail.gmail.com>
- <f4a594a1-464f-3a74-90cb-fd536bed9962@huawei.com>
- <CACOAw_w3OWDVXSYHuTEEVv1HaBZir1CWcRAmxOt00MB4vXBKVg@mail.gmail.com>
- <1d84bc01-fece-df55-6e33-07a705cfb432@huawei.com>
- <CACOAw_xaS7qB22EPsZvHoC=uPiPtqGMAK5cP4Vk20xO21GQ-Kg@mail.gmail.com>
+Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
+References: <20200714184056.149119318@linuxfoundation.org>
+From:   Guenter Roeck <linux@roeck-us.net>
+Autocrypt: addr=linux@roeck-us.net; keydata=
+ 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
+ mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
+Message-ID: <2b9567dd-72a7-de53-256e-e5903e4745ce@roeck-us.net>
+Date:   Wed, 15 Jul 2020 09:42:39 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
+In-Reply-To: <20200714184056.149119318@linuxfoundation.org>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CACOAw_xaS7qB22EPsZvHoC=uPiPtqGMAK5cP4Vk20xO21GQ-Kg@mail.gmail.com>
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 15, 2020 at 07:25:13PM +0900, Daeho Jeong wrote:
-> Chao,
+On 7/14/20 11:43 AM, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 4.19.133 release.
+> There are 58 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
 > 
-> I can't find fscrypt_zeroout_range_inline_crypt() function. Do you
-> mean we need to implement this one for inline encryption?
+> Responses should be made by Thu, 16 Jul 2020 18:40:38 +0000.
+> Anything received after that time might be too late.
 > 
-> 2020년 7월 15일 (수) 오후 4:17, Chao Yu <yuchao0@huawei.com>님이 작성:
-> >
-> > On 2020/7/15 14:54, Daeho Jeong wrote:
-> > > You mean we can support ZEROOUT option only for encrypted files of
-> > > non-multidevice f2fs,
-> > > and return -EOPNOTSUPP in the multidevice case, right now?
-> >
-> > Yes, something like:
-> >
-> > f2fs_sec_trim_file()
-> >
-> > if ((range.flags & F2FS_TRIM_FILE_ZEROOUT) &&
-> >         f2fs_encrypted_file() && f2fs_is_multi_device())
-> >         return -EOPNOTSUPP;
-> >
-> >
-> > f2fs_secure_erase()
-> >
-> > if (!ret && (flags & F2FS_TRIM_FILE_ZEROOUT)) {
-> >         if (f2fs_encrypted_file()) {
-> >                 if (fscrypt_inode_uses_fs_layer_crypto)
-> >                         ret = fscrypt_zeroout_range();
-> >                 else
-> >                         ret = fscrypt_zeroout_range_inline_crypt();
-> >         } else {
-> >                 ret = blkdev_issue_zeroout();
-> >         }
-> > }
 
-fscrypt_zeroout_range_inline_crypt() is being added by
-"fscrypt: add inline encryption support", which is queued in the fscrypt tree
-(the master branch of https://git.kernel.org/pub/scm/fs/fscrypt/fscrypt.git).
+Build results:
+	total: 155 pass: 155 fail: 0
+Qemu test results:
+	total: 421 pass: 421 fail: 0
 
-But that's not actually relevant here because fscrypt_zeroout_range() calls
-fscrypt_zeroout_range_inline_crypt() when needed.
-
-Just use fscrypt_zeroout_range().
-
-- Eric
+Guenter
