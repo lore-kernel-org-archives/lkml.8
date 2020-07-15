@@ -2,83 +2,99 @@ Return-Path: <SRS0=kup7=A2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E9A7C433E4
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 09:24:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 471A7C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 09:25:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F09852065D
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 09:24:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594805099;
-	bh=lQ6hiRNitg1GZKtOIjjCsxsCd+Fn/q4LEgPLitx5eNw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=oh+1hahVmlso9koV0kd7Zp5BOjJDwDO+MY2UuGIh0hFR9lUcS3S2Iy82DzCZRI9To
-	 7bb4eQmZEvngdGXllfFmyjgPcu+uK11lzgtM4c/gULwJ+0ANAz1gY4BAJzOMMdrfLq
-	 yu3tnexfJKsnPiTXOD0HoCzKOeBze0OIA/dmxXM8=
+	by mail.kernel.org (Postfix) with ESMTP id 232012065D
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 09:25:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="SYThOw0D"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730659AbgGOJY5 (ORCPT
+        id S1730669AbgGOJZW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 05:24:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40626 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729672AbgGOJY5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 05:24:57 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        Wed, 15 Jul 2020 05:25:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60952 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729672AbgGOJZW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jul 2020 05:25:22 -0400
+Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 15F65C061755;
+        Wed, 15 Jul 2020 02:25:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=dK8UwzUTgUNLePBN/9TrjpAB3tyGtmDfMqWT0SbBnEY=; b=SYThOw0DKQ59j+xOZ9e7s9giuM
+        tDfpXRj67AxyxcDD/DruSpiV3lLLocgumIGHcor3cLJvMbB67U/P86WHzwLBDWnMM7/VE7d5DilUf
+        4YM2HlWFCuP5zJIWETM4zuvR53OwsBKsLKMox2dndow+qB3qgoNDTu5XP018d/PmLoVEQc1+4SV8H
+        EWEbQpfJpVa6/+Ui67qnx6GgCoPLKU0raNxCb0U6Ww2OCVdoVtagwaYzi4qgDr5u/1i9S5Ss2tK9y
+        XIbatbd4Y1yNWkVo40PSHRKeEh/tlULCWSefU7V9Uf0In+2TOyvTgUB9j1R0/FONOEmAyGtW0Sf5P
+        TNZ6ff8Q==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jvdeu-0001jJ-Bk; Wed, 15 Jul 2020 09:25:00 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5F5262064B;
-        Wed, 15 Jul 2020 09:24:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594805096;
-        bh=lQ6hiRNitg1GZKtOIjjCsxsCd+Fn/q4LEgPLitx5eNw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=oBaNwzBsh7kmGxjdLvriXApi8/YqKJuouaWWFeL42spwDvlFSadiemrxqDlpYUm8R
-         LY544wAtp/bbSB0xDIaU7/myaNVNnuA8LszLVwbA22sZpV0WvX46fArbCakohEuMH6
-         J92A0M8cim9ma+a4eEcu5ruFvB8YIz0YNdmblfTU=
-Date:   Wed, 15 Jul 2020 11:24:53 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Chen-Yu Tsai <wens@kernel.org>
-Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
-        stable <stable@vger.kernel.org>,
-        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
-        Maxime Ripard <maxime@cerno.tech>,
-        Sasha Levin <sashal@kernel.org>
-Subject: Re: [PATCH 5.4 026/109] drm/sun4i: mixer: Call of_dma_configure if
- theres an IOMMU
-Message-ID: <20200715092453.GD2722864@kroah.com>
-References: <20200714184105.507384017@linuxfoundation.org>
- <20200714184106.782410654@linuxfoundation.org>
- <CAGb2v65ecm+9iK7GY6xKUHNhjdDimcL8Kd6eg-yX_nOm5rMZjA@mail.gmail.com>
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 4FE7C305B23;
+        Wed, 15 Jul 2020 11:24:56 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 438C6207A6655; Wed, 15 Jul 2020 11:24:56 +0200 (CEST)
+Date:   Wed, 15 Jul 2020 11:24:56 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Joerg Roedel <joro@8bytes.org>
+Cc:     x86@kernel.org, Joerg Roedel <jroedel@suse.de>, hpa@zytor.com,
+        Andy Lutomirski <luto@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Jiri Slaby <jslaby@suse.cz>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Juergen Gross <jgross@suse.com>,
+        Kees Cook <keescook@chromium.org>,
+        David Rientjes <rientjes@google.com>,
+        Cfir Cohen <cfir@google.com>,
+        Erdem Aktas <erdemaktas@google.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Mike Stunes <mstunes@vmware.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Martin Radev <martin.b.radev@gmail.com>,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        virtualization@lists.linux-foundation.org
+Subject: Re: [PATCH v4 00/75] x86: SEV-ES Guest Support
+Message-ID: <20200715092456.GE10769@hirez.programming.kicks-ass.net>
+References: <20200714120917.11253-1-joro@8bytes.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAGb2v65ecm+9iK7GY6xKUHNhjdDimcL8Kd6eg-yX_nOm5rMZjA@mail.gmail.com>
+In-Reply-To: <20200714120917.11253-1-joro@8bytes.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 15, 2020 at 10:22:13AM +0800, Chen-Yu Tsai wrote:
-> Hi Greg,
+On Tue, Jul 14, 2020 at 02:08:02PM +0200, Joerg Roedel wrote:
+> The #VC entry code now tries to pretend that the #VC handler does not
+> use an IST stack by switching to the task stack if entered from
+> user-mode or the SYSCALL entry path. When it is entered from
+> kernel-mode it is doing its best to switch back to the interrupted
+> stack. This is only possible if it is entered from a known and safe
+> kernel stack (e.g. not the entry stack). If the previous stack is not
+> safe to use the #VC handler switches to a fall-back stack and calls a
+> special handler function which, as of now, just panics the system. For
+> now this is safe as #VC exceptions only happen at know places which
+> use a safe stack.
 > 
-> On Wed, Jul 15, 2020 at 3:11 AM Greg Kroah-Hartman
-> <gregkh@linuxfoundation.org> wrote:
-> >
-> > From: Maxime Ripard <maxime@cerno.tech>
-> >
-> > [ Upstream commit 842ec61f4006a6477a9deaedd69131e9f46e4cb5 ]
-> >
-> > The main DRM device is actually a virtual device so it doesn't have the
-> > iommus property, which is instead on the DMA masters, in this case the
-> > mixers.
-> 
-> The iommu driver and DT changes were added in v5.8-rc1. IMO There is no
-> point in backporting this patch to any stable kernel.
+> The use of the fall-back stack is necessary so that the special
+> handler function can safely raise nested #VC exceptions, for
+> example to print a panic message.
 
-Now dropped from everywhere, thanks.
+Can we get some more words -- preferably in actual code comments, on
+when exactly #VC happens?
 
-greg k-h
+Because the only thing I remember is that #VC could happen on any memop,
+but I also have vague memories of that being a later extention.
