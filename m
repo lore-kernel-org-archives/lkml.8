@@ -2,168 +2,112 @@ Return-Path: <SRS0=kup7=A2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD0D9C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 22:44:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C772C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 22:45:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A314320658
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 22:44:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2026F2067D
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 22:45:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KZridxBW"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OCHL4KJE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727086AbgGOWoy (ORCPT
+        id S1727118AbgGOWpf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 18:44:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43244 "EHLO
+        Wed, 15 Jul 2020 18:45:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43346 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726776AbgGOWox (ORCPT
+        with ESMTP id S1726660AbgGOWpd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 18:44:53 -0400
-Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7D305C061755;
-        Wed, 15 Jul 2020 15:44:53 -0700 (PDT)
-Received: by mail-ej1-x642.google.com with SMTP id o18so4108069eje.7;
-        Wed, 15 Jul 2020 15:44:53 -0700 (PDT)
+        Wed, 15 Jul 2020 18:45:33 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 48720C061755;
+        Wed, 15 Jul 2020 15:45:33 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id f18so4740047wrs.0;
+        Wed, 15 Jul 2020 15:45:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=4M+hLtLEs7PjV/DAxGGuoG9wj+lYK0KPkq9jNEF3IbE=;
-        b=KZridxBWFiYfGsxVkihFki3F4shUFpUBDby2f5c47ZV5x+fvtButWc5P+YX2Ia129A
-         elbkNZEnXhQrNl9p/Uwsv2pjqsAMHnNdTcQrM1LyM4zB5ecDFBEvfltZnQ21+bcxWiC1
-         sOVfoJ7OpOs/cZdzpcAHWzmfAHk6ZLg+I1HoVwLB4FFQRWf7HODRqMv4RaN0MeSlq6vk
-         8+yF6v+lUBrHpYBsoeW8wFtyh8Av5DWUMvRuIGPd/8MRVOE0Bgq4vjptZFTwoXHbPVsF
-         JcjcFFp73zQICsGLD4/DftL+H5IZv9Gp4rl3Yssr82vYu3qCSw21Yx7El4Z/VZgErx9c
-         IikQ==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=la4qm6vspXOJfm9KXsdHliICfFa0lZg8lLjiPV4UsfU=;
+        b=OCHL4KJEJK9ziZzNh1qGADUHvDHQbBolLbT1SaZsUTAFKSLTzQMOPoaSrwV0wQDgzY
+         h7Vt+5UTHqfm9faomfb6XfLSxjXkr1IFLN862ngzq3/0/jXFqT5ndSaNwvaPFNipgOOs
+         axYreCkhm1/1Rc25buR2LmUOa4cdOJrUxcHccryKq4MtYVR74xNHQhNXAVAwzJvYNhlZ
+         R6WY7jNSH55bLUdRS9atC8D5/x6TJGwf5+6keE7MZjacghrCuNUkrsz8BOO4QH4c/PYC
+         Gl5+BoC9N5IhIl+uWAxrNd09Ev74MWYNJNQE/3z+j4fMI5Gbt4POvMIpaj6UpHPsfxeu
+         qNow==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=4M+hLtLEs7PjV/DAxGGuoG9wj+lYK0KPkq9jNEF3IbE=;
-        b=GicZhn2+uJJLcpzHHk5UR+pEwINS20o4HVf8CPrQrdpEP6bq4639XJSOr0mCdN/qls
-         PZmkp3W9CnqeDT0tRZdMvGCkklnYDjBlkgGSnWOKKBkhXIpPPk25a1kFlDlPdl1S3WkA
-         X/OkpOR28VjLqQsLx0j2jQ49efSwcQktLThMKvXNvUsuNwXjbU9+1qZLDHSsOmWF8V/f
-         MxO4S0p6W4LUC1AKdkxuOUYp6OGGwt1GrgaxJcF4kMB4L0ZC4tLDL3og/pxHH4gPT374
-         mg7L3GHTlhz00h8/hgNZsGNNZ2ORwB6Va9JFIxySo8ilpqtB4H19Rpju4+4DGau6VZux
-         9zGg==
-X-Gm-Message-State: AOAM530mcvL5QyXIcvg9WqDq78qk/Kr0F7JTckG4ZmmjUqkd5YNEQRuC
-        3uWP6L08Ilq+Jsg3+svucvk=
-X-Google-Smtp-Source: ABdhPJz7hHoVGdZ4dQSDXImc4c7nsS9meLDLElekH+50f6tALPMzph3f60658UJlLYFuadGVIPvmow==
-X-Received: by 2002:a17:906:c44c:: with SMTP id ck12mr1113082ejb.145.1594853092174;
-        Wed, 15 Jul 2020 15:44:52 -0700 (PDT)
-Received: from skbuf ([188.25.219.134])
-        by smtp.gmail.com with ESMTPSA id r6sm3206573ejd.55.2020.07.15.15.44.50
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=la4qm6vspXOJfm9KXsdHliICfFa0lZg8lLjiPV4UsfU=;
+        b=kuv7uffZqQiWgAd1GK9CoNTUSsIR3aRa0C7KcVFIslqBEUoCgmU0uYALhABRvyCUtX
+         qyQLVtEQj83QkycY5Hc4V60n2NYnyPBGNcZBDlyzwxVf6x5Dshq4E2k36JUDRw49Hvj9
+         sOwHLQ8p3xgLzHFwi62qy8cNQevtPv3NcZOuMKrNT79ByMN9zc1gLYqmT0Om+QZbm8Kt
+         rt8YsF5qbmuTar5X0YU1ca8AjczDOt/XIlv+20A9yYT2vYs69I1moWUKTB/2XiIELCzl
+         Gwmtar4c++ErGNCEDwmFuO0aRWPKt3j2GGKuPq2SaxM1pTV8q0qQdhKXcT+fuhTlxwCe
+         gDEQ==
+X-Gm-Message-State: AOAM533Ph2wxcPOHIzPcWX2FvErxy9rmXVaBJ7XhV29GQfWo/fs70XEG
+        am9oKtunXzJ5Gb84eUQaTqA=
+X-Google-Smtp-Source: ABdhPJxWAWBMJDcpCZDM3vJwoFjC/Aa00uTi9xyZVOCAE++3I4d/cu3sCiWcekzqs4P5EZFsIgVsHg==
+X-Received: by 2002:adf:fd46:: with SMTP id h6mr1951616wrs.105.1594853131852;
+        Wed, 15 Jul 2020 15:45:31 -0700 (PDT)
+Received: from Ansuel-XPS.localdomain (host-87-7-31-173.retail.telecomitalia.it. [87.7.31.173])
+        by smtp.googlemail.com with ESMTPSA id b186sm5759898wme.1.2020.07.15.15.45.29
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 15 Jul 2020 15:44:51 -0700 (PDT)
-Date:   Thu, 16 Jul 2020 01:44:49 +0300
-From:   Vladimir Oltean <olteanv@gmail.com>
-To:     Michael Walle <michael@walle.cc>
-Cc:     Russell King - ARM Linux admin <linux@armlinux.org.uk>,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "David S . Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, Andrew Lunn <andrew@lunn.ch>,
-        Alex Marginean <alexandru.marginean@nxp.com>,
-        Claudiu Manoil <claudiu.manoil@nxp.com>,
-        Heiko Thiery <heiko.thiery@gmail.com>,
-        Ioana Ciornei <ioana.ciornei@nxp.com>,
-        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>
-Subject: Re: [PATCH net-next v6 1/4] net: phy: add USXGMII link partner
- ability constants
-Message-ID: <20200715224449.hrqblfteshuknxon@skbuf>
-References: <20200709213526.21972-1-michael@walle.cc>
- <20200709213526.21972-2-michael@walle.cc>
- <20200713182314.GW1551@shell.armlinux.org.uk>
- <546718f3f76862d285aeb82cb02767c4@walle.cc>
- <b6c24b8f698245549056c975042d9b51@walle.cc>
+        Wed, 15 Jul 2020 15:45:30 -0700 (PDT)
+From:   Ansuel Smith <ansuelsmth@gmail.com>
+To:     Rob Herring <robh+dt@kernel.org>
+Cc:     Ansuel Smith <ansuelsmth@gmail.com>,
+        Amit Kucheria <amit.kucheria@linaro.org>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>, linux-pm@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org
+Subject: [PATCH v3 0/7] Add support for ipq8064 tsens
+Date:   Thu, 16 Jul 2020 00:44:55 +0200
+Message-Id: <20200715224503.30462-1-ansuelsmth@gmail.com>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <b6c24b8f698245549056c975042d9b51@walle.cc>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 15, 2020 at 10:33:23PM +0200, Michael Walle wrote:
-> Am 2020-07-13 20:37, schrieb Michael Walle:
-> > Am 2020-07-13 20:23, schrieb Russell King - ARM Linux admin:
-> > > On Thu, Jul 09, 2020 at 11:35:23PM +0200, Michael Walle wrote:
-> > > > The constants are taken from the USXGMII Singleport Copper Interface
-> > > > specification. The naming are based on the SGMII ones, but with
-> > > > an MDIO_
-> > > > prefix.
-> > > > 
-> > > > Signed-off-by: Michael Walle <michael@walle.cc>
-> > > > ---
-> > > >  include/uapi/linux/mdio.h | 26 ++++++++++++++++++++++++++
-> > > >  1 file changed, 26 insertions(+)
-> > > > 
-> > > > diff --git a/include/uapi/linux/mdio.h b/include/uapi/linux/mdio.h
-> > > > index 4bcb41c71b8c..784723072578 100644
-> > > > --- a/include/uapi/linux/mdio.h
-> > > > +++ b/include/uapi/linux/mdio.h
-> > > > @@ -324,4 +324,30 @@ static inline __u16 mdio_phy_id_c45(int
-> > > > prtad, int devad)
-> > > >  	return MDIO_PHY_ID_C45 | (prtad << 5) | devad;
-> > > >  }
-> > > > 
-> > > > +/* UsxgmiiChannelInfo[15:0] for USXGMII in-band auto-negotiation.*/
-> > > > +#define MDIO_LPA_USXGMII_EEE_CLK_STP	0x0080	/* EEE clock stop
-> > > > supported */
-> > > > +#define MDIO_LPA_USXGMII_EEE		0x0100	/* EEE supported */
-> > > > +#define MDIO_LPA_USXGMII_SPD_MASK	0x0e00	/* USXGMII speed mask */
-> > > > +#define MDIO_LPA_USXGMII_FULL_DUPLEX	0x1000	/* USXGMII full
-> > > > duplex */
-> > > > +#define MDIO_LPA_USXGMII_DPX_SPD_MASK	0x1e00	/* USXGMII duplex
-> > > > and speed bits */
-> > > > +#define MDIO_LPA_USXGMII_10		0x0000	/* 10Mbps */
-> > > > +#define MDIO_LPA_USXGMII_10HALF		0x0000	/* 10Mbps half-duplex */
-> > > > +#define MDIO_LPA_USXGMII_10FULL		0x1000	/* 10Mbps full-duplex */
-> > > > +#define MDIO_LPA_USXGMII_100		0x0200	/* 100Mbps */
-> > > > +#define MDIO_LPA_USXGMII_100HALF	0x0200	/* 100Mbps half-duplex */
-> > > > +#define MDIO_LPA_USXGMII_100FULL	0x1200	/* 100Mbps full-duplex */
-> > > > +#define MDIO_LPA_USXGMII_1000		0x0400	/* 1000Mbps */
-> > > > +#define MDIO_LPA_USXGMII_1000HALF	0x0400	/* 1000Mbps half-duplex */
-> > > > +#define MDIO_LPA_USXGMII_1000FULL	0x1400	/* 1000Mbps full-duplex */
-> > > > +#define MDIO_LPA_USXGMII_10G		0x0600	/* 10Gbps */
-> > > > +#define MDIO_LPA_USXGMII_10GHALF	0x0600	/* 10Gbps half-duplex */
-> > > > +#define MDIO_LPA_USXGMII_10GFULL	0x1600	/* 10Gbps full-duplex */
-> > > > +#define MDIO_LPA_USXGMII_2500		0x0800	/* 2500Mbps */
-> > > > +#define MDIO_LPA_USXGMII_2500HALF	0x0800	/* 2500Mbps half-duplex */
-> > > > +#define MDIO_LPA_USXGMII_2500FULL	0x1800	/* 2500Mbps full-duplex */
-> > > > +#define MDIO_LPA_USXGMII_5000		0x0a00	/* 5000Mbps */
-> > > > +#define MDIO_LPA_USXGMII_5000HALF	0x0a00	/* 5000Mbps half-duplex */
-> > > > +#define MDIO_LPA_USXGMII_5000FULL	0x1a00	/* 5000Mbps full-duplex */
-> > > > +#define MDIO_LPA_USXGMII_LINK		0x8000	/* PHY link with
-> > > > copper-side partner */
-> > > 
-> > > btw, the only thing which is missing from this is bit 0.
-> > 
-> > TBH, I didn't know how to name it. Any suggestions?
-> 
-> NXP calls it ABIL0, in xilinx docs its called USXGMII [1]. In the USXGMII
-> spec, its "set to 1 (0 is SGMII)" which I don't understand because its
-> also 1 for SGMII, right? At least as described in the tx_configReg[15:0] in
-> the SGMII spec.
-> 
-> #define MDIO_USXGMII_USXGMII 0x0001 ?
-> 
-> -michael
-> 
-> [1] https://www.xilinx.com/support/documentation/ip_documentation/usxgmii/v1_0/pg251-usxgmii.pdf
+Ipq8064 SoCs tsens driver is based on 8960 tsens driver. This patchset 
+expand the 8960 unused driver with interrupt support and set_trip point.
+Ipq8064 needs to be registered as a gcc child as the tsens regs on
+this platform are shared with the controller.
 
-The explanation in the spec is quite cryptic, I've taken that to mean
-"corresponds to bit 0 in SGMII". Hence the reason why, in the code I've
-introduced in Felix, this is simply used as ADVERTISE_SGMII. I have no
-problem in creating an alias to ADVERTISE_SGMII named
-MDIO_LPA_USXGMII_SGMII. That being said, I don't see, right now, a
-practical situation where you might want to parse bit 0 from LPA, it's
-just like in Forrest Gump: "life is like a box of chocolates, you never
-know what you're gonna get". Adding it now to the UAPI might very well
-be a non-issue.
+v3:
+* Change driver to register as child instead of use phandle
+v2:
+* Fix dt-bindings problems
 
--Vladimir
+Ansuel Smith (7):
+  ipq806x: gcc: add support for child probe
+  drivers: thermal: tsens: try load regmap from parent for 8960
+  drivers: thermal: tsens: add ipq8064 support
+  dt-bindings: thermal: tsens: document ipq8064 bindings
+  drivers: thermal: tsens: add interrupt support for 9860 driver
+  drivers: thermal: tsens: add support for custom set_trip function
+  drivers: thermal: tsens: add set_trip support for 8960
+
+ .../bindings/thermal/qcom-tsens.yaml          |  50 ++-
+ drivers/clk/qcom/gcc-ipq806x.c                |   2 +-
+ drivers/thermal/qcom/tsens-8960.c             | 286 +++++++++++++++++-
+ drivers/thermal/qcom/tsens.c                  |   7 +
+ drivers/thermal/qcom/tsens.h                  |   3 +
+ 5 files changed, 325 insertions(+), 23 deletions(-)
+
+-- 
+2.27.0
+
