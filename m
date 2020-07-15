@@ -2,100 +2,122 @@ Return-Path: <SRS0=kup7=A2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93338C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 07:02:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FB80C433E2
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 07:03:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6FF7D2064C
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 07:02:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5CDD4205CB
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 07:03:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594796623;
+	bh=UV+mfmRMd26ihN4f6dfSbARDNHCQ/VULlcsE3EswSis=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=RTymZknGfv9NtXOZYqiQVDfr6SVdMzC8V0oeOkvtQLQMX5OZE/ezrodloSxzEqEmY
+	 u6gKiBNQgFuUxB16izOJmnHI/k+lMRwaWkkibvNB2g1AUvcAqyO4hTMFWZNXFQWUtD
+	 Gce1/Rcb/4PjLYT7++xqtrfO0arI35DVULOgDxQU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728607AbgGOHCu (ORCPT
+        id S1728971AbgGOHDm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 03:02:50 -0400
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:44832 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726811AbgGOHCt (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 03:02:49 -0400
-Received: by mail-ed1-f68.google.com with SMTP id by13so786293edb.11
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 00:02:48 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=qyukl+R6sVf8zCCagfwZCOInI4MTxVtSLndOnpVXqyQ=;
-        b=TnTqJIVvkRFpuDZgy1xiNWjPJ+Tm88KKHdWNnIeHU+MRhYI0lr6V+6FfSi4QAa7/We
-         WsCiftO2F9I4sEBJ9mWAvIX6b3AfVpNyXArEfeEUYUOqx+Sqk20aF/d/t6okEdr4dyMs
-         Z3psJiCxlwCVKqyfFY6YsoYWDwEinTB1pwJd3Apw+GKZXuUAak0typeki/rr+YO0gk9T
-         cFMhw9YUQx80bbfH39fV/DTDqiDMf5ueTeUvNXInxsQ7lEqHEyXz8JEEdEhhqsNO2BtM
-         PRLZ1xgsaCJi0PBAZcDX7YZX2ZRRo8gp3fC/G1xMfZBWdFGN4kcE7psOgNNLpc622ZjY
-         Wqxw==
-X-Gm-Message-State: AOAM5326PnEXXgwKigFBJd7BKwmB3SowqZCPhTRWrIkYRPcigWjXChdZ
-        6DEsXB4+BbMvoYp+Dtf4EuQAZt1QhV+QNisXNDU=
-X-Google-Smtp-Source: ABdhPJxvOn3jbL1613P6msMOTLrav1TH+NUmg4Q1KzxEZg2afZzaZYsUzrPRaV7KLFANsJ4+kDGUqyY8j3l/WpDB0T0=
-X-Received: by 2002:a05:6402:1ca8:: with SMTP id cz8mr7938704edb.55.1594796568068;
- Wed, 15 Jul 2020 00:02:48 -0700 (PDT)
+        Wed, 15 Jul 2020 03:03:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53238 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726212AbgGOHDl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jul 2020 03:03:41 -0400
+Received: from mail-oo1-f46.google.com (mail-oo1-f46.google.com [209.85.161.46])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D2CC1206D5
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 07:03:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594796620;
+        bh=UV+mfmRMd26ihN4f6dfSbARDNHCQ/VULlcsE3EswSis=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=Bp9puQ99xjQsIFW2RGiZArn9zcGqk0Qn2UcT8PY+p/J4gx5zGYtZ5AVYRPctgATP7
+         +mnpkBycW4tyfm0sz4G3iE3EyKBScQZU0wdU1oIgtwrSTfW/yhxyOHDqqqP/2pqtV0
+         i3k3705ABUay05mNS1Pzok/Gs//E8y3iARcgCV3I=
+Received: by mail-oo1-f46.google.com with SMTP id z23so262984ood.8
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 00:03:40 -0700 (PDT)
+X-Gm-Message-State: AOAM533Ck6Gj/6oX9fvra2gzTkIR/yTspW5byoFBxcoIZ9YgT1ZMxt/p
+        vxMKujp5mZ6OeBGZnWzmOdCYzJgi06X7HZZv5UE=
+X-Google-Smtp-Source: ABdhPJzsk7y5jNKbbqb9/qIyssy3ypE5WzXrK288d/NhirZLciBaPNTqE55KH+YOg1RriUSg091UjMQXHFeQrwV9H0E=
+X-Received: by 2002:a4a:b34b:: with SMTP id n11mr8087596ooo.41.1594796619297;
+ Wed, 15 Jul 2020 00:03:39 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200714175528.46712-1-grandmaster@al2klimov.de> <20200714193945.49915-1-grandmaster@al2klimov.de>
-In-Reply-To: <20200714193945.49915-1-grandmaster@al2klimov.de>
-From:   =?UTF-8?Q?Philippe_Mathieu=2DDaud=C3=A9?= <f4bug@amsat.org>
-Date:   Wed, 15 Jul 2020 09:02:36 +0200
-Message-ID: <CAAdtpL43_=yhwvncsKDW_CFJv+FrnrO=hGRLOQja944yviBhiw@mail.gmail.com>
-Subject: Re: [PATCH] CREDITS: remove link http://www.mathematik.uni-stuttgart.de/~floeff
-To:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        luis.f.correia@gmail.com, cyphar@cyphar.com, ribalda@kernel.org,
-        davej@codemonkey.org.uk, mchehab+samsung@kernel.org,
-        martink@posteo.de, Paul Burton <paulburton@kernel.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        open list <linux-kernel@vger.kernel.org>
+References: <20200711035544.2832154-1-palmer@dabbelt.com> <20200711035544.2832154-2-palmer@dabbelt.com>
+ <20200713130632.GA29945@infradead.org>
+In-Reply-To: <20200713130632.GA29945@infradead.org>
+From:   Ard Biesheuvel <ardb@kernel.org>
+Date:   Wed, 15 Jul 2020 10:03:27 +0300
+X-Gmail-Original-Message-ID: <CAMj1kXEH2_=tx7jNNZO7T3JHuq2+AdoNuWUmUZBvGN4CUHm+6Q@mail.gmail.com>
+Message-ID: <CAMj1kXEH2_=tx7jNNZO7T3JHuq2+AdoNuWUmUZBvGN4CUHm+6Q@mail.gmail.com>
+Subject: Re: [PATCH 1/3] lib: Add a generic copy_oldmem_page()
+To:     Christoph Hellwig <hch@infradead.org>
+Cc:     Palmer Dabbelt <palmer@dabbelt.com>, mick@ics.forth.gr,
+        Mark Rutland <mark.rutland@arm.com>, gregory.0xf0@gmail.com,
+        Peter Zijlstra <peterz@infradead.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Palmer Dabbelt <palmerdabbelt@google.com>,
+        Brendan Higgins <brendanhiggins@google.com>,
+        Marco Elver <elver@google.com>,
+        Alexander Potapenko <glider@google.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Will Deacon <will@kernel.org>, Ingo Molnar <mingo@kernel.org>,
+        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <uwe@kleine-koenig.org>,
+        takahiro.akashi@linaro.org,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Russell King <linux@armlinux.org.uk>, willy@infradead.org,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Android Kernel Team <kernel-team@android.com>,
+        Petr Mladek <pmladek@suse.com>,
+        Mikhail Zaslonko <zaslonko@linux.ibm.com>,
+        Kees Cook <keescook@chromium.org>,
+        Arnd Bergmann <arnd@arndb.de>, Mark Brown <broonie@kernel.org>,
+        Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
+        Ben Dooks <ben-linux@fluff.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        David Gow <davidgow@google.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "David S. Miller" <davem@davemloft.net>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Alexander,
+On Mon, 13 Jul 2020 at 16:06, Christoph Hellwig <hch@infradead.org> wrote:
+>
+> On Fri, Jul 10, 2020 at 08:55:42PM -0700, Palmer Dabbelt wrote:
+> > +ssize_t copy_oldmem_page(unsigned long pfn, char *buf,
+> > +                      size_t csize, unsigned long offset,
+> > +                      int userbuf)
+> > +{
+> > +     void *vaddr;
+> > +
+> > +     if (!csize)
+> > +             return 0;
+> > +
+> > +     vaddr = memremap(__pfn_to_phys(pfn), PAGE_SIZE, MEMREMAP_WB);
+> > +     if (!vaddr)
+> > +             return -ENOMEM;
+>
+> Doing a memremap for every page is very inefficient.
 
-On Tue, Jul 14, 2020 at 10:18 PM Alexander A. Klimov
-<grandmaster@al2klimov.de> wrote:
->
-> Rationale:
-> The way it redirects looks like a fallback from a dead URL to a generic one.
->
-> Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
-> ---
->  Yes, I noted that some of the links removed by these "CREDITS: remove link:"
->  patches have email addresses with the same domain nearby.
->
->  Don't worry, I'll take care of them together with all other
->  dead email addresses - but not right now.
->
->
->  CREDITS | 1 -
->  1 file changed, 1 deletion(-)
->
-> diff --git a/CREDITS b/CREDITS
-> index 0787b5872906..151083e4245d 100644
-> --- a/CREDITS
-> +++ b/CREDITS
-> @@ -2241,7 +2241,6 @@ S: France
->
->  N: Siegfried "Frieder" Loeffler (dg1sek)
->  E: floeff@tunix.mathematik.uni-stuttgart.de, fl@LF.net
-> -W: http://www.mathematik.uni-stuttgart.de/~floeff
+memremap(MEMREMAP_WB) will reuse the existing linear address if the PA
+is covered by the linear mapping.
 
-One can still use the Internet Archives:
-https://web.archive.org/web/20070918070711/http://www.mathematik.uni-stuttgart.de:80/~floeff/
-
->  D: Busmaster driver for HP 10/100 Mbit Network Adapters
->  S: University of Stuttgart, Germany and
->  S: Ecole Nationale Superieure des Telecommunications, Paris
-> --
-> 2.27.0
->
+> Also I don't see
+> why you'd want to even do that.  All memory is in the direct mapping
+> for RISC-V.  For other architecture that support highmem kmap_atomic_pfn
+> would do the job, which is what I'd use in a generic version.
