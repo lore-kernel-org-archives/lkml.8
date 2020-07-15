@@ -7,34 +7,30 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20018C433F1
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 14:26:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BAE9FC433E8
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 14:26:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E87AD205CB
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 14:26:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 972BF205CB
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 14:26:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nic.cz header.i=@nic.cz header.b="HYUl/mJ3"
+	dkim=pass (1024-bit key) header.d=nic.cz header.i=@nic.cz header.b="RiKFvyZe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728601AbgGOO0U (ORCPT
+        id S1728562AbgGOO0M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 10:26:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50814 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728412AbgGOO0B (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 10:26:01 -0400
-Received: from mail.nic.cz (lists.nic.cz [IPv6:2001:1488:800:400::400])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5E719C061755
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 07:26:01 -0700 (PDT)
+        Wed, 15 Jul 2020 10:26:12 -0400
+Received: from mail.nic.cz ([217.31.204.67]:34942 "EHLO mail.nic.cz"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727908AbgGOO0C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jul 2020 10:26:02 -0400
 Received: from dellmb.labs.office.nic.cz (unknown [IPv6:2001:1488:fffe:6:cac7:3539:7f1f:463])
-        by mail.nic.cz (Postfix) with ESMTP id 50B2E140A51;
+        by mail.nic.cz (Postfix) with ESMTP id C1379140A65;
         Wed, 15 Jul 2020 16:25:58 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=nic.cz; s=default;
-        t=1594823158; bh=keURn+22u253qVA/hwtaY7TRtboxhUkiOumfUMd4baA=;
+        t=1594823158; bh=nerKxigHkObaiHyzNmlG4HvrbXZtheySdo4ELo3MtiU=;
         h=From:To:Date;
-        b=HYUl/mJ3o5KBM3YacMPRiu5S1O2iHhqHTQUlts0pF/3ISXfoBh4yNBfbNWAqv5mil
-         7aUNiIt9vl7BrHwktWtDXh08y5xnpA2QsGdp54xV4aeDd9OLXcdH6VZeILhzqG3rda
-         tFKWDTlUBZc2kOiWT5L9uckmWxSoawEcIuyTV0XI=
+        b=RiKFvyZeKuolRbIZ6r+QCzpKswnOUAAVlUxo/xEZt5U21d6Vv/0XenaIaOSatf+fz
+         RoRbs3+oj74UxucsV/ZqHpb1V3jJmAGWF3O/mFgZHx4CExSrvcoOjf/vYFJECPJmYH
+         3TW98AiC/tzPomO2p7a0XzSygyWS/V0ozDX4raMQ=
 From:   =?UTF-8?q?Marek=20Beh=C3=BAn?= <marek.behun@nic.cz>
 To:     linux-pci@vger.kernel.org
 Cc:     Tomasz Maciej Nowak <tmn505@gmail.com>,
@@ -45,9 +41,9 @@ Cc:     Tomasz Maciej Nowak <tmn505@gmail.com>,
         Xogium <contact@xogium.me>,
         =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>,
         =?UTF-8?q?Marek=20Beh=C3=BAn?= <marek.behun@nic.cz>
-Subject: [PATCH 2/5] PCI: aardvark: Check for errors from pci_bridge_emul_init() call
-Date:   Wed, 15 Jul 2020 16:25:54 +0200
-Message-Id: <20200715142557.17115-3-marek.behun@nic.cz>
+Subject: [PATCH 5/5] PCI: aardvark: Move PCIe reset card code to advk_pcie_train_link()
+Date:   Wed, 15 Jul 2020 16:25:57 +0200
+Message-Id: <20200715142557.17115-6-marek.behun@nic.cz>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200715142557.17115-1-marek.behun@nic.cz>
 References: <20200715142557.17115-1-marek.behun@nic.cz>
@@ -64,51 +60,122 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Pali Rohár <pali@kernel.org>
 
-Function pci_bridge_emul_init() may fail so correctly check for errors.
+Move code which belongs to link training (delays and resets) into
+advk_pcie_train_link() function, so everything related to link training,
+including timings is at one place.
 
-Fixes: 8a3ebd8de328 ("PCI: aardvark: Implement emulated root PCI bridge config space")
+After experiments it can be observed that link training in aardvark
+hardware is very sensitive to timings and delays, so it is a good idea to
+have this code at the same place as link training calls.
+
+This patch does not change behavior of aardvark initialization.
+
 Signed-off-by: Pali Rohár <pali@kernel.org>
-Reviewed-by: Marek Behún <marek.behun@nic.cz>
+Tested-by: Marek Behún <marek.behun@nic.cz>
 ---
- drivers/pci/controller/pci-aardvark.c | 11 +++++++----
- 1 file changed, 7 insertions(+), 4 deletions(-)
+ drivers/pci/controller/pci-aardvark.c | 64 ++++++++++++++-------------
+ 1 file changed, 34 insertions(+), 30 deletions(-)
 
 diff --git a/drivers/pci/controller/pci-aardvark.c b/drivers/pci/controller/pci-aardvark.c
-index 8caa80b19cf8..d5f58684d962 100644
+index 0a5aa6d77f5d..ab39b01474e8 100644
 --- a/drivers/pci/controller/pci-aardvark.c
 +++ b/drivers/pci/controller/pci-aardvark.c
-@@ -608,7 +608,7 @@ static struct pci_bridge_emul_ops advk_pci_bridge_emul_ops = {
-  * Initialize the configuration space of the PCI-to-PCI bridge
-  * associated with the given PCIe interface.
-  */
--static void advk_sw_pci_bridge_init(struct advk_pcie *pcie)
-+static int advk_sw_pci_bridge_init(struct advk_pcie *pcie)
- {
- 	struct pci_bridge_emul *bridge = &pcie->bridge;
- 
-@@ -634,8 +634,7 @@ static void advk_sw_pci_bridge_init(struct advk_pcie *pcie)
- 	bridge->data = pcie;
- 	bridge->ops = &advk_pci_bridge_emul_ops;
- 
--	pci_bridge_emul_init(bridge, 0);
--
-+	return pci_bridge_emul_init(bridge, 0);
+@@ -253,6 +253,25 @@ static void advk_pcie_wait_for_retrain(struct advk_pcie *pcie)
+ 	}
  }
  
- static bool advk_pcie_valid_device(struct advk_pcie *pcie, struct pci_bus *bus,
-@@ -1169,7 +1168,11 @@ static int advk_pcie_probe(struct platform_device *pdev)
++static void advk_pcie_issue_perst(struct advk_pcie *pcie)
++{
++	u32 reg;
++
++	if (!pcie->reset_gpio)
++		return;
++
++	/* PERST does not work for some cards when link training is enabled */
++	reg = advk_readl(pcie, PCIE_CORE_CTRL0_REG);
++	reg &= ~LINK_TRAINING_EN;
++	advk_writel(pcie, reg, PCIE_CORE_CTRL0_REG);
++
++	/* 10ms delay is needed for some cards */
++	dev_info(&pcie->pdev->dev, "issuing PERST via reset GPIO for 10ms\n");
++	gpiod_set_value_cansleep(pcie->reset_gpio, 1);
++	usleep_range(10000, 11000);
++	gpiod_set_value_cansleep(pcie->reset_gpio, 0);
++}
++
+ static int advk_pcie_train_at_gen(struct advk_pcie *pcie, int gen)
+ {
+ 	int ret, neg_gen;
+@@ -300,6 +319,21 @@ static void advk_pcie_train_link(struct advk_pcie *pcie)
+ 	struct device *dev = &pcie->pdev->dev;
+ 	int neg_gen = -1, gen;
  
- 	advk_pcie_setup_hw(pcie);
++	/*
++	 * Reset PCIe card via PERST# signal. Some cards are not detected
++	 * during link training when they are in some non-initial state.
++	 */
++	advk_pcie_issue_perst(pcie);
++
++	/*
++	 * PERST# signal could have been asserted by pinctrl subsystem before
++	 * probe() callback has been called or issued explicitly by reset gpio
++	 * function advk_pcie_issue_perst(), making the endpoint going into
++	 * fundamental reset. As required by PCI Express spec a delay for at
++	 * least 100ms after such a reset before link training is needed.
++	 */
++	msleep(PCI_PM_D3COLD_WAIT);
++
+ 	/*
+ 	 * Try link training at link gen specified by device tree property
+ 	 * 'max-link-speed'. If this fails, iteratively train at lower gen.
+@@ -332,31 +366,10 @@ static void advk_pcie_train_link(struct advk_pcie *pcie)
+ 	dev_err(dev, "link never came up\n");
+ }
  
--	advk_sw_pci_bridge_init(pcie);
-+	ret = advk_sw_pci_bridge_init(pcie);
-+	if (ret) {
-+		dev_err(dev, "Failed to register emulated root PCI bridge\n");
-+		return ret;
-+	}
+-static void advk_pcie_issue_perst(struct advk_pcie *pcie)
+-{
+-	u32 reg;
+-
+-	if (!pcie->reset_gpio)
+-		return;
+-
+-	/* PERST does not work for some cards when link training is enabled */
+-	reg = advk_readl(pcie, PCIE_CORE_CTRL0_REG);
+-	reg &= ~LINK_TRAINING_EN;
+-	advk_writel(pcie, reg, PCIE_CORE_CTRL0_REG);
+-
+-	/* 10ms delay is needed for some cards */
+-	dev_info(&pcie->pdev->dev, "issuing PERST via reset GPIO for 10ms\n");
+-	gpiod_set_value_cansleep(pcie->reset_gpio, 1);
+-	usleep_range(10000, 11000);
+-	gpiod_set_value_cansleep(pcie->reset_gpio, 0);
+-}
+-
+ static void advk_pcie_setup_hw(struct advk_pcie *pcie)
+ {
+ 	u32 reg;
  
- 	ret = advk_pcie_init_irq_domain(pcie);
- 	if (ret) {
+-	advk_pcie_issue_perst(pcie);
+-
+ 	/* Enable TX */
+ 	reg = advk_readl(pcie, PCIE_CORE_REF_CLK_REG);
+ 	reg |= PCIE_CORE_REF_CLK_TX_ENABLE;
+@@ -433,15 +446,6 @@ static void advk_pcie_setup_hw(struct advk_pcie *pcie)
+ 	reg |= PIO_CTRL_ADDR_WIN_DISABLE;
+ 	advk_writel(pcie, reg, PIO_CTRL);
+ 
+-	/*
+-	 * PERST# signal could have been asserted by pinctrl subsystem before
+-	 * probe() callback has been called or issued explicitly by reset gpio
+-	 * function advk_pcie_issue_perst(), making the endpoint going into
+-	 * fundamental reset. As required by PCI Express spec a delay for at
+-	 * least 100ms after such a reset before link training is needed.
+-	 */
+-	msleep(PCI_PM_D3COLD_WAIT);
+-
+ 	advk_pcie_train_link(pcie);
+ 
+ 	/*
 -- 
 2.26.2
 
