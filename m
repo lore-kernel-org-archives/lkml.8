@@ -2,101 +2,149 @@ Return-Path: <SRS0=kup7=A2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5384C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 11:49:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9681C433E2
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 11:50:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 83870206E9
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 11:49:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 94E2820658
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 11:50:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="e7shuYGw"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="LgZ4K6Ei"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730462AbgGOLtL (ORCPT
+        id S1730466AbgGOLue (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 07:49:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54868 "EHLO
+        Wed, 15 Jul 2020 07:50:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55086 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728766AbgGOLtJ (ORCPT
+        with ESMTP id S1728766AbgGOLue (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 07:49:09 -0400
-Received: from mail-io1-xd44.google.com (mail-io1-xd44.google.com [IPv6:2607:f8b0:4864:20::d44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 840DEC061755;
-        Wed, 15 Jul 2020 04:49:09 -0700 (PDT)
-Received: by mail-io1-xd44.google.com with SMTP id e64so1841690iof.12;
-        Wed, 15 Jul 2020 04:49:09 -0700 (PDT)
+        Wed, 15 Jul 2020 07:50:34 -0400
+Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BDEEFC08C5C1
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 04:50:33 -0700 (PDT)
+Received: by mail-wm1-x341.google.com with SMTP id g75so5275051wme.5
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 04:50:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=EJtrToUExV1qmgPKQ5wcLwVvOhkSi2Go4qi0eonxQqk=;
-        b=e7shuYGwUt4R5oPb8p6uuFSBGdw63Pwu5mOnuLGFvOVtw+Gh5STG+NHto9s1IaQVgR
-         TEFladTV0v+/G2a4Wlteau0j2/cD8BdXOwnScm2t0NGG+ds/klVDaG29A/yMSwg2nqFj
-         B1PfIIk4rPUDQMstPVgx/ESYo7kjqZn6lxPHqM9lyG0UvmogikSboeW9QV1EnJrY1OkA
-         4HQmrYeY2GIRQhcMkkRJVzEdeqTuenNcznbpdX3AR3PjnaqbV4QjpeRWYEAueT06lxiS
-         Pn83q0m9aTLh4lJJQDp8PouQ/zw5KVR7bNBWPhXatjfmcKitOGjx49Yi6+BXrHYTTXTJ
-         c4Jw==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=/T16uCv1ZWPqSW676gNIrYzGrdvCyTZGrAfC73gI1R8=;
+        b=LgZ4K6EitdkgNJmIZnB6nrrkUMdllUVyNI6qfVCTSpEPlnB3ZUp9Es7UAQyhkk2ESX
+         l+H779z95rR+9duhx4AG62Afia97T0hXyQ7Yv77OxoAX91FCWUAGTeA80uF2xLY9c9mA
+         E2gWMQuy3uee9dr3EVtZYxqfw18y/qW4jyrI0EpsycGJpLjqdGVPIv9MCp1m+PYBEgL4
+         5KPMUq/2Nn3HBz6WeL2Zp7Con55/FYRTZQo1su6tmF9R3pWakLiFpyx5vfgvRc40p55D
+         01HI+OiRmOJi1hhsdeKRK7c6h30p9nu+D0KPRsoOX4dNKS7iKNT1tuChf5ixMNGUwkgE
+         c1gw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=EJtrToUExV1qmgPKQ5wcLwVvOhkSi2Go4qi0eonxQqk=;
-        b=ItzwCpicbwZrox9tHhbqewmK1AGf4mCixXgim6UE71z/cObrZ1353VRYjP+CYy5+1c
-         wjAi3ln49Ek9N6iEDJotq8I0yR2KyIl3MNUiAs4fDQlQjZrcl6MQJveHTYtFv2xBY+5g
-         HbwIK9iWtiWHS55zTwqeaonYSA6Y0M9Wosw9T/bp5e8ca7W027yeeZrXQL0b3cNCces2
-         QvA3A0IcfozPZkGpGZcIITSYVKmnBh/oNVDkvB9pJ49jWQd97z8cxxUbv6Dfpdt6/sd2
-         a0NdwUq2NghBj72lGUVarAUf0SUiP+vCgMdN1zySeFxH+OR7WYB/WdkhN1vqWvFLiB5N
-         ctRQ==
-X-Gm-Message-State: AOAM532TtVeTeDzazlj2mkbdtFh2y+Uhbxgo20pFNdzUJgTPqIFEmxsg
-        Ie7+tQpjAP9FLtZ3ZQIqWSeMQAetXZfY72ExfDQ=
-X-Google-Smtp-Source: ABdhPJyllEzZprr7CRw31PdknfhagqCIlpavNXQvf5ajsusHxrlUzk8Y3NspGuPzKLiZEYM6U2hgyNJTecoP09mXR4I=
-X-Received: by 2002:a5e:8f4b:: with SMTP id x11mr9255230iop.90.1594813748738;
- Wed, 15 Jul 2020 04:49:08 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=/T16uCv1ZWPqSW676gNIrYzGrdvCyTZGrAfC73gI1R8=;
+        b=B1tea/3yf29jzmsC+17a7HcIau0i+xiF6Ri9/zi7ZOaloFQzU25r7E3wRzIG/+5r/X
+         kM252lgSgLDVylotdEYBHdsWaIA9IvfouAL4M6kr7xzBgZkWoJq+BQPf8lzBfHLhsHTV
+         19eH/BezKMwPHmvbmvvEMYEc2pjT4fwAMnSwJ60Ve8gAgvZiZV3ynEu0WnHW62vXQMj+
+         43hNs4A8EuZyN4P3KvflD3l9uE+vd4eUMssV0IFKlUm8qlZIBDI6s7CCCjZw6GTAZWKM
+         F/GhjhZ7cPocwRg3P+K6fXMGc/6iVOAS4Cq0IlFG1dJgdNaGDsf0Fg8dVLEJUcm43/Mo
+         kJig==
+X-Gm-Message-State: AOAM533JAZseIg9unDFsxKyN6CWy7Ab0shSQMic3copg1ZD0IaUkEHFk
+        +ttBtlmk7Sgjx6uPEE6hWAbmaA==
+X-Google-Smtp-Source: ABdhPJzhl1aZdPeNw+p/Oo2fOmsYKXVrisAAtybPKQQFyVqm7NZLat5RzBihKMlAoPur6B+enJR0gg==
+X-Received: by 2002:a05:600c:2317:: with SMTP id 23mr8624550wmo.72.1594813832408;
+        Wed, 15 Jul 2020 04:50:32 -0700 (PDT)
+Received: from dell ([2.31.163.61])
+        by smtp.gmail.com with ESMTPSA id d28sm3710893wrc.50.2020.07.15.04.50.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 15 Jul 2020 04:50:31 -0700 (PDT)
+Date:   Wed, 15 Jul 2020 12:50:29 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     "Rafael J. Wysocki" <rafael@kernel.org>
+Cc:     Viresh Kumar <viresh.kumar@linaro.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Andy Grover <andrew.grover@intel.com>,
+        Paul Diefenbaugh <paul.s.diefenbaugh@intel.com>,
+        Dominik Brodowski <linux@brodo.de>,
+        Denis Sadykov <denis.m.sadykov@intel.com>
+Subject: Re: [PATCH 09/13] cpufreq: acpi-cpufreq: Remove unused ID structs
+Message-ID: <20200715115029.GC3165313@dell>
+References: <20200714145049.2496163-1-lee.jones@linaro.org>
+ <20200714145049.2496163-10-lee.jones@linaro.org>
+ <CAJZ5v0iB0K6H28DSDQj9T7k_kV10THxV6-HwN9qfmkLsYNHfiA@mail.gmail.com>
+ <20200714210340.GJ1398296@dell>
+ <20200715032442.gh2cliiddhv35fdj@vireshk-i7>
+ <20200715032718.2zlo2eurhkpoayya@vireshk-i7>
+ <CAJZ5v0jHJDLt6QFWG9FOpqmWMXAUuSEPHdHbVgFWcwR6FQD57Q@mail.gmail.com>
+ <20200715113433.GB3165313@dell>
+ <CAJZ5v0gFwYj7KKKj806s5SdWO1Wu5exiwObKKAdQWQEKg+2CJA@mail.gmail.com>
 MIME-Version: 1.0
-References: <20200714184115.844176932@linuxfoundation.org>
-In-Reply-To: <20200714184115.844176932@linuxfoundation.org>
-From:   Puranjay Mohan <puranjay12@gmail.com>
-Date:   Wed, 15 Jul 2020 17:18:57 +0530
-Message-ID: <CANk7y0gpHGAvSiELbvdhiohD299efrDVYs1jYdDxM1bR-wWr3Q@mail.gmail.com>
-Subject: Re: [PATCH 5.7 000/166] 5.7.9-rc1 review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>,
-        lkft-triage@lists.linaro.org, stable@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAJZ5v0gFwYj7KKKj806s5SdWO1Wu5exiwObKKAdQWQEKg+2CJA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 15, 2020 at 12:27 AM Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> This is the start of the stable review cycle for the 5.7.9 release.
-> There are 166 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
->
-> Responses should be made by Thu, 16 Jul 2020 18:40:38 +0000.
-> Anything received after that time might be too late.
->
-> The whole patch series can be found in one patch at:
->         https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.7.9-rc1.gz
-> or in the git tree and branch at:
->         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.7.y
-> and the diffstat can be found below.
->
-> thanks,
->
-> greg k-h
->
-Compiled and booted on my computer running x86_64,
-No dmesg Regressions found.
+On Wed, 15 Jul 2020, Rafael J. Wysocki wrote:
 
-thanks,
---Puranjay
+> On Wed, Jul 15, 2020 at 1:34 PM Lee Jones <lee.jones@linaro.org> wrote:
+> >
+> > On Wed, 15 Jul 2020, Rafael J. Wysocki wrote:
+> >
+> > > On Wed, Jul 15, 2020 at 5:27 AM Viresh Kumar <viresh.kumar@linaro.org> wrote:
+> > > >
+> > > > On 15-07-20, 08:54, Viresh Kumar wrote:
+> > > > > On 14-07-20, 22:03, Lee Jones wrote:
+> > > > > > On Tue, 14 Jul 2020, Rafael J. Wysocki wrote:
+> > > > > >
+> > > > > > > On Tue, Jul 14, 2020 at 4:51 PM Lee Jones <lee.jones@linaro.org> wrote:
+> > > > > > > >
+> > > > > > > > Can't see them being used anywhere and the compiler doesn't complain
+> > > > > > > > that they're missing, so ...
+> > > > > > >
+> > > > > > > Aren't they needed for automatic module loading in certain configurations?
+> > > > > >
+> > > > > > Any idea how that works, or where the code is for that?
+> > > > >
+> > > > > The MODULE_DEVICE_TABLE() thingy creates a map of vendor-id,
+> > > > > product-id that the kernel keeps after boot (and so there is no static
+> > > > > reference of it for the compiler), later when a device is hotplugged
+> > > > > into the kernel it refers to the map to find the related driver for it
+> > > > > and loads it if it isn't already loaded.
+> > > > >
+> > > > > This has some of it, search for MODULE_DEVICE_TABLE() in it.
+> > > > > Documentation/driver-api/usb/hotplug.rst
+> > > >
+> > > > And you just need to add __maybe_unused to them to suppress the
+> > > > warning.
+> > >
+> > > Wouldn't that cause the compiler to optimize them away if it doesn't
+> > > see any users?
+> >
+> > It looks like they're only unused when !MODULE,
+> 
+> OK
+> 
+> > in which case optimising them away would be the correct thing to do, no?
+
+It would be good if someone with a little more knowledge could provide
+a second opinion though.  I would think (hope) that the compiler would
+be smart enough to see when its actually in use.  After all, it is the
+compiler that places the information into the device table.
+
+If that is not the case, then the MODULE_DEVICE_TABLE() magic is
+broken and will need fixing.  Removing boiler-plate is good, but not
+at the expense of obfuscation.
+
+-- 
+Lee Jones [李琼斯]
+Senior Technical Lead - Developer Services
+Linaro.org │ Open source software for Arm SoCs
+Follow Linaro: Facebook | Twitter | Blog
