@@ -2,176 +2,83 @@ Return-Path: <SRS0=kup7=A2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-16.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C99D4C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 06:17:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B275C433E3
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 06:23:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A984920672
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 06:17:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 714BB20663
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 06:23:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728440AbgGOGRB (ORCPT
+        id S1728447AbgGOGXu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 02:17:01 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:38938 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725866AbgGOGRB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 02:17:01 -0400
-Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id D38F29671EBDBCF0AA7B;
-        Wed, 15 Jul 2020 14:16:58 +0800 (CST)
-Received: from [10.134.22.195] (10.134.22.195) by smtp.huawei.com
- (10.3.19.204) with Microsoft SMTP Server (TLS) id 14.3.487.0; Wed, 15 Jul
- 2020 14:16:57 +0800
-Subject: Re: [f2fs-dev] [PATCH v2] f2fs: change the way of handling range.len
- in F2FS_IOC_SEC_TRIM_FILE
-To:     Daeho Jeong <daeho43@gmail.com>
-CC:     Jaegeuk Kim <jaegeuk@kernel.org>,
-        Daeho Jeong <daehojeong@google.com>, <kernel-team@android.com>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-f2fs-devel@lists.sourceforge.net>
-References: <20200713031252.3873546-1-daeho43@gmail.com>
- <20200713181152.GC2910046@google.com>
- <3b02263d-a5e1-136c-40ed-514d34e4c895@huawei.com>
- <CACOAw_wBD_ourGJSdRTDM-wzeH97aGE966QDB6bpjiyXRrh47A@mail.gmail.com>
-From:   Chao Yu <yuchao0@huawei.com>
-Message-ID: <f4a594a1-464f-3a74-90cb-fd536bed9962@huawei.com>
-Date:   Wed, 15 Jul 2020 14:16:56 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        Wed, 15 Jul 2020 02:23:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32780 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725850AbgGOGXt (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jul 2020 02:23:49 -0400
+Received: from trent.utfs.org (trent.utfs.org [IPv6:2a03:3680:0:3::67])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A393AC061794
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 23:23:49 -0700 (PDT)
+Received: from localhost (localhost [IPv6:::1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by trent.utfs.org (Postfix) with ESMTPS id D15FC602BC;
+        Wed, 15 Jul 2020 08:23:43 +0200 (CEST)
+Date:   Tue, 14 Jul 2020 23:23:43 -0700 (PDT)
+From:   Christian Kujau <lists@nerdbynature.de>
+To:     Jonathan Corbet <corbet@lwn.net>
+cc:     "Alexander A. Klimov" <grandmaster@al2klimov.de>,
+        torvalds@linux-foundation.org, ribalda@kernel.org,
+        viro@zeniv.linux.org.uk, mchehab+samsung@kernel.org,
+        luis.f.correia@gmail.com, geert+renesas@glider.be,
+        paulburton@kernel.org, cyphar@cyphar.com, martink@posteo.de,
+        davej@codemonkey.org.uk, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] CREDITS: remove link http://www.dementia.org/~shadow
+In-Reply-To: <20200714154708.71b3efe2@lwn.net>
+Message-ID: <alpine.DEB.2.22.1.446.2007142318110.9019@trent.utfs.org>
+References: <20200713114321.783f0ae6@lwn.net>        <20200714193805.49746-1-grandmaster@al2klimov.de> <20200714154708.71b3efe2@lwn.net>
+User-Agent: Alpine 2.22.1 (DEB 446 2020-06-13)
 MIME-Version: 1.0
-In-Reply-To: <CACOAw_wBD_ourGJSdRTDM-wzeH97aGE966QDB6bpjiyXRrh47A@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.134.22.195]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/7/15 12:06, Daeho Jeong wrote:
-> We could use fscrypt_zeroout_range() for an encrypted file.
-> But, one problem is fscrypt_zeroout_range() assumes that filesystems
-> only use a single block device.
-> It means it doesn't receive bdev as a parameter.
-> How about changing the interface of fscrypt_zeroout_range() first and using it?
+On Tue, 14 Jul 2020, Jonathan Corbet wrote:
+> >  N: Derrick J. Brashear
+> >  E: shadow@dementia.org
+> > -W: http://www.dementia.org/~shadow
 
-Yes, please limited to use fscrypt_zeroout_range() on non-multidevice f2fs image
-first, we can add a condition to check that in the beginning of ioctl interface,
-once fscrypt_zeroout_range() accepts bdev as parameter, we can remove that limitation.
+That particular entry moved to:
 
-Thanks,
+ W: http://www.contrib.andrew.cmu.edu/~shadow/
 
+(The https version only supports TLSv1, and Firefox balks)
+
+Otherwise, what Jon said:
+
+> So thanks for addressing these.  That said, I do wonder if this is quite
+> the right thing to do.  I'm assuming that the old sites still exist in the
+> wayback machine somewhere, and somebody might actually want to find them.
+> Pity the poor anthropologist researching the origins of the the
+> billion-line, free-software kernels widely used in the 2500's...
 > 
-> 2020년 7월 14일 (화) 오후 9:36, Chao Yu <yuchao0@huawei.com>님이 작성:
->>
->> On 2020/7/14 2:11, Jaegeuk Kim wrote:
->>> Hi Daeho,
->>>
->>> Please take a look at this.
->>>
->>> https://git.kernel.org/pub/scm/linux/kernel/git/jaegeuk/f2fs.git/commit/?h=dev&id=35245180459aebf6d70fde88a538f0400a794aa6
->>
->> I'm curious about what will happen if we call
->> sec_trim_file(F2FS_TRIM_FILE_ZEROOUT) on an encrypted file, will
->> it use zero bits covering encrypted data on disk?
->>
->> Thanks,
->>
->>>
->>> Thanks,
->>>
->>> On 07/13, Daeho Jeong wrote:
->>>> From: Daeho Jeong <daehojeong@google.com>
->>>>
->>>> Changed the way of handling range.len of F2FS_IOC_SEC_TRIM_FILE.
->>>>  1. Added -1 value support for range.len to secure trim the whole blocks
->>>>     starting from range.start regardless of i_size.
->>>>  2. If the end of the range passes over the end of file, it means until
->>>>     the end of file (i_size).
->>>>  3. ignored the case of that range.len is zero to prevent the function
->>>>     from making end_addr zero and triggering different behaviour of
->>>>     the function.
->>>>
->>>> Signed-off-by: Daeho Jeong <daehojeong@google.com>
->>>> ---
->>>> Changes in v2:
->>>>  - Changed -1 range.len option to mean the whole blocks starting from
->>>>    range.start regardless of i_size
->>>> ---
->>>>  fs/f2fs/file.c | 23 ++++++++++++-----------
->>>>  1 file changed, 12 insertions(+), 11 deletions(-)
->>>>
->>>> diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
->>>> index 368c80f8e2a1..2485841e3b2d 100644
->>>> --- a/fs/f2fs/file.c
->>>> +++ b/fs/f2fs/file.c
->>>> @@ -3792,7 +3792,7 @@ static int f2fs_sec_trim_file(struct file *filp, unsigned long arg)
->>>>      pgoff_t index, pg_end;
->>>>      block_t prev_block = 0, len = 0;
->>>>      loff_t end_addr;
->>>> -    bool to_end;
->>>> +    bool to_end = false;
->>>>      int ret = 0;
->>>>
->>>>      if (!(filp->f_mode & FMODE_WRITE))
->>>> @@ -3813,23 +3813,23 @@ static int f2fs_sec_trim_file(struct file *filp, unsigned long arg)
->>>>      file_start_write(filp);
->>>>      inode_lock(inode);
->>>>
->>>> -    if (f2fs_is_atomic_file(inode) || f2fs_compressed_file(inode)) {
->>>> +    if (f2fs_is_atomic_file(inode) || f2fs_compressed_file(inode) ||
->>>> +                    range.start >= inode->i_size) {
->>>>              ret = -EINVAL;
->>>>              goto err;
->>>>      }
->>>>
->>>> -    if (range.start >= inode->i_size) {
->>>> -            ret = -EINVAL;
->>>> +    if (range.len == 0)
->>>>              goto err;
->>>> -    }
->>>>
->>>> -    if (inode->i_size - range.start < range.len) {
->>>> -            ret = -E2BIG;
->>>> -            goto err;
->>>> +    if (inode->i_size - range.start > range.len) {
->>>> +            end_addr = range.start + range.len;
->>>> +    } else {
->>>> +            end_addr = range.len == (u64)-1 ?
->>>> +                    sbi->sb->s_maxbytes : inode->i_size;
->>>> +            to_end = true;
->>>>      }
->>>> -    end_addr = range.start + range.len;
->>>>
->>>> -    to_end = (end_addr == inode->i_size);
->>>>      if (!IS_ALIGNED(range.start, F2FS_BLKSIZE) ||
->>>>                      (!to_end && !IS_ALIGNED(end_addr, F2FS_BLKSIZE))) {
->>>>              ret = -EINVAL;
->>>> @@ -3846,7 +3846,8 @@ static int f2fs_sec_trim_file(struct file *filp, unsigned long arg)
->>>>      down_write(&F2FS_I(inode)->i_gc_rwsem[WRITE]);
->>>>      down_write(&F2FS_I(inode)->i_mmap_sem);
->>>>
->>>> -    ret = filemap_write_and_wait_range(mapping, range.start, end_addr - 1);
->>>> +    ret = filemap_write_and_wait_range(mapping, range.start,
->>>> +                    to_end ? LLONG_MAX : end_addr - 1);
->>>>      if (ret)
->>>>              goto out;
->>>>
->>>> --
->>>> 2.27.0.383.g050319c2ae-goog
->>>
->>>
->>> _______________________________________________
->>> Linux-f2fs-devel mailing list
->>> Linux-f2fs-devel@lists.sourceforge.net
->>> https://lists.sourceforge.net/lists/listinfo/linux-f2fs-devel
->>> .
->>>
-> .
-> 
+> So maybe we should either mark it as "[BROKEN]" or make a direct link into
+> the wayback machine instead?  That would enable the suitably motivated to
+> go after the content that once existed.
+
+As an innocent bystander, I'd opt for [BROKEN] tags, or Wayback machine 
+substitutes, instead of just removing those entries.
+
+My 2 cents,
+Christian.
+-- 
+BOFH excuse #128:
+
+Power Company having EMP problems with their reactor
