@@ -2,155 +2,110 @@ Return-Path: <SRS0=kup7=A2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CB4BC433E3
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 15:17:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E58CCC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 15:18:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E43B420658
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 15:17:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C24562065D
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 15:18:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594826301;
+	bh=BE4nfUCM5upCtGB+VvYaPL1UXSpHGoFR76aJ46Bf3K0=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=wqFzIKbMWVeL/oGfg+nFKxND1+lEcHnQBrgdekCOwUy4fH5R/TAK1/5dq4UxMXqwM
+	 Z2eUqthvrHWx0DjK5uOoNnR/LwJCcHzhwTQKJD+qFCaVVCx2SU4DPwQQtDzYlP8DYc
+	 fG/KiPjKIGGx8kaeyXhsum6GPoVO7Pn9xMAkLAps=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725977AbgGOPRt (ORCPT
+        id S1726356AbgGOPSU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 11:17:49 -0400
-Received: from mail-oo1-f65.google.com ([209.85.161.65]:41830 "EHLO
-        mail-oo1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725798AbgGOPRt (ORCPT
+        Wed, 15 Jul 2020 11:18:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59020 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725993AbgGOPST (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 11:17:49 -0400
-Received: by mail-oo1-f65.google.com with SMTP id z23so532764ood.8;
-        Wed, 15 Jul 2020 08:17:48 -0700 (PDT)
+        Wed, 15 Jul 2020 11:18:19 -0400
+Received: from mail-ot1-x341.google.com (mail-ot1-x341.google.com [IPv6:2607:f8b0:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 511A5C08C5DB
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 08:18:19 -0700 (PDT)
+Received: by mail-ot1-x341.google.com with SMTP id t18so1743799otq.5
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 08:18:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linuxfoundation.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=ZGZrT5C+OJg/dALQFoR2ZSEYVyJtYgGFY+YpC3Erpsw=;
+        b=C5RE3jdW4ZsdO1UdVDukf3InUdzEReBCssd7hCg8G1G/ZxF5LPBHeFwtJuWCPtizfV
+         DNtQjrtzwALOkSRzxUnbiSoHK3v2CDFblx8To1rgM4bIidVH5nFM9hjaPaMwiHAez3Nj
+         PJ8/QvXffLbUf+rc898BiuFM8Hb3unpxGKKDQ=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=07w6zT5p/JCkvgft7yXEC/Da1EqLXDyJjPcjdIL2ruY=;
-        b=KoMvZJ1RW4uWbsZKFZ9bC1+dI5SSa8lqHPWx75S0zYDU89uIOn06moxwurD+92arSZ
-         zGVnhrSKaCuVkLJ59DWZiDJ/eX9/xipW2zQ0GCsKdb4iJn4G+OblwNVorj3baaFGzrmW
-         fBPRalF9btvo4Kl1ad7+PLRMArDaHrRHSERVR6QSWnz7DJhAiKQfUpDAWiBuFjnhq5zk
-         +QVBy1+GLKJ0wpGrfLBNApN7aG9EwNIwAOXKLK/SguCgcxVnw4B2udohI74kwz+1cuxX
-         yTGfkHK6oDzfBIjvOKzjUpQ5kqwVRQj3GlB1EfLUDB9JsnDGn1OVruIgDfAmmG18hfEQ
-         kTtQ==
-X-Gm-Message-State: AOAM530FqIOrvxhWTC+rUVbJ25PhboNH3dIP6yttCfPcGVvpKqBMETF5
-        9bWOMkf7uRIrsYsxNP+yNsYF7kHe2ab/I3WSZ/LtpFLTSb0=
-X-Google-Smtp-Source: ABdhPJzcvtdOKs6/rlkfC19wWNicku4ArAC1wkLz5s5+/Yr9O9b5VZw4xWj+dHNs3IyqCFesO3GORRMCWTrweiBD89g=
-X-Received: by 2002:a4a:5209:: with SMTP id d9mr9977302oob.40.1594826268060;
- Wed, 15 Jul 2020 08:17:48 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=ZGZrT5C+OJg/dALQFoR2ZSEYVyJtYgGFY+YpC3Erpsw=;
+        b=G+4T7zSpTaLHO+3628urtW5zcq4Toj7K/Igt6WeA8bKR63LGiG9cH+GUCrjnhH2Rtf
+         9ZqHDudVsKOHDPeLsM+1raUT7k54goyIXksw9Vpe8LQ0WPGB/ybfFAtRoZtYqOjoeFOM
+         EYG1ybpdBizYmBMXtFtFzFNjAAYky33EOkTk+yuL21/eK8KXMu8uWRktSbIeb6RltK0m
+         7FQZJYmwqoIb9UhPRRcVXTCLRUsKD0HuikNohSNcqa3HftiVaPh1K8LWNWcYmFB8bJBh
+         t/81wRDOhXwhat3i4Xp0x2u+sAf+mdgxa1iJ9pJ/C/fZvXUYpRTpciAlP4jvyi5RoOB0
+         /HtA==
+X-Gm-Message-State: AOAM531riue6Pr1DImOj8jnnLxAKPg0PUA79PdtVvhWTsn9pI/c/78mq
+        qGW9v3izc3G+AsVVbTSk6Uj8kQ==
+X-Google-Smtp-Source: ABdhPJzcsWOqIAC9bUlBbYxT5fvs2+0huil4HgSCi+u8/mV6BPw3WkZeUOUph3tU6vKs+0neR4jl9w==
+X-Received: by 2002:a05:6830:15cc:: with SMTP id j12mr145626otr.116.1594826298533;
+        Wed, 15 Jul 2020 08:18:18 -0700 (PDT)
+Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net. [24.9.64.241])
+        by smtp.gmail.com with ESMTPSA id y1sm474728oto.1.2020.07.15.08.18.17
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 15 Jul 2020 08:18:18 -0700 (PDT)
+Subject: Re: [PATCH 5.4 000/109] 5.4.52-rc1 review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org
+Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org, Shuah Khan <skhan@linuxfoundation.org>
+References: <20200714184105.507384017@linuxfoundation.org>
+From:   Shuah Khan <skhan@linuxfoundation.org>
+Message-ID: <8cdff8fc-07c9-8d55-3559-21f5e7d3e537@linuxfoundation.org>
+Date:   Wed, 15 Jul 2020 09:18:16 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-References: <20200715121423.6c20731b@canb.auug.org.au> <CAMuHMdWMmP_YHEwnqmuTMw4-+LSieRaSHeqPLYLZyLq+O7zhyQ@mail.gmail.com>
- <6bc36827-83a7-3695-530d-4b90c08b92c7@kernel.dk>
-In-Reply-To: <6bc36827-83a7-3695-530d-4b90c08b92c7@kernel.dk>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Wed, 15 Jul 2020 17:17:36 +0200
-Message-ID: <CAMuHMdU3uRV+8ep0YRKuqBitkfVchh1L7=+RVxCAL0rMrQHAiQ@mail.gmail.com>
-Subject: Re: linux-next: build failure after merge of the block tree
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200714184105.507384017@linuxfoundation.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jens,
+On 7/14/20 12:43 PM, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 5.4.52 release.
+> There are 109 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+> 
+> Responses should be made by Thu, 16 Jul 2020 18:40:38 +0000.
+> Anything received after that time might be too late.
+> 
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.4.52-rc1.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.4.y
+> and the diffstat can be found below.
+> 
+> thanks,
+> 
+> greg k-h
+> 
 
-On Wed, Jul 15, 2020 at 5:08 PM Jens Axboe <axboe@kernel.dk> wrote:
+Compiled and booted on my test system. No dmesg regressions.
 
-> On 7/15/20 3:24 AM, Geert Uytterhoeven wrote:
-> > On Wed, Jul 15, 2020 at 4:26 AM Stephen Rothwell <sfr@canb.auug.org.au> wrote:
-> >> After merging the block tree, today's linux-next build (arm
-> >> multi_v7_defconfig) failed like this:
-> >>
-> >> block/blk-timeout.c: In function 'blk_round_jiffies':
-> >> block/blk-timeout.c:96:14: error: 'CONFIG_HZ_ROUGH_MASK' undeclared (first use in this function)
-> >>    96 |  return (j + CONFIG_HZ_ROUGH_MASK) + 1;
-> >>       |              ^~~~~~~~~~~~~~~~~~~~
-> >>
-> >> Caused by commit
-> >>
-> >>   91ba0f529364 ("block: relax jiffies rounding for timeouts")
-> >>
-> >> CONFIG_HZ_ROUGH_MASK is not defined for this build even though
-> >> CONFIG_HZ_100 is set. The arm arch does not include kernel/Kconfig.hz.
-> >>
-> >> I have reverted that commit for today.
-> >
-> > (as I don't have the original patch in my email, I'm commenting here)
-> >
-> >     +config HZ_ROUGH_MASK
-> >     +       int
-> >     +       default 127 if HZ_100
-> >     +       default 255 if HZ_250 || HZ_300
-> >     +       default 1023 if HZ_1000
-> >
-> > What about other HZ_* values?
->
-> Which other ones do we have?
-
-$ git grep "\<HZ_[0-9]" -- "*Kconf*"
-arch/alpha/Kconfig:     default HZ_128 if ALPHA_QEMU
-arch/alpha/Kconfig:     default HZ_1200 if ALPHA_RAWHIDE
-arch/alpha/Kconfig:     default HZ_1024
-arch/alpha/Kconfig:     config HZ_32
-arch/alpha/Kconfig:     config HZ_64
-arch/alpha/Kconfig:     config HZ_128
-arch/alpha/Kconfig:     config HZ_256
-arch/alpha/Kconfig:     config HZ_1024
-arch/alpha/Kconfig:     config HZ_1200
-arch/alpha/Kconfig:     default 32 if HZ_32
-arch/alpha/Kconfig:     default 64 if HZ_64
-arch/alpha/Kconfig:     default 128 if HZ_128
-arch/alpha/Kconfig:     default 256 if HZ_256
-arch/alpha/Kconfig:     default 1200 if HZ_1200
-arch/arm/Kconfig:config HZ_100
-arch/arm/Kconfig:config HZ_200
-arch/arm/Kconfig:config HZ_250
-arch/arm/Kconfig:config HZ_300
-arch/arm/Kconfig:config HZ_500
-arch/arm/Kconfig:config HZ_1000
-arch/arm/Kconfig:       default 100 if HZ_100
-arch/arm/Kconfig:       default 200 if HZ_200
-arch/arm/Kconfig:       default 250 if HZ_250
-arch/arm/Kconfig:       default 300 if HZ_300
-arch/arm/Kconfig:       default 500 if HZ_500
-arch/mips/Kconfig:      default HZ_250
-arch/mips/Kconfig:      config HZ_24
-arch/mips/Kconfig:      config HZ_48
-arch/mips/Kconfig:      config HZ_100
-arch/mips/Kconfig:      config HZ_128
-arch/mips/Kconfig:      config HZ_250
-arch/mips/Kconfig:      config HZ_256
-arch/mips/Kconfig:      config HZ_1000
-arch/mips/Kconfig:      config HZ_1024
-arch/mips/Kconfig:      default 24 if HZ_24
-arch/mips/Kconfig:      default 48 if HZ_48
-arch/mips/Kconfig:      default 100 if HZ_100
-arch/mips/Kconfig:      default 128 if HZ_128
-arch/mips/Kconfig:      default 250 if HZ_250
-arch/mips/Kconfig:      default 256 if HZ_256
-arch/mips/Kconfig:      default 1000 if HZ_1000
-arch/mips/Kconfig:      default 1024 if HZ_1024
-kernel/Kconfig.hz:      default HZ_250
-kernel/Kconfig.hz:      config HZ_100
-kernel/Kconfig.hz:      config HZ_250
-kernel/Kconfig.hz:      config HZ_300
-kernel/Kconfig.hz:      config HZ_1000
-kernel/Kconfig.hz:      default 100 if HZ_100
-kernel/Kconfig.hz:      default 250 if HZ_250
-kernel/Kconfig.hz:      default 300 if HZ_300
-kernel/Kconfig.hz:      default 1000 if HZ_1000
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+thanks,
+-- Shuah
