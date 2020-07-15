@@ -2,80 +2,286 @@ Return-Path: <SRS0=kup7=A2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FC80C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 07:11:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03783C433E4
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 07:11:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 477EC20672
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 07:11:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594797062;
-	bh=36wFCTNbZVVPOhrcXgP71yVhuwrzj7gt7k6y5e5xpE8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=aSx0v4QTKX04hpNQUqDHQ/KfKPpI+KKlpng8LBf498l/DOxxHf9HcXE8Pba01lbB4
-	 cHQjAkVizwsgLapKU08Cj55HjQqKAwMZQYVV2rSH9rqss2Lkw0k6ogYzqTqKmsfv7V
-	 jT3oJzbIOc2VYCPub+FMH294w2VvNxrr4Ht4Ei90=
+	by mail.kernel.org (Postfix) with ESMTP id C5CDA20663
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 07:11:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PSYCDg+X"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729094AbgGOHLB (ORCPT
+        id S1729103AbgGOHLT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 03:11:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60828 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728523AbgGOHLA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 03:11:00 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 008F22065E;
-        Wed, 15 Jul 2020 07:10:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594797060;
-        bh=36wFCTNbZVVPOhrcXgP71yVhuwrzj7gt7k6y5e5xpE8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=VbJKaZkyBgIiPNCppTGFtvmaobaT+B6feiSeRdf8SqHOtuIxsmT7+Pl20sfM5zOSl
-         r334lvTCu9xrbDiGTi9POvi6NUD65CAckRHPGMlVmKZzgelcUeQDD5cfm9oNlxGnbO
-         kyoOegLGizuip2IqB4XklEo+qR5mefLRjpYZ+avc=
-Date:   Wed, 15 Jul 2020 09:10:56 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Qiwu Huang <yanziily@gmail.com>
-Cc:     sre@kernel.org, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, jiangfei1@xiaomi.com,
-        Qiwu Huang <huangqiwu@xiaomi.com>
-Subject: Re: [PATCH v3 5/5] power: supply: core: supply battery soc with
- decimal form
-Message-ID: <20200715071056.GC2303720@kroah.com>
-References: <cover.1594726859.git.huangqiwu@xiaomi.com>
- <7f59501fb0566895ea8d6656010c52f2a6a18ef8.1594726859.git.huangqiwu@xiaomi.com>
+        Wed, 15 Jul 2020 03:11:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40162 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728523AbgGOHLS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jul 2020 03:11:18 -0400
+Received: from mail-io1-xd41.google.com (mail-io1-xd41.google.com [IPv6:2607:f8b0:4864:20::d41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2BBE0C061755
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 00:11:18 -0700 (PDT)
+Received: by mail-io1-xd41.google.com with SMTP id y2so1189760ioy.3
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 00:11:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:reply-to:from:date:message-id
+         :subject:to:cc;
+        bh=SnhHnWlmsmozwH7uNLciTFi6uF5Qyh5x11ET74xlgtk=;
+        b=PSYCDg+X4Y88Nh/M86aYiTLzbGayz9K3/hUUWOPnLmCtmeM7fAN2pINBE4Bxd5YzY5
+         ETNXiR/52A/ZcOOn965EKHd803YgLKDjkoPv5aFICnzuXTSvonzlLrs/M356eT9LXuyd
+         rU6t75CkNxyNoSUa56TOBXlIilnA5bBQH37SSaAPwfkvKtvfjkxRukyOG2Pq5t33Y9OE
+         XAuFD9pFUKkbenR4vjGHwoDmrWecfE6YNUz6DSKfwYYubgDu8awQK0J4uV/mQICTSxvO
+         wAzNv5F8vPM9nDZesczsAVnkSlc7Ei/u3IvLsBiFXW4mTcDK4ymBdaxEUSC2P2eZW/y/
+         uzlg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:reply-to
+         :from:date:message-id:subject:to:cc;
+        bh=SnhHnWlmsmozwH7uNLciTFi6uF5Qyh5x11ET74xlgtk=;
+        b=rwFoskcv0QaYh7pbPtRBvFABd1qJCPuzGKs0WmrTJH9C3++o0CrNYFI4El/D5gDRbx
+         L7ScyJmQXQLAhhkyCfHWArPle5JYMP2k7VqeBXzrVal/tu+TNqYLbF8WjymEcpX2NRkb
+         /PHwVZmmShWpWNhK7VLPgBrGdTQZjtVR/DekUhMSZepB1iT1G9QmSES+Uz0vZEU23kEf
+         bf90mtjPSeKxnRjKmbr9vs6x/pHRkKabo3k3PoulrxxD1TBzVKat6ROsXv2i6gFQTOlV
+         H2dO/N0GCDveosVKRItQbNcYoHqlb8xN2cbeah+bXkHcMKbN7P1hk/wuzOr6B45obG0Z
+         jyxw==
+X-Gm-Message-State: AOAM533VPsQG5F55x4t6jChcSTxhj6G5r3fDCmBDLf4THBOnhjSdIGOS
+        wgPhbhj+Qn4Wd7a5xi8Fh5FyLbh8nbHUPAx3FYs=
+X-Google-Smtp-Source: ABdhPJwFEp8/Y8q5NREse8K3AGMwbhk/tSFyBQY4tt5iOinMB6/QbtVer8S6IS6a+ZXt+QWXjaWJ/IuUrsjjq6ZHC1c=
+X-Received: by 2002:a02:ce9a:: with SMTP id y26mr10445385jaq.121.1594797077227;
+ Wed, 15 Jul 2020 00:11:17 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <7f59501fb0566895ea8d6656010c52f2a6a18ef8.1594726859.git.huangqiwu@xiaomi.com>
+References: <20200714023836.2310569-1-nivedita@alum.mit.edu>
+ <20200715004133.1430068-1-nivedita@alum.mit.edu> <CA+icZUU7xXgDSc4ApF2ffyDCygu_N42tP6iF-XAvJAAVrD_B9A@mail.gmail.com>
+In-Reply-To: <CA+icZUU7xXgDSc4ApF2ffyDCygu_N42tP6iF-XAvJAAVrD_B9A@mail.gmail.com>
+Reply-To: sedat.dilek@gmail.com
+From:   Sedat Dilek <sedat.dilek@gmail.com>
+Date:   Wed, 15 Jul 2020 09:11:05 +0200
+Message-ID: <CA+icZUVjVoKBTRkwK0fCMpv=1tkYGpVzAt3j7-YeUKDzkxxwNw@mail.gmail.com>
+Subject: Re: [PATCH v5 0/7] x86/boot: Remove run-time relocations from
+ compressed kernel
+To:     Arvind Sankar <nivedita@alum.mit.edu>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Fangrui Song <maskray@google.com>,
+        Dmitry Golovin <dima@golovin.in>,
+        Clang-Built-Linux ML <clang-built-linux@googlegroups.com>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Daniel Kiper <daniel.kiper@oracle.com>,
+        Kees Cook <keescook@chromium.org>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        "H . J . Lu" <hjl@sourceware.org>, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 15, 2020 at 08:35:23AM +0800, Qiwu Huang wrote:
-> From: Qiwu Huang <huangqiwu@xiaomi.com>
-> 
-> Broadcast battery soc with decimal form.
+On Wed, Jul 15, 2020 at 3:46 AM Sedat Dilek <sedat.dilek@gmail.com> wrote:
+>
+> On Wed, Jul 15, 2020 at 2:41 AM Arvind Sankar <nivedita@alum.mit.edu> wrote:
+> >
+> > The compressed kernel currently contains bogus run-time relocations in
+> > the startup code in head_{32,64}.S, which are generated by the linker,
+> > but must not actually be processed at run-time.
+> >
+> > This generates warnings when linking with the BFD linker, and errors
+> > with LLD, which defaults to erroring on run-time relocations in read-only
+> > sections. It also requires the -z noreloc-overflow hack for the 64-bit
+> > kernel, which prevents us from linking it as -pie on an older BFD linker
+> > (<= 2.26) or on LLD, because the locations that are to be apparently
+> > relocated are only 32-bits in size and so cannot really have
+> > R_X86_64_RELATIVE relocations.
+> >
+> > This series aims to get rid of these relocations. I've build- and
+> > boot-tested with combinations of clang/gcc-10 with lld/bfd-2.34, and
+> > gcc-4.9.0 with bfd-2.24, skipping clang on 32-bit because it currently
+> > has other issues [0].
+> >
+> > The first three patches by Ard remove indirection via the GOT from the
+> > compressed kernel code.
+> >
+> > The next patch is an independent fix for LLD, to avoid an orphan
+> > section in arch/x86/boot/setup.elf.
+> >
+> > The fifth patch gets rid of almost all the relocations. It uses
+> > standard PIC addressing technique for 32-bit, i.e. loading a register
+> > with the address of _GLOBAL_OFFSET_TABLE_ and then using GOTOFF
+> > references to access variables. For 64-bit, there is 32-bit code that
+> > cannot use RIP-relative addressing, and also cannot use the 32-bit
+> > method, since GOTOFF references are 64-bit only. This is instead handled
+> > using a macro to replace a reference like gdt with (gdt-startup_32)
+> > instead. The assembler will generate a PC32 relocation entry, with
+> > addend set to (.-startup_32), and these will be replaced with constants
+> > at link time. This works as long as all the code using such references
+> > lives in the same section as startup_32, i.e. in .head.text.
+> >
+> > The sixth patch addresses a remaining issue with the BFD linker, which
+> > generates run-time relocations for absolute symbols. We use z_input_len
+> > and z_output_len, defined in the generated piggy.S file, as symbols
+> > whose absolute "addresses" are actually the size of the compressed
+> > payload and the size of the decompressed kernel image respectively. LLD
+> > does not generate relocations for these two symbols, but the BFD linker
+> > does, prior to the upcoming 2.35. To get around this, piggy.S is
+> > extended to also define two u32 variables (in .rodata) with the lengths,
+> > and the head code is modified to use those instead of the symbol
+> > addresses.
+> >
+> > An alternative way to handle z_input_len/z_output_len would be to just
+> > include piggy.S in head_{32,64}.S instead of as a separate object file,
+> > since the GNU assembler doesn't generate relocations for symbols set to
+> > constants.
+> >
+> > The last patch adds a check in the linker script to ensure that no
+> > run-time relocations get reintroduced.
+> >
+> > [0] https://lore.kernel.org/lkml/20200504230309.237398-1-ndesaulniers@google.com/
+> >
+> > Changes from v4:
+> > - Move -pie --no-dynamic-linker from KBUILD_LDFLAGS to LDFLAGS_vmlinux
+> >   Sedat: I'm not clear on whether you tested with the final LDFLAGS,
+> >   could you confirm: i.e. if you tested with -pie passed to LLD?
+> > - Replace runtime -> run-time to be consistent in wording
+> >
+>
+> Hi Arvind,
+>
+> thanks for v5.
+>
+> With my diff applied against your patchset *v4*:
+>
+> diff --git a/arch/x86/boot/compressed/Makefile
+> b/arch/x86/boot/compressed/Makefile
+> index 789d5d14d8b0..d0aafcd8cf6c 100644
+> --- a/arch/x86/boot/compressed/Makefile
+> +++ b/arch/x86/boot/compressed/Makefile
+> @@ -51,8 +51,8 @@ UBSAN_SANITIZE :=n
+>  KBUILD_LDFLAGS := -m elf_$(UTS_MACHINE)
+>  # Compressed kernel should be built as PIE since it may be loaded at any
+>  # address by the bootloader.
+> -KBUILD_LDFLAGS += -pie $(call ld-option, --no-dynamic-linker)
+> -LDFLAGS_vmlinux := -T
+> +LDFLAGS_vmlinux := -pie $(call ld-option, --no-dynamic-linker)
+> +LDFLAGS_vmlinux += -T
+>
+>  hostprogs      := mkpiggy
+>  HOST_EXTRACFLAGS += -I$(srctree)/tools/include
+>
+> I was able to build/assemble with LLVM/Clang v11.0.0-git+ffee8040534
+> and boot on bare metal.
+>
+> Note:
+> I have applied some additional patches to be compliant with LLVM_IAS=1
+> (Clang's Integrated Assembler) and LLVM=1 means LLVM utilities.
+> ( As pointed out zstd-v7. )
+>
+> - Sedat -
+>
+> P.S.: Check my build-log
+>
+> $ grep 'arch/x86/boot/compressed/vmlinux'
+> build-log_5.8.0-rc5-3-amd64-llvm11-ias.txt
+> make -f ./scripts/Makefile.build obj=arch/x86/boot/compressed
+> arch/x86/boot/compressed/vmlinux
+>   clang-11 -E -Wp,-MMD,arch/x86/boot/compressed/.vmlinux.lds.d
+> -nostdinc -isystem /usr/lib/llvm-11/lib/clang/11.0.0/include
+> -I./arch/x86/include -I./arch/x86/include/generated  -I./include
+> -I./arch/x86/include/uapi -I./arch/x86/include/generated/uapi
+> -I./include/uapi -I./include/generated/uapi -include
+> ./include/linux/kconfig.h -D__KERNEL__ -Qunused-arguments   -P -Ux86
+> -D__ASSEMBLY__ -DLINKER_SCRIPT -o arch/x86/boot/compressed/vmlinux.lds
+> arch/x86/boot/compressed/vmlinux.lds.S
+>   llvm-objcopy-11  -R .comment -S vmlinux arch/x86/boot/compressed/vmlinux.bin
+>   arch/x86/tools/relocs vmlinux >
+> arch/x86/boot/compressed/vmlinux.relocs;arch/x86/tools/relocs
+> --abs-relocs vmlinux
+>   { cat arch/x86/boot/compressed/vmlinux.bin
+> arch/x86/boot/compressed/vmlinux.relocs | zstd -22 --ultra; printf
+> \114\015\315\001; } > arch/x86/boot/compressed/vmlinux.bin.zst
+>   arch/x86/boot/compressed/mkpiggy
+> arch/x86/boot/compressed/vmlinux.bin.zst >
+> arch/x86/boot/compressed/piggy.S
+>   ld.lld-11 -m elf_x86_64  -pie  --no-dynamic-linker -T
+> arch/x86/boot/compressed/vmlinux.lds
+> arch/x86/boot/compressed/kernel_info.o
+> arch/x86/boot/compressed/head_64.o arch/x86/boot/compressed/misc.o
+> arch/x86/boot/compressed/string.o arch/x86/boot/compressed/cmdline.o
+> arch/x86/boot/compressed/error.o arch/x86/boot/compressed/piggy.o
+> arch/x86/boot/compressed/cpuflags.o
+> arch/x86/boot/compressed/early_serial_console.o
+> arch/x86/boot/compressed/kaslr.o arch/x86/boot/compressed/kaslr_64.o
+> arch/x86/boot/compressed/mem_encrypt.o
+> arch/x86/boot/compressed/pgtable_64.o arch/x86/boot/compressed/acpi.o
+> drivers/firmware/efi/libstub/lib.a
+> arch/x86/boot/compressed/efi_thunk_64.o -o
+> arch/x86/boot/compressed/vmlinux
+>   llvm-nm-11 arch/x86/boot/compressed/vmlinux | sed -n -e
+> 's/^\([0-9a-fA-F]*\) [a-zA-Z]
+> \(startup_32\|startup_64\|efi32_stub_entry\|efi64_stub_entry\|efi_pe_entry\|efi32_pe_entry\|input_data\|kernel_info\|_end\|_ehead\|_text\|z_.*\)$/#define
+> ZO_ 0x/p' > arch/x86/boot/zoffset.h
+>   llvm-objcopy-11  -O binary -R .note -R .comment -S
+> arch/x86/boot/compressed/vmlinux arch/x86/boot/vmlinux.bin
+>
+> - EOT -
+>
 
-What does "soc" mean?
+Re-tested v5 of your patchset, feel free to add appropriate credits.
 
+- Sedat -
 
-> soc_decimal is the decimal part of battery soc.
-> soc_decimal_rate is update frequency of decimal
-> part of battery soc.
-> We want to report such as 0.01 to 99.99% to
-> user space to improve user experience
-> when do very quick charging.
-
-You can wrap your lines a bit longer, 72 columns is usually the normal
-spot :)
-
-thanks,
-
-greg k-h
+> > Changes from v3:
+> > - Move hidden.h to include/linux so the EFI stub and the compressed
+> >   kernel can share the same file
+> >
+> > Changes from v2:
+> > - Incorporate Ard's patches for eliminating GOT references into this
+> >   series
+> > - Rebase on v5.8-rc3
+> >
+> > v2: https://lore.kernel.org/lkml/20200525225918.1624470-1-nivedita@alum.mit.edu/
+> >
+> > Changes from v1:
+> > - Add .text.* to setup.ld instead of just .text.startup
+> > - Rename the la() macro introduced in the second patch for 64-bit to
+> >   rva(), and rework the explanatory comment.
+> > - In the last patch, check both .rel.dyn and .rela.dyn, instead of just
+> >   one per arch.
+> >
+> > Ard Biesheuvel (3):
+> >   x86/boot/compressed: Move .got.plt entries out of the .got section
+> >   x86/boot/compressed: Force hidden visibility for all symbol references
+> >   x86/boot/compressed: Get rid of GOT fixup code
+> >
+> > Arvind Sankar (4):
+> >   x86/boot: Add .text.* to setup.ld
+> >   x86/boot: Remove run-time relocations from .head.text code
+> >   x86/boot: Remove run-time relocations from head_{32,64}.S
+> >   x86/boot: Check that there are no run-time relocations
+> >
+> >  arch/x86/boot/compressed/Makefile      |  39 +-----
+> >  arch/x86/boot/compressed/head_32.S     |  99 +++++----------
+> >  arch/x86/boot/compressed/head_64.S     | 165 ++++++++++---------------
+> >  arch/x86/boot/compressed/mkpiggy.c     |   6 +
+> >  arch/x86/boot/compressed/vmlinux.lds.S |  24 +++-
+> >  arch/x86/boot/setup.ld                 |   2 +-
+> >  drivers/firmware/efi/libstub/Makefile  |   2 +-
+> >  drivers/firmware/efi/libstub/hidden.h  |   6 -
+> >  include/linux/hidden.h                 |  19 +++
+> >  9 files changed, 153 insertions(+), 209 deletions(-)
+> >  delete mode 100644 drivers/firmware/efi/libstub/hidden.h
+> >  create mode 100644 include/linux/hidden.h
+> >
+> >
+> > base-commit: e9919e11e219eaa5e8041b7b1a196839143e9125
+> > --
+> > 2.26.2
+> >
