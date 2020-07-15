@@ -2,168 +2,105 @@ Return-Path: <SRS0=kup7=A2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9C86C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 16:24:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24663C433E4
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 16:25:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BC7A620672
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 16:24:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F11592065E
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 16:25:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="f2EvL9ci"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726736AbgGOQYi (ORCPT
+        id S1726798AbgGOQZG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 12:24:38 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:53015 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725770AbgGOQYh (ORCPT
+        Wed, 15 Jul 2020 12:25:06 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:22947 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725770AbgGOQZF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 12:24:37 -0400
-Received: from 1.general.cking.uk.vpn ([10.172.193.212])
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <colin.king@canonical.com>)
-        id 1jvjwM-0004dH-NA; Wed, 15 Jul 2020 16:07:26 +0000
-Subject: Re: xprtrdma: Prevent inline overflow
-To:     Chuck Lever <chuck.lever@oracle.com>
-Cc:     Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <anna.schumaker@netapp.com>,
-        Bruce Fields <bfields@fieldses.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <ac00f855-e67c-b3d5-2be8-a18b07fcc8f8@canonical.com>
- <239E2F87-E595-4132-B133-504EFF9103B8@oracle.com>
-From:   Colin Ian King <colin.king@canonical.com>
-Autocrypt: addr=colin.king@canonical.com; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <2e64a42f-9e0d-9086-3279-d32aaad4f57c@canonical.com>
-Date:   Wed, 15 Jul 2020 17:07:26 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Wed, 15 Jul 2020 12:25:05 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1594830304;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=FWlD0hLU3r7xo10CWD4eKrWqa3s+/o9AbOuWp62AzV0=;
+        b=f2EvL9ciMxrLWgJmQVBaKhmrT9n6htUi12kL9sH0N7PKrjOVXpGniu2c0Abp79347iIvO0
+        Z5js3Cz5dZbN9uizCTBCUdqjB+01MDOJtpdDR668opT8Cfo9UWflVRv3YddwKjSPBEPHGR
+        ctIoRPzisDF19NZ5v31T/iuHV6RQ1hg=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-203-O5TdvEwdMi6N6b5aBQt3oA-1; Wed, 15 Jul 2020 12:25:02 -0400
+X-MC-Unique: O5TdvEwdMi6N6b5aBQt3oA-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id AB47B8014D7;
+        Wed, 15 Jul 2020 16:25:00 +0000 (UTC)
+Received: from treble (ovpn-112-242.rdu2.redhat.com [10.10.112.242])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 79B3861470;
+        Wed, 15 Jul 2020 16:24:59 +0000 (UTC)
+Date:   Wed, 15 Jul 2020 11:24:57 -0500
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     Petr Mladek <pmladek@suse.com>
+Cc:     Miroslav Benes <mbenes@suse.cz>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        live-patching@vger.kernel.org, Yannick Cote <ycote@redhat.com>
+Subject: Re: linux-next: Tree for Jun 23 (objtool (2))
+Message-ID: <20200715162457.mhoz2rgjbl4okx6d@treble>
+References: <20200623162820.3f45feae@canb.auug.org.au>
+ <61df2e8f-75e8-d233-9c3c-5b4fa2b7fbdc@infradead.org>
+ <20200702123555.bjioosahrs5vjovu@treble>
+ <alpine.LSU.2.21.2007141240540.5393@pobox.suse.cz>
+ <20200714135747.lcgysd5joguhssas@treble>
+ <alpine.LSU.2.21.2007151250390.25290@pobox.suse.cz>
+ <20200715121054.GH20226@alley>
+ <20200715134155.GI20226@alley>
 MIME-Version: 1.0
-In-Reply-To: <239E2F87-E595-4132-B133-504EFF9103B8@oracle.com>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+In-Reply-To: <20200715134155.GI20226@alley>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 15/07/2020 17:05, Chuck Lever wrote:
+On Wed, Jul 15, 2020 at 03:41:55PM +0200, Petr Mladek wrote:
+> On Wed 2020-07-15 14:10:54, Petr Mladek wrote:
+> > On Wed 2020-07-15 13:11:14, Miroslav Benes wrote:
+> > > Petr, would you agree to revert -flive-patching.
+> > 
+> > Yes, I agree.
 > 
+> Or better to say that I will not block it.
 > 
->> On Jul 15, 2020, at 11:56 AM, Colin Ian King <colin.king@canonical.com> wrote:
->>
->> Hi,
->>
->> Static analysis with Coverity has found a potential issue with the
->> header size calculations in source net/sunrpc/xprtrdma/rpc_rdma.c in
->> functions rpcrdma_max_call_header_size and rpcrdma_max_reply_header_size.
->>
->> The commit in question is relatively old:
->>
->> commit 302d3deb20682a076e1ab551821cacfdc81c5e4f
->> Author: Chuck Lever <chuck.lever@oracle.com>
->> Date:   Mon May 2 14:41:05 2016 -0400
->>
->>    xprtrdma: Prevent inline overflow
->>
->> The two issues are as follows:
->>
->> Issue #1:
->>
->> 66 static unsigned int rpcrdma_max_call_header_size(unsigned int maxsegs)
->> 67 {
->> 68        unsigned int size;
->> 69
->> 70        /* Fixed header fields and list discriminators */
->>
->> Unused value (UNUSED_VALUE)
->>
->> 71        size = RPCRDMA_HDRLEN_MIN;
->> 72
->> 73        /* Maximum Read list size */
->> 74        size = maxsegs * rpcrdma_readchunk_maxsz * sizeof(__be32);
->> 75
->>
->> should the size assignment on line 74 be instead:
->>
->> 	size += maxsegs * rpcrdma_readchunk_maxsz * sizeof(__be32);
->>
->>
->> Issue #2:
->>
->> 89 static unsigned int rpcrdma_max_reply_header_size(unsigned int maxsegs)
->> 90 {
->> 91        unsigned int size;
->> 92
->> 93        /* Fixed header fields and list discriminators */
->>
->> Unused value (UNUSED_VALUE)
->>
->> 94        size = RPCRDMA_HDRLEN_MIN;
->> 95
->> 96        /* Maximum Write list size */
->> 97        size = sizeof(__be32);          /* segment count */
->>
->> should the size assignment in line 97 be instead:
->>
->> 	size += sizeof(__be32)?
+> I see that it causes maintenance burden. There are questions about
+> reliability and performance impact. I do not have a magic solution
+> in the pocket.
 > 
-> Colin, Yes to both questions. Can you send a fix to Anna?
+> Anyway, we need a solution to know what functions need to get livepatched.
+> I do not have experience with comparing the assembly, so I do not know
+> how it is complicated and reliable.
 
-OK, thanks for confirming. Will send a fix in the next hour or so.
+Thanks Petr/Miroslav.  I can do the revert patch.  It doesn't have to be
+a permanent revert.  I'd certainly be willing to ACK it again in the
+future if/when it becomes more ready.
 
-Colin
-> 
-> --
-> Chuck Lever
-> 
-> 
-> 
+Yannick has agreed to start looking at the objtool function diff
+feature.  It's purely theoretical at the moment, we'll see how it works
+in practice.  We already do something similar in kpatch-build -- it
+differs from the objtool model, but it at least shows that something
+similar is possible.
+
+-- 
+Josh
 
