@@ -2,129 +2,159 @@ Return-Path: <SRS0=kup7=A2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DE53C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 13:48:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF8BFC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 13:50:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2D48E2064B
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 13:48:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ABDEE20657
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 13:50:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mysnt.onmicrosoft.com header.i=@mysnt.onmicrosoft.com header.b="ZPFaDMRP"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pWaJrQSl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731941AbgGONst (ORCPT
+        id S1729499AbgGONuM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 09:48:49 -0400
-Received: from mail-vi1eur05on2130.outbound.protection.outlook.com ([40.107.21.130]:64321
-        "EHLO EUR05-VI1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729086AbgGONss (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 09:48:48 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=c1GRJ2J7pzKUMnuOosha58oF8LzDH20q1zY5/3P8O+I2twfgeIFzKbn9kJZ48w1UIYyum2bP6eeurg0wzg9DH+IVVvoQtuSA0EVsI/xb397qKDC5Mr8Tim3bvFFxVhnMF0ZKbpttKJG4eI77XH0Su92N8eN8iPPhmnHAtcpzsn94UytYEGabU8+Eqi7LOGHwDlUQZsGjMgh30Xm71Imn1ujMJaeISW8wDFyuRW2d+ujIEn2jIlFW6ziLxO0jQdCsd4mKdjVFd0i23HmgoLYidv9P2Z32JMz7I2Rg+/d6G+Vf/2jeZLUkqoME4KQQkPMfxPnBEw9Fe94MTEzrnQWx6Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=5e8UJsablv1dxkbYP6E9K/fHukoA+a4FsyBwdsutfRQ=;
- b=ZwC+RuKRVuJNa3195E38wZCGJGj5j3/6ZgRQTo8h1jjL6rC6V6ZfOoObU3I4uBSOKO4fDb92b/8eW++v3IrI+oUNgMP02eNXBJ+28GIBTO9ym5wxWGewNv25OEI3594Zm2fstHpBH5YXnpwOwf6o3nWihtt5HMPzL8IMWz3HzHqIbH5hcfQAjsS+Y/sV/d8+d/UlQycDkjM0SBLG/XYRb/guT7AvM3B5LhrJaYCv0bAmyIFDmoMBr0SL3JW3t95BTsWLB2WvdtAsdYFjQb0/orB7B6+EErKoXmFG3h597CpOhVye2weCMzaaYeLiB0LPpHvMWMGXYGB808TBkjyH7A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=kontron.de; dmarc=pass action=none header.from=kontron.de;
- dkim=pass header.d=kontron.de; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mysnt.onmicrosoft.com;
- s=selector2-mysnt-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=5e8UJsablv1dxkbYP6E9K/fHukoA+a4FsyBwdsutfRQ=;
- b=ZPFaDMRPBDGNleNbsGQEjUfRxEn5C95qfqscdtVCsy74WB3/Cm01J+54h8oJ4TEq7yiXNSnwxpjYXd3yRTk2CZaYsnATQJmXVrA5hmqWJ3gYsf/9P7wKm1TkojTiI8IxkjIi+SiwC+qjxPlyGd7ECzSYwiuG8LR+Vl/TzwZwQCM=
-Authentication-Results: vger.kernel.org; dkim=none (message not signed)
- header.d=none;vger.kernel.org; dmarc=none action=none header.from=kontron.de;
-Received: from DB7PR10MB2490.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:10:50::12)
- by DB7PR10MB2345.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:10:4e::23) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3195.17; Wed, 15 Jul
- 2020 13:48:44 +0000
-Received: from DB7PR10MB2490.EURPRD10.PROD.OUTLOOK.COM
- ([fe80::ac04:ef33:baf3:36f3]) by DB7PR10MB2490.EURPRD10.PROD.OUTLOOK.COM
- ([fe80::ac04:ef33:baf3:36f3%4]) with mapi id 15.20.3174.026; Wed, 15 Jul 2020
- 13:48:44 +0000
-Subject: Re: [PATCH] spi: spidev: Add compatible for external SPI ports on
- Kontron boards
-To:     Mark Brown <broonie@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org
-References: <24ec4eed-de01-28df-ee1f-f7bcfc80051a@kontron.de>
- <20200702150725.GI4483@sirena.org.uk>
- <479d566a-213f-4e33-8ac7-7637ae88e31c@kontron.de>
- <a5b88ad9-3884-1d9c-c4ad-057266f84261@kontron.de>
- <20200713151108.GB4420@sirena.org.uk>
- <2eb6971b-7ea4-c9c8-5452-6f4b17e8860a@kontron.de>
- <20200714192907.GJ4900@sirena.org.uk>
- <16825a78-8eb0-90f2-433a-d1ae6eed6ba8@kontron.de>
- <20200715113609.GD5431@sirena.org.uk>
- <824b8479-e204-d087-7887-a2dbefa0f844@kontron.de>
- <20200715131033.GF5431@sirena.org.uk>
-From:   Frieder Schrempf <frieder.schrempf@kontron.de>
-Message-ID: <ce532200-a18c-d618-7f73-6f6ac8f8522e@kontron.de>
-Date:   Wed, 15 Jul 2020 15:48:37 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
-In-Reply-To: <20200715131033.GF5431@sirena.org.uk>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: AM0PR10CA0090.EURPRD10.PROD.OUTLOOK.COM
- (2603:10a6:208:15::43) To DB7PR10MB2490.EURPRD10.PROD.OUTLOOK.COM
- (2603:10a6:10:50::12)
-MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from [192.168.10.17] (109.250.128.36) by AM0PR10CA0090.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:208:15::43) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3195.18 via Frontend Transport; Wed, 15 Jul 2020 13:48:43 +0000
-X-Originating-IP: [109.250.128.36]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: e81ba684-1de0-4747-5f92-08d828c5ca2a
-X-MS-TrafficTypeDiagnostic: DB7PR10MB2345:
-X-Microsoft-Antispam-PRVS: <DB7PR10MB2345A0D8E5B34CBB13628123E97E0@DB7PR10MB2345.EURPRD10.PROD.OUTLOOK.COM>
-X-MS-Oob-TLC-OOBClassifiers: OLM:8273;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: ewUEpim71jP5GkL2QwwalAPJCMKkKi1glhUz7yIKVL6qvqUPuEl6gAFbaoJBAlqvGDgiEvOKEd1LlWcic5Zep2tWfyGFo5zTbCRMZFte+QqhMW8PKw6SihS6XaRFG2s6OFzqWho/MbzJMnAIlNuYT9oloNQDRYYXWJ/ZirGHdnXHquvqP8IBW7RXzqgcpXHMes6MDOoGySfh2uORRSb7/v5K2iNnOLM6nmQcc2sQNdNEFf3msJ+aAgLWkmZ5FQ1hV9Uqe51+5ZOGHpFL1jNSqSfCTDq56RdQJ/hB34T07Ka2agQXIUh/QKMQz6jJ+IZc8p622i/+ZmG+ZJh/4RkZ/vKieWii1Ioxit6aHiHiStIQjT2r7Rjg63d9xunjcbN6
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB7PR10MB2490.EURPRD10.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(376002)(136003)(346002)(396003)(39860400002)(366004)(66946007)(186003)(16526019)(6486002)(53546011)(5660300002)(26005)(86362001)(31696002)(83380400001)(31686004)(478600001)(4326008)(2616005)(956004)(44832011)(6666004)(36756003)(8936002)(16576012)(52116002)(8676002)(6916009)(66476007)(66556008)(2906002)(316002)(43740500002);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData: 44k2munNIh7pOvvzd8M1k6QGRKY765Ql4YXINWIsS8ALEtcSj0SwL2vsx96dPcIJ9I85LBISR4xW27/UHrMlP3brWxTI3q1iOvJUq9cnegny5cOeW3N4F9xfxi1375ojqFB0EtbH4kthwR9WOGljlJbzFb7b3U1QAT4snOqaT/uppX19dqAC9ZVw9I8hWBmmnYmnEMWDGQoB5fP7rv9sOoRlzy4W/YOvUjGkumxJzDsQH4ess/BhrRVUXxB1+Khl2P7CptxKFA/g3xv8+f6hMvcA4s2u8//J8GJNcWzwUwU++7fKcyuwXPu0TRUEkQB0JWPk2tzo5cKYl4Ahslkg4qjHTaF3RUleaDvAXI5SbFinV4Wby9x20MGVHeKSHVnjWm5mqbjuW8qSAltE+IQy4LbOOBkL0WyYUlCNh09LcLq2UxxEUXM0HQ3vU1pd+ToMjedV1+DDEHq5wguguajAoTiEWtWyE/cwP406pHlvgtU=
-X-OriginatorOrg: kontron.de
-X-MS-Exchange-CrossTenant-Network-Message-Id: e81ba684-1de0-4747-5f92-08d828c5ca2a
-X-MS-Exchange-CrossTenant-AuthSource: DB7PR10MB2490.EURPRD10.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Jul 2020 13:48:43.9757
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 8c9d3c97-3fd9-41c8-a2b1-646f3942daf1
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: uL2Evqbld6WqR1X7p3JuA0WdPkcCCISwL9dC7LsCddtuGy3qQ/4S83m3IQK7rSLYyk4b9yOJOZ8uAtupRN2WWM4S8U1HHTqimInXdZD5bPg=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB7PR10MB2345
+        Wed, 15 Jul 2020 09:50:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45282 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729086AbgGONuL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jul 2020 09:50:11 -0400
+Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D18DDC061755;
+        Wed, 15 Jul 2020 06:50:11 -0700 (PDT)
+Received: by mail-pj1-x1041.google.com with SMTP id cm21so3103668pjb.3;
+        Wed, 15 Jul 2020 06:50:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=hRkHds1NU1aAj2mUyg9AefWENY97EFcwEhOvlQBvAKI=;
+        b=pWaJrQSldw39pjxlOdwaKTkIxxaKzDd4ZxG0tqbp1GB3mRAkMTmBA0jtlp6bAGgTSU
+         GgVzohKuKo/TfEfX2Ei6K2SXDRpbmwRYuzFCxY7rcIjA1+li0MF8JPTKUoZ7IxMBljDL
+         JvaqQ1fpJHcR5gmIujuUgVUxcwwc4sCalhmzTUs5j+tUUQBP7qFE6PpCcHhiwA8VCu04
+         wcDW6kz6yQAGqqJqZZBULuWAvge1DKFp+Cv9IohNu+/idyG32HxhLK1tRc2HROEnwjSP
+         L/VwxQMXznSL0PvfGv3fe3uqWg40CmOXEgSp5FKpdqVDia+mxNwxhqtski5ooBLP4mBM
+         x6lQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=hRkHds1NU1aAj2mUyg9AefWENY97EFcwEhOvlQBvAKI=;
+        b=NSBsZFugBAf6KzxDtswnO65KF1+P6kmz0GznfQivy+rkHsKqdwOUpjzpUcNjXH0QCJ
+         3XaAvHEe3fvNEVmKJ0H1SQQujNsTI7Y84jRRpjTBg4CxPu79KMIV7bslTr3IvnAOzIht
+         baUlbvtSXPIu3SRF9GccZCge42vBSS8CG6QPUlvDkvqQifoLWaAY/nIcW2nEjkH6y4I7
+         8r8A9FjXfI3vZ3H311wUAsBXouWVs0XrBdqNeUxOKE0vIjKktBJc5ubFSv1ML4m0qyl2
+         AOZeIGKZDOtkKpQP39VqVxmKULPzUwcOlSjh9qdTL2fSE3is8MU9pperH3qF4tljWqEV
+         MQ9Q==
+X-Gm-Message-State: AOAM5325ZlQpyp+Uq4L+ZmJMpdTTw0CKawztwvNpU8VklC6ItNJaEGeF
+        xc5PTRlgYeXX6Co9Jj9hpqyevwp8
+X-Google-Smtp-Source: ABdhPJxwp+fXlmVhFcSGVSrfWttv0T9qrX7cyZMRH9nprZKuy53DxC55Zw0pQl3hlh4gr1o4To4C1w==
+X-Received: by 2002:a17:902:8bc7:: with SMTP id r7mr8654284plo.57.1594821011393;
+        Wed, 15 Jul 2020 06:50:11 -0700 (PDT)
+Received: from ubuntu.localdomain ([220.116.27.194])
+        by smtp.gmail.com with ESMTPSA id y9sm2205998pju.37.2020.07.15.06.50.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 15 Jul 2020 06:50:10 -0700 (PDT)
+From:   youngjun <her0gyugyu@gmail.com>
+To:     Namjae Jeon <namjae.jeon@samsung.com>,
+        Sungjong Seo <sj1557.seo@samsung.com>
+Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        youngjun <her0gyugyu@gmail.com>
+Subject: [PATCH] exfat: change exfat_set_vol_flags() return type void.
+Date:   Wed, 15 Jul 2020 06:50:00 -0700
+Message-Id: <20200715135000.86155-1-her0gyugyu@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 15.07.20 15:10, Mark Brown wrote:
-> On Wed, Jul 15, 2020 at 01:45:51PM +0200, Frieder Schrempf wrote:
->> On 15.07.20 13:36, Mark Brown wrote:
-> 
->>> Hey, I proposed other solutions you didn't want to implement!
-> 
->> Right, but you have to admit that the other solutions turned out to be
->> rather out of scope for someone like me who merely wants to use the spidev
->> driver.
-> 
->> But I don't blame you. I'm now having a better idea of how things are (or
->> aren't) supposed to look like. So thanks for your patience!
-> 
-> I'm not sure platforms like this are a great fit for DT TBH - the
-> trouble with DT is that it turns things into ABIs regardless of if it's
-> really a finished thing, platform data based systems were a lot more
-> flexible here.
+exfat_set_vol_flags() always return 0.
+So, change function return type as void.
 
-I see your point. Still it seems like the overlays would provide a 
-sufficient alternative in matters of flexibility. Raspberry Pi uses it 
-for years, which made me assume that some generic loading API is 
-available. But it seems like everything is RPi-specific and downstream.
+Signed-off-by: youngjun <her0gyugyu@gmail.com>
+---
+ fs/exfat/exfat_fs.h |  2 +-
+ fs/exfat/super.c    | 15 +++++++--------
+ 2 files changed, 8 insertions(+), 9 deletions(-)
+
+diff --git a/fs/exfat/exfat_fs.h b/fs/exfat/exfat_fs.h
+index 7579cd3bbadb..2130f62bf518 100644
+--- a/fs/exfat/exfat_fs.h
++++ b/fs/exfat/exfat_fs.h
+@@ -383,7 +383,7 @@ static inline int exfat_sector_to_cluster(struct exfat_sb_info *sbi,
+ }
+ 
+ /* super.c */
+-int exfat_set_vol_flags(struct super_block *sb, unsigned short new_flag);
++void exfat_set_vol_flags(struct super_block *sb, unsigned short new_flag);
+ 
+ /* fatent.c */
+ #define exfat_get_next_cluster(sb, pclu) exfat_ent_get(sb, *(pclu), pclu)
+diff --git a/fs/exfat/super.c b/fs/exfat/super.c
+index 253a92460d52..dc05935cb88f 100644
+--- a/fs/exfat/super.c
++++ b/fs/exfat/super.c
+@@ -58,17 +58,16 @@ static void exfat_put_super(struct super_block *sb)
+ static int exfat_sync_fs(struct super_block *sb, int wait)
+ {
+ 	struct exfat_sb_info *sbi = EXFAT_SB(sb);
+-	int err = 0;
+ 
+ 	/* If there are some dirty buffers in the bdev inode */
+ 	mutex_lock(&sbi->s_lock);
+ 	if (test_and_clear_bit(EXFAT_SB_DIRTY, &sbi->s_state)) {
+ 		sync_blockdev(sb->s_bdev);
+-		if (exfat_set_vol_flags(sb, VOL_CLEAN))
+-			err = -EIO;
++		exfat_set_vol_flags(sb, VOL_CLEAN);
++
+ 	}
+ 	mutex_unlock(&sbi->s_lock);
+-	return err;
++	return 0;
+ }
+ 
+ static int exfat_statfs(struct dentry *dentry, struct kstatfs *buf)
+@@ -98,7 +97,7 @@ static int exfat_statfs(struct dentry *dentry, struct kstatfs *buf)
+ 	return 0;
+ }
+ 
+-int exfat_set_vol_flags(struct super_block *sb, unsigned short new_flag)
++void exfat_set_vol_flags(struct super_block *sb, unsigned short new_flag)
+ {
+ 	struct exfat_sb_info *sbi = EXFAT_SB(sb);
+ 	struct boot_sector *p_boot = (struct boot_sector *)sbi->boot_bh->b_data;
+@@ -106,7 +105,7 @@ int exfat_set_vol_flags(struct super_block *sb, unsigned short new_flag)
+ 
+ 	/* flags are not changed */
+ 	if (sbi->vol_flag == new_flag)
+-		return 0;
++		return;
+ 
+ 	sbi->vol_flag = new_flag;
+ 
+@@ -114,7 +113,7 @@ int exfat_set_vol_flags(struct super_block *sb, unsigned short new_flag)
+ 	 * if this volume has been mounted with read-only
+ 	 */
+ 	if (sb_rdonly(sb))
+-		return 0;
++		return;
+ 
+ 	p_boot->vol_flags = cpu_to_le16(new_flag);
+ 
+@@ -128,7 +127,7 @@ int exfat_set_vol_flags(struct super_block *sb, unsigned short new_flag)
+ 
+ 	if (sync)
+ 		sync_dirty_buffer(sbi->boot_bh);
+-	return 0;
++	return;
+ }
+ 
+ static int exfat_show_options(struct seq_file *m, struct dentry *root)
+-- 
+2.17.1
+
