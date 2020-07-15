@@ -7,66 +7,70 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5D80C433F8
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 15:07:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF165C433F7
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 15:07:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A543020672
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 15:07:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D72420771
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 15:07:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="KZ/TT1t8"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mm5H0gkt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728085AbgGOPG6 (ORCPT
+        id S1728059AbgGOPG5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 11:06:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57192 "EHLO
+        Wed, 15 Jul 2020 11:06:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57170 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727978AbgGOPGu (ORCPT
+        with ESMTP id S1727931AbgGOPGp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 11:06:50 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A1556C08C5DB
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 08:06:49 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id b6so3039944wrs.11
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 08:06:49 -0700 (PDT)
+        Wed, 15 Jul 2020 11:06:45 -0400
+Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 006E9C08C5DE
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 08:06:44 -0700 (PDT)
+Received: by mail-wm1-x342.google.com with SMTP id o2so6184723wmh.2
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 08:06:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=IfYptBKxQvrYFn67V4A+QmgFkUNV62He06/dIZhBEjs=;
-        b=KZ/TT1t8CLQwqRlkcCPqM5ZK4eIUzF122chFSiLAFw9aUgHkXoJwedsjFUWNkqBK8w
-         xoB4tfqJRd7SZyxqiKTR0kyAIdXPlACO3EGTzoXFXhuypYOk/pAabYnC9cCRagJh7ra6
-         ys8mn2pnkIg3p3UpxtX1bwTvZquhEm5FSmtxNhh0OL5NHOsLK1CSoHoAZKQZe3U63AC6
-         kWdU4mIEZiRg7ZLXpgfvBAeuZbFLsSu/s8OANq5iu9F/gUzRFCpo8TyvZzhRXipVMsh/
-         W/JWNHB7R1SpSzw5769jWnV7f2oaRtgeMcQNpgQUwUsncIOaqTP5xM4uwZc4qtUaYnV4
-         /oKg==
+        bh=HtRzZ5KmeCiCWZA3g8vq3ZlMKJB7i9QBYHFK4C8GH0s=;
+        b=mm5H0gktuRl27KwOE3Op7rhTrBCOq3IjXtDklC9duhaS3OTT2AIBTmiUK7enabkTxf
+         phcZ+mlV/fhB5510gdwnlVT3Nu8bq+sziuBIoKP6hjoayECw6hdssq4P9CHFYDMgDvIQ
+         ErWfZyh4qn06Cfihd8RkCok4YpfxkvExmV1F49S4++6DMkMoaoPjSjicaXvmiKHPAhAs
+         zamOm620KAFOcYr63wq8QipRJwm8ft++56w68XfTbJiF0Y/z8iqjB7oqiRiK4B4uUWpS
+         X6Lp1A3i1p5aH4zsuxlrzFMGCAXnMp1cnAVb07VjMsCZTEORkYIDT50YyijZRN7wzI4Y
+         PcOA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=IfYptBKxQvrYFn67V4A+QmgFkUNV62He06/dIZhBEjs=;
-        b=Pr/m7HJr3m22bEQDru8UCuxwXVZEzOBYG54+FiWw2q1UpmNZkBIx1VV4iOQ6vge1Qa
-         92c2VDN9p84CJNOrfq7zdwBsYZFK0wHxz1Q9U4+qfnKGW5isXWGH8T1S/fd9UmpTv5AV
-         WbmYMOQmKyS9IqTAP1kVuEBZovGhqwDEACxYpo3km+6CeByqoIXXA98Y9tdXvgsg3ZxS
-         BF7fTxwfRqW4oPx3kB93vXNXq1je62DtS2tIGlWfoiupIoDvTSkAy009z3yullH0DG44
-         5SuBp8wHH4aptYkRiKzTS8tNzwgWzU4qp05Y1tpiLgibESN731wVzeyH9m23SyJ0xPPH
-         tRCQ==
-X-Gm-Message-State: AOAM533aA7oVdIzkC0/9Z3QDWlRmk02/7yWXY8eL4ARsUmf6oblA/917
-        6OJZ++S8Pf6sF6HAZprzwfbcHg==
-X-Google-Smtp-Source: ABdhPJxrrdTj/aQFIMBJUj58shw/EWz9k6o034iUJPO0GSeP71Qz7tMabUEkuVxpSHB3KuZgJnnDiQ==
-X-Received: by 2002:a5d:4992:: with SMTP id r18mr11145302wrq.323.1594825608304;
-        Wed, 15 Jul 2020 08:06:48 -0700 (PDT)
+        bh=HtRzZ5KmeCiCWZA3g8vq3ZlMKJB7i9QBYHFK4C8GH0s=;
+        b=QS5gtqgKdvg6CAONcpX5pHMrP87ZDVCpM4kQa+gRnNr8xDWg2gkmTWZLpE/nnLyO8R
+         RycxLEqaf15BFzIa/M3gbT3v1CJ+4XM9olB3H8POU3kHn3tmAX8FmmipWhky2ibkagl4
+         2f/SOcQ8785ukiFQKEN1OQrakmrT5vmNMyQvK53ItffTp0yI40QSQWkAU4LFRi1bN/nQ
+         0DryyMa/DrLamj6DphuLjnkIT/0Eh8MZ3kBkKDUjaImmCmEhB+KfqYLfyFMvHxjyHHyt
+         Z0ZNw/0mA2bsacMtEoH20iRQmJPKs9yQohJnXPqSrd71taWQmBdpPB95txOEKQWE/I2y
+         M+hg==
+X-Gm-Message-State: AOAM532ZF3nyw0CjB49Ziu3SI9hP36AzKBOD52yU6C6zkCR9o2+TkpJi
+        Or7gs5YAm4qgq6wX7PFmXX4zUw==
+X-Google-Smtp-Source: ABdhPJwPI7700rZiGUg8UA2/gAzTCD4H6EyDR617KU4GnsAL6bxdbGHlfr3Qjde6X1ytzLoqJxXbAg==
+X-Received: by 2002:a05:600c:21cb:: with SMTP id x11mr8697229wmj.141.1594825603705;
+        Wed, 15 Jul 2020 08:06:43 -0700 (PDT)
 Received: from localhost.localdomain ([2.31.163.61])
-        by smtp.gmail.com with ESMTPSA id w2sm3906140wrs.77.2020.07.15.08.06.46
+        by smtp.gmail.com with ESMTPSA id w2sm3906140wrs.77.2020.07.15.08.06.42
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 15 Jul 2020 08:06:47 -0700 (PDT)
+        Wed, 15 Jul 2020 08:06:42 -0700 (PDT)
 From:   Lee Jones <lee.jones@linaro.org>
 To:     broonie@kernel.org
 Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         linux-spi@vger.kernel.org, Lee Jones <lee.jones@linaro.org>,
-        Michal Simek <michal.simek@xilinx.com>
-Subject: [PATCH 10/14] spi: spi-zynqmp-gqspi: Correct a couple of misspellings in kerneldoc
-Date:   Wed, 15 Jul 2020 16:06:28 +0100
-Message-Id: <20200715150632.409077-11-lee.jones@linaro.org>
+        Kukjin Kim <kgene@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Andi Shyti <andi@etezian.org>,
+        Jaswinder Singh <jassi.brar@samsung.com>,
+        linux-samsung-soc@vger.kernel.org
+Subject: [PATCH 07/14] spi: spi-s3c64xx: Add missing entries for structs 's3c64xx_spi_dma_data' and 's3c64xx_spi_dma_data'
+Date:   Wed, 15 Jul 2020 16:06:25 +0100
+Message-Id: <20200715150632.409077-8-lee.jones@linaro.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200715150632.409077-1-lee.jones@linaro.org>
 References: <20200715150632.409077-1-lee.jones@linaro.org>
@@ -79,43 +83,61 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 Fixes the following W=1 kernel build warning(s):
 
- drivers/spi/spi-zynqmp-gqspi.c:205: warning: Function parameter or member 'slavecs' not described in 'zynqmp_gqspi_selectslave'
- drivers/spi/spi-zynqmp-gqspi.c:205: warning: Function parameter or member 'slavebus' not described in 'zynqmp_gqspi_selectslave'
- drivers/spi/spi-zynqmp-gqspi.c:205: warning: Excess function parameter 'flashcs' description in 'zynqmp_gqspi_selectslave'
- drivers/spi/spi-zynqmp-gqspi.c:205: warning: Excess function parameter 'flashbus' description in 'zynqmp_gqspi_selectslave'
- drivers/spi/spi-zynqmp-gqspi.c:902: warning: Function parameter or member 'dev' not described in 'zynqmp_qspi_suspend'
- drivers/spi/spi-zynqmp-gqspi.c:902: warning: Excess function parameter '_dev' description in 'zynqmp_qspi_suspend'
+ drivers/spi/spi-s3c64xx.c:150: warning: Function parameter or member 'quirks' not described in 's3c64xx_spi_port_config'
+ drivers/spi/spi-s3c64xx.c:150: warning: Function parameter or member 'clk_ioclk' not described in 's3c64xx_spi_port_config'
+ drivers/spi/spi-s3c64xx.c:189: warning: Function parameter or member 'pdev' not described in 's3c64xx_spi_driver_data'
+ drivers/spi/spi-s3c64xx.c:189: warning: Function parameter or member 'rx_dma' not described in 's3c64xx_spi_driver_data'
+ drivers/spi/spi-s3c64xx.c:189: warning: Function parameter or member 'tx_dma' not described in 's3c64xx_spi_driver_data'
+ drivers/spi/spi-s3c64xx.c:189: warning: Function parameter or member 'port_conf' not described in 's3c64xx_spi_driver_data'
+ drivers/spi/spi-s3c64xx.c:189: warning: Function parameter or member 'port_id' not described in 's3c64xx_spi_driver_data'
 
-Cc: Michal Simek <michal.simek@xilinx.com>
+Cc: Kukjin Kim <kgene@kernel.org>
+Cc: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Andi Shyti <andi@etezian.org>
+Cc: Jaswinder Singh <jassi.brar@samsung.com>
+Cc: linux-samsung-soc@vger.kernel.org
 Signed-off-by: Lee Jones <lee.jones@linaro.org>
 ---
- drivers/spi/spi-zynqmp-gqspi.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/spi/spi-s3c64xx.c | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/spi/spi-zynqmp-gqspi.c b/drivers/spi/spi-zynqmp-gqspi.c
-index 811c97a7c8589..e17a201252557 100644
---- a/drivers/spi/spi-zynqmp-gqspi.c
-+++ b/drivers/spi/spi-zynqmp-gqspi.c
-@@ -197,8 +197,8 @@ static inline void zynqmp_gqspi_write(struct zynqmp_qspi *xqspi, u32 offset,
- /**
-  * zynqmp_gqspi_selectslave:	For selection of slave device
-  * @instanceptr:	Pointer to the zynqmp_qspi structure
-- * @flashcs:	For chip select
-- * @flashbus:	To check which bus is selected- upper or lower
-+ * @slavecs:	For chip select
-+ * @slavebus:	To check which bus is selected- upper or lower
+diff --git a/drivers/spi/spi-s3c64xx.c b/drivers/spi/spi-s3c64xx.c
+index cf67ea60dc0ed..924b24441789a 100644
+--- a/drivers/spi/spi-s3c64xx.c
++++ b/drivers/spi/spi-s3c64xx.c
+@@ -130,9 +130,11 @@ struct s3c64xx_spi_dma_data {
+  * @fifo_lvl_mask: Bit-mask for {TX|RX}_FIFO_LVL bits in SPI_STATUS register.
+  * @rx_lvl_offset: Bit offset of RX_FIFO_LVL bits in SPI_STATUS regiter.
+  * @tx_st_done: Bit offset of TX_DONE bit in SPI_STATUS regiter.
++ * @quirks: Bitmask of known quirks
+  * @high_speed: True, if the controller supports HIGH_SPEED_EN bit.
+  * @clk_from_cmu: True, if the controller does not include a clock mux and
+  *	prescaler unit.
++ * @clk_ioclk: True if clock is present on this device
+  *
+  * The Samsung s3c64xx SPI controller are used on various Samsung SoC's but
+  * differ in some aspects such as the size of the fifo and spi bus clock
+@@ -154,6 +156,7 @@ struct s3c64xx_spi_port_config {
+  * @clk: Pointer to the spi clock.
+  * @src_clk: Pointer to the clock used to generate SPI signals.
+  * @ioclk: Pointer to the i/o clock between master and slave
++ * @pdev: Pointer to device's platform device data
+  * @master: Pointer to the SPI Protocol master.
+  * @cntrlr_info: Platform specific data for the controller this driver manages.
+  * @lock: Controller specific lock.
+@@ -166,7 +169,11 @@ struct s3c64xx_spi_port_config {
+  * @xfer_completion: To indicate completion of xfer task.
+  * @cur_mode: Stores the active configuration of the controller.
+  * @cur_bpw: Stores the active bits per word settings.
+- * @cur_speed: Stores the active xfer clock speed.
++ * @cur_speed: Current clock speed
++ * @rx_dma: Local receive DMA data (e.g. chan and direction)
++ * @tx_dma: Local transmit DMA data (e.g. chan and direction)
++ * @port_conf: Local SPI port configuartion data
++ * @port_id: Port identification number
   */
- static void zynqmp_gqspi_selectslave(struct zynqmp_qspi *instanceptr,
- 				     u8 slavecs, u8 slavebus)
-@@ -892,7 +892,7 @@ static int zynqmp_qspi_start_transfer(struct spi_master *master,
- 
- /**
-  * zynqmp_qspi_suspend:	Suspend method for the QSPI driver
-- * @_dev:	Address of the platform_device structure
-+ * @dev:	Address of the platform_device structure
-  *
-  * This function stops the QSPI driver queue and disables the QSPI controller
-  *
+ struct s3c64xx_spi_driver_data {
+ 	void __iomem                    *regs;
 -- 
 2.25.1
 
