@@ -2,90 +2,279 @@ Return-Path: <SRS0=kup7=A2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D886AC433F2
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 11:10:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DDEEC433EA
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 11:10:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B06E220658
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 11:10:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=126.com header.i=@126.com header.b="P7aCLf3Q"
+	by mail.kernel.org (Postfix) with ESMTP id 6002A2072E
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 11:10:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731671AbgGOLKc (ORCPT
+        id S1731611AbgGOLKP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 07:10:32 -0400
-Received: from m1546.mail.126.com ([220.181.15.46]:1088 "EHLO
-        m1546.mail.126.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731641AbgGOLK0 (ORCPT
+        Wed, 15 Jul 2020 07:10:15 -0400
+Received: from relmlor1.renesas.com ([210.160.252.171]:4546 "EHLO
+        relmlie5.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1731578AbgGOLKL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 07:10:26 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=126.com;
-        s=s110527; h=Date:From:Subject:MIME-Version:Message-ID; bh=l+5iM
-        3D5BnZ7Ni0vfl5SLJydG/G2uh+bEcSaCcktys4=; b=P7aCLf3QDNRvyuYSKbNhk
-        ijQm42qzc2bYSDhSR4CQm0/iNRuBbm2TnirFPzChQAdU5XuA2MckMhBWLRDOxSFs
-        cGy3e2aiO7kE2eWxgc9MDFT7blCAekQe4zDuLm0RFC4EckMmmziyaaXslHuchMom
-        XO6CNBy4sIdKJNNtAdH7BM=
-Received: from zhixu001$126.com ( [209.8.147.252] ) by ajax-webmail-wmsvr46
- (Coremail) ; Wed, 15 Jul 2020 18:38:55 +0800 (CST)
-X-Originating-IP: [209.8.147.252]
-Date:   Wed, 15 Jul 2020 18:38:55 +0800 (CST)
-From:   Zhao <zhixu001@126.com>
-To:     "Dan Carpenter" <dan.carpenter@oracle.com>
-Cc:     "Rob Springer" <rspringer@google.com>,
-        "Todd Poynor" <toddpoynor@google.com>,
-        "Ben Chan" <benchan@chromium.org>, "Richard Yeh" <rcy@google.com>,
-        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
-        "Joe Perches" <joe@perches.com>
-Subject: Re: [PATCH v2] staging: gasket: core: Fix a coding style issue in
- gasket_core.c
-X-Priority: 3
-X-Mailer: Coremail Webmail Server Version XT5.0.10 build 20190724(ac680a23)
- Copyright (c) 2002-2020 www.mailtech.cn 126com
-In-Reply-To: <20200617191002.GP4151@kadam>
-References: <20200617161127.32006-1-zhixu001@126.com>
- <20200617191002.GP4151@kadam>
-Content-Transfer-Encoding: base64
-Content-Type: text/plain; charset=GBK
-MIME-Version: 1.0
-Message-ID: <782deb83.5bf6.173520e4cef.Coremail.zhixu001@126.com>
-X-Coremail-Locale: zh_CN
-X-CM-TRANSID: LsqowAB3zgXA3A5fkwrRAA--.31047W
-X-CM-SenderInfo: x2kl53qqqrqiyswou0bp/1tbiZwBifF16eYfrGQAAsS
-X-Coremail-Antispam: 1U5529EdanIXcx71UUUUU7vcSsGvfC2KfnxnUU==
+        Wed, 15 Jul 2020 07:10:11 -0400
+X-IronPort-AV: E=Sophos;i="5.75,355,1589209200"; 
+   d="scan'208";a="52194131"
+Received: from unknown (HELO relmlir5.idc.renesas.com) ([10.200.68.151])
+  by relmlie5.idc.renesas.com with ESMTP; 15 Jul 2020 20:10:09 +0900
+Received: from localhost.localdomain (unknown [10.226.36.204])
+        by relmlir5.idc.renesas.com (Postfix) with ESMTP id 019C440065DD;
+        Wed, 15 Jul 2020 20:10:03 +0900 (JST)
+From:   Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+To:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Wolfgang Grandegger <wg@grandegger.com>,
+        Marc Kleine-Budde <mkl@pengutronix.de>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Mark Brown <broonie@kernel.org>,
+        Niklas <niklas.soderlund@ragnatech.se>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Magnus Damm <magnus.damm@gmail.com>
+Cc:     Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Amit Kucheria <amit.kucheria@verdurent.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
+        linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-can@vger.kernel.org,
+        netdev@vger.kernel.org, linux-spi@vger.kernel.org,
+        linux-renesas-soc@vger.kernel.org, linux-pm@vger.kernel.org,
+        linux-watchdog@vger.kernel.org,
+        Prabhakar <prabhakar.csengg@gmail.com>,
+        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Subject: [PATCH 09/20] arm64: dts: renesas: r8a774e1: Add SCIF and HSCIF nodes
+Date:   Wed, 15 Jul 2020 12:08:59 +0100
+Message-Id: <1594811350-14066-10-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1594811350-14066-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+References: <1594811350-14066-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-QXQgMjAyMC0wNi0xOCAwMzoxMDowMiwgIkRhbiBDYXJwZW50ZXIiIDxkYW4uY2FycGVudGVyQG9y
-YWNsZS5jb20+IHdyb3RlOgo+T24gVGh1LCBKdW4gMTgsIDIwMjAgYXQgMTI6MTE6MjdBTSArMDgw
-MCwgWmhpeHUgWmhhbyB3cm90ZToKPj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvc3RhZ2luZy9nYXNr
-ZXQvZ2Fza2V0X2NvcmUuYyBiL2RyaXZlcnMvc3RhZ2luZy9nYXNrZXQvZ2Fza2V0X2NvcmUuYwo+
-PiBpbmRleCA2NzMyNWZiYWY3NjAuLjI4ZGFiMzAyMTgzYiAxMDA2NDQKPj4gLS0tIGEvZHJpdmVy
-cy9zdGFnaW5nL2dhc2tldC9nYXNrZXRfY29yZS5jCj4+ICsrKyBiL2RyaXZlcnMvc3RhZ2luZy9n
-YXNrZXQvZ2Fza2V0X2NvcmUuYwo+PiBAQCAtMjYxLDYgKzI2MSw3IEBAIHN0YXRpYyBpbnQgZ2Fz
-a2V0X21hcF9wY2lfYmFyKHN0cnVjdCBnYXNrZXRfZGV2ICpnYXNrZXRfZGV2LCBpbnQgYmFyX251
-bSkKPj4gIAljb25zdCBzdHJ1Y3QgZ2Fza2V0X2RyaXZlcl9kZXNjICpkcml2ZXJfZGVzYyA9Cj4+
-ICAJCWludGVybmFsX2Rlc2MtPmRyaXZlcl9kZXNjOwo+PiAgCXVsb25nIGRlc2NfYnl0ZXMgPSBk
-cml2ZXJfZGVzYy0+YmFyX2Rlc2NyaXB0aW9uc1tiYXJfbnVtXS5zaXplOwo+ICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5e
-Xgo+R2V0IHJpZCBvZiB0aGlzIGFzIHdlbGwgKGJlbG93KS4KPgo+PiArCXN0cnVjdCBnYXNrZXRf
-YmFyX2RhdGEgKmRhdGE7Cj4+ICAJaW50IHJldDsKPj4gIAo+PiAgCWlmIChkZXNjX2J5dGVzID09
-IDApCj4+IEBAIC0yNzAsMzEgKzI3MSwzMiBAQCBzdGF0aWMgaW50IGdhc2tldF9tYXBfcGNpX2Jh
-cihzdHJ1Y3QgZ2Fza2V0X2RldiAqZ2Fza2V0X2RldiwgaW50IGJhcl9udW0pCj4+ICAJCS8qIG5v
-dCBQQ0k6IHNraXAgdGhpcyBlbnRyeSAqLwo+PiAgCQlyZXR1cm4gMDsKPj4gIAl9Cj4+ICsKPj4g
-KwlkYXRhID0gJmdhc2tldF9kZXYtPmJhcl9kYXRhW2Jhcl9udW1dOwo+Cj5JdCB3b3VsZCBiZSBi
-ZXR0ZXIgdG8gZG8gdGhpcyBpbiB0aGUgZGVjbGFyYXRpb24gYmxvY2sgc28geW91IGNhbiBjaGFu
-Z2UKPnRoZSBlYXJsaWVyIHR3byB1c2VzIGluIHRoaXMgZnVuY3Rpb246Cj4KPisJc3RydWN0IGdh
-c2tldF9iYXJfZGF0YSAqZGF0YSA9ICZnYXNrZXRfZGV2LT5iYXJfZGF0YVtiYXJfbnVtXTsKPi0J
-dWxvbmcgZGVzY19ieXRlcyA9IGRyaXZlcl9kZXNjLT5iYXJfZGVzY3JpcHRpb25zW2Jhcl9udW1d
-LnNpemU7Cj4rCXVsb25nIGRlc2NfYnl0ZXMgPSBkYXRhLT5zaXplOwo+Cj4uLi4KPgo+LQlpZiAo
-ZHJpdmVyX2Rlc2MtPmJhcl9kZXNjcmlwdGlvbnNbYmFyX251bV0udHlwZSAhPSBQQ0lfQkFSKSB7
-Cj4rCWlmIChkYXRhLT50eXBlICE9IFBDSV9CQVIpIHsKPgo+cmVnYXJkcywKPmRhbiBjYXJwZW50
-ZXIKClRoaXMgaXNzdWUgaGFzIGJlZW4gcmVzb2x2ZWQgaW4gIGh0dHBzOi8vbG9yZS5rZXJuZWwu
-b3JnL2xrbWwvMjAyMDA2MTgxNDAzMjcuR1M0MTUxQGthZGFtLwoKWmhpeHUK
+Add the device nodes for RZ/G2H SCIF and HSCIF serial ports,
+including clocks, power domains and DMAs.
+
+Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
+---
+ arch/arm64/boot/dts/renesas/r8a774e1.dtsi | 169 +++++++++++++++++++++-
+ 1 file changed, 168 insertions(+), 1 deletion(-)
+
+diff --git a/arch/arm64/boot/dts/renesas/r8a774e1.dtsi b/arch/arm64/boot/dts/renesas/r8a774e1.dtsi
+index 984ba58c12cd..6ed97187106a 100644
+--- a/arch/arm64/boot/dts/renesas/r8a774e1.dtsi
++++ b/arch/arm64/boot/dts/renesas/r8a774e1.dtsi
+@@ -626,10 +626,91 @@
+ 		};
+ 
+ 		hscif0: serial@e6540000 {
++			compatible = "renesas,hscif-r8a774e1",
++				     "renesas,rcar-gen3-hscif",
++				     "renesas,hscif";
+ 			reg = <0 0xe6540000 0 0x60>;
++			interrupts = <GIC_SPI 154 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&cpg CPG_MOD 520>,
++				 <&cpg CPG_CORE R8A774E1_CLK_S3D1>,
++				 <&scif_clk>;
++			clock-names = "fck", "brg_int", "scif_clk";
++			dmas = <&dmac1 0x31>, <&dmac1 0x30>,
++			       <&dmac2 0x31>, <&dmac2 0x30>;
++			dma-names = "tx", "rx", "tx", "rx";
++			power-domains = <&sysc R8A774E1_PD_ALWAYS_ON>;
++			resets = <&cpg 520>;
+ 			status = "disabled";
++		};
+ 
+-			/* placeholder */
++		hscif1: serial@e6550000 {
++			compatible = "renesas,hscif-r8a774e1",
++				     "renesas,rcar-gen3-hscif",
++				     "renesas,hscif";
++			reg = <0 0xe6550000 0 0x60>;
++			interrupts = <GIC_SPI 155 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&cpg CPG_MOD 519>,
++				 <&cpg CPG_CORE R8A774E1_CLK_S3D1>,
++				 <&scif_clk>;
++			clock-names = "fck", "brg_int", "scif_clk";
++			dmas = <&dmac1 0x33>, <&dmac1 0x32>,
++			       <&dmac2 0x33>, <&dmac2 0x32>;
++			dma-names = "tx", "rx", "tx", "rx";
++			power-domains = <&sysc R8A774E1_PD_ALWAYS_ON>;
++			resets = <&cpg 519>;
++			status = "disabled";
++		};
++
++		hscif2: serial@e6560000 {
++			compatible = "renesas,hscif-r8a774e1",
++				     "renesas,rcar-gen3-hscif",
++				     "renesas,hscif";
++			reg = <0 0xe6560000 0 0x60>;
++			interrupts = <GIC_SPI 144 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&cpg CPG_MOD 518>,
++				 <&cpg CPG_CORE R8A774E1_CLK_S3D1>,
++				 <&scif_clk>;
++			clock-names = "fck", "brg_int", "scif_clk";
++			dmas = <&dmac1 0x35>, <&dmac1 0x34>,
++			       <&dmac2 0x35>, <&dmac2 0x34>;
++			dma-names = "tx", "rx", "tx", "rx";
++			power-domains = <&sysc R8A774E1_PD_ALWAYS_ON>;
++			resets = <&cpg 518>;
++			status = "disabled";
++		};
++
++		hscif3: serial@e66a0000 {
++			compatible = "renesas,hscif-r8a774e1",
++				     "renesas,rcar-gen3-hscif",
++				     "renesas,hscif";
++			reg = <0 0xe66a0000 0 0x60>;
++			interrupts = <GIC_SPI 145 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&cpg CPG_MOD 517>,
++				 <&cpg CPG_CORE R8A774E1_CLK_S3D1>,
++				 <&scif_clk>;
++			clock-names = "fck", "brg_int", "scif_clk";
++			dmas = <&dmac0 0x37>, <&dmac0 0x36>;
++			dma-names = "tx", "rx";
++			power-domains = <&sysc R8A774E1_PD_ALWAYS_ON>;
++			resets = <&cpg 517>;
++			status = "disabled";
++		};
++
++		hscif4: serial@e66b0000 {
++			compatible = "renesas,hscif-r8a774e1",
++				     "renesas,rcar-gen3-hscif",
++				     "renesas,hscif";
++			reg = <0 0xe66b0000 0 0x60>;
++			interrupts = <GIC_SPI 146 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&cpg CPG_MOD 516>,
++				 <&cpg CPG_CORE R8A774E1_CLK_S3D1>,
++				 <&scif_clk>;
++			clock-names = "fck", "brg_int", "scif_clk";
++			dmas = <&dmac0 0x39>, <&dmac0 0x38>;
++			dma-names = "tx", "rx";
++			power-domains = <&sysc R8A774E1_PD_ALWAYS_ON>;
++			resets = <&cpg 516>;
++			status = "disabled";
+ 		};
+ 
+ 		hsusb: usb@e6590000 {
+@@ -962,6 +1043,40 @@
+ 			/* placeholder */
+ 		};
+ 
++		scif0: serial@e6e60000 {
++			compatible = "renesas,scif-r8a774e1",
++				     "renesas,rcar-gen3-scif", "renesas,scif";
++			reg = <0 0xe6e60000 0 0x40>;
++			interrupts = <GIC_SPI 152 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&cpg CPG_MOD 207>,
++				 <&cpg CPG_CORE R8A774E1_CLK_S3D1>,
++				 <&scif_clk>;
++			clock-names = "fck", "brg_int", "scif_clk";
++			dmas = <&dmac1 0x51>, <&dmac1 0x50>,
++			       <&dmac2 0x51>, <&dmac2 0x50>;
++			dma-names = "tx", "rx", "tx", "rx";
++			power-domains = <&sysc R8A774E1_PD_ALWAYS_ON>;
++			resets = <&cpg 207>;
++			status = "disabled";
++		};
++
++		scif1: serial@e6e68000 {
++			compatible = "renesas,scif-r8a774e1",
++				     "renesas,rcar-gen3-scif", "renesas,scif";
++			reg = <0 0xe6e68000 0 0x40>;
++			interrupts = <GIC_SPI 153 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&cpg CPG_MOD 206>,
++				 <&cpg CPG_CORE R8A774E1_CLK_S3D1>,
++				 <&scif_clk>;
++			clock-names = "fck", "brg_int", "scif_clk";
++			dmas = <&dmac1 0x53>, <&dmac1 0x52>,
++			       <&dmac2 0x53>, <&dmac2 0x52>;
++			dma-names = "tx", "rx", "tx", "rx";
++			power-domains = <&sysc R8A774E1_PD_ALWAYS_ON>;
++			resets = <&cpg 206>;
++			status = "disabled";
++		};
++
+ 		scif2: serial@e6e88000 {
+ 			compatible = "renesas,scif-r8a774e1",
+ 				     "renesas,rcar-gen3-scif", "renesas,scif";
+@@ -971,11 +1086,63 @@
+ 				 <&cpg CPG_CORE R8A774E1_CLK_S3D1>,
+ 				 <&scif_clk>;
+ 			clock-names = "fck", "brg_int", "scif_clk";
++			dmas = <&dmac1 0x13>, <&dmac1 0x12>,
++			       <&dmac2 0x13>, <&dmac2 0x12>;
++			dma-names = "tx", "rx", "tx", "rx";
+ 			power-domains = <&sysc R8A774E1_PD_ALWAYS_ON>;
+ 			resets = <&cpg 310>;
+ 			status = "disabled";
+ 		};
+ 
++		scif3: serial@e6c50000 {
++			compatible = "renesas,scif-r8a774e1",
++				     "renesas,rcar-gen3-scif", "renesas,scif";
++			reg = <0 0xe6c50000 0 0x40>;
++			interrupts = <GIC_SPI 23 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&cpg CPG_MOD 204>,
++				 <&cpg CPG_CORE R8A774E1_CLK_S3D1>,
++				 <&scif_clk>;
++			clock-names = "fck", "brg_int", "scif_clk";
++			dmas = <&dmac0 0x57>, <&dmac0 0x56>;
++			dma-names = "tx", "rx";
++			power-domains = <&sysc R8A774E1_PD_ALWAYS_ON>;
++			resets = <&cpg 204>;
++			status = "disabled";
++		};
++
++		scif4: serial@e6c40000 {
++			compatible = "renesas,scif-r8a774e1",
++				     "renesas,rcar-gen3-scif", "renesas,scif";
++			reg = <0 0xe6c40000 0 0x40>;
++			interrupts = <GIC_SPI 16 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&cpg CPG_MOD 203>,
++				 <&cpg CPG_CORE R8A774E1_CLK_S3D1>,
++				 <&scif_clk>;
++			clock-names = "fck", "brg_int", "scif_clk";
++			dmas = <&dmac0 0x59>, <&dmac0 0x58>;
++			dma-names = "tx", "rx";
++			power-domains = <&sysc R8A774E1_PD_ALWAYS_ON>;
++			resets = <&cpg 203>;
++			status = "disabled";
++		};
++
++		scif5: serial@e6f30000 {
++			compatible = "renesas,scif-r8a774e1",
++				     "renesas,rcar-gen3-scif", "renesas,scif";
++			reg = <0 0xe6f30000 0 0x40>;
++			interrupts = <GIC_SPI 17 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&cpg CPG_MOD 202>,
++				 <&cpg CPG_CORE R8A774E1_CLK_S3D1>,
++				 <&scif_clk>;
++			clock-names = "fck", "brg_int", "scif_clk";
++			dmas = <&dmac1 0x5b>, <&dmac1 0x5a>,
++			       <&dmac2 0x5b>, <&dmac2 0x5a>;
++			dma-names = "tx", "rx", "tx", "rx";
++			power-domains = <&sysc R8A774E1_PD_ALWAYS_ON>;
++			resets = <&cpg 202>;
++			status = "disabled";
++		};
++
+ 		rcar_sound: sound@ec500000 {
+ 			reg = <0 0xec500000 0 0x1000>, /* SCU */
+ 			      <0 0xec5a0000 0 0x100>,  /* ADG */
+-- 
+2.17.1
+
