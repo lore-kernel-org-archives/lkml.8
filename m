@@ -2,215 +2,191 @@ Return-Path: <SRS0=kup7=A2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3F0BC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 23:32:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41FD4C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 23:33:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A06D420658
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 23:32:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1FB8C206D5
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 23:33:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727090AbgGOXcD (ORCPT
+        id S1727768AbgGOXdS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 19:32:03 -0400
-Received: from mga07.intel.com ([134.134.136.100]:63890 "EHLO mga07.intel.com"
+        Wed, 15 Jul 2020 19:33:18 -0400
+Received: from mx2.suse.de ([195.135.220.15]:48698 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726778AbgGOXcD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 19:32:03 -0400
-IronPort-SDR: aGV584jx/8tb1xTKRHCaS42SI8yKQWgYqjaUgo8MbRT1HU4aTl4uMLwwipBuJs/0URVGCDxNCm
- LWlod7QmTfuQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9683"; a="214030969"
-X-IronPort-AV: E=Sophos;i="5.75,357,1589266800"; 
-   d="scan'208";a="214030969"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jul 2020 16:32:00 -0700
-IronPort-SDR: cZvsAGDgpGF+2NbxakPS01kIeZEkM3esK0Xo0RC0msz+O1PuaVl0fyjRi+rZ8CiAPRiGdMsLcJ
- Mfelb6mDMgGw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,357,1589266800"; 
-   d="scan'208";a="308429363"
-Received: from romley-ivt3.sc.intel.com ([172.25.110.60])
-  by fmsmga004.fm.intel.com with ESMTP; 15 Jul 2020 16:32:00 -0700
-Date:   Wed, 15 Jul 2020 16:32:00 -0700
-From:   Fenghua Yu <fenghua.yu@intel.com>
-To:     "Liu, Yi L" <yi.l.liu@intel.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Joerg Roedel <joro@8bytes.org>, Ingo Molnar <mingo@redhat.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        H Peter Anvin <hpa@zytor.com>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Felix Kuehling <Felix.Kuehling@amd.com>,
-        "Hansen, Dave" <dave.hansen@intel.com>,
-        "Luck, Tony" <tony.luck@intel.com>,
-        Jean-Philippe Brucker <jean-philippe@linaro.org>,
-        Christoph Hellwig <hch@infradead.org>,
-        "Raj, Ashok" <ashok.raj@intel.com>,
-        "Pan, Jacob jun" <jacob.jun.pan@intel.com>,
-        "Jiang, Dave" <dave.jiang@intel.com>,
-        "Mehta, Sohil" <sohil.mehta@intel.com>,
-        "Shankar, Ravi V" <ravi.v.shankar@intel.com>,
-        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
-        x86 <x86@kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        amd-gfx <amd-gfx@lists.freedesktop.org>
-Subject: Re: [PATCH v6 03/12] docs: x86: Add documentation for SVA (Shared
- Virtual Addressing)
-Message-ID: <20200715233200.GD64320@romley-ivt3.sc.intel.com>
-References: <1594684087-61184-1-git-send-email-fenghua.yu@intel.com>
- <1594684087-61184-4-git-send-email-fenghua.yu@intel.com>
- <DM5PR11MB1435394EDA593222F19F3BF8C3610@DM5PR11MB1435.namprd11.prod.outlook.com>
+        id S1726770AbgGOXdR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jul 2020 19:33:17 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id 59290B6E1;
+        Wed, 15 Jul 2020 23:33:14 +0000 (UTC)
+From:   NeilBrown <neil@brown.name>
+To:     Christoph Hellwig <hch@lst.de>, linux-kernel@vger.kernel.org
+Date:   Thu, 16 Jul 2020 09:33:04 +1000
+Cc:     "H. Peter Anvin" <hpa@zytor.com>, Song Liu <song@kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-raid@vger.kernel.org, linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH 05/23] md: replace the RAID_AUTORUN ioctl with a direct function call
+In-Reply-To: <20200714190427.4332-6-hch@lst.de>
+References: <20200714190427.4332-1-hch@lst.de> <20200714190427.4332-6-hch@lst.de>
+Message-ID: <87blkgxsjz.fsf@notabene.neil.brown.name>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <DM5PR11MB1435394EDA593222F19F3BF8C3610@DM5PR11MB1435.namprd11.prod.outlook.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+Content-Type: multipart/signed; boundary="=-=-=";
+        micalg=pgp-sha256; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi, Yi,
+--=-=-=
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Jul 13, 2020 at 08:25:20PM -0700, Liu, Yi L wrote:
-> > From: Fenghua Yu <fenghua.yu@intel.com>
-> > Sent: Tuesday, July 14, 2020 7:48 AM
-> > From: Ashok Raj <ashok.raj@intel.com>
+On Tue, Jul 14 2020, Christoph Hellwig wrote:
 
-Thank you for your comments!
+> Instead of using a spcial RAID_AUTORUN ioctl that only exists for
+> non-modular builds and is only called from the early init code, just
+> call the actual function directly.
 
-But I think we don't need to update this patch because the current text
-is better than suggested changes. I would rather to keep this patch
-unchanged. Please see my following explanations for details.
+I think there was a tool in the old 'mdutls' that would call this ioctl
+from user-space, but I cannot find a copy of that online, so I cannot be
+sure.... not that it really matters.
 
-> > +(PRI) allow devices to function much the same way as the CPU handling
-> > +application page-faults. For more information please refer to PCIe
-> > +specification Chapter 10: ATS Specification.
-> > +
-> 
-> nit: may be helpful to mention Chapter 10 of PCIe spec since 4.0. before that, ATS has its
-> own specification.
+Reviewed-by: NeilBrown <neilb@suse.de>
 
-This doc only refers to the latest specs. Older specs are not useful
-for this spec.
-
-> > +ENQCMD is the glue that ensures applications can directly submit
-> > +commands to the hardware and also permit hardware to be aware of
-> > +application context to perform I/O operations via use of PASID.
-> > +
-> 
-> maybe a reader will ask about ENQCMDs after reading ENQCMD/S spec. :-)
-
-This doc only covers ENQCMD. ENQCMDS is out of scope of this doc.
-
-> > +- Allocate the PASID, and program the process page-table (cr3) in the
-> > +PASID
-> > +  context entries.
-> 
-> nit: s/PASID context entries/PASID table entries/
-
-Kernel IOMMU does use PASID context. So we would keep the current text.
-
-> 
-> > +- Register for mmu_notifier() to track any page-table invalidations to
-> > +keep
-> > +  the device tlb in sync. For example, when a page-table entry is
-> 
-> not only device tlb. I guess iotlb is also included.
-
-I think they are same/similar concepts. No need to duplicate here.
-
-> > +it into the new MSR to communicate the process identity to platform hardware.
-> > +ENQCMD uses the PASID stored in this MSR to tag requests from this process.
-> > +When a user submits a work descriptor to a device using the ENQCMD
-> > +instruction, the PASID field in the descriptor is auto-filled with the
-> > +value from MSR_IA32_PASID. Requests for DMA from the device are also
-> > +tagged with the same PASID. The platform IOMMU uses the PASID in the
-> 
-> not quite get " Requests for DMA from the device are also tagged with the
-> same PASID"
-
-The DMA access from device to the process address space uses the same PASID
-set up in the MSR.
- 
-> 
-> > +transaction to perform address translation. The IOMMU api's setup the
-> 
-> s/api's/apis/ ?
+Thanks,
+NeilBrown
 
 
-> 
-> > +corresponding PASID entry in IOMMU with the process address used by the CPU
-> > (for e.g cr3 in x86).
-> 
-> with the process page tables used by the CPU (e.g. the page tables pointed by cr3 in x86).
+>
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
+> Acked-by: Song Liu <song@kernel.org>
+> ---
+>  drivers/md/md-autodetect.c | 10 ++--------
+>  drivers/md/md.c            | 14 +-------------
+>  drivers/md/md.h            |  3 +++
+>  3 files changed, 6 insertions(+), 21 deletions(-)
+>
+> diff --git a/drivers/md/md-autodetect.c b/drivers/md/md-autodetect.c
+> index fe806f7b9759a1..0eb746211ed53c 100644
+> --- a/drivers/md/md-autodetect.c
+> +++ b/drivers/md/md-autodetect.c
+> @@ -9,6 +9,7 @@
+>  #include <linux/raid/detect.h>
+>  #include <linux/raid/md_u.h>
+>  #include <linux/raid/md_p.h>
+> +#include "md.h"
+>=20=20
+>  /*
+>   * When md (and any require personalities) are compiled into the kernel
+> @@ -285,8 +286,6 @@ __setup("md=3D", md_setup);
+>=20=20
+>  static void __init autodetect_raid(void)
+>  {
+> -	int fd;
+> -
+>  	/*
+>  	 * Since we don't want to detect and use half a raid array, we need to
+>  	 * wait for the known devices to complete their probing
+> @@ -295,12 +294,7 @@ static void __init autodetect_raid(void)
+>  	printk(KERN_INFO "md: If you don't use raid, use raid=3Dnoautodetect\n"=
+);
+>=20=20
+>  	wait_for_device_probe();
+> -
+> -	fd =3D ksys_open("/dev/md0", 0, 0);
+> -	if (fd >=3D 0) {
+> -		ksys_ioctl(fd, RAID_AUTORUN, raid_autopart);
+> -		ksys_close(fd);
+> -	}
+> +	md_autostart_arrays(raid_autopart);
+>  }
+>=20=20
+>  void __init md_run_setup(void)
+> diff --git a/drivers/md/md.c b/drivers/md/md.c
+> index f567f536b529bd..6e9a48da474848 100644
+> --- a/drivers/md/md.c
+> +++ b/drivers/md/md.c
+> @@ -68,10 +68,6 @@
+>  #include "md-bitmap.h"
+>  #include "md-cluster.h"
+>=20=20
+> -#ifndef MODULE
+> -static void autostart_arrays(int part);
+> -#endif
+> -
+>  /* pers_list is a list of registered personalities protected
+>   * by pers_lock.
+>   * pers_lock does extra service to protect accesses to
+> @@ -7421,7 +7417,6 @@ static inline bool md_ioctl_valid(unsigned int cmd)
+>  	case GET_DISK_INFO:
+>  	case HOT_ADD_DISK:
+>  	case HOT_REMOVE_DISK:
+> -	case RAID_AUTORUN:
+>  	case RAID_VERSION:
+>  	case RESTART_ARRAY_RW:
+>  	case RUN_ARRAY:
+> @@ -7467,13 +7462,6 @@ static int md_ioctl(struct block_device *bdev, fmo=
+de_t mode,
+>  	case RAID_VERSION:
+>  		err =3D get_version(argp);
+>  		goto out;
+> -
+> -#ifndef MODULE
+> -	case RAID_AUTORUN:
+> -		err =3D 0;
+> -		autostart_arrays(arg);
+> -		goto out;
+> -#endif
+>  	default:;
+>  	}
+>=20=20
+> @@ -9721,7 +9709,7 @@ void md_autodetect_dev(dev_t dev)
+>  	}
+>  }
+>=20=20
+> -static void autostart_arrays(int part)
+> +void md_autostart_arrays(int part)
+>  {
+>  	struct md_rdev *rdev;
+>  	struct detected_devices_node *node_detected_dev;
+> diff --git a/drivers/md/md.h b/drivers/md/md.h
+> index 612814d07d35ab..37315a3f28e97d 100644
+> --- a/drivers/md/md.h
+> +++ b/drivers/md/md.h
+> @@ -800,4 +800,7 @@ static inline void mddev_check_write_zeroes(struct md=
+dev *mddev, struct bio *bio
+>  	    !bio->bi_disk->queue->limits.max_write_zeroes_sectors)
+>  		mddev->queue->limits.max_write_zeroes_sectors =3D 0;
+>  }
+> +
+> +void md_autostart_arrays(int part);
+> +
+>  #endif /* _MD_MD_H */
+> --=20
+> 2.27.0
 
-We use address to match the "address space" specified in the term of PASID.
-page table is implementation details. So we would keep the current text.
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
 
-> > +The MSR must be configured on each logical CPU before any application
-> 
-> s/MSR/MSR_IA32_PASID/
+-----BEGIN PGP SIGNATURE-----
 
-The MSR refers to MSR_IA32_PASID. We don't need to repeat long
-"MSR_IA32_PASID" everywhere while a short "the MSR" is better and clear
-in the doc.
-
-> > +thread can interact with a device. Threads that belong to the same
-> > +process share the same page tables, thus the same MSR value.
-> 
-> s/MSR/PASID/
-
-The "MSR" is better because we focus on the MSR value here that is set up for
-each thread.
-
-> 
-> > +
-> > +PASID is cleared when a process is created. The PASID allocation and
-> 
-> s/PASID/MSR_IA32_PASID/
-
-No. It is PASID that is cleared per process creation. We are not talking about
-the MSR here although the MSR will cleared as part of process FPU init.
-
-> 
-> > +MSR programming may occur long after a process and its threads have been
-> > created.
-> > +One thread must call bind() to allocate the PASID for the process. If a
-> 
-> s/bind()/iommu_sva_bind_device()/ or say "call iommu api to bind a process with
-> a device." :-)
-
-bind() is better because the binding function may be changed (e.g. it was
-changed in 5.8). People know bind() means binding. Even in the future the
-binding function is changed again, we don't need to change the text here
-if using bind().
-
-> 
-> > +thread uses ENQCMD without the MSR first being populated, it will cause #GP.
-> > +The kernel will fix up the #GP by writing the process-wide PASID into
-> > +the thread that took the #GP. A single process PASID can be used
-> > +simultaneously with multiple devices since they all share the same address space.
-> 
-> simultaneously with multiple devices if they all share the process address
-> space.
-
-Using "since" is better. It explains "why".
-
-> 
-> > +
-> > +New threads could inherit the MSR value from the parent. But this would
-> 
-> s/MSR/MSR_IA32_PASID/
-
-Ditto. It's unnecessary to use long "MSR_IA32_PASID" everywhere.
-"The MSR" is concise and clear.
-
-Thanks.
-
--Fenghua
+iQIzBAEBCAAdFiEEG8Yp69OQ2HB7X0l6Oeye3VZigbkFAl8PkjAACgkQOeye3VZi
+gbkPzRAAn5qOYJIGEh1PAEMKA3z3S43OAV2OIW/7M/EtYA3Ns3qggb132sayetSl
+WG4Wvpr60UMXbFFdVmJzwRGnfp/V0VCgnuI3gcS4QePF7AXAAmwtGeVDyHEW+mhS
+Cb/tl+fBYUaCiEp/FRRks4i8O6mE5OFKQq60SKMZa+n5XNVwLWbQkimOwmSsn6zD
+zO0og6tmY0ji3zrC2nxr4gH8wdvOBd8zrmLG4SMdRkGNFrhaP1hX7XlFcewcKoY4
+KyMTaZg3oQyoftaccZ+37pgiPC9eEHYb9v6ivsn2D6KYPqRMNSQPgxuCD3JjgVju
+ZiaXIv5BzrZot04zyKLDxC8CUd19fsEpNln1Xi24l41ITCpp4+t+g2/3/X078lc4
+GHHEJHQg8FK90SzTCXJ+oR8CaotTl1QweRbJmCJ752gQnI1X/xkRPRbq4IE3Q8bL
+6ptSkm9KbddWJQYaH+z5kcPuRi0bBYse6SdWfk94aE3OeE8SdFfomF68paV5Tgkn
+RrmquAve4pca2wnGtwF5po4BH8g82URcUinmrrNu37QJJDdcSozMVr9mQf8WQrGm
+knNySDeGbwswLndrR/m1XHeopXroG3zym1G6vPe4b1GPq+c7oje/RK21ha57t+CG
+npJ0UPW5Mr8gABDUvTCg4/sZpxyR6/jZWSLedUXt2Ek6IFPRIU0=
+=61mh
+-----END PGP SIGNATURE-----
+--=-=-=--
