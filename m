@@ -7,44 +7,41 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85674C433F1
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 12:49:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8070BC433F8
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 12:49:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 56D7120578
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 12:49:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5548320578
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 12:49:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="NEyGvFr3"
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="vLtxHrJ2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731396AbgGOMtH (ORCPT
+        id S1731413AbgGOMtO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 08:49:07 -0400
-Received: from perceval.ideasonboard.com ([213.167.242.64]:60282 "EHLO
+        Wed, 15 Jul 2020 08:49:14 -0400
+Received: from perceval.ideasonboard.com ([213.167.242.64]:60266 "EHLO
         perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731347AbgGOMs7 (ORCPT
+        with ESMTP id S1729312AbgGOMs5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 08:48:59 -0400
+        Wed, 15 Jul 2020 08:48:57 -0400
 Received: from Q.local (cpc89242-aztw30-2-0-cust488.18-1.cable.virginm.net [86.31.129.233])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 37AD3564;
-        Wed, 15 Jul 2020 14:48:57 +0200 (CEST)
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 4C28EDC3;
+        Wed, 15 Jul 2020 14:48:54 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1594817337;
-        bh=I4Mi3hs9NzKXoN4u5HKTknj7JJzfm1Unvue8SQk/r+o=;
+        s=mail; t=1594817334;
+        bh=sppLBNveVA4+ntWTNOa++wBjLnMfL1GPniNfmwpUoLk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NEyGvFr3RO7xu/J+6VreJBQ5ZtcQPnwEkULqvlM5kU9EIQHiCKZ3qflop0xn26IxG
-         b08yppSnjuwzbnlVsFZC/yd7Ek0RD7WCFfgmLordwgA/9TobI3gcr9ynMNrjGcCWGW
-         6+LnjZghY07uvepiv0f/Fv+z1fzYH+5tAp0pGUKs=
+        b=vLtxHrJ245dFFtbOYlJXhJNdVlV0lKfhkKZQMr21GCsfKYddhFPO4Jzw/vna7NboJ
+         /LRylILw+pq2tuuHuBIfUUAn8wMZabs3EiVJILcl8iH3f10AwPTNCdsh5GucHz4pRM
+         Vuqa+uktvG2tCXQw0VHIIfqRXAE7/8ZgfuJBy8PM=
 From:   Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
 To:     trivial@kernel.org
 Cc:     Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Colin Ian King <colin.king@canonical.com>,
-        =?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>,
-        Xiong <xndchn@gmail.com>, SeongJae Park <sjpark@amazon.de>,
-        Luca Ceresoli <luca@lucaceresoli.net>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ingo Molnar <mingo@redhat.com>,
         linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH v2 8/8] scripts/spelling.txt: Add descriptors correction
-Date:   Wed, 15 Jul 2020 13:48:39 +0100
-Message-Id: <20200715124839.252822-9-kieran.bingham+renesas@ideasonboard.com>
+Subject: [PATCH v2 6/8] kernel: trace: Fix trivial spelling
+Date:   Wed, 15 Jul 2020 13:48:37 +0100
+Message-Id: <20200715124839.252822-7-kieran.bingham+renesas@ideasonboard.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200715124839.252822-1-kieran.bingham+renesas@ideasonboard.com>
 References: <20200715124839.252822-1-kieran.bingham+renesas@ideasonboard.com>
@@ -55,34 +52,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-After coming across the s/decriptors/descriptors/ spelling error twice,
-a scan of the tree showed it was a pervasive mistake.
+The word 'descriptor' is misspelled throughout the tree.
 
-Update the spelling suggestions database to prevent it in both singular
-and plural form.
+Fix it up accordingly:
+    decriptor -> descriptor
 
 Signed-off-by: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
-
 ---
 v2:
- - Use both singular and plural form.
+ - Fix commit message to reflect actual word replaced
 ---
- scripts/spelling.txt | 2 ++
- 1 file changed, 2 insertions(+)
+ kernel/trace/trace_events.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/scripts/spelling.txt b/scripts/spelling.txt
-index c45e9afaab2d..c56a6c36e6f2 100644
---- a/scripts/spelling.txt
-+++ b/scripts/spelling.txt
-@@ -406,6 +406,8 @@ decendants||descendants
- decompres||decompress
- decsribed||described
- decription||description
-+decriptor||descriptor
-+decriptors||descriptors
- dectected||detected
- defailt||default
- deferal||deferral
+diff --git a/kernel/trace/trace_events.c b/kernel/trace/trace_events.c
+index 780cf3be35d1..5d68f4c46117 100644
+--- a/kernel/trace/trace_events.c
++++ b/kernel/trace/trace_events.c
+@@ -2479,7 +2479,7 @@ __trace_add_new_event(struct trace_event_call *call, struct trace_array *tr)
+ }
+ 
+ /*
+- * Just create a decriptor for early init. A descriptor is required
++ * Just create a descriptor for early init. A descriptor is required
+  * for enabling events at boot. We want to enable events before
+  * the filesystem is initialized.
+  */
 -- 
 2.25.1
 
