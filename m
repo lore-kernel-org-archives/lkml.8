@@ -2,147 +2,116 @@ Return-Path: <SRS0=kup7=A2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30794C433E4
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 19:02:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA244C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 19:02:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 14F5C20657
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 19:02:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BC18520672
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 19:02:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ASTb52Ia"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AJrZs7DM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726766AbgGOTCP (ORCPT
+        id S1726870AbgGOTCz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 15:02:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37188 "EHLO
+        Wed, 15 Jul 2020 15:02:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37290 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726650AbgGOTCO (ORCPT
+        with ESMTP id S1726761AbgGOTCw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 15:02:14 -0400
-Received: from mail-vk1-xa41.google.com (mail-vk1-xa41.google.com [IPv6:2607:f8b0:4864:20::a41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 31FCBC08C5CE
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 12:02:14 -0700 (PDT)
-Received: by mail-vk1-xa41.google.com with SMTP id h1so728765vkn.12
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 12:02:14 -0700 (PDT)
+        Wed, 15 Jul 2020 15:02:52 -0400
+Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8C2E3C08C5CE;
+        Wed, 15 Jul 2020 12:02:52 -0700 (PDT)
+Received: by mail-lj1-x243.google.com with SMTP id z24so3813946ljn.8;
+        Wed, 15 Jul 2020 12:02:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=PmtQ0FrsBiOsqRJiGiTNFNGrmIx+8RMusU8KDu9T4aY=;
-        b=ASTb52Iah2njRL2ETx3AA40ICz/qZGc0YsZ4RTzCHytuyNKqdrkSTbsaUPy6zkttzt
-         S0MEohrvEOeRRGxXFQp93vIfJK+w3YIv6+8lc3P+gfKEBlEbAj93X2DRVgyxa9eN6HIB
-         Wn7Yifou3j68JRXTW7Fq30Bc0R2f+cTkHEa1U=
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=24j8BD/rk1NCezefIEXui0kY0H9CcCq5N57TnMuH0Cs=;
+        b=AJrZs7DMub0Mmpklzzn+wMRqarleeITlOdNdHKFOGnsjGhIvg4RadvozaRFCXFQaJf
+         X77nBWccXJek+u3muNeIFHurc3tLJTbykuiahETAXS+gBNBxh/1qZIvzu0n/yLjWbTFd
+         gTqke7t3gVWxGkDBg1n59jGgmPKYfm3waBnYTyT/+d9CybsSSF7jH1WAnT1VsYCrMq7+
+         37ewHdUaA8AAUWwJxjG+kVaQCxiyDm1c6CeIxVRz02hYonygKPpWGfOZRVqYFdEp95Ct
+         PF1kNoHJn7JwFn/IXryaMa9RbAlLyZNvqdqsuHP8Q/5m1GS5nDS19yKIXHt8E5N+4vgX
+         GJMg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=PmtQ0FrsBiOsqRJiGiTNFNGrmIx+8RMusU8KDu9T4aY=;
-        b=tjRowsZRVF9ShFzQ58mXkm9w7X4MKJa+typjELUU6A4M4s+ISTUOhpsBUrdn3A+RIN
-         0FR/EqxoyWrX8UDg7hudsOWGA1YhK2SpAwNYHBb04Ho1ieQVpHZKnVsSrd0eqkKFuVgO
-         RSbEugeZ1Wgi66c6Ubl2hdp1mZ3vvaX0HXQnZ3/5MjckqPw0jcTZo3qXT3/CoJ52p1nm
-         uJTTj4oGbGQV0WUfGk1ooiWBBAFvzlo+ByfIeCpwH5qJJNEOgrG9OQ5iIGBFD9fMAxYX
-         SkHCtDWtdiJATk5VFaRe3WVBgt2L0F/fFTGxXAHafXl5hyuEmqEYrX1UIaBEwZf/xYaf
-         eJoA==
-X-Gm-Message-State: AOAM5305JiNRrWFA6603mjSutHC4avrMpaJNaJLtYwXQY75XRXhQZAKk
-        dzLkfhkAPkpqpwxGsmiv/zyVAb62g4k=
-X-Google-Smtp-Source: ABdhPJzA7oqzci4xxrt4xwtDv8MqYdm28Gl8Eh/WVwmIQw3nH1QZEG4l0zkbdpaiAe4SVoIqbFh/Ew==
-X-Received: by 2002:a1f:a18f:: with SMTP id k137mr444207vke.69.1594839732872;
-        Wed, 15 Jul 2020 12:02:12 -0700 (PDT)
-Received: from mail-vk1-f178.google.com (mail-vk1-f178.google.com. [209.85.221.178])
-        by smtp.gmail.com with ESMTPSA id f69sm434568vkf.4.2020.07.15.12.02.11
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 15 Jul 2020 12:02:12 -0700 (PDT)
-Received: by mail-vk1-f178.google.com with SMTP id h190so731547vkh.6
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 12:02:11 -0700 (PDT)
-X-Received: by 2002:a1f:3d4a:: with SMTP id k71mr443715vka.65.1594839731375;
- Wed, 15 Jul 2020 12:02:11 -0700 (PDT)
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=24j8BD/rk1NCezefIEXui0kY0H9CcCq5N57TnMuH0Cs=;
+        b=C3/NeDUJyUfUY86XotiYggGLKChXyDpi76Esn3K4JL+PuPwBptWYUtSZnd5amEIYC2
+         mcHlIcLtveAgAaSCjVKG9aLSgzTSxiNfVVkwtezniRFV+CLSq0c7kVacPjIw06c8j7Mr
+         HbSHY7HYugZ0pTnVTRDnl6L2M+K9K2D+vdM4vLq6vRuhwSLtWfp/bfM7jqQQkyDn3qgc
+         onPtoKcv0hyd8bgQ0K/Us6U1awjrBRvC0rgGpf6UUTLsGoAZFEZHQ9mosbEEtAzKgu4E
+         sVjeSNftZRtM3yxbTh9MydaP8JWOfxjmyz48obxXhx2/j8TDBWO2X+JQMqL/wSj3JCt/
+         36sw==
+X-Gm-Message-State: AOAM533rEdHqpmA2SYU7Jq9EuMB2L3Qv7KfDmMMHuam2npv/sgwpDHlQ
+        PJNaAlZixjGitxyr3tLDl4mu3WilfHQ=
+X-Google-Smtp-Source: ABdhPJyeS11MWJWIPMBKnsprqezqgfZ2gTNo4TwAAgBZVHDbSLb9SAwVA3YDJDjCwnF9BB4jYImGIA==
+X-Received: by 2002:a2e:780b:: with SMTP id t11mr234821ljc.271.1594839770991;
+        Wed, 15 Jul 2020 12:02:50 -0700 (PDT)
+Received: from pc636 (h5ef52e31.seluork.dyn.perspektivbredband.net. [94.245.46.49])
+        by smtp.gmail.com with ESMTPSA id g24sm594774ljl.139.2020.07.15.12.02.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 15 Jul 2020 12:02:45 -0700 (PDT)
+From:   Uladzislau Rezki <urezki@gmail.com>
+X-Google-Original-From: Uladzislau Rezki <urezki@pc636>
+Date:   Wed, 15 Jul 2020 21:02:43 +0200
+To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc:     "Uladzislau Rezki (Sony)" <urezki@gmail.com>,
+        LKML <linux-kernel@vger.kernel.org>, RCU <rcu@vger.kernel.org>,
+        linux-mm@kvack.org, "Paul E . McKenney" <paulmck@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "Theodore Y . Ts'o" <tytso@mit.edu>,
+        Matthew Wilcox <willy@infradead.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Oleksiy Avramchenko <oleksiy.avramchenko@sonymobile.com>
+Subject: Re: [PATCH 1/1] rcu/tree: Drop the lock before entering to page
+ allocator
+Message-ID: <20200715190243.GA26735@pc636>
+References: <20200715183537.4010-1-urezki@gmail.com>
+ <20200715185628.7b4k3o5efp4gnbla@linutronix.de>
 MIME-Version: 1.0
-References: <1594615586-17055-1-git-send-email-pillair@codeaurora.org>
-In-Reply-To: <1594615586-17055-1-git-send-email-pillair@codeaurora.org>
-From:   Doug Anderson <dianders@chromium.org>
-Date:   Wed, 15 Jul 2020 12:01:59 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=XtBhM_CSQM63LCiVDR0oPAAyEr5bG_FRt1tdwpw5OPKQ@mail.gmail.com>
-Message-ID: <CAD=FV=XtBhM_CSQM63LCiVDR0oPAAyEr5bG_FRt1tdwpw5OPKQ@mail.gmail.com>
-Subject: Re: [PATCH v2] arm64: dts: qcom: sc7180: Add missing properties for
- Wifi node
-To:     Rakesh Pillai <pillair@codeaurora.org>
-Cc:     "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, Evan Green <evgreen@chromium.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200715185628.7b4k3o5efp4gnbla@linutronix.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Wed, Jul 15, 2020 at 08:56:28PM +0200, Sebastian Andrzej Siewior wrote:
+> On 2020-07-15 20:35:37 [+0200], Uladzislau Rezki (Sony) wrote:
+> > @@ -3306,6 +3307,9 @@ kvfree_call_rcu_add_ptr_to_bulk(struct kfree_rcu_cpu *krcp, void *ptr)
+> >  			if (IS_ENABLED(CONFIG_PREEMPT_RT))
+> >  				return false;
+> >  
+> > +			preempt_disable();
+> > +			krc_this_cpu_unlock(*krcp, *flags);
+> 
+> Now you enter memory allocator with disabled preemption. This isn't any
+> better but we don't have a warning for this yet.
+>
+Please elaborate why it is not allowed? Consider the code:
 
-On Sun, Jul 12, 2020 at 9:46 PM Rakesh Pillai <pillair@codeaurora.org> wrote:
->
-> The wlan firmware memory is statically mapped in
-> the Trusted Firmware, hence the wlan driver does
-> not need to map/unmap this region dynamically.
->
-> Hence add the property to indicate the wlan driver
-> to not map/unamp the firmware memory region
-> dynamically.
->
-> Also add the chain1 voltage supply for wlan.
->
-> Signed-off-by: Rakesh Pillai <pillair@codeaurora.org>
-> ---
-> Changes from v1:
-> - Add the wifi mac alias
->
-> This patch is created on top of the change by
-> Douglas Anderson.
-> https://lkml.org/lkml/2020/6/25/817
->
-> Also the dt-bindings for the chain1 voltage supply
-> is added by the below patch series:
-> https://patchwork.kernel.org/project/linux-wireless/list/?series=309137
-> ---
->  arch/arm64/boot/dts/qcom/sc7180-idp.dts | 3 +++
->  1 file changed, 3 insertions(+)
->
-> diff --git a/arch/arm64/boot/dts/qcom/sc7180-idp.dts b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
-> index 472f7f4..c042d61 100644
-> --- a/arch/arm64/boot/dts/qcom/sc7180-idp.dts
-> +++ b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
-> @@ -19,6 +19,7 @@
->
->         aliases {
->                 bluetooth0 = &bluetooth;
-> +               wifi0 = &wifi;
->                 hsuart0 = &uart3;
->                 serial0 = &uart8;
+<snip>
+    spin_lock();
+    __get_free_page(GFP_NOWAIT | __GFP_NOWARN);
+    spin_unlock();
+<snip>
 
-Could you alphabetize?
+Also, please note we do it for regular kernel.
 
->         };
-> @@ -391,10 +392,12 @@
 >
->  &wifi {
->         status = "okay";
-> +       qcom,msa-fixed-perm;
->         vdd-0.8-cx-mx-supply = <&vreg_l9a_0p6>;
->         vdd-1.8-xo-supply = <&vreg_l1c_1p8>;
->         vdd-1.3-rfa-supply = <&vreg_l2c_1p3>;
->         vdd-3.3-ch0-supply = <&vreg_l10c_3p3>;
-> +       vdd-3.3-ch1-supply = <&vreg_l11c_3p3>;
->         wifi-firmware {
->                 iommus = <&apps_smmu 0xc2 0x1>;
->         };
+> What happened to the part where I asked for a spinlock_t?
+> 
+What do you mean?
 
-Other than the alphabetical order:
-
-Reviewed-by: Douglas Anderson <dianders@chromium.org>
+--
+Vlad Rezki
