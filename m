@@ -8,57 +8,56 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B6E9C433E3
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 05:05:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A52EFC433E2
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 05:05:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D72F22074B
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 05:05:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 73FAF2067D
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 05:05:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nuj/Shff"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mVdrq8+U"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728092AbgGOFFt (ORCPT
+        id S1727883AbgGOFFq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 01:05:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49124 "EHLO
+        Wed, 15 Jul 2020 01:05:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49116 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725917AbgGOFFs (ORCPT
+        with ESMTP id S1725917AbgGOFFp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 01:05:48 -0400
-Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ADCE2C061755
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 22:05:48 -0700 (PDT)
-Received: by mail-pl1-x643.google.com with SMTP id m16so1843526pls.5
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 22:05:48 -0700 (PDT)
+        Wed, 15 Jul 2020 01:05:45 -0400
+Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A852EC061755;
+        Tue, 14 Jul 2020 22:05:45 -0700 (PDT)
+Received: by mail-pj1-x1044.google.com with SMTP id ls15so2427706pjb.1;
+        Tue, 14 Jul 2020 22:05:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=e7byfgHw8QS4EFeIqD5PDYqTNizYFOWzHsxHEo0G+W4=;
-        b=nuj/ShffpoKXVL9Twu4mnjAAGc6trFyAcytARH/jXA7FlxltODfayDtDpf3tZp1bnZ
-         5ypy2TkSdXVby/FZBmOXGUDefNSH0TGR13s3r4SKlgdonIe+fsACRrFKRNNk320EFflm
-         AeALOCBkibmcwxa7uwGTJIVolr1eOLLqolSKKkmPOhXbyrGyg6RJoA+RRDaBKXL9fa9k
-         qtwjlV1STLsyeJqe/98Rao5M1fvvsBBbhoIanlqO03o5kwLS9IKwqKL4CRDs8HZQ6Yf2
-         w0XSLF5CqORruKWR0AQCERc/RXk3488q4N6tCnkMxZaqSaUKj/ofOm91Rf7WArXa8FSK
-         sy0w==
+        h=from:to:cc:subject:date:message-id;
+        bh=z+wv8TGtFVQ1hlwrfyzpVwymGKMjlXdbSWkQQF4iJxI=;
+        b=mVdrq8+UEYotcCGr+EDqNcpyWzyi3Tj+1an8oO/wgzzahQj8FEchq3rg5A6emWKwin
+         bdpUO4taDuCCYFVROBKfbHlaZ5rFUFY5v89yvkVhm/t+WPA4P7zGZoIRufJvUdDO9hBt
+         J3w2XHcwQgBQgNLMB/dqJqCW5F768LhYctTWl+qvaMu6M/nNWMsnC/AkmZj4cBtK96ir
+         4ApDGo+FIPCh/F303Cjjxli3Aeo6r/F2pSFbogYpQDIYYR9R2j2jWIa63j/nvXn6X8Zx
+         VQq9E4roHRDNlTHNiwt9v5bHL+Yv02VbmNBosu/MHVi8kfYb0cG7vbvM/b+MFHM9mJik
+         RoGA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=e7byfgHw8QS4EFeIqD5PDYqTNizYFOWzHsxHEo0G+W4=;
-        b=BZYlMql94WM3lED4aRY8KP5ORPBQOwHLMH/BN9jIWisaAMSdWZyBre2biYTzcg0LSH
-         LYYkMNUEwXqvmm49xPWpuIgZH25f3NMqt4+6UeB+4RT11jvlhBxkFEuXWIvjJkNCV+JA
-         IqvFa5XkqWxVIAZKMcC9BqLsLWCaf4MDPxMrAvbz9CLHbFhtKJTdUQEMIuKm+8aeYEmF
-         dAP79/eaE1Zplc9X2w4sfKCkg4qx4A02G6KS4H8dybOWijUicF77kXWCu5bC2XDUjHNl
-         9fedv/RfsqVnyPbIDsJRvOGyzrmCpFqLn5Q8wY1lB2gdrQ2H08Jva/f/d0lqqwGMU0qb
-         pEDg==
-X-Gm-Message-State: AOAM5319jF3XWjWbL5S2E8NXJH53FL7WvGkK6J29UfD8mQWHvVKpYkKT
-        L0tltcYZ/wYyFETuLgbPH4Y=
-X-Google-Smtp-Source: ABdhPJyEk74SdinwCEymCOZL8TIvU3lrpB1LNieqQ+aiZb/vLtcI8gc4oa2hwcSXm4m0mHX4JQjJvQ==
-X-Received: by 2002:a17:90a:a393:: with SMTP id x19mr8520227pjp.228.1594789548231;
-        Tue, 14 Jul 2020 22:05:48 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=z+wv8TGtFVQ1hlwrfyzpVwymGKMjlXdbSWkQQF4iJxI=;
+        b=o3R506+zkRDvjtmNg3kp1x7YRMUD6FnCj/aa8MR2aP1DSpu8JfKrTy5Zq5jROSWuDW
+         evhbxZwvr/G1rIOuAw5CldLpKe6yKSTBi/xOysXEal17LPPOmtGBAXVP6SMm+R1oXQu7
+         j5QcPu4my090ZX/dUZTIRLTkxwRxXsH0dlWlNnPEGP5TftsOdiaanNkTTJT2hprfEJx8
+         XkSOepyB4vlphJhTKPyW73KwNO/KoHZZihVjBKc/1o1m8yDcd3AYqAsW0ud8Bp+xyu6S
+         GLdmdqrk5n+D5bR2/imz1nxSNRtiCSyIJkcutYQ5vXkQALyi7PoBPoegnbGvOd28WaOZ
+         e6Xg==
+X-Gm-Message-State: AOAM531lxLHfVxYtY2+BRcWMFD1nYovBV6i733YsJ8wmsSi0rNrrwmEw
+        BSXZcsBw4JVQ11NRCHLIXRyRa81a
+X-Google-Smtp-Source: ABdhPJza7Rlli4ZIDhwyoO76GHLo1Ah2DCPstIOcYT7GHUj3pMDr9aKgEtz17O8TCQIjcamlkOFgiw==
+X-Received: by 2002:a17:90b:3612:: with SMTP id ml18mr8160176pjb.193.1594789544814;
+        Tue, 14 Jul 2020 22:05:44 -0700 (PDT)
 Received: from localhost.localdomain ([114.206.198.176])
-        by smtp.gmail.com with ESMTPSA id i21sm747251pfa.18.2020.07.14.22.05.45
+        by smtp.gmail.com with ESMTPSA id i21sm747251pfa.18.2020.07.14.22.05.41
         (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 14 Jul 2020 22:05:47 -0700 (PDT)
+        Tue, 14 Jul 2020 22:05:44 -0700 (PDT)
 From:   js1304@gmail.com
 X-Google-Original-From: iamjoonsoo.kim@lge.com
 To:     Andrew Morton <akpm@linux-foundation.org>
@@ -70,13 +69,11 @@ Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
         Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>,
         Michal Hocko <mhocko@suse.com>,
         "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>
-Subject: [PATCH 2/4] mm/gup: restrict CMA region by using allocation scope API
-Date:   Wed, 15 Jul 2020 14:05:27 +0900
-Message-Id: <1594789529-6206-2-git-send-email-iamjoonsoo.kim@lge.com>
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>, stable@vger.kernel.org
+Subject: [PATCH 1/4] mm/page_alloc: fix non cma alloc context
+Date:   Wed, 15 Jul 2020 14:05:26 +0900
+Message-Id: <1594789529-6206-1-git-send-email-iamjoonsoo.kim@lge.com>
 X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1594789529-6206-1-git-send-email-iamjoonsoo.kim@lge.com>
-References: <1594789529-6206-1-git-send-email-iamjoonsoo.kim@lge.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -84,97 +81,126 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Joonsoo Kim <iamjoonsoo.kim@lge.com>
 
-We have well defined scope API to exclude CMA region.
-Use it rather than manipulating gfp_mask manually. With this change,
-we can now use __GFP_MOVABLE for gfp_mask and the ZONE_MOVABLE is also
-searched by page allocator. For hugetlb, gfp_mask is redefined since
-it has a regular allocation mask filter for migration target.
+Currently, preventing cma area in page allocation is implemented by using
+current_gfp_context(). However, there are two problems of this
+implementation.
 
-Note that this can be considered as a fix for the commit 9a4e9f3b2d73
-("mm: update get_user_pages_longterm to migrate pages allocated from
-CMA region"). However, "Fixes" tag isn't added here since it is just
-suboptimal but it doesn't cause any problem.
+First, this doesn't work for allocation fastpath. In the fastpath,
+original gfp_mask is used since current_gfp_context() is introduced in
+order to control reclaim and it is on slowpath.
+Second, clearing __GFP_MOVABLE has a side effect to exclude the memory
+on the ZONE_MOVABLE for allocation target.
 
-Suggested-by: Michal Hocko <mhocko@suse.com>
+To fix these problems, this patch changes the implementation to exclude
+cma area in page allocation. Main point of this change is using the
+alloc_flags. alloc_flags is mainly used to control allocation so it fits
+for excluding cma area in allocation.
+
+Fixes: d7fefcc (mm/cma: add PF flag to force non cma alloc)
+Cc: <stable@vger.kernel.org>
 Signed-off-by: Joonsoo Kim <iamjoonsoo.kim@lge.com>
 ---
- include/linux/hugetlb.h |  2 ++
- mm/gup.c                | 17 ++++++++---------
- 2 files changed, 10 insertions(+), 9 deletions(-)
+ include/linux/sched/mm.h |  4 ----
+ mm/page_alloc.c          | 27 +++++++++++++++------------
+ 2 files changed, 15 insertions(+), 16 deletions(-)
 
-diff --git a/include/linux/hugetlb.h b/include/linux/hugetlb.h
-index 6b9508d..2660b04 100644
---- a/include/linux/hugetlb.h
-+++ b/include/linux/hugetlb.h
-@@ -708,6 +708,8 @@ static inline gfp_t htlb_modify_alloc_mask(struct hstate *h, gfp_t gfp_mask)
- 	/* Some callers might want to enfoce node */
- 	modified_mask |= (gfp_mask & __GFP_THISNODE);
+diff --git a/include/linux/sched/mm.h b/include/linux/sched/mm.h
+index 44ad5b7..a73847a 100644
+--- a/include/linux/sched/mm.h
++++ b/include/linux/sched/mm.h
+@@ -191,10 +191,6 @@ static inline gfp_t current_gfp_context(gfp_t flags)
+ 			flags &= ~(__GFP_IO | __GFP_FS);
+ 		else if (pflags & PF_MEMALLOC_NOFS)
+ 			flags &= ~__GFP_FS;
+-#ifdef CONFIG_CMA
+-		if (pflags & PF_MEMALLOC_NOCMA)
+-			flags &= ~__GFP_MOVABLE;
+-#endif
+ 	}
+ 	return flags;
+ }
+diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+index 6416d08..cd53894 100644
+--- a/mm/page_alloc.c
++++ b/mm/page_alloc.c
+@@ -2791,7 +2791,7 @@ __rmqueue(struct zone *zone, unsigned int order, int migratetype,
+ 	 * allocating from CMA when over half of the zone's free memory
+ 	 * is in the CMA area.
+ 	 */
+-	if (migratetype == MIGRATE_MOVABLE &&
++	if (alloc_flags & ALLOC_CMA &&
+ 	    zone_page_state(zone, NR_FREE_CMA_PAGES) >
+ 	    zone_page_state(zone, NR_FREE_PAGES) / 2) {
+ 		page = __rmqueue_cma_fallback(zone, order);
+@@ -2802,7 +2802,7 @@ __rmqueue(struct zone *zone, unsigned int order, int migratetype,
+ retry:
+ 	page = __rmqueue_smallest(zone, order, migratetype);
+ 	if (unlikely(!page)) {
+-		if (migratetype == MIGRATE_MOVABLE)
++		if (alloc_flags & ALLOC_CMA)
+ 			page = __rmqueue_cma_fallback(zone, order);
  
-+	modified_mask |= (gfp_mask & __GFP_NOWARN);
-+
- 	return modified_mask;
+ 		if (!page && __rmqueue_fallback(zone, order, migratetype,
+@@ -3502,11 +3502,9 @@ static inline long __zone_watermark_unusable_free(struct zone *z,
+ 	if (likely(!alloc_harder))
+ 		unusable_free += z->nr_reserved_highatomic;
+ 
+-#ifdef CONFIG_CMA
+ 	/* If allocation can't use CMA areas don't use free CMA pages */
+-	if (!(alloc_flags & ALLOC_CMA))
++	if (IS_ENABLED(CONFIG_CMA) && !(alloc_flags & ALLOC_CMA))
+ 		unusable_free += zone_page_state(z, NR_FREE_CMA_PAGES);
+-#endif
+ 
+ 	return unusable_free;
+ }
+@@ -3693,6 +3691,16 @@ alloc_flags_nofragment(struct zone *zone, gfp_t gfp_mask)
+ 	return alloc_flags;
  }
  
-diff --git a/mm/gup.c b/mm/gup.c
-index 5daadae..bbd36a1 100644
---- a/mm/gup.c
-+++ b/mm/gup.c
-@@ -1619,10 +1619,12 @@ static struct page *new_non_cma_page(struct page *page, unsigned long private)
- 	 * Trying to allocate a page for migration. Ignore allocation
- 	 * failure warnings. We don't force __GFP_THISNODE here because
- 	 * this node here is the node where we have CMA reservation and
--	 * in some case these nodes will have really less non movable
-+	 * in some case these nodes will have really less non CMA
- 	 * allocation memory.
-+	 *
-+	 * Note that CMA region is prohibited by allocation scope.
- 	 */
--	gfp_t gfp_mask = GFP_USER | __GFP_NOWARN;
-+	gfp_t gfp_mask = GFP_USER | __GFP_MOVABLE | __GFP_NOWARN;
- 
- 	if (PageHighMem(page))
- 		gfp_mask |= __GFP_HIGHMEM;
-@@ -1630,6 +1632,8 @@ static struct page *new_non_cma_page(struct page *page, unsigned long private)
- #ifdef CONFIG_HUGETLB_PAGE
- 	if (PageHuge(page)) {
- 		struct hstate *h = page_hstate(page);
++static inline void current_alloc_flags(gfp_t gfp_mask,
++				unsigned int *alloc_flags)
++{
++	unsigned int pflags = READ_ONCE(current->flags);
 +
-+		gfp_mask = htlb_modify_alloc_mask(h, gfp_mask);
- 		/*
- 		 * We don't want to dequeue from the pool because pool pages will
- 		 * mostly be from the CMA region.
-@@ -1644,11 +1648,6 @@ static struct page *new_non_cma_page(struct page *page, unsigned long private)
- 		 */
- 		gfp_t thp_gfpmask = GFP_TRANSHUGE | __GFP_NOWARN;
++	if (!(pflags & PF_MEMALLOC_NOCMA) &&
++		gfp_migratetype(gfp_mask) == MIGRATE_MOVABLE)
++		*alloc_flags |= ALLOC_CMA;
++}
++
+ /*
+  * get_page_from_freelist goes through the zonelist trying to allocate
+  * a page.
+@@ -3706,6 +3714,8 @@ get_page_from_freelist(gfp_t gfp_mask, unsigned int order, int alloc_flags,
+ 	struct pglist_data *last_pgdat_dirty_limit = NULL;
+ 	bool no_fallback;
  
--		/*
--		 * Remove the movable mask so that we don't allocate from
--		 * CMA area again.
--		 */
--		thp_gfpmask &= ~__GFP_MOVABLE;
- 		thp = __alloc_pages_node(nid, thp_gfpmask, HPAGE_PMD_ORDER);
- 		if (!thp)
- 			return NULL;
-@@ -1794,7 +1793,6 @@ static long __gup_longterm_locked(struct task_struct *tsk,
- 				     vmas_tmp, NULL, gup_flags);
++	current_alloc_flags(gfp_mask, &alloc_flags);
++
+ retry:
+ 	/*
+ 	 * Scan zonelist, looking for a zone with enough free.
+@@ -4339,10 +4349,6 @@ gfp_to_alloc_flags(gfp_t gfp_mask)
+ 	} else if (unlikely(rt_task(current)) && !in_interrupt())
+ 		alloc_flags |= ALLOC_HARDER;
  
- 	if (gup_flags & FOLL_LONGTERM) {
--		memalloc_nocma_restore(flags);
- 		if (rc < 0)
- 			goto out;
+-#ifdef CONFIG_CMA
+-	if (gfp_migratetype(gfp_mask) == MIGRATE_MOVABLE)
+-		alloc_flags |= ALLOC_CMA;
+-#endif
+ 	return alloc_flags;
+ }
  
-@@ -1807,9 +1805,10 @@ static long __gup_longterm_locked(struct task_struct *tsk,
+@@ -4808,9 +4814,6 @@ static inline bool prepare_alloc_pages(gfp_t gfp_mask, unsigned int order,
+ 	if (should_fail_alloc_page(gfp_mask, order))
+ 		return false;
  
- 		rc = check_and_migrate_cma_pages(tsk, mm, start, rc, pages,
- 						 vmas_tmp, gup_flags);
-+out:
-+		memalloc_nocma_restore(flags);
- 	}
+-	if (IS_ENABLED(CONFIG_CMA) && ac->migratetype == MIGRATE_MOVABLE)
+-		*alloc_flags |= ALLOC_CMA;
+-
+ 	return true;
+ }
  
--out:
- 	if (vmas_tmp != vmas)
- 		kfree(vmas_tmp);
- 	return rc;
 -- 
 2.7.4
 
