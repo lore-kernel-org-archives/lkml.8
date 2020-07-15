@@ -2,114 +2,129 @@ Return-Path: <SRS0=kup7=A2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FDDAC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 08:37:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CABD1C433E4
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 08:41:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E645A2064C
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 08:37:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A877320663
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 08:41:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Z9kDPOp1"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b="joTTxszS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730277AbgGOIhB (ORCPT
+        id S1730331AbgGOIlg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 04:37:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53472 "EHLO
+        Wed, 15 Jul 2020 04:41:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54168 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729241AbgGOIhB (ORCPT
+        with ESMTP id S1729351AbgGOIle (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 04:37:01 -0400
-Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 05C55C061755
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 01:37:01 -0700 (PDT)
-Received: by mail-pj1-x1042.google.com with SMTP id gc9so2735100pjb.2
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 01:37:01 -0700 (PDT)
+        Wed, 15 Jul 2020 04:41:34 -0400
+Received: from mail-ed1-x541.google.com (mail-ed1-x541.google.com [IPv6:2a00:1450:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9541AC061755
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 01:41:34 -0700 (PDT)
+Received: by mail-ed1-x541.google.com with SMTP id a1so978017edt.10
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 01:41:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
+        d=szeredi.hu; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=h9e1W5rBzUoEq05vuDlOKs3gf+nXF7OhrK8kaajg1ac=;
-        b=Z9kDPOp1FOu00FcZtAxKCCrC//M9z2MauO785jr35+alWbwgh31TLfIbwBkJwkJIx1
-         DNJBfgyJ9K4mIlkkNFDwNTqHraFDPl2s5lCYSlYhBKGlVdVka6e4rH1SgjV1ZnBTQ0YA
-         azRGUWkc56EmpFXB7K20gR36aLtQk8xdI18iHAl+vJsN1luj/w+rCYRlAV2tchpx6hw6
-         Pjzg03n+odx2Bu3ArbeliphQl4nUcsSCkfHMtsTratpMsr0Qe0dauFhJPRSOQUej8c4Y
-         frIzwbZKglsrzysOE35FuFf7tnHMlW/GOv9BHscJ8X77S0Nr3p8V6TQL//jqoocHl/s2
-         bBtw==
+        bh=J4RPEf69RMf6fMrFPs7gvn650I5l4fPXkmLiZzrYicg=;
+        b=joTTxszSLFMvayIfPbb55BXWK7XCzUWZDla2m5tAeog6qXLfmJE5dj+uRo2NBF9wZ/
+         F7i8zd8hr0+Qxym6zB6l97h72NSaZ/5NKdHBEnj5J1feDVUpr1YfOMLXfk4KLNiTdWYK
+         3mrklvsXTJ1W+NqzIijFYhkfbdrl3pBNpY49Y=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=h9e1W5rBzUoEq05vuDlOKs3gf+nXF7OhrK8kaajg1ac=;
-        b=NAvES21p842NGIG1jgAiQhhixLwcsl0EdX1fkYbSVMUOyNetfyUP+6ijUUfeWEDwBo
-         fpYRNwbzRm/aJ9pMHFVjjTWjy0GWAUG1QhIsA9kt9hc99b+ExRX4yi+WgFuEaWc5a2U8
-         zR67q+9rBAZEb8WSYLpr71YeLa4xRxaFrspYNH12J9K6gJEC2W+waffdZyzGqsaeAbBV
-         qXRHxfl53mxuZ1ZJ4C4cRLC903TXB1WURSaUxEr6Ytd7fRKp9IKlTqPcdkX1/HQwvs48
-         oV2DOXK/4Hkl28eOFp6+LfeGyigdJFSuyAlnXouNHmTU69aOk5b9J+4wq37jhjZeEHBp
-         lFIA==
-X-Gm-Message-State: AOAM533NyDl4JTRlODd0krsW8PQIzZu1c/bKb3wrsupmOGNTmfdp1g7i
-        c5XFAm3k5mqjObp+cIyMwUNqpmAWtCFdRtvFsOcvxg==
-X-Google-Smtp-Source: ABdhPJw3SeXd2XR4IrKqxKl7AKVabBH4FlMuqTRltcDQ7ODNjGBPkrxjgzPvvgHQkNyLh820BQ+mH8+NEnTOCNHJVqs=
-X-Received: by 2002:a17:90b:1296:: with SMTP id fw22mr9071513pjb.20.1594802220226;
- Wed, 15 Jul 2020 01:37:00 -0700 (PDT)
+        bh=J4RPEf69RMf6fMrFPs7gvn650I5l4fPXkmLiZzrYicg=;
+        b=IRL+mcNPmxS9kqepwtARjrQzuKpqbdvhFAnudGXGVAE8VMaI+e1G1RsrwwbqS0+o2w
+         TzQiJ5Fi0FWOxh5MrELOFD74ZmrPDXDUCiPTXo6ySdRbmJuH0xFVZJp5m1ZkPjzP2TB5
+         8bNqVQgUlyBEXJUgww74gyqpRrLzVRJfawHIifjwCYUUuxkSFDi1EfVO7f7n9lZsGNNY
+         OPhY0+wR0zV6fKmZDRdGRROSWM0eITckFB5CffD7Gqg1b7GliNpN63mgx+lpzy3e7ME0
+         JPDZ9bb2cTE8Ya8DRVE7DHPgth8mmH7XOHy3lez7KuQhIRXGIxaVZI+vfh0DcQK58GY5
+         xbbw==
+X-Gm-Message-State: AOAM53026iFMdKMAC3jjJ0IbNnw1CWYB7U7EPgKyaf6YJFt9czjfdRVT
+        TQrWujSHY1GWjAM2twbQXumQ5Ft+yrwPfWH3mZd7OA==
+X-Google-Smtp-Source: ABdhPJxiUoXSY8oQTuQyEBhp5lraS2n1iwGYDCrETHXVLFmYYXHH1CsTFd5Uc/EepPXHKcXFh5OP0Y7UW1nxbUoUAJg=
+X-Received: by 2002:a05:6402:1687:: with SMTP id a7mr8448226edv.358.1594802493290;
+ Wed, 15 Jul 2020 01:41:33 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200704085213.444645-1-ignat@cloudflare.com>
-In-Reply-To: <20200704085213.444645-1-ignat@cloudflare.com>
-From:   Brendan Higgins <brendanhiggins@google.com>
-Date:   Wed, 15 Jul 2020 01:36:49 -0700
-Message-ID: <CAFd5g44QK2L+Zkri9=mTFoLXTqdjORn-QATPomiKXkgZfA+wqw@mail.gmail.com>
-Subject: Re: [PATCH v2 0/3] um: allow static linking for non-glibc libc implementations
-To:     Ignat Korchagin <ignat@cloudflare.com>
-Cc:     Jeff Dike <jdike@addtoit.com>, Richard Weinberger <richard@nod.at>,
-        Anton Ivanov <anton.ivanov@cambridgegreys.com>,
-        linux-um <linux-um@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        kernel-team@cloudflare.com
+References: <CAODFU0q6CrUB_LkSdrbp5TQ4Jm6Sw=ZepZwD-B7-aFudsOvsig@mail.gmail.com>
+ <20200705115021.GA1227929@kroah.com> <20200714065110.GA8047@amd>
+ <CAJfpegu8AXZWQh3W39PriqxVna+t3D2pz23t_4xEVxGcNf1AUA@mail.gmail.com>
+ <4e92b851-ce9a-e2f6-3f9a-a4d47219d320@gmail.com> <CAJfpegvroouw5ndHv+395w5PP1c+pUyp=-T8qhhvSnFbhbRehg@mail.gmail.com>
+ <7584d754-2044-a892-cf29-65259b9c4eb1@gmail.com>
+In-Reply-To: <7584d754-2044-a892-cf29-65259b9c4eb1@gmail.com>
+From:   Miklos Szeredi <miklos@szeredi.hu>
+Date:   Wed, 15 Jul 2020 10:41:22 +0200
+Message-ID: <CAJfpegvkw5Exptz=gY5bRy2U8GjvTo+muBHsgdF_PA5=hyhmSA@mail.gmail.com>
+Subject: Re: [PATCH 0/3] readfile(2): a new syscall to make open/read/close faster
+To:     Pavel Begunkov <asml.silence@gmail.com>
+Cc:     Pavel Machek <pavel@denx.de>, Greg KH <gregkh@linuxfoundation.org>,
+        Jan Ziak <0xe2.0x9a.0x9b@gmail.com>,
+        Linux API <linux-api@vger.kernel.org>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-kselftest@vger.kernel.org,
+        linux-man <linux-man@vger.kernel.org>,
+        Michael Kerrisk <mtk.manpages@gmail.com>, shuah@kernel.org,
+        Al Viro <viro@zeniv.linux.org.uk>, io-uring@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jul 4, 2020 at 1:52 AM Ignat Korchagin <ignat@cloudflare.com> wrote:
+On Wed, Jul 15, 2020 at 10:33 AM Pavel Begunkov <asml.silence@gmail.com> wrote:
 >
-> This is a continuation of [1]. Since I was able to produce a working UML binary
-> with UML_NET_VECTOR linked with musl with the changes included in the patches
-> here. I was compiling on Arch Linux, so hopefully all the latest versions of
-> the compiler, libraries and binutils.
+> On 14/07/2020 14:55, Miklos Szeredi wrote:
+> > On Tue, Jul 14, 2020 at 1:36 PM Pavel Begunkov <asml.silence@gmail.com> wrote:
+> >>
+> >> On 14/07/2020 11:07, Miklos Szeredi wrote:
+> >>> On Tue, Jul 14, 2020 at 8:51 AM Pavel Machek <pavel@denx.de> wrote:
+> >>>>
+> >>>> Hi!
+> >>>>
+> >>>>>> At first, I thought that the proposed system call is capable of
+> >>>>>> reading *multiple* small files using a single system call - which
+> >>>>>> would help increase HDD/SSD queue utilization and increase IOPS (I/O
+> >>>>>> operations per second) - but that isn't the case and the proposed
+> >>>>>> system call can read just a single file.
+> >>>>>
+> >>>>> If you want to do this for multple files, use io_ring, that's what it
+> >>>>> was designed for.  I think Jens was going to be adding support for the
+> >>>>> open/read/close pattern to it as well, after some other more pressing
+> >>>>> features/fixes were finished.
+> >>>>
+> >>>> What about... just using io_uring for single file, too? I'm pretty
+> >>>> sure it can be wrapped in a library that is simple to use, avoiding
+> >>>> need for new syscall.
+> >>>
+> >>> Just wondering:  is there a plan to add strace support to io_uring?
+> >>> And I don't just mean the syscalls associated with io_uring, but
+> >>> tracing the ring itself.
+> >>
+> >> What kind of support do you mean? io_uring is asynchronous in nature
+> >> with all intrinsic tracing/debugging/etc. problems of such APIs.
+> >> And there are a lot of handy trace points, are those not enough?
+> >>
+> >> Though, this can be an interesting project to rethink how async
+> >> APIs are worked with.
+> >
+> > Yeah, it's an interesting problem.  The uring has the same events, as
+> > far as I understand, that are recorded in a multithreaded strace
+> > output (syscall entry, syscall exit); nothing more is needed>
+> > I do think this needs to be integrated into strace(1), otherwise the
+> > usefulness of that tool (which I think is *very* high) would go down
+> > drastically as io_uring usage goes up.
 >
-> I also tested allyesconfig with both musl and glibc. The compilation succeeds
-> with both, however both binaries (glibc one being dynamically linked) segfault
-> on start. This is probably of some incompatible config option/module being
-> included and not related to musl/glibc.
->
-> [1]: https://patchwork.ozlabs.org/project/linux-um/patch/20200624212319.403689-1-ignat@cloudflare.com/
->
-> Ignat Korchagin (3):
->   um/kconfig: introduce CC_CAN_LINK_STATIC_NO_RUNTIME_DEPS
->   um: some fixes to build UML with musl
->   um: allow static linking for non-glibc implementations
->
->  arch/um/Kconfig               |  2 +-
->  arch/um/drivers/Kconfig       |  3 ---
->  arch/um/drivers/daemon_user.c |  1 +
->  arch/um/drivers/pcap_user.c   | 12 ++++++------
->  arch/um/drivers/slip_user.c   |  2 +-
->  arch/um/drivers/vector_user.c |  4 +---
->  arch/um/os-Linux/util.c       |  2 +-
->  arch/x86/um/user-offsets.c    |  2 +-
->  init/Kconfig                  |  6 ++++++
->  scripts/cc-can-link.sh        |  5 +++--
->  10 files changed, 21 insertions(+), 18 deletions(-)
+> Not touching the topic of usefulness of strace + io_uring, but I'd rather
+> have a tool that solves a problem, than a problem that created and honed
+> for a tool.
 
-Sorry for taking so long to get to this. I saw this last week or
-whenever and then forgot, saw the comments yesterday and remembered.
+Sorry, I'm not getting the metaphor.  Can you please elaborate?
 
-Looks pretty good overall. I will put my reviewed-by on each
-individual patch. Nevertheless, I tested them all together, so being
-lazy:
-
-Tested-by: Brendan Higgins <brendanhiggins@google.com>
+Thanks,
+Miklos
