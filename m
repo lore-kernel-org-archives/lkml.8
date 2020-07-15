@@ -2,88 +2,131 @@ Return-Path: <SRS0=kup7=A2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6569C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 09:11:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A239C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 09:12:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9626020672
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 09:11:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="SiwsoZsP"
+	by mail.kernel.org (Postfix) with ESMTP id 23EAA20672
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 09:12:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730521AbgGOJLX (ORCPT
+        id S1730527AbgGOJME (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 05:11:23 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:26360 "EHLO m43-7.mailgun.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730125AbgGOJLW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 05:11:22 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1594804282; h=Date: Message-Id: Cc: To: References:
- In-Reply-To: From: Subject: Content-Transfer-Encoding: MIME-Version:
- Content-Type: Sender; bh=0/YCW5B7Rgcqq/98N36ELNpltv7+ewePsKHphVBSOPU=;
- b=SiwsoZsP5/2O5ZH/JKDU0XlxJZUs08kRyQVwC7Gpu+AVB3dNcKg0ZYLAYjfaWDj4goz+a/m0
- ESgIqabSOOMQjx/r2XFzyqLavxS6GE1ZYE/T2mYNyVY46K6iRiRNEyxdMBhdCpJ8K92Bs/hc
- bSYMJeSRLqJc+3W2MDkldJBeOyE=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n05.prod.us-west-2.postgun.com with SMTP id
- 5f0ec83975eeb235f65200f4 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Wed, 15 Jul 2020 09:11:21
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 76DB6C433CB; Wed, 15 Jul 2020 09:11:21 +0000 (UTC)
-Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: kvalo)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 53C1DC433C9;
-        Wed, 15 Jul 2020 09:11:19 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 53C1DC433C9
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: Re: [PATCH] rtw88: 8822ce: add support for device ID 0xc82f
-From:   Kalle Valo <kvalo@codeaurora.org>
-In-Reply-To: <20200612082745.204400-1-aaron.ma@canonical.com>
-References: <20200612082745.204400-1-aaron.ma@canonical.com>
-To:     Aaron Ma <aaron.ma@canonical.com>
-Cc:     aaron.ma@canonical.com, yhchuang@realtek.com, davem@davemloft.net,
-        kuba@kernel.org, linux-wireless@vger.kernel.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-User-Agent: pwcli/0.1.0-git (https://github.com/kvalo/pwcli/) Python/3.5.2
-Message-Id: <20200715091121.76DB6C433CB@smtp.codeaurora.org>
-Date:   Wed, 15 Jul 2020 09:11:21 +0000 (UTC)
+        Wed, 15 Jul 2020 05:12:04 -0400
+Received: from lucky1.263xmail.com ([211.157.147.132]:54690 "EHLO
+        lucky1.263xmail.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728739AbgGOJME (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jul 2020 05:12:04 -0400
+Received: from localhost (unknown [192.168.167.209])
+        by lucky1.263xmail.com (Postfix) with ESMTP id 30255EC4CA;
+        Wed, 15 Jul 2020 17:03:58 +0800 (CST)
+X-MAIL-GRAY: 0
+X-MAIL-DELIVERY: 1
+X-ADDR-CHECKED4: 1
+X-ANTISPAM-LEVEL: 2
+X-ABS-CHECKED: 0
+Received: from localhost.localdomain (unknown [58.22.7.114])
+        by smtp.263.net (postfix) whith ESMTP id P9169T139648078694144S1594803824986898_;
+        Wed, 15 Jul 2020 17:03:58 +0800 (CST)
+X-IP-DOMAINF: 1
+X-UNIQUE-TAG: <f0d531f91e8be1cc3dd6a1ff4d8944af>
+X-RL-SENDER: yifeng.zhao@rock-chips.com
+X-SENDER: zyf@rock-chips.com
+X-LOGIN-NAME: yifeng.zhao@rock-chips.com
+X-FST-TO: miquel.raynal@bootlin.com
+X-SENDER-IP: 58.22.7.114
+X-ATTACHMENT-NUM: 0
+X-DNS-TYPE: 0
+X-System-Flag: 0
+From:   Yifeng Zhao <yifeng.zhao@rock-chips.com>
+To:     miquel.raynal@bootlin.com, richard@nod.at, vigneshr@ti.com,
+        robh+dt@kernel.org
+Cc:     devicetree@vger.kernel.org, linux-mtd@lists.infradead.org,
+        heiko@sntech.de, linux-rockchip@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Yifeng Zhao <yifeng.zhao@rock-chips.com>
+Subject: [PATCH v7 0/8] Add Rockchip NFC drivers for RK3308 and others
+Date:   Wed, 15 Jul 2020 17:03:38 +0800
+Message-Id: <20200715090342.28339-1-yifeng.zhao@rock-chips.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Aaron Ma <aaron.ma@canonical.com> wrote:
 
-> New device ID 0xc82f found on Lenovo ThinkCenter.
-> Tested it with c822 driver, works good.
-> 
-> PCI id:
-> 03:00.0 Network controller [0280]: Realtek Semiconductor Co., Ltd.
-> Device [10ec:c82f]
->         Subsystem: Lenovo Device [17aa:c02f]
-> 
-> Signed-off-by: Aaron Ma <aaron.ma@canonical.com>
+Rockchp's NFC(Nand Flash Controller) has four versions: V600, V622, V800 and
+V900.This series patch can support all four versions.
 
-Patch applied to wireless-drivers-next.git, thanks.
 
-7d428b1c9ffc rtw88: 8822ce: add support for device ID 0xc82f
+Changes in v7:
+- Fix some wrong define
+- Rebase to linux-next.
+- Fix coding style.
+- Reserved 4 bytes at the begining of the oob area.
+- Page raw read and write included ecc data.
+
+Changes in v6:
+- Fix some wrong define
+- Modified the definition of compatible
+- The mtd->name set by NAND label property.
+- Add some comments.
+- Fix compile error.
+
+Changes in v5:
+- Fix some wrong define.
+- Add boot-medium define.
+- Remove some compatible define.
+- Add boot blocks support  with different ECC for bootROM.
+- Rename rockchip-nand.c to rockchip-nand-controller.c.
+- Unification of other variable names.
+- Remove some compatible define.
+
+Changes in v4:
+- The compatible define with rkxx_nfc.
+- Add assigned-clocks.
+- Fix some wrong defineChanges in.
+- Define platform data structure for the register offsets.
+- The compatible define with rkxx_nfc.
+- Use SET_SYSTEM_SLEEP_PM_OPS to define PM_OPS.
+- Use exec_op instead of legacy hooks.
+
+Changes in v3:
+- Change the title for the dt-bindings.
+
+Changes in v2:
+- Fix compile error.
+- Include header files sorted by file name.
+
+Yifeng Zhao (8):
+  dt-bindings: mtd: Describe Rockchip RK3xxx NAND flash controller
+  mtd: rawnand: rockchip: NFC drivers for RK3308, RK2928 and others
+  MAINTAINERS: add maintainers to ROCKCHIP NFC
+  arm64: dts: rockchip: Add NFC node for RK3308 SoC
+  arm64: dts: rockchip: Add NFC node for PX30 SoC
+  arm: dts: rockchip: Add NFC node for RV1108 SoC
+  arm: dts: rockchip: Add NFC node for RK2928 and other SoCs
+  arm: dts: rockchip: Add NFC node for RK3036 SoC
+
+ .../mtd/rockchip,nand-controller.yaml         |  162 ++
+ MAINTAINERS                                   |    4 +-
+ arch/arm/boot/dts/rk3036.dtsi                 |   52 +
+ arch/arm/boot/dts/rk3xxx.dtsi                 |    9 +
+ arch/arm/boot/dts/rv1108.dtsi                 |   11 +
+ arch/arm64/boot/dts/rockchip/px30.dtsi        |   15 +
+ arch/arm64/boot/dts/rockchip/rk3308.dtsi      |   15 +
+ drivers/mtd/nand/raw/Kconfig                  |   12 +
+ drivers/mtd/nand/raw/Makefile                 |    1 +
+ .../mtd/nand/raw/rockchip-nand-controller.c   | 1422 +++++++++++++++++
+ 10 files changed, 1701 insertions(+), 2 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/mtd/rockchip,nand-controller.yaml
+ create mode 100644 drivers/mtd/nand/raw/rockchip-nand-controller.c
 
 -- 
-https://patchwork.kernel.org/patch/11601385/
+2.17.1
 
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+
 
