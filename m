@@ -2,134 +2,132 @@ Return-Path: <SRS0=kup7=A2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF3C9C433E5
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 20:40:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44BE4C433E4
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 20:40:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 89F722065F
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 20:40:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="W6JWWMnC"
+	by mail.kernel.org (Postfix) with ESMTP id 2174120672
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 20:40:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727798AbgGOUkU (ORCPT
+        id S1727826AbgGOUkV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 16:40:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52298 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726859AbgGOUkQ (ORCPT
+        Wed, 15 Jul 2020 16:40:21 -0400
+Received: from hera.aquilenet.fr ([185.233.100.1]:41926 "EHLO
+        hera.aquilenet.fr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726960AbgGOUkR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 16:40:16 -0400
-Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 77DB8C061755
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 13:40:16 -0700 (PDT)
-Received: by mail-pj1-x1044.google.com with SMTP id gc9so3673666pjb.2
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 13:40:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=3RdpnHt4YFQNegHM71xCSPo+5hGEKA55j9DzkLX+zEI=;
-        b=W6JWWMnCCKRoZOrZTqxAVNCpWdse7JHrhl955F5ofkWIbY8yj0WiYEYIrzGnCpQmPr
-         nebzAR1cLp77bQPydJtMWmGvGL1DOx/5b1SD2FJ+owpHkt8+SixM1Gqmi5haJ+ZpVK/l
-         ohTNaS/ycfxJ7NhhCYIL+fq/TdpwR9jTHXNUw=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=3RdpnHt4YFQNegHM71xCSPo+5hGEKA55j9DzkLX+zEI=;
-        b=amQo3DE8itAZuwU+eNbUL3kSgbDMgtQescZ2f3eJAZ1NIpXukrjWAAQrVQsQHmvGUj
-         64PhmXEdcYgmnl1x6qDGhK23Z8V9VYYhVw9ptcPOVntYMtxz41uVkB4B2jY3yHMHCmrZ
-         d2OuBOqCePuZetsm+7xhmb52MhDhfxRdyORpJWEI/CFfHoGIJEqsr5/Ci3nTsrznd80I
-         /vGqrGSGIzlVahptF1bVa2wNkclWNn/HVYeYq/8xKCDT/5Jn/AIHo4zsffy9Je5UmX9b
-         BidssG84YS/g73HBnr2jGAdgrB3sXs4EY2CyQCJQyK4YSM5Mrd6JYeIsJVXTF52Fu5Cz
-         mOIw==
-X-Gm-Message-State: AOAM533v6c72a1B5urvuH5cs0Cos+WMwIg4pZvFHJTrv8O57093vcEt2
-        NcVFU4M3uezfN2fqT0hYmUJgAw==
-X-Google-Smtp-Source: ABdhPJy0QMC5q+2qYD6o7SHOebREIiw8ISqB8EjezF/XGzbblfIdGbOr3hMolHLPO5Yp/fgvt7Nt3A==
-X-Received: by 2002:a17:90b:8d7:: with SMTP id ds23mr1507273pjb.148.1594845616072;
-        Wed, 15 Jul 2020 13:40:16 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id 66sm2720207pfd.93.2020.07.15.13.40.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 15 Jul 2020 13:40:15 -0700 (PDT)
-Date:   Wed, 15 Jul 2020 13:40:14 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     =?iso-8859-1?Q?Micka=EBl_Sala=FCn?= <mic@digikod.net>
-Cc:     linux-kernel@vger.kernel.org, Aleksa Sarai <cyphar@cyphar.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Christian Heimes <christian@python.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Deven Bowers <deven.desai@linux.microsoft.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Eric Biggers <ebiggers@kernel.org>,
-        Eric Chiang <ericchiang@google.com>,
-        Florian Weimer <fweimer@redhat.com>,
-        James Morris <jmorris@namei.org>, Jan Kara <jack@suse.cz>,
-        Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
-        Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
-        Matthew Garrett <mjg59@google.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Michael Kerrisk <mtk.manpages@gmail.com>,
-        =?iso-8859-1?Q?Micka=EBl_Sala=FCn?= <mickael.salaun@ssi.gouv.fr>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        Philippe =?iso-8859-1?Q?Tr=E9buchet?= 
-        <philippe.trebuchet@ssi.gouv.fr>,
-        Scott Shell <scottsh@microsoft.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Steve Dower <steve.dower@python.org>,
-        Steve Grubb <sgrubb@redhat.com>,
-        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
-        Thibaut Sautereau <thibaut.sautereau@ssi.gouv.fr>,
-        Vincent Strubel <vincent.strubel@ssi.gouv.fr>,
-        kernel-hardening@lists.openwall.com, linux-api@vger.kernel.org,
-        linux-integrity@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH v6 7/7] ima: add policy support for the new file open
- MAY_OPENEXEC flag
-Message-ID: <202007151339.283D7CD@keescook>
-References: <20200714181638.45751-1-mic@digikod.net>
- <20200714181638.45751-8-mic@digikod.net>
+        Wed, 15 Jul 2020 16:40:17 -0400
+X-Greylist: delayed 501 seconds by postgrey-1.27 at vger.kernel.org; Wed, 15 Jul 2020 16:40:17 EDT
+Received: from localhost (localhost [127.0.0.1])
+        by hera.aquilenet.fr (Postfix) with ESMTP id 413A92FE3;
+        Wed, 15 Jul 2020 22:31:51 +0200 (CEST)
+X-Virus-Scanned: Debian amavisd-new at aquilenet.fr
+Received: from hera.aquilenet.fr ([127.0.0.1])
+        by localhost (hera.aquilenet.fr [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id ibs7Zj-7XLWF; Wed, 15 Jul 2020 22:31:50 +0200 (CEST)
+Received: from function (lfbn-bor-1-797-11.w86-234.abo.wanadoo.fr [86.234.239.11])
+        by hera.aquilenet.fr (Postfix) with ESMTPSA id 6A5032FCD;
+        Wed, 15 Jul 2020 22:31:50 +0200 (CEST)
+Received: from samy by function with local (Exim 4.94)
+        (envelope-from <samuel.thibault@ens-lyon.org>)
+        id 1jvo4D-000k9L-Cw; Wed, 15 Jul 2020 22:31:49 +0200
+Date:   Wed, 15 Jul 2020 22:31:49 +0200
+From:   Samuel Thibault <samuel.thibault@ens-lyon.org>
+To:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
+Cc:     w.d.hubbs@gmail.com, chris@the-brannons.com, kirk@reisers.ca,
+        gregkh@linuxfoundation.org, speakup@linux-speakup.org,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] Staging: speakup: Replace HTTP links with HTTPS ones
+Message-ID: <20200715203149.b6cmsku5lfrx56rm@function>
+Mail-Followup-To: Samuel Thibault <samuel.thibault@ens-lyon.org>,
+        "Alexander A. Klimov" <grandmaster@al2klimov.de>,
+        w.d.hubbs@gmail.com, chris@the-brannons.com, kirk@reisers.ca,
+        gregkh@linuxfoundation.org, speakup@linux-speakup.org,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
+References: <20200713091305.32708-1-grandmaster@al2klimov.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200714181638.45751-8-mic@digikod.net>
+In-Reply-To: <20200713091305.32708-1-grandmaster@al2klimov.de>
+Organization: I am not organized
+User-Agent: NeoMutt/20170609 (1.8.3)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 14, 2020 at 08:16:38PM +0200, Mickaël Salaün wrote:
-> From: Mimi Zohar <zohar@linux.ibm.com>
+Alexander A. Klimov, le lun. 13 juil. 2020 11:13:05 +0200, a ecrit:
+> Rationale:
+> Reduces attack surface on kernel devs opening the links for MITM
+> as HTTPS traffic is much harder to manipulate.
 > 
-> The kernel has no way of differentiating between a file containing data
-> or code being opened by an interpreter.  The proposed O_MAYEXEC
-> openat2(2) flag bridges this gap by defining and enabling the
-> MAY_OPENEXEC flag.
+> Deterministic algorithm:
+> For each file:
+>   If not .svg:
+>     For each line:
+>       If doesn't contain `\bxmlns\b`:
+>         For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
+> 	  If neither `\bgnu\.org/license`, nor `\bmozilla\.org/MPL\b`:
+>             If both the HTTP and HTTPS versions
+>             return 200 OK and serve the same content:
+>               Replace HTTP with HTTPS.
 > 
-> This patch adds IMA policy support for the new MAY_OPENEXEC flag.
-> 
-> Example:
-> measure func=FILE_CHECK mask=^MAY_OPENEXEC
-> appraise func=FILE_CHECK appraise_type=imasig mask=^MAY_OPENEXEC
-> 
-> Signed-off-by: Mimi Zohar <zohar@linux.ibm.com>
-> Reviewed-by: Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
-> Acked-by: Mickaël Salaün <mic@digikod.net>
+> Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
 
-(Process nit: if you're sending this on behalf of another author, then
-this should be Signed-off-by rather than Acked-by.)
+Reviewed-by: Samuel Thibault <samuel.thibault@ens-lyon.org>
+
+Thanks!
+
+> ---
+>  Continuing my work started at 93431e0607e5.
+>  See also: git log --oneline '--author=Alexander A. Klimov <grandmaster@al2klimov.de>' v5.7..master
+>  (Actually letting a shell for loop submit all this stuff for me.)
+> 
+>  If there are any URLs to be removed completely or at least not just HTTPSified:
+>  Just clearly say so and I'll *undo my change*.
+>  See also: https://lkml.org/lkml/2020/6/27/64
+> 
+>  If there are any valid, but yet not changed URLs:
+>  See: https://lkml.org/lkml/2020/6/26/837
+> 
+>  If you apply the patch, please let me know.
+> 
+>  Sorry again to all maintainers who complained about subject lines.
+>  Now I realized that you want an actually perfect prefixes,
+>  not just subsystem ones.
+>  I tried my best...
+>  And yes, *I could* (at least half-)automate it.
+>  Impossible is nothing! :)
+> 
+> 
+>  drivers/staging/speakup/spkguide.txt | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/staging/speakup/spkguide.txt b/drivers/staging/speakup/spkguide.txt
+> index 1e622cd34363..3782f6a09e97 100644
+> --- a/drivers/staging/speakup/spkguide.txt
+> +++ b/drivers/staging/speakup/spkguide.txt
+> @@ -1531,7 +1531,7 @@ The Free Software Foundation may publish new, revised versions
+>  of the GNU Free Documentation License from time to time.  Such new
+>  versions will be similar in spirit to the present version, but may
+>  differ in detail to address new problems or concerns.  See
+> -http://www.gnu.org/copyleft/.
+> +https://www.gnu.org/copyleft/.
+>  
+>  Each version of the License is given a distinguishing version number.
+>  If the Document specifies that a particular numbered version of this
+> -- 
+> 2.27.0
+> 
 
 -- 
-Kees Cook
+Samuel
+ J'ai un gros problÃ¨me: j'ai cet exercice Ã  rendre demain lundi, mais ma
+ TI 89 ne sait pas le faire...
+ Est-ce que quelqu'un pourrait m'aider??
+ -+- OD In Guide du Neuneu Usenet : Comment Ã§a ! Il faut rÃ©flÃ©chir ?-+-
