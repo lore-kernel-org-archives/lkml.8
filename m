@@ -2,98 +2,71 @@ Return-Path: <SRS0=kup7=A2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FE38C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 02:45:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 168E3C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 02:47:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DEC2E20663
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 02:45:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=synology.com header.i=@synology.com header.b="Nfgl23aW"
+	by mail.kernel.org (Postfix) with ESMTP id E65CF20663
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 02:47:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728352AbgGOCpl (ORCPT
+        id S1728332AbgGOCrt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 22:45:41 -0400
-Received: from mail.synology.com ([211.23.38.101]:40820 "EHLO synology.com"
+        Tue, 14 Jul 2020 22:47:49 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:39572 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727071AbgGOCpl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 22:45:41 -0400
-Subject: Re: [PATCH] mm : fix pte _PAGE_DIRTY bit when fallback migrate page
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synology.com; s=123;
-        t=1594781139; bh=5fo2vbPQ7m0yDE7a+ouN9kyFBdQ4CHGkaiwDsK86hQk=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To;
-        b=Nfgl23aWE5cPGhbzZyBHoHpDRntBMrczkLPs8jSdjooB7SYTCWFOjF8xRl90nIgsP
-         BTF44JCfl8U7+nDG/G3rY0jQawU3ZVk/MNbC363MoOJt3uW+Rmy/hCSDvvLbPDq7bu
-         9UnavLI1Faun19PsxcBq241LLszwx83kkXJaQuus=
-To:     "Kirill A. Shutemov" <kirill@shutemov.name>,
-        Vlastimil Babka <vbabka@suse.cz>
-Cc:     linux-mm@kvack.org, LKML <linux-kernel@vger.kernel.org>,
-        linux-btrfs@vger.kernel.org, Roman Gushchin <guro@fb.com>,
-        David Sterba <dsterba@suse.com>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-References: <20200709024808.18466-1-robbieko@synology.com>
- <859c810e-376e-5e8b-e8a5-0da3f83315d1@suse.cz>
- <80b55fcf-def1-8a83-8f53-a22f2be56244@synology.com>
- <433e26b0-5201-129a-4afe-4881e42781fa@suse.cz>
- <20200714101951.6osakxdgbhrnfrbd@box>
-From:   Robbie Ko <robbieko@synology.com>
-Message-ID: <a7bb68ef-9b33-3ed7-8eff-91feb2223d80@synology.com>
-Date:   Wed, 15 Jul 2020 10:45:39 +0800
+        id S1726755AbgGOCrt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 22:47:49 -0400
+Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 5E0021359E7F3911B2C4;
+        Wed, 15 Jul 2020 10:47:47 +0800 (CST)
+Received: from localhost (10.174.179.108) by DGGEMS404-HUB.china.huawei.com
+ (10.3.19.204) with Microsoft SMTP Server id 14.3.487.0; Wed, 15 Jul 2020
+ 10:47:39 +0800
+From:   YueHaibing <yuehaibing@huawei.com>
+To:     <linus.walleij@linaro.org>, <gregkh@linuxfoundation.org>,
+        <sudeep.holla@arm.com>
+CC:     <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, YueHaibing <yuehaibing@huawei.com>
+Subject: [PATCH -next] soc: integrator: Drop pointless static qualifier in integrator_soc_init()
+Date:   Wed, 15 Jul 2020 10:47:01 +0800
+Message-ID: <20200715024701.28356-1-yuehaibing@huawei.com>
+X-Mailer: git-send-email 2.10.2.windows.1
 MIME-Version: 1.0
-In-Reply-To: <20200714101951.6osakxdgbhrnfrbd@box>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-Synology-MCP-Status: no
-X-Synology-Spam-Flag: no
-X-Synology-Spam-Status: score=0, required 6, WHITELIST_FROM_ADDRESS 0
-X-Synology-Virus-Status: no
+Content-Type: text/plain
+X-Originating-IP: [10.174.179.108]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+There is no need to have the 'struct regmap *syscon_regmap' variable
+static since new value always be assigned before use it.
 
-Kirill A. Shutemov 於 2020/7/14 下午6:19 寫道:
-> On Tue, Jul 14, 2020 at 11:46:12AM +0200, Vlastimil Babka wrote:
->> On 7/13/20 3:57 AM, Robbie Ko wrote:
->>> Vlastimil Babka 於 2020/7/10 下午11:31 寫道:
->>>> On 7/9/20 4:48 AM, robbieko wrote:
->>>>> From: Robbie Ko <robbieko@synology.com>
->>>>>
->>>>> When a migrate page occurs, we first create a migration entry
->>>>> to replace the original pte, and then go to fallback_migrate_page
->>>>> to execute a writeout if the migratepage is not supported.
->>>>>
->>>>> In the writeout, we will clear the dirty bit of the page and use
->>>>> page_mkclean to clear the dirty bit along with the corresponding pte,
->>>>> but page_mkclean does not support migration entry.
-> I don't follow the scenario.
->
-> When we establish migration entries with try_to_unmap(), it transfers
-> dirty bit from PTE to the page.
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+---
+ drivers/soc/versatile/soc-integrator.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Sorry, I mean is _PAGE_RW with pte_write
-
-When we establish migration entries with try_to_unmap(),
-we create a migration entry, and if pte_write we set it to SWP_MIGRATION_WRITE,
-which will replace the migration entry with the original pte.
-
-When migratepage,  we go to fallback_migrate_page to execute a writeout
-if the migratepage is not supported.
-
-In the writeout, we call clear_page_dirty_for_io to  clear the dirty bit of the page
-and use page_mkclean to clear pte _PAGE_RW with pte_wrprotect in page_mkclean_one.
-
-However, page_mkclean_one does not support migration entries, so the
-migration entry is still SWP_MIGRATION_WRITE.
-
-In writeout, then we call remove_migration_ptes to remove the migration entry,
-because it is still SWP_MIGRATION_WRITE so set _PAGE_RW to pte via pte_mkwrite.
-
-Therefore, subsequent mmap wirte will not trigger page_mkwrite to cause data loss.
+diff --git a/drivers/soc/versatile/soc-integrator.c b/drivers/soc/versatile/soc-integrator.c
+index 7dcf77ccd31e..bab4ad87aa75 100644
+--- a/drivers/soc/versatile/soc-integrator.c
++++ b/drivers/soc/versatile/soc-integrator.c
+@@ -100,7 +100,7 @@ ATTRIBUTE_GROUPS(integrator);
+ 
+ static int __init integrator_soc_init(void)
+ {
+-	static struct regmap *syscon_regmap;
++	struct regmap *syscon_regmap;
+ 	struct soc_device *soc_dev;
+ 	struct soc_device_attribute *soc_dev_attr;
+ 	struct device_node *np;
+-- 
+2.17.1
 
 
