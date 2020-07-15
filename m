@@ -2,89 +2,85 @@ Return-Path: <SRS0=kup7=A2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,NICE_REPLY_C,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CFAB8C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 13:21:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DE1BC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 13:22:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AECBD2071B
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 13:21:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1DCCA206D5
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 13:22:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nic.cz header.i=@nic.cz header.b="G7MA1GLq"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="heDS1LEu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731843AbgGONVZ (ORCPT
+        id S1731856AbgGONWc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 09:21:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40844 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731457AbgGONVY (ORCPT
+        Wed, 15 Jul 2020 09:22:32 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:25280 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1731632AbgGONWc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 09:21:24 -0400
-Received: from mail.nic.cz (lists.nic.cz [IPv6:2001:1488:800:400::400])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 74127C061755;
-        Wed, 15 Jul 2020 06:21:24 -0700 (PDT)
-Received: from dellmb.labs.office.nic.cz (unknown [IPv6:2001:1488:fffe:6:cac7:3539:7f1f:463])
-        by mail.nic.cz (Postfix) with ESMTPSA id 2E272140A60;
-        Wed, 15 Jul 2020 15:21:23 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=nic.cz; s=default;
-        t=1594819283; bh=WVQHLBnbGbOBnmAoMTDufYi1LLuac3moiz5aaKIoeSc=;
-        h=Date:From:To;
-        b=G7MA1GLqOdzN1A8ORSkjWh3TMH2VOl8VVZXxMwsqnClzDnvyGrKQXNawRBxbFLu/C
-         /MSUJijx16New9hqzZxRrDgrYyaS57ijf3UP3Cl8KHPlm8Kd7avTDvoWvdFoW2T+s1
-         UXcBeqbjxIbFR+zYkQNhr6Oz515N+dEq+YP/RuWY=
-Date:   Wed, 15 Jul 2020 15:21:22 +0200
-From:   Marek =?ISO-8859-1?Q?Beh=FAn?= <marek.behun@nic.cz>
-To:     Dan Murphy <dmurphy@ti.com>
-Cc:     <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>, <robh@kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-leds@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH v30 05/16] leds: multicolor: Introduce a multicolor
- class definition
-Message-ID: <20200715152122.437016b3@dellmb.labs.office.nic.cz>
-In-Reply-To: <20200713154544.1683-6-dmurphy@ti.com>
-References: <20200713154544.1683-1-dmurphy@ti.com>
-        <20200713154544.1683-6-dmurphy@ti.com>
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Wed, 15 Jul 2020 09:22:32 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1594819351;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         references:references; bh=eujgVDOYWc3cCN8+v848SftAP3mzH/rlkfn6GJO88Cw=;
+        b=heDS1LEucImnJ7KivaLfq8WDf0HMOx5mfb0oQ1Pc7wuiWBSxssI7rwP6jKhrUQspXxvTeX
+        l+CxPKj6fKu02rFsa2bpCOelxFyKg8wmJuNpTaMGyRRR1f1tlHtgbo2KE1PCrvYdxV3p3K
+        B/CtpOueYP2IkHNV4r10xfHd7A4kzDw=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-420-yLJrAiKwNNq5CnTy7sBerw-1; Wed, 15 Jul 2020 09:22:27 -0400
+X-MC-Unique: yLJrAiKwNNq5CnTy7sBerw-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 98F2718A1DE2;
+        Wed, 15 Jul 2020 13:22:25 +0000 (UTC)
+Received: from oldenburg2.str.redhat.com (ovpn-112-228.ams2.redhat.com [10.36.112.228])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 8102E5D9CA;
+        Wed, 15 Jul 2020 13:22:20 +0000 (UTC)
+From:   Florian Weimer <fweimer@redhat.com>
+To:     Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc:     carlos <carlos@redhat.com>, Peter Zijlstra <peterz@infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        paulmck <paulmck@linux.ibm.com>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Paul Turner <pjt@google.com>,
+        linux-api <linux-api@vger.kernel.org>,
+        Christian Brauner <christian.brauner@ubuntu.com>
+Subject: Re: [RFC PATCH 2/4] rseq: Allow extending struct rseq
+References: <20200714030348.6214-1-mathieu.desnoyers@efficios.com>
+        <20200714030348.6214-3-mathieu.desnoyers@efficios.com>
+        <87mu42bepq.fsf@oldenburg2.str.redhat.com>
+        <131549905.11442.1594731035989.JavaMail.zimbra@efficios.com>
+        <87a7028d5u.fsf@oldenburg2.str.redhat.com>
+        <2452161.11491.1594732791558.JavaMail.zimbra@efficios.com>
+        <71f08b3a-56f5-0e0f-53b0-cc680f7e8181@redhat.com>
+        <2053637148.14136.1594818777608.JavaMail.zimbra@efficios.com>
+Date:   Wed, 15 Jul 2020 15:22:18 +0200
+Message-ID: <87y2nk29rp.fsf@oldenburg2.str.redhat.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.3 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Virus-Scanned: clamav-milter 0.102.2 at mail
-X-Virus-Status: Clean
+Content-Type: text/plain
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 13 Jul 2020 10:45:33 -0500
-Dan Murphy <dmurphy@ti.com> wrote:
+* Mathieu Desnoyers:
 
-> Introduce a multicolor class that groups colored LEDs
-> within a LED node.
->=20
-> The multi color class groups monochrome LEDs and allows controlling
-> two aspects of the final combined color: hue and lightness. The
-> former is controlled via the intensity file and the latter is
-> controlled via brightness file.
->=20
-> Acked-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
-> Signed-off-by: Dan Murphy <dmurphy@ti.com>
-> ---
->  .../ABI/testing/sysfs-class-led-multicolor    |  35 +++
->  Documentation/leds/index.rst                  |   1 +
->  Documentation/leds/leds-class-multicolor.rst  |  86 ++++++++
->  drivers/leds/Kconfig                          |  10 +
->  drivers/leds/Makefile                         |   1 +
->  drivers/leds/led-class-multicolor.c           | 204
-> ++++++++++++++++++ include/linux/led-class-multicolor.h          |
-> 121 +++++++++++ 7 files changed, 458 insertions(+)
->  create mode 100644
-> Documentation/ABI/testing/sysfs-class-led-multicolor create mode
-> 100644 Documentation/leds/leds-class-multicolor.rst create mode
-> 100644 drivers/leds/led-class-multicolor.c create mode 100644
-> include/linux/led-class-multicolor.h
+> Practically speaking, I suspect this would mean postponing availability of
+> rseq for widely deployed applications for a few more years ?
 
-Reviewed-by: Marek Beh=C3=BAn <marek.behun@nic.cz>
+There is no rseq support in GCC today, so you have to write assembler
+code anyway.
+
+Thanks,
+Florian
+
