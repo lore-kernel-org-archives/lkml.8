@@ -2,172 +2,123 @@ Return-Path: <SRS0=kup7=A2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59591C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 12:17:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08EFEC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 12:17:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 38CA9206F5
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 12:17:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="EKHMfQBU"
+	by mail.kernel.org (Postfix) with ESMTP id D8E0B206F5
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 12:17:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594815450;
+	bh=oox3IXWADMTRayXaRJ2ttv7qQ4vHlGzipTP8KKgGols=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=l4DoIZazDbO7Ah+2Li0eZlBtGHx8dbkOlBQPE+iYn23LwjSw1qK0+315jP6P+U7Wy
+	 UTIdhlorib6bZkotAHxIkDHfzTTf6c4BISXuzj0UkhRsgN+ABdGMx0XJOPK19G+LGA
+	 EWplmneF3oye78DT+EenHg/N5v+7mR1TYBPfWgeQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729683AbgGOMRC (ORCPT
+        id S1729868AbgGOMR3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 08:17:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59136 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727075AbgGOMRB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 08:17:01 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 34E29C08C5C1
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 05:17:01 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id o11so2411484wrv.9
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 05:17:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=P9+1m3wZiqcpo0cnrnururZIQWEQrhFekUGBts30/fQ=;
-        b=EKHMfQBUPRLnnQQy6i3XNrTIKLvKdaglpd3anIxBP5KtA7V0HujMdXnvEX3vUZo7+H
-         t5fnqFjVnqkUKRH/hlyrsXh79yMI5l92TtpicLz4H/eS9mTJqfDmvttnyNDi2IvvIo3m
-         X5VL7L7f9fqXfDap7ketUgOdL0B4HCZLZjQe/bxYv1YNbr0wJzntZpfsbyOeSVqzdf34
-         dvmF/viWDyhmQRt9ktn/P9OOl50Cm9AWl1vTRjww8R1nZ+1q4NdkQ6Z6AQNGfGnIR+Gc
-         Hpc+pE7t77YFeWLuHTYM+VBefRVRkEvb2oBUFG6+aHJ97Btx2gu1PdW+KJ1pTNWdB5d1
-         6Y+w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=P9+1m3wZiqcpo0cnrnururZIQWEQrhFekUGBts30/fQ=;
-        b=hyjSyeGn+dZkpv5leELn3M7Lz3CnzAwJzI5eGKxJzWk822N4jMdSwWVpfPqokkWyLF
-         XrZDECsmRdB78DGDUgSII+c99FJA7hUxYQ1be9dmO0NcA82gmf7f2vQn9P4B07NhUq72
-         jKrEm+Yrrhs+CFIWTlfexFiWZSH2jJcbLIlMNkemxTt67ycYehNqRFWXB110KvP2/KVT
-         SECzOBW7GQfhUuxPp0NCEScxTIo/eUBYjE3pgd/0yiDFxb+JlrPpCafWDyir5LZlnVcJ
-         ptHsY+2hfoSrUP9HrvgqPnCXrDvZEDRMZbc7mF5/78ooVzY6hu9JIntI73NoGVK1DxDM
-         LCpA==
-X-Gm-Message-State: AOAM533E01fr/HlBBCKOjVnSY6ENdR3ntFi5cAWSvnyU/elplhq767Wj
-        B/JzPB56xidtmzb4U+sHsZh76A==
-X-Google-Smtp-Source: ABdhPJw1RlHdFlCQxqYGIvI7SbhsAtRef67AkGJAHgn0iJW7X2IQ3QQMgUd4z/mr68WLHf9teEyKyA==
-X-Received: by 2002:a5d:4a84:: with SMTP id o4mr11321706wrq.104.1594815419802;
-        Wed, 15 Jul 2020 05:16:59 -0700 (PDT)
-Received: from dell ([2.31.163.61])
-        by smtp.gmail.com with ESMTPSA id p29sm3239215wmi.43.2020.07.15.05.16.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 15 Jul 2020 05:16:59 -0700 (PDT)
-Date:   Wed, 15 Jul 2020 13:16:57 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     "Rafael J. Wysocki" <rafael@kernel.org>
-Cc:     Viresh Kumar <viresh.kumar@linaro.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Paul Diefenbaugh <paul.s.diefenbaugh@intel.com>,
-        Dominik Brodowski <linux@brodo.de>,
-        Denis Sadykov <denis.m.sadykov@intel.com>
-Subject: Re: [PATCH 09/13] cpufreq: acpi-cpufreq: Remove unused ID structs
-Message-ID: <20200715121657.GE3165313@dell>
-References: <20200714145049.2496163-10-lee.jones@linaro.org>
- <CAJZ5v0iB0K6H28DSDQj9T7k_kV10THxV6-HwN9qfmkLsYNHfiA@mail.gmail.com>
- <20200714210340.GJ1398296@dell>
- <20200715032442.gh2cliiddhv35fdj@vireshk-i7>
- <20200715032718.2zlo2eurhkpoayya@vireshk-i7>
- <CAJZ5v0jHJDLt6QFWG9FOpqmWMXAUuSEPHdHbVgFWcwR6FQD57Q@mail.gmail.com>
- <20200715113433.GB3165313@dell>
- <CAJZ5v0gFwYj7KKKj806s5SdWO1Wu5exiwObKKAdQWQEKg+2CJA@mail.gmail.com>
- <20200715115029.GC3165313@dell>
- <CAJZ5v0hJf2BwDvmtD6UEyyxm-CGcA=SLmAt+F8Sr0ceDZji0jw@mail.gmail.com>
+        Wed, 15 Jul 2020 08:17:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42162 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725924AbgGOMR3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jul 2020 08:17:29 -0400
+Received: from pali.im (pali.im [31.31.79.79])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8303D2065D;
+        Wed, 15 Jul 2020 12:17:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594815448;
+        bh=oox3IXWADMTRayXaRJ2ttv7qQ4vHlGzipTP8KKgGols=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=LlI75eE7yhlwt979Nx/dOdJXZJs8+5qMb3+utgc8rqZR/gwMjbq6Bnvw9X9CU7DUT
+         0nrp3nGJEHjA5B4L1TEIT0JdL1zUk+ihUPhllCD+q8ciqqb0wi/Fk+4vPaKxHf1qvX
+         0b64zk3z7FOMl0SvH9SXRuHivUu1unSUJJ4MmLZE=
+Received: by pali.im (Postfix)
+        id 55E077AC; Wed, 15 Jul 2020 14:17:26 +0200 (CEST)
+Date:   Wed, 15 Jul 2020 14:17:26 +0200
+From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
+To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc:     Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Andrew Murray <amurray@thegoodpenguin.co.uk>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Marek =?utf-8?B?QmVow7pu?= <marek.behun@nic.cz>,
+        Remi Pommarel <repk@triplefau.lt>,
+        Tomasz Maciej Nowak <tmn505@gmail.com>,
+        Xogium <contact@xogium.me>, linux-pci@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3] PCI: aardvark: Don't touch PCIe registers if no card
+ connected
+Message-ID: <20200715121726.eh4xglkdbcqkh7td@pali>
+References: <20200528143141.29956-1-pali@kernel.org>
+ <20200702083036.12230-1-pali@kernel.org>
+ <20200709113509.GB19638@e121166-lin.cambridge.arm.com>
+ <20200709122208.rmfeuu6zgbwh3fr5@pali>
+ <20200709144701.GA21760@e121166-lin.cambridge.arm.com>
+ <20200709150959.wq6zfkcy4m6hvvpl@pali>
+ <20200710091800.GA3419@e121166-lin.cambridge.arm.com>
+ <20200713082747.e3q3ml3wpbszn4j7@pali>
+ <20200713112325.GA25865@e121166-lin.cambridge.arm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAJZ5v0hJf2BwDvmtD6UEyyxm-CGcA=SLmAt+F8Sr0ceDZji0jw@mail.gmail.com>
+In-Reply-To: <20200713112325.GA25865@e121166-lin.cambridge.arm.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 15 Jul 2020, Rafael J. Wysocki wrote:
-
-> On Wed, Jul 15, 2020 at 1:50 PM Lee Jones <lee.jones@linaro.org> wrote:
-> >
-> > On Wed, 15 Jul 2020, Rafael J. Wysocki wrote:
-> >
-> > > On Wed, Jul 15, 2020 at 1:34 PM Lee Jones <lee.jones@linaro.org> wrote:
-> > > >
-> > > > On Wed, 15 Jul 2020, Rafael J. Wysocki wrote:
-> > > >
-> > > > > On Wed, Jul 15, 2020 at 5:27 AM Viresh Kumar <viresh.kumar@linaro.org> wrote:
-> > > > > >
-> > > > > > On 15-07-20, 08:54, Viresh Kumar wrote:
-> > > > > > > On 14-07-20, 22:03, Lee Jones wrote:
-> > > > > > > > On Tue, 14 Jul 2020, Rafael J. Wysocki wrote:
-> > > > > > > >
-> > > > > > > > > On Tue, Jul 14, 2020 at 4:51 PM Lee Jones <lee.jones@linaro.org> wrote:
-> > > > > > > > > >
-> > > > > > > > > > Can't see them being used anywhere and the compiler doesn't complain
-> > > > > > > > > > that they're missing, so ...
-> > > > > > > > >
-> > > > > > > > > Aren't they needed for automatic module loading in certain configurations?
-> > > > > > > >
-> > > > > > > > Any idea how that works, or where the code is for that?
-> > > > > > >
-> > > > > > > The MODULE_DEVICE_TABLE() thingy creates a map of vendor-id,
-> > > > > > > product-id that the kernel keeps after boot (and so there is no static
-> > > > > > > reference of it for the compiler), later when a device is hotplugged
-> > > > > > > into the kernel it refers to the map to find the related driver for it
-> > > > > > > and loads it if it isn't already loaded.
-> > > > > > >
-> > > > > > > This has some of it, search for MODULE_DEVICE_TABLE() in it.
-> > > > > > > Documentation/driver-api/usb/hotplug.rst
-> > > > > >
-> > > > > > And you just need to add __maybe_unused to them to suppress the
-> > > > > > warning.
-> > > > >
-> > > > > Wouldn't that cause the compiler to optimize them away if it doesn't
-> > > > > see any users?
-> > > >
-> > > > It looks like they're only unused when !MODULE,
-> > >
-> > > OK
-> > >
-> > > > in which case optimising them away would be the correct thing to do, no?
-> >
-> > It would be good if someone with a little more knowledge could provide
-> > a second opinion though.  I would think (hope) that the compiler would
-> > be smart enough to see when its actually in use.  After all, it is the
-> > compiler that places the information into the device table.
-> >
-> If that is not the case, then the MODULE_DEVICE_TABLE() magic is
-> > broken and will need fixing.
+On Monday 13 July 2020 12:23:25 Lorenzo Pieralisi wrote:
+> On Mon, Jul 13, 2020 at 10:27:47AM +0200, Pali Rohár wrote:
+> > On Friday 10 July 2020 10:18:00 Lorenzo Pieralisi wrote:
+> > > On Thu, Jul 09, 2020 at 05:09:59PM +0200, Pali Rohár wrote:
+> > > > > I understand that but the bridge bus resource can be trimmed to just
+> > > > > contain the root bus because that's the only one where there is a
+> > > > > chance you can enumerate a device.
+> > > > 
+> > > > It is possible to register only root bridge without endpoint?
+> > > 
+> > > It is possible to register the root bridge with a trimmed IORESOURCE_BUS
+> > > so that you don't enumerate anything other than the root port.
+> > 
+> > Hello Lorenzo! I really do not know how to achieve it. From code it
+> > looks like that pci/probe.c scans child buses unconditionally.
+> > 
+> > pci-aardvark.c calls pci_host_probe() which calls functions
+> > pci_scan_root_bus_bridge() which calls pci_scan_child_bus() which calls
+> > pci_scan_child_bus_extend() which calls pci_scan_bridge_extend() (bridge
+> > needs to be reconfigured) which then try to probe child bus via
+> > pci_scan_child_bus_extend() because bridge is not card bus.
+> > 
+> > In function pci_scan_bridge_extend() I do not see a way how to skip
+> > probing for child buses which would avoid enumerating aardvark root
+> > bridge when PCIe device is not connected.
+> > 
+> > dmesg output contains:
+> > 
+> >   advk-pcie d0070000.pcie: link never came up
+> >   advk-pcie d0070000.pcie: PCI host bridge to bus 0000:00
+> >   pci_bus 0000:00: root bus resource [bus 00-ff]
 > 
-> I'm not sure why that would be the case?
+> This resource can be limited to the root bus number only before calling
+> pci_host_probe() (ie see pci_parse_request_of_pci_ranges() and code in
+> pci_scan_bridge_extend() that programs primary/secondary/subordinate
+> busses) but I think that only papers over the issue, it does not fix it.
 
-Nor me.  In fact, take a look at my latest email.  I think I just
-proved out that it's not broken.  The warning is valid and
-MODULE_DEVICE_TABLE() appears to work just as it should.
+I looked at the code in pci/probe.c again and I do not think it is
+possible to avoid scanning devices. pci_scan_child_bus_extend() is
+unconditionally calling pci_scan_slot() for devfn=0 as the first thing.
+And this function unconditionally calls pci_scan_device() which is
+directly trying to read vendor id from config register.
 
-> > Removing boiler-plate is good, but not at the expense of obfuscation.
-> 
-> I'm not following you here to be honest.
+So for me it looks like that kernel expects that can read vendor id and
+device id from config register for device which is not connected.
 
-Never mind.  It's no longer important.
-
-> BTW, I'm wondering if removing the "static" modifier from the
-> definitions of the structures in question makes the warnings you want
-> to get rid of go away.
-
-I'm sure that it would.  But that just alludes to the fact that the
-tables may be in use elsewhere, which in the case of !MODULE is
-untrue.  That's probably more of a hack than using __maybe_unused.
-
--- 
-Lee Jones [李琼斯]
-Senior Technical Lead - Developer Services
-Linaro.org │ Open source software for Arm SoCs
-Follow Linaro: Facebook | Twitter | Blog
+And trying to read config register would cause those timeouts in
+aardvark.
