@@ -2,120 +2,129 @@ Return-Path: <SRS0=kup7=A2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A04BC433E4
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 14:17:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2ACBC433E3
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 14:20:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 38AB6206E9
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 14:17:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A026F206F5
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 14:20:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="S0VhaBxg"
+	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="NQOp04me"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728114AbgGOORo (ORCPT
+        id S1728188AbgGOOUT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 10:17:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49544 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726834AbgGOORo (ORCPT
+        Wed, 15 Jul 2020 10:20:19 -0400
+Received: from mail.efficios.com ([167.114.26.124]:42852 "EHLO
+        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726834AbgGOOUS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 10:17:44 -0400
-Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C1C87C061755
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 07:17:43 -0700 (PDT)
-Received: by mail-wm1-x344.google.com with SMTP id l2so6036715wmf.0
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 07:17:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=1JgqT9mrEdGtuuXwQt1J5C4Rwf+h8f2OaFWoY0odJro=;
-        b=S0VhaBxg8cYN2y22Wc8O6G1H0W5VMl3rd5sgHxUVmhOmkptVnKaF2Atf0ycbrTZlJJ
-         sND/EQFP9ttvwNC0bf7Aep2qLg+X2eS57cDpA5Y48S+1/77eLo6OmZElOADrMEqeBh7f
-         k4fLSjVpyGlb6Q+Dh6qeGDi/Argdm/WmvtL5C41RmhcJ6NsfE6KAx7bxDDr08n7D4auF
-         1Z1XDU61mCGt8BkkdkTjLxR2YIvWXVvaXBAy5mhit9DKMAdmxGSnbig9tLf/1awmFsYn
-         ykR2apsM/CS1X95ZF1wa1lIrb3u0f/wtq6QczfxsneKAuT4a2TMYSboex0KVB6zfsKZd
-         A2ug==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=1JgqT9mrEdGtuuXwQt1J5C4Rwf+h8f2OaFWoY0odJro=;
-        b=oKESBryHecPnXD6aW/9Rd4aoQzTG11Xqx6UppO8Z4MqzMzN78c+1QSFvNO+eNOGmjQ
-         D8Fzv/kgesxRII2fgAvmagRchtiwufzvWJtcb70efIPshDQ9wTrKTYiJZO8PBWfcT9fE
-         OSugMLf+TRGqY1qcmL6vq9RWzUK1bmT/pICMPsUHNgtubz+dsuG/RVlGYf2YN5iWz2kC
-         qGV3AqbaKCLj7kaPxozHXxAeo/sacY3Sj3GL4kXkhZ0Ke1eS1CejpDOT00HmMNL+oonR
-         kcy+oBcYm8ODhF/I9aTjoyUoPLy+LL6/yFYXhwfhhbLk/G8KEBXlvezAqHJ2IN5xIEBS
-         sjLg==
-X-Gm-Message-State: AOAM531eK52Ptzl/oEAAPuPm9d/Mdw/xWhV81zrbqARgAYBrseNkxNLJ
-        98MIi6hazlTf5P9IBUQBdtG9TA==
-X-Google-Smtp-Source: ABdhPJxOQs7hjvQMJKZS3uHDUMnZ/0JyZLpaK8BTw6SybE8pBSddAZM6kWuOIcneFpTvLZCFPfLoXA==
-X-Received: by 2002:a1c:4d05:: with SMTP id o5mr8820870wmh.130.1594822662438;
-        Wed, 15 Jul 2020 07:17:42 -0700 (PDT)
-Received: from dell ([2.31.163.61])
-        by smtp.gmail.com with ESMTPSA id p17sm3394573wma.47.2020.07.15.07.17.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 15 Jul 2020 07:17:41 -0700 (PDT)
-Date:   Wed, 15 Jul 2020 15:17:40 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc:     Linux PM <linux-pm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-Subject: Re: [PATCH] cpufreq: intel_pstate: Clean up aperf_mperf_shift
- description
-Message-ID: <20200715141740.GG3165313@dell>
-References: <1695770.kLfQgcESsc@kreacher>
+        Wed, 15 Jul 2020 10:20:18 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by mail.efficios.com (Postfix) with ESMTP id BA731282582;
+        Wed, 15 Jul 2020 10:20:16 -0400 (EDT)
+Received: from mail.efficios.com ([127.0.0.1])
+        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id eZg8zfz8LZ71; Wed, 15 Jul 2020 10:20:16 -0400 (EDT)
+Received: from localhost (localhost [127.0.0.1])
+        by mail.efficios.com (Postfix) with ESMTP id 63C86282581;
+        Wed, 15 Jul 2020 10:20:16 -0400 (EDT)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com 63C86282581
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
+        s=default; t=1594822816;
+        bh=8pyjh3w3gqmbApSqfgRB3ksH58blRuuNrO9qaoBB2P8=;
+        h=Date:From:To:Message-ID:MIME-Version;
+        b=NQOp04meYobOrNmaL5O+BPNwVBabfCQhcnNrZ30VkCIserTPFvBIu8bKMXfyaARMk
+         my4A6xnXOOVbqsNTiZ0qH/+76r7xVJ3UX0zWkYcbF+YYPVBOcZ8ZuUsi8YPYYfw6lR
+         mhRFFbO+JNHo8j4MvP25Ia06jlh3khYCXQyYzceFb45uxDtRewmnOolVFLluS9xz8A
+         DiWCEz7H/6RjWNVVxtHxs1CQGMTA8vJQYqZLixXz2e67TmyIUAsL/I3pNhTqsJg+jX
+         JSN+NoUEQuhuqr94Lycw1GfwCw5DCelZ9g9zIZUFquatV953iKHbYfXaYCTqTca5lG
+         tfNyFO5vlhuvQ==
+X-Virus-Scanned: amavisd-new at efficios.com
+Received: from mail.efficios.com ([127.0.0.1])
+        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id uVk_T4vgAKIJ; Wed, 15 Jul 2020 10:20:16 -0400 (EDT)
+Received: from mail03.efficios.com (mail03.efficios.com [167.114.26.124])
+        by mail.efficios.com (Postfix) with ESMTP id 557522823A1;
+        Wed, 15 Jul 2020 10:20:16 -0400 (EDT)
+Date:   Wed, 15 Jul 2020 10:20:16 -0400 (EDT)
+From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+To:     Christian Brauner <christian.brauner@ubuntu.com>
+Cc:     Florian Weimer <fweimer@redhat.com>, carlos <carlos@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        paulmck <paulmck@linux.ibm.com>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Paul Turner <pjt@google.com>,
+        linux-api <linux-api@vger.kernel.org>
+Message-ID: <1765484769.14232.1594822816264.JavaMail.zimbra@efficios.com>
+In-Reply-To: <20200715135554.4q6aamx4iqd4mnqh@wittgenstein>
+References: <20200714030348.6214-1-mathieu.desnoyers@efficios.com> <2452161.11491.1594732791558.JavaMail.zimbra@efficios.com> <71f08b3a-56f5-0e0f-53b0-cc680f7e8181@redhat.com> <2053637148.14136.1594818777608.JavaMail.zimbra@efficios.com> <87y2nk29rp.fsf@oldenburg2.str.redhat.com> <882700738.14181.1594819884049.JavaMail.zimbra@efficios.com> <87mu4028uk.fsf@oldenburg2.str.redhat.com> <20200715135554.4q6aamx4iqd4mnqh@wittgenstein>
+Subject: Re: [RFC PATCH 2/4] rseq: Allow extending struct rseq
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <1695770.kLfQgcESsc@kreacher>
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [167.114.26.124]
+X-Mailer: Zimbra 8.8.15_GA_3955 (ZimbraWebClient - FF78 (Linux)/8.8.15_GA_3953)
+Thread-Topic: rseq: Allow extending struct rseq
+Thread-Index: dcnj3oHgdUUwDl0MIo+e+CqqnEuWyQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 15 Jul 2020, Rafael J. Wysocki wrote:
+----- On Jul 15, 2020, at 9:55 AM, Christian Brauner christian.brauner@ubuntu.com wrote:
 
-> From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> On Wed, Jul 15, 2020 at 03:42:11PM +0200, Florian Weimer wrote:
+>> * Mathieu Desnoyers:
+>> 
+>> > So indeed it could be done today without upgrading the toolchains by
+>> > writing custom assembler for each architecture to get the thread's
+>> > struct rseq. AFAIU the ABI to access the thread pointer is fixed for
+>> > each architecture, right ?
+>> 
+>> Yes, determining the thread pointer and access initial-exec TLS
+>> variables is baked into the ABI.
+>> 
+>> > How would this allow early-rseq-adopter libraries to interact with
+>> > glibc ?
+>> 
+>> Under all extension proposals I've seen so far, early adopters are
+>> essentially incompatible with glibc rseq registration.  I don't think
+>> you can have it both ways.
 > 
-> The kerneldoc description of the aperf_mperf_shift field in
-> struct global_params is unclear and there is a typo in it, so
-> simplify it and clean it up.
-> 
-> Reported-by: Lee Jones <lee.jones@linaro.org>
-> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> ---
->  drivers/cpufreq/intel_pstate.c |    4 +---
->  1 file changed, 1 insertion(+), 3 deletions(-)
-> 
-> Index: linux-pm/drivers/cpufreq/intel_pstate.c
-> ===================================================================
-> --- linux-pm.orig/drivers/cpufreq/intel_pstate.c
-> +++ linux-pm/drivers/cpufreq/intel_pstate.c
-> @@ -202,9 +202,7 @@ struct global_params {
->   * @pstate:		Stores P state limits for this CPU
->   * @vid:		Stores VID limits for this CPU
->   * @last_sample_time:	Last Sample time
-> - * @aperf_mperf_shift:	Number of clock cycles after aperf, merf is incremented
-> - *			This shift is a multiplier to mperf delta to
-> - *			calculate CPU busy.
-> + * @aperf_mperf_shift:	APERF vs MPERF counting frequency difference
->   * @prev_aperf:		Last APERF value read from APERF MSR
->   * @prev_mperf:		Last MPERF value read from MPERF MSR
->   * @prev_tsc:		Last timestamp counter (TSC) value
+> Who are the early adopters? And if we aren't being compatible with them
+> under the extensible schemes proposed we should be able to achieve
+> compatibility with non-early adopters, right? Which I guess is more
+> important. (I still struggle to make sense what qualifies as an early
+> adopter/what the difference to a non-early adopter is.)
 
-Definitely clearer.
+Early adopter libraries and applications are meant to be able to use rseq
+without requiring upgrade of the entire environment to a newer glibc.
 
-Reviewed-by: Lee Jones <lee.jones@linaro.org>
+I maintain early adopter projects (liburcu, lttng-ust) which postpone using
+rseq outside of prototype branches until we agree on an ABI to share
+__rseq_abi between glibc and early adopter libraries. The last thing I
+want is for those projects to break when an end-user upgrades their
+glibc. tcmalloc is another early adopter which have less strict
+compatibility requirements: they are OK with breaking changes requiring
+upgrading and rebuilding tcmalloc.
+
+Indeed, until we cast in stone the layout of struct rseq as exposed by
+glibc, I think we have some freedom in our definition of "early adopter",
+because pretty much every relevant open source project which want to use
+rseq is waiting on glibc to define that ABI, to use rseq either as an
+early-adopter or through a dependency on newer glibc.
+
+Thanks,
+
+Mathieu
+
 
 -- 
-Lee Jones [李琼斯]
-Senior Technical Lead - Developer Services
-Linaro.org │ Open source software for Arm SoCs
-Follow Linaro: Facebook | Twitter | Blog
+Mathieu Desnoyers
+EfficiOS Inc.
+http://www.efficios.com
