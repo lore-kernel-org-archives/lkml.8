@@ -2,79 +2,146 @@ Return-Path: <SRS0=kup7=A2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FA3FC433E4
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 16:46:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 001BEC433E3
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 16:46:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6862420672
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 16:46:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB9F32065D
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 16:46:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728156AbgGOQqG (ORCPT
+        id S1726954AbgGOQqx convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 12:46:06 -0400
-Received: from foss.arm.com ([217.140.110.172]:57722 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726916AbgGOQqE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 12:46:04 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 04E9931B;
-        Wed, 15 Jul 2020 09:46:03 -0700 (PDT)
-Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 39EA53F718;
-        Wed, 15 Jul 2020 09:46:02 -0700 (PDT)
-Date:   Wed, 15 Jul 2020 17:45:59 +0100
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Dejin Zheng <zhengdejin5@gmail.com>
-Cc:     Rob Herring <robh@kernel.org>,
-        "Chocron, Jonathan" <jonnyc@amazon.com>,
+        Wed, 15 Jul 2020 12:46:53 -0400
+Received: from eu-smtp-delivery-151.mimecast.com ([207.82.80.151]:23197 "EHLO
+        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725897AbgGOQqt (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jul 2020 12:46:49 -0400
+Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
+ TLS) by relay.mimecast.com with ESMTP id
+ uk-mta-52-I5MfYmGMN8WVVlleqrOfeQ-1; Wed, 15 Jul 2020 17:46:45 +0100
+X-MC-Unique: I5MfYmGMN8WVVlleqrOfeQ-1
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
+ AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
+ Server (TLS) id 15.0.1347.2; Wed, 15 Jul 2020 17:46:44 +0100
+Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
+ AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
+ Wed, 15 Jul 2020 17:46:44 +0100
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     'Kees Cook' <keescook@chromium.org>
+CC:     'Christoph Hellwig' <hch@infradead.org>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
-Subject: Re: [PATCH v1] PCI: controller: Remove duplicate error message
-Message-ID: <20200715164559.GC3432@e121166-lin.cambridge.arm.com>
-References: <20200526150954.4729-1-zhengdejin5@gmail.com>
- <1d7703d5c29dc9371ace3645377d0ddd9c89be30.camel@amazon.com>
- <20200527132005.GA7143@nuc8i5>
- <1b54c08f759c101a8db162f4f62c6b6a8a455d3f.camel@amazon.com>
- <CAL_JsqJWKfShzb6r=pXFv03T4L+nmNrCHvt+NkEy5EFuuD1HAA@mail.gmail.com>
- <20200706155847.GA32050@e121166-lin.cambridge.arm.com>
- <20200711074733.GD3112@nuc8i5>
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
+        "linux-security-module@vger.kernel.org" 
+        <linux-security-module@vger.kernel.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        James Morris <jmorris@namei.org>,
+        Kentaro Takeda <takedakn@nttdata.co.jp>,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        "John Johansen" <john.johansen@canonical.com>
+Subject: RE: [PATCH 7/7] exec: Implement kernel_execve
+Thread-Topic: [PATCH 7/7] exec: Implement kernel_execve
+Thread-Index: AQHWWnMrd4ih7YlzG0aqMJfp5omyT6kIuIaQ///1mACAACJpAA==
+Date:   Wed, 15 Jul 2020 16:46:44 +0000
+Message-ID: <dc8371b7e05d4aa49eefcfd402b3fa1e@AcuMS.aculab.com>
+References: <871rle8bw2.fsf@x220.int.ebiederm.org>
+ <87wo365ikj.fsf@x220.int.ebiederm.org> <202007141446.A72A4437C@keescook>
+ <20200715064248.GH32470@infradead.org>
+ <d6d204c4427b49f6b24ac24bf1082fa4@AcuMS.aculab.com>
+ <202007150801.27B6690@keescook>
+In-Reply-To: <202007150801.27B6690@keescook>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200711074733.GD3112@nuc8i5>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Authentication-Results: relay.mimecast.com;
+        auth=pass smtp.auth=C51A453 smtp.mailfrom=david.laight@aculab.com
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: aculab.com
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jul 11, 2020 at 03:47:33PM +0800, Dejin Zheng wrote:
-> On Mon, Jul 06, 2020 at 04:58:47PM +0100, Lorenzo Pieralisi wrote:
-> > On Tue, Jun 02, 2020 at 09:01:13AM -0600, Rob Herring wrote:
-> > 
-> > [...]
-> > 
-> > > > The other 2 error cases as well don't print the resource name as far as
-> > > > I recall (they will at least print the resource start/end).
-> > > 
-> > > Start/end are what are important for why either of these functions
-> > > failed.
-> > > 
-> > > But sure, we could add 'name' here. That's a separate patch IMO.
+From: Kees Cook <keescook@chromium.org>
+> Sent: 15 July 2020 16:09
 > 
-> Hi Lorenzo, Bob and Jonathan:                                                                                                     
+> On Wed, Jul 15, 2020 at 02:55:50PM +0000, David Laight wrote:
+> > From: Christoph Hellwig
+> > > Sent: 15 July 2020 07:43
+> > > Subject: Re: [PATCH 7/7] exec: Implement kernel_execve
+> > >
+> > > On Tue, Jul 14, 2020 at 02:49:23PM -0700, Kees Cook wrote:
+> > > > On Tue, Jul 14, 2020 at 08:31:40AM -0500, Eric W. Biederman wrote:
+> > > > > +static int count_strings_kernel(const char *const *argv)
+> > > > > +{
+> > > > > +	int i;
+> > > > > +
+> > > > > +	if (!argv)
+> > > > > +		return 0;
+> > > > > +
+> > > > > +	for (i = 0; argv[i]; ++i) {
+> > > > > +		if (i >= MAX_ARG_STRINGS)
+> > > > > +			return -E2BIG;
+> > > > > +		if (fatal_signal_pending(current))
+> > > > > +			return -ERESTARTNOHAND;
+> > > > > +		cond_resched();
+> > > > > +	}
+> > > > > +	return i;
+> > > > > +}
+> > > >
+> > > > I notice count() is only ever called with MAX_ARG_STRINGS. Perhaps
+> > > > refactor that too? (And maybe rename it to count_strings_user()?)
+> >
+> > Thinks....
+> > If you setup env[] and argv[] on the new user stack early in exec processing
+> > then you may not need any limits at all - except the size of the user stack.
+> > Even the get_user() loop will hit an invalid address before the counter
+> > wraps (provided it is unsigned long).
 > 
-> Thank you very much for helping me review this patch,
+> *grumpy noises* Yes, but not in practice (if I'm understanding what you
+> mean). The expectations of a number of execution environments can be
+> really odd-ball. I've tried to collect the notes from over the years in
+> prepare_arg_pages()'s comments, and it mostly boils down to "there has
+> to be enough room for the exec to start" otherwise the exec ends up in a
+> hard-to-debug failure state (i.e. past the "point of no return", where you
+> get no useful information about the cause of the SEGV). So the point has
+> been to move as many of the setup checks as early as possible and report
+> about them if they fail. The argv processing is already very early, but
+> it needs to do the limit checks otherwise it'll just break after the exec
+> is underway and the process will just SEGV. (And ... some environments
+> will attempt to dynamically check the size of the argv space by growing
+> until it sees E2BIG, so we can't just remove it and let those hit SEGV.)
 
-I merge this patch in pci/misc, thanks.
+Yes - I bet the code is horrid.
+I guess the real problem is that you'd need access to the old process's
+user addresses and the new process's stack area at the same time.
+Unless there is a suitable hole in the old process's address map
+any attempted trick will fall foul of cache aliasing on some
+architectures - like anything else that does page-loaning.
 
-> I sent a new patch for print the resource name when the request memory
-> region or remapping of configuration space fails. and it is here:
-> https://patchwork.kernel.org/patch/11657801/
+I'm sure there are hair-brained schemes that might work.
 
-We will get to it soon.
+	David
 
-Lorenzo
+-
+Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
+Registration No: 1397386 (Wales)
+
