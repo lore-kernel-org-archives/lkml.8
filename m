@@ -2,108 +2,224 @@ Return-Path: <SRS0=kup7=A2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78514C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 06:54:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74229C433EB
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 06:54:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 482872067D
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 06:54:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 49BBE2067D
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 06:54:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="m5M0g8I0"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="E6jlNw7e"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728977AbgGOGyr (ORCPT
+        id S1728991AbgGOGyx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 02:54:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37588 "EHLO
+        Wed, 15 Jul 2020 02:54:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37610 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728948AbgGOGyn (ORCPT
+        with ESMTP id S1728948AbgGOGyu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 02:54:43 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9764BC061755;
-        Tue, 14 Jul 2020 23:54:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
-        References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
-        Content-Type:Content-ID:Content-Description;
-        bh=y+69naeMbJzLmps1ix1zIh5S0S7ZMs54M4SKXhvxIQw=; b=m5M0g8I044GkmEWX1jwLHudNgg
-        Y+R7SYA1jyAZiY2QPIlKeZnT/BMBXmOsKpm66Wg/2BFzyBNPno9O6z6DEvT49dtjIx21GcnTrCXQR
-        M/MrLXSh8EjTApsGbTG3LZaaIAcqn06MVY+gfWePppXQm72I/Knz3pBbii8lerEJfot94ZLRdUJFq
-        tbE5Ekq60OkT/InvLe5vM1FZpUKnspDXaMk+F2zVesBJysWviC8GKPDR5Kkyb/RnQXY9d8I8CnuUG
-        dROrl1xSVgpjtTdlb6JMDsXnb53vLlNuoBwD0soTpbOOqMfhHxoJXRlDHOVA0ILXdGczFilL6cky5
-        Mfv0KDYw==;
-Received: from [2001:4bb8:105:4a81:1c8f:d581:a5f2:bdb7] (helo=localhost)
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jvbJR-0001kO-9X; Wed, 15 Jul 2020 06:54:41 +0000
-From:   Christoph Hellwig <hch@lst.de>
-To:     Al Viro <viro@zeniv.linux.org.uk>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 4/4] initramfs: use vfs_utimes in do_copy
-Date:   Wed, 15 Jul 2020 08:54:34 +0200
-Message-Id: <20200715065434.2550-5-hch@lst.de>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200715065434.2550-1-hch@lst.de>
-References: <20200715065434.2550-1-hch@lst.de>
+        Wed, 15 Jul 2020 02:54:50 -0400
+Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5D4EEC061755
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 23:54:50 -0700 (PDT)
+Received: by mail-lf1-x144.google.com with SMTP id u12so476916lff.2
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 23:54:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=NTsvJyRsXTYCu8MRJ6uonhEhc3O9bi7P+xqu5XwBB5o=;
+        b=E6jlNw7evD92OdJk5WvRgw585l+yKXMvWaIDL63GiT3/WAMzPN4eE8SboE4p7Epj14
+         sU6PAnG4/7Ye8TdkAcT58Wjx7FS7ictIISKa5aLBRAjORMP62xOGyWrXsCLBGQ8DtcBp
+         V/DtM5Pzze4tWl3X/xsum3CWLm/ci6wglbrTQ/ri8l+qinRrGLxIokZfPwNy5PlcdcCV
+         mNHZjzSBPa7YLjoGeYFRBBGwJrdMmVNdn46m8fKLwuE4qpenUY+5LBh8ytrmpjffFsDx
+         8dvJtaI4bSFxL1AOSgGpPbV2/eeq3pD99oBRkkpXHT3SdfYAM2ljbZE9XzgDa7gWhDXG
+         dsTw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=NTsvJyRsXTYCu8MRJ6uonhEhc3O9bi7P+xqu5XwBB5o=;
+        b=VPf1AnFt6+tAF58fSCOxyz88BCGbqug940d3vjkN709vd3UldDkMnCb1OfxHfQB5OP
+         QLcgPjCZC7RCE3U5Y/ZswXRkqcfhBiYij5pipPt+BaucSnFmlV7+xvpgT26hrZC3mJ0h
+         uqof5lodVZwCyiB5NdlYCs09jM4BFwDkxQv3zwGZRcjQ2F6Reydw52QksotcoVHFFcEX
+         oDrLg4CIp/8hzXPaHXeYzC3UjjFjv26b4fNOH2VnjGACp8jqC3GvSSOEdcPFsShilqkO
+         uRgZf5g2LR3ZpC7kCi2Pi1Q3CdacvSgmIMcdIfXy5XY9Gls1/BWpmnkHWN9q0UaWk2AD
+         kLQw==
+X-Gm-Message-State: AOAM532d75bHkSiA4/88+U8n/gT7h8Zft4CKM3Mp4tE0Enx+WjQjsFdN
+        NjMXYK7ntKLPor8k3avwELkt9++WWoKOlI4d2rM=
+X-Google-Smtp-Source: ABdhPJzaAHirbaV9fE8Gp2p6pOT7v1RRsHPmFc3Dtky4E27NDk/KuiefzTdq7jt3y2ung8PHx/RdWli1iHEKYukdpaE=
+X-Received: by 2002:a19:e61a:: with SMTP id d26mr4021628lfh.96.1594796087665;
+ Tue, 14 Jul 2020 23:54:47 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
+References: <20200713031252.3873546-1-daeho43@gmail.com> <20200713181152.GC2910046@google.com>
+ <3b02263d-a5e1-136c-40ed-514d34e4c895@huawei.com> <CACOAw_wBD_ourGJSdRTDM-wzeH97aGE966QDB6bpjiyXRrh47A@mail.gmail.com>
+ <f4a594a1-464f-3a74-90cb-fd536bed9962@huawei.com>
+In-Reply-To: <f4a594a1-464f-3a74-90cb-fd536bed9962@huawei.com>
+From:   Daeho Jeong <daeho43@gmail.com>
+Date:   Wed, 15 Jul 2020 15:54:36 +0900
+Message-ID: <CACOAw_w3OWDVXSYHuTEEVv1HaBZir1CWcRAmxOt00MB4vXBKVg@mail.gmail.com>
+Subject: Re: [f2fs-dev] [PATCH v2] f2fs: change the way of handling range.len
+ in F2FS_IOC_SEC_TRIM_FILE
+To:     Chao Yu <yuchao0@huawei.com>
+Cc:     Jaegeuk Kim <jaegeuk@kernel.org>,
+        Daeho Jeong <daehojeong@google.com>, kernel-team@android.com,
+        linux-kernel@vger.kernel.org,
+        linux-f2fs-devel@lists.sourceforge.net
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Don't bother saving away the pathname and just use the new struct path
-based utimes helper instead.
+You mean we can support ZEROOUT option only for encrypted files of
+non-multidevice f2fs,
+and return -EOPNOTSUPP in the multidevice case, right now?
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
----
- init/initramfs.c | 11 +++++++----
- 1 file changed, 7 insertions(+), 4 deletions(-)
-
-diff --git a/init/initramfs.c b/init/initramfs.c
-index c335920e5ecc2d..3823d15e5d2619 100644
---- a/init/initramfs.c
-+++ b/init/initramfs.c
-@@ -201,7 +201,6 @@ static inline void __init eat(unsigned n)
- 	byte_count -= n;
- }
- 
--static __initdata char *vcollected;
- static __initdata char *collected;
- static long remains __initdata;
- static __initdata char *collect;
-@@ -342,7 +341,6 @@ static int __init do_name(void)
- 			vfs_fchmod(wfile, mode);
- 			if (body_len)
- 				vfs_truncate(&wfile->f_path, body_len);
--			vcollected = kstrdup(collected, GFP_KERNEL);
- 			state = CopyFile;
- 		}
- 	} else if (S_ISDIR(mode)) {
-@@ -365,11 +363,16 @@ static int __init do_name(void)
- static int __init do_copy(void)
- {
- 	if (byte_count >= body_len) {
-+		struct timespec64 t[2] = { };
-+
- 		if (xwrite(wfile, victim, body_len) != body_len)
- 			error("write error");
-+
-+		t[0].tv_sec = mtime;
-+		t[1].tv_sec = mtime;
-+		vfs_utimes(&wfile->f_path, t);
-+
- 		fput(wfile);
--		do_utime(vcollected, mtime);
--		kfree(vcollected);
- 		eat(body_len);
- 		state = SkipIt;
- 		return 0;
--- 
-2.27.0
-
+2020=EB=85=84 7=EC=9B=94 15=EC=9D=BC (=EC=88=98) =EC=98=A4=ED=9B=84 3:17, C=
+hao Yu <yuchao0@huawei.com>=EB=8B=98=EC=9D=B4 =EC=9E=91=EC=84=B1:
+>
+> On 2020/7/15 12:06, Daeho Jeong wrote:
+> > We could use fscrypt_zeroout_range() for an encrypted file.
+> > But, one problem is fscrypt_zeroout_range() assumes that filesystems
+> > only use a single block device.
+> > It means it doesn't receive bdev as a parameter.
+> > How about changing the interface of fscrypt_zeroout_range() first and u=
+sing it?
+>
+> Yes, please limited to use fscrypt_zeroout_range() on non-multidevice f2f=
+s image
+> first, we can add a condition to check that in the beginning of ioctl int=
+erface,
+> once fscrypt_zeroout_range() accepts bdev as parameter, we can remove tha=
+t limitation.
+>
+> Thanks,
+>
+> >
+> > 2020=EB=85=84 7=EC=9B=94 14=EC=9D=BC (=ED=99=94) =EC=98=A4=ED=9B=84 9:3=
+6, Chao Yu <yuchao0@huawei.com>=EB=8B=98=EC=9D=B4 =EC=9E=91=EC=84=B1:
+> >>
+> >> On 2020/7/14 2:11, Jaegeuk Kim wrote:
+> >>> Hi Daeho,
+> >>>
+> >>> Please take a look at this.
+> >>>
+> >>> https://git.kernel.org/pub/scm/linux/kernel/git/jaegeuk/f2fs.git/comm=
+it/?h=3Ddev&id=3D35245180459aebf6d70fde88a538f0400a794aa6
+> >>
+> >> I'm curious about what will happen if we call
+> >> sec_trim_file(F2FS_TRIM_FILE_ZEROOUT) on an encrypted file, will
+> >> it use zero bits covering encrypted data on disk?
+> >>
+> >> Thanks,
+> >>
+> >>>
+> >>> Thanks,
+> >>>
+> >>> On 07/13, Daeho Jeong wrote:
+> >>>> From: Daeho Jeong <daehojeong@google.com>
+> >>>>
+> >>>> Changed the way of handling range.len of F2FS_IOC_SEC_TRIM_FILE.
+> >>>>  1. Added -1 value support for range.len to secure trim the whole bl=
+ocks
+> >>>>     starting from range.start regardless of i_size.
+> >>>>  2. If the end of the range passes over the end of file, it means un=
+til
+> >>>>     the end of file (i_size).
+> >>>>  3. ignored the case of that range.len is zero to prevent the functi=
+on
+> >>>>     from making end_addr zero and triggering different behaviour of
+> >>>>     the function.
+> >>>>
+> >>>> Signed-off-by: Daeho Jeong <daehojeong@google.com>
+> >>>> ---
+> >>>> Changes in v2:
+> >>>>  - Changed -1 range.len option to mean the whole blocks starting fro=
+m
+> >>>>    range.start regardless of i_size
+> >>>> ---
+> >>>>  fs/f2fs/file.c | 23 ++++++++++++-----------
+> >>>>  1 file changed, 12 insertions(+), 11 deletions(-)
+> >>>>
+> >>>> diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
+> >>>> index 368c80f8e2a1..2485841e3b2d 100644
+> >>>> --- a/fs/f2fs/file.c
+> >>>> +++ b/fs/f2fs/file.c
+> >>>> @@ -3792,7 +3792,7 @@ static int f2fs_sec_trim_file(struct file *fil=
+p, unsigned long arg)
+> >>>>      pgoff_t index, pg_end;
+> >>>>      block_t prev_block =3D 0, len =3D 0;
+> >>>>      loff_t end_addr;
+> >>>> -    bool to_end;
+> >>>> +    bool to_end =3D false;
+> >>>>      int ret =3D 0;
+> >>>>
+> >>>>      if (!(filp->f_mode & FMODE_WRITE))
+> >>>> @@ -3813,23 +3813,23 @@ static int f2fs_sec_trim_file(struct file *f=
+ilp, unsigned long arg)
+> >>>>      file_start_write(filp);
+> >>>>      inode_lock(inode);
+> >>>>
+> >>>> -    if (f2fs_is_atomic_file(inode) || f2fs_compressed_file(inode)) =
+{
+> >>>> +    if (f2fs_is_atomic_file(inode) || f2fs_compressed_file(inode) |=
+|
+> >>>> +                    range.start >=3D inode->i_size) {
+> >>>>              ret =3D -EINVAL;
+> >>>>              goto err;
+> >>>>      }
+> >>>>
+> >>>> -    if (range.start >=3D inode->i_size) {
+> >>>> -            ret =3D -EINVAL;
+> >>>> +    if (range.len =3D=3D 0)
+> >>>>              goto err;
+> >>>> -    }
+> >>>>
+> >>>> -    if (inode->i_size - range.start < range.len) {
+> >>>> -            ret =3D -E2BIG;
+> >>>> -            goto err;
+> >>>> +    if (inode->i_size - range.start > range.len) {
+> >>>> +            end_addr =3D range.start + range.len;
+> >>>> +    } else {
+> >>>> +            end_addr =3D range.len =3D=3D (u64)-1 ?
+> >>>> +                    sbi->sb->s_maxbytes : inode->i_size;
+> >>>> +            to_end =3D true;
+> >>>>      }
+> >>>> -    end_addr =3D range.start + range.len;
+> >>>>
+> >>>> -    to_end =3D (end_addr =3D=3D inode->i_size);
+> >>>>      if (!IS_ALIGNED(range.start, F2FS_BLKSIZE) ||
+> >>>>                      (!to_end && !IS_ALIGNED(end_addr, F2FS_BLKSIZE)=
+)) {
+> >>>>              ret =3D -EINVAL;
+> >>>> @@ -3846,7 +3846,8 @@ static int f2fs_sec_trim_file(struct file *fil=
+p, unsigned long arg)
+> >>>>      down_write(&F2FS_I(inode)->i_gc_rwsem[WRITE]);
+> >>>>      down_write(&F2FS_I(inode)->i_mmap_sem);
+> >>>>
+> >>>> -    ret =3D filemap_write_and_wait_range(mapping, range.start, end_=
+addr - 1);
+> >>>> +    ret =3D filemap_write_and_wait_range(mapping, range.start,
+> >>>> +                    to_end ? LLONG_MAX : end_addr - 1);
+> >>>>      if (ret)
+> >>>>              goto out;
+> >>>>
+> >>>> --
+> >>>> 2.27.0.383.g050319c2ae-goog
+> >>>
+> >>>
+> >>> _______________________________________________
+> >>> Linux-f2fs-devel mailing list
+> >>> Linux-f2fs-devel@lists.sourceforge.net
+> >>> https://lists.sourceforge.net/lists/listinfo/linux-f2fs-devel
+> >>> .
+> >>>
+> > .
+> >
