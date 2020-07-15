@@ -2,110 +2,99 @@ Return-Path: <SRS0=kup7=A2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 097D3C433E8
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 12:39:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD9F5C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 12:39:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DF64C2071B
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 12:39:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B57320720
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 12:39:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594816746;
-	bh=Z6Lx02fZ6qfF+yXhz7Gf6Kj/KVhYR9qVe5kO17QukC8=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=ACN25n8Upr2EXCc7KIHnZwsXd0dyae9TlQ31A1VG+p0vxFl5fssQmQFMLrEhQ/k66
-	 +h3ao3HlUqtieHM887XS8teOiK9ARzD4hzYzH24HOVNZUwxilPcsE0bZ+7OEzEH1Qo
-	 RXEGldboyTKQjj/siMCxkVmphDpduyik/Z32KhVs=
+	s=default; t=1594816767;
+	bh=Mm0sOXAApGS6XP4wrEAQonVs/JhhikOUmoPj10egjVk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=yBevmJ9pOsyyFjo7kQfDDcoohv+/Fz32BiN1XhSgorcHEa95zkC3FdyXEmLmPnf0y
+	 Mt/TlbuzFua3heISv3JSi5Vovt8KKH0TR1NHgxroWh+J1po+wAHsej7nAcwy84U/3I
+	 N7pCoUT2hZNoOHI1E/vcq+jaxttNg1B/175BvipU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731017AbgGOMjF (ORCPT
+        id S1731042AbgGOMj0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 08:39:05 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:39128 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728975AbgGOMjD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 08:39:03 -0400
-Received: by mail-ot1-f68.google.com with SMTP id 18so1318094otv.6;
-        Wed, 15 Jul 2020 05:39:03 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=qEMirJ4iEA7/amJKPxcxC1aWj+9/XnHViK3CvAKtiJ0=;
-        b=QAhf7V7FSx5b8wlN/lMBk4IoBkG/jyYs0j35csRjCQkVMUX7kjtbMZAyEHyoagyc3j
-         WA+7Ors3l0duNyKg9LLUCk9TxD4WnUaux+V41CxeaX3XJjBm7B5XGuJVd/9RWRXHHU6o
-         aD3dO0qOeN0Q+z3BAuSdUXx/tAJoppjQ2bZ+d70h0mLdl3TWsBaGs0f0oL0JmdCpKbKT
-         6JpctTKzHlJQxSr0XaWQlxrN7NH5WDfs0TYmL8eNcrbouAzm1Gr5CHZwgq+IiujkLHpA
-         Qdcn9rSLOjTQ8zH6ucYJFkMjOehhRIOo7X1udwpHO60zXvnCgEDx2dpeBBDHz0sT2ZAF
-         AGWQ==
-X-Gm-Message-State: AOAM532HDHSHsKNb5J1lIw7hYWIb8ksq1gu46cHk2lGLt/vCvL9W3EKK
-        pQNOSeIsRlvoAQsZIVdC+xoEkIBfUxJs+QlJTMM=
-X-Google-Smtp-Source: ABdhPJxvkSkL+mL03a/+kUFCkWVChdwL/udtsAeVBYfe6BwLRVZ83g1tMqK2UpQXTukqQs8HVYr+WcUxT5xBvtdSoFo=
-X-Received: by 2002:a9d:590a:: with SMTP id t10mr8727872oth.262.1594816742784;
- Wed, 15 Jul 2020 05:39:02 -0700 (PDT)
+        Wed, 15 Jul 2020 08:39:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50008 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730153AbgGOMj0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jul 2020 08:39:26 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 682D12071B;
+        Wed, 15 Jul 2020 12:39:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594816765;
+        bh=Mm0sOXAApGS6XP4wrEAQonVs/JhhikOUmoPj10egjVk=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=W71eWUSy8TBUu9FYoHL46wqDxvSanIvgABViG6MBLyv8F3mb2RhaCh1ZmiJRaaCTy
+         8nCFFR6awRTH0qFX1WhtXMknDyGP/uBS0ZsnNlkz7mhvLKvcvv51YigE9pi0fvnyZt
+         ZSjdC3vuPCNlEs/1mG+V6NZPjgXuseQTcLyoDsgU=
+Date:   Wed, 15 Jul 2020 14:39:22 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Jon Hunter <jonathanh@nvidia.com>
+Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+        akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
+        patches@kernelci.org, ben.hutchings@codethink.co.uk,
+        lkft-triage@lists.linaro.org, stable@vger.kernel.org,
+        linux-tegra <linux-tegra@vger.kernel.org>
+Subject: Re: [PATCH 5.7 000/166] 5.7.9-rc1 review
+Message-ID: <20200715123922.GC3134677@kroah.com>
+References: <20200714184115.844176932@linuxfoundation.org>
+ <fc3af2c8-d6ca-0ad1-597e-3bba2292613c@nvidia.com>
 MIME-Version: 1.0
-References: <20200714145049.2496163-1-lee.jones@linaro.org>
- <20200714145049.2496163-13-lee.jones@linaro.org> <CAJZ5v0jkDWD6Ea2_oEDtFfPDWh5ByphUqEa=3jE2ZbnW0DVEcQ@mail.gmail.com>
- <20200714210306.GI1398296@dell>
-In-Reply-To: <20200714210306.GI1398296@dell>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Wed, 15 Jul 2020 14:38:51 +0200
-Message-ID: <CAJZ5v0jCyfi3Gd83UrC5NJ3QrCceUprT1QMtc4KgROBP2deGuQ@mail.gmail.com>
-Subject: Re: [PATCH 12/13] cpufreq: intel_pstate: Supply struct attribute
- description for get_aperf_mperf_shift()
-To:     Lee Jones <lee.jones@linaro.org>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        Len Brown <lenb@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <fc3af2c8-d6ca-0ad1-597e-3bba2292613c@nvidia.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 14, 2020 at 11:28 PM Lee Jones <lee.jones@linaro.org> wrote:
->
-> On Tue, 14 Jul 2020, Rafael J. Wysocki wrote:
->
-> > On Tue, Jul 14, 2020 at 4:51 PM Lee Jones <lee.jones@linaro.org> wrote:
-> > >
-> > > Fixes the following W=1 kernel build warning(s):
-> > >
-> > >  drivers/cpufreq/intel_pstate.c:293: warning: Function parameter or member 'get_aperf_mperf_shift' not described in 'pstate_funcs'
-> > >
-> > > Cc: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-> > > Cc: Len Brown <lenb@kernel.org>
-> > > Cc: Dirk Brandewie <dirk.j.brandewie@intel.com>
-> > > Signed-off-by: Lee Jones <lee.jones@linaro.org>
-> > > ---
-> > >  drivers/cpufreq/intel_pstate.c | 2 ++
-> > >  1 file changed, 2 insertions(+)
-> > >
-> > > diff --git a/drivers/cpufreq/intel_pstate.c b/drivers/cpufreq/intel_pstate.c
-> > > index 44c7b4677675d..f92fc69c87269 100644
-> > > --- a/drivers/cpufreq/intel_pstate.c
-> > > +++ b/drivers/cpufreq/intel_pstate.c
-> > > @@ -275,6 +275,8 @@ static struct cpudata **all_cpu_data;
-> > >   * @get_min:           Callback to get minimum P state
-> > >   * @get_turbo:         Callback to get turbo P state
-> > >   * @get_scaling:       Callback to get frequency scaling factor
-> > > + * @get_aperf_mperf_shift: Callback to get the number of clock cycles after
-> > > + *                     aperf, merf is incremented
-> >
-> > This added description is inaccurate.  It should be something like
-> > "Callback to get the APERF vs MPERF frequency difference".
->
-> Does that mean the description of @aperf_mperf_shift above is also
-> incorrect?
+On Wed, Jul 15, 2020 at 11:50:30AM +0100, Jon Hunter wrote:
+> 
+> On 14/07/2020 19:42, Greg Kroah-Hartman wrote:
+> > This is the start of the stable review cycle for the 5.7.9 release.
+> > There are 166 patches in this series, all will be posted as a response
+> > to this one.  If anyone has any issues with these being applied, please
+> > let me know.
+> > 
+> > Responses should be made by Thu, 16 Jul 2020 18:40:38 +0000.
+> > Anything received after that time might be too late.
+> > 
+> > The whole patch series can be found in one patch at:
+> > 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.7.9-rc1.gz
+> > or in the git tree and branch at:
+> > 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.7.y
+> > and the diffstat can be found below.
+> > 
+> > thanks,
+> > 
+> > greg k-h
+> 
+> All tests are passing for Tegra ...
+> 
+> Test results for stable-v5.7:
+>     11 builds:	11 pass, 0 fail
+>     26 boots:	26 pass, 0 fail
+>     56 tests:	56 pass, 0 fail
+> 
+> Linux version:	5.7.9-rc1-gc2fb28a4b6e4
+> Boards tested:	tegra124-jetson-tk1, tegra186-p2771-0000,
+>                 tegra194-p2972-0000, tegra20-ventana,
+>                 tegra210-p2371-2180, tegra210-p3450-0000,
+>                 tegra30-cardhu-a04
+> 
 
-It is slightly unclear, let me improve it.
+Thanks for testing all of these and letting me know.
 
-Thanks!
+greg k-h
