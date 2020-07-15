@@ -2,160 +2,94 @@ Return-Path: <SRS0=kup7=A2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E906C433E4
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 13:03:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F4103C433E3
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 13:07:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7ACE5206D5
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 13:03:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="ip+9qV9o"
+	by mail.kernel.org (Postfix) with ESMTP id D658020657
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 13:07:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731402AbgGONDC (ORCPT
+        id S1731420AbgGONHD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 09:03:02 -0400
-Received: from mail.efficios.com ([167.114.26.124]:45970 "EHLO
-        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729900AbgGONDB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 09:03:01 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by mail.efficios.com (Postfix) with ESMTP id A3B4A2818D1;
-        Wed, 15 Jul 2020 09:02:59 -0400 (EDT)
-Received: from mail.efficios.com ([127.0.0.1])
-        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id T-XhEFUSaRUD; Wed, 15 Jul 2020 09:02:59 -0400 (EDT)
-Received: from localhost (localhost [127.0.0.1])
-        by mail.efficios.com (Postfix) with ESMTP id 2A5E128199D;
-        Wed, 15 Jul 2020 09:02:59 -0400 (EDT)
-DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com 2A5E128199D
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
-        s=default; t=1594818179;
-        bh=Sbd+cGFRnpcsVMskyWR7rP8BqYCfqctsQ8T1oYWLSPA=;
-        h=Date:From:To:Message-ID:MIME-Version;
-        b=ip+9qV9oYQB6oHNPVhT20tRLymHcsVPD1Pn7A/qIKoBDmIhZKIkc9/l2kFaUaqp3z
-         cEa44OxzVDEUfrEiKe4Zsa5qRxiCrivTGSbMr/pip1nqAo2hdtjOekoBpxnOs1fmcI
-         L8OVVdNXdK6/QrdlI3nOdl/XsZxG0b56WLJamyFQStKwMsSs8K8U3mH3Y1G5RxTJQX
-         yH841PgJLYFZiCylIz5/nZsxu6iwOCdCZJSPLLUtFd45JbQuELsJEM1QtZ0xOKeSq0
-         9HIJnSLJQrOlnjZh6oBPg+9DeLE3yKhA0E7a7lWUVAEYHwa13uTeovCBlbX/OfvtU7
-         3u8Zlb/zbG2+A==
-X-Virus-Scanned: amavisd-new at efficios.com
-Received: from mail.efficios.com ([127.0.0.1])
-        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id mTcnIX4OkSq5; Wed, 15 Jul 2020 09:02:59 -0400 (EDT)
-Received: from mail03.efficios.com (mail03.efficios.com [167.114.26.124])
-        by mail.efficios.com (Postfix) with ESMTP id 1875528199C;
-        Wed, 15 Jul 2020 09:02:59 -0400 (EDT)
-Date:   Wed, 15 Jul 2020 09:02:59 -0400 (EDT)
-From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-To:     carlos <carlos@redhat.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        paulmck <paulmck@linux.ibm.com>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Paul Turner <pjt@google.com>,
-        linux-api <linux-api@vger.kernel.org>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Florian Weimer <fw@deneb.enyo.de>,
-        Chris Kennelly <ckennelly@google.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Message-ID: <1190016739.14119.1594818179014.JavaMail.zimbra@efficios.com>
-In-Reply-To: <e7ede994-ebec-8022-b12b-ac7147641ffb@redhat.com>
-References: <20200714030348.6214-1-mathieu.desnoyers@efficios.com> <e7ede994-ebec-8022-b12b-ac7147641ffb@redhat.com>
-Subject: Re: [RFC PATCH 0/4] rseq: Introduce extensible struct rseq
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [167.114.26.124]
-X-Mailer: Zimbra 8.8.15_GA_3955 (ZimbraWebClient - FF78 (Linux)/8.8.15_GA_3953)
-Thread-Topic: rseq: Introduce extensible struct rseq
-Thread-Index: Uvni3ynFct6LM9XWdCgpU+47NQj6gw==
+        Wed, 15 Jul 2020 09:07:03 -0400
+Received: from mga04.intel.com ([192.55.52.120]:61454 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729900AbgGONHD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jul 2020 09:07:03 -0400
+IronPort-SDR: 4mlgv5VBAoy8aa4TriM1ER9YbZiCJUaFgSrqzmqErlz5fj35Pq434hoWCeJgxkBqVZhgXdSdAf
+ 1uG3YgL/avQQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9682"; a="146648471"
+X-IronPort-AV: E=Sophos;i="5.75,355,1589266800"; 
+   d="scan'208";a="146648471"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jul 2020 06:07:02 -0700
+IronPort-SDR: E3pA83vvknl1Df5oHsY6r61hOoIDzniJHE8XzU9CoYabakhau/AgfLvtlpy6dDBj35AO9l6AFY
+ apgQ9NUm9/LQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,355,1589266800"; 
+   d="scan'208";a="324828700"
+Received: from brentlu-desk0.itwn.intel.com ([10.5.253.11])
+  by FMSMGA003.fm.intel.com with ESMTP; 15 Jul 2020 06:06:55 -0700
+From:   Brent Lu <brent.lu@intel.com>
+To:     alsa-devel@alsa-project.org
+Cc:     Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Kai Vehmanen <kai.vehmanen@linux.intel.com>,
+        =?UTF-8?q?Amadeusz=20S=C5=82awi=C5=84ski?= 
+        <amadeuszx.slawinski@linux.intel.com>,
+        Guennadi Liakhovetski <guennadi.liakhovetski@linux.intel.com>,
+        Brent Lu <brent.lu@intel.com>, linux-kernel@vger.kernel.org
+Subject: [PATCH] ASoC: hdac_hdmi: remove cancel_work_sync in runtime suspend
+Date:   Wed, 15 Jul 2020 21:01:50 +0800
+Message-Id: <1594818110-786-1-git-send-email-brent.lu@intel.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
------ On Jul 14, 2020, at 4:55 PM, carlos carlos@redhat.com wrote:
+A deadlock is identified when there are three contexts running at the
+same time:
+- a HDMI jack work which is calling snd_soc_dapm_sync().
+- user space is calling snd_pcm_release() to close pcm device.
+- pm is calling runtime suspend function of HDMI codec driver.
 
-> On 7/13/20 11:03 PM, Mathieu Desnoyers wrote:
->> Recent discussion led to a solution for extending struct rseq. This is
->> an implementation of the proposed solution.
->> 
->> Now is a good time to agree on this scheme before the release of glibc
->> 2.32, just in case there are small details to fix on the user-space
->> side in order to allow extending struct rseq.
-> 
-> Adding extensibility to the rseq registration process would be great,
-> but we are out of time for the glibc 2.32 release.
+By removing the clear_dapm_works() invocation in the
+hdac_hdmi_runtime_suspend() function, the snd_pcm_release() could
+always returns from dapm_power_widgets() function call without
+blocking the hdac_hdmi_jack_dapm_work() work thread or being blocked
+by the hdac_hdmi_runtime_suspend() function. The purpose of the jack
+work is to enable/disable the dapm jack pin so it's not necessary to
+cancel the work in runtime suspend function which is usually called
+when pcm device is closed.
 
-Of course, and my goal is not to add this support for extensibility
-before glibc 2.32, but merely to see if we need to change anything in
-the way it uses rseq today (before the release) in order to facilitate
-extensibility in the future.
+Signed-off-by: Brent Lu <brent.lu@intel.com>
+---
+ sound/soc/codecs/hdac_hdmi.c | 2 --
+ 1 file changed, 2 deletions(-)
 
-> Should we revert rseq for glibc 2.32 and spend quality time discussing
-> the implications of an extensible design, something that Google already
-> says they are doing?
-
-Google's approach is limited to contexts simpler than multiple unrelated
-libraries scenarios. Peter Oskolkov stated as a follow-up that my
-extension approach would be one way to deal with problems associated
-with sharing __rseq_abi between unrelated libraries:
-
-https://lore.kernel.org/lkml/CAPNVh5fiCCJpyeLj_ciWzFrO4fasVXZNhpfKXJhJWJirXdJOjQ@mail.gmail.com/
-
-The fact that Google already have their own rseq extensions internally
-confirms that planning for extensibility is needed.
-
-> We can, with a clear head, and an agreed upon extension mechanism
-> include rseq in glibc 2.33 (release scheduled for Feburary 1st 2021).
-> We release time boxed every 6 months, no deviation, so you know when
-> your next merge window will be.
-> 
-> We have already done the hard work of fixing the nesting signal
-> handler issues, and glibc integration. If we revert today that will
-> also give time for Firefox and Chrome to adjust their sandboxes.
-> 
-> Do you wish to go forward with rseq as we have it in glibc 2.32,
-> or do you wish to revert rseq from glibc 2.32, discuss the extension
-> mechanism, and put it back into glibc 2.33 with adjustments?
-
-So here we have a catch-22 situation. Linus wants to see how rseq
-is being used before accepting additional features (ref.
-https://lore.kernel.org/lkml/CAHk-=wjk-2c4XvWjdzc-bs9Hbgvy-p7ASSnKKphggr5qDoXRDQ@mail.gmail.com/).
-This lack of ability to allow user-space to make any large-scale use
-of the rseq system call in a coordinated fashion blocks wide use of rseq.
-This coordination is supposed to be done by glibc, and I told
-every user-space project maintainer who contacted me to hold off
-using rseq until it is integrated into glibc. "tcmalloc" from Google
-is the exception because they do not care about ABI compatibility with
-other libraries (they are OK with a breakage and requiring upgrade).
-
-The process I'm going through right now is checking what are our
-options for extending rseq starting from the current ABI, just
-to see if we are painting ourselves in a corner with the current
-glibc integration. However, if we postpone integration of rseq
-into glibc because of possible future extensibility features, those
-may never happen because of the lack of usage feedback, due of lack
-of users, due to lack of coordinated ABI registration.
-
-At this point, the main question I would like answered is whether
-it would be acceptable to increase the size and alignment of
-the __rseq_abi symbol (which will be exposed by glibc) between
-e.g. glibc 2.32 and 2.33. If it's not possible, then we can
-find other solutions, for instance using an indirection with
-a pointer to an extended structure, but this appears to be
-slightly less efficient.
-
-Thanks,
-
-Mathieu
-
+diff --git a/sound/soc/codecs/hdac_hdmi.c b/sound/soc/codecs/hdac_hdmi.c
+index f26b77f..9052edd 100644
+--- a/sound/soc/codecs/hdac_hdmi.c
++++ b/sound/soc/codecs/hdac_hdmi.c
+@@ -2097,8 +2097,6 @@ static int hdac_hdmi_runtime_suspend(struct device *dev)
+ 	if (!bus)
+ 		return 0;
+ 
+-	clear_dapm_works(hdev);
+-
+ 	/*
+ 	 * Power down afg.
+ 	 * codec_read is preferred over codec_write to set the power state.
 -- 
-Mathieu Desnoyers
-EfficiOS Inc.
-http://www.efficios.com
+2.7.4
+
