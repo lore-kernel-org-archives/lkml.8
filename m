@@ -2,39 +2,40 @@ Return-Path: <SRS0=kup7=A2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE396C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 04:06:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42431C433E2
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 04:06:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D803E2067D
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 04:06:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 22CB3206F5
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 04:06:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725907AbgGOEGC (ORCPT
+        id S1726086AbgGOEGD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 00:06:02 -0400
-Received: from mga17.intel.com ([192.55.52.151]:16670 "EHLO mga17.intel.com"
+        Wed, 15 Jul 2020 00:06:03 -0400
+Received: from mga17.intel.com ([192.55.52.151]:16671 "EHLO mga17.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725770AbgGOEGB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 00:06:01 -0400
-IronPort-SDR: keFLI2pZFftDHBMkkaHIc3kzVRpmz8P2NqsA0yi9/+K9R5lvaJ1qIrsZWX4vD6Zdt4CmF/oj4Y
- XNLcJuyamPkQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9682"; a="129167478"
+        id S1725885AbgGOEGC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jul 2020 00:06:02 -0400
+IronPort-SDR: MC6ZGUcmmoKsjmPMFKbNjeqSbb6NGalw6cS4L5lBvcv33d5p1K3kB5znCN8V5D7JUfZ0ekqhqI
+ 0i3LeQJRYQ1w==
+X-IronPort-AV: E=McAfee;i="6000,8403,9682"; a="129167481"
 X-IronPort-AV: E=Sophos;i="5.75,353,1589266800"; 
-   d="scan'208";a="129167478"
+   d="scan'208";a="129167481"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jul 2020 21:06:01 -0700
-IronPort-SDR: oLkwvnypvmrjiOV2yo8kXfycM+VsPm00teLTHWLLxxVaKBlwcl9+ijgnqqc48T1EM0ZxqhjFZ6
- k/LDhNNQntRw==
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jul 2020 21:06:02 -0700
+IronPort-SDR: v+XInTWoTKRYbE1UC1W2TSxWvGPUzRRM45ChY1gc2F5PTzO9jo7+fYkBfgQaKBFf63no4wBB6O
+ O17oBdIpn/yw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.75,353,1589266800"; 
-   d="scan'208";a="485587000"
+   d="scan'208";a="485587009"
 Received: from sjchrist-coffee.jf.intel.com ([10.54.74.152])
-  by fmsmga006.fm.intel.com with ESMTP; 14 Jul 2020 21:06:00 -0700
+  by fmsmga006.fm.intel.com with ESMTP; 14 Jul 2020 21:06:01 -0700
 From:   Sean Christopherson <sean.j.christopherson@intel.com>
 To:     Paolo Bonzini <pbonzini@redhat.com>
 Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
@@ -44,10 +45,12 @@ Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
         Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
         linux-kernel@vger.kernel.org, Dan Cross <dcross@google.com>,
         Peter Shier <pshier@google.com>
-Subject: [PATCH 0/7] KVM: nVMX: Bug fixes and cleanup
-Date:   Tue, 14 Jul 2020 21:05:50 -0700
-Message-Id: <20200715040557.5889-1-sean.j.christopherson@intel.com>
+Subject: [PATCH 2/7] KVM: nVMX: Reload vmcs01 if getting vmcs12's pages fails
+Date:   Tue, 14 Jul 2020 21:05:52 -0700
+Message-Id: <20200715040557.5889-3-sean.j.christopherson@intel.com>
 X-Mailer: git-send-email 2.26.0
+In-Reply-To: <20200715040557.5889-1-sean.j.christopherson@intel.com>
+References: <20200715040557.5889-1-sean.j.christopherson@intel.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -55,26 +58,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix for a brutal segment caching bug that manifested as random nested
-VM-Enter failures when running with unrestricted guest disabled.  A few
-more bug fixes and cleanups for stuff found by inspection when hunting
-down the caching issue.
+Reload vmcs01 when bailing from nested_vmx_enter_non_root_mode() as KVM
+expects vmcs01 to be loaded when is_guest_mode() is false.
 
-Sean Christopherson (7):
-  KVM: nVMX: Reset the segment cache when stuffing guest segs
-  KVM: nVMX: Reload vmcs01 if getting vmcs12's pages fails
-  KVM: nVMX: Explicitly check for valid guest state for !unrestricted
-    guest
-  KVM: nVMX: Move free_nested() below vmx_switch_vmcs()
-  KVM: nVMX: Ensure vmcs01 is the loaded VMCS when freeing nested state
-  KVM: nVMX: Drop redundant VMCS switch and free_nested() call
-  KVM: nVMX: WARN on attempt to switch the currently loaded VMCS
+Fixes: 671ddc700fd08 ("KVM: nVMX: Don't leak L1 MMIO regions to L2")
+Cc: stable@vger.kernel.org
+Cc: Dan Cross <dcross@google.com>
+Cc: Jim Mattson <jmattson@google.com>
+Cc: Peter Shier <pshier@google.com>
+Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+---
+ arch/x86/kvm/vmx/nested.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
- arch/x86/kvm/vmx/nested.c | 103 ++++++++++++++++++++------------------
- arch/x86/kvm/vmx/vmx.c    |   8 +--
- arch/x86/kvm/vmx/vmx.h    |  10 ++++
- 3 files changed, 66 insertions(+), 55 deletions(-)
-
+diff --git a/arch/x86/kvm/vmx/nested.c b/arch/x86/kvm/vmx/nested.c
+index 3b23901b90809..8cbf7bd3a7aa3 100644
+--- a/arch/x86/kvm/vmx/nested.c
++++ b/arch/x86/kvm/vmx/nested.c
+@@ -3345,8 +3345,10 @@ enum nvmx_vmentry_status nested_vmx_enter_non_root_mode(struct kvm_vcpu *vcpu,
+ 	prepare_vmcs02_early(vmx, vmcs12);
+ 
+ 	if (from_vmentry) {
+-		if (unlikely(!nested_get_vmcs12_pages(vcpu)))
++		if (unlikely(!nested_get_vmcs12_pages(vcpu))) {
++			vmx_switch_vmcs(vcpu, &vmx->vmcs01);
+ 			return NVMX_VMENTRY_KVM_INTERNAL_ERROR;
++		}
+ 
+ 		if (nested_vmx_check_vmentry_hw(vcpu)) {
+ 			vmx_switch_vmcs(vcpu, &vmx->vmcs01);
 -- 
 2.26.0
 
