@@ -2,206 +2,140 @@ Return-Path: <SRS0=kup7=A2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 479C1C433E5
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 01:54:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB926C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 02:05:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E26AF2071B
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 01:54:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB76220663
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 02:05:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="TkI3Qj+7"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="KSk5xf+9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728170AbgGOByz (ORCPT
+        id S1727925AbgGOCFZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 21:54:55 -0400
-Received: from mailout2.samsung.com ([203.254.224.25]:34037 "EHLO
-        mailout2.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727837AbgGOByy (ORCPT
+        Tue, 14 Jul 2020 22:05:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49614 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726356AbgGOCFY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 21:54:54 -0400
-Received: from epcas1p1.samsung.com (unknown [182.195.41.45])
-        by mailout2.samsung.com (KnoxPortal) with ESMTP id 20200715015451epoutp020c6a6c042bb1abfa2208207127c75746~hyjlpotAs0711507115epoutp02h
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 01:54:50 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20200715015451epoutp020c6a6c042bb1abfa2208207127c75746~hyjlpotAs0711507115epoutp02h
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1594778091;
-        bh=BM75WM+A9pA9ayxI/YRxm0bAY78/AuIlepl26x00ESM=;
-        h=From:To:Cc:In-Reply-To:Subject:Date:References:From;
-        b=TkI3Qj+7e8Xh+rzM3Es9Efk+ICMWGh0a52C4jQe8Gkk+yN2ZqKITnWTSQgyt6dxj4
-         XDemeuk7NYCL9UlCqUbLQoU90Q5xPWDn7A9tvJB9Z6t2a/E5yZVohmHrJH5CapZwc9
-         VaYciAcxqUNAdF238cAxmJ5Z7rdiHWvfEV+SXo4k=
-Received: from epsnrtp3.localdomain (unknown [182.195.42.164]) by
-        epcas1p3.samsung.com (KnoxPortal) with ESMTP id
-        20200715015450epcas1p378c3c44bad600792888eb155cb94956f~hyjlIFO4-3168631686epcas1p3g;
-        Wed, 15 Jul 2020 01:54:50 +0000 (GMT)
-Received: from epsmges1p3.samsung.com (unknown [182.195.40.159]) by
-        epsnrtp3.localdomain (Postfix) with ESMTP id 4B60nP1MRRzMqYkV; Wed, 15 Jul
-        2020 01:54:49 +0000 (GMT)
-Received: from epcas1p3.samsung.com ( [182.195.41.47]) by
-        epsmges1p3.samsung.com (Symantec Messaging Gateway) with SMTP id
-        FF.0C.29173.9E16E0F5; Wed, 15 Jul 2020 10:54:49 +0900 (KST)
-Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
-        epcas1p4.samsung.com (KnoxPortal) with ESMTPA id
-        20200715015448epcas1p42a3cefc71921a97f881d8d70670f8877~hyjjYXEvz2970629706epcas1p4q;
-        Wed, 15 Jul 2020 01:54:48 +0000 (GMT)
-Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
-        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20200715015448epsmtrp1f31c2fcd6068f552fb6ff7b581e6a4f9~hyjjXobhj2511625116epsmtrp1H;
-        Wed, 15 Jul 2020 01:54:48 +0000 (GMT)
-X-AuditID: b6c32a37-9cdff700000071f5-54-5f0e61e95b2d
-Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
-        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        C1.F9.08382.8E16E0F5; Wed, 15 Jul 2020 10:54:48 +0900 (KST)
-Received: from namjaejeon01 (unknown [10.88.104.63]) by epsmtip1.samsung.com
-        (KnoxPortal) with ESMTPA id
-        20200715015448epsmtip19bcd59920956b2125be2c8612e088456~hyjjJpAUh2702727027epsmtip1U;
-        Wed, 15 Jul 2020 01:54:48 +0000 (GMT)
-From:   "Namjae Jeon" <namjae.jeon@samsung.com>
-To:     <Kohada.Tetsuhiro@dc.MitsubishiElectric.co.jp>
-Cc:     <Mori.Takahiro@ab.MitsubishiElectric.co.jp>,
-        <Motai.Hirotaka@aj.MitsubishiElectric.co.jp>,
-        "'Sungjong Seo'" <sj1557.seo@samsung.com>,
-        <linux-fsdevel@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        "'Tetsuhiro Kohada''" <kohada.t2@gmail.com>
-In-Reply-To: <TY2PR01MB2875C88DD10CC13D0C70DE1690610@TY2PR01MB2875.jpnprd01.prod.outlook.com>
-Subject: RE: [PATCH] exfat: retain 'VolumeFlags' properly
-Date:   Wed, 15 Jul 2020 10:54:48 +0900
-Message-ID: <015801d65a4a$ebedd380$c3c97a80$@samsung.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-Mailer: Microsoft Outlook 16.0
-Thread-Index: AQJOchBlupSQwdEhi4rggGDYoy3yLwE5agcKAmVRsN0CrFCHjqflVWYQ
-Content-Language: ko
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprNJsWRmVeSWpSXmKPExsWy7bCmvu7LRL54g5932Cx+zL3NYvHm5FQW
-        iz17T7JYXN41h83i8v9PLBbLvkxmsdjy7wirA7vHlznH2T3aJv9j92g+tpLNY+esu+wefVtW
-        MXp83iQXwBaVY5ORmpiSWqSQmpecn5KZl26r5B0c7xxvamZgqGtoaWGupJCXmJtqq+TiE6Dr
-        lpkDdIuSQlliTilQKCCxuFhJ386mKL+0JFUhI7+4xFYptSAlp8DQoECvODG3uDQvXS85P9fK
-        0MDAyBSoMiEnY8rpe+wFp0UrTvc+Z2xgPCLQxcjJISFgIjH3zjWWLkYuDiGBHYwSMz/fZ4Rw
-        PjFKHJl8hQ3C+cYo8fTtUXaYltlt96ASexklLl87A+W8ZJTYdu8/K0gVm4CuxL8/+4ESHBwi
-        AkYST08WgtQwC/xhlFjXd4sNpIZTIFbi0MN2sHphAUuJl5N2gsVZBFQlnh/6zgrSywsUP7PV
-        HyTMKyAocXLmExYQm1lAXmL72znMEAcpSPx8ugxsjIiAm8Sdtu3sEDUiErM726BqFnJIzF5e
-        CWG7SHx+PRcqLizx6vgWqMekJF72t7GDrJUQqJb4uB+qpINR4sV3WwjbWOLm+g1glzELaEqs
-        36UPEVaU2Pl7LiPEVj6Jd197WCGm8Ep0tAlBlKhK9F06zARhS0t0tX9gn8CoNAvJX7OQ/DUL
-        yf2zEJYtYGRZxSiWWlCcm55abFhgjBzVmxjBqVTLfAfjtLcf9A4xMnEwHmKU4GBWEuHl4eKN
-        F+JNSaysSi3Kjy8qzUktPsRoCgzoicxSosn5wGSeVxJvaGpkbGxsYWJmbmZqrCTO++8se7yQ
-        QHpiSWp2ampBahFMHxMHp1QDU8oMBm6dU8ViDRGyW4/fcLjEedCH4e/yvbrzc97I273vlNBm
-        PjD3WW/iHvHaG+/vh2q7X/8dHiE3LfvcNCW3pftzxTXjYxR8Lc0rz86VVhJ2kZzzweHi5M+v
-        39/IeFH78ffG1bxTS+SNTmUJ+3x1LFs5R3CvxP/+mulvY94rdn6wU1NjLTxYrXTO0KvzuFm5
-        d4e3Ro9c1KyZDuW3f4Rt2GdwbtXifDXfV6VcHG2rNlx0XKn55Zv0jXN/f2lcnCvizRG88hdr
-        geBc3v4nnIv1bvl8y3LRPH/xwaqf/TN27XTtn/LLp7v9steban/dq2HVe693mpvHCVV6rZmx
-        fGPhqQttBvIvGQUVlfqfaygXKbEUZyQaajEXFScCACjzYI4uBAAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFmpnkeLIzCtJLcpLzFFi42LZdlhJTvdFIl+8wcI/khY/5t5msXhzciqL
-        xZ69J1ksLu+aw2Zx+f8nFotlXyazWGz5d4TVgd3jy5zj7B5tk/+xezQfW8nmsXPWXXaPvi2r
-        GD0+b5ILYIvisklJzcksSy3St0vgyphy+h57wWnRitO9zxkbGI8IdDFyckgImEjMbrvH1sXI
-        xSEksJtR4kJnBwtEQlri2IkzzF2MHEC2sMThw8UQNc8ZJa482s0MUsMmoCvx789+NpAaEQEj
-        iacnC0FqmAUamCSuzH8HNbSDSaJl5jd2kAZOgViJQw/bWUFsYQFLiZeTdrKB2CwCqhLPD31n
-        BRnECxQ/s9UfJMwrIChxcuYTsHuYBbQleh+2MkLY8hLb385hhrhTQeLn02VgI0UE3CTutG1n
-        h6gRkZjd2cY8gVF4FpJRs5CMmoVk1CwkLQsYWVYxSqYWFOem5xYbFhjmpZbrFSfmFpfmpesl
-        5+duYgTHlZbmDsbtqz7oHWJk4mA8xCjBwawkwsvDxRsvxJuSWFmVWpQfX1Sak1p8iFGag0VJ
-        nPdG4cI4IYH0xJLU7NTUgtQimCwTB6dUA5Pes/5S5uKey9Mdp6mum9phazGlx3Nide/Kj6ys
-        Py2/Clcc1Dmb9256LUvUvQgj29mn8tff9HewWhd/vKCTxXKqZeGjYtNVhgp2ghxTX7iGhem2
-        /5Bds7Trh/FCU+5vLIe3Zj3bVvP+2LzeDObbbyPPuU3IsnE1UtJm1fkYabt3+9kIvpfNtjtY
-        F8fX3aso4Fl7I/y0ffiv0/Wfbh5x+saRmfHj58STXKuXPpgQvSiotdDXfrGr1op9p3RZgoIK
-        7lZVimeKbxMNlF23JDdSLSml/p2iZs8Ws61Pkx2+lNQXr+2f17U47X9lZpHMh76JiuWZcyye
-        fd0zS6fxStF9kwMnCqZlXAyX5lne/krzqhJLcUaioRZzUXEiAKZAbb4aAwAA
-X-CMS-MailID: 20200715015448epcas1p42a3cefc71921a97f881d8d70670f8877
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: SVC_REQ_APPROVE
-CMS-TYPE: 101P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20200708095813epcas1p2277cdf7de6a8bb20c27bcd030eec431f
-References: <CGME20200708095813epcas1p2277cdf7de6a8bb20c27bcd030eec431f@epcas1p2.samsung.com>
-        <20200708095746.4179-1-kohada.t2@gmail.com>
-        <005101d658d1$7202e5d0$5608b170$@samsung.com>
-        <TY2PR01MB2875C88DD10CC13D0C70DE1690610@TY2PR01MB2875.jpnprd01.prod.outlook.com>
+        Tue, 14 Jul 2020 22:05:24 -0400
+Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8DD05C061755
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 19:05:24 -0700 (PDT)
+Received: by mail-pg1-x541.google.com with SMTP id g67so1160147pgc.8
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 19:05:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=IaDIKmrv4dx2/me1ziKFX3npWTh6u2+K8VHR4xtYEvI=;
+        b=KSk5xf+9ttvbvG1cUFueIBgCZIa/2o3Ml/6KGETT23GM0EIHEb+kwexHi648eok0q+
+         b+rTfFxE6XjfnzX23D3MkRRo5oDlpI4h3Yg6JvtLWpYRR0MPrnWfCKvsk7a4OoFmZXWp
+         0a4wXfZbRtKWI7gtfU5yF51cqxGhVaUshB1jfsMmQ5VBkyJCSHsbSfBxZcFMcNkxtxrw
+         YSiJ8zj1LJ1+HMafeOB/Sq75celLO4f7hb7lhBKux2CGbTKti/Oyc1VYBPdnsAi7unSN
+         vO9JhCJN+kF0TxsPVQxU/v/XWDZgjKoNn8++ar7cpNVMUuwS3+jmRVvEEo75eGv8rrWz
+         fMrQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=IaDIKmrv4dx2/me1ziKFX3npWTh6u2+K8VHR4xtYEvI=;
+        b=UguCfhdooHjl44Rj82BCHbGsak5KhKmhOsUs4RcKA4H5/P4gqOthYFluzTJlTaIpnQ
+         GyTnOhpmpGidK3NDiCc19Brgi3cPnfhfggeqP2GCyedrSriNqhu7gh91lJfx0mcNZLqL
+         YsQhYFi4Qg73I76J+y+5Tx4TySoXtBWdhhY/1ML6deMgfK40qDzYrlPalGqYENRaFlV/
+         p6lFhV+2DQ0snOSkjd4kXBXssfqFRu1FPJmZP4PXrj4AfazTp3JjHQtffZqHuzULm/gT
+         +Ne9MyI9nTarQIuOTEE4aRe2/YqSp0h/NH+U+PdQUlBKNit5GflZvPN/3fbisDFDkw5l
+         701Q==
+X-Gm-Message-State: AOAM531cqeb2MHEPIsaH9qmmnzrqJujS6TT6S2kbzddo9lgB5vQAaWGc
+        wQw6yjqnlvevpIGVrT0g0W6uSQ==
+X-Google-Smtp-Source: ABdhPJzcTSLzoTkwN0ZklOtgUfNh6CnWTfMrQCsIPnKPLy5Pumiyh3t7E4wIxKgRr9byBrCe1lgrHw==
+X-Received: by 2002:a62:1801:: with SMTP id 1mr6907081pfy.242.1594778723827;
+        Tue, 14 Jul 2020 19:05:23 -0700 (PDT)
+Received: from localhost ([2400:8904::f03c:91ff:fe8a:bbe4])
+        by smtp.gmail.com with ESMTPSA id my9sm296320pjb.44.2020.07.14.19.05.22
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 14 Jul 2020 19:05:23 -0700 (PDT)
+From:   Leo Yan <leo.yan@linaro.org>
+To:     Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Paul Cercueil <paul@crapouillou.net>,
+        "Ben Dooks (Codethink)" <ben.dooks@codethink.co.uk>,
+        "Ahmed S. Darwish" <a.darwish@linutronix.de>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc:     Leo Yan <leo.yan@linaro.org>
+Subject: [PATCH v2 0/6] arm64: perf: Proper cap_user_time* support
+Date:   Wed, 15 Jul 2020 10:05:06 +0800
+Message-Id: <20200715020512.20991-1-leo.yan@linaro.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> Thanks for your reply.
-> 
-> > > Also, rename ERR_MEDIUM to MED_FAILURE.
-> > I think that MEDIA_FAILURE looks better.
-> 
-> I think so too.
-> If so, should I change VOL_DIRTY to VOLUME_DIRTY?
-Yes, maybe.
-> 
-> > > -int exfat_set_vol_flags(struct super_block *sb, unsigned short
-> > > new_flag)
-> > > +int exfat_set_vol_flags(struct super_block *sb, unsigned short
-> > > +new_flags)
-> > >  {
-> > >  	struct exfat_sb_info *sbi = EXFAT_SB(sb);
-> > >  	struct boot_sector *p_boot = (struct boot_sector *)sbi->boot_bh->b_data;
-> > >  	bool sync;
-> > If dirty bit is set in on-disk volume flags, we can just return 0 at the beginning of this function ?
-> 
-> That's right.
-> Neither 'set VOL_DIRTY' nor 'set VOL_CLEAN' makes a change to volume flags.
-> 
-> 
-> > > +	if (new_flags == VOL_CLEAN)
-> > > +		new_flags = (sbi->vol_flags & ~VOL_DIRTY) | sbi->vol_flags_noclear;
-> > > +	else
-> > > +		new_flags |= sbi->vol_flags;
-> > > +
-> > >  	/* flags are not changed */
-> > > -	if (sbi->vol_flag == new_flag)
-> > > +	if (sbi->vol_flags == new_flags)
-> > >  		return 0;
-> > >
-> > > -	sbi->vol_flag = new_flag;
-> > > +	sbi->vol_flags = new_flags;
-> > >
-> > >  	/* skip updating volume dirty flag,
-> > >  	 * if this volume has been mounted with read-only @@ -114,9 +119,9
-> > > @@ int exfat_set_vol_flags(struct super_block *sb, unsigned short new_flag)
-> > >  	if (sb_rdonly(sb))
-> > >  		return 0;
-> > >
-> > > -	p_boot->vol_flags = cpu_to_le16(new_flag);
-> > > +	p_boot->vol_flags = cpu_to_le16(new_flags);
-> > How about set or clear only dirty bit to on-disk volume flags instead
-> > of using
-> > sbi->vol_flags_noclear ?
-> >        if (set)
-> >                p_boot->vol_flags |= cpu_to_le16(VOL_DIRTY);
-> >        else
-> >                p_boot->vol_flags &= cpu_to_le16(~VOL_DIRTY);
-> 
-> In this way, the initial  VOL_DIRTY cannot be retained.
-> The purpose of this patch is to avoid losing the initial VOL_DIRTY and MED_FAILURE.
-> Furthermore, I'm also thinking of setting MED_FAILURE.
-I know what you do. I mean this function does not need to be called if volume dirty
-Is already set on on-disk volume flags as I said earlier.
-> 
-> However, the formula for 'new_flags' may be a bit complicated.
-> Is it better to change to the following?
-> 
-> 	if (new_flags == VOL_CLEAN)
-> 		new_flags = sbi->vol_flags & ~VOL_DIRTY
-> 	else
-> 		new_flags |= sbi->vol_flags;
-> 
-> 	new_flags |= sbi->vol_flags_noclear;
-> 
-> 
-> one more point,
-> Is there a better name than 'vol_flags_noclear'?
-> (I can't come up with a good name anymore)
-It looks complicated. It would be better to simply set/clear VOLUME DIRTY bit.
+This patch set is rebased for Peter's patch set to support
+cap_user_time/cap_user_time_short ABI for Arm64, and export Arm arch
+timer counter related parameters from kernel to Perf tool.
 
-Thanks!
-> 
-> BR
-> ---
-> Kohada Tetsuhiro <Kohada.Tetsuhiro@dc.MitsubishiElectric.co.jp>
+In this version, there have two changes comparing to Peter's original
+patch set [1]:
+
+The first change is for calculation 'time_zero', in the old patch it
+used the formula:
+
+  userpg->time_zero -= (rd->epoch_cyc * rd->mult) >> rd->shift;
+
+From the testing, if 'rd->epoch_cyc' is a big counter value, then it's
+easily to cause overflow issue when multiply by the 'rd->mult'.  So in
+this patch set, it changes to use quot/rem approach for the calculation
+and can avoid overflow:
+
+  quot = rd->epoch_cyc >> rd->shift;
+  rem = rd->epoch_cyc & (((u64)1 << rd->shift) - 1);
+  ns = quot * rd->mult + ((rem * rd->mult) >> rd->shift);
+  userpg->time_zero -= ns;
+
+The second change is to add new patch 'tools headers UAPI: Update
+tools's copy of linux/perf_event.h', it's used to update perf tool
+header so make sure the headers are consistent between kernel and user
+space.
+
+This patch set has been rebased on mainline kernel with the latest
+commit 11ba468877bb ("Linux 5.8-rc5"); it has been verified with Perf
+tool for Arm SPE timestamp enabling, the patch set for Arm SPE timestamp
+enabling will be sent out separately.
+
+
+[1] https://lkml.org/lkml/2020/5/12/481
+
+
+Leo Yan (1):
+  tools headers UAPI: Update tools's copy of linux/perf_event.h
+
+Peter Zijlstra (5):
+  sched_clock: Expose struct clock_read_data
+  arm64: perf: Implement correct cap_user_time
+  arm64: perf: Only advertise cap_user_time for arch_timer
+  perf: Add perf_event_mmap_page::cap_user_time_short ABI
+  arm64: perf: Add cap_user_time_short
+
+ arch/arm64/kernel/perf_event.c        | 59 ++++++++++++++++++++-------
+ include/linux/sched_clock.h           | 28 +++++++++++++
+ include/uapi/linux/perf_event.h       | 23 +++++++++--
+ kernel/time/sched_clock.c             | 41 ++++++-------------
+ tools/include/uapi/linux/perf_event.h | 23 +++++++++--
+ 5 files changed, 126 insertions(+), 48 deletions(-)
+
+-- 
+2.17.1
 
