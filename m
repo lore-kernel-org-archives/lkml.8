@@ -2,84 +2,191 @@ Return-Path: <SRS0=kup7=A2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLACK autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36591C433FB
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 10:40:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13C1DC433E2
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 10:40:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 12E3B20656
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 10:40:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DF49420656
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 10:40:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="ArzoTwlp"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dzq8l9KD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731323AbgGOKkn (ORCPT
+        id S1731297AbgGOKkR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 06:40:43 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:16406 "EHLO m43-7.mailgun.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729273AbgGOKkk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 06:40:40 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1594809639; h=Date: Message-Id: Cc: To: References:
- In-Reply-To: From: Subject: Content-Transfer-Encoding: MIME-Version:
- Content-Type: Sender; bh=sLdqw6vO/Dx5gVEAynTfPJwz0Jq0muScd1+nrlQdM8c=;
- b=ArzoTwlpQEAxCDcCi2x/6QXPXLZXLf4PHPY3BnFUtwJ9IgnyXXrSrOHjZ0twhysquqE8SBgY
- tEhJjwQq59ZVteAyyt09i443h7gAXY/7yheJz2Y6VEYt3KYYlGiX50QBaSVoPiOJdcXpWdpp
- ify0vr8XqdZbuvDMwXm8+TIxfWs=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n06.prod.us-east-1.postgun.com with SMTP id
- 5f0edd27e3bee12510d09f70 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Wed, 15 Jul 2020 10:40:39
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 7B85BC433C9; Wed, 15 Jul 2020 10:40:38 +0000 (UTC)
-Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Wed, 15 Jul 2020 06:40:17 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:38733 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731270AbgGOKkQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jul 2020 06:40:16 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1594809614;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=7rzU9vQDmEneDz3cTLWm+HlcE01BlZKI42KGcYUTLpo=;
+        b=dzq8l9KD+tEZh1mp2qdzjlrL4WBHwzJoEFIcuezpMJOQkVMdHbTRiDH3uHKbnbLttyzdwh
+        epg2lyo0rVRAEiUlYMFiYV88hjS0EhYOdt+bbPCbG91mTcSmEvM3Op6sC6EF6+ZzYt6M6v
+        rT+dTj0vMHt5ZOF+o+RcJur6To+nHy0=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-20-b6nq-5r6P9KpZSrNejdX9Q-1; Wed, 15 Jul 2020 06:40:10 -0400
+X-MC-Unique: b6nq-5r6P9KpZSrNejdX9Q-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: kvalo)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 728C1C433CB;
-        Wed, 15 Jul 2020 10:40:35 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 728C1C433CB
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
-Content-Type: text/plain; charset="utf-8"
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 71C7480040A;
+        Wed, 15 Jul 2020 10:40:09 +0000 (UTC)
+Received: from gondolin (ovpn-112-242.ams2.redhat.com [10.36.112.242])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 614795C1BD;
+        Wed, 15 Jul 2020 10:39:58 +0000 (UTC)
+Date:   Wed, 15 Jul 2020 12:39:55 +0200
+From:   Cornelia Huck <cohuck@redhat.com>
+To:     Zeng Tao <prime.zeng@hisilicon.com>
+Cc:     <alex.williamson@redhat.com>, <cai@lca.pw>,
+        Kevin Tian <kevin.tian@intel.com>,
+        Peter Xu <peterx@redhat.com>,
+        "Andrew Morton" <akpm@linux-foundation.org>,
+        Michel Lespinasse <walken@google.com>,
+        Denis Efremov <efremov@linux.com>, <kvm@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] vfio/pci: fix racy on error and request eventfd ctx
+Message-ID: <20200715123955.0d7e731a.cohuck@redhat.com>
+In-Reply-To: <1594798484-20501-1-git-send-email-prime.zeng@hisilicon.com>
+References: <1594798484-20501-1-git-send-email-prime.zeng@hisilicon.com>
+Organization: Red Hat GmbH
 MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Subject: Re: [PATCH] airo: use set_current_state macro
-From:   Kalle Valo <kvalo@codeaurora.org>
-In-Reply-To: <20200702015701.8606-1-vulab@iscas.ac.cn>
-References: <20200702015701.8606-1-vulab@iscas.ac.cn>
-To:     Xu Wang <vulab@iscas.ac.cn>
-Cc:     davem@davemloft.net, kuba@kernel.org, mpe@ellerman.id.au,
-        akpm@linux-foundation.org, wenwen@cs.uga.edu, adobriyan@gmail.com,
-        dan.carpenter@oracle.com, linux-wireless@vger.kernel.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Xu Wang <vulab@iscas.ac.cn>
-User-Agent: pwcli/0.1.0-git (https://github.com/kvalo/pwcli/) Python/3.5.2
-Message-Id: <20200715104038.7B85BC433C9@smtp.codeaurora.org>
-Date:   Wed, 15 Jul 2020 10:40:38 +0000 (UTC)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Xu Wang <vulab@iscas.ac.cn> wrote:
+On Wed, 15 Jul 2020 15:34:41 +0800
+Zeng Tao <prime.zeng@hisilicon.com> wrote:
 
-> Use set_current_state macro instead of current->state = TASK_RUNNING.
+> The vfio_pci_release call will free and clear the error and request
+> eventfd ctx while these ctx could be in use at the same time in the
+> function like vfio_pci_request, and it's expected to protect them under
+> the vdev->igate mutex, which is missing in vfio_pci_release.
 > 
-> Signed-off-by: Xu Wang <vulab@iscas.ac.cn>
+> This issue is introduced since commit 1518ac272e78 ("vfio/pci: fix memory
+> leaks of eventfd ctx"),and since commit 5c5866c593bb ("vfio/pci: Clear
+> error and request eventfd ctx after releasing"), it's very easily to
+> trigger the kernel panic like this:
+> 
+> [ 9513.904346] Unable to handle kernel NULL pointer dereference at virtual address 0000000000000008
+> [ 9513.913091] Mem abort info:
+> [ 9513.915871]   ESR = 0x96000006
+> [ 9513.918912]   EC = 0x25: DABT (current EL), IL = 32 bits
+> [ 9513.924198]   SET = 0, FnV = 0
+> [ 9513.927238]   EA = 0, S1PTW = 0
+> [ 9513.930364] Data abort info:
+> [ 9513.933231]   ISV = 0, ISS = 0x00000006
+> [ 9513.937048]   CM = 0, WnR = 0
+> [ 9513.940003] user pgtable: 4k pages, 48-bit VAs, pgdp=0000007ec7d12000
+> [ 9513.946414] [0000000000000008] pgd=0000007ec7d13003, p4d=0000007ec7d13003, pud=0000007ec728c003, pmd=0000000000000000
+> [ 9513.956975] Internal error: Oops: 96000006 [#1] PREEMPT SMP
+> [ 9513.962521] Modules linked in: vfio_pci vfio_virqfd vfio_iommu_type1 vfio hclge hns3 hnae3 [last unloaded: vfio_pci]
+> [ 9513.972998] CPU: 4 PID: 1327 Comm: bash Tainted: G        W         5.8.0-rc4+ #3
+> [ 9513.980443] Hardware name: Huawei TaiShan 2280 V2/BC82AMDC, BIOS 2280-V2 CS V3.B270.01 05/08/2020
+> [ 9513.989274] pstate: 80400089 (Nzcv daIf +PAN -UAO BTYPE=--)
+> [ 9513.994827] pc : _raw_spin_lock_irqsave+0x48/0x88
+> [ 9513.999515] lr : eventfd_signal+0x6c/0x1b0
+> [ 9514.003591] sp : ffff800038a0b960
+> [ 9514.006889] x29: ffff800038a0b960 x28: ffff007ef7f4da10
+> [ 9514.012175] x27: ffff207eefbbfc80 x26: ffffbb7903457000
+> [ 9514.017462] x25: ffffbb7912191000 x24: ffff007ef7f4d400
+> [ 9514.022747] x23: ffff20be6e0e4c00 x22: 0000000000000008
+> [ 9514.028033] x21: 0000000000000000 x20: 0000000000000000
+> [ 9514.033321] x19: 0000000000000008 x18: 0000000000000000
+> [ 9514.038606] x17: 0000000000000000 x16: ffffbb7910029328
+> [ 9514.043893] x15: 0000000000000000 x14: 0000000000000001
+> [ 9514.049179] x13: 0000000000000000 x12: 0000000000000002
+> [ 9514.054466] x11: 0000000000000000 x10: 0000000000000a00
+> [ 9514.059752] x9 : ffff800038a0b840 x8 : ffff007ef7f4de60
+> [ 9514.065038] x7 : ffff007fffc96690 x6 : fffffe01faffb748
+> [ 9514.070324] x5 : 0000000000000000 x4 : 0000000000000000
+> [ 9514.075609] x3 : 0000000000000000 x2 : 0000000000000001
+> [ 9514.080895] x1 : ffff007ef7f4d400 x0 : 0000000000000000
+> [ 9514.086181] Call trace:
+> [ 9514.088618]  _raw_spin_lock_irqsave+0x48/0x88
+> [ 9514.092954]  eventfd_signal+0x6c/0x1b0
+> [ 9514.096691]  vfio_pci_request+0x84/0xd0 [vfio_pci]
+> [ 9514.101464]  vfio_del_group_dev+0x150/0x290 [vfio]
+> [ 9514.106234]  vfio_pci_remove+0x30/0x128 [vfio_pci]
+> [ 9514.111007]  pci_device_remove+0x48/0x108
+> [ 9514.115001]  device_release_driver_internal+0x100/0x1b8
+> [ 9514.120200]  device_release_driver+0x28/0x38
+> [ 9514.124452]  pci_stop_bus_device+0x68/0xa8
+> [ 9514.128528]  pci_stop_and_remove_bus_device+0x20/0x38
+> [ 9514.133557]  pci_iov_remove_virtfn+0xb4/0x128
+> [ 9514.137893]  sriov_disable+0x3c/0x108
+> [ 9514.141538]  pci_disable_sriov+0x28/0x38
+> [ 9514.145445]  hns3_pci_sriov_configure+0x48/0xb8 [hns3]
+> [ 9514.150558]  sriov_numvfs_store+0x110/0x198
+> [ 9514.154724]  dev_attr_store+0x44/0x60
+> [ 9514.158373]  sysfs_kf_write+0x5c/0x78
+> [ 9514.162018]  kernfs_fop_write+0x104/0x210
+> [ 9514.166010]  __vfs_write+0x48/0x90
+> [ 9514.169395]  vfs_write+0xbc/0x1c0
+> [ 9514.172694]  ksys_write+0x74/0x100
+> [ 9514.176079]  __arm64_sys_write+0x24/0x30
+> [ 9514.179987]  el0_svc_common.constprop.4+0x110/0x200
+> [ 9514.184842]  do_el0_svc+0x34/0x98
+> [ 9514.188144]  el0_svc+0x14/0x40
+> [ 9514.191185]  el0_sync_handler+0xb0/0x2d0
+> [ 9514.195088]  el0_sync+0x140/0x180
+> [ 9514.198389] Code: b9001020 d2800000 52800022 f9800271 (885ffe61)
+> [ 9514.204455] ---[ end trace 648de00c8406465f ]---
+> [ 9514.212308] note: bash[1327] exited with preempt_count 1
 
-Patch applied to wireless-drivers-next.git, thanks.
+Good catch, I hope this is fixed now for good :/
 
-b28bd97c1c19 airo: use set_current_state macro
+> 
+> Cc: Qian Cai <cai@lca.pw>
+> Cc: Alex Williamson <alex.williamson@redhat.com>
+> Fixes: 1518ac272e78 ("vfio/pci: fix memory leaks of eventfd ctx")
 
--- 
-https://patchwork.kernel.org/patch/11637715/
+Fixes: 5c5866c593bb ("vfio/pci: Clear error and request eventfd ctx after releasing")
 
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+> Signed-off-by: Zeng Tao <prime.zeng@hisilicon.com>
+> ---
+>  drivers/vfio/pci/vfio_pci.c | 5 +++++
+>  1 file changed, 5 insertions(+)
+> 
+> diff --git a/drivers/vfio/pci/vfio_pci.c b/drivers/vfio/pci/vfio_pci.c
+> index f634c81..de881a6 100644
+> --- a/drivers/vfio/pci/vfio_pci.c
+> +++ b/drivers/vfio/pci/vfio_pci.c
+> @@ -521,14 +521,19 @@ static void vfio_pci_release(void *device_data)
+>  		vfio_pci_vf_token_user_add(vdev, -1);
+>  		vfio_spapr_pci_eeh_release(vdev->pdev);
+>  		vfio_pci_disable(vdev);
+> +		mutex_lock(&vdev->igate);
+>  		if (vdev->err_trigger) {
+>  			eventfd_ctx_put(vdev->err_trigger);
+>  			vdev->err_trigger = NULL;
+>  		}
+> +		mutex_unlock(&vdev->igate);
+> +
+> +		mutex_lock(&vdev->igate);
+
+Just keep the mutex locked for both triggers?
+
+>  		if (vdev->req_trigger) {
+>  			eventfd_ctx_put(vdev->req_trigger);
+>  			vdev->req_trigger = NULL;
+>  		}
+> +		mutex_unlock(&vdev->igate);
+>  	}
+>  
+>  	mutex_unlock(&vdev->reflck->lock);
 
