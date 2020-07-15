@@ -2,180 +2,95 @@ Return-Path: <SRS0=kup7=A2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BAE9FC433E8
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 14:26:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35D26C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 14:26:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 972BF205CB
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 14:26:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 06063205CB
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 14:26:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nic.cz header.i=@nic.cz header.b="RiKFvyZe"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LqWxujlr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728562AbgGOO0M (ORCPT
+        id S1728657AbgGOO0j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 10:26:12 -0400
-Received: from mail.nic.cz ([217.31.204.67]:34942 "EHLO mail.nic.cz"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727908AbgGOO0C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 10:26:02 -0400
-Received: from dellmb.labs.office.nic.cz (unknown [IPv6:2001:1488:fffe:6:cac7:3539:7f1f:463])
-        by mail.nic.cz (Postfix) with ESMTP id C1379140A65;
-        Wed, 15 Jul 2020 16:25:58 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=nic.cz; s=default;
-        t=1594823158; bh=nerKxigHkObaiHyzNmlG4HvrbXZtheySdo4ELo3MtiU=;
-        h=From:To:Date;
-        b=RiKFvyZeKuolRbIZ6r+QCzpKswnOUAAVlUxo/xEZt5U21d6Vv/0XenaIaOSatf+fz
-         RoRbs3+oj74UxucsV/ZqHpb1V3jJmAGWF3O/mFgZHx4CExSrvcoOjf/vYFJECPJmYH
-         3TW98AiC/tzPomO2p7a0XzSygyWS/V0ozDX4raMQ=
-From:   =?UTF-8?q?Marek=20Beh=C3=BAn?= <marek.behun@nic.cz>
-To:     linux-pci@vger.kernel.org
-Cc:     Tomasz Maciej Nowak <tmn505@gmail.com>,
-        Gregory Clement <gregory.clement@bootlin.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        linux-kernel@vger.kernel.org, Andrew Lunn <andrew@lunn.ch>,
-        Xogium <contact@xogium.me>,
-        =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>,
-        =?UTF-8?q?Marek=20Beh=C3=BAn?= <marek.behun@nic.cz>
-Subject: [PATCH 5/5] PCI: aardvark: Move PCIe reset card code to advk_pcie_train_link()
-Date:   Wed, 15 Jul 2020 16:25:57 +0200
-Message-Id: <20200715142557.17115-6-marek.behun@nic.cz>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200715142557.17115-1-marek.behun@nic.cz>
-References: <20200715142557.17115-1-marek.behun@nic.cz>
+        Wed, 15 Jul 2020 10:26:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50914 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728414AbgGOO0j (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jul 2020 10:26:39 -0400
+Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 216C9C061755;
+        Wed, 15 Jul 2020 07:26:39 -0700 (PDT)
+Received: by mail-pl1-x641.google.com with SMTP id x8so2452353plm.10;
+        Wed, 15 Jul 2020 07:26:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition;
+        bh=Cf7VzUGNcVW14TxQ7W+i6Ijja36UwcJjRErcM4N9znc=;
+        b=LqWxujlr5FI8tOftLMXDC2FrO1bETiMZL5N/zvR32Cr+VM9Qa7FxhZ0D0v1C4gbMVt
+         RALDAW9w8pHRhDIbqWX7d8HR3ArZPW9CObUh3arqYIGcOdYqK63kfiRLx8l6nj9b1Yi9
+         MRkrKug2lXN4V/2r6Z8EYQFuzZGQz1KjVowvR/2YS62NiYpNlXINwvk6HPmHJol8do56
+         vudp7YV+bgjbWgRKwxomyR4wc8ZSxBXvWfNM4gDdzs8vFX0SDeVRJr+JX7eVU85nBFnY
+         SfWy3yDl+aHjP3ThhfYX6BLpo/r+4Yl1xh7A0YLjOkfj6FdjEDTe5w37Q4xqd6qlrdrC
+         9biw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition;
+        bh=Cf7VzUGNcVW14TxQ7W+i6Ijja36UwcJjRErcM4N9znc=;
+        b=f4mQSu0jnkBm6IJKJAUN7pKs8q8z8lAyggP8psguxaCJril9Ssqhvul966eT5qrTl4
+         HxhtVbmIujYj03iUpVNqwoJLXOAU0+/4B0DGHp5Z4TLH0Yjw+p5fSLj4xBacrrMeNaV7
+         iA5aKizC6kLEmExK1uyncBSv0vQaxArkp9KNh0ie3l9DTTRmQu2EYacFsH/czQku0y+h
+         t3TnrN8dxhdHbl0nFIgNrPaexq8BFwiF8MSoVlTHusePFWY2YbUrxhE3Nv2lpDshmTvY
+         XritN7UacARTl2vSGDUUbziZC5uIoV8fC47m7wbYdNhrt7Cfm9tr6t45uvzYSnxTKKHm
+         nmrQ==
+X-Gm-Message-State: AOAM532tCsm/NRIkE2xwC+5o76maASWws+0HnA+g20lli9MGqT4QFcMo
+        Io/vbE5eMr3UZKf63X+DBCc=
+X-Google-Smtp-Source: ABdhPJxc+PcUyRXPFSiepL+frTS2yx9txd8EAmyAZUd70euDlFa2pRe1xLDwQfwe4R+3T7s6lvZg4g==
+X-Received: by 2002:a17:90b:4910:: with SMTP id kr16mr10502482pjb.126.1594823198263;
+        Wed, 15 Jul 2020 07:26:38 -0700 (PDT)
+Received: from mritunjay-Lenovo-Yoga-S740-14IIL ([2405:201:6402:aeae:6d34:5d62:d650:d199])
+        by smtp.gmail.com with ESMTPSA id q13sm2639207pfk.8.2020.07.15.07.26.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 15 Jul 2020 07:26:37 -0700 (PDT)
+Date:   Wed, 15 Jul 2020 19:56:31 +0530
+From:   Mritunjay Sharma <mritunjaysharma394@gmail.com>
+To:     masahiroy@kernel.org, michal.lkml@markovi.net
+Cc:     linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
+        clang-built-linux@googlegroups.com
+Subject: [PATCH] Modified Makefile to print -eudyptula in the version string
+Message-ID: <20200715142631.GA3721@mritunjay-Lenovo-Yoga-S740-14IIL>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Spamd-Bar: /
-X-Virus-Scanned: clamav-milter 0.102.2 at mail
-X-Virus-Status: Clean
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pali Rohár <pali@kernel.org>
-
-Move code which belongs to link training (delays and resets) into
-advk_pcie_train_link() function, so everything related to link training,
-including timings is at one place.
-
-After experiments it can be observed that link training in aardvark
-hardware is very sensitive to timings and delays, so it is a good idea to
-have this code at the same place as link training calls.
-
-This patch does not change behavior of aardvark initialization.
-
-Signed-off-by: Pali Rohár <pali@kernel.org>
-Tested-by: Marek Behún <marek.behun@nic.cz>
+Signed-off-by: Mritunjay Sharma <mritunjaysharma394@gmail.com>
 ---
- drivers/pci/controller/pci-aardvark.c | 64 ++++++++++++++-------------
- 1 file changed, 34 insertions(+), 30 deletions(-)
+ Makefile | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/pci/controller/pci-aardvark.c b/drivers/pci/controller/pci-aardvark.c
-index 0a5aa6d77f5d..ab39b01474e8 100644
---- a/drivers/pci/controller/pci-aardvark.c
-+++ b/drivers/pci/controller/pci-aardvark.c
-@@ -253,6 +253,25 @@ static void advk_pcie_wait_for_retrain(struct advk_pcie *pcie)
- 	}
- }
+diff --git a/Makefile b/Makefile
+index 0b5f8538bde5..d7897ce5ab23 100644
+--- a/Makefile
++++ b/Makefile
+@@ -2,7 +2,7 @@
+ VERSION = 5
+ PATCHLEVEL = 8
+ SUBLEVEL = 0
+-EXTRAVERSION = -rc5
++EXTRAVERSION = -rc5-eudyptula
+ NAME = Kleptomaniac Octopus
  
-+static void advk_pcie_issue_perst(struct advk_pcie *pcie)
-+{
-+	u32 reg;
-+
-+	if (!pcie->reset_gpio)
-+		return;
-+
-+	/* PERST does not work for some cards when link training is enabled */
-+	reg = advk_readl(pcie, PCIE_CORE_CTRL0_REG);
-+	reg &= ~LINK_TRAINING_EN;
-+	advk_writel(pcie, reg, PCIE_CORE_CTRL0_REG);
-+
-+	/* 10ms delay is needed for some cards */
-+	dev_info(&pcie->pdev->dev, "issuing PERST via reset GPIO for 10ms\n");
-+	gpiod_set_value_cansleep(pcie->reset_gpio, 1);
-+	usleep_range(10000, 11000);
-+	gpiod_set_value_cansleep(pcie->reset_gpio, 0);
-+}
-+
- static int advk_pcie_train_at_gen(struct advk_pcie *pcie, int gen)
- {
- 	int ret, neg_gen;
-@@ -300,6 +319,21 @@ static void advk_pcie_train_link(struct advk_pcie *pcie)
- 	struct device *dev = &pcie->pdev->dev;
- 	int neg_gen = -1, gen;
- 
-+	/*
-+	 * Reset PCIe card via PERST# signal. Some cards are not detected
-+	 * during link training when they are in some non-initial state.
-+	 */
-+	advk_pcie_issue_perst(pcie);
-+
-+	/*
-+	 * PERST# signal could have been asserted by pinctrl subsystem before
-+	 * probe() callback has been called or issued explicitly by reset gpio
-+	 * function advk_pcie_issue_perst(), making the endpoint going into
-+	 * fundamental reset. As required by PCI Express spec a delay for at
-+	 * least 100ms after such a reset before link training is needed.
-+	 */
-+	msleep(PCI_PM_D3COLD_WAIT);
-+
- 	/*
- 	 * Try link training at link gen specified by device tree property
- 	 * 'max-link-speed'. If this fails, iteratively train at lower gen.
-@@ -332,31 +366,10 @@ static void advk_pcie_train_link(struct advk_pcie *pcie)
- 	dev_err(dev, "link never came up\n");
- }
- 
--static void advk_pcie_issue_perst(struct advk_pcie *pcie)
--{
--	u32 reg;
--
--	if (!pcie->reset_gpio)
--		return;
--
--	/* PERST does not work for some cards when link training is enabled */
--	reg = advk_readl(pcie, PCIE_CORE_CTRL0_REG);
--	reg &= ~LINK_TRAINING_EN;
--	advk_writel(pcie, reg, PCIE_CORE_CTRL0_REG);
--
--	/* 10ms delay is needed for some cards */
--	dev_info(&pcie->pdev->dev, "issuing PERST via reset GPIO for 10ms\n");
--	gpiod_set_value_cansleep(pcie->reset_gpio, 1);
--	usleep_range(10000, 11000);
--	gpiod_set_value_cansleep(pcie->reset_gpio, 0);
--}
--
- static void advk_pcie_setup_hw(struct advk_pcie *pcie)
- {
- 	u32 reg;
- 
--	advk_pcie_issue_perst(pcie);
--
- 	/* Enable TX */
- 	reg = advk_readl(pcie, PCIE_CORE_REF_CLK_REG);
- 	reg |= PCIE_CORE_REF_CLK_TX_ENABLE;
-@@ -433,15 +446,6 @@ static void advk_pcie_setup_hw(struct advk_pcie *pcie)
- 	reg |= PIO_CTRL_ADDR_WIN_DISABLE;
- 	advk_writel(pcie, reg, PIO_CTRL);
- 
--	/*
--	 * PERST# signal could have been asserted by pinctrl subsystem before
--	 * probe() callback has been called or issued explicitly by reset gpio
--	 * function advk_pcie_issue_perst(), making the endpoint going into
--	 * fundamental reset. As required by PCI Express spec a delay for at
--	 * least 100ms after such a reset before link training is needed.
--	 */
--	msleep(PCI_PM_D3COLD_WAIT);
--
- 	advk_pcie_train_link(pcie);
- 
- 	/*
+ # *DOCUMENTATION*
 -- 
-2.26.2
+2.25.1
 
