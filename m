@@ -2,146 +2,87 @@ Return-Path: <SRS0=kup7=A2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 001BEC433E3
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 16:46:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39F9BC433E5
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 16:47:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DB9F32065D
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 16:46:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0AC412065D
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 16:47:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="cN4+RSaH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726954AbgGOQqx convert rfc822-to-8bit (ORCPT
+        id S1727774AbgGOQrV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 12:46:53 -0400
-Received: from eu-smtp-delivery-151.mimecast.com ([207.82.80.151]:23197 "EHLO
-        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725897AbgGOQqt (ORCPT
+        Wed, 15 Jul 2020 12:47:21 -0400
+Received: from mail29.static.mailgun.info ([104.130.122.29]:15277 "EHLO
+        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726376AbgGOQrN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 12:46:49 -0400
-Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
- TLS) by relay.mimecast.com with ESMTP id
- uk-mta-52-I5MfYmGMN8WVVlleqrOfeQ-1; Wed, 15 Jul 2020 17:46:45 +0100
-X-MC-Unique: I5MfYmGMN8WVVlleqrOfeQ-1
-Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
- AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
- Server (TLS) id 15.0.1347.2; Wed, 15 Jul 2020 17:46:44 +0100
-Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
- AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
- Wed, 15 Jul 2020 17:46:44 +0100
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     'Kees Cook' <keescook@chromium.org>
-CC:     'Christoph Hellwig' <hch@infradead.org>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
-        "linux-security-module@vger.kernel.org" 
-        <linux-security-module@vger.kernel.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        James Morris <jmorris@namei.org>,
-        Kentaro Takeda <takedakn@nttdata.co.jp>,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        "John Johansen" <john.johansen@canonical.com>
-Subject: RE: [PATCH 7/7] exec: Implement kernel_execve
-Thread-Topic: [PATCH 7/7] exec: Implement kernel_execve
-Thread-Index: AQHWWnMrd4ih7YlzG0aqMJfp5omyT6kIuIaQ///1mACAACJpAA==
-Date:   Wed, 15 Jul 2020 16:46:44 +0000
-Message-ID: <dc8371b7e05d4aa49eefcfd402b3fa1e@AcuMS.aculab.com>
-References: <871rle8bw2.fsf@x220.int.ebiederm.org>
- <87wo365ikj.fsf@x220.int.ebiederm.org> <202007141446.A72A4437C@keescook>
- <20200715064248.GH32470@infradead.org>
- <d6d204c4427b49f6b24ac24bf1082fa4@AcuMS.aculab.com>
- <202007150801.27B6690@keescook>
-In-Reply-To: <202007150801.27B6690@keescook>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
+        Wed, 15 Jul 2020 12:47:13 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1594831632; h=Date: Message-Id: Cc: To: References:
+ In-Reply-To: From: Subject: Content-Transfer-Encoding: MIME-Version:
+ Content-Type: Sender; bh=TKew3JJfCToYrT8uujUrU8/Gqwdn23TvQoieCSi469s=;
+ b=cN4+RSaHqXMZEHxNaROtVOwpTWGIjXDFzq/UwkiSGruXkzZWlosGjcOsWBCl+mLKllFYYnOb
+ S8ya7duCF29kwPmHOgTAAc7PEdJmXweCH/GYnWxoU23r8bGiMiFqGEgkYJixm3DdRthNQyIE
+ yUANX81U+HlA77Wrp10WxW0UzXA=
+X-Mailgun-Sending-Ip: 104.130.122.29
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n06.prod.us-west-2.postgun.com with SMTP id
+ 5f0f3304ee6926bb4f2c3949 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Wed, 15 Jul 2020 16:47:00
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id B8EACC43395; Wed, 15 Jul 2020 16:46:59 +0000 (UTC)
+Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: kvalo)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 0240CC433C6;
+        Wed, 15 Jul 2020 16:46:56 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 0240CC433C6
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Authentication-Results: relay.mimecast.com;
-        auth=pass smtp.auth=C51A453 smtp.mailfrom=david.laight@aculab.com
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: aculab.com
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Content-Transfer-Encoding: 7bit
+Subject: Re: [PATCH] zd1211rw: remove needless check before
+ usb_free_coherent()
+From:   Kalle Valo <kvalo@codeaurora.org>
+In-Reply-To: <20200630070404.8207-1-vulab@iscas.ac.cn>
+References: <20200630070404.8207-1-vulab@iscas.ac.cn>
+To:     Chen Ni <vulab@iscas.ac.cn>
+Cc:     dsd@gentoo.org, kune@deine-taler.de, davem@davemloft.net,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Xu Wang <vulab@iscas.ac.cn>
+User-Agent: pwcli/0.1.0-git (https://github.com/kvalo/pwcli/) Python/3.5.2
+Message-Id: <20200715164659.B8EACC43395@smtp.codeaurora.org>
+Date:   Wed, 15 Jul 2020 16:46:59 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kees Cook <keescook@chromium.org>
-> Sent: 15 July 2020 16:09
+Chen Ni <vulab@iscas.ac.cn> wrote:
+
+> From: Xu Wang <vulab@iscas.ac.cn>
 > 
-> On Wed, Jul 15, 2020 at 02:55:50PM +0000, David Laight wrote:
-> > From: Christoph Hellwig
-> > > Sent: 15 July 2020 07:43
-> > > Subject: Re: [PATCH 7/7] exec: Implement kernel_execve
-> > >
-> > > On Tue, Jul 14, 2020 at 02:49:23PM -0700, Kees Cook wrote:
-> > > > On Tue, Jul 14, 2020 at 08:31:40AM -0500, Eric W. Biederman wrote:
-> > > > > +static int count_strings_kernel(const char *const *argv)
-> > > > > +{
-> > > > > +	int i;
-> > > > > +
-> > > > > +	if (!argv)
-> > > > > +		return 0;
-> > > > > +
-> > > > > +	for (i = 0; argv[i]; ++i) {
-> > > > > +		if (i >= MAX_ARG_STRINGS)
-> > > > > +			return -E2BIG;
-> > > > > +		if (fatal_signal_pending(current))
-> > > > > +			return -ERESTARTNOHAND;
-> > > > > +		cond_resched();
-> > > > > +	}
-> > > > > +	return i;
-> > > > > +}
-> > > >
-> > > > I notice count() is only ever called with MAX_ARG_STRINGS. Perhaps
-> > > > refactor that too? (And maybe rename it to count_strings_user()?)
-> >
-> > Thinks....
-> > If you setup env[] and argv[] on the new user stack early in exec processing
-> > then you may not need any limits at all - except the size of the user stack.
-> > Even the get_user() loop will hit an invalid address before the counter
-> > wraps (provided it is unsigned long).
+> usb_free_coherent() is safe with NULL addr and this check is
+> not required.
 > 
-> *grumpy noises* Yes, but not in practice (if I'm understanding what you
-> mean). The expectations of a number of execution environments can be
-> really odd-ball. I've tried to collect the notes from over the years in
-> prepare_arg_pages()'s comments, and it mostly boils down to "there has
-> to be enough room for the exec to start" otherwise the exec ends up in a
-> hard-to-debug failure state (i.e. past the "point of no return", where you
-> get no useful information about the cause of the SEGV). So the point has
-> been to move as many of the setup checks as early as possible and report
-> about them if they fail. The argv processing is already very early, but
-> it needs to do the limit checks otherwise it'll just break after the exec
-> is underway and the process will just SEGV. (And ... some environments
-> will attempt to dynamically check the size of the argv space by growing
-> until it sees E2BIG, so we can't just remove it and let those hit SEGV.)
+> Signed-off-by: Xu Wang <vulab@iscas.ac.cn>
 
-Yes - I bet the code is horrid.
-I guess the real problem is that you'd need access to the old process's
-user addresses and the new process's stack area at the same time.
-Unless there is a suitable hole in the old process's address map
-any attempted trick will fall foul of cache aliasing on some
-architectures - like anything else that does page-loaning.
+Patch applied to wireless-drivers-next.git, thanks.
 
-I'm sure there are hair-brained schemes that might work.
+4f3ebd6fb680 zd1211rw: remove needless check before usb_free_coherent()
 
-	David
+-- 
+https://patchwork.kernel.org/patch/11633321/
 
--
-Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
-Registration No: 1397386 (Wales)
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
 
