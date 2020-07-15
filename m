@@ -7,41 +7,48 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8070BC433F8
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 12:49:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F053AC433F4
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 12:49:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5548320578
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 12:49:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C3F6520578
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 12:49:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="vLtxHrJ2"
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="UtSY7tjj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731413AbgGOMtO (ORCPT
+        id S1731401AbgGOMtM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 08:49:14 -0400
-Received: from perceval.ideasonboard.com ([213.167.242.64]:60266 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729312AbgGOMs5 (ORCPT
+        Wed, 15 Jul 2020 08:49:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35796 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731342AbgGOMs5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 15 Jul 2020 08:48:57 -0400
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [IPv6:2001:4b98:dc2:55:216:3eff:fef7:d647])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 477A4C061755
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 05:48:57 -0700 (PDT)
 Received: from Q.local (cpc89242-aztw30-2-0-cust488.18-1.cable.virginm.net [86.31.129.233])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 4C28EDC3;
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id ECDFEF7E;
         Wed, 15 Jul 2020 14:48:54 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1594817334;
-        bh=sppLBNveVA4+ntWTNOa++wBjLnMfL1GPniNfmwpUoLk=;
+        s=mail; t=1594817335;
+        bh=u9Cm7lA4aBFNKRUo0tffD5UvM74Xr5Kxc/Se1oDySRQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vLtxHrJ245dFFtbOYlJXhJNdVlV0lKfhkKZQMr21GCsfKYddhFPO4Jzw/vna7NboJ
-         /LRylILw+pq2tuuHuBIfUUAn8wMZabs3EiVJILcl8iH3f10AwPTNCdsh5GucHz4pRM
-         Vuqa+uktvG2tCXQw0VHIIfqRXAE7/8ZgfuJBy8PM=
+        b=UtSY7tjjcJelEBGaEVU6X+F6L1nfEn8ne3g6gR9doTU3d66NdI1Kwl4I2gbD4XxNy
+         BaTHqGt0/JNKOmxza/OunYpzCHq7SctqGr8TH+OVzFT+rjxm7CEpQTeXDcUE+BsG7t
+         lmIM0NFPhXhGVgPhKvkADGNjKnQ5ZCRfn4YFJYW0=
 From:   Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
 To:     trivial@kernel.org
 Cc:     Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ingo Molnar <mingo@redhat.com>,
+        David Hildenbrand <david@redhat.com>,
+        Souptick Joarder <jrdr.linux@gmail.com>,
+        "Michael S . Tsirkin" <mst@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        virtualization@lists.linux-foundation.org (open list:VIRTIO BALLOON),
+        linux-mm@kvack.org (open list:MEMORY MANAGEMENT),
         linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH v2 6/8] kernel: trace: Fix trivial spelling
-Date:   Wed, 15 Jul 2020 13:48:37 +0100
-Message-Id: <20200715124839.252822-7-kieran.bingham+renesas@ideasonboard.com>
+Subject: [PATCH v2 7/8] mm/balloon_compaction: Fix trivial spelling
+Date:   Wed, 15 Jul 2020 13:48:38 +0100
+Message-Id: <20200715124839.252822-8-kieran.bingham+renesas@ideasonboard.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200715124839.252822-1-kieran.bingham+renesas@ideasonboard.com>
 References: <20200715124839.252822-1-kieran.bingham+renesas@ideasonboard.com>
@@ -58,26 +65,38 @@ Fix it up accordingly:
     decriptor -> descriptor
 
 Signed-off-by: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
+Reviewed-by: David Hildenbrand <david@redhat.com>
+Acked-by: Souptick Joarder <jrdr.linux@gmail.com>
+Acked-by: Michael S. Tsirkin <mst@redhat.com>
 ---
 v2:
  - Fix commit message to reflect actual word replaced
 ---
- kernel/trace/trace_events.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ mm/balloon_compaction.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/kernel/trace/trace_events.c b/kernel/trace/trace_events.c
-index 780cf3be35d1..5d68f4c46117 100644
---- a/kernel/trace/trace_events.c
-+++ b/kernel/trace/trace_events.c
-@@ -2479,7 +2479,7 @@ __trace_add_new_event(struct trace_event_call *call, struct trace_array *tr)
- }
- 
+diff --git a/mm/balloon_compaction.c b/mm/balloon_compaction.c
+index 26de020aae7b..907fefde2572 100644
+--- a/mm/balloon_compaction.c
++++ b/mm/balloon_compaction.c
+@@ -58,7 +58,7 @@ EXPORT_SYMBOL_GPL(balloon_page_list_enqueue);
+ /**
+  * balloon_page_list_dequeue() - removes pages from balloon's page list and
+  *				 returns a list of the pages.
+- * @b_dev_info: balloon device decriptor where we will grab a page from.
++ * @b_dev_info: balloon device descriptor where we will grab a page from.
+  * @pages: pointer to the list of pages that would be returned to the caller.
+  * @n_req_pages: number of requested pages.
+  *
+@@ -157,7 +157,7 @@ EXPORT_SYMBOL_GPL(balloon_page_enqueue);
  /*
-- * Just create a decriptor for early init. A descriptor is required
-+ * Just create a descriptor for early init. A descriptor is required
-  * for enabling events at boot. We want to enable events before
-  * the filesystem is initialized.
-  */
+  * balloon_page_dequeue - removes a page from balloon's page list and returns
+  *			  its address to allow the driver to release the page.
+- * @b_dev_info: balloon device decriptor where we will grab a page from.
++ * @b_dev_info: balloon device descriptor where we will grab a page from.
+  *
+  * Driver must call this function to properly dequeue a previously enqueued page
+  * before definitively releasing it back to the guest system.
 -- 
 2.25.1
 
