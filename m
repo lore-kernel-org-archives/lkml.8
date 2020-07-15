@@ -2,79 +2,121 @@ Return-Path: <SRS0=kup7=A2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CEC34C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 02:55:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70AACC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 02:58:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B2D3220663
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 02:55:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4CA9C20663
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 02:58:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="x6hFAGUi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728071AbgGOCzz (ORCPT
+        id S1728048AbgGOC6Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 22:55:55 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:39522 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726934AbgGOCzz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 22:55:55 -0400
-Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 6842B459E0B9AD3E8124;
-        Wed, 15 Jul 2020 10:55:53 +0800 (CST)
-Received: from localhost (10.174.179.108) by DGGEMS414-HUB.china.huawei.com
- (10.3.19.214) with Microsoft SMTP Server id 14.3.487.0; Wed, 15 Jul 2020
- 10:55:42 +0800
-From:   YueHaibing <yuehaibing@huawei.com>
-To:     <jejb@linux.ibm.com>, <martin.petersen@oracle.com>,
-        <axboe@kernel.dk>, <damien.lemoal@wdc.com>,
-        <johannes.thumshirn@wdc.com>
-CC:     <linux-scsi@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        YueHaibing <yuehaibing@huawei.com>
-Subject: [PATCH -next] scsi: sd_zbc: Remove unused inline functions
-Date:   Wed, 15 Jul 2020 10:55:23 +0800
-Message-ID: <20200715025523.34620-1-yuehaibing@huawei.com>
-X-Mailer: git-send-email 2.10.2.windows.1
+        Tue, 14 Jul 2020 22:58:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57702 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726930AbgGOC6P (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 22:58:15 -0400
+Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6C95CC061794
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 19:58:15 -0700 (PDT)
+Received: by mail-pj1-x1043.google.com with SMTP id ls15so1681827pjb.1
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 19:58:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=TfePUk2yeb1Ip9ZhAd8/+f2UK1/Sw83r4/BpWZTD/P8=;
+        b=x6hFAGUiiTiYSdQBH//9ZDxZAC9+qHTN8B5ZKovUu0QYSR0A9eGTCY0oFGWgMoY5Ib
+         sE1RInDacRJMhoPPi+QUJId3DrdNNRKEUc9H72r540ohJ6eAg8g7ZC5Y5Hh50qu0WwXH
+         HF+RXoYCmWSdVplAdcX7KiNr9A2vJBNNwOU8p3/9qIwZVrpErH3GjBpAvOOTu+4dI8wY
+         c/FGL/9QlD/DcZ7qEFnIFr8HL2C83+JFAHcFDSL3XJe7TBEkX7EcmqCbh9B8pYG674wC
+         +M9iqYnoBna5SBM6zck9ruWRwRPCxdJObUW+KlcEHURFwVLSWKJCNeaodbM7pvvwNkv2
+         +nrA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=TfePUk2yeb1Ip9ZhAd8/+f2UK1/Sw83r4/BpWZTD/P8=;
+        b=OhkbXtIIhN52JMVWIC4XHVXY+Rjr2hhfGIVZ+QZ4dLuiYvGy5O4Kv1lOnFo3k1loYM
+         5ErWpK6pUhWZNg9CMCXAoJywB/+Etfh+WGUvsludYH0XLFKmZybqLKhsy+t3B8zcRhRU
+         5u6kcQIaNLPROxmZI5DwWWzuXBQ9TxDpNXBmQAiRcqkiC+u+NW2DRiF2y0G8wXd20QuT
+         NeWj72P7ZxScjC7DcXf39LKsqSdkCr7VZ5lCBb+XKPNcOKHjlfZeCjsIopkV6EiGi4xX
+         lVDvAxbRV/P4T9yZGa+TTQxp51RP7/nw2JUldGLUcwxcaAl0ibDL0lcYb/xEmoO2qRDx
+         bGMA==
+X-Gm-Message-State: AOAM530lo/bqBAzI72whK7dxHGo5EqfcNuL1Weqp//mFrnKlISB3H7gM
+        7+/WcBTRU3FujkLLcO+MNpXF2Q==
+X-Google-Smtp-Source: ABdhPJw/scwRmkaJm5WN2+4mQyDhXsyoDWXYwlB0VHB55IZ/1yI45FR+qvYRpvKWUj2GNCKKNEhIIA==
+X-Received: by 2002:a17:902:7688:: with SMTP id m8mr2594603pll.12.1594781894788;
+        Tue, 14 Jul 2020 19:58:14 -0700 (PDT)
+Received: from localhost ([122.172.34.142])
+        by smtp.gmail.com with ESMTPSA id t188sm424964pfc.198.2020.07.14.19.58.13
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 14 Jul 2020 19:58:13 -0700 (PDT)
+Date:   Wed, 15 Jul 2020 08:28:12 +0530
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     rjw@rjwysocki.net, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        Patrice Chotard <patrice.chotard@st.com>,
+        Pal Singh <ajitpal.singh@st.com>
+Subject: Re: [PATCH 04/13] cpufreq: sti-cpufreq: Fix some formatting and
+ misspelling issues
+Message-ID: <20200715025812.dzcu5vilhns4kljw@vireshk-i7>
+References: <20200714145049.2496163-1-lee.jones@linaro.org>
+ <20200714145049.2496163-5-lee.jones@linaro.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.174.179.108]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200714145049.2496163-5-lee.jones@linaro.org>
+User-Agent: NeoMutt/20180716-391-311a52
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-They are never used, so can remove it.
+On 14-07-20, 15:50, Lee Jones wrote:
+> Kerneldoc format for attribute descriptions should be '@.*: '.
+> 
+> Fixes the following W=1 kernel build warning(s):
+> 
+>  drivers/cpufreq/sti-cpufreq.c:49: warning: cannot understand function prototype: 'struct sti_cpufreq_ddata '
+> 
+> Cc: Patrice Chotard <patrice.chotard@st.com>
+> Cc: Pal Singh <ajitpal.singh@st.com>
+> Signed-off-by: Lee Jones <lee.jones@linaro.org>
+> ---
+>  drivers/cpufreq/sti-cpufreq.c | 8 ++++----
+>  1 file changed, 4 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/cpufreq/sti-cpufreq.c b/drivers/cpufreq/sti-cpufreq.c
+> index 8f16bbb164b84..a5ad96d29adca 100644
+> --- a/drivers/cpufreq/sti-cpufreq.c
+> +++ b/drivers/cpufreq/sti-cpufreq.c
+> @@ -40,11 +40,11 @@ enum {
+>  };
+>  
+>  /**
+> - * ST CPUFreq Driver Data
+> + * struct sti_cpufreq_ddata - ST CPUFreq Driver Data
+>   *
+> - * @cpu_node		CPU's OF node
+> - * @syscfg_eng		Engineering Syscon register map
+> - * @regmap		Syscon register map
+> + * @cpu:		CPU's OF node
+> + * @syscfg_eng:		Engineering Syscon register map
+> + * @syscfg:		Syscon register map
+>   */
+>  static struct sti_cpufreq_ddata {
+>  	struct device *cpu;
 
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
----
- drivers/scsi/sd.h | 6 ------
- 1 file changed, 6 deletions(-)
+Applied. Thanks.
 
-diff --git a/drivers/scsi/sd.h b/drivers/scsi/sd.h
-index 3a74f4b45134..27c0f4e9b1d4 100644
---- a/drivers/scsi/sd.h
-+++ b/drivers/scsi/sd.h
-@@ -229,17 +229,11 @@ blk_status_t sd_zbc_prepare_zone_append(struct scsi_cmnd *cmd, sector_t *lba,
- 
- #else /* CONFIG_BLK_DEV_ZONED */
- 
--static inline int sd_zbc_init(void)
--{
--	return 0;
--}
--
- static inline int sd_zbc_init_disk(struct scsi_disk *sdkp)
- {
- 	return 0;
- }
- 
--static inline void sd_zbc_exit(void) {}
- static inline void sd_zbc_release_disk(struct scsi_disk *sdkp) {}
- 
- static inline int sd_zbc_read_zones(struct scsi_disk *sdkp,
 -- 
-2.17.1
-
-
+viresh
