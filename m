@@ -2,111 +2,105 @@ Return-Path: <SRS0=kup7=A2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BEADFC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 03:24:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E163C433E2
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 03:26:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8C53A2070E
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 03:24:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="swLmgPhg"
+	by mail.kernel.org (Postfix) with ESMTP id 8875020672
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 03:26:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728449AbgGODYr (ORCPT
+        id S1728481AbgGOD0f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 23:24:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33548 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727049AbgGODYq (ORCPT
+        Tue, 14 Jul 2020 23:26:35 -0400
+Received: from mail-qk1-f194.google.com ([209.85.222.194]:44981 "EHLO
+        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727049AbgGOD0e (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 23:24:46 -0400
-Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7B37AC061794
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 20:24:46 -0700 (PDT)
-Received: by mail-pl1-x642.google.com with SMTP id 72so1398687ple.0
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 20:24:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=dVCx6htI5TVOttkAFatlrmjAYqmh13a2xgOrYQfZR+o=;
-        b=swLmgPhgBkDkXHB/JCDnmiyyNjJolmWYhYsntkr0xHe4LMexlvYTmAWGgYhQ52XXMx
-         77/GNPg4XlDSFiQPuBKfklkXHtRs315SnYFjmBb5SkdIUA5ddzIxTexeK9XaGMO6vL6X
-         RvnFWLUDT1WK+2e/7XiZXjenGX+bfaVa/qvbcgRj8wXEQgTwzcAr6W4SoFO9P6a6qYt6
-         jyVhgBDQqKYlWDyTUupWhICo3wbaUV+c4L0oXsnSMHixRrGNwmToGMRnsSQ8Hp8PHMP1
-         cmfzVcyGxhKFcdrHjKo3uZF3z6YUJlmaKkaFv2GCFRcOEsVOVbROg1rtTM4vj7WfpM/r
-         oalw==
+        Tue, 14 Jul 2020 23:26:34 -0400
+Received: by mail-qk1-f194.google.com with SMTP id b4so542243qkn.11;
+        Tue, 14 Jul 2020 20:26:33 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=dVCx6htI5TVOttkAFatlrmjAYqmh13a2xgOrYQfZR+o=;
-        b=K/TyJ9xTY303zGi66fnMBXhuH0w8bCOJb1uYc+eeQ+rRjG4553B+401sXH/z2kVjtS
-         aNUq3DvKTa1OtbqfbeHhWTpGAw1YWzEB1fWYfvZ2dZuazUhiFYHFhKvsjaMOz/NL98hN
-         tZDI6RPeNJS5WIiI3s77q7fC1uLohFq5oj50G0Zu/3Y1qIYcbOugjZ+odt81IdH1j27P
-         E00V83m55Qo2dHFPd58aKB0MQoD7I0hyEWcVM2FKyJX5u2pMiO9QvvNcyNaE9DdQZx7v
-         HLlUkPl8+5bUfdxwOj9+7AKlq+YIzZyMeGfa2O1sschvlAYeEdM59M0dMENQjh84DHcJ
-         2tvw==
-X-Gm-Message-State: AOAM533rvb2yPah8ojw0uRNF2FsZszd47qP93dK11xKmu73oDYuytl7p
-        pmz+tz+QvmLyJrjC6cy4yW39Tw==
-X-Google-Smtp-Source: ABdhPJzI/jGv+9mdtKCgglTH9INVPVH2hbHvJSR+Iok++HVt4l15rbmwjqQqKczIoGyPr81tGVFXZg==
-X-Received: by 2002:a17:90b:e8d:: with SMTP id fv13mr8170265pjb.128.1594783485893;
-        Tue, 14 Jul 2020 20:24:45 -0700 (PDT)
-Received: from localhost ([122.172.34.142])
-        by smtp.gmail.com with ESMTPSA id d5sm398825pju.15.2020.07.14.20.24.44
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 14 Jul 2020 20:24:45 -0700 (PDT)
-Date:   Wed, 15 Jul 2020 08:54:42 +0530
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     Lee Jones <lee.jones@linaro.org>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Andy Grover <andrew.grover@intel.com>,
-        Paul Diefenbaugh <paul.s.diefenbaugh@intel.com>,
-        Dominik Brodowski <linux@brodo.de>,
-        Denis Sadykov <denis.m.sadykov@intel.com>
-Subject: Re: [PATCH 09/13] cpufreq: acpi-cpufreq: Remove unused ID structs
-Message-ID: <20200715032442.gh2cliiddhv35fdj@vireshk-i7>
-References: <20200714145049.2496163-1-lee.jones@linaro.org>
- <20200714145049.2496163-10-lee.jones@linaro.org>
- <CAJZ5v0iB0K6H28DSDQj9T7k_kV10THxV6-HwN9qfmkLsYNHfiA@mail.gmail.com>
- <20200714210340.GJ1398296@dell>
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=x02PSZ/ln73kH7sNoYBWCtnZv6JMMSwwMLMAhMgzHFw=;
+        b=oB5fTh1Ruv4+IXDIiB/4KddIc+Bw45HUoNf3HKjt9ZHX4nLhes40WA/paDwK8P27At
+         Bl+H4zzAv6N1TQJZwkvFRSUnkke0my5Qyjag7bG1UXuMgsn2YmLzC/0GJEqERlTqXw4v
+         TGNQNYV4dJQKXr3pgbLYtNVCL07K1W0Ua+d2CwhDKiWzk1WhozKImARepvAfh/S9xhDI
+         CJB4W1Zt58M2RHI8lCG+B1R2satc0Fl7fE+QADJh3fZ4OrD4FJeDmJS0omB1yJGhcgtd
+         Keh+VMr4wcerOXPeHNBxWdiDtMPd0MWEgQebte0kytVQDDM0OMN1KjozOLtky95ZWRPV
+         Edwg==
+X-Gm-Message-State: AOAM5331ssa5Q3lZ7AIyeNVTw513I4e0PVdqnhGMtrJwvwig3BrkQ07m
+        CDNZTNDEiY3ucSme4E5H+QE=
+X-Google-Smtp-Source: ABdhPJyDVid+brrmtZb5Ifc3sfFV/6rCk4qRYru0r78cYTkiQXtL3W+Z6drnA9x1nieS2mBIhqZGoA==
+X-Received: by 2002:a37:27c2:: with SMTP id n185mr7301100qkn.459.1594783593197;
+        Tue, 14 Jul 2020 20:26:33 -0700 (PDT)
+Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
+        by smtp.gmail.com with ESMTPSA id f15sm838709qka.120.2020.07.14.20.26.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 14 Jul 2020 20:26:32 -0700 (PDT)
+From:   Arvind Sankar <nivedita@alum.mit.edu>
+To:     x86@kernel.org, Masahiro Yamada <masahiroy@kernel.org>
+Cc:     linux-kbuild@vger.kernel.org, linux-efi@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] arch/x86/boot: Don't add the EFI stub to targets
+Date:   Tue, 14 Jul 2020 23:26:31 -0400
+Message-Id: <20200715032631.1562882-1-nivedita@alum.mit.edu>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200714210340.GJ1398296@dell>
-User-Agent: NeoMutt/20180716-391-311a52
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 14-07-20, 22:03, Lee Jones wrote:
-> On Tue, 14 Jul 2020, Rafael J. Wysocki wrote:
-> 
-> > On Tue, Jul 14, 2020 at 4:51 PM Lee Jones <lee.jones@linaro.org> wrote:
-> > >
-> > > Can't see them being used anywhere and the compiler doesn't complain
-> > > that they're missing, so ...
-> > 
-> > Aren't they needed for automatic module loading in certain configurations?
-> 
-> Any idea how that works, or where the code is for that?
+vmlinux-objs-y is added to targets, which currently means that the EFI
+stub gets added to the targets as well. It shouldn't be added since it
+is built elsewhere.
 
-The MODULE_DEVICE_TABLE() thingy creates a map of vendor-id,
-product-id that the kernel keeps after boot (and so there is no static
-reference of it for the compiler), later when a device is hotplugged
-into the kernel it refers to the map to find the related driver for it
-and loads it if it isn't already loaded.
+This confuses Makefile.build which interprets the EFI stub as a target
+	$(obj)/$(objtree)/drivers/firmware/efi/libstub/lib.a
+and will create drivers/firmware/efi/libstub/ underneath
+arch/x86/boot/compressed, to hold this supposed target, if building
+out-of-tree. [0]
 
-This has some of it, search for MODULE_DEVICE_TABLE() in it.
-Documentation/driver-api/usb/hotplug.rst
+Fix this by pulling the stub out of vmlinux-objs-y into efi-obj-y.
 
+[0] See scripts/Makefile.build near the end:
+    # Create directories for object files if they do not exist
+
+Signed-off-by: Arvind Sankar <nivedita@alum.mit.edu>
+---
+ arch/x86/boot/compressed/Makefile | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/arch/x86/boot/compressed/Makefile b/arch/x86/boot/compressed/Makefile
+index 7619742f91c9..5a828fde7a42 100644
+--- a/arch/x86/boot/compressed/Makefile
++++ b/arch/x86/boot/compressed/Makefile
+@@ -90,8 +90,8 @@ endif
+ 
+ vmlinux-objs-$(CONFIG_ACPI) += $(obj)/acpi.o
+ 
+-vmlinux-objs-$(CONFIG_EFI_STUB) += $(objtree)/drivers/firmware/efi/libstub/lib.a
+ vmlinux-objs-$(CONFIG_EFI_MIXED) += $(obj)/efi_thunk_$(BITS).o
++efi-obj-$(CONFIG_EFI_STUB) = $(objtree)/drivers/firmware/efi/libstub/lib.a
+ 
+ # The compressed kernel is built with -fPIC/-fPIE so that a boot loader
+ # can place it anywhere in memory and it will still run. However, since
+@@ -115,7 +115,7 @@ endef
+ quiet_cmd_check-and-link-vmlinux = LD      $@
+       cmd_check-and-link-vmlinux = $(cmd_check_data_rel); $(cmd_ld)
+ 
+-$(obj)/vmlinux: $(vmlinux-objs-y) FORCE
++$(obj)/vmlinux: $(vmlinux-objs-y) $(efi-obj-y) FORCE
+ 	$(call if_changed,check-and-link-vmlinux)
+ 
+ OBJCOPYFLAGS_vmlinux.bin :=  -R .comment -S
 -- 
-viresh
+2.26.2
+
