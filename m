@@ -2,110 +2,97 @@ Return-Path: <SRS0=kup7=A2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
+X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2245C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 23:34:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1159AC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 23:36:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C6F38206D5
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 23:34:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E86EE20656
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 23:36:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727813AbgGOXeN (ORCPT
+        id S1726905AbgGOXg4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 19:34:13 -0400
-Received: from mx2.suse.de ([195.135.220.15]:49902 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726770AbgGOXeM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 19:34:12 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 027CCB02B;
-        Wed, 15 Jul 2020 23:34:15 +0000 (UTC)
-From:   NeilBrown <neil@brown.name>
-To:     Christoph Hellwig <hch@lst.de>, linux-kernel@vger.kernel.org
-Date:   Thu, 16 Jul 2020 09:34:05 +1000
-Cc:     "H. Peter Anvin" <hpa@zytor.com>, Song Liu <song@kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-raid@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH 06/23] md: remove the autoscan partition re-read
-In-Reply-To: <20200714190427.4332-7-hch@lst.de>
-References: <20200714190427.4332-1-hch@lst.de> <20200714190427.4332-7-hch@lst.de>
-Message-ID: <878sfkxsia.fsf@notabene.neil.brown.name>
+        Wed, 15 Jul 2020 19:36:56 -0400
+Received: from www262.sakura.ne.jp ([202.181.97.72]:62153 "EHLO
+        www262.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726770AbgGOXgz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jul 2020 19:36:55 -0400
+Received: from fsav108.sakura.ne.jp (fsav108.sakura.ne.jp [27.133.134.235])
+        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id 06FNas9G083247;
+        Thu, 16 Jul 2020 08:36:54 +0900 (JST)
+        (envelope-from penguin-kernel@I-love.SAKURA.ne.jp)
+Received: from www262.sakura.ne.jp (202.181.97.72)
+ by fsav108.sakura.ne.jp (F-Secure/fsigk_smtp/550/fsav108.sakura.ne.jp);
+ Thu, 16 Jul 2020 08:36:54 +0900 (JST)
+X-Virus-Status: clean(F-Secure/fsigk_smtp/550/fsav108.sakura.ne.jp)
+Received: from [192.168.1.9] (M106072142033.v4.enabler.ne.jp [106.72.142.33])
+        (authenticated bits=0)
+        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id 06FNarZT083239
+        (version=TLSv1.2 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO);
+        Thu, 16 Jul 2020 08:36:54 +0900 (JST)
+        (envelope-from penguin-kernel@I-love.SAKURA.ne.jp)
+Subject: [PATCH] binder: Don't use mmput() from shrinker function.
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Arve Hjonnevag <arve@android.com>,
+        Todd Kjos <tkjos@android.com>,
+        Martijn Coenen <maco@android.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Christian Brauner <christian@brauner.io>,
+        Michal Hocko <mhocko@kernel.org>
+References: <0000000000001fbbb605aa805c9b@google.com>
+Cc:     syzbot <syzbot+e5344baa319c9a96edec@syzkaller.appspotmail.com>,
+        acme@kernel.org, alexander.shishkin@linux.intel.com,
+        jolsa@redhat.com, linux-kernel@vger.kernel.org,
+        mark.rutland@arm.com, mingo@redhat.com, namhyung@kernel.org,
+        peterz@infradead.org, syzkaller-bugs@googlegroups.com,
+        "open list:ANDROID DRIVERS" <devel@driverdev.osuosl.org>,
+        linux-mm <linux-mm@kvack.org>
+From:   Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+Message-ID: <5ce3ee90-333e-638d-ac8c-cd6d7ab7aa3b@I-love.SAKURA.ne.jp>
+Date:   Thu, 16 Jul 2020 08:36:52 +0900
+User-Agent: Mozilla/5.0 (Windows NT 6.3; Win64; x64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-        micalg=pgp-sha256; protocol="application/pgp-signature"
+In-Reply-To: <0000000000001fbbb605aa805c9b@google.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
+syzbot is reporting that mmput() from shrinker function has a risk of
+deadlock [1]. Don't start synchronous teardown of mm when called from
+shrinker function.
 
-On Tue, Jul 14 2020, Christoph Hellwig wrote:
+[1] https://syzkaller.appspot.com/bug?id=bc9e7303f537c41b2b0cc2dfcea3fc42964c2d45
 
-> devfs is long gone, and autoscan works just fine without this these days.
->
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
-> Acked-by: Song Liu <song@kernel.org>
+Reported-by: syzbot <syzbot+1068f09c44d151250c33@syzkaller.appspotmail.com>
+Reported-by: syzbot <syzbot+e5344baa319c9a96edec@syzkaller.appspotmail.com>
+Signed-off-by: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+---
+ drivers/android/binder_alloc.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Happy to see this go!
+diff --git a/drivers/android/binder_alloc.c b/drivers/android/binder_alloc.c
+index 42c672f1584e..cbe6aa77d50d 100644
+--- a/drivers/android/binder_alloc.c
++++ b/drivers/android/binder_alloc.c
+@@ -947,7 +947,7 @@ enum lru_status binder_alloc_free_page(struct list_head *item,
+ 		trace_binder_unmap_user_end(alloc, index);
+ 	}
+ 	mmap_read_unlock(mm);
+-	mmput(mm);
++	mmput_async(mm);
+ 
+ 	trace_binder_unmap_kernel_start(alloc, index);
+ 
+-- 
+2.18.4
 
-Reviewed-by: NeilBrown <neilb@suse.de>
 
-Thanks,
-NeilBrown
-
-
-> ---
->  drivers/md/md-autodetect.c | 10 ----------
->  1 file changed, 10 deletions(-)
->
-> diff --git a/drivers/md/md-autodetect.c b/drivers/md/md-autodetect.c
-> index 0eb746211ed53c..6bc9b734eee6ff 100644
-> --- a/drivers/md/md-autodetect.c
-> +++ b/drivers/md/md-autodetect.c
-> @@ -240,16 +240,6 @@ static void __init md_setup_drive(void)
->  			err =3D ksys_ioctl(fd, RUN_ARRAY, 0);
->  		if (err)
->  			printk(KERN_WARNING "md: starting md%d failed\n", minor);
-> -		else {
-> -			/* reread the partition table.
-> -			 * I (neilb) and not sure why this is needed, but I cannot
-> -			 * boot a kernel with devfs compiled in from partitioned md
-> -			 * array without it
-> -			 */
-> -			ksys_close(fd);
-> -			fd =3D ksys_open(name, 0, 0);
-> -			ksys_ioctl(fd, BLKRRPART, 0);
-> -		}
->  		ksys_close(fd);
->  	}
->  }
-> --=20
-> 2.27.0
-
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEEG8Yp69OQ2HB7X0l6Oeye3VZigbkFAl8Pkm0ACgkQOeye3VZi
-gbmvhRAAqNcDpiKiYUoh6S31+KrS0faoFbgtIelgUebGH3b9IvlXaerDxxz7ZkYE
-fWQxVUfscuRjirEJ2+SRztm6SLy0as8ufCrLV6EboI4mrqSij2WqNfSrEO9A7w76
-xMs0JmWrnGmz073MoI7maLYbh6dcDycSvDzcnHWGjD10kaZoNC39E4jLMtZFe4VR
-IVx69GH4LEWqWcE+wq9ZqGFKZnsGxdxr5+CIZrTTiZQcWEswBixbZc0Jsz0sh3CD
-tOpsCkq/nXlNc8Fo8nvyBUZuWHaPlwxMtw3xflwEJCl6CVhCKx9lRsCfnbYSD8VK
-hBJvdVmLazmVpR12ISimBJTH81xMayZNhCrqv97eXwY4LsRiOAN0F+VOtTew7WKI
-mHWz6jvyJLrsbuWhyDnqwSphOHcIX6UjOKhEhB9l1WRN5cwt7Cgvva6vnv7f8FBZ
-Dwo6YCshQw6llozCk3DBlNyw3mzsFSOo9GO2924lloxeN4W77giK68LCDSW3Wh94
-vW+elFckRQH3Er27BlT524ptXjV6XyKuOGVQJI6vWA3mOxJf5Vd99gqm6EC3wq3+
-a7C5QW+MO6FUeersShdyxfulSmQ5Bye1mByD6xuo4/2nvaufKQKQyIWEaECpTTst
-+LXbbfaQWZmuSy9Ps4G2ugXHgt03Ke3p3iMpIClLqY9NHa7kl9c=
-=n2C8
------END PGP SIGNATURE-----
---=-=-=--
