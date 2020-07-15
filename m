@@ -2,112 +2,108 @@ Return-Path: <SRS0=kup7=A2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58AC6C433E3
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 20:51:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3322FC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 20:53:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 378782065D
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 20:51:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594846285;
-	bh=7K2AKFplTVr819ofOXAFAyKxxpTCjfqstUP/bwMZbFw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=QDqsiMK4AkVEBv4ENplVZK3K5sUr/iqDpXszx5NOY7cT58R9Y57QMW5gnPqGubRLJ
-	 DC9A3Je648GYI/BU74GrySDEgMW9I+5fHH6yQseBfsHwhBTH1m2XgkcX0b1VfciH/N
-	 iyL+bVUp/pn2lgMDtUeD+52s7IohacvrDOGXYspA=
+	by mail.kernel.org (Postfix) with ESMTP id 11B7C2067D
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 20:53:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="HDRUmGjV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726984AbgGOUvX (ORCPT
+        id S1726776AbgGOUxp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 16:51:23 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:40700 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726356AbgGOUvX (ORCPT
+        Wed, 15 Jul 2020 16:53:45 -0400
+Received: from aserp2130.oracle.com ([141.146.126.79]:57780 "EHLO
+        aserp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726356AbgGOUxo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 16:51:23 -0400
-Received: by mail-io1-f66.google.com with SMTP id l17so3728614iok.7;
-        Wed, 15 Jul 2020 13:51:22 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=q9ACE8nvrxYAkV7UmkgZ6sY12qZMuGAXz/YkNp21cP8=;
-        b=LpBQtXg04ocu1/Q8mGVkib+W0iU7MtYouSSSgQ/34Boyh+bpLQ7p/GovdOggOwulsU
-         vhE6CIKFThZx+KzEpBGD3cSlpOeMrBXSF3AK8FcId3FyNiFZIFww/RDZ32ra1r5pLVj3
-         2PTRvBMJw2wyfVU51b14qX3xBIIRB8hwROwQq4QxQypIRV52Dq1pvHXRBX/XgQmXBEAp
-         E5Pnfgd5Af078PGV7G5pZxAXt5dI5iYN/QIUBahTc/8EsAWVHf/WISeduP3npOhJUpQp
-         LyA/nMH0jgL8LVOwLaGKkUsprr884+CoOCLgpz82HpZeyGeUXXXYlozhltIXoK41oOnB
-         Hf4Q==
-X-Gm-Message-State: AOAM531xyvCulBgRrh5OYmx9dZ3QXvy9FynsAXHx4Kch5v3DlNEkbWhf
-        iJYcL+Aglj4ys0Pb7cZvdFXp5ctCrg==
-X-Google-Smtp-Source: ABdhPJwJgZBHTochu4o5lfkCZewGDWCyBkruv1P6g3YXlsJ82fsfdRZEt+/xHnCbpv9RpaMjsjLcFw==
-X-Received: by 2002:a6b:4409:: with SMTP id r9mr1160938ioa.158.1594846282053;
-        Wed, 15 Jul 2020 13:51:22 -0700 (PDT)
-Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id s18sm1576592ilj.63.2020.07.15.13.51.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 15 Jul 2020 13:51:21 -0700 (PDT)
-Received: (nullmailer pid 795410 invoked by uid 1000);
-        Wed, 15 Jul 2020 20:51:20 -0000
-Date:   Wed, 15 Jul 2020 14:51:20 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Miles Chen <miles.chen@mediatek.com>
-Cc:     Joerg Roedel <joro@8bytes.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        iommu@lists.linux-foundation.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, wsd_upstream@mediatek.com,
-        Yong Wu <yong.wu@mediatek.com>,
-        Chao Hao <chao.hao@mediatek.com>,
-        Yingjoe Chen <yingjoe.chen@mediatek.com>
-Subject: Re: [PATCH 1/4] dt-bindings: mediatek: add mediatek,infracfg phandle
-Message-ID: <20200715205120.GA778876@bogus>
-References: <20200702093721.6063-1-miles.chen@mediatek.com>
+        Wed, 15 Jul 2020 16:53:44 -0400
+Received: from pps.filterd (aserp2130.oracle.com [127.0.0.1])
+        by aserp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06FKW2Du147198;
+        Wed, 15 Jul 2020 20:53:18 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
+ from : message-id : references : date : in-reply-to : mime-version :
+ content-type; s=corp-2020-01-29;
+ bh=62GDuwaaSfc70sN5qjgMF0+16PJauklzFTdwCeP+NQA=;
+ b=HDRUmGjVogNoQNaF+paYq4QBogeS4Nvz/WFgY2AlLrnKaRn68pmjTe/94QxXbdL534Wm
+ mOzej0+qFCf/s8EPSOfzAggfn4ikBqaZzn+bBbAfQnduIEDJt7tXibQL52J9rTnVYYB/
+ xZ5cYOU09PDzkm3jQmhKc4y2PmxflfN6i+UgHrsqLE4cBJRwGBx5sF5o/A/1Crbrkirp
+ hu+omEEhvOgh3SWEuxHMRcAfWwbnqfXWTUWEdzM8+kSdsZIJbX8jh+CCIqCTr3RucH2R
+ RWH0M/TIyduSk2tyBa9sdtBWly3o5sOrYm4LMnArsuAWvCokH8+CtACW3pTempPpKk8+ 2w== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by aserp2130.oracle.com with ESMTP id 327s65m17y-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 15 Jul 2020 20:53:18 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06FKXeeZ059197;
+        Wed, 15 Jul 2020 20:53:18 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by aserp3020.oracle.com with ESMTP id 327qb8thdq-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 15 Jul 2020 20:53:18 +0000
+Received: from abhmp0006.oracle.com (abhmp0006.oracle.com [141.146.116.12])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 06FKrHXb031054;
+        Wed, 15 Jul 2020 20:53:17 GMT
+Received: from ca-mkp.ca.oracle.com (/10.159.214.123)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 15 Jul 2020 13:53:17 -0700
+To:     Simon Arlott <simon@octiron.net>
+Cc:     Jens Axboe <axboe@kernel.dk>, linux-ide@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Park Ju Hyung <qkrwngud825@gmail.com>,
+        Tejun Heo <tj@kernel.org>
+Subject: Re: [PATCH] ata: Disable queued TRIM for Samsung 860 SSDs
+From:   "Martin K. Petersen" <martin.petersen@oracle.com>
+Organization: Oracle Corporation
+Message-ID: <yq1blkgo6y0.fsf@ca-mkp.ca.oracle.com>
+References: <9324ef33-eedd-b965-37e8-b82e06778aab@0882a8b5-c6c3-11e9-b005-00805fc181fe>
+Date:   Wed, 15 Jul 2020 16:53:14 -0400
+In-Reply-To: <9324ef33-eedd-b965-37e8-b82e06778aab@0882a8b5-c6c3-11e9-b005-00805fc181fe>
+        (Simon Arlott's message of "Wed, 15 Jul 2020 12:13:24 +0100")
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200702093721.6063-1-miles.chen@mediatek.com>
+Content-Type: text/plain
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9683 signatures=668680
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=921 malwarescore=0
+ mlxscore=0 spamscore=0 phishscore=0 suspectscore=0 bulkscore=0
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2007150158
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9683 signatures=668680
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 malwarescore=0
+ phishscore=0 mlxscore=0 priorityscore=1501 lowpriorityscore=0 spamscore=0
+ clxscore=1011 bulkscore=0 mlxlogscore=931 impostorscore=0 suspectscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2007150158
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 02, 2020 at 05:37:17PM +0800, Miles Chen wrote:
-> Add a description for mediatek,infracfg. We can check if 4GB mode
-> is enable by reading it instead of checking the unexported
-> symbol "max_pfn".
-> 
-> This is a step towards building mtk_iommu as a kernel module.
 
-You determined this before without DT, so it is an OS problem and 
-shouldn't need a DT update.
+Hi Simon!
 
-I'd assume there's only one instance of the node mediatek,infracfg 
-points to, so just search for it if you want to get the info from DT.
+> Despite the unsubstantiated claim from Samsung that "the improved
+> queued trim enhances Linux compatibility" this does not appear to be
+> true, even on Intel SATA controllers:
 
+I am aware of several people using 860 drives with queued TRIM. And I
+haven't heard any complaints outside of the bug you referenced.
 
-> 
-> Cc: Yong Wu <yong.wu@mediatek.com>
-> Signed-off-by: Miles Chen <miles.chen@mediatek.com>
-> ---
->  Documentation/devicetree/bindings/iommu/mediatek,iommu.txt | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/iommu/mediatek,iommu.txt b/Documentation/devicetree/bindings/iommu/mediatek,iommu.txt
-> index ce59a505f5a4..a7881deabcca 100644
-> --- a/Documentation/devicetree/bindings/iommu/mediatek,iommu.txt
-> +++ b/Documentation/devicetree/bindings/iommu/mediatek,iommu.txt
-> @@ -74,6 +74,8 @@ Required properties:
->  - mediatek,larbs : List of phandle to the local arbiters in the current Socs.
->  	Refer to bindings/memory-controllers/mediatek,smi-larb.txt. It must sort
->  	according to the local arbiter index, like larb0, larb1, larb2...
-> +- mediatek,infracfg: a phandle to infracfg. It is used to confirm if 4GB mode is set.
-> +	It is an optional property, add it when the SoC have 4g mode.
->  - iommu-cells : must be 1. This is the mtk_m4u_id according to the HW.
->  	Specifies the mtk_m4u_id as defined in
->  	dt-binding/memory/mt2701-larb-port.h for mt2701, mt7623
-> -- 
-> 2.18.0
+Also, I have tested both 860 2.5" Pro and 860 mSATA EVO on a few
+different systems in my lab without any problems. See:
+
+    https://lore.kernel.org/stable/yq1h87du82d.fsf@oracle.com/T/
+
+I really wish we had some more data to work with :(
+
+Lacking a proper heuristic I guess we don't have any choice to disable
+the feature. But that's sad news for the people who currently don't have
+problems since their performance will inevitably suffer.
+
+-- 
+Martin K. Petersen	Oracle Linux Engineering
