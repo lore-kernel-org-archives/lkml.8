@@ -2,116 +2,314 @@ Return-Path: <SRS0=kup7=A2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE986C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 08:17:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B51DC433E3
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 08:18:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D1021206D5
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 08:17:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594801073;
-	bh=SvP8iyns00kbpVs5yBcwZXOYmwphb3eMqVXOlGWTykA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=1kv11NhwySzGNn7v311buQzmIjEM3/QOcw0lqmCXLU+IxNFkpFtzmXGtXy/wSmAzH
-	 oBwiabQOhG4BCla/1XFtbJFjmgYmxOKBoAGdr2TRjXZ5X/LLaonh9oVWgXDnwXrdJ3
-	 EMJKIAWXdSszDhjJ5vrzGgk7FmqeEpJLn8F5WypE=
+	by mail.kernel.org (Postfix) with ESMTP id DFD93206D5
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 08:18:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="aabUMemp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729730AbgGOIRx (ORCPT
+        id S1729739AbgGOISI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 04:17:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34480 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729609AbgGOIRw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 04:17:52 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6AA6C2067D;
-        Wed, 15 Jul 2020 08:17:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594801072;
-        bh=SvP8iyns00kbpVs5yBcwZXOYmwphb3eMqVXOlGWTykA=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=HhHhjzla7+qt5CngL6tg5OM8+pscX43/hxhpf0kHJwQsQVuNpjZXwGmgSDYsq3RXV
-         6dC1i4zALOwOJ56/cRJoVeZYfrOnPlYBKn4tJURD3URn3WDl4n2UBrZfMzXMP9LxeC
-         T+xIJs1imS7+nrpQajRxS2+QjIWt3dX/+1R0/IKI=
-Date:   Wed, 15 Jul 2020 10:17:46 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Michal Miroslaw <mirq-linux@rere.qmqm.pl>
-Cc:     Chen Yu <yu.c.chen@intel.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Len Brown <len.brown@intel.com>,
-        Zhang Rui <rui.zhang@intel.com>, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/2][RESEND v3] PM-runtime: change the tracepoints to
- cover all usage_count
-Message-ID: <20200715081746.GA2616388@kroah.com>
-References: <cover.1594790493.git.yu.c.chen@intel.com>
- <395187057e486df9a4328bc6d7d4ee912967fdb3.1594790493.git.yu.c.chen@intel.com>
- <20200715070614.GA2297388@kroah.com>
- <20200715072728.GA18147@qmqm.qmqm.pl>
+        Wed, 15 Jul 2020 04:18:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50478 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729677AbgGOISI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jul 2020 04:18:08 -0400
+Received: from mail-oi1-x243.google.com (mail-oi1-x243.google.com [IPv6:2607:f8b0:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1D06BC061755
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 01:18:08 -0700 (PDT)
+Received: by mail-oi1-x243.google.com with SMTP id t4so1560167oij.9
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 01:18:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ffwll.ch; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=7JdzSf1JNPBFVrVfQRC059VSwx1Vs2UfRAfsdcG4f4A=;
+        b=aabUMempCX4LPdKZgAW5dffc1J6UiQbjVnVijSeBSWTeLds2OtbKw6UUxwm/GMpqt8
+         u5g7T6pZ+nR7yGLi4mKhCV9Tnk1qa5x3j5B1xN5rwzkAhzV6dUKsqi6zfLKt/PdWGqB4
+         kyzUk4S/n78c5nXMCFwE/AicJYdqtWSV23Ewk=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=7JdzSf1JNPBFVrVfQRC059VSwx1Vs2UfRAfsdcG4f4A=;
+        b=HsD67/EcXZhowNCJYw0oL1IxS9LtRWD+j7ZNFEZmk857p0ZX8FjWjZfnFyYrzbj5va
+         a2Ha4WOYuNmPQUWQpEOnLmcL+jlXVnniFvapNgTl6ujRcELVf4dibYpPGYeX52/iQrP1
+         O+V4pPKx4IAOj32Ml3jVjtHs58D6vH+Lw39IV193qg/gEhSLCqBGwYHYLiFpyRYsO2di
+         MIsqZ/LXDURPdeC55Oacm4ixzBCU33Q19Bqd84HFna1C4FnVsX9SmhJ+0wv+Leb9UJYH
+         3tQb8N5CTopy34jL1BBEdG75foTL6VBuIPXzyKe2c4936otd6GA+OP3bVQyYH67Y8Q5b
+         1+aA==
+X-Gm-Message-State: AOAM530YOByZ50wvx1eeC4fPoyIXFc6hy65+0a0yZGINcd9330CZBUck
+        EXju2E4fLigJli3k8aptwJUleQ7f09Z30gjH7fFp2Q==
+X-Google-Smtp-Source: ABdhPJwCQgYDcPMZzrGLvELaH1VLlC9bthrN46oK5Ru4vARAWOM0IUpQTwsJJ+vwykLeJ6jKKsAyGZ/O2tpqhY7/kPY=
+X-Received: by 2002:a05:6808:88:: with SMTP id s8mr6418797oic.101.1594801087422;
+ Wed, 15 Jul 2020 01:18:07 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200715072728.GA18147@qmqm.qmqm.pl>
+References: <20200701153134.4187-1-realwakka@gmail.com> <20200702131355.GX3278063@phenom.ffwll.local>
+ <20200710170533.xn2ar2cpekom6i2n@smtp.gmail.com> <20200713160621.GQ3278063@phenom.ffwll.local>
+ <20200714102009.4qxgdq5bkpwhhhio@smtp.gmail.com> <CAJeY4oF9k--dGOYaC9qAXiVbx6aX2a6isXpfOg+JV2s+UskKGA@mail.gmail.com>
+ <20200714140904.GF3278063@phenom.ffwll.local> <20200714183513.6zah7wqlo2bpalum@smtp.gmail.com>
+In-Reply-To: <20200714183513.6zah7wqlo2bpalum@smtp.gmail.com>
+From:   Daniel Vetter <daniel@ffwll.ch>
+Date:   Wed, 15 Jul 2020 10:17:56 +0200
+Message-ID: <CAKMK7uFF=CuuTQQJ+MSZD-7+gDzcN-jKB3Uojgps+hY0jdz1bg@mail.gmail.com>
+Subject: Re: [PATCH] drm/vkms: add wait_for_vblanks in atomic_commit_tail
+To:     Melissa Wen <melissa.srw@gmail.com>
+Cc:     Sidong Yang <realwakka@gmail.com>,
+        Haneen Mohammed <hamohammed.sa@gmail.com>,
+        Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>,
+        David Airlie <airlied@linux.ie>,
+        Emil Velikov <emil.l.velikov@gmail.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        DRI Development <dri-devel@lists.freedesktop.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 15, 2020 at 09:27:28AM +0200, Michal Miroslaw wrote:
-> On Wed, Jul 15, 2020 at 09:06:14AM +0200, Greg Kroah-Hartman wrote:
-> > On Wed, Jul 15, 2020 at 02:28:03PM +0800, Chen Yu wrote:
-> > > Commit d229290689ae ("PM-runtime: add tracepoints for usage_count changes")
-> > > has added some tracepoints to monitor the change of runtime usage, and
-> > > there is something to improve:
-> > > 1. There are some places that adjust the usage count not
-> > >    been traced yet. For example, pm_runtime_get_noresume() and
-> > >    pm_runtime_put_noidle()
-> > > 2. The change of the usage count will not be tracked if decreased
-> > >    from 1 to 0.
-> > > 
-> > > This patch intends to adjust the logic to be consistent with the
-> > > change of usage_counter, that is to say, only after the counter has
-> > > been possibly modified, we record it. Besides, all usage changes will
-> > > be shown using rpm_usage even if included by other trace points.
-> > > And these changes has helped track down the e1000e runtime issue.
-> > > 
-> > > Reviewed-by: Michał Mirosław <mirq-linux@rere.qmqm.pl>
-> > > Signed-off-by: Chen Yu <yu.c.chen@intel.com>
-> > > ---
-> > >  drivers/base/power/runtime.c | 38 +++++++++++++++++++++++-------------
-> > >  1 file changed, 24 insertions(+), 14 deletions(-)
-> > > 
-> > > diff --git a/drivers/base/power/runtime.c b/drivers/base/power/runtime.c
-> > > index 85a248e196ca..5789d2624513 100644
-> > > --- a/drivers/base/power/runtime.c
-> > > +++ b/drivers/base/power/runtime.c
-> > > @@ -1004,10 +1004,11 @@ int __pm_runtime_idle(struct device *dev, int rpmflags)
-> > >  	int retval;
-> > >  
-> > >  	if (rpmflags & RPM_GET_PUT) {
-> > > -		if (!atomic_dec_and_test(&dev->power.usage_count)) {
-> > > -			trace_rpm_usage_rcuidle(dev, rpmflags);
-> > > +		bool non_zero = !atomic_dec_and_test(&dev->power.usage_count);
-> > > +
-> > > +		trace_rpm_usage_rcuidle(dev, rpmflags);
-> > 
-> > Why not just call trace everywhere before you do the atomic operations?
-> > Why does the trace need to be called after the operation everywhere?
-> 
-> I would argue that this is easier mentally: We trace what state the
-> device is in from now on (a "current state" for the time being) instead
-> of tracing what it was before (an information that has just expired).
+On Tue, Jul 14, 2020 at 9:01 PM Melissa Wen <melissa.srw@gmail.com> wrote:
+>
+> On 07/14, Daniel Vetter wrote:
+> > On Tue, Jul 14, 2020 at 07:39:42AM -0300, Melissa Wen wrote:
+> > > On Tue, Jul 14, 2020 at 7:20 AM Melissa Wen <melissa.srw@gmail.com> wrote:
+> > > >
+> > > > On 07/13, Daniel Vetter wrote:
+> > > > > On Fri, Jul 10, 2020 at 02:05:33PM -0300, Melissa Wen wrote:
+> > > > > > On 07/02, Daniel Vetter wrote:
+> > > > > > > On Wed, Jul 01, 2020 at 03:31:34PM +0000, Sidong Yang wrote:
+> > > > > > > > there is an error when igt test is run continuously. vkms_atomic_commit_tail()
+> > > > > > > > need to call drm_atomic_helper_wait_for_vblanks() for give up ownership of
+> > > > > > > > vblank events. without this code, next atomic commit will not enable vblank
+> > > > > > > > and raise timeout error.
+> > > > > > > >
+> > > > > > > > Signed-off-by: Sidong Yang <realwakka@gmail.com>
+> > > > > > > > ---
+> > > > > > > >  drivers/gpu/drm/vkms/vkms_drv.c | 2 ++
+> > > > > > > >  1 file changed, 2 insertions(+)
+> > > > > > > >
+> > > > > > > > diff --git a/drivers/gpu/drm/vkms/vkms_drv.c b/drivers/gpu/drm/vkms/vkms_drv.c
+> > > > > > > > index 1e8b2169d834..10b9be67a068 100644
+> > > > > > > > --- a/drivers/gpu/drm/vkms/vkms_drv.c
+> > > > > > > > +++ b/drivers/gpu/drm/vkms/vkms_drv.c
+> > > > > > > > @@ -93,6 +93,8 @@ static void vkms_atomic_commit_tail(struct drm_atomic_state *old_state)
+> > > > > > > >                 flush_work(&vkms_state->composer_work);
+> > > > > > > >         }
+> > > > > > > >
+> > > > > > > > +       drm_atomic_helper_wait_for_vblanks(dev, old_state);
+> > > > > > >
+> > > > > > > Uh, we have a wait_for_flip_done right above, which should be doing
+> > > > > > > exactly the same, but more precisely: Instead of just waiting for any
+> > > > > > > vblank to happen, we wait for exactly the vblank corresponding to this
+> > > > > > > atomic commit. So no races possible. If this is papering over some issue,
+> > > > > > > then I think more debugging is needed.
+> > > > > > >
+> > > > > > > What exactly is going wrong here for you?
+> > > > > >
+> > > > > > Hi Daniel and Sidong,
+> > > > > >
+> > > > > > I noticed a similar issue when running the IGT test kms_cursor_crc. For
+> > > > > > example, a subtest that passes on the first run (alpha-opaque) fails on
+> > > > > > the second due to a kind of busy waiting in subtest preparation (the
+> > > > > > subtest fails before actually running).
+> > > > > >
+> > > > > > In addition, in the same test, the dpms subtest started to fail since
+> > > > > > the commit that change from wait_for_vblanks to wait_for_flip_done. By
+> > > > > > reverting this commit, the dpms subtest passes again and the sequential
+> > > > > > subtests return to normal.
+> > > > > >
+> > > > > > I am trying to figure out what's missing from using flip_done op on
+> > > > > > vkms, since I am also interested in solving this problem and I
+> > > > > > understand that the change for flip_done has been discussed in the past.
+> > > > > >
+> > > > > > Do you have any idea?
+> > > > >
+> > > > > Uh, not at all. This is indeed rather surprising ...
+> > > > >
+> > > > > What exactly is the failure mode when running a test the 2nd time? Full
+> > > > > igt logs might give me an idea. But yeah this is kinda surprising.
+> > > >
+> > > > Hi Daniel,
+> > > >
+> > > > This is the IGT log of the 2nd run of kms_cursor_crc/alpha-opaque:
+> > > >
+> > > > IGT-Version: 1.25-NO-GIT (x86_64) (Linux: 5.8.0-rc2-DRM+ x86_64)
+> > > > Force option used: Using driver vkms
+> > > > Starting subtest: pipe-A-cursor-alpha-opaque
+> > > > Timed out: Opening crc fd, and poll for first CRC.
+> > > > Subtest pipe-A-cursor-alpha-opaque failed.
+> > > > **** DEBUG ****
+> > > > (kms_cursor_crc:2317) igt_kms-DEBUG: display: Virtual-1: set_pipe(A)
+> > > > (kms_cursor_crc:2317) igt_kms-DEBUG: display: Virtual-1: Selecting pipe A
+> > > > (kms_cursor_crc:2317) igt_fb-DEBUG: igt_create_fb_with_bo_size(width=1024, height=768, format=XR24(0x34325258), modifier=0x0, size=0)
+> > > > (kms_cursor_crc:2317) igt_fb-DEBUG: igt_create_fb_with_bo_size(handle=1, pitch=4096)
+> > > > (kms_cursor_crc:2317) igt_fb-DEBUG: Test requirement passed: cairo_surface_status(fb->cairo_surface) == CAIRO_STATUS_SUCCESS
+> > > > (kms_cursor_crc:2317) igt_fb-DEBUG: igt_create_fb_with_bo_size(width=1024, height=768, format=XR24(0x34325258), modifier=0x0, size=0)
+> > > > (kms_cursor_crc:2317) igt_fb-DEBUG: igt_create_fb_with_bo_size(handle=2, pitch=4096)
+> > > > (kms_cursor_crc:2317) igt_fb-DEBUG: Test requirement passed: cairo_surface_status(fb->cairo_surface) == CAIRO_STATUS_SUCCESS
+> > > > (kms_cursor_crc:2317) igt_kms-DEBUG: Test requirement passed: plane_idx >= 0 && plane_idx < pipe->n_planes
+> > > > (kms_cursor_crc:2317) igt_kms-DEBUG: Test requirement passed: plane_idx >= 0 && plane_idx < pipe->n_planes
+> > > > (kms_cursor_crc:2317) igt_kms-DEBUG: display: A.0: plane_set_fb(37)
+> > > > (kms_cursor_crc:2317) igt_kms-DEBUG: display: A.0: plane_set_size (1024x768)
+> > > > (kms_cursor_crc:2317) igt_kms-DEBUG: display: A.0: fb_set_position(0,0)
+> > > > (kms_cursor_crc:2317) igt_kms-DEBUG: display: A.0: fb_set_size(1024x768)
+> > > > (kms_cursor_crc:2317) igt_kms-DEBUG: display: commit {
+> > > > (kms_cursor_crc:2317) igt_kms-DEBUG: display:     Virtual-1: SetCrtc pipe A, fb 37, src (0, 0), mode 1024x768
+> > > > (kms_cursor_crc:2317) igt_kms-DEBUG: display:     SetCursor pipe A, disabling
+> > > > (kms_cursor_crc:2317) igt_kms-DEBUG: display:     MoveCursor pipe A, (0, 0)
+> > > > (kms_cursor_crc:2317) igt_kms-DEBUG: display: }
+> > > > (kms_cursor_crc:2317) igt_debugfs-DEBUG: Opening debugfs directory '/sys/kernel/debug/dri/0'
+> > > > (kms_cursor_crc:2317) igt_debugfs-DEBUG: Opening debugfs directory '/sys/kernel/debug/dri/0'
+> > > > (kms_cursor_crc:2317) igt_debugfs-DEBUG: Opening debugfs directory '/sys/kernel/debug/dri/0'
+> > > > (kms_cursor_crc:2317) igt_core-INFO: Timed out: Opening crc fd, and poll for first CRC.
+> > > > ****  END  ****
+> > > > Subtest pipe-A-cursor-alpha-opaque: FAIL (10.017s)
+> > > >
+> > > > ---
+> > > >
+> > > > What I found was a timeout in the poll of
+> > > > igt_debugfs/igt_pipe_crc_start() that in turn is called in the
+> > > > prepare_crc() of kms_cursor_crc.
+> > > >
+> > > > Initially, I thought it was just a matter of timing for vblank and sent
+> > > > a patch to IGT that solved the problem by calling igt_wait_for_vblank()
+> > > > before the "start" op. But then I saw that the timeout also happens in a
+> > > > similar way in the dpms subtest, which before the change to flip_done
+> > > > was succeded.
+> > > >
+> > > > I still have doubts if it is or not a matter of timing...
+> > >
+> > > Just to complement, this is what I sent to IGT due to my first suspicion
+> > > (still not reviewed): https://patchwork.freedesktop.org/series/78813/
+> >
+> > Hm, so the first patch makes some sense I think, that would indeed be a
+> > test bug if we pile up the crc and leak the old one.
+> >
+> > The 2nd patch looks a bit like similar duct-tape like the kernel patch
+> > here, somehow forcing a full vblank wait instead of just waiting for the
+> > previos flip to complete fixes something. I'm just really confused what it
+> > could be.
+> >
+> > We don't have multiple crtc in vkms, so it's likely not that, but it could
+> > be that something goes wrong when we switch everything on. And after one
+> > vblank, things are in sync and working ...
+> >
+> > Maybe to test this theory, adding a drm_crtc_wait_one_vblank() to the
+> > crtc->enable function? If that fixes all these bugs, then we at least have
+> > a better idea where this vblank wait is needed, and can try to investigate
+> > a bit more focused why.
+>
+> Hey,
+>
+> I just checked this way (let me know if I made a mistake):
+>
+> diff --git a/drivers/gpu/drm/vkms/vkms_crtc.c b/drivers/gpu/drm/vkms/vkms_crtc.c
+> index ac85e17428f8..893d451fa966 100644
+> --- a/drivers/gpu/drm/vkms/vkms_crtc.c
+> +++ b/drivers/gpu/drm/vkms/vkms_crtc.c
+> @@ -212,6 +212,7 @@ static void vkms_crtc_atomic_enable(struct drm_crtc *crtc,
+>                                     struct drm_crtc_state *old_state)
+>  {
+>         drm_crtc_vblank_on(crtc);
+> +       drm_crtc_wait_one_vblank(crtc);
+>  }
+>
+> and yes, in the case of kms_cursor_crc, it solves the failure of the 2nd
+> run (ie, sequential run) and the failure of the cursor-dpms subtest.
+>
+> :)
+> >
+> > I don't think it's relevant for crtc->disable, since once the crtc is off,
+> > vblanks stop doing anything. And since steady-state seems to work (at
+> > least your igt patch only adds a vblank wait on setup), so I don't think
+> > we need it for all flips ...
+>
+> I'm not sure if it's also related: I noticed that the cursor-suspend
+> subtest has another pipe_crc_start that is also "requiring" another
+> igt_wait_for_vblank before it.
+>
+> Describing a little more, the cursor-dpms and cursor-suspend subtests
+> have the same setup structure [do_single_test()] besides the
+> prepare_crtc, but in the case of cursor-suspend, even applying any of
+> these "proposals" to wait for vblank, it still breaks due to timeout
+> issues in a last pipe_crc_start.  The cursor-suspend subtest only
+> completes when we add another igt_wait_for_vblank also here.
 
-Is that really the case here and you look at that atomic value somehow
-in the trace and need it?
+Excellent debug work, that's some solid information that limits the
+scope of the bug. I think the next step would be to put a vblank wait
+into the vkms crc setup function. If that papers over all the bugs
+you've found, then that should give us pretty solid information about
+what's breaking. And hopefully only a little bit of code to further
+debug.
 
-thanks,
+Cheers, Daniel
+>
+> >
+> > Stil confused what's going on here.
+> > -Daniel
+> >
+> > >
+> > > >
+> > > >
+> > > > Thanks,
+> > > >
+> > > > Melissa
+> > > > >
+> > > > > Also happy to chat on irc for debugging ideas, that might be faster (I'm
+> > > > > danvet on #dri-devel on freenode).
+> > > > > -Daniel
+> > > > >
+> > > > > >
+> > > > > > Melissa
+> > > > > >
+> > > > > > > -Daniel
+> > > > > > >
+> > > > > > > > +
+> > > > > > > >         drm_atomic_helper_cleanup_planes(dev, old_state);
+> > > > > > > >  }
+> > > > > > > >
+> > > > > > > > --
+> > > > > > > > 2.17.1
+> > > > > > > >
+> > > > > > >
+> > > > > > > --
+> > > > > > > Daniel Vetter
+> > > > > > > Software Engineer, Intel Corporation
+> > > > > > > http://blog.ffwll.ch
+> > > > > > > _______________________________________________
+> > > > > > > dri-devel mailing list
+> > > > > > > dri-devel@lists.freedesktop.org
+> > > > > > > https://lists.freedesktop.org/mailman/listinfo/dri-devel
+> > > > >
+> > > > > --
+> > > > > Daniel Vetter
+> > > > > Software Engineer, Intel Corporation
+> > > > > http://blog.ffwll.ch
+> > > _______________________________________________
+> > > dri-devel mailing list
+> > > dri-devel@lists.freedesktop.org
+> > > https://lists.freedesktop.org/mailman/listinfo/dri-devel
+> >
+> > --
+> > Daniel Vetter
+> > Software Engineer, Intel Corporation
+> > http://blog.ffwll.ch
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/dri-devel
 
-greg k-h
+
+
+-- 
+Daniel Vetter
+Software Engineer, Intel Corporation
+http://blog.ffwll.ch
