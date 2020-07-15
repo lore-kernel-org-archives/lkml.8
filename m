@@ -2,139 +2,237 @@ Return-Path: <SRS0=kup7=A2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B8B4C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 15:47:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF81DC433E2
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 15:47:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6635E2065E
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 15:47:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uAmWLwE/"
+	by mail.kernel.org (Postfix) with ESMTP id 84B3D2065E
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 15:47:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594828070;
+	bh=3u48/YRTR/wIj6gVq5s5zi28RKvRxbQeXZRmg5f8kbI=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=QE1WGRLrUi9tX1pJa2qojm/NpFu0y9l7J/nJ7nJjnZ5Q5B1cE6I5NBVAS/3jiSyul
+	 5hpdwdY93eCrfz5NcnxLCii4XB5+MeU5/LfjWF7rgyOMUIzGHkuYMGG5+KGYJCHtwJ
+	 eZnOSs5HCV2joyC8RzwS7V73vLxzWwRbK5WXGySo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726722AbgGOPrH (ORCPT
+        id S1726384AbgGOPrt convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 11:47:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35276 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725798AbgGOPrG (ORCPT
+        Wed, 15 Jul 2020 11:47:49 -0400
+Received: from mail-oo1-f65.google.com ([209.85.161.65]:34926 "EHLO
+        mail-oo1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725798AbgGOPrs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 11:47:06 -0400
-Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9C088C061755
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 08:47:06 -0700 (PDT)
-Received: by mail-pj1-x1043.google.com with SMTP id b92so3157996pjc.4
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 08:47:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=sLH6sJiQXmgSukJgX8/DO69X96LYF+NzNLc7t6L2/Sg=;
-        b=uAmWLwE/X7tejts48oDLWu0N6J93qGudNux6Py3WgedC2uNFNKbkxWa4xcuJj8DSNJ
-         WCmMZk7dNnRWhN8uwqZsSYcpSXoq2ffwYgs1/2uwBDpmB2OM3EWvKDeS/CGdwcwd/qkN
-         2y9RqYoC3ANMVx2b4g20hxXBH/jgNBuiZ3oQOljHnsWA7JF3/m2eMeA4hDCq71NYJtY7
-         zw4on+IR8Rs9jUyRk+NpBkFyjF/iZawih3U0wO8Z/VpTlk8LfeBsfOP0gyfQJGfxvqvm
-         88uude+3Opu9bwq/gsHcN0Z5KYVj/rBh4zq0sjSiWMQkZWsCPo2KYdkBF4lctkwU4JIi
-         xIVQ==
+        Wed, 15 Jul 2020 11:47:48 -0400
+Received: by mail-oo1-f65.google.com with SMTP id w1so555705ooj.2;
+        Wed, 15 Jul 2020 08:47:48 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=sLH6sJiQXmgSukJgX8/DO69X96LYF+NzNLc7t6L2/Sg=;
-        b=iIFujEreSwQAVJCmG2gSdbj2YX/4JVrKVD8B4iRW35PO2eQ9iLemoRu9tiZqNbhq+v
-         u1nXrFKj7iDc1LKxGvltDzuMfY7Q4XZOzNk9qpU9aTJj2TKgIQMEMAu1lBOqSfRL1rU4
-         j6y2CbOy3l7s9VpcokioIq9XDebp/4lkDIH2ppzP6v0zNg9nNFl/rzEbY5BtGFreR50B
-         UxOjuFnBwFdZr5lhFvMDIe8NgGAiekmUE2egPK/AR574Bpbr5ygm4RcdyQbC6IVbjALv
-         U17oNzJ3Mgws+iRmk5ejhrh/tTrnda8quiY/NeGvHw2SSSaSdgG8MXBeYgkMKMzhuxqY
-         dL+Q==
-X-Gm-Message-State: AOAM530UljkTwYkEzuGjGgI09UlrdpL+/kYSmLaBfV4frKkUsvvaV/0G
-        kk69BXIzmnplF2NbzG7JLm8RDmRU+cCEXQ==
-X-Google-Smtp-Source: ABdhPJxxYu7No5w89yfleDz0iprY6cdSbOIG/ccb39GlpAwOINaCRTj9MkoTwMfKq+GPxG/gu1MM0g==
-X-Received: by 2002:a17:902:680c:: with SMTP id h12mr99767plk.142.1594828026116;
-        Wed, 15 Jul 2020 08:47:06 -0700 (PDT)
-Received: from arpitha-Inspiron-7570.lan ([49.206.11.188])
-        by smtp.gmail.com with ESMTPSA id g26sm2446064pfq.205.2020.07.15.08.47.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 15 Jul 2020 08:47:05 -0700 (PDT)
-From:   Arpitha Raghunandan <98.arpi@gmail.com>
-To:     Larry.Finger@lwfinger.net, gregkh@linuxfoundation.org,
-        puranjay12@gmail.com, yepeilin.cs@gmail.com
-Cc:     Arpitha Raghunandan <98.arpi@gmail.com>,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v3] staging: rtl8188eu: core: fix coding style issues
-Date:   Wed, 15 Jul 2020 21:16:23 +0530
-Message-Id: <20200715154623.78315-1-98.arpi@gmail.com>
-X-Mailer: git-send-email 2.25.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=2dd8dU80M/kMQux1WWZ1GyO7vPwtuF7WLVF0BD54ZC8=;
+        b=DKEyMRGjTbiEnQM3w6EOq9t7yCnc8T1BqTvWsRuITpwzBiUYXKiL8lG5B8jfovX0O4
+         nNe8xhqCZyAgeX03X1kvSVQnHonMA/kxUZRZdXqlzBej4di1l7QD/OFwiDTRmypTo9uB
+         DKgWxm2MMqgq2/UUrP0d65eyLrKQVpAwWI5SUPu+a5+fXBTBJosvSTET6Obq4DLCN2aK
+         bWxTjehE1F4/soQLx1m15ZG+GUeAm4HJlEh3RWv80Rh9dCTgWWZFdK4KAJIV5aU0e9PN
+         SKwjr3hr0wyOyOBsza5h9pq0qUiyzvwQ20bpozU3KYTGfLmCCb9NxU4cDTflMIkx3+dc
+         s5pg==
+X-Gm-Message-State: AOAM530wosair74sp32AhvvUgj/A/ClVO4rqmX0sCzS8I5SHdx9nZRYa
+        IEv5KaN/dvPOzh4KkVTKypQdwSHrUKPDkaahtRU=
+X-Google-Smtp-Source: ABdhPJybCX4o1BU6NYBb/UZcP+yGeSeAacIluPEC2msbr+yFDYZx+ayBE7divhGu1q6ipjauPHhqigsiSHgpdBdDtTQ=
+X-Received: by 2002:a4a:2459:: with SMTP id v25mr10007959oov.75.1594828067535;
+ Wed, 15 Jul 2020 08:47:47 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <cover.1594790493.git.yu.c.chen@intel.com> <395187057e486df9a4328bc6d7d4ee912967fdb3.1594790493.git.yu.c.chen@intel.com>
+In-Reply-To: <395187057e486df9a4328bc6d7d4ee912967fdb3.1594790493.git.yu.c.chen@intel.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Wed, 15 Jul 2020 17:47:36 +0200
+Message-ID: <CAJZ5v0j9Jb5c7AQT611Zjep+jx+iTqKB8-KbPCKb8SCXMqEiJQ@mail.gmail.com>
+Subject: Re: [PATCH 2/2][RESEND v3] PM-runtime: change the tracepoints to
+ cover all usage_count
+To:     Chen Yu <yu.c.chen@intel.com>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Len Brown <len.brown@intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Michal Miroslaw <mirq-linux@rere.qmqm.pl>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fixing WARNING: Prefer using '"%s...", __func__' to using 'function_name'
-in a string in rtw_ioctl_set.c
+On Wed, Jul 15, 2020 at 8:26 AM Chen Yu <yu.c.chen@intel.com> wrote:
+>
+> Commit d229290689ae ("PM-runtime: add tracepoints for usage_count changes")
+> has added some tracepoints to monitor the change of runtime usage, and
+> there is something to improve:
+> 1. There are some places that adjust the usage count not
+>    been traced yet. For example, pm_runtime_get_noresume() and
+>    pm_runtime_put_noidle()
+> 2. The change of the usage count will not be tracked if decreased
+>    from 1 to 0.
+>
+> This patch intends to adjust the logic to be consistent with the
+> change of usage_counter, that is to say, only after the counter has
+> been possibly modified, we record it. Besides, all usage changes will
+> be shown using rpm_usage even if included by other trace points.
+> And these changes has helped track down the e1000e runtime issue.
+>
+> Reviewed-by: Michał Mirosław <mirq-linux@rere.qmqm.pl>
+> Signed-off-by: Chen Yu <yu.c.chen@intel.com>
+> ---
+>  drivers/base/power/runtime.c | 38 +++++++++++++++++++++++-------------
+>  1 file changed, 24 insertions(+), 14 deletions(-)
+>
+> diff --git a/drivers/base/power/runtime.c b/drivers/base/power/runtime.c
+> index 85a248e196ca..5789d2624513 100644
+> --- a/drivers/base/power/runtime.c
+> +++ b/drivers/base/power/runtime.c
+> @@ -1004,10 +1004,11 @@ int __pm_runtime_idle(struct device *dev, int rpmflags)
+>         int retval;
+>
+>         if (rpmflags & RPM_GET_PUT) {
+> -               if (!atomic_dec_and_test(&dev->power.usage_count)) {
+> -                       trace_rpm_usage_rcuidle(dev, rpmflags);
+> +               bool non_zero = !atomic_dec_and_test(&dev->power.usage_count);
+> +
+> +               trace_rpm_usage_rcuidle(dev, rpmflags);
 
-Signed-off-by: Arpitha Raghunandan <98.arpi@gmail.com>
----
-Changes v2->v3:
-- Added information about what changed from previous versions
-Changes v1->v2:
-- Added full name in From and Signed-off-by
+It looks like you could move the trace event before the atomic variable check.
 
- drivers/staging/rtl8188eu/core/rtw_ioctl_set.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+The ordering between the two doesn't matter, because usage_count may
+change between the check and the trace event anyway.
 
-diff --git a/drivers/staging/rtl8188eu/core/rtw_ioctl_set.c b/drivers/staging/rtl8188eu/core/rtw_ioctl_set.c
-index 9cc77ab4fd6b..fa88e8b2852d 100644
---- a/drivers/staging/rtl8188eu/core/rtw_ioctl_set.c
-+++ b/drivers/staging/rtl8188eu/core/rtw_ioctl_set.c
-@@ -44,12 +44,12 @@ u8 rtw_do_join(struct adapter *padapter)
- 
- 		if (!pmlmepriv->LinkDetectInfo.bBusyTraffic ||
- 		    pmlmepriv->to_roaming > 0) {
--			RT_TRACE(_module_rtl871x_ioctl_set_c_, _drv_info_, ("rtw_do_join(): site survey if scanned_queue is empty\n."));
-+			RT_TRACE(_module_rtl871x_ioctl_set_c_, _drv_info_, ("%s: site survey if scanned_queue is empty\n.", __func__));
- 			/*  submit site_survey_cmd */
- 			ret = rtw_sitesurvey_cmd(padapter, &pmlmepriv->assoc_ssid, 1, NULL, 0);
- 			if (ret != _SUCCESS) {
- 				pmlmepriv->to_join = false;
--				RT_TRACE(_module_rtl871x_ioctl_set_c_, _drv_err_, ("rtw_do_join(): site survey return error\n."));
-+				RT_TRACE(_module_rtl871x_ioctl_set_c_, _drv_err_, ("%s: site survey return error\n.", __func__));
- 			}
- 		} else {
- 			pmlmepriv->to_join = false;
-@@ -313,7 +313,7 @@ u8 rtw_set_802_11_infrastructure_mode(struct adapter *padapter,
- 	enum ndis_802_11_network_infra *pold_state = &cur_network->network.InfrastructureMode;
- 
- 	RT_TRACE(_module_rtl871x_ioctl_set_c_, _drv_notice_,
--		 ("+rtw_set_802_11_infrastructure_mode: old =%d new =%d fw_state = 0x%08x\n",
-+		 ("+%s: old =%d new =%d fw_state = 0x%08x\n", __func__,
- 		  *pold_state, networktype, get_fwstate(pmlmepriv)));
- 
- 	if (*pold_state != networktype) {
-@@ -496,7 +496,7 @@ u8 rtw_set_802_11_add_wep(struct adapter *padapter, struct ndis_802_11_wep *wep)
- 		break;
- 	}
- 	RT_TRACE(_module_rtl871x_ioctl_set_c_, _drv_info_,
--		 ("rtw_set_802_11_add_wep:before memcpy, wep->KeyLength = 0x%x wep->KeyIndex = 0x%x  keyid =%x\n",
-+		 ("%s:before memcpy, wep->KeyLength = 0x%x wep->KeyIndex = 0x%x  keyid =%x\n", __func__,
- 		 wep->KeyLength, wep->KeyIndex, keyid));
- 
- 	memcpy(&psecuritypriv->dot11DefKey[keyid].skey[0],
-@@ -507,7 +507,7 @@ u8 rtw_set_802_11_add_wep(struct adapter *padapter, struct ndis_802_11_wep *wep)
- 	psecuritypriv->dot11PrivacyKeyIndex = keyid;
- 
- 	RT_TRACE(_module_rtl871x_ioctl_set_c_, _drv_info_,
--		 ("rtw_set_802_11_add_wep:security key material : %x %x %x %x %x %x %x %x %x %x %x %x %x\n",
-+		 ("%s:security key material : %x %x %x %x %x %x %x %x %x %x %x %x %x\n", __func__,
- 		 psecuritypriv->dot11DefKey[keyid].skey[0],
- 		 psecuritypriv->dot11DefKey[keyid].skey[1],
- 		 psecuritypriv->dot11DefKey[keyid].skey[2],
--- 
-2.25.1
+But then what is the trace event useful for in the first place?
 
+> +               if (non_zero)
+>                         return 0;
+> -               }
+>         }
+>
+>         might_sleep_if(!(rpmflags & RPM_ASYNC) && !dev->power.irq_safe);
+> @@ -1038,10 +1039,12 @@ int __pm_runtime_suspend(struct device *dev, int rpmflags)
+>         int retval;
+>
+>         if (rpmflags & RPM_GET_PUT) {
+> -               if (!atomic_dec_and_test(&dev->power.usage_count)) {
+> -                       trace_rpm_usage_rcuidle(dev, rpmflags);
+> +               bool non_zero = !atomic_dec_and_test(&dev->power.usage_count);
+> +
+> +               trace_rpm_usage_rcuidle(dev, rpmflags);
+
+And the same comments apply here.
+
+> +               if (non_zero)
+>                         return 0;
+> -               }
+> +
+>         }
+>
+>         might_sleep_if(!(rpmflags & RPM_ASYNC) && !dev->power.irq_safe);
+> @@ -1073,8 +1076,10 @@ int __pm_runtime_resume(struct device *dev, int rpmflags)
+>         might_sleep_if(!(rpmflags & RPM_ASYNC) && !dev->power.irq_safe &&
+>                         dev->power.runtime_status != RPM_ACTIVE);
+>
+> -       if (rpmflags & RPM_GET_PUT)
+> +       if (rpmflags & RPM_GET_PUT) {
+>                 atomic_inc(&dev->power.usage_count);
+
+So the reason why things like that don't work is because the atomic
+variable can change again between the inc and the trace event.
+
+> +               trace_rpm_usage_rcuidle(dev, rpmflags);
+> +       }
+>
+>         spin_lock_irqsave(&dev->power.lock, flags);
+>         retval = rpm_resume(dev, rpmflags);
+> @@ -1433,6 +1438,7 @@ void pm_runtime_forbid(struct device *dev)
+>
+>         dev->power.runtime_auto = false;
+>         atomic_inc(&dev->power.usage_count);
+
+Analogously here.
+
+> +       trace_rpm_usage_rcuidle(dev, 0);
+>         rpm_resume(dev, 0);
+>
+>   out:
+> @@ -1448,16 +1454,17 @@ EXPORT_SYMBOL_GPL(pm_runtime_forbid);
+>   */
+>  void pm_runtime_allow(struct device *dev)
+>  {
+> +       bool is_zero;
+> +
+>         spin_lock_irq(&dev->power.lock);
+>         if (dev->power.runtime_auto)
+>                 goto out;
+>
+>         dev->power.runtime_auto = true;
+> -       if (atomic_dec_and_test(&dev->power.usage_count))
+> +       is_zero = atomic_dec_and_test(&dev->power.usage_count);
+> +       trace_rpm_usage_rcuidle(dev, RPM_AUTO | RPM_ASYNC);
+> +       if (is_zero)
+>                 rpm_idle(dev, RPM_AUTO | RPM_ASYNC);
+> -       else
+> -               trace_rpm_usage_rcuidle(dev, RPM_AUTO | RPM_ASYNC);
+
+The change of ordering is pointless for the reasons outlined above.
+
+And so on.
+
+> -
+>   out:
+>         spin_unlock_irq(&dev->power.lock);
+>  }
+> @@ -1523,9 +1530,8 @@ static void update_autosuspend(struct device *dev, int old_delay, int old_use)
+>                 /* If it used to be allowed then prevent it. */
+>                 if (!old_use || old_delay >= 0) {
+>                         atomic_inc(&dev->power.usage_count);
+> -                       rpm_resume(dev, 0);
+> -               } else {
+>                         trace_rpm_usage_rcuidle(dev, 0);
+> +                       rpm_resume(dev, 0);
+>                 }
+>         }
+>
+> @@ -1533,8 +1539,10 @@ static void update_autosuspend(struct device *dev, int old_delay, int old_use)
+>         else {
+>
+>                 /* If it used to be prevented then allow it. */
+> -               if (old_use && old_delay < 0)
+> +               if (old_use && old_delay < 0) {
+>                         atomic_dec(&dev->power.usage_count);
+> +                       trace_rpm_usage_rcuidle(dev, 0);
+> +               }
+>
+>                 /* Maybe we can autosuspend now. */
+>                 rpm_idle(dev, RPM_AUTO);
+> @@ -1741,12 +1749,14 @@ void pm_runtime_drop_link(struct device *dev)
+>  void pm_runtime_get_noresume(struct device *dev)
+>  {
+>         atomic_inc(&dev->power.usage_count);
+> +       trace_rpm_usage_rcuidle(dev, 0);
+>  }
+
+This actually kind of makes sense, as a matter of tracing the
+pm_runtime_get_noresume() usage, but not as a matter of tracing the
+atomic variable value.
+
+>  EXPORT_SYMBOL_GPL(pm_runtime_get_noresume);
+>
+>  void pm_runtime_put_noidle(struct device *dev)
+>  {
+>         atomic_add_unless(&dev->power.usage_count, -1, 0);
+> +       trace_rpm_usage_rcuidle(dev, 0);
+>  }
+>  EXPORT_SYMBOL_GPL(pm_runtime_put_noidle);
+>
+> --
