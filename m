@@ -2,99 +2,129 @@ Return-Path: <SRS0=kup7=A2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 471A7C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 09:25:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B9A3C433E2
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 09:25:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 232012065D
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 09:25:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B281206D5
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 09:25:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="SYThOw0D"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="S/n86HB0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730669AbgGOJZW (ORCPT
+        id S1730679AbgGOJZc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 05:25:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60952 "EHLO
+        Wed, 15 Jul 2020 05:25:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60982 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729672AbgGOJZW (ORCPT
+        with ESMTP id S1729983AbgGOJZc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 05:25:22 -0400
-Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 15F65C061755;
-        Wed, 15 Jul 2020 02:25:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=dK8UwzUTgUNLePBN/9TrjpAB3tyGtmDfMqWT0SbBnEY=; b=SYThOw0DKQ59j+xOZ9e7s9giuM
-        tDfpXRj67AxyxcDD/DruSpiV3lLLocgumIGHcor3cLJvMbB67U/P86WHzwLBDWnMM7/VE7d5DilUf
-        4YM2HlWFCuP5zJIWETM4zuvR53OwsBKsLKMox2dndow+qB3qgoNDTu5XP018d/PmLoVEQc1+4SV8H
-        EWEbQpfJpVa6/+Ui67qnx6GgCoPLKU0raNxCb0U6Ww2OCVdoVtagwaYzi4qgDr5u/1i9S5Ss2tK9y
-        XIbatbd4Y1yNWkVo40PSHRKeEh/tlULCWSefU7V9Uf0In+2TOyvTgUB9j1R0/FONOEmAyGtW0Sf5P
-        TNZ6ff8Q==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jvdeu-0001jJ-Bk; Wed, 15 Jul 2020 09:25:00 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 4FE7C305B23;
-        Wed, 15 Jul 2020 11:24:56 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 438C6207A6655; Wed, 15 Jul 2020 11:24:56 +0200 (CEST)
-Date:   Wed, 15 Jul 2020 11:24:56 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Joerg Roedel <joro@8bytes.org>
-Cc:     x86@kernel.org, Joerg Roedel <jroedel@suse.de>, hpa@zytor.com,
-        Andy Lutomirski <luto@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Jiri Slaby <jslaby@suse.cz>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Juergen Gross <jgross@suse.com>,
-        Kees Cook <keescook@chromium.org>,
-        David Rientjes <rientjes@google.com>,
-        Cfir Cohen <cfir@google.com>,
-        Erdem Aktas <erdemaktas@google.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Mike Stunes <mstunes@vmware.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Martin Radev <martin.b.radev@gmail.com>,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        virtualization@lists.linux-foundation.org
-Subject: Re: [PATCH v4 00/75] x86: SEV-ES Guest Support
-Message-ID: <20200715092456.GE10769@hirez.programming.kicks-ass.net>
-References: <20200714120917.11253-1-joro@8bytes.org>
+        Wed, 15 Jul 2020 05:25:32 -0400
+Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 00F32C061755
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 02:25:32 -0700 (PDT)
+Received: by mail-wm1-x342.google.com with SMTP id j18so4655732wmi.3
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 02:25:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=BxEQuTmqko+pgzijDd2lGbDRaEjjMMNtGU3cvLEaE6E=;
+        b=S/n86HB008axGB6WKz9m+NdU+bqcERxKeXWGb+MQoYnuj23/rvTNA/HzyJOsXElTUa
+         kMBNN09IM8T7a410mbjPH9IrXuuq340M4y9PK7byTyrJZwHUOHbvhm7AcYY/eX7etFel
+         PKOEE2Wvi3JJ4qp+02qOQoiegkfD09R+TPpAE6T9dQRDlJ4ur15/kQcEXisqt5SV0+FP
+         g1INpsSjpPPU24d3RlzcCgeZRT2zHFjOo7M9e3gyMNpFQxGUEWqVc+AfDmhQCsXvGSb6
+         M1/x90AKy+XbFF5iozX5hX48gucEuA3aZypkMMHdbHnDxOnOPyH4JuSphmOgqZyH6kXn
+         JOVQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=BxEQuTmqko+pgzijDd2lGbDRaEjjMMNtGU3cvLEaE6E=;
+        b=JUAzDPeXMy8aQxeghBctPn5cHEVIqd5m+CxVK4k5QCgFKiEmJ43zKpZNqbxUnpzzY4
+         ZzL+wzZb3piAtsKTOupT/lRIQtpgckCVawKDnKPJoyY0niSaYVfvSHKrXd/hxh26ofPT
+         ApWNDavrP1jh3xIl3zyUv1FeBVqHEXDnzZZtldJaOxf3IX61QB3WfPBw1zYtzNQClZsN
+         TrHWeLzEJiBEk2j2rdWLQvy7HYPd5SiHGoGgFRq2VY4dQB/FzBRGcSt/ZoAHxaQbqg78
+         6QCByj0lPAnRTX8chp7q2QLLWTgW7e2i8sZh26t/s4032cd74wjsxAxBMfrncXOyYsAK
+         LjYA==
+X-Gm-Message-State: AOAM532TdVIGCjfJznEc97U5+z8SbAS5SWncpHCSZR9sUinSOtoyJ7Aq
+        0MPpskOkPI8t0mCGUV4QjeN5Ag5VVO4=
+X-Google-Smtp-Source: ABdhPJyommb1Qc2v2rVIuSC6qsOykeoBwgjcpJYFj8Qs7T2/nah5bDGTDtY6INNmZRnI240Jm9Mvyw==
+X-Received: by 2002:a1c:2805:: with SMTP id o5mr7861943wmo.25.1594805130724;
+        Wed, 15 Jul 2020 02:25:30 -0700 (PDT)
+Received: from debian-brgl.home (lfbn-nic-1-68-20.w2-15.abo.wanadoo.fr. [2.15.159.20])
+        by smtp.gmail.com with ESMTPSA id v11sm12083419wmb.3.2020.07.15.02.25.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 15 Jul 2020 02:25:30 -0700 (PDT)
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+To:     Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Michal Simek <michal.simek@xilinx.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     linux-iio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Subject: [PATCH v5 0/3] devres: provide and use devm_krealloc()
+Date:   Wed, 15 Jul 2020 11:25:25 +0200
+Message-Id: <20200715092528.8136-1-brgl@bgdev.pl>
+X-Mailer: git-send-email 2.26.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200714120917.11253-1-joro@8bytes.org>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 14, 2020 at 02:08:02PM +0200, Joerg Roedel wrote:
-> The #VC entry code now tries to pretend that the #VC handler does not
-> use an IST stack by switching to the task stack if entered from
-> user-mode or the SYSCALL entry path. When it is entered from
-> kernel-mode it is doing its best to switch back to the interrupted
-> stack. This is only possible if it is entered from a known and safe
-> kernel stack (e.g. not the entry stack). If the previous stack is not
-> safe to use the #VC handler switches to a fall-back stack and calls a
-> special handler function which, as of now, just panics the system. For
-> now this is safe as #VC exceptions only happen at know places which
-> use a safe stack.
-> 
-> The use of the fall-back stack is necessary so that the special
-> handler function can safely raise nested #VC exceptions, for
-> example to print a panic message.
+From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
-Can we get some more words -- preferably in actual code comments, on
-when exactly #VC happens?
+Regular krealloc() obviously can't work with managed memory. This series
+implements devm_krealloc() and adds the first users with hope that this
+helper will be adopted by other drivers currently using non-managed
+krealloc().
 
-Because the only thing I remember is that #VC could happen on any memop,
-but I also have vague memories of that being a later extention.
+Some additional changes to the code modified by main patches are included.
+
+v1 -> v2:
+- remove leftover call to hwmon_device_unregister() from pmbus_core.c
+- add a patch extending devm_kmalloc() to handle zero size case
+- use WARN_ON() instead of WARN_ONCE() in devm_krealloc() when passed
+  a pointer to non-managed memory
+- correctly handle the case when devm_krealloc() is passed a pointer to
+  memory in .rodata (potentially returned by devm_kstrdup_const())
+- correctly handle ZERO_SIZE_PTR passed as the ptr argument in devm_krealloc()
+
+v2 -> v3:
+- drop already applied patches
+- collect Acks
+- add an additional user in iio
+
+v3 -> v4:
+- add the kerneldoc for devm_krealloc()
+- WARN() outside of spinlock
+- rename local variable
+
+v4 -> v5:
+- tweak the kerneldoc
+
+Bartosz Golaszewski (3):
+  devres: provide devm_krealloc()
+  hwmon: pmbus: use more devres helpers
+  iio: adc: xilinx-xadc: use devm_krealloc()
+
+ .../driver-api/driver-model/devres.rst        |  1 +
+ drivers/base/devres.c                         | 68 +++++++++++++++++++
+ drivers/hwmon/pmbus/pmbus_core.c              | 28 +++-----
+ drivers/iio/adc/xilinx-xadc-core.c            | 16 ++---
+ include/linux/device.h                        |  2 +
+ 5 files changed, 88 insertions(+), 27 deletions(-)
+
+-- 
+2.26.1
+
