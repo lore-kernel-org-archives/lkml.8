@@ -2,134 +2,161 @@ Return-Path: <SRS0=kup7=A2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A81AC433E3
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 14:28:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E6BAC433E6
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 14:28:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D833F205CB
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 14:28:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bJ+tC554"
+	by mail.kernel.org (Postfix) with ESMTP id 804502065D
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 14:28:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728746AbgGOO2J (ORCPT
+        id S1728785AbgGOO2Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 10:28:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51142 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728682AbgGOO2I (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 10:28:08 -0400
-Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C3C1DC061755
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 07:28:08 -0700 (PDT)
-Received: by mail-pj1-x1044.google.com with SMTP id ch3so3146863pjb.5
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 07:28:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=KBeNhu4r9ct33AD8nCJXuATCP+neQ9VRMXlPD66LODI=;
-        b=bJ+tC554X0Z6XqwKuLjItvQCNuXil4sEPt5/kcK+5lquxGsA5DfrMx926ECsIDfxoe
-         2fg8PqXxt9DdZ/rhAsVjkO6be9/BOqmLIITSoueABAs8Yd1VFtFV12kaezh/4oQXQzSI
-         zsZEEip04dcCec0GwMCWnXXCvju1HDFr3GPnwKKa2P3Wo0LPitr5hEHkJhlqyoac9w4u
-         ncKmJbGO/6EjmhaDgGtR7r2dNdVwgYw3qIB4sz4usgkeo9dJO6lrPRPiFKxcTusgDDbq
-         TreOYCTOgHker/rRu+jzmdz7kehDXAZgMx3Gjm3JzS7f8ZAZ8BaW8wxk0I8RIYQw0F+I
-         zbKA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=KBeNhu4r9ct33AD8nCJXuATCP+neQ9VRMXlPD66LODI=;
-        b=UBPrO0kQcAx/zgqN/+kNrJgxbWrrIbaMb6gsRu2u7B2qolmcdf2qfIzrXAYMuFos8V
-         CEO1ig5fZJmMgboTh9JovPTTQRFvXpeXMxU+2BeehZZI7IE/U3lF2tG/m0fqmZbAuV4/
-         MCpN4aQHMnOT1mh9PU1SD3tTuURBHacA3SRf9LDZQ1D+jm6zByN4R4JTKxsZ2B2irUZ4
-         Rmn3FX73KRp3wGBScZ6SmXJ9xJOR3DaX9uRfIG5nDy4KunQdHRXffA/WKTQcqg4x1F+O
-         +5VrL/vPW17AcC42yem5DIuX+2IADM7SdqT+v/L7ep12VRZPVo4sebsMywVAS9PoYCry
-         txlA==
-X-Gm-Message-State: AOAM533/RsRuopKHOGeCAdVrOWFafaxjY6ePU4w99VcRM52DfEQiioYn
-        QqpbD4zLW+ylWu6SJGJDwRQ=
-X-Google-Smtp-Source: ABdhPJx/jqAj8OJkuIeTpRWjFpTG7mKBnmmil4xsrr7Uid+wQiSPt/pDI30z7NJCu4rLwQ8BpHppxg==
-X-Received: by 2002:a17:90b:4a06:: with SMTP id kk6mr10302117pjb.186.1594823288335;
-        Wed, 15 Jul 2020 07:28:08 -0700 (PDT)
-Received: from arpitha-Inspiron-7570.lan ([49.206.11.188])
-        by smtp.gmail.com with ESMTPSA id ji2sm2335989pjb.1.2020.07.15.07.28.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 15 Jul 2020 07:28:07 -0700 (PDT)
-From:   Arpitha Raghunandan <98.arpi@gmail.com>
-To:     Larry.Finger@lwfinger.net, gregkh@linuxfoundation.org,
-        puranjay12@gmail.com, yepeilin.cs@gmail.com
-Cc:     Arpitha Raghunandan <98.arpi@gmail.com>,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2] staging: rtl8188eu: core: fix coding style issues
-Date:   Wed, 15 Jul 2020 19:57:10 +0530
-Message-Id: <20200715142710.76205-1-98.arpi@gmail.com>
-X-Mailer: git-send-email 2.25.1
+        Wed, 15 Jul 2020 10:28:16 -0400
+Received: from mga17.intel.com ([192.55.52.151]:46204 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728682AbgGOO2P (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jul 2020 10:28:15 -0400
+IronPort-SDR: W1SOnzUpdrwG7O551Y/Jz/xW45u3zh1Kb8/Me5Zf19yAYqI9HNqgWJJ5K7gqYLOSItBdxBEupz
+ YTazMMdTvMfg==
+X-IronPort-AV: E=McAfee;i="6000,8403,9682"; a="129240431"
+X-IronPort-AV: E=Sophos;i="5.75,355,1589266800"; 
+   d="scan'208";a="129240431"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jul 2020 07:28:13 -0700
+IronPort-SDR: ffsHaxwUjwpcuIW+Zs/TkksI0VgEafl5TMvJUnPZyADArYISt2BaRard8hQzsGLsHIPfssZpBH
+ nP5sjJKONMvA==
+X-IronPort-AV: E=Sophos;i="5.75,355,1589266800"; 
+   d="scan'208";a="460108677"
+Received: from mrbecket-mobl.amr.corp.intel.com (HELO [10.255.3.138]) ([10.255.3.138])
+  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jul 2020 07:28:07 -0700
+Subject: Re: [PATCH] x86/bugs/multihit: Fix mitigation reporting when KVM is
+ not in use
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, x86@kernel.org,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Tony Luck <tony.luck@intel.com>,
+        "Gomez Iglesias, Antonio" <antonio.gomez.iglesias@intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Anthony Steinhauser <asteinhauser@google.com>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Mark Gross <mgross@linux.intel.com>,
+        Waiman Long <longman@redhat.com>, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        Jonathan Corbet <corbet@lwn.net>
+References: <267631f4db4fd7e9f7ca789c2efaeab44103f68e.1594689154.git.pawan.kumar.gupta@linux.intel.com>
+ <20200714014540.GH29725@linux.intel.com>
+ <099d6985-9e9f-1d9f-7098-58a9e26e4450@intel.com>
+ <20200714191759.GA7116@guptapadev.amr>
+ <ba442a51-294e-8624-9a69-5613ff050551@intel.com>
+ <20200714210442.GA10488@guptapadev.amr>
+ <e12cd3b8-7df1-94e8-e603-39e00648c026@intel.com>
+ <20200715005130.GE14404@linux.intel.com>
+From:   Dave Hansen <dave.hansen@intel.com>
+Autocrypt: addr=dave.hansen@intel.com; keydata=
+ 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
+ z5cecg==
+Message-ID: <807f553e-517e-dd3c-8c11-a07739367b0f@intel.com>
+Date:   Wed, 15 Jul 2020 07:28:06 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
+In-Reply-To: <20200715005130.GE14404@linux.intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fixing WARNING: Prefer using '"%s...", __func__' to using 'function_name'
-in a string in rtw_ioctl_set.c
+On 7/14/20 5:51 PM, Sean Christopherson wrote:
+> To do the above table, KVM will also need to update itlb_multihit_kvm_mitigation
+> when it is unloaded, which seems rather silly.  That's partly why I suggested
+> keying off CR4.VMXE as it doesn't require poking directly into KVM.  E.g. the
+> entire fix becomes:
 
-Signed-off-by: Arpitha Raghunandan <98.arpi@gmail.com>
----
- drivers/staging/rtl8188eu/core/rtw_ioctl_set.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+Failing to update itlb_multihit_kvm_mitigation leaves us with something
+that's asymmetric.  A system with a never-loaded kvm module will say
+something different than one that was loaded and then unloaded.
 
-diff --git a/drivers/staging/rtl8188eu/core/rtw_ioctl_set.c b/drivers/staging/rtl8188eu/core/rtw_ioctl_set.c
-index 9cc77ab4fd6b..fa88e8b2852d 100644
---- a/drivers/staging/rtl8188eu/core/rtw_ioctl_set.c
-+++ b/drivers/staging/rtl8188eu/core/rtw_ioctl_set.c
-@@ -44,12 +44,12 @@ u8 rtw_do_join(struct adapter *padapter)
- 
- 		if (!pmlmepriv->LinkDetectInfo.bBusyTraffic ||
- 		    pmlmepriv->to_roaming > 0) {
--			RT_TRACE(_module_rtl871x_ioctl_set_c_, _drv_info_, ("rtw_do_join(): site survey if scanned_queue is empty\n."));
-+			RT_TRACE(_module_rtl871x_ioctl_set_c_, _drv_info_, ("%s: site survey if scanned_queue is empty\n.", __func__));
- 			/*  submit site_survey_cmd */
- 			ret = rtw_sitesurvey_cmd(padapter, &pmlmepriv->assoc_ssid, 1, NULL, 0);
- 			if (ret != _SUCCESS) {
- 				pmlmepriv->to_join = false;
--				RT_TRACE(_module_rtl871x_ioctl_set_c_, _drv_err_, ("rtw_do_join(): site survey return error\n."));
-+				RT_TRACE(_module_rtl871x_ioctl_set_c_, _drv_err_, ("%s: site survey return error\n.", __func__));
- 			}
- 		} else {
- 			pmlmepriv->to_join = false;
-@@ -313,7 +313,7 @@ u8 rtw_set_802_11_infrastructure_mode(struct adapter *padapter,
- 	enum ndis_802_11_network_infra *pold_state = &cur_network->network.InfrastructureMode;
- 
- 	RT_TRACE(_module_rtl871x_ioctl_set_c_, _drv_notice_,
--		 ("+rtw_set_802_11_infrastructure_mode: old =%d new =%d fw_state = 0x%08x\n",
-+		 ("+%s: old =%d new =%d fw_state = 0x%08x\n", __func__,
- 		  *pold_state, networktype, get_fwstate(pmlmepriv)));
- 
- 	if (*pold_state != networktype) {
-@@ -496,7 +496,7 @@ u8 rtw_set_802_11_add_wep(struct adapter *padapter, struct ndis_802_11_wep *wep)
- 		break;
- 	}
- 	RT_TRACE(_module_rtl871x_ioctl_set_c_, _drv_info_,
--		 ("rtw_set_802_11_add_wep:before memcpy, wep->KeyLength = 0x%x wep->KeyIndex = 0x%x  keyid =%x\n",
-+		 ("%s:before memcpy, wep->KeyLength = 0x%x wep->KeyIndex = 0x%x  keyid =%x\n", __func__,
- 		 wep->KeyLength, wep->KeyIndex, keyid));
- 
- 	memcpy(&psecuritypriv->dot11DefKey[keyid].skey[0],
-@@ -507,7 +507,7 @@ u8 rtw_set_802_11_add_wep(struct adapter *padapter, struct ndis_802_11_wep *wep)
- 	psecuritypriv->dot11PrivacyKeyIndex = keyid;
- 
- 	RT_TRACE(_module_rtl871x_ioctl_set_c_, _drv_info_,
--		 ("rtw_set_802_11_add_wep:security key material : %x %x %x %x %x %x %x %x %x %x %x %x %x\n",
-+		 ("%s:security key material : %x %x %x %x %x %x %x %x %x %x %x %x %x\n", __func__,
- 		 psecuritypriv->dot11DefKey[keyid].skey[0],
- 		 psecuritypriv->dot11DefKey[keyid].skey[1],
- 		 psecuritypriv->dot11DefKey[keyid].skey[2],
--- 
-2.25.1
+That's funky, but not the end of the world I guess.
 
+> diff --git a/arch/x86/kernel/cpu/bugs.c b/arch/x86/kernel/cpu/bugs.c
+> index ed54b3b21c39..4452df7f332d 100644
+> --- a/arch/x86/kernel/cpu/bugs.c
+> +++ b/arch/x86/kernel/cpu/bugs.c
+> @@ -1447,7 +1447,12 @@ static ssize_t l1tf_show_state(char *buf)
+> 
+>  static ssize_t itlb_multihit_show_state(char *buf)
+>  {
+> -       if (itlb_multihit_kvm_mitigation)
+> +       if (!boot_cpu_has(X86_FEATURE_MSR_IA32_FEAT_CTL) ||
+> +           !boot_cpu_has(X86_FEATURE_VMX))
+> +               return sprintf(buf, "KVM: Mitigation: VMX unsupported\n");
+> +       else if (!(cr4_read_shadow() & X86_CR4_VMXE))
+> +               return sprintf(buf, "KVM: Mitigation: VMX disabled\n");
+> +       else if (itlb_multihit_kvm_mitigation)
+>                 return sprintf(buf, "KVM: Mitigation: Split huge pages\n");
+>         else
+>                 return sprintf(buf, "KVM: Vulnerable\n");
+
+That's at least short and sweet.  I wouldn't object to that at all.
