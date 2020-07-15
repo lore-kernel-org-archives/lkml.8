@@ -2,159 +2,132 @@ Return-Path: <SRS0=kup7=A2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DBF2C433E3
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 01:40:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4A82C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 01:41:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7624E20674
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 01:40:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F4B020674
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 01:41:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="GwQiBY/m"
+	dkim=pass (1024-bit key) header.d=windriversystems.onmicrosoft.com header.i=@windriversystems.onmicrosoft.com header.b="NsD3ShKr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727101AbgGOBke (ORCPT
+        id S1727965AbgGOBlk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 21:40:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45838 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726670AbgGOBkd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 21:40:33 -0400
-Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B8106C061794
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 18:40:32 -0700 (PDT)
-Received: by mail-pf1-x441.google.com with SMTP id a14so771596pfi.2
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 18:40:32 -0700 (PDT)
+        Tue, 14 Jul 2020 21:41:40 -0400
+Received: from mail-bn7nam10on2081.outbound.protection.outlook.com ([40.107.92.81]:29194
+        "EHLO NAM10-BN7-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727798AbgGOBlj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 21:41:39 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=iyiHP3VX4dWFoa2aLgIgQ8SjQj/ztrv3J2akbQt2nNtWiox8gEP5Lm+U6lCEVyEM9+UOG0xCyZsxz8+oV+SnmjN39oB6wEEtLPelCm2CKjiLhkQz6esQZp8hihVx6/qqlMjkX6U6bq04bKAzOJNuyJ4XxlNwZ1pJfa158SNF6UgYG/Ff8SA7PbuwwwvnuStL2gmws4HoDCd2R936hQ/A3z3d7P8mhW7Pdv3J+FEbQPAZvQAU0ygsH9xlElaAeWqCuUF6ZFLAAaZDqSX0DbcHb6P0FkSOdeEnOxMsjVbYFTZ61Kv2z0BVblOPrNW+/EWN9+pD/zlhpxkdAXzPzZ1lSA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=023pgXTD/wpXeVHur5be1QEIQtgEVqTArpymGu42GL8=;
+ b=bACEfnDvs1fNBkhXqmH+OC0aLA8S/EtMyIl/S3aEKddfhweIH30lV6KQfSRCMdBROiIJDEPbA0tQADrEjo+c4zXdoYJiQTasc5MGceA7yrGw8V8Z8AgdZUDYLfbY3g+pVBu3i8ANvSQ8pQKH0zZRGFJl02m5eelqkbSo/Me+7+p2uSR33KFzqc8vR9ZCTtDDyGqUkgC8vrUP0fcDdjKI8aHS/c6SvfwnumTpa6pb9ivlPZG7h7sMEMgZ7ygIWlAHfBs+zhZZ4SYqP+nnPehU7yJ3YsdHL01akMg6bva8/LbHt+19oTAWcGrY1XYycu/WLTjBbqBwDuHzLjEOFa61mw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=windriver.com; dmarc=pass action=none
+ header.from=windriver.com; dkim=pass header.d=windriver.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=yB4mfZhVGgML4uV5FJMaGcIbxMBeIJoUsQc2RIfPst4=;
-        b=GwQiBY/mF/gzosD/19uNdGcObWYOeTnMNqoTyK/Mra8Yom+dF+q9WqmgL3exkJj5Ks
-         ThzoIIqFrRVrwrBf2ezFEZbzlcV88k6koT1GBJS+RPZz5MUcJE4VyIexZyZoQNMN4biB
-         mYfToQLkYNPG5zuJGNEKuZc80GG84FkVaqIOg=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=yB4mfZhVGgML4uV5FJMaGcIbxMBeIJoUsQc2RIfPst4=;
-        b=TWExj/ErSAN6bncbXpbTqtS7tgZr5rFdBeOYzTEndLpN1qa/umUn/STDDnFQjxbGfx
-         KCXJZGRmW6nbnVFPqvuCfsx2Bum97MVn1xJK4XHZqAUkSzkt6RI/G3uNzolWy/wEza1U
-         niGwY4JE5hU52QGzmhDLO1kwIW3Vse8qOXBQoNJlkJ5UYF24bbt/vINWFzrPCvEBswRi
-         PxcKbc6Q+O1PKXcuvc9axgV6KyDHQ4EO9PjPqgrYbQmSF6xvejgNziMvIbm3XyzNonBY
-         gJpwFlnH09Eqa7eqEqFEvx6Bbg/MN6DFaLsIJlFusHp+85+mf/GhZzJT0iNX7kcaoyER
-         Vp6Q==
-X-Gm-Message-State: AOAM530d5U/FJtQx9xuc3gSejADpVO8jh6WLiSH8pvnmRTbBoGXoZ1c6
-        9vanRJPt50TKbm6/jS+JUJbKpQ==
-X-Google-Smtp-Source: ABdhPJwZlZG81xgIsES7Sgk18FpcVoLdUj5ncFZJKakDpHjmEazwsdHMNLs36Zv3OD5kEjNWNMDBAg==
-X-Received: by 2002:a63:dc50:: with SMTP id f16mr5461349pgj.19.1594777232199;
-        Tue, 14 Jul 2020 18:40:32 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id z11sm345567pfr.71.2020.07.14.18.40.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 Jul 2020 18:40:31 -0700 (PDT)
-Date:   Tue, 14 Jul 2020 18:40:30 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Joerg Roedel <joro@8bytes.org>
-Cc:     x86@kernel.org, Joerg Roedel <jroedel@suse.de>, hpa@zytor.com,
-        Andy Lutomirski <luto@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Jiri Slaby <jslaby@suse.cz>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Juergen Gross <jgross@suse.com>,
-        David Rientjes <rientjes@google.com>,
-        Cfir Cohen <cfir@google.com>,
-        Erdem Aktas <erdemaktas@google.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Mike Stunes <mstunes@vmware.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Martin Radev <martin.b.radev@gmail.com>,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        virtualization@lists.linux-foundation.org
-Subject: Re: [PATCH v4 70/75] x86/head/64: Don't call verify_cpu() on
- starting APs
-Message-ID: <202007141837.2B93BBD78@keescook>
-References: <20200714120917.11253-1-joro@8bytes.org>
- <20200714120917.11253-71-joro@8bytes.org>
+ d=windriversystems.onmicrosoft.com;
+ s=selector2-windriversystems-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=023pgXTD/wpXeVHur5be1QEIQtgEVqTArpymGu42GL8=;
+ b=NsD3ShKrUCUa30zgsSCaZVDglo3fCuEYQEOl4cujrTB+BOhrQyC2paSgBU4LRuzFye1d1P8AkBwZPsHZ5Wov2/W3Fap9ClBfiVDAoYN5wCaEc+J+gnkqAgAH8LFzfw9YahvQ7yWZkAGAihnISawKoI7Gv9QoatW6767/jElaybo=
+Authentication-Results: zeniv.linux.org.uk; dkim=none (message not signed)
+ header.d=none;zeniv.linux.org.uk; dmarc=none action=none
+ header.from=windriver.com;
+Received: from BY5PR11MB4241.namprd11.prod.outlook.com (2603:10b6:a03:1ca::13)
+ by BY5PR11MB4354.namprd11.prod.outlook.com (2603:10b6:a03:1cb::16) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3195.17; Wed, 15 Jul
+ 2020 01:41:35 +0000
+Received: from BY5PR11MB4241.namprd11.prod.outlook.com
+ ([fe80::6892:dd68:8b6b:c702]) by BY5PR11MB4241.namprd11.prod.outlook.com
+ ([fe80::6892:dd68:8b6b:c702%4]) with mapi id 15.20.3174.025; Wed, 15 Jul 2020
+ 01:41:35 +0000
+Subject: Re: [PATCH] userfaultfd: avoid the duplicated release for
+ userfaultfd_ctx
+From:   "Xu, Yanfei" <yanfei.xu@windriver.com>
+To:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Alexander Viro <viro@zeniv.linux.org.uk>
+References: <20200714161203.31879-1-yanfei.xu@windriver.com>
+Message-ID: <1a463530-107d-0893-cecf-87ba42ebdbf6@windriver.com>
+Date:   Wed, 15 Jul 2020 09:41:29 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
+In-Reply-To: <20200714161203.31879-1-yanfei.xu@windriver.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: HK0PR01CA0061.apcprd01.prod.exchangelabs.com
+ (2603:1096:203:a6::25) To BY5PR11MB4241.namprd11.prod.outlook.com
+ (2603:10b6:a03:1ca::13)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200714120917.11253-71-joro@8bytes.org>
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from [128.224.162.160] (60.247.85.82) by HK0PR01CA0061.apcprd01.prod.exchangelabs.com (2603:1096:203:a6::25) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3195.18 via Frontend Transport; Wed, 15 Jul 2020 01:41:34 +0000
+X-Originating-IP: [60.247.85.82]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 510f572b-e05d-429e-1264-08d8286035a3
+X-MS-TrafficTypeDiagnostic: BY5PR11MB4354:
+X-Microsoft-Antispam-PRVS: <BY5PR11MB43540644F7FF9FCC73AED03EE47E0@BY5PR11MB4354.namprd11.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:669;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: dtaNFx4No/wrumYvmGuGycGz8urjr4aUnW43NUZF5uc3kolJg/0F5L/CFW7oy+G6vp0YiVG0DevaVEy4ZpJ1XFfQW8pAKqSmNSe2QbkuY41F2WaIKCq5jsGtcfYu3IQpA5i4AX/9oSgwVcLjyOzQx/cVRcBkpesiWFzQWEYFGd4l3VoY3bS9qtTNVeA2+Nw62lXq9F6RgJhEcAuaPfEX1YyufBD2x0S5kWX1M0lHNwufK8+OiXytuNqsCuUPUA4m8QZOs6P62Z3QQTdcg/qUzlpbAhjc4szdwiSAg8nhhlpHg8HYRUeWscWuCWaFD5exd2zXmHDVrW0L71remr4rthmGsKGy+WYzSJyIGqy8hlLURnISTHkBezvELpaQBHU9RJOtRQJqpxNE3ceFDCNDQwOQw+yFzpsrm7+n5HxVq2TiiWg2KDmcFcU4Y32gmeM7
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BY5PR11MB4241.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(366004)(376002)(39850400004)(396003)(136003)(346002)(478600001)(2616005)(186003)(4744005)(26005)(66946007)(8676002)(16526019)(31696002)(86362001)(6916009)(66476007)(66556008)(5660300002)(6666004)(6706004)(956004)(16576012)(8936002)(52116002)(83380400001)(31686004)(2906002)(6486002)(316002)(36756003)(53546011)(78286006)(43740500002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: e8id6lOHyuIevEHX17jr3C4OqsorjEUUc60wy9rveZGAup3V1MYUC1K+kCUwjzmEB+8TcplRQ51eZh1NVcR7MepoOsG2qOdj8zIDd1hRS2L7xkIwqap5LFS6ktMkDo3z/eifwbTntc7hboje8yBUaRsRqrvo02w8N2y0jcalfbLJ2mWqwnQl8xO6p2qCUqEiiHOv9I2BuAVJcGp7LjD/NQyxJbCO9mGhKkNxi2U6sY/VMCWIP5Xbro/0iKiiH8Ei4RFvVQUbhD/TbpgfqxiGm1rOudnm7fQqWNd63Z01WP7HWhdMEUnkKlNsIVjENO2KZu7UsTS177ZpMncx9nGgkI8Mqh5rw2jaTQHN1wUZQjw+orYFByIa4mRUwEkn6R3Anl61zdznfU5iV1VVMaSYaXzGYmwRwrqmfkOPDlHdgSz71g83qW6vwpDDCbZaYHBmIk1c307bqGF5gxvniG33w2uhKgybaSHphrHp3QgSKuY=
+X-OriginatorOrg: windriver.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 510f572b-e05d-429e-1264-08d8286035a3
+X-MS-Exchange-CrossTenant-AuthSource: BY5PR11MB4241.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Jul 2020 01:41:35.6665
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 8ddb2873-a1ad-4a18-ae4e-4644631433be
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: R98yxmSfP0IqATewOJr92InTDYOmxO1MMk6wDaXlv+9o0pTfQvRrxTtPY4V0RvH4g61IW969w3Jb1qEmIpNKQg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR11MB4354
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 14, 2020 at 02:09:12PM +0200, Joerg Roedel wrote:
-> From: Joerg Roedel <jroedel@suse.de>
+Add maintainer Alexander Viro  :)
+
+On 7/15/20 12:12 AM, yanfei.xu@windriver.com wrote:
+> From: Yanfei Xu <yanfei.xu@windriver.com>
 > 
-> The APs are not ready to handle exceptions when verify_cpu() is called
-> in secondary_startup_64.
-
-Eek, no. MSR_IA32_MISC_ENABLE_XD_DISABLE needs to be cleared very early
-during CPU startup; this can't just be skipped.
-
-Also, is UNWIND_HINT_EMPTY needed for the new target?
-
--Kees
-
+> when get_unused_fd_flags gets failure, userfaultfd_ctx_cachep will
+> be freed by userfaultfd_fops's release function which is the
+> userfaultfd_release. So we could return directly after fput().
 > 
-> Signed-off-by: Joerg Roedel <jroedel@suse.de>
+> userfaultfd_release()->userfaultfd_ctx_put(ctx)
+> 
+> Fixes: d08ac70b1e0d (Wire UFFD up to SELinux)
+> Reported-by: syzbot+75867c44841cb6373570@syzkaller.appspotmail.com
+> Signed-off-by: Yanfei Xu <yanfei.xu@windriver.com>
 > ---
->  arch/x86/include/asm/realmode.h | 1 +
->  arch/x86/kernel/head_64.S       | 1 +
->  arch/x86/realmode/init.c        | 6 ++++++
->  3 files changed, 8 insertions(+)
+>   fs/userfaultfd.c | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> diff --git a/arch/x86/include/asm/realmode.h b/arch/x86/include/asm/realmode.h
-> index 6590394af309..5c97807c38a4 100644
-> --- a/arch/x86/include/asm/realmode.h
-> +++ b/arch/x86/include/asm/realmode.h
-> @@ -69,6 +69,7 @@ extern unsigned char startup_32_smp[];
->  extern unsigned char boot_gdt[];
->  #else
->  extern unsigned char secondary_startup_64[];
-> +extern unsigned char secondary_startup_64_no_verify[];
->  #endif
->  
->  static inline size_t real_mode_size_needed(void)
-> diff --git a/arch/x86/kernel/head_64.S b/arch/x86/kernel/head_64.S
-> index 5b577d6bce7a..8b43ed0592e8 100644
-> --- a/arch/x86/kernel/head_64.S
-> +++ b/arch/x86/kernel/head_64.S
-> @@ -165,6 +165,7 @@ SYM_CODE_START(secondary_startup_64)
->  	/* Sanitize CPU configuration */
->  	call verify_cpu
->  
-> +SYM_INNER_LABEL(secondary_startup_64_no_verify, SYM_L_GLOBAL)
->  	/*
->  	 * Retrieve the modifier (SME encryption mask if SME is active) to be
->  	 * added to the initial pgdir entry that will be programmed into CR3.
-> diff --git a/arch/x86/realmode/init.c b/arch/x86/realmode/init.c
-> index 61a52b925d15..df701f87ddef 100644
-> --- a/arch/x86/realmode/init.c
-> +++ b/arch/x86/realmode/init.c
-> @@ -46,6 +46,12 @@ static void sme_sev_setup_real_mode(struct trampoline_header *th)
->  		th->flags |= TH_FLAGS_SME_ACTIVE;
->  
->  	if (sev_es_active()) {
-> +		/*
-> +		 * Skip the call to verify_cpu() in secondary_startup_64 as it
-> +		 * will cause #VC exceptions when the AP can't handle them yet.
-> +		 */
-> +		th->start = (u64) secondary_startup_64_no_verify;
-> +
->  		if (sev_es_setup_ap_jump_table(real_mode_header))
->  			panic("Failed to update SEV-ES AP Jump Table");
->  	}
-> -- 
-> 2.27.0
+> diff --git a/fs/userfaultfd.c b/fs/userfaultfd.c
+> index 3a4d6ac5a81a..e98317c15530 100644
+> --- a/fs/userfaultfd.c
+> +++ b/fs/userfaultfd.c
+> @@ -2049,7 +2049,7 @@ SYSCALL_DEFINE1(userfaultfd, int, flags)
+>   	fd = get_unused_fd_flags(O_RDONLY | O_CLOEXEC);
+>   	if (fd < 0) {
+>   		fput(file);
+> -		goto out;
+> +		return fd;
+>   	}
+>   
+>   	ctx->owner = file_inode(file);
 > 
-
--- 
-Kees Cook
