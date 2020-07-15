@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 882DEC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 16:43:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CDF9C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 16:44:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 58C7D20672
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 16:43:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 17ED82071B
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 16:44:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="OPihS1Fn"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="X02g21ms"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728053AbgGOQnN (ORCPT
+        id S1726837AbgGOQoH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 12:43:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43954 "EHLO
+        Wed, 15 Jul 2020 12:44:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43974 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726660AbgGOQmz (ORCPT
+        with ESMTP id S1726859AbgGOQnE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 12:42:55 -0400
+        Wed, 15 Jul 2020 12:43:04 -0400
 Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 504D6C08C5DB;
-        Wed, 15 Jul 2020 09:42:55 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D1417C061755;
+        Wed, 15 Jul 2020 09:43:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
         References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
         Content-Type:Content-ID:Content-Description;
-        bh=DOJlt9WwfqvtxRtQsVD4HWEtnnEyii8gz7SD33MqTBM=; b=OPihS1FnhrhLYvowRAiFznnovY
-        0wQD938emlP8/LoTHLK7SiJGGLbcCRwsfOdhQGu90L7/5i3r2V/oWc9FBPVG/R0kU39qfIdDjZkF1
-        kINffO+FPgycao/YhqbxefX3ksmLEh1FCmOBKBuG7nRqTcCiFqGU1tWPzulGiuvzlveAQPUZJ5uEo
-        hUpaxhjj8zNI1VQZk4olLl6kajDteU5DSsKYhObErzdgZDZbHTQr4+TC6VvwrXCFUx7etA1nuzeCK
-        ARIiBN9v9kgAIBcYGp6j8DxTHohceDR1dQMfSzC35xx44TYcEXhsfjayNWjb+g5UeV6/Gh+kG3ftT
-        Tyb4uRJQ==;
+        bh=w7JZTeu1VBjKmQFYJ4UVm6XlML5JSLLBrBKAwYZP1sI=; b=X02g21msjtU7jGCjpEDQiNzSrT
+        FJRhv38+J9cMCp7ng59RZkr+tH0CxVIgEacZqXmN99+zowP5jeFQv6RjRuhPwKtFQ6ZeLYvIATMfM
+        PZWQBjtGTL738U+QyR7zOubsL5bbfL7ffnvF9A8mq7hL9f7Z15U8bnmluTTq0O/ZGKu/qpxiP9AB/
+        pSe4fMUnz1YNijQAROdVn6EjnyNw1B/p3hkb5fAnqSDBPfm7etmvY6NFy1NbqgVbIlLh5GjvsynyT
+        dWKOjmtuUbXS/l/oY9O94JhCp8yoMgCYuxwiVeRTFTg8sNq/OMmqaVFmKICNi9w9wrpZiHxCHP+St
+        3piHEE0w==;
 Received: from [2601:1c0:6280:3f0::19c2] (helo=smtpauth.infradead.org)
         by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jvkUe-0000Bh-Pn; Wed, 15 Jul 2020 16:42:53 +0000
+        id 1jvkUo-0000Bh-22; Wed, 15 Jul 2020 16:43:02 +0000
 From:   Randy Dunlap <rdunlap@infradead.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Randy Dunlap <rdunlap@infradead.org>,
         "David S. Miller" <davem@davemloft.net>,
         Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH 2/9 v2 net-next] net: skbuff.h: drop duplicate words in comments
-Date:   Wed, 15 Jul 2020 09:42:39 -0700
-Message-Id: <20200715164246.9054-2-rdunlap@infradead.org>
+Subject: [PATCH 7/9 v2 net-next] net: ip6_fib.h: drop duplicate word in comment
+Date:   Wed, 15 Jul 2020 09:42:44 -0700
+Message-Id: <20200715164246.9054-7-rdunlap@infradead.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200715164246.9054-1-rdunlap@infradead.org>
 References: <20200715164246.9054-1-rdunlap@infradead.org>
@@ -57,7 +57,7 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Drop doubled words in several comments.
+Drop doubled word "the" in a comment.
 
 Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
 Cc: "David S. Miller" <davem@davemloft.net>
@@ -66,26 +66,17 @@ Cc: netdev@vger.kernel.org
 ---
 v2: move wireless patches to a separate patch series.
 
- include/linux/skbuff.h |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ include/net/ip6_fib.h |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- linux-next-20200714.orig/include/linux/skbuff.h
-+++ linux-next-20200714/include/linux/skbuff.h
-@@ -1329,7 +1329,7 @@ void skb_flow_dissect_meta(const struct
- 			   void *target_container);
+--- linux-next-20200714.orig/include/net/ip6_fib.h
++++ linux-next-20200714/include/net/ip6_fib.h
+@@ -166,7 +166,7 @@ struct fib6_info {
+ 	struct fib6_node __rcu		*fib6_node;
  
- /* Gets a skb connection tracking info, ctinfo map should be a
-- * a map of mapsize to translate enum ip_conntrack_info states
-+ * map of mapsize to translate enum ip_conntrack_info states
-  * to user states.
-  */
- void
-@@ -3813,7 +3813,7 @@ static inline bool skb_defer_rx_timestam
-  * must call this function to return the skb back to the stack with a
-  * timestamp.
-  *
-- * @skb: clone of the the original outgoing packet
-+ * @skb: clone of the original outgoing packet
-  * @hwtstamps: hardware time stamps
-  *
-  */
+ 	/* Multipath routes:
+-	 * siblings is a list of fib6_info that have the the same metric/weight,
++	 * siblings is a list of fib6_info that have the same metric/weight,
+ 	 * destination, but not the same gateway. nsiblings is just a cache
+ 	 * to speed up lookup.
+ 	 */
