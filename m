@@ -2,105 +2,153 @@ Return-Path: <SRS0=kup7=A2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D381CC433E3
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 12:23:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D85DEC433E3
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 12:30:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B18652071B
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 12:23:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="EENkeYdp"
+	by mail.kernel.org (Postfix) with ESMTP id C15A1206E9
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 12:30:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730813AbgGOMXj (ORCPT
+        id S1730850AbgGOMal (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 08:23:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60136 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728781AbgGOMXi (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 08:23:38 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 446C7C08C5C1
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 05:23:38 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id b6so2406337wrs.11
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 05:23:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=KVdISYiS8HEy4aersiAqtxJUUdWsfYZxho+YIECAEc0=;
-        b=EENkeYdpmz+Fa/oxs41nGObcWJcqqjRB5xU7cJqLc5cQW53tOkVHHOJktnz14IYzeO
-         zY69n3pCHyfUAHCCf2t9Hcb0PhXUn15FIqjzEDVh83Gwn5aK0w28sCLaByaqikWHwgG6
-         Ogy+ikd4Avjs6CMSGlYKBUpzEGvMjmLQVJU6yCM5NZac2KBmrWnShRVpYo4GAfe9XkmR
-         1scWq8aM+241SZ0CPNxEWkiaHUSU/Sn3oVwMFZC33tXA8eosT+boqtlGMe9QjT0N8hX5
-         vUD89hjtG1J4TT0dK1TUS4u5wr6Ogo0GQBLHHv1nEVOHgYIiH9HW2vXuWFegEh6DOVQL
-         Dk/Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=KVdISYiS8HEy4aersiAqtxJUUdWsfYZxho+YIECAEc0=;
-        b=J8N7E7lIFb1z/UTCrRfic0WFpuXIeDi5shrJgFzDS6VP7AkCMcxrNeUTo7wZzwM5bl
-         2fmR5JchralbQtnp2CS2QIOg5Sv7jW2614AojNSsOOhhfQJDBvymGpSE8Ueb9gp8Vzf2
-         hsevxg4hZnEe51V9oNHYQb5fmkmCH6BhcGxut+SnNso59Xpmxzybd4HaofvCtVd06OIz
-         g1SNtOvOzAiWTCUc1ZVIdD7exFBDI7NjZllvLknZQNwsvLqgtIstT0Ch3COm31ieqoqv
-         czvfxPZrhDIA5PvWfZDA+m8KtsU0OdODxSoC89vB6Ljxcouk4UpCfXbdmyGgKA1i1s7b
-         lbsA==
-X-Gm-Message-State: AOAM5327uwE/tGUbLhvU9SU/70L/S+BanmUBTSu2YK8bRUgKGkQzH4oA
-        TxvLlYDpmSv0DmDmgJuiUx8RFA==
-X-Google-Smtp-Source: ABdhPJyeV0wB0fonR/LRwQmNyWEbnt40Y6ckiqhq2xVKDDt9GQw+UZwL96kZeAjpEwtq7O8vVIlSpw==
-X-Received: by 2002:adf:f784:: with SMTP id q4mr11028896wrp.397.1594815815609;
-        Wed, 15 Jul 2020 05:23:35 -0700 (PDT)
-Received: from localhost.localdomain ([2.31.163.61])
-        by smtp.gmail.com with ESMTPSA id l67sm3753409wml.13.2020.07.15.05.23.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 15 Jul 2020 05:23:35 -0700 (PDT)
-From:   Lee Jones <lee.jones@linaro.org>
-To:     lee.jones@linaro.org
-Cc:     linux-kernel@vger.kernel.org,
-        Federico Vaga <federico.vaga@vaga.pv.it>,
-        Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
-        clang-built-linux@googlegroups.com
-Subject: [PATCH 1/1] doc:it_IT: process: coding-style.rst: Correct __maybe_unused compiler label
-Date:   Wed, 15 Jul 2020 13:23:28 +0100
-Message-Id: <20200715122328.3882187-1-lee.jones@linaro.org>
-X-Mailer: git-send-email 2.25.1
+        Wed, 15 Jul 2020 08:30:41 -0400
+Received: from foss.arm.com ([217.140.110.172]:52172 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729198AbgGOMal (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jul 2020 08:30:41 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 10B5130E;
+        Wed, 15 Jul 2020 05:30:40 -0700 (PDT)
+Received: from [10.57.32.45] (unknown [10.57.32.45])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 847AC3F66E;
+        Wed, 15 Jul 2020 05:30:38 -0700 (PDT)
+Subject: Re: [PATCH 09/13] cpufreq: acpi-cpufreq: Remove unused ID structs
+To:     Lee Jones <lee.jones@linaro.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>
+Cc:     Denis Sadykov <denis.m.sadykov@intel.com>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Paul Diefenbaugh <paul.s.diefenbaugh@intel.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Dominik Brodowski <linux@brodo.de>
+References: <20200714145049.2496163-10-lee.jones@linaro.org>
+ <CAJZ5v0iB0K6H28DSDQj9T7k_kV10THxV6-HwN9qfmkLsYNHfiA@mail.gmail.com>
+ <20200714210340.GJ1398296@dell> <20200715032442.gh2cliiddhv35fdj@vireshk-i7>
+ <20200715032718.2zlo2eurhkpoayya@vireshk-i7>
+ <CAJZ5v0jHJDLt6QFWG9FOpqmWMXAUuSEPHdHbVgFWcwR6FQD57Q@mail.gmail.com>
+ <20200715113433.GB3165313@dell>
+ <CAJZ5v0gFwYj7KKKj806s5SdWO1Wu5exiwObKKAdQWQEKg+2CJA@mail.gmail.com>
+ <20200715115029.GC3165313@dell>
+ <CAJZ5v0hJf2BwDvmtD6UEyyxm-CGcA=SLmAt+F8Sr0ceDZji0jw@mail.gmail.com>
+ <20200715121657.GE3165313@dell>
+From:   Robin Murphy <robin.murphy@arm.com>
+Message-ID: <4ba45e6b-7c49-7a7b-ae76-12d912629e4d@arm.com>
+Date:   Wed, 15 Jul 2020 13:30:36 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200715121657.GE3165313@dell>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Flag is __maybe_unused, not __maybe_used.
+On 2020-07-15 13:16, Lee Jones wrote:
+> On Wed, 15 Jul 2020, Rafael J. Wysocki wrote:
+> 
+>> On Wed, Jul 15, 2020 at 1:50 PM Lee Jones <lee.jones@linaro.org> wrote:
+>>>
+>>> On Wed, 15 Jul 2020, Rafael J. Wysocki wrote:
+>>>
+>>>> On Wed, Jul 15, 2020 at 1:34 PM Lee Jones <lee.jones@linaro.org> wrote:
+>>>>>
+>>>>> On Wed, 15 Jul 2020, Rafael J. Wysocki wrote:
+>>>>>
+>>>>>> On Wed, Jul 15, 2020 at 5:27 AM Viresh Kumar <viresh.kumar@linaro.org> wrote:
+>>>>>>>
+>>>>>>> On 15-07-20, 08:54, Viresh Kumar wrote:
+>>>>>>>> On 14-07-20, 22:03, Lee Jones wrote:
+>>>>>>>>> On Tue, 14 Jul 2020, Rafael J. Wysocki wrote:
+>>>>>>>>>
+>>>>>>>>>> On Tue, Jul 14, 2020 at 4:51 PM Lee Jones <lee.jones@linaro.org> wrote:
+>>>>>>>>>>>
+>>>>>>>>>>> Can't see them being used anywhere and the compiler doesn't complain
+>>>>>>>>>>> that they're missing, so ...
+>>>>>>>>>>
+>>>>>>>>>> Aren't they needed for automatic module loading in certain configurations?
+>>>>>>>>>
+>>>>>>>>> Any idea how that works, or where the code is for that?
+>>>>>>>>
+>>>>>>>> The MODULE_DEVICE_TABLE() thingy creates a map of vendor-id,
+>>>>>>>> product-id that the kernel keeps after boot (and so there is no static
+>>>>>>>> reference of it for the compiler), later when a device is hotplugged
+>>>>>>>> into the kernel it refers to the map to find the related driver for it
+>>>>>>>> and loads it if it isn't already loaded.
+>>>>>>>>
+>>>>>>>> This has some of it, search for MODULE_DEVICE_TABLE() in it.
+>>>>>>>> Documentation/driver-api/usb/hotplug.rst
+>>>>>>>
+>>>>>>> And you just need to add __maybe_unused to them to suppress the
+>>>>>>> warning.
+>>>>>>
+>>>>>> Wouldn't that cause the compiler to optimize them away if it doesn't
+>>>>>> see any users?
+>>>>>
+>>>>> It looks like they're only unused when !MODULE,
+>>>>
+>>>> OK
+>>>>
+>>>>> in which case optimising them away would be the correct thing to do, no?
+>>>
+>>> It would be good if someone with a little more knowledge could provide
+>>> a second opinion though.  I would think (hope) that the compiler would
+>>> be smart enough to see when its actually in use.  After all, it is the
+>>> compiler that places the information into the device table.
+>>>
+>> If that is not the case, then the MODULE_DEVICE_TABLE() magic is
+>>> broken and will need fixing.
+>>
+>> I'm not sure why that would be the case?
+> 
+> Nor me.  In fact, take a look at my latest email.  I think I just
+> proved out that it's not broken.  The warning is valid and
+> MODULE_DEVICE_TABLE() appears to work just as it should.
 
-Cc: Federico Vaga <federico.vaga@vaga.pv.it>
-Cc: Jonathan Corbet <corbet@lwn.net>
-Cc: linux-doc@vger.kernel.org
-Cc: clang-built-linux@googlegroups.com
-Signed-off-by: Lee Jones <lee.jones@linaro.org>
----
- Documentation/translations/it_IT/process/coding-style.rst | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+I won't claim to be an expert at all, but...
 
-diff --git a/Documentation/translations/it_IT/process/coding-style.rst b/Documentation/translations/it_IT/process/coding-style.rst
-index 6f4f85832deea..a346f1f2ce21f 100644
---- a/Documentation/translations/it_IT/process/coding-style.rst
-+++ b/Documentation/translations/it_IT/process/coding-style.rst
-@@ -1097,7 +1097,7 @@ la direttiva condizionale su di esse.
- 
- Se avete una variabile o funzione che potrebbe non essere usata in alcune
- configurazioni, e quindi il compilatore potrebbe avvisarvi circa la definizione
--inutilizzata, marcate questa definizione come __maybe_used piuttosto che
-+inutilizzata, marcate questa definizione come __maybe_unused piuttosto che
- racchiuderla in una direttiva condizionale del preprocessore.  (Comunque,
- se una variabile o funzione è *sempre* inutilizzata, rimuovetela).
- 
--- 
-2.25.1
+For !MODULE, MODULE_DEVICE_TABLE() expands to nothing, so after 
+preprocessing the static variable is literally unreferenced.
 
+Otherwise, MODULE_DEVICE_TABLE() emits an extern declaration of another 
+variable which is defined via the "alias" attribute to refer to the 
+symbol of the static variable. Thus the compiler presumably has to treat 
+it as potentially accessible from other compilation units such that it 
+can't be optimised away.
+
+>>> Removing boiler-plate is good, but not at the expense of obfuscation.
+>>
+>> I'm not following you here to be honest.
+> 
+> Never mind.  It's no longer important.
+> 
+>> BTW, I'm wondering if removing the "static" modifier from the
+>> definitions of the structures in question makes the warnings you want
+>> to get rid of go away.
+> 
+> I'm sure that it would.  But that just alludes to the fact that the
+> tables may be in use elsewhere, which in the case of !MODULE is
+> untrue.  That's probably more of a hack than using __maybe_unused.
+
+Right, that just ends up with someone sending another patch changing it 
+back to shut up "variable foo was not declared, should it be static?" 
+warnings from Sparse ;)
+
+Robin.
