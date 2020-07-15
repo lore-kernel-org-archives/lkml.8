@@ -2,184 +2,188 @@ Return-Path: <SRS0=kup7=A2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47B02C433E7
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 15:51:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 005B3C433E4
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 15:54:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1FB8920658
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 15:51:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="ihxt9tMz"
+	by mail.kernel.org (Postfix) with ESMTP id D4FB720658
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 15:54:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726396AbgGOPvJ (ORCPT
+        id S1726402AbgGOPyd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 11:51:09 -0400
-Received: from linux.microsoft.com ([13.77.154.182]:46236 "EHLO
-        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725835AbgGOPvI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 11:51:08 -0400
-Received: from sequoia (162-237-133-238.lightspeed.rcsntx.sbcglobal.net [162.237.133.238])
-        by linux.microsoft.com (Postfix) with ESMTPSA id 7D47F20B4908;
-        Wed, 15 Jul 2020 08:51:07 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 7D47F20B4908
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1594828268;
-        bh=PqZS5ckYTWkUACXW2CzkMAhIn3QNaBv0Mq12LReLoVA=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ihxt9tMz48bY6B/jpDdTs1dTPvX52ZyIF7gncnLawsjwkY8neLeNQ90iRqXzFY0qz
-         CklPsjPHf7QPev7+Dm/MnlgjsGs4h2iNl95bh4lACsae+lEsqrIpv6VZ4dVk7j0wlJ
-         +KtXNOzw4JHsh6HXps2KOQIz9mK+TqUDUszBeiU8=
-Date:   Wed, 15 Jul 2020 10:50:53 -0500
-From:   Tyler Hicks <tyhicks@linux.microsoft.com>
-To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Cc:     Peter Huewe <peterhuewe@gmx.de>, Ard Biesheuvel <ardb@kernel.org>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Petr Vandrovec <petr@vmware.com>,
-        Nayna Jain <nayna@linux.ibm.com>,
-        Thirupathaiah Annapureddy <thiruan@microsoft.com>,
-        linux-integrity@vger.kernel.org, linux-efi@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Peter Jones <pjones@redhat.com>
-Subject: Re: [PATCH v2] tpm: Require that all digests are present in
- TCG_PCR_EVENT2 structures
-Message-ID: <20200715155053.GA3673@sequoia>
-References: <20200710192955.23333-1-tyhicks@linux.microsoft.com>
- <20200713205719.GA1419951@linux.intel.com>
+        Wed, 15 Jul 2020 11:54:33 -0400
+Received: from mga06.intel.com ([134.134.136.31]:3994 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725897AbgGOPyd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jul 2020 11:54:33 -0400
+IronPort-SDR: Jfrhcul+9Asal5E6VLwOIUsLKSl7as7HVJXJbyZolYJKmExjM/LA4f80UVHut3IxpFSqWfVnKF
+ hDvl+D9MP8mQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9683"; a="210719066"
+X-IronPort-AV: E=Sophos;i="5.75,355,1589266800"; 
+   d="scan'208";a="210719066"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jul 2020 08:54:32 -0700
+IronPort-SDR: aQuOBvXboXvtr9LVjlL5IQoQ7kAhQ0ypAtkS+t3EQWIQbydXd6EzK86vUF9k3FT6R/aJglWQbE
+ fG7j1Cnj2I4g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,355,1589266800"; 
+   d="scan'208";a="460137858"
+Received: from jacob-builder.jf.intel.com (HELO jacob-builder) ([10.7.199.155])
+  by orsmga005.jf.intel.com with ESMTP; 15 Jul 2020 08:54:32 -0700
+Date:   Wed, 15 Jul 2020 09:01:14 -0700
+From:   Jacob Pan <jacob.jun.pan@linux.intel.com>
+To:     Lu Baolu <baolu.lu@linux.intel.com>
+Cc:     Joerg Roedel <joro@8bytes.org>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Jean-Philippe Brucker <jean-philippe@linaro.org>,
+        Kevin Tian <kevin.tian@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Ashok Raj <ashok.raj@intel.com>, kvm@vger.kernel.org,
+        Cornelia Huck <cohuck@redhat.com>,
+        linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org,
+        Robin Murphy <robin.murphy@arm.com>,
+        jacob.jun.pan@linux.intel.com
+Subject: Re: [PATCH v3 2/4] iommu: Add iommu_aux_at(de)tach_group()
+Message-ID: <20200715090114.50a459d4@jacob-builder>
+In-Reply-To: <b5b22e01-4a51-8dfe-9ba4-aeca783740f1@linux.intel.com>
+References: <20200714055703.5510-1-baolu.lu@linux.intel.com>
+        <20200714055703.5510-3-baolu.lu@linux.intel.com>
+        <20200714093909.1ab93c9e@jacob-builder>
+        <b5b22e01-4a51-8dfe-9ba4-aeca783740f1@linux.intel.com>
+Organization: OTC
+X-Mailer: Claws Mail 3.13.2 (GTK+ 2.24.30; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200713205719.GA1419951@linux.intel.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-07-13 23:57:19, Jarkko Sakkinen wrote:
-> On Fri, Jul 10, 2020 at 02:29:55PM -0500, Tyler Hicks wrote:
-> > Require that the TCG_PCR_EVENT2.digests.count value strictly matches the
-> > value of TCG_EfiSpecIdEvent.numberOfAlgorithms in the event field of the
-> > TCG_PCClientPCREvent event log header. Also require that
-> > TCG_EfiSpecIdEvent.numberOfAlgorithms is non-zero.
-> > 
-> > The TCG PC Client Platform Firmware Profile Specification section 9.1
-> > (Family "2.0", Level 00 Revision 1.04) states:
-> > 
-> >  For each Hash algorithm enumerated in the TCG_PCClientPCREvent entry,
-> >  there SHALL be a corresponding digest in all TCG_PCR_EVENT2 structures.
-> >  Note: This includes EV_NO_ACTION events which do not extend the PCR.
-> > 
-> > Section 9.4.5.1 provides this description of
-> > TCG_EfiSpecIdEvent.numberOfAlgorithms:
-> > 
-> >  The number of Hash algorithms in the digestSizes field. This field MUST
-> >  be set to a value of 0x01 or greater.
-> > 
-> > Enforce these restrictions, as required by the above specification, in
-> > order to better identify and ignore invalid sequences of bytes at the
-> > end of an otherwise valid TPM2 event log. Firmware doesn't always have
-> > the means necessary to inform the kernel of the actual event log size so
-> > the kernel's event log parsing code should be stringent when parsing the
-> > event log for resiliency against firmware bugs. This is true, for
-> > example, when firmware passes the event log to the kernel via a reserved
-> > memory region described in device tree.
-> > 
-> > POWER and some ARM systems use the "linux,sml-base" and "linux,sml-size"
-> > device tree properties to describe the memory region used to pass the
-> > event log from firmware to the kernel. Unfortunately, the
-> > "linux,sml-size" property describes the size of the entire reserved
-> > memory region rather than the size of the event long within the memory
-> > region and the event log format does not include information describing
-> > the size of the event log.
-> > 
-> > tpm_read_log_of(), in drivers/char/tpm/eventlog/of.c, is where the
-> > "linux,sml-size" property is used. At the end of that function,
-> > log->bios_event_log_end is pointing at the end of the reserved memory
-> > region. That's typically 0x10000 bytes offset from "linux,sml-base",
-> > depending on what's defined in the device tree source.
-> > 
-> > The firmware event log only fills a portion of those 0x10000 bytes and
-> > the rest of the memory region should be zeroed out by firmware. Even in
-> > the case of a properly zeroed bytes in the remainder of the memory
-> > region, the only thing allowing the kernel's event log parser to detect
-> > the end of the event log is the following conditional in
-> > __calc_tpm2_event_size():
-> > 
-> >         if (event_type == 0 && event_field->event_size == 0)
-> >                 size = 0;
-> > 
-> > If that wasn't there, __calc_tpm2_event_size() would think that a 16
-> > byte sequence of zeroes, following an otherwise valid event log, was
-> > a valid event.
-> > 
-> > However, problems can occur if a single bit is set in the offset
-> > corresponding to either the TCG_PCR_EVENT2.eventType or
-> > TCG_PCR_EVENT2.eventSize fields, after the last valid event log entry.
-> > This could confuse the parser into thinking that an additional entry is
-> > present in the event log and exposing this invalid entry to userspace in
-> > the /sys/kernel/security/tpm0/binary_bios_measurements file. Such
-> > problems have been seen if firmware does not fully zero the memory
-> > region upon a warm reboot.
-> > 
-> > This patch significantly raises the bar on how difficult it is for
-> > stale/invalid memory to confuse the kernel's event log parser but
-> > there's still, ultimately, a reliance on firmware to properly initialize
-> > the remainder of the memory region reserved for the event log as the
-> > parser cannot be expected to detect a stale but otherwise properly
-> > formatted firmware event log entry.
-> > 
-> > Fixes: fd5c78694f3f ("tpm: fix handling of the TPM 2.0 event logs")
-> > Signed-off-by: Tyler Hicks <tyhicks@linux.microsoft.com>
-> > ---
-> > 
-> > * v2
-> >   - Rebase the patch on top of the TPM next branch, commit 786a2aa281f4
-> >     ("Revert commit e918e570415c ("tpm_tis: Remove the HID IFX0102")")
-> >   - Expand on the technical reasoning for needing strict event
-> >     validation in the commit message
-> >   - Improve the inline comment explaining the need for detecting
-> >     malformed events
-> > 
-> >  include/linux/tpm_eventlog.h | 11 +++++++++--
-> >  1 file changed, 9 insertions(+), 2 deletions(-)
-> > 
-> > diff --git a/include/linux/tpm_eventlog.h b/include/linux/tpm_eventlog.h
-> > index 64356b199e94..739ba9a03ec1 100644
-> > --- a/include/linux/tpm_eventlog.h
-> > +++ b/include/linux/tpm_eventlog.h
-> > @@ -211,9 +211,16 @@ static inline int __calc_tpm2_event_size(struct tcg_pcr_event2_head *event,
-> >  
-> >  	efispecid = (struct tcg_efi_specid_event_head *)event_header->event;
-> >  
-> > -	/* Check if event is malformed. */
-> > +	/*
-> > +	 * Perform validation of the event in order to identify malformed
-> > +	 * events. This function may be asked to parse arbitrary byte sequences
-> > +	 * immediately following a valid event log. The caller expects this
-> > +	 * function to recognize that the byte sequence is not a valid event
-> > +	 * and to return an event size of 0.
-> > +	 */
-> >  	if (memcmp(efispecid->signature, TCG_SPECID_SIG,
-> > -		   sizeof(TCG_SPECID_SIG)) || count > efispecid->num_algs) {
-> > +		   sizeof(TCG_SPECID_SIG)) ||
-> > +	    !efispecid->num_algs || count != efispecid->num_algs) {
-> >  		size = 0;
-> >  		goto out;
-> >  	}
-> > -- 
-> > 2.25.1
-> > 
-> 
-> 
-> Reviewed-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+On Wed, 15 Jul 2020 08:47:36 +0800
+Lu Baolu <baolu.lu@linux.intel.com> wrote:
 
-Thanks for the review. Do you plan to take this through the linux-tpmdd
-tree or are you expecting someone else to pick up this patch?
-
-Tyler
-
+> Hi Jacob,
 > 
-> /Jarkko
+> On 7/15/20 12:39 AM, Jacob Pan wrote:
+> > On Tue, 14 Jul 2020 13:57:01 +0800
+> > Lu Baolu<baolu.lu@linux.intel.com>  wrote:
+> >   
+> >> This adds two new aux-domain APIs for a use case like vfio/mdev
+> >> where sub-devices derived from an aux-domain capable device are
+> >> created and put in an iommu_group.
+> >>
+> >> /**
+> >>   * iommu_aux_attach_group - attach an aux-domain to an iommu_group
+> >> which
+> >>   *                          contains sub-devices (for example
+> >> mdevs) derived
+> >>   *                          from @dev.
+> >>   * @domain: an aux-domain;
+> >>   * @group:  an iommu_group which contains sub-devices derived from
+> >> @dev;
+> >>   * @dev:    the physical device which supports IOMMU_DEV_FEAT_AUX.
+> >>   *
+> >>   * Returns 0 on success, or an error value.
+> >>   */
+> >> int iommu_aux_attach_group(struct iommu_domain *domain,
+> >>                             struct iommu_group *group,
+> >>                             struct device *dev)
+> >>
+> >> /**
+> >>   * iommu_aux_detach_group - detach an aux-domain from an
+> >> iommu_group *
+> >>   * @domain: an aux-domain;
+> >>   * @group:  an iommu_group which contains sub-devices derived from
+> >> @dev;
+> >>   * @dev:    the physical device which supports IOMMU_DEV_FEAT_AUX.
+> >>   *
+> >>   * @domain must have been attached to @group via
+> >> iommu_aux_attach_group(). */
+> >> void iommu_aux_detach_group(struct iommu_domain *domain,
+> >>                              struct iommu_group *group,
+> >>                              struct device *dev)
+> >>
+> >> It also adds a flag in the iommu_group data structure to identify
+> >> an iommu_group with aux-domain attached from those normal ones.
+> >>
+> >> Signed-off-by: Lu Baolu<baolu.lu@linux.intel.com>
+> >> ---
+> >>   drivers/iommu/iommu.c | 58
+> >> +++++++++++++++++++++++++++++++++++++++++++ include/linux/iommu.h |
+> >> 17 +++++++++++++ 2 files changed, 75 insertions(+)
+> >>
+> >> diff --git a/drivers/iommu/iommu.c b/drivers/iommu/iommu.c
+> >> index e1fdd3531d65..cad5a19ebf22 100644
+> >> --- a/drivers/iommu/iommu.c
+> >> +++ b/drivers/iommu/iommu.c
+> >> @@ -45,6 +45,7 @@ struct iommu_group {
+> >>   	struct iommu_domain *default_domain;
+> >>   	struct iommu_domain *domain;
+> >>   	struct list_head entry;
+> >> +	unsigned int aux_domain_attached:1;
+> >>   };
+> >>   
+> >>   struct group_device {
+> >> @@ -2759,6 +2760,63 @@ int iommu_aux_get_pasid(struct iommu_domain
+> >> *domain, struct device *dev) }
+> >>   EXPORT_SYMBOL_GPL(iommu_aux_get_pasid);
+> >>   
+> >> +/**
+> >> + * iommu_aux_attach_group - attach an aux-domain to an iommu_group
+> >> which
+> >> + *                          contains sub-devices (for example
+> >> mdevs) derived
+> >> + *                          from @dev.
+> >> + * @domain: an aux-domain;
+> >> + * @group:  an iommu_group which contains sub-devices derived from
+> >> @dev;
+> >> + * @dev:    the physical device which supports IOMMU_DEV_FEAT_AUX.
+> >> + *
+> >> + * Returns 0 on success, or an error value.
+> >> + */
+> >> +int iommu_aux_attach_group(struct iommu_domain *domain,
+> >> +			   struct iommu_group *group, struct
+> >> device *dev) +{
+> >> +	int ret = -EBUSY;
+> >> +
+> >> +	mutex_lock(&group->mutex);
+> >> +	if (group->domain)
+> >> +		goto out_unlock;
+> >> +  
+> > Perhaps I missed something but are we assuming only one mdev per
+> > mdev group? That seems to change the logic where vfio does:
+> > iommu_group_for_each_dev()
+> > 	iommu_aux_attach_device()
+> >   
+> 
+> It has been changed in PATCH 4/4:
+> 
+> static int vfio_iommu_attach_group(struct vfio_domain *domain,
+>                                     struct vfio_group *group)
+> {
+>          if (group->mdev_group)
+>                  return iommu_aux_attach_group(domain->domain,
+>                                                group->iommu_group,
+>                                                group->iommu_device);
+>          else
+>                  return iommu_attach_group(domain->domain, 
+> group->iommu_group);
+> }
+> 
+> So, for both normal domain and aux-domain, we use the same concept:
+> attach a domain to a group.
+> 
+I get that, but don't you have to attach all the devices within the
+group? Here you see the group already has a domain and exit.
+
+> Best regards,
+> baolu
+
+[Jacob Pan]
