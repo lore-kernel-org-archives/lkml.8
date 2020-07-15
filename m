@@ -2,100 +2,94 @@ Return-Path: <SRS0=kup7=A2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E221EC43617
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 11:12:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3D22C43459
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 11:13:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BE10520658
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 11:12:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b="JZLRSBhW"
+	by mail.kernel.org (Postfix) with ESMTP id B489D2075B
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 11:13:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594811601;
+	bh=eydGT5vyj3DFkrTR3iGkM6VbuT/mY9iEwObflzBiA5M=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=P+wFIHPpaZS1QiAye8b3d76oVYmzZFlDECSflGVp3o/Bo0towaFQ8ihPn7fkfWJPM
+	 rxhdDv3rIes24I2dAiNci2fQXXii6s8HJtZ7sstORK5d+9s6/f/H0AQMx94aHir9jo
+	 jAZ6Ba1I+Fw5uQrIYS4Ic5mf+XVBZUYVfptjbc7s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729805AbgGOLM2 (ORCPT
+        id S1728348AbgGOLNV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 07:12:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49242 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728095AbgGOLMW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 07:12:22 -0400
-Received: from mail-ej1-x632.google.com (mail-ej1-x632.google.com [IPv6:2a00:1450:4864:20::632])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7C786C08C5DB
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 04:12:22 -0700 (PDT)
-Received: by mail-ej1-x632.google.com with SMTP id a1so1717139ejg.12
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 04:12:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=szeredi.hu; s=google;
-        h=mime-version:from:date:message-id:subject:to:cc;
-        bh=GNZTlebsq0eWIwEljX2xeBdZEHRs2k6AtH87hm9Zwgg=;
-        b=JZLRSBhWm0oHxV3fok6cxthIXvhjAenz53D8fezRJjLbsEGzev4V175VrT5tTOPQ0L
-         XAnaq/Ov0CMEsnpV/F+V8rK7u1bIHghoUkChEQwbMY9tpBz4kn9ZGAYdf+rjrsnXqUDy
-         +MzGC5vqoZD/qK6UbJ4A75mLpvNLy6Zar3ArQ=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
-        bh=GNZTlebsq0eWIwEljX2xeBdZEHRs2k6AtH87hm9Zwgg=;
-        b=Xl7r89TCiN1NPVwdOG0nPRmZ2rJmKZqQrGaYA6d8pVx+wIzTPoX4bCpPCyzeT3vgOz
-         tXkOto8qWhpkYW+BSJNEP1xPxCgQfejCIAsuu+cNCc6l17/NHl35r4++86cSgeR7f5Bp
-         rVefNLaP7BfNqR/N4ozNVU/oSt6tJ+FQG2l8FDE1z4inILA9mXpkiNtgUc0MsGRR/tmC
-         7+QQbWy3UePi7ngcwpABt1pv5F+ftLiqO5ZLVb7AAVQwbowb9olMAAQKWYuE0en7JB8h
-         nPHKGiZa8Zprh4U7+j26+eLG6G298cBspKhzPEj+EzDvZjBhlezGKvg0xRqVy3rAzaXo
-         joDw==
-X-Gm-Message-State: AOAM5313U0w4Vfm7pmfeNRt57qQv6Fhaawfk8X7f9lqaAD+661NbZ7RG
-        tl7Ho8dHF8pC9V7oZKAr7eF46U3ZMHlFvIvmWT1+xg==
-X-Google-Smtp-Source: ABdhPJw0oIZdNNSQSx2dAWVRtVjY5tScV5cqBbhIhCHnr1dD6YokQZCqwZVPmd0NLTWPqfK15c8L+dhgVb8e5/u5u6o=
-X-Received: by 2002:a17:906:b74e:: with SMTP id fx14mr8403146ejb.202.1594811541019;
- Wed, 15 Jul 2020 04:12:21 -0700 (PDT)
+        Wed, 15 Jul 2020 07:13:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51210 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726034AbgGOLNU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jul 2020 07:13:20 -0400
+Received: from localhost (unknown [122.171.202.192])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 21EC220658;
+        Wed, 15 Jul 2020 11:13:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594811600;
+        bh=eydGT5vyj3DFkrTR3iGkM6VbuT/mY9iEwObflzBiA5M=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=uRYxnG5OXQN4sijkPXo4JIQSHo3Qzo2kvJDps2v9dTJ0oqZ96Rea5oLMtoDrybZEf
+         YHq/nhv6B7uhMyy7b5+bRM81cLS0YnTrkJlEiNxEi2qoxzVHKehGD6hMe8e5faj4Na
+         wjf5BXMWyoj6kPiSBzLZn+xio+Bhagas8hBXFHcQ=
+Date:   Wed, 15 Jul 2020 16:43:15 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Cc:     Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Viresh Kumar <vireshk@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
+        devicetree@vger.kernel.org, dmaengine@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v7 04/11] dmaengine: Introduce max SG list entries
+ capability
+Message-ID: <20200715111315.GK34333@vkoul-mobl>
+References: <20200709224550.15539-1-Sergey.Semin@baikalelectronics.ru>
+ <20200709224550.15539-5-Sergey.Semin@baikalelectronics.ru>
+ <d667adda-6576-623d-6976-30f60ab3c3dc@ti.com>
+ <20200710092738.z7zyywe46mp7uuf3@mobilestation>
+ <427bc5c8-0325-bc25-8637-a7627bcac26f@ti.com>
+ <20200710161445.t6eradkgt4terdr3@mobilestation>
 MIME-Version: 1.0
-From:   Miklos Szeredi <miklos@szeredi.hu>
-Date:   Wed, 15 Jul 2020 13:12:09 +0200
-Message-ID: <CAJfpegu3EwbBFTSJiPhm7eMyTK2MzijLUp1gcboOo3meMF_+Qg@mail.gmail.com>
-Subject: strace of io_uring events?
-To:     strace-devel@lists.strace.io, io-uring@vger.kernel.org
-Cc:     Pavel Begunkov <asml.silence@gmail.com>,
-        Linux API <linux-api@vger.kernel.org>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200710161445.t6eradkgt4terdr3@mobilestation>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On 10-07-20, 19:14, Serge Semin wrote:
+> On Fri, Jul 10, 2020 at 02:51:33PM +0300, Peter Ujfalusi wrote:
 
-This thread is to discuss the possibility of stracing requests
-submitted through io_uring.   I'm not directly involved in io_uring
-development, so I'm posting this out of  interest in using strace on
-processes utilizing io_uring.
+> > Since we should be able to handle longer lists and this is kind of a
+> > hint for clients that above this number of nents the list will be broken
+> > up to smaller 'bursts', which when traversing could cause latency.
+> > 
+> > sg_chunk_len might be another candidate.
+> 
+> Ok. We've got four candidates:
+> - max_sg_nents_burst
+> - max_sg_burst
+> - max_sg_chain
+> - sg_chunk_len
+> 
+> @Vinod, @Andy, what do you think?
 
-io_uring gives the developer a way to bypass the syscall interface,
-which results in loss of information when tracing.  This is a strace
-fragment on  "io_uring-cp" from liburing:
+So IIUC your hw supports single sg and in that you would like to publish
+the length of each chunk, is that correct? If so sg_chunk_len seems
+apt..
 
-io_uring_enter(5, 40, 0, 0, NULL, 8)    = 40
-io_uring_enter(5, 1, 0, 0, NULL, 8)     = 1
-io_uring_enter(5, 1, 0, 0, NULL, 8)     = 1
-...
-
-What really happens are read + write requests.  Without that
-information the strace output is mostly useless.
-
-This loss of information is not new, e.g. calls through the vdso or
-futext fast paths are also invisible to strace.  But losing filesystem
-I/O calls are a major blow, imo.
-
-What do people think?
-
-From what I can tell, listing the submitted requests on
-io_uring_enter() would not be hard.  Request completion is
-asynchronous, however, and may not require  io_uring_enter() syscall.
-Am I correct?
-
-Is there some existing tracing infrastructure that strace could use to
-get async completion events?  Should we be introducing one?
-
-Thanks,
-Miklos
+-- 
+~Vinod
