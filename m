@@ -2,82 +2,82 @@ Return-Path: <SRS0=kup7=A2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 461CFC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 07:52:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D93BC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 07:56:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2A6A120672
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 07:52:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4CCE120672
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 07:56:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594799773;
+	bh=xZqtc5KFNzDMqv1v9PhQ/sqkiiymDO/f3b/2PSAL50o=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=uQ9Oin5sCsu0XBk4ZwNm1OX7GriiMcI5Ci87meJNq4zAgJgYmZ1h4OMT9i8Nrbvxc
+	 zU/j1u27lbVOa+R1qXG4any2uj7r/LNf1NPgAfdYo/cItjw1EamtClP1tWYTTsu5cZ
+	 wHmW+/wf+GEbWFQ6fxoKgFx2YUwLWEXDpr2d2iMI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729496AbgGOHwk (ORCPT
+        id S1729505AbgGOH4M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 03:52:40 -0400
-Received: from smtprelay0068.hostedemail.com ([216.40.44.68]:41390 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728888AbgGOHwk (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 03:52:40 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay04.hostedemail.com (Postfix) with ESMTP id 2F788180A7FDB;
-        Wed, 15 Jul 2020 07:52:39 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: boot55_4b12d8026ef7
-X-Filterd-Recvd-Size: 3675
-Received: from XPS-9350.home (unknown [47.151.133.149])
-        (Authenticated sender: joe@perches.com)
-        by omf02.hostedemail.com (Postfix) with ESMTPA;
-        Wed, 15 Jul 2020 07:52:37 +0000 (UTC)
-Message-ID: <70107f0baa54e5ee8da989e01519f292536a41ef.camel@perches.com>
-Subject: Re: [PATCH] mmc: cqhci: Fix a print format for the task descriptor
-From:   Joe Perches <joe@perches.com>
-To:     Ben Chuang <benchuanggli@gmail.com>, adrian.hunter@intel.com,
-        riteshh@codeaurora.org, asutoshd@codeaurora.org,
-        ulf.hansson@linaro.org
-Cc:     linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernelnewbies <kernelnewbies@kernelnewbies.org>
-Date:   Wed, 15 Jul 2020 00:52:36 -0700
-In-Reply-To: <20200715073344.8965-1-benchuanggli@gmail.com>
-References: <20200715073344.8965-1-benchuanggli@gmail.com>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.36.3-0ubuntu1 
+        Wed, 15 Jul 2020 03:56:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56532 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729001AbgGOH4L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jul 2020 03:56:11 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 92BE12064C;
+        Wed, 15 Jul 2020 07:56:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594799771;
+        bh=xZqtc5KFNzDMqv1v9PhQ/sqkiiymDO/f3b/2PSAL50o=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=aGw0rplfw8f/k1FfNUkKQGBVYlQ4xVToAgpgsuO+QQc4bhsaVhcGYzzRY4JJ9ntAd
+         zNV9h+ac/XodDn3iDCOTCDexqcuLaaAms7kgL7HE52wKcxqalcNdCRfo2ezryio/s/
+         u4Jisz+u01Didj1whBgMfzyt9iKyFRekqJ0R2Dgc=
+Date:   Wed, 15 Jul 2020 09:56:07 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Bhanu Prakash Maiya <bhanumaiya@chromium.org>
+Cc:     linux-arm-kernel@lists.infradead.org,
+        Lee Jones <lee.jones@linaro.org>,
+        Furquan Shaikh <furquan@chromium.org>,
+        Raul E Rangel <rrangel@chromium.org>,
+        Eric Peers <epeers@google.com>,
+        Duncan Laurie <dlaurie@google.com>,
+        Benson Leung <bleung@chromium.org>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Guenter Roeck <groeck@chromium.org>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kernel test robot <lkp@intel.com>
+Subject: Re: [PATCH 1/2] cros: platform/chrome: Add cros-ec-uart driver for
+ uart support
+Message-ID: <20200715075607.GA2514306@kroah.com>
+References: <20200715074106.1754048-1-bhanumaiya@google.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200715074106.1754048-1-bhanumaiya@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2020-07-15 at 15:33 +0800, Ben Chuang wrote:
-> The format string of the task descriptor should be "%016llx".
+On Wed, Jul 15, 2020 at 12:41:06AM -0700, Bhanu Prakash Maiya wrote:
+> From: Bhanu Prakash Maiya <bhanumaiya@chromium.org>
+> 
+> This patch enables uart transport layer for cros_ec framework.
+> The cros-ec-uart binds with EC device working on uart transport to
+> send request and receive response.
+> 
+> Signed-off-by: Bhanu Prakash Maiya <bhanumaiya@chromium.org>
+> Reported-by: kernel test robot <lkp@intel.com>
+> Change-Id: Icb23b633700f1ef4d123e3f21fd26fad21a3f207
 
-There are a lot of these:
-
-$ git grep -P -n '\b0x\d+%'
-arch/m68k/include/asm/mmu_context.h:166:        pr_info("ksp load failed: mm=0x%p ksp=0x08%lx\n", mm, mmuar);
-arch/powerpc/kvm/book3s_xive.c:1706:    pr_devel("  val=0x016%llx (server=0x%x, guest_prio=%d)\n",
-drivers/atm/eni.c:590:                  EVENT("bad PDU (descr=0x08%lx,length=%ld)\n",descr,
-drivers/dma/ppc4xx/adma.c:4366:                 "uses 0x1%02x polynomial.\n", reg);
-drivers/gpu/drm/amd/amdgpu/gfx_v9_0.c:3023:             DRM_INFO("Using rlc debug ucode. mmRLC_GPM_GENERAL_6 ==0x08%x / fw_ver == %i \n",
-drivers/gpu/drm/i915/intel_uncore.c:495:                drm_dbg(&uncore->i915->drm, "GTFIFODBG = 0x08%x\n", fifodbg);
-drivers/media/usb/gspca/ov519.c:2760:                           gspca_err(gspca_dev, "Unknown sensor: 0x76%02x\n",
-drivers/mmc/host/cqhci.c:425:   pr_debug("%s: cqhci: tag %d task descriptor 0x016%llx\n",
-drivers/mmc/host/s3cmci.c:192:           "#%u%s op:%i arg:0x%08x flags:0x08%x retries:%u",
-drivers/net/can/flexcan.c:1517:         "gpr %s req_gpr=0x02%x req_bit=%u ack_gpr=0x02%x ack_bit=%u\n",
-drivers/net/ethernet/intel/i40e/i40e_debugfs.c:444:              "    info: cmd_reserved[] = 0x%02x 0x%02x 0x%02x 0x0%02x 0x%02x 0x%02x 0x%02x 0x0%02x\n",
-drivers/net/ethernet/oki-semi/pch_gbe/pch_gbe_main.c:1397:                         "i = %d  buffer_info->dma = 0x08%llx  buffer_info->length = 0x%x\n",
-drivers/net/wireless/intel/iwlwifi/pcie/trans.c:2298:           "Queue %d is %sactive on fifo %d and stuck for %u ms. SW [%d, %d] HW [%d, %d] FH TRB=0x0%x\n",
-drivers/net/wireless/intersil/hostap/hostap_hw.c:779:                  "(%d,0x04%x,%d); reg=0x%04x\n",
-drivers/net/wireless/realtek/rtw88/rtw8822c.c:429:              rtw_dbg(rtwdev, RTW_DBG_RFK, "[DACK] ADCK 0x%08x=0x08%x\n",
-drivers/scsi/mpt3sas/mpt3sas_scsih.c:6161:              ioc_err(ioc, "device is not present handle(0x04%x)!!!\n",
-drivers/scsi/mpt3sas/mpt3sas_scsih.c:6923:              ioc_err(ioc, "device is not present handle(0x04%x)!!!\n",
-drivers/staging/rtl8723bs/hal/hal_com_phycfg.c:328:                     DBG_871X("Invalid RegAddr 0x3%x in PHY_GetRateSectionIndexOfTxPowerByRate()", RegAddr);
-drivers/usb/serial/spcp8x5.c:225:       dev_dbg(&port->dev, "0xc0:0x22:0:6  %d - 0x02%x\n", ret, *buf);
-drivers/video/fbdev/s1d13xxxfb.c:500:   dbg_blit("(copyarea) bpp=%d=0x0%d, mem_offset1=%d, mem_offset2=%d\n", bpp, (bpp >> 1),
-sound/pci/es1938.c:306:         "snd_es1938_write_cmd timeout (0x02%x/0x02%x)\n", cmd, v);
-sound/pci/es1938.c:319: dev_err(chip->card->dev, "get_byte timeout: status 0x02%x\n", v);
-
-
+I think you forgot to run checkpatch.pl on this :(
 
