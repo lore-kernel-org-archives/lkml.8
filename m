@@ -2,136 +2,99 @@ Return-Path: <SRS0=kup7=A2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4456EC433F2
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 12:47:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A26C1C433E4
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 12:48:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2401C20578
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 12:47:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594817250;
-	bh=6Sx27IA7enGX06xdFuvHpylG4RnOCDfdJZa4amp1Z6k=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=YmcIcOVvOLHn+DYpdR6naC2/4F0cYxI4R7bzt00SyCAvUi2XquoPfDl8KlBWebt09
-	 qpho3UNrDltRS6o+8z/RJTpVjjcKlDOE+JlBuUS+iOip+RRQOtVb2m/pVj0wZtxX8U
-	 iI2gubY7ZgtrJRoQQ4j8x+M/5haBMQ0BUNy8YXak=
+	by mail.kernel.org (Postfix) with ESMTP id 7961E20578
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 12:48:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="AEuBZRjn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731206AbgGOMr2 (ORCPT
+        id S1731246AbgGOMsp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 08:47:28 -0400
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:41348 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728861AbgGOMr2 (ORCPT
+        Wed, 15 Jul 2020 08:48:45 -0400
+Received: from perceval.ideasonboard.com ([213.167.242.64]:60138 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728861AbgGOMsp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 08:47:28 -0400
-Received: by mail-oi1-f196.google.com with SMTP id y22so2073059oie.8;
-        Wed, 15 Jul 2020 05:47:27 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=4wdDNfmxaJDMgzx6KGb0R32bfQn7xefP7F9Z+jm7O8M=;
-        b=ErJPE7Y3tXa/QwfTZ8E+hqgzHhBnqeik0/u9v8c2k/hJSZsMGii49ClvmN/ypA/kBC
-         LZf1jkIHDdBCftCqO6/DPZ7c0RbRUznkZ1EHz/yx+qeGKpK3E+UWrgy0Qen3ihsF4vpB
-         of2Gx9AJ2R1fiNZX0x6zp4m3T3I7QPJ+2TcQ4dFS6Coc2CroJnOedC/ueCHmhAdDpnEF
-         KzrRdDg3a/JCSe38u1z8L0DvcZNt7ctxu5ibhuucAxtl8SlANBBGV9cR5YEhCTo0DOi/
-         lfYysjgs7Pc6VMhDgMaGq4sH2rBkI3o58VhwzqHYzrD1xsugWObKTuZlI5bUWC9eUMib
-         U+AA==
-X-Gm-Message-State: AOAM532VzyGKuCZdE6uD8Bkh1N682rX85s9rUDdBSwEsNoc+YJ/uetJH
-        r5NOhq0Xo1AguSMcoP/SCTCn4LZyEu97jx6O7P4=
-X-Google-Smtp-Source: ABdhPJxewLcMbqQtHFzIXxogNRmQ7yp2yEiyvW8cX3rQxeBkDtYIVHg606iB1KWw9RAdZfYsCuseer30sxq1Sm9KkVg=
-X-Received: by 2002:aca:f58a:: with SMTP id t132mr7362035oih.68.1594817247377;
- Wed, 15 Jul 2020 05:47:27 -0700 (PDT)
+        Wed, 15 Jul 2020 08:48:45 -0400
+Received: from Q.local (cpc89242-aztw30-2-0-cust488.18-1.cable.virginm.net [86.31.129.233])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 80E1A564;
+        Wed, 15 Jul 2020 14:48:42 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1594817323;
+        bh=ymuoWEsdbUlRYdGRMk/tboXnTJb8BaO8toTY5V7aRxQ=;
+        h=From:To:Cc:Subject:Date:From;
+        b=AEuBZRjnvuPz8LxH97+ubyzGhBWRm59auYKmPT7gIsDbBuH51n63LTcwmXGcVRXdE
+         0U4O3VpTWs52HfRNy7JUD+ERwUwTMLaiOzatgXen2TVLE7ZrKjuYP/yNhw577sJOJ3
+         +S7VQe5cZRnY2yRUe74ZRksgY3MbUoCTr5ilMKHM=
+From:   Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
+To:     trivial@kernel.org
+Cc:     Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-input@vger.kernel.org, netdev@vger.kernel.org,
+        ath10k@lists.infradead.org, linux-wireless@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, linux-mm@kvack.org
+Subject: [PATCH v2 0/8] spelling.txt: /decriptors/descriptors/
+Date:   Wed, 15 Jul 2020 13:48:31 +0100
+Message-Id: <20200715124839.252822-1-kieran.bingham+renesas@ideasonboard.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-References: <cover.1594707424.git.viresh.kumar@linaro.org> <b051b42f0c4f36d7177978e090c6a85df17922c6.1594707424.git.viresh.kumar@linaro.org>
- <CAJZ5v0i=yNH9pGkty2QdeQLcqJcuY=pLx_XcY4VXs8bSqXL=dg@mail.gmail.com> <20200715073225.vnf6dibfca3oc2h4@vireshk-i7>
-In-Reply-To: <20200715073225.vnf6dibfca3oc2h4@vireshk-i7>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Wed, 15 Jul 2020 14:47:16 +0200
-Message-ID: <CAJZ5v0j1iaOuASa9K0x3QsWW2mhqoMQyhiVU5eXbNgEN=aU_rw@mail.gmail.com>
-Subject: Re: [PATCH 2/2] thermal: cpufreq_cooling: Reuse effective_cpu_util()
-To:     Viresh Kumar <viresh.kumar@linaro.org>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Amit Daniel Kachhap <amit.kachhap@gmail.com>,
-        Javi Merino <javi.merino@kernel.org>,
-        Amit Kucheria <amit.kucheria@verdurent.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Quentin Perret <qperret@google.com>,
-        Rafael Wysocki <rjw@rjwysocki.net>,
-        Linux PM <linux-pm@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 15, 2020 at 9:32 AM Viresh Kumar <viresh.kumar@linaro.org> wrote:
->
-> On 14-07-20, 15:05, Rafael J. Wysocki wrote:
-> > On Tue, Jul 14, 2020 at 8:37 AM Viresh Kumar <viresh.kumar@linaro.org> wrote:
-> > >  static u32 get_load(struct cpufreq_cooling_device *cpufreq_cdev, int cpu,
-> > >                     int cpu_idx)
-> > >  {
-> > > -       u32 load;
-> > > -       u64 now, now_idle, delta_time, delta_idle;
-> > > -       struct time_in_idle *idle_time = &cpufreq_cdev->idle_time[cpu_idx];
-> > > -
-> > > -       now_idle = get_cpu_idle_time(cpu, &now, 0);
-> > > -       delta_idle = now_idle - idle_time->time;
-> > > -       delta_time = now - idle_time->timestamp;
-> > > +       unsigned long util = cpu_util_cfs(cpu_rq(cpu));
-> > > +       unsigned long max = arch_scale_cpu_capacity(cpu);
-> > >
-> > > -       if (delta_time <= delta_idle)
-> > > -               load = 0;
-> > > -       else
-> > > -               load = div64_u64(100 * (delta_time - delta_idle), delta_time);
-> > > -
-> > > -       idle_time->time = now_idle;
-> > > -       idle_time->timestamp = now;
-> > > -
-> > > -       return load;
-> > > +       util = effective_cpu_util(cpu, util, max, ENERGY_UTIL, NULL);
-> >
-> > Hmm.
-> >
-> > It doesn't look like cpufreq_cdev and cpu_idx are needed any more in
-> > this function, so maybe drop them from the arg list?
->
-> Right.
->
-> > And then there
-> > won't be anything specific to CPU cooling in this function, so maybe
-> > move it to sched and export it from there properly?
->
-> There isn't a lot happening in this routine right now TBH and am not
-> sure if it is really worth it to have a separate routine for this
-> (unless we can get rid of something for all the callers, like avoiding
-> a call to arch_scale_cpu_capacity() and then naming it
-> effective_cpu_load().
+I wouldn't normally go through spelling fixes, but I caught sight of
+this typo twice, and then foolishly grepped the tree for it, and saw how
+pervasive it was.
 
-Maybe yes.  Or sched_cpu_load() to stand for "the effective CPU load
-as seen by the scheduler".
+so here I am ... fixing a typo globally... but with an addition in
+scripts/spelling.txt so it shouldn't re-appear ;-)
 
-But I'm not sure if percent is the best unit to return from it.  Maybe
-make it return something like (util << SCHED_CAPACITY_SHFT) /
-arch_scale_cpu_capacity(cpu).
+V2: Posting before the merge windows close to pick up the last few
+non-merged patches, and ideally - to get the actaul spelling.txt entry
+picked up, and this time including trivial@kernel.org to let these get
+head through that tree if required.
 
-> > Also it looks like max could be passed to it along with the CPU number
-> > instead of being always taken as arch_scale_cpu_capacity(cpu).
->
-> I am not sure what you are suggesting here. What will be the value of
-> max if not arch_scale_cpu_capacity() ?
+Cc: trivial@kernel.org
+Cc: linux-arm-kernel@lists.infradead.org (moderated list:ARM SUB-ARCHITECTURES)
+Cc: linux-kernel@vger.kernel.org (open list)
+Cc: linux-input@vger.kernel.org (open list:INPUT (KEYBOARD, MOUSE, JOYSTICK, TOUCHSCREEN)...)
+Cc: netdev@vger.kernel.org (open list:NETWORKING DRIVERS)
+Cc: ath10k@lists.infradead.org (open list:QUALCOMM ATHEROS ATH10K WIRELESS DRIVER)
+Cc: linux-wireless@vger.kernel.org (open list:NETWORKING DRIVERS (WIRELESS))
+Cc: virtualization@lists.linux-foundation.org (open list:VIRTIO BALLOON)
+Cc: linux-mm@kvack.org (open list:MEMORY MANAGEMENT)
 
-I was thinking about a value supplied by the caller, eg.
-sched_cpu_load(cpu, max), but if all callers would pass
-arch_scale_cpu_capacity(cpu) as max anyway, then it's better to simply
-call it from there.
+Kieran Bingham (17):
+  arch: arm: mach-davinci: Fix trivial spelling
+  drivers: input: joystick: Fix trivial spelling
+  drivers: net: wan: Fix trivial spelling
+  drivers: net: wireless: Fix trivial spelling
+  include: dynamic_debug.h: Fix trivial spelling
+  kernel: trace: Fix trivial spelling
+  mm/balloon_compaction: Fix trivial spelling
+  scripts/spelling.txt: Add descriptors correction
+
+ arch/arm/mach-davinci/board-da830-evm.c | 2 +-
+ drivers/input/joystick/spaceball.c      | 2 +-
+ drivers/net/wan/lmc/lmc_main.c          | 2 +-
+ drivers/net/wireless/ath/ath10k/usb.c   | 2 +-
+ drivers/net/wireless/ath/ath6kl/usb.c   | 2 +-
+ drivers/net/wireless/cisco/airo.c       | 2 +-
+ include/linux/dynamic_debug.h           | 2 +-
+ kernel/trace/trace_events.c             | 2 +-
+ mm/balloon_compaction.c                 | 4 ++--
+ scripts/spelling.txt                    | 2 ++
+ 10 files changed, 12 insertions(+), 10 deletions(-)
+
+-- 
+2.25.1
+
