@@ -2,89 +2,120 @@ Return-Path: <SRS0=kup7=A2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF97EC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 14:12:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A04BC433E4
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 14:17:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CF1B92065D
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 14:12:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594822348;
-	bh=Sd6qj++/pkBAkKGOFyJiYesklyaJ3nNkMOOe9MXP87o=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=AXfjjok7FdSF/JgHEyT6Q3mdJPq88ce05iK7XJqMJL97We4yTG9RGzxEYa1DpIVh9
-	 K/j0gILOCAfyKX7jisFKNACrT/c0dAFKmktuWAUvH7FY6r2p2EWVX+EFCZBn5PGrDg
-	 QfNIxwyG1THckj38QiBqVH9WVj60O9AnVBOmnUgs=
+	by mail.kernel.org (Postfix) with ESMTP id 38AB6206E9
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 14:17:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="S0VhaBxg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726830AbgGOOM1 (ORCPT
+        id S1728114AbgGOORo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 10:12:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53230 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726821AbgGOOM1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 10:12:27 -0400
-Received: from paulmck-ThinkPad-P72.home (50-39-111-31.bvtn.or.frontiernet.net [50.39.111.31])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CC1C1205CB;
-        Wed, 15 Jul 2020 14:12:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594822346;
-        bh=Sd6qj++/pkBAkKGOFyJiYesklyaJ3nNkMOOe9MXP87o=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=Y6XFF7zosG3rUgD7k/npIlm0M8ZCPkRW5lg20eQBa4lgw63mAaSUffcxXPSm0vAfL
-         esm5PvwNNUWOY9lXkF6cu2uk6ytbupHoktP+lRFjeoLXAu59RwjuQt7F1cEFh0iPvq
-         6FZqc3dJ41E5uJgEC7vFV39XE+ZZveJIqxncz8w8=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id B1FF23522636; Wed, 15 Jul 2020 07:12:26 -0700 (PDT)
-Date:   Wed, 15 Jul 2020 07:12:26 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Uladzislau Rezki <urezki@gmail.com>
-Cc:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        mingo@kernel.org, linux-kernel@vger.kernel.org,
-        rcu@vger.kernel.org, arnd@arndb.de, elver@google.com, ethp@qq.com,
-        frederic@kernel.org, jbi.octave@gmail.com, joel@joelfernandes.org,
-        lihaoliang@google.com, madhuparnabhowmik10@gmail.com,
-        mchehab+huawei@kernel.org, peter.enderborg@sony.com,
-        rdunlap@infradead.org, richard.weiyang@linux.alibaba.com,
-        zou_wei@huawei.com, tglx@linutronix.de
-Subject: Re: [GIT PULL tip/core/rcu] RCU commits for v5.9
-Message-ID: <20200715141226.GB9247@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20200714172701.GA31369@paulmck-ThinkPad-P72>
- <20200714181426.hhguqzrcqdubyvae@linutronix.de>
- <20200714182732.GU9247@paulmck-ThinkPad-P72>
- <20200714201734.GA20470@pc636>
+        Wed, 15 Jul 2020 10:17:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49544 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726834AbgGOORo (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jul 2020 10:17:44 -0400
+Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C1C87C061755
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 07:17:43 -0700 (PDT)
+Received: by mail-wm1-x344.google.com with SMTP id l2so6036715wmf.0
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 07:17:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=1JgqT9mrEdGtuuXwQt1J5C4Rwf+h8f2OaFWoY0odJro=;
+        b=S0VhaBxg8cYN2y22Wc8O6G1H0W5VMl3rd5sgHxUVmhOmkptVnKaF2Atf0ycbrTZlJJ
+         sND/EQFP9ttvwNC0bf7Aep2qLg+X2eS57cDpA5Y48S+1/77eLo6OmZElOADrMEqeBh7f
+         k4fLSjVpyGlb6Q+Dh6qeGDi/Argdm/WmvtL5C41RmhcJ6NsfE6KAx7bxDDr08n7D4auF
+         1Z1XDU61mCGt8BkkdkTjLxR2YIvWXVvaXBAy5mhit9DKMAdmxGSnbig9tLf/1awmFsYn
+         ykR2apsM/CS1X95ZF1wa1lIrb3u0f/wtq6QczfxsneKAuT4a2TMYSboex0KVB6zfsKZd
+         A2ug==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=1JgqT9mrEdGtuuXwQt1J5C4Rwf+h8f2OaFWoY0odJro=;
+        b=oKESBryHecPnXD6aW/9Rd4aoQzTG11Xqx6UppO8Z4MqzMzN78c+1QSFvNO+eNOGmjQ
+         D8Fzv/kgesxRII2fgAvmagRchtiwufzvWJtcb70efIPshDQ9wTrKTYiJZO8PBWfcT9fE
+         OSugMLf+TRGqY1qcmL6vq9RWzUK1bmT/pICMPsUHNgtubz+dsuG/RVlGYf2YN5iWz2kC
+         qGV3AqbaKCLj7kaPxozHXxAeo/sacY3Sj3GL4kXkhZ0Ke1eS1CejpDOT00HmMNL+oonR
+         kcy+oBcYm8ODhF/I9aTjoyUoPLy+LL6/yFYXhwfhhbLk/G8KEBXlvezAqHJ2IN5xIEBS
+         sjLg==
+X-Gm-Message-State: AOAM531eK52Ptzl/oEAAPuPm9d/Mdw/xWhV81zrbqARgAYBrseNkxNLJ
+        98MIi6hazlTf5P9IBUQBdtG9TA==
+X-Google-Smtp-Source: ABdhPJxOQs7hjvQMJKZS3uHDUMnZ/0JyZLpaK8BTw6SybE8pBSddAZM6kWuOIcneFpTvLZCFPfLoXA==
+X-Received: by 2002:a1c:4d05:: with SMTP id o5mr8820870wmh.130.1594822662438;
+        Wed, 15 Jul 2020 07:17:42 -0700 (PDT)
+Received: from dell ([2.31.163.61])
+        by smtp.gmail.com with ESMTPSA id p17sm3394573wma.47.2020.07.15.07.17.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 15 Jul 2020 07:17:41 -0700 (PDT)
+Date:   Wed, 15 Jul 2020 15:17:40 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc:     Linux PM <linux-pm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+Subject: Re: [PATCH] cpufreq: intel_pstate: Clean up aperf_mperf_shift
+ description
+Message-ID: <20200715141740.GG3165313@dell>
+References: <1695770.kLfQgcESsc@kreacher>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200714201734.GA20470@pc636>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <1695770.kLfQgcESsc@kreacher>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 14, 2020 at 10:17:34PM +0200, Uladzislau Rezki wrote:
-> On Tue, Jul 14, 2020 at 11:27:32AM -0700, Paul E. McKenney wrote:
-> > On Tue, Jul 14, 2020 at 08:14:26PM +0200, Sebastian Andrzej Siewior wrote:
-> > > On 2020-07-14 10:27:01 [-0700], Paul E. McKenney wrote:
-> > > > Joel Fernandes (Google) (5):
-> > > >       rcu/tree: Skip entry into the page allocator for PREEMPT_RT
-> > > 
-> > > If it is too late to drop this then I am going send a revert okay?
-> > 
-> > I believe that Ulad and Joel are working on an update.
-> > 
-> > Now that you mention it Ulad and Joel, how is this coming along?
-> > 
-> Yes. I have made a proposal with dropping the lock. I do not see
-> any issues by doing that. I will upload a patch soon.
+On Wed, 15 Jul 2020, Rafael J. Wysocki wrote:
 
-Looking forward to seeing it!
+> From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> 
+> The kerneldoc description of the aperf_mperf_shift field in
+> struct global_params is unclear and there is a typo in it, so
+> simplify it and clean it up.
+> 
+> Reported-by: Lee Jones <lee.jones@linaro.org>
+> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> ---
+>  drivers/cpufreq/intel_pstate.c |    4 +---
+>  1 file changed, 1 insertion(+), 3 deletions(-)
+> 
+> Index: linux-pm/drivers/cpufreq/intel_pstate.c
+> ===================================================================
+> --- linux-pm.orig/drivers/cpufreq/intel_pstate.c
+> +++ linux-pm/drivers/cpufreq/intel_pstate.c
+> @@ -202,9 +202,7 @@ struct global_params {
+>   * @pstate:		Stores P state limits for this CPU
+>   * @vid:		Stores VID limits for this CPU
+>   * @last_sample_time:	Last Sample time
+> - * @aperf_mperf_shift:	Number of clock cycles after aperf, merf is incremented
+> - *			This shift is a multiplier to mperf delta to
+> - *			calculate CPU busy.
+> + * @aperf_mperf_shift:	APERF vs MPERF counting frequency difference
+>   * @prev_aperf:		Last APERF value read from APERF MSR
+>   * @prev_mperf:		Last MPERF value read from MPERF MSR
+>   * @prev_tsc:		Last timestamp counter (TSC) value
 
-							Thanx, Paul
+Definitely clearer.
+
+Reviewed-by: Lee Jones <lee.jones@linaro.org>
+
+-- 
+Lee Jones [李琼斯]
+Senior Technical Lead - Developer Services
+Linaro.org │ Open source software for Arm SoCs
+Follow Linaro: Facebook | Twitter | Blog
