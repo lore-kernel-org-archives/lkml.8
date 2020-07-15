@@ -2,132 +2,118 @@ Return-Path: <SRS0=kup7=A2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E488C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 03:49:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3195C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 03:46:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DBA092074B
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 03:49:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lixom-net.20150623.gappssmtp.com header.i=@lixom-net.20150623.gappssmtp.com header.b="IAhNc2PE"
+	by mail.kernel.org (Postfix) with ESMTP id B94D12074B
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 03:46:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728683AbgGODtg (ORCPT
+        id S1728644AbgGODqF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 23:49:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37340 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726710AbgGODtf (ORCPT
+        Tue, 14 Jul 2020 23:46:05 -0400
+Received: from out30-131.freemail.mail.aliyun.com ([115.124.30.131]:42584 "EHLO
+        out30-131.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728578AbgGODqF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 23:49:35 -0400
-Received: from mail-io1-xd44.google.com (mail-io1-xd44.google.com [IPv6:2607:f8b0:4864:20::d44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DCB42C061755
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 20:49:35 -0700 (PDT)
-Received: by mail-io1-xd44.google.com with SMTP id i4so758314iov.11
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 20:49:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lixom-net.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=f1CRBSIEJDuFB8dog5jdvBQmdtw3EAxf2Oj6BzpDQQw=;
-        b=IAhNc2PEOhArE+GcYrmBe/3NxGeuZx3JCuvw8ORdWaNpd8YNvHPLjFq+HAH3MRMP5S
-         oOxyBK2u/zYrAOOjd2SxmZlRdg52TimjplCGTE4uqPKuozcM1fiFENkeKCPQ9TnAqGmC
-         qDzl2Wwr+U15OcOwRP1fOnEZpCsaQlWf0zLOAuwadhfEdNRJAzc51eKROOxgfx8Ojn9p
-         T23rKIIJKsm16XdyBmajMpVc4HFjxz2XrsVtLUH+3NCWbaIRrG6ISCGQMbYo3oB6eg8Y
-         VXr6eeEnaLcVnulcplV88lhEe/D2ixCJV4Udc5gLfEIJqGRTME27xPjf75uimLjop3CO
-         simA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=f1CRBSIEJDuFB8dog5jdvBQmdtw3EAxf2Oj6BzpDQQw=;
-        b=qrb3+k5B6bnpmEbpuGZSawbDDi0S4M5UZtc7kN0mmRd/3gLa7/+1NIBhFqoPGrofw1
-         218mrApT7qU5OL+LKuGTY8d5k778mpmV2qhxuuMsLYkAFfXMcHcq89XcEdfUDH+KgN80
-         lJ05tV8CPKLvbyMQvaxEtwSmZp8kmL1wC8SG6gNEa0+UyO/usxRoDTW+MsTpZgKgeBms
-         3f6b+eJay/K/894YbIkjxetS1hBmIJZ+Rv1wqIOtSasfWNx37TzAfo7kAI4G6bSgK+6i
-         IIRkWWw7WEQh3AM/DbzrMbwgBGZ7hXgSsKVYpvA5N3aXndYaKBYR2fHjzNxvyLEMviJ1
-         JUiw==
-X-Gm-Message-State: AOAM531yHMrmrGTrDuPDYxO8yFaE9KleIpWl0vIXOlWO3Tzon/+2XpZd
-        +LEd3iDGbquRnp3hwMS2kQKZ0ujJoWU/B6Ja6IlxBg==
-X-Google-Smtp-Source: ABdhPJxIX1Rz1uy6qYWtVhSNi58vBkltN0nc+Y74TsUfZKS2AQDMN6wsabdJmmRCmC3OuMNUYpqM8OhcnmPuarpFxhU=
-X-Received: by 2002:a6b:8e56:: with SMTP id q83mr8239025iod.61.1594784975129;
- Tue, 14 Jul 2020 20:49:35 -0700 (PDT)
+        Tue, 14 Jul 2020 23:46:05 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R201e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e01422;MF=richard.weiyang@linux.alibaba.com;NM=1;PH=DS;RN=6;SR=0;TI=SMTPD_---0U2lkO7H_1594784760;
+Received: from localhost(mailfrom:richard.weiyang@linux.alibaba.com fp:SMTPD_---0U2lkO7H_1594784760)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Wed, 15 Jul 2020 11:46:00 +0800
+Date:   Wed, 15 Jul 2020 11:46:00 +0800
+From:   Wei Yang <richard.weiyang@linux.alibaba.com>
+To:     Mike Kravetz <mike.kravetz@oracle.com>
+Cc:     Vlastimil Babka <vbabka@suse.cz>,
+        Wei Yang <richard.weiyang@linux.alibaba.com>,
+        akpm@linux-foundation.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] mm/hugetlb: hide nr_nodes in the internal of
+ for_each_node_mask_to_[alloc|free]
+Message-ID: <20200715034600.GA88314@L-31X9LVDL-1304.local>
+Reply-To: Wei Yang <richard.weiyang@linux.alibaba.com>
+References: <20200714073404.84863-1-richard.weiyang@linux.alibaba.com>
+ <cd1651a0-35c6-7535-5782-ce7e31cc26e8@suse.cz>
+ <807a1e32-926b-2882-740b-6484b8dca2b6@suse.cz>
+ <20200714095713.GA86690@L-31X9LVDL-1304.local>
+ <e0d384a7-34bc-43ce-dc20-db4808b0f736@suse.cz>
+ <694bb1ac-4f9c-a6a5-7c87-1fc0cdd948a6@oracle.com>
 MIME-Version: 1.0
-References: <20200714145049.2496163-1-lee.jones@linaro.org>
- <20200714145049.2496163-6-lee.jones@linaro.org> <20200715030706.prxya7fyylscoy25@vireshk-i7>
-In-Reply-To: <20200715030706.prxya7fyylscoy25@vireshk-i7>
-From:   Olof Johansson <olof@lixom.net>
-Date:   Tue, 14 Jul 2020 20:49:24 -0700
-Message-ID: <CAOesGMi1dfqPbFJ8YoUoJ75NdU1=XiNoYx+6+JLu44a4LuuYGA@mail.gmail.com>
-Subject: Re: [PATCH 05/13] cpufreq/arch: powerpc: pasemi: Move prototypes to
- shared header
-To:     Viresh Kumar <viresh.kumar@linaro.org>
-Cc:     Lee Jones <lee.jones@linaro.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-pm@vger.kernel.org, Michael Ellerman <mpe@ellerman.id.au>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <694bb1ac-4f9c-a6a5-7c87-1fc0cdd948a6@oracle.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 14, 2020 at 8:07 PM Viresh Kumar <viresh.kumar@linaro.org> wrot=
-e:
+On Tue, Jul 14, 2020 at 02:12:03PM -0700, Mike Kravetz wrote:
+>On 7/14/20 3:02 AM, Vlastimil Babka wrote:
+>> On 7/14/20 11:57 AM, Wei Yang wrote:
+>>> On Tue, Jul 14, 2020 at 11:22:03AM +0200, Vlastimil Babka wrote:
+>>>> On 7/14/20 11:13 AM, Vlastimil Babka wrote:
+>>>>> On 7/14/20 9:34 AM, Wei Yang wrote:
+>>>>>> The second parameter of for_each_node_mask_to_[alloc|free] is a loop
+>>>>>> variant, which is not used outside of loop iteration.
+>>>>>>
+>>>>>> Let's hide this.
+>>>>>>
+>>>>>> Signed-off-by: Wei Yang <richard.weiyang@linux.alibaba.com>
+>>>>>> ---
+>>>>>>  mm/hugetlb.c | 38 ++++++++++++++++++++------------------
+>>>>>>  1 file changed, 20 insertions(+), 18 deletions(-)
+>>>>>>
+>>>>>> diff --git a/mm/hugetlb.c b/mm/hugetlb.c
+>>>>>> index 57ece74e3aae..9c3d15fb317e 100644
+>>>>>> --- a/mm/hugetlb.c
+>>>>>> +++ b/mm/hugetlb.c
+>>>>>> @@ -1196,17 +1196,19 @@ static int hstate_next_node_to_free(struct hstate *h, nodemask_t *nodes_allowed)
+>>>>>>  	return nid;
+>>>>>>  }
+>>>>>>  
+>>>>>> -#define for_each_node_mask_to_alloc(hs, nr_nodes, node, mask)		\
+>>>>>> -	for (nr_nodes = nodes_weight(*mask);				\
+>>>>>> -		nr_nodes > 0 &&						\
+>>>>>> +#define for_each_node_mask_to_alloc(hs, node, mask)			\
+>>>>>> +	int __nr_nodes;							\
+>>>>>> +	for (__nr_nodes = nodes_weight(*mask);				\
+>>>>>
+>>>>> The problem with this is that if I use the macro twice in the same block, this
+>>>>> will redefine __nr_nodes and fail to compile, no?
+>>>>> In that case it's better to avoid setting up this trap, IMHO.
+>>>>
+>>>> Ah, and it will also generate the following warning, if the use of for_each*
+>>>> macro is not the first thing after variable declarations, but there's another
+>>>> statement before:
+>>>>
+>>>> warning: ISO C90 forbids mixed declarations and code [-Wdeclaration-after-statement]
+>>>>
+>>>> Instead we should switch to C99 and declare it as "for (int __nr_nodes" :P
+>>>
+>>> Hmm... I tried what you suggested, but compiler complains.
+>>>
+>>> 'for' loop initial declarations are only allowed in C99 or C11 mode
+>> 
+>> Yes, by "we should switch to C99" I meant that the kernel kbuild system would
+>> need to switch. Not a trivial change...
+>> Without that, I don't see how your patch is possible to do safely.
 >
-> On 14-07-20, 15:50, Lee Jones wrote:
-> > If function callers and providers do not share the same prototypes the
-> > compiler complains of missing prototypes.  Fix this by moving the
-> > already existing prototypes out to a mutually convenient location.
-> >
-> > Fixes the following W=3D1 kernel build warning(s):
-> >
-> >  drivers/cpufreq/pasemi-cpufreq.c:109:5: warning: no previous prototype=
- for =E2=80=98check_astate=E2=80=99 [-Wmissing-prototypes]
-> >  109 | int check_astate(void)
-> >  | ^~~~~~~~~~~~
-> >  drivers/cpufreq/pasemi-cpufreq.c:114:6: warning: no previous prototype=
- for =E2=80=98restore_astate=E2=80=99 [-Wmissing-prototypes]
-> >  114 | void restore_astate(int cpu)
-> >  | ^~~~~~~~~~~~~~
-> >
-> > Cc: Olof Johansson <olof@lixom.net>
-> > Cc: Michael Ellerman <mpe@ellerman.id.au>
-> > Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-> > Cc: Paul Mackerras <paulus@samba.org>
-> > Cc: linuxppc-dev@lists.ozlabs.org
-> > Signed-off-by: Lee Jones <lee.jones@linaro.org>
-> > ---
-> >  arch/powerpc/platforms/pasemi/pasemi.h    | 15 ------------
+>Vlastimil, thanks for pointing out future potential issues with this patch.
+>I likely would have missed that.
 >
-> Is there no sane way we can include this file directly to the cpufreq
-> file ?
+>Wei, thanks for taking the time to put together the patch.  However, I tend
+>to agree with Vlastimil's assesment.  The cleanup is not worth the risk of
+>running into issues if someone uses multiple instances of the macro.
 
-Yep. arch/powerpc seems to be in the search path for modules on powerpc, so=
-:
+Yep, thanks all for your feedback.
 
-diff --git a/drivers/cpufreq/pasemi-cpufreq.c b/drivers/cpufreq/pasemi-cpuf=
-req.c
-index c66f566a854cb..815645170c4de 100644
---- a/drivers/cpufreq/pasemi-cpufreq.c
-+++ b/drivers/cpufreq/pasemi-cpufreq.c
-@@ -22,6 +22,8 @@
- #include <asm/time.h>
- #include <asm/smp.h>
+>-- 
+>Mike Kravetz
 
-+#include <platforms/pasemi/pasemi.h>
-+
- #define SDCASR_REG             0x0100
- #define SDCASR_REG_STRIDE      0x1000
- #define SDCPWR_CFGA0_REG       0x0100
-
-
--Olof
+-- 
+Wei Yang
+Help you, Help me
