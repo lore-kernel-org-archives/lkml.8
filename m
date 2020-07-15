@@ -2,92 +2,148 @@ Return-Path: <SRS0=kup7=A2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FC19C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 16:11:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A732C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 16:17:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 119C720663
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 16:11:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD2C120720
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 16:17:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="nAbB2/ew"
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="jaUQqOIp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726661AbgGOQLp (ORCPT
+        id S1725909AbgGOQRE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 12:11:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39058 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725861AbgGOQLo (ORCPT
+        Wed, 15 Jul 2020 12:17:04 -0400
+Received: from perceval.ideasonboard.com ([213.167.242.64]:33506 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725770AbgGOQRE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 12:11:44 -0400
-Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8E9E9C061755;
-        Wed, 15 Jul 2020 09:11:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
-        :Reply-To:Content-ID:Content-Description;
-        bh=ilGqLU0B6JSAMLnMU3a1AJslwpv+znvpmPHNeBrqY9I=; b=nAbB2/ewRCALtgBN9X4IK9wVcG
-        iDB2wfvXXJWlU06VV46on4N8auBIpqaxqdp8GzE3O3aR8Y0YTdnQ8vpn9WX9Arh1ZnOhS2wyP7usN
-        04izXTP3B9k0OeE+sPBsLQy3pWmwcxQc3DpSevLRr2k8D6TKK8wEAzwtcvTCYPs53ZG+PP64vYXdu
-        XhMMrit8+l2pEM+3oE0eVmufUu9oP+EQ/V/Nk9UZaGyi8S1+3c5d1aMUiaMJdSKpBPbODcshZmK0/
-        VUx/5wtnX6Wx30tPHP3mjvmeZm3K8PS8GdOhqY2yzooK5kHDxo+bs0fI/rNQSXT+v1tBdDFWt7yzL
-        FM1gSljQ==;
-Received: from [2601:1c0:6280:3f0::19c2]
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jvk0S-0001M2-Dk; Wed, 15 Jul 2020 16:11:40 +0000
-Subject: Re: [PATCH 01/13 net-next] net: nl80211.h: drop duplicate words in
- comments
-To:     Johannes Berg <johannes@sipsolutions.net>,
-        Jakub Kicinski <kuba@kernel.org>
-Cc:     linux-kernel@vger.kernel.org,
-        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org
-References: <20200715025914.28091-1-rdunlap@infradead.org>
- <20200715084811.01ba7ffd@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
- <d2b68464a9a7dd18ea39d1f1d483c8d4bc12c540.camel@sipsolutions.net>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <153e0d4f-645f-129d-f51c-d82f43e19b7e@infradead.org>
-Date:   Wed, 15 Jul 2020 09:11:36 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Wed, 15 Jul 2020 12:17:04 -0400
+Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id C1612564;
+        Wed, 15 Jul 2020 18:17:01 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1594829821;
+        bh=IomH7o8rac3NGmFDKq1XchQn1ckZPiqly9xWhwp/YxU=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=jaUQqOIp4sYgb5+PK2ECSVB6gHmIaFhcSOyjNOzGVkTcMGoxDBN4GFcOHGYUoLEjP
+         s+zYYO6jRFaImebUx8AWRf8RrYYXW27cFtVEzyEXmMPlhc7UTyGLTPgm1pdNSeoXhh
+         kE5d5JEXRS5csWu5w1LJvfqm5M2cIciiNaUA8XnY=
+Date:   Wed, 15 Jul 2020 19:16:47 +0300
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Vishal Sagar <vishal.sagar@xilinx.com>
+Cc:     hyunk@xilinx.com, hverkuil@xs4all.nl, mchehab@kernel.org,
+        robh+dt@kernel.org, mark.rutland@arm.com, michals@xilinx.com,
+        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        joe@perches.com, sandipk@xilinx.com, dineshk@xilinx.com
+Subject: Re: [PATCH v3 1/3] v4l2-dv-timings: Add timings for 1920x1080P48 and
+ 4KP48
+Message-ID: <20200715161647.GD6144@pendragon.ideasonboard.com>
+References: <20200618053304.14551-1-vishal.sagar@xilinx.com>
+ <20200618053304.14551-2-vishal.sagar@xilinx.com>
 MIME-Version: 1.0
-In-Reply-To: <d2b68464a9a7dd18ea39d1f1d483c8d4bc12c540.camel@sipsolutions.net>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+In-Reply-To: <20200618053304.14551-2-vishal.sagar@xilinx.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/15/20 9:06 AM, Johannes Berg wrote:
-> On Wed, 2020-07-15 at 08:48 -0700, Jakub Kicinski wrote:
->> On Tue, 14 Jul 2020 19:59:02 -0700 Randy Dunlap wrote:
->>> Drop doubled words in several comments.
->>>
->>> Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
->>> Cc: "David S. Miller" <davem@davemloft.net>
->>> Cc: Jakub Kicinski <kuba@kernel.org>
->>> Cc: netdev@vger.kernel.org
->>
->> Hi Randy, the WiFi stuff goes through Johannes's mac80211 tree.
+Hi Vishal,
+
+Thank you for the patch.
+
+On Thu, Jun 18, 2020 at 11:03:02AM +0530, Vishal Sagar wrote:
+> Add the timing entry for 1920x1080p48, 3840x2160p48 and 4096x2160p48
+> from CTA-861-G.
+> 1920x1080p48 is VIC 111.
+> 3840x2160P48 is VIC 114.
+> 4096x2160P48 is VIC 115.
 > 
-> It can go to you if you like, for this, I have no problem with that.
-> Though I saw only the subject right now :)
+> Signed-off-by: Vishal Sagar <vishal.sagar@xilinx.com>
+> ---
+> v3
+> - Added for first time
 > 
->> Would you mind splitting those 5 patches out to a separate series and
->> sending to him?
+>  include/uapi/linux/v4l2-dv-timings.h | 31 +++++++++++++++++++++++++++-
+>  1 file changed, 30 insertions(+), 1 deletion(-)
+> 
+> diff --git a/include/uapi/linux/v4l2-dv-timings.h b/include/uapi/linux/v4l2-dv-timings.h
+> index b52b67c62562..6ceaa7841923 100644
+> --- a/include/uapi/linux/v4l2-dv-timings.h
+> +++ b/include/uapi/linux/v4l2-dv-timings.h
+> @@ -167,6 +167,16 @@
+>  		V4L2_DV_FL_HAS_CEA861_VIC, { 0, 0 }, 20) \
+>  }
+>  
+> +#define V4L2_DV_BT_CEA_1920X1080P48 { \
+> +	.type = V4L2_DV_BT_656_1120, \
+> +	V4L2_INIT_BT_TIMINGS(1920, 1080, 0, \
+> +		V4L2_DV_HSYNC_POS_POL | V4L2_DV_VSYNC_POS_POL, \
+> +		148500000, 638, 44, 148, 4, 5, 36, 0, 0, 0, \
+> +		V4L2_DV_BT_STD_CEA861, \
+> +		V4L2_DV_FL_CAN_REDUCE_FPS | V4L2_DV_FL_IS_CE_VIDEO | \
+> +		V4L2_DV_FL_HAS_CEA861_VIC, { 0, 0 }, 111) \
+> +}
+> +
+>  #define V4L2_DV_BT_CEA_1920X1080P50 { \
+>  	.type = V4L2_DV_BT_656_1120, \
+>  	V4L2_INIT_BT_TIMINGS(1920, 1080, 0, \
+> @@ -229,6 +239,16 @@
+>  		{ 0, 0 }, 95, 1) \
+>  }
+>  
+> +#define V4L2_DV_BT_CEA_3840X2160P48 { \
+> +	.type = V4L2_DV_BT_656_1120, \
+> +	V4L2_INIT_BT_TIMINGS(3840, 2160, 0, \
+> +		V4L2_DV_HSYNC_POS_POL | V4L2_DV_VSYNC_POS_POL, \
+> +		594000000, 1276, 88, 296, 8, 10, 72, 0, 0, 0, \
+> +		V4L2_DV_BT_STD_CEA861, \
+> +		V4L2_DV_FL_CAN_REDUCE_FPS | V4L2_DV_FL_IS_CE_VIDEO | \
+> +		V4L2_DV_FL_HAS_CEA861_VIC, { 0, 0 }, 114) \
+> +}
+> +
+>  #define V4L2_DV_BT_CEA_3840X2160P50 { \
+>  	.type = V4L2_DV_BT_656_1120, \
+>  	V4L2_INIT_BT_TIMINGS(3840, 2160, 0, \
+> @@ -278,6 +298,16 @@
+>  		V4L2_DV_FL_HAS_CEA861_VIC, { 0, 0 }, 100) \
+>  }
+>  
+> +#define V4L2_DV_BT_CEA_4096X2160P48 { \
+> +	.type = V4L2_DV_BT_656_1120, \
+> +	V4L2_INIT_BT_TIMINGS(4096, 2160, 0, \
+> +		V4L2_DV_HSYNC_POS_POL | V4L2_DV_VSYNC_POS_POL, \
+> +		594000000, 1020, 88, 296, 8, 10, 72, 0, 0, 0, \
+> +		V4L2_DV_BT_STD_CEA861, \
+> +		V4L2_DV_FL_CAN_REDUCE_FPS | V4L2_DV_FL_IS_CE_VIDEO | \
+> +		V4L2_DV_FL_HAS_CEA861_VIC, { 0, 0 }, 115) \
+> +}
+> +
+>  #define V4L2_DV_BT_CEA_4096X2160P50 { \
+>  	.type = V4L2_DV_BT_656_1120, \
+>  	V4L2_INIT_BT_TIMINGS(4096, 2160, 0, \
+> @@ -297,7 +327,6 @@
+>  		V4L2_DV_FL_HAS_CEA861_VIC, { 0, 0 }, 102) \
+>  }
+>  
+> -
 
-I found another net patch that I missed, so I will add that one
-and also split the patches + resend.
+This seems to be an unrelated change. Apart from that,
 
-> linux-wireless@vger.kernel.org would be most important in that case, so
-> patchwork there picks it up.
+Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 
-Thanks.
+>  /* VESA Discrete Monitor Timings as per version 1.0, revision 12 */
+>  
+>  #define V4L2_DV_BT_DMT_640X350P85 { \
+
 -- 
-~Randy
+Regards,
 
+Laurent Pinchart
