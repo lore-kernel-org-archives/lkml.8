@@ -2,156 +2,116 @@ Return-Path: <SRS0=kup7=A2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F13BC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 18:37:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFEBBC433E6
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 18:44:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 04E332064B
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 18:37:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A15FF2065F
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 18:44:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=marek-ca.20150623.gappssmtp.com header.i=@marek-ca.20150623.gappssmtp.com header.b="X41U7h2b"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="HJBm7iTE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726971AbgGOShy (ORCPT
+        id S1726986AbgGOSoO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 14:37:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33404 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726670AbgGOShy (ORCPT
+        Wed, 15 Jul 2020 14:44:14 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:57136 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726465AbgGOSoO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 14:37:54 -0400
-Received: from mail-qt1-x844.google.com (mail-qt1-x844.google.com [IPv6:2607:f8b0:4864:20::844])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 19D5CC08C5CE
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 11:37:54 -0700 (PDT)
-Received: by mail-qt1-x844.google.com with SMTP id o38so2534419qtf.6
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 11:37:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=marek-ca.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=wu5L69ovDWpf3LlRTghHvSZ9xDVM0oBpBNBxh9J31aU=;
-        b=X41U7h2bTsN1nK0Puc/tLb924o67b+2UV9G0xJtvqBnjtGU2GJVoLTPmPc2FM+tUrb
-         Yqa/M22owsTFVTn8qQuvMAhKKdbOchqlqkKcL3i9UZ7cUvoSJemVue+leOt2xxf4Udl8
-         0QdSDzjGO8hph3oKTCCMmWEFoJT7nzr3yBVxVmuVLny7X4bnY73FE7kXEKyzlggqVxvG
-         ilX0nPTbXIaLsc5zdeyl8IwR+yURCMy/1WPaHPWiskOYpN8t4ShR35rLkwoy8ME/5pnH
-         P+ys0a1HCyZMA23ZGY+NOI1MtM773J6j+OiXsBamFl5mwJG04FdBbpXcVaX0EsJ17Cia
-         EHIQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=wu5L69ovDWpf3LlRTghHvSZ9xDVM0oBpBNBxh9J31aU=;
-        b=DLlgBnBp0DClAfkdIWdQ8jWdgqQg6GfUMm2SCvJxxEJs4xeKqW55KVsBleS8O3lwXp
-         y4zvnk9Q58O2Ftrab8dLhbwEsL+Y3oWxj/yLIWAurpa7aSr+kWxu4fzGZYsJNTh9ZmQ5
-         98RzD2r5sryrbsKq6gL5C1DQKamxylwCzy5P4CeC7Q9EyAgw4NdoQSQEpcWO8TWU2Q0H
-         0zilqqHj6aBsP6TK4srSnyW4h4+II9eVBplnTDtXvHn5Ulv1HfeG9VsGHAEDFnUdL5iA
-         7AkmIcR3EloWnf9pjcpZRiClXobUf3TcFFNM9QREVb6b2l5pmtaClG6Lx8Z17+xUPCXD
-         MbZg==
-X-Gm-Message-State: AOAM530p1YrHTIc5SUFiIbIStttrsnpEeF/Agmwo0G2Yx8t02m2ir9pN
-        gYSRfFe8hACjMkYiA3KtSLTg1gXyV7I=
-X-Google-Smtp-Source: ABdhPJz3H5u/h/w/d+GjGc1uZlqsx1rCJM9E4KLLiOaeaJjvmt5xA4eeQYXiFdMY+OuSMREJ5zLqug==
-X-Received: by 2002:ac8:5542:: with SMTP id o2mr1219868qtr.47.1594838272913;
-        Wed, 15 Jul 2020 11:37:52 -0700 (PDT)
-Received: from [192.168.0.189] ([147.253.86.153])
-        by smtp.gmail.com with ESMTPSA id z60sm4010802qtc.30.2020.07.15.11.37.51
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 15 Jul 2020 11:37:52 -0700 (PDT)
-Subject: Re: [PATCH] drm/msm/adreno: fix gpu probe if no interconnect-names
-To:     Rob Clark <robdclark@gmail.com>, dri-devel@lists.freedesktop.org
-Cc:     Rob Clark <robdclark@chromium.org>, Sean Paul <sean@poorly.run>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Jordan Crouse <jcrouse@codeaurora.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Brian Masney <masneyb@onstation.org>,
-        John Stultz <john.stultz@linaro.org>,
-        "open list:DRM DRIVER FOR MSM ADRENO GPU" 
-        <linux-arm-msm@vger.kernel.org>,
-        "open list:DRM DRIVER FOR MSM ADRENO GPU" 
-        <freedreno@lists.freedesktop.org>,
-        open list <linux-kernel@vger.kernel.org>
-References: <20200715182955.3081774-1-robdclark@gmail.com>
-From:   Jonathan Marek <jonathan@marek.ca>
-Message-ID: <baef95e0-e44f-be7d-f60f-0ba75b550050@marek.ca>
-Date:   Wed, 15 Jul 2020 14:36:33 -0400
+        Wed, 15 Jul 2020 14:44:14 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 06FIhv2K036134;
+        Wed, 15 Jul 2020 13:43:57 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1594838637;
+        bh=ETxMORbytoMFSSDE/0XGG8wkFT+afuxOfmweC84PIGM=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=HJBm7iTEK7Qapy+9+FfuJgtNwQi9eA36zxGtY/099/ZLdi2lbCaer+bUn99iTl6S+
+         bPs77L3IT+JcQQQs0hrW8FDYyDlIrm6bfOdmxq80OD5uaSgaKG1Zpl8B4KXXblclwY
+         RLLfo2pBvSAyEy4KijTXv5KhFAD1KoK6Q9wnmpI8=
+Received: from DLEE100.ent.ti.com (dlee100.ent.ti.com [157.170.170.30])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 06FIhvDi124279
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 15 Jul 2020 13:43:57 -0500
+Received: from DLEE106.ent.ti.com (157.170.170.36) by DLEE100.ent.ti.com
+ (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Wed, 15
+ Jul 2020 13:43:57 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE106.ent.ti.com
+ (157.170.170.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Wed, 15 Jul 2020 13:43:57 -0500
+Received: from [10.250.100.73] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 06FIhsGT128678;
+        Wed, 15 Jul 2020 13:43:55 -0500
+Subject: Re: [PATCH] clocksource/drivers/timer-ti-dm: Fix suspend and resume
+ for am3 and am4
+To:     Tony Lindgren <tony@atomide.com>
+CC:     Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        <linux-kernel@vger.kernel.org>, <linux-omap@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        Carlos Hernandez <ceh@ti.com>
+References: <20200713162601.6829-1-tony@atomide.com>
+ <1972bace-e9d1-b901-eb33-b4081a4b175d@ti.com>
+ <20200715173211.GA10993@atomide.com>
+From:   Grygorii Strashko <grygorii.strashko@ti.com>
+Message-ID: <cc613f22-5a22-a840-f4e2-cd4650cbd237@ti.com>
+Date:   Wed, 15 Jul 2020 21:43:47 +0300
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-In-Reply-To: <20200715182955.3081774-1-robdclark@gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <20200715173211.GA10993@atomide.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/15/20 2:29 PM, Rob Clark wrote:
-> From: Rob Clark <robdclark@chromium.org>
-> 
-> If there is no interconnect-names, but there is an interconnects
-> property, then of_icc_get(dev, "gfx-mem"); would return an error
-> rather than NULL.
-> 
-> Also, if there is no interconnect-names property, there will never
-> be a ocmem path.  But of_icc_get(dev, "ocmem") would return -EINVAL
-> instead of -ENODATA.  Just don't bother trying in this case.
-> 
-> Fixes: 8e29fb37b301 ("drm/msm: handle for EPROBE_DEFER for of_icc_get")
-> Signed-off-by: Rob Clark <robdclark@chromium.org>
-> ---
->   drivers/gpu/drm/msm/adreno/adreno_gpu.c | 8 ++++++--
->   1 file changed, 6 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/msm/adreno/adreno_gpu.c b/drivers/gpu/drm/msm/adreno/adreno_gpu.c
-> index 0527e85184e1..c4ac998b90c8 100644
-> --- a/drivers/gpu/drm/msm/adreno/adreno_gpu.c
-> +++ b/drivers/gpu/drm/msm/adreno/adreno_gpu.c
-> @@ -979,6 +979,7 @@ int adreno_gpu_init(struct drm_device *drm, struct platform_device *pdev,
->   	struct adreno_platform_config *config = dev->platform_data;
->   	struct msm_gpu_config adreno_gpu_config  = { 0 };
->   	struct msm_gpu *gpu = &adreno_gpu->base;
-> +	bool has_interconnect_names = true;
->   	int ret;
->   
->   	adreno_gpu->funcs = funcs;
-> @@ -1005,12 +1006,13 @@ int adreno_gpu_init(struct drm_device *drm, struct platform_device *pdev,
->   
->   	/* Check for an interconnect path for the bus */
->   	gpu->icc_path = of_icc_get(dev, "gfx-mem");
-> -	if (!gpu->icc_path) {
-> +	if (IS_ERR_OR_NULL(gpu->icc_path)) {
->   		/*
->   		 * Keep compatbility with device trees that don't have an
->   		 * interconnect-names property.
->   		 */
->   		gpu->icc_path = of_icc_get(dev, NULL);
 
-This is misleading because if it gets a EPROBE_DEFER error (or any other 
-error), it will hit this path. Maybe there's a specific error you can 
-check for instead to identify the "no-interconnect-names" case?
 
-Also don't think its a good idea to be calling of_icc_get(dev, NULL) 
-again when there's a EPROBE_DEFER, the interconnect driver could come up 
-between the two calls
-
-> +		has_interconnect_names = false;
->   	}
->   	if (IS_ERR(gpu->icc_path)) {
->   		ret = PTR_ERR(gpu->icc_path);
-> @@ -1018,7 +1020,9 @@ int adreno_gpu_init(struct drm_device *drm, struct platform_device *pdev,
->   		return ret;
->   	}
->   
-> -	gpu->ocmem_icc_path = of_icc_get(dev, "ocmem");
-> +	if (has_interconnect_names)
-> +		gpu->ocmem_icc_path = of_icc_get(dev, "ocmem");
-> +
->   	if (IS_ERR(gpu->ocmem_icc_path)) {
->   		ret = PTR_ERR(gpu->ocmem_icc_path);
->   		gpu->ocmem_icc_path = NULL;
+On 15/07/2020 20:32, Tony Lindgren wrote:
+> * Grygorii Strashko <grygorii.strashko@ti.com> [200715 10:17]:
+>> On 13/07/2020 19:26, Tony Lindgren wrote:
+>>> @@ -653,8 +679,8 @@ static int __init dmtimer_clocksource_init(struct device_node *np)
+>>>    	dev->mask = CLOCKSOURCE_MASK(32);
+>>>    	dev->flags = CLOCK_SOURCE_IS_CONTINUOUS;
+>>> -	if (of_device_is_compatible(np, "ti,am33xx") ||
+>>> -	    of_device_is_compatible(np, "ti,am43")) {
+>>> +	/* Unlike for clockevent, legacy code sets suspend only for am4 */
+>>> +	if (of_machine_is_compatible("ti,am43")) {
+>>>    		dev->suspend = dmtimer_clocksource_suspend;
+>>>    		dev->resume = dmtimer_clocksource_resume;
+>>>    	}
+>>>
+>>
+>> It might be better to use SOC_BUS infra here, which is available on OMAP platforms by default,
+>> instead if DT. What do you think?
 > 
+> Well we have time_init() run very early, and some SoCs have only external
+> timers. So timer-ti-dm-systimer must be initialized early. And I think
+> soc_device_match() depends on soc_bus_register() that runs later at
+> core_initcall().
+
+Ah. right it's early init. I revoke my proposal then.
+
+> 
+> If you are thinking of something else, or we can use soc_device_match()
+> early, sure :) But sounds like that change should be a separate patch
+> then.
+> 
+> The reason for why we need to check for the SoC, we have the compatible
+> for ti,am335x-timer already in use on am3/4 and dm814x, so we can't use
+> TIMER_OF_DECLARE alone here.
+
+
+-- 
+Best regards,
+grygorii
