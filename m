@@ -2,117 +2,113 @@ Return-Path: <SRS0=kup7=A2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D60FEC433E2
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 11:39:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2545C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 11:44:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B1F6F206F5
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 11:39:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="KMonAL2N"
+	by mail.kernel.org (Postfix) with ESMTP id 82917206E9
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 11:44:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594813456;
+	bh=BaBDIw1z/eEqdf0QQ4ZUt0oW4z4lCjYpMBZZDcbuR0c=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=jz0ZLFYSYvebqRK+YpVJhc21eRUIF35gCZI3j8IFSSfgtqQnHXWJMKFT2p2s2RFRy
+	 qDRzx7vEpRQlnBHzMMbrYuURCl40u0arPsikg6q4ftxQn4HYKgXNChegZRfprKtE6f
+	 WN4SMshH/8T2mV309lfBFMZkSk0RQXRG8UQcKLVk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729363AbgGOLjR (ORCPT
+        id S1729517AbgGOLoP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 07:39:17 -0400
-Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:15656 "EHLO
-        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725924AbgGOLjR (ORCPT
+        Wed, 15 Jul 2020 07:44:15 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:36055 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729402AbgGOLoO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 07:39:17 -0400
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5f0eea730001>; Wed, 15 Jul 2020 04:37:23 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Wed, 15 Jul 2020 04:39:17 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Wed, 15 Jul 2020 04:39:17 -0700
-Received: from HQMAIL107.nvidia.com (172.20.187.13) by HQMAIL109.nvidia.com
- (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 15 Jul
- 2020 11:39:12 +0000
-Received: from rnnvemgw01.nvidia.com (10.128.109.123) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Wed, 15 Jul 2020 11:39:12 +0000
-Received: from moonraker.nvidia.com (Not Verified[10.26.73.219]) by rnnvemgw01.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5f0eeade0000>; Wed, 15 Jul 2020 04:39:11 -0700
-From:   Jon Hunter <jonathanh@nvidia.com>
-To:     Mathias Nyman <mathias.nyman@intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thierry Reding <thierry.reding@gmail.com>
-CC:     <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Jon Hunter <jonathanh@nvidia.com>, <stable@vger.kernel.org>
-Subject: [PATCH V2] usb: tegra: Fix allocation for the FPCI context
-Date:   Wed, 15 Jul 2020 12:38:42 +0100
-Message-ID: <20200715113842.30680-1-jonathanh@nvidia.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200712102837.24340-1-jonathanh@nvidia.com>
-References: <20200712102837.24340-1-jonathanh@nvidia.com>
-X-NVConfidentiality: public
+        Wed, 15 Jul 2020 07:44:14 -0400
+Received: by mail-ot1-f68.google.com with SMTP id 72so1215033otc.3;
+        Wed, 15 Jul 2020 04:44:13 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=BaBDIw1z/eEqdf0QQ4ZUt0oW4z4lCjYpMBZZDcbuR0c=;
+        b=RrtCkGNRfH3fAsP1WY6uPp7osIGCxNk8Tm6aqLZWdMTXfwTpMFhnluX/Nq/gJghiSK
+         5Lblc8Zn0QOqpxvlA/Qq3ZORXjUicOyxJSgF9ffio5/frR8QNEOfNc0pBv3Z8Ffldj+w
+         oAHFROAcRvC25+JAu4OJkdHwAlZYvSLSxQFpL4uwincr/N/5ZjV27iuuZWIJ6XiF/Mup
+         4hkfP8R3xVppNM94d9TGftX0tDOx7G2pOdZH2sV6laQL3RrvBP4kpE/18y5bGCPKxsk3
+         kRtDVTl/AVKVRIrsxv354n3fvL0F3g8v7VlqxyX2gGcLEs1S4iRNPrvl3rcyBcWjpRAh
+         9xUQ==
+X-Gm-Message-State: AOAM533VDzvw7e1pe2BF8txx1kJAxV6MubGCHYyMLnkE0yVJnDzgF3xm
+        Q+ouXuogLQDbxt/+kxoITWapWe5AnnDuAvj6S1w=
+X-Google-Smtp-Source: ABdhPJxEcoP6okwQqNr/RlRkCB0Aw3hNucn3W2acw4J2SJUqB280r/rPKtFMA2T/K62rr7Bm4/+fKhqo/8OcKnWTGb0=
+X-Received: by 2002:a9d:1c82:: with SMTP id l2mr8192356ota.167.1594813453344;
+ Wed, 15 Jul 2020 04:44:13 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1594813043; bh=uuPzFrd79X6snwWrV1rXcJChGJVyio56NAiQtRIpVMc=;
-        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
-         In-Reply-To:References:X-NVConfidentiality:MIME-Version:
-         Content-Type;
-        b=KMonAL2NbiHVsPl3rkICVkx73w8mC+CLtMefaqfM1KgIRQsRrVud30eixHuu3Zm0c
-         YF5DXh1QC43if5k/v50J6t7ajWSsTt0YEaXxyENBVBSLRIAobeVQU4FNheHuVb9R0R
-         Ay+/3YyQaGcMePqWIvUGnW9YuKZDNvaWBjC/F1ziF5ga3sGJiPjpzODCiRqJv33TRU
-         6KsW+6oeB85vHFI9FRD0Z1gizhPwW6g4hwh+NzsYUQHknuqsSK8eUX9UOEVEIjKrOb
-         uXM1GjDqHQts882dmRP3XnmWs6AJ/Ts1co3nV0WlbuQi9aPjL6KJms8FtLivukX/lf
-         p6rf6QuZ1gMHA==
+References: <20200714145049.2496163-1-lee.jones@linaro.org>
+ <20200714145049.2496163-10-lee.jones@linaro.org> <CAJZ5v0iB0K6H28DSDQj9T7k_kV10THxV6-HwN9qfmkLsYNHfiA@mail.gmail.com>
+ <20200714210340.GJ1398296@dell> <20200715032442.gh2cliiddhv35fdj@vireshk-i7>
+ <20200715032718.2zlo2eurhkpoayya@vireshk-i7> <CAJZ5v0jHJDLt6QFWG9FOpqmWMXAUuSEPHdHbVgFWcwR6FQD57Q@mail.gmail.com>
+ <20200715113433.GB3165313@dell>
+In-Reply-To: <20200715113433.GB3165313@dell>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Wed, 15 Jul 2020 13:44:01 +0200
+Message-ID: <CAJZ5v0gFwYj7KKKj806s5SdWO1Wu5exiwObKKAdQWQEKg+2CJA@mail.gmail.com>
+Subject: Re: [PATCH 09/13] cpufreq: acpi-cpufreq: Remove unused ID structs
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Andy Grover <andrew.grover@intel.com>,
+        Paul Diefenbaugh <paul.s.diefenbaugh@intel.com>,
+        Dominik Brodowski <linux@brodo.de>,
+        Denis Sadykov <denis.m.sadykov@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit 5c4e8d3781bc ("usb: host: xhci-tegra: Add support for XUSB
-context save/restore") is using the IPFS 'num_offsets' value when
-allocating memory for FPCI context instead of the FPCI 'num_offsets'.
+On Wed, Jul 15, 2020 at 1:34 PM Lee Jones <lee.jones@linaro.org> wrote:
+>
+> On Wed, 15 Jul 2020, Rafael J. Wysocki wrote:
+>
+> > On Wed, Jul 15, 2020 at 5:27 AM Viresh Kumar <viresh.kumar@linaro.org> wrote:
+> > >
+> > > On 15-07-20, 08:54, Viresh Kumar wrote:
+> > > > On 14-07-20, 22:03, Lee Jones wrote:
+> > > > > On Tue, 14 Jul 2020, Rafael J. Wysocki wrote:
+> > > > >
+> > > > > > On Tue, Jul 14, 2020 at 4:51 PM Lee Jones <lee.jones@linaro.org> wrote:
+> > > > > > >
+> > > > > > > Can't see them being used anywhere and the compiler doesn't complain
+> > > > > > > that they're missing, so ...
+> > > > > >
+> > > > > > Aren't they needed for automatic module loading in certain configurations?
+> > > > >
+> > > > > Any idea how that works, or where the code is for that?
+> > > >
+> > > > The MODULE_DEVICE_TABLE() thingy creates a map of vendor-id,
+> > > > product-id that the kernel keeps after boot (and so there is no static
+> > > > reference of it for the compiler), later when a device is hotplugged
+> > > > into the kernel it refers to the map to find the related driver for it
+> > > > and loads it if it isn't already loaded.
+> > > >
+> > > > This has some of it, search for MODULE_DEVICE_TABLE() in it.
+> > > > Documentation/driver-api/usb/hotplug.rst
+> > >
+> > > And you just need to add __maybe_unused to them to suppress the
+> > > warning.
+> >
+> > Wouldn't that cause the compiler to optimize them away if it doesn't
+> > see any users?
+>
+> It looks like they're only unused when !MODULE,
 
-After commit cad064f1bd52 ("devres: handle zero size in devm_kmalloc()")
-was added system suspend started failing on Tegra186. The kernel log
-showed that the Tegra XHCI driver was crashing on entry to suspend when
-attempting the save the USB context. On Tegra186, the IPFS context has a
-zero length but the FPCI content has a non-zero length, and because of
-the bug in the Tegra XHCI driver we are incorrectly allocating a zero
-length array for the FPCI context. The crash seen on entering suspend
-when we attempt to save the FPCI context and following commit
-cad064f1bd52 ("devres: handle zero size in devm_kmalloc()") this now
-causes a NULL pointer deference when we access the memory. Fix this by
-correcting the amount of memory we are allocating for FPCI contexts.
+OK
 
-Cc: stable@vger.kernel.org
-
-Fixes: 5c4e8d3781bc ("usb: host: xhci-tegra: Add support for XUSB context save/restore")
-
-Signed-off-by: Jon Hunter <jonathanh@nvidia.com>
-Acked-by: Thierry Reding <treding@nvidia.com>
----
-
-Changes since V1:
-- Corrected commit message
-- Added Thierry's ACK
-
- drivers/usb/host/xhci-tegra.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/usb/host/xhci-tegra.c b/drivers/usb/host/xhci-tegra.c
-index 9ce28ab47f4b..014d79334f50 100644
---- a/drivers/usb/host/xhci-tegra.c
-+++ b/drivers/usb/host/xhci-tegra.c
-@@ -856,7 +856,7 @@ static int tegra_xusb_init_context(struct tegra_xusb *tegra)
- 	if (!tegra->context.ipfs)
- 		return -ENOMEM;
- 
--	tegra->context.fpci = devm_kcalloc(tegra->dev, soc->ipfs.num_offsets,
-+	tegra->context.fpci = devm_kcalloc(tegra->dev, soc->fpci.num_offsets,
- 					   sizeof(u32), GFP_KERNEL);
- 	if (!tegra->context.fpci)
- 		return -ENOMEM;
--- 
-2.17.1
-
+> in which case optimising them away would be the correct thing to do, no?
