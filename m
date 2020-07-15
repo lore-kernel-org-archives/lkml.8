@@ -2,128 +2,130 @@ Return-Path: <SRS0=kup7=A2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05EFFC433E2
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 18:21:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C36BAC433E2
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 18:23:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E81A92065F
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 18:21:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A3495207BB
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 18:23:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uONZHPpi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726864AbgGOSVj (ORCPT
+        id S1726634AbgGOSXC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 14:21:39 -0400
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:40207 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726376AbgGOSVi (ORCPT
+        Wed, 15 Jul 2020 14:23:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59364 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725882AbgGOSXB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 14:21:38 -0400
-Received: by mail-oi1-f196.google.com with SMTP id t198so2953454oie.7;
-        Wed, 15 Jul 2020 11:21:38 -0700 (PDT)
+        Wed, 15 Jul 2020 14:23:01 -0400
+Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EEE96C061755;
+        Wed, 15 Jul 2020 11:23:00 -0700 (PDT)
+Received: by mail-ej1-x644.google.com with SMTP id n22so233877ejy.3;
+        Wed, 15 Jul 2020 11:23:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=A1O8hMul/CJLSbV1N5c3JTA54EIaO3M+DVJ+l+X2WwY=;
+        b=uONZHPpirU56iDmZf7UJPLf4XCv8SFTwAJCeF0ZahyHBh2Q1OZwv9p7PFDP0YsAK9v
+         HWH1Qz9J+uEzZpnVXgmqPR6piZHgQeVFyzB5DWgE8/05Sh9s0hQ3THroLvv1ldx81Cu7
+         78P78TU2pwfpEdKUXHZvo0/9asBMkzKlr4RaEigWa8zdpf2fGph1xxnFye4ImwlgoLKk
+         HHX2/CW+BCqHhB/xZwEtYAlJNpMSq++rA2wRCULjRheyqx7teTCOWEKoH8n4hckjvd0C
+         zwws5WFYH1YmucevJN7vUlkYZPrzwo4u5LIkLoNE6Avj0ZWE8bo/Olu7CZyVvEn/yAg+
+         hY7A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=1FF6NE3RgAgvvORLzrwBOqEqD//9KPcGwvYKX0LojsE=;
-        b=TK3mi/bHffi/aEJRfbAnIouCrWpTtNeQDZe/DqmPNHb51FoaqS500TEpLr/0VH1HR6
-         7nF4BxjxMQV5fb09OmQKUCceoKjMRsoLZBcnMHDOZfdwodIEYp3vPoxXJqVBSXCtSrSc
-         4DEe2kvY6ftFCflhGfVCXso1k/6bbqAKOE/Kzm8EhSVa8dt2fVL7RnGGypJdgAA2fDvb
-         2J8HelyKFvEdZfjEUoXZibAZFNujSWmpsmnAY30OgjVf8Aq8q+jBZSj3043nWd30ekng
-         7Pz6X8Zet5HD8CYO9KeJJYFPxZ69Di3rTQOAtCI98QuLx0r+qZ5pzBkXmQBg/uKZBqjR
-         6iqA==
-X-Gm-Message-State: AOAM530Bn3OjDDGEI65oL27Q2HTp8THObFTm8iAJ/Ua2RnL+nxLargsk
-        QpsHSUeR9askigdCjk3oMwGaS7JeA8mo7KXxlGg=
-X-Google-Smtp-Source: ABdhPJwcV1vvhv5crG8UvMw8+zcm63bfpdE+L75sxCxC4Zcq61IpcOYcERI4IV670l+4nsLuAHvWr6g3bRI8fJaTsOI=
-X-Received: by 2002:aca:5c41:: with SMTP id q62mr834458oib.148.1594837298177;
- Wed, 15 Jul 2020 11:21:38 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=A1O8hMul/CJLSbV1N5c3JTA54EIaO3M+DVJ+l+X2WwY=;
+        b=N+T3Pf07ChXnCRXfLt41uV7lpG7XAiGmNKGOOMo/pMjwhO+a9+uCXGzTwxQHCA1c6V
+         Pji6CPDyXKZIOa92c/6gvqNVGvdAjYhis58P3K3aPWyhKvWaP7jqPnm7gxhb/fk2Tvly
+         ONEY9thiSMeMuTjsLIEEA9D4dznXA3rDi4t7M/zVbTTstAy5sUOMtZOQBXeuLOKxe7al
+         rBWO4gJtnZ0VnwufOy2T8pniasOjmZzv/85q4jHjZqhNsgAyEXjCBGlgo4gKfhuZG57p
+         tjRKxwMX4xcBcipvF3oLXPy38vLIiDy4pEUB/3zCKJmPSbKcV/SLmxSMx4YMJTk6VZwf
+         XdOw==
+X-Gm-Message-State: AOAM530v8mZBSd4WaKFCU/MbIK0XmclJ7mZmOlnlSWRcNoWvg4cnWLsp
+        uoBGWYF0yrzdwtILbXVEBE98BI89L3w=
+X-Google-Smtp-Source: ABdhPJwlaflYv2TqUtLyq5VbaHKn8hR3K68nDNQ9YAiP4xnxsgqI9AEw9CvyJigjI4uMFC5edDMJuQ==
+X-Received: by 2002:a17:906:c943:: with SMTP id fw3mr232794ejb.55.1594837379427;
+        Wed, 15 Jul 2020 11:22:59 -0700 (PDT)
+Received: from ?IPv6:2003:ea:8f23:5700:99de:6366:d65c:d599? (p200300ea8f23570099de6366d65cd599.dip0.t-ipconnect.de. [2003:ea:8f23:5700:99de:6366:d65c:d599])
+        by smtp.googlemail.com with ESMTPSA id ai4sm2756085ejc.91.2020.07.15.11.22.58
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 15 Jul 2020 11:22:58 -0700 (PDT)
+Subject: Re: PCI: Disable not requested resource types in pci_enable_resources
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <20200710210924.GA80868@bjorn-Precision-5520>
+From:   Heiner Kallweit <hkallweit1@gmail.com>
+Message-ID: <eeae5c45-a718-71d8-04e8-4042eaed54de@gmail.com>
+Date:   Wed, 15 Jul 2020 20:22:51 +0200
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-References: <20200714121856.955680-1-hch@lst.de> <b0745e43-0ff1-58f7-70d5-60b9c8b8d81b@physik.fu-berlin.de>
- <20200714155914.GA24404@brightrain.aerifal.cx> <8cbf2963-d0e4-0ca8-4ffe-c2057694447f@physik.fu-berlin.de>
- <011f29e6-ad71-366e-dbff-bc8471f3da60@physik.fu-berlin.de>
- <CAMuHMdUre2-fRgLP8YiwjAKN6J=m1vGhPSMMUdpof7jPJfcWuw@mail.gmail.com>
- <def65208-a38b-8663-492a-cae150027003@physik.fu-berlin.de>
- <b5f1853e-031d-c09d-57d2-fb4baffa01ea@physik.fu-berlin.de>
- <CAMuHMdW8RtJKk3u7RWQKP2tA3AYT2rB2aqhUT1KnJ4tJwWWKDA@mail.gmail.com>
- <b5cd845f-7b5e-af8e-a15d-3ede7e61ced4@physik.fu-berlin.de>
- <0322def7-fc16-c805-8f2b-c88fffce2f1e@physik.fu-berlin.de> <2df7ca7f-7e26-c916-b6ac-4ec1913fb8d7@physik.fu-berlin.de>
-In-Reply-To: <2df7ca7f-7e26-c916-b6ac-4ec1913fb8d7@physik.fu-berlin.de>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Wed, 15 Jul 2020 20:21:27 +0200
-Message-ID: <CAMuHMdXjfq=RjJ2doR7XyQMnZUA8ccxKc7_tyUzTX29tpyZojw@mail.gmail.com>
-Subject: Re: ioremap and dma cleanups and fixes for superh (2nd resend)
-To:     John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
-Cc:     Rich Felker <dalias@libc.org>, Christoph Hellwig <hch@lst.de>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Linux-sh list <linux-sh@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200710210924.GA80868@bjorn-Precision-5520>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 15, 2020 at 6:18 PM John Paul Adrian Glaubitz
-<glaubitz@physik.fu-berlin.de> wrote:
-> On 7/15/20 4:37 PM, John Paul Adrian Glaubitz wrote:
-> > Okay, kernel 5.0.0 does not suffer from this bug. So I should be able to bisect
-> > this particular issue.
-> >
-> > I'm glad I don't have to start bisecting with earlier kernels because these
-> > won't build easily with my current toolchain based on gcc-9.
-> >
-> > Will report once I found the bad commit that introduced the problem.
->
-> Found the culprit:
->
-> c5b27a889da92f4a969d61df77bd4f79ffce57c9 is the first bad commit
-> commit c5b27a889da92f4a969d61df77bd4f79ffce57c9
-> Author: Peter Zijlstra <peterz@infradead.org>
-> Date:   Tue Sep 4 14:45:04 2018 +0200
->
->     sh/tlb: Convert SH to generic mmu_gather
->
->     Generic mmu_gather provides everything SH needs (range tracking and
->     cache coherency).
->
->     No change in behavior intended.
->
->     Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
->     Cc: Andrew Morton <akpm@linux-foundation.org>
->     Cc: Andy Lutomirski <luto@kernel.org>
->     Cc: Aneesh Kumar K.V <aneesh.kumar@linux.vnet.ibm.com>
->     Cc: Borislav Petkov <bp@alien8.de>
->     Cc: Dave Hansen <dave.hansen@linux.intel.com>
->     Cc: H. Peter Anvin <hpa@zytor.com>
->     Cc: Linus Torvalds <torvalds@linux-foundation.org>
->     Cc: Nick Piggin <npiggin@gmail.com>
->     Cc: Peter Zijlstra <peterz@infradead.org>
->     Cc: Rich Felker <dalias@libc.org>
->     Cc: Rik van Riel <riel@surriel.com>
->     Cc: Thomas Gleixner <tglx@linutronix.de>
->     Cc: Will Deacon <will.deacon@arm.com>
->     Cc: Yoshinori Sato <ysato@users.sourceforge.jp>
->     Signed-off-by: Ingo Molnar <mingo@kernel.org>
->
->  arch/sh/include/asm/pgalloc.h |   9 +++
->  arch/sh/include/asm/tlb.h     | 130 +-----------------------------------------
->  2 files changed, 10 insertions(+), 129 deletions(-)
->
-> CC'ing the author (Peter Zijlstra <peterz@infradead.org>).
+On 10.07.2020 23:09, Bjorn Helgaas wrote:
+> On Thu, May 28, 2020 at 08:47:12PM +0200, Heiner Kallweit wrote:
+>> Currently, if both resource types are enabled before the call, the mask
+>> value doesn't matter. Means as of today I wouldn't be able to e.g.
+>> disable PCI_COMMAND_IO. At least my interpretation is that mask defines
+>> which resource types are enabled after the call. Therefore change the
+>> behavior to disable not requested resource types.
+>>
+>> At least on my x86 devices this change doesn't have side effects.
+> 
+> Does this have a practical benefit?  If it fixes a bug or if there's
+> something useful we can do because of this patch, I'll push it higher
+> up the priority list.
+> 
+There's no big benefit. The current behavior just doesn't seem to be
+consistent, and I don't see why we have a function pci_enable_device_mem().
+Also after calling this function IO resources can be active.
+So why not remove this function and use pci_enable_device() always.
 
-Oh, we actually discussed that:
-https://lore.kernel.org/linux-mm/20191204133454.GW2844@hirez.programming.kicks-ass.net/
-but there was no conclusion...
+Small benefit is that the change allows to guarantee that IO resources
+are disabled after calling pci_enable_device_mem().
+This might help to avoid using IO resources mistakenly in a driver.
 
-Gr{oetje,eeting}s,
+>> Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
+>> ---
+>>  drivers/pci/setup-res.c | 4 ++--
+>>  1 file changed, 2 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/drivers/pci/setup-res.c b/drivers/pci/setup-res.c
+>> index d21fa04fa..6ef458c10 100644
+>> --- a/drivers/pci/setup-res.c
+>> +++ b/drivers/pci/setup-res.c
+>> @@ -459,8 +459,8 @@ int pci_enable_resources(struct pci_dev *dev, int mask)
+>>  	int i;
+>>  	struct resource *r;
+>>  
+>> -	pci_read_config_word(dev, PCI_COMMAND, &cmd);
+>> -	old_cmd = cmd;
+>> +	pci_read_config_word(dev, PCI_COMMAND, &old_cmd);
+>> +	cmd = old_cmd & ~(PCI_COMMAND_IO | PCI_COMMAND_MEMORY);
+>>  
+>>  	for (i = 0; i < PCI_NUM_RESOURCES; i++) {
+>>  		if (!(mask & (1 << i)))
+>> -- 
+>> 2.26.2
+>>
 
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
