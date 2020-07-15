@@ -2,219 +2,204 @@ Return-Path: <SRS0=kup7=A2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=BAYES_00,FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CB12C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 16:28:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7893C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 16:29:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 79D9220663
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 16:28:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA94E2065E
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 16:29:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727038AbgGOQ23 (ORCPT
+        id S1727052AbgGOQ3F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 12:28:29 -0400
-Received: from mail-io1-f72.google.com ([209.85.166.72]:56006 "EHLO
-        mail-io1-f72.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726354AbgGOQ21 (ORCPT
+        Wed, 15 Jul 2020 12:29:05 -0400
+Received: from mail.baikalelectronics.com ([87.245.175.226]:37930 "EHLO
+        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725866AbgGOQ3E (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 12:28:27 -0400
-Received: by mail-io1-f72.google.com with SMTP id k10so1685707ioh.22
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 09:28:26 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=UpgYgCUDKrsc9Xcijcf9gmExAoa/09kZKT/LNRqDMKI=;
-        b=kkMiZwg5xOhz2ZzMeh3+DC6dGkI3OVvQ95hpvWaR+JSzn8/Qkvine9giBl7w0XTp/U
-         S5q7V99/UMa2ZgXgpDLBAcmnNSDu/9s09VK/xhdTfI1/rsOrSBicYeL5Vt6V4rwJYLcn
-         7A+LaqCoIUiyrp1fRATU5nHy4SVg2ihXrJeGzbK879aOjxf+TXnlIo628lpZYgM1wGPw
-         GgCDzfDBZwWl4gEgTap5eOFwdjx/dw8orclgxq+zWUYD0pYePcn7fNBdvwE2bPrwWPAF
-         heSRpeX3RUAsRWdN9/rzTTZfK8t5oiymr8V0QS5Wdnq2sPo4dxwCDKlpvZJUdrjrBpeh
-         /Gog==
-X-Gm-Message-State: AOAM531YkoryJFJAgkm/uuEhOVrDh4gYEzg3QXr/zCYw60I6PmrvC6+I
-        bSSk0UOzQvzbaMBZRaknJdr0hJ1gAM9KGi98O7eqbbAPfcsX
-X-Google-Smtp-Source: ABdhPJzjuiae/f/pcvJCLHcxco1+xLn+j67kPQ59ZJTT2mWfEDvzIYk/Rpil3pE6xjzY3ta0N8PkASsoAFmTvd59AuiIUnSfzWjz
+        Wed, 15 Jul 2020 12:29:04 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id 1C2E980307C2;
+        Wed, 15 Jul 2020 16:28:56 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at baikalelectronics.ru
+Received: from mail.baikalelectronics.ru ([127.0.0.1])
+        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id R4yGKnKOMh8D; Wed, 15 Jul 2020 19:28:54 +0300 (MSK)
+Date:   Wed, 15 Jul 2020 19:28:52 +0300
+From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
+To:     Claire Chang <tientzu@chromium.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>
+CC:     Daniel Winkler <danielwinkler@google.com>,
+        Nicolas Boichat <drinkcat@google.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Aaron Sierra <asierra@xes-inc.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Lukas Wunner <lukas@wunner.de>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        <linux-serial@vger.kernel.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        BlueZ <linux-bluetooth@vger.kernel.org>,
+        chromeos-bluetooth-upstreaming 
+        <chromeos-bluetooth-upstreaming@chromium.org>,
+        <abhishekpandit@chromium.org>, <stable@vger.kernel.org>,
+        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
+        lkml <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] serial: 8250_mtk: Fix high-speed baud rates clamping
+Message-ID: <20200715162852.5ykgubvoc7tvbfhc@mobilestation>
+References: <20200714124113.20918-1-Sergey.Semin@baikalelectronics.ru>
+ <CAP2xMbvwxYaGPPCDWY2LWUc2te8kS9t-+A0zieYp3RiGMJR6ng@mail.gmail.com>
+ <CALiNf2-mmC1ueeiQ6xh5BPzCH_ratYPpeW1Rq=EHsA7+e6yK0A@mail.gmail.com>
 MIME-Version: 1.0
-X-Received: by 2002:a6b:3f57:: with SMTP id m84mr67721ioa.99.1594830505936;
- Wed, 15 Jul 2020 09:28:25 -0700 (PDT)
-Date:   Wed, 15 Jul 2020 09:28:25 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000c88b2c05aa7d69af@google.com>
-Subject: KASAN: slab-out-of-bounds Read in subflow_syn_recv_sock
-From:   syzbot <syzbot+be889269e2b87ab34afb@syzkaller.appspotmail.com>
-To:     davem@davemloft.net, kuba@kernel.org, linux-kernel@vger.kernel.org,
-        mathew.j.martineau@linux.intel.com, matthieu.baerts@tessares.net,
-        mptcp@lists.01.org, netdev@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <CALiNf2-mmC1ueeiQ6xh5BPzCH_ratYPpeW1Rq=EHsA7+e6yK0A@mail.gmail.com>
+X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On Wed, Jul 15, 2020 at 01:36:04PM +0800, Claire Chang wrote:
+> On Wed, Jul 15, 2020 at 4:45 AM Daniel Winkler <danielwinkler@google.com> wrote:
+> >
+> > Thank you Sergey for looking into this. Adding folks working on this
+> > platform to perform validation of the proposed patch.
+> >
+> > Best,
+> > Daniel
+> >
+> > On Tue, Jul 14, 2020 at 5:41 AM Serge Semin
+> > <Sergey.Semin@baikalelectronics.ru> wrote:
+> > >
+> > > Commit 7b668c064ec3 ("serial: 8250: Fix max baud limit in generic 8250
+> > > port") fixed limits of a baud rate setting for a generic 8250 port.
+> > > In other words since that commit the baud rate has been permitted to be
+> > > within [uartclk / 16 / UART_DIV_MAX; uartclk / 16], which is absolutely
+> > > normal for a standard 8250 UART port. But there are custom 8250 ports,
+> > > which provide extended baud rate limits. In particular the Mediatek 8250
+> > > port can work with baud rates up to "uartclk" speed.
+> > >
+> > > Normally that and any other peculiarity is supposed to be handled in a
+> > > custom set_termios() callback implemented in the vendor-specific
+> > > 8250-port glue-driver. Currently that is how it's done for the most of
+> > > the vendor-specific 8250 ports, but for some reason for Mediatek a
+> > > solution has been spread out to both the glue-driver and to the generic
+> > > 8250-port code. Due to that a bug has been introduced, which permitted the
+> > > extended baud rate limit for all even for standard 8250-ports. The bug
+> > > has been fixed by the commit 7b668c064ec3 ("serial: 8250: Fix max baud
+> > > limit in generic 8250 port") by narrowing the baud rates limit back down to
+> > > the normal bounds. Unfortunately by doing so we also broke the
+> > > Mediatek-specific extended bauds feature.
+> > >
+> > > A fix of the problem described above is twofold. First since we can't get
+> > > back the extended baud rate limits feature to the generic set_termios()
+> > > function and that method supports only a standard baud rates range, the
+> > > requested baud rate must be locally stored before calling it and then
+> > > restored back to the new termios structure after the generic set_termios()
+> > > finished its magic business. By doing so we still use the
+> > > serial8250_do_set_termios() method to set the LCR/MCR/FCR/etc. registers,
+> > > while the extended baud rate setting procedure will be performed later in
+> > > the custom Mediatek-specific set_termios() callback. Second since a true
+> > > baud rate is now fully calculated in the custom set_termios() method we
+> > > need to locally update the port timeout by calling the
+> > > uart_update_timeout() function. After the fixes described above are
+> > > implemented in the 8250_mtk.c driver, the Mediatek 8250-port should
+> > > get back to normally working with extended baud rates.
+> > >
+> > > Link: https://lore.kernel.org/linux-serial/20200701211337.3027448-1-danielwinkler@google.com
+> > >
+> > > Fixes: 7b668c064ec3 ("serial: 8250: Fix max baud limit in generic 8250 port")
+> > > Reported-by: Daniel Winkler <danielwinkler@google.com>
+> > > Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
 
-syzbot found the following issue on:
+> Tested-by: Claire Chang <tientzu@chromium.org>
+> > >
+> > > ---
+> > >
+> > > Folks, sorry for a delay with the problem fix. A solution is turned out to
+> > > be a bit more complicated than I originally thought in my comment to the
+> > > Daniel revert-patch.
+> > >
+> > > Please also note, that I don't have a Mediatek hardware to test the
+> > > solution suggested in the patch. The code is written as on so called
+> > > the tip of the pen after digging into the 8250_mtk.c and 8250_port.c
+> > > drivers code. So please Daniel or someone with Mediatek 8250-port
+> > > available on a board test this patch first and report about the results in
+> > > reply to this emailing thread. After that, if your conclusion is positive
+> > > and there is no objection against the solution design the patch can be
+> > > merged in.
+> I tested it with mt8183 + QCA6174.
+> The UART Bluetooth works fine with this fix.
+> Thanks!
 
-HEAD commit:    d113c0f2 Merge tag 'wireless-drivers-2020-07-13' of git://..
-git tree:       net
-console output: https://syzkaller.appspot.com/x/log.txt?x=158d14d0900000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=368e8612711aa2cc
-dashboard link: https://syzkaller.appspot.com/bug?extid=be889269e2b87ab34afb
-compiler:       gcc (GCC) 10.1.0-syz 20200507
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=123882bf100000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=11b2c6f7100000
+Great! Thanks.
 
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+be889269e2b87ab34afb@syzkaller.appspotmail.com
+Greg, Jiri, Matthias since a test's showed the patch correctness you may now
+merge it in if you are ok with its design. It shall fix the problem Daniel
+reported.
 
-==================================================================
-BUG: KASAN: slab-out-of-bounds in subflow_syn_recv_sock+0x945/0xd80 net/mptcp/subflow.c:447
-Read of size 1 at addr ffff8880a8d6dc40 by task syz-executor124/9639
+-Sergey
 
-CPU: 0 PID: 9639 Comm: syz-executor124 Not tainted 5.8.0-rc4-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Call Trace:
- <IRQ>
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x18f/0x20d lib/dump_stack.c:118
- print_address_description.constprop.0.cold+0xae/0x436 mm/kasan/report.c:383
- __kasan_report mm/kasan/report.c:513 [inline]
- kasan_report.cold+0x1f/0x37 mm/kasan/report.c:530
- subflow_syn_recv_sock+0x945/0xd80 net/mptcp/subflow.c:447
- tcp_get_cookie_sock+0xca/0x510 net/ipv4/syncookies.c:209
- cookie_v6_check+0x14f2/0x2250 net/ipv6/syncookies.c:255
- tcp_v6_cookie_check net/ipv6/tcp_ipv6.c:1134 [inline]
- tcp_v6_do_rcv+0xf50/0x1290 net/ipv6/tcp_ipv6.c:1459
- tcp_v6_rcv+0x312b/0x3470 net/ipv6/tcp_ipv6.c:1670
- ip6_protocol_deliver_rcu+0x2e8/0x1670 net/ipv6/ip6_input.c:433
- ip6_input_finish+0x7f/0x160 net/ipv6/ip6_input.c:474
- NF_HOOK include/linux/netfilter.h:307 [inline]
- NF_HOOK include/linux/netfilter.h:301 [inline]
- ip6_input+0x9c/0xd0 net/ipv6/ip6_input.c:483
- dst_input include/net/dst.h:449 [inline]
- ip6_rcv_finish net/ipv6/ip6_input.c:76 [inline]
- NF_HOOK include/linux/netfilter.h:307 [inline]
- NF_HOOK include/linux/netfilter.h:301 [inline]
- ipv6_rcv+0x28e/0x3c0 net/ipv6/ip6_input.c:307
- __netif_receive_skb_one_core+0x114/0x180 net/core/dev.c:5281
- __netif_receive_skb+0x27/0x1c0 net/core/dev.c:5395
- process_backlog+0x28d/0x7f0 net/core/dev.c:6239
- napi_poll net/core/dev.c:6684 [inline]
- net_rx_action+0x4a1/0xe60 net/core/dev.c:6752
- __do_softirq+0x34c/0xa60 kernel/softirq.c:292
- asm_call_on_stack+0xf/0x20 arch/x86/entry/entry_64.S:711
- </IRQ>
- __run_on_irqstack arch/x86/include/asm/irq_stack.h:22 [inline]
- run_on_irqstack_cond arch/x86/include/asm/irq_stack.h:48 [inline]
- do_softirq_own_stack+0x111/0x170 arch/x86/kernel/irq_64.c:77
- do_softirq kernel/softirq.c:337 [inline]
- do_softirq+0x16b/0x1e0 kernel/softirq.c:324
- __local_bh_enable_ip+0x1f8/0x250 kernel/softirq.c:189
- local_bh_enable include/linux/bottom_half.h:32 [inline]
- rcu_read_unlock_bh include/linux/rcupdate.h:723 [inline]
- ip6_finish_output2+0x91d/0x17b0 net/ipv6/ip6_output.c:118
- __ip6_finish_output net/ipv6/ip6_output.c:143 [inline]
- __ip6_finish_output+0x447/0xab0 net/ipv6/ip6_output.c:128
- ip6_finish_output+0x34/0x1f0 net/ipv6/ip6_output.c:153
- NF_HOOK_COND include/linux/netfilter.h:296 [inline]
- ip6_output+0x1db/0x520 net/ipv6/ip6_output.c:176
- dst_output include/net/dst.h:443 [inline]
- NF_HOOK include/linux/netfilter.h:307 [inline]
- NF_HOOK include/linux/netfilter.h:301 [inline]
- ip6_xmit+0x1258/0x1e80 net/ipv6/ip6_output.c:280
- inet6_csk_xmit+0x339/0x610 net/ipv6/inet6_connection_sock.c:135
- __tcp_transmit_skb+0x1884/0x3690 net/ipv4/tcp_output.c:1240
- __tcp_send_ack.part.0+0x3aa/0x590 net/ipv4/tcp_output.c:3787
- __tcp_send_ack net/ipv4/tcp_output.c:3793 [inline]
- tcp_send_ack+0x7d/0xa0 net/ipv4/tcp_output.c:3793
- tcp_rcv_synsent_state_process net/ipv4/tcp_input.c:6058 [inline]
- tcp_rcv_state_process+0x374c/0x4add net/ipv4/tcp_input.c:6227
- tcp_v6_do_rcv+0x7ad/0x1290 net/ipv6/tcp_ipv6.c:1474
- sk_backlog_rcv include/net/sock.h:997 [inline]
- __release_sock+0x134/0x3a0 net/core/sock.c:2550
- release_sock+0x54/0x1b0 net/core/sock.c:3066
- tcp_sendmsg+0x36/0x40 net/ipv4/tcp.c:1442
- inet6_sendmsg+0x99/0xe0 net/ipv6/af_inet6.c:638
- sock_sendmsg_nosec net/socket.c:652 [inline]
- sock_sendmsg+0xcf/0x120 net/socket.c:672
- __sys_sendto+0x21c/0x320 net/socket.c:1995
- __do_sys_sendto net/socket.c:2007 [inline]
- __se_sys_sendto net/socket.c:2003 [inline]
- __x64_sys_sendto+0xdd/0x1b0 net/socket.c:2003
- do_syscall_64+0x60/0xe0 arch/x86/entry/common.c:384
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
-RIP: 0033:0x44ad39
-Code: Bad RIP value.
-RSP: 002b:00007f9c42a5ed98 EFLAGS: 00000246 ORIG_RAX: 000000000000002c
-RAX: ffffffffffffffda RBX: 00000000006e7a28 RCX: 000000000044ad39
-RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000003
-RBP: 00000000006e7a20 R08: 00000000200000c0 R09: 000000000000001c
-R10: 0000000024004044 R11: 0000000000000246 R12: 00000000006e7a2c
-R13: 0000000000000000 R14: 0000000000000000 R15: 20c49ba5e353f7cf
-
-Allocated by task 9639:
- save_stack+0x1b/0x40 mm/kasan/common.c:48
- set_track mm/kasan/common.c:56 [inline]
- __kasan_kmalloc.constprop.0+0xc2/0xd0 mm/kasan/common.c:494
- slab_post_alloc_hook mm/slab.h:586 [inline]
- slab_alloc mm/slab.c:3320 [inline]
- kmem_cache_alloc+0x12c/0x3b0 mm/slab.c:3484
- reqsk_alloc include/net/request_sock.h:84 [inline]
- inet_reqsk_alloc+0x91/0x710 net/ipv4/tcp_input.c:6516
- cookie_v6_check+0x5a5/0x2250 net/ipv6/syncookies.c:173
- tcp_v6_cookie_check net/ipv6/tcp_ipv6.c:1134 [inline]
- tcp_v6_do_rcv+0xf50/0x1290 net/ipv6/tcp_ipv6.c:1459
- tcp_v6_rcv+0x312b/0x3470 net/ipv6/tcp_ipv6.c:1670
- ip6_protocol_deliver_rcu+0x2e8/0x1670 net/ipv6/ip6_input.c:433
- ip6_input_finish+0x7f/0x160 net/ipv6/ip6_input.c:474
- NF_HOOK include/linux/netfilter.h:307 [inline]
- NF_HOOK include/linux/netfilter.h:301 [inline]
- ip6_input+0x9c/0xd0 net/ipv6/ip6_input.c:483
- dst_input include/net/dst.h:449 [inline]
- ip6_rcv_finish net/ipv6/ip6_input.c:76 [inline]
- NF_HOOK include/linux/netfilter.h:307 [inline]
- NF_HOOK include/linux/netfilter.h:301 [inline]
- ipv6_rcv+0x28e/0x3c0 net/ipv6/ip6_input.c:307
- __netif_receive_skb_one_core+0x114/0x180 net/core/dev.c:5281
- __netif_receive_skb+0x27/0x1c0 net/core/dev.c:5395
- process_backlog+0x28d/0x7f0 net/core/dev.c:6239
- napi_poll net/core/dev.c:6684 [inline]
- net_rx_action+0x4a1/0xe60 net/core/dev.c:6752
- __do_softirq+0x34c/0xa60 kernel/softirq.c:292
-
-Freed by task 0:
-(stack is not available)
-
-The buggy address belongs to the object at ffff8880a8d6daf0
- which belongs to the cache request_sock_TCPv6 of size 336
-The buggy address is located 0 bytes to the right of
- 336-byte region [ffff8880a8d6daf0, ffff8880a8d6dc40)
-The buggy address belongs to the page:
-page:ffffea0002a35b40 refcount:1 mapcount:0 mapping:0000000000000000 index:0xffff8880a8d6dff6
-flags: 0xfffe0000000200(slab)
-raw: 00fffe0000000200 ffffea000229a488 ffff8880994fc550 ffff88809949ee00
-raw: ffff8880a8d6dff6 ffff8880a8d6d000 000000010000000a 0000000000000000
-page dumped because: kasan: bad access detected
-
-Memory state around the buggy address:
- ffff8880a8d6db00: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
- ffff8880a8d6db80: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
->ffff8880a8d6dc00: 00 00 00 00 00 00 00 00 fc fc fc fc fc fc fc fc
-                                           ^
- ffff8880a8d6dc80: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
- ffff8880a8d6dd00: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-==================================================================
-
-
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-syzbot can test patches for this issue, for details see:
-https://goo.gl/tpsmEJ#testing-patches
+> > >
+> > > Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
+> > > Cc: Daniel Winkler <danielwinkler@google.com>
+> > > Cc: Aaron Sierra <asierra@xes-inc.com>
+> > > Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> > > Cc: Lukas Wunner <lukas@wunner.de>
+> > > Cc: Vignesh Raghavendra <vigneshr@ti.com>
+> > > Cc: linux-serial@vger.kernel.org
+> > > Cc: linux-mediatek@lists.infradead.org
+> > > Cc: BlueZ <linux-bluetooth@vger.kernel.org>
+> > > Cc: chromeos-bluetooth-upstreaming <chromeos-bluetooth-upstreaming@chromium.org>
+> > > Cc: abhishekpandit@chromium.org
+> > > Cc: stable@vger.kernel.org
+> > > ---
+> > >  drivers/tty/serial/8250/8250_mtk.c | 18 ++++++++++++++++++
+> > >  1 file changed, 18 insertions(+)
+> > >
+> > > diff --git a/drivers/tty/serial/8250/8250_mtk.c b/drivers/tty/serial/8250/8250_mtk.c
+> > > index f839380c2f4c..98b8a3e30733 100644
+> > > --- a/drivers/tty/serial/8250/8250_mtk.c
+> > > +++ b/drivers/tty/serial/8250/8250_mtk.c
+> > > @@ -306,8 +306,21 @@ mtk8250_set_termios(struct uart_port *port, struct ktermios *termios,
+> > >         }
+> > >  #endif
+> > >
+> > > +       /*
+> > > +        * Store the requested baud rate before calling the generic 8250
+> > > +        * set_termios method. Standard 8250 port expects bauds to be
+> > > +        * no higher than (uartclk / 16) so the baud will be clamped if it
+> > > +        * gets out of that bound. Mediatek 8250 port supports speed
+> > > +        * higher than that, therefore we'll get original baud rate back
+> > > +        * after calling the generic set_termios method and recalculate
+> > > +        * the speed later in this method.
+> > > +        */
+> > > +       baud = tty_termios_baud_rate(termios);
+> > > +
+> > >         serial8250_do_set_termios(port, termios, old);
+> > >
+> > > +       tty_termios_encode_baud_rate(termios, baud, baud);
+> > > +
+> > >         /*
+> > >          * Mediatek UARTs use an extra highspeed register (MTK_UART_HIGHS)
+> > >          *
+> > > @@ -339,6 +352,11 @@ mtk8250_set_termios(struct uart_port *port, struct ktermios *termios,
+> > >          */
+> > >         spin_lock_irqsave(&port->lock, flags);
+> > >
+> > > +       /*
+> > > +        * Update the per-port timeout.
+> > > +        */
+> > > +       uart_update_timeout(port, termios->c_cflag, baud);
+> > > +
+> > >         /* set DLAB we have cval saved in up->lcr from the call to the core */
+> > >         serial_port_out(port, UART_LCR, up->lcr | UART_LCR_DLAB);
+> > >         serial_dl_write(up, quot);
+> > > --
+> > > 2.26.2
+> > >
