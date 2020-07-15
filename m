@@ -2,186 +2,108 @@ Return-Path: <SRS0=kup7=A2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F40AC433E5
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 20:45:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35389C433E6
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 20:45:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 207522067D
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 20:45:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594845914;
-	bh=82c0M4r2v9vmu+J3LNGEZvNsiX4xegCRnclRjTkc4/o=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QPZ14/UyC1OWiJuBqPSTGFzGzqX2+y9QKJ73Ji6Yc+UirRtqUWxUY5kDFsZh0eCfy
-	 ed+27jWKtvYQvHoec3eEORmx5qVgTCGLZWlAcUxf6vBl2yrnXVLBJIyy+1V1P7Hiwa
-	 lYIoDIQ7T5uGEeKSJb9U23Kedsdub9C60B/RTDfs=
+	by mail.kernel.org (Postfix) with ESMTP id 0D4D1206F4
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 20:45:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="xnJm4t/1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727903AbgGOUpI (ORCPT
+        id S1727840AbgGOUpH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 16:45:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37774 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726670AbgGOUpC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jul 2020 16:45:07 -0400
+Received: from gate2.alliedtelesis.co.nz ([202.36.163.20]:37267 "EHLO
+        gate2.alliedtelesis.co.nz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727104AbgGOUpC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 15 Jul 2020 16:45:02 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+Received: from mmarshal3.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4A73C2070E;
-        Wed, 15 Jul 2020 20:45:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594845901;
-        bh=82c0M4r2v9vmu+J3LNGEZvNsiX4xegCRnclRjTkc4/o=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=eVcCgpSp6N8Lu8pYUkh2pzuDpoBZ9+aiIPRlmvsFhp1Bfd3YqxJUUDQFqM08p1mDW
-         S5jMIbrSuBtCPF0Kar2gn5BtTdTQjI183TIUre92tq5Hq+QWM3a84jB3rYrAKu8eBM
-         H3JGVGLCn+Wum99KL/beD+yTWX44f+lMRh/EJnhg=
-From:   Mark Brown <broonie@kernel.org>
-To:     Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Heiko Carstens <hca@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>
-Cc:     Christian Borntraeger <borntraeger@de.ibm.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Jiri Slaby <jirislaby@kernel.org>, x86@kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-s390@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>
-Subject: [PATCH 2/3] arm64: stacktrace: Make stack walk callback consistent with generic code
-Date:   Wed, 15 Jul 2020 21:28:20 +0100
-Message-Id: <20200715202821.12220-3-broonie@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200715202821.12220-1-broonie@kernel.org>
-References: <20200715202821.12220-1-broonie@kernel.org>
+        (Client did not present a certificate)
+        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id 7FE948066C;
+        Thu, 16 Jul 2020 08:44:54 +1200 (NZST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
+        s=mail181024; t=1594845894;
+        bh=Yyrrii0aC13/URhPuBNQwge6HS2GmJlH4tIWcCtwuik=;
+        h=From:To:CC:Subject:Date:References:In-Reply-To;
+        b=xnJm4t/14f2aR0lTcnqmPhj4qT6tA4A+BQZbK++5niPKjXZobZpur9z0GGQW7+yKW
+         8PNhx1k2mq8ku/NnrS3NmZbloNkbAUoSzikBPXo4iHKVUNddes5oCIfWBecW/iyodG
+         InVjzTzcgGzFddsdggHWDwcBZSuwm/QYXpW0Zn+66gUVQirdXFGLallItVZQ5cFDOa
+         Zfak+VFIF6UH5UXTtPsw1EH/RpPXU8ApoESprVMX3FF4FJyuS5ho2Gzlb8G5JB+I94
+         Ccb1Ny2CUtnbjIjR+KSYQOHYck2Lg4I4McQ5SVqDCWiE6uJb9clFCGm1ZwPqQPyOR1
+         EteGRa08RaMqQ==
+Received: from svr-chch-ex1.atlnz.lc (Not Verified[10.32.16.77]) by mmarshal3.atlnz.lc with Trustwave SEG (v7,5,8,10121)
+        id <B5f0f6ac50001>; Thu, 16 Jul 2020 08:44:53 +1200
+Received: from svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8:409d:36f5:8899:92e8)
+ by svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8:409d:36f5:8899:92e8) with
+ Microsoft SMTP Server (TLS) id 15.0.1497.2; Thu, 16 Jul 2020 08:44:54 +1200
+Received: from svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8]) by
+ svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8%12]) with mapi id
+ 15.00.1497.006; Thu, 16 Jul 2020 08:44:54 +1200
+From:   Chris Packham <Chris.Packham@alliedtelesis.co.nz>
+To:     Jonathan Corbet <corbet@lwn.net>
+CC:     "adobriyan@gmail.com" <adobriyan@gmail.com>,
+        "mchehab+huawei@kernel.org" <mchehab+huawei@kernel.org>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 1/2] doc: filesystems: proc: Remove stray '-' preventing
+ table output
+Thread-Topic: [PATCH 1/2] doc: filesystems: proc: Remove stray '-' preventing
+ table output
+Thread-Index: AQHWWb4d+mzGhLnBJ0Sy58P6Uv8OEqkGTvYAgAIF+QA=
+Date:   Wed, 15 Jul 2020 20:44:54 +0000
+Message-ID: <e8df76a1-349f-7499-77a9-bac42e2c6e32@alliedtelesis.co.nz>
+References: <20200714090644.13011-1-chris.packham@alliedtelesis.co.nz>
+ <20200714075100.41db8cea@lwn.net>
+In-Reply-To: <20200714075100.41db8cea@lwn.net>
+Accept-Language: en-NZ, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.32.1.11]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <43E8D424AD5D9A4193247B9BF585BA9D@atlnz.lc>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-As with the generic arch_stack_walk() code the arm64 stack walk code takes
-a callback that is called per stack frame. Currently the arm64 code always
-passes a struct stackframe to the callback and the generic code just passes
-the pc, however none of the users ever reference anything in the struct
-other than the pc value. The arm64 code also uses a return type of int
-while the generic code uses a return type of bool though in both cases the
-return value is a boolean value.
-
-In order to reduce code duplication when arm64 is converted to use
-arch_stack_walk() change the signature of the arm64 specific callback to
-match that of the generic code.
-
-Signed-off-by: Mark Brown <broonie@kernel.org>
----
- arch/arm64/include/asm/stacktrace.h |  2 +-
- arch/arm64/kernel/perf_callchain.c  |  6 +++---
- arch/arm64/kernel/return_address.c  |  8 ++++----
- arch/arm64/kernel/stacktrace.c      | 11 +++++------
- 4 files changed, 13 insertions(+), 14 deletions(-)
-
-diff --git a/arch/arm64/include/asm/stacktrace.h b/arch/arm64/include/asm/stacktrace.h
-index fc7613023c19..eb29b1fe8255 100644
---- a/arch/arm64/include/asm/stacktrace.h
-+++ b/arch/arm64/include/asm/stacktrace.h
-@@ -63,7 +63,7 @@ struct stackframe {
- 
- extern int unwind_frame(struct task_struct *tsk, struct stackframe *frame);
- extern void walk_stackframe(struct task_struct *tsk, struct stackframe *frame,
--			    int (*fn)(struct stackframe *, void *), void *data);
-+			    bool (*fn)(void *, unsigned long), void *data);
- extern void dump_backtrace(struct pt_regs *regs, struct task_struct *tsk,
- 			   const char *loglvl);
- 
-diff --git a/arch/arm64/kernel/perf_callchain.c b/arch/arm64/kernel/perf_callchain.c
-index b0e03e052dd1..bd2a91bd9e9e 100644
---- a/arch/arm64/kernel/perf_callchain.c
-+++ b/arch/arm64/kernel/perf_callchain.c
-@@ -137,11 +137,11 @@ void perf_callchain_user(struct perf_callchain_entry_ctx *entry,
-  * whist unwinding the stackframe and is like a subroutine return so we use
-  * the PC.
-  */
--static int callchain_trace(struct stackframe *frame, void *data)
-+static bool callchain_trace(void *data, unsigned long pc)
- {
- 	struct perf_callchain_entry_ctx *entry = data;
--	perf_callchain_store(entry, frame->pc);
--	return 0;
-+	perf_callchain_store(entry, pc);
-+	return false;
- }
- 
- void perf_callchain_kernel(struct perf_callchain_entry_ctx *entry,
-diff --git a/arch/arm64/kernel/return_address.c b/arch/arm64/kernel/return_address.c
-index a5e8b3b9d798..6434427a827a 100644
---- a/arch/arm64/kernel/return_address.c
-+++ b/arch/arm64/kernel/return_address.c
-@@ -18,16 +18,16 @@ struct return_address_data {
- 	void *addr;
- };
- 
--static int save_return_addr(struct stackframe *frame, void *d)
-+static bool save_return_addr(void *d, unsigned long pc)
- {
- 	struct return_address_data *data = d;
- 
- 	if (!data->level) {
--		data->addr = (void *)frame->pc;
--		return 1;
-+		data->addr = (void *)pc;
-+		return true;
- 	} else {
- 		--data->level;
--		return 0;
-+		return false;
- 	}
- }
- NOKPROBE_SYMBOL(save_return_addr);
-diff --git a/arch/arm64/kernel/stacktrace.c b/arch/arm64/kernel/stacktrace.c
-index 2dd8e3b8b94b..743cf11fbfca 100644
---- a/arch/arm64/kernel/stacktrace.c
-+++ b/arch/arm64/kernel/stacktrace.c
-@@ -118,12 +118,12 @@ int notrace unwind_frame(struct task_struct *tsk, struct stackframe *frame)
- NOKPROBE_SYMBOL(unwind_frame);
- 
- void notrace walk_stackframe(struct task_struct *tsk, struct stackframe *frame,
--		     int (*fn)(struct stackframe *, void *), void *data)
-+			     bool (*fn)(void *, unsigned long), void *data)
- {
- 	while (1) {
- 		int ret;
- 
--		if (fn(frame, data))
-+		if (fn(data, frame->pc))
- 			break;
- 		ret = unwind_frame(tsk, frame);
- 		if (ret < 0)
-@@ -139,17 +139,16 @@ struct stack_trace_data {
- 	unsigned int skip;
- };
- 
--static int save_trace(struct stackframe *frame, void *d)
-+static bool save_trace(void *d, unsigned long addr)
- {
- 	struct stack_trace_data *data = d;
- 	struct stack_trace *trace = data->trace;
--	unsigned long addr = frame->pc;
- 
- 	if (data->no_sched_functions && in_sched_functions(addr))
--		return 0;
-+		return false;
- 	if (data->skip) {
- 		data->skip--;
--		return 0;
-+		return false;
- 	}
- 
- 	trace->entries[trace->nr_entries++] = addr;
--- 
-2.20.1
-
+DQpPbiAxNS8wNy8yMCAxOjUxIGFtLCBKb25hdGhhbiBDb3JiZXQgd3JvdGU6DQo+IE9uIFR1ZSwg
+MTQgSnVsIDIwMjAgMjE6MDY6NDMgKzEyMDANCj4gQ2hyaXMgUGFja2hhbSA8Y2hyaXMucGFja2hh
+bUBhbGxpZWR0ZWxlc2lzLmNvLm56PiB3cm90ZToNCj4NCj4+IFdoZW4gcHJvY2Vzc2luZyBwcm9j
+LnJzdCBzcGhpbnggY29tcGxhaW5lZA0KPj4NCj4+ICAgIERvY3VtZW50YXRpb24vZmlsZXN5c3Rl
+bXMvcHJvYy5yc3Q6NTQ4OiBXQVJOSU5HOiBNYWxmb3JtZWQgdGFibGUuDQo+PiAgICBUZXh0IGlu
+IGNvbHVtbiBtYXJnaW4gaW4gdGFibGUgbGluZSAyOS4NCj4+DQo+PiBUaGlzIGNhdXNlZCB0aGUg
+ZW50aXJlIHRhYmxlIHRvIGJlIGRyb3BwZWQuIFJlbW92aW5nIHRoZSBzdHJheSAnLScNCj4+IHJl
+c29sdmVzIHRoZSBlcnJvciBhbmQgcHJvZHVjZXMgdGhlIGRlc2lyZWQgdGFibGUuDQo+Pg0KPj4g
+U2lnbmVkLW9mZi1ieTogQ2hyaXMgUGFja2hhbSA8Y2hyaXMucGFja2hhbUBhbGxpZWR0ZWxlc2lz
+LmNvLm56Pg0KPj4gLS0tDQo+PiAgIERvY3VtZW50YXRpb24vZmlsZXN5c3RlbXMvcHJvYy5yc3Qg
+fCAyICstDQo+PiAgIDEgZmlsZSBjaGFuZ2VkLCAxIGluc2VydGlvbigrKSwgMSBkZWxldGlvbigt
+KQ0KPj4NCj4+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2ZpbGVzeXN0ZW1zL3Byb2MucnN0
+IGIvRG9jdW1lbnRhdGlvbi9maWxlc3lzdGVtcy9wcm9jLnJzdA0KPj4gaW5kZXggOTk2ZjNjZmU3
+MDMwLi41M2EwMjMwYTA4ZTIgMTAwNjQ0DQo+PiAtLS0gYS9Eb2N1bWVudGF0aW9uL2ZpbGVzeXN0
+ZW1zL3Byb2MucnN0DQo+PiArKysgYi9Eb2N1bWVudGF0aW9uL2ZpbGVzeXN0ZW1zL3Byb2MucnN0
+DQo+PiBAQCAtNTQ1LDcgKzU0NSw3IEBAIGVuY29kZWQgbWFubmVyLiBUaGUgY29kZXMgYXJlIHRo
+ZSBmb2xsb3dpbmc6DQo+PiAgICAgICBoZyAgICBodWdlIHBhZ2UgYWR2aXNlIGZsYWcNCj4+ICAg
+ICAgIG5oICAgIG5vIGh1Z2UgcGFnZSBhZHZpc2UgZmxhZw0KPj4gICAgICAgbWcgICAgbWVyZ2Fi
+bGUgYWR2aXNlIGZsYWcNCj4+IC0gICAgYnQgIC0gYXJtNjQgQlRJIGd1YXJkZWQgcGFnZQ0KPj4g
+KyAgICBidCAgICBhcm02NCBCVEkgZ3VhcmRlZCBwYWdlDQo+PiAgICAgICA9PSAgICA9PT09PT09
+PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT0NCj4gV2hpY2ggdHJlZSBhcmUgeW91IGxv
+b2tpbmcgYXQ/ICBNYXVybyBmaXhlZCB0aGlzIGJhY2sgaW4gSnVuZS4uLg0KPg0KPiBUaGFua3Ms
+DQoNClRpcCBvZiBMaW51cydzIHRyZWUuIEN1cnJlbnRseSBwb2ludHMgdG8gY29tbWl0IGU5OTE5
+ZTExZTIxOSAoIk1lcmdlIA0KYnJhbmNoICdmb3ItbGludXMnIG9mIA0KZ2l0Oi8vZ2l0Lmtlcm5l
+bC5vcmcvcHViL3NjbS9saW51eC9rZXJuZWwvZ2l0L2R0b3IvaW5wdXQiKS4gSSBjYW4gc2VlIA0K
+TWF1cm8ncyBmaXggd2FpdGluZyBpbiBkb2NzLW5leHQgKHByb2JhYmx5IHNob3VsZCBoYXZlIGNo
+ZWNrZWQgdGhlcmUgDQpmaXJzdCkuIEZlZWwgZnJlZSB0byBkcm9wIHRoaXMgcGF0Y2guDQoNCj4N
+Cj4gam9u
