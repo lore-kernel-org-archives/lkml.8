@@ -2,166 +2,172 @@ Return-Path: <SRS0=kup7=A2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12BD7C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 12:11:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59591C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 12:17:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E5C8C2071B
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 12:11:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594815086;
-	bh=EXu1kOfMT0TfeYMt5SaQKguRAQVoN7/43lBZkGikHUM=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=gVc3lCJM/bFExdNEC3kLMOXSmmQ/jBEPLDwA2imZcOSoNVR+0jEq8H5zF7SqEZJyY
-	 ZFgmRiUvRO4N3U/gLrxLq/O3Eh1bdWjQ2+N+6kKPh3x+0iCpsnJA1NbJDLi2Km2rdr
-	 SNfjXnyjoWifUYj2/maWVujgnGLCcA2FW5u9chjU=
+	by mail.kernel.org (Postfix) with ESMTP id 38CA9206F5
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 12:17:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="EKHMfQBU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730816AbgGOML0 (ORCPT
+        id S1729683AbgGOMRC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 08:11:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37178 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728801AbgGOMLZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 08:11:25 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 205922065D;
-        Wed, 15 Jul 2020 12:11:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594815084;
-        bh=EXu1kOfMT0TfeYMt5SaQKguRAQVoN7/43lBZkGikHUM=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=vifp9O6mgxoldHa1gdB3O/MPEwFJarzgHlOglCwDg9iGGVKJFT6kaHW3mtbCPcPHj
-         ETtBNeazYeFCsIRnLJHRJkQvbfHKEQHuMI+BRs4ePqhh2ebe3lGLThb0Rdi/tdRoeY
-         pwvyzapVPMv9HuWGVMQuVNk12A8vuHsvcL2fQu6w=
-Date:   Wed, 15 Jul 2020 13:11:21 +0100
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Alexandru Ardelean <alexandru.ardelean@analog.com>
-Cc:     <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <lars@metafoo.de>
-Subject: Re: [PATCH] iio: buffer: fix attach/detach pollfunc order
-Message-ID: <20200715131121.23f5a952@archlinux>
-In-Reply-To: <20200715041629.81435-1-alexandru.ardelean@analog.com>
-References: <20200715041629.81435-1-alexandru.ardelean@analog.com>
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Wed, 15 Jul 2020 08:17:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59136 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727075AbgGOMRB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jul 2020 08:17:01 -0400
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 34E29C08C5C1
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 05:17:01 -0700 (PDT)
+Received: by mail-wr1-x441.google.com with SMTP id o11so2411484wrv.9
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 05:17:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=P9+1m3wZiqcpo0cnrnururZIQWEQrhFekUGBts30/fQ=;
+        b=EKHMfQBUPRLnnQQy6i3XNrTIKLvKdaglpd3anIxBP5KtA7V0HujMdXnvEX3vUZo7+H
+         t5fnqFjVnqkUKRH/hlyrsXh79yMI5l92TtpicLz4H/eS9mTJqfDmvttnyNDi2IvvIo3m
+         X5VL7L7f9fqXfDap7ketUgOdL0B4HCZLZjQe/bxYv1YNbr0wJzntZpfsbyOeSVqzdf34
+         dvmF/viWDyhmQRt9ktn/P9OOl50Cm9AWl1vTRjww8R1nZ+1q4NdkQ6Z6AQNGfGnIR+Gc
+         Hpc+pE7t77YFeWLuHTYM+VBefRVRkEvb2oBUFG6+aHJ97Btx2gu1PdW+KJ1pTNWdB5d1
+         6Y+w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=P9+1m3wZiqcpo0cnrnururZIQWEQrhFekUGBts30/fQ=;
+        b=hyjSyeGn+dZkpv5leELn3M7Lz3CnzAwJzI5eGKxJzWk822N4jMdSwWVpfPqokkWyLF
+         XrZDECsmRdB78DGDUgSII+c99FJA7hUxYQ1be9dmO0NcA82gmf7f2vQn9P4B07NhUq72
+         jKrEm+Yrrhs+CFIWTlfexFiWZSH2jJcbLIlMNkemxTt67ycYehNqRFWXB110KvP2/KVT
+         SECzOBW7GQfhUuxPp0NCEScxTIo/eUBYjE3pgd/0yiDFxb+JlrPpCafWDyir5LZlnVcJ
+         ptHsY+2hfoSrUP9HrvgqPnCXrDvZEDRMZbc7mF5/78ooVzY6hu9JIntI73NoGVK1DxDM
+         LCpA==
+X-Gm-Message-State: AOAM533E01fr/HlBBCKOjVnSY6ENdR3ntFi5cAWSvnyU/elplhq767Wj
+        B/JzPB56xidtmzb4U+sHsZh76A==
+X-Google-Smtp-Source: ABdhPJw1RlHdFlCQxqYGIvI7SbhsAtRef67AkGJAHgn0iJW7X2IQ3QQMgUd4z/mr68WLHf9teEyKyA==
+X-Received: by 2002:a5d:4a84:: with SMTP id o4mr11321706wrq.104.1594815419802;
+        Wed, 15 Jul 2020 05:16:59 -0700 (PDT)
+Received: from dell ([2.31.163.61])
+        by smtp.gmail.com with ESMTPSA id p29sm3239215wmi.43.2020.07.15.05.16.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 15 Jul 2020 05:16:59 -0700 (PDT)
+Date:   Wed, 15 Jul 2020 13:16:57 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     "Rafael J. Wysocki" <rafael@kernel.org>
+Cc:     Viresh Kumar <viresh.kumar@linaro.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Paul Diefenbaugh <paul.s.diefenbaugh@intel.com>,
+        Dominik Brodowski <linux@brodo.de>,
+        Denis Sadykov <denis.m.sadykov@intel.com>
+Subject: Re: [PATCH 09/13] cpufreq: acpi-cpufreq: Remove unused ID structs
+Message-ID: <20200715121657.GE3165313@dell>
+References: <20200714145049.2496163-10-lee.jones@linaro.org>
+ <CAJZ5v0iB0K6H28DSDQj9T7k_kV10THxV6-HwN9qfmkLsYNHfiA@mail.gmail.com>
+ <20200714210340.GJ1398296@dell>
+ <20200715032442.gh2cliiddhv35fdj@vireshk-i7>
+ <20200715032718.2zlo2eurhkpoayya@vireshk-i7>
+ <CAJZ5v0jHJDLt6QFWG9FOpqmWMXAUuSEPHdHbVgFWcwR6FQD57Q@mail.gmail.com>
+ <20200715113433.GB3165313@dell>
+ <CAJZ5v0gFwYj7KKKj806s5SdWO1Wu5exiwObKKAdQWQEKg+2CJA@mail.gmail.com>
+ <20200715115029.GC3165313@dell>
+ <CAJZ5v0hJf2BwDvmtD6UEyyxm-CGcA=SLmAt+F8Sr0ceDZji0jw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAJZ5v0hJf2BwDvmtD6UEyyxm-CGcA=SLmAt+F8Sr0ceDZji0jw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 15 Jul 2020 07:16:29 +0300
-Alexandru Ardelean <alexandru.ardelean@analog.com> wrote:
+On Wed, 15 Jul 2020, Rafael J. Wysocki wrote:
 
-> The original patch was error-ed by the submitter (me) and not by the author
-> (Lars).
-> After looking through the discussion logs (on email), it seems that this
-> order was wrong for the start, even though the order implemented in the
-> drivers was correct.
+> On Wed, Jul 15, 2020 at 1:50 PM Lee Jones <lee.jones@linaro.org> wrote:
+> >
+> > On Wed, 15 Jul 2020, Rafael J. Wysocki wrote:
+> >
+> > > On Wed, Jul 15, 2020 at 1:34 PM Lee Jones <lee.jones@linaro.org> wrote:
+> > > >
+> > > > On Wed, 15 Jul 2020, Rafael J. Wysocki wrote:
+> > > >
+> > > > > On Wed, Jul 15, 2020 at 5:27 AM Viresh Kumar <viresh.kumar@linaro.org> wrote:
+> > > > > >
+> > > > > > On 15-07-20, 08:54, Viresh Kumar wrote:
+> > > > > > > On 14-07-20, 22:03, Lee Jones wrote:
+> > > > > > > > On Tue, 14 Jul 2020, Rafael J. Wysocki wrote:
+> > > > > > > >
+> > > > > > > > > On Tue, Jul 14, 2020 at 4:51 PM Lee Jones <lee.jones@linaro.org> wrote:
+> > > > > > > > > >
+> > > > > > > > > > Can't see them being used anywhere and the compiler doesn't complain
+> > > > > > > > > > that they're missing, so ...
+> > > > > > > > >
+> > > > > > > > > Aren't they needed for automatic module loading in certain configurations?
+> > > > > > > >
+> > > > > > > > Any idea how that works, or where the code is for that?
+> > > > > > >
+> > > > > > > The MODULE_DEVICE_TABLE() thingy creates a map of vendor-id,
+> > > > > > > product-id that the kernel keeps after boot (and so there is no static
+> > > > > > > reference of it for the compiler), later when a device is hotplugged
+> > > > > > > into the kernel it refers to the map to find the related driver for it
+> > > > > > > and loads it if it isn't already loaded.
+> > > > > > >
+> > > > > > > This has some of it, search for MODULE_DEVICE_TABLE() in it.
+> > > > > > > Documentation/driver-api/usb/hotplug.rst
+> > > > > >
+> > > > > > And you just need to add __maybe_unused to them to suppress the
+> > > > > > warning.
+> > > > >
+> > > > > Wouldn't that cause the compiler to optimize them away if it doesn't
+> > > > > see any users?
+> > > >
+> > > > It looks like they're only unused when !MODULE,
+> > >
+> > > OK
+> > >
+> > > > in which case optimising them away would be the correct thing to do, no?
+> >
+> > It would be good if someone with a little more knowledge could provide
+> > a second opinion though.  I would think (hope) that the compiler would
+> > be smart enough to see when its actually in use.  After all, it is the
+> > compiler that places the information into the device table.
+> >
+> If that is not the case, then the MODULE_DEVICE_TABLE() magic is
+> > broken and will need fixing.
 > 
-> Discussions:
-> - first RFC: https://lore.kernel.org/linux-iio/20180622135322.3459-1-alexandru.ardelean@analog.com/
-> - 2nd patch: https://lore.kernel.org/linux-iio/20181219140912.22582-1-alexandru.ardelean@analog.com/
-> - final patch-sets:
->   https://lore.kernel.org/linux-iio/20200522104632.517470-1-alexandru.ardelean@analog.com/
->   https://lore.kernel.org/linux-iio/20200525113855.178821-1-alexandru.ardelean@analog.com/
-> 
-> The last one was applied.
-> 
-> The idea is that pollfunc should be attached before calling the
-> 'indio_dev->setup_ops->postenable' hook and should be detached after
-> calling the 'indio_dev->setup_ops->predisable' hook.
-> 
-> While the drivers were updated to take this into account, the change to the
-> IIO core was somehow omitted and was made wrong.
-> 
-> This change fixes the order to the proper form.
-> 
-> Fixes f11d59d87b862: ("iio: Move attach/detach of the poll func to the core")
-> Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
-Great thanks.
+> I'm not sure why that would be the case?
 
-Applied to the togreg branch of iio.git. 
+Nor me.  In fact, take a look at my latest email.  I think I just
+proved out that it's not broken.  The warning is valid and
+MODULE_DEVICE_TABLE() appears to work just as it should.
 
-Thanks,
-
-Jonathan
-
-> ---
->  drivers/iio/industrialio-buffer.c | 31 ++++++++++++++++++-------------
->  1 file changed, 18 insertions(+), 13 deletions(-)
+> > Removing boiler-plate is good, but not at the expense of obfuscation.
 > 
-> diff --git a/drivers/iio/industrialio-buffer.c b/drivers/iio/industrialio-buffer.c
-> index 2aec8b85f40d..a7d7e5143ed2 100644
-> --- a/drivers/iio/industrialio-buffer.c
-> +++ b/drivers/iio/industrialio-buffer.c
-> @@ -971,24 +971,29 @@ static int iio_enable_buffers(struct iio_dev *indio_dev,
->  			goto err_disable_buffers;
->  	}
->  
-> +	if (indio_dev->currentmode == INDIO_BUFFER_TRIGGERED) {
-> +		ret = iio_trigger_attach_poll_func(indio_dev->trig,
-> +						   indio_dev->pollfunc);
-> +		if (ret)
-> +			goto err_disable_buffers;
-> +	}
-> +
->  	if (indio_dev->setup_ops->postenable) {
->  		ret = indio_dev->setup_ops->postenable(indio_dev);
->  		if (ret) {
->  			dev_dbg(&indio_dev->dev,
->  			       "Buffer not started: postenable failed (%d)\n", ret);
-> -			goto err_disable_buffers;
-> +			goto err_detach_pollfunc;
->  		}
->  	}
->  
-> -	if (indio_dev->currentmode == INDIO_BUFFER_TRIGGERED) {
-> -		ret = iio_trigger_attach_poll_func(indio_dev->trig,
-> -						   indio_dev->pollfunc);
-> -		if (ret)
-> -			goto err_disable_buffers;
-> -	}
-> -
->  	return 0;
->  
-> +err_detach_pollfunc:
-> +	if (indio_dev->currentmode == INDIO_BUFFER_TRIGGERED) {
-> +		iio_trigger_detach_poll_func(indio_dev->trig,
-> +					     indio_dev->pollfunc);
-> +	}
->  err_disable_buffers:
->  	list_for_each_entry_continue_reverse(buffer, &iio_dev_opaque->buffer_list,
->  					     buffer_list)
-> @@ -1014,11 +1019,6 @@ static int iio_disable_buffers(struct iio_dev *indio_dev)
->  	if (list_empty(&iio_dev_opaque->buffer_list))
->  		return 0;
->  
-> -	if (indio_dev->currentmode == INDIO_BUFFER_TRIGGERED) {
-> -		iio_trigger_detach_poll_func(indio_dev->trig,
-> -					     indio_dev->pollfunc);
-> -	}
-> -
->  	/*
->  	 * If things go wrong at some step in disable we still need to continue
->  	 * to perform the other steps, otherwise we leave the device in a
-> @@ -1032,6 +1032,11 @@ static int iio_disable_buffers(struct iio_dev *indio_dev)
->  			ret = ret2;
->  	}
->  
-> +	if (indio_dev->currentmode == INDIO_BUFFER_TRIGGERED) {
-> +		iio_trigger_detach_poll_func(indio_dev->trig,
-> +					     indio_dev->pollfunc);
-> +	}
-> +
->  	list_for_each_entry(buffer, &iio_dev_opaque->buffer_list, buffer_list) {
->  		ret2 = iio_buffer_disable(buffer, indio_dev);
->  		if (ret2 && !ret)
+> I'm not following you here to be honest.
 
+Never mind.  It's no longer important.
+
+> BTW, I'm wondering if removing the "static" modifier from the
+> definitions of the structures in question makes the warnings you want
+> to get rid of go away.
+
+I'm sure that it would.  But that just alludes to the fact that the
+tables may be in use elsewhere, which in the case of !MODULE is
+untrue.  That's probably more of a hack than using __maybe_unused.
+
+-- 
+Lee Jones [李琼斯]
+Senior Technical Lead - Developer Services
+Linaro.org │ Open source software for Arm SoCs
+Follow Linaro: Facebook | Twitter | Blog
