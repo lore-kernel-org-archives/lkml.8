@@ -2,200 +2,88 @@ Return-Path: <SRS0=kup7=A2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA965C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 09:47:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87359C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 09:49:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C56F52067D
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 09:47:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="rGy15IwT"
+	by mail.kernel.org (Postfix) with ESMTP id 67587206F5
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 09:49:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594806592;
+	bh=9xx+gNtt6oLKxftC59xyOBTx9fu4Ex6Msj/y14JyeWg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=sny2NQl1++1BNsgPtlMxXWpOvJA2D65bzIRuqAS5f/BFD8I9II6Qr9miUZAGzA0sq
+	 EIy6/JnmBRqoUHsh9wrPT+8e0YW3LflebBsqm7ouYCkqAbXN3B4xrrfXiLYQZdWTlq
+	 X9GdHt0heSRaPH7rIxBshch/gD4E0PAgcXIj95LM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730844AbgGOJrV (ORCPT
+        id S1730871AbgGOJtu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 05:47:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36150 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730000AbgGOJrV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 05:47:21 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 07996C061755;
-        Wed, 15 Jul 2020 02:47:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=0elNuqYxcCo1hxsLEEQkxpnR+7H9VliZhBonNrxGt2Y=; b=rGy15IwTdosyqZKG9Fqu61aw8r
-        EcZqWOQPfINy492XWxED50S8KJjaSk2xP068ox4WapjrUXn0tcqK85EqV4MyFmONN72dm0x4BFmsL
-        obY7r6FuMNdeixQGVaOA8lsOHVH1WSfrgP8wMRvXhlrxAMk5wmMbJN72IlywZHIO8SLxOlVd8T5Xm
-        t3qjIJHlibrn7hbOfDk1StAlw/Hgd83oGiTYkjBSF4Tkv34kCsYkgjos0J5jqaOKXuyirk4YKpgy1
-        /IcvszPzckLNg5+AsNpyaCsU/coExmg8PiDbzLwsndF6ajo69ZfzGRko1WQojQClj99DuhyNBasrz
-        t+oPuxPw==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jve0G-00033K-3p; Wed, 15 Jul 2020 09:47:04 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        Wed, 15 Jul 2020 05:49:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48880 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730854AbgGOJtu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jul 2020 05:49:50 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id B9F563028C8;
-        Wed, 15 Jul 2020 11:47:02 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id A202F20D27C63; Wed, 15 Jul 2020 11:47:02 +0200 (CEST)
-Date:   Wed, 15 Jul 2020 11:47:02 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Joerg Roedel <joro@8bytes.org>
-Cc:     x86@kernel.org, Joerg Roedel <jroedel@suse.de>, hpa@zytor.com,
-        Andy Lutomirski <luto@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Jiri Slaby <jslaby@suse.cz>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Juergen Gross <jgross@suse.com>,
-        Kees Cook <keescook@chromium.org>,
-        David Rientjes <rientjes@google.com>,
-        Cfir Cohen <cfir@google.com>,
-        Erdem Aktas <erdemaktas@google.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Mike Stunes <mstunes@vmware.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Martin Radev <martin.b.radev@gmail.com>,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        virtualization@lists.linux-foundation.org
-Subject: Re: [PATCH v4 45/75] x86/sev-es: Adjust #VC IST Stack on entering
- NMI handler
-Message-ID: <20200715094702.GF10769@hirez.programming.kicks-ass.net>
-References: <20200714120917.11253-1-joro@8bytes.org>
- <20200714120917.11253-46-joro@8bytes.org>
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A0174206E9;
+        Wed, 15 Jul 2020 09:49:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594806590;
+        bh=9xx+gNtt6oLKxftC59xyOBTx9fu4Ex6Msj/y14JyeWg=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=ymdu1pusQGg3JKkkxYsuWEvNXbUAmj6yZmX3c5nnbA3rs6vQFtoG3QW9cPQ0+LEtn
+         Jo+k18VjelP0t6a4o348atJSeCgZBIECuTTxeGuzPwn3lLCUcpT1w1wrMmr/0ppM01
+         CaSdBcQqbLFNsAwj/ZOKebcI+o2WFy64YNsNUzbg=
+Date:   Wed, 15 Jul 2020 10:49:40 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Qing Zhang <zhangqing@loongson.cn>
+Cc:     linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 2/2] spi: coldfire-qspi: Use clk_prepare_enable and
+ clk_disable_unprepare
+Message-ID: <20200715094940.GB5431@sirena.org.uk>
+References: <1594790807-32319-1-git-send-email-zhangqing@loongson.cn>
+ <1594790807-32319-2-git-send-email-zhangqing@loongson.cn>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="tjCHc7DPkfUGtrlw"
 Content-Disposition: inline
-In-Reply-To: <20200714120917.11253-46-joro@8bytes.org>
+In-Reply-To: <1594790807-32319-2-git-send-email-zhangqing@loongson.cn>
+X-Cookie: 40 isn't old.  If you're a tree.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 14, 2020 at 02:08:47PM +0200, Joerg Roedel wrote:
 
-> @@ -489,6 +490,9 @@ DEFINE_IDTENTRY_RAW(exc_nmi)
->  	this_cpu_write(nmi_cr2, read_cr2());
->  nmi_restart:
->  
-> +	/* Needs to happen before DR7 is accessed */
-> +	sev_es_ist_enter(regs);
-> +
->  	this_cpu_write(nmi_dr7, local_db_save());
->  
->  	nmi_enter();
-> @@ -502,6 +506,8 @@ DEFINE_IDTENTRY_RAW(exc_nmi)
->  
->  	local_db_restore(this_cpu_read(nmi_dr7));
->  
-> +	sev_es_ist_exit();
-> +
->  	if (unlikely(this_cpu_read(nmi_cr2) != read_cr2()))
->  		write_cr2(this_cpu_read(nmi_cr2));
->  	if (this_cpu_dec_return(nmi_state))
+--tjCHc7DPkfUGtrlw
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-I really hate all this #VC stuff :-(
+On Wed, Jul 15, 2020 at 01:26:47PM +0800, Qing Zhang wrote:
+> Convert clk_enable() to clk_prepare_enable() and clk_disable() to
+> clk_disable_unprepare() respectively in the spi-coldfire-qspi.c.
 
-So the above will make the NMI do 4 unconditional extra CALL+RET, a LOAD
-(which will potentially miss) and a compare and branch.
+Like I said on the previous version are you sure that ColdFire uses the
+common clock framework and has the prepare calls?
 
-How's that a win for normal people? Can we please turn all these
-sev_es_*() hooks into something like:
+--tjCHc7DPkfUGtrlw
+Content-Type: application/pgp-signature; name="signature.asc"
 
-DECLARE_STATIC_KEY_FALSE(sev_es_enabled_key);
+-----BEGIN PGP SIGNATURE-----
 
-static __always_inline void sev_es_foo()
-{
-	if (static_branch_unlikely(&sev_es_enabled_key))
-		__sev_es_foo();
-}
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl8O0TQACgkQJNaLcl1U
+h9A/dgf/aLQzZJxJjJtHkv0PkrYiFHMKt2j85g9+O2DYaRsaX7NqkYxlg7mdzgaC
+m/+BgYLwuUMzGHtkk10454Sdixed6OMIARbGbX6SfzUOIgkeqMOmStuTlVh1ShcL
+TLB6EBDXUaVXvozf5NTIfQg2HYoB/4eUILY8jI56JJwhn034883Eu429EGbOQWCs
+TO9ndf1B6klLdBJ+u7Arl20jUHmiCYPLIuhPHdaKSzsV8FMMP4TdmeMhi1SX0fVO
+uiTbBXXsucV3+d7KUxLzCUR+h4plV0R5ckyucfTZE3luKrg3PYHL5VXUE3S9UVlz
+rHHfbNqENQMR5G8iyTkI8IjSiqnF8w==
+=How3
+-----END PGP SIGNATURE-----
 
-So that normal people will only see an extra NOP?
-
-> diff --git a/arch/x86/kernel/sev-es.c b/arch/x86/kernel/sev-es.c
-> index d415368f16ec..2a7cc72db1d5 100644
-> --- a/arch/x86/kernel/sev-es.c
-> +++ b/arch/x86/kernel/sev-es.c
-> @@ -78,6 +78,67 @@ static void __init sev_es_setup_vc_stacks(int cpu)
->  	tss->x86_tss.ist[IST_INDEX_VC] = CEA_ESTACK_TOP(&cea->estacks, VC);
->  }
->  
-> +static bool on_vc_stack(unsigned long sp)
-
-noinstr or __always_inline
-
-> +{
-> +	return ((sp >= __this_cpu_ist_bot_va(VC)) && (sp < __this_cpu_ist_top_va(VC)));
-> +}
-> +
-> +/*
-> + * This function handles the case when an NMI or an NMI-like exception
-> + * like #DB is raised in the #VC exception handler entry code. In this
-
-I've yet to find you handle the NMI-like cases..
-
-> + * case the IST entry for VC must be adjusted, so that any subsequent VC
-> + * exception will not overwrite the stack contents of the interrupted VC
-> + * handler.
-> + *
-> + * The IST entry is adjusted unconditionally so that it can be also be
-> + * unconditionally back-adjusted in sev_es_nmi_exit(). Otherwise a
-> + * nested nmi_exit() call (#VC->NMI->#DB) may back-adjust the IST entry
-> + * too early.
-
-Is this comment accurate, I cannot find the patch touching
-nmi_enter/exit()?
-
-> + */
-> +void noinstr sev_es_ist_enter(struct pt_regs *regs)
-> +{
-> +	unsigned long old_ist, new_ist;
-> +	unsigned long *p;
-> +
-> +	if (!sev_es_active())
-> +		return;
-> +
-> +	/* Read old IST entry */
-> +	old_ist = __this_cpu_read(cpu_tss_rw.x86_tss.ist[IST_INDEX_VC]);
-> +
-> +	/* Make room on the IST stack */
-> +	if (on_vc_stack(regs->sp))
-> +		new_ist = ALIGN_DOWN(regs->sp, 8) - sizeof(old_ist);
-> +	else
-> +		new_ist = old_ist - sizeof(old_ist);
-> +
-> +	/* Store old IST entry */
-> +	p       = (unsigned long *)new_ist;
-> +	*p      = old_ist;
-> +
-> +	/* Set new IST entry */
-> +	this_cpu_write(cpu_tss_rw.x86_tss.ist[IST_INDEX_VC], new_ist);
-> +}
-> +
-> +void noinstr sev_es_ist_exit(void)
-> +{
-> +	unsigned long ist;
-> +	unsigned long *p;
-> +
-> +	if (!sev_es_active())
-> +		return;
-> +
-> +	/* Read IST entry */
-> +	ist = __this_cpu_read(cpu_tss_rw.x86_tss.ist[IST_INDEX_VC]);
-> +
-> +	if (WARN_ON(ist == __this_cpu_ist_top_va(VC)))
-> +		return;
-> +
-> +	/* Read back old IST entry and write it to the TSS */
-> +	p = (unsigned long *)ist;
-> +	this_cpu_write(cpu_tss_rw.x86_tss.ist[IST_INDEX_VC], *p);
-> +}
-
-That's pretty disguisting :-(
+--tjCHc7DPkfUGtrlw--
