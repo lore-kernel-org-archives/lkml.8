@@ -7,42 +7,42 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43398C433E7
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 00:42:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 951E4C433E8
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 00:42:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 251842071B
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 00:42:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7950B2071B
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 00:42:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728250AbgGOAmA (ORCPT
+        id S1728235AbgGOAl7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 20:42:00 -0400
-Received: from mail-qv1-f67.google.com ([209.85.219.67]:40588 "EHLO
-        mail-qv1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728001AbgGOAlk (ORCPT
+        Tue, 14 Jul 2020 20:41:59 -0400
+Received: from mail-qv1-f65.google.com ([209.85.219.65]:42459 "EHLO
+        mail-qv1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728002AbgGOAlk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 14 Jul 2020 20:41:40 -0400
-Received: by mail-qv1-f67.google.com with SMTP id m8so160218qvk.7
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 17:41:38 -0700 (PDT)
+Received: by mail-qv1-f65.google.com with SMTP id dm12so156209qvb.9
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 17:41:39 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=hjflrgJ1nEMfvu6o0sT4KLViapV2UjMMsYBLgsk/fRo=;
-        b=Q6SEAMAMnDdgV1S7UXkZy77S+bvLzbfBw06lLiiqI2O5dfGBZT9E8Cw4EW8+HpXHK8
-         OoiUcf+p6HAoIhj3LLE9CfyCair+QUDF71sD/p7w04GC9Id2ekqNefnn3lXVAOY7N5N2
-         acbcueSasUxFFXI/d9AYcjco9/4s/R95+JvVwcPdwLbkGRZ4NBzqw5tR/0WvgrztIMVu
-         JaSJQYVhw74JfqD6ttX7C5rPCBalYQUDl6fQ00qxXEdyomqjp1oJVXGuTTipgMXrpavw
-         VNU4LvhTnczrBNLmrIJtf1nWoE82s0+RyIV2aUQ9FN6LoznOJjfSzwmRWSIr6taFWadX
-         ELUg==
-X-Gm-Message-State: AOAM5304it34O2bsD5tjIHPLWgV+unq1Gwo15HQEWhuHgyoVa0gBa5kY
-        zYunJrwmXzntezDDG5cSjgQ=
-X-Google-Smtp-Source: ABdhPJynsxYw5jhy38wdUYN1czf73AgxDDA5r0ToCeHsBYePScDi+KNtXWhzyvlyfgWYfUWU4C9Cig==
-X-Received: by 2002:a05:6214:289:: with SMTP id l9mr7332970qvv.238.1594773698195;
-        Tue, 14 Jul 2020 17:41:38 -0700 (PDT)
+        bh=ypmaqJCaWru1//3r1Y8vm/BttJnmALbhqbmJfGQPjbM=;
+        b=GT/FHlKSokTj6DewCoe+8g2EIOKkMSv0g2SdPzXtGcJQKOsUIaT46x3nulJeFCRsAs
+         45PA0IiXDXjVDe5b4mtvDfNluIMqn699GgkNjBRe4aePfNIZIdmg6OQSuqSbWlrfd/iR
+         JNZWs9Ms3sVDGVjE/wyRO9eB3MoAFas1IAgVuzUkV5SO9Cg/zZjQnvpXrJ12BycIAMX3
+         yflN5seQqxcaMSTQ7/T5L17nPoGlTGUdVCKjcf4IS1wYxmnOCo61jWPKz3NZ788LOygl
+         CWmW1Ce5zaNvWyUE7Mxqe/suBtPkeIBtWcpCYLBEULWkUrddDFyNuWM9kK36RBGFMAkH
+         7cvg==
+X-Gm-Message-State: AOAM5321Ejpid9/Jyf1RrF15aI2MBOhw1JZ8Y+27ir0fu0SEgEBosWRk
+        F8t+J1k5VdKoIA8kP9UntO0=
+X-Google-Smtp-Source: ABdhPJyg3qQqXHPYN6XUuEaS1U97O0cTeEfAaCIz4HLjdmqJS5ISyRwES+8ykZwtP906CXmkyD0i3A==
+X-Received: by 2002:a0c:b284:: with SMTP id r4mr7167816qve.141.1594773699140;
+        Tue, 14 Jul 2020 17:41:39 -0700 (PDT)
 Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
-        by smtp.gmail.com with ESMTPSA id c9sm524776qko.24.2020.07.14.17.41.37
+        by smtp.gmail.com with ESMTPSA id c9sm524776qko.24.2020.07.14.17.41.38
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 Jul 2020 17:41:37 -0700 (PDT)
+        Tue, 14 Jul 2020 17:41:38 -0700 (PDT)
 From:   Arvind Sankar <nivedita@alum.mit.edu>
 To:     Thomas Gleixner <tglx@linutronix.de>,
         Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
@@ -59,9 +59,9 @@ Cc:     Nick Desaulniers <ndesaulniers@google.com>,
         Nathan Chancellor <natechancellor@gmail.com>,
         Arnd Bergmann <arnd@arndb.de>,
         "H . J . Lu" <hjl@sourceware.org>, linux-kernel@vger.kernel.org
-Subject: [PATCH v5 3/7] x86/boot/compressed: Get rid of GOT fixup code
-Date:   Tue, 14 Jul 2020 20:41:29 -0400
-Message-Id: <20200715004133.1430068-4-nivedita@alum.mit.edu>
+Subject: [PATCH v5 4/7] x86/boot: Add .text.* to setup.ld
+Date:   Tue, 14 Jul 2020 20:41:30 -0400
+Message-Id: <20200715004133.1430068-5-nivedita@alum.mit.edu>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200714023836.2310569-1-nivedita@alum.mit.edu>
 References: <20200714023836.2310569-1-nivedita@alum.mit.edu>
@@ -72,177 +72,87 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ard Biesheuvel <ardb@kernel.org>
+gcc puts the main function into .text.startup when compiled with -Os (or
+-O2). This results in arch/x86/boot/main.c having a .text.startup
+section which is currently not included explicitly in the linker script
+setup.ld in the same directory.
 
-In a previous patch, we have eliminated GOT entries from the decompressor
-binary and added an assertion that the .got section is empty. This means
-that the GOT fixup routines that exist in both the 32-bit and 64-bit
-startup routines have become dead code, and can be removed.
+The BFD linker places this orphan section immediately after .text, so
+this still works. However, LLD git, since [1], is choosing to place it
+immediately after the .bstext section instead (this is the first code
+section). This plays havoc with the section layout that setup.elf
+requires to create the setup header, for eg on 64-bit:
 
-While at it, drop the KEEP() from the linker script, as it has no effect
-on the contents of output sections that are created by the linker itself.
+    LD      arch/x86/boot/setup.elf
+  ld.lld: error: section .text.startup file range overlaps with .header
+  >>> .text.startup range is [0x200040, 0x2001FE]
+  >>> .header range is [0x2001EF, 0x20026B]
+
+  ld.lld: error: section .header file range overlaps with .bsdata
+  >>> .header range is [0x2001EF, 0x20026B]
+  >>> .bsdata range is [0x2001FF, 0x200398]
+
+  ld.lld: error: section .bsdata file range overlaps with .entrytext
+  >>> .bsdata range is [0x2001FF, 0x200398]
+  >>> .entrytext range is [0x20026C, 0x2002D3]
+
+  ld.lld: error: section .text.startup virtual address range overlaps
+  with .header
+  >>> .text.startup range is [0x40, 0x1FE]
+  >>> .header range is [0x1EF, 0x26B]
+
+  ld.lld: error: section .header virtual address range overlaps with
+  .bsdata
+  >>> .header range is [0x1EF, 0x26B]
+  >>> .bsdata range is [0x1FF, 0x398]
+
+  ld.lld: error: section .bsdata virtual address range overlaps with
+  .entrytext
+  >>> .bsdata range is [0x1FF, 0x398]
+  >>> .entrytext range is [0x26C, 0x2D3]
+
+  ld.lld: error: section .text.startup load address range overlaps with
+  .header
+  >>> .text.startup range is [0x40, 0x1FE]
+  >>> .header range is [0x1EF, 0x26B]
+
+  ld.lld: error: section .header load address range overlaps with
+  .bsdata
+  >>> .header range is [0x1EF, 0x26B]
+  >>> .bsdata range is [0x1FF, 0x398]
+
+  ld.lld: error: section .bsdata load address range overlaps with
+  .entrytext
+  >>> .bsdata range is [0x1FF, 0x398]
+  >>> .entrytext range is [0x26C, 0x2D3]
+
+Add .text.* to the .text output section to fix this, and also prevent
+any future surprises if the compiler decides to create other such
+sections.
+
+[1] https://reviews.llvm.org/D75225
 
 Reviewed-by: Kees Cook <keescook@chromium.org>
-Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
-Acked-by: Arvind Sankar <nivedita@alum.mit.edu>
+Reviewed-by: Ard Biesheuvel <ardb@kernel.org>
+Reviewed-by: Fangrui Song <maskray@google.com>
 Signed-off-by: Arvind Sankar <nivedita@alum.mit.edu>
-From: Ard Biesheuvel <ardb@kernel.org>
-Link: https://lore.kernel.org/r/20200523120021.34996-4-ardb@kernel.org
 ---
- arch/x86/boot/compressed/head_32.S     | 24 ++---------
- arch/x86/boot/compressed/head_64.S     | 57 --------------------------
- arch/x86/boot/compressed/vmlinux.lds.S |  4 +-
- 3 files changed, 5 insertions(+), 80 deletions(-)
+ arch/x86/boot/setup.ld | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/x86/boot/compressed/head_32.S b/arch/x86/boot/compressed/head_32.S
-index 03557f2174bf..39f0bb43218f 100644
---- a/arch/x86/boot/compressed/head_32.S
-+++ b/arch/x86/boot/compressed/head_32.S
-@@ -49,16 +49,13 @@
-  * Position Independent Executable (PIE) so that linker won't optimize
-  * R_386_GOT32X relocation to its fixed symbol address.  Older
-  * linkers generate R_386_32 relocations against locally defined symbols,
-- * _bss, _ebss, _got, _egot and _end, in PIE.  It isn't wrong, just less
-- * optimal than R_386_RELATIVE.  But the x86 kernel fails to properly handle
-- * R_386_32 relocations when relocating the kernel.  To generate
-- * R_386_RELATIVE relocations, we mark _bss, _ebss, _got, _egot and _end as
-- * hidden:
-+ * _bss, _ebss and _end, in PIE.  It isn't wrong, just less optimal than
-+ * R_386_RELATIVE.  But the x86 kernel fails to properly handle R_386_32
-+ * relocations when relocating the kernel.  To generate R_386_RELATIVE
-+ * relocations, we mark _bss, _ebss and _end as hidden:
-  */
- 	.hidden _bss
- 	.hidden _ebss
--	.hidden _got
--	.hidden _egot
- 	.hidden _end
+diff --git a/arch/x86/boot/setup.ld b/arch/x86/boot/setup.ld
+index 24c95522f231..49546c247ae2 100644
+--- a/arch/x86/boot/setup.ld
++++ b/arch/x86/boot/setup.ld
+@@ -20,7 +20,7 @@ SECTIONS
+ 	.initdata	: { *(.initdata) }
+ 	__end_init = .;
  
- 	__HEAD
-@@ -192,19 +189,6 @@ SYM_FUNC_START_LOCAL_NOALIGN(.Lrelocated)
- 	shrl	$2, %ecx
- 	rep	stosl
+-	.text		: { *(.text) }
++	.text		: { *(.text .text.*) }
+ 	.text32		: { *(.text32) }
  
--/*
-- * Adjust our own GOT
-- */
--	leal	_got(%ebx), %edx
--	leal	_egot(%ebx), %ecx
--1:
--	cmpl	%ecx, %edx
--	jae	2f
--	addl	%ebx, (%edx)
--	addl	$4, %edx
--	jmp	1b
--2:
--
- /*
-  * Do the extraction, and jump to the new kernel..
-  */
-diff --git a/arch/x86/boot/compressed/head_64.S b/arch/x86/boot/compressed/head_64.S
-index 97d37f0a34f5..bf1ab30acc5b 100644
---- a/arch/x86/boot/compressed/head_64.S
-+++ b/arch/x86/boot/compressed/head_64.S
-@@ -40,8 +40,6 @@
-  */
- 	.hidden _bss
- 	.hidden _ebss
--	.hidden _got
--	.hidden _egot
- 	.hidden _end
- 
- 	__HEAD
-@@ -353,25 +351,6 @@ SYM_CODE_START(startup_64)
- 	/* Set up the stack */
- 	leaq	boot_stack_end(%rbx), %rsp
- 
--	/*
--	 * paging_prepare() and cleanup_trampoline() below can have GOT
--	 * references. Adjust the table with address we are running at.
--	 *
--	 * Zero RAX for adjust_got: the GOT was not adjusted before;
--	 * there's no adjustment to undo.
--	 */
--	xorq	%rax, %rax
--
--	/*
--	 * Calculate the address the binary is loaded at and use it as
--	 * a GOT adjustment.
--	 */
--	call	1f
--1:	popq	%rdi
--	subq	$1b, %rdi
--
--	call	.Ladjust_got
--
- 	/*
- 	 * At this point we are in long mode with 4-level paging enabled,
- 	 * but we might want to enable 5-level paging or vice versa.
-@@ -464,21 +443,6 @@ trampoline_return:
- 	pushq	$0
- 	popfq
- 
--	/*
--	 * Previously we've adjusted the GOT with address the binary was
--	 * loaded at. Now we need to re-adjust for relocation address.
--	 *
--	 * Calculate the address the binary is loaded at, so that we can
--	 * undo the previous GOT adjustment.
--	 */
--	call	1f
--1:	popq	%rax
--	subq	$1b, %rax
--
--	/* The new adjustment is the relocation address */
--	movq	%rbx, %rdi
--	call	.Ladjust_got
--
- /*
-  * Copy the compressed kernel to the end of our buffer
-  * where decompression in place becomes safe.
-@@ -556,27 +520,6 @@ SYM_FUNC_START_LOCAL_NOALIGN(.Lrelocated)
- 	jmp	*%rax
- SYM_FUNC_END(.Lrelocated)
- 
--/*
-- * Adjust the global offset table
-- *
-- * RAX is the previous adjustment of the table to undo (use 0 if it's the
-- * first time we touch GOT).
-- * RDI is the new adjustment to apply.
-- */
--.Ladjust_got:
--	/* Walk through the GOT adding the address to the entries */
--	leaq	_got(%rip), %rdx
--	leaq	_egot(%rip), %rcx
--1:
--	cmpq	%rcx, %rdx
--	jae	2f
--	subq	%rax, (%rdx)	/* Undo previous adjustment */
--	addq	%rdi, (%rdx)	/* Apply the new adjustment */
--	addq	$8, %rdx
--	jmp	1b
--2:
--	ret
--
- 	.code32
- /*
-  * This is the 32-bit trampoline that will be copied over to low memory.
-diff --git a/arch/x86/boot/compressed/vmlinux.lds.S b/arch/x86/boot/compressed/vmlinux.lds.S
-index 4bcc943842ab..a4a4a59a2628 100644
---- a/arch/x86/boot/compressed/vmlinux.lds.S
-+++ b/arch/x86/boot/compressed/vmlinux.lds.S
-@@ -43,9 +43,7 @@ SECTIONS
- 		_erodata = . ;
- 	}
- 	.got : {
--		_got = .;
--		KEEP(*(.got))
--		_egot = .;
-+		*(.got)
- 	}
- 	.got.plt : {
- 		*(.got.plt)
+ 	. = ALIGN(16);
 -- 
 2.26.2
 
