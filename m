@@ -2,123 +2,95 @@ Return-Path: <SRS0=kup7=A2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA55FC433E4
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 15:08:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9F89C433E8
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 15:08:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9994D20658
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 15:08:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F1C220658
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 15:08:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728336AbgGOPIo convert rfc822-to-8bit (ORCPT
+        id S1728294AbgGOPIf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 11:08:44 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:50309 "EHLO
+        Wed, 15 Jul 2020 11:08:35 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:50303 "EHLO
         youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728314AbgGOPIl (ORCPT
+        with ESMTP id S1728293AbgGOPIe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 11:08:41 -0400
-Received: from mail-pj1-f71.google.com ([209.85.216.71])
-        by youngberry.canonical.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        Wed, 15 Jul 2020 11:08:34 -0400
+Received: from ip5f5af08c.dynamic.kabel-deutschland.de ([95.90.240.140] helo=wittgenstein)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
         (Exim 4.86_2)
-        (envelope-from <kai.heng.feng@canonical.com>)
-        id 1jvj1S-0003xT-HQ
-        for linux-kernel@vger.kernel.org; Wed, 15 Jul 2020 15:08:38 +0000
-Received: by mail-pj1-f71.google.com with SMTP id k4so2988101pjs.1
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 08:08:38 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=PjMy4io7R2jHdSWxArusOtwgBaqFTbEYz/sY2JlYP5w=;
-        b=VDm9oHSOK4Gfv7ZNZ4y6W9KfK0mbeY1reXNDCjbNZKi/R9LhOt4q+Pw+1fRTSeyDZ5
-         ZmMC1m+dUwZ3Hynd9GnwCufRJHxi7CevSDQXaK5VgKHCkxqK+l24tzjCr/sQ5a0XnHvp
-         ujyFuEf2lmTqrynV5RmlPRZtoyLqnIoGbnGqSGWHQsMFwQpT1AJiACifaFHT+eO5Gc49
-         QRSWAENrkeAQJF9UycWpOHCsIka7h1T59Dn2XsSFEkwVXWGVpIrV0d1gfRy0KDcckN4j
-         PVQ7dxKGNOIOofFgeE94DXALMGLJVh5AsLSM1mvFxcPFqB2oS5SXrskKPwRgCulxfQbH
-         lG1w==
-X-Gm-Message-State: AOAM530QTRQUnx4qR+c3pka4Z1BDFENgzE3rydcFD6Hfngf348isT3wI
-        V8Fx1pbV4UwMWFTzHQC5Jsgle+VznBTLeR6iI6Iso4dSCwqRAqHTWo+biq2nM5keEy7O72O2X7N
-        gOa1AYX1XPXin8BSL4epf8IBcynz/y/P3Vit7pfjRAA==
-X-Received: by 2002:a17:90a:3002:: with SMTP id g2mr108796pjb.68.1594825717130;
-        Wed, 15 Jul 2020 08:08:37 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJyeaLMdNxhmgRLyUdtuuy7GErTF8uag+bSGeUBRnl/y7/ExiAOI6J/b8SmUhYYGsqLrNQjV8w==
-X-Received: by 2002:a17:90a:3002:: with SMTP id g2mr108775pjb.68.1594825716853;
-        Wed, 15 Jul 2020 08:08:36 -0700 (PDT)
-Received: from [192.168.1.208] (220-133-187-190.HINET-IP.hinet.net. [220.133.187.190])
-        by smtp.gmail.com with ESMTPSA id 7sm2467724pgw.85.2020.07.15.08.08.35
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 15 Jul 2020 08:08:36 -0700 (PDT)
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.80.23.2.2\))
-Subject: Re: [Regression] "SUNRPC: Add "@len" parameter to gss_unwrap()"
- breaks NFS Kerberos on upstream stable 5.4.y
-From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
-In-Reply-To: <424D9E36-C51B-46E8-9A07-D329821F2647@oracle.com>
-Date:   Wed, 15 Jul 2020 23:08:33 +0800
-Cc:     matthew.ruffell@canonical.com,
-        linux-stable <stable@vger.kernel.org>,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
-        "open list:NETWORKING DRIVERS" <netdev@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Content-Transfer-Encoding: 8BIT
-Message-Id: <6E0D09F1-601B-432B-81EE-9858EC1AF1DE@canonical.com>
-References: <309E203B-8818-4E33-87F0-017E127788E2@canonical.com>
- <424D9E36-C51B-46E8-9A07-D329821F2647@oracle.com>
-To:     Chuck Lever <chuck.lever@oracle.com>
-X-Mailer: Apple Mail (2.3608.80.23.2.2)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1jvj12-0003tr-Gv; Wed, 15 Jul 2020 15:08:12 +0000
+Date:   Wed, 15 Jul 2020 17:08:11 +0200
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     Adrian Reber <areber@redhat.com>
+Cc:     Eric Biederman <ebiederm@xmission.com>,
+        Pavel Emelyanov <ovzxemul@gmail.com>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Dmitry Safonov <0x7f454c46@gmail.com>,
+        Andrei Vagin <avagin@gmail.com>,
+        Nicolas Viennot <Nicolas.Viennot@twosigma.com>,
+        =?utf-8?B?TWljaGHFgiBDxYJhcGnFhHNraQ==?= <mclapinski@google.com>,
+        Kamil Yurtsever <kyurtsever@google.com>,
+        Dirk Petersen <dipeit@gmail.com>,
+        Christine Flood <chf@redhat.com>,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Radostin Stoyanov <rstoyanov1@gmail.com>,
+        Cyrill Gorcunov <gorcunov@openvz.org>,
+        Serge Hallyn <serge@hallyn.com>,
+        Stephen Smalley <stephen.smalley.work@gmail.com>,
+        Sargun Dhillon <sargun@sargun.me>,
+        Arnd Bergmann <arnd@arndb.de>,
+        linux-security-module@vger.kernel.org,
+        linux-kernel@vger.kernel.org, selinux@vger.kernel.org,
+        Eric Paris <eparis@parisplace.org>,
+        Jann Horn <jannh@google.com>, linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH v5 2/6] pid: use checkpoint_restore_ns_capable() for
+ set_tid
+Message-ID: <20200715150811.ly7fhogee7zykaoh@wittgenstein>
+References: <20200715144954.1387760-1-areber@redhat.com>
+ <20200715144954.1387760-3-areber@redhat.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200715144954.1387760-3-areber@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Jul 15, 2020 at 04:49:50PM +0200, Adrian Reber wrote:
+> Use the newly introduced capability CAP_CHECKPOINT_RESTORE to allow
+> using clone3() with set_tid set.
+> 
+> Signed-off-by: Adrian Reber <areber@redhat.com>
+> Signed-off-by: Nicolas Viennot <Nicolas.Viennot@twosigma.com>
+> ---
 
+Looks good!
+Acked-by: Christian Brauner <christian.brauner@ubuntu.com>
 
-> On Jul 15, 2020, at 23:02, Chuck Lever <chuck.lever@oracle.com> wrote:
+>  kernel/pid.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
+> diff --git a/kernel/pid.c b/kernel/pid.c
+> index de9d29c41d77..a9cbab0194d9 100644
+> --- a/kernel/pid.c
+> +++ b/kernel/pid.c
+> @@ -199,7 +199,7 @@ struct pid *alloc_pid(struct pid_namespace *ns, pid_t *set_tid,
+>  			if (tid != 1 && !tmp->child_reaper)
+>  				goto out_free;
+>  			retval = -EPERM;
+> -			if (!ns_capable(tmp->user_ns, CAP_SYS_ADMIN))
+> +			if (!checkpoint_restore_ns_capable(tmp->user_ns))
+>  				goto out_free;
+>  			set_tid_size--;
+>  		}
+> -- 
+> 2.26.2
 > 
-> 
->> On Jul 15, 2020, at 10:48 AM, Kai-Heng Feng <kai.heng.feng@canonical.com> wrote:
->> 
->> Hi,
->> 
->> Multiple users reported NFS causes NULL pointer dereference [1] on Ubuntu, due to commit "SUNRPC: Add "@len" parameter to gss_unwrap()" and commit "SUNRPC: Fix GSS privacy computation of auth->au_ralign".
->> 
->> The same issue happens on upstream stable 5.4.y branch.
->> The mainline kernel doesn't have this issue though.
->> 
->> Should we revert them? Or is there any missing commits need to be backported to v5.4?
->> 
->> [1] https://bugs.launchpad.net/bugs/1886277
->> 
->> Kai-Heng
-> 
-> 31c9590ae468 ("SUNRPC: Add "@len" parameter to gss_unwrap()") is a refactoring
-> change. It shouldn't have introduced any behavior difference. But in theory,
-> practice and theory should be the same...
-> 
-> Check if 0a8e7b7d0846 ("SUNRPC: Revert 241b1f419f0e ("SUNRPC: Remove xdr_buf_trim()")")
-> is also applied to 5.4.0-40-generic.
-
-Yes, it's included. The commit is part of upstream stable 5.4.
-
-> 
-> It would help to know if v5.5 stable is working for you. I haven't had any
-> problems with it.
-
-I'll ask users to test it out. 
-Thanks for you quick reply!
-
-Kai-Heng
-
-> 
-> 
-> --
-> Chuck Lever
-> 
-> 
-> 
-
