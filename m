@@ -2,137 +2,173 @@ Return-Path: <SRS0=kup7=A2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B53C4C433E5
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 21:19:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 962DCC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 21:22:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8B2E7207BC
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 21:19:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C1082065F
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 21:22:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZG1zi7bL"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fyqry2rV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726977AbgGOVTT (ORCPT
+        id S1726778AbgGOVWq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 17:19:19 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:20902 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725917AbgGOVTR (ORCPT
+        Wed, 15 Jul 2020 17:22:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58820 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725917AbgGOVWp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 17:19:17 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1594847956;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=0pIO/CyK9TUBNUHGP+XxCwmCDqMIbTL/hRitVCQDSjQ=;
-        b=ZG1zi7bLz5pTOulrtyhx9No48Cb9/kPsuDLeRgKH3TARgO+AtF6v7bcx72+8Y06ycu0vli
-        JT2pp6L9Pm9RkEueDVEAL6nq59w8eSagJHMiuQe41Pa9wNoa9r+b3xNiRZx5ZEew6hGY7q
-        EtASz+cKzB7RUZOFKJ0o7SHRkpIkO9g=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-485-894-qe1GP7y-jGgegK0VSw-1; Wed, 15 Jul 2020 17:19:14 -0400
-X-MC-Unique: 894-qe1GP7y-jGgegK0VSw-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 842561B18BC1;
-        Wed, 15 Jul 2020 21:19:12 +0000 (UTC)
-Received: from krava (unknown [10.40.194.44])
-        by smtp.corp.redhat.com (Postfix) with SMTP id A99B01757A;
-        Wed, 15 Jul 2020 21:19:09 +0000 (UTC)
-Date:   Wed, 15 Jul 2020 23:19:08 +0200
-From:   Jiri Olsa <jolsa@redhat.com>
-To:     Ian Rogers <irogers@google.com>
-Cc:     Jiri Olsa <jolsa@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Michael Petlan <mpetlan@redhat.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Kajol Jain <kjain@linux.ibm.com>,
-        John Garry <john.garry@huawei.com>,
-        "Paul A. Clarke" <pc@us.ibm.com>,
-        Stephane Eranian <eranian@google.com>
-Subject: Re: [PATCH 13/18] perf metric: Add events for the current group
-Message-ID: <20200715211908.GS183694@krava>
-References: <20200712132634.138901-1-jolsa@kernel.org>
- <20200712132634.138901-14-jolsa@kernel.org>
- <CAP-5=fXHGGCFw_5zcXboFUYeNMMC5K0fbAXwPn0HRw91pt6A0A@mail.gmail.com>
+        Wed, 15 Jul 2020 17:22:45 -0400
+Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 67342C061755;
+        Wed, 15 Jul 2020 14:22:45 -0700 (PDT)
+Received: by mail-pf1-x443.google.com with SMTP id a14so2662633pfi.2;
+        Wed, 15 Jul 2020 14:22:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=zEOeNcHcUcS12HReWL9QBQ9Se3gqYrNjZVjrRl75LJU=;
+        b=fyqry2rVZWAyho5Eh/lPxvweLWsxMh9zcpIYRTREpq3y2NDJsKC7/rMT56NNQvRD4e
+         LQuWIoxxf3U2reZ7W8BUO3pPqtK7aHRDda0pwNQVom0QMEim3HwdcusYmkg9rduCJFTN
+         xfY4iDUSpEvdYxPjJv55vdjkyug3x+itUG7TNBe3NFpfzqzjeBb8C3I+LPKr+8bfc3bV
+         HXz1bD6FXy2Nt8nGGlKkdZOiknjOL+NP3yjjUDAKv0Pg9Uh+esbJkYF9ke+8FBAJCQ3E
+         8DasfjZAI6nEZ3pKamRjwFA42SZO24OKiBOc8mayUOHeDGMhFurmereTe9iUGPgqus6m
+         418w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=zEOeNcHcUcS12HReWL9QBQ9Se3gqYrNjZVjrRl75LJU=;
+        b=rThiryXVDEeRE8TAAYkAXDaVhBq/RwtgylPRRmDYb2G2pbPJlWzh70gaW0d9q4m1h5
+         PJT6am659BJdCCa9fs29J1XvX9QGskE/zCagB9doPVIqJBxse0XcprcVWqCJ/f3j6oZU
+         jj6IO62+bxer472FHRaSXqNTrn58+5YGyBeS8D1MIeA3pso1WRmWXxDz0qxIPjdxfrxC
+         iSAr9KLLeUjUjC5mmypJ2kFINgApKsJeHMEXFu7KwmKx3Up54G9aIWpVjnSVHZ1DU7B9
+         7wnTJRC+5w0iYn71fhsPXsQC8K+jZSYzxp+qsVayTzukKRjyMk6DCCIRbKabvTgfUj2Y
+         X9qQ==
+X-Gm-Message-State: AOAM531lJAOl6rv9h8ooUh2FrhK4NvuzqP7Rds8dM4Zm3dqsEUm3WBO4
+        lpKEYLeju/qLnivFY+TUlTw=
+X-Google-Smtp-Source: ABdhPJy+oKkcsN7ED8Y658Q4NbEL9ZFjkmdguwR8qBBTsjz6SD6Mc9fogzydz7mOVkv3jD3wEAdMfA==
+X-Received: by 2002:aa7:942e:: with SMTP id y14mr1046467pfo.58.1594848164745;
+        Wed, 15 Jul 2020 14:22:44 -0700 (PDT)
+Received: from localhost.localdomain.com ([2605:e000:160b:911f:a2ce:c8ff:fe03:6cb0])
+        by smtp.gmail.com with ESMTPSA id y63sm2868611pgb.49.2020.07.15.14.22.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 15 Jul 2020 14:22:44 -0700 (PDT)
+From:   Chris Healy <cphealy@gmail.com>
+To:     shawnguo@kernel.org, s.hauer@pengutronix.de, stefan@agner.ch,
+        robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        festevam@gmail.com
+Cc:     Chris Healy <cphealy@gmail.com>
+Subject: [PATCH] ARM: dts: ZII: Disable HW Ethernet switch reset GPIO
+Date:   Wed, 15 Jul 2020 14:22:27 -0700
+Message-Id: <20200715212227.26436-1-cphealy@gmail.com>
+X-Mailer: git-send-email 2.21.3
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAP-5=fXHGGCFw_5zcXboFUYeNMMC5K0fbAXwPn0HRw91pt6A0A@mail.gmail.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 15, 2020 at 10:00:09AM -0700, Ian Rogers wrote:
-> On Sun, Jul 12, 2020 at 6:27 AM Jiri Olsa <jolsa@kernel.org> wrote:
-> >
-> > There's no need to iterate the whole list of groups,
-> > when adding new events. The currently created group
-> > is the one we want to add.
-> >
-> > Signed-off-by: Jiri Olsa <jolsa@kernel.org>
-> > ---
-> >  tools/perf/util/metricgroup.c | 22 ++++++++++++----------
-> >  1 file changed, 12 insertions(+), 10 deletions(-)
-> >
-> > diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.c
-> > index 8cbcc5e05fef..66f25362702d 100644
-> > --- a/tools/perf/util/metricgroup.c
-> > +++ b/tools/perf/util/metricgroup.c
-> > @@ -811,17 +811,19 @@ static int metricgroup__add_metric(const char *metric, bool metric_no_group,
-> 
-> Could we add a function comment to describe the arguments here?
+Disable Ethernet switch reset GPIO with ZII platforms that have it
+enabled to sync up with existing ZII platforms that already have
+it disabled.
 
-ok
+Signed-off-by: Chris Healy <cphealy@gmail.com>
+---
+ arch/arm/boot/dts/vf610-zii-cfu1.dts      | 2 --
+ arch/arm/boot/dts/vf610-zii-spb4.dts      | 2 --
+ arch/arm/boot/dts/vf610-zii-ssmb-dtu.dts  | 2 --
+ arch/arm/boot/dts/vf610-zii-ssmb-spu3.dts | 2 --
+ 4 files changed, 8 deletions(-)
 
-> Currently events is an empty list out argument that is built up by
-> this code, now it will be incrementally updated. Except I don't think
-> I'm capturing the current state correctly, it is confusing that there
-> is the loop in the current code. It looks like events will be added
-> multiple times redundantly.
-
-oops, I meant to add the example of broken processing in here,
-but forgot.. will update
-
-> 
-> >         if (ret)
-> >                 return ret;
-> >
-> > -       list_for_each_entry(eg, group_list, nd) {
-> > -               if (events->len > 0)
-> > -                       strbuf_addf(events, ",");
-> > +       if (events->len > 0)
-> > +               strbuf_addf(events, ",");
-> >
-> > -               if (eg->has_constraint) {
-> > -                       metricgroup__add_metric_non_group(events,
-> > -                                                         &eg->pctx);
-> > -               } else {
-> > -                       metricgroup__add_metric_weak_group(events,
-> > -                                                          &eg->pctx);
-> > -               }
-> > +       /*
-> > +        * Even if we add multiple groups through the runtime
-> > +        * param, they share same events.
-> > +        */
-> 
-> I'm not clear what runtime param is here. Is it the \? arch runtime parameter?
-
-yes, that's that ppc quirk.. adding extra same metrics based
-on that runtime param.. for some reason ;-)
-
-thanks,
-jirka
+diff --git a/arch/arm/boot/dts/vf610-zii-cfu1.dts b/arch/arm/boot/dts/vf610-zii-cfu1.dts
+index ce1920c052fc..c2668230a4c0 100644
+--- a/arch/arm/boot/dts/vf610-zii-cfu1.dts
++++ b/arch/arm/boot/dts/vf610-zii-cfu1.dts
+@@ -170,7 +170,6 @@
+ 			interrupts = <2 IRQ_TYPE_LEVEL_LOW>;
+ 			interrupt-controller;
+ 			#interrupt-cells = <2>;
+-			reset-gpios = <&gpio3 11 GPIO_ACTIVE_LOW>;
+ 
+ 			ports {
+ 				#address-cells = <1>;
+@@ -354,7 +353,6 @@
+ 	pinctrl_switch: switch-grp {
+ 		fsl,pins = <
+ 			VF610_PAD_PTB28__GPIO_98		0x3061
+-			VF610_PAD_PTE2__GPIO_107		0x1042
+ 		>;
+ 	};
+ 
+diff --git a/arch/arm/boot/dts/vf610-zii-spb4.dts b/arch/arm/boot/dts/vf610-zii-spb4.dts
+index 55b4201e27f6..261317340189 100644
+--- a/arch/arm/boot/dts/vf610-zii-spb4.dts
++++ b/arch/arm/boot/dts/vf610-zii-spb4.dts
+@@ -127,7 +127,6 @@
+ 			pinctrl-names = "default";
+ 			reg = <0>;
+ 			eeprom-length = <65536>;
+-			reset-gpios = <&gpio3 11 GPIO_ACTIVE_LOW>;
+ 			interrupt-parent = <&gpio3>;
+ 			interrupts = <2 IRQ_TYPE_LEVEL_LOW>;
+ 			interrupt-controller;
+@@ -312,7 +311,6 @@
+ 
+ 	pinctrl_gpio_switch0: pinctrl-gpio-switch0 {
+ 		fsl,pins = <
+-			VF610_PAD_PTE2__GPIO_107		0x31c2
+ 			VF610_PAD_PTB28__GPIO_98		0x219d
+ 		>;
+ 	};
+diff --git a/arch/arm/boot/dts/vf610-zii-ssmb-dtu.dts b/arch/arm/boot/dts/vf610-zii-ssmb-dtu.dts
+index a6c22a79779e..e37b9643269b 100644
+--- a/arch/arm/boot/dts/vf610-zii-ssmb-dtu.dts
++++ b/arch/arm/boot/dts/vf610-zii-ssmb-dtu.dts
+@@ -113,7 +113,6 @@
+ 			pinctrl-names = "default";
+ 			reg = <0>;
+ 			eeprom-length = <65536>;
+-			reset-gpios = <&gpio3 11 GPIO_ACTIVE_LOW>;
+ 			interrupt-parent = <&gpio3>;
+ 			interrupts = <2 IRQ_TYPE_LEVEL_LOW>;
+ 			interrupt-controller;
+@@ -288,7 +287,6 @@
+ 
+ 	pinctrl_gpio_switch0: pinctrl-gpio-switch0 {
+ 		fsl,pins = <
+-			VF610_PAD_PTE2__GPIO_107		0x31c2
+ 			VF610_PAD_PTB28__GPIO_98		0x219d
+ 		>;
+ 	};
+diff --git a/arch/arm/boot/dts/vf610-zii-ssmb-spu3.dts b/arch/arm/boot/dts/vf610-zii-ssmb-spu3.dts
+index 3d05c894bdc0..b3d6d4b9fa9c 100644
+--- a/arch/arm/boot/dts/vf610-zii-ssmb-spu3.dts
++++ b/arch/arm/boot/dts/vf610-zii-ssmb-spu3.dts
+@@ -141,7 +141,6 @@
+ 			pinctrl-names = "default";
+ 			reg = <0>;
+ 			eeprom-length = <65536>;
+-			reset-gpios = <&gpio3 11 GPIO_ACTIVE_LOW>;
+ 			interrupt-parent = <&gpio3>;
+ 			interrupts = <2 IRQ_TYPE_LEVEL_LOW>;
+ 			interrupt-controller;
+@@ -319,7 +318,6 @@
+ 
+ 	pinctrl_gpio_switch0: pinctrl-gpio-switch0 {
+ 		fsl,pins = <
+-			VF610_PAD_PTE2__GPIO_107		0x31c2
+ 			VF610_PAD_PTB28__GPIO_98		0x219d
+ 		>;
+ 	};
+-- 
+2.21.3
 
