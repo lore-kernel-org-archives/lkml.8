@@ -2,191 +2,296 @@ Return-Path: <SRS0=kup7=A2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLACK autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UPPERCASE_50_75 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13C1DC433E2
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 10:40:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F26A5C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 10:44:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DF49420656
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 10:40:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dzq8l9KD"
+	by mail.kernel.org (Postfix) with ESMTP id D163320656
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 10:44:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731297AbgGOKkR (ORCPT
+        id S1729273AbgGOKos (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 06:40:17 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:38733 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731270AbgGOKkQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 06:40:16 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1594809614;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=7rzU9vQDmEneDz3cTLWm+HlcE01BlZKI42KGcYUTLpo=;
-        b=dzq8l9KD+tEZh1mp2qdzjlrL4WBHwzJoEFIcuezpMJOQkVMdHbTRiDH3uHKbnbLttyzdwh
-        epg2lyo0rVRAEiUlYMFiYV88hjS0EhYOdt+bbPCbG91mTcSmEvM3Op6sC6EF6+ZzYt6M6v
-        rT+dTj0vMHt5ZOF+o+RcJur6To+nHy0=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-20-b6nq-5r6P9KpZSrNejdX9Q-1; Wed, 15 Jul 2020 06:40:10 -0400
-X-MC-Unique: b6nq-5r6P9KpZSrNejdX9Q-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 71C7480040A;
-        Wed, 15 Jul 2020 10:40:09 +0000 (UTC)
-Received: from gondolin (ovpn-112-242.ams2.redhat.com [10.36.112.242])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 614795C1BD;
-        Wed, 15 Jul 2020 10:39:58 +0000 (UTC)
-Date:   Wed, 15 Jul 2020 12:39:55 +0200
-From:   Cornelia Huck <cohuck@redhat.com>
-To:     Zeng Tao <prime.zeng@hisilicon.com>
-Cc:     <alex.williamson@redhat.com>, <cai@lca.pw>,
-        Kevin Tian <kevin.tian@intel.com>,
-        Peter Xu <peterx@redhat.com>,
-        "Andrew Morton" <akpm@linux-foundation.org>,
-        Michel Lespinasse <walken@google.com>,
-        Denis Efremov <efremov@linux.com>, <kvm@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] vfio/pci: fix racy on error and request eventfd ctx
-Message-ID: <20200715123955.0d7e731a.cohuck@redhat.com>
-In-Reply-To: <1594798484-20501-1-git-send-email-prime.zeng@hisilicon.com>
-References: <1594798484-20501-1-git-send-email-prime.zeng@hisilicon.com>
-Organization: Red Hat GmbH
+        Wed, 15 Jul 2020 06:44:48 -0400
+Received: from mga09.intel.com ([134.134.136.24]:18308 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729010AbgGOKos (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jul 2020 06:44:48 -0400
+IronPort-SDR: 4vXpUeJopZYf3sd/k6hdx7yi+R8D/V3B871M/ONw8zJKXqj4bKLeI5MYInaRWX3CS+yxtbcrBo
+ CAnogoeMfG9g==
+X-IronPort-AV: E=McAfee;i="6000,8403,9682"; a="150530771"
+X-IronPort-AV: E=Sophos;i="5.75,355,1589266800"; 
+   d="scan'208";a="150530771"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jul 2020 03:44:46 -0700
+IronPort-SDR: 7cS6YQkoQUIPWsYASnXWxUfEK+lcJaGjrqTWf+9d2Jhqg8F9QqUAMSz/AL0yv4sOZM+uBSw0iS
+ AF1DY3epn51w==
+X-IronPort-AV: E=Sophos;i="5.75,355,1589266800"; 
+   d="scan'208";a="308210603"
+Received: from ykazandz-mobl1.ger.corp.intel.com ([10.251.85.102])
+  by fmsmga004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jul 2020 03:44:42 -0700
+Message-ID: <a86909a94351ae25c936d639aa87ccacb4d737e6.camel@linux.intel.com>
+Subject: Re: [PATCH v3 3/7] dt-bindings: clock: Add Keem Bay clock IDs
+From:   Daniele Alessandrelli <daniele.alessandrelli@linux.intel.com>
+To:     Rob Herring <robh@kernel.org>
+List-Id: <soc.lore.kernel.org>
+Cc:     linux-arm-kernel@lists.infradead.org, SoC Team <soc@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Jassi Brar <jassisinghbrar@gmail.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        "Paul J. Murphy" <paul.j.murphy@intel.com>,
+        Dinh Nguyen <dinguyen@kernel.org>,
+        Daniele Alessandrelli <daniele.alessandrelli@intel.com>
+Date:   Wed, 15 Jul 2020 11:44:33 +0100
+In-Reply-To: <20200714211227.GA2924943@bogus>
+References: <20200714161305.836348-1-daniele.alessandrelli@linux.intel.com>
+         <20200714161305.836348-4-daniele.alessandrelli@linux.intel.com>
+         <20200714211227.GA2924943@bogus>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.36.3 (3.36.3-1.fc32) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 15 Jul 2020 15:34:41 +0800
-Zeng Tao <prime.zeng@hisilicon.com> wrote:
-
-> The vfio_pci_release call will free and clear the error and request
-> eventfd ctx while these ctx could be in use at the same time in the
-> function like vfio_pci_request, and it's expected to protect them under
-> the vdev->igate mutex, which is missing in vfio_pci_release.
+On Tue, 2020-07-14 at 15:12 -0600, Rob Herring wrote:
+> On Tue, Jul 14, 2020 at 05:13:01PM +0100, Daniele Alessandrelli
+> wrote:
+> > From: Daniele Alessandrelli <daniele.alessandrelli@intel.com>
+> > 
+> > Add clock dt-bindings for Keem Bay SoC.
 > 
-> This issue is introduced since commit 1518ac272e78 ("vfio/pci: fix memory
-> leaks of eventfd ctx"),and since commit 5c5866c593bb ("vfio/pci: Clear
-> error and request eventfd ctx after releasing"), it's very easily to
-> trigger the kernel panic like this:
-> 
-> [ 9513.904346] Unable to handle kernel NULL pointer dereference at virtual address 0000000000000008
-> [ 9513.913091] Mem abort info:
-> [ 9513.915871]   ESR = 0x96000006
-> [ 9513.918912]   EC = 0x25: DABT (current EL), IL = 32 bits
-> [ 9513.924198]   SET = 0, FnV = 0
-> [ 9513.927238]   EA = 0, S1PTW = 0
-> [ 9513.930364] Data abort info:
-> [ 9513.933231]   ISV = 0, ISS = 0x00000006
-> [ 9513.937048]   CM = 0, WnR = 0
-> [ 9513.940003] user pgtable: 4k pages, 48-bit VAs, pgdp=0000007ec7d12000
-> [ 9513.946414] [0000000000000008] pgd=0000007ec7d13003, p4d=0000007ec7d13003, pud=0000007ec728c003, pmd=0000000000000000
-> [ 9513.956975] Internal error: Oops: 96000006 [#1] PREEMPT SMP
-> [ 9513.962521] Modules linked in: vfio_pci vfio_virqfd vfio_iommu_type1 vfio hclge hns3 hnae3 [last unloaded: vfio_pci]
-> [ 9513.972998] CPU: 4 PID: 1327 Comm: bash Tainted: G        W         5.8.0-rc4+ #3
-> [ 9513.980443] Hardware name: Huawei TaiShan 2280 V2/BC82AMDC, BIOS 2280-V2 CS V3.B270.01 05/08/2020
-> [ 9513.989274] pstate: 80400089 (Nzcv daIf +PAN -UAO BTYPE=--)
-> [ 9513.994827] pc : _raw_spin_lock_irqsave+0x48/0x88
-> [ 9513.999515] lr : eventfd_signal+0x6c/0x1b0
-> [ 9514.003591] sp : ffff800038a0b960
-> [ 9514.006889] x29: ffff800038a0b960 x28: ffff007ef7f4da10
-> [ 9514.012175] x27: ffff207eefbbfc80 x26: ffffbb7903457000
-> [ 9514.017462] x25: ffffbb7912191000 x24: ffff007ef7f4d400
-> [ 9514.022747] x23: ffff20be6e0e4c00 x22: 0000000000000008
-> [ 9514.028033] x21: 0000000000000000 x20: 0000000000000000
-> [ 9514.033321] x19: 0000000000000008 x18: 0000000000000000
-> [ 9514.038606] x17: 0000000000000000 x16: ffffbb7910029328
-> [ 9514.043893] x15: 0000000000000000 x14: 0000000000000001
-> [ 9514.049179] x13: 0000000000000000 x12: 0000000000000002
-> [ 9514.054466] x11: 0000000000000000 x10: 0000000000000a00
-> [ 9514.059752] x9 : ffff800038a0b840 x8 : ffff007ef7f4de60
-> [ 9514.065038] x7 : ffff007fffc96690 x6 : fffffe01faffb748
-> [ 9514.070324] x5 : 0000000000000000 x4 : 0000000000000000
-> [ 9514.075609] x3 : 0000000000000000 x2 : 0000000000000001
-> [ 9514.080895] x1 : ffff007ef7f4d400 x0 : 0000000000000000
-> [ 9514.086181] Call trace:
-> [ 9514.088618]  _raw_spin_lock_irqsave+0x48/0x88
-> [ 9514.092954]  eventfd_signal+0x6c/0x1b0
-> [ 9514.096691]  vfio_pci_request+0x84/0xd0 [vfio_pci]
-> [ 9514.101464]  vfio_del_group_dev+0x150/0x290 [vfio]
-> [ 9514.106234]  vfio_pci_remove+0x30/0x128 [vfio_pci]
-> [ 9514.111007]  pci_device_remove+0x48/0x108
-> [ 9514.115001]  device_release_driver_internal+0x100/0x1b8
-> [ 9514.120200]  device_release_driver+0x28/0x38
-> [ 9514.124452]  pci_stop_bus_device+0x68/0xa8
-> [ 9514.128528]  pci_stop_and_remove_bus_device+0x20/0x38
-> [ 9514.133557]  pci_iov_remove_virtfn+0xb4/0x128
-> [ 9514.137893]  sriov_disable+0x3c/0x108
-> [ 9514.141538]  pci_disable_sriov+0x28/0x38
-> [ 9514.145445]  hns3_pci_sriov_configure+0x48/0xb8 [hns3]
-> [ 9514.150558]  sriov_numvfs_store+0x110/0x198
-> [ 9514.154724]  dev_attr_store+0x44/0x60
-> [ 9514.158373]  sysfs_kf_write+0x5c/0x78
-> [ 9514.162018]  kernfs_fop_write+0x104/0x210
-> [ 9514.166010]  __vfs_write+0x48/0x90
-> [ 9514.169395]  vfs_write+0xbc/0x1c0
-> [ 9514.172694]  ksys_write+0x74/0x100
-> [ 9514.176079]  __arm64_sys_write+0x24/0x30
-> [ 9514.179987]  el0_svc_common.constprop.4+0x110/0x200
-> [ 9514.184842]  do_el0_svc+0x34/0x98
-> [ 9514.188144]  el0_svc+0x14/0x40
-> [ 9514.191185]  el0_sync_handler+0xb0/0x2d0
-> [ 9514.195088]  el0_sync+0x140/0x180
-> [ 9514.198389] Code: b9001020 d2800000 52800022 f9800271 (885ffe61)
-> [ 9514.204455] ---[ end trace 648de00c8406465f ]---
-> [ 9514.212308] note: bash[1327] exited with preempt_count 1
+> Where's the binding schema?
 
-Good catch, I hope this is fixed now for good :/
+I should have specified that they are SCMI clocks.
+
+Anyway, when I split the original patchset (change done in v2) I had to
+remove SCMI support from the DT, so these bindings (and the power
+domain ones) are currently unused. So, probably, the right thing to do
+is to drop them for now. I'll do that in v4.
 
 > 
-> Cc: Qian Cai <cai@lca.pw>
-> Cc: Alex Williamson <alex.williamson@redhat.com>
-> Fixes: 1518ac272e78 ("vfio/pci: fix memory leaks of eventfd ctx")
-
-Fixes: 5c5866c593bb ("vfio/pci: Clear error and request eventfd ctx after releasing")
-
-> Signed-off-by: Zeng Tao <prime.zeng@hisilicon.com>
-> ---
->  drivers/vfio/pci/vfio_pci.c | 5 +++++
->  1 file changed, 5 insertions(+)
-> 
-> diff --git a/drivers/vfio/pci/vfio_pci.c b/drivers/vfio/pci/vfio_pci.c
-> index f634c81..de881a6 100644
-> --- a/drivers/vfio/pci/vfio_pci.c
-> +++ b/drivers/vfio/pci/vfio_pci.c
-> @@ -521,14 +521,19 @@ static void vfio_pci_release(void *device_data)
->  		vfio_pci_vf_token_user_add(vdev, -1);
->  		vfio_spapr_pci_eeh_release(vdev->pdev);
->  		vfio_pci_disable(vdev);
-> +		mutex_lock(&vdev->igate);
->  		if (vdev->err_trigger) {
->  			eventfd_ctx_put(vdev->err_trigger);
->  			vdev->err_trigger = NULL;
->  		}
-> +		mutex_unlock(&vdev->igate);
-> +
-> +		mutex_lock(&vdev->igate);
-
-Just keep the mutex locked for both triggers?
-
->  		if (vdev->req_trigger) {
->  			eventfd_ctx_put(vdev->req_trigger);
->  			vdev->req_trigger = NULL;
->  		}
-> +		mutex_unlock(&vdev->igate);
->  	}
->  
->  	mutex_unlock(&vdev->reflck->lock);
+> > Signed-off-by: Daniele Alessandrelli <
+> > daniele.alessandrelli@intel.com>
+> > ---
+> >  include/dt-bindings/clock/keembay-clocks.h | 188
+> > +++++++++++++++++++++
+> >  1 file changed, 188 insertions(+)
+> >  create mode 100644 include/dt-bindings/clock/keembay-clocks.h
+> > 
+> > diff --git a/include/dt-bindings/clock/keembay-clocks.h
+> > b/include/dt-bindings/clock/keembay-clocks.h
+> > new file mode 100644
+> > index 000000000000..4ad6616ee8e0
+> > --- /dev/null
+> > +++ b/include/dt-bindings/clock/keembay-clocks.h
+> > @@ -0,0 +1,188 @@
+> > +/* SPDX-License-Identifier: (GPL-2.0-only OR BSD-3-Clause) */
+> > +/*
+> > + * Copyright (c) 2020 Intel Corporation.
+> > + *
+> > + * Device tree defines for clocks in Keem Bay.
+> > + */
+> > +
+> > +#ifndef __DT_BINDINGS_KEEMBAY_CLOCKS_H
+> > +#define __DT_BINDINGS_KEEMBAY_CLOCKS_H
+> > +
+> > +/* CPR_PLL region. CLK_ID: 0 - 11 */
+> > +#define KEEM_BAY_A53_PLL_START_ID (0)
+> > +#define KEEM_BAY_A53_PLL_0_OUT_0 (KEEM_BAY_A53_PLL_START_ID + 0)
+> > +#define KEEM_BAY_A53_PLL_0_OUT_1 (KEEM_BAY_A53_PLL_START_ID + 1)
+> > +#define KEEM_BAY_A53_PLL_0_OUT_2 (KEEM_BAY_A53_PLL_START_ID + 2)
+> > +#define KEEM_BAY_A53_PLL_0_OUT_3 (KEEM_BAY_A53_PLL_START_ID + 3)
+> > +#define KEEM_BAY_A53_PLL_1_OUT_0 (KEEM_BAY_A53_PLL_START_ID + 4)
+> > +#define KEEM_BAY_A53_PLL_1_OUT_1 (KEEM_BAY_A53_PLL_START_ID + 5)
+> > +#define KEEM_BAY_A53_PLL_1_OUT_2 (KEEM_BAY_A53_PLL_START_ID + 6)
+> > +#define KEEM_BAY_A53_PLL_1_OUT_3 (KEEM_BAY_A53_PLL_START_ID + 7)
+> > +#define KEEM_BAY_A53_PLL_2_OUT_0 (KEEM_BAY_A53_PLL_START_ID + 8)
+> > +#define KEEM_BAY_A53_PLL_2_OUT_1 (KEEM_BAY_A53_PLL_START_ID + 9)
+> > +#define KEEM_BAY_A53_PLL_2_OUT_2 (KEEM_BAY_A53_PLL_START_ID + 10)
+> > +#define KEEM_BAY_A53_PLL_2_OUT_3 (KEEM_BAY_A53_PLL_START_ID + 11)
+> > +#define KEEM_BAY_A53_PLL_MAX_ID (KEEM_BAY_A53_PLL_2_OUT_3)
+> > +
+> > +/* A53_CPR region. CLK_ID: 12 - 30 */
+> > +#define KEEM_BAY_A53_START_ID (KEEM_BAY_A53_PLL_MAX_ID + 1)
+> > +#define KEEM_BAY_A53_AON (KEEM_BAY_A53_START_ID + 0)
+> > +#define KEEM_BAY_A53_NOC (KEEM_BAY_A53_START_ID + 1)
+> > +#define KEEM_BAY_A53_FUSE (KEEM_BAY_A53_START_ID + 2)
+> > +#define KEEM_BAY_A53_ROM (KEEM_BAY_A53_START_ID + 3)
+> > +#define KEEM_BAY_A53_ICB (KEEM_BAY_A53_START_ID + 4)
+> > +#define KEEM_BAY_A53_GIC (KEEM_BAY_A53_START_ID + 5)
+> > +#define KEEM_BAY_A53_TIM (KEEM_BAY_A53_START_ID + 6)
+> > +#define KEEM_BAY_A53_GPIO (KEEM_BAY_A53_START_ID + 7)
+> > +#define KEEM_BAY_A53_JTAG (KEEM_BAY_A53_START_ID + 8)
+> > +#define KEEM_BAY_A53_MBIST_0 (KEEM_BAY_A53_START_ID + 9)
+> > +#define KEEM_BAY_A53_DSS (KEEM_BAY_A53_START_ID + 10)
+> > +#define KEEM_BAY_A53_MSS (KEEM_BAY_A53_START_ID + 11)
+> > +#define KEEM_BAY_A53_PSS (KEEM_BAY_A53_START_ID + 12)
+> > +#define KEEM_BAY_A53_PCIE (KEEM_BAY_A53_START_ID + 13)
+> > +#define KEEM_BAY_A53_VENC (KEEM_BAY_A53_START_ID + 14)
+> > +#define KEEM_BAY_A53_VDEC (KEEM_BAY_A53_START_ID + 15)
+> > +#define KEEM_BAY_A53_MBIST_1 (KEEM_BAY_A53_START_ID + 16)
+> > +#define KEEM_BAY_A53_MBIST_2 (KEEM_BAY_A53_START_ID + 17)
+> > +#define KEEM_BAY_A53_MBIST_3 (KEEM_BAY_A53_START_ID + 18)
+> > +#define KEEM_BAY_A53_MAX_ID (KEEM_BAY_A53_MBIST_3)
+> > +
+> > +/* A53_CPR_AUX region. CLK_ID: 31 - 57 */
+> > +#define KEEM_BAY_A53_AUX_START_ID (KEEM_BAY_A53_MAX_ID + 1)
+> > +#define KEEM_BAY_A53_AUX_32KHZ (KEEM_BAY_A53_AUX_START_ID + 0)
+> > +#define KEEM_BAY_A53_AUX_CPR (KEEM_BAY_A53_AUX_START_ID + 1)
+> > +#define KEEM_BAY_A53_AUX_TSENS (KEEM_BAY_A53_AUX_START_ID + 2)
+> > +#define KEEM_BAY_A53_AUX_GPIO0 (KEEM_BAY_A53_AUX_START_ID + 3)
+> > +#define KEEM_BAY_A53_AUX_GPIO1 (KEEM_BAY_A53_AUX_START_ID + 4)
+> > +#define KEEM_BAY_A53_AUX_GPIO2 (KEEM_BAY_A53_AUX_START_ID + 5)
+> > +#define KEEM_BAY_A53_AUX_GPIO3 (KEEM_BAY_A53_AUX_START_ID + 6)
+> > +#define KEEM_BAY_A53_AUX_DDR_REF (KEEM_BAY_A53_AUX_START_ID + 7)
+> > +#define KEEM_BAY_A53_AUX_DDR_REF_BYPASS (KEEM_BAY_A53_AUX_START_ID
+> > + 8)
+> > +#define KEEM_BAY_A53_AUX_RESERVED1 (KEEM_BAY_A53_AUX_START_ID + 9)
+> > +#define KEEM_BAY_A53_AUX_VENC (KEEM_BAY_A53_AUX_START_ID + 10)
+> > +#define KEEM_BAY_A53_AUX_VDEC (KEEM_BAY_A53_AUX_START_ID + 11)
+> > +#define KEEM_BAY_A53_AUX_USOC_USB_CTRL (KEEM_BAY_A53_AUX_START_ID
+> > + 12)
+> > +#define KEEM_BAY_A53_AUX_USB (KEEM_BAY_A53_AUX_START_ID + 13)
+> > +#define KEEM_BAY_A53_AUX_USB_REF (KEEM_BAY_A53_AUX_START_ID + 14)
+> > +#define KEEM_BAY_A53_AUX_USB_ALT_REF (KEEM_BAY_A53_AUX_START_ID +
+> > 15)
+> > +#define KEEM_BAY_A53_AUX_USB_SUSPEND (KEEM_BAY_A53_AUX_START_ID +
+> > 16)
+> > +#define KEEM_BAY_A53_AUX_RESERVED2 (KEEM_BAY_A53_AUX_START_ID +
+> > 17)
+> > +#define KEEM_BAY_A53_AUX_PCIE (KEEM_BAY_A53_AUX_START_ID + 18)
+> > +#define KEEM_BAY_A53_AUX_DBG_CLK (KEEM_BAY_A53_AUX_START_ID + 19)
+> > +#define KEEM_BAY_A53_AUX_DBG_TRACE (KEEM_BAY_A53_AUX_START_ID +
+> > 20)
+> > +#define KEEM_BAY_A53_AUX_DBG_DAP (KEEM_BAY_A53_AUX_START_ID + 21)
+> > +#define KEEM_BAY_A53_AUX_ARM_CLKIN (KEEM_BAY_A53_AUX_START_ID +
+> > 22)
+> > +#define KEEM_BAY_A53_AUX_ARM_AXI (KEEM_BAY_A53_AUX_START_ID + 23)
+> > +#define KEEM_BAY_A53_AUX_USOC (KEEM_BAY_A53_AUX_START_ID + 24)
+> > +#define KEEM_BAY_A53_AUX_USOC_REF (KEEM_BAY_A53_AUX_START_ID + 25)
+> > +#define KEEM_BAY_A53_AUX_USOC_ALT_REF (KEEM_BAY_A53_AUX_START_ID +
+> > 26)
+> > +#define KEEM_BAY_A53_AUX_MAX_ID (KEEM_BAY_A53_AUX_USOC_ALT_REF)
+> > +
+> > +/* PSS_CPR region CLK_ID: CLK_ID: 58 - 82 */
+> > +#define KEEM_BAY_PSS_START_ID (KEEM_BAY_A53_AUX_MAX_ID + 1)
+> > +#define KEEM_BAY_PSS_I2C0 (KEEM_BAY_PSS_START_ID + 0)
+> > +#define KEEM_BAY_PSS_I2C1 (KEEM_BAY_PSS_START_ID + 1)
+> > +#define KEEM_BAY_PSS_I2C2 (KEEM_BAY_PSS_START_ID + 2)
+> > +#define KEEM_BAY_PSS_I2C3 (KEEM_BAY_PSS_START_ID + 3)
+> > +#define KEEM_BAY_PSS_I2C4 (KEEM_BAY_PSS_START_ID + 4)
+> > +#define KEEM_BAY_PSS_SD0 (KEEM_BAY_PSS_START_ID + 5)
+> > +#define KEEM_BAY_PSS_SD1 (KEEM_BAY_PSS_START_ID + 6)
+> > +#define KEEM_BAY_PSS_EMMC (KEEM_BAY_PSS_START_ID + 7)
+> > +#define KEEM_BAY_PSS_AXI_DMA (KEEM_BAY_PSS_START_ID + 8)
+> > +#define KEEM_BAY_PSS_SPI0 (KEEM_BAY_PSS_START_ID + 9)
+> > +#define KEEM_BAY_PSS_SPI1 (KEEM_BAY_PSS_START_ID + 10)
+> > +#define KEEM_BAY_PSS_SPI2 (KEEM_BAY_PSS_START_ID + 11)
+> > +#define KEEM_BAY_PSS_SPI3 (KEEM_BAY_PSS_START_ID + 12)
+> > +#define KEEM_BAY_PSS_I2S0 (KEEM_BAY_PSS_START_ID + 13)
+> > +#define KEEM_BAY_PSS_I2S1 (KEEM_BAY_PSS_START_ID + 14)
+> > +#define KEEM_BAY_PSS_I2S2 (KEEM_BAY_PSS_START_ID + 15)
+> > +#define KEEM_BAY_PSS_I2S3 (KEEM_BAY_PSS_START_ID + 16)
+> > +#define KEEM_BAY_PSS_UART0 (KEEM_BAY_PSS_START_ID + 17)
+> > +#define KEEM_BAY_PSS_UART1 (KEEM_BAY_PSS_START_ID + 18)
+> > +#define KEEM_BAY_PSS_UART2 (KEEM_BAY_PSS_START_ID + 19)
+> > +#define KEEM_BAY_PSS_UART3 (KEEM_BAY_PSS_START_ID + 20)
+> > +#define KEEM_BAY_PSS_I3C0 (KEEM_BAY_PSS_START_ID + 21)
+> > +#define KEEM_BAY_PSS_I3C1 (KEEM_BAY_PSS_START_ID + 22)
+> > +#define KEEM_BAY_PSS_I3C2 (KEEM_BAY_PSS_START_ID + 23)
+> > +#define KEEM_BAY_PSS_GBE (KEEM_BAY_PSS_START_ID + 24)
+> > +#define KEEM_BAY_PSS_MAX_ID (KEEM_BAY_PSS_GBE)
+> > +
+> > +/* PSS_CPR_AUX region. CLK_ID: 83 - 97 */
+> > +#define KEEM_BAY_PSS_AUX_START_ID (KEEM_BAY_PSS_MAX_ID + 1)
+> > +#define KEEM_BAY_PSS_AUX_I2S0 (KEEM_BAY_PSS_AUX_START_ID + 0)
+> > +#define KEEM_BAY_PSS_AUX_I2S1 (KEEM_BAY_PSS_AUX_START_ID + 1)
+> > +#define KEEM_BAY_PSS_AUX_I2S2 (KEEM_BAY_PSS_AUX_START_ID + 2)
+> > +#define KEEM_BAY_PSS_AUX_I2S3 (KEEM_BAY_PSS_AUX_START_ID + 3)
+> > +#define KEEM_BAY_PSS_AUX_UART0 (KEEM_BAY_PSS_AUX_START_ID + 4)
+> > +#define KEEM_BAY_PSS_AUX_UART1 (KEEM_BAY_PSS_AUX_START_ID + 5)
+> > +#define KEEM_BAY_PSS_AUX_UART2 (KEEM_BAY_PSS_AUX_START_ID + 6)
+> > +#define KEEM_BAY_PSS_AUX_UART3 (KEEM_BAY_PSS_AUX_START_ID + 7)
+> > +#define KEEM_BAY_PSS_AUX_SD0 (KEEM_BAY_PSS_AUX_START_ID + 8)
+> > +#define KEEM_BAY_PSS_AUX_SD1 (KEEM_BAY_PSS_AUX_START_ID + 9)
+> > +#define KEEM_BAY_PSS_AUX_EMMC (KEEM_BAY_PSS_AUX_START_ID + 10)
+> > +#define KEEM_BAY_PSS_AUX_TRNG (KEEM_BAY_PSS_AUX_START_ID + 11)
+> > +#define KEEM_BAY_PSS_AUX_OCS (KEEM_BAY_PSS_AUX_START_ID + 12)
+> > +#define KEEM_BAY_PSS_AUX_GBE_PTP (KEEM_BAY_PSS_AUX_START_ID + 13)
+> > +#define KEEM_BAY_PSS_AUX_GBE_TX (KEEM_BAY_PSS_AUX_START_ID + 14)
+> > +#define KEEM_BAY_PSS_AUX_MAX_ID (KEEM_BAY_PSS_AUX_GBE_TX)
+> > +
+> > +/* DSS_CPR region. CLK_ID: 98 - 109 */
+> > +#define KEEM_BAY_DSS_START_ID (KEEM_BAY_PSS_AUX_MAX_ID + 1)
+> > +#define KEEM_BAY_DSS_SYS (KEEM_BAY_DSS_START_ID + 0)
+> > +#define KEEM_BAY_DSS_DEC400 (KEEM_BAY_DSS_START_ID + 1)
+> > +#define KEEM_BAY_DSS_TSENSE (KEEM_BAY_DSS_START_ID + 2)
+> > +#define KEEM_BAY_DSS_BUS_0 (KEEM_BAY_DSS_START_ID + 3)
+> > +#define KEEM_BAY_DSS_CORE_0 (KEEM_BAY_DSS_START_ID + 4)
+> > +#define KEEM_BAY_DSS_REF_0 (KEEM_BAY_DSS_START_ID + 5)
+> > +#define KEEM_BAY_DSS_REF_BYP_0 (KEEM_BAY_DSS_START_ID + 6)
+> > +#define KEEM_BAY_DSS_BUS_1 (KEEM_BAY_DSS_START_ID + 7)
+> > +#define KEEM_BAY_DSS_CORE_1 (KEEM_BAY_DSS_START_ID + 8)
+> > +#define KEEM_BAY_DSS_REF_1 (KEEM_BAY_DSS_START_ID + 9)
+> > +#define KEEM_BAY_DSS_REF_BYP_1 (KEEM_BAY_DSS_START_ID + 10)
+> > +#define KEEM_BAY_DSS_MMU500 (KEEM_BAY_DSS_START_ID + 11)
+> > +#define KEEM_BAY_DSS_MAX_ID (KEEM_BAY_DSS_MMU500)
+> > +
+> > +/* USS_CPR region. CLK_ID: 110 - 116 */
+> > +#define KEEM_BAY_USS_START_ID (KEEM_BAY_DSS_MAX_ID + 1)
+> > +#define KEEM_BAY_USS_SYS (KEEM_BAY_USS_START_ID + 0)
+> > +#define KEEM_BAY_USS_REF (KEEM_BAY_USS_START_ID + 1)
+> > +#define KEEM_BAY_USS_ALT_REF (KEEM_BAY_USS_START_ID + 2)
+> > +#define KEEM_BAY_USS_SUSPEND (KEEM_BAY_USS_START_ID + 3)
+> > +#define KEEM_BAY_USS_CORE (KEEM_BAY_USS_START_ID + 4)
+> > +#define KEEM_BAY_USS_LOW_JIT (KEEM_BAY_USS_START_ID + 5)
+> > +#define KEEM_BAY_USS_PHY_TST (KEEM_BAY_USS_START_ID + 6)
+> > +#define KEEM_BAY_USS_MAX_ID (KEEM_BAY_USS_PHY_TST)
+> > +
+> > +/* MSS_CPR region. CLK_ID: 117 - 129 */
+> > +#define KEEM_BAY_MSS_START_ID (KEEM_BAY_USS_MAX_ID + 1)
+> > +#define KEEM_BAY_MSS_CPU (KEEM_BAY_MSS_START_ID + 0)
+> > +#define KEEM_BAY_MSS_CPU_DSU (KEEM_BAY_MSS_START_ID + 1)
+> > +#define KEEM_BAY_MSS_CPU_L2C (KEEM_BAY_MSS_START_ID + 2)
+> > +#define KEEM_BAY_MSS_CPU_ICB (KEEM_BAY_MSS_START_ID + 3)
+> > +#define KEEM_BAY_MSS_CPU_TIM (KEEM_BAY_MSS_START_ID + 4)
+> > +#define KEEM_BAY_MSS_JPGENC (KEEM_BAY_MSS_START_ID + 5)
+> > +#define KEEM_BAY_MSS_DTB (KEEM_BAY_MSS_START_ID + 6)
+> > +#define KEEM_BAY_MSS_BLT (KEEM_BAY_MSS_START_ID + 7)
+> > +#define KEEM_BAY_MSS_UPA (KEEM_BAY_MSS_START_ID + 8)
+> > +#define KEEM_BAY_MSS_NCE (KEEM_BAY_MSS_START_ID + 9)
+> > +#define KEEM_BAY_MSS_CV (KEEM_BAY_MSS_START_ID + 10)
+> > +#define KEEM_BAY_MSS_ISP (KEEM_BAY_MSS_START_ID + 11)
+> > +#define KEEM_BAY_MSS_CAM (KEEM_BAY_MSS_START_ID + 12)
+> > +#define KEEM_BAY_MSS_MAX_ID (KEEM_BAY_MSS_CAM)
+> > +
+> > +/* MSS_CPR_AUX region. CLK_ID: 130 - 138 */
+> > +#define KEEM_BAY_MSS_AUX_START_ID (KEEM_BAY_MSS_MAX_ID + 1)
+> > +#define KEEM_BAY_MSS_AUX_CIF (KEEM_BAY_MSS_AUX_START_ID + 0)
+> > +#define KEEM_BAY_MSS_AUX_LCD (KEEM_BAY_MSS_AUX_START_ID + 1)
+> > +#define KEEM_BAY_MSS_AUX_SLVDS0 (KEEM_BAY_MSS_AUX_START_ID + 2)
+> > +#define KEEM_BAY_MSS_AUX_SLVDS1 (KEEM_BAY_MSS_AUX_START_ID + 3)
+> > +#define KEEM_BAY_MSS_AUX_MIPI_TX0 (KEEM_BAY_MSS_AUX_START_ID + 4)
+> > +#define KEEM_BAY_MSS_AUX_MIPI_TX1 (KEEM_BAY_MSS_AUX_START_ID + 5)
+> > +#define KEEM_BAY_MSS_AUX_MIPI_ECFG (KEEM_BAY_MSS_AUX_START_ID + 6)
+> > +#define KEEM_BAY_MSS_AUX_MIPI_CFG (KEEM_BAY_MSS_AUX_START_ID + 7)
+> > +#define KEEM_BAY_MSS_AUX_JPGENC (KEEM_BAY_MSS_AUX_START_ID + 8)
+> > +#define KEEM_BAY_MSS_AUX_MAX_ID (KEEM_BAY_MSS_AUX_JPGENC)
+> > +
+> > +#define KEEM_BAY_NUM_CLOCKS (KEEM_BAY_MSS_AUX_MAX_ID + 1)
+> > +
+> > +#endif /* __DT_BINDINGS_KEEMBAY_CLOCKS_H */
+> > -- 
+> > 2.26.2
+> > 
 
