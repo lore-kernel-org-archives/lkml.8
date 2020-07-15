@@ -2,198 +2,379 @@ Return-Path: <SRS0=kup7=A2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-15.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3183C433E4
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 09:35:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F80AC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 09:35:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D267E206F4
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 09:35:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4453D2064B
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 09:35:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernelci-org.20150623.gappssmtp.com header.i=@kernelci-org.20150623.gappssmtp.com header.b="AcR7xx7O"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730507AbgGOJfI (ORCPT
+        id S1730540AbgGOJfb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 05:35:08 -0400
-Received: from mga14.intel.com ([192.55.52.115]:17366 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729047AbgGOJfI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 05:35:08 -0400
-IronPort-SDR: /RhEs1ezO4fUwI0+S8giD2+TXfKR6EZk72LEtYRVuVaTK21SCSjvTaM0Vb4Gy09Qee6JX0mkES
- RW30vAIZrlEA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9682"; a="148263530"
-X-IronPort-AV: E=Sophos;i="5.75,354,1589266800"; 
-   d="scan'208";a="148263530"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jul 2020 02:35:07 -0700
-IronPort-SDR: s4HUAEIe0zRFUw7HV1d/if0esPX8SM2lJDteLk3CncAu8Q1yuGJtdyi+JspbYdp1GbhWq6WFQt
- f7XwBq24ryhw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,354,1589266800"; 
-   d="scan'208";a="268897816"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by fmsmga007.fm.intel.com with ESMTP; 15 Jul 2020 02:35:04 -0700
-Received: from andy by smile with local (Exim 4.94)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1jvdoe-001wGn-K1; Wed, 15 Jul 2020 12:35:04 +0300
-Date:   Wed, 15 Jul 2020 12:35:04 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Michal Simek <michal.simek@xilinx.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Guenter Roeck <linux@roeck-us.net>, linux-iio@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: Re: [PATCH v5 1/3] devres: provide devm_krealloc()
-Message-ID: <20200715093504.GY3703480@smile.fi.intel.com>
-References: <20200715092528.8136-1-brgl@bgdev.pl>
- <20200715092528.8136-2-brgl@bgdev.pl>
+        Wed, 15 Jul 2020 05:35:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34332 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730393AbgGOJfa (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jul 2020 05:35:30 -0400
+Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 54B63C08C5C1
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 02:35:30 -0700 (PDT)
+Received: by mail-pf1-x443.google.com with SMTP id z3so1838814pfn.12
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 02:35:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernelci-org.20150623.gappssmtp.com; s=20150623;
+        h=message-id:date:mime-version:content-transfer-encoding:subject:to
+         :from:cc;
+        bh=AVB5MsrwbaPIfDw4I26TDX5GzM7tcYJsoKaN5Tiam2w=;
+        b=AcR7xx7OWiLQnAZjaYAKsReUTmyX0vA2ivseCBNhJy30sctAip8r1VNILKYch8Z/WI
+         cadcezapw4RyUmZ6DfnFYQEmFS7pvSiUKFTYmF0NHlnKOAOw02kw5eLDZpnJVRQwI5S0
+         g2sO3hnfV4+PF2Irs7U0lfTiod8hzrSn8o8wKe8e1jh6/ipEHm0XI4+Iqfj4PJnfkd2/
+         BcSH113B9l07cQdFB0XGB4dRPvWVsowu3A75sKeeJt+5P31FSqpoIeGFf2Y2+BYkZp+1
+         WT1pHZAmgR1P3wc4sLtaZ9SmUJAme2KzuKYbukg3nrmscN7M4ps9PeLY7T4ARL18/gQC
+         Zubg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:date:mime-version
+         :content-transfer-encoding:subject:to:from:cc;
+        bh=AVB5MsrwbaPIfDw4I26TDX5GzM7tcYJsoKaN5Tiam2w=;
+        b=MdWi6w+sB7YsRJEE8ylac+hTMuXsNOqX/jPpeEyzTq2Jnp/ong7jbf9Usn5EzS03pG
+         cUimgzeJz9V2XjqVPcBiYILqx16hpI3jQnGCerSkLNBjakIuNI38TImv1IL5R/tvkleD
+         fhPBd3tKjlT9F1IHE5GRmo3hesbnjC6Q+tTqHOBpI0UzmMSprq7DDFge+uIIhURAkSch
+         4+BPikBPAtognfeG1xmaaKAbuWqw71ZpgCnggcsdV1zlm+kfMQgv9GsKs0lvNpPX+oR+
+         fQ7pCqBL9C0qsEZgHUHYlo25yKuXs67oMbCfyaLL/TUITjyY65kXsfjLa/ouJwI7eQyi
+         0HTw==
+X-Gm-Message-State: AOAM531UL/nX3lUtEmOlVhonw15qM3NdRf+jLV2hQ0/d0hvjKz8l3mQd
+        Se38H2bhjHjkxSiwGLLIGf2maA==
+X-Google-Smtp-Source: ABdhPJzFj7a36Uevg5YU2rCtPwpnAYOL7SlhvqT54yiOsL3qz8Rh2GOL6id3l4tUuS1UEy8sJwLgoA==
+X-Received: by 2002:aa7:8edc:: with SMTP id b28mr8145624pfr.230.1594805729750;
+        Wed, 15 Jul 2020 02:35:29 -0700 (PDT)
+Received: from kernelci-production.internal.cloudapp.net ([52.250.1.28])
+        by smtp.gmail.com with ESMTPSA id c187sm1491979pfc.146.2020.07.15.02.35.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 15 Jul 2020 02:35:28 -0700 (PDT)
+Message-ID: <5f0ecde0.1c69fb81.17318.4549@mx.google.com>
+Date:   Wed, 15 Jul 2020 02:35:28 -0700 (PDT)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200715092528.8136-2-brgl@bgdev.pl>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Transfer-Encoding: quoted-printable
+X-Kernelci-Kernel: v5.8-rc5-16-ge9919e11e219
+X-Kernelci-Report-Type: bisect
+X-Kernelci-Tree: mainline
+X-Kernelci-Branch: master
+X-Kernelci-Lab-Name: lab-collabora
+Subject: mainline/master bisection: baseline.dmesg.crit on
+ qemu_arm-vexpress-a15
+To:     Andre Przywara <andre.przywara@arm.com>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        kernelci-results@groups.io, gtucker@collabora.com
+From:   "kernelci.org bot" <bot@kernelci.org>
+Cc:     Liviu Dudau <liviu.dudau@arm.com>,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 15, 2020 at 11:25:26AM +0200, Bartosz Golaszewski wrote:
-> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> 
-> Implement the managed variant of krealloc(). This function works with
-> all memory allocated by devm_kmalloc() (or devres functions using it
-> implicitly like devm_kmemdup(), devm_kstrdup() etc.).
-> 
-> Managed realloc'ed chunks can be manually released with devm_kfree().
+* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+* This automated bisection report was sent to you on the basis  *
+* that you may be involved with the breaking commit it has      *
+* found.  No manual investigation has been done to verify it,   *
+* and the root cause of the problem may be somewhere else.      *
+*                                                               *
+* If you do send a fix, please include this trailer:            *
+*   Reported-by: "kernelci.org bot" <bot@kernelci.org>          *
+*                                                               *
+* Hope this helps!                                              *
+* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 
-FWIW,
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+mainline/master bisection: baseline.dmesg.crit on qemu_arm-vexpress-a15
 
-> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> ---
->  .../driver-api/driver-model/devres.rst        |  1 +
->  drivers/base/devres.c                         | 68 +++++++++++++++++++
->  include/linux/device.h                        |  2 +
->  3 files changed, 71 insertions(+)
-> 
-> diff --git a/Documentation/driver-api/driver-model/devres.rst b/Documentation/driver-api/driver-model/devres.rst
-> index eaaaafc21134f..f318a5c0033c1 100644
-> --- a/Documentation/driver-api/driver-model/devres.rst
-> +++ b/Documentation/driver-api/driver-model/devres.rst
-> @@ -354,6 +354,7 @@ MEM
->    devm_kmalloc()
->    devm_kmalloc_array()
->    devm_kmemdup()
-> +  devm_krealloc()
->    devm_kstrdup()
->    devm_kvasprintf()
->    devm_kzalloc()
-> diff --git a/drivers/base/devres.c b/drivers/base/devres.c
-> index ed615d3b9cf15..24e27959af270 100644
-> --- a/drivers/base/devres.c
-> +++ b/drivers/base/devres.c
-> @@ -837,6 +837,74 @@ void *devm_kmalloc(struct device *dev, size_t size, gfp_t gfp)
->  }
->  EXPORT_SYMBOL_GPL(devm_kmalloc);
->  
-> +/**
-> + * devm_krealloc - Resource-managed krealloc()
-> + * @dev: Device to re-allocate memory for
-> + * @ptr: Pointer to the memory chunk to re-allocate
-> + * @new_size: New allocation size
-> + * @gfp: Allocation gfp flags
-> + *
-> + * Managed krealloc(). Resizes the memory chunk allocated with devm_kmalloc().
-> + * Behaves similarly to regular krealloc(): if @ptr is NULL or ZERO_SIZE_PTR,
-> + * it's the equivalent of devm_kmalloc(). If new_size is zero, it frees the
-> + * previously allocated memory and returns ZERO_SIZE_PTR. This function doesn't
-> + * change the order in which the release callback for the re-alloc'ed devres
-> + * will be called (except when falling back to devm_kmalloc() or when freeing
-> + * resources when new_size is zero). The contents of the memory are preserved
-> + * up to the lesser of new and old sizes.
-> + */
-> +void *devm_krealloc(struct device *dev, void *ptr, size_t new_size, gfp_t gfp)
-> +{
-> +	struct devres *old_dr, *new_dr;
-> +	struct list_head old_head;
-> +	unsigned long flags;
-> +	size_t total_size;
-> +	void *ret = NULL;
-> +
-> +	if (unlikely(!new_size)) {
-> +		devm_kfree(dev, ptr);
-> +		return ZERO_SIZE_PTR;
-> +	}
-> +
-> +	if (unlikely(ZERO_OR_NULL_PTR(ptr)))
-> +		return devm_kmalloc(dev, new_size, gfp);
-> +
-> +	if (WARN_ON(is_kernel_rodata((unsigned long)ptr)))
-> +		/*
-> +		 * We cannot reliably realloc a const string returned by
-> +		 * devm_kstrdup_const().
-> +		 */
-> +		return NULL;
-> +
-> +	if (!check_dr_size(new_size, &total_size))
-> +		return NULL;
-> +
-> +	spin_lock_irqsave(&dev->devres_lock, flags);
-> +
-> +	old_dr = find_dr(dev, devm_kmalloc_release, devm_kmalloc_match, ptr);
-> +	if (!old_dr) {
-> +		spin_unlock_irqrestore(&dev->devres_lock, flags);
-> +		WARN(1, "Memory chunk not managed or managed by a different device.");
-> +		return NULL;
-> +	}
-> +
-> +	old_head = old_dr->node.entry;
-> +
-> +	new_dr = krealloc(old_dr, total_size, gfp);
-> +	if (!new_dr) {
-> +		spin_unlock_irqrestore(&dev->devres_lock, flags);
-> +		return NULL;
-> +	}
-> +
-> +	if (new_dr != old_dr)
-> +		list_replace(&old_head, &new_dr->node.entry);
-> +
-> +	ret = new_dr->data;
-> +	spin_unlock_irqrestore(&dev->devres_lock, flags);
-> +	return ret;
-> +}
-> +EXPORT_SYMBOL_GPL(devm_krealloc);
-> +
->  /**
->   * devm_kstrdup - Allocate resource managed space and
->   *                copy an existing string into that.
-> diff --git a/include/linux/device.h b/include/linux/device.h
-> index 7322c51e9c0c7..f64f408431593 100644
-> --- a/include/linux/device.h
-> +++ b/include/linux/device.h
-> @@ -206,6 +206,8 @@ int devres_release_group(struct device *dev, void *id);
->  
->  /* managed devm_k.alloc/kfree for device drivers */
->  void *devm_kmalloc(struct device *dev, size_t size, gfp_t gfp) __malloc;
-> +void *devm_krealloc(struct device *dev, void *ptr, size_t size,
-> +		    gfp_t gfp) __must_check;
->  __printf(3, 0) char *devm_kvasprintf(struct device *dev, gfp_t gfp,
->  				     const char *fmt, va_list ap) __malloc;
->  __printf(3, 4) char *devm_kasprintf(struct device *dev, gfp_t gfp,
-> -- 
-> 2.26.1
-> 
+Summary:
+  Start:      e9919e11e219 Merge branch 'for-linus' of git://git.kernel.org=
+/pub/scm/linux/kernel/git/dtor/input
+  Plain log:  https://storage.kernelci.org/mainline/master/v5.8-rc5-16-ge99=
+19e11e219/arm/vexpress_defconfig/gcc-8/lab-collabora/baseline-vexpress-v2p-=
+ca15-tc1.txt
+  HTML log:   https://storage.kernelci.org/mainline/master/v5.8-rc5-16-ge99=
+19e11e219/arm/vexpress_defconfig/gcc-8/lab-collabora/baseline-vexpress-v2p-=
+ca15-tc1.html
+  Result:     38ac46002d1d arm: dts: vexpress: Move mcc node back into moth=
+erboard node
 
--- 
-With Best Regards,
-Andy Shevchenko
+Checks:
+  revert:     PASS
+  verify:     PASS
+
+Parameters:
+  Tree:       mainline
+  URL:        https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linu=
+x.git
+  Branch:     master
+  Target:     qemu_arm-vexpress-a15
+  CPU arch:   arm
+  Lab:        lab-collabora
+  Compiler:   gcc-8
+  Config:     vexpress_defconfig
+  Test case:  baseline.dmesg.crit
+
+Breaking commit found:
+
+---------------------------------------------------------------------------=
+----
+commit 38ac46002d1df5707566a73486452851341028d2
+Author: Andre Przywara <andre.przywara@arm.com>
+Date:   Wed Jun 3 17:22:37 2020 +0100
+
+    arm: dts: vexpress: Move mcc node back into motherboard node
+    =
+
+    Commit d9258898ad49 ("arm64: dts: arm: vexpress: Move fixed devices
+    out of bus node") moved the "mcc" DT node into the root node, because
+    it does not have any children using "reg" properties, so does violate
+    some dtc checks about "simple-bus" nodes.
+    =
+
+    However this broke the vexpress config-bus code, which walks up the
+    device tree to find the first node with an "arm,vexpress,site" property.
+    This gave the wrong result (matching the root node instead of the
+    motherboard node), so broke the clocks and some other devices for
+    VExpress boards.
+    =
+
+    Move the whole node back into its original position. This re-introduces
+    the dtc warning, but is conceptually the right thing to do. The dtc
+    warning seems to be overzealous here, there are discussions on fixing or
+    relaxing this check instead.
+    =
+
+    Link: https://lore.kernel.org/r/20200603162237.16319-1-andre.przywara@a=
+rm.com
+    Fixes: d9258898ad49 ("arm64: dts: vexpress: Move fixed devices out of b=
+us node")
+    Reported-and-tested-by: Guenter Roeck <linux@roeck-us.net>
+    Signed-off-by: Andre Przywara <andre.przywara@arm.com>
+    Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
+
+diff --git a/arch/arm/boot/dts/vexpress-v2m-rs1.dtsi b/arch/arm/boot/dts/ve=
+xpress-v2m-rs1.dtsi
+index e6308fb76183..a88ee5294d35 100644
+--- a/arch/arm/boot/dts/vexpress-v2m-rs1.dtsi
++++ b/arch/arm/boot/dts/vexpress-v2m-rs1.dtsi
+@@ -100,79 +100,6 @@
+ 		};
+ 	};
+ =
+
+-	mcc {
+-		compatible =3D "arm,vexpress,config-bus";
+-		arm,vexpress,config-bridge =3D <&v2m_sysreg>;
+-
+-		oscclk0 {
+-			/* MCC static memory clock */
+-			compatible =3D "arm,vexpress-osc";
+-			arm,vexpress-sysreg,func =3D <1 0>;
+-			freq-range =3D <25000000 60000000>;
+-			#clock-cells =3D <0>;
+-			clock-output-names =3D "v2m:oscclk0";
+-		};
+-
+-		v2m_oscclk1: oscclk1 {
+-			/* CLCD clock */
+-			compatible =3D "arm,vexpress-osc";
+-			arm,vexpress-sysreg,func =3D <1 1>;
+-			freq-range =3D <23750000 65000000>;
+-			#clock-cells =3D <0>;
+-			clock-output-names =3D "v2m:oscclk1";
+-		};
+-
+-		v2m_oscclk2: oscclk2 {
+-			/* IO FPGA peripheral clock */
+-			compatible =3D "arm,vexpress-osc";
+-			arm,vexpress-sysreg,func =3D <1 2>;
+-			freq-range =3D <24000000 24000000>;
+-			#clock-cells =3D <0>;
+-			clock-output-names =3D "v2m:oscclk2";
+-		};
+-
+-		volt-vio {
+-			/* Logic level voltage */
+-			compatible =3D "arm,vexpress-volt";
+-			arm,vexpress-sysreg,func =3D <2 0>;
+-			regulator-name =3D "VIO";
+-			regulator-always-on;
+-			label =3D "VIO";
+-		};
+-
+-		temp-mcc {
+-			/* MCC internal operating temperature */
+-			compatible =3D "arm,vexpress-temp";
+-			arm,vexpress-sysreg,func =3D <4 0>;
+-			label =3D "MCC";
+-		};
+-
+-		reset {
+-			compatible =3D "arm,vexpress-reset";
+-			arm,vexpress-sysreg,func =3D <5 0>;
+-		};
+-
+-		muxfpga {
+-			compatible =3D "arm,vexpress-muxfpga";
+-			arm,vexpress-sysreg,func =3D <7 0>;
+-		};
+-
+-		shutdown {
+-			compatible =3D "arm,vexpress-shutdown";
+-			arm,vexpress-sysreg,func =3D <8 0>;
+-		};
+-
+-		reboot {
+-			compatible =3D "arm,vexpress-reboot";
+-			arm,vexpress-sysreg,func =3D <9 0>;
+-		};
+-
+-		dvimode {
+-			compatible =3D "arm,vexpress-dvimode";
+-			arm,vexpress-sysreg,func =3D <11 0>;
+-		};
+-	};
+-
+ 	bus@8000000 {
+ 		motherboard-bus {
+ 			model =3D "V2M-P1";
+@@ -435,6 +362,79 @@
+ 						};
+ 					};
+ 				};
++
++				mcc {
++					compatible =3D "arm,vexpress,config-bus";
++					arm,vexpress,config-bridge =3D <&v2m_sysreg>;
++
++					oscclk0 {
++						/* MCC static memory clock */
++						compatible =3D "arm,vexpress-osc";
++						arm,vexpress-sysreg,func =3D <1 0>;
++						freq-range =3D <25000000 60000000>;
++						#clock-cells =3D <0>;
++						clock-output-names =3D "v2m:oscclk0";
++					};
++
++					v2m_oscclk1: oscclk1 {
++						/* CLCD clock */
++						compatible =3D "arm,vexpress-osc";
++						arm,vexpress-sysreg,func =3D <1 1>;
++						freq-range =3D <23750000 65000000>;
++						#clock-cells =3D <0>;
++						clock-output-names =3D "v2m:oscclk1";
++					};
++
++					v2m_oscclk2: oscclk2 {
++						/* IO FPGA peripheral clock */
++						compatible =3D "arm,vexpress-osc";
++						arm,vexpress-sysreg,func =3D <1 2>;
++						freq-range =3D <24000000 24000000>;
++						#clock-cells =3D <0>;
++						clock-output-names =3D "v2m:oscclk2";
++					};
++
++					volt-vio {
++						/* Logic level voltage */
++						compatible =3D "arm,vexpress-volt";
++						arm,vexpress-sysreg,func =3D <2 0>;
++						regulator-name =3D "VIO";
++						regulator-always-on;
++						label =3D "VIO";
++					};
++
++					temp-mcc {
++						/* MCC internal operating temperature */
++						compatible =3D "arm,vexpress-temp";
++						arm,vexpress-sysreg,func =3D <4 0>;
++						label =3D "MCC";
++					};
++
++					reset {
++						compatible =3D "arm,vexpress-reset";
++						arm,vexpress-sysreg,func =3D <5 0>;
++					};
++
++					muxfpga {
++						compatible =3D "arm,vexpress-muxfpga";
++						arm,vexpress-sysreg,func =3D <7 0>;
++					};
++
++					shutdown {
++						compatible =3D "arm,vexpress-shutdown";
++						arm,vexpress-sysreg,func =3D <8 0>;
++					};
++
++					reboot {
++						compatible =3D "arm,vexpress-reboot";
++						arm,vexpress-sysreg,func =3D <9 0>;
++					};
++
++					dvimode {
++						compatible =3D "arm,vexpress-dvimode";
++						arm,vexpress-sysreg,func =3D <11 0>;
++					};
++				};
+ 			};
+ 		};
+ 	};
+---------------------------------------------------------------------------=
+----
 
 
+Git bisection log:
+
+---------------------------------------------------------------------------=
+----
+git bisect start
+# good: [719fdd32921fb7e3208db8832d32ae1c2d68900f] afs: Fix storage of cell=
+ names
+git bisect good 719fdd32921fb7e3208db8832d32ae1c2d68900f
+# bad: [e9919e11e219eaa5e8041b7b1a196839143e9125] Merge branch 'for-linus' =
+of git://git.kernel.org/pub/scm/linux/kernel/git/dtor/input
+git bisect bad e9919e11e219eaa5e8041b7b1a196839143e9125
+# bad: [6d12075ddeedc38d25c5b74e929e686158da728c] Merge tag 'mtd/fixes-for-=
+5.8-rc5' of git://git.kernel.org/pub/scm/linux/kernel/git/mtd/linux
+git bisect bad 6d12075ddeedc38d25c5b74e929e686158da728c
+# bad: [684c8ccc40d7e5408d597a43712bad3827d3fb94] Merge tag 'devicetree-fix=
+es-for-5.8-2' of git://git.kernel.org/pub/scm/linux/kernel/git/robh/linux
+git bisect bad 684c8ccc40d7e5408d597a43712bad3827d3fb94
+# bad: [e44b59cd758acdd413512d4597a1fabdadfe3abf] Merge tag 'arm-fixes-5.8-=
+1' of git://git.kernel.org/pub/scm/linux/kernel/git/soc/soc
+git bisect bad e44b59cd758acdd413512d4597a1fabdadfe3abf
+# good: [91a9a90d040e8b9ff63d48ea71468e0f4db764ff] Merge tag 'sched_urgent_=
+for_5.8_rc3' of git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip
+git bisect good 91a9a90d040e8b9ff63d48ea71468e0f4db764ff
+# bad: [42d3f7e8da1bc55e3109f612c519c945f6587194] Merge tag 'imx-fixes-5.8'=
+ of git://git.kernel.org/pub/scm/linux/kernel/git/shawnguo/linux into arm/f=
+ixes
+git bisect bad 42d3f7e8da1bc55e3109f612c519c945f6587194
+# bad: [6d89c73ca5813768a2cc66f7420ac0cbddf4f37d] Merge tag 'arm-soc/for-5.=
+8/soc-fixes' of https://github.com/Broadcom/stblinux into arm/fixes
+git bisect bad 6d89c73ca5813768a2cc66f7420ac0cbddf4f37d
+# bad: [0f77ce26ebcf6ea384421d2dd47b924b83649692] Revert "ARM: sti: Impleme=
+nt dummy L2 cache's write_sec"
+git bisect bad 0f77ce26ebcf6ea384421d2dd47b924b83649692
+# bad: [d68ec1644dd546851d651787a638aead32a60a6f] Merge tag 'juno-fix-5.8' =
+of git://git.kernel.org/pub/scm/linux/kernel/git/sudeep.holla/linux into ar=
+m/fixes
+git bisect bad d68ec1644dd546851d651787a638aead32a60a6f
+# bad: [38ac46002d1df5707566a73486452851341028d2] arm: dts: vexpress: Move =
+mcc node back into motherboard node
+git bisect bad 38ac46002d1df5707566a73486452851341028d2
+# first bad commit: [38ac46002d1df5707566a73486452851341028d2] arm: dts: ve=
+xpress: Move mcc node back into motherboard node
+---------------------------------------------------------------------------=
+----
