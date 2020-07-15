@@ -2,152 +2,161 @@ Return-Path: <SRS0=kup7=A2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F99DC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 16:40:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51FB4C433ED
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 16:40:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D7ED720658
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 16:40:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 25F6E20658
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 16:40:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="iJ+X+zEE"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="NtioENTc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726546AbgGOQkI (ORCPT
+        id S1727101AbgGOQkb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 12:40:08 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:42748 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725991AbgGOQkI (ORCPT
+        Wed, 15 Jul 2020 12:40:31 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:43492 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725832AbgGOQk1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 12:40:08 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06FGSbYv028465;
-        Wed, 15 Jul 2020 16:39:55 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
- mime-version : subject : from : in-reply-to : date : cc :
- content-transfer-encoding : message-id : references : to;
- s=corp-2020-01-29; bh=k5zSAo+DYmjFyDq68+jvxd9Dt4r7usycofHJ4FxGsj0=;
- b=iJ+X+zEEPIgVZc2AkcyIn43zzb23xgQjntkuFE0A0WoQvjZhL+rjDVz81aSqYF/8Bm0L
- KQWUZ6SnInwMQT3gxrANrGXjhG/wlq2vQbj7yV4Re4MGYihN+IQ9Uykn2venSiByOgPY
- CXgpAoBTwoamCDXTbdgi/tVYMC/IGHXiWKQhgkyUPjAoAfjBrW688jgrUOYffIkxeIJW
- s+o1AHbpZeogNaXAmn791ynPZXzvRmDUmbzwZpy58Ajq9woy64GzOBTW1Pyy1VzEZjVv
- ctL/8gp532Re6au6ejWLvmXv1WJd9wLCXSlD47pmsQYzrONiBuvAzJED5HqiSwTO+NHn Ng== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2130.oracle.com with ESMTP id 3274urcjsw-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 15 Jul 2020 16:39:55 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06FGNdxH046871;
-        Wed, 15 Jul 2020 16:39:54 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by aserp3020.oracle.com with ESMTP id 327qb847t5-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 15 Jul 2020 16:39:54 +0000
-Received: from abhmp0003.oracle.com (abhmp0003.oracle.com [141.146.116.9])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 06FGdlwv006212;
-        Wed, 15 Jul 2020 16:39:47 GMT
-Received: from anon-dhcp-152.1015granger.net (/68.61.232.219)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 15 Jul 2020 09:39:47 -0700
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.80.23.2.2\))
-Subject: Re: [PATCH] xprtrdma: fix incorrect header size calcations
-From:   Chuck Lever <chuck.lever@oracle.com>
-In-Reply-To: <eb5d2ead-807b-3435-5024-b8cc4a1311f3@canonical.com>
-Date:   Wed, 15 Jul 2020 12:39:46 -0400
-Cc:     Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <anna.schumaker@netapp.com>,
-        Bruce Fields <bfields@fieldses.org>,
-        "David S . Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
-        netdev@vger.kernel.org, kernel-janitors@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <20DD16C5-2A91-4B3A-9879-D381EE40AF1A@oracle.com>
-References: <20200715162604.1080552-1-colin.king@canonical.com>
- <eb5d2ead-807b-3435-5024-b8cc4a1311f3@canonical.com>
-To:     Colin Ian King <colin.king@canonical.com>
-X-Mailer: Apple Mail (2.3608.80.23.2.2)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9683 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 malwarescore=0
- mlxscore=0 spamscore=0 phishscore=0 suspectscore=0 bulkscore=0
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2007150129
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9683 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 lowpriorityscore=0 impostorscore=0
- suspectscore=0 phishscore=0 spamscore=0 mlxlogscore=999 malwarescore=0
- mlxscore=0 priorityscore=1501 adultscore=0 bulkscore=0 clxscore=1011
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2007150129
+        Wed, 15 Jul 2020 12:40:27 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 06FGeKb7021727;
+        Wed, 15 Jul 2020 11:40:20 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1594831220;
+        bh=XMzq7561T5RJCzslEP/YdFioyB6s0Mb3+VrTCfsQ4JQ=;
+        h=From:To:Subject:Date:In-Reply-To:References;
+        b=NtioENTc8+mTEg1owiNn5sqHQ843hk2+1KJ3bGXS8oh4j2xDrjjf+mvkYAikT2XcV
+         Yb46xuRguPOyVwtHDz5+Vkcb/PkQrz9WoF56tA69f32+5VD/ZC0UTBW0zShlbMZ0BD
+         ZsbSvWAnkLlZQxFvNPq4s1uaeDSHGMOnKwyoOaGw=
+Received: from DLEE112.ent.ti.com (dlee112.ent.ti.com [157.170.170.23])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 06FGeKQf031815;
+        Wed, 15 Jul 2020 11:40:20 -0500
+Received: from DLEE109.ent.ti.com (157.170.170.41) by DLEE112.ent.ti.com
+ (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Wed, 15
+ Jul 2020 11:40:20 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE109.ent.ti.com
+ (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Wed, 15 Jul 2020 11:40:20 -0500
+Received: from uda0868495.fios-router.home (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 06FGeCvc081717;
+        Wed, 15 Jul 2020 11:40:19 -0500
+From:   Murali Karicheri <m-karicheri2@ti.com>
+To:     <davem@davemloft.net>, <kuba@kernel.org>, <netdev@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-api@vger.kernel.org>,
+        <nsekhar@ti.com>, <grygorii.strashko@ti.com>,
+        <vinicius.gomes@intel.com>
+Subject: [net-next PATCH v2 4/9] net: hsr: introduce common code for skb initialization
+Date:   Wed, 15 Jul 2020 12:40:05 -0400
+Message-ID: <20200715164012.1222-5-m-karicheri2@ti.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200715164012.1222-1-m-karicheri2@ti.com>
+References: <20200715164012.1222-1-m-karicheri2@ti.com>
+MIME-Version: 1.0
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+As a preparatory patch to introduce PRP protocol support in the
+driver, refactor the skb init code to a separate function.
 
+Signed-off-by: Murali Karicheri <m-karicheri2@ti.com>
+---
+ net/hsr/hsr_device.c | 41 ++++++++++++++++++++++++++++-------------
+ 1 file changed, 28 insertions(+), 13 deletions(-)
 
-> On Jul 15, 2020, at 12:31 PM, Colin Ian King =
-<colin.king@canonical.com> wrote:
->=20
-> Bah, $SUBJECT typo "calcations" -> "calculations". can that be fixed =
-up
-> when it's applied, or shall I send a V2?
-
-Anna's preference.
-
-Reviewed-by: Chuck Lever <chuck.lever@oracle.com>
-
-
-> On 15/07/2020 17:26, Colin King wrote:
->> From: Colin Ian King <colin.king@canonical.com>
->>=20
->> Currently the header size calculations are using an assignment
->> operator instead of a +=3D operator when accumulating the header
->> size leading to incorrect sizes.  Fix this by using the correct
->> operator.
->>=20
->> Addresses-Coverity: ("Unused value")
->> Fixes: 302d3deb2068 ("xprtrdma: Prevent inline overflow")
->> Signed-off-by: Colin Ian King <colin.king@canonical.com>
->> ---
->> net/sunrpc/xprtrdma/rpc_rdma.c | 4 ++--
->> 1 file changed, 2 insertions(+), 2 deletions(-)
->>=20
->> diff --git a/net/sunrpc/xprtrdma/rpc_rdma.c =
-b/net/sunrpc/xprtrdma/rpc_rdma.c
->> index 935bbef2f7be..453bacc99907 100644
->> --- a/net/sunrpc/xprtrdma/rpc_rdma.c
->> +++ b/net/sunrpc/xprtrdma/rpc_rdma.c
->> @@ -71,7 +71,7 @@ static unsigned int =
-rpcrdma_max_call_header_size(unsigned int maxsegs)
->> 	size =3D RPCRDMA_HDRLEN_MIN;
->>=20
->> 	/* Maximum Read list size */
->> -	size =3D maxsegs * rpcrdma_readchunk_maxsz * sizeof(__be32);
->> +	size +=3D maxsegs * rpcrdma_readchunk_maxsz * sizeof(__be32);
->>=20
->> 	/* Minimal Read chunk size */
->> 	size +=3D sizeof(__be32);	/* segment count */
->> @@ -94,7 +94,7 @@ static unsigned int =
-rpcrdma_max_reply_header_size(unsigned int maxsegs)
->> 	size =3D RPCRDMA_HDRLEN_MIN;
->>=20
->> 	/* Maximum Write list size */
->> -	size =3D sizeof(__be32);		/* segment count */
->> +	size +=3D sizeof(__be32);		/* segment count */
->> 	size +=3D maxsegs * rpcrdma_segment_maxsz * sizeof(__be32);
->> 	size +=3D sizeof(__be32);	/* list discriminator */
->>=20
->>=20
->=20
-
---
-Chuck Lever
-
-
+diff --git a/net/hsr/hsr_device.c b/net/hsr/hsr_device.c
+index ddc6582a89be..b1effa8b2403 100644
+--- a/net/hsr/hsr_device.c
++++ b/net/hsr/hsr_device.c
+@@ -230,15 +230,11 @@ static const struct header_ops hsr_header_ops = {
+ 	.parse	 = eth_header_parse,
+ };
+ 
+-static void send_hsr_supervision_frame(struct hsr_port *master,
+-				       u8 type, u8 hsr_ver)
++static struct sk_buff *hsr_init_skb(struct hsr_port *master, u8 hsr_ver)
+ {
++	struct hsr_priv *hsr = master->hsr;
+ 	struct sk_buff *skb;
+ 	int hlen, tlen;
+-	struct hsr_tag *hsr_tag;
+-	struct hsr_sup_tag *hsr_stag;
+-	struct hsr_sup_payload *hsr_sp;
+-	unsigned long irqflags;
+ 
+ 	hlen = LL_RESERVED_SPACE(master->dev);
+ 	tlen = master->dev->needed_tailroom;
+@@ -247,22 +243,44 @@ static void send_hsr_supervision_frame(struct hsr_port *master,
+ 			    sizeof(struct hsr_sup_payload) + hlen + tlen);
+ 
+ 	if (!skb)
+-		return;
++		return skb;
+ 
+ 	skb_reserve(skb, hlen);
+-
+ 	skb->dev = master->dev;
+ 	skb->protocol = htons(hsr_ver ? ETH_P_HSR : ETH_P_PRP);
+ 	skb->priority = TC_PRIO_CONTROL;
+ 
+ 	if (dev_hard_header(skb, skb->dev, (hsr_ver ? ETH_P_HSR : ETH_P_PRP),
+-			    master->hsr->sup_multicast_addr,
++			    hsr->sup_multicast_addr,
+ 			    skb->dev->dev_addr, skb->len) <= 0)
+ 		goto out;
++
+ 	skb_reset_mac_header(skb);
+ 	skb_reset_network_header(skb);
+ 	skb_reset_transport_header(skb);
+ 
++	return skb;
++out:
++	kfree_skb(skb);
++
++	return NULL;
++}
++
++static void send_hsr_supervision_frame(struct hsr_port *master,
++				       u8 type, u8 hsr_ver)
++{
++	struct sk_buff *skb;
++	struct hsr_tag *hsr_tag;
++	struct hsr_sup_tag *hsr_stag;
++	struct hsr_sup_payload *hsr_sp;
++	unsigned long irqflags;
++
++	skb = hsr_init_skb(master, hsr_ver);
++	if (!skb) {
++		WARN_ONCE(1, "HSR: Could not send supervision frame\n");
++		return;
++	}
++
+ 	if (hsr_ver > 0) {
+ 		hsr_tag = skb_put(skb, sizeof(struct hsr_tag));
+ 		hsr_tag->encap_proto = htons(ETH_P_PRP);
+@@ -299,11 +317,8 @@ static void send_hsr_supervision_frame(struct hsr_port *master,
+ 		return;
+ 
+ 	hsr_forward_skb(skb, master);
+-	return;
+ 
+-out:
+-	WARN_ONCE(1, "HSR: Could not send supervision frame\n");
+-	kfree_skb(skb);
++	return;
+ }
+ 
+ /* Announce (supervision frame) timer function
+-- 
+2.17.1
 
