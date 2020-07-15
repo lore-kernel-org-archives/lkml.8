@@ -2,117 +2,94 @@ Return-Path: <SRS0=kup7=A2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15417C433E5
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 06:33:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD88AC433E4
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 06:35:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EF7562067D
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 06:33:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7EE012068F
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 06:35:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="iqnWMJ1I"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728712AbgGOGdo (ORCPT
+        id S1728177AbgGOGfA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 02:33:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34322 "EHLO
+        Wed, 15 Jul 2020 02:35:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34520 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725823AbgGOGdo (ORCPT
+        with ESMTP id S1725823AbgGOGe7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 02:33:44 -0400
-Received: from smtp.al2klimov.de (smtp.al2klimov.de [IPv6:2a01:4f8:c0c:1465::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 301E4C061755;
-        Tue, 14 Jul 2020 23:33:44 -0700 (PDT)
-Received: from authenticated-user (PRIMARY_HOSTNAME [PUBLIC_IP])
-        by smtp.al2klimov.de (Postfix) with ESMTPA id 06794BC069;
-        Wed, 15 Jul 2020 06:33:39 +0000 (UTC)
-Subject: Re: [PATCH] Replace HTTP links with HTTPS ones: Xilinx video IP cores
-To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc:     hyun.kwon@xilinx.com, mchehab@kernel.org, robh+dt@kernel.org,
-        michal.simek@xilinx.com, linux-media@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-References: <20200705075524.22657-1-grandmaster@al2klimov.de>
- <20200714235724.GR5854@pendragon.ideasonboard.com>
-From:   "Alexander A. Klimov" <grandmaster@al2klimov.de>
-Message-ID: <5fca4c17-9e83-3936-0d8f-ad73ae760033@al2klimov.de>
-Date:   Wed, 15 Jul 2020 08:33:35 +0200
+        Wed, 15 Jul 2020 02:34:59 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DA66AC061755;
+        Tue, 14 Jul 2020 23:34:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=uhPc2J6glGI+RDlliWDq3XWJeCjKpR3A1WQFVmhZIBw=; b=iqnWMJ1IUFJiYzarQTP0Rd49hG
+        Q2CSm1hkwddUk1VLFftC4UznnibgkB1spxve3NbIp4pRHH3eOHfdbcV+6pt9ZWXLBVHDq/7cxOdUd
+        cjSj2kYQwvl+YvWzkoBQu82Ujw1kmWPxiAMpZuBQJ7axxmppkEh2xRanLkr2w/CGYLX1GiX/8BKXz
+        5gmjQmCsk3eUw4WTZosg5ZjBjcriJ72OKFrMcDoc4/sna9rNpvTmYO7GPSOZ0tHoRipjzxo3EGe0L
+        +BJ/lPgu1bBtJV0IZEloy7GocgXDDrrDVbssaCcIBbYH3KBPSjBy0hxdhPdimTZdMGXRrZNZIGC95
+        m5SF1n9A==;
+Received: from hch by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jvb0K-0000mc-IN; Wed, 15 Jul 2020 06:34:56 +0000
+Date:   Wed, 15 Jul 2020 07:34:56 +0100
+From:   Christoph Hellwig <hch@infradead.org>
+To:     "Eric W. Biederman" <ebiederm@xmission.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Kees Cook <keescook@chromium.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        linux-fsdevel@vger.kernel.org,
+        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
+        linux-security-module@vger.kernel.org,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        James Morris <jmorris@namei.org>,
+        Kentaro Takeda <takedakn@nttdata.co.jp>,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        John Johansen <john.johansen@canonical.com>,
+        Christoph Hellwig <hch@infradead.org>
+Subject: Re: [PATCH 3/7] exec: Move initialization of bprm->filename into
+ alloc_bprm
+Message-ID: <20200715063456.GC32470@infradead.org>
+References: <871rle8bw2.fsf@x220.int.ebiederm.org>
+ <87k0z66x8f.fsf@x220.int.ebiederm.org>
 MIME-Version: 1.0
-In-Reply-To: <20200714235724.GR5854@pendragon.ideasonboard.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Spamd-Bar: +
-Authentication-Results: smtp.al2klimov.de;
-        auth=pass smtp.auth=aklimov@al2klimov.de smtp.mailfrom=grandmaster@al2klimov.de
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87k0z66x8f.fsf@x220.int.ebiederm.org>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Jul 14, 2020 at 08:29:36AM -0500, Eric W. Biederman wrote:
+>  
+> -static struct linux_binprm *alloc_bprm(void)
+> +static struct linux_binprm *alloc_bprm(int fd, struct filename *filename)
+>  {
+>  	struct linux_binprm *bprm = kzalloc(sizeof(*bprm), GFP_KERNEL);
+> +	int retval = -ENOMEM;
+>  	if (!bprm)
+> -		return ERR_PTR(-ENOMEM);
+> +		goto out;
+> +
 
+Ok, so here we add to it.   Two nitpicks:
 
-Am 15.07.20 um 01:57 schrieb Laurent Pinchart:
-> Hi Alexander,
-> 
-> Thank you for the patch.
-> 
-> The subject line should be
-> 
-> dt-bindings: media: xilinx: Replace HTTP links with HTTPS ones
-> 
-> On Sun, Jul 05, 2020 at 09:55:24AM +0200, Alexander A. Klimov wrote:
->> Rationale:
->> Reduces attack surface on kernel devs opening the links for MITM
->> as HTTPS traffic is much harder to manipulate.
->>
->> Deterministic algorithm:
->> For each file:
->>    If not .svg:
->>      For each line:
->>        If doesn't contain `\bxmlns\b`:
->>          For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
->>            If both the HTTP and HTTPS versions
->>            return 200 OK and serve the same content:
->>              Replace HTTP with HTTPS.
->>
->> Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
-> 
-> Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-> 
-> Will you get this patch merged as part of a bigger series, or do you
-> expect us to take care of it ? In the latter case, if you agree with the
-I've just followed the patch submission instructions as for any 
-non-treewide patch. So yes, I assume the people I write to take care of 
-the patch.
+The abose is missing a blank line after the declarations, which really
+makes things more readable.  Also no need for the goto there.
 
-> subject line change, there's no need to resubmit, I can fix this when
-> applying the patch.
-OK.
+Otherwisel ooks good:
 
-> 
->> ---
->>   Continuing my work started at 93431e0607e5.
->>
->>   If there are any URLs to be removed completely or at least not HTTPSified:
->>   Just clearly say so and I'll *undo my change*.
->>   See also https://lkml.org/lkml/2020/6/27/64
->>
->>   If there are any valid, but yet not changed URLs:
->>   See https://lkml.org/lkml/2020/6/26/837
->>
->>   Documentation/devicetree/bindings/media/xilinx/video.txt | 2 +-
->>   1 file changed, 1 insertion(+), 1 deletion(-)
->>
->> diff --git a/Documentation/devicetree/bindings/media/xilinx/video.txt b/Documentation/devicetree/bindings/media/xilinx/video.txt
->> index 68ac210e688e..d0335ca0cd57 100644
->> --- a/Documentation/devicetree/bindings/media/xilinx/video.txt
->> +++ b/Documentation/devicetree/bindings/media/xilinx/video.txt
->> @@ -32,4 +32,4 @@ The following properties are common to all Xilinx video IP cores.
->>     defaults to "mono".
->>   
->>   
->> -[UG934] http://www.xilinx.com/support/documentation/ip_documentation/axi_videoip/v1_0/ug934_axi_videoIP.pdf
->> +[UG934] https://www.xilinx.com/support/documentation/ip_documentation/axi_videoip/v1_0/ug934_axi_videoIP.pdf
-> 
+Reviewed-by: Christoph Hellwig <hch@lst.de>
