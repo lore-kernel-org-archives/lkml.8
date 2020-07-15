@@ -2,130 +2,125 @@ Return-Path: <SRS0=kup7=A2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 939FDC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 02:22:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72D87C433E4
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 02:22:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6F8C42075D
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 02:22:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594779748;
-	bh=c4adXwgTz9+ULV0x1H07n31CpFW3Edu+uF+WF0+7G9c=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=qRX3gA0/x23HqAvuN4qCo1s46rrK9ZCpuE+qoR9c23zmh60q+A6BwQISdGeuXqYHu
-	 aMXN7hNacOjXddrY3N4MEUn7TCrPMWt4IHb168CDSRf+4jrXUQZEvehqp+FJCsIrBd
-	 yt55C0Vp5ToSlGq9GIa4FcPlOdZE/ZuA+2Px0TQw=
+	by mail.kernel.org (Postfix) with ESMTP id 5D4D72072D
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 02:22:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728284AbgGOCW1 (ORCPT
+        id S1728314AbgGOCWc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 22:22:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55692 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726458AbgGOCW0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 22:22:26 -0400
-Received: from mail-lj1-f178.google.com (mail-lj1-f178.google.com [209.85.208.178])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8FEC220729;
-        Wed, 15 Jul 2020 02:22:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594779745;
-        bh=c4adXwgTz9+ULV0x1H07n31CpFW3Edu+uF+WF0+7G9c=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=RmuNG9E7sSX4nRDZbRLxTevXtFu/bIOq03QJKfFuVBIO7XnxDNP94KFf+qM8bT4WK
-         j/fuHFx6wkd8kst4Y6b4xD4w8mg8DOsxn1JIRT+OC2wJX+qJUlzQLvyxneFzq/elTs
-         DZPNJSSV110zvBjvyjBN71PShvY2BsXkcLrjLyTs=
-Received: by mail-lj1-f178.google.com with SMTP id e4so831551ljn.4;
-        Tue, 14 Jul 2020 19:22:25 -0700 (PDT)
-X-Gm-Message-State: AOAM533edfqQm05gs4QWglCwoldo0kiaUuaza/Si/iPU/aN+/spoPLd3
-        Umf7lDAPnk0mJUtgsFGR7yKDY1b65VI5/IEJZ+I=
-X-Google-Smtp-Source: ABdhPJwrm2+zB1EhS3SfHGX0vYG35lCOW5okEt60TUk+1VM15EsRhzYEWaRG8mG/z5J3yAFF7b16dRsNls1wv3SMH6s=
-X-Received: by 2002:a2e:3a14:: with SMTP id h20mr3363025lja.331.1594779743917;
- Tue, 14 Jul 2020 19:22:23 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200714184105.507384017@linuxfoundation.org> <20200714184106.782410654@linuxfoundation.org>
-In-Reply-To: <20200714184106.782410654@linuxfoundation.org>
-From:   Chen-Yu Tsai <wens@kernel.org>
-Date:   Wed, 15 Jul 2020 10:22:13 +0800
-X-Gmail-Original-Message-ID: <CAGb2v65ecm+9iK7GY6xKUHNhjdDimcL8Kd6eg-yX_nOm5rMZjA@mail.gmail.com>
-Message-ID: <CAGb2v65ecm+9iK7GY6xKUHNhjdDimcL8Kd6eg-yX_nOm5rMZjA@mail.gmail.com>
-Subject: Re: [PATCH 5.4 026/109] drm/sun4i: mixer: Call of_dma_configure if
- theres an IOMMU
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
-        stable <stable@vger.kernel.org>,
-        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
-        Maxime Ripard <maxime@cerno.tech>,
-        Sasha Levin <sashal@kernel.org>
+        Tue, 14 Jul 2020 22:22:32 -0400
+Received: from kernel.crashing.org ([76.164.61.194]:36952 "EHLO
+        kernel.crashing.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726458AbgGOCWb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 22:22:31 -0400
+Received: from localhost (gate.crashing.org [63.228.1.57])
+        (authenticated bits=0)
+        by kernel.crashing.org (8.14.7/8.14.7) with ESMTP id 06F2JlC0001315
+        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
+        Tue, 14 Jul 2020 21:19:51 -0500
+Message-ID: <2629240c07af7fec5989127ed6da405e12cf77a3.camel@kernel.crashing.org>
+Subject: Re: [RFC PATCH 00/35] Move all PCIBIOS* definitions into arch/x86
+From:   Benjamin Herrenschmidt <benh@kernel.crashing.org>
+To:     Bjorn Helgaas <helgaas@kernel.org>, Arnd Bergmann <arnd@arndb.de>
+Cc:     "Saheed O. Bolarinwa" <refactormyself@gmail.com>,
+        bjorn@helgaas.com, Shuah Khan <skhan@linuxfoundation.org>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Richard Henderson <rth@twiddle.net>,
+        Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
+        Matt Turner <mattst88@gmail.com>,
+        Greg Ungerer <gerg@linux-m68k.org>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Russell King <linux@armlinux.org.uk>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Juergen Gross <jgross@suse.com>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Paul Mackerras <paulus@samba.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        sparclinux <sparclinux@vger.kernel.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@fb.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Toan Le <toan@os.amperecomputing.com>,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        Ley Foon Tan <ley.foon.tan@intel.com>,
+        Marek Vasut <marek.vasut+renesas@gmail.com>,
+        Kjetil Oftedal <oftedal@gmail.com>
+Date:   Wed, 15 Jul 2020 12:19:46 +1000
+In-Reply-To: <20200714234625.GA428442@bjorn-Precision-5520>
+References: <20200714234625.GA428442@bjorn-Precision-5520>
 Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.2 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Greg,
+On Tue, 2020-07-14 at 18:46 -0500, Bjorn Helgaas wrote:
+> Yes.  I have no problem with that.  There are a few cases where it's
+> important to check for errors, e.g., we read a status register and do
+> something based on a bit being set.  A failure will return all bits
+> set, and we may do the wrong thing.  But most of the errors we care
+> about will be on MMIO reads, not config reads, so we can probably
+> ignore most config read errors.
 
-On Wed, Jul 15, 2020 at 3:11 AM Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> From: Maxime Ripard <maxime@cerno.tech>
->
-> [ Upstream commit 842ec61f4006a6477a9deaedd69131e9f46e4cb5 ]
->
-> The main DRM device is actually a virtual device so it doesn't have the
-> iommus property, which is instead on the DMA masters, in this case the
-> mixers.
+And in both cases, we don't have the plumbing to provide accurate
+and reliable error returns for all platforms anyways (esp. not for
+MMIO).
 
-The iommu driver and DT changes were added in v5.8-rc1. IMO There is no
-point in backporting this patch to any stable kernel.
+I think it makes sense to stick to the good old "if all 1's, then go
+out of line" including for config space.
 
-ChenYu
+ ../..
 
-> Add a call to of_dma_configure with the mixers DT node but on the DRM
-> virtual device to configure it in the same way than the mixers.
->
-> Reviewed-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-> Signed-off-by: Maxime Ripard <maxime@cerno.tech>
-> Link: https://patchwork.freedesktop.org/patch/msgid/9a4daf438dd3f2fe07afb23688bfb793a0613d7d.1589378833.git-series.maxime@cerno.tech
-> (cherry picked from commit b718102dbdfd0285ad559687a30e27cc9124e592)
-> [Maxime: Applied to -fixes since it missed the merge window and display is
->          broken without it]
-> Signed-off-by: Maxime Ripard <maxime@cerno.tech>
-> Signed-off-by: Sasha Levin <sashal@kernel.org>
-> ---
->  drivers/gpu/drm/sun4i/sun8i_mixer.c | 13 +++++++++++++
->  1 file changed, 13 insertions(+)
->
-> diff --git a/drivers/gpu/drm/sun4i/sun8i_mixer.c b/drivers/gpu/drm/sun4i/sun8i_mixer.c
-> index 18b4881f44814..e24f225d80f1f 100644
-> --- a/drivers/gpu/drm/sun4i/sun8i_mixer.c
-> +++ b/drivers/gpu/drm/sun4i/sun8i_mixer.c
-> @@ -452,6 +452,19 @@ static int sun8i_mixer_bind(struct device *dev, struct device *master,
->         mixer->engine.ops = &sun8i_engine_ops;
->         mixer->engine.node = dev->of_node;
->
-> +       if (of_find_property(dev->of_node, "iommus", NULL)) {
-> +               /*
-> +                * This assume we have the same DMA constraints for
-> +                * all our the mixers in our pipeline. This sounds
-> +                * bad, but it has always been the case for us, and
-> +                * DRM doesn't do per-device allocation either, so we
-> +                * would need to fix DRM first...
-> +                */
-> +               ret = of_dma_configure(drm->dev, dev->of_node, true);
-> +               if (ret)
-> +                       return ret;
-> +       }
-> +
->         /*
->          * While this function can fail, we shouldn't do anything
->          * if this happens. Some early DE2 DT entries don't provide
-> --
-> 2.25.1
->
->
->
+> Yep, except for things like device removal or other PCI errors.
+
+A whole bunch of these are reported asynchronously, esp for writes (and
+yes, including config writes, they are supposed to be non-posted but
+more often than not, the path  from the CPU to the PCI bridge remains
+posted for writes including config ones).
+
+> So maybe a good place to start is by removing some of the useless
+> error checking for pci_read_config_*() and pci_write_config_*().
+> That's a decent-sized but not impractical project that could be done
+> per subsystem or something:
+> 
+>   git grep -E "(if|return|=).*\<pci_(read|write)_config" drivers
+> 
+> finds about 400 matches.
+> 
+> Some of those callers probably really *do* want to check for errors,
+> and I guess we'd have to identify them and do them separately as you
+> mentioned.
+
+I'd be curious about these considering how unreliable our error return
+is accross the board.
+
+Cheers,
+Ben.
+
+
