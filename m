@@ -2,131 +2,121 @@ Return-Path: <SRS0=kup7=A2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B957C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 11:34:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66A11C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 11:35:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 68D3F2063A
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 11:34:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3EA1B206F5
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 11:35:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ac8gFt6f"
+	dkim=pass (2048-bit key) header.d=pesu-pes-edu.20150623.gappssmtp.com header.i=@pesu-pes-edu.20150623.gappssmtp.com header.b="Jhuq7dRp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729035AbgGOLei (ORCPT
+        id S1729146AbgGOLfI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 07:34:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52648 "EHLO
+        Wed, 15 Jul 2020 07:35:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52730 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728970AbgGOLeh (ORCPT
+        with ESMTP id S1728970AbgGOLfH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 07:34:37 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6860AC08C5C1
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 04:34:37 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id s10so2237933wrw.12
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 04:34:37 -0700 (PDT)
+        Wed, 15 Jul 2020 07:35:07 -0400
+Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EA519C061755
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 04:35:06 -0700 (PDT)
+Received: by mail-lj1-x241.google.com with SMTP id z24so2167279ljn.8
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 04:35:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=amnN+tZUOWZ5o5gu9/BaU8xfX8cw/6xXvE3/vXYjLKQ=;
-        b=ac8gFt6fc03EWqx72+kQBSxrokYP8Po1DjfRHYCNQrzqX05C3sc2XfWosLGeUwuqFb
-         AR0p4SntE+94Wjh0RgBBTXE7ap6QeVlhHKGrMSuj42b4VkbNmSy2a6XyeWVqK87AgYJM
-         VAYU1x0RvG7GQt/kmIjyvBYmI8sLOwm0TN8VoKvP2BP17Dy8pH78dqu95LoSYTYZ5MoC
-         q3IJU90DUo3WCrxa0a74Qtl1pwezPtZXw9GrsROhf8Sx1Il76qkt72xdO001hJkXPOSa
-         ngSLzazrCRBOgC2fw15NhfoDssQXKXMoxW01qSHz74TvDXySb7fKxYJddXRSO5iPZHDS
-         6EEg==
+        d=pesu-pes-edu.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=NyvuHuxxjvWixAHxdaLAwZ6ZtVOaOESx6JTIlYQ1UFI=;
+        b=Jhuq7dRptRZ5adddt0e2fWxQLeRIVq1FjdGY4ntX0JfABPLOpttj04c173B1lrBZ4g
+         8uXkwo6UzwFqC5hkEEDc2a9n1T8mJMGUYndW26RFbW6Pg2itghKVqj/cXxheuqv3WuqN
+         iQgp70k8raExTKpMc6nuIxP+yg9EbrRXbvf/YYpT6b1XPq3F8/KhTWzGaQekYAN5yzw5
+         GJrP5cHIwNuQeKV7CzsgoOqSfcKTqfvRpPrepD5YhJR5jlCFoDd09AaqahvS5Zp5BuTZ
+         XVyrf6rU2CTqnb0SApTvqQKPcc5rigrHbpyVuTnDI7tvxBdfySGEuT40Mv2PYai+B1hq
+         QX9w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=amnN+tZUOWZ5o5gu9/BaU8xfX8cw/6xXvE3/vXYjLKQ=;
-        b=MvjwMRUY4/n99gpEH9XgL1DsduGU3OtFs8UAVHHIvzcS4tmMtpgbt0Fsx/sIJt6NPq
-         HEDuNhediwl1LksKM2mskEqb0/mdu8FO4tfjTVqb8khvY/e5jJPwEIXU2ohpmuqssHKb
-         iKrVvVD0eojml0gAXslZu4ny9NqSPXbUVNZPKtPrKOGoJHYt8uBxrBaJ6pPJZGXhE/oR
-         Y3F9Q3nAPEpEVQeoFFwEGKrD6DI0sJwYcOAef8n8Rf/PbRglQKloISb8cCQTELI64juM
-         f+rWZQU1nbKkEstxGRWDmph7p2c9d+bh9JPC6vQ9h6JiBNI1SEfp4thyQcOz6pHiF49Z
-         5Cug==
-X-Gm-Message-State: AOAM532sC6ku3qMp4COjNQpGLvtxbz+rQ4CVYB/D9f5ADiUFwVog0HrU
-        1RC1T/nKLk08F+P0VYrCfYKe2Q==
-X-Google-Smtp-Source: ABdhPJyOJ594kO/nH68gr/cagcLRLVrx6mi5PcaDxcb85XAJBXlNoyaEdFSfKDZf+nd45/NNKHZNlQ==
-X-Received: by 2002:a5d:408c:: with SMTP id o12mr10886895wrp.412.1594812876029;
-        Wed, 15 Jul 2020 04:34:36 -0700 (PDT)
-Received: from dell ([2.31.163.61])
-        by smtp.gmail.com with ESMTPSA id f15sm3020213wmj.44.2020.07.15.04.34.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 15 Jul 2020 04:34:35 -0700 (PDT)
-Date:   Wed, 15 Jul 2020 12:34:33 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     "Rafael J. Wysocki" <rafael@kernel.org>
-Cc:     Viresh Kumar <viresh.kumar@linaro.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Andy Grover <andrew.grover@intel.com>,
-        Paul Diefenbaugh <paul.s.diefenbaugh@intel.com>,
-        Dominik Brodowski <linux@brodo.de>,
-        Denis Sadykov <denis.m.sadykov@intel.com>
-Subject: Re: [PATCH 09/13] cpufreq: acpi-cpufreq: Remove unused ID structs
-Message-ID: <20200715113433.GB3165313@dell>
-References: <20200714145049.2496163-1-lee.jones@linaro.org>
- <20200714145049.2496163-10-lee.jones@linaro.org>
- <CAJZ5v0iB0K6H28DSDQj9T7k_kV10THxV6-HwN9qfmkLsYNHfiA@mail.gmail.com>
- <20200714210340.GJ1398296@dell>
- <20200715032442.gh2cliiddhv35fdj@vireshk-i7>
- <20200715032718.2zlo2eurhkpoayya@vireshk-i7>
- <CAJZ5v0jHJDLt6QFWG9FOpqmWMXAUuSEPHdHbVgFWcwR6FQD57Q@mail.gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=NyvuHuxxjvWixAHxdaLAwZ6ZtVOaOESx6JTIlYQ1UFI=;
+        b=VyZrXmPUiU1w3GJW1vCbjnqW2QJ5uFfb02HEU6i8ZsXjPfHUZoLaoqLltB9zPwl+4t
+         xsY6mmiBj7wiKNoKL5BEM1eSaeKi8KPN2VwE8WaB43IBruBQXwmyZhp++ArzYswQn+bI
+         ieigMFFf8p6E9tq4cctZTk12y/abTu5Ri+6ZnzGdk37nWedJssOIsUTZ5PULhdtaTncy
+         QKv3yE0n/KGEZBtkqpxi1ETVFCX7TpUie1Iq2PuwBOgO8QwGKD/biNWk3pSPw7sVtbfJ
+         apEI5HMvv9XY1jqk4p36RWNjDB4+Kkaj7klBhCX4akc2UE26FPQAcDcO6DFSVepoz3IF
+         VkUg==
+X-Gm-Message-State: AOAM533nkMqcDPMUmyFFZtb17oEY3mVXX2q6BMa1rC2IXZoYGRNDbBov
+        LaAyZh8wX0sT91FYjBPgZJBuZDENX1UtkYi7Kq/AnA==
+X-Google-Smtp-Source: ABdhPJypBz7OPH34QSSqjFhSDKduQLyFK7h7ytCItXKjSyyGAdzJH56C7G4s+wNbRfW9+iKL7RwMwzST90cJjgc3/Y0=
+X-Received: by 2002:a2e:b4ed:: with SMTP id s13mr4678829ljm.296.1594812905302;
+ Wed, 15 Jul 2020 04:35:05 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAJZ5v0jHJDLt6QFWG9FOpqmWMXAUuSEPHdHbVgFWcwR6FQD57Q@mail.gmail.com>
+References: <20200715044813.fww3regsgsbgyp7b@pesu-pes-edu> <4aa4d949-7ef9-ccfe-bf5c-11a380c8f542@mev.co.uk>
+In-Reply-To: <4aa4d949-7ef9-ccfe-bf5c-11a380c8f542@mev.co.uk>
+From:   B K Karthik <bkkarthik@pesu.pes.edu>
+Date:   Wed, 15 Jul 2020 07:34:53 -0400
+Message-ID: <CAAhDqq0NYcX+UJi+GfbLP7q-MqrXfDaoB5z64GmgO3L7zpCMjQ@mail.gmail.com>
+Subject: Re: [PATCH] staging: comedi: comedi_fops.c: changed type in
+ assignment to unsigned int *
+To:     Ian Abbott <abbotti@mev.co.uk>
+Cc:     H Hartley Sweeten <hsweeten@visionengravers.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Xiyu Yang <xiyuyang19@fudan.edu.cn>,
+        Michel Lespinasse <walken@google.com>,
+        Divyansh Kamboj <kambojdivyansh2000@gmail.com>,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 15 Jul 2020, Rafael J. Wysocki wrote:
-
-> On Wed, Jul 15, 2020 at 5:27 AM Viresh Kumar <viresh.kumar@linaro.org> wrote:
+On Wed, Jul 15, 2020 at 7:19 AM Ian Abbott <abbotti@mev.co.uk> wrote:
+>
+> On 15/07/2020 05:48, B K Karthik wrote:
+> > fixed a sparse warning by changing the type in
+> > assignment from void [noderef] __user * to unsigned int *
+> > (different address space)
 > >
-> > On 15-07-20, 08:54, Viresh Kumar wrote:
-> > > On 14-07-20, 22:03, Lee Jones wrote:
-> > > > On Tue, 14 Jul 2020, Rafael J. Wysocki wrote:
-> > > >
-> > > > > On Tue, Jul 14, 2020 at 4:51 PM Lee Jones <lee.jones@linaro.org> wrote:
-> > > > > >
-> > > > > > Can't see them being used anywhere and the compiler doesn't complain
-> > > > > > that they're missing, so ...
-> > > > >
-> > > > > Aren't they needed for automatic module loading in certain configurations?
-> > > >
-> > > > Any idea how that works, or where the code is for that?
-> > >
-> > > The MODULE_DEVICE_TABLE() thingy creates a map of vendor-id,
-> > > product-id that the kernel keeps after boot (and so there is no static
-> > > reference of it for the compiler), later when a device is hotplugged
-> > > into the kernel it refers to the map to find the related driver for it
-> > > and loads it if it isn't already loaded.
-> > >
-> > > This has some of it, search for MODULE_DEVICE_TABLE() in it.
-> > > Documentation/driver-api/usb/hotplug.rst
+> > Signed-off-by: B K Karthik <karthik.bk2000@live.com>
+> > ---
+> >   drivers/staging/comedi/comedi_fops.c | 2 +-
+> >   1 file changed, 1 insertion(+), 1 deletion(-)
 > >
-> > And you just need to add __maybe_unused to them to suppress the
-> > warning.
-> 
-> Wouldn't that cause the compiler to optimize them away if it doesn't
-> see any users?
+> > diff --git a/drivers/staging/comedi/comedi_fops.c b/drivers/staging/comedi/comedi_fops.c
+> > index 3f70e5dfac39..4cc012e231b7 100644
+> > --- a/drivers/staging/comedi/comedi_fops.c
+> > +++ b/drivers/staging/comedi/comedi_fops.c
+> > @@ -2956,7 +2956,7 @@ static int get_compat_cmd(struct comedi_cmd *cmd,
+> >       cmd->scan_end_arg = v32.scan_end_arg;
+> >       cmd->stop_src = v32.stop_src;
+> >       cmd->stop_arg = v32.stop_arg;
+> > -     cmd->chanlist = compat_ptr(v32.chanlist);
+> > +     cmd->chanlist = (unsigned int *) compat_ptr(v32.chanlist);
+>
+> That should be:
+>
+>         cmd->chanlist = (unsigned int __force *)compat_ptr(v32.chanlist);
+>
+> >       cmd->chanlist_len = v32.chanlist_len;
+> >       cmd->data = compat_ptr(v32.data);
+> >       cmd->data_len = v32.data_len;
+> >
+>
+> A reverse cast is required in put_compat_cmd():
+>
+>         v32.chanlist = ptr_to_compat((unsigned int __user *)cmd->chanlist);
+>
+> Those changes will get rid of the sparse warnings.
 
-It looks like they're only unused when !MODULE, in which case
-optimising them away would be the correct thing to do, no?
+Thank you for the clarifications Ian. I will make the changes and submit a patch
 
--- 
-Lee Jones [李琼斯]
-Senior Technical Lead - Developer Services
-Linaro.org │ Open source software for Arm SoCs
-Follow Linaro: Facebook | Twitter | Blog
+thanks,
+
+karthik
