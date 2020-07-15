@@ -2,163 +2,118 @@ Return-Path: <SRS0=kup7=A2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 724C2C433E4
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 09:51:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89E5BC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 09:58:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4AEB82064B
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 09:51:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="yusml1W+"
+	by mail.kernel.org (Postfix) with ESMTP id 6434F2064C
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 09:58:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730903AbgGOJvC (ORCPT
+        id S1730941AbgGOJ6s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 05:51:02 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:53322 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730755AbgGOJvB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 05:51:01 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06F9mSh7176609;
-        Wed, 15 Jul 2020 09:50:48 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2020-01-29;
- bh=L1fC24AO0mFGrHZ+aeKv7ArHLZSEsoi+M3DofTmccgo=;
- b=yusml1W+ItxebkMydFTO6Lu0XB7PqaZ7ZytBPghep5MTwdPUvM85wje7wtukJRhtHKBK
- daFyp0vFfmaN/h/NSJ8Mx0Ic9bC9ClTp0aDxjMo5hyybbASJu3MqJuQ5H0UWt/mLFjw2
- Hta5Ub3rxsvTvqBP0hGW7Mp+mi+SQa15sFzHcBAtAT+rlh5xbvXqeUD5xmYFNvtddex5
- vDk7hceohFW8rhK5ZgQzUWgV3x5VFqNzN3pggi6dWBoZ76Ri+9pRrEeILe3s9NUMGZyd
- r0mg8pLLZxDdGpSnaPLMBrBbB662aZM31X6AvahJgcxxIPnsh2SxaJSxZzJqByqFxMDw kg== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by aserp2120.oracle.com with ESMTP id 3275cmac7e-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 15 Jul 2020 09:50:48 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06F9ldJH118956;
-        Wed, 15 Jul 2020 09:48:47 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by userp3020.oracle.com with ESMTP id 327q6u3f6m-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 15 Jul 2020 09:48:47 +0000
-Received: from abhmp0012.oracle.com (abhmp0012.oracle.com [141.146.116.18])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 06F9miY4015244;
-        Wed, 15 Jul 2020 09:48:44 GMT
-Received: from kadam (/41.57.98.10)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 15 Jul 2020 02:48:44 -0700
-Date:   Wed, 15 Jul 2020 12:48:36 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
-Cc:     Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        George Kennedy <george.kennedy@oracle.com>,
-        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        syzbot <syzbot+e5fd3e65515b48c02a30@syzkaller.appspotmail.com>
-Subject: Re: [PATCH v2] fbdev: Detect integer underflow at "struct
- fbcon_ops"->clear_margins.
-Message-ID: <20200715094836.GD2571@kadam>
-References: <adff5d10-fe35-62d4-74c5-182958c5ada7@i-love.sakura.ne.jp>
- <20200715015102.3814-1-penguin-kernel@I-love.SAKURA.ne.jp>
+        Wed, 15 Jul 2020 05:58:48 -0400
+Received: from mga11.intel.com ([192.55.52.93]:3722 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728043AbgGOJ6r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jul 2020 05:58:47 -0400
+IronPort-SDR: Ccg8o/TKYuRPlxu59lO07VnZAyh+ZVdR1vaeWk1B2zcUIMouYASEbL8SpVi7u1mTLbh3mWXTTr
+ NGOfPIDyu32w==
+X-IronPort-AV: E=McAfee;i="6000,8403,9682"; a="147121823"
+X-IronPort-AV: E=Sophos;i="5.75,354,1589266800"; 
+   d="scan'208";a="147121823"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jul 2020 02:58:47 -0700
+IronPort-SDR: qqUQiZjtJC9DtiYjrdw1wdZpnZDKzBJCJgLhXo9hV4zhclnfN/FNhad/9To1q8/bbpICKqPzp3
+ XuEPLf7ZmLDQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,354,1589266800"; 
+   d="scan'208";a="286058587"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga006.jf.intel.com with ESMTP; 15 Jul 2020 02:58:46 -0700
+Received: from andy by smile with local (Exim 4.94)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1jveBa-001woD-Ni; Wed, 15 Jul 2020 12:58:46 +0300
+Date:   Wed, 15 Jul 2020 12:58:46 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>
+Subject: [GIT PULL] platform-drivers-x86 for 5.8-2
+Message-ID: <20200715095846.GA464373@smile.fi.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200715015102.3814-1-penguin-kernel@I-love.SAKURA.ne.jp>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9682 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 suspectscore=0
- phishscore=0 malwarescore=0 mlxlogscore=999 bulkscore=0 mlxscore=0
- spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2007150081
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9682 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 priorityscore=1501
- bulkscore=0 adultscore=0 lowpriorityscore=0 phishscore=0 spamscore=0
- impostorscore=0 malwarescore=0 mlxlogscore=999 clxscore=1011 mlxscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2007150081
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 15, 2020 at 10:51:02AM +0900, Tetsuo Handa wrote:
-> syzbot is reporting general protection fault in bitfill_aligned() [1]
-> caused by integer underflow in bit_clear_margins(). The cause of this
-> problem is when and how do_vc_resize() updates vc->vc_{cols,rows}.
-> 
-> If vc_do_resize() fails (e.g. kzalloc() fails) when var.xres or var.yres
-> is going to shrink, vc->vc_{cols,rows} will not be updated. This allows
-> bit_clear_margins() to see info->var.xres < (vc->vc_cols * cw) or
-> info->var.yres < (vc->vc_rows * ch). Unexpectedly large rw or bh will
-> try to overrun the __iomem region and causes general protection fault.
-> 
-> Also, vc_resize(vc, 0, 0) does not set vc->vc_{cols,rows} = 0 due to
-> 
->   new_cols = (cols ? cols : vc->vc_cols);
->   new_rows = (lines ? lines : vc->vc_rows);
-> 
-> exception. Since cols and lines are calculated as
-> 
->   cols = FBCON_SWAP(ops->rotate, info->var.xres, info->var.yres);
->   rows = FBCON_SWAP(ops->rotate, info->var.yres, info->var.xres);
->   cols /= vc->vc_font.width;
->   rows /= vc->vc_font.height;
->   vc_resize(vc, cols, rows);
-> 
-> in fbcon_modechanged(), var.xres < vc->vc_font.width makes cols = 0
-> and var.yres < vc->vc_font.height makes rows = 0. This means that
-> 
->   const int fd = open("/dev/fb0", O_ACCMODE);
->   struct fb_var_screeninfo var = { };
->   ioctl(fd, FBIOGET_VSCREENINFO, &var);
->   var.xres = var.yres = 1;
->   ioctl(fd, FBIOPUT_VSCREENINFO, &var);
-> 
-> easily reproduces integer underflow bug explained above.
-> 
-> Of course, callers of vc_resize() are not handling vc_do_resize() failure
-> is bad. But we can't avoid vc_resize(vc, 0, 0) which returns 0. Therefore,
-> as a band-aid workaround, this patch checks integer underflow in
-> "struct fbcon_ops"->clear_margins call, assuming that
-> vc->vc_cols * vc->vc_font.width and vc->vc_rows * vc->vc_font.heigh do not
-> cause integer overflow.
-> 
-> [1] https://syzkaller.appspot.com/bug?id=a565882df74fa76f10d3a6fec4be31098dbb37c6
-> 
-> Reported-and-tested-by: syzbot <syzbot+e5fd3e65515b48c02a30@syzkaller.appspotmail.com>
-> Signed-off-by: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
-> ---
->  drivers/video/fbdev/core/bitblit.c   | 4 ++--
->  drivers/video/fbdev/core/fbcon_ccw.c | 4 ++--
->  drivers/video/fbdev/core/fbcon_cw.c  | 4 ++--
->  drivers/video/fbdev/core/fbcon_ud.c  | 4 ++--
->  4 files changed, 8 insertions(+), 8 deletions(-)
-> 
-> diff --git a/drivers/video/fbdev/core/bitblit.c b/drivers/video/fbdev/core/bitblit.c
-> index ca935c09a261..35ebeeccde4d 100644
-> --- a/drivers/video/fbdev/core/bitblit.c
-> +++ b/drivers/video/fbdev/core/bitblit.c
-> @@ -216,7 +216,7 @@ static void bit_clear_margins(struct vc_data *vc, struct fb_info *info,
->  	region.color = color;
->  	region.rop = ROP_COPY;
->  
-> -	if (rw && !bottom_only) {
-> +	if ((int) rw > 0 && !bottom_only) {
->  		region.dx = info->var.xoffset + rs;
-                            ^^^^^^^^^^^^^^^^^^^^^^
+Hi Linus,
 
-If you choose a very high positive "rw" then this addition can overflow.
-info->var.xoffset comes from the user and I don't think it's checked...
+Small fixes for this, v5.8 cycle in PDx86. No conflicts found.
 
-regards,
-dan carpenter
+Thanks,
+
+With Best Regards,
+Andy Shevchenko
+
+The following changes since commit b3a9e3b9622ae10064826dccb4f7a52bd88c7407:
+
+  Linux 5.8-rc1 (2020-06-14 12:45:04 -0700)
+
+are available in the Git repository at:
+
+  git://git.infradead.org/linux-platform-drivers-x86.git tags/platform-drivers-x86-v5.8-2
+
+for you to fetch changes up to 9a33e375d98ece5ea40c576eabd3257acb90c509:
+
+  platform/x86: asus-wmi: allow BAT1 battery name (2020-07-15 12:47:04 +0300)
+
+----------------------------------------------------------------
+platform-drivers-x86 for v5.8-2
+
+* Fix procfs handling in Thinkpad ACPI driver
+* Fix battery management on new ASUS laptops
+* New IDs (Sapphire Rapids) in ISST tool
+
+The following is an automated git shortlog grouped by driver:
+
+asus-wmi:
+ -  allow BAT1 battery name
+
+ISST:
+ -  Add new PCI device ids
+
+thinkpad_acpi:
+ -  Revert "Use strndup_user() in dispatch_proc_write()"
+
+----------------------------------------------------------------
+Andy Shevchenko (1):
+      platform/x86: thinkpad_acpi: Revert "Use strndup_user() in dispatch_proc_write()"
+
+Srinivas Pandruvada (1):
+      platform/x86: ISST: Add new PCI device ids
+
+Vasiliy Kupriakov (1):
+      platform/x86: asus-wmi: allow BAT1 battery name
+
+ drivers/platform/x86/asus-wmi.c                            |  1 +
+ .../platform/x86/intel_speed_select_if/isst_if_common.h    |  3 +++
+ .../platform/x86/intel_speed_select_if/isst_if_mbox_pci.c  |  1 +
+ drivers/platform/x86/intel_speed_select_if/isst_if_mmio.c  |  1 +
+ drivers/platform/x86/thinkpad_acpi.c                       | 14 +++++++++++---
+ 5 files changed, 17 insertions(+), 3 deletions(-)
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
 
