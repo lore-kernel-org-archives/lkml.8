@@ -8,63 +8,62 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B4E8C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 08:54:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14E06C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 08:55:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 01408206D5
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 08:54:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D96E8206D5
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 08:55:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZrE2/4u2"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="REAg+4jM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729956AbgGOIyc (ORCPT
+        id S1730055AbgGOIzB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 04:54:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56186 "EHLO
+        Wed, 15 Jul 2020 04:55:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56266 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728145AbgGOIyc (ORCPT
+        with ESMTP id S1728145AbgGOIzB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 04:54:32 -0400
-Received: from mail-io1-xd41.google.com (mail-io1-xd41.google.com [IPv6:2607:f8b0:4864:20::d41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 13742C061755
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 01:54:32 -0700 (PDT)
-Received: by mail-io1-xd41.google.com with SMTP id l1so1431423ioh.5
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 01:54:32 -0700 (PDT)
+        Wed, 15 Jul 2020 04:55:01 -0400
+Received: from mail-io1-xd42.google.com (mail-io1-xd42.google.com [IPv6:2607:f8b0:4864:20::d42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 20D2DC061755
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 01:55:01 -0700 (PDT)
+Received: by mail-io1-xd42.google.com with SMTP id k23so1406542iom.10
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 01:55:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:reply-to:from:date:message-id
          :subject:to:cc;
-        bh=1k+VOrS3k+fDAx9V/lzvRFaKuobwwRq89CgWgY4l2xA=;
-        b=ZrE2/4u2sh46AtpcdPlk+fEFVxq7lZTxmNHDVr06mBbPiRkgluZ2wWqEzlgAxExLhd
-         0fFiA4AwRB+00MexfCJ6wrcMGft7oqa/w4mRjj9IhAf7Gm94ymaOyF9FTmmDl709oAiv
-         H0ltiEX8OhLYrWcY2fe2XfNMOF61DvXIKhe2W098vox94LPbpl06/86z+oUasgqJmeFX
-         h/pb3lUmdQFxJFfNgv4MyaImg58BDiQpAUNPA2VdMC+IqqFenHAjNE5M4YDq/6F8B8uG
-         N5yj+yFYPMzLrK7OWSZq7baINiBFE/n7+6hl463kYA7yG/yU/61ZM1KezGrM+adda7Lr
-         4cyw==
+        bh=E2KzDTTFRMDiRWJvyL1sP2xPLBu+h45b96i3t1+zICg=;
+        b=REAg+4jMgFjTriSI5Lb0DMOgace/gsHcOhmNuScsAQpLlZNqocusWWB0jZYfdmjSxP
+         38l7QutyQ1JxMOQlHKZLh0wI17gFE2diQLmCqTGo00F/QJD2N8xY8Hr6cmS/nTG3iFe2
+         ElK1iW+HwQhoKoHVP7+a6W4MuY5rb4rVJzF1KRdBhBuQTs6t+xfubC5Ptl7CxjypZ1P4
+         C0tFFyfZZuSttYWNi+p+kpFEMjCm6elPYU7jq7CvJZUHVjTE+0hzQVQcltD2FrJcnMqy
+         OnPyfIU0IflA0aaqOXFaeiuHmSDMQ8ozB2UNnguweCdAJ18RMhLDOD9SlH1xs8gkVALP
+         G2sQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:reply-to
          :from:date:message-id:subject:to:cc;
-        bh=1k+VOrS3k+fDAx9V/lzvRFaKuobwwRq89CgWgY4l2xA=;
-        b=XZUHNzVZd3ZOPmhTj/Kit+xj6ID35f2PPDQbgPebd11Y4PJiYUD5ha1yVmGZcjb04X
-         DO7ut/asHH/3sFt/mTReFEafQTK9qaOXAQYeh0Wqro8skpFCyk7X+lexHgLjG5VZ0qSi
-         WJpCweNe5Fh02MhyEzfFeQ+XP8qbjttOjRGWf1IafRuo7GGjcA4+emeCo+sIBROJ/UTN
-         I4G/WJX4pUiQoxx+csP64izLPRtwLzywPO+UEwWszHrSkNHWwLtKMKv8TkhgyqAtuS9w
-         e+B0CKkIbrM2BprkixMkTqi/B3mrjUQ6qy55pPES+E1BtRddqSo2+9XPJExndvbniyy2
-         +s+g==
-X-Gm-Message-State: AOAM530s1u1n8KKNstAJB+rBEW4cAwxI7RjozRybjoNNjVN2qyEdii+r
-        XQSQXbB22mGMjs5r8N5Ydax/seEXefzlUrlqAVE=
-X-Google-Smtp-Source: ABdhPJyGZfMuIMjd5xSTPFS1L4yGLLghk2ZfNiko2/gBuJHgNHwG8MXr5RjAd6ep2uEBBEzMDmS4FyjxtuHSZF5rmCM=
-X-Received: by 2002:a6b:c343:: with SMTP id t64mr9383464iof.66.1594803271042;
- Wed, 15 Jul 2020 01:54:31 -0700 (PDT)
+        bh=E2KzDTTFRMDiRWJvyL1sP2xPLBu+h45b96i3t1+zICg=;
+        b=hT1YZp71qoUezFgoQXKa4YtK3gv10xDe6eSYDo9P7pwwWLpqjCsuPGQ8p8Xd5aeTjI
+         6cwh0mDylST/CmXZ6N8UUP6L3TeCt/xQ+AudUb1mHxjrp/h72mFxFtLwjzqo6NKrJd+8
+         4q+okqwDJ8d35mqb0oFqGW320uUciRwTBVLIgBgcEeD79POGNVfqkvTBGAfToepc9QbL
+         h7JFSoAheB5B0iTISSDj/awOz+VfSJjBMWuojWyh3mjDlqXBLSZdWVGd7wMT1EuXZlWj
+         HcEfOHexbhG3nC3yPyb/RRg8mOdUxPKY2mazK6//Hoi2q2J35LT6RYEjNXbLd08kW6e+
+         7U9Q==
+X-Gm-Message-State: AOAM533ztRjkxbs3JK7dE8FmCcG9oVRR9CUM5u474tm4n0Zxop8/KQf8
+        LXiXAumhnp20FNplM2BV/wyLS3c64RmYyxp/tP4=
+X-Google-Smtp-Source: ABdhPJz7vNmjqPEigVUxaXZKf2QB7tcA/b2b+Q3C0oB6IQ4cfmzqBcJ5BN8+V+V89TuDMyBt64LqaV1Nd1j4r2f8x0c=
+X-Received: by 2002:a05:6602:1555:: with SMTP id h21mr8957112iow.163.1594803300431;
+ Wed, 15 Jul 2020 01:55:00 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200714023836.2310569-1-nivedita@alum.mit.edu> <20200715004133.1430068-3-nivedita@alum.mit.edu>
-In-Reply-To: <20200715004133.1430068-3-nivedita@alum.mit.edu>
+References: <20200714023836.2310569-1-nivedita@alum.mit.edu> <20200715004133.1430068-4-nivedita@alum.mit.edu>
+In-Reply-To: <20200715004133.1430068-4-nivedita@alum.mit.edu>
 Reply-To: sedat.dilek@gmail.com
 From:   Sedat Dilek <sedat.dilek@gmail.com>
-Date:   Wed, 15 Jul 2020 10:54:19 +0200
-Message-ID: <CA+icZUUxn6qZhXEgr4jiBSUjSLqCw=wPLwmKZw6eViZ6ORLXdQ@mail.gmail.com>
-Subject: Re: [PATCH v5 2/7] x86/boot/compressed: Force hidden visibility for
- all symbol references
+Date:   Wed, 15 Jul 2020 10:54:49 +0200
+Message-ID: <CA+icZUVPzMnEe-VUabCCA_Kb9X00NZTUoms1Q0Wm6sK-5fHn=A@mail.gmail.com>
+Subject: Re: [PATCH v5 3/7] x86/boot/compressed: Get rid of GOT fixup code
 To:     Arvind Sankar <nivedita@alum.mit.edu>
 Cc:     Thomas Gleixner <tglx@linutronix.de>,
         Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
@@ -90,117 +89,180 @@ On Wed, Jul 15, 2020 at 2:41 AM Arvind Sankar <nivedita@alum.mit.edu> wrote:
 >
 > From: Ard Biesheuvel <ardb@kernel.org>
 >
-> Eliminate all GOT entries in the decompressor binary, by forcing hidden
-> visibility for all symbol references, which informs the compiler that
-> such references will be resolved at link time without the need for
-> allocating GOT entries.
+> In a previous patch, we have eliminated GOT entries from the decompressor
+> binary and added an assertion that the .got section is empty. This means
+> that the GOT fixup routines that exist in both the 32-bit and 64-bit
+> startup routines have become dead code, and can be removed.
 >
-> To ensure that no GOT entries will creep back in, add an assertion to
-> the decompressor linker script that will fire if the .got section has
-> a non-zero size.
+> While at it, drop the KEEP() from the linker script, as it has no effect
+> on the contents of output sections that are created by the linker itself.
 >
-> [Arvind: move hidden.h to include/linux instead of making a copy]
->
-
-Tested-by: Sedat Dilek <sedat.dilek@gmail.com>
-Reported-by: Sedat Dilek <sedat.dilek@gmail.com>
-
-Reported hidden.h breakage and asked for a follow-up.
-
-- Sedat -
-
-[1] https://marc.info/?l=linux-kernel&m=159056070321982&w=2
-
 > Reviewed-by: Kees Cook <keescook@chromium.org>
 > Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
 > Acked-by: Arvind Sankar <nivedita@alum.mit.edu>
 > Signed-off-by: Arvind Sankar <nivedita@alum.mit.edu>
 > From: Ard Biesheuvel <ardb@kernel.org>
-> Link: https://lore.kernel.org/r/20200523120021.34996-3-ardb@kernel.org
+> Link: https://lore.kernel.org/r/20200523120021.34996-4-ardb@kernel.org
+
+Tested-by: Sedat Dilek <sedat.dilek@gmail.com>
+
+- Sedat -
+
 > ---
->  arch/x86/boot/compressed/Makefile      |  1 +
->  arch/x86/boot/compressed/vmlinux.lds.S |  1 +
->  drivers/firmware/efi/libstub/Makefile  |  2 +-
->  drivers/firmware/efi/libstub/hidden.h  |  6 ------
->  include/linux/hidden.h                 | 19 +++++++++++++++++++
->  5 files changed, 22 insertions(+), 7 deletions(-)
->  delete mode 100644 drivers/firmware/efi/libstub/hidden.h
->  create mode 100644 include/linux/hidden.h
+>  arch/x86/boot/compressed/head_32.S     | 24 ++---------
+>  arch/x86/boot/compressed/head_64.S     | 57 --------------------------
+>  arch/x86/boot/compressed/vmlinux.lds.S |  4 +-
+>  3 files changed, 5 insertions(+), 80 deletions(-)
 >
-> diff --git a/arch/x86/boot/compressed/Makefile b/arch/x86/boot/compressed/Makefile
-> index 7619742f91c9..c829d874dcac 100644
-> --- a/arch/x86/boot/compressed/Makefile
-> +++ b/arch/x86/boot/compressed/Makefile
-> @@ -42,6 +42,7 @@ KBUILD_CFLAGS += $(call cc-disable-warning, gnu)
->  KBUILD_CFLAGS += -Wno-pointer-sign
->  KBUILD_CFLAGS += $(call cc-option,-fmacro-prefix-map=$(srctree)/=)
->  KBUILD_CFLAGS += -fno-asynchronous-unwind-tables
-> +KBUILD_CFLAGS += -include $(srctree)/include/linux/hidden.h
+> diff --git a/arch/x86/boot/compressed/head_32.S b/arch/x86/boot/compressed/head_32.S
+> index 03557f2174bf..39f0bb43218f 100644
+> --- a/arch/x86/boot/compressed/head_32.S
+> +++ b/arch/x86/boot/compressed/head_32.S
+> @@ -49,16 +49,13 @@
+>   * Position Independent Executable (PIE) so that linker won't optimize
+>   * R_386_GOT32X relocation to its fixed symbol address.  Older
+>   * linkers generate R_386_32 relocations against locally defined symbols,
+> - * _bss, _ebss, _got, _egot and _end, in PIE.  It isn't wrong, just less
+> - * optimal than R_386_RELATIVE.  But the x86 kernel fails to properly handle
+> - * R_386_32 relocations when relocating the kernel.  To generate
+> - * R_386_RELATIVE relocations, we mark _bss, _ebss, _got, _egot and _end as
+> - * hidden:
+> + * _bss, _ebss and _end, in PIE.  It isn't wrong, just less optimal than
+> + * R_386_RELATIVE.  But the x86 kernel fails to properly handle R_386_32
+> + * relocations when relocating the kernel.  To generate R_386_RELATIVE
+> + * relocations, we mark _bss, _ebss and _end as hidden:
+>   */
+>         .hidden _bss
+>         .hidden _ebss
+> -       .hidden _got
+> -       .hidden _egot
+>         .hidden _end
 >
->  KBUILD_AFLAGS  := $(KBUILD_CFLAGS) -D__ASSEMBLY__
->  GCOV_PROFILE := n
+>         __HEAD
+> @@ -192,19 +189,6 @@ SYM_FUNC_START_LOCAL_NOALIGN(.Lrelocated)
+>         shrl    $2, %ecx
+>         rep     stosl
+>
+> -/*
+> - * Adjust our own GOT
+> - */
+> -       leal    _got(%ebx), %edx
+> -       leal    _egot(%ebx), %ecx
+> -1:
+> -       cmpl    %ecx, %edx
+> -       jae     2f
+> -       addl    %ebx, (%edx)
+> -       addl    $4, %edx
+> -       jmp     1b
+> -2:
+> -
+>  /*
+>   * Do the extraction, and jump to the new kernel..
+>   */
+> diff --git a/arch/x86/boot/compressed/head_64.S b/arch/x86/boot/compressed/head_64.S
+> index 97d37f0a34f5..bf1ab30acc5b 100644
+> --- a/arch/x86/boot/compressed/head_64.S
+> +++ b/arch/x86/boot/compressed/head_64.S
+> @@ -40,8 +40,6 @@
+>   */
+>         .hidden _bss
+>         .hidden _ebss
+> -       .hidden _got
+> -       .hidden _egot
+>         .hidden _end
+>
+>         __HEAD
+> @@ -353,25 +351,6 @@ SYM_CODE_START(startup_64)
+>         /* Set up the stack */
+>         leaq    boot_stack_end(%rbx), %rsp
+>
+> -       /*
+> -        * paging_prepare() and cleanup_trampoline() below can have GOT
+> -        * references. Adjust the table with address we are running at.
+> -        *
+> -        * Zero RAX for adjust_got: the GOT was not adjusted before;
+> -        * there's no adjustment to undo.
+> -        */
+> -       xorq    %rax, %rax
+> -
+> -       /*
+> -        * Calculate the address the binary is loaded at and use it as
+> -        * a GOT adjustment.
+> -        */
+> -       call    1f
+> -1:     popq    %rdi
+> -       subq    $1b, %rdi
+> -
+> -       call    .Ladjust_got
+> -
+>         /*
+>          * At this point we are in long mode with 4-level paging enabled,
+>          * but we might want to enable 5-level paging or vice versa.
+> @@ -464,21 +443,6 @@ trampoline_return:
+>         pushq   $0
+>         popfq
+>
+> -       /*
+> -        * Previously we've adjusted the GOT with address the binary was
+> -        * loaded at. Now we need to re-adjust for relocation address.
+> -        *
+> -        * Calculate the address the binary is loaded at, so that we can
+> -        * undo the previous GOT adjustment.
+> -        */
+> -       call    1f
+> -1:     popq    %rax
+> -       subq    $1b, %rax
+> -
+> -       /* The new adjustment is the relocation address */
+> -       movq    %rbx, %rdi
+> -       call    .Ladjust_got
+> -
+>  /*
+>   * Copy the compressed kernel to the end of our buffer
+>   * where decompression in place becomes safe.
+> @@ -556,27 +520,6 @@ SYM_FUNC_START_LOCAL_NOALIGN(.Lrelocated)
+>         jmp     *%rax
+>  SYM_FUNC_END(.Lrelocated)
+>
+> -/*
+> - * Adjust the global offset table
+> - *
+> - * RAX is the previous adjustment of the table to undo (use 0 if it's the
+> - * first time we touch GOT).
+> - * RDI is the new adjustment to apply.
+> - */
+> -.Ladjust_got:
+> -       /* Walk through the GOT adding the address to the entries */
+> -       leaq    _got(%rip), %rdx
+> -       leaq    _egot(%rip), %rcx
+> -1:
+> -       cmpq    %rcx, %rdx
+> -       jae     2f
+> -       subq    %rax, (%rdx)    /* Undo previous adjustment */
+> -       addq    %rdi, (%rdx)    /* Apply the new adjustment */
+> -       addq    $8, %rdx
+> -       jmp     1b
+> -2:
+> -       ret
+> -
+>         .code32
+>  /*
+>   * This is the 32-bit trampoline that will be copied over to low memory.
 > diff --git a/arch/x86/boot/compressed/vmlinux.lds.S b/arch/x86/boot/compressed/vmlinux.lds.S
-> index b17d218ccdf9..4bcc943842ab 100644
+> index 4bcc943842ab..a4a4a59a2628 100644
 > --- a/arch/x86/boot/compressed/vmlinux.lds.S
 > +++ b/arch/x86/boot/compressed/vmlinux.lds.S
-> @@ -81,6 +81,7 @@ SECTIONS
->         DISCARDS
->  }
->
-> +ASSERT(SIZEOF(.got) == 0, "Unexpected GOT entries detected!")
->  #ifdef CONFIG_X86_64
->  ASSERT(SIZEOF(.got.plt) == 0 || SIZEOF(.got.plt) == 0x18, "Unexpected GOT/PLT entries detected!")
->  #else
-> diff --git a/drivers/firmware/efi/libstub/Makefile b/drivers/firmware/efi/libstub/Makefile
-> index 4cce372edaf4..609157a40493 100644
-> --- a/drivers/firmware/efi/libstub/Makefile
-> +++ b/drivers/firmware/efi/libstub/Makefile
-> @@ -27,7 +27,7 @@ cflags-$(CONFIG_ARM)          := $(subst $(CC_FLAGS_FTRACE),,$(KBUILD_CFLAGS)) \
->  cflags-$(CONFIG_EFI_GENERIC_STUB) += -I$(srctree)/scripts/dtc/libfdt
->
->  KBUILD_CFLAGS                  := $(cflags-y) -Os -DDISABLE_BRANCH_PROFILING \
-> -                                  -include $(srctree)/drivers/firmware/efi/libstub/hidden.h \
-> +                                  -include $(srctree)/include/linux/hidden.h \
->                                    -D__NO_FORTIFY \
->                                    $(call cc-option,-ffreestanding) \
->                                    $(call cc-option,-fno-stack-protector) \
-> diff --git a/drivers/firmware/efi/libstub/hidden.h b/drivers/firmware/efi/libstub/hidden.h
-> deleted file mode 100644
-> index 3493b041f419..000000000000
-> --- a/drivers/firmware/efi/libstub/hidden.h
-> +++ /dev/null
-> @@ -1,6 +0,0 @@
-> -/* SPDX-License-Identifier: GPL-2.0 */
-> -/*
-> - * To prevent the compiler from emitting GOT-indirected (and thus absolute)
-> - * references to any global symbols, override their visibility as 'hidden'
-> - */
-> -#pragma GCC visibility push(hidden)
-> diff --git a/include/linux/hidden.h b/include/linux/hidden.h
-> new file mode 100644
-> index 000000000000..49a17b6b5962
-> --- /dev/null
-> +++ b/include/linux/hidden.h
-> @@ -0,0 +1,19 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +/*
-> + * When building position independent code with GCC using the -fPIC option,
-> + * (or even the -fPIE one on older versions), it will assume that we are
-> + * building a dynamic object (either a shared library or an executable) that
-> + * may have symbol references that can only be resolved at load time. For a
-> + * variety of reasons (ELF symbol preemption, the CoW footprint of the section
-> + * that is modified by the loader), this results in all references to symbols
-> + * with external linkage to go via entries in the Global Offset Table (GOT),
-> + * which carries absolute addresses which need to be fixed up when the
-> + * executable image is loaded at an offset which is different from its link
-> + * time offset.
-> + *
-> + * Fortunately, there is a way to inform the compiler that such symbol
-> + * references will be satisfied at link time rather than at load time, by
-> + * giving them 'hidden' visibility.
-> + */
-> +
-> +#pragma GCC visibility push(hidden)
+> @@ -43,9 +43,7 @@ SECTIONS
+>                 _erodata = . ;
+>         }
+>         .got : {
+> -               _got = .;
+> -               KEEP(*(.got))
+> -               _egot = .;
+> +               *(.got)
+>         }
+>         .got.plt : {
+>                 *(.got.plt)
 > --
 > 2.26.2
 >
