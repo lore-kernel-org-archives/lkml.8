@@ -8,37 +8,37 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8CACC4346D
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 04:20:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AFF1C43470
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 04:20:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AFB0420720
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 04:20:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4992F206E9
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 04:20:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="ZVsOspQX"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="Xka7PEDQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728861AbgGOEUj (ORCPT
+        id S1728889AbgGOEUt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 00:20:39 -0400
-Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:9565 "EHLO
+        Wed, 15 Jul 2020 00:20:49 -0400
+Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:9559 "EHLO
         hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728083AbgGOET3 (ORCPT
+        with ESMTP id S1728103AbgGOET0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 00:19:29 -0400
+        Wed, 15 Jul 2020 00:19:26 -0400
 Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5f0e835f0000>; Tue, 14 Jul 2020 21:17:35 -0700
+        id <B5f0e835c0000>; Tue, 14 Jul 2020 21:17:32 -0700
 Received: from hqmail.nvidia.com ([172.20.161.6])
   by hqpgpgate102.nvidia.com (PGP Universal service);
-  Tue, 14 Jul 2020 21:19:29 -0700
+  Tue, 14 Jul 2020 21:19:25 -0700
 X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Tue, 14 Jul 2020 21:19:29 -0700
-Received: from HQMAIL109.nvidia.com (172.20.187.15) by HQMAIL109.nvidia.com
- (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 15 Jul
- 2020 04:19:28 +0000
-Received: from rnnvemgw01.nvidia.com (10.128.109.123) by HQMAIL109.nvidia.com
- (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Wed, 15 Jul 2020 04:19:28 +0000
+        by hqpgpgate102.nvidia.com on Tue, 14 Jul 2020 21:19:25 -0700
+Received: from HQMAIL105.nvidia.com (172.20.187.12) by HQMAIL105.nvidia.com
+ (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 15 Jul
+ 2020 04:19:25 +0000
+Received: from rnnvemgw01.nvidia.com (10.128.109.123) by HQMAIL105.nvidia.com
+ (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Wed, 15 Jul 2020 04:19:24 +0000
 Received: from skomatineni-linux.nvidia.com (Not Verified[10.2.160.169]) by rnnvemgw01.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5f0e83cf0000>; Tue, 14 Jul 2020 21:19:28 -0700
+        id <B5f0e83cb0004>; Tue, 14 Jul 2020 21:19:24 -0700
 From:   Sowjanya Komatineni <skomatineni@nvidia.com>
 To:     <skomatineni@nvidia.com>, <thierry.reding@gmail.com>,
         <jonathanh@nvidia.com>, <frankc@nvidia.com>, <hverkuil@xs4all.nl>,
@@ -48,9 +48,9 @@ CC:     <digetx@gmail.com>, <sboyd@kernel.org>,
         <gregkh@linuxfoundation.org>, <linux-media@vger.kernel.org>,
         <devicetree@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>, <linux-i2c@vger.kernel.org>
-Subject: [RFC PATCH v3 06/18] i2c: tegra: Fix runtime resume to re-init VI I2C
-Date:   Tue, 14 Jul 2020 21:20:43 -0700
-Message-ID: <1594786855-26506-7-git-send-email-skomatineni@nvidia.com>
+Subject: [RFC PATCH v3 03/18] i2c: tegra: Don't mark VI I2C as IRQ safe runtime PM
+Date:   Tue, 14 Jul 2020 21:20:40 -0700
+Message-ID: <1594786855-26506-4-git-send-email-skomatineni@nvidia.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1594786855-26506-1-git-send-email-skomatineni@nvidia.com>
 References: <1594786855-26506-1-git-send-email-skomatineni@nvidia.com>
@@ -58,71 +58,59 @@ X-NVConfidentiality: public
 MIME-Version: 1.0
 Content-Type: text/plain
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1594786655; bh=rVT7elWIzK6dQfAm9YaBBuoEEleair7GkfBCOrcVb5U=;
+        t=1594786652; bh=zxB65TqmmcKmPfWkLJU50AtZToCBrCGEYlb/JsyjY+U=;
         h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
          In-Reply-To:References:X-NVConfidentiality:MIME-Version:
          Content-Type;
-        b=ZVsOspQXOQhKMXofQtLcCis5jFnvhNKlwIeOFcdXIxp7MIDcMAY4ro7qygeTxmC4J
-         6pSo0qCZ29/9V9vh0ZHep15nKCkSRd1OGcBed1u/vUmiVMY0MQsCpYUzjKluVkmkyd
-         rz+Gr/fEJir1zYqLqeLd663lZW057MZVwapgE1Hg7laKvGddSbOJtoMikagAC58xFr
-         3rC1Ukavenfp8Q+OVxwXC0ae9HnpWcPI8LsTakw94NB6/+nCefVexuVmFZtalrWExe
-         eae7bsKnX6r+4AFGyr4XLZ0BGLVBoYRQicyJ58lG2AG84nt4ZBXLFf22yLBfbfIA35
-         +X5DZPAwGdmug==
+        b=Xka7PEDQWikb4oQIXRaCkY2gULdhMDJ1lasgdot1PE7Qf8Z/hdMS8RhHveHp+qBk+
+         P7VgFglkANZ11RbdOM7SOFc/cLmigsqV9PcSWWJVYFBnIPYPeLfDz9pX9xSI3K1MDi
+         QOeJzMMya50BETGQiaSeB2mhYEW/QqRUFqK5F7OCpeM+SG+yfLlCVzLWUN47dMsJN5
+         4tGMIVKVP/LW642IIzNsh5ze1UW2iMBZKLmdO9mwC03T6WBX3O4FDnA0MgQw0sKr29
+         eLagY03vZ1rKnriR7npLuBZ5bKSQfO8Kgisz1Yg0mTYzoCCEERwMpbqm+eW6BKOmNO
+         6Iwvh4+fpTNUA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-VI I2C is on host1x bus and is part of VE power domain.
+Tegra VI I2C is part of VE power domain and typically used for
+camera usecases.
 
-During suspend/resume VE power domain goes through power off/on.
+VE power domain is not always on and is non-IRQ safe. So, IRQ safe
+device cannot be attached to a non-IRQ safe domain as it prevents
+powering off the PM domain and generic power domain driver will warn.
 
-So, controller reset followed by i2c re-initialization is required
-after the domain power up.
+Current driver marks all I2C devices as IRQ safe and VI I2C device
+does not require IRQ safe as it will not be used for atomic transfers.
 
-This patch fixes it.
+This patch has fix to make VI I2C as non-IRQ safe.
 
 Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
 ---
- drivers/i2c/busses/i2c-tegra.c | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
+ drivers/i2c/busses/i2c-tegra.c | 10 +++++++++-
+ 1 file changed, 9 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/i2c/busses/i2c-tegra.c b/drivers/i2c/busses/i2c-tegra.c
-index 7b93c45..1bf3666 100644
+index 1577296..3be1018 100644
 --- a/drivers/i2c/busses/i2c-tegra.c
 +++ b/drivers/i2c/busses/i2c-tegra.c
-@@ -293,6 +293,8 @@ struct tegra_i2c_dev {
- 	bool is_curr_atomic_xfer;
- };
- 
-+static int tegra_i2c_init(struct tegra_i2c_dev *i2c_dev, bool clk_reinit);
-+
- static void dvc_writel(struct tegra_i2c_dev *i2c_dev, u32 val,
- 		       unsigned long reg)
- {
-@@ -675,8 +677,22 @@ static int __maybe_unused tegra_i2c_runtime_resume(struct device *dev)
- 		goto disable_slow_clk;
+@@ -1750,7 +1750,15 @@ static int tegra_i2c_probe(struct platform_device *pdev)
+ 		goto unprepare_slow_clk;
  	}
  
+-	pm_runtime_irq_safe(&pdev->dev);
 +	/*
-+	 * VI I2C device is attached to VE power domain which goes through
-+	 * power ON/OFF during PM runtime resume/suspend. So, controller
-+	 * should go through reset and need to re-initialize after power
-+	 * domain ON.
++	 * VI I2C is in VE power domain which is not always on and not
++	 * an IRQ safe. So, IRQ safe device can't be attached to a non-IRQ
++	 * safe domain as it prevents powering off the PM domain.
++	 * Also, VI I2C device don't need to use runtime IRQ safe as it will
++	 * not be used for atomic transfers.
 +	 */
-+	if (i2c_dev->is_vi) {
-+		ret = tegra_i2c_init(i2c_dev, true);
-+		if (ret)
-+			goto disable_div_clk;
-+	}
-+
- 	return 0;
- 
-+disable_div_clk:
-+	clk_disable(i2c_dev->div_clk);
- disable_slow_clk:
- 	clk_disable(i2c_dev->slow_clk);
- disable_fast_clk:
++	if (!i2c_dev->is_vi)
++		pm_runtime_irq_safe(&pdev->dev);
+ 	pm_runtime_enable(&pdev->dev);
+ 	if (!pm_runtime_enabled(&pdev->dev)) {
+ 		ret = tegra_i2c_runtime_resume(&pdev->dev);
 -- 
 2.7.4
 
