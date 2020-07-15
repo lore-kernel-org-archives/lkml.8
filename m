@@ -2,117 +2,147 @@ Return-Path: <SRS0=kup7=A2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-17.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC967C433E6
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 08:43:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EC5CC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 08:44:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BC51F20657
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 08:43:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5878620657
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 08:44:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="nc7TV2jL"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="qFs5UOpA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730411AbgGOInv (ORCPT
+        id S1730375AbgGOIoa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 04:43:51 -0400
-Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:8674 "EHLO
-        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729377AbgGOInu (ORCPT
+        Wed, 15 Jul 2020 04:44:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54634 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729377AbgGOIo3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 04:43:50 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5f0ec18c0000>; Wed, 15 Jul 2020 01:42:52 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Wed, 15 Jul 2020 01:43:50 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Wed, 15 Jul 2020 01:43:50 -0700
-Received: from [10.26.73.219] (172.20.13.39) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 15 Jul
- 2020 08:43:44 +0000
-Subject: Re: [PATCH 2/2] usb: tegra: Fix zero length memory allocation
-To:     Thierry Reding <thierry.reding@gmail.com>
-CC:     Mathias Nyman <mathias.nyman@intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <stable@vger.kernel.org>
-References: <20200712102837.24340-1-jonathanh@nvidia.com>
- <20200712102837.24340-2-jonathanh@nvidia.com> <20200714093256.GG141356@ulmo>
-From:   Jon Hunter <jonathanh@nvidia.com>
-Message-ID: <9c8ddf99-40fb-547f-81a9-05f0c64c9a5f@nvidia.com>
-Date:   Wed, 15 Jul 2020 09:43:42 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Wed, 15 Jul 2020 04:44:29 -0400
+Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 59CE2C061755
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 01:44:29 -0700 (PDT)
+Received: by mail-pj1-x1043.google.com with SMTP id b92so2645111pjc.4
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 01:44:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=SQZ+5fRESyEi63NIelgd90G0TtLUIL0LzSPgqMyfTyM=;
+        b=qFs5UOpAaOm+WGRKa8yt+h+sNKKx5DXUBETYTeROWmGtZlF9E60iYM66u9BQMEar+G
+         vEzjCPPA0S2CDZUi4v1y6DoA5siI+TCH9TrIT49WLvIURisB7cph3iO4eJuie53/iUQ5
+         /Jz9gC52PAEeOkBQYAUPSkoetziXdG2pHrKTKFhgBqFo9fZ3PKtlga4stHf6138143rF
+         Y3SKawrS4W+ltNKuleWcVeD73hFu9VXunP7qU1hrMOYh1QqoKp9z+XxAewEYjNb9qpkb
+         JWhfW9uduotjkNcZXm/6JDfDsPnv43oRMD8GS81+LcsGs1t0pWeKY02eTHS5Lv2Z4LEy
+         MXvw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=SQZ+5fRESyEi63NIelgd90G0TtLUIL0LzSPgqMyfTyM=;
+        b=RXno7w1cvyU6Gc/Elfez0rARkdibwFHXGk1Ue7MoxIJSKcbUAyPQibXoI8SY3dBwC9
+         h2NFuJ8PlidCdIbNIoFTtoRvhp/Ol66955qqKiRKyGvD3VP+eqrB1AftmEmDRdPhu5sH
+         W3zAU5flfjbxpcje2vB9P3vTKr/Yk/rVLMOew/l3d1UxHM1vDz+YWo5imBHFXnFk8SaH
+         075r32hgV6Mdu45XHoh1zmpzyLqaiXMTAVFwRuPoUOPjWEL+FVeiwPlyODz3CO3AsJIB
+         a7RxIxZ+6X/JpIBZKZDDzvrRlHpphDXyJ3NaY1j9xCdCw8rOmti1tc4fGUKaMROjXOSn
+         KwPA==
+X-Gm-Message-State: AOAM531kndkNKqy3KBsRf3UwlHAn8nisyHwJjkcztuKnba/SFhA0WoZX
+        tsW5DgpRWQb/On7A+8hzAI50JEgxGhQbz1sbBeMX8g==
+X-Google-Smtp-Source: ABdhPJxKV2Qih0pRErB5HR7H8Cpzgcn1iUkcpTb3z47Perx/PI1mWPDqewFDOixtcRSv86ABrAacAvT5BYgqgubgI9w=
+X-Received: by 2002:a17:90a:4bc7:: with SMTP id u7mr9250189pjl.217.1594802668714;
+ Wed, 15 Jul 2020 01:44:28 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200714093256.GG141356@ulmo>
-X-Originating-IP: [172.20.13.39]
-X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="windows-1252"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1594802572; bh=3xiQ0vTDOSTESSN096aBDlKYmYjzrdf/LhVyTEamGSc=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=nc7TV2jLCSjE3pSrrGfu/3q01u0z0h9PWL0U6XakGVGY4UqrVPyuW4xTolcE0HET4
-         9qp+6VYCgB2I9PqGZaNwqVVNMmtnrC14xan6oxdDMn9q+sx7+8EGXr1cgOFN4KKcdQ
-         vXfNKcIxRyn6hkm/FOHJw2GHkYQ7TVJi3Yfu9cluLqu67f5fkRnbT2NtX7NPw87phJ
-         CXKKVCd8ZVY+UeHBD+bz7iaM7/nPk3s+pVuV3hDpocPthL+c0980bsGJOTmrrUAvqb
-         bhAjyMx2jZvFR8DnFPpDUggd5+451h4klTBbtIZY4hkJxi2knFNDqCJ0orF0ZiUsD+
-         f2UXlqXmCR4ZA==
+References: <20200704085213.444645-1-ignat@cloudflare.com> <20200704085213.444645-4-ignat@cloudflare.com>
+In-Reply-To: <20200704085213.444645-4-ignat@cloudflare.com>
+From:   Brendan Higgins <brendanhiggins@google.com>
+Date:   Wed, 15 Jul 2020 01:44:17 -0700
+Message-ID: <CAFd5g44Hxhxjqb6WkfaMtaTDKVhs0onnkRaQ0Aq55z6oYTbJbA@mail.gmail.com>
+Subject: Re: [PATCH v2 3/3] um: allow static linking for non-glibc implementations
+To:     Ignat Korchagin <ignat@cloudflare.com>
+Cc:     Jeff Dike <jdike@addtoit.com>, Richard Weinberger <richard@nod.at>,
+        Anton Ivanov <anton.ivanov@cambridgegreys.com>,
+        linux-um <linux-um@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        kernel-team@cloudflare.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Sat, Jul 4, 2020 at 1:52 AM Ignat Korchagin <ignat@cloudflare.com> wrote:
+>
+> It is possible to produce a statically linked UML binary with UML_NET_VECTOR,
+> UML_NET_VDE and UML_NET_PCAP options enabled using alternative libc
+> implementations, which do not rely on NSS, such as musl.
+>
+> Allow static linking in this case.
+>
+> Signed-off-by: Ignat Korchagin <ignat@cloudflare.com>
 
-On 14/07/2020 10:32, Thierry Reding wrote:
-> On Sun, Jul 12, 2020 at 11:28:37AM +0100, Jon Hunter wrote:
->> After commit cad064f1bd52 ("devres: handle zero size in devm_kmalloc()")
->> was added system suspend started failing on Tegra186. The kernel log
->> showed that the Tegra XHCI driver was crashing on entry to suspend when
->> attemptin the save the USB context. The problem is caused because we
->> are trying to allocate a zero length array for the IPFS context on
->> Tegra186 and following commit cad064f1bd52 ("devres: handle zero size
->> in devm_kmalloc()") this now causes a NULL pointer deference crash
->> when we try to access the memory. Fix this by only allocating memory
->> for both the IPFS and FPCI contexts when required.
->>
->> Cc: stable@vger.kernel.org
->>
->> Fixes: 5c4e8d3781bc ("usb: host: xhci-tegra: Add support for XUSB context save/restore")
->>
->> Signed-off-by: Jon Hunter <jonathanh@nvidia.com>
->> ---
->>  drivers/usb/host/xhci-tegra.c | 22 ++++++++++++++--------
->>  1 file changed, 14 insertions(+), 8 deletions(-)
-> 
-> Actually it would seem to me that this is no longer a bug after your fix
-> in patch 1. We only ever access tegra->context.ipfs if
-> tegra->soc->ipfs.num_offsets > 0, so the special ZERO_SIZE_PTR case will
-> not actually cause an issue anymore.
-> 
-> The reason why this was crashing was because tegra->context.fpci was
-> allocated with a zero size (because of the bug that you fixed in patch
-> 1) and then that zero-size pointer was dereferenced because the code was
-> correctly checking for tegra->soc->fpci.num_offsets > 0 in the context
-> save and restore.
-> 
-> So I don't think there's a bug here. It's not wrong to allocate a zero-
-> size buffer. It's only a bug to then go and dereference it. Are you
-> still seeing the issue if you leave out this patch and only apply patch
-> 1?
+One minor issue below. Other than that:
 
-Ah yes you are right. OK, we can drop this. I will update the commit
-message to patch 1/1.
+Reviewed-by: Brendan Higgins <brendanhiggins@google.com>
 
-Jon
+> ---
+>  arch/um/Kconfig         | 2 +-
+>  arch/um/drivers/Kconfig | 3 ---
+>  2 files changed, 1 insertion(+), 4 deletions(-)
+>
+> diff --git a/arch/um/Kconfig b/arch/um/Kconfig
+> index 9318dc6d1a0c..af7ed63f9c74 100644
+> --- a/arch/um/Kconfig
+> +++ b/arch/um/Kconfig
+> @@ -67,7 +67,7 @@ config FORBID_STATIC_LINK
 
--- 
-nvpublic
+Doesn't look like FORBID_STATIC_LINK is used anymore, so you should
+probably drop it as well.
+
+With the preceding changes, in this patchset, you can revert my patch
+like you did in the RFC - or not, your choice. I am not offended by
+people reverting my commits. I just don't like it when people break
+allyesconfig. :-)
+
+>  config STATIC_LINK
+>         bool "Force a static link"
+> -       depends on !FORBID_STATIC_LINK
+> +       depends on CC_CAN_LINK_STATIC_NO_RUNTIME_DEPS || (!UML_NET_VECTOR && !UML_NET_VDE && !UML_NET_PCAP)
+>         help
+>           This option gives you the ability to force a static link of UML.
+>           Normally, UML is linked as a shared binary.  This is inconvenient for
+> diff --git a/arch/um/drivers/Kconfig b/arch/um/drivers/Kconfig
+> index 9160ead56e33..72d417055782 100644
+> --- a/arch/um/drivers/Kconfig
+> +++ b/arch/um/drivers/Kconfig
+> @@ -234,7 +234,6 @@ config UML_NET_DAEMON
+>  config UML_NET_VECTOR
+>         bool "Vector I/O high performance network devices"
+>         depends on UML_NET
+> -       select FORBID_STATIC_LINK
+>         help
+>         This User-Mode Linux network driver uses multi-message send
+>         and receive functions. The host running the UML guest must have
+> @@ -246,7 +245,6 @@ config UML_NET_VECTOR
+>  config UML_NET_VDE
+>         bool "VDE transport (obsolete)"
+>         depends on UML_NET
+> -       select FORBID_STATIC_LINK
+>         help
+>         This User-Mode Linux network transport allows one or more running
+>         UMLs on a single host to communicate with each other and also
+> @@ -294,7 +292,6 @@ config UML_NET_MCAST
+>  config UML_NET_PCAP
+>         bool "pcap transport (obsolete)"
+>         depends on UML_NET
+> -       select FORBID_STATIC_LINK
+>         help
+>         The pcap transport makes a pcap packet stream on the host look
+>         like an ethernet device inside UML.  This is useful for making
+> --
+> 2.20.1
+>
