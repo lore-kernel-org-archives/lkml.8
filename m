@@ -2,213 +2,155 @@ Return-Path: <SRS0=kup7=A2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C70FDC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 22:14:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18486C433E2
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 22:14:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9783B2065F
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 22:14:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC7802065F
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 22:14:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aSDyLpd+"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="JOqO7Ui9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727787AbgGOWOA (ORCPT
+        id S1727938AbgGOWOq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 18:14:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38484 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726356AbgGOWN7 (ORCPT
+        Wed, 15 Jul 2020 18:14:46 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:47606 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726356AbgGOWOq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 18:13:59 -0400
-Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 33567C061755
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 15:13:59 -0700 (PDT)
-Received: by mail-pl1-x643.google.com with SMTP id d1so2974852plr.8
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 15:13:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=hPolnAcEPImDBRIWPgPqyudTNM+MItweaMqp0DHw7xw=;
-        b=aSDyLpd+/7Fj/Rro38XcMmgi78rLjpTg3gTtbdxqENEd0tChDb9/xROEvtUUdgTAJQ
-         SBKfz6qpXTlFJcQ3EuvndpziICIAzIb7kISnZE5pDa3M4S4EoSBwdYDGjxJ3zewGKBXK
-         qJnE2wZ1+Yr6yUCzoJGXWn30VsUluIwxPVuIE5RW9boznXh2yINhkzVih+uh6t1KuENR
-         b0w8LgMzAs2tJP4Ca/S/Ue+FZYkka5poRu/ftx0rKldGCxvijAYKsunfJw3Y21Kwtt1V
-         xHJHjtt9a+NC2JblV/+H8A2g79GjsuV7QI9lguw1CAQg9aUGhoWJdgs/EtARF8w3yryd
-         58tA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=hPolnAcEPImDBRIWPgPqyudTNM+MItweaMqp0DHw7xw=;
-        b=iMLo+avNax+55tmMsHTnWcZZ8GspsEM05/KbXViKT2WWV/akznGyr17VZrM7seoZWi
-         sXqwDou4lekgKBcUTbmoW6UBGHrGCXqZnsebzEsne5/8cqqaqwkcMdQeb2gMYMWAAlCB
-         TDm80ixhBAEOylxff2r00+x/19uvb6SlI4paM3IgiRmodLNZ+M8HREZqpAwiG1abYv4N
-         DUgOQJx5siMMX/AF63pod3hL/px3Iwbjb00wQSsclTQnOjE/YAmIWdimqx99c0QZYhFv
-         DjzmQL2pfno1It6ABAPrzXTWVwrDu5M70c8GzVk6QQKaqOubAPw67NfKQ+VLvXgtdmaD
-         nWVg==
-X-Gm-Message-State: AOAM53113TckVtTULygULbSDtF3OgVYLa96XHwkgZaVYnaMNpAeynBRa
-        t/ze0PDgpGJnIccqy3RNlRU=
-X-Google-Smtp-Source: ABdhPJw6YZj0QTHARxlKSg1VMOoFOt6Ol1eer2pQpU+Mds5lKEOzv8HrjSfC2OiMQuPEFK3USBVXwA==
-X-Received: by 2002:a17:90b:46cb:: with SMTP id jx11mr1685603pjb.79.1594851238683;
-        Wed, 15 Jul 2020 15:13:58 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id m3sm3045304pfk.171.2020.07.15.15.13.57
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 15 Jul 2020 15:13:57 -0700 (PDT)
-Date:   Wed, 15 Jul 2020 15:13:56 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Saravana Kannan <saravanak@google.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        linux-kernel@vger.kernel.org, John Stultz <john.stultz@linaro.org>,
-        kernel-team@android.com
-Subject: Re: [PATCH v3 1/3] driver core: Expose device link details in sysfs
-Message-ID: <20200715221356.GA219557@roeck-us.net>
-References: <20200521191800.136035-1-saravanak@google.com>
- <20200521191800.136035-2-saravanak@google.com>
+        Wed, 15 Jul 2020 18:14:46 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06FMDfrL130374;
+        Wed, 15 Jul 2020 22:14:43 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id : in-reply-to : references : mime-version :
+ content-transfer-encoding; s=corp-2020-01-29;
+ bh=DnBqyE8/pCTV8QRw6jCmfUYbXTq2sDoxMNKNNmn7vp0=;
+ b=JOqO7Ui9X2EMSDe6DU9riUaAq9isteC4YSe048IgjkUjFpT4jc7KV3tVj47W4kzel4BW
+ V8JlW8AVipK6VcODUKkwcQ9mfwoFRPmLO3JtTg/fUFS2dsSHpUStdZH6y0LNMiTDZOdK
+ PeV0bGkL66auzHeMh2vZZKf5hj2oaSeUDU4S5Icgp6LM9iYqLhevqH/uaB3qMag0m+o+
+ gS69CCFIolLvE4nOIFheNmNl0uQuKwJ15XRm4iITDDMDhJ8q4PQ2mtk1Wh9tfSoLqlBx
+ edIcGFFFNj2PuO+gAaUVgk6a1RhIEBJ7tr+dMkDimFRhOUXJBqGKd7ZesYjETL7WWWaC VQ== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by aserp2120.oracle.com with ESMTP id 3275cme19n-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 15 Jul 2020 22:14:42 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06FMDdmP086718;
+        Wed, 15 Jul 2020 22:14:42 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by userp3020.oracle.com with ESMTP id 32a4cretk5-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 15 Jul 2020 22:14:42 +0000
+Received: from abhmp0017.oracle.com (abhmp0017.oracle.com [141.146.116.23])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 06FMEfsA004642;
+        Wed, 15 Jul 2020 22:14:41 GMT
+Received: from ca-mkp.ca.oracle.com (/10.156.108.201)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 15 Jul 2020 15:14:40 -0700
+From:   "Martin K. Petersen" <martin.petersen@oracle.com>
+To:     jejb@linux.ibm.com, Lee Jones <lee.jones@linaro.org>
+Cc:     "Martin K . Petersen" <martin.petersen@oracle.com>,
+        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 00/24] Set 3: Fix another set of SCSI related W=1 warnings
+Date:   Wed, 15 Jul 2020 18:14:33 -0400
+Message-Id: <159484884355.21107.3732344826044180939.b4-ty@oracle.com>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200713080001.128044-1-lee.jones@linaro.org>
+References: <20200713080001.128044-1-lee.jones@linaro.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200521191800.136035-2-saravanak@google.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9683 signatures=668680
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 mlxlogscore=999 spamscore=0
+ suspectscore=0 bulkscore=0 adultscore=0 phishscore=0 malwarescore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2007150165
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9683 signatures=668680
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 priorityscore=1501
+ bulkscore=0 adultscore=0 lowpriorityscore=0 phishscore=0 spamscore=0
+ impostorscore=0 malwarescore=0 mlxlogscore=999 clxscore=1015 mlxscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2007150165
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Mon, 13 Jul 2020 08:59:37 +0100, Lee Jones wrote:
 
-On Thu, May 21, 2020 at 12:17:58PM -0700, Saravana Kannan wrote:
-> It's helpful to be able to look at device link details from sysfs. So,
-> expose it in sysfs.
+> This set is part of a larger effort attempting to clean-up W=1
+> kernel builds, which are currently overwhelmingly riddled with
+> niggly little warnings.
 > 
-> Say device-A is supplier of device-B. These are the additional files
-> this patch would create:
+> Slowly working through the SCSI related ones.  There are many.
 > 
-> /sys/class/devlink/device-A:device-B/
-> 	auto_remove_on
-> 	consumer/ -> .../device-B/
-> 	runtime_pm
-> 	status
-> 	supplier/ -> .../device-A/
-> 	sync_state_only
+> This brings the total of W=1 SCSI wanings from 1690 in v5.8-rc1 to 1109.
 > 
-> /sys/devices/.../device-A/
-> 	consumer:device-B/ -> /sys/class/devlink/device-A:device-B/
-> 
-> /sys/devices/.../device-B/
-> 	supplier:device-A/ -> /sys/class/devlink/device-A:device-B/
-> 
-> That way:
-> To get a list of all the device link in the system:
-> ls /sys/class/devlink/
-> 
-> To get the consumer names and links of a device:
-> ls -d /sys/devices/.../device-X/consumer:*
-> 
-> To get the supplier names and links of a device:
-> ls -d /sys/devices/.../device-X/supplier:*
-> 
-> Signed-off-by: Saravana Kannan <saravanak@google.com>
+> [...]
 
-This patch creates a lot of noise in linux-next when booting various
-qemu images. Example log output as well as bisect results below.
-Reverting the patch fixes the problem.
+Applied to 5.9/scsi-queue. Thanks for cleaning things up!
 
-Guenter
+I do think that in general it makes little sense for low-level drivers
+to document internal functions using kerneldoc. As a general approach
+I would prefer to just switch drivers to '/*' or to remove stale
+comments instead of trying to keep up with the "docrot" warnings.
 
----
-BUG: sleeping function called from invalid context at kernel/locking/mutex.c:935
-in_atomic(): 1, irqs_disabled(): 0, non_block: 0, pid: 13, name: kworker/0:1
-2 locks held by kworker/0:1/13:
- #0: c78048a4 ((wq_completion)rcu_gp){+.+.}-{0:0}, at: process_one_work+0x1a0/0x728
- #1: c78ebf18 ((work_completion)(&sdp->work)){+.+.}-{0:0}, at: process_one_work+0x1a0/0x728
-Preemption disabled at:
-[<c0085bb4>] srcu_invoke_callbacks+0xc0/0x158
-CPU: 0 PID: 13 Comm: kworker/0:1 Not tainted 5.8.0-rc5-next-20200715 #1
-Hardware name: Freescale i.MX25 (Device Tree Support)
-Workqueue: rcu_gp srcu_invoke_callbacks
-[<c0010fe4>] (unwind_backtrace) from [<c000e740>] (show_stack+0x10/0x18)
-[<c000e740>] (show_stack) from [<c050985c>] (dump_stack+0x20/0x2c)
-[<c050985c>] (dump_stack) from [<c00496e4>] (___might_sleep+0x1d0/0x2cc)
-[<c00496e4>] (___might_sleep) from [<c09105e8>] (__mutex_lock+0x38/0x654)
-[<c09105e8>] (__mutex_lock) from [<c0910c20>] (mutex_lock_nested+0x1c/0x28)
-[<c0910c20>] (mutex_lock_nested) from [<c05b25dc>] (device_del+0x2c/0x3f0)
-[<c05b25dc>] (device_del) from [<c05b2a10>] (__device_link_free_srcu+0x50/0x64)
-[<c05b2a10>] (__device_link_free_srcu) from [<c0085bc4>] (srcu_invoke_callbacks+0xd0/0x158)
-[<c0085bc4>] (srcu_invoke_callbacks) from [<c003ad2c>] (process_one_work+0x284/0x728)
-[<c003ad2c>] (process_one_work) from [<c003b1fc>] (worker_thread+0x2c/0x52c)
-[<c003b1fc>] (worker_thread) from [<c0042df8>] (kthread+0x154/0x180)
-[<c0042df8>] (kthread) from [<c0008530>] (ret_from_fork+0x14/0x24)
-Exception stack(0xc78ebfb0 to 0xc78ebff8)
-bfa0:                                     00000000 00000000 00000000 00000000
-bfc0: 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
-bfe0: 00000000 00000000 00000000 00000000 00000013 00000000
-BUG: scheduling while atomic: kworker/0:1/13/0x00000201
-3 locks held by kworker/0:1/13:
- #0: c78048a4 ((wq_completion)rcu_gp){+.+.}-{0:0}, at: process_one_work+0x1a0/0x728
- #1: c78ebf18 ((work_completion)(&sdp->work)){+.+.}-{0:0}, at: process_one_work+0x1a0/0x728
- #2: c0cf5710 (gdp_mutex){+.+.}-{3:3}, at: cleanup_glue_dir.part.14+0x14/0xa0
-Modules linked in:
-Preemption disabled at:
-[<c0085bb4>] srcu_invoke_callbacks+0xc0/0x158
-CPU: 0 PID: 13 Comm: kworker/0:1 Tainted: G        W         5.8.0-rc5-next-20200715 #1
-Hardware name: Freescale i.MX25 (Device Tree Support)
-Workqueue: rcu_gp srcu_invoke_callbacks
-[<c0010fe4>] (unwind_backtrace) from [<c000e740>] (show_stack+0x10/0x18)
-[<c000e740>] (show_stack) from [<c050985c>] (dump_stack+0x20/0x2c)
-[<c050985c>] (dump_stack) from [<c0049910>] (__schedule_bug+0x88/0xf0)
-[<c0049910>] (__schedule_bug) from [<c090e148>] (__schedule+0x5f0/0x824)
-[<c090e148>] (__schedule) from [<c090e3d0>] (schedule+0x54/0x128)
-[<c090e3d0>] (schedule) from [<c090e838>] (schedule_preempt_disabled+0x14/0x28)
-[<c090e838>] (schedule_preempt_disabled) from [<c0910744>] (__mutex_lock+0x194/0x654)
-[<c0910744>] (__mutex_lock) from [<c0910c20>] (mutex_lock_nested+0x1c/0x28)
-[<c0910c20>] (mutex_lock_nested) from [<c05b1d5c>] (cleanup_glue_dir.part.14+0x14/0xa0)
-[<c05b1d5c>] (cleanup_glue_dir.part.14) from [<c05b296c>] (device_del+0x3bc/0x3f0)
-[<c05b296c>] (device_del) from [<c05b2a10>] (__device_link_free_srcu+0x50/0x64)
-[<c05b2a10>] (__device_link_free_srcu) from [<c0085bc4>] (srcu_invoke_callbacks+0xd0/0x158)
-[<c0085bc4>] (srcu_invoke_callbacks) from [<c003ad2c>] (process_one_work+0x284/0x728)
-[<c003ad2c>] (process_one_work) from [<c003b1fc>] (worker_thread+0x2c/0x52c)
-[<c003b1fc>] (worker_thread) from [<c0042df8>] (kthread+0x154/0x180)
-[<c0042df8>] (kthread) from [<c0008530>] (ret_from_fork+0x14/0x24)
-Exception stack(0xc78ebfb0 to 0xc78ebff8)
-bfa0:                                     00000000 00000000 00000000 00000000
-bfc0: 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
-bfe0: 00000000 00000000 00000000 00000000 00000013 00000000
-------------[ cut here ]------------
+kerneldoc cleanups are great for functions that actually have more
+than one user (core code, libraries, common code used by multiple
+drivers, etc.). Whereas for driver internals I would much rather
+emphasize function arguments with well-chosen, descriptive names
+instead of a kerneldoc "@p: pointer to a foobar" comment that will
+inevitably become stale next time an interface changes.
 
----
-# bad: [ca0e494af5edb59002665bf12871e94b4163a257] Add linux-next specific files for 20200715
-# good: [11ba468877bb23f28956a35e896356252d63c983] Linux 5.8-rc5
-git bisect start 'HEAD' 'v5.8-rc5'
-# good: [8a21074e4724ce86b4e1a8fdc271081a86303014] Merge remote-tracking branch 'crypto/master'
-git bisect good 8a21074e4724ce86b4e1a8fdc271081a86303014
-# good: [71f459b5cd96681f615e5c920b3a38ab89e8b5f1] Merge remote-tracking branch 'audit/next'
-git bisect good 71f459b5cd96681f615e5c920b3a38ab89e8b5f1
-# bad: [5a310f73f874211ee7aa570b308d50def85aff1c] Merge remote-tracking branch 'thunderbolt/next'
-git bisect bad 5a310f73f874211ee7aa570b308d50def85aff1c
-# good: [db01f1b1e840f46bdd64c6c846e7b3246bdff55a] Merge remote-tracking branch 'kvm/linux-next'
-git bisect good db01f1b1e840f46bdd64c6c846e7b3246bdff55a
-# bad: [89947fbc4b34bfdef7ade2b26274e78b32d4e39f] Merge remote-tracking branch 'usb/usb-next'
-git bisect bad 89947fbc4b34bfdef7ade2b26274e78b32d4e39f
-# bad: [c845fc08689b52c05c0201614ac89f7978caa169] Merge remote-tracking branch 'driver-core/driver-core-next'
-git bisect bad c845fc08689b52c05c0201614ac89f7978caa169
-# good: [4621ddca720ceb9b45725acd428e0389e3c0b59b] Merge remote-tracking branch 'drivers-x86/for-next'
-git bisect good 4621ddca720ceb9b45725acd428e0389e3c0b59b
-# good: [fac3dee864e971dff81dd4969c361b2b373109c0] Merge remote-tracking branch 'leds/for-next'
-git bisect good fac3dee864e971dff81dd4969c361b2b373109c0
-# good: [55c7549819e438f40a3ef1d8ac5c38b73390bcb7] scripts: add dummy report mode to add_namespace.cocci
-git bisect good 55c7549819e438f40a3ef1d8ac5c38b73390bcb7
-# good: [fe940d7362e6d7a5e5086581d0462e00ba766992] driver core: Drop mention of obsolete bus rwsem from kernel-doc
-git bisect good fe940d7362e6d7a5e5086581d0462e00ba766992
-# bad: [da6d647598a6d182eb6a0344a7b14ae005244399] driver core: Add waiting_for_supplier sysfs file for devices
-git bisect bad da6d647598a6d182eb6a0344a7b14ae005244399
-# bad: [8fd456ec0cf03875908d6b67c1cd20cf0a7b4474] driver core: Add state_synced sysfs file for devices that support it
-git bisect bad 8fd456ec0cf03875908d6b67c1cd20cf0a7b4474
-# bad: [287905e68dd29873bcb7986a8290cd1e4cfde600] driver core: Expose device link details in sysfs
-git bisect bad 287905e68dd29873bcb7986a8290cd1e4cfde600
-# first bad commit: [287905e68dd29873bcb7986a8290cd1e4cfde600] driver core: Expose device link details in sysfs
+[01/24] scsi: aacraid: Repair two kerneldoc headers
+        https://git.kernel.org/mkp/scsi/c/b115958d91f5
+[02/24] scsi: aacraid: Fix a few kerneldoc issues
+        https://git.kernel.org/mkp/scsi/c/cf93fffac261
+[03/24] scsi: aacraid: Fix logical bug when !DBG
+        https://git.kernel.org/mkp/scsi/c/2fee77e5b820
+[04/24] scsi: aacraid: Remove unused variable 'status'
+        https://git.kernel.org/mkp/scsi/c/0123c7c62d6c
+[05/24] scsi: aacraid: Demote partially documented function header
+        https://git.kernel.org/mkp/scsi/c/71aa4d3e0e78
+[06/24] scsi: aic94xx: Document 'lseq' and repair asd_update_port_links() header
+        https://git.kernel.org/mkp/scsi/c/966fdadf6fea
+[07/24] scsi: aacraid: Fix a bunch of function header issues
+        https://git.kernel.org/mkp/scsi/c/f1134f0eb184
+[08/24] scsi: aic94xx: Fix a couple of formatting and bitrot issues
+        https://git.kernel.org/mkp/scsi/c/d2e510505006
+[09/24] scsi: aacraid: Fill in the very parameter descriptions for rx_sync_cmd()
+        https://git.kernel.org/mkp/scsi/c/ae272a95133a
+[10/24] scsi: pm8001: Provide descriptions for the many undocumented 'attr's
+        https://git.kernel.org/mkp/scsi/c/e1c3e0f8a2ae
+[11/24] scsi: ipr: Fix a mountain of kerneldoc misdemeanours
+        https://git.kernel.org/mkp/scsi/c/a96099e2c164
+[12/24] scsi: virtio_scsi: Demote seemingly unintentional kerneldoc header
+        https://git.kernel.org/mkp/scsi/c/e31f2661ff41
+[13/24] scsi: ipr: Remove a bunch of set but checked variables
+        https://git.kernel.org/mkp/scsi/c/4dc833999e37
+[14/24] scsi: ipr: Fix struct packed-not-aligned issues
+        https://git.kernel.org/mkp/scsi/c/f3bdc59f9b11
+[15/24] scsi: myrs: Demote obvious misuse of kerneldoc to standard comment blocks
+        https://git.kernel.org/mkp/scsi/c/8a692fdb1d04
+[17/24] scsi: be2iscsi: Fix API/documentation slip
+        https://git.kernel.org/mkp/scsi/c/abad069ef0da
+[18/24] scsi: be2iscsi: Fix misdocumentation of 'pcontext'
+        https://git.kernel.org/mkp/scsi/c/dbc019a48f97
+[19/24] scsi: be2iscsi: Add missing function parameter description
+        https://git.kernel.org/mkp/scsi/c/7405edfdfb96
+[20/24] scsi: lpfc: Correct some pretty obvious misdocumentation
+        https://git.kernel.org/mkp/scsi/c/09d99705b5d2
+[21/24] scsi: aic7xxx: Remove unused variable 'ahd'
+        https://git.kernel.org/mkp/scsi/c/91b6e191c4dc
+[22/24] scsi: aic7xxx: Remove unused variables 'wait' and 'paused'
+        https://git.kernel.org/mkp/scsi/c/532d56c631f1
+[23/24] scsi: aic7xxx: Fix 'amount_xferred' set but not used issue
+        https://git.kernel.org/mkp/scsi/c/42b840bcfc16
+
+-- 
+Martin K. Petersen	Oracle Linux Engineering
