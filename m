@@ -2,322 +2,102 @@ Return-Path: <SRS0=kup7=A2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95DA0C433EA
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 14:53:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84E22C433E4
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 14:54:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6E4C4206D5
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 14:53:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5EE39206D5
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 14:54:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="GcBmqaBe"
+	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="c67AszQo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726989AbgGOOxQ (ORCPT
+        id S1726962AbgGOOyI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 10:53:16 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:48611 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726858AbgGOOxP (ORCPT
+        Wed, 15 Jul 2020 10:54:08 -0400
+Received: from mail.efficios.com ([167.114.26.124]:53588 "EHLO
+        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726670AbgGOOyH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 10:53:15 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1594824793;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=d9gLBZH3xrp5bh9Hcfk99uaWsYU1ho/1zy2f3F6QJLA=;
-        b=GcBmqaBeGaE6Xh0fJyDB73bl8SUWYodxOY7pC8VhbuREBT+v3lxrF+AwOfBhEaB/WkMOTf
-        geJ+bGYn7p3aDpWphOffX6onYmB8410QFQ+06tmNvlT++WIgx5bkM2w9Y8NparXQ4WasBL
-        PIp497SJHe0r+NGBcwJ4QNkoDKPpddQ=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-331-vxqMJMi2PhGPvdwM3iMhzQ-1; Wed, 15 Jul 2020 10:52:03 -0400
-X-MC-Unique: vxqMJMi2PhGPvdwM3iMhzQ-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B5E7F800EB6;
-        Wed, 15 Jul 2020 14:52:00 +0000 (UTC)
-Received: from dcbz.redhat.com (ovpn-114-113.ams2.redhat.com [10.36.114.113])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 7CDEC60BF1;
-        Wed, 15 Jul 2020 14:51:53 +0000 (UTC)
-From:   Adrian Reber <areber@redhat.com>
-To:     Christian Brauner <christian.brauner@ubuntu.com>,
-        Eric Biederman <ebiederm@xmission.com>,
-        Pavel Emelyanov <ovzxemul@gmail.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Dmitry Safonov <0x7f454c46@gmail.com>,
-        Andrei Vagin <avagin@gmail.com>,
-        Nicolas Viennot <Nicolas.Viennot@twosigma.com>,
-        =?UTF-8?q?Micha=C5=82=20C=C5=82api=C5=84ski?= 
-        <mclapinski@google.com>, Kamil Yurtsever <kyurtsever@google.com>,
-        Dirk Petersen <dipeit@gmail.com>,
-        Christine Flood <chf@redhat.com>,
-        Casey Schaufler <casey@schaufler-ca.com>
-Cc:     Mike Rapoport <rppt@linux.ibm.com>,
-        Radostin Stoyanov <rstoyanov1@gmail.com>,
-        Adrian Reber <areber@redhat.com>,
-        Cyrill Gorcunov <gorcunov@openvz.org>,
-        Serge Hallyn <serge@hallyn.com>,
-        Stephen Smalley <stephen.smalley.work@gmail.com>,
-        Sargun Dhillon <sargun@sargun.me>,
-        Arnd Bergmann <arnd@arndb.de>,
-        linux-security-module@vger.kernel.org,
-        linux-kernel@vger.kernel.org, selinux@vger.kernel.org,
-        Eric Paris <eparis@parisplace.org>,
-        Jann Horn <jannh@google.com>, linux-fsdevel@vger.kernel.org
-Subject: [PATCH v5 6/6] selftests: add clone3() CAP_CHECKPOINT_RESTORE test
-Date:   Wed, 15 Jul 2020 16:49:54 +0200
-Message-Id: <20200715144954.1387760-7-areber@redhat.com>
-In-Reply-To: <20200715144954.1387760-1-areber@redhat.com>
-References: <20200715144954.1387760-1-areber@redhat.com>
+        Wed, 15 Jul 2020 10:54:07 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by mail.efficios.com (Postfix) with ESMTP id 019F228288D;
+        Wed, 15 Jul 2020 10:54:07 -0400 (EDT)
+Received: from mail.efficios.com ([127.0.0.1])
+        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id UI-Yt_BGGMDe; Wed, 15 Jul 2020 10:54:06 -0400 (EDT)
+Received: from localhost (localhost [127.0.0.1])
+        by mail.efficios.com (Postfix) with ESMTP id C501428262B;
+        Wed, 15 Jul 2020 10:54:06 -0400 (EDT)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com C501428262B
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
+        s=default; t=1594824846;
+        bh=54IAB4nGaEdAThpU9gOAvhwf7R9x5qsgZhVuNCgBOPQ=;
+        h=Date:From:To:Message-ID:MIME-Version;
+        b=c67AszQopibnIZZ5NgaobX0YPlXDxRsEZybal42YWvqES/aSF8tql5QXiPN0jzITO
+         nza83eErrmii8q09TFMTqDQt4A1MS7ERNW/80Mw847nL+vBOekZi80j6uSUS03vsqP
+         tQKtXo/Z6jCSXB0lEvLX/D/nGuFEGJHJGnF50lPBEdN2GcuH5w4pxhyCDgZGAbAWcj
+         3Yf5CDENNRAZmNXsUpZAxVINLO28Vd9RDfWw9SXHE/3MxNTZDhjqqhgAiqSMpB3uhz
+         11zdUroTH5uEsInbg0eyVQoJy7PtmipkXP7VNk7UvMUbSBvWN93FEaaFmj8hJR2Y+d
+         f0Xnh2A/ZLxSA==
+X-Virus-Scanned: amavisd-new at efficios.com
+Received: from mail.efficios.com ([127.0.0.1])
+        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id WerSgHc_o-Fa; Wed, 15 Jul 2020 10:54:06 -0400 (EDT)
+Received: from mail03.efficios.com (mail03.efficios.com [167.114.26.124])
+        by mail.efficios.com (Postfix) with ESMTP id B8B4D282626;
+        Wed, 15 Jul 2020 10:54:06 -0400 (EDT)
+Date:   Wed, 15 Jul 2020 10:54:06 -0400 (EDT)
+From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+To:     Florian Weimer <fweimer@redhat.com>
+Cc:     carlos <carlos@redhat.com>, Peter Zijlstra <peterz@infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        paulmck <paulmck@linux.ibm.com>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Paul Turner <pjt@google.com>,
+        linux-api <linux-api@vger.kernel.org>,
+        Christian Brauner <christian.brauner@ubuntu.com>
+Message-ID: <1481331967.14276.1594824846736.JavaMail.zimbra@efficios.com>
+In-Reply-To: <87mu4028uk.fsf@oldenburg2.str.redhat.com>
+References: <20200714030348.6214-1-mathieu.desnoyers@efficios.com> <87a7028d5u.fsf@oldenburg2.str.redhat.com> <2452161.11491.1594732791558.JavaMail.zimbra@efficios.com> <71f08b3a-56f5-0e0f-53b0-cc680f7e8181@redhat.com> <2053637148.14136.1594818777608.JavaMail.zimbra@efficios.com> <87y2nk29rp.fsf@oldenburg2.str.redhat.com> <882700738.14181.1594819884049.JavaMail.zimbra@efficios.com> <87mu4028uk.fsf@oldenburg2.str.redhat.com>
+Subject: Re: [RFC PATCH 2/4] rseq: Allow extending struct rseq
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [167.114.26.124]
+X-Mailer: Zimbra 8.8.15_GA_3955 (ZimbraWebClient - FF78 (Linux)/8.8.15_GA_3953)
+Thread-Topic: rseq: Allow extending struct rseq
+Thread-Index: GU+HWQn+q08bfey6uiSkHPIIjdE8lw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This adds a test that changes its UID, uses capabilities to
-get CAP_CHECKPOINT_RESTORE and uses clone3() with set_tid to
-create a process with a given PID as non-root.
+----- On Jul 15, 2020, at 9:42 AM, Florian Weimer fweimer@redhat.com wrote:
+> * Mathieu Desnoyers:
+> 
+[...]
+>> How would this allow early-rseq-adopter libraries to interact with
+>> glibc ?
+> 
+> Under all extension proposals I've seen so far, early adopters are
+> essentially incompatible with glibc rseq registration.  I don't think
+> you can have it both ways.
 
-Signed-off-by: Adrian Reber <areber@redhat.com>
-Acked-by: Serge Hallyn <serge@hallyn.com>
----
- tools/testing/selftests/clone3/Makefile       |   4 +-
- .../clone3/clone3_cap_checkpoint_restore.c    | 203 ++++++++++++++++++
- 2 files changed, 206 insertions(+), 1 deletion(-)
- create mode 100644 tools/testing/selftests/clone3/clone3_cap_checkpoint_restore.c
+The basic question I'm not sure about is whether we are allowed to increase
+the size and alignement of __rseq_abi from e.g. glibc 2.32 to glibc 2.33.
+If not, then we just need to find another way to extend struct rseq, e.g. by
+adding a pointer to another extended structure in the padding space we
+have at the end of struct rseq.
 
-diff --git a/tools/testing/selftests/clone3/Makefile b/tools/testing/selftests/clone3/Makefile
-index cf976c732906..ef7564cb7abe 100644
---- a/tools/testing/selftests/clone3/Makefile
-+++ b/tools/testing/selftests/clone3/Makefile
-@@ -1,6 +1,8 @@
- # SPDX-License-Identifier: GPL-2.0
- CFLAGS += -g -I../../../../usr/include/
-+LDLIBS += -lcap
- 
--TEST_GEN_PROGS := clone3 clone3_clear_sighand clone3_set_tid
-+TEST_GEN_PROGS := clone3 clone3_clear_sighand clone3_set_tid \
-+	clone3_cap_checkpoint_restore
- 
- include ../lib.mk
-diff --git a/tools/testing/selftests/clone3/clone3_cap_checkpoint_restore.c b/tools/testing/selftests/clone3/clone3_cap_checkpoint_restore.c
-new file mode 100644
-index 000000000000..2cc3d57b91f2
---- /dev/null
-+++ b/tools/testing/selftests/clone3/clone3_cap_checkpoint_restore.c
-@@ -0,0 +1,203 @@
-+// SPDX-License-Identifier: GPL-2.0
-+
-+/*
-+ * Based on Christian Brauner's clone3() example.
-+ * These tests are assuming to be running in the host's
-+ * PID namespace.
-+ */
-+
-+/* capabilities related code based on selftests/bpf/test_verifier.c */
-+
-+#define _GNU_SOURCE
-+#include <errno.h>
-+#include <linux/types.h>
-+#include <linux/sched.h>
-+#include <stdio.h>
-+#include <stdlib.h>
-+#include <stdbool.h>
-+#include <sys/capability.h>
-+#include <sys/prctl.h>
-+#include <sys/syscall.h>
-+#include <sys/types.h>
-+#include <sys/un.h>
-+#include <sys/wait.h>
-+#include <unistd.h>
-+#include <sched.h>
-+
-+#include "../kselftest.h"
-+#include "clone3_selftests.h"
-+
-+#ifndef MAX_PID_NS_LEVEL
-+#define MAX_PID_NS_LEVEL 32
-+#endif
-+
-+static void child_exit(int ret)
-+{
-+	fflush(stdout);
-+	fflush(stderr);
-+	_exit(ret);
-+}
-+
-+static int call_clone3_set_tid(pid_t * set_tid, size_t set_tid_size)
-+{
-+	int status;
-+	pid_t pid = -1;
-+
-+	struct clone_args args = {
-+		.exit_signal = SIGCHLD,
-+		.set_tid = ptr_to_u64(set_tid),
-+		.set_tid_size = set_tid_size,
-+	};
-+
-+	pid = sys_clone3(&args, sizeof(struct clone_args));
-+	if (pid < 0) {
-+		ksft_print_msg("%s - Failed to create new process\n",
-+			       strerror(errno));
-+		return -errno;
-+	}
-+
-+	if (pid == 0) {
-+		int ret;
-+		char tmp = 0;
-+
-+		ksft_print_msg
-+		    ("I am the child, my PID is %d (expected %d)\n",
-+		     getpid(), set_tid[0]);
-+
-+		if (set_tid[0] != getpid())
-+			child_exit(EXIT_FAILURE);
-+		child_exit(EXIT_SUCCESS);
-+	}
-+
-+	ksft_print_msg("I am the parent (%d). My child's pid is %d\n",
-+		       getpid(), pid);
-+
-+	if (waitpid(pid, &status, 0) < 0) {
-+		ksft_print_msg("Child returned %s\n", strerror(errno));
-+		return -errno;
-+	}
-+
-+	if (!WIFEXITED(status))
-+		return -1;
-+
-+	return WEXITSTATUS(status);
-+}
-+
-+static int test_clone3_set_tid(pid_t * set_tid,
-+			       size_t set_tid_size, int expected)
-+{
-+	int ret;
-+
-+	ksft_print_msg("[%d] Trying clone3() with CLONE_SET_TID to %d\n",
-+		       getpid(), set_tid[0]);
-+	ret = call_clone3_set_tid(set_tid, set_tid_size);
-+
-+	ksft_print_msg
-+	    ("[%d] clone3() with CLONE_SET_TID %d says :%d - expected %d\n",
-+	     getpid(), set_tid[0], ret, expected);
-+	if (ret != expected) {
-+		ksft_test_result_fail
-+		    ("[%d] Result (%d) is different than expected (%d)\n",
-+		     getpid(), ret, expected);
-+		return -1;
-+	}
-+	ksft_test_result_pass
-+	    ("[%d] Result (%d) matches expectation (%d)\n", getpid(), ret,
-+	     expected);
-+
-+	return 0;
-+}
-+
-+struct libcap {
-+	struct __user_cap_header_struct hdr;
-+	struct __user_cap_data_struct data[2];
-+};
-+
-+static int set_capability()
-+{
-+	cap_value_t cap_values[] = { CAP_SETUID, CAP_SETGID };
-+	struct libcap *cap;
-+	int ret = -1;
-+	cap_t caps;
-+
-+	caps = cap_get_proc();
-+	if (!caps) {
-+		perror("cap_get_proc");
-+		return -1;
-+	}
-+
-+	/* Drop all capabilities */
-+	if (cap_clear(caps)) {
-+		perror("cap_clear");
-+		goto out;
-+	}
-+
-+	cap_set_flag(caps, CAP_EFFECTIVE, 2, cap_values, CAP_SET);
-+	cap_set_flag(caps, CAP_PERMITTED, 2, cap_values, CAP_SET);
-+
-+	cap = (struct libcap *) caps;
-+
-+	/* 40 -> CAP_CHECKPOINT_RESTORE */
-+	cap->data[1].effective |= 1 << (40 - 32);
-+	cap->data[1].permitted |= 1 << (40 - 32);
-+
-+	if (cap_set_proc(caps)) {
-+		perror("cap_set_proc");
-+		goto out;
-+	}
-+	ret = 0;
-+out:
-+	if (cap_free(caps))
-+		perror("cap_free");
-+	return ret;
-+}
-+
-+int main(int argc, char *argv[])
-+{
-+	pid_t pid;
-+	int status;
-+	int ret = 0;
-+	pid_t set_tid[1];
-+	uid_t uid = getuid();
-+
-+	ksft_print_header();
-+	test_clone3_supported();
-+	ksft_set_plan(2);
-+
-+	if (uid != 0) {
-+		ksft_cnt.ksft_xskip = ksft_plan;
-+		ksft_print_msg("Skipping all tests as non-root\n");
-+		return ksft_exit_pass();
-+	}
-+
-+	memset(&set_tid, 0, sizeof(set_tid));
-+
-+	/* Find the current active PID */
-+	pid = fork();
-+	if (pid == 0) {
-+		ksft_print_msg("Child has PID %d\n", getpid());
-+		child_exit(EXIT_SUCCESS);
-+	}
-+	if (waitpid(pid, &status, 0) < 0)
-+		ksft_exit_fail_msg("Waiting for child %d failed", pid);
-+
-+	/* After the child has finished, its PID should be free. */
-+	set_tid[0] = pid;
-+
-+	if (set_capability())
-+		ksft_test_result_fail
-+		    ("Could not set CAP_CHECKPOINT_RESTORE\n");
-+	prctl(PR_SET_KEEPCAPS, 1, 0, 0, 0);
-+	/* This would fail without CAP_CHECKPOINT_RESTORE */
-+	setgid(1000);
-+	setuid(1000);
-+	set_tid[0] = pid;
-+	ret |= test_clone3_set_tid(set_tid, 1, -EPERM);
-+	if (set_capability())
-+		ksft_test_result_fail
-+		    ("Could not set CAP_CHECKPOINT_RESTORE\n");
-+	/* This should work as we have CAP_CHECKPOINT_RESTORE as non-root */
-+	ret |= test_clone3_set_tid(set_tid, 1, 0);
-+
-+	return !ret ? ksft_exit_pass() : ksft_exit_fail();
-+}
+Thanks,
+
+Mathieu
+
 -- 
-2.26.2
-
+Mathieu Desnoyers
+EfficiOS Inc.
+http://www.efficios.com
