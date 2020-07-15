@@ -2,235 +2,169 @@ Return-Path: <SRS0=kup7=A2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B7DCC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 04:09:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5769AC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 04:14:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C84FB206F0
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 04:09:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3558A206F0
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 04:14:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="K1HTY9Dw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726769AbgGOEJY (ORCPT
+        id S1726892AbgGOEOO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 00:09:24 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:62262 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725831AbgGOEJY (ORCPT
+        Wed, 15 Jul 2020 00:14:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41114 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726458AbgGOEON (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 00:09:24 -0400
-Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06F43lGF001922;
-        Wed, 15 Jul 2020 00:09:00 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 3276ahef37-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 15 Jul 2020 00:09:00 -0400
-Received: from m0098393.ppops.net (m0098393.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 06F48xMs017133;
-        Wed, 15 Jul 2020 00:08:59 -0400
-Received: from ppma02fra.de.ibm.com (47.49.7a9f.ip4.static.sl-reverse.com [159.122.73.71])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 3276ahef2k-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 15 Jul 2020 00:08:59 -0400
-Received: from pps.filterd (ppma02fra.de.ibm.com [127.0.0.1])
-        by ppma02fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 06F40I7c023141;
-        Wed, 15 Jul 2020 04:08:57 GMT
-Received: from b06cxnps3075.portsmouth.uk.ibm.com (d06relay10.portsmouth.uk.ibm.com [9.149.109.195])
-        by ppma02fra.de.ibm.com with ESMTP id 327527v2tu-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 15 Jul 2020 04:08:57 +0000
-Received: from d06av24.portsmouth.uk.ibm.com (mk.ibm.com [9.149.105.60])
-        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 06F48sk265536230
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 15 Jul 2020 04:08:54 GMT
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 58DBF42041;
-        Wed, 15 Jul 2020 04:08:54 +0000 (GMT)
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 86AF742045;
-        Wed, 15 Jul 2020 04:08:50 +0000 (GMT)
-Received: from [9.199.44.159] (unknown [9.199.44.159])
-        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Wed, 15 Jul 2020 04:08:50 +0000 (GMT)
-Subject: Re: [PATCH v3 2/9] powerpc/watchpoint: Fix DAWR exception constraint
-To:     Jordan Niethe <jniethe5@gmail.com>
-Cc:     Michael Ellerman <mpe@ellerman.id.au>, mikey@neuling.org,
-        apopple@linux.ibm.com, Paul Mackerras <paulus@samba.org>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        naveen.n.rao@linux.vnet.ibm.com, peterz@infradead.org,
-        jolsa@kernel.org, oleg@redhat.com, fweisbec@gmail.com,
-        mingo@kernel.org, pedromfc@br.ibm.com, miltonm@us.ibm.com,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        Ravi Bangoria <ravi.bangoria@linux.ibm.com>
-References: <20200708045046.135702-1-ravi.bangoria@linux.ibm.com>
- <20200708045046.135702-3-ravi.bangoria@linux.ibm.com>
- <CACzsE9qSjWKWGDQPGSk-c5f5pxUyWWtUFW+AzzB5M76qFcQ-Cw@mail.gmail.com>
-From:   Ravi Bangoria <ravi.bangoria@linux.ibm.com>
-Message-ID: <9c0a9b97-fcc6-9f69-5a90-1f94cae3c899@linux.ibm.com>
-Date:   Wed, 15 Jul 2020 09:38:49 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Wed, 15 Jul 2020 00:14:13 -0400
+Received: from mail-qt1-x842.google.com (mail-qt1-x842.google.com [IPv6:2607:f8b0:4864:20::842])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5D4CAC061755;
+        Tue, 14 Jul 2020 21:14:13 -0700 (PDT)
+Received: by mail-qt1-x842.google.com with SMTP id x62so708835qtd.3;
+        Tue, 14 Jul 2020 21:14:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=foDNNdgIp5gEZxCFX16NjXsSXtzimT2AqP9s4DUPnRU=;
+        b=K1HTY9DwxKkwlxnhxfdiEyaM+jc4pxAHsm3ZoHLNf46o0NPweVzUmsjJtWpbSuLE+5
+         lvihYceaJxRcEpAn5Y7EIeZe/uvSunAtgqS9kNlEQiAGK00zW7tqpXxTeSY/4j+aQStZ
+         dmrHIkiZe+s8yH734YCb8MWgS9ATNCn5XMcrXihLhLhW4cwiabHZHBVUHd1gjGLW4Q1k
+         a0OvsQS95Pvuit+60T/5UuMN5I0UHd0X5zOBO38F201gGpVLceSzNqKd3aGWubrmj2EM
+         Mn2jFZoMXI7qVziDUAk642VoUW2CExUIyYCmfbb46N7N3LTCKRJRuW2yeEO85s+bRLIn
+         UHIQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=foDNNdgIp5gEZxCFX16NjXsSXtzimT2AqP9s4DUPnRU=;
+        b=hmLLa0iAOZfoB/jGrNMB3Gg/3clEtRSG3DAq+Bq7T5Xg5Mi//0VQ8Jiheozfl+554W
+         zMufiXJBReL0LbMFP3hY1uQ+I32iv9s0KvU1mGyfAjWeXQvDZ8WFQMHb24rdKzEIH4jY
+         GPzawy7WmqFJcjfb/y7yXuvimo3Rhj1qiMjXp72n6FO8COnt5hsGVmmLamJzLnLKgXPu
+         ApXa4jP4YnVln0nf2vSkUZLdJVNvH+jURhEJqCszEDNOxDPrN9hDnTx6i85PWpT00Ptn
+         L1VmMxaYFXkjYGZ3TIBG0L6gKD5nSCUYsW2GLdUL06xlv1ED7/Me/Lq45eAH5/4Blxwt
+         aKPA==
+X-Gm-Message-State: AOAM533s72WljpwaLq2TYunbmP4u3aHjBj24BQC1pQdJ67/pinMM0HjM
+        7FJ80K/BVR9r5BCWNpES30G/5ocT+n6+/Ln6P34=
+X-Google-Smtp-Source: ABdhPJz9uu3YAldIkZ25DwFl7GQTjr4Q/2qWdCJALV+nDYpRz3j+ggBoJDewGFe15ct9g6o4fvRHNE0l6dRRFxn2zpM=
+X-Received: by 2002:ac8:41c6:: with SMTP id o6mr8114697qtm.292.1594786452616;
+ Tue, 14 Jul 2020 21:14:12 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <CACzsE9qSjWKWGDQPGSk-c5f5pxUyWWtUFW+AzzB5M76qFcQ-Cw@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-07-15_02:2020-07-14,2020-07-15 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 adultscore=0
- mlxlogscore=999 malwarescore=0 phishscore=0 priorityscore=1501
- clxscore=1015 lowpriorityscore=0 suspectscore=0 spamscore=0 bulkscore=0
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2007150032
+References: <1594717536-5188-1-git-send-email-shengjiu.wang@nxp.com>
+ <1594717536-5188-4-git-send-email-shengjiu.wang@nxp.com> <20200714211432.GA10818@Asurada-Nvidia>
+In-Reply-To: <20200714211432.GA10818@Asurada-Nvidia>
+From:   Shengjiu Wang <shengjiu.wang@gmail.com>
+Date:   Wed, 15 Jul 2020 12:14:01 +0800
+Message-ID: <CAA+D8ANQ_B9jJUhLYQnKxKJcVrmvakxPo58h433QqFhdu2nRPA@mail.gmail.com>
+Subject: Re: [PATCH 3/3] ASoC: fsl-asoc-card: Support Headphone and Microphone
+ Jack detection
+To:     Nicolin Chen <nicoleotsuka@gmail.com>
+Cc:     Shengjiu Wang <shengjiu.wang@nxp.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux-ALSA <alsa-devel@alsa-project.org>,
+        linuxppc-dev@lists.ozlabs.org, Timur Tabi <timur@kernel.org>,
+        kuninori.morimoto.gx@renesas.com, samuel@sholland.org,
+        katsuhiro@katsuster.net,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Xiubo Li <Xiubo.Lee@gmail.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Takashi Iwai <tiwai@suse.com>, Mark Brown <broonie@kernel.org>,
+        Fabio Estevam <festevam@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jordan,
+On Wed, Jul 15, 2020 at 5:16 AM Nicolin Chen <nicoleotsuka@gmail.com> wrote:
+>
+> Hi Shengjiu,
+>
+> The whole series looks good to me. Just a couple of small
+> questions inline:
+>
+> On Tue, Jul 14, 2020 at 05:05:36PM +0800, Shengjiu Wang wrote:
+> > Use asoc_simple_init_jack function from simple card to implement
+> > the Headphone and Microphone detection.
+> > Register notifier to disable Speaker when Headphone is plugged in
+> > and enable Speaker when Headphone is unplugged.
+> > Register notifier to disable Digital Microphone when Analog Microphone
+> > is plugged in and enable DMIC when Analog Microphone is unplugged.
+> >
+> > Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
+> > ---
+> >  sound/soc/fsl/Kconfig         |  1 +
+> >  sound/soc/fsl/fsl-asoc-card.c | 69 ++++++++++++++++++++++++++++++++++-
+> >  2 files changed, 68 insertions(+), 2 deletions(-)
+>
+> >  static int fsl_asoc_card_late_probe(struct snd_soc_card *card)
+> >  {
+> >       struct fsl_asoc_card_priv *priv = snd_soc_card_get_drvdata(card);
+> > @@ -745,8 +789,29 @@ static int fsl_asoc_card_probe(struct platform_device *pdev)
+> >       snd_soc_card_set_drvdata(&priv->card, priv);
+> >
+> >       ret = devm_snd_soc_register_card(&pdev->dev, &priv->card);
+> > -     if (ret && ret != -EPROBE_DEFER)
+> > -             dev_err(&pdev->dev, "snd_soc_register_card failed (%d)\n", ret);
+> > +     if (ret) {
+> > +             if (ret != -EPROBE_DEFER)
+> > +                     dev_err(&pdev->dev, "snd_soc_register_card failed (%d)\n", ret);
+>
+> I think we may move this EPROBE_DEFER to the asrc_fail label.
 
->> @@ -536,7 +538,12 @@ static bool check_dawrx_constraints(struct pt_regs *regs, int type,
->>          if (OP_IS_LOAD(type) && !(info->type & HW_BRK_TYPE_READ))
->>                  return false;
->>
->> -       if (OP_IS_STORE(type) && !(info->type & HW_BRK_TYPE_WRITE))
->> +       /*
->> +        * The Cache Management instructions other than dcbz never
->> +        * cause a match. i.e. if type is CACHEOP, the instruction
->> +        * is dcbz, and dcbz is treated as Store.
->> +        */
->> +       if ((OP_IS_STORE(type) || type == CACHEOP) && !(info->type & HW_BRK_TYPE_WRITE))
->>                  return false;
-> This change seems seperate to this commit?
+If we move this to asrc_fail label, then it will be hard to define the
+error message.
+There are many places that goto asrc_fail.
 
-I also thought about it but was not sure. See below ...
+>
+> > +             goto asrc_fail;
+> > +     }
+> > +
+> > +     if (of_property_read_bool(np, "hp-det-gpio")) {
+>
+> Could we move this check inside asoc_simple_init_jack? There's no
+> problem with doing it here though, yet I got a bit confused by it
+> as I thought it's a boolean type property, which would be against
+> the DT bindings until I saw asoc_simple_init_jack() uses the same
+> string to get the GPIO. Just it probably would be a bit tricky as
+> we need it to be optional here.
+>
+> Otherwise, I think we may add a line of comments to indicate that
+> the API would use the same string to get the GPIO.
 
->>
->>          if (is_kernel_addr(regs->nip) && !(info->type & HW_BRK_TYPE_KERNEL))
->> @@ -553,7 +560,8 @@ static bool check_dawrx_constraints(struct pt_regs *regs, int type,
->>    * including extraneous exception. Otherwise return false.
->>    */
->>   static bool check_constraints(struct pt_regs *regs, struct ppc_inst instr,
->> -                             int type, int size, struct arch_hw_breakpoint *info)
->> +                             unsigned long ea, int type, int size,
->> +                             struct arch_hw_breakpoint *info)
->>   {
->>          bool in_user_range = dar_in_user_range(regs->dar, info);
->>          bool dawrx_constraints;
->> @@ -569,11 +577,10 @@ static bool check_constraints(struct pt_regs *regs, struct ppc_inst instr,
->>          }
->>
->>          if (unlikely(ppc_inst_equal(instr, ppc_inst(0)))) {
->> -               if (in_user_range)
->> -                       return true;
->> -
->> -               if (dar_in_hw_range(regs->dar, info)) {
->> -                       info->type |= HW_BRK_TYPE_EXTRANEOUS_IRQ;
->> +               if (cpu_has_feature(CPU_FTR_ARCH_31)) {
->> +                       if (dar_in_hw_range(regs->dar, info))
->> +                               return true;
->> +               } else {
->>                          return true;
-> I think this would be clearer as:
->          if (cpu_has_feature(CPU_FTR_ARCH_31) &&
-> !(dar_in_hw_range(regs->dar, info)))
->              return false;
->          else
->              return true;
+In asoc_simple_init_jack, gpio_is_valid() will be invalid when there is
+no "hp-det-gpio" property, and asoc_simple_init_jack will return 0.
 
-ok
+The reason why I add a check here is mostly for
+snd_soc_jack_notifier_register().
+when there is no jack created, there will be a kernel dump.
 
-> 
->>                  }
->>                  return false;
->> @@ -581,10 +588,20 @@ static bool check_constraints(struct pt_regs *regs, struct ppc_inst instr,
->>
->>          dawrx_constraints = check_dawrx_constraints(regs, type, info);
->>
->> -       if (dar_user_range_overlaps(regs->dar, size, info))
->> +       if (type == UNKNOWN) {
->> +               if (cpu_has_feature(CPU_FTR_ARCH_31)) {
->> +                       if (dar_in_hw_range(regs->dar, info))
->> +                               return dawrx_constraints;
->> +               } else {
->> +                       return dawrx_constraints;
->> +               }
->> +               return false;
->> +       }
-> Similar thing here, it could be:
->          if ((cpu_has_feature(CPU_FTR_ARCH_31)) &&
-> !(dar_in_hw_range(regs->dar, info)))
->              return false;
->          else
->              return dawrx_constraints;
+or I can use this code:
 
-ok
+-       if (of_property_read_bool(np, "hp-det-gpio")) {
+-               ret = asoc_simple_init_jack(&priv->card, &priv->hp_jack,
+-                                           1, NULL, "Headphone Jack");
+-               if (ret)
+-                       goto asrc_fail;
++       ret = asoc_simple_init_jack(&priv->card, &priv->hp_jack,
++                                   1, NULL, "Headphone Jack");
++       if (ret)
++               goto asrc_fail;
 
->> +
->> +       if (ea_user_range_overlaps(ea, size, info))
->>                  return dawrx_constraints;
->>
->> -       if (dar_hw_range_overlaps(regs->dar, size, info)) {
->> +       if (ea_hw_range_overlaps(ea, size, info)) {
->>                  if (dawrx_constraints) {
->>                          info->type |= HW_BRK_TYPE_EXTRANEOUS_IRQ;
->>                          return true;
->> @@ -593,8 +610,17 @@ static bool check_constraints(struct pt_regs *regs, struct ppc_inst instr,
->>          return false;
->>   }
->>
->> +static int cache_op_size(void)
->> +{
->> +#ifdef __powerpc64__
->> +       return ppc64_caches.l1d.block_size;
->> +#else
->> +       return L1_CACHE_BYTES;
->> +#endif
->> +}
->> +
->>   static void get_instr_detail(struct pt_regs *regs, struct ppc_inst *instr,
->> -                            int *type, int *size, bool *larx_stcx)
->> +                            int *type, int *size, unsigned long *ea)
->>   {
->>          struct instruction_op op;
->>
->> @@ -602,16 +628,23 @@ static void get_instr_detail(struct pt_regs *regs, struct ppc_inst *instr,
->>                  return;
->>
->>          analyse_instr(&op, regs, *instr);
->> -
->> -       /*
->> -        * Set size = 8 if analyse_instr() fails. If it's a userspace
->> -        * watchpoint(valid or extraneous), we can notify user about it.
->> -        * If it's a kernel watchpoint, instruction  emulation will fail
->> -        * in stepping_handler() and watchpoint will be disabled.
->> -        */
->>          *type = GETTYPE(op.type);
->> -       *size = !(*type == UNKNOWN) ? GETSIZE(op.type) : 8;
->> -       *larx_stcx = (*type == LARX || *type == STCX);
->> +       *ea = op.ea;
->> +#ifdef __powerpc64__
->> +       if (!(regs->msr & MSR_64BIT))
->> +               *ea &= 0xffffffffUL;
->> +#endif
->> +
->> +       *size = GETSIZE(op.type);
->> +       if (*type == CACHEOP) {
->> +               *size = cache_op_size();
->> +               *ea &= ~(*size - 1);
->> +       }
-> Again related to CACHEOP, should these changes be mentioned in the
-> commit message?
++       if (priv->hp_jack.jack.jack)
+                snd_soc_jack_notifier_register(&priv->hp_jack.jack,
+&hp_jack_nb);
+-       }
 
-For CACHEOP, ea returned by analyse_instr() needs to be aligned down to cache
-block size manually. Also, for CACHEOP, size returned by analyse_instr() is 0
-and thus size also needs to be calculated manually. This was missed in
-27985b2a640e. So it kind of relates to other changes of the patch but needs
-special treatment as well. Will see if I can split it.
+what do you think?
 
-Thanks for the review,
-Ravi
+best regards
+wang shengjiu
