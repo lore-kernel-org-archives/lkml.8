@@ -8,37 +8,37 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A4E9C43468
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 04:20:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 776B2C433E2
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 04:20:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1C22E2076D
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 04:20:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 55CE82076D
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 04:20:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="Hc4EcN1U"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="ngli1ZjC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728310AbgGOETe (ORCPT
+        id S1728848AbgGOEU2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 00:19:34 -0400
-Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:11978 "EHLO
-        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728232AbgGOETb (ORCPT
+        Wed, 15 Jul 2020 00:20:28 -0400
+Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:4625 "EHLO
+        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728332AbgGOETf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 00:19:31 -0400
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5f0e83980000>; Tue, 14 Jul 2020 21:18:32 -0700
+        Wed, 15 Jul 2020 00:19:35 -0400
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5f0e83ca0000>; Tue, 14 Jul 2020 21:19:22 -0700
 Received: from hqmail.nvidia.com ([172.20.161.6])
   by hqpgpgate102.nvidia.com (PGP Universal service);
-  Tue, 14 Jul 2020 21:19:30 -0700
+  Tue, 14 Jul 2020 21:19:35 -0700
 X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Tue, 14 Jul 2020 21:19:30 -0700
-Received: from HQMAIL111.nvidia.com (172.20.187.18) by HQMAIL101.nvidia.com
- (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 15 Jul
- 2020 04:19:30 +0000
-Received: from rnnvemgw01.nvidia.com (10.128.109.123) by HQMAIL111.nvidia.com
- (172.20.187.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Wed, 15 Jul 2020 04:19:29 +0000
+        by hqpgpgate102.nvidia.com on Tue, 14 Jul 2020 21:19:35 -0700
+Received: from HQMAIL107.nvidia.com (172.20.187.13) by HQMAIL111.nvidia.com
+ (172.20.187.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 15 Jul
+ 2020 04:19:34 +0000
+Received: from rnnvemgw01.nvidia.com (10.128.109.123) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Wed, 15 Jul 2020 04:19:34 +0000
 Received: from skomatineni-linux.nvidia.com (Not Verified[10.2.160.169]) by rnnvemgw01.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5f0e83d00002>; Tue, 14 Jul 2020 21:19:29 -0700
+        id <B5f0e83d50000>; Tue, 14 Jul 2020 21:19:33 -0700
 From:   Sowjanya Komatineni <skomatineni@nvidia.com>
 To:     <skomatineni@nvidia.com>, <thierry.reding@gmail.com>,
         <jonathanh@nvidia.com>, <frankc@nvidia.com>, <hverkuil@xs4all.nl>,
@@ -48,9 +48,9 @@ CC:     <digetx@gmail.com>, <sboyd@kernel.org>,
         <gregkh@linuxfoundation.org>, <linux-media@vger.kernel.org>,
         <devicetree@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>, <linux-i2c@vger.kernel.org>
-Subject: [RFC PATCH v3 07/18] i2c: tegra: Avoid tegra_i2c_init_dma() for Tegra210 vi i2c
-Date:   Tue, 14 Jul 2020 21:20:44 -0700
-Message-ID: <1594786855-26506-8-git-send-email-skomatineni@nvidia.com>
+Subject: [RFC PATCH v3 11/18] dt-bindings: tegra: Update VI and CSI bindings with port info
+Date:   Tue, 14 Jul 2020 21:20:48 -0700
+Message-ID: <1594786855-26506-12-git-send-email-skomatineni@nvidia.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1594786855-26506-1-git-send-email-skomatineni@nvidia.com>
 References: <1594786855-26506-1-git-send-email-skomatineni@nvidia.com>
@@ -58,44 +58,153 @@ X-NVConfidentiality: public
 MIME-Version: 1.0
 Content-Type: text/plain
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1594786712; bh=bx39F/3n9Q/pzD3y/Hu3Hjt/owO0zkylWWejNtiAobk=;
+        t=1594786762; bh=yGbs5SDi4Dd0+0xT6nDOtBMbjmUT+S0MvKYM2ZVqVhs=;
         h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
          In-Reply-To:References:X-NVConfidentiality:MIME-Version:
          Content-Type;
-        b=Hc4EcN1U4PoSZ7CTF+0Ivlw7U3QxXpFbGOlGEUEJOZT+WzWzFTVXX/GI7IAoWYwdD
-         iSIeSpVlVntd7fqqw0SaHkLbZCmPEgSP1PQCYpdXlWn9ULWtuULoPkjQe/lY42wLD2
-         eTniooK6SuhGwED2DlZg+FBH1Jm0la53jmkgSEv1V1RR5JUWcdfSxnPEgFgsx+dmU0
-         5TFLwrY8xWKy+E0Cyw1aw5+i6xxs64MvX43NAg2SYhUKZdHZNLB5Wi3ExovvdNNhI2
-         PZljrrUfdkCIO1tPqX0l49TdQ8a4NVQYlhT75DCTtePbqEoBtAekCseyUR5HH75rYV
-         Go1u8whx/1SBA==
+        b=ngli1ZjCHCV+7PgXkYKLSX/PDJj9cGBR1ZEY0d6BHlUF0EtD2VR80+MMQY3FFxISt
+         ZRs+Kd2pQpMOi8TufGYjOJyDFAxTt7JKPYdPk6m5H8K7BQBDmOetfFuoJOoBTrWRqU
+         CeayL3MAMII73akRTBVHL4OO1xi0ZS4VBR2PZrQJS3rVcXfjyfoY6KztT486rVaVBq
+         TSPtwvbndRdFRjyLacLon0VqryYYniggIaBONprbvHpUUc4sKehBFSdvhdNroAgJnJ
+         urIXUVBaGeT9EIbxLLQ9L0ifqv9a5Tpr5ImQS3yvpor/SUKgQfs1iShp0BC5FChh+g
+         /2HjJsBTeCUMA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-VI I2C is on host1x bus so APB DMA can't be used for Tegra210 VI
-I2C and there are no tx and rx dma channels for VI I2C.
-
-So, avoid attempt of requesting DMA channels.
+Update VI and CSI bindings to add port and endpoint nodes as per
+media video-interfaces DT binding document.
 
 Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
 ---
- drivers/i2c/busses/i2c-tegra.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ .../display/tegra/nvidia,tegra20-host1x.txt        | 92 +++++++++++++++++++++-
+ 1 file changed, 90 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/i2c/busses/i2c-tegra.c b/drivers/i2c/busses/i2c-tegra.c
-index 1bf3666..00d3e4d 100644
---- a/drivers/i2c/busses/i2c-tegra.c
-+++ b/drivers/i2c/busses/i2c-tegra.c
-@@ -421,7 +421,7 @@ static int tegra_i2c_init_dma(struct tegra_i2c_dev *i2c_dev)
- 	dma_addr_t dma_phys;
- 	int err;
+diff --git a/Documentation/devicetree/bindings/display/tegra/nvidia,tegra20-host1x.txt b/Documentation/devicetree/bindings/display/tegra/nvidia,tegra20-host1x.txt
+index 4731921..ac63ae4a 100644
+--- a/Documentation/devicetree/bindings/display/tegra/nvidia,tegra20-host1x.txt
++++ b/Documentation/devicetree/bindings/display/tegra/nvidia,tegra20-host1x.txt
+@@ -51,8 +51,16 @@ of the following host1x client modules:
+       - vi
+   - Tegra210:
+     - power-domains: Must include venc powergate node as vi is in VE partition.
+-  - Tegra210 has CSI part of VI sharing same host interface and register space.
+-    So, VI device node should have CSI child node.
++
++  ports (optional node)
++  vi can have optional ports node and max 6 ports are supported. Each port
++  should have single 'endpoint' child node. All port nodes are grouped under
++  ports node. Please refer to the bindings defined in
++  Documentation/devicetree/bindings/media/video-interfaces.txt
++
++  csi (required node)
++  Tegra210 has CSI part of VI sharing same host interface and register space.
++  So, VI device node should have CSI child node.
  
--	if (!i2c_dev->hw->has_apb_dma)
-+	if (!i2c_dev->hw->has_apb_dma || i2c_dev->is_vi)
- 		return 0;
+     - csi: mipi csi interface to vi
  
- 	if (!IS_ENABLED(CONFIG_TEGRA20_APB_DMA)) {
+@@ -65,6 +73,46 @@ of the following host1x client modules:
+       - power-domains: Must include sor powergate node as csicil is in
+         SOR partition.
+ 
++      channel (optional nodes)
++      Maximum 6 channels are supported with each csi brick as either x4 or x2
++      based on hw connectivity to sensor.
++
++      Required properties:
++      - reg: csi port number. Valid port numbers are 0 through 5.
++      - nvidia,mipi-calibrate: Should contain a phandle and a specifier
++        specifying which pads are used by this CSI port and need to be
++	calibrated. See also ../display/tegra/nvidia,tegra114-mipi.txt.
++
++      Each channel node must contain 2 port nodes which can be grouped
++      under 'ports' node and each port should have a single child 'endpoint'
++      node.
++
++        ports node
++        Please refer to the bindings defined in
++        Documentation/devicetree/bindings/media/video-interfaces.txt
++
++        ports node must contain below 2 port nodes.
++        port@0 with single child 'endpoint' node always a sink.
++        port@1 with single child 'endpoint' node always a source.
++
++        port@0 (required node)
++        Required properties:
++        - reg: 0
++
++	  endpoint (required node)
++	  Required properties:
++	  - data-lanes: an array of data lane from 1 to 4. Valid array
++	    lengths are 1/2/4.
++	  - remote-endpoint: phandle to sensor 'endpoint' node.
++
++        port@1 (required node)
++        Required properties:
++        - reg: 1
++
++	  endpoint (required node)
++	  Required properties:
++	  - remote-endpoint: phandle to vi port 'endpoint' node.
++
+ - epp: encoder pre-processor
+ 
+   Required properties:
+@@ -340,6 +388,18 @@ Example:
+ 
+ 			ranges = <0x0 0x0 0x54080000 0x2000>;
+ 
++			ports {
++				#address-cells = <1>;
++				#size-cells = <0>;
++
++				port@0 {
++					reg = <0>;
++					imx219_vi_in0: endpoint {
++						remote-endpoint = <&imx219_csi_out0>;
++					};
++				};
++			};
++
+ 			csi@838 {
+ 				compatible = "nvidia,tegra210-csi";
+ 				reg = <0x838 0x1300>;
+@@ -362,6 +422,34 @@ Example:
+ 					 <&tegra_car TEGRA210_CLK_CSI_TPG>;
+ 				clock-names = "csi", "cilab", "cilcd", "cile", "csi_tpg";
+ 				power-domains = <&pd_sor>;
++
++				#address-cells = <1>;
++				#size-cells = <0>;
++
++				channel@0 {
++					reg = <0>;
++					nvidia,mipi-calibrate = <&mipi 0x001>;
++
++					ports {
++						#address-cells = <1>;
++						#size-cells = <0>;
++
++						port@0 {
++							reg = <0>;
++							imx219_csi_in0: endpoint {
++								data-lanes = <1 2>;
++								remote-endpoint = <&imx219_out0>;
++							};
++						};
++
++						port@1 {
++							reg = <1>;
++							imx219_csi_out0: endpoint {
++								remote-endpoint = <&imx219_vi_in0>;
++							};
++						};
++					};
++				};
+ 			};
+ 		};
+ 
 -- 
 2.7.4
 
