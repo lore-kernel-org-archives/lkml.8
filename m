@@ -2,73 +2,135 @@ Return-Path: <SRS0=kup7=A2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
 	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2A96C433E5
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 15:32:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A909DC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 15:32:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 83787206D5
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 15:32:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594827142;
-	bh=oJ4h/SmpkONnzXL2WSeND1WZd7clSyOkeMbEe5Ho76g=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=M0SHiOf9/comHtujDZ8DryAyXLfYI/z/yeroQd/gXhZXXFM1NjMvgogFTs/WYCKfq
-	 RD3i2xxu6o6vDTSlwnrP1U5ptoqasaFWQuA8GIIJLLmC9+kDdoHnoTOZpKe2wqUH2P
-	 KKCsT0SR9CZvyaSuCAQ9B6gWe/kRgTAYyMXTFOsA=
+	by mail.kernel.org (Postfix) with ESMTP id 87668206D5
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 15:32:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="ZJXpiIwQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726568AbgGOPcV (ORCPT
+        id S1726332AbgGOPcG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 11:32:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36354 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725831AbgGOPcV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 11:32:21 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 41C2D206D5;
-        Wed, 15 Jul 2020 15:32:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594827140;
-        bh=oJ4h/SmpkONnzXL2WSeND1WZd7clSyOkeMbEe5Ho76g=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ozO9wnglZvOOTjDuQJJp2X8xeSqaczMd/tIGeCdNmA0YHS6ORamWoMJRObtEdJ6nG
-         daHMBIMnYUz4WLJmEyx6s432CNuHXYG1NjN0PeLMQT/uB8q01G7Hfu19BCbIxQIMci
-         3P26AwYOHjzT2e5G5vYSpGTEwHlNnwXZXzo5Tcvg=
-Date:   Wed, 15 Jul 2020 17:32:16 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Garrit Franke <garritfranke@gmail.com>
-Cc:     rafael@kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] kobject: remove unused KOBJ_MAX action
-Message-ID: <20200715153216.GB749262@kroah.com>
-References: <20200714063517.GB662760@kroah.com>
- <20200715151116.6098-1-garritfranke@gmail.com>
+        Wed, 15 Jul 2020 11:32:06 -0400
+Received: from mail.efficios.com ([167.114.26.124]:44142 "EHLO
+        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725854AbgGOPcF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jul 2020 11:32:05 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by mail.efficios.com (Postfix) with ESMTP id A8032282C9F;
+        Wed, 15 Jul 2020 11:32:04 -0400 (EDT)
+Received: from mail.efficios.com ([127.0.0.1])
+        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id hfBGhRNx8QVl; Wed, 15 Jul 2020 11:32:04 -0400 (EDT)
+Received: from localhost (localhost [127.0.0.1])
+        by mail.efficios.com (Postfix) with ESMTP id 58B91282523;
+        Wed, 15 Jul 2020 11:32:04 -0400 (EDT)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com 58B91282523
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
+        s=default; t=1594827124;
+        bh=YbiH1P2Lw2AGx+BJ46bYeL6rXdS70J7RnP0imUNWnME=;
+        h=Date:From:To:Message-ID:MIME-Version;
+        b=ZJXpiIwQclIm6nWpeWHBl8N6kABDRwl8RDiQ3GMosJeT2LiXHM+Ey2RXGOSCrF2Fq
+         cFq2Y/v11DXPPUUCt46DHLN8qHeC1e4UvZWzXqG6w9NrAndbkkhgQroEf7VIT7vseI
+         vjRvNFaQKiORM18ZtBF88XkKdyh5exPMneuVoTaZrQZP8iGzdpS9xJgarq9yrsV6hi
+         DhfNyGFOdeUyWRnAyMPTmC5Ekh/h9rk5++aRy69Xl5g6GUG6S2fNsCc8KfiysGffkP
+         4u+a64lOm2kpmETwD/DQv1DqeT2eFPuvXgZYSKvNwIN4KGGwCRjg325FKhl1ipVyJM
+         uQsCR26BR1XwA==
+X-Virus-Scanned: amavisd-new at efficios.com
+Received: from mail.efficios.com ([127.0.0.1])
+        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id J-I4XPE67x7V; Wed, 15 Jul 2020 11:32:04 -0400 (EDT)
+Received: from mail03.efficios.com (mail03.efficios.com [167.114.26.124])
+        by mail.efficios.com (Postfix) with ESMTP id 4787228295F;
+        Wed, 15 Jul 2020 11:32:04 -0400 (EDT)
+Date:   Wed, 15 Jul 2020 11:32:04 -0400 (EDT)
+From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+To:     Florian Weimer <fweimer@redhat.com>
+Cc:     carlos <carlos@redhat.com>, Peter Zijlstra <peterz@infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        paulmck <paulmck@linux.ibm.com>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Paul Turner <pjt@google.com>,
+        linux-api <linux-api@vger.kernel.org>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        Florian Weimer <fw@deneb.enyo.de>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Message-ID: <306015794.14349.1594827124274.JavaMail.zimbra@efficios.com>
+In-Reply-To: <87a700zu9w.fsf@oldenburg2.str.redhat.com>
+References: <20200714030348.6214-1-mathieu.desnoyers@efficios.com> <e7ede994-ebec-8022-b12b-ac7147641ffb@redhat.com> <87a700zu9w.fsf@oldenburg2.str.redhat.com>
+Subject: Re: [RFC PATCH 0/4] rseq: Introduce extensible struct rseq
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200715151116.6098-1-garritfranke@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [167.114.26.124]
+X-Mailer: Zimbra 8.8.15_GA_3955 (ZimbraWebClient - FF78 (Linux)/8.8.15_GA_3953)
+Thread-Topic: rseq: Introduce extensible struct rseq
+Thread-Index: zj/evqz9xvlM0ojaaTo8zHxJl5f4sg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 15, 2020 at 05:11:16PM +0200, Garrit Franke wrote:
-> The loop in lib/kobject_uevent.c that checked for KOBJ_MAX is no longer present, we do
-> a much more sane ARRAY_SIZE() check instead (see 5c5daf657cb5).
+----- On Jul 15, 2020, at 11:12 AM, Florian Weimer fweimer@redhat.com wrote:
 
-Odd line wrapping :(
+> * Carlos O'Donell:
+> 
+>> On 7/13/20 11:03 PM, Mathieu Desnoyers wrote:
+>>> Recent discussion led to a solution for extending struct rseq. This is
+>>> an implementation of the proposed solution.
+>>> 
+>>> Now is a good time to agree on this scheme before the release of glibc
+>>> 2.32, just in case there are small details to fix on the user-space
+>>> side in order to allow extending struct rseq.
+>>
+>> Adding extensibility to the rseq registration process would be great,
+>> but we are out of time for the glibc 2.32 release.
+>>
+>> Should we revert rseq for glibc 2.32 and spend quality time discussing
+>> the implications of an extensible design, something that Google already
+>> says they are doing?
+>>
+>> We can, with a clear head, and an agreed upon extension mechanism
+>> include rseq in glibc 2.33 (release scheduled for Feburary 1st 2021).
+>> We release time boxed every 6 months, no deviation, so you know when
+>> your next merge window will be.
+>>
+>> We have already done the hard work of fixing the nesting signal
+>> handler issues, and glibc integration. If we revert today that will
+>> also give time for Firefox and Chrome to adjust their sandboxes.
+>>
+>> Do you wish to go forward with rseq as we have it in glibc 2.32,
+>> or do you wish to revert rseq from glibc 2.32, discuss the extension
+>> mechanism, and put it back into glibc 2.33 with adjustments?
+> 
+> I posted the glibc revert:
+> 
+>  <https://sourceware.org/pipermail/libc-alpha/2020-July/116368.html>
+> 
+> I do not think we have any other choice at this point.
 
-When you specify a git commit, use the format as documented in the
-submitting patches file:
-	5c5daf657cb5 ("Driver core: exclude kobject_uevent.c for !CONFIG_HOTPLUG")
+This is indeed the safe course of action.
 
-> Therefore, the KOBJ_MAX is not used anymore.
+Let's hope the overall interest about rseq will be sufficient to justify
+integrating extensibility support in the rseq system call ABI, otherwise we
+have a catch-22 situation where everything is stalled again, due to further
+progress on rseq kernel features awaiting user feedback on the existing
+implementation, which will never come because the integration of coordinated
+use across libraries is awaiting further development at the kernel level.
 
-That sentence does not make much sense :(
+Thanks,
 
-thanks,
+Mathieu
 
-greg k-h
+
+-- 
+Mathieu Desnoyers
+EfficiOS Inc.
+http://www.efficios.com
