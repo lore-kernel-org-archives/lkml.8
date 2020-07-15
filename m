@@ -2,128 +2,184 @@ Return-Path: <SRS0=kup7=A2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B329DC433E5
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 15:50:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47B02C433E7
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 15:51:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9B8782065E
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 15:50:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1FB8920658
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 15:51:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="ihxt9tMz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728009AbgGOPuB (ORCPT
+        id S1726396AbgGOPvJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 11:50:01 -0400
-Received: from mxo1.nje.dmz.twosigma.com ([208.77.214.160]:33369 "EHLO
-        mxo1.nje.dmz.twosigma.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725835AbgGOPt7 (ORCPT
+        Wed, 15 Jul 2020 11:51:09 -0400
+Received: from linux.microsoft.com ([13.77.154.182]:46236 "EHLO
+        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725835AbgGOPvI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 11:49:59 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by mxo1.nje.dmz.twosigma.com (Postfix) with ESMTP id 4B6MK15sZ8z8snW;
-        Wed, 15 Jul 2020 15:49:57 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at twosigma.com
-Received: from mxo1.nje.dmz.twosigma.com ([127.0.0.1])
-        by localhost (mxo1.nje.dmz.twosigma.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id oLC619_nSHwc; Wed, 15 Jul 2020 15:49:57 +0000 (UTC)
-Received: from exmbdft6.ad.twosigma.com (exmbdft6.ad.twosigma.com [172.22.1.5])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mxo1.nje.dmz.twosigma.com (Postfix) with ESMTPS id 4B6MK15CHXz8snK;
-        Wed, 15 Jul 2020 15:49:57 +0000 (UTC)
-Received: from EXMBDFT10.ad.twosigma.com (172.23.127.159) by
- exmbdft6.ad.twosigma.com (172.22.1.5) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Wed, 15 Jul 2020 15:49:57 +0000
-Received: from EXMBDFT11.ad.twosigma.com (172.23.162.14) by
- EXMBDFT10.ad.twosigma.com (172.23.127.159) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Wed, 15 Jul 2020 15:49:57 +0000
-Received: from EXMBDFT11.ad.twosigma.com ([fe80::8d66:2326:5416:86a9]) by
- EXMBDFT11.ad.twosigma.com ([fe80::8d66:2326:5416:86a9%19]) with mapi id
- 15.00.1497.000; Wed, 15 Jul 2020 15:49:57 +0000
-From:   Nicolas Viennot <Nicolas.Viennot@twosigma.com>
-To:     Christian Brauner <christian.brauner@ubuntu.com>,
-        Adrian Reber <areber@redhat.com>
-CC:     Eric Biederman <ebiederm@xmission.com>,
-        Pavel Emelyanov <ovzxemul@gmail.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Dmitry Safonov <0x7f454c46@gmail.com>,
-        Andrei Vagin <avagin@gmail.com>,
-        =?utf-8?B?TWljaGHFgiBDxYJhcGnFhHNraQ==?= <mclapinski@google.com>,
-        "Kamil Yurtsever" <kyurtsever@google.com>,
-        Dirk Petersen <dipeit@gmail.com>,
-        Christine Flood <chf@redhat.com>,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Radostin Stoyanov <rstoyanov1@gmail.com>,
-        Cyrill Gorcunov <gorcunov@openvz.org>,
-        Serge Hallyn <serge@hallyn.com>,
-        Stephen Smalley <stephen.smalley.work@gmail.com>,
-        Sargun Dhillon <sargun@sargun.me>,
-        Arnd Bergmann <arnd@arndb.de>,
-        "linux-security-module@vger.kernel.org" 
-        <linux-security-module@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "selinux@vger.kernel.org" <selinux@vger.kernel.org>,
-        Eric Paris <eparis@parisplace.org>,
-        Jann Horn <jannh@google.com>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>
-Subject: RE: [PATCH v5 5/6] prctl: Allow checkpoint/restore capable processes
- to change exe link
-Thread-Topic: [PATCH v5 5/6] prctl: Allow checkpoint/restore capable processes
- to change exe link
-Thread-Index: AQHWWrd9MS4DKBjnuUS3UVyYGQIobKkIwW2AgAAGAfA=
-Date:   Wed, 15 Jul 2020 15:49:57 +0000
-Message-ID: <ba55d8b160e541429dc0c823d3240eb3@EXMBDFT11.ad.twosigma.com>
-References: <20200715144954.1387760-1-areber@redhat.com>
- <20200715144954.1387760-6-areber@redhat.com>
- <20200715152011.whdeysy3ztqrnocn@wittgenstein>
-In-Reply-To: <20200715152011.whdeysy3ztqrnocn@wittgenstein>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [192.168.118.104]
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Wed, 15 Jul 2020 11:51:08 -0400
+Received: from sequoia (162-237-133-238.lightspeed.rcsntx.sbcglobal.net [162.237.133.238])
+        by linux.microsoft.com (Postfix) with ESMTPSA id 7D47F20B4908;
+        Wed, 15 Jul 2020 08:51:07 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 7D47F20B4908
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+        s=default; t=1594828268;
+        bh=PqZS5ckYTWkUACXW2CzkMAhIn3QNaBv0Mq12LReLoVA=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=ihxt9tMz48bY6B/jpDdTs1dTPvX52ZyIF7gncnLawsjwkY8neLeNQ90iRqXzFY0qz
+         CklPsjPHf7QPev7+Dm/MnlgjsGs4h2iNl95bh4lACsae+lEsqrIpv6VZ4dVk7j0wlJ
+         +KtXNOzw4JHsh6HXps2KOQIz9mK+TqUDUszBeiU8=
+Date:   Wed, 15 Jul 2020 10:50:53 -0500
+From:   Tyler Hicks <tyhicks@linux.microsoft.com>
+To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Cc:     Peter Huewe <peterhuewe@gmx.de>, Ard Biesheuvel <ardb@kernel.org>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Petr Vandrovec <petr@vmware.com>,
+        Nayna Jain <nayna@linux.ibm.com>,
+        Thirupathaiah Annapureddy <thiruan@microsoft.com>,
+        linux-integrity@vger.kernel.org, linux-efi@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Peter Jones <pjones@redhat.com>
+Subject: Re: [PATCH v2] tpm: Require that all digests are present in
+ TCG_PCR_EVENT2 structures
+Message-ID: <20200715155053.GA3673@sequoia>
+References: <20200710192955.23333-1-tyhicks@linux.microsoft.com>
+ <20200713205719.GA1419951@linux.intel.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200713205719.GA1419951@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PiBPbiBXZWQsIEp1bCAxNSwgMjAyMCBhdCAwNDo0OTo1M1BNICswMjAwLCBBZHJpYW4gUmViZXIg
-d3JvdGU6DQo+ID4gRnJvbTogTmljb2xhcyBWaWVubm90IDxOaWNvbGFzLlZpZW5ub3RAdHdvc2ln
-bWEuY29tPg0KPiA+IA0KPiA+IEFsbG93IENBUF9DSEVDS1BPSU5UX1JFU1RPUkUgY2FwYWJsZSB1
-c2VycyB0byBjaGFuZ2UgL3Byb2Mvc2VsZi9leGUuDQo+ID4gDQo+ID4gVGhpcyBjb21taXQgYWxz
-byBjaGFuZ2VzIHRoZSBwZXJtaXNzaW9uIGVycm9yIGNvZGUgZnJvbSAtRUlOVkFMIHRvIA0KPiA+
-IC1FUEVSTSBmb3IgY29uc2lzdGVuY3kgd2l0aCB0aGUgcmVzdCBvZiB0aGUgcHJjdGwoKSBzeXNj
-YWxsIHdoZW4gDQo+ID4gY2hlY2tpbmcgY2FwYWJpbGl0aWVzLg0KPiBJIGFncmVlIHRoYXQgRUlO
-VkFMIHNlZW1zIHdlaXJkIGhlcmUgYnV0IHRoaXMgaXMgYSBwb3RlbnRpYWxseSB1c2VyIHZpc2li
-bGUgY2hhbmdlLiBNaWdodCBiZSBuaWNlIHRvIGhhdmUgdGhlIEVJTlZBTC0+RVBFUk0gY2hhbmdl
-IGJlIGFuIGFkZGl0aW9uYWwgcGF0Y2ggb24gdG9wIGFmdGVyIHRoaXMgb25lIHNvIHdlIGNhbiBy
-ZXZlcnQgaXQgaW4gY2FzZSBpdCBicmVha3Mgc29tZW9uZSAodW5saWtlbHkgdGhvdWdoKS4gSSBj
-YW4gc3BsaXQgdGhpcyBvdXQgbXlzZWxmIHRob3VnaCBzbyBubyBuZWVkIHRvIHJlc2VuZCBmb3Ig
-dGhhdCBhbG9uZS4NCj4gV2hhdCBJIHdvdWxkIGFsc28gcHJlZmVyIGlzIHRvIGhhdmUgc29tZSBo
-aXN0b3J5IGluIHRoZSBjb21taXQgbWVzc2FnZSB0YmguIFRoZSByZWFzb24gaXMgdGhhdCB3aGVu
-IHdlIHN0YXJ0ZWQgZGlzY3Vzc2luZyB0aGF0IHNwZWNpZmljIGNoYW5nZSBJIGhhZCB0byBodW50
-IGRvd24gdGhlIGhpc3Rvcnkgb2YgY2hhbmdpbmcgL3Byb2Mvc2VsZi9leGUgYW5kIGhhZCB0byBk
-aWcgdXAgYW5kIHJlYWQgdGhyb3VnaCBhbmNpZW50IHRocmVhZHMgb24gbG9yZSB0byBjb21lIHVw
-IHdpdGggdGhlIGV4cGxhbmF0aW9uIHdoeSB0aGlzIGlzIHBsYWNlZCB1bmRlciBhIGNhcGFiaWxp
-dHkuIFRoZSBjb21taXQgbWVzc2FnZSBzaG91bGQgdGhlbiBhbHNvIG1lbnRpb24gdGhhdCB0aGVy
-ZSBhcmUgb3RoZXIgd2F5cyB0byBjaGFuZ2UgdGhlIC9wcm9jL3NlbGYvZXhlIGxpbmsgdGhhdCBk
-b24ndCByZXF1aXJlIGNhcGFiaWxpdGllcyBhbmQgdGhhdCAvcHJvYy9zZWxmL2V4ZSBpdHNlbGYg
-aXMgbm90IHNvbWV0aGluZyB1c2Vyc3BhY2Ugc2hvdWxkIHJlbHkgb24gZm9yIHNlY3VyaXR5LiBN
-YWlubHkgc28gdGhhdCBpbiBhIGZldyBtb250aHMveWVhcnMgd2UgY2FuIHJlYWQgdGhyb3VnaCB0
-aGF0IGNvbW1pdCBtZXNzYWdlIGFuZCBnbyAiV2VpcmQsIGJ1dCBvay4iLiA6KQ0KPiBCdXQgbWF5
-YmUgSSBjYW4ganVzdCByZXdyaXRlIHRoaXMgbXlzZWxmIHNvIHlvdSBkb24ndCBoYXZlIHRvIGdv
-IHRocm91Z2ggdGhlIHRyb3VibGUuIFRoaXMgaXMgcmVhbGx5IG5vdCBwZWRhbnRyeSBpdCdzIGp1
-c3QgdGhhdCBpdCdzIGEgbG90IG9mIHdvcmsgZGlnZ2luZyB1cCB0aGUgcmVhc29ucyBmb3IgYSBw
-aWVjZSBvZiBjb2RlIGV4aXN0aW5nIHdoZW4gaXQncyByZWFsbHkgbm90IG9idmlvdXMuIDopDQoN
-CkhlbGxvIENocmlzdGlhbiwNCg0KSSBhZ3JlZS4NClRoYW5rIHlvdSBmb3Igc3VnZ2VzdGluZyBk
-b2luZyB0aGUgd29yaywgYnV0IHlvdSd2ZSBkb25lIHBsZW50eSBhbHJlYWR5LiBTbyB3ZSdsbCBj
-b21lIGJhY2sgdG8geW91IHdpdGg6DQoxKSBBIHNlcGFyYXRlIGNvbW1pdCBmb3IgRUlOVkFMLT5F
-UEVSTQ0KMikgQSBmdWxsIGhpc3Rvcnkgb2YgZGlzY3Vzc2lvbnMgaW4gdGhlIGNvbW1pdCBtZXNz
-YWdlIHJlbGF0ZWQgdG8gL3Byb2Mvc2VsZi9leGUgY2FwYWJpbGl0eSBjaGVjaw0KDQpUaGFua3Ms
-DQpOaWNvDQo=
+On 2020-07-13 23:57:19, Jarkko Sakkinen wrote:
+> On Fri, Jul 10, 2020 at 02:29:55PM -0500, Tyler Hicks wrote:
+> > Require that the TCG_PCR_EVENT2.digests.count value strictly matches the
+> > value of TCG_EfiSpecIdEvent.numberOfAlgorithms in the event field of the
+> > TCG_PCClientPCREvent event log header. Also require that
+> > TCG_EfiSpecIdEvent.numberOfAlgorithms is non-zero.
+> > 
+> > The TCG PC Client Platform Firmware Profile Specification section 9.1
+> > (Family "2.0", Level 00 Revision 1.04) states:
+> > 
+> >  For each Hash algorithm enumerated in the TCG_PCClientPCREvent entry,
+> >  there SHALL be a corresponding digest in all TCG_PCR_EVENT2 structures.
+> >  Note: This includes EV_NO_ACTION events which do not extend the PCR.
+> > 
+> > Section 9.4.5.1 provides this description of
+> > TCG_EfiSpecIdEvent.numberOfAlgorithms:
+> > 
+> >  The number of Hash algorithms in the digestSizes field. This field MUST
+> >  be set to a value of 0x01 or greater.
+> > 
+> > Enforce these restrictions, as required by the above specification, in
+> > order to better identify and ignore invalid sequences of bytes at the
+> > end of an otherwise valid TPM2 event log. Firmware doesn't always have
+> > the means necessary to inform the kernel of the actual event log size so
+> > the kernel's event log parsing code should be stringent when parsing the
+> > event log for resiliency against firmware bugs. This is true, for
+> > example, when firmware passes the event log to the kernel via a reserved
+> > memory region described in device tree.
+> > 
+> > POWER and some ARM systems use the "linux,sml-base" and "linux,sml-size"
+> > device tree properties to describe the memory region used to pass the
+> > event log from firmware to the kernel. Unfortunately, the
+> > "linux,sml-size" property describes the size of the entire reserved
+> > memory region rather than the size of the event long within the memory
+> > region and the event log format does not include information describing
+> > the size of the event log.
+> > 
+> > tpm_read_log_of(), in drivers/char/tpm/eventlog/of.c, is where the
+> > "linux,sml-size" property is used. At the end of that function,
+> > log->bios_event_log_end is pointing at the end of the reserved memory
+> > region. That's typically 0x10000 bytes offset from "linux,sml-base",
+> > depending on what's defined in the device tree source.
+> > 
+> > The firmware event log only fills a portion of those 0x10000 bytes and
+> > the rest of the memory region should be zeroed out by firmware. Even in
+> > the case of a properly zeroed bytes in the remainder of the memory
+> > region, the only thing allowing the kernel's event log parser to detect
+> > the end of the event log is the following conditional in
+> > __calc_tpm2_event_size():
+> > 
+> >         if (event_type == 0 && event_field->event_size == 0)
+> >                 size = 0;
+> > 
+> > If that wasn't there, __calc_tpm2_event_size() would think that a 16
+> > byte sequence of zeroes, following an otherwise valid event log, was
+> > a valid event.
+> > 
+> > However, problems can occur if a single bit is set in the offset
+> > corresponding to either the TCG_PCR_EVENT2.eventType or
+> > TCG_PCR_EVENT2.eventSize fields, after the last valid event log entry.
+> > This could confuse the parser into thinking that an additional entry is
+> > present in the event log and exposing this invalid entry to userspace in
+> > the /sys/kernel/security/tpm0/binary_bios_measurements file. Such
+> > problems have been seen if firmware does not fully zero the memory
+> > region upon a warm reboot.
+> > 
+> > This patch significantly raises the bar on how difficult it is for
+> > stale/invalid memory to confuse the kernel's event log parser but
+> > there's still, ultimately, a reliance on firmware to properly initialize
+> > the remainder of the memory region reserved for the event log as the
+> > parser cannot be expected to detect a stale but otherwise properly
+> > formatted firmware event log entry.
+> > 
+> > Fixes: fd5c78694f3f ("tpm: fix handling of the TPM 2.0 event logs")
+> > Signed-off-by: Tyler Hicks <tyhicks@linux.microsoft.com>
+> > ---
+> > 
+> > * v2
+> >   - Rebase the patch on top of the TPM next branch, commit 786a2aa281f4
+> >     ("Revert commit e918e570415c ("tpm_tis: Remove the HID IFX0102")")
+> >   - Expand on the technical reasoning for needing strict event
+> >     validation in the commit message
+> >   - Improve the inline comment explaining the need for detecting
+> >     malformed events
+> > 
+> >  include/linux/tpm_eventlog.h | 11 +++++++++--
+> >  1 file changed, 9 insertions(+), 2 deletions(-)
+> > 
+> > diff --git a/include/linux/tpm_eventlog.h b/include/linux/tpm_eventlog.h
+> > index 64356b199e94..739ba9a03ec1 100644
+> > --- a/include/linux/tpm_eventlog.h
+> > +++ b/include/linux/tpm_eventlog.h
+> > @@ -211,9 +211,16 @@ static inline int __calc_tpm2_event_size(struct tcg_pcr_event2_head *event,
+> >  
+> >  	efispecid = (struct tcg_efi_specid_event_head *)event_header->event;
+> >  
+> > -	/* Check if event is malformed. */
+> > +	/*
+> > +	 * Perform validation of the event in order to identify malformed
+> > +	 * events. This function may be asked to parse arbitrary byte sequences
+> > +	 * immediately following a valid event log. The caller expects this
+> > +	 * function to recognize that the byte sequence is not a valid event
+> > +	 * and to return an event size of 0.
+> > +	 */
+> >  	if (memcmp(efispecid->signature, TCG_SPECID_SIG,
+> > -		   sizeof(TCG_SPECID_SIG)) || count > efispecid->num_algs) {
+> > +		   sizeof(TCG_SPECID_SIG)) ||
+> > +	    !efispecid->num_algs || count != efispecid->num_algs) {
+> >  		size = 0;
+> >  		goto out;
+> >  	}
+> > -- 
+> > 2.25.1
+> > 
+> 
+> 
+> Reviewed-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+
+Thanks for the review. Do you plan to take this through the linux-tpmdd
+tree or are you expecting someone else to pick up this patch?
+
+Tyler
+
+> 
+> /Jarkko
