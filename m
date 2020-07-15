@@ -2,77 +2,88 @@ Return-Path: <SRS0=kup7=A2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF538C433E3
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 17:32:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5E36C433E5
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 17:36:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AE7492065D
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 17:32:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C3FAD20656
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 17:36:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726634AbgGORcS (ORCPT
+        id S1726698AbgGORgR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 13:32:18 -0400
-Received: from muru.com ([72.249.23.125]:37046 "EHLO muru.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726396AbgGORcR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 13:32:17 -0400
-Received: from atomide.com (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTPS id 9845B8120;
-        Wed, 15 Jul 2020 17:32:13 +0000 (UTC)
-Date:   Wed, 15 Jul 2020 10:32:11 -0700
-From:   Tony Lindgren <tony@atomide.com>
-To:     Grygorii Strashko <grygorii.strashko@ti.com>
-Cc:     Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, Carlos Hernandez <ceh@ti.com>
-Subject: Re: [PATCH] clocksource/drivers/timer-ti-dm: Fix suspend and resume
- for am3 and am4
-Message-ID: <20200715173211.GA10993@atomide.com>
-References: <20200713162601.6829-1-tony@atomide.com>
- <1972bace-e9d1-b901-eb33-b4081a4b175d@ti.com>
+        Wed, 15 Jul 2020 13:36:17 -0400
+Received: from jabberwock.ucw.cz ([46.255.230.98]:48236 "EHLO
+        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725900AbgGORgR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jul 2020 13:36:17 -0400
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+        id E53971C0BD5; Wed, 15 Jul 2020 19:36:11 +0200 (CEST)
+Date:   Wed, 15 Jul 2020 19:36:10 +0200
+From:   Pavel Machek <pavel@ucw.cz>
+To:     Marek =?iso-8859-1?Q?Beh=FAn?= <marek.behun@nic.cz>
+Cc:     Dan Murphy <dmurphy@ti.com>, jacek.anaszewski@gmail.com,
+        robh@kernel.org, devicetree@vger.kernel.org,
+        linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v30 04/16] leds: Add multicolor ID to the color ID list
+Message-ID: <20200715173610.GA31327@amd>
+References: <20200713154544.1683-1-dmurphy@ti.com>
+ <20200713154544.1683-5-dmurphy@ti.com>
+ <20200715152056.3505e181@dellmb.labs.office.nic.cz>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="jRHKVT23PllUwdXP"
 Content-Disposition: inline
-In-Reply-To: <1972bace-e9d1-b901-eb33-b4081a4b175d@ti.com>
+In-Reply-To: <20200715152056.3505e181@dellmb.labs.office.nic.cz>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* Grygorii Strashko <grygorii.strashko@ti.com> [200715 10:17]:
-> On 13/07/2020 19:26, Tony Lindgren wrote:
-> > @@ -653,8 +679,8 @@ static int __init dmtimer_clocksource_init(struct device_node *np)
-> >   	dev->mask = CLOCKSOURCE_MASK(32);
-> >   	dev->flags = CLOCK_SOURCE_IS_CONTINUOUS;
-> > -	if (of_device_is_compatible(np, "ti,am33xx") ||
-> > -	    of_device_is_compatible(np, "ti,am43")) {
-> > +	/* Unlike for clockevent, legacy code sets suspend only for am4 */
-> > +	if (of_machine_is_compatible("ti,am43")) {
-> >   		dev->suspend = dmtimer_clocksource_suspend;
-> >   		dev->resume = dmtimer_clocksource_resume;
-> >   	}
-> > 
-> 
-> It might be better to use SOC_BUS infra here, which is available on OMAP platforms by default,
-> instead if DT. What do you think?
 
-Well we have time_init() run very early, and some SoCs have only external
-timers. So timer-ti-dm-systimer must be initialized early. And I think
-soc_device_match() depends on soc_bus_register() that runs later at
-core_initcall().
+--jRHKVT23PllUwdXP
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-If you are thinking of something else, or we can use soc_device_match()
-early, sure :) But sounds like that change should be a separate patch
-then.
+On Wed 2020-07-15 15:20:56, Marek Beh=FAn wrote:
+> On Mon, 13 Jul 2020 10:45:32 -0500
+> Dan Murphy <dmurphy@ti.com> wrote:
+>=20
+> > Add a new color ID that is declared as MULTICOLOR as with the
+> > multicolor framework declaring a definitive color is not accurate
+> > as the node can contain multiple colors.
+> >=20
+> > Signed-off-by: Dan Murphy <dmurphy@ti.com>
+> > ---
+> >  drivers/leds/led-core.c | 1 +
+> >  1 file changed, 1 insertion(+)
+>=20
+> Reviewed-by: Marek Beh=FAn <marek.behun@nic.cz>
 
-The reason for why we need to check for the SoC, we have the compatible
-for ti,am335x-timer already in use on am3/4 and dm814x, so we can't use
-TIMER_OF_DECLARE alone here.
+Thanks for patches, thanks for reviews, 1-4 applied.
+									Pavel
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
 
-Regards,
+--jRHKVT23PllUwdXP
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-Tony
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAl8PPooACgkQMOfwapXb+vKzPQCgkeYcvh2P2Yt02B1/uG5cNRWX
+NzoAn2OYFBLFmx2AzOBIY7UIVxkp9EdQ
+=+HiT
+-----END PGP SIGNATURE-----
+
+--jRHKVT23PllUwdXP--
