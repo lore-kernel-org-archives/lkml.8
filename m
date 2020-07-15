@@ -2,160 +2,223 @@ Return-Path: <SRS0=kup7=A2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF6DCC433E2
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 08:52:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7730C433E4
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 08:53:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A29BB20672
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 08:52:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hHzdxBJ1"
+	by mail.kernel.org (Postfix) with ESMTP id A9FB320672
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 08:53:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730460AbgGOIwd (ORCPT
+        id S1730473AbgGOIxe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 04:52:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55882 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730445AbgGOIwc (ORCPT
+        Wed, 15 Jul 2020 04:53:34 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:42102 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730435AbgGOIxe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 04:52:32 -0400
-Received: from mail-io1-xd43.google.com (mail-io1-xd43.google.com [IPv6:2607:f8b0:4864:20::d43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C63CAC061755
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 01:52:32 -0700 (PDT)
-Received: by mail-io1-xd43.google.com with SMTP id e64so1388157iof.12
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 01:52:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:reply-to:from:date:message-id
-         :subject:to:cc;
-        bh=3Z4IpLUKocM3OEmb2Wb4pmzCIIom6GoJeorw5OSNFmA=;
-        b=hHzdxBJ1OQGEfhC90QrC2rcV6mefC3VdSTniGM9hIQKPOR8JXTj7WKNBfXh153QO+z
-         sFiPrRzfbR5yOnd870qHFxRdAdEYgeagfwrYPFcUmAFA+3yJg2yqc2O9iNUOGWqhZ/7W
-         /+RTXMs+zfL+gFZvJLzBprAPHqA+v3Q8eFvUatZCmcRlNjRcjfy7vI6FNIn+nRL+ueS1
-         FGA4P96247zfhiVYwY56WyXY5HoY9wvxCmqjOeslQ0oK8cmR4QPsVKVdc3Tq60C81odk
-         AFuDLyzF/3vXymk+0OE7K/W//GsO2IRZ/m4z3pmbYQUVY67PaLiWpFhncFKvbwP6oySe
-         yEJg==
+        Wed, 15 Jul 2020 04:53:34 -0400
+Received: by mail-ot1-f68.google.com with SMTP id g37so869001otb.9;
+        Wed, 15 Jul 2020 01:53:33 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:reply-to
-         :from:date:message-id:subject:to:cc;
-        bh=3Z4IpLUKocM3OEmb2Wb4pmzCIIom6GoJeorw5OSNFmA=;
-        b=O7jLNp8orujJgAY6Gv8Ww06s8UoXWmmx6ZkZpTDa27kC6VWefoavbXfOBZeUtlCUZR
-         qIFTenCGaj0KnDVUQbmc/aLG6IM3jd2M2W0bpbiL6o7FIViNQHuESUZDX7D1pWRWl+hg
-         oT/MWF+W0ZqyyUCkNtJrPnOVnA+eLptNf7QPL+jaXqvuwQ4cFUuvq0fDCcY6OMcFq396
-         ibJd+iJT8yNlNUXDTU2DmHhUApJpy+3YmtDok4Jl+hZVNfp9fFdqfIm2ZZ56VYmD3O6d
-         hkbipDjwfCI6nhGqbqqyXS2IivOYg7Gc4p7zwhXT2z2RBn6VZ6WSiv7S+koaHfXOjJIv
-         2G9A==
-X-Gm-Message-State: AOAM5304XgtC0eHoYcnyd+woMeZETT+LPXUEZuyKUesnzgs6ziI3Gd29
-        KHS9djyfWttqV8Rwtmt3ETopBG495C7Ef7sUSbU=
-X-Google-Smtp-Source: ABdhPJyp2Jkk8UtUIOJ+t1y4YAmr65LCFaVZo0jz/FKxkcsalM41AmdbHnW8iXebFlCIFGEZZO1+cf9JYfZpLRExKNU=
-X-Received: by 2002:a02:ce9a:: with SMTP id y26mr10812220jaq.121.1594803152177;
- Wed, 15 Jul 2020 01:52:32 -0700 (PDT)
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=fegVhyn3STlKjt12R9hh8prB5z0M+XRshkNWgzH+c0A=;
+        b=mHc61kzPm3KTsgTb4tYpSFoX9qkkpK9bCp8jdYfjOXzpDQArDgxH6RdawBLGOH2LC8
+         F9PTTmratkihAlx/Ry864wnnKvtVpDfMwYAGj4cXsmpbDLCvaRPN/EVIJDXnwBW33NKr
+         1UseVHR4qbePHFj8ltZ7KZpDY3TwwMuh1xYz2FMIwjUapYIRFEvewcfhJEXQ0anoaC9X
+         E1BiQlecFn1PSeZF9cU6EMuySni+zIO4WNr6I8O3k88bA89PJY0rlAdVMzgR4PVsz8pt
+         v3esyrqIURa24QcrfFpBjuu+IInfRPPHp1MsBZztibPLYQq4kHljxUiCG0efgNR0lO55
+         Iv/w==
+X-Gm-Message-State: AOAM531kN9T4QwTS4LdFEarRHozNlWRG7LiM8Bxv89xsZqqHhq7vjsLw
+        0PN9/OyDOAIOTVctt/5xjiyMGQe2GlSjEqrvT7E=
+X-Google-Smtp-Source: ABdhPJwzqy/71BcT98+G7u2CIKJOUb+gfsSSUeTfyxWkvI4GCs2jzfcFtPG1NotmJya2dMsYwvWAXToz7YiXdIblay8=
+X-Received: by 2002:a9d:2646:: with SMTP id a64mr7385300otb.107.1594803213089;
+ Wed, 15 Jul 2020 01:53:33 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200714023836.2310569-1-nivedita@alum.mit.edu> <20200715004133.1430068-2-nivedita@alum.mit.edu>
-In-Reply-To: <20200715004133.1430068-2-nivedita@alum.mit.edu>
-Reply-To: sedat.dilek@gmail.com
-From:   Sedat Dilek <sedat.dilek@gmail.com>
-Date:   Wed, 15 Jul 2020 10:52:20 +0200
-Message-ID: <CA+icZUW4YycmdKATQNW+3-rjLS8=jSVWCvQNx13TuZcYXt0YnQ@mail.gmail.com>
-Subject: Re: [PATCH v5 1/7] x86/boot/compressed: Move .got.plt entries out of
- the .got section
-To:     Arvind Sankar <nivedita@alum.mit.edu>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Fangrui Song <maskray@google.com>,
-        Dmitry Golovin <dima@golovin.in>,
-        Clang-Built-Linux ML <clang-built-linux@googlegroups.com>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Daniel Kiper <daniel.kiper@oracle.com>,
-        Kees Cook <keescook@chromium.org>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        "H . J . Lu" <hjl@sourceware.org>, linux-kernel@vger.kernel.org
+References: <20200714123419.3390-1-aford173@gmail.com>
+In-Reply-To: <20200714123419.3390-1-aford173@gmail.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Wed, 15 Jul 2020 10:53:21 +0200
+Message-ID: <CAMuHMdXfc4EKKOLq1yhwiFaKE1=HT+_puuj6rJZ+OgnHv2cS8g@mail.gmail.com>
+Subject: Re: [PATCH V2 1/2] arm64: dts: Introduce r8a774a1-beacon-rzg2m-kit
+To:     Adam Ford <aford173@gmail.com>
+Cc:     Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Adam Ford-BE <aford@beaconembedded.com>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 15, 2020 at 2:41 AM Arvind Sankar <nivedita@alum.mit.edu> wrote:
->
-> From: Ard Biesheuvel <ardb@kernel.org>
->
-> The .got.plt section contains the part of the GOT which is used by PLT
-> entries, and which gets updated lazily by the dynamic loader when
-> function calls are dispatched through those PLT entries.
->
-> On fully linked binaries such as the kernel proper or the decompressor,
-> this never happens, and so in practice, the .got.plt section consists
-> only of the first 3 magic entries that are meant to point at the _DYNAMIC
-> section and at the fixup routine in the loader. However, since we don't
-> use a dynamic loader, those entries are never populated or used.
->
-> This means that treating those entries like ordinary GOT entries, and
-> updating their values based on the actual placement of the executable in
-> memory is completely pointless, and we can just ignore the .got.plt
-> section entirely, provided that it has no additional entries beyond
-> the first 3 ones.
->
-> So add an assertion in the linker script to ensure that this assumption
-> holds, and move the contents out of the [_got, _egot) memory range that
-> is modified by the GOT fixup routines.
->
-> While at it, drop the KEEP(), since it has no effect on the contents
-> of output sections that are created by the linker itself.
->
-> Reviewed-by: Kees Cook <keescook@chromium.org>
-> Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
-> Acked-by: Arvind Sankar <nivedita@alum.mit.edu>
-> Signed-off-by: Arvind Sankar <nivedita@alum.mit.edu>
-> From: Ard Biesheuvel <ardb@kernel.org>
-> Link: https://lore.kernel.org/r/20200523120021.34996-2-ardb@kernel.org
+Hi Adam,
 
-Tested-by: Sedat Dilek <sedat.dilek@gmail.com>
-
-- Sedat -
-
+On Tue, Jul 14, 2020 at 2:34 PM Adam Ford <aford173@gmail.com> wrote:
+> Beacon EmebeddedWorks, formerly Logic PD is introducing a new
+> SOM and development kit based on the RZ/G2M SoC from Renesas.
+>
+> The SOM supports eMMC, WiFi and Bluetooth, along with a Cat-M1
+> cellular radio.
+>
+> The Baseboard has Ethernet, USB, HDMI, stereo audio in and out,
+> along with a variety of push buttons and LED's, and support for
+> a parallel RGB and an LVDS display.
+>
+> Signed-off-by: Adam Ford <aford173@gmail.com>
 > ---
->  arch/x86/boot/compressed/vmlinux.lds.S | 11 ++++++++++-
->  1 file changed, 10 insertions(+), 1 deletion(-)
+> V2:  Add support for RGB display, second backlight, fix clock references,
+>      fix Makefile, remove unsupported versaclock features, and fix typos.
+
+Thanks for the update!
+Looks mostly OK to me, "make dtbs_check" found a few issues, though.
+
+> --- a/arch/arm64/boot/dts/renesas/Makefile
+> +++ b/arch/arm64/boot/dts/renesas/Makefile
+> @@ -5,6 +5,7 @@ dtb-$(CONFIG_ARCH_R8A774A1) += r8a774a1-hihope-rzg2m-ex-idk-1110wr.dtb
+>  dtb-$(CONFIG_ARCH_R8A774A1) += r8a774a1-hihope-rzg2m-rev2.dtb
+>  dtb-$(CONFIG_ARCH_R8A774A1) += r8a774a1-hihope-rzg2m-rev2-ex.dtb
+>  dtb-$(CONFIG_ARCH_R8A774A1) += r8a774a1-hihope-rzg2m-rev2-ex-idk-1110wr.dtb
+> +dtb-$(CONFIG_ARCH_R8A774A1) += r8a774a1-beacon-rzg2m-kit.dtb
+
+Please preserve alphabetical sort order.
+
 >
-> diff --git a/arch/x86/boot/compressed/vmlinux.lds.S b/arch/x86/boot/compressed/vmlinux.lds.S
-> index 8f1025d1f681..b17d218ccdf9 100644
-> --- a/arch/x86/boot/compressed/vmlinux.lds.S
-> +++ b/arch/x86/boot/compressed/vmlinux.lds.S
-> @@ -44,10 +44,13 @@ SECTIONS
->         }
->         .got : {
->                 _got = .;
-> -               KEEP(*(.got.plt))
->                 KEEP(*(.got))
->                 _egot = .;
->         }
-> +       .got.plt : {
-> +               *(.got.plt)
-> +       }
+>  dtb-$(CONFIG_ARCH_R8A774B1) += r8a774b1-hihope-rzg2n.dtb
+>  dtb-$(CONFIG_ARCH_R8A774B1) += r8a774b1-hihope-rzg2n-ex.dtb
+
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/renesas/beacon-renesom-baseboard.dtsi
+
+> +       lvds {
+> +               compatible = "panel-lvds";
+> +               power-supply = <&reg_lcd_reset>;
+> +               width-mm = <223>;
+> +               height-mm = <125>;
+> +               backlight = <&backlight_lvds>;
+> +               data-mapping = "vesa-24";
 > +
->         .data : {
->                 _data = . ;
->                 *(.data)
-> @@ -77,3 +80,9 @@ SECTIONS
->
->         DISCARDS
->  }
+> +               panel-timing {
+> +                       /* 800x480@60Hz */
+> +                       clock-frequency = <30000000>;
+> +                       hactive = <800>;
+> +                       vactive = <480>;
+> +                       hsync-len = <48>;
+> +                       hfront-porch = <40>;
+> +                       hback-porch = <40>;
+> +                       vfront-porch = <13>;
+> +                       vback-porch = <29>;
+> +                       vsync-len = <3>;
+> +                       hsync-active = <1>;
+> +                       vsync-active = <3>;
+
+"make dtbs_check
+DT_SCHEMA_FILES=Documentation/devicetree/bindings/display/panel/panel-timing.yaml":
+lvds: panel-timing:vsync-active:0:0: 3 is not one of [0, 1]
+
+> +                       de-active = <1>;
+> +                       pixelclk-active = <0>;
+> +               };
 > +
-> +#ifdef CONFIG_X86_64
-> +ASSERT(SIZEOF(.got.plt) == 0 || SIZEOF(.got.plt) == 0x18, "Unexpected GOT/PLT entries detected!")
-> +#else
-> +ASSERT(SIZEOF(.got.plt) == 0 || SIZEOF(.got.plt) == 0xc, "Unexpected GOT/PLT entries detected!")
-> +#endif
-> --
-> 2.26.2
->
+> +               port {
+> +                       panel_in: endpoint {
+> +                               remote-endpoint = <&lvds0_out>;
+> +                       };
+> +               };
+> +       };
+> +
+> +       rgb {
+> +               /* Different LCD with compatible timings */
+> +               compatible = "rocktech,rk070er9427";
+> +               backlight = <&backlight_rgb>;
+> +               enable-gpios = <&gpio1 21 GPIO_ACTIVE_HIGH>;
+> +               port {
+> +                       rgb_panel: endpoint {
+> +                               remote-endpoint = <&du_out_rgb>;
+> +                       };
+> +               };
+
+Documentation/devicetree/bindings/display/panel/panel-simple.yaml
+rgb: 'power-supply' is a required property
+
+> +       };
+
+> +       versaclock6_bb: versaclock@6a {
+
+As per DT generic node name rules, this should be called
+"clock-controller@6a".  I'm aware that would cause issues with the
+current driver implementation, so I'll accept this for now.  But it
+would be good to resolve this later.
+
+> +               compatible = "idt,5p49v6965";
+> +               reg = <0x6a>;
+> +               #clock-cells = <1>;
+> +               clocks = <&x304_clk>;
+> +               clock-names = "xin";
+> +               /* CSI0_MCLK, CSI1_MCLK, AUDIO_CLKIN, USB_HUB_MCLK_BB */
+> +               assigned-clocks = <&versaclock6_bb 1>,
+> +                                  <&versaclock6_bb 2>,
+> +                                  <&versaclock6_bb 3>,
+> +                                  <&versaclock6_bb 4>;
+> +               assigned-clock-rates =  <24000000>, <24000000>, <24000000>, <24576000>;
+> +       };
+> +};
+
+> +       hd3ss3220@47 {
+> +               compatible = "ti,hd3ss3220";
+> +               reg = <0x47>;
+> +               interrupt-parent = <&gpio6>;
+> +               interrupts = <4 IRQ_TYPE_LEVEL_LOW>;
+> +
+> +               connector {
+> +                       compatible = "usb-c-connector";
+> +                       label = "USB-C";
+> +                       data-role = "dual";
+> +
+> +                       ports {
+> +                               #address-cells = <1>;
+> +                               #size-cells = <0>;
+> +
+> +                               port@1 {
+> +                                       reg = <1>;
+> +                                       hd3ss3220_ep: endpoint {
+> +                                               remote-endpoint = <&usb3_role_switch>;
+> +                                       };
+> +                               };
+
+Documentation/devicetree/bindings/connector/usb-connector.yaml
+connector: ports: 'port@0' is a required property
+
+For now, I'd ignore that, as it's a contradiction between the usb-connector
+and the hd3ss3220 bindings.
+
+> +                       };
+> +               };
+> +       };
+> +};
+
+> index 000000000000..97272f5fa0ab
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/renesas/beacon-renesom-som.dtsi
+
+> +       versaclock5: versaclock_som@6a {
+
+Same comment: "clock-controller@6a" (ignored for now).
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
