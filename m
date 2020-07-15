@@ -2,138 +2,153 @@ Return-Path: <SRS0=kup7=A2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0984CC433E7
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 21:32:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A4E4C433E5
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 21:32:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D51AD2067D
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 21:32:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594848736;
-	bh=UN53w6/v3IIYTPxjDCO3ODEmL7ut6oRfzJa7C4UIe08=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=dbm4Q+75fSQ8/xHX+ajmCT+e+6dLy4zL1KZIhtUVte6IwQSPM9HAm+NOFCgmItpul
-	 P0q3L/qkmDOz/qb/8T+1DTD7iWZRDn1c3hGP8+GK28o5ojXjTx7KyLUaG5WVawGB7e
-	 YDdJ8PD+GJwRzKndYA/2ta0NAu90ZWC6vMXAzSuw=
+	by mail.kernel.org (Postfix) with ESMTP id EC7182065F
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 21:32:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=beagleboard-org.20150623.gappssmtp.com header.i=@beagleboard-org.20150623.gappssmtp.com header.b="wKKvAWhb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727086AbgGOVcP (ORCPT
+        id S1727060AbgGOVcL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 17:32:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60276 "EHLO
+        Wed, 15 Jul 2020 17:32:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60262 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726670AbgGOVcO (ORCPT
+        with ESMTP id S1726998AbgGOVcJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 17:32:14 -0400
-Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 53AD3C061755
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 14:32:14 -0700 (PDT)
-Received: by mail-lj1-x244.google.com with SMTP id r19so4323823ljn.12
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 14:32:14 -0700 (PDT)
+        Wed, 15 Jul 2020 17:32:09 -0400
+Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 94A19C08C5CE
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 14:32:09 -0700 (PDT)
+Received: by mail-wm1-x341.google.com with SMTP id o2so7693651wmh.2
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 14:32:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Slsfcsh628hGH9fKIfCUDCo179zQ291O44Iubhz+iYw=;
-        b=O4kkFWBFfS6AruYdFO2kccl5YLYkpVV48bmKKxenxXHKgGnD1JdBpgnOWobKutjQy3
-         Y7HEUJ2/gu9Dzu/XAqMuW+dp94DFj9wAenMyRxasT9IGWFCeOWvoZAgmbKy7oaq5TpSc
-         JOtsiI5wdnX+7TiicHV1PBecF7rxvi0SyEcN0=
+        d=beagleboard-org.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=xBQDfVfj7jVd5q1Z7DUJytLJRXAUVyPchfWSKcEiidM=;
+        b=wKKvAWhbIOGuT1WASkV4LvqzLA0Zv0x2m8Nwk6wRJkg4gE7pNdCYPt+AdS90IlQaIM
+         Nzcl2lwkD3LoPZ8bF5ALatUnatULp2Bn5/CUNG7X+VLqrUxtADV6a747KGhm6+NoH1QZ
+         ft5ET3hyn81yG5M+gDoweEZClfAQ1h+HWI3gJh2l9k6HyFR4HjtWKKhbXcZrNZC8+GXO
+         29VbKG8+4257sY2bj7atKlJXyHsyoaPkCxFyhXsjoeQ2wegGaPLj9LFe0GtBdC/BRjU1
+         9MmtkPGAyn3L9YrWf+cUdr+oTfbeUlaHjNw4HPhm0nnyEx2r+BWUKa2VKvf9Cdgf9Ry0
+         Bolg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Slsfcsh628hGH9fKIfCUDCo179zQ291O44Iubhz+iYw=;
-        b=DyMuatnHUZKvxFxfCruDIy7C00jE5OIliJPkbNhGrVh6WJoDd6PQ43eNSOFiv8BDLY
-         AXmW+yH5pN0C3fC8xxDhypUFP0fxC+zRFTtduSgYxK2uOOgUB4vkjqxnVu9tW3XOvuoy
-         PVA7MiXxRvenDu+YUPMmwcrkawDx18w3+iwxqfrmt1bHzHI6VykSFKdz0jEj5ewYpWVY
-         7JQr0TRuHfftWW3lM1+8kHdxGgGbumUF6iF/8rqHNKKJoNAS69nWaYeq1+xpKE3my/tP
-         ImXsw9SdkWH42sy/GlK2/JXP4giFTPnmSrjhqjmCOMT+pWVHgui6RkoAVvjVs89GSWXx
-         nlCg==
-X-Gm-Message-State: AOAM5339rLuM9eVmozZ174MUjfBcPLW10Sg5gPo++cT0KIRt7SWSvgr7
-        4fxBajC89b9IrTGZMPJQxoIiBIiAkRU=
-X-Google-Smtp-Source: ABdhPJxTwLl/7bLE37l0MGOeIOvhggtssLr+SPe4/9MoHJi8wlfphZ+b1ya5hArRO7mvV6BTRx9VLw==
-X-Received: by 2002:a2e:8942:: with SMTP id b2mr461253ljk.412.1594848732421;
-        Wed, 15 Jul 2020 14:32:12 -0700 (PDT)
-Received: from mail-lf1-f51.google.com (mail-lf1-f51.google.com. [209.85.167.51])
-        by smtp.gmail.com with ESMTPSA id o5sm883785lfg.27.2020.07.15.14.32.10
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 15 Jul 2020 14:32:11 -0700 (PDT)
-Received: by mail-lf1-f51.google.com with SMTP id y18so1924615lfh.11
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 14:32:10 -0700 (PDT)
-X-Received: by 2002:a19:8a07:: with SMTP id m7mr475815lfd.31.1594848730272;
- Wed, 15 Jul 2020 14:32:10 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=xBQDfVfj7jVd5q1Z7DUJytLJRXAUVyPchfWSKcEiidM=;
+        b=QE5RvoWFCtlCzdoOV89C5HV8BsJ7HXtBz05sjBhTlocAyFpGtUgkdN3571sNv7jZxf
+         heL+JytsRSoOksinWsDarZZqkTYP6wtNGLw7Yj4jLUVDWot4UBnY1OTDkyoJz9213eZR
+         hsltVHFMjkD6clquT7bVFvk9UHtgYYhCPkiY4u6IuCpL3LYioWKdK8ACl0sS6oBxAzEO
+         MUdaxDI8EiigHlQu2F+g1MogeGRqrp7F9bcfCbzxpfOHKy+L7eYmXHKPanX8iN9Rtmh1
+         Q37fGMYAyTTeq5m3OMDMvfxKMcA++qgXICtcvSGMdPSRpBLiOt8BrZFAM2/WfnOHM12J
+         nzIA==
+X-Gm-Message-State: AOAM531VK0hFNSD54u//yJ/z8FZUO+6UXniUni35ZaZVyP9xfM9VSyId
+        qkbmd63ydzf2AgQHTfosYvvHiQ==
+X-Google-Smtp-Source: ABdhPJzXxMM86KFYQzvo2fHgX1DfzzmFi79lPdbOcM5GbNb7mdCXrWM7MkQPBJxQPlDJMPLB8DU8sQ==
+X-Received: by 2002:a1c:1d04:: with SMTP id d4mr1545579wmd.156.1594848728233;
+        Wed, 15 Jul 2020 14:32:08 -0700 (PDT)
+Received: from x1 (63.red-95-125-106.dynamicip.rima-tde.net. [95.125.106.63])
+        by smtp.gmail.com with ESMTPSA id 1sm4912324wmf.0.2020.07.15.14.32.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 15 Jul 2020 14:32:07 -0700 (PDT)
+Date:   Wed, 15 Jul 2020 23:32:03 +0200
+From:   Drew Fustini <drew@beagleboard.org>
+To:     Grygorii Strashko <grygorii.strashko@ti.com>
+Cc:     Tony Lindgren <tony@atomide.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Santosh Shilimkar <ssantosh@kernel.org>,
+        Kevin Hilman <khilman@kernel.org>, linux-omap@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] gpio: omap: handle pin config bias flags
+Message-ID: <20200715213203.GA1639870@x1>
+References: <20200709223401.780051-1-drew@beagleboard.org>
+ <1a0180f3-7693-672a-8070-7032854bb73c@ti.com>
 MIME-Version: 1.0
-References: <20200715135011.42743-1-kirill.shutemov@linux.intel.com>
- <CAHk-=wh4pB-jRngOjcGxpc8=NPds3jWqJwDMUWC3-OEo4dRiKg@mail.gmail.com> <20200715205428.GA201569@google.com>
-In-Reply-To: <20200715205428.GA201569@google.com>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Wed, 15 Jul 2020 14:31:54 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wg-_Oof43pKUHMk4ySdLwpYi7+shFg+aeV18UP2Akiv8g@mail.gmail.com>
-Message-ID: <CAHk-=wg-_Oof43pKUHMk4ySdLwpYi7+shFg+aeV18UP2Akiv8g@mail.gmail.com>
-Subject: Re: [PATCHv2] mm: Fix warning in move_normal_pmd()
-To:     Joel Fernandes <joel@joelfernandes.org>
-Cc:     "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linux-MM <linux-mm@kvack.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Naresh Kamboju <naresh.kamboju@linaro.org>,
-        William Kucharski <william.kucharski@oracle.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1a0180f3-7693-672a-8070-7032854bb73c@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 15, 2020 at 1:54 PM Joel Fernandes <joel@joelfernandes.org> wrote:
->
-> Regarding the ADDR_AFTER_NEXT checks, shouldn't you check for:
->
->         if (ADDR_AFTER_NEXT(ALIGN(*old_addr + *len, PMD_SIZE), old))
->                 return;
+On Wed, Jul 15, 2020 at 01:09:12PM +0300, Grygorii Strashko wrote:
+> 
+> 
+> On 10/07/2020 01:34, Drew Fustini wrote:
+> > Modify omap_gpio_set_config() to handle pin config bias flags by calling
+> > gpiochip_generic_config().
+> > 
+> > The pin group for the gpio line must have the corresponding pinconf
+> > properties:
+> > 
+> > PIN_CONFIG_BIAS_PULL_UP requires "pinctrl-single,bias-pullup"
+> > PIN_CONFIG_BIAS_PULL_DOWN requires "pinctrl-single,bias-pulldown"
+> > 
+> > This is necessary for pcs_pinconf_set() to find the requested bias
+> > parameter in the PIN_MAP_TYPE_CONFIGS_GROUP pinctrl map.
+> > 
+> > Signed-off-by: Drew Fustini <drew@beagleboard.org>
+> > ---
+> >   drivers/gpio/gpio-omap.c | 21 +++++++++++++++++----
+> >   1 file changed, 17 insertions(+), 4 deletions(-)
+> > 
+> > diff --git a/drivers/gpio/gpio-omap.c b/drivers/gpio/gpio-omap.c
+> > index b8e2ecc3eade..a471a152f318 100644
+> > --- a/drivers/gpio/gpio-omap.c
+> > +++ b/drivers/gpio/gpio-omap.c
+> > @@ -896,12 +896,25 @@ static int omap_gpio_set_config(struct gpio_chip *chip, unsigned offset,
+> >   				unsigned long config)
+> >   {
+> >   	u32 debounce;
+> > +	int ret;
+> 
+> ret =  -ENOTSUPP;
+> 
+> > -	if (pinconf_to_config_param(config) != PIN_CONFIG_INPUT_DEBOUNCE)
+> > -		return -ENOTSUPP;
+> > +	if ((pinconf_to_config_param(config) == PIN_CONFIG_BIAS_DISABLE) ||
+> > +	    (pinconf_to_config_param(config) == PIN_CONFIG_BIAS_PULL_UP) ||
+> > +	    (pinconf_to_config_param(config) == PIN_CONFIG_BIAS_PULL_DOWN))
+> > +	{
+> > +		ret = gpiochip_generic_config(chip, offset, config);
+> > +	}
+> > +	else if (pinconf_to_config_param(config) == PIN_CONFIG_INPUT_DEBOUNCE)
+> > +	{
+> > +		debounce = pinconf_to_config_argument(config);
+> > +		ret = omap_gpio_debounce(chip, offset, debounce);
+> > +	}
+> > +	else
+> > +	{
+> > +		ret = -ENOTSUPP;
+> > +	}
+> 
+> drop above "else"?
+> 
+> > -	debounce = pinconf_to_config_argument(config);
+> > -	return omap_gpio_debounce(chip, offset, debounce);
+> > +	return ret;
+> >   }
+> >   static void omap_gpio_set(struct gpio_chip *chip, unsigned offset, int value)
+> > 
+> 
+> Minor comment, Otherwise:
+> Acked-by: Grygorii Strashko <grygorii.strashko@ti.com>
+> 
+> -- 
+> Best regards,
+> grygorii
 
-No, there's even a comment to the effect.
+Thanks for reviewing.  I'll post a new version with the return value
+improvement per your suggestion.
 
-Instead, that ADDR_AFTER_NEXT() aligns the next address _down_ to the
-PMD boundary.
-
-Because otherwise, what can happen is:
-
- - you're on an architecture that has a separate address space for users
-
- - you're the next-to-last VMA in that address space,
-
- - you're in the last PMD.
-
-And now "ALIGN(*old_addr + *len, PMD_SIZE)" will wrap, and become 0,
-and you think it's ok to move the whole PMD, because it's now smaller
-than the start address of the next VMA.
-
-It's _not_ ok, because you'd be moving that next-vma data too.
-
-> and for the len calculation, I did not follow what you did, but I think you
-> meant something like this? Does the following reduce to what you did? At
-> least this is a bit more readable I think:
->
->         *len += (ALIGN(*new_addr + *len, PMD_SIZE) - (*new_addr + *len));
-
-Yes, right you are.
-
-I actually wrote that first (except I added a helper variable for that
-"*new_addr + *len" thing), and then I decided it can be simplified.
-
-And simplified it wrong ;)
-
-> Also you did "len +=", it should be "*len +=" in this function.
-
-That's indeed a plain stupid bug ;)
-
-Naresh - don't test that version. The bugs Joel found just make the
-math wrong, so it won't work.
-
-The concept was solid, the implementation not so much ;)
-
-                 Linus
+-Drew
