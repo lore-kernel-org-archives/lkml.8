@@ -2,208 +2,171 @@ Return-Path: <SRS0=kup7=A2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLACK autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3E79C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 11:06:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5B3FC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 11:07:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 816D12067D
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 11:06:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A6C142071B
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 11:07:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=antmicro.com header.i=@antmicro.com header.b="tvY8PQWQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731359AbgGOLGM convert rfc822-to-8bit (ORCPT
+        id S1729352AbgGOLHI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 07:06:12 -0400
-Received: from szxga03-in.huawei.com ([45.249.212.189]:2542 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728385AbgGOLGK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 07:06:10 -0400
-Received: from DGGEMM402-HUB.china.huawei.com (unknown [172.30.72.54])
-        by Forcepoint Email with ESMTP id 7FE7B53607C20D5A957B;
-        Wed, 15 Jul 2020 19:06:08 +0800 (CST)
-Received: from DGGEMM526-MBX.china.huawei.com ([169.254.8.195]) by
- DGGEMM402-HUB.china.huawei.com ([10.3.20.210]) with mapi id 14.03.0487.000;
- Wed, 15 Jul 2020 19:06:03 +0800
-From:   "Zengtao (B)" <prime.zeng@hisilicon.com>
-To:     Cornelia Huck <cohuck@redhat.com>
-CC:     "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
-        "cai@lca.pw" <cai@lca.pw>, Kevin Tian <kevin.tian@intel.com>,
-        Peter Xu <peterx@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "Michel Lespinasse" <walken@google.com>,
-        Denis Efremov <efremov@linux.com>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH] vfio/pci: fix racy on error and request eventfd ctx
-Thread-Topic: [PATCH] vfio/pci: fix racy on error and request eventfd ctx
-Thread-Index: AQHWWnqQ+QrCfngfhUOguFGy1o0RgqkH7XyAgACJOHA=
-Date:   Wed, 15 Jul 2020 11:06:04 +0000
-Message-ID: <678F3D1BB717D949B966B68EAEB446ED415845CF@dggemm526-mbx.china.huawei.com>
-References: <1594798484-20501-1-git-send-email-prime.zeng@hisilicon.com>
- <20200715123955.0d7e731a.cohuck@redhat.com>
-In-Reply-To: <20200715123955.0d7e731a.cohuck@redhat.com>
-Accept-Language: zh-CN, en-US
-Content-Language: zh-CN
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.74.221.187]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+        Wed, 15 Jul 2020 07:07:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48396 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729239AbgGOLHI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jul 2020 07:07:08 -0400
+Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 844C0C061755
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 04:07:07 -0700 (PDT)
+Received: by mail-lj1-x242.google.com with SMTP id d17so2138323ljl.3
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 04:07:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=antmicro.com; s=google;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition;
+        bh=LS4hCUEzoSELDF8hz/hUz8/P4swJmb1Knux4DAvwCKg=;
+        b=tvY8PQWQZsDh/YAzpSCW8KgGWfH/ut9NLsu5C5/0X9wPFGorLTcyD1G44JFNQm6oZV
+         K2TpoM4gFya+SxV4S10GEWIFI6ILbEhuUIHR/w2ViF/aBdf0eeQG7+RwKPlEezU4PFGI
+         1LQEJTyjDCvNu4rN3aM32w9MRpSKGQfRO3O7Q=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition;
+        bh=LS4hCUEzoSELDF8hz/hUz8/P4swJmb1Knux4DAvwCKg=;
+        b=LKg/WY0jnu5T5ZpTqahpCZ8H1NH8gRhtt54JhSxjBtBG3wvf4lFsfwdxNrUtK0QVJF
+         UPWmEdySfRrbmO0PvBtaH1ZfDcT9k0Ir38LQtPxmPVOvq0wfytpQEoqUMNPoDrh1xhrt
+         PPcOE+wCpjLKPnhvP7vE6g10siVKReZ2Fk5YS48tI2aU1ZUsDGg5+3Sio7ht4yVsKQVY
+         Mm0RurLOP3JLoaYm2XSCIme2IU4al38VN+OnCHTgy8RNSVO3F1XV8v8HUVECaH+vlQg2
+         fHb9OtyD3zYX2k2DqywZKLYaThrN7I1l9Pv/S60CxSjbi4lNiDqfxnRu2Ci3zEgeCwjm
+         NNxw==
+X-Gm-Message-State: AOAM532aNXveaJg27XSztbN/hxVpfUADqQ+7ASOuiXK5DlWKoF1TfWHo
+        rSrt0l+rchlROVj82moNF1JJnA==
+X-Google-Smtp-Source: ABdhPJy1PC3WtzZvS6+3qsGyi9RvAdJfykrkOKNKr8hT+mKebr7eUBDBcbenv+FYYIgZFXzoLaKNLA==
+X-Received: by 2002:a2e:9a0f:: with SMTP id o15mr4723355lji.450.1594811226020;
+        Wed, 15 Jul 2020 04:07:06 -0700 (PDT)
+Received: from localhost.localdomain (d79-196.icpnet.pl. [77.65.79.196])
+        by smtp.gmail.com with ESMTPSA id u7sm513117lfi.45.2020.07.15.04.07.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 15 Jul 2020 04:07:05 -0700 (PDT)
+Date:   Wed, 15 Jul 2020 13:06:59 +0200
+From:   Mateusz Holenko <mholenko@antmicro.com>
+To:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>, devicetree@vger.kernel.org,
+        linux-serial@vger.kernel.org
+Cc:     Stafford Horne <shorne@gmail.com>,
+        Karol Gugala <kgugala@antmicro.com>,
+        Mateusz Holenko <mholenko@antmicro.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        "Paul E. McKenney" <paulmck@linux.ibm.com>,
+        Filip Kokosinski <fkokosinski@antmicro.com>,
+        Pawel Czarnecki <pczarnecki@internships.antmicro.com>,
+        Joel Stanley <joel@jms.id.au>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Icenowy Zheng <icenowy@aosc.io>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        linux-kernel@vger.kernel.org, "Gabriel L. Somlo" <gsomlo@gmail.com>
+Subject: [PATCH v8 0/5] LiteX SoC controller and LiteUART serial driver
+Message-ID: <20200715130641.1953227-0-mholenko@antmicro.com>
 MIME-Version: 1.0
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> -----Original Message-----
-> From: kvm-owner@vger.kernel.org [mailto:kvm-owner@vger.kernel.org]
-> On Behalf Of Cornelia Huck
-> Sent: Wednesday, July 15, 2020 6:40 PM
-> To: Zengtao (B)
-> Cc: alex.williamson@redhat.com; cai@lca.pw; Kevin Tian; Peter Xu;
-> Andrew Morton; Michel Lespinasse; Denis Efremov; kvm@vger.kernel.org;
-> linux-kernel@vger.kernel.org
-> Subject: Re: [PATCH] vfio/pci: fix racy on error and request eventfd ctx
-> 
-> On Wed, 15 Jul 2020 15:34:41 +0800
-> Zeng Tao <prime.zeng@hisilicon.com> wrote:
-> 
-> > The vfio_pci_release call will free and clear the error and request
-> > eventfd ctx while these ctx could be in use at the same time in the
-> > function like vfio_pci_request, and it's expected to protect them under
-> > the vdev->igate mutex, which is missing in vfio_pci_release.
-> >
-> > This issue is introduced since commit 1518ac272e78 ("vfio/pci: fix
-> memory
-> > leaks of eventfd ctx"),and since commit 5c5866c593bb ("vfio/pci: Clear
-> > error and request eventfd ctx after releasing"), it's very easily to
-> > trigger the kernel panic like this:
-> >
-> > [ 9513.904346] Unable to handle kernel NULL pointer dereference at
-> virtual address 0000000000000008
-> > [ 9513.913091] Mem abort info:
-> > [ 9513.915871]   ESR = 0x96000006
-> > [ 9513.918912]   EC = 0x25: DABT (current EL), IL = 32 bits
-> > [ 9513.924198]   SET = 0, FnV = 0
-> > [ 9513.927238]   EA = 0, S1PTW = 0
-> > [ 9513.930364] Data abort info:
-> > [ 9513.933231]   ISV = 0, ISS = 0x00000006
-> > [ 9513.937048]   CM = 0, WnR = 0
-> > [ 9513.940003] user pgtable: 4k pages, 48-bit VAs,
-> pgdp=0000007ec7d12000
-> > [ 9513.946414] [0000000000000008] pgd=0000007ec7d13003,
-> p4d=0000007ec7d13003, pud=0000007ec728c003,
-> pmd=0000000000000000
-> > [ 9513.956975] Internal error: Oops: 96000006 [#1] PREEMPT SMP
-> > [ 9513.962521] Modules linked in: vfio_pci vfio_virqfd vfio_iommu_type1
-> vfio hclge hns3 hnae3 [last unloaded: vfio_pci]
-> > [ 9513.972998] CPU: 4 PID: 1327 Comm: bash Tainted: G        W
-> 5.8.0-rc4+ #3
-> > [ 9513.980443] Hardware name: Huawei TaiShan 2280 V2/BC82AMDC,
-> BIOS 2280-V2 CS V3.B270.01 05/08/2020
-> > [ 9513.989274] pstate: 80400089 (Nzcv daIf +PAN -UAO BTYPE=--)
-> > [ 9513.994827] pc : _raw_spin_lock_irqsave+0x48/0x88
-> > [ 9513.999515] lr : eventfd_signal+0x6c/0x1b0
-> > [ 9514.003591] sp : ffff800038a0b960
-> > [ 9514.006889] x29: ffff800038a0b960 x28: ffff007ef7f4da10
-> > [ 9514.012175] x27: ffff207eefbbfc80 x26: ffffbb7903457000
-> > [ 9514.017462] x25: ffffbb7912191000 x24: ffff007ef7f4d400
-> > [ 9514.022747] x23: ffff20be6e0e4c00 x22: 0000000000000008
-> > [ 9514.028033] x21: 0000000000000000 x20: 0000000000000000
-> > [ 9514.033321] x19: 0000000000000008 x18: 0000000000000000
-> > [ 9514.038606] x17: 0000000000000000 x16: ffffbb7910029328
-> > [ 9514.043893] x15: 0000000000000000 x14: 0000000000000001
-> > [ 9514.049179] x13: 0000000000000000 x12: 0000000000000002
-> > [ 9514.054466] x11: 0000000000000000 x10: 0000000000000a00
-> > [ 9514.059752] x9 : ffff800038a0b840 x8 : ffff007ef7f4de60
-> > [ 9514.065038] x7 : ffff007fffc96690 x6 : fffffe01faffb748
-> > [ 9514.070324] x5 : 0000000000000000 x4 : 0000000000000000
-> > [ 9514.075609] x3 : 0000000000000000 x2 : 0000000000000001
-> > [ 9514.080895] x1 : ffff007ef7f4d400 x0 : 0000000000000000
-> > [ 9514.086181] Call trace:
-> > [ 9514.088618]  _raw_spin_lock_irqsave+0x48/0x88
-> > [ 9514.092954]  eventfd_signal+0x6c/0x1b0
-> > [ 9514.096691]  vfio_pci_request+0x84/0xd0 [vfio_pci]
-> > [ 9514.101464]  vfio_del_group_dev+0x150/0x290 [vfio]
-> > [ 9514.106234]  vfio_pci_remove+0x30/0x128 [vfio_pci]
-> > [ 9514.111007]  pci_device_remove+0x48/0x108
-> > [ 9514.115001]  device_release_driver_internal+0x100/0x1b8
-> > [ 9514.120200]  device_release_driver+0x28/0x38
-> > [ 9514.124452]  pci_stop_bus_device+0x68/0xa8
-> > [ 9514.128528]  pci_stop_and_remove_bus_device+0x20/0x38
-> > [ 9514.133557]  pci_iov_remove_virtfn+0xb4/0x128
-> > [ 9514.137893]  sriov_disable+0x3c/0x108
-> > [ 9514.141538]  pci_disable_sriov+0x28/0x38
-> > [ 9514.145445]  hns3_pci_sriov_configure+0x48/0xb8 [hns3]
-> > [ 9514.150558]  sriov_numvfs_store+0x110/0x198
-> > [ 9514.154724]  dev_attr_store+0x44/0x60
-> > [ 9514.158373]  sysfs_kf_write+0x5c/0x78
-> > [ 9514.162018]  kernfs_fop_write+0x104/0x210
-> > [ 9514.166010]  __vfs_write+0x48/0x90
-> > [ 9514.169395]  vfs_write+0xbc/0x1c0
-> > [ 9514.172694]  ksys_write+0x74/0x100
-> > [ 9514.176079]  __arm64_sys_write+0x24/0x30
-> > [ 9514.179987]  el0_svc_common.constprop.4+0x110/0x200
-> > [ 9514.184842]  do_el0_svc+0x34/0x98
-> > [ 9514.188144]  el0_svc+0x14/0x40
-> > [ 9514.191185]  el0_sync_handler+0xb0/0x2d0
-> > [ 9514.195088]  el0_sync+0x140/0x180
-> > [ 9514.198389] Code: b9001020 d2800000 52800022 f9800271
-> (885ffe61)
-> > [ 9514.204455] ---[ end trace 648de00c8406465f ]---
-> > [ 9514.212308] note: bash[1327] exited with preempt_count 1
-> 
-> Good catch, I hope this is fixed now for good :/
-> 
-> >
-> > Cc: Qian Cai <cai@lca.pw>
-> > Cc: Alex Williamson <alex.williamson@redhat.com>
-> > Fixes: 1518ac272e78 ("vfio/pci: fix memory leaks of eventfd ctx")
-> 
-> Fixes: 5c5866c593bb ("vfio/pci: Clear error and request eventfd ctx after
-> releasing")
-> 
-In fact, commit 5c5866c593bb don't really introduce any problem but happened
- to make the issue more explicit and it's easier to get a panic. :) 
+This patchset introduces support for LiteX SoC Controller
+and LiteUART - serial device from LiteX SoC builder
+(https://github.com/enjoy-digital/litex).
 
-> > Signed-off-by: Zeng Tao <prime.zeng@hisilicon.com>
-> > ---
-> >  drivers/vfio/pci/vfio_pci.c | 5 +++++
-> >  1 file changed, 5 insertions(+)
-> >
-> > diff --git a/drivers/vfio/pci/vfio_pci.c b/drivers/vfio/pci/vfio_pci.c
-> > index f634c81..de881a6 100644
-> > --- a/drivers/vfio/pci/vfio_pci.c
-> > +++ b/drivers/vfio/pci/vfio_pci.c
-> > @@ -521,14 +521,19 @@ static void vfio_pci_release(void
-> *device_data)
-> >  		vfio_pci_vf_token_user_add(vdev, -1);
-> >  		vfio_spapr_pci_eeh_release(vdev->pdev);
-> >  		vfio_pci_disable(vdev);
-> > +		mutex_lock(&vdev->igate);
-> >  		if (vdev->err_trigger) {
-> >  			eventfd_ctx_put(vdev->err_trigger);
-> >  			vdev->err_trigger = NULL;
-> >  		}
-> > +		mutex_unlock(&vdev->igate);
-> > +
-> > +		mutex_lock(&vdev->igate);
-> 
-> Just keep the mutex locked for both triggers?
-two reasons here:
-1.  Just keep a smaller lock, it's a better practice. 
-2.  Let the pending request to finish if there is race condition.
+In the following patchset I will add
+a new mor1kx-based (OpenRISC) platform that
+uses this device.
 
-> 
-> >  		if (vdev->req_trigger) {
-> >  			eventfd_ctx_put(vdev->req_trigger);
-> >  			vdev->req_trigger = NULL;
-> >  		}
-> > +		mutex_unlock(&vdev->igate);
-> >  	}
-> >
-> >  	mutex_unlock(&vdev->reflck->lock);
+Later I plan to extend this platform by
+adding support for more devices from LiteX suite.
+
+Changes in v8:
+    - fixed help messages in LiteUART's KConfig
+    - removed dependency between LiteUART and LiteX SoC drivers
+    - removed `litex_check_accessors()` helper function
+    - added crashing (BUG) on the failed LiteX CSR access test
+
+Changes in v7:
+    - added missing include directive in UART's driver
+
+Changes in v6:
+    - changed accessors in SoC Controller's driver
+    - reworked UART driver
+
+Changes in v5:
+    - added Reviewed-by tag
+    - removed custom accessors from SoC Controller's driver
+    - fixed error checking in SoC Controller's driver
+
+Changes in v4:
+    - fixed copyright headers
+    - fixed SoC Controller's yaml 
+    - simplified SoC Controller's driver
+
+Changes in v3:
+    - added Acked-by and Reviewed-by tags
+    - introduced LiteX SoC Controller driver
+    - removed endianness detection (handled now by LiteX SoC Controller driver)
+    - modified litex.h header
+    - DTS aliases for LiteUART made optional
+    - renamed SERIAL_LITEUART_NR_PORTS to SERIAL_LITEUART_MAX_PORTS
+    - changed PORT_LITEUART from 122 to 123
+
+Changes in v2:
+    - binding description rewritten to a yaml schema file
+    - added litex.h header with common register access functions
+
+Filip Kokosinski (3):
+  dt-bindings: vendor: add vendor prefix for LiteX
+  dt-bindings: serial: document LiteUART bindings
+  drivers/tty/serial: add LiteUART driver
+
+Pawel Czarnecki (2):
+  dt-bindings: soc: document LiteX SoC Controller bindings
+  drivers/soc/litex: add LiteX SoC Controller driver
+
+ .../bindings/serial/litex,liteuart.yaml       |  38 ++
+ .../soc/litex/litex,soc-controller.yaml       |  39 ++
+ .../devicetree/bindings/vendor-prefixes.yaml  |   2 +
+ MAINTAINERS                                   |   9 +
+ drivers/soc/Kconfig                           |   1 +
+ drivers/soc/Makefile                          |   1 +
+ drivers/soc/litex/Kconfig                     |  15 +
+ drivers/soc/litex/Makefile                    |   3 +
+ drivers/soc/litex/litex_soc_ctrl.c            | 192 +++++++++
+ drivers/tty/serial/Kconfig                    |  32 ++
+ drivers/tty/serial/Makefile                   |   1 +
+ drivers/tty/serial/liteuart.c                 | 402 ++++++++++++++++++
+ include/linux/litex.h                         |  24 ++
+ 13 files changed, 759 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/serial/litex,liteuart.yaml
+ create mode 100644 Documentation/devicetree/bindings/soc/litex/litex,soc-controller.yaml
+ create mode 100644 drivers/soc/litex/Kconfig
+ create mode 100644 drivers/soc/litex/Makefile
+ create mode 100644 drivers/soc/litex/litex_soc_ctrl.c
+ create mode 100644 drivers/tty/serial/liteuart.c
+ create mode 100644 include/linux/litex.h
+
+-- 
+2.25.1
 
