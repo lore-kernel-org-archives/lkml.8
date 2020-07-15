@@ -6,83 +6,92 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
 	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39F9BC433E5
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 16:47:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F2C2C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 16:47:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0AC412065D
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 16:47:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F9C52065D
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 16:47:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="cN4+RSaH"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="SLNWjudG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727774AbgGOQrV (ORCPT
+        id S1727775AbgGOQrd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 12:47:21 -0400
-Received: from mail29.static.mailgun.info ([104.130.122.29]:15277 "EHLO
+        Wed, 15 Jul 2020 12:47:33 -0400
+Received: from mail29.static.mailgun.info ([104.130.122.29]:33685 "EHLO
         mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726376AbgGOQrN (ORCPT
+        by vger.kernel.org with ESMTP id S1726376AbgGOQrc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 12:47:13 -0400
+        Wed, 15 Jul 2020 12:47:32 -0400
 DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1594831632; h=Date: Message-Id: Cc: To: References:
+ s=smtp; t=1594831651; h=Date: Message-Id: Cc: To: References:
  In-Reply-To: From: Subject: Content-Transfer-Encoding: MIME-Version:
- Content-Type: Sender; bh=TKew3JJfCToYrT8uujUrU8/Gqwdn23TvQoieCSi469s=;
- b=cN4+RSaHqXMZEHxNaROtVOwpTWGIjXDFzq/UwkiSGruXkzZWlosGjcOsWBCl+mLKllFYYnOb
- S8ya7duCF29kwPmHOgTAAc7PEdJmXweCH/GYnWxoU23r8bGiMiFqGEgkYJixm3DdRthNQyIE
- yUANX81U+HlA77Wrp10WxW0UzXA=
+ Content-Type: Sender; bh=Fkd5UNtRsIId9YP9qYrj9/dwuFqWZDT1zDqATogYRKA=;
+ b=SLNWjudGvTZwcCQvPExKVWZkMlKQbBp1B5BF8q85qViv4wMTaOi0oHtBniIRw3jc8L7xGT5c
+ sq7+6KiB/0hko6gObEnH/xIbvWhGYS23Ivg68TKC23V5ZpsJoyhcuINQe64SfvxAhBDuwvd4
+ 486Icyf3gOUn/JUhFNEJYhRPp+4=
 X-Mailgun-Sending-Ip: 104.130.122.29
 X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
 Received: from smtp.codeaurora.org
  (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n06.prod.us-west-2.postgun.com with SMTP id
- 5f0f3304ee6926bb4f2c3949 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Wed, 15 Jul 2020 16:47:00
+ smtp-out-n17.prod.us-west-2.postgun.com with SMTP id
+ 5f0f331d512812c070a1f33f (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Wed, 15 Jul 2020 16:47:25
  GMT
 Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id B8EACC43395; Wed, 15 Jul 2020 16:46:59 +0000 (UTC)
+        id 3FBE1C433CB; Wed, 15 Jul 2020 16:47:25 +0000 (UTC)
 Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
         (Authenticated sender: kvalo)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 0240CC433C6;
-        Wed, 15 Jul 2020 16:46:56 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 0240CC433C6
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 765E2C433C6;
+        Wed, 15 Jul 2020 16:47:23 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 765E2C433C6
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
-Subject: Re: [PATCH] zd1211rw: remove needless check before
- usb_free_coherent()
+Subject: Re: [PATCH] ssb: Replace HTTP links with HTTPS ones
 From:   Kalle Valo <kvalo@codeaurora.org>
-In-Reply-To: <20200630070404.8207-1-vulab@iscas.ac.cn>
-References: <20200630070404.8207-1-vulab@iscas.ac.cn>
-To:     Chen Ni <vulab@iscas.ac.cn>
-Cc:     dsd@gentoo.org, kune@deine-taler.de, davem@davemloft.net,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Xu Wang <vulab@iscas.ac.cn>
+In-Reply-To: <20200710062151.28871-1-grandmaster@al2klimov.de>
+References: <20200710062151.28871-1-grandmaster@al2klimov.de>
+To:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
+Cc:     m@bues.ch, linux-wireless@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        "Alexander A. Klimov" <grandmaster@al2klimov.de>
 User-Agent: pwcli/0.1.0-git (https://github.com/kvalo/pwcli/) Python/3.5.2
-Message-Id: <20200715164659.B8EACC43395@smtp.codeaurora.org>
-Date:   Wed, 15 Jul 2020 16:46:59 +0000 (UTC)
+Message-Id: <20200715164725.3FBE1C433CB@smtp.codeaurora.org>
+Date:   Wed, 15 Jul 2020 16:47:25 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Chen Ni <vulab@iscas.ac.cn> wrote:
+"Alexander A. Klimov" <grandmaster@al2klimov.de> wrote:
 
-> From: Xu Wang <vulab@iscas.ac.cn>
+> Rationale:
+> Reduces attack surface on kernel devs opening the links for MITM
+> as HTTPS traffic is much harder to manipulate.
 > 
-> usb_free_coherent() is safe with NULL addr and this check is
-> not required.
+> Deterministic algorithm:
+> For each file:
+>   If not .svg:
+>     For each line:
+>       If doesn't contain `\bxmlns\b`:
+>         For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
+> 	  If neither `\bgnu\.org/license`, nor `\bmozilla\.org/MPL\b`:
+>             If both the HTTP and HTTPS versions
+>             return 200 OK and serve the same content:
+>               Replace HTTP with HTTPS.
 > 
-> Signed-off-by: Xu Wang <vulab@iscas.ac.cn>
+> Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
 
 Patch applied to wireless-drivers-next.git, thanks.
 
-4f3ebd6fb680 zd1211rw: remove needless check before usb_free_coherent()
+0db5bc7b3447 ssb: Replace HTTP links with HTTPS ones
 
 -- 
-https://patchwork.kernel.org/patch/11633321/
+https://patchwork.kernel.org/patch/11655771/
 
 https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
 
