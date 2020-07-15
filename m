@@ -2,107 +2,116 @@ Return-Path: <SRS0=kup7=A2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4499C433E7
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 23:13:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E9E7C433E5
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 23:13:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 840B12065D
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 23:13:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2A5BC2065D
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 23:13:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="yVzHSrOX"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="JiuD8YFq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727794AbgGOXNr (ORCPT
+        id S1727097AbgGOXNM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 19:13:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47678 "EHLO
+        Wed, 15 Jul 2020 19:13:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47584 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726785AbgGOXNq (ORCPT
+        with ESMTP id S1726776AbgGOXNL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 19:13:46 -0400
-Received: from mail-io1-xd41.google.com (mail-io1-xd41.google.com [IPv6:2607:f8b0:4864:20::d41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 76F00C08C5CE
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 16:13:46 -0700 (PDT)
-Received: by mail-io1-xd41.google.com with SMTP id f23so4066886iof.6
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 16:13:46 -0700 (PDT)
+        Wed, 15 Jul 2020 19:13:11 -0400
+Received: from mail-qk1-x743.google.com (mail-qk1-x743.google.com [IPv6:2607:f8b0:4864:20::743])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 27C48C08C5DB
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 16:13:11 -0700 (PDT)
+Received: by mail-qk1-x743.google.com with SMTP id 80so3681929qko.7
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 16:13:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=DpM7iZGjlHMT36GUoTRhbvrdRBioSuqO7w4vuhft5qY=;
-        b=yVzHSrOXwoYgeWhWxTJWWSAM1r1CTdo/IEZQTDxqvoFKTUNQFQHmLzHLCYc2Q6KUOI
-         byy5V8OB336uMVpKdUMP7I9fUIzytEdw0j4rFnHZRboSYyYQYkjLbVe6KnJ82yY+ZMjy
-         jV7P434+rCPUM2CqswmTxPMyOhyp/sYEHI+rk=
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=vAehlSiMXOBCPl2Wze087kwOurzcuZOvn7IQRZzFikA=;
+        b=JiuD8YFqFvnmHOANaz54QgP0xf5g9vCr6TrkO7SwhU4atcBVlXcC9PAv+zepmyi7io
+         El06x5r7w14+Ax+DURpDvK4pIPmZPSrfc8xb0unaS3EpJl8p96f4tx5PVGgThhzrblfF
+         QFyHm1DiRVQAgEGdBjWowRsR0lhPVCj1tueD3q82qLTWkgCJPro08Jp7Y2xc2vZPH9zN
+         yJ0EDiSov7q0EwN6K81zJY9XwzdVpF4VkSt2nQ0z+fll5dBolw2RAKxL0Pqbk4YV2+5D
+         Z3hve+BvRo9I1Rlwg53Xa92dBr/wLgAg5UN89r7LhHFK4oJAbWMHcAcUzdiv5N8xPlWJ
+         FcQg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=DpM7iZGjlHMT36GUoTRhbvrdRBioSuqO7w4vuhft5qY=;
-        b=HAJbCcp3RmzOsSQmzpZyfWVRJhyhFlYkr/AP8msjs243HsZU10HYaqlrp2L80+EjI1
-         DmCoZkxrxBuHB9FgwbbM46Z/reWx9XNj5g/zo0BW/CZ2aYekXDYPCF7P+OKlnrqxXGp2
-         xyR15eCOqxotghavbmYKS+dpbwmLTrlic9Qjt31FCBVxrhKAycnveMEha8Lgmf3CxmVl
-         4T4fMt13VZkBUQDelBoYWSnfNpT5bvGXhtIqoteWr1F+EXI0yPZRfzc+odljY2H7YxmD
-         7kHytbmN9mfVH1TeLk/3X5Lo/4DqzC9AQ5YZvgcHgeD6yVQD9AwdGZfYTBAV5d9iZvEy
-         rK8w==
-X-Gm-Message-State: AOAM533UHMQE2eGLyfTvRUFztztMJBZBywQoIyEi4CKnxoTcSPsKkEAs
-        farpXfaqfTvIeC+esNppah83ZSNjQwj/FuayAPzrbQ==
-X-Google-Smtp-Source: ABdhPJxjnwT+l42GfizHvUFFUJxyOdqilKyMo+sfvYz7uyJ/YcLLxfI/iaNVKjhp/otcw60dhs1w4MksE+Vo+gi+BNw=
-X-Received: by 2002:a6b:c410:: with SMTP id y16mr1659605ioa.75.1594854824360;
- Wed, 15 Jul 2020 16:13:44 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=vAehlSiMXOBCPl2Wze087kwOurzcuZOvn7IQRZzFikA=;
+        b=sZ7J8hbOu6jdOWJ0I5BTZlaX0D0ksEkZqvauBtFLvkkziKWl+99tNNOkg7kxGxNWqO
+         cKpoe1IJd54jTBEt/FrCIhOXjNSlUoZ8kEnH6Ho83oVJLU8PDi7ndtVbIaDJ1MKzf7p9
+         auAEcdBcn4rmB7aGjK4yWlA9QLvR1zAp+EPdjcg7KzCyTG5tzKED0zN7w0ijnnbklzGb
+         DJJtiXPym/y/BCUSXduYlUtP/tTsI7nFiwKynvCse9YTTud8E5w5ifWXx64e9dMqeCat
+         LaHaPooeZR/XtrvlzCIFO/SbN2HjFZv0D4lus7gPKsbG4DJh/QuAh4ErIPohCywMzvLP
+         pUJg==
+X-Gm-Message-State: AOAM533NjKpVHAqiZeg7DrTpReyaufv+i+rllO3l5YUDyesGvjFyxQ6n
+        xWnoA4U13ecNYHuRkHUKujRsStys3Jw=
+X-Google-Smtp-Source: ABdhPJxZ6l+FRJikK5oRIE1iuRzwQaeFAf5CQjSwrXbnAa5rSaFlH93xrFhXfS2XG+jV25NHNcAVig==
+X-Received: by 2002:a37:b58:: with SMTP id 85mr1435240qkl.26.1594854789870;
+        Wed, 15 Jul 2020 16:13:09 -0700 (PDT)
+Received: from [192.168.1.92] (pool-71-255-246-27.washdc.fios.verizon.net. [71.255.246.27])
+        by smtp.gmail.com with ESMTPSA id v28sm4059355qkv.31.2020.07.15.16.13.08
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 15 Jul 2020 16:13:08 -0700 (PDT)
+Subject: Re: [RFC PATCH 4/4] thermal: Modify thermal governors to do nothing
+ for "cold" trip points
+To:     Zhang Rui <rui.zhang@intel.com>, daniel.lezcano@linaro.org,
+        robh+dt@kernel.org
+Cc:     linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20200710135154.181454-1-thara.gopinath@linaro.org>
+ <20200710135154.181454-5-thara.gopinath@linaro.org>
+ <d2eeca29328a87433a46c35947ffb490d49c168a.camel@intel.com>
+From:   Thara Gopinath <thara.gopinath@linaro.org>
+Message-ID: <5c9eec96-79b6-3499-fe06-7312504ffc4a@linaro.org>
+Date:   Wed, 15 Jul 2020 19:13:08 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-References: <20200715183537.4010-1-urezki@gmail.com> <20200715185628.7b4k3o5efp4gnbla@linutronix.de>
-In-Reply-To: <20200715185628.7b4k3o5efp4gnbla@linutronix.de>
-From:   Joel Fernandes <joel@joelfernandes.org>
-Date:   Wed, 15 Jul 2020 19:13:33 -0400
-Message-ID: <CAEXW_YRoTvQfqqcM9fi+MkMxCPEaoJh4zHRM3qNYkv=-nAVuBQ@mail.gmail.com>
-Subject: Re: [PATCH 1/1] rcu/tree: Drop the lock before entering to page allocator
-To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc:     "Uladzislau Rezki (Sony)" <urezki@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>, RCU <rcu@vger.kernel.org>,
-        linux-mm <linux-mm@kvack.org>,
-        "Paul E . McKenney" <paulmck@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "Theodore Y . Ts'o" <tytso@mit.edu>,
-        Matthew Wilcox <willy@infradead.org>,
-        Oleksiy Avramchenko <oleksiy.avramchenko@sonymobile.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <d2eeca29328a87433a46c35947ffb490d49c168a.camel@intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 15, 2020 at 2:56 PM Sebastian Andrzej Siewior
-<bigeasy@linutronix.de> wrote:
->
-> On 2020-07-15 20:35:37 [+0200], Uladzislau Rezki (Sony) wrote:
-> > @@ -3306,6 +3307,9 @@ kvfree_call_rcu_add_ptr_to_bulk(struct kfree_rcu_cpu *krcp, void *ptr)
-> >                       if (IS_ENABLED(CONFIG_PREEMPT_RT))
-> >                               return false;
-> >
-> > +                     preempt_disable();
-> > +                     krc_this_cpu_unlock(*krcp, *flags);
->
-> Now you enter memory allocator with disabled preemption. This isn't any
-> better but we don't have a warning for this yet.
-> What happened to the part where I asked for a spinlock_t?
-
-Ulad,
-Wouldn't the replacing of preempt_disable() with migrate_disable()
-above resolve Sebastian's issue?
-
-Or which scenario breaks?
-
-thanks,
-
- - Joel
 
 
->
-> > +
-> >                       /*
-> >                        * NOTE: For one argument of kvfree_rcu() we can
-> >                        * drop the lock and get the page in sleepable
->
-> Sebastian
+On 7/15/20 4:35 AM, Zhang Rui wrote:
+> On Fri, 2020-07-10 at 09:51 -0400, Thara Gopinath wrote:
+>> For now, thermal governors do not support monitoring of falling
+>> temperature. Hence, in case of calls to the governor for trip points
+>> marked
+>> as cold, return doing nothing.
+>>
+>> Signed-off-by: Thara Gopinath <thara.gopinath@linaro.org>
+>> ---
+>>   drivers/thermal/gov_bang_bang.c       | 8 ++++++++
+>>   drivers/thermal/gov_fair_share.c      | 8 ++++++++
+>>   drivers/thermal/gov_power_allocator.c | 8 ++++++++
+>>   drivers/thermal/gov_step_wise.c       | 8 ++++++++
+>>   4 files changed, 32 insertions(+)
+> 
+> userspace governor does not support cold trip point neither.
+> 
+> So how about adding the check in handle_non_critical_trips first, and
+> remove the check later, after all the governors support cold trip?
+
+Yeah, no governors support cold trip for now. Putting check in 
+handle_non_critical_trips is another way to handle this. I can do it and 
+come back to this solution when one or more governors start supporting 
+cold trip points.
+
+
+-- 
+Warm Regards
+Thara
