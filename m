@@ -2,70 +2,190 @@ Return-Path: <SRS0=kup7=A2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0FD5C433E3
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 23:10:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 086ACC433E4
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 23:10:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BD4942067D
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 23:10:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594854607;
-	bh=A/1JlGGKSPmIYHTZNSGv2IKoJJf+O9ym0G+SRLpk3QY=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=aoxdc0zb2HD7hURVyptOa4rLC3CLkZe4skwEEJvOTWLtSxhU1po6/p9IAzzeGHzNN
-	 T1vY64QuALtBYbbWdYFBFts7iUSAtko7qdHYXkN7DfWD0p10ElkqrvRShRsKEj9Gkx
-	 8GboSYYgmNALIdWYMR66WqhDtfOjZpozqMn8LOlU=
+	by mail.kernel.org (Postfix) with ESMTP id D8B792067D
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 23:10:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ANY+5vdG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727081AbgGOXKG (ORCPT
+        id S1727119AbgGOXKr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 19:10:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50634 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726908AbgGOXKE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 19:10:04 -0400
-Subject: Re: [GIT PULL] platform-drivers-x86 for 5.8-2
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594854604;
-        bh=A/1JlGGKSPmIYHTZNSGv2IKoJJf+O9ym0G+SRLpk3QY=;
-        h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=nGBLLbSCG1DR9QKK/Ry+GPz61UDtK5EmnRdobAqHesjOvhdsQm42M+DksazDvQjGU
-         j+JuMR56ao/nr85PRrhYDFRrFjR7mUaYwfbZliBltRp77RyzS9pduIFgd7MOtm6Gkb
-         xUjCxRkqpjCmpAeYhQH5h9/vM6RgpmYOuqBv0XQg=
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20200715095846.GA464373@smile.fi.intel.com>
-References: <20200715095846.GA464373@smile.fi.intel.com>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20200715095846.GA464373@smile.fi.intel.com>
-X-PR-Tracked-Remote: git://git.infradead.org/linux-platform-drivers-x86.git
- tags/platform-drivers-x86-v5.8-2
-X-PR-Tracked-Commit-Id: 9a33e375d98ece5ea40c576eabd3257acb90c509
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 994e99a96c9b502b3f6ee411457007cd52051cf5
-Message-Id: <159485460413.13658.7656761980338516510.pr-tracker-bot@kernel.org>
-Date:   Wed, 15 Jul 2020 23:10:04 +0000
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>
+        Wed, 15 Jul 2020 19:10:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47210 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726776AbgGOXKq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jul 2020 19:10:46 -0400
+Received: from mail-qt1-x843.google.com (mail-qt1-x843.google.com [IPv6:2607:f8b0:4864:20::843])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A6B52C061755
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 16:10:46 -0700 (PDT)
+Received: by mail-qt1-x843.google.com with SMTP id w34so3348534qte.1
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 16:10:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=mLrSPcSP9NHr2sVXnCdLqh0ohhYXZ2KFJWAV+LYwv1A=;
+        b=ANY+5vdGSeAT/ltQoNROcJ9ixl8Rc/x2Z00hZxkjpCYlnOWkR1aF1UenJ1gu/CpAxd
+         IKFrTmlj26YREMUyfj6H5BjIPO7Tbef/srWBW+sfi13desk4JB9w4Cis23tng3Vg1Qt3
+         EOEW0xf5Qz2jWuERZFGUYquD/ipBWaHLTVZ1LHyPZsBDsqNYPdeD2wpTNjSjCC1xlOuD
+         woTV4oet1UFKbmcvaNXHis7JY/mK2LeRzpv6nFTWHT48+j7xVo6JsZPU73HDjN5xrXLy
+         VA7qdiPYvOk1BIyCmFvuZeXmlLxSyqKHbqtFj0v7xT2bmtvoDlrmamOHvid0056ViNqJ
+         LOyA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=mLrSPcSP9NHr2sVXnCdLqh0ohhYXZ2KFJWAV+LYwv1A=;
+        b=PDIuITP9Bu2n5m1KaRMp6TClDDFeRYJ+liqwF9mQGYGb43hUoV2/WYt5QZFtjBpbEk
+         VWHvrW7n3fjYN10zgjJGsbjhobkx8snRA+rLmO9pGizNgD/WGmGOrmX731wsuKRgszFh
+         V9y1LBnTOfLNPKLypTjwFFlI0kLF1IuIoJ+3vsU8jlhZX8HCS2ohEdOJ/zKtxUubqGR4
+         d4wnAGLVCIfGKDqN/h9XGY475/4H3UwJHtfjuEpXFrahMfVOjsFjhBWHXxr9sC3YhaZq
+         sW0vdgI0BgyUdXhYis5xSwZnRKMQuGlDPjrUrJ062KYcvsCPtJB2FQfwFEbeDXtknmy5
+         /ytA==
+X-Gm-Message-State: AOAM530StruKakRFzi1zEScH4Dfi1wbt/AeYHx45BoHURkqdRtbQq54t
+        VXTUKnToRKy2slvntF7Uejs9U+s2cFg=
+X-Google-Smtp-Source: ABdhPJwNvqcjdr0yGKhR8wd7uBcp5VMF1bVDGBTc8kuZrD49NBcYItmKf4SjA36kglpeWz8EL4Zc8Q==
+X-Received: by 2002:ac8:2672:: with SMTP id v47mr2200099qtv.330.1594854645102;
+        Wed, 15 Jul 2020 16:10:45 -0700 (PDT)
+Received: from [192.168.1.92] (pool-71-255-246-27.washdc.fios.verizon.net. [71.255.246.27])
+        by smtp.gmail.com with ESMTPSA id c24sm5448445qtd.82.2020.07.15.16.10.43
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 15 Jul 2020 16:10:44 -0700 (PDT)
+Subject: Re: [RFC PATCH 0/4] thermal: Introduce support for monitoring falling
+ temperature
+To:     Zhang Rui <rui.zhang@intel.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>, robh+dt@kernel.org
+Cc:     linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20200710135154.181454-1-thara.gopinath@linaro.org>
+ <7437ee89-e76d-0c82-9860-5c6076ad8a30@linaro.org>
+ <b25d54d35cec777f0dcc5b2bcacce27321d9bd45.camel@intel.com>
+ <5861acec-c49a-47cc-d7c6-ccef11dc1d58@linaro.org>
+ <e078f9ebd3e8e440d5c04d2abac31201f5d3443d.camel@intel.com>
+From:   Thara Gopinath <thara.gopinath@linaro.org>
+Message-ID: <75d5465a-fbbb-8bfb-6fd0-4063ce292147@linaro.org>
+Date:   Wed, 15 Jul 2020 19:10:43 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
+MIME-Version: 1.0
+In-Reply-To: <e078f9ebd3e8e440d5c04d2abac31201f5d3443d.camel@intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Wed, 15 Jul 2020 12:58:46 +0300:
 
-> git://git.infradead.org/linux-platform-drivers-x86.git tags/platform-drivers-x86-v5.8-2
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/994e99a96c9b502b3f6ee411457007cd52051cf5
+On 7/15/20 4:27 AM, Zhang Rui wrote:
+> Hi, Thara,
+> 
+> On Tue, 2020-07-14 at 17:39 -0400, Thara Gopinath wrote:
+>>
+>>>
+>>> For example, to support this, we can
+>>> either
+>>> introduce both "cold" trip points and "warming devices", and
+>>> introduce
+>>> new logic in thermal framework and governors to handle them,
+>>> Or
+>>> introduce "cold" trip point and "warming" device, but only
+>>> semantically, and treat them just like normal trip points and
+>>> cooling
+>>> devices. And strictly define cooling state 0 as the state that
+>>> generates most heat, and define max cooling state as the state that
+>>> generates least heat. Then, say, we have a trip point at -10C, the
+>>> "warming" device is set to cooling state 0 when the temperature is
+>>> lower than -10C, and in most cases, this thermal zone is always in
+>>> a
+>>> "overheating" state (temperature higher than -10C), and the
+>>> "warming"
+>>> device for this thermal zone is "throttled" to generate as least
+>>> heat
+>>> as possible. And this is pretty much what the current code has
+>>> always
+>>> been doing, right?
+>>
+>>
+>> IMHO, thermal framework should move to a direction where the term
+>> "mitigation" is used rather than cooling or warming. In this case
+>> "cooling dev" and "warming dev" should will become
+>> "temp-mitigating-dev". So going by this, I think what you mention as
+>> option 1 is more suitable where new logic is introduced into the
+>> framework and governors to handle the trip points marked as "cold".
+>>
+>> Also in the current set of requirements, we have a few power domain
+>> rails and other resources that are used exclusively in the thermal
+>> framework for warming alone as in they are not used ever for cooling
+>> down a zone. But then one of the requirements we have discussed is
+>> for cpufreq and gpu scaling to be behave as warming devices where
+>> the minimum operating point/ voltage of the relevant cpu/gpu is
+>> restricted.
+>> So in this case, Daniel had this suggestion of introducing negative
+>> states for presently what is defined as cooling devices. So cooling
+>> dev
+>> / temp-mitigation-dev states can range from say -3 to 5 with 0 as
+>> the
+>> good state where no mitigation is happening. This is an interesting
+>> idea
+>> though I have not proto-typed it yet.
+> 
+> Agreed. If some devices support both "cooling" and "warning", we should
+> have only one "temp-mitigating-dev" instead.
+>>
+>>>
+>>> I can not say which one is better for now as I don't have the
+>>> background of this requirement. It's nice that Thara sent this RFC
+>>> series for discussion, but from upstream point of view, I'd prefer
+>>> to
+>>> see a full stack solution, before taking any code.
+>>
+>> We had done a session at ELC on this requirement. Here is the link
+>> to
+>> the presentation. Hopefully it gives you some back ground on this.
+> 
+> yes, it helps. :)
+>>
+>>
+> https://elinux.org/images/f/f7/ELC-2020-Thara-Ram-Linux-Kernel-Thermal-Warming.pdf
+>>
+>> I have sent across some patches for introducing a generic power
+>> domain
+>> warming device which is under review by Daniel.
+>>
+>> So how do you want to proceed on this? Can you elaborate a bit more
+>> on
+>> what you mean by a full stack solution.
+> 
+> I mean, the patches, and the idea look good to me, just with some minor
+> comments. But applying this patch series, alone, does not bring us
+> anything because we don't have a thermal zone driver that supports cold
+> trip point, right?
+> I'd like to see this patch series together with the support in
+> thermal_core/governors and real users like updated/new thermal
+> zone/cdev drivers that supports the cold trip point and warming
+> actions.
+> Or else I've the concern that this piece of code may be changed back
+> and forth when prototyping the rest of the support.
 
-Thank you!
+Got it! I will try to include more pieces in the next version.
+
+> 
+> thanks,
+> rui
+> 
 
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.wiki.kernel.org/userdoc/prtracker
+Warm Regards
+Thara
