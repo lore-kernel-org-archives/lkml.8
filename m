@@ -2,154 +2,118 @@ Return-Path: <SRS0=kup7=A2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7ACAAC433E6
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 06:47:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7D75C433EA
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 06:47:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 602E6206F4
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 06:47:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 859D720663
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 06:47:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="XGBsIWWQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728862AbgGOGrj (ORCPT
+        id S1728879AbgGOGru (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 02:47:39 -0400
-Received: from mout.kundenserver.de ([212.227.17.10]:50153 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725924AbgGOGrj (ORCPT
+        Wed, 15 Jul 2020 02:47:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36522 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725924AbgGOGrt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 02:47:39 -0400
-Received: from mail-qk1-f174.google.com ([209.85.222.174]) by
- mrelayeu.kundenserver.de (mreue109 [212.227.15.145]) with ESMTPSA (Nemesis)
- id 1M7sQ8-1jzSp816GY-0050Q9; Wed, 15 Jul 2020 08:47:36 +0200
-Received: by mail-qk1-f174.google.com with SMTP id b185so871202qkg.1;
-        Tue, 14 Jul 2020 23:47:35 -0700 (PDT)
-X-Gm-Message-State: AOAM532LrhM8hiVVJOK5szknGYigk+QyT6hGxaJj8ouEmzM0Tan6qN4p
-        6sOhYgiDfFfclZnxoY+vKIyb0FSRZ+r/GKo5AeU=
-X-Google-Smtp-Source: ABdhPJyFS0Zk4AmYJjgRoHnkDRGYzV2yqrKuev4xpaWExBMOSp+Vk7tlNoV31gVNZsw16288M3SPusHOFA0ODDFCn0I=
-X-Received: by 2002:a37:a496:: with SMTP id n144mr8314087qke.286.1594795654855;
- Tue, 14 Jul 2020 23:47:34 -0700 (PDT)
+        Wed, 15 Jul 2020 02:47:49 -0400
+Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 754A3C061755
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 23:47:49 -0700 (PDT)
+Received: by mail-wm1-x343.google.com with SMTP id o2so4398350wmh.2
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 23:47:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=pFEdwPrFAGXygP0PLmBw7h9OMC5JQetuJaGwPug3T84=;
+        b=XGBsIWWQ4rQmBhLUNdm6ehB4cRfkZzVoo4evT3I5MZ7SfXhse4jI7tKro6tlGtAKvx
+         vcNzSB6Y57nsLmW1KhHblZDArOxm5UCyl04aTLIywFjrAO6Bb420IPRy+hJfGCI/Nwjf
+         IPzjST6rchSVPzMXhsSXZ/Bpx5vG4JxqkeYf57lar4VEG6Twy7oe/ew/R1EeWc5epv+O
+         z9LPHPkZpbgNmnq/TAqRkLbGPBZgSqrF7GCZ4Km2IernIXhXtNVrqPi5Kc+j+Szq5/a1
+         kvfGT3WcEan0m5hUkC2tLVzin5iVOaSvKqUYm+4lw1rjmisSWY35681iqCSc/NbwDyBq
+         N08w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=pFEdwPrFAGXygP0PLmBw7h9OMC5JQetuJaGwPug3T84=;
+        b=Br8QBm6U0yGDqgtymcyYzRJtpa4S+MNKcxy11FQ3H0vOnbVLggpJJj+ae2nF0lXdKf
+         t27p3Wwd5jYRmDlP8/IliGzFWgrSHVdXfhlkj69HOwPP7DNGksGOKWPUGgVFLo0Q/3F2
+         /08hU1jElMA58DrfDCBRNJK78r2T7a5VZlRogBGZnKbt086PN03jVVReA6jKbetjcE4h
+         8BTX1PhEW5ExD1kPDm5Ahzhka+/lWj9Ud8ELRZL2PI10zf6yakOqYDRaSn/oosPIcBQ2
+         InFmzW2wtwNVXgp8IHOYJMXmHkRHprgatBLXbeWd5LlUzgPxlDgTmBvTbk0WZTUgEt5F
+         2tpQ==
+X-Gm-Message-State: AOAM530beJ3MeSgDioPZ5Q10F2VEuaDd1M3aHF0e1oij9gnnjY1DMNGN
+        kf7uNdWhNnYIRdXF0xS06c4hgg==
+X-Google-Smtp-Source: ABdhPJx+NTfnG9znaTGAktM3qpcuI/D+Sz92/+h/drddXvIQvTwedXSgGSKR6+Zl3zCJHSv8iY4C9A==
+X-Received: by 2002:a05:600c:2209:: with SMTP id z9mr7012030wml.178.1594795668190;
+        Tue, 14 Jul 2020 23:47:48 -0700 (PDT)
+Received: from dell ([2.31.163.61])
+        by smtp.gmail.com with ESMTPSA id r28sm2048595wrr.20.2020.07.14.23.47.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 14 Jul 2020 23:47:47 -0700 (PDT)
+Date:   Wed, 15 Jul 2020 07:47:46 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Kim Phillips <kim.phillips@amd.com>
+Cc:     rjw@rjwysocki.net, viresh.kumar@linaro.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-pm@vger.kernel.org
+Subject: Re: [PATCH 13/13] cpufreq: amd_freq_sensitivity: Remove unused ID
+ structs
+Message-ID: <20200715064746.GU1398296@dell>
+References: <20200714145049.2496163-1-lee.jones@linaro.org>
+ <20200714145049.2496163-14-lee.jones@linaro.org>
+ <6101e041-41e9-22bc-488d-38124c139bc7@amd.com>
+ <20200714210218.GH1398296@dell>
+ <8f7f2325-8c6a-b005-1f27-67e4b640da31@amd.com>
 MIME-Version: 1.0
-References: <CAK8P3a3EZX8=649R9cYF6_=ivh1Xyrgsc5mUtS=d5yvQ3doZaQ@mail.gmail.com>
- <20200714234625.GA428442@bjorn-Precision-5520>
-In-Reply-To: <20200714234625.GA428442@bjorn-Precision-5520>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Wed, 15 Jul 2020 08:47:17 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a3OEOosC2VEHb3z7hTA=BjVp0nv9bNxBWzEnmgSDDTX3Q@mail.gmail.com>
-Message-ID: <CAK8P3a3OEOosC2VEHb3z7hTA=BjVp0nv9bNxBWzEnmgSDDTX3Q@mail.gmail.com>
-Subject: Re: [RFC PATCH 00/35] Move all PCIBIOS* definitions into arch/x86
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     "Saheed O. Bolarinwa" <refactormyself@gmail.com>,
-        bjorn@helgaas.com, Shuah Khan <skhan@linuxfoundation.org>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Richard Henderson <rth@twiddle.net>,
-        Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
-        Matt Turner <mattst88@gmail.com>,
-        Greg Ungerer <gerg@linux-m68k.org>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Russell King <linux@armlinux.org.uk>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Juergen Gross <jgross@suse.com>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        sparclinux <sparclinux@vger.kernel.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@fb.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Toan Le <toan@os.amperecomputing.com>,
-        Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        Ley Foon Tan <ley.foon.tan@intel.com>,
-        Marek Vasut <marek.vasut+renesas@gmail.com>,
-        Kjetil Oftedal <oftedal@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:Ov73+FkWwqGvDa0Nd9xKW4QYYDGcw0TUwF/8ivnuG1D8a0mbzvW
- LVK/98InOx7ZAWF2Ybaus8kHATrC0tfSvZSg6GJJ9RYYOLnSVyK2RzSSmyVYdKEvOpn7JtU
- xhXzOPSGrSBf06b3T2Ykg/Rtz55itFj0U9A1/pc5LbW/PXQY1V9e+H+YLfRFMdieO5Kp4RV
- abg3RR8d6mSOt/zih4tow==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:7ysEtf4/W10=:ErYqQP9WJNbcjMCKGNPZaL
- SXuVyVI8Bxq7mRI3jEh9IJ9wZ7h1Gk0VOJe7yAFPGFii1qYzZdmww9s+Vol7k4WSNbxrfTa9P
- maWNGQbXG6WgYs3uOa7b2HfWcgM5TiXYLZ5UTF9ty4hjHNaXkPEsd1LuDAI15xjDF6FZEhbOK
- GrlC93UXHHwXaBsZNes07PPGGEwfUoAlI2q+bvlbC9NiNJO34YYcLE8o/zOZ66VHWvN5mdKh8
- TLiA9elD4OcrxVgkG6OD2URYvoob4IVTM/lWNpOOXELPT9V2LoB7eWTIALUWrz9vfLsId15KT
- ruYwqEziCy2jF8Q28G0+e5CehAY0Yn6z/xB30AOLme4Ue2vjKFkaHZv7qzDaBrm7fmXo7iHuj
- k6Snjwpf9oomxvUTYYwWuc+NqIcNwDvykgAm2XB9jYLtZUq5E9UiLpLBxdSbhJFGBlhGuP91p
- 6ddT/fhpEXn3St9B9Xburqq/AoI5BwWdltiYfO87oJ4HlzN7WPnvfuY5HvbvnCHkLwHx0T0lF
- jP5Tnn91+Z7BO6I5ENKT470MUe36vIXVwtJUKFtboh50d824RUOh9G1C7X5VwsTkkCooxeSN5
- cV2XqpO83DRYqEofW8IHTHWiyDkugVqfDE8o+bJhC08etgjkpHa9J8mh3J1sVJ5jX1eU2jL5j
- Hv5OjT35eMzL8R7+Ij1iZIsFBBRwhSegzO+OfoTdvCLo/QAWiTnF8dxpuJITdPVDUpPOgothf
- MRViAVrKjnEP7+I7gEwYwwGFIk5mZFOgog1apOiWiGuvhPPxXI7ssB1PW+5CNcBbcFU2FcrBZ
- kdt0/qDvWkqAIt0nrrwAaooG0FS/5j4olvDVtvW/o2403TsGEWybMLig4sM+bICzMa3X47wwa
- h9Pn5bSTiPUVxs71Gphsj5L5hTW1T8ysjpauL1A1NtsPEdbDqbb4fxHU7PHWZ9ibT4fViOqJU
- InVriLguElFCSH67Fo/POd23hKoNMFlAmPNRjDK65NrGUGdl+trF9
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <8f7f2325-8c6a-b005-1f27-67e4b640da31@amd.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 15, 2020 at 1:46 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
+On Tue, 14 Jul 2020, Kim Phillips wrote:
 
- So something like:
->
->   void pci_read_config_word(struct pci_dev *dev, int where, u16 *val)
->
-> and where we used to return anything non-zero, we just set *val = ~0
-> instead?  I think we do that already in most, maybe all, cases.
+> On 7/14/20 4:02 PM, Lee Jones wrote:
+> > On Tue, 14 Jul 2020, Kim Phillips wrote:
+> >> On 7/14/20 9:50 AM, Lee Jones wrote:
+> >>> Can't see them being used anywhere and the compiler doesn't complain
+> >>> that they're missing, so ...
+> >>>
+> >>> Fixes the following W=1 kernel build warning(s):
+> >>>
+> >>>  drivers/cpufreq/amd_freq_sensitivity.c:147:32: warning: ‘amd_freq_sensitivity_ids’ defined but not used [-Wunused-const-variable=]
+> >>>  147 | static const struct x86_cpu_id amd_freq_sensitivity_ids[] = {
+> >>>  | ^~~~~~~~~~~~~~~~~~~~~~~~
+> >>>
+> >>> Cc: Jacob Shin <jacob.shin@amd.com>
+> >>> Signed-off-by: Lee Jones <lee.jones@linaro.org>
+> >>> ---
+> >>
+> >> Same comment as for patch 9/13: these are used automatic module loading.
+> > 
+> > How does that work?
+> > 
+> > Could you point me to the code which handles that please?
+> 
+> It's MODULE_DEVICE_TABLE magic.
 
-Right, this is what I had in mind. If we start by removing the handling
-of the return code in all files that clearly don't need it, looking at
-whatever remains will give a much better idea of what a good interface
-should be.
+I'll look into that.  Thanks.
 
->  git grep -E "(if|return|=).*\<pci_(read|write)_config" drivers
-> finds about 400 matches.
-
-Right, and this is some 112 files to look at.
-
-I had a slightly different regex, which found more false-positives, but
-also these:
-
-arch/x86/kernel/amd_nb.c:      : pci_read_config_dword(root, 0x64, value));
-drivers/i2c/busses/i2c-sis630.c:     pci_write_config_byte(sis630_dev,
-SIS630_BIOS_CTL_REG, b | 0x80)) {
-drivers/i2c/busses/i2c-viapro.c:     !pci_read_config_word(pdev,
-SMBBA2, &vt596_smba) &&
-drivers/ide/rz1000.c:     !pci_write_config_word(dev, 0x40, reg & 0xdfff)) {
-drivers/net/ethernet/realtek/r8169_main.c:
-pci_write_config_byte(pdev, 0x070f, val) == PCIBIOS_SUCCESSFUL)
-include/linux/rtsx_pci.h:#define rtsx_pci_read_config_dword(pcr,
-where, val) pci_read_config_dword((pcr)->pci, where, val)
-include/linux/rtsx_pci.h:#define rtsx_pci_write_config_dword(pcr,
-where, val) pci_write_config_dword((pcr)->pci, where, val)
-drivers/misc/cardreader/rts5261.c:              retval =
-rtsx_pci_read_config_dword(pcr,
-drivers/misc/cardreader/rts5261.c:      retval =
-rtsx_pci_write_config_dword(pcr, PCR_SETTING_REG2, lval);
-
-That last one is interesting because I think this is a case in which we
-actually want to check for errors, as the driver seems to use it
-to ensure that accessing extended config space at offset 0x814
-works before relying on the value. Unfortunately the implementation
-seems buggy as it a) keeps using the possibly uninitialized value after
-printing a warning and b) returns the PCIBIOS_* value in place of a
-negative errno and then ignores it in the caller.
-
-      Arnd
+-- 
+Lee Jones [李琼斯]
+Senior Technical Lead - Developer Services
+Linaro.org │ Open source software for Arm SoCs
+Follow Linaro: Facebook | Twitter | Blog
