@@ -2,87 +2,183 @@ Return-Path: <SRS0=kup7=A2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2E75C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 06:04:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19994C433E4
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 06:04:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 90FCD20663
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 06:04:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594793041;
-	bh=1lPhEX+gUN5h3SFVmkH1Xm04ko6BKhHxoYzLWu5nClA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Ap8LXU2xK0+OvTl8FVhHSt+uYaXtvnKlJ0GVLQ0Z8fByVPI9FrhLcQjDKHwJg2FfE
-	 mx0HjiuUQMAqsJeAu7Nq8SWGdrO8JsC7ZpwCBmbkrHm4wRZaQYNhPPvVukHp/yu2sm
-	 I85G5UletsKgp62sLz19Hw+4n/E7UMu4SPuDxjaE=
+	by mail.kernel.org (Postfix) with ESMTP id C07D1206D5
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 06:04:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="IsjSX6Gl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727825AbgGOGD7 (ORCPT
+        id S1728018AbgGOGEb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 02:03:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56780 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725770AbgGOGD7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 02:03:59 -0400
-Received: from localhost (unknown [122.171.202.192])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Wed, 15 Jul 2020 02:04:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58080 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727908AbgGOGEb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jul 2020 02:04:31 -0400
+Received: from ozlabs.org (ozlabs.org [IPv6:2401:3900:2:1::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C234EC061755
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 23:04:30 -0700 (PDT)
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2F12E20663;
-        Wed, 15 Jul 2020 06:03:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594793039;
-        bh=1lPhEX+gUN5h3SFVmkH1Xm04ko6BKhHxoYzLWu5nClA=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=V0S5z6fuc6QuujTu5XuCaSzdF1JNAWlWgKlptU3pzyPcNLq/6md1jBNIn34mgCF2O
-         eOKJioilQYvaRtRqPxgFMhQ1kaKb5p4E9OCKYwhW01fmP7dTqGGvJtoX7GbsZGk9nw
-         4GmW8rHFrFg43vMiRaMdvZn2T2iAznXxsRNe0ujg=
-Date:   Wed, 15 Jul 2020 11:33:55 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Dave Jiang <dave.jiang@intel.com>
-Cc:     Randy Dunlap <rdunlap@infradead.org>,
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 4B66KQ73r3z9sQt;
+        Wed, 15 Jul 2020 16:04:26 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1594793068;
+        bh=xOeqp8wg1wzSnVdBuEdXN3kiPlzF1h3So05Ikk8GK1I=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=IsjSX6GldAgrRTAtMdYr57r1MSZg9kBwHJotUn4NS4gGMWurBny8xWtuo7lBOViYq
+         z0z6lnjn6w9fBEbtTZ7ZFynUxAFb3s6twgor0e67ul8RtElh3TkUXWlM5nHzNCyusi
+         EPADOxaa5UaF/gOfPLvqK8lwh5otjiH8htIcCR3rYb5WRY7Er1dFYR7pm6fVDIObVr
+         q/zvaiKWN3bJFBxbUENxQ7j++dBNXKMk+1plsjPd6oz/wgRa3oqPHy1xNyQEqmwkAq
+         8adUY5BVxcFr+VGtMiyxJTfNXfefKk3gZjEzQHs9NCyXcEEF4bc/vU48ede17eMztb
+         TaQ2TIxnRb/Mw==
+Date:   Wed, 15 Jul 2020 16:04:26 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Yafang Shao <laoar.shao@gmail.com>
+Cc:     syzbot <syzbot+98be80110b9043885626@syzkaller.appspotmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
         LKML <linux-kernel@vger.kernel.org>,
-        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>
-Subject: Re: [PATCH -next] dmaengine: idxd: fix PCI_MSI build errors
-Message-ID: <20200715060355.GX34333@vkoul-mobl>
-References: <9dee3f46-70d9-ea75-10cb-5527ab297d1d@infradead.org>
- <46ae481e-3213-f1e0-604b-177bc876bb93@intel.com>
+        Linux MM <linux-mm@kvack.org>, syzkaller-bugs@googlegroups.com
+Subject: Re: kernel panic: System is deadlocked on memory
+Message-ID: <20200715160426.225feefb@canb.auug.org.au>
+In-Reply-To: <CALOAHbDsDTmi6EpfDeg2UcCX-btfw+dzQ2T6iZWvHUhffU0dFQ@mail.gmail.com>
+References: <000000000000c62c0205aa73a505@google.com>
+        <CALOAHbDsDTmi6EpfDeg2UcCX-btfw+dzQ2T6iZWvHUhffU0dFQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <46ae481e-3213-f1e0-604b-177bc876bb93@intel.com>
+Content-Type: multipart/signed; boundary="Sig_/OZqELQeYl2hzk=93DoC5kM4";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 14-07-20, 07:58, Dave Jiang wrote:
-> 
-> 
-> On 7/13/2020 11:35 PM, Randy Dunlap wrote:
-> > From: Randy Dunlap <rdunlap@infradead.org>
-> > 
-> > Fix build errors when CONFIG_PCI_MSI is not enabled by making the
-> > driver depend on PCI_MSI:
-> > 
-> > ld: drivers/dma/idxd/device.o: in function `idxd_mask_msix_vector':
-> > device.c:(.text+0x26f): undefined reference to `pci_msi_mask_irq'
-> > ld: drivers/dma/idxd/device.o: in function `idxd_unmask_msix_vector':
-> > device.c:(.text+0x2af): undefined reference to `pci_msi_unmask_irq'
-> > 
-> > Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-> > Cc: Dave Jiang <dave.jiang@intel.com>
-> > Cc: dmaengine@vger.kernel.org
-> > Cc: Vinod Koul <vkoul@kernel.org>
-> 
-> Vinod, I submitted this fix patch last week:
-> https://patchwork.kernel.org/patch/11649231/
-> 
-> But I think maybe Randy's patch may be more preferable? You can apply this
-> one and ignore my submission.
+--Sig_/OZqELQeYl2hzk=93DoC5kM4
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Ok, Applied this one, thanks
--- 
-~Vinod
+Hi all,
+
+On Wed, 15 Jul 2020 13:54:04 +0800 Yafang Shao <laoar.shao@gmail.com> wrote:
+>
+> On Wed, Jul 15, 2020 at 12:49 PM syzbot
+> <syzbot+98be80110b9043885626@syzkaller.appspotmail.com> wrote:
+> >
+> > Hello,
+> >
+> > syzbot found the following issue on:
+> >
+> > HEAD commit:    d31958b3 Add linux-next specific files for 20200710
+> > git tree:       linux-next
+> > console output: https://syzkaller.appspot.com/x/log.txt?x=3D11a2fe13100=
+000
+> > kernel config:  https://syzkaller.appspot.com/x/.config?x=3D3fe4fccb94c=
+bc1a6
+> > dashboard link: https://syzkaller.appspot.com/bug?extid=3D98be80110b904=
+3885626
+> > compiler:       gcc (GCC) 10.1.0-syz 20200507
+> > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=3D101ec9671=
+00000
+> > C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=3D14a77000900=
+000
+> >
+> > The issue was bisected to:
+> >
+> > commit e642d9be463d02c735cd99a9a904063324ee03d6
+> > Author: Yafang Shao <laoar.shao@gmail.com>
+> > Date:   Fri Jul 10 04:58:08 2020 +0000
+> >
+> >     mm, oom: make the calculation of oom badness more accurate
+> >
+> > bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=3D1432bd77=
+100000
+> > final oops:     https://syzkaller.appspot.com/x/report.txt?x=3D1632bd77=
+100000
+> > console output: https://syzkaller.appspot.com/x/log.txt?x=3D1232bd77100=
+000
+> >
+> > IMPORTANT: if you fix the issue, please add the following tag to the co=
+mmit:
+> > Reported-by: syzbot+98be80110b9043885626@syzkaller.appspotmail.com
+> > Fixes: e642d9be463d ("mm, oom: make the calculation of oom badness more=
+ accurate")
+> >
+> > Out of memory and no killable processes...
+> > Kernel panic - not syncing: System is deadlocked on memory
+> > CPU: 0 PID: 6810 Comm: syz-executor919 Not tainted 5.8.0-rc4-next-20200=
+710-syzkaller #0
+> > Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS=
+ Google 01/01/2011
+> > Call Trace:
+> >  __dump_stack lib/dump_stack.c:77 [inline]
+> >  dump_stack+0x18f/0x20d lib/dump_stack.c:118
+> >  panic+0x2e3/0x75c kernel/panic.c:231
+> >  out_of_memory mm/oom_kill.c:1106 [inline]
+> >  out_of_memory.cold+0xa6/0x182 mm/oom_kill.c:1041
+> >  pagefault_out_of_memory+0x109/0x11c mm/oom_kill.c:1135
+> >  mm_fault_error+0x123/0x380 arch/x86/mm/fault.c:930
+> >  do_user_addr_fault+0x5f8/0xbf0 arch/x86/mm/fault.c:1317
+> >  handle_page_fault arch/x86/mm/fault.c:1351 [inline]
+> >  exc_page_fault+0xab/0x170 arch/x86/mm/fault.c:1404
+> >  asm_exc_page_fault+0x1e/0x30 arch/x86/include/asm/idtentry.h:544
+> > RIP: 0033:0x40154d
+> > Code: Bad RIP value.
+> > RSP: 002b:00007ffddf4649b0 EFLAGS: 00010202
+> > RAX: 0000000000000001 RBX: 0000000000000000 RCX: fffffffffffffffd
+> > RDX: 0000000000000001 RSI: 00007ffddf4665e0 RDI: ffffffffffffffff
+> > RBP: 00007ffddf4665e0 R08: 0000000000000000 R09: 0000000000000001
+> > R10: 0000000000000064 R11: 0000000000000246 R12: ffffffffffffffff
+> > R13: 0000000000000003 R14: 0000000000000000 R15: 0000000000000000
+> > Kernel Offset: disabled
+> > Rebooting in 86400 seconds..
+> >
+> >
+> > ---
+> > This report is generated by a bot. It may contain errors.
+> > See https://goo.gl/tpsmEJ for more information about syzbot.
+> > syzbot engineers can be reached at syzkaller@googlegroups.com.
+> >
+> > syzbot will keep track of this issue. See:
+> > https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+> > For information about bisection process see: https://goo.gl/tpsmEJ#bise=
+ction
+> > syzbot can test patches for this issue, for details see:
+> > https://goo.gl/tpsmEJ#testing-patches =20
+>=20
+> Thanks for the report.
+> This issue has been already fixed by
+> "mm-oom-make-the-calculation-of-oom-badness-more-accurate-v3", which
+> is already in the -next tree.
+
+#syz fix: mm-oom-make-the-calculation-of-oom-badness-more-accurate-v3
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/OZqELQeYl2hzk=93DoC5kM4
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl8OnGoACgkQAVBC80lX
+0GxSOwgAnQvhricRi5/pRseVMAVvmcQHIUSp7ht0HIMwoTXFLM4wMmF1Jo+k3s10
+k10vF944IM96X3zCXTtz3v1tIQNDOQUzgs8YwuThUuEIGFTZ4rvh+g7x1p+6uFFA
+AF8dSFNyajcBrdVNihOoMHP1jNpVx4jAGq/mqfhX4ioSLvECaw9Oo7sd7hbvsg9D
+7AbSDHOlaBqomewEQTBhbu8+BhWiZLpop0fs7rRQEcyF25Upof7OqY0EcqxV/Ah8
+J0x5hHNsB643odfv0c2zSWIP55sE/edwdSTHLiWPM0kJ1iA8XP9VWJN8IE6ucgjL
+Onw+CS6I/QLzVleHNoyhx4Uw7CbGgg==
+=MlP5
+-----END PGP SIGNATURE-----
+
+--Sig_/OZqELQeYl2hzk=93DoC5kM4--
