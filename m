@@ -2,90 +2,72 @@ Return-Path: <SRS0=kup7=A2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AD78C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 09:26:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B219C433E2
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 09:27:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 382C320674
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 09:26:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=octiron.net header.i=@octiron.net header.b="mS2x6lyq";
-	dkim=pass (2048-bit key) header.d=octiron.net header.i=@octiron.net header.b="oN/opcW7"
+	by mail.kernel.org (Postfix) with ESMTP id 4F69A206D5
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 09:27:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730716AbgGOJ0N (ORCPT
+        id S1730717AbgGOJ1W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 05:26:13 -0400
-Received: from chalk.uuid.uk ([51.68.227.198]:51732 "EHLO chalk.uuid.uk"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729890AbgGOJ0M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 05:26:12 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=octiron.net
-        ; s=20180214; h=Message-ID:References:In-Reply-To:Subject:Cc:To:From:Date:
-        Content-Transfer-Encoding:Content-Type:MIME-Version:Sender:Reply-To:
-        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-        Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=BuxXrpb686ptaZ1HCHsKcx9WQB5LeIW7vA9uRU9DVeE=; b=mS2x6lyqgl9S1NYxKolQ3u+MOw
-        B2QGyLs7CSV+ZU7KaEXhMS3iS0GeixJdOkDAMIP7bv1al73Im79MYGV3rWPzHhfq/dh/+QpsevpdV
-        01p9bxNO/iJUiY5S3VS1qrodVODH3fnEYG4qrrpv/eLEvAb8sSLBlWqiuXsAW2m51JzBGYXbMiayU
-        URqSiouTZo4HuH1dSGt3dO2/19zYyGSDV/WfmDaJaeC9VNfUn8wUFs/B8Tek/d5ZrucAMawQ3F9sa
-        S2o5QJoASdWbJBq2YVj9U2PyZ7+unBTga87tezN/4AKIcvPm3Y0l424HF7PQWQTXxlwVkU6OBqhX6
-        OcrEoVhg==;
-Received: by chalk.uuid.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.90_1)
-        (envelope-from <simon@octiron.net>)
-        id 1jvdfm-0005i1-4N; Wed, 15 Jul 2020 10:25:59 +0100
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=octiron.net
-        ; s=20180214; h=Message-ID:References:In-Reply-To:Subject:Cc:To:From:Date:
-        Content-Transfer-Encoding:Content-Type:MIME-Version;
-        bh=BuxXrpb686ptaZ1HCHsKcx9WQB5LeIW7vA9uRU9DVeE=; b=oN/opcW7Llpdn+3P9i4ewgdFha
-        x1UfAtQbGeo129n6GyLA0manluVHBBKL3KUtMkihJI6OujbKtf9uMg7EWMg6HaEja2NpanRF97yeM
-        lYwG1ylVQNyzIkgk/REnO9lwI2hakWaVx+b3DjGEnBot15iCB4GifSPx/bX3KS9VrZ/TwzMaU68cR
-        BqeqTwZCSCyLri9uo7dXDF/z8R4sAZsPeKQNdgmNqHyxveuolRKoPZH3befcSF44/MW+RDBlH8qkK
-        P4/jPGSurFtvSp0SKxV7Q/J9JytrL+8X3A7xC3u5A2ojI5nJPgYVl6E9XY+Rr8QPGu1cUGJejUSsV
-        +fPtqjSg==;
-Received: by tsort.uuid.uk with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <simon@octiron.net>)
-        id 1jvdfj-0004dX-Bh; Wed, 15 Jul 2020 10:25:51 +0100
-Received: from localhost ([::1]:44858)
-        by skund.uuid.uk with esmtp (Exim 4.86_2)
-        (envelope-from <simon@octiron.net>)
-        id 1jvdfj-0000oB-8E; Wed, 15 Jul 2020 10:25:51 +0100
+        Wed, 15 Jul 2020 05:27:22 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:57616 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729850AbgGOJ1W (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jul 2020 05:27:22 -0400
+Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 4C18AC02F39D6E97CE62;
+        Wed, 15 Jul 2020 17:27:20 +0800 (CST)
+Received: from localhost.localdomain.localdomain (10.175.113.25) by
+ DGGEMS411-HUB.china.huawei.com (10.3.19.211) with Microsoft SMTP Server id
+ 14.3.487.0; Wed, 15 Jul 2020 17:27:14 +0800
+From:   Jing Xiangfeng <jingxiangfeng@huawei.com>
+To:     <bskeggs@redhat.com>, <airlied@linux.ie>, <daniel@ffwll.ch>
+CC:     <dri-devel@lists.freedesktop.org>, <nouveau@lists.freedesktop.org>,
+        <linux-kernel@vger.kernel.org>, <jingxiangfeng@huawei.com>
+Subject: [PATCH] drm/nouveau: add the missed kfree() for nouveau_bo_alloc()
+Date:   Wed, 15 Jul 2020 17:30:26 +0800
+Message-ID: <20200715093026.156142-1-jingxiangfeng@huawei.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Wed, 15 Jul 2020 10:25:51 +0100
-From:   Simon Arlott <simon@octiron.net>
-To:     "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Christoph Hellwig <hch@infradead.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-scsi@vger.kernel.org
-Subject: Re: [PATCH (v2)] scsi: sd: add parameter to stop disks before reboot
-In-Reply-To: <yq1bll1fi9u.fsf@ca-mkp.ca.oracle.com>
-References: <e726ffd8-8897-4a79-c3d6-6271eda8aebb@0882a8b5-c6c3-11e9-b005-00805fc181fe>
- <20200629080947.GA28551@infradead.org>
- <yq1bll1fi9u.fsf@ca-mkp.ca.oracle.com>
-Message-ID: <3d3799e1-5c4c-b82d-5f35-88144df1cc1f@0882a8b5-c6c3-11e9-b005-00805fc181fe>
-X-Sender: simon@octiron.net
-User-Agent: Roundcube Webmail/1.2-beta
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.175.113.25]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 30/06/2020 02:35, Martin K. Petersen wrote:
->> What happened to the suggestion to treat reboot=p like a poweroff
->> instead?  That seems to be fundamentally the right thing to do.
-> 
-> I agree!
+nouveau_bo_alloc() misses to call kfree() in an error path. Add the
+missed function call to fix it.
 
-I've done that but so far it has been ignored:
-https://lore.kernel.org/lkml/f4a7b539-eeac-1a59-2350-3eefc8c17801@0882a8b5-c6c3-11e9-b005-00805fc181fe/
+Signed-off-by: Jing Xiangfeng <jingxiangfeng@huawei.com>
+---
+ drivers/gpu/drm/nouveau/nouveau_bo.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
+diff --git a/drivers/gpu/drm/nouveau/nouveau_bo.c b/drivers/gpu/drm/nouveau/nouveau_bo.c
+index c40f127de3d0..abd80b1a6de3 100644
+--- a/drivers/gpu/drm/nouveau/nouveau_bo.c
++++ b/drivers/gpu/drm/nouveau/nouveau_bo.c
+@@ -276,8 +276,10 @@ nouveau_bo_alloc(struct nouveau_cli *cli, u64 *size, int *align, u32 flags,
+ 			break;
+ 	}
+ 
+-	if (WARN_ON(pi < 0))
++	if (WARN_ON(pi < 0)) {
++		kfree(nvbo);
+ 		return ERR_PTR(-EINVAL);
++	}
+ 
+ 	/* Disable compression if suitable settings couldn't be found. */
+ 	if (nvbo->comp && !vmm->page[pi].comp) {
 -- 
-Simon Arlott
+2.17.1
+
