@@ -2,105 +2,123 @@ Return-Path: <SRS0=kup7=A2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DB98C433E3
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 18:26:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80935C433E2
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 18:26:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7B8762065F
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 18:26:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 61ED72065F
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 18:26:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uEvZT5ws"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726765AbgGOS0Z (ORCPT
+        id S1726829AbgGOS0k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 14:26:25 -0400
-Received: from out03.mta.xmission.com ([166.70.13.233]:34524 "EHLO
-        out03.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725907AbgGOS0Y (ORCPT
+        Wed, 15 Jul 2020 14:26:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59922 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725907AbgGOS0j (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 14:26:24 -0400
-Received: from in02.mta.xmission.com ([166.70.13.52])
-        by out03.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.90_1)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1jvm6d-0008Fo-UP; Wed, 15 Jul 2020 12:26:11 -0600
-Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
-        by in02.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.87)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1jvm6U-0003IZ-Lu; Wed, 15 Jul 2020 12:26:11 -0600
-From:   ebiederm@xmission.com (Eric W. Biederman)
-To:     Christoph Hellwig <hch@infradead.org>
-Cc:     linux-kernel@vger.kernel.org,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Kees Cook <keescook@chromium.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        linux-fsdevel@vger.kernel.org,
-        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
-        linux-security-module@vger.kernel.org,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        James Morris <jmorris@namei.org>,
-        Kentaro Takeda <takedakn@nttdata.co.jp>,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        John Johansen <john.johansen@canonical.com>
-References: <871rle8bw2.fsf@x220.int.ebiederm.org>
-        <87wo365ikj.fsf@x220.int.ebiederm.org>
-        <20200715064220.GG32470@infradead.org>
-Date:   Wed, 15 Jul 2020 13:23:11 -0500
-In-Reply-To: <20200715064220.GG32470@infradead.org> (Christoph Hellwig's
-        message of "Wed, 15 Jul 2020 07:42:20 +0100")
-Message-ID: <87lfjk3aeo.fsf@x220.int.ebiederm.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+        Wed, 15 Jul 2020 14:26:39 -0400
+Received: from mail-ed1-x544.google.com (mail-ed1-x544.google.com [IPv6:2a00:1450:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A0A99C061755;
+        Wed, 15 Jul 2020 11:26:39 -0700 (PDT)
+Received: by mail-ed1-x544.google.com with SMTP id a8so2357254edy.1;
+        Wed, 15 Jul 2020 11:26:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=oTQol0VmjKmBPC+M8imaYKdXV0XGdfLv0rh0VWky9EE=;
+        b=uEvZT5ws7+T1jnEVo6h4JbcKv8hKOxVCiJq7OPNIAvwfhDPmyGLsLZHzlj3+UQdbDu
+         AJKToPAaUqlIXFAC4vBVNmIbeFB8QSK3UYuQk68sX+Joam1O4wNo/I0UIbhcua/xk60a
+         e1JadHF+95xJiCjkb4BPqj69zzhrMH3vOdDr9/57zwNbf1j0o51CmK+HkV8Fnv1oh3mq
+         dsHG/eup+01xytoaipZGKywOhJg0gANnXIIwUNiURsyiVQoE6F3fjv5GsM9a4ECmV1Zu
+         nsh/4VmIRcvcEWOFyXfYT657uKLnIh76SWifvHzJigNGdoc3EB2Y3w8AuF8RT8CkFJo2
+         ey+w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=oTQol0VmjKmBPC+M8imaYKdXV0XGdfLv0rh0VWky9EE=;
+        b=tTRIs+H4xo3e29xxKPEMMW/30g1+xlytsB1bpIn4Pw40HIgiz9yCAA46A95cFkLFAV
+         o4Z4lvxZJriql+Qq84/YFzLo+YQa6dmf7Q7rZV+EubT0ijfmJPA8FiXyiw9t+2xsfM/O
+         5nwbVGDGe30Fo4G3b0s9RnfkkYGTJ3QBh7g8wP1qt2WA8GjFpOw8XQjMTtFKgIcn/Mr3
+         gL5/zCiAo1eVrMgThtbHzbRKl9zT8D0WLdRxXJ4gSeR9shktCFluqVDT1riQYCuDpVqO
+         RFWYxWIDpPMEV73wd4gIIxFxJD10YLSdxGD9JJEUX6ox7Y4trQh1h9/bgw+kl59x/y1v
+         4U1A==
+X-Gm-Message-State: AOAM530t0giHHUudMUnNqqtVodt9utW25AwPXHG0KDPwOzqmDZQyQPSV
+        WU+DKZtY2l8BUVDQM3iKD4WyW0j57F9L0l3H/zM=
+X-Google-Smtp-Source: ABdhPJxLqEBMfJSdn3WSobb0Oqp5l9KTaKAbyXt1aXJeFG4g+SFo7Aq+S0ThjrslTJ53COSNmM0KR2c9PV+YQEl8Ctc=
+X-Received: by 2002:a05:6402:304a:: with SMTP id bu10mr915071edb.70.1594837598280;
+ Wed, 15 Jul 2020 11:26:38 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-XM-SPF: eid=1jvm6U-0003IZ-Lu;;;mid=<87lfjk3aeo.fsf@x220.int.ebiederm.org>;;;hst=in02.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
-X-XM-AID: U2FsdGVkX18nYA25PFlqmd+QJj8Nw4u9gsb6kkHODq4=
-X-SA-Exim-Connect-IP: 68.227.160.95
-X-SA-Exim-Mail-From: ebiederm@xmission.com
-Subject: Re: [PATCH 7/7] exec: Implement kernel_execve
-X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
-X-SA-Exim-Scanned: Yes (on in02.mta.xmission.com)
+References: <1594644106-22449-1-git-send-email-akhilpo@codeaurora.org> <1594644106-22449-6-git-send-email-akhilpo@codeaurora.org>
+In-Reply-To: <1594644106-22449-6-git-send-email-akhilpo@codeaurora.org>
+From:   Rob Clark <robdclark@gmail.com>
+Date:   Wed, 15 Jul 2020 11:27:11 -0700
+Message-ID: <CAF6AEGs9Ei=MAhC=OOfxHvw_AGeF25LTCrWLzxB_kGN7e2PgNA@mail.gmail.com>
+Subject: Re: [PATCH v5 5/6] arm64: dts: qcom: sc7180: Add interconnects
+ property for GPU
+To:     Akhil P Oommen <akhilpo@codeaurora.org>
+Cc:     freedreno <freedreno@lists.freedesktop.org>,
+        dri-devel@freedesktop.org,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Jordan Crouse <jcrouse@codeaurora.org>,
+        Sharat Masetty <smasetty@codeaurora.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, Matthias Kaehlcke <mka@chromium.org>,
+        saravanak@google.com, Sibi Sankar <sibis@codeaurora.org>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Jonathan <jonathan@marek.ca>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Christoph Hellwig <hch@infradead.org> writes:
-
->> +static int count_strings_kernel(const char *const *argv)
->> +{
->> +	int i;
->> +
->> +	if (!argv)
->> +		return 0;
->> +
->> +	for (i = 0; argv[i]; ++i) {
->> +		if (i >= MAX_ARG_STRINGS)
->> +			return -E2BIG;
->> +		if (fatal_signal_pending(current))
->> +			return -ERESTARTNOHAND;
->> +		cond_resched();
+On Mon, Jul 13, 2020 at 5:42 AM Akhil P Oommen <akhilpo@codeaurora.org> wrote:
 >
-> I don't think we need a fatal_signal_pending and cond_resched() is
-> needed in each step given that we don't actually do anything.
+> From: Sharat Masetty <smasetty@codeaurora.org>
+>
+> This patch adds the interconnects property to the GPU node. This enables
+> the GPU->DDR path bandwidth voting.
+>
+> Signed-off-by: Sharat Masetty <smasetty@codeaurora.org>
+> Signed-off-by: Akhil P Oommen <akhilpo@codeaurora.org>
+> ---
+>  arch/arm64/boot/dts/qcom/sc7180.dtsi | 2 ++
+>  1 file changed, 2 insertions(+)
+>
+> diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> index 31b9217..a567297 100644
+> --- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> @@ -1470,6 +1470,8 @@
+>                         operating-points-v2 = <&gpu_opp_table>;
+>                         qcom,gmu = <&gmu>;
+>
+> +                       interconnects = <&gem_noc MASTER_GFX3D &mc_virt SLAVE_EBI1>;
 
-If we have a MAX_ARG_STRINGS sized argv passed in, that is 2^31
-iterations of the loop.  A processor at 2Ghz performs roughly 2^31
-cycles per second.  So this loop has the potential to run for an entire
-second.  That is long enough to need fatal_signal_pending() and
-cond_resched checks.
+I suppose this and the 845 dts patch should have:
 
-In practice I don't think we have any argv arrays anywhere near that big
-passed in from the kernel.  However removing the logic that accounts for
-long running loops is best handled as a separate change so that people
-will analyze the patch based on that criterian, and so that in the
-highly unlikely even something goes wrong people have a nice commit
-to bisect things to.
+   interconnect-names = "gfx-mem";
 
-Eric
+(OTOH not having it was a good way to notice a bug in the driver
+handling the legacy case without having 'interconnect-names')
+
+BR,
+-R
+
+
+> +
+>                         gpu_opp_table: opp-table {
+>                                 compatible = "operating-points-v2";
+>
+> --
+> 2.7.4
+>
