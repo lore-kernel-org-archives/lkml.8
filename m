@@ -2,138 +2,233 @@ Return-Path: <SRS0=kup7=A2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90966C433FE
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 08:35:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90408C433E8
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 08:35:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6DA402065D
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 08:35:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="Gq7wo52x"
+	by mail.kernel.org (Postfix) with ESMTP id 65774206F5
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 08:35:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594802133;
+	bh=Ox43SIMUWgQaXB3i+UOOy7ao2qOQdpYQtJCeLUAPGk0=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=f9xik9kPutBB15GCqtZr9J2YdSi76tZqTBVkVKgDqpuU5C8OJQAW3m4qZvuApnRu3
+	 SvKEnbuY6Q6l/KwFwKEd2cqetdHtGQ6dJMaO5FuHEHm8us+apkwOOzE/Ulxxi9ymDM
+	 8m96Yr0Ph5OFnpSIW4bOe/Rh1hKcbgclmEyiNIbo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730207AbgGOIfR (ORCPT
+        id S1730235AbgGOIfc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 04:35:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53202 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729199AbgGOIfQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 04:35:16 -0400
-Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 34BB3C061755
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 01:35:16 -0700 (PDT)
-Received: by mail-pf1-x444.google.com with SMTP id m9so1796903pfh.0
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 01:35:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=amarulasolutions.com; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=WPolAUEN8R+26Nb1p0YR+16g+IcA7gsrUiiI7xSTFn8=;
-        b=Gq7wo52xCqehQ6QK/f2liMmmxxUT5CSK8hJv2qgPncNQnTQn3pGDoSbccnMYQPC3Ml
-         fUaTM8lUFNIsaA/w4hoWS0GxLPNzSTDRuGYwsvh+G5WVXWKoQ+aWaAARX8UUMNAzxr3t
-         nUIKNkVrkGhszsESFqPHATprCHgotgLFyLTYA=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=WPolAUEN8R+26Nb1p0YR+16g+IcA7gsrUiiI7xSTFn8=;
-        b=tIvIcyGgI4jPx/ZwZh/l3C7KZy9PQBhMncAqsOcgNlVx40Y9wFzAJow74+CZ1awhTh
-         79QXnZAOM7OHvjRuwqQgSNW6EdU0glTHqOVO7GauDXbYf2Oz+eTM5LUot9QXi0VWXPJU
-         l4mjJbEyw20iNBNs2RJtxFLMC1KxZYBe5vucY1rYfACOH1Ge7yah5OD3N1BPdilc5oh+
-         ssMRFb1C6T9NOhE8y0vgN8x2oz4qVEHcn1/u4eDSoW0TT+pf026nb33e5khsMox34Ka+
-         x4UHysRZBOuApN5jz1fRGk3Sayil/ZRk1UDCUnwASQ+OKr5I7I+INH+auaY3lpS+b75g
-         6q8A==
-X-Gm-Message-State: AOAM531I2SLuk4Mj9dFcMY9zWCGwOkpO2wCOhOM6krLRKDejsOT23kyg
-        cQgDyDtQ6igaOQHVWkFP+m5b3g==
-X-Google-Smtp-Source: ABdhPJyYzrJs37beWQwtGNYJoh/xqyO8utCUQ58r7LA3J+ThvdUHJeGggZl5mk14AlpcbBbfuvbXNw==
-X-Received: by 2002:a63:c947:: with SMTP id y7mr6972752pgg.357.1594802115768;
-        Wed, 15 Jul 2020 01:35:15 -0700 (PDT)
-Received: from localhost.localdomain ([2405:201:c809:c7d5:9887:56a8:c916:cfdb])
-        by smtp.gmail.com with ESMTPSA id m92sm1467584pje.13.2020.07.15.01.35.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 15 Jul 2020 01:35:14 -0700 (PDT)
-From:   Jagan Teki <jagan@amarulasolutions.com>
-To:     Heiko Stuebner <heiko@sntech.de>, Rob Herring <robh+dt@kernel.org>
-Cc:     Suniel Mahesh <sunil@amarulasolutions.com>,
-        Michael Trimarchi <michael@amarulasolutions.com>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        linux-amarula <linux-amarula@amarulasolutions.com>,
-        Jagan Teki <jagan@amarulasolutions.com>
-Subject: [PATCH v6 7/7] ARM: dts: rockchip: Add Radxa Rock Pi N8 initial support
-Date:   Wed, 15 Jul 2020 14:04:18 +0530
-Message-Id: <20200715083418.112003-8-jagan@amarulasolutions.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200715083418.112003-1-jagan@amarulasolutions.com>
-References: <20200715083418.112003-1-jagan@amarulasolutions.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Wed, 15 Jul 2020 04:35:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41670 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730224AbgGOIfa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jul 2020 04:35:30 -0400
+Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id BBD652065D;
+        Wed, 15 Jul 2020 08:35:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594802129;
+        bh=Ox43SIMUWgQaXB3i+UOOy7ao2qOQdpYQtJCeLUAPGk0=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=LwtBgKWVLrxa9jeFRbsT9NRk351F+8baad7pbFJebQxf8s8+TVabITgJHMeWMu0fe
+         HUCUGS/2/sOXjD99U0dJ2bWIPzS2RLkc6rSr2NzU/iY4EelmsB2idUMv7vOXWNY6Gk
+         hvcpB7nYoPK1472Ta1KLEx4kb5A6MzuqGPr7ml80=
+Date:   Wed, 15 Jul 2020 17:35:24 +0900
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Cc:     linux-kernel@vger.kernel.org, x86@vger.kernel.org,
+        Andi Kleen <ak@linux.intel.com>, Jessica Yu <jeyu@kernel.org>,
+        "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
+        Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ingo Molnar <mingo@redhat.com>
+Subject: Re: [PATCH v3 3/3] kprobes: Flag out CONFIG_MODULES dependent code
+Message-Id: <20200715173524.0f21afce3574b8e8596e751e@kernel.org>
+In-Reply-To: <20200714223239.1543716-4-jarkko.sakkinen@linux.intel.com>
+References: <20200714223239.1543716-1-jarkko.sakkinen@linux.intel.com>
+        <20200714223239.1543716-4-jarkko.sakkinen@linux.intel.com>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Rock Pi N8 is a Rockchip RK3288 based SBC, which has
-- VMARC RK3288 SOM (as per SMARC standard) from Vamrs.
-- Compatible carrier board from Radxa.
+Hi Jarkko,
 
-VAMRC RK3288 SOM need to mount on top of radxa dalang
-carrier board for making Rock Pi N8 SBC.
+On Wed, 15 Jul 2020 01:32:29 +0300
+Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com> wrote:
 
-So, add initial support for Rock Pi N8 by including rk3288,
-rk3288 vamrc-som and raxda dalang carrier board dtsi files.
+> Remove CONFIG_MODULES dependency by flagging out the dependent code. This
+> allows to use kprobes in a kernel without support for loadable modules,
+> which could be useful for a test kernel or perhaps an embedded kernel.
+> 
 
-Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
----
-Changes for v6:
-- none
+OK, looks good, I just have 2 comments below.
 
- arch/arm/boot/dts/Makefile              |  1 +
- arch/arm/boot/dts/rk3288-rock-pi-n8.dts | 17 +++++++++++++++++
- 2 files changed, 18 insertions(+)
- create mode 100644 arch/arm/boot/dts/rk3288-rock-pi-n8.dts
+> Cc: Andi Kleen <ak@linux.intel.com>
+> Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+> ---
+>  include/linux/module.h      | 14 +++++++-------
+>  kernel/kprobes.c            |  7 +++++++
+>  kernel/trace/trace_kprobe.c | 16 +++++++++++++++-
+>  3 files changed, 29 insertions(+), 8 deletions(-)
+> 
+> diff --git a/include/linux/module.h b/include/linux/module.h
+> index 857b84bf9e90..eaa8ad02f75c 100644
+> --- a/include/linux/module.h
+> +++ b/include/linux/module.h
+> @@ -290,6 +290,13 @@ extern typeof(name) __mod_##type##__##name##_device_table		\
+>  
+>  struct notifier_block;
+>  
+> +enum module_state {
+> +	MODULE_STATE_LIVE,	/* Normal state. */
+> +	MODULE_STATE_COMING,	/* Full formed, running module_init. */
+> +	MODULE_STATE_GOING,	/* Going away. */
+> +	MODULE_STATE_UNFORMED,	/* Still setting it up. */
+> +};
+> +
+>  #ifdef CONFIG_MODULES
+>  
+>  extern int modules_disabled; /* for sysctl */
+> @@ -305,13 +312,6 @@ struct module_use {
+>  	struct module *source, *target;
+>  };
+>  
+> -enum module_state {
+> -	MODULE_STATE_LIVE,	/* Normal state. */
+> -	MODULE_STATE_COMING,	/* Full formed, running module_init. */
+> -	MODULE_STATE_GOING,	/* Going away. */
+> -	MODULE_STATE_UNFORMED,	/* Still setting it up. */
+> -};
+> -
+>  struct mod_tree_node {
+>  	struct module *mod;
+>  	struct latch_tree_node node;
+> diff --git a/kernel/kprobes.c b/kernel/kprobes.c
+> index b4f3c24cd2ef..3039df13d34e 100644
+> --- a/kernel/kprobes.c
+> +++ b/kernel/kprobes.c
+> @@ -2225,6 +2225,7 @@ int kprobe_add_area_blacklist(unsigned long start, unsigned long end)
+>  	return 0;
+>  }
+>  
+> +#ifdef CONFIG_MODULES
+>  /* Remove all symbols in given area from kprobe blacklist */
+>  static void kprobe_remove_area_blacklist(unsigned long start, unsigned long end)
+>  {
+> @@ -2242,6 +2243,7 @@ static void kprobe_remove_ksym_blacklist(unsigned long entry)
+>  {
+>  	kprobe_remove_area_blacklist(entry, entry + 1);
+>  }
+> +#endif
+>  
+>  int __init __weak arch_populate_kprobe_blacklist(void)
+>  {
+> @@ -2285,6 +2287,7 @@ static int __init populate_kprobe_blacklist(unsigned long *start,
+>  	return ret ? : arch_populate_kprobe_blacklist();
+>  }
+>  
+> +#ifdef CONFIG_MODULES
+>  static void add_module_kprobe_blacklist(struct module *mod)
+>  {
+>  	unsigned long start, end;
+> @@ -2330,6 +2333,10 @@ static void remove_module_kprobe_blacklist(struct module *mod)
+>  		kprobe_remove_area_blacklist(start, end);
+>  	}
+>  }
+> +#else
+> +static void add_module_kprobe_blacklist(struct module *mod) {}
+> +static void remove_module_kprobe_blacklist(struct module *mod) {}
+> +#endif /* CONFIG_MODULES */
 
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index e8dd99201397..1d1b6ac26394 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -964,6 +964,7 @@ dtb-$(CONFIG_ARCH_ROCKCHIP) += \
- 	rk3288-popmetal.dtb \
- 	rk3288-r89.dtb \
- 	rk3288-rock2-square.dtb \
-+	rk3288-rock-pi-n8.dtb \
- 	rk3288-tinker.dtb \
- 	rk3288-tinker-s.dtb \
- 	rk3288-veyron-brain.dtb \
-diff --git a/arch/arm/boot/dts/rk3288-rock-pi-n8.dts b/arch/arm/boot/dts/rk3288-rock-pi-n8.dts
-new file mode 100644
-index 000000000000..b19593021713
---- /dev/null
-+++ b/arch/arm/boot/dts/rk3288-rock-pi-n8.dts
-@@ -0,0 +1,17 @@
-+// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-+/*
-+ * Copyright (c) 2019 Fuzhou Rockchip Electronics Co., Ltd
-+ * Copyright (c) 2019 Vamrs Limited
-+ * Copyright (c) 2019 Amarula Solutions(India)
-+ */
-+
-+/dts-v1/;
-+#include "rk3288.dtsi"
-+#include <arm/rockchip-radxa-dalang-carrier.dtsi>
-+#include "rk3288-vmarc-som.dtsi"
-+
-+/ {
-+	model = "Radxa ROCK Pi N8";
-+	compatible = "radxa,rockpi-n8", "vamrs,rk3288-vmarc-som",
-+		     "rockchip,rk3288";
-+};
+Please feel free to move the function. I would like to see;
+
+#ifdef CONFIG_MODULES
+/* Remove all symbols in given area from kprobe blacklist */
+static void kprobe_remove_area_blacklist(unsigned long start, unsigned long end)
+{
+...
+}
+static void add_module_kprobe_blacklist(struct module *mod)
+{
+...
+}
+#else
+static void add_module_kprobe_blacklist(struct module *mod) {}
+static void remove_module_kprobe_blacklist(struct module *mod) {}
+#endif /* CONFIG_MODULES */
+
+Rather than split #ifdefs.
+
+>  
+>  /* Module notifier call back, checking kprobes on the module */
+>  static int kprobes_module_callback(struct notifier_block *nb,
+> diff --git a/kernel/trace/trace_kprobe.c b/kernel/trace/trace_kprobe.c
+> index 710ec6a6aa8f..7fcd1bf2d96e 100644
+> --- a/kernel/trace/trace_kprobe.c
+> +++ b/kernel/trace/trace_kprobe.c
+> @@ -103,8 +103,9 @@ static nokprobe_inline bool trace_kprobe_has_gone(struct trace_kprobe *tk)
+>  	return !!(kprobe_gone(&tk->rp.kp));
+>  }
+>  
+> +#ifdef CONFIG_MODULES
+>  static nokprobe_inline bool trace_kprobe_within_module(struct trace_kprobe *tk,
+> -						 struct module *mod)
+> +						       struct module *mod)
+>  {
+>  	int len = strlen(mod->name);
+>  	const char *name = trace_kprobe_symbol(tk);
+> @@ -129,6 +130,17 @@ static nokprobe_inline bool trace_kprobe_module_exist(struct trace_kprobe *tk)
+>  
+>  	return ret;
+>  }
+> +#else
+> +static nokprobe_inline bool trace_kprobe_within_module(struct trace_kprobe *tk,
+> +						       struct module *mod)
+> +{
+> +	return false;
+> +}
+> +static nokprobe_inline bool trace_kprobe_module_exist(struct trace_kprobe *tk)
+> +{
+> +	return false;
+> +}
+> +#endif
+>  
+>  static bool trace_kprobe_is_busy(struct dyn_event *ev)
+>  {
+> @@ -685,10 +697,12 @@ static int trace_kprobe_module_callback(struct notifier_block *nb,
+>  			/* Don't need to check busy - this should have gone. */
+>  			__unregister_trace_kprobe(tk);
+>  			ret = __register_trace_kprobe(tk);
+> +#ifdef CONFIG_MODULES
+>  			if (ret)
+>  				pr_warn("Failed to re-register probe %s on %s: %d\n",
+>  					trace_probe_name(&tk->tp),
+>  					mod->name, ret);
+> +#endif
+
+I guess this CONFIG_MODULES is for avoiding build error according to mod->name,
+if so, please use module_name(mod) macro instead of this #ifdef.
+
+>  		}
+>  	}
+>  	mutex_unlock(&event_mutex);
+> -- 
+> 2.25.1
+> 
+
+
 -- 
-2.25.1
-
+Masami Hiramatsu <mhiramat@kernel.org>
