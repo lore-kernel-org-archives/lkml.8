@@ -2,101 +2,140 @@ Return-Path: <SRS0=kup7=A2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F053AC433F4
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 12:49:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 449D3C433E4
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 12:50:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C3F6520578
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 12:49:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 15E14206D5
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 12:50:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="UtSY7tjj"
+	dkim=pass (2048-bit key) header.d=pesu-pes-edu.20150623.gappssmtp.com header.i=@pesu-pes-edu.20150623.gappssmtp.com header.b="zfEz8H5E"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731401AbgGOMtM (ORCPT
+        id S1731145AbgGOMu1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 08:49:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35796 "EHLO
+        Wed, 15 Jul 2020 08:50:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36030 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731342AbgGOMs5 (ORCPT
+        with ESMTP id S1728766AbgGOMu1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 08:48:57 -0400
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [IPv6:2001:4b98:dc2:55:216:3eff:fef7:d647])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 477A4C061755
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 05:48:57 -0700 (PDT)
-Received: from Q.local (cpc89242-aztw30-2-0-cust488.18-1.cable.virginm.net [86.31.129.233])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id ECDFEF7E;
-        Wed, 15 Jul 2020 14:48:54 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1594817335;
-        bh=u9Cm7lA4aBFNKRUo0tffD5UvM74Xr5Kxc/Se1oDySRQ=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UtSY7tjjcJelEBGaEVU6X+F6L1nfEn8ne3g6gR9doTU3d66NdI1Kwl4I2gbD4XxNy
-         BaTHqGt0/JNKOmxza/OunYpzCHq7SctqGr8TH+OVzFT+rjxm7CEpQTeXDcUE+BsG7t
-         lmIM0NFPhXhGVgPhKvkADGNjKnQ5ZCRfn4YFJYW0=
-From:   Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
-To:     trivial@kernel.org
-Cc:     Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
-        David Hildenbrand <david@redhat.com>,
-        Souptick Joarder <jrdr.linux@gmail.com>,
-        "Michael S . Tsirkin" <mst@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        virtualization@lists.linux-foundation.org (open list:VIRTIO BALLOON),
-        linux-mm@kvack.org (open list:MEMORY MANAGEMENT),
-        linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH v2 7/8] mm/balloon_compaction: Fix trivial spelling
-Date:   Wed, 15 Jul 2020 13:48:38 +0100
-Message-Id: <20200715124839.252822-8-kieran.bingham+renesas@ideasonboard.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200715124839.252822-1-kieran.bingham+renesas@ideasonboard.com>
-References: <20200715124839.252822-1-kieran.bingham+renesas@ideasonboard.com>
+        Wed, 15 Jul 2020 08:50:27 -0400
+Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 012A2C061755
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 05:50:27 -0700 (PDT)
+Received: by mail-pf1-x441.google.com with SMTP id m9so2065800pfh.0
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 05:50:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=pesu-pes-edu.20150623.gappssmtp.com; s=20150623;
+        h=from:date:to:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=ShVGtDM5xerpslVq+QO4NAQXlRlUc1FZogmGfNpoutY=;
+        b=zfEz8H5E0uTrtiedmvrlTGbHtdxGX3RrMjMgJxif+xhNGImqKZRwVnxOB7SiJiHGZb
+         EgfDXwV6eV0eYsRRBkuQtDnVaC/gA32Wm8PgvRC0S/grBe3RSNr07Qwb/U5MFJQCd+xu
+         ZzRH0TwSYyHM7F+ByWaX4y+/lwLlfZropXcAtw4OEd6s5YhRov92z0a99VRfYJAAhfNf
+         bZtJoVQi9SqMDg0zgDRRi4WZCRBAeTXicGV743fdg5EHoHEDZibVOgCS65ZUQ9HcWhdA
+         loHkMsrB0ViJIeLN9ArV7hzmoxVeMMuJFVT9NdQFZG26b8lb2eJfYno6GYBY0w3mG5Fw
+         aObg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=ShVGtDM5xerpslVq+QO4NAQXlRlUc1FZogmGfNpoutY=;
+        b=R4PvkTf5Xror0VUwfQR/Ep+asa/1D0mGreNQ+AfyVZ/3iydCd3kJcRJ75HMf8/JCl5
+         ipynfFsSSyIo8M8mHdg2tWtziTa9+rriJzjsftX/eF6Nq7s+5Pv1nUfWwf7Sig6deaUk
+         DgVwvUDkHEKxZDovXHjgFC4ReexwxPpFNpIiDI1NXvM6K8e45VbpetqKKljPG1477oVO
+         zCpb49BbV/0uX1DYytsVPx3S9BFFnmYauPdDYXh41/3FQ60euiDtXa/Ut7sUxOI7XnYt
+         F6nPO0hqfEQVZ/IP2+bdV6eToVZ/06s9cVcBodA1cRHCLtXMGevjiraDGadbg1k+j2Fi
+         NYsA==
+X-Gm-Message-State: AOAM531hwnE3MkLF4I2vtfTV5DoQUM0U4qwpxndQD+1PWbvSqfpMlrNv
+        oa15zWWbm9DZWf1SEzdBgmBWRkv4yCM=
+X-Google-Smtp-Source: ABdhPJy/Ln9peH7xxHmsqXkwnv/o960pFulImShZC6watVz+6vqqfalkLQT9ngLHhAPVGcqCMTcTqA==
+X-Received: by 2002:a63:1f11:: with SMTP id f17mr7755201pgf.217.1594817426552;
+        Wed, 15 Jul 2020 05:50:26 -0700 (PDT)
+Received: from localhost ([2406:7400:73:f0a7:1936:cfd2:c2df:5e48])
+        by smtp.gmail.com with ESMTPSA id ml8sm2037189pjb.47.2020.07.15.05.50.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 15 Jul 2020 05:50:25 -0700 (PDT)
+From:   B K Karthik <bkkarthik@pesu.pes.edu>
+X-Google-Original-From: B K Karthik <karthik.bk2000@live.com>
+Date:   Wed, 15 Jul 2020 08:50:18 -0400
+To:     Alexander Viro <viro@zeniv.linux.org.uk>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] fs: block_dev.c: fix WARNING in submit_bio_check
+Message-ID: <20200715125018.mjj6sj5uibd5s67b@pesu-pes-edu>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="lpn6rsynz3x3gxmk"
+Content-Disposition: inline
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The word 'descriptor' is misspelled throughout the tree.
 
-Fix it up accordingly:
-    decriptor -> descriptor
+--lpn6rsynz3x3gxmk
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
-Reviewed-by: David Hildenbrand <david@redhat.com>
-Acked-by: Souptick Joarder <jrdr.linux@gmail.com>
-Acked-by: Michael S. Tsirkin <mst@redhat.com>
+duplicating the logic in blkdev_get_by_path to
+blkdev_get_by_dev to avoid a user-triggerable WARN
+trying to write to a read-only block device.
+
+blkdev_get_by_path() looks at
+((mode & FMODE_WRITE) && bdev_read_only(bdev)) to check for write permissio=
+ns.
+
+A user-triggerable WARN can be avoided by doing the same with bdev_get_by_d=
+ev.
+
+Reported-by: syzbot+4c50ac32e5b10e4133e1@syzkaller.appspotmail.com
+Signed-off-by: B K Karthik <karthik.bk2000@live.com>
 ---
-v2:
- - Fix commit message to reflect actual word replaced
----
- mm/balloon_compaction.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ fs/block_dev.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/mm/balloon_compaction.c b/mm/balloon_compaction.c
-index 26de020aae7b..907fefde2572 100644
---- a/mm/balloon_compaction.c
-+++ b/mm/balloon_compaction.c
-@@ -58,7 +58,7 @@ EXPORT_SYMBOL_GPL(balloon_page_list_enqueue);
- /**
-  * balloon_page_list_dequeue() - removes pages from balloon's page list and
-  *				 returns a list of the pages.
-- * @b_dev_info: balloon device decriptor where we will grab a page from.
-+ * @b_dev_info: balloon device descriptor where we will grab a page from.
-  * @pages: pointer to the list of pages that would be returned to the caller.
-  * @n_req_pages: number of requested pages.
-  *
-@@ -157,7 +157,7 @@ EXPORT_SYMBOL_GPL(balloon_page_enqueue);
- /*
-  * balloon_page_dequeue - removes a page from balloon's page list and returns
-  *			  its address to allow the driver to release the page.
-- * @b_dev_info: balloon device decriptor where we will grab a page from.
-+ * @b_dev_info: balloon device descriptor where we will grab a page from.
-  *
-  * Driver must call this function to properly dequeue a previously enqueued page
-  * before definitively releasing it back to the guest system.
--- 
-2.25.1
+diff --git a/fs/block_dev.c b/fs/block_dev.c
+index 64c4fe8181f2..472e3b046406 100644
+--- a/fs/block_dev.c
++++ b/fs/block_dev.c
+@@ -1796,6 +1796,11 @@ struct block_device *blkdev_get_by_dev(dev_t dev, fm=
+ode_t mode, void *holder)
+ 	if (err)
+ 		return ERR_PTR(err);
+=20
++	if ((mode & FMODE_WRITE) && bdev_read_only(bdev)) {
++		blkdev_put(bdev, mode);
++		return ERR_PTR(-EACCES);
++	}
++
+ 	return bdev;
+ }
+ EXPORT_SYMBOL(blkdev_get_by_dev);
+--=20
+2.20.1
 
+
+--lpn6rsynz3x3gxmk
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQGzBAEBCgAdFiEEpIrzAt4LvWLJmKjp471Q5AHeZ2oFAl8O+4kACgkQ471Q5AHe
+Z2rFSwv/eUXmS0JEAwk4ovaLtuu9ly240wFQQBHwIyOidIuxiw0fnOKPfRpBFCHc
+NDdVlZ3/IDfRbcT/5Td3wO+X4OmWPoE/mr2EClOxeYWFCcJV7oWzO+FBkkYb7P93
+JmzuDtIYMsSVnIrAyjlwwCdlii0nW2eism0rIP2Ja30FsAvZR5l1pqw8ypjFpKrQ
+tGot98tkBA5iAm5A2F/8iBpwX+kp/y5kEzXpfH8qgrslt3booQ4FLFcg+TCOeIaj
+G1vPkY0fuVCsQZPXSta6RU89NI71AQKN5FhyujqpNa1hIiA5IYT4+c9ryRwzuJIr
+fzLFygwWbFXLXtvgZ87BlhkSIayJMQNFUBrjA36BB0iN83fRyKr69K0i8BbG5QKU
+FP/zryOsnO2AdbtBpB8OCPXq5era+hbeZnXncBzl9h9ApatmRWajO4D0mOXQRd7a
+njx23nf5npJtjXeHmznhi+luoAeeLkK+te0hvGl2fmFhT/v7Zt8xa7D4bMnC18eh
+ZkaRfIHq
+=Pl6p
+-----END PGP SIGNATURE-----
+
+--lpn6rsynz3x3gxmk--
