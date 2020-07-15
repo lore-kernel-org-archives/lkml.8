@@ -6,71 +6,71 @@ X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24EA6C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 21:44:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54866C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 21:45:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EE5252075B
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 21:44:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1AFB8206F4
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 21:45:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594849497;
-	bh=anKYBjcbvOPtsBtRUHg9RK+mp8CGK35PuSptGilkUVk=;
+	s=default; t=1594849556;
+	bh=mVnkBfAhJ6FomVjxHOY1OyCTNAIYT/5UonrMuIScsJw=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=t3MDW8kC+pR9I8V5EIc8W8VrKqIUdmPnfS+0klDHjAPO5htLNTyyfq6E51vQDKYsx
-	 U1sY4yIM3k8eODnieBBD3HvYG0aHdshIlalyr5jW/DxZs/I7WyzkYvO9aM8e+V6cqF
-	 JeRvi8OsC2Cadz8P2B0a8o8sU0BcH0sOE5YICcfw=
+	b=HpeCwy1vmWQ2xSSOkdkQQSK1c9jBKfF72cRjebE3JRpqisy2mogSBeNzDro0KwiKa
+	 9sTlThwrSp8zMfr43DkuRAgJdwd2RiKaopKDXhzbVKob7VlITh8radY81OiwEwWPMs
+	 UeLv8HdJoezh5tIsIVhv/kZM/t/CzVm2rsDbN1Uw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727925AbgGOVo4 (ORCPT
+        id S1726968AbgGOVpy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 17:44:56 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:36156 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726370AbgGOVoz (ORCPT
+        Wed, 15 Jul 2020 17:45:54 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:33654 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726356AbgGOVpy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 17:44:55 -0400
-Received: by mail-io1-f65.google.com with SMTP id y2so3897021ioy.3;
-        Wed, 15 Jul 2020 14:44:54 -0700 (PDT)
+        Wed, 15 Jul 2020 17:45:54 -0400
+Received: by mail-io1-f68.google.com with SMTP id d18so3910271ion.0;
+        Wed, 15 Jul 2020 14:45:53 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=G2Mqt7gxRiFgu+zBoG7bPjfYecL9s+S+lyU0ScviujI=;
-        b=tDLPz8rWtwGfcf7mR215ep7KtrBZNn/03hbvhHa29SsAybIF1Rc3sDDhbZh9wAzVRn
-         B//VEJIS25JacBkBH7KRoKVYA7YPwC2ECmPuI01BuUVSwg5S2LlrjG2/eY8/dWxQbOyn
-         LbWLv6Ljyt/RLaKhvEr4kBI1aG+3AJX7nvjOqdlawLPq81x4Q8mdAZm6S1AbXjiQx3+z
-         SFuR9Zs27+G6a7QX0Cksq3/BKSkVbxWe0yl6Ov7zq3a5KtKJhbwoOE8NtgO2KI8mf5yx
-         LQCwp4oP+YSj94J7tT5CrLu8OduXnt2Z9z4ak85iCsAsL9GdWJ/mplvkjsKTXJPa17fk
-         x9ng==
-X-Gm-Message-State: AOAM5334BXonM3fO3Y8YJn3YjXpl2g1TV6DINy6gzwypTVo8JmUpwiTQ
-        uWxefP9QD3TggICCvB06Yg==
-X-Google-Smtp-Source: ABdhPJzmxir1p3e9ru+Hz1g9JLvam/4uHKqg3E7b8w9WMvJYI1Tx2B7G1S7vbF+WtPKipdU9wyqFog==
-X-Received: by 2002:a6b:b2d1:: with SMTP id b200mr1314239iof.137.1594849494492;
-        Wed, 15 Jul 2020 14:44:54 -0700 (PDT)
+        bh=uTCKNrA40szb/yJmrWq3ey+AdiQAjiCsW6MNjx/ks4E=;
+        b=G9Xf4tlySs3Ti6ixUYzhG491yUDxWJ+X3pczJOGHuL88TUMrCT3p8+0PC/i0NBID9C
+         0ZLH0xoZcQI1uf15Yur5ECNwTSwh7r9CukHCe8P2HNfo7ifqWWJeQ3ZnlZPItoOjOK8i
+         uq46gryBRdRzzNx08xnuHl8BckdQnn4ssGOCYcTV9bam2DsO0SLLDouOcOfZR4Ht2TZE
+         k+wfDnD1aExiZTXoX+kY5MGxaBENYZ2I6d50Mv89Mixr6PAZMX+CH2F4uaDXUjHehuID
+         5ILFqOdaGawhDGU91fCbozr5nl/kXnvh6FBlebhmFa1cgHtJKOgxelGgNxXsheKpSq4s
+         FPXg==
+X-Gm-Message-State: AOAM533yhC8EZmAb93lWuDLjJmng//Cy9YFcr1eT2GXkqlWAgAB49PTj
+        Z1xoKYpok/abiDRJriLs/KpHUjVtxQ==
+X-Google-Smtp-Source: ABdhPJyYNTJmcV2ZHEBtk6f0cCrE4qIzXSpkaMVmF4GV38KcS7lBiv8NNFpiUn4/cWzdpLNPDyHODg==
+X-Received: by 2002:a5e:dc03:: with SMTP id b3mr1281748iok.97.1594849553618;
+        Wed, 15 Jul 2020 14:45:53 -0700 (PDT)
 Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id v4sm1632908ilo.44.2020.07.15.14.44.53
+        by smtp.gmail.com with ESMTPSA id d18sm1638866ils.34.2020.07.15.14.45.52
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 15 Jul 2020 14:44:53 -0700 (PDT)
-Received: (nullmailer pid 869896 invoked by uid 1000);
-        Wed, 15 Jul 2020 21:44:52 -0000
-Date:   Wed, 15 Jul 2020 15:44:52 -0600
+        Wed, 15 Jul 2020 14:45:53 -0700 (PDT)
+Received: (nullmailer pid 871406 invoked by uid 1000);
+        Wed, 15 Jul 2020 21:45:52 -0000
+Date:   Wed, 15 Jul 2020 15:45:52 -0600
 From:   Rob Herring <robh@kernel.org>
 To:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
-Cc:     devicetree@vger.kernel.org, hyun.kwon@xilinx.com,
-        michal.simek@xilinx.com, mchehab@kernel.org, robh+dt@kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-media@vger.kernel.org, laurent.pinchart@ideasonboard.com
-Subject: Re: [PATCH] Replace HTTP links with HTTPS ones: Xilinx video IP cores
-Message-ID: <20200715214452.GA869842@bogus>
-References: <20200705075524.22657-1-grandmaster@al2klimov.de>
+Cc:     lee.jones@linaro.org, devicetree@vger.kernel.org,
+        support.opensource@diasemi.com, linux-kernel@vger.kernel.org,
+        robh+dt@kernel.org
+Subject: Re: [PATCH] Replace HTTP links with HTTPS ones: Dialog Semiconductor
+ drivers
+Message-ID: <20200715214552.GA871311@bogus>
+References: <20200705075542.22728-1-grandmaster@al2klimov.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200705075524.22657-1-grandmaster@al2klimov.de>
+In-Reply-To: <20200705075542.22728-1-grandmaster@al2klimov.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 05 Jul 2020 09:55:24 +0200, Alexander A. Klimov wrote:
+On Sun, 05 Jul 2020 09:55:42 +0200, Alexander A. Klimov wrote:
 > Rationale:
 > Reduces attack surface on kernel devs opening the links for MITM
 > as HTTPS traffic is much harder to manipulate.
@@ -96,8 +96,8 @@ On Sun, 05 Jul 2020 09:55:24 +0200, Alexander A. Klimov wrote:
 >  If there are any valid, but yet not changed URLs:
 >  See https://lkml.org/lkml/2020/6/26/837
 > 
->  Documentation/devicetree/bindings/media/xilinx/video.txt | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>  Documentation/devicetree/bindings/mfd/da9062.txt | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
 > 
 
 Applied, thanks!
