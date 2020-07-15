@@ -2,299 +2,314 @@ Return-Path: <SRS0=kup7=A2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6140BC433E7
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 07:20:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6903C433E3
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 07:15:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 40B352067D
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 07:20:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7346020663
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 07:15:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="WhL4ghuM";
+	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="BeZd4JXJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729255AbgGOHUN (ORCPT
+        id S1729134AbgGOHPm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 03:20:13 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:7754 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729066AbgGOHUL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 03:20:11 -0400
-Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 4FDBFEDC143ACF09E1A1;
-        Wed, 15 Jul 2020 15:20:01 +0800 (CST)
-Received: from DESKTOP-KKJBAGG.china.huawei.com (10.174.186.75) by
- DGGEMS413-HUB.china.huawei.com (10.3.19.213) with Microsoft SMTP Server id
- 14.3.487.0; Wed, 15 Jul 2020 15:19:53 +0800
-From:   Zhenyu Ye <yezhenyu2@huawei.com>
-To:     <catalin.marinas@arm.com>, <will@kernel.org>,
-        <suzuki.poulose@arm.com>, <maz@kernel.org>, <steven.price@arm.com>,
-        <guohanjun@huawei.com>, <olof@lixom.net>
-CC:     <yezhenyu2@huawei.com>, <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <linux-arch@vger.kernel.org>,
-        <linux-mm@kvack.org>, <arm@kernel.org>, <xiexiangyou@huawei.com>,
-        <prime.zeng@hisilicon.com>, <zhangshaokun@hisilicon.com>,
-        <kuhn.chenqun@huawei.com>
-Subject: [PATCH v3 3/3] arm64: tlb: Use the TLBI RANGE feature in arm64
-Date:   Wed, 15 Jul 2020 15:19:45 +0800
-Message-ID: <20200715071945.897-4-yezhenyu2@huawei.com>
-X-Mailer: git-send-email 2.22.0.windows.1
-In-Reply-To: <20200715071945.897-1-yezhenyu2@huawei.com>
-References: <20200715071945.897-1-yezhenyu2@huawei.com>
+        Wed, 15 Jul 2020 03:15:42 -0400
+Received: from esa4.hgst.iphmx.com ([216.71.154.42]:34248 "EHLO
+        esa4.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725852AbgGOHPl (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jul 2020 03:15:41 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1594797340; x=1626333340;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:content-transfer-encoding:mime-version;
+  bh=h1jdQyc0qpyfOWfjsceeRqeIzz3oZ9kZbI7mLIKW7WM=;
+  b=WhL4ghuM4e7ZLM7ctASgvZBnUOaERvUinXpdPQlkBdT3BdttrbG8ZyMT
+   jlfqS6hfPPpyZSiT/VMDprFx8ZgTHVGniHlF84l6SY+v2QVfxoEX2Sj6N
+   CXtv6Kobi5OA3ycwUDQ9zE5dtLJAbeYOtTOtqP22QxP9J8hWtu6EjaQxr
+   TyCeYGWzGp6dUVPYtoCUF/H4NnFef8w4o22IH+W94cUvRYm5JWr4gita4
+   XL6nuXVBhgxMcLz7VEq2WZYGKvRpVAVDUPsuyoDHJ517hF+0uPztaOEYB
+   d0LEDBsPhOXpIJyqeEdfVyl8oflPyxHHl1dajRxIkTz7PqAAVkRO6UUDr
+   Q==;
+IronPort-SDR: vNBj/73jAzDD3SJmDXc7zF3y3C+G+ggk35ooklbvKZ3xNPyRp8/jRDTbzJGlvzCTOvt3eSRgS6
+ XHIWPstkEoZ9mJn0qdeGav2Do2ctufE/Fu9LSnK5sQOwWt1cHUrV0GNZH2aibS+9Vpvkms8xGx
+ x75YMokKm1mgnHRlONM10TMCh+FYgaPgho+mQEyiNLo0T7ZCboOext4lCUtct3PXp19Vj7fdEk
+ 1ux31a+Z/Bwhq/K2HnYltlyBQHhRuQbVWzm5KkCS6Q6aHlE8gtPpNx+nxXWS8EcZq/6gKOr8Cw
+ Pk4=
+X-IronPort-AV: E=Sophos;i="5.75,354,1589212800"; 
+   d="scan'208";a="142495407"
+Received: from mail-sn1nam04lp2052.outbound.protection.outlook.com (HELO NAM04-SN1-obe.outbound.protection.outlook.com) ([104.47.44.52])
+  by ob1.hgst.iphmx.com with ESMTP; 15 Jul 2020 15:15:39 +0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=W9vt5miafQfSgAlyb1dKMc/jnWEkJ2GM1ztKi9PrXl4DDLY4DNHWENrcuBMmLyMaCKk4glszgQg14V9c2+Y1tLcoSOH4CEWCMVp4GMSDlx+1u6twE8mQdIagZPxBHO5+UCTqSEZu4DJExJWhKqYEYqWTG9eG1u1qRaW7R8JohzRSKUj1mRU2udjqcRNQqyQwhwh9k9fpEUMIZaz6RvXeJIYmdPoQEU04EMEG67c/PWhsWfYAzHfk33I6evJkNda+Q8Yq7SYy8/fj9jIx+kblQ9VFk72cBbmEyrbfszdyHIih4LcGEz+VP/ZA5W5M10cZ3UHaA4kifzrTMkOfabwGIg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ZjK6OaReuE8m9Nlpcy7spMgxdJ10Zx7GGh4+Bv9YArI=;
+ b=e51D8Q3kvOzFMDDinZl5q8Oh1ZYKTRYyfkS7LRjE8nJihULmHEGMhZV5FyW06j1jHJ7G5EpwyYovGfSJfmH1OWYHAJii3bdko8TsmJ+yEKDRdEBj+p4Nwc4QmAGLvLsK1WIjs2yMY+p+AYa1G3Pi9mzjyGgWWhgkJozyfnl9uAa1tollKy7T1Shybr833vrtyAvrkUlUhIgtJi3qy3BVQRElx4zQEdm+i4AiQyibC5o5yTBBLw9xd0hp0mYvyAOToZLLdA++cNPfCkHIXZb8Wrkx0OC6YSu6QaZ3034PIF40DDPc5A3zoDxVcAD9ukTjB/9BMOOlkYLuf7l4dQZzmA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
+ header.d=wdc.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ZjK6OaReuE8m9Nlpcy7spMgxdJ10Zx7GGh4+Bv9YArI=;
+ b=BeZd4JXJ96Cmj0Cm7dZ4UFC56YcnlK8YWdbVZn8BEyIqxW8GSfHDWLJc26rWn6x8c7lJyc8+ndEMEwwQwwkgX4LvaAeFbSHnqteTsieI4l8I9mBQWPY6sJq8/pbFvs4+DXEuOYXkg/BH9+sfTKvsDKq1ZmXtd0QQE82dF6hLiNQ=
+Authentication-Results: dabbelt.com; dkim=none (message not signed)
+ header.d=none;dabbelt.com; dmarc=none action=none header.from=wdc.com;
+Received: from DM6PR04MB6201.namprd04.prod.outlook.com (2603:10b6:5:127::32)
+ by DM6PR04MB4329.namprd04.prod.outlook.com (2603:10b6:5:9a::26) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3195.17; Wed, 15 Jul
+ 2020 07:15:39 +0000
+Received: from DM6PR04MB6201.namprd04.prod.outlook.com
+ ([fe80::e0a4:aa82:1847:dea5]) by DM6PR04MB6201.namprd04.prod.outlook.com
+ ([fe80::e0a4:aa82:1847:dea5%7]) with mapi id 15.20.3174.026; Wed, 15 Jul 2020
+ 07:15:39 +0000
+From:   Anup Patel <anup.patel@wdc.com>
+To:     Palmer Dabbelt <palmer@dabbelt.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Rob Herring <robh+dt@kernel.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+Cc:     Damien Le Moal <damien.lemoal@wdc.com>,
+        Atish Patra <atish.patra@wdc.com>,
+        Alistair Francis <Alistair.Francis@wdc.com>,
+        Anup Patel <anup@brainfault.org>,
+        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, Anup Patel <anup.patel@wdc.com>
+Subject: [PATCH v3 1/4] RISC-V: Add mechanism to provide custom IPI operations
+Date:   Wed, 15 Jul 2020 12:45:02 +0530
+Message-Id: <20200715071506.10994-2-anup.patel@wdc.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200715071506.10994-1-anup.patel@wdc.com>
+References: <20200715071506.10994-1-anup.patel@wdc.com>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: PN1PR0101CA0047.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:c00:c::33) To DM6PR04MB6201.namprd04.prod.outlook.com
+ (2603:10b6:5:127::32)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.174.186.75]
-X-CFilter-Loop: Reflected
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from wdc.com (103.15.57.135) by PN1PR0101CA0047.INDPRD01.PROD.OUTLOOK.COM (2603:1096:c00:c::33) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3195.18 via Frontend Transport; Wed, 15 Jul 2020 07:15:33 +0000
+X-Mailer: git-send-email 2.25.1
+X-Originating-IP: [103.15.57.135]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: c6c26822-57d8-4490-a96d-08d8288ee05a
+X-MS-TrafficTypeDiagnostic: DM6PR04MB4329:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <DM6PR04MB43291AA246D0FFC80A8798478D7E0@DM6PR04MB4329.namprd04.prod.outlook.com>
+WDCIPOUTBOUND: EOP-TRUE
+X-MS-Oob-TLC-OOBClassifiers: OLM:9508;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: FwGBBR6yv/a+rlk8t25Jn2HuLwBqf2wctOJcqfuzvwuXiizjvwxz6lapswrOaremLjF+vZ3V9jTGm1Iu8K+8bu5ik+X0ArByeE7wSPpGOlC8Scs9xUk2YcIzBytV23Tl8ChH1TxLV8lHqJ6YLhWhST+4cPFIwXw4zfcqw4kmIsatOaEzn01za+UPmKPqmg/anG+ANrrWoAb7d670DI8JapwE+xrBaL0+6pk11bH4eJUCJ7Ij9XoEcpUNqf/gIUxKUfV7AQRUL69efgt0skSDxbRIMGLaK1Vvu8o9yRN5cNljR3eKmuc7x4yJoNVSGgpVIvUz6nF+8tWySrV7ac5hoA==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR04MB6201.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(346002)(366004)(396003)(39860400002)(376002)(136003)(8936002)(16526019)(8886007)(186003)(44832011)(36756003)(7696005)(478600001)(26005)(66476007)(7416002)(66556008)(66946007)(54906003)(110136005)(52116002)(2616005)(316002)(956004)(6666004)(2906002)(86362001)(55016002)(1076003)(8676002)(83380400001)(4326008)(5660300002);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData: U4cYh6UEP0Dlo1M1Ije2xhKpb2GZTCPwnBLY5Xq7WB4ODnvo6Nz9F+VgIXFySlP+W0dN5/ZooYxH6YGSuvqTB6OkFucc+6QTf3CKfQ5TpmguG63Uv3TWVdVMZgoBfXdt1MmgCbE+29drik56qSq2K4SFqjaIVq7L+UJ/a6FFGNMa2GxL3r76ViO/eA3qOsgjuH3uMvLg9+aoLYoU4HyKB7sPUSjf7JoElmINIL7X9kt/4QRO/wQOOjFjCNncVULlv6SWa+4uAkjUqUgh6ecw7HZcYc+MjPOdy8mlwBsfu8TQ0zktLucGR62BP3jKWIa0exBIAW/GZwpuoet/3GhCU/nHJ1S8D8O02UVDMgEMZmtOA634AZYeNhvRQKfYaFxSsmvmNT3gq5d1nhZU+8KqbL9IVwnpp1MLT5azQ0qtnEatSxTTelVbRzVI2RxdfjwC3e2Ci99kajkyK3wM44vtqRrpNTFKgo97rSOm+3ul17Y=
+X-OriginatorOrg: wdc.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: c6c26822-57d8-4490-a96d-08d8288ee05a
+X-MS-Exchange-CrossTenant-AuthSource: DM6PR04MB6201.namprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Jul 2020 07:15:39.2007
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: b61c8803-16f3-4c35-9b17-6f65f441df86
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: spt6++0DKLURSB8LhCrC3DAPlhWfkGU0uYb13QAHe+ifyFBtn0fv0m3HiEqKnJJws7mL10VAm5R9l7iT9lZRwA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR04MB4329
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add __TLBI_VADDR_RANGE macro and rewrite __flush_tlb_range().
+We add mechanism to set custom IPI operations so that CLINT driver
+from drivers directory can provide custom IPI operations.
 
-When cpu supports TLBI feature, the minimum range granularity is
-decided by 'scale', so we can not flush all pages by one instruction
-in some cases.
-
-For example, when the pages = 0xe81a, let's start 'scale' from
-maximum, and find right 'num' for each 'scale':
-
-1. scale = 3, we can flush no pages because the minimum range is
-   2^(5*3 + 1) = 0x10000.
-2. scale = 2, the minimum range is 2^(5*2 + 1) = 0x800, we can
-   flush 0xe800 pages this time, the num = 0xe800/0x800 - 1 = 0x1c.
-   Remaining pages is 0x1a;
-3. scale = 1, the minimum range is 2^(5*1 + 1) = 0x40, no page
-   can be flushed.
-4. scale = 0, we flush the remaining 0x1a pages, the num =
-   0x1a/0x2 - 1 = 0xd.
-
-However, in most scenarios, the pages = 1 when flush_tlb_range() is
-called. Start from scale = 3 or other proper value (such as scale =
-ilog2(pages)), will incur extra overhead.
-So increase 'scale' from 0 to maximum, the flush order is exactly
-opposite to the example.
-
-Signed-off-by: Zhenyu Ye <yezhenyu2@huawei.com>
-Link: https://lore.kernel.org/r/20200710094420.517-3-yezhenyu2@huawei.com
-[catalin.marinas@arm.com: removed unnecessary masks in __TLBI_VADDR_RANGE]
-[catalin.marinas@arm.com: __TLB_RANGE_NUM subtracts 1]
-[catalin.marinas@arm.com: minor adjustments to the comments]
-Signed-off-by: Catalin Marinas <catalin.marinas@arm.com>
+Signed-off-by: Anup Patel <anup.patel@wdc.com>
 ---
- arch/arm64/include/asm/tlbflush.h | 156 ++++++++++++++++++++++++------
- 1 file changed, 127 insertions(+), 29 deletions(-)
+ arch/riscv/include/asm/smp.h | 19 ++++++++++++++++
+ arch/riscv/kernel/sbi.c      | 14 ++++++++++++
+ arch/riscv/kernel/smp.c      | 43 ++++++++++++++++++++----------------
+ arch/riscv/kernel/smpboot.c  |  3 +--
+ 4 files changed, 58 insertions(+), 21 deletions(-)
 
-diff --git a/arch/arm64/include/asm/tlbflush.h b/arch/arm64/include/asm/tlbflush.h
-index 2cb275efcea3..4a21d8dc0312 100644
---- a/arch/arm64/include/asm/tlbflush.h
-+++ b/arch/arm64/include/asm/tlbflush.h
-@@ -60,6 +60,31 @@
- 		__ta;						\
- 	})
+diff --git a/arch/riscv/include/asm/smp.h b/arch/riscv/include/asm/smp.h
+index 40bb1c15a731..68de78a8eba6 100644
+--- a/arch/riscv/include/asm/smp.h
++++ b/arch/riscv/include/asm/smp.h
+@@ -15,6 +15,11 @@
+ struct seq_file;
+ extern unsigned long boot_cpu_hartid;
  
-+/*
-+ * Get translation granule of the system, which is decided by
-+ * PAGE_SIZE.  Used by TTL.
-+ *  - 4KB	: 1
-+ *  - 16KB	: 2
-+ *  - 64KB	: 3
-+ */
-+#define TLBI_TTL_TG_4K		1
-+#define TLBI_TTL_TG_16K		2
-+#define TLBI_TTL_TG_64K		3
++struct riscv_ipi_ops {
++	void (*ipi_inject)(const struct cpumask *target);
++	void (*ipi_clear)(void);
++};
 +
-+static inline unsigned long get_trans_granule(void)
+ #ifdef CONFIG_SMP
+ /*
+  * Mapping between linux logical cpu index and hartid.
+@@ -40,6 +45,12 @@ void arch_send_call_function_single_ipi(int cpu);
+ int riscv_hartid_to_cpuid(int hartid);
+ void riscv_cpuid_to_hartid_mask(const struct cpumask *in, struct cpumask *out);
+ 
++/* Set custom IPI operations */
++void riscv_set_ipi_ops(struct riscv_ipi_ops *ops);
++
++/* Clear IPI for current CPU */
++void riscv_clear_ipi(void);
++
+ /*
+  * Obtains the hart ID of the currently executing task.  This relies on
+  * THREAD_INFO_IN_TASK, but we define that unconditionally.
+@@ -78,6 +89,14 @@ static inline void riscv_cpuid_to_hartid_mask(const struct cpumask *in,
+ 	cpumask_set_cpu(boot_cpu_hartid, out);
+ }
+ 
++static inline void riscv_set_ipi_ops(struct riscv_ipi_ops *ops)
 +{
-+	switch (PAGE_SIZE) {
-+	case SZ_4K:
-+		return TLBI_TTL_TG_4K;
-+	case SZ_16K:
-+		return TLBI_TTL_TG_16K;
-+	case SZ_64K:
-+		return TLBI_TTL_TG_64K;
-+	default:
-+		return 0;
-+	}
 +}
 +
- /*
-  * Level-based TLBI operations.
-  *
-@@ -73,9 +98,6 @@
-  * in asm/stage2_pgtable.h.
-  */
- #define TLBI_TTL_MASK		GENMASK_ULL(47, 44)
--#define TLBI_TTL_TG_4K		1
--#define TLBI_TTL_TG_16K		2
--#define TLBI_TTL_TG_64K		3
- 
- #define __tlbi_level(op, addr, level) do {				\
- 	u64 arg = addr;							\
-@@ -83,19 +105,7 @@
- 	if (cpus_have_const_cap(ARM64_HAS_ARMv8_4_TTL) &&		\
- 	    level) {							\
- 		u64 ttl = level & 3;					\
--									\
--		switch (PAGE_SIZE) {					\
--		case SZ_4K:						\
--			ttl |= TLBI_TTL_TG_4K << 2;			\
--			break;						\
--		case SZ_16K:						\
--			ttl |= TLBI_TTL_TG_16K << 2;			\
--			break;						\
--		case SZ_64K:						\
--			ttl |= TLBI_TTL_TG_64K << 2;			\
--			break;						\
--		}							\
--									\
-+		ttl |= get_trans_granule() << 2;			\
- 		arg &= ~TLBI_TTL_MASK;					\
- 		arg |= FIELD_PREP(TLBI_TTL_MASK, ttl);			\
- 	}								\
-@@ -108,6 +118,44 @@
- 		__tlbi_level(op, (arg | USER_ASID_FLAG), level);	\
- } while (0)
- 
-+/*
-+ * This macro creates a properly formatted VA operand for the TLB RANGE.
-+ * The value bit assignments are:
-+ *
-+ * +----------+------+-------+-------+-------+----------------------+
-+ * |   ASID   |  TG  | SCALE |  NUM  |  TTL  |        BADDR         |
-+ * +-----------------+-------+-------+-------+----------------------+
-+ * |63      48|47  46|45   44|43   39|38   37|36                   0|
-+ *
-+ * The address range is determined by below formula:
-+ * [BADDR, BADDR + (NUM + 1) * 2^(5*SCALE + 1) * PAGESIZE)
-+ *
-+ */
-+#define __TLBI_VADDR_RANGE(addr, asid, scale, num, ttl)		\
-+	({							\
-+		unsigned long __ta = (addr) >> PAGE_SHIFT;	\
-+		__ta &= GENMASK_ULL(36, 0);			\
-+		__ta |= (unsigned long)(ttl) << 37;		\
-+		__ta |= (unsigned long)(num) << 39;		\
-+		__ta |= (unsigned long)(scale) << 44;		\
-+		__ta |= get_trans_granule() << 46;		\
-+		__ta |= (unsigned long)(asid) << 48;		\
-+		__ta;						\
-+	})
++static inline void riscv_clear_ipi(void)
++{
++}
 +
-+/* These macros are used by the TLBI RANGE feature. */
-+#define __TLBI_RANGE_PAGES(num, scale)	\
-+	((unsigned long)((num) + 1) << (5 * (scale) + 1))
-+#define MAX_TLBI_RANGE_PAGES		__TLBI_RANGE_PAGES(31, 3)
-+
-+/*
-+ * Generate 'num' values from -1 to 30 with -1 rejected by the
-+ * __flush_tlb_range() loop below.
-+ */
-+#define TLBI_RANGE_MASK			GENMASK_ULL(4, 0)
-+#define __TLBI_RANGE_NUM(pages, scale)	\
-+	((((pages) >> (5 * (scale) + 1)) & TLBI_RANGE_MASK) - 1)
-+
- /*
-  *	TLB Invalidation
-  *	================
-@@ -231,32 +279,82 @@ static inline void __flush_tlb_range(struct vm_area_struct *vma,
- 				     unsigned long stride, bool last_level,
- 				     int tlb_level)
- {
-+	int num = 0;
-+	int scale = 0;
- 	unsigned long asid = ASID(vma->vm_mm);
- 	unsigned long addr;
-+	unsigned long pages;
+ #endif /* CONFIG_SMP */
  
- 	start = round_down(start, stride);
- 	end = round_up(end, stride);
-+	pages = (end - start) >> PAGE_SHIFT;
- 
--	if ((end - start) >= (MAX_TLBI_OPS * stride)) {
-+	/*
-+	 * When not uses TLB range ops, we can handle up to
-+	 * (MAX_TLBI_OPS - 1) pages;
-+	 * When uses TLB range ops, we can handle up to
-+	 * (MAX_TLBI_RANGE_PAGES - 1) pages.
-+	 */
-+	if ((!(cpus_have_const_cap(ARM64_HAS_TLB_RANGE) &&
-+	       IS_ENABLED(CONFIG_ARM64_TLB_RANGE)) &&
-+	     (end - start) >= (MAX_TLBI_OPS * stride)) ||
-+	    pages >= MAX_TLBI_RANGE_PAGES) {
- 		flush_tlb_mm(vma->vm_mm);
- 		return;
- 	}
- 
--	/* Convert the stride into units of 4k */
--	stride >>= 12;
-+	dsb(ishst);
- 
--	start = __TLBI_VADDR(start, asid);
--	end = __TLBI_VADDR(end, asid);
-+	/*
-+	 * When the CPU does not support TLB range operations, flush the TLB
-+	 * entries one by one at the granularity of 'stride'. If the the TLB
-+	 * range ops are supported, then:
-+	 *
-+	 * 1. If 'pages' is odd, flush the first page through non-range
-+	 *    operations;
-+	 *
-+	 * 2. For remaining pages: the minimum range granularity is decided
-+	 *    by 'scale', so multiple range TLBI operations may be required.
-+	 *    Start from scale = 0, flush the corresponding number of pages
-+	 *    ((num+1)*2^(5*scale+1) starting from 'addr'), then increase it
-+	 *    until no pages left.
-+	 *
-+	 * Note that certain ranges can be represented by either num = 31 and
-+	 * scale or num = 0 and scale + 1. The loop below favours the latter
-+	 * since num is limited to 30 by the __TLBI_RANGE_NUM() macro.
-+	 */
-+	while (pages > 0) {
-+		if (!IS_ENABLED(CONFIG_ARM64_TLB_RANGE) ||
-+		    !cpus_have_const_cap(ARM64_HAS_TLB_RANGE) ||
-+		    pages % 2 == 1) {
-+			addr = __TLBI_VADDR(start, asid);
-+			if (last_level) {
-+				__tlbi_level(vale1is, addr, tlb_level);
-+				__tlbi_user_level(vale1is, addr, tlb_level);
-+			} else {
-+				__tlbi_level(vae1is, addr, tlb_level);
-+				__tlbi_user_level(vae1is, addr, tlb_level);
-+			}
-+			start += stride;
-+			pages -= stride >> PAGE_SHIFT;
-+			continue;
-+		}
- 
--	dsb(ishst);
--	for (addr = start; addr < end; addr += stride) {
--		if (last_level) {
--			__tlbi_level(vale1is, addr, tlb_level);
--			__tlbi_user_level(vale1is, addr, tlb_level);
--		} else {
--			__tlbi_level(vae1is, addr, tlb_level);
--			__tlbi_user_level(vae1is, addr, tlb_level);
-+		num = __TLBI_RANGE_NUM(pages, scale);
-+		if (num >= 0) {
-+			addr = __TLBI_VADDR_RANGE(start, asid, scale,
-+						  num, tlb_level);
-+			if (last_level) {
-+				__tlbi(rvale1is, addr);
-+				__tlbi_user(rvale1is, addr);
-+			} else {
-+				__tlbi(rvae1is, addr);
-+				__tlbi_user(rvae1is, addr);
-+			}
-+			start += __TLBI_RANGE_PAGES(num, scale) << PAGE_SHIFT;
-+			pages -= __TLBI_RANGE_PAGES(num, scale);
- 		}
-+		scale++;
- 	}
- 	dsb(ish);
+ #if defined(CONFIG_HOTPLUG_CPU) && (CONFIG_SMP)
+diff --git a/arch/riscv/kernel/sbi.c b/arch/riscv/kernel/sbi.c
+index f383ef5672b2..226ccce0f9e0 100644
+--- a/arch/riscv/kernel/sbi.c
++++ b/arch/riscv/kernel/sbi.c
+@@ -547,6 +547,18 @@ static inline long sbi_get_firmware_version(void)
+ 	return __sbi_base_ecall(SBI_EXT_BASE_GET_IMP_VERSION);
  }
+ 
++static void sbi_send_cpumask_ipi(const struct cpumask *target)
++{
++	struct cpumask hartid_mask;
++
++	riscv_cpuid_to_hartid_mask(target, &hartid_mask);
++
++	sbi_send_ipi(cpumask_bits(&hartid_mask));
++}
++
++static struct riscv_ipi_ops sbi_ipi_ops = {
++	.ipi_inject = sbi_send_cpumask_ipi
++};
+ 
+ int __init sbi_init(void)
+ {
+@@ -587,5 +599,7 @@ int __init sbi_init(void)
+ 		__sbi_rfence	= __sbi_rfence_v01;
+ 	}
+ 
++	riscv_set_ipi_ops(&sbi_ipi_ops);
++
+ 	return 0;
+ }
+diff --git a/arch/riscv/kernel/smp.c b/arch/riscv/kernel/smp.c
+index b1d4f452f843..8b85683ce203 100644
+--- a/arch/riscv/kernel/smp.c
++++ b/arch/riscv/kernel/smp.c
+@@ -84,9 +84,25 @@ static void ipi_stop(void)
+ 		wait_for_interrupt();
+ }
+ 
++static struct riscv_ipi_ops *ipi_ops;
++
++void riscv_set_ipi_ops(struct riscv_ipi_ops *ops)
++{
++	ipi_ops = ops;
++}
++EXPORT_SYMBOL_GPL(riscv_set_ipi_ops);
++
++void riscv_clear_ipi(void)
++{
++	if (ipi_ops && ipi_ops->ipi_clear)
++		ipi_ops->ipi_clear();
++
++	csr_clear(CSR_IP, IE_SIE);
++}
++EXPORT_SYMBOL_GPL(riscv_clear_ipi);
++
+ static void send_ipi_mask(const struct cpumask *mask, enum ipi_message_type op)
+ {
+-	struct cpumask hartid_mask;
+ 	int cpu;
+ 
+ 	smp_mb__before_atomic();
+@@ -94,33 +110,22 @@ static void send_ipi_mask(const struct cpumask *mask, enum ipi_message_type op)
+ 		set_bit(op, &ipi_data[cpu].bits);
+ 	smp_mb__after_atomic();
+ 
+-	riscv_cpuid_to_hartid_mask(mask, &hartid_mask);
+-	if (IS_ENABLED(CONFIG_RISCV_SBI))
+-		sbi_send_ipi(cpumask_bits(&hartid_mask));
++	if (ipi_ops && ipi_ops->ipi_inject)
++		ipi_ops->ipi_inject(mask);
+ 	else
+-		clint_send_ipi_mask(mask);
++		pr_warn("SMP: IPI inject method not available\n");
+ }
+ 
+ static void send_ipi_single(int cpu, enum ipi_message_type op)
+ {
+-	int hartid = cpuid_to_hartid_map(cpu);
+-
+ 	smp_mb__before_atomic();
+ 	set_bit(op, &ipi_data[cpu].bits);
+ 	smp_mb__after_atomic();
+ 
+-	if (IS_ENABLED(CONFIG_RISCV_SBI))
+-		sbi_send_ipi(cpumask_bits(cpumask_of(hartid)));
+-	else
+-		clint_send_ipi_single(hartid);
+-}
+-
+-static inline void clear_ipi(void)
+-{
+-	if (IS_ENABLED(CONFIG_RISCV_SBI))
+-		csr_clear(CSR_IP, IE_SIE);
++	if (ipi_ops && ipi_ops->ipi_inject)
++		ipi_ops->ipi_inject(cpumask_of(cpu));
+ 	else
+-		clint_clear_ipi(cpuid_to_hartid_map(smp_processor_id()));
++		pr_warn("SMP: IPI inject method not available\n");
+ }
+ 
+ void handle_IPI(struct pt_regs *regs)
+@@ -131,7 +136,7 @@ void handle_IPI(struct pt_regs *regs)
+ 
+ 	irq_enter();
+ 
+-	clear_ipi();
++	riscv_clear_ipi();
+ 
+ 	while (true) {
+ 		unsigned long ops;
+diff --git a/arch/riscv/kernel/smpboot.c b/arch/riscv/kernel/smpboot.c
+index 4e9922790f6e..5fe849791bf0 100644
+--- a/arch/riscv/kernel/smpboot.c
++++ b/arch/riscv/kernel/smpboot.c
+@@ -147,8 +147,7 @@ asmlinkage __visible void smp_callin(void)
+ {
+ 	struct mm_struct *mm = &init_mm;
+ 
+-	if (!IS_ENABLED(CONFIG_RISCV_SBI))
+-		clint_clear_ipi(cpuid_to_hartid_map(smp_processor_id()));
++	riscv_clear_ipi();
+ 
+ 	/* All kernel threads share the same mm context.  */
+ 	mmgrab(mm);
 -- 
-2.19.1
-
+2.25.1
 
