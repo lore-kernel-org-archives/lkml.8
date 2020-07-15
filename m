@@ -2,207 +2,311 @@ Return-Path: <SRS0=kup7=A2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B619C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 15:14:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D7A7C433EC
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 15:14:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3028D20658
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 15:14:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance-com.20150623.gappssmtp.com header.i=@bytedance-com.20150623.gappssmtp.com header.b="lXIVAkey"
+	by mail.kernel.org (Postfix) with ESMTP id 3FE5F20658
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 15:14:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726633AbgGOPN7 (ORCPT
+        id S1726687AbgGOPO2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 11:13:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58332 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725932AbgGOPN7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 11:13:59 -0400
-Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 16F52C061755
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 08:13:59 -0700 (PDT)
-Received: by mail-pf1-x442.google.com with SMTP id m9so2235729pfh.0
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 08:13:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=0r5bb0ZMWMeJxc6MpJgS1kjFqz/n/TBIUkKDAK8VCUM=;
-        b=lXIVAkeyGU3/B9G+hN1tCKgp85EQHsHi8oOUtcSkVV9Z0LcFVkKyWbelTBYEI6TU1m
-         bhOBvmTOrlemvaEshedkWQ9SfdcZGA//kuKxWWiJIKG0uQw0Ijfi/LZoVEGx1aK0Sj+d
-         Sy8cyeK/K0QL9vQatJhzlSw4YxH4SIDq91ibsAZyc9BI3s8dzw7ubsByrvKmSmjnr2Uj
-         710q8G5KWB+2mFkHJ1dNQISBcekeHsukednXGe8l9KZnul1rnJJ92TXao6hLiGtAQeBE
-         Zx+K5CPbG3lgsoY4TTkXF2tM7tsNqwcmjtw2n1+0yift8fEdwoqGsZXooTiShVTbH4ft
-         CCXg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=0r5bb0ZMWMeJxc6MpJgS1kjFqz/n/TBIUkKDAK8VCUM=;
-        b=Cx/NgD0Yn3uqgrnoeqWRvMibqd7Itlow1QlKigjvBc6oSc6Hx3SiPobOXfi0JX+eoG
-         C/JnE5C+9qRokJBM3XoC/gbqdsogei3stIVFCuj4l5fdUYr9qDey5yVLXtVg/B3AHwJw
-         6/7XUkasEzc7OW7GVtA3DGCUXZm2Q8+nk00xexWJQgfu2jeVGy+zrJai32S7j1AB8+Dz
-         RxggvORGcn8bVN5fq+9Q+1S3ttDxyRTR06uV2/8EFf0hPfa+IQ4nFD3nuv82nJRQOCLk
-         pybv5hGeqjOzhX5BOCsFB0PH8W+4pt9z/JRUWSOJAp4AK1Br2ZJ4BiZXJp5NeH40IlHm
-         gRiA==
-X-Gm-Message-State: AOAM533Ho+kPWZYt69+U0lHdmvuIaLr+oUQMwU1htuErY1jS3tBbLWcH
-        xzB48oE4iHf6mw1745mbJSGVRQ1fF8pC20B9UQsOGQ==
-X-Google-Smtp-Source: ABdhPJwaqBwFm70w6USx9FK6Q52mOCQdGHjx14sdVsxuDJX8FDJYRZUjwKajpLIuZPmZUIxALRCJQ+Ps3mhkf19NyDA=
-X-Received: by 2002:aa7:858c:: with SMTP id w12mr9910141pfn.143.1594826038426;
- Wed, 15 Jul 2020 08:13:58 -0700 (PDT)
+        Wed, 15 Jul 2020 11:14:28 -0400
+Received: from ms-10.1blu.de ([178.254.4.101]:35016 "EHLO ms-10.1blu.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725900AbgGOPO2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jul 2020 11:14:28 -0400
+Received: from [78.43.71.214] (helo=marius.fritz.box)
+        by ms-10.1blu.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.90_1)
+        (envelope-from <mail@mariuszachmann.de>)
+        id 1jvj71-0008LG-7v; Wed, 15 Jul 2020 17:14:23 +0200
+From:   Marius Zachmann <mail@mariuszachmann.de>
+To:     Guenter Roeck <linux@roeck-us.net>
+Cc:     Marius Zachmann <mail@mariuszachmann.de>,
+        Jean Delvare <jdelvare@suse.com>, linux-hwmon@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v2] hwmon: corsair-cpro: Change to HID driver
+Date:   Wed, 15 Jul 2020 17:14:19 +0200
+Message-Id: <20200715151419.43134-1-mail@mariuszachmann.de>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-References: <20200707062754.8383-1-songmuchun@bytedance.com> <3d06418e-e75c-e7b8-91cd-ba56283045be@suse.cz>
-In-Reply-To: <3d06418e-e75c-e7b8-91cd-ba56283045be@suse.cz>
-From:   Muchun Song <songmuchun@bytedance.com>
-Date:   Wed, 15 Jul 2020 23:13:22 +0800
-Message-ID: <CAMZfGtXK9yQOJy7BPnTBzhG4tithRs=9R4O3rDg1Rjz0zUFKnQ@mail.gmail.com>
-Subject: Re: [External] Re: [PATCH v5.4.y, v4.19.y] mm: memcg/slab: fix memory
- leak at non-root kmem_cache destroy
-To:     Vlastimil Babka <vbabka@suse.cz>
-Cc:     Christoph Lameter <cl@linux.com>,
-        Pekka Enberg <penberg@kernel.org>,
-        David Rientjes <rientjes@google.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linux Memory Management List <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Shakeel Butt <shakeelb@google.com>,
-        Roman Gushchin <guro@fb.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-Con-Id: 241080
+X-Con-U: 0-mail
+X-Originating-IP: 78.43.71.214
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 15, 2020 at 7:32 PM Vlastimil Babka <vbabka@suse.cz> wrote:
->
-> On 7/7/20 8:27 AM, Muchun Song wrote:
-> > If the kmem_cache refcount is greater than one, we should not
-> > mark the root kmem_cache as dying. If we mark the root kmem_cache
-> > dying incorrectly, the non-root kmem_cache can never be destroyed.
-> > It resulted in memory leak when memcg was destroyed. We can use the
-> > following steps to reproduce.
-> >
-> >   1) Use kmem_cache_create() to create a new kmem_cache named A.
-> >   2) Coincidentally, the kmem_cache A is an alias for kmem_cache B,
-> >      so the refcount of B is just increased.
-> >   3) Use kmem_cache_destroy() to destroy the kmem_cache A, just
-> >      decrease the B's refcount but mark the B as dying.
-> >   4) Create a new memory cgroup and alloc memory from the kmem_cache
-> >      A. It leads to create a non-root kmem_cache for allocating.
-> >   5) When destroy the memory cgroup created in the step 4), the
-> >      non-root kmem_cache can never be destroyed.
-> >
-> > If we repeat steps 4) and 5), this will cause a lot of memory leak.
-> > So only when refcount reach zero, we mark the root kmem_cache as dying.
-> >
-> > Fixes: 92ee383f6daa ("mm: fix race between kmem_cache destroy, create and deactivate")
-> > Signed-off-by: Muchun Song <songmuchun@bytedance.com>
->
-> CC Roman, who worked in this area recently.
->
-> Also why is this marked "[PATCH v5.4.y, v4.19.y]"? Has it been fixed otherwise
-> in 5.5+ ?
+This changes corsair-cpro to a hid driver using hid reports.
 
-Because the memcg slab/slub is reworked by Roman since v5.8.
-Therefore, this problem exists in v5.7 and below.
+Signed-off-by: Marius Zachmann <mail@mariuszachmann.de>
 
->
-> > ---
-> >  mm/slab_common.c | 43 +++++++++++++++++++++++++++++++++++++++++--
-> >  1 file changed, 41 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/mm/slab_common.c b/mm/slab_common.c
-> > index 8c1ffbf7de45..83ee6211aec7 100644
-> > --- a/mm/slab_common.c
-> > +++ b/mm/slab_common.c
-> > @@ -258,6 +258,11 @@ static void memcg_unlink_cache(struct kmem_cache *s)
-> >               list_del(&s->memcg_params.kmem_caches_node);
-> >       }
-> >  }
-> > +
-> > +static inline bool memcg_kmem_cache_dying(struct kmem_cache *s)
-> > +{
-> > +     return is_root_cache(s) && s->memcg_params.dying;
-> > +}
-> >  #else
-> >  static inline int init_memcg_params(struct kmem_cache *s,
-> >                                   struct kmem_cache *root_cache)
-> > @@ -272,6 +277,11 @@ static inline void destroy_memcg_params(struct kmem_cache *s)
-> >  static inline void memcg_unlink_cache(struct kmem_cache *s)
-> >  {
-> >  }
-> > +
-> > +static inline bool memcg_kmem_cache_dying(struct kmem_cache *s)
-> > +{
-> > +     return false;
-> > +}
-> >  #endif /* CONFIG_MEMCG_KMEM */
-> >
-> >  /*
-> > @@ -326,6 +336,13 @@ int slab_unmergeable(struct kmem_cache *s)
-> >       if (s->refcount < 0)
-> >               return 1;
-> >
-> > +     /*
-> > +      * If the kmem_cache is dying. We should also skip this
-> > +      * kmem_cache.
-> > +      */
-> > +     if (memcg_kmem_cache_dying(s))
-> > +             return 1;
-> > +
-> >       return 0;
-> >  }
-> >
-> > @@ -944,8 +961,6 @@ void kmem_cache_destroy(struct kmem_cache *s)
-> >       if (unlikely(!s))
-> >               return;
-> >
-> > -     flush_memcg_workqueue(s);
-> > -
-> >       get_online_cpus();
-> >       get_online_mems();
-> >
-> > @@ -955,6 +970,30 @@ void kmem_cache_destroy(struct kmem_cache *s)
-> >       if (s->refcount)
-> >               goto out_unlock;
-> >
-> > +#ifdef CONFIG_MEMCG_KMEM
-> > +     mutex_unlock(&slab_mutex);
-> > +
-> > +     put_online_mems();
-> > +     put_online_cpus();
-> > +
-> > +     flush_memcg_workqueue(s);
-> > +
-> > +     get_online_cpus();
-> > +     get_online_mems();
-> > +
-> > +     mutex_lock(&slab_mutex);
-> > +
-> > +     if (WARN(s->refcount,
-> > +              "kmem_cache_destroy %s: Slab cache is still referenced\n",
-> > +              s->name)) {
-> > +             /*
-> > +              * Reset the dying flag setted by flush_memcg_workqueue().
-> > +              */
-> > +             s->memcg_params.dying = false;
-> > +             goto out_unlock;
-> > +     }
-> > +#endif
-> > +
-> >       err = shutdown_memcg_caches(s);
-> >       if (!err)
-> >               err = shutdown_cache(s);
-> >
->
+---
+Changes from v1
+- add comment at the beginning about using hid and hidraw
+- use hwmon_device_register_with_info and hwmon_device_unregister
+- use a define for timeout
 
+---
+ drivers/hid/hid-quirks.c     |   2 -
+ drivers/hwmon/Kconfig        |   2 +-
+ drivers/hwmon/corsair-cpro.c | 124 ++++++++++++++++++++++++++---------
+ 3 files changed, 95 insertions(+), 35 deletions(-)
 
+diff --git a/drivers/hid/hid-quirks.c b/drivers/hid/hid-quirks.c
+index 7b7bc7737c53..ca8b5c261c7c 100644
+--- a/drivers/hid/hid-quirks.c
++++ b/drivers/hid/hid-quirks.c
+@@ -699,8 +699,6 @@ static const struct hid_device_id hid_ignore_list[] = {
+ 	{ HID_USB_DEVICE(USB_VENDOR_ID_AXENTIA, USB_DEVICE_ID_AXENTIA_FM_RADIO) },
+ 	{ HID_USB_DEVICE(USB_VENDOR_ID_BERKSHIRE, USB_DEVICE_ID_BERKSHIRE_PCWD) },
+ 	{ HID_USB_DEVICE(USB_VENDOR_ID_CIDC, 0x0103) },
+-	{ HID_USB_DEVICE(USB_VENDOR_ID_CORSAIR, 0x0c10) },
+-	{ HID_USB_DEVICE(USB_VENDOR_ID_CORSAIR, 0x1d00) },
+ 	{ HID_USB_DEVICE(USB_VENDOR_ID_CYGNAL, USB_DEVICE_ID_CYGNAL_RADIO_SI470X) },
+ 	{ HID_USB_DEVICE(USB_VENDOR_ID_CYGNAL, USB_DEVICE_ID_CYGNAL_RADIO_SI4713) },
+ 	{ HID_USB_DEVICE(USB_VENDOR_ID_CMEDIA, USB_DEVICE_ID_CM109) },
+diff --git a/drivers/hwmon/Kconfig b/drivers/hwmon/Kconfig
+index 8b046a5dfa40..c603d8c8e3d2 100644
+--- a/drivers/hwmon/Kconfig
++++ b/drivers/hwmon/Kconfig
+@@ -441,7 +441,7 @@ config SENSORS_BT1_PVT_ALARMS
+
+ config SENSORS_CORSAIR_CPRO
+ 	tristate "Corsair Commander Pro controller"
+-	depends on USB
++	depends on HID
+ 	help
+ 	  If you say yes here you get support for the Corsair Commander Pro
+ 	  controller.
+diff --git a/drivers/hwmon/corsair-cpro.c b/drivers/hwmon/corsair-cpro.c
+index fe625190e3a1..ba378574b073 100644
+--- a/drivers/hwmon/corsair-cpro.c
++++ b/drivers/hwmon/corsair-cpro.c
+@@ -2,16 +2,21 @@
+ /*
+  * corsair-cpro.c - Linux driver for Corsair Commander Pro
+  * Copyright (C) 2020 Marius Zachmann <mail@mariuszachmann.de>
++ *
++ * This driver uses hid reports to communicate with the device to allow hidraw userspace drivers
++ * still being used. The device does not use report ids. When using hidraw and this driver
++ * simultaniously, reports could be switched.
+  */
+
+ #include <linux/bitops.h>
++#include <linux/completion.h>
++#include <linux/hid.h>
+ #include <linux/hwmon.h>
+ #include <linux/kernel.h>
+ #include <linux/module.h>
+ #include <linux/mutex.h>
+ #include <linux/slab.h>
+ #include <linux/types.h>
+-#include <linux/usb.h>
+
+ #define USB_VENDOR_ID_CORSAIR			0x1b1c
+ #define USB_PRODUCT_ID_CORSAIR_COMMANDERPRO	0x0c10
+@@ -20,6 +25,7 @@
+ #define OUT_BUFFER_SIZE		63
+ #define IN_BUFFER_SIZE		16
+ #define LABEL_LENGTH		11
++#define REQ_TIMEOUT		300
+
+ #define CTL_GET_TMP_CNCT	0x10	/*
+ 					 * returns in bytes 1-4 for each temp sensor:
+@@ -62,7 +68,9 @@
+ #define NUM_TEMP_SENSORS	4
+
+ struct ccp_device {
+-	struct usb_device *udev;
++	struct hid_device *hdev;
++	struct device *hwmon_dev;
++	struct completion wait_input_report;
+ 	struct mutex mutex; /* whenever buffer is used, lock before send_usb_cmd */
+ 	u8 *buffer;
+ 	int pwm[6];
+@@ -75,7 +83,7 @@ struct ccp_device {
+ /* send command, check for error in response, response in ccp->buffer */
+ static int send_usb_cmd(struct ccp_device *ccp, u8 command, u8 byte1, u8 byte2, u8 byte3)
+ {
+-	int actual_length;
++	unsigned long t;
+ 	int ret;
+
+ 	memset(ccp->buffer, 0x00, OUT_BUFFER_SIZE);
+@@ -84,26 +92,39 @@ static int send_usb_cmd(struct ccp_device *ccp, u8 command, u8 byte1, u8 byte2,
+ 	ccp->buffer[2] = byte2;
+ 	ccp->buffer[3] = byte3;
+
+-	ret = usb_bulk_msg(ccp->udev, usb_sndintpipe(ccp->udev, 2), ccp->buffer, OUT_BUFFER_SIZE,
+-			   &actual_length, 1000);
+-	if (ret)
+-		return ret;
++	reinit_completion(&ccp->wait_input_report);
+
+-	/* response needs to be received every time */
+-	ret = usb_bulk_msg(ccp->udev, usb_rcvintpipe(ccp->udev, 1), ccp->buffer, IN_BUFFER_SIZE,
+-			   &actual_length, 1000);
+-	if (ret)
++	ret = hid_hw_output_report(ccp->hdev, ccp->buffer, OUT_BUFFER_SIZE);
++	if (ret < 0)
+ 		return ret;
+
++	t = wait_for_completion_timeout(&ccp->wait_input_report, msecs_to_jiffies(REQ_TIMEOUT));
++	if (!t)
++		return -ETIMEDOUT;
++
+ 	/* first byte of response is error code */
+ 	if (ccp->buffer[0] != 0x00) {
+-		dev_dbg(&ccp->udev->dev, "device response error: %d", ccp->buffer[0]);
++		hid_dbg(ccp->hdev, "device response error: %d", ccp->buffer[0]);
+ 		return -EIO;
+ 	}
+
+ 	return 0;
+ }
+
++static int ccp_raw_event(struct hid_device *hdev, struct hid_report *report, u8 *data, int size)
++{
++	struct ccp_device *ccp = hid_get_drvdata(hdev);
++
++	/* only copy buffer when requested */
++	if (completion_done(&ccp->wait_input_report))
++		return 0;
++
++	memcpy(ccp->buffer, data, min(IN_BUFFER_SIZE, size));
++	complete(&ccp->wait_input_report);
++
++	return 0;
++}
++
+ /* requests and returns single data values depending on channel */
+ static int get_data(struct ccp_device *ccp, int command, int channel)
+ {
+@@ -437,57 +458,98 @@ static int get_temp_cnct(struct ccp_device *ccp)
+ 	return 0;
+ }
+
+-static int ccp_probe(struct usb_interface *intf, const struct usb_device_id *id)
++static int ccp_probe(struct hid_device *hdev, const struct hid_device_id *id)
+ {
+-	struct device *hwmon_dev;
+ 	struct ccp_device *ccp;
+ 	int ret;
+
+-	ccp = devm_kzalloc(&intf->dev, sizeof(*ccp), GFP_KERNEL);
++	ccp = devm_kzalloc(&hdev->dev, sizeof(*ccp), GFP_KERNEL);
+ 	if (!ccp)
+ 		return -ENOMEM;
+
+-	ccp->buffer = devm_kmalloc(&intf->dev, OUT_BUFFER_SIZE, GFP_KERNEL);
++	ccp->buffer = devm_kmalloc(&hdev->dev, OUT_BUFFER_SIZE, GFP_KERNEL);
+ 	if (!ccp->buffer)
+ 		return -ENOMEM;
+
++	ret = hid_parse(hdev);
++	if (ret)
++		return ret;
++
++	ret = hid_hw_start(hdev, HID_CONNECT_HIDRAW);
++	if (ret)
++		return ret;
++
++	ret = hid_hw_open(hdev);
++	if (ret)
++		goto out_hw_stop;
++
++	ccp->hdev = hdev;
++	hid_set_drvdata(hdev, ccp);
+ 	mutex_init(&ccp->mutex);
++	init_completion(&ccp->wait_input_report);
+
+-	ccp->udev = interface_to_usbdev(intf);
++	hid_device_io_start(hdev);
+
+ 	/* temp and fan connection status only updates when device is powered on */
+ 	ret = get_temp_cnct(ccp);
+ 	if (ret)
+-		return ret;
++		goto out_hw_close;
+
+ 	ret = get_fan_cnct(ccp);
+ 	if (ret)
+-		return ret;
++		goto out_hw_close;
++	ccp->hwmon_dev = hwmon_device_register_with_info(&hdev->dev, "corsaircpro",
++							 ccp, &ccp_chip_info, 0);
++	if (IS_ERR(ccp->hwmon_dev)) {
++		ret = PTR_ERR(ccp->hwmon_dev);
++		goto out_hw_close;
++	}
+
+-	hwmon_dev = devm_hwmon_device_register_with_info(&intf->dev, "corsaircpro", ccp,
+-							 &ccp_chip_info, 0);
++	return 0;
+
+-	return PTR_ERR_OR_ZERO(hwmon_dev);
++out_hw_close:
++	hid_hw_close(hdev);
++out_hw_stop:
++	hid_hw_stop(hdev);
++	return ret;
+ }
+
+-static void ccp_disconnect(struct usb_interface *intf)
++static void ccp_remove(struct hid_device *hdev)
+ {
++	struct ccp_device *ccp = hid_get_drvdata(hdev);
++
++	hwmon_device_unregister(ccp->hwmon_dev);
++	hid_hw_close(hdev);
++	hid_hw_stop(hdev);
+ }
+
+-static const struct usb_device_id ccp_devices[] = {
+-	{ USB_DEVICE(USB_VENDOR_ID_CORSAIR, USB_PRODUCT_ID_CORSAIR_COMMANDERPRO) },
+-	{ USB_DEVICE(USB_VENDOR_ID_CORSAIR, USB_PRODUCT_ID_CORSAIR_1000D) },
++static const struct hid_device_id ccp_devices[] = {
++	{ HID_USB_DEVICE(USB_VENDOR_ID_CORSAIR, USB_PRODUCT_ID_CORSAIR_COMMANDERPRO) },
++	{ HID_USB_DEVICE(USB_VENDOR_ID_CORSAIR, USB_PRODUCT_ID_CORSAIR_1000D) },
+ 	{ }
+ };
+
+-static struct usb_driver ccp_driver = {
++static struct hid_driver ccp_driver = {
+ 	.name = "corsair-cpro",
++	.id_table = ccp_devices,
+ 	.probe = ccp_probe,
+-	.disconnect = ccp_disconnect,
+-	.id_table = ccp_devices
++	.remove = ccp_remove,
++	.raw_event = ccp_raw_event,
+ };
+
+-MODULE_DEVICE_TABLE(usb, ccp_devices);
++MODULE_DEVICE_TABLE(hid, ccp_devices);
+ MODULE_LICENSE("GPL");
+
+-module_usb_driver(ccp_driver);
++static int __init ccp_init(void)
++{
++	return hid_register_driver(&ccp_driver);
++}
++
++static void __exit ccp_exit(void)
++{
++	hid_unregister_driver(&ccp_driver);
++}
++
++/* make sure it is loaded after hid */
++late_initcall(ccp_init);
++module_exit(ccp_exit);
 --
-Yours,
-Muchun
+2.27.0
