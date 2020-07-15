@@ -2,165 +2,161 @@ Return-Path: <SRS0=kup7=A2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D690C433E3
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 15:39:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58732C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 15:39:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DE42D20663
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 15:39:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3217E2071B
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 15:39:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="UklZI0FU";
+	dkim=pass (1024-bit key) header.d=microchiptechnology.onmicrosoft.com header.i=@microchiptechnology.onmicrosoft.com header.b="I3fIch1p"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726828AbgGOPjV (ORCPT
+        id S1726864AbgGOPjh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 11:39:21 -0400
-Received: from outpost1.zedat.fu-berlin.de ([130.133.4.66]:35041 "EHLO
-        outpost1.zedat.fu-berlin.de" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725835AbgGOPjT (ORCPT
+        Wed, 15 Jul 2020 11:39:37 -0400
+Received: from esa3.microchip.iphmx.com ([68.232.153.233]:26093 "EHLO
+        esa3.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726034AbgGOPjg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 11:39:19 -0400
-Received: from inpost2.zedat.fu-berlin.de ([130.133.4.69])
-          by outpost.zedat.fu-berlin.de (Exim 4.93)
-          with esmtps (TLS1.2)
-          tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-          (envelope-from <glaubitz@zedat.fu-berlin.de>)
-          id 1jvjV5-003CrQ-RT; Wed, 15 Jul 2020 17:39:15 +0200
-Received: from p57bd93f9.dip0.t-ipconnect.de ([87.189.147.249] helo=[192.168.178.139])
-          by inpost2.zedat.fu-berlin.de (Exim 4.93)
-          with esmtpsa (TLS1.2)
-          tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-          (envelope-from <glaubitz@physik.fu-berlin.de>)
-          id 1jvjV5-002QSz-KF; Wed, 15 Jul 2020 17:39:15 +0200
-Subject: Re: ioremap and dma cleanups and fixes for superh (2nd resend)
-From:   John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     Rich Felker <dalias@libc.org>, Christoph Hellwig <hch@lst.de>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Linux-sh list <linux-sh@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-References: <20200714121856.955680-1-hch@lst.de>
- <b0745e43-0ff1-58f7-70d5-60b9c8b8d81b@physik.fu-berlin.de>
- <20200714155914.GA24404@brightrain.aerifal.cx>
- <8cbf2963-d0e4-0ca8-4ffe-c2057694447f@physik.fu-berlin.de>
- <011f29e6-ad71-366e-dbff-bc8471f3da60@physik.fu-berlin.de>
- <CAMuHMdUre2-fRgLP8YiwjAKN6J=m1vGhPSMMUdpof7jPJfcWuw@mail.gmail.com>
- <def65208-a38b-8663-492a-cae150027003@physik.fu-berlin.de>
- <b5f1853e-031d-c09d-57d2-fb4baffa01ea@physik.fu-berlin.de>
- <CAMuHMdW8RtJKk3u7RWQKP2tA3AYT2rB2aqhUT1KnJ4tJwWWKDA@mail.gmail.com>
- <b5cd845f-7b5e-af8e-a15d-3ede7e61ced4@physik.fu-berlin.de>
- <0322def7-fc16-c805-8f2b-c88fffce2f1e@physik.fu-berlin.de>
-Autocrypt: addr=glaubitz@physik.fu-berlin.de; keydata=
- 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
- scOkTAZQGVpD/8AaLH4v1w==
-Message-ID: <f10d2711-674b-50b4-cf7a-234070b3c265@physik.fu-berlin.de>
-Date:   Wed, 15 Jul 2020 17:39:14 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
-MIME-Version: 1.0
-In-Reply-To: <0322def7-fc16-c805-8f2b-c88fffce2f1e@physik.fu-berlin.de>
-Content-Type: text/plain; charset=utf-8
+        Wed, 15 Jul 2020 11:39:36 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1594827575; x=1626363575;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-id:content-transfer-encoding:
+   mime-version;
+  bh=bs1GCJRROT3L+eFiWB7ldF/NSw4SssN96pcj5Hl7GMM=;
+  b=UklZI0FURMT4+G9xrYBYrRGOQ4GTREVxDc69Kyc2H4mVaNSOL49EaSWh
+   5duOkgXIYvCZAFuDGBNJK+ydxyJbh/CiYypmYlyB3iUgeQpj4M8pFLcvD
+   SghiJ8vC60c2nxazRnUeVuA85xBBRK9R23ZXzLXtozL1Sn9sDgG8vMYt+
+   50JjRArcV31BKP4B+w6hOcqM2k++jduQLyECugPRGkmUMp//LSsHQDS/Z
+   z/5tiXBm7qQc5pZs0Z2gsMwSeDsWhCRHoRfVqSDviOe4Ib5LVqtpfrC4j
+   qGrjJ8/jDdptB/EKRT3UwDh/hNV3JZ1OAFhT9A3nMCroW+MZwFcMDFE7E
+   Q==;
+IronPort-SDR: JNBV6em2FEFPlLBVkAmL/gs2VqZSyUliUQagTuE99021UnOurCPUR4LOg60SiTENxOPMn6OkGO
+ cLW4Ifd2xyNNgDIW/FuS6ldxeaDIz1AaxigioKeQtup+4zvxdQXQzEAgJZhez0lo+DhIRNAiDi
+ x8lisfVLJV+DbAuA7MT8+GBhDlGWagIwRsxyr6iAxAeaOfZaCilJa9Pcm5YbLXnP+wDwhfGvfL
+ 2aTJ50mdRF/l22uJw5EcvDFfrYdkVDAHt89D4mHd/4appSZcaMuEhWNwbXhMGYI+52rZKmtdSL
+ BlY=
+X-IronPort-AV: E=Sophos;i="5.75,355,1589266800"; 
+   d="scan'208";a="84010188"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa3.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 15 Jul 2020 08:39:34 -0700
+Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
+ chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1979.3; Wed, 15 Jul 2020 08:39:01 -0700
+Received: from NAM02-SN1-obe.outbound.protection.outlook.com (10.10.215.89) by
+ email.microchip.com (10.10.87.152) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1979.3
+ via Frontend Transport; Wed, 15 Jul 2020 08:39:34 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=a+Bo3pm2VhgwKkHZmmU2VCstsHFvFey/EeDfaHE7nkGS0a99+gLRwxGQ8nhOZTdm84c9BDvApjPpHxwH8Y1bzNsDv8VVakUPjqvFnVAZw5Gh0RG6gyMNEXjTDD+Kvs6sopRj+CSsmA9Ixxm3MPJgfxM4KoC1iFLRiE13Lr8AUG8+S6PG76kpEmNmhL+gZcf0TjdA/CWCuOEFfnv/zFLTlwJGWp2/u8PzTDFTP716Id7RBcL0k3IYY1fohZYTHJ7deYgF0aH8QKEZjZvYVtK6MFIBoLWATAWppA7uzl0BQ3+t/RonnTWszVZ1SgjBLztPy1vyCus4UInwfiCLFC94Pg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=bs1GCJRROT3L+eFiWB7ldF/NSw4SssN96pcj5Hl7GMM=;
+ b=Zx6TMlwV1TFFXgdJ61On6KQcQSimUn42/wdWZkilpG1dRQgHj69d7hZweWuZCJy9/1MypJQWvhXeQ+nxK+q2vZNYMHFfk2UyE/ayHDwS5vKAUWlSQ8rWxJn8iLHC1N+b0AocsZ9OZwaNk8Irkm5nTxzu0LYm/pyPDK+yOpkfTBZtoXt6ShXpUDrs0k654g6cOCcn03JDgcqMTjyD1f/vYSfrBErsuSEuxRSWVLEUqBZMu2FaPEmtpx7cNNs1BIAxnwLF7xUF6AeMLmNEjD2kgc+HgMwNRpY1rLFEag+TItncGuuVUWsZlm9Bsj0vKbJpSWM/hmVCFHxvD2AIALj4Og==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microchip.com; dmarc=pass action=none
+ header.from=microchip.com; dkim=pass header.d=microchip.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=microchiptechnology.onmicrosoft.com;
+ s=selector2-microchiptechnology-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=bs1GCJRROT3L+eFiWB7ldF/NSw4SssN96pcj5Hl7GMM=;
+ b=I3fIch1p3vnxBoJyTRVpzYzvxV4CPXxZ/PyGhHsDEH/ycOnQPi33IZXbw/EfvuGotN4xD0xLdikDmXizvIylx9pMJSr9xddyQ4FrTlurUz0UT2rP+Yceejjv6rFcvBY2UgvrYXWtMSEDvvDW8BbvBn9V12j3fH3DMo6+LOrzMlA=
+Received: from DM6PR11MB3420.namprd11.prod.outlook.com (2603:10b6:5:69::31) by
+ DM6PR11MB3290.namprd11.prod.outlook.com (2603:10b6:5:59::25) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.3174.21; Wed, 15 Jul 2020 15:39:33 +0000
+Received: from DM6PR11MB3420.namprd11.prod.outlook.com
+ ([fe80::e8b2:1d82:49d9:f4b]) by DM6PR11MB3420.namprd11.prod.outlook.com
+ ([fe80::e8b2:1d82:49d9:f4b%6]) with mapi id 15.20.3174.026; Wed, 15 Jul 2020
+ 15:39:33 +0000
+From:   <Claudiu.Beznea@microchip.com>
+To:     <mturquette@baylibre.com>, <sboyd@kernel.org>,
+        <Nicolas.Ferre@microchip.com>, <alexandre.belloni@bootlin.com>,
+        <Ludovic.Desroches@microchip.com>
+CC:     <bbrezillon@kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-clk@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH 09/19] clk: at91: sckc: register slow_rc with accuracy
+ option
+Thread-Topic: [PATCH 09/19] clk: at91: sckc: register slow_rc with accuracy
+ option
+Thread-Index: AQHWWr4hHbdIy9PUz0W5KlN9iMKsng==
+Date:   Wed, 15 Jul 2020 15:39:33 +0000
+Message-ID: <a0728969-dcb7-7702-a4fb-58ca1b2260c1@microchip.com>
+References: <1594812267-6697-1-git-send-email-claudiu.beznea@microchip.com>
+ <1594812267-6697-10-git-send-email-claudiu.beznea@microchip.com>
+In-Reply-To: <1594812267-6697-10-git-send-email-claudiu.beznea@microchip.com>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Original-Sender: glaubitz@physik.fu-berlin.de
-X-Originating-IP: 87.189.147.249
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
+authentication-results: baylibre.com; dkim=none (message not signed)
+ header.d=none;baylibre.com; dmarc=none action=none header.from=microchip.com;
+x-originating-ip: [82.76.227.81]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 3e40926b-2ba9-4a38-90db-08d828d545c5
+x-ms-traffictypediagnostic: DM6PR11MB3290:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <DM6PR11MB329046A8CF87DB02505354C5877E0@DM6PR11MB3290.namprd11.prod.outlook.com>
+x-bypassexternaltag: True
+x-ms-oob-tlc-oobclassifiers: OLM:1107;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: GQPVvk+x/zYu9cb0X5KinmcWEuCHYnqShAoDJW/Ad9PKDxjuDb/MCGkt5fVTltsZsSKfRkmUPdZHLKjJ8BzFmpHMr8ES+C1io13N4g4DNXEugZTRa5/Auo9dw3FvOcXVH42crJDxR1G0dg+YMiH+sQgzSe6erpuliYggOIH6JipoNDiUTmVNqX4HwV/vHVFm4IQSg/XbX8YUGAJvx9rgDmDa2daSCyHqopwXKUbg751/AayzYITdblYoW3LSH3ratx9BeT4p+9U/l2SYNHzFQlRzmjMN9bD4v3/qY+R6KZVGQEoF6rL6RFgRNDi4/lF69E5vsoE1IQO9d/NuFCZEb6E+2OhPtyIBRwxyXn+u1LjWZaY6MWeFj0lw3wdXcovJwe0vPxMqJZ4dMbqOYgeG6tkSMLxoOV4EPtCe74E+zmp6+5HxXyTvEa66pucCdD19hQHtLx6oZ+trMhkn6tgLjA==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR11MB3420.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(39860400002)(346002)(376002)(366004)(136003)(396003)(6486002)(8936002)(4326008)(8676002)(83080400001)(54906003)(110136005)(478600001)(71200400001)(6512007)(31696002)(66946007)(316002)(6636002)(86362001)(66446008)(2616005)(83380400001)(53546011)(16799955002)(186003)(31686004)(6506007)(64756008)(91956017)(966005)(36756003)(26005)(2906002)(76116006)(5660300002)(66476007)(66556008)(43740500002);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: zuQdiXmeoKb5ZjcRAT+W6Kql+8w0loxV3L/6uDWgbFXfGIdZFowryaBnRRzfrS8O1obrXopkLYhWizV1RoIHNcEu3QQDieXoY6IWoPSQ2Vdsdx90xpwbWQ1YyPzqtDSKvozaiRrdymmxJBpE1kU5Mup8+UukZ1AoyQ+9nM7E9/eUDc1wViWDtEQ5FG2VKjQVAT2UvrW6F+l0zgXoafZinZmboufQbWQ1/7aK0PjC1HyylP8NxJFLJoBhi/V98uY36a+O92YeWtJl9raWSBiJYUS/R5pW9eu0KWPSM+9uNXLNnkcvABnpuiFRnLYXAP2BHKn0JN9E/tKQgqaMpTsATRL9+zx9OJxKwvhUARlrJsxobd/aGSHSg4EQB6nLj6i/dFoaNe7lW7VJvcxbJurWu1NgYK5HYO3Igp8YXLuJgToIwlaQz4SsDAgdISMDQRnui6MVfDhl4taON0zOchlHZ7bsdGV08LuyPZAIlasz4i4=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <AEBF733E7A1CFE439EB0AFB0B0B5ED56@namprd11.prod.outlook.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: DM6PR11MB3420.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3e40926b-2ba9-4a38-90db-08d828d545c5
+X-MS-Exchange-CrossTenant-originalarrivaltime: 15 Jul 2020 15:39:33.5456
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 30DbM7F7EGYU+0zVeiKQhJTxXZZBuEyf9lYFqRdjCH1yydUDJA/jOEM2eWxHHadTmioDblhd6xnhLEOyDcljQT97aad82pRIpnW96Xhp0+g=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR11MB3290
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/15/20 4:37 PM, John Paul Adrian Glaubitz wrote:
-> Will report once I found the bad commit that introduced the problem.
-
-git bisect lead me to a merge commit:
-
-glaubitz@epyc:..glaubitz/linux> git bisect log
-git bisect start
-# good: [1c163f4c7b3f621efff9b28a47abb36f7378d783] Linux 5.0
-git bisect good 1c163f4c7b3f621efff9b28a47abb36f7378d783
-# bad: [7bc20f6563b4e117d61ca575427208e0eaa945b9] sh: Fix unneeded constructor in page table allocation
-git bisect bad 7bc20f6563b4e117d61ca575427208e0eaa945b9
-# bad: [eeb2045bb7d20fea0a242148059377cd0cb4a499] Merge branch '10GbE' of git://git.kernel.org/pub/scm/linux/kernel/git/jkirsher/next-queue
-git bisect bad eeb2045bb7d20fea0a242148059377cd0cb4a499
-# bad: [5ce40fd86cf155e0eefc73509343bb3eeaafa4bc] drm/amdgpu: add Arcturus chip_name for init sdma microcode
-git bisect bad 5ce40fd86cf155e0eefc73509343bb3eeaafa4bc
-# good: [8f14c99c7edaaba9c0bb1727d44db6ebf157cc61] netfilter: conntrack: limit sysctl setting for boolean options
-git bisect good 8f14c99c7edaaba9c0bb1727d44db6ebf157cc61
-# good: [dce45af5c2e9e85f22578f2f8065f225f5d11764] Merge tag 'for-linus' of git://git.kernel.org/pub/scm/linux/kernel/git/rdma/rdma
-git bisect good dce45af5c2e9e85f22578f2f8065f225f5d11764
-# bad: [60fce36afa9c77c7ccbf980c4f670f3be3651fce] mm/compaction.c: correct zone boundary handling when isolating pages from a pageblock
-git bisect bad 60fce36afa9c77c7ccbf980c4f670f3be3651fce
-# bad: [414147d99b928c574ed76e9374a5d2cb77866a29] Merge tag 'pci-v5.2-changes' of git://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci
-git bisect bad 414147d99b928c574ed76e9374a5d2cb77866a29
-# bad: [1fb3b526df3bd7647e7854915ae6b22299408baf] Merge tag 'docs-5.2a' of git://git.lwn.net/linux
-git bisect bad 1fb3b526df3bd7647e7854915ae6b22299408baf
-# bad: [ea5aee6d97fd2d4499b1eebc233861c1def70f06] Merge tag 'clk-for-linus' of git://git.kernel.org/pub/scm/linux/kernel/git/clk/linux
-git bisect bad ea5aee6d97fd2d4499b1eebc233861c1def70f06
-# bad: [45182e4e1f8ac04708ca7508c51d9103f07d81ab] Merge branch 'i2c/for-5.2' of git://git.kernel.org/pub/scm/linux/kernel/git/wsa/linux
-git bisect bad 45182e4e1f8ac04708ca7508c51d9103f07d81ab
-# good: [5940d1cf9f42f67e9cc3f7df9eda39f5888d6e9e] SUNRPC: Rebalance a kref in auth_gss.c
-git bisect good 5940d1cf9f42f67e9cc3f7df9eda39f5888d6e9e
-# bad: [abde77eb5c66b2f98539c4644b54f34b7e179e6b] Merge branch 'for-5.2' of git://git.kernel.org/pub/scm/linux/kernel/git/tj/cgroup
-git bisect bad abde77eb5c66b2f98539c4644b54f34b7e179e6b
-# bad: [7664cd6e3a0b2709f04c07435e96c7c85e7d7324] Merge branch 'next-integrity' of git://git.kernel.org/pub/scm/linux/kernel/git/jmorris/linux-security
-git bisect bad 7664cd6e3a0b2709f04c07435e96c7c85e7d7324
-# good: [3e9dfc6e1e8bce62a329f1452c7eeccbac230980] orangefs: move do_readv_writev to direct_IO
-git bisect good 3e9dfc6e1e8bce62a329f1452c7eeccbac230980
-# good: [4077a0f25b001926f86d35f6236351583bada9a4] orangefs: pass slot index back to readpage.
-git bisect good 4077a0f25b001926f86d35f6236351583bada9a4
-# good: [2bfebea90dd5e8c57ae1021a5d1bb6c1057eee6d] Merge branch 'next-integrity-for-james' of git://git.kernel.org/pub/scm/linux/kernel/git/zohar/linux-integrity into next-integrity
-git bisect good 2bfebea90dd5e8c57ae1021a5d1bb6c1057eee6d
-# good: [33713cd09ccdc1e01b10d0782ae60200d4989553] orangefs: truncate before updating size
-git bisect good 33713cd09ccdc1e01b10d0782ae60200d4989553
-# bad: [882388056194d2d4c3f589b194b6bdcc47e677e8] Merge tag 'for-linus-5.2-ofs1' of git://git.kernel.org/pub/scm/linux/kernel/git/hubcap/linux
-git bisect bad 882388056194d2d4c3f589b194b6bdcc47e677e8
-# first bad commit: [882388056194d2d4c3f589b194b6bdcc47e677e8] Merge tag 'for-linus-5.2-ofs1' of git://git.kernel.org/pub/scm/linux/kernel/git/hubcap/linux
-glaubitz@epyc:..glaubitz/linux>
-
--- 
- .''`.  John Paul Adrian Glaubitz
-: :' :  Debian Developer - glaubitz@debian.org
-`. `'   Freie Universitaet Berlin - glaubitz@physik.fu-berlin.de
-  `-    GPG: 62FF 8A75 84E0 2956 9546  0006 7426 3B37 F5B5 F913
+DQoNCk9uIDE1LjA3LjIwMjAgMTQ6MjQsIENsYXVkaXUgQmV6bmVhIHdyb3RlOg0KPiBSZWdpc3Rl
+ciBzbG93IHJjIHdpdGggYWNjdXJhY3kgb3B0aW9uLg0KPiANCj4gRml4ZXM6IDA0YmNjNDI3NWU2
+MDEgKCJjbGs6IGF0OTE6IHNja2M6IGFkZCBzdXBwb3J0IGZvciBTQU05WDYwIikNCj4gU2lnbmVk
+LW9mZi1ieTogQ2xhdWRpdSBCZXpuZWEgPGNsYXVkaXUuYmV6bmVhQG1pY3JvY2hpcC5jb20+DQo+
+IC0tLQ0KPiAgZHJpdmVycy9jbGsvYXQ5MS9zY2tjLmMgfCA1ICsrKy0tDQo+ICAxIGZpbGUgY2hh
+bmdlZCwgMyBpbnNlcnRpb25zKCspLCAyIGRlbGV0aW9ucygtKQ0KPiANCj4gZGlmZiAtLWdpdCBh
+L2RyaXZlcnMvY2xrL2F0OTEvc2NrYy5jIGIvZHJpdmVycy9jbGsvYXQ5MS9zY2tjLmMNCj4gaW5k
+ZXggMTVkYzRjZDg2ZDc2Li4yZDY1NzcwZDg2NjUgMTAwNjQ0DQo+IC0tLSBhL2RyaXZlcnMvY2xr
+L2F0OTEvc2NrYy5jDQo+ICsrKyBiL2RyaXZlcnMvY2xrL2F0OTEvc2NrYy5jDQo+IEBAIC00NzEs
+OCArNDcxLDkgQEAgc3RhdGljIHZvaWQgX19pbml0IG9mX3NhbTl4NjBfc2NrY19zZXR1cChzdHJ1
+Y3QgZGV2aWNlX25vZGUgKm5wKQ0KPiAgCWlmICghcmVnYmFzZSkNCj4gIAkJcmV0dXJuOw0KPiAg
+DQo+IC0Jc2xvd19yYyA9IGNsa19od19yZWdpc3Rlcl9maXhlZF9yYXRlKE5VTEwsIHBhcmVudF9u
+YW1lc1swXSwgTlVMTCwgMCwNCj4gLQkJCQkJICAgICAzMjc2OCk7DQo+ICsJc2xvd19yYyA9IGNs
+a19od19yZWdpc3Rlcl9maXhlZF9yYXRlX3dpdGhfYWNjdXJhY3koTlVMTCwgcGFyZW50X25hbWVz
+WzBdLA0KPiArCQkJCQkJCSAgIE5VTEwsIDAsIDMyNzY4LA0KPiArCQkJCQkJCSAgIDkzNzUwMDAw
+KTsNCg0KSSBmb3Jnb3QgdG8gbWVudGlvbiBpbiBjb21taXQgbWVzc2FnZSAoSSdsbCBkbyBpdCBp
+biB2MiBvbmNlIEknbGwNCmdhdGhlciBtb3JlIGNvbW1lbnRzIG9uIHRoaXMgc2VyaWVzKToNCg0K
+Q2hhcHRlciA1Ny43LjUgb2YgU0FNOVg2MCBkYXRhc2hlZXQgc3BlY2lmaWVzIHRoYXQgdGhlIG1h
+eGltdW0gZHJpZnQgb2YNCnRoaXMgb3NjaWxsYXRvciBpcyArLSAzS0h6LiBJIHVzZWQgdGhhdCB2
+YWx1ZSBhbmQgdGhlIGZvcm11bGEgYXQgWzFdDQpvciB0aGUgY2FsY3VsYXRvciBhdCBbMl0gdG8g
+Y29tcHV0ZSB0aGUgUFBCIHZhbHVlLg0KDQpbMV0gaHR0cHM6Ly93d3cuZXZlcnl0aGluZ3JmLmNv
+bS9yZi1jYWxjdWxhdG9ycy9wcG0tdG8taHotY2FsY3VsYXRvcg0KWzJdIGh0dHBzOi8vd3d3LmNo
+YW5ncHVhay5jaC9lbGVjdHJvbmljcy9wcG1fdG9fSHpfY29udmVydGVyLnBocA0KDQoNClRoYW5r
+IHlvdSwNCkNsYXVkaXUgQmV6bmVhDQoNCj4gIAlpZiAoSVNfRVJSKHNsb3dfcmMpKQ0KPiAgCQly
+ZXR1cm47DQo+ICANCj4g
