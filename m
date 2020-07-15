@@ -2,48 +2,51 @@ Return-Path: <SRS0=kup7=A2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A26C1C433E4
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 12:48:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 044A3C433E3
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 12:48:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7961E20578
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 12:48:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D0D16206D5
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 12:48:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="AEuBZRjn"
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="BhAQ/z1N"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731246AbgGOMsp (ORCPT
+        id S1731269AbgGOMsq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 08:48:45 -0400
-Received: from perceval.ideasonboard.com ([213.167.242.64]:60138 "EHLO
+        Wed, 15 Jul 2020 08:48:46 -0400
+Received: from perceval.ideasonboard.com ([213.167.242.64]:60148 "EHLO
         perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728861AbgGOMsp (ORCPT
+        with ESMTP id S1729312AbgGOMsp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 15 Jul 2020 08:48:45 -0400
 Received: from Q.local (cpc89242-aztw30-2-0-cust488.18-1.cable.virginm.net [86.31.129.233])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 80E1A564;
-        Wed, 15 Jul 2020 14:48:42 +0200 (CEST)
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 651DF595;
+        Wed, 15 Jul 2020 14:48:43 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
         s=mail; t=1594817323;
-        bh=ymuoWEsdbUlRYdGRMk/tboXnTJb8BaO8toTY5V7aRxQ=;
-        h=From:To:Cc:Subject:Date:From;
-        b=AEuBZRjnvuPz8LxH97+ubyzGhBWRm59auYKmPT7gIsDbBuH51n63LTcwmXGcVRXdE
-         0U4O3VpTWs52HfRNy7JUD+ERwUwTMLaiOzatgXen2TVLE7ZrKjuYP/yNhw577sJOJ3
-         +S7VQe5cZRnY2yRUe74ZRksgY3MbUoCTr5ilMKHM=
+        bh=a7uVQzE49137RdV07bw9OGdl1LVEpyOGkBAVLWh288A=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=BhAQ/z1NGB0cIEOvyVsZG7CB936KpG6rTgJSLDtFCgObG0y+k+Vhnh8ThyDG8TeWN
+         5147wg0RI6c3cin6GYmxbQA9KBYaNHAfmMV1Ijx1Onemy1xIEYUp1tkhlawf3nYFXQ
+         Be65b2WYNfIefqdiruXdTQrTlTrjNEAtYMWUP/t4=
 From:   Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
 To:     trivial@kernel.org
 Cc:     Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-input@vger.kernel.org, netdev@vger.kernel.org,
-        ath10k@lists.infradead.org, linux-wireless@vger.kernel.org,
-        virtualization@lists.linux-foundation.org, linux-mm@kvack.org
-Subject: [PATCH v2 0/8] spelling.txt: /decriptors/descriptors/
-Date:   Wed, 15 Jul 2020 13:48:31 +0100
-Message-Id: <20200715124839.252822-1-kieran.bingham+renesas@ideasonboard.com>
+        Sekhar Nori <nsekhar@ti.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Russell King <linux@armlinux.org.uk>,
+        linux-arm-kernel@lists.infradead.org (moderated list:ARM
+        SUB-ARCHITECTURES), linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH v2 1/8] arch: arm: mach-davinci: Fix trivial spelling
+Date:   Wed, 15 Jul 2020 13:48:32 +0100
+Message-Id: <20200715124839.252822-2-kieran.bingham+renesas@ideasonboard.com>
 X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200715124839.252822-1-kieran.bingham+renesas@ideasonboard.com>
+References: <20200715124839.252822-1-kieran.bingham+renesas@ideasonboard.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -51,50 +54,29 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-I wouldn't normally go through spelling fixes, but I caught sight of
-this typo twice, and then foolishly grepped the tree for it, and saw how
-pervasive it was.
+The word 'descriptor' is misspelled throughout the tree.
 
-so here I am ... fixing a typo globally... but with an addition in
-scripts/spelling.txt so it shouldn't re-appear ;-)
+Fix it up accordingly:
+    decriptors -> descriptors
 
-V2: Posting before the merge windows close to pick up the last few
-non-merged patches, and ideally - to get the actaul spelling.txt entry
-picked up, and this time including trivial@kernel.org to let these get
-head through that tree if required.
-
-Cc: trivial@kernel.org
-Cc: linux-arm-kernel@lists.infradead.org (moderated list:ARM SUB-ARCHITECTURES)
-Cc: linux-kernel@vger.kernel.org (open list)
-Cc: linux-input@vger.kernel.org (open list:INPUT (KEYBOARD, MOUSE, JOYSTICK, TOUCHSCREEN)...)
-Cc: netdev@vger.kernel.org (open list:NETWORKING DRIVERS)
-Cc: ath10k@lists.infradead.org (open list:QUALCOMM ATHEROS ATH10K WIRELESS DRIVER)
-Cc: linux-wireless@vger.kernel.org (open list:NETWORKING DRIVERS (WIRELESS))
-Cc: virtualization@lists.linux-foundation.org (open list:VIRTIO BALLOON)
-Cc: linux-mm@kvack.org (open list:MEMORY MANAGEMENT)
-
-Kieran Bingham (17):
-  arch: arm: mach-davinci: Fix trivial spelling
-  drivers: input: joystick: Fix trivial spelling
-  drivers: net: wan: Fix trivial spelling
-  drivers: net: wireless: Fix trivial spelling
-  include: dynamic_debug.h: Fix trivial spelling
-  kernel: trace: Fix trivial spelling
-  mm/balloon_compaction: Fix trivial spelling
-  scripts/spelling.txt: Add descriptors correction
-
+Signed-off-by: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
+---
  arch/arm/mach-davinci/board-da830-evm.c | 2 +-
- drivers/input/joystick/spaceball.c      | 2 +-
- drivers/net/wan/lmc/lmc_main.c          | 2 +-
- drivers/net/wireless/ath/ath10k/usb.c   | 2 +-
- drivers/net/wireless/ath/ath6kl/usb.c   | 2 +-
- drivers/net/wireless/cisco/airo.c       | 2 +-
- include/linux/dynamic_debug.h           | 2 +-
- kernel/trace/trace_events.c             | 2 +-
- mm/balloon_compaction.c                 | 4 ++--
- scripts/spelling.txt                    | 2 ++
- 10 files changed, 12 insertions(+), 10 deletions(-)
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
+diff --git a/arch/arm/mach-davinci/board-da830-evm.c b/arch/arm/mach-davinci/board-da830-evm.c
+index a273ab25c668..1076886938b6 100644
+--- a/arch/arm/mach-davinci/board-da830-evm.c
++++ b/arch/arm/mach-davinci/board-da830-evm.c
+@@ -266,7 +266,7 @@ static struct mtd_partition da830_evm_nand_partitions[] = {
+ 	}
+ };
+ 
+-/* flash bbt decriptors */
++/* flash bbt descriptors */
+ static uint8_t da830_evm_nand_bbt_pattern[] = { 'B', 'b', 't', '0' };
+ static uint8_t da830_evm_nand_mirror_pattern[] = { '1', 't', 'b', 'B' };
+ 
 -- 
 2.25.1
 
