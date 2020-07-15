@@ -2,92 +2,139 @@ Return-Path: <SRS0=kup7=A2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 196EFC433E5
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 07:49:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44BCEC433E3
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 07:49:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DA9D2206F4
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 07:49:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 25D2C206F4
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 07:49:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nITANJhZ"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Yfvzjf4u"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729489AbgGOHtq (ORCPT
+        id S1729481AbgGOHtW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 03:49:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46104 "EHLO
+        Wed, 15 Jul 2020 03:49:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46040 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728888AbgGOHtq (ORCPT
+        with ESMTP id S1728888AbgGOHtV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 03:49:46 -0400
-Received: from mail-qk1-x742.google.com (mail-qk1-x742.google.com [IPv6:2607:f8b0:4864:20::742])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0D95AC061755
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 00:49:46 -0700 (PDT)
-Received: by mail-qk1-x742.google.com with SMTP id z63so941278qkb.8
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 00:49:46 -0700 (PDT)
+        Wed, 15 Jul 2020 03:49:21 -0400
+Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 97019C061755
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 00:49:21 -0700 (PDT)
+Received: by mail-pg1-x544.google.com with SMTP id s189so2660713pgc.13
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 00:49:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=A2hxAhRHGznvP3x0GH9I5kLA83LtI5MGzkZDrric2C8=;
-        b=nITANJhZ+S1Je3d/kQHYlr/LhsqXxPv8kVQpvEzlVF1g56h8F0f/RvZXCzQvtvjsGl
-         EoTaUTmG8wAKzp/pe0KWE3QAahWqmfXk8TpROJZAJF/AolCKVTXcAxtRbRCjBdL9SUOd
-         c7QaU5hwk5yXHGrOZKnlJ8y8mMrfwFkA1AN26YV5kLnLIt4Yg57lLga+Qhyv8X/D9fax
-         2GLQGm0V0zWP6YTmz3NGmSh+wlgasLHEK8WgjpyF7ga2kvDRbxkckWUgGwH0wmDqo3KP
-         jdQ4aegz6v1stNglcJEI38a9P5ZPtyNvz9Wu/07JQXpy9IG145PT5OVcJDJtz2kKywoC
-         MrMQ==
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=AvUYaZdTBJOJT4skplAAvkJuJ1Wq6R9AP4tH75ZrRy8=;
+        b=Yfvzjf4uQhFQ3iiZ5Gopk0tjd4eTIzdPUwdWjIhr83TAMELSaGbvOPrOOcdrLn+8Ag
+         W3UC77VHMkmg0jEQ6MY6S8qFzt4J4KBytWDGraf+22OAp9jVSpoO++6zNHYM2JPgi3eF
+         0dzNj78rTpDvxvwNT+eEwUlOEO2c44ExSxuhA=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=A2hxAhRHGznvP3x0GH9I5kLA83LtI5MGzkZDrric2C8=;
-        b=AyAE3aL1VPzDJeG2OGpKSZj/1Zeyco+Ju+j3DEeoOyH9CRiyHfcipOM6RHVbySIoYG
-         3K7TiGc1ipluO08FZeCLw9zfD5fmHhj4q/7+FGhIzFDIDDK5rZpX4/TPzlBsDx1ykEiB
-         JkeQdUpRP2L067ofPPvtJCrvzKaYvW+pv5dWcRoNZovgVZnlMmgmXfr7/S0LZL+zqLhl
-         cKJscMEj7OisNjt1cj0TRQVOl97LgsFSnJghHc467s2+SYQd2AeQYIqjICw+SWJ3B86p
-         JizaVuRbcJTHatC9i+YFRoIpblNH1MNFoybDYei4xFFk/kWFcCPO9v21e6wNaAQtkTJy
-         Mryg==
-X-Gm-Message-State: AOAM530xrqdmq7/no3Bxfekyb3nnTIC1VWaTSNLVUeBOSjB/wOQ8tlJ5
-        pCslxYa2h57mZCAEO8ip+zdeODtUJGNwu8LvBAO9uw==
-X-Google-Smtp-Source: ABdhPJxRU1suOXictpKMhpKdY5n5UFCCvMV8M/HIMI2KDxMKdYWvKym3V4XUrQboYUtv/X0P+Ssv4DNWAqpKu3Vj1N8=
-X-Received: by 2002:a37:9147:: with SMTP id t68mr8274659qkd.34.1594799385291;
- Wed, 15 Jul 2020 00:49:45 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=AvUYaZdTBJOJT4skplAAvkJuJ1Wq6R9AP4tH75ZrRy8=;
+        b=H8Kr7FYYeVopx5Vlj1BzNwPLS+BUnFOShwuEvissJn0P9VW6UW04/ozkTh9v53WYyk
+         aM8xJE4jxUxwRxs3kuHl0jX9ryLcwKfNOI77H7A0T7rcOY7QfNeO80uTIqxhatqaWNLW
+         DhPdUQquJXOWe30VErCeIMsH4thDb0J2xYnuswnNdpf9HQqwtXIyOU8uXTZNFd1AFwFt
+         hnSMMemW4pRV+5eeYMYu219UA1S9dCTQA+YbYKUwiiH2isq0ErskV24wy4KDyaP4hy2z
+         pVblrkMsHcG4D1JGs7hwIXPiZ6YeuxWMHYGIzCGcak2zKFl3ih4jX7bhzuWZ1lTPu6Xu
+         BzcA==
+X-Gm-Message-State: AOAM531T/AoNYCtgT4f+OcNuVMeL7RVQ0RL7yUJ8/x+fpTlVfHRz4nXW
+        u49Ad3P9qJK2OELy3vZlMXH7Ic/djyQ=
+X-Google-Smtp-Source: ABdhPJzL1M78tbYggyyVZ6z0szvFqkdhrNRhCxOjhcPk+1HQ4/2RhGd7uaOXdyjkI7gmrmd1BvGCmw==
+X-Received: by 2002:a62:3587:: with SMTP id c129mr7799705pfa.212.1594799361142;
+        Wed, 15 Jul 2020 00:49:21 -0700 (PDT)
+Received: from bhanumaiya-glaptop.hsd1.ca.comcast.net ([2601:646:9500:590:250:b6ff:fe8e:b459])
+        by smtp.gmail.com with ESMTPSA id ci23sm1203329pjb.29.2020.07.15.00.49.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 15 Jul 2020 00:49:20 -0700 (PDT)
+From:   Bhanu Prakash Maiya <bhanumaiya@chromium.org>
+X-Google-Original-From: Bhanu Prakash Maiya <bhanumaiya@google.com>
+To:     linux-arm-kernel@lists.infradead.org
+Cc:     Lee Jones <lee.jones@linaro.org>,
+        Furquan Shaikh <furquan@chromium.org>,
+        Raul E Rangel <rrangel@chromium.org>,
+        Eric Peers <epeers@google.com>,
+        Duncan Laurie <dlaurie@google.com>,
+        Benson Leung <bleung@chromium.org>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Bhanu Prakash Maiya <bhanumaiya@chromium.org>,
+        Guenter Roeck <groeck@chromium.org>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        Rob Herring <robh@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        devicetree@vger.kernel.org, linux-kernel@vger.Kernel.org,
+        Bhanu Prakash Maiya <bhanumaiya@google.com>
+Subject: [PATCH v2 2/2] dt-bindings: mfd: Add DT compatible string "google,cros_ec_uart"
+Date:   Wed, 15 Jul 2020 00:49:07 -0700
+Message-Id: <20200715074907.1756034-2-bhanumaiya@google.com>
+X-Mailer: git-send-email 2.27.0.389.gc38d7665816-goog
+In-Reply-To: <20200715074907.1756034-1-bhanumaiya@google.com>
+References: <20200715074907.1756034-1-bhanumaiya@google.com>
 MIME-Version: 1.0
-References: <20200619090635.58548-1-lizhe67@huawei.com> <e0d04d70ce674584a71af1a5a00984dd26729891.camel@infinera.com>
- <dadc539df01b17aa5dc85e7c0f1dbc83591667cc.camel@infinera.com>
- <CAFLxGvzP3AuZBJ3RugZiRTobxv3Z-kxYKnBUi0rfshwf7GuuCA@mail.gmail.com> <a42981ab23f75dcf5feddf6c8b50d3b44f749899.camel@infinera.com>
-In-Reply-To: <a42981ab23f75dcf5feddf6c8b50d3b44f749899.camel@infinera.com>
-From:   Richard Weinberger <richard.weinberger@gmail.com>
-Date:   Wed, 15 Jul 2020 09:49:34 +0200
-Message-ID: <CAFLxGvwNuN_OqGdA8oMom1uG=QAnmJDJkQ-BHEMA915-Kz19cA@mail.gmail.com>
-Subject: Re: [PATCH] jffs2: fix UAF problem
-To:     Joakim Tjernlund <Joakim.Tjernlund@infinera.com>
-Cc:     "zhongjubin@huawei.com" <zhongjubin@huawei.com>,
-        "dwmw2@infradead.org" <dwmw2@infradead.org>,
-        "qiuxi1@huawei.com" <qiuxi1@huawei.com>,
-        "richard@nod.at" <richard@nod.at>,
-        "wangfangpeng1@huawei.com" <wangfangpeng1@huawei.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>,
-        "chenjie6@huawei.com" <chenjie6@huawei.com>,
-        "lizhe67@huawei.com" <lizhe67@huawei.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 13, 2020 at 11:51 PM Joakim Tjernlund
-<Joakim.Tjernlund@infinera.com> wrote:
-> Did you queue for stable too?
-> This bug has been there since day one for jffs2
+From: Bhanu Prakash Maiya <bhanumaiya@chromium.org>
 
-It will. I just had no chance to re-create my setup after the
-infradead.org meltdown. :-)
+Add DT compatible string in
+Documentation/devicetree/bindings/mfd/cros_ec.txt
 
+Series-to: LKML <linux-kernel@vger.kernel.org>
+Series-cc: Raul E Rangel <rrangel@chromium.org>, Furquan Shaikh <furquan@chromium.org>, Duncan Laurie <dlaurie@google.com>, Eric Peers <epeers@google.com>, Benson Leung <bleung@chromium.org>, Enric Balletbo i Serra <enric.balletbo@collabora.com>, Guenter Roeck <groeck@chromium.org>, linux-kernel@vger.kernel.org, Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
+
+Signed-off-by: Bhanu Prakash Maiya <bhanumaiya@chromium.org>
+Change-Id: Icfeab15fa04daaffc61280faf5a75cd9b23ee822
+Signed-off-by: Bhanu Prakash Maiya <bhanumaiya@google.com>
+---
+ Documentation/devicetree/bindings/mfd/cros-ec.txt | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/mfd/cros-ec.txt b/Documentation/devicetree/bindings/mfd/cros-ec.txt
+index 4860eabd0f729..ec8c5d7ecc266 100644
+--- a/Documentation/devicetree/bindings/mfd/cros-ec.txt
++++ b/Documentation/devicetree/bindings/mfd/cros-ec.txt
+@@ -3,7 +3,7 @@ ChromeOS Embedded Controller
+ Google's ChromeOS EC is a Cortex-M device which talks to the AP and
+ implements various function such as keyboard and battery charging.
+ 
+-The EC can be connect through various means (I2C, SPI, LPC, RPMSG) and the
++The EC can be connect through various means (I2C, SPI, UART, LPC, RPMSG) and the
+ compatible string used depends on the interface. Each connection method has
+ its own driver which connects to the top level interface-agnostic EC driver.
+ Other Linux driver (such as cros-ec-keyb for the matrix keyboard) connect to
+@@ -17,6 +17,10 @@ Required properties (SPI):
+ - compatible: "google,cros-ec-spi"
+ - reg: SPI chip select
+ 
++Required properties (UART):
++- compatible: "google,cros-ec-uart"
++- reg: UART baudrate, flowcontrol
++
+ Required properties (RPMSG):
+ - compatible: "google,cros-ec-rpmsg"
+ 
+@@ -72,5 +76,6 @@ spi@131b0000 {
+ 	};
+ };
+ 
+-
+ Example for LPC is not supplied as it is not yet implemented.
++
++Example for UART is not supplied as it is not yet implemented.
 -- 
-Thanks,
-//richard
+2.27.0.389.gc38d7665816-goog
+
