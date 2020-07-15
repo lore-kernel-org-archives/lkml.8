@@ -2,114 +2,91 @@ Return-Path: <SRS0=kup7=A2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 655B7C433E4
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 21:46:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8A76C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 21:44:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 421062067D
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 21:46:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594849619;
-	bh=HdqgtgLNazmORv5XMV200mCswt3ooYEI7ls8u5QJzd0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=IQnyAAro1axp2hT6NQVxNJn8+RWXsKAesplN2MiMHd+f9GrEClq/eVy8FAOy1lfZR
-	 YrureldiELxdOPPahFSsWXhJmtOgsIlNR5wEprkmBIP0RVBase9O9k9WjZ8jD2CLzj
-	 XVEGQB4PYrAyElG3+1c1vWEmXBesjT0RFa2/BiDI=
+	by mail.kernel.org (Postfix) with ESMTP id CD98D206F5
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 21:44:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727825AbgGOVq6 (ORCPT
+        id S1727901AbgGOVom (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 17:46:58 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:43205 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726370AbgGOVq4 (ORCPT
+        Wed, 15 Jul 2020 17:44:42 -0400
+Received: from relay4-d.mail.gandi.net ([217.70.183.196]:49211 "EHLO
+        relay4-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726370AbgGOVol (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 17:46:56 -0400
-Received: by mail-io1-f67.google.com with SMTP id k23so3870427iom.10;
-        Wed, 15 Jul 2020 14:46:55 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=8X1vTbH+xw2rCtV8oFWi4+4P5U4mLPjeUc+S5jha1dI=;
-        b=CD0MBXrfyiYFyvNMEbpo9r3X2YxyYRGnfjENQSg+aWtRe5RYuOBYFkL5roTO1vZ0DA
-         Aj7b1PfQEag/VmLmzf160N/gUvsd9aOFMHzDulN3kXoLcFsUQCMtKfLmAkRzcculn2Mo
-         Aua/QpxG9dFpIK7vunXLNfXCKrOuwI3MFZO5YBAJ+8P0pSBV9DwdkD3NNvWQ43zaqsx7
-         Cz5Xd5dEMr1UZtKFnvbLRJbqug4AJj6MXpYFiKE/9Ya6v9hM3iqdRMbGTcAG36NDMNqF
-         uLDRzc6QmivlYuTpeF/g8DLryuZFW9K2pveZi5BconobU7r29BWGFSxdT8sgAuwVajJL
-         5akg==
-X-Gm-Message-State: AOAM531ceMbADn/buTtlUA72v2bUZn80bHF87Jtw+O8U5w1v46qxFK5H
-        pafhPUUq/6qkdTDz8RHdQA==
-X-Google-Smtp-Source: ABdhPJyzuv6RdWuDkioL49WymJzxtFy1VHPX3fMw2CtZy0VDQtTxfVBdWTwCsbTEYs0hrDISr0c6PQ==
-X-Received: by 2002:a6b:3f57:: with SMTP id m84mr1241019ioa.99.1594849615577;
-        Wed, 15 Jul 2020 14:46:55 -0700 (PDT)
-Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id c14sm1623116ild.41.2020.07.15.14.46.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 15 Jul 2020 14:46:55 -0700 (PDT)
-Received: (nullmailer pid 872990 invoked by uid 1000);
-        Wed, 15 Jul 2020 21:46:53 -0000
-Date:   Wed, 15 Jul 2020 15:46:53 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
-Cc:     robh+dt@kernel.org, leon@kernel.org, wg@grandegger.com,
-        mkl@pengutronix.de, kuba@kernel.org, dmurphy@ti.com,
-        krzk@kernel.org, masahiroy@kernel.org, linux-can@vger.kernel.org,
-        sriram.dash@samsung.com, netdev@vger.kernel.org,
-        kvalo@codeaurora.org, linux-kernel@vger.kernel.org,
-        hpeter@gmail.com, devicetree@vger.kernel.org, davem@davemloft.net
-Subject: Re: [PATCH] Replace HTTP links with HTTPS ones: CAN network drivers
-Message-ID: <20200715214653.GA872937@bogus>
-References: <20200705075606.22802-1-grandmaster@al2klimov.de>
+        Wed, 15 Jul 2020 17:44:41 -0400
+X-Originating-IP: 90.65.108.121
+Received: from localhost (lfbn-lyo-1-1676-121.w90-65.abo.wanadoo.fr [90.65.108.121])
+        (Authenticated sender: alexandre.belloni@bootlin.com)
+        by relay4-d.mail.gandi.net (Postfix) with ESMTPSA id 1CA45E0005;
+        Wed, 15 Jul 2020 21:44:38 +0000 (UTC)
+Date:   Wed, 15 Jul 2020 23:44:38 +0200
+From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
+To:     =?utf-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>
+Cc:     Cristian Birsan <cristian.birsan@microchip.com>,
+        Felipe Balbi <balbi@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Ludovic Desroches <ludovic.desroches@microchip.com>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Songjun Wu <songjun.wu@atmel.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-usb@vger.kernel.org
+Subject: Re: [PATCH RESEND 1/3] usb: gadget: udc: atmel: remove outdated
+ comment in usba_ep_disable()
+Message-ID: <20200715214438.GE23553@piout.net>
+References: <cover.1594231056.git.mirq-linux@rere.qmqm.pl>
+ <ab8ef3e2bf15fa75572f9ad51d6e7b10c67cb494.1594231056.git.mirq-linux@rere.qmqm.pl>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200705075606.22802-1-grandmaster@al2klimov.de>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <ab8ef3e2bf15fa75572f9ad51d6e7b10c67cb494.1594231056.git.mirq-linux@rere.qmqm.pl>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 05 Jul 2020 09:56:06 +0200, Alexander A. Klimov wrote:
-> Rationale:
-> Reduces attack surface on kernel devs opening the links for MITM
-> as HTTPS traffic is much harder to manipulate.
+On 08/07/2020 20:04:09+0200, Michał Mirosław wrote:
+> Fixed commit removed the offending behaviour from the driver, but missed
+> the comment and associated test. Remove them now.
 > 
-> Deterministic algorithm:
-> For each file:
->   If not .svg:
->     For each line:
->       If doesn't contain `\bxmlns\b`:
->         For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
->           If both the HTTP and HTTPS versions
->           return 200 OK and serve the same content:
->             Replace HTTP with HTTPS.
-> 
-> Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
+> Fixes: 38e58986e6fc ("usb: gadget: udc: atmel: don't disable enpdoints we don't own")
+> Signed-off-by: Michał Mirosław <mirq-linux@rere.qmqm.pl>
+Acked-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+
 > ---
->  Continuing my work started at 93431e0607e5.
+>  drivers/usb/gadget/udc/atmel_usba_udc.c | 8 +-------
+>  1 file changed, 1 insertion(+), 7 deletions(-)
 > 
->  If there are any URLs to be removed completely or at least not HTTPSified:
->  Just clearly say so and I'll *undo my change*.
->  See also https://lkml.org/lkml/2020/6/27/64
-> 
->  If there are any valid, but yet not changed URLs:
->  See https://lkml.org/lkml/2020/6/26/837
-> 
->  Documentation/devicetree/bindings/net/can/grcan.txt |  2 +-
->  drivers/net/can/grcan.c                             |  2 +-
->  drivers/net/can/m_can/m_can.c                       |  2 +-
->  drivers/net/can/m_can/m_can.h                       |  2 +-
->  drivers/net/can/m_can/m_can_platform.c              |  2 +-
->  drivers/net/can/m_can/tcan4x5x.c                    |  2 +-
->  drivers/net/can/sja1000/Kconfig                     | 12 ++++++------
->  drivers/net/can/sja1000/tscan1.c                    |  2 +-
->  drivers/net/can/slcan.c                             |  2 +-
->  drivers/net/can/ti_hecc.c                           |  4 ++--
->  drivers/net/can/usb/Kconfig                         |  6 +++---
->  11 files changed, 19 insertions(+), 19 deletions(-)
+> diff --git a/drivers/usb/gadget/udc/atmel_usba_udc.c b/drivers/usb/gadget/udc/atmel_usba_udc.c
+> index d69f61ff0181..9153e220848d 100644
+> --- a/drivers/usb/gadget/udc/atmel_usba_udc.c
+> +++ b/drivers/usb/gadget/udc/atmel_usba_udc.c
+> @@ -676,13 +676,7 @@ static int usba_ep_disable(struct usb_ep *_ep)
+>  
+>  	if (!ep->ep.desc) {
+>  		spin_unlock_irqrestore(&udc->lock, flags);
+> -		/* REVISIT because this driver disables endpoints in
+> -		 * reset_all_endpoints() before calling disconnect(),
+> -		 * most gadget drivers would trigger this non-error ...
+> -		 */
+> -		if (udc->gadget.speed != USB_SPEED_UNKNOWN)
+> -			DBG(DBG_ERR, "ep_disable: %s not enabled\n",
+> -					ep->ep.name);
+> +		DBG(DBG_ERR, "ep_disable: %s not enabled\n", ep->ep.name);
+>  		return -EINVAL;
+>  	}
+>  	ep->ep.desc = NULL;
+> -- 
+> 2.20.1
 > 
 
-Acked-by: Rob Herring <robh@kernel.org>
+-- 
+Alexandre Belloni, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
