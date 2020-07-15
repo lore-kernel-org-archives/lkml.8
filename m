@@ -2,129 +2,134 @@ Return-Path: <SRS0=kup7=A2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E84BC433E4
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 20:38:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 457C6C433EA
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 20:39:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3A0732065F
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 20:38:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2352F2065F
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 20:39:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ijKpH2WT"
+	dkim=pass (2048-bit key) header.d=telus.net header.i=@telus.net header.b="1fvtETkL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726907AbgGOUit (ORCPT
+        id S1727119AbgGOUji (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 16:38:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52066 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726491AbgGOUir (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 16:38:47 -0400
-Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F14B1C08C5DD
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 13:38:46 -0700 (PDT)
-Received: by mail-pf1-x444.google.com with SMTP id a23so1009314pfk.13
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 13:38:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=qTkObtIP1JOxTsAafQAu4JRP/2PqoQenw/nsfCYT+XA=;
-        b=ijKpH2WTKasm1SeJa7YfW41RoND4SGhxfWW8WIrBUyWAJo5mncDz3F6DsdpLNbN9yM
-         zimIQJdAwdsoIuaoAmdGi8bqgFGbI1ImDdJTj84SXvxwzifKGWR/ToGmegNpJJRYxabz
-         0Mzoe5AOfjDlUoukmWy/DGwdgH+42OpxYqawc=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=qTkObtIP1JOxTsAafQAu4JRP/2PqoQenw/nsfCYT+XA=;
-        b=l71Z8luYFHM3uYqmHVyNfPe4oiF1czfFOpM6RF+Mr/6QZ3dtxq0jHY4Silz6XilKD6
-         K0/G7mhT8rxWCCUttt4yW4mH7qudpLmdb1BSYh4ZYshYXB8g2kWjwnY5091dGDrllM13
-         GDQyMMh7USce3xWVDU9j/01Nn+jjCncEDUvEJKyXnRwW3AyzvcEDu/VONSGVqjoBXa2X
-         6oEpusNgWe18hXZ2VecWoI9iCvXAFGf5lx26DWLdqYD1/pHcbq88HnR4uJO6GRl/qfww
-         dt/QzBpnmc5k72mcCgv2RptNPqIHMcW7XrwX8k5+0psauEnd4qxQ8wO7tF2oQpj11cpw
-         9p+Q==
-X-Gm-Message-State: AOAM532CPDNAhcxKREasPPg1RARKGWts4XR0dPBoYCfvfjnQVktKagwm
-        GxKLp1tuYzyAoZBmrieagcPvow==
-X-Google-Smtp-Source: ABdhPJyOe9mUdiu/xb+eBR+7MVDzMD0v9uEBAElvlLK4fUJtk8fgRzbG6NWh1tQpT587gudq9JBjRg==
-X-Received: by 2002:a62:cdc4:: with SMTP id o187mr922387pfg.200.1594845526528;
-        Wed, 15 Jul 2020 13:38:46 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id m3sm2962482pfk.171.2020.07.15.13.38.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 15 Jul 2020 13:38:45 -0700 (PDT)
-Date:   Wed, 15 Jul 2020 13:38:44 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     =?iso-8859-1?Q?Micka=EBl_Sala=FCn?= <mic@digikod.net>
-Cc:     linux-kernel@vger.kernel.org, Aleksa Sarai <cyphar@cyphar.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Christian Heimes <christian@python.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Deven Bowers <deven.desai@linux.microsoft.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Eric Biggers <ebiggers@kernel.org>,
-        Eric Chiang <ericchiang@google.com>,
-        Florian Weimer <fweimer@redhat.com>,
-        James Morris <jmorris@namei.org>, Jan Kara <jack@suse.cz>,
-        Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
-        Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
-        Matthew Garrett <mjg59@google.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Michael Kerrisk <mtk.manpages@gmail.com>,
-        =?iso-8859-1?Q?Micka=EBl_Sala=FCn?= <mickael.salaun@ssi.gouv.fr>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        Philippe =?iso-8859-1?Q?Tr=E9buchet?= 
-        <philippe.trebuchet@ssi.gouv.fr>,
-        Scott Shell <scottsh@microsoft.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Steve Dower <steve.dower@python.org>,
-        Steve Grubb <sgrubb@redhat.com>,
-        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
-        Thibaut Sautereau <thibaut.sautereau@ssi.gouv.fr>,
-        Vincent Strubel <vincent.strubel@ssi.gouv.fr>,
-        kernel-hardening@lists.openwall.com, linux-api@vger.kernel.org,
-        linux-integrity@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH v6 6/7] selftest/openat2: Add tests for O_MAYEXEC
- enforcing
-Message-ID: <202007151337.2A113F8C@keescook>
-References: <20200714181638.45751-1-mic@digikod.net>
- <20200714181638.45751-7-mic@digikod.net>
+        Wed, 15 Jul 2020 16:39:38 -0400
+Received: from cmta20.telus.net ([209.171.16.93]:54187 "EHLO cmta20.telus.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726736AbgGOUjh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jul 2020 16:39:37 -0400
+Received: from dougxps ([173.180.45.4])
+        by cmsmtp with SMTP
+        id voBejhx9xljNxvoBgjp2il; Wed, 15 Jul 2020 14:39:35 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=telus.net; s=neo;
+        t=1594845575; bh=9fRULD8XlrgndUg5eFygGTTDWcJ/HwRXNiPujg/A/Qc=;
+        h=From:To:Cc:References:In-Reply-To:Subject:Date;
+        b=1fvtETkLR13imU+Vlzy1L7GOkj7CLH2z21fXJ9DDEaoqv6sxI7WRhSXOJw5fTuyT8
+         WoRFqST6TtfEllXl68MlT8KKs1qY9O9E27x87xXsanipAZ1QpcslVOcZCgybhqCL7i
+         05hY8TaopCbN43WaPsjj99Xdx/U5/0UI32Gfnkdy0lSXEfYpKOJ5yYH5dUh8HJlLry
+         WWLIFLA4M75+0zZyk9cQim6qdEAnrcvBbrvB2ycHQQYl0QItLwO/0HmF8B66Swu+sW
+         vitp5pvvbLC0KpmQ5EqaxfSup+4u/jqIFrYIMq/E+nCG0aupBu6Fb6vFUf9xoKNTRF
+         G+dhlq58AesXA==
+X-Telus-Authed: none
+X-Authority-Analysis: v=2.3 cv=Z8aS40ZA c=1 sm=1 tr=0
+ a=zJWegnE7BH9C0Gl4FFgQyA==:117 a=zJWegnE7BH9C0Gl4FFgQyA==:17
+ a=Pyq9K9CWowscuQLKlpiwfMBGOR0=:19 a=kj9zAlcOel0A:10 a=QyXUC8HyAAAA:8
+ a=gu6fZOg2AAAA:8 a=oGXUH_wexJK_5aFMPiMA:9 a=CjuIK1q_8ugA:10 a=-FEs8UIgK8oA:10
+ a=NWVoK91CQyQA:10 a=2RSlZUUhi9gRBrsHwhhZ:22
+From:   "Doug Smythies" <dsmythies@telus.net>
+To:     "'Rafael J. Wysocki'" <rjw@rjwysocki.net>
+Cc:     "'Linux Documentation'" <linux-doc@vger.kernel.org>,
+        "'LKML'" <linux-kernel@vger.kernel.org>,
+        "'Peter Zijlstra'" <peterz@infradead.org>,
+        "'Srinivas Pandruvada'" <srinivas.pandruvada@linux.intel.com>,
+        "'Giovanni Gherdovich'" <ggherdovich@suse.cz>,
+        "'Francisco Jerez'" <francisco.jerez.plata@intel.com>,
+        "'Linux PM'" <linux-pm@vger.kernel.org>
+References: <3955470.QvD6XneCf3@kreacher>
+In-Reply-To: <3955470.QvD6XneCf3@kreacher>
+Subject: RE: [PATCH] cpufreq: intel_pstate: Implement passive mode with HWP enabled
+Date:   Wed, 15 Jul 2020 13:39:29 -0700
+Message-ID: <000f01d65ae8$0c607990$25216cb0$@net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200714181638.45751-7-mic@digikod.net>
+Content-Type: text/plain;
+        charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+X-Mailer: Microsoft Office Outlook 12.0
+Content-Language: en-ca
+Thread-Index: AdZaCuFLSnPOiWVOTIG1A3EnWVHa7QApTu8Q
+X-CMAE-Envelope: MS4wfEv3zAJX+Q5FKLqV55u0UjRRufhzfTzlTepfJsLiSoJWGqbw8G/MQ22qOAH6ryMIj4EApSXZNOoxIM3vu/LpAhtmjiuJ3Nlg9oPXDkVvj8H+g//WH7lV
+ vLLp4hl4TIMSuRJLG7JXKiI3RMVZ3sY5v+cPWtimZGTorfLZ6CqGTfb4kMwIOa0p+n9V+9/8qpmrKJ/OtxZF7G5lYOc5PIRbFJt5rRTOo9Ek0kFPXfOmQ3+R
+ MfBQA1vgqC82NbdXeX0JCWvKWMweqd05DuWNpYC64+0gbd2vIXYzrSlzvICQ3xxKAWO5XElfi7rvVZ6YflwlAyXVDyD/e+Gg7PuMQ/MqADph4qNUN6yD/A6C
+ 5WYvxSp+zL2ekinuJuOQXZCWUwf4fWQDp3oKGaeAB0y3b1lFOS2XHffWPor5PIPAnDTZRx8SoY0LV4HEjzpEZ09kWd/gSQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 14, 2020 at 08:16:37PM +0200, Mickaël Salaün wrote:
-> Test propagation of noexec mount points or file executability through
-> files open with or without O_MAYEXEC, thanks to the
-> fs.open_mayexec_enforce sysctl.
+On 2020.07.14 11:16 Rafael J. Wysocki wrote:
 > 
-> Signed-off-by: Mickaël Salaün <mic@digikod.net>
-> Reviewed-by: Thibaut Sautereau <thibaut.sautereau@ssi.gouv.fr>
-> Cc: Aleksa Sarai <cyphar@cyphar.com>
-> Cc: Al Viro <viro@zeniv.linux.org.uk>
-> Cc: Kees Cook <keescook@chromium.org>
-> Cc: Shuah Khan <shuah@kernel.org>
+> From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+...
+> Since the passive mode hasn't worked with HWP at all, and it is not going to
+> the default for HWP systems anyway, I don't see any drawbacks related to making
+> this change, so I would consider this as 5.9 material unless there are any
+> serious objections.
 
-Yay variants! :)
+Good point.
+Some of the tests I do involve labour intensive post processing of data.
+I want to automate some of that work, and it will take time.
+We might be into the 5.9-rc series before I have detailed feedback.
 
-Reviewed-by: Kees Cook <keescook@chromium.org>
+However, so far:
 
--- 
-Kees Cook
+Inverse impulse response test [1]:
+
+High level test, i5-9600K, HWP-passive (this patch), ondemand:
+3101 tests. 0 failures. (GOOD)
+
+From [1], re-stated:
+> . High level: i5-9600K: 2453 tests, 60 failures, 2.45% fail rate. (HWP-active - powersave)
+> . Verify acpi-cpufreq/ondemand works fine: i5-9600K: 8975 tests. 0 failures.
+
+My version of that cool Alexander named pipe test [2] serialized workflow:
+
+HWP-passive (this patch), performance: PASS.
+
+From [2], re-stated, and also re-tested.
+HWP-disabled passive - performance: FAIL.
+Although, I believe the issue to be EPB management, [3].
+
+And yes, I did see the reply to [3] that came earlier,
+And have now re-done the test, with the referenced patch added.
+It still is FAIL. I reply to the [3] thread, eventually.
+
+[1] https://marc.info/?l=linux-pm&m=159354421400342&w=2
+[2] https://marc.info/?l=linux-pm&m=159155067328641&w=2
+[3] https://marc.info/?l=linux-pm&m=159438804230744&w=2
+
+Kernel:
+
+b08284a541ad (HEAD -> k58rc5-doug) cpufreq: intel_pstate: Avoid enabling HWP if EPP is not supported
+063fd7ccabfe cpufreq: intel_pstate: Implement passive mode with HWP enabled
+730ccf5054e9 cpufreq: intel_pstate: Allow raw energy performance preference value
+bee36df01c68 cpufreq: intel_pstate: Allow enable/disable energy efficiency
+199629d8200e cpufreq: intel_pstate: Fix active mode setting from command line
+11ba468877bb (tag: v5.8-rc5, origin/master, origin/HEAD, master) Linux 5.8-rc5
+
+Rules for this work:
+
+. never use x86_energy_perf_policy.
+. For HWP disabled: never change from active to passive or via versa, but rather do it via boot.
+. after boot always check and reset the various power limit log bits that are set.
+. never compile the kernel (well, until after any tests), which will set those bits again.
+. never run prime95 high heat torture test, which will set those bits again.
+. try to never do anything else that will set those bits again.
+
+To be clear, I do allow changing governors within the context of the above rules.
+
+... Doug
+
+
