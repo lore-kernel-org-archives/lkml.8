@@ -2,109 +2,170 @@ Return-Path: <SRS0=kup7=A2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E44BC433FB
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 16:40:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE482C43445
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 16:40:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 52F8D20658
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 16:40:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BA497206D5
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 16:40:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="pZ6J1yfQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727886AbgGOQkr (ORCPT
+        id S1727927AbgGOQky (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 12:40:47 -0400
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:33599 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727787AbgGOQkg (ORCPT
+        Wed, 15 Jul 2020 12:40:54 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:42680 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727123AbgGOQkf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 12:40:36 -0400
-Received: by mail-ed1-f68.google.com with SMTP id h28so2106348edz.0;
-        Wed, 15 Jul 2020 09:40:35 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=mkYMsiSKEyTRllQWaVCWr/1Tzi9Mh4OsE2TArv0QPE4=;
-        b=GpWMlkg2pG8vm7YvFAaQ5PN9iyjgJxBcHxfNP3RKeR7O6FdGk1AWMu9tK1zV5eem+d
-         +3ywLdxKa2B4/7UcNFoR/rj8856HLeOS7aqKO3rtOUCCJx+VN8gFqLdwyrczkxVvhzMF
-         kUS2AUrtz7GfMWFVDCd+wSk1pdoYBlsDvGuEuKWky/VIMFHcf8DQGye/cvjTHVGtXInc
-         ESF3JIhZWxuvi/EQ510MnBXavtcfz8WWXUh0vcrRsFvMp/02uKdELXy7qCHmqDs85vXg
-         eeZC9uKDLkSgJ59UwzNh9u85l6yjwwDva5mxgFi6hYJayxAMGTXIZcl94LkNhKafxw07
-         S3YA==
-X-Gm-Message-State: AOAM532ucAZU1HpiMKFGguksDMocNJZ/WPlOgDL+tElPcyvcx8WWofbq
-        TTmpCIZAXjgA7SvH5SyFBcNKVoyMcwXSD6gAvU18LA==
-X-Google-Smtp-Source: ABdhPJxL2C4dTVVKrNN4e+F8ARVR16RmQ+W2KY1F0ucI6oh6+0b4B0E4YcDIV44fX0Geoxf4yVkiP3FmOGIrLSi9TeA=
-X-Received: by 2002:a50:ab5c:: with SMTP id t28mr436194edc.209.1594831234383;
- Wed, 15 Jul 2020 09:40:34 -0700 (PDT)
+        Wed, 15 Jul 2020 12:40:35 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 06FGeTDp003868;
+        Wed, 15 Jul 2020 11:40:29 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1594831229;
+        bh=ojXEfYtuih4BAfSq6WWG368UipUr0VPWWjTMBz+cdiE=;
+        h=From:To:Subject:Date:In-Reply-To:References;
+        b=pZ6J1yfQ6mO7eAp/5Xtxw8wR0DdzlhbUvi2w4u6appKixMZjhi5L15FF7YhiipUKG
+         YlnMexbvjcCnHLQpxz0gMyTf3fXBwzSnZeCsG321Uw9HQBGNIMS8++nldYjYdRjFBJ
+         6Vr69GpSD7D6a/3F/DHfWwaKpQF57FKTozMCkxZA=
+Received: from DLEE113.ent.ti.com (dlee113.ent.ti.com [157.170.170.24])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 06FGeTDF031949;
+        Wed, 15 Jul 2020 11:40:29 -0500
+Received: from DLEE102.ent.ti.com (157.170.170.32) by DLEE113.ent.ti.com
+ (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Wed, 15
+ Jul 2020 11:40:29 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE102.ent.ti.com
+ (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Wed, 15 Jul 2020 11:40:29 -0500
+Received: from uda0868495.fios-router.home (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 06FGeCvi081717;
+        Wed, 15 Jul 2020 11:40:28 -0500
+From:   Murali Karicheri <m-karicheri2@ti.com>
+To:     <davem@davemloft.net>, <kuba@kernel.org>, <netdev@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-api@vger.kernel.org>,
+        <nsekhar@ti.com>, <grygorii.strashko@ti.com>,
+        <vinicius.gomes@intel.com>
+Subject: [net-next iproute2 PATCH v2 1/2] iplink: hsr: add support for creating PRP device similar to HSR
+Date:   Wed, 15 Jul 2020 12:40:11 -0400
+Message-ID: <20200715164012.1222-11-m-karicheri2@ti.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200715164012.1222-1-m-karicheri2@ti.com>
+References: <20200715164012.1222-1-m-karicheri2@ti.com>
 MIME-Version: 1.0
-References: <20200715162604.1080552-1-colin.king@canonical.com> <eb5d2ead-807b-3435-5024-b8cc4a1311f3@canonical.com>
-In-Reply-To: <eb5d2ead-807b-3435-5024-b8cc4a1311f3@canonical.com>
-From:   Anna Schumaker <anna.schumaker@netapp.com>
-Date:   Wed, 15 Jul 2020 12:40:18 -0400
-Message-ID: <CAFX2Jfn75a8XENoqvztVnUe0aR9S2KGjpcGp3zyLeFS-h--9ag@mail.gmail.com>
-Subject: Re: [PATCH] xprtrdma: fix incorrect header size calcations
-To:     Colin Ian King <colin.king@canonical.com>
-Cc:     Trond Myklebust <trond.myklebust@hammerspace.com>,
-        "J . Bruce Fields" <bfields@fieldses.org>,
-        Chuck Lever <chuck.lever@oracle.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
-        netdev@vger.kernel.org, kernel-janitors@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-No need for a v2, I can fix it up!
+This patch enhances the iplink command to add a proto parameters to
+create PRP device/interface similar to HSR. Both protocols are
+quite similar and requires a pair of Ethernet interfaces. So re-use
+the existing HSR iplink command to create PRP device/interface as
+well. Use proto parameter to differentiate the two protocols.
 
+Signed-off-by: Murali Karicheri <m-karicheri2@ti.com>
+---
+ include/uapi/linux/if_link.h | 12 +++++++++++-
+ ip/iplink_hsr.c              | 19 +++++++++++++++++--
+ 2 files changed, 28 insertions(+), 3 deletions(-)
 
-On Wed, Jul 15, 2020 at 12:32 PM Colin Ian King
-<colin.king@canonical.com> wrote:
->
-> Bah, $SUBJECT typo "calcations" -> "calculations". can that be fixed up
-> when it's applied, or shall I send a V2?
->
-> On 15/07/2020 17:26, Colin King wrote:
-> > From: Colin Ian King <colin.king@canonical.com>
-> >
-> > Currently the header size calculations are using an assignment
-> > operator instead of a += operator when accumulating the header
-> > size leading to incorrect sizes.  Fix this by using the correct
-> > operator.
-> >
-> > Addresses-Coverity: ("Unused value")
-> > Fixes: 302d3deb2068 ("xprtrdma: Prevent inline overflow")
-> > Signed-off-by: Colin Ian King <colin.king@canonical.com>
-> > ---
-> >  net/sunrpc/xprtrdma/rpc_rdma.c | 4 ++--
-> >  1 file changed, 2 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/net/sunrpc/xprtrdma/rpc_rdma.c b/net/sunrpc/xprtrdma/rpc_rdma.c
-> > index 935bbef2f7be..453bacc99907 100644
-> > --- a/net/sunrpc/xprtrdma/rpc_rdma.c
-> > +++ b/net/sunrpc/xprtrdma/rpc_rdma.c
-> > @@ -71,7 +71,7 @@ static unsigned int rpcrdma_max_call_header_size(unsigned int maxsegs)
-> >       size = RPCRDMA_HDRLEN_MIN;
-> >
-> >       /* Maximum Read list size */
-> > -     size = maxsegs * rpcrdma_readchunk_maxsz * sizeof(__be32);
-> > +     size += maxsegs * rpcrdma_readchunk_maxsz * sizeof(__be32);
-> >
-> >       /* Minimal Read chunk size */
-> >       size += sizeof(__be32); /* segment count */
-> > @@ -94,7 +94,7 @@ static unsigned int rpcrdma_max_reply_header_size(unsigned int maxsegs)
-> >       size = RPCRDMA_HDRLEN_MIN;
-> >
-> >       /* Maximum Write list size */
-> > -     size = sizeof(__be32);          /* segment count */
-> > +     size += sizeof(__be32);         /* segment count */
-> >       size += maxsegs * rpcrdma_segment_maxsz * sizeof(__be32);
-> >       size += sizeof(__be32); /* list discriminator */
-> >
-> >
->
+diff --git a/include/uapi/linux/if_link.h b/include/uapi/linux/if_link.h
+index a8901a39a345..fa2e3f642deb 100644
+--- a/include/uapi/linux/if_link.h
++++ b/include/uapi/linux/if_link.h
+@@ -904,7 +904,14 @@ enum {
+ #define IFLA_IPOIB_MAX (__IFLA_IPOIB_MAX - 1)
+ 
+ 
+-/* HSR section */
++/* HSR/PRP section, both uses same interface */
++
++/* Different redundancy protocols for hsr device */
++enum {
++	HSR_PROTOCOL_HSR,
++	HSR_PROTOCOL_PRP,
++	HSR_PROTOCOL_MAX,
++};
+ 
+ enum {
+ 	IFLA_HSR_UNSPEC,
+@@ -914,6 +921,9 @@ enum {
+ 	IFLA_HSR_SUPERVISION_ADDR,	/* Supervision frame multicast addr */
+ 	IFLA_HSR_SEQ_NR,
+ 	IFLA_HSR_VERSION,		/* HSR version */
++	IFLA_HSR_PROTOCOL,		/* Indicate different protocol than
++					 * HSR. For example PRP.
++					 */
+ 	__IFLA_HSR_MAX,
+ };
+ 
+diff --git a/ip/iplink_hsr.c b/ip/iplink_hsr.c
+index 7d9167d4e6a3..6ea138a23cbc 100644
+--- a/ip/iplink_hsr.c
++++ b/ip/iplink_hsr.c
+@@ -25,7 +25,7 @@ static void print_usage(FILE *f)
+ {
+ 	fprintf(f,
+ 		"Usage:\tip link add name NAME type hsr slave1 SLAVE1-IF slave2 SLAVE2-IF\n"
+-		"\t[ supervision ADDR-BYTE ] [version VERSION]\n"
++		"\t[ supervision ADDR-BYTE ] [version VERSION] [proto PROTOCOL]\n"
+ 		"\n"
+ 		"NAME\n"
+ 		"	name of new hsr device (e.g. hsr0)\n"
+@@ -35,7 +35,9 @@ static void print_usage(FILE *f)
+ 		"	0-255; the last byte of the multicast address used for HSR supervision\n"
+ 		"	frames (default = 0)\n"
+ 		"VERSION\n"
+-		"	0,1; the protocol version to be used. (default = 0)\n");
++		"	0,1; the protocol version to be used. (default = 0)\n"
++		"PROTOCOL\n"
++		"	0 - HSR, 1 - PRP. (default = 0 - HSR)\n");
+ }
+ 
+ static void usage(void)
+@@ -49,6 +51,7 @@ static int hsr_parse_opt(struct link_util *lu, int argc, char **argv,
+ 	int ifindex;
+ 	unsigned char multicast_spec;
+ 	unsigned char protocol_version;
++	unsigned char protocol = HSR_PROTOCOL_HSR;
+ 
+ 	while (argc > 0) {
+ 		if (matches(*argv, "supervision") == 0) {
+@@ -64,6 +67,13 @@ static int hsr_parse_opt(struct link_util *lu, int argc, char **argv,
+ 				invarg("version is invalid", *argv);
+ 			addattr_l(n, 1024, IFLA_HSR_VERSION,
+ 				  &protocol_version, 1);
++		} else if (matches(*argv, "proto") == 0) {
++			NEXT_ARG();
++			if (!(get_u8(&protocol, *argv, 0) == HSR_PROTOCOL_HSR ||
++			      get_u8(&protocol, *argv, 0) == HSR_PROTOCOL_PRP))
++				invarg("protocol is invalid", *argv);
++			addattr_l(n, 1024, IFLA_HSR_PROTOCOL,
++				  &protocol, 1);
+ 		} else if (matches(*argv, "slave1") == 0) {
+ 			NEXT_ARG();
+ 			ifindex = ll_name_to_index(*argv);
+@@ -140,6 +150,11 @@ static void hsr_print_opt(struct link_util *lu, FILE *f, struct rtattr *tb[])
+ 					 RTA_PAYLOAD(tb[IFLA_HSR_SUPERVISION_ADDR]),
+ 					 ARPHRD_VOID,
+ 					 b1, sizeof(b1)));
++	if (tb[IFLA_HSR_PROTOCOL])
++		print_int(PRINT_ANY,
++			  "proto",
++			  "proto %d ",
++			  rta_getattr_u8(tb[IFLA_HSR_PROTOCOL]));
+ }
+ 
+ static void hsr_print_help(struct link_util *lu, int argc, char **argv,
+-- 
+2.17.1
+
