@@ -2,159 +2,104 @@ Return-Path: <SRS0=kup7=A2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CFC0C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 05:14:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EF66C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 05:17:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 02AFE20657
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 05:14:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E192120657
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 05:17:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="FcSvr06b"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="z3TTaGR9";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="kax19Snu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728170AbgGOFOA (ORCPT
+        id S1728150AbgGOFRV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 01:14:00 -0400
-Received: from mailout4.samsung.com ([203.254.224.34]:48572 "EHLO
-        mailout4.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725770AbgGOFN7 (ORCPT
+        Wed, 15 Jul 2020 01:17:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50880 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726938AbgGOFRV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 01:13:59 -0400
-Received: from epcas1p3.samsung.com (unknown [182.195.41.47])
-        by mailout4.samsung.com (KnoxPortal) with ESMTP id 20200715051355epoutp04d56a71223a471e74396c6110c425cee2~h1RaSa3P-0561505615epoutp04R
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 05:13:55 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20200715051355epoutp04d56a71223a471e74396c6110c425cee2~h1RaSa3P-0561505615epoutp04R
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1594790036;
-        bh=GIdXeG9LsXYkUgrWWOUY0Jh4teDLnJtF0I4YxRoyxug=;
-        h=From:To:Cc:Subject:Date:References:From;
-        b=FcSvr06b/VwGObhzcsHaKH9FVcrqbeAuRIYtGSEBqEL1ySn01h1nRaLgxU7Zp1R7I
-         Xx3FN0PN6n1TYmDo7ts7yKpRfQlu4UjqsOCu+jgGPyc2J8ItRNpsQI0EMYM39BloLo
-         Mg8bU3DdbtwARSdJ5w6kcd+okPSQ8Wkv/JwHzaB8=
-Received: from epsnrtp2.localdomain (unknown [182.195.42.163]) by
-        epcas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20200715051355epcas1p2f5a139c8dee95e82b27438b02b476bed~h1RZs_KC23061530615epcas1p29;
-        Wed, 15 Jul 2020 05:13:55 +0000 (GMT)
-Received: from epsmges1p2.samsung.com (unknown [182.195.40.164]) by
-        epsnrtp2.localdomain (Postfix) with ESMTP id 4B65C56WzRzMqYkX; Wed, 15 Jul
-        2020 05:13:53 +0000 (GMT)
-Received: from epcas1p1.samsung.com ( [182.195.41.45]) by
-        epsmges1p2.samsung.com (Symantec Messaging Gateway) with SMTP id
-        B8.46.19033.1909E0F5; Wed, 15 Jul 2020 14:13:53 +0900 (KST)
-Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
-        epcas1p4.samsung.com (KnoxPortal) with ESMTPA id
-        20200715051353epcas1p46ae6b84555180be315752ef69262dfce~h1RXp0kgP0136901369epcas1p4w;
-        Wed, 15 Jul 2020 05:13:53 +0000 (GMT)
-Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
-        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20200715051353epsmtrp1a3877c73a7eb2f2b0d5eb26e0b147381~h1RXpMRDq0122501225epsmtrp1B;
-        Wed, 15 Jul 2020 05:13:53 +0000 (GMT)
-X-AuditID: b6c32a36-16fff70000004a59-30-5f0e9091b9b4
-Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
-        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        4E.6D.08382.1909E0F5; Wed, 15 Jul 2020 14:13:53 +0900 (KST)
-Received: from localhost.localdomain (unknown [10.253.105.96]) by
-        epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20200715051353epsmtip17fbac96bdc4e0b9c4a65516606bb5d7f~h1RXhq5Rd0927509275epsmtip1e;
-        Wed, 15 Jul 2020 05:13:53 +0000 (GMT)
-From:   Jeehong Kim <jhez.kim@samsung.com>
-To:     jhez.kim@samsung.com, sre@kernel.org
-Cc:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Dohyung Kim <dh0703.kim@samsung.com>
-Subject: [PATCH] power: supply: add "Wireless" to power_supply_type and
- power_supply_type_text
-Date:   Wed, 15 Jul 2020 14:38:44 +0900
-Message-Id: <20200715053844.12657-1-jhez.kim@samsung.com>
-X-Mailer: git-send-email 2.17.1
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrFKsWRmVeSWpSXmKPExsWy7bCmru7ECXzxBltv6Vsc+reb0eLq0UnM
-        Fpd3zWGz+Nx7hNHi9O4SB1aPTas62Tz6tqxi9Pi8SS6AOSrHJiM1MSW1SCE1Lzk/JTMv3VbJ
-        OzjeOd7UzMBQ19DSwlxJIS8xN9VWycUnQNctMwdoo5JCWWJOKVAoILG4WEnfzqYov7QkVSEj
-        v7jEVim1ICWnwNCgQK84Mbe4NC9dLzk/18rQwMDIFKgyISfjy609jAXL+Cqev41pYFzM08XI
-        ySEhYCKx5M9k9i5GLg4hgR2MEtevvWKDcD4xSlz58Y4NpEpI4BujxJ+3lTAdqyb+Y4Qo2sso
-        sb11KlT7Z0aJ2e+3sYNUsQloSNxtvscCYosA2U0N0xlBbGaBJIkNd64D2RwcwgIJEqe680DC
-        LAKqEvuengMr4RWwlLjw6C0zxDJ5idUbDjCDzJcQ6GeXWN13gw0i4SJx588eJghbWOLV8S3s
-        ELaUxMv+NnaoBkaJD2/bobp7gF5Y+ZgVospYorfnAjPIFcwCmhLrd+lDhBUldv6eC3Uon8S7
-        rz2sICUSArwSHW1CEKaSxLFV9hDVEhJPvp+HGughsfz2YyZIYMVKbF0yjX0Co+wshPkLGBlX
-        MYqlFhTnpqcWGxYYIcfRJkZwItIy28E46e0HvUOMTByMhxglOJiVRHh5uHjjhXhTEiurUovy
-        44tKc1KLDzGaAgNsIrOUaHI+MBXmlcQbmhoZGxtbmJiZm5kaK4nz/jvLHi8kkJ5YkpqdmlqQ
-        WgTTx8TBKdXAtGy5+8Gj9id/+93ec2Ae2xY3O47fDPMkvzAvjDxgP6vaxGD+bQamrLcP9Vyv
-        Zd9lEmue/dnBPtCk+PlO3aqW6duzAz96bnom0sRSJb2hPDOsQUFHf/Hy+ff9ZjLzKBwVOfNs
-        auYj6ffxURJZQu3evCuOXGOavJPX73lazK8Zk44uiCyftObtQ6vQSXoXp+7kct1UULxSKlVY
-        gL053q6Cl2vupDscn08ENz/fr++4V/RbzIn/SxxWuK69OW+XpaiaX2ay3KFFHZuapkSVN6R2
-        GWhNWH6jKcRT5nryHYtT7zf6sfIE+C/asmdC27Snusec/l3Z+f1EVlhmUbFIqNmBp5eCdi/d
-        eOxkiJBLicTKfiWW4oxEQy3mouJEAER+QIvNAwAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrBJMWRmVeSWpSXmKPExsWy7bCSnO7ECXzxBpO3sFkc+reb0eLq0UnM
-        Fpd3zWGz+Nx7hNHi9O4SB1aPTas62Tz6tqxi9Pi8SS6AOYrLJiU1J7MstUjfLoEr48utPYwF
-        y/gqnr+NaWBczNPFyMkhIWAisWriP8YuRi4OIYHdjBIfnx1lh0hISBz+cJe1i5EDyBaWOHy4
-        GKLmI6PE+sV3wGrYBDQk7jbfYwGxRQS0JBbf3sUGYjMLpEhsO9oHViMsECfx5uhqMJtFQFVi
-        39NzjCA2r4ClxIVHb5khdslLrN5wgHkCI88CRoZVjJKpBcW56bnFhgWGeanlesWJucWleel6
-        yfm5mxjBgaGluYNx+6oPeocYmTgYDzFKcDArifDycPHGC/GmJFZWpRblxxeV5qQWH2KU5mBR
-        Eue9UbgwTkggPbEkNTs1tSC1CCbLxMEp1cDUsXE+Y8GUqLBckQ/K6ZWxNddXXQxT/hz31LM1
-        k+PAi/RVf2WE1Xdt3iM87fDqT3Vffdj9H7Lk8jX+nBGxqp6ffaKkMKdpSvzvLb8npgqluQV9
-        9HkvvkvnXq6a+bYypWexqmf5k7XDDxlpawe0zpzr8GrfuyWczdPbVj4UEd1s5HpyTeFeB+dH
-        dzRY38Zmv5i/76FLZsz2BUFHX4udmi/Yrl+hqfhgRsr6A9H52bfiK/29D510Cpg9M+Hjzz6n
-        5XH33pxMbCwztMk7nzT9KctX7qWt+7zmb9jF/fZXp6r/1ccc1zfffnTEY+e54grDG5cjjXa6
-        lZ2bOjEz58SMa2p3ynU3Rr1pjJn/kWku165pSizFGYmGWsxFxYkA0Y5iRXsCAAA=
-X-CMS-MailID: 20200715051353epcas1p46ae6b84555180be315752ef69262dfce
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: SVC_REQ_APPROVE
-CMS-TYPE: 101P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20200715051353epcas1p46ae6b84555180be315752ef69262dfce
-References: <CGME20200715051353epcas1p46ae6b84555180be315752ef69262dfce@epcas1p4.samsung.com>
+        Wed, 15 Jul 2020 01:17:21 -0400
+Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 273ACC061755
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 22:17:21 -0700 (PDT)
+Date:   Wed, 15 Jul 2020 07:17:15 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1594790238;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=cXO320q4GkCe2Aew1c5mHBAyO5/6Jbm89pFoFIxkOzg=;
+        b=z3TTaGR9bOxU0IKAGu9agWb3Meux3/9l7MXcoUa2cGWEJXKh80jSDebH6bP/5baMtbw3ff
+        cE9MfRMr+UjowGJzkVhEHdIcS/cqRQDb0Rync2fH1sY29xKvrNu1lCyjIoJn0zu3EEgA1H
+        mKZookoqJg8cTKaTofRENIx7y2/wuKGbNG97sIRsS9zYTg2Xn02Af2Bd/zTci5F4mwbpsd
+        eTM09SQeXHj5uoQUX0f1076ePt5RLfS/gnh4JYfAwkf9Ch1O+4RmXrCsKxRkUFxpee5IFr
+        Jn9Jc51Eyr5k1KHwI64l8t5IYfZiTY9RYBcR/U1CaeaCVkiinguQ8x8z1l5yow==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1594790238;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=cXO320q4GkCe2Aew1c5mHBAyO5/6Jbm89pFoFIxkOzg=;
+        b=kax19Snu70YSwZBcaslmFFZOKqpSEJz7lZrP8RbhShtnQk1GB4yfegnarzyW2mn0zIsaKj
+        0QIsuz8TJCHXi8Bg==
+From:   "Ahmed S. Darwish" <a.darwish@linutronix.de>
+To:     Leo Yan <leo.yan@linaro.org>
+Cc:     Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Paul Cercueil <paul@crapouillou.net>,
+        "Ben Dooks (Codethink)" <ben.dooks@codethink.co.uk>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 0/6] arm64: perf: Proper cap_user_time* support
+Message-ID: <20200715051715.GA225020@debian-buster-darwi.lab.linutronix.de>
+References: <20200715020512.20991-1-leo.yan@linaro.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200715020512.20991-1-leo.yan@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In android platform(BatteryMonitor.cpp), SysfsStringEnumMap<int>
-supplyTypeMap[] is declred for communication with kernel(sysfs)
-and there is "Wireless". But, no type for "Wireless" in kernel.
-So, we suggest to add "Wireless" to power_supply_type and
-power_supply_type_text.
-I hope this will not only synchronize the text values with
-android platform, but also help other platforms.
+On Wed, Jul 15, 2020 at 10:05:06AM +0800, Leo Yan wrote:
+...
+>
+> In this version, there have two changes comparing to Peter's original
+> patch set [1]:
+>
+...
+>
+> [1] https://lkml.org/lkml/2020/5/12/481
+>
 
-Reported-by: Jaeho Song <jaeho21.song@samsung.com>
-Signed-off-by: Dohyung Kim <dh0703.kim@samsung.com>
-Signed-off-by: Jeehong Kim <jhez.kim@samsung.com>
----
- drivers/power/supply/power_supply_sysfs.c | 1 +
- include/linux/power_supply.h              | 1 +
- 2 files changed, 2 insertions(+)
+Nitpick: please avoid using https://lkml.org:
 
-diff --git a/drivers/power/supply/power_supply_sysfs.c b/drivers/power/supply/power_supply_sysfs.c
-index bc79560229b5..35582b67eff5 100644
---- a/drivers/power/supply/power_supply_sysfs.c
-+++ b/drivers/power/supply/power_supply_sysfs.c
-@@ -56,6 +56,7 @@ static const char * const POWER_SUPPLY_TYPE_TEXT[] = {
- 	[POWER_SUPPLY_TYPE_USB_PD]		= "USB_PD",
- 	[POWER_SUPPLY_TYPE_USB_PD_DRP]		= "USB_PD_DRP",
- 	[POWER_SUPPLY_TYPE_APPLE_BRICK_ID]	= "BrickID",
-+	[POWER_SUPPLY_TYPE_WIRELESS]		= "Wireless",
- };
+  1) It's a non-official external service
+  2) The opaque URLs it uses drop the most important info for uniquely
+     identifying e-mails: the Message-Id.
 
- static const char * const POWER_SUPPLY_USB_TYPE_TEXT[] = {
-diff --git a/include/linux/power_supply.h b/include/linux/power_supply.h
-index ac1345a48ad0..c8bad17a9483 100644
---- a/include/linux/power_supply.h
-+++ b/include/linux/power_supply.h
-@@ -182,6 +182,7 @@ enum power_supply_type {
- 	POWER_SUPPLY_TYPE_USB_PD,		/* Power Delivery Port */
- 	POWER_SUPPLY_TYPE_USB_PD_DRP,		/* PD Dual Role Port */
- 	POWER_SUPPLY_TYPE_APPLE_BRICK_ID,	/* Apple Charging Method */
-+	POWER_SUPPLY_TYPE_WIRELESS,		/* Wireless */
- };
+Thus if the site one day goes down, and at times it did, the reference
+is almost gone forever.
 
-enum power_supply_usb_type {
+Use "https://lkml.kernel.org/r/<message-id>". The link becomes:
 
-base-commit: e9919e11e219eaa5e8041b7b1a196839143e9125
+  https://lkml.kernel.org/r/20200512124058.833263033@infradead.org
+
+thanks,
+
 --
-2.17.1
-
+Ahmed S. Darwish
+Linutronix GmbH
