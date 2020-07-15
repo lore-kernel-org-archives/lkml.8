@@ -7,51 +7,51 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ECD6BC433EA
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 11:24:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AAC1C433EC
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 11:24:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C11162070E
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 11:24:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 378AA2070E
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 11:24:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="CXb0loqH"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="TrllTA33"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729953AbgGOLYw (ORCPT
+        id S1729989AbgGOLY4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 07:24:52 -0400
+        Wed, 15 Jul 2020 07:24:56 -0400
 Received: from esa3.microchip.iphmx.com ([68.232.153.233]:62426 "EHLO
         esa3.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728768AbgGOLYu (ORCPT
+        with ESMTP id S1729938AbgGOLYz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 07:24:50 -0400
+        Wed, 15 Jul 2020 07:24:55 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
   d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1594812290; x=1626348290;
+  t=1594812294; x=1626348294;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version;
-  bh=T1OYveV/D+zKAKeQwDPMk7Yyaqe/yTBKNsdgc95BSbk=;
-  b=CXb0loqHDaUhfMm0kNs1BtvUELoia21+lxkercPyyLSSb9U3DE4U6VHb
-   Hm8chSN/L/cSy0H0wVq5LLaNmxVsy5Fo0u2v8RFbK38T3qExbwczy85/m
-   tDwCFlnvKos+2a8J8DmdUGMlVJ8JdFFZECRT1ZnUFb4Qd9O8DeL1HVEaa
-   ni5Ke72mE8Bp+KATtg0+/64jSSbzDXPu2wXFjS10e13sQfzlIPYliZJVq
-   i0s10UdOn3z4lrY2qy8xsAV20syaTZDRjr1xdN82zmeEywRbpKjRFcz8G
-   XEXiNIcM+phlcffPuzgPr5NEXTGJLxt43M9mAp6kYoot12J7kFwdf0jCv
-   Q==;
-IronPort-SDR: ViUFu9WFGhwE9g7juizxJ6T7yuXVEYnfiqsGkltEd2s7kBf2xIUKUDKH7kFUJ1ImoEHSyimq26
- fTueqBKHmkx54rWzfv0Zjqo3dqHVZta3HZnd8eMmFghqnnkZJoQUBs4EulVWh/4zV7oYm0bXqj
- LC2iqOhIw++KzFg7AnEIcb3L4xQs5uxnnsV+EDCzWFwiZUl1u4wCw43anLlB2Ert/KOlL90BVa
- 07i93OT51NnaE7atMqOcdjtnb7MJOO0yFCZ+ZMpZ0ruROSAmf8YcxClidO0UnFm2UapvzgIKjf
- ESs=
+  bh=Zj8y6PhZEdQjJEh+6pVcK105guGzemj0ylKCAe8Ysco=;
+  b=TrllTA33oR89kpATk8Jo51oguyd9LeORHW64Fd2vLZSVdtKSyUZ4E3WK
+   We+xCH9ySeXFTOweoF3wRqxCWEeqgexLkMfZC9hz/8y2FhISx12PsaOp2
+   PYQSVI2YhjNuXx05mJUyaNr1+Q/q760KkXqLGKFNCv8Ym5GtUBGPpYiR8
+   wJWja3A1OGy5d0x47CWmfuQcIH0sRZwrABqG/WuCEkYF/yLixoF3sHWgn
+   bM8AluP1k+9mM0SDcpTqWY75B98+Q9pTMV9ruZ59CPf0UAqvPHnEDwd1G
+   aL/XBVbTAexK8nb0p8oOk8sZ4bbCS70dgBDuMBLOhTwJJinIfOCYb65H9
+   A==;
+IronPort-SDR: bWiHJ2HU/50IaNHpFnA5JKHNpjvKB1JTRViO+douwV1WcHubhVIk+7xHstLhqaKG9RdjZp1cya
+ UJ//y4IfgAbg4xKnTqTnxS/n115Fk2EijHQUiWw0YAOFJttH9E1Rc4n1mieNpFnQ+7V+xS2L9w
+ 1QD4WHCwllLp4SyecIeIKpxVVaptOPrVndawPfadiCQd+18T3bt+VtN3fy3vORBUepGfxWCjlV
+ e5/L4DMvf+UIspcKRXKB3ZSWXaeRHGRS8mGf3Zge1PTC0BGX21HIKkKc20BuWuvGEBnu9cEGBv
+ ZNw=
 X-IronPort-AV: E=Sophos;i="5.75,355,1589266800"; 
-   d="scan'208";a="83962792"
+   d="scan'208";a="83962806"
 Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa3.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 15 Jul 2020 04:24:49 -0700
+  by esa3.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 15 Jul 2020 04:24:53 -0700
 Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
  chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1979.3; Wed, 15 Jul 2020 04:24:49 -0700
+ 15.1.1979.3; Wed, 15 Jul 2020 04:24:53 -0700
 Received: from m18063-ThinkPad-T460p.microchip.com (10.10.115.15) by
  chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server id
- 15.1.1979.3 via Frontend Transport; Wed, 15 Jul 2020 04:24:13 -0700
+ 15.1.1979.3 via Frontend Transport; Wed, 15 Jul 2020 04:24:17 -0700
 From:   Claudiu Beznea <claudiu.beznea@microchip.com>
 To:     <mturquette@baylibre.com>, <sboyd@kernel.org>,
         <nicolas.ferre@microchip.com>, <alexandre.belloni@bootlin.com>,
@@ -60,9 +60,9 @@ CC:     <bbrezillon@kernel.org>, <linux-kernel@vger.kernel.org>,
         <linux-clk@vger.kernel.org>,
         <linux-arm-kernel@lists.infradead.org>,
         "Claudiu Beznea" <claudiu.beznea@microchip.com>
-Subject: [PATCH 04/19] clk: at91: sam9x60-pll: use frac when computing pll frequency
-Date:   Wed, 15 Jul 2020 14:24:12 +0300
-Message-ID: <1594812267-6697-5-git-send-email-claudiu.beznea@microchip.com>
+Subject: [PATCH 05/19] clk: at91: sam9x60-pll: use logical or for range check
+Date:   Wed, 15 Jul 2020 14:24:13 +0300
+Message-ID: <1594812267-6697-6-git-send-email-claudiu.beznea@microchip.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1594812267-6697-1-git-send-email-claudiu.beznea@microchip.com>
 References: <1594812267-6697-1-git-send-email-claudiu.beznea@microchip.com>
@@ -73,30 +73,29 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-According to datasheet the PLL frequency is computed using the following
-formula: parent_rate * (mul + 1 + frac/2^22)/(div + 1). Use this
-formula.
+Use logical or for range check. In case bestrate is not in
+characteristics->output[0].min..characteristics->output[0].max
+range we should return -ERANGE.
 
 Fixes: a436c2a447e59 ("clk: at91: add sam9x60 PLL driver")
 Signed-off-by: Claudiu Beznea <claudiu.beznea@microchip.com>
 ---
- drivers/clk/at91/clk-sam9x60-pll.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/clk/at91/clk-sam9x60-pll.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/drivers/clk/at91/clk-sam9x60-pll.c b/drivers/clk/at91/clk-sam9x60-pll.c
-index 3522eae2edd6..d3152c0afcbf 100644
+index d3152c0afcbf..dfb91c190bd1 100644
 --- a/drivers/clk/at91/clk-sam9x60-pll.c
 +++ b/drivers/clk/at91/clk-sam9x60-pll.c
-@@ -152,7 +152,8 @@ static unsigned long sam9x60_pll_recalc_rate(struct clk_hw *hw,
- {
- 	struct sam9x60_pll *pll = to_sam9x60_pll(hw);
+@@ -232,7 +232,7 @@ static long sam9x60_pll_get_best_div_mul(struct sam9x60_pll *pll,
+ 	}
  
--	return (parent_rate * (pll->mul + 1)) / (pll->div + 1);
-+	return DIV_ROUND_CLOSEST_ULL((parent_rate * (pll->mul + 1) +
-+		((u64)parent_rate * pll->frac >> 22)), (pll->div + 1));
- }
+ 	/* Check if bestrate is a valid output rate  */
+-	if (bestrate < characteristics->output[0].min &&
++	if (bestrate < characteristics->output[0].min ||
+ 	    bestrate > characteristics->output[0].max)
+ 		return -ERANGE;
  
- static long sam9x60_pll_get_best_div_mul(struct sam9x60_pll *pll,
 -- 
 2.7.4
 
