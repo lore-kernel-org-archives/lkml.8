@@ -2,197 +2,160 @@ Return-Path: <SRS0=kup7=A2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5487AC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 08:51:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF6DCC433E2
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 08:52:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2DCA120672
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 08:51:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A29BB20672
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 08:52:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sReJIDJW"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hHzdxBJ1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730443AbgGOIv1 (ORCPT
+        id S1730460AbgGOIwd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 04:51:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55706 "EHLO
+        Wed, 15 Jul 2020 04:52:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55882 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729618AbgGOIvZ (ORCPT
+        with ESMTP id S1730445AbgGOIwc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 04:51:25 -0400
-Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 92D42C061755;
-        Wed, 15 Jul 2020 01:51:25 -0700 (PDT)
-Received: by mail-ej1-x642.google.com with SMTP id n26so1373982ejx.0;
-        Wed, 15 Jul 2020 01:51:25 -0700 (PDT)
+        Wed, 15 Jul 2020 04:52:32 -0400
+Received: from mail-io1-xd43.google.com (mail-io1-xd43.google.com [IPv6:2607:f8b0:4864:20::d43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C63CAC061755
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 01:52:32 -0700 (PDT)
+Received: by mail-io1-xd43.google.com with SMTP id e64so1388157iof.12
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 01:52:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=to:cc:references:from:autocrypt:subject:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=txoJOOAr0ku04ztfGeJfOmNP/IA3KSD8q9V1QgCkZzQ=;
-        b=sReJIDJW/NSiPJ1XNNo9NxMS0ReT2pnz5V+fPJCnR9h+Puign104X+rYs4UagHkN0R
-         iUlJdJ1TKj8eNSW2tvIkLH760la6vHqJACxyjWF8qrGFXwXzr/JYOPmQOlCUCqHMOWaD
-         rTRyYB9Y3lBmFK1LyuszZXdmCDzy1j1yOUQhobEIO0vwnFbFTvmdNdPQtb+2Nro2PLT7
-         6TkGT0m4xPkV51Mfe++v2fZ5nIZS2ydtIqIxK4x8egOm5mq7+yPVYMWF4y/GlZR0Nj1I
-         O0gydvUU+ZhIWcyu1cbpNCHL8xj4h9D3YxbNHeAbZGOyE4edkw/oNOuRZKiE+WfeVBg4
-         R/iA==
+        h=mime-version:references:in-reply-to:reply-to:from:date:message-id
+         :subject:to:cc;
+        bh=3Z4IpLUKocM3OEmb2Wb4pmzCIIom6GoJeorw5OSNFmA=;
+        b=hHzdxBJ1OQGEfhC90QrC2rcV6mefC3VdSTniGM9hIQKPOR8JXTj7WKNBfXh153QO+z
+         sFiPrRzfbR5yOnd870qHFxRdAdEYgeagfwrYPFcUmAFA+3yJg2yqc2O9iNUOGWqhZ/7W
+         /+RTXMs+zfL+gFZvJLzBprAPHqA+v3Q8eFvUatZCmcRlNjRcjfy7vI6FNIn+nRL+ueS1
+         FGA4P96247zfhiVYwY56WyXY5HoY9wvxCmqjOeslQ0oK8cmR4QPsVKVdc3Tq60C81odk
+         AFuDLyzF/3vXymk+0OE7K/W//GsO2IRZ/m4z3pmbYQUVY67PaLiWpFhncFKvbwP6oySe
+         yEJg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:to:cc:references:from:autocrypt:subject
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=txoJOOAr0ku04ztfGeJfOmNP/IA3KSD8q9V1QgCkZzQ=;
-        b=nXTnc7paaWFEl0xIvZYc0TIrBfPISXzJqk8/NoeRU7WRz1r6Q4/Agbka7WqWtpjGLr
-         j8+QyBw9Q3NdSaVBX4xsAMF8dxUM5viTc+9hPDVFw2TP10ZoDy0OOj4uxekZM3U5i/eP
-         69/dnmyJ5phnT7X899YfSW0fd1cy5dFnQ9BPASSFhnvaC7ji4LahcHYjM2hb1szFR4jB
-         ER1SfqgIvqAjm3gdDQQXqdPqpdv/Vnq1eRPV0bjZ/LE2Aq+nz4kvARsNWhYIpkmLazcb
-         4ZLm00wgHYJ1hZ3gzdFRw8sSAx+OAXNp5K7dc+IZCG1onAuM3cB/xMein/DE3C/7/k6F
-         oi2g==
-X-Gm-Message-State: AOAM532Oe7KrqQmaz3XoRDxx3/JT0P7Thk30Abywvn+9wgklTvV9pReS
-        6pmudYzbjEsoIOUh0M46Dym4ZEaKZLE=
-X-Google-Smtp-Source: ABdhPJxDGucO9Kx1cwEfPk29VnCtghOTl6tenRsE/JEDH1l8huAOVBLVaNS6gcNZQyETV2nIqXCiPg==
-X-Received: by 2002:a17:906:fa9b:: with SMTP id lt27mr7929676ejb.365.1594803083844;
-        Wed, 15 Jul 2020 01:51:23 -0700 (PDT)
-Received: from [192.168.43.236] ([5.100.193.69])
-        by smtp.gmail.com with ESMTPSA id u13sm1429627ejc.72.2020.07.15.01.51.21
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 15 Jul 2020 01:51:23 -0700 (PDT)
-To:     Miklos Szeredi <miklos@szeredi.hu>
-Cc:     Pavel Machek <pavel@denx.de>, Greg KH <gregkh@linuxfoundation.org>,
-        Jan Ziak <0xe2.0x9a.0x9b@gmail.com>,
-        Linux API <linux-api@vger.kernel.org>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-kselftest@vger.kernel.org,
-        linux-man <linux-man@vger.kernel.org>,
-        Michael Kerrisk <mtk.manpages@gmail.com>, shuah@kernel.org,
-        Al Viro <viro@zeniv.linux.org.uk>, io-uring@vger.kernel.org
-References: <CAODFU0q6CrUB_LkSdrbp5TQ4Jm6Sw=ZepZwD-B7-aFudsOvsig@mail.gmail.com>
- <20200705115021.GA1227929@kroah.com> <20200714065110.GA8047@amd>
- <CAJfpegu8AXZWQh3W39PriqxVna+t3D2pz23t_4xEVxGcNf1AUA@mail.gmail.com>
- <4e92b851-ce9a-e2f6-3f9a-a4d47219d320@gmail.com>
- <CAJfpegvroouw5ndHv+395w5PP1c+pUyp=-T8qhhvSnFbhbRehg@mail.gmail.com>
- <7584d754-2044-a892-cf29-65259b9c4eb1@gmail.com>
- <CAJfpegvkw5Exptz=gY5bRy2U8GjvTo+muBHsgdF_PA5=hyhmSA@mail.gmail.com>
-From:   Pavel Begunkov <asml.silence@gmail.com>
-Autocrypt: addr=asml.silence@gmail.com; prefer-encrypt=mutual; keydata=
- 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 bA==
-Subject: Re: [PATCH 0/3] readfile(2): a new syscall to make open/read/close
- faster
-Message-ID: <b3adac43-f4ec-7820-1297-59eee206f308@gmail.com>
-Date:   Wed, 15 Jul 2020 11:49:36 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:reply-to
+         :from:date:message-id:subject:to:cc;
+        bh=3Z4IpLUKocM3OEmb2Wb4pmzCIIom6GoJeorw5OSNFmA=;
+        b=O7jLNp8orujJgAY6Gv8Ww06s8UoXWmmx6ZkZpTDa27kC6VWefoavbXfOBZeUtlCUZR
+         qIFTenCGaj0KnDVUQbmc/aLG6IM3jd2M2W0bpbiL6o7FIViNQHuESUZDX7D1pWRWl+hg
+         oT/MWF+W0ZqyyUCkNtJrPnOVnA+eLptNf7QPL+jaXqvuwQ4cFUuvq0fDCcY6OMcFq396
+         ibJd+iJT8yNlNUXDTU2DmHhUApJpy+3YmtDok4Jl+hZVNfp9fFdqfIm2ZZ56VYmD3O6d
+         hkbipDjwfCI6nhGqbqqyXS2IivOYg7Gc4p7zwhXT2z2RBn6VZ6WSiv7S+koaHfXOjJIv
+         2G9A==
+X-Gm-Message-State: AOAM5304XgtC0eHoYcnyd+woMeZETT+LPXUEZuyKUesnzgs6ziI3Gd29
+        KHS9djyfWttqV8Rwtmt3ETopBG495C7Ef7sUSbU=
+X-Google-Smtp-Source: ABdhPJyp2Jkk8UtUIOJ+t1y4YAmr65LCFaVZo0jz/FKxkcsalM41AmdbHnW8iXebFlCIFGEZZO1+cf9JYfZpLRExKNU=
+X-Received: by 2002:a02:ce9a:: with SMTP id y26mr10812220jaq.121.1594803152177;
+ Wed, 15 Jul 2020 01:52:32 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <CAJfpegvkw5Exptz=gY5bRy2U8GjvTo+muBHsgdF_PA5=hyhmSA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <20200714023836.2310569-1-nivedita@alum.mit.edu> <20200715004133.1430068-2-nivedita@alum.mit.edu>
+In-Reply-To: <20200715004133.1430068-2-nivedita@alum.mit.edu>
+Reply-To: sedat.dilek@gmail.com
+From:   Sedat Dilek <sedat.dilek@gmail.com>
+Date:   Wed, 15 Jul 2020 10:52:20 +0200
+Message-ID: <CA+icZUW4YycmdKATQNW+3-rjLS8=jSVWCvQNx13TuZcYXt0YnQ@mail.gmail.com>
+Subject: Re: [PATCH v5 1/7] x86/boot/compressed: Move .got.plt entries out of
+ the .got section
+To:     Arvind Sankar <nivedita@alum.mit.edu>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Fangrui Song <maskray@google.com>,
+        Dmitry Golovin <dima@golovin.in>,
+        Clang-Built-Linux ML <clang-built-linux@googlegroups.com>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Daniel Kiper <daniel.kiper@oracle.com>,
+        Kees Cook <keescook@chromium.org>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        "H . J . Lu" <hjl@sourceware.org>, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 15/07/2020 11:41, Miklos Szeredi wrote:
-> On Wed, Jul 15, 2020 at 10:33 AM Pavel Begunkov <asml.silence@gmail.com> wrote:
->>
->> On 14/07/2020 14:55, Miklos Szeredi wrote:
->>> On Tue, Jul 14, 2020 at 1:36 PM Pavel Begunkov <asml.silence@gmail.com> wrote:
->>>>
->>>> On 14/07/2020 11:07, Miklos Szeredi wrote:
->>>>> On Tue, Jul 14, 2020 at 8:51 AM Pavel Machek <pavel@denx.de> wrote:
->>>>>>
->>>>>> Hi!
->>>>>>
->>>>>>>> At first, I thought that the proposed system call is capable of
->>>>>>>> reading *multiple* small files using a single system call - which
->>>>>>>> would help increase HDD/SSD queue utilization and increase IOPS (I/O
->>>>>>>> operations per second) - but that isn't the case and the proposed
->>>>>>>> system call can read just a single file.
->>>>>>>
->>>>>>> If you want to do this for multple files, use io_ring, that's what it
->>>>>>> was designed for.  I think Jens was going to be adding support for the
->>>>>>> open/read/close pattern to it as well, after some other more pressing
->>>>>>> features/fixes were finished.
->>>>>>
->>>>>> What about... just using io_uring for single file, too? I'm pretty
->>>>>> sure it can be wrapped in a library that is simple to use, avoiding
->>>>>> need for new syscall.
->>>>>
->>>>> Just wondering:  is there a plan to add strace support to io_uring?
->>>>> And I don't just mean the syscalls associated with io_uring, but
->>>>> tracing the ring itself.
->>>>
->>>> What kind of support do you mean? io_uring is asynchronous in nature
->>>> with all intrinsic tracing/debugging/etc. problems of such APIs.
->>>> And there are a lot of handy trace points, are those not enough?
->>>>
->>>> Though, this can be an interesting project to rethink how async
->>>> APIs are worked with.
->>>
->>> Yeah, it's an interesting problem.  The uring has the same events, as
->>> far as I understand, that are recorded in a multithreaded strace
->>> output (syscall entry, syscall exit); nothing more is needed>
->>> I do think this needs to be integrated into strace(1), otherwise the
->>> usefulness of that tool (which I think is *very* high) would go down
->>> drastically as io_uring usage goes up.
->>
->> Not touching the topic of usefulness of strace + io_uring, but I'd rather
->> have a tool that solves a problem, than a problem that created and honed
->> for a tool.
-> 
-> Sorry, I'm not getting the metaphor.  Can you please elaborate?
+On Wed, Jul 15, 2020 at 2:41 AM Arvind Sankar <nivedita@alum.mit.edu> wrote:
+>
+> From: Ard Biesheuvel <ardb@kernel.org>
+>
+> The .got.plt section contains the part of the GOT which is used by PLT
+> entries, and which gets updated lazily by the dynamic loader when
+> function calls are dispatched through those PLT entries.
+>
+> On fully linked binaries such as the kernel proper or the decompressor,
+> this never happens, and so in practice, the .got.plt section consists
+> only of the first 3 magic entries that are meant to point at the _DYNAMIC
+> section and at the fixup routine in the loader. However, since we don't
+> use a dynamic loader, those entries are never populated or used.
+>
+> This means that treating those entries like ordinary GOT entries, and
+> updating their values based on the actual placement of the executable in
+> memory is completely pointless, and we can just ignore the .got.plt
+> section entirely, provided that it has no additional entries beyond
+> the first 3 ones.
+>
+> So add an assertion in the linker script to ensure that this assumption
+> holds, and move the contents out of the [_got, _egot) memory range that
+> is modified by the GOT fixup routines.
+>
+> While at it, drop the KEEP(), since it has no effect on the contents
+> of output sections that are created by the linker itself.
+>
+> Reviewed-by: Kees Cook <keescook@chromium.org>
+> Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
+> Acked-by: Arvind Sankar <nivedita@alum.mit.edu>
+> Signed-off-by: Arvind Sankar <nivedita@alum.mit.edu>
+> From: Ard Biesheuvel <ardb@kernel.org>
+> Link: https://lore.kernel.org/r/20200523120021.34996-2-ardb@kernel.org
 
-Sure, I mean _if_ there are tools that conceptually suit better, I'd
-prefer to work with them, then trying to shove a new and possibly alien
-infrastructure into strace.
+Tested-by: Sedat Dilek <sedat.dilek@gmail.com>
 
-But my knowledge of strace is very limited, so can't tell whether that's
-the case. E.g. can it utilise static trace points?
+- Sedat -
 
--- 
-Pavel Begunkov
+> ---
+>  arch/x86/boot/compressed/vmlinux.lds.S | 11 ++++++++++-
+>  1 file changed, 10 insertions(+), 1 deletion(-)
+>
+> diff --git a/arch/x86/boot/compressed/vmlinux.lds.S b/arch/x86/boot/compressed/vmlinux.lds.S
+> index 8f1025d1f681..b17d218ccdf9 100644
+> --- a/arch/x86/boot/compressed/vmlinux.lds.S
+> +++ b/arch/x86/boot/compressed/vmlinux.lds.S
+> @@ -44,10 +44,13 @@ SECTIONS
+>         }
+>         .got : {
+>                 _got = .;
+> -               KEEP(*(.got.plt))
+>                 KEEP(*(.got))
+>                 _egot = .;
+>         }
+> +       .got.plt : {
+> +               *(.got.plt)
+> +       }
+> +
+>         .data : {
+>                 _data = . ;
+>                 *(.data)
+> @@ -77,3 +80,9 @@ SECTIONS
+>
+>         DISCARDS
+>  }
+> +
+> +#ifdef CONFIG_X86_64
+> +ASSERT(SIZEOF(.got.plt) == 0 || SIZEOF(.got.plt) == 0x18, "Unexpected GOT/PLT entries detected!")
+> +#else
+> +ASSERT(SIZEOF(.got.plt) == 0 || SIZEOF(.got.plt) == 0xc, "Unexpected GOT/PLT entries detected!")
+> +#endif
+> --
+> 2.26.2
+>
