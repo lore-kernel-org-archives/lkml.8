@@ -2,79 +2,81 @@ Return-Path: <SRS0=kup7=A2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DDC32C433E6
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 09:34:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 566B7C433E8
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 09:34:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BC5FF206E9
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 09:34:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2F6CA206F4
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 09:34:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730273AbgGOJeJ (ORCPT
+        id S1730336AbgGOJea (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 05:34:09 -0400
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:37724 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728043AbgGOJeI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 05:34:08 -0400
-Received: by mail-oi1-f193.google.com with SMTP id 12so1729501oir.4
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 02:34:08 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=EvU8f9uqtqhKQi1upBV6M7odRgHTJO0NIPiNBIO/iso=;
-        b=WGSmOAK17cViYw49pHuVHA8/wJ62VUvDNk5LRf8MA+d0k++nmNRpHiL/ySlZ4p0u45
-         XGPfjN/WnAkIdL2WxVBKoGRI3029EbU3cpGxh1BoRhbYp9kFiUGS6O3AukkGS3ybmGc3
-         zVsqdMXmWvICUhPi1e4hNZZzeiw+asBipSEgQ9T37bB0l2TbGAQkiQyjraJaEhJIz/9/
-         Lge5E/O+og5OC2aSPyHILJ0q9UFDfozdcatmRfruhzzhSTJhoPeApvmM6MppjEZxAL/R
-         syJmjtnKrjnEcFVSvbarPwc2gCGC4hN2hDM7abSJLRoaEcH44DSjtjPN84Z7qLeCf5ol
-         9/lA==
-X-Gm-Message-State: AOAM5333Hrq88Es0RWZoV1O2jGRRDpGMzjEPfgVeNf024TQrhLeFU93e
-        EvCgjZr7p2KG/zo9TkQN1w5FMT89JC1I8G00rjk=
-X-Google-Smtp-Source: ABdhPJy9IvsxtdXlInbx2uqQJkVU+nPkqyYw7WEzAKfjGHtwKAFf4Tb1kkO8UbWyyEt9nm9bbZrbFwjGHDrSB0oKqCc=
-X-Received: by 2002:aca:5c41:: with SMTP id q62mr6800166oib.148.1594805648341;
- Wed, 15 Jul 2020 02:34:08 -0700 (PDT)
+        Wed, 15 Jul 2020 05:34:30 -0400
+Received: from [195.135.220.15] ([195.135.220.15]:41518 "EHLO mx2.suse.de"
+        rhost-flags-FAIL-FAIL-OK-OK) by vger.kernel.org with ESMTP
+        id S1728043AbgGOJea (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jul 2020 05:34:30 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id 99D8CAC2D;
+        Wed, 15 Jul 2020 09:34:31 +0000 (UTC)
+Date:   Wed, 15 Jul 2020 11:34:26 +0200
+From:   Joerg Roedel <jroedel@suse.de>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Joerg Roedel <joro@8bytes.org>, x86@kernel.org, hpa@zytor.com,
+        Andy Lutomirski <luto@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Jiri Slaby <jslaby@suse.cz>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Juergen Gross <jgross@suse.com>,
+        Kees Cook <keescook@chromium.org>,
+        David Rientjes <rientjes@google.com>,
+        Cfir Cohen <cfir@google.com>,
+        Erdem Aktas <erdemaktas@google.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Mike Stunes <mstunes@vmware.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Martin Radev <martin.b.radev@gmail.com>,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        virtualization@lists.linux-foundation.org
+Subject: Re: [PATCH v4 00/75] x86: SEV-ES Guest Support
+Message-ID: <20200715093426.GK16200@suse.de>
+References: <20200714120917.11253-1-joro@8bytes.org>
+ <20200715092456.GE10769@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-References: <1594722055-9298-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <1594722055-9298-3-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-In-Reply-To: <1594722055-9298-3-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Wed, 15 Jul 2020 11:33:57 +0200
-Message-ID: <CAMuHMdXOBVn1HAxN6yB+bv+VtBPs4F4dUwvPZHkLj6Sz7KmRDQ@mail.gmail.com>
-Subject: Re: [PATCH 2/2] iommu/ipmmu-vmsa: Add an entry for r8a77961 in soc_rcar_gen3[]
-To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Cc:     Joerg Roedel <joro@8bytes.org>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Linux IOMMU <iommu@lists.linux-foundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Prabhakar <prabhakar.csengg@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200715092456.GE10769@hirez.programming.kicks-ass.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 14, 2020 at 12:21 PM Lad Prabhakar
-<prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
-> Add an entry for r8a77961 in soc_rcar_gen3[] list so that we dont
-> enable iommu unconditionally.
->
-> Fixes: 17fe161816398 ("iommu/renesas: Add support for r8a77961")
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+On Wed, Jul 15, 2020 at 11:24:56AM +0200, Peter Zijlstra wrote:
+> Can we get some more words -- preferably in actual code comments, on
+> when exactly #VC happens?
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Sure, will add this as a comment before the actual runtime VC handler.
 
-Gr{oetje,eeting}s,
+> Because the only thing I remember is that #VC could happen on any memop,
+> but I also have vague memories of that being a later extention.
 
-                        Geert
+Currently it is only raised when something happens that the hypervisor
+intercepts, for example on a couple of instructions like CPUID,
+RD/WRMSR, ..., or on MMIO/IOIO accesses.
 
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+With Secure Nested Paging (SNP), which needs additional enablement, a #VC can
+happen on any memory access. I wrote the IST handling entry code for #VC
+with that in mind, but do not actually enable it. This is the reason why
+the #VC handler just panics the system when it ends up on the fall-back
+(VC2) stack, with SNP enabled it needs to handle the SNP exit-codes in
+that path.
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Regards,
+
+	Joerg
