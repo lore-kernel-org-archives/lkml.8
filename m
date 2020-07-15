@@ -7,43 +7,43 @@ X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62EE0C433E5
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 13:20:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 370C4C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 13:20:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3D8B3206D5
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 13:20:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1521E206D5
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 13:20:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nic.cz header.i=@nic.cz header.b="FdASlJ7v"
+	dkim=pass (1024-bit key) header.d=nic.cz header.i=@nic.cz header.b="hnpTkao8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731756AbgGONUY (ORCPT
+        id S1731784AbgGONUo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 09:20:24 -0400
-Received: from mail.nic.cz ([217.31.204.67]:41280 "EHLO mail.nic.cz"
+        Wed, 15 Jul 2020 09:20:44 -0400
+Received: from lists.nic.cz ([217.31.204.67]:41386 "EHLO mail.nic.cz"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729900AbgGONUX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 09:20:23 -0400
+        id S1731457AbgGONUo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jul 2020 09:20:44 -0400
 Received: from dellmb.labs.office.nic.cz (unknown [IPv6:2001:1488:fffe:6:cac7:3539:7f1f:463])
-        by mail.nic.cz (Postfix) with ESMTPSA id AAC84140968;
-        Wed, 15 Jul 2020 15:20:21 +0200 (CEST)
+        by mail.nic.cz (Postfix) with ESMTPSA id 2D862140968;
+        Wed, 15 Jul 2020 15:20:42 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=nic.cz; s=default;
-        t=1594819221; bh=EhvEo4m4fKGkK7GF8jSxHSKc1eN7KqOotdvfp78dHIE=;
+        t=1594819242; bh=OJGSnMnuLigyhZ0vOvJBhIa0tDbcEtM7CFv9CHE99m0=;
         h=Date:From:To;
-        b=FdASlJ7vdxKjyIY/Xqz49mtaP2/xeCzwUwpM08kQJcfFVYoCs84cOKaLYqUXyfgd+
-         NoBgXj2NV1/ZrpmNhamXJ2gffI753w1WiLHY+J2HADCMRvmocCGe3ZbS+nGkYULtdN
-         2mWcK1PILV6jjZ5y/37lEKdzJjPWNd1XGGBOZWb4=
-Date:   Wed, 15 Jul 2020 15:20:17 +0200
+        b=hnpTkao8b/RorXcj9I2ae4UcIToI6hbiGr9hvUT0aWG9bKMDMPhvn8VQYrAH2xJpF
+         tkMpmJIZP6Jj7b7saWTR/4qcU1f6HLAuEFU8XoID8pk+DnpWToyRbotJoFko/8qoYi
+         Cnwi+NWdCSL0zt+F6Nqh5V43jYsGFPqpqj5LssFM=
+Date:   Wed, 15 Jul 2020 15:20:41 +0200
 From:   Marek =?ISO-8859-1?Q?Beh=FAn?= <marek.behun@nic.cz>
 To:     Dan Murphy <dmurphy@ti.com>
 Cc:     <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>, <robh@kernel.org>,
         <devicetree@vger.kernel.org>, <linux-leds@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>,
         <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH v30 02/16] leds: lp5523: Fix various formatting issues
- in the code
-Message-ID: <20200715152017.4961ddc7@dellmb.labs.office.nic.cz>
-In-Reply-To: <20200713154544.1683-3-dmurphy@ti.com>
+Subject: Re: [PATCH v30 03/16] dt: bindings: Add multicolor class dt
+ bindings documention
+Message-ID: <20200715152041.203ebcf6@dellmb.labs.office.nic.cz>
+In-Reply-To: <20200713154544.1683-4-dmurphy@ti.com>
 References: <20200713154544.1683-1-dmurphy@ti.com>
-        <20200713154544.1683-3-dmurphy@ti.com>
+        <20200713154544.1683-4-dmurphy@ti.com>
 X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -55,17 +55,22 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 13 Jul 2020 10:45:30 -0500
+On Mon, 13 Jul 2020 10:45:31 -0500
 Dan Murphy <dmurphy@ti.com> wrote:
 
-> Fix checkpatch errors and warnings for the LP5523.c device
-> driver.
+> Add DT bindings for the LEDs multicolor class framework.
+> Add multicolor ID to the color ID list for device tree bindings.
 >=20
+> CC: Rob Herring <robh@kernel.org>
+> Reviewed-by: Rob Herring <robh@kernel.org>
 > Acked-by: Pavel Machek <pavel@ucw.cz>
 > Acked-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
 > Signed-off-by: Dan Murphy <dmurphy@ti.com>
 > ---
->  drivers/leds/leds-lp5523.c | 19 ++++++++++---------
->  1 file changed, 10 insertions(+), 9 deletions(-)=20
+>  .../bindings/leds/leds-class-multicolor.yaml  | 37
+> +++++++++++++++++++ include/dt-bindings/leds/common.h             |
+> 3 +- 2 files changed, 39 insertions(+), 1 deletion(-)
+>  create mode 100644
+> Documentation/devicetree/bindings/leds/leds-class-multicolor.yaml
 
 Reviewed-by: Marek Beh=C3=BAn <marek.behun@nic.cz>
