@@ -7,30 +7,30 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F5B0C433E3
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 14:26:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88ED2C433E6
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 14:26:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7E7D0205CB
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 14:26:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5600D205CB
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 14:26:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nic.cz header.i=@nic.cz header.b="A6FljPmO"
+	dkim=pass (1024-bit key) header.d=nic.cz header.i=@nic.cz header.b="bU8BR010"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728398AbgGOO0A (ORCPT
+        id S1728500AbgGOO0G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 10:26:00 -0400
-Received: from lists.nic.cz ([217.31.204.67]:34900 "EHLO mail.nic.cz"
+        Wed, 15 Jul 2020 10:26:06 -0400
+Received: from lists.nic.cz ([217.31.204.67]:34852 "EHLO mail.nic.cz"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727908AbgGOOZ7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 10:25:59 -0400
+        id S1725819AbgGOO0A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jul 2020 10:26:00 -0400
 Received: from dellmb.labs.office.nic.cz (unknown [IPv6:2001:1488:fffe:6:cac7:3539:7f1f:463])
-        by mail.nic.cz (Postfix) with ESMTP id 79497140A5D;
+        by mail.nic.cz (Postfix) with ESMTP id 2FDD21405F6;
         Wed, 15 Jul 2020 16:25:58 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=nic.cz; s=default;
-        t=1594823158; bh=sQp6sw1pd1H2vwHpvza0rOe5XDLopPj0Q2DKS+BS2DA=;
+        t=1594823158; bh=XjDxcdcVGrz+d5OePWpf+or5ePv31N9WBkAeqAIKxek=;
         h=From:To:Date;
-        b=A6FljPmOlB1YnkZW/BHqu5LZjzNogxWbG6hQ4nOYYzJrD1Am/M3LlZiDZ2b0DXsez
-         sZoEMejCL3j/AsKLsfB5iooPQu+6uJOrT31E4d9Si8bLSSUTP3YFxkXJ0V/cwUCtEI
-         yUXc/6PHDHH3kQOBR12cZ/gv1fWgz6J/DQepYB3M=
+        b=bU8BR0101pBkUmKJVcgQ51wZNhxpmIWt0MDyLAsrmrPDg1by3oLYvfdz3Z23/NFFb
+         anAk2UB9AVdFC2UMYSNlaJ4+UearZa+q78qEJmLnyveufFAhBQdIzXk7/aBQVCMIX5
+         kGyrc4VNQUyTSJnHvxZvEYmHTuJBHVz9G3HXiX1s=
 From:   =?UTF-8?q?Marek=20Beh=C3=BAn?= <marek.behun@nic.cz>
 To:     linux-pci@vger.kernel.org
 Cc:     Tomasz Maciej Nowak <tmn505@gmail.com>,
@@ -40,10 +40,11 @@ Cc:     Tomasz Maciej Nowak <tmn505@gmail.com>,
         linux-kernel@vger.kernel.org, Andrew Lunn <andrew@lunn.ch>,
         Xogium <contact@xogium.me>,
         =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>,
+        kernel test robot <lkp@intel.com>,
         =?UTF-8?q?Marek=20Beh=C3=BAn?= <marek.behun@nic.cz>
-Subject: [PATCH 3/5] PCI: pci-bridge-emul: Export API functions
-Date:   Wed, 15 Jul 2020 16:25:55 +0200
-Message-Id: <20200715142557.17115-4-marek.behun@nic.cz>
+Subject: [PATCH 1/5] PCI: aardvark: Fix compilation on s390
+Date:   Wed, 15 Jul 2020 16:25:53 +0200
+Message-Id: <20200715142557.17115-2-marek.behun@nic.cz>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200715142557.17115-1-marek.behun@nic.cz>
 References: <20200715142557.17115-1-marek.behun@nic.cz>
@@ -60,48 +61,37 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Pali Rohár <pali@kernel.org>
 
-It allows kernel modules which are not compiled into kernel image to use
-pci-bridge-emul API functions.
+Include linux/gpio/consumer.h instead of linux/gpio.h, as is said in the
+latter file.
 
+This was reported by kernel test bot when compiling for s390.
+
+  drivers/pci/controller/pci-aardvark.c:350:2: error: implicit declaration of function 'gpiod_set_value_cansleep' [-Werror,-Wimplicit-function-declaration]
+  drivers/pci/controller/pci-aardvark.c:1074:21: error: implicit declaration of function 'devm_gpiod_get_from_of_node' [-Werror,-Wimplicit-function-declaration]
+  drivers/pci/controller/pci-aardvark.c:1076:14: error: use of undeclared identifier 'GPIOD_OUT_LOW'
+
+Link: https://lore.kernel.org/r/202006211118.LxtENQfl%25lkp@intel.com
+Reported-by: kernel test robot <lkp@intel.com>
+Fixes: 5169a9851da ("PCI: aardvark: Issue PERST via GPIO")
 Signed-off-by: Pali Rohár <pali@kernel.org>
 Reviewed-by: Marek Behún <marek.behun@nic.cz>
 ---
- drivers/pci/pci-bridge-emul.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/pci/controller/pci-aardvark.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/pci/pci-bridge-emul.c b/drivers/pci/pci-bridge-emul.c
-index ccf26d12ec61..139869d50eb2 100644
---- a/drivers/pci/pci-bridge-emul.c
-+++ b/drivers/pci/pci-bridge-emul.c
-@@ -294,6 +294,7 @@ int pci_bridge_emul_init(struct pci_bridge_emul *bridge,
+diff --git a/drivers/pci/controller/pci-aardvark.c b/drivers/pci/controller/pci-aardvark.c
+index 90ff291c24f0..8caa80b19cf8 100644
+--- a/drivers/pci/controller/pci-aardvark.c
++++ b/drivers/pci/controller/pci-aardvark.c
+@@ -9,7 +9,7 @@
+  */
  
- 	return 0;
- }
-+EXPORT_SYMBOL_GPL(pci_bridge_emul_init);
- 
- /*
-  * Cleanup a pci_bridge_emul structure that was previously initialized
-@@ -305,6 +306,7 @@ void pci_bridge_emul_cleanup(struct pci_bridge_emul *bridge)
- 		kfree(bridge->pcie_cap_regs_behavior);
- 	kfree(bridge->pci_regs_behavior);
- }
-+EXPORT_SYMBOL_GPL(pci_bridge_emul_cleanup);
- 
- /*
-  * Should be called by the PCI controller driver when reading the PCI
-@@ -366,6 +368,7 @@ int pci_bridge_emul_conf_read(struct pci_bridge_emul *bridge, int where,
- 
- 	return PCIBIOS_SUCCESSFUL;
- }
-+EXPORT_SYMBOL_GPL(pci_bridge_emul_conf_read);
- 
- /*
-  * Should be called by the PCI controller driver when writing the PCI
-@@ -430,3 +433,4 @@ int pci_bridge_emul_conf_write(struct pci_bridge_emul *bridge, int where,
- 
- 	return PCIBIOS_SUCCESSFUL;
- }
-+EXPORT_SYMBOL_GPL(pci_bridge_emul_conf_write);
+ #include <linux/delay.h>
+-#include <linux/gpio.h>
++#include <linux/gpio/consumer.h>
+ #include <linux/interrupt.h>
+ #include <linux/irq.h>
+ #include <linux/irqdomain.h>
 -- 
 2.26.2
 
