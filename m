@@ -2,103 +2,106 @@ Return-Path: <SRS0=kup7=A2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E626CC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 14:58:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F392EC433E2
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 14:59:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C56E0206D5
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 14:58:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="YqFRWUSn"
+	by mail.kernel.org (Postfix) with ESMTP id C910F206E9
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 14:59:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594825182;
+	bh=oY0bSa2V0EHeW/S+pZKL8cobHCUlI74YE8WVvDT9Rn4=;
+	h=Date:From:To:Cc:In-Reply-To:References:Subject:List-ID:From;
+	b=pvq3/QU2Er2+BRZrw5M5ob4qTVv3V8yGfOEyFPK1awBAqO2Hg7Bspy2jthG5JF65L
+	 jRZuVdK6Sbm2YCR1GJlAchAzZFd4qvADGRWA3zlLCL+5yuKCt8FJcE6LAmRRBJI/K6
+	 EC9ovU9WGGTOqbmc0KPfXsgkrWfvoMFxR2rpUR50=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727105AbgGOO6z (ORCPT
+        id S1727121AbgGOO7l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 10:58:55 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:59141 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725866AbgGOO6z (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 10:58:55 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1594825133;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=lwi7F6lNPgRmpIECSq0+3vcP/L2xM7AboV3WqOkIYpQ=;
-        b=YqFRWUSnP4442v1QPBQn7rKJFtnI/iOBJRsfToh1TcmXT9cIbWiv46yALs64q1gkSykEjl
-        4W0eLS/rgXGHDqD3ul/1HBAims1M3s+gVwthWzrAriv0+kprR3wmG/R/PZANHvHY2mGAPf
-        j+kZT7F0YErqs0ikFvyKH0zmxcH8JSY=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-505-ZM94YXkPNHiyhvmR24MdRA-1; Wed, 15 Jul 2020 10:58:50 -0400
-X-MC-Unique: ZM94YXkPNHiyhvmR24MdRA-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Wed, 15 Jul 2020 10:59:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47786 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725866AbgGOO7l (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jul 2020 10:59:41 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 2AB80102C7F1;
-        Wed, 15 Jul 2020 14:58:48 +0000 (UTC)
-Received: from oldenburg2.str.redhat.com (ovpn-112-228.ams2.redhat.com [10.36.112.228])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 3F60361982;
-        Wed, 15 Jul 2020 14:58:43 +0000 (UTC)
-From:   Florian Weimer <fweimer@redhat.com>
-To:     Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc:     carlos <carlos@redhat.com>, Peter Zijlstra <peterz@infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        paulmck <paulmck@linux.ibm.com>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Paul Turner <pjt@google.com>,
-        linux-api <linux-api@vger.kernel.org>,
-        Christian Brauner <christian.brauner@ubuntu.com>
-Subject: Re: [RFC PATCH 2/4] rseq: Allow extending struct rseq
-References: <20200714030348.6214-1-mathieu.desnoyers@efficios.com>
-        <87a7028d5u.fsf@oldenburg2.str.redhat.com>
-        <2452161.11491.1594732791558.JavaMail.zimbra@efficios.com>
-        <71f08b3a-56f5-0e0f-53b0-cc680f7e8181@redhat.com>
-        <2053637148.14136.1594818777608.JavaMail.zimbra@efficios.com>
-        <87y2nk29rp.fsf@oldenburg2.str.redhat.com>
-        <882700738.14181.1594819884049.JavaMail.zimbra@efficios.com>
-        <87mu4028uk.fsf@oldenburg2.str.redhat.com>
-        <1481331967.14276.1594824846736.JavaMail.zimbra@efficios.com>
-Date:   Wed, 15 Jul 2020 16:58:41 +0200
-In-Reply-To: <1481331967.14276.1594824846736.JavaMail.zimbra@efficios.com>
-        (Mathieu Desnoyers's message of "Wed, 15 Jul 2020 10:54:06 -0400
-        (EDT)")
-Message-ID: <87k0z4zuxq.fsf@oldenburg2.str.redhat.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.3 (gnu/linux)
-MIME-Version: 1.0
-Content-Type: text/plain
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+        by mail.kernel.org (Postfix) with ESMTPSA id 0656F206D5;
+        Wed, 15 Jul 2020 14:59:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594825180;
+        bh=oY0bSa2V0EHeW/S+pZKL8cobHCUlI74YE8WVvDT9Rn4=;
+        h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
+        b=SWuws3Q8Dh9CyWLs4Pp/5SUMxnBsypK69Fr/ueXX5wTTyL6IXR9j8vFPl0tCverVt
+         z1eEvA4CLjjD3R0X5T099EYI4n18xI8tSLVT29kywsL52Cuc+TLYjz4zE69lVX/e/f
+         SUhUCupduGtIVSEQZ4OBFVL++wSv7gg2Aje3/Ka4=
+Date:   Wed, 15 Jul 2020 15:59:30 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Sumit Semwal <sumit.semwal@linaro.org>, lgirdwood@gmail.com,
+        bjorn.andersson@linaro.org, robh+dt@kernel.org, agross@kernel.org
+Cc:     rnayak@codeaurora.org, nishakumari@codeaurora.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, kgunda@codeaurora.org
+In-Reply-To: <20200622124110.20971-1-sumit.semwal@linaro.org>
+References: <20200622124110.20971-1-sumit.semwal@linaro.org>
+Subject: Re: [PATCH v5 0/4] Qualcomm labibb regulator driver
+Message-Id: <159482517093.44733.5508630525614600992.b4-ty@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* Mathieu Desnoyers:
-
-> ----- On Jul 15, 2020, at 9:42 AM, Florian Weimer fweimer@redhat.com wrote:
->> * Mathieu Desnoyers:
->> 
+On Mon, 22 Jun 2020 18:11:06 +0530, Sumit Semwal wrote:
+> This series adds a driver for LAB/IBB regulators found on some Qualcomm SoCs.
+> These regulators provide positive and/or negative boost power supplies
+> for LCD/LED display panels connected to the SoC.
+> 
+> This series adds the support for pmi8998 PMIC found in SDM845 family of SoCs.
+> 
+> Changes from v4:
+> - v4 Review comments incorporated
+>   - simplified the driver: removed of_get_child_by_name(); use ENABLE_CTL
+>     register and switch over to use the regulator_*_regmap helpers
+>   - improved kerneldoc
+>   - From the dt-bindings, removed interrupt-names, changed to dual license,
+>     added unevaluatedProperties: false, removed interrupt-names, since there
+>     is only one interrupt per node
+>   - Since the Short Circuit handling needs more details from QC engineers,
+>     drop the SC handling patch from this series, to submit it later
+> 
 > [...]
->>> How would this allow early-rseq-adopter libraries to interact with
->>> glibc ?
->> 
->> Under all extension proposals I've seen so far, early adopters are
->> essentially incompatible with glibc rseq registration.  I don't think
->> you can have it both ways.
->
-> The basic question I'm not sure about is whether we are allowed to increase
-> the size and alignement of __rseq_abi from e.g. glibc 2.32 to glibc 2.33.
 
-With the current mechanism (global TLS data symbol), we can do that
-using symbol versioning.  That means that we can only do this on a
-release boundary, and that it's incompatible with other libraries which
-use an interposing unversioned symbol.
+Applied to
+
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git for-next
+
+Thanks!
+
+[1/3] regulator: Allow regulators to verify enabled during enable()
+      commit: f7d7ad42a9dc2d63cab6a79fe31e6732a30dacf5
+[2/3] regulator: Add labibb regulator binding
+      commit: 88c14de2b6786ef503fd1bc2c952159e65fe45cc
+[3/3] regulator: qcom: Add labibb driver
+      commit: 498ab2fdf8554690c9567c1eee436b858637e3ff
+
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
 
 Thanks,
-Florian
-
+Mark
