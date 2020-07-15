@@ -2,135 +2,82 @@ Return-Path: <SRS0=kup7=A2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DBCDDC433E3
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 12:09:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F2ECC433E2
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 12:10:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BCD4C2065D
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 12:09:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594814962;
-	bh=pLHwjbIgufeWOFnWvZVLWDsUYXG6WW21lbO9Vj/FqQo=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=s+cHefHyBJseSfk7lwxo6qU+O9ThqUshIGrgVeKnRO2+WGO3hqzPlExg2VHmQh3XK
-	 4rLPouRfR+B76c0fjvt1mv28UcwfO7LcnyrewzFYxqBfgJ3rS76QRXgLqAmX7n+46f
-	 hlYO+DXVEOg7lDsVTxkQSpMRtK59p8g53UZq6tG8=
+	by mail.kernel.org (Postfix) with ESMTP id 53C8D2071B
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 12:10:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730740AbgGOMJV (ORCPT
+        id S1730757AbgGOMKa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 08:09:21 -0400
-Received: from mail-oo1-f67.google.com ([209.85.161.67]:46470 "EHLO
-        mail-oo1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726968AbgGOMJU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 08:09:20 -0400
-Received: by mail-oo1-f67.google.com with SMTP id s190so403230ooa.13;
-        Wed, 15 Jul 2020 05:09:20 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=mLPIoPCWX/2y/tjhSwNs4ynh2yh9mmc4HFXmFaRS20o=;
-        b=jDZVhF9MQ82b6zgvydVnT2Q6Q4VYVrwcMWgai09sxS44j1rb+egc6R8UibZhNchQ2N
-         Hr598KW1Ti1sgMfVh0R1wdq2fItiWy1WO2qAlv8obQeKAh8E9WlYVqAsVoRP98v49sS3
-         iFFmtH4H1pcZfyzxVmPnFhLr6W9v+dEfdJsNP9JaJ9Ge0VenYGGNfvFbXkUAb7CQB17V
-         t1+csOrgj8hxaXqIGBoxB4rtBZzCXBQaTwREbvRGtKKuID1zET77BquanQV5Bxf44Qha
-         V8au6/5a4ghH9Oc9EBmkJwBjJuA0RTnhqam3XQKg5lCSyuXc0q8xI7TETRtJCch3+IBY
-         9BaA==
-X-Gm-Message-State: AOAM531na6ZPgce0RdbCncMnVFlr3AFRPqtD2gNkHaYrmiuhpO/wZuRH
-        rSEpB+mA6EF7r9ehqGe2b6bDZBOGLbtI8VtO+iA=
-X-Google-Smtp-Source: ABdhPJzhuH+9Zrju5mwFlmKrjVgDgi8NrlfM121ZkbvRz/q0nnaYaOaetm9dOKKvsw8jaadpotSDzsXSuJpbTVm7Q8Q=
-X-Received: by 2002:a4a:3e48:: with SMTP id t69mr9173593oot.38.1594814959632;
- Wed, 15 Jul 2020 05:09:19 -0700 (PDT)
+        Wed, 15 Jul 2020 08:10:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36128 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726968AbgGOMK3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jul 2020 08:10:29 -0400
+Received: from gaia (unknown [95.146.230.158])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 860542065D;
+        Wed, 15 Jul 2020 12:10:26 +0000 (UTC)
+Date:   Wed, 15 Jul 2020 13:10:23 +0100
+From:   Catalin Marinas <catalin.marinas@arm.com>
+To:     Zhenyu Ye <yezhenyu2@huawei.com>
+Cc:     will@kernel.org, suzuki.poulose@arm.com, maz@kernel.org,
+        steven.price@arm.com, guohanjun@huawei.com, olof@lixom.net,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-arch@vger.kernel.org, linux-mm@kvack.org, arm@kernel.org,
+        xiexiangyou@huawei.com, prime.zeng@hisilicon.com,
+        zhangshaokun@hisilicon.com, kuhn.chenqun@huawei.com
+Subject: Re: [PATCH v3 2/3] arm64: enable tlbi range instructions
+Message-ID: <20200715121023.GC2519@gaia>
+References: <20200715071945.897-1-yezhenyu2@huawei.com>
+ <20200715071945.897-3-yezhenyu2@huawei.com>
 MIME-Version: 1.0
-References: <20200714145049.2496163-1-lee.jones@linaro.org>
- <20200714145049.2496163-10-lee.jones@linaro.org> <CAJZ5v0iB0K6H28DSDQj9T7k_kV10THxV6-HwN9qfmkLsYNHfiA@mail.gmail.com>
- <20200714210340.GJ1398296@dell> <20200715032442.gh2cliiddhv35fdj@vireshk-i7>
- <20200715032718.2zlo2eurhkpoayya@vireshk-i7> <CAJZ5v0jHJDLt6QFWG9FOpqmWMXAUuSEPHdHbVgFWcwR6FQD57Q@mail.gmail.com>
- <20200715113433.GB3165313@dell> <CAJZ5v0gFwYj7KKKj806s5SdWO1Wu5exiwObKKAdQWQEKg+2CJA@mail.gmail.com>
- <20200715115029.GC3165313@dell>
-In-Reply-To: <20200715115029.GC3165313@dell>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Wed, 15 Jul 2020 14:09:08 +0200
-Message-ID: <CAJZ5v0hJf2BwDvmtD6UEyyxm-CGcA=SLmAt+F8Sr0ceDZji0jw@mail.gmail.com>
-Subject: Re: [PATCH 09/13] cpufreq: acpi-cpufreq: Remove unused ID structs
-To:     Lee Jones <lee.jones@linaro.org>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Paul Diefenbaugh <paul.s.diefenbaugh@intel.com>,
-        Dominik Brodowski <linux@brodo.de>,
-        Denis Sadykov <denis.m.sadykov@intel.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200715071945.897-3-yezhenyu2@huawei.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 15, 2020 at 1:50 PM Lee Jones <lee.jones@linaro.org> wrote:
->
-> On Wed, 15 Jul 2020, Rafael J. Wysocki wrote:
->
-> > On Wed, Jul 15, 2020 at 1:34 PM Lee Jones <lee.jones@linaro.org> wrote:
-> > >
-> > > On Wed, 15 Jul 2020, Rafael J. Wysocki wrote:
-> > >
-> > > > On Wed, Jul 15, 2020 at 5:27 AM Viresh Kumar <viresh.kumar@linaro.org> wrote:
-> > > > >
-> > > > > On 15-07-20, 08:54, Viresh Kumar wrote:
-> > > > > > On 14-07-20, 22:03, Lee Jones wrote:
-> > > > > > > On Tue, 14 Jul 2020, Rafael J. Wysocki wrote:
-> > > > > > >
-> > > > > > > > On Tue, Jul 14, 2020 at 4:51 PM Lee Jones <lee.jones@linaro.org> wrote:
-> > > > > > > > >
-> > > > > > > > > Can't see them being used anywhere and the compiler doesn't complain
-> > > > > > > > > that they're missing, so ...
-> > > > > > > >
-> > > > > > > > Aren't they needed for automatic module loading in certain configurations?
-> > > > > > >
-> > > > > > > Any idea how that works, or where the code is for that?
-> > > > > >
-> > > > > > The MODULE_DEVICE_TABLE() thingy creates a map of vendor-id,
-> > > > > > product-id that the kernel keeps after boot (and so there is no static
-> > > > > > reference of it for the compiler), later when a device is hotplugged
-> > > > > > into the kernel it refers to the map to find the related driver for it
-> > > > > > and loads it if it isn't already loaded.
-> > > > > >
-> > > > > > This has some of it, search for MODULE_DEVICE_TABLE() in it.
-> > > > > > Documentation/driver-api/usb/hotplug.rst
-> > > > >
-> > > > > And you just need to add __maybe_unused to them to suppress the
-> > > > > warning.
-> > > >
-> > > > Wouldn't that cause the compiler to optimize them away if it doesn't
-> > > > see any users?
-> > >
-> > > It looks like they're only unused when !MODULE,
-> >
-> > OK
-> >
-> > > in which case optimising them away would be the correct thing to do, no?
->
-> It would be good if someone with a little more knowledge could provide
-> a second opinion though.  I would think (hope) that the compiler would
-> be smart enough to see when its actually in use.  After all, it is the
-> compiler that places the information into the device table.
->
-> If that is not the case, then the MODULE_DEVICE_TABLE() magic is
-> broken and will need fixing.
+On Wed, Jul 15, 2020 at 03:19:44PM +0800, Zhenyu Ye wrote:
+> diff --git a/arch/arm64/Makefile b/arch/arm64/Makefile
+> index a0d94d063fa8..4e823b97c92e 100644
+> --- a/arch/arm64/Makefile
+> +++ b/arch/arm64/Makefile
+> @@ -82,11 +82,18 @@ endif
+>  # compiler to generate them and consequently to break the single image contract
+>  # we pass it only to the assembler. This option is utilized only in case of non
+>  # integrated assemblers.
+> +ifneq ($(CONFIG_AS_HAS_ARMV8_4), y)
+>  branch-prot-flags-$(CONFIG_AS_HAS_PAC) += -Wa,-march=armv8.3-a
+>  endif
+> +endif
 
-I'm not sure why that would be the case?
+I couldn't find a clear statement in the gas documentation on what
+happens if multiple -march options are passed. I think it's safer to
+avoid this here.
 
-> Removing boiler-plate is good, but not at the expense of obfuscation.
+>  KBUILD_CFLAGS += $(branch-prot-flags-y)
+>  
+> +ifeq ($(CONFIG_AS_HAS_ARMV8_4), y)
+> +# make sure to pass the newest target architecture to -march.
+> +KBUILD_CFLAGS	+= -Wa,-march=armv8.4-a
+> +endif
 
-I'm not following you here to be honest.
+I have a suspicion both of these options will break the LLVM integrated
+assembler but we don't officially support it on arm64 yet (-Wa, doesn't
+seem to get passed to the integrated asm).
 
-BTW, I'm wondering if removing the "static" modifier from the
-definitions of the structures in question makes the warnings you want
-to get rid of go away.
+Thanks for the re-spin.
+
+-- 
+Catalin
