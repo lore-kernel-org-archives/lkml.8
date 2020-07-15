@@ -2,222 +2,125 @@ Return-Path: <SRS0=kup7=A2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93FBDC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 18:18:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38798C433E2
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 18:19:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 797A92064B
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 18:18:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 176EA2065F
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 18:19:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594837161;
+	bh=taJ+5KPPgh1D4VQJC+LpzEH18ropvCeO2aSQWXX/F30=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=C2teMMi4MQh8ZrQ0zm+q3F4sG2oY16TW5bXKrYWVxf40k3IDxhqKWKY77wNFLShLh
+	 5yDdKfdU9jSZKmLyT9ppuZcKr5vNEJfwIAxFnVSOGFfczJGm3zzLa7H0uNEvltCsPe
+	 c4oreDsXoLjlLtbuc1srkqk5CVflq2LMyoVP680o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726491AbgGOSSL (ORCPT
+        id S1726768AbgGOSTT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 14:18:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58622 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725900AbgGOSSK (ORCPT
+        Wed, 15 Jul 2020 14:19:19 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:41554 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725861AbgGOSTS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 14:18:10 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 306FEC061755
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 11:18:10 -0700 (PDT)
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1jvlyo-0003Sd-Lv; Wed, 15 Jul 2020 20:18:06 +0200
-Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1jvlyl-000415-ST; Wed, 15 Jul 2020 20:18:03 +0200
-Date:   Wed, 15 Jul 2020 20:18:03 +0200
-From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To:     Michael Walle <michael@walle.cc>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org,
-        linux-pwm@vger.kernel.org, linux-watchdog@vger.kernel.org,
+        Wed, 15 Jul 2020 14:19:18 -0400
+Received: by mail-io1-f65.google.com with SMTP id p205so3248249iod.8;
+        Wed, 15 Jul 2020 11:19:18 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=8qir7BYEt1ePlYcSc9kQBoolo/NmI427EpRk3jCnc0E=;
+        b=MAMZCEyepTv0b0HymYM9Pt5xXg3EkaTRQOxe5Ec+mPPsIURDQaEDeO3jlLa7mxYqMA
+         bvTENVFP/SLmQPzmMrKM5gh9x50livFPdiaUmAyDcj+uzJHrvWArmGTNqUQUpD/SHpsD
+         fXAK4BIsT6u5524M8xDCXaYZew/CZGBp39X8S+3hak7cmkOM+caafEL91Wyo7IJh38xk
+         mDPkA7LXNGlqS4mVPMCg75+oBIrF5Abh9zL2AJRT/pCGcog8dIqffpzCD7LCJEgjF59J
+         QErn2OisfbYQsd7JlA9VjNYZ1veXN8swsLvo7XewKOLwil+Ey5fUdQIIT5nRJHrvQeTa
+         2coQ==
+X-Gm-Message-State: AOAM532k0gsgn5zO9TWmJBT4B31Os+cpTnpfR2XO+oJkbZfu4DxMNN5n
+        r5TYmx71R4uO7IcJj9/v5w==
+X-Google-Smtp-Source: ABdhPJy+MnYJTQwPRpfYQ3APxYiqsDRIvjF899R10bA6VgiAK98fT5sRURp5v0MVa13LsRx2/1boXA==
+X-Received: by 2002:a5d:8ac3:: with SMTP id e3mr575726iot.9.1594837157634;
+        Wed, 15 Jul 2020 11:19:17 -0700 (PDT)
+Received: from xps15 ([64.188.179.252])
+        by smtp.gmail.com with ESMTPSA id t11sm1437942ils.3.2020.07.15.11.19.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 15 Jul 2020 11:19:17 -0700 (PDT)
+Received: (nullmailer pid 557898 invoked by uid 1000);
+        Wed, 15 Jul 2020 18:19:16 -0000
+Date:   Wed, 15 Jul 2020 12:19:16 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Amelie Delaunay <amelie.delaunay@st.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-usb@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
         linux-arm-kernel@lists.infradead.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Lee Jones <lee.jones@linaro.org>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: Re: [PATCH v5 07/13] pwm: add support for sl28cpld PWM controller
-Message-ID: <20200715181803.nmgi32tugpbuqvjg@pengutronix.de>
-References: <20200706175353.16404-1-michael@walle.cc>
- <20200706175353.16404-8-michael@walle.cc>
- <20200709085006.b54ype3p4yu64upl@pengutronix.de>
- <72858253a9094074e9c8cd7a4e1db09f@walle.cc>
- <20200713084750.qj4hquzd6uz6y526@pengutronix.de>
- <c0594c34c712ce26b3936d42c92d2361@walle.cc>
- <20200714160856.rjqi7lv63geil3hm@pengutronix.de>
- <eedceb44cba9b54e0634f0e8e4f96f70@walle.cc>
- <20200715163620.xhi24mct5b64qpyp@pengutronix.de>
- <7d8e9f524f0fd81be282be0be50d16ad@walle.cc>
+        Fabrice Gasnier <fabrice.gasnier@st.com>
+Subject: Re: [PATCH 1/6] dt-bindings: connector: add power-opmode optional
+ property to usb-connector
+Message-ID: <20200715181916.GA551920@bogus>
+References: <20200615161512.19150-1-amelie.delaunay@st.com>
+ <20200615161512.19150-2-amelie.delaunay@st.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="f4urrnelako4gbo3"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <7d8e9f524f0fd81be282be0be50d16ad@walle.cc>
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+In-Reply-To: <20200615161512.19150-2-amelie.delaunay@st.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, Jun 15, 2020 at 06:15:07PM +0200, Amelie Delaunay wrote:
+> Power operation mode may depends on hardware design, so, add the optional
+> property power-opmode for usb-c connector to select the power operation
+> mode capability.
+> 
+> Signed-off-by: Amelie Delaunay <amelie.delaunay@st.com>
+> ---
+>  .../devicetree/bindings/connector/usb-connector.yaml  | 11 +++++++++++
+>  1 file changed, 11 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/connector/usb-connector.yaml b/Documentation/devicetree/bindings/connector/usb-connector.yaml
+> index 9bd52e63c935..cd7feb2d4984 100644
+> --- a/Documentation/devicetree/bindings/connector/usb-connector.yaml
+> +++ b/Documentation/devicetree/bindings/connector/usb-connector.yaml
+> @@ -88,6 +88,17 @@ properties:
+>        - device
+>        - dual
+>  
+> +  power-opmode:
+> +    description: Determines the power operation mode that the Type C connector
+> +      will support.
+> +    allOf:
+> +      - $ref: /schemas/types.yaml#definitions/string
+> +    enum:
+> +      - default
 
---f4urrnelako4gbo3
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Wouldn't this just be no property?
 
-On Wed, Jul 15, 2020 at 07:45:10PM +0200, Michael Walle wrote:
-> Hi Uwe,
->=20
-> Am 2020-07-15 18:36, schrieb Uwe Kleine-K=F6nig:
-> > On Tue, Jul 14, 2020 at 11:09:28PM +0200, Michael Walle wrote:
-> > > > My wishlist (just as it comes to my mind, so no guarantee of
-> > > > completeness):
-> > > >
-> > > >  - can do 0% duty cycle for all supported period lengths
-> > > >  - can do 100% duty cycle for all supported period lengths
-> > > >  - supports both polarities
-> > > >  - supports immediate change of configuration and after completion =
-of
-> > > >    the currently running period
-> > > >  - atomic update (i.e. if you go from configuration A to configurat=
-ion B
-> > > >    the hardware guarantees to only emit periods of type A and then =
-type
-> > > >    B. (Depending on the item above, the last A period might be cut =
-off.)
-> > >=20
-> > > We actually discussed this, because the implementation would be
-> > > easier. But
-> > > if the change takes place immediately you might end up with a longer
-> > > duty
-> > > cycle. Assume the PWM runs at 80% duty cycle and starts with the
-> > > on-period.
-> > > If you now change that to 50% you might end up with one successive
-> > > duty
-> > > cycle of "130%". Eg. the 80% of the old and right after that you
-> > > switch to
-> > > the new 50% and then you'd have a high output which corresponds to a
-> > > 130%
-> > > cycle. I don't know if that is acceptable for all applications.
-> >=20
-> > I thought this is a "change takes place immediately" implementation?! So
-> > these problems are actually real here. (And this not happening is
-> > exactly
-> > my wish here. Is there a mis-understanding?)
->=20
-> I wasn't talking about the sl28cpld btw. What is the difference between
-> your proposed "change take place immediately" and "after the cycle".
-> I understand how the after the cycle should work. But how would the
-> immediate change work in your ideal PWM?
+> +      - 1.5A
+> +      - 3.0A
 
-If the PWM is running at 1/3 duty cycle and reconfigured for 2/3, then
-the two scenarios are (the * marks the moment where pwm_apply_state() is
-called, ^ marks the start of a period):
+You'll need to explain these better.
 
-immediately:
+> +      - usb_power_delivery
 
-  __       __    _____    _____
- /  \_____/  \__/     \__/
- ^        ^     ^        ^
-                *
+I would have thought 'default' would be USB-PD. Though I thought Type-C 
+was always USB-PD. 
 
-after the cycle
-  __       __       _____    _____
- /  \_____/  \_____/     \__/
- ^        ^        ^        ^
-                *
-
-and with my ideal PWM I can choose which of the two behaviours I want.
-
-> > > > > > What about disable()?
-> > > > >
-> > > > > Mhh well, it would do one 100% cycle.. mhh ;) Lets see if there w=
-e can
-> > > > > fix that (in hardware), not much we can do in the driver here. We=
- are
-> > > > > _very_ constraint in size, therefore all that little edge cases f=
-all
-> > > > > off
-> > > > > the table.
-> > > >
-> > > > You're saying that on disable the hardware emits a constant high le=
-vel
-> > > > for one cycle? I hope not ...
-> > >=20
-> > > Mh, I was mistaken, disabling the PWM will turn it off immediately,
-> > > but
-> >=20
-> > And does turn off mean, the output gets inactive?
-> > If so you might also disable the hardware if a 0% duty cycle is
-> > configured assuming this saves some energy without modifying the
-> > resulting wave form.
->=20
-> Disabling it has some side effects like switching to another function
-> for this multi function pin. So I'd rather keep it on ;)
-
-So IMHO you should also keep it on when pwm_apply_state is called with
-state.enabled =3D false to ensure a low output.
-
-> > > one 100% duty cycle may happen if you change from a higher to a lower
-> > > duty cycle setting. See above.
-> > >=20
-> > > > I never programmed a CPLD to emulate a hardware PWM, but I wonder if
-> > > > these are really edge cases that increase the size of the binary?!
-> > >=20
-> > > At the moment there is only one 8bit register which stores the value
-> > > which is used for matching. If you want to change that setting after
-> > > a whole cycle, you'd use another 8bit register to cache the new value.
-> > > So this would at least needs 8 additional flip-flops. This doesn't
-> > > sound much, but we are already near 100% usage of the CPLD. So its
-> > > hard to convince people why this is really necessary.
-> >=20
-> > OK. (Maybe there is enough space to allow implementing 100% for mode 0?)
->=20
-> Little bit here a little bit there ;) TBH there are some more critical
-> bugs which would need to be fixed first. So this would need to be a
-> limitation for now.
-
-Ok for me.
-
-Best regards
-Uwe
-
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
-
---f4urrnelako4gbo3
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAl8PSFgACgkQwfwUeK3K
-7AmGDwgAm95avWRsld3nTjBceB0wN2U3rfrBSGmvypuUp5vppogjIM6W07spEnxY
-m/vKOHxNGrm4DNXqFfmv3F/gygTbLMtKr3kbPHWsfA+k3CeMS+zxCh6Fojbf3Jih
-6Kh+ZnFNzyRwObAiK6biI5tyAJtJTvvlhrKZcLFraJce2wio8PLfUUPtDQiah1+9
-UxVnKfhhhpr1yeH6ke0CFKNCdRv74oewtYgMZlfp1Uk5XXTeXWi8qqb+l/GsO1KG
-OdAGj4vN1xPf/Ze7dGzxhXKoyDONSu9Hw5s2eQAJIVmstvVUjpN9IDOqYgbItZuN
-mcyqN8M8SnBgByA7QXOG0VtnMpXpIA==
-=43K8
------END PGP SIGNATURE-----
-
---f4urrnelako4gbo3--
+> +
+>    # The following are optional properties for "usb-c-connector" with power
+>    # delivery support.
+>    source-pdos:
+> -- 
+> 2.17.1
+> 
