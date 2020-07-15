@@ -2,122 +2,123 @@ Return-Path: <SRS0=kup7=A2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=BAYES_00,FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A97FFC433E3
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 08:38:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67BB3C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 08:39:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 889F92065D
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 08:38:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="c5VIn3Mt"
+	by mail.kernel.org (Postfix) with ESMTP id 509E5206E9
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 08:39:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729324AbgGOIiL (ORCPT
+        id S1730286AbgGOIjT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 04:38:11 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:54604 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729066AbgGOIiK (ORCPT
+        Wed, 15 Jul 2020 04:39:19 -0400
+Received: from mail-io1-f72.google.com ([209.85.166.72]:51267 "EHLO
+        mail-io1-f72.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729329AbgGOIjS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 04:38:10 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06F8W7kg147701;
-        Wed, 15 Jul 2020 08:37:57 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2020-01-29;
- bh=0oIcIHic/n+18h7D2ez3Bk061rU2Mlnb/HJIfCwCVqU=;
- b=c5VIn3MtRNPOEhDMfEao95+zv9V3kIYxMcRBq6EDrPNQzGsumpbNqdjgju1O/oCBpdMx
- 8Ku3ZlFWL64vWQcTS2hobf2++tYJaP0ccPSC3FekTWvdYu5eFk7LMEiy42Pi7A9fxfIF
- +VpJDL/B+ImOoY6MAUA5jbPgRY3acGVp/NdbWDsOck2eRZdwTf8KKo7ggfxBIcqAIQgj
- A6igT30WtACoCgBCsX2LrucRHqxrGxuOmMCN1V8F9cAmn74V4QVmfGxZ1WV5br2gZUWN
- VcaEVTneH1nDxhaCdKh+8OUcbEIUxKXUKKf3NA50CAaGGhdnDl0iIC9IlxubYeO78C6F 8Q== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2130.oracle.com with ESMTP id 3274ura2kv-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 15 Jul 2020 08:37:56 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06F8XeDp042497;
-        Wed, 15 Jul 2020 08:37:56 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by userp3020.oracle.com with ESMTP id 327q6tytyk-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 15 Jul 2020 08:37:56 +0000
-Received: from abhmp0014.oracle.com (abhmp0014.oracle.com [141.146.116.20])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 06F8bt7d017390;
-        Wed, 15 Jul 2020 08:37:55 GMT
-Received: from kadam (/41.57.98.10)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 15 Jul 2020 01:37:54 -0700
-Date:   Wed, 15 Jul 2020 11:37:27 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     Joe Perches <joe@perches.com>, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org, Zhixu Zhao <zhixu001@126.com>,
-        rcy@google.com, rspringer@google.com, toddpoynor@google.com
-Subject: Re: [PATCH v2] staging: gasket: core: Fix a coding style issue in
- gasket_core.c
-Message-ID: <20200715083727.GY2549@kadam>
-References: <20200617161127.32006-1-zhixu001@126.com>
- <20200714234440.27009-1-zhixu001@126.com>
- <20200715071748.GC2305231@kroah.com>
- <23ef3ca9616418b702df891443d0f4864edd58ff.camel@perches.com>
- <20200715075755.GA2516028@kroah.com>
+        Wed, 15 Jul 2020 04:39:18 -0400
+Received: by mail-io1-f72.google.com with SMTP id l1so944652ioh.18
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 01:39:17 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=X50zSFlWOsBbnGGaGGIgEhrXhN4UntpAF5C1oBx9MYs=;
+        b=GYxjZvk4TDZ9ACWWS9c71iYVx1eSYR08vSiNwql2naU/QEQabu71vhsSKzhtQhI+ak
+         HUsSZYNByGCI7GPGw3up5+v0oFGcH16YhLxlI39ZoUD74mhtQhQlwKnRAVm93JqfzO1L
+         V1R61YyzByoBXL7lhuL608luDaWqScO6zP/RgK+d18hbCVlBSDy1LAnrVHsNS3DznclG
+         gZJ4gOAU/W6opZDGmH8m7eON7usx9n2M5J3P9E4ltEo4Ky2QLfnvKQOH+ltY01BhUjhH
+         HeppSYK+zGRXEH4ZcSCzQAOsIiboCUADqk29nb9dhmgbFQJk9gxiReKHPRZmgvC/nXhN
+         kCAg==
+X-Gm-Message-State: AOAM530xmbf3pODvJjTQYVkSRAAfsUHXPgesEqeYejOFSkPy0g6T8V6A
+        k183fI4AFYUysqpxT+bRAPmRS5yOMVKgHTovgCEgPTYGK/6R
+X-Google-Smtp-Source: ABdhPJyFSqYEGOij/2d2gRAgBYTTNAvoJfPacGxhsMgIpHLdOUDDPeG4AeOMpxQVXQBcvyYcDGWpH3dXO8ZI3tqHxnFQj6EqYi7Y
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200715075755.GA2516028@kroah.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9682 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 suspectscore=0
- phishscore=0 malwarescore=0 mlxlogscore=999 bulkscore=0 mlxscore=0
- spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2007150072
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9682 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 lowpriorityscore=0 impostorscore=0
- suspectscore=0 phishscore=0 spamscore=0 mlxlogscore=999 malwarescore=0
- mlxscore=0 priorityscore=1501 adultscore=0 bulkscore=0 clxscore=1015
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2007150072
+X-Received: by 2002:a05:6e02:682:: with SMTP id o2mr8155784ils.188.1594802357332;
+ Wed, 15 Jul 2020 01:39:17 -0700 (PDT)
+Date:   Wed, 15 Jul 2020 01:39:17 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000fef5a905aa76dbf9@google.com>
+Subject: memory leak in create_pipe_files
+From:   syzbot <syzbot+6a137efd811917e8b53c@syzkaller.appspotmail.com>
+To:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com, viro@zeniv.linux.org.uk
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 15, 2020 at 09:57:55AM +0200, Greg KH wrote:
-> On Wed, Jul 15, 2020 at 12:24:22AM -0700, Joe Perches wrote:
-> > On Wed, 2020-07-15 at 09:17 +0200, Greg KH wrote:
-> > > On Wed, Jul 15, 2020 at 07:44:40AM +0800, Zhixu Zhao wrote:
-> > > > On Thu, Jun 18, 2020 at 12:11:27AM +0800, Zhixu Zhao wrote:
-> > > > > A coding alignment issue is found by checkpatch.pl.
-> > > > > Fix it by using a temporary for gasket_dev->bar_data[bar_num].
-> > > > > 
-> > > > > Signed-off-by: Zhixu Zhao <zhixu001@126.com>
-> > > > 
-> > > > Hi, there~
-> > > > 
-> > > > Does anybody have any further comments on this?
-> > > > Can it be merged?
-> > > 
-> > > I never saw the first version of this, are you sure it got sent to the
-> > > mailing list?  It's not in any archives anywhere.
-> > 
-> > I saw it.  It's here:
-> > https://lore.kernel.org/lkml/20200617161127.32006-1-zhixu001@126.com/
-> 
-> Ah, doh, sorry.
-> 
-> Zhixu, please address the comments given to you on the series and resend
-> it as a new version.
+Hello,
 
-He responded but not as a reply to my email.  It turns out I made a
-mistake.
+syzbot found the following issue on:
 
-Anyway, just resend, Zhixu.
+HEAD commit:    a581387e Merge tag 'io_uring-5.8-2020-07-10' of git://git...
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=10ba1967100000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=13a9cfc3f50ff96
+dashboard link: https://syzkaller.appspot.com/bug?extid=6a137efd811917e8b53c
+compiler:       gcc (GCC) 10.1.0-syz 20200507
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=13d2004f100000
 
-regards,
-dan carpenter
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+6a137efd811917e8b53c@syzkaller.appspotmail.com
 
+BUG: memory leak
+unreferenced object 0xffff88812a6c8800 (size 256):
+  comm "syz-execprog", pid 6479, jiffies 4295096411 (age 83.520s)
+  hex dump (first 32 bytes):
+    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+    20 2d 85 2a 81 88 ff ff 80 57 d2 15 81 88 ff ff   -.*.....W......
+  backtrace:
+    [<00000000057eb446>] kmem_cache_zalloc include/linux/slab.h:659 [inline]
+    [<00000000057eb446>] __alloc_file+0x23/0x120 fs/file_table.c:101
+    [<0000000046b459a4>] alloc_empty_file+0x4f/0xe0 fs/file_table.c:151
+    [<00000000fced1caf>] alloc_file+0x31/0x160 fs/file_table.c:193
+    [<0000000079549d8a>] alloc_file_pseudo+0xae/0x120 fs/file_table.c:233
+    [<0000000058a70f71>] create_pipe_files+0x127/0x270 fs/pipe.c:931
+    [<00000000ad5d09be>] __do_pipe_flags fs/pipe.c:964 [inline]
+    [<00000000ad5d09be>] do_pipe2+0x43/0x110 fs/pipe.c:1012
+    [<0000000038960906>] __do_sys_pipe2 fs/pipe.c:1030 [inline]
+    [<0000000038960906>] __se_sys_pipe2 fs/pipe.c:1028 [inline]
+    [<0000000038960906>] __x64_sys_pipe2+0x16/0x20 fs/pipe.c:1028
+    [<00000000b1b64f40>] do_syscall_64+0x4c/0xe0 arch/x86/entry/common.c:384
+    [<00000000e3fac4b7>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
+
+BUG: memory leak
+unreferenced object 0xffff88812a7abb80 (size 16):
+  comm "syz-execprog", pid 6479, jiffies 4295096411 (age 83.520s)
+  hex dump (first 16 bytes):
+    01 00 00 00 01 00 00 00 00 00 00 00 00 00 00 00  ................
+  backtrace:
+    [<0000000029e2bcd5>] kmem_cache_zalloc include/linux/slab.h:659 [inline]
+    [<0000000029e2bcd5>] lsm_file_alloc security/security.c:567 [inline]
+    [<0000000029e2bcd5>] security_file_alloc+0x2e/0xc0 security/security.c:1455
+    [<00000000884a9f66>] __alloc_file+0x61/0x120 fs/file_table.c:106
+    [<0000000046b459a4>] alloc_empty_file+0x4f/0xe0 fs/file_table.c:151
+    [<00000000fced1caf>] alloc_file+0x31/0x160 fs/file_table.c:193
+    [<0000000079549d8a>] alloc_file_pseudo+0xae/0x120 fs/file_table.c:233
+    [<0000000058a70f71>] create_pipe_files+0x127/0x270 fs/pipe.c:931
+    [<00000000ad5d09be>] __do_pipe_flags fs/pipe.c:964 [inline]
+    [<00000000ad5d09be>] do_pipe2+0x43/0x110 fs/pipe.c:1012
+    [<0000000038960906>] __do_sys_pipe2 fs/pipe.c:1030 [inline]
+    [<0000000038960906>] __se_sys_pipe2 fs/pipe.c:1028 [inline]
+    [<0000000038960906>] __x64_sys_pipe2+0x16/0x20 fs/pipe.c:1028
+    [<00000000b1b64f40>] do_syscall_64+0x4c/0xe0 arch/x86/entry/common.c:384
+    [<00000000e3fac4b7>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
+
+
+
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+syzbot can test patches for this issue, for details see:
+https://goo.gl/tpsmEJ#testing-patches
