@@ -2,97 +2,67 @@ Return-Path: <SRS0=kup7=A2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C319C433E6
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 16:40:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F14FC433E4
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 16:40:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D025420658
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 16:40:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="pOYUydWs"
+	by mail.kernel.org (Postfix) with ESMTP id 68B5020672
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 16:40:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726885AbgGOQkY (ORCPT
+        id S1726715AbgGOQkQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 12:40:24 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:42638 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725832AbgGOQkV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 12:40:21 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 06FGeG9i003829;
-        Wed, 15 Jul 2020 11:40:16 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1594831216;
-        bh=l9F2o1gesIVnYJhZiValfLiNSoAwf9JeCCag42kCIhw=;
-        h=From:To:Subject:Date:In-Reply-To:References;
-        b=pOYUydWsjV15MttD6f3f7N0GbW76lJoenLILsfkvQ+uKDLqOxmkVAjElsnykej79v
-         hEn5IQSar6BmIP4WlhFqen/9ZMVTwXxmjKjCSSxTTGRZmeHQZWJ/M4wTh0jL5E9OJd
-         pmL0pcmGNV86wqmKWENA7WUjxJE39TrrJQLiZgS0=
-Received: from DLEE109.ent.ti.com (dlee109.ent.ti.com [157.170.170.41])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 06FGeGI4102665
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 15 Jul 2020 11:40:16 -0500
-Received: from DLEE106.ent.ti.com (157.170.170.36) by DLEE109.ent.ti.com
- (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Wed, 15
- Jul 2020 11:40:15 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE106.ent.ti.com
- (157.170.170.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Wed, 15 Jul 2020 11:40:15 -0500
-Received: from uda0868495.fios-router.home (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 06FGeCvZ081717;
-        Wed, 15 Jul 2020 11:40:14 -0500
-From:   Murali Karicheri <m-karicheri2@ti.com>
-To:     <davem@davemloft.net>, <kuba@kernel.org>, <netdev@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-api@vger.kernel.org>,
-        <nsekhar@ti.com>, <grygorii.strashko@ti.com>,
-        <vinicius.gomes@intel.com>
-Subject: [net-next PATCH v2 1/9] net: hsr: fix incorrect lsdu size in the tag of HSR frames for small frames
-Date:   Wed, 15 Jul 2020 12:40:02 -0400
-Message-ID: <20200715164012.1222-2-m-karicheri2@ti.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200715164012.1222-1-m-karicheri2@ti.com>
-References: <20200715164012.1222-1-m-karicheri2@ti.com>
-MIME-Version: 1.0
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+        Wed, 15 Jul 2020 12:40:16 -0400
+Received: from mail.ispras.ru ([83.149.199.84]:33672 "EHLO mail.ispras.ru"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726201AbgGOQkO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jul 2020 12:40:14 -0400
+Received: from hellwig.intra.ispras.ru (unknown [10.10.2.182])
+        by mail.ispras.ru (Postfix) with ESMTPS id 6827D4089F09;
+        Wed, 15 Jul 2020 16:40:11 +0000 (UTC)
+From:   Evgeny Novikov <novikov@ispras.ru>
+To:     Felipe Balbi <balbi@kernel.org>
+Cc:     Evgeny Novikov <novikov@ispras.ru>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+        Jason Yan <yanaijie@huawei.com>, Arnd Bergmann <arnd@arndb.de>,
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
+        ldv-project@linuxtesting.org
+Subject: [PATCH] usb: gadget: net2272: skip BAR1 on error handling paths in probe
+Date:   Wed, 15 Jul 2020 19:40:09 +0300
+Message-Id: <20200715164009.32341-1-novikov@ispras.ru>
+X-Mailer: git-send-email 2.16.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-For small Ethernet frames with size less than minimum size 66 for HSR
-vs 60 for regular Ethernet frames, hsr driver currently doesn't pad the
-frame to make it minimum size. This results in incorrect LSDU size being
-populated in the HSR tag for these frames. Fix this by padding the frame
-to the minimum size applicable for HSR.
+net2272_rdk1_probe() skips "i == 1" (BAR1) during allocation of
+resources. The patch does this on error hanling paths as well.
 
-Signed-off-by: Murali Karicheri <m-karicheri2@ti.com>
-Reviewed-by: Grygorii Strashko <grygorii.strashko@ti.com>
+Found by Linux Driver Verification project (linuxtesting.org).
+
+Signed-off-by: Evgeny Novikov <novikov@ispras.ru>
 ---
- net/hsr/hsr_forward.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/usb/gadget/udc/net2272.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/net/hsr/hsr_forward.c b/net/hsr/hsr_forward.c
-index ed13760463de..e42fd356f073 100644
---- a/net/hsr/hsr_forward.c
-+++ b/net/hsr/hsr_forward.c
-@@ -127,6 +127,9 @@ static void hsr_fill_tag(struct sk_buff *skb, struct hsr_frame_info *frame,
- 	int lane_id;
- 	int lsdu_size;
+diff --git a/drivers/usb/gadget/udc/net2272.c b/drivers/usb/gadget/udc/net2272.c
+index 928057b206f1..639631d44b00 100644
+--- a/drivers/usb/gadget/udc/net2272.c
++++ b/drivers/usb/gadget/udc/net2272.c
+@@ -2370,6 +2370,8 @@ net2272_rdk1_probe(struct pci_dev *pdev, struct net2272 *dev)
  
-+	/* pad to minimum packet size which is 60 + 6 (HSR tag) */
-+	skb_put_padto(skb, ETH_ZLEN + HSR_HLEN);
-+
- 	if (port->type == HSR_PT_SLAVE_A)
- 		lane_id = 0;
- 	else
+  err:
+ 	while (--i >= 0) {
++		if (i == 1)
++			continue;	/* BAR1 unused */
+ 		iounmap(mem_mapped_addr[i]);
+ 		release_mem_region(pci_resource_start(pdev, i),
+ 			pci_resource_len(pdev, i));
 -- 
-2.17.1
+2.16.4
 
