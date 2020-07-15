@@ -2,236 +2,127 @@ Return-Path: <SRS0=kup7=A2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CCFC7C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 06:09:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E4D4C433E4
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 06:20:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 96EAE2065D
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 06:09:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="k1c9QrmW"
+	by mail.kernel.org (Postfix) with ESMTP id 0EEEE20663
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 06:20:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594794004;
+	bh=05czjJvRJc8XN686B6X5OIjt1m5Lx94Zy66nZ0TFTuI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=tYsLyY/Ua/ECl4PoWlonNpBsxjoJI7bizelZ2xKJPH64JBK4XbYqsx+ek/TjgCp9a
+	 e9SGbLJVTrJSLitEC/Kf8DWty40Wa2JM1h7LGmBK1HYOOAu6XJuHirs/yFvRKvLChZ
+	 NjGHon/zkDLAOzLvFq4nWJJ7Yh5j0IotV0h/tXLo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728304AbgGOGJ2 (ORCPT
+        id S1728496AbgGOGUC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 02:09:28 -0400
-Received: from mailout2.w1.samsung.com ([210.118.77.12]:39524 "EHLO
-        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725866AbgGOGJ1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 02:09:27 -0400
-Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
-        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20200715060925euoutp029e65c3cde7470f0b93ee9c2219d91ade~h2B2yhjgc1909419094euoutp02s
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 06:09:25 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20200715060925euoutp029e65c3cde7470f0b93ee9c2219d91ade~h2B2yhjgc1909419094euoutp02s
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1594793365;
-        bh=4RyTK5YdV7uLppFPF96u+pYNl8SDIfUmV01BP93CLnA=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=k1c9QrmWS/NN0JHA4h7URElYKG6WOFoiLMw23S3Ot15kLxizEpyYqb+4vyzSc39Bb
-         UsVfvyds95dhA/OjMoGWYJu70jl6JEaariUNRwU1mviHcPOqRq3MyBA9Sx/aTtB1oY
-         Ey826WSHXSrvh7eBjN5VhY2lPDkbBgHwIG2EuAPQ=
-Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
-        20200715060924eucas1p14a1dcd4ae7990c795f08245390a0abb7~h2B2g2YZO1886318863eucas1p1E;
-        Wed, 15 Jul 2020 06:09:24 +0000 (GMT)
-Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
-        eusmges1new.samsung.com (EUCPMTA) with SMTP id 5B.2B.06456.49D9E0F5; Wed, 15
-        Jul 2020 07:09:24 +0100 (BST)
-Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
-        20200715060924eucas1p154109f1cd1316452c5c8330461d9423e~h2B2KoEBk1046610466eucas1p1Y;
-        Wed, 15 Jul 2020 06:09:24 +0000 (GMT)
-Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
-        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20200715060924eusmtrp1c4fdd160ecb2e64e5f00aceb0d554b53~h2B2J2rde0891608916eusmtrp1U;
-        Wed, 15 Jul 2020 06:09:24 +0000 (GMT)
-X-AuditID: cbfec7f2-7efff70000001938-d5-5f0e9d949b19
-Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
-        eusmgms2.samsung.com (EUCPMTA) with SMTP id F7.B1.06017.49D9E0F5; Wed, 15
-        Jul 2020 07:09:24 +0100 (BST)
-Received: from [106.210.88.143] (unknown [106.210.88.143]) by
-        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20200715060923eusmtip1d6f71525cd30663353dca8cd30f9d34a~h2B1oTFqg1110011100eusmtip1X;
-        Wed, 15 Jul 2020 06:09:23 +0000 (GMT)
-Subject: Re: [PATCH v4 4/4] thermal: core: Add notifications call in the
- framework
-To:     Daniel Lezcano <daniel.lezcano@linaro.org>, rui.zhang@intel.com
-Cc:     srinivas.pandruvada@linux.intel.com, rkumbako@codeaurora.org,
-        amit.kucheria@linaro.org, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Arnd Bergmann <arnd.bergmann@linaro.org>
-From:   Marek Szyprowski <m.szyprowski@samsung.com>
-Message-ID: <6cf5d9a9-a142-d2e0-10e3-10271a4bb926@samsung.com>
-Date:   Wed, 15 Jul 2020 08:09:25 +0200
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
-        Thunderbird/68.10.0
+        Wed, 15 Jul 2020 02:20:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60664 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725866AbgGOGUC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jul 2020 02:20:02 -0400
+Received: from localhost (unknown [122.171.202.192])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6E49520672;
+        Wed, 15 Jul 2020 06:20:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594794001;
+        bh=05czjJvRJc8XN686B6X5OIjt1m5Lx94Zy66nZ0TFTuI=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=TkN9kI7sW2FxzrMGLsnMSOwyLrYgRTsapamaHFT5ehvpboZalM4to6Kn4CneZsoAf
+         l4tDgoEVPTgKkzAIWkq6cI1RYmZsqxw6PeL35Jmiwe4gky+oFMzPrqQysl6qj66iMd
+         mZBGDFdxeuRN4wxW83eGEdBuxtQBaZu7WESwQtMo=
+Date:   Wed, 15 Jul 2020 11:49:57 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     EastL Lee <EastL.Lee@mediatek.com>
+Cc:     Sean Wang <sean.wang@mediatek.com>, robh+dt@kernel.org,
+        mark.rutland@arm.com, matthias.bgg@gmail.com,
+        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org,
+        wsd_upstream@mediatek.com, cc.hwang@mediatek.com
+Subject: Re: [PATCH v6 2/4] dmaengine: mediatek-cqdma: remove redundant queue
+ structure
+Message-ID: <20200715061957.GA34333@vkoul-mobl>
+References: <1593673564-4425-1-git-send-email-EastL.Lee@mediatek.com>
+ <1593673564-4425-3-git-send-email-EastL.Lee@mediatek.com>
 MIME-Version: 1.0
-In-Reply-To: <4cfb15f6-2801-3386-c7cf-6296a54571a1@linaro.org>
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrGKsWRmVeSWpSXmKPExsWy7djPc7pT5vLFG7T2Glo0NyxmsljZ422x
-        ccZ6Vot5n2UtLu+aw2bxufcIo8XnbbPYLZ487GOzmLB4I7sDp8flvl4mj8V7XjJ53Lm2h81j
-        3slAj74tqxg9Pm+SC2CL4rJJSc3JLEst0rdL4MrYPuMhS8EK1YrrM8IbGNfLdzFyckgImEis
-        XnKaGcQWEljBKLFzbV0XIxeQ/YVR4tX1L8wQzmdGia+TjjPBdCztfckOkVjOKHGg8R4ThPOe
-        UeLP2xY2kCphgRCJXz8+MoLYIgLOEldP3gXrYBb4wSixZW43K0iCTcBQouttF1gDr4CdxIvJ
-        nUCTODhYBFQllt0RAQmLCsRJrH+5nQmiRFDi5MwnLCA2J1B5//ulYDazgLxE89bZzBC2uMSt
-        J/PBDpIQOMYu0TH1KxvE2S4SO9sfsEDYwhKvjm9hh7BlJE5P7mGBaGhmlHh4bi07hNPDKHG5
-        aQYjRJW1xJ1zv9hArmMW0JRYv0sfIuwo8fTtDrCwhACfxI23ghBH8ElM2jadGSLMK9HRJgRR
-        rSYx6/g6uLUHL1xinsCoNAvJa7OQvDMLyTuzEPYuYGRZxSieWlqcm55abJiXWq5XnJhbXJqX
-        rpecn7uJEZiaTv87/mkH49dLSYcYBTgYlXh4LabzxguxJpYVV+YeYpTgYFYS4XU6ezpOiDcl
-        sbIqtSg/vqg0J7X4EKM0B4uSOK/xopexQgLpiSWp2ampBalFMFkmDk6pBsa5JQusbr67bXN4
-        /v7jFU8LPTNsJv869GnxS87nbxSZLopnPMsvnW2/kGHHrg1zQmOdVF1kzNpmL3zxvP1hvYLA
-        9QS+83skxdIcyz3E4yUlbb9tfz/v9Z8/S2bFcN13PTlfeHrzkZWv9xkVsR6+blXCUtzecVKt
-        KHrSzXN2O5cyF2bMa4hbxPVTiaU4I9FQi7moOBEAUMJpgkkDAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrJIsWRmVeSWpSXmKPExsVy+t/xu7pT5vLFG1w+KWbR3LCYyWJlj7fF
-        xhnrWS3mfZa1uLxrDpvF594jjBaft81it3jysI/NYsLijewOnB6X+3qZPBbvecnkcefaHjaP
-        eScDPfq2rGL0+LxJLoAtSs+mKL+0JFUhI7+4xFYp2tDCSM/Q0kLPyMRSz9DYPNbKyFRJ384m
-        JTUnsyy1SN8uQS9j+4yHLAUrVCuuzwhvYFwv38XIySEhYCKxtPclexcjF4eQwFJGiQsf/rBA
-        JGQkTk5rYIWwhSX+XOtigyh6yyjxeNpRdpCEsECIxK8fHxlBbBEBZ4mrJ++CTWIW+MUo8Xvv
-        DVaIjgYWiTPXNoKNYhMwlOh6CzKKk4NXwE7ixeROpi5GDg4WAVWJZXdEQMKiAnESy7fMZ4co
-        EZQ4OfMJ2EWcQOX975eC2cwCZhLzNj9khrDlJZq3zoayxSVuPZnPNIFRaBaS9llIWmYhaZmF
-        pGUBI8sqRpHU0uLc9NxiI73ixNzi0rx0veT83E2MwGjcduznlh2MXe+CDzEKcDAq8fBOmMkb
-        L8SaWFZcmXuIUYKDWUmE1+ns6Tgh3pTEyqrUovz4otKc1OJDjKZAv01klhJNzgcmirySeENT
-        Q3MLS0NzY3NjMwslcd4OgYMxQgLpiSWp2ampBalFMH1MHJxSDYwF274pK+ycvV2scPVGXpv3
-        lZ6VTmdksntKZvkxO2zbd1S9Vz2Yy0w+fWvfgltBNVLxvMZrDRlPJdusDpO7rGXFf/Oct2hc
-        xBtji8JX93UnqVxhfdgwW/zcBbadV/+rvufQ7Og2m3Hvq8ST4xIzumL33v6xS539yvwdPTP5
-        XeozVkR33GvnLlNiKc5INNRiLipOBADKyG3E3AIAAA==
-X-CMS-MailID: 20200715060924eucas1p154109f1cd1316452c5c8330461d9423e
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20200706131708eucas1p1487955a7632584c17df724399f48825a
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20200706131708eucas1p1487955a7632584c17df724399f48825a
-References: <20200706105538.2159-1-daniel.lezcano@linaro.org>
-        <20200706105538.2159-4-daniel.lezcano@linaro.org>
-        <CGME20200706131708eucas1p1487955a7632584c17df724399f48825a@eucas1p1.samsung.com>
-        <c7ed6c63-cbb5-07dc-c292-2c473af8c4fb@samsung.com>
-        <23c5830d-0a7c-9e87-e859-821d2dccb200@linaro.org>
-        <8a34e9c4-6457-cfd2-3d05-05f80a630a0d@samsung.com>
-        <41466d5a-24fb-b861-93ae-3ed190af7174@samsung.com>
-        <75683b75-6e1b-6e4e-2354-477c487a5f5f@linaro.org>
-        <4cfb15f6-2801-3386-c7cf-6296a54571a1@linaro.org>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1593673564-4425-3-git-send-email-EastL.Lee@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Daniel,
+On 02-07-20, 15:06, EastL Lee wrote:
 
-On 15.07.2020 01:20, Daniel Lezcano wrote:
-> On 13/07/2020 22:32, Daniel Lezcano wrote:
->> On 13/07/2020 11:31, Marek Szyprowski wrote:
->>> On 07.07.2020 11:15, Marek Szyprowski wrote:
->>>> On 06.07.2020 15:46, Daniel Lezcano wrote:
->>>>> On 06/07/2020 15:17, Marek Szyprowski wrote:
->>>>>> On 06.07.2020 12:55, Daniel Lezcano wrote:
->>>>>>> The generic netlink protocol is implemented but the different
->>>>>>> notification functions are not yet connected to the core code.
->>>>>>>
->>>>>>> These changes add the notification calls in the different
->>>>>>> corresponding places.
->>>>>>>
->>>>>>> Reviewed-by: Amit Kucheria <amit.kucheria@linaro.org>
->>>>>>> Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
->>>>>> This patch landed in today's linux-next 20200706 as commit 5df786e46560
->>>>>> ("thermal: core: Add notifications call in the framework"). Sadly it
->>>>>> breaks booting various Samsung Exynos based boards. Here is an example
->>>>>> log from Odroid U3 board:
->>>>>>
->>>>>> Unable to handle kernel NULL pointer dereference at virtual address
->>>>>> 00000010
->>>>>> pgd = (ptrval)
->>>>>> [00000010] *pgd=00000000
->>>>>> Internal error: Oops: 5 [#1] PREEMPT SMP ARM
->>>>>> Modules linked in:
->>>>>> CPU: 0 PID: 1 Comm: swapper/0 Not tainted 5.8.0-rc3-00015-g5df786e46560
->>>>>> #1146
->>>>>> Hardware name: Samsung Exynos (Flattened Device Tree)
->>>>>> PC is at kmem_cache_alloc+0x13c/0x418
->>>>>> LR is at kmem_cache_alloc+0x48/0x418
->>>>>> pc : [<c02b5cac>]    lr : [<c02b5bb8>]    psr: 20000053
->>>>>> ...
->>>>>> Flags: nzCv  IRQs on  FIQs off  Mode SVC_32  ISA ARM  Segment none
->>>>>> Control: 10c5387d  Table: 4000404a  DAC: 00000051
->>>>>> Process swapper/0 (pid: 1, stack limit = 0x(ptrval))
->>>>>> Stack: (0xee8f1cf8 to 0xee8f2000)
->>>>>> ...
->>>>>> [<c02b5cac>] (kmem_cache_alloc) from [<c08cd170>]
->>>>>> (__alloc_skb+0x5c/0x170)
->>>>>> [<c08cd170>] (__alloc_skb) from [<c07ec19c>]
->>>>>> (thermal_genl_send_event+0x24/0x174)
->>>>>> [<c07ec19c>] (thermal_genl_send_event) from [<c07ec648>]
->>>>>> (thermal_notify_tz_create+0x58/0x74)
->>>>>> [<c07ec648>] (thermal_notify_tz_create) from [<c07e9058>]
->>>>>> (thermal_zone_device_register+0x358/0x650)
->>>>>> [<c07e9058>] (thermal_zone_device_register) from [<c1028d34>]
->>>>>> (of_parse_thermal_zones+0x304/0x7a4)
->>>>>> [<c1028d34>] (of_parse_thermal_zones) from [<c1028964>]
->>>>>> (thermal_init+0xdc/0x154)
->>>>>> [<c1028964>] (thermal_init) from [<c0102378>]
->>>>>> (do_one_initcall+0x8c/0x424)
->>>>>> [<c0102378>] (do_one_initcall) from [<c1001158>]
->>>>>> (kernel_init_freeable+0x190/0x204)
->>>>>> [<c1001158>] (kernel_init_freeable) from [<c0ab85f4>]
->>>>>> (kernel_init+0x8/0x118)
->>>>>> [<c0ab85f4>] (kernel_init) from [<c0100114>] (ret_from_fork+0x14/0x20)
->>>>>>
->>>>>> Reverting it on top of linux-next fixes the boot issue. I will
->>>>>> investigate it further soon.
->>>>> Thanks for reporting this.
->>>>>
->>>>> Can you send the addr2line result and code it points to ?
->>>> addr2line of c02b5cac (kmem_cache_alloc+0x13c/0x418) points to
->>>> mm/slub.c +2839, but I'm not sure if we can trust it. imho it looks
->>>> like some trashed memory somewhere, but I don't have time right now to
->>>> analyze it further now...
->>> Just one more thing I've noticed. The crash happens only if the kernel
->>> is compiled with old GCC (tested with arm-linux-gnueabi-gcc (Linaro GCC
->>> 4.9-2017.01) 4.9.4). If I compile kernel with newed GCC (like
->>> arm-linux-gnueabi-gcc (Linaro GCC 6.4-2017.11) 6.4.1 20171012), it works
->>> fine...
->>>
->>> This happens also with Linux next-20200710, which again got this commit.
->> So I finally succeed to reproduce on an ARM64 with a recent compiler,
->> earlycon, and the option CONFIG_INIT_ON_ALLOC_DEFAULT_ON.
->
-> Finally, narrowed down the issue.
->
->   - genetlink initialization is done at subsys initcall.
->   - thermal netlink init is done at core initcall
->   - netlink is done at core initcall
->
-> By changing the order:
->
->   - netlink and genetlink at core initcall
->   - thermal init at postcore initcall
->
-> That fixes the problem.
-I confirm that such change fixes the issue! Feel free to add:
+>  static enum dma_status mtk_cqdma_tx_status(struct dma_chan *c,
+>  					   dma_cookie_t cookie,
+>  					   struct dma_tx_state *txstate)
+>  {
+> -	struct mtk_cqdma_vchan *cvc = to_cqdma_vchan(c);
+> -	struct mtk_cqdma_vdesc *cvd;
+> -	struct virt_dma_desc *vd;
+> -	enum dma_status ret;
+> -	unsigned long flags;
+> -	size_t bytes = 0;
+> -
+> -	ret = dma_cookie_status(c, cookie, txstate);
+> -	if (ret == DMA_COMPLETE || !txstate)
+> -		return ret;
+> -
+> -	spin_lock_irqsave(&cvc->vc.lock, flags);
+> -	vd = mtk_cqdma_find_active_desc(c, cookie);
+> -	spin_unlock_irqrestore(&cvc->vc.lock, flags);
+> -
+> -	if (vd) {
+> -		cvd = to_cqdma_vdesc(vd);
+> -		bytes = cvd->residue;
+> -	}
+> -
+> -	dma_set_residue(txstate, bytes);
 
-Reported-by: Marek Szyprowski <m.szyprowski@samsung.com>
+any reason why you want to remove setting residue?
 
-Tested-by: Marek Szyprowski <m.szyprowski@samsung.com>
+> -static void mtk_cqdma_free_active_desc(struct dma_chan *c)
+> +static int mtk_cqdma_terminate_all(struct dma_chan *c)
+>  {
+>  	struct mtk_cqdma_vchan *cvc = to_cqdma_vchan(c);
+> -	bool sync_needed = false;
+> +	struct virt_dma_chan *vc = to_virt_chan(c);
+>  	unsigned long pc_flags;
+>  	unsigned long vc_flags;
+> +	LIST_HEAD(head);
+> +
+> +	/* wait for the VC to be inactive  */
+> +	if (!wait_for_completion_timeout(&cvc->cmp, msecs_to_jiffies(3000)))
+> +		return -EAGAIN;
+>  
+>  	/* acquire PC's lock first due to lock dependency in dma ISR */
+>  	spin_lock_irqsave(&cvc->pc->lock, pc_flags);
+>  	spin_lock_irqsave(&cvc->vc.lock, vc_flags);
+>  
+> -	/* synchronization is required if this VC is active */
+> -	if (mtk_cqdma_is_vchan_active(cvc)) {
+> -		cvc->issue_synchronize = true;
+> -		sync_needed = true;
+> -	}
+> +	/* get VDs from lists */
+> +	vchan_get_all_descriptors(vc, &head);
+> +
+> +	/* free all the VDs */
+> +	vchan_dma_desc_free_list(vc, &head);
+>  
+>  	spin_unlock_irqrestore(&cvc->vc.lock, vc_flags);
+>  	spin_unlock_irqrestore(&cvc->pc->lock, pc_flags);
 
-to the final patch.
-
-> The genetlink initcall order is from 2005 and
-> IMO it makes sense to come right after the netlink initialization.
->
-> It is acceptable to have the thermal init at the postcore initcall. It
-> is very recently we moved from fs_initcall to core_initcall.
->
-> Thanks to Arnd who give me a direction to look at.
-Best regards
-
+Good cleanup, do you need both these locks?
 -- 
-Marek Szyprowski, PhD
-Samsung R&D Institute Poland
-
+~Vinod
