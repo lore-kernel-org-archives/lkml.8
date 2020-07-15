@@ -7,68 +7,68 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C99CFC433FC
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 15:07:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC97CC43445
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 15:07:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AA4D520672
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 15:07:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A95EB2065D
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 15:07:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="OeStQ676"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ic4mFINw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728131AbgGOPHQ (ORCPT
+        id S1728174AbgGOPHS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 11:07:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57214 "EHLO
+        Wed, 15 Jul 2020 11:07:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57202 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728032AbgGOPGx (ORCPT
+        with ESMTP id S1728009AbgGOPGw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 11:06:53 -0400
-Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 55E51C061755
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 08:06:53 -0700 (PDT)
-Received: by mail-wm1-x344.google.com with SMTP id 22so5936014wmg.1
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 08:06:53 -0700 (PDT)
+        Wed, 15 Jul 2020 11:06:52 -0400
+Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AB262C061755
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 08:06:51 -0700 (PDT)
+Received: by mail-wm1-x343.google.com with SMTP id w3so6163968wmi.4
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 08:06:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=AI7c50J2x+3VkfEYyAsOrnfGhBXfcF4lm0Ws/hDguDo=;
-        b=OeStQ676gkLJC9flvx8uGog1ZO5sbiMnJMlr05Al3vZvFQRZHCm9sU16b+mHbGjiu/
-         zQLROHGqy978gbiKFEpIyBMkOKofeVQ/0xUFfYH39mKo7Q/YCUXT4fDwvOGve9NdyaIX
-         9oBji0BeVTVDE0SHHoemYV6TVo+WjAKxrdNhNHqSd/H/p+j3DHSbgYtsByjsXwlwg6yh
-         B90amTbQ+xuUjsIMEaeQTQ5v1qC2Q60Kfs8TTa513agQ2PQASIWFW+QdgHaZlhk4wKge
-         XgSqUFE8pvon3wcWLfW14C76/b7c1rRSMvGnEnSCton+69Vj+u/y5VG7MA4JQqEPS5Xd
-         Ycwg==
+        bh=Neuk7hlxyMHOEJZl+c3Ce+fuWuJ+zLYxzzvecm8U2ZQ=;
+        b=ic4mFINwL49QSVPf3k9/rgWYim5/9jEoZkN3gqetr4K9fAHlJVyJ3XypL6SuWfRqDz
+         +S7WszcHEof6BWrZKfFj9g/YLF71Qcm1yt4zHcQPPYgdqTAQxCrOZh51+TZvW0YQ8Ck0
+         aLn5KjCQKZ3Gd/aFzV5L2DQfyiqU8ujb9Iv4xSapyMw6tqW4tt5JwZPpcrPnOA8PiwaE
+         0yOlSql13qvWzpkdNz/tyd6HeetzNbv+eay/5/xjytCtAkIYMyDbb9Uefd2mAG3NGm2+
+         EaVE9UW+LkFfgx1Zg5Rp6RueZCf8/5881/TkICwUazyXDTk14I4cs6dLDvr0xHFNjtcl
+         EisA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=AI7c50J2x+3VkfEYyAsOrnfGhBXfcF4lm0Ws/hDguDo=;
-        b=aRNRw3dwuOJ1fXbihN+sEaiL9xO9vr4FcfElDv6RoJn+Zr84WLhmEqyFRKNfp6XSdI
-         xTvMwTYyLkYOvZqDaN2LkgcfTolYJ7Jh9scxtplG442USoKwuGsOdt8dJf5iYVvBlZCn
-         WtEgCUaQF7ob7sq47qQH/qXSjKB2VQGonW/azr2NXF2yIqykgpWp/GMppJJPWSalYOEw
-         bTw1QnWjDpVmh+SoCzZyN3RBW8q2XegsZeGAX107aU4tQU/gjWWXyYHM4GKexMSCAAsT
-         96ngVxjnSxRR0hRimsfXJqrGGj+AS2ybQK4PnIo+nYcSNXwbLhK8EetUc5ouHOtDj9T5
-         imPQ==
-X-Gm-Message-State: AOAM530khjWAt0/zz5oFE1AmslQOE4KyD50QfDHjXTRwfG2hvbNj5MJC
-        mKp8eTQsZib7WVEAvy9waEXxww==
-X-Google-Smtp-Source: ABdhPJyBnfjeYbjMACkhjMYXKR10NpPlrtS5qROBcZV5AlpsItZlXQak8hpIg97VCabsero4VDwi7w==
-X-Received: by 2002:a1c:a557:: with SMTP id o84mr9230410wme.42.1594825612087;
-        Wed, 15 Jul 2020 08:06:52 -0700 (PDT)
+        bh=Neuk7hlxyMHOEJZl+c3Ce+fuWuJ+zLYxzzvecm8U2ZQ=;
+        b=DnA1Rp5kxkxeDM+W4srP7F0Z4RTuP0iYepvzh0IjNYMozsKQsqdGk933AInREjEvvs
+         2KPz9DPiYAXbRRDs3wW7cYSsoCQOPiaJof4hgGv0YHFOAeR21CeAEfXEyb5FrjrBS8FQ
+         ZzD4UAPG05auv54CIBQmTATY39esIM2MZHheTuszc1KiShLRjtp5JSQuFjjWrkm+Ui4x
+         aCS2ynSG033tP9qjJ/Xgdhzr6V9vQWplQpyvQWFFoUEtCLrokZ++IPbnXteqxdTApW2o
+         btX8n7D+mds0hzGhqyThBIczuqpaOrhHvcNmzBAmPCagf8XM/243YV3i/D7JtRHoH9eB
+         pKww==
+X-Gm-Message-State: AOAM530RpuKkHLvDdPVLzZ4s2WkVJsHVe8wB1U7glz5J0ptkJs/yoBo1
+        cZyvn8tlpWAcKs5eM355YsM84w==
+X-Google-Smtp-Source: ABdhPJyhQwehdC5E5vWdp2tq0inGEyTI0AsEuhIDReVDRKACyOC/THNq1DETNswb/m5QQ3kSVY3afQ==
+X-Received: by 2002:a1c:7315:: with SMTP id d21mr8770056wmb.108.1594825602210;
+        Wed, 15 Jul 2020 08:06:42 -0700 (PDT)
 Received: from localhost.localdomain ([2.31.163.61])
-        by smtp.gmail.com with ESMTPSA id w2sm3906140wrs.77.2020.07.15.08.06.50
+        by smtp.gmail.com with ESMTPSA id w2sm3906140wrs.77.2020.07.15.08.06.40
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 15 Jul 2020 08:06:51 -0700 (PDT)
+        Wed, 15 Jul 2020 08:06:41 -0700 (PDT)
 From:   Lee Jones <lee.jones@linaro.org>
 To:     broonie@kernel.org
 Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         linux-spi@vger.kernel.org, Lee Jones <lee.jones@linaro.org>,
-        Daniel Mack <daniel@zonque.org>,
-        Haojian Zhuang <haojian.zhuang@gmail.com>,
-        Robert Jarzmik <robert.jarzmik@free.fr>
-Subject: [PATCH 13/14] spi: spi-pxa2xx: Do not define 'struct acpi_device_id' when
-Date:   Wed, 15 Jul 2020 16:06:31 +0100
-Message-Id: <20200715150632.409077-14-lee.jones@linaro.org>
+        Kevin Hilman <khilman@baylibre.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        linux-amlogic@lists.infradead.org
+Subject: [PATCH 06/14] spi: spi-meson-spicc: Remove set but never used variable 'data' from meson_spicc_reset_fifo()
+Date:   Wed, 15 Jul 2020 16:06:24 +0100
+Message-Id: <20200715150632.409077-7-lee.jones@linaro.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200715150632.409077-1-lee.jones@linaro.org>
 References: <20200715150632.409077-1-lee.jones@linaro.org>
@@ -80,43 +80,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since ACPI_PTR() is used to NULLify the value when !CONFIG_ACPI,
-struct 'pxa2xx_spi_acpi_match' becomes defined but unused.
+Looks like it hasn't ever been checked.
 
 Fixes the following W=1 kernel build warning(s):
 
- drivers/spi/spi-pxa2xx.c:1435:36: warning: ‘pxa2xx_spi_acpi_match’ defined but not used [-Wunused-const-variable=]
- 1435 | static const struct acpi_device_id pxa2xx_spi_acpi_match[] = {
- | ^~~~~~~~~~~~~~~~~~~~~
+ drivers/spi/spi-meson-spicc.c: In function ‘meson_spicc_reset_fifo’:
+ drivers/spi/spi-meson-spicc.c:365:6: warning: variable ‘data’ set but not used [-Wunused-but-set-variable]
+ 365 | u32 data;
+ | ^~~~
 
-Cc: Daniel Mack <daniel@zonque.org>
-Cc: Haojian Zhuang <haojian.zhuang@gmail.com>
-Cc: Robert Jarzmik <robert.jarzmik@free.fr>
+Cc: Kevin Hilman <khilman@baylibre.com>
+Cc: Neil Armstrong <narmstrong@baylibre.com>
+Cc: linux-amlogic@lists.infradead.org
 Signed-off-by: Lee Jones <lee.jones@linaro.org>
 ---
- drivers/spi/spi-pxa2xx.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/spi/spi-meson-spicc.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-diff --git a/drivers/spi/spi-pxa2xx.c b/drivers/spi/spi-pxa2xx.c
-index 0040362b71622..814268405ab0b 100644
---- a/drivers/spi/spi-pxa2xx.c
-+++ b/drivers/spi/spi-pxa2xx.c
-@@ -1432,6 +1432,7 @@ static void cleanup(struct spi_device *spi)
- 	kfree(chip);
- }
+diff --git a/drivers/spi/spi-meson-spicc.c b/drivers/spi/spi-meson-spicc.c
+index 77f7d0e0e46ad..ecba6b4a5d85d 100644
+--- a/drivers/spi/spi-meson-spicc.c
++++ b/drivers/spi/spi-meson-spicc.c
+@@ -362,8 +362,6 @@ static void meson_spicc_setup_xfer(struct meson_spicc_device *spicc,
  
-+#ifdef CONFIG_ACPI
- static const struct acpi_device_id pxa2xx_spi_acpi_match[] = {
- 	{ "INT33C0", LPSS_LPT_SSP },
- 	{ "INT33C1", LPSS_LPT_SSP },
-@@ -1442,6 +1443,7 @@ static const struct acpi_device_id pxa2xx_spi_acpi_match[] = {
- 	{ },
- };
- MODULE_DEVICE_TABLE(acpi, pxa2xx_spi_acpi_match);
-+#endif
+ static void meson_spicc_reset_fifo(struct meson_spicc_device *spicc)
+ {
+-	u32 data;
+-
+ 	if (spicc->data->has_oen)
+ 		writel_bits_relaxed(SPICC_ENH_MAIN_CLK_AO,
+ 				    SPICC_ENH_MAIN_CLK_AO,
+@@ -373,7 +371,7 @@ static void meson_spicc_reset_fifo(struct meson_spicc_device *spicc)
+ 			    spicc->base + SPICC_TESTREG);
  
- /*
-  * PCI IDs of compound devices that integrate both host controller and private
+ 	while (meson_spicc_rxready(spicc))
+-		data = readl_relaxed(spicc->base + SPICC_RXDATA);
++		readl_relaxed(spicc->base + SPICC_RXDATA);
+ 
+ 	if (spicc->data->has_oen)
+ 		writel_bits_relaxed(SPICC_ENH_MAIN_CLK_AO, 0,
 -- 
 2.25.1
 
