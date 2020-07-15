@@ -6,98 +6,98 @@ X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
 	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84E22C433E4
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 14:54:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5DD2C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 14:55:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5EE39206D5
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 14:54:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E206206F5
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 14:55:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="c67AszQo"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mZ7zMteF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726962AbgGOOyI (ORCPT
+        id S1727036AbgGOOzV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 10:54:08 -0400
-Received: from mail.efficios.com ([167.114.26.124]:53588 "EHLO
-        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726670AbgGOOyH (ORCPT
+        Wed, 15 Jul 2020 10:55:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55380 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725798AbgGOOzV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 10:54:07 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by mail.efficios.com (Postfix) with ESMTP id 019F228288D;
-        Wed, 15 Jul 2020 10:54:07 -0400 (EDT)
-Received: from mail.efficios.com ([127.0.0.1])
-        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id UI-Yt_BGGMDe; Wed, 15 Jul 2020 10:54:06 -0400 (EDT)
-Received: from localhost (localhost [127.0.0.1])
-        by mail.efficios.com (Postfix) with ESMTP id C501428262B;
-        Wed, 15 Jul 2020 10:54:06 -0400 (EDT)
-DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com C501428262B
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
-        s=default; t=1594824846;
-        bh=54IAB4nGaEdAThpU9gOAvhwf7R9x5qsgZhVuNCgBOPQ=;
-        h=Date:From:To:Message-ID:MIME-Version;
-        b=c67AszQopibnIZZ5NgaobX0YPlXDxRsEZybal42YWvqES/aSF8tql5QXiPN0jzITO
-         nza83eErrmii8q09TFMTqDQt4A1MS7ERNW/80Mw847nL+vBOekZi80j6uSUS03vsqP
-         tQKtXo/Z6jCSXB0lEvLX/D/nGuFEGJHJGnF50lPBEdN2GcuH5w4pxhyCDgZGAbAWcj
-         3Yf5CDENNRAZmNXsUpZAxVINLO28Vd9RDfWw9SXHE/3MxNTZDhjqqhgAiqSMpB3uhz
-         11zdUroTH5uEsInbg0eyVQoJy7PtmipkXP7VNk7UvMUbSBvWN93FEaaFmj8hJR2Y+d
-         f0Xnh2A/ZLxSA==
-X-Virus-Scanned: amavisd-new at efficios.com
-Received: from mail.efficios.com ([127.0.0.1])
-        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id WerSgHc_o-Fa; Wed, 15 Jul 2020 10:54:06 -0400 (EDT)
-Received: from mail03.efficios.com (mail03.efficios.com [167.114.26.124])
-        by mail.efficios.com (Postfix) with ESMTP id B8B4D282626;
-        Wed, 15 Jul 2020 10:54:06 -0400 (EDT)
-Date:   Wed, 15 Jul 2020 10:54:06 -0400 (EDT)
-From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-To:     Florian Weimer <fweimer@redhat.com>
-Cc:     carlos <carlos@redhat.com>, Peter Zijlstra <peterz@infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        paulmck <paulmck@linux.ibm.com>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Paul Turner <pjt@google.com>,
-        linux-api <linux-api@vger.kernel.org>,
-        Christian Brauner <christian.brauner@ubuntu.com>
-Message-ID: <1481331967.14276.1594824846736.JavaMail.zimbra@efficios.com>
-In-Reply-To: <87mu4028uk.fsf@oldenburg2.str.redhat.com>
-References: <20200714030348.6214-1-mathieu.desnoyers@efficios.com> <87a7028d5u.fsf@oldenburg2.str.redhat.com> <2452161.11491.1594732791558.JavaMail.zimbra@efficios.com> <71f08b3a-56f5-0e0f-53b0-cc680f7e8181@redhat.com> <2053637148.14136.1594818777608.JavaMail.zimbra@efficios.com> <87y2nk29rp.fsf@oldenburg2.str.redhat.com> <882700738.14181.1594819884049.JavaMail.zimbra@efficios.com> <87mu4028uk.fsf@oldenburg2.str.redhat.com>
-Subject: Re: [RFC PATCH 2/4] rseq: Allow extending struct rseq
+        Wed, 15 Jul 2020 10:55:21 -0400
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CBFE0C061755
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 07:55:20 -0700 (PDT)
+Received: by mail-wr1-x441.google.com with SMTP id o11so3025608wrv.9
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 07:55:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=Xx3joU+7lj4tPv3i1MBeu7gIGjv2jVS4xXq0wsixJEw=;
+        b=mZ7zMteF9Dkbv4smJYU6GqQ+rNM4I9cTbn4pjKCwKenfFj3y8WMi6xF/5lDE87m0mn
+         0ipw1YhEn3wMmPaqWymXg7qytDbvgBHRAmy0zz1wWns9j+WrdH3Hr0dkvY3bzZC8Y8cc
+         rak79OzoglUWnTrb3nQGygOzoyTJ8+F0sb9OTXIRFkfcLdTB9yhGDUy+7aV9jFXsXhu/
+         j6gvw1HI5lHnqNVrqLdvgwYJ0JR+kzUEHZqeYlDPG7AJFP8aMG2u4Wg0aXFp00ezS96E
+         3TRB6il2spjRMxMrg0mN0LPgz0Dq9Og+iXFLR/R5sfl0SaYoRYSB/Hp4LCKsSAhE/EhW
+         fA3g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=Xx3joU+7lj4tPv3i1MBeu7gIGjv2jVS4xXq0wsixJEw=;
+        b=NFbEiA6OhBAcBr8Fq+et2v+UPdcE+c2jqpW9QOsPRaJW+5BcX94gbAZScRS2GTVmGH
+         QUPTpp7PrV928yAPOV5rcGBVPyjOwTm62AEySLqLS7Xb6lKx+TlGJYjYAGoXqnaKfeZp
+         0O/84yW4DcjRRq+T7GJua0XotLLHgS+u7kBRmTGNVzhqRFnGxYGCpbvI+EgPCNVpz9Og
+         KHrAuy2vLBXIoJHXJ0DlMGMnIs7bpYBu6v3iqpDahmcqYFVjbjp5t6Ey4xhcN5D5VKkQ
+         A87Rw5JuP/KIxnALcuNlWpGXg50hXRMLR+y3Jpe4hGStanFQyix37i1uWS4C0ABhuNIM
+         swLQ==
+X-Gm-Message-State: AOAM5316uw0U4ckGwa0u49MZnDBLodARR5Ucl9SqKkiXSYQ5R+MqSyHp
+        AQHRucPP9wItnjN9SdLdec8dpA==
+X-Google-Smtp-Source: ABdhPJweQjLfl3Z2I4EIWZw8pwB7r6eyoCyj4BdjN5QJI5YwTdyLpOuupQoYb9sgXDe+xqjyl9/7CA==
+X-Received: by 2002:a5d:628b:: with SMTP id k11mr11838681wru.107.1594824919525;
+        Wed, 15 Jul 2020 07:55:19 -0700 (PDT)
+Received: from dell ([2.31.163.61])
+        by smtp.gmail.com with ESMTPSA id c15sm3733251wme.23.2020.07.15.07.55.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 15 Jul 2020 07:55:18 -0700 (PDT)
+Date:   Wed, 15 Jul 2020 15:55:16 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Mark Brown <broonie@kernel.org>
+Cc:     lgirdwood@gmail.com, alsa-devel@alsa-project.org,
+        Timur Tabi <timur@kernel.org>, Xiubo Li <Xiubo.Lee@gmail.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        Nicolin Chen <nicoleotsuka@gmail.com>,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH 1/1] ASoC: fsl: fsl-asoc-card: Trivial: Fix misspelling
+ of 'exists'
+Message-ID: <20200715145516.GH3165313@dell>
+References: <20200715094447.3170843-1-lee.jones@linaro.org>
+ <20200715142651.GA44014@sirena.org.uk>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [167.114.26.124]
-X-Mailer: Zimbra 8.8.15_GA_3955 (ZimbraWebClient - FF78 (Linux)/8.8.15_GA_3953)
-Thread-Topic: rseq: Allow extending struct rseq
-Thread-Index: GU+HWQn+q08bfey6uiSkHPIIjdE8lw==
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200715142651.GA44014@sirena.org.uk>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
------ On Jul 15, 2020, at 9:42 AM, Florian Weimer fweimer@redhat.com wrote:
-> * Mathieu Desnoyers:
+On Wed, 15 Jul 2020, Mark Brown wrote:
+
+> On Wed, Jul 15, 2020 at 10:44:47AM +0100, Lee Jones wrote:
 > 
-[...]
->> How would this allow early-rseq-adopter libraries to interact with
->> glibc ?
+> >  /*
+> > - * This dapm route map exits for DPCM link only.
+> > + * This dapm route map exists for DPCM link only.
+> >   * The other routes shall go through Device Tree.
 > 
-> Under all extension proposals I've seen so far, early adopters are
-> essentially incompatible with glibc rseq registration.  I don't think
-> you can have it both ways.
+> This doesn't apply against current code, please check and resend.
 
-The basic question I'm not sure about is whether we are allowed to increase
-the size and alignement of __rseq_abi from e.g. glibc 2.32 to glibc 2.33.
-If not, then we just need to find another way to extend struct rseq, e.g. by
-adding a pointer to another extended structure in the padding space we
-have at the end of struct rseq.
-
-Thanks,
-
-Mathieu
+What is 'current code'?  It's applied against today's -next.
 
 -- 
-Mathieu Desnoyers
-EfficiOS Inc.
-http://www.efficios.com
+Lee Jones [李琼斯]
+Senior Technical Lead - Developer Services
+Linaro.org │ Open source software for Arm SoCs
+Follow Linaro: Facebook | Twitter | Blog
