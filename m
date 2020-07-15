@@ -2,91 +2,78 @@ Return-Path: <SRS0=kup7=A2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BEC0BC433E3
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 05:27:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02527C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 05:24:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A61CB2068F
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 05:27:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C632A2068F
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 05:24:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="BAxPo9Mn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728397AbgGOF07 (ORCPT
+        id S1728194AbgGOFXy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 01:26:59 -0400
-Received: from mail.loongson.cn ([114.242.206.163]:48595 "EHLO loongson.cn"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726928AbgGOF04 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 01:26:56 -0400
-Received: from linux.localdomain (unknown [113.200.148.30])
-        by mail.loongson.cn (Coremail) with SMTP id AQAAf9CxCdWYkw5fPuQEAA--.6136S2;
-        Wed, 15 Jul 2020 13:26:48 +0800 (CST)
-From:   Qing Zhang <zhangqing@loongson.cn>
-To:     Mark Brown <broonie@kernel.org>
-Cc:     linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 1/2] spi: omap-uwire: Use clk_prepare_enable and clk_disable_unprepare
-Date:   Wed, 15 Jul 2020 13:26:46 +0800
-Message-Id: <1594790807-32319-1-git-send-email-zhangqing@loongson.cn>
-X-Mailer: git-send-email 2.1.0
-X-CM-TRANSID: AQAAf9CxCdWYkw5fPuQEAA--.6136S2
-X-Coremail-Antispam: 1UD129KBjvdXoWrurWxZw4rtw4rZF47CFW7Jwb_yoWDuwb_uF
-        4DWrs7Gr4Y9rsak3W2gwnxA34I9r1qvFn2g34IqFWfJry2vwn8CrZ0qrsxCr1rZw4rAFnx
-        Ar1kJ34akw1fGjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-        9fnUUIcSsGvfJTRUUUb2AYjsxI4VW3JwAYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I
-        6I8E6xAIw20EY4v20xvaj40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l8cAvFVAK0II2c7xJM2
-        8CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVWUCVW8JwA2z4x0Y4vE2Ix0
-        cI8IcVCY1x0267AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I
-        8E87Iv6xkF7I0E14v26F4UJVW0owAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC
-        0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUGVWUXwAv7VC2z280aVAFwI0_Gr0_Cr
-        1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JMxkIecxEwVAFwVW8WwCF04k2
-        0xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI
-        8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jrv_JF1lIxkGc2Ij64vIr41l
-        IxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIx
-        AIcVCF04k26cxKx2IYs7xG6rWUJVWrZr1UMIIF0xvEx4A2jsIE14v26r4j6F4UMIIF0xvE
-        x4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07jwCztUUUUU=
-X-CM-SenderInfo: x2kd0wptlqwqxorr0wxvrqhubq/
+        Wed, 15 Jul 2020 01:23:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51868 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725855AbgGOFXy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jul 2020 01:23:54 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 41BEDC061755
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 22:23:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
+        Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
+        Content-Description:In-Reply-To:References;
+        bh=HXh3ski+GPcGZpvJ68cKeSX8JRfurQWDErJFFmRJGeg=; b=BAxPo9MnajgoZdIO8PwLphY/qr
+        8t2T/7knbH63dDEaFnE9kDzUlLPRHzN3jNlg9NQRMjoikd3/+CAsxqkrHEqr1av/yjXWKL/VIbps/
+        S4EOTAAmcaYdtGc7ctlc6E9OoeUqT/TJ//lnfBAyEG9aRHGagotNllFmG9I2W81ZjoG+tWbndlqt2
+        31eGzF4IHaSKdGEIVNgfRBf50V9s+TDL4jGk8OkP+Yk+0la/xxSW63O6kRTq8EneCrEKLYdQK7pKD
+        hXXige4rGDEW3IDBQeY28bDuQViKSH8Bf7gkRAL3sKlFDv+/iVsB7XTP8UwSWn54zst0qBwNfXsJ8
+        yaz9JT5Q==;
+Received: from [2601:1c0:6280:3f0::19c2] (helo=smtpauth.infradead.org)
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jvZtX-0006Vd-Th; Wed, 15 Jul 2020 05:23:52 +0000
+From:   Randy Dunlap <rdunlap@infradead.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Randy Dunlap <rdunlap@infradead.org>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        dri-devel@lists.freedesktop.org
+Subject: [PATCH 1/7] drm: drm_atomic.h: delete duplicated word in comment
+Date:   Tue, 14 Jul 2020 22:23:43 -0700
+Message-Id: <20200715052349.23319-1-rdunlap@infradead.org>
+X-Mailer: git-send-email 2.26.2
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Convert clk_enable() to clk_prepare_enable() and clk_disable() to
-clk_disable_unprepare() respectively in the spi-omap-uwire.c.
+Drop doubled word "than" in a comment.
 
-Signed-off-by: Qing Zhang <zhangqing@loongson.cn>
+Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+Cc: David Airlie <airlied@linux.ie>
+Cc: Daniel Vetter <daniel@ffwll.ch>
+Cc: dri-devel@lists.freedesktop.org
 ---
+ include/drm/drm_atomic.h |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-v2:
-  -Modify the commit message
-  -Split into two patches
-
- drivers/spi/spi-omap-uwire.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/spi/spi-omap-uwire.c b/drivers/spi/spi-omap-uwire.c
-index ce8dbdb..71402f7 100644
---- a/drivers/spi/spi-omap-uwire.c
-+++ b/drivers/spi/spi-omap-uwire.c
-@@ -443,7 +443,7 @@ static void uwire_cleanup(struct spi_device *spi)
- static void uwire_off(struct uwire_spi *uwire)
- {
- 	uwire_write_reg(UWIRE_SR3, 0);
--	clk_disable(uwire->ck);
-+	clk_disable_unprepare(uwire->ck);
- 	spi_master_put(uwire->bitbang.master);
- }
- 
-@@ -475,7 +475,7 @@ static int uwire_probe(struct platform_device *pdev)
- 		spi_master_put(master);
- 		return status;
- 	}
--	clk_enable(uwire->ck);
-+	clk_prepare_enable(uwire->ck);
- 
- 	if (cpu_is_omap7xx())
- 		uwire_idx_shift = 1;
--- 
-2.1.0
-
+--- linux-next-20200714.orig/include/drm/drm_atomic.h
++++ linux-next-20200714/include/drm/drm_atomic.h
+@@ -103,7 +103,7 @@ struct drm_crtc_commit {
+ 	 *
+ 	 * Will be signalled when all hw register changes for this commit have
+ 	 * been written out. Especially when disabling a pipe this can be much
+-	 * later than than @flip_done, since that can signal already when the
++	 * later than @flip_done, since that can signal already when the
+ 	 * screen goes black, whereas to fully shut down a pipe more register
+ 	 * I/O is required.
+ 	 *
