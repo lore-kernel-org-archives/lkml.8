@@ -3,85 +3,94 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E234BC433E7
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 20:58:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65D9DC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 21:01:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B5A452065D
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 20:58:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594846731;
-	bh=ybEIdV7HyjnueFZ+8Obnz4ZXgIPGgarf/3fLzo5pYXM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=C57JRg7Z2s68SZAfFVCi4OA3OJbVwpsNUgYcaiwuqtmu+PYbalBzSW71Txl5LhuEc
-	 A4LXBsCJrGZ5s49rEmjwaQ4x/R5BQT3X0AZ0s/8T/FoeVcXPrZOEA3ajJ8Ayv2u9e+
-	 +YM86AJI+OulPrEctJZe9/LK0UcqhMRqMqsrzOOg=
+	by mail.kernel.org (Postfix) with ESMTP id 2FA422065D
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 21:01:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="b41Y3YFq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726929AbgGOU6u (ORCPT
+        id S1726796AbgGOVB3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 16:58:50 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:42525 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726356AbgGOU6t (ORCPT
+        Wed, 15 Jul 2020 17:01:29 -0400
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:33319 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726356AbgGOVB3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 16:58:49 -0400
-Received: by mail-io1-f67.google.com with SMTP id c16so3733345ioi.9;
-        Wed, 15 Jul 2020 13:58:49 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=hvOlrpFh38OhJfQRgWsFESzalTDuzMi9WGh0C3h9sK8=;
-        b=lK6hLt8xB4H3LpL4G/OGhS45qxk+agj+vKSSjNDhXspKTqNslZ7Olst5El1JFcPram
-         fP6WIU7b13wr3UCTthcuDfehnzf2Hu/Hd6F0zROctZJSMDVONT4ScmlzcaKROZHiZ9sW
-         C0mgG+mKMkLdFrozc6EO4YtY0nWxGmglmHN9yW0uKLW7s03NvoD+CuRAsDnvE758RPq6
-         0xjk4gOLqOUvjmbySnAb9pdNSIZ63lZ15ZPtlJuHdN+8SENDqLqEavAkYPaK1bJM2Dmo
-         PXefT8y8Med+16h1//BzicCzcVDEfVfDRN+glQh3KfvdG2aCyCPwrdJGiucIugSRUtF0
-         sseQ==
-X-Gm-Message-State: AOAM530/4PC35YTq4fQ8VYWhKd2kw5DJpJ76cH1wwBX/Vwvr9Cs06w7m
-        L/6xi692Qs0I1zqZOTe96g==
-X-Google-Smtp-Source: ABdhPJwD2sTr16al3pJVQdcYEtWu5BczxSa5mMVZBZJxKwKrlnofFmhPZ73CBtj/agbIaHc83ciPdQ==
-X-Received: by 2002:a02:ccb3:: with SMTP id t19mr1387559jap.122.1594846728709;
-        Wed, 15 Jul 2020 13:58:48 -0700 (PDT)
-Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id b2sm1644211ilf.0.2020.07.15.13.58.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 15 Jul 2020 13:58:48 -0700 (PDT)
-Received: (nullmailer pid 805535 invoked by uid 1000);
-        Wed, 15 Jul 2020 20:58:47 -0000
-Date:   Wed, 15 Jul 2020 14:58:47 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Tony Lindgren <tony@atomide.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Santosh Shilimkar <ssantosh@kernel.org>,
-        "Andrew F . Davis" <afd@ti.com>,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-omap@vger.kernel.org, Tero Kristo <t-kristo@ti.com>
-Subject: Re: [PATCH 1/6] dt-bindings: omap: Update PRM binding for genpd
-Message-ID: <20200715205847.GA805485@bogus>
-References: <20200702154513.31859-1-tony@atomide.com>
- <20200702154513.31859-2-tony@atomide.com>
+        Wed, 15 Jul 2020 17:01:29 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1594846888;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=OH200y1oPX+RP3T1aRFymBiTupL+7e3hrQnJD2zNgsc=;
+        b=b41Y3YFq3uZXMYFO77Vkw0sWIRQ3ypMdvSw0l4QumU6jDoYUVwl273GCLoKHUGhDXI0Jvj
+        abynFDFQXQPUM7b+b4+OyWhHHlUkIpla736sOdNJ86+PEJe7kQvJYs1YxiJvAO1iJif/JG
+        fkeQ/kAiuj7pD01GQjZXHaYUvbURC1o=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-216-i2Q5c5bhPJaSJSgVHjJDuA-1; Wed, 15 Jul 2020 17:01:26 -0400
+X-MC-Unique: i2Q5c5bhPJaSJSgVHjJDuA-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D0E6419067E0;
+        Wed, 15 Jul 2020 21:01:23 +0000 (UTC)
+Received: from krava (unknown [10.40.194.44])
+        by smtp.corp.redhat.com (Postfix) with SMTP id EEE3C60C05;
+        Wed, 15 Jul 2020 21:01:20 +0000 (UTC)
+Date:   Wed, 15 Jul 2020 23:01:20 +0200
+From:   Jiri Olsa <jolsa@redhat.com>
+To:     Ian Rogers <irogers@google.com>
+Cc:     Jiri Olsa <jolsa@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Michael Petlan <mpetlan@redhat.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Kajol Jain <kjain@linux.ibm.com>,
+        John Garry <john.garry@huawei.com>,
+        "Paul A. Clarke" <pc@us.ibm.com>,
+        Stephane Eranian <eranian@google.com>
+Subject: Re: [PATCH 07/18] perf metric: Add add_metric function
+Message-ID: <20200715210120.GQ183694@krava>
+References: <20200712132634.138901-1-jolsa@kernel.org>
+ <20200712132634.138901-8-jolsa@kernel.org>
+ <CAP-5=fUdSGvd9DYoFM5eGU8itjER=AYXcL33vDWDMTP3GZfZJg@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200702154513.31859-2-tony@atomide.com>
+In-Reply-To: <CAP-5=fUdSGvd9DYoFM5eGU8itjER=AYXcL33vDWDMTP3GZfZJg@mail.gmail.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 02 Jul 2020 08:45:08 -0700, Tony Lindgren wrote:
-> The PRM (Power and Reset Module) has a register to enable and disable
-> the related power domain, so let's update the binding for that.
+On Tue, Jul 14, 2020 at 02:11:02PM -0700, Ian Rogers wrote:
+> On Sun, Jul 12, 2020 at 6:27 AM Jiri Olsa <jolsa@kernel.org> wrote:
+> >
+> > Decouple metric adding login into add_metric function,
 > 
-> Cc: devicetree@vger.kernel.org
-> Cc: Rob Herring <robh@kernel.org>
-> Signed-off-by: Tony Lindgren <tony@atomide.com>
-> ---
->  Documentation/devicetree/bindings/arm/omap/prm-inst.txt | 2 ++
->  1 file changed, 2 insertions(+)
-> 
+> s/login/logging/ ?
 
-Acked-by: Rob Herring <robh@kernel.org>
+ugh yes
+
+> 
+> > so it can be used from other places in following changes.
+> >
+> > Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+> 
+> Acked-by: Ian Rogers <irogers@google.com>
+
+thanks,
+jirka
+
