@@ -8,72 +8,72 @@ X-Spam-Status: No, score=-12.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18486C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 22:14:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68A55C433E6
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 22:14:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DC7802065F
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 22:14:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3E360206F5
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 22:14:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="JOqO7Ui9"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="tCmmAhkx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727938AbgGOWOq (ORCPT
+        id S1727975AbgGOWOu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 18:14:46 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:47606 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726356AbgGOWOq (ORCPT
+        Wed, 15 Jul 2020 18:14:50 -0400
+Received: from aserp2130.oracle.com ([141.146.126.79]:41548 "EHLO
+        aserp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726989AbgGOWOq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 15 Jul 2020 18:14:46 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06FMDfrL130374;
-        Wed, 15 Jul 2020 22:14:43 GMT
+Received: from pps.filterd (aserp2130.oracle.com [127.0.0.1])
+        by aserp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06FMBvoF090395;
+        Wed, 15 Jul 2020 22:14:44 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
  subject : date : message-id : in-reply-to : references : mime-version :
  content-transfer-encoding; s=corp-2020-01-29;
- bh=DnBqyE8/pCTV8QRw6jCmfUYbXTq2sDoxMNKNNmn7vp0=;
- b=JOqO7Ui9X2EMSDe6DU9riUaAq9isteC4YSe048IgjkUjFpT4jc7KV3tVj47W4kzel4BW
- V8JlW8AVipK6VcODUKkwcQ9mfwoFRPmLO3JtTg/fUFS2dsSHpUStdZH6y0LNMiTDZOdK
- PeV0bGkL66auzHeMh2vZZKf5hj2oaSeUDU4S5Icgp6LM9iYqLhevqH/uaB3qMag0m+o+
- gS69CCFIolLvE4nOIFheNmNl0uQuKwJ15XRm4iITDDMDhJ8q4PQ2mtk1Wh9tfSoLqlBx
- edIcGFFFNj2PuO+gAaUVgk6a1RhIEBJ7tr+dMkDimFRhOUXJBqGKd7ZesYjETL7WWWaC VQ== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by aserp2120.oracle.com with ESMTP id 3275cme19n-1
+ bh=pr1P/I9L+5gzWuD7JenbHVssGm+AxNla7ODU/7+mdDc=;
+ b=tCmmAhkxmhm1/jaufggXk9M5ahMOT4bvSr2fXfwn0wh3CEOSbv0zFUYPPXbKULdULNh5
+ uWaF+xh+ol2Esse8AXdwP2tBahZUPghqL+vthOAep6rGs1OiU2uVszflEfLGQA2lOH/k
+ 6wZCMqCDhIh9PheEO6MQqZ7bWacF5C5D0UBCg76F+r5HbwcW+y+zb7W4L4ptSt2NOoXa
+ H791VGy9Pi8slbKYht9Vf1/RVVoUfJKPYBUlklXzEeAuhKy2xJkejq+imq84BTaefRHK
+ Go7SW1KJnwyxyWcg+f9BhiB7VW0eQgZbRqf9dsjnvajd7ec8zQkArVA9iiMsDPjZxZgL zw== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by aserp2130.oracle.com with ESMTP id 327s65maba-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 15 Jul 2020 22:14:42 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06FMDdmP086718;
-        Wed, 15 Jul 2020 22:14:42 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by userp3020.oracle.com with ESMTP id 32a4cretk5-1
+        Wed, 15 Jul 2020 22:14:43 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06FMDevu035125;
+        Wed, 15 Jul 2020 22:14:43 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by aserp3020.oracle.com with ESMTP id 327qb91d9w-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 15 Jul 2020 22:14:42 +0000
-Received: from abhmp0017.oracle.com (abhmp0017.oracle.com [141.146.116.23])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 06FMEfsA004642;
-        Wed, 15 Jul 2020 22:14:41 GMT
+        Wed, 15 Jul 2020 22:14:43 +0000
+Received: from abhmp0010.oracle.com (abhmp0010.oracle.com [141.146.116.16])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 06FMEgCk001029;
+        Wed, 15 Jul 2020 22:14:42 GMT
 Received: from ca-mkp.ca.oracle.com (/10.156.108.201)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 15 Jul 2020 15:14:40 -0700
+        with ESMTP ; Wed, 15 Jul 2020 15:14:41 -0700
 From:   "Martin K. Petersen" <martin.petersen@oracle.com>
 To:     jejb@linux.ibm.com, Lee Jones <lee.jones@linaro.org>
 Cc:     "Martin K . Petersen" <martin.petersen@oracle.com>,
         linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 00/24] Set 3: Fix another set of SCSI related W=1 warnings
-Date:   Wed, 15 Jul 2020 18:14:33 -0400
-Message-Id: <159484884355.21107.3732344826044180939.b4-ty@oracle.com>
+Subject: Re: [PATCH v2 00/29] Fix a bunch more SCSI related W=1 warnings
+Date:   Wed, 15 Jul 2020 18:14:34 -0400
+Message-Id: <159484884353.21107.4318943401829525429.b4-ty@oracle.com>
 X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200713080001.128044-1-lee.jones@linaro.org>
-References: <20200713080001.128044-1-lee.jones@linaro.org>
+In-Reply-To: <20200713074645.126138-1-lee.jones@linaro.org>
+References: <20200713074645.126138-1-lee.jones@linaro.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9683 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 mlxlogscore=999 spamscore=0
- suspectscore=0 bulkscore=0 adultscore=0 phishscore=0 malwarescore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2007150165
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 malwarescore=0
+ mlxscore=0 spamscore=0 phishscore=0 suspectscore=0 bulkscore=0
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2007150165
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9683 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 priorityscore=1501
- bulkscore=0 adultscore=0 lowpriorityscore=0 phishscore=0 spamscore=0
- impostorscore=0 malwarescore=0 mlxlogscore=999 clxscore=1015 mlxscore=0
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 malwarescore=0
+ phishscore=0 mlxscore=0 priorityscore=1501 lowpriorityscore=0 spamscore=0
+ clxscore=1015 bulkscore=0 mlxlogscore=999 impostorscore=0 suspectscore=0
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
  definitions=main-2007150165
 Sender: linux-kernel-owner@vger.kernel.org
@@ -81,7 +81,7 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 13 Jul 2020 08:59:37 +0100, Lee Jones wrote:
+On Mon, 13 Jul 2020 08:46:16 +0100, Lee Jones wrote:
 
 > This set is part of a larger effort attempting to clean-up W=1
 > kernel builds, which are currently overwhelmingly riddled with
@@ -89,68 +89,68 @@ On Mon, 13 Jul 2020 08:59:37 +0100, Lee Jones wrote:
 > 
 > Slowly working through the SCSI related ones.  There are many.
 > 
-> This brings the total of W=1 SCSI wanings from 1690 in v5.8-rc1 to 1109.
+> Change-log:
 > 
 > [...]
 
-Applied to 5.9/scsi-queue. Thanks for cleaning things up!
+Applied to 5.9/scsi-queue, thanks!
 
-I do think that in general it makes little sense for low-level drivers
-to document internal functions using kerneldoc. As a general approach
-I would prefer to just switch drivers to '/*' or to remove stale
-comments instead of trying to keep up with the "docrot" warnings.
-
-kerneldoc cleanups are great for functions that actually have more
-than one user (core code, libraries, common code used by multiple
-drivers, etc.). Whereas for driver internals I would much rather
-emphasize function arguments with well-chosen, descriptive names
-instead of a kerneldoc "@p: pointer to a foobar" comment that will
-inevitably become stale next time an interface changes.
-
-[01/24] scsi: aacraid: Repair two kerneldoc headers
-        https://git.kernel.org/mkp/scsi/c/b115958d91f5
-[02/24] scsi: aacraid: Fix a few kerneldoc issues
-        https://git.kernel.org/mkp/scsi/c/cf93fffac261
-[03/24] scsi: aacraid: Fix logical bug when !DBG
-        https://git.kernel.org/mkp/scsi/c/2fee77e5b820
-[04/24] scsi: aacraid: Remove unused variable 'status'
-        https://git.kernel.org/mkp/scsi/c/0123c7c62d6c
-[05/24] scsi: aacraid: Demote partially documented function header
-        https://git.kernel.org/mkp/scsi/c/71aa4d3e0e78
-[06/24] scsi: aic94xx: Document 'lseq' and repair asd_update_port_links() header
-        https://git.kernel.org/mkp/scsi/c/966fdadf6fea
-[07/24] scsi: aacraid: Fix a bunch of function header issues
-        https://git.kernel.org/mkp/scsi/c/f1134f0eb184
-[08/24] scsi: aic94xx: Fix a couple of formatting and bitrot issues
-        https://git.kernel.org/mkp/scsi/c/d2e510505006
-[09/24] scsi: aacraid: Fill in the very parameter descriptions for rx_sync_cmd()
-        https://git.kernel.org/mkp/scsi/c/ae272a95133a
-[10/24] scsi: pm8001: Provide descriptions for the many undocumented 'attr's
-        https://git.kernel.org/mkp/scsi/c/e1c3e0f8a2ae
-[11/24] scsi: ipr: Fix a mountain of kerneldoc misdemeanours
-        https://git.kernel.org/mkp/scsi/c/a96099e2c164
-[12/24] scsi: virtio_scsi: Demote seemingly unintentional kerneldoc header
-        https://git.kernel.org/mkp/scsi/c/e31f2661ff41
-[13/24] scsi: ipr: Remove a bunch of set but checked variables
-        https://git.kernel.org/mkp/scsi/c/4dc833999e37
-[14/24] scsi: ipr: Fix struct packed-not-aligned issues
-        https://git.kernel.org/mkp/scsi/c/f3bdc59f9b11
-[15/24] scsi: myrs: Demote obvious misuse of kerneldoc to standard comment blocks
-        https://git.kernel.org/mkp/scsi/c/8a692fdb1d04
-[17/24] scsi: be2iscsi: Fix API/documentation slip
-        https://git.kernel.org/mkp/scsi/c/abad069ef0da
-[18/24] scsi: be2iscsi: Fix misdocumentation of 'pcontext'
-        https://git.kernel.org/mkp/scsi/c/dbc019a48f97
-[19/24] scsi: be2iscsi: Add missing function parameter description
-        https://git.kernel.org/mkp/scsi/c/7405edfdfb96
-[20/24] scsi: lpfc: Correct some pretty obvious misdocumentation
-        https://git.kernel.org/mkp/scsi/c/09d99705b5d2
-[21/24] scsi: aic7xxx: Remove unused variable 'ahd'
-        https://git.kernel.org/mkp/scsi/c/91b6e191c4dc
-[22/24] scsi: aic7xxx: Remove unused variables 'wait' and 'paused'
-        https://git.kernel.org/mkp/scsi/c/532d56c631f1
-[23/24] scsi: aic7xxx: Fix 'amount_xferred' set but not used issue
-        https://git.kernel.org/mkp/scsi/c/42b840bcfc16
+[01/29] scsi: libfc: Supply some missing kerneldoc struct/function attributes/params
+        https://git.kernel.org/mkp/scsi/c/74341d35b901
+[02/29] scsi: scsi_transport_fc: Match HBA Attribute Length with HBAAPI V2.0 definitions
+        https://git.kernel.org/mkp/scsi/c/e721eb0616f6
+[03/29] scsi: libfc: trivial: Fix spelling mistake of 'discovery'
+        https://git.kernel.org/mkp/scsi/c/ee9ec5c9af94
+[04/29] scsi: fcoe: Fix various kernel-doc infringements
+        https://git.kernel.org/mkp/scsi/c/54888649bec7
+[05/29] scsi: fcoe: Fix a myriad of documentation issues
+        https://git.kernel.org/mkp/scsi/c/3052652326dc
+[06/29] scsi: fcoe: Correct some kernel-doc issues
+        https://git.kernel.org/mkp/scsi/c/f2db5efefa89
+[07/29] scsi: bnx2fc: Repair a range of kerneldoc issues
+        https://git.kernel.org/mkp/scsi/c/ca63d8e2e9ef
+[08/29] scsi: qedf: Demote obvious misuse of kerneldoc to standard comment blocks
+        https://git.kernel.org/mkp/scsi/c/a9d4aece2255
+[09/29] scsi: qedf: Remove set but not checked variable 'tmp'
+        https://git.kernel.org/mkp/scsi/c/c6e2f4bd794a
+[10/29] scsi: libfc: Repair function parameter documentation
+        https://git.kernel.org/mkp/scsi/c/9865a04d528c
+[11/29] scsi: libfc: Fix a couple of misdocumented function parameters
+        https://git.kernel.org/mkp/scsi/c/f636acae8d0d
+[12/29] scsi: libfc: Provide missing and repair existing function documentation
+        https://git.kernel.org/mkp/scsi/c/ebb40ab68118
+[13/29] scsi: bnx2fc: Fix a couple of bitrotted function documentation headers
+        https://git.kernel.org/mkp/scsi/c/4db2ac3e0392
+[14/29] scsi: arcmsr: Remove some set but unused variables
+        https://git.kernel.org/mkp/scsi/c/18bc435e0a1d
+[16/29] scsi: qedf: Remove a whole host of unused variables
+        https://git.kernel.org/mkp/scsi/c/50efc51cb9ff
+[17/29] scsi: bnx2fc: Demote obvious misuse of kerneldoc to standard comment blocks
+        https://git.kernel.org/mkp/scsi/c/2bd92b33643e
+[18/29] scsi: aic7xxx: Remove unused variable 'tinfo'
+        https://git.kernel.org/mkp/scsi/c/e3f58eeedb55
+[19/29] scsi: aic7xxx: Remove unused variable 'ahc'
+        https://git.kernel.org/mkp/scsi/c/614fc2f9883e
+[20/29] scsi: aic7xxx: Remove unused variable 'targ'
+        https://git.kernel.org/mkp/scsi/c/7097a517446f
+[21/29] scsi: aic7xxx: Fix 'amount_xferred' set but not used issue
+        https://git.kernel.org/mkp/scsi/c/aa89d74e040a
+[22/29] scsi: qedf: Demote obvious misuse of kerneldoc to standard comment blocks
+        https://git.kernel.org/mkp/scsi/c/ce7e0a84e5d7
+[23/29] scsi: aacraid: Provide suggested curly braces around empty body of if()
+        https://git.kernel.org/mkp/scsi/c/8558d5a4f38c
+[24/29] scsi: aacraid: Fix a couple of small kerneldoc issues
+        https://git.kernel.org/mkp/scsi/c/00a72e8cd267
+[25/29] scsi: aic94xx: Demote seemingly unintentional kerneldoc header
+        https://git.kernel.org/mkp/scsi/c/2862a3a26c2d
+[26/29] scsi: pm8001: Demote obvious misuse of kerneldoc and update others
+        https://git.kernel.org/mkp/scsi/c/e802fc43ba36
+[27/29] scsi: aic94xx: Repair kerneldoc formatting error and remove extra param
+        https://git.kernel.org/mkp/scsi/c/bb458974e063
+[28/29] scsi: aacraid: Fix a bunch of function doc formatting errors
+        https://git.kernel.org/mkp/scsi/c/e7eb414c653d
+[29/29] scsi: qla4xxx: Provide a missing function param description and fix formatting
+        https://git.kernel.org/mkp/scsi/c/7ec772d0c3e6
 
 -- 
 Martin K. Petersen	Oracle Linux Engineering
