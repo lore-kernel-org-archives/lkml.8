@@ -2,114 +2,206 @@ Return-Path: <SRS0=kup7=A2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A53FC433E6
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 01:54:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 479C1C433E5
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 01:54:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 60F452071B
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 01:54:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E26AF2071B
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 01:54:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="a255Yq4R"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="TkI3Qj+7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728132AbgGOByO (ORCPT
+        id S1728170AbgGOByz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 21:54:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47918 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727856AbgGOByO (ORCPT
+        Tue, 14 Jul 2020 21:54:55 -0400
+Received: from mailout2.samsung.com ([203.254.224.25]:34037 "EHLO
+        mailout2.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727837AbgGOByy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 21:54:14 -0400
-Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B432EC061755;
-        Tue, 14 Jul 2020 18:54:13 -0700 (PDT)
-Received: by mail-lj1-x242.google.com with SMTP id f5so717036ljj.10;
-        Tue, 14 Jul 2020 18:54:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=WtLhaS2/MYqghS/tBUOjQfwmTd/BXa8nIjD1SlrYAgA=;
-        b=a255Yq4RIXuuTC7c+TfIBn8lld+kUEb646LXBXy2N47l/oPxjIFYD1T9vUkCDE39P0
-         Swj6+VuefRq4oxhSkQaTLag5Hk9R17FCVoTukPcVPR3Jjr459xH9chlAPAqC+nrIYQxe
-         RIPxk7CG9v5AMQMD/g62rSUdHrQiYni+pcZnSfPbHSPzGAB6wdEPo1+bvjSF+NpoHbcN
-         Dchqys2zlUnI9BVwHeLYd+XOYL0+PHhGHYHH74XAuGEhVl4RITjiGoPlRY/PXzgWPpHZ
-         QqcIRr6iWbVyvwXwOTVN1gbFKUF0Z05IaDRzRl7ZX2G0bhn6x+8a8xPw6a5tA0fRPCjY
-         ueQQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=WtLhaS2/MYqghS/tBUOjQfwmTd/BXa8nIjD1SlrYAgA=;
-        b=QbJ3J/471QMBnmrz99mBD2l95v9jXQD5p8+18Wko4J3cG94HvZ9CPehLTY4mDVmaRo
-         s9mHtD15TMjWQSzrNTPSlQPlW0O/9hK1O6On1ceXzUC3WHXBGgrQlif+kiwhIljFv8VM
-         xLpZdE5E2zy3Ai4oxtBq9doj51uNq+3Eyi5x0qKmfyd/HWb/pvexQavK9uQSBV8Mt2Rs
-         6HtcLR5UHsWMsWf+mwVjnelrO2FODmBXflMFjQ2X0k3ixGYwKxBUd1mqZY7G04LLp77R
-         5XxwauhLvH4V1qXeac2AJNqPknKoMXPiDBCBSRQk0KlHzB7SxHxxppSTwNe1sYpBBwVL
-         DSFw==
-X-Gm-Message-State: AOAM5329ZVSl8jimmoExzUCl/xWRhWu7zsm+3LZaUVWs7fg0ErwZfwz6
-        VxACbB1zl2pcnc9HAFYawbS3CQbb0kcLLmwnXso=
-X-Google-Smtp-Source: ABdhPJzLc+wvn9POm8kWklXHdLC5iQJ+u+6tFnO9vhKrJfQhcHgkJviGKTkHCk1Y3OQAjpV/aBEMJQE1WBJp/ldFIKA=
-X-Received: by 2002:a2e:9a0f:: with SMTP id o15mr3714334lji.450.1594778052069;
- Tue, 14 Jul 2020 18:54:12 -0700 (PDT)
+        Tue, 14 Jul 2020 21:54:54 -0400
+Received: from epcas1p1.samsung.com (unknown [182.195.41.45])
+        by mailout2.samsung.com (KnoxPortal) with ESMTP id 20200715015451epoutp020c6a6c042bb1abfa2208207127c75746~hyjlpotAs0711507115epoutp02h
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 01:54:50 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20200715015451epoutp020c6a6c042bb1abfa2208207127c75746~hyjlpotAs0711507115epoutp02h
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1594778091;
+        bh=BM75WM+A9pA9ayxI/YRxm0bAY78/AuIlepl26x00ESM=;
+        h=From:To:Cc:In-Reply-To:Subject:Date:References:From;
+        b=TkI3Qj+7e8Xh+rzM3Es9Efk+ICMWGh0a52C4jQe8Gkk+yN2ZqKITnWTSQgyt6dxj4
+         XDemeuk7NYCL9UlCqUbLQoU90Q5xPWDn7A9tvJB9Z6t2a/E5yZVohmHrJH5CapZwc9
+         VaYciAcxqUNAdF238cAxmJ5Z7rdiHWvfEV+SXo4k=
+Received: from epsnrtp3.localdomain (unknown [182.195.42.164]) by
+        epcas1p3.samsung.com (KnoxPortal) with ESMTP id
+        20200715015450epcas1p378c3c44bad600792888eb155cb94956f~hyjlIFO4-3168631686epcas1p3g;
+        Wed, 15 Jul 2020 01:54:50 +0000 (GMT)
+Received: from epsmges1p3.samsung.com (unknown [182.195.40.159]) by
+        epsnrtp3.localdomain (Postfix) with ESMTP id 4B60nP1MRRzMqYkV; Wed, 15 Jul
+        2020 01:54:49 +0000 (GMT)
+Received: from epcas1p3.samsung.com ( [182.195.41.47]) by
+        epsmges1p3.samsung.com (Symantec Messaging Gateway) with SMTP id
+        FF.0C.29173.9E16E0F5; Wed, 15 Jul 2020 10:54:49 +0900 (KST)
+Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
+        epcas1p4.samsung.com (KnoxPortal) with ESMTPA id
+        20200715015448epcas1p42a3cefc71921a97f881d8d70670f8877~hyjjYXEvz2970629706epcas1p4q;
+        Wed, 15 Jul 2020 01:54:48 +0000 (GMT)
+Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
+        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20200715015448epsmtrp1f31c2fcd6068f552fb6ff7b581e6a4f9~hyjjXobhj2511625116epsmtrp1H;
+        Wed, 15 Jul 2020 01:54:48 +0000 (GMT)
+X-AuditID: b6c32a37-9cdff700000071f5-54-5f0e61e95b2d
+Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
+        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        C1.F9.08382.8E16E0F5; Wed, 15 Jul 2020 10:54:48 +0900 (KST)
+Received: from namjaejeon01 (unknown [10.88.104.63]) by epsmtip1.samsung.com
+        (KnoxPortal) with ESMTPA id
+        20200715015448epsmtip19bcd59920956b2125be2c8612e088456~hyjjJpAUh2702727027epsmtip1U;
+        Wed, 15 Jul 2020 01:54:48 +0000 (GMT)
+From:   "Namjae Jeon" <namjae.jeon@samsung.com>
+To:     <Kohada.Tetsuhiro@dc.MitsubishiElectric.co.jp>
+Cc:     <Mori.Takahiro@ab.MitsubishiElectric.co.jp>,
+        <Motai.Hirotaka@aj.MitsubishiElectric.co.jp>,
+        "'Sungjong Seo'" <sj1557.seo@samsung.com>,
+        <linux-fsdevel@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        "'Tetsuhiro Kohada''" <kohada.t2@gmail.com>
+In-Reply-To: <TY2PR01MB2875C88DD10CC13D0C70DE1690610@TY2PR01MB2875.jpnprd01.prod.outlook.com>
+Subject: RE: [PATCH] exfat: retain 'VolumeFlags' properly
+Date:   Wed, 15 Jul 2020 10:54:48 +0900
+Message-ID: <015801d65a4a$ebedd380$c3c97a80$@samsung.com>
 MIME-Version: 1.0
-References: <20200713134114.137265-1-gnurou@gmail.com> <20200714223344.GA20740@amd>
-In-Reply-To: <20200714223344.GA20740@amd>
-From:   Alexandre Courbot <gnurou@gmail.com>
-Date:   Wed, 15 Jul 2020 10:54:00 +0900
-Message-ID: <CAAVeFuKomLcAue9rGXhK3Uc=H+v9ZLBA84Ozr_rZDRQMYeC=dg@mail.gmail.com>
-Subject: Re: [PATCH] leds: add NCT6795D driver
-To:     Pavel Machek <pavel@ucw.cz>
-Cc:     Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Dan Murphy <dmurphy@ti.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-leds@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: Microsoft Outlook 16.0
+Thread-Index: AQJOchBlupSQwdEhi4rggGDYoy3yLwE5agcKAmVRsN0CrFCHjqflVWYQ
+Content-Language: ko
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprNJsWRmVeSWpSXmKPExsWy7bCmvu7LRL54g5932Cx+zL3NYvHm5FQW
+        iz17T7JYXN41h83i8v9PLBbLvkxmsdjy7wirA7vHlznH2T3aJv9j92g+tpLNY+esu+wefVtW
+        MXp83iQXwBaVY5ORmpiSWqSQmpecn5KZl26r5B0c7xxvamZgqGtoaWGupJCXmJtqq+TiE6Dr
+        lpkDdIuSQlliTilQKCCxuFhJ386mKL+0JFUhI7+4xFYptSAlp8DQoECvODG3uDQvXS85P9fK
+        0MDAyBSoMiEnY8rpe+wFp0UrTvc+Z2xgPCLQxcjJISFgIjH3zjWWLkYuDiGBHYwSMz/fZ4Rw
+        PjFKHJl8hQ3C+cYo8fTtUXaYltlt96ASexklLl87A+W8ZJTYdu8/K0gVm4CuxL8/+4ESHBwi
+        AkYST08WgtQwC/xhlFjXd4sNpIZTIFbi0MN2sHphAUuJl5N2gsVZBFQlnh/6zgrSywsUP7PV
+        HyTMKyAocXLmExYQm1lAXmL72znMEAcpSPx8ugxsjIiAm8Sdtu3sEDUiErM726BqFnJIzF5e
+        CWG7SHx+PRcqLizx6vgWqMekJF72t7GDrJUQqJb4uB+qpINR4sV3WwjbWOLm+g1glzELaEqs
+        36UPEVaU2Pl7LiPEVj6Jd197WCGm8Ep0tAlBlKhK9F06zARhS0t0tX9gn8CoNAvJX7OQ/DUL
+        yf2zEJYtYGRZxSiWWlCcm55abFhgjBzVmxjBqVTLfAfjtLcf9A4xMnEwHmKU4GBWEuHl4eKN
+        F+JNSaysSi3Kjy8qzUktPsRoCgzoicxSosn5wGSeVxJvaGpkbGxsYWJmbmZqrCTO++8se7yQ
+        QHpiSWp2ampBahFMHxMHp1QDU8oMBm6dU8ViDRGyW4/fcLjEedCH4e/yvbrzc97I273vlNBm
+        PjD3WW/iHvHaG+/vh2q7X/8dHiE3LfvcNCW3pftzxTXjYxR8Lc0rz86VVhJ2kZzzweHi5M+v
+        39/IeFH78ffG1bxTS+SNTmUJ+3x1LFs5R3CvxP/+mulvY94rdn6wU1NjLTxYrXTO0KvzuFm5
+        d4e3Ro9c1KyZDuW3f4Rt2GdwbtXifDXfV6VcHG2rNlx0XKn55Zv0jXN/f2lcnCvizRG88hdr
+        geBc3v4nnIv1bvl8y3LRPH/xwaqf/TN27XTtn/LLp7v9steban/dq2HVe693mpvHCVV6rZmx
+        fGPhqQttBvIvGQUVlfqfaygXKbEUZyQaajEXFScCACjzYI4uBAAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFmpnkeLIzCtJLcpLzFFi42LZdlhJTvdFIl+8wcI/khY/5t5msXhzciqL
+        xZ69J1ksLu+aw2Zx+f8nFotlXyazWGz5d4TVgd3jy5zj7B5tk/+xezQfW8nmsXPWXXaPvi2r
+        GD0+b5ILYIvisklJzcksSy3St0vgyphy+h57wWnRitO9zxkbGI8IdDFyckgImEjMbrvH1sXI
+        xSEksJtR4kJnBwtEQlri2IkzzF2MHEC2sMThw8UQNc8ZJa482s0MUsMmoCvx789+NpAaEQEj
+        iacnC0FqmAUamCSuzH8HNbSDSaJl5jd2kAZOgViJQw/bWUFsYQFLiZeTdrKB2CwCqhLPD31n
+        BRnECxQ/s9UfJMwrIChxcuYTsHuYBbQleh+2MkLY8hLb385hhrhTQeLn02VgI0UE3CTutG1n
+        h6gRkZjd2cY8gVF4FpJRs5CMmoVk1CwkLQsYWVYxSqYWFOem5xYbFhjmpZbrFSfmFpfmpesl
+        5+duYgTHlZbmDsbtqz7oHWJk4mA8xCjBwawkwsvDxRsvxJuSWFmVWpQfX1Sak1p8iFGag0VJ
+        nPdG4cI4IYH0xJLU7NTUgtQimCwTB6dUA5Pes/5S5uKey9Mdp6mum9phazGlx3Nide/Kj6ys
+        Py2/Clcc1Dmb9256LUvUvQgj29mn8tff9HewWhd/vKCTxXKqZeGjYtNVhgp2ghxTX7iGhem2
+        /5Bds7Trh/FCU+5vLIe3Zj3bVvP+2LzeDObbbyPPuU3IsnE1UtJm1fkYabt3+9kIvpfNtjtY
+        F8fX3aso4Fl7I/y0ffiv0/Wfbh5x+saRmfHj58STXKuXPpgQvSiotdDXfrGr1op9p3RZgoIK
+        7lZVimeKbxMNlF23JDdSLSml/p2iZs8Ws61Pkx2+lNQXr+2f17U47X9lZpHMh76JiuWZcyye
+        fd0zS6fxStF9kwMnCqZlXAyX5lne/krzqhJLcUaioRZzUXEiAKZAbb4aAwAA
+X-CMS-MailID: 20200715015448epcas1p42a3cefc71921a97f881d8d70670f8877
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: SVC_REQ_APPROVE
+CMS-TYPE: 101P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20200708095813epcas1p2277cdf7de6a8bb20c27bcd030eec431f
+References: <CGME20200708095813epcas1p2277cdf7de6a8bb20c27bcd030eec431f@epcas1p2.samsung.com>
+        <20200708095746.4179-1-kohada.t2@gmail.com>
+        <005101d658d1$7202e5d0$5608b170$@samsung.com>
+        <TY2PR01MB2875C88DD10CC13D0C70DE1690610@TY2PR01MB2875.jpnprd01.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Pavel,
+> Thanks for your reply.
+> 
+> > > Also, rename ERR_MEDIUM to MED_FAILURE.
+> > I think that MEDIA_FAILURE looks better.
+> 
+> I think so too.
+> If so, should I change VOL_DIRTY to VOLUME_DIRTY?
+Yes, maybe.
+> 
+> > > -int exfat_set_vol_flags(struct super_block *sb, unsigned short
+> > > new_flag)
+> > > +int exfat_set_vol_flags(struct super_block *sb, unsigned short
+> > > +new_flags)
+> > >  {
+> > >  	struct exfat_sb_info *sbi = EXFAT_SB(sb);
+> > >  	struct boot_sector *p_boot = (struct boot_sector *)sbi->boot_bh->b_data;
+> > >  	bool sync;
+> > If dirty bit is set in on-disk volume flags, we can just return 0 at the beginning of this function ?
+> 
+> That's right.
+> Neither 'set VOL_DIRTY' nor 'set VOL_CLEAN' makes a change to volume flags.
+> 
+> 
+> > > +	if (new_flags == VOL_CLEAN)
+> > > +		new_flags = (sbi->vol_flags & ~VOL_DIRTY) | sbi->vol_flags_noclear;
+> > > +	else
+> > > +		new_flags |= sbi->vol_flags;
+> > > +
+> > >  	/* flags are not changed */
+> > > -	if (sbi->vol_flag == new_flag)
+> > > +	if (sbi->vol_flags == new_flags)
+> > >  		return 0;
+> > >
+> > > -	sbi->vol_flag = new_flag;
+> > > +	sbi->vol_flags = new_flags;
+> > >
+> > >  	/* skip updating volume dirty flag,
+> > >  	 * if this volume has been mounted with read-only @@ -114,9 +119,9
+> > > @@ int exfat_set_vol_flags(struct super_block *sb, unsigned short new_flag)
+> > >  	if (sb_rdonly(sb))
+> > >  		return 0;
+> > >
+> > > -	p_boot->vol_flags = cpu_to_le16(new_flag);
+> > > +	p_boot->vol_flags = cpu_to_le16(new_flags);
+> > How about set or clear only dirty bit to on-disk volume flags instead
+> > of using
+> > sbi->vol_flags_noclear ?
+> >        if (set)
+> >                p_boot->vol_flags |= cpu_to_le16(VOL_DIRTY);
+> >        else
+> >                p_boot->vol_flags &= cpu_to_le16(~VOL_DIRTY);
+> 
+> In this way, the initial  VOL_DIRTY cannot be retained.
+> The purpose of this patch is to avoid losing the initial VOL_DIRTY and MED_FAILURE.
+> Furthermore, I'm also thinking of setting MED_FAILURE.
+I know what you do. I mean this function does not need to be called if volume dirty
+Is already set on on-disk volume flags as I said earlier.
+> 
+> However, the formula for 'new_flags' may be a bit complicated.
+> Is it better to change to the following?
+> 
+> 	if (new_flags == VOL_CLEAN)
+> 		new_flags = sbi->vol_flags & ~VOL_DIRTY
+> 	else
+> 		new_flags |= sbi->vol_flags;
+> 
+> 	new_flags |= sbi->vol_flags_noclear;
+> 
+> 
+> one more point,
+> Is there a better name than 'vol_flags_noclear'?
+> (I can't come up with a good name anymore)
+It looks complicated. It would be better to simply set/clear VOLUME DIRTY bit.
 
-On Wed, Jul 15, 2020 at 7:33 AM Pavel Machek <pavel@ucw.cz> wrote:
->
-> Hi!
->
-> > Add support for the LED feature of the NCT6795D chip found on some
-> > motherboards, notably MSI ones. The LEDs are typically used using a
-> > RGB connector so this driver creates one LED device for each color
-> > component.
->
-> Ok, let me take a look. What entries does it present in /sys?
+Thanks!
+> 
+> BR
+> ---
+> Kohada Tetsuhiro <Kohada.Tetsuhiro@dc.MitsubishiElectric.co.jp>
 
-Right now these 3 directories in /sys/class/leds:
-
-nct6795d:blue:
-nct6795d:green:
-nct6795d:red:
-
-with the usual suspects `brightness` and `max_brightness` in each. I
-am not 100% sure I got the names right so please let me know if that
-is not correct.
-
->
-> We'll want you to switch to multicolor framework.
-
-Most definitely. Last time I checked it was not merged yet though?
-
->
-> > Also add self as maintainer.
->
-> That will need to be separate patch, I'd be asking for trouble if I
-> took that.
-
-Note that I am also comfortable if you prefer to take care of this,
-just didn't want to look like I was throwing this code at you without
-following up on its maintenance.
-
-Cheers,
-Alex.
