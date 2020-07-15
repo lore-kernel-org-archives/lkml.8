@@ -2,116 +2,87 @@ Return-Path: <SRS0=kup7=A2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA244C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 19:02:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74C71C433E6
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 19:07:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BC18520672
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 19:02:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AJrZs7DM"
+	by mail.kernel.org (Postfix) with ESMTP id 53F6E2076C
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 19:07:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594840050;
+	bh=psDCvxOSuP0dAb/UIIYTKsvGm+t+ept1MueqCEk/RpU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=RU0u5SEUZemF8KbhZzZf2jvL+FDw/QR0RNWviF84rSRnaEpfFjlEX5WY6Aw2PaxiL
+	 9OetK+Q7aEvqr8XW7JXAOQgb+/gLo+dREOnoSLE9HRLR7Qki8/nhitiiH3XZvDGqH1
+	 w1Iz1HxzHwrIYb+89Ryqof9TZNbFncp9waKXpJ1w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726870AbgGOTCz (ORCPT
+        id S1726785AbgGOTHY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 15:02:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37290 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726761AbgGOTCw (ORCPT
+        Wed, 15 Jul 2020 15:07:24 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:35723 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726398AbgGOTG6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 15:02:52 -0400
-Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8C2E3C08C5CE;
-        Wed, 15 Jul 2020 12:02:52 -0700 (PDT)
-Received: by mail-lj1-x243.google.com with SMTP id z24so3813946ljn.8;
-        Wed, 15 Jul 2020 12:02:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=24j8BD/rk1NCezefIEXui0kY0H9CcCq5N57TnMuH0Cs=;
-        b=AJrZs7DMub0Mmpklzzn+wMRqarleeITlOdNdHKFOGnsjGhIvg4RadvozaRFCXFQaJf
-         X77nBWccXJek+u3muNeIFHurc3tLJTbykuiahETAXS+gBNBxh/1qZIvzu0n/yLjWbTFd
-         gTqke7t3gVWxGkDBg1n59jGgmPKYfm3waBnYTyT/+d9CybsSSF7jH1WAnT1VsYCrMq7+
-         37ewHdUaA8AAUWwJxjG+kVaQCxiyDm1c6CeIxVRz02hYonygKPpWGfOZRVqYFdEp95Ct
-         PF1kNoHJn7JwFn/IXryaMa9RbAlLyZNvqdqsuHP8Q/5m1GS5nDS19yKIXHt8E5N+4vgX
-         GJMg==
+        Wed, 15 Jul 2020 15:06:58 -0400
+Received: by mail-io1-f66.google.com with SMTP id v8so3447449iox.2;
+        Wed, 15 Jul 2020 12:06:58 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=24j8BD/rk1NCezefIEXui0kY0H9CcCq5N57TnMuH0Cs=;
-        b=C3/NeDUJyUfUY86XotiYggGLKChXyDpi76Esn3K4JL+PuPwBptWYUtSZnd5amEIYC2
-         mcHlIcLtveAgAaSCjVKG9aLSgzTSxiNfVVkwtezniRFV+CLSq0c7kVacPjIw06c8j7Mr
-         HbSHY7HYugZ0pTnVTRDnl6L2M+K9K2D+vdM4vLq6vRuhwSLtWfp/bfM7jqQQkyDn3qgc
-         onPtoKcv0hyd8bgQ0K/Us6U1awjrBRvC0rgGpf6UUTLsGoAZFEZHQ9mosbEEtAzKgu4E
-         sVjeSNftZRtM3yxbTh9MydaP8JWOfxjmyz48obxXhx2/j8TDBWO2X+JQMqL/wSj3JCt/
-         36sw==
-X-Gm-Message-State: AOAM533rEdHqpmA2SYU7Jq9EuMB2L3Qv7KfDmMMHuam2npv/sgwpDHlQ
-        PJNaAlZixjGitxyr3tLDl4mu3WilfHQ=
-X-Google-Smtp-Source: ABdhPJyeS11MWJWIPMBKnsprqezqgfZ2gTNo4TwAAgBZVHDbSLb9SAwVA3YDJDjCwnF9BB4jYImGIA==
-X-Received: by 2002:a2e:780b:: with SMTP id t11mr234821ljc.271.1594839770991;
-        Wed, 15 Jul 2020 12:02:50 -0700 (PDT)
-Received: from pc636 (h5ef52e31.seluork.dyn.perspektivbredband.net. [94.245.46.49])
-        by smtp.gmail.com with ESMTPSA id g24sm594774ljl.139.2020.07.15.12.02.45
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=jno93+SekzksiRMw8XaCQpKWQNtPwJXK6kxizzByIZA=;
+        b=bEk2EagMIMzaZM9v7+OWMb1ielzmnZjKavq/bViNC0giLsprCEx6PS2qETs/YC21Zb
+         U37qkhCIssPGqaWbmC9dVAx1Rqyhy4k4uk/1v+dKkSfSXj/+V8AgHuU+gncisZm0DjZE
+         KRJbJ7ifwehbN8r+abtah1pKU6LFa5Rf3hlb3vaoyirEOpEU12xXO0lwrvBwEGKrN9Z6
+         yXlmrAbFQpR+JHQj7+rYpTHtNpVoMj+WbQLzpz5nkuKNXft3n3VlWT9ufZmvY488kCy/
+         H7lUgK1Y3W50S/soaJK5bWcBA6kqdAu/Blo4PgAtnhfMtxK5+P4xNyUZcZZ+SQ7u3sbL
+         E2XA==
+X-Gm-Message-State: AOAM530mpXCc4q7Bid1A0kKTaNRB56MsimYL6W+5alLBGzt718mlQaTS
+        pNWXJbITuzsA0VMOeBQmow==
+X-Google-Smtp-Source: ABdhPJxaI60mevvS3ihbp2eUo+tIkZk2660IIqqpr0Dc8tHcZTbING24Cchf10COIM6sdj0TWrcbWg==
+X-Received: by 2002:a02:a909:: with SMTP id n9mr952808jam.70.1594840018185;
+        Wed, 15 Jul 2020 12:06:58 -0700 (PDT)
+Received: from xps15 ([64.188.179.252])
+        by smtp.gmail.com with ESMTPSA id g1sm1477197ilk.51.2020.07.15.12.06.56
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 15 Jul 2020 12:02:45 -0700 (PDT)
-From:   Uladzislau Rezki <urezki@gmail.com>
-X-Google-Original-From: Uladzislau Rezki <urezki@pc636>
-Date:   Wed, 15 Jul 2020 21:02:43 +0200
-To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc:     "Uladzislau Rezki (Sony)" <urezki@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>, RCU <rcu@vger.kernel.org>,
-        linux-mm@kvack.org, "Paul E . McKenney" <paulmck@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "Theodore Y . Ts'o" <tytso@mit.edu>,
-        Matthew Wilcox <willy@infradead.org>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Oleksiy Avramchenko <oleksiy.avramchenko@sonymobile.com>
-Subject: Re: [PATCH 1/1] rcu/tree: Drop the lock before entering to page
- allocator
-Message-ID: <20200715190243.GA26735@pc636>
-References: <20200715183537.4010-1-urezki@gmail.com>
- <20200715185628.7b4k3o5efp4gnbla@linutronix.de>
+        Wed, 15 Jul 2020 12:06:57 -0700 (PDT)
+Received: (nullmailer pid 649392 invoked by uid 1000);
+        Wed, 15 Jul 2020 19:06:56 -0000
+Date:   Wed, 15 Jul 2020 13:06:56 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Gene Chen <gene.chen.richtek@gmail.com>
+Cc:     matthias.bgg@gmail.com, lee.jones@linaro.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
+        gene_chen@richtek.com, Wilma.Wu@mediatek.com,
+        shufan_lee@richtek.com, cy_huang@richtek.com
+Subject: Re: [PATCH] dt-bindings: mfd: Add bindings for the Mediatek MT6360
+ PMIC
+Message-ID: <20200715190656.GA647195@bogus>
+References: <1592306876-3504-1-git-send-email-gene.chen.richtek@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200715185628.7b4k3o5efp4gnbla@linutronix.de>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <1592306876-3504-1-git-send-email-gene.chen.richtek@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 15, 2020 at 08:56:28PM +0200, Sebastian Andrzej Siewior wrote:
-> On 2020-07-15 20:35:37 [+0200], Uladzislau Rezki (Sony) wrote:
-> > @@ -3306,6 +3307,9 @@ kvfree_call_rcu_add_ptr_to_bulk(struct kfree_rcu_cpu *krcp, void *ptr)
-> >  			if (IS_ENABLED(CONFIG_PREEMPT_RT))
-> >  				return false;
-> >  
-> > +			preempt_disable();
-> > +			krc_this_cpu_unlock(*krcp, *flags);
+On Tue, Jun 16, 2020 at 07:27:56PM +0800, Gene Chen wrote:
+> From: Gene Chen <gene_chen@richtek.com>
 > 
-> Now you enter memory allocator with disabled preemption. This isn't any
-> better but we don't have a warning for this yet.
->
-Please elaborate why it is not allowed? Consider the code:
-
-<snip>
-    spin_lock();
-    __get_free_page(GFP_NOWAIT | __GFP_NOWARN);
-    spin_unlock();
-<snip>
-
-Also, please note we do it for regular kernel.
-
->
-> What happened to the part where I asked for a spinlock_t?
+> Add devicetree binding document support Mediatek MT6360 PMIC
 > 
-What do you mean?
+> Signed-off-by: Gene Chen <gene_chen@richtek.com>
+> ---
+>  Documentation/devicetree/bindings/mfd/mt6360.txt | 53 ++++++++++++++++++++++++
+>  1 file changed, 53 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mfd/mt6360.txt
 
---
-Vlad Rezki
+Bindings are in DT schema format now.
+
+Rob
