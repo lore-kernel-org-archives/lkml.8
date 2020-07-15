@@ -2,124 +2,145 @@ Return-Path: <SRS0=kup7=A2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLACK,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40EC6C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 15:32:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56CE8C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 15:33:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1844420720
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 15:32:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3591C20720
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 15:33:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="r51ZMZ/D"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="D+ARyC/t"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726801AbgGOPci (ORCPT
+        id S1726843AbgGOPdF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 11:32:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33004 "EHLO
+        Wed, 15 Jul 2020 11:33:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33078 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726715AbgGOPcg (ORCPT
+        with ESMTP id S1726446AbgGOPdF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 11:32:36 -0400
-Received: from mail-il1-x141.google.com (mail-il1-x141.google.com [IPv6:2607:f8b0:4864:20::141])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 94831C08C5DD
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 08:32:36 -0700 (PDT)
-Received: by mail-il1-x141.google.com with SMTP id h16so2315227ilj.11
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 08:32:36 -0700 (PDT)
+        Wed, 15 Jul 2020 11:33:05 -0400
+Received: from mail-io1-xd43.google.com (mail-io1-xd43.google.com [IPv6:2607:f8b0:4864:20::d43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 406E8C08C5DB
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 08:33:05 -0700 (PDT)
+Received: by mail-io1-xd43.google.com with SMTP id y2so2689460ioy.3
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 08:33:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=5j36s7iC5zp5BnB779s7+MCfhpn2EN7hNLz0r5dH+FA=;
-        b=r51ZMZ/DE0WxoG59krMoig/9PaS0tfTZQHD+TvqbtLO1VBxZ9aeo4y5YWtJRp4zJRo
-         vUqZXm2LLngXYhELgp5j9kD61YXkJhiqxqMEWOO/376d8UI8vonLIgP9dYxJWaoEd/mW
-         Qtt0HRxHXQGRNQ2ppfPwColQHMv3zebgB827nmH0bKPq0N/dNkm1egJbZG5eIm/aUkWR
-         7sxAouIYuZPqrXjSqm98qv5hCURTzr/2xpkXL3zjnfaFn9Z1YZGB8M0ewwuq+FQAiCSI
-         3KIAbart0wn9Ekl8JVjJFjh3LU1DQJd8SLlJhtOvGb5/Q4ludj4LkFUyQ/blwlXJ0Q9q
-         P0Vg==
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=3/pQdYS/Dnr1ymTJv+NidFC3OUFb+e6KKsxPQ2Yv67c=;
+        b=D+ARyC/tT0EwkUI5QwGS/MpuvZHZQhZw1IIn9yTvTJ5PzNgdV+xJ/09woYE+QgKfHA
+         3nKvtPRUFo91vGrZFgb7mNort2mz0DapQl970UQKuba9mYudg7ARczsPYKbSKJCaUpjV
+         Fk258LRS73Px4xEW/TA2kMUJauSKvIMglEiugBR3zKo6W0D9aC9EuWP2GjQJG2tjFoEe
+         eQ8PL+1KiRVDerhisAHsmoPZOjTS70z873MicFxWmtGOZMhK53rzReWy5Qxwx8kNikp9
+         je9dzKqFAQF7ri/Pfuvj7yOzlwqQ2ayWa1kC/nuMJuJ0pZfEGNGuIebCrCAdEa4smsTu
+         3i3Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=5j36s7iC5zp5BnB779s7+MCfhpn2EN7hNLz0r5dH+FA=;
-        b=jLsi1JyWorfh7NVc6P9y8XKf1usUocaiSw2hd8yWq/gG0GoVMpoH0Db4MmUGAzBw9O
-         qc10zM/wRM59fHWacaUjRSzKKcAJ8DsRVS5SXWDqQg4B448OQJ+Xs8OK7zmH5SLAjlyS
-         OxYKfNmFtvO/LPjqDFKcl3ppcOSsLsNRYYH7NSYFUU6NnfzEL5JJlzacoKV3revhnv6G
-         UDb1s5R71J1vsi2T/2PrzFwPAqyynUw1ITd0+mTEXmPr2eepTjlC+yj4CvNCIbQLE8IF
-         o58/SY4Zgk3O5hF2s89BHA70seUtKuqMr+IDBXqCQZx1KWn7kkC3Go/m1Ii4BDV5xSwd
-         kH4Q==
-X-Gm-Message-State: AOAM533Hlz31gSM5CS2HujY9U27oRlPFhu9v3KocWTQ2OPcuxWjQcEuB
-        R6hOjI17nTM/EAipJqvWwkkQzw2JjF9Elg==
-X-Google-Smtp-Source: ABdhPJzMy5tfw9Plsd3ic0px69p4rqwR4ycrMGtffRykSgnbPggNEenduhT9rlt/dfD+oFWBP2zgyA==
-X-Received: by 2002:a05:6e02:de6:: with SMTP id m6mr61699ilj.296.1594827155581;
-        Wed, 15 Jul 2020 08:32:35 -0700 (PDT)
-Received: from [192.168.1.58] ([65.144.74.34])
-        by smtp.gmail.com with ESMTPSA id m5sm1234561ilg.18.2020.07.15.08.32.33
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 15 Jul 2020 08:32:34 -0700 (PDT)
-Subject: Re: [PATCH v2] blk-rq-qos: remove redundant finish_wait to
- rq_qos_wait.
-To:     Stephen Rothwell <sfr@canb.auug.org.au>, Qian Cai <cai@lca.pw>
-Cc:     Guo Xuenan <guoxuenan@huawei.com>, linux-block@vger.kernel.org,
-        wangli74@huawei.com, fangwei1@huawei.com, ming.lei@redhat.com,
-        josef@toxicpanda.com, linux-next@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20200628135625.3396636-1-guoxuenan@huawei.com>
- <20200714232123.GA49251@lca.pw> <20200715121942.33bb34d8@canb.auug.org.au>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <73fa9772-9b02-fcfa-ea50-6779067ed70a@kernel.dk>
-Date:   Wed, 15 Jul 2020 09:32:33 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=3/pQdYS/Dnr1ymTJv+NidFC3OUFb+e6KKsxPQ2Yv67c=;
+        b=Jdw6eaW7c+Z9V19Is0K7TpfjMnNRZAgpE0eA1tNi5WzX3JDLj5amWtpN8QTHvPVety
+         5j0CLQ+d40SEYXIMSrw67ZZ/pNl4TIBiJ7N/M8aAykx/QhrmfSsWUepTGsIKPvK0rMW8
+         kYjBt0C7RWRiuErS0NgDjVUBLnMljTBOOjMDXUQ8F4eOJdtsIyXNLj4ujVgaNm97Jund
+         PdvnOTAkScei7c/+0qzQw5gJLFtNlpj+uOpk0ir4q4gBz3isHkmBim/HBDzo4zCJSv7i
+         X2tW9LrS6NJ9SMAyFWPPgeebA74msM0qZAWzWcmgVaHvuaOWzfS4jCBSBFvv8AjxYkK8
+         GSXA==
+X-Gm-Message-State: AOAM531ZKw1LFjq+PB+TBpMf3Mh3rYVSnhjEgFVOd3IlcPqP4vjRd1ym
+        71E1rPWc5qcSWPXCogabDtvNmABX077VE/XvrEaYLQ==
+X-Google-Smtp-Source: ABdhPJweq1N6tkof3wjCwSMgBSSq0jgPksYVht/5VHBVayPqCWUxP7gIsxMCn/l6df4OcdQzXCWR0gv5qPFEFEpUW1E=
+X-Received: by 2002:a6b:5c0a:: with SMTP id z10mr10587243ioh.131.1594827184561;
+ Wed, 15 Jul 2020 08:33:04 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200715121942.33bb34d8@canb.auug.org.au>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200714200445.1427257-1-mathieu.poirier@linaro.org> <1cde5c1d5d9047149c93e031c5093492@SFHDAG3NODE1.st.com>
+In-Reply-To: <1cde5c1d5d9047149c93e031c5093492@SFHDAG3NODE1.st.com>
+From:   Mathieu Poirier <mathieu.poirier@linaro.org>
+Date:   Wed, 15 Jul 2020 09:32:53 -0600
+Message-ID: <CANLsYkyWLowSk1Zq7oWUzgsF=7FDVwe6XDgA6foWyX0VQwTE4g@mail.gmail.com>
+Subject: Re: [PATCH v6 00/11] remoteproc: stm32: Add support for attaching to M4
+To:     Arnaud POULIQUEN <arnaud.pouliquen@st.com>
+Cc:     "ohad@wizery.com" <ohad@wizery.com>,
+        "bjorn.andersson@linaro.org" <bjorn.andersson@linaro.org>,
+        Loic PALLARDY <loic.pallardy@st.com>,
+        "mcoquelin.stm32@gmail.com" <mcoquelin.stm32@gmail.com>,
+        Alexandre TORGUE <alexandre.torgue@st.com>,
+        "linux-remoteproc@vger.kernel.org" <linux-remoteproc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-stm32@st-md-mailman.stormreply.com" 
+        <linux-stm32@st-md-mailman.stormreply.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/14/20 8:19 PM, Stephen Rothwell wrote:
-> Hi all,
-> 
-> On Tue, 14 Jul 2020 19:21:24 -0400 Qian Cai <cai@lca.pw> wrote:
->>
->> On Sun, Jun 28, 2020 at 09:56:25AM -0400, Guo Xuenan wrote:
->>> It is no need do finish_wait twice after acquiring inflight.
->>>
->>> Signed-off-by: Guo Xuenan <guoxuenan@huawei.com>
->>> ---
->>>  block/blk-rq-qos.c | 2 --
->>>  1 file changed, 2 deletions(-)
->>>
->>> diff --git a/block/blk-rq-qos.c b/block/blk-rq-qos.c
->>> index 656460636ad3..18f3eab9f768 100644
->>> --- a/block/blk-rq-qos.c
->>> +++ b/block/blk-rq-qos.c
->>> @@ -273,8 +273,6 @@ void rq_qos_wait(struct rq_wait *rqw, void *private_data,
->>>  		if (data.got_token)
->>>  			break;
->>>  		if (!has_sleeper && acquire_inflight_cb(rqw, private_data)) {
->>> -			finish_wait(&rqw->wait, &data.wq);
->>> -
->>>  			/*
->>>  			 * We raced with wbt_wake_function() getting a token,
->>>  			 * which means we now have two. Put our local token
->>> -- 
->>> 2.25.4  
->>
->> Reverting this commit fixed an issue that swapping workloads will stall for
->> days without being able to make any progress below.
-> 
-> I have reverted that commit from linux-next today.
+On Wed, 15 Jul 2020 at 00:51, Arnaud POULIQUEN <arnaud.pouliquen@st.com> wrote:
+>
+> Hi Mathieu
+>
+> > -----Original Message-----
+> > From: Mathieu Poirier <mathieu.poirier@linaro.org>
+> > Sent: mardi 14 juillet 2020 22:05
+> > To: ohad@wizery.com; bjorn.andersson@linaro.org; Loic PALLARDY
+> > <loic.pallardy@st.com>; Arnaud POULIQUEN <arnaud.pouliquen@st.com>;
+> > mcoquelin.stm32@gmail.com; Alexandre TORGUE
+> > <alexandre.torgue@st.com>
+> > Cc: linux-remoteproc@vger.kernel.org; linux-kernel@vger.kernel.org; linux-
+> > stm32@st-md-mailman.stormreply.com
+> > Subject: [PATCH v6 00/11] remoteproc: stm32: Add support for attaching to
+> > M4
+> >
+> > This set applies on top of [1] and refactors the STM32 platform code in order
+> > to attach to the M4 remote processor when it has been started by the boot
+> > loader.
+> >
+> > New to V6:
+> > 1) Removed extra newline in patch 06.
+> > 2) Re-worked title and changelog of patch 08 to better reflect
+> >    what is done by the patch.
+> >
+> > Tested on ST's mp157c development board.
+>
+> I don' t know if you don't see  it on last  version or if you prefer that I review your update first... so for the series
 
-Thanks, I'll revert it locally too.
+Ah yes, my apologies on that - I misread the comment you left me in
+00/11 of the V5 set.
 
--- 
-Jens Axboe
-
+>
+> Acked-by: Arnaud Pouliquen <arnaud.pouliquen@st.com>
+>
+> Thanks,
+> Arnaud
+>
+> >
+> > Thanks,
+> > Mathieu
+> >
+> > [1].https://patchwork.kernel.org/project/linux-
+> > remoteproc/list/?series=318275
+> >
+> > Mathieu Poirier (11):
+> >   remoteproc: stm32: Decouple rproc from memory translation
+> >   remoteproc: stm32: Request IRQ with platform device
+> >   remoteproc: stm32: Decouple rproc from DT parsing
+> >   remoteproc: stm32: Remove memory translation from DT parsing
+> >   remoteproc: stm32: Parse syscon that will manage M4 synchronisation
+> >   remoteproc: stm32: Properly set co-processor state when attaching
+> >   remoteproc: Make function rproc_resource_cleanup() public
+> >   remoteproc: stm32: Parse memory regions when attaching to M4
+> >   remoteproc: stm32: Properly handle the resource table when attaching
+> >   remoteproc: stm32: Introduce new attach() operation
+> >   remoteproc: stm32: Update M4 state in stm32_rproc_stop()
+> >
+> >  drivers/remoteproc/remoteproc_core.c |   3 +-
+> >  drivers/remoteproc/stm32_rproc.c     | 214 ++++++++++++++++++++++++--
+> > -
+> >  include/linux/remoteproc.h           |   1 +
+> >  3 files changed, 198 insertions(+), 20 deletions(-)
+> >
+> > --
+> > 2.25.1
+>
