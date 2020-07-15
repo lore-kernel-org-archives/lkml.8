@@ -2,193 +2,91 @@ Return-Path: <SRS0=kup7=A2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C892CC433E3
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 19:14:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3F24C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 19:15:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A4B7D2076C
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 19:14:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594840489;
-	bh=Q92CGkbFmN831vkgF0i/MWKGtX3Qsl9FAaCQx2Pt9DY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=N8qQQ5JK2UPpjx/HP842iEd/zvhdDIvHOMsqbh5orEGVpI0AQCYaipHb4mhXIqIwi
-	 p/XBR9NRnpKm9w0d2blAS+ZpszFiJzWlAs30E8p0y4XSmKm3DG3Mr4Bnx5Jbhljvzv
-	 0pacMWKGuMMIRk3jbcVw2L1L7VvqbQzDDxf7DR8U=
+	by mail.kernel.org (Postfix) with ESMTP id 54E7420771
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 19:15:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=protonmail.com header.i=@protonmail.com header.b="DnRkV5IY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726796AbgGOTOr (ORCPT
+        id S1726858AbgGOTPU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 15:14:47 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:34637 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726491AbgGOTOk (ORCPT
+        Wed, 15 Jul 2020 15:15:20 -0400
+Received: from mail-40136.protonmail.ch ([185.70.40.136]:32871 "EHLO
+        mail-40136.protonmail.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726831AbgGOTPO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 15:14:40 -0400
-Received: by mail-io1-f67.google.com with SMTP id q74so3481687iod.1;
-        Wed, 15 Jul 2020 12:14:40 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=uAYhyJcJRVka9ydt6uo/YHKiTlbjPRvSn1YwW+mkzCw=;
-        b=OlBgYq8k0O+iHOS7TQDylL0OsEDDRYkUWcXljhHrPtyCkT7RsLrXKHwoxDLm2RM2M9
-         N/eNHv98NctvsVcIsNHYK5v0lD2AnGqwDzr9f+XBz10C0mvf4Ed9CaMsB00qpMb/Y9S7
-         DOFFy1aPMTwRHBEuLMDvoBzXN+J7ltLpmnuLjh7Tq1jfKiI25VPshV5/Cz5CgikXs7YQ
-         X0OLKUlWxVq1iK0SCRgRA6q+Kj4FjdXn5Ob5tTneXUykgw2o3Nxv9egtJ6MNa60WxD0/
-         udKvd6TE+inPddSo7dX23jSpCMtD/vBfs3VvnmA8aa/1nku+c8sDP2IBCFMtAoFhitjz
-         P8xg==
-X-Gm-Message-State: AOAM532dTMGvaL2zXyDfv25luTlXk+ygw46uw1m33+uY61zo2AVB7x90
-        XG3YDFfozO+kWMrwlJxFMg==
-X-Google-Smtp-Source: ABdhPJxgvH2KybKM2cWCk8cIHsLk9UbkbEjCygxMcdbxSXzyladjhwGB4UwgszPdx59ugl221+sjgA==
-X-Received: by 2002:a6b:6b18:: with SMTP id g24mr814518ioc.8.1594840479773;
-        Wed, 15 Jul 2020 12:14:39 -0700 (PDT)
-Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id u3sm1530228iol.41.2020.07.15.12.14.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 15 Jul 2020 12:14:38 -0700 (PDT)
-Received: (nullmailer pid 661854 invoked by uid 1000);
-        Wed, 15 Jul 2020 19:14:37 -0000
-Date:   Wed, 15 Jul 2020 13:14:37 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Kathiravan T <kathirav@codeaurora.org>
-Cc:     agross@kernel.org, bjorn.andersson@linaro.org, lgirdwood@gmail.com,
-        broonie@kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        sivaprak@codeaurora.org
-Subject: Re: [PATCH 1/6] dt-bindings: soc: qcom: add YAML schema for SMD-RPM
- driver
-Message-ID: <20200715191437.GA656528@bogus>
-References: <1592550307-11040-1-git-send-email-kathirav@codeaurora.org>
- <1592550307-11040-2-git-send-email-kathirav@codeaurora.org>
+        Wed, 15 Jul 2020 15:15:14 -0400
+Date:   Wed, 15 Jul 2020 19:15:00 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=protonmail.com;
+        s=protonmail; t=1594840502;
+        bh=P/gvWR474i9qth5RZzFqPpPCdgTMcXM/XgN0ab28lYU=;
+        h=Date:To:From:Cc:Reply-To:Subject:From;
+        b=DnRkV5IYwD5QKQyrENU9/lmSOdE+IYr40nYm/Xxk5cMbG9vjjLZQutg//ASCWXLVa
+         FwlxGzPgXvC1sUooE6vCAeYKCmYH3ioqS1Kqq45lIGwiBDxMYH4KRACRddky1VAtS5
+         YvusbL9yXwrS7E+O6IYSqw2JRURgquOz8Ac+SCyE=
+To:     lgirdwood@gmail.com
+From:   Colton Lewis <colton.w.lewis@protonmail.com>
+Cc:     broonie@kernel.org, linux-kernel@vger.kernel.org,
+        Colton Lewis <colton.w.lewis@protonmail.com>
+Reply-To: Colton Lewis <colton.w.lewis@protonmail.com>
+Subject: [PATCH] regulator: Correct kernel-doc inconsistency
+Message-ID: <20200715191438.29312-1-colton.w.lewis@protonmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1592550307-11040-2-git-send-email-kathirav@codeaurora.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 19, 2020 at 12:35:02PM +0530, Kathiravan T wrote:
-> Add YAML schema for the devitree properties used in the SMD-RPM driver.
+Silence documentation build warning by correcting kernel-doc comments.
 
-This is converting, not adding...
+./include/linux/regulator/machine.h:196: warning: Function parameter or mem=
+ber 'max_uV_step' not described in 'regulation_constraints'
+./include/linux/regulator/driver.h:206: warning: Function parameter or memb=
+er 'resume' not described in 'regulator_ops'
 
-> 
-> Signed-off-by: Kathiravan T <kathirav@codeaurora.org>
-> ---
->  .../devicetree/bindings/soc/qcom/qcom,smd-rpm.txt  | 62 ---------------
->  .../devicetree/bindings/soc/qcom/qcom,smd-rpm.yaml | 91 ++++++++++++++++++++++
->  2 files changed, 91 insertions(+), 62 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/soc/qcom/qcom,smd-rpm.txt
->  create mode 100644 Documentation/devicetree/bindings/soc/qcom/qcom,smd-rpm.yaml
+Signed-off-by: Colton Lewis <colton.w.lewis@protonmail.com>
+---
+ include/linux/regulator/driver.h  | 2 +-
+ include/linux/regulator/machine.h | 1 +
+ 2 files changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/include/linux/regulator/driver.h b/include/linux/regulator/dri=
+ver.h
+index 7eb9fea8e482..7258e678d809 100644
+--- a/include/linux/regulator/driver.h
++++ b/include/linux/regulator/driver.h
+@@ -117,7 +117,7 @@ enum regulator_status {
+  *                       suspended.
+  * @set_suspend_mode: Set the operating mode for the regulator when the
+  *                    system is suspended.
+- *
++ * @resume: Resume operation of suspended regulator.
+  * @set_pull_down: Configure the regulator to pull down when the regulator
+  *=09=09   is disabled.
+  *
+diff --git a/include/linux/regulator/machine.h b/include/linux/regulator/ma=
+chine.h
+index a84cc8879c3e..8a56f033b6cd 100644
+--- a/include/linux/regulator/machine.h
++++ b/include/linux/regulator/machine.h
+@@ -101,6 +101,7 @@ struct regulator_state {
+  * @system_load: Load that isn't captured by any consumer requests.
+  *
+  * @max_spread: Max possible spread between coupled regulators
++ * @max_uV_step: Max possible step change in voltage
+  * @valid_modes_mask: Mask of modes which may be configured by consumers.
+  * @valid_ops_mask: Operations which may be performed by consumers.
+  *
+--=20
+2.26.2
 
 
-> diff --git a/Documentation/devicetree/bindings/soc/qcom/qcom,smd-rpm.yaml b/Documentation/devicetree/bindings/soc/qcom/qcom,smd-rpm.yaml
-> new file mode 100644
-> index 00000000..5b33def
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/soc/qcom/qcom,smd-rpm.yaml
-> @@ -0,0 +1,91 @@
-> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: "http://devicetree.org/schemas/soc/qcom/qcom,smd-rpm.yaml#"
-> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
-> +
-> +title: Qualcomm Resource Power Manager (RPM) over SMD
-> +
-> +description: |
-> +  This driver is used to interface with the Resource Power Manager (RPM) found
-> +  in various Qualcomm platforms. The RPM allows each component in the system
-> +  to vote for state of the system resources, such as clocks, regulators and bus
-> +  frequencies.
-> +
-> +  The SMD information for the RPM edge should be filled out.  See qcom,smd.txt
-> +  for the required edge properties.  All SMD related properties will reside
-> +  within the RPM node itself.
-> +
-> +  The RPM exposes resources to its subnodes.  The rpm_requests node must be
-> +  present and this subnode may contain children that designate regulator
-> +  resources.
-> +
-> +  Refer to Documentation/devicetree/bindings/regulator/qcom,smd-rpm-regulator.txt
-> +  for information on the regulator subnodes that can exist under the
-> +  rpm_requests.
-> +
-> +maintainers:
-> +  - Kathiravan T <kathirav@codeaurora.org>
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - qcom,rpm-apq8084
-> +      - qcom,rpm-msm8916
-> +      - qcom,rpm-msm8974
-> +      - qcom,rpm-msm8976
-> +      - qcom,rpm-msm8996
-> +      - qcom,rpm-msm8998
-> +      - qcom,rpm-sdm660
-> +      - qcom,rpm-qcs404
-> +
-> +  qcom,smd-channels:
-> +    $ref: /schemas/types.yaml#/definitions/string-array
-> +    description: Channel name used for the RPM communication
-> +    items:
-> +      - const: rpm_requests
-> +
-> +if:
-> +  properties:
-> +    compatible:
-> +      contains:
-> +        enum:
-> +          - qcom,rpm-apq8084
-> +          - qcom,rpm-msm8916
-> +          - qcom,rpm-msm8974
-> +then:
-> +  required:
-> +    - qcom,smd-channels
-> +
-> +required:
-> +  - compatible
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    soc {
-> +        #address-cells = <1>;
-> +        #size-cells = <1>;
-> +        apcs: syscon@f9011000 {
-> +              compatible = "syscon";
-> +              reg = <0xf9011000 0x1000>;
-> +        };
-> +    };
-
-Drop this node. The use of 'syscon' alone is not valid and will now 
-generate warnings with what I have queued for 5.9.
-
-> +    smd {
-> +        compatible = "qcom,smd";
-> +
-> +        rpm {
-> +            interrupts = <0 168 1>;
-> +            qcom,ipc = <&apcs 8 0>;
-> +            qcom,smd-edge = <15>;
-> +
-> +                rpm_requests {
-> +                        compatible = "qcom,rpm-msm8974";
-> +                        qcom,smd-channels = "rpm_requests";
-> +
-> +                        /* Regulator nodes to follow */
-> +                };
-> +            };
-> +     };
-> +...
-> -- 
-> QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
-> 
