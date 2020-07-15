@@ -2,129 +2,163 @@ Return-Path: <SRS0=kup7=A2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16CC1C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 09:55:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 724C2C433E4
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 09:51:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E43872076C
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 09:55:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4AEB82064B
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 09:51:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="JME1/EPE"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="yusml1W+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730935AbgGOJze (ORCPT
+        id S1730903AbgGOJvC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 05:55:34 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:24852 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726687AbgGOJzd (ORCPT
+        Wed, 15 Jul 2020 05:51:02 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:53322 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730755AbgGOJvB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 05:55:33 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1594806932;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=bgMe+PJv6EbNNW+M57oHn+BOmr98gpSCFa9M9x7OmkA=;
-        b=JME1/EPEAn+n8K8raJ7zX7a3I3yw0ljinDAOowThUG0Ra4BFQLIJ+yJIbDdMuqqt54Sluk
-        SAP0dU6L/NLU0LIk2fb0zonflUVsPrzB5OgY9ZVKS6GR0l6Qzd0MNpWaAFXixUFCAqEic1
-        I87n78pgr80ocZJaDQ+gUbOWJNumEWU=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-453-bKF6v7lJM_29bnIZfmmQqg-1; Wed, 15 Jul 2020 05:55:30 -0400
-X-MC-Unique: bKF6v7lJM_29bnIZfmmQqg-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id E05911083E83;
-        Wed, 15 Jul 2020 09:55:28 +0000 (UTC)
-Received: from starship.f32vm (unknown [10.35.206.178])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id C98EB710A0;
-        Wed, 15 Jul 2020 09:55:19 +0000 (UTC)
-From:   Maxim Levitsky <mlevitsk@redhat.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Stefan Hajnoczi <stefanha@redhat.com>,
-        linux-block@vger.kernel.org (open list:BLOCK LAYER),
-        virtualization@lists.linux-foundation.org (open list:VIRTIO CORE AND
-        NET DRIVERS), Paolo Bonzini <pbonzini@redhat.com>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Jason Wang <jasowang@redhat.com>, Jens Axboe <axboe@kernel.dk>,
-        Maxim Levitsky <mlevitsk@redhat.com>
-Subject: [PATCH] virtio-blk: check host supplied logical block size
-Date:   Wed, 15 Jul 2020 12:55:18 +0300
-Message-Id: <20200715095518.3724-1-mlevitsk@redhat.com>
+        Wed, 15 Jul 2020 05:51:01 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06F9mSh7176609;
+        Wed, 15 Jul 2020 09:50:48 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2020-01-29;
+ bh=L1fC24AO0mFGrHZ+aeKv7ArHLZSEsoi+M3DofTmccgo=;
+ b=yusml1W+ItxebkMydFTO6Lu0XB7PqaZ7ZytBPghep5MTwdPUvM85wje7wtukJRhtHKBK
+ daFyp0vFfmaN/h/NSJ8Mx0Ic9bC9ClTp0aDxjMo5hyybbASJu3MqJuQ5H0UWt/mLFjw2
+ Hta5Ub3rxsvTvqBP0hGW7Mp+mi+SQa15sFzHcBAtAT+rlh5xbvXqeUD5xmYFNvtddex5
+ vDk7hceohFW8rhK5ZgQzUWgV3x5VFqNzN3pggi6dWBoZ76Ri+9pRrEeILe3s9NUMGZyd
+ r0mg8pLLZxDdGpSnaPLMBrBbB662aZM31X6AvahJgcxxIPnsh2SxaJSxZzJqByqFxMDw kg== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by aserp2120.oracle.com with ESMTP id 3275cmac7e-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 15 Jul 2020 09:50:48 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06F9ldJH118956;
+        Wed, 15 Jul 2020 09:48:47 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by userp3020.oracle.com with ESMTP id 327q6u3f6m-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 15 Jul 2020 09:48:47 +0000
+Received: from abhmp0012.oracle.com (abhmp0012.oracle.com [141.146.116.18])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 06F9miY4015244;
+        Wed, 15 Jul 2020 09:48:44 GMT
+Received: from kadam (/41.57.98.10)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 15 Jul 2020 02:48:44 -0700
+Date:   Wed, 15 Jul 2020 12:48:36 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+Cc:     Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        George Kennedy <george.kennedy@oracle.com>,
+        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        syzbot <syzbot+e5fd3e65515b48c02a30@syzkaller.appspotmail.com>
+Subject: Re: [PATCH v2] fbdev: Detect integer underflow at "struct
+ fbcon_ops"->clear_margins.
+Message-ID: <20200715094836.GD2571@kadam>
+References: <adff5d10-fe35-62d4-74c5-182958c5ada7@i-love.sakura.ne.jp>
+ <20200715015102.3814-1-penguin-kernel@I-love.SAKURA.ne.jp>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200715015102.3814-1-penguin-kernel@I-love.SAKURA.ne.jp>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9682 signatures=668680
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 suspectscore=0
+ phishscore=0 malwarescore=0 mlxlogscore=999 bulkscore=0 mlxscore=0
+ spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2007150081
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9682 signatures=668680
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 priorityscore=1501
+ bulkscore=0 adultscore=0 lowpriorityscore=0 phishscore=0 spamscore=0
+ impostorscore=0 malwarescore=0 mlxlogscore=999 clxscore=1011 mlxscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2007150081
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Linux kernel only supports logical block sizes which are power of two,
-at least 512 bytes and no more that PAGE_SIZE.
+On Wed, Jul 15, 2020 at 10:51:02AM +0900, Tetsuo Handa wrote:
+> syzbot is reporting general protection fault in bitfill_aligned() [1]
+> caused by integer underflow in bit_clear_margins(). The cause of this
+> problem is when and how do_vc_resize() updates vc->vc_{cols,rows}.
+> 
+> If vc_do_resize() fails (e.g. kzalloc() fails) when var.xres or var.yres
+> is going to shrink, vc->vc_{cols,rows} will not be updated. This allows
+> bit_clear_margins() to see info->var.xres < (vc->vc_cols * cw) or
+> info->var.yres < (vc->vc_rows * ch). Unexpectedly large rw or bh will
+> try to overrun the __iomem region and causes general protection fault.
+> 
+> Also, vc_resize(vc, 0, 0) does not set vc->vc_{cols,rows} = 0 due to
+> 
+>   new_cols = (cols ? cols : vc->vc_cols);
+>   new_rows = (lines ? lines : vc->vc_rows);
+> 
+> exception. Since cols and lines are calculated as
+> 
+>   cols = FBCON_SWAP(ops->rotate, info->var.xres, info->var.yres);
+>   rows = FBCON_SWAP(ops->rotate, info->var.yres, info->var.xres);
+>   cols /= vc->vc_font.width;
+>   rows /= vc->vc_font.height;
+>   vc_resize(vc, cols, rows);
+> 
+> in fbcon_modechanged(), var.xres < vc->vc_font.width makes cols = 0
+> and var.yres < vc->vc_font.height makes rows = 0. This means that
+> 
+>   const int fd = open("/dev/fb0", O_ACCMODE);
+>   struct fb_var_screeninfo var = { };
+>   ioctl(fd, FBIOGET_VSCREENINFO, &var);
+>   var.xres = var.yres = 1;
+>   ioctl(fd, FBIOPUT_VSCREENINFO, &var);
+> 
+> easily reproduces integer underflow bug explained above.
+> 
+> Of course, callers of vc_resize() are not handling vc_do_resize() failure
+> is bad. But we can't avoid vc_resize(vc, 0, 0) which returns 0. Therefore,
+> as a band-aid workaround, this patch checks integer underflow in
+> "struct fbcon_ops"->clear_margins call, assuming that
+> vc->vc_cols * vc->vc_font.width and vc->vc_rows * vc->vc_font.heigh do not
+> cause integer overflow.
+> 
+> [1] https://syzkaller.appspot.com/bug?id=a565882df74fa76f10d3a6fec4be31098dbb37c6
+> 
+> Reported-and-tested-by: syzbot <syzbot+e5fd3e65515b48c02a30@syzkaller.appspotmail.com>
+> Signed-off-by: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+> ---
+>  drivers/video/fbdev/core/bitblit.c   | 4 ++--
+>  drivers/video/fbdev/core/fbcon_ccw.c | 4 ++--
+>  drivers/video/fbdev/core/fbcon_cw.c  | 4 ++--
+>  drivers/video/fbdev/core/fbcon_ud.c  | 4 ++--
+>  4 files changed, 8 insertions(+), 8 deletions(-)
+> 
+> diff --git a/drivers/video/fbdev/core/bitblit.c b/drivers/video/fbdev/core/bitblit.c
+> index ca935c09a261..35ebeeccde4d 100644
+> --- a/drivers/video/fbdev/core/bitblit.c
+> +++ b/drivers/video/fbdev/core/bitblit.c
+> @@ -216,7 +216,7 @@ static void bit_clear_margins(struct vc_data *vc, struct fb_info *info,
+>  	region.color = color;
+>  	region.rop = ROP_COPY;
+>  
+> -	if (rw && !bottom_only) {
+> +	if ((int) rw > 0 && !bottom_only) {
+>  		region.dx = info->var.xoffset + rs;
+                            ^^^^^^^^^^^^^^^^^^^^^^
 
-Check this instead of crashing later on.
+If you choose a very high positive "rw" then this addition can overflow.
+info->var.xoffset comes from the user and I don't think it's checked...
 
-Note that there is no need to check physical block size since it is
-only a hint, and virtio-blk already only supports power of two values.
-
-Bugzilla link: https://bugzilla.redhat.com/show_bug.cgi?id=1664619
-
-Signed-off-by: Maxim Levitsky <mlevitsk@redhat.com>
----
- drivers/block/virtio_blk.c | 20 ++++++++++++++++++--
- 1 file changed, 18 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/block/virtio_blk.c b/drivers/block/virtio_blk.c
-index 980df853ee497..36dda31cc4e96 100644
---- a/drivers/block/virtio_blk.c
-+++ b/drivers/block/virtio_blk.c
-@@ -681,6 +681,12 @@ static const struct blk_mq_ops virtio_mq_ops = {
- static unsigned int virtblk_queue_depth;
- module_param_named(queue_depth, virtblk_queue_depth, uint, 0444);
- 
-+
-+static bool virtblk_valid_block_size(unsigned int blksize)
-+{
-+	return blksize >= 512 && blksize <= PAGE_SIZE && is_power_of_2(blksize);
-+}
-+
- static int virtblk_probe(struct virtio_device *vdev)
- {
- 	struct virtio_blk *vblk;
-@@ -809,9 +815,16 @@ static int virtblk_probe(struct virtio_device *vdev)
- 	err = virtio_cread_feature(vdev, VIRTIO_BLK_F_BLK_SIZE,
- 				   struct virtio_blk_config, blk_size,
- 				   &blk_size);
--	if (!err)
-+	if (!err) {
-+		if (!virtblk_valid_block_size(blk_size)) {
-+			dev_err(&vdev->dev,
-+				"%s failure: unsupported logical block size %d\n",
-+				__func__, blk_size);
-+			err = -EINVAL;
-+			goto out_cleanup_queue;
-+		}
- 		blk_queue_logical_block_size(q, blk_size);
--	else
-+	} else
- 		blk_size = queue_logical_block_size(q);
- 
- 	/* Use topology information if available */
-@@ -872,6 +885,9 @@ static int virtblk_probe(struct virtio_device *vdev)
- 	device_add_disk(&vdev->dev, vblk->disk, virtblk_attr_groups);
- 	return 0;
- 
-+out_cleanup_queue:
-+	blk_cleanup_queue(vblk->disk->queue);
-+	vblk->disk->queue = NULL;
- out_free_tags:
- 	blk_mq_free_tag_set(&vblk->tag_set);
- out_put_disk:
--- 
-2.26.2
+regards,
+dan carpenter
 
