@@ -7,40 +7,51 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBAA6C433EB
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 12:49:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1581CC433ED
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 12:49:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 96B2020578
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 12:49:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E568F20658
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 12:49:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="p31QfGJi"
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="pqQHNtg/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731362AbgGOMs7 (ORCPT
+        id S1731378AbgGOMtC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 08:48:59 -0400
-Received: from perceval.ideasonboard.com ([213.167.242.64]:60234 "EHLO
+        Wed, 15 Jul 2020 08:49:02 -0400
+Received: from perceval.ideasonboard.com ([213.167.242.64]:60220 "EHLO
         perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731325AbgGOMsz (ORCPT
+        with ESMTP id S1731318AbgGOMsz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 15 Jul 2020 08:48:55 -0400
 Received: from Q.local (cpc89242-aztw30-2-0-cust488.18-1.cable.virginm.net [86.31.129.233])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id B4630564;
-        Wed, 15 Jul 2020 14:48:53 +0200 (CEST)
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 2101FE41;
+        Wed, 15 Jul 2020 14:48:51 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1594817334;
-        bh=JAoja8y90Xy1LA7xMhyZO7bkk+OVjLIs4Sokc2AZVl8=;
+        s=mail; t=1594817331;
+        bh=kFIqceJw8NJZHT+p2m2bRFvh6h9ZXyO/LjXEWTcfRHw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=p31QfGJiiHK3OXiQ9t9Ho+Ehnjj//bbFf/LBRwbXZXkykpyJ/aOirn7qRan2/3HUb
-         EBt63jNmXPYlkFFf8fBS6VL7ZLzIWqYYZU1Mz44q6gTRoTXN0T/r300BCQi/a8KOkc
-         o1KIOmP5YQGLf6/zY6U1T+zQBvInnJBA1cNwXRGI=
+        b=pqQHNtg/IkjKuIO0R4p0XOGb/rHonJ4HsTDFkXA/K42MVA2dd7Z7R8WTOViv82kyY
+         y5aaX4/rlvjNjECzMX72xCkoYu4CZcVOpO3kQd92tUFZGCYOTWUIH5xw+wxFwp04r4
+         OJ31alJ95QdwDj+3pitjPlvHijwo87233OzrJjGc=
 From:   Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
 To:     trivial@kernel.org
 Cc:     Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
-        Jason Baron <jbaron@akamai.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Wenwen Wang <wenwen@cs.uga.edu>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        ath10k@lists.infradead.org (open list:QUALCOMM ATHEROS ATH10K WIRELESS
+        DRIVER),
+        linux-wireless@vger.kernel.org (open list:NETWORKING DRIVERS (WIRELESS)),
+        netdev@vger.kernel.org (open list:NETWORKING DRIVERS),
         linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH v2 5/8] include: dynamic_debug.h: Fix trivial spelling
-Date:   Wed, 15 Jul 2020 13:48:36 +0100
-Message-Id: <20200715124839.252822-6-kieran.bingham+renesas@ideasonboard.com>
+Subject: [PATCH v2 4/8] drivers: net: wireless: Fix trivial spelling
+Date:   Wed, 15 Jul 2020 13:48:35 +0100
+Message-Id: <20200715124839.252822-5-kieran.bingham+renesas@ideasonboard.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200715124839.252822-1-kieran.bingham+renesas@ideasonboard.com>
 References: <20200715124839.252822-1-kieran.bingham+renesas@ideasonboard.com>
@@ -54,29 +65,54 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 The word 'descriptor' is misspelled throughout the tree.
 
 Fix it up accordingly:
-    decriptor -> descriptor
+    decriptors -> descriptors
 
 Signed-off-by: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
 ---
-v2:
- - Fix commit message to reflect actual word replaced
----
- include/linux/dynamic_debug.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/wireless/ath/ath10k/usb.c | 2 +-
+ drivers/net/wireless/ath/ath6kl/usb.c | 2 +-
+ drivers/net/wireless/cisco/airo.c     | 2 +-
+ 3 files changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/include/linux/dynamic_debug.h b/include/linux/dynamic_debug.h
-index abcd5fde30eb..a06ef7380b2d 100644
---- a/include/linux/dynamic_debug.h
-+++ b/include/linux/dynamic_debug.h
-@@ -133,7 +133,7 @@ void __dynamic_ibdev_dbg(struct _ddebug *descriptor,
+diff --git a/drivers/net/wireless/ath/ath10k/usb.c b/drivers/net/wireless/ath/ath10k/usb.c
+index b7daf344d012..05a620ff6fe2 100644
+--- a/drivers/net/wireless/ath/ath10k/usb.c
++++ b/drivers/net/wireless/ath/ath10k/usb.c
+@@ -824,7 +824,7 @@ static int ath10k_usb_setup_pipe_resources(struct ath10k *ar,
  
- /*
-  * "Factory macro" for generating a call to func, guarded by a
-- * DYNAMIC_DEBUG_BRANCH. The dynamic debug decriptor will be
-+ * DYNAMIC_DEBUG_BRANCH. The dynamic debug descriptor will be
-  * initialized using the fmt argument. The function will be called with
-  * the address of the descriptor as first argument, followed by all
-  * the varargs. Note that fmt is repeated in invocations of this
+ 	ath10k_dbg(ar, ATH10K_DBG_USB, "usb setting up pipes using interface\n");
+ 
+-	/* walk decriptors and setup pipes */
++	/* walk descriptors and setup pipes */
+ 	for (i = 0; i < iface_desc->desc.bNumEndpoints; ++i) {
+ 		endpoint = &iface_desc->endpoint[i].desc;
+ 
+diff --git a/drivers/net/wireless/ath/ath6kl/usb.c b/drivers/net/wireless/ath/ath6kl/usb.c
+index 53b66e9434c9..5372e948e761 100644
+--- a/drivers/net/wireless/ath/ath6kl/usb.c
++++ b/drivers/net/wireless/ath/ath6kl/usb.c
+@@ -311,7 +311,7 @@ static int ath6kl_usb_setup_pipe_resources(struct ath6kl_usb *ar_usb)
+ 
+ 	ath6kl_dbg(ATH6KL_DBG_USB, "setting up USB Pipes using interface\n");
+ 
+-	/* walk decriptors and setup pipes */
++	/* walk descriptors and setup pipes */
+ 	for (i = 0; i < iface_desc->desc.bNumEndpoints; ++i) {
+ 		endpoint = &iface_desc->endpoint[i].desc;
+ 
+diff --git a/drivers/net/wireless/cisco/airo.c b/drivers/net/wireless/cisco/airo.c
+index 827bb6d74815..e3ad77666ba8 100644
+--- a/drivers/net/wireless/cisco/airo.c
++++ b/drivers/net/wireless/cisco/airo.c
+@@ -2450,7 +2450,7 @@ static void mpi_unmap_card(struct pci_dev *pci)
+ 
+ /*************************************************************
+  *  This routine assumes that descriptors have been setup .
+- *  Run at insmod time or after reset  when the decriptors
++ *  Run at insmod time or after reset when the descriptors
+  *  have been initialized . Returns 0 if all is well nz
+  *  otherwise . Does not allocate memory but sets up card
+  *  using previously allocated descriptors.
 -- 
 2.25.1
 
