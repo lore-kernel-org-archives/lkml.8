@@ -2,144 +2,129 @@ Return-Path: <SRS0=kup7=A2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBBF4C433E5
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 15:35:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4194C433E4
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 15:36:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 949AE2065E
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 15:35:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594827329;
-	bh=V0qtRgykR9Neq4cw4rdJ3cYTxglIaj33jScC8Ln97aw=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=oKq8jlq09pAFCFbOlyhscY2BbANrbvZf41vHG4mVOAmOnjc/qaPODpjEXiWYR8TK1
-	 qzknDLv8mZWi51ozYz2Ypz6zBbvTLPb1PNVBOUeZxa6sq2b/svVY4hycyT+WceayHo
-	 fru0kY8msLnu4E6hNIH8ZZjgeiG/8lSda9vfsbvs=
+	by mail.kernel.org (Postfix) with ESMTP id C060A2065E
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 15:36:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WcIywgf/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727114AbgGOPf2 (ORCPT
+        id S1726878AbgGOPgM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 11:35:28 -0400
-Received: from mail-oo1-f68.google.com ([209.85.161.68]:35911 "EHLO
-        mail-oo1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725770AbgGOPf1 (ORCPT
+        Wed, 15 Jul 2020 11:36:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33562 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725770AbgGOPgM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 11:35:27 -0400
-Received: by mail-oo1-f68.google.com with SMTP id z127so550324ooa.3;
-        Wed, 15 Jul 2020 08:35:27 -0700 (PDT)
+        Wed, 15 Jul 2020 11:36:12 -0400
+Received: from mail-ed1-x543.google.com (mail-ed1-x543.google.com [IPv6:2a00:1450:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C411DC061755;
+        Wed, 15 Jul 2020 08:36:11 -0700 (PDT)
+Received: by mail-ed1-x543.google.com with SMTP id g20so1932544edm.4;
+        Wed, 15 Jul 2020 08:36:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ldTR/KsOkvUXfFE3oIwY06p1m96PfAnxhTKvRebiJFk=;
+        b=WcIywgf/5yGovAVSIjXD9OIB0Yx1Lqe39sKQcKnE0bhl7NpHMP3wyUyXsz76eznoDN
+         kLjzcwlopVjThClxHuAyihsZX8FPaEHuAR07Xs+vzRHSsrUbJI0eICfPyJGZKPi/QsKZ
+         mmZYeZuAvUsvxgkbItIok1s8pKt4mmzBtXk9cwHdKDPanj9nt1L5t+ZuHliLF00lGmDj
+         sgGGTAONqoqLI9wypqeA5drEqMm5oVMEDqzFIsWfOobV+z2oJKOnAPiPglVQaa4qup8s
+         aimYRQqb3HkkSb9UJ3FCrUOw7rkvO35YQrAjHrLTkQRICmx+aHtbSrz7ehlxcrNUKK9x
+         axwQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=+lRS/tWjF+I7awdCql4jqwqaHB+t8A414qDcPmgKQpY=;
-        b=c2qVcQeaQB/dHqFZxebtn/y0Yxpa9rRzUqP9YgqFxd+gb+isVyNvcZ6Zk9wU7j4ZO3
-         maD3LbMeCozUolAX6CCFxuIfvTjKEXH5/SAidNTRxl/BlTpjwyx3SFy6EHzdQDDPEOpr
-         tbAInZ7vVmrZ4OfCpKSH82jOMOJ6cneFtruvlg8rW9VcryHXsO5+D+C7uySFzGZVJvr3
-         TQVLWblN0tVMWCJzE9mIRhHL1dtc3HRwHIKv0j8iKLyXeIaP7l46P4Wt2lruoOQjP504
-         ivBjSBe0dgidh4MkuVytCa8EiWa4x5O8bxrmbo7DjF+mYF+YmD0hhckOYvgahMMsrmup
-         pSGg==
-X-Gm-Message-State: AOAM531p03m+zDWtJgDTnPxoRMOdLKl3cVImmnXvMtNNqmJtVO23UzJ7
-        Itp+DvEyFwZDMjswu+EOIqCgv3lb4584V6yzQ9Q=
-X-Google-Smtp-Source: ABdhPJx2GJR5NbirfZQYle2m74jHodHyWXkLAVZ4Al4BzULCempQvTyGmEvulXneNhcu36SBd/LUki2wPRk7m97876k=
-X-Received: by 2002:a4a:9552:: with SMTP id n18mr9927340ooi.1.1594827327053;
- Wed, 15 Jul 2020 08:35:27 -0700 (PDT)
+        bh=ldTR/KsOkvUXfFE3oIwY06p1m96PfAnxhTKvRebiJFk=;
+        b=gQ0XgMnJ9kus4pHurSEm0wdnrdUhN4vb/1c8UPemjVzXd2S2EpPNxLlTp0apwiqgQR
+         +nAv2yFLteaOfb22DD3gs2HskF9o8A4JtgviHGTrjGHbok7qJoVwffz95y1FhyMaNsjs
+         iGDlujgMa7MAPEXip87nqzhuIinyxjgZbGbzVaUrKaY/2DSNLJUnewj81AXdUv2hA42T
+         r9BgyLC78sKMS+5x+2dcujIthhkOPYrM9Cc/R8sDllek8c/UreJzrhuqQcdD1P/nNPRL
+         bSsdYPj4+CaZ+avd9sQrxnAjE73gaM3xeHVrH4uqycEuH/hoFSlAS9JHdBBUHug9xA59
+         BUYg==
+X-Gm-Message-State: AOAM5300h6fXWjwjGPwqSDswQJRT/qJxXqAbFr4rzdO8uX4T1mB+iEdQ
+        1V/IqG3WCtXHkfNUSywOCQzxS7GN3JZDPlhKtXw=
+X-Google-Smtp-Source: ABdhPJwUDgryr+uwNIkAcro/MFjmRNEHds+xBye6alkuUKRwQY/Ip2yfUIBYAYZ0SbfRqlleTEVLIvRkwjo+QnLxV+0=
+X-Received: by 2002:a50:cd1a:: with SMTP id z26mr209684edi.120.1594827370435;
+ Wed, 15 Jul 2020 08:36:10 -0700 (PDT)
 MIME-Version: 1.0
-References: <cover.1594790493.git.yu.c.chen@intel.com> <9c261b5001c853006e4fe719726948dfe3b4d487.1594790493.git.yu.c.chen@intel.com>
-In-Reply-To: <9c261b5001c853006e4fe719726948dfe3b4d487.1594790493.git.yu.c.chen@intel.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Wed, 15 Jul 2020 17:35:16 +0200
-Message-ID: <CAJZ5v0ikdBn-hunahd_jtawizTHra5iZ4Ff4q=C2ip6HOeGV7w@mail.gmail.com>
-Subject: Re: [PATCH 1/2][RESEND v3] PM-runtime: Move all runtime usage related
- function to runtime.c
-To:     Chen Yu <yu.c.chen@intel.com>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        Len Brown <len.brown@intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Michal Miroslaw <mirq-linux@rere.qmqm.pl>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <1594644106-22449-1-git-send-email-akhilpo@codeaurora.org>
+In-Reply-To: <1594644106-22449-1-git-send-email-akhilpo@codeaurora.org>
+From:   Rob Clark <robdclark@gmail.com>
+Date:   Wed, 15 Jul 2020 08:36:43 -0700
+Message-ID: <CAF6AEGtAEwZbWxLb4MxaWNswvtrFbLK+N0Fez2XYr7odKZffWA@mail.gmail.com>
+Subject: Re: [PATCH v5 0/6] Add support for GPU DDR BW scaling
+To:     Akhil P Oommen <akhilpo@codeaurora.org>
+Cc:     freedreno <freedreno@lists.freedesktop.org>,
+        dri-devel@freedesktop.org,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Jordan Crouse <jcrouse@codeaurora.org>,
+        Sharat Masetty <smasetty@codeaurora.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, Matthias Kaehlcke <mka@chromium.org>,
+        saravanak@google.com, Sibi Sankar <sibis@codeaurora.org>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Jonathan <jonathan@marek.ca>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 15, 2020 at 8:26 AM Chen Yu <yu.c.chen@intel.com> wrote:
+On Mon, Jul 13, 2020 at 5:41 AM Akhil P Oommen <akhilpo@codeaurora.org> wrote:
 >
-> In order to track all the runtime usage count change, move the code
-> related to runtime usage count change from pm_runtime.h to runtime.c,
-> so that in runtime.c we can leverage trace event to do the tracking.
-> Meanwhile export pm_runtime_get_noresume() and pm_runtime_put_noidle()
-> so the module can use them.
+> This series adds support for GPU DDR bandwidth scaling and is based on the
+> bindings from Georgi [1]. This is mostly a rebase of Sharat's patches [2] on the
+> tip of msm-next branch.
 >
-> No functional changes intended.
+> Changes from v4:
+> - Squashed a patch to another one to fix Jonathan's comment
+> - Add back the pm_runtime_get_if_in_use() check
 >
-> Signed-off-by: Chen Yu <yu.c.chen@intel.com>
-> ---
->  drivers/base/power/runtime.c | 12 ++++++++++++
->  include/linux/pm_runtime.h   | 12 ++----------
->  2 files changed, 14 insertions(+), 10 deletions(-)
+> Changes from v3:
+> - Rebased on top of Jonathan's patch which adds support for changing gpu freq
+> through hfi on newer targets
+> - As suggested by Rob, left the icc_path intact for pre-a6xx GPUs
 >
-> diff --git a/drivers/base/power/runtime.c b/drivers/base/power/runtime.c
-> index 9f62790f644c..85a248e196ca 100644
-> --- a/drivers/base/power/runtime.c
-> +++ b/drivers/base/power/runtime.c
-> @@ -1738,6 +1738,18 @@ void pm_runtime_drop_link(struct device *dev)
->         spin_unlock_irq(&dev->power.lock);
->  }
+> [1] https://kernel.googlesource.com/pub/scm/linux/kernel/git/vireshk/pm/+log/opp/linux-next/
+> [2] https://patchwork.freedesktop.org/series/75291/
 >
-> +void pm_runtime_get_noresume(struct device *dev)
-> +{
-> +       atomic_inc(&dev->power.usage_count);
-> +}
-> +EXPORT_SYMBOL_GPL(pm_runtime_get_noresume);
-> +
-> +void pm_runtime_put_noidle(struct device *dev)
-> +{
-> +       atomic_add_unless(&dev->power.usage_count, -1, 0);
-> +}
-> +EXPORT_SYMBOL_GPL(pm_runtime_put_noidle);
+> Sharat Masetty (6):
+>   dt-bindings: drm/msm/gpu: Document gpu opp table
+>   drm: msm: a6xx: send opp instead of a frequency
+>   drm: msm: a6xx: use dev_pm_opp_set_bw to scale DDR
+>   arm64: dts: qcom: SDM845: Enable GPU DDR bw scaling
+>   arm64: dts: qcom: sc7180: Add interconnects property for GPU
+>   arm64: dts: qcom: sc7180: Add opp-peak-kBps to GPU opp
 
-I honestly don't think that this is going in the right direction.
+I can take the first two into msm-next, the 3rd will need to wait
+until dev_pm_opp_set_bw() lands
 
-> +
->  static bool pm_runtime_need_not_resume(struct device *dev)
->  {
->         return atomic_read(&dev->power.usage_count) <= 1 &&
-> diff --git a/include/linux/pm_runtime.h b/include/linux/pm_runtime.h
-> index 3dbc207bff53..26510fef2acd 100644
-> --- a/include/linux/pm_runtime.h
-> +++ b/include/linux/pm_runtime.h
-> @@ -59,6 +59,8 @@ extern void pm_runtime_get_suppliers(struct device *dev);
->  extern void pm_runtime_put_suppliers(struct device *dev);
->  extern void pm_runtime_new_link(struct device *dev);
->  extern void pm_runtime_drop_link(struct device *dev);
-> +extern void pm_runtime_get_noresume(struct device *dev);
-> +extern void pm_runtime_put_noidle(struct device *dev);
+Bjorn, I assume you take the last three?
+
+BR,
+-R
+
 >
->  static inline int pm_runtime_get_if_in_use(struct device *dev)
->  {
-> @@ -70,16 +72,6 @@ static inline void pm_suspend_ignore_children(struct device *dev, bool enable)
->         dev->power.ignore_children = enable;
->  }
+>  .../devicetree/bindings/display/msm/gpu.txt        |  28 ++++++
+>  arch/arm64/boot/dts/qcom/sc7180.dtsi               |   9 ++
+>  arch/arm64/boot/dts/qcom/sdm845.dtsi               |   9 ++
+>  drivers/gpu/drm/msm/adreno/a6xx_gmu.c              | 108 ++++++++++++---------
+>  drivers/gpu/drm/msm/adreno/a6xx_gpu.h              |   2 +-
+>  drivers/gpu/drm/msm/msm_gpu.c                      |   3 +-
+>  drivers/gpu/drm/msm/msm_gpu.h                      |   3 +-
+>  7 files changed, 112 insertions(+), 50 deletions(-)
 >
-> -static inline void pm_runtime_get_noresume(struct device *dev)
-> -{
-> -       atomic_inc(&dev->power.usage_count);
-> -}
-> -
-> -static inline void pm_runtime_put_noidle(struct device *dev)
-> -{
-> -       atomic_add_unless(&dev->power.usage_count, -1, 0);
-> -}
-> -
->  static inline bool pm_runtime_suspended(struct device *dev)
->  {
->         return dev->power.runtime_status == RPM_SUSPENDED
 > --
-> 2.17.1
+> 2.7.4
 >
