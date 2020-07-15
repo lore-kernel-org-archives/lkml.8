@@ -2,566 +2,179 @@ Return-Path: <SRS0=kup7=A2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DF37C433E4
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 00:41:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F31FC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 00:37:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 46C1220674
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 00:41:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F78F20674
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 00:37:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="nQAtCVzU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728123AbgGOAlp (ORCPT
+        id S1728043AbgGOAhB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 20:41:45 -0400
-Received: from mail-qk1-f194.google.com ([209.85.222.194]:32957 "EHLO
-        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728005AbgGOAlm (ORCPT
+        Tue, 14 Jul 2020 20:37:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36044 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726893AbgGOAhB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 20:41:42 -0400
-Received: by mail-qk1-f194.google.com with SMTP id j80so311431qke.0
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 17:41:40 -0700 (PDT)
+        Tue, 14 Jul 2020 20:37:01 -0400
+Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E161BC061755
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 17:37:00 -0700 (PDT)
+Received: by mail-wm1-x344.google.com with SMTP id o8so2326226wmh.4
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 17:37:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=fyYHKBAEzWizf9raS+o1+KdK49GqNrkiRZGBEtob6wU=;
+        b=nQAtCVzUhpS93taxTWnLXkxMV9e8LFmbTxpMYPt3h4S9PC7WSh9WDOpFBH2ssKXCKW
+         1ysNRALjweghfM0buYTQz0ODi9le7f692CurPwnafhsGQcEIXOiDOnIs6ZGSjyxtPACs
+         1QGfzPgg9a01ouhFHRnyd9VF7slLelIIXll67D5oW+uFNFWqkLh7Axk5nzir/NKmqww8
+         9a2hzfW3LtdDfhEQudTbg/m12LJzChK1bj+i0RMgED4cEwCGGs82ZASilgAmT9VbKoCI
+         pRxgPSqcJQ8LkK36otymqsFjkBYyJUlcSOZrHqXdLLRAaxndr+VeyBdrOm4Xx6FPieQE
+         15FA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=/q/O9D+6vDad+Mg0SVz7yYCpcIMV6yHQiSeCInF/P8Y=;
-        b=M1TDIpXpNi+1uow1IK+AcnZoWs5Lxf5j7YK5PCG7n7OZ9tbfqT2lFYdH24ZPB5zej1
-         6F4mxlXTkMjPFhE8FiOEsHMxAQCjVKFXg0oTs8ko3IkoWcQiWY4qNvHuCGCFtlAOFhWi
-         5k0gBea3xHEE05f0tSMfC5HxE5wEYNckI9YygdGMcyq3wvS413L4lB2KFpr7F+URVhhg
-         xTPUQ7a1x+pJ93D2NnK56Y8b8ostNzwYkIyQNWnrcvsAxDSErfk6fX1XLRl9nHIsSeOy
-         m9LzdXN54fiX3TfHwFK0GGbPdLoHsiq38OCtiLJgwNsZyvv3CSEQjXvz+lwQpN+AZLtY
-         nFXQ==
-X-Gm-Message-State: AOAM532Z59SV0iIA//h67BfLrZkebmXeEC7q/hqFRLjJ53ERIvP27HU9
-        tG0LgOACOHi1KIEY9vDHdRQ=
-X-Google-Smtp-Source: ABdhPJybnQswCTY/dLN63pfqQ1PPpW35r9dvsBUKoZlfFdtlYNWhsYX7T06cS7VHrfEponVu/fepkw==
-X-Received: by 2002:a37:a785:: with SMTP id q127mr7036264qke.334.1594773700103;
-        Tue, 14 Jul 2020 17:41:40 -0700 (PDT)
-Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
-        by smtp.gmail.com with ESMTPSA id c9sm524776qko.24.2020.07.14.17.41.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 Jul 2020 17:41:39 -0700 (PDT)
-From:   Arvind Sankar <nivedita@alum.mit.edu>
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org
-Cc:     Nick Desaulniers <ndesaulniers@google.com>,
-        Fangrui Song <maskray@google.com>,
-        Dmitry Golovin <dima@golovin.in>,
-        clang-built-linux@googlegroups.com,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Daniel Kiper <daniel.kiper@oracle.com>,
-        Sedat Dilek <sedat.dilek@gmail.com>,
-        Kees Cook <keescook@chromium.org>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        "H . J . Lu" <hjl@sourceware.org>, linux-kernel@vger.kernel.org
-Subject: [PATCH v5 5/7] x86/boot: Remove run-time relocations from .head.text code
-Date:   Tue, 14 Jul 2020 20:41:31 -0400
-Message-Id: <20200715004133.1430068-6-nivedita@alum.mit.edu>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200714023836.2310569-1-nivedita@alum.mit.edu>
-References: <20200714023836.2310569-1-nivedita@alum.mit.edu>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=fyYHKBAEzWizf9raS+o1+KdK49GqNrkiRZGBEtob6wU=;
+        b=r4K0ly/ayYWTjGCB2wF4pK9yspJEOHsAO3E5Ey+8/YbUxnB+Vz7aftrJ24WucJ8WMi
+         1P3zzNwrtobJwJ1w7msNC9XLUp+f7GrbtQs1fg9NypyIB+nitk8e8vBHJeRThF20/NmO
+         v9DWBvAfBawH/M29yt0kGryxuyKxgsvZi0ikYKlZSV6K3D03G6c97YGsZaE43h+5lCRc
+         9IUYEVlnJuv4Qp4UQnLnKyRWHYxEIJ0JXK2FAN4r9QcB2UsxOUuzAaBCdA9as87HYMo9
+         3VZx/g4TWbfP5eugKjFEvi+TxaVQ8A+y5Rb1NEJNfc6tzCv57vfGsEPRJxo2LSak5VHo
+         nw7w==
+X-Gm-Message-State: AOAM5303hrvuF55wEq/hans5iwSD6pLVbc/zAEjcuY0jhWvwKACQ1qE9
+        6ki03QtVJBoL26fx/VlRT6QAE+KLD5E58cVDSjZnaKqSbWQ=
+X-Google-Smtp-Source: ABdhPJx7l4LDaw+zhDnbEnv4B+UZ34ld6qKBXtTgvzH4TTCQ1rPk1xzm6TX1TvjrOlweSDOmwbxSOhm49DM/1+4vaE4=
+X-Received: by 2002:a1c:4e08:: with SMTP id g8mr6204312wmh.77.1594771798282;
+ Tue, 14 Jul 2020 17:09:58 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200712132634.138901-1-jolsa@kernel.org> <20200712132634.138901-11-jolsa@kernel.org>
+In-Reply-To: <20200712132634.138901-11-jolsa@kernel.org>
+From:   Ian Rogers <irogers@google.com>
+Date:   Tue, 14 Jul 2020 17:09:47 -0700
+Message-ID: <CAP-5=fXm7YxrnemW-FWvZCvP8JUqJ2HMeRwUE3E=bM3XszxcFA@mail.gmail.com>
+Subject: Re: [PATCH 10/18] perf metric: Collect referenced metrics in struct metric_expr
+To:     Jiri Olsa <jolsa@kernel.org>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Michael Petlan <mpetlan@redhat.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Kajol Jain <kjain@linux.ibm.com>,
+        John Garry <john.garry@huawei.com>,
+        "Paul A. Clarke" <pc@us.ibm.com>,
+        Stephane Eranian <eranian@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The assembly code in head_{32,64}.S, while meant to be
-position-independent, generates run-time relocations because it uses
-instructions such as
-	leal	gdt(%edx), %eax
-which make the assembler and linker think that the code is using %edx as
-an index into gdt, and hence gdt needs to be relocated to its run-time
-address.
+On Sun, Jul 12, 2020 at 6:27 AM Jiri Olsa <jolsa@kernel.org> wrote:
+>
+> Add referenced metrics into struct metric_expr object,
+> so they are accessible when computing the metric.
+>
+> Storing just name and expression itself, so the metric
+> can be resolved and computed.
+>
+> Signed-off-by: Jiri Olsa <jolsa@kernel.org>
 
-On 32-bit, with lld Dmitry Golovin reports that this results in a
-link-time error with default options (i.e. unless -z notext is
-explicitly passed):
-  LD      arch/x86/boot/compressed/vmlinux
-ld.lld: error: can't create dynamic relocation R_386_32 against local
-symbol in readonly segment; recompile object files with -fPIC or pass
-'-Wl,-z,notext' to allow text relocations in the output
+Acked-by: Ian Rogers <irogers@google.com>
 
-With the BFD linker, this generates a warning during the build, if
---warn-shared-textrel is enabled, which at least Gentoo enables by
-default:
-  LD      arch/x86/boot/compressed/vmlinux
-ld: arch/x86/boot/compressed/head_32.o: warning: relocation in read-only section `.head.text'
-ld: warning: creating a DT_TEXTREL in object
+Thanks,
+Ian
 
-On 64-bit, it is not possible to link the kernel as -pie with lld, and
-it is only possible with a BFD linker that supports -z noreloc-overflow,
-i.e. versions >2.26. This is because these instructions cannot really be
-relocated: the displacement field is only 32-bits wide, and thus cannot
-be relocated for a 64-bit load address. The -z noreloc-overflow option
-simply overrides the linker error, and results in R_X86_64_RELATIVE
-relocations that apply a 64-bit relocation to a 32-bit field anyway.
-This happens to work because nothing will process these run-time
-relocations.
-
-Start fixing this by removing relocations from .head.text:
-- On 32-bit, use a base register that holds the address of the GOT and
-  reference symbol addresses using @GOTOFF, i.e.
-	leal	gdt@GOTOFF(%edx), %eax
-- On 64-bit, most of the code can (and already does) use %rip-relative
-  addressing, however the .code32 bits can't, and the 64-bit code also
-  needs to reference symbol addresses as they will be after moving the
-  compressed kernel to the end of the decompression buffer.
-  For these cases, reference the symbols as an offset to startup_32 to
-  avoid creating relocations, i.e.
-  	leal	(gdt-startup_32)(%bp), %eax
-  This only works in .head.text as the subtraction cannot be represented
-  as a PC-relative relocation unless startup_32 is in the same section
-  as the code. Move efi32_pe_entry into .head.text so that it can use
-  the same method to avoid relocations.
-
-Reviewed-by: Kees Cook <keescook@chromium.org>
-Reviewed-by: Ard Biesheuvel <ardb@kernel.org>
-Reviewed-by: Fangrui Song <maskray@google.com>
-Signed-off-by: Arvind Sankar <nivedita@alum.mit.edu>
----
- arch/x86/boot/compressed/head_32.S |  64 +++++++-----------
- arch/x86/boot/compressed/head_64.S | 104 ++++++++++++++++++-----------
- 2 files changed, 90 insertions(+), 78 deletions(-)
-
-diff --git a/arch/x86/boot/compressed/head_32.S b/arch/x86/boot/compressed/head_32.S
-index 39f0bb43218f..8c1a4f5610f5 100644
---- a/arch/x86/boot/compressed/head_32.S
-+++ b/arch/x86/boot/compressed/head_32.S
-@@ -33,26 +33,10 @@
- #include <asm/bootparam.h>
- 
- /*
-- * The 32-bit x86 assembler in binutils 2.26 will generate R_386_GOT32X
-- * relocation to get the symbol address in PIC.  When the compressed x86
-- * kernel isn't built as PIC, the linker optimizes R_386_GOT32X
-- * relocations to their fixed symbol addresses.  However, when the
-- * compressed x86 kernel is loaded at a different address, it leads
-- * to the following load failure:
-- *
-- *   Failed to allocate space for phdrs
-- *
-- * during the decompression stage.
-- *
-- * If the compressed x86 kernel is relocatable at run-time, it should be
-- * compiled with -fPIE, instead of -fPIC, if possible and should be built as
-- * Position Independent Executable (PIE) so that linker won't optimize
-- * R_386_GOT32X relocation to its fixed symbol address.  Older
-- * linkers generate R_386_32 relocations against locally defined symbols,
-- * _bss, _ebss and _end, in PIE.  It isn't wrong, just less optimal than
-- * R_386_RELATIVE.  But the x86 kernel fails to properly handle R_386_32
-- * relocations when relocating the kernel.  To generate R_386_RELATIVE
-- * relocations, we mark _bss, _ebss and _end as hidden:
-+ * These symbols needed to be marked as .hidden to prevent the BFD linker from
-+ * generating R_386_32 (rather than R_386_RELATIVE) relocations for them when
-+ * the 32-bit compressed kernel is linked as PIE. This is no longer necessary,
-+ * but it doesn't hurt to keep them .hidden.
-  */
- 	.hidden _bss
- 	.hidden _ebss
-@@ -74,10 +58,10 @@ SYM_FUNC_START(startup_32)
- 	leal	(BP_scratch+4)(%esi), %esp
- 	call	1f
- 1:	popl	%edx
--	subl	$1b, %edx
-+	addl	$_GLOBAL_OFFSET_TABLE_+(.-1b), %edx
- 
- 	/* Load new GDT */
--	leal	gdt(%edx), %eax
-+	leal	gdt@GOTOFF(%edx), %eax
- 	movl	%eax, 2(%eax)
- 	lgdt	(%eax)
- 
-@@ -90,14 +74,16 @@ SYM_FUNC_START(startup_32)
- 	movl	%eax, %ss
- 
- /*
-- * %edx contains the address we are loaded at by the boot loader and %ebx
-- * contains the address where we should move the kernel image temporarily
-- * for safe in-place decompression. %ebp contains the address that the kernel
-- * will be decompressed to.
-+ * %edx contains the address we are loaded at by the boot loader (plus the
-+ * offset to the GOT).  The below code calculates %ebx to be the address where
-+ * we should move the kernel image temporarily for safe in-place decompression
-+ * (again, plus the offset to the GOT).
-+ *
-+ * %ebp is calculated to be the address that the kernel will be decompressed to.
-  */
- 
- #ifdef CONFIG_RELOCATABLE
--	movl	%edx, %ebx
-+	leal	startup_32@GOTOFF(%edx), %ebx
- 
- #ifdef CONFIG_EFI_STUB
- /*
-@@ -108,7 +94,7 @@ SYM_FUNC_START(startup_32)
-  *	image_offset = startup_32 - image_base
-  * Otherwise image_offset will be zero and has no effect on the calculations.
-  */
--	subl    image_offset(%edx), %ebx
-+	subl    image_offset@GOTOFF(%edx), %ebx
- #endif
- 
- 	movl	BP_kernel_alignment(%esi), %eax
-@@ -125,10 +111,10 @@ SYM_FUNC_START(startup_32)
- 	movl	%ebx, %ebp	// Save the output address for later
- 	/* Target address to relocate to for decompression */
- 	addl    BP_init_size(%esi), %ebx
--	subl    $_end, %ebx
-+	subl    $_end@GOTOFF, %ebx
- 
- 	/* Set up the stack */
--	leal	boot_stack_end(%ebx), %esp
-+	leal	boot_stack_end@GOTOFF(%ebx), %esp
- 
- 	/* Zero EFLAGS */
- 	pushl	$0
-@@ -139,8 +125,8 @@ SYM_FUNC_START(startup_32)
-  * where decompression in place becomes safe.
-  */
- 	pushl	%esi
--	leal	(_bss-4)(%edx), %esi
--	leal	(_bss-4)(%ebx), %edi
-+	leal	(_bss@GOTOFF-4)(%edx), %esi
-+	leal	(_bss@GOTOFF-4)(%ebx), %edi
- 	movl	$(_bss - startup_32), %ecx
- 	shrl	$2, %ecx
- 	std
-@@ -153,14 +139,14 @@ SYM_FUNC_START(startup_32)
- 	 * during extract_kernel below. To avoid any issues, repoint the GDTR
- 	 * to the new copy of the GDT.
- 	 */
--	leal	gdt(%ebx), %eax
-+	leal	gdt@GOTOFF(%ebx), %eax
- 	movl	%eax, 2(%eax)
- 	lgdt	(%eax)
- 
- /*
-  * Jump to the relocated address.
-  */
--	leal	.Lrelocated(%ebx), %eax
-+	leal	.Lrelocated@GOTOFF(%ebx), %eax
- 	jmp	*%eax
- SYM_FUNC_END(startup_32)
- 
-@@ -170,7 +156,7 @@ SYM_FUNC_START_ALIAS(efi_stub_entry)
- 	add	$0x4, %esp
- 	movl	8(%esp), %esi	/* save boot_params pointer */
- 	call	efi_main
--	leal	startup_32(%eax), %eax
-+	/* efi_main returns the possibly relocated address of startup_32 */
- 	jmp	*%eax
- SYM_FUNC_END(efi32_stub_entry)
- SYM_FUNC_END_ALIAS(efi_stub_entry)
-@@ -183,8 +169,8 @@ SYM_FUNC_START_LOCAL_NOALIGN(.Lrelocated)
-  * Clear BSS (stack is currently empty)
-  */
- 	xorl	%eax, %eax
--	leal	_bss(%ebx), %edi
--	leal	_ebss(%ebx), %ecx
-+	leal	_bss@GOTOFF(%ebx), %edi
-+	leal	_ebss@GOTOFF(%ebx), %ecx
- 	subl	%edi, %ecx
- 	shrl	$2, %ecx
- 	rep	stosl
-@@ -198,9 +184,9 @@ SYM_FUNC_START_LOCAL_NOALIGN(.Lrelocated)
- 	pushl	%ebp		/* output address */
- 
- 	pushl	$z_input_len	/* input_len */
--	leal	input_data(%ebx), %eax
-+	leal	input_data@GOTOFF(%ebx), %eax
- 	pushl	%eax		/* input_data */
--	leal	boot_heap(%ebx), %eax
-+	leal	boot_heap@GOTOFF(%ebx), %eax
- 	pushl	%eax		/* heap area */
- 	pushl	%esi		/* real mode pointer */
- 	call	extract_kernel	/* returns kernel location in %eax */
-diff --git a/arch/x86/boot/compressed/head_64.S b/arch/x86/boot/compressed/head_64.S
-index bf1ab30acc5b..11429092c224 100644
---- a/arch/x86/boot/compressed/head_64.S
-+++ b/arch/x86/boot/compressed/head_64.S
-@@ -43,6 +43,32 @@
- 	.hidden _end
- 
- 	__HEAD
-+
-+/*
-+ * This macro gives the relative virtual address of X, i.e. the offset of X
-+ * from startup_32. This is the same as the link-time virtual address of X,
-+ * since startup_32 is at 0, but defining it this way tells the
-+ * assembler/linker that we do not want the actual run-time address of X. This
-+ * prevents the linker from trying to create unwanted run-time relocation
-+ * entries for the reference when the compressed kernel is linked as PIE.
-+ *
-+ * A reference X(%reg) will result in the link-time VA of X being stored with
-+ * the instruction, and a run-time R_X86_64_RELATIVE relocation entry that
-+ * adds the 64-bit base address where the kernel is loaded.
-+ *
-+ * Replacing it with (X-startup_32)(%reg) results in the offset being stored,
-+ * and no run-time relocation.
-+ *
-+ * The macro should be used as a displacement with a base register containing
-+ * the run-time address of startup_32 [i.e. rva(X)(%reg)], or as an immediate
-+ * [$ rva(X)].
-+ *
-+ * This macro can only be used from within the .head.text section, since the
-+ * expression requires startup_32 to be in the same section as the code being
-+ * assembled.
-+ */
-+#define rva(X) ((X) - startup_32)
-+
- 	.code32
- SYM_FUNC_START(startup_32)
- 	/*
-@@ -65,10 +91,10 @@ SYM_FUNC_START(startup_32)
- 	leal	(BP_scratch+4)(%esi), %esp
- 	call	1f
- 1:	popl	%ebp
--	subl	$1b, %ebp
-+	subl	$ rva(1b), %ebp
- 
- 	/* Load new GDT with the 64bit segments using 32bit descriptor */
--	leal	gdt(%ebp), %eax
-+	leal	rva(gdt)(%ebp), %eax
- 	movl	%eax, 2(%eax)
- 	lgdt	(%eax)
- 
-@@ -81,7 +107,7 @@ SYM_FUNC_START(startup_32)
- 	movl	%eax, %ss
- 
- /* setup a stack and make sure cpu supports long mode. */
--	leal	boot_stack_end(%ebp), %esp
-+	leal	rva(boot_stack_end)(%ebp), %esp
- 
- 	call	verify_cpu
- 	testl	%eax, %eax
-@@ -108,7 +134,7 @@ SYM_FUNC_START(startup_32)
-  *	image_offset = startup_32 - image_base
-  * Otherwise image_offset will be zero and has no effect on the calculations.
-  */
--	subl    image_offset(%ebp), %ebx
-+	subl    rva(image_offset)(%ebp), %ebx
- #endif
- 
- 	movl	BP_kernel_alignment(%esi), %eax
-@@ -124,7 +150,7 @@ SYM_FUNC_START(startup_32)
- 
- 	/* Target address to relocate to for decompression */
- 	addl	BP_init_size(%esi), %ebx
--	subl	$_end, %ebx
-+	subl	$ rva(_end), %ebx
- 
- /*
-  * Prepare for entering 64 bit mode
-@@ -152,19 +178,19 @@ SYM_FUNC_START(startup_32)
- 1:
- 
- 	/* Initialize Page tables to 0 */
--	leal	pgtable(%ebx), %edi
-+	leal	rva(pgtable)(%ebx), %edi
- 	xorl	%eax, %eax
- 	movl	$(BOOT_INIT_PGT_SIZE/4), %ecx
- 	rep	stosl
- 
- 	/* Build Level 4 */
--	leal	pgtable + 0(%ebx), %edi
-+	leal	rva(pgtable + 0)(%ebx), %edi
- 	leal	0x1007 (%edi), %eax
- 	movl	%eax, 0(%edi)
- 	addl	%edx, 4(%edi)
- 
- 	/* Build Level 3 */
--	leal	pgtable + 0x1000(%ebx), %edi
-+	leal	rva(pgtable + 0x1000)(%ebx), %edi
- 	leal	0x1007(%edi), %eax
- 	movl	$4, %ecx
- 1:	movl	%eax, 0x00(%edi)
-@@ -175,7 +201,7 @@ SYM_FUNC_START(startup_32)
- 	jnz	1b
- 
- 	/* Build Level 2 */
--	leal	pgtable + 0x2000(%ebx), %edi
-+	leal	rva(pgtable + 0x2000)(%ebx), %edi
- 	movl	$0x00000183, %eax
- 	movl	$2048, %ecx
- 1:	movl	%eax, 0(%edi)
-@@ -186,7 +212,7 @@ SYM_FUNC_START(startup_32)
- 	jnz	1b
- 
- 	/* Enable the boot page tables */
--	leal	pgtable(%ebx), %eax
-+	leal	rva(pgtable)(%ebx), %eax
- 	movl	%eax, %cr3
- 
- 	/* Enable Long mode in EFER (Extended Feature Enable Register) */
-@@ -211,14 +237,14 @@ SYM_FUNC_START(startup_32)
- 	 * We place all of the values on our mini stack so lret can
- 	 * used to perform that far jump.
- 	 */
--	leal	startup_64(%ebp), %eax
-+	leal	rva(startup_64)(%ebp), %eax
- #ifdef CONFIG_EFI_MIXED
--	movl	efi32_boot_args(%ebp), %edi
-+	movl	rva(efi32_boot_args)(%ebp), %edi
- 	cmp	$0, %edi
- 	jz	1f
--	leal	efi64_stub_entry(%ebp), %eax
--	movl	efi32_boot_args+4(%ebp), %esi
--	movl	efi32_boot_args+8(%ebp), %edx	// saved bootparams pointer
-+	leal	rva(efi64_stub_entry)(%ebp), %eax
-+	movl	rva(efi32_boot_args+4)(%ebp), %esi
-+	movl	rva(efi32_boot_args+8)(%ebp), %edx	// saved bootparams pointer
- 	cmpl	$0, %edx
- 	jnz	1f
- 	/*
-@@ -229,7 +255,7 @@ SYM_FUNC_START(startup_32)
- 	 * the correct stack alignment for entry.
- 	 */
- 	subl	$40, %esp
--	leal	efi_pe_entry(%ebp), %eax
-+	leal	rva(efi_pe_entry)(%ebp), %eax
- 	movl	%edi, %ecx			// MS calling convention
- 	movl	%esi, %edx
- 1:
-@@ -255,18 +281,18 @@ SYM_FUNC_START(efi32_stub_entry)
- 
- 	call	1f
- 1:	pop	%ebp
--	subl	$1b, %ebp
-+	subl	$ rva(1b), %ebp
- 
--	movl	%esi, efi32_boot_args+8(%ebp)
-+	movl	%esi, rva(efi32_boot_args+8)(%ebp)
- SYM_INNER_LABEL(efi32_pe_stub_entry, SYM_L_LOCAL)
--	movl	%ecx, efi32_boot_args(%ebp)
--	movl	%edx, efi32_boot_args+4(%ebp)
--	movb	$0, efi_is64(%ebp)
-+	movl	%ecx, rva(efi32_boot_args)(%ebp)
-+	movl	%edx, rva(efi32_boot_args+4)(%ebp)
-+	movb	$0, rva(efi_is64)(%ebp)
- 
- 	/* Save firmware GDTR and code/data selectors */
--	sgdtl	efi32_boot_gdt(%ebp)
--	movw	%cs, efi32_boot_cs(%ebp)
--	movw	%ds, efi32_boot_ds(%ebp)
-+	sgdtl	rva(efi32_boot_gdt)(%ebp)
-+	movw	%cs, rva(efi32_boot_cs)(%ebp)
-+	movw	%ds, rva(efi32_boot_ds)(%ebp)
- 
- 	/* Disable paging */
- 	movl	%cr0, %eax
-@@ -345,11 +371,11 @@ SYM_CODE_START(startup_64)
- 
- 	/* Target address to relocate to for decompression */
- 	movl	BP_init_size(%rsi), %ebx
--	subl	$_end, %ebx
-+	subl	$ rva(_end), %ebx
- 	addq	%rbp, %rbx
- 
- 	/* Set up the stack */
--	leaq	boot_stack_end(%rbx), %rsp
-+	leaq	rva(boot_stack_end)(%rbx), %rsp
- 
- 	/*
- 	 * At this point we are in long mode with 4-level paging enabled,
-@@ -423,7 +449,7 @@ SYM_CODE_START(startup_64)
- 	lretq
- trampoline_return:
- 	/* Restore the stack, the 32-bit trampoline uses its own stack */
--	leaq	boot_stack_end(%rbx), %rsp
-+	leaq	rva(boot_stack_end)(%rbx), %rsp
- 
- 	/*
- 	 * cleanup_trampoline() would restore trampoline memory.
-@@ -435,7 +461,7 @@ trampoline_return:
- 	 * this function call.
- 	 */
- 	pushq	%rsi
--	leaq	top_pgtable(%rbx), %rdi
-+	leaq	rva(top_pgtable)(%rbx), %rdi
- 	call	cleanup_trampoline
- 	popq	%rsi
- 
-@@ -449,9 +475,9 @@ trampoline_return:
-  */
- 	pushq	%rsi
- 	leaq	(_bss-8)(%rip), %rsi
--	leaq	(_bss-8)(%rbx), %rdi
--	movq	$_bss /* - $startup_32 */, %rcx
--	shrq	$3, %rcx
-+	leaq	rva(_bss-8)(%rbx), %rdi
-+	movl	$(_bss - startup_32), %ecx
-+	shrl	$3, %ecx
- 	std
- 	rep	movsq
- 	cld
-@@ -462,15 +488,15 @@ trampoline_return:
- 	 * during extract_kernel below. To avoid any issues, repoint the GDTR
- 	 * to the new copy of the GDT.
- 	 */
--	leaq	gdt64(%rbx), %rax
--	leaq	gdt(%rbx), %rdx
-+	leaq	rva(gdt64)(%rbx), %rax
-+	leaq	rva(gdt)(%rbx), %rdx
- 	movq	%rdx, 2(%rax)
- 	lgdt	(%rax)
- 
- /*
-  * Jump to the relocated address.
-  */
--	leaq	.Lrelocated(%rbx), %rax
-+	leaq	rva(.Lrelocated)(%rbx), %rax
- 	jmp	*%rax
- SYM_CODE_END(startup_64)
- 
-@@ -482,7 +508,7 @@ SYM_FUNC_START_ALIAS(efi_stub_entry)
- 	movq	%rdx, %rbx			/* save boot_params pointer */
- 	call	efi_main
- 	movq	%rbx,%rsi
--	leaq	startup_64(%rax), %rax
-+	leaq	rva(startup_64)(%rax), %rax
- 	jmp	*%rax
- SYM_FUNC_END(efi64_stub_entry)
- SYM_FUNC_END_ALIAS(efi_stub_entry)
-@@ -645,7 +671,7 @@ SYM_DATA(efi_is64, .byte 1)
- #define BS32_handle_protocol	88 // offsetof(efi_boot_services_32_t, handle_protocol)
- #define LI32_image_base		32 // offsetof(efi_loaded_image_32_t, image_base)
- 
--	.text
-+	__HEAD
- 	.code32
- SYM_FUNC_START(efi32_pe_entry)
- /*
-@@ -667,12 +693,12 @@ SYM_FUNC_START(efi32_pe_entry)
- 
- 	call	1f
- 1:	pop	%ebx
--	subl	$1b, %ebx
-+	subl	$ rva(1b), %ebx
- 
- 	/* Get the loaded image protocol pointer from the image handle */
- 	leal	-4(%ebp), %eax
- 	pushl	%eax				// &loaded_image
--	leal	loaded_image_proto(%ebx), %eax
-+	leal	rva(loaded_image_proto)(%ebx), %eax
- 	pushl	%eax				// pass the GUID address
- 	pushl	8(%ebp)				// pass the image handle
- 
-@@ -707,7 +733,7 @@ SYM_FUNC_START(efi32_pe_entry)
- 	 * use it before we get to the 64-bit efi_pe_entry() in C code.
- 	 */
- 	subl	%esi, %ebx
--	movl	%ebx, image_offset(%ebp)	// save image_offset
-+	movl	%ebx, rva(image_offset)(%ebp)	// save image_offset
- 	jmp	efi32_pe_stub_entry
- 
- 2:	popl	%edi				// restore callee-save registers
--- 
-2.26.2
-
+> ---
+>  tools/perf/util/metricgroup.c | 26 ++++++++++++++++++++++++++
+>  tools/perf/util/metricgroup.h |  6 ++++++
+>  2 files changed, 32 insertions(+)
+>
+> diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.c
+> index 9923eef1e2d4..8cbcc5e05fef 100644
+> --- a/tools/perf/util/metricgroup.c
+> +++ b/tools/perf/util/metricgroup.c
+> @@ -83,6 +83,7 @@ static void metric_event_delete(struct rblist *rblist __maybe_unused,
+>         struct metric_expr *expr, *tmp;
+>
+>         list_for_each_entry_safe(expr, tmp, &me->head, nd) {
+> +               free(expr->metric_refs);
+>                 free(expr);
+>         }
+>
+> @@ -243,6 +244,7 @@ static int metricgroup__setup_events(struct list_head *groups,
+>
+>         list_for_each_entry (eg, groups, nd) {
+>                 struct evsel **metric_events;
+> +               struct metric_ref *metric_refs = NULL;
+>
+>                 metric_events = calloc(sizeof(void *),
+>                                 hashmap__size(&eg->pctx.ids) + 1);
+> @@ -274,6 +276,30 @@ static int metricgroup__setup_events(struct list_head *groups,
+>                         free(metric_events);
+>                         break;
+>                 }
+> +
+> +               /*
+> +                * Collect and store collected nested expressions
+> +                * for metric processing.
+> +                */
+> +               if (eg->refs_cnt) {
+> +                       struct metric_ref_node *ref;
+> +
+> +                       metric_refs = zalloc(sizeof(struct metric_ref) * (eg->refs_cnt + 1));
+> +                       if (!metric_refs) {
+> +                               ret = -ENOMEM;
+> +                               free(metric_events);
+> +                               break;
+> +                       }
+> +
+> +                       i = 0;
+> +                       list_for_each_entry(ref, &eg->refs, list) {
+> +                               metric_refs[i].metric_name = ref->metric_name;
+> +                               metric_refs[i].metric_expr = ref->metric_expr;
+> +                               i++;
+> +                       }
+> +               };
+> +
+> +               expr->metric_refs = metric_refs;
+>                 expr->metric_expr = eg->metric_expr;
+>                 expr->metric_name = eg->metric_name;
+>                 expr->metric_unit = eg->metric_unit;
+> diff --git a/tools/perf/util/metricgroup.h b/tools/perf/util/metricgroup.h
+> index 8315bd1a7da4..62623a39cbec 100644
+> --- a/tools/perf/util/metricgroup.h
+> +++ b/tools/perf/util/metricgroup.h
+> @@ -18,12 +18,18 @@ struct metric_event {
+>         struct list_head head; /* list of metric_expr */
+>  };
+>
+> +struct metric_ref {
+> +       const char *metric_name;
+> +       const char *metric_expr;
+> +};
+> +
+>  struct metric_expr {
+>         struct list_head nd;
+>         const char *metric_expr;
+>         const char *metric_name;
+>         const char *metric_unit;
+>         struct evsel **metric_events;
+> +       struct metric_ref *metric_refs;
+>         int runtime;
+>  };
+>
+> --
+> 2.25.4
+>
