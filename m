@@ -2,164 +2,173 @@ Return-Path: <SRS0=kup7=A2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 737B1C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 04:19:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82984C433E5
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 04:19:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 511AB2070E
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 04:19:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 563222067D
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 04:19:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bQAhGIZJ"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="X0EOcpsF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727814AbgGOETB (ORCPT
+        id S1728028AbgGOETX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 00:19:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41880 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725824AbgGOETA (ORCPT
+        Wed, 15 Jul 2020 00:19:23 -0400
+Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:11947 "EHLO
+        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725824AbgGOETW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 00:19:00 -0400
-Received: from mail-il1-x142.google.com (mail-il1-x142.google.com [IPv6:2607:f8b0:4864:20::142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 73673C061755;
-        Tue, 14 Jul 2020 21:19:00 -0700 (PDT)
-Received: by mail-il1-x142.google.com with SMTP id s21so824827ilk.5;
-        Tue, 14 Jul 2020 21:19:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=+vY2OIlneWe5ztE2bvwwhli0jm6HqPh+OWIpoUB8BSw=;
-        b=bQAhGIZJE7XGnGYhwL0/1olYisauxe9ymI6u2tgG5vEOuz2Nq+QlDtF7dhHuDuByuD
-         qW96jNuM4d+gf7D3wc8J8orrZQS9iM0Icv2ATeffIzl0qNeTkHmX83cMCjFi8nTTJm5v
-         7ig6QsacBF0GCuiO/mGKrMcs7KLcULwA6yDS5Bhdj00wAveDS58I1htt6LsbCi5aopAo
-         94cRQMbn77WvY0ntAe3eMQsVBODihtWQxeS8Nk4f6gtDn95RBRSxHL19GMAyBDy2dM6S
-         N6sPHPVxHB/cnaCH/kcUf5eC7pYe8YR2n8bCiJu6OiN1Jb3CBLYelLNvpnWbwRHuU5zs
-         q8/Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=+vY2OIlneWe5ztE2bvwwhli0jm6HqPh+OWIpoUB8BSw=;
-        b=BOWJX3NgFQ2+4r50NHnYqGctDdbAW6O9OdStbysncoLz1ieX2ggmbhtxnpam+Nf/Of
-         Z+E9A42x5WhUraIybx4ZrOuzfikRVuOH75y82agNs0DqcAtstkKI3Q3+6HD34YbESbKF
-         hrQL/t1Nq/CIeMSz9vAFipi8XFc6j3RrbbiD+BzpYt2nbZsfDm5+gv+jYABqRo6ETLB/
-         /NWezqjD8wQ5f8/qlLspnhQ2U2GAIYF//SVZ5Qg2vTSdo8aD5o1Q0jGfl7ZaslB7k3LG
-         n0nuttBl7gKBP0OLGFw30HQHmnusOS+8lNdD0DuFlEFdaGN2JE02nF8VGGN1S+Ho842i
-         tFzQ==
-X-Gm-Message-State: AOAM5308dqJN0GErgcjMKhBzDXt5JMKRPj4f5xwWiUgku3KVKg1WEtXR
-        vsN5HUcAm/RSXbAwgTrb7NQ4X4vmEN93vIHL3tc=
-X-Google-Smtp-Source: ABdhPJxbEVXkXtWoblqKfj5L8JbBLsjm2+xbwAB3m5diPF3AzSD/1a23QyEn3OuWSfYYBfrU93OGI/PkJJ/ZoDLhhcU=
-X-Received: by 2002:a92:9a97:: with SMTP id c23mr8119143ill.258.1594786739362;
- Tue, 14 Jul 2020 21:18:59 -0700 (PDT)
+        Wed, 15 Jul 2020 00:19:22 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5f0e83900000>; Tue, 14 Jul 2020 21:18:24 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Tue, 14 Jul 2020 21:19:22 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Tue, 14 Jul 2020 21:19:22 -0700
+Received: from HQMAIL101.nvidia.com (172.20.187.10) by HQMAIL109.nvidia.com
+ (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 15 Jul
+ 2020 04:19:21 +0000
+Received: from rnnvemgw01.nvidia.com (10.128.109.123) by HQMAIL101.nvidia.com
+ (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Wed, 15 Jul 2020 04:19:21 +0000
+Received: from skomatineni-linux.nvidia.com (Not Verified[10.2.160.169]) by rnnvemgw01.nvidia.com with Trustwave SEG (v7,5,8,10121)
+        id <B5f0e83c80002>; Tue, 14 Jul 2020 21:19:21 -0700
+From:   Sowjanya Komatineni <skomatineni@nvidia.com>
+To:     <skomatineni@nvidia.com>, <thierry.reding@gmail.com>,
+        <jonathanh@nvidia.com>, <frankc@nvidia.com>, <hverkuil@xs4all.nl>,
+        <sakari.ailus@iki.fi>, <robh+dt@kernel.org>,
+        <helen.koike@collabora.com>
+CC:     <digetx@gmail.com>, <sboyd@kernel.org>,
+        <gregkh@linuxfoundation.org>, <linux-media@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-i2c@vger.kernel.org>
+Subject: [RFC PATCH v3 00/18] Support for Tegra video capture from external sensor
+Date:   Tue, 14 Jul 2020 21:20:37 -0700
+Message-ID: <1594786855-26506-1-git-send-email-skomatineni@nvidia.com>
+X-Mailer: git-send-email 2.7.4
+X-NVConfidentiality: public
 MIME-Version: 1.0
-References: <CAK8P3a3NWSZw6678k1O2eJ6-c5GuW7484PRvEzU9MEPPrCD-yw@mail.gmail.com>
- <20200714184550.GA397277@bjorn-Precision-5520> <CAK8P3a3EZX8=649R9cYF6_=ivh1Xyrgsc5mUtS=d5yvQ3doZaQ@mail.gmail.com>
-In-Reply-To: <CAK8P3a3EZX8=649R9cYF6_=ivh1Xyrgsc5mUtS=d5yvQ3doZaQ@mail.gmail.com>
-From:   "Oliver O'Halloran" <oohall@gmail.com>
-Date:   Wed, 15 Jul 2020 14:18:47 +1000
-Message-ID: <CAOSf1CEviMYySQhyQGks8hHjST-85wGpxEBasuxwSX_homBJ2A@mail.gmail.com>
-Subject: Re: [RFC PATCH 00/35] Move all PCIBIOS* definitions into arch/x86
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Bjorn Helgaas <helgaas@kernel.org>,
-        Keith Busch <kbusch@kernel.org>,
-        Paul Mackerras <paulus@samba.org>,
-        sparclinux <sparclinux@vger.kernel.org>,
-        Toan Le <toan@os.amperecomputing.com>,
-        Greg Ungerer <gerg@linux-m68k.org>,
-        Marek Vasut <marek.vasut+renesas@gmail.com>,
-        Rob Herring <robh@kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        Russell King <linux@armlinux.org.uk>,
-        Ley Foon Tan <ley.foon.tan@intel.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Kevin Hilman <khilman@baylibre.com>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Matt Turner <mattst88@gmail.com>,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        Guenter Roeck <linux@roeck-us.net>,
-        Ray Jui <rjui@broadcom.com>, Jens Axboe <axboe@fb.com>,
-        Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
-        Shuah Khan <skhan@linuxfoundation.org>, bjorn@helgaas.com,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Richard Henderson <rth@twiddle.net>,
-        Juergen Gross <jgross@suse.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Scott Branden <sbranden@broadcom.com>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        "Saheed O. Bolarinwa" <refactormyself@gmail.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Heiner Kallweit <hkallweit1@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1594786704; bh=H3uPLyelSg29Z/xvdKbwpYtnQFHubI57wAgazwqqfrw=;
+        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
+         X-NVConfidentiality:MIME-Version:Content-Type;
+        b=X0EOcpsFFWEHuf70WGXCxtoJAK/Jk6fD8r01WJJ4DrQxTYhyxRb0OY6KhDP4Cz44a
+         439SZGN6UU3tNPQu84AL30GbgPxruZ/eZoZpnt81P+iX1w1Cisb2BYpPvHd6wa5IzS
+         2/5VRmMr79THMyo9czoE+HAendIjzh8k/42HhV6fTILkfkf6+2LNbxyCZs8+pldAaZ
+         Ab/yI8XAMWRgR/hCmonUTWbkGE/JE1zd08fw4TTcU0U3ARCvhQ+Dzpavnc+HewW+2C
+         yNHG7uEUD6wNilH2sxkWW8o8EDu2ihCQ3J8VgehZCWtChO9+kSavqGCG9jNQFL4YDk
+         ehyY4yhXsh84g==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 15, 2020 at 8:03 AM Arnd Bergmann <arnd@arndb.de> wrote:
->
-> - Most error checking is static: PCIBIOS_BAD_REGISTER_NUMBER
->   only happens if you pass an invalid register number, but most
->   callers pass a compile-time constant register number that is
->   known to be correct, or the driver would never work. Similarly,
->   PCIBIOS_DEVICE_NOT_FOUND wouldn't normally happen
->   since you pass a valid pci_device pointer that was already
->   probed.
+This series adds support for video capture from external camera sensor to
+Tegra video driver.
 
-Having some feedback about obvious programming errors is still useful
-when doing driver development. Reporting those via printk() would
-probably be more useful to those who care though.
+Jetson TX1 has camera expansion connector and supports custom camera module
+designed as per TX1 design specification.
 
-> - config space accesses are very rare compared to memory
->   space access and on the hardware side the error handling
->   would be similar, but readl/writel don't return errors, they just
->   access wrong registers or return 0xffffffff.
->   arch/powerpc/kernel/eeh.c has a ton extra code written to
->   deal with it, but no other architectures do.
+This series also enables camera capture support for Jetson Nano which has
+Raspberry PI camera header.
 
-TBH the EEH MMIO hooks were probably a mistake to begin with. Errors
-detected via MMIO are almost always asynchronous to the error itself
-so you usually just wind up with a misleading stack trace rather than
-any kind of useful synchronous error reporting. It seems like most
-drivers don't bother checking for 0xFFs either and rely on the
-asynchronous reporting via .error_detected() instead, so I have to
-wonder what the point is. I've been thinking of removing the MMIO
-hooks and using a background poller to check for errors on each PHB
-periodically (assuming we don't have an EEH interrupt) instead. That
-would remove the requirement for eeh_dev_check_failure() to be
-interrupt safe too, so it might even let us fix all the godawful races
-in EEH.
+This series is tested with IMX219 camera sensor.
 
-> - If we add code to detect errors in pci_read_config_*
->   and do some of the stuff from powerpc's
->   eeh_dev_check_failure(), we are more likely to catch
->   intermittent failures when drivers don't check, or bugs
->   with invalid arguments in device drivers than relying on
->   drivers to get their error handling right when those code
->   paths don't ever get covered in normal testing.
+This series include,
 
-Adding some kind of error detection to the generic config accessors
-wouldn't hurt, but detection is only half the problem. The main job of
-eeh_dev_check_failure() is waking up the EEH recovery thread which
-actually handles notifying drivers, device resets, etc and you'd want
-something in the PCI core. Right now there's two implementations of
-that reporting logic: one for EEH in arch/powerpc/eeh_driver.c and one
-for AER/DPC in drivers/pci/pcie/err.c. I think the latter could be
-moved into the PCI core easily enough since there's not much about it
-that's really specific to PCIe. Ideally we could drop the EEH specific
-one too, but I'm not sure how to implement that without it devolving
-into callback spaghetti.
+VI I2C related fixes
+- Camera sensor programming happens through VI I2C which is on host1x bus.
+- These patches includes device tree and I2C driver fixes for VI I2C.
 
-Oliver
+Tegra video driver updates
+- TPG Vs Non-TPG based on Kconfig
+- Support for external sensor video capture based on device graph from DT.
+- Support for selection ioctl operations
+- Tegra MIPI CSI pads calibration
+- CSI T-CLK and T-HS settle time computation based on clock rates.
+
+Host1x driver updates
+- Adds API to allow creating mipi device for specific device node.
+- Splits MIPI pads calibrate start and waiting for calibration to be done.
+
+Device tree updates
+- Adds camera connector 2V8, 1V8, 1V2 regulator supplies to Jetson TX1 DT.
+- Enabled VI and CSI support in Jetson Nano DT.
+
+
+Delta between patch versions:
+
+[v3]:	Includes v2 feedback
+	- Uses separate helper function for retrieving remote csi subdevice
+	  and source subdevice.
+	- Added check for presence of subdevice ops set/get_selection
+	- dropped vb2_queue_release from driver and using
+	  vb2_video_unregister_device instead of video_unregister_device.
+	- video device register should happen in the last after all video
+	  device related setup is done in the driver. This is being addressed
+	  in below RFC patch. Once proper implementation of this is available
+	  will update Tegra video driver to use split APIs and do all setup
+	  prior to device register. Added this as TODO in the driver.
+	  https://www.spinics.net/lists/linux-media/msg172761.html
+
+	Note:
+	Patch-0012 has compilation dependency on
+	https://patchwork.kernel.org/patch/11659521/
+
+
+[v2]:	Includes below changes based on v1 feedback
+	- dt-binding document and the driver update for device graph to use
+	  separate ports for sink endpoint and source endpoint for csi.
+	- Use data-lanes endpoint property for csi.
+	- Update tegra_mipi_request() to take device node pointer argument
+	  rather than adding extra API.
+	- Remove checking for clk pointer before clk_disable.
+
+
+Sowjanya Komatineni (18):
+  dt-bindings: i2c: tegra: Document Tegra210 VI I2C clocks and
+    power-domains
+  arm64: tegra: Add missing clocks and power-domains to Tegra210 VI I2C
+  i2c: tegra: Don't mark VI I2C as IRQ safe runtime PM
+  i2c: tegra: Remove NULL pointer check before
+    clk_enable/disable/prepare/unprepare
+  i2c: tegra: Fix the error path in tegra_i2c_runtime_resume
+  i2c: tegra: Fix runtime resume to re-init VI I2C
+  i2c: tegra: Avoid tegra_i2c_init_dma() for Tegra210 vi i2c
+  media: tegra-video: Fix channel format alignment
+  media: tegra-video: Enable TPG based on kernel config
+  media: tegra-video: Update format lookup to offset based
+  dt-bindings: tegra: Update VI and CSI bindings with port info
+  media: tegra-video: Add support for external sensor capture
+  media: tegra-video: Add support for selection ioctl ops
+  gpu: host1x: mipi: Update tegra_mipi_request() to be node based
+  gpu: host1x: mipi: Use readl_relaxed_poll_timeout in tegra_mipi_wait
+  gpu: host1x: mipi: Split tegra_mipi_calibrate and tegra_mipi_wait
+  media: tegra-video: Add CSI MIPI pads calibration
+  media: tegra-video: Compute settle times based on the clock rate
+
+ .../display/tegra/nvidia,tegra20-host1x.txt        |  92 ++-
+ .../devicetree/bindings/i2c/nvidia,tegra20-i2c.txt |  19 +-
+ arch/arm64/boot/dts/nvidia/tegra210.dtsi           |   6 +
+ drivers/gpu/drm/tegra/dsi.c                        |   9 +-
+ drivers/gpu/host1x/mipi.c                          |  37 +-
+ drivers/i2c/busses/i2c-tegra.c                     | 101 +--
+ drivers/staging/media/tegra-video/Kconfig          |   7 +
+ drivers/staging/media/tegra-video/csi.c            | 247 ++++++-
+ drivers/staging/media/tegra-video/csi.h            |   8 +
+ drivers/staging/media/tegra-video/tegra210.c       |  25 +-
+ drivers/staging/media/tegra-video/vi.c             | 793 +++++++++++++++++++--
+ drivers/staging/media/tegra-video/vi.h             |  25 +-
+ drivers/staging/media/tegra-video/video.c          |  23 +-
+ include/linux/host1x.h                             |   4 +-
+ 14 files changed, 1242 insertions(+), 154 deletions(-)
+
+-- 
+2.7.4
+
