@@ -2,156 +2,105 @@ Return-Path: <SRS0=kup7=A2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9098DC433E2
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 13:51:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21A44C433EA
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 13:52:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 743ED20657
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 13:51:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ECF0F207CB
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 13:52:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=octiron.net header.i=@octiron.net header.b="bNOrGneS";
+	dkim=pass (2048-bit key) header.d=octiron.net header.i=@octiron.net header.b="pDNq9ZX1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729703AbgGONvw (ORCPT
+        id S1731959AbgGONwM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 09:51:52 -0400
-Received: from relay7-d.mail.gandi.net ([217.70.183.200]:39503 "EHLO
-        relay7-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729086AbgGONvw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 09:51:52 -0400
-X-Originating-IP: 93.29.109.196
-Received: from aptenodytes (196.109.29.93.rev.sfr.net [93.29.109.196])
-        (Authenticated sender: paul.kocialkowski@bootlin.com)
-        by relay7-d.mail.gandi.net (Postfix) with ESMTPSA id B7D4820008;
-        Wed, 15 Jul 2020 13:51:46 +0000 (UTC)
-Date:   Wed, 15 Jul 2020 15:51:45 +0200
-From:   Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-To:     Ezequiel Garcia <ezequiel@collabora.com>
-Cc:     Nicolas Dufresne <nicolas.dufresne@collabora.com>,
-        Hans Verkuil <hverkuil@xs4all.nl>, stable@vger.kernel.org,
-        kernel@collabora.com, Maxime Ripard <mripard@kernel.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Chen-Yu Tsai <wens@csie.org>, linux-media@vger.kernel.org,
-        devel@driverdev.osuosl.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] media: cedrus: Propagate OUTPUT resolution to CAPTURE
-Message-ID: <20200715135145.GA2019248@aptenodytes>
-References: <20200514153903.341287-1-nicolas.dufresne@collabora.com>
- <3c8a235ebb0bf76bcffeb8c6b983cd4c95d77459.camel@collabora.com>
+        Wed, 15 Jul 2020 09:52:12 -0400
+Received: from chalk.uuid.uk ([51.68.227.198]:53852 "EHLO chalk.uuid.uk"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729086AbgGONwM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jul 2020 09:52:12 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=octiron.net
+        ; s=20180214; h=Message-ID:References:In-Reply-To:Subject:Cc:To:From:Date:
+        Content-Transfer-Encoding:Content-Type:MIME-Version:Sender:Reply-To:
+        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+        Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=guijBD4cg8Q7tdnUnEDYLjCfwVKhLO9XFxXD5Rd4dqU=; b=bNOrGneSfYnabKmEt6SPi+WhIf
+        idXYQAEi7Poyjy3yLsuqy/0ACqYBbFcVPFXbb0YNSzDlGlr6lRMJBiNSVNdkRjtjooluEZmMcTolf
+        56My/D8cvRmABhjiD0CcNIIPFiu1Eo1GycDDdij0/UemLKBWCIpEs1Alv78co2roBRY+AIx8qG++y
+        EhWTf3CHekv94ORx/+LiocmaTH3L35yiDmj5oOG9zqw2fvvPl7WoZjPm9wXjMIwcwOVTC7umLLaPI
+        Dek47bdZuoyPeetqJKwYcQV4sVN8Seiyk2mWO1TozYNm9peYsHxPRlG2nL3yKKZZIOV7bnisqjszV
+        adyVta9g==;
+Received: by chalk.uuid.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.90_1)
+        (envelope-from <simon@octiron.net>)
+        id 1jvhpH-0000Mi-KI; Wed, 15 Jul 2020 14:52:05 +0100
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=octiron.net
+        ; s=20180214; h=Message-ID:References:In-Reply-To:Subject:Cc:To:From:Date:
+        Content-Transfer-Encoding:Content-Type:MIME-Version;
+        bh=guijBD4cg8Q7tdnUnEDYLjCfwVKhLO9XFxXD5Rd4dqU=; b=pDNq9ZX1Rc+2yxI3frqE441dLn
+        80QhNt/Yfx7iAN/mf+jMRFBtacr/seV9EPGwIbZ5N1gFvw4oZNE2C5FWPS5TXVTC7BuWXN1+AJYtn
+        AR5etgDHvk6u0ceQw+5PYoOLy+nlB7C3uidtDT2OrI6F2nUj2KikkA1oBDDsBr8YXzyJCxSpDwOl1
+        sIpOzTZNCGeC9RhpyQs8HKYSJYrjfSbGlV/8mdYUVfrKyjeg+qYuqFOfOBIY6UPRWhrqcXXsQSWB3
+        I4xwtSVTAxF9Le/gY1Pysf3yxX1iMdR7owIo+2dYk5fbZk29pCF616RWFKKuUKUg7NXmCLt7nBQu8
+        19VaFC3A==;
+Received: by tsort.uuid.uk with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <simon@octiron.net>)
+        id 1jvhpC-00018M-Kr; Wed, 15 Jul 2020 14:51:57 +0100
+Received: from localhost ([::1]:45698)
+        by skund.uuid.uk with esmtp (Exim 4.86_2)
+        (envelope-from <simon@octiron.net>)
+        id 1jvhpC-0005Bx-Hy; Wed, 15 Jul 2020 14:51:54 +0100
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="n8g4imXOkfNTN/H1"
-Content-Disposition: inline
-In-Reply-To: <3c8a235ebb0bf76bcffeb8c6b983cd4c95d77459.camel@collabora.com>
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
+Content-Transfer-Encoding: 8bit
+Date:   Wed, 15 Jul 2020 14:51:54 +0100
+From:   Simon Arlott <simon@octiron.net>
+To:     =?UTF-8?Q?=C3=81lvaro_Fern=C3=A1ndez_Rojas?= <noltari@gmail.com>
+Cc:     Jonas Gorski <jonas.gorski@gmail.com>, kishon@ti.com,
+        vkoul@kernel.org, robh+dt@kernel.org,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        bcm-kernel-feedback-list@broadcom.com,
+        Philipp Zabel <p.zabel@pengutronix.de>, krzk@kernel.org,
+        gregkh@linuxfoundation.org, alcooperx@gmail.com,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v6 2/2] phy: bcm63xx-usbh: Add BCM63xx USBH driver
+In-Reply-To: <4C342CF5-7417-4C6D-B1D2-75C71B9688C1@gmail.com>
+References: <20200715131803.1762064-1-noltari@gmail.com>
+ <20200715131803.1762064-3-noltari@gmail.com>
+ <2e28eed25955385ab2513f8b617829f3@arlott.org>
+ <4C342CF5-7417-4C6D-B1D2-75C71B9688C1@gmail.com>
+Message-ID: <17de4f558d512a288ff15c26e90951d0@arlott.org>
+X-Sender: simon@octiron.net
+User-Agent: Roundcube Webmail/1.2-beta
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 2020-07-15 14:39, Álvaro Fernández Rojas wrote:
+> Hello Simon,
+> 
+> This is based on your work:
+> https://github.com/nomis/linux/commit/c4c55b603a78e2732044a833e248c1a1087e7053
+> https://github.com/nomis/linux/commit/f153a58b9e6f88e72c3ef34dc076118f8b3ade5b
 
---n8g4imXOkfNTN/H1
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Ok, it has been a long time and I couldn't find a branch with those in 
+locally.
 
-Hi,
+Please remove my *email address* from the source code and MODULE_AUTHOR 
+text.
 
-On Wed 15 Jul 20, 08:57, Ezequiel Garcia wrote:
-> It seems this one felt thru the cracks. Sorry for the delay.
->=20
-> On Thu, 2020-05-14 at 11:39 -0400, Nicolas Dufresne wrote:
-> > As per spec, the CAPTURE resolution should be automatically set based on
-> > the OTUPUT resolution. This patch properly propagate width/height to the
-> > capture when the OUTPUT format is set and override the user provided
-> > width/height with configured OUTPUT resolution when the CAPTURE fmt is
-> > updated.
-> >=20
-> > This also prevents userspace from selecting a CAPTURE resolution that is
-> > too small, avoiding unwanted page faults.
-> >=20
-> > Signed-off-by: Nicolas Dufresne <nicolas.dufresne@collabora.com>
->=20
-> This looks correct.
 
-Looks like there's no issue with alignment (that will get applied as well),
-which was a possible concern.
+Historical signed-off-by lines can be updated to:
+Signed-off-by: Simon Arlott <simon@octiron.net>
 
-Thanks for reviewing!
-
-Acked-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-
-Cheers,
-
-Paul
-
-> Reviewed-by: Ezequiel Garcia <ezequiel@collabora.com>
->=20
-> Thanks,
-> Ezequiel
->=20
-> > ---
-> >  drivers/staging/media/sunxi/cedrus/cedrus_video.c | 7 ++++++-
-> >  1 file changed, 6 insertions(+), 1 deletion(-)
-> >=20
-> > diff --git a/drivers/staging/media/sunxi/cedrus/cedrus_video.c b/driver=
-s/staging/media/sunxi/cedrus/cedrus_video.c
-> > index 16d82309e7b6..a6d6b15adc2e 100644
-> > --- a/drivers/staging/media/sunxi/cedrus/cedrus_video.c
-> > +++ b/drivers/staging/media/sunxi/cedrus/cedrus_video.c
-> > @@ -247,6 +247,8 @@ static int cedrus_try_fmt_vid_cap(struct file *file=
-, void *priv,
-> >  		return -EINVAL;
-> > =20
-> >  	pix_fmt->pixelformat =3D fmt->pixelformat;
-> > +	pix_fmt->width =3D ctx->src_fmt.width;
-> > +	pix_fmt->height =3D ctx->src_fmt.height;
-> >  	cedrus_prepare_format(pix_fmt);
-> > =20
-> >  	return 0;
-> > @@ -319,11 +321,14 @@ static int cedrus_s_fmt_vid_out(struct file *file=
-, void *priv,
-> >  		break;
-> >  	}
-> > =20
-> > -	/* Propagate colorspace information to capture. */
-> > +	/* Propagate format information to capture. */
-> >  	ctx->dst_fmt.colorspace =3D f->fmt.pix.colorspace;
-> >  	ctx->dst_fmt.xfer_func =3D f->fmt.pix.xfer_func;
-> >  	ctx->dst_fmt.ycbcr_enc =3D f->fmt.pix.ycbcr_enc;
-> >  	ctx->dst_fmt.quantization =3D f->fmt.pix.quantization;
-> > +	ctx->dst_fmt.width =3D ctx->src_fmt.width;
-> > +	ctx->dst_fmt.height =3D ctx->src_fmt.height;
-> > +	cedrus_prepare_format(&ctx->dst_fmt);
-> > =20
-> >  	return 0;
-> >  }
-> > --=20
-> > 2.26.2
-> >=20
-> >=20
->=20
->=20
-
---=20
-Paul Kocialkowski, Bootlin
-Embedded Linux and kernel engineering
-https://bootlin.com
-
---n8g4imXOkfNTN/H1
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEEJZpWjZeIetVBefti3cLmz3+fv9EFAl8PCfAACgkQ3cLmz3+f
-v9Hn4Af9EzN5gnaUQKr1CzXC653L4rnjwlGYHhQ1ctQj7EtF8LgF6iugRO1UMIF9
-nKLxp3yyElrKlWAE3DpaVDmb4cilu8IzSeO3T6f9XtUwaAhJcsmP+QEeQ3QLT2R/
-yclIp4Nv7u93jYLvPDXKLf4BPQ1Gjrrhh1R9fEda+GV/lVkaY6jzFBoGwPRCr7Ix
-t0FWyHNrOH+FfAAWm+gmqWB4Molnl3cd1vYcvWBbM8Yf7VbDL3DyvUA6NhUCcs64
-f5OUBpJVGArH7HxL/sHB7pmqG4pcsQeljXE1GPuV77+/AJ/AlvpVslpWyC4sOx1C
-PdDbVhi/dtKugkhQNAtUN2fnmFHRAg==
-=49po
------END PGP SIGNATURE-----
-
---n8g4imXOkfNTN/H1--
+-- 
+Simon Arlott
