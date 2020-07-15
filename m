@@ -2,115 +2,96 @@ Return-Path: <SRS0=kup7=A2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C4DAC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 19:32:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3337C433E5
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 19:32:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F06B820663
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 19:32:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 810AA2065F
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 19:32:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="km99CtKF"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="opeGBUU0";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="wdER8ko3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726929AbgGOTcf (ORCPT
+        id S1726983AbgGOTcx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 15:32:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41828 "EHLO
+        Wed, 15 Jul 2020 15:32:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41880 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726479AbgGOTce (ORCPT
+        with ESMTP id S1726479AbgGOTcx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 15:32:34 -0400
-Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 33568C061755;
-        Wed, 15 Jul 2020 12:32:34 -0700 (PDT)
-Received: by mail-ej1-x643.google.com with SMTP id n26so3430982ejx.0;
-        Wed, 15 Jul 2020 12:32:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=+qRKnkS0l/5+dReHrPFaB3lJpeJ/drPMSf8yw4099q4=;
-        b=km99CtKFXqmaMoFN/9hZ2vfU3M9rn9VXa0Wddi68s8J9FsBJ8mWSLNO5DBIuGn65+P
-         Laa+wzzJWf4NO8vfEFptU9T1uqWWVuMD88WeO+GvXICa6TSRX0pG0CqHSLS5IILRGOPK
-         N0sVitdg01ogrDBvGLmTD4fPMmZjj1mpWEfa3ZCaH/3GaYyF5UeOyJjp+KheigZ6YrMZ
-         mkJtq8+gfL+RUteDOpmEBaV2JtHCvmkZ4t+FW3Usy5KZ7oPyHC20bf8t3AvIds2VLQ+T
-         lmgvOvSsDG6j3j30M+znQ5JbDeJvCAnT/HR4Uqlw2hi0XKpMvmzErSL0+FQpc4jSTfOU
-         Up7A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=+qRKnkS0l/5+dReHrPFaB3lJpeJ/drPMSf8yw4099q4=;
-        b=EYYyl7DZp3cyECvpQ/U1MzxO+R9cyfFX3LGe5ElRvcVK6wlkuNTHmndzsln/q8GbVF
-         c1jkejYGSF+I8UZuNJWFUkt2NIoRxHLSe4ZjqLatrLZmxHXeU4oPrQx0s0KVc/PR59v+
-         BBehOkmNtXPfCmzLpBPD8VQmyeHB0gedCOySbv6ikZoNOZ6FpjOSefGSKJKFQMRrptGn
-         670AOh4BMDz7sohb4TIuwWIL1yQG83aQk6QX89E/vwkTPk/+q/dQ6LTxq19tAffzzUih
-         MDr1cLmvFwTUHg2m2tUH8Nz5/JM6TON/CKP58c7GZdUVCcxy3p1iOik2x45+exZlYCCr
-         kzow==
-X-Gm-Message-State: AOAM5329bzPmacQShMTzu29LpuN/QosadCMg5oZMOshoXgPLQruvBUjG
-        iK/gIVoozqRlIDkZssoy9kqae1o4
-X-Google-Smtp-Source: ABdhPJyg6GYM0hmAM0FigvjKQ2H3ifxf3ZIbxnOmQoCXVh4NMOSzihd1rNORYEVslV757YPGB1xB9A==
-X-Received: by 2002:a17:906:6dda:: with SMTP id j26mr518486ejt.336.1594841551741;
-        Wed, 15 Jul 2020 12:32:31 -0700 (PDT)
-Received: from ?IPv6:2a01:110f:b59:fd00:4863:80a3:c4db:39e? ([2a01:110f:b59:fd00:4863:80a3:c4db:39e])
-        by smtp.gmail.com with ESMTPSA id a25sm2989970eds.77.2020.07.15.12.32.30
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 15 Jul 2020 12:32:30 -0700 (PDT)
-Subject: Re: [PATCH] leds: add NCT6795D driver
-To:     Alexandre Courbot <gnurou@gmail.com>, Pavel Machek <pavel@ucw.cz>
-Cc:     Dan Murphy <dmurphy@ti.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-leds@vger.kernel.org
-References: <20200713134114.137265-1-gnurou@gmail.com>
- <20200714223344.GA20740@amd>
- <CAAVeFuKomLcAue9rGXhK3Uc=H+v9ZLBA84Ozr_rZDRQMYeC=dg@mail.gmail.com>
-From:   Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Message-ID: <17fe52a2-73ff-b547-8a59-5df009c929c8@gmail.com>
-Date:   Wed, 15 Jul 2020 21:32:28 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Wed, 15 Jul 2020 15:32:53 -0400
+Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1140DC061755;
+        Wed, 15 Jul 2020 12:32:53 -0700 (PDT)
+Date:   Wed, 15 Jul 2020 21:32:50 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1594841571;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=h3ZtpJhPWfienzS6KSRdpCoqdEdUY7hLyESs4LYy87o=;
+        b=opeGBUU0Km5h9n/E8ozxgvlvS0jssPdHjWnrj09AHc/Z0ECXSrpw0TgunqI0QQN3VoATZI
+        G4Ks00Havy1oKYlpXi2Xul5pvYePd0NE2qVfBt3/+9Q90GD2Vca3VkHx3eiGk5JqK5VSZW
+        f8m4o2rAT5Geg4I7fw368/FHBKjEno6vbf3SN9LrTJq9LBPuIcPEv8yJ543SwygAH0w0YW
+        YtfWzmGIikSwam30e+yMTcvDLxvfLX3ruSWvNNx4RIpcVrDsz1ZOmOUK9mr/D11pTIl+Eb
+        xLGTDt+Y03icyfWMx1brZngDAfgJEFuYrtzniWbiTPEwtEyWmx4R3L6WTWHlIA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1594841571;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=h3ZtpJhPWfienzS6KSRdpCoqdEdUY7hLyESs4LYy87o=;
+        b=wdER8ko3tdcNTTXPV2aMj3jks22cJywWY/NJY3QdvIddTlTFyj3ptvbixkBGazMBo/fAwh
+        Iqx8KQDkSbXv8hCg==
+From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To:     Uladzislau Rezki <urezki@gmail.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>, RCU <rcu@vger.kernel.org>,
+        linux-mm@kvack.org, "Paul E . McKenney" <paulmck@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "Theodore Y . Ts'o" <tytso@mit.edu>,
+        Matthew Wilcox <willy@infradead.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Oleksiy Avramchenko <oleksiy.avramchenko@sonymobile.com>
+Subject: Re: [PATCH 1/1] rcu/tree: Drop the lock before entering to page
+ allocator
+Message-ID: <20200715193250.axntj7jdt6bw52dr@linutronix.de>
+References: <20200715183537.4010-1-urezki@gmail.com>
+ <20200715185628.7b4k3o5efp4gnbla@linutronix.de>
+ <20200715190243.GA26735@pc636>
 MIME-Version: 1.0
-In-Reply-To: <CAAVeFuKomLcAue9rGXhK3Uc=H+v9ZLBA84Ozr_rZDRQMYeC=dg@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200715190243.GA26735@pc636>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Alexandre,
+On 2020-07-15 21:02:43 [+0200], Uladzislau Rezki wrote:
+> 
+> <snip>
+>     spin_lock();
+>     __get_free_page(GFP_NOWAIT | __GFP_NOWARN);
+>     spin_unlock();
+> <snip>
+> 
+> Also, please note we do it for regular kernel.
 
-On 7/15/20 3:54 AM, Alexandre Courbot wrote:
-> Hi Pavel,
-> 
-> On Wed, Jul 15, 2020 at 7:33 AM Pavel Machek <pavel@ucw.cz> wrote:
->>
->> Hi!
->>
->>> Add support for the LED feature of the NCT6795D chip found on some
->>> motherboards, notably MSI ones. The LEDs are typically used using a
->>> RGB connector so this driver creates one LED device for each color
->>> component.
->>
->> Ok, let me take a look. What entries does it present in /sys?
-> 
-> Right now these 3 directories in /sys/class/leds:
-> 
-> nct6795d:blue:
-> nct6795d:green:
-> nct6795d:red:
-> 
-> with the usual suspects `brightness` and `max_brightness` in each. I
-> am not 100% sure I got the names right so please let me know if that
-> is not correct.
+ach right okay then.
 
-You miss LED function, that should be in the second section.
+> >
+> > What happened to the part where I asked for a spinlock_t?
+> > 
+> What do you mean?
 
--- 
-Best regards,
-Jacek Anaszewski
+Please drop that raw_spinlock_t for the kfree_rcu() based locking and
+use just a plain spinlock_t for the locking. Then you can keep the same
+code flow for RT and !RT without any special cases and everything.
+
+> --
+> Vlad Rezki
+
+Sebastian
