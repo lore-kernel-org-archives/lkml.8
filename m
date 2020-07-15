@@ -2,173 +2,123 @@ Return-Path: <SRS0=kup7=A2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4081C433E4
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 17:53:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CB49C433E2
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 17:54:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9B19D20663
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 17:53:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EA4CB20663
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 17:54:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594835642;
+	bh=9g8aeLK9REP1cLVWsPlMudE6ohkuFFjl/Cs+LGSZ6P0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Duhg/ErzWbRA8NUmgPknDAKSe8+uR6kxU0gNHZi10LuN/sdOc+Aqr9Geile5Ri0y9
+	 tJPD2sv6ySZqIZPlG3i7XHcukmn0IAEAXlI6WlA/660rGnJ2K0hMHdSh+fEny9Fk8A
+	 /ol9x2EQgoi5qaj1NAkwO5mRCtc46FsfCYO9QS6s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726648AbgGORxY (ORCPT
+        id S1726715AbgGORyA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 13:53:24 -0400
-Received: from foss.arm.com ([217.140.110.172]:38254 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725861AbgGORxY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 13:53:24 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6737031B;
-        Wed, 15 Jul 2020 10:53:23 -0700 (PDT)
-Received: from [10.57.32.45] (unknown [10.57.32.45])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id DE4D23F718;
-        Wed, 15 Jul 2020 10:53:20 -0700 (PDT)
-Subject: Re: [PATCH 0/4] Bounced DMA support
-To:     Claire Chang <tientzu@chromium.org>
-Cc:     Rob Herring <robh+dt@kernel.org>, frowand.list@gmail.com,
-        hch@lst.de, m.szyprowski@samsung.com, treding@nvidia.com,
-        Greg KH <gregkh@linuxfoundation.org>, saravanak@google.com,
-        suzuki.poulose@arm.com, dan.j.williams@intel.com,
-        heikki.krogerus@linux.intel.com, bgolaszewski@baylibre.com,
-        devicetree@vger.kernel.org, lkml <linux-kernel@vger.kernel.org>,
-        iommu@lists.linux-foundation.org, tfiga@chromium.org,
-        Nicolas Boichat <drinkcat@chromium.org>
-References: <20200713091211.2183368-1-tientzu@chromium.org>
- <8a7ce34e-87c0-d224-3974-34f1877fbb0e@arm.com>
- <CALiNf2_GdC1RSLyYSu+LWXHGQZiAL69zNuW0sowuCDdRWw4HJg@mail.gmail.com>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <6c36635b-9611-30dd-bb6f-92e7d66bd7e3@arm.com>
-Date:   Wed, 15 Jul 2020 18:53:17 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Wed, 15 Jul 2020 13:54:00 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:44995 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725861AbgGORx7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jul 2020 13:53:59 -0400
+Received: by mail-io1-f65.google.com with SMTP id i4so3151758iov.11;
+        Wed, 15 Jul 2020 10:53:58 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=P3B3mLxesRLNcERsb3dRLB4kBnpbANKyx7xmsh9Ksh8=;
+        b=eIHWUOiOdzmrIHnDI3VVZSZz2bhwv1NFQW8JvRL2mO3yq6dc5W9vzYRALFK8k3py9Q
+         VkW150/UUelWqKB8wL7jJGxFS6rk4rT0bYlC3L5pQoc5yNdKxzhMOEqFCke6ACNhxJuq
+         9UW+tGi6ZllWZma9xMNy0nhvVOQkviFks/Z/88AU3cgKS/bcLg9XgV/uhi+WA+JBTIkm
+         1mTSZFJZoIcyBzh76dNnDqTCKVuScAX3OrNagao+WfmgSvQ5rJFEgwKrV6SH8byIJXal
+         Fde6OAOutJ1EfJAurr4/xlHiLk/LUhPV+6rr/vvCYDpgbjH/6GsCSms+/AvPvQJ2vqGw
+         6HwQ==
+X-Gm-Message-State: AOAM531o1lfeANz/Ise03RmeVctS0pWnvjfOennE5Vt8GWlULYBKOops
+        mNWHNVaVKjIOrVxyVeRJnFL+0dTOyg==
+X-Google-Smtp-Source: ABdhPJx5JOOO2YSgNc4SGZxFHsxJyNx/SGb0yWUOzjfTsY5cWxBY1ZnqpvTk5wIBElTlc0mSwwxtEA==
+X-Received: by 2002:a6b:b74e:: with SMTP id h75mr428154iof.79.1594835638606;
+        Wed, 15 Jul 2020 10:53:58 -0700 (PDT)
+Received: from xps15 ([64.188.179.252])
+        by smtp.gmail.com with ESMTPSA id u6sm1359427ilg.32.2020.07.15.10.53.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 15 Jul 2020 10:53:57 -0700 (PDT)
+Received: (nullmailer pid 504090 invoked by uid 1000);
+        Wed, 15 Jul 2020 17:53:56 -0000
+Date:   Wed, 15 Jul 2020 11:53:56 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Yifeng Zhao <yifeng.zhao@rock-chips.com>
+Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        vigneshr@ti.com, heiko@sntech.de, robh+dt@kernel.org,
+        richard@nod.at, miquel.raynal@bootlin.com,
+        linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org,
+        linux-rockchip@lists.infradead.org
+Subject: Re: [PATCH v7 1/8] dt-bindings: mtd: Describe Rockchip RK3xxx NAND
+ flash controller
+Message-ID: <20200715175356.GA502928@bogus>
+References: <20200715090342.28339-1-yifeng.zhao@rock-chips.com>
+ <20200715090342.28339-2-yifeng.zhao@rock-chips.com>
 MIME-Version: 1.0
-In-Reply-To: <CALiNf2_GdC1RSLyYSu+LWXHGQZiAL69zNuW0sowuCDdRWw4HJg@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200715090342.28339-2-yifeng.zhao@rock-chips.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-07-15 04:43, Claire Chang wrote:
-> On Mon, Jul 13, 2020 at 7:40 PM Robin Murphy <robin.murphy@arm.com> wrote:
->>
->> On 2020-07-13 10:12, Claire Chang wrote:
->>> This series implements mitigations for lack of DMA access control on
->>> systems without an IOMMU, which could result in the DMA accessing the
->>> system memory at unexpected times and/or unexpected addresses, possibly
->>> leading to data leakage or corruption.
->>>
->>> For example, we plan to use the PCI-e bus for Wi-Fi and that PCI-e bus
->>> is not behind an IOMMU. As PCI-e, by design, gives the device full
->>> access to system memory, a vulnerability in the Wi-Fi firmware could
->>> easily escalate to a full system exploit (remote wifi exploits: [1a],
->>> [1b] that shows a full chain of exploits; [2], [3]).
->>>
->>> To mitigate the security concerns, we introduce bounced DMA. The bounced
->>> DMA ops provide an implementation of DMA ops that bounce streaming DMA
->>> in and out of a specially allocated region. The feature on its own
->>> provides a basic level of protection against the DMA overwriting buffer
->>> contents at unexpected times. However, to protect against general data
->>> leakage and system memory corruption, the system needs to provide a way
->>> to restrict the DMA to a predefined memory region (this is usually done
->>> at firmware level, e.g. in ATF on some ARM platforms).
->>
->> More to the point, this seems to need some fairly special interconnect
->> hardware too. On typical systems that just stick a TZASC directly in
->> front of the memory controller it would be hard to block DMA access
->> without also blocking CPU access. With something like Arm TZC-400 I
->> guess you could set up a "secure" region for most of DRAM that allows NS
->> accesses by NSAID from the CPUs, then similar regions for the pools with
->> NSAID access for both the respective device and the CPUs, but by that
->> point you've probably used up most of the available regions before even
->> considering what the firmware and TEE might want for actual Secure memory.
->>
->> In short, I don't foresee this being used by very many systems.
-> We're going to use this on MTK SoC with MPU (memory protection unit) to
-> restrict the DMA access for PCI-e Wi-Fi.
+On Wed, 15 Jul 2020 17:03:39 +0800, Yifeng Zhao wrote:
+> Documentation support for Rockchip RK3xxx NAND flash controllers
+> 
+> Signed-off-by: Yifeng Zhao <yifeng.zhao@rock-chips.com>
+> ---
+> 
+> Changes in v7:
+> - Fix some wrong define
+> 
+> Changes in v6:
+> - Fix some wrong define
+> - Modified the definition of compatible
+> 
+> Changes in v5:
+> - Fix some wrong define.
+> - Add boot-medium define.
+> - Remove some compatible define.
+> 
+> Changes in v4:
+> - The compatible define with rkxx_nfc.
+> - Add assigned-clocks.
+> - Fix some wrong defineChanges in.
+> 
+> Changes in v3:
+> - Change the title for the dt-bindings.
+> 
+> Changes in v2: None
+> 
+>  .../mtd/rockchip,nand-controller.yaml         | 162 ++++++++++++++++++
+>  1 file changed, 162 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mtd/rockchip,nand-controller.yaml
+> 
 
-OK, based on failing to really grasp the M4U and LARB side of MTK's 
-interconnect for the media stuff, I'm not even going to ask about that 
-MPU ;)
 
-What I had in mind and didn't do a good job of actually expressing there 
-was that this is a strong justification for using shared code as much as 
-possible, to minimise the amount we have to maintain that's specific to 
-this relatively niche use-case (it's good for SoCs like yours that *can* 
-support it, but most will either have IOMMUs or simply not have the 
-option of doing anything).
+My bot found errors running 'make dt_binding_check' on your patch:
 
->> That said,, although the motivation is different, it appears to end up
->> being almost exactly the same end result as the POWER secure
->> virtualisation thingy (essentially: constrain DMA to a specific portion
->> of RAM). The more code can be shared with that, the better.
-> Could you share a bit more about the POWER secure virtualisation thingy?
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/mtd/rockchip,nand-controller.example.dt.yaml: example-0: nand-controller@ff4b0000:reg:0: [0, 4283105280, 0, 16384] is too long
 
-There are probably more recent resources, but what I could easily turn 
-up from memory (other than a lot of back-and-forth about virtio) is this 
-old patchset which seems to form a reasonable overview:
 
-https://lore.kernel.org/linux-iommu/20180824162535.22798-1-bauerman@linux.ibm.com/
+See https://patchwork.ozlabs.org/patch/1329325
 
-The main differences are that they have the luxury of being able to make 
-the SWIOTLB buffer accessible in-place, rather than having to control 
-its initial allocation, and because it's a system-wide thing they could 
-pretty much achieve it all with existing machinery - on second look 
-there are actually far fewer changes there than I thought - whereas you 
-need the extra work to handle it on a per-device basis.
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure dt-schema is up to date:
 
-Robin.
+pip3 install git+https://github.com/devicetree-org/dt-schema.git@master --upgrade
 
->>> Currently, 32-bit architectures are not supported because of the need to
->>> handle HIGHMEM, which increases code complexity and adds more
->>> performance penalty for such platforms. Also, bounced DMA can not be
->>> enabled on devices behind an IOMMU, as those require an IOMMU-aware
->>> implementation of DMA ops and do not require this kind of mitigation
->>> anyway.
->>
->> Note that we do actually have the notion of bounced DMA with IOMMUs
->> already (to avoid leakage of unrelated data in the same page). I think
->> it's only implemented for intel-iommu so far, but shouldn't take much
->> work to generalise to iommu-dma if anyone wanted to. That's already done
->> a bunch of work to generalise the SWIOTLB routines to be more reusable,
->> so building on top of that would be highly preferable.
-> Yes, I'm aware of that and I'll try to put this on top of SWIOTLB.
->>
->> Thirdly, the concept of device-private bounce buffers does in fact
->> already exist to some degree too - there are various USB, crypto and
->> other devices that can only DMA to a local SRAM buffer (not to mention
->> subsystems doing their own bouncing for the sake of alignment/block
->> merging/etc.). Again, a slightly more generalised solution that makes
->> this a first-class notion for dma-direct itself and could help supplant
->> some of those hacks would be really really good.
->>
->> Robin.
->>
->>> [1a] https://googleprojectzero.blogspot.com/2017/04/over-air-exploiting-broadcoms-wi-fi_4.html
->>> [1b] https://googleprojectzero.blogspot.com/2017/04/over-air-exploiting-broadcoms-wi-fi_11.html
->>> [2] https://blade.tencent.com/en/advisories/qualpwn/
->>> [3] https://www.bleepingcomputer.com/news/security/vulnerabilities-found-in-highly-popular-firmware-for-wifi-chips/
->>>
->>>
->>> Claire Chang (4):
->>>     dma-mapping: Add bounced DMA ops
->>>     dma-mapping: Add bounced DMA pool
->>>     dt-bindings: of: Add plumbing for bounced DMA pool
->>>     of: Add plumbing for bounced DMA pool
->>>
->>>    .../reserved-memory/reserved-memory.txt       |  36 +++
->>>    drivers/of/address.c                          |  37 +++
->>>    drivers/of/device.c                           |   3 +
->>>    drivers/of/of_private.h                       |   6 +
->>>    include/linux/device.h                        |   3 +
->>>    include/linux/dma-mapping.h                   |   1 +
->>>    kernel/dma/Kconfig                            |  17 +
->>>    kernel/dma/Makefile                           |   1 +
->>>    kernel/dma/bounced.c                          | 304 ++++++++++++++++++
->>>    9 files changed, 408 insertions(+)
->>>    create mode 100644 kernel/dma/bounced.c
->>>
+Please check and re-submit.
+
