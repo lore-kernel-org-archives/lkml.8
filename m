@@ -2,101 +2,81 @@ Return-Path: <SRS0=kup7=A2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B54EC433E3
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 12:07:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DBCDDC433E3
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 12:09:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4B7742065D
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 12:07:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="f0bfEQZq"
+	by mail.kernel.org (Postfix) with ESMTP id BCD4C2065D
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 12:09:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594814962;
+	bh=pLHwjbIgufeWOFnWvZVLWDsUYXG6WW21lbO9Vj/FqQo=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=s+cHefHyBJseSfk7lwxo6qU+O9ThqUshIGrgVeKnRO2+WGO3hqzPlExg2VHmQh3XK
+	 4rLPouRfR+B76c0fjvt1mv28UcwfO7LcnyrewzFYxqBfgJ3rS76QRXgLqAmX7n+46f
+	 hlYO+DXVEOg7lDsVTxkQSpMRtK59p8g53UZq6tG8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730718AbgGOMHr (ORCPT
+        id S1730740AbgGOMJV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 08:07:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57722 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726968AbgGOMHq (ORCPT
+        Wed, 15 Jul 2020 08:09:21 -0400
+Received: from mail-oo1-f67.google.com ([209.85.161.67]:46470 "EHLO
+        mail-oo1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726968AbgGOMJU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 08:07:46 -0400
-Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 65B40C08C5C1
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 05:07:46 -0700 (PDT)
-Received: by mail-wm1-x342.google.com with SMTP id l2so5558976wmf.0
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 05:07:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=4Ce16eeyEmToVm1NyTuv8byPgefbOw/xQlLRuQI5vZU=;
-        b=f0bfEQZqTKoRNeLTWWsp+zkIDgSFJWBKwFbKQfO2fXZlKbPptdDII0Jk2YdDLrE0iH
-         icpSZnlr67PJZGT4osLoC2AzAriW8M//EE+9wS1LBsoBO3tf/T9SYGHAft585vjtuA8b
-         JZEN93Nih7lc1/dU5BgHIGLgqv1TWIG9UwQlOJJcXBRz4JZMCdkc/aibeTpCTVqOlM08
-         baawOh99cZBhycFMiFUUBgvwC3bADLYZGm74B6yXygYf9f1uZrRRO7VGncyBQuwQvKFv
-         0QSBBggsuQJUYOJ1E0Vi7OZLo7/f7Ww/8uBLTWT7HHQUnx/wh/kY56QJ1F/V4EiJ0xA6
-         sMVA==
+        Wed, 15 Jul 2020 08:09:20 -0400
+Received: by mail-oo1-f67.google.com with SMTP id s190so403230ooa.13;
+        Wed, 15 Jul 2020 05:09:20 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=4Ce16eeyEmToVm1NyTuv8byPgefbOw/xQlLRuQI5vZU=;
-        b=rBwjyCPJJ2JiPDjt2uvnalSkLugNspY9OWjyTWkV72qBsKhMgwboGsdhV0z5TtSQs3
-         q8BrKbbU2TjWabHrifijOGzIcdaBIldJ2TTqaZlyXQPTIR772ZeGRGDXloKCq9Om8sJv
-         /yhdXG5ZdcYqsf7raV3u5uf/Oohaqjb+Qm3P1F2INGyjY+GQByyMBwGMkeC+gtRAuvVh
-         BwKLLg8q1/62Pvmn7/hMJ5q9luIlRUpWi8tAhuPdYoViuPR+6K7brdVMpZllvyckBHSk
-         M2RTrWKqe4R7wqBvoviC91k8BUHWp9uLI0OKn3tg6DK684OD6KRhNt+NdHJECkhQIYVs
-         y+Hw==
-X-Gm-Message-State: AOAM530lNU+s680yl+lZXy3ooMq0KFefWI6lhAXTyAITTLFaHrolpD++
-        5J3Cs8q13YllW2uvhhb9BGSmJg==
-X-Google-Smtp-Source: ABdhPJzGN43S3RJ1eZFN9X1bggN1kL3iVKtEOsRuQxQlaxuxgrdeeXcNpbyaLSqe+xJ6h09Y4Ul15g==
-X-Received: by 2002:a1c:9994:: with SMTP id b142mr8151396wme.141.1594814864992;
-        Wed, 15 Jul 2020 05:07:44 -0700 (PDT)
-Received: from dell ([2.31.163.61])
-        by smtp.gmail.com with ESMTPSA id 5sm3056248wmk.9.2020.07.15.05.07.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 15 Jul 2020 05:07:44 -0700 (PDT)
-Date:   Wed, 15 Jul 2020 13:07:42 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     "Rafael J. Wysocki" <rafael@kernel.org>
-Cc:     Viresh Kumar <viresh.kumar@linaro.org>,
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=mLPIoPCWX/2y/tjhSwNs4ynh2yh9mmc4HFXmFaRS20o=;
+        b=jDZVhF9MQ82b6zgvydVnT2Q6Q4VYVrwcMWgai09sxS44j1rb+egc6R8UibZhNchQ2N
+         Hr598KW1Ti1sgMfVh0R1wdq2fItiWy1WO2qAlv8obQeKAh8E9WlYVqAsVoRP98v49sS3
+         iFFmtH4H1pcZfyzxVmPnFhLr6W9v+dEfdJsNP9JaJ9Ge0VenYGGNfvFbXkUAb7CQB17V
+         t1+csOrgj8hxaXqIGBoxB4rtBZzCXBQaTwREbvRGtKKuID1zET77BquanQV5Bxf44Qha
+         V8au6/5a4ghH9Oc9EBmkJwBjJuA0RTnhqam3XQKg5lCSyuXc0q8xI7TETRtJCch3+IBY
+         9BaA==
+X-Gm-Message-State: AOAM531na6ZPgce0RdbCncMnVFlr3AFRPqtD2gNkHaYrmiuhpO/wZuRH
+        rSEpB+mA6EF7r9ehqGe2b6bDZBOGLbtI8VtO+iA=
+X-Google-Smtp-Source: ABdhPJzhuH+9Zrju5mwFlmKrjVgDgi8NrlfM121ZkbvRz/q0nnaYaOaetm9dOKKvsw8jaadpotSDzsXSuJpbTVm7Q8Q=
+X-Received: by 2002:a4a:3e48:: with SMTP id t69mr9173593oot.38.1594814959632;
+ Wed, 15 Jul 2020 05:09:19 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200714145049.2496163-1-lee.jones@linaro.org>
+ <20200714145049.2496163-10-lee.jones@linaro.org> <CAJZ5v0iB0K6H28DSDQj9T7k_kV10THxV6-HwN9qfmkLsYNHfiA@mail.gmail.com>
+ <20200714210340.GJ1398296@dell> <20200715032442.gh2cliiddhv35fdj@vireshk-i7>
+ <20200715032718.2zlo2eurhkpoayya@vireshk-i7> <CAJZ5v0jHJDLt6QFWG9FOpqmWMXAUuSEPHdHbVgFWcwR6FQD57Q@mail.gmail.com>
+ <20200715113433.GB3165313@dell> <CAJZ5v0gFwYj7KKKj806s5SdWO1Wu5exiwObKKAdQWQEKg+2CJA@mail.gmail.com>
+ <20200715115029.GC3165313@dell>
+In-Reply-To: <20200715115029.GC3165313@dell>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Wed, 15 Jul 2020 14:09:08 +0200
+Message-ID: <CAJZ5v0hJf2BwDvmtD6UEyyxm-CGcA=SLmAt+F8Sr0ceDZji0jw@mail.gmail.com>
+Subject: Re: [PATCH 09/13] cpufreq: acpi-cpufreq: Remove unused ID structs
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
         "Rafael J. Wysocki" <rjw@rjwysocki.net>,
         Linux ARM <linux-arm-kernel@lists.infradead.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
         Linux PM <linux-pm@vger.kernel.org>,
-        Andy Grover <andrew.grover@intel.com>,
         Paul Diefenbaugh <paul.s.diefenbaugh@intel.com>,
         Dominik Brodowski <linux@brodo.de>,
         Denis Sadykov <denis.m.sadykov@intel.com>
-Subject: Re: [PATCH 09/13] cpufreq: acpi-cpufreq: Remove unused ID structs
-Message-ID: <20200715120742.GD3165313@dell>
-References: <20200714145049.2496163-1-lee.jones@linaro.org>
- <20200714145049.2496163-10-lee.jones@linaro.org>
- <CAJZ5v0iB0K6H28DSDQj9T7k_kV10THxV6-HwN9qfmkLsYNHfiA@mail.gmail.com>
- <20200714210340.GJ1398296@dell>
- <20200715032442.gh2cliiddhv35fdj@vireshk-i7>
- <20200715032718.2zlo2eurhkpoayya@vireshk-i7>
- <CAJZ5v0jHJDLt6QFWG9FOpqmWMXAUuSEPHdHbVgFWcwR6FQD57Q@mail.gmail.com>
- <20200715113433.GB3165313@dell>
- <CAJZ5v0gFwYj7KKKj806s5SdWO1Wu5exiwObKKAdQWQEKg+2CJA@mail.gmail.com>
- <20200715115029.GC3165313@dell>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200715115029.GC3165313@dell>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 15 Jul 2020, Lee Jones wrote:
-
+On Wed, Jul 15, 2020 at 1:50 PM Lee Jones <lee.jones@linaro.org> wrote:
+>
 > On Wed, 15 Jul 2020, Rafael J. Wysocki wrote:
-> 
+>
 > > On Wed, Jul 15, 2020 at 1:34 PM Lee Jones <lee.jones@linaro.org> wrote:
 > > >
 > > > On Wed, 15 Jul 2020, Rafael J. Wysocki wrote:
@@ -132,40 +112,25 @@ On Wed, 15 Jul 2020, Lee Jones wrote:
 > > > > see any users?
 > > >
 > > > It looks like they're only unused when !MODULE,
-> > 
+> >
 > > OK
-> > 
+> >
 > > > in which case optimising them away would be the correct thing to do, no?
-> 
+>
 > It would be good if someone with a little more knowledge could provide
 > a second opinion though.  I would think (hope) that the compiler would
 > be smart enough to see when its actually in use.  After all, it is the
 > compiler that places the information into the device table.
-> 
+>
 > If that is not the case, then the MODULE_DEVICE_TABLE() magic is
-> broken and will need fixing.  Removing boiler-plate is good, but not
-> at the expense of obfuscation.
+> broken and will need fixing.
 
-Okay, I'm satisfied.  This test build is without __maybe_unused:
+I'm not sure why that would be the case?
 
-# All configs built as modules (MODULE) - the compiler knows to use the tables
+> Removing boiler-plate is good, but not at the expense of obfuscation.
 
- $ ccache make -f Makefile -j24 KBUILD_OUTPUT=../builds/build-x86 allmodconfig
- $ ccache make -f Makefile -j24 KBUILD_OUTPUT=../builds/build-x86  W=1  drivers/cpufreq/
- [...]
-   CC [M]  drivers/cpufreq/pcc-cpufreq.o
+I'm not following you here to be honest.
 
-# All configs built-in (!MODULE) - the compiler sees that they are unused
-
- $ ccache make -f Makefile -j24 KBUILD_OUTPUT=../builds/build-x86 allyesconfig
- $ ccache make -f Makefile -j24 KBUILD_OUTPUT=../builds/build-x86  W=1  drivers/cpufreq/
-   CC      drivers/cpufreq/pcc-cpufreq.o
-  drivers/cpufreq/pcc-cpufreq.c:619:36: warning: ‘processor_device_ids’ defined but not used [-Wunused-const-variable=]
-  619 | static const struct acpi_device_id processor_device_ids[] = {
-      |                                    ^~~~~~~~~~~~~~~~~~~~
-
--- 
-Lee Jones [李琼斯]
-Senior Technical Lead - Developer Services
-Linaro.org │ Open source software for Arm SoCs
-Follow Linaro: Facebook | Twitter | Blog
+BTW, I'm wondering if removing the "static" modifier from the
+definitions of the structures in question makes the warnings you want
+to get rid of go away.
