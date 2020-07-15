@@ -2,116 +2,138 @@ Return-Path: <SRS0=kup7=A2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E9E7C433E5
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 23:13:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38225C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 23:14:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2A5BC2065D
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 23:13:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="JiuD8YFq"
+	by mail.kernel.org (Postfix) with ESMTP id 143402065D
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 23:14:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727097AbgGOXNM (ORCPT
+        id S1727817AbgGOXOh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 19:13:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47584 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726776AbgGOXNL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 19:13:11 -0400
-Received: from mail-qk1-x743.google.com (mail-qk1-x743.google.com [IPv6:2607:f8b0:4864:20::743])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 27C48C08C5DB
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 16:13:11 -0700 (PDT)
-Received: by mail-qk1-x743.google.com with SMTP id 80so3681929qko.7
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 16:13:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=vAehlSiMXOBCPl2Wze087kwOurzcuZOvn7IQRZzFikA=;
-        b=JiuD8YFqFvnmHOANaz54QgP0xf5g9vCr6TrkO7SwhU4atcBVlXcC9PAv+zepmyi7io
-         El06x5r7w14+Ax+DURpDvK4pIPmZPSrfc8xb0unaS3EpJl8p96f4tx5PVGgThhzrblfF
-         QFyHm1DiRVQAgEGdBjWowRsR0lhPVCj1tueD3q82qLTWkgCJPro08Jp7Y2xc2vZPH9zN
-         yJ0EDiSov7q0EwN6K81zJY9XwzdVpF4VkSt2nQ0z+fll5dBolw2RAKxL0Pqbk4YV2+5D
-         Z3hve+BvRo9I1Rlwg53Xa92dBr/wLgAg5UN89r7LhHFK4oJAbWMHcAcUzdiv5N8xPlWJ
-         FcQg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=vAehlSiMXOBCPl2Wze087kwOurzcuZOvn7IQRZzFikA=;
-        b=sZ7J8hbOu6jdOWJ0I5BTZlaX0D0ksEkZqvauBtFLvkkziKWl+99tNNOkg7kxGxNWqO
-         cKpoe1IJd54jTBEt/FrCIhOXjNSlUoZ8kEnH6Ho83oVJLU8PDi7ndtVbIaDJ1MKzf7p9
-         auAEcdBcn4rmB7aGjK4yWlA9QLvR1zAp+EPdjcg7KzCyTG5tzKED0zN7w0ijnnbklzGb
-         DJJtiXPym/y/BCUSXduYlUtP/tTsI7nFiwKynvCse9YTTud8E5w5ifWXx64e9dMqeCat
-         LaHaPooeZR/XtrvlzCIFO/SbN2HjFZv0D4lus7gPKsbG4DJh/QuAh4ErIPohCywMzvLP
-         pUJg==
-X-Gm-Message-State: AOAM533NjKpVHAqiZeg7DrTpReyaufv+i+rllO3l5YUDyesGvjFyxQ6n
-        xWnoA4U13ecNYHuRkHUKujRsStys3Jw=
-X-Google-Smtp-Source: ABdhPJxZ6l+FRJikK5oRIE1iuRzwQaeFAf5CQjSwrXbnAa5rSaFlH93xrFhXfS2XG+jV25NHNcAVig==
-X-Received: by 2002:a37:b58:: with SMTP id 85mr1435240qkl.26.1594854789870;
-        Wed, 15 Jul 2020 16:13:09 -0700 (PDT)
-Received: from [192.168.1.92] (pool-71-255-246-27.washdc.fios.verizon.net. [71.255.246.27])
-        by smtp.gmail.com with ESMTPSA id v28sm4059355qkv.31.2020.07.15.16.13.08
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 15 Jul 2020 16:13:08 -0700 (PDT)
-Subject: Re: [RFC PATCH 4/4] thermal: Modify thermal governors to do nothing
- for "cold" trip points
-To:     Zhang Rui <rui.zhang@intel.com>, daniel.lezcano@linaro.org,
-        robh+dt@kernel.org
-Cc:     linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20200710135154.181454-1-thara.gopinath@linaro.org>
- <20200710135154.181454-5-thara.gopinath@linaro.org>
- <d2eeca29328a87433a46c35947ffb490d49c168a.camel@intel.com>
-From:   Thara Gopinath <thara.gopinath@linaro.org>
-Message-ID: <5c9eec96-79b6-3499-fe06-7312504ffc4a@linaro.org>
-Date:   Wed, 15 Jul 2020 19:13:08 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Wed, 15 Jul 2020 19:14:37 -0400
+Received: from mx2.suse.de ([195.135.220.15]:45596 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726776AbgGOXOg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jul 2020 19:14:36 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id 910D0AB76;
+        Wed, 15 Jul 2020 23:14:38 +0000 (UTC)
+From:   NeilBrown <neil@brown.name>
+To:     Christoph Hellwig <hch@lst.de>, linux-kernel@vger.kernel.org
+Date:   Thu, 16 Jul 2020 09:14:28 +1000
+Cc:     "H. Peter Anvin" <hpa@zytor.com>, Song Liu <song@kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-raid@vger.kernel.org, linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH 03/23] init: remove the bstat helper
+In-Reply-To: <20200714190427.4332-4-hch@lst.de>
+References: <20200714190427.4332-1-hch@lst.de> <20200714190427.4332-4-hch@lst.de>
+Message-ID: <87h7u8xtez.fsf@notabene.neil.brown.name>
 MIME-Version: 1.0
-In-Reply-To: <d2eeca29328a87433a46c35947ffb490d49c168a.camel@intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; boundary="=-=-=";
+        micalg=pgp-sha256; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+--=-=-=
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
 
+On Tue, Jul 14 2020, Christoph Hellwig wrote:
 
-On 7/15/20 4:35 AM, Zhang Rui wrote:
-> On Fri, 2020-07-10 at 09:51 -0400, Thara Gopinath wrote:
->> For now, thermal governors do not support monitoring of falling
->> temperature. Hence, in case of calls to the governor for trip points
->> marked
->> as cold, return doing nothing.
->>
->> Signed-off-by: Thara Gopinath <thara.gopinath@linaro.org>
->> ---
->>   drivers/thermal/gov_bang_bang.c       | 8 ++++++++
->>   drivers/thermal/gov_fair_share.c      | 8 ++++++++
->>   drivers/thermal/gov_power_allocator.c | 8 ++++++++
->>   drivers/thermal/gov_step_wise.c       | 8 ++++++++
->>   4 files changed, 32 insertions(+)
-> 
-> userspace governor does not support cold trip point neither.
-> 
-> So how about adding the check in handle_non_critical_trips first, and
-> remove the check later, after all the governors support cold trip?
+> The only caller of the bstat function becomes cleaner and simpler when
+> open coding the function.
+>
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
+> Acked-by: Song Liu <song@kernel.org>
 
-Yeah, no governors support cold trip for now. Putting check in 
-handle_non_critical_trips is another way to handle this. I can do it and 
-come back to this solution when one or more governors start supporting 
-cold trip points.
+Reviewed-by: NeilBrown <neilb@suse.de>
 
+Nice!
 
--- 
-Warm Regards
-Thara
+NeilBrown
+
+> ---
+>  init/do_mounts.h    | 10 ----------
+>  init/do_mounts_md.c |  8 ++++----
+>  2 files changed, 4 insertions(+), 14 deletions(-)
+>
+> diff --git a/init/do_mounts.h b/init/do_mounts.h
+> index 0bb0806de4ce2c..7513d1c14d13fe 100644
+> --- a/init/do_mounts.h
+> +++ b/init/do_mounts.h
+> @@ -20,16 +20,6 @@ static inline int create_dev(char *name, dev_t dev)
+>  	return ksys_mknod(name, S_IFBLK|0600, new_encode_dev(dev));
+>  }
+>=20=20
+> -static inline u32 bstat(char *name)
+> -{
+> -	struct kstat stat;
+> -	if (vfs_stat(name, &stat) !=3D 0)
+> -		return 0;
+> -	if (!S_ISBLK(stat.mode))
+> -		return 0;
+> -	return stat.rdev;
+> -}
+> -
+>  #ifdef CONFIG_BLK_DEV_RAM
+>=20=20
+>  int __init rd_load_disk(int n);
+> diff --git a/init/do_mounts_md.c b/init/do_mounts_md.c
+> index b84031528dd446..359363e85ccd0b 100644
+> --- a/init/do_mounts_md.c
+> +++ b/init/do_mounts_md.c
+> @@ -138,9 +138,9 @@ static void __init md_setup_drive(void)
+>  			dev =3D MKDEV(MD_MAJOR, minor);
+>  		create_dev(name, dev);
+>  		for (i =3D 0; i < MD_SB_DISKS && devname !=3D NULL; i++) {
+> +			struct kstat stat;
+>  			char *p;
+>  			char comp_name[64];
+> -			u32 rdev;
+>=20=20
+>  			p =3D strchr(devname, ',');
+>  			if (p)
+> @@ -150,9 +150,9 @@ static void __init md_setup_drive(void)
+>  			if (strncmp(devname, "/dev/", 5) =3D=3D 0)
+>  				devname +=3D 5;
+>  			snprintf(comp_name, 63, "/dev/%s", devname);
+> -			rdev =3D bstat(comp_name);
+> -			if (rdev)
+> -				dev =3D new_decode_dev(rdev);
+> +			if (vfs_stat(comp_name, &stat) =3D=3D 0 &&
+> +			    S_ISBLK(stat.mode))
+> +				dev =3D new_decode_dev(stat.rdev);
+>  			if (!dev) {
+>  				printk(KERN_WARNING "md: Unknown device name: %s\n", devname);
+>  				break;
+> --=20
+> 2.27.0
+
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEEG8Yp69OQ2HB7X0l6Oeye3VZigbkFAl8PjdQACgkQOeye3VZi
+gbnOgBAAg5tYGuw1TVkG+Rso30FARvah0yhwFOfZKWKl4XLVRV9xmx+b6bklDYL9
+WqtyGlYlvwkyoIhMw+SPMwaswAXHj+g/IB657EdpcZrWsHJ2M0pPwpLgFLmScPL5
+XCx93C0ZEVbbL+TvBh/SVssGpvbo6XCH2YdYNqP46AwSf8iEBDK/6zKW8yXVynzO
+F7C2DmXOchXEhitgHtx15XZPJ1M1rgAasTBgbZGIz0HmFRDjR3M8Q/uMELNBpQlp
+nl/rcoaZPUmubi1n9yDHyyNE5RaV9v1o/u0JuIt6gU6N64Nd1LyVJWMQVueItRDN
+t9zjq2UNqC7vvclHvmTAZPzIXZnqANV2Dniiz5d+iEhFnlnlMI8Oy+3y2vJiMRzL
+y1AHv53G3UgA1SLLQtGZYNynCRtg3QAG3z6ljNFiNgq/VcJou4dJFjyO8TB6RqWo
+FGvGU1UxmR5N5S92vj/ZPq09iC97OAQoarS6/zbwW2PY+xDYc9OyWSS8C2Twoaqa
+vjnUZS9Qk9mTARyX/69Qhn8QGiGyHd04BYSsLZNJ71ayAgIocC7vJNMR0NrKtYFf
+JgCRbAvOzDGOFkdcRhJXaJv0PTvJBW278LS4E4Ithim9aFrXh1Az4zxN/S4OP+Ch
+zXqUPaG3yN2pHC+5hnFB3bxWYqRkkolTXIPwHe7W9JpHrpcR4ik=
+=EyQS
+-----END PGP SIGNATURE-----
+--=-=-=--
