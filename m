@@ -2,103 +2,200 @@ Return-Path: <SRS0=kup7=A2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7C8AC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 17:24:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFC31C433E6
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 17:30:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B49242065D
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 17:24:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9DC112065D
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 17:30:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594834244;
+	bh=4T6S2epKi2ENJEC3KsYLtzEaf+uX57nEZeTJaHpHW8Q=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=2upZaRq+mmxu3CaLTQgz1xQZ8JEpbDiKtEYJ2SL4WWEnsU9SsrcV6WHrj4eWq1vyR
+	 wXI7n2i9pbZr7cz8iCsQfpzK0RzvY13raoy/qhDK5JJIQGtr9lUD3DSa/E1G6jMpNs
+	 R4dcI2PoK2dfAtGc9Qa0Ke950shfDtf6KEzy9GJw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726034AbgGORYQ (ORCPT
+        id S1726086AbgGORan (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 13:24:16 -0400
-Received: from mga05.intel.com ([192.55.52.43]:14801 "EHLO mga05.intel.com"
+        Wed, 15 Jul 2020 13:30:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47508 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725838AbgGORYP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 13:24:15 -0400
-IronPort-SDR: XfrtuW+XMvx9W7vz/obGzoORxpRIsckwEytAbNVy2VqzhU23Qa72dRnQb4GgoVM6dQZWF9aTwf
- CUJY/8Nc6nfg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9683"; a="234077841"
-X-IronPort-AV: E=Sophos;i="5.75,355,1589266800"; 
-   d="scan'208";a="234077841"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jul 2020 10:24:13 -0700
-IronPort-SDR: wsqayxnu2iV0RqIZ80mnY9a5n9quVCaoiOsHLNX9f8O9A+jvW/8ILDlG6gvYuLyd3EgAfM7oBR
- rHVA/jAbsmLw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,355,1589266800"; 
-   d="scan'208";a="430204423"
-Received: from guptapadev.jf.intel.com (HELO guptapadev.amr) ([10.54.74.188])
-  by orsmga004.jf.intel.com with ESMTP; 15 Jul 2020 10:24:13 -0700
-Date:   Wed, 15 Jul 2020 10:18:20 -0700
-From:   Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Dave Hansen <dave.hansen@intel.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, x86@kernel.org,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Tony Luck <tony.luck@intel.com>,
-        "Gomez Iglesias, Antonio" <antonio.gomez.iglesias@intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Anthony Steinhauser <asteinhauser@google.com>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Mark Gross <mgross@linux.intel.com>,
-        Waiman Long <longman@redhat.com>, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        Jonathan Corbet <corbet@lwn.net>
-Subject: Re: [PATCH] x86/bugs/multihit: Fix mitigation reporting when KVM is
- not in use
-Message-ID: <20200715171820.GA12379@guptapadev.amr>
-References: <267631f4db4fd7e9f7ca789c2efaeab44103f68e.1594689154.git.pawan.kumar.gupta@linux.intel.com>
- <20200714014540.GH29725@linux.intel.com>
- <099d6985-9e9f-1d9f-7098-58a9e26e4450@intel.com>
- <20200714191759.GA7116@guptapadev.amr>
- <ba442a51-294e-8624-9a69-5613ff050551@intel.com>
- <20200714210442.GA10488@guptapadev.amr>
- <e12cd3b8-7df1-94e8-e603-39e00648c026@intel.com>
- <20200715005130.GE14404@linux.intel.com>
+        id S1725861AbgGORam (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jul 2020 13:30:42 -0400
+Received: from mail-oi1-f169.google.com (mail-oi1-f169.google.com [209.85.167.169])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 990D02065D;
+        Wed, 15 Jul 2020 17:30:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594834241;
+        bh=4T6S2epKi2ENJEC3KsYLtzEaf+uX57nEZeTJaHpHW8Q=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=UGHUsR7BJPApYZexFuAAHrBmRxmIAKgVSeA6cL9K/upaRAeFUcZHrQLGgvS+7p5F3
+         6hvgH5plDm73aCY/VvnLmFS0Iaslye8woDqCku7pQDoa+9S8jLe4ZuFWd7MlnWOIAO
+         vqFWOiHuJh5mvdnEdK89U+IhikuPR54noxKyGrjI=
+Received: by mail-oi1-f169.google.com with SMTP id j11so2809795oiw.12;
+        Wed, 15 Jul 2020 10:30:41 -0700 (PDT)
+X-Gm-Message-State: AOAM532jxJh+Xw/HOtWoJW4m9UGaQJ5WbpwryfKKGCB5Q7AjWVzRpWgz
+        r03eNrLCPT6ycOYXwtPanm5neQw6O2pNFRzs+A==
+X-Google-Smtp-Source: ABdhPJwVPF7yPW/4Xav5tdTwLAAlgry1UaSHbNVOcYXq6cWPmc2b5sYdGrcceGq9vFN8OCcKMceTZ8Ekrz+Jdd7ZRTE=
+X-Received: by 2002:aca:bb82:: with SMTP id l124mr693571oif.106.1594834240916;
+ Wed, 15 Jul 2020 10:30:40 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200715005130.GE14404@linux.intel.com>
+References: <20200710230224.2265647-1-dianders@chromium.org>
+ <CAL_JsqKC5WtHb-coMCxMTDJ7CJcjVXcAxDT4J9N-Xyr=0uuURA@mail.gmail.com>
+ <CAD=FV=XWKoTd_t2uRGpw3oa0Nij2EPeAJpOHhUipXFW07JN2qw@mail.gmail.com>
+ <CAL_JsqLJM5nwNSdugMBLDVtjP97dikCm_AiHjnDs1jqBOFoaaQ@mail.gmail.com>
+ <CAD=FV=UP0AHWr22U69TKcwwAefPCYMsfzymobczqmrdB6BOOhA@mail.gmail.com>
+ <CAOCk7NoX-XAXy2WaYGjGOtEmypis-DO-W1cfU0wnucHH0oZrqg@mail.gmail.com>
+ <CAL_Jsq+Nys+ry-3D07e-68e=9Pb34C9Js6piAnzwd1gXf_DmTw@mail.gmail.com> <20200714225220.GI388985@builder.lan>
+In-Reply-To: <20200714225220.GI388985@builder.lan>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Wed, 15 Jul 2020 11:30:29 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqKU7X5f-Dt67N_yFQUUVuXrZYomB-n=dKyUqD94OXFyJQ@mail.gmail.com>
+Message-ID: <CAL_JsqKU7X5f-Dt67N_yFQUUVuXrZYomB-n=dKyUqD94OXFyJQ@mail.gmail.com>
+Subject: Re: [Freedreno] [PATCH 0/9] drm/msm: Avoid possible infinite probe
+ deferral and speed booting
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     Jeffrey Hugo <jeffrey.l.hugo@gmail.com>,
+        Doug Anderson <dianders@chromium.org>,
+        freedreno <freedreno@lists.freedesktop.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, David Airlie <airlied@linux.ie>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Rob Clark <robdclark@gmail.com>,
+        Andy Gross <agross@kernel.org>,
+        Daniel Vetter <daniel@ffwll.ch>, Sean Paul <sean@poorly.run>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 14, 2020 at 05:51:30PM -0700, Sean Christopherson wrote:
-> On Tue, Jul 14, 2020 at 02:20:59PM -0700, Dave Hansen wrote:
-> > On 7/14/20 2:04 PM, Pawan Gupta wrote:
-> > >> I see three inputs and four possible states (sorry for the ugly table,
-> > >> it was this or a spreadsheet :):
-> > >>
-> > >> X86_FEATURE_VMX	CONFIG_KVM_*	hpage split  Result	   Reason
-> > >> 	N			x	    x	     Not Affected  No VMX
-> > >> 	Y			N	    x	     Not affected  No KVM
-> 
-> This line item is pointless, the relevant itlb_multihit_show_state()
-> implementation depends on CONFIG_KVM_INTEL.  The !KVM_INTEL version simply
-> prints ""Processor vulnerable".
+On Tue, Jul 14, 2020 at 4:54 PM Bjorn Andersson
+<bjorn.andersson@linaro.org> wrote:
+>
+> On Tue 14 Jul 15:13 PDT 2020, Rob Herring wrote:
+>
+> > On Tue, Jul 14, 2020 at 10:33 AM Jeffrey Hugo <jeffrey.l.hugo@gmail.com> wrote:
+> > >
+> > > On Mon, Jul 13, 2020 at 5:50 PM Doug Anderson <dianders@chromium.org> wrote:
+> > > >
+> > > > Hi,
+> > > >
+> > > > On Mon, Jul 13, 2020 at 1:25 PM Rob Herring <robh+dt@kernel.org> wrote:
+> > > > >
+> > > > > On Mon, Jul 13, 2020 at 9:08 AM Doug Anderson <dianders@chromium.org> wrote:
+> > > > > >
+> > > > > > Hi,
+> > > > > >
+> > > > > > On Mon, Jul 13, 2020 at 7:11 AM Rob Herring <robh+dt@kernel.org> wrote:
+> > > > > > >
+> > > > > > > On Fri, Jul 10, 2020 at 5:02 PM Douglas Anderson <dianders@chromium.org> wrote:
+> > > > > > > >
+> > > > > > > > I found that if I ever had a little mistake in my kernel config,
+> > > > > > > > or device tree, or graphics driver that my system would sit in a loop
+> > > > > > > > at bootup trying again and again and again.  An example log was:
+> > > > > > >
+> > > > > > > Why do we care about optimizing the error case?
+> > > > > >
+> > > > > > It actually results in a _fully_ infinite loop.  That is: if anything
+> > > > > > small causes a component of DRM to fail to probe then the whole system
+> > > > > > doesn't boot because it just loops trying to probe over and over
+> > > > > > again.  The messages I put in the commit message are printed over and
+> > > > > > over and over again.
+> > > > >
+> > > > > Sounds like a bug as that's not what should happen.
+> > > > >
+> > > > > If you defer during boot (initcalls), then you'll be on the deferred
+> > > > > list until late_initcall and everything is retried. After
+> > > > > late_initcall, only devices getting added should trigger probing. But
+> > > > > maybe the adding and then removing a device is causing a re-trigger.
+> > > >
+> > > > Right, I'm nearly certain that the adding and then removing is causing
+> > > > a re-trigger.  I believe the loop would happen for any case where we
+> > > > have a probe function that:
+> > > >
+> > > > 1. Adds devices.
+> > > > 2. After adding devices it decides that it needs to defer.
+> > > > 3. Removes the devices it added.
+> > > > 4. Return -EPROBE_DEFER from its probe function.
+> > > >
+> > > > Specifically from what I know about how -EPROBE_DEFER works I'm not
+> > > > sure how it wouldn't cause an infinite loop in that case.
+> > > >
+> > > > Perhaps the missing part of my explanation, though, is why it never
+> > > > gets out of this infinite loop.  In my case I purposely made the
+> > > > bridge chip "ti-sn65dsi86.c" return an error (-EINVAL) in its probe
+> > > > every time.  Obviously I wasn't going to get a display up like this,
+> > > > but I just wanted to not loop forever at bootup.  I tracked down
+> > > > exactly why we get an - EPROBE_DEFER over and over in this case.
+> > > >
+> > > > You can see it in msm_dsi_host_register().  If some components haven't
+> > > > shown up when that function runs it will _always_ return
+> > > > -EPROBE_DEFER.
+> > > >
+> > > > In my case, since I caused the bridge to fail to probe, those
+> > > > components will _never_ show up.  That means that
+> > > > msm_dsi_host_register() will _always_ return -EPROBE_DEFER.
+> > > >
+> > > > I haven't dug through all the DRM code enough, but it doesn't
+> > > > necessarily seem like the wrong behavior.  If the bridge driver or a
+> > > > panel was a module then (presumably) they could show up later and so
+> > > > it should be OK for it to defer, right?
+> > > >
+> > > > So with all that, it doesn't really feel like this is a bug so much as
+> > > > it's an unsupported use case.  The current deferral logic simply can't
+> > > > handle the case we're throwing at it.  You cannot return -EPROBE_DEFER
+> > > > if your probe function adds devices each time through the probe
+> > > > function.
+> > > >
+> > > > Assuming all the above makes sense, that means we're stuck with:
+> > > >
+> > > > a) This patch series, which makes us not add devices.
+> > > >
+> > > > b) Some other patch series which rearchitects the MSM graphics stack
+> > > > to not return -EPROBE_DEFER in this case.
+> > >
+> > > This isn't a MSM specific issue.  This is an issue with how the DSI
+> > > interface works, and how software is structured in Linux.  I would
+> > > expect that pretty much any DSI host in the kernel would have some
+> > > version of this issue.
+> > >
+> > > The problem is that DSI is not "hot pluggable", so to give the DRM
+> > > stack the info it needs, we need both the DSI controller (aka the MSM
+> > > graphics stack in your case), and the thing it connects to (in your
+> > > case, the TI bridge, normally the actual panel) because the DRM stack
+> > > expects that if init completes, it has certain information
+> > > (resolution, etc), and some of that information is in the DSI
+> > > controller, and some of it is on the DSI device.
+> >
+> > Ah yes, DRM's lack of hot-plug and discrete component support... Is
+> > that not improved with some of the bridge rework?
+> >
+> > Anyways, given there is a child dependency on the parent, I don't
+> > think we should work-around DRM deficiencies in DT.
+> >
+> > BTW, There's also a deferred probe timeout you can use which stops
+> > deferring probe some number of seconds after late_initcall.
+> >
+>
+> I don't think we can rely on the deferred probe timeout, given that it
+> was reverted back to 0 seconds past late_initcall - which given that
+> most of the involved components are modules, means that without the
+> opt-in command line option we would likely fail to bring up the display.
 
-While we are on it, for CONFIG_KVM_INTEL=n would it make sense to report "Not
-affected(No KVM)"? "Processor vulnerable" is not telling much about the
-mitigation.
+I meant just as a way to make progress booting in this case where the
+display is never coming up. We're talking only about a better
+experience for an error case.
 
-Thanks,
-Pawan
+Maybe a simple solution is just having some delay inserted between
+delayed probe triggers so progress is made.
+
+Rob
