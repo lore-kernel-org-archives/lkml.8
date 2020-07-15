@@ -2,120 +2,84 @@ Return-Path: <SRS0=kup7=A2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF297C433E5
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 19:37:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7169C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 19:37:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BEB9B207BC
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 19:37:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gvbGB7NA"
+	by mail.kernel.org (Postfix) with ESMTP id 8683820663
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 19:37:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594841828;
+	bh=6qdNSfLXUeC9QZHfbaMinI6ehBLm0/L8INXojLrnX0Q=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=cYhaGbet/mu1m1edKfknlt84Wq/LKH61a/3L5ddjJLZgDjzTGTsX9mEgsZL+mukQo
+	 BhcWhlBEceJP9Ke3nNqZmBNqIXE5tSHYsCMgHoSQ1h1tpslQsZSi3YzONeiK2JfvBh
+	 n0/WGnohXT5xava6Zy3i4JSvK4Cafkv2ZX02P9WY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727036AbgGOThE (ORCPT
+        id S1727065AbgGOThH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 15:37:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42530 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726634AbgGOThC (ORCPT
+        Wed, 15 Jul 2020 15:37:07 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:42190 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727021AbgGOThF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 15:37:02 -0400
-Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4BC89C061755;
-        Wed, 15 Jul 2020 12:37:02 -0700 (PDT)
-Received: by mail-lf1-x142.google.com with SMTP id y13so1719795lfe.9;
-        Wed, 15 Jul 2020 12:37:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=/UQQ7JECYxcJsC+04YvXu3jkXwx9o0ZU8amBSOGyyL0=;
-        b=gvbGB7NAoQRARPoqxv9Cw9rm5EurTvOipDiLnb6iNSZzYaZbtuhDGwQLbpauTXguAd
-         C+jHRBFUdxhSCfFghxodI4ckz6RBDCAXk1Tj7sBTds8+txIG5PEdKfgwfCWcjaQPWLWp
-         g+erEo9033BpAGp2/xEB13F7l4nR9Uz3oUPR+HmUGwy6R1orIJi1m0bih0U/72ra69d+
-         F/zQBPKiaYzooX+8utpp7jGrm2VVP+1dUhmFTjnxvnHIDTg4hBN17XVgYzLnTTjWcADC
-         1gJGD+gyf51zCD13dM4kh46RTD1LuzJX4xh2bl33eWsWZdj5dX3L2OZVSenIoab3p048
-         u03w==
+        Wed, 15 Jul 2020 15:37:05 -0400
+Received: by mail-io1-f66.google.com with SMTP id c16so3488417ioi.9;
+        Wed, 15 Jul 2020 12:37:04 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=/UQQ7JECYxcJsC+04YvXu3jkXwx9o0ZU8amBSOGyyL0=;
-        b=JQ+ai5l1/r341wc9FHjkz6MfhWly3Vp7GplpvY6ZvAkaMIP2cEEOy1LEdt395B5WJ6
-         tTiH67ByGlZfNXN3AkjPNiefs7gRhk7s6X6g3/xYHwglbi3QK0aTXoGWq3zMCrXm4Ibn
-         8SGKXXJ1DiEPB00OGzqebV7pI6FgBu0IvWqwOAjVdH+L+GFItMCFNEol2NCp7yM4sZN8
-         F0Fwnfg82m371sWN1Q4pDOGfrfZ2qXhBA6iTpI5p8wdJG4Q8zjt8RY0X8/B73BK+WSR4
-         08u8HoX9E1/xrtCasbnaaKJpGFK+6Y/2d6lD5Ta7xQiZpyJViEanGd9bRMLr5ZOOSaOL
-         aXiw==
-X-Gm-Message-State: AOAM532B1DaXw0qSi9+7TRW6RWc7eX+SbzHNTD30SU9w5I+IQVR4xH+U
-        oq8lV4VwQ3IYINP/KIbSxZ4=
-X-Google-Smtp-Source: ABdhPJyTaONhk5LPv5gQR0R6gh7bhdAZIqNcCJDNHomyLJvqxfKFsunEhujBeuBm7wTLGiCaT+nO1A==
-X-Received: by 2002:a19:4a96:: with SMTP id x144mr269142lfa.213.1594841820710;
-        Wed, 15 Jul 2020 12:37:00 -0700 (PDT)
-Received: from pc636 (h5ef52e31.seluork.dyn.perspektivbredband.net. [94.245.46.49])
-        by smtp.gmail.com with ESMTPSA id k3sm608184lji.125.2020.07.15.12.36.58
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=WZaIoDzYYl/HXO7lkwjh/Xm4aTRVdttVJOPKuBMdG0Y=;
+        b=KCb12iau8xG2V+/g++kf3vHPFhzrDZ5WauN19JTO/8JKX4Qy1OtCAngL2FHXN3xT2H
+         6QZ0KO2MxGUueFK2Mz2TqZvzFRc0adoiEgIrlzydwiT7+F/2LbOZuliPQBJiJwvB767+
+         v3Wi83vs427LV48U+TbV2OahhvqgduxTpQW+srTsBBxzPkq3VI9SJRoXc07ZlZdtVZnv
+         uYf4A2+IcB4bVf8uz53vWg9glbvd0DziGvLA7tTSG0aR7llj7sM7myd4tpiTeG0N0NSU
+         T5j4ILG3CQuwz+KgYHWc2oTiMWkVeyJpzEmSgmT5P0wyLf29AcvCAqEllJzmwcuq1OPJ
+         NaGQ==
+X-Gm-Message-State: AOAM531/x88/ZKKzfO+hlbqLnTiRme8WOQYElWTBdMzaz84kMIKrYOMm
+        zC9rhqFkoQI1PWOukhECLLeFoAl3gw==
+X-Google-Smtp-Source: ABdhPJxcBpVavEBVS1LYGqWlui1bdPPAV/Of34Hrn8YE0UAQW3n3OJuA4f90VAJa6/W+EUbZLkh/vg==
+X-Received: by 2002:a6b:8d04:: with SMTP id p4mr901288iod.174.1594841823937;
+        Wed, 15 Jul 2020 12:37:03 -0700 (PDT)
+Received: from xps15 ([64.188.179.252])
+        by smtp.gmail.com with ESMTPSA id k1sm1506055ilr.35.2020.07.15.12.37.02
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 15 Jul 2020 12:36:59 -0700 (PDT)
-From:   Uladzislau Rezki <urezki@gmail.com>
-X-Google-Original-From: Uladzislau Rezki <urezki@pc636>
-Date:   Wed, 15 Jul 2020 21:36:57 +0200
-To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc:     Uladzislau Rezki <urezki@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>, RCU <rcu@vger.kernel.org>,
-        linux-mm@kvack.org, "Paul E . McKenney" <paulmck@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "Theodore Y . Ts'o" <tytso@mit.edu>,
-        Matthew Wilcox <willy@infradead.org>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Oleksiy Avramchenko <oleksiy.avramchenko@sonymobile.com>
-Subject: Re: [PATCH 1/1] rcu/tree: Drop the lock before entering to page
- allocator
-Message-ID: <20200715193657.GB26938@pc636>
-References: <20200715183537.4010-1-urezki@gmail.com>
- <20200715185628.7b4k3o5efp4gnbla@linutronix.de>
- <20200715190243.GA26735@pc636>
- <20200715193250.axntj7jdt6bw52dr@linutronix.de>
+        Wed, 15 Jul 2020 12:37:03 -0700 (PDT)
+Received: (nullmailer pid 696024 invoked by uid 1000);
+        Wed, 15 Jul 2020 19:37:02 -0000
+Date:   Wed, 15 Jul 2020 13:37:02 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Paul Cercueil <paul@crapouillou.net>
+Cc:     od@zcrc.me, =?utf-8?B?5ZGo55Cw5p2w?= <zhouyanjie@wanyeetech.com>,
+        Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-mips@vger.kernel.org,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+Subject: Re: [PATCH 1/7] dt-bindings: vendor-prefixes: Add YLM
+Message-ID: <20200715193702.GA695993@bogus>
+References: <20200623182432.187843-1-paul@crapouillou.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200715193250.axntj7jdt6bw52dr@linutronix.de>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200623182432.187843-1-paul@crapouillou.net>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 15, 2020 at 09:32:50PM +0200, Sebastian Andrzej Siewior wrote:
-> On 2020-07-15 21:02:43 [+0200], Uladzislau Rezki wrote:
-> > 
-> > <snip>
-> >     spin_lock();
-> >     __get_free_page(GFP_NOWAIT | __GFP_NOWARN);
-> >     spin_unlock();
-> > <snip>
-> > 
-> > Also, please note we do it for regular kernel.
+On Tue, 23 Jun 2020 20:24:26 +0200, Paul Cercueil wrote:
+> Shenzhen Yangliming Electronic Technology Co., Ltd., abbreviated YLM or
+> YLMChina, and known as Anbernic in the rest of the world, is a Chinese
+> manufacturer of handheld game consoles, some of which are known to be
+> running Linux.
 > 
-> ach right okay then.
+> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+> ---
+>  Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
+>  1 file changed, 2 insertions(+)
 > 
-> > >
-> > > What happened to the part where I asked for a spinlock_t?
-> > > 
-> > What do you mean?
-> 
-> Please drop that raw_spinlock_t for the kfree_rcu() based locking and
-> use just a plain spinlock_t for the locking. Then you can keep the same
-> code flow for RT and !RT without any special cases and everything.
-> 
-Ahhh... That i see :)
 
-I guess it is up to Paul. I wrote my thoughts. I have only one concern
-that i explained in my previous mails.
-
-Thank you, Sebastian, for your comments!
-
---
-Vlad Rezki
+Acked-by: Rob Herring <robh@kernel.org>
