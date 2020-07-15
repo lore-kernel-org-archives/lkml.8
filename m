@@ -2,149 +2,177 @@ Return-Path: <SRS0=kup7=A2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9681C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 11:50:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC367C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 11:51:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 94E2820658
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 11:50:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A428B20658
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 11:51:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="LgZ4K6Ei"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Ry0B7kwB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730466AbgGOLue (ORCPT
+        id S1730489AbgGOLvj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 07:50:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55086 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728766AbgGOLue (ORCPT
+        Wed, 15 Jul 2020 07:51:39 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:24933 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728766AbgGOLvj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 07:50:34 -0400
-Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BDEEFC08C5C1
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 04:50:33 -0700 (PDT)
-Received: by mail-wm1-x341.google.com with SMTP id g75so5275051wme.5
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 04:50:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=/T16uCv1ZWPqSW676gNIrYzGrdvCyTZGrAfC73gI1R8=;
-        b=LgZ4K6EitdkgNJmIZnB6nrrkUMdllUVyNI6qfVCTSpEPlnB3ZUp9Es7UAQyhkk2ESX
-         l+H779z95rR+9duhx4AG62Afia97T0hXyQ7Yv77OxoAX91FCWUAGTeA80uF2xLY9c9mA
-         E2gWMQuy3uee9dr3EVtZYxqfw18y/qW4jyrI0EpsycGJpLjqdGVPIv9MCp1m+PYBEgL4
-         5KPMUq/2Nn3HBz6WeL2Zp7Con55/FYRTZQo1su6tmF9R3pWakLiFpyx5vfgvRc40p55D
-         01HI+OiRmOJi1hhsdeKRK7c6h30p9nu+D0KPRsoOX4dNKS7iKNT1tuChf5ixMNGUwkgE
-         c1gw==
+        Wed, 15 Jul 2020 07:51:39 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1594813897;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=r3FX3UuRCTo9UAVThurv1D/BIiQ0N6rOrGTWl0O4StY=;
+        b=Ry0B7kwBPvO8OEY3orXXuVTOZhRxZ13ApjRYCZkoujMjI7mp9lKT+2beW1fRzvG9XFSSXv
+        TAV88+Xp65xoReQeRZFbZHY9Cc6dNjQsK+1aVdwqWxvKxBxPxN2au9U4nMXcSebkuf6LyH
+        ms3iho9oIUOhVrnMWm6mf0me8l+i9kA=
+Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com
+ [209.85.222.198]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-489-RbIuBzCWPIyGmZ1lRFm4GA-1; Wed, 15 Jul 2020 07:51:36 -0400
+X-MC-Unique: RbIuBzCWPIyGmZ1lRFm4GA-1
+Received: by mail-qk1-f198.google.com with SMTP id 204so1281781qki.20
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 04:51:36 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:content-transfer-encoding
          :in-reply-to;
-        bh=/T16uCv1ZWPqSW676gNIrYzGrdvCyTZGrAfC73gI1R8=;
-        b=B1tea/3yf29jzmsC+17a7HcIau0i+xiF6Ri9/zi7ZOaloFQzU25r7E3wRzIG/+5r/X
-         kM252lgSgLDVylotdEYBHdsWaIA9IvfouAL4M6kr7xzBgZkWoJq+BQPf8lzBfHLhsHTV
-         19eH/BezKMwPHmvbmvvEMYEc2pjT4fwAMnSwJ60Ve8gAgvZiZV3ynEu0WnHW62vXQMj+
-         43hNs4A8EuZyN4P3KvflD3l9uE+vd4eUMssV0IFKlUm8qlZIBDI6s7CCCjZw6GTAZWKM
-         F/GhjhZ7cPocwRg3P+K6fXMGc/6iVOAS4Cq0IlFG1dJgdNaGDsf0Fg8dVLEJUcm43/Mo
-         kJig==
-X-Gm-Message-State: AOAM533JAZseIg9unDFsxKyN6CWy7Ab0shSQMic3copg1ZD0IaUkEHFk
-        +ttBtlmk7Sgjx6uPEE6hWAbmaA==
-X-Google-Smtp-Source: ABdhPJzhl1aZdPeNw+p/Oo2fOmsYKXVrisAAtybPKQQFyVqm7NZLat5RzBihKMlAoPur6B+enJR0gg==
-X-Received: by 2002:a05:600c:2317:: with SMTP id 23mr8624550wmo.72.1594813832408;
-        Wed, 15 Jul 2020 04:50:32 -0700 (PDT)
-Received: from dell ([2.31.163.61])
-        by smtp.gmail.com with ESMTPSA id d28sm3710893wrc.50.2020.07.15.04.50.31
+        bh=r3FX3UuRCTo9UAVThurv1D/BIiQ0N6rOrGTWl0O4StY=;
+        b=PkQiBPr66tXS+1BLZwKAP1G16IC9eREKXOjIB/+mvu8sjwwaFlEO9mueZ8tX36t4mA
+         PwXwLxOykvoP+mzQtAooQKaq/fYeJI1pEAMewDgnyN8hi8ReG7/wkCDFvPL56DHI6HnZ
+         +w0W1+KwCDJ1giJ4W5R1gBkdyy8ZvK0oEgUcbBXy/CNGVqVkPrXYowSaYyoJIna4R5e0
+         hkqPhN4ZMrgOZNTjUHqNrRBJLTMM2sEVFl66LID1jC6gmjqh/swerCI52KLzpDCIwAVS
+         vpv/7SsfVYRZkBItog2aYnLPzHL0i0SrUHUYn1PLlkgVqrGpshTZYpl+EdKae8zXC8fZ
+         98JQ==
+X-Gm-Message-State: AOAM532FgiDexosVDQ3A4AUTn1BpzWITYdb96xZF2GhJmg/gAwnzZZ6O
+        bPVf16cdpQDeQZ128BNcz7AQcX7IVJknQs8RSEKZYSFAbG29n9TSQI1NILO+6FLfrCFdcvL20AJ
+        Msl5QSnLen4jXF+j9x/qUHqyQ
+X-Received: by 2002:a37:4249:: with SMTP id p70mr8978824qka.496.1594813895585;
+        Wed, 15 Jul 2020 04:51:35 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJyx1aUJiCqHYur0Jh6ZYxhkiq8X5xdMXXfCrNDK8eHV+0xFXx7Y6LeDlwk29NTSE0FYz2C5zw==
+X-Received: by 2002:a37:4249:: with SMTP id p70mr8978802qka.496.1594813895270;
+        Wed, 15 Jul 2020 04:51:35 -0700 (PDT)
+Received: from redhat.com (bzq-79-180-10-140.red.bezeqint.net. [79.180.10.140])
+        by smtp.gmail.com with ESMTPSA id n64sm2006264qke.77.2020.07.15.04.51.30
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 15 Jul 2020 04:50:31 -0700 (PDT)
-Date:   Wed, 15 Jul 2020 12:50:29 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     "Rafael J. Wysocki" <rafael@kernel.org>
-Cc:     Viresh Kumar <viresh.kumar@linaro.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Andy Grover <andrew.grover@intel.com>,
-        Paul Diefenbaugh <paul.s.diefenbaugh@intel.com>,
-        Dominik Brodowski <linux@brodo.de>,
-        Denis Sadykov <denis.m.sadykov@intel.com>
-Subject: Re: [PATCH 09/13] cpufreq: acpi-cpufreq: Remove unused ID structs
-Message-ID: <20200715115029.GC3165313@dell>
-References: <20200714145049.2496163-1-lee.jones@linaro.org>
- <20200714145049.2496163-10-lee.jones@linaro.org>
- <CAJZ5v0iB0K6H28DSDQj9T7k_kV10THxV6-HwN9qfmkLsYNHfiA@mail.gmail.com>
- <20200714210340.GJ1398296@dell>
- <20200715032442.gh2cliiddhv35fdj@vireshk-i7>
- <20200715032718.2zlo2eurhkpoayya@vireshk-i7>
- <CAJZ5v0jHJDLt6QFWG9FOpqmWMXAUuSEPHdHbVgFWcwR6FQD57Q@mail.gmail.com>
- <20200715113433.GB3165313@dell>
- <CAJZ5v0gFwYj7KKKj806s5SdWO1Wu5exiwObKKAdQWQEKg+2CJA@mail.gmail.com>
+        Wed, 15 Jul 2020 04:51:34 -0700 (PDT)
+Date:   Wed, 15 Jul 2020 07:51:28 -0400
+From:   "Michael S. Tsirkin" <mst@redhat.com>
+To:     Jason Wang <jasowang@redhat.com>
+Cc:     Pierre Morel <pmorel@linux.ibm.com>, linux-kernel@vger.kernel.org,
+        pasic@linux.ibm.com, borntraeger@de.ibm.com, frankja@linux.ibm.com,
+        cohuck@redhat.com, kvm@vger.kernel.org, linux-s390@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, thomas.lendacky@amd.com,
+        david@gibson.dropbear.id.au, linuxram@us.ibm.com,
+        hca@linux.ibm.com, gor@linux.ibm.com
+Subject: Re: [PATCH v7 2/2] s390: virtio: PV needs VIRTIO I/O device
+ protection
+Message-ID: <20200715074917-mutt-send-email-mst@kernel.org>
+References: <1594801869-13365-1-git-send-email-pmorel@linux.ibm.com>
+ <1594801869-13365-3-git-send-email-pmorel@linux.ibm.com>
+ <20200715054807-mutt-send-email-mst@kernel.org>
+ <bc5e09ad-faaf-8b38-83e0-5f4a4b1daeb0@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAJZ5v0gFwYj7KKKj806s5SdWO1Wu5exiwObKKAdQWQEKg+2CJA@mail.gmail.com>
+In-Reply-To: <bc5e09ad-faaf-8b38-83e0-5f4a4b1daeb0@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 15 Jul 2020, Rafael J. Wysocki wrote:
-
-> On Wed, Jul 15, 2020 at 1:34 PM Lee Jones <lee.jones@linaro.org> wrote:
-> >
-> > On Wed, 15 Jul 2020, Rafael J. Wysocki wrote:
-> >
-> > > On Wed, Jul 15, 2020 at 5:27 AM Viresh Kumar <viresh.kumar@linaro.org> wrote:
-> > > >
-> > > > On 15-07-20, 08:54, Viresh Kumar wrote:
-> > > > > On 14-07-20, 22:03, Lee Jones wrote:
-> > > > > > On Tue, 14 Jul 2020, Rafael J. Wysocki wrote:
-> > > > > >
-> > > > > > > On Tue, Jul 14, 2020 at 4:51 PM Lee Jones <lee.jones@linaro.org> wrote:
-> > > > > > > >
-> > > > > > > > Can't see them being used anywhere and the compiler doesn't complain
-> > > > > > > > that they're missing, so ...
-> > > > > > >
-> > > > > > > Aren't they needed for automatic module loading in certain configurations?
-> > > > > >
-> > > > > > Any idea how that works, or where the code is for that?
-> > > > >
-> > > > > The MODULE_DEVICE_TABLE() thingy creates a map of vendor-id,
-> > > > > product-id that the kernel keeps after boot (and so there is no static
-> > > > > reference of it for the compiler), later when a device is hotplugged
-> > > > > into the kernel it refers to the map to find the related driver for it
-> > > > > and loads it if it isn't already loaded.
-> > > > >
-> > > > > This has some of it, search for MODULE_DEVICE_TABLE() in it.
-> > > > > Documentation/driver-api/usb/hotplug.rst
-> > > >
-> > > > And you just need to add __maybe_unused to them to suppress the
-> > > > warning.
-> > >
-> > > Wouldn't that cause the compiler to optimize them away if it doesn't
-> > > see any users?
-> >
-> > It looks like they're only unused when !MODULE,
+On Wed, Jul 15, 2020 at 06:16:59PM +0800, Jason Wang wrote:
 > 
-> OK
+> On 2020/7/15 下午5:50, Michael S. Tsirkin wrote:
+> > On Wed, Jul 15, 2020 at 10:31:09AM +0200, Pierre Morel wrote:
+> > > If protected virtualization is active on s390, the virtio queues are
+> > > not accessible to the host, unless VIRTIO_F_IOMMU_PLATFORM has been
+> > > negotiated. Use the new arch_validate_virtio_features() interface to
+> > > fail probe if that's not the case, preventing a host error on access
+> > > attempt.
+> > > 
+> > > Signed-off-by: Pierre Morel <pmorel@linux.ibm.com>
+> > > Reviewed-by: Cornelia Huck <cohuck@redhat.com>
+> > > Acked-by: Halil Pasic <pasic@linux.ibm.com>
+> > > Acked-by: Christian Borntraeger <borntraeger@de.ibm.com>
+> > > ---
+> > >   arch/s390/mm/init.c | 28 ++++++++++++++++++++++++++++
+> > >   1 file changed, 28 insertions(+)
+> > > 
+> > > diff --git a/arch/s390/mm/init.c b/arch/s390/mm/init.c
+> > > index 6dc7c3b60ef6..d39af6554d4f 100644
+> > > --- a/arch/s390/mm/init.c
+> > > +++ b/arch/s390/mm/init.c
+> > > @@ -45,6 +45,7 @@
+> > >   #include <asm/kasan.h>
+> > >   #include <asm/dma-mapping.h>
+> > >   #include <asm/uv.h>
+> > > +#include <linux/virtio_config.h>
+> > >   pgd_t swapper_pg_dir[PTRS_PER_PGD] __section(.bss..swapper_pg_dir);
+> > > @@ -161,6 +162,33 @@ bool force_dma_unencrypted(struct device *dev)
+> > >   	return is_prot_virt_guest();
+> > >   }
+> > > +/*
+> > > + * arch_validate_virtio_features
+> > > + * @dev: the VIRTIO device being added
+> > > + *
+> > > + * Return an error if required features are missing on a guest running
+> > > + * with protected virtualization.
+> > > + */
+> > > +int arch_validate_virtio_features(struct virtio_device *dev)
+> > > +{
+> > > +	if (!is_prot_virt_guest())
+> > > +		return 0;
+> > > +
+> > > +	if (!virtio_has_feature(dev, VIRTIO_F_VERSION_1)) {
+> > > +		dev_warn(&dev->dev,
+> > > +			 "legacy virtio not supported with protected virtualization\n");
+> > > +		return -ENODEV;
+> > > +	}
+> > > +
+> > > +	if (!virtio_has_feature(dev, VIRTIO_F_IOMMU_PLATFORM)) {
+> > > +		dev_warn(&dev->dev,
+> > > +			 "support for limited memory access required for protected virtualization\n");
+> > > +		return -ENODEV;
+> > > +	}
+> > > +
+> > > +	return 0;
+> > > +}
+> > > +
+> > >   /* protected virtualization */
+> > >   static void pv_init(void)
+> > >   {
+> > What bothers me here is that arch code depends on virtio now.
+> > It works even with a modular virtio when functions are inline,
+> > but it seems fragile: e.g. it breaks virtio as an out of tree module,
+> > since layout of struct virtio_device can change.
 > 
-> > in which case optimising them away would be the correct thing to do, no?
+> 
+> The code was only called from virtio.c so it should be fine.
+> 
+> And my understanding is that we don't need to care about the kABI issue
+> during upstream development?
+> 
+> Thanks
 
-It would be good if someone with a little more knowledge could provide
-a second opinion though.  I would think (hope) that the compiler would
-be smart enough to see when its actually in use.  After all, it is the
-compiler that places the information into the device table.
+No, but so far it has been convenient at least for me, for development,
+to just be able to unload all of virtio and load a different version.
 
-If that is not the case, then the MODULE_DEVICE_TABLE() magic is
-broken and will need fixing.  Removing boiler-plate is good, but not
-at the expense of obfuscation.
 
--- 
-Lee Jones [李琼斯]
-Senior Technical Lead - Developer Services
-Linaro.org │ Open source software for Arm SoCs
-Follow Linaro: Facebook | Twitter | Blog
+> 
+> > 
+> > I'm not sure what to do with this yet, will try to think about it
+> > over the weekend. Thanks!
+> > 
+> > 
+> > > -- 
+> > > 2.25.1
+
