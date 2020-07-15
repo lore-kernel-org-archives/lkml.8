@@ -4,70 +4,72 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EED3C433F1
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 08:27:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A17F7C433EA
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 08:26:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0E6A320663
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 08:27:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 80C1E20657
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 08:26:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="MCdybl3G"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="PoZeCokh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729951AbgGOI07 (ORCPT
+        id S1729926AbgGOI0y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 04:26:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51874 "EHLO
+        Wed, 15 Jul 2020 04:26:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51862 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729924AbgGOI0x (ORCPT
+        with ESMTP id S1729909AbgGOI0v (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 04:26:53 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 84546C08C5DD
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 01:26:53 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id b6so1427568wrs.11
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 01:26:53 -0700 (PDT)
+        Wed, 15 Jul 2020 04:26:51 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CA94AC08C5C1
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 01:26:50 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id f18so1528015wrs.0
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 01:26:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=DCQLIBPnltOFRS++BAxztAHTwj2wSWnOs3LHnUsG1Vw=;
-        b=MCdybl3Gw37G1Bq/aJP5Pe/EbpLyiPirff+C0yH74i5zHU8WcFuucv4pc/ZhtSSWEb
-         ttmjNt5ZOBIvwTOM+6NTPRrCdWBMnzyTvyBLIj9ihMHFxmoMVzIWV6oDuc6y7Ddiatc+
-         odBn85hD3ytXmPY/VclQxhIvmv+JEXhZ/+C/UmsSczSruP7d2KHaPnrQXUuIKYHaVTle
-         aqGRE6kd+T5yIuyJ7NE9pl8ssXT3aL++/ogfFrPvX97pp8CLI1PSDK5sv11Crmh69/s8
-         cdeR7g8HxgeKnBP4l2E4bI0m07BfB8de3Xn+NIPTWcrVc0fTiXnI3i5b1Bf+irA6SiuL
-         z/bw==
+        bh=8zTw93zoLeDrW9YVUykvWKpkCsGvq1SvpdvOV91LIDI=;
+        b=PoZeCokh14NVCVrG+W6OCssjbdxlYt+BY2RPI8eovLbhPzaLoVu6hY0++nOStWvk7G
+         AC5m93nmVlLOGmyl+yyOzhE20jZByNmfhTjC3f1OsE+xOaSFhOEZD1adMHSUY86nUcdq
+         003S8WLfCC4kJUQP3B7nLpwZLoeL5quxpYHznQprltVCVB12xkwl1x6YvqBSR6n+AvvB
+         J+eTnxP7lytE9JrfPxVYJ8Bsd1LHlvRP6P3N0Qlk+cD+UXDt4V9NfWmwaf8F2Bq4MSZ2
+         NpHfQwClEX7SFhVB8TSaoxSOf1g6l4dy6IsfsJoDadjfzaKDqNqTFIWTX6+6I08pYoo4
+         qDMA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=DCQLIBPnltOFRS++BAxztAHTwj2wSWnOs3LHnUsG1Vw=;
-        b=e7a/badaXUjg2FcGDzyM8LntezZCzeplx9Z7n6hC8TMVQrI7RFHeS+aegPdOg6BR8k
-         V2yCdxCVV52Rmt9PIyNEri0nMYLbWqMnO64TWf6NLcFAb9BxXAeUXY5x77y/dZV//aym
-         LdDoZx4dGRfNgQiwQfQWBOj0r+bfm48OwD7u8CqqqlbSqTVlxAMY0tsW/goQOrzvj1Kx
-         GIpvfSsrkMeBhaG8Gz8PIXAeIj22DdkmINZhHKVK8nOCZFVZEV+tYNJnp6fLLcG+923W
-         2TIH9wIR0qdTcDYCxUwORVc2ciANF3ltZuG3d02RZDR2CRSVjbxzgSA/eG27r88YKa05
-         Se0Q==
-X-Gm-Message-State: AOAM5302l8Xp8Qj3mlmNdpyy0fIPXYT6MOQaK5wJdGaAcUtonk1Zl5Eb
-        LqZnXb/Ctq4kq71sc7GYRh9UBA==
-X-Google-Smtp-Source: ABdhPJxlua+SYa5MMQ296pyJ156z28xC7KELszStrbytWumw2AI+ZT38OsX9kXDGi5NnDOmPRNNLBQ==
-X-Received: by 2002:a5d:6912:: with SMTP id t18mr9955251wru.411.1594801612237;
-        Wed, 15 Jul 2020 01:26:52 -0700 (PDT)
+        bh=8zTw93zoLeDrW9YVUykvWKpkCsGvq1SvpdvOV91LIDI=;
+        b=YI/+8dcz4XEErARVBVV7zNYvZ6JgEdTE7G5/CBSk2boCjtcDH6HeknzgyUIRl1JBBE
+         8bIkJq5PlEudRkgoRP7hkNGHfD+AbGCoppZRhCw0TfyLqz9/0Vkqgw6fU/bAgnyjLJ7z
+         xe7Xe2wHgTuKYt8DVvT1jdT8HBVnCAriSsq3tjjEuJ3wY2f9FrvMbF8fmr7RJzhRet+Q
+         Jxfk9jVcd7ZarElCOGzT2DxNgcnRux41JUZ0jaHM4zRwo9O5CKzvXFh8qQZ7Boss2l5Q
+         Mp8t0d7NkskmJfECht66TkdHuBVHUJyZLkuDc+Hkmf9NMx4WBX8YNmThv8RouWN5Sm3p
+         MDZw==
+X-Gm-Message-State: AOAM531zt6VjnZKxAFDoGXkBpcXHWSSeW0euG9OcWPIAYUysc/1W7csf
+        ygtcyzP68eAZWI8/z+FSVnFKog==
+X-Google-Smtp-Source: ABdhPJw4NEwvaYTKWQAiVObRyn0jstQiDGELTMaVFiiY+4cxedHvwQNYAgmxqV/UHsTrTKosES/Miw==
+X-Received: by 2002:adf:9062:: with SMTP id h89mr9316099wrh.285.1594801609515;
+        Wed, 15 Jul 2020 01:26:49 -0700 (PDT)
 Received: from localhost.localdomain ([2.31.163.61])
-        by smtp.gmail.com with ESMTPSA id h13sm2400361wml.42.2020.07.15.01.26.51
+        by smtp.gmail.com with ESMTPSA id h13sm2400361wml.42.2020.07.15.01.26.48
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 15 Jul 2020 01:26:51 -0700 (PDT)
+        Wed, 15 Jul 2020 01:26:48 -0700 (PDT)
 From:   Lee Jones <lee.jones@linaro.org>
 To:     rjw@rjwysocki.net, viresh.kumar@linaro.org
 Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         linux-pm@vger.kernel.org, Lee Jones <lee.jones@linaro.org>,
-        Matthew Garrett <mjg@redhat.com>,
-        Nagananda Chumbalkar <nagananda.chumbalkar@hp.com>
-Subject: [PATCH v2 11/13] cpufreq: pcc-cpufreq: Mark sometimes used ID structs as __maybe_unused
-Date:   Wed, 15 Jul 2020 09:26:32 +0100
-Message-Id: <20200715082634.3024816-12-lee.jones@linaro.org>
+        Andy Grover <andrew.grover@intel.com>,
+        Paul Diefenbaugh <paul.s.diefenbaugh@intel.com>,
+        Dominik Brodowski <linux@brodo.de>,
+        Denis Sadykov <denis.m.sadykov@intel.com>
+Subject: [PATCH v2 09/13] cpufreq: acpi-cpufreq: Mark sometimes used ID structs as __maybe_unused
+Date:   Wed, 15 Jul 2020 09:26:30 +0100
+Message-Id: <20200715082634.3024816-10-lee.jones@linaro.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200715082634.3024816-1-lee.jones@linaro.org>
 References: <20200715082634.3024816-1-lee.jones@linaro.org>
@@ -83,24 +85,37 @@ Not used when MODULE is not defined.
 
 Fixes the following W=1 kernel build warning(s):
 
- drivers/cpufreq/pcc-cpufreq.c:619:36: warning: ‘processor_device_ids’ defined but not used [-Wunused-const-variable=]
+ drivers/cpufreq/acpi-cpufreq.c:1004:36: warning: ‘processor_device_ids’ defined but not used [-Wunused-const-variable=]
+ 997 | static const struct x86_cpu_id acpi_cpufreq_ids[] = {
+ | ^~~~~~~~~~~~~~~~
+ drivers/cpufreq/acpi-cpufreq.c:997:32: warning: ‘acpi_cpufreq_ids’ defined but not used [-Wunused-const-variable=]
  619 | static const struct acpi_device_id processor_device_ids[] = {
  | ^~~~~~~~~~~~~~~~~~~~
 
-Cc: Matthew Garrett <mjg@redhat.com>
-Cc: Nagananda Chumbalkar <nagananda.chumbalkar@hp.com>
+Cc: Andy Grover <andrew.grover@intel.com>
+Cc: Paul Diefenbaugh <paul.s.diefenbaugh@intel.com>
+Cc: Dominik Brodowski <linux@brodo.de>
+Cc: Denis Sadykov <denis.m.sadykov@intel.com>
 Signed-off-by: Lee Jones <lee.jones@linaro.org>
 ---
- drivers/cpufreq/pcc-cpufreq.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/cpufreq/acpi-cpufreq.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/cpufreq/pcc-cpufreq.c b/drivers/cpufreq/pcc-cpufreq.c
-index 5789fe7a94bd3..9f3fc7a073d07 100644
---- a/drivers/cpufreq/pcc-cpufreq.c
-+++ b/drivers/cpufreq/pcc-cpufreq.c
-@@ -616,7 +616,7 @@ static void __exit pcc_cpufreq_exit(void)
- 	free_percpu(pcc_cpu_info);
- }
+diff --git a/drivers/cpufreq/acpi-cpufreq.c b/drivers/cpufreq/acpi-cpufreq.c
+index 6b3d8355c8dea..65bdedcc7f142 100644
+--- a/drivers/cpufreq/acpi-cpufreq.c
++++ b/drivers/cpufreq/acpi-cpufreq.c
+@@ -993,14 +993,14 @@ MODULE_PARM_DESC(acpi_pstate_strict,
+ late_initcall(acpi_cpufreq_init);
+ module_exit(acpi_cpufreq_exit);
+ 
+-static const struct x86_cpu_id acpi_cpufreq_ids[] = {
++static const struct x86_cpu_id __maybe_unused acpi_cpufreq_ids[] = {
+ 	X86_MATCH_FEATURE(X86_FEATURE_ACPI, NULL),
+ 	X86_MATCH_FEATURE(X86_FEATURE_HW_PSTATE, NULL),
+ 	{}
+ };
+ MODULE_DEVICE_TABLE(x86cpu, acpi_cpufreq_ids);
  
 -static const struct acpi_device_id processor_device_ids[] = {
 +static const struct acpi_device_id __maybe_unused processor_device_ids[] = {
