@@ -7,113 +7,131 @@ X-Spam-Status: No, score=-12.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CB49C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 17:54:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 454FDC433E4
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 17:55:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EA4CB20663
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 17:54:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 266A220663
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 17:55:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594835642;
-	bh=9g8aeLK9REP1cLVWsPlMudE6ohkuFFjl/Cs+LGSZ6P0=;
+	s=default; t=1594835706;
+	bh=x/b+6oek5ExHkOuOAzMaafX+ZHia1G+C7ykOk8YnX1k=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Duhg/ErzWbRA8NUmgPknDAKSe8+uR6kxU0gNHZi10LuN/sdOc+Aqr9Geile5Ri0y9
-	 tJPD2sv6ySZqIZPlG3i7XHcukmn0IAEAXlI6WlA/660rGnJ2K0hMHdSh+fEny9Fk8A
-	 /ol9x2EQgoi5qaj1NAkwO5mRCtc46FsfCYO9QS6s=
+	b=lN+l1kg1Eb1F/PLtwLw6IGcuWcB1gXE5gKFG1+TtQ4WXJfjzVdUMPAlWB4FTreMb0
+	 tGy3U2TcV/jggbyUxi+vuFfbqouikUAUWm5SW6KEAstP+rWIMoK03tMxv7d0QqUHZM
+	 Dprbm6d58WhP/kg2v3CcsTQVL2pmWDsTZWnNDSjc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726715AbgGORyA (ORCPT
+        id S1726852AbgGORzE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 13:54:00 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:44995 "EHLO
+        Wed, 15 Jul 2020 13:55:04 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:35461 "EHLO
         mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725861AbgGORx7 (ORCPT
+        with ESMTP id S1725861AbgGORzC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 13:53:59 -0400
-Received: by mail-io1-f65.google.com with SMTP id i4so3151758iov.11;
-        Wed, 15 Jul 2020 10:53:58 -0700 (PDT)
+        Wed, 15 Jul 2020 13:55:02 -0400
+Received: by mail-io1-f65.google.com with SMTP id v8so3209761iox.2;
+        Wed, 15 Jul 2020 10:55:02 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=P3B3mLxesRLNcERsb3dRLB4kBnpbANKyx7xmsh9Ksh8=;
-        b=eIHWUOiOdzmrIHnDI3VVZSZz2bhwv1NFQW8JvRL2mO3yq6dc5W9vzYRALFK8k3py9Q
-         VkW150/UUelWqKB8wL7jJGxFS6rk4rT0bYlC3L5pQoc5yNdKxzhMOEqFCke6ACNhxJuq
-         9UW+tGi6ZllWZma9xMNy0nhvVOQkviFks/Z/88AU3cgKS/bcLg9XgV/uhi+WA+JBTIkm
-         1mTSZFJZoIcyBzh76dNnDqTCKVuScAX3OrNagao+WfmgSvQ5rJFEgwKrV6SH8byIJXal
-         Fde6OAOutJ1EfJAurr4/xlHiLk/LUhPV+6rr/vvCYDpgbjH/6GsCSms+/AvPvQJ2vqGw
-         6HwQ==
-X-Gm-Message-State: AOAM531o1lfeANz/Ise03RmeVctS0pWnvjfOennE5Vt8GWlULYBKOops
-        mNWHNVaVKjIOrVxyVeRJnFL+0dTOyg==
-X-Google-Smtp-Source: ABdhPJx5JOOO2YSgNc4SGZxFHsxJyNx/SGb0yWUOzjfTsY5cWxBY1ZnqpvTk5wIBElTlc0mSwwxtEA==
-X-Received: by 2002:a6b:b74e:: with SMTP id h75mr428154iof.79.1594835638606;
-        Wed, 15 Jul 2020 10:53:58 -0700 (PDT)
+        bh=woYWRRlvqEQlLUErEQBpQBUVNM6CQZJXoqFEveZ8nYE=;
+        b=e5jeug7CMLJ4yWalVt6+h28l0S4ln8a6G0sSFgWpgY13XZX+lQe9MtL6mtmDorb0so
+         rodt5zfv0EOZSCba2aPuuLqJH0nuvMuKyMNnybqbHEV+NcX7Vzd6SLJziJDMP3oZQMLk
+         c+G2RaMAwWIHDg4WNFQ8Zm78ksk9s7QaDUSnePn2asV447+4NDkIhYsP+0iP5OhvwUGr
+         dacCBPLy+R3cPhzsBTpf5XV0fSm66jiEckMi3Tk3meKDONvGj72URnwdvjMkRBiKD8rL
+         Xsp9hSvGsYq8RtmCk8Z1n396/vFM62gnZ/mvWFlnUPVYGk+gXTRV6yFsJN0K9RWW+Zg7
+         gR6Q==
+X-Gm-Message-State: AOAM532xXwGkJeJHHV9TBgZB19vfj+IzE1DyU45zxRw35gkff2ksh8LS
+        x4XkrfCslvfyDZrL7BNMDQ==
+X-Google-Smtp-Source: ABdhPJxh8fA5ehCDcqiAyP5L5alxPVWB20vQkTrQUE6pz55njBu1AfI32x925fCetMWucCJAuM+YIg==
+X-Received: by 2002:a6b:2c1:: with SMTP id 184mr417726ioc.167.1594835701529;
+        Wed, 15 Jul 2020 10:55:01 -0700 (PDT)
 Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id u6sm1359427ilg.32.2020.07.15.10.53.57
+        by smtp.gmail.com with ESMTPSA id s5sm1389818ilo.24.2020.07.15.10.54.59
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 15 Jul 2020 10:53:57 -0700 (PDT)
-Received: (nullmailer pid 504090 invoked by uid 1000);
-        Wed, 15 Jul 2020 17:53:56 -0000
-Date:   Wed, 15 Jul 2020 11:53:56 -0600
+        Wed, 15 Jul 2020 10:55:00 -0700 (PDT)
+Received: (nullmailer pid 506188 invoked by uid 1000);
+        Wed, 15 Jul 2020 17:54:59 -0000
+Date:   Wed, 15 Jul 2020 11:54:59 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Yifeng Zhao <yifeng.zhao@rock-chips.com>
-Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        vigneshr@ti.com, heiko@sntech.de, robh+dt@kernel.org,
-        richard@nod.at, miquel.raynal@bootlin.com,
-        linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org,
-        linux-rockchip@lists.infradead.org
-Subject: Re: [PATCH v7 1/8] dt-bindings: mtd: Describe Rockchip RK3xxx NAND
- flash controller
-Message-ID: <20200715175356.GA502928@bogus>
-References: <20200715090342.28339-1-yifeng.zhao@rock-chips.com>
- <20200715090342.28339-2-yifeng.zhao@rock-chips.com>
+To:     Mateusz Holenko <mholenko@antmicro.com>
+Cc:     Heiko Stuebner <heiko@sntech.de>, Jiri Slaby <jslaby@suse.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        devicetree@vger.kernel.org,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        "Gabriel L. Somlo" <gsomlo@gmail.com>,
+        Shawn Guo <shawnguo@kernel.org>, linux-kernel@vger.kernel.org,
+        "Paul E. McKenney" <paulmck@linux.ibm.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Pawel Czarnecki <pczarnecki@internships.antmicro.com>,
+        Joel Stanley <joel@jms.id.au>,
+        Filip Kokosinski <fkokosinski@antmicro.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        linux-serial@vger.kernel.org,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Karol Gugala <kgugala@antmicro.com>,
+        Icenowy Zheng <icenowy@aosc.io>,
+        Maxime Ripard <mripard@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Stafford Horne <shorne@gmail.com>
+Subject: Re: [PATCH v8 2/5] dt-bindings: soc: document LiteX SoC Controller
+ bindings
+Message-ID: <20200715175459.GA505797@bogus>
+References: <20200715130641.1953227-0-mholenko@antmicro.com>
+ <20200715130641.1953227-2-mholenko@antmicro.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200715090342.28339-2-yifeng.zhao@rock-chips.com>
+In-Reply-To: <20200715130641.1953227-2-mholenko@antmicro.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 15 Jul 2020 17:03:39 +0800, Yifeng Zhao wrote:
-> Documentation support for Rockchip RK3xxx NAND flash controllers
+On Wed, 15 Jul 2020 13:07:27 +0200, Mateusz Holenko wrote:
+> From: Pawel Czarnecki <pczarnecki@internships.antmicro.com>
 > 
-> Signed-off-by: Yifeng Zhao <yifeng.zhao@rock-chips.com>
+> Add documentation for LiteX SoC Controller bindings.
+> 
+> Signed-off-by: Pawel Czarnecki <pczarnecki@internships.antmicro.com>
+> Signed-off-by: Mateusz Holenko <mholenko@antmicro.com>
+> Reviewed-by: Rob Herring <robh@kernel.org>
 > ---
 > 
-> Changes in v7:
-> - Fix some wrong define
+> Notes:
+>     No changes in v8.
 > 
-> Changes in v6:
-> - Fix some wrong define
-> - Modified the definition of compatible
+>     No changes in v7.
 > 
-> Changes in v5:
-> - Fix some wrong define.
-> - Add boot-medium define.
-> - Remove some compatible define.
+>     Changes in v6:
+>         - fixed license header
 > 
-> Changes in v4:
-> - The compatible define with rkxx_nfc.
-> - Add assigned-clocks.
-> - Fix some wrong defineChanges in.
+>     Changes in v5:
+>         - added reviewed-by tag
 > 
-> Changes in v3:
-> - Change the title for the dt-bindings.
+>     Changes in v4:
+>         - changes compatible to "litex,soc-controller"
+>         - fixed yaml's header
+>         - removed unnecessary sections from yaml
+>         - fixed indentation in yaml
 > 
-> Changes in v2: None
+>     This commit has been introduced in v3 of the patchset.
 > 
->  .../mtd/rockchip,nand-controller.yaml         | 162 ++++++++++++++++++
->  1 file changed, 162 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mtd/rockchip,nand-controller.yaml
+>  .../soc/litex/litex,soc-controller.yaml       | 39 +++++++++++++++++++
+>  MAINTAINERS                                   |  6 +++
+>  2 files changed, 45 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/soc/litex/litex,soc-controller.yaml
 > 
 
 
 My bot found errors running 'make dt_binding_check' on your patch:
 
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/mtd/rockchip,nand-controller.example.dt.yaml: example-0: nand-controller@ff4b0000:reg:0: [0, 4283105280, 0, 16384] is too long
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/soc/litex/litex,soc-controller.example.dt.yaml: example-0: soc-controller@f0000000:reg:0: [0, 4026531840, 0, 12] is too long
 
 
-See https://patchwork.ozlabs.org/patch/1329325
+See https://patchwork.ozlabs.org/patch/1329382
 
 If you already ran 'make dt_binding_check' and didn't see the above
 error(s), then make sure dt-schema is up to date:
