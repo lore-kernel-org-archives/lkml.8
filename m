@@ -7,57 +7,57 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55A24C433E4
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 02:05:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C209C433E6
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 02:05:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2E4CF20663
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 02:05:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3127020663
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 02:05:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="MBfmujPe"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="vtbH+rvI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728207AbgGOCFf (ORCPT
+        id S1728223AbgGOCFn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 22:05:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49640 "EHLO
+        Tue, 14 Jul 2020 22:05:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49664 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726356AbgGOCFd (ORCPT
+        with ESMTP id S1726356AbgGOCFn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 22:05:33 -0400
-Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BA235C061755
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 19:05:33 -0700 (PDT)
-Received: by mail-pj1-x1043.google.com with SMTP id k71so1297701pje.0
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 19:05:33 -0700 (PDT)
+        Tue, 14 Jul 2020 22:05:43 -0400
+Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 15716C061755
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 19:05:42 -0700 (PDT)
+Received: by mail-pj1-x1042.google.com with SMTP id ls15so1302519pjb.1
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 19:05:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:subject:date:message-id:in-reply-to:references;
-        bh=hMCjz+92Go61XkKZ2KMP8Y2GkwrHTA5+Bwzj3gXnH/0=;
-        b=MBfmujPeyn0IdrSwOHGVo9a3VpMNRn6TeZf7/RFd0B0J6XD9VPV0WJMHnmgGXrF3zJ
-         a5cmGVYTCxM6wTojk8M78+v6KQa+5illqo07dzRaUED0a27GxkDvtLTf1Jy8EV3fPmKI
-         uoD4X/LECFe7OZQbLUC4qeBmYgpOkOoESsQpf4kSLdesuSmOLwvUIhnZzk06XVuajbBZ
-         4XXE45D+qYtwLmi17ipzwzDkCGBFBWaQkgC88SvkOFSMphMWklW1sXp1o6iKenfVJDpj
-         ciclauAccDb4jB166FCuZSiYxDKciO36aOfGo72e2ZOVhKXyy6ZfQZwMVumPlJXqi4ep
-         nEAw==
+        bh=i8X88B9XAc//7jPUSbPAl58G8UKTwAt4ZD/ImrmTyEo=;
+        b=vtbH+rvISfZr3PPUvE3WJyrY4/qP4B3Fob4wEq2EtThH5+99scLGykM5e49ArE3EDg
+         TgkZiFzxOCewMSAsHX4Fl6dFG5cN88ATrvgsO8z+CDP8NFbm6F7H3JY73TD8TaeG+IxO
+         /ZI6SAnebOojnCePbOew3LkEO8p0aQqorF8RPCtjkRwnxLtDdHN6PfkOeHNPRdZ8hjW9
+         NeuwnDum9pacKFdyd8fwTei9SRJ6nIX1UuolQc/eY5c3+FUtg9C3hxL7ms/TuvW0Tx9C
+         qNaipQEj9/i5qd8Sdx6/6kg9lymoTISvMelwcA5NDSBKSDfj5wXUrxroJhI0no2hwNbw
+         Afhg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
          :references;
-        bh=hMCjz+92Go61XkKZ2KMP8Y2GkwrHTA5+Bwzj3gXnH/0=;
-        b=KdTczizfP2yQWr/SkDszpJ1adATjHjX7NCM6yG9allnVtxQA20nI6RwQDWX6GcVpJE
-         DhGL3gfHVcGbprHwF2aqi2V43ynUVPK/o14+RzpkMygJxjMq20r6ia66bFjufXBS/Exj
-         mfmGSMDN7F3lyaIqC8PQvZQEcM20BIpMJf1/ghCrBkH7Q/q7DenrCzex7+zYDj0i/YxD
-         FBARisCfw42QlVKQ+pdqaYwyAHpJGd+3ZK0s0OtYNkBC+q+hpqR7d/gpl9t7USr+rBmA
-         4eOvVXSJuqzZMQI5Z65ijMuiYKfAu69pkWD6LdAnLpEm9gJjjfGs0NzyS8iuyK35z0zI
-         e03A==
-X-Gm-Message-State: AOAM5322ScYP729f9qXw6FY7hjh99Z9swfDVdyCrJmPnPf4M0w6xv99T
-        IIz6P8jA6htbPAdCMp15JA/Cyg==
-X-Google-Smtp-Source: ABdhPJweKUBha3SLMEvJ8s2uZ+OFHY4WBgN+V4lhlk4NpJLYQnE4We4H9eumEdWXhqvcTPSS4e/8sQ==
-X-Received: by 2002:a17:90a:bc98:: with SMTP id x24mr6851187pjr.63.1594778733247;
-        Tue, 14 Jul 2020 19:05:33 -0700 (PDT)
+        bh=i8X88B9XAc//7jPUSbPAl58G8UKTwAt4ZD/ImrmTyEo=;
+        b=MvVy69452OH4XISSH5OXB6w/A2iMrArl080KLjwkKlDVgVJXYuCVp+ALhXbAbgwhPZ
+         ++FvjHAKpMb1Ox8WXMScKj1n7QoB3Rt7rpF4M+xB4s0+j9HgAyGYe2eqUjuLsYLy4d75
+         R6aRQKWddO0NSowX4ZXD+xNQxSg52WKkpSm1XnnK0zNE5NusgrEtYjX1HvXTbbUv9QCU
+         11b+PbZhEDlIfsnh4jYuEW1lIecAYzP12evsA+WK9NMvwSBBmpejlROsb7kL0KrLBAwx
+         a6iqZfNNx6Fc7tLiQBxlZhjNNVDO68p0aSdDqOEhQ/G+qJko2dnTNyeu6eXv9YT6MYhU
+         LXtQ==
+X-Gm-Message-State: AOAM5310DCEsdV3QFTLHpQU8otoCLReibQeL/1wLsTZKAT1sjDEvsRUt
+        /iRSVsRKKuXYdTnjaGSK5cztGg==
+X-Google-Smtp-Source: ABdhPJwj/KisWOWdgz943aOT+B94CHGzkWgMyhvzA6RiDEU6FfzxEsHjV5np2ZCI6pLzOMWql82Nag==
+X-Received: by 2002:a17:90a:3684:: with SMTP id t4mr7394442pjb.91.1594778741505;
+        Tue, 14 Jul 2020 19:05:41 -0700 (PDT)
 Received: from localhost ([2400:8904::f03c:91ff:fe8a:bbe4])
-        by smtp.gmail.com with ESMTPSA id h7sm374726pfq.15.2020.07.14.19.05.31
+        by smtp.gmail.com with ESMTPSA id q11sm297218pjj.17.2020.07.14.19.05.40
         (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 14 Jul 2020 19:05:32 -0700 (PDT)
+        Tue, 14 Jul 2020 19:05:41 -0700 (PDT)
 From:   Leo Yan <leo.yan@linaro.org>
 To:     Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
         Peter Zijlstra <peterz@infradead.org>,
@@ -74,9 +74,9 @@ To:     Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
         Adrian Hunter <adrian.hunter@intel.com>,
         Kan Liang <kan.liang@linux.intel.com>,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 1/6] sched_clock: Expose struct clock_read_data
-Date:   Wed, 15 Jul 2020 10:05:07 +0800
-Message-Id: <20200715020512.20991-2-leo.yan@linaro.org>
+Subject: [PATCH v2 2/6] arm64: perf: Implement correct cap_user_time
+Date:   Wed, 15 Jul 2020 10:05:08 +0800
+Message-Id: <20200715020512.20991-3-leo.yan@linaro.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200715020512.20991-1-leo.yan@linaro.org>
 References: <20200715020512.20991-1-leo.yan@linaro.org>
@@ -87,128 +87,97 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Peter Zijlstra <peterz@infradead.org>
 
-In order to support perf_event_mmap_page::cap_time features, an
-architecture needs, aside from a userspace readable counter register,
-to expose the exact clock data so that userspace can convert the
-counter register into a correct timestamp.
+As reported by Leo; the existing implementation is broken when the
+clock and counter don't intersect at 0.
 
-Provide struct clock_read_data and two (seqcount) helpers so that
-architectures (arm64 in specific) can expose the numbers to userspace.
+Use the sched_clock's struct clock_read_data information to correctly
+implement cap_user_time and cap_user_time_zero.
 
+Note that the ARM64 counter is architecturally only guaranteed to be
+56bit wide (implementations are allowed to be wider) and the existing
+perf ABI cannot deal with wrap-around.
+
+This implementation should also be faster than the old; seeing how we
+don't need to recompute mult and shift all the time.
+
+[leoyan: Use quot/rem to convert cyc to ns to avoid overflow]
+
+Reported-by: Leo Yan <leo.yan@linaro.org>
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 ---
- include/linux/sched_clock.h | 28 +++++++++++++++++++++++++
- kernel/time/sched_clock.c   | 41 ++++++++++++-------------------------
- 2 files changed, 41 insertions(+), 28 deletions(-)
+ arch/arm64/kernel/perf_event.c | 40 ++++++++++++++++++++++++++--------
+ 1 file changed, 31 insertions(+), 9 deletions(-)
 
-diff --git a/include/linux/sched_clock.h b/include/linux/sched_clock.h
-index 0bb04a96a6d4..528718e4ed52 100644
---- a/include/linux/sched_clock.h
-+++ b/include/linux/sched_clock.h
-@@ -6,6 +6,34 @@
- #define LINUX_SCHED_CLOCK
+diff --git a/arch/arm64/kernel/perf_event.c b/arch/arm64/kernel/perf_event.c
+index 4d7879484cec..35c2c737d4af 100644
+--- a/arch/arm64/kernel/perf_event.c
++++ b/arch/arm64/kernel/perf_event.c
+@@ -19,6 +19,7 @@
+ #include <linux/of.h>
+ #include <linux/perf/arm_pmu.h>
+ #include <linux/platform_device.h>
++#include <linux/sched_clock.h>
+ #include <linux/smp.h>
  
- #ifdef CONFIG_GENERIC_SCHED_CLOCK
-+/**
-+ * struct clock_read_data - data required to read from sched_clock()
-+ *
-+ * @epoch_ns:		sched_clock() value at last update
-+ * @epoch_cyc:		Clock cycle value at last update.
-+ * @sched_clock_mask:   Bitmask for two's complement subtraction of non 64bit
-+ *			clocks.
-+ * @read_sched_clock:	Current clock source (or dummy source when suspended).
-+ * @mult:		Multipler for scaled math conversion.
-+ * @shift:		Shift value for scaled math conversion.
-+ *
-+ * Care must be taken when updating this structure; it is read by
-+ * some very hot code paths. It occupies <=40 bytes and, when combined
-+ * with the seqcount used to synchronize access, comfortably fits into
-+ * a 64 byte cache line.
-+ */
-+struct clock_read_data {
-+	u64 epoch_ns;
-+	u64 epoch_cyc;
-+	u64 sched_clock_mask;
-+	u64 (*read_sched_clock)(void);
-+	u32 mult;
-+	u32 shift;
-+};
-+
-+extern struct clock_read_data *sched_clock_read_begin(unsigned int *seq);
-+extern int sched_clock_read_retry(unsigned int seq);
-+
- extern void generic_sched_clock_init(void);
- 
- extern void sched_clock_register(u64 (*read)(void), int bits,
-diff --git a/kernel/time/sched_clock.c b/kernel/time/sched_clock.c
-index fa3f800d7d76..0acaadc3156c 100644
---- a/kernel/time/sched_clock.c
-+++ b/kernel/time/sched_clock.c
-@@ -19,31 +19,6 @@
- 
- #include "timekeeping.h"
- 
--/**
-- * struct clock_read_data - data required to read from sched_clock()
-- *
-- * @epoch_ns:		sched_clock() value at last update
-- * @epoch_cyc:		Clock cycle value at last update.
-- * @sched_clock_mask:   Bitmask for two's complement subtraction of non 64bit
-- *			clocks.
-- * @read_sched_clock:	Current clock source (or dummy source when suspended).
-- * @mult:		Multipler for scaled math conversion.
-- * @shift:		Shift value for scaled math conversion.
-- *
-- * Care must be taken when updating this structure; it is read by
-- * some very hot code paths. It occupies <=40 bytes and, when combined
-- * with the seqcount used to synchronize access, comfortably fits into
-- * a 64 byte cache line.
-- */
--struct clock_read_data {
--	u64 epoch_ns;
--	u64 epoch_cyc;
--	u64 sched_clock_mask;
--	u64 (*read_sched_clock)(void);
--	u32 mult;
--	u32 shift;
--};
--
- /**
-  * struct clock_data - all data needed for sched_clock() (including
-  *                     registration of a new clock source)
-@@ -93,6 +68,17 @@ static inline u64 notrace cyc_to_ns(u64 cyc, u32 mult, u32 shift)
- 	return (cyc * mult) >> shift;
- }
- 
-+struct clock_read_data *sched_clock_read_begin(unsigned int *seq)
-+{
-+	*seq = raw_read_seqcount(&cd.seq);
-+	return cd.read_data + (*seq & 1);
-+}
-+
-+int sched_clock_read_retry(unsigned int seq)
-+{
-+	return read_seqcount_retry(&cd.seq, seq);
-+}
-+
- unsigned long long notrace sched_clock(void)
+ /* ARMv8 Cortex-A53 specific event types. */
+@@ -1165,28 +1166,49 @@ device_initcall(armv8_pmu_driver_init)
+ void arch_perf_update_userpage(struct perf_event *event,
+ 			       struct perf_event_mmap_page *userpg, u64 now)
  {
- 	u64 cyc, res;
-@@ -100,13 +86,12 @@ unsigned long long notrace sched_clock(void)
- 	struct clock_read_data *rd;
+-	u32 freq;
+-	u32 shift;
++	struct clock_read_data *rd;
++	unsigned int seq;
++	u64 quot, rem, ns;
  
- 	do {
--		seq = raw_read_seqcount(&cd.seq);
--		rd = cd.read_data + (seq & 1);
+ 	/*
+ 	 * Internal timekeeping for enabled/running/stopped times
+ 	 * is always computed with the sched_clock.
+ 	 */
+-	freq = arch_timer_get_rate();
+ 	userpg->cap_user_time = 1;
++	userpg->cap_user_time_zero = 1;
++
++	do {
 +		rd = sched_clock_read_begin(&seq);
- 
- 		cyc = (rd->read_sched_clock() - rd->epoch_cyc) &
- 		      rd->sched_clock_mask;
- 		res = rd->epoch_ns + cyc_to_ns(cyc, rd->mult, rd->shift);
--	} while (read_seqcount_retry(&cd.seq, seq));
++
++		userpg->time_mult = rd->mult;
++		userpg->time_shift = rd->shift;
++		userpg->time_zero = rd->epoch_ns;
++
++		/*
++		 * This isn't strictly correct, the ARM64 counter can be
++		 * 'short' and then we get funnies when it wraps. The correct
++		 * thing would be to extend the perf ABI with a cycle and mask
++		 * value, but because wrapping on ARM64 is very rare in
++		 * practise this 'works'.
++		 */
++		quot = rd->epoch_cyc >> rd->shift;
++		rem = rd->epoch_cyc & (((u64)1 << rd->shift) - 1);
++		ns = quot * rd->mult + ((rem * rd->mult) >> rd->shift);
++		userpg->time_zero -= ns;
++
 +	} while (sched_clock_read_retry(seq));
++
++	userpg->time_offset = userpg->time_zero - now;
  
- 	return res;
+-	clocks_calc_mult_shift(&userpg->time_mult, &shift, freq,
+-			NSEC_PER_SEC, 0);
+ 	/*
+ 	 * time_shift is not expected to be greater than 31 due to
+ 	 * the original published conversion algorithm shifting a
+ 	 * 32-bit value (now specifies a 64-bit value) - refer
+ 	 * perf_event_mmap_page documentation in perf_event.h.
+ 	 */
+-	if (shift == 32) {
+-		shift = 31;
++	if (userpg->time_shift == 32) {
++		userpg->time_shift = 31;
+ 		userpg->time_mult >>= 1;
+ 	}
+-	userpg->time_shift = (u16)shift;
+-	userpg->time_offset = -now;
++
  }
 -- 
 2.17.1
