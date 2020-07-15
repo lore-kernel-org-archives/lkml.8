@@ -2,258 +2,115 @@ Return-Path: <SRS0=kup7=A2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3B5EC433E6
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 04:19:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EA83C43446
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 04:20:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8070F2067D
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 04:19:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 570DD2067D
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 04:20:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="RkKwnERV"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="Ys6oiqdb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728768AbgGOETy (ORCPT
+        id S1728781AbgGOET6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 00:19:54 -0400
-Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:12018 "EHLO
-        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728606AbgGOETo (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 00:19:44 -0400
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5f0e83a50001>; Tue, 14 Jul 2020 21:18:45 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Tue, 14 Jul 2020 21:19:43 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Tue, 14 Jul 2020 21:19:43 -0700
-Received: from HQMAIL107.nvidia.com (172.20.187.13) by HQMAIL111.nvidia.com
- (172.20.187.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 15 Jul
- 2020 04:19:42 +0000
-Received: from rnnvemgw01.nvidia.com (10.128.109.123) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Wed, 15 Jul 2020 04:19:42 +0000
-Received: from skomatineni-linux.nvidia.com (Not Verified[10.2.160.169]) by rnnvemgw01.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5f0e83dd0002>; Tue, 14 Jul 2020 21:19:42 -0700
-From:   Sowjanya Komatineni <skomatineni@nvidia.com>
-To:     <skomatineni@nvidia.com>, <thierry.reding@gmail.com>,
-        <jonathanh@nvidia.com>, <frankc@nvidia.com>, <hverkuil@xs4all.nl>,
-        <sakari.ailus@iki.fi>, <robh+dt@kernel.org>,
-        <helen.koike@collabora.com>
-CC:     <digetx@gmail.com>, <sboyd@kernel.org>,
-        <gregkh@linuxfoundation.org>, <linux-media@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-i2c@vger.kernel.org>
-Subject: [RFC PATCH v3 18/18] media: tegra-video: Compute settle times based on the clock rate
-Date:   Tue, 14 Jul 2020 21:20:55 -0700
-Message-ID: <1594786855-26506-19-git-send-email-skomatineni@nvidia.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1594786855-26506-1-git-send-email-skomatineni@nvidia.com>
-References: <1594786855-26506-1-git-send-email-skomatineni@nvidia.com>
-X-NVConfidentiality: public
+        Wed, 15 Jul 2020 00:19:58 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:58911 "EHLO
+        mail.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728548AbgGOETm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jul 2020 00:19:42 -0400
+Received: from [IPv6:2607:fb90:86aa:c3d1:98d1:b804:417e:dfd0] ([IPv6:2607:fb90:86aa:c3d1:98d1:b804:417e:dfd0])
+        (authenticated bits=0)
+        by mail.zytor.com (8.15.2/8.15.2) with ESMTPSA id 06F4IkNn3694318
+        (version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
+        Tue, 14 Jul 2020 21:18:47 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 06F4IkNn3694318
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+        s=2020062301; t=1594786728;
+        bh=GyDpl2vFDnvV7p1dzIy8pnaKCty78BASZHAAdM32od0=;
+        h=Date:In-Reply-To:References:Subject:To:CC:From:From;
+        b=Ys6oiqdb2TxPD8sWGkgID7lTc9Y9vTkG+N22y0Tn42ImUz+AMF13iSVJv+KXbVgLt
+         fDmHJR8u6yeuZUm0IEQe+r0//vzK84GyzKBjGpB9XHtFlJ+qlPJmP1PkBTfnAgeF4t
+         8JgmooE1AQkw2BKksaeqoBfKA65hhnD67axrNZxwrOXv2e/omxHX0kKWWDjpDpSN8u
+         PiExThT5OQUFH9qJiv6MfnXXDpYdbO9n4T/n5YCOsdFLrxE7C/MX57JihHGqLz4pt4
+         g1QJ09w/obNU5px8FgYtJ72RbjVoPJ3aKEpC7o1eB7ZOLsxu0ses9+G83I8hRMF5BL
+         W4KaOSRlGMhzg==
+Date:   Tue, 14 Jul 2020 21:18:34 -0700
+User-Agent: K-9 Mail for Android
+In-Reply-To: <e24f5802-5187-956c-80ad-a4cc8f66a261@intel.com>
+References: <1594088183-7187-1-git-send-email-cathy.zhang@intel.com> <1594088183-7187-4-git-send-email-cathy.zhang@intel.com> <20200714030047.GA12592@linux.intel.com> <80d91e21-6509-ff70-fb5a-5c042f6ea588@intel.com> <3EFFDE4B-7844-4BB3-A824-487EE8359376@zytor.com> <e24f5802-5187-956c-80ad-a4cc8f66a261@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1594786725; bh=4rppkIezC/fsfilzoE7eu50OmLt8l8SIUvmDoxYu1fY=;
-        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
-         In-Reply-To:References:X-NVConfidentiality:MIME-Version:
-         Content-Type;
-        b=RkKwnERV5Pt/Vp6Ucdpuot4TL9kaUx9tGgUSV81hitGIahzt8yvR/j2YstATPLwzr
-         yhb5BOUHVM2Iv4/5m81tHB+zqbp0iGGXFVAVG9xWmaVNtB7EqqazCvpAYhZTXbEOaJ
-         jBjM5bnJiBxAxFMDWnlzvvcEkg9TBNcNcZI1x+vBBpl652jjms3iivP/P6tkq5x4Yj
-         NoANy1FB9et7ISiciizD1aG/mrguMD+I4PxnlCPHdjMIPAVcQd9CAkTaMVA99UbQIw
-         +sKyr1ZAo3GcI8yzRWWLByeDGgsrWPTPi4iRIAcZc77FXanJpFesd69dmBx/mPtGKP
-         x/vbS+in82A8Q==
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH v2 3/4] x86: Expose SERIALIZE for supported cpuid
+To:     "Zhang, Cathy" <cathy.zhang@intel.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>
+CC:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org, x86@kernel.org,
+        pbonzini@redhat.com, vkuznets@redhat.com, wanpengli@tencent.com,
+        jmattson@google.com, joro@8bytes.org, tglx@linutronix.de,
+        mingo@redhat.com, bp@alien8.de,
+        ricardo.neri-calderon@linux.intel.com, kyung.min.park@intel.com,
+        jpoimboe@redhat.com, gregkh@linuxfoundation.org,
+        ak@linux.intel.com, dave.hansen@intel.com, tony.luck@intel.com,
+        ravi.v.shankar@intel.com
+From:   hpa@zytor.com
+Message-ID: <17B83AD0-C4E9-451C-A691-DBB8B85C1533@zytor.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Settle time determines the number of cil clock cyles to wait after
-LP00 when moving from LP to HS.
+On July 14, 2020 5:03:31 PM PDT, "Zhang, Cathy" <cathy=2Ezhang@intel=2Ecom>=
+ wrote:
+>On 7/15/2020 7:05 AM, hpa@zytor=2Ecom wrote:
+>> On July 14, 2020 3:42:08 PM PDT, "Zhang, Cathy"
+><cathy=2Ezhang@intel=2Ecom> wrote:
+>>> On 7/14/2020 11:00 AM, Sean Christopherson wrote:
+>>>> On Tue, Jul 07, 2020 at 10:16:22AM +0800, Cathy Zhang wrote:
+>>>>> SERIALIZE instruction is supported by intel processors,
+>>>>> like Sapphire Rapids=2E Expose it in KVM supported cpuid=2E
+>>>> Providing at least a rough overview of the instruction, e=2Eg=2E its
+>>> enumeration,
+>>>> usage, fault rules, controls, etc=2E=2E=2E would be nice=2E  In isola=
+tion,
+>>> the
+>>>> changelog isn't remotely helpful in understanding the correctness
+>of
+>>> the
+>>>> patch=2E
+>>> Thanks Sean! Add it in the next version=2E
+>>>>> Signed-off-by: Cathy Zhang <cathy=2Ezhang@intel=2Ecom>
+>>>>> ---
+>>>>>    arch/x86/kvm/cpuid=2Ec | 3 ++-
+>>>>>    1 file changed, 2 insertions(+), 1 deletion(-)
+>>>>>
+>>>>> diff --git a/arch/x86/kvm/cpuid=2Ec b/arch/x86/kvm/cpuid=2Ec
+>>>>> index 8a294f9=2E=2Ee603aeb 100644
+>>>>> --- a/arch/x86/kvm/cpuid=2Ec
+>>>>> +++ b/arch/x86/kvm/cpuid=2Ec
+>>>>> @@ -341,7 +341,8 @@ void kvm_set_cpu_caps(void)
+>>>>>    	kvm_cpu_cap_mask(CPUID_7_EDX,
+>>>>>    		F(AVX512_4VNNIW) | F(AVX512_4FMAPS) | F(SPEC_CTRL) |
+>>>>>    		F(SPEC_CTRL_SSBD) | F(ARCH_CAPABILITIES) | F(INTEL_STIBP) |
+>>>>> -		F(MD_CLEAR) | F(AVX512_VP2INTERSECT) | F(FSRM)
+>>>>> +		F(MD_CLEAR) | F(AVX512_VP2INTERSECT) | F(FSRM) |
+>>>>> +		F(SERIALIZE)
+>>>>>    	);
+>>>>>   =20
+>>>>>    	/* TSC_ADJUST and ARCH_CAPABILITIES are emulated in software=2E
+>*/
+>>>>> --=20
+>>>>> 1=2E8=2E3=2E1
+>>>>>
+>> At least that one is easy: SERIALIZE is architecturally a NOP, but
+>with hard serialization, like CPUID or IRET=2E
+>SERIALIZE does not modify registers, arithmetic flags or memory, which=20
+>is different with CPUID=2E
 
-This patch computes T-CLK-SETTLE and T-HS-SETTLE times based on cil
-clock rate and pixel rate from the sensor and programs them during
-streaming.
-
-T-CLK-SETTLE time is the interval during which receiver will ignore
-any HS transitions on clock lane starting from the beginning of
-T-CLK-PREPARE.
-
-T-HS-SETTLE time is the interval during which recevier will ignore
-any HS transitions on data lane starting from the beginning of
-T-HS-PREPARE.
-
-Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
----
- drivers/staging/media/tegra-video/csi.c      | 55 ++++++++++++++++++++++++++++
- drivers/staging/media/tegra-video/csi.h      |  5 +++
- drivers/staging/media/tegra-video/tegra210.c | 17 ++++++++-
- 3 files changed, 75 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/staging/media/tegra-video/csi.c b/drivers/staging/media/tegra-video/csi.c
-index 75c844d..d9f9e3c 100644
---- a/drivers/staging/media/tegra-video/csi.c
-+++ b/drivers/staging/media/tegra-video/csi.c
-@@ -19,6 +19,8 @@
- #include "csi.h"
- #include "video.h"
- 
-+#define MHZ			1000000
-+
- static inline struct tegra_csi *
- host1x_client_to_csi(struct host1x_client *client)
- {
-@@ -235,6 +237,59 @@ static int tegra_csi_g_frame_interval(struct v4l2_subdev *subdev,
- 	return 0;
- }
- 
-+static unsigned int csi_get_pixel_rate(struct tegra_csi_channel *csi_chan)
-+{
-+	struct tegra_vi_channel *chan;
-+	struct v4l2_subdev *src_subdev;
-+	struct v4l2_ctrl *ctrl;
-+
-+	chan = v4l2_get_subdev_hostdata(&csi_chan->subdev);
-+	src_subdev = tegra_channel_get_remote_source_subdev(chan);
-+	ctrl = v4l2_ctrl_find(src_subdev->ctrl_handler, V4L2_CID_PIXEL_RATE);
-+	if (ctrl)
-+		return v4l2_ctrl_g_ctrl_int64(ctrl);
-+
-+	return 0;
-+}
-+
-+void tegra_csi_calc_settle_time(struct tegra_csi_channel *csi_chan,
-+				u8 *clk_settle_time,
-+				u8 *ths_settle_time)
-+{
-+	struct tegra_csi *csi = csi_chan->csi;
-+	unsigned int cil_clk_mhz;
-+	unsigned int pix_clk_mhz;
-+	int clk_idx = (csi_chan->csi_port_num >> 1) + 1;
-+
-+	cil_clk_mhz = clk_get_rate(csi->clks[clk_idx].clk) / MHZ;
-+	pix_clk_mhz = csi_get_pixel_rate(csi_chan) / MHZ;
-+
-+	/*
-+	 * CLK Settle time is the interval during which HS receiver should
-+	 * ignore any clock lane HS transitions, starting from the beginning
-+	 * of T-CLK-PREPARE.
-+	 * Per DPHY specification, T-CLK-SETTLE should be between 95ns ~ 300ns
-+	 *
-+	 * 95ns < (clk-settle-programmed + 7) * lp clk period < 300ns
-+	 * midpoint = 197.5 ns
-+	 */
-+	*clk_settle_time = ((95 + 300) * cil_clk_mhz - 14000) / 2000;
-+
-+	/*
-+	 * THS Settle time is the interval during which HS receiver should
-+	 * ignore any data lane HS transitions, starting from the beginning
-+	 * of THS-PREPARE.
-+	 *
-+	 * Per DPHY specification, T-HS-SETTLE should be between 85ns + 6UI
-+	 * and 145ns+10UI.
-+	 * 85ns + 6UI < (Ths-settle-prog + 5) * lp_clk_period < 145ns + 10UI
-+	 * midpoint = 115ns + 8UI
-+	 */
-+	if (pix_clk_mhz)
-+		*ths_settle_time = (115 * cil_clk_mhz + 8000 * cil_clk_mhz
-+				   / (2 * pix_clk_mhz) - 5000) / 1000;
-+}
-+
- static int tegra_csi_s_stream(struct v4l2_subdev *subdev, int enable)
- {
- 	struct tegra_vi_channel *chan = v4l2_get_subdev_hostdata(subdev);
-diff --git a/drivers/staging/media/tegra-video/csi.h b/drivers/staging/media/tegra-video/csi.h
-index 0d50fc3..c65ff73 100644
---- a/drivers/staging/media/tegra-video/csi.h
-+++ b/drivers/staging/media/tegra-video/csi.h
-@@ -51,6 +51,7 @@ struct tegra_csi;
-  * @h_blank: horizontal blanking for TPG active format
-  * @v_blank: vertical blanking for TPG active format
-  * @mipi: mipi device for corresponding csi channel pads
-+ * @pixel_rate: active pixel rate from the sensor on this channel
-  */
- struct tegra_csi_channel {
- 	struct list_head list;
-@@ -67,6 +68,7 @@ struct tegra_csi_channel {
- 	unsigned int h_blank;
- 	unsigned int v_blank;
- 	struct tegra_mipi_device *mipi;
-+	unsigned int pixel_rate;
- };
- 
- /**
-@@ -147,4 +149,7 @@ extern const struct tegra_csi_soc tegra210_csi_soc;
- #endif
- 
- void tegra_csi_error_recover(struct v4l2_subdev *subdev);
-+void tegra_csi_calc_settle_time(struct tegra_csi_channel *csi_chan,
-+				u8 *clk_settle_time,
-+				u8 *ths_settle_time);
- #endif
-diff --git a/drivers/staging/media/tegra-video/tegra210.c b/drivers/staging/media/tegra-video/tegra210.c
-index 253bf33..ac066c0 100644
---- a/drivers/staging/media/tegra-video/tegra210.c
-+++ b/drivers/staging/media/tegra-video/tegra210.c
-@@ -7,6 +7,7 @@
-  * This source file contains Tegra210 supported video formats,
-  * VI and CSI SoC specific data, operations and registers accessors.
-  */
-+#include <linux/bitfield.h>
- #include <linux/clk.h>
- #include <linux/clk/tegra.h>
- #include <linux/delay.h>
-@@ -98,6 +99,8 @@
- #define   BRICK_CLOCK_B_4X				(0x2 << 16)
- #define TEGRA_CSI_CIL_PAD_CONFIG1                       0x004
- #define TEGRA_CSI_CIL_PHY_CONTROL                       0x008
-+#define   CLK_SETTLE_MASK				GENMASK(13, 8)
-+#define   THS_SETTLE_MASK				GENMASK(5, 0)
- #define TEGRA_CSI_CIL_INTERRUPT_MASK                    0x00c
- #define TEGRA_CSI_CIL_STATUS                            0x010
- #define TEGRA_CSI_CILX_STATUS                           0x014
-@@ -770,8 +773,14 @@ static int tegra210_csi_start_streaming(struct tegra_csi_channel *csi_chan)
- {
- 	struct tegra_csi *csi = csi_chan->csi;
- 	unsigned int portno = csi_chan->csi_port_num;
-+	u8 clk_settle_time = 0;
-+	u8 ths_settle_time = 10;
- 	u32 val;
- 
-+	if (!csi_chan->pg_mode)
-+		tegra_csi_calc_settle_time(csi_chan, &clk_settle_time,
-+					   &ths_settle_time);
-+
- 	csi_write(csi, portno, TEGRA_CSI_CLKEN_OVERRIDE, 0);
- 
- 	/* clean up status */
-@@ -782,7 +791,9 @@ static int tegra210_csi_start_streaming(struct tegra_csi_channel *csi_chan)
- 
- 	/* CIL PHY registers setup */
- 	cil_write(csi, portno, TEGRA_CSI_CIL_PAD_CONFIG0, 0x0);
--	cil_write(csi, portno, TEGRA_CSI_CIL_PHY_CONTROL, 0xa);
-+	cil_write(csi, portno, TEGRA_CSI_CIL_PHY_CONTROL,
-+		  FIELD_PREP(CLK_SETTLE_MASK, clk_settle_time) |
-+		  FIELD_PREP(THS_SETTLE_MASK, ths_settle_time));
- 
- 	/*
- 	 * The CSI unit provides for connection of up to six cameras in
-@@ -801,7 +812,9 @@ static int tegra210_csi_start_streaming(struct tegra_csi_channel *csi_chan)
- 			  BRICK_CLOCK_A_4X);
- 		cil_write(csi, portno + 1, TEGRA_CSI_CIL_PAD_CONFIG0, 0x0);
- 		cil_write(csi, portno + 1, TEGRA_CSI_CIL_INTERRUPT_MASK, 0x0);
--		cil_write(csi, portno + 1, TEGRA_CSI_CIL_PHY_CONTROL, 0xa);
-+		cil_write(csi, portno + 1, TEGRA_CSI_CIL_PHY_CONTROL,
-+			  FIELD_PREP(CLK_SETTLE_MASK, clk_settle_time) |
-+			  FIELD_PREP(THS_SETTLE_MASK, ths_settle_time));
- 		csi_write(csi, portno, TEGRA_CSI_PHY_CIL_COMMAND,
- 			  CSI_A_PHY_CIL_ENABLE | CSI_B_PHY_CIL_ENABLE);
- 	} else {
--- 
-2.7.4
-
+That's what I meant with it being an architectural NOP=2E
+--=20
+Sent from my Android device with K-9 Mail=2E Please excuse my brevity=2E
