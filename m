@@ -2,90 +2,105 @@ Return-Path: <SRS0=kup7=A2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B8E8C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 10:36:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82D68C433EA
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 10:37:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2983520656
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 10:36:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 63C0320656
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 10:37:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="EmP12kxr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731181AbgGOKgu (ORCPT
+        id S1731217AbgGOKhL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 06:36:50 -0400
-Received: from foss.arm.com ([217.140.110.172]:37180 "EHLO foss.arm.com"
+        Wed, 15 Jul 2020 06:37:11 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:54584 "EHLO m43-7.mailgun.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731167AbgGOKgt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 06:36:49 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 46B5D30E;
-        Wed, 15 Jul 2020 03:36:49 -0700 (PDT)
-Received: from [10.57.32.45] (unknown [10.57.32.45])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 62A763F718;
-        Wed, 15 Jul 2020 03:36:47 -0700 (PDT)
-Subject: Re: [PATCH v4 3/4] dt-bindings: arm-smmu: add compatible string for
- Marvell Armada-AP806 SMMU-500
-To:     Tomasz Nowicki <tn@semihalf.com>, will@kernel.org, joro@8bytes.org,
-        gregory.clement@bootlin.com, robh+dt@kernel.org, hannah@marvell.com
-Cc:     linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org,
-        devicetree@vger.kernel.org, catalin.marinas@arm.com,
-        nadavh@marvell.com, linux-arm-kernel@lists.infradead.org,
-        mw@semihalf.com
-References: <20200715070649.18733-1-tn@semihalf.com>
- <20200715070649.18733-4-tn@semihalf.com>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <7147e4ae-30e2-5a2f-7fb0-4027e9adc94c@arm.com>
-Date:   Wed, 15 Jul 2020 11:36:45 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        id S1731201AbgGOKhK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jul 2020 06:37:10 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1594809429; h=Date: Message-Id: Cc: To: References:
+ In-Reply-To: From: Subject: Content-Transfer-Encoding: MIME-Version:
+ Content-Type: Sender; bh=pYgx74LtrBLVD12x3ELyZuAqEdnOVxhRlDanXsj1kC8=;
+ b=EmP12kxrcyDhycqtabL61yknP2Xvf9X/dpr28XNXIuvstcRAFyDJ4QAc90UILpVN/sJDeVIS
+ zhaCoaq5tbbg2O7FsK08IQvFVltx60jyvtphmDY/X8tSmUkAqbwfP2byEFu0dHua+Rle48Ao
+ zIRXZkS1YJCGr8bNgtlm8rhK7SY=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n04.prod.us-west-2.postgun.com with SMTP id
+ 5f0edc4db35196d59d5e52fe (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Wed, 15 Jul 2020 10:37:01
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 5B429C43449; Wed, 15 Jul 2020 10:37:01 +0000 (UTC)
+Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: kvalo)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 639D1C433CA;
+        Wed, 15 Jul 2020 10:36:56 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 639D1C433CA
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-In-Reply-To: <20200715070649.18733-4-tn@semihalf.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
 Content-Transfer-Encoding: 7bit
+Subject: Re: [PATCH v2 04/16] b43: Remove uninitialized_var() usage
+From:   Kalle Valo <kvalo@codeaurora.org>
+In-Reply-To: <20200620033007.1444705-5-keescook@chromium.org>
+References: <20200620033007.1444705-5-keescook@chromium.org>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     linux-kernel@vger.kernel.org, Kees Cook <keescook@chromium.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+        Alexander Potapenko <glider@google.com>,
+        Joe Perches <joe@perches.com>,
+        Andy Whitcroft <apw@canonical.com>, x86@kernel.org,
+        drbd-dev@lists.linbit.com, linux-block@vger.kernel.org,
+        b43-dev@lists.infradead.org, netdev@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-wireless@vger.kernel.org,
+        linux-ide@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-spi@vger.kernel.org, linux-mm@kvack.org,
+        clang-built-linux@googlegroups.com
+User-Agent: pwcli/0.1.0-git (https://github.com/kvalo/pwcli/) Python/3.5.2
+Message-Id: <20200715103701.5B429C43449@smtp.codeaurora.org>
+Date:   Wed, 15 Jul 2020 10:37:01 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-07-15 08:06, Tomasz Nowicki wrote:
-> Add specific compatible string for Marvell usage due to errata of
-> accessing 64bits registers of ARM SMMU, in AP806.
+Kees Cook <keescook@chromium.org> wrote:
+
+> Using uninitialized_var() is dangerous as it papers over real bugs[1]
+> (or can in the future), and suppresses unrelated compiler warnings (e.g.
+> "unused variable"). If the compiler thinks it is uninitialized, either
+> simply initialize the variable or make compiler changes. As a precursor
+> to removing[2] this[3] macro[4], just initialize this variable to NULL.
+> No later NULL deref is possible due to the early returns outside of the
+> (phy->rev >= 7 && phy->rev < 19) case, which explicitly tests for NULL.
 > 
-> AP806 SoC uses the generic ARM-MMU500, and there's no specific
-> implementation of Marvell, this compatible is used for errata only.
-
-Reviewed-by: Robin Murphy <robin.murphy@arm.com>
-
-Presumably Will can pick up these first 3 patches for 5.9 and #4 can go 
-via arm-soc.
-
-Robin.
-
-> Reviewed-by: Rob Herring <robh@kernel.org>
-> Signed-off-by: Hanna Hawa <hannah@marvell.com>
-> Signed-off-by: Gregory CLEMENT <gregory.clement@bootlin.com>
-> Signed-off-by: Tomasz Nowicki <tn@semihalf.com>
-> ---
->   Documentation/devicetree/bindings/iommu/arm,smmu.yaml | 4 ++++
->   1 file changed, 4 insertions(+)
+> [1] https://lore.kernel.org/lkml/20200603174714.192027-1-glider@google.com/
+> [2] https://lore.kernel.org/lkml/CA+55aFw+Vbj0i=1TGqCR5vQkCzWJ0QxK6CernOU6eedsudAixw@mail.gmail.com/
+> [3] https://lore.kernel.org/lkml/CA+55aFwgbgqhbp1fkxvRKEpzyR5J8n1vKT1VZdz9knmPuXhOeg@mail.gmail.com/
+> [4] https://lore.kernel.org/lkml/CA+55aFz2500WfbKXAx8s67wrm9=yVJu65TpLgN_ybYNv0VEOKA@mail.gmail.com/
 > 
-> diff --git a/Documentation/devicetree/bindings/iommu/arm,smmu.yaml b/Documentation/devicetree/bindings/iommu/arm,smmu.yaml
-> index d7ceb4c34423..156b38924a00 100644
-> --- a/Documentation/devicetree/bindings/iommu/arm,smmu.yaml
-> +++ b/Documentation/devicetree/bindings/iommu/arm,smmu.yaml
-> @@ -38,6 +38,10 @@ properties:
->                 - qcom,sc7180-smmu-500
->                 - qcom,sdm845-smmu-500
->             - const: arm,mmu-500
-> +      - description: Marvell SoCs implementing "arm,mmu-500"
-> +        items:
-> +          - const: marvell,ap806-smmu-500
-> +          - const: arm,mmu-500
->         - items:
->             - const: arm,mmu-500
->             - const: arm,smmu-v2
-> 
+> Fixes: 58619b14d106 ("b43: move under broadcom vendor directory")
+> Signed-off-by: Kees Cook <keescook@chromium.org>
+> Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+
+2 patches applied to wireless-drivers-next.git, thanks.
+
+800e7a205a0f b43: Remove uninitialized_var() usage
+f8279dad4e36 rtlwifi: rtl8192cu: Remove uninitialized_var() usage
+
+-- 
+https://patchwork.kernel.org/patch/11615573/
+
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+
