@@ -2,95 +2,103 @@ Return-Path: <SRS0=kup7=A2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B387C433E5
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 22:28:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72323C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 22:30:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 286482065D
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 22:28:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hxbzXSZ7"
+	by mail.kernel.org (Postfix) with ESMTP id 59C352065D
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 22:30:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727029AbgGOW2s (ORCPT
+        id S1727047AbgGOWaR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 18:28:48 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:27209 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726776AbgGOW2r (ORCPT
+        Wed, 15 Jul 2020 18:30:17 -0400
+Received: from kernel.crashing.org ([76.164.61.194]:37602 "EHLO
+        kernel.crashing.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726479AbgGOWaQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 18:28:47 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1594852126;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=r7ysqoJ771cWpq2r7U8vAXss+T0bwN4WnRyfVotsoz8=;
-        b=hxbzXSZ7LXiPE5d5p+CleAXl/rDJp3mLjsUEF3srx6pC1JnSWzVM7saus+aPA6/AQsvw3j
-        f+orP28koUFqKafotD1//5C/KBMuAgtH14ua1WJPBwA9fTeAKgVFjQges4kieFZwbP05Yw
-        ezzet+l4ulEniTS01Ln2kchFpHxtI5o=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-31-A0bR1z3CN4aAii1dDZUDNw-1; Wed, 15 Jul 2020 18:28:42 -0400
-X-MC-Unique: A0bR1z3CN4aAii1dDZUDNw-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A10231083;
-        Wed, 15 Jul 2020 22:28:40 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-112-113.rdu2.redhat.com [10.10.112.113])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 64D4110013C2;
-        Wed, 15 Jul 2020 22:28:39 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-Subject: [PATCH] keys: asymmetric: fix error return code in
- software_key_query()
-From:   David Howells <dhowells@redhat.com>
-To:     torvalds@linux-foundation.org
-Cc:     Wei Yongjun <weiyongjun1@huawei.com>, dhowells@redhat.com,
-        jarkko.sakkinen@linux.intel.com, keyrings@vger.kernel.org,
-        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
-Date:   Wed, 15 Jul 2020 23:28:38 +0100
-Message-ID: <159485211858.2340757.9890754969922775496.stgit@warthog.procyon.org.uk>
-User-Agent: StGit/0.22
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+        Wed, 15 Jul 2020 18:30:16 -0400
+Received: from localhost (gate.crashing.org [63.228.1.57])
+        (authenticated bits=0)
+        by kernel.crashing.org (8.14.7/8.14.7) with ESMTP id 06FMQfq2014030
+        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
+        Wed, 15 Jul 2020 17:26:45 -0500
+Message-ID: <627b214e6fc0624093caa8155d7006de111aacfb.camel@kernel.crashing.org>
+Subject: Re: [RFC PATCH 00/35] Move all PCIBIOS* definitions into arch/x86
+From:   Benjamin Herrenschmidt <benh@kernel.crashing.org>
+To:     Arnd Bergmann <arnd@arndb.de>, Bjorn Helgaas <helgaas@kernel.org>
+Cc:     "Saheed O. Bolarinwa" <refactormyself@gmail.com>,
+        bjorn@helgaas.com, Shuah Khan <skhan@linuxfoundation.org>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Richard Henderson <rth@twiddle.net>,
+        Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
+        Matt Turner <mattst88@gmail.com>,
+        Greg Ungerer <gerg@linux-m68k.org>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Russell King <linux@armlinux.org.uk>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Juergen Gross <jgross@suse.com>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Paul Mackerras <paulus@samba.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        sparclinux <sparclinux@vger.kernel.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@fb.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Toan Le <toan@os.amperecomputing.com>,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        Ley Foon Tan <ley.foon.tan@intel.com>,
+        Marek Vasut <marek.vasut+renesas@gmail.com>,
+        Kjetil Oftedal <oftedal@gmail.com>
+Date:   Thu, 16 Jul 2020 08:26:40 +1000
+In-Reply-To: <CAK8P3a3OEOosC2VEHb3z7hTA=BjVp0nv9bNxBWzEnmgSDDTX3Q@mail.gmail.com>
+References: <CAK8P3a3EZX8=649R9cYF6_=ivh1Xyrgsc5mUtS=d5yvQ3doZaQ@mail.gmail.com>
+         <20200714234625.GA428442@bjorn-Precision-5520>
+         <CAK8P3a3OEOosC2VEHb3z7hTA=BjVp0nv9bNxBWzEnmgSDDTX3Q@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.2 
+Mime-Version: 1.0
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wei Yongjun <weiyongjun1@huawei.com>
+On Wed, 2020-07-15 at 08:47 +0200, Arnd Bergmann wrote:
+> drivers/misc/cardreader/rts5261.c:      retval =
+> rtsx_pci_write_config_dword(pcr, PCR_SETTING_REG2, lval);
+> 
+> That last one is interesting because I think this is a case in which
+> we
+> actually want to check for errors, as the driver seems to use it
+> to ensure that accessing extended config space at offset 0x814
+> works before relying on the value. Unfortunately the implementation
+> seems buggy as it a) keeps using the possibly uninitialized value
+> after
+> printing a warning and b) returns the PCIBIOS_* value in place of a
+> negative errno and then ignores it in the caller.
 
-Fix to return negative error code -ENOMEM from kmalloc() error handling
-case instead of 0, as done elsewhere in this function.
+In cases like this, usually checking against ~0 is sufficient
 
-Fixes: f1774cb8956a ("X.509: parse public key parameters from x509 for akcipher")
-Signed-off-by: Wei Yongjun <weiyongjun1@huawei.com>
-Signed-off-by: David Howells <dhowells@redhat.com>
----
-
- crypto/asymmetric_keys/public_key.c |    1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/crypto/asymmetric_keys/public_key.c b/crypto/asymmetric_keys/public_key.c
-index d7f43d4ea925..e5fae4e838c0 100644
---- a/crypto/asymmetric_keys/public_key.c
-+++ b/crypto/asymmetric_keys/public_key.c
-@@ -119,6 +119,7 @@ static int software_key_query(const struct kernel_pkey_params *params,
- 	if (IS_ERR(tfm))
- 		return PTR_ERR(tfm);
- 
-+	ret = -ENOMEM;
- 	key = kmalloc(pkey->keylen + sizeof(u32) * 2 + pkey->paramlen,
- 		      GFP_KERNEL);
- 	if (!key)
+Cheers,
+Ben.
 
 
