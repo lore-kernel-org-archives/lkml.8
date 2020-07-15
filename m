@@ -3,108 +3,118 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EFAD4C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 20:22:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65E7AC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 20:23:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D629C20657
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 20:22:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3FB0320657
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 20:23:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727774AbgGOUWz (ORCPT
+        id S1727839AbgGOUXF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 16:22:55 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:37088 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726370AbgGOUWy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 16:22:54 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: ezequiel)
-        with ESMTPSA id AA8492A5175
-From:   Ezequiel Garcia <ezequiel@collabora.com>
-To:     linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Tomasz Figa <tfiga@chromium.org>, kernel@collabora.com,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Hans Verkuil <hverkuil@xs4all.nl>,
-        Alexandre Courbot <acourbot@chromium.org>,
-        Jeffrey Kardatzke <jkardatzke@chromium.org>,
-        Nicolas Dufresne <nicolas.dufresne@collabora.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Maxime Ripard <mripard@kernel.org>,
-        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
-        Ezequiel Garcia <ezequiel@collabora.com>
-Subject: [PATCH 0/7] media: Clean H264 stateless uAPI
-Date:   Wed, 15 Jul 2020 17:22:23 -0300
-Message-Id: <20200715202233.185680-1-ezequiel@collabora.com>
-X-Mailer: git-send-email 2.27.0
+        Wed, 15 Jul 2020 16:23:05 -0400
+Received: from ms-10.1blu.de ([178.254.4.101]:33922 "EHLO ms-10.1blu.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726878AbgGOUXC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jul 2020 16:23:02 -0400
+Received: from [78.43.71.214] (helo=marius.localnet)
+        by ms-10.1blu.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.90_1)
+        (envelope-from <mail@mariuszachmann.de>)
+        id 1jvnvf-00049v-Fg; Wed, 15 Jul 2020 22:22:59 +0200
+From:   Marius Zachmann <mail@mariuszachmann.de>
+To:     Guenter Roeck <linux@roeck-us.net>
+Cc:     Jean Delvare <jdelvare@suse.com>, linux-hwmon@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] hwmon: corsair-cpro: Change to HID driver
+Date:   Wed, 15 Jul 2020 22:22:58 +0200
+Message-ID: <3539133.zoi8ogbS3G@marius>
+In-Reply-To: <7a45a7ac-ef4d-b9c8-fac7-6c226baf1329@roeck-us.net>
+References: <20200715151419.43134-1-mail@mariuszachmann.de> <3864498.z6qT3ff8q6@marius> <7a45a7ac-ef4d-b9c8-fac7-6c226baf1329@roeck-us.net>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
+X-Con-Id: 241080
+X-Con-U: 0-mail
+X-Originating-IP: 78.43.71.214
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The recent patch posted by Jernej (which I'm including for context),
-encouraged me to address all the known issues in the uAPI.
+On 15.07.20 at 22:11:39 CEST, Guenter Roeck wrote
+> On 7/15/20 12:55 PM, Marius Zachmann wrote:
+> > On 15.07.20 at 21:49:59 CEST, Guenter Roeck wrote
+> >> On 7/15/20 12:12 PM, Marius Zachmann wrote:
+> >>> On 15.07.20 at 17:35:08 CEST, Guenter Roeck wrote
+> >>>> On 7/15/20 8:14 AM, Marius Zachmann wrote:
+> >>>>> This changes corsair-cpro to a hid driver using hid reports.
+> >>>>>
+> >>>>> Signed-off-by: Marius Zachmann <mail@mariuszachmann.de>
+> >>>>>
+> >>>>> ---
+> >>>>
+> >>> ...
+> >>>>> -module_usb_driver(ccp_driver);
+> >>>>> +static int __init ccp_init(void)
+> >>>>> +{
+> >>>>> +	return hid_register_driver(&ccp_driver);
+> >>>>> +}
+> >>>>> +
+> >>>>> +static void __exit ccp_exit(void)
+> >>>>> +{
+> >>>>> +	hid_unregister_driver(&ccp_driver);
+> >>>>> +}
+> >>>>> +
+> >>>>> +/* make sure it is loaded after hid */
+> >>>>> +late_initcall(ccp_init);
+> >>>>> +module_exit(ccp_exit);
+> >>>>
+> >>>> Sorry for not noticing before, but can you use module_hid_driver() ?
+> >>>> That seems to work for other hid drivers.
+> >>>>
+> >>>> Thanks,
+> >>>> Guenter
+> >>>>
+> >>>
+> >>> When using module_hid_driver() and compiling the driver as built-in
+> >>> the driver init function will get called before hid and fail registering
+> >>> the driver. late_initcall forces it to be loaded after hid.
+> >>>
+> >>
+> >> That seems odd. Why does no other hid driver have that problem ?
+> >> Your argument is pretty much that module_hid_driver() would not work,
+> >> which seems unlikely.
+> >>
+> >> Thanks,
+> >> Guenter
+> >>
+> > 
+> > The order of initcalls is determined by the build order. Hwmon subsystem
+> > gets build before hid subsystem and therefore the initcalls are earlier
+> > than hid. But hid_register_driver needs the hid driver to be there.
+> > 
+> Hmm. I am not happy, but I guess we'll have to live with it.
+> 
+> Can you add the detailed explanation to the comment above ?
+> "make sure it is loaded after hid" doesn't tell the whole story,
+> and I want to avoid having to deal with "cleanup" patches later.
+> 
+> Alternatively, I wonder if it would make sense to force
+> this driver to be built as module. Have you thought about that ?
+> 
+> Thanks,
+> Guenter
+> 
 
-I hope we can finally make this uAPI interface
-public; and then also address the other codec
-interfaces so we can move the codec drivers out of staging.
+I am also not happy about this and thought about this, but I
+think late_initcall is the least ugly solution to this.
+I will add a more detailed explanation.
 
-It should be noted that there is already GStreamer native
-support for this interface, which will be part of 1.18,
-once it's released [1], as well as support in Chromium [2].
+Greetings
+Marius
 
-I have pushed a branch porting GStreamer to
-support these interface changes:
 
-https://gitlab.freedesktop.org/ezequielgarcia/gst-plugins-bad/-/commits/for_h264_uapi_v2
-
-The main changes are:
-
-* Split prediction weight table to a separate control.
-* Increase size of first_mb_in_slice field.
-* Cleanup DPB entry interface, to support field coding.
-* Increase of DPB entry pic_num field.
-* Move slice invariant fields to the per-frame control.
-
-I'm adding here the change from Jernej, and a change from
-Philipp Zabel which apparently fell thru the cracks.
-
-Ezequiel Garcia (8):
-  media: uapi: h264: Further clarify scaling lists order
-  media: uapi: h264: Split prediction weight parameters
-  media: uapi: h264: Increase size of 'first_mb_in_slice' field
-  media: uapi: h264: Cleanup DPB entry interface
-  media: uapi: h264: Increase size of DPB entry pic_num
-  media: uapi: h264: Clean slice invariants syntax elements
-  media: hantro: Don't require unneeded H264_SLICE_PARAMS
-  media: rkvdec: Don't require unneeded H264_SLICE_PARAMS
-
-Jernej Skrabec (1):
-  media: uapi: h264: Update reference lists
-
-Philipp Zabel (1):
-  media: uapi: h264: Clarify pic_order_cnt_bit_size field
-
- .../media/v4l/ext-ctrls-codec.rst             | 192 +++++++++++-------
- drivers/media/v4l2-core/v4l2-ctrls.c          |  25 +++
- drivers/media/v4l2-core/v4l2-h264.c           |  12 +-
- drivers/staging/media/hantro/hantro_drv.c     |   5 -
- .../staging/media/hantro/hantro_g1_h264_dec.c |  21 +-
- drivers/staging/media/hantro/hantro_h264.c    |   8 +-
- drivers/staging/media/hantro/hantro_hw.h      |   2 -
- drivers/staging/media/rkvdec/rkvdec-h264.c    |  18 +-
- drivers/staging/media/rkvdec/rkvdec.c         |   5 -
- drivers/staging/media/sunxi/cedrus/cedrus.h   |   1 +
- .../staging/media/sunxi/cedrus/cedrus_dec.c   |   2 +
- .../staging/media/sunxi/cedrus/cedrus_h264.c  |  21 +-
- include/media/h264-ctrls.h                    |  80 +++++---
- include/media/v4l2-h264.h                     |   3 +-
- 14 files changed, 234 insertions(+), 161 deletions(-)
-
--- 
-2.27.0
 
