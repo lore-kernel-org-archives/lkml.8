@@ -2,118 +2,146 @@ Return-Path: <SRS0=kup7=A2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AAD0C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 01:01:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D0E2C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 01:04:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 61D3E2072D
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 01:01:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 036542072D
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 01:04:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="D+HAwEAA"
+	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="WwupWKzZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727078AbgGOBB4 (ORCPT
+        id S1727790AbgGOBEc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 21:01:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39844 "EHLO
+        Tue, 14 Jul 2020 21:04:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40236 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726356AbgGOBB4 (ORCPT
+        with ESMTP id S1726965AbgGOBEc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 21:01:56 -0400
-Received: from mail-oi1-x243.google.com (mail-oi1-x243.google.com [IPv6:2607:f8b0:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0BB79C061755
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 18:01:56 -0700 (PDT)
-Received: by mail-oi1-x243.google.com with SMTP id x83so498802oif.10
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 18:01:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=OMjrBdOlZtOlrxQJblTz347f9wqhxv2y4/d6fAqMOvo=;
-        b=D+HAwEAA+6YUuQyV3YTuVOAqodxiScvYI0sXW1JASdOzeCJAICLzKcpqPhLEItyi4r
-         7EylnS7jWTeno/LtO8iu+rmRR8q2MX1QPELT1XKECJejL8yJLrzzyaj62WffiBvmlcaF
-         HCRSXo6V1LAJ6CHlb/4qZF73E3jTXFr/4dheQvfBjX5UcX4PBILdSM0jnxYznV73/7IF
-         CmDVWUphrNblgFrkRiuWjTgz6aLwQ5EOudh+GZ9ZgCqj/I4uw2CfJj2YUTy8HdblPZ3x
-         hY53xPDvbUuBCRKGkfP38p3+7DAZEji1GMG2fuGO9R1bjrM9scSdeWyZFz2QG03ZCN6c
-         5ZUg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=OMjrBdOlZtOlrxQJblTz347f9wqhxv2y4/d6fAqMOvo=;
-        b=QC325+KBvFyOLN/jzzcznVQz++Lg7F/7JuXMJNVFiBhGH8U2jLtpxoEemnnMrw318c
-         8KkFaoISBnF826GBiO05Ku2A0QVnI83IIKDuOszaXyBrd9Cna2xhgWvBrqDwN9H2SmnE
-         C8AEefTtwejTpQ6OrM3mKrI8jvMuLxN1z2+UoDaxeUi96c21QFFEs/lZiKSvDa5HqTJr
-         pWny3Ler1idyX4l3vO/7iEHAn6v0t0bqFU8+Rq9iQ9ung7wzxVV0/TOIxdAg9x6zVuTO
-         g3zswFZIQmU4oHn4QmlXLfGTIkwsTqIi88+jcnRhKlsLqCYtBY8XBR1x6pvO1WJmERsk
-         jLsQ==
-X-Gm-Message-State: AOAM532sD9ObjOcp9gEtjYoHHBHlYHOiO+J/vdKVDq3QNi2HALPOX0Ad
-        DeGzQ6YMU2UAcg/egPI2gGGxFOkBzKfbvfQqryU=
-X-Google-Smtp-Source: ABdhPJwOYkykZw/ONGCKTxD0t+RpZ4Uc2oSNkvC3dQpXIGSq/Ls3Qefimh42FXXZW3PnpHY6eA88e7wPjdf4e6SppF0=
-X-Received: by 2002:a54:4418:: with SMTP id k24mr5878649oiw.126.1594774914392;
- Tue, 14 Jul 2020 18:01:54 -0700 (PDT)
+        Tue, 14 Jul 2020 21:04:32 -0400
+Received: from ozlabs.org (ozlabs.org [IPv6:2401:3900:2:1::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DAE82C061755;
+        Tue, 14 Jul 2020 18:04:31 -0700 (PDT)
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 4B5zgH5lGlz9sQt;
+        Wed, 15 Jul 2020 11:04:27 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
+        s=201909; t=1594775068;
+        bh=DRW9yi5rJrMkAE9FJwWBtPJ4PTfLdPhmlR2SiTJPUEA=;
+        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+        b=WwupWKzZobPRuA0ewfQ/OibLdE136XZAxIa6okCeJFSZDbAOw/ndIILKb5eMGYCkY
+         zHhUoRY/HBoO/u7mhE256GPlkDqO7dzJwO9S3/JM6Wlzm509/x6ZSNqD6yFyr0E3pr
+         tMQlga8blXrq4k1TCuRJYTO5WNX8EnD85h6WLusGlw241MRKDzTGFt/AdxNJjkAXe+
+         ixTMKNB6sGuB/35Yx/+fubQLUq+s1LANQJpO/VRS1wTcCGjSUyGxW/RJxc6dFtwFVl
+         hsvo5DxpXVwVHbqXrNveC3J7JJMB5S/HkD5xRJeETKKxfGGKxPh4nXzlGzkkInSc5E
+         /tRwbikclFpbw==
+From:   Michael Ellerman <mpe@ellerman.id.au>
+To:     Christophe Leroy <christophe.leroy@c-s.fr>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>, nathanl@linux.ibm.com
+Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        arnd@arndb.de, tglx@linutronix.de, vincenzo.frascino@arm.com,
+        luto@kernel.org, linux-arch@vger.kernel.org,
+        Tulio Magno Quites Machado Filho <tuliom@linux.ibm.com>
+Subject: Re: [PATCH v8 5/8] powerpc/vdso: Prepare for switching VDSO to generic C implementation.
+In-Reply-To: <2a67c333893454868bbfda773ba4b01c20272a5d.1588079622.git.christophe.leroy@c-s.fr>
+References: <cover.1588079622.git.christophe.leroy@c-s.fr> <2a67c333893454868bbfda773ba4b01c20272a5d.1588079622.git.christophe.leroy@c-s.fr>
+Date:   Wed, 15 Jul 2020 11:04:26 +1000
+Message-ID: <878sflvbad.fsf@mpe.ellerman.id.au>
 MIME-Version: 1.0
-References: <20200708045046.135702-1-ravi.bangoria@linux.ibm.com> <20200708045046.135702-2-ravi.bangoria@linux.ibm.com>
-In-Reply-To: <20200708045046.135702-2-ravi.bangoria@linux.ibm.com>
-From:   Jordan Niethe <jniethe5@gmail.com>
-Date:   Wed, 15 Jul 2020 11:01:43 +1000
-Message-ID: <CACzsE9oCSRdfFbP0DjJ8M0092BNCKXHa5BzmksNGr6ebmfmzSg@mail.gmail.com>
-Subject: Re: [PATCH v3 1/9] powerpc/watchpoint: Fix 512 byte boundary limit
-To:     Ravi Bangoria <ravi.bangoria@linux.ibm.com>
-Cc:     Michael Ellerman <mpe@ellerman.id.au>, mikey@neuling.org,
-        apopple@linux.ibm.com, Paul Mackerras <paulus@samba.org>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        naveen.n.rao@linux.vnet.ibm.com, peterz@infradead.org,
-        jolsa@kernel.org, oleg@redhat.com, fweisbec@gmail.com,
-        mingo@kernel.org, pedromfc@br.ibm.com, miltonm@us.ibm.com,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 8, 2020 at 2:53 PM Ravi Bangoria
-<ravi.bangoria@linux.ibm.com> wrote:
+Christophe Leroy <christophe.leroy@c-s.fr> writes:
+> Prepare for switching VDSO to generic C implementation in following
+> patch. Here, we:
+> - Modify __get_datapage() to take an offset
+> - Prepare the helpers to call the C VDSO functions
+> - Prepare the required callbacks for the C VDSO functions
+> - Prepare the clocksource.h files to define VDSO_ARCH_CLOCKMODES
+> - Add the C trampolines to the generic C VDSO functions
 >
-> Milton Miller reported that we are aligning start and end address to
-> wrong size SZ_512M. It should be SZ_512. Fix that.
+> powerpc is a bit special for VDSO as well as system calls in the
+> way that it requires setting CR SO bit which cannot be done in C.
+> Therefore, entry/exit needs to be performed in ASM.
 >
-> While doing this change I also found a case where ALIGN() comparison
-> fails. Within a given aligned range, ALIGN() of two addresses does not
-> match when start address is pointing to the first byte and end address
-> is pointing to any other byte except the first one. But that's not true
-> for ALIGN_DOWN(). ALIGN_DOWN() of any two addresses within that range
-> will always point to the first byte. So use ALIGN_DOWN() instead of
-> ALIGN().
->
-> Fixes: e68ef121c1f4 ("powerpc/watchpoint: Use builtin ALIGN*() macros")
-> Reported-by: Milton Miller <miltonm@us.ibm.com>
-> Signed-off-by: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
-I tested this with the ptrace-hwbreak selftest. Can confirm without
-also changing to ALIGN_DOWN() then these tests will fail.
-Tested-by: Jordan Niethe <jniethe5@gmail.com>
-> ---
->  arch/powerpc/kernel/hw_breakpoint.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/arch/powerpc/kernel/hw_breakpoint.c b/arch/powerpc/kernel/hw_breakpoint.c
-> index 0000daf0e1da..031e6defc08e 100644
-> --- a/arch/powerpc/kernel/hw_breakpoint.c
-> +++ b/arch/powerpc/kernel/hw_breakpoint.c
-> @@ -419,7 +419,7 @@ static int hw_breakpoint_validate_len(struct arch_hw_breakpoint *hw)
->         if (dawr_enabled()) {
->                 max_len = DAWR_MAX_LEN;
->                 /* DAWR region can't cross 512 bytes boundary */
-> -               if (ALIGN(start_addr, SZ_512M) != ALIGN(end_addr - 1, SZ_512M))
-> +               if (ALIGN_DOWN(start_addr, SZ_512) != ALIGN_DOWN(end_addr - 1, SZ_512))
->                         return -EINVAL;
->         } else if (IS_ENABLED(CONFIG_PPC_8xx)) {
->                 /* 8xx can setup a range without limitation */
-> --
-> 2.26.2
->
+> Implementing __arch_get_vdso_data() would clobber the link register,
+> requiring the caller to save it. As the ASM calling function already
+> has to set a stack frame and saves the link register before calling
+> the C vdso function, retriving the vdso data pointer there is lighter.
+...
+
+> diff --git a/arch/powerpc/include/asm/vdso/gettimeofday.h b/arch/powerpc/include/asm/vdso/gettimeofday.h
+> new file mode 100644
+> index 000000000000..4452897f9bd8
+> --- /dev/null
+> +++ b/arch/powerpc/include/asm/vdso/gettimeofday.h
+> @@ -0,0 +1,175 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +#ifndef __ASM_VDSO_GETTIMEOFDAY_H
+> +#define __ASM_VDSO_GETTIMEOFDAY_H
+> +
+> +#include <asm/ptrace.h>
+> +
+> +#ifdef __ASSEMBLY__
+> +
+> +.macro cvdso_call funct
+> +  .cfi_startproc
+> +	PPC_STLU	r1, -STACK_FRAME_OVERHEAD(r1)
+> +	mflr		r0
+> +  .cfi_register lr, r0
+> +	PPC_STL		r0, STACK_FRAME_OVERHEAD + PPC_LR_STKOFF(r1)
+
+This doesn't work for me on ppc64(le) with glibc.
+
+glibc doesn't create a stack frame before making the VDSO call, so the
+store of r0 (LR) goes into the caller's frame, corrupting the saved LR,
+leading to an infinite loop.
+
+This is an example from a statically built program that calls
+clock_gettime():
+
+0000000010030cb0 <__clock_gettime>:
+    10030cb0:   0e 10 40 3c     lis     r2,4110
+    10030cb4:   00 7a 42 38     addi    r2,r2,31232
+    10030cb8:   a6 02 08 7c     mflr    r0
+    10030cbc:   ff ff 22 3d     addis   r9,r2,-1
+    10030cc0:   58 6d 29 39     addi    r9,r9,27992
+    10030cc4:   f0 ff c1 fb     std     r30,-16(r1)			<-- redzone store
+    10030cc8:   78 23 9e 7c     mr      r30,r4
+    10030ccc:   f8 ff e1 fb     std     r31,-8(r1)			<-- redzone store
+    10030cd0:   78 1b 7f 7c     mr      r31,r3
+    10030cd4:   10 00 01 f8     std     r0,16(r1)			<-- save LR to caller's frame
+    10030cd8:   00 00 09 e8     ld      r0,0(r9)
+    10030cdc:   00 00 20 2c     cmpdi   r0,0
+    10030ce0:   50 00 82 41     beq     10030d30 <__clock_gettime+0x80>
+    10030ce4:   a6 03 09 7c     mtctr   r0
+    10030ce8:   21 04 80 4e     bctrl					<-- vdso call
+    10030cec:   26 00 00 7c     mfcr    r0
+    10030cf0:   00 10 09 74     andis.  r9,r0,4096
+    10030cf4:   78 1b 69 7c     mr      r9,r3
+    10030cf8:   28 00 82 40     bne     10030d20 <__clock_gettime+0x70>
+    10030cfc:   b4 07 23 7d     extsw   r3,r9
+    10030d00:   10 00 01 e8     ld      r0,16(r1)			<-- load saved LR, since clobbered by the VDSO
+    10030d04:   f0 ff c1 eb     ld      r30,-16(r1)
+    10030d08:   f8 ff e1 eb     ld      r31,-8(r1)
+    10030d0c:   a6 03 08 7c     mtlr    r0				<-- restore LR
+    10030d10:   20 00 80 4e     blr					<-- jumps to 10030cec
+
+
+I'm kind of confused how it worked for you on 32-bit.
+
+There's also no code to load/restore the TOC pointer on BE, which I
+think we'll need to handle.
+
+cheers
