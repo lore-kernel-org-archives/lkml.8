@@ -2,118 +2,170 @@ Return-Path: <SRS0=kup7=A2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-8.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A51CC433E5
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 19:50:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CEE3BC433E2
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 19:50:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1B12620663
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 19:50:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A212C2065F
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 19:50:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="UFnWsfiu"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ucHZ+pFs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728092AbgGOTuH (ORCPT
+        id S1727839AbgGOTuD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 15:50:07 -0400
-Received: from smtp-fw-2101.amazon.com ([72.21.196.25]:25772 "EHLO
-        smtp-fw-2101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727118AbgGOTuE (ORCPT
+        Wed, 15 Jul 2020 15:50:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44576 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726986AbgGOTuC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 15:50:04 -0400
+        Wed, 15 Jul 2020 15:50:02 -0400
+Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B63B1C061755;
+        Wed, 15 Jul 2020 12:50:02 -0700 (PDT)
+Received: by mail-pf1-x443.google.com with SMTP id m9so2557434pfh.0;
+        Wed, 15 Jul 2020 12:50:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1594842604; x=1626378604;
-  h=date:from:to:cc:message-id:references:mime-version:
-   in-reply-to:subject;
-  bh=99ygPzuHwg4Q3YW9N+NvtkYNtktLaI4YT2h/lpn7jBQ=;
-  b=UFnWsfiuKcYxKApwDqwbO4JuWJM9eKqMvcjYfa7ae83L+E3IOktXwAD5
-   1wHHvVKUrgAus7aPNrkORvrLyZLqsnyIeTugQzQrucQe/iiX/JBzJmcBU
-   KA+7Qe+7VED+J/xRZLe/xhq02bb//HcCqu8K5r42HbhhM5tMMZznPTi66
-   w=;
-IronPort-SDR: KVs3TTCGlt4jbzRtfh8Z1F2oZ0rdfRw93Xpe0nJRsHl/jLIcyO7oUiuuap5BxGwGfPqm/SHJu5
- uUVJci5HS3mg==
-X-IronPort-AV: E=Sophos;i="5.75,356,1589241600"; 
-   d="scan'208";a="42072089"
-Subject: Re: [PATCH v2 00/11] Fix PM hibernation in Xen guests
-Received: from iad12-co-svc-p1-lb1-vlan2.amazon.com (HELO email-inbound-relay-1d-38ae4ad2.us-east-1.amazon.com) ([10.43.8.2])
-  by smtp-border-fw-out-2101.iad2.amazon.com with ESMTP; 15 Jul 2020 19:50:03 +0000
-Received: from EX13MTAUEB002.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan2.iad.amazon.com [10.40.159.162])
-        by email-inbound-relay-1d-38ae4ad2.us-east-1.amazon.com (Postfix) with ESMTPS id 3C48DA216B;
-        Wed, 15 Jul 2020 19:49:55 +0000 (UTC)
-Received: from EX13D08UEB004.ant.amazon.com (10.43.60.142) by
- EX13MTAUEB002.ant.amazon.com (10.43.60.12) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Wed, 15 Jul 2020 19:49:34 +0000
-Received: from EX13MTAUEB002.ant.amazon.com (10.43.60.12) by
- EX13D08UEB004.ant.amazon.com (10.43.60.142) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Wed, 15 Jul 2020 19:49:33 +0000
-Received: from dev-dsk-anchalag-2a-9c2d1d96.us-west-2.amazon.com
- (172.22.96.68) by mail-relay.amazon.com (10.43.60.234) with Microsoft SMTP
- Server id 15.0.1497.2 via Frontend Transport; Wed, 15 Jul 2020 19:49:33 +0000
-Received: by dev-dsk-anchalag-2a-9c2d1d96.us-west-2.amazon.com (Postfix, from userid 4335130)
-        id 60CEF4E7C7; Wed, 15 Jul 2020 19:49:33 +0000 (UTC)
-Date:   Wed, 15 Jul 2020 19:49:33 +0000
-From:   Anchal Agarwal <anchalag@amazon.com>
-To:     Boris Ostrovsky <boris.ostrovsky@oracle.com>
-CC:     "tglx@linutronix.de" <tglx@linutronix.de>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "bp@alien8.de" <bp@alien8.de>, "hpa@zytor.com" <hpa@zytor.com>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "jgross@suse.com" <jgross@suse.com>,
-        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "Kamata, Munehisa" <kamatam@amazon.com>,
-        "sstabellini@kernel.org" <sstabellini@kernel.org>,
-        "konrad.wilk@oracle.com" <konrad.wilk@oracle.com>,
-        "roger.pau@citrix.com" <roger.pau@citrix.com>,
-        "axboe@kernel.dk" <axboe@kernel.dk>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "rjw@rjwysocki.net" <rjw@rjwysocki.net>,
-        "len.brown@intel.com" <len.brown@intel.com>,
-        "pavel@ucw.cz" <pavel@ucw.cz>,
-        "peterz@infradead.org" <peterz@infradead.org>,
-        "Valentin, Eduardo" <eduval@amazon.com>,
-        "Singh, Balbir" <sblbir@amazon.com>,
-        "xen-devel@lists.xenproject.org" <xen-devel@lists.xenproject.org>,
-        "vkuznets@redhat.com" <vkuznets@redhat.com>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Woodhouse, David" <dwmw@amazon.co.uk>,
-        "benh@kernel.crashing.org" <benh@kernel.crashing.org>
-Message-ID: <20200715194933.GA17938@dev-dsk-anchalag-2a-9c2d1d96.us-west-2.amazon.com>
-References: <cover.1593665947.git.anchalag@amazon.com>
- <324020A7-996F-4CF8-A2F4-46957CEA5F0C@amazon.com>
- <c6688a0c-7fec-97d2-3dcc-e160e97206e6@oracle.com>
+        d=gmail.com; s=20161025;
+        h=sender:subject:to:cc:references:from:autocrypt:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=nzMCxXIb1CZNelAhevV8cRZiqty4DF8B33TdTJ4+WY4=;
+        b=ucHZ+pFszf+J+TIqeYoAWKQwewbznQITtqZ6V0PQDW3MvzrGuqfSjnnpKPEauQMa+V
+         aGnCZelsynpKX0O5oNlueBo4oA1V/ZxUJ1hN6VUpCr1Bwm5xo8vcDmT9CJGB2r+nV0Or
+         ZZBP7x1Igu+lJ0fckLUz1IEDE5Q6GWE2yPwULWxHZrMs8KRvtfS5gzBFkIYsHvAYAEad
+         fMdFld8+Y22QD/5hCeMqh+U8uzaQAXw1Nuk5Gk7FnPY3RGImsTJg3tkqlHf4bGrqS8S7
+         +uAUAmEba+UMCRoovJYnjRmqoTsIcW3qoXuXiPo2i7wkcNl7bz31UTmcUqgyU8U5eyT9
+         kMtw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=nzMCxXIb1CZNelAhevV8cRZiqty4DF8B33TdTJ4+WY4=;
+        b=UUxQVnzvaJLq6QfBTm1dZagf4AhxNt5AnNSxoQkHrzCPy4bAG1hPHiYbs9zYbkgOXf
+         Gym7WZyo5yXRx3jOT1LPEq1pekGpZVNbgB4LDx0DMFAmUCpRu5PA+ANHV8mnYYKob5u1
+         1WrX6VQadnSg1PVjk12UmbUnI4RxXo47UYyOlEa64hKHEi9S9gKzXMUjFJ3On7ahE7a7
+         kCCe8HQeuzWki/vJpTE4iZkscCy8mAwNCox6D6WBN4O9eOg4jR7lbikx92mYx19F8ejm
+         UUysDABgGn0GPCsTCtGjXmdd/nS+Rziaq0EOUt2MOei9rEt2qER9AC56JkJfMHQSl7uW
+         7SCg==
+X-Gm-Message-State: AOAM532sitKHJs03A7Sq+APvyyzaW2T2azbdcmt/DkS7RrtYeuCe68Pl
+        jpzvTvPg9pqHFBA+/hxkjPzPUsNS
+X-Google-Smtp-Source: ABdhPJzfiqnXY/VFZ9GpseRPCHHnoM1kztw79UU+8GLXqQdduVmPjtcpblebKMiIUnypLbyKFjh22g==
+X-Received: by 2002:a63:d40d:: with SMTP id a13mr1147806pgh.225.1594842602101;
+        Wed, 15 Jul 2020 12:50:02 -0700 (PDT)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id nk22sm2810794pjb.51.2020.07.15.12.50.00
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 15 Jul 2020 12:50:01 -0700 (PDT)
+Subject: Re: [PATCH v2] hwmon: corsair-cpro: Change to HID driver
+To:     Marius Zachmann <mail@mariuszachmann.de>
+Cc:     Jean Delvare <jdelvare@suse.com>, linux-hwmon@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20200715151419.43134-1-mail@mariuszachmann.de>
+ <f17c4888-4f5f-0a51-304f-54efd601f00a@roeck-us.net>
+ <51449356.7lugSRDzgr@marius>
+From:   Guenter Roeck <linux@roeck-us.net>
+Autocrypt: addr=linux@roeck-us.net; keydata=
+ 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
+ mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
+Message-ID: <9fc09eec-7921-68ab-b3c7-1d83d3e09817@roeck-us.net>
+Date:   Wed, 15 Jul 2020 12:49:59 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <c6688a0c-7fec-97d2-3dcc-e160e97206e6@oracle.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+In-Reply-To: <51449356.7lugSRDzgr@marius>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 13, 2020 at 03:43:33PM -0400, Boris Ostrovsky wrote:
-> CAUTION: This email originated from outside of the organization. Do not click links or open attachments unless you can confirm the sender and know the content is safe.
+On 7/15/20 12:12 PM, Marius Zachmann wrote:
+> On 15.07.20 at 17:35:08 CEST, Guenter Roeck wrote
+>> On 7/15/20 8:14 AM, Marius Zachmann wrote:
+>>> This changes corsair-cpro to a hid driver using hid reports.
+>>>
+>>> Signed-off-by: Marius Zachmann <mail@mariuszachmann.de>
+>>>
+>>> ---
+>>
+> ...
+>>> -module_usb_driver(ccp_driver);
+>>> +static int __init ccp_init(void)
+>>> +{
+>>> +	return hid_register_driver(&ccp_driver);
+>>> +}
+>>> +
+>>> +static void __exit ccp_exit(void)
+>>> +{
+>>> +	hid_unregister_driver(&ccp_driver);
+>>> +}
+>>> +
+>>> +/* make sure it is loaded after hid */
+>>> +late_initcall(ccp_init);
+>>> +module_exit(ccp_exit);
+>>
+>> Sorry for not noticing before, but can you use module_hid_driver() ?
+>> That seems to work for other hid drivers.
+>>
+>> Thanks,
+>> Guenter
+>>
 > 
+> When using module_hid_driver() and compiling the driver as built-in
+> the driver init function will get called before hid and fail registering
+> the driver. late_initcall forces it to be loaded after hid.
 > 
-> 
-> On 7/10/20 2:17 PM, Agarwal, Anchal wrote:
-> > Gentle ping on this series.
-> 
-> 
-> Have you tested save/restore?
->
-No, not with the last few series. But a good point, I will test that and get
-back to you. Do you see anything specific in the series that suggests otherwise?
+
+That seems odd. Why does no other hid driver have that problem ?
+Your argument is pretty much that module_hid_driver() would not work,
+which seems unlikely.
 
 Thanks,
-Anchal
-> 
-> -bois
-> 
-> 
-> 
+Guenter
