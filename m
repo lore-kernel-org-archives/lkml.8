@@ -2,574 +2,340 @@ Return-Path: <SRS0=kup7=A2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CAC6EC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 08:20:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54035C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 08:22:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A44D32065E
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 08:20:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3159820657
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 08:22:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="eAb1iTVH"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="nC5u3pxJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729763AbgGOIUI (ORCPT
+        id S1729779AbgGOIWi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 04:20:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50786 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729712AbgGOIUH (ORCPT
+        Wed, 15 Jul 2020 04:22:38 -0400
+Received: from mailout1.w1.samsung.com ([210.118.77.11]:47804 "EHLO
+        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729721AbgGOIWh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 04:20:07 -0400
-Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 90C16C061755
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 01:20:07 -0700 (PDT)
-Received: by mail-pf1-x444.google.com with SMTP id a14so1770604pfi.2
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 01:20:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=10LzDkQqRhA0cmYyfLZJm6pL6u1cxDYC4Pwoj9Sc8Qg=;
-        b=eAb1iTVHeTvDMav8jnuGnnccUQj70Mj/s47Gvq3TmSO95cdyhKQe7hDPI0mSEliKVH
-         6EGfrOu3PQcdq9TKoLJUyZVHbtBiig41+pmrWiDXDEjK7AD4Tc6CVOCngXvSD/2VKvDp
-         mUjgIuTXbj+J8Co3bd1XDj0uvgjJ5hfr8MDvs=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=10LzDkQqRhA0cmYyfLZJm6pL6u1cxDYC4Pwoj9Sc8Qg=;
-        b=W5x7LagF1gheeCVc9i+pO2c3Tsk6WZLfvrLQTZPpxapsXMer7pzivlFT/3UTY5CRJQ
-         Y/ETkCnzRxqV35eqC5vIVCGTr6UKyQdD668qBa6Tkb3alMvmwOpCXnNrLXnjcTKT1fZL
-         pSU/FGR4gXvnMKSvK/OKSmE2Zf6U+/NwZQMW2iWMCzkDlf35E97nAVL/b+UlSrzdWM/e
-         GPKWf2b9AinFTCkH2GBvwa7HOItTqnwKOzXENjLlnT4ThoBHh1T41+Da2sCQqVz7CNqy
-         zKU1ONy1p77Y/iZ9j2JkPV0ZV6wzoMEgjo7CuVeRha8ewqiY8dOklJ3du4bldlnRe2UG
-         aLGg==
-X-Gm-Message-State: AOAM532GlyJ9F13VNNZSLKOYkkNFK5f2JII30vyXfbtWGS63yMk+vn4T
-        ZkxJsoDjxwrYF2rMO0OKwZLS7A==
-X-Google-Smtp-Source: ABdhPJwXVILlv3OXbR/0geMIOb9r/omdxVfyN91wsfTpA4HPl57QqxffSf/KG9vikMMj7hEzAycsLw==
-X-Received: by 2002:a63:ec05:: with SMTP id j5mr7228048pgh.109.1594801206681;
-        Wed, 15 Jul 2020 01:20:06 -0700 (PDT)
-Received: from bhanumaiya-glaptop.hsd1.ca.comcast.net ([2601:646:9500:590:250:b6ff:fe8e:b459])
-        by smtp.gmail.com with ESMTPSA id f2sm1382693pfb.184.2020.07.15.01.20.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 15 Jul 2020 01:20:05 -0700 (PDT)
-From:   Bhanu Prakash Maiya <bhanumaiya@chromium.org>
-X-Google-Original-From: Bhanu Prakash Maiya <bhanumaiya@google.com>
-To:     linux-arm-kernel@lists.infradead.org
-Cc:     Lee Jones <lee.jones@linaro.org>,
-        Furquan Shaikh <furquan@chromium.org>,
-        Raul E Rangel <rrangel@chromium.org>,
-        Eric Peers <epeers@google.com>,
-        Duncan Laurie <dlaurie@google.com>,
-        Benson Leung <bleung@chromium.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Bhanu Prakash Maiya <bhanumaiya@chromium.org>,
-        Guenter Roeck <groeck@chromium.org>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        "David S . Miller" <davem@davemloft.net>,
-        Rob Herring <robh@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        devicetree@vger.kernel.org, linux-kernel@vger.Kernel.org,
-        kernel test robot <lkp@intel.com>
-Subject: [PATCH 1/2] cros: platform/chrome: Add cros-ec-uart driver for uart support
-Date:   Wed, 15 Jul 2020 01:20:01 -0700
-Message-Id: <20200715082001.1759763-1-bhanumaiya@google.com>
-X-Mailer: git-send-email 2.27.0.389.gc38d7665816-goog
+        Wed, 15 Jul 2020 04:22:37 -0400
+Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
+        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20200715082234euoutp012dc85c0cafd69d67832c801eab0f05b5~h32HdvScC2982229822euoutp01i
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 08:22:34 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20200715082234euoutp012dc85c0cafd69d67832c801eab0f05b5~h32HdvScC2982229822euoutp01i
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1594801354;
+        bh=OoigdLKrfoK3H3M17PMh/buAdwlhfNUYAko5PagZWJM=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=nC5u3pxJg5622QnEQrAZ0CH4J/uPKX4rEbtfeimCaHTFrbqkPjD1pqrmvu0cwowkv
+         vma+nVCJX3ZKU45JJClCO4QlatemWbCAeDaQWRV2cL2WKGgVO4V7Wf6pg9QW2qej/Q
+         Wu3Fj7cwkPJ5G3XkEjdpnRFaPNxRsmmmuu9FmeIo=
+Received: from eusmges2new.samsung.com (unknown [203.254.199.244]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20200715082234eucas1p27bbcfe0e91758a0b61dec4aea9246036~h32HFZxF52122921229eucas1p2O;
+        Wed, 15 Jul 2020 08:22:34 +0000 (GMT)
+Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
+        eusmges2new.samsung.com (EUCPMTA) with SMTP id 03.7B.05997.9CCBE0F5; Wed, 15
+        Jul 2020 09:22:34 +0100 (BST)
+Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
+        20200715082233eucas1p261d4c5133226b800c3656c9010aa5940~h32GtFYud2332723327eucas1p2F;
+        Wed, 15 Jul 2020 08:22:33 +0000 (GMT)
+Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
+        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20200715082233eusmtrp246981ff6767b26e5ea37cbeb53ecf3d3~h32GiYRzZ0358603586eusmtrp2m;
+        Wed, 15 Jul 2020 08:22:33 +0000 (GMT)
+X-AuditID: cbfec7f4-677ff7000000176d-cd-5f0ebcc96e50
+Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
+        eusmgms2.samsung.com (EUCPMTA) with SMTP id 12.A3.06017.9CCBE0F5; Wed, 15
+        Jul 2020 09:22:33 +0100 (BST)
+Received: from [106.210.88.143] (unknown [106.210.88.143]) by
+        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20200715082232eusmtip1b3dc9731aa94fcaf514b980bce444063~h32F4unjI2461424614eusmtip1r;
+        Wed, 15 Jul 2020 08:22:32 +0000 (GMT)
+Subject: Re: [PATCH v3 0/3] driver core: Add device link related sysfs files
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Saravana Kannan <saravanak@google.com>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        John Stultz <john.stultz@linaro.org>,
+        Android Kernel Team <kernel-team@android.com>,
+        'Linux Samsung SOC' <linux-samsung-soc@vger.kernel.org>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+From:   Marek Szyprowski <m.szyprowski@samsung.com>
+Message-ID: <f564bac4-1120-cee4-4ea5-aad5fcc7bd91@samsung.com>
+Date:   Wed, 15 Jul 2020 10:22:34 +0200
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+        Thunderbird/68.10.0
 MIME-Version: 1.0
+In-Reply-To: <20200710132305.GA1920995@kroah.com>
 Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrBKsWRmVeSWpSXmKPExsWy7djPc7qn9vDFG0w4xWixccZ6VovmxevZ
+        LM781rXYsV3E4vKuOWwWM87vY7KY+2Uqs0XXob9sDhwe23ZvY/VYsKnUY9OqTjaPO9f2sHns
+        n7uG3aNvyypGj8+b5ALYo7hsUlJzMstSi/TtErgyJi7Zx1xwMLjiTMN11gbGNV5djJwcEgIm
+        EksnnWXuYuTiEBJYwShx5dkERpCEkMAXRom2DQEQic+MEqcW72eE6Vj3aA4bRGI5o0TvxB4m
+        COc9o0T3lY3MIFXCAj4SUxc8YAKxRQRiJU7c7WIHKWIWmMMkceXUHrBRbAKGEl1vu9hAbF4B
+        O4mXkz6BNbAIqEq8n/gFrEZUIE5i/cvtTBA1ghInZz5hAbE5gXoXTnkBVsMsIC/RvHU2M4Qt
+        LnHryXywiyQE9rFL3Fj1hAnibheJOYfXsEPYwhKvjm+BsmUk/u+EaWhmlHh4bi07hNPDKHG5
+        aQbU19YSd879AjqVA2iFpsT6XfoQYUeJnzs/s4KEJQT4JG68FYQ4gk9i0rbpzBBhXomONiGI
+        ajWJWcfXwa09eOES8wRGpVlIXpuF5J1ZSN6ZhbB3ASPLKkbx1NLi3PTUYqO81HK94sTc4tK8
+        dL3k/NxNjMD0dPrf8S87GHf9STrEKMDBqMTDO2Emb7wQa2JZcWXuIUYJDmYlEV6ns6fjhHhT
+        EiurUovy44tKc1KLDzFKc7AoifMaL3oZKySQnliSmp2aWpBaBJNl4uCUamA0z98ZwaXw23dS
+        tPpcsQ2uVbxrtc1ulK1z2xkduPeC/aeP/jN3ahqWcjg/eXRg2nrZrJqvbddfTb34xmzWGpuL
+        gU/i0k0tp6+foubWWB5a8OE/+63ktMdrZ9/UvGoa/rAs+nnX5QParjMtvz2fukhlhrD4n8dV
+        V35cd9lyP7SO98q1wBkvF8yJV2Ipzkg01GIuKk4EAPGkFV5LAwAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrJIsWRmVeSWpSXmKPExsVy+t/xu7on9/DFG8z/Jm6xccZ6VovmxevZ
+        LM781rXYsV3E4vKuOWwWM87vY7KY+2Uqs0XXob9sDhwe23ZvY/VYsKnUY9OqTjaPO9f2sHns
+        n7uG3aNvyypGj8+b5ALYo/RsivJLS1IVMvKLS2yVog0tjPQMLS30jEws9QyNzWOtjEyV9O1s
+        UlJzMstSi/TtEvQyJi7Zx1xwMLjiTMN11gbGNV5djJwcEgImEusezWEDsYUEljJKrLqXBhGX
+        kTg5rYEVwhaW+HOtC6iGC6jmLaPEvs+/GEESwgI+ElMXPGACsUUEYiUeLrzFDGIzC8xhkli7
+        VwCi4S6TxI+NK1hAEmwChhJdb7vAtvEK2Em8nPQJrJlFQFXi/cQvYENFBeIklm+Zzw5RIyhx
+        cuYTsF5OoN6FU14wQiwwk5i3+SHUMnmJ5q2zoWxxiVtP5jNNYBSahaR9FpKWWUhaZiFpWcDI
+        sopRJLW0ODc9t9hIrzgxt7g0L10vOT93EyMwGrcd+7llB2PXu+BDjAIcjEo8vBNm8sYLsSaW
+        FVfmHmKU4GBWEuF1Ons6Tog3JbGyKrUoP76oNCe1+BCjKdBzE5mlRJPzgYkiryTe0NTQ3MLS
+        0NzY3NjMQkmct0PgYIyQQHpiSWp2ampBahFMHxMHp1QDo3RJ4olgjTIVEbkVCRz3HBaX1Xic
+        PiSr+f7JC4Wio0yrdT67tn6ftktd6e7n6LnGErHWGqlhFzonTBZxv2gsFH/qyLObe67e2n9H
+        yGUH+zZl6WbR5Vu/R+7f7P8+QTfs8PTvB08snSgsue9ES51ngb7nYz7lPiu3x95fQgyD53Wp
+        q1fLq4ecUWIpzkg01GIuKk4EAHNk9tHcAgAA
+X-CMS-MailID: 20200715082233eucas1p261d4c5133226b800c3656c9010aa5940
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20200715082233eucas1p261d4c5133226b800c3656c9010aa5940
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20200715082233eucas1p261d4c5133226b800c3656c9010aa5940
+References: <20200521191800.136035-1-saravanak@google.com>
+        <CAGETcx8UGps6bz1YhYcbjCAAXenBuR6XDT0qv5WED5zbyfzNFw@mail.gmail.com>
+        <20200529123025.GA1710508@kroah.com>
+        <CAGETcx-QiAysfd7AVV2Y7_GWRd2sj4N=8KwQ_T4fUZ5gVaV8Jw@mail.gmail.com>
+        <CAGETcx94Os7o+xZPSs3vVOQAzGtESAGFXtUNdrEAK9iya05s1w@mail.gmail.com>
+        <20200710132305.GA1920995@kroah.com>
+        <CGME20200715082233eucas1p261d4c5133226b800c3656c9010aa5940@eucas1p2.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bhanu Prakash Maiya <bhanumaiya@chromium.org>
+Hi Greg and Saravana,
 
-This patch enables uart transport layer for cros_ec framework.
-The cros-ec-uart binds with EC device working on uart transport to
-send request and receive response.
+On 10.07.2020 15:23, Greg Kroah-Hartman wrote:
+> On Mon, Jul 06, 2020 at 03:45:02PM -0700, Saravana Kannan wrote:
+>> On Tue, Jun 16, 2020 at 8:45 PM Saravana Kannan <saravanak@google.com> wrote:
+>>> On Fri, May 29, 2020 at 5:30 AM Greg Kroah-Hartman
+>>> <gregkh@linuxfoundation.org> wrote:
+>>>> Looks semi-sane, but it's too close to the merge window at the moment
+>>>> for me to take this.  If there's no objections by the time 5.8-rc1 is
+>>>> out, I'll queue it up in my tree for 5.9-rc1.
+>>> Another friendly reminder :)
+>> *nudge* *nudge*
+> Looks sane, given no objections, let's see what linux-next thinks about
+> it...
 
-Signed-off-by: Bhanu Prakash Maiya <bhanumaiya@chromium.org>
-Reported-by: kernel test robot <lkp@intel.com>
-Change-Id: Icb23b633700f1ef4d123e3f21fd26fad21a3f207
----
-Changes in v2:
-1: Fixed build error on v1.
-2: Changed EC timeout for response packet to 3 Sec and added comments.
-3: Fixed cros_ec_uart_rx_bytes function to handle rx buffer < size of response header.
+linux-next is not very happy from this patchset... Starting from 
+next-20200713 I see a few new issues on various Samsung Exynos based 
+boards. Here are examples from Exynos4412-based Odroid U3 board (ARM 
+32bit, kernel compiled from exynos_defconfig):
 
- MAINTAINERS                            |   1 +
- drivers/platform/chrome/Kconfig        |  10 +
- drivers/platform/chrome/Makefile       |   1 +
- drivers/platform/chrome/cros_ec_uart.c | 411 +++++++++++++++++++++++++
- 4 files changed, 423 insertions(+)
- create mode 100644 drivers/platform/chrome/cros_ec_uart.c
+BUG: sleeping function called from invalid context at 
+kernel/locking/mutex.c:935
+in_atomic(): 1, irqs_disabled(): 0, non_block: 0, pid: 12, name: kworker/0:1
+2 locks held by kworker/0:1/12:
+  #0: ee8074a8 ((wq_completion)rcu_gp){+.+.}-{0:0}, at: 
+process_one_work+0x174/0x7dc
+  #1: ee921f20 ((work_completion)(&sdp->work)){+.+.}-{0:0}, at: 
+process_one_work+0x174/0x7dc
+Preemption disabled at:
+[<c01b10f0>] srcu_invoke_callbacks+0xc0/0x154
+CPU: 0 PID: 12 Comm: kworker/0:1 Tainted: G        W 
+5.8.0-rc3-00022-g287905e68dd2 #8753
+Hardware name: Samsung Exynos (Flattened Device Tree)
+Workqueue: rcu_gp srcu_invoke_callbacks
+[<c011184c>] (unwind_backtrace) from [<c010d250>] (show_stack+0x10/0x14)
+[<c010d250>] (show_stack) from [<c0517f04>] (dump_stack+0xbc/0xe8)
+[<c0517f04>] (dump_stack) from [<c0159188>] (___might_sleep+0x288/0x2d8)
+[<c0159188>] (___might_sleep) from [<c0abbd1c>] (__mutex_lock+0x48/0xb18)
+[<c0abbd1c>] (__mutex_lock) from [<c0abc808>] (mutex_lock_nested+0x1c/0x24)
+[<c0abc808>] (mutex_lock_nested) from [<c064590c>] (device_del+0x30/0x39c)
+[<c064590c>] (device_del) from [<c0645c9c>] (device_unregister+0x24/0x64)
+[<c0645c9c>] (device_unregister) from [<c01b10fc>] 
+(srcu_invoke_callbacks+0xcc/0x154)
+[<c01b10fc>] (srcu_invoke_callbacks) from [<c01493c4>] 
+(process_one_work+0x234/0x7dc)
+[<c01493c4>] (process_one_work) from [<c01499b0>] (worker_thread+0x44/0x51c)
+[<c01499b0>] (worker_thread) from [<c0150bf4>] (kthread+0x158/0x1a0)
+[<c0150bf4>] (kthread) from [<c0100114>] (ret_from_fork+0x14/0x20)
+Exception stack(0xee921fb0 to 0xee921ff8)
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 50659d76976b7..aa8e1d121c1d7 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -4036,6 +4036,7 @@ F:	sound/soc/codecs/cros_ec_codec.*
- CHROMEOS EC SUBDRIVERS
- M:	Benson Leung <bleung@chromium.org>
- M:	Enric Balletbo i Serra <enric.balletbo@collabora.com>
-+M:	Bhanu Prakash Maiya <bhanumaiya@chromium.org>
- R:	Guenter Roeck <groeck@chromium.org>
- S:	Maintained
- F:	drivers/power/supply/cros_usbpd-charger.c
-diff --git a/drivers/platform/chrome/Kconfig b/drivers/platform/chrome/Kconfig
-index 3822e5e111caa..2082fafe08a6a 100644
---- a/drivers/platform/chrome/Kconfig
-+++ b/drivers/platform/chrome/Kconfig
-@@ -125,6 +125,16 @@ config CROS_EC_SPI
- 	  response time cannot be guaranteed, we support ignoring
- 	  'pre-amble' bytes before the response actually starts.
- 
-+config CROS_EC_UART
-+	tristate "ChromeOS Embedded Controller (UART)"
-+	depends on CROS_EC && ACPI && SERIAL_DEV_BUS
-+	help
-+	  If you say Y here, you get support for talking to the ChromeOS EC
-+	  through a UART, using a byte-level protocol.
-+
-+	  To compile this driver as a module, choose M here: the
-+	  module will be called cros_ec_uart.
-+
- config CROS_EC_LPC
- 	tristate "ChromeOS Embedded Controller (LPC)"
- 	depends on CROS_EC && ACPI && (X86 || COMPILE_TEST)
-diff --git a/drivers/platform/chrome/Makefile b/drivers/platform/chrome/Makefile
-index 8ed1e33033b38..fc449351fc794 100644
---- a/drivers/platform/chrome/Makefile
-+++ b/drivers/platform/chrome/Makefile
-@@ -12,6 +12,7 @@ obj-$(CONFIG_CROS_EC_I2C)		+= cros_ec_i2c.o
- obj-$(CONFIG_CROS_EC_ISHTP)		+= cros_ec_ishtp.o
- obj-$(CONFIG_CROS_EC_RPMSG)		+= cros_ec_rpmsg.o
- obj-$(CONFIG_CROS_EC_SPI)		+= cros_ec_spi.o
-+obj-$(CONFIG_CROS_EC_UART)		+= cros_ec_uart.o
- cros_ec_lpcs-objs			:= cros_ec_lpc.o cros_ec_lpc_mec.o
- obj-$(CONFIG_CROS_EC_TYPEC)		+= cros_ec_typec.o
- obj-$(CONFIG_CROS_EC_LPC)		+= cros_ec_lpcs.o
-diff --git a/drivers/platform/chrome/cros_ec_uart.c b/drivers/platform/chrome/cros_ec_uart.c
-new file mode 100644
-index 0000000000000..9a0ba884b6812
---- /dev/null
-+++ b/drivers/platform/chrome/cros_ec_uart.c
-@@ -0,0 +1,411 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * UART interface for ChromeOS Embedded Controller
-+ *
-+ * Copyright 2020 Google LLC.
-+ */
-+
-+#include <linux/delay.h>
-+#include <linux/errno.h>
-+#include <linux/init.h>
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/acpi.h>
-+#include <linux/of.h>
-+#include <linux/platform_data/cros_ec_commands.h>
-+#include <linux/platform_data/cros_ec_proto.h>
-+#include <linux/serdev.h>
-+#include <linux/slab.h>
-+#include <uapi/linux/sched/types.h>
-+
-+#include "cros_ec.h"
-+
-+/*
-+ * EC sends contiguous bytes of response packet on UART AP RX.
-+ * TTY driver in AP accumulates incoming bytes and calls the registered callback
-+ * function. Byte count can range from 1 to Max count supported by TTY driver.
-+ * This driver should wait for long time for all callbacks to be processed.
-+ * Considering the worst case scenario, wait for ~3 secs. This timeout should
-+ * account for max latency and some additional guard time.
-+ * In case the packet is received in ms, wait queue will be released and packet
-+ * will be processed.
-+ */
-+#define EC_MSG_DEADLINE_MS		(300 * 10)
-+
-+/**
-+ * struct response_info - Encapsulate EC response related
-+ *			information for passing between function
-+ *			cros_ec_uart_pkt_xfer() and cros_ec_uart_rx_bytes()
-+ *			callback.
-+ * @data:		Copy the data received from EC here.
-+ * @max_size:		Max size allocated for the @data buffer. If the
-+ *			received data exceeds this value, we log an error.
-+ * @size:		Actual size of data received from EC. This is also
-+ *			used to accumulate byte count with response is received
-+ *			in dma chunks.
-+ * @exp_len:		Expected bytes of response from EC including header.
-+ * @error:		0 for success, negative error code for a failure.
-+ * @received:		Set to true on receiving a valid EC response.
-+ * @wait_queue:		Wait queue EC response where the cros_ec sends request
-+ *			to EC and waits
-+ */
-+struct response_info {
-+	void *data;
-+	size_t max_size;
-+	size_t size;
-+	int error;
-+	size_t exp_len;
-+	bool received;
-+	wait_queue_head_t wait_queue;
-+};
-+
-+/**
-+ * struct cros_ec_uart - information about a uart-connected EC
-+ *
-+ * @serdev_device:	serdev uart device we are connected to.
-+ * @baudrate:		UART baudrate of attached EC device.
-+ * @flowcontrol:	UART flowcontrol of attached device.
-+ * @irq:		Linux IRQ number of associated serial device.
-+ * @response:		Response info passing between cros_ec_uart_pkt_xfer()
-+ *			and cros_ec_uart_rx_bytes()
-+ */
-+struct cros_ec_uart {
-+	struct serdev_device *serdev;
-+	u32 baudrate;
-+	u8  flowcontrol;
-+	u32 irq;
-+	struct response_info response;
-+};
-+
-+static int cros_ec_uart_rx_bytes(struct serdev_device *serdev,
-+				 const u8 *data,
-+				 size_t count)
-+{
-+	struct ec_host_response *response;
-+	struct cros_ec_device *ec_dev =   serdev_device_get_drvdata(serdev);
-+	struct cros_ec_uart *ec_uart = ec_dev->priv;
-+
-+	/* Check if bytes were sent out of band */
-+	if (!ec_uart->response.data) {
-+		/* Discard all bytes */
-+		return count;
-+	}
-+
-+	/*
-+	 * Check if incoming bytes + response.size are less than allocated
-+	 * buffer in din by cros_ec. This will ensure that if EC sends more
-+	 * bytes than max_size, waiting process will be notified with an error.
-+	 */
-+	if (ec_uart->response.size + count <= ec_uart->response.max_size) {
-+		/* Copy bytes in data in buffer */
-+		memcpy((void *)ec_uart->response.data + ec_uart->response.size,
-+		       (void *)data, count);
-+
-+		/* Add incoming bytes in size */
-+		ec_uart->response.size += count;
-+
-+		/*
-+		 * Read data_len if we received response header and if exp_len
-+		 * was not read before.
-+		 */
-+		if (ec_uart->response.size >= sizeof(*response) &&
-+		    ec_uart->response.exp_len == 0) {
-+			/* Get expected response length from response header */
-+			response = (struct ec_host_response *)
-+							ec_uart->response.data;
-+
-+			ec_uart->response.exp_len = response->data_len +
-+				sizeof(*response);
-+		}
-+
-+		/*
-+		 * If driver received response header and payload from EC,
-+		 * Wake up the wait queue.
-+		 */
-+		if (ec_uart->response.size >= sizeof(*response) &&
-+		    ec_uart->response.size == ec_uart->response.exp_len) {
-+			/* Set flag before waking up the caller */
-+			ec_uart->response.received = true;
-+
-+			/* Wake the calling thread */
-+			wake_up_interruptible(&ec_uart->response.wait_queue);
-+		}
-+	} else {
-+		/* Received bytes are more the allocated buffer*/
-+		ec_uart->response.error = -EMSGSIZE;
-+
-+		/* Wake the calling thread */
-+		wake_up_interruptible(&ec_uart->response.wait_queue);
-+	}
-+
-+	return count;
-+}
-+
-+static int cros_ec_uart_pkt_xfer(struct cros_ec_device *ec_dev,
-+				 struct cros_ec_command *ec_msg)
-+{
-+	struct cros_ec_uart *ec_uart = ec_dev->priv;
-+	struct serdev_device *serdev = ec_uart->serdev;
-+	struct ec_host_response *response;
-+	unsigned int len;
-+	int ret, i;
-+	u8 sum = 0;
-+
-+	/* Prepare an outgoing message in the output buffer */
-+	len = cros_ec_prepare_tx(ec_dev, ec_msg);
-+	dev_dbg(ec_dev->dev, "Prepared len=%d\n", len);
-+
-+	/* Setup for incoming response */
-+	ec_uart->response.data = ec_dev->din;
-+	ec_uart->response.max_size = ec_dev->din_size;
-+	ec_uart->response.size = 0;
-+	ec_uart->response.error = 0;
-+	ec_uart->response.exp_len = 0;
-+	ec_uart->response.received = false;
-+
-+	/* Write serial device buffer */
-+	ret = serdev_device_write_buf(serdev, ec_dev->dout, len);
-+	if (ret < len) {
-+		dev_err(&serdev->dev,
-+			"Unable to write data to serial device %s",
-+			dev_name(&serdev->dev));
-+
-+		/* Return EIO as controller had issues writing buffer */
-+		ret = -EIO;
-+		goto exit;
-+	}
-+
-+	/* Once request is successfully sent to EC, wait to wait_queue */
-+	wait_event_interruptible_timeout(ec_uart->response.wait_queue,
-+					 ec_uart->response.received,
-+					 msecs_to_jiffies(EC_MSG_DEADLINE_MS));
-+
-+	/* Check if wait_queue was interrupted due to an error */
-+	if (ec_uart->response.error < 0) {
-+		dev_warn(&serdev->dev, "Response error detected.\n");
-+
-+		ret = ec_uart->response.error;
-+		goto exit;
-+	}
-+
-+	/* Check if valid response was received or there was a timeout */
-+	if (!ec_uart->response.received) {
-+		dev_warn(&serdev->dev, "EC failed to respond in time.\n");
-+
-+		ret = -ETIMEDOUT;
-+		goto exit;
-+	}
-+
-+	/* Check response error code */
-+	response = (struct ec_host_response *)ec_dev->din;
-+	ec_msg->result = response->result;
-+
-+	/* Check if received response is longer than expected */
-+	if (response->data_len > ec_msg->insize) {
-+		dev_err(ec_dev->dev, "Resp too long (%d bytes, expected %d)",
-+			response->data_len,
-+			ec_msg->insize);
-+		ret = -ENOSPC;
-+		goto exit;
-+	}
-+
-+	/* Copy response packet to ec_msg data buffer */
-+	memcpy(ec_msg->data,
-+	       ec_dev->din + sizeof(*response),
-+	       response->data_len);
-+
-+	/* Add all response header bytes for checksum calculation */
-+	for (i = 0; i < sizeof(*response); i++)
-+		sum += ec_dev->din[i];
-+
-+	/* Copy response packet payload and compute checksum */
-+	for (i = 0; i < response->data_len; i++)
-+		sum += ec_msg->data[i];
-+
-+	if (sum) {
-+		dev_err(ec_dev->dev,
-+			"Bad packet checksum calculated %x\n",
-+			sum);
-+		ret = -EBADMSG;
-+		goto exit;
-+	}
-+
-+	/* Return data_len to cros_ec */
-+	ret = response->data_len;
-+
-+exit:
-+	/* Reset ec_uart */
-+	ec_uart->response.data = NULL;
-+	ec_uart->response.max_size = 0;
-+	ec_uart->response.size = 0;
-+	ec_uart->response.error = 0;
-+	ec_uart->response.exp_len = 0;
-+	ec_uart->response.received = false;
-+
-+	if (ec_msg->command == EC_CMD_REBOOT_EC)
-+		msleep(EC_REBOOT_DELAY_MS);
-+
-+	return ret;
-+}
-+
-+static int cros_ec_uart_resource(struct acpi_resource *ares, void *data)
-+{
-+	struct cros_ec_uart *ec_uart = data;
-+	struct acpi_resource_uart_serialbus *sb;
-+
-+	switch (ares->type) {
-+	case ACPI_RESOURCE_TYPE_SERIAL_BUS:
-+		sb = &ares->data.uart_serial_bus;
-+		if (sb->type == ACPI_RESOURCE_SERIAL_TYPE_UART) {
-+			ec_uart->baudrate = sb->default_baud_rate;
-+			dev_dbg(&ec_uart->serdev->dev, "Baudrate %d\n",
-+				ec_uart->baudrate);
-+
-+			ec_uart->flowcontrol = sb->flow_control;
-+			dev_dbg(&ec_uart->serdev->dev, "Flow control %d\n",
-+				ec_uart->flowcontrol);
-+		}
-+		break;
-+	default:
-+		break;
-+	}
-+
-+	return 0;
-+}
-+
-+static int cros_ec_uart_acpi_probe(struct cros_ec_uart *ec_uart)
-+{
-+	LIST_HEAD(resources);
-+	struct acpi_device *adev = ACPI_COMPANION(&ec_uart->serdev->dev);
-+	int ret;
-+
-+	/* Retrieve UART ACPI info */
-+	ret = acpi_dev_get_resources(adev, &resources,
-+				     cros_ec_uart_resource, ec_uart);
-+	if (ret < 0)
-+		return ret;
-+
-+	acpi_dev_free_resource_list(&resources);
-+
-+	/* Retrieve GpioInt and translate it to Linux IRQ number */
-+	ret = acpi_dev_gpio_irq_get(adev, 0);
-+	if (ret < 0)
-+		return ret;
-+
-+	ec_uart->irq = ret;
-+	dev_dbg(&ec_uart->serdev->dev, "IRQ number %d\n", ec_uart->irq);
-+
-+	return 0;
-+}
-+
-+static const struct serdev_device_ops cros_ec_uart_client_ops = {
-+	.receive_buf = cros_ec_uart_rx_bytes,
-+};
-+
-+static int cros_ec_uart_probe(struct serdev_device *serdev)
-+{
-+	struct device *dev = &serdev->dev;
-+	struct cros_ec_device *ec_dev;
-+	struct cros_ec_uart *ec_uart;
-+	int ret;
-+
-+	ec_uart = devm_kzalloc(dev, sizeof(*ec_uart), GFP_KERNEL);
-+	if (!ec_uart)
-+		return -ENOMEM;
-+
-+	ec_dev = devm_kzalloc(dev, sizeof(*ec_dev), GFP_KERNEL);
-+	if (!ec_dev)
-+		return -ENOMEM;
-+
-+	ec_uart->serdev = serdev;
-+
-+	/* Open the serial device */
-+	ret = devm_serdev_device_open(dev, ec_uart->serdev);
-+	if (ret) {
-+		dev_err(dev, "Unable to open UART device %s",
-+			dev_name(&serdev->dev));
-+		return ret;
-+	}
-+
-+	serdev_device_set_drvdata(serdev, ec_dev);
-+
-+	serdev_device_set_client_ops(serdev, &cros_ec_uart_client_ops);
-+
-+	/* Initialize wait queue */
-+	init_waitqueue_head(&ec_uart->response.wait_queue);
-+
-+	ret = cros_ec_uart_acpi_probe(ec_uart);
-+	if (ret < 0) {
-+		dev_err(dev, "Failed to get ACPI info (%d)", ret);
-+		return ret;
-+	}
-+
-+	/* Set baud rate of serial device */
-+	ret = serdev_device_set_baudrate(serdev, ec_uart->baudrate);
-+	if (ret < 0) {
-+		dev_err(dev, "Failed to set up host baud rate (%d)", ret);
-+		return ret;
-+	}
-+
-+	/* Set flow control of serial device */
-+	serdev_device_set_flow_control(serdev, ec_uart->flowcontrol);
-+
-+	/* Initialize ec_dev for cros_ec  */
-+	ec_dev->phys_name = dev_name(&ec_uart->serdev->dev);
-+	ec_dev->dev = dev;
-+	ec_dev->priv = ec_uart;
-+	ec_dev->irq = ec_uart->irq;
-+	ec_dev->cmd_xfer = NULL;
-+	ec_dev->pkt_xfer = cros_ec_uart_pkt_xfer;
-+	ec_dev->din_size = sizeof(struct ec_host_response) +
-+			   sizeof(struct ec_response_get_protocol_info);
-+	ec_dev->dout_size = sizeof(struct ec_host_request);
-+
-+	/* Register a new cros_ec device */
-+	return cros_ec_register(ec_dev);
-+}
-+
-+static void cros_ec_uart_remove(struct serdev_device *serdev)
-+{
-+	struct cros_ec_device *ec_dev = serdev_device_get_drvdata(serdev);
-+
-+	cros_ec_unregister(ec_dev);
-+};
-+
-+static int __maybe_unused cros_ec_uart_suspend(struct device *dev)
-+{
-+	struct cros_ec_device *ec_dev = dev_get_drvdata(dev);
-+
-+	return cros_ec_suspend(ec_dev);
-+}
-+
-+static int __maybe_unused cros_ec_uart_resume(struct device *dev)
-+{
-+	struct cros_ec_device *ec_dev = dev_get_drvdata(dev);
-+
-+	return cros_ec_resume(ec_dev);
-+}
-+
-+static SIMPLE_DEV_PM_OPS(cros_ec_uart_pm_ops, cros_ec_uart_suspend,
-+			 cros_ec_uart_resume);
-+
-+static const struct of_device_id cros_ec_uart_of_match[] = {
-+	{ .compatible = "google,cros-ec-uart" },
-+	{}
-+};
-+
-+static struct serdev_device_driver cros_ec_uart_driver = {
-+	.driver	= {
-+		.name	= "cros-ec-uart",
-+		.of_match_table = cros_ec_uart_of_match,
-+		.pm	= &cros_ec_uart_pm_ops,
-+	},
-+	.probe		= cros_ec_uart_probe,
-+	.remove		= cros_ec_uart_remove,
-+};
-+
-+module_serdev_device_driver(cros_ec_uart_driver);
-+
-+MODULE_LICENSE("GPL v2");
-+MODULE_DESCRIPTION("UART interface for ChromeOS Embedded Controller");
-+MODULE_AUTHOR("Bhanu Prakash Maiya <bhanumaiya@chromium.org>");
+
+BUG: scheduling while atomic: kworker/0:0/5/0x00000201
+3 locks held by kworker/0:0/5:
+  #0: ee8074a8 ((wq_completion)rcu_gp){+.+.}-{0:0}, at: 
+process_one_work+0x174/0x7dc
+  #1: ee907f20 ((work_completion)(&sdp->work)){+.+.}-{0:0}, at: 
+process_one_work+0x174/0x7dc
+  #2: c11367e4 (kernfs_mutex){+.+.}-{3:3}, at: 
+kernfs_remove_by_name_ns+0x24/0x94
+Modules linked in:
+Preemption disabled at:
+[<c01b10f0>] srcu_invoke_callbacks+0xc0/0x154
+CPU: 0 PID: 5 Comm: kworker/0:0 Tainted: G        W 
+5.8.0-rc3-00022-g287905e68dd2 #8753
+Hardware name: Samsung Exynos (Flattened Device Tree)
+Workqueue: rcu_gp srcu_invoke_callbacks
+[<c011184c>] (unwind_backtrace) from [<c010d250>] (show_stack+0x10/0x14)
+[<c010d250>] (show_stack) from [<c0517f04>] (dump_stack+0xbc/0xe8)
+[<c0517f04>] (dump_stack) from [<c0158da0>] (__schedule_bug+0x88/0xe0)
+[<c0158da0>] (__schedule_bug) from [<c0ab7f88>] (__schedule+0x5d0/0x83c)
+[<c0ab7f88>] (__schedule) from [<c0ab8258>] (schedule+0x64/0x124)
+[<c0ab8258>] (schedule) from [<c0ab8768>] 
+(schedule_preempt_disabled+0x14/0x20)
+[<c0ab8768>] (schedule_preempt_disabled) from [<c0abc1ec>] 
+(__mutex_lock+0x518/0xb18)
+[<c0abc1ec>] (__mutex_lock) from [<c0abc808>] (mutex_lock_nested+0x1c/0x24)
+[<c0abc808>] (mutex_lock_nested) from [<c0362fc0>] 
+(kernfs_remove_by_name_ns+0x24/0x94)
+[<c0362fc0>] (kernfs_remove_by_name_ns) from [<c0644eac>] 
+(device_remove_class_symlinks+0x70/0x94)
+[<c0644eac>] (device_remove_class_symlinks) from [<c0645994>] 
+(device_del+0xb8/0x39c)
+[<c0645994>] (device_del) from [<c0645c9c>] (device_unregister+0x24/0x64)
+[<c0645c9c>] (device_unregister) from [<c01b10fc>] 
+(srcu_invoke_callbacks+0xcc/0x154)
+[<c01b10fc>] (srcu_invoke_callbacks) from [<c01493c4>] 
+(process_one_work+0x234/0x7dc)
+[<c01493c4>] (process_one_work) from [<c01499b0>] (worker_thread+0x44/0x51c)
+[<c01499b0>] (worker_thread) from [<c0150bf4>] (kthread+0x158/0x1a0)
+[<c0150bf4>] (kthread) from [<c0100114>] (ret_from_fork+0x14/0x20)
+Exception stack(0xee907fb0 to 0xee907ff8)
+sysfs: cannot create duplicate filename 
+'/devices/virtual/devlink/regulator.28:cpu0'
+
+------------[ cut here ]------------
+WARNING: CPU: 0 PID: 5 at kernel/sched/core.c:3897 
+preempt_count_sub+0x104/0x108
+DEBUG_LOCKS_WARN_ON(val > preempt_count())
+Modules linked in:
+CPU: 0 PID: 5 Comm: kworker/0:0 Tainted: G        W 
+5.8.0-rc3-00022-g287905e68dd2 #8753
+Hardware name: Samsung Exynos (Flattened Device Tree)
+Workqueue: rcu_gp srcu_invoke_callbacks
+[<c011184c>] (unwind_backtrace) from [<c010d250>] (show_stack+0x10/0x14)
+[<c010d250>] (show_stack) from [<c0517f04>] (dump_stack+0xbc/0xe8)
+[<c0517f04>] (dump_stack) from [<c01270a8>] (__warn+0xf0/0x108)
+[<c01270a8>] (__warn) from [<c0127134>] (warn_slowpath_fmt+0x74/0xb8)
+[<c0127134>] (warn_slowpath_fmt) from [<c0158efc>] 
+(preempt_count_sub+0x104/0x108)
+[<c0158efc>] (preempt_count_sub) from [<c012fee4>] 
+(__local_bh_enable_ip+0x74/0x16c)
+[<c012fee4>] (__local_bh_enable_ip) from [<c01b1108>] 
+(srcu_invoke_callbacks+0xd8/0x154)
+[<c01b1108>] (srcu_invoke_callbacks) from [<c01493c4>] 
+(process_one_work+0x234/0x7dc)
+[<c01493c4>] (process_one_work) from [<c01499b0>] (worker_thread+0x44/0x51c)
+[<c01499b0>] (worker_thread) from [<c0150bf4>] (kthread+0x158/0x1a0)
+[<c0150bf4>] (kthread) from [<c0100114>] (ret_from_fork+0x14/0x20)
+Exception stack(0xee907fb0 to 0xee907ff8)
+7fa0:                                     00000000 00000000 00000000 
+00000000
+7fc0: 00000000 00000000 00000000 00000000 00000000 00000000 00000000 
+00000000
+7fe0: 00000000 00000000 00000000 00000000 00000013 00000000
+irq event stamp: 2274
+hardirqs last  enabled at (2273): [<c02b3274>] __slab_free+0x2b0/0x480
+hardirqs last disabled at (2274): [<c012fecc>] 
+__local_bh_enable_ip+0x5c/0x16c
+softirqs last  enabled at (2184): [<c010174c>] __do_softirq+0x50c/0x608
+softirqs last disabled at (2056): [<c01b10e4>] 
+srcu_invoke_callbacks+0xb4/0x154
+---[ end trace eaa99e7b5e453175 ]---
+
+PU: 0 PID: 1 Comm: swapper/0 Tainted: G        W 
+5.8.0-rc3-00022-g287905e68dd2 #8753
+Hardware name: Samsung Exynos (Flattened Device Tree)
+[<c011184c>] (unwind_backtrace) from [<c010d250>] (show_stack+0x10/0x14)
+[<c010d250>] (show_stack) from [<c0517f04>] (dump_stack+0xbc/0xe8)
+[<c0517f04>] (dump_stack) from [<c0365474>] (sysfs_warn_dup+0x58/0x64)
+[<c0365474>] (sysfs_warn_dup) from [<c03655a8>] 
+(sysfs_create_dir_ns+0xe0/0xf4)
+[<c03655a8>] (sysfs_create_dir_ns) from [<c051f218>] 
+(kobject_add_internal+0xb8/0x370)
+[<c051f218>] (kobject_add_internal) from [<c051f69c>] 
+(kobject_add+0x5c/0xbc)
+[<c051f69c>] (kobject_add) from [<c0647338>] (device_add+0x100/0x744)
+[<c0647338>] (device_add) from [<c0647b88>] (device_link_add+0x1f4/0x5d0)
+[<c0647b88>] (device_link_add) from [<c0582f60>] (_regulator_get+0xf4/0x280)
+[<c0582f60>] (_regulator_get) from [<c0803da4>] 
+(dev_pm_opp_set_regulators+0xf8/0x210)
+[<c0803da4>] (dev_pm_opp_set_regulators) from [<c080df80>] 
+(cpufreq_init+0xb8/0x304)
+[<c080df80>] (cpufreq_init) from [<c080aae0>] (cpufreq_online+0x2c8/0x9f8)
+[<c080aae0>] (cpufreq_online) from [<c080b2ac>] (cpufreq_add_dev+0x8c/0xc0)
+[<c080b2ac>] (cpufreq_add_dev) from [<c0649854>] 
+(subsys_interface_register+0xa8/0xf4)
+[<c0649854>] (subsys_interface_register) from [<c0808184>] 
+(cpufreq_register_driver+0x178/0x294)
+[<c0808184>] (cpufreq_register_driver) from [<c080ddac>] 
+(dt_cpufreq_probe+0xd8/0x1f4)
+[<c080ddac>] (dt_cpufreq_probe) from [<c064e048>] 
+(platform_drv_probe+0x6c/0xa4)
+[<c064e048>] (platform_drv_probe) from [<c064b664>] 
+(really_probe+0x200/0x48c)
+[<c064b664>] (really_probe) from [<c064ba58>] 
+(driver_probe_device+0x78/0x1fc)
+[<c064ba58>] (driver_probe_device) from [<c064be40>] 
+(device_driver_attach+0x58/0x60)
+[<c064be40>] (device_driver_attach) from [<c064bf24>] 
+(__driver_attach+0xdc/0x174)
+[<c064bf24>] (__driver_attach) from [<c0649470>] 
+(bus_for_each_dev+0x68/0xb4)
+[<c0649470>] (bus_for_each_dev) from [<c064a7a4>] 
+(bus_add_driver+0x158/0x214)
+[<c064a7a4>] (bus_add_driver) from [<c064cdf8>] (driver_register+0x78/0x110)
+[<c064cdf8>] (driver_register) from [<c0102378>] 
+(do_one_initcall+0x8c/0x424)
+[<c0102378>] (do_one_initcall) from [<c1001158>] 
+(kernel_init_freeable+0x190/0x204)
+[<c1001158>] (kernel_init_freeable) from [<c0ab7104>] 
+(kernel_init+0x8/0x118)
+[<c0ab7104>] (kernel_init) from [<c0100114>] (ret_from_fork+0x14/0x20)
+Exception stack(0xee8f1fb0 to 0xee8f1ff8)
+...
+BUG: sleeping function called from invalid context at 
+kernel/locking/mutex.c:935
+in_atomic(): 1, irqs_disabled(): 0, non_block: 0, pid: 5, name: kworker/0:0
+INFO: lockdep is turned off.
+Preemption disabled at:
+[<c01b10f0>] srcu_invoke_callbacks+0xc0/0x154
+CPU: 0 PID: 5 Comm: kworker/0:0 Tainted: G        W 
+5.8.0-rc3-00022-g287905e68dd2 #8753
+Hardware name: Samsung Exynos (Flattened Device Tree)
+Workqueue: rcu_gp srcu_invoke_callbacks
+[<c011184c>] (unwind_backtrace) from [<c010d250>] (show_stack+0x10/0x14)
+[<c010d250>] (show_stack) from [<c0517f04>] (dump_stack+0xbc/0xe8)
+[<c0517f04>] (dump_stack) from [<c0159188>] (___might_sleep+0x288/0x2d8)
+[<c0159188>] (___might_sleep) from [<c0abbd1c>] (__mutex_lock+0x48/0xb18)
+[<c0abbd1c>] (__mutex_lock) from [<c0abc808>] (mutex_lock_nested+0x1c/0x24)
+[<c0abc808>] (mutex_lock_nested) from [<c064590c>] (device_del+0x30/0x39c)
+[<c064590c>] (device_del) from [<c0645c9c>] (device_unregister+0x24/0x64)
+[<c0645c9c>] (device_unregister) from [<c01b10fc>] 
+(srcu_invoke_callbacks+0xcc/0x154)
+[<c01b10fc>] (srcu_invoke_callbacks) from [<c01493c4>] 
+(process_one_work+0x234/0x7dc)
+[<c01493c4>] (process_one_work) from [<c01499b0>] (worker_thread+0x44/0x51c)
+[<c01499b0>] (worker_thread) from [<c0150bf4>] (kthread+0x158/0x1a0)
+[<c0150bf4>] (kthread) from [<c0100114>] (ret_from_fork+0x14/0x20)
+Exception stack(0xee907fb0 to 0xee907ff8)
+...
+kobject_add_internal failed for regulator.28:cpu0 with -EEXIST, don't 
+try to register things with the same name in the same directory.
+
+Best regards
 -- 
-2.26.2
+Marek Szyprowski, PhD
+Samsung R&D Institute Poland
 
