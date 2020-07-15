@@ -2,178 +2,150 @@ Return-Path: <SRS0=kup7=A2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69AD4C433E3
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 12:11:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 908CEC433E6
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 12:11:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 486BE2071B
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 12:11:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hjT/h20d"
+	by mail.kernel.org (Postfix) with ESMTP id 71BB02065D
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 12:11:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594815098;
+	bh=rIjcU5BPnmY4uK3zj+p+fgmUWHz7mKvqX7fU0IC1020=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=i+dFmtIo023jacdk1qK99UP0bbOZD8mxe3E6zF/W4Xu/NkRt51Jz7UcDex/plZ7JX
+	 cc4yAAAgTdi/O/SdEiAtbmuod6xFSVwulPDRDvRfVOckjMt9HuqkcMKJmO3sQlDiuC
+	 qJ0isk0uSPJ7YOxGGHlWV90nZ/kbchytkS6w5LBE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730801AbgGOMLJ (ORCPT
+        id S1730852AbgGOMLh convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 08:11:09 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:22583 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1730224AbgGOMLI (ORCPT
+        Wed, 15 Jul 2020 08:11:37 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:42544 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728801AbgGOMLg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 08:11:08 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1594815066;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=qiTdV3yCAaoLvg9QrO2QfUMpXovbFKIwHi7VEOB69IY=;
-        b=hjT/h20dqayB5lNIR84UB1zMg6mXSOqGkBJ9JfAtQNUxAveowbHGSDixDe/3wQ0q1adMQP
-        jyzLVSLrTKiFZCcgaXt4BA/9ZtpE31GSuX29ZCmECSFl7uv1yAOV9p05lKaeABECXKkdv1
-        NZ9EMYPeBzvarCSAOUl148QUtACmLKM=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-228-nqN7I_BzO8SA8E5DYjEiiQ-1; Wed, 15 Jul 2020 08:11:01 -0400
-X-MC-Unique: nqN7I_BzO8SA8E5DYjEiiQ-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id BB2011009610;
-        Wed, 15 Jul 2020 12:10:59 +0000 (UTC)
-Received: from starship (unknown [10.35.206.178])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id D55E179CF8;
-        Wed, 15 Jul 2020 12:10:51 +0000 (UTC)
-Message-ID: <3fbc070481ab7610cd5ad69d128da665b96bda79.camel@redhat.com>
-Subject: Re: [PATCH] virtio-blk: check host supplied logical block size
-From:   Maxim Levitsky <mlevitsk@redhat.com>
-To:     "Michael S. Tsirkin" <mst@redhat.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Stefan Hajnoczi <stefanha@redhat.com>,
-        "open list:BLOCK LAYER" <linux-block@vger.kernel.org>,
-        "open list:VIRTIO CORE AND NET DRIVERS" 
-        <virtualization@lists.linux-foundation.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Jason Wang <jasowang@redhat.com>, Jens Axboe <axboe@kernel.dk>
-Date:   Wed, 15 Jul 2020 15:10:50 +0300
-In-Reply-To: <20200715075151-mutt-send-email-mst@kernel.org>
-References: <20200715095518.3724-1-mlevitsk@redhat.com>
-         <20200715060233-mutt-send-email-mst@kernel.org>
-         <5dd5af8032160eb49a4f0e38749e2d9cd968a0d6.camel@redhat.com>
-         <20200715075151-mutt-send-email-mst@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.36.3 (3.36.3-1.fc32) 
+        Wed, 15 Jul 2020 08:11:36 -0400
+Received: by mail-ot1-f68.google.com with SMTP id g37so1250187otb.9;
+        Wed, 15 Jul 2020 05:11:36 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=3cag8LrwMjM3xe6EZSlrz4EBUBRpTmPKD/ABz0zsn30=;
+        b=jEJzl2u/jvooFwgPzbcGNhIyAKUL/N2Uxdfo3SoIEnEI0D1Eml/Lm/8fSkBiGPFWWZ
+         YktRJGKZ1Se099A+RQmwzuquJfJWr2Ahnor2Lvqs84gePsruUtA7XfX3V8LoKuodHIzz
+         GiEMCzFLwEaI6UDww6jtA5tQlZgmfXMkP4e76HPakFXZUmgyVuDVBycGFRC2TIvzEVXG
+         9Or/xTN63OCbReUII5LU6xVPHcodco1bybCAmwquseQ7+oMDPLKr6uBsBggwGxRABZLq
+         GPM5zIIgLYrmSO2FBxfaS47h8rU0ZDk93JjXZ5GdAKdDi3rJIEFH8V+C77hbXr8xdR8A
+         B7pQ==
+X-Gm-Message-State: AOAM530boF05xDlLhMRvjKfQCc2T03vQuJaMi/bt3UgACQ4Up1oG/gPz
+        91hyVbbYLEj+D6CdnXP5y79W2CfG3rBgfcm/Crk=
+X-Google-Smtp-Source: ABdhPJwHW42/HPcNLnkN0GUVwuSkpH45wKSqeoBtesXsaKKCMSGwCyfwn0t0YZsdDwmvmoGpSB8/H5RWdVb+nY27lUg=
+X-Received: by 2002:a9d:590a:: with SMTP id t10mr8619498oth.262.1594815095838;
+ Wed, 15 Jul 2020 05:11:35 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+References: <20200714145049.2496163-1-lee.jones@linaro.org>
+ <20200714145049.2496163-10-lee.jones@linaro.org> <CAJZ5v0iB0K6H28DSDQj9T7k_kV10THxV6-HwN9qfmkLsYNHfiA@mail.gmail.com>
+ <20200714210340.GJ1398296@dell> <20200715032442.gh2cliiddhv35fdj@vireshk-i7>
+ <20200715032718.2zlo2eurhkpoayya@vireshk-i7> <CAJZ5v0jHJDLt6QFWG9FOpqmWMXAUuSEPHdHbVgFWcwR6FQD57Q@mail.gmail.com>
+ <20200715113433.GB3165313@dell> <CAJZ5v0gFwYj7KKKj806s5SdWO1Wu5exiwObKKAdQWQEKg+2CJA@mail.gmail.com>
+ <20200715115029.GC3165313@dell> <20200715120742.GD3165313@dell>
+In-Reply-To: <20200715120742.GD3165313@dell>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Wed, 15 Jul 2020 14:11:24 +0200
+Message-ID: <CAJZ5v0jVvzCuxOa=xDXWw4Js0J5PfKb6aM4W-g=bAPz43JNqQg@mail.gmail.com>
+Subject: Re: [PATCH 09/13] cpufreq: acpi-cpufreq: Remove unused ID structs
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Dominik Brodowski <linux@brodo.de>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2020-07-15 at 07:53 -0400, Michael S. Tsirkin wrote:
-> On Wed, Jul 15, 2020 at 01:19:55PM +0300, Maxim Levitsky wrote:
-> > On Wed, 2020-07-15 at 06:06 -0400, Michael S. Tsirkin wrote:
-> > > On Wed, Jul 15, 2020 at 12:55:18PM +0300, Maxim Levitsky wrote:
-> > > > Linux kernel only supports logical block sizes which are power of
-> > > > two,
-> > > > at least 512 bytes and no more that PAGE_SIZE.
-> > > > 
-> > > > Check this instead of crashing later on.
-> > > > 
-> > > > Note that there is no need to check physical block size since it is
-> > > > only a hint, and virtio-blk already only supports power of two
-> > > > values.
-> > > > 
-> > > > Bugzilla link: https://bugzilla.redhat.com/show_bug.cgi?id=1664619
-> > > > 
-> > > > Signed-off-by: Maxim Levitsky <mlevitsk@redhat.com>
-> > > > ---
-> > > >  drivers/block/virtio_blk.c | 20 ++++++++++++++++++--
-> > > >  1 file changed, 18 insertions(+), 2 deletions(-)
-> > > > 
-> > > > diff --git a/drivers/block/virtio_blk.c b/drivers/block/virtio_blk.c
-> > > > index 980df853ee497..36dda31cc4e96 100644
-> > > > --- a/drivers/block/virtio_blk.c
-> > > > +++ b/drivers/block/virtio_blk.c
-> > > > @@ -681,6 +681,12 @@ static const struct blk_mq_ops virtio_mq_ops =
-> > > > {
-> > > >  static unsigned int virtblk_queue_depth;
-> > > >  module_param_named(queue_depth, virtblk_queue_depth, uint, 0444);
-> > > >  
-> > > > +
-> > > > +static bool virtblk_valid_block_size(unsigned int blksize)
-> > > > +{
-> > > > +	return blksize >= 512 && blksize <= PAGE_SIZE &&
-> > > > is_power_of_2(blksize);
-> > > > +}
-> > > > +
-> > > 
-> > > Is this a blk core assumption? in that case, does not this belong
-> > > in blk core?
-> > 
-> > It is a blk core assumption. 
-> > I had checked other drivers and these that have variable block size all
-> > check this manually like that.
-> > 
-> > I don't mind fixing all of them but I am a bit afraid to create
-> > too much mess.
-> 
-> You don't have to, start by adding this in blk core and using in virtio.
-> Patches to update all drivers can then come separately.
+On Wed, Jul 15, 2020 at 2:07 PM Lee Jones <lee.jones@linaro.org> wrote:
+>
+> On Wed, 15 Jul 2020, Lee Jones wrote:
+>
+> > On Wed, 15 Jul 2020, Rafael J. Wysocki wrote:
+> >
+> > > On Wed, Jul 15, 2020 at 1:34 PM Lee Jones <lee.jones@linaro.org> wrote:
+> > > >
+> > > > On Wed, 15 Jul 2020, Rafael J. Wysocki wrote:
+> > > >
+> > > > > On Wed, Jul 15, 2020 at 5:27 AM Viresh Kumar <viresh.kumar@linaro.org> wrote:
+> > > > > >
+> > > > > > On 15-07-20, 08:54, Viresh Kumar wrote:
+> > > > > > > On 14-07-20, 22:03, Lee Jones wrote:
+> > > > > > > > On Tue, 14 Jul 2020, Rafael J. Wysocki wrote:
+> > > > > > > >
+> > > > > > > > > On Tue, Jul 14, 2020 at 4:51 PM Lee Jones <lee.jones@linaro.org> wrote:
+> > > > > > > > > >
+> > > > > > > > > > Can't see them being used anywhere and the compiler doesn't complain
+> > > > > > > > > > that they're missing, so ...
+> > > > > > > > >
+> > > > > > > > > Aren't they needed for automatic module loading in certain configurations?
+> > > > > > > >
+> > > > > > > > Any idea how that works, or where the code is for that?
+> > > > > > >
+> > > > > > > The MODULE_DEVICE_TABLE() thingy creates a map of vendor-id,
+> > > > > > > product-id that the kernel keeps after boot (and so there is no static
+> > > > > > > reference of it for the compiler), later when a device is hotplugged
+> > > > > > > into the kernel it refers to the map to find the related driver for it
+> > > > > > > and loads it if it isn't already loaded.
+> > > > > > >
+> > > > > > > This has some of it, search for MODULE_DEVICE_TABLE() in it.
+> > > > > > > Documentation/driver-api/usb/hotplug.rst
+> > > > > >
+> > > > > > And you just need to add __maybe_unused to them to suppress the
+> > > > > > warning.
+> > > > >
+> > > > > Wouldn't that cause the compiler to optimize them away if it doesn't
+> > > > > see any users?
+> > > >
+> > > > It looks like they're only unused when !MODULE,
+> > >
+> > > OK
+> > >
+> > > > in which case optimising them away would be the correct thing to do, no?
+> >
+> > It would be good if someone with a little more knowledge could provide
+> > a second opinion though.  I would think (hope) that the compiler would
+> > be smart enough to see when its actually in use.  After all, it is the
+> > compiler that places the information into the device table.
+> >
+> > If that is not the case, then the MODULE_DEVICE_TABLE() magic is
+> > broken and will need fixing.  Removing boiler-plate is good, but not
+> > at the expense of obfuscation.
+>
+> Okay, I'm satisfied.  This test build is without __maybe_unused:
+>
+> # All configs built as modules (MODULE) - the compiler knows to use the tables
+>
+>  $ ccache make -f Makefile -j24 KBUILD_OUTPUT=../builds/build-x86 allmodconfig
+>  $ ccache make -f Makefile -j24 KBUILD_OUTPUT=../builds/build-x86  W=1  drivers/cpufreq/
+>  [...]
+>    CC [M]  drivers/cpufreq/pcc-cpufreq.o
+>
+> # All configs built-in (!MODULE) - the compiler sees that they are unused
+>
+>  $ ccache make -f Makefile -j24 KBUILD_OUTPUT=../builds/build-x86 allyesconfig
+>  $ ccache make -f Makefile -j24 KBUILD_OUTPUT=../builds/build-x86  W=1  drivers/cpufreq/
+>    CC      drivers/cpufreq/pcc-cpufreq.o
+>   drivers/cpufreq/pcc-cpufreq.c:619:36: warning: ‘processor_device_ids’ defined but not used [-Wunused-const-variable=]
+>   619 | static const struct acpi_device_id processor_device_ids[] = {
+>       |                                    ^~~~~~~~~~~~~~~~~~~~
+>
 
-I'll do this then.
+OK
 
-Best regards,
-	Maxim Levitsky
-
-> 
-> > > >  static int virtblk_probe(struct virtio_device *vdev)
-> > > >  {
-> > > >  	struct virtio_blk *vblk;
-> > > > @@ -809,9 +815,16 @@ static int virtblk_probe(struct virtio_device
-> > > > *vdev)
-> > > >  	err = virtio_cread_feature(vdev, VIRTIO_BLK_F_BLK_SIZE,
-> > > >  				   struct virtio_blk_config, blk_size,
-> > > >  				   &blk_size);
-> > > > -	if (!err)
-> > > > +	if (!err) {
-> > > > +		if (!virtblk_valid_block_size(blk_size)) {
-> > > > +			dev_err(&vdev->dev,
-> > > > +				"%s failure: unsupported logical block
-> > > > size %d\n",
-> > > > +				__func__, blk_size);
-> > > > +			err = -EINVAL;
-> > > > +			goto out_cleanup_queue;
-> > > > +		}
-> > > >  		blk_queue_logical_block_size(q, blk_size);
-> > > > -	else
-> > > > +	} else
-> > > >  		blk_size = queue_logical_block_size(q);
-> > > >  
-> > > >  	/* Use topology information if available */
-> > > 
-> > > OK so if we are doing this pls add {} around  blk_size =
-> > > queue_logical_block_size(q);
-> > > too.
-> > Will do.
-> > 
-> > > > @@ -872,6 +885,9 @@ static int virtblk_probe(struct virtio_device
-> > > > *vdev)
-> > > >  	device_add_disk(&vdev->dev, vblk->disk, virtblk_attr_groups);
-> > > >  	return 0;
-> > > >  
-> > > > +out_cleanup_queue:
-> > > > +	blk_cleanup_queue(vblk->disk->queue);
-> > > > +	vblk->disk->queue = NULL;
-> > > >  out_free_tags:
-> > > >  	blk_mq_free_tag_set(&vblk->tag_set);
-> > > >  out_put_disk:
-> > > > -- 
-> > > > 2.26.2
-> > 
-> > Best regards,
-> > 	Maxim Levitsky
-
-
+I thought that this would be the case. :-)
