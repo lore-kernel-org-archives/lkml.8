@@ -2,138 +2,89 @@ Return-Path: <SRS0=kup7=A2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE3A5C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 00:51:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2946C433E4
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 00:52:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 958962071B
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 00:51:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C144720760
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 00:52:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727919AbgGOAvc (ORCPT
+        id S1726930AbgGOAv7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 20:51:32 -0400
-Received: from mga17.intel.com ([192.55.52.151]:64198 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726472AbgGOAvc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 20:51:32 -0400
-IronPort-SDR: HVlwtCL7MGIt67/iZAqzhv1z6RBt0gQmlH++jzugDgJAO3/hYkJIi41KIwyuoWgFp1mCuzii+E
- KS85+eNkfuHw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9682"; a="129143297"
-X-IronPort-AV: E=Sophos;i="5.75,353,1589266800"; 
-   d="scan'208";a="129143297"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jul 2020 17:51:31 -0700
-IronPort-SDR: tZVuTxoxURNmLUGrV7HsCtXOT6Rvob3NShDSo/T/sjerUQA38u1yg9gE0BUuA9hlrv5+qEKEgi
- sZlkEU4jhzzQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,353,1589266800"; 
-   d="scan'208";a="268801804"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.152])
-  by fmsmga007.fm.intel.com with ESMTP; 14 Jul 2020 17:51:30 -0700
-Date:   Tue, 14 Jul 2020 17:51:30 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Dave Hansen <dave.hansen@intel.com>
-Cc:     Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, x86@kernel.org,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Tony Luck <tony.luck@intel.com>,
-        "Gomez Iglesias, Antonio" <antonio.gomez.iglesias@intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Anthony Steinhauser <asteinhauser@google.com>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Mark Gross <mgross@linux.intel.com>,
-        Waiman Long <longman@redhat.com>, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        Jonathan Corbet <corbet@lwn.net>
-Subject: Re: [PATCH] x86/bugs/multihit: Fix mitigation reporting when KVM is
- not in use
-Message-ID: <20200715005130.GE14404@linux.intel.com>
-References: <267631f4db4fd7e9f7ca789c2efaeab44103f68e.1594689154.git.pawan.kumar.gupta@linux.intel.com>
- <20200714014540.GH29725@linux.intel.com>
- <099d6985-9e9f-1d9f-7098-58a9e26e4450@intel.com>
- <20200714191759.GA7116@guptapadev.amr>
- <ba442a51-294e-8624-9a69-5613ff050551@intel.com>
- <20200714210442.GA10488@guptapadev.amr>
- <e12cd3b8-7df1-94e8-e603-39e00648c026@intel.com>
+        Tue, 14 Jul 2020 20:51:59 -0400
+Received: from smtprelay0224.hostedemail.com ([216.40.44.224]:44132 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726356AbgGOAv6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 20:51:58 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay06.hostedemail.com (Postfix) with ESMTP id 8823718224D61;
+        Wed, 15 Jul 2020 00:51:57 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: plane42_08149f426ef5
+X-Filterd-Recvd-Size: 2039
+Received: from XPS-9350.home (unknown [47.151.133.149])
+        (Authenticated sender: joe@perches.com)
+        by omf10.hostedemail.com (Postfix) with ESMTPA;
+        Wed, 15 Jul 2020 00:51:56 +0000 (UTC)
+Message-ID: <c3dc7c1dd56a3a677e6d72b05313b2a61962885e.camel@perches.com>
+Subject: Re: [PATCH 3/5] media/dvbdev.h: fix duplicated word in comment
+From:   Joe Perches <joe@perches.com>
+To:     Randy Dunlap <rdunlap@infradead.org>, linux-kernel@vger.kernel.org
+Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        linux-media@vger.kernel.org
+Date:   Tue, 14 Jul 2020 17:51:55 -0700
+In-Reply-To: <20200714220553.20294-3-rdunlap@infradead.org>
+References: <20200714220553.20294-1-rdunlap@infradead.org>
+         <20200714220553.20294-3-rdunlap@infradead.org>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.36.3-0ubuntu1 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <e12cd3b8-7df1-94e8-e603-39e00648c026@intel.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 14, 2020 at 02:20:59PM -0700, Dave Hansen wrote:
-> On 7/14/20 2:04 PM, Pawan Gupta wrote:
-> >> I see three inputs and four possible states (sorry for the ugly table,
-> >> it was this or a spreadsheet :):
-> >>
-> >> X86_FEATURE_VMX	CONFIG_KVM_*	hpage split  Result	   Reason
-> >> 	N			x	    x	     Not Affected  No VMX
-> >> 	Y			N	    x	     Not affected  No KVM
+On Tue, 2020-07-14 at 15:05 -0700, Randy Dunlap wrote:
+> Change the doubled word "the" in a comment to "to the".
 
-This line item is pointless, the relevant itlb_multihit_show_state()
-implementation depends on CONFIG_KVM_INTEL.  The !KVM_INTEL version simply
-prints ""Processor vulnerable".
-
-> >> 	Y			Y	    Y	     Mitigated	   hpage split
-> >> 	Y			Y	    N	     Vulnerable
-> > Thank you.
-> > 
-> > Just a note... for the last 2 cases kernel wont know about "hpage split"
-> > mitigation until KVM is loaded. So for these cases reporting at boot
-> > will be "Vulnerable" and would change to "Mitigated" once KVM is loaded
-> > and deploys the mitigation. This is the current behavior.
+Hey 
+> Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+> Cc: Mauro Carvalho Chehab <mchehab@kernel.org>
+> Cc: linux-media@vger.kernel.org
+> ---
+>  include/media/dvbdev.h |    2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> That's OK with me, because it's actually pretty closely tied to reality.
->  You are literally "vulnerable" until you've committed to a mitigation
-> and that doesn't happen until KVM is loaded.
+> --- linux-next-20200714.orig/include/media/dvbdev.h
+> +++ linux-next-20200714/include/media/dvbdev.h
+> @@ -385,7 +385,7 @@ struct i2c_client;
+>   * with dvb_module_probe() should use dvb_module_release() to unbind.
+>   *
+>   * Return:
+> - *	On success, return an &struct i2c_client, pointing the the bound
+> + *	On success, return an &struct i2c_client, pointing to the bound
 
-Not that it really matters since itlb_multihit_show_state() reflects current
-state, but loading KVM doesn't commit to a mitigation.  KVM's nx_huge_pages
-module param is writable by root, e.g. the mitigation can be turned off
-while KVM is loaded and even while guests are running.
+an &struct reads OK as text, but does not as rst/html
 
-To do the above table, KVM will also need to update itlb_multihit_kvm_mitigation
-when it is unloaded, which seems rather silly.  That's partly why I suggested
-keying off CR4.VMXE as it doesn't require poking directly into KVM.  E.g. the
-entire fix becomes:
+Perhaps this should be:
 
-diff --git a/arch/x86/kernel/cpu/bugs.c b/arch/x86/kernel/cpu/bugs.c
-index ed54b3b21c39..4452df7f332d 100644
---- a/arch/x86/kernel/cpu/bugs.c
-+++ b/arch/x86/kernel/cpu/bugs.c
-@@ -1447,7 +1447,12 @@ static ssize_t l1tf_show_state(char *buf)
+   return the address of the bound &struct i2c_client device
+or
+   return a pointer to the bound &struct i2c_client device
 
- static ssize_t itlb_multihit_show_state(char *buf)
- {
--       if (itlb_multihit_kvm_mitigation)
-+       if (!boot_cpu_has(X86_FEATURE_MSR_IA32_FEAT_CTL) ||
-+           !boot_cpu_has(X86_FEATURE_VMX))
-+               return sprintf(buf, "KVM: Mitigation: VMX unsupported\n");
-+       else if (!(cr4_read_shadow() & X86_CR4_VMXE))
-+               return sprintf(buf, "KVM: Mitigation: VMX disabled\n");
-+       else if (itlb_multihit_kvm_mitigation)
-                return sprintf(buf, "KVM: Mitigation: Split huge pages\n");
-        else
-                return sprintf(buf, "KVM: Vulnerable\n");
+otherwise the html output is
+
+   Return
+
+   On success, return an struct i2c_client, pointing to the bound
+   I2C device. NULL otherwise.
+
+and there seem to be too many commas used as well.
+
+
+
