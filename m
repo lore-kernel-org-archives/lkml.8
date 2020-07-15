@@ -2,107 +2,357 @@ Return-Path: <SRS0=kup7=A2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54067C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 00:03:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19C68C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 00:07:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3CD922071B
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 00:03:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CEA622072D
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 00:07:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="lpGn5HgZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728006AbgGOADk (ORCPT
+        id S1728040AbgGOAHS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 20:03:40 -0400
-Received: from mga04.intel.com ([192.55.52.120]:24073 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726450AbgGOADj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 20:03:39 -0400
-IronPort-SDR: Kor1lgqUM0jUOBz+UG6tioKzLUwd4GjAae0IGxK2pLvovYJ3yAUtIOywfCJDPXXl4WJGlLN1Ly
- ZWJoISx4Vzfw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9682"; a="146556548"
-X-IronPort-AV: E=Sophos;i="5.75,353,1589266800"; 
-   d="scan'208";a="146556548"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jul 2020 17:03:38 -0700
-IronPort-SDR: Go80DYoOa+jgCvzUJ8c8qVgmU4RYBMo5yNdEeYJXx1Q0+44kELwwdx2JGTitw+q18rqebtLFFK
- S5ELISaY54uQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,353,1589266800"; 
-   d="scan'208";a="281912404"
-Received: from zhangj4-mobl1.ccr.corp.intel.com (HELO [10.249.173.190]) ([10.249.173.190])
-  by orsmga003.jf.intel.com with ESMTP; 14 Jul 2020 17:03:32 -0700
-Subject: Re: [PATCH v2 3/4] x86: Expose SERIALIZE for supported cpuid
-To:     hpa@zytor.com,
-        Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org, x86@kernel.org,
-        pbonzini@redhat.com, vkuznets@redhat.com, wanpengli@tencent.com,
-        jmattson@google.com, joro@8bytes.org, tglx@linutronix.de,
-        mingo@redhat.com, bp@alien8.de,
-        ricardo.neri-calderon@linux.intel.com, kyung.min.park@intel.com,
-        jpoimboe@redhat.com, gregkh@linuxfoundation.org,
-        ak@linux.intel.com, dave.hansen@intel.com, tony.luck@intel.com,
-        ravi.v.shankar@intel.com
-References: <1594088183-7187-1-git-send-email-cathy.zhang@intel.com>
- <1594088183-7187-4-git-send-email-cathy.zhang@intel.com>
- <20200714030047.GA12592@linux.intel.com>
- <80d91e21-6509-ff70-fb5a-5c042f6ea588@intel.com>
- <3EFFDE4B-7844-4BB3-A824-487EE8359376@zytor.com>
-From:   "Zhang, Cathy" <cathy.zhang@intel.com>
-Message-ID: <e24f5802-5187-956c-80ad-a4cc8f66a261@intel.com>
-Date:   Wed, 15 Jul 2020 08:03:31 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Tue, 14 Jul 2020 20:07:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59762 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726450AbgGOAHR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 20:07:17 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 71177C061755
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 17:07:17 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id q5so534568wru.6
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 17:07:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=rCsvWHMFwQCkIyblreEWmVYkj4jsb8u3rKO56xByVZs=;
+        b=lpGn5HgZbuDP9ylEBUNzc14d7+OMrAfnaiEZH01+vtmc4SBQgn/imHg8LWncE9AnRW
+         +UqvO+EGKVepIIvs+nhCSAA6sUwLlyt5CNPiFkfwXkRAOwWCFEgpCziF6jqcpj675seq
+         EAbr9XgDqD72LriKwqjE9Z10tkfkWnANIa8SDz6idOvHUzbpXSjloFlttWQfYHNX1K9H
+         SVY+FAKPJ6DEDt+vPk/wPsjdlaOb1m9CcH7vFxj+nYjIpQcrWBIEQqsePqEPz8jVQqTU
+         RVkB435jX66IukxL4A6y2VRJT6SulwNpxNElhz+Cd5dEw/gsTxBpnUixQDYzlrj8C4nH
+         HDIQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=rCsvWHMFwQCkIyblreEWmVYkj4jsb8u3rKO56xByVZs=;
+        b=kvFJmnawKe4CZM3Gxh45JfA34unvsOb5x2Y7bZPdK4j73MhrbPp14Dq6p6OBAwhDWb
+         G4UyR3aC+HwNFefjwmjHW6ynMLfV5AZSiXk6XJAeX++I4nYeOs+zODzEs2zAGJADMPZx
+         /oEf1Vp+CpFDIcCAi2PpFwL3qJ1WeGS/BvieWLRJ7NGI39PmfMF/sUwqDO2VnW3rx1uU
+         67y/BeZbik5/5e4H8FJ7N3sJCh7tePR2YevmTVB0GKUYj8CnzKwxKSL7c/k1u0A/dnv8
+         dzmIbv/ReRIvQ4GEYh01jI3hU+y5UVrYILOH5A9LN0aLZdGqnfEMIbsp0zpvcYpHud9f
+         7agg==
+X-Gm-Message-State: AOAM531gsuZDIdp5rrw+YGPrL2So5O53+2bk4o0eOF2I9j9IQ9KSGIc+
+        Qnl3DYrRQ1UI5YWjvXtRILkVVqKTCbx7pek7uJdiww==
+X-Google-Smtp-Source: ABdhPJwznz7DG3lneSkNmhwSYgCLIbBiJRbrvOH4dwTnjKOCexkxOybh1+7N0+QaVdX0BnQDOxDfmBdpUYWpbjkSo3c=
+X-Received: by 2002:adf:e6cb:: with SMTP id y11mr8215330wrm.282.1594771635889;
+ Tue, 14 Jul 2020 17:07:15 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <3EFFDE4B-7844-4BB3-A824-487EE8359376@zytor.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+References: <20200712132634.138901-1-jolsa@kernel.org> <20200712132634.138901-10-jolsa@kernel.org>
+In-Reply-To: <20200712132634.138901-10-jolsa@kernel.org>
+From:   Ian Rogers <irogers@google.com>
+Date:   Tue, 14 Jul 2020 17:07:04 -0700
+Message-ID: <CAP-5=fUa0TKW5U3hivu4HMi+9s+9BEygPhGUNRDM-oAH-BOSsw@mail.gmail.com>
+Subject: Re: [PATCH 09/18] perf metric: Collect referenced metrics in struct metric_ref_node
+To:     Jiri Olsa <jolsa@kernel.org>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Michael Petlan <mpetlan@redhat.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Kajol Jain <kjain@linux.ibm.com>,
+        John Garry <john.garry@huawei.com>,
+        "Paul A. Clarke" <pc@us.ibm.com>,
+        Stephane Eranian <eranian@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/15/2020 7:05 AM, hpa@zytor.com wrote:
-> On July 14, 2020 3:42:08 PM PDT, "Zhang, Cathy" <cathy.zhang@intel.com> wrote:
->> On 7/14/2020 11:00 AM, Sean Christopherson wrote:
->>> On Tue, Jul 07, 2020 at 10:16:22AM +0800, Cathy Zhang wrote:
->>>> SERIALIZE instruction is supported by intel processors,
->>>> like Sapphire Rapids. Expose it in KVM supported cpuid.
->>> Providing at least a rough overview of the instruction, e.g. its
->> enumeration,
->>> usage, fault rules, controls, etc... would be nice.  In isolation,
->> the
->>> changelog isn't remotely helpful in understanding the correctness of
->> the
->>> patch.
->> Thanks Sean! Add it in the next version.
->>>> Signed-off-by: Cathy Zhang <cathy.zhang@intel.com>
->>>> ---
->>>>    arch/x86/kvm/cpuid.c | 3 ++-
->>>>    1 file changed, 2 insertions(+), 1 deletion(-)
->>>>
->>>> diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
->>>> index 8a294f9..e603aeb 100644
->>>> --- a/arch/x86/kvm/cpuid.c
->>>> +++ b/arch/x86/kvm/cpuid.c
->>>> @@ -341,7 +341,8 @@ void kvm_set_cpu_caps(void)
->>>>    	kvm_cpu_cap_mask(CPUID_7_EDX,
->>>>    		F(AVX512_4VNNIW) | F(AVX512_4FMAPS) | F(SPEC_CTRL) |
->>>>    		F(SPEC_CTRL_SSBD) | F(ARCH_CAPABILITIES) | F(INTEL_STIBP) |
->>>> -		F(MD_CLEAR) | F(AVX512_VP2INTERSECT) | F(FSRM)
->>>> +		F(MD_CLEAR) | F(AVX512_VP2INTERSECT) | F(FSRM) |
->>>> +		F(SERIALIZE)
->>>>    	);
->>>>    
->>>>    	/* TSC_ADJUST and ARCH_CAPABILITIES are emulated in software. */
->>>> -- 
->>>> 1.8.3.1
->>>>
-> At least that one is easy: SERIALIZE is architecturally a NOP, but with hard serialization, like CPUID or IRET.
-SERIALIZE does not modify registers, arithmetic flags or memory, which 
-is different with CPUID.
+On Sun, Jul 12, 2020 at 6:27 AM Jiri Olsa <jolsa@kernel.org> wrote:
+>
+> Collecting referenced metrics in struct metric_ref_node object,
+> so we can process them later on.
+>
+> The change will parse nested metric names out of expression and
+> 'resolve' them.
+>
+> All referenced metrics are dissolved into one context, meaning all
+> nested metrics events and added to the parent context.
+>
+> Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+> ---
+>  tools/perf/util/metricgroup.c | 147 ++++++++++++++++++++++++++++++----
+>  1 file changed, 132 insertions(+), 15 deletions(-)
+>
+> diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.c
+> index f0b0a053bfd2..9923eef1e2d4 100644
+> --- a/tools/perf/util/metricgroup.c
+> +++ b/tools/perf/util/metricgroup.c
+> @@ -102,12 +102,20 @@ void metricgroup__rblist_exit(struct rblist *metric_events)
+>         rblist__exit(metric_events);
+>  }
+>
+> +struct metric_ref_node {
+> +       const char *metric_name;
+> +       const char *metric_expr;
+> +       struct list_head list;
+> +};
+
+Perhaps a comment like this above:
+/* A node in the list of referenced metrics. metric_expr is held as a
+convenience to avoid a search through the metric list. */
+
+> +
+>  struct egroup {
+>         struct list_head nd;
+>         struct expr_parse_ctx pctx;
+>         const char *metric_name;
+>         const char *metric_expr;
+>         const char *metric_unit;
+> +       struct list_head refs;
+> +       int refs_cnt;
+
+A comment would be nice here as refs is a pretty overloaded term. For
+example, is refs_cnt a reference count for memory management or the
+length of the refs list? I'm unpopular and would use a long variable
+name here of something like referenced_metrics for the list.
+
+>         int runtime;
+>         bool has_constraint;
+>  };
+> @@ -574,27 +582,66 @@ int __weak arch_get_runtimeparam(void)
+>  static int __add_metric(struct list_head *group_list,
+>                         struct pmu_event *pe,
+>                         bool metric_no_group,
+> -                       int runtime)
+> +                       int runtime,
+> +                       struct egroup **egp)
+
+Rather than egp perhaps parent_eg or parent_metric?
+
+>  {
+> +       struct metric_ref_node *ref;
+>         struct egroup *eg;
+>
+> -       eg = malloc(sizeof(*eg));
+> -       if (!eg)
+> -               return -ENOMEM;
+> +       if (*egp == NULL) {
+> +               /*
+> +                * We got in here for the master group,
+> +                * allocate it and put it on the list.
+> +                */
+> +               eg = malloc(sizeof(*eg));
+> +               if (!eg)
+> +                       return -ENOMEM;
+> +
+> +               expr__ctx_init(&eg->pctx);
+> +               eg->metric_name = pe->metric_name;
+> +               eg->metric_expr = pe->metric_expr;
+> +               eg->metric_unit = pe->unit;
+> +               eg->runtime = runtime;
+> +               eg->has_constraint = metric_no_group || metricgroup__has_constraint(pe);
+> +               INIT_LIST_HEAD(&eg->refs);
+> +               eg->refs_cnt = 0;
+> +               *egp = eg;
+> +       } else {
+> +               /*
+> +                * We got here for the referenced metric, via the
+> +                * recursive metricgroup__add_metric call, add
+> +                * it to the master group.
+
+Probably want to avoid the term master here and below:
+https://www.kernel.org/doc/html/latest/process/coding-style.html?highlight=language%20master#naming
+Perhaps parent or referencing metric?
+
+> +                */
+> +               eg = *egp;
+> +
+> +               ref = malloc(sizeof(*ref));
+> +               if (!ref)
+> +                       return -ENOMEM;
+>
+> -       expr__ctx_init(&eg->pctx);
+> -       eg->metric_name = pe->metric_name;
+> -       eg->metric_expr = pe->metric_expr;
+> -       eg->metric_unit = pe->unit;
+> -       eg->runtime = runtime;
+> -       eg->has_constraint = metric_no_group || metricgroup__has_constraint(pe);
+> +               ref->metric_name = pe->metric_name;
+> +               ref->metric_expr = pe->metric_expr;
+> +               list_add(&ref->list, &eg->refs);
+> +               eg->refs_cnt++;
+> +               eg->has_constraint |= metricgroup__has_constraint(pe);
+
+Why not metric_no_group here? Perhaps use a function to avoid
+duplication with the code above.
+
+> +       }
+>
+> +       /*
+> +        * For both the master and referenced metrics, we parse
+> +        * all the metric's IDs and add it to the parent context.
+> +        */
+>         if (expr__find_other(pe->metric_expr, NULL, &eg->pctx, runtime) < 0) {
+>                 expr__ctx_clear(&eg->pctx);
+>                 free(eg);
+>                 return -EINVAL;
+>         }
+>
+> +       /*
+> +        * We add new group only in the 'master' call,
+> +        * so bail out for referenced metric case.
+> +        */
+> +       if (eg->refs_cnt)
+> +               return 0;
+> +
+>         if (list_empty(group_list))
+>                 list_add(&eg->nd, group_list);
+>         else {
+> @@ -636,14 +683,63 @@ static struct pmu_event *find_metric(const char *metric, struct pmu_events_map *
+>
+>  static int add_metric(struct list_head *group_list,
+>                       struct pmu_event *pe,
+> -                     bool metric_no_group)
+> +                     bool metric_no_group,
+> +                     struct egroup **egp);
+> +
+> +static int resolve_metric(struct egroup *eg,
+> +                         bool metric_no_group,
+> +                         struct list_head *group_list,
+> +                         struct pmu_events_map *map)
+> +{
+> +       struct hashmap_entry *cur;
+> +       size_t bkt;
+> +       bool all;
+> +       int ret;
+> +
+> +       /*
+> +        * Iterate all the parsed IDs and if there's metric,
+> +        * add it to the context.
+> +        */
+
+Does this mean that the ID doesn't need to begin "metric:" to
+reference a different metric as per Andi Kleen's request?
+
+> +       do {
+> +               all = true;
+> +               hashmap__for_each_entry((&eg->pctx.ids), cur, bkt) {
+> +                       struct pmu_event *pe;
+> +
+> +                       pe = find_metric(cur->key, map);
+> +                       if (!pe)
+> +                               continue;
+> +
+> +                       all = false;
+> +                       /* The metric key itself needs to go out.. */
+> +                       expr__del_id(&eg->pctx, cur->key);
+> +
+> +                       /* ... and it gets resolved to the parent context. */
+> +                       ret = add_metric(group_list, pe, metric_no_group, &eg);
+> +                       if (ret)
+> +                               return ret;
+> +
+> +                       /*
+> +                        * We added new metric to hashmap, so we need
+> +                        * to break the iteration and start over.
+> +                        */
+> +                       break;
+> +               }
+> +       } while (!all);
+> +
+> +       return 0;
+> +}
+> +
+> +static int add_metric(struct list_head *group_list,
+> +                     struct pmu_event *pe,
+> +                     bool metric_no_group,
+> +                     struct egroup **egp)
+>  {
+>         int ret = 0;
+>
+>         pr_debug("metric expr %s for %s\n", pe->metric_expr, pe->metric_name);
+>
+>         if (!strstr(pe->metric_expr, "?")) {
+> -               ret = __add_metric(group_list, pe, metric_no_group, 1);
+> +               ret = __add_metric(group_list, pe, metric_no_group, 1, egp);
+>         } else {
+>                 int j, count;
+>
+> @@ -655,7 +751,7 @@ static int add_metric(struct list_head *group_list,
+>                  */
+>
+>                 for (j = 0; j < count && !ret; j++) {
+> -                       ret = __add_metric(group_list, pe, metric_no_group, j);
+> +                       ret = __add_metric(group_list, pe, metric_no_group, j, egp);
+>                 }
+>         }
+>
+> @@ -666,16 +762,26 @@ static int metricgroup__add_metric(const char *metric, bool metric_no_group,
+>                                    struct strbuf *events,
+>                                    struct list_head *group_list,
+>                                    struct pmu_events_map *map)
+> +
+>  {
+> +       struct egroup *eg = NULL;
+>         struct pmu_event *pe;
+> -       struct egroup *eg;
+>         int ret;
+>
+>         pe = find_metric(metric, map);
+>         if (!pe)
+>                 return -EINVAL;
+>
+> -       ret = add_metric(group_list, pe, metric_no_group);
+> +       ret = add_metric(group_list, pe, metric_no_group, &eg);
+> +       if (ret)
+> +               return ret;
+> +
+> +       /*
+> +        * Process any possible referenced metrics
+> +        * included in the expression.
+> +        */
+> +       ret = resolve_metric(eg, metric_no_group,
+> +                            group_list, map);
+>         if (ret)
+>                 return ret;
+>
+> @@ -727,11 +833,22 @@ static int metricgroup__add_metric_list(const char *list, bool metric_no_group,
+>         return ret;
+>  }
+>
+> +static void egroup__free_refs(struct egroup *egroup)
+> +{
+> +       struct metric_ref_node *ref, *tmp;
+> +
+> +       list_for_each_entry_safe(ref, tmp, &egroup->refs, list) {
+> +               list_del(&ref->list);
+> +               free(ref);
+> +       }
+> +}
+> +
+>  static void metricgroup__free_egroups(struct list_head *group_list)
+>  {
+>         struct egroup *eg, *egtmp;
+>
+>         list_for_each_entry_safe (eg, egtmp, group_list, nd) {
+> +               egroup__free_refs(eg);
+>                 expr__ctx_clear(&eg->pctx);
+>                 list_del_init(&eg->nd);
+>                 free(eg);
+> --
+> 2.25.4
+>
