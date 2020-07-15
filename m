@@ -7,55 +7,55 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 602B2C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 16:41:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8843CC433F1
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 16:41:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 34A8D20658
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 16:41:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 668B220658
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 16:41:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="uczxLMBz"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Haa/5XR2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728042AbgGOQlX (ORCPT
+        id S1727021AbgGOQk2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 12:41:23 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:42364 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727037AbgGOQk3 (ORCPT
+        Wed, 15 Jul 2020 12:40:28 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:43486 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726846AbgGOQkY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 12:40:29 -0400
+        Wed, 15 Jul 2020 12:40:24 -0400
 Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 06FGeNOW040661;
-        Wed, 15 Jul 2020 11:40:23 -0500
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 06FGeH7V021720;
+        Wed, 15 Jul 2020 11:40:17 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1594831223;
-        bh=uIEP6nrfDSm3jfGkHczw7vpwr5P7//zWswUS3s3266Q=;
+        s=ti-com-17Q1; t=1594831217;
+        bh=BuX2JcVEQqV62DWLE9gR2zCSbXY0NQedT0rYaZKFrdg=;
         h=From:To:Subject:Date:In-Reply-To:References;
-        b=uczxLMBzu9Dm5ijBLMEDQeCH9yYrNraJpVPoLI+ZK/xDNLOcVq5PpCidBTttyzc0B
-         9y7KIWqQ0jqy83GkQwINyq6FvIHj3UvJJx2yCWO0pisotSnN/9pOuAbT/YUC5soowC
-         N7NAlpymuIGoCBKJWNqt7UBnQdwt8KQNEhtKzykk=
-Received: from DLEE112.ent.ti.com (dlee112.ent.ti.com [157.170.170.23])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 06FGeNOt102763
+        b=Haa/5XR2bKSvw86Yfu2C2eKRToy0xBTLSrFH774p7ABVxG5aganh45pqgUYfx9eqF
+         0MKGtA3Ww5P4lckqlZBGrH9/DiYiW8N84R+Mtvx1YTJir2wHaRFV13Ff9Bt51X8miU
+         x5gLAujhYrYaTbN0yWscW5yYkjAk0p95v2duTbTw=
+Received: from DLEE113.ent.ti.com (dlee113.ent.ti.com [157.170.170.24])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 06FGeHUR102690
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 15 Jul 2020 11:40:23 -0500
-Received: from DLEE109.ent.ti.com (157.170.170.41) by DLEE112.ent.ti.com
- (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
+        Wed, 15 Jul 2020 11:40:17 -0500
+Received: from DLEE100.ent.ti.com (157.170.170.30) by DLEE113.ent.ti.com
+ (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Wed, 15
- Jul 2020 11:40:23 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE109.ent.ti.com
- (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
+ Jul 2020 11:40:17 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE100.ent.ti.com
+ (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Wed, 15 Jul 2020 11:40:23 -0500
+ Frontend Transport; Wed, 15 Jul 2020 11:40:17 -0500
 Received: from uda0868495.fios-router.home (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 06FGeCve081717;
-        Wed, 15 Jul 2020 11:40:22 -0500
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 06FGeCva081717;
+        Wed, 15 Jul 2020 11:40:16 -0500
 From:   Murali Karicheri <m-karicheri2@ti.com>
 To:     <davem@davemloft.net>, <kuba@kernel.org>, <netdev@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>, <linux-api@vger.kernel.org>,
         <nsekhar@ti.com>, <grygorii.strashko@ti.com>,
         <vinicius.gomes@intel.com>
-Subject: [net-next PATCH v2 6/9] net: prp: add supervision frame generation utility function
-Date:   Wed, 15 Jul 2020 12:40:07 -0400
-Message-ID: <20200715164012.1222-7-m-karicheri2@ti.com>
+Subject: [net-next PATCH v2 2/9] net: hsr/prp: validate address B before copying to skb
+Date:   Wed, 15 Jul 2020 12:40:03 -0400
+Message-ID: <20200715164012.1222-3-m-karicheri2@ti.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200715164012.1222-1-m-karicheri2@ti.com>
 References: <20200715164012.1222-1-m-karicheri2@ti.com>
@@ -67,171 +67,31 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add support for generation of PRP supervision frames. For PRP,
-supervision frame format is similar to HSR version 0, but have
-a PRP Redundancy Control Trailer (RCT) added and uses a different
-message type, PRP_TLV_LIFE_CHECK_DD. Also update
-is_supervision_frame() to include the new message type used for
-PRP supervision frame.
+Validate MAC address before copying the same to outgoing frame
+skb destination address.
 
 Signed-off-by: Murali Karicheri <m-karicheri2@ti.com>
+Reviewed-by: Grygorii Strashko <grygorii.strashko@ti.com>
 ---
- net/hsr/hsr_device.c  | 64 ++++++++++++++++++++++++++++++++++++++++++-
- net/hsr/hsr_forward.c |  4 ++-
- net/hsr/hsr_main.h    | 22 +++++++++++++++
- 3 files changed, 88 insertions(+), 2 deletions(-)
+ net/hsr/hsr_framereg.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/net/hsr/hsr_device.c b/net/hsr/hsr_device.c
-index 5ca06b4e710e..5410854f9ca6 100644
---- a/net/hsr/hsr_device.c
-+++ b/net/hsr/hsr_device.c
-@@ -238,6 +238,10 @@ static struct sk_buff *hsr_init_skb(struct hsr_port *master, u16 proto)
+diff --git a/net/hsr/hsr_framereg.c b/net/hsr/hsr_framereg.c
+index 03b891904314..01331da28639 100644
+--- a/net/hsr/hsr_framereg.c
++++ b/net/hsr/hsr_framereg.c
+@@ -325,7 +325,10 @@ void hsr_addr_subst_dest(struct hsr_node *node_src, struct sk_buff *skb,
+ 	if (port->type != node_dst->addr_B_port)
+ 		return;
  
- 	hlen = LL_RESERVED_SPACE(master->dev);
- 	tlen = master->dev->needed_tailroom;
-+	/* skb size is same for PRP/HSR frames, only difference
-+	 * being, for PRP it is a trailer and for HSR it is a
-+	 * header
-+	 */
- 	skb = dev_alloc_skb(sizeof(struct hsr_tag) +
- 			    sizeof(struct hsr_sup_tag) +
- 			    sizeof(struct hsr_sup_payload) + hlen + tlen);
-@@ -336,6 +340,55 @@ static void send_hsr_supervision_frame(struct hsr_port *master,
- 	return;
+-	ether_addr_copy(eth_hdr(skb)->h_dest, node_dst->macaddress_B);
++	if (is_valid_ether_addr(node_dst->macaddress_B))
++		ether_addr_copy(eth_hdr(skb)->h_dest, node_dst->macaddress_B);
++	else
++		WARN_ONCE(1, "%s: mac address B not valid\n", __func__);
  }
  
-+static void send_prp_supervision_frame(struct hsr_port *master,
-+				       unsigned long *interval)
-+{
-+	struct hsr_priv *hsr = master->hsr;
-+	struct hsr_sup_payload *hsr_sp;
-+	struct hsr_sup_tag *hsr_stag;
-+	unsigned long irqflags;
-+	struct sk_buff *skb;
-+	struct prp_rct *rct;
-+	u8 *tail;
-+
-+	skb = hsr_init_skb(master, ETH_P_PRP);
-+	if (!skb) {
-+		WARN_ONCE(1, "PRP: Could not send supervision frame\n");
-+		return;
-+	}
-+
-+	*interval = msecs_to_jiffies(HSR_LIFE_CHECK_INTERVAL);
-+	hsr_stag = skb_put(skb, sizeof(struct hsr_sup_tag));
-+	set_hsr_stag_path(hsr_stag, (hsr->prot_version ? 0x0 : 0xf));
-+	set_hsr_stag_HSR_ver(hsr_stag, (hsr->prot_version ? 1 : 0));
-+
-+	/* From HSRv1 on we have separate supervision sequence numbers. */
-+	spin_lock_irqsave(&master->hsr->seqnr_lock, irqflags);
-+	hsr_stag->sequence_nr = htons(hsr->sup_sequence_nr);
-+	hsr->sup_sequence_nr++;
-+	hsr_stag->HSR_TLV_type = PRP_TLV_LIFE_CHECK_DD;
-+	hsr_stag->HSR_TLV_length = sizeof(struct hsr_sup_payload);
-+
-+	/* Payload: MacAddressA */
-+	hsr_sp = skb_put(skb, sizeof(struct hsr_sup_payload));
-+	ether_addr_copy(hsr_sp->macaddress_A, master->dev->dev_addr);
-+
-+	if (skb_put_padto(skb, ETH_ZLEN + HSR_HLEN)) {
-+		spin_unlock_irqrestore(&master->hsr->seqnr_lock, irqflags);
-+		return;
-+	}
-+
-+	tail = skb_tail_pointer(skb) - HSR_HLEN;
-+	rct = (struct prp_rct *)tail;
-+	rct->PRP_suffix = htons(ETH_P_PRP);
-+	set_prp_LSDU_size(rct, HSR_V1_SUP_LSDUSIZE);
-+	rct->sequence_nr = htons(hsr->sequence_nr);
-+	hsr->sequence_nr++;
-+	spin_unlock_irqrestore(&master->hsr->seqnr_lock, irqflags);
-+
-+	hsr_forward_skb(skb, master);
-+}
-+
- /* Announce (supervision frame) timer function
-  */
- static void hsr_announce(struct timer_list *t)
-@@ -389,6 +442,10 @@ static struct hsr_proto_ops hsr_ops = {
- 	.send_sv_frame = send_hsr_supervision_frame,
- };
- 
-+struct hsr_proto_ops prp_ops = {
-+	.send_sv_frame = send_prp_supervision_frame,
-+};
-+
- void hsr_dev_setup(struct net_device *dev)
- {
- 	eth_hw_addr_random(dev);
-@@ -452,7 +509,12 @@ int hsr_dev_finalize(struct net_device *hsr_dev, struct net_device *slave[2],
- 	if (protocol_version == PRP_V1)
- 		return -EPROTONOSUPPORT;
- 
--	hsr->proto_ops = &hsr_ops;
-+	/* initialize protocol specific functions */
-+	if (protocol_version == PRP_V1)
-+		hsr->proto_ops = &prp_ops;
-+	else
-+		hsr->proto_ops = &hsr_ops;
-+
- 	/* Make sure we recognize frames from ourselves in hsr_rcv() */
- 	res = hsr_create_self_node(hsr, hsr_dev->dev_addr,
- 				   slave[1]->dev_addr);
-diff --git a/net/hsr/hsr_forward.c b/net/hsr/hsr_forward.c
-index fc1e7ee9c2d4..3a536a7d98e8 100644
---- a/net/hsr/hsr_forward.c
-+++ b/net/hsr/hsr_forward.c
-@@ -76,7 +76,9 @@ static bool is_supervision_frame(struct hsr_priv *hsr, struct sk_buff *skb)
- 	}
- 
- 	if (hsr_sup_tag->HSR_TLV_type != HSR_TLV_ANNOUNCE &&
--	    hsr_sup_tag->HSR_TLV_type != HSR_TLV_LIFE_CHECK)
-+	    hsr_sup_tag->HSR_TLV_type != HSR_TLV_LIFE_CHECK &&
-+	    hsr_sup_tag->HSR_TLV_type != PRP_TLV_LIFE_CHECK_DD &&
-+	    hsr_sup_tag->HSR_TLV_type != PRP_TLV_LIFE_CHECK_DA)
- 		return false;
- 	if (hsr_sup_tag->HSR_TLV_length != 12 &&
- 	    hsr_sup_tag->HSR_TLV_length != sizeof(struct hsr_sup_payload))
-diff --git a/net/hsr/hsr_main.h b/net/hsr/hsr_main.h
-index 671270115a50..58e1ad21b66f 100644
---- a/net/hsr/hsr_main.h
-+++ b/net/hsr/hsr_main.h
-@@ -35,6 +35,10 @@
- 
- #define HSR_TLV_ANNOUNCE		   22
- #define HSR_TLV_LIFE_CHECK		   23
-+/* PRP V1 life check for Duplicate discard */
-+#define PRP_TLV_LIFE_CHECK_DD		   20
-+/* PRP V1 life check for Duplicate Accept */
-+#define PRP_TLV_LIFE_CHECK_DA		   21
- 
- /* HSR Tag.
-  * As defined in IEC-62439-3:2010, the HSR tag is really { ethertype = 0x88FB,
-@@ -126,6 +130,24 @@ enum hsr_port_type {
- 	HSR_PT_PORTS,	/* This must be the last item in the enum */
- };
- 
-+/* PRP Redunancy Control Trailor (RCT).
-+ * As defined in IEC-62439-4:2012, the PRP RCT is really { sequence Nr,
-+ * Lan indentifier (LanId), LSDU_size and PRP_suffix = 0x88FB }.
-+ *
-+ * Field names as defined in the IEC:2012 standard for PRP.
-+ */
-+struct prp_rct {
-+	__be16          sequence_nr;
-+	__be16          lan_id_and_LSDU_size;
-+	__be16          PRP_suffix;
-+} __packed;
-+
-+static inline void set_prp_LSDU_size(struct prp_rct *rct, u16 LSDU_size)
-+{
-+	rct->lan_id_and_LSDU_size = htons((ntohs(rct->lan_id_and_LSDU_size) &
-+					  0xF000) | (LSDU_size & 0x0FFF));
-+}
-+
- struct hsr_port {
- 	struct list_head	port_list;
- 	struct net_device	*dev;
+ void hsr_register_frame_in(struct hsr_node *node, struct hsr_port *port,
 -- 
 2.17.1
 
