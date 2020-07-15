@@ -2,141 +2,88 @@ Return-Path: <SRS0=kup7=A2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2B76C43461
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 11:11:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00605C43459
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 11:11:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BCBF12063A
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 11:11:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC4572071B
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 11:11:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731828AbgGOLLW (ORCPT
+        id S1731797AbgGOLLN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 07:11:22 -0400
-Received: from [195.135.220.15] ([195.135.220.15]:54998 "EHLO mx2.suse.de"
-        rhost-flags-FAIL-FAIL-OK-OK) by vger.kernel.org with ESMTP
-        id S1731799AbgGOLLR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 07:11:17 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 26997B5A1;
-        Wed, 15 Jul 2020 11:11:18 +0000 (UTC)
-Date:   Wed, 15 Jul 2020 13:11:14 +0200 (CEST)
-From:   Miroslav Benes <mbenes@suse.cz>
-To:     Josh Poimboeuf <jpoimboe@redhat.com>
-cc:     Randy Dunlap <rdunlap@infradead.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>, pmladek@suse.cz,
-        live-patching@vger.kernel.org
-Subject: Re: linux-next: Tree for Jun 23 (objtool (2))
-In-Reply-To: <20200714135747.lcgysd5joguhssas@treble>
-Message-ID: <alpine.LSU.2.21.2007151250390.25290@pobox.suse.cz>
-References: <20200623162820.3f45feae@canb.auug.org.au> <61df2e8f-75e8-d233-9c3c-5b4fa2b7fbdc@infradead.org> <20200702123555.bjioosahrs5vjovu@treble> <alpine.LSU.2.21.2007141240540.5393@pobox.suse.cz> <20200714135747.lcgysd5joguhssas@treble>
-User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+        Wed, 15 Jul 2020 07:11:13 -0400
+Received: from relmlor1.renesas.com ([210.160.252.171]:44106 "EHLO
+        relmlie5.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1731779AbgGOLLK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jul 2020 07:11:10 -0400
+X-IronPort-AV: E=Sophos;i="5.75,355,1589209200"; 
+   d="scan'208";a="52194249"
+Received: from unknown (HELO relmlir5.idc.renesas.com) ([10.200.68.151])
+  by relmlie5.idc.renesas.com with ESMTP; 15 Jul 2020 20:11:07 +0900
+Received: from localhost.localdomain (unknown [10.226.36.204])
+        by relmlir5.idc.renesas.com (Postfix) with ESMTP id 5CC1C4006DF5;
+        Wed, 15 Jul 2020 20:11:02 +0900 (JST)
+From:   Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+To:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Wolfgang Grandegger <wg@grandegger.com>,
+        Marc Kleine-Budde <mkl@pengutronix.de>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Mark Brown <broonie@kernel.org>,
+        Niklas <niklas.soderlund@ragnatech.se>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Magnus Damm <magnus.damm@gmail.com>
+Cc:     Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Amit Kucheria <amit.kucheria@verdurent.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
+        linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-can@vger.kernel.org,
+        netdev@vger.kernel.org, linux-spi@vger.kernel.org,
+        linux-renesas-soc@vger.kernel.org, linux-pm@vger.kernel.org,
+        linux-watchdog@vger.kernel.org,
+        Prabhakar <prabhakar.csengg@gmail.com>,
+        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Subject: [PATCH 19/20] dt-bindings: can: rcar_canfd: Document r8a774e1 support
+Date:   Wed, 15 Jul 2020 12:09:09 +0100
+Message-Id: <1594811350-14066-20-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1594811350-14066-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+References: <1594811350-14066-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 14 Jul 2020, Josh Poimboeuf wrote:
+Document the support for rcar_canfd on R8A774E1 SoC devices.
 
-> On Tue, Jul 14, 2020 at 12:56:21PM +0200, Miroslav Benes wrote:
-> > On Thu, 2 Jul 2020, Josh Poimboeuf wrote:
-> > 
-> > > On Tue, Jun 23, 2020 at 08:06:07AM -0700, Randy Dunlap wrote:
-> > > > On 6/22/20 11:28 PM, Stephen Rothwell wrote:
-> > > > > Hi all,
-> > > > > 
-> > > > > Changes since 20200622:
-> > > > > 
-> > > > 
-> > > > on x86_64:
-> > > > 
-> > > > arch/x86/kernel/cpu/mce/core.o: warning: objtool: mce_timed_out()+0x24: unreachable instruction
-> > > > kernel/exit.o: warning: objtool: __x64_sys_exit_group()+0x14: unreachable instruction
-> > > > 
-> > > > Full randconfig file is attached.
-> > > 
-> > > More livepatch...
-> > 
-> > Correct.
-> > 
-> > Both are known and I thought Josh had fixes queued somewhere for both, but 
-> > my memory fails me quite often. See below.
-> 
-> I did have fixes for some of them in a stash somewhere, but I never
-> finished them because I decided it's a GCC bug.
+Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
+---
+ Documentation/devicetree/bindings/net/can/rcar_canfd.txt | 1 +
+ 1 file changed, 1 insertion(+)
 
-Same here.
- 
-> > However, I think it is time to decide how to approach this whole saga. It 
-> > seems that there are not so many places in the kernel in need of 
-> > __noreturn annotation in the end and as jikos argued at least some of 
-> > those should be fixed regardless.
-> 
-> I would agree that global functions like do_group_exit() deserve a
-> __noreturn annotation, though it should be in the header file.  But
-> static functions shouldn't need it.
+diff --git a/Documentation/devicetree/bindings/net/can/rcar_canfd.txt b/Documentation/devicetree/bindings/net/can/rcar_canfd.txt
+index 13a4e34c0c73..6effe3c89271 100644
+--- a/Documentation/devicetree/bindings/net/can/rcar_canfd.txt
++++ b/Documentation/devicetree/bindings/net/can/rcar_canfd.txt
+@@ -7,6 +7,7 @@ Required properties:
+   - "renesas,r8a774a1-canfd" for R8A774A1 (RZ/G2M) compatible controller.
+   - "renesas,r8a774b1-canfd" for R8A774B1 (RZ/G2N) compatible controller.
+   - "renesas,r8a774c0-canfd" for R8A774C0 (RZ/G2E) compatible controller.
++  - "renesas,r8a774e1-canfd" for R8A774E1 (RZ/G2H) compatible controller.
+   - "renesas,r8a7795-canfd" for R8A7795 (R-Car H3) compatible controller.
+   - "renesas,r8a7796-canfd" for R8A7796 (R-Car M3-W) compatible controller.
+   - "renesas,r8a77965-canfd" for R8A77965 (R-Car M3-N) compatible controller.
+-- 
+2.17.1
 
-Agreed. I'll post the patches for global functions eventually, but see 
-below first.
-
-> > Josh, should I prepare proper patches and submit them to relevant
-> > maintainers to see where this path is going?
-> 
-> If that's how you want to handle it, ok, but it doesn't seem right to
-> me, for the static functions at least.
-> 
-> > It would be much better to fix it in GCC, but it has been like banging 
-> > one's head against a wall so far. Josh, you wanted to create a bug 
-> > for GCC in this respect in the past? Has that happened?
-> 
-> I didn't open a bug, but I could, if you think that would help.  I
-> haven't had a lot of success with GCC bugs in the past.
-
-Understood.
-
-> > If I remember correctly, we discussed briefly a possibility to cope with 
-> > that in objtool, but no solution was presented.
-> 
-> That would also feel like a GCC workaround and might impede objtool's
-> ability to find bugs like this one, and possibly more serious bugs.
-> 
-> > Removing -flive-patching is also a possibility. I don't like it much, but 
-> > we discussed it with Petr M. a couple of months ago and it might be a way 
-> > too.
-> 
-> -flive-patching has many problems which I outlined before.  None of them
-> have been addressed.  I still feel the same way, that it should be
-> reverted until it's ready.  Otherwise it's a drain on upstream.
-> 
-> Also, if the GCC developers won't acknowledge this bug then it doesn't
-> give me confidence in their ability to keep the feature working as
-> optimizations are added or changed.
-
-I must admit that I've started to share the sentiment recently. And it is 
-probably the main reason for changing my mind about the whole thing.
-
-> I still think a potential alternative exists: objtool could be used as a
-> simple tree-wide object diff tool by generating a checksum for each
-> function.  Then the patch can be applied and built to see exactly which
-> functions have changed, based on the changed checksums.  In which case
-> this feature would no longer be needed anyway, would you agree?
-
-Yes.
-
-> I also think that could be a first step for converging our patch
-> creation processes.
-
-Yes again.
-
-Petr, would you agree to revert -flive-patching due to reasons above? Is 
-there anything you want to add?
-
-Miroslav
