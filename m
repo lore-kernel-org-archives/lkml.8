@@ -2,106 +2,134 @@ Return-Path: <SRS0=kup7=A2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16894C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 22:11:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 633BDC433E6
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 22:12:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E84682067D
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 22:11:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3F4F32067D
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 22:12:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594851117;
-	bh=D7E7eUE+zbAwmET6fMzWaWlMMhJQHFgfkXF8fekXvj8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=rBZovLuwlYFzw7XxGIW36P6hNsVe3TzYg3Go51PIz8bb4HNhuO6YV0D0h6KfExjkf
-	 4ifnh0tSNUjVyoreg7bzr3FxXwZkA6BwRzqCQKxqP/NNNB4oZUOk0iO6Fce64Exdvh
-	 /krvrNuqSXKgQp7+oVsSGYhMiAPPFjjiUySFML6U=
+	s=default; t=1594851155;
+	bh=yiFReVioS6K+TBmJa6LKAY/XmzClp9+1AGEcxSQDlBk=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=iOEWEKCi4p5bqef60uHRkU8milrYX9ucxkXQ1hpDnr47DnrLqTK3bDiQHGamR15G+
+	 JR0S2FYrybimtkmVgjA6ZZYcuJiS8Q7cwtpirFX/eAAgwGr3F4FIffQKYWRPHUTR9z
+	 F2B+qQ3PuSF8j/KUnrZdSKLxtIdoar7//N9oVQoQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727867AbgGOWL4 (ORCPT
+        id S1727931AbgGOWMe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 18:11:56 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:38780 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726660AbgGOWLz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 18:11:55 -0400
-Received: by mail-io1-f65.google.com with SMTP id l1so3950773ioh.5;
-        Wed, 15 Jul 2020 15:11:55 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=cSCfkxcCcyjHt+Lm+PcX89G7cBf+aHHVtzsrdedDXKc=;
-        b=m2SCLWuOj8Cd79C0OJJQsSfjIWae+UAU1SHXdNBfAweIup+rCOP0v6ioGOxDpA7Cst
-         ataPw1D4sW2mLGLNZJTgEcD5sn7Fez3oynaEfXrcK7b9Kj3rSa4W9stEIN/iXHnFE3y4
-         wGc07HF8ZlTWOUWQyC3YOcOTuOH7FNLeMO1sHTVlq3bG2K+sutYoMhz8NWP0sWCriV6t
-         WM6Gm7uMwEtibCfPMMBsnrfj3ENTEZNi7CuZtgzAZOjml2Op4lfCQKPv3EzM3edyTHH3
-         iDwbgJsR+ySG3eHtjK4TQq1wy6E92gnKZRs9n+EhLjqOPTrNu54VX9iE9VQtRHBWElxY
-         Afdg==
-X-Gm-Message-State: AOAM531vNdSF5N9L3tO1em3vW3azXsBvxmLDcrNxmDjwXul/Fqes9pLh
-        fjx1+C3nDfg4h32XPGhYtg==
-X-Google-Smtp-Source: ABdhPJyKYsSoag/7NVQqzCmE+kWu9QcpiPp5VpZITLoA8fnHrjW4RaA72LtIyG7LK6zeuLC1+oX5tA==
-X-Received: by 2002:a5d:97d3:: with SMTP id k19mr1459065ios.45.1594851114865;
-        Wed, 15 Jul 2020 15:11:54 -0700 (PDT)
-Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id v5sm1746255ios.54.2020.07.15.15.11.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 15 Jul 2020 15:11:54 -0700 (PDT)
-Received: (nullmailer pid 907327 invoked by uid 1000);
-        Wed, 15 Jul 2020 22:11:53 -0000
-Date:   Wed, 15 Jul 2020 16:11:53 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Johnson CH Chen =?utf-8?B?KOmZs+aYreWLsyk=?= 
-        <JohnsonCH.Chen@moxa.com>
-Cc:     =?iso-8859-1?Q?Beno=EEt?= Cousson <bcousson@baylibre.com>,
-        "tony@atomide.com" <tony@atomide.com>,
-        "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 1/2] dt-bindings: arm: omap: Replace UC-8100-ME-T with
- UC-8100A-ME
-Message-ID: <20200715221153.GA906180@bogus>
-References: <HK2PR01MB3281AFFC8F352E3AE8046645FA660@HK2PR01MB3281.apcprd01.prod.exchangelabs.com>
+        Wed, 15 Jul 2020 18:12:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35126 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726660AbgGOWMd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jul 2020 18:12:33 -0400
+Received: from localhost (mobile-166-175-191-139.mycingular.net [166.175.191.139])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3066F2065F;
+        Wed, 15 Jul 2020 22:12:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594851152;
+        bh=yiFReVioS6K+TBmJa6LKAY/XmzClp9+1AGEcxSQDlBk=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=S/WhYifuBwhLApPX94Rc/0RHdh1EsD3Lsktt1aoGethpDycX9QnYAuXsckOndJhw5
+         n3QaIQohtvY8AFWnVXQuc092VZjXlIZnqtKtIWZvilP5gx9OzeqCMahn+95Usq7PJx
+         YtSiGFgryUo4JNKSiAdj114J+tlIwEPKap8PPewk=
+Date:   Wed, 15 Jul 2020 17:12:30 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     David Laight <David.Laight@ACULAB.COM>
+Cc:     'Oliver O'Halloran' <oohall@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>, Keith Busch <kbusch@kernel.org>,
+        Paul Mackerras <paulus@samba.org>,
+        sparclinux <sparclinux@vger.kernel.org>,
+        Toan Le <toan@os.amperecomputing.com>,
+        Greg Ungerer <gerg@linux-m68k.org>,
+        Marek Vasut <marek.vasut+renesas@gmail.com>,
+        Rob Herring <robh@kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        Russell King <linux@armlinux.org.uk>,
+        Ley Foon Tan <ley.foon.tan@intel.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Kevin Hilman <khilman@baylibre.com>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Matt Turner <mattst88@gmail.com>,
+        "linux-kernel-mentees@lists.linuxfoundation.org" 
+        <linux-kernel-mentees@lists.linuxfoundation.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Ray Jui <rjui@broadcom.com>, Jens Axboe <axboe@fb.com>,
+        Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        "bjorn@helgaas.com" <bjorn@helgaas.com>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Richard Henderson <rth@twiddle.net>,
+        Juergen Gross <jgross@suse.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Scott Branden <sbranden@broadcom.com>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        "Saheed O. Bolarinwa" <refactormyself@gmail.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Heiner Kallweit <hkallweit1@gmail.com>
+Subject: Re: [RFC PATCH 00/35] Move all PCIBIOS* definitions into arch/x86
+Message-ID: <20200715221230.GA563957@bjorn-Precision-5520>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <HK2PR01MB3281AFFC8F352E3AE8046645FA660@HK2PR01MB3281.apcprd01.prod.exchangelabs.com>
+In-Reply-To: <1e2ae69a55f542faa18988a49e9b9491@AcuMS.aculab.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 07, 2020 at 10:23:34AM +0000, Johnson CH Chen (陳昭勳) wrote:
-> UC-8100-ME-T is deprecated, and UC-8100A-ME is advanced of UC-8100-ME-T,
-> so replace UC-8100-ME-T with UC-8100A-ME.
+On Wed, Jul 15, 2020 at 02:38:29PM +0000, David Laight wrote:
+> From: Oliver O'Halloran
+> > Sent: 15 July 2020 05:19
+> > 
+> > On Wed, Jul 15, 2020 at 8:03 AM Arnd Bergmann <arnd@arndb.de> wrote:
+> ...
+> > > - config space accesses are very rare compared to memory
+> > >   space access and on the hardware side the error handling
+> > >   would be similar, but readl/writel don't return errors, they just
+> > >   access wrong registers or return 0xffffffff.
+> > >   arch/powerpc/kernel/eeh.c has a ton extra code written to
+> > >   deal with it, but no other architectures do.
+> > 
+> > TBH the EEH MMIO hooks were probably a mistake to begin with. Errors
+> > detected via MMIO are almost always asynchronous to the error itself
+> > so you usually just wind up with a misleading stack trace rather than
+> > any kind of useful synchronous error reporting. It seems like most
+> > drivers don't bother checking for 0xFFs either and rely on the
+> > asynchronous reporting via .error_detected() instead, so I have to
+> > wonder what the point is. I've been thinking of removing the MMIO
+> > hooks and using a background poller to check for errors on each PHB
+> > periodically (assuming we don't have an EEH interrupt) instead. That
+> > would remove the requirement for eeh_dev_check_failure() to be
+> > interrupt safe too, so it might even let us fix all the godawful races
+> > in EEH.
 > 
-> Signed-off-by: Johnson Chen <johnsonch.chen@moxa.com>
-> ---
->  Documentation/devicetree/bindings/arm/omap/omap.txt | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/arm/omap/omap.txt b/Documentation/devicetree/bindings/arm/omap/omap.txt
-> index e77635c5422c..f02265a8a0d4 100644
-> --- a/Documentation/devicetree/bindings/arm/omap/omap.txt
-> +++ b/Documentation/devicetree/bindings/arm/omap/omap.txt
-> @@ -167,8 +167,8 @@ Boards (incomplete list of examples):
->  - AM335x phyBOARD-REGOR: Single Board Computer
->    compatible = "phytec,am335x-regor", "phytec,am335x-phycore-som", "ti,am33xx"
->  
-> -- AM335X UC-8100-ME-T: Communication-centric industrial computing platform
-> -  compatible = "moxa,uc-8100-me-t", "ti,am33xx";
-> +- AM335X UC-8100A-ME: Communication-centric industrial computing platform
-> +  compatible = "moxa,uc-8100a-me", "ti,am33xx";
+> I've 'played' with PCIe error handling - without much success.
+> What might be useful is for a driver that has just read ~0u to
+> be able to ask 'has there been an error signalled for this device?'.
 
-You can't just change compatible strings. They are an ABI.
+In many cases a driver will know that ~0 is not a valid value for the
+register it's reading.  But if ~0 *could* be valid, an interface like
+you suggest could be useful.  I don't think we have anything like that
+today, but maybe we could.  It would certainly be nice if the PCI core
+noticed, logged, and cleared errors.  We have some of that for AER,
+but that's an optional feature, and support for the error bits in the
+garden-variety PCI_STATUS register is pretty haphazard.  As you note
+below, this sort of SERR/PERR reporting is frequently hard-wired in
+ways that takes it out of our purview.
 
->  
->  - OMAP5 EVM : Evaluation Module
->    compatible = "ti,omap5-evm", "ti,omap5"
-> -- 
-> 2.11.0
+Bjorn
