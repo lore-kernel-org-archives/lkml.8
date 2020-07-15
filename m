@@ -2,101 +2,110 @@ Return-Path: <SRS0=kup7=A2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10EEBC433E8
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 10:20:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BC44C433EB
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 10:20:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D8E46205CB
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 10:20:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="CkSazEZj"
+	by mail.kernel.org (Postfix) with ESMTP id 5AAC8205CB
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 10:20:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731088AbgGOKUb (ORCPT
+        id S1731100AbgGOKUm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 06:20:31 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:30139 "EHLO m43-7.mailgun.net"
+        Wed, 15 Jul 2020 06:20:42 -0400
+Received: from foss.arm.com ([217.140.110.172]:35072 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730850AbgGOKUa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 06:20:30 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1594808429; h=Date: Message-Id: Cc: To: References:
- In-Reply-To: From: Subject: Content-Transfer-Encoding: MIME-Version:
- Content-Type: Sender; bh=KTzJMBs9HCG+sSAIrBVz5xZyu4LzPrPBKllsE/vh7ds=;
- b=CkSazEZjF1zkDCpJvJ4t4TTi51UQhfRA41/sH9MmtWiFo4PfXCwyOhApPdrUbxDgT3zwC6zt
- nZygbXVyG3V6bP1ry8Jpni0QXZovHz+A6ggZ03Tp20Q0BCcXVT+Sk4fvRyyFiyprpQJXSOq3
- FhIfnJkuulEgeVZaJ8fRQKMv5Tk=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n05.prod.us-west-2.postgun.com with SMTP id
- 5f0ed85c1012768490cdfcdc (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Wed, 15 Jul 2020 10:20:12
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 6B907C433CA; Wed, 15 Jul 2020 10:20:12 +0000 (UTC)
-Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: kvalo)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 61DF2C433C9;
-        Wed, 15 Jul 2020 10:20:08 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 61DF2C433C9
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
-Content-Type: text/plain; charset="utf-8"
+        id S1728768AbgGOKUm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jul 2020 06:20:42 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 320B930E;
+        Wed, 15 Jul 2020 03:20:41 -0700 (PDT)
+Received: from [10.57.32.45] (unknown [10.57.32.45])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 50A073F718;
+        Wed, 15 Jul 2020 03:20:39 -0700 (PDT)
+Subject: Re: [PATCH v4 1/4] iommu/arm-smmu: Call configuration impl hook
+ before consuming features
+To:     Tomasz Nowicki <tn@semihalf.com>, will@kernel.org, joro@8bytes.org,
+        gregory.clement@bootlin.com, robh+dt@kernel.org, hannah@marvell.com
+Cc:     linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org,
+        devicetree@vger.kernel.org, catalin.marinas@arm.com,
+        nadavh@marvell.com, linux-arm-kernel@lists.infradead.org,
+        mw@semihalf.com
+References: <20200715070649.18733-1-tn@semihalf.com>
+ <20200715070649.18733-2-tn@semihalf.com>
+From:   Robin Murphy <robin.murphy@arm.com>
+Message-ID: <def8aa82-bcca-b209-a6b4-81725fc4fbdb@arm.com>
+Date:   Wed, 15 Jul 2020 11:20:37 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
+In-Reply-To: <20200715070649.18733-2-tn@semihalf.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
 Content-Transfer-Encoding: 7bit
-Subject: Re: [PATCH 7/9] intersil: fix wiki website url
-From:   Kalle Valo <kvalo@codeaurora.org>
-In-Reply-To: <20200605154112.16277-8-f.suligoi@asem.it>
-References: <20200605154112.16277-8-f.suligoi@asem.it>
-To:     Flavio Suligoi <f.suligoi@asem.it>
-Cc:     Johannes Berg <johannes@sipsolutions.net>,
-        "David S . Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Christian Lamparter <chunkeey@googlemail.com>,
-        Johan Hovold <johan@kernel.org>,
-        Saurav Girepunje <saurav.girepunje@gmail.com>,
-        Larry Finger <Larry.Finger@lwfinger.net>,
-        Emmanuel Grumbach <emmanuel.grumbach@intel.com>,
-        Luca Coelho <luciano.coelho@intel.com>,
-        <linux-wireless@vger.kernel.org>, <b43-dev@lists.infradead.org>,
-        Intel Linux Wireless <linuxwifi@intel.com>,
-        <netdev@vger.kernel.org>, <linux-doc@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, Flavio Suligoi <f.suligoi@asem.it>
-User-Agent: pwcli/0.1.0-git (https://github.com/kvalo/pwcli/) Python/3.5.2
-Message-Id: <20200715102012.6B907C433CA@smtp.codeaurora.org>
-Date:   Wed, 15 Jul 2020 10:20:12 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Flavio Suligoi <f.suligoi@asem.it> wrote:
-
-> In some Intesil files, the wiki url is still the old
-> "wireless.kernel.org" instead of the new
-> "wireless.wiki.kernel.org"
+On 2020-07-15 08:06, Tomasz Nowicki wrote:
+> 'cfg_probe' hook is called at the very end of configuration probing
+> procedure and therefore features override and workaround may become
+> complex like for ID register fixups. In preparation for adding Marvell
+> errata move 'cfg_probe' a bit earlier to have chance to adjust
+> the detected features before we start consuming them.
 > 
-> Signed-off-by: Flavio Suligoi <f.suligoi@asem.it>
+> Since the Cavium quirk (the only user) does not alter features
+> it is safe to do so.
 
-Fails to apply:
+Sorry for the confusion of failing to match my own intent in the first 
+place ;)
 
-fatal: corrupt patch at line 97
-error: could not build fake ancestor
-Applying: intersil: fix wiki website url
-Patch failed at 0001 intersil: fix wiki website url
-The copy of the patch that failed is found in: .git/rebase-apply/patch
+Reviewed-by: Robin Murphy <robin.murphy@arm.com>
 
-Patch set to Changes Requested.
-
--- 
-https://patchwork.kernel.org/patch/11589909/
-
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
-
+> Suggested-by: Robin Murphy <robin.murphy@arm.com>
+> Signed-off-by: Tomasz Nowicki <tn@semihalf.com>
+> ---
+>   drivers/iommu/arm-smmu.c | 11 +++++++----
+>   1 file changed, 7 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/iommu/arm-smmu.c b/drivers/iommu/arm-smmu.c
+> index 243bc4cb2705..19f906de6420 100644
+> --- a/drivers/iommu/arm-smmu.c
+> +++ b/drivers/iommu/arm-smmu.c
+> @@ -1728,7 +1728,7 @@ static int arm_smmu_device_cfg_probe(struct arm_smmu_device *smmu)
+>   	unsigned int size;
+>   	u32 id;
+>   	bool cttw_reg, cttw_fw = smmu->features & ARM_SMMU_FEAT_COHERENT_WALK;
+> -	int i;
+> +	int i, ret;
+>   
+>   	dev_notice(smmu->dev, "probing hardware configuration...\n");
+>   	dev_notice(smmu->dev, "SMMUv%d with:\n",
+> @@ -1891,6 +1891,12 @@ static int arm_smmu_device_cfg_probe(struct arm_smmu_device *smmu)
+>   			smmu->features |= ARM_SMMU_FEAT_FMT_AARCH64_64K;
+>   	}
+>   
+> +	if (smmu->impl && smmu->impl->cfg_probe) {
+> +		ret = smmu->impl->cfg_probe(smmu);
+> +		if (ret)
+> +			return ret;
+> +	}
+> +
+>   	/* Now we've corralled the various formats, what'll it do? */
+>   	if (smmu->features & ARM_SMMU_FEAT_FMT_AARCH32_S)
+>   		smmu->pgsize_bitmap |= SZ_4K | SZ_64K | SZ_1M | SZ_16M;
+> @@ -1918,9 +1924,6 @@ static int arm_smmu_device_cfg_probe(struct arm_smmu_device *smmu)
+>   		dev_notice(smmu->dev, "\tStage-2: %lu-bit IPA -> %lu-bit PA\n",
+>   			   smmu->ipa_size, smmu->pa_size);
+>   
+> -	if (smmu->impl && smmu->impl->cfg_probe)
+> -		return smmu->impl->cfg_probe(smmu);
+> -
+>   	return 0;
+>   }
+>   
+> 
