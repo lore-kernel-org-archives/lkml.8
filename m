@@ -2,98 +2,128 @@ Return-Path: <SRS0=kup7=A2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02445C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 02:14:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4191DC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 02:16:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D31A02074B
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 02:14:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="sl1cn0xr"
+	by mail.kernel.org (Postfix) with ESMTP id 291F420758
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 02:16:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728238AbgGOCO1 (ORCPT
+        id S1727913AbgGOCQM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 22:14:27 -0400
-Received: from ozlabs.org ([203.11.71.1]:43087 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726396AbgGOCO1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 22:14:27 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 4B61D10Lnjz9sQt;
-        Wed, 15 Jul 2020 12:14:24 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1594779265;
-        bh=x5qy5Ql+78M5FEN2qcySDNOA2DzrgzQoHNS5zgAWbuo=;
-        h=Date:From:To:Cc:Subject:From;
-        b=sl1cn0xrPaywVl+jIg2uNO2ghJ7ubo2VatvWtriHmP/DkDrg79WVVpgzVhebogKxM
-         EiQX0y5ot921v9azxPrqubGeCqgiOoQXijzWWi4kPYehPLt3ArwFUKPekfrH/tDd9k
-         JQ6dbv/fPLjjrz/DCCkYl5pTwesn5HLogbxSxqzGVQRUYmCrLiJbABQs14qW8wDd10
-         fnQl/VPXvyCavwqZ/zEICp5j1Gqekwbmfrybzz0hX2nBxVt4V7GgPODG5gCk9HFfyS
-         XsT+VwNBaUZjqz+j/GPRaxDKey1kTiICIDO1sFt82LYL3lgdMdYViljF3zJ6JcbN7t
-         CqinfDR3vZO9w==
-Date:   Wed, 15 Jul 2020 12:14:23 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: linux-next: build failure after merge of the block tree
-Message-ID: <20200715121423.6c20731b@canb.auug.org.au>
-MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/zHMNky4_eNOtOABo7nmMj_B";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+        Tue, 14 Jul 2020 22:16:12 -0400
+Received: from kernel.crashing.org ([76.164.61.194]:36854 "EHLO
+        kernel.crashing.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725977AbgGOCQL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jul 2020 22:16:11 -0400
+Received: from localhost (gate.crashing.org [63.228.1.57])
+        (authenticated bits=0)
+        by kernel.crashing.org (8.14.7/8.14.7) with ESMTP id 06F2CWXx001242
+        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
+        Tue, 14 Jul 2020 21:12:38 -0500
+Message-ID: <fb40545a8de8df8914df40d7d6167752c5244ce6.camel@kernel.crashing.org>
+Subject: Re: [RFC PATCH 00/35] Move all PCIBIOS* definitions into arch/x86
+From:   Benjamin Herrenschmidt <benh@kernel.crashing.org>
+To:     Bjorn Helgaas <helgaas@kernel.org>, Arnd Bergmann <arnd@arndb.de>
+Cc:     "Saheed O. Bolarinwa" <refactormyself@gmail.com>,
+        bjorn@helgaas.com, Shuah Khan <skhan@linuxfoundation.org>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Richard Henderson <rth@twiddle.net>,
+        Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
+        Matt Turner <mattst88@gmail.com>,
+        Greg Ungerer <gerg@linux-m68k.org>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Russell King <linux@armlinux.org.uk>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Juergen Gross <jgross@suse.com>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Paul Mackerras <paulus@samba.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        sparclinux <sparclinux@vger.kernel.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@fb.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Toan Le <toan@os.amperecomputing.com>,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        Ley Foon Tan <ley.foon.tan@intel.com>,
+        Marek Vasut <marek.vasut+renesas@gmail.com>
+Date:   Wed, 15 Jul 2020 12:12:29 +1000
+In-Reply-To: <20200714184550.GA397277@bjorn-Precision-5520>
+References: <20200714184550.GA397277@bjorn-Precision-5520>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.2 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/zHMNky4_eNOtOABo7nmMj_B
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Tue, 2020-07-14 at 13:45 -0500, Bjorn Helgaas wrote:
+> 
+> > fail for valid arguments on a valid pci_device* ?
+> 
+> I really like this idea.
+> 
+> pci_write_config_*() has one return value, and only 100ish of 2500
+> callers check for errors.  It's sometimes possible for config
+> accessors to detect PCI errors and return failure, e.g., device was
+> removed or didn't respond, but most of them don't, and detecting
+> these
+> errors is not really that valuable.
+> 
+> pci_read_config_*() is much more interesting because it returns two
+> things, the function return value and the value read from the PCI
+> device, and it's complicated to check both. 
 
-Hi all,
+  .../...
 
-After merging the block tree, today's linux-next build (arm
-multi_v7_defconfig) failed like this:
+I agree. It's a mess at the moment.
 
-block/blk-timeout.c: In function 'blk_round_jiffies':
-block/blk-timeout.c:96:14: error: 'CONFIG_HZ_ROUGH_MASK' undeclared (first =
-use in this function)
-   96 |  return (j + CONFIG_HZ_ROUGH_MASK) + 1;
-      |              ^~~~~~~~~~~~~~~~~~~~
+We have separate mechanism to convey PCI errors (among other things the
+channel state) which should apply to config space when detection is
+possible.
 
-Caused by commit
+I think returning all 1's is the right thing to do here and avoids odd
+duplicate error detection logic which I bet you is never properly
+tested.
 
-  91ba0f529364 ("block: relax jiffies rounding for timeouts")
+> > For b), it might be nice to also change other aspects of the
+> > interface, e.g. passing a pci_host_bridge pointer plus bus number
+> > instead of a pci_bus pointer, or having the callback in the
+> > pci_host_bridge structure.
+> 
+> I like this idea a lot, too.  I think the fact that
+> pci_bus_read_config_word() requires a pci_bus * complicates things in
+> a few places.
+> 
+> I think it's completely separate, as you say, and we should defer it
+> for now because even part a) is a lot of work.  I added it to my list
+> of possible future projects.
 
-CONFIG_HZ_ROUGH_MASK is not defined for this build even though
-CONFIG_HZ_100 is set. The arm arch does not include kernel/Kconfig.hz.
+Agreed on both points.
 
-I have reverted that commit for today.
-
---=20
 Cheers,
-Stephen Rothwell
+Ben.
 
---Sig_/zHMNky4_eNOtOABo7nmMj_B
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
 
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl8OZn8ACgkQAVBC80lX
-0GymkQf/Tu4diojhWkbXGAG8O3MpFmDlUFeQ6OOZk3gJ/9RMvNwjB6zEUF4i6ZzL
-jqQt4IwLeYP20yigdE8lrF6/x30PrxlD7Q1WW1c+lKt1LJ4ZYNyX99uhHWXl2kC5
-obTu66RplNgUr4/XIwRnXqTqyXvAO2qHXG3eYAXFwwBwgasY9wDwZ1zCzwLVyBw9
-1rMwJIybRNXWwyZVhqNDHJQSk6F7EwaMhghGxdRtqjemPK1xtrykAzJYrXT9Fpy+
-fOMZY0cQxS6jC+WXRqzgEx/C3XpJE/i0jDJhfjMhm0GZ130bXfHRImBZrWgXHdJk
-G6WwVoKrXqRxql7u7H80tuPT+lz8Gg==
-=jY+6
------END PGP SIGNATURE-----
-
---Sig_/zHMNky4_eNOtOABo7nmMj_B--
