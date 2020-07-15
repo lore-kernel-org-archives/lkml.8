@@ -4,38 +4,38 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42585C433E5
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 04:27:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07CB7C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 04:27:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1B0692067D
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 04:27:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D19D42067D
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 04:27:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726989AbgGOE1a (ORCPT
+        id S1728233AbgGOE15 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 00:27:30 -0400
-Received: from mga05.intel.com ([192.55.52.43]:59540 "EHLO mga05.intel.com"
+        Wed, 15 Jul 2020 00:27:57 -0400
+Received: from mga05.intel.com ([192.55.52.43]:59545 "EHLO mga05.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726648AbgGOE11 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 00:27:27 -0400
-IronPort-SDR: LG9/xqolDxs6T2wgjRBSwOCtXb6s7a/btCgWNS6/NlDa2194u5VQI0WwHJygYQmLwJIfJMvTzT
- JtQRMSKLFwvw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9682"; a="233936295"
+        id S1726878AbgGOE1a (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jul 2020 00:27:30 -0400
+IronPort-SDR: jkN8i+RfbEU+ASdhB6fp57ZpTBu1nKVlD0fnmKnJ1reJ0jOcSTA3JZd8FCCaNKH3xLopwXMkhM
+ YWrzM3g0NFGA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9682"; a="233936299"
 X-IronPort-AV: E=Sophos;i="5.75,354,1589266800"; 
-   d="scan'208";a="233936295"
+   d="scan'208";a="233936299"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jul 2020 21:27:26 -0700
-IronPort-SDR: XG45825FcRk1uS6H+/j/TMlWjpS9BTUauZtMIS3M1GzE3c522iNOCo/BtTS22KqOhjz6agcSoK
- VeesXwip3Pzw==
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jul 2020 21:27:27 -0700
+IronPort-SDR: 3e1NIAbU/Y0O7P6YeabD6WshsL5X1M2LcV4VTJkIvNVeSkEq56DTv1DaSuRqfxxvCpZS/uS5EQ
+ u/XxGmjYuHNA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.75,354,1589266800"; 
-   d="scan'208";a="308118778"
+   d="scan'208";a="308118792"
 Received: from sjchrist-coffee.jf.intel.com ([10.54.74.152])
-  by fmsmga004.fm.intel.com with ESMTP; 14 Jul 2020 21:27:26 -0700
+  by fmsmga004.fm.intel.com with ESMTP; 14 Jul 2020 21:27:27 -0700
 From:   Sean Christopherson <sean.j.christopherson@intel.com>
 To:     Paolo Bonzini <pbonzini@redhat.com>
 Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
@@ -44,9 +44,9 @@ Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
         Jim Mattson <jmattson@google.com>,
         Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
         linux-kernel@vger.kernel.org, Junaid Shahid <junaids@google.com>
-Subject: [PATCH 2/8] KVM: x86/mmu: Refactor the zap loop for recovering NX lpages
-Date:   Tue, 14 Jul 2020 21:27:19 -0700
-Message-Id: <20200715042725.10961-3-sean.j.christopherson@intel.com>
+Subject: [PATCH 6/8] KVM: x86/mmu: Rename 'hlevel' to 'level' in FNAME(fetch)
+Date:   Tue, 14 Jul 2020 21:27:23 -0700
+Message-Id: <20200715042725.10961-7-sean.j.christopherson@intel.com>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200715042725.10961-1-sean.j.christopherson@intel.com>
 References: <20200715042725.10961-1-sean.j.christopherson@intel.com>
@@ -57,46 +57,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Refactor the zap loop in kvm_recover_nx_lpages() to be a for loop that
-iterates on to_zap and drop the !to_zap check that leads to the in-loop
-calling of kvm_mmu_commit_zap_page().  The in-loop commit when to_zap
-hits zero is superfluous now that there's an unconditional commit after
-the loop to handle the case where lpage_disallowed_mmu_pages is emptied.
+Rename 'hlevel', which presumably stands for 'host level', to simply
+'level' in FNAME(fetch).  The variable hasn't tracked the host level for
+quite some time.
 
 Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
 ---
- arch/x86/kvm/mmu/mmu.c | 10 ++++++----
- 1 file changed, 6 insertions(+), 4 deletions(-)
+ arch/x86/kvm/mmu/paging_tmpl.h | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
-index 48be51027af64..9cd3d2a23f8a5 100644
---- a/arch/x86/kvm/mmu/mmu.c
-+++ b/arch/x86/kvm/mmu/mmu.c
-@@ -6321,7 +6321,10 @@ static void kvm_recover_nx_lpages(struct kvm *kvm)
+diff --git a/arch/x86/kvm/mmu/paging_tmpl.h b/arch/x86/kvm/mmu/paging_tmpl.h
+index 39578a1839ca4..35867a1a1ee89 100644
+--- a/arch/x86/kvm/mmu/paging_tmpl.h
++++ b/arch/x86/kvm/mmu/paging_tmpl.h
+@@ -636,7 +636,7 @@ static int FNAME(fetch)(struct kvm_vcpu *vcpu, gpa_t addr,
+ 	struct kvm_mmu_page *sp = NULL;
+ 	struct kvm_shadow_walk_iterator it;
+ 	unsigned direct_access, access = gw->pt_access;
+-	int top_level, hlevel, req_level, ret;
++	int top_level, level, req_level, ret;
+ 	gfn_t base_gfn = gw->gfn;
  
- 	ratio = READ_ONCE(nx_huge_pages_recovery_ratio);
- 	to_zap = ratio ? DIV_ROUND_UP(kvm->stat.nx_lpage_splits, ratio) : 0;
--	while (to_zap && !list_empty(&kvm->arch.lpage_disallowed_mmu_pages)) {
-+	for ( ; to_zap; --to_zap) {
-+		if (list_empty(&kvm->arch.lpage_disallowed_mmu_pages))
-+			break;
-+
- 		/*
- 		 * We use a separate list instead of just using active_mmu_pages
- 		 * because the number of lpage_disallowed pages is expected to
-@@ -6334,10 +6337,9 @@ static void kvm_recover_nx_lpages(struct kvm *kvm)
- 		kvm_mmu_prepare_zap_page(kvm, sp, &invalid_list);
- 		WARN_ON_ONCE(sp->lpage_disallowed);
- 
--		if (!--to_zap || need_resched() || spin_needbreak(&kvm->mmu_lock)) {
-+		if (need_resched() || spin_needbreak(&kvm->mmu_lock)) {
- 			kvm_mmu_commit_zap_page(kvm, &invalid_list);
--			if (to_zap)
--				cond_resched_lock(&kvm->mmu_lock);
-+			cond_resched_lock(&kvm->mmu_lock);
- 		}
+ 	direct_access = gw->pte_access;
+@@ -682,8 +682,8 @@ static int FNAME(fetch)(struct kvm_vcpu *vcpu, gpa_t addr,
+ 			link_shadow_page(vcpu, it.sptep, sp);
  	}
- 	kvm_mmu_commit_zap_page(kvm, &invalid_list);
+ 
+-	hlevel = kvm_mmu_hugepage_adjust(vcpu, gw->gfn, max_level, &pfn,
+-					 huge_page_disallowed, &req_level);
++	level = kvm_mmu_hugepage_adjust(vcpu, gw->gfn, max_level, &pfn,
++					huge_page_disallowed, &req_level);
+ 
+ 	trace_kvm_mmu_spte_requested(addr, gw->level, pfn);
+ 
+@@ -694,10 +694,10 @@ static int FNAME(fetch)(struct kvm_vcpu *vcpu, gpa_t addr,
+ 		 * We cannot overwrite existing page tables with an NX
+ 		 * large page, as the leaf could be executable.
+ 		 */
+-		disallowed_hugepage_adjust(it, gw->gfn, &pfn, &hlevel);
++		disallowed_hugepage_adjust(it, gw->gfn, &pfn, &level);
+ 
+ 		base_gfn = gw->gfn & ~(KVM_PAGES_PER_HPAGE(it.level) - 1);
+-		if (it.level == hlevel)
++		if (it.level == level)
+ 			break;
+ 
+ 		validate_direct_spte(vcpu, it.sptep, direct_access);
 -- 
 2.26.0
 
