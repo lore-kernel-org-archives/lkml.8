@@ -2,205 +2,194 @@ Return-Path: <SRS0=kup7=A2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7A23C433E3
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 17:44:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D3E4C433E8
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 17:44:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BD1E420656
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 17:44:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="A1R8OVVC"
+	by mail.kernel.org (Postfix) with ESMTP id 4275F20656
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 17:44:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726742AbgGORo3 (ORCPT
+        id S1726829AbgGORoq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 13:44:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53470 "EHLO
+        Wed, 15 Jul 2020 13:44:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53518 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725900AbgGORo3 (ORCPT
+        with ESMTP id S1725900AbgGORop (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 13:44:29 -0400
-Received: from mail-oo1-xc44.google.com (mail-oo1-xc44.google.com [IPv6:2607:f8b0:4864:20::c44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1887DC061755;
-        Wed, 15 Jul 2020 10:44:29 -0700 (PDT)
-Received: by mail-oo1-xc44.google.com with SMTP id x2so632602oog.5;
-        Wed, 15 Jul 2020 10:44:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=GFlWCMXT1McclKUDiU9FJWNsfLXEuQwJM+Zc8tDAILE=;
-        b=A1R8OVVC9vVfiBTU8FBD4g/7FAbDqOTl5RcE40gueHg0iu1oi6Z+QI63vMrc60ccEg
-         g4fbcm9RdmVBHISRj5nrInNkpM0neIAUHOhCxUobMwfLt/WnJRzj1fZCx2heNrdLQdXf
-         lO3VJTS4O9MH5MRIKrlVs7XTGVHSOrdsiKl22C56iYC74V5wSb2fts2Y27u8p8awc9YH
-         eGGxWmBCh8aKNm8ND87Ix1zGKAjdr8wwhe9YeKPPF64GZS5aiFisu5XF8ik2zFTF6J4b
-         4KWSzGSToha8gQ9Hr3qzr8F1fZrTuXl4D3uvEromBp/ibpUrt5jSzfSuWoStb76eHmpe
-         Wc7A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=GFlWCMXT1McclKUDiU9FJWNsfLXEuQwJM+Zc8tDAILE=;
-        b=OxKMMe0DYgdqGYlcQ6soJ5pa+XHEfBL21gY7wUgr/BdG/w3N7PSpcvMCdy5Ty/YoHg
-         cwkq+2bUB3WQiPdp2n/MENWKkZsGpS9w2RcvQwdBE+4Sb+nA412+gaxUCA0OTtrnoKaD
-         aoAOI0lPNkM4PQZSMPHHrzkrjwc7xCC3OAwLbuWEuKtlMnLjCV9F61+2L4QdOSolK8Fq
-         /xiB2O1+lOGeeZYv1lLrhcL0rwbZkCLiFJDUy1/XpvCJIEiokploNF9ScYGUtutudXos
-         +f0U1orRJLBQJNzABHJNQ+JWKvKBDYF6lWZfWB9ngeARJljRxEQQmaZRbIJ+CRWF5m/y
-         k2gw==
-X-Gm-Message-State: AOAM532bGYmiyph+A82GYVa8flkbiQMkg3ypgYpawUimY+NeIrujE04W
-        vOPn2WH1YDJBuIJ2HPtoK/0sNm3eSb+ecTy3XnM=
-X-Google-Smtp-Source: ABdhPJwLe3zpc1iO8/plW7H06lE30/eXcr+XQ0aXN5z8ePAZR0S2zFdXre5n68MuXktaZx4+4nkPOXL84ctbz5uMfUY=
-X-Received: by 2002:a4a:b006:: with SMTP id f6mr304583oon.13.1594835068421;
- Wed, 15 Jul 2020 10:44:28 -0700 (PDT)
+        Wed, 15 Jul 2020 13:44:45 -0400
+Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 52FBFC061755
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 10:44:45 -0700 (PDT)
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: eballetbo)
+        with ESMTPSA id 0794B2A18A0
+Subject: Re: [PATCH] ASoC: cros_ec_codec: Reset I2S RX when probing
+To:     Yu-Hsuan Hsu <yuhsuan@chromium.org>,
+        Guenter Roeck <groeck@google.com>
+Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
+        Benson Leung <bleung@chromium.org>,
+        Guenter Roeck <groeck@chromium.org>,
+        Cheng-Yi Chiang <cychiang@chromium.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        Tzung-Bi Shih <tzungbi@google.com>,
+        Gwendal Grignou <gwendal@chromium.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        Yicheng Li <yichengli@chromium.org>,
+        ALSA development <alsa-devel@alsa-project.org>
+References: <20200708071117.3070707-1-yuhsuan@chromium.org>
+ <f6a0ea44-3805-5901-9864-72d4a3a4562e@collabora.com>
+ <CABXOdTfV_oGgZWbyP3o07obMuYGOLY87fou2h3_gowQkV7QVNw@mail.gmail.com>
+ <CAGvk5Po=BcHZ8uQJAp10cYHJcvc6-x613o-0Jj00K23xpeQpaQ@mail.gmail.com>
+ <CABXOdTf1+nBtau7ujnUVTfNd68D-RijZBPU8XMv=ZQ-RLbpzAg@mail.gmail.com>
+ <CAGvk5Po2osJOc077x6AWOn7bDgYsWzYSfqrSp64XBgjvjMHKsQ@mail.gmail.com>
+From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Message-ID: <fd73832a-3e5b-7e43-c69c-1d4b9ee78d27@collabora.com>
+Date:   Wed, 15 Jul 2020 19:44:39 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-References: <20200715154853.23374-1-nramas@linux.microsoft.com> <20200715154853.23374-5-nramas@linux.microsoft.com>
-In-Reply-To: <20200715154853.23374-5-nramas@linux.microsoft.com>
-From:   Stephen Smalley <stephen.smalley.work@gmail.com>
-Date:   Wed, 15 Jul 2020 14:04:52 -0400
-Message-ID: <CAEjxPJ6UsK9QqFTpMKjgSin2Q6D-5NCNDS0enuRNuixVP9H2wQ@mail.gmail.com>
-Subject: Re: [PATCH v1 4/5] LSM: Define SELinux function to measure security state
-To:     Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
-Cc:     Mimi Zohar <zohar@linux.ibm.com>,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        James Morris <jmorris@namei.org>,
-        linux-integrity@vger.kernel.org,
-        SElinux list <selinux@vger.kernel.org>,
-        LSM List <linux-security-module@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <CAGvk5Po2osJOc077x6AWOn7bDgYsWzYSfqrSp64XBgjvjMHKsQ@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 15, 2020 at 11:48 AM Lakshmi Ramasubramanian
-<nramas@linux.microsoft.com> wrote:
->
-> SELinux configuration and policy are some of the critical data for this
-> security module that needs to be measured. To enable this measurement
-> SELinux needs to implement the interface function, security_state(), that
-> the LSM can call.
->
-> Define the security_state() function in SELinux to measure SELinux
-> configuration and policy. Call this function to measure SELinux data
-> when there is a change in the security module's state.
->
-> Sample measurement of SELinux state and hash of the policy:
->
-> 10 e32e...5ac3 ima-buf sha256:86e8...4594 selinux-state 656e61626c65643d3=
-13b656e666f7263696e673d303b636865636b72657170726f743d313b6e6574706565723d31=
-3b6f70656e7065726d3d313b657874736f636b636c6173733d313b616c776179736e6574776=
-f726b3d303b6367726f75707365636c6162656c3d313b6e6e706e6f737569647472616e7369=
-74696f6e3d313b67656e66737365636c6162656c73796d6c696e6b3d303b
-> 10 f4a7...9408 ima-buf sha256:4941...68fc selinux-policy-hash 8d1d...1834
->
-> The data for selinux-state in the above measurement is:
-> enabled=3D1;enforcing=3D0;checkreqprot=3D1;netpeer=3D1;openperm=3D1;extso=
-ckclass=3D1;alwaysnetwork=3D0;cgroupseclabel=3D1;nnpnosuidtransition=3D1;ge=
-nfsseclabelsymlink=3D0;
->
-> The data for selinux-policy-hash in the above measurement is
-> the SHA256 hash of the SELinux policy.
->
-> Signed-off-by: Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
-> Suggested-by: Stephen Smalley <stephen.smalley.work@gmail.com>
-> ---
+Hi Yu-Hsuan,
 
-> diff --git a/security/selinux/include/security.h b/security/selinux/inclu=
-de/security.h
-> index b0e02cfe3ce1..691c7e35f82a 100644
-> --- a/security/selinux/include/security.h
-> +++ b/security/selinux/include/security.h
-> @@ -222,16 +222,35 @@ static inline bool selinux_policycap_genfs_seclabel=
-_symlinks(void)
->         return state->policycap[POLICYDB_CAPABILITY_GENFS_SECLABEL_SYMLIN=
-KS];
->  }
->
-> +static inline bool selinux_checkreqprot(void)
-> +{
-> +       struct selinux_state *state =3D &selinux_state;
-> +
-> +       return state->checkreqprot;
-> +}
+On 8/7/20 19:51, Yu-Hsuan Hsu wrote:
+> Guenter Roeck <groeck@google.com> 於 2020年7月9日 週四 上午1:26寫道：
+>>
+>> On Wed, Jul 8, 2020 at 9:17 AM Yu-Hsuan Hsu <yuhsuan@chromium.org> wrote:
+>>>
+>>> Guenter Roeck <groeck@google.com> 於 2020年7月8日 週三 下午9:28寫道：
+>>>>
+>>>> On Wed, Jul 8, 2020 at 3:16 AM Enric Balletbo i Serra
+>>>> <enric.balletbo@collabora.com> wrote:
+>>>>>
+>>>>> Hi Yu-Hsuan,
+>>>>>
+>>>>> Thank you for your patch.
+>>>>>
+>>>>> On 8/7/20 9:11, Yu-Hsuan Hsu wrote:
+>>>>>> It is not guaranteed that I2S RX is disabled when the kernel booting.
+>>>>>> For example, if the kernel crashes while it is enabled, it will keep
+>>>>>> enabled until the next time EC reboots. Reset I2S RX when probing to
+>>>>>> fix this issue.
+>>>>>>
+>>>>>> Signed-off-by: Yu-Hsuan Hsu <yuhsuan@chromium.org>
+>>>>>> ---
+>>>>>>  include/linux/platform_data/cros_ec_commands.h | 1 +
+>>>>>>  sound/soc/codecs/cros_ec_codec.c               | 7 +++++++
+>>>>>>  2 files changed, 8 insertions(+)
+>>>>>>
+>>>>>> diff --git a/include/linux/platform_data/cros_ec_commands.h b/include/linux/platform_data/cros_ec_commands.h
+>>>>>> index 69210881ebac8..11ce917ca924c 100644
+>>>>>> --- a/include/linux/platform_data/cros_ec_commands.h
+>>>>>> +++ b/include/linux/platform_data/cros_ec_commands.h
+>>>>>> @@ -4598,6 +4598,7 @@ enum ec_codec_i2s_rx_subcmd {
+>>>>>>       EC_CODEC_I2S_RX_SET_SAMPLE_DEPTH = 0x2,
+>>>>>>       EC_CODEC_I2S_RX_SET_DAIFMT = 0x3,
+>>>>>>       EC_CODEC_I2S_RX_SET_BCLK = 0x4,
+>>>>>> +     EC_CODEC_I2S_RX_RESET = 0x5,
+>>>>>
+>>>>> Is this a new command not available in the firmware that is already in the field?
+>>>>>
+>>>>>
+>>>>>>       EC_CODEC_I2S_RX_SUBCMD_COUNT,
+>>>>>>  };
+>>>>>>
+>>>>>> diff --git a/sound/soc/codecs/cros_ec_codec.c b/sound/soc/codecs/cros_ec_codec.c
+>>>>>> index 8d45c628e988e..5495214e73e68 100644
+>>>>>> --- a/sound/soc/codecs/cros_ec_codec.c
+>>>>>> +++ b/sound/soc/codecs/cros_ec_codec.c
+>>>>>> @@ -1034,6 +1034,13 @@ static int cros_ec_codec_platform_probe(struct platform_device *pdev)
+>>>>>>       }
+>>>>>>       priv->ec_capabilities = r.capabilities;
+>>>>>>
+>>>>>> +     /* Reset EC codec I2S RX. */
+>>>>>> +     p.cmd = EC_CODEC_I2S_RX_RESET;
+>>>>>> +     ret = send_ec_host_command(priv->ec_device, EC_CMD_EC_CODEC_I2S_RX,
+>>>>>> +                                (uint8_t *)&p, sizeof(p), NULL, 0);
+>>>>>> +     if (ret)
+>>>>>> +             dev_err(dev, "failed to EC_CODEC_I2S_RESET: %d\n", ret);
+>>>>>> +
 
-Probably should use READ_ONCE().
+What about notify the user that he *must* update their firmware?
 
-> diff --git a/security/selinux/measure.c b/security/selinux/measure.c
-> new file mode 100644
-> index 000000000000..b909e8e61542
-> --- /dev/null
-> +++ b/security/selinux/measure.c
-> @@ -0,0 +1,122 @@
-> +int selinux_security_state(void)
+  dev_info(dev, "Missing reset command. Please update your EC firmware.\n")
 
-Let's call this selinux_measure_state() or similar.  Needs a verb. And
-pass it a struct selinux_state * pointer argument to be measured, even
-though initially it will always be passed &selinux_state.  The
-encapsulation of selinux state within selinux_state was to support
-multiple selinux namespaces in the future, each with their own state.
+>>>>>
+>>>>> With an old firmware I suspect this message will appear on every boot, right?
+>>>>> So, to solve the issue and get rid of this error you're forced to upgrade the
+>>>>> firmware. Is that true?
+>>>>>
+>>>>
+>>>> It might possibly make more sense to fail this silently and to send
+>>>> EC_CODEC_I2S_RX_DISABLE as backup if it is not supported (-ENOTSUPP
+>>>> can possibly be used as trigger if the call returns it).
+>>>>
+>>>> Also, I don't accept dev_err() if the error is ignored for patches in
+>>>> my scope of responsibility.
+>>>>
+>>>> Guenter
+>>> Thanks for the suggestion. Our plan is to upstream this patch first.
+>>> And then we will merge it into the kernel after the firmware is
+>>> updated. Is it feasible? (I'm not sure whether there is the better way
+>>> if I want to update EC and the kernel at the same time.)
+>>>
+>>> I think calling EC_CODEC_I2S_RX_DISABLE does not make sense because it
+>>> checks the value of i2s_rx_enabled first. If i2s_rx_enabled is false,
+>>> it will skip the function. However, we don't need to reset while the
+>>> i2s_rx_enabled is already false.
+>>>
+>> Exactly my point. If i2s_rx_enabled is false, nothing needs to be
+>> done, and it doesn't hurt if the EC does nothing. If i2s_rx_enabled is
+>> true, it needs to be set to false, which is accomplished by sending
+>> EC_CODEC_I2S_RX_DISABLE.
+> Sorry my bad. If i2s_rx_enabled is false, it will skip and return
+> EC_RES_BUSY. And then we may need to handle one more error. I think it
+> may become too complicated to handle those errors. Could we just merge
+> this change after the firmware updates? So that we don't need to worry
+> about the unsupported command.
+> 
 
-> +{
-> +       int rc =3D 0;
-> +       int count;
-> +       size_t buflen;
-> +       int policy_hash_len;
-> +       char *state =3D NULL;
-> +       void *policy =3D NULL;
-> +       void *policy_hash =3D NULL;
-> +       static char *security_state_string =3D
-> +                       "enabled=3D%d;enforcing=3D%d;checkreqprot=3D%d;" =
-       \
-> +                       "netpeer=3D%d;openperm=3D%d;extsockclass=3D%d;"  =
-       \
-> +                       "alwaysnetwork=3D%d;cgroupseclabel=3D%d;"        =
-     \
-> +                       "nnpnosuidtransition=3D%d;genfsseclabelsymlink=3D=
-%d;";
+How can you ensure that assuming there is already devices in the field? The
+patch should work for both cases, on devices that has the old firmware and on
+devices that have the new firmware. You can't guarantee that all the devices
+will update their firmware.
 
-Rather than hardcoding policy capability names here, I would recommend
-using the selinux_policycap_names[] array for the names and the
-selinux_state.policycap[] array for the values.  Also recommend
-passing in a struct selinux_state * here to allow for future case
-where there are multiple selinux states, one per selinux namespace.
+I'd suggest notify the user that should update the EC firmware and
+fallback/continue when the EC_CODEC_I2S_RX_RESET is not implemented.
 
-> diff --git a/security/selinux/ss/services.c b/security/selinux/ss/service=
-s.c
-> index ef0afd878bfc..0c289d13ef6a 100644
-> --- a/security/selinux/ss/services.c
-> +++ b/security/selinux/ss/services.c
-> @@ -3724,10 +3724,11 @@ int security_netlbl_sid_to_secattr(struct selinux=
-_state *state,
->   * security_read_policy - read the policy.
->   * @data: binary policy data
->   * @len: length of data in bytes
-> - *
-> + * @alloc_kernel_memory: flag to indicate memory allocation
->   */
-> -int security_read_policy(struct selinux_state *state,
-> -                        void **data, size_t *len)
-> +int security_read_selinux_policy(struct selinux_state *state,
-> +                                void **data, size_t *len,
-> +                                bool alloc_kernel_memory)
-
-Instead of passing in a boolean to control how the memory is
-allocated, split this into a helper function that takes an
-already-allocated buffer and two
-different front-end wrappers, one for kernel-internal use and one for
-userspace use.
-
-> @@ -3738,7 +3739,10 @@ int security_read_policy(struct selinux_state *sta=
-te,
->
->         *len =3D security_policydb_len(state);
->
-> -       *data =3D vmalloc_user(*len);
-> +       if (alloc_kernel_memory)
-> +               *data =3D kzalloc(*len, GFP_KERNEL);
-
-You need vmalloc() since policy image size may exceed kmalloc max (or
-at least that used to be the case).
+>>
+>>> In addition, since it is a sub-command, it will return
+>>> EC_RES_INVALID_PARAM but not ENOTSUPP if the command is not supported.
+>>> And then EC_RES_INVALID_PARAM will turn into -EPROTO finally so it's
+>>> difficult to do other operators basing on the return value.
+>>>
+>>
+>> You might have to convince Enric to permit another error code to
+>> translate EC_RES_INVALID_PARAM. After all, that would meet his
+>> requirement that the error code must be used in the kernel to accept a
+>> translation.
+>>
+>> Guenter
+>>
+>>> Thanks,
+>>> Yu-Hsuan
+>>>
+>>>>
+>>>>>>       platform_set_drvdata(pdev, priv);
+>>>>>>
+>>>>>>       ret = devm_snd_soc_register_component(dev, &i2s_rx_component_driver,
+>>>>>>
