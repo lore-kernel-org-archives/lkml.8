@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA724C433EA
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 02:59:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06D9AC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 02:59:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B8D3D2074B
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 02:59:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D71342074B
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 02:59:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="gmucBQdE"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="kkDj4LY1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728477AbgGOC7g (ORCPT
+        id S1728521AbgGOC7l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 22:59:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57916 "EHLO
+        Tue, 14 Jul 2020 22:59:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57930 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728400AbgGOC7e (ORCPT
+        with ESMTP id S1728487AbgGOC7i (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 22:59:34 -0400
+        Tue, 14 Jul 2020 22:59:38 -0400
 Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F04AAC061755;
-        Tue, 14 Jul 2020 19:59:33 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A45CFC061755;
+        Tue, 14 Jul 2020 19:59:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
         References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
         Content-Type:Content-ID:Content-Description;
-        bh=ufO4lHePtrPPVz7YbFrezalftZMWhKJ1TX8oM3yPcfM=; b=gmucBQdEVlKk+FMDuRFc2mEwTR
-        o+4TN/09L/t6Cxyz6d+u+bhuIvfhgVkPvFNtVJo1R5NYzcD0QGWImKFaNi4+y9xLDG8dbx0jOjYB9
-        Tjyrv4dH8Wabjzjm7ivtYGDFU6s1OAA03oUZ42PUN2p68gDl4X8Xa0ekcPoeKJYzaP3JYBIsJKDtb
-        Tw/Mc22M2CY8ViYA+URBZ3KZ+uP+v+n/TGOZ0P/OjGfKoCxLkCFkWidH2OdgalXOdXEpXphEQwAif
-        RMfB4F4Qy1J621lA+kqt67s97KQhudP2NvqgCUyPIQvEzQICyBgvaRclsZuM06kt0mVVYbZeqtntD
-        lnXVUmcw==;
+        bh=2X3Tt8qjXevwhad97b+dYLiPIuCQP4Yu59ya7pQYiUo=; b=kkDj4LY1a1zWRCcXb2MTsbMjn4
+        nJWcGLBLqS6x0fXRaO4hk7jgy+L7/MCOqIka9SP57/ZxGU8SJkAgFOSa0qlatyLgt2WrgDLaA4irJ
+        pGLXfoyQVrrhVoNMP9K0f0D8D9lfqcuLhOqvN7hiouI3ALmgpMYvng8IHjcv+tiDqLntszui7rF6j
+        U1xesN+Ic748ozfBAxNcJ8ehOkzUxhFb5C2EFxyCfBq0EEa63ooNYgd0YEtPBzT0Pm2FopPM/qXMb
+        foKGOlORV+HMOIrHQd3crt5mJFfazbhNOQjJxQuMw2TZoKUcH2pRhw9P98CPskK2NVtzJnqZpRsiR
+        aTIrhqYQ==;
 Received: from [2601:1c0:6280:3f0::19c2] (helo=smtpauth.infradead.org)
         by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jvXdr-0001FT-G8; Wed, 15 Jul 2020 02:59:32 +0000
+        id 1jvXdw-0001FT-Nj; Wed, 15 Jul 2020 02:59:37 +0000
 From:   Randy Dunlap <rdunlap@infradead.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Randy Dunlap <rdunlap@infradead.org>,
         "David S. Miller" <davem@davemloft.net>,
         Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH 07/13 net-next] net: caif: drop duplicate words in comments
-Date:   Tue, 14 Jul 2020 19:59:08 -0700
-Message-Id: <20200715025914.28091-7-rdunlap@infradead.org>
+Subject: [PATCH 09/13 net-next] net: dsa.h: drop duplicate word in comment
+Date:   Tue, 14 Jul 2020 19:59:10 -0700
+Message-Id: <20200715025914.28091-9-rdunlap@infradead.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200715025914.28091-1-rdunlap@infradead.org>
 References: <20200715025914.28091-1-rdunlap@infradead.org>
@@ -57,45 +57,24 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Drop doubled words "or" and "the" in several comments.
+Drop doubled word "to" in a comment.
 
 Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
 Cc: "David S. Miller" <davem@davemloft.net>
 Cc: Jakub Kicinski <kuba@kernel.org>
 Cc: netdev@vger.kernel.org
 ---
- include/net/caif/caif_layer.h         |    4 ++--
- include/uapi/linux/caif/caif_socket.h |    2 +-
- 2 files changed, 3 insertions(+), 3 deletions(-)
+ include/net/dsa.h |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- linux-next-20200714.orig/include/net/caif/caif_layer.h
-+++ linux-next-20200714/include/net/caif/caif_layer.h
-@@ -156,7 +156,7 @@ struct cflayer {
- 	 *  CAIF packets upwards in the stack.
- 	 *	Packet handling rules:
- 	 *	      - The CAIF packet (cfpkt) ownership is passed to the
--	 *		called receive function. This means that the the
-+	 *		called receive function. This means that the
- 	 *		packet cannot be accessed after passing it to the
- 	 *		above layer using up->receive().
- 	 *
-@@ -184,7 +184,7 @@ struct cflayer {
- 	 *	CAIF packet downwards in the stack.
- 	 *	Packet handling rules:
- 	 *	      - The CAIF packet (cfpkt) ownership is passed to the
--	 *		transmit function. This means that the the packet
-+	 *		transmit function. This means that the packet
- 	 *		cannot be accessed after passing it to the below
- 	 *		layer using dn->transmit().
- 	 *
---- linux-next-20200714.orig/include/uapi/linux/caif/caif_socket.h
-+++ linux-next-20200714/include/uapi/linux/caif/caif_socket.h
-@@ -169,7 +169,7 @@ struct sockaddr_caif {
-  * @CAIFSO_LINK_SELECT:		Selector used if multiple CAIF Link layers are
-  *				available. Either a high bandwidth
-  *				link can be selected (CAIF_LINK_HIGH_BANDW) or
-- *				or a low latency link (CAIF_LINK_LOW_LATENCY).
-+ *				a low latency link (CAIF_LINK_LOW_LATENCY).
-  *                              This option is of type __u32.
-  *				Alternatively SO_BINDTODEVICE can be used.
-  *
+--- linux-next-20200714.orig/include/net/dsa.h
++++ linux-next-20200714/include/net/dsa.h
+@@ -612,7 +612,7 @@ struct dsa_switch_ops {
+ 	 * MTU change functionality. Switches can also adjust their MRU through
+ 	 * this method. By MTU, one understands the SDU (L2 payload) length.
+ 	 * If the switch needs to account for the DSA tag on the CPU port, this
+-	 * method needs to to do so privately.
++	 * method needs to do so privately.
+ 	 */
+ 	int	(*port_change_mtu)(struct dsa_switch *ds, int port,
+ 				   int new_mtu);
