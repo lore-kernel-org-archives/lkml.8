@@ -2,87 +2,111 @@ Return-Path: <SRS0=kup7=A2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E3BCC433E3
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 21:03:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EBB7C433E4
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 21:03:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E02112067D
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 21:03:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594847001;
-	bh=Vlh6jq3CeiOB+eIOnC5hyz2iGa+kf3f418QAJcxuIGg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=2W7ftpa+uffWUo+qFfdnOCn4s9Za1AtKzYxK2V1H98ctWNADVDzH+0y6Czkxwf3Iq
-	 6v9m299YF6W38L3Fl2AFDM3bmeb9xHpSVDP0xsY0M5rzB1H89BDprHoxj4KL2LzEjv
-	 TAudairh4/RZeBd0TUEFsU3VDK67+1LtLgrpzp7Y=
+	by mail.kernel.org (Postfix) with ESMTP id C6CD1206F4
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 21:03:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="M0a6hIft"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726942AbgGOVDU (ORCPT
+        id S1726977AbgGOVDe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 17:03:20 -0400
-Received: from mail-il1-f196.google.com ([209.85.166.196]:33568 "EHLO
-        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726803AbgGOVDT (ORCPT
+        Wed, 15 Jul 2020 17:03:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55886 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726803AbgGOVDd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 17:03:19 -0400
-Received: by mail-il1-f196.google.com with SMTP id a11so3263213ilk.0;
-        Wed, 15 Jul 2020 14:03:18 -0700 (PDT)
+        Wed, 15 Jul 2020 17:03:33 -0400
+Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C7721C061755
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 14:03:33 -0700 (PDT)
+Received: by mail-pf1-x442.google.com with SMTP id a23so1038724pfk.13
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 14:03:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=hRzNY1JDvrNXSdO8U7l97e0qNXhN4R2q/raGpfh2xSg=;
+        b=M0a6hIftqMPigj4qmdMeWnqpRS3Mhy/U/7tUxAJxo7OSSYbXSs1F2eHV2Got5uVniB
+         fnnxdnC9ZZJqASAvHEjKtn37vsFNBdsR0Y+c7kAeDJx9/bg+oiwPjtcgbgWSxF45qxW/
+         +YUIUkpaCLuGaqFeYoJ7IQUIUHnjtTDVdO2eOUlLAEZc+mqjD5ce/+F+m7DsX6qxzgsf
+         zt3i0YoDpSePFWCBoqV0JgX2k1GtNZd9x0PsQ6mObkRRhuqa8i13bcNSo0ft2Yhdpy+8
+         FlYet5jyBRKAe9z/e6RkiL/kXCrQdGGuqn8MWdizP19m3CiL1UddjV1tqOIDudAmNzml
+         3zlQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=GWDZepDoncsEaTMC4EtAIVPS29rg6+akZDaq58u8hqs=;
-        b=Vg4IqM0JjAVxKTl92q2Ivw7uzXy7frBWL4IQE628k6as5i0XubgNnpkLl9eunNsiHR
-         LeV/KZDrIGrtfgda0uOrRw4SICjDmA6iGKN2/w0Z6FUrVWFxsCoujz8LTZxPD5gVXIzh
-         bPST3Jt3hWRJROeAzCSfTrJSDn/KIPsaXORFRBS3Zr8nfErmNRddkSmyi7exigNrsKPe
-         piREuaR3ManQ1TKChUWFeDf8r9NftIFyZE4wdYH+koxcHXkH/k3uaPGR7udQDb7zBDm1
-         J8uMbK4iRuweGOdWfg7LPhdh2qTRIbB6WG0bDhwP66hOOKadsf+a08AJlb3O0X7+lebD
-         FK7w==
-X-Gm-Message-State: AOAM531IHXovbKEk1l9dLinDVwY33gRyXQIsuY8ryBJiCPxq4m6yAn++
-        HUt/dH/lzGO/+IRGUAOnk/ERffAYN/IA
-X-Google-Smtp-Source: ABdhPJwBYLdvUXEXFEUAVM6usSlJJ9M/lybrTM4uUutDaLWTKuqsiNxb1k9dpnNAJ8CbXwx8r57ECw==
-X-Received: by 2002:a92:cf51:: with SMTP id c17mr1328712ilr.122.1594846998231;
-        Wed, 15 Jul 2020 14:03:18 -0700 (PDT)
-Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id y2sm1721651iox.22.2020.07.15.14.03.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 15 Jul 2020 14:03:17 -0700 (PDT)
-Received: (nullmailer pid 811841 invoked by uid 1000);
-        Wed, 15 Jul 2020 21:03:16 -0000
-Date:   Wed, 15 Jul 2020 15:03:16 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Benjamin Gaignard <benjamin.gaignard@st.com>
-Cc:     robh+dt@kernel.org, devicetree@vger.kernel.org,
-        alexandre.torgue@st.com, linux-stm32@st-md-mailman.stormreply.com,
-        linux-kernel@vger.kernel.org, mcoquelin.stm32@gmail.com,
-        lee.jones@linaro.org, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH 1/5] dt-bingings: arm: stm32: Add compatibles for syscon
- nodes
-Message-ID: <20200715210316.GA811477@bogus>
-References: <20200703095520.30264-1-benjamin.gaignard@st.com>
- <20200703095520.30264-2-benjamin.gaignard@st.com>
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=hRzNY1JDvrNXSdO8U7l97e0qNXhN4R2q/raGpfh2xSg=;
+        b=szYciO7S96I35LaePNsF6Ceo1iAAgsApLwPGnoXx1DVX6DwNLDuPLtELD2ep+rcmNN
+         j3puD9PwxsJtvHC1Gg2rvQgUtQ1EkHBYgQJYSHhS/J3yqfg3OFtP5DMIvKuellQzq5e4
+         Ib6lMwxu+xU/yBPbpazOjd6ZAf/OHYApAxapPEen3ytfOAOM9uOIxsc/7SnYoOL28vZ4
+         qTSdXALp3S2FBQsghHmYcQtL/URhQgU4iUIZnmIWDz/qFY++OT7K2aChisp4RjFYgVo9
+         CN+CCA3PcbZSI86Vzy9rN0KUzCIDmM/6prt08HrQeCUwEHSkF9h9b6Eco2DwvqbyxdyA
+         VZwQ==
+X-Gm-Message-State: AOAM531Ij6HOzWltZ0Z3a0CN24alKPsJ5qHUCRu87LDKw3g5qnEIc3Xl
+        XquQllhQeSElf+cLALQfHRQKwra4Zug=
+X-Google-Smtp-Source: ABdhPJzJmgyhP7wX+GxWvJnVu0WYkg3Mrtb2coBAaKPhmJ2puWco+JxG7AG7U8wtv2nQBQYdGGywbw==
+X-Received: by 2002:a62:e919:: with SMTP id j25mr957900pfh.123.1594847013262;
+        Wed, 15 Jul 2020 14:03:33 -0700 (PDT)
+Received: from Asurada-Nvidia (searspoint.nvidia.com. [216.228.112.21])
+        by smtp.gmail.com with ESMTPSA id y7sm2949173pjy.54.2020.07.15.14.03.32
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 15 Jul 2020 14:03:33 -0700 (PDT)
+Date:   Wed, 15 Jul 2020 14:03:08 -0700
+From:   Nicolin Chen <nicoleotsuka@gmail.com>
+To:     Mark Brown <broonie@kernel.org>
+Cc:     Arnaud Ferraris <arnaud.ferraris@collabora.com>,
+        alsa-devel@alsa-project.org, Timur Tabi <timur@kernel.org>,
+        Xiubo Li <Xiubo.Lee@gmail.com>, linux-kernel@vger.kernel.org,
+        Takashi Iwai <tiwai@suse.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>, kernel@collabora.com,
+        Fabio Estevam <festevam@gmail.com>
+Subject: Re: [PATCH 0/4] ASoC: fsl_asrc: allow selecting arbitrary clocks
+Message-ID: <20200715210308.GA14589@Asurada-Nvidia>
+References: <20200702142235.235869-1-arnaud.ferraris@collabora.com>
+ <20200702184226.GA23935@Asurada-Nvidia>
+ <3f39a0bb-a766-f646-28b3-a51cf9983c6b@collabora.com>
+ <3fea8912-63df-ff27-0c29-6284a85107ab@collabora.com>
+ <20200714201544.GA10501@Asurada-Nvidia>
+ <20200714202753.GM4900@sirena.org.uk>
+ <20200714205050.GB10501@Asurada-Nvidia>
+ <20200715140519.GH5431@sirena.org.uk>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200703095520.30264-2-benjamin.gaignard@st.com>
+In-Reply-To: <20200715140519.GH5431@sirena.org.uk>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 03 Jul 2020 11:55:16 +0200, Benjamin Gaignard wrote:
-> Since commit ad440432d1f9 ("dt-bindings: mfd: Ensure 'syscon' has a more specific compatible")
-> it is required to provide at least 2 compatibles string for syscon node.
-> This patch document the missing compatibles for stm32 SoCs.
+On Wed, Jul 15, 2020 at 03:05:19PM +0100, Mark Brown wrote:
+> On Tue, Jul 14, 2020 at 01:50:50PM -0700, Nicolin Chen wrote:
+> > On Tue, Jul 14, 2020 at 09:27:53PM +0100, Mark Brown wrote:
 > 
-> Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
-> ---
->  .../devicetree/bindings/arm/stm32/st,stm32-syscon.yaml     | 14 +++++++++++++-
->  1 file changed, 13 insertions(+), 1 deletion(-)
+> > > The nominal rate might be the same but if they're in different clock
+> > > domains then the actual rates might be different (hence the desire for
+> > > an ASRC I guess).  I can see the system wanting to choose one clock or
+> > > the other on the basis of some system specific property (quality of the
+> > > clock sources, tolerances of the devices involved or something) though
+> > > it's a rather fun edge case configuration :/ .
 > 
+> > Thanks for the input. Fox i.MX6, I don't feel it would be that
+> > drastically different though. And both SSI1 and SSI2 can simply
+> > select the same root clock source to avoid that happen.
+> 
+> If you've got two radios that both need to sync to some radio derived
+> frequency it gets a bit more entertaining.
 
-Typo in the subject, otherwise:
-
-Reviewed-by: Rob Herring <robh@kernel.org>
+I'm simply curious what could be a problem. Do you mind educating
+me a bit? And ASRC here isn't a radio but a sample rate converter
+working as a BE in DPCM setup, using radio-capture for example...
