@@ -2,150 +2,223 @@ Return-Path: <SRS0=kup7=A2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C505C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 18:12:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0FE1C433E3
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 18:12:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 002892064B
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 18:12:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="gptbLyzT"
+	by mail.kernel.org (Postfix) with ESMTP id AF2092065F
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 18:12:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594836772;
+	bh=fcQDgyyGhKHA92TYesU44H0lTyF4CEkwxG576vw2ga8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=oCB5uMU3htHaIT0dMxiS50GJzWfDURI2wrqSiWQ57wJQHYTE8BnzVYF6YQRl/GUoq
+	 p4j+z+C0rHEH86LqWXFvuJ6ghTxQPQ46hkv2uio2rLmGGPEyDMRRjRCCMjUHJstugt
+	 ffskTD6Lb9oMstuU/nuMTPzuqpZpQGNDGiNu7LQM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726817AbgGOSMn (ORCPT
+        id S1726479AbgGOSMv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 14:12:43 -0400
-Received: from mout.web.de ([212.227.15.4]:52339 "EHLO mout.web.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725861AbgGOSMm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 14:12:42 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1594836747;
-        bh=QcpLvxTprRN97noWYETKUiSM4hg9Ue7fzui0lALddEI=;
-        h=X-UI-Sender-Class:To:Cc:Subject:From:Date;
-        b=gptbLyzTdAXPDGpEGAIBW2DpkSatGYena1MP1jHDrC7RtnVUXj2gDHy2f0o8ZPCU6
-         wLTbgKLIPVZBRZs3yL8oBGKflLHJMtP8optXiMAEdX+Y7V7iCK2jzcuzRXdwJoAWqn
-         6PrCZGnICLt5PkLxdXrkUFr/vlnmCe9owIzxJyNk=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.2] ([93.133.102.166]) by smtp.web.de (mrweb005
- [213.165.67.108]) with ESMTPSA (Nemesis) id 1MHVen-1k8kKg09jd-00DYgm; Wed, 15
- Jul 2020 20:12:27 +0200
-To:     Jing Xiangfeng <jingxiangfeng@huawei.com>,
-        dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Ben Skeggs <bskeggs@redhat.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        David Airlie <airlied@linux.ie>
-Subject: Re: [PATCH] drm/nouveau: add the missed kfree() for
- nouveau_bo_alloc()
-From:   Markus Elfring <Markus.Elfring@web.de>
-Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
- 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 FEE=
-Message-ID: <df40519c-1850-6dfc-35bf-bdcc2eb6c117@web.de>
-Date:   Wed, 15 Jul 2020 20:12:16 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Wed, 15 Jul 2020 14:12:51 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:37176 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725866AbgGOSMt (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jul 2020 14:12:49 -0400
+Received: by mail-io1-f67.google.com with SMTP id v6so3253986iob.4;
+        Wed, 15 Jul 2020 11:12:49 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=U4JqWAJUqAlytAcvwdFiI+dvQqxz5t1soB/hFAm5OjQ=;
+        b=cyfNtErCjqed345PiCA7PX9i2S6XtU9+udy7nzIUOyePJqoO0vBlj27Vx1l6MoF3lo
+         pBpRCenkyqQSXcTwEOPlR84opu0SDJVMbb4sHFX5AP4dTMsfmJnlYgiU0OjcXL8fQy4Y
+         WE8uyN7B/3NeruuovSHn0YUGWOu4xLYSsCgKUAK/URLIVOw8tWkRyTcuDI2SWcOKFh3q
+         Imgv1ueCiYSYHd7PuoCWZa5zWkwnr7ogWGwYtLBfIwyVF+sfocfQT8S08kBDVJfr8qFB
+         qL9DmzbBfARAjoX4pPtbwHkKAh+FqplrjcoNa+r1CID9LLLuHURDXKeC2cg+P67Xd94B
+         F0jA==
+X-Gm-Message-State: AOAM532E5whfqZfW2rdcNgbKr1ITzrdmKXte1H0b2crOuenCVZf/NYAz
+        4UgJoTeexv/tWFv9p8fm9g==
+X-Google-Smtp-Source: ABdhPJxxgQ53vC9zVBi4XB7WdDH+bHdKBpexEFln2Bz9WLXLPsN+v2YsSm0PlI2wwA+pwM3cWthaUg==
+X-Received: by 2002:a5d:9c0e:: with SMTP id 14mr519954ioe.109.1594836768497;
+        Wed, 15 Jul 2020 11:12:48 -0700 (PDT)
+Received: from xps15 ([64.188.179.252])
+        by smtp.gmail.com with ESMTPSA id k3sm1414030ils.8.2020.07.15.11.12.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 15 Jul 2020 11:12:47 -0700 (PDT)
+Received: (nullmailer pid 545010 invoked by uid 1000);
+        Wed, 15 Jul 2020 18:12:47 -0000
+Date:   Wed, 15 Jul 2020 12:12:47 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Dan Murphy <dmurphy@ti.com>
+Cc:     lgirdwood@gmail.com, broonie@kernel.org, perex@perex.cz,
+        tiwai@suse.com, shifu0704@thundersoft.com,
+        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org
+Subject: Re: [PATCH 1/2] dt-bindings: tas2770: Convert tas2770 binding to yaml
+Message-ID: <20200715181247.GA535887@bogus>
+References: <20200612171342.25364-1-dmurphy@ti.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:p0wUwp+F6TQiqi/U6wSPc06mtjJKuai6xaqD2S6dWBoKgGwfU4M
- wrQaj1e5bViNDQ0nFcrhlmkoHVDnIYjK8MSLnCsUYuyKBKRba6mvZpfziCtnHr/EDGysBWM
- YdEddRS0RaIrDS/GBKgBMVdTNgZjGbMp6p4YPW4jm57sazgcHu/h/0u459mJPN7S028BuyT
- QqqEJV8WF+jHH2lshKnVA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:+nGvxOs79Nk=:JRHTh7bUmibQ+EYmEQkeYh
- i7NqKrxpzRpBUoNb9SujZOEfiaY4teiTTwK6Iibhqzp+uJehN91dIcpThqkXAh9EVoi7o2hg3
- 6BivmY2BVnIPZz+YUDJ9qn/xnPN9oQ+bihY4YLa+8Bp9hE+97A/TXMRGhraZou99lwCLey/Rd
- aL63cbOiAqFA1kV/fLBr/wL/1AJeFRi+nqvmtXIzNMF1o5vrM+E2tVd+HYb7r9EgNju5yyGl+
- zdbdbu9ddnnnmthJFF0wHm3j0QMD7WzmL+8SReXqlAH+XDgug03VoVaITZ4UuFNVXsWbhUnwK
- ZKhQdorOFYr422ls5XHjAbJ9nWw3sLav7Fp+fO1hFnvgRNCESEM+i1YC5F305cMIyYcjvyX0r
- TK7vkSPiA40qZi6dtMy0c1PW1Nhh4tNPlSak0+lVPw2RQBp/K7Q7VeGuJX5l3cKmsKY/1TjFd
- e5ChHvWm0yc+d7St0McMuGV0LN2ArPbsnzPMmEKPjJ1sV81gpDqeHq6ffg4E3z7NXcSsGfuqK
- ZOWw8FiM+t7AtCqxGF+3x8oUC7cylaLTvZUGbIzqGG8BhP6n96lm4sKDnoMcCYPDrbbABQF3X
- qfBmvW7Sn9IjjwcgvUVMdURDkYcFBL9L4UNR953HHO7c9y7efqQ8FfZkh35RrckQvkQtbS5KN
- +1howGOUmM4JID5M1ejjGuc9En1OavQbxoI59gPYw8xUYwjzMJk6Nlm20s8FienOlVdskbii6
- SbtyGrCjum5530we74JMndeqXnZPLJIRAFg5M/J650NbKBHF3+7UWOU7AL78dh5z6fM8CEv3t
- bhP4gvo9Jf/x6oauWpvYJtxj6dFcAi5caNHbyo/LEjiUQ1MWhD/Mk+lhl6RDJ/HO47X5r8e0U
- xJkbuUHWJexjhNINqowwlMb7AKHubndX2Bo2l+Sm/SmCtsla/dyzSuBCnFtK/+un2LyMjky9e
- yg2zGWNKPEloOoCLgiRF4KmVUZ5PjJuVrsbs0J/RHcqUZ0ur7BzOOO3BR1miyjXCP0DkuiPLo
- D4KYc9eadkJNgj1qCrHyuAoQE4B9ClJea3WH5LkAVRwTVeTPhybasecsKi9CEsaWSxpvHlzfL
- nrkmBRskyCNm9K6Xs5j9zSoGZeXIpr5cda3frQYAqy3fWXLy/zd6YhPiw6JxyX2wJwQCnrJdt
- g1wmz8GeVoLgmbxQV1WfDgEWggXz7bJW1kTWY/6oFvaYtNd+wQPZ+fLuIMsVexcEYLjgi3yXY
- xEU1gxSwBgVzHiFNUvSjDc8m9ngyfX61bITONqA==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200612171342.25364-1-dmurphy@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> =E2=80=A6 to fix it.
+On Fri, Jun 12, 2020 at 12:13:41PM -0500, Dan Murphy wrote:
+> Convert the tas2770 binding to yaml format.
+> Add in the reset-gpio to the binding as it is in the code but not
+> documented in the binding.
+> 
+> Signed-off-by: Dan Murphy <dmurphy@ti.com>
+> ---
+>  .../devicetree/bindings/sound/tas2770.txt     | 37 ---------
+>  .../devicetree/bindings/sound/tas2770.yaml    | 76 +++++++++++++++++++
+>  2 files changed, 76 insertions(+), 37 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/sound/tas2770.txt
+>  create mode 100644 Documentation/devicetree/bindings/sound/tas2770.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/sound/tas2770.txt b/Documentation/devicetree/bindings/sound/tas2770.txt
+> deleted file mode 100644
+> index ede6bb3d9637..000000000000
+> --- a/Documentation/devicetree/bindings/sound/tas2770.txt
+> +++ /dev/null
+> @@ -1,37 +0,0 @@
+> -Texas Instruments TAS2770 Smart PA
+> -
+> -The TAS2770 is a mono, digital input Class-D audio amplifier optimized for
+> -efficiently driving high peak power into small loudspeakers.
+> -Integrated speaker voltage and current sense provides for
+> -real time monitoring of loudspeaker behavior.
+> -
+> -Required properties:
+> -
+> - - compatible:	   - Should contain "ti,tas2770".
+> - - reg:		       - The i2c address. Should contain <0x4c>, <0x4d>,<0x4e>, or <0x4f>.
+> - - #address-cells  - Should be <1>.
+> - - #size-cells     - Should be <0>.
+> - - ti,asi-format:  - Sets TDM RX capture edge. 0->Rising; 1->Falling.
+> - - ti,imon-slot-no:- TDM TX current sense time slot.
+> - - ti,vmon-slot-no:- TDM TX voltage sense time slot.
+> -
+> -Optional properties:
+> -
+> -- interrupt-parent: the phandle to the interrupt controller which provides
+> -                     the interrupt.
+> -- interrupts: interrupt specification for data-ready.
+> -
+> -Examples:
+> -
+> -    tas2770@4c {
+> -                compatible = "ti,tas2770";
+> -                reg = <0x4c>;
+> -                #address-cells = <1>;
+> -                #size-cells = <0>;
+> -                interrupt-parent = <&msm_gpio>;
+> -                interrupts = <97 0>;
+> -                ti,asi-format = <0>;
+> -                ti,imon-slot-no = <0>;
+> -                ti,vmon-slot-no = <2>;
+> -        };
+> -
+> diff --git a/Documentation/devicetree/bindings/sound/tas2770.yaml b/Documentation/devicetree/bindings/sound/tas2770.yaml
+> new file mode 100644
+> index 000000000000..8c667fd37a57
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/sound/tas2770.yaml
+> @@ -0,0 +1,76 @@
+> +# SPDX-License-Identifier: (GPL-2.0+ OR BSD-2-Clause)
 
-I suggest to replace this wording by the tag =E2=80=9CFixes=E2=80=9D.
+Do you have rights to relicense? The old binding defaults to 
+GPL-2.0-only. If so, great.
 
+Either way, GPL-2.0-only not GPL-2.0+.
 
-=E2=80=A6
-> +++ b/drivers/gpu/drm/nouveau/nouveau_bo.c
-> @@ -276,8 +276,10 @@  nouveau_bo_alloc(struct nouveau_cli *cli, u64 *siz=
-e, int *align, u32 flags,
->  			break;
->  	}
->
-> -	if (WARN_ON(pi < 0))
-> +	if (WARN_ON(pi < 0)) {
-> +		kfree(nvbo);
->  		return ERR_PTR(-EINVAL);
-> +	}
+Otherwise,
 
-I propose to move such common exception handling to the end of
-this function implementation so that a bit of duplicate code will be avoid=
-ed.
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Do=
-cumentation/process/coding-style.rst?id=3De9919e11e219eaa5e8041b7b1a196839=
-143e9125#n481
+Reviewed-by: Rob Herring <robh@kernel.org>
 
-Regards,
-Markus
+> +# Copyright (C) 2019-20 Texas Instruments Incorporated
+> +%YAML 1.2
+> +---
+> +$id: "http://devicetree.org/schemas/sound/tas2770.yaml#"
+> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
+> +
+> +title: Texas Instruments TAS2770 Smart PA
+> +
+> +maintainers:
+> +  - Shi Fu <shifu0704@thundersoft.com>
+> +
+> +description: |
+> +  The TAS2770 is a mono, digital input Class-D audio amplifier optimized for
+> +  efficiently driving high peak power into small loudspeakers.
+> +  Integrated speaker voltage and current sense provides for
+> +  real time monitoring of loudspeaker behavior.
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - ti,tas2770
+> +
+> +  reg:
+> +    maxItems: 1
+> +    description: |
+> +       I2C address of the device can be one of these 0x4c, 0x4d, 0x4e or 0x4f
+> +
+> +  reset-gpio:
+> +    description: GPIO used to reset the device.
+> +
+> +  interrupts:
+> +    maxItems: 1
+> +
+> +  ti,imon-slot-no:
+> +    $ref: /schemas/types.yaml#/definitions/uint32
+> +    description: TDM TX current sense time slot.
+> +
+> +  ti,vmon-slot-no:
+> +    $ref: /schemas/types.yaml#/definitions/uint32
+> +    description: TDM TX voltage sense time slot.
+> +
+> +  ti,asi-format:
+> +    $ref: /schemas/types.yaml#/definitions/uint32
+> +    description: Sets TDM RX capture edge.
+> +    enum:
+> +          - 0 # Rising edge
+> +          - 1 # Falling edge
+> +
+> +  '#sound-dai-cells':
+> +    const: 1
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +   #include <dt-bindings/gpio/gpio.h>
+> +   i2c0 {
+> +     #address-cells = <1>;
+> +     #size-cells = <0>;
+> +     codec: codec@4c {
+> +       compatible = "ti,tas2770";
+> +       reg = <0x4c>;
+> +       #sound-dai-cells = <1>;
+> +       interrupt-parent = <&gpio1>;
+> +       interrupts = <14>;
+> +       reset-gpio = <&gpio1 15 0>;
+> +       ti,imon-slot-no = <0>;
+> +       ti,vmon-slot-no = <2>;
+> +     };
+> +   };
+> +
+> -- 
+> 2.26.2
+> 
