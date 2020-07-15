@@ -2,135 +2,124 @@ Return-Path: <SRS0=kup7=A2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLACK,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A909DC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 15:32:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40EC6C433E2
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 15:32:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 87668206D5
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 15:32:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1844420720
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 15:32:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="ZJXpiIwQ"
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="r51ZMZ/D"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726332AbgGOPcG (ORCPT
+        id S1726801AbgGOPci (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 11:32:06 -0400
-Received: from mail.efficios.com ([167.114.26.124]:44142 "EHLO
-        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725854AbgGOPcF (ORCPT
+        Wed, 15 Jul 2020 11:32:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33004 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726715AbgGOPcg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 11:32:05 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by mail.efficios.com (Postfix) with ESMTP id A8032282C9F;
-        Wed, 15 Jul 2020 11:32:04 -0400 (EDT)
-Received: from mail.efficios.com ([127.0.0.1])
-        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id hfBGhRNx8QVl; Wed, 15 Jul 2020 11:32:04 -0400 (EDT)
-Received: from localhost (localhost [127.0.0.1])
-        by mail.efficios.com (Postfix) with ESMTP id 58B91282523;
-        Wed, 15 Jul 2020 11:32:04 -0400 (EDT)
-DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com 58B91282523
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
-        s=default; t=1594827124;
-        bh=YbiH1P2Lw2AGx+BJ46bYeL6rXdS70J7RnP0imUNWnME=;
-        h=Date:From:To:Message-ID:MIME-Version;
-        b=ZJXpiIwQclIm6nWpeWHBl8N6kABDRwl8RDiQ3GMosJeT2LiXHM+Ey2RXGOSCrF2Fq
-         cFq2Y/v11DXPPUUCt46DHLN8qHeC1e4UvZWzXqG6w9NrAndbkkhgQroEf7VIT7vseI
-         vjRvNFaQKiORM18ZtBF88XkKdyh5exPMneuVoTaZrQZP8iGzdpS9xJgarq9yrsV6hi
-         DhfNyGFOdeUyWRnAyMPTmC5Ekh/h9rk5++aRy69Xl5g6GUG6S2fNsCc8KfiysGffkP
-         4u+a64lOm2kpmETwD/DQv1DqeT2eFPuvXgZYSKvNwIN4KGGwCRjg325FKhl1ipVyJM
-         uQsCR26BR1XwA==
-X-Virus-Scanned: amavisd-new at efficios.com
-Received: from mail.efficios.com ([127.0.0.1])
-        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id J-I4XPE67x7V; Wed, 15 Jul 2020 11:32:04 -0400 (EDT)
-Received: from mail03.efficios.com (mail03.efficios.com [167.114.26.124])
-        by mail.efficios.com (Postfix) with ESMTP id 4787228295F;
-        Wed, 15 Jul 2020 11:32:04 -0400 (EDT)
-Date:   Wed, 15 Jul 2020 11:32:04 -0400 (EDT)
-From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-To:     Florian Weimer <fweimer@redhat.com>
-Cc:     carlos <carlos@redhat.com>, Peter Zijlstra <peterz@infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        paulmck <paulmck@linux.ibm.com>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Paul Turner <pjt@google.com>,
-        linux-api <linux-api@vger.kernel.org>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Florian Weimer <fw@deneb.enyo.de>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Message-ID: <306015794.14349.1594827124274.JavaMail.zimbra@efficios.com>
-In-Reply-To: <87a700zu9w.fsf@oldenburg2.str.redhat.com>
-References: <20200714030348.6214-1-mathieu.desnoyers@efficios.com> <e7ede994-ebec-8022-b12b-ac7147641ffb@redhat.com> <87a700zu9w.fsf@oldenburg2.str.redhat.com>
-Subject: Re: [RFC PATCH 0/4] rseq: Introduce extensible struct rseq
+        Wed, 15 Jul 2020 11:32:36 -0400
+Received: from mail-il1-x141.google.com (mail-il1-x141.google.com [IPv6:2607:f8b0:4864:20::141])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 94831C08C5DD
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 08:32:36 -0700 (PDT)
+Received: by mail-il1-x141.google.com with SMTP id h16so2315227ilj.11
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 08:32:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=5j36s7iC5zp5BnB779s7+MCfhpn2EN7hNLz0r5dH+FA=;
+        b=r51ZMZ/DE0WxoG59krMoig/9PaS0tfTZQHD+TvqbtLO1VBxZ9aeo4y5YWtJRp4zJRo
+         vUqZXm2LLngXYhELgp5j9kD61YXkJhiqxqMEWOO/376d8UI8vonLIgP9dYxJWaoEd/mW
+         Qtt0HRxHXQGRNQ2ppfPwColQHMv3zebgB827nmH0bKPq0N/dNkm1egJbZG5eIm/aUkWR
+         7sxAouIYuZPqrXjSqm98qv5hCURTzr/2xpkXL3zjnfaFn9Z1YZGB8M0ewwuq+FQAiCSI
+         3KIAbart0wn9Ekl8JVjJFjh3LU1DQJd8SLlJhtOvGb5/Q4ludj4LkFUyQ/blwlXJ0Q9q
+         P0Vg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=5j36s7iC5zp5BnB779s7+MCfhpn2EN7hNLz0r5dH+FA=;
+        b=jLsi1JyWorfh7NVc6P9y8XKf1usUocaiSw2hd8yWq/gG0GoVMpoH0Db4MmUGAzBw9O
+         qc10zM/wRM59fHWacaUjRSzKKcAJ8DsRVS5SXWDqQg4B448OQJ+Xs8OK7zmH5SLAjlyS
+         OxYKfNmFtvO/LPjqDFKcl3ppcOSsLsNRYYH7NSYFUU6NnfzEL5JJlzacoKV3revhnv6G
+         UDb1s5R71J1vsi2T/2PrzFwPAqyynUw1ITd0+mTEXmPr2eepTjlC+yj4CvNCIbQLE8IF
+         o58/SY4Zgk3O5hF2s89BHA70seUtKuqMr+IDBXqCQZx1KWn7kkC3Go/m1Ii4BDV5xSwd
+         kH4Q==
+X-Gm-Message-State: AOAM533Hlz31gSM5CS2HujY9U27oRlPFhu9v3KocWTQ2OPcuxWjQcEuB
+        R6hOjI17nTM/EAipJqvWwkkQzw2JjF9Elg==
+X-Google-Smtp-Source: ABdhPJzMy5tfw9Plsd3ic0px69p4rqwR4ycrMGtffRykSgnbPggNEenduhT9rlt/dfD+oFWBP2zgyA==
+X-Received: by 2002:a05:6e02:de6:: with SMTP id m6mr61699ilj.296.1594827155581;
+        Wed, 15 Jul 2020 08:32:35 -0700 (PDT)
+Received: from [192.168.1.58] ([65.144.74.34])
+        by smtp.gmail.com with ESMTPSA id m5sm1234561ilg.18.2020.07.15.08.32.33
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 15 Jul 2020 08:32:34 -0700 (PDT)
+Subject: Re: [PATCH v2] blk-rq-qos: remove redundant finish_wait to
+ rq_qos_wait.
+To:     Stephen Rothwell <sfr@canb.auug.org.au>, Qian Cai <cai@lca.pw>
+Cc:     Guo Xuenan <guoxuenan@huawei.com>, linux-block@vger.kernel.org,
+        wangli74@huawei.com, fangwei1@huawei.com, ming.lei@redhat.com,
+        josef@toxicpanda.com, linux-next@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20200628135625.3396636-1-guoxuenan@huawei.com>
+ <20200714232123.GA49251@lca.pw> <20200715121942.33bb34d8@canb.auug.org.au>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <73fa9772-9b02-fcfa-ea50-6779067ed70a@kernel.dk>
+Date:   Wed, 15 Jul 2020 09:32:33 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <20200715121942.33bb34d8@canb.auug.org.au>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [167.114.26.124]
-X-Mailer: Zimbra 8.8.15_GA_3955 (ZimbraWebClient - FF78 (Linux)/8.8.15_GA_3953)
-Thread-Topic: rseq: Introduce extensible struct rseq
-Thread-Index: zj/evqz9xvlM0ojaaTo8zHxJl5f4sg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
------ On Jul 15, 2020, at 11:12 AM, Florian Weimer fweimer@redhat.com wrote:
-
-> * Carlos O'Donell:
+On 7/14/20 8:19 PM, Stephen Rothwell wrote:
+> Hi all,
 > 
->> On 7/13/20 11:03 PM, Mathieu Desnoyers wrote:
->>> Recent discussion led to a solution for extending struct rseq. This is
->>> an implementation of the proposed solution.
->>> 
->>> Now is a good time to agree on this scheme before the release of glibc
->>> 2.32, just in case there are small details to fix on the user-space
->>> side in order to allow extending struct rseq.
+> On Tue, 14 Jul 2020 19:21:24 -0400 Qian Cai <cai@lca.pw> wrote:
 >>
->> Adding extensibility to the rseq registration process would be great,
->> but we are out of time for the glibc 2.32 release.
+>> On Sun, Jun 28, 2020 at 09:56:25AM -0400, Guo Xuenan wrote:
+>>> It is no need do finish_wait twice after acquiring inflight.
+>>>
+>>> Signed-off-by: Guo Xuenan <guoxuenan@huawei.com>
+>>> ---
+>>>  block/blk-rq-qos.c | 2 --
+>>>  1 file changed, 2 deletions(-)
+>>>
+>>> diff --git a/block/blk-rq-qos.c b/block/blk-rq-qos.c
+>>> index 656460636ad3..18f3eab9f768 100644
+>>> --- a/block/blk-rq-qos.c
+>>> +++ b/block/blk-rq-qos.c
+>>> @@ -273,8 +273,6 @@ void rq_qos_wait(struct rq_wait *rqw, void *private_data,
+>>>  		if (data.got_token)
+>>>  			break;
+>>>  		if (!has_sleeper && acquire_inflight_cb(rqw, private_data)) {
+>>> -			finish_wait(&rqw->wait, &data.wq);
+>>> -
+>>>  			/*
+>>>  			 * We raced with wbt_wake_function() getting a token,
+>>>  			 * which means we now have two. Put our local token
+>>> -- 
+>>> 2.25.4  
 >>
->> Should we revert rseq for glibc 2.32 and spend quality time discussing
->> the implications of an extensible design, something that Google already
->> says they are doing?
->>
->> We can, with a clear head, and an agreed upon extension mechanism
->> include rseq in glibc 2.33 (release scheduled for Feburary 1st 2021).
->> We release time boxed every 6 months, no deviation, so you know when
->> your next merge window will be.
->>
->> We have already done the hard work of fixing the nesting signal
->> handler issues, and glibc integration. If we revert today that will
->> also give time for Firefox and Chrome to adjust their sandboxes.
->>
->> Do you wish to go forward with rseq as we have it in glibc 2.32,
->> or do you wish to revert rseq from glibc 2.32, discuss the extension
->> mechanism, and put it back into glibc 2.33 with adjustments?
+>> Reverting this commit fixed an issue that swapping workloads will stall for
+>> days without being able to make any progress below.
 > 
-> I posted the glibc revert:
-> 
->  <https://sourceware.org/pipermail/libc-alpha/2020-July/116368.html>
-> 
-> I do not think we have any other choice at this point.
+> I have reverted that commit from linux-next today.
 
-This is indeed the safe course of action.
-
-Let's hope the overall interest about rseq will be sufficient to justify
-integrating extensibility support in the rseq system call ABI, otherwise we
-have a catch-22 situation where everything is stalled again, due to further
-progress on rseq kernel features awaiting user feedback on the existing
-implementation, which will never come because the integration of coordinated
-use across libraries is awaiting further development at the kernel level.
-
-Thanks,
-
-Mathieu
-
+Thanks, I'll revert it locally too.
 
 -- 
-Mathieu Desnoyers
-EfficiOS Inc.
-http://www.efficios.com
+Jens Axboe
+
