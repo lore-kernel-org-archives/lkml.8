@@ -2,193 +2,202 @@ Return-Path: <SRS0=kup7=A2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40323C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 08:24:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73C2DC433E4
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 08:24:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0B54920672
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 08:24:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594801447;
-	bh=42jZMoEINyjtINi8El3KpnJiCfJKOT842iU/fRRE8Jo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=aBJP0WgJRVMSXcB5saBn5t7IIOrxEhUq5okCa2DcRGzPfxpRz07PW0Mb/JtEyNPob
-	 6BoxGUbH4sRbnKsXngl/5s8JDob4pc1m1NF+wetUvmA4E7yS2zXYbtp609S4GrZMrK
-	 ktYmHTCNcNgzl4x5Yg3nTf8BbhhwYZEaTtb5Cbog=
+	by mail.kernel.org (Postfix) with ESMTP id 50F0B20760
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 08:24:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729760AbgGOIYF (ORCPT
+        id S1729789AbgGOIY4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 04:24:05 -0400
-Received: from mail-ej1-f65.google.com ([209.85.218.65]:38807 "EHLO
-        mail-ej1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729681AbgGOIYF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 04:24:05 -0400
-Received: by mail-ej1-f65.google.com with SMTP id br7so1265823ejb.5
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 01:24:03 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=7u6fFMc2fGdB0ahSthN2uZky3rmUyFB8YW5Ikd1vBkQ=;
-        b=OScwCKaDjp3tgjJsNkvFOYHmgKnWoeDCJpECGf8xZppNXGdMTzpbzGaNp8L94vSomD
-         3jjM0AvZPv84jNXx6DL3eYXbTUoPE1iqrhXTQKnc08GRbXc9Q4HZRUNsZnmhe5ZuacEQ
-         hOv5G3/Y41RTM4rhBdqLO0D5DDxchsGjGsvYtZkuMjSlN4VLuF8UlC6Q1C3dT9DVQ6b8
-         beUQ6h5YEEAyVnfKrOngpY39Qd+RENdgpSp9wSQozE9tmbiNWMKsGgYNQAtLOX88wGRe
-         KqLp9tsPZb3oknqFRBZEJPxMr77whRHkI+BSRY8cU5l7xLufhKWjo8LywONnyPiEjSUb
-         OHaA==
-X-Gm-Message-State: AOAM532yvMfQDaZGP+704/5KPW8vGR2CGEuRi/zhrzjUjKDNwwpngo3D
-        JuHVWLGJHUccL9TXxYF8iFU=
-X-Google-Smtp-Source: ABdhPJxQxmIp7lUBAHi0FmrGkqiXoiHWR12Su4deAD+nPgjZ6SwcVC/eXiynSSkrioP8OGD6bUp5aw==
-X-Received: by 2002:a17:907:7290:: with SMTP id dt16mr8028433ejc.63.1594801442721;
-        Wed, 15 Jul 2020 01:24:02 -0700 (PDT)
-Received: from localhost (ip-37-188-169-187.eurotel.cz. [37.188.169.187])
-        by smtp.gmail.com with ESMTPSA id v24sm1347858eja.29.2020.07.15.01.24.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 15 Jul 2020 01:24:02 -0700 (PDT)
-Date:   Wed, 15 Jul 2020 10:24:01 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     js1304@gmail.com
-Cc:     Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, kernel-team@lge.com,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Christoph Hellwig <hch@infradead.org>,
+        Wed, 15 Jul 2020 04:24:56 -0400
+Received: from [195.135.220.15] ([195.135.220.15]:52834 "EHLO mx2.suse.de"
+        rhost-flags-FAIL-FAIL-OK-OK) by vger.kernel.org with ESMTP
+        id S1727086AbgGOIYz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jul 2020 04:24:55 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id 6FBD6AEA6;
+        Wed, 15 Jul 2020 08:24:56 +0000 (UTC)
+Subject: Re: [PATCH 1/4] mm/page_alloc: fix non cma alloc context
+To:     js1304@gmail.com, Andrew Morton <akpm@linux-foundation.org>
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        kernel-team@lge.com, Christoph Hellwig <hch@infradead.org>,
         Roman Gushchin <guro@fb.com>,
         Mike Kravetz <mike.kravetz@oracle.com>,
         Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>,
+        Michal Hocko <mhocko@suse.com>,
         "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>
-Subject: Re: [PATCH 2/4] mm/gup: restrict CMA region by using allocation
- scope API
-Message-ID: <20200715082401.GC5451@dhcp22.suse.cz>
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>, stable@vger.kernel.org
 References: <1594789529-6206-1-git-send-email-iamjoonsoo.kim@lge.com>
- <1594789529-6206-2-git-send-email-iamjoonsoo.kim@lge.com>
+From:   Vlastimil Babka <vbabka@suse.cz>
+Message-ID: <332d620b-bfe3-3b69-931b-77e3a74edbfd@suse.cz>
+Date:   Wed, 15 Jul 2020 10:24:54 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1594789529-6206-2-git-send-email-iamjoonsoo.kim@lge.com>
+In-Reply-To: <1594789529-6206-1-git-send-email-iamjoonsoo.kim@lge.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed 15-07-20 14:05:27, Joonsoo Kim wrote:
+On 7/15/20 7:05 AM, js1304@gmail.com wrote:
 > From: Joonsoo Kim <iamjoonsoo.kim@lge.com>
 > 
-> We have well defined scope API to exclude CMA region.
-> Use it rather than manipulating gfp_mask manually. With this change,
-> we can now use __GFP_MOVABLE for gfp_mask and the ZONE_MOVABLE is also
-> searched by page allocator. For hugetlb, gfp_mask is redefined since
-> it has a regular allocation mask filter for migration target.
+> Currently, preventing cma area in page allocation is implemented by using
+> current_gfp_context(). However, there are two problems of this
+> implementation.
 > 
-> Note that this can be considered as a fix for the commit 9a4e9f3b2d73
-> ("mm: update get_user_pages_longterm to migrate pages allocated from
-> CMA region"). However, "Fixes" tag isn't added here since it is just
-> suboptimal but it doesn't cause any problem.
+> First, this doesn't work for allocation fastpath. In the fastpath,
+> original gfp_mask is used since current_gfp_context() is introduced in
+> order to control reclaim and it is on slowpath.
+> Second, clearing __GFP_MOVABLE has a side effect to exclude the memory
+> on the ZONE_MOVABLE for allocation target.
+> 
+> To fix these problems, this patch changes the implementation to exclude
+> cma area in page allocation. Main point of this change is using the
+> alloc_flags. alloc_flags is mainly used to control allocation so it fits
+> for excluding cma area in allocation.
 
-But it is breaking the contract that the longterm pins never end up in a
-cma managed memory. So I think Fixes tag is really due. I am not sure
-about stable backport. If the patch was the trivial move of
-memalloc_nocma_restore then it would be probably worth it because it is
-trivial to review and backport. I suspect that longterm pins in CMA
-regions would cause hard to debug issues where CMA memory will not be
-available. But I am not really sure this is a real problem considering
-how many long term pin users we have and I have also no idea whether
-those are usually used along with CMA users.
+Agreed, should have been done with ALLOC_CMA since the beginning.
 
-Anyway I think it would really be much better to isolate the
-memalloc_nocma_restore and have it first in the series. The reword of
-the __GFP_MOVABLE functionality is orthogonal.
+> Fixes: d7fefcc (mm/cma: add PF flag to force non cma alloc)
 
-Btw __GFP_NOWARN change is not documented.
+More digits please.
+Fixes: d7fefcc8de91 ("mm/cma: add PF flag to force non cma alloc")
 
-> Suggested-by: Michal Hocko <mhocko@suse.com>
+> Cc: <stable@vger.kernel.org>
 > Signed-off-by: Joonsoo Kim <iamjoonsoo.kim@lge.com>
 > ---
->  include/linux/hugetlb.h |  2 ++
->  mm/gup.c                | 17 ++++++++---------
->  2 files changed, 10 insertions(+), 9 deletions(-)
+>  include/linux/sched/mm.h |  4 ----
+>  mm/page_alloc.c          | 27 +++++++++++++++------------
+>  2 files changed, 15 insertions(+), 16 deletions(-)
 > 
-> diff --git a/include/linux/hugetlb.h b/include/linux/hugetlb.h
-> index 6b9508d..2660b04 100644
-> --- a/include/linux/hugetlb.h
-> +++ b/include/linux/hugetlb.h
-> @@ -708,6 +708,8 @@ static inline gfp_t htlb_modify_alloc_mask(struct hstate *h, gfp_t gfp_mask)
->  	/* Some callers might want to enfoce node */
->  	modified_mask |= (gfp_mask & __GFP_THISNODE);
+> diff --git a/include/linux/sched/mm.h b/include/linux/sched/mm.h
+> index 44ad5b7..a73847a 100644
+> --- a/include/linux/sched/mm.h
+> +++ b/include/linux/sched/mm.h
+> @@ -191,10 +191,6 @@ static inline gfp_t current_gfp_context(gfp_t flags)
+>  			flags &= ~(__GFP_IO | __GFP_FS);
+>  		else if (pflags & PF_MEMALLOC_NOFS)
+>  			flags &= ~__GFP_FS;
+
+Above this hunk you should also remove PF_MEMALLOC_NOCMA from the test.
+
+> -#ifdef CONFIG_CMA
+> -		if (pflags & PF_MEMALLOC_NOCMA)
+> -			flags &= ~__GFP_MOVABLE;
+> -#endif
+>  	}
+>  	return flags;
+>  }
+> diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+> index 6416d08..cd53894 100644
+> --- a/mm/page_alloc.c
+> +++ b/mm/page_alloc.c
+> @@ -2791,7 +2791,7 @@ __rmqueue(struct zone *zone, unsigned int order, int migratetype,
+>  	 * allocating from CMA when over half of the zone's free memory
+>  	 * is in the CMA area.
+>  	 */
+> -	if (migratetype == MIGRATE_MOVABLE &&
+> +	if (alloc_flags & ALLOC_CMA &&
+>  	    zone_page_state(zone, NR_FREE_CMA_PAGES) >
+>  	    zone_page_state(zone, NR_FREE_PAGES) / 2) {
+>  		page = __rmqueue_cma_fallback(zone, order);
+> @@ -2802,7 +2802,7 @@ __rmqueue(struct zone *zone, unsigned int order, int migratetype,
+>  retry:
+>  	page = __rmqueue_smallest(zone, order, migratetype);
+>  	if (unlikely(!page)) {
+> -		if (migratetype == MIGRATE_MOVABLE)
+> +		if (alloc_flags & ALLOC_CMA)
+>  			page = __rmqueue_cma_fallback(zone, order);
 >  
-> +	modified_mask |= (gfp_mask & __GFP_NOWARN);
-> +
->  	return modified_mask;
+>  		if (!page && __rmqueue_fallback(zone, order, migratetype,
+> @@ -3502,11 +3502,9 @@ static inline long __zone_watermark_unusable_free(struct zone *z,
+>  	if (likely(!alloc_harder))
+>  		unusable_free += z->nr_reserved_highatomic;
+>  
+> -#ifdef CONFIG_CMA
+>  	/* If allocation can't use CMA areas don't use free CMA pages */
+> -	if (!(alloc_flags & ALLOC_CMA))
+> +	if (IS_ENABLED(CONFIG_CMA) && !(alloc_flags & ALLOC_CMA))
+>  		unusable_free += zone_page_state(z, NR_FREE_CMA_PAGES);
+> -#endif
+>  
+>  	return unusable_free;
+>  }
+> @@ -3693,6 +3691,16 @@ alloc_flags_nofragment(struct zone *zone, gfp_t gfp_mask)
+>  	return alloc_flags;
 >  }
 >  
-> diff --git a/mm/gup.c b/mm/gup.c
-> index 5daadae..bbd36a1 100644
-> --- a/mm/gup.c
-> +++ b/mm/gup.c
-> @@ -1619,10 +1619,12 @@ static struct page *new_non_cma_page(struct page *page, unsigned long private)
->  	 * Trying to allocate a page for migration. Ignore allocation
->  	 * failure warnings. We don't force __GFP_THISNODE here because
->  	 * this node here is the node where we have CMA reservation and
-> -	 * in some case these nodes will have really less non movable
-> +	 * in some case these nodes will have really less non CMA
->  	 * allocation memory.
-> +	 *
-> +	 * Note that CMA region is prohibited by allocation scope.
->  	 */
-> -	gfp_t gfp_mask = GFP_USER | __GFP_NOWARN;
-> +	gfp_t gfp_mask = GFP_USER | __GFP_MOVABLE | __GFP_NOWARN;
->  
->  	if (PageHighMem(page))
->  		gfp_mask |= __GFP_HIGHMEM;
-> @@ -1630,6 +1632,8 @@ static struct page *new_non_cma_page(struct page *page, unsigned long private)
->  #ifdef CONFIG_HUGETLB_PAGE
->  	if (PageHuge(page)) {
->  		struct hstate *h = page_hstate(page);
+> +static inline void current_alloc_flags(gfp_t gfp_mask,
+> +				unsigned int *alloc_flags)
+> +{
+> +	unsigned int pflags = READ_ONCE(current->flags);
 > +
-> +		gfp_mask = htlb_modify_alloc_mask(h, gfp_mask);
->  		/*
->  		 * We don't want to dequeue from the pool because pool pages will
->  		 * mostly be from the CMA region.
-> @@ -1644,11 +1648,6 @@ static struct page *new_non_cma_page(struct page *page, unsigned long private)
->  		 */
->  		gfp_t thp_gfpmask = GFP_TRANSHUGE | __GFP_NOWARN;
->  
-> -		/*
-> -		 * Remove the movable mask so that we don't allocate from
-> -		 * CMA area again.
-> -		 */
-> -		thp_gfpmask &= ~__GFP_MOVABLE;
->  		thp = __alloc_pages_node(nid, thp_gfpmask, HPAGE_PMD_ORDER);
->  		if (!thp)
->  			return NULL;
-> @@ -1794,7 +1793,6 @@ static long __gup_longterm_locked(struct task_struct *tsk,
->  				     vmas_tmp, NULL, gup_flags);
->  
->  	if (gup_flags & FOLL_LONGTERM) {
-> -		memalloc_nocma_restore(flags);
->  		if (rc < 0)
->  			goto out;
->  
-> @@ -1807,9 +1805,10 @@ static long __gup_longterm_locked(struct task_struct *tsk,
->  
->  		rc = check_and_migrate_cma_pages(tsk, mm, start, rc, pages,
->  						 vmas_tmp, gup_flags);
-> +out:
-> +		memalloc_nocma_restore(flags);
->  	}
->  
-> -out:
->  	if (vmas_tmp != vmas)
->  		kfree(vmas_tmp);
->  	return rc;
-> -- 
-> 2.7.4
+> +	if (!(pflags & PF_MEMALLOC_NOCMA) &&
+> +		gfp_migratetype(gfp_mask) == MIGRATE_MOVABLE)
+> +		*alloc_flags |= ALLOC_CMA;
+> +}
 
--- 
-Michal Hocko
-SUSE Labs
+I don't like the modification through parameter, would just do what
+current_gfp_context() does and return the modified value.
+Also make it a no-op (including no READ_ONCE(current->flags)) if !CONFIG_CMA,
+please.
+
+>  /*
+>   * get_page_from_freelist goes through the zonelist trying to allocate
+>   * a page.
+> @@ -3706,6 +3714,8 @@ get_page_from_freelist(gfp_t gfp_mask, unsigned int order, int alloc_flags,
+>  	struct pglist_data *last_pgdat_dirty_limit = NULL;
+>  	bool no_fallback;
+>  
+> +	current_alloc_flags(gfp_mask, &alloc_flags);
+
+I don't see why to move the test here? It will still be executed in the
+fastpath, if that's what you wanted to avoid.
+
+> +
+>  retry:
+>  	/*
+>  	 * Scan zonelist, looking for a zone with enough free.
+> @@ -4339,10 +4349,6 @@ gfp_to_alloc_flags(gfp_t gfp_mask)
+>  	} else if (unlikely(rt_task(current)) && !in_interrupt())
+>  		alloc_flags |= ALLOC_HARDER;
+>  
+> -#ifdef CONFIG_CMA
+> -	if (gfp_migratetype(gfp_mask) == MIGRATE_MOVABLE)
+> -		alloc_flags |= ALLOC_CMA;
+> -#endif
+
+I would just replace this here with:
+alloc_flags = current_alloc_flags(gfp_mask, alloc_flags);
+
+>  	return alloc_flags;
+>  }
+>  
+> @@ -4808,9 +4814,6 @@ static inline bool prepare_alloc_pages(gfp_t gfp_mask, unsigned int order,
+>  	if (should_fail_alloc_page(gfp_mask, order))
+>  		return false;
+>  
+> -	if (IS_ENABLED(CONFIG_CMA) && ac->migratetype == MIGRATE_MOVABLE)
+> -		*alloc_flags |= ALLOC_CMA;
+
+And same here... Ah, I see. current_alloc_flags() should probably take a
+migratetype parameter instead of gfp_mask then.
+
+> -
+>  	return true;
+>  }
+>  
+> 
+
