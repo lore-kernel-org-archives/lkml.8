@@ -7,61 +7,61 @@ X-Spam-Status: No, score=-17.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA6D7C433E4
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 17:00:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38454C433E4
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 17:01:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9C8C9205CB
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 17:00:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F81920663
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 17:01:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="EwF/zsrY"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="HOErAk1b"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726370AbgGORAX (ORCPT
+        id S1726568AbgGORBu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 13:00:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46660 "EHLO
+        Wed, 15 Jul 2020 13:01:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46884 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725798AbgGORAW (ORCPT
+        with ESMTP id S1725838AbgGORBt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 13:00:22 -0400
-Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6958AC061755
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 10:00:22 -0700 (PDT)
-Received: by mail-wm1-x342.google.com with SMTP id l2so6536154wmf.0
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 10:00:22 -0700 (PDT)
+        Wed, 15 Jul 2020 13:01:49 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7257CC061755
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 10:01:49 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id r12so3389129wrj.13
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 10:01:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=l2eBn3+EVfj8N4psyRPlN3zHm1Nlg+2LJ1kPRxLMMbY=;
-        b=EwF/zsrYrLoNZL+1mhpkV26aToBaZ70ZYFZgmoEIxoLMHKf9jrheCesgW5aCeCl2ZH
-         x2Bki76zqs/Vwha9F1oU+5K5yOTdqQUe3cW3kGaAjkb0TsRZ277DFapOwgwf7fRFve6u
-         uwEpsCKJcEOpKcR+/SgJbG8BptO/dN5tzfXrgF4lwQ+b4RS4YeAU2Tkqpk2ykDhS1NZE
-         Kf1toOB8Gfe0QtzZ8ljeIb9b1EtdJN1BWhVFPDUN3Lz4Q0dIwAr8q6gbxEFd4Yxf65hH
-         beIfVfFn0aVTjBR8sMmjvmsGTd7iD93KdrpYo0X683xK91TJIKmKXvBBsUWfMaArcKDg
-         rUbQ==
+        bh=miAzuq9MwC1O619PaqzC/i3ymDnyFm/MdhV0rUKfJ2Q=;
+        b=HOErAk1bkfXtfMriGPrsT9YVFG+OojXqlEi25Wh3/PgOD2jvIsw8wOBd0PwrGDvdPa
+         438b47TmdJxhDvBb/W7n9A8ekgcpIieOh8M66B5Z02oxBBHGGhCkNHc+vsAoR6skh8M3
+         0CA0A5YDZ423yE2ybqO//jV9GxJXDWnvW50aKdtLCBIYrFMT/qUidDbm35AiOwdVNbK6
+         K0Z7F747Gc6YzeykUExDQVeXcyeZ8lFgPm30F/qx/ijJ2BSxumHVZOsHwJsDba87cpZG
+         sjygNelMPFwZKVwBzwViUaMdXHHg6FajY0FNG8XO+EkiEyL5O961izsfOWwfKbz0ifIL
+         DLTQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=l2eBn3+EVfj8N4psyRPlN3zHm1Nlg+2LJ1kPRxLMMbY=;
-        b=Y9f9CmlV6QMGYZcr8gAUrUbPQx7Z/8q6KYW6p6lxgrR0ZlDKEkcMna+lJjGowCTVfJ
-         hPMudXrKKGU8VZ79TEqyZGZDLEUm+WpLKQEjADEAv45Iwu+Hms2cVf7NeG5z7FhTjCRi
-         hRspnBbLF8Zx529EgTUGSrhUQnRtnrJkBUI4Xzuph9dVgWRPcFkcLaRwb7e2vndeRhxx
-         /UnongVfTC0tfXnJT0kTs22fIEkaN1eyr2UV0uFpwUTv589S6XonWjFP5TR/y9/jlU9P
-         8yEu6K40ci67UxY4rMyCHVdj/F33dFV+gHq30uXGetXkrglVx7IjwLfqyb99cO5oVb+s
-         RxHg==
-X-Gm-Message-State: AOAM532ps5+aMbKdOSEQbxJY3eVb8eLCoe1FuP2G15W2y9OFV+x9Yl5o
-        SLUYrkCYD9NT31ZHQwlE/GVBOFSBx3TOiJSmIzamiw==
-X-Google-Smtp-Source: ABdhPJxosDB/zioPQt8T+6l2O+rJviFlggpvtgZU3QKstoN0n1OLAPCh+AA+ZnNjTLtI48gKbH3/Q/c6vN+V4ipdt30=
-X-Received: by 2002:a1c:19c5:: with SMTP id 188mr378094wmz.124.1594832420926;
- Wed, 15 Jul 2020 10:00:20 -0700 (PDT)
+        bh=miAzuq9MwC1O619PaqzC/i3ymDnyFm/MdhV0rUKfJ2Q=;
+        b=WZ0g5j3aak7snX5IpmwEkgg4EHDq0cvlJzbLc2CpCHm1lvZOQLw180JQRl1CBaP8mh
+         juyX/lx/68FbrMyiZ0WKxkOjNi10XoASV8Z+lA7eqgVvT/KsFb04rn7J3JRbcEtaD7xe
+         c7pDP7bXkYYveHDEK2lrzd6YZTiA+wN+tZ/IGA+zGmMbCrbpIQQxo3ri1IXRhZInlS+1
+         CJCE2mm8u6dBterm0wM0V2XKFa8Gpe0wOese9kZodwqBFL8hPcBHrMgDA7jmjVVX4aeX
+         ykS72LM7geBEqCEqFzrShQ335rurszubJpTHOrpBOvZQKQSpNP0rM8xq+Om1fUp7cuRB
+         FIDw==
+X-Gm-Message-State: AOAM533312MxBGGxdiyRIdLmynkLmo5dpNdsdB6+NgpHv/WExgvTTTg7
+        TIFeClSNfqKR1srZbidDwmtwIdhj0YQy/mibj3GnDg==
+X-Google-Smtp-Source: ABdhPJzWlXR2emSZ8HLWbCck07An/U4Mxo5ISOE9eGh2vLT7zy7W28FxIyO/2jOBHJpI6LMo+qdbrlzGEUXuxhjMteo=
+X-Received: by 2002:adf:e40e:: with SMTP id g14mr311759wrm.271.1594832507886;
+ Wed, 15 Jul 2020 10:01:47 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200712132634.138901-1-jolsa@kernel.org> <20200712132634.138901-14-jolsa@kernel.org>
-In-Reply-To: <20200712132634.138901-14-jolsa@kernel.org>
+References: <20200712132634.138901-1-jolsa@kernel.org> <20200712132634.138901-16-jolsa@kernel.org>
+In-Reply-To: <20200712132634.138901-16-jolsa@kernel.org>
 From:   Ian Rogers <irogers@google.com>
-Date:   Wed, 15 Jul 2020 10:00:09 -0700
-Message-ID: <CAP-5=fXHGGCFw_5zcXboFUYeNMMC5K0fbAXwPn0HRw91pt6A0A@mail.gmail.com>
-Subject: Re: [PATCH 13/18] perf metric: Add events for the current group
+Date:   Wed, 15 Jul 2020 10:01:36 -0700
+Message-ID: <CAP-5=fV_Hnhcc1Z=xvjkKzjtz+xkUw+q1DG0ov2eOhmagD50PQ@mail.gmail.com>
+Subject: Re: [PATCH 15/18] perf metric: Add DCache_L2 to metric parse test
 To:     Jiri Olsa <jolsa@kernel.org>
 Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
         lkml <linux-kernel@vger.kernel.org>,
@@ -83,61 +83,113 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 On Sun, Jul 12, 2020 at 6:27 AM Jiri Olsa <jolsa@kernel.org> wrote:
 >
-> There's no need to iterate the whole list of groups,
-> when adding new events. The currently created group
-> is the one we want to add.
+> Adding test that compute DCache_L2 metrics with other related metrics in it.
 >
 > Signed-off-by: Jiri Olsa <jolsa@kernel.org>
-> ---
->  tools/perf/util/metricgroup.c | 22 ++++++++++++----------
->  1 file changed, 12 insertions(+), 10 deletions(-)
->
-> diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.c
-> index 8cbcc5e05fef..66f25362702d 100644
-> --- a/tools/perf/util/metricgroup.c
-> +++ b/tools/perf/util/metricgroup.c
-> @@ -811,17 +811,19 @@ static int metricgroup__add_metric(const char *metric, bool metric_no_group,
 
-Could we add a function comment to describe the arguments here?
-Currently events is an empty list out argument that is built up by
-this code, now it will be incrementally updated. Except I don't think
-I'm capturing the current state correctly, it is confusing that there
-is the loop in the current code. It looks like events will be added
-multiple times redundantly.
+This feels familiar :-)
 
->         if (ret)
->                 return ret;
->
-> -       list_for_each_entry(eg, group_list, nd) {
-> -               if (events->len > 0)
-> -                       strbuf_addf(events, ",");
-> +       if (events->len > 0)
-> +               strbuf_addf(events, ",");
->
-> -               if (eg->has_constraint) {
-> -                       metricgroup__add_metric_non_group(events,
-> -                                                         &eg->pctx);
-> -               } else {
-> -                       metricgroup__add_metric_weak_group(events,
-> -                                                          &eg->pctx);
-> -               }
-> +       /*
-> +        * Even if we add multiple groups through the runtime
-> +        * param, they share same events.
-> +        */
-
-I'm not clear what runtime param is here. Is it the \? arch runtime parameter?
+Acked-by: Ian Rogers <irogers@google.com>
 
 Thanks,
 Ian
 
-> +       if (eg->has_constraint) {
-> +               metricgroup__add_metric_non_group(events,
-> +                                                 &eg->pctx);
-> +       } else {
-> +               metricgroup__add_metric_weak_group(events,
-> +                                                  &eg->pctx);
->         }
+
+> ---
+>  tools/perf/tests/parse-metric.c | 71 +++++++++++++++++++++++++++++++++
+>  1 file changed, 71 insertions(+)
+>
+> diff --git a/tools/perf/tests/parse-metric.c b/tools/perf/tests/parse-metric.c
+> index 28f33893338b..b50e2a3f3b73 100644
+> --- a/tools/perf/tests/parse-metric.c
+> +++ b/tools/perf/tests/parse-metric.c
+> @@ -36,6 +36,27 @@ static struct pmu_event pme_test[] = {
+>         .metric_expr    = "(dcache_miss_cpi + icache_miss_cycles)",
+>         .metric_name    = "cache_miss_cycles",
+>  },
+> +{
+> +       .metric_expr    = "L2_RQSTS.DEMAND_DATA_RD_HIT + L2_RQSTS.PF_HIT + L2_RQSTS.RFO_HIT",
+> +       .metric_name    = "DCache_L2_All_Hits",
+> +},
+> +{
+> +       .metric_expr    = "max(L2_RQSTS.ALL_DEMAND_DATA_RD - L2_RQSTS.DEMAND_DATA_RD_HIT, 0) + "
+> +                         "L2_RQSTS.PF_MISS + L2_RQSTS.RFO_MISS",
+> +       .metric_name    = "DCache_L2_All_Miss",
+> +},
+> +{
+> +       .metric_expr    = "DCache_L2_All_Hits + DCache_L2_All_Miss",
+> +       .metric_name    = "DCache_L2_All",
+> +},
+> +{
+> +       .metric_expr    = "d_ratio(DCache_L2_All_Hits, DCache_L2_All)",
+> +       .metric_name    = "DCache_L2_Hits",
+> +},
+> +{
+> +       .metric_expr    = "d_ratio(DCache_L2_All_Miss, DCache_L2_All)",
+> +       .metric_name    = "DCache_L2_Misses",
+> +},
+>  };
+>
+>  static struct pmu_events_map map = {
+> @@ -194,10 +215,60 @@ static int test_cache_miss_cycles(void)
+>         return 0;
+>  }
+>
+> +
+> +/*
+> + * DCache_L2_All_Hits = L2_RQSTS.DEMAND_DATA_RD_HIT + L2_RQSTS.PF_HIT + L2_RQSTS.RFO_HI
+> + * DCache_L2_All_Miss = MAX(L2_RQSTS.ALL_DEMAND_DATA_RD - L2_RQSTS.DEMAND_DATA_RD_HIT, 0) +
+> + *                      L2_RQSTS.PF_MISS + L2_RQSTS.RFO_MISS
+> + * DCache_L2_All      = DCache_L2_All_Hits + DCache_L2_All_Miss
+> + * DCache_L2_Hits     = d_ratio(DCache_L2_All_Hits, DCache_L2_All)
+> + * DCache_L2_Misses   = d_ratio(DCache_L2_All_Miss, DCache_L2_All)
+> + *
+> + * L2_RQSTS.DEMAND_DATA_RD_HIT = 100
+> + * L2_RQSTS.PF_HIT             = 200
+> + * L2_RQSTS.RFO_HI             = 300
+> + * L2_RQSTS.ALL_DEMAND_DATA_RD = 400
+> + * L2_RQSTS.PF_MISS            = 500
+> + * L2_RQSTS.RFO_MISS           = 600
+> + *
+> + * DCache_L2_All_Hits = 600
+> + * DCache_L2_All_Miss = MAX(400 - 100, 0) + 500 + 600 = 1400
+> + * DCache_L2_All      = 600 + 1400  = 2000
+> + * DCache_L2_Hits     = 600 / 2000  = 0.3
+> + * DCache_L2_Misses   = 1400 / 2000 = 0.7
+> + */
+> +static int test_dcache_l2(void)
+> +{
+> +       double ratio;
+> +       struct value vals[] = {
+> +               { .event = "L2_RQSTS.DEMAND_DATA_RD_HIT", .val = 100 },
+> +               { .event = "L2_RQSTS.PF_HIT",             .val = 200 },
+> +               { .event = "L2_RQSTS.RFO_HIT",            .val = 300 },
+> +               { .event = "L2_RQSTS.ALL_DEMAND_DATA_RD", .val = 400 },
+> +               { .event = "L2_RQSTS.PF_MISS",            .val = 500 },
+> +               { .event = "L2_RQSTS.RFO_MISS",           .val = 600 },
+> +               { 0 },
+> +       };
+> +
+> +       TEST_ASSERT_VAL("failed to compute metric",
+> +                       compute_metric("DCache_L2_Hits", vals, &ratio) == 0);
+> +
+> +       TEST_ASSERT_VAL("DCache_L2_Hits failed, wrong ratio",
+> +                       ratio == 0.3);
+> +
+> +       TEST_ASSERT_VAL("failed to compute metric",
+> +                       compute_metric("DCache_L2_Misses", vals, &ratio) == 0);
+> +
+> +       TEST_ASSERT_VAL("DCache_L2_Misses failed, wrong ratio",
+> +                       ratio == 0.7);
+> +       return 0;
+> +}
+> +
+>  int test__parse_metric(struct test *test __maybe_unused, int subtest __maybe_unused)
+>  {
+>         TEST_ASSERT_VAL("IPC failed", test_ipc() == 0);
+>         TEST_ASSERT_VAL("frontend failed", test_frontend() == 0);
+>         TEST_ASSERT_VAL("cache_miss_cycles failed", test_cache_miss_cycles() == 0);
+> +       TEST_ASSERT_VAL("DCache_L2 failed", test_dcache_l2() == 0);
 >         return 0;
 >  }
 > --
