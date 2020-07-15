@@ -2,199 +2,80 @@ Return-Path: <SRS0=kup7=A2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLACK,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01BDFC433E4
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 13:34:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF46FC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 13:34:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BD9F7206E9
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 13:34:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 84F07206F5
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 13:34:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="smSDf7fe"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="O9nIz0t/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731872AbgGONe3 (ORCPT
+        id S1731904AbgGONev (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 09:34:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42856 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731785AbgGONe1 (ORCPT
+        Wed, 15 Jul 2020 09:34:51 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:57473 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1731785AbgGONev (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 09:34:27 -0400
-Received: from mail-qk1-x743.google.com (mail-qk1-x743.google.com [IPv6:2607:f8b0:4864:20::743])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 33149C08C5C1
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 06:34:27 -0700 (PDT)
-Received: by mail-qk1-x743.google.com with SMTP id k18so1758793qke.4
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 06:34:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=ist+zUFMXqgrqPV+nXc/DK8k9+duadJsoRJCJpalHsM=;
-        b=smSDf7feI9j3VBPTdi6AeWuQgXL38IbMjBV4uAuzaPKZAhWkqJf5qYbNfNRnZrV+8V
-         haxpVQ7LxQcpeeTRsh+4QTNxZHmOsm8hu/8+h7kWdWWzFWIB7lBJpZeRs/WVmfVqJJtD
-         Ydrx1cUXEij5059mc4/JQqCk/qs/fB/yv6zO4RaLjUxTW5X5O9fxtIOxjRX416v7U6kd
-         nhiKR0MKrM45Fg8nnmrOVQfuxZEielnAT2oP1IkurX5Whwdv51lOLUGpIQUpOasMMc0g
-         atZ/mdEvSdKZj2PKMTRhOLSf3QOg8iWF53pXRWaarYKaXtGzlZPDF7RV3oY/4r4bIRMR
-         +vEw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=ist+zUFMXqgrqPV+nXc/DK8k9+duadJsoRJCJpalHsM=;
-        b=cpJ0Uo0pwYQcthOPgndQaVCXiPNPc+3AMedB+3w7t9E5D+vQ5xaYK3INTGMQLE3OJi
-         ++3wlLpvSwy21S6iF+sGKWKY4cMKBg9Rh5N4p/QDtCAt+l9CMrcBVuLHbJNSBotfzpAy
-         HJwt5FbqkQbcQdQomY37ko1+hDGIlMftAckN0MRJtHNr5JNBOBjK7ptKS+dinzupkLOf
-         LKpWfGP8+s4KRt1IsbD5zIMPgP+YXYbQU7KZl6jTGRJTZduwubPhyO4I45SwAF2YPYlP
-         /zQtH6ZOjj8Gy5u8Zdob2YxyW4k+i8ILjPW809OSFtd5W5BL2lh/0cKLQiwhk6di87vt
-         PadA==
-X-Gm-Message-State: AOAM531COpLSQIIpU++jnIqldtFykp7NChXH4WKm+d6hlSDO1TVWb9uX
-        CNfY0a3DL3ImFHiiPbMzyxgw5Q==
-X-Google-Smtp-Source: ABdhPJw5d3kxfZ/Sh3StSThbaxC430eJizQ3JC1axkV9iwYy25G/4Qf48KfGB2IIuvL6+v9gOwmwIg==
-X-Received: by 2002:a05:620a:7ea:: with SMTP id k10mr9672926qkk.418.1594820066251;
-        Wed, 15 Jul 2020 06:34:26 -0700 (PDT)
-Received: from lca.pw (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
-        by smtp.gmail.com with ESMTPSA id v62sm2639005qkb.81.2020.07.15.06.34.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 15 Jul 2020 06:34:25 -0700 (PDT)
-Date:   Wed, 15 Jul 2020 09:34:19 -0400
-From:   Qian Cai <cai@lca.pw>
-To:     Zeng Tao <prime.zeng@hisilicon.com>
-Cc:     alex.williamson@redhat.com, Cornelia Huck <cohuck@redhat.com>,
-        Kevin Tian <kevin.tian@intel.com>,
-        Peter Xu <peterx@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Michel Lespinasse <walken@google.com>,
-        Denis Efremov <efremov@linux.com>, kvm@vger.kernel.org,
+        Wed, 15 Jul 2020 09:34:51 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1594820090;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=aTwTLW4lRF7rnmYKZq+JqoSh+krPnIQntfpICzy4iMc=;
+        b=O9nIz0t/LFoJ1S1iComcKn20CID1vSTYRz94ck9wmuuCgI2z+9JhitC588Hou8vmpL2ZNx
+        0tg29FA3Pp/CcRMbkMSSImptuYw+Lsc9GoNjz6DU5sjvOhNKu/tW68lkXTcu7BcWXMQ+lK
+        X0Piife0IAthw+I7Tg3MaRcPDOvfJFo=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-301-DoZSdfGFM3-ImZHLemk0nA-1; Wed, 15 Jul 2020 09:34:48 -0400
+X-MC-Unique: DoZSdfGFM3-ImZHLemk0nA-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 8672F800C64;
+        Wed, 15 Jul 2020 13:34:46 +0000 (UTC)
+Received: from ovpn-114-12.ams2.redhat.com (ovpn-114-12.ams2.redhat.com [10.36.114.12])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 1738572E53;
+        Wed, 15 Jul 2020 13:34:43 +0000 (UTC)
+Message-ID: <1fd0d82ef5e89e18c669f789a8649ea672bace31.camel@redhat.com>
+Subject: Re: [PATCH net-next] mptcp: Remove unused inline function
+ mptcp_rcv_synsent()
+From:   Paolo Abeni <pabeni@redhat.com>
+To:     YueHaibing <yuehaibing@huawei.com>,
+        mathew.j.martineau@linux.intel.com, matthieu.baerts@tessares.net,
+        davem@davemloft.net, kuba@kernel.org
+Cc:     netdev@vger.kernel.org, mptcp@lists.01.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] vfio/pci: fix racy on error and request eventfd ctx
-Message-ID: <20200715133418.GA4426@lca.pw>
-References: <1594798484-20501-1-git-send-email-prime.zeng@hisilicon.com>
+Date:   Wed, 15 Jul 2020 15:34:42 +0200
+In-Reply-To: <20200715023613.9492-1-yuehaibing@huawei.com>
+References: <20200715023613.9492-1-yuehaibing@huawei.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.36.3 (3.36.3-1.fc32) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1594798484-20501-1-git-send-email-prime.zeng@hisilicon.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 15, 2020 at 03:34:41PM +0800, Zeng Tao wrote:
-> The vfio_pci_release call will free and clear the error and request
-> eventfd ctx while these ctx could be in use at the same time in the
-> function like vfio_pci_request, and it's expected to protect them under
-> the vdev->igate mutex, which is missing in vfio_pci_release.
+On Wed, 2020-07-15 at 10:36 +0800, YueHaibing wrote:
+> commit 263e1201a2c3 ("mptcp: consolidate synack processing.")
+> left behind this, remove it.
+> 
+> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 
-How about other similar places calling eventfd_ctx_put() for "struct
-vfio_pci_device" ? For example, vfio_intx_set_signal().
+Acked-by: Paolo Abeni <pabeni@redhat.com>
 
-> 
-> This issue is introduced since commit 1518ac272e78 ("vfio/pci: fix memory
-> leaks of eventfd ctx"),and since commit 5c5866c593bb ("vfio/pci: Clear
-> error and request eventfd ctx after releasing"), it's very easily to
-> trigger the kernel panic like this:
-> 
-> [ 9513.904346] Unable to handle kernel NULL pointer dereference at virtual address 0000000000000008
-> [ 9513.913091] Mem abort info:
-> [ 9513.915871]   ESR = 0x96000006
-> [ 9513.918912]   EC = 0x25: DABT (current EL), IL = 32 bits
-> [ 9513.924198]   SET = 0, FnV = 0
-> [ 9513.927238]   EA = 0, S1PTW = 0
-> [ 9513.930364] Data abort info:
-> [ 9513.933231]   ISV = 0, ISS = 0x00000006
-> [ 9513.937048]   CM = 0, WnR = 0
-> [ 9513.940003] user pgtable: 4k pages, 48-bit VAs, pgdp=0000007ec7d12000
-> [ 9513.946414] [0000000000000008] pgd=0000007ec7d13003, p4d=0000007ec7d13003, pud=0000007ec728c003, pmd=0000000000000000
-> [ 9513.956975] Internal error: Oops: 96000006 [#1] PREEMPT SMP
-> [ 9513.962521] Modules linked in: vfio_pci vfio_virqfd vfio_iommu_type1 vfio hclge hns3 hnae3 [last unloaded: vfio_pci]
-> [ 9513.972998] CPU: 4 PID: 1327 Comm: bash Tainted: G        W         5.8.0-rc4+ #3
-> [ 9513.980443] Hardware name: Huawei TaiShan 2280 V2/BC82AMDC, BIOS 2280-V2 CS V3.B270.01 05/08/2020
-> [ 9513.989274] pstate: 80400089 (Nzcv daIf +PAN -UAO BTYPE=--)
-> [ 9513.994827] pc : _raw_spin_lock_irqsave+0x48/0x88
-> [ 9513.999515] lr : eventfd_signal+0x6c/0x1b0
-> [ 9514.003591] sp : ffff800038a0b960
-> [ 9514.006889] x29: ffff800038a0b960 x28: ffff007ef7f4da10
-> [ 9514.012175] x27: ffff207eefbbfc80 x26: ffffbb7903457000
-> [ 9514.017462] x25: ffffbb7912191000 x24: ffff007ef7f4d400
-> [ 9514.022747] x23: ffff20be6e0e4c00 x22: 0000000000000008
-> [ 9514.028033] x21: 0000000000000000 x20: 0000000000000000
-> [ 9514.033321] x19: 0000000000000008 x18: 0000000000000000
-> [ 9514.038606] x17: 0000000000000000 x16: ffffbb7910029328
-> [ 9514.043893] x15: 0000000000000000 x14: 0000000000000001
-> [ 9514.049179] x13: 0000000000000000 x12: 0000000000000002
-> [ 9514.054466] x11: 0000000000000000 x10: 0000000000000a00
-> [ 9514.059752] x9 : ffff800038a0b840 x8 : ffff007ef7f4de60
-> [ 9514.065038] x7 : ffff007fffc96690 x6 : fffffe01faffb748
-> [ 9514.070324] x5 : 0000000000000000 x4 : 0000000000000000
-> [ 9514.075609] x3 : 0000000000000000 x2 : 0000000000000001
-> [ 9514.080895] x1 : ffff007ef7f4d400 x0 : 0000000000000000
-> [ 9514.086181] Call trace:
-> [ 9514.088618]  _raw_spin_lock_irqsave+0x48/0x88
-> [ 9514.092954]  eventfd_signal+0x6c/0x1b0
-> [ 9514.096691]  vfio_pci_request+0x84/0xd0 [vfio_pci]
-> [ 9514.101464]  vfio_del_group_dev+0x150/0x290 [vfio]
-> [ 9514.106234]  vfio_pci_remove+0x30/0x128 [vfio_pci]
-> [ 9514.111007]  pci_device_remove+0x48/0x108
-> [ 9514.115001]  device_release_driver_internal+0x100/0x1b8
-> [ 9514.120200]  device_release_driver+0x28/0x38
-> [ 9514.124452]  pci_stop_bus_device+0x68/0xa8
-> [ 9514.128528]  pci_stop_and_remove_bus_device+0x20/0x38
-> [ 9514.133557]  pci_iov_remove_virtfn+0xb4/0x128
-> [ 9514.137893]  sriov_disable+0x3c/0x108
-> [ 9514.141538]  pci_disable_sriov+0x28/0x38
-> [ 9514.145445]  hns3_pci_sriov_configure+0x48/0xb8 [hns3]
-> [ 9514.150558]  sriov_numvfs_store+0x110/0x198
-> [ 9514.154724]  dev_attr_store+0x44/0x60
-> [ 9514.158373]  sysfs_kf_write+0x5c/0x78
-> [ 9514.162018]  kernfs_fop_write+0x104/0x210
-> [ 9514.166010]  __vfs_write+0x48/0x90
-> [ 9514.169395]  vfs_write+0xbc/0x1c0
-> [ 9514.172694]  ksys_write+0x74/0x100
-> [ 9514.176079]  __arm64_sys_write+0x24/0x30
-> [ 9514.179987]  el0_svc_common.constprop.4+0x110/0x200
-> [ 9514.184842]  do_el0_svc+0x34/0x98
-> [ 9514.188144]  el0_svc+0x14/0x40
-> [ 9514.191185]  el0_sync_handler+0xb0/0x2d0
-> [ 9514.195088]  el0_sync+0x140/0x180
-> [ 9514.198389] Code: b9001020 d2800000 52800022 f9800271 (885ffe61)
-> [ 9514.204455] ---[ end trace 648de00c8406465f ]---
-> [ 9514.212308] note: bash[1327] exited with preempt_count 1
-> 
-> Cc: Qian Cai <cai@lca.pw>
-> Cc: Alex Williamson <alex.williamson@redhat.com>
-> Fixes: 1518ac272e78 ("vfio/pci: fix memory leaks of eventfd ctx")
-> Signed-off-by: Zeng Tao <prime.zeng@hisilicon.com>
-> ---
->  drivers/vfio/pci/vfio_pci.c | 5 +++++
->  1 file changed, 5 insertions(+)
-> 
-> diff --git a/drivers/vfio/pci/vfio_pci.c b/drivers/vfio/pci/vfio_pci.c
-> index f634c81..de881a6 100644
-> --- a/drivers/vfio/pci/vfio_pci.c
-> +++ b/drivers/vfio/pci/vfio_pci.c
-> @@ -521,14 +521,19 @@ static void vfio_pci_release(void *device_data)
->  		vfio_pci_vf_token_user_add(vdev, -1);
->  		vfio_spapr_pci_eeh_release(vdev->pdev);
->  		vfio_pci_disable(vdev);
-> +		mutex_lock(&vdev->igate);
->  		if (vdev->err_trigger) {
->  			eventfd_ctx_put(vdev->err_trigger);
->  			vdev->err_trigger = NULL;
->  		}
-> +		mutex_unlock(&vdev->igate);
-> +
-> +		mutex_lock(&vdev->igate);
->  		if (vdev->req_trigger) {
->  			eventfd_ctx_put(vdev->req_trigger);
->  			vdev->req_trigger = NULL;
->  		}
-> +		mutex_unlock(&vdev->igate);
->  	}
->  
->  	mutex_unlock(&vdev->reflck->lock);
-> -- 
-> 2.8.1
-> 
+Thank you for the clean-up!
+
+/P
+
