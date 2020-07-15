@@ -2,148 +2,87 @@ Return-Path: <SRS0=kup7=A2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72D70C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 05:58:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2E75C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 06:04:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5637420663
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 05:58:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 90FCD20663
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 06:04:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594793041;
+	bh=1lPhEX+gUN5h3SFVmkH1Xm04ko6BKhHxoYzLWu5nClA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Ap8LXU2xK0+OvTl8FVhHSt+uYaXtvnKlJ0GVLQ0Z8fByVPI9FrhLcQjDKHwJg2FfE
+	 mx0HjiuUQMAqsJeAu7Nq8SWGdrO8JsC7ZpwCBmbkrHm4wRZaQYNhPPvVukHp/yu2sm
+	 I85G5UletsKgp62sLz19Hw+4n/E7UMu4SPuDxjaE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727891AbgGOF6n (ORCPT
+        id S1727825AbgGOGD7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 01:58:43 -0400
-Received: from [195.135.220.15] ([195.135.220.15]:41648 "EHLO mx2.suse.de"
-        rhost-flags-FAIL-FAIL-OK-OK) by vger.kernel.org with ESMTP
-        id S1725823AbgGOF6m (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 01:58:42 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 72153AC5E;
-        Wed, 15 Jul 2020 05:58:43 +0000 (UTC)
-Subject: Re: [PATCH v2 24/24] scsi: aic7xxx: aic79xx_osm: Remove set but
- unused variabes 'saved_scsiid' and 'saved_modes'
-To:     Lee Jones <lee.jones@linaro.org>,
-        James Bottomley <jejb@linux.ibm.com>
-Cc:     martin.petersen@oracle.com, linux-kernel@vger.kernel.org,
-        linux-scsi@vger.kernel.org, Hannes Reinecke <hare@suse.com>
-References: <20200713080001.128044-1-lee.jones@linaro.org>
- <20200713080001.128044-25-lee.jones@linaro.org>
- <559e47de-fa26-9ae5-a3c5-4adeae606309@suse.de>
- <1594741430.4545.15.camel@linux.ibm.com> <20200714213951.GL1398296@dell>
-From:   Hannes Reinecke <hare@suse.de>
-Message-ID: <708d8fb0-512f-a1d3-79d2-50bccda0264c@suse.de>
-Date:   Wed, 15 Jul 2020 07:58:37 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Wed, 15 Jul 2020 02:03:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56780 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725770AbgGOGD7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jul 2020 02:03:59 -0400
+Received: from localhost (unknown [122.171.202.192])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2F12E20663;
+        Wed, 15 Jul 2020 06:03:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594793039;
+        bh=1lPhEX+gUN5h3SFVmkH1Xm04ko6BKhHxoYzLWu5nClA=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=V0S5z6fuc6QuujTu5XuCaSzdF1JNAWlWgKlptU3pzyPcNLq/6md1jBNIn34mgCF2O
+         eOKJioilQYvaRtRqPxgFMhQ1kaKb5p4E9OCKYwhW01fmP7dTqGGvJtoX7GbsZGk9nw
+         4GmW8rHFrFg43vMiRaMdvZn2T2iAznXxsRNe0ujg=
+Date:   Wed, 15 Jul 2020 11:33:55 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Dave Jiang <dave.jiang@intel.com>
+Cc:     Randy Dunlap <rdunlap@infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>
+Subject: Re: [PATCH -next] dmaengine: idxd: fix PCI_MSI build errors
+Message-ID: <20200715060355.GX34333@vkoul-mobl>
+References: <9dee3f46-70d9-ea75-10cb-5527ab297d1d@infradead.org>
+ <46ae481e-3213-f1e0-604b-177bc876bb93@intel.com>
 MIME-Version: 1.0
-In-Reply-To: <20200714213951.GL1398296@dell>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <46ae481e-3213-f1e0-604b-177bc876bb93@intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/14/20 11:39 PM, Lee Jones wrote:
-> On Tue, 14 Jul 2020, James Bottomley wrote:
+On 14-07-20, 07:58, Dave Jiang wrote:
 > 
->> On Tue, 2020-07-14 at 09:46 +0200, Hannes Reinecke wrote:
->>> On 7/13/20 10:00 AM, Lee Jones wrote:
->>>> Haven't been used since 2006.
->>>>
->>>> Fixes the following W=1 kernel build warning(s):
->>>>
->>>>   drivers/scsi/aic7xxx/aic79xx_osm.c: In function
->>>> ‘ahd_linux_queue_abort_cmd’:
->>>>   drivers/scsi/aic7xxx/aic79xx_osm.c:2155:17: warning: variable
->>>> ‘saved_modes’ set but not used [-Wunused-but-set-variable]
->>>>   drivers/scsi/aic7xxx/aic79xx_osm.c:2148:9: warning: variable
->>>> ‘saved_scsiid’ set but not used [-Wunused-but-set-variable]
->>>>
->>>> Cc: Hannes Reinecke <hare@suse.com>
->>>> Signed-off-by: Lee Jones <lee.jones@linaro.org>
->>>> ---
->>>>   drivers/scsi/aic7xxx/aic79xx_osm.c | 4 ----
->>>>   1 file changed, 4 deletions(-)
->>>>
->>>> diff --git a/drivers/scsi/aic7xxx/aic79xx_osm.c
->>>> b/drivers/scsi/aic7xxx/aic79xx_osm.c
->>>> index 3782a20d58885..140c4e74ddd7e 100644
->>>> --- a/drivers/scsi/aic7xxx/aic79xx_osm.c
->>>> +++ b/drivers/scsi/aic7xxx/aic79xx_osm.c
->>>> @@ -2141,14 +2141,12 @@ ahd_linux_queue_abort_cmd(struct scsi_cmnd
->>>> *cmd)
->>>>   	u_int  saved_scbptr;
->>>>   	u_int  active_scbptr;
->>>>   	u_int  last_phase;
->>>> -	u_int  saved_scsiid;
->>>>   	u_int  cdb_byte;
->>>>   	int    retval;
->>>>   	int    was_paused;
->>>>   	int    paused;
->>>>   	int    wait;
->>>>   	int    disconnected;
->>>> -	ahd_mode_state saved_modes;
->>>>   	unsigned long flags;
->>>>   
->>>>   	pending_scb = NULL;
->>>> @@ -2239,7 +2237,6 @@ ahd_linux_queue_abort_cmd(struct scsi_cmnd
->>>> *cmd)
->>>>   		goto done;
->>>>   	}
->>>>   
->>>> -	saved_modes = ahd_save_modes(ahd);
->>>>   	ahd_set_modes(ahd, AHD_MODE_SCSI, AHD_MODE_SCSI);
->>>>   	last_phase = ahd_inb(ahd, LASTPHASE);
->>>>   	saved_scbptr = ahd_get_scbptr(ahd);
->>>> @@ -2257,7 +2254,6 @@ ahd_linux_queue_abort_cmd(struct scsi_cmnd
->>>> *cmd)
->>>>   	 * passed in command.  That command is currently active on
->>>> the
->>>>   	 * bus or is in the disconnected state.
->>>>   	 */
->>>> -	saved_scsiid = ahd_inb(ahd, SAVED_SCSIID);
->>>>   	if (last_phase != P_BUSFREE
->>>>   	    && SCB_GET_TAG(pending_scb) == active_scbptr) {
->>>>   
->>>>
->>>
->>> Reviewed-by: Hannes Reinecke <hare@suse.de>
->>
->> Hey, you don't get to do that ... I asked you to figure out why we're
->> missing an ahd_restore_modes().  Removing the ahd_save_modes() is
->> cosmetic: it gets rid of a warning but doesn't fix the problem.  I'd
->> rather keep the warning until the problem is fixed and the problem is
->> we need a mode save/restore around the ahd_set_modes() which is only
->> partially implemented in this function.
 > 
-> I had a look.  Traced it back to the dawn of time (time == Git), then
-> delved even further back by downloading and trawling through ~10-15
-> tarballs.  It looks as though drivers/scsi/aic7xxx/aic79xx_osm.c was
-> upstreamed in v2.5.60, nearly 20 years ago.  'saved_modes' has been
-> unused since at least then.  If no one has complained in 2 decades,
-> I'd say it probably isn't an issue worth perusing.
+> On 7/13/2020 11:35 PM, Randy Dunlap wrote:
+> > From: Randy Dunlap <rdunlap@infradead.org>
+> > 
+> > Fix build errors when CONFIG_PCI_MSI is not enabled by making the
+> > driver depend on PCI_MSI:
+> > 
+> > ld: drivers/dma/idxd/device.o: in function `idxd_mask_msix_vector':
+> > device.c:(.text+0x26f): undefined reference to `pci_msi_mask_irq'
+> > ld: drivers/dma/idxd/device.o: in function `idxd_unmask_msix_vector':
+> > device.c:(.text+0x2af): undefined reference to `pci_msi_unmask_irq'
+> > 
+> > Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+> > Cc: Dave Jiang <dave.jiang@intel.com>
+> > Cc: dmaengine@vger.kernel.org
+> > Cc: Vinod Koul <vkoul@kernel.org>
 > 
-That's not really the point; this function is the first stage of error 
-recovery. And the only real way of exercising this is to inject a 
-command timeout, which is nearly impossible without dedicated hardware.
-So this function will have a very limited exposure, but nevertheless a 
-quite crucial function.
-Hence I'm not quite agree with your reasoning, and rather would have it 
-fixed.
-But as we're having an alternative fix now, it might be best if you 
-could drop it from your patchset and we'll fix it separately.
+> Vinod, I submitted this fix patch last week:
+> https://patchwork.kernel.org/patch/11649231/
+> 
+> But I think maybe Randy's patch may be more preferable? You can apply this
+> one and ignore my submission.
 
-Cheers,
-
-Hannes
+Ok, Applied this one, thanks
 -- 
-Dr. Hannes Reinecke            Teamlead Storage & Networking
-hare@suse.de                               +49 911 74053 688
-SUSE Software Solutions GmbH, Maxfeldstr. 5, 90409 Nürnberg
-HRB 36809 (AG Nürnberg), Geschäftsführer: Felix Imendörffer
+~Vinod
