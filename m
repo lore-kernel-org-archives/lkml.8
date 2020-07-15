@@ -2,203 +2,213 @@ Return-Path: <SRS0=kup7=A2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF53DC433E3
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 18:35:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0434FC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 18:37:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B054020787
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 18:35:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IHh+UXQJ"
+	by mail.kernel.org (Postfix) with ESMTP id CEAD920656
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 18:37:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594838242;
+	bh=e9h7RZ00AoFOub6D8Q03xsiossw3B3gKpQ4bJXutBX0=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=DBgO4SYtQ0bHgY6JrTS4jB3R8+HAmD6/WIb2YALokwOXO+N4/bbEGHRgnwUKbCK9t
+	 UpJqLsWfvkg+SgpbKdpWYGZseEqlHMMiY6/iWNctmM+e+G7L2eqpDTpwX6YveiKntm
+	 EeIiPf2eK7M7LnP7jffTnbnKH+LuW97VaqK7AVA0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726970AbgGOSfs (ORCPT
+        id S1726859AbgGOShV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 14:35:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33082 "EHLO
+        Wed, 15 Jul 2020 14:37:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33318 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726472AbgGOSfr (ORCPT
+        with ESMTP id S1726670AbgGOShU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 14:35:47 -0400
-Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6D8CAC061755;
-        Wed, 15 Jul 2020 11:35:47 -0700 (PDT)
-Received: by mail-lj1-x241.google.com with SMTP id f5so3708890ljj.10;
-        Wed, 15 Jul 2020 11:35:47 -0700 (PDT)
+        Wed, 15 Jul 2020 14:37:20 -0400
+Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7944BC061755
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 11:37:20 -0700 (PDT)
+Received: by mail-lj1-x242.google.com with SMTP id e8so3804751ljb.0
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 11:37:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=a9PukKTmvcEtFB/zd8C81i1uDCtVpQUHLXdMmIW0atQ=;
-        b=IHh+UXQJ7ALwam/o+gFoelFuyxHtkXg6aIc41790oeW8Jop7ibxd/8Yn1QicWPXRp4
-         cge9/FbC6c/CqS2j2tYZ4Dzb2/Od1HS0HggYxGxUEmVXQeHCEf3NY53e1FVOHy9HVXl1
-         vRmYPi/QHrxmXmBCGkh/HIrBQo1zlDqLJYkwliuDSZzrPHsCIK1FUynrX2ZbtGf4Kj1f
-         4YDBoG5clgz7f+4Sdlx3IGclHWLrWLfYno/PMYhT/jnWP4AqmtV3/KaE3idd8Bp56PAl
-         djmoDFM13a8i/ckLXXWGKffm/1FkWWyVLyWx/hZkhiVtmNkt5yHhidfS4Ok1Fdg26Yd/
-         68HQ==
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=9qQHm2b+3rwbBTzFM/lqzsH6S1Rv7/QR/QYGW+OhMFc=;
+        b=Y+TX0qRGwQIRFrxBRRdvNjZH7UgARoC+KCS4tqoaotvEqXLNKmqCit9K/l4Ucq7pp+
+         rtr3PG3sTjcq17LFAFMOd5vvu7wFr8lWTBiOi3e6ZLG+md72Rn6kNWfTyDy7ujKoNK67
+         8XoVzr+fjQuVqWBY8h75boTmQ608nLGbj9cZ0=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=a9PukKTmvcEtFB/zd8C81i1uDCtVpQUHLXdMmIW0atQ=;
-        b=OpjOmdMppIIMV7DiL61yyusqSymVnD4fiEio8XeZjQTb3Z26ZcAskOGZIYd4w+xOXQ
-         Cv0bEL4ouvZNJDovI1UNy+KaAn35+zE/HKqXb8FesbKxDNrbU6WwcQuDMDdMlz6e6RwQ
-         n5cSahV7X7jEjlnqRjJd8TmuoWU05fbGcI9gMPxtl0JIQ6dc220TlNC4IWalypa5dGRg
-         UTkep9cQPnMaRCBRNTNqlO6rAGn4BpJBigesm/i+cVeYwoAuBqPsD8T6ixVv8fW+JJWW
-         kxkosVKEjihYUvU/LjpZxipO+VMgOvuRfAuiL0lv9LRt/XajzPKLn9++pxt50EPqrZ6h
-         YtQg==
-X-Gm-Message-State: AOAM5320BtbuZdi+BwBLM/y+ThKsNGEfRIWD2ZHOWx8YqP0AJhWQZ7kv
-        Iolgp4YdC9PiVyW5qmTUWv4sJaok9ac=
-X-Google-Smtp-Source: ABdhPJwGU5kzEPsSphSpBxfCet59z1f+F8QI5AGjewge8SCR03L2rLj/ScWSD4l0X7MjA1+f8rBqUw==
-X-Received: by 2002:a2e:808a:: with SMTP id i10mr198256ljg.400.1594838145336;
-        Wed, 15 Jul 2020 11:35:45 -0700 (PDT)
-Received: from pc638.lan (h5ef52e31.seluork.dyn.perspektivbredband.net. [94.245.46.49])
-        by smtp.gmail.com with ESMTPSA id u27sm586992ljd.79.2020.07.15.11.35.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 15 Jul 2020 11:35:44 -0700 (PDT)
-From:   "Uladzislau Rezki (Sony)" <urezki@gmail.com>
-To:     LKML <linux-kernel@vger.kernel.org>, RCU <rcu@vger.kernel.org>,
-        linux-mm@kvack.org, "Paul E . McKenney" <paulmck@kernel.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        "Theodore Y . Ts'o" <tytso@mit.edu>,
-        Matthew Wilcox <willy@infradead.org>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Uladzislau Rezki <urezki@gmail.com>,
-        Oleksiy Avramchenko <oleksiy.avramchenko@sonymobile.com>
-Subject: [PATCH 1/1] rcu/tree: Drop the lock before entering to page allocator
-Date:   Wed, 15 Jul 2020 20:35:37 +0200
-Message-Id: <20200715183537.4010-1-urezki@gmail.com>
-X-Mailer: git-send-email 2.20.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=9qQHm2b+3rwbBTzFM/lqzsH6S1Rv7/QR/QYGW+OhMFc=;
+        b=A0/p5XzfN1HP/T1aF47OFS4MChHYSNDKuwVFrHNBF89/2buGFLltNyZWZEpoeU7EtW
+         Y4vtvPArhtPK4547k92PkSFb3+hw7IPzntG7Lk22lcyjoCm2278BjQ1aZIu0xrY8IDwm
+         pBYIt9P2c7lAi0vhaaSCY/1HNOudSJz69Sindfmz7qhyWIGLIfJo6zg6B/Dt3mhwCvcq
+         yiFC60V8dzhPoQ9trN3zoqHChbxwqvtmwTSpyQ02nGC7i92aSYccTCmU58qV720LxDpQ
+         XSS0fwZlzP9eZ2JCu0qCl0ST8y54g1nNzmxgtNo7EdEM/q79iWYb+Q70SN618xlwqihE
+         Jf0A==
+X-Gm-Message-State: AOAM530BiHQetvvGo4h6J5Kv0z9xKUBMundEUyTfnIJwEI7pC8OGyhx+
+        dy3RrO9wZEo+xCYIrRHFs/nxAsLl6ew=
+X-Google-Smtp-Source: ABdhPJwoDI4r9pgpmz9i2Ql4e5mCWYfUAXpJHbkj4FtNenIfZ8nxNTUtQ7qWZbmmYeQNladSEsuq6g==
+X-Received: by 2002:a2e:760f:: with SMTP id r15mr197703ljc.275.1594838238450;
+        Wed, 15 Jul 2020 11:37:18 -0700 (PDT)
+Received: from mail-lf1-f52.google.com (mail-lf1-f52.google.com. [209.85.167.52])
+        by smtp.gmail.com with ESMTPSA id y26sm594102ljk.26.2020.07.15.11.37.16
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 15 Jul 2020 11:37:17 -0700 (PDT)
+Received: by mail-lf1-f52.google.com with SMTP id y13so1615163lfe.9
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 11:37:16 -0700 (PDT)
+X-Received: by 2002:a05:6512:3f1:: with SMTP id n17mr178224lfq.125.1594838236066;
+ Wed, 15 Jul 2020 11:37:16 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200715135011.42743-1-kirill.shutemov@linux.intel.com>
+In-Reply-To: <20200715135011.42743-1-kirill.shutemov@linux.intel.com>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Wed, 15 Jul 2020 11:36:59 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wh4pB-jRngOjcGxpc8=NPds3jWqJwDMUWC3-OEo4dRiKg@mail.gmail.com>
+Message-ID: <CAHk-=wh4pB-jRngOjcGxpc8=NPds3jWqJwDMUWC3-OEo4dRiKg@mail.gmail.com>
+Subject: Re: [PATCHv2] mm: Fix warning in move_normal_pmd()
+To:     "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Linux-MM <linux-mm@kvack.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Naresh Kamboju <naresh.kamboju@linaro.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        William Kucharski <william.kucharski@oracle.com>
+Content-Type: multipart/mixed; boundary="00000000000089243c05aa7f3607"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If the kernel is built with CONFIG_PROVE_RAW_LOCK_NESTING
-option, the lockedp will complain about violation of the
-nesting rules. It does the raw_spinlock vs. spinlock nesting
-checks.
+--00000000000089243c05aa7f3607
+Content-Type: text/plain; charset="UTF-8"
 
-Internally the kfree_rcu() uses raw_spinlock_t whereas the
-page allocator internally deals with spinlock_t to access
-to its zones.
+On Wed, Jul 15, 2020 at 6:50 AM Kirill A. Shutemov
+<kirill.shutemov@linux.intel.com> wrote:
+>
+> mremap(2) does not allow source and destination regions to overlap, but
+> shift_arg_pages() calls move_page_tables() directly and in this case the
+> source and destination overlap often. It
 
-In order to prevent such vialation that is in question we
-can drop the internal raw_spinlock_t before entering to
-the page allocaor.
+Actually, before we do this patch (which I think is a good idea), I'd
+like Naresh to test the attached patch.
 
-Signed-off-by: Uladzislau Rezki (Sony) <urezki@gmail.com>
----
- kernel/rcu/tree.c | 36 +++++++++++++++++++-----------------
- 1 file changed, 19 insertions(+), 17 deletions(-)
+And Kirill, Joel, mind looking it over too.
 
-diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
-index 21c2fa5bd8c3..7469bd1e5c2c 100644
---- a/kernel/rcu/tree.c
-+++ b/kernel/rcu/tree.c
-@@ -3278,21 +3278,22 @@ static void kfree_rcu_monitor(struct work_struct *work)
- }
- 
- static inline bool
--kvfree_call_rcu_add_ptr_to_bulk(struct kfree_rcu_cpu *krcp, void *ptr)
-+add_ptr_to_bulk_krc_lock(struct kfree_rcu_cpu **krcp,
-+	unsigned long *flags, void *ptr)
- {
- 	struct kvfree_rcu_bulk_data *bnode;
- 	int idx;
- 
--	if (unlikely(!krcp->initialized))
-+	*krcp = krc_this_cpu_lock(flags);
-+	if (unlikely(!(*krcp)->initialized))
- 		return false;
- 
--	lockdep_assert_held(&krcp->lock);
- 	idx = !!is_vmalloc_addr(ptr);
- 
- 	/* Check if a new block is required. */
--	if (!krcp->bkvhead[idx] ||
--			krcp->bkvhead[idx]->nr_records == KVFREE_BULK_MAX_ENTR) {
--		bnode = get_cached_bnode(krcp);
-+	if (!(*krcp)->bkvhead[idx] ||
-+			(*krcp)->bkvhead[idx]->nr_records == KVFREE_BULK_MAX_ENTR) {
-+		bnode = get_cached_bnode(*krcp);
- 		if (!bnode) {
- 			/*
- 			 * To keep this path working on raw non-preemptible
-@@ -3306,6 +3307,9 @@ kvfree_call_rcu_add_ptr_to_bulk(struct kfree_rcu_cpu *krcp, void *ptr)
- 			if (IS_ENABLED(CONFIG_PREEMPT_RT))
- 				return false;
- 
-+			preempt_disable();
-+			krc_this_cpu_unlock(*krcp, *flags);
-+
- 			/*
- 			 * NOTE: For one argument of kvfree_rcu() we can
- 			 * drop the lock and get the page in sleepable
-@@ -3315,6 +3319,9 @@ kvfree_call_rcu_add_ptr_to_bulk(struct kfree_rcu_cpu *krcp, void *ptr)
- 			 */
- 			bnode = (struct kvfree_rcu_bulk_data *)
- 				__get_free_page(GFP_NOWAIT | __GFP_NOWARN);
-+
-+			*krcp = krc_this_cpu_lock(flags);
-+			preempt_enable();
- 		}
- 
- 		/* Switch to emergency path. */
-@@ -3323,15 +3330,15 @@ kvfree_call_rcu_add_ptr_to_bulk(struct kfree_rcu_cpu *krcp, void *ptr)
- 
- 		/* Initialize the new block. */
- 		bnode->nr_records = 0;
--		bnode->next = krcp->bkvhead[idx];
-+		bnode->next = (*krcp)->bkvhead[idx];
- 
- 		/* Attach it to the head. */
--		krcp->bkvhead[idx] = bnode;
-+		(*krcp)->bkvhead[idx] = bnode;
- 	}
- 
- 	/* Finally insert. */
--	krcp->bkvhead[idx]->records
--		[krcp->bkvhead[idx]->nr_records++] = ptr;
-+	(*krcp)->bkvhead[idx]->records
-+		[(*krcp)->bkvhead[idx]->nr_records++] = ptr;
- 
- 	return true;
- }
-@@ -3369,24 +3376,19 @@ void kvfree_call_rcu(struct rcu_head *head, rcu_callback_t func)
- 		ptr = (unsigned long *) func;
- 	}
- 
--	krcp = krc_this_cpu_lock(&flags);
--
- 	// Queue the object but don't yet schedule the batch.
- 	if (debug_rcu_head_queue(ptr)) {
- 		// Probable double kfree_rcu(), just leak.
- 		WARN_ONCE(1, "%s(): Double-freed call. rcu_head %p\n",
- 			  __func__, head);
--
--		// Mark as success and leave.
--		success = true;
--		goto unlock_return;
-+		return;
- 	}
- 
- 	/*
- 	 * Under high memory pressure GFP_NOWAIT can fail,
- 	 * in that case the emergency path is maintained.
- 	 */
--	success = kvfree_call_rcu_add_ptr_to_bulk(krcp, ptr);
-+	success = add_ptr_to_bulk_krc_lock(&krcp, &flags, ptr);
- 	if (!success) {
- 		if (head == NULL)
- 			// Inline if kvfree_rcu(one_arg) call.
--- 
-2.20.1
+IT IS ENTIRELY UNTESTED.
 
+But I hope the concept (and the code) is fairly obvious: it makes
+move_page_tables() try to align the range to be moved, if possible.
+
+That *should* actually remove the warning that Naresh sees, for the
+simple reason that now the PMD moving case will *always* trigger when
+the stack movement is PMD-aligned, and you never see the "first do a
+few small pages, then do the PMD optimization" case.
+
+And that should mean that we don't ever hit the "oh, we already have a
+target pmd" thing, because the "move the whole pmd" case will clear
+the ones it has already taken care of, and you never have that "oh,
+there's an empty pmd where the pages were moved away one by one".
+
+And that means that for this case, it's _ok_ to overlap (as long as we
+copy downwards).
+
+What do you think?
+
+Ok, so I could easily have screwed up the patch, even if it's
+conceptually fairly simple. The details are small, but they needed
+some care. The thing _looks_ fine to me, both on a source level and
+when looking at the generated code, and I made sure to try to use a
+lot of small helper functions and couple of helper macros to make each
+individual piece look clear and obvious.
+
+But obviously a single "Oh, that test is the wrong way around", or a
+missing mask inversion, or whatever, could completely break the code.
+So no guarantees, but it looks fairly straightforward to me.
+
+Naresh - this patch does *NOT* make sense to test together with
+Kirill's (or Joel's) patch that says "don't do the PMD optimization at
+all for overlapping cases". Those patches will hide the issue, and
+make the new code only work for mremap(), not for the initial stack
+setup that caused the original warning.
+
+Joel - I think this patch makes sense _regardless_ of the special
+execve() usage case, in that it extends your "let's just copy things
+at a whole PMD level" logic to even the case where the beginning
+wasn't PMD-aligned (or the length wasn't sufficient).
+
+Obviously it only triggers when the source and destination are
+mutually aligned, and if there are no other vma's around those
+first/last PMD entries. Which might mean that it almost never triggers
+in practice, but looking at the generated code, it sure looks like
+it's cheap enough to test.
+
+Didn't you have some test-cases for your pmd optimized movement cases,
+at least for timing?
+
+               Linus
+
+--00000000000089243c05aa7f3607
+Content-Type: application/octet-stream; name=patch
+Content-Disposition: attachment; filename=patch
+Content-Transfer-Encoding: base64
+Content-ID: <f_kcnphvie0>
+X-Attachment-Id: f_kcnphvie0
+
+IG1tL21yZW1hcC5jIHwgNjcgKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysr
+KysrKysrKysrKysrKysrKysrKysrKwogMSBmaWxlIGNoYW5nZWQsIDY3IGluc2VydGlvbnMoKykK
+CmRpZmYgLS1naXQgYS9tbS9tcmVtYXAuYyBiL21tL21yZW1hcC5jCmluZGV4IDZiMTUzZGMwNWZl
+NC4uMzEyNTQyM2M4MzlhIDEwMDY0NAotLS0gYS9tbS9tcmVtYXAuYworKysgYi9tbS9tcmVtYXAu
+YwpAQCAtMjU0LDYgKzI1NCw3MSBAQCBzdGF0aWMgYm9vbCBtb3ZlX25vcm1hbF9wbWQoc3RydWN0
+IHZtX2FyZWFfc3RydWN0ICp2bWEsIHVuc2lnbmVkIGxvbmcgb2xkX2FkZHIsCiAKIAlyZXR1cm4g
+dHJ1ZTsKIH0KKworI2RlZmluZSBBRERSX0JFRk9SRV9QUkVWKGFkZHIsIHZtYSkgXAorCSgodm1h
+KS0+dm1fcHJldiAmJiAoYWRkcikgPCAodm1hKS0+dm1fcHJldi0+dm1fZW5kKQorCitzdGF0aWMg
+aW5saW5lIHZvaWQgdHJ5X3RvX2FsaWduX3N0YXJ0KHVuc2lnbmVkIGxvbmcgKmxlbiwKKwlzdHJ1
+Y3Qgdm1fYXJlYV9zdHJ1Y3QgKm9sZCwgdW5zaWduZWQgbG9uZyAqb2xkX2FkZHIsCisJc3RydWN0
+IHZtX2FyZWFfc3RydWN0ICpuZXcsIHVuc2lnbmVkIGxvbmcgKm5ld19hZGRyKQoreworCWlmIChB
+RERSX0JFRk9SRV9QUkVWKCpvbGRfYWRkciAmIFBNRF9NQVNLLCBvbGQpKQorCQlyZXR1cm47CisK
+KwlpZiAoQUREUl9CRUZPUkVfUFJFVigqbmV3X2FkZHIgJiBQTURfTUFTSywgbmV3KSkKKwkJcmV0
+dXJuOworCisJLyogQmluZ28hICovCisJKmxlbiArPSAqbmV3X2FkZHIgJiB+UE1EX01BU0s7CisJ
+Km9sZF9hZGRyICY9IFBNRF9NQVNLOworCSpuZXdfYWRkciAmPSBQTURfTUFTSzsKK30KKworLyoK
+KyAqIFdoZW4gYWxpZ25pbmcgdGhlIGVuZCwgYXZvaWQgQUxJR04oKSAod2hpY2ggY2FuIG92ZXJm
+bG93CisgKiBpZiB0aGUgdXNlciBzcGFjZSBpcyB0aGUgZnVsbCBhZGRyZXNzIHNwYWNlLCBhbmQg
+b3ZlcnNob290CisgKiB0aGUgdm1fc3RhcnQgb2YgdGhlIG5leHQgdm1hKS4KKyAqCisgKiBBbGln
+biB0aGUgdXBwZXIgbGltaXQgZG93biBpbnN0ZWFkLCBhbmQgY2hlY2sgdGhhdCBpdCdzIG5vdAor
+ICogaW4gdGhlIHNhbWUgUE1EIGFzIHRoZSBlbmQuCisgKi8KKyNkZWZpbmUgQUREUl9BRlRFUl9O
+RVhUKGFkZHIsIHZtYSkgXAorCSgodm1hKS0+dm1fbmV4dCAmJiAoYWRkcikgPiAoUE1EX01BU0sg
+JiAodm1hKS0+dm1fbmV4dC0+dm1fc3RhcnQpKQorCitzdGF0aWMgaW5saW5lIHZvaWQgdHJ5X3Rv
+X2FsaWduX2VuZCh1bnNpZ25lZCBsb25nICpsZW4sCisJc3RydWN0IHZtX2FyZWFfc3RydWN0ICpv
+bGQsIHVuc2lnbmVkIGxvbmcgKm9sZF9hZGRyLAorCXN0cnVjdCB2bV9hcmVhX3N0cnVjdCAqbmV3
+LCB1bnNpZ25lZCBsb25nICpuZXdfYWRkcikKK3sKKwlpZiAoQUREUl9BRlRFUl9ORVhUKCpvbGRf
+YWRkciArICpsZW4sIG9sZCkpCisJCXJldHVybjsKKworCWlmIChBRERSX0FGVEVSX05FWFQoKm5l
+d19hZGRyICsgKmxlbiwgbmV3KSkKKwkJcmV0dXJuOworCisJLyogTXV0dWFsIGFsaWdubWVudCBt
+ZWFucyB0aGlzIGlzIHNhbWUgZm9yIG5ldy9vbGQgYWRkciAqLworCWxlbiArPSBBTElHTigoKm5l
+d19hZGRyICsgKmxlbikgJiB+UE1EX01BU0ssIFBNRF9TSVpFKTsKK30KKworLyoKKyAqIFRoZSBQ
+TUQgbW92ZSBjYXNlIGlzIG11Y2ggbW9yZSBlZmZpY2llbnQsIHNvIGlmIHdlIGhhdmUgdGhlCisg
+KiBtdXR1YWxseSBhbGlnbmVkIGNhc2UsIHRyeSB0byBzZWUgaWYgd2UgY2FuIGV4dGVuZCB0aGUK
+KyAqIGJlZ2lubmluZyBhbmQgZW5kIHRvIGJlIGFsaWduZWQgdG9vLgorICoKKyAqIFRoZSBwb2lu
+dGVyIGRlcmVmZXJlbmNlcyBsb29rIGJhZCwgYnV0IHdpdGggaW5saW5pbmcsIHRoZQorICogY29t
+cGlsZXIgd2lsbCBzb3J0IGl0IG91dC4KKyAqLworc3RhdGljIGlubGluZSB2b2lkIHRyeV90b19h
+bGlnbl9yYW5nZSh1bnNpZ25lZCBsb25nICpsZW4sCisJc3RydWN0IHZtX2FyZWFfc3RydWN0ICpv
+bGQsIHVuc2lnbmVkIGxvbmcgKm9sZF9hZGRyLAorCXN0cnVjdCB2bV9hcmVhX3N0cnVjdCAqbmV3
+LCB1bnNpZ25lZCBsb25nICpuZXdfYWRkcikKK3sKKwlpZiAoKCpvbGRfYWRkciBeICpuZXdfYWRk
+cikgJiB+UE1EX01BU0spCisJCXJldHVybjsKKworCXRyeV90b19hbGlnbl9zdGFydChsZW4sIG9s
+ZCwgb2xkX2FkZHIsIG5ldywgbmV3X2FkZHIpOworCXRyeV90b19hbGlnbl9lbmQobGVuLCBvbGQs
+IG9sZF9hZGRyLCBuZXcsIG5ld19hZGRyKTsKK30KKyNlbHNlCisjZGVmaW5lIHRyeV90b19hbGln
+bl9yYW5nZShsZW4sb2xkLG9sZGEsbmV3LG5ld2EpIGRvIHsgfSB3aGlsZSgwKTsKICNlbmRpZgog
+CiB1bnNpZ25lZCBsb25nIG1vdmVfcGFnZV90YWJsZXMoc3RydWN0IHZtX2FyZWFfc3RydWN0ICp2
+bWEsCkBAIC0yNzIsNiArMzM3LDggQEAgdW5zaWduZWQgbG9uZyBtb3ZlX3BhZ2VfdGFibGVzKHN0
+cnVjdCB2bV9hcmVhX3N0cnVjdCAqdm1hLAogCQkJCW9sZF9hZGRyLCBvbGRfZW5kKTsKIAltbXVf
+bm90aWZpZXJfaW52YWxpZGF0ZV9yYW5nZV9zdGFydCgmcmFuZ2UpOwogCisJdHJ5X3RvX2FsaWdu
+X3JhbmdlKCZsZW4sIHZtYSwgJm9sZF9hZGRyLCBuZXdfdm1hLCAmbmV3X2FkZHIpOworCiAJZm9y
+ICg7IG9sZF9hZGRyIDwgb2xkX2VuZDsgb2xkX2FkZHIgKz0gZXh0ZW50LCBuZXdfYWRkciArPSBl
+eHRlbnQpIHsKIAkJY29uZF9yZXNjaGVkKCk7CiAJCW5leHQgPSAob2xkX2FkZHIgKyBQTURfU0la
+RSkgJiBQTURfTUFTSzsK
+--00000000000089243c05aa7f3607--
