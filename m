@@ -2,169 +2,165 @@ Return-Path: <SRS0=kup7=A2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5769AC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 04:14:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5469C433E2
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 04:14:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3558A206F0
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 04:14:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="K1HTY9Dw"
+	by mail.kernel.org (Postfix) with ESMTP id 7CFE6206F0
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 04:14:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726892AbgGOEOO (ORCPT
+        id S1727068AbgGOEOk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 00:14:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41114 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726458AbgGOEON (ORCPT
+        Wed, 15 Jul 2020 00:14:40 -0400
+Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:30824 "EHLO
+        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725977AbgGOEOj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 00:14:13 -0400
-Received: from mail-qt1-x842.google.com (mail-qt1-x842.google.com [IPv6:2607:f8b0:4864:20::842])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5D4CAC061755;
-        Tue, 14 Jul 2020 21:14:13 -0700 (PDT)
-Received: by mail-qt1-x842.google.com with SMTP id x62so708835qtd.3;
-        Tue, 14 Jul 2020 21:14:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=foDNNdgIp5gEZxCFX16NjXsSXtzimT2AqP9s4DUPnRU=;
-        b=K1HTY9DwxKkwlxnhxfdiEyaM+jc4pxAHsm3ZoHLNf46o0NPweVzUmsjJtWpbSuLE+5
-         lvihYceaJxRcEpAn5Y7EIeZe/uvSunAtgqS9kNlEQiAGK00zW7tqpXxTeSY/4j+aQStZ
-         dmrHIkiZe+s8yH734YCb8MWgS9ATNCn5XMcrXihLhLhW4cwiabHZHBVUHd1gjGLW4Q1k
-         a0OvsQS95Pvuit+60T/5UuMN5I0UHd0X5zOBO38F201gGpVLceSzNqKd3aGWubrmj2EM
-         Mn2jFZoMXI7qVziDUAk642VoUW2CExUIyYCmfbb46N7N3LTCKRJRuW2yeEO85s+bRLIn
-         UHIQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=foDNNdgIp5gEZxCFX16NjXsSXtzimT2AqP9s4DUPnRU=;
-        b=hmLLa0iAOZfoB/jGrNMB3Gg/3clEtRSG3DAq+Bq7T5Xg5Mi//0VQ8Jiheozfl+554W
-         zMufiXJBReL0LbMFP3hY1uQ+I32iv9s0KvU1mGyfAjWeXQvDZ8WFQMHb24rdKzEIH4jY
-         GPzawy7WmqFJcjfb/y7yXuvimo3Rhj1qiMjXp72n6FO8COnt5hsGVmmLamJzLnLKgXPu
-         ApXa4jP4YnVln0nf2vSkUZLdJVNvH+jURhEJqCszEDNOxDPrN9hDnTx6i85PWpT00Ptn
-         L1VmMxaYFXkjYGZ3TIBG0L6gKD5nSCUYsW2GLdUL06xlv1ED7/Me/Lq45eAH5/4Blxwt
-         aKPA==
-X-Gm-Message-State: AOAM533s72WljpwaLq2TYunbmP4u3aHjBj24BQC1pQdJ67/pinMM0HjM
-        7FJ80K/BVR9r5BCWNpES30G/5ocT+n6+/Ln6P34=
-X-Google-Smtp-Source: ABdhPJz9uu3YAldIkZ25DwFl7GQTjr4Q/2qWdCJALV+nDYpRz3j+ggBoJDewGFe15ct9g6o4fvRHNE0l6dRRFxn2zpM=
-X-Received: by 2002:ac8:41c6:: with SMTP id o6mr8114697qtm.292.1594786452616;
- Tue, 14 Jul 2020 21:14:12 -0700 (PDT)
+        Wed, 15 Jul 2020 00:14:39 -0400
+Received: from pps.filterd (m0167088.ppops.net [127.0.0.1])
+        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06F4ADUS011648;
+        Wed, 15 Jul 2020 00:14:24 -0400
+Received: from nwd2mta4.analog.com ([137.71.173.58])
+        by mx0a-00128a01.pphosted.com with ESMTP id 3279gmjwhr-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 15 Jul 2020 00:14:24 -0400
+Received: from ASHBMBX9.ad.analog.com (ashbmbx9.ad.analog.com [10.64.17.10])
+        by nwd2mta4.analog.com (8.14.7/8.14.7) with ESMTP id 06F4ENvk019877
+        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=FAIL);
+        Wed, 15 Jul 2020 00:14:23 -0400
+Received: from ASHBMBX8.ad.analog.com (10.64.17.5) by ASHBMBX9.ad.analog.com
+ (10.64.17.10) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1779.2; Wed, 15 Jul
+ 2020 00:14:22 -0400
+Received: from zeus.spd.analog.com (10.64.82.11) by ASHBMBX8.ad.analog.com
+ (10.64.17.5) with Microsoft SMTP Server id 15.1.1779.2 via Frontend
+ Transport; Wed, 15 Jul 2020 00:14:22 -0400
+Received: from localhost.localdomain ([10.48.65.12])
+        by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 06F4EIVr029729;
+        Wed, 15 Jul 2020 00:14:19 -0400
+From:   Alexandru Ardelean <alexandru.ardelean@analog.com>
+To:     <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+CC:     <jic23@kernel.org>, <lars@metafoo.de>,
+        Alexandru Ardelean <alexandru.ardelean@analog.com>
+Subject: [PATCH] iio: buffer: fix attach/detach pollfunc order
+Date:   Wed, 15 Jul 2020 07:16:29 +0300
+Message-ID: <20200715041629.81435-1-alexandru.ardelean@analog.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-References: <1594717536-5188-1-git-send-email-shengjiu.wang@nxp.com>
- <1594717536-5188-4-git-send-email-shengjiu.wang@nxp.com> <20200714211432.GA10818@Asurada-Nvidia>
-In-Reply-To: <20200714211432.GA10818@Asurada-Nvidia>
-From:   Shengjiu Wang <shengjiu.wang@gmail.com>
-Date:   Wed, 15 Jul 2020 12:14:01 +0800
-Message-ID: <CAA+D8ANQ_B9jJUhLYQnKxKJcVrmvakxPo58h433QqFhdu2nRPA@mail.gmail.com>
-Subject: Re: [PATCH 3/3] ASoC: fsl-asoc-card: Support Headphone and Microphone
- Jack detection
-To:     Nicolin Chen <nicoleotsuka@gmail.com>
-Cc:     Shengjiu Wang <shengjiu.wang@nxp.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux-ALSA <alsa-devel@alsa-project.org>,
-        linuxppc-dev@lists.ozlabs.org, Timur Tabi <timur@kernel.org>,
-        kuninori.morimoto.gx@renesas.com, samuel@sholland.org,
-        katsuhiro@katsuster.net,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Xiubo Li <Xiubo.Lee@gmail.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Takashi Iwai <tiwai@suse.com>, Mark Brown <broonie@kernel.org>,
-        Fabio Estevam <festevam@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-ADIRoutedOnPrem: True
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-07-15_02:2020-07-14,2020-07-15 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0
+ lowpriorityscore=0 spamscore=0 impostorscore=0 clxscore=1015
+ suspectscore=0 priorityscore=1501 mlxscore=0 bulkscore=0 adultscore=0
+ mlxlogscore=999 phishscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2006250000 definitions=main-2007150033
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 15, 2020 at 5:16 AM Nicolin Chen <nicoleotsuka@gmail.com> wrote:
->
-> Hi Shengjiu,
->
-> The whole series looks good to me. Just a couple of small
-> questions inline:
->
-> On Tue, Jul 14, 2020 at 05:05:36PM +0800, Shengjiu Wang wrote:
-> > Use asoc_simple_init_jack function from simple card to implement
-> > the Headphone and Microphone detection.
-> > Register notifier to disable Speaker when Headphone is plugged in
-> > and enable Speaker when Headphone is unplugged.
-> > Register notifier to disable Digital Microphone when Analog Microphone
-> > is plugged in and enable DMIC when Analog Microphone is unplugged.
-> >
-> > Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
-> > ---
-> >  sound/soc/fsl/Kconfig         |  1 +
-> >  sound/soc/fsl/fsl-asoc-card.c | 69 ++++++++++++++++++++++++++++++++++-
-> >  2 files changed, 68 insertions(+), 2 deletions(-)
->
-> >  static int fsl_asoc_card_late_probe(struct snd_soc_card *card)
-> >  {
-> >       struct fsl_asoc_card_priv *priv = snd_soc_card_get_drvdata(card);
-> > @@ -745,8 +789,29 @@ static int fsl_asoc_card_probe(struct platform_device *pdev)
-> >       snd_soc_card_set_drvdata(&priv->card, priv);
-> >
-> >       ret = devm_snd_soc_register_card(&pdev->dev, &priv->card);
-> > -     if (ret && ret != -EPROBE_DEFER)
-> > -             dev_err(&pdev->dev, "snd_soc_register_card failed (%d)\n", ret);
-> > +     if (ret) {
-> > +             if (ret != -EPROBE_DEFER)
-> > +                     dev_err(&pdev->dev, "snd_soc_register_card failed (%d)\n", ret);
->
-> I think we may move this EPROBE_DEFER to the asrc_fail label.
+The original patch was error-ed by the submitter (me) and not by the author
+(Lars).
+After looking through the discussion logs (on email), it seems that this
+order was wrong for the start, even though the order implemented in the
+drivers was correct.
 
-If we move this to asrc_fail label, then it will be hard to define the
-error message.
-There are many places that goto asrc_fail.
+Discussions:
+- first RFC: https://lore.kernel.org/linux-iio/20180622135322.3459-1-alexandru.ardelean@analog.com/
+- 2nd patch: https://lore.kernel.org/linux-iio/20181219140912.22582-1-alexandru.ardelean@analog.com/
+- final patch-sets:
+  https://lore.kernel.org/linux-iio/20200522104632.517470-1-alexandru.ardelean@analog.com/
+  https://lore.kernel.org/linux-iio/20200525113855.178821-1-alexandru.ardelean@analog.com/
 
->
-> > +             goto asrc_fail;
-> > +     }
-> > +
-> > +     if (of_property_read_bool(np, "hp-det-gpio")) {
->
-> Could we move this check inside asoc_simple_init_jack? There's no
-> problem with doing it here though, yet I got a bit confused by it
-> as I thought it's a boolean type property, which would be against
-> the DT bindings until I saw asoc_simple_init_jack() uses the same
-> string to get the GPIO. Just it probably would be a bit tricky as
-> we need it to be optional here.
->
-> Otherwise, I think we may add a line of comments to indicate that
-> the API would use the same string to get the GPIO.
+The last one was applied.
 
-In asoc_simple_init_jack, gpio_is_valid() will be invalid when there is
-no "hp-det-gpio" property, and asoc_simple_init_jack will return 0.
+The idea is that pollfunc should be attached before calling the
+'indio_dev->setup_ops->postenable' hook and should be detached after
+calling the 'indio_dev->setup_ops->predisable' hook.
 
-The reason why I add a check here is mostly for
-snd_soc_jack_notifier_register().
-when there is no jack created, there will be a kernel dump.
+While the drivers were updated to take this into account, the change to the
+IIO core was somehow omitted and was made wrong.
 
-or I can use this code:
+This change fixes the order to the proper form.
 
--       if (of_property_read_bool(np, "hp-det-gpio")) {
--               ret = asoc_simple_init_jack(&priv->card, &priv->hp_jack,
--                                           1, NULL, "Headphone Jack");
--               if (ret)
--                       goto asrc_fail;
-+       ret = asoc_simple_init_jack(&priv->card, &priv->hp_jack,
-+                                   1, NULL, "Headphone Jack");
-+       if (ret)
-+               goto asrc_fail;
+Fixes f11d59d87b862: ("iio: Move attach/detach of the poll func to the core")
+Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+---
+ drivers/iio/industrialio-buffer.c | 31 ++++++++++++++++++-------------
+ 1 file changed, 18 insertions(+), 13 deletions(-)
 
-+       if (priv->hp_jack.jack.jack)
-                snd_soc_jack_notifier_register(&priv->hp_jack.jack,
-&hp_jack_nb);
--       }
+diff --git a/drivers/iio/industrialio-buffer.c b/drivers/iio/industrialio-buffer.c
+index 2aec8b85f40d..a7d7e5143ed2 100644
+--- a/drivers/iio/industrialio-buffer.c
++++ b/drivers/iio/industrialio-buffer.c
+@@ -971,24 +971,29 @@ static int iio_enable_buffers(struct iio_dev *indio_dev,
+ 			goto err_disable_buffers;
+ 	}
+ 
++	if (indio_dev->currentmode == INDIO_BUFFER_TRIGGERED) {
++		ret = iio_trigger_attach_poll_func(indio_dev->trig,
++						   indio_dev->pollfunc);
++		if (ret)
++			goto err_disable_buffers;
++	}
++
+ 	if (indio_dev->setup_ops->postenable) {
+ 		ret = indio_dev->setup_ops->postenable(indio_dev);
+ 		if (ret) {
+ 			dev_dbg(&indio_dev->dev,
+ 			       "Buffer not started: postenable failed (%d)\n", ret);
+-			goto err_disable_buffers;
++			goto err_detach_pollfunc;
+ 		}
+ 	}
+ 
+-	if (indio_dev->currentmode == INDIO_BUFFER_TRIGGERED) {
+-		ret = iio_trigger_attach_poll_func(indio_dev->trig,
+-						   indio_dev->pollfunc);
+-		if (ret)
+-			goto err_disable_buffers;
+-	}
+-
+ 	return 0;
+ 
++err_detach_pollfunc:
++	if (indio_dev->currentmode == INDIO_BUFFER_TRIGGERED) {
++		iio_trigger_detach_poll_func(indio_dev->trig,
++					     indio_dev->pollfunc);
++	}
+ err_disable_buffers:
+ 	list_for_each_entry_continue_reverse(buffer, &iio_dev_opaque->buffer_list,
+ 					     buffer_list)
+@@ -1014,11 +1019,6 @@ static int iio_disable_buffers(struct iio_dev *indio_dev)
+ 	if (list_empty(&iio_dev_opaque->buffer_list))
+ 		return 0;
+ 
+-	if (indio_dev->currentmode == INDIO_BUFFER_TRIGGERED) {
+-		iio_trigger_detach_poll_func(indio_dev->trig,
+-					     indio_dev->pollfunc);
+-	}
+-
+ 	/*
+ 	 * If things go wrong at some step in disable we still need to continue
+ 	 * to perform the other steps, otherwise we leave the device in a
+@@ -1032,6 +1032,11 @@ static int iio_disable_buffers(struct iio_dev *indio_dev)
+ 			ret = ret2;
+ 	}
+ 
++	if (indio_dev->currentmode == INDIO_BUFFER_TRIGGERED) {
++		iio_trigger_detach_poll_func(indio_dev->trig,
++					     indio_dev->pollfunc);
++	}
++
+ 	list_for_each_entry(buffer, &iio_dev_opaque->buffer_list, buffer_list) {
+ 		ret2 = iio_buffer_disable(buffer, indio_dev);
+ 		if (ret2 && !ret)
+-- 
+2.17.1
 
-what do you think?
-
-best regards
-wang shengjiu
