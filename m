@@ -1,91 +1,100 @@
 Return-Path: <SRS0=kup7=A2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
-X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Level: **
+X-Spam-Status: No, score=2.0 required=3.0 tests=BAYES_00,
+	CHARSET_FARAWAY_HEADER,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 936A1C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 08:25:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE96FC433E2
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 08:25:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 68D5920657
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 08:25:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CCE2B20663
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 08:25:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729799AbgGOIZI (ORCPT
+        id S1729810AbgGOIZ1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 04:25:08 -0400
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2481 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729792AbgGOIZH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 04:25:07 -0400
-Received: from lhreml724-chm.china.huawei.com (unknown [172.18.7.108])
-        by Forcepoint Email with ESMTP id 5B634C3BD6AD20BE046F;
-        Wed, 15 Jul 2020 09:25:06 +0100 (IST)
-Received: from [127.0.0.1] (10.47.6.38) by lhreml724-chm.china.huawei.com
- (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1913.5; Wed, 15 Jul
- 2020 09:25:05 +0100
-Subject: Re: [PATCH] drivers/perf: hisi: Add identifier sysfs file
-To:     Will Deacon <will@kernel.org>
-CC:     <zhangshaokun@hisilicon.com>, <mark.rutland@arm.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <qiangqing.zhang@nxp.com>,
-        <jolsa@redhat.com>, <linuxarm@huawei.com>
-References: <1592399111-134786-1-git-send-email-john.garry@huawei.com>
- <20200714083216.GD4516@willie-the-truck>
-From:   John Garry <john.garry@huawei.com>
-Message-ID: <67db3c30-5aaf-ac17-0256-950494f5ba88@huawei.com>
-Date:   Wed, 15 Jul 2020 09:23:19 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.2
-MIME-Version: 1.0
-In-Reply-To: <20200714083216.GD4516@willie-the-truck>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
+        Wed, 15 Jul 2020 04:25:27 -0400
+Received: from mag112.magazineer.net ([157.7.134.112]:44481 "EHLO
+        157.7.134.112" rhost-flags-OK-OK-FAIL-FAIL) by vger.kernel.org
+        with ESMTP id S1729792AbgGOIZ1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jul 2020 04:25:27 -0400
+X-Greylist: delayed 335 seconds by postgrey-1.27 at vger.kernel.org; Wed, 15 Jul 2020 04:25:26 EDT
+To:     <linux-kernel@vger.kernel.org>
+Subject: =?iso-2022-jp?B?GyRCJTMlbSVKJEskaCRrOWJCNDpOTVEkTiU5JTElOCVlITwla0pROTkbKEI=?=
+From:   =?ISO-2022-JP?B?GyRCJTglZyVWJUklaSVVJUglOyVfJUohPDE/MUQ8PBsoQg==?= 
+        <info@hr-saiyo.work>
+Date:   Wed, 15 Jul 2020 17:25:26 +0900
+Reply-To: info@hr-saiyo.work
+Message-Id: <20200615172526.08071@hr-saiyo.work>
+Content-Type: text/plain; charset="iso-2022-jp"
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.47.6.38]
-X-ClientProxiedBy: lhreml728-chm.china.huawei.com (10.201.108.79) To
- lhreml724-chm.china.huawei.com (10.201.108.75)
-X-CFilter-Loop: Reflected
+MIME-Version: 1.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Will,
+いつもお世話になります。
 
-> 
-> On Wed, Jun 17, 2020 at 09:05:11PM +0800, John Garry wrote:
->> To allow userspace to identify the specific implementation of the device,
->> add an "identifier" sysfs file.
->>
->> Encoding is as follows:
->> hi1620: 0x0	(aka hip08)
->> hi1630: 0x30
->>
->> Signed-off-by: John Garry <john.garry@huawei.com>
-> 
-> I'm struggling a bit to track this. If you still think it's worth pursuing,
-> please could you post a series with a cover-letter describing what this is
-> for, a link to the userspace changes and then patches for all the PMU
-> drivers that need updating? 
+この度は、高卒採用に関するオンラインセミナーをご案内申し上げます。
 
-There is no hi1630 userspace support yet.
 
-So what I can do is post updated userspace support (including hi1630), 
-and then post kernel parts together for all drivers we could initially 
-support.
+コロナの影響で、今年の高卒採用のスケジュールは
+9月の応募開始・採用選考解禁の1ヶ月後ろ倒しが決定しました。
 
-@Joakim, I'll pick your imx driver changes here, if you don't mind.
 
-There was an RFC from you for the SMMUv3 PMU as
-> well, and also some other "arm64" changes.
-> 
+それに伴い、例年は8月に行う職場見学を
+9月まで受入が必要になる可能性があります。
 
-I hope to drop that RFC if an updated SMMUv3 spec helps us out.
 
-Cheers,
-John
+企業側が高校生に直接会える場面はそう多くありません。
+職場見学は貴重なチャンスです。
 
+
+ここでの「事前準備」「当日の運営」「事後対応」が
+その後の応募率に大きな影響を与えます。
+
+
+本講座では、2000社を超える企業へのアドバイス経験を元に
+50%以上を応募に繋げる職場見学の仕掛け方をご紹介いたします。
+
+
+良い職場見学と悪い職場見学の違いは？
+応募したくなる仕掛けとは？
+スケジュールが変更になる中、今後想定されることは？
+
+
+高卒採用を行う企業様は是非ともお申込ください。
+
+
+　■　詳細・申込　https://hr-saiyo.work/200700/　■
+
+
+オンライン開催
+――――――――――――――――――――――――――――
+
+　　　　　応募率50%を超える
+　　　 “職場見学”の仕掛け方
+
+　 日程：7月15日/21日/31日　※
+　 時間：11:00〜11:45　※
+　 会場：オンライン開催　(自宅や職場で視聴可能)
+
+　■　詳細・申込　https://hr-saiyo.work/200700/　■
+
+　 ※全日程とも開催時間・内容は同じです。
+
+――――――――――――――――――――――――――――
+　本メールのご不要な方には大変ご迷惑をおかけいたしました。
+　配信停止ご希望の方は、お手数ですが「配信不要」と
+　ご返信いただくか、下記アドレスよりお手続き願います。
+　 https://form9dm.site/kaijo/
+――――――――――――――――――――――――――――
+   ジョブドラフトセミナー運営室(株式会社ジンジブ)
+　 住所：東京都港区浜松町2丁目7-19　KDX浜松町ビル5階    
+ 　TEL：03-5777-2679
+　 Mail：info@hr-service.work
+――――――――――――――――――――――――――――
