@@ -2,224 +2,207 @@ Return-Path: <SRS0=kup7=A2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1B24C433E4
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 15:13:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B619C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 15:14:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 760AD20658
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 15:13:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3028D20658
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 15:14:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="gl5bB9+M"
+	dkim=pass (2048-bit key) header.d=bytedance-com.20150623.gappssmtp.com header.i=@bytedance-com.20150623.gappssmtp.com header.b="lXIVAkey"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726465AbgGOPNh (ORCPT
+        id S1726633AbgGOPN7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 11:13:37 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:11929 "EHLO m43-7.mailgun.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725834AbgGOPNg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 11:13:36 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1594826014; h=Content-Transfer-Encoding: Content-Type:
- MIME-Version: Message-ID: In-Reply-To: Date: References: Subject: Cc:
- To: From: Sender; bh=SSjNXt42DQxpNXXA7N1+wh/xYOkbNXGPf32vrswsm9M=; b=gl5bB9+MCdIyLbHQ1mLkxPUsSR+mPKq+esIEeqpzhb3tSs8DN5vaGOWoLHcPV9tzxe04i94z
- ItpoWAxULysOmjOEVE7ZUlWDz6KC9widRS9kKRhDDh431zsyYBfB1buwA2yWZUa9lmtuw3/y
- PJN54FSg89VcTGEghpfWFnkxOpE=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n02.prod.us-east-1.postgun.com with SMTP id
- 5f0f1d0df9ca681bd099b737 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Wed, 15 Jul 2020 15:13:17
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 19850C433AD; Wed, 15 Jul 2020 15:13:17 +0000 (UTC)
-Received: from tynnyri.adurom.net (tynnyri.adurom.net [51.15.11.48])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: kvalo)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 78FF5C433C6;
-        Wed, 15 Jul 2020 15:13:13 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 78FF5C433C6
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
-From:   Kalle Valo <kvalo@codeaurora.org>
-To:     Viktor =?utf-8?B?SsOkZ2Vyc2vDvHBwZXI=?= 
-        <viktor_jaegerskuepper@freenet.de>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Gabriel C <nix.or.die@googlemail.com>,
-        Jiri Slaby <jirislaby@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        stable <stable@vger.kernel.org>, lwn@lwn.net,
-        angrypenguinpoland@gmail.com, Qiujun Huang <hqjagain@gmail.com>,
-        ath9k-devel <ath9k-devel@qca.qualcomm.com>,
-        "linux-wireless\@vger.kernel.org" <linux-wireless@vger.kernel.org>
-Subject: Re: ath9k broken [was: Linux 5.7.3]
-References: <1592410366125160@kroah.com>
-        <CAEJqkgjV8p6LtBV8YUGbNb0vYzKOQt4-AMAvYw5mzFr3eicyTg@mail.gmail.com>
-        <b7993e83-1df7-0c93-f6dd-dba9dc10e27a@kernel.org>
-        <CAEJqkggG2ZB8De_zbP2W7Z9eRYve2br8jALaLRhjC33ksLZpTw@mail.gmail.com>
-        <CAEJqkgj4LS7M3zYK51Vagt4rWC9A7uunA+7CvX0Qv=57Or3Ngg@mail.gmail.com>
-        <CAEJqkghJWGsLCj2Wvt-yhzMewjXwrXhSEDpar6rbDpbSA6R8kQ@mail.gmail.com>
-        <20200626133959.GA4024297@kroah.com>
-        <CAEJqkgiACMar-iWsWQgJPAViBBURaNpcOD4FKtp6M8Aw_D4FOw@mail.gmail.com>
-        <CAEJqkgg4Ka8oNL7ELoJrR0-Abz3=caLns48KyDC=DQcym6SRvA@mail.gmail.com>
-        <20200707141100.GE4064836@kroah.com>
-        <07c8d8fa-8bbc-0b4e-191c-b2635214e8b9@freenet.de>
-Date:   Wed, 15 Jul 2020 18:13:08 +0300
-In-Reply-To: <07c8d8fa-8bbc-0b4e-191c-b2635214e8b9@freenet.de> ("Viktor
-        \=\?utf-8\?Q\?J\=C3\=A4gersk\=C3\=BCpper\=22's\?\= message of "Tue, 7 Jul 2020
- 22:20:41 +0200")
-Message-ID: <87ft9sbym3.fsf@tynnyri.adurom.net>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+        Wed, 15 Jul 2020 11:13:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58332 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725932AbgGOPN7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jul 2020 11:13:59 -0400
+Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 16F52C061755
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 08:13:59 -0700 (PDT)
+Received: by mail-pf1-x442.google.com with SMTP id m9so2235729pfh.0
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 08:13:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bytedance-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=0r5bb0ZMWMeJxc6MpJgS1kjFqz/n/TBIUkKDAK8VCUM=;
+        b=lXIVAkeyGU3/B9G+hN1tCKgp85EQHsHi8oOUtcSkVV9Z0LcFVkKyWbelTBYEI6TU1m
+         bhOBvmTOrlemvaEshedkWQ9SfdcZGA//kuKxWWiJIKG0uQw0Ijfi/LZoVEGx1aK0Sj+d
+         Sy8cyeK/K0QL9vQatJhzlSw4YxH4SIDq91ibsAZyc9BI3s8dzw7ubsByrvKmSmjnr2Uj
+         710q8G5KWB+2mFkHJ1dNQISBcekeHsukednXGe8l9KZnul1rnJJ92TXao6hLiGtAQeBE
+         Zx+K5CPbG3lgsoY4TTkXF2tM7tsNqwcmjtw2n1+0yift8fEdwoqGsZXooTiShVTbH4ft
+         CCXg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=0r5bb0ZMWMeJxc6MpJgS1kjFqz/n/TBIUkKDAK8VCUM=;
+        b=Cx/NgD0Yn3uqgrnoeqWRvMibqd7Itlow1QlKigjvBc6oSc6Hx3SiPobOXfi0JX+eoG
+         C/JnE5C+9qRokJBM3XoC/gbqdsogei3stIVFCuj4l5fdUYr9qDey5yVLXtVg/B3AHwJw
+         6/7XUkasEzc7OW7GVtA3DGCUXZm2Q8+nk00xexWJQgfu2jeVGy+zrJai32S7j1AB8+Dz
+         RxggvORGcn8bVN5fq+9Q+1S3ttDxyRTR06uV2/8EFf0hPfa+IQ4nFD3nuv82nJRQOCLk
+         pybv5hGeqjOzhX5BOCsFB0PH8W+4pt9z/JRUWSOJAp4AK1Br2ZJ4BiZXJp5NeH40IlHm
+         gRiA==
+X-Gm-Message-State: AOAM533Ho+kPWZYt69+U0lHdmvuIaLr+oUQMwU1htuErY1jS3tBbLWcH
+        xzB48oE4iHf6mw1745mbJSGVRQ1fF8pC20B9UQsOGQ==
+X-Google-Smtp-Source: ABdhPJwaqBwFm70w6USx9FK6Q52mOCQdGHjx14sdVsxuDJX8FDJYRZUjwKajpLIuZPmZUIxALRCJQ+Ps3mhkf19NyDA=
+X-Received: by 2002:aa7:858c:: with SMTP id w12mr9910141pfn.143.1594826038426;
+ Wed, 15 Jul 2020 08:13:58 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+References: <20200707062754.8383-1-songmuchun@bytedance.com> <3d06418e-e75c-e7b8-91cd-ba56283045be@suse.cz>
+In-Reply-To: <3d06418e-e75c-e7b8-91cd-ba56283045be@suse.cz>
+From:   Muchun Song <songmuchun@bytedance.com>
+Date:   Wed, 15 Jul 2020 23:13:22 +0800
+Message-ID: <CAMZfGtXK9yQOJy7BPnTBzhG4tithRs=9R4O3rDg1Rjz0zUFKnQ@mail.gmail.com>
+Subject: Re: [External] Re: [PATCH v5.4.y, v4.19.y] mm: memcg/slab: fix memory
+ leak at non-root kmem_cache destroy
+To:     Vlastimil Babka <vbabka@suse.cz>
+Cc:     Christoph Lameter <cl@linux.com>,
+        Pekka Enberg <penberg@kernel.org>,
+        David Rientjes <rientjes@google.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linux Memory Management List <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Shakeel Butt <shakeelb@google.com>,
+        Roman Gushchin <guro@fb.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Viktor J=C3=A4gersk=C3=BCpper <viktor_jaegerskuepper@freenet.de> writes:
-
-> Greg Kroah-Hartman wrote:
->> On Fri, Jun 26, 2020 at 04:40:18PM +0200, Gabriel C wrote:
->>> Am Fr., 26. Juni 2020 um 15:51 Uhr schrieb Gabriel C
->>> <nix.or.die@googlemail.com>:
->>>>
->>>> Am Fr., 26. Juni 2020 um 15:40 Uhr schrieb Greg Kroah-Hartman
->>>> <gregkh@linuxfoundation.org>:
->>>>>
->>>>> On Fri, Jun 26, 2020 at 01:48:59PM +0200, Gabriel C wrote:
->>>>>> Am Do., 25. Juni 2020 um 12:52 Uhr schrieb Gabriel C
->>>>>> <nix.or.die@googlemail.com>:
->>>>>>>
->>>>>>> Am Do., 25. Juni 2020 um 12:48 Uhr schrieb Gabriel C
->>>>>>> <nix.or.die@googlemail.com>:
->>>>>>>>
->>>>>>>> Am Do., 25. Juni 2020 um 06:57 Uhr schrieb Jiri Slaby <jirislaby@k=
-ernel.org>:
->>>>>>>>>
->>>>>>>>> On 25. 06. 20, 0:05, Gabriel C wrote:
->>>>>>>>>> Am Mi., 17. Juni 2020 um 18:13 Uhr schrieb Greg Kroah-Hartman
->>>>>>>>>> <gregkh@linuxfoundation.org>:
->>>>>>>>>>>
->>>>>>>>>>> I'm announcing the release of the 5.7.3 kernel.
->>>>>>>>>>>
->>>>>>>>>>
->>>>>>>>>> Hello Greg,
->>>>>>>>>>
->>>>>>>>>>> Qiujun Huang (5):
->>>>>>>>>>>       ath9k: Fix use-after-free Read in htc_connect_service
->>>>>>>>>>>       ath9k: Fix use-after-free Read in ath9k_wmi_ctrl_rx
->>>>>>>>>>>       ath9k: Fix use-after-free Write in ath9k_htc_rx_msg
->>>>>>>>>>>       ath9x: Fix stack-out-of-bounds Write in ath9k_hif_usb_rx_=
-cb
->>>>>>>>>>>       ath9k: Fix general protection fault in ath9k_hif_usb_rx_cb
->>>>>>>>>>>
->>>>>>>>>>
->>>>>>>>>> We got a report on IRC about 5.7.3+ breaking a USB ath9k Wifi Do=
-ngle,
->>>>>>>>>> while working fine on <5.7.3.
->>>>>>>>>>
->>>>>>>>>> I don't have myself such HW, and the reported doesn't have any e=
-xperience
->>>>>>>>>> in bisecting the kernel, so we build kernels, each with one of t=
-he
->>>>>>>>>> above commits reverted,
->>>>>>>>>> to find the bad commit.
->>>>>>>>>>
->>>>>>>>>> The winner is:
->>>>>>>>>>
->>>>>>>>>> commit 6602f080cb28745259e2fab1a4cf55eeb5894f93
->>>>>>>>>> Author: Qiujun Huang <hqjagain@gmail.com>
->>>>>>>>>> Date:   Sat Apr 4 12:18:38 2020 +0800
->>>>>>>>>>
->>>>>>>>>>     ath9k: Fix general protection fault in ath9k_hif_usb_rx_cb
->>>>>>>>>>
->>>>>>>>>>     commit 2bbcaaee1fcbd83272e29f31e2bb7e70d8c49e05 upstream.
->>>>>>>>>> ...
->>>>>>>>>>
->>>>>>>>>> Reverting this one fixed his problem.
->>>>>>>>>
->>>>>>>>> Obvious question: is 5.8-rc1 (containing the commit) broken too?
->>>>>>>>
->>>>>>>> Yes, it does, just checked.
->>>>>>>>
->>>>>>>> git tag --contains 2bbcaaee1fcbd83272e29f31e2bb7e70d8c49e05
->>>>>>>> v5.8-rc1
->>>>>>>> v5.8-rc2
->>>>>>>>
->>>>>>>
->>>>>>> Sorry, I read the wrong, I just woke up.
->>>>>>>
->>>>>>> We didn't test 5.8-rc{1,2} yet but we will today and let you know.
->>>>>>>
->>>>>>
->>>>>> We tested 5.8-rc2 and it is broken too.
->>>>>>
->>>>>> The exact HW name is:
->>>>>>
->>>>>> TP-link tl-wn722n (Atheros AR9271 chip)
->>>>>
->>>>> Great!
->>>>>
->>>>> Can you work with the developers to fix this in Linus's tree first?
->>>>
->>>> I'm the man in the middle, but sure we will try patches or any suggest=
-ions
->>>> from developers to identify and fix the problem.
->>>>
->>>>>
->>>>> I bet they want to see the output of 'lsusb -v' for this device to see
->>>>> if the endpoint calculations are correct...
->>>>>
->>>>
->>>> Working on it. As soon the reporter gives me the output, I will post i=
-t here.
->>>> I've told him to run it on a broken and one working kernel.
->>>
->>> That is from a good kernel with reverted commit
->>> https://gist.github.com/AngryPenguinPL/07c8e2abd3b103eaf8978a39ad8577d1
->>>
->>> That is from the broken kernel without the commit reverted
->>> https://gist.github.com/AngryPenguinPL/5cdc0dd16ce5e59ff3c32c048e2f5111
->>>
->>> This is from 5.7.5 kernel, I don't have yet a 5.8-rc2 package with the
->>> reverted commit.
->>=20
->> Did this ever get resolved?
->>=20
->> thanks,
->>=20
->> greg k-h
->>=20
+On Wed, Jul 15, 2020 at 7:32 PM Vlastimil Babka <vbabka@suse.cz> wrote:
 >
-> This bug was also reported on the thread where it had been posted origina=
-lly:
-> https://lore.kernel.org/linux-wireless/20200621020428.6417d6fb@natsu/
+> On 7/7/20 8:27 AM, Muchun Song wrote:
+> > If the kmem_cache refcount is greater than one, we should not
+> > mark the root kmem_cache as dying. If we mark the root kmem_cache
+> > dying incorrectly, the non-root kmem_cache can never be destroyed.
+> > It resulted in memory leak when memcg was destroyed. We can use the
+> > following steps to reproduce.
+> >
+> >   1) Use kmem_cache_create() to create a new kmem_cache named A.
+> >   2) Coincidentally, the kmem_cache A is an alias for kmem_cache B,
+> >      so the refcount of B is just increased.
+> >   3) Use kmem_cache_destroy() to destroy the kmem_cache A, just
+> >      decrease the B's refcount but mark the B as dying.
+> >   4) Create a new memory cgroup and alloc memory from the kmem_cache
+> >      A. It leads to create a non-root kmem_cache for allocating.
+> >   5) When destroy the memory cgroup created in the step 4), the
+> >      non-root kmem_cache can never be destroyed.
+> >
+> > If we repeat steps 4) and 5), this will cause a lot of memory leak.
+> > So only when refcount reach zero, we mark the root kmem_cache as dying.
+> >
+> > Fixes: 92ee383f6daa ("mm: fix race between kmem_cache destroy, create and deactivate")
+> > Signed-off-by: Muchun Song <songmuchun@bytedance.com>
 >
-> I am waiting for Kalle Valo to accept my patch (v2) which reverts the abo=
-ve
-> mentioned commit and which looks correct according to him. He wrote that =
-he
-> would take a closer look at this as soon as he could.
+> CC Roman, who worked in this area recently.
+>
+> Also why is this marked "[PATCH v5.4.y, v4.19.y]"? Has it been fixed otherwise
+> in 5.5+ ?
 
-Mark posted a patch which I'm hoping to fix the issue:
+Because the memcg slab/slub is reworked by Roman since v5.8.
+Therefore, this problem exists in v5.7 and below.
 
-[1/1] ath9k: Fix regression with Atheros 9271
+>
+> > ---
+> >  mm/slab_common.c | 43 +++++++++++++++++++++++++++++++++++++++++--
+> >  1 file changed, 41 insertions(+), 2 deletions(-)
+> >
+> > diff --git a/mm/slab_common.c b/mm/slab_common.c
+> > index 8c1ffbf7de45..83ee6211aec7 100644
+> > --- a/mm/slab_common.c
+> > +++ b/mm/slab_common.c
+> > @@ -258,6 +258,11 @@ static void memcg_unlink_cache(struct kmem_cache *s)
+> >               list_del(&s->memcg_params.kmem_caches_node);
+> >       }
+> >  }
+> > +
+> > +static inline bool memcg_kmem_cache_dying(struct kmem_cache *s)
+> > +{
+> > +     return is_root_cache(s) && s->memcg_params.dying;
+> > +}
+> >  #else
+> >  static inline int init_memcg_params(struct kmem_cache *s,
+> >                                   struct kmem_cache *root_cache)
+> > @@ -272,6 +277,11 @@ static inline void destroy_memcg_params(struct kmem_cache *s)
+> >  static inline void memcg_unlink_cache(struct kmem_cache *s)
+> >  {
+> >  }
+> > +
+> > +static inline bool memcg_kmem_cache_dying(struct kmem_cache *s)
+> > +{
+> > +     return false;
+> > +}
+> >  #endif /* CONFIG_MEMCG_KMEM */
+> >
+> >  /*
+> > @@ -326,6 +336,13 @@ int slab_unmergeable(struct kmem_cache *s)
+> >       if (s->refcount < 0)
+> >               return 1;
+> >
+> > +     /*
+> > +      * If the kmem_cache is dying. We should also skip this
+> > +      * kmem_cache.
+> > +      */
+> > +     if (memcg_kmem_cache_dying(s))
+> > +             return 1;
+> > +
+> >       return 0;
+> >  }
+> >
+> > @@ -944,8 +961,6 @@ void kmem_cache_destroy(struct kmem_cache *s)
+> >       if (unlikely(!s))
+> >               return;
+> >
+> > -     flush_memcg_workqueue(s);
+> > -
+> >       get_online_cpus();
+> >       get_online_mems();
+> >
+> > @@ -955,6 +970,30 @@ void kmem_cache_destroy(struct kmem_cache *s)
+> >       if (s->refcount)
+> >               goto out_unlock;
+> >
+> > +#ifdef CONFIG_MEMCG_KMEM
+> > +     mutex_unlock(&slab_mutex);
+> > +
+> > +     put_online_mems();
+> > +     put_online_cpus();
+> > +
+> > +     flush_memcg_workqueue(s);
+> > +
+> > +     get_online_cpus();
+> > +     get_online_mems();
+> > +
+> > +     mutex_lock(&slab_mutex);
+> > +
+> > +     if (WARN(s->refcount,
+> > +              "kmem_cache_destroy %s: Slab cache is still referenced\n",
+> > +              s->name)) {
+> > +             /*
+> > +              * Reset the dying flag setted by flush_memcg_workqueue().
+> > +              */
+> > +             s->memcg_params.dying = false;
+> > +             goto out_unlock;
+> > +     }
+> > +#endif
+> > +
+> >       err = shutdown_memcg_caches(s);
+> >       if (!err)
+> >               err = shutdown_cache(s);
+> >
+>
 
-https://patchwork.kernel.org/patch/11657669/
 
-Can someone confirm this, please? I would rather take Mark's fix than
-the revert.
-
---=20
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatc=
-hes
+--
+Yours,
+Muchun
