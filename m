@@ -2,173 +2,112 @@ Return-Path: <SRS0=kup7=A2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82984C433E5
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 04:19:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DA57C433E6
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 04:19:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 563222067D
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 04:19:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 407792070E
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 04:19:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="X0EOcpsF"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KOX6dxv5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728028AbgGOETX (ORCPT
+        id S1727919AbgGOETR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 00:19:23 -0400
-Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:11947 "EHLO
-        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725824AbgGOETW (ORCPT
+        Wed, 15 Jul 2020 00:19:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41922 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725824AbgGOETR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 00:19:22 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5f0e83900000>; Tue, 14 Jul 2020 21:18:24 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Tue, 14 Jul 2020 21:19:22 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Tue, 14 Jul 2020 21:19:22 -0700
-Received: from HQMAIL101.nvidia.com (172.20.187.10) by HQMAIL109.nvidia.com
- (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 15 Jul
- 2020 04:19:21 +0000
-Received: from rnnvemgw01.nvidia.com (10.128.109.123) by HQMAIL101.nvidia.com
- (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Wed, 15 Jul 2020 04:19:21 +0000
-Received: from skomatineni-linux.nvidia.com (Not Verified[10.2.160.169]) by rnnvemgw01.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5f0e83c80002>; Tue, 14 Jul 2020 21:19:21 -0700
-From:   Sowjanya Komatineni <skomatineni@nvidia.com>
-To:     <skomatineni@nvidia.com>, <thierry.reding@gmail.com>,
-        <jonathanh@nvidia.com>, <frankc@nvidia.com>, <hverkuil@xs4all.nl>,
-        <sakari.ailus@iki.fi>, <robh+dt@kernel.org>,
-        <helen.koike@collabora.com>
-CC:     <digetx@gmail.com>, <sboyd@kernel.org>,
-        <gregkh@linuxfoundation.org>, <linux-media@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-i2c@vger.kernel.org>
-Subject: [RFC PATCH v3 00/18] Support for Tegra video capture from external sensor
-Date:   Tue, 14 Jul 2020 21:20:37 -0700
-Message-ID: <1594786855-26506-1-git-send-email-skomatineni@nvidia.com>
-X-Mailer: git-send-email 2.7.4
-X-NVConfidentiality: public
+        Wed, 15 Jul 2020 00:19:17 -0400
+Received: from mail-yb1-xb42.google.com (mail-yb1-xb42.google.com [IPv6:2607:f8b0:4864:20::b42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E9D04C061755;
+        Tue, 14 Jul 2020 21:19:16 -0700 (PDT)
+Received: by mail-yb1-xb42.google.com with SMTP id x9so511032ybd.4;
+        Tue, 14 Jul 2020 21:19:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=n7GY+WJuUal6vZC2qyTKGq0rmN3PIL2kDK1bpGspZE0=;
+        b=KOX6dxv50PeEz3NBTMxawpG8CoBeTrEHVlITwgBKI3UTMRJ8c75Q6boiJzj9k4Susm
+         wNqYZ66jq52MHGD9rifNgImnw3xGQn/nis+awUIqZ81o2L6vW00sWSoVbGmMrxsfX3NS
+         /hBu8s1l6dZD/Y4K0b4WtYr80grhepO+nTZHMGyvCfKwIOVqLa8JU821PVw0Js6pv5Hu
+         55Wj64k9JPuD3E3qvP1ZTrUadB7iT+Y0WcXCHYjBnJgFargui2RkQ9KUoIsHv35mNTXV
+         +YQwHyj17w4MsUasUmbdCmb3mEJlwc4F5Uq7vJ0mpsx0jOcT1xZZcgXlQdh8+DMVWxV7
+         HOJA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=n7GY+WJuUal6vZC2qyTKGq0rmN3PIL2kDK1bpGspZE0=;
+        b=YVU9ujWzSVo8NhxBC5d8GcVDK76pZ2JP9fJM4dmxUuekuhJ6N1DxfJ9zKG7y7vCEH9
+         uomSkr5O8rf72AWlzzSeMBdTIIxz/iVvRrDUbkJSsWSfkzYFh7dMt/yf0ou5P9iVWUgA
+         6/IpJt9eci7XUF8RTcKSLbvEIeD8+OliCIPpYJdopv53pv5wzQMruDmOiiZapB27dOWk
+         LUgbEEWpBoM333fXbtghm1Ex8gF404zQHpEjCEAw131UIZ0kD3cMLdyMXrdUTi/WMejU
+         kDkIHQY87gd1fUrvh9WK4Pmdi2akBbK6FKkEFvv4gCb3m7yWdKduH2KjimierXejCGnZ
+         cz0w==
+X-Gm-Message-State: AOAM531/Zk2aDD1ytB3vfEDRiq2MGkj9eW/DQIDII38mNK7UkIKW/tYu
+        mnVUMbqT2JipE5MIfKP5/J1siJMnFRQKONmt/SFB6naE
+X-Google-Smtp-Source: ABdhPJzxOEManeM1VS4Ej7+mHpB4DMdkSQHnSTzwu69n9tgGLjbMLG2LU44grBL/dzIbmNNcNI9vP+KqcTTTYenwGj0=
+X-Received: by 2002:a25:880e:: with SMTP id c14mr14101146ybl.376.1594786756160;
+ Tue, 14 Jul 2020 21:19:16 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1594786704; bh=H3uPLyelSg29Z/xvdKbwpYtnQFHubI57wAgazwqqfrw=;
-        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
-         X-NVConfidentiality:MIME-Version:Content-Type;
-        b=X0EOcpsFFWEHuf70WGXCxtoJAK/Jk6fD8r01WJJ4DrQxTYhyxRb0OY6KhDP4Cz44a
-         439SZGN6UU3tNPQu84AL30GbgPxruZ/eZoZpnt81P+iX1w1Cisb2BYpPvHd6wa5IzS
-         2/5VRmMr79THMyo9czoE+HAendIjzh8k/42HhV6fTILkfkf6+2LNbxyCZs8+pldAaZ
-         Ab/yI8XAMWRgR/hCmonUTWbkGE/JE1zd08fw4TTcU0U3ARCvhQ+Dzpavnc+HewW+2C
-         yNHG7uEUD6wNilH2sxkWW8o8EDu2ihCQ3J8VgehZCWtChO9+kSavqGCG9jNQFL4YDk
-         ehyY4yhXsh84g==
+References: <1594724352-11451-1-git-send-email-wang.yi59@zte.com.cn>
+In-Reply-To: <1594724352-11451-1-git-send-email-wang.yi59@zte.com.cn>
+From:   Steve French <smfrench@gmail.com>
+Date:   Tue, 14 Jul 2020 23:19:05 -0500
+Message-ID: <CAH2r5mvm=PWV4cVKznJEB1FQW3jRMXBFF1vXv=-Jy8PQLRCgdQ@mail.gmail.com>
+Subject: Re: [PATCH] cifs: Remove the superfluous break
+To:     Yi Wang <wang.yi59@zte.com.cn>
+Cc:     Steve French <sfrench@samba.org>,
+        CIFS <linux-cifs@vger.kernel.org>,
+        samba-technical <samba-technical@lists.samba.org>,
+        LKML <linux-kernel@vger.kernel.org>, xue.zhihong@zte.com.cn,
+        wang.liang82@zte.com.cn, Liao Pingfang <liao.pingfang@zte.com.cn>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This series adds support for video capture from external camera sensor to
-Tegra video driver.
+merged into cifs-2.6.git for-next
 
-Jetson TX1 has camera expansion connector and supports custom camera module
-designed as per TX1 design specification.
+thx
 
-This series also enables camera capture support for Jetson Nano which has
-Raspberry PI camera header.
+On Tue, Jul 14, 2020 at 6:14 AM Yi Wang <wang.yi59@zte.com.cn> wrote:
+>
+> From: Liao Pingfang <liao.pingfang@zte.com.cn>
+>
+> Remove the superfuous break, as there is a 'return' before it.
+>
+> Signed-off-by: Liao Pingfang <liao.pingfang@zte.com.cn>
+> Signed-off-by: Yi Wang <wang.yi59@zte.com.cn>
+> ---
+>  fs/cifs/sess.c | 1 -
+>  1 file changed, 1 deletion(-)
+>
+> diff --git a/fs/cifs/sess.c b/fs/cifs/sess.c
+> index 5d05bd2..6708ab0 100644
+> --- a/fs/cifs/sess.c
+> +++ b/fs/cifs/sess.c
+> @@ -1705,7 +1705,6 @@ static int select_sec(struct cifs_ses *ses, struct sess_data *sess_data)
+>  #else
+>                 cifs_dbg(VFS, "Kerberos negotiated but upcall support disabled!\n");
+>                 return -ENOSYS;
+> -               break;
+>  #endif /* CONFIG_CIFS_UPCALL */
+>         case RawNTLMSSP:
+>                 sess_data->func = sess_auth_rawntlmssp_negotiate;
+> --
+> 2.9.5
+>
 
-This series is tested with IMX219 camera sensor.
-
-This series include,
-
-VI I2C related fixes
-- Camera sensor programming happens through VI I2C which is on host1x bus.
-- These patches includes device tree and I2C driver fixes for VI I2C.
-
-Tegra video driver updates
-- TPG Vs Non-TPG based on Kconfig
-- Support for external sensor video capture based on device graph from DT.
-- Support for selection ioctl operations
-- Tegra MIPI CSI pads calibration
-- CSI T-CLK and T-HS settle time computation based on clock rates.
-
-Host1x driver updates
-- Adds API to allow creating mipi device for specific device node.
-- Splits MIPI pads calibrate start and waiting for calibration to be done.
-
-Device tree updates
-- Adds camera connector 2V8, 1V8, 1V2 regulator supplies to Jetson TX1 DT.
-- Enabled VI and CSI support in Jetson Nano DT.
-
-
-Delta between patch versions:
-
-[v3]:	Includes v2 feedback
-	- Uses separate helper function for retrieving remote csi subdevice
-	  and source subdevice.
-	- Added check for presence of subdevice ops set/get_selection
-	- dropped vb2_queue_release from driver and using
-	  vb2_video_unregister_device instead of video_unregister_device.
-	- video device register should happen in the last after all video
-	  device related setup is done in the driver. This is being addressed
-	  in below RFC patch. Once proper implementation of this is available
-	  will update Tegra video driver to use split APIs and do all setup
-	  prior to device register. Added this as TODO in the driver.
-	  https://www.spinics.net/lists/linux-media/msg172761.html
-
-	Note:
-	Patch-0012 has compilation dependency on
-	https://patchwork.kernel.org/patch/11659521/
-
-
-[v2]:	Includes below changes based on v1 feedback
-	- dt-binding document and the driver update for device graph to use
-	  separate ports for sink endpoint and source endpoint for csi.
-	- Use data-lanes endpoint property for csi.
-	- Update tegra_mipi_request() to take device node pointer argument
-	  rather than adding extra API.
-	- Remove checking for clk pointer before clk_disable.
-
-
-Sowjanya Komatineni (18):
-  dt-bindings: i2c: tegra: Document Tegra210 VI I2C clocks and
-    power-domains
-  arm64: tegra: Add missing clocks and power-domains to Tegra210 VI I2C
-  i2c: tegra: Don't mark VI I2C as IRQ safe runtime PM
-  i2c: tegra: Remove NULL pointer check before
-    clk_enable/disable/prepare/unprepare
-  i2c: tegra: Fix the error path in tegra_i2c_runtime_resume
-  i2c: tegra: Fix runtime resume to re-init VI I2C
-  i2c: tegra: Avoid tegra_i2c_init_dma() for Tegra210 vi i2c
-  media: tegra-video: Fix channel format alignment
-  media: tegra-video: Enable TPG based on kernel config
-  media: tegra-video: Update format lookup to offset based
-  dt-bindings: tegra: Update VI and CSI bindings with port info
-  media: tegra-video: Add support for external sensor capture
-  media: tegra-video: Add support for selection ioctl ops
-  gpu: host1x: mipi: Update tegra_mipi_request() to be node based
-  gpu: host1x: mipi: Use readl_relaxed_poll_timeout in tegra_mipi_wait
-  gpu: host1x: mipi: Split tegra_mipi_calibrate and tegra_mipi_wait
-  media: tegra-video: Add CSI MIPI pads calibration
-  media: tegra-video: Compute settle times based on the clock rate
-
- .../display/tegra/nvidia,tegra20-host1x.txt        |  92 ++-
- .../devicetree/bindings/i2c/nvidia,tegra20-i2c.txt |  19 +-
- arch/arm64/boot/dts/nvidia/tegra210.dtsi           |   6 +
- drivers/gpu/drm/tegra/dsi.c                        |   9 +-
- drivers/gpu/host1x/mipi.c                          |  37 +-
- drivers/i2c/busses/i2c-tegra.c                     | 101 +--
- drivers/staging/media/tegra-video/Kconfig          |   7 +
- drivers/staging/media/tegra-video/csi.c            | 247 ++++++-
- drivers/staging/media/tegra-video/csi.h            |   8 +
- drivers/staging/media/tegra-video/tegra210.c       |  25 +-
- drivers/staging/media/tegra-video/vi.c             | 793 +++++++++++++++++++--
- drivers/staging/media/tegra-video/vi.h             |  25 +-
- drivers/staging/media/tegra-video/video.c          |  23 +-
- include/linux/host1x.h                             |   4 +-
- 14 files changed, 1242 insertions(+), 154 deletions(-)
 
 -- 
-2.7.4
+Thanks,
 
+Steve
