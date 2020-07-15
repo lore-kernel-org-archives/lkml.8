@@ -2,298 +2,191 @@ Return-Path: <SRS0=kup7=A2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 111EDC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 19:46:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 822FAC433E3
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 19:46:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B6C0120657
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 19:46:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="Uj9FeJ9Y"
+	by mail.kernel.org (Postfix) with ESMTP id 5FA3420657
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 19:46:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726970AbgGOTqB (ORCPT
+        id S1727060AbgGOTqJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 15:46:01 -0400
-Received: from smtp-fw-33001.amazon.com ([207.171.190.10]:54807 "EHLO
-        smtp-fw-33001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726661AbgGOTqA (ORCPT
+        Wed, 15 Jul 2020 15:46:09 -0400
+Received: from outpost1.zedat.fu-berlin.de ([130.133.4.66]:56651 "EHLO
+        outpost1.zedat.fu-berlin.de" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726996AbgGOTqI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 15:46:00 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1594842360; x=1626378360;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=07ZiHsSJNDyPfOvpZkEmwAGWdhDd52BASM8p6D09UtE=;
-  b=Uj9FeJ9YvPAofU/XH9a9oeNz68jep07n0ALYYrJCnuJs3XbkefTQnIQa
-   VVUCQvPY97qST+oSZMTWO2YX+2pOGRtlyRuLb+kHU+hr2g2DNQyz/ECKy
-   3bzPP7TMHq9RR7Bvr3SDdS2F+sxtRRFDknvpVUPAgHASs3iCUOGKRPHUA
-   I=;
-IronPort-SDR: m0FYBS1y8EPqixIZ3YB7F4fCUkllhYZ4p53vgtEm/8Lyndake2gOPVevlm0oFKIsow/+PrT+ZJ
- 4fK+gMGx78qw==
-X-IronPort-AV: E=Sophos;i="5.75,356,1589241600"; 
-   d="scan'208";a="58896902"
-Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-2b-c300ac87.us-west-2.amazon.com) ([10.47.23.38])
-  by smtp-border-fw-out-33001.sea14.amazon.com with ESMTP; 15 Jul 2020 19:45:57 +0000
-Received: from EX13MTAUEA002.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan2.pdx.amazon.com [10.170.41.162])
-        by email-inbound-relay-2b-c300ac87.us-west-2.amazon.com (Postfix) with ESMTPS id 30B69A25AA;
-        Wed, 15 Jul 2020 19:45:57 +0000 (UTC)
-Received: from EX13D16EUB001.ant.amazon.com (10.43.166.28) by
- EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Wed, 15 Jul 2020 19:45:56 +0000
-Received: from 38f9d34ed3b1.ant.amazon.com (10.43.161.214) by
- EX13D16EUB001.ant.amazon.com (10.43.166.28) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Wed, 15 Jul 2020 19:45:46 +0000
-From:   Andra Paraschiv <andraprs@amazon.com>
-To:     <linux-kernel@vger.kernel.org>
-CC:     Anthony Liguori <aliguori@amazon.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Colm MacCarthaigh <colmmacc@amazon.com>,
-        "David Duncan" <davdunc@amazon.com>,
-        Bjoern Doebel <doebel@amazon.de>,
-        "David Woodhouse" <dwmw@amazon.co.uk>,
-        Frank van der Linden <fllinden@amazon.com>,
-        Alexander Graf <graf@amazon.de>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        "Karen Noel" <knoel@redhat.com>,
-        Martin Pohlack <mpohlack@amazon.de>,
-        Matt Wilson <msw@amazon.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Balbir Singh <sblbir@amazon.com>,
-        Stefano Garzarella <sgarzare@redhat.com>,
-        "Stefan Hajnoczi" <stefanha@redhat.com>,
-        Stewart Smith <trawets@amazon.com>,
-        "Uwe Dannowski" <uwed@amazon.de>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>, <kvm@vger.kernel.org>,
-        <ne-devel-upstream@amazon.com>,
-        Andra Paraschiv <andraprs@amazon.com>
-Subject: [PATCH v5 00/18] Add support for Nitro Enclaves
-Date:   Wed, 15 Jul 2020 22:45:22 +0300
-Message-ID: <20200715194540.45532-1-andraprs@amazon.com>
-X-Mailer: git-send-email 2.20.1 (Apple Git-117)
+        Wed, 15 Jul 2020 15:46:08 -0400
+Received: from inpost2.zedat.fu-berlin.de ([130.133.4.69])
+          by outpost.zedat.fu-berlin.de (Exim 4.93)
+          with esmtps (TLS1.2)
+          tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+          (envelope-from <glaubitz@zedat.fu-berlin.de>)
+          id 1jvnLt-000SMm-0U; Wed, 15 Jul 2020 21:46:01 +0200
+Received: from p57bd93f9.dip0.t-ipconnect.de ([87.189.147.249] helo=[192.168.178.139])
+          by inpost2.zedat.fu-berlin.de (Exim 4.93)
+          with esmtpsa (TLS1.2)
+          tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+          (envelope-from <glaubitz@physik.fu-berlin.de>)
+          id 1jvnLs-0034NF-Pm; Wed, 15 Jul 2020 21:46:00 +0200
+Subject: Re: [PATCH v6 10/18] sh/tlb: Convert SH to generic mmu_gather
+To:     Geert Uytterhoeven <geert@linux-m68k.org>,
+        Peter Zijlstra <peterz@infradead.org>
+Cc:     Will Deacon <will.deacon@arm.com>,
+        "Aneesh Kumar K.V" <aneesh.kumar@linux.vnet.ibm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Linux-Arch <linux-arch@vger.kernel.org>,
+        Linux MM <linux-mm@kvack.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Russell King <linux@armlinux.org.uk>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Rik van Riel <riel@surriel.com>,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Rich Felker <dalias@libc.org>,
+        Linux-sh list <linux-sh@vger.kernel.org>,
+        Guenter Roeck <linux@roeck-us.net>
+References: <20190219103148.192029670@infradead.org>
+ <20190219103233.443069009@infradead.org>
+ <CAMuHMdW3nwckjA9Bt-_Dmf50B__sZH+9E5s0_ziK1U_y9onN=g@mail.gmail.com>
+ <20191204104733.GR2844@hirez.programming.kicks-ass.net>
+ <CAMuHMdXs_Fm93t=O9jJPLxcREZy-T53Z_U_RtHcvaWyV+ESdjg@mail.gmail.com>
+From:   John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
+Autocrypt: addr=glaubitz@physik.fu-berlin.de; keydata=
+ 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
+ scOkTAZQGVpD/8AaLH4v1w==
+Message-ID: <524b87c5-0e94-1578-4395-fd53226d02aa@physik.fu-berlin.de>
+Date:   Wed, 15 Jul 2020 21:45:59 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-X-Originating-IP: [10.43.161.214]
-X-ClientProxiedBy: EX13D46UWB002.ant.amazon.com (10.43.161.70) To
- EX13D16EUB001.ant.amazon.com (10.43.166.28)
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <CAMuHMdXs_Fm93t=O9jJPLxcREZy-T53Z_U_RtHcvaWyV+ESdjg@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Original-Sender: glaubitz@physik.fu-berlin.de
+X-Originating-IP: 87.189.147.249
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Nitro Enclaves (NE) is a new Amazon Elastic Compute Cloud (EC2) capability
-that allows customers to carve out isolated compute environments within EC2
-instances [1].
+Hi!
 
-For example, an application that processes sensitive data and runs in a VM,
-can be separated from other applications running in the same VM. This
-application then runs in a separate VM than the primary VM, namely an enclave.
+On 12/4/19 1:32 PM, Geert Uytterhoeven wrote:
+>>>> Cc: Will Deacon <will.deacon@arm.com>
+>>>> Cc: "Aneesh Kumar K.V" <aneesh.kumar@linux.vnet.ibm.com>
+>>>> Cc: Andrew Morton <akpm@linux-foundation.org>
+>>>> Cc: Nick Piggin <npiggin@gmail.com>
+>>>> Cc: Yoshinori Sato <ysato@users.sourceforge.jp>
+>>>> Cc: Rich Felker <dalias@libc.org>
+>>>> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+>>>
+>>> I got remote access to an SH7722-based Migo-R again, which spews a long
+>>> sequence of BUGs during userspace startup.  I've bisected this to commit
+>>> c5b27a889da92f4a ("sh/tlb: Convert SH to generic mmu_gather").
+>>
+>> Whoopsy.. also, is this really the first time anybody booted an SH
+>> kernel in over a year ?!?
+> 
+> Nah, but the v5.4-rc3 I booted recently on qemu -M r2d had
+> CONFIG_PGTABLE_LEVELS=2, so it didn't show the problem.
+> 
+>>> Do you have a clue?
+>>
+>> Does the below help?
+> 
+> Unfortunately not.
+> 
+>> diff --git a/arch/sh/include/asm/pgalloc.h b/arch/sh/include/asm/pgalloc.h
+>> index 22d968bfe9bb..73a2c00de6c5 100644
+>> --- a/arch/sh/include/asm/pgalloc.h
+>> +++ b/arch/sh/include/asm/pgalloc.h
+>> @@ -36,9 +36,8 @@ do {                                                  \
+>>  #if CONFIG_PGTABLE_LEVELS > 2
+>>  #define __pmd_free_tlb(tlb, pmdp, addr)                        \
+>>  do {                                                   \
+>> -       struct page *page = virt_to_page(pmdp);         \
+>> -       pgtable_pmd_page_dtor(page);                    \
+>> -       tlb_remove_page((tlb), page);                   \
+>> +       pgtable_pmd_page_dtor(pmdp);                    \
+> 
+> expected ‘struct page *’ but argument is of type ‘pmd_t * {aka struct
+> <anonymous> *}’
+> 
+>> +       tlb_remove_page((tlb), (pmdp));                 \
+> 
+> likewise
+> 
+>>  } while (0);
+>>  #endif
 
-An enclave runs alongside the VM that spawned it. This setup matches low latency
-applications needs. The resources that are allocated for the enclave, such as
-memory and CPUs, are carved out of the primary VM. Each enclave is mapped to a
-process running in the primary VM, that communicates with the NE driver via an
-ioctl interface.
+Any chance we can have another go at this? The original change
 
-In this sense, there are two components:
+commit c5b27a889da92f4a969d61df77bd4f79ffce57c9 (refs/bisect/bad)
+Author: Peter Zijlstra <peterz@infradead.org>
+Date:   Tue Sep 4 14:45:04 2018 +0200
 
-1. An enclave abstraction process - a user space process running in the primary
-VM guest that uses the provided ioctl interface of the NE driver to spawn an
-enclave VM (that's 2 below).
+    sh/tlb: Convert SH to generic mmu_gather
+    
+    Generic mmu_gather provides everything SH needs (range tracking and
+    cache coherency).
 
-There is a NE emulated PCI device exposed to the primary VM. The driver for this
-new PCI device is included in the NE driver.
+breaks systemd for me on my SH-7785LCR [1].
 
-The ioctl logic is mapped to PCI device commands e.g. the NE_START_ENCLAVE ioctl
-maps to an enclave start PCI command. The PCI device commands are then
-translated into  actions taken on the hypervisor side; that's the Nitro
-hypervisor running on the host where the primary VM is running. The Nitro
-hypervisor is based on core KVM technology.
+Adrian
 
-2. The enclave itself - a VM running on the same host as the primary VM that
-spawned it. Memory and CPUs are carved out of the primary VM and are dedicated
-for the enclave VM. An enclave does not have persistent storage attached.
+> [1] https://marc.info/?l=linux-kernel&m=159479951822677&w=2
 
-The memory regions carved out of the primary VM and given to an enclave need to
-be aligned 2 MiB / 1 GiB physically contiguous memory regions (or multiple of
-this size e.g. 8 MiB). The memory can be allocated e.g. by using hugetlbfs from
-user space [2][3]. The memory size for an enclave needs to be at least 64 MiB.
-The enclave memory and CPUs need to be from the same NUMA node.
-
-An enclave runs on dedicated cores. CPU 0 and its CPU siblings need to remain
-available for the primary VM. A CPU pool has to be set for NE purposes by an
-user with admin capability. See the cpu list section from the kernel
-documentation [4] for how a CPU pool format looks.
-
-An enclave communicates with the primary VM via a local communication channel,
-using virtio-vsock [5]. The primary VM has virtio-pci vsock emulated device,
-while the enclave VM has a virtio-mmio vsock emulated device. The vsock device
-uses eventfd for signaling. The enclave VM sees the usual interfaces - local
-APIC and IOAPIC - to get interrupts from virtio-vsock device. The virtio-mmio
-device is placed in memory below the typical 4 GiB.
-
-The application that runs in the enclave needs to be packaged in an enclave
-image together with the OS ( e.g. kernel, ramdisk, init ) that will run in the
-enclave VM. The enclave VM has its own kernel and follows the standard Linux
-boot protocol.
-
-The kernel bzImage, the kernel command line, the ramdisk(s) are part of the
-Enclave Image Format (EIF); plus an EIF header including metadata such as magic
-number, eif version, image size and CRC.
-
-Hash values are computed for the entire enclave image (EIF), the kernel and
-ramdisk(s). That's used, for example, to check that the enclave image that is
-loaded in the enclave VM is the one that was intended to be run.
-
-These crypto measurements are included in a signed attestation document
-generated by the Nitro Hypervisor and further used to prove the identity of the
-enclave; KMS is an example of service that NE is integrated with and that checks
-the attestation doc.
-
-The enclave image (EIF) is loaded in the enclave memory at offset 8 MiB. The
-init process in the enclave connects to the vsock CID of the primary VM and a
-predefined port - 9000 - to send a heartbeat value - 0xb7. This mechanism is
-used to check in the primary VM that the enclave has booted.
-
-If the enclave VM crashes or gracefully exits, an interrupt event is received by
-the NE driver. This event is sent further to the user space enclave process
-running in the primary VM via a poll notification mechanism. Then the user space
-enclave process can exit.
-
-Thank you.
-
-Andra
-
-[1] https://aws.amazon.com/ec2/nitro/nitro-enclaves/
-[2] https://www.kernel.org/doc/Documentation/vm/hugetlbpage.txt
-[3] https://lwn.net/Articles/807108/
-[4] https://www.kernel.org/doc/html/latest/admin-guide/kernel-parameters.html
-[5] https://man7.org/linux/man-pages/man7/vsock.7.html
-
----
-
-Patch Series Changelog
-
-The patch series is built on top of v5.8-rc5.
-
-v4 -> v5
-
-* Rebase on top of v5.8-rc5.
-* Add more details about the ioctl calls usage e.g. error codes.
-* Update the ioctl to set an enclave vCPU to not return a fd.
-* Add specific NE error codes.
-* Split the NE CPU pool in CPU cores cpumasks.
-* Remove log on copy_from_user() / copy_to_user() failure.
-* Release the reference to the NE PCI device on failure paths.
-* Close enclave fd on copy_to_user() failure.
-* Set empty string in case of invalid NE CPU pool sysfs value.
-* Early exit on NE CPU pool setup if enclave(s) already running.
-* Add more sanity checks for provided vCPUs e.g. maximum possible value.
-* Split logic for checking if a vCPU is in pool / getting a vCPU from pool.
-* Exit without unpinning the pages on NE PCI dev request failure.
-* Add check for the memory region user space address alignment.
-* Update the logic to set memory region to not have a hardcoded check for 2 MiB.
-* Add arch dependency for Arm / x86.
-* v4: https://lore.kernel.org/lkml/20200622200329.52996-1-andraprs@amazon.com/
-
-v3 -> v4
-
-* Rebase on top of v5.8-rc2.
-* Add NE API version and the corresponding ioctl call.
-* Add enclave / image load flags options.
-* Decouple NE ioctl interface from KVM API.
-* Remove the "packed" attribute and include padding in the NE data structures.
-* Update documentation based on the changes from v4.
-* Update sample to match the updates in v4.
-* Remove the NE CPU pool init during NE kernel module loading.
-* Setup the NE CPU pool at runtime via a sysfs file for the kernel parameter.
-* Check if the enclave memory and CPUs are from the same NUMA node.
-* Add minimum enclave memory size definition.
-* v3: https://lore.kernel.org/lkml/20200525221334.62966-1-andraprs@amazon.com/ 
-
-v2 -> v3
-
-* Rebase on top of v5.7-rc7.
-* Add changelog to each patch in the series.
-* Remove "ratelimited" from the logs that are not in the ioctl call paths.
-* Update static calls sanity checks.
-* Remove file ops that do nothing for now.
-* Remove GPL additional wording as SPDX-License-Identifier is already in place.
-* v2: https://lore.kernel.org/lkml/20200522062946.28973-1-andraprs@amazon.com/
-
-v1 -> v2
-
-* Rebase on top of v5.7-rc6.
-* Adapt codebase based on feedback from v1.
-* Update ioctl number definition - major and minor.
-* Add sample / documentation for the ioctl interface basic flow usage.
-* Update cover letter to include more context on the NE overall.
-* Add fix for the enclave / vcpu fd creation error cleanup path.
-* Add fix reported by kbuild test robot <lkp@intel.com>.
-* v1: https://lore.kernel.org/lkml/20200421184150.68011-1-andraprs@amazon.com/
-
----
-
-Andra Paraschiv (18):
-  nitro_enclaves: Add ioctl interface definition
-  nitro_enclaves: Define the PCI device interface
-  nitro_enclaves: Define enclave info for internal bookkeeping
-  nitro_enclaves: Init PCI device driver
-  nitro_enclaves: Handle PCI device command requests
-  nitro_enclaves: Handle out-of-band PCI device events
-  nitro_enclaves: Init misc device providing the ioctl interface
-  nitro_enclaves: Add logic for creating an enclave VM
-  nitro_enclaves: Add logic for setting an enclave vCPU
-  nitro_enclaves: Add logic for getting the enclave image load info
-  nitro_enclaves: Add logic for setting an enclave memory region
-  nitro_enclaves: Add logic for starting an enclave
-  nitro_enclaves: Add logic for terminating an enclave
-  nitro_enclaves: Add Kconfig for the Nitro Enclaves driver
-  nitro_enclaves: Add Makefile for the Nitro Enclaves driver
-  nitro_enclaves: Add sample for ioctl interface usage
-  nitro_enclaves: Add overview documentation
-  MAINTAINERS: Add entry for the Nitro Enclaves driver
-
- Documentation/nitro_enclaves/ne_overview.rst  |   87 ++
- .../userspace-api/ioctl/ioctl-number.rst      |    5 +-
- MAINTAINERS                                   |   13 +
- drivers/virt/Kconfig                          |    2 +
- drivers/virt/Makefile                         |    2 +
- drivers/virt/nitro_enclaves/Kconfig           |   16 +
- drivers/virt/nitro_enclaves/Makefile          |   11 +
- drivers/virt/nitro_enclaves/ne_misc_dev.c     | 1385 +++++++++++++++++
- drivers/virt/nitro_enclaves/ne_misc_dev.h     |  106 ++
- drivers/virt/nitro_enclaves/ne_pci_dev.c      |  565 +++++++
- drivers/virt/nitro_enclaves/ne_pci_dev.h      |  265 ++++
- include/linux/nitro_enclaves.h                |   11 +
- include/uapi/linux/nitro_enclaves.h           |  244 +++
- samples/nitro_enclaves/.gitignore             |    2 +
- samples/nitro_enclaves/Makefile               |   16 +
- samples/nitro_enclaves/ne_ioctl_sample.c      |  628 ++++++++
- 16 files changed, 3357 insertions(+), 1 deletion(-)
- create mode 100644 Documentation/nitro_enclaves/ne_overview.rst
- create mode 100644 drivers/virt/nitro_enclaves/Kconfig
- create mode 100644 drivers/virt/nitro_enclaves/Makefile
- create mode 100644 drivers/virt/nitro_enclaves/ne_misc_dev.c
- create mode 100644 drivers/virt/nitro_enclaves/ne_misc_dev.h
- create mode 100644 drivers/virt/nitro_enclaves/ne_pci_dev.c
- create mode 100644 drivers/virt/nitro_enclaves/ne_pci_dev.h
- create mode 100644 include/linux/nitro_enclaves.h
- create mode 100644 include/uapi/linux/nitro_enclaves.h
- create mode 100644 samples/nitro_enclaves/.gitignore
- create mode 100644 samples/nitro_enclaves/Makefile
- create mode 100644 samples/nitro_enclaves/ne_ioctl_sample.c
+Adrian
 
 -- 
-2.20.1 (Apple Git-117)
-
-
-
-
-Amazon Development Center (Romania) S.R.L. registered office: 27A Sf. Lazar Street, UBC5, floor 2, Iasi, Iasi County, 700045, Romania. Registered in Romania. Registration number J22/2621/2005.
-
+ .''`.  John Paul Adrian Glaubitz
+: :' :  Debian Developer - glaubitz@debian.org
+`. `'   Freie Universitaet Berlin - glaubitz@physik.fu-berlin.de
+  `-    GPG: 62FF 8A75 84E0 2956 9546  0006 7426 3B37 F5B5 F913
