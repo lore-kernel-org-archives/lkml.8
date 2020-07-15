@@ -2,205 +2,321 @@ Return-Path: <SRS0=kup7=A2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+X-Spam-Status: No, score=-22.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CCE9AC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 00:12:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00617C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 00:18:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9FC092072D
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 00:12:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C24DD2065E
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 00:18:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="IeoNgx8c"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="i6O2sMFj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727981AbgGOAMl (ORCPT
+        id S1728053AbgGOAS0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 20:12:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60578 "EHLO
+        Tue, 14 Jul 2020 20:18:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33222 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726630AbgGOAMk (ORCPT
+        with ESMTP id S1726142AbgGOAS0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 20:12:40 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1A631C061755
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 17:12:40 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id z2so579458wrp.2
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 17:12:39 -0700 (PDT)
+        Tue, 14 Jul 2020 20:18:26 -0400
+Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 12D55C061794
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 17:18:26 -0700 (PDT)
+Received: by mail-pl1-x643.google.com with SMTP id 72so377465ple.0
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 17:18:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=sneM91rbI/nDHEsWP+L7URp2+UR8C8X7sfxWS1/+l7o=;
-        b=IeoNgx8cdpYeAccA0uobhRHb5Z1AiDBQeDVnP2vLAatouPAyojkmncBb7SW7Rd3oMS
-         +aAHajEqlfaW0Vb6OjAwVqRoMwYkZaolo7m7veropFVzLcsKps3SC4iurtswUYUMCZVh
-         Js14A4U5rSyI1lW6mJFMLbw5ipdFhfabzsZWa/mGOHfMS0FLF7ME87aRI3OIIUjhjUCA
-         njRY01u91xfXqoDXHZHh/KcLltem7kL0+Z5VL4WNfBz+GJWDIbq9DqRUNdkVfq4IFDrZ
-         QkDxyQqMCNnFOFss2xwdpFvi3goOqWnR+ASj/7ftOurvD4H4TrBw7lFVdlH/dwBELXf8
-         m6bA==
+        bh=VKz0ARpq5MDLj9K45daGnPMEyKlao4XZmq4tn5REs6Q=;
+        b=i6O2sMFjKkipVxCildMn6AzET2z4pdczDQE3sZOr1uwSdT3eZ65QTtVd5rG9TZCpJu
+         T5PiVd+GwVHsuqNXczfnQ/yoLjLrWDHE34c6beCJTjNoKtk6ozH74O8EJFtFi2GBlB7H
+         fMvwevHXqDBkTvV8xoKASTd5bj/ErMEE6X3yZq5KHjsA7g2YsStC7ElhAMmb6SXnl1mE
+         dSHT/3FqVk76ABqguIEKNL9BzGqmcUW6vlqMWtlSKw3Kypb3e1qy2iFTmh/XT/usxERv
+         CNqQCdlyLT7F//fp5WtJ+VE2Yom1VZF1MaEHN2vFEgLkty4et18e+oBR7f/DwLkNanhO
+         6n5w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=sneM91rbI/nDHEsWP+L7URp2+UR8C8X7sfxWS1/+l7o=;
-        b=FH4OkNfTI0ZJVWzGf0JAbJlxFc6ejrPCrZPNnvcGgkROilbQ5QP3g6fAwHW92Q42H8
-         JmqJMYZXSlWzs3ZyJB1096wfLCv6YZZgmDT+/9z312Ji15NBzao696leNwCk55Dl1krB
-         /X3K0D0xXxGcVuiIp9f0ySvIvqwJlwKvgu9YNvxwaU3J8qpwbT3JxHNcDOWYzMWD6xFB
-         7Fv5oQSO76mmM3Co4kolSGohB0SZsVfQzEjMNYIoOk3QJ764t+bjLTL/M8/Q/ZLW6hze
-         v8TdegH1fMwgUYuMb7YbnJxRRU55HfScNh29Ptz6PTwwPLqjpadz8w6Wnoay8m3os7jZ
-         gM0w==
-X-Gm-Message-State: AOAM530V84ol46gebt2qOxxUjfiMZR/SpsaSNLjcVTwY3s/E6XcOJKQS
-        1pyGr5JZR2zgo0A3B1raHfm+9lQSAWE8nZzQONaIWA==
-X-Google-Smtp-Source: ABdhPJzrYJ4qEvtSH6cYIMsTC+j2czH1YQqYtoKTph6QpAMMU7w68aMvKN+k3v4azq08KsmnZj8vc+4C9VAUYcDWQLU=
-X-Received: by 2002:adf:82e1:: with SMTP id 88mr8104138wrc.376.1594771958519;
- Tue, 14 Jul 2020 17:12:38 -0700 (PDT)
+        bh=VKz0ARpq5MDLj9K45daGnPMEyKlao4XZmq4tn5REs6Q=;
+        b=T+8j7zdQwQZfrH4+y8d8Nu/8BAMu/h3GouYOaczC7h9uvDTX5uPhUCxEXHmsyAWbmu
+         hXKMDlbZJZkFPRpLLNpTXFDQX8e21LXPMz6ywkg9f+BTaQKZYKyPVFZSk8JEkiCArHQ3
+         R2GER30T5b8Sbu+fTs1UxhHoq4WfpOUGTyzDdlRMMTs2fdQisDbmUQQRCOfSdcTbFJ24
+         wRnNBkwv1V1cBvDlk2T4RBh2pXJnM66ouL0yhzHcbzqPPz/ifGUdWko/Wsqq902ZtAQe
+         57RC9QAG8J9gwxa3r4LKsbQi0GSJLFXK2YBnB9lilBQFYkLNRqKIBsL9Pt6B+yEjQZ3I
+         0OLg==
+X-Gm-Message-State: AOAM532rMFnqxC57oFYCUf6jZv+sBDndQhRJz8NVnD8eVK8ZcZgp892x
+        3jKjvnhDYNOvpzPWQ80Ow5pKnj2pbDjzOK0Hcs3gGA==
+X-Google-Smtp-Source: ABdhPJwa2dzmCFcQqTMjbmnXoLW3w7WXixblDqFy52K1oh7MLD0H+RydmNx0h+dj1KgCAmDIW1rNAAkyVatrnsANveQ=
+X-Received: by 2002:a17:90a:d306:: with SMTP id p6mr6741341pju.25.1594772305155;
+ Tue, 14 Jul 2020 17:18:25 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200712132634.138901-1-jolsa@kernel.org> <20200712132634.138901-13-jolsa@kernel.org>
-In-Reply-To: <20200712132634.138901-13-jolsa@kernel.org>
-From:   Ian Rogers <irogers@google.com>
-Date:   Tue, 14 Jul 2020 17:12:26 -0700
-Message-ID: <CAP-5=fV-tCNpvDVs9aqOsBVCGQZej0jJ_Pki_pSmbL3g99cGqQ@mail.gmail.com>
-Subject: Re: [PATCH 12/18] perf metric: Compute referenced metrics
-To:     Jiri Olsa <jolsa@kernel.org>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Michael Petlan <mpetlan@redhat.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Kajol Jain <kjain@linux.ibm.com>,
-        John Garry <john.garry@huawei.com>,
-        "Paul A. Clarke" <pc@us.ibm.com>,
-        Stephane Eranian <eranian@google.com>
+References: <20200713225103.GA1095851@google.com> <20200714232349.2198114-1-nhuck@google.com>
+In-Reply-To: <20200714232349.2198114-1-nhuck@google.com>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Tue, 14 Jul 2020 17:18:13 -0700
+Message-ID: <CAKwvOdnsp=zuxbFVcbGRN+-ZH-F5UFVfKzNBfHM714WkwRZyCQ@mail.gmail.com>
+Subject: Re: [PATCH v3] Makefile: Add clang-tidy and static analyzer support
+ to makefile
+To:     Nathan Huckleberry <nhuck@google.com>
+Cc:     Masahiro Yamada <masahiroy@kernel.org>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jul 12, 2020 at 6:27 AM Jiri Olsa <jolsa@kernel.org> wrote:
+On Tue, Jul 14, 2020 at 4:24 PM 'Nathan Huckleberry' via Clang Built
+Linux <clang-built-linux@googlegroups.com> wrote:
 >
-> Adding computation (expr__parse call) of referenced metric at
-> the point when it needs to be resolved during the 'master'
-> metric computation.
-
-Same note on wrt master:
-https://www.kernel.org/doc/html/latest/process/coding-style.html?highlight=language%20master#naming
-
-> Once the inner metric is computed, the result is stored and
-> used if there's another usage of that metric.
+> This patch adds clang-tidy and the clang static-analyzer as make
+> targets. The goal of this patch is to make static analysis tools
+> usable and extendable by any developer or researcher who is familiar
+> with basic c++.
 >
-> Signed-off-by: Jiri Olsa <jolsa@kernel.org>
-
-Acked-by: Ian Rogers <irogers@google.com>
-
-Thanks,
-Ian
-
+> The current static analysis tools require intimate knowledge of the
+> internal
+> workings of the static analysis.  Clang-tidy and the clang static
+> analyzers
+> expose an easy to use api and allow users unfamiliar with clang to
+> write new checks with relative ease.
+>
+> ===Clang-tidy===
+>
+> Clang-tidy is an easily extendable 'linter' that runs on the AST.
+> Clang-tidy checks are easy to write and understand. A check consists of
+> two parts, a matcher and a checker. The matcher is created using a
+> domain specific language that acts on the AST
+> (https://clang.llvm.org/docs/LibASTMatchersReference.html).  When AST
+> nodes are found by the matcher a callback is made to the checker. The
+> checker can then execute additional checks and issue warnings.
+>
+> Here is an example clang-tidy check to report functions that have calls
+> to local_irq_disable without calls to local_irq_enable and vice-versa.
+> Functions flagged with __attribute((annotation("ignore_irq_balancing")))
+> are ignored for analysis. (https://reviews.llvm.org/D65828)
+>
+> ===Clang static analyzer===
+>
+> The clang static analyzer is a more powerful static analysis tool that
+> uses symbolic execution to find bugs. Currently there is a check that
+> looks for potential security bugs from invalid uses of kmalloc and
+> kfree. There are several more general purpose checks that are useful for
+> the kernel.
+>
+> The clang static analyzer is well documented and designed to be
+> extensible.
+> (https://clang-analyzer.llvm.org/checker_dev_manual.html)
+> (https://github.com/haoNoQ/clang-analyzer-guide/releases/download/v0.1/clang-analyzer-guide-v0.1.pdf)
+>
+> The main draw of the clang tools is how accessible they are. The clang
+> documentation is very nice and these tools are built specifically to be
+> easily extendable by any developer. They provide an accessible method of
+> bug-finding and research to people who are not overly familiar with the
+> kernel codebase.
+>
+> Signed-off-by: Nathan Huckleberry <nhuck@google.com>
 > ---
->  tools/perf/util/expr.c | 31 +++++++++++++++++++++++++++++++
->  tools/perf/util/expr.h |  3 +++
->  tools/perf/util/expr.y |  4 ++--
->  3 files changed, 36 insertions(+), 2 deletions(-)
+> Changes v2 -> v3
+> * Redirect clang-tidy output to stderr
+> * Style fixes
+> * Add directory to MAINTAINERS
+>  MAINTAINERS                                   |  1 +
+>  Makefile                                      |  3 +
+>  scripts/clang-tools/Makefile.clang-tools      | 23 +++++++
+>  .../{ => clang-tools}/gen_compile_commands.py |  0
+>  scripts/clang-tools/run-clang-tools.py        | 69 +++++++++++++++++++
+>  5 files changed, 96 insertions(+)
+>  create mode 100644 scripts/clang-tools/Makefile.clang-tools
+>  rename scripts/{ => clang-tools}/gen_compile_commands.py (100%)
+>  create mode 100755 scripts/clang-tools/run-clang-tools.py
 >
-> diff --git a/tools/perf/util/expr.c b/tools/perf/util/expr.c
-> index 6bf8a21f5c53..2784df38f8c2 100644
-> --- a/tools/perf/util/expr.c
-> +++ b/tools/perf/util/expr.c
-> @@ -91,6 +91,7 @@ int expr__add_ref(struct expr_parse_ctx *ctx, struct metric_ref *ref)
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 1d4aa7f942de..a444564e5572 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -4198,6 +4198,7 @@ W:        https://clangbuiltlinux.github.io/
+>  B:     https://github.com/ClangBuiltLinux/linux/issues
+>  C:     irc://chat.freenode.net/clangbuiltlinux
+>  F:     Documentation/kbuild/llvm.rst
+> +F:     scripts/clang-tools/
+>  K:     \b(?i:clang|llvm)\b
 >
->         data_ptr->ref.metric_name = ref->metric_name;
->         data_ptr->ref.metric_expr = ref->metric_expr;
-> +       data_ptr->ref.counted = false;
->         data_ptr->is_ref = true;
+>  CLEANCACHE API
+> diff --git a/Makefile b/Makefile
+> index fe0164a654c7..3e2df010b342 100644
+> --- a/Makefile
+> +++ b/Makefile
+> @@ -747,6 +747,7 @@ KBUILD_CFLAGS       += $(call cc-option,-fno-allow-store-data-races)
 >
->         ret = hashmap__set(&ctx->ids, name, data_ptr,
-> @@ -110,6 +111,34 @@ int expr__get_id(struct expr_parse_ctx *ctx, const char *id,
->         return hashmap__find(&ctx->ids, id, (void **)data) ? 0 : -1;
->  }
+>  include scripts/Makefile.kcov
+>  include scripts/Makefile.gcc-plugins
+> +include scripts/clang-tools/Makefile.clang-tools
 >
-> +int expr__resolve_id(struct expr_parse_ctx *ctx, const char *id,
-> +                    struct expr_id_data **datap)
-> +{
-> +       struct expr_id_data *data;
+>  ifdef CONFIG_READABLE_ASM
+>  # Disable optimizations that make assembler listings hard to read.
+> @@ -1543,6 +1544,8 @@ help:
+>         @echo  '  export_report   - List the usages of all exported symbols'
+>         @echo  '  headerdep       - Detect inclusion cycles in headers'
+>         @echo  '  coccicheck      - Check with Coccinelle'
+> +       @echo  '  clang-analyzer  - Check with clang static analyzer'
+> +       @echo  '  clang-tidy      - Check with clang-tidy'
+>         @echo  ''
+>         @echo  'Tools:'
+>         @echo  '  nsdeps          - Generate missing symbol namespace dependencies'
+> diff --git a/scripts/clang-tools/Makefile.clang-tools b/scripts/clang-tools/Makefile.clang-tools
+> new file mode 100644
+> index 000000000000..7ad3308c1937
+> --- /dev/null
+> +++ b/scripts/clang-tools/Makefile.clang-tools
+> @@ -0,0 +1,23 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +#
+> +# Copyright (C) Google LLC, 2020
+> +#
+> +# Author: Nathan Huckleberry <nhuck@google.com>
+> +#
+> +PHONY += clang-tidy
+> +clang-tidy:
+> +ifdef CONFIG_CC_IS_CLANG
+> +       $(PYTHON3) scripts/clang-tools/gen_compile_commands.py
+> +       $(PYTHON3) scripts/clang-tools/run-clang-tools.py clang-tidy compile_commands.json
+> +else
+> +       $(error clang-tidy requires CC=clang)
+> +endif
 > +
-> +       if (expr__get_id(ctx, id, datap) || !*datap) {
-> +               pr_debug("%s not found\n", id);
-> +               return -1;
-> +       }
+> +PHONY += clang-analyzer
+> +clang-analyzer:
+> +ifdef CONFIG_CC_IS_CLANG
+> +       $(PYTHON3) scripts/clang-tools/gen_compile_commands.py
+> +       $(PYTHON3) scripts/clang-tools/run-clang-tools.py static-analyzer compile_commands.json
+
+^ note below on `static-analyzer`
+
+> +else
+> +       $(error clang-analyzer requires CC=clang)
+> +endif
+> diff --git a/scripts/gen_compile_commands.py b/scripts/clang-tools/gen_compile_commands.py
+> similarity index 100%
+> rename from scripts/gen_compile_commands.py
+> rename to scripts/clang-tools/gen_compile_commands.py
+> diff --git a/scripts/clang-tools/run-clang-tools.py b/scripts/clang-tools/run-clang-tools.py
+> new file mode 100755
+> index 000000000000..00b8532c1729
+> --- /dev/null
+> +++ b/scripts/clang-tools/run-clang-tools.py
+> @@ -0,0 +1,69 @@
+> +#!/usr/bin/env python
+> +# SPDX-License-Identifier: GPL-2.0
+> +#
+> +# Copyright (C) Google LLC, 2020
+> +#
+> +# Author: Nathan Huckleberry <nhuck@google.com>
+> +#
+> +"""A helper routine run clang-tidy and the clang static-analyzer on
+> +compile_commands.json."""
 > +
-> +       data = *datap;
+> +import argparse
+> +import json
+> +import logging
+> +import multiprocessing
+> +import os
+> +import subprocess
+> +import sys
 > +
-> +       pr_debug2("lookup: is_ref %d, counted %d, val %f: %s\n",
-> +                 data->is_ref, data->ref.counted, data->val, id);
+> +def parse_arguments():
+> +  """Set up and parses command-line arguments.
+> +  Returns:
+> +    args: Dict of parsed args
+> +      Has keys "file" and "type"
+> +  """
+> +  usage = """Run clang-tidy or the clang static-analyzer on a
+> +  compilation database."""
+> +  parser = argparse.ArgumentParser(description=usage)
 > +
-> +       if (data->is_ref && !data->ref.counted) {
-> +               data->ref.counted = true;
-> +               pr_debug("processing metric: %s ENTRY\n", id);
-> +               if (expr__parse(&data->val, ctx, data->ref.metric_expr, 1)) {
-> +                       pr_debug("%s failed to count\n", id);
-> +                       return -1;
-> +               }
-> +               pr_debug("processing metric: %s EXIT: %f\n", id, data->val);
-> +       }
+> +  type_help = ("Type of analysis to be performed")
+> +  parser.add_argument("type", choices=["clang-tidy", "static-analyzer"],
+
+Rather than "static-analyzer", how about "clang-analyzer" to be
+consistent with the `make` target?  Top level Makefile would need to
+pass that here, too.
+
+> +                      help=type_help)
+> +  file_path_help = ("Path to the compilation database to parse")
+> +  parser.add_argument("file",  type=str, help=file_path_help)
 > +
-> +       return 0;
-> +}
+> +  args = parser.parse_args()
 > +
->  void expr__del_id(struct expr_parse_ctx *ctx, const char *id)
->  {
->         struct expr_id_data *old_val = NULL;
-> @@ -150,6 +179,8 @@ __expr__parse(double *val, struct expr_parse_ctx *ctx, const char *expr,
->         void *scanner;
->         int ret;
->
-> +       pr_debug2("parsing metric: %s\n", expr);
+> +  return args
 > +
->         ret = expr_lex_init_extra(&scanner_ctx, &scanner);
->         if (ret)
->                 return ret;
-> diff --git a/tools/perf/util/expr.h b/tools/perf/util/expr.h
-> index d19e66915228..b6d1fba64eaa 100644
-> --- a/tools/perf/util/expr.h
-> +++ b/tools/perf/util/expr.h
-> @@ -25,6 +25,7 @@ struct expr_id_data {
->                 struct {
->                         const char *metric_name;
->                         const char *metric_expr;
-> +                       bool counted;
->                 } ref;
->         };
->  };
-> @@ -42,6 +43,8 @@ int expr__add_id_val(struct expr_parse_ctx *ctx, const char *id, double val);
->  int expr__add_ref(struct expr_parse_ctx *ctx, struct metric_ref *ref);
->  int expr__get_id(struct expr_parse_ctx *ctx, const char *id,
->                  struct expr_id_data **data);
-> +int expr__resolve_id(struct expr_parse_ctx *ctx, const char *id,
-> +                    struct expr_id_data **datap);
->  int expr__parse(double *final_val, struct expr_parse_ctx *ctx,
->                 const char *expr, int runtime);
->  int expr__find_other(const char *expr, const char *one,
-> diff --git a/tools/perf/util/expr.y b/tools/perf/util/expr.y
-> index 0d4f5d324be7..d34b370391c6 100644
-> --- a/tools/perf/util/expr.y
-> +++ b/tools/perf/util/expr.y
-> @@ -88,11 +88,11 @@ expr:         NUMBER
->         | ID                    {
->                                         struct expr_id_data *data;
->
-> -                                       if (expr__get_id(ctx, $1, &data) || !data) {
-> -                                               pr_debug("%s not found\n", $1);
-> +                                       if (expr__resolve_id(ctx, $1, &data)) {
->                                                 free($1);
->                                                 YYABORT;
->                                         }
+> +def init(l,t):
+> +  global lock
+> +  global analysis_type
+> +  lock = l
+> +  analysis_type = t
 > +
->                                         $$ = data->val;
->                                         free($1);
->                                 }
+> +def run_analysis(entry):
+> +  filename = entry["file"]
+> +  checks = "-checks=-*,linuxkernel-*" if (analysis_type == "clang-tidy") else "-checks=-*,clang-analyzer-*"
+
+I'm not sure that the parens are necessary ^, but it's not a big
+enough deal to necessitate a v4, IMO.
+
+Though this is still running `-*,` for static-analyzer which I would
+like removed.
+
+> +  p = subprocess.run(["clang-tidy", "-p", os.getcwd(),
+> +                    checks, filename],
+> +                    stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+> +  lock.acquire()
+> +  print(filename, file=sys.stderr)
+
+Should we drop printing the filename? Analyzing the output of `make
+LLVM=1 -j71 defconfig clang-tidy 2> log.txt`, for example I see:
+Error while processing
+/linux-next/drivers/net/ethernet/freescale/fman/fman_sp.c.
+...
+<hundreds of lines from different files>
+drivers/net/ethernet/freescale/fman/fman_sp.c
+
+It's surprising to me how these appear out of order; maybe buffering
+or not has something to do with it?
+
+Anyways, if we print the filename anyways per error, and files with no
+errors are just printed kind of meaninglessly, then I think we don't
+need to print the filename being analyzed again.  For clang-analyzer,
+the errors also have the filename per line of the warning printed.
+
+> +  sys.stderr.buffer.write(p.stdout)
+> +  lock.release()
+> +
+> +
+> +def main():
+> +  args = parse_arguments()
+> +  filename = args.file
+> +
+> +  #Read JSON data into the datastore variable
+> +  with open(filename, "r") as f:
+> +    datastore = json.load(f)
+> +    lock = multiprocessing.Lock()
+> +    pool = multiprocessing.Pool(initializer=init, initargs=(lock, args.type))
+> +    pool.map(run_analysis,datastore)
+> +
+> +if __name__ == "__main__":
+> +    main()
 > --
-> 2.25.4
->
+
+
+-- 
+Thanks,
+~Nick Desaulniers
