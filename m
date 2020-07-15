@@ -2,320 +2,143 @@ Return-Path: <SRS0=kup7=A2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8424DC433E2
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 15:25:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21798C433E6
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 15:25:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 664E520672
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 15:25:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 02C1E20672
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 15:25:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="eZCm30jQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726398AbgGOPZC (ORCPT
+        id S1726661AbgGOPZU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 11:25:02 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:51036 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725798AbgGOPZC (ORCPT
+        Wed, 15 Jul 2020 11:25:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60102 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725798AbgGOPZU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 11:25:02 -0400
-Received: from ip5f5af08c.dynamic.kabel-deutschland.de ([95.90.240.140] helo=wittgenstein)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <christian.brauner@ubuntu.com>)
-        id 1jvjGw-00077b-8q; Wed, 15 Jul 2020 15:24:38 +0000
-Date:   Wed, 15 Jul 2020 17:24:37 +0200
-From:   Christian Brauner <christian.brauner@ubuntu.com>
-To:     Adrian Reber <areber@redhat.com>
-Cc:     Eric Biederman <ebiederm@xmission.com>,
-        Pavel Emelyanov <ovzxemul@gmail.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Dmitry Safonov <0x7f454c46@gmail.com>,
-        Andrei Vagin <avagin@gmail.com>,
-        Nicolas Viennot <Nicolas.Viennot@twosigma.com>,
-        =?utf-8?B?TWljaGHFgiBDxYJhcGnFhHNraQ==?= <mclapinski@google.com>,
-        Kamil Yurtsever <kyurtsever@google.com>,
-        Dirk Petersen <dipeit@gmail.com>,
-        Christine Flood <chf@redhat.com>,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Radostin Stoyanov <rstoyanov1@gmail.com>,
-        Cyrill Gorcunov <gorcunov@openvz.org>,
-        Serge Hallyn <serge@hallyn.com>,
-        Stephen Smalley <stephen.smalley.work@gmail.com>,
-        Sargun Dhillon <sargun@sargun.me>,
-        Arnd Bergmann <arnd@arndb.de>,
-        linux-security-module@vger.kernel.org,
-        linux-kernel@vger.kernel.org, selinux@vger.kernel.org,
-        Eric Paris <eparis@parisplace.org>,
-        Jann Horn <jannh@google.com>, linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH v5 6/6] selftests: add clone3() CAP_CHECKPOINT_RESTORE
- test
-Message-ID: <20200715152437.ngn2hs5zhxkdway4@wittgenstein>
-References: <20200715144954.1387760-1-areber@redhat.com>
- <20200715144954.1387760-7-areber@redhat.com>
+        Wed, 15 Jul 2020 11:25:20 -0400
+Received: from mail-il1-x141.google.com (mail-il1-x141.google.com [IPv6:2607:f8b0:4864:20::141])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DD24EC08C5DB
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 08:25:19 -0700 (PDT)
+Received: by mail-il1-x141.google.com with SMTP id p15so2273044ilh.13
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 08:25:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=BiW/jN3rL+5vGHysOrPdpgcbXQ4vTbW3++qctnxB/PU=;
+        b=eZCm30jQ/Qc+jKEddMFpjDPUVEJDOJ2pl/XK/6BHPnks2yC1LwQwIKyv72gOpCc6lc
+         lV81aiqejy5GKid9iK4bdpHGG/fBYBLb5XGkgsdTCfkIjXi2/GWPuKIalBW0LrzcNSrU
+         XcsZZBEuWTXwmSEhKlt7lzekUjfaG5Lsamwwlenik2+LS3CnQKlul6rk9OLweAfWtFQC
+         1jZPq65bO0bPOuDCA8LxZgIdSEZ9UTt3m3z4V7IKYgYsre3DSs0nLb5odTdPgmqx2AQY
+         VENjRQfFl1AyCQ7C6PfzkuQd0KL0GmxDixcrjek12RxJJX0P9gBC0BYi2B2+soPTUwsp
+         M1Cg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=BiW/jN3rL+5vGHysOrPdpgcbXQ4vTbW3++qctnxB/PU=;
+        b=Eah93l7h9DAT+qKH2pQC41jUPREwxFXfEgK0xu+vf8NdNYRje22VPkNi8fv7QAR4/E
+         bn2jYERL0yH/IGK3Wb2mHo1FmjfEEkCIKHqjo6pGuGl7ezlomKO/n3Bh2Yn7+56hruBD
+         G8R0QdZtzKiLLNsycUhNCwUy5vs0rG8Y9gQx8OLtSL97KjsjJNjzyq509yK6CCis2SlL
+         r7WiL4tdsqw6/sA7GIMkUfju88KtQmeTPAZJUK1pBJlGF6LYXDTWEb/z638TgyJcUe1b
+         vqF7x6g536l8+c4LFhnLE19wuopzkcAfwBzVMUKw4WIXuQZEreU9wpS1rU5ySOo9rz2U
+         olgQ==
+X-Gm-Message-State: AOAM533sjQXQ9YDjMo1REMt1i/Cim0ZFESw+BpXS8VPgDYBWym4I+daY
+        yhryhg5ccumKux5MBmmH9coXrleJWDmjdw==
+X-Google-Smtp-Source: ABdhPJwCzhW5e78PQkSIJCl8zdBuhNHkvJMbJPY3jb2g/z33Q628vl8nCYLAPnihmkQZXphfIS5mwg==
+X-Received: by 2002:a92:8b0e:: with SMTP id i14mr9796070ild.307.1594826718885;
+        Wed, 15 Jul 2020 08:25:18 -0700 (PDT)
+Received: from [192.168.1.58] ([65.144.74.34])
+        by smtp.gmail.com with ESMTPSA id a13sm1211031ilk.19.2020.07.15.08.25.18
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 15 Jul 2020 08:25:18 -0700 (PDT)
+Subject: Re: linux-next: build failure after merge of the block tree
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <20200715121423.6c20731b@canb.auug.org.au>
+ <CAMuHMdWMmP_YHEwnqmuTMw4-+LSieRaSHeqPLYLZyLq+O7zhyQ@mail.gmail.com>
+ <6bc36827-83a7-3695-530d-4b90c08b92c7@kernel.dk>
+ <CAMuHMdU3uRV+8ep0YRKuqBitkfVchh1L7=+RVxCAL0rMrQHAiQ@mail.gmail.com>
+ <CAMuHMdW78E0xe2ogeF0tAK3EN0vBr-B1RBOQTqi4t_9ByUiEEw@mail.gmail.com>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <44248db6-ff4d-aa83-a89e-dd712d540577@kernel.dk>
+Date:   Wed, 15 Jul 2020 09:25:17 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
+In-Reply-To: <CAMuHMdW78E0xe2ogeF0tAK3EN0vBr-B1RBOQTqi4t_9ByUiEEw@mail.gmail.com>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200715144954.1387760-7-areber@redhat.com>
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 15, 2020 at 04:49:54PM +0200, Adrian Reber wrote:
-> This adds a test that changes its UID, uses capabilities to
-> get CAP_CHECKPOINT_RESTORE and uses clone3() with set_tid to
-> create a process with a given PID as non-root.
+On 7/15/20 9:22 AM, Geert Uytterhoeven wrote:
+> Hi Jens,
 > 
-> Signed-off-by: Adrian Reber <areber@redhat.com>
-> Acked-by: Serge Hallyn <serge@hallyn.com>
-> ---
-
-You need to add the new clone3_cap_checkpoint_restore binary to
-.gitignore too. :)
-
-And one more annoying request: can you port the selftests to use the
-kselftest_harness.h infrastructure, please? It is way nicer to use, has
-a more uniform feel, and generates better output. You can look at:
-
-tools/testing/selftests/pidfd/pidfd_setns_test.c
-tools/testing/selftests/seccomp/seccomp_bpf.c
-
-and others for examples on how to use it.
-
-Thanks!
-Christian
-
->  tools/testing/selftests/clone3/Makefile       |   4 +-
->  .../clone3/clone3_cap_checkpoint_restore.c    | 203 ++++++++++++++++++
->  2 files changed, 206 insertions(+), 1 deletion(-)
->  create mode 100644 tools/testing/selftests/clone3/clone3_cap_checkpoint_restore.c
+>> On Wed, Jul 15, 2020 at 5:08 PM Jens Axboe <axboe@kernel.dk> wrote:
+>>> On 7/15/20 3:24 AM, Geert Uytterhoeven wrote:
+>>>> On Wed, Jul 15, 2020 at 4:26 AM Stephen Rothwell <sfr@canb.auug.org.au> wrote:
+>>>>> After merging the block tree, today's linux-next build (arm
+>>>>> multi_v7_defconfig) failed like this:
+>>>>>
+>>>>> block/blk-timeout.c: In function 'blk_round_jiffies':
+>>>>> block/blk-timeout.c:96:14: error: 'CONFIG_HZ_ROUGH_MASK' undeclared (first use in this function)
+>>>>>    96 |  return (j + CONFIG_HZ_ROUGH_MASK) + 1;
+>>>>>       |              ^~~~~~~~~~~~~~~~~~~~
+>>>>>
+>>>>> Caused by commit
+>>>>>
+>>>>>   91ba0f529364 ("block: relax jiffies rounding for timeouts")
+>>>>>
+>>>>> CONFIG_HZ_ROUGH_MASK is not defined for this build even though
+>>>>> CONFIG_HZ_100 is set. The arm arch does not include kernel/Kconfig.hz.
+>>>>>
+>>>>> I have reverted that commit for today.
+>>>>
+>>>> (as I don't have the original patch in my email, I'm commenting here)
+>>>>
+>>>>     +config HZ_ROUGH_MASK
+>>>>     +       int
+>>>>     +       default 127 if HZ_100
+>>>>     +       default 255 if HZ_250 || HZ_300
+>>>>     +       default 1023 if HZ_1000
+>>>>
+>>>> What about other HZ_* values?
+>>>
+>>> Which other ones do we have?
+>>
+>> $ git grep "\<HZ_[0-9]" -- "*Kconf*"
+>> arch/alpha/Kconfig:     default HZ_128 if ALPHA_QEMU
+>> arch/alpha/Kconfig:     default HZ_1200 if ALPHA_RAWHIDE
+>> arch/alpha/Kconfig:     default HZ_1024
 > 
-> diff --git a/tools/testing/selftests/clone3/Makefile b/tools/testing/selftests/clone3/Makefile
-> index cf976c732906..ef7564cb7abe 100644
-> --- a/tools/testing/selftests/clone3/Makefile
-> +++ b/tools/testing/selftests/clone3/Makefile
-> @@ -1,6 +1,8 @@
->  # SPDX-License-Identifier: GPL-2.0
->  CFLAGS += -g -I../../../../usr/include/
-> +LDLIBS += -lcap
->  
-> -TEST_GEN_PROGS := clone3 clone3_clear_sighand clone3_set_tid
-> +TEST_GEN_PROGS := clone3 clone3_clear_sighand clone3_set_tid \
-> +	clone3_cap_checkpoint_restore
->  
->  include ../lib.mk
-> diff --git a/tools/testing/selftests/clone3/clone3_cap_checkpoint_restore.c b/tools/testing/selftests/clone3/clone3_cap_checkpoint_restore.c
-> new file mode 100644
-> index 000000000000..2cc3d57b91f2
-> --- /dev/null
-> +++ b/tools/testing/selftests/clone3/clone3_cap_checkpoint_restore.c
-> @@ -0,0 +1,203 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +
-> +/*
-> + * Based on Christian Brauner's clone3() example.
-> + * These tests are assuming to be running in the host's
-> + * PID namespace.
-> + */
-> +
-> +/* capabilities related code based on selftests/bpf/test_verifier.c */
-> +
-> +#define _GNU_SOURCE
-> +#include <errno.h>
-> +#include <linux/types.h>
-> +#include <linux/sched.h>
-> +#include <stdio.h>
-> +#include <stdlib.h>
-> +#include <stdbool.h>
-> +#include <sys/capability.h>
-> +#include <sys/prctl.h>
-> +#include <sys/syscall.h>
-> +#include <sys/types.h>
-> +#include <sys/un.h>
-> +#include <sys/wait.h>
-> +#include <unistd.h>
-> +#include <sched.h>
-> +
-> +#include "../kselftest.h"
-> +#include "clone3_selftests.h"
-> +
-> +#ifndef MAX_PID_NS_LEVEL
-> +#define MAX_PID_NS_LEVEL 32
-> +#endif
-> +
-> +static void child_exit(int ret)
-> +{
-> +	fflush(stdout);
-> +	fflush(stderr);
-> +	_exit(ret);
-> +}
-> +
-> +static int call_clone3_set_tid(pid_t * set_tid, size_t set_tid_size)
-> +{
-> +	int status;
-> +	pid_t pid = -1;
-> +
-> +	struct clone_args args = {
-> +		.exit_signal = SIGCHLD,
-> +		.set_tid = ptr_to_u64(set_tid),
-> +		.set_tid_size = set_tid_size,
-> +	};
-> +
-> +	pid = sys_clone3(&args, sizeof(struct clone_args));
-> +	if (pid < 0) {
-> +		ksft_print_msg("%s - Failed to create new process\n",
-> +			       strerror(errno));
-> +		return -errno;
-> +	}
-> +
-> +	if (pid == 0) {
-> +		int ret;
-> +		char tmp = 0;
-> +
-> +		ksft_print_msg
-> +		    ("I am the child, my PID is %d (expected %d)\n",
-> +		     getpid(), set_tid[0]);
-> +
-> +		if (set_tid[0] != getpid())
-> +			child_exit(EXIT_FAILURE);
-> +		child_exit(EXIT_SUCCESS);
-> +	}
-> +
-> +	ksft_print_msg("I am the parent (%d). My child's pid is %d\n",
-> +		       getpid(), pid);
-> +
-> +	if (waitpid(pid, &status, 0) < 0) {
-> +		ksft_print_msg("Child returned %s\n", strerror(errno));
-> +		return -errno;
-> +	}
-> +
-> +	if (!WIFEXITED(status))
-> +		return -1;
-> +
-> +	return WEXITSTATUS(status);
-> +}
-> +
-> +static int test_clone3_set_tid(pid_t * set_tid,
-> +			       size_t set_tid_size, int expected)
-> +{
-> +	int ret;
-> +
-> +	ksft_print_msg("[%d] Trying clone3() with CLONE_SET_TID to %d\n",
-> +		       getpid(), set_tid[0]);
-> +	ret = call_clone3_set_tid(set_tid, set_tid_size);
-> +
-> +	ksft_print_msg
-> +	    ("[%d] clone3() with CLONE_SET_TID %d says :%d - expected %d\n",
-> +	     getpid(), set_tid[0], ret, expected);
-> +	if (ret != expected) {
-> +		ksft_test_result_fail
-> +		    ("[%d] Result (%d) is different than expected (%d)\n",
-> +		     getpid(), ret, expected);
-> +		return -1;
-> +	}
-> +	ksft_test_result_pass
-> +	    ("[%d] Result (%d) matches expectation (%d)\n", getpid(), ret,
-> +	     expected);
-> +
-> +	return 0;
-> +}
-> +
-> +struct libcap {
-> +	struct __user_cap_header_struct hdr;
-> +	struct __user_cap_data_struct data[2];
-> +};
-> +
-> +static int set_capability()
-> +{
-> +	cap_value_t cap_values[] = { CAP_SETUID, CAP_SETGID };
-> +	struct libcap *cap;
-> +	int ret = -1;
-> +	cap_t caps;
-> +
-> +	caps = cap_get_proc();
-> +	if (!caps) {
-> +		perror("cap_get_proc");
-> +		return -1;
-> +	}
-> +
-> +	/* Drop all capabilities */
-> +	if (cap_clear(caps)) {
-> +		perror("cap_clear");
-> +		goto out;
-> +	}
-> +
-> +	cap_set_flag(caps, CAP_EFFECTIVE, 2, cap_values, CAP_SET);
-> +	cap_set_flag(caps, CAP_PERMITTED, 2, cap_values, CAP_SET);
-> +
-> +	cap = (struct libcap *) caps;
-> +
-> +	/* 40 -> CAP_CHECKPOINT_RESTORE */
-> +	cap->data[1].effective |= 1 << (40 - 32);
-> +	cap->data[1].permitted |= 1 << (40 - 32);
-> +
-> +	if (cap_set_proc(caps)) {
-> +		perror("cap_set_proc");
-> +		goto out;
-> +	}
-> +	ret = 0;
-> +out:
-> +	if (cap_free(caps))
-> +		perror("cap_free");
-> +	return ret;
-> +}
-> +
-> +int main(int argc, char *argv[])
-> +{
-> +	pid_t pid;
-> +	int status;
-> +	int ret = 0;
-> +	pid_t set_tid[1];
-> +	uid_t uid = getuid();
-> +
-> +	ksft_print_header();
-> +	test_clone3_supported();
-> +	ksft_set_plan(2);
-> +
-> +	if (uid != 0) {
-> +		ksft_cnt.ksft_xskip = ksft_plan;
-> +		ksft_print_msg("Skipping all tests as non-root\n");
-> +		return ksft_exit_pass();
-> +	}
-> +
-> +	memset(&set_tid, 0, sizeof(set_tid));
-> +
-> +	/* Find the current active PID */
-> +	pid = fork();
-> +	if (pid == 0) {
-> +		ksft_print_msg("Child has PID %d\n", getpid());
-> +		child_exit(EXIT_SUCCESS);
-> +	}
-> +	if (waitpid(pid, &status, 0) < 0)
-> +		ksft_exit_fail_msg("Waiting for child %d failed", pid);
-> +
-> +	/* After the child has finished, its PID should be free. */
-> +	set_tid[0] = pid;
-> +
-> +	if (set_capability())
-> +		ksft_test_result_fail
-> +		    ("Could not set CAP_CHECKPOINT_RESTORE\n");
-> +	prctl(PR_SET_KEEPCAPS, 1, 0, 0, 0);
-> +	/* This would fail without CAP_CHECKPOINT_RESTORE */
-> +	setgid(1000);
-> +	setuid(1000);
-> +	set_tid[0] = pid;
-> +	ret |= test_clone3_set_tid(set_tid, 1, -EPERM);
-> +	if (set_capability())
-> +		ksft_test_result_fail
-> +		    ("Could not set CAP_CHECKPOINT_RESTORE\n");
-> +	/* This should work as we have CAP_CHECKPOINT_RESTORE as non-root */
-> +	ret |= test_clone3_set_tid(set_tid, 1, 0);
-> +
-> +	return !ret ? ksft_exit_pass() : ksft_exit_fail();
-> +}
-> -- 
-> 2.26.2
+> And ARC allows you to enter any integer value:
 > 
+>     config HZ
+>             int "Timer Frequency"
+>             default 100
+> 
+> So probably you want to derive something from the integer value itself.
+> 
+> Note that not all architectures include kernel/Kconfig.hz.
+
+I've dropped the dependency on Kconfig solving it, and just made it
+an initcall setup to generate the mask. That should work on all archs
+and not be dependent on fixed HZ settings.
+
+-- 
+Jens Axboe
+
