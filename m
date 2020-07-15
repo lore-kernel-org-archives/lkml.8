@@ -2,184 +2,123 @@ Return-Path: <SRS0=kup7=A2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3208C433ED
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 14:35:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CF93C433F7
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 14:36:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9276620658
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 14:35:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2A69D206F5
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 14:36:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="PkQmWQM2"
+	dkim=pass (2048-bit key) header.d=amacapital-net.20150623.gappssmtp.com header.i=@amacapital-net.20150623.gappssmtp.com header.b="MBTmhayG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728977AbgGOOfr (ORCPT
+        id S1729107AbgGOOf6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 10:35:47 -0400
-Received: from rnd-relay.smtp.broadcom.com ([192.19.229.170]:45000 "EHLO
-        rnd-relay.smtp.broadcom.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728874AbgGOOfl (ORCPT
+        Wed, 15 Jul 2020 10:35:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52340 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729053AbgGOOfz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 10:35:41 -0400
-Received: from mail-irv-17.broadcom.com (mail-irv-17.lvn.broadcom.net [10.75.242.48])
-        by rnd-relay.smtp.broadcom.com (Postfix) with ESMTP id 150E030C028;
-        Wed, 15 Jul 2020 07:35:29 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.10.3 rnd-relay.smtp.broadcom.com 150E030C028
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=broadcom.com;
-        s=dkimrelay; t=1594823729;
-        bh=GSqFzmHeOiSek+62bFpDJcfrtOQWQUrThlJG71lclKo=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PkQmWQM251q/9kIKk+Qiw7d64q2cinZ8PLGqa3muYrh19KB0YULOi+umj5U4MIB0x
-         ykmhll0iI/h35hcV6V1aewCdxdjXFWz2VBaxFowTKsYFRpdppHxuGBatSTbwVPuRfU
-         TaMlaLr+HGr/LIeetVrzq3neA7lfJ/GfFR1NdLug=
-Received: from stbsrv-and-01.and.broadcom.net (stbsrv-and-01.and.broadcom.net [10.28.16.211])
-        by mail-irv-17.broadcom.com (Postfix) with ESMTP id E1CCC14008B;
-        Wed, 15 Jul 2020 07:35:38 -0700 (PDT)
-From:   Jim Quinlan <james.quinlan@broadcom.com>
-To:     linux-pci@vger.kernel.org,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Christoph Hellwig <hch@lst.de>,
-        bcm-kernel-feedback-list@broadcom.com, james.quinlan@broadcom.com
-Cc:     Jim Quinlan <james.quinlan@broadcom.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        linux-rpi-kernel@lists.infradead.org (moderated list:BROADCOM
-        BCM2711/BCM2835 ARM ARCHITECTURE),
-        linux-arm-kernel@lists.infradead.org (moderated list:BROADCOM
-        BCM2711/BCM2835 ARM ARCHITECTURE),
-        devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
-        DEVICE TREE BINDINGS), linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH v8 03/12] dt-bindings: PCI: Add bindings for more Brcmstb chips
-Date:   Wed, 15 Jul 2020 10:35:06 -0400
-Message-Id: <20200715143530.9702-4-james.quinlan@broadcom.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200715143530.9702-1-james.quinlan@broadcom.com>
-References: <20200715143530.9702-1-james.quinlan@broadcom.com>
+        Wed, 15 Jul 2020 10:35:55 -0400
+Received: from mail-pl1-x631.google.com (mail-pl1-x631.google.com [IPv6:2607:f8b0:4864:20::631])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A308DC08C5DD
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 07:35:55 -0700 (PDT)
+Received: by mail-pl1-x631.google.com with SMTP id k4so2459196pld.12
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 07:35:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=amacapital-net.20150623.gappssmtp.com; s=20150623;
+        h=content-transfer-encoding:from:mime-version:subject:date:message-id
+         :references:cc:in-reply-to:to;
+        bh=yhR2xx3ll78zXx4v/LleHZDLIGASUAw7oXjwdcYoQnM=;
+        b=MBTmhayGzIbypNDEFm2+paSuwfcC+PzqE85tReoauMa8/vlEuTbLPAXgN9+8qVkcNT
+         yGNU7gl/zluURp9BUENw3LJ4rFqKK/8Ff3aRUbs7uTkYSeZwW3aDJgw4Kt3y+YyUVgap
+         0Zoy3gWJ2MC50r6ZcK2DVZ/eywPJseJ4IQfjEcO37x2ua0wTNQCE2y3Qf9A5N9IFiZH3
+         TV20PfmuxIw8NVCsuD+kmZ/Sgqsg/HqB0qdOSMeiMCizUz5tGze/hYcp6asxJeM5mtMB
+         DgMTMy20N6K6A7ufGOkrKyndioWzeqygDTq2Q7VudYC1FYDBSTz+eJgpCU7AeeAih/Ao
+         uuaQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:content-transfer-encoding:from:mime-version
+         :subject:date:message-id:references:cc:in-reply-to:to;
+        bh=yhR2xx3ll78zXx4v/LleHZDLIGASUAw7oXjwdcYoQnM=;
+        b=ePnacpqsmxPHKHoFdCdlKI+CzSFnrYqWf9wUU8dpX3iWJ1j8Q768eMPyeMvBSQtotk
+         2pFmol367oEbBUN3qEksOGVUpUyd4QsZ5GC4SfGPS38pOFpcmyiTE4Bra6G5eMdLyIzX
+         ODxCFDW67XFAecvfDV/pSCHIlP59bazmb/6YGbLyGyyNrcV/cZRH/Nt4p1N4Opi76whv
+         JLlBzUev4xCGDGjAucvlhZAICxW1+IrgUQeMeqH4DHGeZM0B8I4dMZGophKjzEwq2s6C
+         zvmrXZ/49g7eSxMMZwTAnJly+qc56YlIla3JBvRMq09Bbg21CAAs/vhp2P+1/6XyLSi6
+         G8Aw==
+X-Gm-Message-State: AOAM5303rQBsqVBRCgDgY08z/+QmAM2k2qYKhnCmWoaa0geIfPDKFOjY
+        ++maJKjGd2RmMDfB5ld6FpucmpnDpBdanw==
+X-Google-Smtp-Source: ABdhPJx+DB3uxvOEpxqYRcjJv7aAG86vLrcHnfdyXOzjYxTb/HN/VlnnEvVbdEuur4NmvWF0oRc3Vw==
+X-Received: by 2002:a17:90a:7406:: with SMTP id a6mr9616376pjg.152.1594823753194;
+        Wed, 15 Jul 2020 07:35:53 -0700 (PDT)
+Received: from ?IPv6:2601:646:c200:1ef2:14c:4e33:547f:e274? ([2601:646:c200:1ef2:14c:4e33:547f:e274])
+        by smtp.gmail.com with ESMTPSA id y7sm2101353pfq.69.2020.07.15.07.35.51
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 15 Jul 2020 07:35:51 -0700 (PDT)
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+From:   Andy Lutomirski <luto@amacapital.net>
+Mime-Version: 1.0 (1.0)
+Subject: Re: strace of io_uring events?
+Date:   Wed, 15 Jul 2020 07:35:50 -0700
+Message-Id: <D9FAB37B-D059-4137-A115-616237D78640@amacapital.net>
+References: <CAJfpegu3EwbBFTSJiPhm7eMyTK2MzijLUp1gcboOo3meMF_+Qg@mail.gmail.com>
+Cc:     strace-devel@lists.strace.io, io-uring@vger.kernel.org,
+        Pavel Begunkov <asml.silence@gmail.com>,
+        Linux API <linux-api@vger.kernel.org>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <CAJfpegu3EwbBFTSJiPhm7eMyTK2MzijLUp1gcboOo3meMF_+Qg@mail.gmail.com>
+To:     Miklos Szeredi <miklos@szeredi.hu>,
+        Kees Cook <keescook@chromium.org>,
+        Christian Brauner <christian.brauner@ubuntu.com>
+X-Mailer: iPhone Mail (17F80)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jim Quinlan <jquinlan@broadcom.com>
 
-- Add compatible strings for three more Broadcom STB chips: 7278, 7216,
-  7211 (STB version of RPi4).
-- Add new property 'brcm,scb-sizes'.
-- Add new property 'resets'.
-- Add new property 'reset-names' for 7216 only.
-- Allow 'ranges' and 'dma-ranges' to have more than one item and update
-  the example to show this.
 
-Signed-off-by: Jim Quinlan <jquinlan@broadcom.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
----
- .../bindings/pci/brcm,stb-pcie.yaml           | 56 ++++++++++++++++---
- 1 file changed, 49 insertions(+), 7 deletions(-)
+> On Jul 15, 2020, at 4:12 AM, Miklos Szeredi <miklos@szeredi.hu> wrote:
+>=20
+> =EF=BB=BFHi,
+>=20
+> This thread is to discuss the possibility of stracing requests
+> submitted through io_uring.   I'm not directly involved in io_uring
+> development, so I'm posting this out of  interest in using strace on
+> processes utilizing io_uring.
+>=20
+> io_uring gives the developer a way to bypass the syscall interface,
+> which results in loss of information when tracing.  This is a strace
+> fragment on  "io_uring-cp" from liburing:
+>=20
+> io_uring_enter(5, 40, 0, 0, NULL, 8)    =3D 40
+> io_uring_enter(5, 1, 0, 0, NULL, 8)     =3D 1
+> io_uring_enter(5, 1, 0, 0, NULL, 8)     =3D 1
+> ...
+>=20
+> What really happens are read + write requests.  Without that
+> information the strace output is mostly useless.
+>=20
+> This loss of information is not new, e.g. calls through the vdso or
+> futext fast paths are also invisible to strace.  But losing filesystem
+> I/O calls are a major blow, imo.
+>=20
+> What do people think?
+>=20
+> =46rom what I can tell, listing the submitted requests on
+> io_uring_enter() would not be hard.  Request completion is
+> asynchronous, however, and may not require  io_uring_enter() syscall.
+> Am I correct?
+>=20
+> Is there some existing tracing infrastructure that strace could use to
+> get async completion events?  Should we be introducing one?
+>=20
+>=20
 
-diff --git a/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml b/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
-index 8680a0f86c5a..807694b4f41f 100644
---- a/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
-+++ b/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
-@@ -9,12 +9,15 @@ title: Brcmstb PCIe Host Controller Device Tree Bindings
- maintainers:
-   - Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
- 
--allOf:
--  - $ref: /schemas/pci/pci-bus.yaml#
--
- properties:
-   compatible:
--    const: brcm,bcm2711-pcie # The Raspberry Pi 4
-+    items:
-+      - enum:
-+          - brcm,bcm2711-pcie # The Raspberry Pi 4
-+          - brcm,bcm7211-pcie # Broadcom STB version of RPi4
-+          - brcm,bcm7278-pcie # Broadcom 7278 Arm
-+          - brcm,bcm7216-pcie # Broadcom 7216 Arm
-+          - brcm,bcm7445-pcie # Broadcom 7445 Arm
- 
-   reg:
-     maxItems: 1
-@@ -34,10 +37,12 @@ properties:
-       - const: msi
- 
-   ranges:
--    maxItems: 1
-+    minItems: 1
-+    maxItems: 4
- 
-   dma-ranges:
--    maxItems: 1
-+    minItems: 1
-+    maxItems: 6
- 
-   clocks:
-     maxItems: 1
-@@ -58,8 +63,31 @@ properties:
- 
-   aspm-no-l0s: true
- 
-+  resets:
-+    description: for "brcm,bcm7216-pcie", must be a valid reset
-+      phandle pointing to the RESCAL reset controller provider node.
-+    $ref: "/schemas/types.yaml#/definitions/phandle"
-+
-+  reset-names:
-+    items:
-+      - const: rescal
-+
-+  brcm,scb-sizes:
-+    description: u64 giving the 64bit PCIe memory
-+      viewport size of a memory controller.  There may be up to
-+      three controllers, and each size must be a power of two
-+      with a size greater or equal to the amount of memory the
-+      controller supports.  Note that each memory controller
-+      may have two component regions -- base and extended -- so
-+      this information cannot be deduced from the dma-ranges.
-+    $ref: /schemas/types.yaml#/definitions/uint64-array
-+    items:
-+      minItems: 1
-+      maxItems: 3
-+
- required:
-   - reg
-+  - ranges
-   - dma-ranges
-   - "#interrupt-cells"
-   - interrupts
-@@ -68,6 +96,18 @@ required:
-   - interrupt-map
-   - msi-controller
- 
-+allOf:
-+  - $ref: /schemas/pci/pci-bus.yaml#
-+  - if:
-+      properties:
-+        compatible:
-+          contains:
-+            const: brcm,bcm7216-pcie
-+    then:
-+      required:
-+        - resets
-+        - reset-names
-+
- unevaluatedProperties: false
- 
- examples:
-@@ -93,7 +133,9 @@ examples:
-                     msi-parent = <&pcie0>;
-                     msi-controller;
-                     ranges = <0x02000000 0x0 0xf8000000 0x6 0x00000000 0x0 0x04000000>;
--                    dma-ranges = <0x02000000 0x0 0x00000000 0x0 0x00000000 0x0 0x80000000>;
-+                    dma-ranges = <0x42000000 0x1 0x00000000 0x0 0x40000000 0x0 0x80000000>,
-+                                 <0x42000000 0x1 0x80000000 0x3 0x00000000 0x0 0x80000000>;
-                     brcm,enable-ssc;
-+                    brcm,scb-sizes =  <0x0000000080000000 0x0000000080000000>;
-             };
-     };
--- 
-2.17.1
-
+Let=E2=80=99s add some seccomp folks. We probably also want to be able to ru=
+n seccomp-like filters on io_uring requests. So maybe io_uring should call i=
+nto seccomp-and-tracing code for each action.=
