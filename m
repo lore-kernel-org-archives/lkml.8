@@ -3,84 +3,125 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_C,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DE1BC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 13:22:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9DD6C433E2
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 13:24:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1DCCA206D5
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 13:22:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="heDS1LEu"
+	by mail.kernel.org (Postfix) with ESMTP id 97871206D5
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 13:24:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594819450;
+	bh=0ySNGf0015Xk70pMqOWm7F13UdGwLRL7LAS7WodGYLI=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=pU0PTGeiighIHy2jk7M7Z+WiNFw5abTbp0TUVN3yF9dmTzW16/ykZTw3Mc/uW1Juk
+	 XrsToaAvlMrEeLT/vP7ePGS3+JR5nKnQPP/KFaUxrhlBNn8DuPDDGfAFCl6hHZ6jRV
+	 zn07DDUh7AgrJG2lmCjKLc23zGA1gyKJC6t/TKL8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731856AbgGONWc (ORCPT
+        id S1731846AbgGONYJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 09:22:32 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:25280 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1731632AbgGONWc (ORCPT
+        Wed, 15 Jul 2020 09:24:09 -0400
+Received: from mail-oo1-f65.google.com ([209.85.161.65]:35394 "EHLO
+        mail-oo1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730868AbgGONYI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 09:22:32 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1594819351;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         references:references; bh=eujgVDOYWc3cCN8+v848SftAP3mzH/rlkfn6GJO88Cw=;
-        b=heDS1LEucImnJ7KivaLfq8WDf0HMOx5mfb0oQ1Pc7wuiWBSxssI7rwP6jKhrUQspXxvTeX
-        l+CxPKj6fKu02rFsa2bpCOelxFyKg8wmJuNpTaMGyRRR1f1tlHtgbo2KE1PCrvYdxV3p3K
-        B/CtpOueYP2IkHNV4r10xfHd7A4kzDw=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-420-yLJrAiKwNNq5CnTy7sBerw-1; Wed, 15 Jul 2020 09:22:27 -0400
-X-MC-Unique: yLJrAiKwNNq5CnTy7sBerw-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 98F2718A1DE2;
-        Wed, 15 Jul 2020 13:22:25 +0000 (UTC)
-Received: from oldenburg2.str.redhat.com (ovpn-112-228.ams2.redhat.com [10.36.112.228])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 8102E5D9CA;
-        Wed, 15 Jul 2020 13:22:20 +0000 (UTC)
-From:   Florian Weimer <fweimer@redhat.com>
-To:     Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc:     carlos <carlos@redhat.com>, Peter Zijlstra <peterz@infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        paulmck <paulmck@linux.ibm.com>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Paul Turner <pjt@google.com>,
-        linux-api <linux-api@vger.kernel.org>,
-        Christian Brauner <christian.brauner@ubuntu.com>
-Subject: Re: [RFC PATCH 2/4] rseq: Allow extending struct rseq
-References: <20200714030348.6214-1-mathieu.desnoyers@efficios.com>
-        <20200714030348.6214-3-mathieu.desnoyers@efficios.com>
-        <87mu42bepq.fsf@oldenburg2.str.redhat.com>
-        <131549905.11442.1594731035989.JavaMail.zimbra@efficios.com>
-        <87a7028d5u.fsf@oldenburg2.str.redhat.com>
-        <2452161.11491.1594732791558.JavaMail.zimbra@efficios.com>
-        <71f08b3a-56f5-0e0f-53b0-cc680f7e8181@redhat.com>
-        <2053637148.14136.1594818777608.JavaMail.zimbra@efficios.com>
-Date:   Wed, 15 Jul 2020 15:22:18 +0200
-Message-ID: <87y2nk29rp.fsf@oldenburg2.str.redhat.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.3 (gnu/linux)
+        Wed, 15 Jul 2020 09:24:08 -0400
+Received: by mail-oo1-f65.google.com with SMTP id w1so457900ooj.2;
+        Wed, 15 Jul 2020 06:24:07 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ybTRMRwTXg8GftT6GqtnDN/MiNSxSxn6EjDTyKGp5Qk=;
+        b=j9DyxIOxG7B7a8H7FBQ/VbVPWsPA3d+bE/nAUMv3sjVGijrnOrpul8BoA0Xl6WdZJw
+         Cfn/58PQytWwq6oC3TZpE2EYj8xBQ4mrzM3UIvJC+iU86Mhjs96Q5pk960HzFVZgLhT5
+         I3Ff5iC49c6BOKcBEDyWx5pygZPCAlTHPmD40NMhxRdVEboLtytoym/uxWJvicrsNUV9
+         j9NL/wgO14tZxnj5iArdsIVkA/DOiMUVMSH4FjjBe9kAfF1hyZcEDjgpnxXJmAH+zP7+
+         TbkubSsrY2WR9tQp19XVrqIEuyvhGN3JwwKuglk6nLISKgaW0H9D8MEzbH0CQtHAsN68
+         iJqw==
+X-Gm-Message-State: AOAM532pzmwJMyRlIh00HneA/eg5Pc9pb3yp2vJaXd2RkSnQkRlXrBad
+        m5ZpoYS86p5J3WwCSJyf5/Ptdo+vJP6HpVB5Bd0=
+X-Google-Smtp-Source: ABdhPJxMCfbP+2jw0s4zpYMWrMAbGRmywLWYB0Np/Uh44G/h6/hOUJM7OZKrC4qaIHoEibMSyvOp3EYnmEaG8iTzlPA=
+X-Received: by 2002:a4a:2459:: with SMTP id v25mr9382879oov.75.1594819447535;
+ Wed, 15 Jul 2020 06:24:07 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+References: <20200715082634.3024816-1-lee.jones@linaro.org>
+In-Reply-To: <20200715082634.3024816-1-lee.jones@linaro.org>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Wed, 15 Jul 2020 15:23:56 +0200
+Message-ID: <CAJZ5v0jra1Q=L9H-9jJTFERbwSt5t4iF=vmtv9_01roa6bPB3A@mail.gmail.com>
+Subject: Re: [PATCH v2 00/13] Rid W=1 warnings in CPUFreq
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* Mathieu Desnoyers:
+On Wed, Jul 15, 2020 at 10:27 AM Lee Jones <lee.jones@linaro.org> wrote:
+>
+> This set is part of a larger effort attempting to clean-up W=1
+> kernel builds, which are currently overwhelmingly riddled with
+> niggly little warnings.
+>
+> After these patches are applied, the build system no longer
+> complains about any W=0 nor W=1 level warnings in drivers/cpufreq.
+>
+> Hurrah!
+>
+> Changelog
+>
+> v1 => v2:
+>  - Collect *-bys
+>  - Use __maybe_unused instead of removing device IDs
+>  - Use __always_unused instead of using unused variables
+>  - Include architecture header instead of creating new include file
+>
+> Lee Jones (13):
+>   cpufreq: freq_table: Demote obvious misuse of kerneldoc to standard
+>     comment blocks
+>   cpufreq: cpufreq: Demote lots of function headers unworthy of
+>     kerneldoc status
+>   cpufreq: cpufreq_governor: Demote store_sampling_rate() header to
+>     standard comment block
+>   cpufreq: sti-cpufreq: Fix some formatting and misspelling issues
+>   cpufreq: pasemi: Include header file for {check,restore}_astate
+>     prototypes
+>   cpufreq: powernv-cpufreq: Functions only used in call-backs should be
+>     static
+>   cpufreq: powernv-cpufreq: Fix a bunch of kerneldoc related issues
+>   cpufreq: acpi-cpufreq: Mark 'dummy' variable as __always_unused
+>   cpufreq: acpi-cpufreq: Mark sometimes used ID structs as
+>     __maybe_unused
+>   cpufreq: powernow-k8: Mark 'hi' and 'lo' dummy variables as
+>     __always_unused
+>   cpufreq: pcc-cpufreq: Mark sometimes used ID structs as __maybe_unused
+>   cpufreq: intel_pstate: Supply struct attribute description for
+>     get_aperf_mperf_shift()
+>   cpufreq: amd_freq_sensitivity: Mark sometimes used ID structs as
+>     __maybe_unused
+>
+>  drivers/cpufreq/acpi-cpufreq.c         |  8 +++----
+>  drivers/cpufreq/amd_freq_sensitivity.c |  2 +-
+>  drivers/cpufreq/cpufreq.c              | 32 ++++++++++++++------------
+>  drivers/cpufreq/cpufreq_governor.c     |  2 +-
+>  drivers/cpufreq/freq_table.c           |  6 ++---
+>  drivers/cpufreq/intel_pstate.c         |  2 ++
+>  drivers/cpufreq/pasemi-cpufreq.c       |  2 ++
+>  drivers/cpufreq/pcc-cpufreq.c          |  2 +-
+>  drivers/cpufreq/powernow-k8.c          |  4 ++--
+>  drivers/cpufreq/powernv-cpufreq.c      | 15 ++++++------
+>  drivers/cpufreq/sti-cpufreq.c          |  8 +++----
+>  11 files changed, 45 insertions(+), 38 deletions(-)
+>
+> --
 
-> Practically speaking, I suspect this would mean postponing availability of
-> rseq for widely deployed applications for a few more years ?
-
-There is no rseq support in GCC today, so you have to write assembler
-code anyway.
-
-Thanks,
-Florian
-
+All patches except for the [04/13] (applied by Viresh) and [06/13]
+(requested to be ignored) applied as 5.9 material with the ACKs from
+Viresh, thanks!
