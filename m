@@ -2,179 +2,132 @@ Return-Path: <SRS0=kup7=A2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,LONGWORDS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 513E6C433E3
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 09:23:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 734FFC433E2
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 09:23:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 31C722065D
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 09:23:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5155020760
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 09:23:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="iRcqbhoo";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="XvgIcEpx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730637AbgGOJXs (ORCPT
+        id S1730645AbgGOJXw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 05:23:48 -0400
-Received: from mga12.intel.com ([192.55.52.136]:55198 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729672AbgGOJXr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 05:23:47 -0400
-IronPort-SDR: 6MECR/mdu1hZCHOTqjfpLOH6oolGTeZVakstF31Z0LBzMYtyp9bUMCEm5V/BjvcBmnzNHLj/pL
- gcsxWgXjuNOg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9682"; a="128675166"
-X-IronPort-AV: E=Sophos;i="5.75,354,1589266800"; 
-   d="scan'208";a="128675166"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jul 2020 02:23:47 -0700
-IronPort-SDR: +yhAI4yuWih4miWHj/upq+Xknm2prgWKgQcXWJn677L39lhKlJigRG2x4TvAWHd3Pl4pif8+S4
- 0Y5Sx5e1g99w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,354,1589266800"; 
-   d="scan'208";a="326110851"
-Received: from lkp-server01.sh.intel.com (HELO b157d87b7ee7) ([10.239.97.150])
-  by orsmga007.jf.intel.com with ESMTP; 15 Jul 2020 02:23:46 -0700
-Received: from kbuild by b157d87b7ee7 with local (Exim 4.92)
-        (envelope-from <lkp@intel.com>)
-        id 1jvddh-00008f-H2; Wed, 15 Jul 2020 09:23:45 +0000
-Date:   Wed, 15 Jul 2020 17:22:49 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     "Paul E. McKenney" <paulmck@kernel.org>
-Cc:     linux-kernel@vger.kernel.org
-Subject: [rcu:dev.2020.07.10a] BUILD SUCCESS
- 475a5da3202544a8cbb3342f842a763df423b989
-Message-ID: <5f0ecae9.B36+NWa6ZvW1RngG%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        Wed, 15 Jul 2020 05:23:52 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:49896 "EHLO
+        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729672AbgGOJXt (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jul 2020 05:23:49 -0400
+Date:   Wed, 15 Jul 2020 11:23:45 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1594805027;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=nVewUEkE+vEgqvpSZaR+rHv9rvICaRBJ6Hc/Y4Gfv04=;
+        b=iRcqbhooQLbNQYs0t6EgUxItIJxhtP3b8s8woTQvVERuHgCybkfAetFUIzEPA2qoDta3XB
+        hFGfqNFUsu3hRGjuhAphrutMLv6knCYWsKZM43Mb3AYZHtaVSpWCf9rN/cvu+IehElTs6w
+        w7jkCecMreibSzUAgIGJ2NVV3RoeZlRT8WDBS9NXru7YSKwOWLV7KNvaQtm77bvWFv6rIw
+        Tmf674X1SQV4U6ysvZST8Y6X5/9VyE6jietFR2lRK9R/Fnv4Xy0+oqlSKZzC+OAamfCMpL
+        S6AUQbGmozxbFDdI/qPyin9SrTMah7JNfk2r2V4MAlBnzEXS+gnSSHhpJVaY6A==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1594805027;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=nVewUEkE+vEgqvpSZaR+rHv9rvICaRBJ6Hc/Y4Gfv04=;
+        b=XvgIcEpx3pM+hW2dYCP5H7sBCeEboYeXT2fgmDCQ3cwOqyeGO6r/T+NNo/0VBxbVQMqjLC
+        G1W0Dhzx1t3IK1CQ==
+From:   "Ahmed S. Darwish" <a.darwish@linutronix.de>
+To:     peterz@infradead.org
+Cc:     Leo Yan <leo.yan@linaro.org>, Will Deacon <will@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Paul Cercueil <paul@crapouillou.net>,
+        "Ben Dooks (Codethink)" <ben.dooks@codethink.co.uk>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Kan Liang <kan.liang@linux.intel.com>, jogness@linutronix.de,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/6] sched_clock: Expose struct clock_read_data
+Message-ID: <20200715092345.GA231464@debian-buster-darwi.lab.linutronix.de>
+References: <20200715020512.20991-1-leo.yan@linaro.org>
+ <20200715020512.20991-2-leo.yan@linaro.org>
+ <20200715055650.GB225020@debian-buster-darwi.lab.linutronix.de>
+ <20200715081222.GB10769@hirez.programming.kicks-ass.net>
+ <20200715081443.GB43129@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+In-Reply-To: <20200715081443.GB43129@hirez.programming.kicks-ass.net>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/paulmck/linux-rcu.git  dev.2020.07.10a
-branch HEAD: 475a5da3202544a8cbb3342f842a763df423b989  rcutorture: Add CONFIG_PROVE_RCU_LIST to TREE05
+On Wed, Jul 15, 2020 at 10:14:43AM +0200, peterz@infradead.org wrote:
+> On Wed, Jul 15, 2020 at 10:12:22AM +0200, Peter Zijlstra wrote:
+> > On Wed, Jul 15, 2020 at 07:56:50AM +0200, Ahmed S. Darwish wrote:
+> > > On Wed, Jul 15, 2020 at 10:05:07AM +0800, Leo Yan wrote:
+> > > > From: Peter Zijlstra <peterz@infradead.org>
+> > > >
+> > > ...
+> > > >
+> > > > Provide struct clock_read_data and two (seqcount) helpers so that
+> > > > architectures (arm64 in specific) can expose the numbers to userspace.
+> > > >
+> > > ...
+> > > >
+> > > > +struct clock_read_data *sched_clock_read_begin(unsigned int *seq)
+> > > > +{
+> > > > +	*seq = raw_read_seqcount(&cd.seq);
+> > > > +	return cd.read_data + (*seq & 1);
+> > > > +}
+> > > > +
+> > > ...
+> > >
+> > > Hmm, this seqcount_t is actually a latch seqcount. I know the original
+> > > code also used raw_read_seqcount(), but while at it, let's use the
+> > > proper read API for seqcount_t latchers: raw_read_seqcount_latch().
+> > >
+> > > raw_read_seqcount_latch() has no read memory barrier though, and a
+> > > suspicious claim that READ_ONCE() pairs with an smp_wmb() (??). But if
+> > > its implementation is wrong, let's fix it there instead.
+> >
+> > It's supposed to be a dependent load, so READ_ONCE() is sufficient.
+> > Except, of course, the C standard has other ideas, so a compiler is
+> > allowed to wreck that, but they mostly don't :-)
+>
+> Also see:
+>
+>   https://lkml.kernel.org/r/20200625085745.GD117543@hirez.programming.kicks-ass.net
 
-elapsed time: 720m
+Oh, spot on.
 
-configs tested: 108
-configs skipped: 12
+Can we then please replace the raw_read_seqcount(), in the original
+patch which started this discussion, with raw_read_seqcount_latch()?
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+I see that you already did something similar for timekeeping.c:
+7fc26327b756 ("seqlock: Introduce raw_read_seqcount_latch()").
 
-arm                                 defconfig
-arm                              allyesconfig
-arm                              allmodconfig
-arm                               allnoconfig
-arm64                            allyesconfig
-arm64                               defconfig
-arm64                            allmodconfig
-arm64                             allnoconfig
-h8300                     edosk2674_defconfig
-sh                          polaris_defconfig
-mips                           xway_defconfig
-xtensa                          iss_defconfig
-powerpc                      pmac32_defconfig
-mips                      maltaaprp_defconfig
-sh                           se7206_defconfig
-mips                malta_qemu_32r6_defconfig
-sparc64                             defconfig
-mips                      pistachio_defconfig
-powerpc                       maple_defconfig
-arm                          badge4_defconfig
-microblaze                          defconfig
-i386                             allyesconfig
-arm                         s3c6400_defconfig
-m68k                         amcore_defconfig
-c6x                               allnoconfig
-xtensa                generic_kc705_defconfig
-mips                           ip27_defconfig
-mips                  mips_paravirt_defconfig
-c6x                        evmc6474_defconfig
-powerpc                      pasemi_defconfig
-sh                        dreamcast_defconfig
-openrisc                         alldefconfig
-m68k                        m5407c3_defconfig
-arm                          ep93xx_defconfig
-arm                          moxart_defconfig
-sparc                               defconfig
-mips                        maltaup_defconfig
-mips                          rb532_defconfig
-powerpc                mpc7448_hpc2_defconfig
-mips                        nlm_xlp_defconfig
-sh                 kfr2r09-romimage_defconfig
-openrisc                            defconfig
-arm                  colibri_pxa270_defconfig
-ia64                      gensparse_defconfig
-mips                      fuloong2e_defconfig
-sh                          r7780mp_defconfig
-ia64                                defconfig
-powerpc                      ppc6xx_defconfig
-i386                              allnoconfig
-i386                                defconfig
-i386                              debian-10.3
-ia64                             allmodconfig
-ia64                              allnoconfig
-ia64                             allyesconfig
-m68k                             allmodconfig
-m68k                              allnoconfig
-m68k                           sun3_defconfig
-m68k                                defconfig
-m68k                             allyesconfig
-nios2                               defconfig
-nios2                            allyesconfig
-c6x                              allyesconfig
-openrisc                         allyesconfig
-nds32                               defconfig
-nds32                             allnoconfig
-csky                             allyesconfig
-csky                                defconfig
-alpha                               defconfig
-alpha                            allyesconfig
-xtensa                           allyesconfig
-h8300                            allyesconfig
-h8300                            allmodconfig
-xtensa                              defconfig
-arc                                 defconfig
-arc                              allyesconfig
-sh                               allmodconfig
-sh                                allnoconfig
-microblaze                        allnoconfig
-mips                             allyesconfig
-mips                              allnoconfig
-mips                             allmodconfig
-parisc                            allnoconfig
-parisc                              defconfig
-parisc                           allyesconfig
-parisc                           allmodconfig
-powerpc                             defconfig
-powerpc                          allyesconfig
-powerpc                          rhel-kconfig
-powerpc                          allmodconfig
-powerpc                           allnoconfig
-riscv                            allyesconfig
-riscv                             allnoconfig
-riscv                               defconfig
-riscv                            allmodconfig
-s390                             allyesconfig
-s390                              allnoconfig
-s390                             allmodconfig
-s390                                defconfig
-sparc                            allyesconfig
-sparc64                           allnoconfig
-sparc64                          allyesconfig
-sparc64                          allmodconfig
-x86_64                    rhel-7.6-kselftests
-x86_64                               rhel-8.3
-x86_64                                  kexec
-x86_64                                   rhel
-x86_64                                    lkp
-x86_64                              fedora-25
+Confession time: I have an internal patch series which introduces
+seqcount_latch_t. Having a standardized set of accessors for the
+seqcount latch read and write paths will make everything much more
+streamlined :-)
 
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+Thanks,
+
+--
+Ahmed S. Darwish
+Linutronix GmbH
