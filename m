@@ -6,172 +6,140 @@ X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71FDCC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 04:50:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EFB7CC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 04:54:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4213C20657
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 04:50:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C323A206E9
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 04:54:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594788623;
-	bh=kEf6MQF2Y5n0rlWzjJYfrClkHjV3lWYZo3i24jQ9xzA=;
+	s=default; t=1594788896;
+	bh=RKspWdQUmF4FP5uXe/3l4Ju6t7jIEW6++Ox7QAXw9Qs=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=jsvJggcSS52bc7HDxsawTP/aG9vPGfoj1uBw2SZZ9HcAxR4jrkfOxgRZAUzwfSTIM
-	 Iu6YKGiSOMQzGL+J/HztAPQH9FgAKgRY7Zt6oh+RQQhek7ga/2+YVPlgCm3iRbvMZh
-	 SSFbQy+gxCZHtIoLuhwvDrZjTC1NVxfTdnoPn1CY=
+	b=gyLv3pXcKJArKFSZCHIvqifBTESkvbRxM1nyfbsJYGmpJ7WUtvJ9H1/icD6SKdsNo
+	 0ISnbr1Q3pf9ycofHe3H0T186SuLrQHOneruQa+BfhTuKc6l9KxXdc/71DgjUYx7Iw
+	 3vyLoj/era1FvV+m3la3rZTnBuna7ARwRH97t43c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726829AbgGOEuS (ORCPT
+        id S1726971AbgGOEyz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 00:50:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39642 "EHLO mail.kernel.org"
+        Wed, 15 Jul 2020 00:54:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40034 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725770AbgGOEuQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 00:50:16 -0400
+        id S1725770AbgGOEyy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jul 2020 00:54:54 -0400
 Received: from localhost (unknown [122.171.202.192])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 49D75206E9;
-        Wed, 15 Jul 2020 04:50:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BD3BD20657;
+        Wed, 15 Jul 2020 04:54:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594788616;
-        bh=kEf6MQF2Y5n0rlWzjJYfrClkHjV3lWYZo3i24jQ9xzA=;
+        s=default; t=1594788893;
+        bh=RKspWdQUmF4FP5uXe/3l4Ju6t7jIEW6++Ox7QAXw9Qs=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=fFk8RG3eedKn16raycefkeAXPpU4XusiL5s+Mnfe3o4RwZM8m99jMOTXJfY2MrUbw
-         m1/kNSp08xdW/LkY6tSuGPgPfAT7VjlcnXR8LT+yOhxc46IbYMzKE+x3zpQ6pJLi1c
-         u+B5slyjcE0mpbM3/xzYEPKMwBBzB2zPBJbYSHfk=
-Date:   Wed, 15 Jul 2020 10:20:11 +0530
+        b=KzNUdA0n80OlGxwzMG/VZtWvb6RZCZdf/zWgAqITT49Tq22x4Y7JSs1ILoudkOWsc
+         yMEntxxBo6ZkyD0QpKWxA8b1aGmWw5uuvMcGBHLUPrKw7ScKfY9IC6HDfdScSvF/M3
+         TTsuOqkzNI+C8yHvuzJYNB28v0xyRhNS1Et2aZH8=
+Date:   Wed, 15 Jul 2020 10:24:49 +0530
 From:   Vinod Koul <vkoul@kernel.org>
 To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Cc:     Bard Liao <yung-chuan.liao@linux.intel.com>,
-        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
-        tiwai@suse.de, broonie@kernel.org, gregkh@linuxfoundation.org,
-        jank@cadence.com, srinivas.kandagatla@linaro.org,
-        rander.wang@linux.intel.com, ranjani.sridharan@linux.intel.com,
-        hui.wang@canonical.com, sanyog.r.kale@intel.com,
-        slawomir.blauciak@intel.com, mengdong.lin@intel.com,
-        bard.liao@intel.com
-Subject: Re: [PATCH 8/9] soundwire: intel: add wake interrupt support
-Message-ID: <20200715045011.GO34333@vkoul-mobl>
+Cc:     "Liao, Bard" <bard.liao@intel.com>,
+        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
+        "tiwai@suse.de" <tiwai@suse.de>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "ranjani.sridharan@linux.intel.com" 
+        <ranjani.sridharan@linux.intel.com>,
+        "hui.wang@canonical.com" <hui.wang@canonical.com>,
+        "broonie@kernel.org" <broonie@kernel.org>,
+        "srinivas.kandagatla@linaro.org" <srinivas.kandagatla@linaro.org>,
+        "jank@cadence.com" <jank@cadence.com>,
+        "Lin, Mengdong" <mengdong.lin@intel.com>,
+        "Blauciak, Slawomir" <slawomir.blauciak@intel.com>,
+        "Kale, Sanyog R" <sanyog.r.kale@intel.com>,
+        Bard Liao <yung-chuan.liao@linux.intel.com>,
+        "rander.wang@linux.intel.com" <rander.wang@linux.intel.com>
+Subject: Re: [PATCH 7/9] soundwire: intel/cadence: merge Soundwire interrupt
+ handlers/threads
+Message-ID: <20200715045449.GP34333@vkoul-mobl>
 References: <20200623173546.21870-1-yung-chuan.liao@linux.intel.com>
- <20200623173546.21870-9-yung-chuan.liao@linux.intel.com>
- <20200630165126.GT2599@vkoul-mobl>
- <a69aa5d0-613a-6ef6-9263-378b1e99770a@linux.intel.com>
- <20200701055654.GW2599@vkoul-mobl>
- <81a33798-0667-9a4f-9916-eb157ad5514d@linux.intel.com>
+ <20200623173546.21870-8-yung-chuan.liao@linux.intel.com>
+ <20200630162448.GS2599@vkoul-mobl>
+ <55fbc41e-cb41-8bdf-bdbd-1d1b76938683@linux.intel.com>
+ <20200701054224.GV2599@vkoul-mobl>
+ <MN2PR11MB4080CF23D00A3AF817AC1E7CFF6D0@MN2PR11MB4080.namprd11.prod.outlook.com>
+ <077d4430-bb76-df2c-2c39-8077998e6fdc@linux.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <81a33798-0667-9a4f-9916-eb157ad5514d@linux.intel.com>
+In-Reply-To: <077d4430-bb76-df2c-2c39-8077998e6fdc@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 01-07-20, 10:25, Pierre-Louis Bossart wrote:
-> 
-> > > > > +	 * wake up master and slave so that slave can notify master
-> > > > > +	 * the wakeen event and let codec driver check codec status
-> > > > > +	 */
-> > > > > +	list_for_each_entry(slave, &bus->slaves, node) {
-> > > > > +		/*
-> > > > > +		 * discard devices that are defined in ACPI tables but
-> > > > > +		 * not physically present and devices that cannot
-> > > > > +		 * generate wakes
-> > > > > +		 */
-> > > > > +		if (slave->dev_num_sticky && slave->prop.wake_capable)
-> > > > > +			pm_request_resume(&slave->dev);
-> > > > 
-> > > > Hmmm, shouldn't slave do this? would it not make sense to notify the
-> > > > slave thru callback and then slave decides to resume or not..?
-> > > 
-> > > In this mode, the bus is clock-stop mode, and events are detected with level
-> > > detector tied to PCI events. The master and slave devices are all in
-> > > pm_runtime suspended states. The codec cannot make any decisions on its own
-> > > since the bus is stopped, it needs to first resume, which assumes that the
-> > > master resumes first and the enumeration re-done before it can access any of
-> > > its registers.
-> > > 
-> > > By looping through the list of devices that can generate events, you end-up
-> > > first forcing the master to resume, and then each slave resumes and can
-> > > check who generated the event and what happened while suspended. if the
-> > > codec didn't generate the event it will go back to suspended mode after the
-> > > usual timeout.
-> > > 
-> > > We can add a callback but that callback would only be used for Intel
-> > > solutions, but internally it would only do a pm_request_resume() since the
-> > > codec cannot make any decisions before first resuming. In other words, it
-> > > would be an Intel-specific callback that is implemented using generic resume
-> > > operations. It's probably better to keep this in Intel-specific code, no?
+On 02-07-20, 10:01, Pierre-Louis Bossart wrote:
+ 
+> > > Sounds good. Now that you are already in irq thread, does it make sense
+> > > to spawn a worker thread for this and handle it there? Why not do in the
+> > > irq thread itself. Using a thread kind of defeats the whole point behind
+> > > concept of irq threads
 > > 
-> > I do not like the idea that a device would be woken up, that kind of
-> > defeats the whole idea behind the runtime pm. Waking up a device to
-> > check the events is a generic sdw concept, I don't see that as Intel
-> > specific one.
-> 
-> In this case, this in an Intel-specific mode that's beyond what MIPI
-> defined. This is not the traditional in-band SoundWire wake defined in the
-> SoundWire specification. The bus is completely down, the master IP is
-> powered-off and all context lost. There is still the ability for a Slave
-> device to throw a wake as defined by MIPI in clock-stop-mode1, but this is
-> handled with a separate level detector and the wake detection is handled by
-> the PCI subsystem. On a wake, the master IP needs to be powered-up, the
-> entire bus needs to be restarted and the Slave devices re-enumerated.
-
-Right and I would expect that Slave device would do runtime_get_sync()
-first thing in the callback. That would ensure that the Master is
-powered up, Slave is powered up, all enumeration is complete. This is
-more standard way to deal with this, we expect devices to be so we
-low powered or off so cannot do read/write unless we resume.
-
-> We trigger that sequence with a loop that calls pm_request_resume() for all
-> Slave devices that are present and exposed in their properties that they are
-> wake-capable. As you rightly said in your comments, this will result a nice
-> wake-up handled by the pm_runtime framework in the right sequence (DSP
-> first, then SoundWire master then Slave devices).
-> 
-> You will see in follow-up patches that the master IP can be configured in
-> different clock stop modes, depending on the needs (power/latency compromise
-> typically). When the more traditional SoundWire wake is used, we do not use
-> this sequence at all.
-
-The point which is not clear to me if why do we need a specific
-sequence. Above sequence should work for you, if not I would like to
-understand why.
-
-> > I would like to see a generic callback for the devices and let devices
-> > do the resume part, that is standard operating principle when we deal
-> > with suspended devices. If the device thinks they need to resume, they
-> > will do the runtime resume, check the status and sleep if not
-> > applicable. Since we have set the parents correctly, any resume
-> > operation for slaves would wake master up as well...
+> > Not sure If you are talking about cdns_update_slave_status_work().
+> > The reason we need to spawn a worker thread in sdw_cdns_irq() is
+> > that we will do sdw transfer which will generate an interrupt when
+> > a slave interrupt is triggered. And the handler will not be invoked if the
+> > previous handler is not return yet.
+> > Please see the scenario below for better explanation.
+> > 1. Slave interrupt arrives
+> > 	2.1 Try to read Slave register and waiting for the transfer response
+> > 	2.2 Get the transfer response interrupt and finish the sdw transfer.
+> > 3. Finish the Slave interrupt handling.
 > > 
-> > I do not see a need for intel driver to resume slave devices here, or
-> > did I miss something?
+> > Interrupts are triggered in step 1 and 2.2, but step 2.2's handler will not be
+> > invoked if step 1's handler is not return yet.
+> > What we do is to spawn a worker thread to do step 2 and return from step 1.
+> > So the handler can be invoked when the transfer response interrupt arrives.
 > 
-> Yes, the part "If the device thinks they need to resume" is not quite right.
-> The Slave device cannot access its registers before fully resuming, which in
-> this case means a re-enumeration, so cannot "think" or make a decision on
-> its own. That's the reason why we force them to resume, since it's the first
-> step they would need to do anyways, and then if they don't have anything to
-> do they go back to idle after a timeout. I invite you to see the
-> suspend/resume sequences in codec drivers where you will see regmap access
-> moves to cache-only on suspend and full access restored on resume, along
-> with a hardware sync.
+> To build on Bard's correct answer, the irq thread only takes care of
+> 'immediate' actions, such as command completion, parity or bus clash errors.
+> The rest of the work can be split in
+> a) changes to device state, usually for attachment and enumeration. This is
+> rather slow and will entail regmap syncs.
+> b) device interrupts - typically only for jack detection which is also
+> rather slow.
 > 
-> I see your point and I really think we are talking about a similar sequence,
-> but we simplified your idea since there's no possibility of making a
-> decision before Slave devices resume.
+> Since this irq thread function is actually part of the entire HDaudio
+> controller interrupt handling, we have to defer the work for cases a) and b)
+> and re-enable the HDaudio interrupts at the end of the irq thread function -
+> see the code I shared earlier.
+> 
+> In addition, both a) and b) will result  in transactions over the bus, which
+> will trigger interrupts to signal the command completions. In other words,
+> because of the asynchronous nature of the transactions, we need a two-level
+> implementation. If you look at the previous solution it was the same, the
+> commands were issued in the irq thread and the command completion was
+> handled in the handler, since we had to make the handler minimal with a
+> global GIE interrupt disable we kept the same hierarchy to deal with
+> commands but move it up one level.
+> 
+> You could argue that maybe a worker thread is not optimal and could be
+> replaced by something better/faster. Since the jack detection is typically
+> handled with a worker thread in all ASoC codec drivers, we didn't feel the
+> need to optimize further. We did not see any performance impact with this
+> change.
+> 
+> Does this answer to your concern?
 
-If we are worried about Slave device remembering then we should save
-state in device context. But i think that slave should *always* perform
-runtime resume as a first step in the callback before they would do any
-bus/device ops. After all, the callback is wake from low power state
+The point is that we are already in irq_thread which is designed to
+handle any bottom half processing and can be given priority, spawning of
+worker threads for another bottom half seems unnecessary to me and would
+increase the latency for you.
 
-> The only optimization we did here is that we only resume Slave devices than
-> can generate a wake, and filter out the 'ghost' devices that are described
-> in ACPI tables but don't physically exist.
-> 
-> Does this help?
-> 
+I would have handled everything in irq_thread and returned, after all we
+are in bottom half :)
 
+Is there a reason for worker thread here, if so it is not clear to me
+atm.
+
+Thanks
 -- 
 ~Vinod
