@@ -2,125 +2,88 @@ Return-Path: <SRS0=kup7=A2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72D87C433E4
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 02:22:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A038C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 02:28:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5D4D72072D
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 02:22:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1AE3520663
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 02:28:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=paul-moore-com.20150623.gappssmtp.com header.i=@paul-moore-com.20150623.gappssmtp.com header.b="pd8yJsIz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728314AbgGOCWc (ORCPT
+        id S1727068AbgGOC20 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jul 2020 22:22:32 -0400
-Received: from kernel.crashing.org ([76.164.61.194]:36952 "EHLO
-        kernel.crashing.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726458AbgGOCWb (ORCPT
+        Tue, 14 Jul 2020 22:28:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53136 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726396AbgGOC2Z (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jul 2020 22:22:31 -0400
-Received: from localhost (gate.crashing.org [63.228.1.57])
-        (authenticated bits=0)
-        by kernel.crashing.org (8.14.7/8.14.7) with ESMTP id 06F2JlC0001315
-        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
-        Tue, 14 Jul 2020 21:19:51 -0500
-Message-ID: <2629240c07af7fec5989127ed6da405e12cf77a3.camel@kernel.crashing.org>
-Subject: Re: [RFC PATCH 00/35] Move all PCIBIOS* definitions into arch/x86
-From:   Benjamin Herrenschmidt <benh@kernel.crashing.org>
-To:     Bjorn Helgaas <helgaas@kernel.org>, Arnd Bergmann <arnd@arndb.de>
-Cc:     "Saheed O. Bolarinwa" <refactormyself@gmail.com>,
-        bjorn@helgaas.com, Shuah Khan <skhan@linuxfoundation.org>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Richard Henderson <rth@twiddle.net>,
-        Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
-        Matt Turner <mattst88@gmail.com>,
-        Greg Ungerer <gerg@linux-m68k.org>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Russell King <linux@armlinux.org.uk>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Juergen Gross <jgross@suse.com>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Paul Mackerras <paulus@samba.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        sparclinux <sparclinux@vger.kernel.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@fb.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Toan Le <toan@os.amperecomputing.com>,
-        Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        Ley Foon Tan <ley.foon.tan@intel.com>,
-        Marek Vasut <marek.vasut+renesas@gmail.com>,
-        Kjetil Oftedal <oftedal@gmail.com>
-Date:   Wed, 15 Jul 2020 12:19:46 +1000
-In-Reply-To: <20200714234625.GA428442@bjorn-Precision-5520>
-References: <20200714234625.GA428442@bjorn-Precision-5520>
+        Tue, 14 Jul 2020 22:28:25 -0400
+Received: from mail-ed1-x544.google.com (mail-ed1-x544.google.com [IPv6:2a00:1450:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5A47CC08C5C1
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 19:28:25 -0700 (PDT)
+Received: by mail-ed1-x544.google.com with SMTP id by13so430527edb.11
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 19:28:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=paul-moore-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=NzQjEy96mwvK5RqK1HselxgI2oA5I911Qdx2GNiQhg0=;
+        b=pd8yJsIzUV+lmtpXyBfCDr7n3+H80zSFriHlcIPUQEshJKvvGy7eE8F14z2Me5kfma
+         VchPpX69Esx3VqPLBaPtWBzKR87WMmuAAWVk6Zxbb59t8akiJqxXSK2gY6bFjn29yKdB
+         u5gQKb2NXD0jidguQUC5MRpGj0zHsrpcgQuBsGynE5bZ8s9cVj6Q8jAbJceW4ZopqgQo
+         IvkF1Gx536gA5Y4BkC0O7XTgAUc4PVIK4icnKvo1lQlDCDz3x4NjAf2shtmOTNMFbH8c
+         +IGUMuuj3R2wNaCqM1RuDMeE1vo+SB1yNukyNP1BaeyfimEuy9EkvDvAtPydf4lgXJ5S
+         7CCg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=NzQjEy96mwvK5RqK1HselxgI2oA5I911Qdx2GNiQhg0=;
+        b=NcCl3h/oSB17DHqvyBj3Wn5gu4ZFjqf1DQCLWq0TE1lDdSyfzNQW88Q4v9aa8kuWW/
+         6EJ8dlUJsfI/4AgNDi83H6WkaY68P8m6uiHZvZbVX4SFGLZQBPY7cpYok7n7JoTKMQJK
+         ZGm8HBmZJFn2MG2SHnuufSUihsU5lfAPKTKIBy/a6PsGFV2FVSaPDFEKxHm+p5Cz67qI
+         bI72wtOpI77uMXGDMWmmLQHPA+4RWCMB7faiqgjFk9moYCOlIccrF6v0diJ1ttv9hJiM
+         KVvwSz7l2Cn8gOzMQkDlN219P9swwMM1qvNBO+ws0orNYmZ2FLLP6fbewSfjPEDg39xo
+         2D2g==
+X-Gm-Message-State: AOAM531igJjZE9lS09/wiw1SxYyDGrRqtsztWJWPOXpFpAtEk99vkQSN
+        FAztoRj2QZm5DAnxgUhuyU4w940ozD7UyzVxzOg/Rqc=
+X-Google-Smtp-Source: ABdhPJwC+iS+MYu3jbSKussTXFfhjkiopLyiCmfWTihVgPblMmDRROS4S+1ydwyZ0bTIgA2yjuH02BgGUJUMI4Q0zDU=
+X-Received: by 2002:a05:6402:742:: with SMTP id p2mr7142885edy.135.1594780103839;
+ Tue, 14 Jul 2020 19:28:23 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200715021846.34096-1-yuehaibing@huawei.com>
+In-Reply-To: <20200715021846.34096-1-yuehaibing@huawei.com>
+From:   Paul Moore <paul@paul-moore.com>
+Date:   Tue, 14 Jul 2020 22:28:12 -0400
+Message-ID: <CAHC9VhTPhtx-t7_WucUyKg=y1g_0OiFFs1RdvfuixOUoytWmvA@mail.gmail.com>
+Subject: Re: [PATCH net-next] cipso: Remove unused inline functions
+To:     YueHaibing <yuehaibing@huawei.com>
+Cc:     davem@davemloft.net, kuba@kernel.org, netdev@vger.kernel.org,
+        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.2 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2020-07-14 at 18:46 -0500, Bjorn Helgaas wrote:
-> Yes.  I have no problem with that.  There are a few cases where it's
-> important to check for errors, e.g., we read a status register and do
-> something based on a bit being set.  A failure will return all bits
-> set, and we may do the wrong thing.  But most of the errors we care
-> about will be on MMIO reads, not config reads, so we can probably
-> ignore most config read errors.
+On Tue, Jul 14, 2020 at 10:21 PM YueHaibing <yuehaibing@huawei.com> wrote:
+>
+> They are not used any more since commit b1edeb102397 ("netlabel: Replace
+> protocol/NetLabel linking with refrerence counts")
+>
+> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+> ---
+>  include/net/cipso_ipv4.h | 12 ------------
+>  1 file changed, 12 deletions(-)
 
-And in both cases, we don't have the plumbing to provide accurate
-and reliable error returns for all platforms anyways (esp. not for
-MMIO).
+Looks good to me, thanks for the patch.
 
-I think it makes sense to stick to the good old "if all 1's, then go
-out of line" including for config space.
+Acked-by: Paul Moore <paul@paul-moore.com>
 
- ../..
-
-> Yep, except for things like device removal or other PCI errors.
-
-A whole bunch of these are reported asynchronously, esp for writes (and
-yes, including config writes, they are supposed to be non-posted but
-more often than not, the path  from the CPU to the PCI bridge remains
-posted for writes including config ones).
-
-> So maybe a good place to start is by removing some of the useless
-> error checking for pci_read_config_*() and pci_write_config_*().
-> That's a decent-sized but not impractical project that could be done
-> per subsystem or something:
-> 
->   git grep -E "(if|return|=).*\<pci_(read|write)_config" drivers
-> 
-> finds about 400 matches.
-> 
-> Some of those callers probably really *do* want to check for errors,
-> and I guess we'd have to identify them and do them separately as you
-> mentioned.
-
-I'd be curious about these considering how unreliable our error return
-is accross the board.
-
-Cheers,
-Ben.
-
-
+-- 
+paul moore
+www.paul-moore.com
