@@ -2,155 +2,154 @@ Return-Path: <SRS0=kup7=A2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-17.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68A55C433E6
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 22:14:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 792F9C433E5
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 22:14:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3E360206F5
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 22:14:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4FA6D2065F
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 22:14:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="tCmmAhkx"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="rSyT29QG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727975AbgGOWOu (ORCPT
+        id S1728022AbgGOWOz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 18:14:50 -0400
-Received: from aserp2130.oracle.com ([141.146.126.79]:41548 "EHLO
-        aserp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726989AbgGOWOq (ORCPT
+        Wed, 15 Jul 2020 18:14:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38616 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727972AbgGOWOu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 18:14:46 -0400
-Received: from pps.filterd (aserp2130.oracle.com [127.0.0.1])
-        by aserp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06FMBvoF090395;
-        Wed, 15 Jul 2020 22:14:44 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id : in-reply-to : references : mime-version :
- content-transfer-encoding; s=corp-2020-01-29;
- bh=pr1P/I9L+5gzWuD7JenbHVssGm+AxNla7ODU/7+mdDc=;
- b=tCmmAhkxmhm1/jaufggXk9M5ahMOT4bvSr2fXfwn0wh3CEOSbv0zFUYPPXbKULdULNh5
- uWaF+xh+ol2Esse8AXdwP2tBahZUPghqL+vthOAep6rGs1OiU2uVszflEfLGQA2lOH/k
- 6wZCMqCDhIh9PheEO6MQqZ7bWacF5C5D0UBCg76F+r5HbwcW+y+zb7W4L4ptSt2NOoXa
- H791VGy9Pi8slbKYht9Vf1/RVVoUfJKPYBUlklXzEeAuhKy2xJkejq+imq84BTaefRHK
- Go7SW1KJnwyxyWcg+f9BhiB7VW0eQgZbRqf9dsjnvajd7ec8zQkArVA9iiMsDPjZxZgL zw== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by aserp2130.oracle.com with ESMTP id 327s65maba-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 15 Jul 2020 22:14:43 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06FMDevu035125;
-        Wed, 15 Jul 2020 22:14:43 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by aserp3020.oracle.com with ESMTP id 327qb91d9w-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 15 Jul 2020 22:14:43 +0000
-Received: from abhmp0010.oracle.com (abhmp0010.oracle.com [141.146.116.16])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 06FMEgCk001029;
-        Wed, 15 Jul 2020 22:14:42 GMT
-Received: from ca-mkp.ca.oracle.com (/10.156.108.201)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 15 Jul 2020 15:14:41 -0700
-From:   "Martin K. Petersen" <martin.petersen@oracle.com>
-To:     jejb@linux.ibm.com, Lee Jones <lee.jones@linaro.org>
-Cc:     "Martin K . Petersen" <martin.petersen@oracle.com>,
-        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 00/29] Fix a bunch more SCSI related W=1 warnings
-Date:   Wed, 15 Jul 2020 18:14:34 -0400
-Message-Id: <159484884353.21107.4318943401829525429.b4-ty@oracle.com>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200713074645.126138-1-lee.jones@linaro.org>
-References: <20200713074645.126138-1-lee.jones@linaro.org>
+        Wed, 15 Jul 2020 18:14:50 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 28E19C061755
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 15:14:50 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id f7so4631823wrw.1
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 15:14:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=mGOlP9G5CXJe9eB7XItn7CJnKM6Jix0dL12Y/lrDDZk=;
+        b=rSyT29QGebga4yLdY0Ovq+pzg4H3/wyIXlF4UMurpsQ85dJIdahdklNIKcMrvA6gaT
+         +HpJrxTaEoK89o2e2XMKyYPwjtG5A7pkJydGnEYVmq5kzaERiS5Yoat3OEjXYNOaBAZe
+         Pz1ZBvm+xVToPjzlr5w5bRupLWA9AFoFoe/fdNVTw8cJUPyVE1Tl3Ax/B0hJ0pW6+S2c
+         9NsokrYhLr2X0pJTX0rh/mkVU2SznCeQoIWNgETdObcp5ZsLmtOlX2zq5c8qxk6bcBKG
+         XJT70GE0qez7Pu8L81Slq8wVbSa6RGruXP8fANFdKkEX3hWoJAb1Cbc7vzYa2Wpu+BW1
+         9+yQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=mGOlP9G5CXJe9eB7XItn7CJnKM6Jix0dL12Y/lrDDZk=;
+        b=G29vs75f0k67IbenN2orIavRRzlEMR8CoDg9ldeX4tMeRIhQ3aC+baxURRMsUoov8f
+         Z+gFCwsavSnaYwKekjJQo654cZzBUehT2e2Zghg3cK7HYaDZGDt3LJlFeRDyzsUy7Yc2
+         R6sEKM8kwxQ34YSnVmx2JKbLgAtEg0pl3gYOtMBFQLcqnyvMEFH5Vu7bOy/sl2fHltMB
+         DUMMiQBW1iPhQlbWoI9CHXnG+i07j+1MH+BTYzXZADS21bykJG/+tlIsSEX4MN6GFrWM
+         taoSXM9k8hSen+VObv1VnCtImNMTXBm6vAvM02Nq5lSC4WOOBnWRv9T17fqHH7yaMzvm
+         /shA==
+X-Gm-Message-State: AOAM533eEzSx1wgqwPzf6dyFSLN6qsXwlODYsbc+7kAAlesZFzmmKBbO
+        oowzktDbddeS8Tc1QIzdd5ID4P3xcoTLYmvT6SCj0g==
+X-Google-Smtp-Source: ABdhPJx9FEJ+aW22lQiTU/77KbFvqUqLIWRi8krNaoDW8bkuzCqQ9W4/adRfXqOKHusucCsOQkd0JY77DxhCk2oiYFU=
+X-Received: by 2002:adf:e40e:: with SMTP id g14mr1828123wrm.271.1594851288721;
+ Wed, 15 Jul 2020 15:14:48 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9683 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 malwarescore=0
- mlxscore=0 spamscore=0 phishscore=0 suspectscore=0 bulkscore=0
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2007150165
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9683 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 malwarescore=0
- phishscore=0 mlxscore=0 priorityscore=1501 lowpriorityscore=0 spamscore=0
- clxscore=1015 bulkscore=0 mlxlogscore=999 impostorscore=0 suspectscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2007150165
+References: <20200712132634.138901-1-jolsa@kernel.org> <20200712132634.138901-14-jolsa@kernel.org>
+ <CAP-5=fXHGGCFw_5zcXboFUYeNMMC5K0fbAXwPn0HRw91pt6A0A@mail.gmail.com> <20200715211908.GS183694@krava>
+In-Reply-To: <20200715211908.GS183694@krava>
+From:   Ian Rogers <irogers@google.com>
+Date:   Wed, 15 Jul 2020 15:14:37 -0700
+Message-ID: <CAP-5=fXdP+Km-RPchL-C0VbSiBhrOBveTTUoqTzx-Tvub6wYng@mail.gmail.com>
+Subject: Re: [PATCH 13/18] perf metric: Add events for the current group
+To:     Jiri Olsa <jolsa@redhat.com>
+Cc:     Jiri Olsa <jolsa@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Michael Petlan <mpetlan@redhat.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Kajol Jain <kjain@linux.ibm.com>,
+        John Garry <john.garry@huawei.com>,
+        "Paul A. Clarke" <pc@us.ibm.com>,
+        Stephane Eranian <eranian@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 13 Jul 2020 08:46:16 +0100, Lee Jones wrote:
+On Wed, Jul 15, 2020 at 2:19 PM Jiri Olsa <jolsa@redhat.com> wrote:
+>
+> On Wed, Jul 15, 2020 at 10:00:09AM -0700, Ian Rogers wrote:
+> > On Sun, Jul 12, 2020 at 6:27 AM Jiri Olsa <jolsa@kernel.org> wrote:
+> > >
+> > > There's no need to iterate the whole list of groups,
+> > > when adding new events. The currently created group
+> > > is the one we want to add.
+> > >
+> > > Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+> > > ---
+> > >  tools/perf/util/metricgroup.c | 22 ++++++++++++----------
+> > >  1 file changed, 12 insertions(+), 10 deletions(-)
+> > >
+> > > diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.c
+> > > index 8cbcc5e05fef..66f25362702d 100644
+> > > --- a/tools/perf/util/metricgroup.c
+> > > +++ b/tools/perf/util/metricgroup.c
+> > > @@ -811,17 +811,19 @@ static int metricgroup__add_metric(const char *metric, bool metric_no_group,
+> >
+> > Could we add a function comment to describe the arguments here?
+>
+> ok
+>
+> > Currently events is an empty list out argument that is built up by
+> > this code, now it will be incrementally updated. Except I don't think
+> > I'm capturing the current state correctly, it is confusing that there
+> > is the loop in the current code. It looks like events will be added
+> > multiple times redundantly.
+>
+> oops, I meant to add the example of broken processing in here,
+> but forgot.. will update
+>
+> >
+> > >         if (ret)
+> > >                 return ret;
+> > >
+> > > -       list_for_each_entry(eg, group_list, nd) {
+> > > -               if (events->len > 0)
+> > > -                       strbuf_addf(events, ",");
+> > > +       if (events->len > 0)
+> > > +               strbuf_addf(events, ",");
+> > >
+> > > -               if (eg->has_constraint) {
+> > > -                       metricgroup__add_metric_non_group(events,
+> > > -                                                         &eg->pctx);
+> > > -               } else {
+> > > -                       metricgroup__add_metric_weak_group(events,
+> > > -                                                          &eg->pctx);
+> > > -               }
+> > > +       /*
+> > > +        * Even if we add multiple groups through the runtime
+> > > +        * param, they share same events.
+> > > +        */
+> >
+> > I'm not clear what runtime param is here. Is it the \? arch runtime parameter?
+>
+> yes, that's that ppc quirk.. adding extra same metrics based
+> on that runtime param.. for some reason ;-)
 
-> This set is part of a larger effort attempting to clean-up W=1
-> kernel builds, which are currently overwhelmingly riddled with
-> niggly little warnings.
-> 
-> Slowly working through the SCSI related ones.  There are many.
-> 
-> Change-log:
-> 
-> [...]
+Do they share the same event? I thought the "?" was substituted in a
+loop for a value 0...arch_runtime_value and so you got an event for
+each of those values.
 
-Applied to 5.9/scsi-queue, thanks!
+Thanks,
+Ian
 
-[01/29] scsi: libfc: Supply some missing kerneldoc struct/function attributes/params
-        https://git.kernel.org/mkp/scsi/c/74341d35b901
-[02/29] scsi: scsi_transport_fc: Match HBA Attribute Length with HBAAPI V2.0 definitions
-        https://git.kernel.org/mkp/scsi/c/e721eb0616f6
-[03/29] scsi: libfc: trivial: Fix spelling mistake of 'discovery'
-        https://git.kernel.org/mkp/scsi/c/ee9ec5c9af94
-[04/29] scsi: fcoe: Fix various kernel-doc infringements
-        https://git.kernel.org/mkp/scsi/c/54888649bec7
-[05/29] scsi: fcoe: Fix a myriad of documentation issues
-        https://git.kernel.org/mkp/scsi/c/3052652326dc
-[06/29] scsi: fcoe: Correct some kernel-doc issues
-        https://git.kernel.org/mkp/scsi/c/f2db5efefa89
-[07/29] scsi: bnx2fc: Repair a range of kerneldoc issues
-        https://git.kernel.org/mkp/scsi/c/ca63d8e2e9ef
-[08/29] scsi: qedf: Demote obvious misuse of kerneldoc to standard comment blocks
-        https://git.kernel.org/mkp/scsi/c/a9d4aece2255
-[09/29] scsi: qedf: Remove set but not checked variable 'tmp'
-        https://git.kernel.org/mkp/scsi/c/c6e2f4bd794a
-[10/29] scsi: libfc: Repair function parameter documentation
-        https://git.kernel.org/mkp/scsi/c/9865a04d528c
-[11/29] scsi: libfc: Fix a couple of misdocumented function parameters
-        https://git.kernel.org/mkp/scsi/c/f636acae8d0d
-[12/29] scsi: libfc: Provide missing and repair existing function documentation
-        https://git.kernel.org/mkp/scsi/c/ebb40ab68118
-[13/29] scsi: bnx2fc: Fix a couple of bitrotted function documentation headers
-        https://git.kernel.org/mkp/scsi/c/4db2ac3e0392
-[14/29] scsi: arcmsr: Remove some set but unused variables
-        https://git.kernel.org/mkp/scsi/c/18bc435e0a1d
-[16/29] scsi: qedf: Remove a whole host of unused variables
-        https://git.kernel.org/mkp/scsi/c/50efc51cb9ff
-[17/29] scsi: bnx2fc: Demote obvious misuse of kerneldoc to standard comment blocks
-        https://git.kernel.org/mkp/scsi/c/2bd92b33643e
-[18/29] scsi: aic7xxx: Remove unused variable 'tinfo'
-        https://git.kernel.org/mkp/scsi/c/e3f58eeedb55
-[19/29] scsi: aic7xxx: Remove unused variable 'ahc'
-        https://git.kernel.org/mkp/scsi/c/614fc2f9883e
-[20/29] scsi: aic7xxx: Remove unused variable 'targ'
-        https://git.kernel.org/mkp/scsi/c/7097a517446f
-[21/29] scsi: aic7xxx: Fix 'amount_xferred' set but not used issue
-        https://git.kernel.org/mkp/scsi/c/aa89d74e040a
-[22/29] scsi: qedf: Demote obvious misuse of kerneldoc to standard comment blocks
-        https://git.kernel.org/mkp/scsi/c/ce7e0a84e5d7
-[23/29] scsi: aacraid: Provide suggested curly braces around empty body of if()
-        https://git.kernel.org/mkp/scsi/c/8558d5a4f38c
-[24/29] scsi: aacraid: Fix a couple of small kerneldoc issues
-        https://git.kernel.org/mkp/scsi/c/00a72e8cd267
-[25/29] scsi: aic94xx: Demote seemingly unintentional kerneldoc header
-        https://git.kernel.org/mkp/scsi/c/2862a3a26c2d
-[26/29] scsi: pm8001: Demote obvious misuse of kerneldoc and update others
-        https://git.kernel.org/mkp/scsi/c/e802fc43ba36
-[27/29] scsi: aic94xx: Repair kerneldoc formatting error and remove extra param
-        https://git.kernel.org/mkp/scsi/c/bb458974e063
-[28/29] scsi: aacraid: Fix a bunch of function doc formatting errors
-        https://git.kernel.org/mkp/scsi/c/e7eb414c653d
-[29/29] scsi: qla4xxx: Provide a missing function param description and fix formatting
-        https://git.kernel.org/mkp/scsi/c/7ec772d0c3e6
-
--- 
-Martin K. Petersen	Oracle Linux Engineering
+> thanks,
+> jirka
+>
