@@ -2,169 +2,146 @@ Return-Path: <SRS0=kup7=A2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-16.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5972C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 18:33:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BED2C433E4
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 18:34:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B3F0120672
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 18:33:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C84A207BC
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 18:34:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="ENfLP4xn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726766AbgGOSdl (ORCPT
+        id S1726873AbgGOSeJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 14:33:41 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:29306 "EHLO
-        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726034AbgGOSdk (ORCPT
+        Wed, 15 Jul 2020 14:34:09 -0400
+Received: from linux.microsoft.com ([13.77.154.182]:38982 "EHLO
+        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726034AbgGOSeJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 14:33:40 -0400
-Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06FIWrwq047725;
-        Wed, 15 Jul 2020 14:33:32 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 3298wvyt0g-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 15 Jul 2020 14:33:32 -0400
-Received: from m0098417.ppops.net (m0098417.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 06FIXWmu050138;
-        Wed, 15 Jul 2020 14:33:32 -0400
-Received: from ppma02wdc.us.ibm.com (aa.5b.37a9.ip4.static.sl-reverse.com [169.55.91.170])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 3298wvysyw-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 15 Jul 2020 14:33:32 -0400
-Received: from pps.filterd (ppma02wdc.us.ibm.com [127.0.0.1])
-        by ppma02wdc.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 06FIEhBv011573;
-        Wed, 15 Jul 2020 18:33:31 GMT
-Received: from b01cxnp22036.gho.pok.ibm.com (b01cxnp22036.gho.pok.ibm.com [9.57.198.26])
-        by ppma02wdc.us.ibm.com with ESMTP id 327ursuufr-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 15 Jul 2020 18:33:31 +0000
-Received: from b01ledav002.gho.pok.ibm.com (b01ledav002.gho.pok.ibm.com [9.57.199.107])
-        by b01cxnp22036.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 06FIXUW515597920
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 15 Jul 2020 18:33:30 GMT
-Received: from b01ledav002.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id B6D1E124052;
-        Wed, 15 Jul 2020 18:33:30 +0000 (GMT)
-Received: from b01ledav002.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 99971124053;
-        Wed, 15 Jul 2020 18:33:29 +0000 (GMT)
-Received: from oc3272150783.ibm.com (unknown [9.160.89.209])
-        by b01ledav002.gho.pok.ibm.com (Postfix) with ESMTPS;
-        Wed, 15 Jul 2020 18:33:29 +0000 (GMT)
-Date:   Wed, 15 Jul 2020 13:33:27 -0500
-From:   "Paul A. Clarke" <pc@us.ibm.com>
-To:     Jiri Olsa <jolsa@kernel.org>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Michael Petlan <mpetlan@redhat.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Kajol Jain <kjain@linux.ibm.com>,
-        John Garry <john.garry@huawei.com>,
-        Stephane Eranian <eranian@google.com>,
-        Ian Rogers <irogers@google.com>
-Message-ID: <20200715183327.GA21935@oc3272150783.ibm.com>
-References: <20200712132634.138901-1-jolsa@kernel.org>
+        Wed, 15 Jul 2020 14:34:09 -0400
+Received: from [192.168.0.104] (c-73-42-176-67.hsd1.wa.comcast.net [73.42.176.67])
+        by linux.microsoft.com (Postfix) with ESMTPSA id 0456D20B4908;
+        Wed, 15 Jul 2020 11:34:07 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 0456D20B4908
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+        s=default; t=1594838048;
+        bh=h/hY55Q0qtm8L3rDWYxgRPeKHyFR7vIM/95MK08uoXY=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=ENfLP4xnfL87tgV8bYKfz92gup/o0XmaYAr+T2UGIZhJW860xPQ5YxZUznSchJTxn
+         GHmpXHtBTgrY48padhK2h6/aqsJrBj6X9abd+M9RE+9iyXjHt5b43Q/u3EbyiYhWvZ
+         aOX3AM4xbrCHDMgVdUB3IWeUaHkvalD8r3+0cpGg=
+Subject: Re: [PATCH v1 4/5] LSM: Define SELinux function to measure security
+ state
+To:     Stephen Smalley <stephen.smalley.work@gmail.com>
+Cc:     Mimi Zohar <zohar@linux.ibm.com>,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        James Morris <jmorris@namei.org>,
+        linux-integrity@vger.kernel.org,
+        SElinux list <selinux@vger.kernel.org>,
+        LSM List <linux-security-module@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+References: <20200715154853.23374-1-nramas@linux.microsoft.com>
+ <20200715154853.23374-5-nramas@linux.microsoft.com>
+ <CAEjxPJ6UsK9QqFTpMKjgSin2Q6D-5NCNDS0enuRNuixVP9H2wQ@mail.gmail.com>
+From:   Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
+Message-ID: <fec80278-1306-787d-a8ed-615a3709ae77@linux.microsoft.com>
+Date:   Wed, 15 Jul 2020 11:34:07 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200712132634.138901-1-jolsa@kernel.org>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-TM-AS-GCONF: 00
-Subject: Re:  [PATCH 00/18] perf metric: Add support to reuse metric
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-07-15_12:2020-07-15,2020-07-15 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0
- priorityscore=1501 lowpriorityscore=0 suspectscore=0 adultscore=0
- impostorscore=0 spamscore=0 phishscore=0 malwarescore=0 mlxscore=0
- mlxlogscore=999 clxscore=1011 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2006250000 definitions=main-2007150143
+In-Reply-To: <CAEjxPJ6UsK9QqFTpMKjgSin2Q6D-5NCNDS0enuRNuixVP9H2wQ@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jul 12, 2020 at 03:26:16PM +0200, Jiri Olsa wrote:
-> hi,
-> this patchset is adding the support to reused metric in another 
-> metric. The metric needs to be referenced by 'metric:' prefix.
+On 7/15/20 11:04 AM, Stephen Smalley wrote:
+
+>> +static inline bool selinux_checkreqprot(void)
+>> +{
+>> +       struct selinux_state *state = &selinux_state;
+>> +
+>> +       return state->checkreqprot;
+>> +}
 > 
-> For example, to define IPC by using CPI with change like:
+> Probably should use READ_ONCE().
+Will do.
+
 > 
->          "BriefDescription": "Instructions Per Cycle (per Logical Processor)",
->  -       "MetricExpr": "INST_RETIRED.ANY / CPU_CLK_UNHALTED.THREAD",
->  +       "MetricExpr": "1/metric:CPI",
->          "MetricGroup": "TopDownL1",
->          "MetricName": "IPC"
+>> diff --git a/security/selinux/measure.c b/security/selinux/measure.c
+>> new file mode 100644
+>> index 000000000000..b909e8e61542
+>> --- /dev/null
+>> +++ b/security/selinux/measure.c
+>> @@ -0,0 +1,122 @@
+>> +int selinux_security_state(void)
 > 
-> I won't be able to find all the possible places we could
-> use this at, so I wonder you guys (who was asking for this)
-> would try it and come up with comments if there's something
-> missing or we could already use it at some places.
+> Let's call this selinux_measure_state() or similar.  Needs a verb. And
+> pass it a struct selinux_state * pointer argument to be measured, even
+> though initially it will always be passed &selinux_state.  The
+> encapsulation of selinux state within selinux_state was to support
+> multiple selinux namespaces in the future, each with their own state.
+Will do.
+
+>> +       static char *security_state_string =
+>> +                       "enabled=%d;enforcing=%d;checkreqprot=%d;"        \
+>> +                       "netpeer=%d;openperm=%d;extsockclass=%d;"         \
+>> +                       "alwaysnetwork=%d;cgroupseclabel=%d;"             \
+>> +                       "nnpnosuidtransition=%d;genfsseclabelsymlink=%d;";
 > 
-> It's based on Arnaldo's tmp.perf/core.
+> Rather than hardcoding policy capability names here, I would recommend
+> using the selinux_policycap_names[] array for the names and the
+> selinux_state.policycap[] array for the values.  Also recommend
+> passing in a struct selinux_state * here to allow for future case
+> where there are multiple selinux states, one per selinux namespace.
+Will do.
+
 > 
-> v2 changes:
->   - collected Ian's acks for few patches [Ian]
->   - renamed expr__add_id to expr__add_id_val [Ian]
->   - renamed expr_parse_data to expr_id_data [Ian]
->   - added recursion check [Ian]
->   - added metric test for DCache_L2 metric [Ian]
->   - added some renames as discussed in review [Ian]
+>> diff --git a/security/selinux/ss/services.c b/security/selinux/ss/services.c
+>> index ef0afd878bfc..0c289d13ef6a 100644
+>> --- a/security/selinux/ss/services.c
+>> +++ b/security/selinux/ss/services.c
+>> @@ -3724,10 +3724,11 @@ int security_netlbl_sid_to_secattr(struct selinux_state *state,
+>>    * security_read_policy - read the policy.
+>>    * @data: binary policy data
+>>    * @len: length of data in bytes
+>> - *
+>> + * @alloc_kernel_memory: flag to indicate memory allocation
+>>    */
+>> -int security_read_policy(struct selinux_state *state,
+>> -                        void **data, size_t *len)
+>> +int security_read_selinux_policy(struct selinux_state *state,
+>> +                                void **data, size_t *len,
+>> +                                bool alloc_kernel_memory)
 > 
-> Also available in here:
->   git://git.kernel.org/pub/scm/linux/kernel/git/jolsa/perf.git
->   perf/metric
+> Instead of passing in a boolean to control how the memory is
+> allocated, split this into a helper function that takes an
+> already-allocated buffer and two
+> different front-end wrappers, one for kernel-internal use and one for
+> userspace use.
+Will do.
 
-I'm having trouble testing this.
+> 
+>> @@ -3738,7 +3739,10 @@ int security_read_policy(struct selinux_state *state,
+>>
+>>          *len = security_policydb_len(state);
+>>
+>> -       *data = vmalloc_user(*len);
+>> +       if (alloc_kernel_memory)
+>> +               *data = kzalloc(*len, GFP_KERNEL);
+> 
+> You need vmalloc() since policy image size may exceed kmalloc max (or
+> at least that used to be the case).
+Will do.
 
-I checked out this tree, and am able to build with a JSON metrics definition
-file which uses other metrics.  I put this aside, though, because of the
-following issue.
+thanks,
+  -lakshmi
 
-I built the kernel from this same tree and booted it successfully.
-However, the metrics are not working correctly.  (I may very well be
-doing something wrong.)
 
-The base system is RHEL8, but it's now booted with the new kernel.
-```
-# uname -a
-Linux system 5.8.0-rc4-g7dd02cf0b #1 SMP Wed Jul 15 12:31:45 EDT 2020 ppc64le ppc64le ppc64le GNU/Linux
-# perf stat --metrics cpi_breakdown ./load
-failed: way too many variables
-
- Performance counter stats for './load':
-
-           569,884      pm_cmplu_stall_bru        #      0.0 bru_stall_cpi            (0.66%)
-     5,662,892,875      pm_run_inst_cmpl                                              (0.66%)
-                 0      pm_cmplu_stall_crypto     #      0.0 crypto_stall_cpi         (0.89%)
-     6,728,401,038      pm_run_inst_cmpl                                              (0.89%)
-        25,347,764      pm_cmplu_stall_dcache_miss #      0.0 dcache_miss_stall_cpi    (1.77%)
-     6,727,267,383      pm_run_inst_cmpl                                              (1.77%)
-                 0      pm_cmplu_stall_dflong     #      0.0 dflong_stall_cpi         (1.77%)
-     6,719,648,242      pm_run_inst_cmpl                                              (1.77%)
-                 0      pm_cmplu_stall_dfu        #      0.0 dfu_other_stall_cpi      (0.89%)
-[...and LOTS more output...]
-
-# ~/install/bin/perf stat --metrics cpi_breakdown ./load
-
- Performance counter stats for './load':
-
-     6,729,588,550      pm_run_inst_cmpl          #     0.00 bru_stall_cpi          
-            58,005      pm_cmplu_stall_bru                                          
-
-       1.129524610 seconds time elapsed
-
-       1.126914000 seconds user
-       0.000955000 seconds sys
-
-```
-
-PC
