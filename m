@@ -2,102 +2,264 @@ Return-Path: <SRS0=kup7=A2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 018F5C433EA
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 15:11:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44C3FC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 15:12:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C5E8520658
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 15:11:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 179F120658
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 15:12:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CtElDGHw"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="HSR188X/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726776AbgGOPLx (ORCPT
+        id S1726101AbgGOPMq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 11:11:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58010 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726617AbgGOPLv (ORCPT
+        Wed, 15 Jul 2020 11:12:46 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:43588 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725792AbgGOPMp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 11:11:51 -0400
-Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 82E77C061755
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 08:11:51 -0700 (PDT)
-Received: by mail-ej1-x642.google.com with SMTP id a1so2516014ejg.12
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 08:11:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=ANeFtpgsDdH07BSJ3r/FEFFwUnnrJcRtNy/hmdhNkgo=;
-        b=CtElDGHwYMrTdIlhaLD1XghrGm7sOuxMcREU4G1+MeXHBsLAHwZQpRNGd8LxGfhatk
-         baEZ5wD4vdtyPXjPrUECNCbURnZjynmvkx/DDmocxb6mS+P+yKz/scLtTdmt5Un9KMqb
-         AjukBAkU4Ji/CtSw/2g215xbpih0/QppZgQEaskyWccy21ZttVePZjFOpLCecRtJxoWb
-         6U0UVJFBCDvLBUxZ+OV72zZCw4jjt60N6zbtMhteCLSwUz7bbz2iQ+dgZQoVblAMSumq
-         dlVqn075KFBaTOdPXLnXkeEhlRafu1yMv10lFMd6AwkhUvcq5wC+AwN7bOklqp27BIm0
-         vA+w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=ANeFtpgsDdH07BSJ3r/FEFFwUnnrJcRtNy/hmdhNkgo=;
-        b=NcG6SvfPoSAi2PR9599KQn8UZdYQ6609P8J54YBA0FmHtxhMLuWK5Y9VbVoVR6zGzJ
-         LoK8Ikt7ixrT8JqI4VwgA6USj1MbdnlHZJimqyQg4GW14ViK4NKMycm5xxs/t452/k7S
-         zxYNaZ9LyRlJq89z3qjIpWv0HMVSWLZnotuF5ZgnNbgNOfBexIvTHBkDmg38M59qnlEP
-         mwsvQzXWqG1QpW9C35klUpfiIcN27t/vl4fxGrih41QcC5DrMzFFOs7r8NxnvQ/2IjkG
-         GfgmY7ByJxlS8Qc221Q3fUOliW7nLLg5qE2uFyISkg299lDK58fnUBW6LrIhsKvpbJtQ
-         Oaag==
-X-Gm-Message-State: AOAM533sMa+Kw+yt8y0Mu67Swt4ldNYsmQP8jkGdPf7Ui+TZ7JE887cs
-        lfCA7AyZ19AsvOn6gxW0vhsM0fJQlIlAmBZz
-X-Google-Smtp-Source: ABdhPJwjncRyfVHDwFt/3ntCvC2oC0UWO+uG/6cIda5CX6SJAx8a+b7ol2DJ8QpryqmqsjYGEAWUWg==
-X-Received: by 2002:a17:907:2170:: with SMTP id rl16mr10125880ejb.422.1594825910229;
-        Wed, 15 Jul 2020 08:11:50 -0700 (PDT)
-Received: from garrit-VirtualBox.fritz.box (p5dd0dd67.dip0.t-ipconnect.de. [93.208.221.103])
-        by smtp.gmail.com with ESMTPSA id m6sm2248824eja.87.2020.07.15.08.11.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 15 Jul 2020 08:11:49 -0700 (PDT)
-From:   Garrit Franke <garritfranke@gmail.com>
-To:     gregkh@linuxfoundation.org, rafael@kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     Garrit Franke <garritfranke@gmail.com>
-Subject: [PATCH v2] kobject: remove unused KOBJ_MAX action
-Date:   Wed, 15 Jul 2020 17:11:16 +0200
-Message-Id: <20200715151116.6098-1-garritfranke@gmail.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200714063517.GB662760@kroah.com>
-References: <20200714063517.GB662760@kroah.com>
+        Wed, 15 Jul 2020 11:12:45 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06FF38MP145934;
+        Wed, 15 Jul 2020 15:12:31 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2020-01-29;
+ bh=0JkdM7OaeZKo/wNUM2SyUi9gk7ZssmR/pU76UHP9/Xc=;
+ b=HSR188X/Hvk1zLPBJUb3Cd8Tr9EvT8gzYNdB5JVap9w0llK7ChDwTWd9GTbydK5PdEaj
+ xnxOud9i8FHXezvhiFuWLUwJWzJOvWVzkaSR06zmfxsAylJnayEgQayKc0jqldoeW8Uy
+ h4+/JxUbHlciV5waMwe3uMv6XcmPXMyC7eyIl79SKtkV4Jcxfn5nbsygYWv3JNY7ETHj
+ NMVYgO6EtrYsM63+i+0ubS9JEdPQB8aKUzXKUm6eIQ+0fYuWNTJv1Ex0s/PfRgLr0kGF
+ u3wM0pZkfvkLUtMBaj3dQQVXN0DHpRJm0gbgDISho8UwH5Lhp7p7+L8MqJOQbyD9X/Dm DA== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by aserp2120.oracle.com with ESMTP id 3275cmc051-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 15 Jul 2020 15:12:31 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06FF3eFq126116;
+        Wed, 15 Jul 2020 15:12:30 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by userp3020.oracle.com with ESMTP id 327q6up5jp-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 15 Jul 2020 15:12:30 +0000
+Received: from abhmp0005.oracle.com (abhmp0005.oracle.com [141.146.116.11])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 06FFCSA3023623;
+        Wed, 15 Jul 2020 15:12:28 GMT
+Received: from kadam (/41.57.98.10)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 15 Jul 2020 08:12:28 -0700
+Date:   Wed, 15 Jul 2020 18:12:20 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
+Cc:     Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        George Kennedy <george.kennedy@oracle.com>,
+        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        syzbot <syzbot+e5fd3e65515b48c02a30@syzkaller.appspotmail.com>
+Subject: Re: [PATCH v2] fbdev: Detect integer underflow at "struct
+ fbcon_ops"->clear_margins.
+Message-ID: <20200715151220.GE2571@kadam>
+References: <adff5d10-fe35-62d4-74c5-182958c5ada7@i-love.sakura.ne.jp>
+ <20200715015102.3814-1-penguin-kernel@I-love.SAKURA.ne.jp>
+ <20200715094836.GD2571@kadam>
+ <9e6eac10-c5c3-f518-36cc-9ea32fb5d7fe@i-love.sakura.ne.jp>
+ <b50f85c7-80e5-89c5-0aca-31d8e9892665@i-love.sakura.ne.jp>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <b50f85c7-80e5-89c5-0aca-31d8e9892665@i-love.sakura.ne.jp>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9683 signatures=668680
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 suspectscore=0
+ phishscore=0 malwarescore=0 mlxlogscore=999 bulkscore=0 mlxscore=0
+ spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2007150124
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9683 signatures=668680
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 priorityscore=1501
+ bulkscore=0 adultscore=0 lowpriorityscore=0 phishscore=0 spamscore=0
+ impostorscore=0 malwarescore=0 mlxlogscore=999 clxscore=1015 mlxscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2007150124
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The loop in lib/kobject_uevent.c that checked for KOBJ_MAX is no longer present, we do
-a much more sane ARRAY_SIZE() check instead (see 5c5daf657cb5).
-Therefore, the KOBJ_MAX is not used anymore.
+On Wed, Jul 15, 2020 at 11:02:58PM +0900, Tetsuo Handa wrote:
+> On 2020/07/15 20:17, Tetsuo Handa wrote:
+> > On 2020/07/15 18:48, Dan Carpenter wrote:
+> >>> @@ -216,7 +216,7 @@ static void bit_clear_margins(struct vc_data *vc, struct fb_info *info,
+> >>>  	region.color = color;
+> >>>  	region.rop = ROP_COPY;
+> >>>  
+> >>> -	if (rw && !bottom_only) {
+> >>> +	if ((int) rw > 0 && !bottom_only) {
+> >>>  		region.dx = info->var.xoffset + rs;
+> >>                             ^^^^^^^^^^^^^^^^^^^^^^
+> >>
+> >> If you choose a very high positive "rw" then this addition can overflow.
+> >> info->var.xoffset comes from the user and I don't think it's checked...
+> > 
+> > Well, I think it would be checked by "struct fb_ops"->check_var hook.
+> > For example, vmw_fb_check_var() has
+> > 
+> > 	if ((var->xoffset + var->xres) > par->max_width ||
+> > 	    (var->yoffset + var->yres) > par->max_height) {
+> > 		DRM_ERROR("Requested geom can not fit in framebuffer\n");
+> > 		return -EINVAL;
+> > 	}
+> > 
+> > check. Of course, there might be integer overflow in that check...
+> > Having sanity check at caller of "struct fb_ops"->check_var might be nice.
+> > 
+> 
+> Well, while
+> 
+>         const int fd = open("/dev/fb0", O_ACCMODE);
+>         struct fb_var_screeninfo var = { };
+>         ioctl(fd, FBIOGET_VSCREENINFO, &var);
+>         var.xres = var.yres = 4;
+>         var.xoffset = 4294967292U;
+>         ioctl(fd, FBIOPUT_VSCREENINFO, &var);
+> 
+> bypassed
+> 
+>   (var->xoffset + var->xres) > par->max_width
+> 
+> check in vmw_fb_check_var(),
+> 
+> ----------
+> --- a/drivers/video/fbdev/core/bitblit.c
+> +++ b/drivers/video/fbdev/core/bitblit.c
+> @@ -216,6 +216,7 @@ static void bit_clear_margins(struct vc_data *vc, struct fb_info *info,
+>         region.color = color;
+>         region.rop = ROP_COPY;
+> 
+> +       printk(KERN_INFO "%s info->var.xoffset=%u rs=%u info->var.yoffset=%u bs=%u\n", __func__, info->var.xoffset, rs, info->var.yoffset, bs);
+>         if ((int) rw > 0 && !bottom_only) {
+>                 region.dx = info->var.xoffset + rs;
+>                 region.dy = 0;
+> ----------
+> 
+> says that info->var.xoffset does not come from the user.
+> 
+> ----------
+>  bit_clear_margins info->var.xoffset=0 rs=1024 info->var.yoffset=0 bs=800
+> ----------
 
-Signed-off-by: Garrit Franke <garritfranke@gmail.com>
----
- include/linux/kobject.h | 1 -
- 1 file changed, 1 deletion(-)
+In fb_set_var() we do:
 
-diff --git a/include/linux/kobject.h b/include/linux/kobject.h
-index 6cba088bee24..ea30529fba08 100644
---- a/include/linux/kobject.h
-+++ b/include/linux/kobject.h
-@@ -59,7 +59,6 @@ enum kobject_action {
- 	KOBJ_OFFLINE,
- 	KOBJ_BIND,
- 	KOBJ_UNBIND,
--	KOBJ_MAX
- };
+drivers/video/fbdev/core/fbmem.c
+  1055          ret = info->fbops->fb_check_var(var, info);
+  1056  
+  1057          if (ret)
+  1058                  return ret;
+  1059  
+  1060          if ((var->activate & FB_ACTIVATE_MASK) != FB_ACTIVATE_NOW)
+  1061                  return 0;
+  1062  
+  1063          if (!basic_checks(var))
+  1064                  return -EINVAL;
+  1065  
+  1066          if (info->fbops->fb_get_caps) {
+  1067                  ret = fb_check_caps(info, var, var->activate);
+  1068  
+  1069                  if (ret)
+  1070                          return ret;
+  1071          }
+  1072  
+  1073          old_var = info->var;
+  1074          info->var = *var;
+                ^^^^^^^^^^^^^^^^
+This should set "info->var.offset".
+
+  1075  
+  1076          if (info->fbops->fb_set_par) {
+  1077                  ret = info->fbops->fb_set_par(info);
+  1078  
+  1079                  if (ret) {
+  1080                          info->var = old_var;
+  1081                          printk(KERN_WARNING "detected "
+
+I've complained about integer overflows in fbdev for a long time...
+
+What I'd like to see is something like the following maybe.  I don't
+know how to get the vc_data in fbmem.c so it doesn't include your checks
+for negative.
+
+diff --git a/drivers/video/fbdev/core/fbmem.c b/drivers/video/fbdev/core/fbmem.c
+index caf817bcb05c..5c74181fea5d 100644
+--- a/drivers/video/fbdev/core/fbmem.c
++++ b/drivers/video/fbdev/core/fbmem.c
+@@ -934,6 +934,54 @@ fb_pan_display(struct fb_info *info, struct fb_var_screeninfo *var)
+ }
+ EXPORT_SYMBOL(fb_pan_display);
  
- struct kobject {
--- 
-2.25.1
-
++static bool basic_checks(struct fb_var_screeninfo *var)
++{
++	unsigned int v_margins, h_margins;
++
++	/* I think var->height and var->width == UINT_MAX means something. */
++
++	if (var->xres > INT_MAX ||
++	    var->yres > INT_MAX ||
++	    var->xres_virtual > INT_MAX ||
++	    var->yres_virtual > INT_MAX ||
++	    var->xoffset > INT_MAX ||
++	    var->yoffset > INT_MAX ||
++	    var->left_margin > INT_MAX ||
++	    var->right_margin > INT_MAX ||
++	    var->upper_margin > INT_MAX ||
++	    var->lower_margin > INT_MAX ||
++	    var->hsync_len > INT_MAX ||
++	    var->vsync_len > INT_MAX)
++		return false;
++
++	if (var->bits_per_pixel > 128)
++		return false;
++	if (var->rotate > FB_ROTATE_CCW)
++		return false;
++
++	if (var->xoffset > INT_MAX - var->xres)
++		return false;
++	if (var->yoffset > INT_MAX - var->yres)
++		return false;
++
++	if (var->left_margin > INT_MAX - var->right_margin ||
++	    var->upper_margin > INT_MAX - var->lower_margin)
++		return false;
++
++	v_margins = var->left_margin + var->right_margin;
++	h_margins = var->upper_margin + var->lower_margin;
++
++	if (var->xres > INT_MAX - var->hsync_len ||
++	    var->yres > INT_MAX - var->vsync_len)
++		return false;
++
++	if (v_margins > INT_MAX - var->hsync_len - var->xres ||
++	    h_margins > INT_MAX - var->vsync_len - var->yres)
++		return false;
++
++	return true;
++}
++
+ static int fb_check_caps(struct fb_info *info, struct fb_var_screeninfo *var,
+ 			 u32 activate)
+ {
+@@ -1012,6 +1060,9 @@ fb_set_var(struct fb_info *info, struct fb_var_screeninfo *var)
+ 	if ((var->activate & FB_ACTIVATE_MASK) != FB_ACTIVATE_NOW)
+ 		return 0;
+ 
++	if (!basic_checks(var))
++		return -EINVAL;
++
+ 	if (info->fbops->fb_get_caps) {
+ 		ret = fb_check_caps(info, var, var->activate);
+ 
