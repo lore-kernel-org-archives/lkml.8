@@ -2,117 +2,199 @@ Return-Path: <SRS0=kup7=A2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23452C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 06:51:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B274C433E2
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 06:46:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0202D2068F
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 06:51:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594795888;
-	bh=5DttlarQkKvK74ioG6I0+VxDllg5IuyUP93tfyKyKgQ=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=QSYt5oCW+SzSgghve+uOHH4AozRQ2v7bgg+35S7I5K7MUjQd3FHtREOjO7UM1jA/Z
-	 +wj737o0xO4r2UThghhEsBfDfG3PbvYHXWtybEkC1v4TcJrVvFBcjbP33MbsdNVEBB
-	 um3IGEOo/8SuAVWw0phu8+yOUW/dZrha2UqA0iDk=
+	by mail.kernel.org (Postfix) with ESMTP id 2951220663
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 06:46:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=lixom-net.20150623.gappssmtp.com header.i=@lixom-net.20150623.gappssmtp.com header.b="D+l25n5b"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728885AbgGOGv0 (ORCPT
+        id S1728822AbgGOGq4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 02:51:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41166 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725924AbgGOGv0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 02:51:26 -0400
-Received: from mail-ot1-f52.google.com (mail-ot1-f52.google.com [209.85.210.52])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 574D32067D;
-        Wed, 15 Jul 2020 06:51:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594795885;
-        bh=5DttlarQkKvK74ioG6I0+VxDllg5IuyUP93tfyKyKgQ=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=Ng5t2TWJzvvsKlj8vhgNYrko2Y/LBVPSqVGt6VfuP/VXJ7kMpneB2xAI4nINZLpni
-         yvIwA6yaxpVwOtzCVOBJThcMsykaZjhWnPvYCjF5SL3kSv294DMupYqxVwiZL2LL3J
-         YOCbJDzS5uoJN1EmKaoSXNbV7qWobORB+Otw6uUs=
-Received: by mail-ot1-f52.google.com with SMTP id 72so676849otc.3;
-        Tue, 14 Jul 2020 23:51:25 -0700 (PDT)
-X-Gm-Message-State: AOAM531m8UphKIayCokYP4DDUt4ccuU1249SGBxc4p5XDdaToAQiwOEb
-        fnvz/cxkj6yD+c+Yrc4Bwj9+EKpOq3+CjJ5gWQM=
-X-Google-Smtp-Source: ABdhPJyOUv8yAnl6wxEUDJ3G0ggCymhEObpRdn/b7PFU4YR6YIR4dFTpLKjM9DtkyVqwv4c8oWhWQAbWJrxM6qgMY9U=
-X-Received: by 2002:a9d:7553:: with SMTP id b19mr7955857otl.77.1594795884664;
- Tue, 14 Jul 2020 23:51:24 -0700 (PDT)
+        Wed, 15 Jul 2020 02:46:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36376 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726971AbgGOGqz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jul 2020 02:46:55 -0400
+Received: from mail-il1-x142.google.com (mail-il1-x142.google.com [IPv6:2607:f8b0:4864:20::142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D71B7C061755
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 23:46:55 -0700 (PDT)
+Received: by mail-il1-x142.google.com with SMTP id i18so1039672ilk.10
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 23:46:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lixom-net.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=Ia+M7c1s6u4QzvRmg9F+yYUkSaBCxJOCiZePFvIuDVc=;
+        b=D+l25n5bcv1TSbCDuyiTk2BK9pkdINNUwW67aGOacRlIyk0ySLjsGWzDcPBj31btQV
+         uDr2HcZeXtm3d3NwwZOa3vRzLezh5c0YssPAMkbS4z+ueh4VLm6jhtIsezInCY+VOLYl
+         BWZMjKveeau7A9dBxlUHol1MsZAX4gMmGiQ22HEQSAMHuE1v8qFSSyrhqJ/IvSH0bD1O
+         mBebeftKbgCJRjoXd4nqNPwbuhndA7VOSBCMd+m7SUzXm4ERmEfKnrRO9kPL69Dl3KM4
+         KsO97+80nmLk1lFqu5rINAAxsAApi+EPfJlcn8P3YWd2UyctKlIKgf7jwSTcD25f0bRS
+         0frg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=Ia+M7c1s6u4QzvRmg9F+yYUkSaBCxJOCiZePFvIuDVc=;
+        b=cOtpgff2rF+AvYFd+byHQNLf5esscBfk0nwbO0eAYyfVlL7bNDE18o6e2VGOgBbL4N
+         UlgOq64PWWISCnVQ7SYOG3yv8dcfcK0JKnJz/D3JnP4JoBqalIu/w7JxJNI3S/al8SRB
+         OMv+XaovTzLviSoSU4YTxetPMkxYboXwepooDhRihVsygaIeOc4d3l6YB4wFb0mc+/70
+         Fp8g1o4KG1jE7qNeRn5s3/hpj85Gt8mwGEhJKFfm+k7dhWYiHCrUQwvrpPyJ4cHT9HNi
+         Ouwbk6I++6TnvvuFReUG/gu5BMYJtAGYkXhD9geP5W8mhHUTPfBzGUumzuGsyg04IV6w
+         PYEQ==
+X-Gm-Message-State: AOAM532gJ3fpwrDgiXJZjgr2IzvUh9zJd0pDOzmL2EIkGWB8m98X32cZ
+        HdUjGxPSCrZv/61rNPDUqTqMgzHYEwfG8ha4PFhUWw==
+X-Google-Smtp-Source: ABdhPJyNtTQ6tjiuB0fOsiGMKDn204hJD42fgcPc/S+ZwIlU4lbiCn47FJ7HiWLEM0DrOPmZUmzgdMVyttDg+xz5UnM=
+X-Received: by 2002:a92:49c3:: with SMTP id k64mr7793042ilg.278.1594795615165;
+ Tue, 14 Jul 2020 23:46:55 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200715032631.1562882-1-nivedita@alum.mit.edu>
-In-Reply-To: <20200715032631.1562882-1-nivedita@alum.mit.edu>
-From:   Ard Biesheuvel <ardb@kernel.org>
-Date:   Wed, 15 Jul 2020 09:51:12 +0300
-X-Gmail-Original-Message-ID: <CAMj1kXHzZAqHbqgJnrTjxtRvcVkpZan3LC6khFEucdR=cUhYfg@mail.gmail.com>
-Message-ID: <CAMj1kXHzZAqHbqgJnrTjxtRvcVkpZan3LC6khFEucdR=cUhYfg@mail.gmail.com>
-Subject: Re: [PATCH] arch/x86/boot: Don't add the EFI stub to targets
-To:     Arvind Sankar <nivedita@alum.mit.edu>
-Cc:     X86 ML <x86@kernel.org>, Masahiro Yamada <masahiroy@kernel.org>,
-        linux-kbuild@vger.kernel.org,
-        linux-efi <linux-efi@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <20200714145049.2496163-1-lee.jones@linaro.org>
+ <20200714145049.2496163-6-lee.jones@linaro.org> <CAOesGMjCZMyWLe+tpNFstC88odeSCKS8bM6Oj9cpaj6j7U94rQ@mail.gmail.com>
+ <20200715063311.GP1398296@dell>
+In-Reply-To: <20200715063311.GP1398296@dell>
+From:   Olof Johansson <olof@lixom.net>
+Date:   Tue, 14 Jul 2020 23:46:44 -0700
+Message-ID: <CAOesGMjnyq7iRQBopBQ2Dn7ziNGo4cjdKhceL0=gxrt1MuZY1g@mail.gmail.com>
+Subject: Re: [PATCH 05/13] cpufreq/arch: powerpc: pasemi: Move prototypes to
+ shared header
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        viresh kumar <viresh.kumar@linaro.org>,
+        Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-pm@vger.kernel.org, Michael Ellerman <mpe@ellerman.id.au>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 15 Jul 2020 at 06:26, Arvind Sankar <nivedita@alum.mit.edu> wrote:
+On Tue, Jul 14, 2020 at 11:33 PM Lee Jones <lee.jones@linaro.org> wrote:
 >
-> vmlinux-objs-y is added to targets, which currently means that the EFI
-> stub gets added to the targets as well. It shouldn't be added since it
-> is built elsewhere.
+> On Tue, 14 Jul 2020, Olof Johansson wrote:
 >
-> This confuses Makefile.build which interprets the EFI stub as a target
->         $(obj)/$(objtree)/drivers/firmware/efi/libstub/lib.a
-> and will create drivers/firmware/efi/libstub/ underneath
-> arch/x86/boot/compressed, to hold this supposed target, if building
-> out-of-tree. [0]
+> > On Tue, Jul 14, 2020 at 7:50 AM Lee Jones <lee.jones@linaro.org> wrote:
+> > >
+> > > If function callers and providers do not share the same prototypes th=
+e
+> > > compiler complains of missing prototypes.  Fix this by moving the
+> > > already existing prototypes out to a mutually convenient location.
+> > >
+> > > Fixes the following W=3D1 kernel build warning(s):
+> > >
+> > >  drivers/cpufreq/pasemi-cpufreq.c:109:5: warning: no previous prototy=
+pe for =E2=80=98check_astate=E2=80=99 [-Wmissing-prototypes]
+> > >  109 | int check_astate(void)
+> > >  | ^~~~~~~~~~~~
+> > >  drivers/cpufreq/pasemi-cpufreq.c:114:6: warning: no previous prototy=
+pe for =E2=80=98restore_astate=E2=80=99 [-Wmissing-prototypes]
+> > >  114 | void restore_astate(int cpu)
+> > >  | ^~~~~~~~~~~~~~
+> > >
+> > > Cc: Olof Johansson <olof@lixom.net>
+> > > Cc: Michael Ellerman <mpe@ellerman.id.au>
+> > > Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+> > > Cc: Paul Mackerras <paulus@samba.org>
+> > > Cc: linuxppc-dev@lists.ozlabs.org
+> > > Signed-off-by: Lee Jones <lee.jones@linaro.org>
+> > > ---
+> > >  arch/powerpc/platforms/pasemi/pasemi.h    | 15 ------------
+> > >  arch/powerpc/platforms/pasemi/powersave.S |  2 ++
+> > >  drivers/cpufreq/pasemi-cpufreq.c          |  1 +
+> > >  include/linux/platform_data/pasemi.h      | 28 +++++++++++++++++++++=
+++
+> > >  4 files changed, 31 insertions(+), 15 deletions(-)
+> > >  create mode 100644 include/linux/platform_data/pasemi.h
+> > >
+> > > diff --git a/arch/powerpc/platforms/pasemi/pasemi.h b/arch/powerpc/pl=
+atforms/pasemi/pasemi.h
+> > > index 70b56048ed1be..528d81ef748ad 100644
+> > > --- a/arch/powerpc/platforms/pasemi/pasemi.h
+> > > +++ b/arch/powerpc/platforms/pasemi/pasemi.h
+> > > @@ -15,21 +15,6 @@ extern void __init pasemi_map_registers(void);
+> > >  extern void idle_spin(void);
+> > >  extern void idle_doze(void);
+> > >
+> > > -/* Restore astate to last set */
+> > > -#ifdef CONFIG_PPC_PASEMI_CPUFREQ
+> > > -extern int check_astate(void);
+> > > -extern void restore_astate(int cpu);
+> > > -#else
+> > > -static inline int check_astate(void)
+> > > -{
+> > > -       /* Always return >0 so we never power save */
+> > > -       return 1;
+> > > -}
+> > > -static inline void restore_astate(int cpu)
+> > > -{
+> > > -}
+> > > -#endif
+> > > -
+> > >  extern struct pci_controller_ops pasemi_pci_controller_ops;
+> > >
+> > >  #endif /* _PASEMI_PASEMI_H */
+> > > diff --git a/arch/powerpc/platforms/pasemi/powersave.S b/arch/powerpc=
+/platforms/pasemi/powersave.S
+> > > index d0215d5329ca7..7747b48963286 100644
+> > > --- a/arch/powerpc/platforms/pasemi/powersave.S
+> > > +++ b/arch/powerpc/platforms/pasemi/powersave.S
+> > > @@ -5,6 +5,8 @@
+> > >   * Maintained by: Olof Johansson <olof@lixom.net>
+> > >   */
+> > >
+> > > +#include <linux/platform_data/pasemi.h>
+> > > +
+> > >  #include <asm/processor.h>
+> > >  #include <asm/page.h>
+> > >  #include <asm/ppc_asm.h>
+> > > diff --git a/drivers/cpufreq/pasemi-cpufreq.c b/drivers/cpufreq/pasem=
+i-cpufreq.c
+> > > index c66f566a854cb..c6bb3ecc90ef3 100644
+> > > --- a/drivers/cpufreq/pasemi-cpufreq.c
+> > > +++ b/drivers/cpufreq/pasemi-cpufreq.c
+> > > @@ -15,6 +15,7 @@
+> > >  #include <linux/timer.h>
+> > >  #include <linux/module.h>
+> > >  #include <linux/of_address.h>
+> > > +#include <linux/platform_data/pasemi.h>
+> > >
+> > >  #include <asm/hw_irq.h>
+> > >  #include <asm/io.h>
+> > > diff --git a/include/linux/platform_data/pasemi.h b/include/linux/pla=
+tform_data/pasemi.h
+> > > new file mode 100644
+> > > index 0000000000000..3fed0687fcc9a
+> > > --- /dev/null
+> > > +++ b/include/linux/platform_data/pasemi.h
+> > > @@ -0,0 +1,28 @@
+> > > +/* SPDX-License-Identifier: GPL-2.0-only */
+> > > +/*
+> > > + * Copyright (C) 2020 Linaro Ltd.
+> > > + *
+> > > + * Author: Lee Jones <lee.jones@linaro.org>
+> > > + */
+> >
+> > Absolutely not. It's neither your copyright, nor your authorship.
 >
-> Fix this by pulling the stub out of vmlinux-objs-y into efi-obj-y.
->
-> [0] See scripts/Makefile.build near the end:
->     # Create directories for object files if they do not exist
->
-> Signed-off-by: Arvind Sankar <nivedita@alum.mit.edu>
+> The file was new.  Anyway, the point is now moot.
 
-Acked-by: Ard Biesheuvel <ardb@kernel.org>
+The contents was copied and pasted from other material, not originally
+produced by you.
 
-> ---
->  arch/x86/boot/compressed/Makefile | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
->
-> diff --git a/arch/x86/boot/compressed/Makefile b/arch/x86/boot/compressed/Makefile
-> index 7619742f91c9..5a828fde7a42 100644
-> --- a/arch/x86/boot/compressed/Makefile
-> +++ b/arch/x86/boot/compressed/Makefile
-> @@ -90,8 +90,8 @@ endif
->
->  vmlinux-objs-$(CONFIG_ACPI) += $(obj)/acpi.o
->
-> -vmlinux-objs-$(CONFIG_EFI_STUB) += $(objtree)/drivers/firmware/efi/libstub/lib.a
->  vmlinux-objs-$(CONFIG_EFI_MIXED) += $(obj)/efi_thunk_$(BITS).o
-> +efi-obj-$(CONFIG_EFI_STUB) = $(objtree)/drivers/firmware/efi/libstub/lib.a
->
->  # The compressed kernel is built with -fPIC/-fPIE so that a boot loader
->  # can place it anywhere in memory and it will still run. However, since
-> @@ -115,7 +115,7 @@ endef
->  quiet_cmd_check-and-link-vmlinux = LD      $@
->        cmd_check-and-link-vmlinux = $(cmd_check_data_rel); $(cmd_ld)
->
-> -$(obj)/vmlinux: $(vmlinux-objs-y) FORCE
-> +$(obj)/vmlinux: $(vmlinux-objs-y) $(efi-obj-y) FORCE
->         $(call if_changed,check-and-link-vmlinux)
->
->  OBJCOPYFLAGS_vmlinux.bin :=  -R .comment -S
-> --
-> 2.26.2
->
+I suggest you consult with Linaro lawyers on how to handle this if you
+have to do something like it in the future.
+
+
+-Olof
