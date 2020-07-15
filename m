@@ -2,264 +2,111 @@ Return-Path: <SRS0=kup7=A2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44C3FC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 15:12:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA599C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 15:13:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 179F120658
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 15:12:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 88CA420658
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 15:13:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="HSR188X/"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HjIdtSu3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726101AbgGOPMq (ORCPT
+        id S1726402AbgGOPNd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 11:12:46 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:43588 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725792AbgGOPMp (ORCPT
+        Wed, 15 Jul 2020 11:13:33 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:46936 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725835AbgGOPNc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 11:12:45 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06FF38MP145934;
-        Wed, 15 Jul 2020 15:12:31 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2020-01-29;
- bh=0JkdM7OaeZKo/wNUM2SyUi9gk7ZssmR/pU76UHP9/Xc=;
- b=HSR188X/Hvk1zLPBJUb3Cd8Tr9EvT8gzYNdB5JVap9w0llK7ChDwTWd9GTbydK5PdEaj
- xnxOud9i8FHXezvhiFuWLUwJWzJOvWVzkaSR06zmfxsAylJnayEgQayKc0jqldoeW8Uy
- h4+/JxUbHlciV5waMwe3uMv6XcmPXMyC7eyIl79SKtkV4Jcxfn5nbsygYWv3JNY7ETHj
- NMVYgO6EtrYsM63+i+0ubS9JEdPQB8aKUzXKUm6eIQ+0fYuWNTJv1Ex0s/PfRgLr0kGF
- u3wM0pZkfvkLUtMBaj3dQQVXN0DHpRJm0gbgDISho8UwH5Lhp7p7+L8MqJOQbyD9X/Dm DA== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by aserp2120.oracle.com with ESMTP id 3275cmc051-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 15 Jul 2020 15:12:31 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06FF3eFq126116;
-        Wed, 15 Jul 2020 15:12:30 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by userp3020.oracle.com with ESMTP id 327q6up5jp-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 15 Jul 2020 15:12:30 +0000
-Received: from abhmp0005.oracle.com (abhmp0005.oracle.com [141.146.116.11])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 06FFCSA3023623;
-        Wed, 15 Jul 2020 15:12:28 GMT
-Received: from kadam (/41.57.98.10)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 15 Jul 2020 08:12:28 -0700
-Date:   Wed, 15 Jul 2020 18:12:20 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
-Cc:     Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        George Kennedy <george.kennedy@oracle.com>,
-        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        syzbot <syzbot+e5fd3e65515b48c02a30@syzkaller.appspotmail.com>
-Subject: Re: [PATCH v2] fbdev: Detect integer underflow at "struct
- fbcon_ops"->clear_margins.
-Message-ID: <20200715151220.GE2571@kadam>
-References: <adff5d10-fe35-62d4-74c5-182958c5ada7@i-love.sakura.ne.jp>
- <20200715015102.3814-1-penguin-kernel@I-love.SAKURA.ne.jp>
- <20200715094836.GD2571@kadam>
- <9e6eac10-c5c3-f518-36cc-9ea32fb5d7fe@i-love.sakura.ne.jp>
- <b50f85c7-80e5-89c5-0aca-31d8e9892665@i-love.sakura.ne.jp>
+        Wed, 15 Jul 2020 11:13:32 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1594826011;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=SLr4XU8Zt9nR4MhV7pccKhkMvz8sYtWmhpN/hWtv1I8=;
+        b=HjIdtSu3TbqrW8Y7vX/kDOuW3LpJmfcGE/r+ZrvTwNW2f4tfVrQbYIH1n5ac3+0aO0FvD/
+        u3aZyyKX6VkKURVX/9+4//rb+xa4QwShSISc6dRyAzWAY7DccWBsOgZtkbEN7QfP2c3LkI
+        9hVnaGdaU809nEWgkxLZRpa6ukb/yI8=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-428-mZSMVSBVMIe8Af8C462YOA-1; Wed, 15 Jul 2020 11:13:08 -0400
+X-MC-Unique: mZSMVSBVMIe8Af8C462YOA-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 5C43A800597;
+        Wed, 15 Jul 2020 15:13:06 +0000 (UTC)
+Received: from oldenburg2.str.redhat.com (ovpn-112-228.ams2.redhat.com [10.36.112.228])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id CA32379D06;
+        Wed, 15 Jul 2020 15:13:00 +0000 (UTC)
+From:   Florian Weimer <fweimer@redhat.com>
+To:     Carlos O'Donell <carlos@redhat.com>
+Cc:     Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        "Paul E . McKenney" <paulmck@linux.ibm.com>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        "H . Peter Anvin" <hpa@zytor.com>, Paul Turner <pjt@google.com>,
+        linux-api@vger.kernel.org,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        Florian Weimer <fw@deneb.enyo.de>
+Subject: Re: [RFC PATCH 0/4] rseq: Introduce extensible struct rseq
+References: <20200714030348.6214-1-mathieu.desnoyers@efficios.com>
+        <e7ede994-ebec-8022-b12b-ac7147641ffb@redhat.com>
+Date:   Wed, 15 Jul 2020 17:12:59 +0200
+In-Reply-To: <e7ede994-ebec-8022-b12b-ac7147641ffb@redhat.com> (Carlos
+        O'Donell's message of "Tue, 14 Jul 2020 16:55:11 -0400")
+Message-ID: <87a700zu9w.fsf@oldenburg2.str.redhat.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.3 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <b50f85c7-80e5-89c5-0aca-31d8e9892665@i-love.sakura.ne.jp>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9683 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 suspectscore=0
- phishscore=0 malwarescore=0 mlxlogscore=999 bulkscore=0 mlxscore=0
- spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2007150124
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9683 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 priorityscore=1501
- bulkscore=0 adultscore=0 lowpriorityscore=0 phishscore=0 spamscore=0
- impostorscore=0 malwarescore=0 mlxlogscore=999 clxscore=1015 mlxscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2007150124
+Content-Type: text/plain
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 15, 2020 at 11:02:58PM +0900, Tetsuo Handa wrote:
-> On 2020/07/15 20:17, Tetsuo Handa wrote:
-> > On 2020/07/15 18:48, Dan Carpenter wrote:
-> >>> @@ -216,7 +216,7 @@ static void bit_clear_margins(struct vc_data *vc, struct fb_info *info,
-> >>>  	region.color = color;
-> >>>  	region.rop = ROP_COPY;
-> >>>  
-> >>> -	if (rw && !bottom_only) {
-> >>> +	if ((int) rw > 0 && !bottom_only) {
-> >>>  		region.dx = info->var.xoffset + rs;
-> >>                             ^^^^^^^^^^^^^^^^^^^^^^
-> >>
-> >> If you choose a very high positive "rw" then this addition can overflow.
-> >> info->var.xoffset comes from the user and I don't think it's checked...
-> > 
-> > Well, I think it would be checked by "struct fb_ops"->check_var hook.
-> > For example, vmw_fb_check_var() has
-> > 
-> > 	if ((var->xoffset + var->xres) > par->max_width ||
-> > 	    (var->yoffset + var->yres) > par->max_height) {
-> > 		DRM_ERROR("Requested geom can not fit in framebuffer\n");
-> > 		return -EINVAL;
-> > 	}
-> > 
-> > check. Of course, there might be integer overflow in that check...
-> > Having sanity check at caller of "struct fb_ops"->check_var might be nice.
-> > 
-> 
-> Well, while
-> 
->         const int fd = open("/dev/fb0", O_ACCMODE);
->         struct fb_var_screeninfo var = { };
->         ioctl(fd, FBIOGET_VSCREENINFO, &var);
->         var.xres = var.yres = 4;
->         var.xoffset = 4294967292U;
->         ioctl(fd, FBIOPUT_VSCREENINFO, &var);
-> 
-> bypassed
-> 
->   (var->xoffset + var->xres) > par->max_width
-> 
-> check in vmw_fb_check_var(),
-> 
-> ----------
-> --- a/drivers/video/fbdev/core/bitblit.c
-> +++ b/drivers/video/fbdev/core/bitblit.c
-> @@ -216,6 +216,7 @@ static void bit_clear_margins(struct vc_data *vc, struct fb_info *info,
->         region.color = color;
->         region.rop = ROP_COPY;
-> 
-> +       printk(KERN_INFO "%s info->var.xoffset=%u rs=%u info->var.yoffset=%u bs=%u\n", __func__, info->var.xoffset, rs, info->var.yoffset, bs);
->         if ((int) rw > 0 && !bottom_only) {
->                 region.dx = info->var.xoffset + rs;
->                 region.dy = 0;
-> ----------
-> 
-> says that info->var.xoffset does not come from the user.
-> 
-> ----------
->  bit_clear_margins info->var.xoffset=0 rs=1024 info->var.yoffset=0 bs=800
-> ----------
+* Carlos O'Donell:
 
-In fb_set_var() we do:
+> On 7/13/20 11:03 PM, Mathieu Desnoyers wrote:
+>> Recent discussion led to a solution for extending struct rseq. This is
+>> an implementation of the proposed solution.
+>> 
+>> Now is a good time to agree on this scheme before the release of glibc
+>> 2.32, just in case there are small details to fix on the user-space
+>> side in order to allow extending struct rseq.
+>
+> Adding extensibility to the rseq registration process would be great,
+> but we are out of time for the glibc 2.32 release.
+>
+> Should we revert rseq for glibc 2.32 and spend quality time discussing
+> the implications of an extensible design, something that Google already
+> says they are doing?
+>
+> We can, with a clear head, and an agreed upon extension mechanism
+> include rseq in glibc 2.33 (release scheduled for Feburary 1st 2021).
+> We release time boxed every 6 months, no deviation, so you know when
+> your next merge window will be.
+>
+> We have already done the hard work of fixing the nesting signal
+> handler issues, and glibc integration. If we revert today that will 
+> also give time for Firefox and Chrome to adjust their sandboxes.
+>
+> Do you wish to go forward with rseq as we have it in glibc 2.32,
+> or do you wish to revert rseq from glibc 2.32, discuss the extension
+> mechanism, and put it back into glibc 2.33 with adjustments?
 
-drivers/video/fbdev/core/fbmem.c
-  1055          ret = info->fbops->fb_check_var(var, info);
-  1056  
-  1057          if (ret)
-  1058                  return ret;
-  1059  
-  1060          if ((var->activate & FB_ACTIVATE_MASK) != FB_ACTIVATE_NOW)
-  1061                  return 0;
-  1062  
-  1063          if (!basic_checks(var))
-  1064                  return -EINVAL;
-  1065  
-  1066          if (info->fbops->fb_get_caps) {
-  1067                  ret = fb_check_caps(info, var, var->activate);
-  1068  
-  1069                  if (ret)
-  1070                          return ret;
-  1071          }
-  1072  
-  1073          old_var = info->var;
-  1074          info->var = *var;
-                ^^^^^^^^^^^^^^^^
-This should set "info->var.offset".
+I posted the glibc revert:
 
-  1075  
-  1076          if (info->fbops->fb_set_par) {
-  1077                  ret = info->fbops->fb_set_par(info);
-  1078  
-  1079                  if (ret) {
-  1080                          info->var = old_var;
-  1081                          printk(KERN_WARNING "detected "
+  <https://sourceware.org/pipermail/libc-alpha/2020-July/116368.html>
 
-I've complained about integer overflows in fbdev for a long time...
+I do not think we have any other choice at this point.
 
-What I'd like to see is something like the following maybe.  I don't
-know how to get the vc_data in fbmem.c so it doesn't include your checks
-for negative.
+Thanks,
+Florian
 
-diff --git a/drivers/video/fbdev/core/fbmem.c b/drivers/video/fbdev/core/fbmem.c
-index caf817bcb05c..5c74181fea5d 100644
---- a/drivers/video/fbdev/core/fbmem.c
-+++ b/drivers/video/fbdev/core/fbmem.c
-@@ -934,6 +934,54 @@ fb_pan_display(struct fb_info *info, struct fb_var_screeninfo *var)
- }
- EXPORT_SYMBOL(fb_pan_display);
- 
-+static bool basic_checks(struct fb_var_screeninfo *var)
-+{
-+	unsigned int v_margins, h_margins;
-+
-+	/* I think var->height and var->width == UINT_MAX means something. */
-+
-+	if (var->xres > INT_MAX ||
-+	    var->yres > INT_MAX ||
-+	    var->xres_virtual > INT_MAX ||
-+	    var->yres_virtual > INT_MAX ||
-+	    var->xoffset > INT_MAX ||
-+	    var->yoffset > INT_MAX ||
-+	    var->left_margin > INT_MAX ||
-+	    var->right_margin > INT_MAX ||
-+	    var->upper_margin > INT_MAX ||
-+	    var->lower_margin > INT_MAX ||
-+	    var->hsync_len > INT_MAX ||
-+	    var->vsync_len > INT_MAX)
-+		return false;
-+
-+	if (var->bits_per_pixel > 128)
-+		return false;
-+	if (var->rotate > FB_ROTATE_CCW)
-+		return false;
-+
-+	if (var->xoffset > INT_MAX - var->xres)
-+		return false;
-+	if (var->yoffset > INT_MAX - var->yres)
-+		return false;
-+
-+	if (var->left_margin > INT_MAX - var->right_margin ||
-+	    var->upper_margin > INT_MAX - var->lower_margin)
-+		return false;
-+
-+	v_margins = var->left_margin + var->right_margin;
-+	h_margins = var->upper_margin + var->lower_margin;
-+
-+	if (var->xres > INT_MAX - var->hsync_len ||
-+	    var->yres > INT_MAX - var->vsync_len)
-+		return false;
-+
-+	if (v_margins > INT_MAX - var->hsync_len - var->xres ||
-+	    h_margins > INT_MAX - var->vsync_len - var->yres)
-+		return false;
-+
-+	return true;
-+}
-+
- static int fb_check_caps(struct fb_info *info, struct fb_var_screeninfo *var,
- 			 u32 activate)
- {
-@@ -1012,6 +1060,9 @@ fb_set_var(struct fb_info *info, struct fb_var_screeninfo *var)
- 	if ((var->activate & FB_ACTIVATE_MASK) != FB_ACTIVATE_NOW)
- 		return 0;
- 
-+	if (!basic_checks(var))
-+		return -EINVAL;
-+
- 	if (info->fbops->fb_get_caps) {
- 		ret = fb_check_caps(info, var, var->activate);
- 
