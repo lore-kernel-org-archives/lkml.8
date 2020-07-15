@@ -2,180 +2,86 @@ Return-Path: <SRS0=kup7=A2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B273C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 06:27:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6474C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 06:28:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 757FA2067D
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 06:27:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B88920672
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 06:28:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="gFQ0jjKd"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Tz7UqrAU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728707AbgGOG1Y (ORCPT
+        id S1728169AbgGOG2k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 02:27:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33326 "EHLO
+        Wed, 15 Jul 2020 02:28:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33536 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728688AbgGOG1X (ORCPT
+        with ESMTP id S1725823AbgGOG2k (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 02:27:23 -0400
-Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2577DC061755
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 23:27:23 -0700 (PDT)
-Received: by mail-lj1-x242.google.com with SMTP id h22so1247311lji.9
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Jul 2020 23:27:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=PJzQ6C5etwDQHSi7DhcVYIwc+Qw2lPx1DzppZhJZzF8=;
-        b=gFQ0jjKdytUBmHCTdUeIywxJqRPut7uAw/seKwSMTETRW0zuBPA/3c08CXMdM7pVs1
-         3P3Yp1z0JBYtOUZy9ks0rASnRoGZNwFZnFKu6U3PikDaGoXlKiCjwxlnX6oviP1HAk/h
-         tbA/sQ18KLZWwmcAPOBgXKchC9q6N+8n/bzJTUdiRdazQIL0oOJ4ytfKLm1QScpma+3U
-         jomrtZiiZM5aq2ncdgRHnR2p+PXv7fJRAoxaZ3WPJnE4tBAhqx6bsh+aojr8BiJwGLKQ
-         XJaB0EkLFY7FaWC4S+xB4hOavceqQIhVfH98Izk2tIIHb9o5XRI9Tre5gVkP9ZSPRHuP
-         iCQw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=PJzQ6C5etwDQHSi7DhcVYIwc+Qw2lPx1DzppZhJZzF8=;
-        b=P0S0qWtRmNaCvGyNtfxyo+ori+fJnXS4qS0B9fvE3dw6pmWNeAL6b2ymBQ5vEu5VXm
-         qpFF9iSlIF+CwGmmVD+Coo8BNkBJBogLbMVq5yl2C+ayGAlXm/5gnZqXIpdb6vIWAOrA
-         ykVHMd0hf9oZT60FJ6vEducMYwsteStasi8LDLF0Ehn6crorNbt0ZM+GHWBw8uZ5pHpO
-         uhhMgdAVapdggX3Mmn02AXgQCp6w/z5DuoqxpJkS2OPlnn7kb3YDQ9Tw0UMxEH11U0SE
-         KZ1Uoc+dAqmIQu9kU8oOSVGJKYdiujZdIRC1gGzgVo5m89NjPLEEn7a6g1/8KQ9DBSrF
-         sT0A==
-X-Gm-Message-State: AOAM533IbL7occbpLxpD3LsPt5PG80isM4BwRiLGudZdVHcR5NLZJYjJ
-        nbkDcZ02StMuGyacZ1xThKufJilhPI6kI7UVFMqLZA==
-X-Google-Smtp-Source: ABdhPJxB/h5ZZI6qtvUaf2IQPkAuV1D7Mz80yAR+8Beqkb7bSTeVTs7ktXvRmAhPgHpKS9QvSqW2OFczUFpTTF0rZdw=
-X-Received: by 2002:a2e:9857:: with SMTP id e23mr4226879ljj.411.1594794441480;
- Tue, 14 Jul 2020 23:27:21 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200714184115.844176932@linuxfoundation.org>
-In-Reply-To: <20200714184115.844176932@linuxfoundation.org>
-From:   Naresh Kamboju <naresh.kamboju@linaro.org>
-Date:   Wed, 15 Jul 2020 11:57:10 +0530
-Message-ID: <CA+G9fYs_6hgdEUaM3hJ9QzH0R0_qvXkQ4a0oUVMPGN9qfMdGGQ@mail.gmail.com>
-Subject: Re: [PATCH 5.7 000/166] 5.7.9-rc1 review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     open list <linux-kernel@vger.kernel.org>,
+        Wed, 15 Jul 2020 02:28:40 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BF494C061755;
+        Tue, 14 Jul 2020 23:28:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=pvO4ic3x1AyoT4qNI92vdeMOnJXAMHSBZQ7RBY+0sE0=; b=Tz7UqrAUHQyZfyJrdxR+5kr7A2
+        75r73ERji5D37LsDIzj2PSfbzlkjdwQ0bfWt+87Z//LUyWH83Ao0/E2pwRD9m+OgP0HQVH88DhoEz
+        XTIgAJZF/7g0p46Q775/HTeQXeg+3OP+9mbkXXMet6mLmNUHTJKyo0JOIBVAKZ+pBIgDtbnHWhrmV
+        I3gKqOBZNdXfBuQ1yWEX24+q9qrVli66jaSYYPh4XwQjfqOcrii39Rzs0eyHM6UF3RQJEN522CoCY
+        UT0uMWTaqR9Lr3xLTbyTi3KhW6bXX89jIFtWxCqTZSk8msKl7xgIgrtr+MpA0t5hdVPHLe1pKRMKU
+        hFfKcJOQ==;
+Received: from hch by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jvau4-0000YM-3A; Wed, 15 Jul 2020 06:28:28 +0000
+Date:   Wed, 15 Jul 2020 07:28:27 +0100
+From:   Christoph Hellwig <hch@infradead.org>
+To:     "Eric W. Biederman" <ebiederm@xmission.com>
+Cc:     linux-kernel@vger.kernel.org,
         Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>,
-        lkft-triage@lists.linaro.org,
-        linux- stable <stable@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Kees Cook <keescook@chromium.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        linux-fsdevel@vger.kernel.org,
+        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
+        linux-security-module@vger.kernel.org,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        James Morris <jmorris@namei.org>,
+        Kentaro Takeda <takedakn@nttdata.co.jp>,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        John Johansen <john.johansen@canonical.com>,
+        Christoph Hellwig <hch@infradead.org>
+Subject: Re: [PATCH 1/7] exec: Remove unnecessary spaces from binfmts.h
+Message-ID: <20200715062827.GA32470@infradead.org>
+References: <871rle8bw2.fsf@x220.int.ebiederm.org>
+ <87v9iq6x9x.fsf@x220.int.ebiederm.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87v9iq6x9x.fsf@x220.int.ebiederm.org>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 15 Jul 2020 at 00:23, Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> This is the start of the stable review cycle for the 5.7.9 release.
-> There are 166 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
->
-> Responses should be made by Thu, 16 Jul 2020 18:40:38 +0000.
-> Anything received after that time might be too late.
->
-> The whole patch series can be found in one patch at:
->         https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-=
-5.7.9-rc1.gz
-> or in the git tree and branch at:
->         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
--rc.git linux-5.7.y
-> and the diffstat can be found below.
->
-> thanks,
->
-> greg k-h
+On Tue, Jul 14, 2020 at 08:28:42AM -0500, Eric W. Biederman wrote:
+> 
+> The general convention in the linux kernel is to define a pointer
+> member as "type *name".  The declaration of struct linux_binprm has
+> several pointer defined as "type * name".  Update them to the
+> form of "type *name" for consistency.
+> 
+> Suggested-by: Kees Cook <keescook@chromium.org>
+> Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
 
-Results from Linaro=E2=80=99s test farm.
-No regressions on arm64, arm, x86_64, and i386.
+Looks good,
 
-Summary
-------------------------------------------------------------------------
-
-kernel: 5.7.9-rc1
-git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
-le-rc.git
-git branch: linux-5.7.y
-git commit: c2fb28a4b6e42b090d478b30aab47f3fef177964
-git describe: v5.7.8-167-gc2fb28a4b6e4
-Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-5.7-oe/bui=
-ld/v5.7.8-167-gc2fb28a4b6e4
-
-
-No regressions (compared to build v5.7.8)
-
-
-No fixes (compared to build v5.7.8)
-
-Ran 33472 total tests in the following environments and test suites.
-
-Environments
---------------
-- dragonboard-410c
-- hi6220-hikey
-- i386
-- juno-r2
-- juno-r2-compat
-- juno-r2-kasan
-- nxp-ls2088
-- qemu_arm
-- qemu_arm64
-- qemu_i386
-- qemu_x86_64
-- x15
-- x86
-- x86-kasan
-
-Test Suites
------------
-* build
-* install-android-platform-tools-r2800
-* libhugetlbfs
-* linux-log-parser
-* ltp-containers-tests
-* ltp-dio-tests
-* ltp-fcntl-locktests-tests
-* ltp-filecaps-tests
-* ltp-fs_bind-tests
-* ltp-fs_perms_simple-tests
-* ltp-fsx-tests
-* ltp-hugetlb-tests
-* ltp-io-tests
-* ltp-mm-tests
-* ltp-nptl-tests
-* ltp-pty-tests
-* ltp-sched-tests
-* ltp-securebits-tests
-* ltp-syscalls-tests
-* v4l2-compliance
-* ltp-cap_bounds-tests
-* ltp-commands-tests
-* ltp-cpuhotplug-tests
-* ltp-crypto-tests
-* ltp-math-tests
-* network-basic-tests
-* ltp-controllers-tests
-* ltp-cve-tests
-* ltp-fs-tests
-* ltp-ipc-tests
-* ltp-open-posix-tests
-* kvm-unit-tests
-
---=20
-Linaro LKFT
-https://lkft.linaro.org
+Reviewed-by: Christoph Hellwig <hch@lst.de>
