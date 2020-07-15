@@ -2,117 +2,123 @@ Return-Path: <SRS0=kup7=A2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A78FC433FB
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 15:08:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA55FC433E4
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 15:08:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6A70720658
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 15:08:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="bUXUkD3l"
+	by mail.kernel.org (Postfix) with ESMTP id 9994D20658
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 15:08:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728280AbgGOPI3 (ORCPT
+        id S1728336AbgGOPIo convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 11:08:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57470 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728268AbgGOPI3 (ORCPT
+        Wed, 15 Jul 2020 11:08:44 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:50309 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728314AbgGOPIl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 11:08:29 -0400
-Received: from mail-io1-xd41.google.com (mail-io1-xd41.google.com [IPv6:2607:f8b0:4864:20::d41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 07DE1C061755
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 08:08:29 -0700 (PDT)
-Received: by mail-io1-xd41.google.com with SMTP id p205so2560366iod.8
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 08:08:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=Nv9vjEvfHuWgzOSTm31gduIcyNjGsqlPyVwRk5nczoY=;
-        b=bUXUkD3lLd7CHIozSS1/iIJPQyuZ6XiRImkOzjZFuEKQYveJa8bvjkII4VrHqfCqMU
-         kuH0pRPkIg7ziheSSHRqmgaCLg+h687dh1YSYtlAy/Oe40JhyvgtSpkpIJNObK4UHNk3
-         w8LIPDDexzUbBOc2wL97+8+aAqyXbHRwE92d91l7W+RqFxlA+WdSZTMS/UrFz4RJpqG6
-         qvYqRMcCBkudZwWItAJdGZ7pehhefaPhbvpdXWcL1BdR0CHkq8il16cFJanrVGhGPT/X
-         fvL3TrLvlSDCPgwwGI4UvyjwtlSyFSYDh0IyRCGSOpc7hzToCvCY9IIn2NgeGNMzoVgl
-         lhNg==
+        Wed, 15 Jul 2020 11:08:41 -0400
+Received: from mail-pj1-f71.google.com ([209.85.216.71])
+        by youngberry.canonical.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <kai.heng.feng@canonical.com>)
+        id 1jvj1S-0003xT-HQ
+        for linux-kernel@vger.kernel.org; Wed, 15 Jul 2020 15:08:38 +0000
+Received: by mail-pj1-f71.google.com with SMTP id k4so2988101pjs.1
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 08:08:38 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=Nv9vjEvfHuWgzOSTm31gduIcyNjGsqlPyVwRk5nczoY=;
-        b=diwiz/vqtYp3OlpXUXvYNxgSqyJBYFFFqwK8/kMjNaY8Zan/yocCEUggRkMpYDmd8Y
-         WhwLJjY+VNcSXo6jv7lBMtzRhYxX+nyuWHiwZ4p4FG5jlS17nHzWyQ+T4zIU3y2wlCaZ
-         ypVEeSnsi21e30k4UpOcfSx9l2Fp2uPumqrZzhmjvrgW0BSPWSypKfIGqiSA+c8/uNj5
-         eaWsjznYYc655BhQ+5doqU9v9fHnFtYswpsqcHUZf9IO6/wxzBic7Xcl/zkPbZYLCF7D
-         QdXW6TzdjVZbB9k7GMBHQa5vP7d7owsvKheGJGRCs53z9Yo8XOEFYaRonC475M5eisMq
-         Na2A==
-X-Gm-Message-State: AOAM530+0Ghk10gEfXV/6wKlRQ9r+pfpr7jw84kA/uWaIlNgHFy0hZhn
-        mmf8zYQso1+gqPiZJXK/ME2MDAwVWRK5Bg==
-X-Google-Smtp-Source: ABdhPJzdiEqUABXsSiG1oRYxRlOkdtBGQtYGSyurLmSFVJmSliG4jn3im7aBaoRs2jNie6rFFZhMWQ==
-X-Received: by 2002:a05:6638:2172:: with SMTP id p18mr12320831jak.63.1594825707956;
-        Wed, 15 Jul 2020 08:08:27 -0700 (PDT)
-Received: from [192.168.1.58] ([65.144.74.34])
-        by smtp.gmail.com with ESMTPSA id f206sm1205356ilh.75.2020.07.15.08.08.27
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 15 Jul 2020 08:08:27 -0700 (PDT)
-Subject: Re: linux-next: build failure after merge of the block tree
-To:     Geert Uytterhoeven <geert@linux-m68k.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-References: <20200715121423.6c20731b@canb.auug.org.au>
- <CAMuHMdWMmP_YHEwnqmuTMw4-+LSieRaSHeqPLYLZyLq+O7zhyQ@mail.gmail.com>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <6bc36827-83a7-3695-530d-4b90c08b92c7@kernel.dk>
-Date:   Wed, 15 Jul 2020 09:08:26 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
-MIME-Version: 1.0
-In-Reply-To: <CAMuHMdWMmP_YHEwnqmuTMw4-+LSieRaSHeqPLYLZyLq+O7zhyQ@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=PjMy4io7R2jHdSWxArusOtwgBaqFTbEYz/sY2JlYP5w=;
+        b=VDm9oHSOK4Gfv7ZNZ4y6W9KfK0mbeY1reXNDCjbNZKi/R9LhOt4q+Pw+1fRTSeyDZ5
+         ZmMC1m+dUwZ3Hynd9GnwCufRJHxi7CevSDQXaK5VgKHCkxqK+l24tzjCr/sQ5a0XnHvp
+         ujyFuEf2lmTqrynV5RmlPRZtoyLqnIoGbnGqSGWHQsMFwQpT1AJiACifaFHT+eO5Gc49
+         QRSWAENrkeAQJF9UycWpOHCsIka7h1T59Dn2XsSFEkwVXWGVpIrV0d1gfRy0KDcckN4j
+         PVQ7dxKGNOIOofFgeE94DXALMGLJVh5AsLSM1mvFxcPFqB2oS5SXrskKPwRgCulxfQbH
+         lG1w==
+X-Gm-Message-State: AOAM530QTRQUnx4qR+c3pka4Z1BDFENgzE3rydcFD6Hfngf348isT3wI
+        V8Fx1pbV4UwMWFTzHQC5Jsgle+VznBTLeR6iI6Iso4dSCwqRAqHTWo+biq2nM5keEy7O72O2X7N
+        gOa1AYX1XPXin8BSL4epf8IBcynz/y/P3Vit7pfjRAA==
+X-Received: by 2002:a17:90a:3002:: with SMTP id g2mr108796pjb.68.1594825717130;
+        Wed, 15 Jul 2020 08:08:37 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJyeaLMdNxhmgRLyUdtuuy7GErTF8uag+bSGeUBRnl/y7/ExiAOI6J/b8SmUhYYGsqLrNQjV8w==
+X-Received: by 2002:a17:90a:3002:: with SMTP id g2mr108775pjb.68.1594825716853;
+        Wed, 15 Jul 2020 08:08:36 -0700 (PDT)
+Received: from [192.168.1.208] (220-133-187-190.HINET-IP.hinet.net. [220.133.187.190])
+        by smtp.gmail.com with ESMTPSA id 7sm2467724pgw.85.2020.07.15.08.08.35
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 15 Jul 2020 08:08:36 -0700 (PDT)
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.80.23.2.2\))
+Subject: Re: [Regression] "SUNRPC: Add "@len" parameter to gss_unwrap()"
+ breaks NFS Kerberos on upstream stable 5.4.y
+From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
+In-Reply-To: <424D9E36-C51B-46E8-9A07-D329821F2647@oracle.com>
+Date:   Wed, 15 Jul 2020 23:08:33 +0800
+Cc:     matthew.ruffell@canonical.com,
+        linux-stable <stable@vger.kernel.org>,
+        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
+        "open list:NETWORKING DRIVERS" <netdev@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Content-Transfer-Encoding: 8BIT
+Message-Id: <6E0D09F1-601B-432B-81EE-9858EC1AF1DE@canonical.com>
+References: <309E203B-8818-4E33-87F0-017E127788E2@canonical.com>
+ <424D9E36-C51B-46E8-9A07-D329821F2647@oracle.com>
+To:     Chuck Lever <chuck.lever@oracle.com>
+X-Mailer: Apple Mail (2.3608.80.23.2.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/15/20 3:24 AM, Geert Uytterhoeven wrote:
-> On Wed, Jul 15, 2020 at 4:26 AM Stephen Rothwell <sfr@canb.auug.org.au> wrote:
->> After merging the block tree, today's linux-next build (arm
->> multi_v7_defconfig) failed like this:
->>
->> block/blk-timeout.c: In function 'blk_round_jiffies':
->> block/blk-timeout.c:96:14: error: 'CONFIG_HZ_ROUGH_MASK' undeclared (first use in this function)
->>    96 |  return (j + CONFIG_HZ_ROUGH_MASK) + 1;
->>       |              ^~~~~~~~~~~~~~~~~~~~
->>
->> Caused by commit
->>
->>   91ba0f529364 ("block: relax jiffies rounding for timeouts")
->>
->> CONFIG_HZ_ROUGH_MASK is not defined for this build even though
->> CONFIG_HZ_100 is set. The arm arch does not include kernel/Kconfig.hz.
->>
->> I have reverted that commit for today.
-> 
-> (as I don't have the original patch in my email, I'm commenting here)
-> 
->     +config HZ_ROUGH_MASK
->     +       int
->     +       default 127 if HZ_100
->     +       default 255 if HZ_250 || HZ_300
->     +       default 1023 if HZ_1000
-> 
-> What about other HZ_* values?
 
-Which other ones do we have?
 
--- 
-Jens Axboe
+> On Jul 15, 2020, at 23:02, Chuck Lever <chuck.lever@oracle.com> wrote:
+> 
+> 
+> 
+>> On Jul 15, 2020, at 10:48 AM, Kai-Heng Feng <kai.heng.feng@canonical.com> wrote:
+>> 
+>> Hi,
+>> 
+>> Multiple users reported NFS causes NULL pointer dereference [1] on Ubuntu, due to commit "SUNRPC: Add "@len" parameter to gss_unwrap()" and commit "SUNRPC: Fix GSS privacy computation of auth->au_ralign".
+>> 
+>> The same issue happens on upstream stable 5.4.y branch.
+>> The mainline kernel doesn't have this issue though.
+>> 
+>> Should we revert them? Or is there any missing commits need to be backported to v5.4?
+>> 
+>> [1] https://bugs.launchpad.net/bugs/1886277
+>> 
+>> Kai-Heng
+> 
+> 31c9590ae468 ("SUNRPC: Add "@len" parameter to gss_unwrap()") is a refactoring
+> change. It shouldn't have introduced any behavior difference. But in theory,
+> practice and theory should be the same...
+> 
+> Check if 0a8e7b7d0846 ("SUNRPC: Revert 241b1f419f0e ("SUNRPC: Remove xdr_buf_trim()")")
+> is also applied to 5.4.0-40-generic.
+
+Yes, it's included. The commit is part of upstream stable 5.4.
+
+> 
+> It would help to know if v5.5 stable is working for you. I haven't had any
+> problems with it.
+
+I'll ask users to test it out. 
+Thanks for you quick reply!
+
+Kai-Heng
+
+> 
+> 
+> --
+> Chuck Lever
+> 
+> 
+> 
 
