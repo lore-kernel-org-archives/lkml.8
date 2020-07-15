@@ -2,98 +2,152 @@ Return-Path: <SRS0=kup7=A2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A379C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 19:08:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A42CC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 19:08:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 741AD2076C
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 19:08:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 135BE2076C
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 19:08:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="e73JoRrR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726356AbgGOTIK (ORCPT
+        id S1726766AbgGOTHO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 15:08:10 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:36613 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726752AbgGOTHJ (ORCPT
+        Wed, 15 Jul 2020 15:07:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37908 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726356AbgGOTGz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 15:07:09 -0400
-Received: by mail-ot1-f65.google.com with SMTP id 72so2326426otc.3;
-        Wed, 15 Jul 2020 12:07:08 -0700 (PDT)
+        Wed, 15 Jul 2020 15:06:55 -0400
+Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 83D6BC061755;
+        Wed, 15 Jul 2020 12:06:55 -0700 (PDT)
+Received: by mail-pj1-x1041.google.com with SMTP id cv18so2224250pjb.1;
+        Wed, 15 Jul 2020 12:06:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=TdOyt4R9Z57zhmCtsEfttpqmFzjBydXI6S7D/BNVn9o=;
+        b=e73JoRrRYxGu62bl5KoSMZHLBcuQMjV+5+TqneAGMDvDQTH7fvHFQjdep471elc40r
+         KvBNYigMGwr18RELuTuShGU/xAut09ARiqnzPDWaj2vMtsdLifL2ZCnYKuSkXPIqEV92
+         Ms9uzBeRmeocYNunLPBTKFEDN2ce/cgUrH/z4H2luYDl556tpE4fcTL7QhQj2m+wUm+D
+         PXWsycKlNvFdNmaoz0pCSiYyl0vvg/4WIQQL1XI2726MpDBgeAIFGKe3ouhJsMX7FPzy
+         mwB7N0slfwSDWtt3tLY/bb5UX7n2yZwiAi7gM6FGg6YfMcOCi1cgWf3Az916kmnx/0mN
+         Jrfw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=wY3QJfcVyJVpfiCFE28joz64Cm4Q2M/EKmJjz4Xq+cU=;
-        b=Of7pKTd0k4ziHZvSXNok636YknyMHuVx0tzteD1AdH+OUkxZDAyBlY4bN4t0vzdCm4
-         mYEcO/h/+OV6zKeEIdUJYH8JspV1UuTW07Ayf2FCdp2uDDwkYKgm8zdTmF+XvAGx/eWp
-         suwWr1vyRyyXlcagK6fKNKTh0dZ1dAeYz4DqdULhAS+cWQtR04FUz+G3bTp63RljWyPT
-         21UuHGEL+VgBPv1bDhXeQkoOAm3TWUUDYDp9PWKOvfp3YhGVBGHOkgR+/oqN1q8tNgu/
-         KmX7uxa85YB1hadTAw3AF9A6FRY6tcAPHEIXLRiypOKJFEo1pBUpjCz/c81gTdH7vqKY
-         liMw==
-X-Gm-Message-State: AOAM531I8ZyLMq/hVZ7bv1zM2lmdmuS6jSrZ0C79wm/1BYlJcSjoM6so
-        HJELicId4ibT655cLgq3jmCjN0AnWTvyX9ViFQj1aT6hlbI=
-X-Google-Smtp-Source: ABdhPJxtrf7cwMquZAhltJT4Egsrp/5t1aoR1MZy5Jh+6xdpWTbNqaY8bo8KHyVr/g4KW4MfbR6Q0i0+fj1ED2AGIc0=
-X-Received: by 2002:a9d:2646:: with SMTP id a64mr999765otb.107.1594840027946;
- Wed, 15 Jul 2020 12:07:07 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=TdOyt4R9Z57zhmCtsEfttpqmFzjBydXI6S7D/BNVn9o=;
+        b=n1ecSWdHUL717mh614IBnWRWCJ6lxpC1Uh5+4Zh2C+1t3QRSPqox0r82ZPFX4gK/pr
+         M7IP+a8VfQOelsDzFDhrrS6pJXdZl28GJmfLxt7apAny7VB5QEW+cXPhkkSZTW1aphk5
+         MIxo1J8reVI5ydD8iAPQyf95+O3od7ehZwCdJy6SwTuqGWmu3P+hffMrOHDmIthBvjc1
+         6wrRfGLZif3Sllcuiex0dKywhezjrT0H+8lDSRBZ7LG9YlgRRvO4htPjHkQB7C6eAU4b
+         noDkeSS46eJcFE1H0Y8B1sdnXVlg7mxvCcjb1Vy6j0FX9zyUEVb07LY5uKSG/Ft0G0V9
+         IboA==
+X-Gm-Message-State: AOAM531ejwBA/19IEhtlkuIovWFiydMguhL862UtN0vJK4+Sktioj26H
+        I3i+CAJ8+u/bEtIZUiTQZKk=
+X-Google-Smtp-Source: ABdhPJxkJHXkw9qYWYAXzFYPSzZ3C8v4575JyuEP2Ms4l7Azc1ObNhfpBI+OUK/nzsaigQEU2g8Cyg==
+X-Received: by 2002:a17:90a:12c7:: with SMTP id b7mr1129885pjg.137.1594840014855;
+        Wed, 15 Jul 2020 12:06:54 -0700 (PDT)
+Received: from localhost ([2601:1c0:5200:a6:307:a401:7b76:c6e5])
+        by smtp.gmail.com with ESMTPSA id z25sm2757161pfg.140.2020.07.15.12.06.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 15 Jul 2020 12:06:53 -0700 (PDT)
+From:   Rob Clark <robdclark@gmail.com>
+To:     dri-devel@lists.freedesktop.org
+Cc:     Jonathan Marek <jonathan@marek.ca>,
+        Rob Clark <robdclark@chromium.org>,
+        Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Jordan Crouse <jcrouse@codeaurora.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Brian Masney <masneyb@onstation.org>,
+        Fabio Estevam <festevam@gmail.com>,
+        linux-arm-msm@vger.kernel.org (open list:DRM DRIVER FOR MSM ADRENO GPU),
+        freedreno@lists.freedesktop.org (open list:DRM DRIVER FOR MSM ADRENO
+        GPU), linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH] drm/msm/adreno: fix gpu probe if no interconnect-names
+Date:   Wed, 15 Jul 2020 12:07:30 -0700
+Message-Id: <20200715190732.3116556-1-robdclark@gmail.com>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-References: <20200702141846.7752-1-frieder.schrempf@kontron.de>
- <20200702142511.GF4483@sirena.org.uk> <24ec4eed-de01-28df-ee1f-f7bcfc80051a@kontron.de>
- <20200702150725.GI4483@sirena.org.uk> <479d566a-213f-4e33-8ac7-7637ae88e31c@kontron.de>
- <a5b88ad9-3884-1d9c-c4ad-057266f84261@kontron.de> <20200713151108.GB4420@sirena.org.uk>
-In-Reply-To: <20200713151108.GB4420@sirena.org.uk>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Wed, 15 Jul 2020 21:06:56 +0200
-Message-ID: <CAMuHMdUYnMkobQBVLWkL-n8HLHGVOTqDs7H7kaYN6gPQmV_A7A@mail.gmail.com>
-Subject: Re: [PATCH] spi: spidev: Add compatible for external SPI ports on
- Kontron boards
-To:     Mark Brown <broonie@kernel.org>
-Cc:     Frieder Schrempf <frieder.schrempf@kontron.de>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-spi <linux-spi@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 13, 2020 at 5:11 PM Mark Brown <broonie@kernel.org> wrote:
-> On Mon, Jul 13, 2020 at 03:19:52PM +0200, Frieder Schrempf wrote:
-> > I would have expected that there is some kind of existing userspace API to
-> > load an overlay manually, but it seems like there isn't!?
->
-> > So what's the reasoning behind this? How can I solve this in a
-> > mainline-compliant way, meaning without either keeping downstream patches to
-> > bind spidev to my device or writing and maintaining code that does the
-> > overlay loading?
->
-> Basically the reasoning is that nobody's done it rather than any grand
+From: Rob Clark <robdclark@chromium.org>
 
-Nah, it's been done, but a bit unsafe, if you don't know what you're doing
-("with great power come great responsibilities").
+If there is no interconnect-names, but there is an interconnects
+property, then of_icc_get(dev, "gfx-mem"); would return an error
+rather than NULL.
 
-Please check out https://elinux.org/R-Car/DT-Overlays
-I do my best to keep topic/overlays branch up-to-date, and working.
+Also, if there is no interconnect-names property, there will never
+be a ocmem path.  But of_icc_get(dev, "ocmem") would return -EINVAL
+instead of -ENODATA.  Just don't bother trying in this case.
 
-> design not to do it.  There's some issues for more complex connectors
-> present on multiple boards with mapping the same connector onto multiple
-> boards where a resource on the connector might be provided by different
-> things on the base board so it's not quite as trivial for them as it
-> should be.
+v2: explicity check for interconnect-names property
 
-There's a big list of issues at
-https://elinux.org/Frank%27s_Evolving_Overlay_Thoughts
-In other words: more work to be done, to polish it, and make it safe(r).
+Fixes: 8e29fb37b301 ("drm/msm: handle for EPROBE_DEFER for of_icc_get")
+Fixes: 00bb9243d346 ("drm/msm/gpu: add support for ocmem interconnect path")
+Signed-off-by: Rob Clark <robdclark@chromium.org>
+---
+ drivers/gpu/drm/msm/adreno/adreno_gpu.c | 18 ++++++++++--------
+ 1 file changed, 10 insertions(+), 8 deletions(-)
 
-Gr{oetje,eeting}s,
-
-                        Geert
-
+diff --git a/drivers/gpu/drm/msm/adreno/adreno_gpu.c b/drivers/gpu/drm/msm/adreno/adreno_gpu.c
+index 0527e85184e1..e23641a5ec84 100644
+--- a/drivers/gpu/drm/msm/adreno/adreno_gpu.c
++++ b/drivers/gpu/drm/msm/adreno/adreno_gpu.c
+@@ -1003,22 +1003,23 @@ int adreno_gpu_init(struct drm_device *drm, struct platform_device *pdev,
+ 	if (ret)
+ 		return ret;
+ 
+-	/* Check for an interconnect path for the bus */
+-	gpu->icc_path = of_icc_get(dev, "gfx-mem");
+-	if (!gpu->icc_path) {
+-		/*
+-		 * Keep compatbility with device trees that don't have an
+-		 * interconnect-names property.
+-		 */
++	/*
++	 * The legacy case, before "interconnect-names", only has a
++	 * single interconnect path which is equivalent to "gfx-mem"
++	 */
++	if (!of_find_property(dev->of_node, "interconnect-names", NULL)) {
+ 		gpu->icc_path = of_icc_get(dev, NULL);
++	} else {
++		gpu->icc_path = of_icc_get(dev, "gfx-mem");
++		gpu->ocmem_icc_path = of_icc_get(dev, "ocmem");
+ 	}
++
+ 	if (IS_ERR(gpu->icc_path)) {
+ 		ret = PTR_ERR(gpu->icc_path);
+ 		gpu->icc_path = NULL;
+ 		return ret;
+ 	}
+ 
+-	gpu->ocmem_icc_path = of_icc_get(dev, "ocmem");
+ 	if (IS_ERR(gpu->ocmem_icc_path)) {
+ 		ret = PTR_ERR(gpu->ocmem_icc_path);
+ 		gpu->ocmem_icc_path = NULL;
+@@ -1026,6 +1027,7 @@ int adreno_gpu_init(struct drm_device *drm, struct platform_device *pdev,
+ 		if (ret != -ENODATA)
+ 			return ret;
+ 	}
++
+ 	return 0;
+ }
+ 
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+2.26.2
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
