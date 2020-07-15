@@ -2,91 +2,195 @@ Return-Path: <SRS0=kup7=A2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AE77C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 16:34:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D177C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 16:36:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0E8DD2065E
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 16:34:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 00F5020658
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 16:36:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725993AbgGOQev (ORCPT
+        id S1726070AbgGOQgc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 12:34:51 -0400
-Received: from mx2.suse.de ([195.135.220.15]:42622 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725811AbgGOQev (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 12:34:51 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 89EA3AF83;
-        Wed, 15 Jul 2020 16:34:52 +0000 (UTC)
-Date:   Wed, 15 Jul 2020 18:34:47 +0200
-From:   Joerg Roedel <jroedel@suse.de>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Joerg Roedel <joro@8bytes.org>, x86@kernel.org, hpa@zytor.com,
-        Andy Lutomirski <luto@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Jiri Slaby <jslaby@suse.cz>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Juergen Gross <jgross@suse.com>,
-        David Rientjes <rientjes@google.com>,
-        Cfir Cohen <cfir@google.com>,
-        Erdem Aktas <erdemaktas@google.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Mike Stunes <mstunes@vmware.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Martin Radev <martin.b.radev@gmail.com>,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        virtualization@lists.linux-foundation.org
-Subject: Re: [PATCH v4 34/75] x86/head/64: Build k/head64.c with
- -fno-stack-protector
-Message-ID: <20200715163446.GB24822@suse.de>
-References: <20200714120917.11253-1-joro@8bytes.org>
- <20200714120917.11253-35-joro@8bytes.org>
- <202007141831.F3165F22@keescook>
+        Wed, 15 Jul 2020 12:36:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42930 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725792AbgGOQgb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jul 2020 12:36:31 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 971D0C061755
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 09:36:31 -0700 (PDT)
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1jvkOQ-0001Gr-Qt; Wed, 15 Jul 2020 18:36:26 +0200
+Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1jvkOK-0000PJ-M9; Wed, 15 Jul 2020 18:36:20 +0200
+Date:   Wed, 15 Jul 2020 18:36:20 +0200
+From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To:     Michael Walle <michael@walle.cc>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org,
+        linux-pwm@vger.kernel.org, linux-watchdog@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Lee Jones <lee.jones@linaro.org>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: Re: [PATCH v5 07/13] pwm: add support for sl28cpld PWM controller
+Message-ID: <20200715163620.xhi24mct5b64qpyp@pengutronix.de>
+References: <20200706175353.16404-1-michael@walle.cc>
+ <20200706175353.16404-8-michael@walle.cc>
+ <20200709085006.b54ype3p4yu64upl@pengutronix.de>
+ <72858253a9094074e9c8cd7a4e1db09f@walle.cc>
+ <20200713084750.qj4hquzd6uz6y526@pengutronix.de>
+ <c0594c34c712ce26b3936d42c92d2361@walle.cc>
+ <20200714160856.rjqi7lv63geil3hm@pengutronix.de>
+ <eedceb44cba9b54e0634f0e8e4f96f70@walle.cc>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="43ja544hwta6zjxk"
 Content-Disposition: inline
-In-Reply-To: <202007141831.F3165F22@keescook>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <eedceb44cba9b54e0634f0e8e4f96f70@walle.cc>
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 14, 2020 at 06:34:24PM -0700, Kees Cook wrote:
-> On Tue, Jul 14, 2020 at 02:08:36PM +0200, Joerg Roedel wrote:
-> > +# make sure head64.c is built without stack protector
-> > +nostackp := $(call cc-option, -fno-stack-protector)
-> > +CFLAGS_head64.o		:= $(nostackp)
-> 
-> Recent refactoring[1] for stack protector suggests this should just
-> unconditionally be:
-> 
-> CFLAGS_head64.o			+= -fno-stack-protector
-> 
-> But otherwise, yeah, this should be fine here -- it's all early init
-> stuff.
-> 
-> Reviewed-by: Kees Cook <keescook@chromium.org>
 
-Thanks, I am not sure this patch will be needed in the next version, as
-I am currently rebasing to tip/master, which also made idt_descr static
-in kernel/idt.c.
+--43ja544hwta6zjxk
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-So with that I think I have to move the early IDT init functions to
-kernel/idt.c too and setup %gs earlier in head_64.S to make
-stack-protector happy.
+Hello Michael,
 
-The %gs setup actually needs to happen two times, one time when the
-kernel still runs identity mapped and then again when it switched to
-virtual addresses.
+On Tue, Jul 14, 2020 at 11:09:28PM +0200, Michael Walle wrote:
+> > My wishlist (just as it comes to my mind, so no guarantee of
+> > completeness):
+> >=20
+> >  - can do 0% duty cycle for all supported period lengths
+> >  - can do 100% duty cycle for all supported period lengths
+> >  - supports both polarities
+> >  - supports immediate change of configuration and after completion of
+> >    the currently running period
+> >  - atomic update (i.e. if you go from configuration A to configuration B
+> >    the hardware guarantees to only emit periods of type A and then type
+> >    B. (Depending on the item above, the last A period might be cut off.)
+>=20
+> We actually discussed this, because the implementation would be easier. B=
+ut
+> if the change takes place immediately you might end up with a longer duty
+> cycle. Assume the PWM runs at 80% duty cycle and starts with the on-perio=
+d.
+> If you now change that to 50% you might end up with one successive duty
+> cycle of "130%". Eg. the 80% of the old and right after that you switch to
+> the new 50% and then you'd have a high output which corresponds to a 130%
+> cycle. I don't know if that is acceptable for all applications.
 
-Regards,
+I thought this is a "change takes place immediately" implementation?! So
+these problems are actually real here. (And this not happening is exactly
+my wish here. Is there a mis-understanding?)
 
-	Joerg
+> >  - emits an irq when configuration changes
+>=20
+> Why would you need the interrupt?
+
+To know that the new setting is active. Currently Thierry's ideal PWM
+implementation blocks in pwm_apply_state() until the new setting is
+active. So some signaling is nice.=20
+
+> > > > If you change only cycle but not mode, does the hardware complete t=
+he
+> > > > currently running period?
+> > >=20
+> > > No it does not.
+> >=20
+> > Please document this as a Limitation.
+>=20
+> I've discussed this internally, for now its a limitation. In the worst
+> case you'd do one 100% duty cycle. Maybe we can fix the hardware. I
+> acknowledge that this is a severe limitation, esp. if you use the PWM
+> for controlling stuff (for now its only LCD backlight.. so thats ok).
+
+That happens if you reduce the duty cycle from A to B and the counter is
+already bigger than B but smaller than A, right? The fix would be to
+compare for counter >=3D match instead of counter =3D match. (Which then
+would result in a period with a duty cycle bigger than B but smaller
+than A. Also not ideal, but probably better.)
+
+> > > > What about disable()?
+> > >=20
+> > > Mhh well, it would do one 100% cycle.. mhh ;) Lets see if there we can
+> > > fix that (in hardware), not much we can do in the driver here. We are
+> > > _very_ constraint in size, therefore all that little edge cases fall
+> > > off
+> > > the table.
+> >=20
+> > You're saying that on disable the hardware emits a constant high level
+> > for one cycle? I hope not ...
+>=20
+> Mh, I was mistaken, disabling the PWM will turn it off immediately, but
+
+And does turn off mean, the output gets inactive?
+If so you might also disable the hardware if a 0% duty cycle is
+configured assuming this saves some energy without modifying the
+resulting wave form.
+
+> one 100% duty cycle may happen if you change from a higher to a lower
+> duty cycle setting. See above.
+>=20
+> > I never programmed a CPLD to emulate a hardware PWM, but I wonder if
+> > these are really edge cases that increase the size of the binary?!
+>=20
+> At the moment there is only one 8bit register which stores the value
+> which is used for matching. If you want to change that setting after
+> a whole cycle, you'd use another 8bit register to cache the new value.
+> So this would at least needs 8 additional flip-flops. This doesn't
+> sound much, but we are already near 100% usage of the CPLD. So its
+> hard to convince people why this is really necessary.
+
+OK. (Maybe there is enough space to allow implementing 100% for mode 0?)
+
+Best regards
+Uwe
+
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+
+--43ja544hwta6zjxk
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAl8PMIEACgkQwfwUeK3K
+7AmkoQf/Xsa5eWznePZ+LGv5Ny4n0jnjIKQDxCWubAooelGqLEF0EsNjO6hA2ShJ
+0/Bkwa4V22BFbXS2s4Ai4KcM6kEqxytEADlIAVvcfDxTq6aFqYrrNt+gYTLyFJvr
+7WkzW1Jh1FZpqTQck7bUAyOd9VA9Y8aEwnqDnZbUrEctYnhylTz0ogj6RLw2EZqL
+lT/EWHA461DnNoJ19v1QNBTolcDgOBMTZuk8bUBtYAJhf3Zf4m+YOYxTiOgNGOaQ
+yKB5hXTsyURWKJhf0+0pDtWry6Dl2B6xCLa/rLbfkAMx00kaKGRCSd2o7bw+mCj5
+71RVew6wqS5+tx2hi20V582pM4qAnA==
+=G5tl
+-----END PGP SIGNATURE-----
+
+--43ja544hwta6zjxk--
