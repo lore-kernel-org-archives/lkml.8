@@ -2,113 +2,114 @@ Return-Path: <SRS0=kup7=A2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B26EDC433F1
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 08:15:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0622EC433E4
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 08:17:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 353012067D
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 08:15:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="M9zfAwe4"
+	by mail.kernel.org (Postfix) with ESMTP id E671A2067D
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 08:17:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729635AbgGOIPD (ORCPT
+        id S1729717AbgGOIRT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 04:15:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49998 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726201AbgGOIPD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 04:15:03 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 464C5C061755
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 01:15:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=K/b2gzLoXUAw2gDUZSlQlfPbeMDcCTrXkeWFcHteJ9E=; b=M9zfAwe4IWuymtjYzyffcH5NBQ
-        Tc8CS5HMRap2tQUJ31MPk2PAxoJU/DiwZqE4e3lMt8ftk2EgUJIHMe19uAijoO0gGvl9ejZAIaU0C
-        tZ/pUHF/F+RKqprtARg6n8L7r9TQ36tEYIMayX3epN9Kd04gBDdl34FK948FsnTpKllmc7r5aMe0V
-        yzAdFgpHx5kkoMG0YzSeNyVW6tiADJslaKyi6G3DO3l3LSJcXT87WllSl4plJC3ZAF9+ArM0la2OK
-        /bdvV+aBgm5CqxSpkpuQcf6aIplFccGngs2lWjRJySCUxk2sAeqX0UbDy+TI4vOF+FCT7qZPlfEmi
-        KR6W9CwA==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jvcYv-0005kx-Uh; Wed, 15 Jul 2020 08:14:46 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 22DB2300130;
-        Wed, 15 Jul 2020 10:14:43 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 0DC1823648704; Wed, 15 Jul 2020 10:14:43 +0200 (CEST)
-Date:   Wed, 15 Jul 2020 10:14:43 +0200
-From:   peterz@infradead.org
-To:     "Ahmed S. Darwish" <a.darwish@linutronix.de>
-Cc:     Leo Yan <leo.yan@linaro.org>, Will Deacon <will@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Paul Cercueil <paul@crapouillou.net>,
-        "Ben Dooks (Codethink)" <ben.dooks@codethink.co.uk>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Kan Liang <kan.liang@linux.intel.com>, jogness@linutronix.de,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/6] sched_clock: Expose struct clock_read_data
-Message-ID: <20200715081443.GB43129@hirez.programming.kicks-ass.net>
-References: <20200715020512.20991-1-leo.yan@linaro.org>
- <20200715020512.20991-2-leo.yan@linaro.org>
- <20200715055650.GB225020@debian-buster-darwi.lab.linutronix.de>
- <20200715081222.GB10769@hirez.programming.kicks-ass.net>
+        Wed, 15 Jul 2020 04:17:19 -0400
+Received: from mga17.intel.com ([192.55.52.151]:10240 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729609AbgGOIRT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jul 2020 04:17:19 -0400
+IronPort-SDR: kz12ijebYn0rgvE+Tsk3uvOTENBsBK2o1JPnedwjWllDftYoXbm4zpmp8sCXWIHSqsNz0ZgiA0
+ 6vdfNBu8E5lg==
+X-IronPort-AV: E=McAfee;i="6000,8403,9682"; a="129192958"
+X-IronPort-AV: E=Sophos;i="5.75,354,1589266800"; 
+   d="scan'208";a="129192958"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jul 2020 01:17:19 -0700
+IronPort-SDR: 6HuCebTA1L2MzGnfdRJfGme8ptZjG4bUr+C1KsCVsDafRlDS57yCMrIy6skNMdlheJp7X5xMEw
+ iD3Ewbb4NJXA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,354,1589266800"; 
+   d="scan'208";a="459987676"
+Received: from chenyu-office.sh.intel.com ([10.239.158.173])
+  by orsmga005.jf.intel.com with ESMTP; 15 Jul 2020 01:17:17 -0700
+Date:   Wed, 15 Jul 2020 16:18:38 +0800
+From:   Chen Yu <yu.c.chen@intel.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Len Brown <len.brown@intel.com>,
+        Michal Miroslaw <mirq-linux@rere.qmqm.pl>,
+        Zhang Rui <rui.zhang@intel.com>, linux-pm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/2][RESEND v3] PM-runtime: change the tracepoints to
+ cover all usage_count
+Message-ID: <20200715081838.GA22379@chenyu-office.sh.intel.com>
+References: <cover.1594790493.git.yu.c.chen@intel.com>
+ <395187057e486df9a4328bc6d7d4ee912967fdb3.1594790493.git.yu.c.chen@intel.com>
+ <20200715070614.GA2297388@kroah.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200715081222.GB10769@hirez.programming.kicks-ass.net>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200715070614.GA2297388@kroah.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 15, 2020 at 10:12:22AM +0200, Peter Zijlstra wrote:
-> On Wed, Jul 15, 2020 at 07:56:50AM +0200, Ahmed S. Darwish wrote:
-> > On Wed, Jul 15, 2020 at 10:05:07AM +0800, Leo Yan wrote:
-> > > From: Peter Zijlstra <peterz@infradead.org>
-> > >
-> > ...
-> > >
-> > > Provide struct clock_read_data and two (seqcount) helpers so that
-> > > architectures (arm64 in specific) can expose the numbers to userspace.
-> > >
-> > ...
-> > >
-> > > +struct clock_read_data *sched_clock_read_begin(unsigned int *seq)
-> > > +{
-> > > +	*seq = raw_read_seqcount(&cd.seq);
-> > > +	return cd.read_data + (*seq & 1);
-> > > +}
-> > > +
-> > ...
+Hi Greg,
+thanks very much for taking a look,
+On Wed, Jul 15, 2020 at 09:06:14AM +0200, Greg Kroah-Hartman wrote:
+> On Wed, Jul 15, 2020 at 02:28:03PM +0800, Chen Yu wrote:
+> > Commit d229290689ae ("PM-runtime: add tracepoints for usage_count changes")
+> > has added some tracepoints to monitor the change of runtime usage, and
+> > there is something to improve:
+> > 1. There are some places that adjust the usage count not
+> >    been traced yet. For example, pm_runtime_get_noresume() and
+> >    pm_runtime_put_noidle()
+> > 2. The change of the usage count will not be tracked if decreased
+> >    from 1 to 0.
 > > 
-> > Hmm, this seqcount_t is actually a latch seqcount. I know the original
-> > code also used raw_read_seqcount(), but while at it, let's use the
-> > proper read API for seqcount_t latchers: raw_read_seqcount_latch().
+> > This patch intends to adjust the logic to be consistent with the
+> > change of usage_counter, that is to say, only after the counter has
+> > been possibly modified, we record it. Besides, all usage changes will
+> > be shown using rpm_usage even if included by other trace points.
+> > And these changes has helped track down the e1000e runtime issue.
 > > 
-> > raw_read_seqcount_latch() has no read memory barrier though, and a
-> > suspicious claim that READ_ONCE() pairs with an smp_wmb() (??). But if
-> > its implementation is wrong, let's fix it there instead.
+> > Reviewed-by: Michał Mirosław <mirq-linux@rere.qmqm.pl>
+> > Signed-off-by: Chen Yu <yu.c.chen@intel.com>
+> > ---
+> >  drivers/base/power/runtime.c | 38 +++++++++++++++++++++++-------------
+> >  1 file changed, 24 insertions(+), 14 deletions(-)
+> > 
+> > diff --git a/drivers/base/power/runtime.c b/drivers/base/power/runtime.c
+> > index 85a248e196ca..5789d2624513 100644
+> > --- a/drivers/base/power/runtime.c
+> > +++ b/drivers/base/power/runtime.c
+> > @@ -1004,10 +1004,11 @@ int __pm_runtime_idle(struct device *dev, int rpmflags)
+> >  	int retval;
+> >  
+> >  	if (rpmflags & RPM_GET_PUT) {
+> > -		if (!atomic_dec_and_test(&dev->power.usage_count)) {
+> > -			trace_rpm_usage_rcuidle(dev, rpmflags);
+> > +		bool non_zero = !atomic_dec_and_test(&dev->power.usage_count);
+> > +
+> > +		trace_rpm_usage_rcuidle(dev, rpmflags);
 > 
-> It's supposed to be a dependent load, so READ_ONCE() is sufficient.
-> Except, of course, the C standard has other ideas, so a compiler is
-> allowed to wreck that, but they mostly don't :-)
+> Why not just call trace everywhere before you do the atomic operations?
+> Why does the trace need to be called after the operation everywhere?
+> 
+If I understand correctly, besides Michal's comments, if we put the trace
+before the atomic operation, we might be unable to judge whether the counter
+is going to increase or decrease from rpmflags: it is RPM_GET_PUT which combine
+the get() and put() together, then it is a little inconvenient for tracking IMO.
 
-Also see:
-
-  https://lkml.kernel.org/r/20200625085745.GD117543@hirez.programming.kicks-ass.net
+thanks,
+Chenyu
+> thanks,
+> 
+> greg k-h
