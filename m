@@ -2,145 +2,187 @@ Return-Path: <SRS0=kup7=A2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56CE8C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 15:33:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F70AC433E4
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 15:33:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3591C20720
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 15:33:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="D+ARyC/t"
+	by mail.kernel.org (Postfix) with ESMTP id 1044E206D5
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 15:33:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726843AbgGOPdF (ORCPT
+        id S1726905AbgGOPd0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 11:33:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33078 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726446AbgGOPdF (ORCPT
+        Wed, 15 Jul 2020 11:33:26 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:51208 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726446AbgGOPdZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 11:33:05 -0400
-Received: from mail-io1-xd43.google.com (mail-io1-xd43.google.com [IPv6:2607:f8b0:4864:20::d43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 406E8C08C5DB
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 08:33:05 -0700 (PDT)
-Received: by mail-io1-xd43.google.com with SMTP id y2so2689460ioy.3
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 08:33:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=3/pQdYS/Dnr1ymTJv+NidFC3OUFb+e6KKsxPQ2Yv67c=;
-        b=D+ARyC/tT0EwkUI5QwGS/MpuvZHZQhZw1IIn9yTvTJ5PzNgdV+xJ/09woYE+QgKfHA
-         3nKvtPRUFo91vGrZFgb7mNort2mz0DapQl970UQKuba9mYudg7ARczsPYKbSKJCaUpjV
-         Fk258LRS73Px4xEW/TA2kMUJauSKvIMglEiugBR3zKo6W0D9aC9EuWP2GjQJG2tjFoEe
-         eQ8PL+1KiRVDerhisAHsmoPZOjTS70z873MicFxWmtGOZMhK53rzReWy5Qxwx8kNikp9
-         je9dzKqFAQF7ri/Pfuvj7yOzlwqQ2ayWa1kC/nuMJuJ0pZfEGNGuIebCrCAdEa4smsTu
-         3i3Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=3/pQdYS/Dnr1ymTJv+NidFC3OUFb+e6KKsxPQ2Yv67c=;
-        b=Jdw6eaW7c+Z9V19Is0K7TpfjMnNRZAgpE0eA1tNi5WzX3JDLj5amWtpN8QTHvPVety
-         5j0CLQ+d40SEYXIMSrw67ZZ/pNl4TIBiJ7N/M8aAykx/QhrmfSsWUepTGsIKPvK0rMW8
-         kYjBt0C7RWRiuErS0NgDjVUBLnMljTBOOjMDXUQ8F4eOJdtsIyXNLj4ujVgaNm97Jund
-         PdvnOTAkScei7c/+0qzQw5gJLFtNlpj+uOpk0ir4q4gBz3isHkmBim/HBDzo4zCJSv7i
-         X2tW9LrS6NJ9SMAyFWPPgeebA74msM0qZAWzWcmgVaHvuaOWzfS4jCBSBFvv8AjxYkK8
-         GSXA==
-X-Gm-Message-State: AOAM531ZKw1LFjq+PB+TBpMf3Mh3rYVSnhjEgFVOd3IlcPqP4vjRd1ym
-        71E1rPWc5qcSWPXCogabDtvNmABX077VE/XvrEaYLQ==
-X-Google-Smtp-Source: ABdhPJweq1N6tkof3wjCwSMgBSSq0jgPksYVht/5VHBVayPqCWUxP7gIsxMCn/l6df4OcdQzXCWR0gv5qPFEFEpUW1E=
-X-Received: by 2002:a6b:5c0a:: with SMTP id z10mr10587243ioh.131.1594827184561;
- Wed, 15 Jul 2020 08:33:04 -0700 (PDT)
+        Wed, 15 Jul 2020 11:33:25 -0400
+Received: from ip5f5af08c.dynamic.kabel-deutschland.de ([95.90.240.140] helo=wittgenstein)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1jvjPO-0000OV-7h; Wed, 15 Jul 2020 15:33:22 +0000
+Date:   Wed, 15 Jul 2020 17:33:21 +0200
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc:     Florian Weimer <fw@deneb.enyo.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        paulmck <paulmck@linux.ibm.com>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Paul Turner <pjt@google.com>,
+        linux-api <linux-api@vger.kernel.org>, carlos <carlos@redhat.com>
+Subject: Re: [RFC PATCH 2/4] rseq: Allow extending struct rseq
+Message-ID: <20200715153321.km46syojmvqne5md@wittgenstein>
+References: <20200714030348.6214-1-mathieu.desnoyers@efficios.com>
+ <20200714030348.6214-3-mathieu.desnoyers@efficios.com>
+ <20200715113849.yy6amhynxya64arv@wittgenstein>
+ <20200715123323.vrmblagnvkdp4pyy@wittgenstein>
+ <1944484270.14303.1594825847550.JavaMail.zimbra@efficios.com>
 MIME-Version: 1.0
-References: <20200714200445.1427257-1-mathieu.poirier@linaro.org> <1cde5c1d5d9047149c93e031c5093492@SFHDAG3NODE1.st.com>
-In-Reply-To: <1cde5c1d5d9047149c93e031c5093492@SFHDAG3NODE1.st.com>
-From:   Mathieu Poirier <mathieu.poirier@linaro.org>
-Date:   Wed, 15 Jul 2020 09:32:53 -0600
-Message-ID: <CANLsYkyWLowSk1Zq7oWUzgsF=7FDVwe6XDgA6foWyX0VQwTE4g@mail.gmail.com>
-Subject: Re: [PATCH v6 00/11] remoteproc: stm32: Add support for attaching to M4
-To:     Arnaud POULIQUEN <arnaud.pouliquen@st.com>
-Cc:     "ohad@wizery.com" <ohad@wizery.com>,
-        "bjorn.andersson@linaro.org" <bjorn.andersson@linaro.org>,
-        Loic PALLARDY <loic.pallardy@st.com>,
-        "mcoquelin.stm32@gmail.com" <mcoquelin.stm32@gmail.com>,
-        Alexandre TORGUE <alexandre.torgue@st.com>,
-        "linux-remoteproc@vger.kernel.org" <linux-remoteproc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-stm32@st-md-mailman.stormreply.com" 
-        <linux-stm32@st-md-mailman.stormreply.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <1944484270.14303.1594825847550.JavaMail.zimbra@efficios.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 15 Jul 2020 at 00:51, Arnaud POULIQUEN <arnaud.pouliquen@st.com> wrote:
->
-> Hi Mathieu
->
-> > -----Original Message-----
-> > From: Mathieu Poirier <mathieu.poirier@linaro.org>
-> > Sent: mardi 14 juillet 2020 22:05
-> > To: ohad@wizery.com; bjorn.andersson@linaro.org; Loic PALLARDY
-> > <loic.pallardy@st.com>; Arnaud POULIQUEN <arnaud.pouliquen@st.com>;
-> > mcoquelin.stm32@gmail.com; Alexandre TORGUE
-> > <alexandre.torgue@st.com>
-> > Cc: linux-remoteproc@vger.kernel.org; linux-kernel@vger.kernel.org; linux-
-> > stm32@st-md-mailman.stormreply.com
-> > Subject: [PATCH v6 00/11] remoteproc: stm32: Add support for attaching to
-> > M4
-> >
-> > This set applies on top of [1] and refactors the STM32 platform code in order
-> > to attach to the M4 remote processor when it has been started by the boot
-> > loader.
-> >
-> > New to V6:
-> > 1) Removed extra newline in patch 06.
-> > 2) Re-worked title and changelog of patch 08 to better reflect
-> >    what is done by the patch.
-> >
-> > Tested on ST's mp157c development board.
->
-> I don' t know if you don't see  it on last  version or if you prefer that I review your update first... so for the series
+On Wed, Jul 15, 2020 at 11:10:47AM -0400, Mathieu Desnoyers wrote:
+> ----- On Jul 15, 2020, at 8:33 AM, Christian Brauner christian.brauner@ubuntu.com wrote:
+> [...]
+> > 
+> > So here's a very free-wheeling draft of roughly what I had in mind. Not
+> > even compile-tested just to illustrate what I'd change and sorry if that
+> > code will make you sob in your hands:
+> > 
+> [...]
+> > +	/*
+> > +	 * With __rseq_abi.flags RSEQ_TLS_FLAG_SIZE set, user_size should be
+> > +	 * statically initialized to offsetof(struct rseq, end).
+> > +	 */
+> > +	__u32 user_size;
+> > +	/*
+> > +	 * With __rseq_abi.flags RSEQ_TLS_FLAG_SIZE set, if the kernel supports
+> > +	 * extensible struct rseq ABI, the kernel_size field is populated by
+> > +	 * the kernel to the minimum between user_size and the offset of the
+> > +	 * "end" field within the struct rseq supported by the kernel on
+> > +	 * successful registration. Should be initialized to 0.
+> > +	 */
+> > +	__u32 kernel_size;
+> 
+> Moving from __u16 to __u32 for both fields don't achieve much, and increase
+> the size of struct rseq (excluding padding) from 24 bytes to 28 bytes.
+> 
+> Note that the struct rseq alignment is 32 bytes. At 24 bytes, it leaves room
+> for exactly one 8 bytes pointer, which can be useful for future extensions.
+> If the size is increased to 28 bytes or more, then we're done and cannot
+> add a pointer.
+> 
+> > +	__u32 active_size;
+> 
+> This additional field takes the very last bytes of padding we have in the
+> current layout.
+> 
+> > } __attribute__((aligned(4 * sizeof(__u64))));
+> > 
+> > +#define RSEQ_SIZE_VER0 24 /* sizeof first published struct */
+> 
+> This is incorrect. The sizeof(struct_rseq) with its 32 bytes alignment is 32,
+> not 24. The padding at the end of the structure is considered as part of its
+> size, but we cannot rely on its content being zero-initialized based on the
+> C standard.
+> 
+> > +#define RSEQ_SIZE_VER1 32 /* sizeof second published struct */
+> > +#define RSEQ_SIZE_LATEST RSEQ_SIZE_VER1 /* sizeof last published struct */
+> > +
+> 
+> [...]
+> 
+> > @@ -349,10 +363,58 @@ SYSCALL_DEFINE4(rseq, struct rseq __user *, rseq, u32,
+> > rseq_len,
+> > 	 * ensure the provided rseq is properly aligned and valid.
+> > 	 */
+> > 	if (!IS_ALIGNED((unsigned long)rseq, __alignof__(*rseq)) ||
+> > -	    rseq_len != sizeof(*rseq))
+> > +	    rseq_len < RSEQ_SIZE_VER0)
+> 
+> This could perhaps be changed for future kernels, but will break for existing
+> kernels as soon as rseq_len is increased. This is something we should have
+> planned for in the initial implementation of the system call, but here we are.
+> 
+> How do you envision that userspace would handle this failure from older kernels ?
+> Try again with a second system call passing RSEQ_SIZE_VER0 as argument ?
+> 
+> > 		return -EINVAL;
+> > 	if (!access_ok(rseq, rseq_len))
+> > 		return -EFAULT;
+> > +
+> > +	/* Handle extensible struct rseq ABI. */
+> > +	ret = get_user(tls_flags, &rseq->flags);
+> > +	if (ret)
+> > +		return ret;
+> > +	if (tls_flags & RSEQ_TLS_FLAG_SIZE) {
+> > +		u32 user_size, kernel_size, active_size;
+> > +
+> > +		/* Can probably be made nicer by using check_zeroed_user(). */
+> > +		ret = get_user(user_size, &rseq->user_size);
+> > +		if (ret)
+> > +			return ret;
+> > +		if (user_size != 0)
+> > +			return -EINVAL;
+> > +
+> > +		ret = get_user(active_size, &rseq->active_size);
+> > +		if (ret)
+> > +			return ret;
+> > +		if (active_size != 0)
+> > +			return -EINVAL;
+> > +
+> > +		ret = get_user(active_size, &rseq->kernel_size);
+> 
+> I guess you mean kernel_size here.
+> 
+> > +		if (ret)
+> > +			return ret;
+> > +		if (kernel_size != 0)
+> > +			return -EINVAL;
+> > +
+> > +		/* Calculate the useable size. */
+> > +		active_size = min_t(u32, rseq_len, RSEQ_SIZE_LATEST);
+> 
+> Where is the rseq_len supposed to come from in userspace ? Should it be
+> that the code doing the registration uses sizeof(struct rseq), or offsetof(struct rseq, end),
+> or should it read the content of __rseq_abi.user_size ?
+> 
+> > +		ret = put_user(active_size, &rseq->active_size);
+> > +		if (ret)
+> > +			return ret;
+> > +
+> > +		/* Let other users know what userspace used to register. */
+> > +		ret = put_user(rseq_len, &rseq->user_size);
+> > +		if (ret)
+> > +			return -EFAULT;
+> > +
+> > +		/* Let other users know what size the kernel supports. */
+> 
+> I am not sure what those 3 __u32 fields (user_size, kernel_size, and active_size),
+> plus use of the rseq_len syscall parameter, accomplish which was not accomplished
+> by my __u16 user_size + kernel_size approach ? If anything, it seems to make support
+> of older kernels which do not support an extended rseq_len parameter more complex.
 
-Ah yes, my apologies on that - I misread the comment you left me in
-00/11 of the V5 set.
+Yeah, fair point. I really just sketched this.
+It seemed to me that what you might want to expose all three sizes in
+some form, i.e.  the size the kernel knows about, the size that
+userspace knows about and the size in use. The advantage of exposing the
+size the kernel itself knows about and the size that userspace knows
+about is that you can infer the used size and you don't loose any
+information. When you only register the kernel used size and the size
+userspace knows about you can't necessarily infer what size the kernel
+supports. But I suppose there's no obvious case where this is needed rn.
 
->
-> Acked-by: Arnaud Pouliquen <arnaud.pouliquen@st.com>
->
-> Thanks,
-> Arnaud
->
-> >
-> > Thanks,
-> > Mathieu
-> >
-> > [1].https://patchwork.kernel.org/project/linux-
-> > remoteproc/list/?series=318275
-> >
-> > Mathieu Poirier (11):
-> >   remoteproc: stm32: Decouple rproc from memory translation
-> >   remoteproc: stm32: Request IRQ with platform device
-> >   remoteproc: stm32: Decouple rproc from DT parsing
-> >   remoteproc: stm32: Remove memory translation from DT parsing
-> >   remoteproc: stm32: Parse syscon that will manage M4 synchronisation
-> >   remoteproc: stm32: Properly set co-processor state when attaching
-> >   remoteproc: Make function rproc_resource_cleanup() public
-> >   remoteproc: stm32: Parse memory regions when attaching to M4
-> >   remoteproc: stm32: Properly handle the resource table when attaching
-> >   remoteproc: stm32: Introduce new attach() operation
-> >   remoteproc: stm32: Update M4 state in stm32_rproc_stop()
-> >
-> >  drivers/remoteproc/remoteproc_core.c |   3 +-
-> >  drivers/remoteproc/stm32_rproc.c     | 214 ++++++++++++++++++++++++--
-> > -
-> >  include/linux/remoteproc.h           |   1 +
-> >  3 files changed, 198 insertions(+), 20 deletions(-)
-> >
-> > --
-> > 2.25.1
->
+Thanks!
+Christian
