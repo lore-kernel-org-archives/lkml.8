@@ -2,57 +2,108 @@ Return-Path: <SRS0=kup7=A2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DB36C433E5
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 14:45:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB13CC433E3
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 14:45:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 735F120658
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 14:45:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 97D3720658
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 14:45:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729506AbgGOOpt (ORCPT
+        id S1729558AbgGOOpz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 10:45:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53844 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725838AbgGOOps (ORCPT
+        Wed, 15 Jul 2020 10:45:55 -0400
+Received: from jabberwock.ucw.cz ([46.255.230.98]:59996 "EHLO
+        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725838AbgGOOpx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 10:45:48 -0400
-Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EF8ECC061755;
-        Wed, 15 Jul 2020 07:45:47 -0700 (PDT)
-Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 992BE12A03D0C;
-        Wed, 15 Jul 2020 07:45:47 -0700 (PDT)
-Date:   Wed, 15 Jul 2020 07:45:46 -0700 (PDT)
-Message-Id: <20200715.074546.257319511918937424.davem@davemloft.net>
-To:     yuehaibing@huawei.com
-Cc:     kuba@kernel.org, fw@strlen.de, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next] net: flow: Remove unused inline function
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20200715023119.22108-1-yuehaibing@huawei.com>
-References: <20200715023119.22108-1-yuehaibing@huawei.com>
-X-Mailer: Mew version 6.8 on Emacs 26.3
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Wed, 15 Jul 2020 07:45:47 -0700 (PDT)
+        Wed, 15 Jul 2020 10:45:53 -0400
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+        id 6E8E91C0BDB; Wed, 15 Jul 2020 16:45:47 +0200 (CEST)
+Date:   Wed, 15 Jul 2020 16:45:46 +0200
+From:   Pavel Machek <pavel@denx.de>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Emil Velikov <emil.l.velikov@gmail.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: Re: [PATCH 4.19 15/58] drm: panel-orientation-quirks: Use generic
+ orientation-data for Acer S1003
+Message-ID: <20200715144546.GA20651@duo.ucw.cz>
+References: <20200714184056.149119318@linuxfoundation.org>
+ <20200714184056.909662669@linuxfoundation.org>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="a8Wt8u1KmwUX3Y2C"
+Content-Disposition: inline
+In-Reply-To: <20200714184056.909662669@linuxfoundation.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: YueHaibing <yuehaibing@huawei.com>
-Date: Wed, 15 Jul 2020 10:31:19 +0800
 
-> It is not used since commit 09c7570480f7 ("xfrm: remove flow cache")
-> 
-> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+--a8Wt8u1KmwUX3Y2C
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Applied.
+Hi!
+
+> The Acer S1003 has proper DMI strings for sys-vendor and product-name,
+> so we do not need to match by BIOS-date.
+>=20
+> This means that the Acer S1003 can use the generic lcd800x1280_rightside_=
+up
+> drm_dmi_panel_orientation_data struct which is also used by other quirks.
+
+This is	just a cleanup,	it does	not fix	anything. I don't think we
+need it in stable.
+
+Best regards,
+								Pavel
+							=09
+> =20
+> -static const struct drm_dmi_panel_orientation_data acer_s1003 =3D {
+> -	.width =3D 800,
+> -	.height =3D 1280,
+> -	.orientation =3D DRM_MODE_PANEL_ORIENTATION_RIGHT_UP,
+> -};
+> -
+>  static const struct drm_dmi_panel_orientation_data asus_t100ha =3D {
+>  	.width =3D 800,
+>  	.height =3D 1280,
+> @@ -100,7 +94,7 @@ static const struct dmi_system_id orientation_data[] =
+=3D {
+>  		  DMI_EXACT_MATCH(DMI_SYS_VENDOR, "Acer"),
+>  		  DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "One S1003"),
+>  		},
+> -		.driver_data =3D (void *)&acer_s1003,
+> +		.driver_data =3D (void *)&lcd800x1280_rightside_up,
+>  	}, {	/* Asus T100HA */
+>  		.matches =3D {
+>  		  DMI_EXACT_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
+> --=20
+> 2.25.1
+>=20
+>=20
+
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--a8Wt8u1KmwUX3Y2C
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCXw8WmgAKCRAw5/Bqldv6
+8gylAKC4LV32Hyp+Z40bVQzp0yoG4Su2JwCfWuPV9I/hi5eWiDUWJKQ5B1H0Ilk=
+=tys3
+-----END PGP SIGNATURE-----
+
+--a8Wt8u1KmwUX3Y2C--
