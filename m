@@ -2,188 +2,138 @@ Return-Path: <SRS0=kup7=A2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4702C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 22:59:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53A7BC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 23:00:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9B1B720656
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 22:59:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="UyVYVGZ3"
+	by mail.kernel.org (Postfix) with ESMTP id 3498620656
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 23:00:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727096AbgGOW7P (ORCPT
+        id S1727782AbgGOXAM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 18:59:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45436 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726765AbgGOW7P (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 18:59:15 -0400
-Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BA7C0C061755
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 15:59:14 -0700 (PDT)
-Received: by mail-ej1-x641.google.com with SMTP id o18so4154182eje.7
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 15:59:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=fZ1rBakSReO9Dn+EzmBi7QlVUTw5S5sAIhY6NkDcqpg=;
-        b=UyVYVGZ3tCLbe+5CH0LQ890sq2xoQmOnnE5A7hlJaGCoxZtFB624re+THIl7BI+lvO
-         eyyMilV41zbb2R7HS+QQp0qUghMOIUFFpGhvCz6uhonYxEZ2Lupsz+v2JGuO2SUposUC
-         wjZ0s+y5RtIISKMhBqUi/DW+mBLIJ4qpPEQ28=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=fZ1rBakSReO9Dn+EzmBi7QlVUTw5S5sAIhY6NkDcqpg=;
-        b=YOkvmmX2qE5CvgfU9DAIpR35vfxYuZsa2Wq3vrN9A/poQjtywmArrKUlKe7G/3B2eF
-         y/sekBJLdMhMFaF3xuwdVEmNjlRk50e8x70X6KKn6mFW5/GUI4Oy/AjZZICtuQRiNRr4
-         RZlCwAuyHkNcC1rg0aO/Ivsuq6RPhmDHX65oLBCr0WLWf8xpH873hA8E0/lQWs/M4rXi
-         kpliUsLSeNOWnC9jqqCNsLtY3jQGUgdmVdxBj58JdEHbibTz2JPhDbjHqxIxkUJI7Jch
-         B1mVt5KxHQTCzmAsKyIn/Lrm+fNv5s9Ub2xyMvt210gEogoW4uHiyWUuohI6/1m7+h0K
-         K2xg==
-X-Gm-Message-State: AOAM533Ck0zjKH6Wq6cxrunRgPlj0xWU1TloRdnFYFi/vmY6N79wgqMG
-        spn0DYjltHYOBE0gFk7xVz1SBg==
-X-Google-Smtp-Source: ABdhPJwtiT8rbD9B7KAQceCDxM9R1q9fPYU/TGYjl/rb8FPg4sH1QIcjoK1TO2tKm/WTJsefqNGf6A==
-X-Received: by 2002:a17:907:2149:: with SMTP id rk9mr1079014ejb.553.1594853953417;
-        Wed, 15 Jul 2020 15:59:13 -0700 (PDT)
-Received: from google.com ([81.6.44.51])
-        by smtp.gmail.com with ESMTPSA id hb8sm3307531ejb.8.2020.07.15.15.59.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 15 Jul 2020 15:59:12 -0700 (PDT)
-From:   KP Singh <kpsingh@chromium.org>
-X-Google-Original-From: KP Singh <kpsingh>
-Date:   Thu, 16 Jul 2020 00:59:11 +0200
-To:     Martin KaFai Lau <kafai@fb.com>
-Cc:     KP Singh <kpsingh@chromium.org>, linux-kernel@vger.kernel.org,
-        bpf@vger.kernel.org, linux-security-module@vger.kernel.org,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Paul Turner <pjt@google.com>, Jann Horn <jannh@google.com>,
-        Florent Revest <revest@chromium.org>
-Subject: Re: [PATCH bpf-next v4 2/4] bpf: Implement bpf_local_storage for
- inodes
-Message-ID: <20200715225911.GA1194150@google.com>
-References: <20200709101239.3829793-1-kpsingh@chromium.org>
- <20200709101239.3829793-3-kpsingh@chromium.org>
- <20200715215751.6llgungzff66iwxh@kafai-mbp>
+        Wed, 15 Jul 2020 19:00:12 -0400
+Received: from mga03.intel.com ([134.134.136.65]:1713 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726765AbgGOXAL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jul 2020 19:00:11 -0400
+IronPort-SDR: iHMAX7dbH+1DiZw8mqRitIvrUrA+U24ANHKkWNbM6bUqQrSa2FwouM80KZvL0sVsWl+em9zSi+
+ HJkglCgnaC/A==
+X-IronPort-AV: E=McAfee;i="6000,8403,9683"; a="149274296"
+X-IronPort-AV: E=Sophos;i="5.75,357,1589266800"; 
+   d="scan'208";a="149274296"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jul 2020 16:00:09 -0700
+IronPort-SDR: wabWivlgfsZ89og+8FO6XfFmkaajLr8T24U6dOGKCshdczPg5lcuO8WfrxCgC0KZb0x4ywDy1v
+ LJI2s/3cyTXQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,357,1589266800"; 
+   d="scan'208";a="486406812"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.152])
+  by fmsmga005.fm.intel.com with ESMTP; 15 Jul 2020 16:00:09 -0700
+Date:   Wed, 15 Jul 2020 16:00:08 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Mohammed Gamal <mgamal@redhat.com>
+Cc:     kvm@vger.kernel.org, pbonzini@redhat.com,
+        linux-kernel@vger.kernel.org, vkuznets@redhat.com,
+        wanpengli@tencent.com, jmattson@google.com, joro@8bytes.org
+Subject: Re: [PATCH v3 7/9] KVM: VMX: Add guest physical address check in EPT
+ violation and misconfig
+Message-ID: <20200715230006.GF12349@linux.intel.com>
+References: <20200710154811.418214-1-mgamal@redhat.com>
+ <20200710154811.418214-8-mgamal@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200715215751.6llgungzff66iwxh@kafai-mbp>
+In-Reply-To: <20200710154811.418214-8-mgamal@redhat.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 15-Jul 14:57, Martin KaFai Lau wrote:
-> On Thu, Jul 09, 2020 at 12:12:37PM +0200, KP Singh wrote:
-> > From: KP Singh <kpsingh@google.com>
-> > 
-> > Similar to bpf_local_storage for sockets, add local storage for inodes.
-> > The life-cycle of storage is managed with the life-cycle of the inode.
-> > i.e. the storage is destroyed along with the owning inode.
-> > 
-> > The BPF LSM allocates an __rcu pointer to the bpf_local_storage in the
-> > security blob which are now stackable and can co-exist with other LSMs.
-> > 
-> > Signed-off-by: KP Singh <kpsingh@google.com>
+On Fri, Jul 10, 2020 at 05:48:09PM +0200, Mohammed Gamal wrote:
+> Check guest physical address against it's maximum physical memory. If
+> the guest's physical address exceeds the maximum (i.e. has reserved bits
+> set), inject a guest page fault with PFERR_RSVD_MASK set.
 > 
-> [ ... ]
+> This has to be done both in the EPT violation and page fault paths, as
+> there are complications in both cases with respect to the computation
+> of the correct error code.
 > 
+> For EPT violations, unfortunately the only possibility is to emulate,
+> because the access type in the exit qualification might refer to an
+> access to a paging structure, rather than to the access performed by
+> the program.
 > 
-> > +static void *bpf_inode_storage_lookup_elem(struct bpf_map *map, void *key)
-> > +{
-> > +	struct bpf_local_storage_data *sdata;
-> > +	struct inode *inode;
-> > +	int err = -EINVAL;
-> > +
-> > +	if (key) {
-> > +		inode = *(struct inode **)(key);
-> The bpf_inode_storage_lookup_elem() here and the (update|delete)_elem() below
-> are called from the userspace syscall.  How the userspace may provide this key?
+> Trapping page faults instead is needed in order to correct the error code,
+> but the access type can be obtained from the original error code and
+> passed to gva_to_gpa.  The corrections required in the error code are
+> subtle. For example, imagine that a PTE for a supervisor page has a reserved
+> bit set.  On a supervisor-mode access, the EPT violation path would trigger.
+> However, on a user-mode access, the processor will not notice the reserved
+> bit and not include PFERR_RSVD_MASK in the error code.
+> 
+> Co-developed-by: Mohammed Gamal <mgamal@redhat.com>
+> Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+> ---
+>  arch/x86/kvm/vmx/vmx.c | 24 +++++++++++++++++++++---
+>  arch/x86/kvm/vmx/vmx.h |  3 ++-
+>  2 files changed, 23 insertions(+), 4 deletions(-)
+> 
+> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+> index 770b090969fb..de3f436b2d32 100644
+> --- a/arch/x86/kvm/vmx/vmx.c
+> +++ b/arch/x86/kvm/vmx/vmx.c
+> @@ -4790,9 +4790,15 @@ static int handle_exception_nmi(struct kvm_vcpu *vcpu)
+>  
+>  	if (is_page_fault(intr_info)) {
+>  		cr2 = vmx_get_exit_qual(vcpu);
+> -		/* EPT won't cause page fault directly */
+> -		WARN_ON_ONCE(!vcpu->arch.apf.host_apf_flags && enable_ept);
+> -		return kvm_handle_page_fault(vcpu, error_code, cr2, NULL, 0);
+> +		if (enable_ept && !vcpu->arch.apf.host_apf_flags) {
+> +			/*
+> +			 * EPT will cause page fault only if we need to
+> +			 * detect illegal GPAs.
+> +			 */
+> +			kvm_fixup_and_inject_pf_error(vcpu, cr2, error_code);
 
-I realized this when I replied about the _fd_ name in the sk helpers.
-I am going to mark them as unsupported for now for inodes.
+This splats when running the PKU unit test, although the test still passed.
+I haven't yet spent the brain power to determine if this is a benign warning,
+i.e. simply unexpected, or if permission_fault() fault truly can't handle PK
+faults.
 
-We could, probably and separately, use a combination of the device
-and inode number as a key from userspace.
+  WARNING: CPU: 25 PID: 5465 at arch/x86/kvm/mmu.h:197 paging64_walk_addr_generic+0x594/0x750 [kvm]
+  Hardware name: Intel Corporation WilsonCity/WilsonCity, BIOS WLYDCRB1.SYS.0014.D62.2001092233 01/09/2020
+  RIP: 0010:paging64_walk_addr_generic+0x594/0x750 [kvm]
+  Code: <0f> 0b e9 db fe ff ff 44 8b 43 04 4c 89 6c 24 30 8b 13 41 39 d0 89
+  RSP: 0018:ff53778fc623fb60 EFLAGS: 00010202
+  RAX: 0000000000000001 RBX: ff53778fc623fbf0 RCX: 0000000000000007
+  RDX: 0000000000000001 RSI: 0000000000000002 RDI: ff4501efba818000
+  RBP: 0000000000000020 R08: 0000000000000005 R09: 00000000004000e7
+  R10: 0000000000000001 R11: 0000000000000000 R12: 0000000000000007
+  R13: ff4501efba818388 R14: 10000000004000e7 R15: 0000000000000000
+  FS:  00007f2dcf31a700(0000) GS:ff4501f1c8040000(0000) knlGS:0000000000000000
+  CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+  CR2: 0000000000000000 CR3: 0000001dea475005 CR4: 0000000000763ee0
+  DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+  DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+  PKRU: 55555554
+  Call Trace:
+   paging64_gva_to_gpa+0x3f/0xb0 [kvm]
+   kvm_fixup_and_inject_pf_error+0x48/0xa0 [kvm]
+   handle_exception_nmi+0x4fc/0x5b0 [kvm_intel]
+   kvm_arch_vcpu_ioctl_run+0x911/0x1c10 [kvm]
+   kvm_vcpu_ioctl+0x23e/0x5d0 [kvm]
+   ksys_ioctl+0x92/0xb0
+   __x64_sys_ioctl+0x16/0x20
+   do_syscall_64+0x3e/0xb0
+   entry_SYSCALL_64_after_hwframe+0x44/0xa9
+  ---[ end trace d17eb998aee991da ]---
 
-- KP
-
-> 
-> > +		sdata = inode_storage_lookup(inode, map, true);
-> > +		return sdata ? sdata->data : NULL;
-> > +	}
-> > +
-> > +	return ERR_PTR(err);
-> > +}
-> > +
-> > +static int bpf_inode_storage_update_elem(struct bpf_map *map, void *key,
-> > +					 void *value, u64 map_flags)
-> > +{
-> > +	struct bpf_local_storage_data *sdata;
-> > +	struct inode *inode;
-> > +	int err = -EINVAL;
-> > +
-> > +	if (key) {
-> > +		inode = *(struct inode **)(key);
-> > +		sdata = map->ops->map_local_storage_update(inode, map, value,
-> > +							   map_flags);
-> > +		return PTR_ERR_OR_ZERO(sdata);
-> > +	}
-> > +	return err;
-> > +}
-> > +
-> > +static int inode_storage_delete(struct inode *inode, struct bpf_map *map)
-> > +{
-> > +	struct bpf_local_storage_data *sdata;
-> > +
-> > +	sdata = inode_storage_lookup(inode, map, false);
-> > +	if (!sdata)
-> > +		return -ENOENT;
-> > +
-> > +	bpf_selem_unlink_map_elem(SELEM(sdata));
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +static int bpf_inode_storage_delete_elem(struct bpf_map *map, void *key)
-> > +{
-> > +	struct inode *inode;
-> > +	int err = -EINVAL;
-> > +
-> > +	if (key) {
-> > +		inode = *(struct inode **)(key);
-> > +		err = inode_storage_delete(inode, map);
-> > +	}
-> > +
-> > +	return err;
-> > +}
-> > +
-> 
-> [ ... ]
-> 
-> > +static int inode_storage_map_btf_id;
-> > +const struct bpf_map_ops inode_storage_map_ops = {
-> > +	.map_alloc_check = bpf_local_storage_map_alloc_check,
-> > +	.map_alloc = inode_storage_map_alloc,
-> > +	.map_free = inode_storage_map_free,
-> > +	.map_get_next_key = notsupp_get_next_key,
-> > +	.map_lookup_elem = bpf_inode_storage_lookup_elem,
-> > +	.map_update_elem = bpf_inode_storage_update_elem,
-> > +	.map_delete_elem = bpf_inode_storage_delete_elem,
-> > +	.map_check_btf = bpf_local_storage_map_check_btf,
-> > +	.map_btf_name = "bpf_local_storage_map",
-> > +	.map_btf_id = &inode_storage_map_btf_id,
-> > +	.map_local_storage_alloc = inode_storage_alloc,
-> > +	.map_selem_alloc = inode_selem_alloc,
-> > +	.map_local_storage_update = inode_storage_update,
-> > +	.map_local_storage_unlink = unlink_inode_storage,
-> > +};
-> > +
