@@ -2,122 +2,145 @@ Return-Path: <SRS0=kup7=A2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26BE7C433EB
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 08:33:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E89DC433E2
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 08:33:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ED5DF206F4
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 08:33:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 77908206D5
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 08:33:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594802009;
-	bh=iOVN0Aj56V7pWppvWBvshuC3/3Wx6PjHbGrnZyydSO0=;
+	s=default; t=1594802036;
+	bh=yJ25XsOgrvtzDWGEQ2WlZvT86/GEzbZcNWXj3DwVecg=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=AQKsIaKmcORKoo26km8RhG8ZuYnkh13y/c7tzNXRnSDSASEffOBiSUhJ4SSMaYD9v
-	 Gb9bui7LrDcvaiyvmqmtxAl6hsQHj3tMXxgkWsCqluuJqe0Sm9PHTBBRZm8WFQLjQq
-	 w01hc5rzbk/Z1zcO8T/gPqeYBQqJOkIR1DTVfNPI=
+	b=YkJsULlVGTrV9IakyZcq6ChW0FyuA4Ln/RhhGprKPGyX7W6mzFLPdboSlUVjynwLH
+	 gnBDEqMyvakhRJ3NVq8BXmj+rQ8B1llIVd8yjrnVcMo1/u0PaezbxflAJ9EPPD3TQZ
+	 DNNewkTjzokI5B/TXmbVXtifT7+elU0By4K1EBUA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730138AbgGOId1 (ORCPT
+        id S1730146AbgGOIdz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 04:33:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40308 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726034AbgGOId1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 04:33:27 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0AB1C20672;
-        Wed, 15 Jul 2020 08:33:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594802006;
-        bh=iOVN0Aj56V7pWppvWBvshuC3/3Wx6PjHbGrnZyydSO0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=PTE7YLDehLY6msegiqFCDsJCkrKstPFQEli4wDa+DYQ0plMqvlHJ00vUMOzOrJCY/
-         05CVC2ZuBA3YF5UVB395FVbgyOFuFxd2c+C3Gb9/pHpjTpCyPYcjbchaOybNvNF9Nr
-         0hAr7IDZ08YHAOgkmGdtM567MY6dwVdj2gl/4Ae4=
-Date:   Wed, 15 Jul 2020 10:33:22 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Chen Yu <yu.c.chen@intel.com>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        Len Brown <len.brown@intel.com>,
-        Michal Miroslaw <mirq-linux@rere.qmqm.pl>,
-        Zhang Rui <rui.zhang@intel.com>, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/2][RESEND v3] PM-runtime: change the tracepoints to
- cover all usage_count
-Message-ID: <20200715083322.GB2716443@kroah.com>
-References: <cover.1594790493.git.yu.c.chen@intel.com>
- <395187057e486df9a4328bc6d7d4ee912967fdb3.1594790493.git.yu.c.chen@intel.com>
- <20200715070614.GA2297388@kroah.com>
- <20200715081838.GA22379@chenyu-office.sh.intel.com>
+        Wed, 15 Jul 2020 04:33:55 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:41276 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726034AbgGOIdz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jul 2020 04:33:55 -0400
+Received: by mail-wr1-f68.google.com with SMTP id z15so1482228wrl.8
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 01:33:53 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=UogqZ/2X6MWGX1K8GDMtBTIuBPUjas+5dLb7mmibZ5Y=;
+        b=XA9Hb34GIYql3PjLBmiH/I5XF4aY9nIAQnQSazPp4cXieHBZ0k7dyNGoeDgfjaWdeQ
+         5NuGWx6Gmx5YPuO1rZsqgq8chQ1EULGtv+J28amflDBtj5cxEU3IVCS0a+KrB1aEZDJm
+         Dmw47UdbSgKNGtQQWQUh6udV2Bg2b44Z57iRf3TnsjZzei7GfWxw8fD7PdlKWcdV97pd
+         iI7vibSssr4WyAp1r6yHqcASOSN+sKszUJRR0cgWmxzCiRkNqT7i2txj1PV7i1Fncq9S
+         uuo8XdM/uaZG7uSFKpBI4vTULxDmz1Z2TsbZ4aTqT9LotiXvWK6qbXADRFnscValvcav
+         jwCg==
+X-Gm-Message-State: AOAM531Hsz8yaUioQini1hBHj9PPd0JbIWBYjmqGPmHWt/z83H2nFnIT
+        eRvCGLRFr64l2j5g2yj2HUA=
+X-Google-Smtp-Source: ABdhPJyeTXlojCPm2UkniYD8Z6F3TBatG36bOsrE5NFr5E+FztEte+oHjdrUX4/BSwJ1nfJn9oc3PA==
+X-Received: by 2002:a5d:5642:: with SMTP id j2mr10071811wrw.19.1594802032784;
+        Wed, 15 Jul 2020 01:33:52 -0700 (PDT)
+Received: from localhost (ip-37-188-169-187.eurotel.cz. [37.188.169.187])
+        by smtp.gmail.com with ESMTPSA id m10sm2229049wru.4.2020.07.15.01.33.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 15 Jul 2020 01:33:52 -0700 (PDT)
+Date:   Wed, 15 Jul 2020 10:33:51 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     js1304@gmail.com
+Cc:     Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, kernel-team@lge.com,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Christoph Hellwig <hch@infradead.org>,
+        Roman Gushchin <guro@fb.com>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>,
+        "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>
+Subject: Re: [PATCH 3/4] mm/hugetlb: make hugetlb migration callback CMA aware
+Message-ID: <20200715083351.GE5451@dhcp22.suse.cz>
+References: <1594789529-6206-1-git-send-email-iamjoonsoo.kim@lge.com>
+ <1594789529-6206-3-git-send-email-iamjoonsoo.kim@lge.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200715081838.GA22379@chenyu-office.sh.intel.com>
+In-Reply-To: <1594789529-6206-3-git-send-email-iamjoonsoo.kim@lge.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 15, 2020 at 04:18:38PM +0800, Chen Yu wrote:
-> Hi Greg,
-> thanks very much for taking a look,
-> On Wed, Jul 15, 2020 at 09:06:14AM +0200, Greg Kroah-Hartman wrote:
-> > On Wed, Jul 15, 2020 at 02:28:03PM +0800, Chen Yu wrote:
-> > > Commit d229290689ae ("PM-runtime: add tracepoints for usage_count changes")
-> > > has added some tracepoints to monitor the change of runtime usage, and
-> > > there is something to improve:
-> > > 1. There are some places that adjust the usage count not
-> > >    been traced yet. For example, pm_runtime_get_noresume() and
-> > >    pm_runtime_put_noidle()
-> > > 2. The change of the usage count will not be tracked if decreased
-> > >    from 1 to 0.
-> > > 
-> > > This patch intends to adjust the logic to be consistent with the
-> > > change of usage_counter, that is to say, only after the counter has
-> > > been possibly modified, we record it. Besides, all usage changes will
-> > > be shown using rpm_usage even if included by other trace points.
-> > > And these changes has helped track down the e1000e runtime issue.
-> > > 
-> > > Reviewed-by: Michał Mirosław <mirq-linux@rere.qmqm.pl>
-> > > Signed-off-by: Chen Yu <yu.c.chen@intel.com>
-> > > ---
-> > >  drivers/base/power/runtime.c | 38 +++++++++++++++++++++++-------------
-> > >  1 file changed, 24 insertions(+), 14 deletions(-)
-> > > 
-> > > diff --git a/drivers/base/power/runtime.c b/drivers/base/power/runtime.c
-> > > index 85a248e196ca..5789d2624513 100644
-> > > --- a/drivers/base/power/runtime.c
-> > > +++ b/drivers/base/power/runtime.c
-> > > @@ -1004,10 +1004,11 @@ int __pm_runtime_idle(struct device *dev, int rpmflags)
-> > >  	int retval;
-> > >  
-> > >  	if (rpmflags & RPM_GET_PUT) {
-> > > -		if (!atomic_dec_and_test(&dev->power.usage_count)) {
-> > > -			trace_rpm_usage_rcuidle(dev, rpmflags);
-> > > +		bool non_zero = !atomic_dec_and_test(&dev->power.usage_count);
-> > > +
-> > > +		trace_rpm_usage_rcuidle(dev, rpmflags);
-> > 
-> > Why not just call trace everywhere before you do the atomic operations?
-> > Why does the trace need to be called after the operation everywhere?
-> > 
-> If I understand correctly, besides Michal's comments, if we put the trace
-> before the atomic operation, we might be unable to judge whether the counter
-> is going to increase or decrease from rpmflags: it is RPM_GET_PUT which combine
-> the get() and put() together, then it is a little inconvenient for tracking IMO.
+On Wed 15-07-20 14:05:28, Joonsoo Kim wrote:
+> From: Joonsoo Kim <iamjoonsoo.kim@lge.com>
+> 
+> new_non_cma_page() in gup.c requires to allocate the new page that is not
+> on the CMA area. new_non_cma_page() implements it by using allocation
+> scope APIs.
+> 
+> However, there is a work-around for hugetlb. Normal hugetlb page
+> allocation API for migration is alloc_huge_page_nodemask(). It consists
+> of two steps. First is dequeing from the pool. Second is, if there is no
+> available page on the queue, allocating by using the page allocator.
+> 
+> new_non_cma_page() can't use this API since first step (deque) isn't
+> aware of scope API to exclude CMA area. So, new_non_cma_page() exports
+> hugetlb internal function for the second step, alloc_migrate_huge_page(),
+> to global scope and uses it directly. This is suboptimal since hugetlb
+> pages on the queue cannot be utilized.
+> 
+> This patch tries to fix this situation by making the deque function on
+> hugetlb CMA aware. In the deque function, CMA memory is skipped if
+> PF_MEMALLOC_NOCMA flag is found.
 
-A trace can never know the exact value of an atomic value as it could
-change right before or after the trace function is called, right?
+Now that this is in sync with the global case I do not have any
+objections.
 
-So why are you caring about that?  Care about the functionality that is
-happening, not a reference count that you do not control at all.
+> Acked-by: Mike Kravetz <mike.kravetz@oracle.com>
+> Signed-off-by: Joonsoo Kim <iamjoonsoo.kim@lge.com>
 
-thanks,
+Acked-by: Michal Hocko <mhocko@suse.com>
 
-greg k-h
+Minor nit below
+
+[...]
+> @@ -1036,10 +1037,16 @@ static void enqueue_huge_page(struct hstate *h, struct page *page)
+>  static struct page *dequeue_huge_page_node_exact(struct hstate *h, int nid)
+>  {
+>  	struct page *page;
+> +	bool nocma = !!(READ_ONCE(current->flags) & PF_MEMALLOC_NOCMA);
+
+READ_ONCE is not really needed because current->flags are always set on
+the current so no race is possible.
+
+> +
+> +	list_for_each_entry(page, &h->hugepage_freelists[nid], lru) {
+> +		if (nocma && is_migrate_cma_page(page))
+> +			continue;
+>  
+> -	list_for_each_entry(page, &h->hugepage_freelists[nid], lru)
+>  		if (!PageHWPoison(page))
+>  			break;
+> +	}
+> +
+>  	/*
+>  	 * if 'non-isolated free hugepage' not found on the list,
+>  	 * the allocation fails.
+> @@ -1928,7 +1935,7 @@ static struct page *alloc_surplus_huge_page(struct hstate *h, gfp_t gfp_mask,
+>  	return page;
+>  }
+>  
+> -struct page *alloc_migrate_huge_page(struct hstate *h, gfp_t gfp_mask,
+> +static struct page *alloc_migrate_huge_page(struct hstate *h, gfp_t gfp_mask,
+>  				     int nid, nodemask_t *nmask)
+>  {
+>  	struct page *page;
+> -- 
+> 2.7.4
+
+-- 
+Michal Hocko
+SUSE Labs
