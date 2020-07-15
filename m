@@ -2,103 +2,160 @@ Return-Path: <SRS0=kup7=A2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC6EFC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 13:01:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E906C433E4
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 13:03:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BD1C6206D5
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 13:01:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594818095;
-	bh=SZ93HvN5hT6+SbAbEMCbWN+cCEkXYiCiaxjJCORj4vA=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=uDSSjvXjpmaaMV99aZmSoo712IgBgjR+yn1kjUMlREaQGYM6pj0qoh/6XKWkbwhE+
-	 xzhmLlWaw9BVL1qmKJ7NNB8yffhvG1rKTSRQI2SSChn/+9z/ITngBnixKJHnH7h6W6
-	 0XO4Jon+gjCZTE5uXlf4Sc/Dq14whJhUfpR6WwgU=
+	by mail.kernel.org (Postfix) with ESMTP id 7ACE5206D5
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jul 2020 13:03:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="ip+9qV9o"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731348AbgGONBd (ORCPT
+        id S1731402AbgGONDC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 09:01:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55442 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726335AbgGONBd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 09:01:33 -0400
-Received: from localhost.localdomain (unknown [122.171.202.192])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4A59220657;
-        Wed, 15 Jul 2020 13:01:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594818092;
-        bh=SZ93HvN5hT6+SbAbEMCbWN+cCEkXYiCiaxjJCORj4vA=;
-        h=From:To:Cc:Subject:Date:From;
-        b=mFkrVXx991rb6Q2Vgw0Woxo9kEiRRm1FatgxdV6hQS+atmhVJff5VMbjD85Wuve8/
-         BEx8NtB50ySWa5YVzAd/brMyKLe1yDOiSMYIb8zBp2ReOMvxZMlMKqHnvXxYfnzprH
-         l4jZo7RviEbInXImJgWynSLywuBbXe7ZLaS+ZK94=
-From:   Vinod Koul <vkoul@kernel.org>
-To:     dmaengine@vger.kernel.org
-Cc:     Vinod Koul <vkoul@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] dmaengine: imx-sdma: remove always true comparisons
-Date:   Wed, 15 Jul 2020 18:31:22 +0530
-Message-Id: <20200715130122.39873-1-vkoul@kernel.org>
-X-Mailer: git-send-email 2.26.2
+        Wed, 15 Jul 2020 09:03:02 -0400
+Received: from mail.efficios.com ([167.114.26.124]:45970 "EHLO
+        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729900AbgGONDB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jul 2020 09:03:01 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by mail.efficios.com (Postfix) with ESMTP id A3B4A2818D1;
+        Wed, 15 Jul 2020 09:02:59 -0400 (EDT)
+Received: from mail.efficios.com ([127.0.0.1])
+        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id T-XhEFUSaRUD; Wed, 15 Jul 2020 09:02:59 -0400 (EDT)
+Received: from localhost (localhost [127.0.0.1])
+        by mail.efficios.com (Postfix) with ESMTP id 2A5E128199D;
+        Wed, 15 Jul 2020 09:02:59 -0400 (EDT)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com 2A5E128199D
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
+        s=default; t=1594818179;
+        bh=Sbd+cGFRnpcsVMskyWR7rP8BqYCfqctsQ8T1oYWLSPA=;
+        h=Date:From:To:Message-ID:MIME-Version;
+        b=ip+9qV9oYQB6oHNPVhT20tRLymHcsVPD1Pn7A/qIKoBDmIhZKIkc9/l2kFaUaqp3z
+         cEa44OxzVDEUfrEiKe4Zsa5qRxiCrivTGSbMr/pip1nqAo2hdtjOekoBpxnOs1fmcI
+         L8OVVdNXdK6/QrdlI3nOdl/XsZxG0b56WLJamyFQStKwMsSs8K8U3mH3Y1G5RxTJQX
+         yH841PgJLYFZiCylIz5/nZsxu6iwOCdCZJSPLLUtFd45JbQuELsJEM1QtZ0xOKeSq0
+         9HIJnSLJQrOlnjZh6oBPg+9DeLE3yKhA0E7a7lWUVAEYHwa13uTeovCBlbX/OfvtU7
+         3u8Zlb/zbG2+A==
+X-Virus-Scanned: amavisd-new at efficios.com
+Received: from mail.efficios.com ([127.0.0.1])
+        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id mTcnIX4OkSq5; Wed, 15 Jul 2020 09:02:59 -0400 (EDT)
+Received: from mail03.efficios.com (mail03.efficios.com [167.114.26.124])
+        by mail.efficios.com (Postfix) with ESMTP id 1875528199C;
+        Wed, 15 Jul 2020 09:02:59 -0400 (EDT)
+Date:   Wed, 15 Jul 2020 09:02:59 -0400 (EDT)
+From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+To:     carlos <carlos@redhat.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        paulmck <paulmck@linux.ibm.com>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Paul Turner <pjt@google.com>,
+        linux-api <linux-api@vger.kernel.org>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        Florian Weimer <fw@deneb.enyo.de>,
+        Chris Kennelly <ckennelly@google.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Message-ID: <1190016739.14119.1594818179014.JavaMail.zimbra@efficios.com>
+In-Reply-To: <e7ede994-ebec-8022-b12b-ac7147641ffb@redhat.com>
+References: <20200714030348.6214-1-mathieu.desnoyers@efficios.com> <e7ede994-ebec-8022-b12b-ac7147641ffb@redhat.com>
+Subject: Re: [RFC PATCH 0/4] rseq: Introduce extensible struct rseq
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [167.114.26.124]
+X-Mailer: Zimbra 8.8.15_GA_3955 (ZimbraWebClient - FF78 (Linux)/8.8.15_GA_3953)
+Thread-Topic: rseq: Introduce extensible struct rseq
+Thread-Index: Uvni3ynFct6LM9XWdCgpU+47NQj6gw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-sdmac->event_id0 is of type unsigned int and hence can never be less
-than zero. Driver compares this at couple of places with greater than or
-equal to zero, these are always true so should be dropped
+----- On Jul 14, 2020, at 4:55 PM, carlos carlos@redhat.com wrote:
 
-drivers/dma/imx-sdma.c:1336:23: warning: comparison of unsigned expression >= 0 is always true [-Wtype-limits]
-drivers/dma/imx-sdma.c:1637:23: warning: comparison of unsigned expression >= 0 is always true [-Wtype-limits]
+> On 7/13/20 11:03 PM, Mathieu Desnoyers wrote:
+>> Recent discussion led to a solution for extending struct rseq. This is
+>> an implementation of the proposed solution.
+>> 
+>> Now is a good time to agree on this scheme before the release of glibc
+>> 2.32, just in case there are small details to fix on the user-space
+>> side in order to allow extending struct rseq.
+> 
+> Adding extensibility to the rseq registration process would be great,
+> but we are out of time for the glibc 2.32 release.
 
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
----
- drivers/dma/imx-sdma.c | 11 ++++-------
- 1 file changed, 4 insertions(+), 7 deletions(-)
+Of course, and my goal is not to add this support for extensibility
+before glibc 2.32, but merely to see if we need to change anything in
+the way it uses rseq today (before the release) in order to facilitate
+extensibility in the future.
 
-diff --git a/drivers/dma/imx-sdma.c b/drivers/dma/imx-sdma.c
-index b8cfc9d5f1a2..4f8d8f5e1132 100644
---- a/drivers/dma/imx-sdma.c
-+++ b/drivers/dma/imx-sdma.c
-@@ -1333,8 +1333,7 @@ static void sdma_free_chan_resources(struct dma_chan *chan)
- 
- 	sdma_channel_synchronize(chan);
- 
--	if (sdmac->event_id0 >= 0)
--		sdma_event_disable(sdmac, sdmac->event_id0);
-+	sdma_event_disable(sdmac, sdmac->event_id0);
- 	if (sdmac->event_id1)
- 		sdma_event_disable(sdmac, sdmac->event_id1);
- 
-@@ -1634,11 +1633,9 @@ static int sdma_config(struct dma_chan *chan,
- 	memcpy(&sdmac->slave_config, dmaengine_cfg, sizeof(*dmaengine_cfg));
- 
- 	/* Set ENBLn earlier to make sure dma request triggered after that */
--	if (sdmac->event_id0 >= 0) {
--		if (sdmac->event_id0 >= sdmac->sdma->drvdata->num_events)
--			return -EINVAL;
--		sdma_event_enable(sdmac, sdmac->event_id0);
--	}
-+	if (sdmac->event_id0 >= sdmac->sdma->drvdata->num_events)
-+		return -EINVAL;
-+	sdma_event_enable(sdmac, sdmac->event_id0);
- 
- 	if (sdmac->event_id1) {
- 		if (sdmac->event_id1 >= sdmac->sdma->drvdata->num_events)
+> Should we revert rseq for glibc 2.32 and spend quality time discussing
+> the implications of an extensible design, something that Google already
+> says they are doing?
+
+Google's approach is limited to contexts simpler than multiple unrelated
+libraries scenarios. Peter Oskolkov stated as a follow-up that my
+extension approach would be one way to deal with problems associated
+with sharing __rseq_abi between unrelated libraries:
+
+https://lore.kernel.org/lkml/CAPNVh5fiCCJpyeLj_ciWzFrO4fasVXZNhpfKXJhJWJirXdJOjQ@mail.gmail.com/
+
+The fact that Google already have their own rseq extensions internally
+confirms that planning for extensibility is needed.
+
+> We can, with a clear head, and an agreed upon extension mechanism
+> include rseq in glibc 2.33 (release scheduled for Feburary 1st 2021).
+> We release time boxed every 6 months, no deviation, so you know when
+> your next merge window will be.
+> 
+> We have already done the hard work of fixing the nesting signal
+> handler issues, and glibc integration. If we revert today that will
+> also give time for Firefox and Chrome to adjust their sandboxes.
+> 
+> Do you wish to go forward with rseq as we have it in glibc 2.32,
+> or do you wish to revert rseq from glibc 2.32, discuss the extension
+> mechanism, and put it back into glibc 2.33 with adjustments?
+
+So here we have a catch-22 situation. Linus wants to see how rseq
+is being used before accepting additional features (ref.
+https://lore.kernel.org/lkml/CAHk-=wjk-2c4XvWjdzc-bs9Hbgvy-p7ASSnKKphggr5qDoXRDQ@mail.gmail.com/).
+This lack of ability to allow user-space to make any large-scale use
+of the rseq system call in a coordinated fashion blocks wide use of rseq.
+This coordination is supposed to be done by glibc, and I told
+every user-space project maintainer who contacted me to hold off
+using rseq until it is integrated into glibc. "tcmalloc" from Google
+is the exception because they do not care about ABI compatibility with
+other libraries (they are OK with a breakage and requiring upgrade).
+
+The process I'm going through right now is checking what are our
+options for extending rseq starting from the current ABI, just
+to see if we are painting ourselves in a corner with the current
+glibc integration. However, if we postpone integration of rseq
+into glibc because of possible future extensibility features, those
+may never happen because of the lack of usage feedback, due of lack
+of users, due to lack of coordinated ABI registration.
+
+At this point, the main question I would like answered is whether
+it would be acceptable to increase the size and alignment of
+the __rseq_abi symbol (which will be exposed by glibc) between
+e.g. glibc 2.32 and 2.33. If it's not possible, then we can
+find other solutions, for instance using an indirection with
+a pointer to an extended structure, but this appears to be
+slightly less efficient.
+
+Thanks,
+
+Mathieu
+
 -- 
-2.26.2
-
+Mathieu Desnoyers
+EfficiOS Inc.
+http://www.efficios.com
