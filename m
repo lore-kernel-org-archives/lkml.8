@@ -2,78 +2,104 @@ Return-Path: <SRS0=y5Sx=A3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2082FC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 23:16:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 979F1C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 23:17:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EDD4220739
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 23:16:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6CF5820739
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 23:17:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="d1BIlQya"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727825AbgGPXQl (ORCPT
+        id S1726960AbgGPXRY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 19:16:41 -0400
-Received: from www262.sakura.ne.jp ([202.181.97.72]:54435 "EHLO
-        www262.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726189AbgGPXQl (ORCPT
+        Thu, 16 Jul 2020 19:17:24 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:55426 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726189AbgGPXRX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 19:16:41 -0400
-Received: from fsav105.sakura.ne.jp (fsav105.sakura.ne.jp [27.133.134.232])
-        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id 06GMR8YS077197;
-        Fri, 17 Jul 2020 07:27:08 +0900 (JST)
-        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
-Received: from www262.sakura.ne.jp (202.181.97.72)
- by fsav105.sakura.ne.jp (F-Secure/fsigk_smtp/550/fsav105.sakura.ne.jp);
- Fri, 17 Jul 2020 07:27:08 +0900 (JST)
-X-Virus-Status: clean(F-Secure/fsigk_smtp/550/fsav105.sakura.ne.jp)
-Received: from [192.168.1.9] (M106072142033.v4.enabler.ne.jp [106.72.142.33])
-        (authenticated bits=0)
-        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id 06GMR8eS077194
-        (version=TLSv1.2 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO);
-        Fri, 17 Jul 2020 07:27:08 +0900 (JST)
-        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
-Subject: Re: [PATCH v2] binder: Don't use mmput() from shrinker function.
-To:     Christian Brauner <christian.brauner@ubuntu.com>
-Cc:     Michal Hocko <mhocko@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Arve Hjonnevag <arve@android.com>,
-        Todd Kjos <tkjos@android.com>,
-        Martijn Coenen <maco@android.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Christian Brauner <christian@brauner.io>,
-        syzbot <syzbot+e5344baa319c9a96edec@syzkaller.appspotmail.com>,
-        acme@kernel.org, alexander.shishkin@linux.intel.com,
-        jolsa@redhat.com, linux-kernel@vger.kernel.org,
-        mark.rutland@arm.com, mingo@redhat.com, namhyung@kernel.org,
-        peterz@infradead.org, syzkaller-bugs@googlegroups.com,
-        "open list:ANDROID DRIVERS" <devel@driverdev.osuosl.org>,
-        linux-mm <linux-mm@kvack.org>
-References: <0000000000001fbbb605aa805c9b@google.com>
- <5ce3ee90-333e-638d-ac8c-cd6d7ab7aa3b@I-love.SAKURA.ne.jp>
- <20200716083506.GA20915@dhcp22.suse.cz>
- <36db7016-98d6-2c6b-110b-b2481fd480ac@i-love.sakura.ne.jp>
- <20200716135445.GN31089@dhcp22.suse.cz>
- <4ba9adb2-43f5-2de0-22de-f6075c1fab50@i-love.sakura.ne.jp>
- <20200716151756.GO31089@dhcp22.suse.cz>
- <20200716162931.g3delsp7qmfjup6x@wittgenstein>
-From:   Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
-Message-ID: <3407ed9e-9f88-6b13-ce05-7aecc25b77d4@i-love.sakura.ne.jp>
-Date:   Fri, 17 Jul 2020 07:27:04 +0900
-User-Agent: Mozilla/5.0 (Windows NT 6.3; Win64; x64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Thu, 16 Jul 2020 19:17:23 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06GNDPgK088443;
+        Thu, 16 Jul 2020 23:17:07 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2020-01-29;
+ bh=8jtki/pU95bZMs51t72Fvdic/OjDlvBAeH0vxva+v1M=;
+ b=d1BIlQyasWZQ9MBtOcWLb43omvjPgkZWmnYzB71AFO0OcQc+6doqyh8kCIQnKRDmFggS
+ xZsMl0rbWhLZRY66Kwjdho6Q7gptc2icRRCVHEaKHyLYaUWCNaX4Vrhs+tkBcLGSf1AJ
+ HMJybpVlmy4UNTSTNnq+xjoHHQs98r2OTElwLvyZPGHDliwl/RSX6+SNQzSzBavtNA+Z
+ oV98Ev4fcwSrtUr3k+vFBmFL7LzpSATz8Y+J9AVj+Xvco0eUBKZ2RkaSEvGPgfbaJPRg
+ 8Qv1Q/MFs9S9Tjj3/ynJ7n7YQbfrc7VrJWCTYvSsapQaq/X34KorYouq+TU70KjwLAUu jg== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by aserp2120.oracle.com with ESMTP id 3275cmm8mr-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 16 Jul 2020 23:17:07 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06GNDiTN111977;
+        Thu, 16 Jul 2020 23:15:06 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by aserp3020.oracle.com with ESMTP id 327qbctyd5-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 16 Jul 2020 23:15:06 +0000
+Received: from abhmp0013.oracle.com (abhmp0013.oracle.com [141.146.116.19])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 06GNF3TF013005;
+        Thu, 16 Jul 2020 23:15:04 GMT
+Received: from [192.168.2.112] (/50.38.35.18)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 16 Jul 2020 16:15:03 -0700
+Subject: Re: [PATCH v4 03/15] mm,madvise: call soft_offline_page() without
+ MF_COUNT_INCREASED
+To:     Oscar Salvador <osalvador@suse.de>, akpm@linux-foundation.org
+Cc:     mhocko@suse.com, linux-mm@kvack.org, david@redhat.com,
+        aneesh.kumar@linux.vnet.ibm.com, naoya.horiguchi@nec.com,
+        linux-kernel@vger.kernel.org,
+        Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>,
+        Oscar Salvador <osalvador@suse.com>
+References: <20200716123810.25292-1-osalvador@suse.de>
+ <20200716123810.25292-4-osalvador@suse.de>
+From:   Mike Kravetz <mike.kravetz@oracle.com>
+Message-ID: <0467947a-4306-bc36-2c5e-04e578990d36@oracle.com>
+Date:   Thu, 16 Jul 2020 16:15:01 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-In-Reply-To: <20200716162931.g3delsp7qmfjup6x@wittgenstein>
+In-Reply-To: <20200716123810.25292-4-osalvador@suse.de>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9684 signatures=668680
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 malwarescore=0
+ mlxscore=0 spamscore=0 phishscore=0 suspectscore=0 bulkscore=0
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2007160149
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9684 signatures=668680
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 priorityscore=1501
+ bulkscore=0 adultscore=0 lowpriorityscore=0 phishscore=0 spamscore=0
+ impostorscore=0 malwarescore=0 mlxlogscore=999 clxscore=1011 mlxscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2007160149
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/07/17 1:29, Christian Brauner wrote:
-> Does this need a Cc: stable?
+On 7/16/20 5:37 AM, Oscar Salvador wrote:
+> From: Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>
+> 
+> The call to get_user_pages_fast is only to get the pointer to a struct
+> page of a given address, pinning it is memory-poisoning handler's job,
+> so drop the refcount grabbed by get_user_pages_fast
+> 
+> Signed-off-by: Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>
+> Signed-off-by: Oscar Salvador <osalvador@suse.com>
 
-Up to someone who applies this patch. I think this race is hard to hit.
+Reviewed-by: Mike Kravetz <mike.kravetz@oracle.com>
+
+-- 
+Mike Kravetz
