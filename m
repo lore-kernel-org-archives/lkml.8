@@ -2,170 +2,146 @@ Return-Path: <SRS0=y5Sx=A3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A75FCC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 17:06:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC4CFC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 17:09:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 835D6204EC
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 17:06:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA750204EC
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 17:09:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ScABqrn1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729123AbgGPRG0 (ORCPT
+        id S1728707AbgGPRJ0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 13:06:26 -0400
-Received: from mx2.suse.de ([195.135.220.15]:57984 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728126AbgGPRGZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 13:06:25 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id BB08DB609;
-        Thu, 16 Jul 2020 17:06:27 +0000 (UTC)
-Message-ID: <fe14037b02fd887a73cd91c115dccc4485f8446e.camel@suse.de>
-Subject: Re: [PATCH] dma-pool: Only allocate from CMA when in same memory
- zone
-From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-To:     hch@lst.de, Marek Szyprowski <m.szyprowski@samsung.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        David Rientjes <rientjes@google.com>
-Cc:     linux-rpi-kernel@lists.infradead.org, jeremy.linton@arm.com,
-        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org
-Date:   Thu, 16 Jul 2020 19:06:22 +0200
-In-Reply-To: <20200710141016.15495-1-nsaenzjulienne@suse.de>
-References: <20200710141016.15495-1-nsaenzjulienne@suse.de>
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-i8vqeUqMtzSmwKfBb2jT"
-User-Agent: Evolution 3.36.4 
+        Thu, 16 Jul 2020 13:09:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44284 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725867AbgGPRJZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jul 2020 13:09:25 -0400
+Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9CBB4C061755
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Jul 2020 10:09:25 -0700 (PDT)
+Received: by mail-pg1-x543.google.com with SMTP id z5so5158293pgb.6
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Jul 2020 10:09:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=+YUV7baZS3QMy6H9iHTF1vq422tSxwwdhocsQIIKpJ8=;
+        b=ScABqrn1IiApBTOd3uwWZ9zcKyBA/0MYgYViGsTpujPuZnW3GdtFtgxyBI5AFAzYl3
+         fUrxQg8yGnew+6F9JimmYfj2uOabAogHKPhV3U7stmqIjUvfIAn3FmaffVO5I3+Cc4Bc
+         vhXwlBO1ze/qqLGqmg/EgekmFJZAfA2nMSGkk=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=+YUV7baZS3QMy6H9iHTF1vq422tSxwwdhocsQIIKpJ8=;
+        b=JHZWFN3V/2OWidMSCTsbFNvkcw37T+LHK9HfSunz4T07yxOKChTEdBYCW7EETH7wqA
+         gS3EWeu9WFhTNjnAeGtQ3KI9MA63/GKZ3j/lORzuAjblswsJZvGHLMQNBXaUhUQyYqW5
+         ip5h75b8m1E+CuV4dqE6SQAvLaT5iX659hTxzyf7TkSV6Jww74XmibtXEqiunVG30fb3
+         B//j5/xIwuec6VEiP4rvPR4abAhp74HBYwbImz2GHqeot66x2h/YyOF618gEhqqGo586
+         NFqYWuvBDGC3X/uylTf6DtVn05E1pyNTmDAVQo8Xx8MFyqE5V595FfofTrhla7BmlXUR
+         NfRA==
+X-Gm-Message-State: AOAM530erqVNQ+h/ppThRzFt/VUDIyGoaNPkJHW577TrwKkvc0YeOYGe
+        XGFSHKvL/qkSfdBh7qnVbVkWop2XP0XupQ==
+X-Google-Smtp-Source: ABdhPJwER+Qj87J/ACr8CCYXvpcmu4jIfvu9bYRFuYv8jUqPfgcWzZLmxBY+kzYo551VD6jFfDqMQQ==
+X-Received: by 2002:a63:cb03:: with SMTP id p3mr5023403pgg.444.1594919364719;
+        Thu, 16 Jul 2020 10:09:24 -0700 (PDT)
+Received: from localhost ([2401:fa00:1:10:725a:fff:fe46:44eb])
+        by smtp.gmail.com with ESMTPSA id c71sm651622pje.32.2020.07.16.10.09.20
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 16 Jul 2020 10:09:22 -0700 (PDT)
+From:   Yu-Hsuan Hsu <yuhsuan@chromium.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Tzung-Bi Shih <tzungbi@google.com>,
+        Cheng-Yi Chiang <cychiang@chromium.org>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Guenter Roeck <groeck@chromium.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        Benson Leung <bleung@chromium.org>,
+        alsa-devel@alsa-project.org, Yu-Hsuan Hsu <yuhsuan@chromium.org>
+Subject: [PATCH v2] ASoC: cros_ec_codec: Reset I2S RX when probing
+Date:   Fri, 17 Jul 2020 01:09:14 +0800
+Message-Id: <20200716170914.3623060-1-yuhsuan@chromium.org>
+X-Mailer: git-send-email 2.27.0.389.gc38d7665816-goog
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+It is not guaranteed that I2S RX is disabled when the kernel booting.
+For example, if the kernel crashes while it is enabled, it will keep
+enabled until the next time EC reboots. Reset I2S RX when probing to
+fix this issue.
 
---=-i8vqeUqMtzSmwKfBb2jT
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Signed-off-by: Yu-Hsuan Hsu <yuhsuan@chromium.org>
+---
+ drivers/platform/chrome/cros_ec_proto.c        | 7 ++++++-
+ include/linux/platform_data/cros_ec_commands.h | 1 +
+ sound/soc/codecs/cros_ec_codec.c               | 9 +++++++++
+ 3 files changed, 16 insertions(+), 1 deletion(-)
 
-Hi Chritoph,
-
-On Fri, 2020-07-10 at 16:10 +0200, Nicolas Saenz Julienne wrote:
-> There is no guarantee to CMA's placement, so allocating a zone specific
-> atomic pool from CMA might return memory from a completely different
-> memory zone. To get around this double check CMA's placement before
-> allocating from it.
->=20
-> Fixes: c84dc6e68a1d ("dma-pool: add additional coherent pools to map to g=
-fp
-> mask")
-> Reported-by: Jeremy Linton <jeremy.linton@arm.com>
-> Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-> ---
->=20
-> This is a code intensive alternative to "dma-pool: Do not allocate pool
-> memory from CMA"[1].
-
-I see you applied "dma-pool: Do not allocate pool memory from CMA" on your
-tree. Do you want me to send a v2 of this patch taking that into account
-targeting v5.9? or you'd rather just follow another approach?
-
-Regards,
-Nicolas
-
->=20
-> [1] https://lkml.org/lkml/2020/7/8/1108
->=20
->  kernel/dma/pool.c | 36 +++++++++++++++++++++++++++++++++++-
->  1 file changed, 35 insertions(+), 1 deletion(-)
->=20
-> diff --git a/kernel/dma/pool.c b/kernel/dma/pool.c
-> index 8cfa01243ed2..ccf3eeb77e00 100644
-> --- a/kernel/dma/pool.c
-> +++ b/kernel/dma/pool.c
-> @@ -3,6 +3,7 @@
->   * Copyright (C) 2012 ARM Ltd.
->   * Copyright (C) 2020 Google LLC
->   */
-> +#include <linux/cma.h>
->  #include <linux/debugfs.h>
->  #include <linux/dma-direct.h>
->  #include <linux/dma-noncoherent.h>
-> @@ -56,6 +57,39 @@ static void dma_atomic_pool_size_add(gfp_t gfp, size_t
-> size)
->  		pool_size_kernel +=3D size;
->  }
-> =20
-> +static bool cma_in_zone(gfp_t gfp)
-> +{
-> +	u64 zone_dma_end, zone_dma32_end;
-> +	phys_addr_t base, end;
-> +	unsigned long size;
-> +	struct cma *cma;
-> +
-> +	cma =3D dev_get_cma_area(NULL);
-> +	if (!cma)
-> +		return false;
-> +
-> +	size =3D cma_get_size(cma);
-> +	if (!size)
-> +		return false;
-> +	base =3D cma_get_base(cma) - memblock_start_of_DRAM();
-> +	end =3D base + size - 1;
-> +
-> +	zone_dma_end =3D IS_ENABLED(CONFIG_ZONE_DMA) ? DMA_BIT_MASK(zone_dma_bi=
-ts)
-> : 0;
-> +	zone_dma32_end =3D IS_ENABLED(CONFIG_ZONE_DMA32) ? DMA_BIT_MASK(32) : 0=
-;
-> +
-> +	/* CMA can't cross zone boundaries, see cma_activate_area() */
-> +	if (IS_ENABLED(CONFIG_ZONE_DMA) && gfp & GFP_DMA &&
-> +	   end <=3D zone_dma_end)
-> +		return true;
-> +	else if (IS_ENABLED(CONFIG_ZONE_DMA32) && gfp & GFP_DMA32 &&
-> +		base > zone_dma_end && end <=3D zone_dma32_end)
-> +		return true;
-> +	else if (base > zone_dma32_end)
-> +		return true;
-> +
-> +	return false;
-> +}
-> +
->  static int atomic_pool_expand(struct gen_pool *pool, size_t pool_size,
->  			      gfp_t gfp)
->  {
-> @@ -70,7 +104,7 @@ static int atomic_pool_expand(struct gen_pool *pool, s=
-ize_t
-> pool_size,
->  	do {
->  		pool_size =3D 1 << (PAGE_SHIFT + order);
-> =20
-> -		if (dev_get_cma_area(NULL))
-> +		if (cma_in_zone(gfp))
->  			page =3D dma_alloc_from_contiguous(NULL, 1 << order,
->  							 order, false);
->  		else
-
-
---=-i8vqeUqMtzSmwKfBb2jT
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl8QiQ4ACgkQlfZmHno8
-x/5J8wgAgtnoi3awUaaAoJDZ3SxyOCK0RAeATzl/PIyFmwFPHIHmHND7mUjdEKDZ
-hAJC5gVoRZfflUHUgQ0VhccWa6KoL0Jkf74PiS0h+JRjsHkLWeGCAsJs8532sRrR
-4bHjmyDRi3YtQZu8zpTp9iYbICXN5N9ekA4HyvRo/rTTfbq8THwLsLqtcgfO+uL8
-MMDa6Nsh8Y5KyVWJQCo5/giHR3KEqrN2tHkFi3iBwK+7NQxUzKEOaVl5EHXbmf3T
-rO2MP6cfi0sIz/r3H1Kuni2ntDI4PP4lGVF45H3WSmTntUVOx8/bqV6FtAV0QhqB
-Coam+hyQ0aB/eHvPHwUFJw/fsOQ2KA==
-=iOG2
------END PGP SIGNATURE-----
-
---=-i8vqeUqMtzSmwKfBb2jT--
+diff --git a/drivers/platform/chrome/cros_ec_proto.c b/drivers/platform/chrome/cros_ec_proto.c
+index 3e745e0fe092c..2c60690d7147c 100644
+--- a/drivers/platform/chrome/cros_ec_proto.c
++++ b/drivers/platform/chrome/cros_ec_proto.c
+@@ -572,7 +572,12 @@ int cros_ec_cmd_xfer_status(struct cros_ec_device *ec_dev,
+ 		return -ENOTSUPP;
+ 	} else if (msg->result != EC_RES_SUCCESS) {
+ 		dev_dbg(ec_dev->dev, "Command result (err: %d)\n", msg->result);
+-		return -EPROTO;
++		switch (msg->result) {
++		case EC_RES_INVALID_PARAM:
++			return -EINVAL;
++		default:
++			return -EPROTO;
++		}
+ 	}
+ 
+ 	return ret;
+diff --git a/include/linux/platform_data/cros_ec_commands.h b/include/linux/platform_data/cros_ec_commands.h
+index 69210881ebac8..11ce917ca924c 100644
+--- a/include/linux/platform_data/cros_ec_commands.h
++++ b/include/linux/platform_data/cros_ec_commands.h
+@@ -4598,6 +4598,7 @@ enum ec_codec_i2s_rx_subcmd {
+ 	EC_CODEC_I2S_RX_SET_SAMPLE_DEPTH = 0x2,
+ 	EC_CODEC_I2S_RX_SET_DAIFMT = 0x3,
+ 	EC_CODEC_I2S_RX_SET_BCLK = 0x4,
++	EC_CODEC_I2S_RX_RESET = 0x5,
+ 	EC_CODEC_I2S_RX_SUBCMD_COUNT,
+ };
+ 
+diff --git a/sound/soc/codecs/cros_ec_codec.c b/sound/soc/codecs/cros_ec_codec.c
+index f23956cf4ed84..b5ff30b7f1aa8 100644
+--- a/sound/soc/codecs/cros_ec_codec.c
++++ b/sound/soc/codecs/cros_ec_codec.c
+@@ -1034,6 +1034,15 @@ static int cros_ec_codec_platform_probe(struct platform_device *pdev)
+ 	}
+ 	priv->ec_capabilities = r.capabilities;
+ 
++	/* Reset EC codec I2S RX. */
++	p.cmd = EC_CODEC_I2S_RX_RESET;
++	ret = send_ec_host_command(priv->ec_device, EC_CMD_EC_CODEC_I2S_RX,
++				   (uint8_t *)&p, sizeof(p), NULL, 0);
++	if (ret == -EINVAL)
++		dev_info(dev, "Missing reset command. Please update your EC firmware.\n");
++	else if (ret)
++		dev_err(dev, "failed to EC_CODEC_I2S_RESET: %d\n", ret);
++
+ 	platform_set_drvdata(pdev, priv);
+ 
+ 	ret = devm_snd_soc_register_component(dev, &i2s_rx_component_driver,
+-- 
+2.27.0.389.gc38d7665816-goog
 
