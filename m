@@ -2,127 +2,158 @@ Return-Path: <SRS0=y5Sx=A3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A92AC433E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 21:33:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD89BC433E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 21:33:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 097BC207CB
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 21:33:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 95A47207E8
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 21:33:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="1bhpXeAp";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="fPIc5sqd"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="m2OYpSaj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726885AbgGPVdZ (ORCPT
+        id S1726784AbgGPVdM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 17:33:25 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:36106 "EHLO
-        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725959AbgGPVdY (ORCPT
+        Thu, 16 Jul 2020 17:33:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56826 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725959AbgGPVdL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 17:33:24 -0400
-From:   Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1594935202;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=5CsMjI9aQcGWcn47drYeuuGUUPH28S7NiRCV6XdURWs=;
-        b=1bhpXeApWbtkbvSGYhWsDKvZdDydcP4ehLGkuE2WITWwKhNEwXNJ8lY8Svg5UV6WjEoK9J
-        NE4M2xROmRfONtlPdMHWQTLpSguKdBN9p9hC2UReKlReVzE2e7JAZU2pE/NtmjLp10UKTT
-        OZ/QyIG/0gzeYy5P7vRlOPKKFMRkQ8O5krpiNAv3dcPkTah17ACvGYKSiSXrekP4/03qyT
-        4F9DI44067dc+tumHrRPdC4SdZqfasXGgVt0UjSjp0NQ9yFB8aZCKf/GUN5mhBAIpWZNBQ
-        7kuiTTAN4tRb++m2WYn+8+rquMQM6zZJN3F6JzT8IjGaKFH/8ogYMgejYvQmsw==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1594935202;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=5CsMjI9aQcGWcn47drYeuuGUUPH28S7NiRCV6XdURWs=;
-        b=fPIc5sqdGm8Y0fsYjECBge8CE3I7sD1Pqzh4zvKUg77NBgtNSCRX3xBQa6Q6vv51j9Aabo
-        CcEGWk/LqOe4WwCw==
-To:     Kees Cook <keescook@chromium.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
-        linux-arch@vger.kernel.org, Will Deacon <will@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Keno Fischer <keno@juliacomputing.com>,
-        Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org
-Subject: Re: [patch V3 08/13] x86/entry: Use generic syscall entry function
-In-Reply-To: <202007161359.AB211685@keescook>
-References: <20200716182208.180916541@linutronix.de> <20200716185424.765294277@linutronix.de> <202007161359.AB211685@keescook>
-Date:   Thu, 16 Jul 2020 23:33:21 +0200
-Message-ID: <87ft9rtaam.fsf@nanos.tec.linutronix.de>
-MIME-Version: 1.0
-Content-Type: text/plain
+        Thu, 16 Jul 2020 17:33:11 -0400
+Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1B115C061755;
+        Thu, 16 Jul 2020 14:33:11 -0700 (PDT)
+Received: by mail-wm1-x341.google.com with SMTP id f139so13196567wmf.5;
+        Thu, 16 Jul 2020 14:33:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=jVRCxAU1h8uuMP5tlk5Q3qw+CDViJUj6+cwcmkFoV2I=;
+        b=m2OYpSajgIdqjKm9kQG8kvxpt0MuknTil2/DXtr3coNClLWwVDowL4oW+qaM1nPeEQ
+         tdKEGdYGp+qtPT15R2/PG4xjaIlSn3zzelPRoUwurVJQvHplOJ+nvOpzuKV6TQppv46b
+         rHzDsX0tPxfrUVbXV9HZlESUPIFEuHknSIimxf8z0PLKPD9ZGeqZlyujR8Y8XUW5Hdzm
+         1GhZEJxeYK+uMiYtJUngU81CpTJwWMlKst5ZzS9O6H3RssbleNq4FHvbxUpsn/lweUVz
+         rk6iykT4jlf3Fftfw0bQ3eBAU3IrE8145Jm4ZVCycNSN/2p3p+CjhdRW0HF2towyYiem
+         Y0ww==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=jVRCxAU1h8uuMP5tlk5Q3qw+CDViJUj6+cwcmkFoV2I=;
+        b=JTpuB2sTB+hDVtVAIltMORi2FFqcBHAyKvL9KM2ZS1wP6WwSviHn2XU+LAxKtxoIKx
+         IbANQkA45TCRB/MfnvRHMwH3/qvdIMidGLeIQ+NXT2twqvPatmvdLbX44pluF14JfBsO
+         8eKPwLYyFD4aYILTxrc/Nx7BoYlBofEyGZTOeEKIJZZZ0lWA0f9L9cc2WHxLISrnH2RZ
+         kgX16PM9vI+kzGL7u/ecbJGjlOc6ZL0dydKpOKYGTqbsTgKveBkLgVeEaoBKbSdRcLeh
+         hViZHzwfeKJ1o86tA56XTtZ7bMH3SVSqi/nNpqJf1lD01cCzQGtI790WLYdLZAtMMBo3
+         WHUg==
+X-Gm-Message-State: AOAM530GfUpAxALGECaHR1vAAmu7Ou7XFFuUe/m7UyuRdGjTBpI3KDeo
+        +BjjfqGvNd6qjrsM8JjGkI6eNutgrw==
+X-Google-Smtp-Source: ABdhPJzyU+1bToje+Yv8U/cWOGO3OKW1Aeh17ICpPtjpRkx2p87s8HuYdnwNug4TFPuzHzsS5CZc0Q==
+X-Received: by 2002:a7b:c194:: with SMTP id y20mr6420782wmi.83.1594935189465;
+        Thu, 16 Jul 2020 14:33:09 -0700 (PDT)
+Received: from localhost.localdomain ([2a02:810b:f40:e00:922b:34ff:fe38:6455])
+        by smtp.googlemail.com with ESMTPSA id v11sm7444825wmb.3.2020.07.16.14.33.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 16 Jul 2020 14:33:08 -0700 (PDT)
+From:   Alex Bee <knaerzche@gmail.com>
+To:     linux-media@vger.kernel.org
+Cc:     Alex Bee <knaerzche@gmail.com>, linux-kernel@vger.kernel.org,
+        Arnd Bergmann <arnd@arndb.de>, Sean Young <sean@mess.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>
+Subject: [PATCH] media: dvb_usb_pctv452e: use ISL6423 voltage regulator per default
+Date:   Thu, 16 Jul 2020 23:33:03 +0200
+Message-Id: <20200716213303.20044-1-knaerzche@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Kees Cook <keescook@chromium.org> writes:
-> On Thu, Jul 16, 2020 at 08:22:16PM +0200, Thomas Gleixner wrote:
->> +}
->> +#define arch_check_user_regs arch_check_user_regs
->
-> Will architectures implement subsets of these functions? (i.e. instead
-> of each of the defines, is CONFIG_ENTRY_GENERIC sufficient for the
-> no-op inlines?)
+Both TT-connect S2-3600 and Pinnacle PCTV Sat HDTV are using
+Intersil ISL6423 as LNB voltage regulator. This makes
+TT-connect S2-3650 CI the only device which uses STM LNBP22 regulator
+which is currently used for all devices driven by pctv452e driver.
 
-Yes, some of these are optional as far as my analysis of the
-architecture code went.
+This patch fixes this by creating an exception for TT-connect S2-3650 CI
+to continue to use STM LNBP22 while all others now using correct ISL6423
+driver which makes DiSEqC/EN50494 comands which involve voltage changes
+now working on the other devices (which didn't work before).
 
->> +}
->> +#define arch_syscall_enter_seccomp arch_syscall_enter_seccomp
->
-> Actually, I've been meaning to clean this up. It's not needed at all.
-> This was left over from the seccomp fast-path code that got ripped out a
-> while ago. seccomp already has everything it needs to do this work, so
-> just:
->
-> 	__secure_computing(NULL);
->
-> is sufficient for every architecture that supports seccomp. (See kernel/seccomp.c
-> populate_seccomp_data().)
+Signed-off-by: Alex Bee <knaerzche@gmail.com>
+---
+ drivers/media/usb/dvb-usb/Kconfig    |  1 +
+ drivers/media/usb/dvb-usb/pctv452e.c | 24 ++++++++++++++++++++----
+ 2 files changed, 21 insertions(+), 4 deletions(-)
 
-Nice. Was not aware of these details. Trivial enough to fix :)
+diff --git a/drivers/media/usb/dvb-usb/Kconfig b/drivers/media/usb/dvb-usb/Kconfig
+index 25ba03edcb5c..7498110142e4 100644
+--- a/drivers/media/usb/dvb-usb/Kconfig
++++ b/drivers/media/usb/dvb-usb/Kconfig
+@@ -279,6 +279,7 @@ config DVB_USB_PCTV452E
+ 	tristate "Pinnacle PCTV HDTV Pro USB device/TT Connect S2-3600"
+ 	depends on DVB_USB
+ 	select TTPCI_EEPROM
++	select DVB_ISL6423 if MEDIA_SUBDRV_AUTOSELECT
+ 	select DVB_LNBP22 if MEDIA_SUBDRV_AUTOSELECT
+ 	select DVB_STB0899 if MEDIA_SUBDRV_AUTOSELECT
+ 	select DVB_STB6100 if MEDIA_SUBDRV_AUTOSELECT
+diff --git a/drivers/media/usb/dvb-usb/pctv452e.c b/drivers/media/usb/dvb-usb/pctv452e.c
+index 441d878fc22c..4b13c1f35b28 100644
+--- a/drivers/media/usb/dvb-usb/pctv452e.c
++++ b/drivers/media/usb/dvb-usb/pctv452e.c
+@@ -20,6 +20,7 @@
+ #include "stb6100.h"
+ #include "stb6100_cfg.h"
+ /* FE Power */
++#include "isl6423.h"
+ #include "lnbp22.h"
+ 
+ #include <media/dvb_ca_en50221.h>
+@@ -83,6 +84,13 @@ static struct stb0899_postproc pctv45e_postproc[] = {
+ 	{ 0, 0 }
+ };
+ 
++static struct isl6423_config pctv452e_isl6423_config = {
++	.current_max		= SEC_CURRENT_515m,
++	.curlim			= SEC_CURRENT_LIM_ON,
++	.mod_extern		= 1,
++	.addr			= 0x08,
++};
++
+ /*
+  * stores all private variables for communication with the PCTV452e DVB-S2
+  */
+@@ -909,15 +917,23 @@ static int pctv452e_frontend_attach(struct dvb_usb_adapter *a)
+ 						&a->dev->i2c_adap);
+ 	if (!a->fe_adap[0].fe)
+ 		return -ENODEV;
+-	if ((dvb_attach(lnbp22_attach, a->fe_adap[0].fe,
+-					&a->dev->i2c_adap)) == NULL)
+-		err("Cannot attach lnbp22\n");
+ 
+ 	id = a->dev->desc->warm_ids[0];
+ 	if (USB_VID_TECHNOTREND == id->idVendor
+-	    && USB_PID_TECHNOTREND_CONNECT_S2_3650_CI == id->idProduct)
++	    && USB_PID_TECHNOTREND_CONNECT_S2_3650_CI == id->idProduct) {
++		if (dvb_attach(lnbp22_attach,
++			       a->fe_adap[0].fe,
++			       &a->dev->i2c_adap) == NULL) {
++			err("Cannot attach lnbp22\n");
++		}
+ 		/* Error ignored. */
+ 		tt3650_ci_init(a);
++	} else if (dvb_attach(isl6423_attach,
++			      a->fe_adap[0].fe,
++			      &a->dev->i2c_adap,
++			      &pctv452e_isl6423_config) == NULL) {
++		err("Cannot attach isl6423\n");
++	}
+ 
+ 	return 0;
+ }
+-- 
+2.17.1
 
-> And if you want more generalization work, note that the secure_computing()
-> macro performs a TIF test before calling __secure_computing(NULL). But
-> my point is, I think arch_syscall_enter_seccomp() is not needed.
-
-Cute. One horror gone.
-
->> +static inline void arch_syscall_enter_audit(struct pt_regs *regs)
->> +{
->> +#ifdef CONFIG_X86_64
->> +	if (in_ia32_syscall()) {
->> +		audit_syscall_entry(regs->orig_ax, regs->di,
->> +				    regs->si, regs->dx, regs->r10);
->> +	} else
->> +#endif
->> +	{
->> +		audit_syscall_entry(regs->orig_ax, regs->bx,
->> +				    regs->cx, regs->dx, regs->si);
->> +	}
->> +}
->> +#define arch_syscall_enter_audit arch_syscall_enter_audit
->
-> Similarly, I think these can be redefined in the generic case
-> using the existing accessors for syscall arguments, etc. e.g.
-> arch_syscall_enter_audit() is not needed for any architecture, and the
-> generic is:
->
-> 	unsigned long args[6];
->
->         syscall_get_arguments(task, regs, args);
-> 	audit_syscall_entry(syscall_get_nr(current, regs),
-> 			    args[0], args[1], args[2], args[3]);
-
-Nice. Another arch specific mess gone.
-
-Thanks,
-
-        tglx
