@@ -2,236 +2,225 @@ Return-Path: <SRS0=y5Sx=A3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EC15C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 06:08:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA99AC433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 06:10:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D08FF20720
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 06:08:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Z4LPEAHL"
+	by mail.kernel.org (Postfix) with ESMTP id BD51220578
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 06:10:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727788AbgGPGIl (ORCPT
+        id S1727924AbgGPGKW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 02:08:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54890 "EHLO
+        Thu, 16 Jul 2020 02:10:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55154 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725844AbgGPGIk (ORCPT
+        with ESMTP id S1725844AbgGPGKW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 02:08:40 -0400
-Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 625C1C061755
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 23:08:40 -0700 (PDT)
-Received: by mail-pg1-x542.google.com with SMTP id l63so4300627pge.12
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 23:08:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=D4RopI2SK+VrJEt5Anwxfc4A31dj9pQyiM4Ej3RP8gk=;
-        b=Z4LPEAHLdCtydXYwHy5cU2hsfvFcR5JZLRy085J5GiJJX1s8CFicrMFC3sfVPq82iA
-         S2gTAcNRx0z7pigJVhpFAZY/SMoNlmmokLMMb+NQpHw0E/iM55ch/lGZvz1Bkjn2nTIq
-         OsHUkpcep1ZQ8SLY+kskWFbRRi3v7mY8mY+NopAHN6/N1OJFJDi7MLRtV2vfsOINfkFi
-         lsn1yQaTDs1D8GtgLFesxH5GmUoAWVXjmEv/WJUcX/MaUzmFog3cHE7j8z+Foz5bNOx7
-         LPYArLeNaOsMs5xOf1+QgAhIHLLl0vRfNp1uZAVZnwYvE0vqDnwlyRihhP4O6CiPuFRu
-         wwGg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=D4RopI2SK+VrJEt5Anwxfc4A31dj9pQyiM4Ej3RP8gk=;
-        b=gK+hv1baH5aXpnq0YLrAauijSHGS94G8McMY1Q9oY8stiYeAC6nUSLRe514nKQdiXG
-         44OvzPaIPqFHab+L2ryz499DaIX5dcamDUkAeO3Uo3Mzq6nJLbaqiN5289x3eWU12IAk
-         d5U4MCHcHPTGcKwn8uVhd3+fmQYNCozrdMTV5BMOGeYnrw0uarYVHZaa3kt+VXtCFc4p
-         AXC229FTDrFl0nBTGgPGucfzeIpRgc5EvW+RL4tyGCbqXSXxCn9pYFYey/PexQHs0u4V
-         8TSbgoVfA78YlJEyO5Xf3o/Mg8xcrDlrCEScsCWFoctPoipvmKEYhieJU5ii11dy+Ky0
-         UzXw==
-X-Gm-Message-State: AOAM53108EkFJv1HKE9+Bq92OIdTUIaQOwwBMkNtXduAvZ8Fw+qx8oPt
-        wistx2oM7I3jKje0F9cbqi+l
-X-Google-Smtp-Source: ABdhPJzWa1JbitsW/hnOb4MBqiXITtCsWCUmRQVBbs5jud0hn6mZskzEN3d0CKaYGXLBuLVYHqcNpA==
-X-Received: by 2002:aa7:860f:: with SMTP id p15mr2360915pfn.59.1594879719659;
-        Wed, 15 Jul 2020 23:08:39 -0700 (PDT)
-Received: from Mani-XPS-13-9360 ([2409:4072:6d89:fed1:8431:5b69:9df5:ad9f])
-        by smtp.gmail.com with ESMTPSA id j8sm3854003pfd.145.2020.07.15.23.08.35
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 15 Jul 2020 23:08:38 -0700 (PDT)
-Date:   Thu, 16 Jul 2020 11:38:33 +0530
-From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To:     bbhatt@codeaurora.org
-Cc:     linux-arm-msm@vger.kernel.org, hemantk@codeaurora.org,
-        jhugo@codeaurora.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm-owner@vger.kernel.org
-Subject: Re: [PATCH v4 3/9] bus: mhi: core: Use helper API to trigger a
- non-blocking host resume
-Message-ID: <20200716060833.GE3271@Mani-XPS-13-9360>
-References: <1593448782-8385-1-git-send-email-bbhatt@codeaurora.org>
- <1593448782-8385-4-git-send-email-bbhatt@codeaurora.org>
- <20200704144714.GC3066@Mani-XPS-13-9360>
- <ed30fd4330863c9743a019b6bd89aabd@codeaurora.org>
+        Thu, 16 Jul 2020 02:10:22 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A1761C061755
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 23:10:21 -0700 (PDT)
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1jvx5y-0004Ls-Bg; Thu, 16 Jul 2020 08:10:14 +0200
+Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1jvx5w-0008GV-5U; Thu, 16 Jul 2020 08:10:12 +0200
+Date:   Thu, 16 Jul 2020 08:10:09 +0200
+From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To:     Michael Walle <michael@walle.cc>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org,
+        linux-pwm@vger.kernel.org, linux-watchdog@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Lee Jones <lee.jones@linaro.org>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: Re: [PATCH v5 07/13] pwm: add support for sl28cpld PWM controller
+Message-ID: <20200716061009.z7uu4lcwo3wk6dzb@pengutronix.de>
+References: <20200709085006.b54ype3p4yu64upl@pengutronix.de>
+ <72858253a9094074e9c8cd7a4e1db09f@walle.cc>
+ <20200713084750.qj4hquzd6uz6y526@pengutronix.de>
+ <c0594c34c712ce26b3936d42c92d2361@walle.cc>
+ <20200714160856.rjqi7lv63geil3hm@pengutronix.de>
+ <eedceb44cba9b54e0634f0e8e4f96f70@walle.cc>
+ <20200715163620.xhi24mct5b64qpyp@pengutronix.de>
+ <7d8e9f524f0fd81be282be0be50d16ad@walle.cc>
+ <20200715181803.nmgi32tugpbuqvjg@pengutronix.de>
+ <8debe0ee9aff2c49a7567069d7bb9477@walle.cc>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="4bah6ckq6xdukftr"
 Content-Disposition: inline
-In-Reply-To: <ed30fd4330863c9743a019b6bd89aabd@codeaurora.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <8debe0ee9aff2c49a7567069d7bb9477@walle.cc>
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 08, 2020 at 01:53:49PM -0700, bbhatt@codeaurora.org wrote:
-> On 2020-07-04 07:47, Manivannan Sadhasivam wrote:
-> > On Mon, Jun 29, 2020 at 09:39:36AM -0700, Bhaumik Bhatt wrote:
-> > > Autonomous low power mode support requires the MHI host to resume from
-> > > multiple places and post a wakeup source to exit system suspend. This
-> > > needs to be done in a non-blocking manner. Introduce a helper API to
-> > > trigger the host resume for data transfers and other non-blocking use
-> > > cases while supporting implementation of autonomous low power modes.
-> > > 
-> > 
-> > Why can't you use pm_wakeup_event() as done in __mhi_device_get_sync()?
-> > 
-> > Thanks,
-> > Mani
-> > 
-> 
-> I forgot to address the __mhi_device_get_sync() function. Thanks for
-> pointing out.
-> 
-> Is it preferable to always post wakeup source with hard boolean set?
 
-A quick grep shows that this routine is not used extensively as compared to
-the other one and hence the question.
+--4bah6ckq6xdukftr
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-For a bus driver like this I think we can just live without the hard wakeup.
-I don't see a specific usecase where we would need a hard wakeup from suspend.
+Hello Michael,
 
-Thanks,
-Mani
+On Wed, Jul 15, 2020 at 10:41:25PM +0200, Michael Walle wrote:
+> Am 2020-07-15 20:18, schrieb Uwe Kleine-K=F6nig:
+> > On Wed, Jul 15, 2020 at 07:45:10PM +0200, Michael Walle wrote:
+> > >=20
+> > > Am 2020-07-15 18:36, schrieb Uwe Kleine-K=F6nig:
+> > > > On Tue, Jul 14, 2020 at 11:09:28PM +0200, Michael Walle wrote:
+> > > > > > My wishlist (just as it comes to my mind, so no guarantee of
+> > > > > > completeness):
+> > > > > >
+> > > > > >  - can do 0% duty cycle for all supported period lengths
+> > > > > >  - can do 100% duty cycle for all supported period lengths
+> > > > > >  - supports both polarities
+> > > > > >  - supports immediate change of configuration and after complet=
+ion of
+> > > > > >    the currently running period
+> > > > > >  - atomic update (i.e. if you go from configuration A to config=
+uration B
+> > > > > >    the hardware guarantees to only emit periods of type A and t=
+hen type
+> > > > > >    B. (Depending on the item above, the last A period might be =
+cut off.)
+> > > > >
+> > > > > We actually discussed this, because the implementation would be
+> > > > > easier. But
+> > > > > if the change takes place immediately you might end up with a lon=
+ger
+> > > > > duty
+> > > > > cycle. Assume the PWM runs at 80% duty cycle and starts with the
+> > > > > on-period.
+> > > > > If you now change that to 50% you might end up with one successive
+> > > > > duty
+> > > > > cycle of "130%". Eg. the 80% of the old and right after that you
+> > > > > switch to
+> > > > > the new 50% and then you'd have a high output which corresponds t=
+o a
+> > > > > 130%
+> > > > > cycle. I don't know if that is acceptable for all applications.
+> > > >
+> > > > I thought this is a "change takes place immediately" implementation=
+?! So
+> > > > these problems are actually real here. (And this not happening is
+> > > > exactly
+> > > > my wish here. Is there a mis-understanding?)
+> > >=20
+> > > I wasn't talking about the sl28cpld btw. What is the difference
+> > > between
+> > > your proposed "change take place immediately" and "after the cycle".
+> > > I understand how the after the cycle should work. But how would the
+> > > immediate change work in your ideal PWM?
+> >=20
+> > If the PWM is running at 1/3 duty cycle and reconfigured for 2/3, then
+> > the two scenarios are (the * marks the moment where pwm_apply_state() is
+> > called, ^ marks the start of a period):
+> >=20
+> > immediately:
+> >=20
+> >   __       __    _____    _____
+> >  /  \_____/  \__/     \__/
+> >  ^        ^     ^        ^
+> >                 *
+>=20
+> Ok lets assume 2/3 and change it to 1/3:
+>=20
+>    ____     ______      __
+>   /    \___/      \____/  \____
+>   ^        ^   ^       ^
+>                *
+> This will then have a longer on period than any of the settings.
 
-> We do want to wakeup from Suspend-to-Idle if system suspend happens to go
-> that route.
-> 
-> As of now, we just by default do regular wakeup event and not hard.
-> I figured at some point we might need to distinguish between hard vs
-> regular, hence the option but
-> it can be eliminated in favor of one or another.
-> 
+I think we agree here. With an immediate change to the new setting both
+too long and too short signals can heppen. How bad this is depends on
+the use. The consumers currently in the kernel probably don't care too
+much.
 
+> > > > > > > > What about disable()?
+> > > > > > >
+> > > > > > > Mhh well, it would do one 100% cycle.. mhh ;) Lets see if the=
+re we can
+> > > > > > > fix that (in hardware), not much we can do in the driver here=
+=2E We are
+> > > > > > > _very_ constraint in size, therefore all that little edge cas=
+es fall
+> > > > > > > off
+> > > > > > > the table.
+> > > > > >
+> > > > > > You're saying that on disable the hardware emits a constant hig=
+h level
+> > > > > > for one cycle? I hope not ...
+> > > > >
+> > > > > Mh, I was mistaken, disabling the PWM will turn it off immediatel=
+y,
+> > > > > but
+> > > >
+> > > > And does turn off mean, the output gets inactive?
+> > > > If so you might also disable the hardware if a 0% duty cycle is
+> > > > configured assuming this saves some energy without modifying the
+> > > > resulting wave form.
+> > >=20
+> > > Disabling it has some side effects like switching to another function
+> > > for this multi function pin. So I'd rather keep it on ;)
+> >=20
+> > So IMHO you should also keep it on when pwm_apply_state is called with
+> > state.enabled =3D false to ensure a low output.
+>=20
+> That won't work either, because that is how you would turn on that multi
+> function. Ie. it is GPIO (default input) as long as the PWM is not enable=
+d,
+> otherwise its PWM.
 
+I think you misunderstood what I wrote. The intended behaviour for a
+disabled PWM (as in: pwm_apply_state() was called with state.enabled =3D
+false) is that the output is a constant low (assuming a normal
+polarity). If disabling your hardware results in something else, don't
+disable the hardware. That's another item in the Limitations paragraph.
 
-> Thanks,
-> Bhaumik
-> 
-> > > Signed-off-by: Bhaumik Bhatt <bbhatt@codeaurora.org>
-> > > ---
-> > >  drivers/bus/mhi/core/internal.h |  8 ++++++++
-> > >  drivers/bus/mhi/core/main.c     | 21 +++++++--------------
-> > >  drivers/bus/mhi/core/pm.c       |  6 ++----
-> > >  3 files changed, 17 insertions(+), 18 deletions(-)
-> > > 
-> > > diff --git a/drivers/bus/mhi/core/internal.h
-> > > b/drivers/bus/mhi/core/internal.h
-> > > index bcfa7b6..cb32eaf 100644
-> > > --- a/drivers/bus/mhi/core/internal.h
-> > > +++ b/drivers/bus/mhi/core/internal.h
-> > > @@ -599,6 +599,14 @@ int mhi_queue_state_transition(struct
-> > > mhi_controller *mhi_cntrl,
-> > >  int mhi_send_cmd(struct mhi_controller *mhi_cntrl, struct mhi_chan
-> > > *mhi_chan,
-> > >  		 enum mhi_cmd_type cmd);
-> > > 
-> > > +static inline void mhi_trigger_resume(struct mhi_controller
-> > > *mhi_cntrl,
-> > > +				      bool hard_wakeup)
-> > > +{
-> > > +	pm_wakeup_dev_event(&mhi_cntrl->mhi_dev->dev, 0, hard_wakeup);
-> > > +	mhi_cntrl->runtime_get(mhi_cntrl);
-> > > +	mhi_cntrl->runtime_put(mhi_cntrl);
-> > > +}
-> > > +
-> > >  /* Register access methods */
-> > >  void mhi_db_brstmode(struct mhi_controller *mhi_cntrl, struct
-> > > db_cfg *db_cfg,
-> > >  		     void __iomem *db_addr, dma_addr_t db_val);
-> > > diff --git a/drivers/bus/mhi/core/main.c b/drivers/bus/mhi/core/main.c
-> > > index 1f622ce..8d6ec34 100644
-> > > --- a/drivers/bus/mhi/core/main.c
-> > > +++ b/drivers/bus/mhi/core/main.c
-> > > @@ -909,8 +909,7 @@ void mhi_ctrl_ev_task(unsigned long data)
-> > >  		 * process it since we are probably in a suspended state,
-> > >  		 * so trigger a resume.
-> > >  		 */
-> > > -		mhi_cntrl->runtime_get(mhi_cntrl);
-> > > -		mhi_cntrl->runtime_put(mhi_cntrl);
-> > > +		mhi_trigger_resume(mhi_cntrl, false);
-> > > 
-> > >  		return;
-> > >  	}
-> > > @@ -971,10 +970,8 @@ int mhi_queue_skb(struct mhi_device *mhi_dev,
-> > > enum dma_data_direction dir,
-> > >  	}
-> > > 
-> > >  	/* we're in M3 or transitioning to M3 */
-> > > -	if (MHI_PM_IN_SUSPEND_STATE(mhi_cntrl->pm_state)) {
-> > > -		mhi_cntrl->runtime_get(mhi_cntrl);
-> > > -		mhi_cntrl->runtime_put(mhi_cntrl);
-> > > -	}
-> > > +	if (MHI_PM_IN_SUSPEND_STATE(mhi_cntrl->pm_state))
-> > > +		mhi_trigger_resume(mhi_cntrl, false);
-> > > 
-> > >  	/* Toggle wake to exit out of M2 */
-> > >  	mhi_cntrl->wake_toggle(mhi_cntrl);
-> > > @@ -1032,10 +1029,8 @@ int mhi_queue_dma(struct mhi_device *mhi_dev,
-> > > enum dma_data_direction dir,
-> > >  	}
-> > > 
-> > >  	/* we're in M3 or transitioning to M3 */
-> > > -	if (MHI_PM_IN_SUSPEND_STATE(mhi_cntrl->pm_state)) {
-> > > -		mhi_cntrl->runtime_get(mhi_cntrl);
-> > > -		mhi_cntrl->runtime_put(mhi_cntrl);
-> > > -	}
-> > > +	if (MHI_PM_IN_SUSPEND_STATE(mhi_cntrl->pm_state))
-> > > +		mhi_trigger_resume(mhi_cntrl, false);
-> > > 
-> > >  	/* Toggle wake to exit out of M2 */
-> > >  	mhi_cntrl->wake_toggle(mhi_cntrl);
-> > > @@ -1147,10 +1142,8 @@ int mhi_queue_buf(struct mhi_device *mhi_dev,
-> > > enum dma_data_direction dir,
-> > >  	read_lock_irqsave(&mhi_cntrl->pm_lock, flags);
-> > > 
-> > >  	/* we're in M3 or transitioning to M3 */
-> > > -	if (MHI_PM_IN_SUSPEND_STATE(mhi_cntrl->pm_state)) {
-> > > -		mhi_cntrl->runtime_get(mhi_cntrl);
-> > > -		mhi_cntrl->runtime_put(mhi_cntrl);
-> > > -	}
-> > > +	if (MHI_PM_IN_SUSPEND_STATE(mhi_cntrl->pm_state))
-> > > +		mhi_trigger_resume(mhi_cntrl, false);
-> > > 
-> > >  	/* Toggle wake to exit out of M2 */
-> > >  	mhi_cntrl->wake_toggle(mhi_cntrl);
-> > > diff --git a/drivers/bus/mhi/core/pm.c b/drivers/bus/mhi/core/pm.c
-> > > index 661d704..5e3994e 100644
-> > > --- a/drivers/bus/mhi/core/pm.c
-> > > +++ b/drivers/bus/mhi/core/pm.c
-> > > @@ -1139,10 +1139,8 @@ void mhi_device_put(struct mhi_device *mhi_dev)
-> > > 
-> > >  	mhi_dev->dev_wake--;
-> > >  	read_lock_bh(&mhi_cntrl->pm_lock);
-> > > -	if (MHI_PM_IN_SUSPEND_STATE(mhi_cntrl->pm_state)) {
-> > > -		mhi_cntrl->runtime_get(mhi_cntrl);
-> > > -		mhi_cntrl->runtime_put(mhi_cntrl);
-> > > -	}
-> > > +	if (MHI_PM_IN_SUSPEND_STATE(mhi_cntrl->pm_state))
-> > > +		mhi_trigger_resume(mhi_cntrl, false);
-> > > 
-> > >  	mhi_cntrl->wake_put(mhi_cntrl, false);
-> > >  	read_unlock_bh(&mhi_cntrl->pm_lock);
-> > > --
-> > > The Qualcomm Innovation Center, Inc. is a member of the Code Aurora
-> > > Forum,
-> > > a Linux Foundation Collaborative Project
-> > > 
+Best regards
+Uwe
+
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+
+--4bah6ckq6xdukftr
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAl8P7z4ACgkQwfwUeK3K
+7AkERwf7Bnq1RmmZZQEaEwO2ylFCpy6YKnXVLNIu3EmoJGn5P52CsM5A5Qfzg+lh
+FqwhdDqowMO7BpePNly1bdYZzO32kuVb2rJUAgBcXtC06liNeJWCwXgCMola+8LC
+ZXVn66RdWkQpBVO2mHjnTgOLorVIJuytb//evqyxYgNcicNwUGy5Nq9WtQM9OkBl
+nwd1o+p5iqOvwJ5YfjJNTTKoDbzoG0RqfTcwSWiAazSZZBdcERzbCxUuKM+ci55y
+0CjOU+OaEQU2lMc6h+0e+mlYO3+3fHL4wiOF32iRXEabMbaaUxVq+R46VJXBwwwM
+CmDqF+afXcPaPzQqs1QqUj35WTTi5Q==
+=t2cU
+-----END PGP SIGNATURE-----
+
+--4bah6ckq6xdukftr--
