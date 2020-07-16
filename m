@@ -2,97 +2,197 @@ Return-Path: <SRS0=y5Sx=A3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED136C433E8
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 17:29:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95BC4C433EC
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 17:29:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CB90F2067D
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 17:29:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594920578;
-	bh=0jMCxoAhpWBqBVQTht7wO9wLNCW0SC1YsW8Ym7kyc8A=;
-	h=From:Date:Subject:To:Cc:List-ID:From;
-	b=M6wdAFJghbzo1CzOdWZc6dpPOGEc0dBNYGJrXcjSQR1FFo4kupDBNk7D6jVbjXWfy
-	 nwrFwXWAapJAkS6fdkMBbSVytDfrvc5MA4CaqU6gkh+qMKdt7qgLGeLeMYhQG7KzHg
-	 6JVgeZvEqmQJNmBsI5ETDC1MMiLX9wh8tbPmZjhE=
+	by mail.kernel.org (Postfix) with ESMTP id 68B232067D
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 17:29:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="IsO4I4K/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729197AbgGPR3h (ORCPT
+        id S1729358AbgGPR3v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 13:29:37 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:44916 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726986AbgGPR3g (ORCPT
+        Thu, 16 Jul 2020 13:29:51 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:60448 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726986AbgGPR3u (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 13:29:36 -0400
-Received: by mail-ot1-f65.google.com with SMTP id 5so4799659oty.11;
-        Thu, 16 Jul 2020 10:29:36 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
-        bh=hLRAAQw1hek9rcC0v4IQJbEXFqIYwef7riqylhpqMJ8=;
-        b=shSPQIQ7V3HIrVMpDkOpCgrSkqoGSbj3UJVoze7Gnf6xPlUURVokKhs/cLxOhuKCvL
-         6CGOHrTTfQ97JyHGK0d7ydgwCVi2lASPKkX6ApU7HD59HQNDW9EPjwN+WxMl+tQdGTPX
-         qFMDnyb4L19sElmw7GG+GQfPcqdcw1S2j155B9behBbFkAtQfJ7LoyYYlPr66vPac25e
-         SY4lXSn2ARosjvlaruiWOUz6WBhQPp1DrslD5Dbt0xeV6lvDMK9TgDr3phFJuzA9OJ08
-         YKeIQM+Lgnd2ler3y0VFUv0rjEn56iZficzMgvPLI+Ysn3LjS8cv34Xu8nwdrx2tjPiC
-         XFHw==
-X-Gm-Message-State: AOAM532r+8IXUcOThNYTcvMYCR3ubOhORiV8aNALSYDcxQo8sbMKuEc5
-        FWysIkOLtuvFnJA8QZleYAQKlQKl2IBXlFS1rN4DSFuH
-X-Google-Smtp-Source: ABdhPJzOuAyn47IyH1V7aliQDZH8xprkbSFsARvbPH6K9CqdtEbyhqFvgPUADgSgMenaYoFyQ+TWa5vd0l7p6vA6/ts=
-X-Received: by 2002:a05:6830:30ba:: with SMTP id g26mr5299455ots.118.1594920575691;
- Thu, 16 Jul 2020 10:29:35 -0700 (PDT)
-MIME-Version: 1.0
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Thu, 16 Jul 2020 19:29:23 +0200
-Message-ID: <CAJZ5v0iikebC7mujzog-Vge8=OhrZwQU0ii2FMZO215NfBpvhA@mail.gmail.com>
-Subject: [GIT PULL] Power management fixes for v5.8-rc6
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Linux PM <linux-pm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Thu, 16 Jul 2020 13:29:50 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06GHMrg7108489;
+        Thu, 16 Jul 2020 17:29:45 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id : in-reply-to : references; s=corp-2020-01-29;
+ bh=/DojH78Za5gXTe4CFdrD9/E9liFW6vuu4N1QfjS7cME=;
+ b=IsO4I4K/0EC29A+KQC6ljCJGfAbFH0C2iLEN0W2370NcHp8FAKnH5iQeskKw0BPWpiep
+ xDnRuGbD5Sf2f3MK3wpNjFtWfTB1n12AGnmulgiowFQr2oI99mlFnw3CdkPYjhNtgKmR
+ x7TPatP8tnaHtsru5/wueuOp+a9P1eOt/Pu8fTESQ5YyhqRWXA0e3xwn12ACVq7bxBQy
+ 9i7wkWVGrNtasJlD9jdDBttMZ9C3piHIHxKSlKzzNp1mOzVf0k8nqNKjuE8IqVA1uWwF
+ sRFboFAcnpAD9A1E5E6YwQd9hV/wzN1rK3spWX+GpY2vPgfM4cmegoEjGQ96pGGIqudT rg== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2130.oracle.com with ESMTP id 3274urjv6m-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 16 Jul 2020 17:29:45 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06GHIk0l086528;
+        Thu, 16 Jul 2020 17:29:45 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by userp3030.oracle.com with ESMTP id 327qc3tuw4-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 16 Jul 2020 17:29:44 +0000
+Received: from abhmp0003.oracle.com (abhmp0003.oracle.com [141.146.116.9])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 06GHTh5Z016792;
+        Thu, 16 Jul 2020 17:29:43 GMT
+Received: from paddy.uk.oracle.com (/10.175.173.87)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 16 Jul 2020 10:29:43 -0700
+From:   Joao Martins <joao.m.martins@oracle.com>
+To:     Dan Williams <dan.j.williams@intel.com>
+Cc:     linux-nvdimm@lists.01.org, Vishal Verma <vishal.l.verma@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        Jason Zeng <jason.zeng@intel.com>
+Subject: [PATCH v1 4/4] device-dax: Add a range mapping allocation attribute
+Date:   Thu, 16 Jul 2020 18:29:13 +0100
+Message-Id: <20200716172913.19658-5-joao.m.martins@oracle.com>
+X-Mailer: git-send-email 2.11.0
+In-Reply-To: <20200716172913.19658-1-joao.m.martins@oracle.com>
+References: <20200716172913.19658-1-joao.m.martins@oracle.com>
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9684 signatures=668680
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 spamscore=0
+ mlxlogscore=999 bulkscore=0 malwarescore=0 mlxscore=0 phishscore=0
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2007160126
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9684 signatures=668680
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 lowpriorityscore=0 impostorscore=0
+ suspectscore=0 phishscore=0 spamscore=0 mlxlogscore=999 malwarescore=0
+ mlxscore=0 priorityscore=1501 adultscore=0 bulkscore=0 clxscore=1015
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2007160126
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+Add a sysfs attribute which denotes a range from the dax region
+to be allocated. It's an write only @mapping sysfs attribute in
+the format of '<start>-<end>' to allocate a range. @start and
+@end use hexadecimal values and the @pgoff is implicitly ordered
+wrt to previous writes to @mapping sysfs e.g. a write of a range
+of length 1G the pgoff is 0..1G(-4K), a second write will use
+@pgoff for 1G+4K..<size>.
 
-Please pull from the tag
+This range mapping interface is useful for:
 
- git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git \
- pm-5.8-rc6
+ 1) Application which want to implement its own allocation logic,
+ and thus pick the desired ranges from dax_region.
 
-with top-most commit 1740f21af58b89a072f33ae0912d5acf95314f22
+ 2) For use cases like VMM fast restart[0] where after kexec we
+ want to the same gpa<->phys mappings (as originally created
+ before kexec).
 
- Merge branch 'pm-cpufreq'
+[0] https://static.sched.com/hosted_files/kvmforum2019/66/VMM-fast-restart_kvmforum2019.pdf
 
-on top of commit 11ba468877bb23f28956a35e896356252d63c983
+Signed-off-by: Joao Martins <joao.m.martins@oracle.com>
+---
+ drivers/dax/bus.c | 64 +++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 64 insertions(+)
 
- Linux 5.8-rc5
+diff --git a/drivers/dax/bus.c b/drivers/dax/bus.c
+index eb384dd6a376..83cc55d7517d 100644
+--- a/drivers/dax/bus.c
++++ b/drivers/dax/bus.c
+@@ -1041,6 +1041,67 @@ static ssize_t size_store(struct device *dev, struct device_attribute *attr,
+ }
+ static DEVICE_ATTR_RW(size);
+ 
++static ssize_t range_parse(const char *opt, size_t len, struct range *range)
++{
++	unsigned long long addr = 0;
++	char *start, *end, *str;
++	ssize_t rc = EINVAL;
++
++	str = kstrdup(opt, GFP_KERNEL);
++	if (!str)
++		return rc;
++
++	end = str;
++	start = strsep(&end, "-");
++	if (!start || !end)
++		goto err;
++
++	rc = kstrtoull(start, 16, &addr);
++	if (rc)
++		goto err;
++	range->start = addr;
++
++	rc = kstrtoull(end, 16, &addr);
++	if (rc)
++		goto err;
++	range->end = addr;
++
++err:
++	kfree(str);
++	return rc;
++}
++
++static ssize_t mapping_store(struct device *dev, struct device_attribute *attr,
++		const char *buf, size_t len)
++{
++	struct dev_dax *dev_dax = to_dev_dax(dev);
++	struct dax_region *dax_region = dev_dax->region;
++	size_t to_alloc;
++	struct range r;
++	ssize_t rc;
++
++	rc = range_parse(buf, len, &r);
++	if (rc)
++		return rc;
++
++	rc = -ENXIO;
++	device_lock(dax_region->dev);
++	if (!dax_region->dev->driver) {
++		device_unlock(dax_region->dev);
++		return rc;
++	}
++	device_lock(dev);
++
++	to_alloc = range_len(&r);
++	if (alloc_is_aligned(to_alloc, dev_dax->align))
++		rc = alloc_dev_dax_range(dev_dax, r.start, to_alloc);
++	device_unlock(dev);
++	device_unlock(dax_region->dev);
++
++	return rc == 0 ? len : rc;
++}
++static DEVICE_ATTR_WO(mapping);
++
+ static ssize_t align_show(struct device *dev,
+ 		struct device_attribute *attr, char *buf)
+ {
+@@ -1182,6 +1243,8 @@ static umode_t dev_dax_visible(struct kobject *kobj, struct attribute *a, int n)
+ 		return 0;
+ 	if (a == &dev_attr_numa_node.attr && !IS_ENABLED(CONFIG_NUMA))
+ 		return 0;
++	if (a == &dev_attr_mapping.attr && is_static(dax_region))
++		return 0;
+ 	if ((a == &dev_attr_align.attr ||
+ 	     a == &dev_attr_size.attr) && is_static(dax_region))
+ 		return 0444;
+@@ -1191,6 +1254,7 @@ static umode_t dev_dax_visible(struct kobject *kobj, struct attribute *a, int n)
+ static struct attribute *dev_dax_attributes[] = {
+ 	&dev_attr_modalias.attr,
+ 	&dev_attr_size.attr,
++	&dev_attr_mapping.attr,
+ 	&dev_attr_target_node.attr,
+ 	&dev_attr_align.attr,
+ 	&dev_attr_resource.attr,
+-- 
+2.17.1
 
-to receive power management fixes for 5.8-rc6.
-
-These add missing handling of a command line switch to the
-intel_pstate driver (Rafael Wysocki) and fix the freeing of the
-operating performance point (OPP) entries for the legacy (v1) OPP
-table type (Walter Lozano).
-
-Thanks!
-
-
----------------
-
-Rafael J. Wysocki (1):
-      cpufreq: intel_pstate: Fix active mode setting from command line
-
-Walter Lozano (1):
-      opp: Increase parsed_static_opps in _of_add_opp_table_v1()
-
----------------
-
- drivers/cpufreq/intel_pstate.c | 8 ++++++--
- drivers/opp/of.c               | 4 ++++
- 2 files changed, 10 insertions(+), 2 deletions(-)
