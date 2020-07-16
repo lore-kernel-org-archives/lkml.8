@@ -2,179 +2,141 @@ Return-Path: <SRS0=y5Sx=A3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE81AC433E4
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 19:18:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7AEBC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 19:17:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C22A6207BC
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 19:18:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AEE292076D
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 19:17:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mkb+z21t"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729534AbgGPTSU (ORCPT
+        id S1729376AbgGPTRE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 15:18:20 -0400
-Received: from foss.arm.com ([217.140.110.172]:39474 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729387AbgGPTSU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 15:18:20 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 23D4231B;
-        Thu, 16 Jul 2020 12:18:19 -0700 (PDT)
-Received: from [10.57.35.46] (unknown [10.57.35.46])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id ED5483F718;
-        Thu, 16 Jul 2020 12:18:17 -0700 (PDT)
-Subject: Re: [RFC PATCH v1 1/2] dt-bindings: arm: rockchip: add A95X Z2
- description
-To:     Johan Jonker <jbx6244@gmail.com>, Rob Herring <robh@kernel.org>
-Cc:     linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
-        heiko@sntech.de, linux-arm-kernel@lists.infradead.org,
-        devicetree@vger.kernel.org
-References: <20200620134659.4592-1-jbx6244@gmail.com>
- <20200620134659.4592-2-jbx6244@gmail.com> <20200715192935.GA684031@bogus>
- <14b39efe-f38b-b471-560d-1ecaeafc5dd5@gmail.com>
- <56b1447d-6c62-9e73-a7ce-08fb70096a97@arm.com>
- <544f9182-034b-6309-a945-72b5a34ee2e8@gmail.com>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <7811d168-6f41-adda-bd64-e7475b239863@arm.com>
-Date:   Thu, 16 Jul 2020 20:18:16 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Thu, 16 Jul 2020 15:17:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35722 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728541AbgGPTRD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jul 2020 15:17:03 -0400
+Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B4A4DC061755;
+        Thu, 16 Jul 2020 12:17:03 -0700 (PDT)
+Received: by mail-pl1-x643.google.com with SMTP id l6so4279807plt.7;
+        Thu, 16 Jul 2020 12:17:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=ctBf8/7XPdvbbAkJHl7up2LKX2yqPU2x4trxTx5gJxQ=;
+        b=mkb+z21tnzXUUogTFHF8Q1qb56fwTZmcZUnsDM+2Bl88ZPTCYaX4A1LtSFhV0mInzV
+         MmkU+tXreJo+pQCFKqIv9yfbKZmtP54qa9yKHCAG6y+fK/kme/KYpOvkEle+1C64AP5Q
+         j7HlJ+jyN2bF5vTjNNd6rrFuFjfHlZpvgKXYOip9Xw82nX0vdltTzpiEamt2kWonnCCA
+         x1Ka0lzXQNLmJnEgyXm9NEVXLNVNKhd3HAZ+9VK2RDJweEcQJUFVEsuY0Ae2AkpqYqFV
+         X7/TuA2CCGe7yL2ydyitajzK+o/G3CIQvnM/43Y6oN2tWH6h9+D7a4xPwaknoqfAfFRe
+         GLDw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=ctBf8/7XPdvbbAkJHl7up2LKX2yqPU2x4trxTx5gJxQ=;
+        b=MC4NrMl51ZZxniBD0Y8ebdWut4F87pfQYCqCOBdT846IrBCte05BxRUXtQ/IZokyj9
+         Ocz0Wd+xOJufn28TUqZNHhVW4t20wKg68Ga67g5JV2RluIS5G7JGN0VVTaBXHSAdvy7f
+         0CbsmNoQ7sm4XuVOc+RVeBu/7rEvsNpsTPsJvHcsOAdCAyCy9WedWMDnrR7g57YX+Whk
+         N3S21mfiCnn0ulF8B0COIOnuW9RX+4HQRXRkYyTb++KKf3PK1ZniNcGrY/Ua4yOT3mHY
+         KTaeLSCP8bb1v2Q/CRr/pxdw3cft/j/1GT4SFu+6PSgrabL7TMX1IzVmr6pVNuzcgVpy
+         oOkQ==
+X-Gm-Message-State: AOAM5331UGrXoFA0N66PIQjn+c2/ttP27ZL022ZR73KvNk4qT8fzR3qa
+        ps0tojCzhUlH+kG5m0sx/fI=
+X-Google-Smtp-Source: ABdhPJwSzTaQlCtxnOXDeWa3n+peKBrIVM9xhShLR8fMayDya6j6FbD33dwdlWUE+CtW9NUj15lS+g==
+X-Received: by 2002:a17:902:d70f:: with SMTP id w15mr4792036ply.110.1594927023223;
+        Thu, 16 Jul 2020 12:17:03 -0700 (PDT)
+Received: from blackclown ([103.88.82.145])
+        by smtp.gmail.com with ESMTPSA id q10sm6124187pfk.86.2020.07.16.12.17.00
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 16 Jul 2020 12:17:02 -0700 (PDT)
+Date:   Fri, 17 Jul 2020 00:46:45 +0530
+From:   Suraj Upadhyay <usuraj35@gmail.com>
+To:     davem@davemloft.net, kuba@kernel.org
+Cc:     linux-decnet-user@lists.sourceforge.net, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] net: decnet: af_decnet: Simplify goto loop.
+Message-ID: <20200716191645.GA4953@blackclown>
 MIME-Version: 1.0
-In-Reply-To: <544f9182-034b-6309-a945-72b5a34ee2e8@gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="IJpNTDwzlM2Ie8A6"
+Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-07-16 17:11, Johan Jonker wrote:
-> On 7/16/20 3:34 PM, Robin Murphy wrote:
->> On 2020-07-16 13:05, Johan Jonker wrote:
->>> Hi Rob,
->>>
->>> The A95X Z2 boxes are sold by various vendors/manufacturers/web shops.
->>> The box it self only shows a label with a model name.
->>> Determining the true vendor is a kind of tricky for a outsider of the
->>> business.
->>> Could you advise what would be a save choice to the rather rigid vendor
->>> requirements.
->>> Is for example this a option:
->>>
->>>     "^a95x,.*":
->>>       description: A95X
->>>
->>> Is there someone who can give more info on this subject?
->>
->> FWIW we already have some "A95X" branded things attributed to Nexbox in
->> upstream DTs, however, the evidence from scraping around the internet
->> suggests that the closest thing to an original vendor for the "A95X Z2"
->> model is probably these folks:
->>
->> https://zkmagic.en.alibaba.com/
-> 
-> That's where I got my update/backup img from.
-> A mail was sent, but what if they all claim to be a 'official' or
-> 'direct' store?
 
-Well, at some point we have to make a judgement call if the facts aren't 
-easy to come by, but it's already clear that "A95X" is not a vendor but 
-some kind of generic model name apparently used by multiple vendors. We 
-already have "nexbox,a95x" as a binding for another model, and a 
-plausible idea of who's responsible for this one, so I think 
-"zkmagic,a95x-z2" would be the appropriate binding here. It's hardly the 
-end of the world if it's not 100% accurate, but that's no excuse not to 
-at least try.
+--IJpNTDwzlM2Ie8A6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Robin.
+Replace goto loop with while loop.
 
-> 
-> option 1:
-> 
->        - description: A95X Z2
->          items:
->            - const: a95x,z2
-> 
->    "^a95x,.*":
->      description: A95X
-> 
-> or option 2:
-> 
->        - description: Zkmagic A95X Z2
->          items:
->            - const: zkmagic,a95x-z2
-> 
->    "^zkmagic,.*":
->      description: Shenzhen Zkmagic Technology Co., Ltd.
-> 
-> I'ld rather prefer a short neutral name like option 1 just to be save. ;)
-> For the completeness there seems to be:
-> a95x a2
-> a95x a3
-> a95x f1
-> a95x f2
-> a95x f3
-> a95x max
-> a95x max plus
-> a95x r1
-> a95x r2
-> a95x r3
-> a95x r5
-> a95x z2
-> a95x z2 +
-> 
-> Any advice welcome..
-> 
-> Johan
-> 
->>
->> Robin.
->>
->>>
->>> Kind regards,
->>>
->>> Johan Jonker
->>>
->>> On 7/15/20 9:29 PM, Rob Herring wrote:
->>>> On Sat, Jun 20, 2020 at 03:46:58PM +0200, Johan Jonker wrote:
->>>>> Add A95X Z2 description for a board with rk3318 processor.
->>>>>
->>>>> Signed-off-by: Johan Jonker <jbx6244@gmail.com>
->>>>> ---
->>>>>    Documentation/devicetree/bindings/arm/rockchip.yaml | 5 +++++
->>>>>    1 file changed, 5 insertions(+)
->>>>>
->>>>> diff --git a/Documentation/devicetree/bindings/arm/rockchip.yaml
->>>>> b/Documentation/devicetree/bindings/arm/rockchip.yaml
->>>>> index d4a404509..3d44b3cf0 100644
->>>>> --- a/Documentation/devicetree/bindings/arm/rockchip.yaml
->>>>> +++ b/Documentation/devicetree/bindings/arm/rockchip.yaml
->>>>> @@ -25,6 +25,11 @@ properties:
->>>>>              - const: vamrs,rock960
->>>>>              - const: rockchip,rk3399
->>>>>    +      - description: A95X Z2
->>>>> +        items:
->>>>> +          - const: a95x,z2
->>>>
->>>> Need to document vendor prefix.
->>>>
->>>>> +          - const: rockchip,rk3318
->>>>> +
->>>>>          - description: Amarula Vyasa RK3288
->>>>>            items:
->>>>>              - const: amarula,vyasa-rk3288
->>>>> -- 
->>>>> 2.11.0
->>>>>
->>>
->>>
->>> _______________________________________________
->>> Linux-rockchip mailing list
->>> Linux-rockchip@lists.infradead.org
->>> http://lists.infradead.org/mailman/listinfo/linux-rockchip
->>>
-> 
+Signed-off-by: Suraj Upadhyay <usuraj35@gmail.com>
+---
+ net/decnet/af_decnet.c | 13 +++++--------
+ 1 file changed, 5 insertions(+), 8 deletions(-)
+
+diff --git a/net/decnet/af_decnet.c b/net/decnet/af_decnet.c
+index 0a46ea3bddd5..7d7ae2dd69b8 100644
+--- a/net/decnet/af_decnet.c
++++ b/net/decnet/af_decnet.c
+@@ -2134,14 +2134,11 @@ static struct sock *dn_socket_get_next(struct seq_f=
+ile *seq,
+ 	struct dn_iter_state *state =3D seq->private;
+=20
+ 	n =3D sk_next(n);
+-try_again:
+-	if (n)
+-		goto out;
+-	if (++state->bucket >=3D DN_SK_HASH_SIZE)
+-		goto out;
+-	n =3D sk_head(&dn_sk_hash[state->bucket]);
+-	goto try_again;
+-out:
++	while (!n) {
++		if (++state->bucket >=3D DN_SK_HASH_SIZE)
++			break;
++		n =3D sk_head(&dn_sk_hash[state->bucket]);
++	}
+ 	return n;
+ }
+=20
+--=20
+2.17.1
+
+
+--IJpNTDwzlM2Ie8A6
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEE7AbCa0kOsMJ4cx0j+gRsbIfe744FAl8Qp5wACgkQ+gRsbIfe
+74734BAAorwVxz+f8hyIOXsQT3a5bVBzZlIZLjZGqBMc2M45GtFrb2NQRPTmwr+s
+f0I/PbgtXj5+tADrCSY7FD4AOkBk3qHgUfWze8dpM0/9EopSqOzNp6x88nO4LLqu
+P8raX7c55wujcWqqDdwe/4Kk3Uhs3ZxobwPGwBivUEFCHFqXFyAFOxNdBqh5geXE
+xlh0WTrnvbD8Pwt+D9aP02QjTIp/7n3hGsf4lznPsVt4u32hl51QrXdOp9AL25B4
+1ligDFPjt+2VrnQrdJ/NZ2pORjF7pEYcG5kPMk3qPathqN9gz2sRrFg8IyOY9UvZ
+6BeOd3h7HbhyHezaROSxIf8puIVNWybxqidy3aPk7yLIptDzTqk8/JhlD/Js7Fle
+XBlMinF0M+I+YXIWMipVx2mvldqmnuwDhYvEMwQF3xhp4N2A7r8ruAdztQyAJR+k
+k308k6hm/Op54yvksym93rv3VngYjFJ8MtUjHzuLhQ+jHs19dOpKHfI8gfMdqQsY
+NIWcUKHYF3ZTcT2aRcdHdBdYIolOt45Qidap99nf47aUjHBTNavB8+6vxeA+hbV/
+PzrSdZYO8r/my10iz3Ihgpm7R7iFTnChlWL70XGDOsURINn8jOKPTBBRm4xs38Eq
+0UpzqU4ej+DZP5mz1yg3uxpwxTNceCeHIEY8PrVjytcNgEGuM/Y=
+=TBRA
+-----END PGP SIGNATURE-----
+
+--IJpNTDwzlM2Ie8A6--
