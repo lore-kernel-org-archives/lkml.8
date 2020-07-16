@@ -2,122 +2,97 @@ Return-Path: <SRS0=y5Sx=A3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 478B7C433EB
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 17:29:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED136C433E8
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 17:29:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 20C0A2067D
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 17:29:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="RUBQfUgm"
+	by mail.kernel.org (Postfix) with ESMTP id CB90F2067D
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 17:29:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594920578;
+	bh=0jMCxoAhpWBqBVQTht7wO9wLNCW0SC1YsW8Ym7kyc8A=;
+	h=From:Date:Subject:To:Cc:List-ID:From;
+	b=M6wdAFJghbzo1CzOdWZc6dpPOGEc0dBNYGJrXcjSQR1FFo4kupDBNk7D6jVbjXWfy
+	 nwrFwXWAapJAkS6fdkMBbSVytDfrvc5MA4CaqU6gkh+qMKdt7qgLGeLeMYhQG7KzHg
+	 6JVgeZvEqmQJNmBsI5ETDC1MMiLX9wh8tbPmZjhE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729334AbgGPR3o (ORCPT
+        id S1729197AbgGPR3h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 13:29:44 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:60320 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726986AbgGPR3n (ORCPT
+        Thu, 16 Jul 2020 13:29:37 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:44916 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726986AbgGPR3g (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 13:29:43 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06GHMCCs108201;
-        Thu, 16 Jul 2020 17:29:37 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id : in-reply-to; s=corp-2020-01-29;
- bh=ZkLmXaQi9ugUcPGIWCmMgZ6iQMhcjVJkBMoXeOQwmyM=;
- b=RUBQfUgmGKChbgMYUmEvIcVT3+aJZYhwqkHWUKpO5rPrQkilijpWXETaWT4LmQ96BF7y
- P/oKa+3s6SFsI7CYFSlnZRD/x9AVlbiugk+uKy4Ry8kt7WtR+aQai9iIO4jC7DtJl+nn
- HLXPSAGelTdcbvi3LLlduGK4hxHTOObWVHxs731Sz64ppe9UaW/V53mFmddjReVQ0R1n
- akCk8xVzPJF9UjkAW9t0vyjd8Vo5koDzZa6q+UkTP+WAY1yXOTVPZRnX8ROBN0CM41iU
- PDOgoL08ydnGbrdA5iPFyB/T1MKQp/O+1FRVP1IhrnS2BRpSG1rilgv92WJoNmHfN0ON qg== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2130.oracle.com with ESMTP id 3274urjv5v-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 16 Jul 2020 17:29:37 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06GHHlFm071570;
-        Thu, 16 Jul 2020 17:29:37 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by userp3020.oracle.com with ESMTP id 32akr3qw0r-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 16 Jul 2020 17:29:36 +0000
-Received: from abhmp0003.oracle.com (abhmp0003.oracle.com [141.146.116.9])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 06GHTZVM019031;
-        Thu, 16 Jul 2020 17:29:35 GMT
-Received: from paddy.uk.oracle.com (/10.175.173.87)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 16 Jul 2020 10:29:35 -0700
-From:   Joao Martins <joao.m.martins@oracle.com>
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     linux-nvdimm@lists.01.org, Vishal Verma <vishal.l.verma@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        Jason Zeng <jason.zeng@intel.com>
-Subject: [PATCH v1 0/4] device-dax: Further improvements to subdivision
-Date:   Thu, 16 Jul 2020 18:29:09 +0100
-Message-Id: <20200716172913.19658-1-joao.m.martins@oracle.com>
-X-Mailer: git-send-email 2.11.0
-In-Reply-To: <159457116473.754248.7879464730875147365.stgit@dwillia2-desk3.amr.corp.intel.com>
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9684 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 malwarescore=0
- suspectscore=0 mlxlogscore=999 spamscore=0 mlxscore=0 bulkscore=0
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2007160126
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9684 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 lowpriorityscore=0 impostorscore=0
- suspectscore=0 phishscore=0 spamscore=0 mlxlogscore=999 malwarescore=0
- mlxscore=0 priorityscore=1501 adultscore=0 bulkscore=0 clxscore=1011
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2007160126
+        Thu, 16 Jul 2020 13:29:36 -0400
+Received: by mail-ot1-f65.google.com with SMTP id 5so4799659oty.11;
+        Thu, 16 Jul 2020 10:29:36 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
+        bh=hLRAAQw1hek9rcC0v4IQJbEXFqIYwef7riqylhpqMJ8=;
+        b=shSPQIQ7V3HIrVMpDkOpCgrSkqoGSbj3UJVoze7Gnf6xPlUURVokKhs/cLxOhuKCvL
+         6CGOHrTTfQ97JyHGK0d7ydgwCVi2lASPKkX6ApU7HD59HQNDW9EPjwN+WxMl+tQdGTPX
+         qFMDnyb4L19sElmw7GG+GQfPcqdcw1S2j155B9behBbFkAtQfJ7LoyYYlPr66vPac25e
+         SY4lXSn2ARosjvlaruiWOUz6WBhQPp1DrslD5Dbt0xeV6lvDMK9TgDr3phFJuzA9OJ08
+         YKeIQM+Lgnd2ler3y0VFUv0rjEn56iZficzMgvPLI+Ysn3LjS8cv34Xu8nwdrx2tjPiC
+         XFHw==
+X-Gm-Message-State: AOAM532r+8IXUcOThNYTcvMYCR3ubOhORiV8aNALSYDcxQo8sbMKuEc5
+        FWysIkOLtuvFnJA8QZleYAQKlQKl2IBXlFS1rN4DSFuH
+X-Google-Smtp-Source: ABdhPJzOuAyn47IyH1V7aliQDZH8xprkbSFsARvbPH6K9CqdtEbyhqFvgPUADgSgMenaYoFyQ+TWa5vd0l7p6vA6/ts=
+X-Received: by 2002:a05:6830:30ba:: with SMTP id g26mr5299455ots.118.1594920575691;
+ Thu, 16 Jul 2020 10:29:35 -0700 (PDT)
+MIME-Version: 1.0
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Thu, 16 Jul 2020 19:29:23 +0200
+Message-ID: <CAJZ5v0iikebC7mujzog-Vge8=OhrZwQU0ii2FMZO215NfBpvhA@mail.gmail.com>
+Subject: [GIT PULL] Power management fixes for v5.8-rc6
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Linux PM <linux-pm@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hey,
+Hi Linus,
 
-Here's a small set of improvements that I was hoping you would consider as part
-of your Soft-Reserved series[0]; should you think they make sense. It does the
-following:
+Please pull from the tag
 
-  Patch 1-2: Add an align sysfs attribute, as opposed to being limited to 2M.
-  This brings parity to static dax regions, which support 1G.
+ git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git \
+ pm-5.8-rc6
 
-  Patch 3. Add a module parameter to hmem, to initialize the region as idle
-  with full available_size for child devices. When the region is gonna be
-  partiotined by default and assigned to guests, doesn't help to
-  initialize the region. Also if the majority of the region starts
-  non-idle and it's a region which memmap is bigger than System-Ram,
-  then there not be enough space for the device to be probed successfully.
+with top-most commit 1740f21af58b89a072f33ae0912d5acf95314f22
 
-  Patch 4: Add an sysfs attribute for range allocation. It is a single entry
-  where you pass a range <start>-<end> and where the ordering plus range
-  length designate the page_offset. It is meant for recreate the same
-  mappings after kexec (retaining the GPA->HPA association), but could
-  also allow application to implement their own allocation strategy.
+ Merge branch 'pm-cpufreq'
 
-I will submit a separate daxctl counterpart shortly, to help visualize its use.
+on top of commit 11ba468877bb23f28956a35e896356252d63c983
 
-[0] https://lore.kernel.org/linux-mm/159457116473.754248.7879464730875147365.stgit@dwillia2-desk3.amr.corp.intel.com
+ Linux 5.8-rc5
 
-	Joao
+to receive power management fixes for 5.8-rc6.
 
-Joao Martins (4):
-  device-dax: Make align a per-device property
-  device-dax: Add an 'align' attribute
-  dax/hmem: Introduce dax_hmem.region_idle parameter
-  device-dax: Add a range mapping allocation attribute
+These add missing handling of a command line switch to the
+intel_pstate driver (Rafael Wysocki) and fix the freeing of the
+operating performance point (OPP) entries for the legacy (v1) OPP
+table type (Walter Lozano).
 
- drivers/dax/bus.c         | 166 +++++++++++++++++++++++++++++++++++---
- drivers/dax/dax-private.h |   1 +
- drivers/dax/device.c      |  35 ++++----
- drivers/dax/hmem/hmem.c   |   5 +-
- 4 files changed, 177 insertions(+), 30 deletions(-)
+Thanks!
 
--- 
-2.17.1
 
+---------------
+
+Rafael J. Wysocki (1):
+      cpufreq: intel_pstate: Fix active mode setting from command line
+
+Walter Lozano (1):
+      opp: Increase parsed_static_opps in _of_add_opp_table_v1()
+
+---------------
+
+ drivers/cpufreq/intel_pstate.c | 8 ++++++--
+ drivers/opp/of.c               | 4 ++++
+ 2 files changed, 10 insertions(+), 2 deletions(-)
