@@ -2,147 +2,189 @@ Return-Path: <SRS0=y5Sx=A3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 669C2C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 23:44:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 657A7C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 23:44:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3BB792063A
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 23:44:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3E0EE2063A
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 23:44:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="UbOHCl5a"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hEkIv4Ut"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726238AbgGPXoQ (ORCPT
+        id S1726381AbgGPXow (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 19:44:16 -0400
-Received: from mail-eopbgr00080.outbound.protection.outlook.com ([40.107.0.80]:50308
-        "EHLO EUR02-AM5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726125AbgGPXoP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 19:44:15 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=fdAQXRU0D08Ps4FDiE/Yfnh8uDz/LFfW4lJMWKlA4IFzT4X/P+KQpPrZSYEBjzo46HNyBRQFfPmUj8Plo7Ck0eSYHpdkYEfPRFiGAEPiM7qfFWoWALS3PvXDEa/gdoTLxtXSKYi26HLwtOwV5HYMkN4c1Gr0KpTGVtUUGz5ruu0mAn9yk4E5AWH4VP/gW+LI22wODQKwW3FP7p0VvitW3Lb53iS8fBnrpAYAg86HY634c7B5DeXVScRv5XXqbLtAdkmqyYCWbeFaxLGgddZmHPSG+2wor277kwrHxANdA6y9Sdm/HtR3ew6HRNINmFbiXKzvdfu4c9fW0oRcMKPUNg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=lI1yy9aQskN+vUKHhhI48eLNLu/sEKVKUFpUhOiVQ+0=;
- b=SZXUIp7lQOXfx4MLTOTmhHu/rZJZ5FPMc6U9XVp3r57WsNIH7oayWCqlrrHhARCbd694uxgeWThQqOpCRJzshwILkejznzzK92iGb9VUDbnTYstVCLgFPNrIGj/MAXv+Yp9gYvzzZaAmMmR12bQtG1IFjv1nBjIRVHhw7EI2gbgHCS6aecTVnyE6W9A+d+bhMGoDu2pb7epbjnjss/voNmrWbzwBLQRp4JQcxcQpn7zhI6KNmhcXPRlFu0SwLnje4EJa5pj4Zt1Lck+3wCuFXnQjlII7r8838irbVi8lHLdF1YCOGUilwgRLR6YAZyxCbJD8U8i/B8NNfbPz9/KI2w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=lI1yy9aQskN+vUKHhhI48eLNLu/sEKVKUFpUhOiVQ+0=;
- b=UbOHCl5awBklUyqzrq+Jdg38BYoaMq8AwLDP2M9OWixki0G/UpwQRKpsEFRdYsaN/Mvdahj38zKaaMKveOn7cjt61etHPyZIQA9UO+7wCacitap8eWq7iQBOHs8phYdr6IVCDLmyU/rzR1vmO9wV4PyM8OJXrog8zYmU2kFkedI=
-Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com (2603:10a6:8:10::18)
- by DB6PR0401MB2376.eurprd04.prod.outlook.com (2603:10a6:4:51::19) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3174.20; Thu, 16 Jul
- 2020 23:44:11 +0000
-Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com
- ([fe80::1dab:b68c:e028:acb3]) by DB3PR0402MB3916.eurprd04.prod.outlook.com
- ([fe80::1dab:b68c:e028:acb3%6]) with mapi id 15.20.3174.026; Thu, 16 Jul 2020
- 23:44:11 +0000
-From:   Anson Huang <anson.huang@nxp.com>
-To:     Daniel Baluta <daniel.baluta@nxp.com>,
-        Aisheng Dong <aisheng.dong@nxp.com>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "stefan@agner.ch" <stefan@agner.ch>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
-CC:     dl-linux-imx <linux-imx@nxp.com>
-Subject: RE: [PATCH 1/2] pinctrl: imx: Support building SCU pinctrl driver as
- module
-Thread-Topic: [PATCH 1/2] pinctrl: imx: Support building SCU pinctrl driver as
- module
-Thread-Index: AQHWW4NHWrU0ATUAm0ydC8gIz0Rl9akKUIoAgAABVNCAAArtgIAAgWsw
-Date:   Thu, 16 Jul 2020 23:44:10 +0000
-Message-ID: <DB3PR0402MB3916AAEE01257A7F9A25A657F57F0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
-References: <1594912013-20859-1-git-send-email-Anson.Huang@nxp.com>
- <c00f8fe3-d12a-0f91-c301-c028e5aa3f25@nxp.com>
- <DB3PR0402MB3916C9FE00C0F4FC62ACB711F57F0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
- <5e2af0c3-c832-3978-017e-0b1649aac61c@nxp.com>
-In-Reply-To: <5e2af0c3-c832-3978-017e-0b1649aac61c@nxp.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: nxp.com; dkim=none (message not signed)
- header.d=none;nxp.com; dmarc=none action=none header.from=nxp.com;
-x-originating-ip: [183.192.22.28]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: af583e62-643d-4134-89d5-08d829e223ac
-x-ms-traffictypediagnostic: DB6PR0401MB2376:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DB6PR0401MB23765058D56E8DE0A74860A4F57F0@DB6PR0401MB2376.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8882;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: VZZisyR758hmGBfWmPV+yAgQj5+Wb8VXjZYsDYbI68gIUTMYZZhLGgrQZcbzc3OKnBlEjnIdwbkOQLukfvAsAZirej+IcyOS1f4EhuWWEizks/UMzn/PCKyvzQOPAVbCDLVOXNMVJ7jUDkFk1FuxDSaEKaCaNDU3p3u11weFCKb4FVcj08niwIBq9UzWEKT4opIDWGIf+XYaqTqISq4n6MOKP6aMze9mnWmWjn8mvFSSttAXyJgXg2KOXLYYrCxwYbe7I2+YIrFrP4eeMPgx03h7KiJCckrYHn3EstQ+K81Jm8/EG8R2L4iLDg85Qj4jePApvcFF79ISjQIIkNq5NCeRAM2/iKNXlYawQ5y4Q5KVH80GGgIMI7tQfezJwzF+
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB3PR0402MB3916.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(396003)(136003)(39860400002)(376002)(366004)(346002)(52536014)(71200400001)(76116006)(66476007)(53546011)(6506007)(9686003)(2906002)(64756008)(66556008)(66446008)(5660300002)(66946007)(83380400001)(7696005)(33656002)(55016002)(8676002)(186003)(316002)(26005)(44832011)(110136005)(86362001)(8936002)(478600001)(4326008)(921003);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: lLzTE1nHBOeWhDhwm1bneK/Tl1yBikR6hnZj66fNNMNTdHpaDBoGppQFOvHKpbJJkr19juBBdVzPMnRXQLJ/WcrmhzUZ+PmegOGchW5zDc8txlmrRGRFClgDFykLNTVHGYW4/jf/7FjIW5bsIHxosyyqNFhEnWi+5cD7YGqwCrDTSRMt6yrjG1R/J8U3lZoIgqYtkl+kC5Qj9nqGXOKvFPc8w0E0nXpe/yeC/112vBhO760+s0i4eX6+vhbuXd/qCh4Kl9+STnANAj0O++CGJRRfyOAbJjhJMzpPHqKXrQpu7OFtj0fJtrctY3tg93oECc3G1ggEtpWt/+XQzp7q6z3958F7wL8Gtcuf9d7Ebava9yCTZlUwGDN0XWAIqzs/q434CRb2QstMK+uRgUsBuNU2QPlybOCwTyW17FTgsBSrWmpUT+80cD/ePlxSCsFJTttPd4dGclcMYf7/uuMOXHaje0+gwt8tEMMLDGBBvgr+A8DixHT7uEZ5EGpeV3dX
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Thu, 16 Jul 2020 19:44:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49064 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725948AbgGPXow (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jul 2020 19:44:52 -0400
+Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DC4C4C061755;
+        Thu, 16 Jul 2020 16:44:51 -0700 (PDT)
+Received: by mail-pg1-x541.google.com with SMTP id s189so5720555pgc.13;
+        Thu, 16 Jul 2020 16:44:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=b87Qqp4/uiRihe98ddeAhee2zlCsyVOmpKiv8uZHXek=;
+        b=hEkIv4UtH9Uo1HCpChBQ5wcUVhRASkkdGBO/z/koaN0BOKodrPbX3MXorkr/vL/q6p
+         +dZ7YkdDJlapVuRDihjd6xZEnbrw22uEBfyzJqOqcclcS1ILf1ANkVEGE7dnkJEOo7d7
+         pDdObdv6t957O8QV+6an28TumGcwxfYRFz07pjtxMkOkrf9v2KLDniNHRYs+reGLOlEw
+         DRMFqcx/5dI0bUfTAh6r3Jh7fRhIBZb5XKzqE0iS2lnlx7bD5iW/TSXRVh/VplMXBqro
+         uLn9UE+DCDLJBv6zGe3D+m9GE0MzPVOtamE8tAQAUgwhVjTTQNzLUzEk1/mzQxHaoOWv
+         e3zQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=b87Qqp4/uiRihe98ddeAhee2zlCsyVOmpKiv8uZHXek=;
+        b=cnYOE2g3XLq7TfxDbFhWZpX5YJKkj5+Mfj0xPFFKPZ+Y8D1yZfme2fi8nKH4V/tNzT
+         cq/ZHSK4PvnhzMjHvyZK9O3+mpbjluyfJyE7TqFM4YaVY58ydYNsfj8715+KZZwVOclw
+         EgSZVI2gU8HBNecCHPUKwlpz/jlFCFvBo6aOCtHItHB2sDNVLpzYqFJN4PxQB/oUr6z0
+         D+4i7l8/KtvfgIvXP+NCwrb9PLQWAonptGBMt848Iw0rsBmPxCGQQffYcG5bzvSf8HZS
+         KmSSSoUT3OCFm2X0I/6eewJxf3Z9ZfgWSXzn01Yy3gB1VqOncGKvWsEKhiJ/Tne4nz/n
+         nCcA==
+X-Gm-Message-State: AOAM5338dmQHm7sw2ULTS009yAamBuY6mPdKP5O4sQgDNGxS++HmeBfa
+        UJt0W+XUlRkNrzL0qrdQtMg=
+X-Google-Smtp-Source: ABdhPJzBpCDAi9m56FIS0fdW6XyWSbp5t1i5QtOoyG2uqLnRMj/6r2yyF4b1tubGXKCr5scrR6cD1w==
+X-Received: by 2002:a63:210c:: with SMTP id h12mr6244042pgh.152.1594943091216;
+        Thu, 16 Jul 2020 16:44:51 -0700 (PDT)
+Received: from shane-XPS-13-9380.hsd1.ca.comcast.net ([2601:646:8880:9ae0:70a0:cae8:8c09:d74a])
+        by smtp.gmail.com with ESMTPSA id f6sm5903309pfe.174.2020.07.16.16.44.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 16 Jul 2020 16:44:50 -0700 (PDT)
+From:   Xie He <xie.he.0141@gmail.com>
+To:     "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Eric Dumazet <edumazet@google.com>,
+        Martin Schiller <ms@dev.tdt.de>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-x25@vger.kernel.org
+Cc:     Xie He <xie.he.0141@gmail.com>
+Subject: [PATCH v2] drivers/net/wan/x25_asy: Fix to make it work
+Date:   Thu, 16 Jul 2020 16:44:33 -0700
+Message-Id: <20200716234433.6490-1-xie.he.0141@gmail.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: DB3PR0402MB3916.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: af583e62-643d-4134-89d5-08d829e223ac
-X-MS-Exchange-CrossTenant-originalarrivaltime: 16 Jul 2020 23:44:10.9753
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: UOBUB262TZUHOYoGdg+UJG3OLGLYDVny6LVva7I5uPcls3Fdyogh6cy0m9a7XC1KAvWRkPhLNHlJvTYtxZheFQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB6PR0401MB2376
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGksIERhbmllbA0KDQoNCj4gU3ViamVjdDogUmU6IFtQQVRDSCAxLzJdIHBpbmN0cmw6IGlteDog
-U3VwcG9ydCBidWlsZGluZyBTQ1UgcGluY3RybCBkcml2ZXIgYXMNCj4gbW9kdWxlDQo+IA0KPiBP
-biA3LzE2LzIwIDY6MjEgUE0sIEFuc29uIEh1YW5nIHdyb3RlOg0KPiA+IEhpLCBEYW5pZWwNCj4g
-Pg0KPiA+DQo+ID4+IFN1YmplY3Q6IFJlOiBbUEFUQ0ggMS8yXSBwaW5jdHJsOiBpbXg6IFN1cHBv
-cnQgYnVpbGRpbmcgU0NVIHBpbmN0cmwNCj4gPj4gZHJpdmVyIGFzIG1vZHVsZQ0KPiA+Pg0KPiA+
-PiBIaSBBbnNvbiwNCj4gPj4NCj4gPj4gRmV3IGNvbW1lbnRzIGlubGluZToNCj4gPj4NCj4gPj4g
-T24gNy8xNi8yMCA2OjA2IFBNLCBBbnNvbiBIdWFuZyB3cm90ZToNCj4gPj4+IFRvIHN1cHBvcnQg
-YnVpbGRpbmcgaS5NWCBTQ1UgcGluY3RybCBkcml2ZXIgYXMgbW9kdWxlLCBiZWxvdyB0aGluZ3MN
-Cj4gPj4+IG5lZWQgdG8NCj4gPj4gYmUgY2hhbmdlZDoNCj4gPj4+ICAgICAgIC0gRXhwb3J0IFND
-VSByZWxhdGVkIGZ1bmN0aW9ucyBhbmQgdXNlICJJU19FTkFCTEVEIiBpbnN0ZWFkIG9mDQo+ID4+
-PiAgICAgICAgICJpZmRlZiIgdG8gc3VwcG9ydCBTQ1UgcGluY3RybCBkcml2ZXIgdXNlciBhbmQg
-aXRzZWxmIHRvIGJlDQo+ID4+PiAgICAgICAgIGJ1aWx0IGFzIG1vZHVsZTsNCj4gPj4+ICAgICAg
-IC0gVXNlIGZ1bmN0aW9uIGNhbGxiYWNrcyBmb3IgU0NVIHJlbGF0ZWQgZnVuY3Rpb25zIGluIHBp
-bmN0cmwtaW14LmMNCj4gPj4+ICAgICAgICAgaW4gb3JkZXIgdG8gc3VwcG9ydCB0aGUgc2NlbmFy
-aW8gb2YgUElOQ1RSTF9JTVggaXMgYnVpbHQgaW4NCj4gPj4+ICAgICAgICAgd2hpbGUgUElOQ1RS
-TF9JTVhfU0NVIGlzIGJ1aWx0IGFzIG1vZHVsZTsNCj4gPj4+ICAgICAgIC0gQWxsIGRyaXZlcnMg
-dXNpbmcgU0NVIHBpbmN0cmwgZHJpdmVyIG5lZWQgdG8gaW5pdGlhbGl6ZSB0aGUNCj4gPj4+ICAg
-ICAgICAgU0NVIHJlbGF0ZWQgZnVuY3Rpb24gY2FsbGJhY2s7DQo+ID4+PiAgICAgICAtIENoYW5n
-ZSBQSU5DVFJfSU1YX1NDVSB0byB0cmlzdGF0ZTsNCj4gPj4+ICAgICAgIC0gQWRkIG1vZHVsZSBh
-dXRob3IsIGRlc2NyaXB0aW9uIGFuZCBsaWNlbnNlLg0KPiA+Pj4NCj4gPj4+IFdpdGggYWJvdmUg
-Y2hhbmdlcywgaS5NWCBTQ1UgcGluY3RybCBkcml2ZXIgY2FuIGJlIGJ1aWx0IGFzIG1vZHVsZS4N
-Cj4gPj4NCj4gPj4gVGhlcmUgYXJlIGEgbG90IG9mIGNoYW5nZXMgaGVyZS4gSSB0aGluayBpdCB3
-b3VsZCBiZSBiZXR0ZXIgdG8gdHJ5IHRvDQo+ID4+IHNwbGl0IHRoZW0NCj4gPj4NCj4gPj4gcGVy
-IGZ1bmN0aW9uYWxpdHkuIE9uZSBmdW5jdGlvbmFsIGNoYW5nZSBwZXIgcGF0Y2guDQo+ID4gQWN0
-dWFsbHksIEkgZXZlciB0cmllZCB0byBzcGxpdCB0aGVtLCBidXQgdGhlIGZ1bmN0aW9uIHdpbGwg
-YmUgYnJva2VuLg0KPiA+IEFsbCB0aGUgY2hhbmdlcyBhcmUganVzdCB0byBzdXBwb3J0IHRoZSBt
-b2R1bGUgYnVpbGQuIElmIHNwbGl0IHRoZW0sDQo+ID4gdGhlIGJpc2VjdCB3aWxsIGhhdmUgcGlu
-Y3RybCBidWlsZCBvciBmdW5jdGlvbiBicm9rZW4uDQo+IA0KPiBIaSBBbnNvbiwNCj4gDQo+IA0K
-PiBJIHNlZSB5b3VyIHBvaW50IGFuZCBJIGtub3cgdGhhdCB0aGlzIGlzIGEgdmVyeSBoYXJkIHRh
-c2sgdG8gZ2V0IGl0IHJpZ2h0IGZyb20NCj4gDQo+IHRoZSBmaXJzdCBwYXRjaGVzLg0KPiANCj4g
-QnV0IGxldCBtZSBzdWdnZXN0IGF0IGxlYXN0IHRoYXQ6DQo+IA0KPiAtIGNoYW5nZXMgaW7CoCBk
-cml2ZXJzL3BpbmN0cmwvZnJlZXNjYWxlL3BpbmN0cmwtaW14LmMgKGluY2x1ZGUgZmlsZSBhbmQN
-Cj4gTU9EVUxFXyBtYWNyb3Mgc2hvdWxkIGdvIHRvIGEgc2VwYXJhdGUgcGF0Y2gpLg0KDQpZb3Ug
-bWVhbnQgaW4gcGF0Y2ggIzIsIHRoZSBjaGFuZ2VzIGluIEtjb25maWcgYW5kIHRoZSBjaGFuZ2Vz
-IGluIC5jIGZpbGUgc2hvdWxkDQpiZSBzcGxpdCB0byAyIHBhdGNoZXM/DQoNClRoYW5rcywNCkFu
-c29uIA0KDQo=
+This driver is not working because of problems of its receiving code.
+This patch fixes it to make it work.
+
+When the driver receives an LAPB frame, it should first pass the frame
+to the LAPB module to process. After processing, the LAPB module passes
+the data (the packet) back to the driver, the driver should then add a
+one-byte pseudo header and pass the data to upper layers.
+
+The changes to the "x25_asy_bump" function and the
+"x25_asy_data_indication" function are to correctly implement this
+procedure.
+
+Also, the "x25_asy_unesc" function ignores any frame that is shorter
+than 3 bytes. However the shortest frames are 2-byte long. So we need
+to change it to allow 2-byte frames to pass.
+
+Cc: Eric Dumazet <edumazet@google.com>
+Cc: Martin Schiller <ms@dev.tdt.de>
+Signed-off-by: Xie He <xie.he.0141@gmail.com>
+---
+
+Change from v1:
+Added skb_cow before skb_push to ensure skb_push will succeed
+according the suggestion of Eric Dumazet.
+
+Hi Eric Dumazet and Martin Schiller,
+Can you review this patch again and see if it is OK for me to include
+your names in a "Signed-off-by", "Reviewed-by" or "Acked-by" tag?
+Thank you!
+
+Hi All,
+I'm happy to answer any questions you might have and make improvements
+according to your suggestions. Thanks!
+
+---
+ drivers/net/wan/x25_asy.c | 21 ++++++++++++++-------
+ 1 file changed, 14 insertions(+), 7 deletions(-)
+
+diff --git a/drivers/net/wan/x25_asy.c b/drivers/net/wan/x25_asy.c
+index 69773d228ec1..84640a0c13f3 100644
+--- a/drivers/net/wan/x25_asy.c
++++ b/drivers/net/wan/x25_asy.c
+@@ -183,7 +183,7 @@ static inline void x25_asy_unlock(struct x25_asy *sl)
+ 	netif_wake_queue(sl->dev);
+ }
+ 
+-/* Send one completely decapsulated IP datagram to the IP layer. */
++/* Send an LAPB frame to the LAPB module to process. */
+ 
+ static void x25_asy_bump(struct x25_asy *sl)
+ {
+@@ -195,13 +195,12 @@ static void x25_asy_bump(struct x25_asy *sl)
+ 	count = sl->rcount;
+ 	dev->stats.rx_bytes += count;
+ 
+-	skb = dev_alloc_skb(count+1);
++	skb = dev_alloc_skb(count);
+ 	if (skb == NULL) {
+ 		netdev_warn(sl->dev, "memory squeeze, dropping packet\n");
+ 		dev->stats.rx_dropped++;
+ 		return;
+ 	}
+-	skb_push(skb, 1);	/* LAPB internal control */
+ 	skb_put_data(skb, sl->rbuff, count);
+ 	skb->protocol = x25_type_trans(skb, sl->dev);
+ 	err = lapb_data_received(skb->dev, skb);
+@@ -209,7 +208,6 @@ static void x25_asy_bump(struct x25_asy *sl)
+ 		kfree_skb(skb);
+ 		printk(KERN_DEBUG "x25_asy: data received err - %d\n", err);
+ 	} else {
+-		netif_rx(skb);
+ 		dev->stats.rx_packets++;
+ 	}
+ }
+@@ -356,12 +354,21 @@ static netdev_tx_t x25_asy_xmit(struct sk_buff *skb,
+  */
+ 
+ /*
+- *	Called when I frame data arrives. We did the work above - throw it
+- *	at the net layer.
++ *	Called when I frame data arrive. We add a pseudo header for upper
++ *	layers and pass it to upper layers.
+  */
+ 
+ static int x25_asy_data_indication(struct net_device *dev, struct sk_buff *skb)
+ {
++	if (skb_cow(skb, 1)) {
++		kfree_skb(skb);
++		return NET_RX_DROP;
++	}
++	skb_push(skb, 1);
++	skb->data[0] = X25_IFACE_DATA;
++
++	skb->protocol = x25_type_trans(skb, dev);
++
+ 	return netif_rx(skb);
+ }
+ 
+@@ -657,7 +664,7 @@ static void x25_asy_unesc(struct x25_asy *sl, unsigned char s)
+ 	switch (s) {
+ 	case X25_END:
+ 		if (!test_and_clear_bit(SLF_ERROR, &sl->flags) &&
+-		    sl->rcount > 2)
++		    sl->rcount >= 2)
+ 			x25_asy_bump(sl);
+ 		clear_bit(SLF_ESCAPE, &sl->flags);
+ 		sl->rcount = 0;
+-- 
+2.25.1
+
