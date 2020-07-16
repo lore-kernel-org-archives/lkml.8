@@ -2,44 +2,48 @@ Return-Path: <SRS0=y5Sx=A3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-14.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B45C1C433E8
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 17:43:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA498C433F7
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 17:44:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 974012076A
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 17:43:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 827012076D
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 17:44:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="Sizm3BjA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729379AbgGPRnf (ORCPT
+        id S1729448AbgGPRoF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 13:43:35 -0400
-Received: from mx2.suse.de ([195.135.220.15]:43066 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728182AbgGPRnd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 13:43:33 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 5F269AFCE;
-        Thu, 16 Jul 2020 17:43:35 +0000 (UTC)
-From:   Coly Li <colyli@suse.de>
-To:     linux-block@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, linux-bcache@vger.kernel.org,
-        Coly Li <colyli@suse.de>,
-        Acshai Manoj <acshai.manoj@microfocus.com>,
-        Hannes Reinecke <hare@suse.com>,
-        Ming Lei <ming.lei@redhat.com>, Xiao Ni <xni@redhat.com>,
-        Bart Van Assche <bvanassche@acm.org>,
-        Christoph Hellwig <hch@lst.de>,
-        Enzo Matsumiya <ematsumiya@suse.com>,
-        Jens Axboe <axboe@kernel.dk>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>
-Subject: [PATCH v3] block: improve discard bio alignment in __blkdev_issue_discard()
-Date:   Fri, 17 Jul 2020 01:43:24 +0800
-Message-Id: <20200716174324.30424-1-colyli@suse.de>
-X-Mailer: git-send-email 2.26.2
+        Thu, 16 Jul 2020 13:44:05 -0400
+Received: from linux.microsoft.com ([13.77.154.182]:54454 "EHLO
+        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727844AbgGPRoD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jul 2020 13:44:03 -0400
+Received: from localhost.localdomain (c-73-42-176-67.hsd1.wa.comcast.net [73.42.176.67])
+        by linux.microsoft.com (Postfix) with ESMTPSA id AB67F20B4909;
+        Thu, 16 Jul 2020 10:44:02 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com AB67F20B4909
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+        s=default; t=1594921442;
+        bh=MdDEgRa6UippolxJcPeM/hQSOUKo4WoMK9t77dGEGj4=;
+        h=From:To:Cc:Subject:Date:From;
+        b=Sizm3BjAMdT+PRCjC/4fBmtejMVd9kz3DIU9iy2Q4czaTO87PTmEixfWJ9pEmrdht
+         yqFEEOJb6ZH3+z7G+dVldRusRL+U5fXKxiMoqbrPjyTHVG91aV96s59BavSqRZxUmx
+         MhnjQz01m6B4uHKYOpLg1WqoWO+ODELcOKmUNmXQ=
+From:   Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
+To:     zohar@linux.ibm.com, stephen.smalley.work@gmail.com,
+        casey@schaufler-ca.com
+Cc:     jmorris@namei.org, linux-integrity@vger.kernel.org,
+        selinux@vger.kernel.org, linux-security-module@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v2 0/5] LSM: Measure security module state
+Date:   Thu, 16 Jul 2020 10:43:46 -0700
+Message-Id: <20200716174351.20128-1-nramas@linux.microsoft.com>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -47,215 +51,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch improves discard bio split for address and size alignment in
-__blkdev_issue_discard(). The aligned discard bio may help underlying
-device controller to perform better discard and internal garbage
-collection, and avoid unnecessary internal fragment.
+Critical data structures of security modules are currently not measured.
+Therefore an attestation service, for instance, would not be able to
+attest whether the security modules are always operating with the policies
+and configuration that the system administrator had setup. The policies
+and configuration for the security modules could be tampered with by
+malware by exploiting Kernel vulnerabilities or modified through some
+inadvertent actions on the system. Measuring such critical data would
+enable an attestation service to better assess the state of the system.
 
-Current discard bio split algorithm in __blkdev_issue_discard() may have
-non-discarded fregment on device even the discard bio LBA and size are
-both aligned to device's discard granularity size.
+IMA subsystem measures system files, command line arguments passed to
+kexec, boot aggregate, keys, etc. It can be used to measure critical
+data structures of security modules as well.
 
-Here is the example steps on how to reproduce the above problem.
-- On a VMWare ESXi 6.5 update3 installation, create a 51GB virtual disk
-  with thin mode and give it to a Linux virtual machine.
-- Inside the Linux virtual machine, if the 50GB virtual disk shows up as
-  /dev/sdb, fill data into the first 50GB by,
-        # dd if=/dev/zero of=/dev/sdb bs=4096 count=13107200
-- Discard the 50GB range from offset 0 on /dev/sdb,
-        # blkdiscard /dev/sdb -o 0 -l 53687091200
-- Observe the underlying mapping status of the device
-        # sg_get_lba_status /dev/sdb -m 1048 --lba=0
-  descriptor LBA: 0x0000000000000000  blocks: 2048  mapped (or unknown)
-  descriptor LBA: 0x0000000000000800  blocks: 16773120  deallocated
-  descriptor LBA: 0x0000000000fff800  blocks: 2048  mapped (or unknown)
-  descriptor LBA: 0x0000000001000000  blocks: 8386560  deallocated
-  descriptor LBA: 0x00000000017ff800  blocks: 2048  mapped (or unknown)
-  descriptor LBA: 0x0000000001800000  blocks: 8386560  deallocated
-  descriptor LBA: 0x0000000001fff800  blocks: 2048  mapped (or unknown)
-  descriptor LBA: 0x0000000002000000  blocks: 8386560  deallocated
-  descriptor LBA: 0x00000000027ff800  blocks: 2048  mapped (or unknown)
-  descriptor LBA: 0x0000000002800000  blocks: 8386560  deallocated
-  descriptor LBA: 0x0000000002fff800  blocks: 2048  mapped (or unknown)
-  descriptor LBA: 0x0000000003000000  blocks: 8386560  deallocated
-  descriptor LBA: 0x00000000037ff800  blocks: 2048  mapped (or unknown)
-  descriptor LBA: 0x0000000003800000  blocks: 8386560  deallocated
-  descriptor LBA: 0x0000000003fff800  blocks: 2048  mapped (or unknown)
-  descriptor LBA: 0x0000000004000000  blocks: 8386560  deallocated
-  descriptor LBA: 0x00000000047ff800  blocks: 2048  mapped (or unknown)
-  descriptor LBA: 0x0000000004800000  blocks: 8386560  deallocated
-  descriptor LBA: 0x0000000004fff800  blocks: 2048  mapped (or unknown)
-  descriptor LBA: 0x0000000005000000  blocks: 8386560  deallocated
-  descriptor LBA: 0x00000000057ff800  blocks: 2048  mapped (or unknown)
-  descriptor LBA: 0x0000000005800000  blocks: 8386560  deallocated
-  descriptor LBA: 0x0000000005fff800  blocks: 2048  mapped (or unknown)
-  descriptor LBA: 0x0000000006000000  blocks: 6291456  deallocated
-  descriptor LBA: 0x0000000006600000  blocks: 0  deallocated
+This change aims to address measuring critical data structures
+of security modules when they are initialized, when they are updated
+at runtime, and also periodically to detect any tampering.
 
-Although the discard bio starts at LBA 0 and has 50<<30 bytes size which
-are perfect aligned to the discard granularity, from the above list
-these are many 1MB (2048 sectors) internal fragments exist unexpectedly.
+This change set is based off of Linux Kernel version 5.8-rc5.
 
-The problem is in __blkdev_issue_discard(), an improper algorithm causes
-an improper bio size which is not aligned.
+The following patch needs to be applied first before applying
+the patches in this patch set:
 
- 25 int __blkdev_issue_discard(struct block_device *bdev, sector_t sector,
- 26                 sector_t nr_sects, gfp_t gfp_mask, int flags,
- 27                 struct bio **biop)
- 28 {
- 29         struct request_queue *q = bdev_get_queue(bdev);
-   [snipped]
- 56
- 57         while (nr_sects) {
- 58                 sector_t req_sects = min_t(sector_t, nr_sects,
- 59                                 bio_allowed_max_sectors(q));
- 60
- 61                 WARN_ON_ONCE((req_sects << 9) > UINT_MAX);
- 62
- 63                 bio = blk_next_bio(bio, 0, gfp_mask);
- 64                 bio->bi_iter.bi_sector = sector;
- 65                 bio_set_dev(bio, bdev);
- 66                 bio_set_op_attrs(bio, op, 0);
- 67
- 68                 bio->bi_iter.bi_size = req_sects << 9;
- 69                 sector += req_sects;
- 70                 nr_sects -= req_sects;
-   [snipped]
- 79         }
- 80
- 81         *biop = bio;
- 82         return 0;
- 83 }
- 84 EXPORT_SYMBOL(__blkdev_issue_discard);
+    https://patchwork.kernel.org/patch/11612989/
 
-At line 58-59, to discard a 50GB range, req_sects is set as return value
-of bio_allowed_max_sectors(q), which is 8388607 sectors. In the above
-case, the discard granularity is 2048 sectors, although the start LBA
-and discard length are aligned to discard granularity, req_sects never
-has chance to be aligned to discard granularity. This is why there are
-some still-mapped 2048 sectors fragment in every 4 or 8 GB range.
+Change log:
 
-If req_sects at line 58 is set to a value aligned to discard_granularity
-and close to UNIT_MAX, then all consequent split bios inside device
-driver are (almostly) aligned to discard_granularity of the device
-queue. The 2048 sectors still-mapped fragment will disappear.
+  v2:
+      => Pass selinux_state struct as parameter to the function
+         that measures SELinux data.
+      => Use strings from selinux_policycap_names array for SELinux
+         state measurement.
+      => Refactored security_read_policy() to alloc kernel or user
+         virtual memory and then read the SELinux policy.
 
-This patch introduces bio_aligned_discard_max_sectors() to return the
-the value which is aligned to q->limits.discard_granularity and closest
-to UINT_MAX. Then this patch replaces bio_allowed_max_sectors() with
-this new routine to decide a more proper split bio length.
+  v1:
+      => Per Stephen Smalley's suggestion added selinux_state booleans
+         and hash of SELinux policy in the measured data for SELinux.
+      => Call IMA hook from the security module directly instead of
+         redirecting through the LSM.
 
-But we still need to handle the situation when discard start LBA is not
-aligned to q->limits.discard_granularity, otherwise even the length is
-aligned, current code may still leave 2048 fragment around every 4GB
-range. Therefore, to calculate req_sects, firstly the start LBA of
-discard range is checked, if it is not aligned to discard granularity,
-the first split location should make sure following bio has bi_sector
-aligned to discard granularity. Then there won't be still-mapped
-fragment in the middle of the discard range.
+Lakshmi Ramasubramanian (5):
+  IMA: Add LSM_STATE func to measure LSM data
+  IMA: Define an IMA hook to measure LSM data
+  LSM: Add security_measure_data in lsm_info struct
+  LSM: Define SELinux function to measure security state
+  LSM: Define workqueue for measuring security module state
 
-The above is how this patch improves discard bio alignment in
-__blkdev_issue_discard(). Now with this patch, after discard with same
-command line mentiond previously, sg_get_lba_status returns,
-descriptor LBA: 0x0000000000000000  blocks: 106954752  deallocated
-descriptor LBA: 0x0000000006600000  blocks: 0  deallocated
+ Documentation/ABI/testing/ima_policy |   6 +-
+ include/linux/ima.h                  |   4 +
+ include/linux/lsm_hooks.h            |   3 +
+ security/integrity/ima/ima.h         |   1 +
+ security/integrity/ima/ima_api.c     |   2 +-
+ security/integrity/ima/ima_main.c    |  17 +++
+ security/integrity/ima/ima_policy.c  |  29 ++++-
+ security/security.c                  |  74 ++++++++++++-
+ security/selinux/Makefile            |   2 +
+ security/selinux/hooks.c             |   4 +
+ security/selinux/include/security.h  |  26 +++++
+ security/selinux/measure.c           | 158 +++++++++++++++++++++++++++
+ security/selinux/selinuxfs.c         |   1 +
+ security/selinux/ss/services.c       |  66 +++++++++--
+ 14 files changed, 376 insertions(+), 17 deletions(-)
+ create mode 100644 security/selinux/measure.c
 
-We an see there is no 2048 sectors segment anymore, everything is clean.
-
-Reported-and-tested-by: Acshai Manoj <acshai.manoj@microfocus.com>
-Signed-off-by: Coly Li <colyli@suse.de>
-Reviewed-by: Hannes Reinecke <hare@suse.com>
-Reviewed-by: Ming Lei <ming.lei@redhat.com>
-Reviewed-by: Xiao Ni <xni@redhat.com>
-Cc: Bart Van Assche <bvanassche@acm.org>
-Cc: Christoph Hellwig <hch@lst.de>
-Cc: Enzo Matsumiya <ematsumiya@suse.com>
-Cc: Jens Axboe <axboe@kernel.dk>
-Cc: Martin K. Petersen <martin.petersen@oracle.com>
----
-Changelog:
-v3: handle partition offset suggested by Martin.
-v2: fix the overflow pointed by Ming Lei.
-v1: initial version.
- block/blk-lib.c | 31 ++++++++++++++++++++++++++++---
- block/blk.h     | 14 ++++++++++++++
- 2 files changed, 42 insertions(+), 3 deletions(-)
-
-diff --git a/block/blk-lib.c b/block/blk-lib.c
-index 5f2c429d4378..019e09bb9c0e 100644
---- a/block/blk-lib.c
-+++ b/block/blk-lib.c
-@@ -29,7 +29,7 @@ int __blkdev_issue_discard(struct block_device *bdev, sector_t sector,
- 	struct request_queue *q = bdev_get_queue(bdev);
- 	struct bio *bio = *biop;
- 	unsigned int op;
--	sector_t bs_mask;
-+	sector_t bs_mask, part_offset = 0;
- 
- 	if (!q)
- 		return -ENXIO;
-@@ -54,9 +54,34 @@ int __blkdev_issue_discard(struct block_device *bdev, sector_t sector,
- 	if (!nr_sects)
- 		return -EINVAL;
- 
-+	/* In case the discard request is in a partition */
-+	if (bdev->bd_partno)
-+		part_offset = bdev->bd_part->start_sect;
-+
- 	while (nr_sects) {
--		sector_t req_sects = min_t(sector_t, nr_sects,
--				bio_allowed_max_sectors(q));
-+		sector_t granularity_aligned_lba, req_sects;
-+		sector_t sector_mapped = sector + part_offset;
-+
-+		granularity_aligned_lba = round_up(sector_mapped,
-+				q->limits.discard_granularity >> SECTOR_SHIFT);
-+
-+		/*
-+		 * Check whether the discard bio starts at a discard_granularity
-+		 * aligned LBA,
-+		 * - If no: set (granularity_aligned_lba - sector_mapped) to
-+		 *   bi_size of the first split bio, then the second bio will
-+		 *   start at a discard_granularity aligned LBA on the device.
-+		 * - If yes: use bio_aligned_discard_max_sectors() as the max
-+		 *   possible bi_size of the first split bio. Then when this bio
-+		 *   is split in device drive, the split ones are very probably
-+		 *   to be aligned to discard_granularity of the device's queue.
-+		 */
-+		if (granularity_aligned_lba == sector_mapped)
-+			req_sects = min_t(sector_t, nr_sects,
-+					  bio_aligned_discard_max_sectors(q));
-+		else
-+			req_sects = min_t(sector_t, nr_sects,
-+					  granularity_aligned_lba - sector_mapped);
- 
- 		WARN_ON_ONCE((req_sects << 9) > UINT_MAX);
- 
-diff --git a/block/blk.h b/block/blk.h
-index b5d1f0fc6547..a80738581f84 100644
---- a/block/blk.h
-+++ b/block/blk.h
-@@ -281,6 +281,20 @@ static inline unsigned int bio_allowed_max_sectors(struct request_queue *q)
- 	return round_down(UINT_MAX, queue_logical_block_size(q)) >> 9;
- }
- 
-+/*
-+ * The max bio size which is aligned to q->limits.discard_granularity. This
-+ * is a hint to split large discard bio in generic block layer, then if device
-+ * driver needs to split the discard bio into smaller ones, their bi_size can
-+ * be very probably and easily aligned to discard_granularity of the device's
-+ * queue.
-+ */
-+static inline unsigned int bio_aligned_discard_max_sectors(
-+					struct request_queue *q)
-+{
-+	return round_down(UINT_MAX, q->limits.discard_granularity) >>
-+			SECTOR_SHIFT;
-+}
-+
- /*
-  * Internal io_context interface
-  */
 -- 
-2.26.2
+2.27.0
 
