@@ -2,106 +2,420 @@ Return-Path: <SRS0=y5Sx=A3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 776ACC433E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 23:53:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CFF94C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 23:53:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 558FE206F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 23:53:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594943585;
-	bh=4CYHGW9f4TNDqQkfNjdBI3p0P2PYHswYd3FtirRWxXc=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=HeOu9mMOaDoTCMX0BDIvdABqdWap61R3d2k+AzGdHoMxqWy3xDAhDexwdJczyuFP6
-	 T+KspLf6OkTce4JgZRnNvQanKBjqJyPCSEahXxd1TTUBJlYY0BHQvtyvKXhfBT4hfz
-	 PqCB03eUu0oazUa44vPiSdG/gQCmQkmdnGfho/mM=
+	by mail.kernel.org (Postfix) with ESMTP id 9FF572074B
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 23:53:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="LSWuOHno"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726204AbgGPXw7 (ORCPT
+        id S1726279AbgGPXxH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 19:52:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55264 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725933AbgGPXw7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 19:52:59 -0400
-Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A8847206F4;
-        Thu, 16 Jul 2020 23:52:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594943577;
-        bh=4CYHGW9f4TNDqQkfNjdBI3p0P2PYHswYd3FtirRWxXc=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=qgdn9gwXPbrVgYJvq6kzBsXYH+nQmYTZwhsChh6QZz6ZEJIHbq3kLU4EiWkFCoNtn
-         33DUYjVC5p42m9+RqLVs2IqhO3Se5pnt5jgnSEDxmoWXmxBJOXV/O+YZYKTww39/wl
-         Bf+i96oXjizncsBu4hURDwZUNrys7aoCbESTM43w=
-Date:   Thu, 16 Jul 2020 16:52:57 -0700
-From:   Andrew Morton <akpm@linux-foundation.org>
-To:     Vlastimil Babka <vbabka@suse.cz>
-Cc:     "Alexander A. Klimov" <grandmaster@al2klimov.de>,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] mm: thp: Replace HTTP links with HTTPS ones
-Message-Id: <20200716165257.88776064be381ca5797983c5@linux-foundation.org>
-In-Reply-To: <642ab4dc-d0fb-d973-0e5e-7d1bc7d90f11@suse.cz>
-References: <20200713164345.36088-1-grandmaster@al2klimov.de>
-        <642ab4dc-d0fb-d973-0e5e-7d1bc7d90f11@suse.cz>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Thu, 16 Jul 2020 19:53:07 -0400
+Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:49252 "EHLO
+        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725933AbgGPXxG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jul 2020 19:53:06 -0400
+Received: from pps.filterd (m0148461.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06GMsYCL030303
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Jul 2020 16:02:42 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
+ : date : message-id : in-reply-to : references : mime-version :
+ content-transfer-encoding : content-type; s=facebook;
+ bh=jZMX57EPV/7/7uY+GefjM7y4Fg/m7Ib2Yn1NpdhOkeg=;
+ b=LSWuOHnoEtUSQGbAV/kuUoRx8906A26Ju27ozOdb92zE+JsAj5H5Rdkfg1ZM2TJSkK9u
+ 2lHeMJj+B9G/UZomhEtwkI9afRP36HN7g8mmZQNqiPKv1A5y0QdOmlhZPyF2jqRplpSH
+ jaqdCbYqtQSKfQNs7moG2ypta8/F724t4Aw= 
+Received: from maileast.thefacebook.com ([163.114.130.16])
+        by mx0a-00082601.pphosted.com with ESMTP id 32ax1v8kc0-8
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Jul 2020 16:02:41 -0700
+Received: from intmgw001.08.frc2.facebook.com (2620:10d:c0a8:1b::d) by
+ mail.thefacebook.com (2620:10d:c0a8:82::e) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1979.3; Thu, 16 Jul 2020 16:02:38 -0700
+Received: by devbig006.ftw2.facebook.com (Postfix, from userid 4523)
+        id 78ECF62E52DA; Thu, 16 Jul 2020 15:59:40 -0700 (PDT)
+Smtp-Origin-Hostprefix: devbig
+From:   Song Liu <songliubraving@fb.com>
+Smtp-Origin-Hostname: devbig006.ftw2.facebook.com
+To:     <linux-kernel@vger.kernel.org>, <bpf@vger.kernel.org>,
+        <netdev@vger.kernel.org>
+CC:     <ast@kernel.org>, <daniel@iogearbox.net>, <kernel-team@fb.com>,
+        <john.fastabend@gmail.com>, <kpsingh@chromium.org>,
+        <brouer@redhat.com>, <peterz@infradead.org>,
+        Song Liu <songliubraving@fb.com>
+Smtp-Origin-Cluster: ftw2c04
+Subject: [PATCH v3 bpf-next 1/2] bpf: separate bpf_get_[stack|stackid] for perf events BPF
+Date:   Thu, 16 Jul 2020 15:59:32 -0700
+Message-ID: <20200716225933.196342-2-songliubraving@fb.com>
+X-Mailer: git-send-email 2.24.1
+In-Reply-To: <20200716225933.196342-1-songliubraving@fb.com>
+References: <20200716225933.196342-1-songliubraving@fb.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+X-FB-Internal: Safe
+Content-Type: text/plain
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-07-16_11:2020-07-16,2020-07-16 signatures=0
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 adultscore=0
+ clxscore=1015 impostorscore=0 suspectscore=0 spamscore=0 mlxlogscore=999
+ lowpriorityscore=0 bulkscore=0 phishscore=0 malwarescore=0 mlxscore=0
+ priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2007160148
+X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 14 Jul 2020 11:41:37 +0200 Vlastimil Babka <vbabka@suse.cz> wrote:
+Calling get_perf_callchain() on perf_events from PEBS entries may cause
+unwinder errors. To fix this issue, the callchain is fetched early. Such
+perf_events are marked with __PERF_SAMPLE_CALLCHAIN_EARLY.
 
-> > --- a/mm/huge_memory.c
-> > +++ b/mm/huge_memory.c
-> > @@ -2069,7 +2069,7 @@ static void __split_huge_pmd_locked(struct vm_area_struct *vma, pmd_t *pmd,
-> >  	 * free), userland could trigger a small page size TLB miss on the
-> >  	 * small sized TLB while the hugepage TLB entry is still established in
-> >  	 * the huge TLB. Some CPU doesn't like that.
-> > -	 * See http://support.amd.com/us/Processor_TechDocs/41322.pdf, Erratum
-> > +	 * See https://support.amd.com/us/Processor_TechDocs/41322.pdf, Erratum
-> >  	 * 383 on page 93. Intel should be safe but is also warns that it's
-> 
-> Well, it was a good opportunity to find out that the link doesn't work anyway.
-> The pdf seems to be now at
-> http://support.amd.com/TechDocs/41322_10h_Rev_Gd.pdf
-> and the erratum is on page 105
+Similarly, calling bpf_get_[stack|stackid] on perf_events from PEBS may
+also cause unwinder errors. To fix this, add separate version of these
+two helpers, bpf_get_[stack|stackid]_pe. These two hepers use callchain i=
+n
+bpf_perf_event_data_kern->data->callchain.
 
-Thanks.
-
-From: Andrew Morton <akpm@linux-foundation.org>
-Subject: mm-thp-replace-http-links-with-https-ones-fix
-
-fix amd.com URL, per Vlastimil
-
-Cc: "Alexander A. Klimov" <grandmaster@al2klimov.de>
-Cc: Vlastimil Babka <vbabka@suse.cz>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Song Liu <songliubraving@fb.com>
 ---
+ include/linux/bpf.h      |   2 +
+ kernel/bpf/stackmap.c    | 202 +++++++++++++++++++++++++++++++++++----
+ kernel/trace/bpf_trace.c |   4 +-
+ 3 files changed, 188 insertions(+), 20 deletions(-)
 
- mm/huge_memory.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
---- a/mm/huge_memory.c~mm-thp-replace-http-links-with-https-ones-fix
-+++ a/mm/huge_memory.c
-@@ -2065,8 +2065,8 @@ static void __split_huge_pmd_locked(stru
- 	 * free), userland could trigger a small page size TLB miss on the
- 	 * small sized TLB while the hugepage TLB entry is still established in
- 	 * the huge TLB. Some CPU doesn't like that.
--	 * See https://support.amd.com/us/Processor_TechDocs/41322.pdf, Erratum
--	 * 383 on page 93. Intel should be safe but is also warns that it's
-+	 * See http://support.amd.com/TechDocs/41322_10h_Rev_Gd.pdf, Erratum
-+	 * 383 on page 105. Intel should be safe but is also warns that it's
- 	 * only safe if the permission and cache attributes of the two entries
- 	 * loaded in the two TLB is identical (which should be the case here).
- 	 * But it is generally safer to never allow small and huge TLB entries
-_
+diff --git a/include/linux/bpf.h b/include/linux/bpf.h
+index 54ad426dbea1a..cf8804e302257 100644
+--- a/include/linux/bpf.h
++++ b/include/linux/bpf.h
+@@ -1643,6 +1643,8 @@ extern const struct bpf_func_proto bpf_get_current_=
+comm_proto;
+ extern const struct bpf_func_proto bpf_get_stackid_proto;
+ extern const struct bpf_func_proto bpf_get_stack_proto;
+ extern const struct bpf_func_proto bpf_get_task_stack_proto;
++extern const struct bpf_func_proto bpf_get_stackid_proto_pe;
++extern const struct bpf_func_proto bpf_get_stack_proto_pe;
+ extern const struct bpf_func_proto bpf_sock_map_update_proto;
+ extern const struct bpf_func_proto bpf_sock_hash_update_proto;
+ extern const struct bpf_func_proto bpf_get_current_cgroup_id_proto;
+diff --git a/kernel/bpf/stackmap.c b/kernel/bpf/stackmap.c
+index 48d8e739975fa..7a03d1c24b25f 100644
+--- a/kernel/bpf/stackmap.c
++++ b/kernel/bpf/stackmap.c
+@@ -4,6 +4,7 @@
+ #include <linux/bpf.h>
+ #include <linux/jhash.h>
+ #include <linux/filter.h>
++#include <linux/kernel.h>
+ #include <linux/stacktrace.h>
+ #include <linux/perf_event.h>
+ #include <linux/elf.h>
+@@ -387,11 +388,10 @@ get_callchain_entry_for_task(struct task_struct *ta=
+sk, u32 init_nr)
+ #endif
+ }
+=20
+-BPF_CALL_3(bpf_get_stackid, struct pt_regs *, regs, struct bpf_map *, ma=
+p,
+-	   u64, flags)
++static long __bpf_get_stackid(struct bpf_map *map,
++			      struct perf_callchain_entry *trace, u64 flags)
+ {
+ 	struct bpf_stack_map *smap =3D container_of(map, struct bpf_stack_map, =
+map);
+-	struct perf_callchain_entry *trace;
+ 	struct stack_map_bucket *bucket, *new_bucket, *old_bucket;
+ 	u32 max_depth =3D map->value_size / stack_map_data_size(map);
+ 	/* stack_map_alloc() checks that max_depth <=3D sysctl_perf_event_max_s=
+tack */
+@@ -399,21 +399,9 @@ BPF_CALL_3(bpf_get_stackid, struct pt_regs *, regs, =
+struct bpf_map *, map,
+ 	u32 skip =3D flags & BPF_F_SKIP_FIELD_MASK;
+ 	u32 hash, id, trace_nr, trace_len;
+ 	bool user =3D flags & BPF_F_USER_STACK;
+-	bool kernel =3D !user;
+ 	u64 *ips;
+ 	bool hash_matches;
+=20
+-	if (unlikely(flags & ~(BPF_F_SKIP_FIELD_MASK | BPF_F_USER_STACK |
+-			       BPF_F_FAST_STACK_CMP | BPF_F_REUSE_STACKID)))
+-		return -EINVAL;
+-
+-	trace =3D get_perf_callchain(regs, init_nr, kernel, user,
+-				   sysctl_perf_event_max_stack, false, false);
+-
+-	if (unlikely(!trace))
+-		/* couldn't fetch the stack trace */
+-		return -EFAULT;
+-
+ 	/* get_perf_callchain() guarantees that trace->nr >=3D init_nr
+ 	 * and trace-nr <=3D sysctl_perf_event_max_stack, so trace_nr <=3D max_=
+depth
+ 	 */
+@@ -478,6 +466,30 @@ BPF_CALL_3(bpf_get_stackid, struct pt_regs *, regs, =
+struct bpf_map *, map,
+ 	return id;
+ }
+=20
++BPF_CALL_3(bpf_get_stackid, struct pt_regs *, regs, struct bpf_map *, ma=
+p,
++	   u64, flags)
++{
++	u32 max_depth =3D map->value_size / stack_map_data_size(map);
++	/* stack_map_alloc() checks that max_depth <=3D sysctl_perf_event_max_s=
+tack */
++	u32 init_nr =3D sysctl_perf_event_max_stack - max_depth;
++	bool user =3D flags & BPF_F_USER_STACK;
++	struct perf_callchain_entry *trace;
++	bool kernel =3D !user;
++
++	if (unlikely(flags & ~(BPF_F_SKIP_FIELD_MASK | BPF_F_USER_STACK |
++			       BPF_F_FAST_STACK_CMP | BPF_F_REUSE_STACKID)))
++		return -EINVAL;
++
++	trace =3D get_perf_callchain(regs, init_nr, kernel, user,
++				   sysctl_perf_event_max_stack, false, false);
++
++	if (unlikely(!trace))
++		/* couldn't fetch the stack trace */
++		return -EFAULT;
++
++	return __bpf_get_stackid(map, trace, flags);
++}
++
+ const struct bpf_func_proto bpf_get_stackid_proto =3D {
+ 	.func		=3D bpf_get_stackid,
+ 	.gpl_only	=3D true,
+@@ -487,7 +499,86 @@ const struct bpf_func_proto bpf_get_stackid_proto =3D=
+ {
+ 	.arg3_type	=3D ARG_ANYTHING,
+ };
+=20
++static __u64 count_kernel_ip(struct perf_callchain_entry *trace)
++{
++	__u64 nr_kernel =3D 0;
++
++	while (nr_kernel < trace->nr) {
++		if (trace->ip[nr_kernel] =3D=3D PERF_CONTEXT_USER)
++			break;
++		nr_kernel++;
++	}
++	return nr_kernel;
++}
++
++BPF_CALL_3(bpf_get_stackid_pe, struct bpf_perf_event_data_kern *, ctx,
++	   struct bpf_map *, map, u64, flags)
++{
++	struct perf_event *event =3D ctx->event;
++	struct perf_callchain_entry *trace;
++	bool has_kernel, has_user;
++	bool kernel, user;
++
++	/* perf_sample_data doesn't have callchain, use bpf_get_stackid */
++	if (!(event->attr.sample_type & __PERF_SAMPLE_CALLCHAIN_EARLY))
++		return bpf_get_stackid((unsigned long)(ctx->regs),
++				       (unsigned long) map, flags, 0, 0);
++
++	if (unlikely(flags & ~(BPF_F_SKIP_FIELD_MASK | BPF_F_USER_STACK |
++			       BPF_F_FAST_STACK_CMP | BPF_F_REUSE_STACKID)))
++		return -EINVAL;
++
++	user =3D flags & BPF_F_USER_STACK;
++	kernel =3D !user;
++
++	has_kernel =3D !event->attr.exclude_callchain_kernel;
++	has_user =3D !event->attr.exclude_callchain_user;
++
++	if ((kernel && !has_kernel) || (user && !has_user))
++		return -EINVAL;
++
++	trace =3D ctx->data->callchain;
++	if (unlikely(!trace))
++		return -EFAULT;
++
++	if (has_kernel && has_user) {
++		__u64 nr_kernel =3D count_kernel_ip(trace);
++		int ret;
++
++		if (kernel) {
++			__u64 nr =3D trace->nr;
++
++			trace->nr =3D nr_kernel;
++			ret =3D __bpf_get_stackid(map, trace, flags);
++
++			/* restore nr */
++			trace->nr =3D nr;
++		} else { /* user */
++			u64 skip =3D flags & BPF_F_SKIP_FIELD_MASK;
++
++			skip +=3D nr_kernel;
++			if (skip > BPF_F_SKIP_FIELD_MASK)
++				return -EFAULT;
++
++			flags =3D (flags & ~BPF_F_SKIP_FIELD_MASK) | skip;
++			ret =3D __bpf_get_stackid(map, trace, flags);
++		}
++		return ret;
++	}
++	return __bpf_get_stackid(map, trace, flags);
++}
++
++const struct bpf_func_proto bpf_get_stackid_proto_pe =3D {
++	.func		=3D bpf_get_stackid_pe,
++	.gpl_only	=3D false,
++	.ret_type	=3D RET_INTEGER,
++	.arg1_type	=3D ARG_PTR_TO_CTX,
++	.arg2_type	=3D ARG_CONST_MAP_PTR,
++	.arg3_type	=3D ARG_ANYTHING,
++};
++
+ static long __bpf_get_stack(struct pt_regs *regs, struct task_struct *ta=
+sk,
++			    struct perf_callchain_entry *trace_in,
+ 			    void *buf, u32 size, u64 flags)
+ {
+ 	u32 init_nr, trace_nr, copy_len, elem_size, num_elem;
+@@ -520,7 +611,9 @@ static long __bpf_get_stack(struct pt_regs *regs, str=
+uct task_struct *task,
+ 	else
+ 		init_nr =3D sysctl_perf_event_max_stack - num_elem;
+=20
+-	if (kernel && task)
++	if (trace_in)
++		trace =3D trace_in;
++	else if (kernel && task)
+ 		trace =3D get_callchain_entry_for_task(task, init_nr);
+ 	else
+ 		trace =3D get_perf_callchain(regs, init_nr, kernel, user,
+@@ -556,7 +649,7 @@ static long __bpf_get_stack(struct pt_regs *regs, str=
+uct task_struct *task,
+ BPF_CALL_4(bpf_get_stack, struct pt_regs *, regs, void *, buf, u32, size=
+,
+ 	   u64, flags)
+ {
+-	return __bpf_get_stack(regs, NULL, buf, size, flags);
++	return __bpf_get_stack(regs, NULL, NULL, buf, size, flags);
+ }
+=20
+ const struct bpf_func_proto bpf_get_stack_proto =3D {
+@@ -574,7 +667,7 @@ BPF_CALL_4(bpf_get_task_stack, struct task_struct *, =
+task, void *, buf,
+ {
+ 	struct pt_regs *regs =3D task_pt_regs(task);
+=20
+-	return __bpf_get_stack(regs, task, buf, size, flags);
++	return __bpf_get_stack(regs, task, NULL, buf, size, flags);
+ }
+=20
+ BTF_ID_LIST(bpf_get_task_stack_btf_ids)
+@@ -591,6 +684,79 @@ const struct bpf_func_proto bpf_get_task_stack_proto=
+ =3D {
+ 	.btf_id		=3D bpf_get_task_stack_btf_ids,
+ };
+=20
++BPF_CALL_4(bpf_get_stack_pe, struct bpf_perf_event_data_kern *, ctx,
++	   void *, buf, u32, size, u64, flags)
++{
++	struct perf_event *event =3D ctx->event;
++	struct perf_callchain_entry *trace;
++	bool has_kernel, has_user;
++	bool kernel, user;
++	int err =3D -EINVAL;
++
++	if (!(event->attr.sample_type & __PERF_SAMPLE_CALLCHAIN_EARLY))
++		return __bpf_get_stack(ctx->regs, NULL, NULL, buf, size, flags);
++
++	if (unlikely(flags & ~(BPF_F_SKIP_FIELD_MASK | BPF_F_USER_STACK |
++			       BPF_F_USER_BUILD_ID)))
++		goto clear;
++
++	user =3D flags & BPF_F_USER_STACK;
++	kernel =3D !user;
++
++	has_kernel =3D !event->attr.exclude_callchain_kernel;
++	has_user =3D !event->attr.exclude_callchain_user;
++
++	if ((kernel && !has_kernel) || (user && !has_user))
++		goto clear;
++
++	err =3D -EFAULT;
++	trace =3D ctx->data->callchain;
++	if (unlikely(!trace))
++		goto clear;
++
++	if (has_kernel && has_user) {
++		__u64 nr_kernel =3D count_kernel_ip(trace);
++		int ret;
++
++		if (kernel) {
++			__u64 nr =3D trace->nr;
++
++			trace->nr =3D nr_kernel;
++			ret =3D __bpf_get_stack(ctx->regs, NULL, trace, buf,
++					      size, flags);
++
++			/* restore nr */
++			trace->nr =3D nr;
++		} else { /* user */
++			u64 skip =3D flags & BPF_F_SKIP_FIELD_MASK;
++
++			skip +=3D nr_kernel;
++			if (skip > BPF_F_SKIP_FIELD_MASK)
++				goto clear;
++
++			flags =3D (flags & ~BPF_F_SKIP_FIELD_MASK) | skip;
++			ret =3D __bpf_get_stack(ctx->regs, NULL, trace, buf,
++					      size, flags);
++		}
++		return ret;
++	}
++	return __bpf_get_stack(ctx->regs, NULL, trace, buf, size, flags);
++clear:
++	memset(buf, 0, size);
++	return err;
++
++}
++
++const struct bpf_func_proto bpf_get_stack_proto_pe =3D {
++	.func		=3D bpf_get_stack_pe,
++	.gpl_only	=3D true,
++	.ret_type	=3D RET_INTEGER,
++	.arg1_type	=3D ARG_PTR_TO_CTX,
++	.arg2_type	=3D ARG_PTR_TO_UNINIT_MEM,
++	.arg3_type	=3D ARG_CONST_SIZE_OR_ZERO,
++	.arg4_type	=3D ARG_ANYTHING,
++};
++
+ /* Called from eBPF program */
+ static void *stack_map_lookup_elem(struct bpf_map *map, void *key)
+ {
+diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
+index 3cc0dcb60ca20..cb91ef902cc43 100644
+--- a/kernel/trace/bpf_trace.c
++++ b/kernel/trace/bpf_trace.c
+@@ -1411,9 +1411,9 @@ pe_prog_func_proto(enum bpf_func_id func_id, const =
+struct bpf_prog *prog)
+ 	case BPF_FUNC_perf_event_output:
+ 		return &bpf_perf_event_output_proto_tp;
+ 	case BPF_FUNC_get_stackid:
+-		return &bpf_get_stackid_proto_tp;
++		return &bpf_get_stackid_proto_pe;
+ 	case BPF_FUNC_get_stack:
+-		return &bpf_get_stack_proto_tp;
++		return &bpf_get_stack_proto_pe;
+ 	case BPF_FUNC_perf_prog_read_value:
+ 		return &bpf_perf_prog_read_value_proto;
+ 	case BPF_FUNC_read_branch_records:
+--=20
+2.24.1
 
