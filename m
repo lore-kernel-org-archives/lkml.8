@@ -2,261 +2,145 @@ Return-Path: <SRS0=y5Sx=A3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A62E8C433E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 21:26:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF02EC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 21:26:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 74D1E20787
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 21:26:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8AC3E20787
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 21:26:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RzNAZoej"
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="X1bKofa1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726649AbgGPV0h (ORCPT
+        id S1726801AbgGPV0z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 17:26:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55782 "EHLO
+        Thu, 16 Jul 2020 17:26:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55832 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725970AbgGPV0g (ORCPT
+        with ESMTP id S1726198AbgGPV0y (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 17:26:36 -0400
-Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 43DB7C061755;
-        Thu, 16 Jul 2020 14:26:36 -0700 (PDT)
-Received: by mail-ej1-x642.google.com with SMTP id n22so5278352ejy.3;
-        Thu, 16 Jul 2020 14:26:36 -0700 (PDT)
+        Thu, 16 Jul 2020 17:26:54 -0400
+Received: from mail-io1-xd44.google.com (mail-io1-xd44.google.com [IPv6:2607:f8b0:4864:20::d44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5E71DC08C5CE
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Jul 2020 14:26:54 -0700 (PDT)
+Received: by mail-io1-xd44.google.com with SMTP id l17so7658816iok.7
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Jul 2020 14:26:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=vAseUwcQJdDJQQra5TLeLm+SJbx5n23UWFenIaII7YI=;
-        b=RzNAZoejioCvLIzByvtQGVtgUKb7+UXluj3R4ebR91VeNxXDXqhn/1nQu7qixemUju
-         lvd1pm3mo9dtStJ4jO1jA2sQD+J+y0XTqn0t7HjG/qPGj2is9EUTVvKNkixDUF105Ab5
-         SQINgUAcT3LjEbzb3g3qu4aAzpwfg+6AHBLhWTFZZhLIw1MG02TBNfGXudsDH9sioMwQ
-         hwQtaJoXjnFlddCrOEfOhW732LZQaZSs0Ze+lpLPhhObICHV5LgRJAOlE93qjqiJwmUE
-         QOrPzoZUiJee7xMoTbubCeTtzHCddwETMiGdL34b/4/JFdaUa4E76Lp3tnbBerKHKsin
-         op2A==
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=oQxCrdBDFS2fRH6xFMh6bKNwdL/lOdhX2TcgbTw/bOw=;
+        b=X1bKofa1qS2JEqLt0jom2OGXcSEoy9mscvmqkSKw8hFEy0fixVyEp97RLhJBv0e25M
+         5JKdMVDMSTsC5WlnjOSPEo/tHM7cdH3CZ9iJLQBDMXVrv18QtAElSGku/OwZib6w+YDZ
+         DPMZ8zhKkmKok/aW7E+USmDemh/OhbI+MFhZDrPjUCoVLLS8sCH6uu61kaFE8LqZrslC
+         +nno3iWJZm1lbiDJXPvnuDBIJyTCQRgTVEJMwwqfZZqcxhsf4+9PRJ+/vK22/BTtxuEB
+         LK5CvgOZLaUAjsWE48ccQb8xKsqoO2DrM/MEbnYL7Fyo5JpyMmYLeZBXl7GCDwrWKoSG
+         2sWQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=vAseUwcQJdDJQQra5TLeLm+SJbx5n23UWFenIaII7YI=;
-        b=fhjbeqYS/oEfvzNCqL4E5CRF+3V/73tf4+F/941N2qFk/jnp0q1JIMuc+vcQXmhIN1
-         dI54b5iTxs8YcO0sWD22DD5RNJwy1O80GN/qgDWI8bXWhq5OqK/STl5OiAO77KATjWrP
-         UxcGQd5vwa6pE7axwgHQ8gz6NbjIneZllP0vRsoG/V3BunDnBu3J+Iy59lHsizj/O/o1
-         4SIqYHE+/NUuuR5bedNVmwb0YzdBPq5I/AFVfkTKyEAzqj2KoLB22BT6WtNIetRh8wsV
-         SeneGoLy/mD+NZMD4r6oMrt2MTPXRQt8OGEn49Dl8Tg1iLiif8L0FY0/dTDNuTR9jSuc
-         ktqA==
-X-Gm-Message-State: AOAM532CIDkT3P6LsDfmvzp82IdkDiVsa1CVQDzxtmXKHUj0hPrKZyuN
-        dTlU7znYQ4DGchD6n/QH9Hg=
-X-Google-Smtp-Source: ABdhPJy07RGdNa3FOJhhw3BUf5RTKV1JBhUIdwZloMswtbvXh0JJPkU0i4+HLCgqbVLI3plPHTGP+w==
-X-Received: by 2002:a17:906:434c:: with SMTP id z12mr5444703ejm.33.1594934794860;
-        Thu, 16 Jul 2020 14:26:34 -0700 (PDT)
-Received: from BV030612LT ([188.24.137.55])
-        by smtp.gmail.com with ESMTPSA id o15sm6249168edv.55.2020.07.16.14.26.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 16 Jul 2020 14:26:33 -0700 (PDT)
-Date:   Fri, 17 Jul 2020 00:26:31 +0300
-From:   Cristian Ciocaltea <cristian.ciocaltea@gmail.com>
-To:     Rob Herring <robh@kernel.org>
-Cc:     Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        linux-actions@lists.infradead.org
-Subject: Re: [PATCH 1/3] dt-bindings: pinctrl: Add bindings for Actions S500
- SoC
-Message-ID: <20200716212631.GA348917@BV030612LT>
-References: <cover.1593112402.git.cristian.ciocaltea@gmail.com>
- <2a7610ff9f33cf72d9df6fc4598741fb6d7836e0.1593112402.git.cristian.ciocaltea@gmail.com>
- <20200715200309.GA722435@bogus>
- <20200716104316.GA309338@BV030612LT>
- <CAL_Jsq+8bX5duv=116e=hve1L-h8a=5quqCHVtSAs4PjK6xc1w@mail.gmail.com>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=oQxCrdBDFS2fRH6xFMh6bKNwdL/lOdhX2TcgbTw/bOw=;
+        b=nNyou2aCx76/w4tESXPeslYYC094MK0h4k/4pAHRRzsNlWBgfvrjYaTd+b830sVC4R
+         u4XaIz3mdFz1YcL+AbpgsX45g2N5WGUgPdHXghjTK5wGKwt+R9sTe45YXK0AYQxJlNR4
+         XrPBX5fsvYFQQ+lhz9VaXqXIwywPZVsoHtvSpNwuwsYBkB5Gteud16RNXyg/wor6lLpd
+         /3SqSbwjX573mSgHJUkToIr7MBkFLhMPxM0iOMLEf6Bav5v0zmUQqauEmDdRzInyJP2y
+         lPpr/QGcmUUCiKmdd4953n/LBekHb7UbtKZZjhdtRNffBE0vKTtvWNnD1G55IGDREJnA
+         IxVA==
+X-Gm-Message-State: AOAM531XDvSK8yGnlUXIYe/bzXwIM2C9n38CUILn5eV4PmqOWu+NYkSm
+        HOi1NSFz442rW3ae05weQenPAIkZARL9bg==
+X-Google-Smtp-Source: ABdhPJziyVuAkAxLvealhwn98eWxfMZWbG1ZmYnENKBM0t128sCt9/8AqZ3b6rF3HvTsRxWrjCRABQ==
+X-Received: by 2002:a05:6602:2103:: with SMTP id x3mr6450447iox.130.1594934813535;
+        Thu, 16 Jul 2020 14:26:53 -0700 (PDT)
+Received: from [192.168.1.58] ([65.144.74.34])
+        by smtp.gmail.com with ESMTPSA id u65sm3232286iod.45.2020.07.16.14.26.52
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 16 Jul 2020 14:26:52 -0700 (PDT)
+Subject: Re: [PATCH RFC v2 2/3] io_uring: add IOURING_REGISTER_RESTRICTIONS
+ opcode
+To:     Stefano Garzarella <sgarzare@redhat.com>
+Cc:     Alexander Viro <viro@zeniv.linux.org.uk>,
+        Kernel Hardening <kernel-hardening@lists.openwall.com>,
+        Kees Cook <keescook@chromium.org>,
+        Aleksa Sarai <asarai@suse.de>,
+        Stefan Hajnoczi <stefanha@redhat.com>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        Sargun Dhillon <sargun@sargun.me>,
+        Jann Horn <jannh@google.com>, io-uring@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, Jeff Moyer <jmoyer@redhat.com>,
+        linux-kernel@vger.kernel.org
+References: <20200716124833.93667-1-sgarzare@redhat.com>
+ <20200716124833.93667-3-sgarzare@redhat.com>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <0fbb0393-c14f-3576-26b1-8bb22d2e0615@kernel.dk>
+Date:   Thu, 16 Jul 2020 15:26:51 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAL_Jsq+8bX5duv=116e=hve1L-h8a=5quqCHVtSAs4PjK6xc1w@mail.gmail.com>
+In-Reply-To: <20200716124833.93667-3-sgarzare@redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 16, 2020 at 08:50:36AM -0600, Rob Herring wrote:
-> On Thu, Jul 16, 2020 at 4:43 AM Cristian Ciocaltea
-> <cristian.ciocaltea@gmail.com> wrote:
-> >
-> > On Wed, Jul 15, 2020 at 02:03:09PM -0600, Rob Herring wrote:
-> > > On Thu, Jun 25, 2020 at 11:16:18PM +0300, Cristian Ciocaltea wrote:
-> > > > Add pinctrl and gpio bindings for Actions Semi S500 SoC.
-> > > >
-> > > > Signed-off-by: Cristian Ciocaltea <cristian.ciocaltea@gmail.com>
-> > > > ---
-> > > >  .../pinctrl/actions,s500-pinctrl.yaml         | 228 ++++++++++++++++++
-> > > >  1 file changed, 228 insertions(+)
-> > > >  create mode 100644 Documentation/devicetree/bindings/pinctrl/actions,s500-pinctrl.yaml
-> > > >
-> > > > diff --git a/Documentation/devicetree/bindings/pinctrl/actions,s500-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/actions,s500-pinctrl.yaml
-> > > > new file mode 100644
-> > > > index 000000000000..856947c70844
-> > > > --- /dev/null
-> > > > +++ b/Documentation/devicetree/bindings/pinctrl/actions,s500-pinctrl.yaml
-> > > > @@ -0,0 +1,228 @@
-> > > > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> > > > +%YAML 1.2
-> > > > +---
-> > > > +$id: http://devicetree.org/schemas/pinctrl/actions,s500-pinctrl.yaml#
-> > > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > > > +
-> > > > +title: Actions Semi S500 SoC pinmux & GPIO controller
-> > > > +
-> > > > +maintainers:
-> > > > +  - Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> > > > +
-> > > > +description: |
-> > > > +  Pinmux & GPIO controller manages pin multiplexing & configuration including
-> > > > +  GPIO function selection & GPIO attributes configuration. Please refer to
-> > > > +  pinctrl-bindings.txt in this directory for common binding part and usage.
-> > > > +
-> > > > +properties:
-> > > > +  compatible:
-> > > > +    const: actions,s500-pinctrl
-> > > > +
-> > > > +  reg:
-> > > > +    minItems: 1
-> > > > +    maxItems: 4
-> > >
-> > > Need to enumerate what each register range is.
-> >
-> > Hi Rob,
-> >
-> > Thanks for the review!
-> >
-> > Would the update below suffice?
-> >
-> >   reg:
-> >     description: |
-> >       Specifies the memory region(s) associated with the pin-controller.
-> >       To improve granularity, up to four register ranges can be provided:
-> 
-> What does 'improve granularity' mean:
+On 7/16/20 6:48 AM, Stefano Garzarella wrote:
+> diff --git a/include/uapi/linux/io_uring.h b/include/uapi/linux/io_uring.h
+> index efc50bd0af34..0774d5382c65 100644
+> --- a/include/uapi/linux/io_uring.h
+> +++ b/include/uapi/linux/io_uring.h
+> @@ -265,6 +265,7 @@ enum {
+>  	IORING_REGISTER_PROBE,
+>  	IORING_REGISTER_PERSONALITY,
+>  	IORING_UNREGISTER_PERSONALITY,
+> +	IORING_REGISTER_RESTRICTIONS,
+>  
+>  	/* this goes last */
+>  	IORING_REGISTER_LAST
+> @@ -293,4 +294,30 @@ struct io_uring_probe {
+>  	struct io_uring_probe_op ops[0];
+>  };
+>  
+> +struct io_uring_restriction {
+> +	__u16 opcode;
+> +	union {
+> +		__u8 register_op; /* IORING_RESTRICTION_REGISTER_OP */
+> +		__u8 sqe_op;      /* IORING_RESTRICTION_SQE_OP */
+> +	};
+> +	__u8 resv;
+> +	__u32 resv2[3];
+> +};
+> +
+> +/*
+> + * io_uring_restriction->opcode values
+> + */
+> +enum {
+> +	/* Allow an io_uring_register(2) opcode */
+> +	IORING_RESTRICTION_REGISTER_OP,
+> +
+> +	/* Allow an sqe opcode */
+> +	IORING_RESTRICTION_SQE_OP,
+> +
+> +	/* Only allow fixed files */
+> +	IORING_RESTRICTION_FIXED_FILES_ONLY,
+> +
+> +	IORING_RESTRICTION_LAST
+> +};
+> +
 
-Technically all the registers used by the driver could be specified via
-a single contiguous range. However, there are a few unrelated registers
-(i.e. PWM Output Control) which should be excluded in order to come up
-with a more accurate specification. The 4 ranges below are basically
-the result of this exclusion:
+Not sure I totally love this API. Maybe it'd be cleaner to have separate
+ops for this, instead of muxing it like this. One for registering op
+code restrictions, and one for disallowing other parts (like fixed
+files, etc).
 
-> >       * GPIO Output + GPIO Input + GPIO Data
-> >       * Multiplexing Control
-> >       * PAD Pull Control + PAD Schmitt Trigger enable + PAD Control
-> >       * PAD Drive Capacity Select
-> 
-> The h/w sometimes has these and sometimes doesn't?
+I think that would look a lot cleaner than the above.
 
-No, the h/w is fixed, the only reason of this approach was to allow a
-precise memory region specification, as explained above.
-
-I'm not sure if this should be made mandatory or it's also fine to let
-(a lazy) user provide combined ranges or just a contiguous one (like
-in the example), with the drawback of loosing the accuracy, of course.
-
-> If they do stay, then you want:
-> 
-> items:
->   - description: GPIO Output + GPIO Input + GPIO Data
->   - description: ...
-
-Would this be applicable even if we keep this flexible approach and
-don't set 'minItems: 4'?
-
-> >
-> > > > +
-> > > > +  clocks:
-> > > > +    maxItems: 1
-> > > > +
-> > > > +  gpio-controller: true
-> > > > +
-> > > > +  gpio-ranges:
-> > > > +    maxItems: 1
-> > > > +
-> > > > +  '#gpio-cells':
-> > > > +    description:
-> > > > +      Specifies the pin number and flags, as defined in
-> > > > +      include/dt-bindings/gpio/gpio.h
-> > > > +    const: 2
-> > > > +
-> > > > +  interrupt-controller: true
-> > > > +
-> > > > +  '#interrupt-cells':
-> > > > +    description:
-> > > > +      Specifies the pin number and flags, as defined in
-> > > > +      include/dt-bindings/interrupt-controller/irq.h
-> > > > +    const: 2
-> > > > +
-> > > > +  interrupts:
-> > > > +    description:
-> > > > +      One interrupt per each of the 5 GPIO ports supported by the controller,
-> > > > +      sorted by port number ascending order.
-> > > > +    minItems: 5
-> > > > +    maxItems: 5
-> > > > +
-> > > > +patternProperties:
-> > > > +  '^.*$':
-> > > > +    if:
-> > > > +      type: object
-> > >
-> > > For a new binding, can you do '-pins$' for the node names so we don't
-> > > need this if/then hack.
-> >
-> > Right, the idea was to be consistent with the existing bindings for
-> > S700 and S900, which allow free node names, although they are not yet
-> > converted to yaml format.
-> 
-> If we want consistency, those should have their node names updated.
-
-Fair enough, I have already updated the node names to use the '-pins'
-suffix.
-
-> >
-> > > > +    then:
-> > > > +      patternProperties:
-> > > > +        'pinmux$':
-> > >
-> > > Is this really a pattern? Can't tell from the example.
-> >
-> > pinmux and pinconf subnodes may appear multiple times, that's why I
-> > decided to match their names based on the suffix.
-> >
-> > The example is not complex enough, I will change it to the following:
-> >
-> >     mmc0_default: mmc0_default {
-> >         pinmux {
-> >             groups = "sd0_d0_mfp", "sd0_d1_mfp", "sd0_d2_d3_mfp",
-> >                      "sd0_cmd_mfp", "sd0_clk_mfp";
-> >             function = "sd0";
-> >         };
-> >
-> >         drv_pinconf {
-> 
-> drv-pinconf
-> 
-> Make the pattern '-?pinconf' to enforce that. (that '-' may need escaping?)
-
-Actually the pattern should be '^(.*-)?pinconf$', to restrict the names
-to either 'pinconf' or '<label>-pinconf'.
-
-I have just made some more validation tests and noticed I had missed an
-'additionalProperties: false' line, for the 'pins' node. Should be fine
-now!
-
-Thanks,
-Cristi
+-- 
+Jens Axboe
 
