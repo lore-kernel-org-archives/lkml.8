@@ -2,148 +2,139 @@ Return-Path: <SRS0=y5Sx=A3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE493C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 13:48:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8391C433E7
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 13:53:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 663A5207DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 13:48:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SfqKe+gN"
+	by mail.kernel.org (Postfix) with ESMTP id ABCB4207BC
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 13:53:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728774AbgGPNsr (ORCPT
+        id S1728885AbgGPNxp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 09:48:47 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:46724 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728093AbgGPNsq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 09:48:46 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1594907324;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=GfvtRZl6XjjqgsUho+mp1mDesIN25Q1M46CfrAHyf5E=;
-        b=SfqKe+gNMqaMKgHfybf+ieUujVXBmxQ/gBRrVTTN8McUsJqsb+7ADFiOrBJs5M6Xhfh7vu
-        /5n1z4KNRfm+UPnpkH5rJx7Yl2NtZe1Chd67Oui4ccPEJkfwC+jDpGwUbxF9uGc717vbya
-        HSsDULINrxLwQg6xK2YFH2qai5OWw8k=
-Received: from mail-qv1-f69.google.com (mail-qv1-f69.google.com
- [209.85.219.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-457-BmnPp_yuP-uniWIoy0c9zQ-1; Thu, 16 Jul 2020 09:48:43 -0400
-X-MC-Unique: BmnPp_yuP-uniWIoy0c9zQ-1
-Received: by mail-qv1-f69.google.com with SMTP id u10so3428108qvj.23
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Jul 2020 06:48:43 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=GfvtRZl6XjjqgsUho+mp1mDesIN25Q1M46CfrAHyf5E=;
-        b=G8kIezbQT9lJxRO4ZT4Rr9WgWUDpOjFykGG1g3Gv9oyJ+nAAcQFJAQJmGaVUK6jd/G
-         hxJob4NQ4TphFvQ3oz/eRHI1jOTaAu8u8eku56TAn2sUrhPkXZdek6NdXIwRM3k6zJem
-         kY4B7efS7SRwpOGGYJZGTxCtJQ7caKP4EDv49Ot9+KYZjOSP6f5lxqkWY4oK8NgM15wj
-         Q69TPBPIo6MtqqVn5UzFqh2RvtGKkYor5FZ5mAyrYiuMAoUD4WiVkq3uqHkUOobl6qSo
-         WbcVGp6oU7iRtYQSCA+ZSjUFxemsLUSJCp9qojgxTKQdbPbGPDn/2fkQb8OnAcJ6Lz8i
-         xcPw==
-X-Gm-Message-State: AOAM533p7O3b8iBsUkFvC+GzkufQmfrK1RTLCDDA5Dl7DXDUZxh1xGMd
-        GQRPnXexzK2Lt1dEt4kjczRUILA4E7WIb9g7W2XXEdDm1JoRWi/c/6rSYRjBRPEV0PmCzmk7SGC
-        Pk0Gwk1cmOWLvbfjH7VzhIm68
-X-Received: by 2002:a05:6214:a72:: with SMTP id ef18mr4342615qvb.166.1594907322451;
-        Thu, 16 Jul 2020 06:48:42 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJw0Oubl/AqRtyIxgKrCGuB+yjKyn9Gpk897PmC3Xhvn7arTCjRXwWZ17enUl/Seg7/aLuCVeA==
-X-Received: by 2002:a05:6214:a72:: with SMTP id ef18mr4342587qvb.166.1594907322139;
-        Thu, 16 Jul 2020 06:48:42 -0700 (PDT)
-Received: from trix.remote.csb (075-142-250-213.res.spectrum.com. [75.142.250.213])
-        by smtp.gmail.com with ESMTPSA id k197sm7161963qke.133.2020.07.16.06.48.40
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 16 Jul 2020 06:48:41 -0700 (PDT)
-Subject: Re: [PATCH] reiserfs : fix improper free in reiserfs_get_block
-To:     Jan Kara <jack@suse.cz>
-Cc:     Matthew Wilcox <willy@infradead.org>, william.kucharski@oracle.com,
-        jeffm@suse.com, joseph.qi@linux.alibaba.com,
-        liao.pingfang@zte.com.cn, reiserfs-devel@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20200714130509.11791-1-trix@redhat.com>
- <20200714131043.GB12769@casper.infradead.org>
- <bc5a13bd-54c4-509d-7202-20c93f43e2f6@redhat.com>
- <20200715080451.GK23073@quack2.suse.cz>
-From:   Tom Rix <trix@redhat.com>
-Message-ID: <41a5b57f-2bea-04a6-3510-6d76bd5098d5@redhat.com>
-Date:   Thu, 16 Jul 2020 06:48:39 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Thu, 16 Jul 2020 09:53:45 -0400
+Received: from mga11.intel.com ([192.55.52.93]:48056 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726986AbgGPNxp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jul 2020 09:53:45 -0400
+IronPort-SDR: 5wX9w7WCQsvMGzSmK9p0H/m6QsfNquohN/AEjODJO+6oXCqmLNKEeS681xmbvfxQzrjTl0GzwU
+ 3Dvgnh3E3TyA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9683"; a="147368384"
+X-IronPort-AV: E=Sophos;i="5.75,359,1589266800"; 
+   d="scan'208";a="147368384"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jul 2020 06:53:44 -0700
+IronPort-SDR: d/mYQX24GIFvWrFe0ojmopRlk2JfmMU2TdM3wve6JY9CRav7lpyy0beitzmo3shyRjfd04SBfB
+ 5UUIU4O/hjUA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,359,1589266800"; 
+   d="scan'208";a="325150023"
+Received: from lettner-mobl.ger.corp.intel.com (HELO localhost) ([10.252.32.212])
+  by FMSMGA003.fm.intel.com with ESMTP; 16 Jul 2020 06:53:34 -0700
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     x86@kernel.org, linux-sgx@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Jethro Beekman <jethro@fortanix.com>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        akpm@linux-foundation.org, andriy.shevchenko@linux.intel.com,
+        asapek@google.com, cedric.xing@intel.com, chenalexchen@google.com,
+        conradparker@google.com, cyhanish@google.com,
+        dave.hansen@intel.com, haitao.huang@intel.com,
+        josh@joshtriplett.org, kai.huang@intel.com, kai.svahn@intel.com,
+        kmoy@google.com, ludloff@google.com, luto@kernel.org,
+        nhorman@redhat.com, npmccallum@redhat.com, puiterwijk@redhat.com,
+        rientjes@google.com, tglx@linutronix.de, yaozhangx@google.com
+Subject: [PATCH v36 02/24] x86/cpufeatures: x86/msr: Add Intel SGX Launch Control hardware bits
+Date:   Thu, 16 Jul 2020 16:52:41 +0300
+Message-Id: <20200716135303.276442-3-jarkko.sakkinen@linux.intel.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200716135303.276442-1-jarkko.sakkinen@linux.intel.com>
+References: <20200716135303.276442-1-jarkko.sakkinen@linux.intel.com>
 MIME-Version: 1.0
-In-Reply-To: <20200715080451.GK23073@quack2.suse.cz>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Sean Christopherson <sean.j.christopherson@intel.com>
 
-On 7/15/20 1:04 AM, Jan Kara wrote:
-> On Tue 14-07-20 06:12:47, Tom Rix wrote:
->> On 7/14/20 6:10 AM, Matthew Wilcox wrote:
->>> On Tue, Jul 14, 2020 at 06:05:09AM -0700, trix@redhat.com wrote:
->>>> From: Tom Rix <trix@redhat.com>
->>>>
->>>> clang static analysis flags this error
->>>>
->>>> inode.c:1083:5: warning: Argument to kfree() is the address of the
->>>>   local variable 'unf_single', which is not memory allocated by
->>>>   malloc() [unix.Malloc]
->>>>                                 kfree(un);
->>>>                                 ^~~~~~~~~
->>>> Assignment of 'un'
->>>>
->>>> 	/*
->>>> 	 * We use this in case we need to allocate
->>>> 	 * only one block which is a fastpath
->>>> 	 */
->>>> 	unp_t unf_single = 0;
->>>>
->>>> 	...
->>>>
->>>> 	if (blocks_needed == 1) {
->>>> 		un = &unf_single;
->>>> 	} else {
->>>> 		un = kcalloc(min(blocks_needed, max_to_insert),
->>>> 			     UNFM_P_SIZE, GFP_NOFS);
->>>> 		if (!un) {
->>>> 			un = &unf_single;
->>>> 			blocks_needed = 1;
->>>> 			max_to_insert = 0;
->>>> 		}
->>>> 	}
->>>>
->>>> The logic to free 'un'
->>>>
->>>> 	if (blocks_needed != 1)
->>>> 		kfree(un);
->>>>
->>>> Because the kcalloc failure falls back to using unf_single,
->>>> the if-check for the free is wrong.
->>> I think you mean "Because clang's static analysis is limited, it
->>> warns incorrectly about this".  There's no path to get to the
->>> kfree with blocks_needed != 1 and un being equal to &unf_single.
->> Ok.
-> I agree with Matthew the patch will make the code more obviously correct so
-> it's a sensible cleanup. But the changelog needs to redone to reflect this
-> is just a cleanup before the patch can be merged.
->
-> 									Honza
+Add X86_FEATURE_SGX_LC, which informs whether or not the CPU supports SGX
+Launch Control.
 
-I am going to look into the problem with the analyzer because that is where the fix should go.
+Add MSR_IA32_SGXLEPUBKEYHASH{0, 1, 2, 3}, which when combined contain a
+SHA256 hash of a 3072-bit RSA public key. SGX backed software packages, so
+called enclaves, are always signed. All enclaves signed with the public key
+are unconditionally allowed to initialize. [1]
 
-If the problem isn't resolvable, i will loop back to this clean up.
+Add FEAT_CTL_SGX_LC_ENABLED, which informs whether the aformentioned MSRs
+are writable or not. If the bit is off, the public key MSRs are read-only
+for the OS.
 
-Tom
+If the MSRs are read-only, the platform must provide a launch enclave (LE).
+LE can create cryptographic tokens for other enclaves that they can pass
+together with their signature to the ENCLS(EINIT) opcode, which is used
+to initialize enclaves.
+
+Linux is unlikely to support the locked configuration because it takes away
+the control of the launch decisions from the kernel.
+
+[1] Intel SDM: 38.1.4 Intel SGX Launch Control Configuration
+
+Reviewed-by: Borislav Petkov <bp@alien8.de>
+Acked-by: Jethro Beekman <jethro@fortanix.com>
+Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+Co-developed-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+---
+ arch/x86/include/asm/cpufeatures.h | 1 +
+ arch/x86/include/asm/msr-index.h   | 7 +++++++
+ 2 files changed, 8 insertions(+)
+
+diff --git a/arch/x86/include/asm/cpufeatures.h b/arch/x86/include/asm/cpufeatures.h
+index 545ac3e0e269..0a4541e4f076 100644
+--- a/arch/x86/include/asm/cpufeatures.h
++++ b/arch/x86/include/asm/cpufeatures.h
+@@ -352,6 +352,7 @@
+ #define X86_FEATURE_CLDEMOTE		(16*32+25) /* CLDEMOTE instruction */
+ #define X86_FEATURE_MOVDIRI		(16*32+27) /* MOVDIRI instruction */
+ #define X86_FEATURE_MOVDIR64B		(16*32+28) /* MOVDIR64B instruction */
++#define X86_FEATURE_SGX_LC		(16*32+30) /* Software Guard Extensions Launch Control */
+ 
+ /* AMD-defined CPU features, CPUID level 0x80000007 (EBX), word 17 */
+ #define X86_FEATURE_OVERFLOW_RECOV	(17*32+ 0) /* MCA overflow recovery support */
+diff --git a/arch/x86/include/asm/msr-index.h b/arch/x86/include/asm/msr-index.h
+index 18e08da19f16..3d7c89a8533f 100644
+--- a/arch/x86/include/asm/msr-index.h
++++ b/arch/x86/include/asm/msr-index.h
+@@ -582,6 +582,7 @@
+ #define FEAT_CTL_LOCKED				BIT(0)
+ #define FEAT_CTL_VMX_ENABLED_INSIDE_SMX		BIT(1)
+ #define FEAT_CTL_VMX_ENABLED_OUTSIDE_SMX	BIT(2)
++#define FEAT_CTL_SGX_LC_ENABLED			BIT(17)
+ #define FEAT_CTL_SGX_ENABLED			BIT(18)
+ #define FEAT_CTL_LMCE_ENABLED			BIT(20)
+ 
+@@ -602,6 +603,12 @@
+ #define MSR_IA32_UCODE_WRITE		0x00000079
+ #define MSR_IA32_UCODE_REV		0x0000008b
+ 
++/* Intel SGX Launch Enclave Public Key Hash MSRs */
++#define MSR_IA32_SGXLEPUBKEYHASH0	0x0000008C
++#define MSR_IA32_SGXLEPUBKEYHASH1	0x0000008D
++#define MSR_IA32_SGXLEPUBKEYHASH2	0x0000008E
++#define MSR_IA32_SGXLEPUBKEYHASH3	0x0000008F
++
+ #define MSR_IA32_SMM_MONITOR_CTL	0x0000009b
+ #define MSR_IA32_SMBASE			0x0000009e
+ 
+-- 
+2.25.1
 
