@@ -2,118 +2,78 @@ Return-Path: <SRS0=y5Sx=A3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51466C433E8
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 07:46:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29C87C433E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 07:46:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3458C20720
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 07:46:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EAD6D2071B
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 07:46:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594885600;
+	bh=2rRF0+H6dzoiWSGTgh9BDTtMArRDj3M+AvESL+Ll92M=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=HPrFiwnqU/UCiBs22qMP8Ucdc19BLlT1ODXS0HHCQ5K9wvm38bdV6bm2MjTSi5SJK
+	 265dUZVqOhq6rkkBevXhYD30VbrjBp6SGPCCay1JJ6M6bxFUMAiYjdDRCne+0IolFD
+	 0zbqqm8/NdjrkHfXKOPP61L4O/IZXx64Z+192AQE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726440AbgGPHqA (ORCPT
+        id S1726629AbgGPHqj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 03:46:00 -0400
-Received: from mx2.suse.de ([195.135.220.15]:35558 "EHLO mx2.suse.de"
+        Thu, 16 Jul 2020 03:46:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59918 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725867AbgGPHqA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 03:46:00 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 62992ABF4;
-        Thu, 16 Jul 2020 07:46:02 +0000 (UTC)
-Subject: Re: [PATCH 1/4] mm/page_alloc: fix non cma alloc context
-To:     Joonsoo Kim <js1304@gmail.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Linux Memory Management List <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>, kernel-team@lge.com,
-        Christoph Hellwig <hch@infradead.org>,
-        Roman Gushchin <guro@fb.com>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>,
-        Michal Hocko <mhocko@suse.com>,
-        "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>, stable@vger.kernel.org
-References: <1594789529-6206-1-git-send-email-iamjoonsoo.kim@lge.com>
- <332d620b-bfe3-3b69-931b-77e3a74edbfd@suse.cz>
- <CAAmzW4NbG0fCtU2mV83pRamUeOEqKKxGTpQK2zuDxzmoF2FVrg@mail.gmail.com>
-From:   Vlastimil Babka <vbabka@suse.cz>
-Message-ID: <6f18d999-4518-31ce-4cea-9b5b89a577ad@suse.cz>
-Date:   Thu, 16 Jul 2020 09:45:55 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        id S1725867AbgGPHqi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jul 2020 03:46:38 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C19CE206F4;
+        Thu, 16 Jul 2020 07:46:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594885598;
+        bh=2rRF0+H6dzoiWSGTgh9BDTtMArRDj3M+AvESL+Ll92M=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=ykopcBfC8YZCQhBDtu5ek2ciYghlU215+FDFUuzg2YHmoat+k86idGLq2jd84r4PL
+         M+nWOuyxNyB0H5bJhyI3P9YPhnwhmKATxdHpf6lyTxFWENbayTObGZUbv675fhC2Ww
+         X/fx1WnTSpJjB87+FY1X0YI2klLEX/2NPc2ri7Qc=
+Date:   Thu, 16 Jul 2020 09:46:32 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Guenter Roeck <linux@roeck-us.net>
+Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+        akpm@linux-foundation.org, shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
+Subject: Re: [PATCH 5.7 000/166] 5.7.9-rc1 review
+Message-ID: <20200716074632.GB975409@kroah.com>
+References: <20200714184115.844176932@linuxfoundation.org>
+ <424db635-44a1-8bc8-fe5e-4b84e9c14281@roeck-us.net>
 MIME-Version: 1.0
-In-Reply-To: <CAAmzW4NbG0fCtU2mV83pRamUeOEqKKxGTpQK2zuDxzmoF2FVrg@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <424db635-44a1-8bc8-fe5e-4b84e9c14281@roeck-us.net>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/16/20 9:27 AM, Joonsoo Kim wrote:
-> 2020년 7월 15일 (수) 오후 5:24, Vlastimil Babka <vbabka@suse.cz>님이 작성:
->> >  /*
->> >   * get_page_from_freelist goes through the zonelist trying to allocate
->> >   * a page.
->> > @@ -3706,6 +3714,8 @@ get_page_from_freelist(gfp_t gfp_mask, unsigned int order, int alloc_flags,
->> >       struct pglist_data *last_pgdat_dirty_limit = NULL;
->> >       bool no_fallback;
->> >
->> > +     current_alloc_flags(gfp_mask, &alloc_flags);
->>
->> I don't see why to move the test here? It will still be executed in the
->> fastpath, if that's what you wanted to avoid.
+On Wed, Jul 15, 2020 at 09:43:41AM -0700, Guenter Roeck wrote:
+> On 7/14/20 11:42 AM, Greg Kroah-Hartman wrote:
+> > This is the start of the stable review cycle for the 5.7.9 release.
+> > There are 166 patches in this series, all will be posted as a response
+> > to this one.  If anyone has any issues with these being applied, please
+> > let me know.
+> > 
+> > Responses should be made by Thu, 16 Jul 2020 18:40:38 +0000.
+> > Anything received after that time might be too late.
+> > 
 > 
-> I want to execute it on the fastpath, too. Reason that I moved it here
-> is that alloc_flags could be reset on slowpath. See the code where
-> __gfp_pfmemalloc_flags() is on. This is the only place that I can apply
-> this option to all the allocation paths at once.
+> Build results:
+> 	total: 155 pass: 155 fail: 0
+> Qemu test results:
+> 	total: 431 pass: 431 fail: 0
 
-But get_page_from_freelist() might be called multiple times in the slowpath, and
-also anyone looking for gfp and alloc flags setup will likely not examine this
-function. I don't see a problem in having it in two places that already deal
-with alloc_flags setup, as it is now.
+Thanks for testing all of these and letting me know.
 
-> Thanks.
-> 
->> > +
->> >  retry:
->> >       /*
->> >        * Scan zonelist, looking for a zone with enough free.
->> > @@ -4339,10 +4349,6 @@ gfp_to_alloc_flags(gfp_t gfp_mask)
->> >       } else if (unlikely(rt_task(current)) && !in_interrupt())
->> >               alloc_flags |= ALLOC_HARDER;
->> >
->> > -#ifdef CONFIG_CMA
->> > -     if (gfp_migratetype(gfp_mask) == MIGRATE_MOVABLE)
->> > -             alloc_flags |= ALLOC_CMA;
->> > -#endif
->>
->> I would just replace this here with:
->> alloc_flags = current_alloc_flags(gfp_mask, alloc_flags);
->>
->> >       return alloc_flags;
->> >  }
->> >
->> > @@ -4808,9 +4814,6 @@ static inline bool prepare_alloc_pages(gfp_t gfp_mask, unsigned int order,
->> >       if (should_fail_alloc_page(gfp_mask, order))
->> >               return false;
->> >
->> > -     if (IS_ENABLED(CONFIG_CMA) && ac->migratetype == MIGRATE_MOVABLE)
->> > -             *alloc_flags |= ALLOC_CMA;
->>
->> And same here... Ah, I see. current_alloc_flags() should probably take a
->> migratetype parameter instead of gfp_mask then.
->>
->> > -
->> >       return true;
->> >  }
->> >
->> >
->>
-> 
-
+greg k-h
