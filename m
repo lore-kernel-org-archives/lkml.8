@@ -2,137 +2,123 @@ Return-Path: <SRS0=y5Sx=A3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B32DAC43445
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 18:21:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88AD2C43446
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 18:21:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8C3F02074B
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 18:21:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5ECCA2074B
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 18:21:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="AlLWGc9g"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="ZDPqwSJ+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729572AbgGPSVE (ORCPT
+        id S1729584AbgGPSVG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 14:21:04 -0400
-Received: from linux.microsoft.com ([13.77.154.182]:59484 "EHLO
-        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729544AbgGPSVA (ORCPT
+        Thu, 16 Jul 2020 14:21:06 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:40346 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728402AbgGPSVB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 14:21:00 -0400
-Received: from sequoia (162-237-133-238.lightspeed.rcsntx.sbcglobal.net [162.237.133.238])
-        by linux.microsoft.com (Postfix) with ESMTPSA id E7AF320B4909;
-        Thu, 16 Jul 2020 11:20:58 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com E7AF320B4909
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1594923659;
-        bh=EQouyNC75DO1HsNnhD3+10RmroB00VBujwUdao5crR4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=AlLWGc9gUvnMB7UwGwCLpIAYfC/XPdwoLPOvLh6rcFv5LPR3FS5XoPECUgTkm7EDV
-         GZFBRU2hU43W3bR8QI6OCDTpA9RJJjsTj3/x9YcZe2qcVfig3fvqBRZS1OyvjsY5n6
-         Ug7JdAKvuWBseNKYHxSWIy8kwFBFxbBs3qjJIVCs=
-Date:   Thu, 16 Jul 2020 13:20:57 -0500
-From:   Tyler Hicks <tyhicks@linux.microsoft.com>
-To:     Mimi Zohar <zohar@linux.ibm.com>
-Cc:     Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
-        James Morris <jmorris@namei.org>,
-        "Serge E . Hallyn" <serge@hallyn.com>,
-        Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
-        Prakhar Srivastava <prsriva02@gmail.com>,
-        linux-kernel@vger.kernel.org, linux-integrity@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        Nayna Jain <nayna@linux.ibm.com>
-Subject: Re: [PATCH v3 07/12] ima: Fail rule parsing when
- appraise_flag=blacklist is unsupportable
-Message-ID: <20200716182057.GE3673@sequoia>
-References: <20200709061911.954326-1-tyhicks@linux.microsoft.com>
- <20200709061911.954326-8-tyhicks@linux.microsoft.com>
- <1594923290.12900.376.camel@linux.ibm.com>
+        Thu, 16 Jul 2020 14:21:01 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 06GIKp76062591;
+        Thu, 16 Jul 2020 13:20:51 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1594923651;
+        bh=3U1YGou84u3VUbet9dKfDOd4OJ1M3iNBcC5HTyHhUDg=;
+        h=From:To:CC:Subject:Date:In-Reply-To:References;
+        b=ZDPqwSJ+bjyXN0ZEU56QQeSAKv39MsKHTFnGMszmLkoAKEBaGSnKOlnqdatMx8nQt
+         1lvc5fkygd7k4bHwwHB9GD++KD8NQPj0GRrjFVVaJklOpCQyFczLkRT0AycDZuksc7
+         LcdwAyt8ImKTqnmE2IsG8m+lbRPtb3MUn9zA9PlI=
+Received: from DFLE114.ent.ti.com (dfle114.ent.ti.com [10.64.6.35])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 06GIKpoi122383
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 16 Jul 2020 13:20:51 -0500
+Received: from DFLE108.ent.ti.com (10.64.6.29) by DFLE114.ent.ti.com
+ (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Thu, 16
+ Jul 2020 13:20:50 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE108.ent.ti.com
+ (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Thu, 16 Jul 2020 13:20:50 -0500
+Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 06GIKoZ1090243;
+        Thu, 16 Jul 2020 13:20:50 -0500
+From:   Dan Murphy <dmurphy@ti.com>
+To:     <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>, <robh@kernel.org>,
+        <marek.behun@nic.cz>
+CC:     <devicetree@vger.kernel.org>, <linux-leds@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, Dan Murphy <dmurphy@ti.com>
+Subject: [PATCH v31 09/12] leds: lp5521: Add multicolor framework multicolor brightness support
+Date:   Thu, 16 Jul 2020 13:20:04 -0500
+Message-ID: <20200716182007.18389-10-dmurphy@ti.com>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200716182007.18389-1-dmurphy@ti.com>
+References: <20200716182007.18389-1-dmurphy@ti.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <1594923290.12900.376.camel@linux.ibm.com>
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-07-16 14:14:50, Mimi Zohar wrote:
-> On Thu, 2020-07-09 at 01:19 -0500, Tyler Hicks wrote:
-> > The "appraise_flag" option is only appropriate for appraise actions
-> > and its "blacklist" value is only appropriate when
-> > CONFIG_IMA_APPRAISE_MODSIG is enabled and "appraise_flag=blacklist" is
-> > only appropriate when "appraise_type=imasig|modsig" is also present.
-> > Make this clear at policy load so that IMA policy authors don't assume
-> > that other uses of "appraise_flag=blacklist" are supported.
-> 
-> The code looks correct, but this patch description could be written at
-> a higher level.  Perhaps it just needs to be prefixed with something
-> like this:
-> 
-> Verifying that a file hash is not blacklisted is currently only
-> supported for files with appended signatures (modsig).  In the future,
-> this might change.  For now, ...
+Add the multicolor brightness call back to support the multicolor
+framework. This function allows setting the brightness across
+grouped LED channels in a single call.
 
-That makes sense. I'm not up to speed on the intent behind the blacklist
-feature or where it may go in the future so I didn't think to add
-anything along those lines.
+Acked-by: Pavel Machek <pavel@ucw.cz>
+Acked-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Signed-off-by: Dan Murphy <dmurphy@ti.com>
+---
+ drivers/leds/leds-lp5521.c | 20 ++++++++++++++++++++
+ 1 file changed, 20 insertions(+)
 
-If you are happy with the rest of the series, please feel free to append
-this to the commit message. Otherwise, I can add it if I need to submit
-a new revision of the series.
+diff --git a/drivers/leds/leds-lp5521.c b/drivers/leds/leds-lp5521.c
+index 6ff81d6be789..ef8c3bfa8f3c 100644
+--- a/drivers/leds/leds-lp5521.c
++++ b/drivers/leds/leds-lp5521.c
+@@ -349,6 +349,25 @@ static int lp5521_run_selftest(struct lp55xx_chip *chip, char *buf)
+ 	return 0;
+ }
+ 
++static int lp5521_multicolor_brightness(struct lp55xx_led *led)
++{
++	struct lp55xx_chip *chip = led->chip;
++	int ret;
++	int i;
++
++	mutex_lock(&chip->lock);
++	for (i = 0; i < led->mc_cdev.num_colors; i++) {
++		ret = lp55xx_write(chip,
++				   LP5521_REG_LED_PWM_BASE +
++				   led->mc_cdev.subled_info[i].channel,
++				   led->mc_cdev.subled_info[i].brightness);
++		if (ret)
++			break;
++	}
++	mutex_unlock(&chip->lock);
++	return ret;
++}
++
+ static int lp5521_led_brightness(struct lp55xx_led *led)
+ {
+ 	struct lp55xx_chip *chip = led->chip;
+@@ -490,6 +509,7 @@ static struct lp55xx_device_config lp5521_cfg = {
+ 	.max_channel  = LP5521_MAX_LEDS,
+ 	.post_init_device   = lp5521_post_init_device,
+ 	.brightness_fn      = lp5521_led_brightness,
++	.multicolor_brightness_fn = lp5521_multicolor_brightness,
+ 	.set_led_current    = lp5521_set_led_current,
+ 	.firmware_cb        = lp5521_firmware_loaded,
+ 	.run_engine         = lp5521_run_engine,
+-- 
+2.27.0
 
-Tyler
-
-> 
-> Mimi
-> 
-> > 
-> > Fixes: 273df864cf74 ("ima: Check against blacklisted hashes for files with modsig")
-> > Signed-off-by: Tyler Hicks <tyhicks@linux.microsoft.com>
-> > Cc: Nayna Jain <nayna@linux.ibm.com>
-> 
-> > ---
-> > 
-> > * v3
-> >   - New patch
-> > 
-> >  security/integrity/ima/ima_policy.c | 13 ++++++++++++-
-> >  1 file changed, 12 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/security/integrity/ima/ima_policy.c b/security/integrity/ima/ima_policy.c
-> > index 81da02071d41..9842e2e0bc6d 100644
-> > --- a/security/integrity/ima/ima_policy.c
-> > +++ b/security/integrity/ima/ima_policy.c
-> > @@ -1035,6 +1035,11 @@ static bool ima_validate_rule(struct ima_rule_entry *entry)
-> >  		return false;
-> >  	}
-> >  
-> > +	/* Ensure that combinations of flags are compatible with each other */
-> > +	if (entry->flags & IMA_CHECK_BLACKLIST &&
-> > +	    !(entry->flags & IMA_MODSIG_ALLOWED))
-> > +		return false;
-> > +
-> >  	return true;
-> >  }
-> >  
-> > @@ -1371,8 +1376,14 @@ static int ima_parse_rule(char *rule, struct ima_rule_entry *entry)
-> >  				result = -EINVAL;
-> >  			break;
-> >  		case Opt_appraise_flag:
-> > +			if (entry->action != APPRAISE) {
-> > +				result = -EINVAL;
-> > +				break;
-> > +			}
-> > +
-> >  			ima_log_string(ab, "appraise_flag", args[0].from);
-> > -			if (strstr(args[0].from, "blacklist"))
-> > +			if (IS_ENABLED(CONFIG_IMA_APPRAISE_MODSIG) &&
-> > +			    strstr(args[0].from, "blacklist"))
-> >  				entry->flags |= IMA_CHECK_BLACKLIST;
-> >  			break;
-> >  		case Opt_permit_directio:
