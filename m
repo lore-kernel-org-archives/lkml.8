@@ -4,62 +4,62 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 958A3C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 16:35:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F14B3C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 16:36:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6F4932070E
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 16:35:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF5E12065E
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 16:36:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=massaru-org.20150623.gappssmtp.com header.i=@massaru-org.20150623.gappssmtp.com header.b="farj/N/v"
+	dkim=pass (2048-bit key) header.d=massaru-org.20150623.gappssmtp.com header.i=@massaru-org.20150623.gappssmtp.com header.b="GrgSKDhx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729343AbgGPQfW (ORCPT
+        id S1729272AbgGPQgC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 12:35:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38998 "EHLO
+        Thu, 16 Jul 2020 12:36:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39104 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729048AbgGPQfU (ORCPT
+        with ESMTP id S1725867AbgGPQgC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 12:35:20 -0400
+        Thu, 16 Jul 2020 12:36:02 -0400
 Received: from mail-qv1-xf44.google.com (mail-qv1-xf44.google.com [IPv6:2607:f8b0:4864:20::f44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9BBA4C08C5C0
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Jul 2020 09:35:20 -0700 (PDT)
-Received: by mail-qv1-xf44.google.com with SMTP id m8so2981986qvk.7
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Jul 2020 09:35:20 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D099EC061755
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Jul 2020 09:36:01 -0700 (PDT)
+Received: by mail-qv1-xf44.google.com with SMTP id dm12so2984080qvb.9
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Jul 2020 09:36:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=massaru-org.20150623.gappssmtp.com; s=20150623;
         h=message-id:subject:from:to:cc:date:in-reply-to:references
          :user-agent:mime-version:content-transfer-encoding;
-        bh=fNLVxbryOFz0P4iYYN4nq5tJAfgthGwNwlN4AMKfx5s=;
-        b=farj/N/v+ww/83TMrMdBjmvadr5J8dJu08GDa5Tve6Cw2sMPHNaIVTcHH0ZFEV5Kwi
-         NiY2D1Xt8uErC7YPv3kQC3PYDE+gwdKrJ3ApxcyQRSaOYXO/qJ+F/3mQXuS4533nh0cd
-         CqcEznH6H2jGjttpN0nwhYp/vK6gjEhSQ/a9Oa41IlFPOaVxX09ev84NgIYKEqGfBQjN
-         2sfhwOFwfdkryZ8q66d4MsB4adXy+0a+VLB51dDnO7M7+ZtBBOhD24vmB4rDE760G7SI
-         xqALJZLkbyjkz4BesCT5g/br60aItZRF4KnT16fHXN2oNCeMyy8e2n5U2tWOPWuiytxP
-         9dcw==
+        bh=TLyzrMoUQJBrFIS7h6/Ao3hqwvcAjDtd5BjTOluL9gg=;
+        b=GrgSKDhxqKx4Ttoo/eEntuPwJVU7FTTnuxxRBHCdAjExk8jst+SL8WG4eAnNH+xe55
+         zd+2bXboDcoeeDCO4XWH8BAjiML8Zjwt9mMp3k1x/2lkEmsAc1N9grJFKb/4MYa5GeCV
+         JG7Dn0t2rCXzeN4phClA3yDyZuUDDFxKEvSj9vVRHsXzGxKFU7Lp7YfxDcQQISgt1ImM
+         ee5DgE8JsaMj1Pd//bpOa2k4JCGW+03m2y3rvMs0Hv94t42sXb3NLlXtlZ8ywnQ24aBa
+         GilOZX8Ep5MV70Mm5D2bFUFfvzTAZ/pZQdp9+wcPz2nbMqdhephslTLUXthYNHdj1ZXt
+         ps6w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
          :references:user-agent:mime-version:content-transfer-encoding;
-        bh=fNLVxbryOFz0P4iYYN4nq5tJAfgthGwNwlN4AMKfx5s=;
-        b=JwkHcf1sLkNQgyk92slpPpzu4hJRd6CueWySQ6TLNzoYdC/T+wF6FvPX5s4nE30HNR
-         iuqAV31rr5TnRLVhJKI8bNm1kbwc3MnK4g9I7aUH1vj1Bgy2BdUuprxx+08xyd+t40zm
-         Vw7oqfZtwrONcBVJhBrlfxYidlFTd6cqv2tHHcCgG4Eg6Eilhny/i5ZaVqAZNs5AvvcP
-         DaNgbzKkNvtuxgj4x6w/JaI9Jotg5okaDE3rIl4sR6BI4PaYFMt4xhxupgICbAAtNjYN
-         RikYxKQ3LKvS4XDFp/A3Uy3rx/mG0vTQ5mEm97zJrLEJZ0NkP6G3TRr23uqh2CzTBrp6
-         Im+Q==
-X-Gm-Message-State: AOAM5338PbJa2lFT9FOCuPJkm3apilLtTWwsbO3HuZKXoX4eJ6FogzbI
-        mWH4T0KeVAhwweBLlhLMEyvdCw==
-X-Google-Smtp-Source: ABdhPJwLiVWEhyy9wE5hXwCJKWEklBwb1sYkeUh8lfEwZJQowdISUQsLFJ8anNvNV9YuVvNhuv80nA==
-X-Received: by 2002:a05:6214:851:: with SMTP id dg17mr5157555qvb.235.1594917319752;
-        Thu, 16 Jul 2020 09:35:19 -0700 (PDT)
+        bh=TLyzrMoUQJBrFIS7h6/Ao3hqwvcAjDtd5BjTOluL9gg=;
+        b=FvXQKj+A0LORRB/v7o/zlQCHfnSz/DtRxPGDmxYXAcW+QDFv9C+SekzW7XTcBxteQ2
+         8QdU1gk4xrOZhNEVxAmQevdUPJQ26a8o8MyCnLy9BqQHUWbAXTzgmV8QDWdj74saLUrr
+         5jjz3PAYlC9ptu/1uMn5eMuR2iEYAi4qq8oVDXxdYNy5IUUhFkn1YxK9IssHG6sWlAzt
+         TjcN5MtO+fG+hRwG3tfQZnWmRsQ5iWqpmnAcmEImehwyIhynIBF+UCMW6Ujf3bvlc7ZA
+         5f/0ZSmK+oWBwt+NO7UjbNAI7RVu8O8+fONQMqLLD/eDFjCzxwoMZFM4S9GfEj/j+YmI
+         QaeQ==
+X-Gm-Message-State: AOAM530KF+a7FGTJBUoEJSuq1vuajLTfcDwRfT9nAP3qFMmGz60AXctf
+        hpmbsvXeIf493dh9IXTF4W7/WOyGzkPxHalV
+X-Google-Smtp-Source: ABdhPJzDAQdsuQfj+FrH2AKPIAzSqhhNwiffQw3ilVWX5dglvzazNFagj3w1wfSFixQ3ZB7ypXcGPw==
+X-Received: by 2002:a0c:f683:: with SMTP id p3mr5009130qvn.39.1594917361013;
+        Thu, 16 Jul 2020 09:36:01 -0700 (PDT)
 Received: from bbking.lan ([2804:14c:4a5:36c::cd2])
-        by smtp.gmail.com with ESMTPSA id l5sm8264754qtd.37.2020.07.16.09.35.16
+        by smtp.gmail.com with ESMTPSA id g1sm7742608qkl.86.2020.07.16.09.35.58
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 16 Jul 2020 09:35:18 -0700 (PDT)
-Message-ID: <a1221f11e7ab6926dcca8b4cabfa4ef6dfecf654.camel@massaru.org>
+        Thu, 16 Jul 2020 09:36:00 -0700 (PDT)
+Message-ID: <ccf310f7b7f5368be09868f7f782096a45b779f1.camel@massaru.org>
 Subject: Re: [RFC 2/3] lib: Allows to borrow mm in userspace on KUnit
 From:   Vitor Massaru Iha <vitor@massaru.org>
 To:     Brendan Higgins <brendanhiggins@google.com>
@@ -71,7 +71,7 @@ Cc:     KUnit Development <kunit-dev@googlegroups.com>,
         David Gow <davidgow@google.com>,
         Shuah Khan <skhan@linuxfoundation.org>,
         linux-kernel-mentees@lists.linuxfoundation.org
-Date:   Thu, 16 Jul 2020 13:35:14 -0300
+Date:   Thu, 16 Jul 2020 13:35:57 -0300
 In-Reply-To: <CAFd5g47HPGjX4AYuBCjH8DqSUMNO+yqjudWH+ZNovStM+aXExA@mail.gmail.com>
 References: <20200715031120.1002016-1-vitor@massaru.org>
          <20200715031120.1002016-3-vitor@massaru.org>
@@ -147,6 +147,8 @@ On Wed, 2020-07-15 at 17:37 -0700, Brendan Higgins wrote:
 > 
 > Here and below: You already have a pointer to test. You should use
 > it.
+
+Ops, thanks!
 > 
 > > +               if (test->mm != NULL)
 > > +                       kthread_unuse_mm(try_catch->test->mm);
