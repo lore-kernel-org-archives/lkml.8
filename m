@@ -2,76 +2,71 @@ Return-Path: <SRS0=y5Sx=A3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D278C433E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 06:14:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7993C433E5
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 06:15:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D3DF920578
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 06:14:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D02720760
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 06:15:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="DfaEXmos"
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="Ejy7ckch"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727927AbgGPGOx (ORCPT
+        id S1728047AbgGPGPe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 02:14:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55854 "EHLO
+        Thu, 16 Jul 2020 02:15:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55958 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727768AbgGPGOw (ORCPT
+        with ESMTP id S1728025AbgGPGPc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 02:14:52 -0400
-Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BF58EC061755
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 23:14:52 -0700 (PDT)
-Received: by mail-pl1-x642.google.com with SMTP id l6so3408267plt.7
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 23:14:52 -0700 (PDT)
+        Thu, 16 Jul 2020 02:15:32 -0400
+Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7D29BC061755
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 23:15:32 -0700 (PDT)
+Received: by mail-pf1-x443.google.com with SMTP id a24so3194606pfc.10
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 23:15:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
+        d=sifive.com; s=google;
         h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=rX60TSR1P7XjO+Zan3QrbefgI3vkAw4Lsg0JYzx7KTU=;
-        b=DfaEXmosLkzCXColYdER7fQTE+pnxestTiwogli79YB63MdvbjgeIx7gkFJS1CbxBF
-         o5b5y2FxBgxlnZJbQFsEEwOTkyQq6DYaoAuN81UW48px8AC/6JitpcdVwdzeMjfQD2a8
-         tpLZ9QAuBKCI2jQcymhxWbWcN8sWCef2vk0BA=
+        bh=DVb9BqnCCIXJSwGWTgbhyZjM4qcTaOK8ILi1j32bGuk=;
+        b=Ejy7ckchYzB4B/cGUpLwzSLs5SWO7j2kWIG+QyF6S7cM+STr5Pl4msE6B3g3mVMpuY
+         Hm4YOy9h2ZNvTyTyoj8vV4ybhx+YAPjv1RWuNVOzdC6IP+Z7PfXGASj1v5jqWLxXgqRr
+         eAyUauN1faGhfkiAKtK24NGVy4EXFFBUCxIujb+A3mjvHyc4ykYXS2RFZB44h642U87z
+         IWZsDw/RrO6K76WIUZMaPzuBLAgkG5sB6+ntFDxPM/uu99ODtxdV4FeWDXBP2wsTXukt
+         8F0A4Iitb8y8P8Z2KaD9gNq8OW6rWkBfuQUEG7WT0fVS7WpIan4dtegFoitWZJ74X7bQ
+         Eviw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=rX60TSR1P7XjO+Zan3QrbefgI3vkAw4Lsg0JYzx7KTU=;
-        b=Soh15VW4rAOaPU5WRcBfMtMnJBx6vIzJF+Eb0Jngcu+UV0LYuv1veP3/Fjg1gwokwj
-         q9QLB/ArCAsYcTcwxsbQfTOGcvOTjyI2vXTkSKJ/Qp3xYr5/fV9SDNBEzIuFRFd1uhth
-         oKfjPq/F4hVs+0lSCDZdv292yyxf583QjNngLItIt82eir8NTrz4vgihWbUX8Um9+FQf
-         3GiJF62KLUs9jqBHvkiCrQEmCcXOy2UfbsBdkiRxaLqe67ZT52nunWDj47c9UKh1Cj2f
-         GYZEx37IpiQTJ6hLBw4GVrAUqPhXaGIoyeWDftsW93bToPbvVbciRZ9YonMHKCPu4Opw
-         lGGA==
-X-Gm-Message-State: AOAM533xDmgTTjjRYh5cefgD3obJ3ZTV0z8qTekwyWNa2I9RbEInXrw6
-        VaLwTdd8Sv+xz1ZdrkydqRGlf/n6RC3cnA==
-X-Google-Smtp-Source: ABdhPJytRFsLl3nksVCRoGhLJkXcC9c3Nco6dEzjGhQI7mrBYNaPdjOvYWM0U7xbKS1h4vZ5aIHkJw==
-X-Received: by 2002:a17:90a:ea83:: with SMTP id h3mr3434941pjz.176.1594880091903;
-        Wed, 15 Jul 2020 23:14:51 -0700 (PDT)
-Received: from localhost ([2401:fa00:1:10:de4a:3eff:fe7d:d39c])
-        by smtp.gmail.com with ESMTPSA id j10sm3885604pgh.28.2020.07.15.23.14.49
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 15 Jul 2020 23:14:51 -0700 (PDT)
-From:   Cheng-Yi Chiang <cychiang@chromium.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Taniya Das <tdas@codeaurora.org>,
-        Rohit kumar <rohitkr@codeaurora.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>, dianders@chromium.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        Ajit Pandey <ajitp@codeaurora.org>,
-        Cheng-Yi Chiang <cychiang@chromium.org>
-Subject: [PATCH] arm64: dts: qcom: sc7180: Add lpass cpu node for I2S driver
-Date:   Thu, 16 Jul 2020 14:14:45 +0800
-Message-Id: <20200716061445.628709-1-cychiang@chromium.org>
-X-Mailer: git-send-email 2.28.0.rc0.105.gf9edc3c819-goog
+        bh=DVb9BqnCCIXJSwGWTgbhyZjM4qcTaOK8ILi1j32bGuk=;
+        b=AXguJn7F6SgJ7hUrPUnSHEb5SAkW7Fydu5e8cFY95BpB5KTF+TcGyhhtQoq48S8oFb
+         ufEXuIycxMvQpZ+I/h5xFlkRNSXJ2nsDEYcU1D2RaO9zGTVL/wX3X5cqLXB0ULdWAq22
+         xxCwHYqiLDVC4mVRAbltBtFNDQoKSQ385nqET+Jetf+rzJd4Bh6yUO1lnbttQWPeANQQ
+         8pPTyns2/nSbIhJPCfH+t/k5ylIb7fdQSSNnFX98HOWNgUL3+AsEfJE7vbMUSv4k/I42
+         GvNbkbFZLpxWiKfJzQ8Fr43ty4ZzT/simWeZF27LLbfJIv9EQbL/RT0RGM2EAw5s6eyI
+         M+BA==
+X-Gm-Message-State: AOAM531AZlcrltyhyp/m0HemWck6em4vSWTRePfKsBmnHY6Ck8zN4l+G
+        tfQBK+D5lZGXfX5X+NVwkJ7hwg==
+X-Google-Smtp-Source: ABdhPJy4dj2Prxcig0aMdKJOiKAGjXoiqLvRtoIWGCfqYZeloqoaeRkaNEjF7GFc8mFQQ/QoRphcYw==
+X-Received: by 2002:a63:b06:: with SMTP id 6mr2884850pgl.116.1594880131151;
+        Wed, 15 Jul 2020 23:15:31 -0700 (PDT)
+Received: from hsinchu02.internal.sifive.com (114-34-229-221.HINET-IP.hinet.net. [114.34.229.221])
+        by smtp.gmail.com with ESMTPSA id w20sm3669904pfn.44.2020.07.15.23.15.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 15 Jul 2020 23:15:30 -0700 (PDT)
+From:   Zong Li <zong.li@sifive.com>
+To:     palmer@dabbelt.com, paul.walmsley@sifive.com,
+        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc:     Zong Li <zong.li@sifive.com>
+Subject: [PATCH 0/2] Fix some build warnings when W=1
+Date:   Thu, 16 Jul 2020 14:15:25 +0800
+Message-Id: <cover.1594880014.git.zong.li@sifive.com>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -79,172 +74,26 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ajit Pandey <ajitp@codeaurora.org>
+These patches fix some build warnings when W=1, the most of warnings are
+missing prototype as follows:
 
-Add the I2S controller node to sc7180 dtsi.
-Add pinmux for pirmary and secondary I2S.
+arch/riscv/mm/init.c:520:13: warning: no previous prototype for 'resource_init' [-Wmissing-prototypes]
+arch/riscv/mm/pageattr.c:130:5: warning: no previous prototype for 'set_memory_ro' [-Wmissing-prototypes]
+arch/riscv/mm/pageattr.c:136:5: warning: no previous prototype for 'set_memory_rw' [-Wmissing-prototypes]
+arch/riscv/mm/pageattr.c:142:5: warning: no previous prototype for 'set_memory_x' [-Wmissing-prototypes]
+arch/riscv/mm/pageattr.c:147:5: warning: no previous prototype for 'set_memory_nx' [-Wmissing-prototypes]
+arch/riscv/mm/pageattr.c:152:5: warning: no previous prototype for 'set_direct_map_invalid_noflush' [-Wmissing-prototypes]
+arch/riscv/mm/pageattr.c:169:5: warning: no previous prototype for 'set_direct_map_default_noflush' [-Wmissing-prototypes]
+arch/riscv/mm/pageattr.c:97:1: warning: 'static' is not at beginning of declaration [-Wold-style-declaration]
 
-Signed-off-by: Ajit Pandey <ajitp@codeaurora.org>
-Signed-off-by: Cheng-Yi Chiang <cychiang@chromium.org>
----
-This patch depends on these patch series so it is not ready to be merged now.
-- clk: qcom: Support for Low Power Audio Clocks on SC7180 https://patchwork.kernel.org/cover/11664273/
-- arm64: dts: qcom: sc7180: Add LPASS clock controller nodes https://patchwork.kernel.org/patch/11664303/
-- ASoC: qcom: Add support for SC7180 lpass variant https://patchwork.kernel.org/cover/11650649/
+Zong Li (2):
+  riscv: Fix build warning for mm/init
+  riscv: fix build warning of mm/pageattr
 
- arch/arm64/boot/dts/qcom/sc7180.dtsi | 132 +++++++++++++++++++++++++++
- 1 file changed, 132 insertions(+)
+ arch/riscv/mm/init.c     | 2 +-
+ arch/riscv/mm/pageattr.c | 3 ++-
+ 2 files changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-index 6eb14b6a47f5..2fe3bd89f950 100644
---- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-@@ -511,6 +511,34 @@ qusb2p_hstx_trim: hstx-trim-primary@25b {
- 			};
- 		};
- 
-+		lpass_cpu: lpass {
-+			compatible = "qcom,lpass-cpu-sc7180";
-+
-+			reg = <0 0x62F00000 0 0x29000>;
-+			reg-names = "lpass-lpaif";
-+
-+			iommus = <&apps_smmu 0x1020 0>;
-+
-+			power-domains = <&lpass_hm LPASS_CORE_HM_GDSCR>;
-+
-+			status = "disabled";
-+
-+			clocks = <&gcc GCC_LPASS_CFG_NOC_SWAY_CLK>,
-+				 <&lpasscc LPASS_AUDIO_CORE_CORE_CLK>,
-+				 <&lpasscc LPASS_AUDIO_CORE_EXT_MCLK0_CLK>,
-+				 <&lpasscc LPASS_AUDIO_CORE_SYSNOC_MPORT_CORE_CLK>,
-+				 <&lpasscc LPASS_AUDIO_CORE_LPAIF_PRI_IBIT_CLK>,
-+				 <&lpasscc LPASS_AUDIO_CORE_LPAIF_SEC_IBIT_CLK>;
-+
-+			clock-names = "noc", "audio-core", "mclk0", "sysnoc_mport",
-+				      "pri_ibit", "sec_ibit";
-+
-+			#sound-dai-cells = <1>;
-+
-+			interrupts = <0 160 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupt-names = "lpass-irq-lpaif";
-+		};
-+
- 		sdhc_1: sdhci@7c4000 {
- 			compatible = "qcom,sc7180-sdhci", "qcom,sdhci-msm-v5";
- 			reg = <0 0x7c4000 0 0x1000>,
-@@ -1357,6 +1385,110 @@ pinmux {
- 				};
- 			};
- 
-+			sec_mi2s_active: sec-mi2s-active {
-+				pinmux {
-+					pins = "gpio49";
-+					function = "mi2s_1";
-+				};
-+
-+				pinconf {
-+					pins = "gpio49";
-+					drive-strength = <8>;
-+					bias-pull-up;
-+				};
-+			};
-+
-+			sec_mi2s_ws_active: sec-mi2s-ws-active {
-+				pinmux {
-+					pins = "gpio50";
-+					function = "mi2s_1";
-+				};
-+
-+				pinconf {
-+					pins = "gpio50";
-+					drive-strength = <8>;
-+					bias-pull-up;
-+				};
-+			};
-+
-+			sec_mi2s_dout_active: sec-mi2s-dout-active {
-+				pinmux {
-+					pins = "gpio51";
-+					function = "mi2s_1";
-+				};
-+
-+				pinconf {
-+					pins = "gpio51";
-+					drive-strength = <8>;
-+					bias-pull-up;
-+				};
-+			};
-+
-+			pri_mi2s_active: pri-mi2s-active {
-+				pinmux {
-+					pins = "gpio53";
-+					function = "mi2s_0";
-+				};
-+
-+				pinconf {
-+					pins = "gpio53";
-+					drive-strength = <8>;
-+					bias-pull-up;
-+				};
-+			};
-+
-+			pri_mi2s_ws_active: pri-mi2s-ws-active {
-+				pinmux {
-+					pins = "gpio54";
-+					function = "mi2s_0";
-+				};
-+
-+				pinconf {
-+					pins = "gpio54";
-+					drive-strength = <8>;
-+					bias-pull-up;
-+				};
-+			};
-+
-+			pri_mi2s_dout_active: pri-mi2s-dout-active {
-+				pinmux {
-+					pins = "gpio55";
-+					function = "mi2s_0";
-+				};
-+
-+				pinconf {
-+					pins = "gpio55";
-+					drive-strength = <8>;
-+					bias-pull-up;
-+				};
-+			};
-+
-+			pri_mi2s_din_active: pri-mi2s-din-active {
-+				pinmux {
-+					pins = "gpio56";
-+					function = "mi2s_0";
-+				};
-+
-+				pinconf {
-+					pins = "gpio56";
-+					drive-strength = <8>;
-+					bias-pull-up;
-+				};
-+			};
-+
-+			pri_mi2s_mclk_active: pri-mi2s-mclk-active {
-+				pinmux {
-+					pins = "gpio57";
-+					function = "lpass_ext";
-+				};
-+
-+				pinconf {
-+					pins = "gpio57";
-+					drive-strength = <8>;
-+					bias-pull-up;
-+				};
-+			};
-+
- 			sdc1_on: sdc1-on {
- 				pinconf-clk {
- 					pins = "sdc1_clk";
 -- 
-2.28.0.rc0.105.gf9edc3c819-goog
+2.27.0
 
