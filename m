@@ -2,134 +2,89 @@ Return-Path: <SRS0=y5Sx=A3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02796C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 12:37:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B81C9C433E4
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 12:37:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D31B920739
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 12:37:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 94ABD20739
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 12:37:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dxAyHGv8"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="g9UvVz1I"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728651AbgGPMhW (ORCPT
+        id S1728665AbgGPMhk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 08:37:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58444 "EHLO
+        Thu, 16 Jul 2020 08:37:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58498 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728595AbgGPMhV (ORCPT
+        with ESMTP id S1728505AbgGPMhj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 08:37:21 -0400
-Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E8C3FC061755;
-        Thu, 16 Jul 2020 05:37:20 -0700 (PDT)
-Received: by mail-ej1-x642.google.com with SMTP id lx13so6400772ejb.4;
-        Thu, 16 Jul 2020 05:37:20 -0700 (PDT)
+        Thu, 16 Jul 2020 08:37:39 -0400
+Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 29078C08C5CE
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Jul 2020 05:37:39 -0700 (PDT)
+Received: by mail-lj1-x242.google.com with SMTP id s9so6916750ljm.11
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Jul 2020 05:37:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=AocC3N5O0Uik9tYTa8moQI4LJJ7GiuwBhVnoPAOMLg4=;
-        b=dxAyHGv8/TE10lSjw/yQqwJGeZjjI08Ao3yIohI6bXl91J5ofEmcPmLjm3VjQSFfHg
-         Jttj08hfnGuNsqTPObfYq4diqcl7Fa9pii54JJUJLL6l9596OD7u1/vw8Z1pTfNSTlwF
-         aUJWF66b4GontU6xmfqKV7uywwkFNntXMS384rkFPOWQTyCaF51q6nJhNN0Saxm+a+06
-         xv3IdB7VSqksw/GzwKUE5MT6InYFiyAtcso5/IChhux6pqAtKzORkEWEpYYM8dAi2/8A
-         1iE0P488pn8eWgn65AIuyWIMiIYcq8soFEbpimPROSh0uMVpVJlvvVlfUgnVvnXSCipD
-         F+Vg==
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=FnNUxYhFyuPQjKzE8y9GdlPHRlRogzze8BallsxYE/I=;
+        b=g9UvVz1IghO8CDvr3aZ9mIYL/QzzwbZV0qKv5oxbeoa0mNux2Qp5PUNbBhhqg87xDd
+         g6uoRA+wpRauJwHJxurVHR6uRsRZoau5jJIntD4/0xNdi+scGE34EIByS7TEvCk9RhfG
+         8eF/1YbT8ZAXnOViaBofAayfledvBFnRliY+XTt/G63C6fPIC8hJHu9k42vEce050vpI
+         1AXTKj6eGXmAKJXavjCgCVeqXb3DbXroIIQ1FkT9ag7ISugc6JO/hByHXZ4nZJ2zLQFZ
+         +tMhU6nqFLtRaBS4uWTVFDlkcUKHMjqBkFGJMARYBPSraKo9S2TSkd6ZURodPY5jTiYN
+         oK5Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=AocC3N5O0Uik9tYTa8moQI4LJJ7GiuwBhVnoPAOMLg4=;
-        b=W6cimUG7BuJimtX/p2jWlmew8r1SYcoGxo5y8l0PIJxDeCmt00euP3yT6+wfDJj0WE
-         AjuErXIX1w37qVSkI3s9MkIpvnLtJK2yW66rD1jLSH/Ie4vp8E6ajDeKr69i7ypzjod2
-         F6bsR0qr7BJU967sgChgrxl+QVQOp+zcPlWfwMJTfVJS5STZBXgKj8RFr/dkbQhvTTwA
-         KZcBPMRqS/rS3QT6xwqT0DTLIhnEXnWrySTkvEFRFnYcjN5W+8UihfaFFqA9ci2fhYoF
-         FGYMV+VkJjK0fahlm0vS++v0zBVm5FBoI2LOJpHShzNtvVIxnZ7u9dlWHzxDCKrvckCO
-         CNeg==
-X-Gm-Message-State: AOAM531oMbEPej1GiR28UbZHNIRn2zHKL0F/tl29vRMWvwHcY3N3cCol
-        FYiIvezyyPeWhmKDsoyceYo=
-X-Google-Smtp-Source: ABdhPJxzzgoaNlh+vbjSbCGiMYEDZpuqnaxyDGO9u2TDK8GFSqsac269SAuIWYX7yVNK1iQ9KS/vnw==
-X-Received: by 2002:a17:906:e210:: with SMTP id gf16mr3443029ejb.386.1594903039688;
-        Thu, 16 Jul 2020 05:37:19 -0700 (PDT)
-Received: from localhost ([62.96.65.119])
-        by smtp.gmail.com with ESMTPSA id ay27sm5289311edb.81.2020.07.16.05.37.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 16 Jul 2020 05:37:16 -0700 (PDT)
-Date:   Thu, 16 Jul 2020 14:37:15 +0200
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Sumit Gupta <sumitg@nvidia.com>
-Cc:     rjw@rjwysocki.net, viresh.kumar@linaro.org,
-        catalin.marinas@arm.com, will@kernel.org, robh+dt@kernel.org,
-        mirq-linux@rere.qmqm.pl, devicetree@vger.kernel.org,
-        jonathanh@nvidia.com, talho@nvidia.com, linux-pm@vger.kernel.org,
-        linux-tegra@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, bbasu@nvidia.com,
-        mperttunen@nvidia.com
-Subject: Re: [TEGRA194_CPUFREQ PATCH v6 2/3] arm64: tegra: Add t194 ccplex
- compatible and bpmp property
-Message-ID: <20200716123715.GA535268@ulmo>
-References: <1594819885-31016-1-git-send-email-sumitg@nvidia.com>
- <1594819885-31016-3-git-send-email-sumitg@nvidia.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=FnNUxYhFyuPQjKzE8y9GdlPHRlRogzze8BallsxYE/I=;
+        b=Q/H5JyG4T21X0FcnwurLMVtGxkNHo5CRls25UUtCMxAtnYD9n07QCMKWG2u5E0+vT7
+         OQybpEcq53u9/P7THNDJTQSlRC2nKY8rUAr7mo9ebJFKFbIvAfaRdrEdBvVre5/UnqYQ
+         HGMYxler++LbL0JiIGOI3euZ7A2YpqUo90cC27Qrei3bc5UpmX1n1+qCyWDDBDWhnC8k
+         h26RY/fwaU+BrC8+dVok+Iv19giylFD6SdUIOz+Hza6NTtoYfY9mEBdZrfz68R2/QdLf
+         UjHQcALuJwZ2xLyW+SAJGG2zIFi2KjUQTK7jNYYRjTpsqbObanrfXecHRsbt7DGJuNPY
+         G6XA==
+X-Gm-Message-State: AOAM530G9FW2fjdG3n4aSoSb5t/NaEBR3IlXzbvyB6CcUGmI9Hisnexx
+        6ljdXl4BleZqXb/8SA6fnN2bc2bbDPDoXGaGbyJt6g==
+X-Google-Smtp-Source: ABdhPJybAk/I23kj8/SY0qnJoUwGC9fYwenCCoXPb03yQn3fxzX9qPOPGUgzqfmQkszNRbJ6Y8gHbdedlO5cJ+meHhk=
+X-Received: by 2002:a2e:9a4d:: with SMTP id k13mr2024973ljj.283.1594903057547;
+ Thu, 16 Jul 2020 05:37:37 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="9amGYk9869ThD9tj"
-Content-Disposition: inline
-In-Reply-To: <1594819885-31016-3-git-send-email-sumitg@nvidia.com>
-User-Agent: Mutt/1.14.4 (2020-06-18)
+References: <20200630160736.1196697-1-mans0n@gorani.run> <20200630160934.1197066-1-mans0n@gorani.run>
+In-Reply-To: <20200630160934.1197066-1-mans0n@gorani.run>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Thu, 16 Jul 2020 14:37:27 +0200
+Message-ID: <CACRpkdYxej2rfdiTVPZ-PR4BMNih-hbiBrE4MB6pbtzOCo9pFA@mail.gmail.com>
+Subject: Re: [PATCH v3 2/2] dt-bindings: gpio: Add bindings for NXP PCA9570
+To:     Sungbo Eo <mans0n@gorani.run>
+Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Jun 30, 2020 at 6:10 PM Sungbo Eo <mans0n@gorani.run> wrote:
 
---9amGYk9869ThD9tj
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Wed, Jul 15, 2020 at 07:01:24PM +0530, Sumit Gupta wrote:
-> On Tegra194, data on valid operating points for the CPUs needs to be
-> queried from BPMP. In T194, there is no node representing CPU complex.
-> So, add compatible string to the 'cpus' node instead of using dummy
-> node to bind cpufreq driver. Also, add reference to the BPMP instance
-> for the CPU complex.
->=20
-> Signed-off-by: Sumit Gupta <sumitg@nvidia.com>
+> This patch adds device tree bindings for the NXP PCA9570,
+> a 4-bit I2C GPO expander.
+>
+> Signed-off-by: Sungbo Eo <mans0n@gorani.run>
 > ---
->  arch/arm64/boot/dts/nvidia/tegra194.dtsi | 2 ++
->  1 file changed, 2 insertions(+)
+> v3:
 
-Looks like the DT bindings are now done so I've applied this for v5.9.
+This v3 patch applied, thanks!
 
-Viresh, are you going to pick up the other patches, or do you want me
-to pick them up and send you a pull request?
-
-Thanks,
-Thierry
-
---9amGYk9869ThD9tj
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl8QSfkACgkQ3SOs138+
-s6EbDxAAhqiTFGVj3wdEIaQIT0jcQR9+VZIbrzcT3Wob4TFu4TTP+vNGQj6zvqw4
-sluL9jQ8fg43Hl/rR3wsxJvp9IqSqWOeIcI4cqJ3a4ztIC2jyqCL8NDbr+oaL3K+
-k+teHfVv/VqluTyqJC0N9Q+0yOifuZ3BXSmbW8Mfh0VH5U0RX/sYW0Clzsa1dK1t
-LJscfWRHRyoEIi+GVL+B8at7xK/vxP/LjIncFufO//LwAxqb0qm4HUmdixHLESDd
-tnIlUoe2Cta8Q9ksQXsas+6hW7ykoDTlnfLVvJ3WmjBrJPhTMRwub7tglL0smQs6
-KkP2d1cRmCeRIbJkcttClKo/poBGRsANiZrz97ljGujPNjJl8heCcYqdQhwvOvie
-dw2Yv7vATSMxTv0qSBFUqFi7wfevvhRys3Z3qc4Br6o0VsxtR/dmaiOhxcd2xMSk
-7e4bi9/g8NlljezdeI5L8VDj3Phjzho2ItYNFBP3CCLTZwHGVkVsymT+wvoN9TgF
-rU24SGbvTP6/Op8gZ+Gm/CeVuYfYaZ7mRhp0XZVy1Gqw4wnpiVp7/+cM5EIXQTFt
-1tN5+WpPlmH9WDLVWfo2lBKekw5om++Xpvpo7WlVe7FB66XcNtyecmXYWa8SzQQi
-OCFGLe9PDlxfWR6Vi4TIZ5yhLkiaszewktYYt+fo6v8tUaRyxw0=
-=UgfU
------END PGP SIGNATURE-----
-
---9amGYk9869ThD9tj--
+Yours,
+Linus Walleij
