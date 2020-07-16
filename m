@@ -2,110 +2,112 @@ Return-Path: <SRS0=y5Sx=A3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A335C4345F
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 02:28:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 918EFC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 02:34:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 011F520663
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 02:28:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BJCEiCgj"
+	by mail.kernel.org (Postfix) with ESMTP id 7778A207BC
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 02:34:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728142AbgGPC24 (ORCPT
+        id S1727067AbgGPCd7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 22:28:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49208 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726479AbgGPC2b (ORCPT
+        Wed, 15 Jul 2020 22:33:59 -0400
+Received: from rtits2.realtek.com ([211.75.126.72]:57575 "EHLO
+        rtits2.realtek.com.tw" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726479AbgGPCd7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 22:28:31 -0400
-Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3F6E9C061755;
-        Wed, 15 Jul 2020 19:28:30 -0700 (PDT)
-Received: by mail-wm1-x344.google.com with SMTP id 22so8096058wmg.1;
-        Wed, 15 Jul 2020 19:28:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=jsnFEaPOATe0rU74z4wmdx5Snp9SyB/gn+FbmEyk+5U=;
-        b=BJCEiCgjoizQk0MuwZnjC++IpUrRbuW2pdRAaA62MIRcfaclEvyOXR/tD9ejUx8GMS
-         mF90akZODSnNpjz6Uv4bahWA3cNTRYJUF2aXKAsCNiWNRsllo/6WH5fXcXS2s0t4XrHX
-         lzcNf/9rpffayJ8OKYukNpZHVJO/m1A8HBwouPwdkhMZlHWunkMej7lXrK1gJc8o+H5d
-         URbglFqcIogn5Oj3ZKJdVO5cTaZMaQk5jGAP1KB+VVWMaCatsUOq+tyaQ99Bg78Jju41
-         wMxTLmnysHeG8DpPr9a0EHs1ezob1S+rOScTOxEALW9jw4oZfjilpq28K6UoEwCafva6
-         JGHQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=jsnFEaPOATe0rU74z4wmdx5Snp9SyB/gn+FbmEyk+5U=;
-        b=NPAHDXY218eCwiUwzLshGJ4bp0tvHWjhcEvTCnFHTfuIRYNH8zHgi791DgJK3Hdjcz
-         QNsKPu5czYgTXyNGsyJoEild7alFUzrQujAMmcxdbVDhuB0VKmwvSeH0Dbb+9U6PzcSc
-         sqL3Uvm4041NRd3PyNOXSyLOXQonazQkWCXceYqD92+OgAWcsBehtkFSIdOvHLp9tHoB
-         S4G2auskHd+HodUciACZcGrGnMQkdhe2taZhKPqW5JD91uShjHL9pgvxmLGtsb0XYxN1
-         mVzAs+Uj53U/Sega/4Xe2B/Lh0GeImZGmFUYYHyC+/S8o7oU3hKCjtt8bA2fNZRFfETd
-         Q/vw==
-X-Gm-Message-State: AOAM530tTvTNceZdCm3jwrvgEeakYMLel1J2T20JU8JA0ySjpp0GZ71F
-        GSBvWuDms3TQxwLYVcK1EHw=
-X-Google-Smtp-Source: ABdhPJzCJ+vAQ/QeXIWzlb11w/o7pwBiMD7vR0FI/Iqs4NB5SM67+6BkbQd4gbRfAjNy7ipBfFR+ig==
-X-Received: by 2002:a05:600c:2050:: with SMTP id p16mr2179009wmg.44.1594866508949;
-        Wed, 15 Jul 2020 19:28:28 -0700 (PDT)
-Received: from Ansuel-XPS.localdomain (host-87-7-31-173.retail.telecomitalia.it. [87.7.31.173])
-        by smtp.googlemail.com with ESMTPSA id u1sm7477611wrb.78.2020.07.15.19.28.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 15 Jul 2020 19:28:28 -0700 (PDT)
-From:   Ansuel Smith <ansuelsmth@gmail.com>
-To:     Rob Herring <robh+dt@kernel.org>
-Cc:     Ansuel Smith <ansuelsmth@gmail.com>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Amit Kucheria <amit.kucheria@linaro.org>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>, linux-arm-msm@vger.kernel.org,
-        linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org
-Subject: [PATCH v4 3/7] drivers: thermal: tsens: add ipq8064 support
-Date:   Thu, 16 Jul 2020 04:28:12 +0200
-Message-Id: <20200716022817.30439-4-ansuelsmth@gmail.com>
+        Wed, 15 Jul 2020 22:33:59 -0400
+Authenticated-By: 
+X-SpamFilter-By: ArmorX SpamTrap 5.69 with qID 06G2Xdi56017581, This message is accepted by code: ctloc85258
+Received: from mail.realtek.com (rtexmb06.realtek.com.tw[172.21.6.99])
+        by rtits2.realtek.com.tw (8.15.2/2.66/5.86) with ESMTPS id 06G2Xdi56017581
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+        Thu, 16 Jul 2020 10:33:39 +0800
+Received: from RTEXMB03.realtek.com.tw (172.21.6.96) by
+ RTEXMB06.realtek.com.tw (172.21.6.99) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1779.2; Thu, 16 Jul 2020 10:33:39 +0800
+Received: from RTEXMB06.realtek.com.tw (172.21.6.99) by
+ RTEXMB03.realtek.com.tw (172.21.6.96) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1779.2; Thu, 16 Jul 2020 10:33:38 +0800
+Received: from localhost.localdomain (172.21.252.101) by
+ RTEXMB01.realtek.com.tw (172.21.6.99) with Microsoft SMTP Server id
+ 15.1.1779.2 via Frontend Transport; Thu, 16 Jul 2020 10:33:38 +0800
+From:   TY Chang <tychang@realtek.com>
+To:     <linux-realtek-soc@lists.infradead.org>, <afaerber@suse.de>
+CC:     <linus.walleij@linaro.org>, <linux-gpio@vger.kernel.org>,
+        <robh+dt@kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: [PATCH v2 0/8] pinctrl: update realtek DHC pinctrl driver
+Date:   Thu, 16 Jul 2020 10:33:30 +0800
+Message-ID: <20200716023338.14922-1-tychang@realtek.com>
 X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200716022817.30439-1-ansuelsmth@gmail.com>
-References: <20200716022817.30439-1-ansuelsmth@gmail.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Ipq8064 SoCs based use the same 8960 driver.
+Hi Andreas,
 
-Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
----
- drivers/thermal/qcom/tsens.c | 3 +++
- 1 file changed, 3 insertions(+)
+This series update Realtek DHC pinctrl driver with the following details:
 
-diff --git a/drivers/thermal/qcom/tsens.c b/drivers/thermal/qcom/tsens.c
-index 39c4462e38f6..23f63dfbf13d 100644
---- a/drivers/thermal/qcom/tsens.c
-+++ b/drivers/thermal/qcom/tsens.c
-@@ -906,6 +906,9 @@ static const struct of_device_id tsens_table[] = {
- 	}, {
- 		.compatible = "qcom,msm8996-tsens",
- 		.data = &data_8996,
-+	}, {
-+		.compatible = "qcom,ipq8064-tsens",
-+		.data = &data_8960,
- 	}, {
- 		.compatible = "qcom,tsens-v1",
- 		.data = &data_tsens_v1,
+* add missed pins
+* add pin configuration feature
+* add realtek DHC pinctrl documentation
+* fix the warnings checked by running scripts/checkpatch.pl
+* move realtek DHC pinctrl driver to realtek directory
+* add \suspend/resume callback function
+
+Changelog:
+v2
+-remove realtek,rtd-pinctrl.yaml documentation
+-add device tree binding rtd1195 documentation
+-add deivce tree binding rtd1295 documentation
+-fix the errors running 'make dt_binding_check'
+-document the pin settings
+
+Cc: Andreas Färber <afaerber@suse.de>
+
+
+TY Chang (8):
+  pinctrl: realtek: rtd1295: Add missed pins.
+  pinctrl: realtek: rtd1295: Add pin configs.
+  pinctrl: realtek: rtd1195: Add missed pins and pin configs.
+  dt-bindings: pinctrl: realtek: Add Realtek DHC SoC rtd1195
+  dt-bindings: pinctrl: realtek: Add Realtek DHC SoC rtd1295
+  pinctrl: realtek: DHC: Fix pinctrl driver coding style according to
+    checkpatch.pl.
+  pinctrl: realtek: DHC: Move pinctrl drivers to realtek directory and
+    rename.
+  pinctrl: realtek: DHC: Add suspend/resume callback function.
+
+ .../pinctrl/realtek,rtd1195-pinctrl.yaml      | 104 +++
+ .../pinctrl/realtek,rtd1295-pinctrl.yaml      | 121 +++
+ drivers/pinctrl/Kconfig                       |  10 +-
+ drivers/pinctrl/Makefile                      |   2 +-
+ drivers/pinctrl/pinctrl-rtd119x.c             | 383 ---------
+ drivers/pinctrl/realtek/Kconfig               |  14 +
+ drivers/pinctrl/realtek/Makefile              |   3 +
+ drivers/pinctrl/realtek/pinctrl-rtd.c         | 600 +++++++++++++
+ .../pinctrl/{ => realtek}/pinctrl-rtd1195.h   | 490 ++++++++---
+ .../pinctrl/{ => realtek}/pinctrl-rtd1295.h   | 805 +++++++++++++++---
+ 10 files changed, 1899 insertions(+), 633 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/realtek,rtd1195-pinctrl.yaml
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/realtek,rtd1295-pinctrl.yaml
+ delete mode 100644 drivers/pinctrl/pinctrl-rtd119x.c
+ create mode 100644 drivers/pinctrl/realtek/Kconfig
+ create mode 100644 drivers/pinctrl/realtek/Makefile
+ create mode 100644 drivers/pinctrl/realtek/pinctrl-rtd.c
+ rename drivers/pinctrl/{ => realtek}/pinctrl-rtd1195.h (64%)
+ rename drivers/pinctrl/{ => realtek}/pinctrl-rtd1295.h (62%)
+
 -- 
 2.27.0
 
