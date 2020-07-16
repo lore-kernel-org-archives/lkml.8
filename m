@@ -2,153 +2,116 @@ Return-Path: <SRS0=y5Sx=A3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DCC0BC433F2
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 19:13:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53F64C433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 19:14:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B800E2065F
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 19:13:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2D5822065F
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 19:14:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="eUF5kUcP"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Wn7hhFIJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729601AbgGPTNe (ORCPT
+        id S1729458AbgGPTO5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 15:13:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35156 "EHLO
+        Thu, 16 Jul 2020 15:14:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35390 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729515AbgGPTNc (ORCPT
+        with ESMTP id S1728374AbgGPTO5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 15:13:32 -0400
-Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0C33AC08C5DB
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Jul 2020 12:13:32 -0700 (PDT)
-Received: by mail-pg1-x543.google.com with SMTP id z5so5322417pgb.6
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Jul 2020 12:13:32 -0700 (PDT)
+        Thu, 16 Jul 2020 15:14:57 -0400
+Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A3DD1C061755;
+        Thu, 16 Jul 2020 12:14:56 -0700 (PDT)
+Received: by mail-lj1-x243.google.com with SMTP id f5so9540728ljj.10;
+        Thu, 16 Jul 2020 12:14:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=P2Y3x3UF7aakg+eDh/JCMQ/ujg3OM7agEmMMQHUiWYw=;
-        b=eUF5kUcP1I8IOHUVxI3FxJ/qxspiNpwWZ1kyR1myyi5d/rlntny124yFpRoBP0S+TU
-         IULeT+p9QcpLBQJdqAMtaWb0tPOnG564tv2NICoimzwkKBF7b7R+TO++MSXHI9kPTYW4
-         dLCo8Qo5IB3QU1NMvjyOcqhje5qnF9Vt8u7nM=
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=FH1i/9Q7biv+5kd2aHJzTASe8AFgNZkqx6zcZ0CRgAM=;
+        b=Wn7hhFIJBgNHurMYXpcMzkVEpgS+G0L7MmD8J8qk3tCEqcYin8UHdaPxMT5CXRg+S9
+         g83fFCUogHDCB6WOJ4rpJ+8uh1wxnGl0J7FmcabE8rce6HWdqsbzaw0R4/Dowv1tdpJh
+         DIAlQT38AV71ra9Ka/8j1WaHlIv5TEvlzqq9oZTib3fjS8IydzBFRyvELNRZQU9vVPeV
+         /x0xTA6jYir1Q9hW5bTld/jgCm4zngsfN39XIiRD+XNuixgVtIOcfW4aW3DVcKpD+Vcf
+         KmzvDEK+J86k5402o4XaGz7PhPUV1EWfNEK72hUm7msuQgdm0zxDD9bGTq+4PjpsD6rv
+         5M8Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=P2Y3x3UF7aakg+eDh/JCMQ/ujg3OM7agEmMMQHUiWYw=;
-        b=gFJYzUK22Ywe/i5NJLw2XfZYiU2w+5hYIMSc73EX/kYsfDsNPxOwhuOfkLyaqgyFim
-         80HUL2c/u3640KOpy6cMeL0dC7nfK8C0YR9fTErnpY1TDLX0ZlXMqYp0FqvcTFWFRtXf
-         M2pUM7ijK6pEtgBVKavsWxk9S5wh/3bVDYhxMn9CMMpTKxAORgvqzJnAsIJWy7S+E8jw
-         7X9+CyV8lPP7ATK1YoP2bqG+xwW7pUa25voCtG5y58WoXpjaVM+cBm+IWa9ITD4XWXyb
-         ketL1H8hZ0r+UExEpdkPi5Axltnq/off961In+J8DtZJHG5u1ok0vSNGlXx6NJagRDoV
-         iGjw==
-X-Gm-Message-State: AOAM5328+6X0451bz5gf8CbyA/KECjbBWXORd6ii3R5hPLNGd1nx3fmm
-        Czcp4sH1S6zvmKrsd0yWUJ/AMw==
-X-Google-Smtp-Source: ABdhPJy1fQTquN4l33pCs4D4d2Xd1YwY/TqBCMAGvi2rtEVPLt90LIg/bGHmjLscqWmRjzI4Zwih4g==
-X-Received: by 2002:a63:c150:: with SMTP id p16mr5583761pgi.141.1594926811598;
-        Thu, 16 Jul 2020 12:13:31 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id u14sm6060148pfk.211.2020.07.16.12.13.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 16 Jul 2020 12:13:30 -0700 (PDT)
-Date:   Thu, 16 Jul 2020 12:13:29 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Randy Dunlap <rdunlap@infradead.org>
-Cc:     =?iso-8859-1?Q?Micka=EBl_Sala=FCn?= <mic@digikod.net>,
-        linux-kernel@vger.kernel.org, Aleksa Sarai <cyphar@cyphar.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Christian Heimes <christian@python.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Deven Bowers <deven.desai@linux.microsoft.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Eric Biggers <ebiggers@kernel.org>,
-        Eric Chiang <ericchiang@google.com>,
-        Florian Weimer <fweimer@redhat.com>,
-        James Morris <jmorris@namei.org>, Jan Kara <jack@suse.cz>,
-        Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
-        Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
-        Matthew Garrett <mjg59@google.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Michael Kerrisk <mtk.manpages@gmail.com>,
-        =?iso-8859-1?Q?Micka=EBl_Sala=FCn?= <mickael.salaun@ssi.gouv.fr>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        Philippe =?iso-8859-1?Q?Tr=E9buchet?= 
-        <philippe.trebuchet@ssi.gouv.fr>,
-        Scott Shell <scottsh@microsoft.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Steve Dower <steve.dower@python.org>,
-        Steve Grubb <sgrubb@redhat.com>,
-        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
-        Thibaut Sautereau <thibaut.sautereau@ssi.gouv.fr>,
-        Vincent Strubel <vincent.strubel@ssi.gouv.fr>,
-        kernel-hardening@lists.openwall.com, linux-api@vger.kernel.org,
-        linux-integrity@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH v6 7/7] ima: add policy support for the new file open
- MAY_OPENEXEC flag
-Message-ID: <202007161213.E8D240D98@keescook>
-References: <20200714181638.45751-1-mic@digikod.net>
- <20200714181638.45751-8-mic@digikod.net>
- <202007151339.283D7CD@keescook>
- <8df69733-0088-3e3c-9c3d-2610414cea2b@digikod.net>
- <61c05cb0-a956-3cc7-5dab-e11ebf0e95bf@infradead.org>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=FH1i/9Q7biv+5kd2aHJzTASe8AFgNZkqx6zcZ0CRgAM=;
+        b=uKLA6yRgm8fzkGOEwfROln2VXNcnT9krxSdFUu4aMpusmPwlKCq3j2B0NMj3LqkyR1
+         Y64/7klSMjrcbXJDM3w8uKkl86NPAWiI52Ml1fkLRaV9xnXyiq8rsx+8GyCAgvz3KPmr
+         YIhMY6V6JaXc7c9DJKO1tvN2+sWhLlPxzQjXe4ABxow9c8Ul1YWcg1z6PSoQ/31+56Gk
+         OvDAv/JEXvIWhx/E0drfkStjwL9sX8s78baP3MEvYqmVF8ATuneygDM0TZYBWYxNqNZl
+         FuADX8nTzy6ORUnF1lti8vOEnYrtsUtlLT1sRqURbMLNKIm+PaV9o+u4KVmOzMPSx1BZ
+         N6zw==
+X-Gm-Message-State: AOAM531l6Y1lE0iPp+psx40QRea7ByUGwCXcb6ae/VrbnAxKHO9Sshud
+        /5oM+WqtnihKz9+dGF2SOtKgopaS
+X-Google-Smtp-Source: ABdhPJwcYWd14dWMRbo7MCBi1xwO+8IGc1NwY6E8MeiMH3Khln7PDLzj6vFwtTk/KoIlzzJ7hJsiig==
+X-Received: by 2002:a2e:5746:: with SMTP id r6mr2910169ljd.205.1594926894806;
+        Thu, 16 Jul 2020 12:14:54 -0700 (PDT)
+Received: from [192.168.2.145] (ppp91-76-4-184.pppoe.mtu-net.ru. [91.76.4.184])
+        by smtp.googlemail.com with ESMTPSA id s4sm1357437lfc.71.2020.07.16.12.14.53
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 16 Jul 2020 12:14:54 -0700 (PDT)
+Subject: Re: [PATCH v4 0/6] Improvements for MAX77620 GPIO driver
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Laxman Dewangan <ldewangan@nvidia.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        linux-tegra@vger.kernel.org,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <20200709171203.12950-1-digetx@gmail.com>
+ <CACRpkdZNLDgsrPRenyvPZD6A+Wvj-P3AJBf5Ke-uY9=R9DyjxQ@mail.gmail.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <c33c7f0d-cc0d-a9ba-dbd2-587c8cf9e2e8@gmail.com>
+Date:   Thu, 16 Jul 2020 22:14:53 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
+In-Reply-To: <CACRpkdZNLDgsrPRenyvPZD6A+Wvj-P3AJBf5Ke-uY9=R9DyjxQ@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <61c05cb0-a956-3cc7-5dab-e11ebf0e95bf@infradead.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 16, 2020 at 07:59:20AM -0700, Randy Dunlap wrote:
-> On 7/16/20 7:40 AM, Mickaël Salaün wrote:
-> > 
-> > On 15/07/2020 22:40, Kees Cook wrote:
-> >> On Tue, Jul 14, 2020 at 08:16:38PM +0200, Mickaël Salaün wrote:
-> >>> From: Mimi Zohar <zohar@linux.ibm.com>
-> >>>
-> >>> The kernel has no way of differentiating between a file containing data
-> >>> or code being opened by an interpreter.  The proposed O_MAYEXEC
-> >>> openat2(2) flag bridges this gap by defining and enabling the
-> >>> MAY_OPENEXEC flag.
-> >>>
-> >>> This patch adds IMA policy support for the new MAY_OPENEXEC flag.
-> >>>
-> >>> Example:
-> >>> measure func=FILE_CHECK mask=^MAY_OPENEXEC
-> >>> appraise func=FILE_CHECK appraise_type=imasig mask=^MAY_OPENEXEC
-> >>>
-> >>> Signed-off-by: Mimi Zohar <zohar@linux.ibm.com>
-> >>> Reviewed-by: Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
-> >>> Acked-by: Mickaël Salaün <mic@digikod.net>
-> >>
-> >> (Process nit: if you're sending this on behalf of another author, then
-> >> this should be Signed-off-by rather than Acked-by.)
-> > 
-> > I'm not a co-author of this patch.
-> > 
+16.07.2020 11:52, Linus Walleij Ð¿Ð¸ÑˆÐµÑ‚:
+> On Thu, Jul 9, 2020 at 7:12 PM Dmitry Osipenko <digetx@gmail.com> wrote:
 > 
-> from Documentation/process/submitting-patches.rst:
+>> This series addresses a problem that I discovered on Nexus 7 device where
+>> GPIO interrupts may be left enabled after bootloader and the driver isn't
+>> prepared to this. It also makes a small improvements to the code, fixes the
+>> non-released interrupt bug and converts driver to use irqchip template.
+>>
+>> Changelog:
+>>
+>> v4: - Added stable-tag to the patch "Fix missing release of interrupt".
 > 
-> The Signed-off-by: tag indicates that the signer was involved in the
-> development of the patch, or that he/she was in the patch's delivery path.
->                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> This v4 series applied, thanks a *LOT* for your patient work on this!
 
-Randy beat me to it. :)
+Hello, Linus! Thank you for applying the patches!
 
--- 
-Kees Cook
+> I need to fix the USB port on my Nexus 7 so I can test how the
+> mainline support is working these days!
+
+Please notice that this should be a Nexus 7 2012, which is NVIDIA
+Tegra30-based Nexus 7.
+
+The mainline support just starting to emerge for the 2012 model,
+although not much is missed in the upstream. There are couple patches
+currently under review which are necessary for Nexus 7 2012 in order to
+make it ready for everyday use, like a tiny patch for the touchscreen
+support and DRM bridges/panel orientation improvements for the Tegra DRM
+driver. We're pretty close! :)
