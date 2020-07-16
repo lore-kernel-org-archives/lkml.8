@@ -2,213 +2,91 @@ Return-Path: <SRS0=y5Sx=A3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 013E5C433E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 21:14:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9C5DC433E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 21:13:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C99DC207E8
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 21:14:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="I+5xqu6T"
+	by mail.kernel.org (Postfix) with ESMTP id 84A78207DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 21:13:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594934036;
+	bh=W/rnCJweoSroLPFc4qIJiZovV2xgzWULfomtSZCzpLY=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=TEb8gG+PowIdcTcyvdBC+dcWvtrF9+u9Yn3Ub38nRjWOFpiL83Sw+63K7GZFN4WZS
+	 gOQz5CHF34brCXITk6PKRYcJAsujaKrnGWM1riRWVbyFBWCc6mcwNv3N2UPsn/tvUA
+	 yk08Lwz7Y8G2mV3G8BRIfDrrlpdO5XVUsOCWm0Ds=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727094AbgGPVOC (ORCPT
+        id S1726989AbgGPVNz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 17:14:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53802 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727032AbgGPVOB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 17:14:01 -0400
-Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 088BCC08C5CE
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Jul 2020 14:14:01 -0700 (PDT)
-Received: by mail-pl1-x642.google.com with SMTP id 72so4422777ple.0
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Jul 2020 14:14:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=CSCv+qenN8fQz+hz3SBJPq4lxH8/L5lNiF/O/RXH4cs=;
-        b=I+5xqu6T187eBlA+tL31dh5CS7wCkNI25QanX8f0QfAWVGToBzsZX8AeIKyT7710Bs
-         F94Tg6+plhmnLGCVlrr/UFEsPF9kU5zpXXmZwrmqg0W/0MYVN46CtWYu55uxwXw2fCn6
-         +2FGuZWQiqu1zo5Jq+VajaCuGX6Q4J7vQ4gJI=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=CSCv+qenN8fQz+hz3SBJPq4lxH8/L5lNiF/O/RXH4cs=;
-        b=SFIgI5OjMEowS1YrCiFltOeMFQe0sGnzFMax+c5WdS7EnVaWY2XF43R2jITXxrsHtb
-         N0uqKnUHkm32c/+HfPZdlhPgIu76wHM1G9bR8o+uCjo+jE0+o9xe9fbr98Rreaeh2lyo
-         8IL4lCdMzhodUAPVWmjOA4d1CcFxSPxpEM3LP1zpENOgfkQWYpjigKiHX/QRRU3ttLD3
-         +iC35yu/9apXPV6N3wNra8m7GETCI4EqOhZwYUp7o0jJTka6gPyfob6l7I47iUmqj0Md
-         +36MVGdJcQe0c9a/CX4QUd9+Q5AijBj3ny5gb/un+eikt9kfxo+ImJWz+ZCdDiZumhVv
-         R4Fg==
-X-Gm-Message-State: AOAM533HwLsCTiPkttWy05I03dSO28qvMMSgwDBBSDQ5O84LmzwH5KLO
-        mO8UkrGQFYt5eeH5XtkKuv6zjg==
-X-Google-Smtp-Source: ABdhPJz1BmB9fwt+demvs5kOAZ0MYGo3jfds+eP75BLBTh2DsDI3UFftrsMyrJVfYldCQpL3sKvIZQ==
-X-Received: by 2002:a17:902:8206:: with SMTP id x6mr5160870pln.328.1594934040349;
-        Thu, 16 Jul 2020 14:14:00 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id x13sm5361936pfj.122.2020.07.16.14.13.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 16 Jul 2020 14:13:59 -0700 (PDT)
-Date:   Thu, 16 Jul 2020 14:13:58 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
-        linux-arch@vger.kernel.org, Will Deacon <will@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Keno Fischer <keno@juliacomputing.com>,
-        Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org
-Subject: Re: [patch V3 08/13] x86/entry: Use generic syscall entry function
-Message-ID: <202007161359.AB211685@keescook>
-References: <20200716182208.180916541@linutronix.de>
- <20200716185424.765294277@linutronix.de>
+        Thu, 16 Jul 2020 17:13:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53368 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726256AbgGPVNy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jul 2020 17:13:54 -0400
+Received: from embeddedor (unknown [201.162.240.161])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E06DE20760;
+        Thu, 16 Jul 2020 21:13:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594934034;
+        bh=W/rnCJweoSroLPFc4qIJiZovV2xgzWULfomtSZCzpLY=;
+        h=Date:From:To:Cc:Subject:From;
+        b=tpxK0XQjI40X994VvpKDI8qWdJfXDo+L2E9a7aHlksE0YnI51yxxDzJCZG4hmE6kX
+         dYBojpDBIKG/JEQXPfTcmfDA5XgsmfRKz7cHfErnCZMhgbwlAYpc2HHAWREiqKyoKQ
+         d2ePqrl7hDE49IdUS0/LlOm1k7L0WWTDI7PGAIm8=
+Date:   Thu, 16 Jul 2020 16:19:19 -0500
+From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To:     Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Andy Shevchenko <andy@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>
+Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Subject: [PATCH][next] pinctrl: baytrail: Use fallthrough pseudo-keyword
+Message-ID: <20200716211919.GA17378@embeddedor>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200716185424.765294277@linutronix.de>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 16, 2020 at 08:22:16PM +0200, Thomas Gleixner wrote:
-> From: Thomas Gleixner <tglx@linutronix.de>
-> 
-> Replace the syscall entry work handling with the generic version. Provide
-> the necessary helper inlines to handle the real architecture specific
-> parts, e.g. audit and seccomp invocations.
-> 
-> Use a temporary define for idtentry_enter_user which will be cleaned up
-> seperately.
-> 
-> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-> [...]
-> --- /dev/null
-> +++ b/arch/x86/include/asm/entry-common.h
-> @@ -0,0 +1,86 @@
-> +/* SPDX-License-Identifier: GPL-2.0-only */
-> +#ifndef _ASM_X86_ENTRY_COMMON_H
-> +#define _ASM_X86_ENTRY_COMMON_H
-> +
-> +#include <linux/seccomp.h>
-> +#include <linux/audit.h>
-> +
-> +/* Check that the stack and regs on entry from user mode are sane. */
-> +static __always_inline void arch_check_user_regs(struct pt_regs *regs)
-> +{
-> +	if (IS_ENABLED(CONFIG_DEBUG_ENTRY)) {
-> +		/*
-> +		 * Make sure that the entry code gave us a sensible EFLAGS
-> +		 * register.  Native because we want to check the actual CPU
-> +		 * state, not the interrupt state as imagined by Xen.
-> +		 */
-> +		unsigned long flags = native_save_fl();
-> +		WARN_ON_ONCE(flags & (X86_EFLAGS_AC | X86_EFLAGS_DF |
-> +				      X86_EFLAGS_NT));
-> +
-> +		/* We think we came from user mode. Make sure pt_regs agrees. */
-> +		WARN_ON_ONCE(!user_mode(regs));
-> +
-> +		/*
-> +		 * All entries from user mode (except #DF) should be on the
-> +		 * normal thread stack and should have user pt_regs in the
-> +		 * correct location.
-> +		 */
-> +		WARN_ON_ONCE(!on_thread_stack());
-> +		WARN_ON_ONCE(regs != task_pt_regs(current));
-> +	}
-> +}
-> +#define arch_check_user_regs arch_check_user_regs
+Replace the existing /* fall through */ comments and its variants with
+the new pseudo-keyword macro fallthrough[1].
 
-Will architectures implement subsets of these functions? (i.e. instead
-of each of the defines, is CONFIG_ENTRY_GENERIC sufficient for the
-no-op inlines?)
+[1] https://www.kernel.org/doc/html/latest/process/deprecated.html?highlight=fallthrough#implicit-switch-case-fall-through
 
-> +
-> +static inline long arch_syscall_enter_seccomp(struct pt_regs *regs)
-> +{
-> +#ifdef CONFIG_SECCOMP
-> +	u32 arch = in_ia32_syscall() ? AUDIT_ARCH_I386 : AUDIT_ARCH_X86_64;
-> +	struct seccomp_data sd;
-> +
-> +	sd.arch = arch;
-> +	sd.nr = regs->orig_ax;
-> +	sd.instruction_pointer = regs->ip;
-> +
-> +#ifdef CONFIG_X86_64
-> +	if (arch == AUDIT_ARCH_X86_64) {
-> +		sd.args[0] = regs->di;
-> +		sd.args[1] = regs->si;
-> +		sd.args[2] = regs->dx;
-> +		sd.args[3] = regs->r10;
-> +		sd.args[4] = regs->r8;
-> +		sd.args[5] = regs->r9;
-> +	} else
-> +#endif
-> +	{
-> +		sd.args[0] = regs->bx;
-> +		sd.args[1] = regs->cx;
-> +		sd.args[2] = regs->dx;
-> +		sd.args[3] = regs->si;
-> +		sd.args[4] = regs->di;
-> +		sd.args[5] = regs->bp;
-> +	}
-> +
-> +	return __secure_computing(&sd);
-> +#else
-> +	return 0;
-> +#endif
-> +}
-> +#define arch_syscall_enter_seccomp arch_syscall_enter_seccomp
+Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+---
+ drivers/pinctrl/intel/pinctrl-baytrail.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-Actually, I've been meaning to clean this up. It's not needed at all.
-This was left over from the seccomp fast-path code that got ripped out a
-while ago. seccomp already has everything it needs to do this work, so
-just:
-
-	__secure_computing(NULL);
-
-is sufficient for every architecture that supports seccomp. (See kernel/seccomp.c
-populate_seccomp_data().)
-
-And if you want more generalization work, note that the secure_computing()
-macro performs a TIF test before calling __secure_computing(NULL). But
-my point is, I think arch_syscall_enter_seccomp() is not needed.
-
-> +static inline void arch_syscall_enter_audit(struct pt_regs *regs)
-> +{
-> +#ifdef CONFIG_X86_64
-> +	if (in_ia32_syscall()) {
-> +		audit_syscall_entry(regs->orig_ax, regs->di,
-> +				    regs->si, regs->dx, regs->r10);
-> +	} else
-> +#endif
-> +	{
-> +		audit_syscall_entry(regs->orig_ax, regs->bx,
-> +				    regs->cx, regs->dx, regs->si);
-> +	}
-> +}
-> +#define arch_syscall_enter_audit arch_syscall_enter_audit
-
-Similarly, I think these can be redefined in the generic case
-using the existing accessors for syscall arguments, etc. e.g.
-arch_syscall_enter_audit() is not needed for any architecture, and the
-generic is:
-
-	unsigned long args[6];
-
-        syscall_get_arguments(task, regs, args);
-	audit_syscall_entry(syscall_get_nr(current, regs),
-			    args[0], args[1], args[2], args[3]);
-
-
-
+diff --git a/drivers/pinctrl/intel/pinctrl-baytrail.c b/drivers/pinctrl/intel/pinctrl-baytrail.c
+index a917a2df520e..d6e35cba3065 100644
+--- a/drivers/pinctrl/intel/pinctrl-baytrail.c
++++ b/drivers/pinctrl/intel/pinctrl-baytrail.c
+@@ -1372,13 +1372,13 @@ static void byt_irq_unmask(struct irq_data *d)
+ 	switch (irqd_get_trigger_type(d)) {
+ 	case IRQ_TYPE_LEVEL_HIGH:
+ 		value |= BYT_TRIG_LVL;
+-		/* fall through */
++		fallthrough;
+ 	case IRQ_TYPE_EDGE_RISING:
+ 		value |= BYT_TRIG_POS;
+ 		break;
+ 	case IRQ_TYPE_LEVEL_LOW:
+ 		value |= BYT_TRIG_LVL;
+-		/* fall through */
++		fallthrough;
+ 	case IRQ_TYPE_EDGE_FALLING:
+ 		value |= BYT_TRIG_NEG;
+ 		break;
 -- 
-Kees Cook
+2.27.0
+
