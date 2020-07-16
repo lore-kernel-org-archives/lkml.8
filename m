@@ -2,119 +2,169 @@ Return-Path: <SRS0=y5Sx=A3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C173C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 17:55:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66198C433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 17:55:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2EAAD2070E
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 17:55:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594922114;
-	bh=lLJldrxIoCk4M8C+GINWVcU4GYYV6tS/oFagogB61Z8=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=T2yOiFA3E4MlMjGZPOraJLrXVJl000BastN5ZRF4K30Rydkkke0iEeYZIs/HhvuIw
-	 RJv/AheoDK+TB2ZqFAsRf/OyTqVQ13GNK8aMQ+4thO9YUWqNGyDCErh9vs9F1AxLn+
-	 wjCvu+vh6HKEfm7qV6XUlfLnZsxMpwRuucqMWU6E=
+	by mail.kernel.org (Postfix) with ESMTP id 36FB52070E
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 17:55:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="Cw4Td7i9";
+	dkim=pass (1024-bit key) header.d=microchiptechnology.onmicrosoft.com header.i=@microchiptechnology.onmicrosoft.com header.b="IXkXMNQk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729048AbgGPRzN (ORCPT
+        id S1729366AbgGPRzx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 13:55:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51352 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727844AbgGPRzM (ORCPT
+        Thu, 16 Jul 2020 13:55:53 -0400
+Received: from esa5.microchip.iphmx.com ([216.71.150.166]:24951 "EHLO
+        esa5.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727844AbgGPRzv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 13:55:12 -0400
-Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0AC5BC061755
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Jul 2020 10:55:12 -0700 (PDT)
-Received: by mail-lf1-x143.google.com with SMTP id u25so4309809lfm.1
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Jul 2020 10:55:11 -0700 (PDT)
+        Thu, 16 Jul 2020 13:55:51 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1594922150; x=1626458150;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-id:content-transfer-encoding:
+   mime-version;
+  bh=w4+oLkJntJW2BwFYrNn/5Zt8Ai5Pb0SFAM3p8/ZIyQ4=;
+  b=Cw4Td7i9DPf5lngNtzsZ+Ka3239xY5DZGuhuLnoQooxarbHT2uDM9A2c
+   HT+C9PC565FOsJ39gJyO82TejGvz4/lyauJF69LCW1uDpwCd20+SAWle3
+   knqR0mvuiMz02QYUnD/kYsNRUD0c6STKevGwwkEV80QmU+t7Z4ApsYl8W
+   GwfavAh/3aQyTvYQ3IKAy4rq+ZZaNP7+DmcNvx0tyG1LCiG04Pxb+lzQ2
+   gdZgSD5iTrwHD2FzO93FbiVMYT0H2t1FsIEQYzOeV9s50jO/BwUboAL6L
+   /sZgdXKdEOvI/mk3fqdlrP5u7A2kyLmr5VKdEPFNR6NrDIXwVbZvccayD
+   Q==;
+IronPort-SDR: UYhUZdzaowOv0iDDQniL1JB8Uzre8aosQqLwPTWa7j/naIl2JqW+q3X9qjz279iyqKGQMGaW0d
+ rfCc7d4R195w/cDl3+wc5p9ABUh7xZ1vL1gJBhMn8Q6jWae+yTvfZS/DOauhb/6HxHSM7L6Jr0
+ zXtRB3Qa0E4ZJ3aOogBxy4l4x0YPN0z75eqyomsS2jJyOmAQkENSsuEj5Ik/o96H5krXY7Knh/
+ 6urKGu17MG6IbB6nBXJZfh8wjp6hEaMN+auMYmctnLW0KKqHkEHbqZ0wdYVMexxabhjDyfKRwp
+ psE=
+X-IronPort-AV: E=Sophos;i="5.75,360,1589266800"; 
+   d="scan'208";a="83470496"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa5.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 16 Jul 2020 10:55:49 -0700
+Received: from chn-vm-ex04.mchp-main.com (10.10.85.152) by
+ chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1979.3; Thu, 16 Jul 2020 10:55:49 -0700
+Received: from NAM11-DM6-obe.outbound.protection.outlook.com (10.10.215.89) by
+ email.microchip.com (10.10.87.151) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1979.3
+ via Frontend Transport; Thu, 16 Jul 2020 10:55:49 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=k+n9pp5/hlyLaF7bK9s+iIZvjb5Ow76pVkNx5FhJb/k3ePkpX/pzqew9GtydN5V+QlflPIO3ZD0ohQUz7vXU6YbvRaTyN8mZzWOto4oArvs8X1GO4INhwrtJPdX3Mzxr1bCurfPr3UMHmEd3ogFrGFHnmaieqBMBLpyE8IgHvPMGr7JU5qpPeIIQBH1Cu5kDiz8OSKkeNjpRkyD2HcSI2u8xL8R5zyM6fXIp+oOxkBAz0NmoW4PAMoCdQI/eo5KivljL3GJFNLHbd+Xgnnj1CvZlgMY/EMuzde/qvHC6lAJUQhzWJYEnsEh505xtLy9OQjeIRvb8PfJUVs3WX/shhA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=w4+oLkJntJW2BwFYrNn/5Zt8Ai5Pb0SFAM3p8/ZIyQ4=;
+ b=IWP5UNtJqp40qUsDMaOcUMONaFqOwqgMKZrsZGm4TsfKDWpcbFRTieFfvMObvFolgXuzCekdB8DDRF4hSezSXt4ISuBGM8AIIhnfdIpeYMClLOZYQJUbpaDk3qnOIFlHrTZrFEnA4dWi3BWHg0ZGz269hlf3E/AfSwLFcgqXu2udCNr2Dg/OIha1pLipkDIC4ofeKV5eDfN52WjmdJGyhENzdnNdFcXpp4qMj6aabgdVqQ1V4I/9RjGajAWgmlh+ZZTvHkDB+FxcoRYO/mlaDRCXkCp1ZPzhq0o2xdyJkIgabwYSYaC0INIZSmXqfjzaz4G2QNbdDlVN6X9PuS7aaw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microchip.com; dmarc=pass action=none
+ header.from=microchip.com; dkim=pass header.d=microchip.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Xq2JH4o8fhssULM8OxiE+8BVwjY6u3DAco48q1luJAA=;
-        b=ObQzTlhrDJzFPiBqNrDCENTQ8eDuKme5lbe0pge63Qy9tUEn0lpb9Ibc70CsMa5rJp
-         w8lsRsux3WCKeRWxpK6T76ywqmXf6GOGmCHC3Y9Ch4w0CY3EGTy5ho0T+peufUbLOykN
-         oxttWek9XqXN20xjMRBA6JbA31+SDZptabSZQ=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Xq2JH4o8fhssULM8OxiE+8BVwjY6u3DAco48q1luJAA=;
-        b=Kdi0kXE/zjyvxz7sG/s4rPXIXm+0xeKBogzjVyUodMaUgk4v/ILTVhxg3ZIMy6mplo
-         wHP7/fPXaq92pJkmZG1kEiB/FZPYW2hBM/EI8GMKx6+QQuRSRNyCtoBdgpC2nA2JDmvl
-         cnrWhip7gX6tKju4XYVarmqLh0A/lNqS7nAOYCGSkXQij4uoxKbRzN53XBbuZu7kzDAY
-         VbFBL7wF7ehZt0EqD900iYahfnO7bvlJg7sEx8hCgiKla+3YGz3pJC96fLZbLxhkaA1S
-         mz8RpsU4EZMe8Z+X2a+vzecHM2Vzz9kalXoml6BI/CZtiYmsQvtf7aBEIINyWHlzgQkR
-         IEfg==
-X-Gm-Message-State: AOAM5336TWqnrm7aZrD0F5MgzjRQLR4BPvNM+MK2I4BcPFwe84JYCHTe
-        9GyTz7pf3JEbp2HldnZOL0zmfS/tMwY=
-X-Google-Smtp-Source: ABdhPJwevqIpaIkLvhtVIuX7Rz4Zynanw1ielf8XiloMHasx1yRbLe4l74qBd5vq4A5+DvQuJ3KA0A==
-X-Received: by 2002:a19:ca48:: with SMTP id h8mr2745889lfj.161.1594922110206;
-        Thu, 16 Jul 2020 10:55:10 -0700 (PDT)
-Received: from mail-lj1-f169.google.com (mail-lj1-f169.google.com. [209.85.208.169])
-        by smtp.gmail.com with ESMTPSA id l4sm1176259ljc.83.2020.07.16.10.55.08
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 16 Jul 2020 10:55:08 -0700 (PDT)
-Received: by mail-lj1-f169.google.com with SMTP id x9so9114754ljc.5
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Jul 2020 10:55:08 -0700 (PDT)
-X-Received: by 2002:a2e:9b42:: with SMTP id o2mr2516849ljj.102.1594922108423;
- Thu, 16 Jul 2020 10:55:08 -0700 (PDT)
+ d=microchiptechnology.onmicrosoft.com;
+ s=selector2-microchiptechnology-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=w4+oLkJntJW2BwFYrNn/5Zt8Ai5Pb0SFAM3p8/ZIyQ4=;
+ b=IXkXMNQkFbIh5POktXec180Qzpn5vIga94RhswRi1crZ17J+23Sd9iJm7jNKxOTRCIpLYN/6f8i+YsCCXhEFqvoPgeheZikg/cit9AQTdkhQEtnmDaamF3uLUqjHa/DWThTnmbEA0+kZDlPQarmGuGyZMui2OH9LWTU5nAVeYcs=
+Received: from DM6PR11MB3082.namprd11.prod.outlook.com (2603:10b6:5:6b::19) by
+ DM6PR11MB3002.namprd11.prod.outlook.com (2603:10b6:5:6d::29) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.3174.20; Thu, 16 Jul 2020 17:55:47 +0000
+Received: from DM6PR11MB3082.namprd11.prod.outlook.com
+ ([fe80::cf1:ea8d:b9f2:5238]) by DM6PR11MB3082.namprd11.prod.outlook.com
+ ([fe80::cf1:ea8d:b9f2:5238%5]) with mapi id 15.20.3174.026; Thu, 16 Jul 2020
+ 17:55:47 +0000
+From:   <Cristian.Birsan@microchip.com>
+To:     <alexandre.belloni@bootlin.com>, <mirq-linux@rere.qmqm.pl>
+CC:     <balbi@kernel.org>, <gregkh@linuxfoundation.org>,
+        <Ludovic.Desroches@microchip.com>, <Nicolas.Ferre@microchip.com>,
+        <songjun.wu@atmel.com>, <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <linux-usb@vger.kernel.org>
+Subject: Re: [PATCH RESEND 1/3] usb: gadget: udc: atmel: remove outdated
+ comment in usba_ep_disable()
+Thread-Topic: [PATCH RESEND 1/3] usb: gadget: udc: atmel: remove outdated
+ comment in usba_ep_disable()
+Thread-Index: AQHWVVJNzw5hS4rB3kS1Tqr/60tonKkJN6IAgAFSZIA=
+Date:   Thu, 16 Jul 2020 17:55:47 +0000
+Message-ID: <9616d73d-d55c-1a33-58a0-6f36ba949f1c@microchip.com>
+References: <cover.1594231056.git.mirq-linux@rere.qmqm.pl>
+ <ab8ef3e2bf15fa75572f9ad51d6e7b10c67cb494.1594231056.git.mirq-linux@rere.qmqm.pl>
+ <20200715214438.GE23553@piout.net>
+In-Reply-To: <20200715214438.GE23553@piout.net>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
+authentication-results: bootlin.com; dkim=none (message not signed)
+ header.d=none;bootlin.com; dmarc=none action=none header.from=microchip.com;
+x-originating-ip: [2a02:2f01:5d1d:6d00:8053:86f0:6820:9e8f]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: ad94c631-e513-4282-7397-08d829b17854
+x-ms-traffictypediagnostic: DM6PR11MB3002:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <DM6PR11MB3002F5F36B2AF11B5AAE8654EF7F0@DM6PR11MB3002.namprd11.prod.outlook.com>
+x-bypassexternaltag: True
+x-ms-oob-tlc-oobclassifiers: OLM:478;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: sP72AAjkaBDwewaEYwN5Kn1PJ/5GaozKrP3amGO9BK/vaGOQ/kYplFwSz/TEjH3nGNPfuKdVWZJu8o6tNUD7Hve5zxEVUpplcWkpjXvGRJuI3lebMFeqvuFpyPw19gwDmPqaWOnjR71+H/us2fGWGiOF5oAI52GSKPuVjf5BsI+wdqdIKnBhfHX2pMf0FCMvyWdvj3sMb8Yc3AVwTEGp5hLreZhJzMYnATCOm8kU18Mjd77pH1qUm2PNlOLg+VGd4UmeMVYCUVeRqNG7HAhuCec9vEUqR6BDovKs8/+d08gwz/Inct5OibOO7bEI9+ZQwhDxxYUX2fihkDTI2QuDB+/ddTaqf+6w9Z7iEQApygno1VuYJDYJ6zzWdJriQX2cQQ3jbAqaJ8SwaSiAM3bVX8xFU1nzZn/Xv3NSosHVZi7h0cpwXb24dbEA52rorvdQjQf0Shp+gLSGyf7kcg4ICg==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR11MB3082.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(366004)(136003)(396003)(376002)(39860400002)(346002)(110136005)(36756003)(31686004)(316002)(76116006)(54906003)(83380400001)(91956017)(71200400001)(2616005)(66946007)(31696002)(6512007)(66476007)(966005)(66556008)(66446008)(2906002)(6486002)(8936002)(478600001)(5660300002)(4326008)(66574015)(64756008)(186003)(53546011)(86362001)(6506007)(8676002)(43740500002);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: lwVo8BjZKZji357cvRaMF3IwsNdBlZyotk/5sflUE7vB2IN/X4k9/Ujv/owmgF9X0uELIWxJ+BG15+WsbYh/Ee8NIJsL8rUEsuxov0nocIQEgOn8g1kZHh719YC4OL2hwrzlFy9ZlKQq1DIyra60L1YkmxanILNqbNIQq+bMv4jgEQ3pk82sHh+xoNlS+S6WWZsoPoEkRRkNezEVp+hIw/sY4WLVGtmmb1eI0Tc0jrovkLrGTOD1dLHAQJKspc5l9vfT1SEPZrSebKXrn+DiAwQQzLsDmq/wmJ3eNWMgq+0CB7akLrdHu1nCex5Vmp96VjJgNp9nEwgbyssS29bp/FKv/shHexzkjHhtRUi+ixO5oRXK2KZz0U2EiCcfmXyrOqpofybuKFWJVdO5iNLoqUQo0wJYOMAzgRaZKeMVD4QZHDG5Xlcn7t7PcGi+zdj8Kk4xi1YuCPOanukKfhUlTIo+sCvO5lylvYReO2aOMezNFUT6maekh3nSI6S8buFXp8hkrgnJsAzPp/Wy9KjLCkFiNtZYyyzmlp+0VSKTn5Xs35epQLJmOVNwhLKL1cv8
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <9C19C15F629EE14EAAEE3F4CCADFE71B@namprd11.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-References: <20200715135011.42743-1-kirill.shutemov@linux.intel.com>
- <CAHk-=wh4pB-jRngOjcGxpc8=NPds3jWqJwDMUWC3-OEo4dRiKg@mail.gmail.com>
- <20200715205428.GA201569@google.com> <CAHk-=wg-_Oof43pKUHMk4ySdLwpYi7+shFg+aeV18UP2Akiv8g@mail.gmail.com>
- <CAHk-=wg+iVwK7MDXB+BPbhTmP-1eBa-y4vxRNr_G8ETnzv5pZg@mail.gmail.com>
- <20200715222228.jf2pv5u2wyhtc5o5@box> <CAHk-=wgp-ZJ+J250DMaJFBDU2hnhUUqXcUnVnZZ1iFQEK6O-jg@mail.gmail.com>
- <CAHk-=wh3jD4dwXWWFors9OnYp-YCzYN2bCGs9HDxrtZ=TiFyDQ@mail.gmail.com>
- <CAHk-=wjw2yuQjP1rqB=ocr9W3=ak+6h4XygoFTAgM5meiM1Q0A@mail.gmail.com> <20200716131612.b7ottczdgnxwdvrp@box>
-In-Reply-To: <20200716131612.b7ottczdgnxwdvrp@box>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Thu, 16 Jul 2020 10:54:52 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wi1PKGsk-Nr_Jd1vHGqg5AjTUtJkeh9R-a9SN-H=i2-1A@mail.gmail.com>
-Message-ID: <CAHk-=wi1PKGsk-Nr_Jd1vHGqg5AjTUtJkeh9R-a9SN-H=i2-1A@mail.gmail.com>
-Subject: Re: [PATCHv2] mm: Fix warning in move_normal_pmd()
-To:     "Kirill A. Shutemov" <kirill@shutemov.name>
-Cc:     Joel Fernandes <joel@joelfernandes.org>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linux-MM <linux-mm@kvack.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Naresh Kamboju <naresh.kamboju@linaro.org>,
-        William Kucharski <william.kucharski@oracle.com>
-Content-Type: text/plain; charset="UTF-8"
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: DM6PR11MB3082.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: ad94c631-e513-4282-7397-08d829b17854
+X-MS-Exchange-CrossTenant-originalarrivaltime: 16 Jul 2020 17:55:47.6846
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 9pXQJoVwBkieB5zC4Vb0eFxKnQ7GP5TQsqnVUic+cZVmv0cAWddCBUE5xg9wjwMAswbzakcdx7EGQtLF1MGzoKI0Rcf8dnn3MScSO0Y5k7E=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR11MB3002
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 16, 2020 at 6:16 AM Kirill A. Shutemov <kirill@shutemov.name> wrote:
->
-> It can also lead to performance regression: for small mremap() if only one
-> side of the range got aligned and there's no PMD_SIZE range to move,
-> kernel will still iterate over PTEs, but it would need to handle more
-> pte_none()s than without the patch.
-
-Ack, I've dropped the patch from my queue of experiments, because it
-doesn't work for the case I wanted to do, and the other cases could
-regress, as you say.
-
-Plus considering how many problems that patch had, I decided it wasn't
-as simple as I initially thought it would be anyway ;)
-
-Joel - while it's gone from my mind, if you're still interested in
-this, maybe you can do something _similar_ that patch, except perhaps
-also start out checking that the initial size is large enough for this
-to make sense even when one of the sides doesn't align, for example.
-
-(It might be as simple as checking that the initial 'len' is at least
-PMD_SIZE - then you're guaranteed that whichever side gets aligned,
-it's not doing extra work because the other side didn't).
-
-               Linus
+DQoNCk9uIDcvMTYvMjAgMTI6NDQgQU0sIEFsZXhhbmRyZSBCZWxsb25pIHdyb3RlOg0KPiANCj4g
+T24gMDgvMDcvMjAyMCAyMDowNDowOSswMjAwLCBNaWNoYcWCIE1pcm9zxYJhdyB3cm90ZToNCj4+
+IEZpeGVkIGNvbW1pdCByZW1vdmVkIHRoZSBvZmZlbmRpbmcgYmVoYXZpb3VyIGZyb20gdGhlIGRy
+aXZlciwgYnV0IG1pc3NlZA0KPj4gdGhlIGNvbW1lbnQgYW5kIGFzc29jaWF0ZWQgdGVzdC4gUmVt
+b3ZlIHRoZW0gbm93Lg0KPj4NCj4+IEZpeGVzOiAzOGU1ODk4NmU2ZmMgKCJ1c2I6IGdhZGdldDog
+dWRjOiBhdG1lbDogZG9uJ3QgZGlzYWJsZSBlbnBkb2ludHMgd2UgZG9uJ3Qgb3duIikNCj4+IFNp
+Z25lZC1vZmYtYnk6IE1pY2hhxYIgTWlyb3PFgmF3IDxtaXJxLWxpbnV4QHJlcmUucW1xbS5wbD4N
+Cj4gQWNrZWQtYnk6IEFsZXhhbmRyZSBCZWxsb25pIDxhbGV4YW5kcmUuYmVsbG9uaUBib290bGlu
+LmNvbT4NCg0KQWNrZWQtYnk6IENyaXN0aWFuIEJpcnNhbiA8Y3Jpc3RpYW4uYmlyc2FuQG1pY3Jv
+Y2hpcC5jb20+DQoNCj4gDQo+PiAtLS0NCj4+ICBkcml2ZXJzL3VzYi9nYWRnZXQvdWRjL2F0bWVs
+X3VzYmFfdWRjLmMgfCA4ICstLS0tLS0tDQo+PiAgMSBmaWxlIGNoYW5nZWQsIDEgaW5zZXJ0aW9u
+KCspLCA3IGRlbGV0aW9ucygtKQ0KPj4NCj4+IGRpZmYgLS1naXQgYS9kcml2ZXJzL3VzYi9nYWRn
+ZXQvdWRjL2F0bWVsX3VzYmFfdWRjLmMgYi9kcml2ZXJzL3VzYi9nYWRnZXQvdWRjL2F0bWVsX3Vz
+YmFfdWRjLmMNCj4+IGluZGV4IGQ2OWY2MWZmMDE4MS4uOTE1M2UyMjA4NDhkIDEwMDY0NA0KPj4g
+LS0tIGEvZHJpdmVycy91c2IvZ2FkZ2V0L3VkYy9hdG1lbF91c2JhX3VkYy5jDQo+PiArKysgYi9k
+cml2ZXJzL3VzYi9nYWRnZXQvdWRjL2F0bWVsX3VzYmFfdWRjLmMNCj4+IEBAIC02NzYsMTMgKzY3
+Niw3IEBAIHN0YXRpYyBpbnQgdXNiYV9lcF9kaXNhYmxlKHN0cnVjdCB1c2JfZXAgKl9lcCkNCj4+
+DQo+PiAgICAgICBpZiAoIWVwLT5lcC5kZXNjKSB7DQo+PiAgICAgICAgICAgICAgIHNwaW5fdW5s
+b2NrX2lycXJlc3RvcmUoJnVkYy0+bG9jaywgZmxhZ3MpOw0KPj4gLSAgICAgICAgICAgICAvKiBS
+RVZJU0lUIGJlY2F1c2UgdGhpcyBkcml2ZXIgZGlzYWJsZXMgZW5kcG9pbnRzIGluDQo+PiAtICAg
+ICAgICAgICAgICAqIHJlc2V0X2FsbF9lbmRwb2ludHMoKSBiZWZvcmUgY2FsbGluZyBkaXNjb25u
+ZWN0KCksDQo+PiAtICAgICAgICAgICAgICAqIG1vc3QgZ2FkZ2V0IGRyaXZlcnMgd291bGQgdHJp
+Z2dlciB0aGlzIG5vbi1lcnJvciAuLi4NCj4+IC0gICAgICAgICAgICAgICovDQo+PiAtICAgICAg
+ICAgICAgIGlmICh1ZGMtPmdhZGdldC5zcGVlZCAhPSBVU0JfU1BFRURfVU5LTk9XTikNCj4+IC0g
+ICAgICAgICAgICAgICAgICAgICBEQkcoREJHX0VSUiwgImVwX2Rpc2FibGU6ICVzIG5vdCBlbmFi
+bGVkXG4iLA0KPj4gLSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBlcC0+ZXAu
+bmFtZSk7DQo+PiArICAgICAgICAgICAgIERCRyhEQkdfRVJSLCAiZXBfZGlzYWJsZTogJXMgbm90
+IGVuYWJsZWRcbiIsIGVwLT5lcC5uYW1lKTsNCj4+ICAgICAgICAgICAgICAgcmV0dXJuIC1FSU5W
+QUw7DQo+PiAgICAgICB9DQo+PiAgICAgICBlcC0+ZXAuZGVzYyA9IE5VTEw7DQo+PiAtLQ0KPj4g
+Mi4yMC4xDQo+Pg0KPiANCj4gLS0NCj4gQWxleGFuZHJlIEJlbGxvbmksIEJvb3RsaW4NCj4gRW1i
+ZWRkZWQgTGludXggYW5kIEtlcm5lbCBlbmdpbmVlcmluZw0KPiBodHRwczovL2Jvb3RsaW4uY29t
+DQo+IA0K
