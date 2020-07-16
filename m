@@ -2,168 +2,289 @@ Return-Path: <SRS0=y5Sx=A3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 416E5C433E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 21:21:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2633C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 21:17:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 18DCC20787
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 21:21:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B40B620809
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 21:17:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="n8TtjlSg"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=deltatee.com header.i=@deltatee.com header.b="JpjWoQtY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726337AbgGPVU6 (ORCPT
+        id S1727108AbgGPVRu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 17:20:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54886 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726104AbgGPVU5 (ORCPT
+        Thu, 16 Jul 2020 17:17:50 -0400
+Received: from ale.deltatee.com ([204.191.154.188]:47674 "EHLO
+        ale.deltatee.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726231AbgGPVRr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 17:20:57 -0400
-Received: from mail-io1-xd42.google.com (mail-io1-xd42.google.com [IPv6:2607:f8b0:4864:20::d42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 33699C061755
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Jul 2020 14:20:57 -0700 (PDT)
-Received: by mail-io1-xd42.google.com with SMTP id l1so7645627ioh.5
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Jul 2020 14:20:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:from:to:cc:references:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=LEv+cQHA0XVbPMchrlnqMxvR2K1AYW3g6zK4UFsmFr4=;
-        b=n8TtjlSgQK6zU0sdra5ATCoBC6aOE8/1mnUXbCo8BmXqg8Y12GIOpFWzYBy40wj23U
-         JmoMk0rduLiaC+UVOW7D/nGGfwTrey+2CrevmYppsxQULo8eDxbunzsZNk0LLJ6HtOGq
-         ZsscAzjF0679jB4Qb+S39HskAxrgsRKj9NoYzU+iFB/OVxvFtbwgib1KEwtVPGcaB6SG
-         qp3z1ZJ7zcxrN121ZMsjZNknSEJCYp95O85MD4wG3pGulD20kBSlPl0xXhVLAQJgbXC6
-         goO5rKY/VaWec0XlG3xAf+9pbAmCycTC5aJ9vYExN1xKg352hKcLAEpkifJF+Fryj3mZ
-         coZA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=LEv+cQHA0XVbPMchrlnqMxvR2K1AYW3g6zK4UFsmFr4=;
-        b=oDVHZQcCGx8EMtXjhqePk1Am0ugWF3TkO/nzRrdNMtnzXmrRIPPGeOXH3MEFvUB9FV
-         vqcov2AI1GLf4BmOlINyRF1BHVJRHR6iStnYDv02Z7sHBu5I1v+eaLXNINnh5a9JsNhp
-         vNimlqxtBiS3FoU0vrtnysNuNkW3FOxF9oRDLxN/g22wpRltMkvJKOXWPOxu51mv35Yn
-         1KjaSJymkj900B5RzCsMm+OrFUKjpCL7pWgqcR+/zMCq3Q7/J2+sX6Dv1HFP1qGwoEyh
-         rVjWe1XXbDcSSXUnoiJw1nY9cZxsWTVRvUXtPyIAsUEwKoUVawpoJCukL5h+5FlZ0rI2
-         VjvQ==
-X-Gm-Message-State: AOAM533wD1iZ3CS6LUe8YLCzYX8AtxodRyw5Ggjwx5joLEeayRGril3+
-        ODLdWR39mSGNCI2aTJ8igMJJj6Q9plWi1Q==
-X-Google-Smtp-Source: ABdhPJxkpXHzsahyntnkdfZ9wBuSP7clR/vwRWqejN6tIPNw6BoYR132PIZwKZWkDVV6KrHlU2MY5A==
-X-Received: by 2002:a92:4913:: with SMTP id w19mr6104024ila.185.1594934455696;
-        Thu, 16 Jul 2020 14:20:55 -0700 (PDT)
-Received: from [192.168.1.58] ([65.144.74.34])
-        by smtp.gmail.com with ESMTPSA id v15sm2238190ili.28.2020.07.16.14.20.53
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 16 Jul 2020 14:20:54 -0700 (PDT)
-Subject: Re: [PATCH RFC v2 1/3] io_uring: use an enumeration for
- io_uring_register(2) opcodes
-From:   Jens Axboe <axboe@kernel.dk>
-To:     Pavel Begunkov <asml.silence@gmail.com>,
-        Stefano Garzarella <sgarzare@redhat.com>
-Cc:     Alexander Viro <viro@zeniv.linux.org.uk>,
-        Kernel Hardening <kernel-hardening@lists.openwall.com>,
-        Kees Cook <keescook@chromium.org>,
-        Aleksa Sarai <asarai@suse.de>,
-        Stefan Hajnoczi <stefanha@redhat.com>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Sargun Dhillon <sargun@sargun.me>,
-        Jann Horn <jannh@google.com>, io-uring@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, Jeff Moyer <jmoyer@redhat.com>,
-        linux-kernel@vger.kernel.org
-References: <20200716124833.93667-1-sgarzare@redhat.com>
- <20200716124833.93667-2-sgarzare@redhat.com>
- <ca242a15-576d-4099-a5f8-85c08985e3ff@gmail.com>
- <a2f109b2-adbf-147d-9423-7a1a4bf99967@kernel.dk>
- <20326d79-fb5a-2480-e52a-e154e056171f@gmail.com>
- <76879432-745d-a5ca-b171-b1391b926ea2@kernel.dk>
-Message-ID: <0357e544-d534-06d2-dc61-1169fc172d20@kernel.dk>
-Date:   Thu, 16 Jul 2020 15:20:53 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Thu, 16 Jul 2020 17:17:47 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=deltatee.com; s=20200525; h=Subject:Content-Transfer-Encoding:MIME-Version:
+        References:In-Reply-To:Message-Id:Date:Cc:To:From:Sender:Reply-To:
+        Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=DEAE2OOFgI04hyrQAkZfXCVDYcv0u92XcKNOKuVJWhU=; b=JpjWoQtY+ATygiabrOgxAZfspV
+        gMH2m0fqAFt7kL/NO5R2Vrs6SUS5VJvJMvgBzJmKmyXI0eXbZq+TTCS6LucSTSAsrJ++konpyiErh
+        vsUiFKPPGOUqA+L66Qh0+lk+8JLv2chGgxl6bFmhTuMVxEM0r7o/+7Sy3pkp+FwC7AYEgyTpEzNmZ
+        uFjzyfh/JZjj4gAjfmTPuNqfjpsTQ7jVCv0dKuYWClae6BPIhQAjAsRDX+K27SQhZQ2R9BI6WT8zE
+        1esPYW8FSLJVmBZhamDOU9OgJllhbpHB73AT96n8l4t2mwnxlybtqbJ//rS1KL60TMWg+oVJ3f885
+        hD97rPag==;
+Received: from cgy1-donard.priv.deltatee.com ([172.16.1.31])
+        by ale.deltatee.com with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <gunthorp@deltatee.com>)
+        id 1jwAZL-0005uI-Pz; Thu, 16 Jul 2020 14:33:29 -0600
+Received: from gunthorp by cgy1-donard.priv.deltatee.com with local (Exim 4.92)
+        (envelope-from <gunthorp@deltatee.com>)
+        id 1jwAZF-0004Bf-IG; Thu, 16 Jul 2020 14:33:21 -0600
+From:   Logan Gunthorpe <logang@deltatee.com>
+To:     linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org
+Cc:     Christoph Hellwig <hch@lst.de>, Sagi Grimberg <sagi@grimberg.me>,
+        Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@fb.com>,
+        Chaitanya Kulkarni <Chaitanya.Kulkarni@wdc.com>,
+        Max Gurtovoy <maxg@mellanox.com>,
+        Stephen Bates <sbates@raithlin.com>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
+Date:   Thu, 16 Jul 2020 14:33:18 -0600
+Message-Id: <20200716203319.16022-9-logang@deltatee.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200716203319.16022-1-logang@deltatee.com>
+References: <20200716203319.16022-1-logang@deltatee.com>
 MIME-Version: 1.0
-In-Reply-To: <76879432-745d-a5ca-b171-b1391b926ea2@kernel.dk>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 172.16.1.31
+X-SA-Exim-Rcpt-To: linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org, hch@lst.de, sagi@grimberg.me, kbusch@kernel.org, axboe@fb.com, maxg@mellanox.com, sbates@raithlin.com, logang@deltatee.com, Chaitanya.Kulkarni@wdc.com, chaitanya.kulkarni@wdc.com
+X-SA-Exim-Mail-From: gunthorp@deltatee.com
+Subject: [PATCH v15 8/9] nvmet-passthru: Add enable/disable helpers
+X-SA-Exim-Version: 4.2.1 (built Wed, 08 May 2019 21:11:16 +0000)
+X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/16/20 2:51 PM, Jens Axboe wrote:
-> On 7/16/20 2:47 PM, Pavel Begunkov wrote:
->> On 16/07/2020 23:42, Jens Axboe wrote:
->>> On 7/16/20 2:16 PM, Pavel Begunkov wrote:
->>>> On 16/07/2020 15:48, Stefano Garzarella wrote:
->>>>> The enumeration allows us to keep track of the last
->>>>> io_uring_register(2) opcode available.
->>>>>
->>>>> Behaviour and opcodes names don't change.
->>>>>
->>>>> Signed-off-by: Stefano Garzarella <sgarzare@redhat.com>
->>>>> ---
->>>>>  include/uapi/linux/io_uring.h | 27 ++++++++++++++++-----------
->>>>>  1 file changed, 16 insertions(+), 11 deletions(-)
->>>>>
->>>>> diff --git a/include/uapi/linux/io_uring.h b/include/uapi/linux/io_uring.h
->>>>> index 7843742b8b74..efc50bd0af34 100644
->>>>> --- a/include/uapi/linux/io_uring.h
->>>>> +++ b/include/uapi/linux/io_uring.h
->>>>> @@ -253,17 +253,22 @@ struct io_uring_params {
->>>>>  /*
->>>>>   * io_uring_register(2) opcodes and arguments
->>>>>   */
->>>>> -#define IORING_REGISTER_BUFFERS		0
->>>>> -#define IORING_UNREGISTER_BUFFERS	1
->>>>> -#define IORING_REGISTER_FILES		2
->>>>> -#define IORING_UNREGISTER_FILES		3
->>>>> -#define IORING_REGISTER_EVENTFD		4
->>>>> -#define IORING_UNREGISTER_EVENTFD	5
->>>>> -#define IORING_REGISTER_FILES_UPDATE	6
->>>>> -#define IORING_REGISTER_EVENTFD_ASYNC	7
->>>>> -#define IORING_REGISTER_PROBE		8
->>>>> -#define IORING_REGISTER_PERSONALITY	9
->>>>> -#define IORING_UNREGISTER_PERSONALITY	10
->>>>> +enum {
->>>>> +	IORING_REGISTER_BUFFERS,
->>>>> +	IORING_UNREGISTER_BUFFERS,
->>>>> +	IORING_REGISTER_FILES,
->>>>> +	IORING_UNREGISTER_FILES,
->>>>> +	IORING_REGISTER_EVENTFD,
->>>>> +	IORING_UNREGISTER_EVENTFD,
->>>>> +	IORING_REGISTER_FILES_UPDATE,
->>>>> +	IORING_REGISTER_EVENTFD_ASYNC,
->>>>> +	IORING_REGISTER_PROBE,
->>>>> +	IORING_REGISTER_PERSONALITY,
->>>>> +	IORING_UNREGISTER_PERSONALITY,
->>>>> +
->>>>> +	/* this goes last */
->>>>> +	IORING_REGISTER_LAST
->>>>> +};
->>>>
->>>> It breaks userspace API. E.g.
->>>>
->>>> #ifdef IORING_REGISTER_BUFFERS
->>>
->>> It can, yes, but we have done that in the past. In this one, for
->>
->> Ok, if nobody on the userspace side cares, then better to do that
->> sooner than later.
+This patch adds helper functions which are used in the NVMeOF configfs
+when the user is configuring the passthru subsystem. Here we ensure
+that only one subsys is assigned to each nvme_ctrl by using an xarray
+on the cntlid.
 
-I actually don't think it's a huge issue. Normally if applications
-do this, it's because they are using it and need it. Ala:
+The subsystem's version number is overridden by the passed through
+controller's version. However, if that version is less than 1.2.1,
+then we bump the advertised version to that and print a warning
+in dmesg.
 
-#ifndef IORING_REGISTER_SOMETHING
-#define IORING_REGISTER_SOMETHING	fooval
-#endif
+Based-on-a-patch-by: Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
+Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
+Reviewed-by: Sagi Grimberg <sagi@grimberg.me>
+---
+ drivers/nvme/target/configfs.c |  4 ++
+ drivers/nvme/target/core.c     | 10 +++-
+ drivers/nvme/target/nvmet.h    | 12 +++++
+ drivers/nvme/target/passthru.c | 86 ++++++++++++++++++++++++++++++++++
+ 4 files changed, 111 insertions(+), 1 deletion(-)
 
-and that'll still work just fine, even if an identical enum is there.
-
+diff --git a/drivers/nvme/target/configfs.c b/drivers/nvme/target/configfs.c
+index cdec47de89ed..61c258dea88a 100644
+--- a/drivers/nvme/target/configfs.c
++++ b/drivers/nvme/target/configfs.c
+@@ -879,6 +879,10 @@ static ssize_t nvmet_subsys_attr_version_store(struct config_item *item,
+ 	int major, minor, tertiary = 0;
+ 	int ret;
+ 
++	/* passthru subsystems use the underlying controller's version */
++	if (nvmet_passthru_ctrl(subsys))
++		return -EINVAL;
++
+ 	ret = sscanf(page, "%d.%d.%d\n", &major, &minor, &tertiary);
+ 	if (ret != 2 && ret != 3)
+ 		return -EINVAL;
+diff --git a/drivers/nvme/target/core.c b/drivers/nvme/target/core.c
+index 86fc913f481a..c0c7a0d75a01 100644
+--- a/drivers/nvme/target/core.c
++++ b/drivers/nvme/target/core.c
+@@ -558,6 +558,12 @@ int nvmet_ns_enable(struct nvmet_ns *ns)
+ 
+ 	mutex_lock(&subsys->lock);
+ 	ret = 0;
++
++	if (nvmet_passthru_ctrl(subsys)) {
++		pr_info("cannot enable both passthru and regular namespaces for a single subsystem");
++		goto out_unlock;
++	}
++
+ 	if (ns->enabled)
+ 		goto out_unlock;
+ 
+@@ -1498,7 +1504,7 @@ struct nvmet_subsys *nvmet_subsys_alloc(const char *subsysnqn,
+ 	if (!subsys)
+ 		return ERR_PTR(-ENOMEM);
+ 
+-	subsys->ver = NVME_VS(1, 3, 0); /* NVMe 1.3.0 */
++	subsys->ver = NVMET_DEFAULT_VS;
+ 	/* generate a random serial number as our controllers are ephemeral: */
+ 	get_random_bytes(&subsys->serial, sizeof(subsys->serial));
+ 
+@@ -1540,6 +1546,8 @@ static void nvmet_subsys_free(struct kref *ref)
+ 
+ 	WARN_ON_ONCE(!list_empty(&subsys->namespaces));
+ 
++	nvmet_passthru_subsys_free(subsys);
++
+ 	kfree(subsys->subsysnqn);
+ 	kfree_rcu(subsys->model, rcuhead);
+ 	kfree(subsys);
+diff --git a/drivers/nvme/target/nvmet.h b/drivers/nvme/target/nvmet.h
+index 03a92dba24c3..d8689744e0f7 100644
+--- a/drivers/nvme/target/nvmet.h
++++ b/drivers/nvme/target/nvmet.h
+@@ -21,6 +21,8 @@
+ #include <linux/radix-tree.h>
+ #include <linux/t10-pi.h>
+ 
++#define NVMET_DEFAULT_VS		NVME_VS(1, 3, 0)
++
+ #define NVMET_ASYNC_EVENTS		4
+ #define NVMET_ERROR_LOG_SLOTS		128
+ #define NVMET_NO_ERROR_LOC		((u16)-1)
+@@ -246,6 +248,7 @@ struct nvmet_subsys {
+ 
+ #ifdef CONFIG_NVME_TARGET_PASSTHRU
+ 	struct nvme_ctrl	*passthru_ctrl;
++	char			*passthru_ctrl_path;
+ #endif /* CONFIG_NVME_TARGET_PASSTHRU */
+ };
+ 
+@@ -545,6 +548,9 @@ static inline u32 nvmet_dsm_len(struct nvmet_req *req)
+ }
+ 
+ #ifdef CONFIG_NVME_TARGET_PASSTHRU
++void nvmet_passthru_subsys_free(struct nvmet_subsys *subsys);
++int nvmet_passthru_ctrl_enable(struct nvmet_subsys *subsys);
++void nvmet_passthru_ctrl_disable(struct nvmet_subsys *subsys);
+ u16 nvmet_parse_passthru_admin_cmd(struct nvmet_req *req);
+ u16 nvmet_parse_passthru_io_cmd(struct nvmet_req *req);
+ static inline struct nvme_ctrl *nvmet_passthru_ctrl(struct nvmet_subsys *subsys)
+@@ -552,6 +558,12 @@ static inline struct nvme_ctrl *nvmet_passthru_ctrl(struct nvmet_subsys *subsys)
+ 	return subsys->passthru_ctrl;
+ }
+ #else /* CONFIG_NVME_TARGET_PASSTHRU */
++static inline void nvmet_passthru_subsys_free(struct nvmet_subsys *subsys)
++{
++}
++static inline void nvmet_passthru_ctrl_disable(struct nvmet_subsys *subsys)
++{
++}
+ static inline u16 nvmet_parse_passthru_admin_cmd(struct nvmet_req *req)
+ {
+ 	return 0;
+diff --git a/drivers/nvme/target/passthru.c b/drivers/nvme/target/passthru.c
+index 96799febdbc3..d7f80e82bd3e 100644
+--- a/drivers/nvme/target/passthru.c
++++ b/drivers/nvme/target/passthru.c
+@@ -11,6 +11,11 @@
+ #include "../host/nvme.h"
+ #include "nvmet.h"
+ 
++/*
++ * xarray to maintain one passthru subsystem per nvme controller.
++ */
++static DEFINE_XARRAY(passthru_subsystems);
++
+ static void nvmet_passthru_execute_cmd_work(struct work_struct *w)
+ {
+ 	struct nvmet_req *req = container_of(w, struct nvmet_req, p.work);
+@@ -455,3 +460,84 @@ u16 nvmet_parse_passthru_admin_cmd(struct nvmet_req *req)
+ 		return NVME_SC_INVALID_OPCODE | NVME_SC_DNR;
+ 	}
+ }
++
++int nvmet_passthru_ctrl_enable(struct nvmet_subsys *subsys)
++{
++	struct nvme_ctrl *ctrl;
++	int ret = -EINVAL;
++	void *old;
++
++	mutex_lock(&subsys->lock);
++	if (!subsys->passthru_ctrl_path)
++		goto out_unlock;
++	if (subsys->passthru_ctrl)
++		goto out_unlock;
++
++	if (subsys->nr_namespaces) {
++		pr_info("cannot enable both passthru and regular namespaces for a single subsystem");
++		goto out_unlock;
++	}
++
++	ctrl = nvme_ctrl_get_by_path(subsys->passthru_ctrl_path);
++	if (IS_ERR(ctrl)) {
++		ret = PTR_ERR(ctrl);
++		pr_err("failed to open nvme controller %s\n",
++		       subsys->passthru_ctrl_path);
++
++		goto out_unlock;
++	}
++
++	old = xa_cmpxchg(&passthru_subsystems, ctrl->cntlid, NULL,
++			 subsys, GFP_KERNEL);
++	if (xa_is_err(old)) {
++		ret = xa_err(old);
++		goto out_put_ctrl;
++	}
++
++	if (old)
++		goto out_put_ctrl;
++
++	subsys->passthru_ctrl = ctrl;
++	subsys->ver = ctrl->vs;
++
++	if (subsys->ver < NVME_VS(1, 2, 1)) {
++		pr_warn("nvme controller version is too old: %llu.%llu.%llu, advertising 1.2.1\n",
++			NVME_MAJOR(subsys->ver), NVME_MINOR(subsys->ver),
++			NVME_TERTIARY(subsys->ver));
++		subsys->ver = NVME_VS(1, 2, 1);
++	}
++
++	mutex_unlock(&subsys->lock);
++	return 0;
++
++out_put_ctrl:
++	nvme_put_ctrl(ctrl);
++out_unlock:
++	mutex_unlock(&subsys->lock);
++	return ret;
++}
++
++static void __nvmet_passthru_ctrl_disable(struct nvmet_subsys *subsys)
++{
++	if (subsys->passthru_ctrl) {
++		xa_erase(&passthru_subsystems, subsys->passthru_ctrl->cntlid);
++		nvme_put_ctrl(subsys->passthru_ctrl);
++	}
++	subsys->passthru_ctrl = NULL;
++	subsys->ver = NVMET_DEFAULT_VS;
++}
++
++void nvmet_passthru_ctrl_disable(struct nvmet_subsys *subsys)
++{
++	mutex_lock(&subsys->lock);
++	__nvmet_passthru_ctrl_disable(subsys);
++	mutex_unlock(&subsys->lock);
++}
++
++void nvmet_passthru_subsys_free(struct nvmet_subsys *subsys)
++{
++	mutex_lock(&subsys->lock);
++	__nvmet_passthru_ctrl_disable(subsys);
++	mutex_unlock(&subsys->lock);
++	kfree(subsys->passthru_ctrl_path);
++}
 -- 
-Jens Axboe
+2.20.1
 
