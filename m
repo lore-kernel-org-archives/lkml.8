@@ -6,65 +6,63 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
 	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A3DDC433E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 19:05:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1643BC433E5
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 19:05:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 26026207CB
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 19:05:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E3E912076A
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 19:05:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594926306;
-	bh=BFbwfWJpiL95LXiR69gz6/hzOi80cRnQ5OsZptnMVPo=;
+	s=default; t=1594926310;
+	bh=Ui8MvdHcSMIVI9Y+GYo/n8FZ3RdCwTYMUWA1bu+K1cc=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=YB5vIvT8eIOGPfZ3zRhDSBf16DWySEg8koyJRT7RdIZ//zwtZLREmZTcC0lnX/f4g
-	 UxonBKDTxZXsmm47SrNWZVBy5T06nxmk+TgE+EB/qn7Vv7N7rB5/01tAR0rqMQWwxM
-	 laheVev1c/9iF7TAiVM+KmyJMtHwq55z8jEFq2n8=
+	b=Y71aud5XVTjBkeOKETv/in3GYsQp2ofNcpxTW7zHA5aZvo/UILviQx1h4oa511ODK
+	 p48o8hkSolsKx8RohyiCVdVG8Ee/kluDyJgL12eS1P67LFWIGtAR9p+i+keHTIUuR+
+	 4lMk+uzjHJhKW40/beHxCApObOCF/DVhTRN0qOHo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729458AbgGPTFE (ORCPT
+        id S1729615AbgGPTFJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 15:05:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60086 "EHLO mail.kernel.org"
+        Thu, 16 Jul 2020 15:05:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60124 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
         id S1728163AbgGPTFE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 16 Jul 2020 15:05:04 -0400
-Subject: Re: [GIT PULL] thermal fixes for v5.8-rc6
+Subject: Re: [GIT PULL] Staging/IIO driver fixes for 5.8-rc6
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594926303;
-        bh=BFbwfWJpiL95LXiR69gz6/hzOi80cRnQ5OsZptnMVPo=;
+        s=default; t=1594926304;
+        bh=Ui8MvdHcSMIVI9Y+GYo/n8FZ3RdCwTYMUWA1bu+K1cc=;
         h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=ORlDRut9Pv4L4r4DjpDFxQg24kvM0D0KIvLPep06yo/cYdWMsfaFJO/lsCZF0n0Qx
-         9VYHHRC5VVv1nnIyr3WQqfNCGnWa8lQ9B8nTzgMkgAZKtfxiPjfgphVFrnvuLRAxRm
-         C1en6Ra0IcNK7wHMdaAd4hI6d1TG+jBiXFL64O28=
+        b=2fEvhZ//b2ZLtdSJMhca7GoaeVk+LS3ZAzqyB6E0s2QRUakm50W6x3R+1cbgPkTGy
+         FATCBSL8Z9IufKyQIqzwojAsPNumPZj91upwCi3mCfc/cG1BABbzTGfxkVX3/ZPSxt
+         eoCpWg4Iv+rlgiYFB67L7ouKzYuMGAdnYW5mKQmQ=
 From:   pr-tracker-bot@kernel.org
-In-Reply-To: <40ec1ad2-1938-81ee-5ddb-965c18ddd25f@linaro.org>
-References: <40ec1ad2-1938-81ee-5ddb-965c18ddd25f@linaro.org>
+In-Reply-To: <20200716152939.GA2378914@kroah.com>
+References: <20200716152939.GA2378914@kroah.com>
 X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <40ec1ad2-1938-81ee-5ddb-965c18ddd25f@linaro.org>
-X-PR-Tracked-Remote: ssh://git@gitolite.kernel.org/pub/scm/linux/kernel/git/thermal/linux.git
- tags/thermal-v5.8-rc6
-X-PR-Tracked-Commit-Id: a8f62f183021be389561570ab5f8c701a5e70298
+X-PR-Tracked-Message-Id: <20200716152939.GA2378914@kroah.com>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/staging.git
+ tags/staging-5.8-rc6
+X-PR-Tracked-Commit-Id: ef75e14a6c935eec82abac07ab68e388514e39bc
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 7e8d2f6d4d8fa6adc5075d39184c2ce713ce168e
-Message-Id: <159492630380.21154.11953236217402014309.pr-tracker-bot@kernel.org>
-Date:   Thu, 16 Jul 2020 19:05:03 +0000
-To:     Daniel Lezcano <daniel.lezcano@linaro.org>
+X-PR-Merge-Commit-Id: 6a058f0be518bbb10aadd3c5d18516f91b1a4a04
+Message-Id: <159492630464.21154.1782207197856638176.pr-tracker-bot@kernel.org>
+Date:   Thu, 16 Jul 2020 19:05:04 +0000
+To:     Greg KH <gregkh@linuxfoundation.org>
 Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Linux PM mailing list <linux-pm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        alex.hung@canonical.com, bsz@semihalf.com
+        Andrew Morton <akpm@linux-foundation.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        devel@linuxdriverproject.org, linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Thu, 16 Jul 2020 15:21:18 +0200:
+The pull request you sent on Thu, 16 Jul 2020 17:29:39 +0200:
 
-> ssh://git@gitolite.kernel.org/pub/scm/linux/kernel/git/thermal/linux.git tags/thermal-v5.8-rc6
+> git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/staging.git tags/staging-5.8-rc6
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/7e8d2f6d4d8fa6adc5075d39184c2ce713ce168e
+https://git.kernel.org/torvalds/c/6a058f0be518bbb10aadd3c5d18516f91b1a4a04
 
 Thank you!
 
