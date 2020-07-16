@@ -2,110 +2,148 @@ Return-Path: <SRS0=y5Sx=A3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DDF8C433E4
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 05:11:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0E64C433E5
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 05:11:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7247E207CB
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 05:11:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594876284;
-	bh=fVIx7exM1IL4il1EvPnQv2j2V1fBwT20/XpSLo7h7UA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=k7XOKpvUrNaPmR0Ecm6yhuB5yC03rFGYsk2GKaUpHmBpxuL1IWDmpTs0AyVcd/Q/o
-	 OW24kCZHE2s15DcvjRCHOyD8zY8I15saUwtudeB7C3jTw9xid+YpIsshBlFYwEFvK4
-	 Nrw41q7WiFXuU+7kyNA3n0xgjiCSwKgroblOyp40=
+	by mail.kernel.org (Postfix) with ESMTP id 7BB45207CB
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 05:11:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="oQ4/q7Ha"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726564AbgGPFLX (ORCPT
+        id S1726585AbgGPFLt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 01:11:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56096 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725268AbgGPFLX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 01:11:23 -0400
-Received: from localhost (unknown [122.171.202.192])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A226F207BC;
-        Thu, 16 Jul 2020 05:11:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594876282;
-        bh=fVIx7exM1IL4il1EvPnQv2j2V1fBwT20/XpSLo7h7UA=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=FFfk/MgqkxjA56TqPGaFqo3E5C+UKWoOOglSrFeYYnF/KgHxASQLgFomcd5uiZvRb
-         KnNUejif5jQf0QE3YNyKokUBewlqLrdf4a21iJIb4jysDeBRgzJAEwe0TvHtfyjslP
-         1+XQ67ae0Mr7Gra1wG7mGb56g1/D8m4H820f5Yko=
-Date:   Thu, 16 Jul 2020 10:41:18 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Alim Akhtar <alim.akhtar@samsung.com>
-Cc:     robh+dt@kernel.org, krzk@kernel.org, kwmad.kim@samsung.com,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
-        kishon@ti.com
-Subject: Re: [PATCH v12 2/2] phy: samsung-ufs: add UFS PHY driver for samsung
- SoC
-Message-ID: <20200716051118.GB55478@vkoul-mobl>
-References: <20200703171135.77389-1-alim.akhtar@samsung.com>
- <CGME20200703173144epcas5p1daa9f5c594e7f299638cc75b7425b7c8@epcas5p1.samsung.com>
- <20200703171135.77389-2-alim.akhtar@samsung.com>
- <20200713061737.GD34333@vkoul-mobl>
- <077501d65b0e$e1630100$a4290300$@samsung.com>
+        Thu, 16 Jul 2020 01:11:49 -0400
+Received: from esa3.microchip.iphmx.com ([68.232.153.233]:45897 "EHLO
+        esa3.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725268AbgGPFLt (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jul 2020 01:11:49 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1594876308; x=1626412308;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=f+rPT+jNEXdJoFoZf0UEA0FTUOzDbR/rIkJL2ofKWF0=;
+  b=oQ4/q7HaCGy+dAbHIEAhHtg/6P5OU4eJvhQTMG1G7RmNQk7GjNnjKXKs
+   b1ISXe6/ELBD2eW7ppQzbCgLM2wqqbExX94duAtdalGeQeTd2h7atkpSC
+   HXun1P07Vzm6iQPpxHraycA29zqeGR0tXk5iO8EYRGAR1mSyF9+GLPvYW
+   tEB7CZWWFZCYjsVPt8OUctYaQUmK1rswHklOeZcFZ0khbMhaEhKRdTgP6
+   CVLsM423YcUallmsz0qJFg3OJZUSOQ4PWkTFfAHr0MICqq424LIVXby8q
+   EufhbtJWoqWXUakr1WpTuiQ6PijbFBp/iiaCfmw7l2axYpZc1N5DzoT3J
+   Q==;
+IronPort-SDR: wQwQRKuCAYZPa4M66Lv+/DTAIg8SUlTR2tOOyI8CyphClmYcWz5VxQKli4nA5Q2CcH3oWfGiym
+ ychYzYEoeftLGroJPtzwW6oqXZSYbkWtBCQVWFmDXKb6RQm7DW+MsGHAQ8iq8iI+GMcTQMDFhG
+ Z2h//MYmbTst6ZAC4nGHgKSKS+V3Tr7m0IcxnqIEIg+JBAo9+flw2QT1vtkAQcQaT1tEUJCJ5M
+ Cny35fvz+mQeYQORKopnKFgQ9JhQC3ZlyJP6CP8o6sxgyjcWweu5fl0+FcHVXHPQ52djQQufgl
+ prU=
+X-IronPort-AV: E=Sophos;i="5.75,358,1589266800"; 
+   d="scan'208";a="84097825"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa3.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 15 Jul 2020 22:11:48 -0700
+Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
+ chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1979.3; Wed, 15 Jul 2020 22:11:47 -0700
+Received: from atudor-ThinkPad-T470p.amer.actel.com (10.10.115.15) by
+ chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server id
+ 15.1.1979.3 via Frontend Transport; Wed, 15 Jul 2020 22:11:46 -0700
+From:   Tudor Ambarus <tudor.ambarus@microchip.com>
+To:     <broonie@kernel.org>
+CC:     <han.xu@nxp.com>, <trivial@kernel.org>,
+        <linux-spi@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Tudor Ambarus <tudor.ambarus@microchip.com>
+Subject: [PATCH trivial] spi: Fix SPI NOR and SPI NAND acronyms
+Date:   Thu, 16 Jul 2020 08:11:44 +0300
+Message-ID: <20200716051144.568606-1-tudor.ambarus@microchip.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <077501d65b0e$e1630100$a4290300$@samsung.com>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Alim,
+The industry refers to these flash types as "SPI NOR" and
+"SPI NAND". Be consistent and use the same acronyms.
 
-On 16-07-20, 06:47, Alim Akhtar wrote:
+Signed-off-by: Tudor Ambarus <tudor.ambarus@microchip.com>
+---
+ drivers/spi/Kconfig        | 10 +++++-----
+ drivers/spi/spi-fsl-qspi.c |  2 +-
+ drivers/spi/spi-orion.c    |  2 +-
+ 3 files changed, 7 insertions(+), 7 deletions(-)
 
-> > > +static int samsung_ufs_phy_symbol_clk_init(struct samsung_ufs_phy
-> > > +*phy) {
-> > > +	int ret = 0;
-> > 
-> > superfluous init, am sure I flagged it before as well
-> > 
-> Yes, you did, but 0-DAY CI kernel test gave warning [1], so I kept this as
-> it is.
-> [1] https://lkml.org/lkml/2020/7/3/81
-
-But you moved away from return below to goto, so that is no longer
-the case. First use of ret is for clk_prepare_enable() call below which
-is not conditional hence this is superfluous. Earlier it was not as it was
-conditional so required to be initialized
-
-> 
-> > > +
-> > > +	phy->tx0_symbol_clk = devm_clk_get(phy->dev, "tx0_symbol_clk");
-> > > +	if (IS_ERR(phy->tx0_symbol_clk)) {
-> > > +		dev_err(phy->dev, "failed to get tx0_symbol_clk clock\n");
-> > > +		goto out;
-> > > +	}
-> > > +
-> > > +	phy->rx0_symbol_clk = devm_clk_get(phy->dev, "rx0_symbol_clk");
-> > > +	if (IS_ERR(phy->rx0_symbol_clk)) {
-> > > +		dev_err(phy->dev, "failed to get rx0_symbol_clk clock\n");
-> > > +		goto out;
-> > > +	}
-> > > +
-> > > +	phy->rx1_symbol_clk = devm_clk_get(phy->dev, "rx1_symbol_clk");
-> > > +	if (IS_ERR(phy->rx0_symbol_clk)) {
-> > > +		dev_err(phy->dev, "failed to get rx1_symbol_clk clock\n");
-> > > +		goto out;
-> > > +	}
-> > > +
-> > > +	ret = clk_prepare_enable(phy->tx0_symbol_clk);
-> > > +	if (ret) {
-> > > +		dev_err(phy->dev, "%s: tx0_symbol_clk enable failed %d\n",
-> > __func__, ret);
-> > > +		goto out;
-> > > +	}
+diff --git a/drivers/spi/Kconfig b/drivers/spi/Kconfig
+index b89d03a36cbd..c11c6c5cb442 100644
+--- a/drivers/spi/Kconfig
++++ b/drivers/spi/Kconfig
+@@ -169,7 +169,7 @@ config SPI_BCM_QSPI
+ 	help
+ 	  Enables support for the Broadcom SPI flash and MSPI controller.
+ 	  Select this option for any one of BRCMSTB, iProc NSP and NS2 SoCs
+-	  based platforms. This driver works for both SPI master for spi-nor
++	  based platforms. This driver works for both SPI master for SPI NOR
+ 	  flash device as well as MSPI device.
+ 
+ config SPI_BITBANG
+@@ -311,11 +311,11 @@ config SPI_FSL_QUADSPI
+ 	  supports the high-level SPI memory interface.
+ 
+ config SPI_HISI_SFC_V3XX
+-	tristate "HiSilicon SPI-NOR Flash Controller for Hi16XX chipsets"
++	tristate "HiSilicon SPI NOR Flash Controller for Hi16XX chipsets"
+ 	depends on (ARM64 && ACPI) || COMPILE_TEST
+ 	depends on HAS_IOMEM
+ 	help
+-	  This enables support for HiSilicon v3xx SPI-NOR flash controller
++	  This enables support for HiSilicon v3xx SPI NOR flash controller
+ 	  found in hi16xx chipsets.
+ 
+ config SPI_NXP_FLEXSPI
+@@ -477,9 +477,9 @@ config SPI_MTK_NOR
+ 	depends on ARCH_MEDIATEK || COMPILE_TEST
+ 	help
+ 	  This enables support for SPI NOR controller found on MediaTek
+-	  ARM SoCs. This is a controller specifically for SPI-NOR flash.
++	  ARM SoCs. This is a controller specifically for SPI NOR flash.
+ 	  It can perform generic SPI transfers up to 6 bytes via generic
+-	  SPI interface as well as several SPI-NOR specific instructions
++	  SPI interface as well as several SPI NOR specific instructions
+ 	  via SPI MEM interface.
+ 
+ config SPI_NPCM_FIU
+diff --git a/drivers/spi/spi-fsl-qspi.c b/drivers/spi/spi-fsl-qspi.c
+index 6766262d7e75..9851551ebbe0 100644
+--- a/drivers/spi/spi-fsl-qspi.c
++++ b/drivers/spi/spi-fsl-qspi.c
+@@ -15,7 +15,7 @@
+  *     Yogesh Gaur <yogeshnarayan.gaur@nxp.com>
+  *     Suresh Gupta <suresh.gupta@nxp.com>
+  *
+- * Based on the original fsl-quadspi.c spi-nor driver:
++ * Based on the original fsl-quadspi.c SPI NOR driver:
+  * Author: Freescale Semiconductor, Inc.
+  *
+  */
+diff --git a/drivers/spi/spi-orion.c b/drivers/spi/spi-orion.c
+index 43f73db22f21..b57b8b3cc26e 100644
+--- a/drivers/spi/spi-orion.c
++++ b/drivers/spi/spi-orion.c
+@@ -708,7 +708,7 @@ static int orion_spi_probe(struct platform_device *pdev)
+ 		/*
+ 		 * Only map one page for direct access. This is enough for the
+ 		 * simple TX transfer which only writes to the first word.
+-		 * This needs to get extended for the direct SPI-NOR / SPI-NAND
++		 * This needs to get extended for the direct SPI NOR / SPI NAND
+ 		 * support, once this gets implemented.
+ 		 */
+ 		dir_acc = &spi->child[cs].direct_access;
 -- 
-~Vinod
+2.25.1
+
