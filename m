@@ -8,24 +8,24 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4369DC433E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 02:42:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6415C433E5
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 02:42:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2813B20787
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 02:42:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 89AD620787
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 02:42:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727886AbgGPCmg (ORCPT
+        id S1727992AbgGPCmp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 22:42:36 -0400
-Received: from out30-133.freemail.mail.aliyun.com ([115.124.30.133]:41555 "EHLO
-        out30-133.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727833AbgGPCmg (ORCPT
+        Wed, 15 Jul 2020 22:42:45 -0400
+Received: from out30-57.freemail.mail.aliyun.com ([115.124.30.57]:60246 "EHLO
+        out30-57.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727829AbgGPCmm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 22:42:36 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R831e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04407;MF=teawaterz@linux.alibaba.com;NM=1;PH=DS;RN=11;SR=0;TI=SMTPD_---0U2rTvA2_1594867348;
-Received: from localhost(mailfrom:teawaterz@linux.alibaba.com fp:SMTPD_---0U2rTvA2_1594867348)
+        Wed, 15 Jul 2020 22:42:42 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R131e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e01419;MF=teawaterz@linux.alibaba.com;NM=1;PH=DS;RN=11;SR=0;TI=SMTPD_---0U2rWAKu_1594867354;
+Received: from localhost(mailfrom:teawaterz@linux.alibaba.com fp:SMTPD_---0U2rWAKu_1594867354)
           by smtp.aliyun-inc.com(127.0.0.1);
-          Thu, 16 Jul 2020 10:42:32 +0800
+          Thu, 16 Jul 2020 10:42:37 +0800
 From:   Hui Zhu <teawater@gmail.com>
 To:     mst@redhat.com, david@redhat.com, jasowang@redhat.com,
         akpm@linux-foundation.org,
@@ -33,9 +33,9 @@ To:     mst@redhat.com, david@redhat.com, jasowang@redhat.com,
         linux-kernel@vger.kernel.org, linux-mm@kvack.org,
         qemu-devel@nongnu.org, virtio-dev@lists.oasis-open.org
 Cc:     Hui Zhu <teawater@gmail.com>, Hui Zhu <teawaterz@linux.alibaba.com>
-Subject: [RFC for Linux v4 2/2] virtio_balloon: Add deflate_cont_vq to deflate continuous pages
-Date:   Thu, 16 Jul 2020 10:41:52 +0800
-Message-Id: <1594867315-8626-3-git-send-email-teawater@gmail.com>
+Subject: [RFC for qemu v4 1/2] virtio_balloon: Add cont-pages and icvq
+Date:   Thu, 16 Jul 2020 10:41:54 +0800
+Message-Id: <1594867315-8626-5-git-send-email-teawater@gmail.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1594867315-8626-1-git-send-email-teawater@gmail.com>
 References: <1594867315-8626-1-git-send-email-teawater@gmail.com>
@@ -44,269 +44,195 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This commit adds a vq deflate_cont_vq to deflate continuous pages.
-When VIRTIO_BALLOON_F_CONT_PAGES is set, call leak_balloon_cont to leak
-the balloon.
-leak_balloon_cont will call balloon_page_list_dequeue_cont get continuous
-pages from balloon and report them use deflate_cont_vq.
+This commit adds cont-pages option to virtio_balloon.  virtio_balloon
+will open flags VIRTIO_BALLOON_F_CONT_PAGES with this option.
+And it add a vq icvq to inflate continuous pages.
+When VIRTIO_BALLOON_F_CONT_PAGES is set, try to get continuous pages
+from icvq and use madvise MADV_DONTNEED release the pages.
 
 Signed-off-by: Hui Zhu <teawaterz@linux.alibaba.com>
 ---
- drivers/virtio/virtio_balloon.c    | 73 ++++++++++++++++++++++++++++++++----
- include/linux/balloon_compaction.h |  3 ++
- mm/balloon_compaction.c            | 76 ++++++++++++++++++++++++++++++++++++++
- 3 files changed, 144 insertions(+), 8 deletions(-)
+ hw/virtio/virtio-balloon.c                      | 80 ++++++++++++++++---------
+ include/hw/virtio/virtio-balloon.h              |  2 +-
+ include/standard-headers/linux/virtio_balloon.h |  1 +
+ 3 files changed, 55 insertions(+), 28 deletions(-)
 
-diff --git a/drivers/virtio/virtio_balloon.c b/drivers/virtio/virtio_balloon.c
-index b89f566..258b3d9 100644
---- a/drivers/virtio/virtio_balloon.c
-+++ b/drivers/virtio/virtio_balloon.c
-@@ -44,6 +44,7 @@
+diff --git a/hw/virtio/virtio-balloon.c b/hw/virtio/virtio-balloon.c
+index a4729f7..d36a5c8 100644
+--- a/hw/virtio/virtio-balloon.c
++++ b/hw/virtio/virtio-balloon.c
+@@ -65,23 +65,26 @@ static bool virtio_balloon_pbp_matches(PartiallyBalloonedPage *pbp,
  
- #define VIRTIO_BALLOON_INFLATE_MAX_ORDER min((int) (sizeof(__virtio32) * BITS_PER_BYTE - \
- 						    1 - PAGE_SHIFT), (MAX_ORDER-1))
-+#define VIRTIO_BALLOON_DEFLATE_MAX_PAGES_NUM (((__virtio32)~0U) >> PAGE_SHIFT)
- 
- #ifdef CONFIG_BALLOON_COMPACTION
- static struct vfsmount *balloon_mnt;
-@@ -56,6 +57,7 @@ enum virtio_balloon_vq {
- 	VIRTIO_BALLOON_VQ_FREE_PAGE,
- 	VIRTIO_BALLOON_VQ_REPORTING,
- 	VIRTIO_BALLOON_VQ_INFLATE_CONT,
-+	VIRTIO_BALLOON_VQ_DEFLATE_CONT,
- 	VIRTIO_BALLOON_VQ_MAX
- };
- 
-@@ -65,7 +67,8 @@ enum virtio_balloon_config_read {
- 
- struct virtio_balloon {
- 	struct virtio_device *vdev;
--	struct virtqueue *inflate_vq, *deflate_vq, *stats_vq, *free_page_vq, *inflate_cont_vq;
-+	struct virtqueue *inflate_vq, *deflate_vq, *stats_vq, *free_page_vq,
-+			 *inflate_cont_vq, *deflate_cont_vq;
- 
- 	/* Balloon's own wq for cpu-intensive work items */
- 	struct workqueue_struct *balloon_wq;
-@@ -215,6 +218,16 @@ static void set_page_pfns(struct virtio_balloon *vb,
- 					  page_to_balloon_pfn(page) + i);
- }
- 
-+static void set_page_pfns_size(struct virtio_balloon *vb,
-+			       __virtio32 pfns[], struct page *page,
-+			       size_t size)
-+{
-+	/* Set the first pfn of the continuous pages.  */
-+	pfns[0] = cpu_to_virtio32(vb->vdev, page_to_balloon_pfn(page));
-+	/* Set the size of the continuous pages.  */
-+	pfns[1] = (__virtio32) size;
-+}
-+
- static void set_page_pfns_order(struct virtio_balloon *vb,
- 				__virtio32 pfns[], struct page *page,
- 				unsigned int order)
-@@ -222,10 +235,7 @@ static void set_page_pfns_order(struct virtio_balloon *vb,
- 	if (order == 0)
- 		return set_page_pfns(vb, pfns, page);
- 
--	/* Set the first pfn of the continuous pages.  */
--	pfns[0] = cpu_to_virtio32(vb->vdev, page_to_balloon_pfn(page));
--	/* Set the size of the continuous pages.  */
--	pfns[1] = PAGE_SIZE << order;
-+	set_page_pfns_size(vb, pfns, page, PAGE_SIZE << order);
- }
- 
- static unsigned fill_balloon(struct virtio_balloon *vb, size_t num)
-@@ -367,6 +377,42 @@ static unsigned leak_balloon(struct virtio_balloon *vb, size_t num)
- 	return num_freed_pages;
- }
- 
-+static unsigned int leak_balloon_cont(struct virtio_balloon *vb, size_t num)
-+{
-+	unsigned int num_freed_pages;
-+	struct balloon_dev_info *vb_dev_info = &vb->vb_dev_info;
-+	LIST_HEAD(pages);
-+	size_t num_pages;
-+
-+	mutex_lock(&vb->balloon_lock);
-+	for (vb->num_pfns = 0, num_freed_pages = 0;
-+	     vb->num_pfns < ARRAY_SIZE(vb->pfns) && num_freed_pages < num;
-+	     vb->num_pfns += 2,
-+	     num_freed_pages += num_pages << (PAGE_SHIFT - VIRTIO_BALLOON_PFN_SHIFT)) {
-+		struct page *page;
-+
-+		num_pages = balloon_page_list_dequeue_cont(vb_dev_info, &pages, &page,
-+						min_t(size_t,
-+						      VIRTIO_BALLOON_DEFLATE_MAX_PAGES_NUM,
-+						      num - num_freed_pages));
-+		if (!num_pages)
-+			break;
-+		set_page_pfns_size(vb, vb->pfns + vb->num_pfns, page, num_pages << PAGE_SHIFT);
-+	}
-+	vb->num_pages -= num_freed_pages;
-+
-+	/*
-+	 * Note that if
-+	 * virtio_has_feature(vdev, VIRTIO_BALLOON_F_MUST_TELL_HOST);
-+	 * is true, we *have* to do it in this order
-+	 */
-+	if (vb->num_pfns != 0)
-+		tell_host(vb, vb->deflate_cont_vq);
-+	release_pages_balloon(vb, &pages);
-+	mutex_unlock(&vb->balloon_lock);
-+	return num_freed_pages;
-+}
-+
- static inline void update_stat(struct virtio_balloon *vb, int idx,
- 			       u16 tag, u64 val)
+ static void balloon_inflate_page(VirtIOBalloon *balloon,
+                                  MemoryRegion *mr, hwaddr mr_offset,
++                                 size_t size,
+                                  PartiallyBalloonedPage *pbp)
  {
-@@ -551,8 +597,12 @@ static void update_balloon_size_func(struct work_struct *work)
+     void *addr = memory_region_get_ram_ptr(mr) + mr_offset;
+     ram_addr_t rb_offset, rb_aligned_offset, base_gpa;
+     RAMBlock *rb;
+     size_t rb_page_size;
+-    int subpages;
++    int subpages, pages_num;
  
- 	if (diff > 0)
- 		diff -= fill_balloon(vb, diff);
--	else
--		diff += leak_balloon(vb, -diff);
-+	else {
-+		if (virtio_has_feature(vb->vdev, VIRTIO_BALLOON_F_CONT_PAGES))
-+			diff += leak_balloon_cont(vb, -diff);
-+		else
-+			diff += leak_balloon(vb, -diff);
-+	}
- 	update_balloon_size(vb);
+     /* XXX is there a better way to get to the RAMBlock than via a
+      * host address? */
+     rb = qemu_ram_block_from_host(addr, false, &rb_offset);
+     rb_page_size = qemu_ram_pagesize(rb);
  
- 	if (diff)
-@@ -587,6 +637,8 @@ static int init_vqs(struct virtio_balloon *vb)
- 	names[VIRTIO_BALLOON_VQ_REPORTING] = NULL;
- 	names[VIRTIO_BALLOON_VQ_INFLATE_CONT] = NULL;
- 	callbacks[VIRTIO_BALLOON_VQ_INFLATE_CONT] = NULL;
-+	names[VIRTIO_BALLOON_VQ_DEFLATE_CONT] = NULL;
-+	callbacks[VIRTIO_BALLOON_VQ_DEFLATE_CONT] = NULL;
++    size &= ~(rb_page_size - 1);
++
+     if (rb_page_size == BALLOON_PAGE_SIZE) {
+         /* Easy case */
  
- 	if (virtio_has_feature(vb->vdev, VIRTIO_BALLOON_F_STATS_VQ)) {
- 		names[VIRTIO_BALLOON_VQ_STATS] = "stats";
-@@ -606,6 +658,8 @@ static int init_vqs(struct virtio_balloon *vb)
- 	if (virtio_has_feature(vb->vdev, VIRTIO_BALLOON_F_CONT_PAGES)) {
- 		names[VIRTIO_BALLOON_VQ_INFLATE_CONT] = "inflate_cont";
- 		callbacks[VIRTIO_BALLOON_VQ_INFLATE_CONT] = balloon_ack;
-+		names[VIRTIO_BALLOON_VQ_DEFLATE_CONT] = "deflate_cont";
-+		callbacks[VIRTIO_BALLOON_VQ_DEFLATE_CONT] = balloon_ack;
- 	}
+-        ram_block_discard_range(rb, rb_offset, rb_page_size);
++        ram_block_discard_range(rb, rb_offset, size);
+         /* We ignore errors from ram_block_discard_range(), because it
+          * has already reported them, and failing to discard a balloon
+          * page is not fatal */
+@@ -99,32 +102,38 @@ static void balloon_inflate_page(VirtIOBalloon *balloon,
  
- 	err = vb->vdev->config->find_vqs(vb->vdev, VIRTIO_BALLOON_VQ_MAX,
-@@ -643,9 +697,12 @@ static int init_vqs(struct virtio_balloon *vb)
- 	if (virtio_has_feature(vb->vdev, VIRTIO_BALLOON_F_REPORTING))
- 		vb->reporting_vq = vqs[VIRTIO_BALLOON_VQ_REPORTING];
+     rb_aligned_offset = QEMU_ALIGN_DOWN(rb_offset, rb_page_size);
+     subpages = rb_page_size / BALLOON_PAGE_SIZE;
+-    base_gpa = memory_region_get_ram_addr(mr) + mr_offset -
+-               (rb_offset - rb_aligned_offset);
  
--	if (virtio_has_feature(vb->vdev, VIRTIO_BALLOON_F_CONT_PAGES))
-+	if (virtio_has_feature(vb->vdev, VIRTIO_BALLOON_F_CONT_PAGES)) {
- 		vb->inflate_cont_vq
- 			= vqs[VIRTIO_BALLOON_VQ_INFLATE_CONT];
-+		vb->deflate_cont_vq
-+			= vqs[VIRTIO_BALLOON_VQ_DEFLATE_CONT];
-+	}
+-    if (pbp->bitmap && !virtio_balloon_pbp_matches(pbp, base_gpa)) {
+-        /* We've partially ballooned part of a host page, but now
+-         * we're trying to balloon part of a different one.  Too hard,
+-         * give up on the old partial page */
+-        virtio_balloon_pbp_free(pbp);
+-    }
++    for (pages_num = size / BALLOON_PAGE_SIZE;
++         pages_num > 0; pages_num--) {
++        base_gpa = memory_region_get_ram_addr(mr) + mr_offset -
++                   (rb_offset - rb_aligned_offset);
  
- 	return 0;
+-    if (!pbp->bitmap) {
+-        virtio_balloon_pbp_alloc(pbp, base_gpa, subpages);
+-    }
++        if (pbp->bitmap && !virtio_balloon_pbp_matches(pbp, base_gpa)) {
++            /* We've partially ballooned part of a host page, but now
++            * we're trying to balloon part of a different one.  Too hard,
++            * give up on the old partial page */
++            virtio_balloon_pbp_free(pbp);
++        }
+ 
+-    set_bit((rb_offset - rb_aligned_offset) / BALLOON_PAGE_SIZE,
+-            pbp->bitmap);
++        if (!pbp->bitmap) {
++            virtio_balloon_pbp_alloc(pbp, base_gpa, subpages);
++        }
+ 
+-    if (bitmap_full(pbp->bitmap, subpages)) {
+-        /* We've accumulated a full host page, we can actually discard
+-         * it now */
++        set_bit((rb_offset - rb_aligned_offset) / BALLOON_PAGE_SIZE,
++                pbp->bitmap);
+ 
+-        ram_block_discard_range(rb, rb_aligned_offset, rb_page_size);
+-        /* We ignore errors from ram_block_discard_range(), because it
+-         * has already reported them, and failing to discard a balloon
+-         * page is not fatal */
+-        virtio_balloon_pbp_free(pbp);
++        if (bitmap_full(pbp->bitmap, subpages)) {
++            /* We've accumulated a full host page, we can actually discard
++            * it now */
++
++            ram_block_discard_range(rb, rb_aligned_offset, rb_page_size);
++            /* We ignore errors from ram_block_discard_range(), because it
++            * has already reported them, and failing to discard a balloon
++            * page is not fatal */
++            virtio_balloon_pbp_free(pbp);
++        }
++
++        mr_offset += BALLOON_PAGE_SIZE;
+     }
  }
-diff --git a/include/linux/balloon_compaction.h b/include/linux/balloon_compaction.h
-index 8180bbf..7cb2a75 100644
---- a/include/linux/balloon_compaction.h
-+++ b/include/linux/balloon_compaction.h
-@@ -70,6 +70,9 @@ extern size_t balloon_page_list_enqueue(struct balloon_dev_info *b_dev_info,
- 				      struct list_head *pages);
- extern size_t balloon_page_list_dequeue(struct balloon_dev_info *b_dev_info,
- 				     struct list_head *pages, size_t n_req_pages);
-+extern size_t balloon_page_list_dequeue_cont(struct balloon_dev_info *b_dev_info,
-+					     struct list_head *pages, struct page **first_page,
-+					     size_t max_req_pages);
  
- static inline struct page *balloon_page_alloc(void)
- {
-diff --git a/mm/balloon_compaction.c b/mm/balloon_compaction.c
-index 397d0b9..ea7d91f 100644
---- a/mm/balloon_compaction.c
-+++ b/mm/balloon_compaction.c
-@@ -111,6 +111,82 @@ size_t balloon_page_list_dequeue(struct balloon_dev_info *b_dev_info,
+@@ -340,12 +349,21 @@ static void virtio_balloon_handle_output(VirtIODevice *vdev, VirtQueue *vq)
+         while (iov_to_buf(elem->out_sg, elem->out_num, offset, &pfn, 4) == 4) {
+             unsigned int p = virtio_ldl_p(vdev, &pfn);
+             hwaddr pa;
++            unsigned int psize = BALLOON_PAGE_SIZE;
+ 
+             pa = (hwaddr) p << VIRTIO_BALLOON_PFN_SHIFT;
+             offset += 4;
+ 
+-            section = memory_region_find(get_system_memory(), pa,
+-                                         BALLOON_PAGE_SIZE);
++            if (vq == s->icvq) {
++                uint32_t psize_ptr;
++                if (iov_to_buf(elem->out_sg, elem->out_num, offset, &psize_ptr, 4) != 4) {
++                    break;
++                }
++                psize = virtio_ldl_p(vdev, &psize_ptr);
++                offset += 4;
++            }
++
++            section = memory_region_find(get_system_memory(), pa, psize);
+             if (!section.mr) {
+                 trace_virtio_balloon_bad_addr(pa);
+                 continue;
+@@ -361,9 +379,10 @@ static void virtio_balloon_handle_output(VirtIODevice *vdev, VirtQueue *vq)
+             trace_virtio_balloon_handle_output(memory_region_name(section.mr),
+                                                pa);
+             if (!qemu_balloon_is_inhibited()) {
+-                if (vq == s->ivq) {
++                if (vq == s->ivq || vq == s->icvq) {
+                     balloon_inflate_page(s, section.mr,
+-                                         section.offset_within_region, &pbp);
++                                         section.offset_within_region,
++                                         psize, &pbp);
+                 } else if (vq == s->dvq) {
+                     balloon_deflate_page(s, section.mr, section.offset_within_region);
+                 } else {
+@@ -816,6 +835,11 @@ static void virtio_balloon_device_realize(DeviceState *dev, Error **errp)
+             virtio_error(vdev, "iothread is missing");
+         }
+     }
++
++    if (virtio_has_feature(s->host_features, VIRTIO_BALLOON_F_CONT_PAGES)) {
++        s->icvq = virtio_add_queue(vdev, 128, virtio_balloon_handle_output);
++    }
++
+     reset_stats(s);
  }
- EXPORT_SYMBOL_GPL(balloon_page_list_dequeue);
  
-+/**
-+ * balloon_page_list_dequeue_cont() - removes continuous pages from balloon's page list
-+ *				      and returns a list of the continuous pages.
-+ * @b_dev_info: balloon device decriptor where we will grab a page from.
-+ * @pages: pointer to the list of pages that would be returned to the caller.
-+ * @max_req_pages: max number of requested pages.
-+ *
-+ * Driver must call this function to properly de-allocate a previous enlisted
-+ * balloon pages before definitively releasing it back to the guest system.
-+ * This function tries to remove @max_req_pages continuous pages from the ballooned
-+ * pages and return them to the caller in the @pages list.
-+ *
-+ * Note that this function may fail to dequeue some pages even if the balloon
-+ * isn't empty - since the page list can be temporarily empty due to compaction
-+ * of isolated pages.
-+ *
-+ * Return: number of pages that were added to the @pages list.
-+ */
-+size_t balloon_page_list_dequeue_cont(struct balloon_dev_info *b_dev_info,
-+				      struct list_head *pages, struct page **first_page,
-+				      size_t max_req_pages)
-+{
-+	struct page *page, *tmp;
-+	unsigned long flags, tail_pfn;
-+	size_t n_pages = 0;
-+	bool got_first = false;
-+
-+	spin_lock_irqsave(&b_dev_info->pages_lock, flags);
-+	list_for_each_entry_safe_reverse(page, tmp, &b_dev_info->pages, lru) {
-+		unsigned long pfn;
-+
-+		if (n_pages == max_req_pages)
-+			break;
-+
-+		pfn = page_to_pfn(page);
-+
-+		if (got_first && pfn != tail_pfn + 1)
-+			break;
-+
-+		/*
-+		 * Block others from accessing the 'page' while we get around to
-+		 * establishing additional references and preparing the 'page'
-+		 * to be released by the balloon driver.
-+		 */
-+		if (!trylock_page(page)) {
-+			if (!got_first)
-+				continue;
-+			else
-+				break;
-+		}
-+
-+		if (IS_ENABLED(CONFIG_BALLOON_COMPACTION) && PageIsolated(page)) {
-+			/* raced with isolation */
-+			unlock_page(page);
-+			if (!got_first)
-+				continue;
-+			else
-+				break;
-+		}
-+		balloon_page_delete(page);
-+		__count_vm_event(BALLOON_DEFLATE);
-+		list_add(&page->lru, pages);
-+		unlock_page(page);
-+		n_pages++;
-+		tail_pfn = pfn;
-+		if (!got_first) {
-+			got_first = true;
-+			*first_page = page;
-+		}
-+	}
-+	spin_unlock_irqrestore(&b_dev_info->pages_lock, flags);
-+
-+	return n_pages;
-+}
-+EXPORT_SYMBOL_GPL(balloon_page_list_dequeue_cont);
-+
- /*
-  * balloon_pages_alloc - allocates a new page for insertion into the balloon
-  *			 page list.
+@@ -916,6 +940,8 @@ static Property virtio_balloon_properties[] = {
+                     VIRTIO_BALLOON_F_DEFLATE_ON_OOM, false),
+     DEFINE_PROP_BIT("free-page-hint", VirtIOBalloon, host_features,
+                     VIRTIO_BALLOON_F_FREE_PAGE_HINT, false),
++    DEFINE_PROP_BIT("cont-pages", VirtIOBalloon, host_features,
++                    VIRTIO_BALLOON_F_CONT_PAGES, false),
+     /* QEMU 4.0 accidentally changed the config size even when free-page-hint
+      * is disabled, resulting in QEMU 3.1 migration incompatibility.  This
+      * property retains this quirk for QEMU 4.1 machine types.
+diff --git a/include/hw/virtio/virtio-balloon.h b/include/hw/virtio/virtio-balloon.h
+index d1c968d..6a2514d 100644
+--- a/include/hw/virtio/virtio-balloon.h
++++ b/include/hw/virtio/virtio-balloon.h
+@@ -42,7 +42,7 @@ enum virtio_balloon_free_page_report_status {
+ 
+ typedef struct VirtIOBalloon {
+     VirtIODevice parent_obj;
+-    VirtQueue *ivq, *dvq, *svq, *free_page_vq;
++    VirtQueue *ivq, *dvq, *svq, *free_page_vq, *icvq;
+     uint32_t free_page_report_status;
+     uint32_t num_pages;
+     uint32_t actual;
+diff --git a/include/standard-headers/linux/virtio_balloon.h b/include/standard-headers/linux/virtio_balloon.h
+index 9375ca2..033926c 100644
+--- a/include/standard-headers/linux/virtio_balloon.h
++++ b/include/standard-headers/linux/virtio_balloon.h
+@@ -36,6 +36,7 @@
+ #define VIRTIO_BALLOON_F_DEFLATE_ON_OOM	2 /* Deflate balloon on OOM */
+ #define VIRTIO_BALLOON_F_FREE_PAGE_HINT	3 /* VQ to report free pages */
+ #define VIRTIO_BALLOON_F_PAGE_POISON	4 /* Guest is using page poisoning */
++#define VIRTIO_BALLOON_F_CONT_PAGES	6 /* VQ to report continuous pages */
+ 
+ /* Size of a PFN in the balloon interface. */
+ #define VIRTIO_BALLOON_PFN_SHIFT 12
 -- 
 2.7.4
 
