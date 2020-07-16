@@ -6,120 +6,63 @@ X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BA67C433E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 23:54:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D4EDC433E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 23:56:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DBDF52074B
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 23:54:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 73E2420760
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 23:56:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594943684;
-	bh=5JJSHjqmJlDv9mXOvlmTppZP30lsQeoHcSBH5e6zomY=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=kDxe1w4OrxGL6wqBh4RUz6qd11Si9YNf7IIBwlYJe2lx6E/zEv36DLvh2CxcQhR+7
-	 fsTybZ6Eeopi1m3g79IJvfQaeDv2hWzH6NNMek8S3MzC4AqqVbNQE1sQLup2aZF271
-	 tH9aOxvOZbblY85Di3A3z6Qi3FFDtJ0PDTfIpyVc=
+	s=default; t=1594943799;
+	bh=m3W4a6mZcGBNErfi0jzmkZeG7pWDxWdwzWchzY8XPx0=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=Z4inKrkHl9uE2PEWD8POG32gGFeGzqGKldTx1fr2+PIvDLJRXHsLvPXQoc+Egw9m1
+	 G2pvLMehNBjUBKufHRQu/4xD6fr6ibhHAnlU3aueHSMQJeVV50Zksg4dLfYWCdd9MW
+	 t+YG9F89DJARewhiI/wqVYjofP/KjyjASvzC55b0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726344AbgGPXyn (ORCPT
+        id S1726386AbgGPX4h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 19:54:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56262 "EHLO mail.kernel.org"
+        Thu, 16 Jul 2020 19:56:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57064 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726138AbgGPXyn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 19:54:43 -0400
-Received: from localhost (mobile-166-175-191-139.mycingular.net [166.175.191.139])
+        id S1725948AbgGPX4g (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jul 2020 19:56:36 -0400
+Received: from kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com (unknown [163.114.132.6])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1AA32206F4;
-        Thu, 16 Jul 2020 23:54:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C553A2076D;
+        Thu, 16 Jul 2020 23:56:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594943682;
-        bh=5JJSHjqmJlDv9mXOvlmTppZP30lsQeoHcSBH5e6zomY=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=jYtPm3RtLoP4YCa/HNF9mG73mziytXde43UKFlYiPwOZ0xNzjIZuANUx82RnQOxzM
-         D4bYVCLwh14O89ldVqnKI1QeRVqkKLYckkMDsttFq1Ff/j7ClI2CZzD6jtG8zdgTmS
-         HLXCuGk3naDByOot88co+hUnYRj30e+fIupHmo3A=
-Date:   Thu, 16 Jul 2020 18:54:40 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Karol Herbst <kherbst@redhat.com>
-Cc:     Linux PCI <linux-pci@vger.kernel.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Ben Skeggs <bskeggs@redhat.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Lyude Paul <lyude@redhat.com>,
-        nouveau <nouveau@lists.freedesktop.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Patrick Volkerding <volkerdi@gmail.com>,
-        linux-kernel@vger.kernel.org,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: Re: nouveau regression with 5.7 caused by "PCI/PM: Assume ports
- without DLL Link Active train links in 100 ms"
-Message-ID: <20200716235440.GA675421@bjorn-Precision-5520>
+        s=default; t=1594943796;
+        bh=m3W4a6mZcGBNErfi0jzmkZeG7pWDxWdwzWchzY8XPx0=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=bt5RY8B63Vhtg9Nd7/RWJ7IE4n3mJaMsVZgg57n4aAH3+zAlIj5HVFxIjfQwAQKtM
+         E/gOdCRS+iIn4Kk0TvrgttXo8OLDTMgKSQXXoKZ6oCUHxANQrmr5m1tYv9bMzqxzJb
+         f38yyje3hWRrn6Is3FYbddgatNlzsufSBTNdoB74=
+Date:   Thu, 16 Jul 2020 16:56:34 -0700
+From:   Jakub Kicinski <kuba@kernel.org>
+To:     Murali Karicheri <m-karicheri2@ti.com>
+Cc:     <davem@davemloft.net>, <netdev@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-api@vger.kernel.org>,
+        <nsekhar@ti.com>, <grygorii.strashko@ti.com>,
+        <vinicius.gomes@intel.com>
+Subject: Re: [net-next PATCH v2 0/9] Add PRP driver and bug fixes
+Message-ID: <20200716165634.5a57d364@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+In-Reply-To: <20200715164012.1222-1-m-karicheri2@ti.com>
+References: <20200715164012.1222-1-m-karicheri2@ti.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CACO55tuA+XMgv=GREf178NzTLTHri4kyD5mJjKuDpKxExauvVg@mail.gmail.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[+cc Sasha -- stable kernel regression]
-[+cc Patrick, Kai-Heng, LKML]
+Hi Murali,
 
-On Fri, Jul 17, 2020 at 12:10:39AM +0200, Karol Herbst wrote:
-> On Tue, Jul 7, 2020 at 9:30 PM Karol Herbst <kherbst@redhat.com> wrote:
-> >
-> > Hi everybody,
-> >
-> > with the mentioned commit Nouveau isn't able to load firmware onto the
-> > GPU on one of my systems here. Even though the issue doesn't always
-> > happen I am quite confident this is the commit breaking it.
-> >
-> > I am still digging into the issue and trying to figure out what
-> > exactly breaks, but it shows up in different ways. Either we are not
-> > able to boot the engines on the GPU or the GPU becomes unresponsive.
-> > Btw, this is also a system where our runtime power management issue
-> > shows up, so maybe there is indeed something funky with the bridge
-> > controller.
-> >
-> > Just pinging you in case you have an idea on how this could break Nouveau
-> >
-> > most of the times it shows up like this:
-> > nouveau 0000:01:00.0: acr: AHESASC binary failed
-> >
-> > Sometimes it works at boot and fails at runtime resuming with random
-> > faults. So I will be investigating a bit more, but yeah... I am super
-> > sure the commit triggered this issue, no idea if it actually causes
-> > it.
-> 
-> so yeah.. I reverted that locally and never ran into issues again.
-> Still valid on latest 5.7. So can we get this reverted or properly
-> fixed? This breaks runtime pm for us on at least some hardware.
+thanks for the patches. 
 
-Yeah, that stinks.  We had another similar report from Patrick:
+It seems like at least the first patch addresses a problem which exist
+in Linus's tree, i.e. Linux 5.8-rc.
 
-  https://lore.kernel.org/r/CAErSpo5sTeK_my1dEhWp7aHD0xOp87+oHYWkTjbL7ALgDbXo-Q@mail.gmail.com
-
-Apparently the problem is ec411e02b7a2 ("PCI/PM: Assume ports without
-DLL Link Active train links in 100 ms"), which Patrick found was
-backported to v5.4.49 as 828b192c57e8, and you found was backported to
-v5.7.6 as afaff825e3a4.
-
-Oddly, Patrick reported that v5.7.7 worked correctly, even though it
-still contains afaff825e3a4.
-
-I guess in the absence of any other clues we'll have to revert it.
-I hate to do that because that means we'll have slow resume of
-Thunderbolt-connected devices again, but that's better than having
-GPUs completely broken.
-
-Could you and Patrick open bugzilla.kernel.org reports, attach dmesg
-logs and "sudo lspci -vv" output, and add the URLs to Kai-Heng's
-original report at https://bugzilla.kernel.org/show_bug.cgi?id=206837
-and to this thread?
-
-There must be a way to fix the slow resume problem without breaking
-the GPUs.
-
-Bjorn
+Could you please separate bug fixes like that out to a new series
+addressed to the net tree, and add appropriate Fixes tags?
