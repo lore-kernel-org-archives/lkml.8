@@ -7,50 +7,49 @@ X-Spam-Status: No, score=-17.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5AD7C433E6
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 15:29:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88B05C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 15:30:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 946FF2076A
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 15:29:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5AE39206F5
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 15:30:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594913387;
-	bh=W80dXnsx8xCpD4ZJDZiVreuYHVetErKPCjXzs3QZiGQ=;
+	s=default; t=1594913411;
+	bh=PawmqB/Q7xJKCoLY3kW1NBAdHFKr3B51rLnHjLEUNTk=;
 	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=uFArVDNAAht++Zb/aM+2+7LsFa4QN+qvq2CK43sFOSEu9typNtOE3Tu4jYZ28nCog
-	 ve1FylC4j4WJDhKpvhlzbYZAgEqCiSxbHlOEcwxJPKmRubIXQSN5NdWYN85X7scrw/
-	 r+V7xNmW47vaNJRXRw2lxikiq0sm+BJbMTqpeaJo=
+	b=ePSs5oVYvMrujezmQHeTAVvCXK+DzwkfOslW7VF7ghfBk49WQhRsRBFdCE2elslC5
+	 gBMo3fJ1UL88mlRFBjpVxRWJ/85mMAvLMgq7s0MryHdnwheoEFZOcZS8UIuQAvJeka
+	 JcUD/dk9rGJdQZHiLxCBiVOvKxoTvTJ9UCvMv/Wg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729124AbgGPP3q (ORCPT
+        id S1729148AbgGPPaK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 11:29:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45412 "EHLO mail.kernel.org"
+        Thu, 16 Jul 2020 11:30:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45578 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728412AbgGPP3q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 11:29:46 -0400
+        id S1728150AbgGPPaJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jul 2020 11:30:09 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1B77D2065F;
-        Thu, 16 Jul 2020 15:29:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1C5572065F;
+        Thu, 16 Jul 2020 15:30:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594913385;
-        bh=W80dXnsx8xCpD4ZJDZiVreuYHVetErKPCjXzs3QZiGQ=;
+        s=default; t=1594913409;
+        bh=PawmqB/Q7xJKCoLY3kW1NBAdHFKr3B51rLnHjLEUNTk=;
         h=Date:From:To:Cc:Subject:From;
-        b=nhMKkuL8h1iFlTPmdvCAYA7hY4RttU7BKfsBtwtmAruEV190ao2fY2n8Kam/p67Az
-         HcomLt91gviNdfpgNpTOWos7VSNNYRnn4hPEGVvKBg0qcsdZIVKCCtGNizP6SKqjM6
-         ITnzp68hCPggpIfPHWn2mvgVAaI4L0uYZK0KTgxA=
-Date:   Thu, 16 Jul 2020 17:29:39 +0200
+        b=CxYdGa2CractfD+g6Ox7/oaikKnNvCP7gAVSaCIjnQr9zzJST4Lr/+OhWX7o1ryRM
+         zx0Pt5j9gg4GyErqpE7IlO6ym2jwrwaQrSbkv28gWFpwtqJvAt/kbyXFQgFofKCNve
+         hcoz0R7Txsq4CnmG1cAHcQgHL/9Tq8dPs69dcdcc=
+Date:   Thu, 16 Jul 2020 17:30:03 +0200
 From:   Greg KH <gregkh@linuxfoundation.org>
 To:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>
+Cc:     linux-kernel@vger.kernel.org,
         Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     devel@linuxdriverproject.org, linux-kernel@vger.kernel.org
-Subject: [GIT PULL] Staging/IIO driver fixes for 5.8-rc6
-Message-ID: <20200716152939.GA2378914@kroah.com>
+Subject: [GIT PULL] Driver core fixes for 5.8-rc6
+Message-ID: <20200716153003.GA2379010@kroah.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -62,76 +61,31 @@ The following changes since commit 9ebcfadb0610322ac537dd7aa5d9cbc2b2894c68:
 
 are available in the Git repository at:
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/staging.git tags/staging-5.8-rc6
+  git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/driver-core.git tags/driver-core-5.8-rc6
 
-for you to fetch changes up to ef75e14a6c935eec82abac07ab68e388514e39bc:
+for you to fetch changes up to 2451e746478a6a6e981cfa66b62b791ca93b90c8:
 
-  staging: comedi: verify array index is correct before using it (2020-07-10 14:03:00 +0200)
+  driver core: Avoid deferred probe due to fw_devlink_pause/resume() (2020-07-10 15:20:38 +0200)
 
 ----------------------------------------------------------------
-IIO/Staging driver fixes for 5.8-rc6
+Driver core fixes for 5.8-rc6
 
-Here are some IIO and staging driver fixes for 5.8-rc6.
+Here are 3 driver core fixes for 5.8-rc6.
 
-The majority of fixes are for IIO drivers, resolving a number of small
-reported issues, and there are some counter fixes in here too that were
-tied to the IIO fixes.  There's only one staging driver fix here, a
-comedi fix found by code inspection.
-
-All of these have been in linux-next for a while with no reported
-issues.
+They resolve some issues found with the deferred probe code for some
+types of devices on some embedded systems.  They have been tested a
+bunch and have been in linux-next for a while with no reported issues.
 
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ----------------------------------------------------------------
-Christophe JAILLET (1):
-      iio: adc: ad7780: Fix a resource handling path in 'ad7780_probe()'
+Saravana Kannan (3):
+      driver core: Don't do deferred probe in parallel with kernel_init thread
+      driver core: Rename dev_links_info.defer_sync to defer_hook
+      driver core: Avoid deferred probe due to fw_devlink_pause/resume()
 
-Chuhong Yuan (1):
-      iio: mma8452: Add missed iio_device_unregister() call in mma8452_probe()
-
-Dan Carpenter (1):
-      staging: comedi: verify array index is correct before using it
-
-Dinghao Liu (1):
-      iio: magnetometer: ak8974: Fix runtime PM imbalance on error
-
-Greg Kroah-Hartman (1):
-      Merge tag 'iio-fixes-for-5.8a' of git://git.kernel.org/.../jic23/iio into staging-linus
-
-Jonathan Cameron (6):
-      iio:health:afe4403 Fix timestamp alignment and prevent data leak.
-      iio:health:afe4404 Fix timestamp alignment and prevent data leak.
-      iio:magnetometer:ak8974: Fix alignment and data leak issues
-      iio:humidity:hdc100x Fix alignment and data leak issues
-      iio:humidity:hts221 Fix alignment and data leak issues
-      iio:pressure:ms5611 Fix buffer element alignment
-
-Matt Ranostay (1):
-      iio: core: add missing IIO_MOD_H2/ETHANOL string identifiers
-
-Navid Emamdoost (1):
-      iio: pressure: zpa2326: handle pm_runtime_get_sync failure
-
-Nuno Sá (1):
-      iio: adc: adi-axi-adc: Fix object reference counting
-
-Syed Nayyar Waris (2):
-      counter: 104-quad-8: Add lock guards - differential encoder
-      counter: 104-quad-8: Add lock guards - filter clock prescaler
-
- drivers/counter/104-quad-8.c                    | 22 ++++++++++++++++---
- drivers/iio/accel/mma8452.c                     |  5 ++++-
- drivers/iio/adc/ad7780.c                        |  2 +-
- drivers/iio/adc/adi-axi-adc.c                   |  4 ++--
- drivers/iio/health/afe4403.c                    |  9 +++++---
- drivers/iio/health/afe4404.c                    |  8 ++++---
- drivers/iio/humidity/hdc100x.c                  | 10 ++++++---
- drivers/iio/humidity/hts221.h                   |  7 ++++--
- drivers/iio/humidity/hts221_buffer.c            |  9 ++++----
- drivers/iio/industrialio-core.c                 |  2 ++
- drivers/iio/magnetometer/ak8974.c               | 29 +++++++++++++++----------
- drivers/iio/pressure/ms5611_core.c              | 11 +++++++---
- drivers/iio/pressure/zpa2326.c                  |  4 +++-
- drivers/staging/comedi/drivers/addi_apci_1500.c | 10 ++++++---
- 14 files changed, 91 insertions(+), 41 deletions(-)
+ drivers/base/base.h    |  1 -
+ drivers/base/core.c    | 44 ++++++++++++++++++++++++++++++++------------
+ drivers/base/dd.c      |  5 -----
+ include/linux/device.h |  5 +++--
+ 4 files changed, 35 insertions(+), 20 deletions(-)
