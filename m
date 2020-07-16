@@ -2,163 +2,285 @@ Return-Path: <SRS0=y5Sx=A3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6661C433E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 17:56:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19C93C433E5
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 17:59:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 757CC205CB
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 17:56:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E0CCB205CB
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 17:59:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="KB41Mns6";
-	dkim=pass (1024-bit key) header.d=microchiptechnology.onmicrosoft.com header.i=@microchiptechnology.onmicrosoft.com header.b="ZE/fc+UE"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="bR/AEXYV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729387AbgGPR4e (ORCPT
+        id S1728705AbgGPR7i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 13:56:34 -0400
-Received: from esa6.microchip.iphmx.com ([216.71.154.253]:61388 "EHLO
-        esa6.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728237AbgGPR4d (ORCPT
+        Thu, 16 Jul 2020 13:59:38 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:58686 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728182AbgGPR7i (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 13:56:33 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1594922192; x=1626458192;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-id:content-transfer-encoding:
-   mime-version;
-  bh=xHOYSXMpXm7GnVYzGGZCaRnAaiLy5ZVXDb6u2UyBfEE=;
-  b=KB41Mns6aONn2cicq76Eg0fq6tuXf7YtLpdn7G5rnHF7tVe9ywBB9iKv
-   5uz35xxWdSrVE7nXQiUgXK/v3POgYJakjclwkp0/+ANuNVVzrtG8eSV1k
-   RAAW8S3WWOzxKtR+NeluG/9D/1qxrNFEEfOyC/f//Sei+OqstGaWg95yd
-   m+zSSkVxqUZ1Xt7cTtGOp7vAMjLDz2VMSiX7/Zeaphf3DV4pHdG52MPUO
-   3Ti0kCyR7UC4DBDUKhX9Fw7csMkzMv3Ws2Ovs1jUTxaUnbX3gqO/3IOAE
-   xx+VR9i+/hLOHgHpFiqML/WD15j2vHXWqiMG0O4FLn9aJO3PbR/UOmNDz
-   w==;
-IronPort-SDR: uuizLfjowjdU/R3riGOHDybZ7LA9N1vB7hVlVo4iq94lMk9PrwjIJ8ZsodQBXoeo42l6yrs9G8
- Ad44tx9c0RHK20b6wLDyD0Go7Lqai/21HnDMGLS4tWzpskBv/Wcs6LRP9enG4894EcJRqZQOon
- ktkj2vxTI2qi5Ws78tW88/qDzpqZeIoWuL9kHx6bK1psytM3i3Sa6Nnorkmpreq4eEZF1wjz4J
- lVlbUQQv9G10jHKv6AmEkBChqUwe8YvwnabIauuoMMqjXM6nLdY3INQMLp5VLJkzoDLbfevfgB
- puQ=
-X-IronPort-AV: E=Sophos;i="5.75,360,1589266800"; 
-   d="scan'208";a="19474139"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa6.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 16 Jul 2020 10:56:19 -0700
-Received: from chn-vm-ex02.mchp-main.com (10.10.85.144) by
- chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1979.3; Thu, 16 Jul 2020 10:56:19 -0700
-Received: from NAM11-DM6-obe.outbound.protection.outlook.com (10.10.215.89) by
- email.microchip.com (10.10.87.72) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1979.3 via Frontend
- Transport; Thu, 16 Jul 2020 10:55:44 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=UgOh1lcL92hrO9E+fZU0vxk8Z7WiBAwmKovjV83reROElbw1B07qmMJP/ZzQzvYfv6rdZ3oP9AD1ryqr3H7cK6ULWbF8PFCDwtW9h1WagmH0Z/ZD8c9a2C2IVS54OY9jorry2jp/K/CvIH8NuAxaQvWXmUb8eMdesTQu0MKm2+1ZdqNO3Ye1qIw8Am2r60Arx22TdxPgSFE/l/4NeePRNtme9oEGa8vzyAB09DzcMI88V7mCAhrf1uzGWHoQfzoXrma1qB8DyuiqChGnuUjHydwm+tMubzyyn3uIoNOqO5NE1IQqFN+rjTGp6s0XQ19eXPXSUXBQgf4ydt0GnqTVVw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=xHOYSXMpXm7GnVYzGGZCaRnAaiLy5ZVXDb6u2UyBfEE=;
- b=hjloZcIq4ATVCvKLZA4bmH/xsLqJqiTKqrNLI4BBwtUXxGWBYDKOnMYsMoXFdnEyycC3aifS5okZu2gYzNyDjtoKxAHL+RClCTcPolWCnWHbZUHAUY/34ukr/QuOv9wybzPPh2r8qvTVXt3QgAVYbKcOOzqNdFUIvdtQ/vUCseHSfv0EdLPxAbT/mAwAJhHXtCbYwHUeLv2EEepc4CvtqcV6Kwjd6cpV2cNbdH7mtCC8/8B8ZZ6rwY83hFCshEFpgoy4xoMav9Dcis1QKpfzKCP/fA+Bp7hwyO8A74LqE2T2KjistMZDwlFi463bC98gk/eUDfrKX6EgDNs+mUpnSg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microchip.com; dmarc=pass action=none
- header.from=microchip.com; dkim=pass header.d=microchip.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=microchiptechnology.onmicrosoft.com;
- s=selector2-microchiptechnology-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=xHOYSXMpXm7GnVYzGGZCaRnAaiLy5ZVXDb6u2UyBfEE=;
- b=ZE/fc+UEOAwAtUMGeCLoaksq9bi/cpbPj/ad3ameQ/Ev9oK8dNtjJ7p4UZ36y+BVPEfcOBQ/13Jt+0j8hFyVGrj/dgMSm8EynOzbd9Av07dfMWN5BMjYona587Md4xim/HDM+mXVr7ALVARifw3FLPW+UyEzPFOtI3up3vTvk30=
-Received: from DM6PR11MB3082.namprd11.prod.outlook.com (2603:10b6:5:6b::19) by
- DM5PR11MB1548.namprd11.prod.outlook.com (2603:10b6:4:c::10) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.3174.21; Thu, 16 Jul 2020 17:56:17 +0000
-Received: from DM6PR11MB3082.namprd11.prod.outlook.com
- ([fe80::cf1:ea8d:b9f2:5238]) by DM6PR11MB3082.namprd11.prod.outlook.com
- ([fe80::cf1:ea8d:b9f2:5238%5]) with mapi id 15.20.3174.026; Thu, 16 Jul 2020
- 17:56:17 +0000
-From:   <Cristian.Birsan@microchip.com>
-To:     <alexandre.belloni@bootlin.com>, <mirq-linux@rere.qmqm.pl>
-CC:     <balbi@kernel.org>, <gregkh@linuxfoundation.org>,
-        <Ludovic.Desroches@microchip.com>, <Nicolas.Ferre@microchip.com>,
-        <songjun.wu@atmel.com>, <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <linux-usb@vger.kernel.org>
-Subject: Re: [PATCH RESEND 2/3] usb: gadget: udc: atmel: fix uninitialized
- read in debug printk
-Thread-Topic: [PATCH RESEND 2/3] usb: gadget: udc: atmel: fix uninitialized
- read in debug printk
-Thread-Index: AQHWVVJJ7PBXO+opJEOajBCCvmHl7KkJN/mAgAFSMgA=
-Date:   Thu, 16 Jul 2020 17:56:17 +0000
-Message-ID: <38c65e57-628e-f497-9538-50f6f5a9df04@microchip.com>
-References: <cover.1594231056.git.mirq-linux@rere.qmqm.pl>
- <248e7089f7fbb3727e83a1dfb43820d96a69e8c2.1594231056.git.mirq-linux@rere.qmqm.pl>
- <20200715214551.GF23553@piout.net>
-In-Reply-To: <20200715214551.GF23553@piout.net>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
-authentication-results: bootlin.com; dkim=none (message not signed)
- header.d=none;bootlin.com; dmarc=none action=none header.from=microchip.com;
-x-originating-ip: [2a02:2f01:5d1d:6d00:8053:86f0:6820:9e8f]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 3fcac46c-f91f-42cd-9ce9-08d829b18a4b
-x-ms-traffictypediagnostic: DM5PR11MB1548:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DM5PR11MB1548B636FBA03E93FD685806EF7F0@DM5PR11MB1548.namprd11.prod.outlook.com>
-x-bypassexternaltag: True
-x-ms-oob-tlc-oobclassifiers: OLM:179;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: RQxV8tCQFpgvJGy6QXSjaAl/dPVkj7kndI8BkNVdMp/nYtU/Zo7fQyqz/+kBh8ZVHJVhz2ZXiSuRpi7Q7ztR+FmGI0qR4qvAA5yg7ZJHxkItVvJSntjxbvsT/vWEIykwoEGKau0x4nxNy0jqt02Aul75qcyHt2Si2zVr/IesGbwux2sqJ2hsyn8kymMzxBTQXzbK5JMNb0vNmjlzqwBQoLU/pXBHx2/2Ist6bKffL8OVGiPRseLOfaS/X8TA0CUht4xOViAE6LtWIxXrp2BBLPw2c3p36yzSXkSPb0NvqguATt+H7N0uFIvY/PKd5u0doBHzRwwDlnq5p7qMl+B1YROJ5OE9Cc3G6q58zyx//FItxAsTkj6DZz/dbZ5khLH2hy/6uJsArYcsQ3TLgvkcj22thKSUUt+LB/zyegrLCtMva5t+MDMB3XbfRgBG/u9/jYk44V10U4imVG4SPQRf8w==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR11MB3082.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(136003)(39860400002)(396003)(346002)(366004)(376002)(66446008)(5660300002)(64756008)(110136005)(6512007)(186003)(8676002)(66946007)(4326008)(66476007)(8936002)(54906003)(91956017)(66556008)(316002)(31686004)(71200400001)(76116006)(83380400001)(36756003)(86362001)(31696002)(966005)(6506007)(6486002)(53546011)(2616005)(478600001)(2906002)(66574015)(43740500002);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: iucvUz3m9NGKGitaCJeqjZRK/i/PCsiu1H/59nRLATX2a/3Mgw4ePQbbjUWx9bJ1FxibtUYQPVusSCeGpO6+EpDntH0NLYiTfUGdUUvlroKQ52sAL5Vez2tZIM38YNSh8LPFANmYfJxX9/ArCi23zOGcBeNw/8rd3AUq8LKsZWxdlPtzzefejVjPLAJIo5+E1ilkcwP8t5fg3Q7ETUOJ/AX8rs4mdvbfrk/52YlniOUy9ct3foUETkBZaK+Am+p41aFnhkqB1GL/a1eB21mpPsAJOXIH/1V6mHox+rD6UPcJVf/jqQoZ5ZIolVk0nCQtaaSfNV/PT9QpppM2hJGSiMkig1Y4nHttBKMpPpY7z3fTS2L6Tz/8kr7yXd34LaTsskZSBjfhzXpIQlpPOtHzAtU2p84OCfERHy+jmnFru+vSFzKdzXssoJ688qqBgcmTmyjs3XfPET+uLv8agTwue2tglW85GZQPK98DBCdmLS379c7qqigsRAMYuoYmL9jPQGuB+ctXVaK+wyMIdC86xjQcXGCXaHXalIJgRZXf+NroLuHibBdWq9ErClKQgasd
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <778451F403692E44AFF3277D9627C68E@namprd11.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Thu, 16 Jul 2020 13:59:38 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1594922374;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=aBt9fwy2XXJljFfJuDWZWmsSUcX8SgaXjyNCiY9Ihb0=;
+        b=bR/AEXYVG8prk8Po3sxROUNAJSbJyE/AsuTcy0BpYycRWp6rNfEpKOIKGTe8Nb9B5geAf8
+        ob3mpa/06N9NLNpboqEkrB+6UMef+QRTP5N/3FKTLIvi4VSEwRpl/zfFUA/CQj/7WAiJxS
+        22RVHiqwlqNBHT7PO+yaQy6hxCtTkwU=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-499-Wc_rX3hOPlGamBxce9__SA-1; Thu, 16 Jul 2020 13:59:32 -0400
+X-MC-Unique: Wc_rX3hOPlGamBxce9__SA-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id C29F28CAB2F;
+        Thu, 16 Jul 2020 17:59:30 +0000 (UTC)
+Received: from starship (unknown [10.35.206.36])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id CFA8A73036;
+        Thu, 16 Jul 2020 17:59:28 +0000 (UTC)
+Message-ID: <824383bdd2dbb4ad09d2342792e11d418efdd60b.camel@redhat.com>
+Subject: Re: kernel oops in 'typec_ucsi' due to commit 'drivers property:
+ When no children in primary, try secondary'
+From:   Maxim Levitsky <mlevitsk@redhat.com>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     linux-kernel@vger.kernel.org, rafael.j.wysocki@intel.com,
+        sakari.ailus@linux.intel.com, heikki.krogerus@linux.intel.com,
+        gregkh@linuxfoundation.org
+Date:   Thu, 16 Jul 2020 20:59:27 +0300
+In-Reply-To: <20200716143411.GN3703480@smile.fi.intel.com>
+References: <7affdd923186c5ce8c7dcf7cbe7b826eaa3ac8b2.camel@redhat.com>
+         <20200716143411.GN3703480@smile.fi.intel.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.36.3 (3.36.3-1.fc32) 
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: DM6PR11MB3082.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3fcac46c-f91f-42cd-9ce9-08d829b18a4b
-X-MS-Exchange-CrossTenant-originalarrivaltime: 16 Jul 2020 17:56:17.8227
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: r4AdSGFMgiSEMuzqFNHm2c6rAIeJ2QwAsFkwNz2LmJd+9Ce6ynKGLGAWrDDs5iTBCAfYv1agHsjjjHzWfGu2QH34IVo21qcVJcXK7AtQguk=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR11MB1548
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQoNCk9uIDcvMTYvMjAgMTI6NDUgQU0sIEFsZXhhbmRyZSBCZWxsb25pIHdyb3RlOg0KPiBFWFRF
-Uk5BTCBFTUFJTDogRG8gbm90IGNsaWNrIGxpbmtzIG9yIG9wZW4gYXR0YWNobWVudHMgdW5sZXNz
-IHlvdSBrbm93IHRoZSBjb250ZW50IGlzIHNhZmUNCj4gDQo+IE9uIDA4LzA3LzIwMjAgMjA6MDQ6
-MDkrMDIwMCwgTWljaGHFgiBNaXJvc8WCYXcgd3JvdGU6DQo+PiBGaXhlZCBjb21taXQgbW92ZWQg
-dGhlIGFzc2lnbm1lbnQgb2YgJ3JlcScsIGJ1dCBkaWQgbm90IHVwZGF0ZSBhDQo+PiByZWZlcmVu
-Y2UgaW4gdGhlIERCRygpIGNhbGwuIFVzZSB0aGUgYXJndW1lbnQgYXMgaXQgd2FzIHJlbmFtZWQu
-DQo+Pg0KPj4gRml4ZXM6IDVmYjY5NGY5NmU3YyAoInVzYjogZ2FkZ2V0OiB1ZGM6IGF0bWVsOiBm
-aXggcG9zc2libGUgb29wcyB3aGVuIHVubG9hZGluZyBtb2R1bGUiKQ0KPj4gU2lnbmVkLW9mZi1i
-eTogTWljaGHFgiBNaXJvc8WCYXcgPG1pcnEtbGludXhAcmVyZS5xbXFtLnBsPg0KPiBBY2tlZC1i
-eTogQWxleGFuZHJlIEJlbGxvbmkgPGFsZXhhbmRyZS5iZWxsb25pQGJvb3RsaW4uY29tPg0KDQpB
-Y2tlZC1ieTogQ3Jpc3RpYW4gQmlyc2FuIDxjcmlzdGlhbi5iaXJzYW5AbWljcm9jaGlwLmNvbT4N
-Cg0KPiANCj4+IC0tLQ0KPj4gIGRyaXZlcnMvdXNiL2dhZGdldC91ZGMvYXRtZWxfdXNiYV91ZGMu
-YyB8IDIgKy0NCj4+ICAxIGZpbGUgY2hhbmdlZCwgMSBpbnNlcnRpb24oKyksIDEgZGVsZXRpb24o
-LSkNCj4+DQo+PiBkaWZmIC0tZ2l0IGEvZHJpdmVycy91c2IvZ2FkZ2V0L3VkYy9hdG1lbF91c2Jh
-X3VkYy5jIGIvZHJpdmVycy91c2IvZ2FkZ2V0L3VkYy9hdG1lbF91c2JhX3VkYy5jDQo+PiBpbmRl
-eCA5MTUzZTIyMDg0OGQuLjkzNDJhM2QyNDk2MyAxMDA2NDQNCj4+IC0tLSBhL2RyaXZlcnMvdXNi
-L2dhZGdldC91ZGMvYXRtZWxfdXNiYV91ZGMuYw0KPj4gKysrIGIvZHJpdmVycy91c2IvZ2FkZ2V0
-L3VkYy9hdG1lbF91c2JhX3VkYy5jDQo+PiBAQCAtODY1LDcgKzg2NSw3IEBAIHN0YXRpYyBpbnQg
-dXNiYV9lcF9kZXF1ZXVlKHN0cnVjdCB1c2JfZXAgKl9lcCwgc3RydWN0IHVzYl9yZXF1ZXN0ICpf
-cmVxKQ0KPj4gICAgICAgdTMyIHN0YXR1czsNCj4+DQo+PiAgICAgICBEQkcoREJHX0dBREdFVCB8
-IERCR19RVUVVRSwgImVwX2RlcXVldWU6ICVzLCByZXEgJXBcbiIsDQo+PiAtICAgICAgICAgICAg
-ICAgICAgICAgZXAtPmVwLm5hbWUsIHJlcSk7DQo+PiArICAgICAgICAgICAgICAgICAgICAgZXAt
-PmVwLm5hbWUsIF9yZXEpOw0KPj4NCj4+ICAgICAgIHNwaW5fbG9ja19pcnFzYXZlKCZ1ZGMtPmxv
-Y2ssIGZsYWdzKTsNCj4+DQo+PiAtLQ0KPj4gMi4yMC4xDQo+Pg0KPiANCj4gLS0NCj4gQWxleGFu
-ZHJlIEJlbGxvbmksIEJvb3RsaW4NCj4gRW1iZWRkZWQgTGludXggYW5kIEtlcm5lbCBlbmdpbmVl
-cmluZw0KPiBodHRwczovL2Jvb3RsaW4uY29tDQo+IA0K
+On Thu, 2020-07-16 at 17:34 +0300, Andy Shevchenko wrote:
+> On Thu, Jul 16, 2020 at 11:17:03AM +0300, Maxim Levitsky wrote:
+> > Hi!
+> > 
+> > Few days ago I bisected a regression on 5.8 kernel:
+> > 
+> > I have nvidia rtx 2070s and its USB type C port driver (which is open source)
+> > started to crash on load:
+> 
+> I'm looking at this, but I have questions:
+> - any pointers to the device tree excerpt which this tries to iterate over
+> - can you provide full Code: line?
+> 
+> Only way I see, why it happens, is that fwnode is not initialized properly
+> somewhere (means it has garbage in the secondary pointer).
+> 
+> > [  +0.000043] CPU: 19 PID: 31281 Comm: kworker/19:1 Tainted: P        W  O      5.8.0-rc3.stable #133
+> > [  +0.000045] Hardware name: Gigabyte Technology Co., Ltd. TRX40 DESIGNARE/TRX40 DESIGNARE, BIOS F4c 03/05/2020
+> > [  +0.000030] Workqueue: events_long ucsi_init_work [typec_ucsi]
+> > [  +0.000048] RIP: 0010:device_get_next_child_node+0x5b/0xb0
+> > [  +0.000024] Code: 18 48 85 db 74 24 48 8b 43 08 48 85 c0 74 1b 48 8b 40 50 48 85 c0 74 12 48 89 ee 48 89 df ff d0 48 85 c0 74 05 5b 5d 41 5c c3 <48> 8b 03 48 85 c0 74 f3 48>
+> > [  +0.000065] RSP: 0018:ffffc900038d7e08 EFLAGS: 00010246
+> > [  +0.000044] RAX: ffff889fb6b62f00 RBX: 0000000000000000 RCX: 0000000000000001
+> > [  +0.000027] RDX: ffff889fb6fd4a70 RSI: 0000000000000000 RDI: ffff889fb6b63608
+> > [  +0.000046] RBP: 0000000000000000 R08: 0000000000000001 R09: 7fffffffffffffff
+> > [  +0.000024] R10: 00002075ce282580 R11: 000000000062de3e R12: ffff889fb6b63608
+> > [  +0.000043] R13: 0000000000010000 R14: ffff889fb6b63018 R15: 0000000000000001
+> > [  +0.000044] FS:  0000000000000000(0000) GS:ffff889fbe4c0000(0000) knlGS:0000000000000000
+> > [  +0.000024] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> > [  +0.000042] CR2: 0000000000000000 CR3: 000000175621b000 CR4: 0000000000340ea0
+> > [  +0.000046] Call Trace:
+> > [  +0.000030]  ucsi_init+0x213/0x530 [typec_ucsi]
+> > [  +0.000028]  ucsi_init_work+0x12/0x20 [typec_ucsi]
+> > [  +0.000049]  process_one_work+0x1d2/0x390
+> > [  +0.000027]  worker_thread+0x4a/0x3b0
+> > [  +0.000025]  ? process_one_work+0x390/0x390
+> > [  +0.000049]  kthread+0xf9/0x130
+> > [  +0.000026]  ? kthread_park+0x90/0x90
+> > [  +0.000028]  ret_from_fork+0x1f/0x30
+> > [  +0.000048] Modules linked in: ucsi_ccg typec_ucsi typec hfsplus cdrom ntfs msdos vfio_pci vfio_virqfd vfio_iommu_type1 vfio vhost_net vhost vhost_iotlb tap xfs rfcomm xt_M>
+> > [  +0.000039]  usb_storage ext4 mbcache jbd2 amdgpu gpu_sched ttm drm_kms_helper syscopyarea sysfillrect ahci sysimgblt fb_sys_fops crc32_pclmul libahci crc32c_intel igb ccp >
+> > [  +0.000289] CR2: 0000000000000000
+> > [  +0.000026] ---[ end trace 38ebb9aebd55fbff ]---
+> > [  +0.014201] RIP: 0010:device_get_next_child_node+0x5b/0xb0
+> > [  +0.000030] Code: 18 48 85 db 74 24 48 8b 43 08 48 85 c0 74 1b 48 8b 40 50 48 85 c0 74 12 48 89 ee 48 89 df ff d0 48 85 c0 74 05 5b 5d 41 5c c3 <48> 8b 03 48 85 c0 74 f3 48>
+> > [  +0.000075] RSP: 0018:ffffc900038d7e08 EFLAGS: 00010246
+> > [  +0.000027] RAX: ffff889fb6b62f00 RBX: 0000000000000000 RCX: 0000000000000001
+> > [  +0.000048] RDX: ffff889fb6fd4a70 RSI: 0000000000000000 RDI: ffff889fb6b63608
+> > [  +0.000049] RBP: 0000000000000000 R08: 0000000000000001 R09: 7fffffffffffffff
+> > [  +0.000027] R10: 00002075ce282580 R11: 000000000062de3e R12: ffff889fb6b63608
+> > [  +0.000049] R13: 0000000000010000 R14: ffff889fb6b63018 R15: 0000000000000001
+> > [  +0.000050] FS:  0000000000000000(0000) GS:ffff889fbe4c0000(0000) knlGS:0000000000000000
+> > [  +0.000027] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> > [  +0.000050] CR2: 0000000000000000 CR3: 000000175621b000 CR4: 0000000000340ea0
+> > 
+> > I bisected this, while passing the UCSI controller to a VM, and this
+> > is the result:
+> > 
+> > git bisect start
+> > # good: [3d77e6a8804abcc0504c904bd6e5cdf3a5cf8162] Linux 5.7
+> > git bisect good 3d77e6a8804abcc0504c904bd6e5cdf3a5cf8162
+> > # bad: [48778464bb7d346b47157d21ffde2af6b2d39110] Linux 5.8-rc2
+> > git bisect bad 48778464bb7d346b47157d21ffde2af6b2d39110
+> > # good: [a98f670e41a99f53acb1fb33cee9c6abbb2e6f23] Merge tag 'media/v5.8-1' of git://git.kernel.org/pub/scm/linux/kernel/git/mchehab/linux-media
+> > git bisect good a98f670e41a99f53acb1fb33cee9c6abbb2e6f23
+> > # good: [081096d98bb23946f16215357b141c5616b234bf] Merge tag 'tty-5.8-rc1' of git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/tty
+> > git bisect good 081096d98bb23946f16215357b141c5616b234bf
+> > # bad: [3a2a8751742133a7bbc49b9d1bcbd52e212edff6] Merge tag 'for-v5.8' of git://git.kernel.org/pub/scm/linux/kernel/git/sre/linux-power-supply
+> > git bisect bad 3a2a8751742133a7bbc49b9d1bcbd52e212edff6
+> > # bad: [a1e81f9654eef650d3ee35c94a8cab00b5cd379c] m68k: implement flush_icache_user_range
+> > git bisect bad a1e81f9654eef650d3ee35c94a8cab00b5cd379c
+> > # good: [c336c022503d1be719ca06f2526c211709e3d2d3] staging: wfx: remove false positive warning
+> > git bisect good c336c022503d1be719ca06f2526c211709e3d2d3
+> > # good: [05c8a4fc44a916dd897769ca69b42381f9177ec4] habanalabs: correctly cast u64 to void*
+> > git bisect good 05c8a4fc44a916dd897769ca69b42381f9177ec4
+> > # good: [a3975dea1696b7c81319dc4b66e3c378dd47ccfb] Merge tag 'iio-for-5.8c' of git://git.kernel.org/pub/scm/linux/kernel/git/jic23/iio into staging-next
+> > git bisect good a3975dea1696b7c81319dc4b66e3c378dd47ccfb
+> > # bad: [f558b8364e19f9222e7976c64e9367f66bab02cc] Merge tag 'driver-core-5.8-rc1' of git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/driver-core
+> > git bisect bad f558b8364e19f9222e7976c64e9367f66bab02cc
+> > # good: [b6d90ef9a439b4ef73a350789bf766a1339a703d] staging: vchi: Get rid of not implemented function declarations
+> > git bisect good b6d90ef9a439b4ef73a350789bf766a1339a703d
+> > # good: [93d2e4322aa74c1ad1e8c2160608eb9a960d69ff] of: platform: Batch fwnode parsing when adding all top level devices
+> > git bisect good 93d2e4322aa74c1ad1e8c2160608eb9a960d69ff
+> > # bad: [c2c076166b5880eabe068ce1cab30bf6edeeea1a] firmware_loader: change enum fw_opt to u32
+> > git bisect bad c2c076166b5880eabe068ce1cab30bf6edeeea1a
+> > # bad: [2cd38fd15e4ebcfe917a443734820269f8b5ba2b] driver core: Remove unnecessary is_fwnode_dev variable in device_add()
+> > git bisect bad 2cd38fd15e4ebcfe917a443734820269f8b5ba2b
+> > # good: [c82c83c330654c5639960ebc3dabbae53c43f79e] driver core: platform: Fix spelling errors in platform.c
+> > git bisect good c82c83c330654c5639960ebc3dabbae53c43f79e
+> > # bad: [114dbb4fa7c4053a51964d112e2851e818e085c6] drivers property: When no children in primary, try secondary
+> > git bisect bad 114dbb4fa7c4053a51964d112e2851e818e085c6
+> > # first bad commit: [114dbb4fa7c4053a51964d112e2851e818e085c6] drivers property: When no children in primary, try secondary
+> > 
+> > 
+> > Reverting the commit helped fix this oops.
+> > 
+> > My .config attached.
+> > If any more info is needed I'll be happy to provide it,
+> > and of course test patches.
+> > 
+> > Best regards,
+> > 	Maxim Levitsky
+> 
+> 
+
+
+Turns out that kernel has decode_stacktrace.sh. I always decoded the symbols manually.
+I will send the decoded trace from now on in bug reports.
+
+IMHO it would be usefull to include a pointer to it in the kernel oops report since many people like me don't know about this nice script.
+
+[mlevitsk@starship ~/UPSTREAM/linux-kernel/work_area/ucsi_crash]$../../src/scripts/decode_stacktrace.sh ../../src/vmlinux ../../src/ ../../src/ < ./stacktrace.txt 
+[  +0.000043] CPU: 19 PID: 31281 Comm: kworker/19:1 Tainted: P        W  O      5.8.0-rc3.stable #133
+[  +0.000045] Hardware name: Gigabyte Technology Co., Ltd. TRX40 DESIGNARE/TRX40 DESIGNARE, BIOS F4c 03/05/2020
+[  +0.000030] Workqueue: events_long ucsi_init_work [typec_ucsi]
+[   +0.000048] RIP: 0010:device_get_next_child_node (/home/mlevitsk/UPSTREAM/linux-kernel/src/drivers/base/property.c:715) 
+[ +0.000024] Code: 18 48 85 db 74 24 48 8b 43 08 48 85 c0 74 1b 48 8b 40 50 48 85 c0 74 12 48 89 ee 48 89 df ff d0 48 85 c0 74 05 5b 5d 41 5c c3 <48> 8b 03 48 85 c0 74 f3 48>
+All code
+========
+   0:	18 48 85             	sbb    %cl,-0x7b(%rax)
+   3:	db 74 24 48          	(bad)  0x48(%rsp)
+   7:	8b 43 08             	mov    0x8(%rbx),%eax
+   a:	48 85 c0             	test   %rax,%rax
+   d:	74 1b                	je     0x2a
+   f:	48 8b 40 50          	mov    0x50(%rax),%rax
+  13:	48 85 c0             	test   %rax,%rax
+  16:	74 12                	je     0x2a
+  18:	48 89 ee             	mov    %rbp,%rsi
+  1b:	48 89 df             	mov    %rbx,%rdi
+  1e:	ff d0                	callq  *%rax
+  20:	48 85 c0             	test   %rax,%rax
+  23:	74 05                	je     0x2a
+  25:	5b                   	pop    %rbx
+  26:	5d                   	pop    %rbp
+  27:	41 5c                	pop    %r12
+  29:	c3                   	retq   
+  2a:*	48 8b 03             	mov    (%rbx),%rax		<-- trapping instruction
+  2d:	48 85 c0             	test   %rax,%rax
+  30:	74 f3                	je     0x25
+  32:	48                   	rex.W
+
+Code starting with the faulting instruction
+===========================================
+   0:	48 8b 03             	mov    (%rbx),%rax
+   3:	48 85 c0             	test   %rax,%rax
+   6:	74 f3                	je     0xfffffffffffffffb
+   8:	48                   	rex.W
+[  +0.000065] RSP: 0018:ffffc900038d7e08 EFLAGS: 00010246
+[  +0.000044] RAX: ffff889fb6b62f00 RBX: 0000000000000000 RCX: 0000000000000001
+[  +0.000027] RDX: ffff889fb6fd4a70 RSI: 0000000000000000 RDI: ffff889fb6b63608
+[  +0.000046] RBP: 0000000000000000 R08: 0000000000000001 R09: 7fffffffffffffff
+[  +0.000024] R10: 00002075ce282580 R11: 000000000062de3e R12: ffff889fb6b63608
+[  +0.000043] R13: 0000000000010000 R14: ffff889fb6b63018 R15: 0000000000000001
+[  +0.000044] FS:  0000000000000000(0000) GS:ffff889fbe4c0000(0000) knlGS:0000000000000000
+[  +0.000024] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[  +0.000042] CR2: 0000000000000000 CR3: 000000175621b000 CR4: 0000000000340ea0
+[  +0.000046] Call Trace:
+[   +0.000030] ucsi_init (/home/mlevitsk/UPSTREAM/linux-kernel/src/drivers/usb/typec/ucsi/ucsi.c:932 /home/mlevitsk/UPSTREAM/linux-kernel/src/drivers/usb/typec/ucsi/ucsi.c:1049) typec_ucsi
+[   +0.000028] ucsi_init_work (/home/mlevitsk/UPSTREAM/linux-kernel/src/drivers/usb/typec/ucsi/ucsi.c:1089) typec_ucsi
+[   +0.000049] process_one_work (/home/mlevitsk/UPSTREAM/linux-kernel/src/./arch/x86/include/asm/jump_label.h:25 /home/mlevitsk/UPSTREAM/linux-kernel/src/./include/linux/jump_label.h:200
+/home/mlevitsk/UPSTREAM/linux-kernel/src/./include/trace/events/workqueue.h:108 /home/mlevitsk/UPSTREAM/linux-kernel/src/kernel/workqueue.c:2274) 
+[   +0.000027] worker_thread (/home/mlevitsk/UPSTREAM/linux-kernel/src/kernel/workqueue.c:2415) 
+[   +0.000025] ? process_one_work (/home/mlevitsk/UPSTREAM/linux-kernel/src/kernel/workqueue.c:2462) 
+[   +0.000049] kthread (/home/mlevitsk/UPSTREAM/linux-kernel/src/kernel/kthread.c:266) 
+[   +0.000026] ? kthread_park (/home/mlevitsk/UPSTREAM/linux-kernel/src/kernel/kthread.c:1296) 
+[   +0.000028] ret_from_fork (/home/mlevitsk/UPSTREAM/linux-kernel/src/arch/x86/entry/entry_64.S:299) 
+[  +0.000048] Modules linked in: ucsi_ccg typec_ucsi typec hfsplus cdrom ntfs msdos vfio_pci vfio_virqfd vfio_iommu_type1 vfio vhost_net vhost vhost_iotlb tap xfs rfcomm xt_M>
+[  +0.000039]  usb_storage ext4 mbcache jbd2 amdgpu gpu_sched ttm drm_kms_helper syscopyarea sysfillrect ahci sysimgblt fb_sys_fops crc32_pclmul libahci crc32c_intel igb ccp >
+[  +0.000289] CR2: 0000000000000000
+[  +0.000026] ---[ end trace 38ebb9aebd55fbff ]---
+[   +0.014201] RIP: 0010:device_get_next_child_node (/home/mlevitsk/UPSTREAM/linux-kernel/src/drivers/base/property.c:715) 
+[ +0.000030] Code: 18 48 85 db 74 24 48 8b 43 08 48 85 c0 74 1b 48 8b 40 50 48 85 c0 74 12 48 89 ee 48 89 df ff d0 48 85 c0 74 05 5b 5d 41 5c c3 <48> 8b 03 48 85 c0 74 f3 48>
+All code
+========
+   0:	18 48 85             	sbb    %cl,-0x7b(%rax)
+   3:	db 74 24 48          	(bad)  0x48(%rsp)
+   7:	8b 43 08             	mov    0x8(%rbx),%eax
+   a:	48 85 c0             	test   %rax,%rax
+   d:	74 1b                	je     0x2a
+   f:	48 8b 40 50          	mov    0x50(%rax),%rax
+  13:	48 85 c0             	test   %rax,%rax
+  16:	74 12                	je     0x2a
+  18:	48 89 ee             	mov    %rbp,%rsi
+  1b:	48 89 df             	mov    %rbx,%rdi
+  1e:	ff d0                	callq  *%rax
+  20:	48 85 c0             	test   %rax,%rax
+  23:	74 05                	je     0x2a
+  25:	5b                   	pop    %rbx
+  26:	5d                   	pop    %rbp
+  27:	41 5c                	pop    %r12
+  29:	c3                   	retq   
+  2a:*	48 8b 03             	mov    (%rbx),%rax		<-- trapping instruction
+  2d:	48 85 c0             	test   %rax,%rax
+  30:	74 f3                	je     0x25
+  32:	48                   	rex.W
+
+Code starting with the faulting instruction
+===========================================
+   0:	48 8b 03             	mov    (%rbx),%rax
+   3:	48 85 c0             	test   %rax,%rax
+   6:	74 f3                	je     0xfffffffffffffffb
+   8:	48                   	rex.W
+[  +0.000075] RSP: 0018:ffffc900038d7e08 EFLAGS: 00010246
+[  +0.000027] RAX: ffff889fb6b62f00 RBX: 0000000000000000 RCX: 0000000000000001
+[  +0.000048] RDX: ffff889fb6fd4a70 RSI: 0000000000000000 RDI: ffff889fb6b63608
+[  +0.000049] RBP: 0000000000000000 R08: 0000000000000001 R09: 7fffffffffffffff
+[  +0.000027] R10: 00002075ce282580 R11: 000000000062de3e R12: ffff889fb6b63608
+[  +0.000049] R13: 0000000000010000 R14: ffff889fb6b63018 R15: 0000000000000001
+[  +0.000050] FS:  0000000000000000(0000) GS:ffff889fbe4c0000(0000) knlGS:0000000000000000
+[  +0.000027] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[  +0.000050] CR2: 0000000000000000 CR3: 000000175621b000 CR4: 0000000000340ea0
+
+
+
+Best regards,
+	Maxim Levitsky
+
