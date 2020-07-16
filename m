@@ -2,134 +2,151 @@ Return-Path: <SRS0=y5Sx=A3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05F15C433E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 12:26:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EABE5C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 12:31:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D860C2065F
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 12:26:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA28A2065F
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 12:31:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mCe2KSeU"
+	dkim=pass (1024-bit key) header.d=rambus.com header.i=@rambus.com header.b="N7beBgHq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728362AbgGPM0e (ORCPT
+        id S1728412AbgGPMbK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 08:26:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56792 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728126AbgGPM0d (ORCPT
+        Thu, 16 Jul 2020 08:31:10 -0400
+Received: from us-smtp-delivery-148.mimecast.com ([216.205.24.148]:56053 "EHLO
+        us-smtp-delivery-148.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727081AbgGPMbJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 08:26:33 -0400
-Received: from mail-io1-xd44.google.com (mail-io1-xd44.google.com [IPv6:2607:f8b0:4864:20::d44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 59073C061755;
-        Thu, 16 Jul 2020 05:26:33 -0700 (PDT)
-Received: by mail-io1-xd44.google.com with SMTP id c16so5747556ioi.9;
-        Thu, 16 Jul 2020 05:26:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=doFUSPu+F9XWVoD0er+QTsCiGOPKHkPF6UHj7R181iw=;
-        b=mCe2KSeUnzmk3A8gQQiBEhYjSIGSvpLq2JzMLdPPyPKgIJSHIhvnuOc9gfCKTOX4vg
-         8yrjJnNByYOAtKATSSwAgY+8Q5gq+xAy4sdJx9RujTXUREBm76w30qbFW1tdz9vnsN+Y
-         tDJoGU3A6uJWPOl2dXB2G1UOxfcvv9W1W0LAYInw7GW8T6j5gVd2LQNshWa7oSWyWmeS
-         wjCGqa7j0DbICJBi5uKkTjTS8qsW6PHSv6CWhHrBnkue4HupvWLsO+qGcEqw/Xzc7RfH
-         pJ+hlojFQ9+WL/lH80WVuAnGtoPN3hd9uc4QeveINvwewCgKBXG8bY+v52f2AFkIZw7p
-         sqqw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=doFUSPu+F9XWVoD0er+QTsCiGOPKHkPF6UHj7R181iw=;
-        b=Sr9VKWltC+znnIrBdH/khIq0n8Q6tr/5sCAlHphe5V12dH0gtq1gzbHFTXQEnI8fze
-         X7/h5/vrGklokwCAAY4lkaIGHMNsHQHN7Ba8CJ3seoP1uCdcKLZly456c2dIX7RAsweG
-         H3Dy56oXX72bIa8yW02ZvAnLkwzCEj70Wb74hYpUXI82NeqBTbYYFygRPw8PViXS8IKT
-         U9LQSzBlZvtqRAsib4CieKHNjGJcFPT5z1ZVyN0k2SD0uNy5QvuT1QXDFqADJDYywt1C
-         u+8lx+W1KgAnHym6Yj5iveBRRENFfJqyExVnLoB92ZqtCR64WMMWr6n3si/ZU642cqbR
-         M06w==
-X-Gm-Message-State: AOAM530YouTi7SaY5ElJ99VTV2uisVNunB8Uf4VONAqZGkW3lv+P9BHS
-        AYNcMVxQPMjzF8AEXnc78Cuq4PR6
-X-Google-Smtp-Source: ABdhPJxiuNMoaGJIohrtAZ/TChqlgCmzOk5riegFW+xC5Gq8hkCNMIkfjUhjgF9PW9V0O776vPLbDQ==
-X-Received: by 2002:a6b:c9c4:: with SMTP id z187mr4285455iof.27.1594902392215;
-        Thu, 16 Jul 2020 05:26:32 -0700 (PDT)
-Received: from aford-OptiPlex-7050.logicpd.com ([174.46.170.158])
-        by smtp.gmail.com with ESMTPSA id o67sm2568708ila.25.2020.07.16.05.26.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 16 Jul 2020 05:26:31 -0700 (PDT)
-From:   Adam Ford <aford173@gmail.com>
-To:     linux-clk@vger.kernel.org
-Cc:     dan.carpenter@oracle.com, luca@lucaceresoli.net,
-        aford@beaconembedded.com, Adam Ford <aford173@gmail.com>,
-        Marek Vasut <marek.vasut@gmail.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>, linux-kernel@vger.kernel.org
-Subject: [PATCH V3] clk: vc5: Add memory check to prevent oops
-Date:   Thu, 16 Jul 2020 07:26:20 -0500
-Message-Id: <20200716122620.4538-1-aford173@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Thu, 16 Jul 2020 08:31:09 -0400
+X-Greylist: delayed 371 seconds by postgrey-1.27 at vger.kernel.org; Thu, 16 Jul 2020 08:31:08 EDT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=rambus.com;
+        s=mimecast20161209; t=1594902667;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=nhfQhc6aRzW+uHuJFfEtyF2WjQtJezgOMT8TofgsTdQ=;
+        b=N7beBgHqGdEUHWKMA+NtFGV0qX3RsgbHu8ryucL/tOo2veZDqX0pOLg7GV2S3etoEr3ktJ
+        P4Wko8laLdCuQLO199L1E6kzEtHdPwR5P7EeDfy2s+Ucg7RlqkiyD9o8feKkVUP/Oyq2hx
+        7Ii0Gw2tFchqCtUOpalv2QHEM6hrzL0=
+Received: from NAM12-BN8-obe.outbound.protection.outlook.com
+ (mail-bn8nam12lp2170.outbound.protection.outlook.com [104.47.55.170])
+ (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-493-JODGKilENJ2kjy3pgwHPjg-1; Thu, 16 Jul 2020 08:24:54 -0400
+X-MC-Unique: JODGKilENJ2kjy3pgwHPjg-1
+Received: from CY4PR0401MB3652.namprd04.prod.outlook.com
+ (2603:10b6:910:8a::27) by CY1PR04MB2363.namprd04.prod.outlook.com
+ (2a01:111:e400:c617::13) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3174.20; Thu, 16 Jul
+ 2020 12:24:51 +0000
+Received: from CY4PR0401MB3652.namprd04.prod.outlook.com
+ ([fe80::c5b1:ff88:4c39:34d8]) by CY4PR0401MB3652.namprd04.prod.outlook.com
+ ([fe80::c5b1:ff88:4c39:34d8%3]) with mapi id 15.20.3174.026; Thu, 16 Jul 2020
+ 12:24:50 +0000
+From:   "Van Leeuwen, Pascal" <pvanleeuwen@rambus.com>
+To:     Herbert Xu <herbert@gondor.apana.org.au>,
+        =?utf-8?B?SG9yaWEgR2VhbnTEgw==?= <horia.geanta@nxp.com>
+CC:     Iuliana Prodan <iuliana.prodan@nxp.com>,
+        Aymen Sghaier <aymen.sghaier@nxp.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Silvano Di Ninno <silvano.dininno@nxp.com>,
+        Franck Lenormand <franck.lenormand@nxp.com>,
+        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        dl-linux-imx <linux-imx@nxp.com>
+Subject: RE: [PATCH 2/2] crypto: caam - support tagged keys for skcipher
+ algorithms
+Thread-Topic: [PATCH 2/2] crypto: caam - support tagged keys for skcipher
+ algorithms
+Thread-Index: AQHWWJjegJE1XH3+JEmZW6ZYWNYYq6kJ1loAgAAyNICAABWGgIAABC0AgAADRQCAAAGhIA==
+Date:   Thu, 16 Jul 2020 12:24:49 +0000
+Message-ID: <CY4PR0401MB36527396455B1AEE4A17CDB1C37F0@CY4PR0401MB3652.namprd04.prod.outlook.com>
+References: <1594591536-531-1-git-send-email-iuliana.prodan@nxp.com>
+ <1594591536-531-3-git-send-email-iuliana.prodan@nxp.com>
+ <20200716073610.GA28215@gondor.apana.org.au>
+ <0c818beb-05e5-a6c6-717d-782b32afff26@nxp.com>
+ <20200716115253.GA25035@gondor.apana.org.au>
+ <59436173-9891-b857-f36b-e97c0a3264c8@nxp.com>
+ <20200716121932.GA31870@gondor.apana.org.au>
+In-Reply-To: <20200716121932.GA31870@gondor.apana.org.au>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [159.100.118.162]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 1e18d3bc-0fd7-4842-a715-08d829833c86
+x-ms-traffictypediagnostic: CY1PR04MB2363:
+x-microsoft-antispam-prvs: <CY1PR04MB23638D61FF7FBDBB34A6E7A6C37F0@CY1PR04MB2363.namprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: Qkzq1tqdCoS1L2Uj+wBvU2dxJ3tozMJSBbDF8ryt4BfK1UmC5BLi6LEIE/TQABY5EgphZPfzLRLULngTrIDTY9u4cQPxsmSGDKxWDOdEwhJ4WBiGjb35hQ6mboNga7tt/oS+cn9FTrH9gvySdyaxW9NVXuce9gwoz8HFtWfZhFOYWQKQvuv+wQW4jIdkCg0WzOdhiBE3TkeYhf9RRADo1eLvu3VIguXpAihFc26yyTcrC1+eK1FD/h9igcsYoO8aSOCzqH3ZQt8LteOazhPmAZt9sn1BRkRtWA8xb8CNUuLvVM+GfBr1n525zJyveXBr/P+mUfAbCq1jrOFiGjzNFPqj5KuEum0uV3MhOntJHk9iD87b31yiWfexzDKyLN4Ytp5POAEGHW6rwGCMwRiQLQ==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CY4PR0401MB3652.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(136003)(39850400004)(396003)(376002)(346002)(366004)(478600001)(5660300002)(54906003)(53546011)(66476007)(2906002)(86362001)(8676002)(8936002)(6506007)(4326008)(66946007)(83380400001)(76116006)(110136005)(7416002)(66446008)(966005)(186003)(33656002)(71200400001)(64756008)(66556008)(83080400001)(9686003)(26005)(52536014)(55016002)(316002)(7696005);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: hLpwAsZCGgY5UjupIOpIuE91XIcf63zTVHjT5Rocpfwj+dKC+bTGwOk/GTTwy/xK9b/a35Ufd0KMOEctSguBZtvwGy7LWzZ5d8nO57iZzNX3Mdeara58uXC9oMywYlJ8lFgYmCtHi38nYH3Bg2U3a3mWiby3sOjqIGn3g92ijd+jdJIWOG/GVpgJ3RP170t7DAyLIi0UfgOGHK0n8AII2GWJRTXYDPJoCYc9rhfGYu7TkhYzv0naiVmWWBcKyBz4vpmztpiFnxQ4baqbT6TZcJLVIew5gOjivtVGPk+faKsDgQ08ZIAxGeNufzsKRYIx+FOb58WxM4KN5pDm+sg48ULge0Qy0BB523J62WV/SqTwZVDHNYCsJ1bGTL5R0fuohmMhTjKu/y5MGu6CsNthLeFjcUlbjwBDvGxy7gMylXFtHG2mV0Bfcna7/Y0dTQXn2hBGxlwXvxoiZRie2/ZOWZz3BNhflfocDI+Ylnm2PxBXJZHYCgs+Vti0DcC2lh1u
+x-ms-exchange-transport-forked: True
+MIME-Version: 1.0
+X-OriginatorOrg: rambus.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: CY4PR0401MB3652.namprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1e18d3bc-0fd7-4842-a715-08d829833c86
+X-MS-Exchange-CrossTenant-originalarrivaltime: 16 Jul 2020 12:24:50.4398
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: bd0ba799-c2b9-413c-9c56-5d1731c4827c
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: zxZ3v5MjUWGJlbd8ShstY+sLxucHtQimCJDVX5WQEiBkQ507LpM+pk+BhTabRoJUHWfuKVLwGzDWswgM3e329g==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY1PR04MB2363
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: rambus.com
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When getting the names of the child nodes, kasprintf is used to
-allocate memory which is used to create the string for the node
-name.  Unfortunately, there is no memory check to determine
-if this allocation fails, it may cause an error when trying
-to get child node name.
-
-This patch will check if the memory allocation fails, and returns
-and -ENOMEM error instead of blindly moving on.
-
-Fixes: 260249f929e8 ("clk: vc5: Enable addition output configurations of the Versaclock")
-
-Suggested-by: Dan Carpenter <dan.carpenter@oracle.com>
-Signed-off-by: Adam Ford <aford173@gmail.com>
-Reviewed-by: Luca Ceresoli <luca@lucaceresoli.net>
----
-V3:   Fix spelling error, and use the style of checking (!variable) instead of
-      (variable == NULL)
-
-V2:   Fix an issue where a goto was going to use an unitialized variable.
-
-diff --git a/drivers/clk/clk-versaclock5.c b/drivers/clk/clk-versaclock5.c
-index 9a5fb3834b9a..9a37168c4afc 100644
---- a/drivers/clk/clk-versaclock5.c
-+++ b/drivers/clk/clk-versaclock5.c
-@@ -789,10 +789,13 @@ static int vc5_get_output_config(struct i2c_client *client,
- 	int ret = 0;
- 
- 	child_name = kasprintf(GFP_KERNEL, "OUT%d", clk_out->num + 1);
-+	if (!child_name)
-+		return -ENOMEM;
-+
- 	np_output = of_get_child_by_name(client->dev.of_node, child_name);
- 	kfree(child_name);
- 	if (!np_output)
--		goto output_done;
-+		return 0;
- 
- 	ret = vc5_update_mode(np_output, clk_out);
- 	if (ret)
-@@ -813,7 +816,6 @@ static int vc5_get_output_config(struct i2c_client *client,
- 
- 	of_node_put(np_output);
- 
--output_done:
- 	return ret;
- }
- 
-@@ -828,7 +830,7 @@ static int vc5_probe(struct i2c_client *client, const struct i2c_device_id *id)
- 	int ret;
- 
- 	vc5 = devm_kzalloc(&client->dev, sizeof(*vc5), GFP_KERNEL);
--	if (vc5 == NULL)
-+	if (!vc5)
- 		return -ENOMEM;
- 
- 	i2c_set_clientdata(client, vc5);
--- 
-2.17.1
+PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBsaW51eC1jcnlwdG8tb3duZXJA
+dmdlci5rZXJuZWwub3JnIDxsaW51eC1jcnlwdG8tb3duZXJAdmdlci5rZXJuZWwub3JnPiBPbiBC
+ZWhhbGYgT2YgSGVyYmVydCBYdQ0KPiBTZW50OiBUaHVyc2RheSwgSnVseSAxNiwgMjAyMCAyOjIw
+IFBNDQo+IFRvOiBIb3JpYSBHZWFudMSDIDxob3JpYS5nZWFudGFAbnhwLmNvbT4NCj4gQ2M6IEl1
+bGlhbmEgUHJvZGFuIDxpdWxpYW5hLnByb2RhbkBueHAuY29tPjsgQXltZW4gU2doYWllciA8YXlt
+ZW4uc2doYWllckBueHAuY29tPjsgRGF2aWQgUy4gTWlsbGVyIDxkYXZlbUBkYXZlbWxvZnQubmV0
+PjsNCj4gU2lsdmFubyBEaSBOaW5ubyA8c2lsdmFuby5kaW5pbm5vQG54cC5jb20+OyBGcmFuY2sg
+TGVub3JtYW5kIDxmcmFuY2subGVub3JtYW5kQG54cC5jb20+OyBsaW51eC1jcnlwdG9Admdlci5r
+ZXJuZWwub3JnOw0KPiBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnOyBkbC1saW51eC1pbXgg
+PGxpbnV4LWlteEBueHAuY29tPg0KPiBTdWJqZWN0OiBSZTogW1BBVENIIDIvMl0gY3J5cHRvOiBj
+YWFtIC0gc3VwcG9ydCB0YWdnZWQga2V5cyBmb3Igc2tjaXBoZXIgYWxnb3JpdGhtcw0KPg0KPiA8
+PDwgRXh0ZXJuYWwgRW1haWwgPj4+DQo+IE9uIFRodSwgSnVsIDE2LCAyMDIwIGF0IDAzOjA3OjUw
+UE0gKzAzMDAsIEhvcmlhIEdlYW50xIMgd3JvdGU6DQo+ID4NCj4gPiBTbyBpbnN0ZWFkIG9mIHRr
+KGNiYyhhZXMpKSB1c2UgcGFlcyhjYmMoYWVzKSBvciBjYmMocGFlcyk/DQo+DQo+IFdlbGwgaWYg
+d2UncmUgZm9sbG93aW5nIHRoZSBleGlzdGluZyBwYWVzIG1vZGVsIHRoZW4gaXQnZCBiZQ0KPiBj
+YmMocGFlcykuDQo+DQo+ID4gSG93IHdvdWxkIHRoaXMgd29yayBmb3IgaG1hYyhzaGE1MTIpLA0K
+PiA+IHBhZXMoaG1hYyhzaGE1MTIpKSBvciBobWFjKHBzaGE1MTIpLCBvciBldmVuIHBobWFjKHNo
+YTUxMik/DQo+DQo+IFBlcmhhcHMgaG1hYyhwc2hhNTEyKS4NCj4NClRoYXQgd291bGQgbWFrZSBu
+byBzZW5zZSB0aG91Z2gsIGFzIHNoYTUxMiBkb2VzIG5vdCBpbnZvbHZlIGFueSBrZXlzIC4uLg0K
+SXQncyB0aGUgSE1BQyBwYXJ0IHRoYXQgbmVlZHMgdGhlIGtleXMuIFNvIHBobWFjKHNoYTUxMikg
+dGhlbj8NCg0KPiBUaGUgcG9pbnQgaXMgd2hhdGV2ZXIgc2NoZW1lIHlvdSBjb21lIHVwIHdpdGgg
+aGFzIHRvIGJlIGNvbnNpc3RlbnQNCj4gYWNyb3NzIGFsbCBkcml2ZXJzLg0KPg0KPiBDaGVlcnMs
+DQo+IC0tDQo+IEVtYWlsOiBIZXJiZXJ0IFh1IDxoZXJiZXJ0QGdvbmRvci5hcGFuYS5vcmcuYXU+
+DQo+IEhvbWUgUGFnZTogaHR0cDovL2dvbmRvci5hcGFuYS5vcmcuYXUvfmhlcmJlcnQvDQo+IFBH
+UCBLZXk6IGh0dHA6Ly9nb25kb3IuYXBhbmEub3JnLmF1L35oZXJiZXJ0L3B1YmtleS50eHQNCg0K
+UGFzY2FsIHZhbiBMZWV1d2VuDQpTaWxpY29uIElQIEFyY2hpdGVjdCBNdWx0aS1Qcm90b2NvbCBF
+bmdpbmVzLCBSYW1idXMgU2VjdXJpdHkNClJhbWJ1cyBST1RXIEhvbGRpbmcgQlYNCiszMS03MyA2
+NTgxOTUzDQoNCk5vdGU6IFRoZSBJbnNpZGUgU2VjdXJlL1ZlcmltYXRyaXggU2lsaWNvbiBJUCB0
+ZWFtIHdhcyByZWNlbnRseSBhY3F1aXJlZCBieSBSYW1idXMuDQpQbGVhc2UgYmUgc28ga2luZCB0
+byB1cGRhdGUgeW91ciBlLW1haWwgYWRkcmVzcyBib29rIHdpdGggbXkgbmV3IGUtbWFpbCBhZGRy
+ZXNzLg0KDQoNCioqIFRoaXMgbWVzc2FnZSBhbmQgYW55IGF0dGFjaG1lbnRzIGFyZSBmb3IgdGhl
+IHNvbGUgdXNlIG9mIHRoZSBpbnRlbmRlZCByZWNpcGllbnQocykuIEl0IG1heSBjb250YWluIGlu
+Zm9ybWF0aW9uIHRoYXQgaXMgY29uZmlkZW50aWFsIGFuZCBwcml2aWxlZ2VkLiBJZiB5b3UgYXJl
+IG5vdCB0aGUgaW50ZW5kZWQgcmVjaXBpZW50IG9mIHRoaXMgbWVzc2FnZSwgeW91IGFyZSBwcm9o
+aWJpdGVkIGZyb20gcHJpbnRpbmcsIGNvcHlpbmcsIGZvcndhcmRpbmcgb3Igc2F2aW5nIGl0LiBQ
+bGVhc2UgZGVsZXRlIHRoZSBtZXNzYWdlIGFuZCBhdHRhY2htZW50cyBhbmQgbm90aWZ5IHRoZSBz
+ZW5kZXIgaW1tZWRpYXRlbHkuICoqDQoNClJhbWJ1cyBJbmMuPGh0dHA6Ly93d3cucmFtYnVzLmNv
+bT4NCg==
 
