@@ -2,134 +2,164 @@ Return-Path: <SRS0=y5Sx=A3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30293C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 15:22:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3967FC433E5
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 15:22:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0B5852065F
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 15:22:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="plx+rFzx"
+	by mail.kernel.org (Postfix) with ESMTP id 167822076D
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 15:22:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594912964;
+	bh=DwVHfGGJTGv6nAmHEhHPiFSRol8+UO9qWC7oNMEKASg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=jGyet58AgAA4E2tgSMyCEVLyTXNUyg8jzF9ta9VqKV3zshRkBYtdrRdgNch45H4tD
+	 GzPehB+u9lLWw8lYKmRYHVCiIzrQqE2sJZ0a2HghP7xtrGsNusSlcPE8DfzaxPOskR
+	 xnx+khwfdfxTJ78e2oJm8Exhc03fJPSbx/EBTz1Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729096AbgGPPWV (ORCPT
+        id S1729166AbgGPPWm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 11:22:21 -0400
-Received: from mail29.static.mailgun.info ([104.130.122.29]:64460 "EHLO
-        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728150AbgGPPWV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 11:22:21 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1594912940; h=In-Reply-To: Content-Type: MIME-Version:
- References: Message-ID: Subject: Cc: To: From: Date: Sender;
- bh=Fsjdjjd/Og6F+tby19z8oTo04GrQvO0K2CiurdVNlIQ=; b=plx+rFzx9DnFD7gtnZuSIC3e4ihce6pfmwZnhff47l6jwuenHnBZSfjvbcb+JiAA5rAxN3Y7
- zRMXsFphTwHcZDxy6g0es1MMN3mwWHW8wXHQTr+pdojwWEbKkXG9tFL8AoYkBbdaZgyM6MZX
- zY9+YO0QPtDrWfLU0fNG/jXL/tw=
-X-Mailgun-Sending-Ip: 104.130.122.29
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n11.prod.us-west-2.postgun.com with SMTP id
- 5f106f4fee86618575d5d276 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Thu, 16 Jul 2020 15:16:31
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 97C25C433AF; Thu, 16 Jul 2020 15:16:30 +0000 (UTC)
-Received: from jcrouse1-lnx.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        Thu, 16 Jul 2020 11:22:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43364 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728949AbgGPPWk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jul 2020 11:22:40 -0400
+Received: from quaco.ghostprotocols.net (unknown [179.97.37.151])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: jcrouse)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 0060BC433C9;
-        Thu, 16 Jul 2020 15:16:28 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 0060BC433C9
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=jcrouse@codeaurora.org
-Date:   Thu, 16 Jul 2020 09:16:25 -0600
-From:   Jordan Crouse <jcrouse@codeaurora.org>
-To:     Will Deacon <will@kernel.org>
-Cc:     Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
-        linux-arm-msm@vger.kernel.org, Joerg Roedel <joro@8bytes.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org,
-        John Stultz <john.stultz@linaro.org>,
-        freedreno@lists.freedesktop.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [Freedreno] [PATCH v9 4/7] iommu/arm-smmu: Add a pointer to the
- attached device to smmu_domain
-Message-ID: <20200716151625.GA14526@jcrouse1-lnx.qualcomm.com>
-Mail-Followup-To: Will Deacon <will@kernel.org>,
-        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
-        linux-arm-msm@vger.kernel.org, Joerg Roedel <joro@8bytes.org>,
-        Robin Murphy <robin.murphy@arm.com>, linux-kernel@vger.kernel.org,
-        iommu@lists.linux-foundation.org,
-        John Stultz <john.stultz@linaro.org>,
-        freedreno@lists.freedesktop.org,
-        linux-arm-kernel@lists.infradead.org
-References: <20200626200042.13713-1-jcrouse@codeaurora.org>
- <20200626200042.13713-5-jcrouse@codeaurora.org>
- <20200713150901.GA3072@willie-the-truck>
- <20200713171917.GA3815@jcrouse1-lnx.qualcomm.com>
- <20200716085053.GB6771@willie-the-truck>
+        by mail.kernel.org (Postfix) with ESMTPSA id F2A1A2063A;
+        Thu, 16 Jul 2020 15:22:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594912959;
+        bh=DwVHfGGJTGv6nAmHEhHPiFSRol8+UO9qWC7oNMEKASg=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=W0VJ/hAd4vqcwztpNEBI3+gu2X6XCIMlXEJqmrcrsPfef0Gk2HJlpLz49T9DjFoxT
+         afouBzBFOrke2t2bJceDxRxXTSlVVpRIYkoU+JTRDF3J5SLykzFiDnOfOvr/TwiePL
+         lQoK62C/7yEmeDabLGtumJMMR8+2ypo8oQbpJ+ds=
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 369E4403C7; Thu, 16 Jul 2020 12:22:37 -0300 (-03)
+Date:   Thu, 16 Jul 2020 12:22:37 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Kajol Jain <kjain@linux.ibm.com>
+Cc:     peterz@infradead.org, mingo@redhat.com, mark.rutland@arm.com,
+        alexander.shishkin@linux.intel.com, pc@us.ibm.com,
+        jolsa@redhat.com, namhyung@kernel.org, ak@linux.intel.com,
+        yao.jin@linux.intel.com, linux-kernel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org, irogers@google.com,
+        maddy@linux.ibm.com, ravi.bangoria@linux.ibm.com,
+        anju@linux.vnet.ibm.com, kan.liang@linux.intel.com,
+        nasastry@in.ibm.com
+Subject: Re: [PATCH v3 0/5] powerpc/perf: Add json file support for hv_24x7
+ core level events
+Message-ID: <20200716152237.GC373728@kernel.org>
+References: <20200716094216.1418659-1-kjain@linux.ibm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200716085053.GB6771@willie-the-truck>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <20200716094216.1418659-1-kjain@linux.ibm.com>
+X-Url:  http://acmel.wordpress.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 16, 2020 at 09:50:53AM +0100, Will Deacon wrote:
-> On Mon, Jul 13, 2020 at 11:19:17AM -0600, Jordan Crouse wrote:
-> > On Mon, Jul 13, 2020 at 04:09:02PM +0100, Will Deacon wrote:
-> > > On Fri, Jun 26, 2020 at 02:00:38PM -0600, Jordan Crouse wrote:
-> > > > diff --git a/drivers/iommu/arm-smmu.h b/drivers/iommu/arm-smmu.h
-> > > > index 5f2de20e883b..d33cfe26b2f5 100644
-> > > > --- a/drivers/iommu/arm-smmu.h
-> > > > +++ b/drivers/iommu/arm-smmu.h
-> > > > @@ -345,6 +345,7 @@ struct arm_smmu_domain {
-> > > >  	struct mutex			init_mutex; /* Protects smmu pointer */
-> > > >  	spinlock_t			cb_lock; /* Serialises ATS1* ops and TLB syncs */
-> > > >  	struct iommu_domain		domain;
-> > > > +	struct device			*dev;	/* Device attached to this domain */
-> > > 
-> > > This really doesn't feel right to me -- you can generally have multiple
-> > > devices attached to a domain and they can come and go without the domain
-> > > being destroyed. Perhaps you could instead identify the GPU during
-> > > cfg_probe() and squirrel that information away somewhere?
-> > 
-> > I need some help here. The SMMU device (qcom,adreno-smmu) will have at least two
-> > stream ids from two different platform devices (GPU and GMU) and I need to
-> > configure split-pagetable and stall/terminate differently on the two domains.
+Em Thu, Jul 16, 2020 at 03:12:11PM +0530, Kajol Jain escreveu:
+> Patchset enhance current runtime parameter support. It introduces new
+> fields like "PerChip" and "PerCore" similar to the field "PerPkg" which is
+> used to specify perpkg events. 
 > 
-> Hmm. How does the GPU driver know which context bank is assigned to the GPU
-> and which one is assigned to the GMU? I assume it needs this information so
-> that it can play its nasty tricks with the TTBR registers?
+> The "PerCore" and "PerChip" specifies whether its core or chip events.
+> Based on which we can decide which runtime parameter user want to
+> access. Now character  '?' can refers different parameter based on user
+> requirement.
 > 
-> I ask because if we need to guarantee stability of the context-bank
-> assignment, then you could match on that in the ->init_context() callback,
-> but now I worry that it currently works by luck :/
+> Initially, every time we want to add new terms like chip, core, thread
+> etc, we need to create corrsponding fields in pmu_events and event
+> struct.
+> This patchset adds an enum called 'aggr_mode_class' which store all these
+> aggregation like perpkg/percore. It also adds new field 'AggregationMode'
+> to capture these terms.
+> Now, if user wants to add any new term, they just need to add it in
+> the enum defined. I try to test it with  my current setup.
+> 
+> I also need to replace PerPkg field to AggregationMode in all the
+> x86 uncore json files. It will great if Andi and team can test it
+> and let me know if they have any concerns.
+> 
+> Changelog:
+> v2 -> v3:
+> - Did some nits changes suggested by Jiri include correction of
+>   indentation, and making PerCore/PerChip values forward after
+>   PerPkg as 1 in the enum.
+> - Rebase the patchset on Arnaldo's tmp.perf/core branch.
+> - Change RFC tag
+
+Hey, have anybody provided Acked-by/Reviewed-by for previous revisions
+of this patchset? If so you could have collected them for patches
+without changes, was that the case?
+
+- Arnaldo
  
-Its more like "educated" luck. If we assign the domains in the right order we
-know that the GPU will be on context bank 0 but you are entirely right that if
-everything doesn't go exactly the way we need things go badly.
-
-Some targets do have the ability to reprogram which context bank is used but
-that would require a domain attribute from the SMMU driver to communicate that
-information back to the GPU driver.
-
-> Do we need to add an extra callback to allocate the context bank?
-
-That seems like a reasonable option. That seems like it would work with legacy
-targets and rely less on luck.
-
-Jordan
+> v1 -> v2:
+> - Rather then adding new field as PerCore/PerChip, created a new enum
+>   to get these fields. And new field as "AggregationMode" which can
+>   be used to capture these fields from json file.
+>   - Suggested By Ian Rogers
+> 
+> 
+> Kajol Jain (5):
+>   perf/pmu-events/jevents: Add enum to store aggregation like PerPkg
+>   pmu-events/x86/uncore: Replace PerPkg field to AggregationMode in x86
+>     json files
+>   perf jevents: Add support for parsing perchip/percore events
+>   perf/tools: Pass pmu_event structure as a parameter for
+>     arch_get_runtimeparam
+>   perf/tools/pmu_events/powerpc: Add hv_24x7 core level metric events
+> 
+>  tools/perf/arch/powerpc/util/header.c         |   7 +-
+>  .../arch/powerpc/power9/nest_metrics.json     |  27 +-
+>  .../arch/x86/broadwellde/uncore-cache.json    |  62 ++--
+>  .../arch/x86/broadwellde/uncore-memory.json   |  18 +-
+>  .../arch/x86/broadwellde/uncore-power.json    |  18 +-
+>  .../arch/x86/broadwellx/uncore-cache.json     |  62 ++--
+>  .../x86/broadwellx/uncore-interconnect.json   |   6 +-
+>  .../arch/x86/broadwellx/uncore-memory.json    |  18 +-
+>  .../arch/x86/broadwellx/uncore-power.json     |  18 +-
+>  .../arch/x86/cascadelakex/uncore-memory.json  |  64 ++--
+>  .../arch/x86/cascadelakex/uncore-other.json   | 332 +++++++++---------
+>  .../arch/x86/haswellx/uncore-cache.json       |  62 ++--
+>  .../x86/haswellx/uncore-interconnect.json     |   6 +-
+>  .../arch/x86/haswellx/uncore-memory.json      |  18 +-
+>  .../arch/x86/haswellx/uncore-power.json       |  18 +-
+>  .../arch/x86/ivytown/uncore-cache.json        |  62 ++--
+>  .../arch/x86/ivytown/uncore-interconnect.json |  10 +-
+>  .../arch/x86/ivytown/uncore-memory.json       |  16 +-
+>  .../arch/x86/ivytown/uncore-power.json        |  52 +--
+>  .../arch/x86/jaketown/uncore-cache.json       |  40 +--
+>  .../x86/jaketown/uncore-interconnect.json     |  10 +-
+>  .../arch/x86/jaketown/uncore-memory.json      |  18 +-
+>  .../arch/x86/jaketown/uncore-power.json       |  52 +--
+>  .../x86/knightslanding/uncore-memory.json     |   8 +-
+>  .../arch/x86/skylakex/uncore-memory.json      |  36 +-
+>  .../arch/x86/skylakex/uncore-other.json       | 220 ++++++------
+>  .../arch/x86/tremontx/uncore-memory.json      |  14 +-
+>  .../arch/x86/tremontx/uncore-other.json       |  70 ++--
+>  .../arch/x86/tremontx/uncore-power.json       |   2 +-
+>  tools/perf/pmu-events/jevents.c               |  45 ++-
+>  tools/perf/pmu-events/jevents.h               |   2 +-
+>  tools/perf/pmu-events/pmu-events.h            |   8 +-
+>  tools/perf/tests/pmu-events.c                 |   8 +-
+>  tools/perf/util/metricgroup.c                 |   5 +-
+>  tools/perf/util/metricgroup.h                 |   3 +-
+>  tools/perf/util/pmu.c                         |   6 +-
+>  36 files changed, 729 insertions(+), 694 deletions(-)
+> 
+> -- 
+> 2.26.2
+> 
 
 -- 
-The Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+
+- Arnaldo
