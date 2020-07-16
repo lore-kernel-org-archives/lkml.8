@@ -2,60 +2,78 @@ Return-Path: <SRS0=y5Sx=A3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1F42C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 12:56:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BA0BC433E8
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 12:57:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A7F6F2076D
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 12:56:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 320BB20739
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 12:57:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="A9llEpHY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728837AbgGPM4o (ORCPT
+        id S1728867AbgGPM47 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 08:56:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33072 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728605AbgGPMz4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 08:55:56 -0400
-Received: from ozlabs.org (ozlabs.org [IPv6:2401:3900:2:1::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A72E9C061755
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Jul 2020 05:55:56 -0700 (PDT)
-Received: by ozlabs.org (Postfix, from userid 1034)
-        id 4B6vPc4zFDz9sTh; Thu, 16 Jul 2020 22:55:48 +1000 (AEST)
-From:   Michael Ellerman <patch-notifications@ellerman.id.au>
-To:     npiggin@gmail.com, Michael Ellerman <mpe@ellerman.id.au>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Christophe Leroy <christophe.leroy@csgroup.eu>
-Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-In-Reply-To: <173de3b659fa3a5f126a0eb170522cccd909950f.1594125164.git.christophe.leroy@csgroup.eu>
-References: <173de3b659fa3a5f126a0eb170522cccd909950f.1594125164.git.christophe.leroy@csgroup.eu>
-Subject: Re: [PATCH 1/2] powerpc/signal_32: Remove !FULL_REGS() special handling in PPC64 save_general_regs()
-Message-Id: <159490400779.3805857.2201061957365361885.b4-ty@ellerman.id.au>
-Date:   Thu, 16 Jul 2020 22:55:48 +1000 (AEST)
+        Thu, 16 Jul 2020 08:56:59 -0400
+Received: from crapouillou.net ([89.234.176.41]:59350 "EHLO crapouillou.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728150AbgGPM45 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jul 2020 08:56:57 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
+        s=mail; t=1594904215; h=from:from:sender:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:references; bh=DUN8mRRTBoSNE5wMk07ynYLLgnvVyFadqpMluACqVzo=;
+        b=A9llEpHYyVXFBQJ+53KuAtojE88Sbp0dYxrXJpLeyeCNQeGJnTPeIIXOvS6y6loRvjzqiK
+        +8SmbAgNEi70JtQqVdOuetgZtYhNFinJb4fi8ekKE4UVXRw9getW4wk065sdZENPxrlNv1
+        yKfwx/rcemLi0fqStgsCpo3Mf+SjekU=
+From:   Paul Cercueil <paul@crapouillou.net>
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        Sam Ravnborg <sam@ravnborg.org>
+Cc:     od@zcrc.me, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>,
+        stable@vger.kernel.org
+Subject: [PATCH v2 1/2] drm/panel-simple: Fix inverted V/H SYNC for Frida FRD350H54004 panel
+Date:   Thu, 16 Jul 2020 14:56:46 +0200
+Message-Id: <20200716125647.10964-1-paul@crapouillou.net>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 7 Jul 2020 12:33:35 +0000 (UTC), Christophe Leroy wrote:
-> Since commit ("1bd79336a426 powerpc: Fix various
-> syscall/signal/swapcontext bugs"), getting save_general_regs() called
-> without FULL_REGS() is very unlikely and generates a warning.
-> 
-> The 32-bit version of save_general_regs() doesn't take care of it
-> at all and copies all registers anyway since that commit.
-> 
-> [...]
+The FRD350H54004 panel was marked as having active-high VSYNC and HSYNC
+signals, which sorts-of worked, but resulted in the picture fading out
+under certain circumstances.
 
-Applied to powerpc/next.
+Fix this issue by marking VSYNC and HSYNC signals active-low.
 
-[1/2] powerpc/signal_32: Remove !FULL_REGS() special handling in PPC64 save_general_regs()
-      https://git.kernel.org/powerpc/c/667e3c413ecf20371692fd2dc37e06dc14d0b140
-[2/2] powerpc/signal_32: Simplify loop in PPC64 save_general_regs()
-      https://git.kernel.org/powerpc/c/020c4831e01264f8b62af6ca9e669b7c51881a56
+v2: Rebase on drm-misc-next
 
-cheers
+Fixes: 7b6bd8433609 ("drm/panel: simple: Add support for the Frida FRD350H54004 panel")
+Cc: stable@vger.kernel.org # v5.5
+Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+---
+ drivers/gpu/drm/panel/panel-simple.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/gpu/drm/panel/panel-simple.c b/drivers/gpu/drm/panel/panel-simple.c
+index f42249b72548..8b0bab9dd075 100644
+--- a/drivers/gpu/drm/panel/panel-simple.c
++++ b/drivers/gpu/drm/panel/panel-simple.c
+@@ -1763,7 +1763,7 @@ static const struct drm_display_mode frida_frd350h54004_mode = {
+ 	.vsync_start = 240 + 2,
+ 	.vsync_end = 240 + 2 + 6,
+ 	.vtotal = 240 + 2 + 6 + 2,
+-	.flags = DRM_MODE_FLAG_PHSYNC | DRM_MODE_FLAG_PVSYNC,
++	.flags = DRM_MODE_FLAG_NHSYNC | DRM_MODE_FLAG_NVSYNC,
+ };
+ 
+ static const struct panel_desc frida_frd350h54004 = {
+-- 
+2.27.0
+
