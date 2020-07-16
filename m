@@ -2,133 +2,133 @@ Return-Path: <SRS0=y5Sx=A3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40615C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 03:01:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8D00C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 03:01:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0FB752076C
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 03:01:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B6B9A2076C
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 03:01:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="XQfAvT6Z"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="QNys3f76"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728116AbgGPDBE (ORCPT
+        id S1728123AbgGPDBb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 23:01:04 -0400
-Received: from mail-vi1eur05on2062.outbound.protection.outlook.com ([40.107.21.62]:35168
-        "EHLO EUR05-VI1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726998AbgGPDBE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 23:01:04 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=L8pGgs+6Y4wmdb5EC/irfA1WkY2/8ZstTmZ8GJrvKNgk829xK5E4n4AaZt9LcKDtYbVeWtOXNPNtGL53OK5iQ5feu/Vc+uyP/NalU8D4RWv/fOzLo6N/xmY69PQIc/5djtnUYvZ686FqpwAm+c3If1yPtKESSklI7yvQbeTHSFP1tPaLXcZQn0+pyuG5LJR4F3iy/uXQXQCt39nNrfPAfSBDlDR4BfLoL7RiUHO0hvHERfUdY61KSUeJvYE1HGB5iaEumQFYt7yzizHdvckV5768YcjXJnDaND4zHwSyOr7EKlpiusXoblrbSbjzrGd+9lW0vJtaa+0dL3uqmwjiDw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=KVpE3Ljz0RSpqiTT5D+/SImJVtTPFtinOCSnoOFyUSk=;
- b=XjK54thI84DSuCfInT3Avf/69prq9jnIQpgPN6sK4T3OabIugykun9ZAIugn4fD+EVwELlReJiTu+LpPsqLIfiMyXqMuzkij2zlAKegRy/uCOp2/idzKDhHgtpfzW6L9omqvRnJ9m/oYIDX1B6n8u1xoc0WWWREfp9YzIR5p7qzHxd7UEKx7iJYTxer8IzmqI6UZGSFauveQC5bsw70tCs0a80JLHR3cMBrcVlBUbBrdhfHQkam7DyuOAukR0iIzRnpB6KDNHrW0jQVJTGVBq1usfyvWPEtbyqC3U/52gpZtkeInVdVBGS7nq6tWGw/ZP0Bij0d2JpaFK/v8vwaIuA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=KVpE3Ljz0RSpqiTT5D+/SImJVtTPFtinOCSnoOFyUSk=;
- b=XQfAvT6Z3LK6fIkWAcvLI3wqnaVp1Fxl73jQUFAjPjq7/L5gC5hLM/qdoypmFNWiH90qLexM5MCHRzUygLEwlzsQGXktBI5udrPScRap7tZW1ZTwuJQ0BW1BKV55uUD/OQvH8I/ys81NF+VoHgdSb2X2NVK1STmU4Y4wSjq0d8g=
-Received: from AM6PR0402MB3607.eurprd04.prod.outlook.com
- (2603:10a6:209:12::18) by AM6PR04MB5688.eurprd04.prod.outlook.com
- (2603:10a6:20b:a5::18) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3174.20; Thu, 16 Jul
- 2020 03:00:56 +0000
-Received: from AM6PR0402MB3607.eurprd04.prod.outlook.com
- ([fe80::75d9:c8cb:c564:d17f]) by AM6PR0402MB3607.eurprd04.prod.outlook.com
- ([fe80::75d9:c8cb:c564:d17f%5]) with mapi id 15.20.3174.026; Thu, 16 Jul 2020
- 03:00:56 +0000
-From:   Andy Duan <fugang.duan@nxp.com>
-To:     Sergey Organov <sorganov@gmail.com>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Richard Cochran <richardcochran@gmail.com>,
-        Vladimir Oltean <olteanv@gmail.com>
-Subject: RE: [EXT] [PATCH net-next v2 0/4]  net: fec: a few improvements
-Thread-Topic: [EXT] [PATCH net-next v2 0/4]  net: fec: a few improvements
-Thread-Index: AQHWWr6ibltQtnA9YECq6XGYxzCLvqkJhMYw
-Date:   Thu, 16 Jul 2020 03:00:56 +0000
-Message-ID: <AM6PR0402MB36071DED4EC0FAF0A02F5872FF7F0@AM6PR0402MB3607.eurprd04.prod.outlook.com>
-References: <20200706142616.25192-1-sorganov@gmail.com>
- <20200715154300.13933-1-sorganov@gmail.com>
-In-Reply-To: <20200715154300.13933-1-sorganov@gmail.com>
-Accept-Language: zh-CN, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: gmail.com; dkim=none (message not signed)
- header.d=none;gmail.com; dmarc=none action=none header.from=nxp.com;
-x-originating-ip: [119.31.174.67]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 1b726b92-b0a0-4216-92c2-08d82934760b
-x-ms-traffictypediagnostic: AM6PR04MB5688:
-x-microsoft-antispam-prvs: <AM6PR04MB5688BF0EDD9384AEAB900012FF7F0@AM6PR04MB5688.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8882;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: n1jCQlIzm7VEPhAoC6YBAKdSrtXE9GvCw5s8VxUFmLdF4jblDWR7ALJq180by/Z12Eil5hysrFp8cRyYM20O+jbpM6iFgr9c12OJMLCof/0IQbCwSwCODRtjBee9Rc/TCib62BIN39lA0EidmEj0TQpsvG9A9kQx/to7YcYsGlSKOF+lNSTZQCt49VkI/4N0zrXwD9S8pHgXQvBveAsZqYr2TB5O2HIRB1KKWxjojAYyCWWBi96rP7JAnsultqdDykcD5+8W2chRytPfI8uZIt8CDYhyaCSvHR25yq68AxLBd++CEEouYzSssD8/m5qqa4mfru2svSVfLmJFS2IRXA==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM6PR0402MB3607.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(376002)(39860400002)(136003)(346002)(366004)(396003)(4326008)(7696005)(55016002)(9686003)(478600001)(26005)(8676002)(6506007)(8936002)(86362001)(83380400001)(5660300002)(71200400001)(52536014)(316002)(110136005)(76116006)(54906003)(33656002)(186003)(2906002)(66556008)(66476007)(66946007)(66446008)(64756008);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: dBL7VW4eOmsRQ+oRa5KfWW8vUU9Pc51JOpcfdqCGvm/fBxkS6laxVRheAQtjvKeF0ZoRejOskXSp2OfiPW2MoHjCLc1zGTRcGfK4kO5kUsMqhgEg/D9oZBc0bWesobh8BR1xF2DWI7W0/wuZGhEoUj1WWosmqWDLPo2/cSQEtBw1E2NItDS/bFg4JvlNsFRkrVf6TVCNbIVFnKoom4J5oEqVj6eQ6RocYqVS05nzC+WGXaEEZmFvqJ2MaH1F1TuA5qSpuhYjhSlfDXP6xe8qFi1Ce2RcBggrnqMJ7n/BerbcTn+raGLd12WD2RTGGNfDLNltu7+swUvMfznSxg8ebByETuzq2FjfP6IT7oaxlUhzimlzC64j64EEcs8HPUGdX6h76wn2TCfyCMFjXLt7CbOpnZWzLRBQJxJm57VU7enOajJFyhSIUUX0q6Ev7OLTGvLv2F8dYCA2nka8ndLyUOPm/SbixZhdLzwRoWXH6fk=
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Wed, 15 Jul 2020 23:01:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54288 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727075AbgGPDBb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jul 2020 23:01:31 -0400
+Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 15059C08C5CE
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 20:01:31 -0700 (PDT)
+Received: by mail-pf1-x443.google.com with SMTP id a24so3006574pfc.10
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 20:01:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=GPQxbwTXWhN79V6vWRx99MB+RvD215vLIPI8oltDITs=;
+        b=QNys3f76fO3ArkQ+U5VKCzEsVFzThuhz6zGESkCJzCWv48Hn20rX6sbrqvMiXZmH0h
+         8emf3+hAUEec4VwlSjakOG0ZUQPpWEeV9RtlnZANPtzBQS6jsTwfcZfrgODHToJBAU+Z
+         QqZeqmpnSva1PaQhCQQpBA09o98pUGKIp+fZPLuk8pg3PaEktGanlA946ErEkY85CTqh
+         XtBI9FpHu75vBCj+mchEeC+5UUJKIu1ZxDJbfnJLXhnRvAhMtuvdM2RNyyKiAYkkNUG7
+         u1hBHZ+lNeypvSgt3AdCzOm6aj27OjOqfmedqtH96zkcJAzS+QhbYYy1UgU7zy8VpdVw
+         duAA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=GPQxbwTXWhN79V6vWRx99MB+RvD215vLIPI8oltDITs=;
+        b=Ll9QW/mfg2pl5uQj4GOiBEk+Y6bSnvWw5Ccys5tbKNStXS/JrrtGYlyYF0ZRXl3VUn
+         old7jTm0+HnQHCRKuYJppwXqjsCuCB62P8af0j1KJLiMROulQgFdNsg/u6ZP2zmq2g1t
+         gljZTpMtuAzQt+KcSNftpaWchKjjoQ7QOSBh4z+HAO+FTlDzW9p2aMh4p0dH6de6JG/E
+         5HRu7miM49LQj9BT/vAnzad2sDXd4VKJD19QIYrRbFtzSWygA/W+pw7dP0pLOO60yJpn
+         nWZezD1j9po4Qe5nB/xCZCv/Z6F3lXrRpLz1InjlnqPAHxqb+w9XegneI8jqE1nYNg5Z
+         qkEg==
+X-Gm-Message-State: AOAM5316t85ko+BRvbzNR1HPu99GcONeOgZ0skVy08Arz8DmKYnJy93G
+        X5TL851UmWIFFyntbxDEY5w7QDHpGw==
+X-Google-Smtp-Source: ABdhPJyzi/egeBx/Sr3rQArvWkCqTJA764GFCwXdcJsxZl69YGlOGD2d4Qqo/A7HCaa3I213BOGucg==
+X-Received: by 2002:a62:6305:: with SMTP id x5mr1903199pfb.81.1594868490574;
+        Wed, 15 Jul 2020 20:01:30 -0700 (PDT)
+Received: from Mani-XPS-13-9360 ([2409:4072:6d89:fed1:9157:c271:c363:4849])
+        by smtp.gmail.com with ESMTPSA id l16sm3224414pff.167.2020.07.15.20.01.27
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 15 Jul 2020 20:01:30 -0700 (PDT)
+Date:   Thu, 16 Jul 2020 08:31:24 +0530
+From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To:     Randy Dunlap <rdunlap@infradead.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Hemant Kumar <hemantk@codeaurora.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>
+Subject: Re: [PATCH] mhi: fix doubled words and struct image_info kernel-doc
+Message-ID: <20200716030124.GB3271@Mani-XPS-13-9360>
+References: <cab64692-31f6-5a2b-a540-aa434d35f9a9@infradead.org>
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: AM6PR0402MB3607.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 1b726b92-b0a0-4216-92c2-08d82934760b
-X-MS-Exchange-CrossTenant-originalarrivaltime: 16 Jul 2020 03:00:56.7723
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: RXvo+SsbjrmvfwXPEDhIHu5Hy87+7CT4ehgsFU7Rmc/04RsZPP8wU/YQwnK89XnthenGiQXOge041ws2Oymhvg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR04MB5688
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <cab64692-31f6-5a2b-a540-aa434d35f9a9@infradead.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sergey Organov <sorganov@gmail.com> Sent: Wednesday, July 15, 2020 11=
-:43 PM
-> This is a collection of simple improvements that reduce and/or simplify c=
-ode.
-> They got developed out of attempt to use DP83640 PTP PHY connected to
-> built-in FEC (that has its own PTP support) of the iMX 6SX micro-controll=
-er.
-> The primary bug-fix was now submitted separately, and this is the rest of=
- the
-> changes.
->=20
-> NOTE: the patches are developed and tested on 4.9.146, and rebased on top
-> of recent 'net-next/master', where, besides visual inspection, I only tes=
-ted
-> that they do compile.
->=20
-> Sergey Organov (4):
->   net: fec: enable to use PPS feature without time stamping
->   net: fec: initialize clock with 0 rather than current kernel time
->   net: fec: get rid of redundant code in fec_ptp_set()
->   net: fec: replace snprintf() with strlcpy() in fec_ptp_init()
->=20
-> v2:
->   - bug-fix patch from original series submitted separately
->   - added Acked-by: where applicable
->=20
->  drivers/net/ethernet/freescale/fec_ptp.c | 13 +++----------
->  1 file changed, 3 insertions(+), 10 deletions(-)
->=20
+On Wed, Jul 15, 2020 at 06:29:32PM -0700, Randy Dunlap wrote:
+> From: Randy Dunlap <rdunlap@infradead.org>
+> 
+> Drop doubled word "table" in kernel-doc.
+> Fix syntax for the kernel-doc notation for struct image_info.
+> Note that the bhi_vec field is private and not part of the kernel-doc.
+> 
+> Drop doubled word "device" in a comment.
+> 
+> Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
 
-For the version: Acked-by: Fugang Duan <fugang.duan@nxp.com>
-Thanks!
+Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+
+Thanks,
+Mani
+
+> Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> Cc: Hemant Kumar <hemantk@codeaurora.org>
+> Cc: linux-arm-msm@vger.kernel.org
+> ---
+>  include/linux/mhi.h |   10 ++++++----
+>  1 file changed, 6 insertions(+), 4 deletions(-)
+> 
+> --- linux-next-20200714.orig/include/linux/mhi.h
+> +++ linux-next-20200714/include/linux/mhi.h
+> @@ -85,13 +85,15 @@ enum mhi_ch_type {
+>  };
+>  
+>  /**
+> - * struct image_info - Firmware and RDDM table table
+> - * @mhi_buf - Buffer for firmware and RDDM table
+> - * @entries - # of entries in table
+> + * struct image_info - Firmware and RDDM table
+> + * @mhi_buf: Buffer for firmware and RDDM table
+> + * @entries: # of entries in table
+>   */
+>  struct image_info {
+>  	struct mhi_buf *mhi_buf;
+> +	/* private: from internal.h */
+>  	struct bhi_vec_entry *bhi_vec;
+> +	/* public: */
+>  	u32 entries;
+>  };
+>  
+> @@ -593,7 +595,7 @@ int mhi_async_power_up(struct mhi_contro
+>  
+>  /**
+>   * mhi_sync_power_up - Start MHI power up sequence and wait till the device
+> - *                     device enters valid EE state
+> + *                     enters valid EE state
+>   * @mhi_cntrl: MHI controller
+>   */
+>  int mhi_sync_power_up(struct mhi_controller *mhi_cntrl);
+> 
