@@ -2,202 +2,177 @@ Return-Path: <SRS0=y5Sx=A3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.3 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 723CFC433E7
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 08:09:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F36F8C433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 08:10:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 47F7120657
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 08:09:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB2BB206F4
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 08:10:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="gyYRQVs7"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="rlzotqsD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726894AbgGPIJE (ORCPT
+        id S1726954AbgGPIKo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 04:09:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45152 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726834AbgGPIJA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 04:09:00 -0400
-Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 20E88C061755
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Jul 2020 01:09:00 -0700 (PDT)
-Received: by mail-pg1-x543.google.com with SMTP id l63so4449734pge.12
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Jul 2020 01:09:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=aCGGactJae57qbbpYq++cFizr8LPhk+6s9WIHNZJ04M=;
-        b=gyYRQVs7B8rmkhComuQRCcJpLDEtIx8vxhDmau+6R2aE5Q5MdT3CM/RdY/j0v9jZF+
-         KwtzTbBXKD0F3ABDzmqXSEvGouXyCrNujVr9fZ/sCrw6ata/aQq/hOHhf1npzTRchpRS
-         +L4OsbBx5DEXz/FYoqJCpx0QOUST0xnjM69Lg=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=aCGGactJae57qbbpYq++cFizr8LPhk+6s9WIHNZJ04M=;
-        b=gGoGTL31ntZzyC2NocnoMRM/4/G1SGrfjUhTBbEaUK5ky0Wg8A/v9bsfd6DjCXJsur
-         XJLAXMdbx5RZzY/+AJ2fISx+mLGipMSZt8HP7Je/y/KlE6vgUg2CB9+rLRBGyT9txbF+
-         vM4WVjvrDu0nhJbgtuTt4HY/Tfx+1P6LACJQSUOPaFTcwBZZi+jpYPOX8nN31aj8OlGr
-         RSHWmcksSBZYd3X+LwRc0jE1143v6Y4wc2rSK7UEmjx8ZlM7PqKLbF5nHeUFlTQEmz0O
-         DGnWwyNt77Y4wdQ/RGCbAewz7YngyPaSpU/Lx1uJAe8WMInnaduthkxf53EdDz00RCaE
-         /daA==
-X-Gm-Message-State: AOAM5332GUCU2FpUQU6Rukit76a+NgQjQkbjVc5lseVdFXR2I8W6Naki
-        6ie8/Q8kxJ/jEQck8487RzwZrw==
-X-Google-Smtp-Source: ABdhPJzY89owDrFh1Z8KnO6xelQRBmWpGhbIDfhY7bcls9gGw1PkpgX/IgpGYwIRWXuRLq7oDoIdPw==
-X-Received: by 2002:aa7:9f8f:: with SMTP id z15mr2592603pfr.73.1594886939485;
-        Thu, 16 Jul 2020 01:08:59 -0700 (PDT)
-Received: from rayagonda.dhcp.broadcom.net ([192.19.234.250])
-        by smtp.gmail.com with ESMTPSA id a3sm4353085pgd.73.2020.07.16.01.08.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 16 Jul 2020 01:08:58 -0700 (PDT)
-From:   Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
-To:     Wolfram Sang <wsa@kernel.org>, linux-i2c@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        bcm-kernel-feedback-list@broadcom.com,
-        Lori Hikichi <lori.hikichi@broadcom.com>,
-        Robert Richter <rrichter@marvell.com>,
-        Nishka Dasgupta <nishkadg.linux@gmail.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        linux-arm-kernel@lists.infradead.org
-Cc:     Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
-Subject: [PATCH V1 2/2] i2c: iproc: add slave pec support
-Date:   Thu, 16 Jul 2020 13:38:36 +0530
-Message-Id: <20200716080836.2279-3-rayagonda.kokatanur@broadcom.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200716080836.2279-1-rayagonda.kokatanur@broadcom.com>
-References: <20200716080836.2279-1-rayagonda.kokatanur@broadcom.com>
+        Thu, 16 Jul 2020 04:10:44 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:47963 "EHLO m43-7.mailgun.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726232AbgGPIKn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jul 2020 04:10:43 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1594887042; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=OUndtw99GjuFdnvm3oihRnsk0PT6v/AS5DPedfQMp64=;
+ b=rlzotqsDzYmOXIPLrm0hXNBkdv+YI9BQvgCIDRWYDxRL4Hp7DszKO0W7CAdNZ1eGmJqyH9dG
+ 3i7bG3wZzmqWAwgYiI0YOqFHwV4xWDs101WcoV/T/zCihz8DD7Uab6SDtcHFpPS9Nr3EYrVz
+ QoZuqy6LJrrxnw16mwAxZeZAYTw=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n05.prod.us-east-1.postgun.com with SMTP id
+ 5f100b811e603dbb44934c4b (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Thu, 16 Jul 2020 08:10:41
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 2A221C433C6; Thu, 16 Jul 2020 08:10:41 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: sibis)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 31ABDC433C9;
+        Thu, 16 Jul 2020 08:10:40 +0000 (UTC)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Thu, 16 Jul 2020 13:40:40 +0530
+From:   Sibi Sankar <sibis@codeaurora.org>
+To:     Mathieu Poirier <mathieu.poirier@linaro.org>
+Cc:     Rishabh Bhatnagar <rishabhb@codeaurora.org>,
+        linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        bjorn.andersson@linaro.org, tsoni@codeaurora.org,
+        psodagud@codeaurora.org, sidgup@codeaurora.org,
+        linux-kernel-owner@vger.kernel.org
+Subject: Re: [PATCH v1 2/4] remoteproc: qcom_q6v5_mss: Replace mask based
+ tracking with size
+In-Reply-To: <20200714171836.GA1407705@xps15>
+References: <1594326716-15474-1-git-send-email-rishabhb@codeaurora.org>
+ <1594326716-15474-3-git-send-email-rishabhb@codeaurora.org>
+ <20200714171836.GA1407705@xps15>
+Message-ID: <e1eb249d26e9b97e8438355fd1855ad8@codeaurora.org>
+X-Sender: sibis@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Iproc supports PEC computation and checking in both Master
-and Slave mode.
+On 2020-07-14 22:48, Mathieu Poirier wrote:
+> On Thu, Jul 09, 2020 at 01:31:54PM -0700, Rishabh Bhatnagar wrote:
+>> From: Sibi Sankar <sibis@codeaurora.org>
+>> 
+>> In order to land inline coredump support for mss, the dump_segment
+>> function would need to support granularities less than the segment
+>> size. This is achieved by replacing mask based tracking with size.
+>> 
+>> Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
+>> Signed-off-by: Rishabh Bhatnagar <rishabhb@codeaurora.org>
+>> ---
+>>  drivers/remoteproc/qcom_q6v5_mss.c | 15 +++++++--------
+>>  1 file changed, 7 insertions(+), 8 deletions(-)
+>> 
+>> diff --git a/drivers/remoteproc/qcom_q6v5_mss.c 
+>> b/drivers/remoteproc/qcom_q6v5_mss.c
+>> index feb70283b..c6ce032 100644
+>> --- a/drivers/remoteproc/qcom_q6v5_mss.c
+>> +++ b/drivers/remoteproc/qcom_q6v5_mss.c
+>> @@ -181,8 +181,8 @@ struct q6v5 {
+>>  	bool running;
+>> 
+>>  	bool dump_mba_loaded;
+>> -	unsigned long dump_segment_mask;
+>> -	unsigned long dump_complete_mask;
+>> +	size_t current_dump_size;
+>> +	size_t total_dump_size;
+>> 
+>>  	phys_addr_t mba_phys;
+>>  	void *mba_region;
+>> @@ -1203,7 +1203,6 @@ static void qcom_q6v5_dump_segment(struct rproc 
+>> *rproc,
+>>  {
+>>  	int ret = 0;
+>>  	struct q6v5 *qproc = rproc->priv;
+>> -	unsigned long mask = BIT((unsigned long)segment->priv);
+>>  	int offset = segment->da - qproc->mpss_reloc;
+>>  	void *ptr = NULL;
+>> 
+>> @@ -1229,10 +1228,10 @@ static void qcom_q6v5_dump_segment(struct 
+>> rproc *rproc,
+>>  		memset(dest, 0xff, segment->size);
+>>  	}
+>> 
+>> -	qproc->dump_segment_mask |= mask;
+>> +	qproc->current_dump_size += segment->size;
+>> 
+>>  	/* Reclaim mba after copying segments */
+>> -	if (qproc->dump_segment_mask == qproc->dump_complete_mask) {
+>> +	if (qproc->current_dump_size == qproc->total_dump_size) {
+>>  		if (qproc->dump_mba_loaded) {
+>>  			/* Try to reset ownership back to Q6 */
+>>  			q6v5_xfer_mem_ownership(qproc, &qproc->mpss_perm,
+>> @@ -1274,7 +1273,7 @@ static int q6v5_start(struct rproc *rproc)
+>>  			"Failed to reclaim mba buffer system may become unstable\n");
+>> 
+>>  	/* Reset Dump Segment Mask */
+>> -	qproc->dump_segment_mask = 0;
+>> +	qproc->current_dump_size = 0;
+>>  	qproc->running = true;
+>> 
+>>  	return 0;
+>> @@ -1323,7 +1322,7 @@ static int 
+>> qcom_q6v5_register_dump_segments(struct rproc *rproc,
+>> 
+>>  	ehdr = (struct elf32_hdr *)fw->data;
+>>  	phdrs = (struct elf32_phdr *)(ehdr + 1);
+>> -	qproc->dump_complete_mask = 0;
+>> +	qproc->total_dump_size = 0;
+>> 
+>>  	for (i = 0; i < ehdr->e_phnum; i++) {
+>>  		phdr = &phdrs[i];
+>> @@ -1338,7 +1337,7 @@ static int 
+>> qcom_q6v5_register_dump_segments(struct rproc *rproc,
+>>  		if (ret)
+>>  			break;
+> 
+> There is also no longer a need to carry the 'i' in:
+> 
+>                 ret = rproc_coredump_add_custom_segment(rproc, 
+> phdr->p_paddr,
+>                                                         phdr->p_memsz,
+>                                                         
+> qcom_q6v5_dump_segment,
+>                                                         (void *)i);
 
-This patch adds support for PEC in slave mode.
+I assume Rishabh will re-spin the
+series today and this will be taken
+care as well.
 
-Signed-off-by: Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
----
- drivers/i2c/busses/i2c-bcm-iproc.c | 50 +++++++++++++++++++++++++++---
- 1 file changed, 46 insertions(+), 4 deletions(-)
+>> 
+>> -		qproc->dump_complete_mask |= BIT(i);
+>> +		qproc->total_dump_size += phdr->p_memsz;
+>>  	}
+>> 
+>>  	release_firmware(fw);
+>> --
+>> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora 
+>> Forum,
+>> a Linux Foundation Collaborative Project
+>> 
 
-diff --git a/drivers/i2c/busses/i2c-bcm-iproc.c b/drivers/i2c/busses/i2c-bcm-iproc.c
-index 8a3c98866fb7..51c8b165bb5e 100644
---- a/drivers/i2c/busses/i2c-bcm-iproc.c
-+++ b/drivers/i2c/busses/i2c-bcm-iproc.c
-@@ -93,6 +93,7 @@
- #define S_CMD_STATUS_MASK            0x07
- #define S_CMD_STATUS_SUCCESS         0x0
- #define S_CMD_STATUS_TIMEOUT         0x5
-+#define S_CMD_PEC_SHIFT              8
- 
- #define IE_OFFSET                    0x38
- #define IE_M_RX_FIFO_FULL_SHIFT      31
-@@ -138,7 +139,9 @@
- #define S_RX_OFFSET                  0x4c
- #define S_RX_STATUS_SHIFT            30
- #define S_RX_STATUS_MASK             0x03
--#define S_RX_PEC_ERR_SHIFT           29
-+#define S_RX_PEC_ERR_SHIFT           28
-+#define S_RX_PEC_ERR_MASK            0x3
-+#define S_RX_PEC_ERR                 0x1
- #define S_RX_DATA_SHIFT              0
- #define S_RX_DATA_MASK               0xff
- 
-@@ -205,6 +208,8 @@ struct bcm_iproc_i2c_dev {
- 	/* bytes that have been read */
- 	unsigned int rx_bytes;
- 	unsigned int thld_bytes;
-+
-+	bool en_s_pec;
- };
- 
- /*
-@@ -321,6 +326,24 @@ static void bcm_iproc_i2c_check_slave_status(
- 	}
- }
- 
-+static int bcm_iproc_smbus_check_slave_pec(struct bcm_iproc_i2c_dev *iproc_i2c,
-+					   u32 val)
-+{
-+	u8 err_status;
-+	int ret = 0;
-+
-+	if (!iproc_i2c->en_s_pec)
-+		return ret;
-+
-+	err_status = (u8)((val >> S_RX_PEC_ERR_SHIFT) & S_RX_PEC_ERR_MASK);
-+	if (err_status == S_RX_PEC_ERR) {
-+		dev_err(iproc_i2c->device, "Slave PEC error\n");
-+		ret = -EBADMSG;
-+	}
-+
-+	return ret;
-+}
-+
- static bool bcm_iproc_i2c_slave_isr(struct bcm_iproc_i2c_dev *iproc_i2c,
- 				    u32 status)
- {
-@@ -347,6 +370,8 @@ static bool bcm_iproc_i2c_slave_isr(struct bcm_iproc_i2c_dev *iproc_i2c,
- 			iproc_i2c_wr_reg(iproc_i2c, S_TX_OFFSET, value);
- 
- 			val = BIT(S_CMD_START_BUSY_SHIFT);
-+			if (iproc_i2c->en_s_pec)
-+				val |= BIT(S_CMD_PEC_SHIFT);
- 			iproc_i2c_wr_reg(iproc_i2c, S_CMD_OFFSET, val);
- 
- 			/*
-@@ -361,9 +386,19 @@ static bool bcm_iproc_i2c_slave_isr(struct bcm_iproc_i2c_dev *iproc_i2c,
- 			value = (u8)((val >> S_RX_DATA_SHIFT) & S_RX_DATA_MASK);
- 			i2c_slave_event(iproc_i2c->slave,
- 					I2C_SLAVE_WRITE_RECEIVED, &value);
--			if (rx_status == I2C_SLAVE_RX_END)
--				i2c_slave_event(iproc_i2c->slave,
--						I2C_SLAVE_STOP, &value);
-+			if (rx_status == I2C_SLAVE_RX_END) {
-+				int ret;
-+
-+				ret = bcm_iproc_smbus_check_slave_pec(iproc_i2c,
-+								      val);
-+				if (!ret)
-+					i2c_slave_event(iproc_i2c->slave,
-+							I2C_SLAVE_STOP, &value);
-+				else
-+					i2c_slave_event(iproc_i2c->slave,
-+							I2C_SLAVE_PEC_ERR,
-+							&value);
-+			}
- 		}
- 	} else if (status & BIT(IS_S_TX_UNDERRUN_SHIFT)) {
- 		/* Master read other than start */
-@@ -372,6 +407,8 @@ static bool bcm_iproc_i2c_slave_isr(struct bcm_iproc_i2c_dev *iproc_i2c,
- 
- 		iproc_i2c_wr_reg(iproc_i2c, S_TX_OFFSET, value);
- 		val = BIT(S_CMD_START_BUSY_SHIFT);
-+		if (iproc_i2c->en_s_pec)
-+			val |= BIT(S_CMD_PEC_SHIFT);
- 		iproc_i2c_wr_reg(iproc_i2c, S_CMD_OFFSET, val);
- 	}
- 
-@@ -1065,6 +1102,11 @@ static int bcm_iproc_i2c_reg_slave(struct i2c_client *slave)
- 	if (slave->flags & I2C_CLIENT_TEN)
- 		return -EAFNOSUPPORT;
- 
-+	/* Enable partial slave HW PEC support if requested by the client */
-+	iproc_i2c->en_s_pec = !!(slave->flags & I2C_CLIENT_PEC);
-+	if (iproc_i2c->en_s_pec)
-+		dev_info(iproc_i2c->device, "Enable PEC\n");
-+
- 	iproc_i2c->slave = slave;
- 	bcm_iproc_i2c_slave_init(iproc_i2c, false);
- 	return 0;
 -- 
-2.17.1
-
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project.
