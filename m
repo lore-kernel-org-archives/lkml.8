@@ -2,188 +2,152 @@ Return-Path: <SRS0=y5Sx=A3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D211DC433E4
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 10:03:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3157C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 10:05:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A5FC620890
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 10:03:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bl7dbS4T"
+	by mail.kernel.org (Postfix) with ESMTP id 804F62074B
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 10:05:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727062AbgGPKDo (ORCPT
+        id S1726812AbgGPKFn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 06:03:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34664 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726027AbgGPKDn (ORCPT
+        Thu, 16 Jul 2020 06:05:43 -0400
+Received: from outpost1.zedat.fu-berlin.de ([130.133.4.66]:58271 "EHLO
+        outpost1.zedat.fu-berlin.de" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725965AbgGPKFl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 06:03:43 -0400
-Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B3E9CC061755;
-        Thu, 16 Jul 2020 03:03:43 -0700 (PDT)
-Received: by mail-pl1-x644.google.com with SMTP id k5so3638795plk.13;
-        Thu, 16 Jul 2020 03:03:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:subject:to:cc:references:in-reply-to:mime-version
-         :message-id:content-transfer-encoding;
-        bh=HzIbutGmLrLif9xBPq32ksQXCD4wvXBqbvefIYna8wU=;
-        b=bl7dbS4T4uDjdhahJk0bCdTaM3dC1r+F5i8++IxyKP2qnF2Kf/rLnM18Ahb2BQj84+
-         X8rk719vY3DynXplaAKcF6U2zU6SW98a3GhFzdFE8OGuy8RFhP7fGa6EV1ETGVQEWTd1
-         Mf7XSgUl+AIvYgwE2i17W/Z1qPH34WVz3AxetZZeUeTCl0udyR+Zpi1gXsEDzHchQB5K
-         SRsEl2UQID0/PTfY+V12/dgTQxru9rz1uX91W3Ay1wB1rNmszHGR0jNnXufPtbZ7agzA
-         GRg3qZAPwI2+KnlBfnWqXmc320TXESStI+zEl+6Cv3EcyGSD+QmPeMPqa26dtaIVA6h/
-         j7+g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:subject:to:cc:references:in-reply-to
-         :mime-version:message-id:content-transfer-encoding;
-        bh=HzIbutGmLrLif9xBPq32ksQXCD4wvXBqbvefIYna8wU=;
-        b=rClRJAoGg9J/3Zy/6h2BjOJkX2zMLTFg9awpXBDGchaznekyOFZW8YUKHElNaURWZ0
-         Y9TUoQPGYmGqjFQI5+xtWZfzpUukkErK7uG8BJoCpLn55X9GnDjuPZLYlk3vjtBaCfJz
-         iJTD1CazzhLyJAqcfLR9lBMarKr8Bv5mIO8IO2PEesqA/0Etccp2GyKQ0A0kLhn3YE5Y
-         aeGFFlo0ZDVw5GalpBzvCOeZPWXIcH45CdkMI+CFxFUO21GsTwS4rzXyGu6zL7QyeOg6
-         fnlozSkvxbLzX+iI95ZQILpWR9nBPnChOuPagzYyu+kbQGFUdLIKFcTnbgsfexFhhHm4
-         6jag==
-X-Gm-Message-State: AOAM532WQGIL3JslXZ4ubifqeF2bnIJZqwNOC/kcExXyoCg5wyiXkse6
-        zGwsvkL7hHd+l320NI8La38=
-X-Google-Smtp-Source: ABdhPJz/0JtE0/eGZGAu9L0wDX7GXQ/CJQgKm6kh7sieTO8a1OloSXoQV79VZaFvU7UdYKEcVxmDrw==
-X-Received: by 2002:a17:90b:2351:: with SMTP id ms17mr4083381pjb.105.1594893823195;
-        Thu, 16 Jul 2020 03:03:43 -0700 (PDT)
-Received: from localhost (110-174-173-27.tpgi.com.au. [110.174.173.27])
-        by smtp.gmail.com with ESMTPSA id s194sm4639978pgs.24.2020.07.16.03.03.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 16 Jul 2020 03:03:42 -0700 (PDT)
-Date:   Thu, 16 Jul 2020 20:03:36 +1000
-From:   Nicholas Piggin <npiggin@gmail.com>
-Subject: Re: [RFC PATCH 4/7] x86: use exit_lazy_tlb rather than
- membarrier_mm_sync_core_before_usermode
-To:     Andy Lutomirski <luto@amacapital.net>,
-        Peter Zijlstra <peterz@infradead.org>
-Cc:     Anton Blanchard <anton@ozlabs.org>, Arnd Bergmann <arnd@arndb.de>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-mm <linux-mm@kvack.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        x86 <x86@kernel.org>
-References: <1594868476.6k5kvx8684.astroid@bobo.none>
-        <EFAD6E2F-EC08-4EB3-9ECC-2A963C023FC5@amacapital.net>
-        <20200716085032.GO10769@hirez.programming.kicks-ass.net>
-In-Reply-To: <20200716085032.GO10769@hirez.programming.kicks-ass.net>
+        Thu, 16 Jul 2020 06:05:41 -0400
+Received: from inpost2.zedat.fu-berlin.de ([130.133.4.69])
+          by outpost.zedat.fu-berlin.de (Exim 4.93)
+          with esmtps (TLS1.2)
+          tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+          (envelope-from <glaubitz@zedat.fu-berlin.de>)
+          id 1jw0ln-000QVP-0Q; Thu, 16 Jul 2020 12:05:39 +0200
+Received: from p57bd93f9.dip0.t-ipconnect.de ([87.189.147.249] helo=[192.168.178.139])
+          by inpost2.zedat.fu-berlin.de (Exim 4.93)
+          with esmtpsa (TLS1.2)
+          tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+          (envelope-from <glaubitz@physik.fu-berlin.de>)
+          id 1jw0lm-0012f3-Pb; Thu, 16 Jul 2020 12:05:38 +0200
+Subject: Re: ioremap and dma cleanups and fixes for superh (2nd resend)
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Rich Felker <dalias@libc.org>, Christoph Hellwig <hch@lst.de>,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Linux-sh list <linux-sh@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <8cbf2963-d0e4-0ca8-4ffe-c2057694447f@physik.fu-berlin.de>
+ <011f29e6-ad71-366e-dbff-bc8471f3da60@physik.fu-berlin.de>
+ <CAMuHMdUre2-fRgLP8YiwjAKN6J=m1vGhPSMMUdpof7jPJfcWuw@mail.gmail.com>
+ <def65208-a38b-8663-492a-cae150027003@physik.fu-berlin.de>
+ <b5f1853e-031d-c09d-57d2-fb4baffa01ea@physik.fu-berlin.de>
+ <CAMuHMdW8RtJKk3u7RWQKP2tA3AYT2rB2aqhUT1KnJ4tJwWWKDA@mail.gmail.com>
+ <b5cd845f-7b5e-af8e-a15d-3ede7e61ced4@physik.fu-berlin.de>
+ <0322def7-fc16-c805-8f2b-c88fffce2f1e@physik.fu-berlin.de>
+ <2df7ca7f-7e26-c916-b6ac-4ec1913fb8d7@physik.fu-berlin.de>
+ <CAMuHMdXjfq=RjJ2doR7XyQMnZUA8ccxKc7_tyUzTX29tpyZojw@mail.gmail.com>
+ <20200716094039.GQ10769@hirez.programming.kicks-ass.net>
+From:   John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
+Autocrypt: addr=glaubitz@physik.fu-berlin.de; keydata=
+ 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
+ scOkTAZQGVpD/8AaLH4v1w==
+Message-ID: <c9648179-4f11-a3eb-fe3b-b06d9898a37f@physik.fu-berlin.de>
+Date:   Thu, 16 Jul 2020 12:05:37 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Message-Id: <1594892300.mxnq3b9a77.astroid@bobo.none>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200716094039.GQ10769@hirez.programming.kicks-ass.net>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Original-Sender: glaubitz@physik.fu-berlin.de
+X-Originating-IP: 87.189.147.249
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Excerpts from Peter Zijlstra's message of July 16, 2020 6:50 pm:
-> On Wed, Jul 15, 2020 at 10:18:20PM -0700, Andy Lutomirski wrote:
->> > On Jul 15, 2020, at 9:15 PM, Nicholas Piggin <npiggin@gmail.com> wrote=
-:
->=20
->> > CPU0                     CPU1
->> >                         1. user stuff
->> > a. membarrier()          2. enter kernel
->> > b. read rq->curr         3. rq->curr switched to kthread
->> > c. is kthread, skip IPI  4. switch_to kthread
->> > d. return to user        5. rq->curr switched to user thread
->> >                 6. switch_to user thread
->> >                 7. exit kernel
->> >                         8. more user stuff
->=20
->> I find it hard to believe that this is x86 only. Why would thread
->> switch imply core sync on any architecture?  Is x86 unique in having a
->> stupid expensive core sync that is heavier than smp_mb()?
->=20
-> smp_mb() is nowhere near the most expensive barrier we have in Linux,
-> mb() might qualify, since that has some completion requirements since it
-> needs to serialize against external actors.
->=20
-> On x86_64 things are rather murky, we have:
->=20
-> 	LOCK prefix -- which implies smp_mb() before and after RmW
-> 	LFENCE -- which used to be rmb like, until Spectre, and now it
-> 		  is ISYNC like. Since ISYNC ensures an empty pipeline,
-> 		  it also implies all loads are retired (and therefore
-> 		  complete) it implies rmb.
-> 	MFENCE -- which is a memop completion barrier like, it makes
-> 		  sure all previously issued memops are complete.
->=20
-> if you read that carefully, you'll note you'll have to use LFENCE +
-> MFENCE to order against non-memops instructions.
->=20
-> But none of them imply dumping the instruction decoder caches, that only
-> happens on core serializing instructions like CR3 writes, IRET, CPUID
-> and a few others, I think we recently got a SERIALIZE instruction to add
-> to this list.
->=20
->=20
-> On ARM64 there's something a whole different set of barriers, and again
-> smp_mb() isn't nowhere near the top of the list. They have roughly 3
-> classes:
->=20
-> 	ISB -- instruction sync barrier
-> 	DMB(x) -- memory ordering in domain x
-> 	DSB(x) -- memory completion in domain x
->=20
-> And they have at least 3 domains (IIRC), system, outer, inner.
->=20
-> The ARM64 __switch_to() includes a dsb(sy), just like PowerPC used to
-> have a SYNC, but since PowerPC is rare for only having one rediculously
-> heavy serializing instruction, we got to re-use the smp_mb() early in
-> __schedule() instead, but ARM64 can't do that.
->=20
->=20
-> So rather than say that x86 is special here, I'd say that PowerPC is
-> special here.
+Hi Peter!
 
-PowerPC is "special", I'll agree with you there :)
+On 7/16/20 11:40 AM, Peter Zijlstra wrote:
+> On Wed, Jul 15, 2020 at 08:21:27PM +0200, Geert Uytterhoeven wrote:
+> 
+>> Oh, we actually discussed that:
+>> https://lore.kernel.org/linux-mm/20191204133454.GW2844@hirez.programming.kicks-ass.net/
+>> but there was no conclusion...
+> 
+> Urgh.. clearly that fell off the table :-(
+> 
+> So yes, that patch works, but as I wrote, I think it's still broken.
+> Then again, that particular breakage has been there for a long time.
+> 
+> Ooohh.. I have another whole patch-set that fixes that across
+> architectures which I forgot about too:
+> 
+>   https://lkml.kernel.org/r/20191211120713.360281197@infradead.org
+> 
+> that actually included the SH fix.
+> 
+> Then Aneesh got a bunch of those patches merged because he needed it for
+> Power, but the rest bitrotted again.
+> 
+> Let me rebase/refresh the rest of that and send it out again.
 
-It does have a SYNC (HWSYNC) instruction that is mb(). It does not
-serialize the core.
-
-ISYNC is a nop. ICBI ; ISYNC does serialize the core.
-
-Difference between them is probably much the same as difference between
-MFENCE and CPUID on x86 CPUs. Serializing the core is almost always=20
-pretty expensive. HWSYNC/MFENCE can be expensive if you have a lot of
-or difficult (not exclusive in cache) outstanding with critical reads
-after the barrier, but it can also be somewhat cheap if there are few
-writes, and executed past, it only needs to hold up subsequent reads.
-
-That said... implementation details. powerpc CPUs have traditionally
-had fairly costly HWSYNC.
-
-
->> But I=E2=80=99m wondering if all this deferred sync stuff is wrong. In t=
-he
->> brave new world of io_uring and such, perhaps kernel access matter
->> too.  Heck, even:
->=20
-> IIRC the membarrier SYNC_CORE use-case is about user-space
-> self-modifying code.
->=20
-> Userspace re-uses a text address and needs to SYNC_CORE before it can be
-> sure the old text is forgotten. Nothing the kernel does matters there.
->=20
-> I suppose the manpage could be more clear there.
-
-True, but memory ordering of kernel stores from kernel threads for
-regular mem barrier is the concern here.
-
-Does io_uring update completion queue from kernel thread or interrupt,
-for example? If it does, then membarrier will not order such stores
-with user memory accesses.
+Sounds good. Do you think this new patch set could fix the crash of systemd
+that I observed on SH that was introduced with your previous patch?
 
 Thanks,
-Nick
+Adrian
+
+> [1] https://marc.info/?l=linux-kernel&m=159479951822677&w=2
+
+-- 
+ .''`.  John Paul Adrian Glaubitz
+: :' :  Debian Developer - glaubitz@debian.org
+`. `'   Freie Universitaet Berlin - glaubitz@physik.fu-berlin.de
+  `-    GPG: 62FF 8A75 84E0 2956 9546  0006 7426 3B37 F5B5 F913
