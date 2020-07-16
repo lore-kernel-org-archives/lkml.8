@@ -2,71 +2,88 @@ Return-Path: <SRS0=y5Sx=A3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 707C2C433E7
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 10:02:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4551C433E8
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 10:02:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 515042089D
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 10:02:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8168620825
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 10:02:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727913AbgGPKCC (ORCPT
+        id S1727983AbgGPKCG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 06:02:02 -0400
-Received: from elvis.franken.de ([193.175.24.41]:38162 "EHLO elvis.franken.de"
+        Thu, 16 Jul 2020 06:02:06 -0400
+Received: from elvis.franken.de ([193.175.24.41]:38196 "EHLO elvis.franken.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725996AbgGPKB6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 06:01:58 -0400
+        id S1725996AbgGPKCE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jul 2020 06:02:04 -0400
 Received: from uucp (helo=alpha)
         by elvis.franken.de with local-bsmtp (Exim 3.36 #1)
-        id 1jw0iB-0008Mc-01; Thu, 16 Jul 2020 12:01:55 +0200
+        id 1jw0iA-0008Mc-02; Thu, 16 Jul 2020 12:01:54 +0200
 Received: by alpha.franken.de (Postfix, from userid 1000)
-        id 5BBACC080E; Thu, 16 Jul 2020 11:55:01 +0200 (CEST)
-Date:   Thu, 16 Jul 2020 11:55:01 +0200
+        id 4D421C080E; Thu, 16 Jul 2020 11:51:54 +0200 (CEST)
+Date:   Thu, 16 Jul 2020 11:51:54 +0200
 From:   Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-To:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
-Cc:     paulburton@kernel.org, linux-mips@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] mips: Replace HTTP links with HTTPS ones
-Message-ID: <20200716095501.GE8455@alpha.franken.de>
-References: <59938583-2ce4-c7bf-c454-89a1559be846@flygoat.com>
- <20200714191226.48652-1-grandmaster@al2klimov.de>
+To:     =?utf-8?B?5ZGo55Cw5p2wIChaaG91IFlhbmppZSk=?= 
+        <zhouyanjie@wanyeetech.com>
+Cc:     robh+dt@kernel.org, linux-mips@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        paulburton@kernel.org, paul@crapouillou.net, ak@linux.intel.com,
+        ebiederm@xmission.com, dongsheng.qiu@ingenic.com,
+        aric.pzqi@ingenic.com, rick.tyliu@ingenic.com,
+        yanfei.li@ingenic.com, sernia.zhou@foxmail.com,
+        zhenwenjin@gmail.com
+Subject: Re: [PATCH v4 0/5] Add support for Ingenic X1830 SoC and Y&A
+ CU1830-Neo board.
+Message-ID: <20200716095154.GC8455@alpha.franken.de>
+References: <20200714053229.33195-1-zhouyanjie@wanyeetech.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200714191226.48652-1-grandmaster@al2klimov.de>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200714053229.33195-1-zhouyanjie@wanyeetech.com>
 User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 14, 2020 at 09:12:26PM +0200, Alexander A. Klimov wrote:
-> Rationale:
-> Reduces attack surface on kernel devs opening the links for MITM
-> as HTTPS traffic is much harder to manipulate.
+On Tue, Jul 14, 2020 at 01:32:24PM +0800, 周琰杰 (Zhou Yanjie) wrote:
+> v3->v4:
+> 1.Modify the commit message and add the change description
+>   for CU1000-Neo in patch [2/5].
+> 2.The wrongly written "ingenic,x1000" in compatible is
+>   changed to "ingenic,x1000e" in "cu1000-neo.dts".
+> 3.Adjust the order of nodes according to the corresponding
+>   address value for X1000.
+> 4.Drop unnecessary node in "wlan_pwrseq" in "cu1000-neo.dts".
+> 5.Add the leds node to "cu1000-neo.dts".
 > 
-> Deterministic algorithm:
-> For each file:
->   If not .svg:
->     For each line:
->       If doesn't contain `\bxmlns\b`:
->         For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
-> 	  If neither `\bgnu\.org/license`, nor `\bmozilla\.org/MPL\b`:
->             If both the HTTP and HTTPS versions
->             return 200 OK and serve the same content:
->               Replace HTTP with HTTPS.
+> 周琰杰 (Zhou Yanjie) (5):
+>   MIPS: Ingenic: Add Ingenic X1830 support.
+>   dt-bindings: MIPS: Add X1830 based CU1830-Neo and fix bug in
+>     CU1000-Neo.
+>   MIPS: Ingenic: Add YSH & ATIL CU Neo board support.
+>   MIPS: Ingenic: Fix bugs and add missing LED node for X1000.
+>   MIPS: CU1000-Neo: Refresh defconfig to support LED.
 > 
-> Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
-> ---
->  arch/mips/Kconfig           | 2 +-
->  arch/mips/include/asm/war.h | 2 +-
->  2 files changed, 2 insertions(+), 2 deletions(-)
+>  .../devicetree/bindings/mips/ingenic/devices.yaml  |  12 +-
+>  arch/mips/boot/dts/ingenic/Makefile                |   1 +
+>  arch/mips/boot/dts/ingenic/cu1000-neo.dts          | 114 ++++----
+>  arch/mips/boot/dts/ingenic/cu1830-neo.dts          | 168 ++++++++++++
+>  arch/mips/boot/dts/ingenic/x1000.dtsi              | 126 +++++----
+>  arch/mips/boot/dts/ingenic/x1830.dtsi              | 300 +++++++++++++++++++++
+>  arch/mips/configs/cu1000-neo_defconfig             |   4 +
+>  arch/mips/configs/cu1830-neo_defconfig             | 123 +++++++++
+>  arch/mips/jz4740/Kconfig                           |  10 +
+>  9 files changed, 733 insertions(+), 125 deletions(-)
+>  create mode 100644 arch/mips/boot/dts/ingenic/cu1830-neo.dts
+>  create mode 100644 arch/mips/boot/dts/ingenic/x1830.dtsi
+>  create mode 100644 arch/mips/configs/cu1830-neo_defconfig
 
-applied to mips-next.
+series applied to mips-next.
 
 Thomas.
 
