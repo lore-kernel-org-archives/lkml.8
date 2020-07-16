@@ -7,68 +7,68 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A7ADC43446
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 14:01:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AF82C433E5
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 14:01:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 274DB20787
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 14:01:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5913620825
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 14:01:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="PM/T9mUg"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Jv6cEZz6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729364AbgGPOBf (ORCPT
+        id S1729376AbgGPOBi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 10:01:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43034 "EHLO
+        Thu, 16 Jul 2020 10:01:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43028 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729123AbgGPN7k (ORCPT
+        with ESMTP id S1729113AbgGPN7j (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 09:59:40 -0400
-Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5C0B7C08C5C0
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Jul 2020 06:59:40 -0700 (PDT)
-Received: by mail-wm1-x343.google.com with SMTP id o8so10402081wmh.4
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Jul 2020 06:59:40 -0700 (PDT)
+        Thu, 16 Jul 2020 09:59:39 -0400
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 34CE8C08C5DB
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Jul 2020 06:59:39 -0700 (PDT)
+Received: by mail-wr1-x441.google.com with SMTP id z15so7162053wrl.8
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Jul 2020 06:59:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=fj2Sj0XBOTrpGgH9u3LbiKzQE/KWClevdkHkCrkv1Yg=;
-        b=PM/T9mUg57/CuVzSIuFJHVpwMZAsIApx9CGqyg4/eDIC/7dh9PlknGvhE+A+c7966q
-         XybA6myfzfBuH/Qh+OX1ITKny8XjO5LLjfsFV/fYTP9VMB5rmlvpW3iQsQuj8CITWU3h
-         jx97ObdkSLVlMbtORCmzu6vjidAYr+koJ+vGxd6udM4RZnXcrx2mGhZkzYwCBntnXg3e
-         mW/gVTm2uoeLOtllsIa/q8FTPSiXXd9ce7yyleepQoME4liFOQn5OUlCWrbtmqkK3imr
-         URy4fSosY1s0usmRsDFnkdkpLHNHYKXWKI9DgAhON/D+z9hadcuNobUG+pSlu75aJuQC
-         8Tsg==
+        bh=fG8RCQ1K6Z0ZD4fhah06tp/GYuGMejEtwlGsSpFMXOU=;
+        b=Jv6cEZz6qHBVpSVOcwxAwzMDLFTHVAMLrP4A4D4V+FHDXZFAj1flc7YVNIRB0ee/WE
+         aGwz1qvHH5ne6KtO0pimqv30XyEUFcAkU23rYpnzcim2sUiERnCh6IOKBB5AawvDrf8C
+         ehF69Fh15rdZX9cZB3/5QsQtMFIlc6Z/K5pwABNbOJZ3J9yl9OmDxcPn1ZmNQ73UBVdd
+         1nd8eBuxEXNCHdgG3vNdNRXpWRlvHe1EONC1e4r2cMKbEMXWTcWXpn3M4bomO7+Qtk0Q
+         f9bBWRoxYeSNIHsBfDB6eeNBmtIY/JWwik6Dn/F/JwVAb7FmkeG6bI8x/+y8B8xVwthK
+         o+AQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=fj2Sj0XBOTrpGgH9u3LbiKzQE/KWClevdkHkCrkv1Yg=;
-        b=GTHZ+UiSaTVSnHa2UnMm6S/HpkvOjYKuwp5v9oIp/CPDdHOPQB/ga5DUM0TtcZku9C
-         DBt6oD5Zs2bOvfiU6LgFnuM0KhJbSi/2MN4r50h2Ml/L1yLH/t4lCsc4CqoXWILO5VZH
-         C27q4js0gPG0qWYAuYmKQ4ykRLSBvLlf9sZFRMB4iwzs+Knxhe068JKaLCArcFCSI1+t
-         Eu4PGjeEFuI0/2rwOamSNIvd0ctGXPvzAs8Mk9qxPngfGGh5gTyaqpkzYC7lP4rkAKUL
-         So+sKAfaHzORncTwd6T7jvQK1Bpfo6Sx/hTqg5lWLWNB/sS5/Ybbl11AhGBgyqEMnm7F
-         o3qg==
-X-Gm-Message-State: AOAM531skO6d0OagII+KvXrM7RinZN7HmBvdLZIkhLEVDssWEHTZYOQo
-        7BD6sRG68F3PLa9GtR5frL5gZg==
-X-Google-Smtp-Source: ABdhPJyySGT29h69n7yXJV4PeAehRLjC+H/BTtk2NLBpgHq2750weLnkYpp73TD509FUkx9aIrc1cw==
-X-Received: by 2002:a1c:14e:: with SMTP id 75mr4753360wmb.151.1594907979060;
-        Thu, 16 Jul 2020 06:59:39 -0700 (PDT)
+        bh=fG8RCQ1K6Z0ZD4fhah06tp/GYuGMejEtwlGsSpFMXOU=;
+        b=FSZ/rdJzSbhNIvS88CWl8VCLt+YxbJmLGThrp7Ju286Aw68oAKkxiAArDpk9EtT96o
+         384JCJhkat4fq56Q8PKtmC/oNxQlUj2DyJtFvFKvgl8niia9JbB59tYkXBBSGwNeemJ2
+         KXq7n/0j8PJRcKmJYmh3qiaI9yvKdKe6mJYLLwONA4EQLd7GKQbnwAkDNiO3YZN5v7Oy
+         fCSN+0qnnTgNrHjbL/byIX2qiC2sSeD67ZgPmBFgJTjtb0Fior5jT5QRaVUFQoBRH/3O
+         mac3fCD3McVJTGPV0p3CD3NmT/yvfnl7vK6/nAc9hO1PR3+vFr01LXtXImLfapkKVpjg
+         C4Zg==
+X-Gm-Message-State: AOAM5335sFQHYZUaZa4rAPijNR8FGZaW3RGYFCM4nKLxr5gqkqmWcME6
+        oaRbjW2Ovj67w70EN/aEOufEUA==
+X-Google-Smtp-Source: ABdhPJyvpcH8qjv3cJarACK1MheVg11n29CkbWUPLk1zd4I4RoIeswrSswn++4ZubNJ1s43pi5gpJQ==
+X-Received: by 2002:a5d:60c7:: with SMTP id x7mr4966047wrt.138.1594907977935;
+        Thu, 16 Jul 2020 06:59:37 -0700 (PDT)
 Received: from localhost.localdomain ([2.31.163.61])
-        by smtp.gmail.com with ESMTPSA id x18sm9351001wrq.13.2020.07.16.06.59.38
+        by smtp.gmail.com with ESMTPSA id x18sm9351001wrq.13.2020.07.16.06.59.36
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 16 Jul 2020 06:59:38 -0700 (PDT)
+        Thu, 16 Jul 2020 06:59:37 -0700 (PDT)
 From:   Lee Jones <lee.jones@linaro.org>
 To:     jic23@kernel.org, knaack.h@gmx.de, lars@metafoo.de,
         pmeerw@pmeerw.net
 Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         linux-iio@vger.kernel.org, Lee Jones <lee.jones@linaro.org>,
-        Michael Hennerich <Michael.Hennerich@analog.com>,
-        Patrick Vasseur <patrick.vasseur@c-s.fr>
-Subject: [PATCH 06/30] iio: adc: ad7923: Demote obvious misuse of kerneldoc to standard comment blocks
-Date:   Thu, 16 Jul 2020 14:59:04 +0100
-Message-Id: <20200716135928.1456727-7-lee.jones@linaro.org>
+        Andreas Brauchli <a.brauchli@elementarea.net>,
+        Pascal Sachs <pascal.sachs@sensirion.com>
+Subject: [PATCH 05/30] iio: chemical: sgp30: Add description for sgp_read_cmd()'s 'duration_us'
+Date:   Thu, 16 Jul 2020 14:59:03 +0100
+Message-Id: <20200716135928.1456727-6-lee.jones@linaro.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200716135928.1456727-1-lee.jones@linaro.org>
 References: <20200716135928.1456727-1-lee.jones@linaro.org>
@@ -79,53 +79,29 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-No attempt has been made to document either of the demoted functions here
-
 Fixes the following W=1 kernel build warning(s):
 
- drivers/iio/adc/ad7923.c:159: warning: Function parameter or member 'indio_dev' not described in 'ad7923_update_scan_mode'
- drivers/iio/adc/ad7923.c:159: warning: Function parameter or member 'active_scan_mask' not described in 'ad7923_update_scan_mode'
- drivers/iio/adc/ad7923.c:202: warning: Function parameter or member 'irq' not described in 'ad7923_trigger_handler'
- drivers/iio/adc/ad7923.c:202: warning: Function parameter or member 'p' not described in 'ad7923_trigger_handler'
+ drivers/iio/chemical/sgp30.c:236: warning: Function parameter or member 'duration_us' not described in 'sgp_read_cmd'
 
-Cc: Michael Hennerich <Michael.Hennerich@analog.com>
-Cc: Patrick Vasseur <patrick.vasseur@c-s.fr>
+Cc: Andreas Brauchli <a.brauchli@elementarea.net>
+Cc: Pascal Sachs <pascal.sachs@sensirion.com>
 Signed-off-by: Lee Jones <lee.jones@linaro.org>
 ---
- drivers/iio/adc/ad7923.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ drivers/iio/chemical/sgp30.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/iio/adc/ad7923.c b/drivers/iio/adc/ad7923.c
-index 1d124c87c6ace..2a11bc7fdb567 100644
---- a/drivers/iio/adc/ad7923.c
-+++ b/drivers/iio/adc/ad7923.c
-@@ -151,9 +151,9 @@ static const struct ad7923_chip_info ad7923_chip_info[] = {
- 	},
- };
- 
--/**
-+/*
-  * ad7923_update_scan_mode() setup the spi transfer buffer for the new scan mask
-- **/
-+ */
- static int ad7923_update_scan_mode(struct iio_dev *indio_dev,
- 				   const unsigned long *active_scan_mask)
- {
-@@ -192,12 +192,12 @@ static int ad7923_update_scan_mode(struct iio_dev *indio_dev,
- 	return 0;
- }
- 
--/**
-+/*
-  * ad7923_trigger_handler() bh of trigger launched polling to ring buffer
+diff --git a/drivers/iio/chemical/sgp30.c b/drivers/iio/chemical/sgp30.c
+index 403e8803471a9..82e407d48a0aa 100644
+--- a/drivers/iio/chemical/sgp30.c
++++ b/drivers/iio/chemical/sgp30.c
+@@ -227,6 +227,7 @@ static int sgp_verify_buffer(const struct sgp_data *data,
+  * @cmd:         SGP Command to issue
+  * @buf:         Raw data buffer to use
+  * @word_count:  Num words to read, excluding CRC bytes
++ * @duration_us: Time to sleep in microseconds
   *
-  * Currently there is no option in this driver to disable the saving of
-  * timestamps within the ring.
-- **/
-+ */
- static irqreturn_t ad7923_trigger_handler(int irq, void *p)
- {
- 	struct iio_poll_func *pf = p;
+  * Return:       0 on success, negative error otherwise.
+  */
 -- 
 2.25.1
 
