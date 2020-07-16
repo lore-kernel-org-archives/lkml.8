@@ -2,155 +2,163 @@ Return-Path: <SRS0=y5Sx=A3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20FE0C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 11:45:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CB9BC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 11:48:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EE85D20657
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 11:45:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 13D2B20657
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 11:48:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="voMIzOHi"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="r1UHOryz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728162AbgGPLpF (ORCPT
+        id S1728232AbgGPLsq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 07:45:05 -0400
-Received: from lb3-smtp-cloud8.xs4all.net ([194.109.24.29]:36061 "EHLO
-        lb3-smtp-cloud8.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726383AbgGPLpE (ORCPT
+        Thu, 16 Jul 2020 07:48:46 -0400
+Received: from mail29.static.mailgun.info ([104.130.122.29]:13263 "EHLO
+        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728175AbgGPLsq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 07:45:04 -0400
-Received: from cust-b5b5937f ([IPv6:fc0c:c16d:66b8:757f:c639:739b:9d66:799d])
-        by smtp-cloud8.xs4all.net with ESMTPA
-        id w2Juj4VQ8NPeYw2JxjUuuJ; Thu, 16 Jul 2020 13:45:02 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
-        t=1594899902; bh=ocX3h7C2mB2k9EdNbERODh1fBs1RKjA6eiTyuzzqIik=;
-        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
-         Subject;
-        b=voMIzOHiVYG1pC81I0Vfgmvm9KUbfLJYe4tJwJjVQc3tZzgZrKGtXXGRRdbMjP0we
-         aig+Mk1NxDbA7xM4nF5M02U2RH390B6YPBFcXRWHh/Tqtbq2pFjBUxpmW9Hf7rfYec
-         6hap9PYCNMM1/+QOZu125A9H8nmmUQCgPVlk8oahHKM+qD58d4ItcymjYpXZ6B+eIE
-         YHTDrHM8R/8Nw/3bwDfOKn3TLc4/jVw88Le4Khc0ZbmWeY/2vEIltupLBy2I+ZL8c9
-         MR1RLzjeB5e4bPeCgJ4hYvXh2VpS2M6efLC7+AlEFv0gZ4EtgjL9LZ9ydrJFrLSgOP
-         W+VmLE8HDVSzQ==
-Subject: Re: [PATCH 02/10] media: uapi: h264: Further clarify scaling lists
- order
-To:     Ezequiel Garcia <ezequiel@collabora.com>,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Tomasz Figa <tfiga@chromium.org>, kernel@collabora.com,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Alexandre Courbot <acourbot@chromium.org>,
-        Jeffrey Kardatzke <jkardatzke@chromium.org>,
-        Nicolas Dufresne <nicolas.dufresne@collabora.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Maxime Ripard <mripard@kernel.org>,
-        Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-References: <20200715202233.185680-1-ezequiel@collabora.com>
- <20200715202233.185680-3-ezequiel@collabora.com>
- <bfb5d0df-779f-78d2-fc48-3c6056f5fdd3@xs4all.nl>
- <6e61d98bd8d7a6d41daf0edd449bd27558c0ac16.camel@collabora.com>
-From:   Hans Verkuil <hverkuil@xs4all.nl>
-Message-ID: <39819dcc-a336-3d13-38ab-93a27460e103@xs4all.nl>
-Date:   Thu, 16 Jul 2020 13:44:58 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Thu, 16 Jul 2020 07:48:46 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1594900125; h=Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Message-ID: Date: Subject: In-Reply-To: References: Cc:
+ To: From: Sender; bh=aM87sqkNzeJ/91w1iSJM0tfB/by6oEdZCg93yCjk6SY=; b=r1UHOryzRGkNt/xKdOLm8+b5VChLfaPYG4FlLJTkFkoh7OoRBYROrV00KcgQHaQGwZINB6d6
+ T0kBlbP0tahS61JprRCKA8P5WoAPL+ve1rEpNU9K2KpS6ZRGhO0Upq2P8W8O1M/3WMCzzhwy
+ EzrVApD5V1n2kXW0LzopQArxW2M=
+X-Mailgun-Sending-Ip: 104.130.122.29
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n04.prod.us-east-1.postgun.com with SMTP id
+ 5f103e91d3d65084220a440f (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Thu, 16 Jul 2020 11:48:33
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id DA00CC43395; Thu, 16 Jul 2020 11:48:32 +0000 (UTC)
+Received: from Pillair (unknown [183.83.71.149])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: pillair)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 5140DC433C9;
+        Thu, 16 Jul 2020 11:48:30 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 5140DC433C9
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=pillair@codeaurora.org
+From:   "Rakesh Pillai" <pillair@codeaurora.org>
+To:     "'Ben Greear'" <greearb@candelatech.com>,
+        <ath10k@lists.infradead.org>
+Cc:     <linux-wireless@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <1593238973-23237-1-git-send-email-pillair@codeaurora.org> <926301ed-e27f-0d8f-0177-6484bfffa40c@candelatech.com> <000201d64d0a$b3d39d10$1b7ad730$@codeaurora.org> <859a8ffb-6108-81f3-b379-4a0adfa064fe@candelatech.com>
+In-Reply-To: <859a8ffb-6108-81f3-b379-4a0adfa064fe@candelatech.com>
+Subject: RE: [PATCH] ath10k: Add history for tracking certain events
+Date:   Thu, 16 Jul 2020 17:18:22 +0530
+Message-ID: <008501d65b67$0743a0c0$15cae240$@codeaurora.org>
 MIME-Version: 1.0
-In-Reply-To: <6e61d98bd8d7a6d41daf0edd449bd27558c0ac16.camel@collabora.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Type: text/plain;
+        charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4wfDL66E0Skoqx60YILWBzPAdko3NSlEE7T29wnMuX9V1cM9PipwoGDNpSOYBlqupmz6lvkFlstT+7UvoWhw/w6RFi5ZZ//0wdLHEZ2WNAYqj2bzipWbAv
- zC6UUIMoljrRMij72/v7+SPEHFm8DXP6RkZiFn9Z06EdNdIOjBxvUH9uaMkQkk4zWsOZKS7ALPRyiAuTmnni0MjXCV8fvxbvyGEiCvEpizwafUavKq4Z+GoI
- 2AQb4OCTSEAboqHWVUx3JZaWRh1VPTME7JyfTenaeCcKp9SvleT8qCxefRgnEKSGXjlnlnB6li2Ue0XxnkhKNKjyqLGnZ+GKVKGK9cVV8flWudwVoltTghKq
- bJLdlRv7HWKyoatI66Cbrx9dtA4XqfplJeqNr8ZQ9+YZq6lGSXYTXUr57v+Lg32pKCFR4/J2+ePly3as3A58iAbjfageTgC9krO1zD5quD4CQSlOd7DtUtVa
- S1hESLdOM3/wnGkE3euULsC5sG62CCi+1TIWXg7+WV/n9aAezqNTvhLmHVPK9SBgB4xc8iX8tjjTlgwP2h3NJvTNbGu7a9pd6J+xqw==
+X-Mailer: Microsoft Outlook 16.0
+Thread-Index: AQJ0JDYcv05C8nhyAbHgeWn72AC7twKruW4sAhHRnKMBmbwe6KebyyaA
+Content-Language: en-us
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 16/07/2020 13:43, Ezequiel Garcia wrote:
-> On Thu, 2020-07-16 at 09:23 +0200, Hans Verkuil wrote:
->> On 15/07/2020 22:22, Ezequiel Garcia wrote:
->>> Commit 0b0393d59eb4a ("media: uapi: h264: clarify
->>> expected scaling_list_4x4/8x8 order") improved the
->>> documentation on H264 scaling lists order.
->>>
->>> This commit improves the documentation by clarifying
->>> that the lists themselves are expected in matrix order.
->>
->> "matrix order" is not a well defined term. Especially since different
->> programming languages lay out matrices differently (e.g. fortran uses
->> column-major order). Perhaps something like this is more unambiguous:
->>
-> 
-> Agreed, "matrix order" is perhaps not a proper choice of words.
-> 
->> "The values on each scaling list are in row-major order."
->>
->> BTW, why not be explicit and use:
->>
->> __u8 scaling_list_4x4[6][4][4];
->> __u8 scaling_list_8x8[6][8][8];
->>
->> That makes it explicit and the order is just that of what the C language
->> uses.
->>
-> 
-> I am not sure if that'll go in clearer direction.
-> 
-> I'm thinking we just need to clarify the coefficients
-> are in raster scan order, as opposed to a zig-zag scan
-> order, which is a part of the decoding process.
-> 
-> How about we simply say "raster scan order" and keep the patch as is?
 
-That works for me.
 
-Regards,
+> -----Original Message-----
+> From: Ben Greear <greearb@candelatech.com>
+> Sent: Sunday, June 28, 2020 10:56 PM
+> To: Rakesh Pillai <pillair@codeaurora.org>; ath10k@lists.infradead.org
+> Cc: linux-wireless@vger.kernel.org; linux-kernel@vger.kernel.org
+> Subject: Re: [PATCH] ath10k: Add history for tracking certain events
+> 
+> 
+> 
+> On 06/27/2020 10:12 PM, Rakesh Pillai wrote:
+> >
+> >
+> >> -----Original Message-----
+> >> From: Ben Greear <greearb@candelatech.com>
+> >> Sent: Saturday, June 27, 2020 8:58 PM
+> >> To: Rakesh Pillai <pillair@codeaurora.org>; ath10k@lists.infradead.org
+> >> Cc: linux-wireless@vger.kernel.org; linux-kernel@vger.kernel.org
+> >> Subject: Re: [PATCH] ath10k: Add history for tracking certain events
+> >>
+> >>
+> >>
+> >> On 06/26/2020 11:22 PM, Rakesh Pillai wrote:
+> >>> For debugging many issues, a history of the
+> >>> below mentioned events can help get an idea
+> >>> of what exactly was going on just before any
+> >>> issue occurred in the system. These event
+> >>> history will be collected only when the host
+> >>> driver is run in debug mode (i.e. with the
+> >>> config ATH10K_DEBUG enabled).
+> >>
+> >> This should be disabled by default unless user specifically pokes some
+> >> debugfs
+> >> value to turn it on so that it does not impact performance.
+> >
+> > Hi Ben,
+> > This history is enabled only if the user compiles the kernel with
+> > ATH10K_DEBUG.
+> > Making it runtime, adds a lot of "if" conditions for this history
+record.
+> > Do you suggest to add support to enable/disable it runtime even in
+> > ATH10K_DEBUG ?
+> 
+> Yes, because you are adding lots of locks/unlocks.  That is way more
+> expensive
+> than an if statement.  You can add an 'unlikely' to the if check as well,
+so
+> compiler will optimize for this feature not being enabled.
 
-	Hans
+
+Hi Ben,
+I missed this mail somehow.
+Yes sure, I will make the necessary changes and upload a new patchset.
+
+Thanks,
+Rakesh Pillai.
+
 
 > 
 > Thanks,
-> Ezequiel
+> Ben
 > 
+> >
+> >>
+> >> Thanks,
+> >> Ben
+> >>
+> >>>
+> >>> Add history for tracking the below events
+> >>> - register read
+> >>> - register write
+> >>> - IRQ trigger
+> >>> - IRQ Enable
+> >>> - IRQ Disable
+> >>> - NAPI poll
+> >>> - CE service
+> >>> - WMI cmd
+> >>> - WMI event
+> >>> - WMI tx completion
+> >>>
+> >>> This will help in debugging any crash or any
+> >>> improper behaviour.
+> >>
+> >>
+> >> --
+> >> Ben Greear <greearb@candelatech.com>
+> >> Candela Technologies Inc  http://www.candelatech.com
+> >
 > 
->> Regards,
->>
->> 	Hans
->>
->>> Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
->>> ---
->>>  Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst | 6 ++++--
->>>  1 file changed, 4 insertions(+), 2 deletions(-)
->>>
->>> diff --git a/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst b/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst
->>> index c2e17c02f77e..16bfc98ab2f6 100644
->>> --- a/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst
->>> +++ b/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst
->>> @@ -1725,12 +1725,14 @@ enum v4l2_mpeg_video_h264_hierarchical_coding_type -
->>>        - ``scaling_list_4x4[6][16]``
->>>        - Scaling matrix after applying the inverse scanning process.
->>>          Expected list order is Intra Y, Intra Cb, Intra Cr, Inter Y,
->>> -        Inter Cb, Inter Cr.
->>> +        Inter Cb, Inter Cr. The values on each scaling list are
->>> +        expected in matrix order.
->>>      * - __u8
->>>        - ``scaling_list_8x8[6][64]``
->>>        - Scaling matrix after applying the inverse scanning process.
->>>          Expected list order is Intra Y, Inter Y, Intra Cb, Inter Cb,
->>> -        Intra Cr, Inter Cr.
->>> +        Intra Cr, Inter Cr. The values on each scaling list are
->>> +        expected in matrix order.
->>>  
->>>  ``V4L2_CID_MPEG_VIDEO_H264_SLICE_PARAMS (struct)``
->>>      Specifies the slice parameters (as extracted from the bitstream)
->>>
-> 
-> 
+> --
+> Ben Greear <greearb@candelatech.com>
+> Candela Technologies Inc  http://www.candelatech.com
 
