@@ -2,149 +2,137 @@ Return-Path: <SRS0=y5Sx=A3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2AEEC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 16:17:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1187C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 16:20:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 96D062074B
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 16:17:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CzQ7XtUl"
+	by mail.kernel.org (Postfix) with ESMTP id 864A720739
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 16:20:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594916435;
+	bh=PQee4AgUCogpdQDHjbReNKdVn4/HmPns+3W+57MW024=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=bGCqTu/2HjtBsyd0PeTjGoq0xRmKvZk6D00Fdl5uZ3tOiqiaSeQU7hp7Tj2k4DEph
+	 j06Z/SdFcDXmfKkZqA1qrJHwJDRaG1wyZx/J+w5Fn8lnl1mLolW+eZFbRsGpaWb4As
+	 qXxZf8xq0TCMI5GOe5f0EgGMOJh+/VwVoqXVkW3E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729288AbgGPQRD (ORCPT
+        id S1729151AbgGPQUe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 12:17:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36152 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728837AbgGPQRC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 12:17:02 -0400
-Received: from mail-oi1-x244.google.com (mail-oi1-x244.google.com [IPv6:2607:f8b0:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 93913C061755;
-        Thu, 16 Jul 2020 09:17:02 -0700 (PDT)
-Received: by mail-oi1-x244.google.com with SMTP id e4so5546551oib.1;
-        Thu, 16 Jul 2020 09:17:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=X40K+wu84kv/mAn7oQZlyEv2lZtROdjFfXssqudkZyk=;
-        b=CzQ7XtUl+MF8GX6TDg0e7SD3lj/qAvD2KStC71O3eWB9OfCW1BzsVvv/1iL8Y/mCQU
-         fN4joOmmJ/0uBygZJGef06IoX4h0ZNXifm3VHogUnAyZF+JcP3a1A2oE0fy2dFP4kvGP
-         xFwmr+MQ4KPFtF164bEtu/G5WF0V2aacWYR1UIw9DG6B9wXrAAKRf8fZMioRBck37MTT
-         xDfVdarzCWeHMa0Mcm8G0uKITIWQrHyEZzqO/otpqo8m1gPlhSBO+cYLrrDuNmAXIUFr
-         7PyR6Ypsa5VwoAihahqLjZVDJJOgD0mwVwE889vQFE/8GYrGcOFoobKSzHwwFrV7pbIR
-         o9Gg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=X40K+wu84kv/mAn7oQZlyEv2lZtROdjFfXssqudkZyk=;
-        b=CykDlEcmT1kC2H2aWyojyiVqPNLX4xGvnAWSj6ivw4caP+btFOqHpOk7SZF0PtQMWG
-         sheJrM6/xt7VAFOUAxRCfKcm6Wiau5JGQqoEeKjIUSPYoOBb1MlbLwzx2JDUifBnv7m/
-         1kbb0SiI/9H1T644Q1oi2oKq/Y/1acXwOjwHpTkC4DBtzDgE8LmVqqNjwUL2XAdhNWJO
-         mI0ESsGnUI2dHnvnINkMmhaEoz7fvRuL0uv4dA5URN9ZQUkqixJjYoHepmkjlgjfP+Rj
-         n/cn09D4bb0AZbrsNerRFabWI0bRgSsa+AzjGPwU8t++HeLRC3/boYFNk7+aY8chbRu9
-         TfbQ==
-X-Gm-Message-State: AOAM533UAvdZIP7ou/bfURfOfdmI2I3BgZL4on2LjmFbbGWjkIZJel1X
-        Ip4EDAkrcRN30O+zjhMMSqp+ErqpBjSHBJMxcug5waNjv+M=
-X-Google-Smtp-Source: ABdhPJyMB5in8yNJ9qyfWT0teHY8MlwUvugWwOfShB8Gk0BOZqaBFWTvfCAz9fPqJKDu2FcmeWO5eTMrRY/82Sq3lYQ=
-X-Received: by 2002:aca:cf81:: with SMTP id f123mr4528403oig.137.1594916221887;
- Thu, 16 Jul 2020 09:17:01 -0700 (PDT)
+        Thu, 16 Jul 2020 12:20:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34502 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728837AbgGPQUd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jul 2020 12:20:33 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 33BB52065F;
+        Thu, 16 Jul 2020 16:20:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594916432;
+        bh=PQee4AgUCogpdQDHjbReNKdVn4/HmPns+3W+57MW024=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=JT0hUr3L+wdrMfMmF4x7T3mOiKvbORNaf+cg8byMoUqpCF/R8tQuHUC9zY4oK6e0y
+         maThQaJ3F32XtkVS48seOhsmAlBGXCHIBMJHffyQNXRsEmgLyH+Rc/hikEd+NxVBTN
+         xGGgSlc30fdsiLwwygFoRts3sW9CXnTL5JJYHi9A=
+Date:   Thu, 16 Jul 2020 17:20:22 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Miroslav Benes <mbenes@suse.cz>
+Cc:     Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Heiko Carstens <hca@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Jiri Slaby <jirislaby@kernel.org>, x86@kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-s390@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 3/3] arm64: stacktrace: Convert to ARCH_STACKWALK
+Message-ID: <20200716162022.GD5105@sirena.org.uk>
+References: <20200715202821.12220-1-broonie@kernel.org>
+ <20200715202821.12220-4-broonie@kernel.org>
+ <alpine.LSU.2.21.2007161342290.3958@pobox.suse.cz>
 MIME-Version: 1.0
-References: <3635193ecd8c6034731387404825e998df2fd788.camel@redhat.com>
-In-Reply-To: <3635193ecd8c6034731387404825e998df2fd788.camel@redhat.com>
-From:   Luiz Augusto von Dentz <luiz.dentz@gmail.com>
-Date:   Thu, 16 Jul 2020 09:16:50 -0700
-Message-ID: <CABBYNZ+YOJQi9a=pU2cc9czH1VoL04SdaXfnDksakCCfxx-skA@mail.gmail.com>
-Subject: Re: Commit 'Bluetooth: Consolidate encryption handling in
- hci_encrypt_cfm' broke my JBL TUNE500BT headphones
-To:     Maxim Levitsky <mlevitsk@redhat.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Luiz Augusto Von Dentz <luiz.von.dentz@intel.com>,
-        Marcel Holtmann <marcel@holtmann.org>,
-        Johan Hedberg <johan.hedberg@gmail.com>,
-        "linux-bluetooth@vger.kernel.org" <linux-bluetooth@vger.kernel.org>,
-        "open list:NETWORKING [GENERAL]" <netdev@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="Xm/fll+QQv+hsKip"
+Content-Disposition: inline
+In-Reply-To: <alpine.LSU.2.21.2007161342290.3958@pobox.suse.cz>
+X-Cookie: This login session: $13.99
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Maxim,
 
-On Thu, Jul 16, 2020 at 1:29 AM Maxim Levitsky <mlevitsk@redhat.com> wrote:
->
-> Hi,
->
-> Few days ago I bisected a recent regression in the 5.8 kernel:
->
-> git bisect start
-> # good: [3d77e6a8804abcc0504c904bd6e5cdf3a5cf8162] Linux 5.7
-> git bisect good 3d77e6a8804abcc0504c904bd6e5cdf3a5cf8162
-> # bad: [dcde237b9b0eb1d19306e6f48c0a4e058907619f] Merge tag 'perf-tools-fixes-2020-07-07' of git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux
-> git bisect bad dcde237b9b0eb1d19306e6f48c0a4e058907619f
-> # bad: [a0a4d17e02a80a74a63c7cbb7bc8cea2f0b7d8b1] Merge branch 'pcmcia-next' of git://git.kernel.org/pub/scm/linux/kernel/git/brodo/linux
-> git bisect bad a0a4d17e02a80a74a63c7cbb7bc8cea2f0b7d8b1
-> # good: [09587a09ada2ed7c39aedfa2681152b5ac5641ee] arm64: mm: use ARCH_HAS_DEBUG_WX instead of arch defined
-> git bisect good 09587a09ada2ed7c39aedfa2681152b5ac5641ee
-> # good: [3248044ecf9f91900be5678919966715f1fb8834] Merge tag 'wireless-drivers-next-2020-05-25' of git://git.kernel.org/pub/scm/linux/kernel/git/kvalo/wireless-drivers-next
-> git bisect good 3248044ecf9f91900be5678919966715f1fb8834
-> # bad: [cb8e59cc87201af93dfbb6c3dccc8fcad72a09c2] Merge git://git.kernel.org/pub/scm/linux/kernel/git/netdev/net-next
-> git bisect bad cb8e59cc87201af93dfbb6c3dccc8fcad72a09c2
-> # bad: [b8215dce7dfd817ca38807f55165bf502146cd68] selftests/bpf, flow_dissector: Close TAP device FD after the test
-> git bisect bad b8215dce7dfd817ca38807f55165bf502146cd68
-> # good: [b8ded9de8db34dd209a3dece94cf54fc414e78f7] net/smc: pre-fetch send buffer outside of send_lock
-> git bisect good b8ded9de8db34dd209a3dece94cf54fc414e78f7
-> # good: [1079a34c56c535c3e27df8def0d3c5069d2de129] Merge tag 'mac80211-next-for-davem-2020-05-31' of git://git.kernel.org/pub/scm/linux/kernel/git/jberg/mac80211-next
-> git bisect good 1079a34c56c535c3e27df8def0d3c5069d2de129
-> # bad: [f395b69f40f580491ef56f2395a98e3189baa53c] dpaa2-eth: Add PFC support through DCB ops
-> git bisect bad f395b69f40f580491ef56f2395a98e3189baa53c
-> # bad: [a74d19ba7c41b6c1e424ef4fb7d4600f43ff75e5] net: fec: disable correct clk in the err path of fec_enet_clk_enable
-> git bisect bad a74d19ba7c41b6c1e424ef4fb7d4600f43ff75e5
-> # bad: [dafe2078a75af1abe4780313ef8dd8491ba8598f] ipv4: nexthop: Fix deadcode issue by performing a proper NULL check
-> git bisect bad dafe2078a75af1abe4780313ef8dd8491ba8598f
-> # bad: [feac90d756c03b03b83fabe83571bd88ecc96b78] Bluetooth: hci_qca: Fix suspend/resume functionality failure
-> git bisect bad feac90d756c03b03b83fabe83571bd88ecc96b78
-> # good: [a228f7a410290d836f3a9f9b1ed5aef1aab25cc7] Bluetooth: hci_qca: Enable WBS support for wcn3991
-> git bisect good a228f7a410290d836f3a9f9b1ed5aef1aab25cc7
-> # bad: [755dfcbca83710fa967d0efa7c5bb601f871a747] Bluetooth: Fix assuming EIR flags can result in SSP authentication
-> git bisect bad 755dfcbca83710fa967d0efa7c5bb601f871a747
-> # bad: [3ca44c16b0dcc764b641ee4ac226909f5c421aa3] Bluetooth: Consolidate encryption handling in hci_encrypt_cfm
-> git bisect bad 3ca44c16b0dcc764b641ee4ac226909f5c421aa3
-> # first bad commit: [3ca44c16b0dcc764b641ee4ac226909f5c421aa3] Bluetooth: Consolidate encryption handling in hci_encrypt_cfm
+--Xm/fll+QQv+hsKip
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-We just merged a fix for that:
+On Thu, Jul 16, 2020 at 01:56:13PM +0200, Miroslav Benes wrote:
+> On Wed, 15 Jul 2020, Mark Brown wrote:
 
-https://git.kernel.org/pub/scm/linux/kernel/git/bluetooth/bluetooth-next.git/commit/?id=339ddaa626995bc6218972ca241471f3717cc5f4
+> > -void save_stack_trace(struct stack_trace *trace)
+> > -{
+> > -	__save_stack_trace(current, trace, 0);
+> > +	walk_stackframe(task, &frame, consume_entry, cookie);
+> >  }
 
-> The sympthoms are that I am unable to pair the headphones, and even if I use an older kernel
-> to pair them, and then switch to the new kernel, the connection is established only sometimes.
->
-> Without this commit, I can pair the headphones 100% of the time.
->
-> I am not familiar with bluetooth debugging but I am willing to provide
-> any logs, do tests and try patches.
->
-> I am running fedora 32 on the affected system which has built-in intel wireless/bluetooth card,
->
-> PCI (wifi) part:
-> 47:00.0 Network controller: Intel Corporation Wi-Fi 6 AX200 (rev 1a)
->
-> USB (bluetooth) parrt:
-> Bus 011 Device 004: ID 8087:0029 Intel Corp.
->
-> My .config attached (custom built kernel)
->
-> Best regards,
->         Maxim Levitsky
->
+> just an idea for further improvement (and it might be a matter of taste).=
+=20
 
+Yeah, there's some more stuff that can be done - the reason I'm looking
+at this code is to do reliable stack trace which is going to require at
+least some changes to the actual unwinder, this just seemed like a
+useful block moving things forwards in itself and I particularly wanted
+feedback on patch 1.
 
--- 
-Luiz Augusto von Dentz
+> Wouldn't it be slightly better to do one more step and define "struct=20
+> unwind_state" instead of "struct stackframe" and also some iterator for=
+=20
+> the unwinding and use that right in new arch_stack_walk() instead of=20
+> walk_stackframe()? I mean, take the unbounded loop, "inline" it to=20
+> arch_stack_walk() and replace the loop with the iterator. The body of the=
+=20
+> iterator would call to unwind_frame() and consume_entry() and that's it.=
+=20
+> It would make arm64 implementation very similar to x86 and s390 and thus=
+=20
+> easier to follow when one switches between architectures all the time.
+
+That's definitely on the radar, the unwinding stuff needs other changes
+for the reliable stack trace (if nothing else we need to distinguish
+between "errors" due to reaching the bottom of the stack and errors due
+to bogosity) which so far looked sensible to bundle up together.
+
+> Tangential to this patch, but another idea for improvement is in=20
+> unwind_frame(). If I am not missing something, everything in=20
+> CONFIG_FUNCTION_GRAPH_TRACER could be replaced by a simple call to=20
+> ftrace_graph_ret_addr(). Again see for example unwind_next_frame() in
+> arch/s390/kernel/unwind_bc.c (x86 has it too).
+
+Yes, I'd noticed some divergence there and was going to look into it.
+
+--Xm/fll+QQv+hsKip
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl8QfkYACgkQJNaLcl1U
+h9AnkAf/cGt+i9TOTKfVzPwxvPOYxIgZQpSMlmklR0SY1sWmcGtHD2GGLY5vutZq
+ew2RXblS1fSUHU/84tOR89SZP7ly/ojyOKifIZPvsxti8/cQK+UadByeJYCagHiu
+25hGCUDK509xYFPbhqOUI7jb8PWSdwGqBYBV9SPZS4nZEEQpK4FaHNIs/Wu6vC+k
+kuq976EB9160ZfH1k/iMUzNU4Sj2AKMqM70J8hEgMFxX8SlxkASobyqsS+nG0s9R
+7Xsr/icmleu1Mi2Xli7p/+QZFsTXESSAv8yZusyAXu+Fz9YNK4JNBI9BaetkDV6A
+9nPWgwOXONiJKps0DAdipNj5frMfmw==
+=/UMo
+-----END PGP SIGNATURE-----
+
+--Xm/fll+QQv+hsKip--
