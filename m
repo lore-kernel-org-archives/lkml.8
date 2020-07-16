@@ -2,142 +2,150 @@ Return-Path: <SRS0=y5Sx=A3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9ADB8C433E4
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 15:30:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16AD2C433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 15:31:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 750F3206F5
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 15:30:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E902E2065F
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 15:31:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="rdXMMs/u";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ilxDs9El"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ZCAVB8ns"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729208AbgGPPao (ORCPT
+        id S1729215AbgGPPbj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 11:30:44 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:33988 "EHLO
-        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728630AbgGPPag (ORCPT
+        Thu, 16 Jul 2020 11:31:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57330 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728415AbgGPPbe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 11:30:36 -0400
-Date:   Thu, 16 Jul 2020 15:30:34 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1594913434;
-        h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=kBVGjRPpGZHRaqdX1zko42An6S3IYk96HvtOlF5TMy0=;
-        b=rdXMMs/uu+SNJRgx46YM7REw4nN+f7sjOLI7TInWlzqBie5WTUOmzQz7s8Wqaqz1yc9Qci
-        4YdE3WYdVVVUh15Smig6GoecbFbamCP2VePKIriPTabW2NtyD0KUSJgqGr6NZvCtQHj0lM
-        Gj6mEDdlYxD1JFXCelqr0Wob+IAi0//bIWzv7+UcUlka40Dj0XAkTrZ7jyGOoSpVSNnXrU
-        zsh3aVxaIU9sALrYa27+GphHJb73h4qyt48IdiIKXN4o2586anGqVv6G7zRcTcLH2ZCA/C
-        82QcJnh/fq9npj3YEDje9oRAGyuTbpft3p5NsjkLEaC1SrPaeVXpaBhR1sn+vg==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1594913434;
-        h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=kBVGjRPpGZHRaqdX1zko42An6S3IYk96HvtOlF5TMy0=;
-        b=ilxDs9ElUyiFNbWF4vK44Lr6DiIlFixuGgOpYeIiI+7zgF3WazXBW0mdjNdLlHBE7UZuKf
-        C2m8YoclaTheEADg==
-From:   "tip-bot2 for Sedat Dilek" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/urgent] x86/entry: Fix vectors to IDTENTRY_SYSVEC for CONFIG_HYPERV
-Cc:     Nick Desaulniers <ndesaulniers@google.com>,
-        Sedat Dilek <sedat.dilek@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Wei Liu <wei.liu@kernel.org>, x86 <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200714194740.4548-1-sedat.dilek@gmail.com>
-References: <20200714194740.4548-1-sedat.dilek@gmail.com>
+        Thu, 16 Jul 2020 11:31:34 -0400
+Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9522CC08C5C0
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Jul 2020 08:31:34 -0700 (PDT)
+Received: by mail-pl1-x644.google.com with SMTP id m16so4021829pls.5
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Jul 2020 08:31:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=jGC0Cma9sD+M6C66CXjEVdr4Gdb8mMF8OboSIxxwdH4=;
+        b=ZCAVB8nsh1reVbsCtXsNpc9/GpvQQzf253bRke2fSht/9fsA2S0zNy7s7Q7zaYprZf
+         XIp3CYeZYUJRxqJWxlw4GYR6Rxfcw9Cy7l7xTQwKslcSPJZlLm/qGcYymwn8C7VPsU+k
+         dDBF3EEYw3UhdPnQHkORD5qj1r8KpyjprM3rc=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=jGC0Cma9sD+M6C66CXjEVdr4Gdb8mMF8OboSIxxwdH4=;
+        b=Sk9+YSlO1uVwVmAVFc9XlYcEF53QWjLVHOaK7+8+mJqYKSAVD3ic701bHZM1VAWnSF
+         Wiv1+fXKo08K0ZKYK0TQbHznHV8crZBvBaBrIkrMqTYtHewqtNrwyIv5Hmqxzd2Xvo60
+         ya/4nlvXQZYatbhIncwLov35QJmI/XQMPkmh0432eyL/V2s6h7eVmIGjT4Dn73oPMv5/
+         740QFaOCZ/EExFqXn6IALIBUx7tWMAnh78QY2K3tH8bmbAR9A7HLa9djrZ0LrVtlhsZT
+         nFvb23F4QvVc7G8cHNyTs6zq9k57JW5XsfFNw/xV8wNb4qcVoVxJmBkAdgNKFEnixabd
+         dPPg==
+X-Gm-Message-State: AOAM531UAnV07r1/uHyjBeVyqaTt5Y902z1ALWWnzbSDpvqIg4Yrn5v4
+        sk7wHYzh7ecDZ9xCOLm5SUjelA==
+X-Google-Smtp-Source: ABdhPJweDZrRnoUX7jCQB/uM+EQPmvMQFRn5PcnR6HDszEBspoWj0c+Kso5Fx/ceySNNzLeNRQX5LA==
+X-Received: by 2002:a17:90b:390e:: with SMTP id ob14mr4976168pjb.221.1594913494019;
+        Thu, 16 Jul 2020 08:31:34 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id e195sm5218464pfh.218.2020.07.16.08.31.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 16 Jul 2020 08:31:33 -0700 (PDT)
+Date:   Thu, 16 Jul 2020 08:31:32 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     =?iso-8859-1?Q?Micka=EBl_Sala=FCn?= <mic@digikod.net>
+Cc:     Jan Kara <jack@suse.cz>,
+        Matthew Bobrowski <mbobrowski@mbobrowski.org>,
+        linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Aleksa Sarai <cyphar@cyphar.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        Christian Heimes <christian@python.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Deven Bowers <deven.desai@linux.microsoft.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Eric Biggers <ebiggers@kernel.org>,
+        Eric Chiang <ericchiang@google.com>,
+        Florian Weimer <fweimer@redhat.com>,
+        James Morris <jmorris@namei.org>, Jann Horn <jannh@google.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
+        Matthew Garrett <mjg59@google.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Michael Kerrisk <mtk.manpages@gmail.com>,
+        =?iso-8859-1?Q?Micka=EBl_Sala=FCn?= <mickael.salaun@ssi.gouv.fr>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        Philippe =?iso-8859-1?Q?Tr=E9buchet?= 
+        <philippe.trebuchet@ssi.gouv.fr>,
+        Scott Shell <scottsh@microsoft.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Steve Dower <steve.dower@python.org>,
+        Steve Grubb <sgrubb@redhat.com>,
+        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
+        Thibaut Sautereau <thibaut.sautereau@ssi.gouv.fr>,
+        Vincent Strubel <vincent.strubel@ssi.gouv.fr>,
+        kernel-hardening@lists.openwall.com, linux-api@vger.kernel.org,
+        linux-integrity@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH v6 4/7] fs: Introduce O_MAYEXEC flag for openat2(2)
+Message-ID: <202007160822.CCDB5478@keescook>
+References: <20200714181638.45751-1-mic@digikod.net>
+ <20200714181638.45751-5-mic@digikod.net>
+ <202007151304.9F48071@keescook>
+ <b209ea10-5b7f-c40e-5b6a-3da9028403d5@digikod.net>
 MIME-Version: 1.0
-Message-ID: <159491343409.4006.12274516170496995947.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <b209ea10-5b7f-c40e-5b6a-3da9028403d5@digikod.net>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the x86/urgent branch of tip:
+On Thu, Jul 16, 2020 at 04:18:27PM +0200, Mickaël Salaün wrote:
+> On 15/07/2020 22:06, Kees Cook wrote:
+> > On Tue, Jul 14, 2020 at 08:16:35PM +0200, Mickaël Salaün wrote:
+> >> The implementation of O_MAYEXEC almost duplicates what execve(2) and
+> >> uselib(2) are already doing: setting MAY_OPENEXEC in acc_mode (which can
+> >> then be checked as MAY_EXEC, if enforced), and propagating FMODE_EXEC to
+> >> _fmode via __FMODE_EXEC flag (which can then trigger a
+> >> fanotify/FAN_OPEN_EXEC event).
+> >> [...]
+> > 
+> > Adding __FMODE_EXEC here will immediately change the behaviors of NFS
+> > and fsnotify. If that's going to happen, I think it needs to be under
+> > the control of the later patches doing the behavioral controls.
+> > (specifically, NFS looks like it completely changes its access control
+> > test when this is set and ignores the read/write checks entirely, which
+> > is not what's wanted).
+> 
+> __FMODE_EXEC was suggested by Jan Kara and Matthew Bobrowski because of
+> fsnotify. However, the NFS handling of SUID binaries [1] indeed leads to
+> an unintended behavior. This also means that uselib(2) shouldn't work
+> properly with NFS. I can remove the __FMODE_EXEC flag for now.
 
-Commit-ID:     5769fe26f389b0002ed48fd16d642a1d86edaf79
-Gitweb:        https://git.kernel.org/tip/5769fe26f389b0002ed48fd16d642a1d86edaf79
-Author:        Sedat Dilek <sedat.dilek@gmail.com>
-AuthorDate:    Tue, 14 Jul 2020 21:47:40 +02:00
-Committer:     Thomas Gleixner <tglx@linutronix.de>
-CommitterDate: Thu, 16 Jul 2020 17:25:10 +02:00
+I kind of wonder if we need to more completely fix __FMODE_EXEC?
 
-x86/entry: Fix vectors to IDTENTRY_SYSVEC for CONFIG_HYPERV
+> [1] https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/commit/?id=f8d9a897d4384b77f13781ea813156568f68b83e
 
-When assembling with Clang via `make LLVM_IAS=1` and CONFIG_HYPERV enabled,
-we observe the following error:
+Hmpf, this implies that "fmode" should contain MAY_EXEC? It really looks
+like __FMODE_EXEC is a hack for places where only "flags" were passed
+around, and this only seems to be an issue for NFS at this point? And it
+should be fixable for fsnotify too?
 
-<instantiation>:9:6: error: expected absolute expression
- .if HYPERVISOR_REENLIGHTENMENT_VECTOR == 3
-     ^
-<instantiation>:1:1: note: while in macro instantiation
-idtentry HYPERVISOR_REENLIGHTENMENT_VECTOR asm_sysvec_hyperv_reenlightenment sysvec_hyperv_reenlightenment has_error_code=0
-^
-./arch/x86/include/asm/idtentry.h:627:1: note: while in macro instantiation
-idtentry_sysvec HYPERVISOR_REENLIGHTENMENT_VECTOR sysvec_hyperv_reenlightenment;
-^
-<instantiation>:9:6: error: expected absolute expression
- .if HYPERVISOR_STIMER0_VECTOR == 3
-     ^
-<instantiation>:1:1: note: while in macro instantiation
-idtentry HYPERVISOR_STIMER0_VECTOR asm_sysvec_hyperv_stimer0 sysvec_hyperv_stimer0 has_error_code=0
-^
-./arch/x86/include/asm/idtentry.h:628:1: note: while in macro instantiation
-idtentry_sysvec HYPERVISOR_STIMER0_VECTOR sysvec_hyperv_stimer0;
+Hmm. (And nothing should use uselib anyway...)
 
-This is caused by typos in arch/x86/include/asm/idtentry.h:
-
-HYPERVISOR_REENLIGHTENMENT_VECTOR -> HYPERV_REENLIGHTENMENT_VECTOR
-HYPERVISOR_STIMER0_VECTOR         -> HYPERV_STIMER0_VECTOR
-
-For more details see ClangBuiltLinux issue #1088.
-
-Fixes: a16be368dd3f ("x86/entry: Convert various hypervisor vectors to IDTENTRY_SYSVEC")
-Suggested-by: Nick Desaulniers <ndesaulniers@google.com>
-Signed-off-by: Sedat Dilek <sedat.dilek@gmail.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
-Reviewed-by: Wei Liu <wei.liu@kernel.org>
-Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
-Link: https://github.com/ClangBuiltLinux/linux/issues/1088
-Link: https://github.com/ClangBuiltLinux/linux/issues/1043
-Link: https://lore.kernel.org/patchwork/patch/1272115/
-Link: https://lkml.kernel.org/r/20200714194740.4548-1-sedat.dilek@gmail.com
-
----
- arch/x86/include/asm/idtentry.h | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/arch/x86/include/asm/idtentry.h b/arch/x86/include/asm/idtentry.h
-index 5efaaed..80d3b30 100644
---- a/arch/x86/include/asm/idtentry.h
-+++ b/arch/x86/include/asm/idtentry.h
-@@ -624,8 +624,8 @@ DECLARE_IDTENTRY_SYSVEC(POSTED_INTR_NESTED_VECTOR,	sysvec_kvm_posted_intr_nested
- 
- #if IS_ENABLED(CONFIG_HYPERV)
- DECLARE_IDTENTRY_SYSVEC(HYPERVISOR_CALLBACK_VECTOR,	sysvec_hyperv_callback);
--DECLARE_IDTENTRY_SYSVEC(HYPERVISOR_REENLIGHTENMENT_VECTOR,	sysvec_hyperv_reenlightenment);
--DECLARE_IDTENTRY_SYSVEC(HYPERVISOR_STIMER0_VECTOR,	sysvec_hyperv_stimer0);
-+DECLARE_IDTENTRY_SYSVEC(HYPERV_REENLIGHTENMENT_VECTOR,	sysvec_hyperv_reenlightenment);
-+DECLARE_IDTENTRY_SYSVEC(HYPERV_STIMER0_VECTOR,	sysvec_hyperv_stimer0);
- #endif
- 
- #if IS_ENABLED(CONFIG_ACRN_GUEST)
+-- 
+Kees Cook
