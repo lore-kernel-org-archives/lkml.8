@@ -2,110 +2,74 @@ Return-Path: <SRS0=y5Sx=A3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D617DC433E4
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 10:01:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 707C2C433E7
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 10:02:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BD851207F9
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 10:01:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 515042089D
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 10:02:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726863AbgGPKBZ (ORCPT
+        id S1727913AbgGPKCC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 06:01:25 -0400
-Received: from mail.loongson.cn ([114.242.206.163]:36886 "EHLO loongson.cn"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725996AbgGPKBY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 06:01:24 -0400
-Received: from [10.130.0.99] (unknown [113.200.148.30])
-        by mail.loongson.cn (Coremail) with SMTP id AQAAf9Dxn9duJRBfuJsFAA--.4223S3;
-        Thu, 16 Jul 2020 18:01:19 +0800 (CST)
-Subject: Re: [PATCH v2 2/2] spi: coldfire-qspi: Use clk_prepare_enable and
- clk_disable_unprepare
-To:     Mark Brown <broonie@kernel.org>
-References: <1594790807-32319-1-git-send-email-zhangqing@loongson.cn>
- <1594790807-32319-2-git-send-email-zhangqing@loongson.cn>
- <20200715094940.GB5431@sirena.org.uk>
-Cc:     linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Geert Uytterhoeven <geert@linux-m68k.org>
-From:   zhangqing <zhangqing@loongson.cn>
-Message-ID: <1616bb3e-ba20-46df-7818-c11c382a0d86@loongson.cn>
-Date:   Thu, 16 Jul 2020 18:01:18 +0800
-User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
- Thunderbird/45.4.0
+        Thu, 16 Jul 2020 06:02:02 -0400
+Received: from elvis.franken.de ([193.175.24.41]:38162 "EHLO elvis.franken.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725996AbgGPKB6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jul 2020 06:01:58 -0400
+Received: from uucp (helo=alpha)
+        by elvis.franken.de with local-bsmtp (Exim 3.36 #1)
+        id 1jw0iB-0008Mc-01; Thu, 16 Jul 2020 12:01:55 +0200
+Received: by alpha.franken.de (Postfix, from userid 1000)
+        id 5BBACC080E; Thu, 16 Jul 2020 11:55:01 +0200 (CEST)
+Date:   Thu, 16 Jul 2020 11:55:01 +0200
+From:   Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+To:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
+Cc:     paulburton@kernel.org, linux-mips@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] mips: Replace HTTP links with HTTPS ones
+Message-ID: <20200716095501.GE8455@alpha.franken.de>
+References: <59938583-2ce4-c7bf-c454-89a1559be846@flygoat.com>
+ <20200714191226.48652-1-grandmaster@al2klimov.de>
 MIME-Version: 1.0
-In-Reply-To: <20200715094940.GB5431@sirena.org.uk>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID: AQAAf9Dxn9duJRBfuJsFAA--.4223S3
-X-Coremail-Antispam: 1UD129KBjvJXoW7XFyDCr1xXF17Gw4UXr4rGrg_yoW8Jr4xpF
-        WxJFWFka1UXryF9an2yr40qr1ak3yvgayUArWrKa4xXw13Gr9Yqr1rCFyDWFyYvrZ7A3WI
-        9FyxXF95AF4DCrDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDU0xBIdaVrnRJUUUvab7Iv0xC_Zr1lb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I2
-        0VC2zVCF04k26cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rw
-        A2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xII
-        jxv20xvEc7CjxVAFwI0_Cr0_Gr1UM28EF7xvwVC2z280aVAFwI0_Cr1j6rxdM28EF7xvwV
-        C2z280aVCY1x0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC
-        0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Gr0_Cr
-        1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI48JMxk0xIA0c2IEe2xFo4CEbIxvr21l
-        c2xSY4AK67AK6r4DMxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I
-        0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWU
-        AVWUtwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcV
-        CY1x0267AKxVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Wr1j6rW3Jr1lIxAIcVC2z280
-        aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyT
-        uYvjxUx3CzDUUUU
-X-CM-SenderInfo: x2kd0wptlqwqxorr0wxvrqhubq/
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200714191226.48652-1-grandmaster@al2klimov.de>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Jul 14, 2020 at 09:12:26PM +0200, Alexander A. Klimov wrote:
+> Rationale:
+> Reduces attack surface on kernel devs opening the links for MITM
+> as HTTPS traffic is much harder to manipulate.
+> 
+> Deterministic algorithm:
+> For each file:
+>   If not .svg:
+>     For each line:
+>       If doesn't contain `\bxmlns\b`:
+>         For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
+> 	  If neither `\bgnu\.org/license`, nor `\bmozilla\.org/MPL\b`:
+>             If both the HTTP and HTTPS versions
+>             return 200 OK and serve the same content:
+>               Replace HTTP with HTTPS.
+> 
+> Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
+> ---
+>  arch/mips/Kconfig           | 2 +-
+>  arch/mips/include/asm/war.h | 2 +-
+>  2 files changed, 2 insertions(+), 2 deletions(-)
 
+applied to mips-next.
 
-On 07/15/2020 05:49 PM, Mark Brown wrote:
-> On Wed, Jul 15, 2020 at 01:26:47PM +0800, Qing Zhang wrote:
->> Convert clk_enable() to clk_prepare_enable() and clk_disable() to
->> clk_disable_unprepare() respectively in the spi-coldfire-qspi.c.
-> Like I said on the previous version are you sure that ColdFire uses the
-> common clock framework and has the prepare calls?
-Hi Mark,
+Thomas.
 
-Thanks for your reminder again.
-
-I see the following comment and code in arch/m68k/coldfire/clk.c:
-
-For more advanced ColdFire parts that have clocks that can be enabled
-we supply enable/disable functions. These must properly define their
-clocks in their platform specific code.
-
-int clk_enable(struct clk *clk)
-{
-     unsigned long flags;
-     spin_lock_irqsave(&clk_lock, flags);
-     if ((clk->enabled++ == 0) && clk->clk_ops)
-         clk->clk_ops->enable(clk);
-     spin_unlock_irqrestore(&clk_lock, flags);
-
-     return 0;
-}
-EXPORT_SYMBOL(clk_enable);
-
-void clk_disable(struct clk *clk)
-{
-     unsigned long flags;
-
-     if (!clk)
-         return;
-
-     spin_lock_irqsave(&clk_lock, flags);
-     if ((--clk->enabled == 0) && clk->clk_ops)
-         clk->clk_ops->disable(clk);
-     spin_unlock_irqrestore(&clk_lock, flags);
-}
-EXPORT_SYMBOL(clk_disable);
-
-Thanks,
-Qing
-
+-- 
+Crap can work. Given enough thrust pigs will fly, but it's not necessarily a
+good idea.                                                [ RFC1925, 2.3 ]
