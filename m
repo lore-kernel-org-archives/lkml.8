@@ -2,123 +2,104 @@ Return-Path: <SRS0=y5Sx=A3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88AD2C43446
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 18:21:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BAFAC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 18:21:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5ECCA2074B
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 18:21:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="ZDPqwSJ+"
+	by mail.kernel.org (Postfix) with ESMTP id 0EFE620787
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 18:21:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729584AbgGPSVG (ORCPT
+        id S1729640AbgGPSVZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 14:21:06 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:40346 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728402AbgGPSVB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 14:21:01 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 06GIKp76062591;
-        Thu, 16 Jul 2020 13:20:51 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1594923651;
-        bh=3U1YGou84u3VUbet9dKfDOd4OJ1M3iNBcC5HTyHhUDg=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=ZDPqwSJ+bjyXN0ZEU56QQeSAKv39MsKHTFnGMszmLkoAKEBaGSnKOlnqdatMx8nQt
-         1lvc5fkygd7k4bHwwHB9GD++KD8NQPj0GRrjFVVaJklOpCQyFczLkRT0AycDZuksc7
-         LcdwAyt8ImKTqnmE2IsG8m+lbRPtb3MUn9zA9PlI=
-Received: from DFLE114.ent.ti.com (dfle114.ent.ti.com [10.64.6.35])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 06GIKpoi122383
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 16 Jul 2020 13:20:51 -0500
-Received: from DFLE108.ent.ti.com (10.64.6.29) by DFLE114.ent.ti.com
- (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Thu, 16
- Jul 2020 13:20:50 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE108.ent.ti.com
- (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Thu, 16 Jul 2020 13:20:50 -0500
-Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 06GIKoZ1090243;
-        Thu, 16 Jul 2020 13:20:50 -0500
-From:   Dan Murphy <dmurphy@ti.com>
-To:     <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>, <robh@kernel.org>,
-        <marek.behun@nic.cz>
-CC:     <devicetree@vger.kernel.org>, <linux-leds@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, Dan Murphy <dmurphy@ti.com>
-Subject: [PATCH v31 09/12] leds: lp5521: Add multicolor framework multicolor brightness support
-Date:   Thu, 16 Jul 2020 13:20:04 -0500
-Message-ID: <20200716182007.18389-10-dmurphy@ti.com>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200716182007.18389-1-dmurphy@ti.com>
-References: <20200716182007.18389-1-dmurphy@ti.com>
+        Thu, 16 Jul 2020 14:21:25 -0400
+Received: from mga09.intel.com ([134.134.136.24]:19378 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728402AbgGPSVW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jul 2020 14:21:22 -0400
+IronPort-SDR: Zm/f1OQhboXoaHeqvT53dndd3NFwQtIARK00ut5FnVzGKUSzrtkW2bOizXM55sfNhtnOcLv+CE
+ NSo4gw4TwB5w==
+X-IronPort-AV: E=McAfee;i="6000,8403,9684"; a="150855389"
+X-IronPort-AV: E=Sophos;i="5.75,360,1589266800"; 
+   d="scan'208";a="150855389"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jul 2020 11:21:21 -0700
+IronPort-SDR: kNc46GhuYzuSAHRY/GsieDvarl/xNSWAnR+5QBxDKYczNj+8D7+X/J1loySBBahP/JPkvFCbZY
+ 8ftirJUHrc9g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,360,1589266800"; 
+   d="scan'208";a="391170669"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by fmsmga001.fm.intel.com with ESMTP; 16 Jul 2020 11:21:19 -0700
+Received: from andy by smile with local (Exim 4.94)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1jw8VU-002Cr4-Gb; Thu, 16 Jul 2020 21:21:20 +0300
+Date:   Thu, 16 Jul 2020 21:21:20 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Maxim Levitsky <mlevitsk@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, rafael.j.wysocki@intel.com,
+        sakari.ailus@linux.intel.com, heikki.krogerus@linux.intel.com,
+        gregkh@linuxfoundation.org
+Subject: Re: kernel oops in 'typec_ucsi' due to commit 'drivers property:
+ When no children in primary, try secondary'
+Message-ID: <20200716182120.GS3703480@smile.fi.intel.com>
+References: <7affdd923186c5ce8c7dcf7cbe7b826eaa3ac8b2.camel@redhat.com>
+ <20200716154721.GO3703480@smile.fi.intel.com>
+ <43148a2ebe546fde67028d99fd7365acce1311b2.camel@redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <43148a2ebe546fde67028d99fd7365acce1311b2.camel@redhat.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add the multicolor brightness call back to support the multicolor
-framework. This function allows setting the brightness across
-grouped LED channels in a single call.
+On Thu, Jul 16, 2020 at 09:00:00PM +0300, Maxim Levitsky wrote:
+> On Thu, 2020-07-16 at 18:47 +0300, Andy Shevchenko wrote:
+> > On Thu, Jul 16, 2020 at 11:17:03AM +0300, Maxim Levitsky wrote:
+> > > Hi!
+> > > 
+> > > Few days ago I bisected a regression on 5.8 kernel:
+> > > 
+> > > I have nvidia rtx 2070s and its USB type C port driver (which is open source)
+> > > started to crash on load:
+> > 
+> > ...
+> > 
+> > > Reverting the commit helped fix this oops.
+> > > 
+> > > My .config attached.
+> > > If any more info is needed I'll be happy to provide it,
+> > > and of course test patches.
+> > 
+> > Can you test below?
+> > 
+> > diff --git a/drivers/base/property.c b/drivers/base/property.c
+> > index 1e6d75e65938..d58aa98fe964 100644
+> > --- a/drivers/base/property.c
+> > +++ b/drivers/base/property.c
+> > @@ -721,7 +721,7 @@ struct fwnode_handle *device_get_next_child_node(struct device *dev,
+> >  		return next;
+> >  
+> >  	/* When no more children in primary, continue with secondary */
+> > -	if (!IS_ERR_OR_NULL(fwnode->secondary))
+> > +	if (fwnode && !IS_ERR_OR_NULL(fwnode->secondary))
+> >  		next = fwnode_get_next_child_node(fwnode->secondary, child);
+> >  
+> >  	return next;
+> 
+> It works (no more oops)
 
-Acked-by: Pavel Machek <pavel@ucw.cz>
-Acked-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Signed-off-by: Dan Murphy <dmurphy@ti.com>
----
- drivers/leds/leds-lp5521.c | 20 ++++++++++++++++++++
- 1 file changed, 20 insertions(+)
+Thanks for testing. I'm about to send formal patch, can you give your Tested-by tag there then?
 
-diff --git a/drivers/leds/leds-lp5521.c b/drivers/leds/leds-lp5521.c
-index 6ff81d6be789..ef8c3bfa8f3c 100644
---- a/drivers/leds/leds-lp5521.c
-+++ b/drivers/leds/leds-lp5521.c
-@@ -349,6 +349,25 @@ static int lp5521_run_selftest(struct lp55xx_chip *chip, char *buf)
- 	return 0;
- }
- 
-+static int lp5521_multicolor_brightness(struct lp55xx_led *led)
-+{
-+	struct lp55xx_chip *chip = led->chip;
-+	int ret;
-+	int i;
-+
-+	mutex_lock(&chip->lock);
-+	for (i = 0; i < led->mc_cdev.num_colors; i++) {
-+		ret = lp55xx_write(chip,
-+				   LP5521_REG_LED_PWM_BASE +
-+				   led->mc_cdev.subled_info[i].channel,
-+				   led->mc_cdev.subled_info[i].brightness);
-+		if (ret)
-+			break;
-+	}
-+	mutex_unlock(&chip->lock);
-+	return ret;
-+}
-+
- static int lp5521_led_brightness(struct lp55xx_led *led)
- {
- 	struct lp55xx_chip *chip = led->chip;
-@@ -490,6 +509,7 @@ static struct lp55xx_device_config lp5521_cfg = {
- 	.max_channel  = LP5521_MAX_LEDS,
- 	.post_init_device   = lp5521_post_init_device,
- 	.brightness_fn      = lp5521_led_brightness,
-+	.multicolor_brightness_fn = lp5521_multicolor_brightness,
- 	.set_led_current    = lp5521_set_led_current,
- 	.firmware_cb        = lp5521_firmware_loaded,
- 	.run_engine         = lp5521_run_engine,
 -- 
-2.27.0
+With Best Regards,
+Andy Shevchenko
+
 
