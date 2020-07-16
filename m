@@ -2,134 +2,97 @@ Return-Path: <SRS0=y5Sx=A3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38A02C433E5
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 09:44:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E719C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 09:40:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1E1502071B
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 09:44:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F6612071B
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 09:40:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="wCfVy1BY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728081AbgGPJoP (ORCPT
+        id S1726907AbgGPJkw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 05:44:15 -0400
-Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:63738 "EHLO
-        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728022AbgGPJoM (ORCPT
+        Thu, 16 Jul 2020 05:40:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59380 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725996AbgGPJkw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 05:44:12 -0400
-Received: from pps.filterd (m0167088.ppops.net [127.0.0.1])
-        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06G9e8bJ031070;
-        Thu, 16 Jul 2020 05:44:11 -0400
-Received: from nwd2mta3.analog.com ([137.71.173.56])
-        by mx0a-00128a01.pphosted.com with ESMTP id 3279gmq8hv-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 16 Jul 2020 05:44:11 -0400
-Received: from SCSQMBX10.ad.analog.com (scsqmbx10.ad.analog.com [10.77.17.5])
-        by nwd2mta3.analog.com (8.14.7/8.14.7) with ESMTP id 06G9i9ec057827
-        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=FAIL);
-        Thu, 16 Jul 2020 05:44:09 -0400
-Received: from SCSQMBX10.ad.analog.com (10.77.17.5) by SCSQMBX10.ad.analog.com
- (10.77.17.5) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1779.2; Thu, 16 Jul
- 2020 02:44:08 -0700
-Received: from zeus.spd.analog.com (10.64.82.11) by SCSQMBX10.ad.analog.com
- (10.77.17.5) with Microsoft SMTP Server id 15.1.1779.2 via Frontend
- Transport; Thu, 16 Jul 2020 02:44:08 -0700
-Received: from localhost.localdomain ([10.48.65.12])
-        by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 06G9i21p001073;
-        Thu, 16 Jul 2020 05:44:07 -0400
-From:   Darius Berghe <darius.berghe@analog.com>
-To:     <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-CC:     <jic23@kernel.org>
-Subject: [PATCH v2 3/3] ltc2471 driver yaml
-Date:   Thu, 16 Jul 2020 12:46:11 +0300
-Message-ID: <20200716094611.81746-4-darius.berghe@analog.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200716094611.81746-1-darius.berghe@analog.com>
-References: <20200716094611.81746-1-darius.berghe@analog.com>
+        Thu, 16 Jul 2020 05:40:52 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 00C4BC061755;
+        Thu, 16 Jul 2020 02:40:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=DODVfvRjphploJcUvRl2f5HSQLQF2PLhJJB7s8CHhjQ=; b=wCfVy1BYq74yjZWXOTO2nHfY+M
+        m52ZzX9/5ND6SEwsQMoMegz2OtZELaiXSuS61XrZ5RrqX7GrLrlhEfW34Swp/turxkEQIO1sIRkfM
+        tNNsKlI/qGKlPhvGwhExwrpGzweEFYUtJJCWa4mux4HowvWdaY8HXPsGLZnkdfRHfC+yRQfx1gJJC
+        F4yV6oFbZaj9d+SLSw95wDHKoxnwq0HL6NZoIpjGdw1Lp37udC7Y0vEGRndVCSbaLYi+fZnS0287f
+        oUKpoP7jf1B9RL4C8wN9qMNWwjFWxfX9xORSixllhBZAW3AxmLs/dtJ2wEGl9El1ZmnfDwwrjvFod
+        CleI6WhQ==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jw0Ne-0004td-2E; Thu, 16 Jul 2020 09:40:42 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id B4C4A30066E;
+        Thu, 16 Jul 2020 11:40:39 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 63B9826501E59; Thu, 16 Jul 2020 11:40:39 +0200 (CEST)
+Date:   Thu, 16 Jul 2020 11:40:39 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
+        Rich Felker <dalias@libc.org>, Christoph Hellwig <hch@lst.de>,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Linux-sh list <linux-sh@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: ioremap and dma cleanups and fixes for superh (2nd resend)
+Message-ID: <20200716094039.GQ10769@hirez.programming.kicks-ass.net>
+References: <8cbf2963-d0e4-0ca8-4ffe-c2057694447f@physik.fu-berlin.de>
+ <011f29e6-ad71-366e-dbff-bc8471f3da60@physik.fu-berlin.de>
+ <CAMuHMdUre2-fRgLP8YiwjAKN6J=m1vGhPSMMUdpof7jPJfcWuw@mail.gmail.com>
+ <def65208-a38b-8663-492a-cae150027003@physik.fu-berlin.de>
+ <b5f1853e-031d-c09d-57d2-fb4baffa01ea@physik.fu-berlin.de>
+ <CAMuHMdW8RtJKk3u7RWQKP2tA3AYT2rB2aqhUT1KnJ4tJwWWKDA@mail.gmail.com>
+ <b5cd845f-7b5e-af8e-a15d-3ede7e61ced4@physik.fu-berlin.de>
+ <0322def7-fc16-c805-8f2b-c88fffce2f1e@physik.fu-berlin.de>
+ <2df7ca7f-7e26-c916-b6ac-4ec1913fb8d7@physik.fu-berlin.de>
+ <CAMuHMdXjfq=RjJ2doR7XyQMnZUA8ccxKc7_tyUzTX29tpyZojw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-ADIRoutedOnPrem: True
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-07-16_05:2020-07-16,2020-07-16 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0
- lowpriorityscore=0 spamscore=0 impostorscore=0 clxscore=1015
- suspectscore=0 priorityscore=1501 mlxscore=0 bulkscore=0 adultscore=0
- mlxlogscore=999 phishscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2006250000 definitions=main-2007160075
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAMuHMdXjfq=RjJ2doR7XyQMnZUA8ccxKc7_tyUzTX29tpyZojw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add dt binding documentation for ltc2471 driver. This covers all supported
-devices.
+On Wed, Jul 15, 2020 at 08:21:27PM +0200, Geert Uytterhoeven wrote:
 
-Signed-off-by: Darius Berghe <darius.berghe@analog.com>
----
- .../bindings/iio/adc/adi,ltc2471.yaml         | 49 +++++++++++++++++++
- 1 file changed, 49 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/iio/adc/adi,ltc2471.yaml
+> Oh, we actually discussed that:
+> https://lore.kernel.org/linux-mm/20191204133454.GW2844@hirez.programming.kicks-ass.net/
+> but there was no conclusion...
 
-diff --git a/Documentation/devicetree/bindings/iio/adc/adi,ltc2471.yaml b/Documentation/devicetree/bindings/iio/adc/adi,ltc2471.yaml
-new file mode 100644
-index 000000000000..d5b35a1fa651
---- /dev/null
-+++ b/Documentation/devicetree/bindings/iio/adc/adi,ltc2471.yaml
-@@ -0,0 +1,49 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+# Copyright 2020 Analog Devices Inc.
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/bindings/iio/adc/adi,ltc2471.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Analog Devices LTC2471 16-bit I2C Sigma-Delta ADC
-+
-+maintainers:
-+  - Mike Looijmans <mike.looijmans@topic.nl>
-+
-+description: |
-+  Analog Devices LTC2461 (single-ended) and LTC2463 (differential) 16-bit
-+  I2C Sigma-Delta ADC with 60sps output rate.
-+  https://www.analog.com/media/en/technical-documentation/data-sheets/24613fa.pdf
-+
-+  Analog Devices LTC2471 (single-ended) and LTC2473 (differential) 16-bit
-+  I2C Sigma-Delta ADC with selectable 208/833sps output rate.
-+  https://www.analog.com/media/en/technical-documentation/data-sheets/24713fb.pdf
-+
-+properties:
-+  compatible:
-+    enum:
-+      - adi,ltc2461
-+      - adi,ltc2463
-+      - adi,ltc2471
-+      - adi,ltc2473
-+
-+  reg:
-+    maxItems: 1
-+
-+  avcc-supply:
-+    description:
-+      Phandle to the Avcc power supply (2.7V - 5.5V)
-+
-+required:
-+  - compatible
-+  - reg
-+
-+examples:
-+  - |
-+    i2c0 {
-+      adc@14 {
-+        compatible = "adi,ltc2461";
-+        reg = <0x14>;
-+      };
-+    };
-+
--- 
-2.27.0
+Urgh.. clearly that fell off the table :-(
 
+So yes, that patch works, but as I wrote, I think it's still broken.
+Then again, that particular breakage has been there for a long time.
+
+Ooohh.. I have another whole patch-set that fixes that across
+architectures which I forgot about too:
+
+  https://lkml.kernel.org/r/20191211120713.360281197@infradead.org
+
+that actually included the SH fix.
+
+Then Aneesh got a bunch of those patches merged because he needed it for
+Power, but the rest bitrotted again.
+
+Let me rebase/refresh the rest of that and send it out again.
