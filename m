@@ -2,119 +2,163 @@ Return-Path: <SRS0=y5Sx=A3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-20.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DB2DC433E5
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 17:44:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0270AC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 17:47:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 623092076A
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 17:44:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="dIjUJK4P"
+	by mail.kernel.org (Postfix) with ESMTP id DD96A2071B
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 17:47:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729549AbgGPRo0 (ORCPT
+        id S1728638AbgGPRrg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 13:44:26 -0400
-Received: from linux.microsoft.com ([13.77.154.182]:54476 "EHLO
-        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729415AbgGPRoE (ORCPT
+        Thu, 16 Jul 2020 13:47:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50188 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725867AbgGPRrg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 13:44:04 -0400
-Received: from localhost.localdomain (c-73-42-176-67.hsd1.wa.comcast.net [73.42.176.67])
-        by linux.microsoft.com (Postfix) with ESMTPSA id 467EC20B490C;
-        Thu, 16 Jul 2020 10:44:03 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 467EC20B490C
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1594921443;
-        bh=uMfFSH8BKWRMGn0Ob/aAF/poLIpxKXFWWoJsEWCn7j0=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dIjUJK4PMD8yUDiTmHnKezBpnWOWLdnvWlPcbEvwaoPlheDB5Lf9uoT4UVTIYS99Z
-         OjjKf6ICdE+C85mxymMBAUdhtHOjpH7pT3MGOY0ZWys/t8ptW5+pVuN5opJfIwi9lk
-         DPQY3JzF3Hqqjzhu9/jJfCzlvUvmnidkYXGySyMU=
-From:   Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
-To:     zohar@linux.ibm.com, stephen.smalley.work@gmail.com,
-        casey@schaufler-ca.com
-Cc:     jmorris@namei.org, linux-integrity@vger.kernel.org,
-        selinux@vger.kernel.org, linux-security-module@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v2 2/5] IMA: Define an IMA hook to measure LSM data
-Date:   Thu, 16 Jul 2020 10:43:48 -0700
-Message-Id: <20200716174351.20128-3-nramas@linux.microsoft.com>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200716174351.20128-1-nramas@linux.microsoft.com>
-References: <20200716174351.20128-1-nramas@linux.microsoft.com>
+        Thu, 16 Jul 2020 13:47:36 -0400
+Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F3F6BC061755
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Jul 2020 10:47:35 -0700 (PDT)
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: eballetbo)
+        with ESMTPSA id 6E9772A56D3
+Subject: Re: [PATCH v2] ASoC: cros_ec_codec: Reset I2S RX when probing
+To:     Guenter Roeck <groeck@google.com>,
+        Yu-Hsuan Hsu <yuhsuan@chromium.org>
+Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
+        Tzung-Bi Shih <tzungbi@google.com>,
+        Cheng-Yi Chiang <cychiang@chromium.org>,
+        Guenter Roeck <groeck@chromium.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        Benson Leung <bleung@chromium.org>,
+        ALSA development <alsa-devel@alsa-project.org>
+References: <20200716170914.3623060-1-yuhsuan@chromium.org>
+ <CABXOdTffo_PoFytXTR0DthRgxrp9SLkTrg2Wp6dMDXXj060KFw@mail.gmail.com>
+From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Message-ID: <f53d5f7b-6d9a-af68-7a48-fbb411625336@collabora.com>
+Date:   Thu, 16 Jul 2020 19:47:30 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <CABXOdTffo_PoFytXTR0DthRgxrp9SLkTrg2Wp6dMDXXj060KFw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-IMA subsystem needs to define an IMA hook that the security modules can
-call to measure critical data of the security modules.
+Hi,
 
-Define a new IMA hook, namely ima_lsm_state(), that the security modules
-can call to measure data.
+On 16/7/20 19:23, Guenter Roeck wrote:
+> On Thu, Jul 16, 2020 at 10:09 AM Yu-Hsuan Hsu <yuhsuan@chromium.org> wrote:
+>>
+>> It is not guaranteed that I2S RX is disabled when the kernel booting.
+>> For example, if the kernel crashes while it is enabled, it will keep
+>> enabled until the next time EC reboots. Reset I2S RX when probing to
+>> fix this issue.
+>>
+>> Signed-off-by: Yu-Hsuan Hsu <yuhsuan@chromium.org>
+>> ---
+>>  drivers/platform/chrome/cros_ec_proto.c        | 7 ++++++-
+>>  include/linux/platform_data/cros_ec_commands.h | 1 +
+>>  sound/soc/codecs/cros_ec_codec.c               | 9 +++++++++
+>>  3 files changed, 16 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/platform/chrome/cros_ec_proto.c b/drivers/platform/chrome/cros_ec_proto.c
+>> index 3e745e0fe092c..2c60690d7147c 100644
+>> --- a/drivers/platform/chrome/cros_ec_proto.c
+>> +++ b/drivers/platform/chrome/cros_ec_proto.c
+>> @@ -572,7 +572,12 @@ int cros_ec_cmd_xfer_status(struct cros_ec_device *ec_dev,
+>>                 return -ENOTSUPP;
+>>         } else if (msg->result != EC_RES_SUCCESS) {
+>>                 dev_dbg(ec_dev->dev, "Command result (err: %d)\n", msg->result);
+>> -               return -EPROTO;
+>> +               switch (msg->result) {
+>> +               case EC_RES_INVALID_PARAM:
+>> +                       return -EINVAL;
+> 
+> As we have learned, this may impact other callers of
+> cros_ec_cmd_xfer_status() which only accept -EPROTO as error return
+> value. In addition to that, the code is odd:
+> 
+>     if (msg->result == EC_RES_INVALID_VERSION) {
+>         ...
+>     } else if (msg->result != EC_RES_SUCCESS) {
+>         switch (msg->result) {
+>         ....
+>         }
+>     }
+> 
 
-Signed-off-by: Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
----
- include/linux/ima.h               |  4 ++++
- security/integrity/ima/ima_main.c | 17 +++++++++++++++++
- 2 files changed, 21 insertions(+)
+Ack, this is odd.
 
-diff --git a/include/linux/ima.h b/include/linux/ima.h
-index 9164e1534ec9..7e2686f4953a 100644
---- a/include/linux/ima.h
-+++ b/include/linux/ima.h
-@@ -26,6 +26,7 @@ extern int ima_post_read_file(struct file *file, void *buf, loff_t size,
- extern void ima_post_path_mknod(struct dentry *dentry);
- extern int ima_file_hash(struct file *file, char *buf, size_t buf_size);
- extern void ima_kexec_cmdline(const void *buf, int size);
-+extern void ima_lsm_state(const char *lsm_event_name, const void *buf, int size);
- 
- #ifdef CONFIG_IMA_KEXEC
- extern void ima_add_kexec_buffer(struct kimage *image);
-@@ -104,6 +105,9 @@ static inline int ima_file_hash(struct file *file, char *buf, size_t buf_size)
- }
- 
- static inline void ima_kexec_cmdline(const void *buf, int size) {}
-+
-+static inline void ima_lsm_state(const char *lsm_event_name,
-+				 const void *buf, int size) {}
- #endif /* CONFIG_IMA */
- 
- #ifndef CONFIG_IMA_KEXEC
-diff --git a/security/integrity/ima/ima_main.c b/security/integrity/ima/ima_main.c
-index 8351b2fd48e0..04d9a1d35300 100644
---- a/security/integrity/ima/ima_main.c
-+++ b/security/integrity/ima/ima_main.c
-@@ -835,6 +835,23 @@ void ima_kexec_cmdline(const void *buf, int size)
- 					   KEXEC_CMDLINE, 0, NULL);
- }
- 
-+/**
-+ * ima_lsm_state - measure LSM specific state
-+ * @lsm_event_name: LSM event
-+ * @buf: pointer to buffer containing LSM specific state
-+ * @size: Number of bytes in buf
-+ *
-+ * Buffers can only be measured, not appraised.
-+ */
-+void ima_lsm_state(const char *lsm_event_name, const void *buf, int size)
-+{
-+	if (!lsm_event_name || !buf || !size)
-+		return;
-+
-+	process_buffer_measurement(buf, size, lsm_event_name,
-+				   LSM_STATE, 0, NULL);
-+}
-+
- static int __init init_ima(void)
- {
- 	int error;
--- 
-2.27.0
+> I really dislike the notion of changing error return values of
+> cros_ec_cmd_xfer_status() one by one. That can only cause ongoing
+> trouble with callers expecting specific error return codes (as we have
+> already seen).
+> 
 
+Hmm, that's a good point. Ok.
+
+Let's apply the Guenter's patch that maps the errors *and* fix the callers of
+cros_ec_cmd_xfer_status which only accept -EPROTO (there are few).
+
+Yu-Hsuan, can you take care of this and send a patch series with all the
+required patches? If not, I can work on this next week.
+
+Thanks,
+  Enric
+
+> Guenter
+> 
+>> +               default:
+>> +                       return -EPROTO;
+>> +               }
+>>         }
+>>
+>>         return ret;
+>> diff --git a/include/linux/platform_data/cros_ec_commands.h b/include/linux/platform_data/cros_ec_commands.h
+>> index 69210881ebac8..11ce917ca924c 100644
+>> --- a/include/linux/platform_data/cros_ec_commands.h
+>> +++ b/include/linux/platform_data/cros_ec_commands.h
+>> @@ -4598,6 +4598,7 @@ enum ec_codec_i2s_rx_subcmd {
+>>         EC_CODEC_I2S_RX_SET_SAMPLE_DEPTH = 0x2,
+>>         EC_CODEC_I2S_RX_SET_DAIFMT = 0x3,
+>>         EC_CODEC_I2S_RX_SET_BCLK = 0x4,
+>> +       EC_CODEC_I2S_RX_RESET = 0x5,
+>>         EC_CODEC_I2S_RX_SUBCMD_COUNT,
+>>  };
+>>
+>> diff --git a/sound/soc/codecs/cros_ec_codec.c b/sound/soc/codecs/cros_ec_codec.c
+>> index f23956cf4ed84..b5ff30b7f1aa8 100644
+>> --- a/sound/soc/codecs/cros_ec_codec.c
+>> +++ b/sound/soc/codecs/cros_ec_codec.c
+>> @@ -1034,6 +1034,15 @@ static int cros_ec_codec_platform_probe(struct platform_device *pdev)
+>>         }
+>>         priv->ec_capabilities = r.capabilities;
+>>
+>> +       /* Reset EC codec I2S RX. */
+>> +       p.cmd = EC_CODEC_I2S_RX_RESET;
+>> +       ret = send_ec_host_command(priv->ec_device, EC_CMD_EC_CODEC_I2S_RX,
+>> +                                  (uint8_t *)&p, sizeof(p), NULL, 0);
+>> +       if (ret == -EINVAL)
+>> +               dev_info(dev, "Missing reset command. Please update your EC firmware.\n");
+>> +       else if (ret)
+>> +               dev_err(dev, "failed to EC_CODEC_I2S_RESET: %d\n", ret);
+>> +
+>>         platform_set_drvdata(pdev, priv);
+>>
+>>         ret = devm_snd_soc_register_component(dev, &i2s_rx_component_driver,
+>> --
+>> 2.27.0.389.gc38d7665816-goog
+>>
