@@ -2,154 +2,107 @@ Return-Path: <SRS0=y5Sx=A3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F212C433E5
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 21:16:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44F03C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 21:16:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 787C3207DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 21:16:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="jrlSSu3d"
+	by mail.kernel.org (Postfix) with ESMTP id 1AEFA207DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 21:16:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594934211;
+	bh=8VD2+aiY77GJqGWBooe1O36nHfabIoRq7MZJbjlehuY=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=pGHApqZwDsz6uXbA0ZYfAAj2AiJ7DqFgjPH0Z9HySuC8KR19etEmaiLIvKeOFBxC0
+	 m4oE9kVI/eHCV94Vq0CJYqdiY4OwvINkCTicNXzmLyHUPNYEfENfn6QEB6XJGmjxwB
+	 AYo/ycnJn71je8Vna+jZcfSy4ylJjrjI+32qlYs8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726905AbgGPVQO (ORCPT
+        id S1727101AbgGPVQu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 17:16:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54152 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726246AbgGPVQM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 17:16:12 -0400
-Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A9BFFC08C5CE
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Jul 2020 14:16:11 -0700 (PDT)
-Received: by mail-pg1-x544.google.com with SMTP id p3so5502194pgh.3
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Jul 2020 14:16:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=lmZBQbjqMeBLnSI9FVD3UqngzNA1tgpRunHRVfsAN4E=;
-        b=jrlSSu3doUVtC/cF6fPEixkmZ7d3kTAXWl4iNsSM4I6YoEFL+12kpcB6R9QQdqWsrL
-         tXF4IFkuk15RdtqH+h3KXuu4gjR6RZUWVUL2RXcBy7kHTyR41Iagp8SO/Nhhy6hRv9LC
-         SJF0MSnv27iK1CLHjM8qOEZHVhyaIK8raTTYM=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=lmZBQbjqMeBLnSI9FVD3UqngzNA1tgpRunHRVfsAN4E=;
-        b=giULsej1ZGTdYzrPK1TKo7GZ+qwCVYj4ai9s2eRDDq71iM7KZ0yRk2N9mHfT+sf+vc
-         1CaK43R83QXw3e8RUkKSO9FKcddDBREGRUSg+H50S8m6NPgohq9m5c9rO3oj7gBifF/e
-         26pjZWZ1C9eLZvepWFxl//QpK5HS/r09DlZw0wNvZg2kgit5rytIhM8Jk3KqCMyAIKdF
-         5Z2k4miyaPzgmygcskmEI6MQOosDl/nQQPun3HZ7bUEu1RXX5/clcWdbVClStOm47OlW
-         dTiKq4jG8hBEEgu0DZnTMbwmPBDAKKky5252dljM9s4FqHmdtpDdDBcX74BFG6GNy+cw
-         wbxw==
-X-Gm-Message-State: AOAM533EYCBC13CmzXtjZsan9Ukm2W6yB3asAG4PNZBosaUNHqsFQmHa
-        nHQyq85s7snO8+CETl5NjaQAzQ==
-X-Google-Smtp-Source: ABdhPJxx6Jf69e3T4HfcHOftkZ9Viu9RPr7fEyeFqrBzPYqKcb2Yk/GKdggH4BwCHYsK3kDOz6WVQw==
-X-Received: by 2002:a63:c947:: with SMTP id y7mr5734755pgg.357.1594934171026;
-        Thu, 16 Jul 2020 14:16:11 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id a30sm5752036pfr.87.2020.07.16.14.16.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 16 Jul 2020 14:16:09 -0700 (PDT)
-Date:   Thu, 16 Jul 2020 14:16:09 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Scott Branden <scott.branden@broadcom.com>
-Cc:     Matthew Wilcox <willy@infradead.org>,
-        James Morris <jmorris@namei.org>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Jessica Yu <jeyu@kernel.org>,
-        Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Matthew Garrett <matthewgarrett@google.com>,
-        David Howells <dhowells@redhat.com>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        "Joel Fernandes (Google)" <joel@joelfernandes.org>,
-        KP Singh <kpsingh@google.com>, Dave Olsthoorn <dave@bewaar.me>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Peter Jones <pjones@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Stephen Boyd <stephen.boyd@linaro.org>,
-        Paul Moore <paul@paul-moore.com>, linux-kernel@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-integrity@vger.kernel.org,
-        linux-security-module@vger.kernel.org
-Subject: Re: [PATCH 2/4] fs: Remove FIRMWARE_PREALLOC_BUFFER from
- kernel_read_file() enums
-Message-ID: <202007161415.10D015477@keescook>
-References: <20200707081926.3688096-1-keescook@chromium.org>
- <20200707081926.3688096-3-keescook@chromium.org>
- <3fdb3c53-7471-14d8-ce6a-251d8b660b8a@broadcom.com>
- <20200710220411.GR12769@casper.infradead.org>
- <128120ca-7465-e041-7481-4c5d53f639dd@broadcom.com>
- <202007101543.912633AA73@keescook>
- <9ba08503-e515-6761-63de-a3b611720b1b@broadcom.com>
+        Thu, 16 Jul 2020 17:16:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54966 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726104AbgGPVQt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jul 2020 17:16:49 -0400
+Received: from embeddedor (unknown [201.162.240.161])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 48DF720760;
+        Thu, 16 Jul 2020 21:16:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594934209;
+        bh=8VD2+aiY77GJqGWBooe1O36nHfabIoRq7MZJbjlehuY=;
+        h=Date:From:To:Cc:Subject:From;
+        b=D3fi9UQFPjePmFvXTssBTYmVIslmFyAvPO9ZmGrfJNPnBoT8S3Dh/37zZyk3o93/n
+         5htJuIY8AFIfy27Fjc/yxl026+hl+KO6u8lVw8wb5nJRGH+ALCi6Z+NC7Bp9OknnCq
+         CixBS0SX9fCY/CBu+EmbyhWFbCkBcW71qbiLzD9M=
+Date:   Thu, 16 Jul 2020 16:22:13 -0500
+From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Andy Gross <agross@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>
+Cc:     linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Subject: [PATCH][next] pinctrl: qcom: spmi-gpio: Use fallthrough
+ pseudo-keyword
+Message-ID: <20200716212213.GA17623@embeddedor>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <9ba08503-e515-6761-63de-a3b611720b1b@broadcom.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 16, 2020 at 01:35:17PM -0700, Scott Branden wrote:
-> On 2020-07-10 3:44 p.m., Kees Cook wrote:
-> > On Fri, Jul 10, 2020 at 03:10:25PM -0700, Scott Branden wrote:
-> > > 
-> > > On 2020-07-10 3:04 p.m., Matthew Wilcox wrote:
-> > > > On Fri, Jul 10, 2020 at 02:00:32PM -0700, Scott Branden wrote:
-> > > > > > @@ -950,8 +951,8 @@ int kernel_read_file(struct file *file, void **buf, loff_t *size,
-> > > > > >     		goto out;
-> > > > > >     	}
-> > > > > > -	if (id != READING_FIRMWARE_PREALLOC_BUFFER)
-> > > > > > -		*buf = vmalloc(i_size);
-> > > > > > +	if (!*buf)
-> > > > > The assumption that *buf is always NULL when id !=
-> > > > > READING_FIRMWARE_PREALLOC_BUFFER doesn't appear to be correct.
-> > > > > I get unhandled page faults due to this change on boot.
-> > > > Did it give you a stack backtrace?
-> > > Yes, but there's no requirement that *buf need to be NULL when calling this
-> > > function.
-> > > To fix my particular crash I added the following locally:
-> > > 
-> > > --- a/kernel/module.c
-> > > +++ b/kernel/module.c
-> > > @@ -3989,7 +3989,7 @@ SYSCALL_DEFINE3(finit_module, int, fd, const char
-> > > __user *, uargs, int, flags)
-> > >   {
-> > >       struct load_info info = { };
-> > >       loff_t size;
-> > > -    void *hdr;
-> > > +    void *hdr = NULL;
-> > >       int err;
-> > > 
-> > >       err = may_init_module();
-> > Thanks for the diagnosis and fix! I haven't had time to cycle back
-> > around to this series yet. Hopefully soon. :)
-> > 
-> In order to assist in your patchset I have combined it with my patch series
-> here:
-> https://github.com/sbranden/linux/tree/kernel_read_file_for_kees
-> 
-> Please let me know if this matches your expectations for my patches or if
-> there is something else I need to change.
+Replace the existing /* fall through */ comments and its variants with
+the new pseudo-keyword macro fallthrough[1].
 
-Thanks! I was working on the next revision of this last night, and I'm
-trying to get through today's email to finish it. I'll take a look!
+[1] https://www.kernel.org/doc/html/latest/process/deprecated.html?highlight=fallthrough#implicit-switch-case-fall-through
 
+Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+---
+ drivers/pinctrl/qcom/pinctrl-spmi-gpio.c | 4 ++--
+ drivers/pinctrl/qcom/pinctrl-ssbi-gpio.c | 2 +-
+ 2 files changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/pinctrl/qcom/pinctrl-spmi-gpio.c b/drivers/pinctrl/qcom/pinctrl-spmi-gpio.c
+index 66cbcfe7950e..17441388ce8f 100644
+--- a/drivers/pinctrl/qcom/pinctrl-spmi-gpio.c
++++ b/drivers/pinctrl/qcom/pinctrl-spmi-gpio.c
+@@ -794,13 +794,13 @@ static int pmic_gpio_populate(struct pmic_gpio_state *state,
+ 	switch (subtype) {
+ 	case PMIC_GPIO_SUBTYPE_GPIO_4CH:
+ 		pad->have_buffer = true;
+-		/* Fall through */
++		fallthrough;
+ 	case PMIC_GPIO_SUBTYPE_GPIOC_4CH:
+ 		pad->num_sources = 4;
+ 		break;
+ 	case PMIC_GPIO_SUBTYPE_GPIO_8CH:
+ 		pad->have_buffer = true;
+-		/* Fall through */
++		fallthrough;
+ 	case PMIC_GPIO_SUBTYPE_GPIOC_8CH:
+ 		pad->num_sources = 8;
+ 		break;
+diff --git a/drivers/pinctrl/qcom/pinctrl-ssbi-gpio.c b/drivers/pinctrl/qcom/pinctrl-ssbi-gpio.c
+index 338a15d08629..b5949f766a7a 100644
+--- a/drivers/pinctrl/qcom/pinctrl-ssbi-gpio.c
++++ b/drivers/pinctrl/qcom/pinctrl-ssbi-gpio.c
+@@ -346,7 +346,7 @@ static int pm8xxx_pin_config_set(struct pinctrl_dev *pctldev,
+ 				return -EINVAL;
+ 			}
+ 			pin->pull_up_strength = arg;
+-			/* FALLTHROUGH */
++			fallthrough;
+ 		case PIN_CONFIG_BIAS_PULL_UP:
+ 			pin->bias = pin->pull_up_strength;
+ 			banks |= BIT(2);
 -- 
-Kees Cook
+2.27.0
+
