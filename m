@@ -2,75 +2,93 @@ Return-Path: <SRS0=y5Sx=A3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37519C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 02:55:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 632C4C433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 02:55:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1C2262076C
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 02:55:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 383AD2076C
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 02:55:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Fr8T9im2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727833AbgGPCzD (ORCPT
+        id S1727940AbgGPCzS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 22:55:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53266 "EHLO
+        Wed, 15 Jul 2020 22:55:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53306 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727034AbgGPCzC (ORCPT
+        with ESMTP id S1727034AbgGPCzS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 22:55:02 -0400
-Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B6524C061755;
-        Wed, 15 Jul 2020 19:55:02 -0700 (PDT)
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: wlozano)
-        with ESMTPSA id ED2ED2A3753
-From:   Walter Lozano <walter.lozano@collabora.com>
-To:     linux-pm@vger.kernel.org
-Cc:     kernel@collabora.com, Walter Lozano <walter.lozano@collabora.com>,
-        Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@kernel.org>,
-        Viresh Kumar <vireshk@kernel.org>, linux-kernel@vger.kernel.org
-Subject: [PATCH] opp: Increase parsed_static_opps on _of_add_opp_table_v1
-Date:   Wed, 15 Jul 2020 23:54:52 -0300
-Message-Id: <20200716025452.25761-1-walter.lozano@collabora.com>
-X-Mailer: git-send-email 2.20.1
+        Wed, 15 Jul 2020 22:55:18 -0400
+Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1BE23C061755;
+        Wed, 15 Jul 2020 19:55:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
+        :Reply-To:Content-ID:Content-Description;
+        bh=LQ48wgOnwQjXpsDpDux/VDQorpJQWNSKgnudCvhnDSE=; b=Fr8T9im26yPu3EUQ0ArRpwJEpB
+        M+nzQYEsTOcvI1ntkABM/4mN9Ig6dYscYw1hKLJgMrBnvgrG2zwkFgIPTeDjJQnbNy1KT9wwtvsJO
+        afc6maoZnEmr+xebKuESN8iriMy+l7lzJLoG70OclSQjGJXWQGgbdv0vmg8kG+stoaFSQsFKZGByr
+        7PnLSBDlRuEiv23XeR8VzEQl43OlaV53lqCRBPOWmQ3QHG474M5ouQTI8ebckC/L57HcqrKCM1CSl
+        FmxFckxL/SkJvPK5jlg6OcDr7yqxzaekiOKYLnsrPMmqH/oH5EVfuBGaWRl/U5DMKYsPmg8vmywd3
+        K5FhrJ8w==;
+Received: from [2601:1c0:6280:3f0::19c2]
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jvu3H-0006oy-Ot; Thu, 16 Jul 2020 02:55:16 +0000
+Subject: Re: [PATCH V3 1/3] PCI: Add defines for Designated Vendor-Specific
+ Capability
+To:     "David E. Box" <david.e.box@linux.intel.com>, lee.jones@linaro.org,
+        dvhart@infradead.org, andy@infradead.org, bhelgaas@google.com,
+        alexander.h.duyck@linux.intel.com
+Cc:     linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        linux-pci@vger.kernel.org
+References: <20200508021844.6911-1-david.e.box@linux.intel.com>
+ <20200714062323.19990-2-david.e.box@linux.intel.com>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <3f490460-62f8-8b49-0735-ad29653bfbc0@infradead.org>
+Date:   Wed, 15 Jul 2020 19:55:11 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200714062323.19990-2-david.e.box@linux.intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently, when using _of_add_opp_table_v2 parsed_static_opps is
-increased and this value is used on _opp_remove_all_static to
-check if there are static opps entries that need to be freed.
-Unfortunately this does not happens when using _of_add_opp_table_v1,
-which leads to warnings.
+On 7/13/20 11:23 PM, David E. Box wrote:
+> Add PCIe DVSEC extended capability ID and defines for the header offsets.
+> Defined in PCIe r5.0, sec 7.9.6.
+> 
+> Signed-off-by: David E. Box <david.e.box@linux.intel.com>
+> Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+> ---
+>  include/uapi/linux/pci_regs.h | 5 +++++
+>  1 file changed, 5 insertions(+)
+> 
+> diff --git a/include/uapi/linux/pci_regs.h b/include/uapi/linux/pci_regs.h
+> index f9701410d3b5..09daa9f07b6b 100644
+> --- a/include/uapi/linux/pci_regs.h
+> +++ b/include/uapi/linux/pci_regs.h
+> @@ -720,6 +720,7 @@
+> +#define PCI_EXT_CAP_ID_DVSEC	0x23	/* Designated Vendor-Specific */
+> @@ -1062,6 +1063,10 @@
+> +/* Designated Vendor-Specific (DVSEC, PCI_EXT_CAP_ID_DVSEC) */
+> +#define PCI_DVSEC_HEADER1		0x4 /* Vendor-Specific Header1 */
+> +#define PCI_DVSEC_HEADER2		0x8 /* Vendor-Specific Header2 */
 
-This patch increases parsed_static_opps on _of_add_opp_table_v1 in a
-similar way as in _of_add_opp_table_v2.
+Just a little comment: It would make more sense to me to
+s/DVSEC/DVSPEC/g.
 
-Signed-off-by: Walter Lozano <walter.lozano@collabora.com>
----
+But then I don't have the PCIe documentation.
 
- drivers/opp/of.c | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/drivers/opp/of.c b/drivers/opp/of.c
-index 9a5873591a40..b2bc82bf8b42 100644
---- a/drivers/opp/of.c
-+++ b/drivers/opp/of.c
-@@ -917,6 +917,8 @@ static int _of_add_opp_table_v1(struct device *dev, struct opp_table *opp_table)
- 		nr -= 2;
- 	}
- 
-+	opp_table->parsed_static_opps++;
-+
- 	return ret;
- }
- 
 -- 
-2.20.1
+~Randy
 
