@@ -2,69 +2,185 @@ Return-Path: <SRS0=y5Sx=A3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AAF46C433E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 18:52:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 586E1C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 18:54:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 928DA20739
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 18:52:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2F737207FB
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 18:54:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bB0GqtkF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729428AbgGPSws (ORCPT
+        id S1729451AbgGPSyS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 14:52:48 -0400
-Received: from mga02.intel.com ([134.134.136.20]:38349 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726986AbgGPSwr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 14:52:47 -0400
-IronPort-SDR: B853POwWx+C/LctXjItTXIXyz4MJo0OqgSgiiuYMWaQ0VjYYX8/7yJt6n+1TFmpBZzTKup3BG3
- v3wF5TS/FquA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9684"; a="137597756"
-X-IronPort-AV: E=Sophos;i="5.75,360,1589266800"; 
-   d="scan'208";a="137597756"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jul 2020 11:52:45 -0700
-IronPort-SDR: N3vv3ND+OnFJU9V0jEIRGgw0vxCUTShGBSE6hTDap1fDoKWpNoKTUhnT+137SEhsp507I8dbry
- 7ovP33xCmHgw==
-X-IronPort-AV: E=Sophos;i="5.75,360,1589266800"; 
-   d="scan'208";a="460575619"
-Received: from agluck-desk2.sc.intel.com (HELO agluck-desk2.amr.corp.intel.com) ([10.3.52.68])
-  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jul 2020 11:52:45 -0700
-Date:   Thu, 16 Jul 2020 11:52:42 -0700
-From:   "Luck, Tony" <tony.luck@intel.com>
-To:     Jason Baron <jbaron@akamai.com>
-Cc:     bp@suse.de, linux-kernel@vger.kernel.org,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        linux-edac <linux-edac@vger.kernel.org>
-Subject: Re: [PATCH] EDAC/ie31200: fallback if host bridge device is already
- initialized
-Message-ID: <20200716185242.GA7045@agluck-desk2.amr.corp.intel.com>
-References: <1594923911-10885-1-git-send-email-jbaron@akamai.com>
+        Thu, 16 Jul 2020 14:54:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60400 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726986AbgGPSyR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jul 2020 14:54:17 -0400
+Received: from mail-ot1-x343.google.com (mail-ot1-x343.google.com [IPv6:2607:f8b0:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 93AC8C061755;
+        Thu, 16 Jul 2020 11:54:17 -0700 (PDT)
+Received: by mail-ot1-x343.google.com with SMTP id 72so5056875otc.3;
+        Thu, 16 Jul 2020 11:54:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=hh1P2ej3PSRq1WOldPof/pYHoI8ZC8oiK5qvMk9TyR0=;
+        b=bB0GqtkF+m763mQ8H/zjdUE2tmoKXyBj5xknTJ2FjFNHnb9/9Idj5DCQUd2v4bl5lC
+         e2kgL7T8sqTuXor8tyPCn6TNokY/9aPFtNuk2lPm6w7VpwJsa8Yjmk60VE73+9rin7jU
+         POzPrc+m+Bv/pVWWrnKgXQQ7E+6KJ+6xhL453GVN4fiUl2ImlTtcJLG7XkcwZAJVe3mL
+         Gpo+TBbB3DT5XNsVytw94iXWQ2H2pRk+CbxNpWQqh02pxoZ3cbSyNP2z6v8aWezPnOoJ
+         VYViwIuNXNpzfnPOFyOhssvn/9urkUmCMMf/yBgnpeG918Y+JDevULC5dAL4kTrx3h6I
+         KGGg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=hh1P2ej3PSRq1WOldPof/pYHoI8ZC8oiK5qvMk9TyR0=;
+        b=WMBW4F66SkOdz7OalaybCD59Zq+pAFUHfXkHIpvIvV1B+QTARR4Xb/LXSGbQCyQtJy
+         trJWJ9ccY3fAyJFeCF6gOMqEt1eUa9y3XZK+AthBvx16o66yb9njnWKU68Uk2MHvbGvP
+         BYgf+T4h2z7OTd+3WcRlHbNguk50rdThl9azZiKC/yAfRt42T6x6gFN/cli4/RcOBxBd
+         YvAqnwffDpqbsQsZ/Z8gP4Tx9/7v6QJw0F3d41z8Rb1IHjbcQYjQSwQzk2DZTfBc2sdg
+         gljzJAo5JrelganH9qrZS5Cn5T2inXAjg4aZ0J+amKBcK2AmV/omPbZRayaOXEt9NYOw
+         RexQ==
+X-Gm-Message-State: AOAM533FEBR0CWJgFDihIcVPSdY/XVkB1T47Fo0yfRNuo9dXOSoIcLTI
+        GwEWmLgUkzRn+66KJF7qt5bla8FPp5GzF6x3mhrgiWfk
+X-Google-Smtp-Source: ABdhPJz5CQk76FM+g6cXhnGWeCEydEOpfKBMJz3HmArpJ07d0bYKBDJdEk7sAkAQSMT2H2LdRmvDZteqI+fIukAa3hI=
+X-Received: by 2002:a9d:6e14:: with SMTP id e20mr5552606otr.89.1594925656968;
+ Thu, 16 Jul 2020 11:54:16 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1594923911-10885-1-git-send-email-jbaron@akamai.com>
+References: <20200716174351.20128-1-nramas@linux.microsoft.com> <20200716174351.20128-5-nramas@linux.microsoft.com>
+In-Reply-To: <20200716174351.20128-5-nramas@linux.microsoft.com>
+From:   Stephen Smalley <stephen.smalley.work@gmail.com>
+Date:   Thu, 16 Jul 2020 14:54:06 -0400
+Message-ID: <CAEjxPJ43eXK0xgrE=gDxZVg2SDTz4bkd7N4otjk-cvxf3fKL-g@mail.gmail.com>
+Subject: Re: [PATCH v2 4/5] LSM: Define SELinux function to measure security state
+To:     Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
+Cc:     Mimi Zohar <zohar@linux.ibm.com>,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        James Morris <jmorris@namei.org>,
+        linux-integrity@vger.kernel.org,
+        SElinux list <selinux@vger.kernel.org>,
+        LSM List <linux-security-module@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 16, 2020 at 02:25:11PM -0400, Jason Baron wrote:
-> The Intel uncore driver may claim some of the pci ids from ie31200 which
-> means that the ie31200 edac driver will not initialize them as part of
-> pci_register_driver().
-> 
-> Let's add a fallback for this case to 'pci_get_device()' to get a
-> reference on the device such that it can still be configured. This is
-> similar in approach to other edac drivers.
+On Thu, Jul 16, 2020 at 1:44 PM Lakshmi Ramasubramanian
+<nramas@linux.microsoft.com> wrote:
+>
+> SELinux configuration and policy are some of the critical data for this
+> security module that needs to be measured. To enable this measurement
+> SELinux needs to implement the interface function,
+> security_measure_data(), that the LSM can call.
+>
+> Define the security_state() function in SELinux to measure SELinux
+> configuration and policy. Call this function to measure SELinux data
+> when there is a change in the security module's state.
+>
+> Sample measurement of SELinux state and hash of the policy:
+>
+> 10 e32e...5ac3 ima-buf sha256:86e8...4594 selinux-state 656e61626c65643d3=
+13b656e666f7263696e673d303b636865636b72657170726f743d313b6e6574706565723d31=
+3b6f70656e7065726d3d313b657874736f636b636c6173733d313b616c776179736e6574776=
+f726b3d303b6367726f75707365636c6162656c3d313b6e6e706e6f737569647472616e7369=
+74696f6e3d313b67656e66737365636c6162656c73796d6c696e6b3d303b
+> 10 f4a7...9408 ima-buf sha256:4941...68fc selinux-policy-hash 8d1d...1834
+>
+> The data for selinux-state in the above measurement is:
+> enabled=3D1;enforcing=3D0;checkreqprot=3D1;network_peer_controls=3D1;open=
+_perms=3D1;extended_socket_class=3D1;always_check_network=3D0;cgroup_seclab=
+el=3D1;nnp_nosuid_transition=3D1;genfs_seclabel_symlinks=3D0;
+>
+> The data for selinux-policy-hash in the above measurement is
+> the SHA256 hash of the SELinux policy.
 
-What functionality is lost when this happens?
+Can you show an example of how to verify that the above measurement
+matches a given state and policy, e.g. the sha256sum commands and
+inputs to reproduce the same from an expected state and policy?
 
-Does the user see some message in the console
-log to let them know?
+>
+> Signed-off-by: Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
+> Suggested-by: Stephen Smalley <stephen.smalley.work@gmail.com>
+> ---
 
--Tony
+> diff --git a/security/selinux/measure.c b/security/selinux/measure.c
+> new file mode 100644
+> index 000000000000..27cbb309e926
+> --- /dev/null
+> +++ b/security/selinux/measure.c
+> @@ -0,0 +1,158 @@
+> +// SPDX-License-Identifier: GPL-2.0-or-later
+> +/*
+> + * Measure SELinux state using IMA subsystem.
+> + */
+> +#include <linux/ima.h>
+> +#include "security.h"
+> +
+> +/* Pre-allocated buffer used for measuring state */
+> +static char *selinux_state_string;
+> +static size_t selinux_state_string_len;
+> +static char *selinux_state_string_fmt =3D
+> +       "%s=3D%d;%s=3D%d;%s=3D%d;%s=3D%d;%s=3D%d;%s=3D%d;%s=3D%d;%s=3D%d;=
+%s=3D%d;%s=3D%d;";
+> +
+> +void __init selinux_init_measurement(void)
+> +{
+> +       selinux_state_string_len =3D
+> +       snprintf(NULL, 0, selinux_state_string_fmt,
+> +       "enabled", 0,
+> +       "enforcing", 0,
+> +       "checkreqprot", 0,
+> +       selinux_policycap_names[POLICYDB_CAPABILITY_NETPEER], 0,
+> +       selinux_policycap_names[POLICYDB_CAPABILITY_OPENPERM], 0,
+> +       selinux_policycap_names[POLICYDB_CAPABILITY_EXTSOCKCLASS], 0,
+> +       selinux_policycap_names[POLICYDB_CAPABILITY_ALWAYSNETWORK], 0,
+> +       selinux_policycap_names[POLICYDB_CAPABILITY_CGROUPSECLABEL], 0,
+> +       selinux_policycap_names[POLICYDB_CAPABILITY_NNP_NOSUID_TRANSITION=
+], 0,
+> +       selinux_policycap_names[POLICYDB_CAPABILITY_GENFS_SECLABEL_SYMLIN=
+KS],
+> +       0);
+
+I was thinking you'd dynamically construct the format string with a
+for loop from 0 to POLICYDB_CAPABILITY_MAX
+and likewise for the values so that we wouldn't have to patch this
+code every time we add a new one.
+
+> +
+> +       if (selinux_state_string_len < 0)
+> +               return;
+
+How can this happen legitimately (i.e. as a result of something other
+than a kernel bug)?
+
+> +
+> +       ++selinux_state_string_len;
+> +
+> +       selinux_state_string =3D kzalloc(selinux_state_string_len, GFP_KE=
+RNEL);
+> +       if (!selinux_state_string)
+> +               selinux_state_string_len =3D 0;
+> +}
+
+Not sure about this error handling approach (silent, proceeding as if
+the length was zero and then later failing with ENOMEM on every
+attempt?). I'd be more inclined to panic/BUG here but I know Linus
+doesn't like that.
+
+> +       if (ret)
+> +               pr_err("%s: error %d\n", __func__, ret);
+
+This doesn't seem terribly useful as an error message; I'd be inclined
+to drop it.
