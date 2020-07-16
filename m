@@ -2,87 +2,165 @@ Return-Path: <SRS0=y5Sx=A3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65C80C433E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 07:36:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30C71C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 07:39:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3E65A20760
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 07:36:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C781206F4
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 07:39:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728208AbgGPHgS (ORCPT
+        id S1726013AbgGPHjZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 03:36:18 -0400
-Received: from helcar.hmeau.com ([216.24.177.18]:39708 "EHLO fornost.hmeau.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725921AbgGPHgS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 03:36:18 -0400
-Received: from gwarestrin.arnor.me.apana.org.au ([192.168.0.7])
-        by fornost.hmeau.com with smtp (Exim 4.92 #5 (Debian))
-        id 1jvyR8-0003l4-CL; Thu, 16 Jul 2020 17:36:11 +1000
-Received: by gwarestrin.arnor.me.apana.org.au (sSMTP sendmail emulation); Thu, 16 Jul 2020 17:36:10 +1000
-Date:   Thu, 16 Jul 2020 17:36:10 +1000
-From:   Herbert Xu <herbert@gondor.apana.org.au>
-To:     Iuliana Prodan <iuliana.prodan@nxp.com>
-Cc:     Horia Geanta <horia.geanta@nxp.com>,
-        Aymen Sghaier <aymen.sghaier@nxp.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Silvano Di Ninno <silvano.dininno@nxp.com>,
-        Franck Lenormand <franck.lenormand@nxp.com>,
-        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-imx <linux-imx@nxp.com>
-Subject: Re: [PATCH 2/2] crypto: caam - support tagged keys for skcipher
- algorithms
-Message-ID: <20200716073610.GA28215@gondor.apana.org.au>
-References: <1594591536-531-1-git-send-email-iuliana.prodan@nxp.com>
- <1594591536-531-3-git-send-email-iuliana.prodan@nxp.com>
+        Thu, 16 Jul 2020 03:39:25 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:34565 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725867AbgGPHjZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jul 2020 03:39:25 -0400
+Received: by mail-ot1-f67.google.com with SMTP id e90so3501588ote.1;
+        Thu, 16 Jul 2020 00:39:24 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=IGU21hGDTvPo5e64AOIXhTJHwKIyllgjAL5yrIBEfv0=;
+        b=AR3/WqsiURXFNbRd1xIzzQyp1vBgSIGi0IZPhd31YRIK2RKl1jY06sqfO9JwbffGSE
+         nY+jk2+W8gsOwZdQB2IcinhMQRVYbIlG15zhDKka6fQcDqT/dPOCgNuLP8SxO1suEXLP
+         p2iNmkP97DSt/TXfyY7X5rAHa5coJWshkNurqiPa1/scUDgN3dIH1m4aDUaBeMQRwIqg
+         hlFEBPTGTIGgYp9JrgH1BKD8wGD3oON1QUSFY5GAPA/sgIiWYA3C/A76QFub+uwHFr9s
+         pM1kGc5S+KHyaIio5e+hh7P/iLiNbdIn//1uQzjm8Os8DNsvR+nnNr+vPO9fBp+OT9sv
+         upUw==
+X-Gm-Message-State: AOAM532NdbKgibuLulr1U4xhKiZZ/ZqQI1xu/Qb/6c4x8pyHfIZAG36X
+        J34UC9kZ/dcY+2fSyOQXTu0Hcx8YLHjIDA3IJVmka11N
+X-Google-Smtp-Source: ABdhPJx9vJHqYPZPrI7xMsDb6HaOSr/GTybLWjvDsM+J4nlT/u70YAdUZN81Vbcd7ftkn/6LlKr5qyL/H11n5XxMZlA=
+X-Received: by 2002:a05:6830:1451:: with SMTP id w17mr3298536otp.250.1594885163502;
+ Thu, 16 Jul 2020 00:39:23 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1594591536-531-3-git-send-email-iuliana.prodan@nxp.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20200617120510.25071-1-aford173@gmail.com> <CAMuHMdWjpyi6QiGTHkwXcepMzP8hN7MkXSJ=Xnxn40VkRU9OXg@mail.gmail.com>
+ <CAHCN7xJWbP16SA-Ok-5syNnqOZAt8OFJo2_rtg5VrNVsN2-eiQ@mail.gmail.com>
+ <CAHCN7xLygG5YRG0wt0b9JWW3PHDwMV_kiLRpJqPdSAx7gOoc9w@mail.gmail.com>
+ <CAMuHMdWzcKa1xXdQ8W=fmjTKvPRN68GNVhBi4pFD5OW1_R_aAw@mail.gmail.com> <159485990993.1987609.15025594064431049459@swboyd.mtv.corp.google.com>
+In-Reply-To: <159485990993.1987609.15025594064431049459@swboyd.mtv.corp.google.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Thu, 16 Jul 2020 09:39:12 +0200
+Message-ID: <CAMuHMdVEVNOex0uk1Ko0rghskmephYWGe49e4hUbbfdgSUBCtQ@mail.gmail.com>
+Subject: Re: [PATCH] arm64: dts: Introduce r8a774a1-beacon-rzg2m-kit
+To:     Stephen Boyd <sboyd@kernel.org>
+Cc:     Adam Ford <aford173@gmail.com>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Adam Ford-BE <aford@beaconembedded.com>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS
+        <devicetree@vger.kernel.org>, Linux Kernel Mailing List" 
+        <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 13, 2020 at 01:05:36AM +0300, Iuliana Prodan wrote:
-> Tagged keys are keys that contain metadata indicating what
-> they are and how to handle them using tag_object API.
-> 
-> Add support, for tagged keys, to skcipher algorithms by
-> adding new transformations, with _tk_ prefix to distinguish
-> between plaintext and tagged keys.
-> 
-> For job descriptors a new option (key_cmd_opt) was added for KEY command.
-> Tagged keys can be loaded using only a KEY command with ENC=1
-> and the proper setting of the EKT bit. The EKT bit in the
-> KEY command indicates which encryption algorithm (AES-ECB or
-> AES-CCM) should be used to decrypt the key. These options will be kept in
-> key_cmd_opt.
-> 
-> The tk_ transformations can be used directly by their name:
-> struct sockaddr_alg sa = {
->     .salg_family = AF_ALG,
->     .salg_type = "skcipher", /* this selects the symmetric cipher */
->     .salg_name = "tk(cbc(aes))" /* this is the cipher name */
-> };
-> or for dm-crypt, e.g. using dmsetup:
-> dmsetup -v create encrypted --table "0 $(blockdev --getsz /dev/mmcblk2p10)
-> crypt capi:tk(cbc(aes))-plain :32:logon:seckey 0 /dev/mmcblk2p10 0 1
-> sector_size:512".
-> 
-> Signed-off-by: Franck LENORMAND <franck.lenormand@nxp.com>
-> Signed-off-by: Iuliana Prodan <iuliana.prodan@nxp.com>
+Hi Stephen,
 
-Can this use the existing paes name instead of tk as done in
-other drivers?
+On Thu, Jul 16, 2020 at 2:38 AM Stephen Boyd <sboyd@kernel.org> wrote:
+> Quoting Geert Uytterhoeven (2020-07-13 05:45:00)
+> > On Thu, Jul 9, 2020 at 12:00 AM Adam Ford <aford173@gmail.com> wrote:
+> > > On Wed, Jul 8, 2020 at 4:53 PM Adam Ford <aford173@gmail.com> wrote:
+> > > > On Mon, Jun 22, 2020 at 8:20 AM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+> > > > > On Wed, Jun 17, 2020 at 2:05 PM Adam Ford <aford173@gmail.com> wrote:
+> > > > > > Beacon EmebddedWorks, formerly Logic PD is introducing a new
+> > > > > > SOM and development kit based on the RZ/G2M SoC from Renesas.
+> > > > > >
+> > > > > > The SOM supports eMMC, WiFi and Bluetooth, along with a Cat-M1
+> > > > > > cellular radio.
+> > > > > >
+> > > > > > The Baseboard has Ethernet, USB, HDMI, stereo audio in and out,
+> > > > > > along with a vareity of push buttons and LED's.
+> >
+> > > > > > --- /dev/null
+> > > > > > +++ b/arch/arm64/boot/dts/renesas/beacon-renesom-baseboard.dtsi
+> > > > > > @@ -0,0 +1,733 @@
+> > > > > > +// SPDX-License-Identifier: GPL-2.0
+> > > > > > +/*
+> > > > > > + * Copyright 2020, Compass Electronics Group, LLC
+> > > > > > + */
+> > > > > > +
+> > > > > > +#include <dt-bindings/gpio/gpio.h>
+> > > > > > +#include <dt-bindings/input/input.h>
+> > > > > > +#include <dt-bindings/clk/versaclock.h>
+> > > > >
+> > > > > This depends on "[PATCH V3 2/3] dt: Add additional option bindings for
+> > > > > IDT VersaClock", which hasn't been accepted yet, AFAIK.
+> > >
+> > > Geert,
+> > >
+> > > I forgot to ask.  What is the protocol for something when new bindings
+> > > have been accepted in one branch, but another branch where I want to
+> > > reference them hasn't merged with the other branch?  I'd really like
+> > > to get this board into the next kernel.  I could remove these
+> > > references and the calling functions, but that may cause instability
+> > > due to undefined behaviour of some of the versaclock functions because
+> > > they are not programmed.
+> >
+> > As soon as a binding update has been accepted into the maintainer's
+> > for-next branch, I happily accept DTS patches that start using it,
+> > unless doing so would introduce a regression.
+> > In this case, it's not a pure binding update, but also an update to
+> > binding definitions in a header file, thus creating a hard dependency.
+> > Usually this is mitigated by committing the header file change to an
+> > immutable branch, to be shared by driver and DTS, and to be pulled by
+> > all maintainers affected by the dependency.
+> >
+> > As Stephen has already applied the binding update to his clk-next
+> > branch, it's too late to go for the immutable branch approach.  Hence
+> > the simplest solution would be to postpone your DTS patch to v5.10.
+> >
+> > > However, I would rather have the board mostly work if it means getting
+> > > it accepted into the kernel.  Beacon hasn't shipped any outside of the
+> > > company yet, so I am not really worried about people seeing problems.
+> > > If the board gets accepted without these, I could apply some 'fixes'
+> > > at a late date to correct the undefined behavior.  Let me know what
+> > > the best way to proceed should be, and I'll send a V2 patch.
+> >
+> > An alternative would be for me to cherry-pick commit 34662f6e30846ae0
+> > ("dt: Add additional option bindings for IDT VersaClock") from the
+> > clk-next branch into renesas-devel, before applying your patch.
+> > While that would help you, it may introduce a merge conflict for
+> > linux-next and for upstream later, as Luca has already posted multiple
+> > patches for idt,versaclock5.txt, to fix typos and do the json-schema
+> > conversion.  These may or may not land in v5.9.
+> >
+> > Stephen: what do you think?
+> > Thanks!
+> >
+>
+> Do you need to use something in clk-next as an immutable branch?
+> Typically I don't rebase patches once applying to clk-next and all
+> patches are put on topic branches in case something is needed in another
+> tree. So you should be fine to pull the clk-vc5 branch (which is sort of
+> busted) into your dts tree, or if you need the defines/numbers in the
 
-Thanks,
--- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+busted?
+
+> header file you can use the raw numbers and then replace them with the
+> includes after -rc1.
+
+Thanks, I forgot about the raw number solution, as it's been a while I
+used that.  In the meantime we solved the issue by postponing the new
+VC5 options.
+Adam: if you still want to send a v4 using the raw numbers, feel free
+to do so.
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
