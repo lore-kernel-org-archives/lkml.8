@@ -2,110 +2,108 @@ Return-Path: <SRS0=y5Sx=A3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D69F3C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 15:53:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46E36C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 15:55:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ABF162065F
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 15:53:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1A8D22064B
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 15:55:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="TTVQzQQ8"
+	dkim=pass (2048-bit key) header.d=brainfault-org.20150623.gappssmtp.com header.i=@brainfault-org.20150623.gappssmtp.com header.b="vZRZASGU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729027AbgGPPxn (ORCPT
+        id S1729138AbgGPPzM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 11:53:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60760 "EHLO
+        Thu, 16 Jul 2020 11:55:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60994 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728894AbgGPPxm (ORCPT
+        with ESMTP id S1728126AbgGPPzM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 11:53:42 -0400
-Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 57D92C061755
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Jul 2020 08:53:42 -0700 (PDT)
-Received: by mail-ej1-x641.google.com with SMTP id a21so7067782ejj.10
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Jul 2020 08:53:42 -0700 (PDT)
+        Thu, 16 Jul 2020 11:55:12 -0400
+Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E7FA3C061755
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Jul 2020 08:55:11 -0700 (PDT)
+Received: by mail-wm1-x343.google.com with SMTP id 17so12093841wmo.1
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Jul 2020 08:55:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        d=brainfault-org.20150623.gappssmtp.com; s=20150623;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=8WXG2PIfyvvmPCMZWK/gVmBE6W6BlBqBnmsVmBGJnAE=;
-        b=TTVQzQQ8ViT26pmUNnI4AiNVW2VzNBVbcYWM3Gl8mx7rT/pIssKnqsignxE0w8FuXi
-         3eYXIYONhvl9O6WN+MFAA1B5qMhqm6imyFymvH5wjKTSVktzWmzxkQJTh3fH6AFIWsGU
-         5nUncZclPPs0cTOIBXHbRadP5rWrTInxmdohCU6TZNwEJ6/COZsIjEV3HNQXbC0R86XM
-         bGDSspfH/2WT3M7Rj4sGmYXfU7wzz3uKyM7DsC5iNURYzvxWpIXNMQtWQZEc4zGy2CfH
-         msueYSKFjXIQBwzUnweSezPrtfjSXzLbN8fiImPnjktGXVBRrPy4jup5lOuplPJOgG0F
-         DMGg==
+        bh=/Wm5nrLpCBdqeYkmR+57rLRuzRzpNbn845e+5GZLhdQ=;
+        b=vZRZASGUjzHUDNUcoWRJVEw/jprfGBhvzfE347Y80rA4PUsDvEPgDpQmwf0g9FfhVG
+         9ikl4jTDrkinwreLaaXqxVE9fsGf/w9fU4498vUUFEQPHBZgRe7V2u3k3lvStIkGSTym
+         XvIHE5c2u3SW7L2A7GKBpYNQHvdpyBtruaMdffJa3GalO0Ij4GTdmvbItV4mkVwuXQqO
+         GlP19rGLfU0OCyQNdW1aonSGxS8+DSgLACEeO3w1G9lFmWrdkqwLBrINsrFBKCgj/t4y
+         xnwsAPPbvpiFYmerLBDbqm5MY2knzZq+YZaIC3hS4jdOxPWgasXzLjuYUx7YjmzEnDAi
+         l4WA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=8WXG2PIfyvvmPCMZWK/gVmBE6W6BlBqBnmsVmBGJnAE=;
-        b=iiBWJhA7G8H3zVZaJn6sTnRLZL8bflUETgkZq+ZjRg7RXN0SB2Uvuakic7PfjZYohl
-         Elp7ND5gt7YRSjJ6qVsjX8f0m84xlpp79RyijQzR6we3R/aFuBuPL/1N5rIPER77J0pf
-         c2LsEwYKHtKM1f7CQI7Ndvn8zJmxknCVsYrVyjhznlKF8oUprVWSu1Rlz1ftF0KzWn9r
-         bvPtKJ2bGcTxGNEcY99v/bjKU7GO85P5OdZtbhFTj9OlACdVWobAQLqE1SPtB+pwVAXg
-         e1V3QtZ2kTNEY7jAGo6LXOzlzJKSOq/aadCquTJNjY2ASX7cp486VIf+jwrFubHbltLJ
-         WifQ==
-X-Gm-Message-State: AOAM530ISLQzNL9VzzJkKRvw20WT5l5HmI/fanmtWvJmPdQDG1Q3Z6Q9
-        oCtR2BFlbP2yXZdRDSC4RigjJ9yNBv5+hP4kGy1gnQ==
-X-Google-Smtp-Source: ABdhPJyC/kYBgU3IOAczrEfawy9HqiaBTF+01y7Bb6pDO746HsQJM5cE84Bpja/aFZhr/N9Gx94sJ9OFb9TOk4ri9JA=
-X-Received: by 2002:a17:906:6d56:: with SMTP id a22mr4555135ejt.440.1594914821045;
- Thu, 16 Jul 2020 08:53:41 -0700 (PDT)
+        bh=/Wm5nrLpCBdqeYkmR+57rLRuzRzpNbn845e+5GZLhdQ=;
+        b=N8fwJZ6cxon4X7xnqVrCD25c4m/KUzLuL6oaFgJjYol0fDmehICcZMqxMaFm/9+QhN
+         7BR3+MYbohDWY9D1RPjaV2OfbYeJIEiRe5T8Xb6jjJYapBqVh/AlAZrGscU/h2TITi6I
+         yiZLdlo57ExvDmsNKrcpaIUI48F0zNJNNbB9xzc98AmOqwc78s1D3uwtTPgd1DrtsW2n
+         d9ViuLepzV6+zQlOPwCzpWDISeen2EEwhisuT7zACB9rkRG59TFCJRN9RHY+NdmCunZH
+         RizyhbGv8RSP0h4G7OkmlzqLJ9DsQdAGduVEKdqGGab5tAztnUmhRmDBX/J4HorJs/bW
+         eXYw==
+X-Gm-Message-State: AOAM5310yDRu9JHTga5gTvoOhtWGHwX4nfiUWmBNYJhaji2ur5HgJsUj
+        co9PtTqskfPLuYPfOqNg4aew11kuNCVz0zlWqdSw/g==
+X-Google-Smtp-Source: ABdhPJzBrhvBt5WZDYVM9BB+5Ge01yxUo/KxdkO1suwsN8v/UCTxvNd1QhAwCk2imFJLL0ZsShqhItpxBSVnMqiMg+0=
+X-Received: by 2002:a05:600c:2154:: with SMTP id v20mr5279691wml.185.1594914910499;
+ Thu, 16 Jul 2020 08:55:10 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200716060553.24618-1-ebiggers@kernel.org>
-In-Reply-To: <20200716060553.24618-1-ebiggers@kernel.org>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Thu, 16 Jul 2020 08:53:30 -0700
-Message-ID: <CAPcyv4g94hK7j7hknSmtt11hgq+5N-Yf-fwLdS4VrARyqKwJLw@mail.gmail.com>
-Subject: Re: [PATCH] /dev/mem: Add missing memory barriers for devmem_inode
-To:     Eric Biggers <ebiggers@kernel.org>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux MM <linux-mm@kvack.org>, Ingo Molnar <mingo@redhat.com>,
-        Kees Cook <keescook@chromium.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        Russell King <linux@arm.linux.org.uk>,
-        Andrew Morton <akpm@linux-foundation.org>
+References: <20200715071506.10994-1-anup.patel@wdc.com> <20200715071506.10994-5-anup.patel@wdc.com>
+ <20200715175052.GA497000@bogus> <CAAhSdy04h-PD-=VhjB=5MOf=-RZMrMOcvEtbtUaDc3-kbV47BA@mail.gmail.com>
+ <9c12dd2c-7285-5664-973e-3ec066eec0a2@linaro.org>
+In-Reply-To: <9c12dd2c-7285-5664-973e-3ec066eec0a2@linaro.org>
+From:   Anup Patel <anup@brainfault.org>
+Date:   Thu, 16 Jul 2020 21:24:58 +0530
+Message-ID: <CAAhSdy1kOvXXecGM=qyWS5cpx9nq9RpahLrVaQAUg0VKFu7pYg@mail.gmail.com>
+Subject: Re: [PATCH v3 4/4] dt-bindings: timer: Add CLINT bindings
+To:     Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc:     Rob Herring <robh@kernel.org>, Anup Patel <anup.patel@wdc.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Rob Herring <robh+dt@kernel.org>,
+        Atish Patra <atish.patra@wdc.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        linux-riscv <linux-riscv@lists.infradead.org>,
+        devicetree@vger.kernel.org, Damien Le Moal <damien.lemoal@wdc.com>,
+        Alistair Francis <Alistair.Francis@wdc.com>,
+        Palmer Dabbelt <palmerdabbelt@google.com>,
+        "linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>,
+        Palmer Dabbelt <palmer@dabbelt.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 15, 2020 at 11:07 PM Eric Biggers <ebiggers@kernel.org> wrote:
->
-> From: Eric Biggers <ebiggers@google.com>
->
-> WRITE_ONCE() isn't the correct way to publish a pointer to a data
-> structure, since it doesn't include a write memory barrier.  Therefore
-> other tasks may see that the pointer has been set but not see that the
-> pointed-to memory has finished being initialized yet.  Instead a
-> primitive with "release" semantics is needed.
->
-> Use smp_store_release() for this.
->
-> The use of READ_ONCE() on the read side is still potentially correct if
-> there's no control dependency, i.e. if all memory being "published" is
-> transitively reachable via the pointer itself.  But this pairing is
-> somewhat confusing and error-prone.  So just upgrade the read side to
-> smp_load_acquire() so that it clearly pairs with smp_store_release().
->
-> Cc: Dan Williams <dan.j.williams@intel.com>
-> Cc: Arnd Bergmann <arnd@arndb.de>
-> Cc: Ingo Molnar <mingo@redhat.com>
-> Cc: Kees Cook <keescook@chromium.org>
-> Cc: Matthew Wilcox <willy@infradead.org>
-> Cc: Russell King <linux@arm.linux.org.uk>
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Fixes: 3234ac664a87 ("/dev/mem: Revoke mappings when a driver claims the region")
-> Signed-off-by: Eric Biggers <ebiggers@google.com>
+Hi Daniel,
 
-Makes sense:
+On Thu, Jul 16, 2020 at 7:31 PM Daniel Lezcano
+<daniel.lezcano@linaro.org> wrote:
+>
+>
+> Hi Anup,
+>
+>
+> On 16/07/2020 14:32, Anup Patel wrote:
+> > On Wed, Jul 15, 2020 at 11:20 PM Rob Herring <robh@kernel.org> wrote:
+>
+> [ ... ]
+>
+> > Thanks for these steps. I will fix and send v4.
+>
+> Please take the opportunity to clarify how you want the series to be merged.
 
-Acked-by: Dan Williams <dan.j.williams@intel.com>
+This is yet another series which largely impacts arch/riscv because we are
+factoring CLINT code from arch/riscv into it's own timer driver.
+
+I think this can go via the RISC-V tree.
+
+Regards,
+Anup
