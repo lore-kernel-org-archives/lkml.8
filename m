@@ -2,136 +2,81 @@ Return-Path: <SRS0=y5Sx=A3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E230C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 03:23:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37189C433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 03:23:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5C421205CB
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 03:23:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="d+oERqSX"
+	by mail.kernel.org (Postfix) with ESMTP id 181C5205CB
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 03:23:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727873AbgGPDXE (ORCPT
+        id S1728126AbgGPDXf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 23:23:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57644 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726960AbgGPDXD (ORCPT
+        Wed, 15 Jul 2020 23:23:35 -0400
+Received: from smtprelay0082.hostedemail.com ([216.40.44.82]:46076 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726960AbgGPDXf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 23:23:03 -0400
-Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7174AC08C5CE
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 20:23:03 -0700 (PDT)
-Received: by mail-pl1-x644.google.com with SMTP id b9so3261115plx.6
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 20:23:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=5vL2rTMSzdb973P0bKvsekMeIZjsfxMApp0DH5ESVjs=;
-        b=d+oERqSXZVucE1V+TQGL/D2zNmxgT3cpGX2KTRh4NEs8kTssviY1Ba3cbAxVizMP02
-         QyQEU3W53ITr1t+HZHOPPMmsYI7qPCy/7b0Tjr8VeSDsj8mu6WXpeTZDOhxqb/ow7nVK
-         NcPgTUhDwHSP0A5OFe+1+s73uw41VYCG1GGgAlPJBOW28GwS4PcFOCfS2DRUdRWbctIc
-         YkK4wpm/cJDaE8S57OdeAa2GK2K8BXXIxe88FCTuIGh1kjXu3U3tZpyI+h8OogQlWncV
-         PbsuDk692E0wysOoCWptCn9lHgdR06F01+h/us00y/6VrSGsqiYPnSs3fQlxADphJwnI
-         hm/g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=5vL2rTMSzdb973P0bKvsekMeIZjsfxMApp0DH5ESVjs=;
-        b=CdunMj3z57o7P2J0IFBKTerpTAf2p0G8uEbsK+P+I8znWpylH5AVBG9d07ROSCJsWp
-         2ZDeHi1wqWYKc8KqNeaZVLqNzjJohBqwpDa2ZaohTR8VYbMD1d+2y5RANmtTMOdDmyYP
-         JSKN6eGfOUfyMuOg7cgssBN6pYKTSE5m/uWfFygAh4zYaMdZd4QcjTHV8udm7dddZie2
-         28P19sWNS/wzsTrjLikatMSmYdGB4adZBecIGolBlwHXOcTIWvR/He5fAwhK8RikSNeY
-         5PqicmqERuj7GJHgtj+EYDFUJd/RdyBpGDChEVvQ42rpaARwat6aX5Xjo9xS8T+4tyX5
-         8s3g==
-X-Gm-Message-State: AOAM530xTbyobw6fBkY+CbMuSGXi6ft+9cDG5d2lIYu2EEeJvIuvnQvF
-        EtWp/hicV8HXYqUDCHCYlWSGTQ==
-X-Google-Smtp-Source: ABdhPJyz6+Yw1GquiPJ80G7wUbREi52JSXyMY3Hl9inYjcIG9pgGPETGIXyrrx0B7gL0Fb8xBKJXVQ==
-X-Received: by 2002:a17:90a:f00d:: with SMTP id bt13mr2843254pjb.109.1594869782919;
-        Wed, 15 Jul 2020 20:23:02 -0700 (PDT)
-Received: from localhost ([122.172.34.142])
-        by smtp.gmail.com with ESMTPSA id g19sm3069589pfu.183.2020.07.15.20.23.00
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 15 Jul 2020 20:23:01 -0700 (PDT)
-Date:   Thu, 16 Jul 2020 08:52:59 +0530
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     Walter Lozano <walter.lozano@collabora.com>
-Cc:     linux-pm@vger.kernel.org, kernel@collabora.com,
-        Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@kernel.org>,
-        Viresh Kumar <vireshk@kernel.org>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] opp: Increase parsed_static_opps on _of_add_opp_table_v1
-Message-ID: <20200716032259.l5ybqetpg74ybogh@vireshk-i7>
-References: <20200716025452.25761-1-walter.lozano@collabora.com>
+        Wed, 15 Jul 2020 23:23:35 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay07.hostedemail.com (Postfix) with ESMTP id 5037F181D341E;
+        Thu, 16 Jul 2020 03:23:34 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: pump70_0116adc26efe
+X-Filterd-Recvd-Size: 2024
+Received: from XPS-9350.home (unknown [47.151.133.149])
+        (Authenticated sender: joe@perches.com)
+        by omf09.hostedemail.com (Postfix) with ESMTPA;
+        Thu, 16 Jul 2020 03:23:32 +0000 (UTC)
+Message-ID: <04d15af886da8c91309134b67c0d3e8d69089188.camel@perches.com>
+Subject: Re: [PATCH] SUNDANCE NETWORK DRIVER: Replace HTTP links with HTTPS
+ ones
+From:   Joe Perches <joe@perches.com>
+To:     Jakub Kicinski <kuba@kernel.org>,
+        "Alexander A. Klimov" <grandmaster@al2klimov.de>
+Cc:     kda@linux-powerpc.org, davem@davemloft.net, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Date:   Wed, 15 Jul 2020 20:23:31 -0700
+In-Reply-To: <20200715174437.04890794@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+References: <20200709204925.27287-1-grandmaster@al2klimov.de>
+         <20200715174437.04890794@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.36.3-0ubuntu1 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200716025452.25761-1-walter.lozano@collabora.com>
-User-Agent: NeoMutt/20180716-391-311a52
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 15-07-20, 23:54, Walter Lozano wrote:
-> Currently, when using _of_add_opp_table_v2 parsed_static_opps is
-> increased and this value is used on _opp_remove_all_static to
-> check if there are static opps entries that need to be freed.
-> Unfortunately this does not happens when using _of_add_opp_table_v1,
-> which leads to warnings.
+On Wed, 2020-07-15 at 17:44 -0700, Jakub Kicinski wrote:
+> On Thu,  9 Jul 2020 22:49:25 +0200 Alexander A. Klimov wrote:
+> > Rationale:
+> > Reduces attack surface on kernel devs opening the links for MITM
+> > as HTTPS traffic is much harder to manipulate.
+> > 
+> > Deterministic algorithm:
+> > For each file:
+> >   If not .svg:
+> >     For each line:
+> >       If doesn't contain `\bxmlns\b`:
+> >         For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
+> > 	  If neither `\bgnu\.org/license`, nor `\bmozilla\.org/MPL\b`:
+> >             If both the HTTP and HTTPS versions
+> >             return 200 OK and serve the same content:
+> >               Replace HTTP with HTTPS.
+> > 
+> > Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
 > 
-> This patch increases parsed_static_opps on _of_add_opp_table_v1 in a
-> similar way as in _of_add_opp_table_v2.
-> 
-> Signed-off-by: Walter Lozano <walter.lozano@collabora.com>
-> ---
-> 
->  drivers/opp/of.c | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/drivers/opp/of.c b/drivers/opp/of.c
-> index 9a5873591a40..b2bc82bf8b42 100644
-> --- a/drivers/opp/of.c
-> +++ b/drivers/opp/of.c
-> @@ -917,6 +917,8 @@ static int _of_add_opp_table_v1(struct device *dev, struct opp_table *opp_table)
->  		nr -= 2;
->  	}
->  
-> +	opp_table->parsed_static_opps++;
-> +
->  	return ret;
->  }
+> Applied to net-next, but please find a better algorithm for generating
+> the subject prefixes. 
 
-Merged with this and added relevant Fixes and stable tags.
+Suggestions welcomed for automating patch subject prefixes
+for generic treewide conversions by subsystem.
 
-diff --git a/drivers/opp/of.c b/drivers/opp/of.c
-index b2bc82bf8b42..314f306140a1 100644
---- a/drivers/opp/of.c
-+++ b/drivers/opp/of.c
-@@ -902,6 +902,10 @@ static int _of_add_opp_table_v1(struct device *dev, struct opp_table *opp_table)
-                return -EINVAL;
-        }
- 
-+       mutex_lock(&opp_table->lock);
-+       opp_table->parsed_static_opps = 1;
-+       mutex_unlock(&opp_table->lock);
-+
-        val = prop->value;
-        while (nr) {
-                unsigned long freq = be32_to_cpup(val++) * 1000;
-@@ -917,8 +921,6 @@ static int _of_add_opp_table_v1(struct device *dev, struct opp_table *opp_table)
-                nr -= 2;
-        }
- 
--       opp_table->parsed_static_opps++;
--
-        return ret;
- }
- 
--- 
-viresh
+git history doesn't work particularly well for that.
+
+
+
