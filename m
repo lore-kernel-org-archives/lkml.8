@@ -2,128 +2,94 @@ Return-Path: <SRS0=y5Sx=A3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 343E8C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 23:38:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CACCC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 23:39:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0A6A62063A
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 23:38:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CCD9D2063A
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 23:39:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HNT1KJPv"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KjY4YyMX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726189AbgGPXiO (ORCPT
+        id S1726238AbgGPXjD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 19:38:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48042 "EHLO
+        Thu, 16 Jul 2020 19:39:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48164 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725933AbgGPXiO (ORCPT
+        with ESMTP id S1725933AbgGPXjD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 19:38:14 -0400
-Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F0CC3C061755
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Jul 2020 16:38:13 -0700 (PDT)
-Received: by mail-pg1-x543.google.com with SMTP id m22so5704073pgv.9
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Jul 2020 16:38:13 -0700 (PDT)
+        Thu, 16 Jul 2020 19:39:03 -0400
+Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AC625C061755;
+        Thu, 16 Jul 2020 16:39:02 -0700 (PDT)
+Received: by mail-wm1-x344.google.com with SMTP id 17so13815256wmo.1;
+        Thu, 16 Jul 2020 16:39:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=YI7Vx/uvEtkVHjbnn5enh7Amkd8UUwSoGpt+t0J9E6s=;
-        b=HNT1KJPvsw+DsJ8EOVLWmzitrBpr2yo7OeDS/ByQPu3+8YItroTU5tRmB2KmRs4P21
-         1XdBvcw8tcZZxmOTswgMDE9PbYsIPXJqexuThr4oua0stDFqoqRnQfWaVLDynSbDgGBP
-         +mRMfWfUqqnWFa/3agfFCCVTwGyXE9Uf0XW6eMoUfi0Y7i6+FT+TzKmhujId02r1dSpP
-         EoRiQkBwdafl5ekL2/7NLOuVhAxIIsA3G0q6hzrXbZWVczzNTRhwCuaVqWJ5sR6J8rIC
-         k6eEdlyYzR+qvFsGOEyzIzVx5a23yduG38u5JOFP5rsy3N26hZFlRa6mxiYAppwLyvYL
-         4vGQ==
+        h=from:to:cc:subject:date:message-id;
+        bh=zYfLfuvgFUV8PEBfESgp3lpVexuC9B9b5s18aDhPPDA=;
+        b=KjY4YyMXuJ4Ay3VqVraGJe6N4ia5nXYWzhIqCpEoG3M0VaRDxF0Icl9uhoqCZCmsTM
+         24vUSZgW3rulOjOVa95F6XN7JfJKUwsIsQiLyNS8URLfCqbv+RlE5wywfgI7uXYIDGNC
+         CMQsbrjKV2TYRnBKQFAFyRWfx1HU1aA5n7raUpL+7QFWViP5eEvqKSSr1iG10Y3QFkL6
+         lQqj1Hc6KGrJam+Za0biuFuGSnMBezzF1UMc+QfZJ0sMSBsW2IxOCR0nySP8h2D4xfrg
+         iyo/v0+RNs6yY7H0yJHhoepOg9YR6QjvFX5xR9e7tNC0g71k8rjWtG8i9VB60JsAutav
+         r9kQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=YI7Vx/uvEtkVHjbnn5enh7Amkd8UUwSoGpt+t0J9E6s=;
-        b=L6Ltqr1WR5trdheHjX9BDBYMW4IRCaegMBKg/GhVfwmD4NUPqHzECf5s3Cu1TqBSvJ
-         s7MyIjSqdSYGKPKgxfbnTxht8N8CN5BLgSzrdsheU3Desxi9vBQrxzQD64h9KjFeip3a
-         TvHbpi568VsI5Rm7OiT7b/wnF7Bqiz5vzzf1D6cnfMl0ZLqbzUNH+aSXHiMyi4A2KQR1
-         3DSbna+wfETqeFteRZCmu1I/O5G7fwdF91TVEmMaiitOm9OD85MqZquJnRCzliY72RNO
-         t5/pSPvX107OlfaymPHMp0v9qrEWQiuWNlcb/JL4w4nRvBdmrVKa5FgwE4A6aFxp/q1u
-         3EPA==
-X-Gm-Message-State: AOAM530/xOOtlBKJkFg/pibnhycZCuFvjwlfBa/be4dcHWZA7/zTKNqs
-        3z1BaHwzIVeBP/DVIft6WfI=
-X-Google-Smtp-Source: ABdhPJzQHxH3wEjRwLvQBEJM/Bkm1Yppl+9h/O55FOV43a+W6m9xAk7+6BmVoJgvPO1jc9/gw2Zwfw==
-X-Received: by 2002:a63:ac53:: with SMTP id z19mr6120867pgn.181.1594942693154;
-        Thu, 16 Jul 2020 16:38:13 -0700 (PDT)
-Received: from Asurada-Nvidia (searspoint.nvidia.com. [216.228.112.21])
-        by smtp.gmail.com with ESMTPSA id y20sm5585405pfo.170.2020.07.16.16.38.12
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 16 Jul 2020 16:38:12 -0700 (PDT)
-Date:   Thu, 16 Jul 2020 16:37:46 -0700
-From:   Nicolin Chen <nicoleotsuka@gmail.com>
-To:     Arnaud Ferraris <arnaud.ferraris@collabora.com>
-Cc:     alsa-devel@alsa-project.org, Timur Tabi <timur@kernel.org>,
-        Xiubo Li <Xiubo.Lee@gmail.com>,
-        Fabio Estevam <festevam@gmail.com>,
-        Shengjiu Wang <shengjiu.wang@gmail.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>, linux-kernel@vger.kernel.org,
-        kernel@collabora.com
-Subject: Re: [PATCH v2 2/2] ASoC: fsl_asrc: always use internal ratio
-Message-ID: <20200716233742.GA27376@Asurada-Nvidia>
-References: <20200716145201.186270-1-arnaud.ferraris@collabora.com>
- <20200716151352.193451-1-arnaud.ferraris@collabora.com>
- <20200716151352.193451-3-arnaud.ferraris@collabora.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200716151352.193451-3-arnaud.ferraris@collabora.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=zYfLfuvgFUV8PEBfESgp3lpVexuC9B9b5s18aDhPPDA=;
+        b=YnLz8s/Sy8gVa9yR+5B/kPANrOMX02/jswZi1QF//ENYE7I3NIsFXa7jz9vvmPPFwU
+         XcSwhsSM5Y6rFIhP+UqD9NLFTqIKI5BsiK3S/fE1Q80D2BTdOPR9sMSqSjVZAtbToCQB
+         OiAkIzYhdtNH72qezx2mewBs8Ka4VPTLNQ//sFxwUvxAh7U7GTRfvhLUE9hv0pYX3EDK
+         6T5oFUnYKPElJb/Wld8Wv8TDwAuzLdvkXU2cEKkS8kZ5z2l1OraS7baQ6kdfFo9kn14r
+         eEtjustujRk5kqIrFeJ5h1IY03pndUbyHO9db4xdZkRzP85N3+Q/nAEfz+64bAy1+idF
+         89oQ==
+X-Gm-Message-State: AOAM532I1Xs3IGGUy56hRqRiUtMM6d9bPRKX3Uf36x42LSPFhqzNhgLo
+        D6oEDnnOeCFqNOVBjrsLGW4=
+X-Google-Smtp-Source: ABdhPJwi7mSoPtKRy/EszwPIGTwlNt2H+dk4kCnJ2OPp43Rm1i9KUT7DiiAE7OsFT8vPFH8Dz9rE+g==
+X-Received: by 2002:a1c:c242:: with SMTP id s63mr6488340wmf.146.1594942741502;
+        Thu, 16 Jul 2020 16:39:01 -0700 (PDT)
+Received: from stbirv-lnx-3.igp.broadcom.net ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id u65sm11278013wmg.5.2020.07.16.16.38.59
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 16 Jul 2020 16:39:00 -0700 (PDT)
+From:   Doug Berger <opendmb@gmail.com>
+To:     "David S. Miller" <davem@davemloft.net>
+Cc:     Florian Fainelli <f.fainelli@gmail.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        bcm-kernel-feedback-list@broadcom.com, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Doug Berger <opendmb@gmail.com>
+Subject: [PATCH net 0/3] net: bcmgenet: fix WAKE_FILTER resume from deep sleep
+Date:   Thu, 16 Jul 2020 16:38:14 -0700
+Message-Id: <1594942697-37954-1-git-send-email-opendmb@gmail.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 16, 2020 at 05:13:54PM +0200, Arnaud Ferraris wrote:
-> Even though the current driver calculates the dividers to be used
-> depending on the clocks and sample rates, enabling the internal ratio
-> can lead to noticeable improvements in the audio quality, based on my
-> testing.
-> 
-> As stated in the documentation, "When USRx=1 and IDRx=0, ASRC internal
-> measured ratio will be used", so setting this bit even when not in
-> "Ideal Ratio" mode still makes sense.
-> 
-> Signed-off-by: Arnaud Ferraris <arnaud.ferraris@collabora.com>
-> ---
->  sound/soc/fsl/fsl_asrc.c | 5 ++---
->  1 file changed, 2 insertions(+), 3 deletions(-)
-> 
-> diff --git a/sound/soc/fsl/fsl_asrc.c b/sound/soc/fsl/fsl_asrc.c
-> index 6d43cab6c885..0b79a02d0d76 100644
-> --- a/sound/soc/fsl/fsl_asrc.c
-> +++ b/sound/soc/fsl/fsl_asrc.c
-> @@ -465,7 +465,7 @@ static int fsl_asrc_config_pair(struct fsl_asrc_pair *pair, bool use_ideal_rate)
->  	regmap_update_bits(asrc->regmap, REG_ASRCTR,
->  			   ASRCTR_ATSi_MASK(index), ASRCTR_ATS(index));
->  	regmap_update_bits(asrc->regmap, REG_ASRCTR,
-> -			   ASRCTR_USRi_MASK(index), 0);
-> +			   ASRCTR_USRi_MASK(index), ASRCTR_USR(index));
->  
->  	/* Set the input and output clock sources */
->  	regmap_update_bits(asrc->regmap, REG_ASRCSR,
-> @@ -507,8 +507,7 @@ static int fsl_asrc_config_pair(struct fsl_asrc_pair *pair, bool use_ideal_rate)
->  
->  	/* Enable Ideal Ratio mode */
+The WAKE_FILTER logic can only wake the system from the standby
+power state. However, some systems that include the GENET IP
+support deeper power saving states and the driver should suspend
+and resume correctly from those states as well.
 
-The code is against the comments now -- need to update this line.
+This commit set squashes a few issues uncovered while testing
+suspend and resume from these deep sleep states.
 
->  	regmap_update_bits(asrc->regmap, REG_ASRCTR,
-> -			   ASRCTR_IDRi_MASK(index) | ASRCTR_USRi_MASK(index),
-> -			   ASRCTR_IDR(index) | ASRCTR_USR(index));
-> +			   ASRCTR_IDRi_MASK(index), ASRCTR_IDR(index);
+Doug Berger (3):
+  net: bcmgenet: test MPD_EN when resuming
+  net: bcmgenet: test RBUF_ACPI_EN  when resuming
+  net: bcmgenet: restore HFB filters on resume
 
-The driver falls back to ideal ratio mode if there is no matched
-clock source. Your change seems to apply internal ratio mode any
-way? Probably would break the fallback routine.
+ drivers/net/ethernet/broadcom/genet/bcmgenet.c     | 138 +++++++++------------
+ drivers/net/ethernet/broadcom/genet/bcmgenet.h     |   1 -
+ drivers/net/ethernet/broadcom/genet/bcmgenet_wol.c |  22 ++--
+ 3 files changed, 77 insertions(+), 84 deletions(-)
+
+-- 
+2.7.4
+
