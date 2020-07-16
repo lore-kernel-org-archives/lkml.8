@@ -2,163 +2,148 @@ Return-Path: <SRS0=y5Sx=A3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27015C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 23:21:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0031CC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 23:19:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EF14A20760
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 23:21:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C7D1B20739
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 23:19:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZZyITWdZ"
+	dkim=pass (2048-bit key) header.d=dabbelt-com.20150623.gappssmtp.com header.i=@dabbelt-com.20150623.gappssmtp.com header.b="yS1UlVCB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727952AbgGPXVR (ORCPT
+        id S1727075AbgGPXTU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 19:21:17 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:52287 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726333AbgGPXVP (ORCPT
+        Thu, 16 Jul 2020 19:19:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45174 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726846AbgGPXTT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 19:21:15 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1594941673;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=TIFp0Hg7q04yf1DG6HMd9RGoWeHArzTBdvRZoWQamlI=;
-        b=ZZyITWdZzUpnU3UL9yU1OoHzqC56oiPPr0fn0mUF4qk2g/g5V+s84FOQm2vclSz7S/T5u4
-        fKm39WgbIrKhq5uHEcHxhUJdNnQ6CsC86WXbuKgARNZbQIW4WWqYvFU4jEOmJopL36LaNN
-        O6/GmmCLTL1oN99EQUbrKqjZ9L+MtkA=
-Received: from mail-qv1-f70.google.com (mail-qv1-f70.google.com
- [209.85.219.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-371-27nXiqm1NS6ECX0Exu4U7A-1; Thu, 16 Jul 2020 18:50:55 -0400
-X-MC-Unique: 27nXiqm1NS6ECX0Exu4U7A-1
-Received: by mail-qv1-f70.google.com with SMTP id j4so4373839qvt.20
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Jul 2020 15:50:55 -0700 (PDT)
+        Thu, 16 Jul 2020 19:19:19 -0400
+Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B6895C061755
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Jul 2020 16:19:19 -0700 (PDT)
+Received: by mail-pl1-x643.google.com with SMTP id k4so4563368pld.12
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Jul 2020 16:19:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=dabbelt-com.20150623.gappssmtp.com; s=20150623;
+        h=date:subject:in-reply-to:cc:from:to:message-id:mime-version
+         :content-transfer-encoding;
+        bh=n4KTe3/xuQSWnZuouMggMmRt0/TA0hq7CmPqtl7gf30=;
+        b=yS1UlVCB7/DevfhrSDlYG4yNIeaAteh3TMZPyrtc3jolPKCiHV225h1xQe5YOZhTlI
+         BR/eM9E7fTCROcgjOezPXe0aal4ZJ7M6an23k9aHgb0dx97C5FuSCSOJdh8TbQjVpltg
+         5g0POU6F1xR33zbXr4DVSSbz9khLkqi3MWw/vv1viWmmMJNJXq6468d0wU18kD6xtK1R
+         0/Z3yP84fRQAKdNEEyZAQAxsTf6ex3B2PgElbg0682gaR0tZZmI0Zq2DPmhhr4d3FNuQ
+         f3WcXzoDaEkz4ACVCg4qB1YI7nxsjxZx77Bf05P/dVN16z7F8sAO1vHDjeRTsipfLHFL
+         OQAQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=TIFp0Hg7q04yf1DG6HMd9RGoWeHArzTBdvRZoWQamlI=;
-        b=o3iOP3NGTc+C/2u+Yo/AZjuCoZtS8wp+SUcPt5kKyCJvdwVc2ZjyYZuS9zC8do/0B+
-         qH+cSoN7fcedI6Fqtl3I+BXxnEW+MMhYtnNGjmuC/M7j19DcoQbtOf5rZoJjGX1BnM/O
-         LMi7DLHw6RNh8JoWdpc6UtbnscdLefr0Pc18gBNpFJUHW9X/CBR6brjfjDN+46YtHQJ5
-         dOdkBM20mVVlPKoTkipXiVUUJZ5LCuQW/IalSyYxyxu0BLec47UDW1tJKQiHz7Qx2rIu
-         8hRXwR6Qc+LeJ79gDR0VXHCyFaULb//MaDitq4/qhKANiXcp2e9Bgo906QYIXBzc6ZJP
-         nP4A==
-X-Gm-Message-State: AOAM5318RXHkJCekAvCkqlzvM6tW9eTc/m7koBtchpAzD2hxnfOb1adp
-        L4f4wnTSbXZR0UdOC7ag+LH0b90kqUi8i0x/bfwNyt6coBx/nN4Nl/XuS7MG2b2cvNCotV6whYq
-        7EVqnfaX8ibe0hIY5VAoE6upB
-X-Received: by 2002:a37:6343:: with SMTP id x64mr6351693qkb.114.1594939854034;
-        Thu, 16 Jul 2020 15:50:54 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJz9I+YtgVZqYJkdYGFK6gqcCdhQADDw6d3C/sjWjsOMDp/j86RqH2uKqe6zw6lUnjp2cIPBRg==
-X-Received: by 2002:a37:6343:: with SMTP id x64mr6351678qkb.114.1594939853688;
-        Thu, 16 Jul 2020 15:50:53 -0700 (PDT)
-Received: from trix.remote.csb (075-142-250-213.res.spectrum.com. [75.142.250.213])
-        by smtp.gmail.com with ESMTPSA id a6sm8439003qkd.69.2020.07.16.15.50.52
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 16 Jul 2020 15:50:52 -0700 (PDT)
-Subject: Re: [PATCH 0/2] Modularization of DFL private feature drivers
-To:     Xu Yilun <yilun.xu@intel.com>, mdf@kernel.org,
-        linux-fpga@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     lgoncalv@redhat.com
-References: <1594791498-14495-1-git-send-email-yilun.xu@intel.com>
-From:   Tom Rix <trix@redhat.com>
-Message-ID: <0c7c63b8-5444-2deb-9fed-18956a5ad938@redhat.com>
-Date:   Thu, 16 Jul 2020 15:50:51 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
-MIME-Version: 1.0
-In-Reply-To: <1594791498-14495-1-git-send-email-yilun.xu@intel.com>
-Content-Type: text/plain; charset=utf-8
+        h=x-gm-message-state:date:subject:in-reply-to:cc:from:to:message-id
+         :mime-version:content-transfer-encoding;
+        bh=n4KTe3/xuQSWnZuouMggMmRt0/TA0hq7CmPqtl7gf30=;
+        b=tNn0dGjcINGHqENf6dhadOU5JOabTXdB56dkjtdFvi4tM3CdSdMRVbDkhmRmOuyS8+
+         5z0Ow+dOst5XRtqXpCCHu58oBPCcb/I4+B6DLIa5AM333zKDwSI03Mkd+nRxN7YY5Nht
+         kY7iFw+YgwrCAVbDO/iN716jSnufODC/mt+52w6cMrWNVG1bV5Sq6g5Nr3KRsuYIKFe3
+         kgipMoN9c5bqrQJCwbcuq2/1Cneg7wxdAynfcAE9myezwZxpLLn4fkYJSECme+oGuXS6
+         76d5ZrgigQ1hjZ9zbNkTY3jQkFeKGa+flkvGeJmMZXEhZLR5mT/tP0Um+L3v6pYAy9EJ
+         aQBw==
+X-Gm-Message-State: AOAM532qOZ3Xpf/sTUlDxDlIrFE1rds9zFsXc1BV2GyveDv0jP/bJQIE
+        fCxtQqFX1Fz+LUfAiFWhTnNSDw==
+X-Google-Smtp-Source: ABdhPJycqY6eAxKaeNeuobCKcFDl/A/Pm6poKCispycxj4QQknv/oWVgsDB75ASvN2wpr21lu4X37g==
+X-Received: by 2002:a17:90a:f996:: with SMTP id cq22mr7779446pjb.208.1594941558995;
+        Thu, 16 Jul 2020 16:19:18 -0700 (PDT)
+Received: from localhost (76-210-143-223.lightspeed.sntcca.sbcglobal.net. [76.210.143.223])
+        by smtp.gmail.com with ESMTPSA id r25sm1627287pgv.88.2020.07.16.16.19.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 16 Jul 2020 16:19:18 -0700 (PDT)
+Date:   Thu, 16 Jul 2020 16:19:18 -0700 (PDT)
+X-Google-Original-Date: Thu, 16 Jul 2020 16:03:52 PDT (-0700)
+Subject:     Re: [PATCH] Replace HTTP links with HTTPS ones: RISC-V
+In-Reply-To: <20200705220236.29402-1-grandmaster@al2klimov.de>
+CC:     Paul Walmsley <paul.walmsley@sifive.com>, aou@eecs.berkeley.edu,
+        christian@brauner.io, linux-riscv@lists.infradead.org,
+        linux-kernel@vger.kernel.org, grandmaster@al2klimov.de
+From:   Palmer Dabbelt <palmer@dabbelt.com>
+To:     grandmaster@al2klimov.de
+Message-ID: <mhng-79889b3a-dda3-49ab-ba9b-0c20292c2c31@palmerdabbelt-glaptop1>
+Mime-Version: 1.0 (MHng)
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Generally i think this is a good approach.
-
-However I do have concern.
-
-The feature_id in dfl is magic number, similar to pci id but without a vendor id.
-
-Is it possible to add something like a vendor id so different vendors would not have to be so careful to use a unique id ?
-
-This touches some of the matching function of the bus ops.  Could there be a way for bus ops to be used so that there could be multiple matching function.  Maybe the one in 0002 as a default so users could override it ?
-
-The use case I am worrying about is an OEM.  The OEM uses an unclaimed feature_id and supplies their own platform device device driver to match the feature_id.  But some later version of the kernel claims this feature_id and the OEM's driver no longer works and since the value comes from pci config space it is difficult to change.
-
-So looking for something like
-
-register_feature_matcher((*bus_match)(struct device *dev, struct device_driver *drv))
-
-static int dfl_bus_match_default(struct device *dev, struct device_driver *drv)
-{
-    struct dfl_device *dfl_dev = to_dfl_dev(dev);
-    struct dfl_driver *dfl_drv = to_dfl_drv(drv);
-    const struct dfl_device_id *id_entry = dfl_drv->id_table;
-
-    while (id_entry->feature_id) {
-        if (dfl_match_one_device(id_entry, dfl_dev)) {
-            dfl_dev->id_entry = id_entry;
-            return 1;
-        }
-        id_entry++;
-    }
-
-    return 0;
-}
-
-register_feature_matcher(&dfl_bus_match_default)
-
-static int dfl_bus_match(struct device *dev, struct device_driver *drv)
-{
-
-    struct dfl_device *dfl_dev = to_dfl_dev(dev);
-    struct dfl_driver *dfl_drv = to_dfl_drv(drv);
-    const struct dfl_device_id *id_entry = dfl_drv->id_table;
-
-    while (id_entry->feature_id) {
-
-        matcher = Loop over matchers()
-
-        if (matcher(dev, drv)) {
-            dfl_dev->id_entry = id_entry;
-            return 1;
-        }
-        id_entry++;
-    }
-
-    return 0;
-}
-
-Or maybe use some of the unused bits in the dfl header to add a second vendor-like id and change existing matcher to look feature_id and vendor_like_id.
-
-Tom
-
- 
-
-On 7/14/20 10:38 PM, Xu Yilun wrote:
-> This patchset makes it possible to develop independent driver modules
-> for DFL private features. It also helps to leverage existing kernel
-> drivers to enable some IP blocks in DFL.
+On Sun, 05 Jul 2020 15:02:36 PDT (-0700), grandmaster@al2klimov.de wrote:
+> Rationale:
+> Reduces attack surface on kernel devs opening the links for MITM
+> as HTTPS traffic is much harder to manipulate.
 >
-> Xu Yilun (2):
->   fpga: dfl: map feature mmio resources in their own feature drivers
->   fpga: dfl: create a dfl bus type to support DFL devices
+> Deterministic algorithm:
+> For each file:
+>   If not .svg:
+>     For each line:
+>       If doesn't contain `\bxmlns\b`:
+>         For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
+>           If both the HTTP and HTTPS versions
+>           return 200 OK and serve the same content:
+>             Replace HTTP with HTTPS.
 >
->  Documentation/ABI/testing/sysfs-bus-dfl |  15 ++
->  drivers/fpga/dfl-pci.c                  |  21 +-
->  drivers/fpga/dfl.c                      | 435 +++++++++++++++++++++++++++-----
->  drivers/fpga/dfl.h                      |  91 ++++++-
->  4 files changed, 492 insertions(+), 70 deletions(-)
->  create mode 100644 Documentation/ABI/testing/sysfs-bus-dfl
+> Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
+> ---
+>  Continuing my work started at 93431e0607e5.
 >
+>  If there are any URLs to be removed completely or at least not HTTPSified:
+>  Just clearly say so and I'll *undo my change*.
+>  See also https://lkml.org/lkml/2020/6/27/64
+>
+>  If there are any valid, but yet not changed URLs:
+>  See https://lkml.org/lkml/2020/6/26/837
+>
+>  arch/riscv/include/uapi/asm/unistd.h       | 2 +-
+>  tools/arch/riscv/include/uapi/asm/unistd.h | 2 +-
+>  2 files changed, 2 insertions(+), 2 deletions(-)
+>
+> diff --git a/arch/riscv/include/uapi/asm/unistd.h b/arch/riscv/include/uapi/asm/unistd.h
+> index 13ce76cc5aff..4b989ae15d59 100644
+> --- a/arch/riscv/include/uapi/asm/unistd.h
+> +++ b/arch/riscv/include/uapi/asm/unistd.h
+> @@ -12,7 +12,7 @@
+>   * GNU General Public License for more details.
+>   *
+>   * You should have received a copy of the GNU General Public License
+> - * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+> + * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+>   */
+>
+>  #ifdef __LP64__
+> diff --git a/tools/arch/riscv/include/uapi/asm/unistd.h b/tools/arch/riscv/include/uapi/asm/unistd.h
+> index 0e2eeeb1fd27..f506cca520b0 100644
+> --- a/tools/arch/riscv/include/uapi/asm/unistd.h
+> +++ b/tools/arch/riscv/include/uapi/asm/unistd.h
+> @@ -12,7 +12,7 @@
+>   * GNU General Public License for more details.
+>   *
+>   * You should have received a copy of the GNU General Public License
+> - * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+> + * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+>   */
+>
+>  #ifdef __LP64__
 
+Thanks.  This is on for-next.
+
+Unless anyone has any objections I'll eventually go remove all the license
+boilerplates from arch/rsicv, as it looks like I missed a few when I converted
+them over:
+
+$ git grep "GNU" | grep riscv
+arch/riscv/Makefile:# This file is subject to the terms and conditions of the GNU General Public
+arch/riscv/boot/Makefile:# This file is subject to the terms and conditions of the GNU General Public
+arch/riscv/boot/install.sh:# This file is subject to the terms and conditions of the GNU General Public
+arch/riscv/include/uapi/asm/elf.h: * it under the terms of the GNU General Public License as published by
+arch/riscv/kernel/fpu.S: *   modify it under the terms of the GNU General Public License
+arch/riscv/kernel/fpu.S: *   GNU General Public License for more details.
