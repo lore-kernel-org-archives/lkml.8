@@ -2,72 +2,109 @@ Return-Path: <SRS0=y5Sx=A3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38009C433E6
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 13:03:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45428C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 13:04:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 213572074B
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 13:03:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 28B6B20739
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 13:04:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728639AbgGPNDL (ORCPT
+        id S1728734AbgGPNE3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 09:03:11 -0400
-Received: from elvis.franken.de ([193.175.24.41]:38446 "EHLO elvis.franken.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728093AbgGPNDK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 09:03:10 -0400
-Received: from uucp (helo=alpha)
-        by elvis.franken.de with local-bsmtp (Exim 3.36 #1)
-        id 1jw3XT-0001Iu-00; Thu, 16 Jul 2020 15:03:03 +0200
-Received: by alpha.franken.de (Postfix, from userid 1000)
-        id 42D36C0813; Thu, 16 Jul 2020 14:59:28 +0200 (CEST)
-Date:   Thu, 16 Jul 2020 14:59:28 +0200
-From:   Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-To:     Jiaxun Yang <jiaxun.yang@flygoat.com>
-Cc:     linux-mips@vger.kernel.org, Michal Simek <michal.simek@xilinx.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Waiman Long <longman@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexander Lobakin <alobakin@pm.me>,
-        Jason Wang <jasowang@redhat.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Huacai Chen <chenhc@lemote.com>,
-        Aleksandar Markovic <aleksandar.qemu.devel@gmail.com>,
-        Paul Burton <paulburton@kernel.org>,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-Subject: Re: [RFC PATCH 1/3] MIPS: Retire kvm paravirt
-Message-ID: <20200716125928.GA12483@alpha.franken.de>
-References: <20200710063047.154611-1-jiaxun.yang@flygoat.com>
- <20200710063047.154611-2-jiaxun.yang@flygoat.com>
+        Thu, 16 Jul 2020 09:04:29 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:40934 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728119AbgGPNE3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jul 2020 09:04:29 -0400
+Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id F3C45DF5121E4CB53979;
+        Thu, 16 Jul 2020 21:04:24 +0800 (CST)
+Received: from [127.0.0.1] (10.174.179.91) by DGGEMS407-HUB.china.huawei.com
+ (10.3.19.207) with Microsoft SMTP Server id 14.3.487.0; Thu, 16 Jul 2020
+ 21:04:08 +0800
+Subject: Re: [PATCH -next] scsi: hisi_sas: Convert to DEFINE_SHOW_ATTRIBUTE
+To:     John Garry <john.garry@huawei.com>
+CC:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        <linux-scsi@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        "James E . J . Bottomley" <jejb@linux.vnet.ibm.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>
+References: <20200716084714.7872-1-miaoqinglang@huawei.com>
+ <801e6d49-9bd5-8079-bb83-9f67591a9158@huawei.com>
+From:   miaoqinglang <miaoqinglang@huawei.com>
+Message-ID: <98e26dfe-b6f9-5730-097e-95ff2db5c987@huawei.com>
+Date:   Thu, 16 Jul 2020 21:04:07 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200710063047.154611-2-jiaxun.yang@flygoat.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+In-Reply-To: <801e6d49-9bd5-8079-bb83-9f67591a9158@huawei.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.174.179.91]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 10, 2020 at 02:30:16PM +0800, Jiaxun Yang wrote:
-> paravirt machine was introduced for Cavium's partial virtualization
-> technology, however, it's host side support and QEMU support never
-> landed in upstream.
-> 
-> As Cavium was acquired by Marvel and they have no intention to maintain
-> their MIPS product line, also paravirt is unlikely to be utilized by
-> community users, it's time to retire it if nobody steps in to maintain
-> it.
 
-I've fine deleting it. I'll wait a few more days before applying this patch.
-So if anybody wants to keep it, speak up now.
+在 2020/7/16 17:25, John Garry 写道:
+> On 16/07/2020 09:47, Qinglang Miao wrote:
+>
+> Not sure why you cc Greg, but SCSI maintainers should have been - 
+> James and Martin
+>
+>> From: Yongqiang Liu <liuyongqiang13@huawei.com>
+>>
+>> Use DEFINE_SHOW_ATTRIBUTE macro to simplify the code.
+>>
+>> Signed-off-by: Yongqiang Liu <liuyongqiang13@huawei.com>
+>
+> The sender is not the author, so your signed-off-by should also be 
+> here (after sign off from Yongqiang Liu)
+>
+Sorry for not knowing this rule, I will send a new patch later on if you 
+don't mind.
+>> ---
+>>   drivers/scsi/hisi_sas/hisi_sas_main.c | 137 ++------------------------
+>>   1 file changed, 10 insertions(+), 127 deletions(-)
+>>
+>> diff --git a/drivers/scsi/hisi_sas/hisi_sas_main.c 
+>> b/drivers/scsi/hisi_sas/hisi_sas_main.c
+>> index 852d2620e..f50b0c78f 100644
+>> --- a/drivers/scsi/hisi_sas/hisi_sas_main.c
+>> +++ b/drivers/scsi/hisi_sas/hisi_sas_main.c
+>> @@ -2870,19 +2870,7 @@ static int hisi_sas_debugfs_global_show(struct 
+>> seq_file *s, void *p)
+>>       return 0;
+>>   }
+>>   -static int hisi_sas_debugfs_global_open(struct inode *inode, 
+>> struct file *filp)
+>> -{
+>> -    return single_open(filp, hisi_sas_debugfs_global_show,
+>> -               inode->i_private);
+>> -}
+>> -
+>> -static const struct file_operations hisi_sas_debugfs_global_fops = {
+>> -    .open = hisi_sas_debugfs_global_open,
+>> -    .read_iter = seq_read_iter,
+>> -    .llseek = seq_lseek,
+>> -    .release = single_release,
+>> -    .owner = THIS_MODULE,
+>> -};
+>> +DEFINE_SHOW_ATTRIBUTE(hisi_sas_debugfs_global);
+>
+> I couldn't see an equivalent for file_operations which have a read and 
+> write method, and the driver has a few of those.
+Yes, you're right. There's no equivalence when drivers have read and  
+write method. So the file_operations we cleaned up are those without  
+write method, like hisi_sas_debugfs_global_fops.
+>
+> Thanks
+> .
+Thanks
+  .
 
-Thomas.
-
--- 
-Crap can work. Given enough thrust pigs will fly, but it's not necessarily a
-good idea.                                                [ RFC1925, 2.3 ]
