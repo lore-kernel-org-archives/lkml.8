@@ -7,33 +7,33 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43E99C433F7
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 03:42:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1BAEC43446
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 03:42:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 28E432075F
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 03:42:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F42A2076C
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 03:42:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728398AbgGPDmE (ORCPT
+        id S1728447AbgGPDmQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 23:42:04 -0400
+        Wed, 15 Jul 2020 23:42:16 -0400
 Received: from mga02.intel.com ([134.134.136.20]:4816 "EHLO mga02.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728214AbgGPDl0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728186AbgGPDl0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 15 Jul 2020 23:41:26 -0400
-IronPort-SDR: KBzR0Y0lEgz1aiCquMKEMqdMRbMJJR67MX0HwtgL1a9YNIcvu3EkDGlsVxE6Sw2+KeTda2ZdtL
- 5J4/EDHCwcTA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9683"; a="137442918"
+IronPort-SDR: HYc92FVHkzdoU3kZkvURreaT/1L/oNnK78BOs+9CabgthWF7fYqS+Jl9Z7EXENygevI1Rea7Kz
+ CDXxhPeizmSQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9683"; a="137442916"
 X-IronPort-AV: E=Sophos;i="5.75,357,1589266800"; 
-   d="scan'208";a="137442918"
+   d="scan'208";a="137442916"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga008.jf.intel.com ([10.7.209.65])
   by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jul 2020 20:41:25 -0700
-IronPort-SDR: CbvKX32DWYuILUC4AMNPiYJervepMLVCWi+vLMdAyidnQvm8N3s1mSrZjMGzSCETd9E+eLo/OP
- wYnsjHvvFR2w==
+IronPort-SDR: Hhg21qXorTqd7pdCJjQNZprUA6QK5YopRJWCrDf/myOsck9/q0ocyse/gMhkLgaQHewOfk63z7
+ whqcIhKCuYxg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.75,357,1589266800"; 
-   d="scan'208";a="316905493"
+   d="scan'208";a="316905487"
 Received: from sjchrist-coffee.jf.intel.com ([10.54.74.152])
   by orsmga008.jf.intel.com with ESMTP; 15 Jul 2020 20:41:24 -0700
 From:   Sean Christopherson <sean.j.christopherson@intel.com>
@@ -44,9 +44,9 @@ Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
         Jim Mattson <jmattson@google.com>,
         Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 8/9] KVM: x86/mmu: Rename max_page_level to max_huge_page_level
-Date:   Wed, 15 Jul 2020 20:41:21 -0700
-Message-Id: <20200716034122.5998-9-sean.j.christopherson@intel.com>
+Subject: [PATCH 6/9] KVM: VXM: Remove temporary WARN on expected vs. actual EPTP level mismatch
+Date:   Wed, 15 Jul 2020 20:41:19 -0700
+Message-Id: <20200716034122.5998-7-sean.j.christopherson@intel.com>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200716034122.5998-1-sean.j.christopherson@intel.com>
 References: <20200716034122.5998-1-sean.j.christopherson@intel.com>
@@ -57,65 +57,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Rename max_page_level to explicitly call out that it tracks the max huge
-page level so as to avoid confusion when a future patch moves the max
-TDP level, i.e. max root level, into the MMU and kvm_configure_mmu().
+Remove the WARN in vmx_load_mmu_pgd() that was temporarily added to aid
+bisection/debug in the event the current MMU's shadow root level didn't
+match VMX's computed EPTP level.
 
 Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
 ---
- arch/x86/kvm/mmu/mmu.c | 14 +++++++-------
- 1 file changed, 7 insertions(+), 7 deletions(-)
+ arch/x86/kvm/vmx/vmx.c | 10 ----------
+ 1 file changed, 10 deletions(-)
 
-diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
-index 559b4b92b5e27..c867b35759ab5 100644
---- a/arch/x86/kvm/mmu/mmu.c
-+++ b/arch/x86/kvm/mmu/mmu.c
-@@ -92,7 +92,7 @@ module_param_named(flush_on_reuse, force_flush_and_sync_on_reuse, bool, 0644);
-  */
- bool tdp_enabled = false;
- 
--static int max_page_level __read_mostly;
-+static int max_huge_page_level __read_mostly;
- 
- enum {
- 	AUDIT_PRE_PAGE_FAULT,
-@@ -3256,7 +3256,7 @@ static int kvm_mmu_hugepage_adjust(struct kvm_vcpu *vcpu, gfn_t gfn,
- 	if (!slot)
- 		return PG_LEVEL_4K;
- 
--	max_level = min(max_level, max_page_level);
-+	max_level = min(max_level, max_huge_page_level);
- 	for ( ; max_level > PG_LEVEL_4K; max_level--) {
- 		linfo = lpage_info_slot(gfn, slot, max_level);
- 		if (!linfo->disallow_lpage)
-@@ -5580,23 +5580,23 @@ void kvm_mmu_invpcid_gva(struct kvm_vcpu *vcpu, gva_t gva, unsigned long pcid)
+diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+index 244053cff0a3a..da75878171cea 100644
+--- a/arch/x86/kvm/vmx/vmx.c
++++ b/arch/x86/kvm/vmx/vmx.c
+@@ -3072,14 +3072,6 @@ static int vmx_get_tdp_level(struct kvm_vcpu *vcpu)
+ 	return 4;
  }
- EXPORT_SYMBOL_GPL(kvm_mmu_invpcid_gva);
  
--void kvm_configure_mmu(bool enable_tdp, int tdp_page_level)
-+void kvm_configure_mmu(bool enable_tdp, int tdp_huge_page_level)
+-static int get_ept_level(struct kvm_vcpu *vcpu)
+-{
+-	if (is_guest_mode(vcpu) && nested_cpu_has_ept(get_vmcs12(vcpu)))
+-		return vmx_eptp_page_walk_level(nested_ept_get_eptp(vcpu));
+-
+-	return vmx_get_tdp_level(vcpu);
+-}
+-
+ u64 construct_eptp(struct kvm_vcpu *vcpu, unsigned long root_hpa,
+ 		   int root_level)
  {
- 	tdp_enabled = enable_tdp;
+@@ -3104,8 +3096,6 @@ static void vmx_load_mmu_pgd(struct kvm_vcpu *vcpu, unsigned long pgd,
+ 	u64 eptp;
  
- 	/*
--	 * max_page_level reflects the capabilities of KVM's MMU irrespective
-+	 * max_huge_page_level reflects KVM's MMU capabilities irrespective
- 	 * of kernel support, e.g. KVM may be capable of using 1GB pages when
- 	 * the kernel is not.  But, KVM never creates a page size greater than
- 	 * what is used by the kernel for any given HVA, i.e. the kernel's
- 	 * capabilities are ultimately consulted by kvm_mmu_hugepage_adjust().
- 	 */
- 	if (tdp_enabled)
--		max_page_level = tdp_page_level;
-+		max_huge_page_level = tdp_huge_page_level;
- 	else if (boot_cpu_has(X86_FEATURE_GBPAGES))
--		max_page_level = PG_LEVEL_1G;
-+		max_huge_page_level = PG_LEVEL_1G;
- 	else
--		max_page_level = PG_LEVEL_2M;
-+		max_huge_page_level = PG_LEVEL_2M;
- }
- EXPORT_SYMBOL_GPL(kvm_configure_mmu);
+ 	if (enable_ept) {
+-		WARN_ON(pgd_level != get_ept_level(vcpu));
+-
+ 		eptp = construct_eptp(vcpu, pgd, pgd_level);
+ 		vmcs_write64(EPT_POINTER, eptp);
  
 -- 
 2.26.0
