@@ -7,58 +7,56 @@ X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 448CEC433E5
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 10:02:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84028C433EB
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 10:02:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2C2D42083B
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 10:02:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 65229208FE
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 10:02:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727873AbgGPKCA (ORCPT
+        id S1728022AbgGPKCH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 06:02:00 -0400
-Received: from elvis.franken.de ([193.175.24.41]:38165 "EHLO elvis.franken.de"
+        Thu, 16 Jul 2020 06:02:07 -0400
+Received: from elvis.franken.de ([193.175.24.41]:38190 "EHLO elvis.franken.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726942AbgGPKB6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1727030AbgGPKB6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 16 Jul 2020 06:01:58 -0400
 Received: from uucp (helo=alpha)
         by elvis.franken.de with local-bsmtp (Exim 3.36 #1)
-        id 1jw0iB-0008Mc-00; Thu, 16 Jul 2020 12:01:55 +0200
+        id 1jw0iA-0008Mc-00; Thu, 16 Jul 2020 12:01:54 +0200
 Received: by alpha.franken.de (Postfix, from userid 1000)
-        id 0F33CC080E; Thu, 16 Jul 2020 11:52:14 +0200 (CEST)
-Date:   Thu, 16 Jul 2020 11:52:14 +0200
+        id 66B5CC07DD; Thu, 16 Jul 2020 11:39:40 +0200 (CEST)
+Date:   Thu, 16 Jul 2020 11:39:40 +0200
 From:   Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-To:     Guoyun Sun <sunguoyun@loongson.cn>
-Cc:     Paul Burton <paulburton@kernel.org>, linux-mips@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Tiezhu Yang <yangtiezhu@loongson.cn>
-Subject: Re: [PATCH] MIPS: fix vdso different address spaces
-Message-ID: <20200716095213.GD8455@alpha.franken.de>
-References: <1594706867-4426-1-git-send-email-sunguoyun@loongson.cn>
+To:     Paul Cercueil <paul@crapouillou.net>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        =?utf-8?B?5ZGo55Cw5p2w?= <zhouyanjie@wanyeetech.com>, od@zcrc.me,
+        linux-mips@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/7] dt-bindings: vendor-prefixes: Add YLM
+Message-ID: <20200716093940.GA8455@alpha.franken.de>
+References: <20200623182432.187843-1-paul@crapouillou.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1594706867-4426-1-git-send-email-sunguoyun@loongson.cn>
+In-Reply-To: <20200623182432.187843-1-paul@crapouillou.net>
 User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 14, 2020 at 02:07:47PM +0800, Guoyun Sun wrote:
-> From: Sunguoyun <sunguoyun@loongson.cn>
+On Tue, Jun 23, 2020 at 08:24:26PM +0200, Paul Cercueil wrote:
+> Shenzhen Yangliming Electronic Technology Co., Ltd., abbreviated YLM or
+> YLMChina, and known as Anbernic in the rest of the world, is a Chinese
+> manufacturer of handheld game consoles, some of which are known to be
+> running Linux.
 > 
-> sparse report build warning as follows:
-> arch/mips/vdso/vdso-n32-image.c:13:35:
-> incorrect type in assignment (different address spaces) @@
-> expected void *[usertype] vdso @@     got void [noderef] <asn:1> * @@
-> 
-> Reported-by: kernel test robot <lkp@intel.com>
-> 
-> Signed-off-by: Sunguoyun <sunguoyun@loongson.cn>
+> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
 > ---
->  arch/mips/vdso/genvdso.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>  Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
+>  1 file changed, 2 insertions(+)
 
-applied to mips-next.
+series applied to mips-next.
 
 Thomas.
 
