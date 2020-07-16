@@ -2,105 +2,80 @@ Return-Path: <SRS0=y5Sx=A3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0A2BC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 20:26:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C109AC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 20:29:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A551E207E8
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 20:26:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gA+yRPgZ"
+	by mail.kernel.org (Postfix) with ESMTP id A4B89207E8
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 20:29:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726514AbgGPU0k (ORCPT
+        id S1726141AbgGPU3l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 16:26:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46508 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725921AbgGPU0j (ORCPT
+        Thu, 16 Jul 2020 16:29:41 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:39027 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725921AbgGPU3k (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 16:26:39 -0400
-Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0BD14C061755;
-        Thu, 16 Jul 2020 13:26:39 -0700 (PDT)
-Received: by mail-lf1-x142.google.com with SMTP id i80so4611007lfi.13;
-        Thu, 16 Jul 2020 13:26:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=U6MZ/y/vPc6q78+jPG12T4yfylcbWZbgihagmhF1ua4=;
-        b=gA+yRPgZzqn5fKMZMo/S2JVYKAXcoeW74ALQSddU1jHtrEIMlxogLceEj9SrllM02k
-         qIJF7psdB+PldiFOps2dounuPdIP3iZCfBnn4kHrXskxGjB5AX3m+pDtXY1Zgss4L55z
-         HOAQk0tLv5VpfW21i9I3XHIAJ5kAFd9htOacywsaOMVi4B0ft9D046r7zS6tyNChxIIy
-         uvMz3O0b0KA08lIpsEFNgEczmuhH3MZ+cuAHI4m9BoCA98hQNJmh5q1HRrTjL45w190z
-         WLFQ3rnFyAPSfRKjD/ylru4OASJPfVKvI1lLCRfwC8Nnm2x+bXPYa28IGKH1hzvKMEEW
-         WV1Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=U6MZ/y/vPc6q78+jPG12T4yfylcbWZbgihagmhF1ua4=;
-        b=qx0ER/5l5i2fmQTkQLUolKKeDYlk07k2krfOiQZTtki3nffWobK1Ganr+fueBGBUWU
-         ftJ6qXCZVsRmRIBmlRh1X8vqHJInBv2Azw9YaBns7nVgG9effSaOh4269KsSoFFROPeF
-         TiCmVZYWP5aHwRFVzcbHcbo1FtR0VcnlEjh1Vb8HGuPXfTIxwwXo7SWBXTp9r0ytN5VC
-         W7AIFcDPxp3EsgrK6AucXQEgb0Vz89hXpziKGu7+NddVU4bqTMSAVJxap4OdyiLiF1VS
-         6aEsYgQmZJs1ODHukVvLOK3SeNlnwQgk9iXZIdgqctqNcvzGd1OjK5J6xwUZ8XONZS6e
-         g0Dg==
-X-Gm-Message-State: AOAM533gsqOwvpJJRiV3EAMxh55NoZAyygWRtTD95Fy63DDpcDF/LuGM
-        Tc3BzgDllQmNjDgN55d/ZSaZLh7t
-X-Google-Smtp-Source: ABdhPJy0enoMVs6BkDVaIJm0D5Yr9QDNFNLLIvHjUmf9593o8LzOQ4n67cUT0e7FYJseihDzuMNs1A==
-X-Received: by 2002:a19:814c:: with SMTP id c73mr2266198lfd.16.1594931196681;
-        Thu, 16 Jul 2020 13:26:36 -0700 (PDT)
-Received: from [192.168.2.145] (ppp91-76-4-184.pppoe.mtu-net.ru. [91.76.4.184])
-        by smtp.googlemail.com with ESMTPSA id w4sm1253214ljw.16.2020.07.16.13.26.35
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 16 Jul 2020 13:26:35 -0700 (PDT)
-Subject: Re: [RFC PATCH v3 14/18] gpu: host1x: mipi: Update
- tegra_mipi_request() to be node based
-To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
-        thierry.reding@gmail.com, jonathanh@nvidia.com, frankc@nvidia.com,
-        hverkuil@xs4all.nl, sakari.ailus@iki.fi, robh+dt@kernel.org,
-        helen.koike@collabora.com
-Cc:     sboyd@kernel.org, gregkh@linuxfoundation.org,
-        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-i2c@vger.kernel.org
-References: <1594786855-26506-1-git-send-email-skomatineni@nvidia.com>
- <1594786855-26506-15-git-send-email-skomatineni@nvidia.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <5542c166-5a60-a8c3-281b-5560b7c2dfc6@gmail.com>
-Date:   Thu, 16 Jul 2020 23:26:34 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Thu, 16 Jul 2020 16:29:40 -0400
+Received: from ip5f5af08c.dynamic.kabel-deutschland.de ([95.90.240.140] helo=wittgenstein)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1jwAVc-0007Lm-LN; Thu, 16 Jul 2020 20:29:36 +0000
+Date:   Thu, 16 Jul 2020 22:29:35 +0200
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Gabriel Krisman Bertazi <krisman@collabora.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Matthew Wilcox <willy@infradead.org>, tglx@linutronix.de,
+        linux-kernel@vger.kernel.org, kernel@collabora.com,
+        gofmanp@gmail.com, linux-api@vger.kernel.org, x86@kernel.org,
+        linux-kselftest@vger.kernel.org, shuah@kernel.org, jannh@google.com
+Subject: Re: [PATCH v4 0/2] Syscall User Redirection
+Message-ID: <20200716202935.yorxrz2om67r366x@wittgenstein>
+References: <20200716193141.4068476-1-krisman@collabora.com>
+ <202007161300.7452A2C5@keescook>
+ <20200716202234.wryj7pj7zmwcrxxx@wittgenstein>
+ <202007161324.E75E01B@keescook>
 MIME-Version: 1.0
-In-Reply-To: <1594786855-26506-15-git-send-email-skomatineni@nvidia.com>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Disposition: inline
+In-Reply-To: <202007161324.E75E01B@keescook>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-15.07.2020 07:20, Sowjanya Komatineni пишет:
-> Tegra CSI driver need a separate MIPI device for each channel as
-> calibration of corresponding MIPI pads for each channel should
-> happen independently.
+On Thu, Jul 16, 2020 at 01:25:43PM -0700, Kees Cook wrote:
+> On Thu, Jul 16, 2020 at 10:22:34PM +0200, Christian Brauner wrote:
+> > On Thu, Jul 16, 2020 at 01:04:38PM -0700, Kees Cook wrote:
+> > > On Thu, Jul 16, 2020 at 03:31:39PM -0400, Gabriel Krisman Bertazi wrote:
+> > > > This is v4 of Syscall User Redirection.  The implementation itself is
+> > > > not modified from v3, it only applies the latest round of reviews to the
+> > > > selftests.
+> > > > 
+> > > > __NR_syscalls is not really exported in header files other than
+> > > > asm-generic for every architecture, so it felt safer to optionally
+> > > > expose it with a fallback to a high value.
+> > > > 
+> > > > Also, I didn't expose tests for PR_GET as that is not currently
+> > > > implemented.  If possible, I'd have it supported by a future patchset,
+> > > > since it is not immediately necessary to support this feature.
+> > > 
+> > > Thanks! That all looks good to me.
+> > 
+> > Don't have any problem with this but did this ever get exposure on
+> > linux-api? This is the first time I see this pop up.
 > 
-> So, this patch updates tegra_mipi_request() API to add a device_node
-> pointer argument to allow creating mipi device for specific device
-> node rather than a device.
-> 
-> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
-> ---
+> I thought I'd added it to CC in the past, but that might have been other
+> recent unrelated threads. Does this need a full repost there too, you
+> think?
 
-Thanks!
+Nah, wasn't my intention to force a repost. Seems that several people
+have looked this over. :) Just curious why it didn't get to linux-api
+and we know quite some people who only do look at linux-api (for sanity). :)
 
-Reviewed-by: Dmitry Osipenko <digetx@gmail.com>
-
+Christian
