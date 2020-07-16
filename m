@@ -2,107 +2,134 @@ Return-Path: <SRS0=y5Sx=A3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
+X-Spam-Status: No, score=-8.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
 	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A784C433E5
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 15:22:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30293C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 15:22:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6C8BB2063A
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 15:22:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B5852065F
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 15:22:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Ftnj5nzs"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="plx+rFzx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729024AbgGPPWL (ORCPT
+        id S1729096AbgGPPWV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 11:22:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55890 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728911AbgGPPWK (ORCPT
+        Thu, 16 Jul 2020 11:22:21 -0400
+Received: from mail29.static.mailgun.info ([104.130.122.29]:64460 "EHLO
+        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728150AbgGPPWV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 11:22:10 -0400
-Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 89461C061755
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Jul 2020 08:22:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
-        :Reply-To:Content-ID:Content-Description;
-        bh=tMW+FSjHDJDd5sV7mMP8PFIFsHf/Bo6cCti4h2al50Y=; b=Ftnj5nzs4K7ODC7QCGM0rkVVkN
-        wcbHZpBzkKKlK/7BMXiwAGjl1hT1Vy0e99SZxNHhZEkcDDk4iVgf/pGy4H+GQ5C+mzMWwFcZmEdCV
-        I8xR9z12UhzHMB5j4b5LUTL9cr4BENvkCxiTv8k+pR703OrGzmwNE5LQ7xA0cJ/haNnhULehsKl39
-        /2xsYix8hmiW2htwfu5p3jcGk/JurDBWh3r7YwesHFfjSO0qk/6/jQaYrKZXuY6S5ji2MEFOwS0Kv
-        0aThAb4icQMHfk98+G1LXtWO5KH8qITNS6jrDfi/wNlZb41JVcLAE3b3S1BROzMboDvWjS5jTWJg9
-        F3kd+zDw==;
-Received: from [2601:1c0:6280:3f0::19c2]
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jw5i1-0007Za-5R; Thu, 16 Jul 2020 15:22:05 +0000
-Subject: Re: [PATCH] phy: sun4i-usb: explicitly include gpio/consumer.h
-To:     Vinod Koul <vkoul@kernel.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>
-Cc:     linux-kernel@vger.kernel.org, Maxime Ripard <mripard@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
+        Thu, 16 Jul 2020 11:22:21 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1594912940; h=In-Reply-To: Content-Type: MIME-Version:
+ References: Message-ID: Subject: Cc: To: From: Date: Sender;
+ bh=Fsjdjjd/Og6F+tby19z8oTo04GrQvO0K2CiurdVNlIQ=; b=plx+rFzx9DnFD7gtnZuSIC3e4ihce6pfmwZnhff47l6jwuenHnBZSfjvbcb+JiAA5rAxN3Y7
+ zRMXsFphTwHcZDxy6g0es1MMN3mwWHW8wXHQTr+pdojwWEbKkXG9tFL8AoYkBbdaZgyM6MZX
+ zY9+YO0QPtDrWfLU0fNG/jXL/tw=
+X-Mailgun-Sending-Ip: 104.130.122.29
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n11.prod.us-west-2.postgun.com with SMTP id
+ 5f106f4fee86618575d5d276 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Thu, 16 Jul 2020 15:16:31
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 97C25C433AF; Thu, 16 Jul 2020 15:16:30 +0000 (UTC)
+Received: from jcrouse1-lnx.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: jcrouse)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 0060BC433C9;
+        Thu, 16 Jul 2020 15:16:28 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 0060BC433C9
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=jcrouse@codeaurora.org
+Date:   Thu, 16 Jul 2020 09:16:25 -0600
+From:   Jordan Crouse <jcrouse@codeaurora.org>
+To:     Will Deacon <will@kernel.org>
+Cc:     Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
+        linux-arm-msm@vger.kernel.org, Joerg Roedel <joro@8bytes.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org,
+        John Stultz <john.stultz@linaro.org>,
+        freedreno@lists.freedesktop.org,
         linux-arm-kernel@lists.infradead.org
-References: <20200716062427.71763-1-vkoul@kernel.org>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <7d4fa99a-627b-67bb-33d6-85655deb15a5@infradead.org>
-Date:   Thu, 16 Jul 2020 08:22:01 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+Subject: Re: [Freedreno] [PATCH v9 4/7] iommu/arm-smmu: Add a pointer to the
+ attached device to smmu_domain
+Message-ID: <20200716151625.GA14526@jcrouse1-lnx.qualcomm.com>
+Mail-Followup-To: Will Deacon <will@kernel.org>,
+        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
+        linux-arm-msm@vger.kernel.org, Joerg Roedel <joro@8bytes.org>,
+        Robin Murphy <robin.murphy@arm.com>, linux-kernel@vger.kernel.org,
+        iommu@lists.linux-foundation.org,
+        John Stultz <john.stultz@linaro.org>,
+        freedreno@lists.freedesktop.org,
+        linux-arm-kernel@lists.infradead.org
+References: <20200626200042.13713-1-jcrouse@codeaurora.org>
+ <20200626200042.13713-5-jcrouse@codeaurora.org>
+ <20200713150901.GA3072@willie-the-truck>
+ <20200713171917.GA3815@jcrouse1-lnx.qualcomm.com>
+ <20200716085053.GB6771@willie-the-truck>
 MIME-Version: 1.0
-In-Reply-To: <20200716062427.71763-1-vkoul@kernel.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200716085053.GB6771@willie-the-truck>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/15/20 11:24 PM, Vinod Koul wrote:
-> Driver uses GPIO functions but doesn't include the header explcitly. Add
-> that to fix build errors when GPIOLIB is disabled.
+On Thu, Jul 16, 2020 at 09:50:53AM +0100, Will Deacon wrote:
+> On Mon, Jul 13, 2020 at 11:19:17AM -0600, Jordan Crouse wrote:
+> > On Mon, Jul 13, 2020 at 04:09:02PM +0100, Will Deacon wrote:
+> > > On Fri, Jun 26, 2020 at 02:00:38PM -0600, Jordan Crouse wrote:
+> > > > diff --git a/drivers/iommu/arm-smmu.h b/drivers/iommu/arm-smmu.h
+> > > > index 5f2de20e883b..d33cfe26b2f5 100644
+> > > > --- a/drivers/iommu/arm-smmu.h
+> > > > +++ b/drivers/iommu/arm-smmu.h
+> > > > @@ -345,6 +345,7 @@ struct arm_smmu_domain {
+> > > >  	struct mutex			init_mutex; /* Protects smmu pointer */
+> > > >  	spinlock_t			cb_lock; /* Serialises ATS1* ops and TLB syncs */
+> > > >  	struct iommu_domain		domain;
+> > > > +	struct device			*dev;	/* Device attached to this domain */
+> > > 
+> > > This really doesn't feel right to me -- you can generally have multiple
+> > > devices attached to a domain and they can come and go without the domain
+> > > being destroyed. Perhaps you could instead identify the GPU during
+> > > cfg_probe() and squirrel that information away somewhere?
+> > 
+> > I need some help here. The SMMU device (qcom,adreno-smmu) will have at least two
+> > stream ids from two different platform devices (GPU and GMU) and I need to
+> > configure split-pagetable and stall/terminate differently on the two domains.
 > 
-> drivers/phy/allwinner/phy-sun4i-usb.c:367:11: error: implicit
-> declaration of function ‘gpiod_get_value_cansleep’; did you mean
-> ‘gpio_get_value_cansleep’? [-Werror=implicit-function-declaration]
-> drivers/phy/allwinner/phy-sun4i-usb.c:707:22: error: implicit
-> declaration of function ‘devm_gpiod_get_optional’; did you mean
-> ‘devm_clk_get_optional’? [-Werror=implicit-function-declaration]
-> drivers/phy/allwinner/phy-sun4i-usb.c:708:11: error: ‘GPIOD_IN’
-> undeclared (first use in this function); did you mean ‘GPIOF_IN’?
-> drivers/phy/allwinner/phy-sun4i-usb.c:815:21: error: implicit
-> declaration of function ‘gpiod_to_irq’; did you mean ‘gpio_to_irq’?
-> [-Werror=implicit-function-declaration]
+> Hmm. How does the GPU driver know which context bank is assigned to the GPU
+> and which one is assigned to the GMU? I assume it needs this information so
+> that it can play its nasty tricks with the TTBR registers?
 > 
-> Reported-by: Randy Dunlap <rdunlap@infradead.org>
-> Signed-off-by: Vinod Koul <vkoul@kernel.org>
+> I ask because if we need to guarantee stability of the context-bank
+> assignment, then you could match on that in the ->init_context() callback,
+> but now I worry that it currently works by luck :/
+ 
+Its more like "educated" luck. If we assign the domains in the right order we
+know that the GPU will be on context bank 0 but you are entirely right that if
+everything doesn't go exactly the way we need things go badly.
 
-Acked-by: Randy Dunlap <rdunlap@infradead.org> # build-tested
+Some targets do have the ability to reprogram which context bank is used but
+that would require a domain attribute from the SMMU driver to communicate that
+information back to the GPU driver.
 
-Thanks.
+> Do we need to add an extra callback to allocate the context bank?
 
-> ---
->  drivers/phy/allwinner/phy-sun4i-usb.c | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/drivers/phy/allwinner/phy-sun4i-usb.c b/drivers/phy/allwinner/phy-sun4i-usb.c
-> index 7e09ad6a0b42..585d0a59e712 100644
-> --- a/drivers/phy/allwinner/phy-sun4i-usb.c
-> +++ b/drivers/phy/allwinner/phy-sun4i-usb.c
-> @@ -16,6 +16,7 @@
->  #include <linux/delay.h>
->  #include <linux/err.h>
->  #include <linux/extcon-provider.h>
-> +#include <linux/gpio/consumer.h>
->  #include <linux/io.h>
->  #include <linux/interrupt.h>
->  #include <linux/kernel.h>
-> 
+That seems like a reasonable option. That seems like it would work with legacy
+targets and rely less on luck.
 
+Jordan
 
 -- 
-~Randy
+The Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
