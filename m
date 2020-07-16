@@ -2,215 +2,177 @@ Return-Path: <SRS0=y5Sx=A3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B21BAC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 02:35:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB0EDC433E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 02:37:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 81EF2207F9
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 02:35:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uNLf3n0D"
+	by mail.kernel.org (Postfix) with ESMTP id 8C04220775
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 02:37:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728075AbgGPCfV (ORCPT
+        id S1727788AbgGPChk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 22:35:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50254 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726479AbgGPCfU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 22:35:20 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 30675C061755;
-        Wed, 15 Jul 2020 19:35:20 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id o11so5231781wrv.9;
-        Wed, 15 Jul 2020 19:35:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:subject:to:cc:references:in-reply-to:mime-version
-         :message-id:content-transfer-encoding;
-        bh=zXeIy2ePTaW1WcCtqXXzYiM+52x43mwukDkyOFdBArE=;
-        b=uNLf3n0D7Qu4h1hbLPUuunRiVCBX2Lyi8LRRfrkUyw/6bxvl47ZrFT7AC0G7UdacXX
-         c6+QrsjNTwoOq37N5uFU3QbbBZ5cRutFyI9ZXl2FVTjma5MpfbtwJA9JB75KD3mnpInx
-         HcZiDM+TqoKevx4n6G0jFXwA3RYHSIbITjePdij1I8rqNjv3lGDhPeQb/4sr19zZ1D43
-         xEuD1M/m9160XiL7U4s0w5QSSil+NxJItFWA0LUt+cI91b3UmLubjqFi5eRUOzZBUeW4
-         2ReYm7yv5QnD3OD5iJ+QI454gI1nvkIo/ThBY1fJjyr0XfrD+eFc/s0fgm1bT2X+ofsi
-         btdQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:subject:to:cc:references:in-reply-to
-         :mime-version:message-id:content-transfer-encoding;
-        bh=zXeIy2ePTaW1WcCtqXXzYiM+52x43mwukDkyOFdBArE=;
-        b=oQFy8MywTeTNIbNoooD6yV0SUzKOrkMjVi6XUO2U8GugG97xC2N9tAd4KF9tcTCngv
-         8i31ZIdlFAZSpsfSpaaCylafdFEjKmBZefk/6FfzYCv2EptqPutW7Q4j0WAcZZzB0WHc
-         Yo8BuGU/tykA1L+txFutcd40QPSVLH810iDnqEuYTmTG7bSJjk1JULZvOV/GI4hL4oWi
-         kUpvMdqWGnTtMyCLWF7AU8ZAg6mOxmDyILfZe0Xr6OZ1GzfjDbgWDZUL0slIw4jTuCT2
-         BEUTmLOj5xquzx7gh79BSIfH+sU+o1syNrZ2YStIKyP23WKJW+RW38o+Y/jm10e668vc
-         pgkg==
-X-Gm-Message-State: AOAM533Cp4182F/4S8vW0EM6uq1rBU4V+aj8cfNQRl+h6HIgHOax5tl6
-        2iAuQEGqoniavT+c/N8HcPk=
-X-Google-Smtp-Source: ABdhPJyExXtlVi+Zc+5Zqws9ZmSeFfANLu2ZDScXx6Mtc2Gkhtt4LsfwhHFZsu0tuLx0owk7AOkMTg==
-X-Received: by 2002:adf:e80d:: with SMTP id o13mr2571048wrm.112.1594866918928;
-        Wed, 15 Jul 2020 19:35:18 -0700 (PDT)
-Received: from localhost (110-174-173-27.tpgi.com.au. [110.174.173.27])
-        by smtp.gmail.com with ESMTPSA id g13sm6584482wro.84.2020.07.15.19.35.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 15 Jul 2020 19:35:18 -0700 (PDT)
-Date:   Thu, 16 Jul 2020 12:35:12 +1000
-From:   Nicholas Piggin <npiggin@gmail.com>
-Subject: Re: [RFC PATCH 7/7] lazy tlb: shoot lazies, a non-refcounting lazy
- tlb option
-To:     Andy Lutomirski <luto@amacapital.net>
-Cc:     Anton Blanchard <anton@ozlabs.org>, Arnd Bergmann <arnd@arndb.de>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux-MM <linux-mm@kvack.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Peter Zijlstra <peterz@infradead.org>, X86 ML <x86@kernel.org>
-References: <1594708054.04iuyxuyb5.astroid@bobo.none>
-        <6D3D1346-DB1E-43EB-812A-184918CCC16A@amacapital.net>
-In-Reply-To: <6D3D1346-DB1E-43EB-812A-184918CCC16A@amacapital.net>
+        Wed, 15 Jul 2020 22:37:40 -0400
+Received: from mail.loongson.cn ([114.242.206.163]:40816 "EHLO loongson.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726998AbgGPChk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jul 2020 22:37:40 -0400
+Received: from [10.130.0.52] (unknown [113.200.148.30])
+        by mail.loongson.cn (Coremail) with SMTP id AQAAf9CxINdevQ9fumYFAA--.6663S3;
+        Thu, 16 Jul 2020 10:37:19 +0800 (CST)
+Subject: Re: [PATCH v3] PCI: loongson: Use DECLARE_PCI_FIXUP_EARLY for
+ bridge_class_quirk()
+To:     Huacai Chen <chenhc@lemote.com>
+References: <1594865946-15188-1-git-send-email-yangtiezhu@loongson.cn>
+ <CAAhV-H7_J6oJOYujJqQqm-bpKH-ZKOy3y2yX0TFWzs5ywh=z_g@mail.gmail.com>
+Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        "open list:MIPS" <linux-mips@vger.kernel.org>,
+        linux-pci@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        Xuefeng Li <lixuefeng@loongson.cn>
+From:   Tiezhu Yang <yangtiezhu@loongson.cn>
+Message-ID: <86b3d3bb-afd0-85a7-ffc3-959248ec450c@loongson.cn>
+Date:   Thu, 16 Jul 2020 10:37:18 +0800
+User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
+ Thunderbird/45.4.0
 MIME-Version: 1.0
-Message-Id: <1594866490.ultl891sgk.astroid@bobo.none>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <CAAhV-H7_J6oJOYujJqQqm-bpKH-ZKOy3y2yX0TFWzs5ywh=z_g@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID: AQAAf9CxINdevQ9fumYFAA--.6663S3
+X-Coremail-Antispam: 1UD129KBjvJXoWxJFyxAr17ur47XF15tr4Utwb_yoW7Jr1DpF
+        W5Xa17KF4FqrW5CwnFqa1Dua4avF9xAFykC395W3ZF9asxua45WrW7KFyFvF45Jr4kXF4j
+        q3ZrC3WxGa15ur7anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDU0xBIdaVrnRJUUUBF14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+        rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+        1l84ACjcxK6xIIjxv20xvE14v26r1I6r4UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4j
+        6F4UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gr
+        1j6F4UJwAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv
+        7VC0I7IYx2IY67AKxVWUXVWUAwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r
+        1j6r4UM4x0Y48IcVAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwACI402YVCY1x02628v
+        n2kIc2xKxwCYjI0SjxkI62AI1cAE67vIY487MxkIecxEwVAFwVW8JwCF04k20xvY0x0EwI
+        xGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480
+        Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7
+        IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k2
+        6cxKx2IYs7xG6rWUJVWrZr1UMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7
+        CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0JUyxRDUUUUU=
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Excerpts from Andy Lutomirski's message of July 14, 2020 10:46 pm:
->=20
->=20
->> On Jul 13, 2020, at 11:31 PM, Nicholas Piggin <npiggin@gmail.com> wrote:
->>=20
->> =EF=BB=BFExcerpts from Nicholas Piggin's message of July 14, 2020 3:04 p=
-m:
->>> Excerpts from Andy Lutomirski's message of July 14, 2020 4:18 am:
->>>>=20
->>>>> On Jul 13, 2020, at 9:48 AM, Nicholas Piggin <npiggin@gmail.com> wrot=
-e:
->>>>>=20
->>>>> =EF=BB=BFExcerpts from Andy Lutomirski's message of July 14, 2020 1:5=
-9 am:
->>>>>>> On Thu, Jul 9, 2020 at 6:57 PM Nicholas Piggin <npiggin@gmail.com> =
-wrote:
->>>>>>>=20
->>>>>>> On big systems, the mm refcount can become highly contented when do=
-ing
->>>>>>> a lot of context switching with threaded applications (particularly
->>>>>>> switching between the idle thread and an application thread).
->>>>>>>=20
->>>>>>> Abandoning lazy tlb slows switching down quite a bit in the importa=
-nt
->>>>>>> user->idle->user cases, so so instead implement a non-refcounted sc=
-heme
->>>>>>> that causes __mmdrop() to IPI all CPUs in the mm_cpumask and shoot =
-down
->>>>>>> any remaining lazy ones.
->>>>>>>=20
->>>>>>> On a 16-socket 192-core POWER8 system, a context switching benchmar=
-k
->>>>>>> with as many software threads as CPUs (so each switch will go in an=
-d
->>>>>>> out of idle), upstream can achieve a rate of about 1 million contex=
-t
->>>>>>> switches per second. After this patch it goes up to 118 million.
->>>>>>>=20
->>>>>>=20
->>>>>> I read the patch a couple of times, and I have a suggestion that cou=
-ld
->>>>>> be nonsense.  You are, effectively, using mm_cpumask() as a sort of
->>>>>> refcount.  You're saying "hey, this mm has no more references, but i=
-t
->>>>>> still has nonempty mm_cpumask(), so let's send an IPI and shoot down
->>>>>> those references too."  I'm wondering whether you actually need the
->>>>>> IPI.  What if, instead, you actually treated mm_cpumask as a refcoun=
-t
->>>>>> for real?  Roughly, in __mmdrop(), you would only free the page tabl=
-es
->>>>>> if mm_cpumask() is empty.  And, in the code that removes a CPU from
->>>>>> mm_cpumask(), you would check if mm_users =3D=3D 0 and, if so, check=
- if
->>>>>> you just removed the last bit from mm_cpumask and potentially free t=
-he
->>>>>> mm.
->>>>>>=20
->>>>>> Getting the locking right here could be a bit tricky -- you need to
->>>>>> avoid two CPUs simultaneously exiting lazy TLB and thinking they
->>>>>> should free the mm, and you also need to avoid an mm with mm_users
->>>>>> hitting zero concurrently with the last remote CPU using it lazily
->>>>>> exiting lazy TLB.  Perhaps this could be resolved by having mm_count
->>>>>> =3D=3D 1 mean "mm_cpumask() is might contain bits and, if so, it own=
-s the
->>>>>> mm" and mm_count =3D=3D 0 meaning "now it's dead" and using some car=
-eful
->>>>>> cmpxchg or dec_return to make sure that only one CPU frees it.
->>>>>>=20
->>>>>> Or maybe you'd need a lock or RCU for this, but the idea would be to
->>>>>> only ever take the lock after mm_users goes to zero.
->>>>>=20
->>>>> I don't think it's nonsense, it could be a good way to avoid IPIs.
->>>>>=20
->>>>> I haven't seen much problem here that made me too concerned about IPI=
-s=20
->>>>> yet, so I think the simple patch may be good enough to start with
->>>>> for powerpc. I'm looking at avoiding/reducing the IPIs by combining t=
-he
->>>>> unlazying with the exit TLB flush without doing anything fancy with
->>>>> ref counting, but we'll see.
->>>>=20
->>>> I would be cautious with benchmarking here. I would expect that the
->>>> nasty cases may affect power consumption more than performance =E2=80=
-=94 the=20
->>>> specific issue is IPIs hitting idle cores, and the main effects are to=
-=20
->>>> slow down exit() a bit but also to kick the idle core out of idle.=20
->>>> Although, if the idle core is in a deep sleep, that IPI could be=20
->>>> *very* slow.
->>>=20
->>> It will tend to be self-limiting to some degree (deeper idle cores
->>> would tend to have less chance of IPI) but we have bigger issues on
->>> powerpc with that, like broadcast IPIs to the mm cpumask for THP
->>> management. Power hasn't really shown up as an issue but powerpc
->>> CPUs may have their own requirements and issues there, shall we say.
->>>=20
->>>> So I think it=E2=80=99s worth at least giving this a try.
->>>=20
->>> To be clear it's not a complete solution itself. The problem is of=20
->>> course that mm cpumask gives you false negatives, so the bits
->>> won't always clean up after themselves as CPUs switch away from their
->>> lazy tlb mms.
->>=20
->> ^^
->>=20
->> False positives: CPU is in the mm_cpumask, but is not using the mm
->> as a lazy tlb. So there can be bits left and never freed.
->>=20
->> If you closed the false positives, you're back to a shared mm cache
->> line on lazy mm context switches.
->=20
-> x86 has this exact problem. At least no more than 64*8 CPUs share the cac=
-he line :)
->=20
-> Can your share your benchmark?
+On 07/16/2020 10:21 AM, Huacai Chen wrote:
+> Hi, Tiezhu,
+>
+> You don't need to use the lower case in the title, "Loongson" is just
+> fine (and is recommended).
 
-Just testing the IPI rates (on a smaller 176 CPU system), on a
-kernel compile, it causes about 300 shootdown interrupts (not
-300 broadcasts but total interrupts).
+Hi Huacai,
 
-And very short lived fork;exec;exit things like typical scripting
-commands doesn't typically generate any.
+Thanks for your reply.
 
-So yeah the really high exit rate things self-limit pretty well.
+In the first version of this patch, I received the following reply by Bjorn:
 
-I documented the concern and added a few of the possible ways to
-further reduce IPIs in the comments though.
+[Subject line:
+
+   PCI: loongson: Use DECLARE_PCI_FIXUP_EARLY for bridge_class_quirk()
+
+(Driver names are conventionally lower case.)
+
+Lorenzo will probably silently fix this when applying, so this is
+mostly just a reminder in case you need to revise this or for future
+patches.]
+
+https://lore.kernel.org/patchwork/patch/1254407/
+
+I also checked the git log of drivers/pci/controller:
+
+[yangtiezhu@linux linux.git]$ git log --oneline drivers/pci/controller | 
+grep "PCI:" | head
+8d7e33d PCI: uniphier: Add Socionext UniPhier Pro5 PCIe endpoint 
+controller driver
+fcee90c PCI: tegra: Fix runtime PM imbalance on error
+3e5095e PCI: vmd: Filter resource type bits from shadow register
+1c1dbb2 PCI: tegra194: Fix runtime PM imbalance on error
+d0684fd0 PCI: hv: Use struct_size() helper
+1f58cca PCI: Add Loongson PCI Controller support
+03f8c1b3 PCI: dwc: Use private data pointer of "struct irq_domain" to 
+get pcie_port
+87dccf0 PCI: amlogic: meson: Don't use FAST_LINK_MODE to set up link
+0414b93 PCI: dwc: Fix inner MSI IRQ domain registration
+c8a1197 PCI: dwc: pci-dra7xx: Use devm_platform_ioremap_resource_byname()
+
+So use lower case "loongson" may be proper here.
 
 Thanks,
-Nick
+Tiezhu
+
+>
+> On Thu, Jul 16, 2020 at 10:19 AM Tiezhu Yang <yangtiezhu@loongson.cn> wrote:
+>> According to the datasheet of Loongson LS7A bridge chip, the old version
+>> of Loongson LS7A PCIE port has a hardware bug about PCI class. As far as
+>> I know, the latest version has already fixed this bug.
+>>
+>> In order to maintain downward compatibility, use DECLARE_PCI_FIXUP_EARLY
+>> instead of DECLARE_PCI_FIXUP_HEADER for bridge_class_quirk() to fix it as
+>> early as possible.
+>>
+>> Otherwise, in the function pci_setup_device(), the related code about
+>> "dev->class" such as "class = dev->class >> 8;" and "dev->transparent
+>> = ((dev->class & 0xff) == 1);" maybe get wrong value due to without
+>> EARLY fixup.
+>>
+>> By the way, we can see that the PCI class fixup of other controllers are
+>> all EARLY fixups:
+>>
+>> [root@linux linux.git]# grep -rn -A 3 "PCI_CLASS_BRIDGE_PCI << 8" drivers/pci/controller/ | grep EARLY
+>> drivers/pci/controller/pcie-tango.c-327-DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_SIGMA, 0x0024, tango_fixup_class);
+>> drivers/pci/controller/pcie-tango.c-328-DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_SIGMA, 0x0028, tango_fixup_class);
+>> drivers/pci/controller/pci-tegra.c-775-DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_NVIDIA, 0x0bf0, tegra_pcie_fixup_class);
+>> drivers/pci/controller/pci-tegra.c-776-DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_NVIDIA, 0x0bf1, tegra_pcie_fixup_class);
+>> drivers/pci/controller/dwc/pcie-qcom.c-1442-DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_QCOM, 0x0101, qcom_fixup_class);
+>> drivers/pci/controller/dwc/pcie-qcom.c-1443-DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_QCOM, 0x0104, qcom_fixup_class);
+>> drivers/pci/controller/pcie-iproc-bcma.c-23-DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_BROADCOM, 0x8011, bcma_pcie2_fixup_class);
+>> drivers/pci/controller/pcie-iproc-bcma.c-24-DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_BROADCOM, 0x8012, bcma_pcie2_fixup_class);
+>>
+>> Fixes: 1f58cca5cf2b ("PCI: Add Loongson PCI Controller support")
+>> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+>> ---
+>>
+>> v2: Modify the patch subject used with lower case "loongson"
+>>
+>> v3: Update the commit message
+>>
+>>   drivers/pci/controller/pci-loongson.c | 6 +++---
+>>   1 file changed, 3 insertions(+), 3 deletions(-)
+>>
+>> diff --git a/drivers/pci/controller/pci-loongson.c b/drivers/pci/controller/pci-loongson.c
+>> index 459009c..58b862a 100644
+>> --- a/drivers/pci/controller/pci-loongson.c
+>> +++ b/drivers/pci/controller/pci-loongson.c
+>> @@ -37,11 +37,11 @@ static void bridge_class_quirk(struct pci_dev *dev)
+>>   {
+>>          dev->class = PCI_CLASS_BRIDGE_PCI << 8;
+>>   }
+>> -DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_LOONGSON,
+>> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
+>>                          DEV_PCIE_PORT_0, bridge_class_quirk);
+>> -DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_LOONGSON,
+>> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
+>>                          DEV_PCIE_PORT_1, bridge_class_quirk);
+>> -DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_LOONGSON,
+>> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
+>>                          DEV_PCIE_PORT_2, bridge_class_quirk);
+>>
+>>   static void system_bus_quirk(struct pci_dev *pdev)
+>> --
+>> 2.1.0
+>>
+
