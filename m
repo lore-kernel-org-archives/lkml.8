@@ -2,144 +2,179 @@ Return-Path: <SRS0=y5Sx=A3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EBEDFC433E4
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 13:36:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6A0EC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 13:33:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CAD2720842
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 13:36:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="voqqdiqO"
+	by mail.kernel.org (Postfix) with ESMTP id B063D20760
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 13:33:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728717AbgGPNgv (ORCPT
+        id S1728150AbgGPNdI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 09:36:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39502 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728260AbgGPNgu (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 09:36:50 -0400
-Received: from mail-qv1-xf41.google.com (mail-qv1-xf41.google.com [IPv6:2607:f8b0:4864:20::f41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 84402C08C5C0
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Jul 2020 06:36:50 -0700 (PDT)
-Received: by mail-qv1-xf41.google.com with SMTP id p7so2688201qvl.4
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Jul 2020 06:36:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=6aq1gxLlCQK8XhsdwZ3YqrWIC5XXHCM06bHTQ9xWYQc=;
-        b=voqqdiqO2d2c7Lb6zYlFDZcOuUpzAlEMW0o94zl8C+kidNqA1TSDQyciGHybaUX7NB
-         dvypIDKKqk6APBuPrfEjnM2ZeUbiAkToqE76Xd/m/KsokB6GVBcoPaKj+RlhJJeth63v
-         Go3xiF3ToRSz3qlKoKlu3sBhW2rMlz2M/pBBw=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=6aq1gxLlCQK8XhsdwZ3YqrWIC5XXHCM06bHTQ9xWYQc=;
-        b=qQrk2h6WC+IXON9KFTBZV7P+2bP/58veICY0BRoQHU1JEMooc3nmSfvCc3QhFWAAUo
-         JCu7fP2q/Awzmm1Q5ahlklFiUJXiuTOZuPMO4xKYz4xFcDkqtfhy6U1QwIuTv5SEzyFm
-         m5s73jl3yd368jFxN5ksU62n9MegPTcCLcfABsK3CcDda98ZHL2Te3mnYxlVd8YTp0VN
-         RfvqJe9j6aFPRXrnmiAbizpkhAZNMP9oZXZ3eswJyY93JOOxHVbkNZHpXN7MVtfPPwvD
-         LieGp7Jv8qmCdfw8O9UQwX1Se6cGTGOI7grECI2I2p6HY3XP3ChVwJ+ACqvqjVfOVyYt
-         Xw7w==
-X-Gm-Message-State: AOAM531qGctspkeC9xn4vdRK9vFlMb0Rj37djiK3P7RGdrPNx5pl6EVH
-        Ele6fsVmB4PTtnRh0MK3ai42cQ==
-X-Google-Smtp-Source: ABdhPJyvmYE8tl+5jdGs3PA4YDZHp+glxE8uFXeEo/ltW9QL85Nyr6Lvai+kPlsNjjTSjr4iipqBYg==
-X-Received: by 2002:a0c:e80c:: with SMTP id y12mr4338586qvn.146.1594906609571;
-        Thu, 16 Jul 2020 06:36:49 -0700 (PDT)
-Received: from localhost ([2620:15c:6:12:cad3:ffff:feb3:bd59])
-        by smtp.gmail.com with ESMTPSA id x13sm7378525qts.57.2020.07.16.06.36.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 16 Jul 2020 06:36:48 -0700 (PDT)
-Date:   Thu, 16 Jul 2020 09:36:47 -0400
-From:   Joel Fernandes <joel@joelfernandes.org>
-To:     Uladzislau Rezki <urezki@gmail.com>
-Cc:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        LKML <linux-kernel@vger.kernel.org>, RCU <rcu@vger.kernel.org>,
-        linux-mm <linux-mm@kvack.org>,
-        "Paul E . McKenney" <paulmck@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "Theodore Y . Ts'o" <tytso@mit.edu>,
-        Matthew Wilcox <willy@infradead.org>,
-        Oleksiy Avramchenko <oleksiy.avramchenko@sonymobile.com>
-Subject: Re: [PATCH 1/1] rcu/tree: Drop the lock before entering to page
- allocator
-Message-ID: <20200716133647.GA242690@google.com>
-References: <20200715183537.4010-1-urezki@gmail.com>
- <20200715185628.7b4k3o5efp4gnbla@linutronix.de>
- <CAEXW_YRoTvQfqqcM9fi+MkMxCPEaoJh4zHRM3qNYkv=-nAVuBQ@mail.gmail.com>
- <20200716091913.GA28595@pc636>
+        Thu, 16 Jul 2020 09:33:08 -0400
+Received: from lhrrgout.huawei.com ([185.176.76.210]:2492 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725975AbgGPNdI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jul 2020 09:33:08 -0400
+Received: from lhreml724-chm.china.huawei.com (unknown [172.18.7.108])
+        by Forcepoint Email with ESMTP id 9F5A2950D01906284ED5;
+        Thu, 16 Jul 2020 14:33:06 +0100 (IST)
+Received: from [127.0.0.1] (10.210.168.254) by lhreml724-chm.china.huawei.com
+ (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1913.5; Thu, 16 Jul
+ 2020 14:33:05 +0100
+Subject: Re: [PATCH 0/4] iommu/arm-smmu-v3: Improve cmdq lock efficiency
+To:     Will Deacon <will@kernel.org>
+CC:     <robin.murphy@arm.com>, <joro@8bytes.org>, <trivial@kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <iommu@lists.linux-foundation.org>, <linux-kernel@vger.kernel.org>,
+        <linuxarm@huawei.com>, <maz@kernel.org>
+References: <1592846920-45338-1-git-send-email-john.garry@huawei.com>
+ <20200716101940.GA7036@willie-the-truck>
+ <20200716102233.GC7036@willie-the-truck>
+ <20200716102814.GD7036@willie-the-truck>
+From:   John Garry <john.garry@huawei.com>
+Message-ID: <54b0c8b9-d079-f832-2338-11cf6b09fa00@huawei.com>
+Date:   Thu, 16 Jul 2020 14:31:17 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200716091913.GA28595@pc636>
+In-Reply-To: <20200716102814.GD7036@willie-the-truck>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.210.168.254]
+X-ClientProxiedBy: lhreml714-chm.china.huawei.com (10.201.108.65) To
+ lhreml724-chm.china.huawei.com (10.201.108.75)
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 16, 2020 at 11:19:13AM +0200, Uladzislau Rezki wrote:
-> On Wed, Jul 15, 2020 at 07:13:33PM -0400, Joel Fernandes wrote:
-> > On Wed, Jul 15, 2020 at 2:56 PM Sebastian Andrzej Siewior
-> > <bigeasy@linutronix.de> wrote:
-> > >
-> > > On 2020-07-15 20:35:37 [+0200], Uladzislau Rezki (Sony) wrote:
-> > > > @@ -3306,6 +3307,9 @@ kvfree_call_rcu_add_ptr_to_bulk(struct kfree_rcu_cpu *krcp, void *ptr)
-> > > >                       if (IS_ENABLED(CONFIG_PREEMPT_RT))
-> > > >                               return false;
-> > > >
-> > > > +                     preempt_disable();
-> > > > +                     krc_this_cpu_unlock(*krcp, *flags);
-> > >
-> > > Now you enter memory allocator with disabled preemption. This isn't any
-> > > better but we don't have a warning for this yet.
-> > > What happened to the part where I asked for a spinlock_t?
-> > 
-> > Ulad,
-> > Wouldn't the replacing of preempt_disable() with migrate_disable()
-> > above resolve Sebastian's issue?
-> >
-> This for regular kernel only. That means that migrate_disable() is
-> equal to preempt_disable(). So, no difference.
+On 16/07/2020 11:28, Will Deacon wrote:
+> On Thu, Jul 16, 2020 at 11:22:33AM +0100, Will Deacon wrote:
+>> On Thu, Jul 16, 2020 at 11:19:41AM +0100, Will Deacon wrote:
+>>> On Tue, Jun 23, 2020 at 01:28:36AM +0800, John Garry wrote:
+>>>> As mentioned in [0], the CPU may consume many cycles processing
+>>>> arm_smmu_cmdq_issue_cmdlist(). One issue we find is the cmpxchg() loop to
+>>>> get space on the queue takes approx 25% of the cycles for this function.
+>>>>
+>>>> This series removes that cmpxchg().
+>>>
+>>> How about something much simpler like the diff below?
+>>
+>> Ah, scratch that, I don't drop the lock if we fail the cas with it held.
+>> Let me hack it some more (I have no hardware so I can only build-test this).
+> 
+> Right, second attempt...
+> 
+> Will
 
-But this will force preempt_disable() context into the low-level page
-allocator on -RT kernels which I believe is not what Sebastian wants. The
-whole reason why the spinlock vs raw-spinlock ordering matters is, because on
-RT, the spinlock is sleeping. So if you have:
+Unfortunately that hangs my machine during boot:
 
-raw_spin_lock(..);
-spin_lock(..);   <-- can sleep on RT, so Sleep while atomic (SWA) violation.
+[10.902893] 00:01: ttyS0 at MMIO 0x3f00003f8 (irq = 6, base_baud = 
+115200) is a 16550A
+[10.912048] SuperH (H)SCI(F) driver initialized
+[10.916811] msm_serial: driver initialized
+[10.921371] arm-smmu-v3 arm-smmu-v3.0.auto: option mask 0x0
+[10.926946] arm-smmu-v3 arm-smmu-v3.0.auto: ias 48-bit, oas 48-bit 
+(features 0x00000fef)
+[10.935374] arm-smmu-v3 arm-smmu-v3.0.auto: allocated 65536 entries for cmdq
+[10.942522] arm-smmu-v3 arm-smmu-v3.0.auto: allocated 32768 entries for evtq
 
-That's the main reason you are dropping the lock before calling the
-allocator.
 
-But if you call preempt_disable() and drop the lock, then that may fix the
-lock ordering violation only to reintroduce the SWA issue, which is why you
-wanted to drop the lock in the first place.
+> 
+> --->8
+> 
+> diff --git a/drivers/iommu/arm-smmu-v3.c b/drivers/iommu/arm-smmu-v3.c
+> index f578677a5c41..e6bcddd6ef69 100644
+> --- a/drivers/iommu/arm-smmu-v3.c
+> +++ b/drivers/iommu/arm-smmu-v3.c
+> @@ -560,6 +560,7 @@ struct arm_smmu_cmdq {
+>   	atomic_long_t			*valid_map;
+>   	atomic_t			owner_prod;
+>   	atomic_t			lock;
+> +	spinlock_t			slock;
+>   };
+>   
+>   struct arm_smmu_cmdq_batch {
+> @@ -1378,7 +1379,7 @@ static int arm_smmu_cmdq_issue_cmdlist(struct arm_smmu_device *smmu,
+>   	u64 cmd_sync[CMDQ_ENT_DWORDS];
+>   	u32 prod;
+>   	unsigned long flags;
+> -	bool owner;
+> +	bool owner, locked = false;
+>   	struct arm_smmu_cmdq *cmdq = &smmu->cmdq;
+>   	struct arm_smmu_ll_queue llq = {
+>   		.max_n_shift = cmdq->q.llq.max_n_shift,
+> @@ -1387,27 +1388,38 @@ static int arm_smmu_cmdq_issue_cmdlist(struct arm_smmu_device *smmu,
+>   
+>   	/* 1. Allocate some space in the queue */
+>   	local_irq_save(flags);
+> -	llq.val = READ_ONCE(cmdq->q.llq.val);
+>   	do {
+>   		u64 old;
+> +		llq.val = READ_ONCE(cmdq->q.llq.val);
+>   
+> -		while (!queue_has_space(&llq, n + sync)) {
+> +		if (queue_has_space(&llq, n + sync))
+> +			goto try_cas;
+> +
+> +		if (locked)
+> +			spin_unlock(&cmdq->slock);
+> +
+> +		do {
+>   			local_irq_restore(flags);
+>   			if (arm_smmu_cmdq_poll_until_not_full(smmu, &llq))
+>   				dev_err_ratelimited(smmu->dev, "CMDQ timeout\n");
+>   			local_irq_save(flags);
+> -		}
+> +		} while (!queue_has_space(&llq, n + sync));
+>   
+> +try_cas:
+>   		head.cons = llq.cons;
+>   		head.prod = queue_inc_prod_n(&llq, n + sync) |
+>   					     CMDQ_PROD_OWNED_FLAG;
+>   
+>   		old = cmpxchg_relaxed(&cmdq->q.llq.val, llq.val, head.val);
+> -		if (old == llq.val)
+> +		if (old != llq.val)
 
-migrate_disable() on -RT kernels will not disable preemption which is where
-Sebastian is coming from I think:
-https://git.kernel.org/pub/scm/linux/kernel/git/rt/linux-stable-rt.git/tree/kernel/sched/core.c?h=v5.4-rt#n8178
+Not sure why you changed this. And if I change it back, it seems that we 
+could drop out of the loop with cmdq->slock held, so need to drop the 
+lock also.
 
-In your defense, the "don't disable preemption on migrate_disable()" on -RT
-part is not upstream yet. So maybe this will not work on upstream PREEMPT_RT,
-but I'm not sure whether folks are really running upstream PREEMPT_RT without
-going through the RT tree.
+I tried that and it stops my machine hanging. Let me know that was the 
+intention, so I can test.
 
-I did not see the drawback of just keeping it as migrate_disable() which
-should make everyone happy but Sebastian may have other opinions such as
-maybe that converting the lock to normal spinlock makes the code work on
-upstream's version of PREEMPT_RT without requiring the migrate_disable()
-change. But he can elaborate more.
+Thanks,
+John
 
-Paul, how does all this sound to you?
-
-thanks,
-
- - Joel
+>   			break;
+>   
+> -		llq.val = old;
+> +		if (!locked) {
+> +			spin_lock(&cmdq->slock);
+> +			locked = true;
+> +		}
+>   	} while (1);
+> +
+>   	owner = !(llq.prod & CMDQ_PROD_OWNED_FLAG);
+>   	head.prod &= ~CMDQ_PROD_OWNED_FLAG;
+>   	llq.prod &= ~CMDQ_PROD_OWNED_FLAG;
+> @@ -3192,6 +3204,7 @@ static int arm_smmu_cmdq_init(struct arm_smmu_device *smmu)
+>   
+>   	atomic_set(&cmdq->owner_prod, 0);
+>   	atomic_set(&cmdq->lock, 0);
+> +	spin_lock_init(&cmdq->slock);
+>   
+>   	bitmap = (atomic_long_t *)bitmap_zalloc(nents, GFP_KERNEL);
+>   	if (!bitmap) {
+> .
+> 
 
