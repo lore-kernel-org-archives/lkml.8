@@ -2,1441 +2,638 @@ Return-Path: <SRS0=y5Sx=A3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EB8CC433E4
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 16:40:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 702A0C433E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 16:41:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 44CB12065E
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 16:40:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2E1E72070E
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 16:41:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="CaFAtgOw"
+	dkim=pass (2048-bit key) header.d=massaru-org.20150623.gappssmtp.com header.i=@massaru-org.20150623.gappssmtp.com header.b="PR2hvLRe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729451AbgGPQkG (ORCPT
+        id S1728993AbgGPQk7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 12:40:06 -0400
-Received: from crapouillou.net ([89.234.176.41]:50696 "EHLO crapouillou.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728182AbgGPQkF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 12:40:05 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1594917542; h=from:from:sender:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=xAb1+xvzI52QV3FiJiQNaDSJzd2P+xFYZ0c0CxG7XiE=;
-        b=CaFAtgOwnA9BoZUuvjYUPeDjgWv3pzxhzAzhJW/OzghxggIom8HQfsmW4A32EBkUtOU7nr
-        u3xzn8UQiIkceNsJeu6v74+gKKrQiOtlPyb9AiGtGVzipd4MTLgVrABf+TYNsX3DLMK6IG
-        MD+vMOT34tPJlCJ/MjxQ1fO8Jb6RmeQ=
-From:   Paul Cercueil <paul@crapouillou.net>
-To:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>
-Cc:     Sam Ravnborg <sam@ravnborg.org>, od@zcrc.me,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>
-Subject: [PATCH v3 10/12] drm/ingenic: Add support for the IPU
-Date:   Thu, 16 Jul 2020 18:38:44 +0200
-Message-Id: <20200716163846.174790-10-paul@crapouillou.net>
-In-Reply-To: <20200716163846.174790-1-paul@crapouillou.net>
-References: <20200716163846.174790-1-paul@crapouillou.net>
+        Thu, 16 Jul 2020 12:40:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39876 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728182AbgGPQk6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jul 2020 12:40:58 -0400
+Received: from mail-qt1-x842.google.com (mail-qt1-x842.google.com [IPv6:2607:f8b0:4864:20::842])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D539DC08C5C0
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Jul 2020 09:40:57 -0700 (PDT)
+Received: by mail-qt1-x842.google.com with SMTP id g13so5369884qtv.8
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Jul 2020 09:40:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=massaru-org.20150623.gappssmtp.com; s=20150623;
+        h=message-id:subject:from:to:cc:date:in-reply-to:references
+         :user-agent:mime-version:content-transfer-encoding;
+        bh=rEVktdT3E8GmpRO9z7GuMg2RGypgd6QLHPn36U0peL0=;
+        b=PR2hvLReEYbJR9cIMtBEq1COW5wMj73sV5MOfIA3RUyPu+CjuaMLwbJ7PIyKwjDB6z
+         qJMUbYvT7KtF8Cmi1WC8uluKTs5CaIa8OVxf/NbzUskdGuTPeZph87IL1bTRQgaNTn0E
+         qxEyOlTV7By1HN/UVAw4Ih8sOm6XgcDOC3641pYsOhB3PfeprAlAGAx9suJMW/u4qabz
+         ibpj75wh0HhDafVHHjZUmOYc6nPL3ZjpZn4ilBs230T93n8Gkg3RAtn5ANVWwumNMntD
+         IqmNMSXx61N2lZATnsm2INDB3ZefWaXC2c7m5aiSiW9lhA65g0ffiplvYPBi424pEGfA
+         rrAQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:user-agent:mime-version:content-transfer-encoding;
+        bh=rEVktdT3E8GmpRO9z7GuMg2RGypgd6QLHPn36U0peL0=;
+        b=YI9tq9Bbaw6pR7mV037zFDGml63MbAmOaGxbHxMoeITAyH1aawS70qyB07QVb18/pa
+         3I7gzTgyhu3H6KlmUPctmI53s/TWaGmcsHmHNgeYdEamZ6VgrHLSinfQ6O5SbMCAEM4v
+         YRzeq236oNN4Q936OIqwdSOG0mgtp1pjtqle7cFXR+6zJ2bZghmGrxw1ZWqVu5f7Pzmw
+         bU2e9F+3jEWoE2YTNfhoaXCnpJ8zRFThNBg70emfQd/YP0wJq5IZ17SwMbKmjkJt5fiR
+         HjnG4NrGRDCufI5WiCreCkrs2LXRJ7ppT2lYQ+YtgORfYJffoCXYnsnCOneEtipQ/dVo
+         oH9w==
+X-Gm-Message-State: AOAM530oReQjBePPmjeaWauF85rbSNsWi1LNeO9nPR+G3ZAklN4SgZzz
+        tJRjUa7ygOJZOOTq8OaJq9kT4w==
+X-Google-Smtp-Source: ABdhPJzu38nNsp52/BrVgV2d29aCDGqwkjFTb4zX58eEDB02VOHExz+CoQJxk433NYrDgu0s4OD2/A==
+X-Received: by 2002:aed:32e5:: with SMTP id z92mr6036278qtd.282.1594917656830;
+        Thu, 16 Jul 2020 09:40:56 -0700 (PDT)
+Received: from bbking.lan ([2804:14c:4a5:36c::cd2])
+        by smtp.gmail.com with ESMTPSA id 19sm7518338qke.44.2020.07.16.09.40.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 16 Jul 2020 09:40:54 -0700 (PDT)
+Message-ID: <551419076ba8c6fbf9ca03786b660f6277dc665b.camel@massaru.org>
+Subject: Re: [RFC 3/3] lib: Convert test_user_copy to KUnit test
+From:   Vitor Massaru Iha <vitor@massaru.org>
+To:     Brendan Higgins <brendanhiggins@google.com>
+Cc:     KUnit Development <kunit-dev@googlegroups.com>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        David Gow <davidgow@google.com>,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        linux-kernel-mentees@lists.linuxfoundation.org
+Date:   Thu, 16 Jul 2020 13:40:51 -0300
+In-Reply-To: <CAFd5g471kwX7pHRwksbjMoEyLPoNjwd1kjzvi19oNHn45-a_ew@mail.gmail.com>
+References: <20200715031120.1002016-1-vitor@massaru.org>
+         <20200715031120.1002016-4-vitor@massaru.org>
+         <CAFd5g471kwX7pHRwksbjMoEyLPoNjwd1kjzvi19oNHn45-a_ew@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.36.3 (3.36.3-1.fc32) 
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add support for the Image Processing Unit (IPU) found in all Ingenic
-SoCs.
+On Wed, 2020-07-15 at 17:40 -0700, Brendan Higgins wrote:
+> On Tue, Jul 14, 2020 at 8:11 PM Vitor Massaru Iha <vitor@massaru.org>
+> wrote:
+> > This adds the conversion of the runtime tests of test_user_copy
+> > fuctions,
+> > from `lib/test_user_copy.c`to KUnit tests.
+> > 
+> > Signed-off-by: Vitor Massaru Iha <vitor@massaru.org>
+> > ---
+> >  lib/Kconfig.debug                           |  17 ++
+> >  lib/Makefile                                |   2 +-
+> >  lib/{test_user_copy.c => user_copy_kunit.c} | 196 +++++++++-------
+> > ----
+> >  3 files changed, 102 insertions(+), 113 deletions(-)
+> >  rename lib/{test_user_copy.c => user_copy_kunit.c} (55%)
+> > 
+> > diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
+> > index 9ad9210d70a1..29558674c011 100644
+> > --- a/lib/Kconfig.debug
+> > +++ b/lib/Kconfig.debug
+> > @@ -2154,6 +2154,23 @@ config SYSCTL_KUNIT_TEST
+> > 
+> >           If unsure, say N.
+> > 
+> > +config USER_COPY_KUNIT
+> > +       tristate "KUnit Test for user/kernel boundary protections"
+> > +       depends on KUNIT
+> > +       depends on m
+> > +       help
+> > +         This builds the "test_user_copy" module that runs sanity
+> > checks
+> > +         on the copy_to/from_user infrastructure, making sure
+> > basic
+> > +         user/kernel boundary testing is working. If it fails to
+> > load,
+> > +         a regression has been detected in the user/kernel memory
+> > boundary
+> > +         protections.
+> > +
+> > +          For more information on KUnit and unit tests in general
+> > please refer
+> > +         to the KUnit documentation in Documentation/dev-
+> > tools/kunit/.
+> > +
+> > +         If unsure, say N.
+> 
+> Where do you delete the entry for CONFIG_TEST_USER_COPY? I don't see
+> it here.
 
-The IPU can upscale and downscale a source frame of arbitrary size
-ranging from 4x4 to 4096x4096 on newer SoCs, with bicubic filtering
-on newer SoCs, bilinear filtering on older SoCs. Nearest-neighbour can
-also be obtained with proper coefficients.
+I didn't. Thanks I'll delete it.
 
-Starting from the JZ4725B, the IPU supports a mode where its output is
-sent directly to the LCDC, without having to be written to RAM first.
-This makes it possible to use the IPU as a DRM plane on the compatible
-SoCs, and have it convert and scale anything the userspace asks for to
-what's available for the display.
-
-Regarding pixel formats, older SoCs support packed YUV 4:2:2 and various
-planar YUV formats. Newer SoCs introduced support for RGB.
-
-Since the IPU is a separate hardware block, to make it work properly the
-Ingenic DRM driver will now register itself as a component master in
-case the IPU driver has been enabled in the config.
-
-When enabled in the config, the CRTC will see the IPU as a second primary
-plane. It cannot be enabled at the same time as the regular primary
-plane. It has the same priority, which means that it will also display
-below the overlay plane.
-
-v2: - ingenic-ipu is no longer its own module. It will be built
-      into the ingenic-drm module.
-    - If enabled in the config, both the core driver and the IPU
-      driver will register as components; otherwise the core
-      driver will bypass that and call the ingenic_drm_bind()
-      function directly.
-    - Since both files now build into the same module, the
-      symbols previously exported as GPL are not exported anymore,
-      since they are only used internally.
-    - Fix SPDX license header in ingenic-ipu.h
-    - Avoid using 'for(;;);' loops without trailing statement(s)
-
-v3: - Pass priv structure to IRQ handler; that way we don't hardcode
-      the expectation that the IPU plane is at index #0.
-    - Rework osd_changed() to account for src_* changes
-    - Add multiplanar YUV 4:4:4 support
-    - Commit fb addresses to HW at vblank, since addr registers are
-      not shadow registers
-    - Probe IPU component later so that IPU plane is last
-    - Fix driver not working on IPU-less hardware
-    - Use IPU driver's name as the IRQ name to avoid having two
-      'ingenic-drm' in /proc/interrupts
-    - Fix IPU only working for still images on JZ4725B
-    - Add a bit more code comments
-
-Signed-off-by: Paul Cercueil <paul@crapouillou.net>
----
- drivers/gpu/drm/ingenic/Kconfig           |  11 +
- drivers/gpu/drm/ingenic/Makefile          |   3 +-
- drivers/gpu/drm/ingenic/ingenic-drm-drv.c | 171 ++++-
- drivers/gpu/drm/ingenic/ingenic-drm.h     |  12 +
- drivers/gpu/drm/ingenic/ingenic-ipu.c     | 852 ++++++++++++++++++++++
- drivers/gpu/drm/ingenic/ingenic-ipu.h     | 109 +++
- 6 files changed, 1142 insertions(+), 16 deletions(-)
- create mode 100644 drivers/gpu/drm/ingenic/ingenic-ipu.c
- create mode 100644 drivers/gpu/drm/ingenic/ingenic-ipu.h
-
-diff --git a/drivers/gpu/drm/ingenic/Kconfig b/drivers/gpu/drm/ingenic/Kconfig
-index d82c3d37ec9c..477d5387e43e 100644
---- a/drivers/gpu/drm/ingenic/Kconfig
-+++ b/drivers/gpu/drm/ingenic/Kconfig
-@@ -14,3 +14,14 @@ config DRM_INGENIC
- 	  Choose this option for DRM support for the Ingenic SoCs.
- 
- 	  If M is selected the module will be called ingenic-drm.
-+
-+if DRM_INGENIC
-+
-+config DRM_INGENIC_IPU
-+	bool "IPU support for Ingenic SoCs"
-+	help
-+	  Choose this option to enable support for the IPU found in Ingenic SoCs.
-+
-+	  The Image Processing Unit (IPU) will appear as a second primary plane.
-+
-+endif
-diff --git a/drivers/gpu/drm/ingenic/Makefile b/drivers/gpu/drm/ingenic/Makefile
-index 9875628dd8bc..d313326bdddb 100644
---- a/drivers/gpu/drm/ingenic/Makefile
-+++ b/drivers/gpu/drm/ingenic/Makefile
-@@ -1,2 +1,3 @@
- obj-$(CONFIG_DRM_INGENIC) += ingenic-drm.o
--ingenic-drm-y += ingenic-drm-drv.o
-+ingenic-drm-y = ingenic-drm-drv.o
-+ingenic-drm-$(CONFIG_DRM_INGENIC_IPU) += ingenic-ipu.o
-diff --git a/drivers/gpu/drm/ingenic/ingenic-drm-drv.c b/drivers/gpu/drm/ingenic/ingenic-drm-drv.c
-index e922b910ad39..296d21d203b8 100644
---- a/drivers/gpu/drm/ingenic/ingenic-drm-drv.c
-+++ b/drivers/gpu/drm/ingenic/ingenic-drm-drv.c
-@@ -6,6 +6,7 @@
- 
- #include "ingenic-drm.h"
- 
-+#include <linux/component.h>
- #include <linux/clk.h>
- #include <linux/dma-mapping.h>
- #include <linux/module.h>
-@@ -54,7 +55,7 @@ struct ingenic_drm {
- 	 * f0 (aka. foreground0) can be overlayed. Z-order is fixed in
- 	 * hardware and cannot be changed.
- 	 */
--	struct drm_plane f0, f1;
-+	struct drm_plane f0, f1, *ipu_plane;
- 	struct drm_crtc crtc;
- 	struct drm_encoder encoder;
- 
-@@ -190,13 +191,21 @@ static void ingenic_drm_crtc_update_timings(struct ingenic_drm *priv,
- 
- 	regmap_set_bits(priv->map, JZ_REG_LCD_CTRL,
- 			JZ_LCD_CTRL_OFUP | JZ_LCD_CTRL_BURST_16);
-+
-+	/*
-+	 * IPU restart - specify how much time the LCDC will wait before
-+	 * transferring a new frame from the IPU. The value is the one
-+	 * suggested in the programming manual.
-+	 */
-+	regmap_write(priv->map, JZ_REG_LCD_IPUR, JZ_LCD_IPUR_IPUREN |
-+		     (ht * vpe / 3) << JZ_LCD_IPUR_IPUR_LSB);
- }
- 
- static int ingenic_drm_crtc_atomic_check(struct drm_crtc *crtc,
- 					 struct drm_crtc_state *state)
- {
- 	struct ingenic_drm *priv = drm_crtc_get_priv(crtc);
--	struct drm_plane_state *f1_state, *f0_state;
-+	struct drm_plane_state *f1_state, *f0_state, *ipu_state;
- 	long rate;
- 
- 	if (!drm_atomic_crtc_needs_modeset(state))
-@@ -215,13 +224,44 @@ static int ingenic_drm_crtc_atomic_check(struct drm_crtc *crtc,
- 		f1_state = drm_atomic_get_plane_state(state->state, &priv->f1);
- 		f0_state = drm_atomic_get_plane_state(state->state, &priv->f0);
- 
-+		if (IS_ENABLED(CONFIG_DRM_INGENIC_IPU) && priv->ipu_plane) {
-+			ipu_state = drm_atomic_get_plane_state(state->state, priv->ipu_plane);
-+
-+			/* IPU and F1 planes cannot be enabled at the same time. */
-+			if (f1_state->fb && ipu_state->fb) {
-+				dev_dbg(priv->dev, "Cannot enable both F1 and IPU\n");
-+				return -EINVAL;
-+			}
-+		}
-+
- 		/* If all the planes are disabled, we won't get a VBLANK IRQ */
--		priv->no_vblank = !f1_state->fb && !f0_state->fb;
-+		priv->no_vblank = !f1_state->fb && !f0_state->fb &&
-+				  !(priv->ipu_plane && ipu_state->fb);
- 	}
- 
- 	return 0;
- }
- 
-+static void ingenic_drm_crtc_atomic_begin(struct drm_crtc *crtc,
-+					  struct drm_crtc_state *oldstate)
-+{
-+	struct ingenic_drm *priv = drm_crtc_get_priv(crtc);
-+	u32 ctrl = 0;
-+
-+	if (priv->soc_info->has_osd &&
-+	    drm_atomic_crtc_needs_modeset(crtc->state)) {
-+		/*
-+		 * If IPU plane is enabled, enable IPU as source for the F1
-+		 * plane; otherwise use regular DMA.
-+		 */
-+		if (priv->ipu_plane && priv->ipu_plane->state->fb)
-+			ctrl |= JZ_LCD_OSDCTRL_IPU;
-+
-+		regmap_update_bits(priv->map, JZ_REG_LCD_OSDCTRL,
-+				   JZ_LCD_OSDCTRL_IPU, ctrl);
-+	}
-+}
-+
- static void ingenic_drm_crtc_atomic_flush(struct drm_crtc *crtc,
- 					  struct drm_crtc_state *oldstate)
- {
-@@ -311,10 +351,9 @@ static void ingenic_drm_plane_enable(struct ingenic_drm *priv,
- 	}
- }
- 
--static void ingenic_drm_plane_atomic_disable(struct drm_plane *plane,
--					     struct drm_plane_state *old_state)
-+void ingenic_drm_plane_disable(struct device *dev, struct drm_plane *plane)
- {
--	struct ingenic_drm *priv = drm_device_get_priv(plane->dev);
-+	struct ingenic_drm *priv = dev_get_drvdata(dev);
- 	unsigned int en_bit;
- 
- 	if (priv->soc_info->has_osd) {
-@@ -327,9 +366,18 @@ static void ingenic_drm_plane_atomic_disable(struct drm_plane *plane,
- 	}
- }
- 
--static void ingenic_drm_plane_config(struct ingenic_drm *priv,
--				     struct drm_plane *plane, u32 fourcc)
-+static void ingenic_drm_plane_atomic_disable(struct drm_plane *plane,
-+					     struct drm_plane_state *old_state)
-+{
-+	struct ingenic_drm *priv = drm_device_get_priv(plane->dev);
-+
-+	ingenic_drm_plane_disable(priv->dev, plane);
-+}
-+
-+void ingenic_drm_plane_config(struct device *dev,
-+			      struct drm_plane *plane, u32 fourcc)
- {
-+	struct ingenic_drm *priv = dev_get_drvdata(dev);
- 	struct drm_plane_state *state = plane->state;
- 	unsigned int xy_reg, size_reg;
- 	unsigned int ctrl = 0;
-@@ -411,7 +459,7 @@ static void ingenic_drm_plane_atomic_update(struct drm_plane *plane,
- 		hwdesc->cmd = JZ_LCD_CMD_EOF_IRQ | (width * height * cpp / 4);
- 
- 		if (drm_atomic_crtc_needs_modeset(state->crtc->state))
--			ingenic_drm_plane_config(priv, plane,
-+			ingenic_drm_plane_config(priv->dev, plane,
- 						 state->fb->format->format);
- 	}
- }
-@@ -604,6 +652,7 @@ static const struct drm_plane_helper_funcs ingenic_drm_plane_helper_funcs = {
- static const struct drm_crtc_helper_funcs ingenic_drm_crtc_helper_funcs = {
- 	.atomic_enable		= ingenic_drm_crtc_atomic_enable,
- 	.atomic_disable		= ingenic_drm_crtc_atomic_disable,
-+	.atomic_begin		= ingenic_drm_crtc_atomic_begin,
- 	.atomic_flush		= ingenic_drm_crtc_atomic_flush,
- 	.atomic_check		= ingenic_drm_crtc_atomic_check,
- };
-@@ -624,10 +673,17 @@ static struct drm_mode_config_helper_funcs ingenic_drm_mode_config_helpers = {
- 	.atomic_commit_tail = ingenic_drm_atomic_helper_commit_tail,
- };
- 
--static int ingenic_drm_probe(struct platform_device *pdev)
-+static void ingenic_drm_unbind_all(void *d)
- {
-+	struct ingenic_drm *priv = d;
-+
-+	component_unbind_all(priv->dev, &priv->drm);
-+}
-+
-+static int ingenic_drm_bind(struct device *dev)
-+{
-+	struct platform_device *pdev = to_platform_device(dev);
- 	const struct jz_soc_info *soc_info;
--	struct device *dev = &pdev->dev;
- 	struct ingenic_drm *priv;
- 	struct clk *parent_clk;
- 	struct drm_bridge *bridge;
-@@ -728,6 +784,9 @@ static int ingenic_drm_probe(struct platform_device *pdev)
- 		priv->dma_hwdesc_f0->id = 0xf0;
- 	}
- 
-+	if (soc_info->has_osd)
-+		priv->ipu_plane = drm_plane_from_index(drm, 0);
-+
- 	drm_plane_helper_add(&priv->f1, &ingenic_drm_plane_helper_funcs);
- 
- 	ret = drm_universal_plane_init(drm, &priv->f1, 1,
-@@ -736,7 +795,7 @@ static int ingenic_drm_probe(struct platform_device *pdev)
- 				       ARRAY_SIZE(ingenic_drm_primary_formats),
- 				       NULL, DRM_PLANE_TYPE_PRIMARY, NULL);
- 	if (ret) {
--		dev_err(dev, "Failed to register primary plane: %i\n", ret);
-+		dev_err(dev, "Failed to register plane: %i\n", ret);
- 		return ret;
- 	}
- 
-@@ -764,6 +823,25 @@ static int ingenic_drm_probe(struct platform_device *pdev)
- 				ret);
- 			return ret;
- 		}
-+
-+		if (IS_ENABLED(CONFIG_DRM_INGENIC_IPU)) {
-+			ret = component_bind_all(dev, drm);
-+			if (ret) {
-+				if (ret != -EPROBE_DEFER)
-+					dev_err(dev, "Failed to bind components: %i\n", ret);
-+				return ret;
-+			}
-+
-+			ret = devm_add_action_or_reset(dev, ingenic_drm_unbind_all, priv);
-+			if (ret)
-+				return ret;
-+
-+			priv->ipu_plane = drm_plane_from_index(drm, 2);
-+			if (!priv->ipu_plane) {
-+				dev_err(dev, "Failed to retrieve IPU plane\n");
-+				return -EINVAL;
-+			}
-+		}
- 	}
- 
- 	priv->encoder.possible_crtcs = 1;
-@@ -852,9 +930,14 @@ static int ingenic_drm_probe(struct platform_device *pdev)
- 	return ret;
- }
- 
--static int ingenic_drm_remove(struct platform_device *pdev)
-+static int compare_of(struct device *dev, void *data)
- {
--	struct ingenic_drm *priv = platform_get_drvdata(pdev);
-+	return dev->of_node == data;
-+}
-+
-+static void ingenic_drm_unbind(struct device *dev)
-+{
-+	struct ingenic_drm *priv = dev_get_drvdata(dev);
- 
- 	if (priv->lcd_clk)
- 		clk_disable_unprepare(priv->lcd_clk);
-@@ -862,6 +945,42 @@ static int ingenic_drm_remove(struct platform_device *pdev)
- 
- 	drm_dev_unregister(&priv->drm);
- 	drm_atomic_helper_shutdown(&priv->drm);
-+}
-+
-+static const struct component_master_ops ingenic_master_ops = {
-+	.bind = ingenic_drm_bind,
-+	.unbind = ingenic_drm_unbind,
-+};
-+
-+static int ingenic_drm_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct component_match *match = NULL;
-+	struct device_node *np;
-+
-+	if (!IS_ENABLED(CONFIG_DRM_INGENIC_IPU))
-+		return ingenic_drm_bind(dev);
-+
-+	/* IPU is at port address 8 */
-+	np = of_graph_get_remote_node(dev->of_node, 8, 0);
-+	if (!np) {
-+		dev_err(dev, "Unable to get IPU node\n");
-+		return -EINVAL;
-+	}
-+
-+	drm_of_component_match_add(dev, &match, compare_of, np);
-+
-+	return component_master_add_with_match(dev, &ingenic_master_ops, match);
-+}
-+
-+static int ingenic_drm_remove(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+
-+	if (!IS_ENABLED(CONFIG_DRM_INGENIC_IPU))
-+		ingenic_drm_unbind(dev);
-+	else
-+		component_master_del(dev, &ingenic_master_ops);
- 
- 	return 0;
- }
-@@ -903,7 +1022,29 @@ static struct platform_driver ingenic_drm_driver = {
- 	.probe = ingenic_drm_probe,
- 	.remove = ingenic_drm_remove,
- };
--module_platform_driver(ingenic_drm_driver);
-+
-+static int ingenic_drm_init(void)
-+{
-+	int err;
-+
-+	if (IS_ENABLED(CONFIG_DRM_INGENIC_IPU)) {
-+		err = platform_driver_register(ingenic_ipu_driver_ptr);
-+		if (err)
-+			return err;
-+	}
-+
-+	return platform_driver_register(&ingenic_drm_driver);
-+}
-+module_init(ingenic_drm_init);
-+
-+static void ingenic_drm_exit(void)
-+{
-+	platform_driver_unregister(&ingenic_drm_driver);
-+
-+	if (IS_ENABLED(CONFIG_DRM_INGENIC_IPU))
-+		platform_driver_unregister(ingenic_ipu_driver_ptr);
-+}
-+module_exit(ingenic_drm_exit);
- 
- MODULE_AUTHOR("Paul Cercueil <paul@crapouillou.net>");
- MODULE_DESCRIPTION("DRM driver for the Ingenic SoCs\n");
-diff --git a/drivers/gpu/drm/ingenic/ingenic-drm.h b/drivers/gpu/drm/ingenic/ingenic-drm.h
-index d0b827a9fe83..43f7d959cff7 100644
---- a/drivers/gpu/drm/ingenic/ingenic-drm.h
-+++ b/drivers/gpu/drm/ingenic/ingenic-drm.h
-@@ -8,6 +8,7 @@
- #define DRIVERS_GPU_DRM_INGENIC_INGENIC_DRM_H
- 
- #include <linux/bitops.h>
-+#include <linux/types.h>
- 
- #define JZ_REG_LCD_CFG				0x00
- #define JZ_REG_LCD_VSYNC			0x04
-@@ -158,4 +159,15 @@
- #define JZ_LCD_SIZE01_WIDTH_LSB			0
- #define JZ_LCD_SIZE01_HEIGHT_LSB		16
- 
-+struct device;
-+struct drm_plane;
-+struct drm_plane_state;
-+struct platform_driver;
-+
-+void ingenic_drm_plane_config(struct device *dev,
-+			      struct drm_plane *plane, u32 fourcc);
-+void ingenic_drm_plane_disable(struct device *dev, struct drm_plane *plane);
-+
-+extern struct platform_driver *ingenic_ipu_driver_ptr;
-+
- #endif /* DRIVERS_GPU_DRM_INGENIC_INGENIC_DRM_H */
-diff --git a/drivers/gpu/drm/ingenic/ingenic-ipu.c b/drivers/gpu/drm/ingenic/ingenic-ipu.c
-new file mode 100644
-index 000000000000..45095ebf1526
---- /dev/null
-+++ b/drivers/gpu/drm/ingenic/ingenic-ipu.c
-@@ -0,0 +1,852 @@
-+// SPDX-License-Identifier: GPL-2.0
-+//
-+// Ingenic JZ47xx IPU driver
-+//
-+// Copyright (C) 2020, Paul Cercueil <paul@crapouillou.net>
-+
-+#include "ingenic-drm.h"
-+#include "ingenic-ipu.h"
-+
-+#include <linux/clk.h>
-+#include <linux/component.h>
-+#include <linux/gcd.h>
-+#include <linux/interrupt.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/of_device.h>
-+#include <linux/regmap.h>
-+#include <linux/time.h>
-+
-+#include <drm/drm_atomic.h>
-+#include <drm/drm_atomic_helper.h>
-+#include <drm/drm_drv.h>
-+#include <drm/drm_fb_cma_helper.h>
-+#include <drm/drm_fourcc.h>
-+#include <drm/drm_gem_framebuffer_helper.h>
-+#include <drm/drm_plane.h>
-+#include <drm/drm_plane_helper.h>
-+#include <drm/drm_property.h>
-+#include <drm/drm_vblank.h>
-+
-+struct ingenic_ipu;
-+
-+struct soc_info {
-+	const u32 *formats;
-+	size_t num_formats;
-+	bool has_bicubic;
-+
-+	void (*set_coefs)(struct ingenic_ipu *ipu, unsigned int reg,
-+			  unsigned int sharpness, bool downscale,
-+			  unsigned int weight, unsigned int offset);
-+};
-+
-+struct ingenic_ipu {
-+	struct drm_plane plane;
-+	struct drm_device *drm;
-+	struct device *dev, *master;
-+	struct regmap *map;
-+	struct clk *clk;
-+	const struct soc_info *soc_info;
-+
-+	unsigned int numW, numH, denomW, denomH;
-+
-+	dma_addr_t addr_y, addr_u, addr_v;
-+
-+	struct drm_property *sharpness_prop;
-+	unsigned int sharpness;
-+};
-+
-+/* Signed 15.16 fixed-point math (for bicubic scaling coefficients) */
-+#define I2F(i) ((s32)(i) * 65536)
-+#define F2I(f) ((f) / 65536)
-+#define FMUL(fa, fb) ((s32)(((s64)(fa) * (s64)(fb)) / 65536))
-+#define SHARPNESS_INCR (I2F(-1) / 8)
-+
-+static inline struct ingenic_ipu *plane_to_ingenic_ipu(struct drm_plane *plane)
-+{
-+	return container_of(plane, struct ingenic_ipu, plane);
-+}
-+
-+/*
-+ * Apply conventional cubic convolution kernel. Both parameters
-+ *  and return value are 15.16 signed fixed-point.
-+ *
-+ *  @f_a: Sharpness factor, typically in range [-4.0, -0.25].
-+ *        A larger magnitude increases perceived sharpness, but going past
-+ *        -2.0 might cause ringing artifacts to outweigh any improvement.
-+ *        Nice values on a 320x240 LCD are between -0.75 and -2.0.
-+ *
-+ *  @f_x: Absolute distance in pixels from 'pixel 0' sample position
-+ *        along horizontal (or vertical) source axis. Range is [0, +2.0].
-+ *
-+ *  returns: Weight of this pixel within 4-pixel sample group. Range is
-+ *           [-2.0, +2.0]. For moderate (i.e. > -3.0) sharpness factors,
-+ *           range is within [-1.0, +1.0].
-+ */
-+static inline s32 cubic_conv(s32 f_a, s32 f_x)
-+{
-+	const s32 f_1 = I2F(1);
-+	const s32 f_2 = I2F(2);
-+	const s32 f_3 = I2F(3);
-+	const s32 f_4 = I2F(4);
-+	const s32 f_x2 = FMUL(f_x, f_x);
-+	const s32 f_x3 = FMUL(f_x, f_x2);
-+
-+	if (f_x <= f_1)
-+		return FMUL((f_a + f_2), f_x3) - FMUL((f_a + f_3), f_x2) + f_1;
-+	else if (f_x <= f_2)
-+		return FMUL(f_a, (f_x3 - 5 * f_x2 + 8 * f_x - f_4));
-+	else
-+		return 0;
-+}
-+
-+/*
-+ * On entry, "weight" is a coefficient suitable for bilinear mode,
-+ *  which is converted to a set of four suitable for bicubic mode.
-+ *
-+ * "weight 512" means all of pixel 0;
-+ * "weight 256" means half of pixel 0 and half of pixel 1;
-+ * "weight 0" means all of pixel 1;
-+ *
-+ * "offset" is increment to next source pixel sample location.
-+ */
-+static void jz4760_set_coefs(struct ingenic_ipu *ipu, unsigned int reg,
-+			     unsigned int sharpness, bool downscale,
-+			     unsigned int weight, unsigned int offset)
-+{
-+	u32 val;
-+	s32 w0, w1, w2, w3; /* Pixel weights at X (or Y) offsets -1,0,1,2 */
-+
-+	weight = clamp_val(weight, 0, 512);
-+
-+	if (sharpness < 2) {
-+		/*
-+		 *  When sharpness setting is 0, emulate nearest-neighbor.
-+		 *  When sharpness setting is 1, emulate bilinear.
-+		 */
-+
-+		if (sharpness == 0)
-+			weight = weight >= 256 ? 512 : 0;
-+		w0 = 0;
-+		w1 = weight;
-+		w2 = 512 - weight;
-+		w3 = 0;
-+	} else {
-+		const s32 f_a = SHARPNESS_INCR * sharpness;
-+		const s32 f_h = I2F(1) / 2; /* Round up 0.5 */
-+
-+		/*
-+		 * Note that always rounding towards +infinity here is intended.
-+		 * The resulting coefficients match a round-to-nearest-int
-+		 * double floating-point implementation.
-+		 */
-+
-+		weight = 512 - weight;
-+		w0 = F2I(f_h + 512 * cubic_conv(f_a, I2F(512  + weight) / 512));
-+		w1 = F2I(f_h + 512 * cubic_conv(f_a, I2F(0    + weight) / 512));
-+		w2 = F2I(f_h + 512 * cubic_conv(f_a, I2F(512  - weight) / 512));
-+		w3 = F2I(f_h + 512 * cubic_conv(f_a, I2F(1024 - weight) / 512));
-+		w0 = clamp_val(w0, -1024, 1023);
-+		w1 = clamp_val(w1, -1024, 1023);
-+		w2 = clamp_val(w2, -1024, 1023);
-+		w3 = clamp_val(w3, -1024, 1023);
-+	}
-+
-+	val = ((w1 & JZ4760_IPU_RSZ_COEF_MASK) << JZ4760_IPU_RSZ_COEF31_LSB) |
-+		((w0 & JZ4760_IPU_RSZ_COEF_MASK) << JZ4760_IPU_RSZ_COEF20_LSB);
-+	regmap_write(ipu->map, reg, val);
-+
-+	val = ((w3 & JZ4760_IPU_RSZ_COEF_MASK) << JZ4760_IPU_RSZ_COEF31_LSB) |
-+		((w2 & JZ4760_IPU_RSZ_COEF_MASK) << JZ4760_IPU_RSZ_COEF20_LSB) |
-+		((offset & JZ4760_IPU_RSZ_OFFSET_MASK) << JZ4760_IPU_RSZ_OFFSET_LSB);
-+	regmap_write(ipu->map, reg, val);
-+}
-+
-+static void jz4725b_set_coefs(struct ingenic_ipu *ipu, unsigned int reg,
-+			      unsigned int sharpness, bool downscale,
-+			      unsigned int weight, unsigned int offset)
-+{
-+	u32 val = JZ4725B_IPU_RSZ_LUT_OUT_EN;
-+	unsigned int i;
-+
-+	weight = clamp_val(weight, 0, 512);
-+
-+	if (sharpness == 0)
-+		weight = weight >= 256 ? 512 : 0;
-+
-+	val |= (weight & JZ4725B_IPU_RSZ_LUT_COEF_MASK) << JZ4725B_IPU_RSZ_LUT_COEF_LSB;
-+	if (downscale || !!offset)
-+		val |= JZ4725B_IPU_RSZ_LUT_IN_EN;
-+
-+	regmap_write(ipu->map, reg, val);
-+
-+	if (downscale) {
-+		for (i = 1; i < offset; i++)
-+			regmap_write(ipu->map, reg, JZ4725B_IPU_RSZ_LUT_IN_EN);
-+	}
-+}
-+
-+static void ingenic_ipu_set_downscale_coefs(struct ingenic_ipu *ipu,
-+					    unsigned int reg,
-+					    unsigned int num,
-+					    unsigned int denom)
-+{
-+	unsigned int i, offset, weight, weight_num = denom;
-+
-+	for (i = 0; i < num; i++) {
-+		weight_num = num + (weight_num - num) % (num * 2);
-+		weight = 512 - 512 * (weight_num - num) / (num * 2);
-+		weight_num += denom * 2;
-+		offset = (weight_num - num) / (num * 2);
-+
-+		ipu->soc_info->set_coefs(ipu, reg, ipu->sharpness,
-+					 true, weight, offset);
-+	}
-+}
-+
-+static void ingenic_ipu_set_integer_upscale_coefs(struct ingenic_ipu *ipu,
-+						  unsigned int reg,
-+						  unsigned int num)
-+{
-+	/*
-+	 * Force nearest-neighbor scaling and use simple math when upscaling
-+	 * by an integer ratio. It looks better, and fixes a few problem cases.
-+	 */
-+	unsigned int i;
-+
-+	for (i = 0; i < num; i++)
-+		ipu->soc_info->set_coefs(ipu, reg, 0, false, 512, i == num - 1);
-+}
-+
-+static void ingenic_ipu_set_upscale_coefs(struct ingenic_ipu *ipu,
-+					  unsigned int reg,
-+					  unsigned int num,
-+					  unsigned int denom)
-+{
-+	unsigned int i, offset, weight, weight_num = 0;
-+
-+	for (i = 0; i < num; i++) {
-+		weight = 512 - 512 * weight_num / num;
-+		weight_num += denom;
-+		offset = weight_num >= num;
-+
-+		if (offset)
-+			weight_num -= num;
-+
-+		ipu->soc_info->set_coefs(ipu, reg, ipu->sharpness,
-+					 false, weight, offset);
-+	}
-+}
-+
-+static void ingenic_ipu_set_coefs(struct ingenic_ipu *ipu, unsigned int reg,
-+				  unsigned int num, unsigned int denom)
-+{
-+	/* Begin programming the LUT */
-+	regmap_write(ipu->map, reg, -1);
-+
-+	if (denom > num)
-+		ingenic_ipu_set_downscale_coefs(ipu, reg, num, denom);
-+	else if (denom == 1)
-+		ingenic_ipu_set_integer_upscale_coefs(ipu, reg, num);
-+	else
-+		ingenic_ipu_set_upscale_coefs(ipu, reg, num, denom);
-+}
-+
-+static int reduce_fraction(unsigned int *num, unsigned int *denom)
-+{
-+	unsigned long d = gcd(*num, *denom);
-+
-+	/* The scaling table has only 31 entries */
-+	if (*num > 31 * d)
-+		return -EINVAL;
-+
-+	*num /= d;
-+	*denom /= d;
-+	return 0;
-+}
-+
-+static inline bool osd_changed(struct drm_plane_state *state,
-+			       struct drm_plane_state *oldstate)
-+{
-+	return state->src_x != oldstate->src_x ||
-+		state->src_y != oldstate->src_y ||
-+		state->src_w != oldstate->src_w ||
-+		state->src_h != oldstate->src_h ||
-+		state->crtc_x != oldstate->crtc_x ||
-+		state->crtc_y != oldstate->crtc_y ||
-+		state->crtc_w != oldstate->crtc_w ||
-+		state->crtc_h != oldstate->crtc_h;
-+}
-+
-+static void ingenic_ipu_plane_atomic_update(struct drm_plane *plane,
-+					    struct drm_plane_state *oldstate)
-+{
-+	struct ingenic_ipu *ipu = plane_to_ingenic_ipu(plane);
-+	struct drm_plane_state *state = plane->state;
-+	const struct drm_format_info *finfo;
-+	u32 ctrl, stride = 0, coef_index = 0, format = 0;
-+	bool needs_modeset, upscaling_w, upscaling_h;
-+
-+	if (!state || !state->fb)
-+		return;
-+
-+	finfo = drm_format_info(state->fb->format->format);
-+
-+	/* Reset all the registers if needed */
-+	needs_modeset = drm_atomic_crtc_needs_modeset(state->crtc->state);
-+	if (needs_modeset) {
-+		regmap_set_bits(ipu->map, JZ_REG_IPU_CTRL, JZ_IPU_CTRL_RST);
-+
-+		/* Enable the chip */
-+		regmap_set_bits(ipu->map, JZ_REG_IPU_CTRL,
-+				JZ_IPU_CTRL_CHIP_EN | JZ_IPU_CTRL_LCDC_SEL);
-+	}
-+
-+	/* New addresses will be committed in vblank handler... */
-+	ipu->addr_y = drm_fb_cma_get_gem_addr(state->fb, state, 0);
-+	if (finfo->num_planes > 1)
-+		ipu->addr_u = drm_fb_cma_get_gem_addr(state->fb, state, 1);
-+	if (finfo->num_planes > 2)
-+		ipu->addr_v = drm_fb_cma_get_gem_addr(state->fb, state, 2);
-+
-+	if (!needs_modeset)
-+		return;
-+
-+	/* Or right here if we're doing a full modeset. */
-+	regmap_write(ipu->map, JZ_REG_IPU_Y_ADDR, ipu->addr_y);
-+	regmap_write(ipu->map, JZ_REG_IPU_U_ADDR, ipu->addr_u);
-+	regmap_write(ipu->map, JZ_REG_IPU_V_ADDR, ipu->addr_v);
-+
-+	if (finfo->num_planes == 1)
-+		regmap_set_bits(ipu->map, JZ_REG_IPU_CTRL, JZ_IPU_CTRL_SPKG_SEL);
-+
-+	ingenic_drm_plane_config(ipu->master, plane, DRM_FORMAT_XRGB8888);
-+
-+	/* Set the input height/width/strides */
-+	if (finfo->num_planes > 2)
-+		stride = ((state->src_w >> 16) * finfo->cpp[2] / finfo->hsub)
-+			<< JZ_IPU_UV_STRIDE_V_LSB;
-+
-+	if (finfo->num_planes > 1)
-+		stride |= ((state->src_w >> 16) * finfo->cpp[1] / finfo->hsub)
-+			<< JZ_IPU_UV_STRIDE_U_LSB;
-+
-+	regmap_write(ipu->map, JZ_REG_IPU_UV_STRIDE, stride);
-+
-+	stride = ((state->src_w >> 16) * finfo->cpp[0]) << JZ_IPU_Y_STRIDE_Y_LSB;
-+	regmap_write(ipu->map, JZ_REG_IPU_Y_STRIDE, stride);
-+
-+	regmap_write(ipu->map, JZ_REG_IPU_IN_GS,
-+		     (stride << JZ_IPU_IN_GS_W_LSB) |
-+		     ((state->src_h >> 16) << JZ_IPU_IN_GS_H_LSB));
-+
-+	switch (finfo->format) {
-+	case DRM_FORMAT_XRGB1555:
-+		format = JZ_IPU_D_FMT_IN_FMT_RGB555 |
-+			JZ_IPU_D_FMT_RGB_OUT_OFT_RGB;
-+		break;
-+	case DRM_FORMAT_XBGR1555:
-+		format = JZ_IPU_D_FMT_IN_FMT_RGB555 |
-+			JZ_IPU_D_FMT_RGB_OUT_OFT_BGR;
-+		break;
-+	case DRM_FORMAT_RGB565:
-+		format = JZ_IPU_D_FMT_IN_FMT_RGB565 |
-+			JZ_IPU_D_FMT_RGB_OUT_OFT_RGB;
-+		break;
-+	case DRM_FORMAT_BGR565:
-+		format = JZ_IPU_D_FMT_IN_FMT_RGB565 |
-+			JZ_IPU_D_FMT_RGB_OUT_OFT_BGR;
-+		break;
-+	case DRM_FORMAT_XRGB8888:
-+	case DRM_FORMAT_XYUV8888:
-+		format = JZ_IPU_D_FMT_IN_FMT_RGB888 |
-+			JZ_IPU_D_FMT_RGB_OUT_OFT_RGB;
-+		break;
-+	case DRM_FORMAT_XBGR8888:
-+		format = JZ_IPU_D_FMT_IN_FMT_RGB888 |
-+			JZ_IPU_D_FMT_RGB_OUT_OFT_BGR;
-+		break;
-+	case DRM_FORMAT_YUYV:
-+		format = JZ_IPU_D_FMT_IN_FMT_YUV422 |
-+			JZ_IPU_D_FMT_YUV_VY1UY0;
-+		break;
-+	case DRM_FORMAT_YVYU:
-+		format = JZ_IPU_D_FMT_IN_FMT_YUV422 |
-+			JZ_IPU_D_FMT_YUV_UY1VY0;
-+		break;
-+	case DRM_FORMAT_UYVY:
-+		format = JZ_IPU_D_FMT_IN_FMT_YUV422 |
-+			JZ_IPU_D_FMT_YUV_Y1VY0U;
-+		break;
-+	case DRM_FORMAT_VYUY:
-+		format = JZ_IPU_D_FMT_IN_FMT_YUV422 |
-+			JZ_IPU_D_FMT_YUV_Y1UY0V;
-+		break;
-+	case DRM_FORMAT_YUV411:
-+		format = JZ_IPU_D_FMT_IN_FMT_YUV411;
-+		break;
-+	case DRM_FORMAT_YUV420:
-+		format = JZ_IPU_D_FMT_IN_FMT_YUV420;
-+		break;
-+	case DRM_FORMAT_YUV422:
-+		format = JZ_IPU_D_FMT_IN_FMT_YUV422;
-+		break;
-+	case DRM_FORMAT_YUV444:
-+		format = JZ_IPU_D_FMT_IN_FMT_YUV444;
-+		break;
-+	default:
-+		WARN_ONCE(1, "Unsupported format");
-+		break;
-+	}
-+
-+	/* Fix output to RGB888 */
-+	format |= JZ_IPU_D_FMT_OUT_FMT_RGB888;
-+
-+	/* Set pixel format */
-+	regmap_write(ipu->map, JZ_REG_IPU_D_FMT, format);
-+
-+	/* Set the output height/width/stride */
-+	regmap_write(ipu->map, JZ_REG_IPU_OUT_GS,
-+		     ((state->crtc_w * 4) << JZ_IPU_OUT_GS_W_LSB)
-+		     | state->crtc_h << JZ_IPU_OUT_GS_H_LSB);
-+	regmap_write(ipu->map, JZ_REG_IPU_OUT_STRIDE, state->crtc_w * 4);
-+
-+	if (finfo->is_yuv) {
-+		regmap_set_bits(ipu->map, JZ_REG_IPU_CTRL, JZ_IPU_CTRL_CSC_EN);
-+
-+		/*
-+		 * Offsets for Chroma/Luma.
-+		 * y = source Y - LUMA,
-+		 * u = source Cb - CHROMA,
-+		 * v = source Cr - CHROMA
-+		 */
-+		regmap_write(ipu->map, JZ_REG_IPU_CSC_OFFSET,
-+			     128 << JZ_IPU_CSC_OFFSET_CHROMA_LSB |
-+			     0 << JZ_IPU_CSC_OFFSET_LUMA_LSB);
-+
-+		/*
-+		 * YUV422 to RGB conversion table.
-+		 * R = C0 / 0x400 * y + C1 / 0x400 * v
-+		 * G = C0 / 0x400 * y - C2 / 0x400 * u - C3 / 0x400 * v
-+		 * B = C0 / 0x400 * y + C4 / 0x400 * u
-+		 */
-+		regmap_write(ipu->map, JZ_REG_IPU_CSC_C0_COEF, 0x4a8);
-+		regmap_write(ipu->map, JZ_REG_IPU_CSC_C1_COEF, 0x662);
-+		regmap_write(ipu->map, JZ_REG_IPU_CSC_C2_COEF, 0x191);
-+		regmap_write(ipu->map, JZ_REG_IPU_CSC_C3_COEF, 0x341);
-+		regmap_write(ipu->map, JZ_REG_IPU_CSC_C4_COEF, 0x811);
-+	}
-+
-+	ctrl = 0;
-+
-+	/*
-+	 * Must set ZOOM_SEL before programming bicubic LUTs.
-+	 * If the IPU supports bicubic, we enable it unconditionally, since it
-+	 * can do anything bilinear can and more.
-+	 */
-+	if (ipu->soc_info->has_bicubic)
-+		ctrl |= JZ_IPU_CTRL_ZOOM_SEL;
-+
-+	upscaling_w = ipu->numW > ipu->denomW;
-+	if (upscaling_w)
-+		ctrl |= JZ_IPU_CTRL_HSCALE;
-+
-+	if (ipu->numW != 1 || ipu->denomW != 1) {
-+		if (!ipu->soc_info->has_bicubic && !upscaling_w)
-+			coef_index |= (ipu->denomW - 1) << 16;
-+		else
-+			coef_index |= (ipu->numW - 1) << 16;
-+		ctrl |= JZ_IPU_CTRL_HRSZ_EN;
-+	}
-+
-+	upscaling_h = ipu->numH > ipu->denomH;
-+	if (upscaling_h)
-+		ctrl |= JZ_IPU_CTRL_VSCALE;
-+
-+	if (ipu->numH != 1 || ipu->denomH != 1) {
-+		if (!ipu->soc_info->has_bicubic && !upscaling_h)
-+			coef_index |= ipu->denomH - 1;
-+		else
-+			coef_index |= ipu->numH - 1;
-+		ctrl |= JZ_IPU_CTRL_VRSZ_EN;
-+	}
-+
-+	regmap_update_bits(ipu->map, JZ_REG_IPU_CTRL, JZ_IPU_CTRL_ZOOM_SEL |
-+			   JZ_IPU_CTRL_HRSZ_EN | JZ_IPU_CTRL_VRSZ_EN |
-+			   JZ_IPU_CTRL_HSCALE | JZ_IPU_CTRL_VSCALE, ctrl);
-+
-+	/* Set the LUT index register */
-+	regmap_write(ipu->map, JZ_REG_IPU_RSZ_COEF_INDEX, coef_index);
-+
-+	if (ipu->numW != 1 || ipu->denomW != 1)
-+		ingenic_ipu_set_coefs(ipu, JZ_REG_IPU_HRSZ_COEF_LUT,
-+				      ipu->numW, ipu->denomW);
-+
-+	if (ipu->numH != 1 || ipu->denomH != 1)
-+		ingenic_ipu_set_coefs(ipu, JZ_REG_IPU_VRSZ_COEF_LUT,
-+				      ipu->numH, ipu->denomH);
-+
-+	/* Clear STATUS register */
-+	regmap_write(ipu->map, JZ_REG_IPU_STATUS, 0);
-+
-+	/* Start IPU */
-+	regmap_set_bits(ipu->map, JZ_REG_IPU_CTRL,
-+			JZ_IPU_CTRL_RUN | JZ_IPU_CTRL_FM_IRQ_EN);
-+
-+	dev_dbg(ipu->dev, "Scaling %ux%u to %ux%u (%u:%u horiz, %u:%u vert)\n",
-+		state->src_w >> 16, state->src_h >> 16,
-+		state->crtc_w, state->crtc_h,
-+		ipu->numW, ipu->denomW, ipu->numH, ipu->denomH);
-+}
-+
-+static int ingenic_ipu_plane_atomic_check(struct drm_plane *plane,
-+					  struct drm_plane_state *state)
-+{
-+	unsigned int numW, denomW, numH, denomH, xres, yres;
-+	struct ingenic_ipu *ipu = plane_to_ingenic_ipu(plane);
-+	struct drm_crtc *crtc = state->crtc ?: plane->state->crtc;
-+	struct drm_crtc_state *crtc_state;
-+
-+	if (!crtc)
-+		return 0;
-+
-+	crtc_state = drm_atomic_get_existing_crtc_state(state->state, crtc);
-+	if (WARN_ON(!crtc_state))
-+		return -EINVAL;
-+
-+	/* Request a full modeset if we are enabling or disabling the IPU. */
-+	if (!plane->state->crtc ^ !state->crtc)
-+		crtc_state->mode_changed = true;
-+
-+	if (!state->crtc ||
-+	    !crtc_state->mode.hdisplay || !crtc_state->mode.vdisplay)
-+		return 0;
-+
-+	/* Plane must be fully visible */
-+	if (state->crtc_x < 0 || state->crtc_y < 0 ||
-+	    state->crtc_x + state->crtc_w > crtc_state->mode.hdisplay ||
-+	    state->crtc_y + state->crtc_h > crtc_state->mode.vdisplay)
-+		return -EINVAL;
-+
-+	/* Minimum size is 4x4 */
-+	if ((state->src_w >> 16) < 4 || (state->src_h >> 16) < 4)
-+		return -EINVAL;
-+
-+	/* Input and output lines must have an even number of pixels. */
-+	if (((state->src_w >> 16) & 1) || (state->crtc_w & 1))
-+		return -EINVAL;
-+
-+	if (!osd_changed(state, plane->state))
-+		return 0;
-+
-+	crtc_state->mode_changed = true;
-+
-+	xres = state->src_w >> 16;
-+	yres = state->src_h >> 16;
-+
-+	/* Adjust the coefficients until we find a valid configuration */
-+	for (denomW = xres, numW = state->crtc_w;
-+	     numW <= crtc_state->mode.hdisplay; numW++)
-+		if (!reduce_fraction(&numW, &denomW))
-+			break;
-+	if (numW > crtc_state->mode.hdisplay)
-+		return -EINVAL;
-+
-+	for (denomH = yres, numH = state->crtc_h;
-+	     numH <= crtc_state->mode.vdisplay; numH++)
-+		if (!reduce_fraction(&numH, &denomH))
-+			break;
-+	if (numH > crtc_state->mode.vdisplay)
-+		return -EINVAL;
-+
-+	ipu->numW = numW;
-+	ipu->numH = numH;
-+	ipu->denomW = denomW;
-+	ipu->denomH = denomH;
-+
-+	return 0;
-+}
-+
-+static void ingenic_ipu_plane_atomic_disable(struct drm_plane *plane,
-+					     struct drm_plane_state *old_state)
-+{
-+	struct ingenic_ipu *ipu = plane_to_ingenic_ipu(plane);
-+
-+	regmap_set_bits(ipu->map, JZ_REG_IPU_CTRL, JZ_IPU_CTRL_STOP);
-+	regmap_clear_bits(ipu->map, JZ_REG_IPU_CTRL, JZ_IPU_CTRL_CHIP_EN);
-+
-+	ingenic_drm_plane_disable(ipu->master, plane);
-+}
-+
-+static const struct drm_plane_helper_funcs ingenic_ipu_plane_helper_funcs = {
-+	.atomic_update		= ingenic_ipu_plane_atomic_update,
-+	.atomic_check		= ingenic_ipu_plane_atomic_check,
-+	.atomic_disable		= ingenic_ipu_plane_atomic_disable,
-+	.prepare_fb		= drm_gem_fb_prepare_fb,
-+};
-+
-+static int
-+ingenic_ipu_plane_atomic_get_property(struct drm_plane *plane,
-+				      const struct drm_plane_state *state,
-+				      struct drm_property *property, u64 *val)
-+{
-+	struct ingenic_ipu *ipu = plane_to_ingenic_ipu(plane);
-+
-+	if (property != ipu->sharpness_prop)
-+		return -EINVAL;
-+
-+	*val = ipu->sharpness;
-+
-+	return 0;
-+}
-+
-+static int
-+ingenic_ipu_plane_atomic_set_property(struct drm_plane *plane,
-+				      struct drm_plane_state *state,
-+				      struct drm_property *property, u64 val)
-+{
-+	struct ingenic_ipu *ipu = plane_to_ingenic_ipu(plane);
-+	struct drm_crtc_state *crtc_state;
-+
-+	if (property != ipu->sharpness_prop)
-+		return -EINVAL;
-+
-+	ipu->sharpness = val;
-+
-+	if (state->crtc) {
-+		crtc_state = drm_atomic_get_existing_crtc_state(state->state, state->crtc);
-+		if (WARN_ON(!crtc_state))
-+			return -EINVAL;
-+
-+		crtc_state->mode_changed = true;
-+	}
-+
-+	return 0;
-+}
-+
-+static const struct drm_plane_funcs ingenic_ipu_plane_funcs = {
-+	.update_plane		= drm_atomic_helper_update_plane,
-+	.disable_plane		= drm_atomic_helper_disable_plane,
-+	.reset			= drm_atomic_helper_plane_reset,
-+	.destroy		= drm_plane_cleanup,
-+
-+	.atomic_duplicate_state	= drm_atomic_helper_plane_duplicate_state,
-+	.atomic_destroy_state	= drm_atomic_helper_plane_destroy_state,
-+
-+	.atomic_get_property	= ingenic_ipu_plane_atomic_get_property,
-+	.atomic_set_property	= ingenic_ipu_plane_atomic_set_property,
-+};
-+
-+static irqreturn_t ingenic_ipu_irq_handler(int irq, void *arg)
-+{
-+	struct ingenic_ipu *ipu = arg;
-+	struct drm_crtc *crtc = drm_crtc_from_index(ipu->drm, 0);
-+	unsigned int dummy;
-+
-+	/* dummy read allows CPU to reconfigure IPU */
-+	regmap_read(ipu->map, JZ_REG_IPU_STATUS, &dummy);
-+
-+	/* ACK interrupt */
-+	regmap_write(ipu->map, JZ_REG_IPU_STATUS, 0);
-+
-+	/* Set previously cached addresses */
-+	regmap_write(ipu->map, JZ_REG_IPU_Y_ADDR, ipu->addr_y);
-+	regmap_write(ipu->map, JZ_REG_IPU_U_ADDR, ipu->addr_u);
-+	regmap_write(ipu->map, JZ_REG_IPU_V_ADDR, ipu->addr_v);
-+
-+	/* Run IPU for the new frame */
-+	regmap_set_bits(ipu->map, JZ_REG_IPU_CTRL, JZ_IPU_CTRL_RUN);
-+
-+	drm_crtc_handle_vblank(crtc);
-+
-+	return IRQ_HANDLED;
-+}
-+
-+static const struct regmap_config ingenic_ipu_regmap_config = {
-+	.reg_bits = 32,
-+	.val_bits = 32,
-+	.reg_stride = 4,
-+
-+	.max_register = JZ_REG_IPU_OUT_PHY_T_ADDR,
-+};
-+
-+static int ingenic_ipu_bind(struct device *dev, struct device *master, void *d)
-+{
-+	struct platform_device *pdev = to_platform_device(dev);
-+	const struct soc_info *soc_info;
-+	struct drm_device *drm = d;
-+	struct drm_plane *plane;
-+	struct ingenic_ipu *ipu;
-+	void __iomem *base;
-+	unsigned int sharpness_max;
-+	int err, irq;
-+
-+	ipu = devm_kzalloc(dev, sizeof(*ipu), GFP_KERNEL);
-+	if (!ipu)
-+		return -ENOMEM;
-+
-+	soc_info = of_device_get_match_data(dev);
-+	if (!soc_info) {
-+		dev_err(dev, "Missing platform data\n");
-+		return -EINVAL;
-+	}
-+
-+	ipu->dev = dev;
-+	ipu->drm = drm;
-+	ipu->master = master;
-+	ipu->soc_info = soc_info;
-+
-+	base = devm_platform_ioremap_resource(pdev, 0);
-+	if (IS_ERR(base)) {
-+		dev_err(dev, "Failed to get memory resource\n");
-+		return PTR_ERR(base);
-+	}
-+
-+	ipu->map = devm_regmap_init_mmio(dev, base, &ingenic_ipu_regmap_config);
-+	if (IS_ERR(ipu->map)) {
-+		dev_err(dev, "Failed to create regmap\n");
-+		return PTR_ERR(ipu->map);
-+	}
-+
-+	irq = platform_get_irq(pdev, 0);
-+	if (irq < 0)
-+		return irq;
-+
-+	ipu->clk = devm_clk_get(dev, "ipu");
-+	if (IS_ERR(ipu->clk)) {
-+		dev_err(dev, "Failed to get pixel clock\n");
-+		return PTR_ERR(ipu->clk);
-+	}
-+
-+	err = devm_request_irq(dev, irq, ingenic_ipu_irq_handler, 0,
-+			       dev_name(dev), ipu);
-+	if (err) {
-+		dev_err(dev, "Unable to request IRQ\n");
-+		return err;
-+	}
-+
-+	plane = &ipu->plane;
-+	dev_set_drvdata(dev, plane);
-+
-+	drm_plane_helper_add(plane, &ingenic_ipu_plane_helper_funcs);
-+
-+	err = drm_universal_plane_init(drm, plane, 1, &ingenic_ipu_plane_funcs,
-+				       soc_info->formats, soc_info->num_formats,
-+				       NULL, DRM_PLANE_TYPE_PRIMARY, NULL);
-+	if (err) {
-+		dev_err(dev, "Failed to init plane: %i\n", err);
-+		return err;
-+	}
-+
-+	/*
-+	 * Sharpness settings range is [0,32]
-+	 * 0       : nearest-neighbor
-+	 * 1       : bilinear
-+	 * 2 .. 32 : bicubic (translated to sharpness factor -0.25 .. -4.0)
-+	 */
-+	sharpness_max = soc_info->has_bicubic ? 32 : 1;
-+	ipu->sharpness_prop = drm_property_create_range(drm, 0, "sharpness",
-+							0, sharpness_max);
-+	if (!ipu->sharpness_prop) {
-+		dev_err(dev, "Unable to create sharpness property\n");
-+		return -ENOMEM;
-+	}
-+
-+	/* Default sharpness factor: -0.125 * 8 = -1.0 */
-+	ipu->sharpness = soc_info->has_bicubic ? 8 : 1;
-+	drm_object_attach_property(&plane->base, ipu->sharpness_prop,
-+				   ipu->sharpness);
-+
-+	err = clk_prepare_enable(ipu->clk);
-+	if (err) {
-+		dev_err(dev, "Unable to enable clock\n");
-+		return err;
-+	}
-+
-+	return 0;
-+}
-+
-+static void ingenic_ipu_unbind(struct device *dev,
-+			       struct device *master, void *d)
-+{
-+	struct ingenic_ipu *ipu = dev_get_drvdata(dev);
-+
-+	clk_disable_unprepare(ipu->clk);
-+}
-+
-+static const struct component_ops ingenic_ipu_ops = {
-+	.bind = ingenic_ipu_bind,
-+	.unbind = ingenic_ipu_unbind,
-+};
-+
-+static int ingenic_ipu_probe(struct platform_device *pdev)
-+{
-+	return component_add(&pdev->dev, &ingenic_ipu_ops);
-+}
-+
-+static int ingenic_ipu_remove(struct platform_device *pdev)
-+{
-+	component_del(&pdev->dev, &ingenic_ipu_ops);
-+	return 0;
-+}
-+
-+static const u32 jz4725b_ipu_formats[] = {
-+	DRM_FORMAT_YUYV,
-+	DRM_FORMAT_YVYU,
-+	DRM_FORMAT_UYVY,
-+	DRM_FORMAT_VYUY,
-+	DRM_FORMAT_YUV411,
-+	DRM_FORMAT_YUV420,
-+	DRM_FORMAT_YUV422,
-+	DRM_FORMAT_YUV444,
-+};
-+
-+static const struct soc_info jz4725b_soc_info = {
-+	.formats	= jz4725b_ipu_formats,
-+	.num_formats	= ARRAY_SIZE(jz4725b_ipu_formats),
-+	.has_bicubic	= false,
-+	.set_coefs	= jz4725b_set_coefs,
-+};
-+
-+static const u32 jz4760_ipu_formats[] = {
-+	DRM_FORMAT_XRGB1555,
-+	DRM_FORMAT_XBGR1555,
-+	DRM_FORMAT_RGB565,
-+	DRM_FORMAT_BGR565,
-+	DRM_FORMAT_XRGB8888,
-+	DRM_FORMAT_XBGR8888,
-+	DRM_FORMAT_YUYV,
-+	DRM_FORMAT_YVYU,
-+	DRM_FORMAT_UYVY,
-+	DRM_FORMAT_VYUY,
-+	DRM_FORMAT_YUV411,
-+	DRM_FORMAT_YUV420,
-+	DRM_FORMAT_YUV422,
-+	DRM_FORMAT_YUV444,
-+	DRM_FORMAT_XYUV8888,
-+};
-+
-+static const struct soc_info jz4760_soc_info = {
-+	.formats	= jz4760_ipu_formats,
-+	.num_formats	= ARRAY_SIZE(jz4760_ipu_formats),
-+	.has_bicubic	= true,
-+	.set_coefs	= jz4760_set_coefs,
-+};
-+
-+static const struct of_device_id ingenic_ipu_of_match[] = {
-+	{ .compatible = "ingenic,jz4725b-ipu", .data = &jz4725b_soc_info },
-+	{ .compatible = "ingenic,jz4760-ipu", .data = &jz4760_soc_info },
-+	{ /* sentinel */ },
-+};
-+MODULE_DEVICE_TABLE(of, ingenic_ipu_of_match);
-+
-+static struct platform_driver ingenic_ipu_driver = {
-+	.driver = {
-+		.name = "ingenic-ipu",
-+		.of_match_table = ingenic_ipu_of_match,
-+	},
-+	.probe = ingenic_ipu_probe,
-+	.remove = ingenic_ipu_remove,
-+};
-+
-+struct platform_driver *ingenic_ipu_driver_ptr = &ingenic_ipu_driver;
-diff --git a/drivers/gpu/drm/ingenic/ingenic-ipu.h b/drivers/gpu/drm/ingenic/ingenic-ipu.h
-new file mode 100644
-index 000000000000..eab6fab8c7f6
---- /dev/null
-+++ b/drivers/gpu/drm/ingenic/ingenic-ipu.h
-@@ -0,0 +1,109 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+//
-+// Ingenic JZ47xx IPU - Register definitions and private API
-+//
-+// Copyright (C) 2020, Paul Cercueil <paul@crapouillou.net>
-+
-+#ifndef DRIVERS_GPU_DRM_INGENIC_INGENIC_IPU_H
-+#define DRIVERS_GPU_DRM_INGENIC_INGENIC_IPU_H
-+
-+#include <linux/bitops.h>
-+
-+#define JZ_REG_IPU_CTRL			0x00
-+#define JZ_REG_IPU_STATUS		0x04
-+#define JZ_REG_IPU_D_FMT		0x08
-+#define JZ_REG_IPU_Y_ADDR		0x0c
-+#define JZ_REG_IPU_U_ADDR		0x10
-+#define JZ_REG_IPU_V_ADDR		0x14
-+#define JZ_REG_IPU_IN_GS		0x18
-+#define JZ_REG_IPU_Y_STRIDE		0x1c
-+#define JZ_REG_IPU_UV_STRIDE		0x20
-+#define JZ_REG_IPU_OUT_ADDR		0x24
-+#define JZ_REG_IPU_OUT_GS		0x28
-+#define JZ_REG_IPU_OUT_STRIDE		0x2c
-+#define JZ_REG_IPU_RSZ_COEF_INDEX	0x30
-+#define JZ_REG_IPU_CSC_C0_COEF		0x34
-+#define JZ_REG_IPU_CSC_C1_COEF		0x38
-+#define JZ_REG_IPU_CSC_C2_COEF		0x3c
-+#define JZ_REG_IPU_CSC_C3_COEF		0x40
-+#define JZ_REG_IPU_CSC_C4_COEF		0x44
-+#define JZ_REG_IPU_HRSZ_COEF_LUT	0x48
-+#define JZ_REG_IPU_VRSZ_COEF_LUT	0x4c
-+#define JZ_REG_IPU_CSC_OFFSET		0x50
-+#define JZ_REG_IPU_Y_PHY_T_ADDR		0x54
-+#define JZ_REG_IPU_U_PHY_T_ADDR		0x58
-+#define JZ_REG_IPU_V_PHY_T_ADDR		0x5c
-+#define JZ_REG_IPU_OUT_PHY_T_ADDR	0x60
-+
-+#define JZ_IPU_CTRL_ADDR_SEL		BIT(20)
-+#define JZ_IPU_CTRL_ZOOM_SEL		BIT(18)
-+#define JZ_IPU_CTRL_DFIX_SEL		BIT(17)
-+#define JZ_IPU_CTRL_LCDC_SEL		BIT(11)
-+#define JZ_IPU_CTRL_SPKG_SEL		BIT(10)
-+#define JZ_IPU_CTRL_VSCALE		BIT(9)
-+#define JZ_IPU_CTRL_HSCALE		BIT(8)
-+#define JZ_IPU_CTRL_STOP		BIT(7)
-+#define JZ_IPU_CTRL_RST			BIT(6)
-+#define JZ_IPU_CTRL_FM_IRQ_EN		BIT(5)
-+#define JZ_IPU_CTRL_CSC_EN		BIT(4)
-+#define JZ_IPU_CTRL_VRSZ_EN		BIT(3)
-+#define JZ_IPU_CTRL_HRSZ_EN		BIT(2)
-+#define JZ_IPU_CTRL_RUN			BIT(1)
-+#define JZ_IPU_CTRL_CHIP_EN		BIT(0)
-+
-+#define JZ_IPU_STATUS_OUT_END		BIT(0)
-+
-+#define JZ_IPU_IN_GS_H_LSB		0x0
-+#define JZ_IPU_IN_GS_W_LSB		0x10
-+#define JZ_IPU_OUT_GS_H_LSB		0x0
-+#define JZ_IPU_OUT_GS_W_LSB		0x10
-+
-+#define JZ_IPU_Y_STRIDE_Y_LSB		0
-+#define JZ_IPU_UV_STRIDE_U_LSB		16
-+#define JZ_IPU_UV_STRIDE_V_LSB		0
-+
-+#define JZ_IPU_D_FMT_IN_FMT_LSB		0
-+#define JZ_IPU_D_FMT_IN_FMT_RGB555	(0x0 << JZ_IPU_D_FMT_IN_FMT_LSB)
-+#define JZ_IPU_D_FMT_IN_FMT_YUV420	(0x0 << JZ_IPU_D_FMT_IN_FMT_LSB)
-+#define JZ_IPU_D_FMT_IN_FMT_YUV422	(0x1 << JZ_IPU_D_FMT_IN_FMT_LSB)
-+#define JZ_IPU_D_FMT_IN_FMT_RGB888	(0x2 << JZ_IPU_D_FMT_IN_FMT_LSB)
-+#define JZ_IPU_D_FMT_IN_FMT_YUV444	(0x2 << JZ_IPU_D_FMT_IN_FMT_LSB)
-+#define JZ_IPU_D_FMT_IN_FMT_RGB565	(0x3 << JZ_IPU_D_FMT_IN_FMT_LSB)
-+
-+#define JZ_IPU_D_FMT_YUV_FMT_LSB	2
-+#define JZ_IPU_D_FMT_YUV_Y1UY0V		(0x0 << JZ_IPU_D_FMT_YUV_FMT_LSB)
-+#define JZ_IPU_D_FMT_YUV_Y1VY0U		(0x1 << JZ_IPU_D_FMT_YUV_FMT_LSB)
-+#define JZ_IPU_D_FMT_YUV_UY1VY0		(0x2 << JZ_IPU_D_FMT_YUV_FMT_LSB)
-+#define JZ_IPU_D_FMT_YUV_VY1UY0		(0x3 << JZ_IPU_D_FMT_YUV_FMT_LSB)
-+#define JZ_IPU_D_FMT_IN_FMT_YUV411	(0x3 << JZ_IPU_D_FMT_IN_FMT_LSB)
-+
-+#define JZ_IPU_D_FMT_OUT_FMT_LSB	19
-+#define JZ_IPU_D_FMT_OUT_FMT_RGB555	(0x0 << JZ_IPU_D_FMT_OUT_FMT_LSB)
-+#define JZ_IPU_D_FMT_OUT_FMT_RGB565	(0x1 << JZ_IPU_D_FMT_OUT_FMT_LSB)
-+#define JZ_IPU_D_FMT_OUT_FMT_RGB888	(0x2 << JZ_IPU_D_FMT_OUT_FMT_LSB)
-+#define JZ_IPU_D_FMT_OUT_FMT_YUV422	(0x3 << JZ_IPU_D_FMT_OUT_FMT_LSB)
-+#define JZ_IPU_D_FMT_OUT_FMT_RGBAAA	(0x4 << JZ_IPU_D_FMT_OUT_FMT_LSB)
-+
-+#define JZ_IPU_D_FMT_RGB_OUT_OFT_LSB	22
-+#define JZ_IPU_D_FMT_RGB_OUT_OFT_RGB	(0x0 << JZ_IPU_D_FMT_RGB_OUT_OFT_LSB)
-+#define JZ_IPU_D_FMT_RGB_OUT_OFT_RBG	(0x1 << JZ_IPU_D_FMT_RGB_OUT_OFT_LSB)
-+#define JZ_IPU_D_FMT_RGB_OUT_OFT_GBR	(0x2 << JZ_IPU_D_FMT_RGB_OUT_OFT_LSB)
-+#define JZ_IPU_D_FMT_RGB_OUT_OFT_GRB	(0x3 << JZ_IPU_D_FMT_RGB_OUT_OFT_LSB)
-+#define JZ_IPU_D_FMT_RGB_OUT_OFT_BRG	(0x4 << JZ_IPU_D_FMT_RGB_OUT_OFT_LSB)
-+#define JZ_IPU_D_FMT_RGB_OUT_OFT_BGR	(0x5 << JZ_IPU_D_FMT_RGB_OUT_OFT_LSB)
-+
-+#define JZ4725B_IPU_RSZ_LUT_COEF_LSB	2
-+#define JZ4725B_IPU_RSZ_LUT_COEF_MASK	0x7ff
-+#define JZ4725B_IPU_RSZ_LUT_IN_EN	BIT(1)
-+#define JZ4725B_IPU_RSZ_LUT_OUT_EN	BIT(0)
-+
-+#define JZ4760_IPU_RSZ_COEF20_LSB	6
-+#define JZ4760_IPU_RSZ_COEF31_LSB	17
-+#define JZ4760_IPU_RSZ_COEF_MASK	0x7ff
-+#define JZ4760_IPU_RSZ_OFFSET_LSB	1
-+#define JZ4760_IPU_RSZ_OFFSET_MASK	0x1f
-+
-+#define JZ_IPU_CSC_OFFSET_CHROMA_LSB	16
-+#define JZ_IPU_CSC_OFFSET_LUMA_LSB	16
-+
-+#endif /* DRIVERS_GPU_DRM_INGENIC_INGENIC_IPU_H */
--- 
-2.27.0
+> >  config LIST_KUNIT_TEST
+> >         tristate "KUnit Test for Kernel Linked-list structures" if
+> > !KUNIT_ALL_TESTS
+> >         depends on KUNIT
+> > diff --git a/lib/Makefile b/lib/Makefile
+> > index b1c42c10073b..8c145f85accc 100644
+> > --- a/lib/Makefile
+> > +++ b/lib/Makefile
+> > @@ -78,7 +78,6 @@ obj-$(CONFIG_TEST_VMALLOC) += test_vmalloc.o
+> >  obj-$(CONFIG_TEST_OVERFLOW) += test_overflow.o
+> >  obj-$(CONFIG_TEST_RHASHTABLE) += test_rhashtable.o
+> >  obj-$(CONFIG_TEST_SORT) += test_sort.o
+> > -obj-$(CONFIG_TEST_USER_COPY) += test_user_copy.o
+> >  obj-$(CONFIG_TEST_STATIC_KEYS) += test_static_keys.o
+> >  obj-$(CONFIG_TEST_STATIC_KEYS) += test_static_key_base.o
+> >  obj-$(CONFIG_TEST_PRINTF) += test_printf.o
+> > @@ -318,3 +317,4 @@ obj-$(CONFIG_OBJAGG) += objagg.o
+> >  # KUnit tests
+> >  obj-$(CONFIG_LIST_KUNIT_TEST) += list-test.o
+> >  obj-$(CONFIG_LINEAR_RANGES_TEST) += test_linear_ranges.o
+> > +obj-$(CONFIG_USER_COPY_KUNIT) += user_copy_kunit.o
+> > diff --git a/lib/test_user_copy.c b/lib/user_copy_kunit.c
+> > similarity index 55%
+> > rename from lib/test_user_copy.c
+> > rename to lib/user_copy_kunit.c
+> > index 5ff04d8fe971..c15bb1e997d6 100644
+> > --- a/lib/test_user_copy.c
+> > +++ b/lib/user_copy_kunit.c
+> > @@ -16,6 +16,7 @@
+> >  #include <linux/slab.h>
+> >  #include <linux/uaccess.h>
+> >  #include <linux/vmalloc.h>
+> > +#include <kunit/test.h>
+> > 
+> >  /*
+> >   * Several 32-bit architectures support 64-bit {get,put}_user()
+> > calls.
+> > @@ -31,26 +32,16 @@
+> >  # define TEST_U64
+> >  #endif
+> > 
+> > -#define test(condition, msg,
+> > ...)                                      \
+> > -({                                                                
+> >      \
+> > -       int cond =
+> > (condition);                                         \
+> > -       if
+> > (cond)                                                       \
+> > -               pr_warn("[%d] " msg "\n", __LINE__,
+> > ##__VA_ARGS__);     \
+> > -       cond;                                                      
+> >      \
+> > -})
+> > -
+> >  static bool is_zeroed(void *from, size_t size)
+> >  {
+> >         return memchr_inv(from, 0x0, size) == NULL;
+> >  }
+> > 
+> > -static int test_check_nonzero_user(char *kmem, char __user *umem,
+> > size_t size)
+> > +static void test_check_nonzero_user(struct kunit *test, char
+> > *kmem, char __user *umem, size_t size)
+> >  {
+> > -       int ret = 0;
+> >         size_t start, end, i, zero_start, zero_end;
+> > 
+> > -       if (test(size < 2 * PAGE_SIZE, "buffer too small"))
+> > -               return -EINVAL;
+> > +       KUNIT_EXPECT_FALSE_MSG(test, size < 2 * PAGE_SIZE, "buffer
+> > too small");
+> > 
+> >         /*
+> >          * We want to cross a page boundary to exercise the code
+> > more
+> > @@ -84,7 +75,7 @@ static int test_check_nonzero_user(char *kmem,
+> > char __user *umem, size_t size)
+> >         for (i = zero_end; i < size; i += 2)
+> >                 kmem[i] = 0xff;
+> > 
+> > -       ret |= test(copy_to_user(umem, kmem, size),
+> > +       KUNIT_EXPECT_FALSE_MSG(test, copy_to_user(umem, kmem,
+> > size),
+> >                     "legitimate copy_to_user failed");
+> > 
+> >         for (start = 0; start <= size; start++) {
+> > @@ -93,35 +84,31 @@ static int test_check_nonzero_user(char *kmem,
+> > char __user *umem, size_t size)
+> >                         int retval = check_zeroed_user(umem +
+> > start, len);
+> >                         int expected = is_zeroed(kmem + start,
+> > len);
+> > 
+> > -                       ret |= test(retval != expected,
+> > -                                   "check_nonzero_user(=%d) !=
+> > memchr_inv(=%d) mismatch (start=%zu, end=%zu)",
+> > -                                   retval, expected, start, end);
+> > +                       KUNIT_EXPECT_FALSE_MSG(test, retval !=
+> > expected,
+> > +                           "check_nonzero_user(=%d) !=
+> > memchr_inv(=%d) mismatch (start=%zu, end=%zu)",
+> > +                           retval, expected, start, end);
+> >                 }
+> >         }
+> > -
+> > -       return ret;
+> >  }
+> > 
+> > -static int test_copy_struct_from_user(char *kmem, char __user
+> > *umem,
+> > +static void test_copy_struct_from_user(struct kunit *test, char
+> > *kmem, char __user *umem,
+> >                                       size_t size)
+> >  {
+> > -       int ret = 0;
+> >         char *umem_src = NULL, *expected = NULL;
+> >         size_t ksize, usize;
+> > 
+> >         umem_src = kmalloc(size, GFP_KERNEL);
+> > -       ret = test(umem_src == NULL, "kmalloc failed");
+> > -       if (ret)
+> > -               goto out_free;
+> > +       KUNIT_EXPECT_FALSE_MSG(test, umem_src == NULL, "kmalloc
+> > failed");
+> > 
+> >         expected = kmalloc(size, GFP_KERNEL);
+> > -       ret = test(expected == NULL, "kmalloc failed");
+> > -       if (ret)
+> > -               goto out_free;
+> > +
+> > +       if (expected == NULL)
+> > +               kfree(umem_src);
+> > +       KUNIT_EXPECT_FALSE_MSG(test, expected == NULL, "kmalloc
+> > failed");
+> > 
+> >         /* Fill umem with a fixed byte pattern. */
+> >         memset(umem_src, 0x3e, size);
+> > -       ret |= test(copy_to_user(umem, umem_src, size),
+> > +       KUNIT_EXPECT_FALSE_MSG(test, copy_to_user(umem, umem_src,
+> > size),
+> >                     "legitimate copy_to_user failed");
+> > 
+> >         /* Check basic case -- (usize == ksize). */
+> > @@ -131,9 +118,9 @@ static int test_copy_struct_from_user(char
+> > *kmem, char __user *umem,
+> >         memcpy(expected, umem_src, ksize);
+> > 
+> >         memset(kmem, 0x0, size);
+> > -       ret |= test(copy_struct_from_user(kmem, ksize, umem,
+> > usize),
+> > +       KUNIT_EXPECT_FALSE_MSG(test, copy_struct_from_user(kmem,
+> > ksize, umem, usize),
+> >                     "copy_struct_from_user(usize == ksize)
+> > failed");
+> > -       ret |= test(memcmp(kmem, expected, ksize),
+> > +       KUNIT_EXPECT_FALSE_MSG(test, memcmp(kmem, expected, ksize),
+> >                     "copy_struct_from_user(usize == ksize) gives
+> > unexpected copy");
+> > 
+> >         /* Old userspace case -- (usize < ksize). */
+> > @@ -144,9 +131,9 @@ static int test_copy_struct_from_user(char
+> > *kmem, char __user *umem,
+> >         memset(expected + usize, 0x0, ksize - usize);
+> > 
+> >         memset(kmem, 0x0, size);
+> > -       ret |= test(copy_struct_from_user(kmem, ksize, umem,
+> > usize),
+> > +       KUNIT_EXPECT_FALSE_MSG(test, copy_struct_from_user(kmem,
+> > ksize, umem, usize),
+> >                     "copy_struct_from_user(usize < ksize) failed");
+> > -       ret |= test(memcmp(kmem, expected, ksize),
+> > +       KUNIT_EXPECT_FALSE_MSG(test, memcmp(kmem, expected, ksize),
+> >                     "copy_struct_from_user(usize < ksize) gives
+> > unexpected copy");
+> > 
+> >         /* New userspace (-E2BIG) case -- (usize > ksize). */
+> > @@ -154,7 +141,7 @@ static int test_copy_struct_from_user(char
+> > *kmem, char __user *umem,
+> >         usize = size;
+> > 
+> >         memset(kmem, 0x0, size);
+> > -       ret |= test(copy_struct_from_user(kmem, ksize, umem, usize)
+> > != -E2BIG,
+> > +       KUNIT_EXPECT_FALSE_MSG(test, copy_struct_from_user(kmem,
+> > ksize, umem, usize) != -E2BIG,
+> >                     "copy_struct_from_user(usize > ksize) didn't
+> > give E2BIG");
+> > 
+> >         /* New userspace (success) case -- (usize > ksize). */
+> > @@ -162,24 +149,18 @@ static int test_copy_struct_from_user(char
+> > *kmem, char __user *umem,
+> >         usize = size;
+> > 
+> >         memcpy(expected, umem_src, ksize);
+> > -       ret |= test(clear_user(umem + ksize, usize - ksize),
+> > +       KUNIT_EXPECT_FALSE_MSG(test, clear_user(umem + ksize, usize
+> > - ksize),
+> >                     "legitimate clear_user failed");
+> > 
+> >         memset(kmem, 0x0, size);
+> > -       ret |= test(copy_struct_from_user(kmem, ksize, umem,
+> > usize),
+> > +       KUNIT_EXPECT_FALSE_MSG(test, copy_struct_from_user(kmem,
+> > ksize, umem, usize),
+> >                     "copy_struct_from_user(usize > ksize) failed");
+> > -       ret |= test(memcmp(kmem, expected, ksize),
+> > +       KUNIT_EXPECT_FALSE_MSG(test, memcmp(kmem, expected, ksize),
+> >                     "copy_struct_from_user(usize > ksize) gives
+> > unexpected copy");
+> > -
+> > -out_free:
+> > -       kfree(expected);
+> > -       kfree(umem_src);
+> > -       return ret;
+> >  }
+> > 
+> > -static int __init test_user_copy_init(void)
+> > +static void user_copy_test(struct kunit *test)
+> >  {
+> > -       int ret = 0;
+> >         char *kmem;
+> >         char __user *usermem;
+> >         char *bad_usermem;
+> > @@ -192,16 +173,14 @@ static int __init test_user_copy_init(void)
+> >  #endif
+> > 
+> >         kmem = kmalloc(PAGE_SIZE * 2, GFP_KERNEL);
+> > -       if (!kmem)
+> > -               return -ENOMEM;
+> > +       KUNIT_EXPECT_FALSE_MSG(test, kmem == NULL, "kmalloc
+> > failed");
+> > 
+> >         user_addr = vm_mmap(NULL, 0, PAGE_SIZE * 2,
+> >                             PROT_READ | PROT_WRITE | PROT_EXEC,
+> >                             MAP_ANONYMOUS | MAP_PRIVATE, 0);
+> >         if (user_addr >= (unsigned long)(TASK_SIZE)) {
+> > -               pr_warn("Failed to allocate user memory\n");
+> >                 kfree(kmem);
+> > -               return -ENOMEM;
+> > +               KUNIT_FAIL(test, "Failed to allocate user memory");
+> >         }
+> > 
+> >         usermem = (char __user *)user_addr;
+> > @@ -211,29 +190,29 @@ static int __init test_user_copy_init(void)
+> >          * Legitimate usage: none of these copies should fail.
+> >          */
+> >         memset(kmem, 0x3a, PAGE_SIZE * 2);
+> > -       ret |= test(copy_to_user(usermem, kmem, PAGE_SIZE),
+> > -                   "legitimate copy_to_user failed");
+> > +       KUNIT_EXPECT_FALSE_MSG(test, copy_to_user(usermem, kmem,
+> > PAGE_SIZE), "legitimate copy_to_user failed");
+> > +
+> >         memset(kmem, 0x0, PAGE_SIZE);
+> > -       ret |= test(copy_from_user(kmem, usermem, PAGE_SIZE),
+> > -                   "legitimate copy_from_user failed");
+> > -       ret |= test(memcmp(kmem, kmem + PAGE_SIZE, PAGE_SIZE),
+> > -                   "legitimate usercopy failed to copy data");
+> > -
+> > -#define test_legit(size,
+> > check)                                                  \
+> > -       do
+> > {                                                              \
+> > -               val_##size =
+> > check;                                       \
+> > -               ret |= test(put_user(val_##size, (size __user
+> > *)usermem), \
+> > -                   "legitimate put_user (" #size ")
+> > failed");            \
+> > -               val_##size =
+> > 0;                                           \
+> > -               ret |= test(get_user(val_##size, (size __user
+> > *)usermem), \
+> > -                   "legitimate get_user (" #size ")
+> > failed");            \
+> > -               ret |= test(val_##size !=
+> > check,                          \
+> > -                   "legitimate get_user (" #size ") failed to do
+> > copy"); \
+> > -               if (val_##size != check)
+> > {                                \
+> > -                       pr_info("0x%llx !=
+> > 0x%llx\n",                     \
+> > -                               (unsigned long
+> > long)val_##size,           \
+> > -                               (unsigned long
+> > long)check);               \
+> > -               }                                                  
+> >        \
+> > +       KUNIT_EXPECT_FALSE_MSG(test, copy_from_user(kmem, usermem,
+> > PAGE_SIZE),
+> > +                              "legitimate copy_from_user failed");
+> > +       KUNIT_EXPECT_FALSE_MSG(test, memcmp(kmem, kmem + PAGE_SIZE,
+> > PAGE_SIZE),
+> > +                              "legitimate usercopy failed to copy
+> > data");
+> > +
+> > +#define test_legit(size,
+> > check)                                                             
+> >            \
+> > +       do
+> > {                                                                  
+> >                   \
+> > +               val_##size =
+> > check;                                                             
+> > \
+> > +               KUNIT_EXPECT_FALSE_MSG(test, put_user(val_##size,
+> > (size __user *)usermem),      \
+> > +                               "legitimate put_user (" #size ")
+> > failed");                      \
+> > +               val_##size =
+> > 0;                                                                 
+> > \
+> > +               KUNIT_EXPECT_FALSE_MSG(test, get_user(val_##size,
+> > (size __user *)usermem),      \
+> > +                               "legitimate get_user (" #size ")
+> > failed");                      \
+> > +               KUNIT_EXPECT_FALSE_MSG(test, val_##size !=
+> > check,                               \
+> > +                               "legitimate get_user (" #size ")
+> > failed to do copy");           \
+> > +               if (val_##size != check)
+> > {                                                      \
+> > +                       kunit_info(test, "0x%llx !=
+> > 0x%llx\n",                                  \
+> > +                               (unsigned long
+> > long)val_##size,                                 \
+> > +                               (unsigned long
+> > long)check);                                     \
+> > +               }                                                  
+> >                              \
+> >         } while (0)
+> > 
+> >         test_legit(u8,  0x5a);
+> > @@ -245,9 +224,9 @@ static int __init test_user_copy_init(void)
+> >  #undef test_legit
+> > 
+> >         /* Test usage of check_nonzero_user(). */
+> > -       ret |= test_check_nonzero_user(kmem, usermem, 2 *
+> > PAGE_SIZE);
+> > +       test_check_nonzero_user(test, kmem, usermem, 2 *
+> > PAGE_SIZE);
+> >         /* Test usage of copy_struct_from_user(). */
+> > -       ret |= test_copy_struct_from_user(kmem, usermem, 2 *
+> > PAGE_SIZE);
+> > +       test_copy_struct_from_user(test, kmem, usermem, 2 *
+> > PAGE_SIZE);
+> > 
+> >         /*
+> >          * Invalid usage: none of these copies should succeed.
+> > @@ -258,13 +237,13 @@ static int __init test_user_copy_init(void)
+> >         memset(kmem + PAGE_SIZE, 0, PAGE_SIZE);
+> > 
+> >         /* Reject kernel-to-kernel copies through copy_from_user().
+> > */
+> > -       ret |= test(!copy_from_user(kmem, (char __user *)(kmem +
+> > PAGE_SIZE),
+> > -                                   PAGE_SIZE),
+> > -                   "illegal all-kernel copy_from_user passed");
+> > +       KUNIT_EXPECT_FALSE_MSG(test, !copy_from_user(kmem, (char
+> > __user *)(kmem + PAGE_SIZE),
+> > +                                                PAGE_SIZE),
+> > +                               "illegal all-kernel copy_from_user
+> > passed");
+> > 
+> >         /* Destination half of buffer should have been zeroed. */
+> > -       ret |= test(memcmp(kmem + PAGE_SIZE, kmem, PAGE_SIZE),
+> > -                   "zeroing failure for illegal all-kernel
+> > copy_from_user");
+> > +       KUNIT_EXPECT_FALSE_MSG(test, memcmp(kmem + PAGE_SIZE, kmem,
+> > PAGE_SIZE),
+> > +                       "zeroing failure for illegal all-kernel
+> > copy_from_user");
+> > 
+> >  #if 0
+> >         /*
+> > @@ -273,30 +252,28 @@ static int __init test_user_copy_init(void)
+> >          * to be tested in LKDTM instead, since this test module
+> > does not
+> >          * expect to explode.
+> >          */
+> > -       ret |= test(!copy_from_user(bad_usermem, (char __user
+> > *)kmem,
+> > -                                   PAGE_SIZE),
+> > -                   "illegal reversed copy_from_user passed");
+> > +       KUNIT_EXPECT_FALSE_MSG(test, !copy_from_user(bad_usermem,
+> > (char __user *)kmem,
+> > +                                                    PAGE_SIZE),
+> > +                               "illegal reversed copy_from_user
+> > passed");
+> >  #endif
+> > -       ret |= test(!copy_to_user((char __user *)kmem, kmem +
+> > PAGE_SIZE,
+> > -                                 PAGE_SIZE),
+> > -                   "illegal all-kernel copy_to_user passed");
+> > -       ret |= test(!copy_to_user((char __user *)kmem, bad_usermem,
+> > -                                 PAGE_SIZE),
+> > -                   "illegal reversed copy_to_user passed");
+> > -
+> > -#define test_illegal(size,
+> > check)                                          \
+> > -       do
+> > {                                                                \
+> > -               val_##size =
+> > (check);                                       \
+> > -               ret |= test(!get_user(val_##size, (size __user
+> > *)kmem),     \
+> > -                   "illegal get_user (" #size ")
+> > passed");                 \
+> > -               ret |= test(val_##size !=
+> > (size)0,                          \
+> > -                   "zeroing failure for illegal get_user (" #size
+> > ")");    \
+> > -               if (val_##size != (size)0)
+> > {                                \
+> > -                       pr_info("0x%llx !=
+> > 0\n",                            \
+> > -                               (unsigned long
+> > long)val_##size);            \
+> > -               }                                                  
+> >          \
+> > -               ret |= test(!put_user(val_##size, (size __user
+> > *)kmem),     \
+> > -                   "illegal put_user (" #size ")
+> > passed");                 \
+> > +       KUNIT_EXPECT_FALSE_MSG(test, !copy_to_user((char __user
+> > *)kmem, kmem + PAGE_SIZE, PAGE_SIZE),
+> > +                       "illegal all-kernel copy_to_user passed");
+> > +       KUNIT_EXPECT_FALSE_MSG(test, !copy_to_user((char __user
+> > *)kmem, bad_usermem, PAGE_SIZE),
+> > +                       "illegal reversed copy_to_user passed");
+> > +
+> > +#define test_illegal(size,
+> > check)                                                             
+> >  \
+> > +       do
+> > {                                                                  
+> >                   \
+> > +               val_##size =
+> > (check);                                                           
+> > \
+> > +               KUNIT_EXPECT_FALSE_MSG(test, !get_user(val_##size,
+> > (size __user *)kmem),        \
+> > +                               "illegal get_user (" #size ")
+> > passed");                         \
+> > +               KUNIT_EXPECT_FALSE_MSG(test, val_##size !=
+> > (size)0,                             \
+> > +                               "zeroing failure for illegal
+> > get_user (" #size ")");            \
+> > +               if (val_##size != (size)0)
+> > {                                                    \
+> > +                       kunit_info(test, "0x%llx !=
+> > 0\n",                                       \
+> > +                                       (unsigned long
+> > long)val_##size);                        \
+> > +               }                                                  
+> >                              \
+> > +               KUNIT_EXPECT_FALSE_MSG(test, !put_user(val_##size,
+> > (size __user *)kmem),        \
+> > +                               "illegal put_user (" #size ")
+> > passed");                         \
+> >         } while (0)
+> > 
+> >         test_illegal(u8,  0x5a);
+> > @@ -309,23 +286,18 @@ static int __init test_user_copy_init(void)
+> > 
+> >         vm_munmap(user_addr, PAGE_SIZE * 2);
+> >         kfree(kmem);
+> > -
+> > -       if (ret == 0) {
+> > -               pr_info("tests passed.\n");
+> > -               return 0;
+> > -       }
+> > -
+> > -       return -EINVAL;
+> >  }
+> > 
+> > -module_init(test_user_copy_init);
+> > -
+> > -static void __exit test_user_copy_exit(void)
+> > -{
+> > -       pr_info("unloaded.\n");
+> > -}
+> > +static struct kunit_case user_copy_test_cases[] = {
+> > +       KUNIT_CASE(user_copy_test),
+> > +       {}
+> > +};
+> > 
+> > -module_exit(test_user_copy_exit);
+> > +static struct kunit_suite user_copy_test_suite = {
+> > +       .name = "user_copy",
+> > +       .test_cases = user_copy_test_cases,
+> > +};
+> > 
+> > +kunit_test_suites(&user_copy_test_suite);
+> >  MODULE_AUTHOR("Kees Cook <keescook@chromium.org>");
+> >  MODULE_LICENSE("GPL");
+> > --
+> > 2.26.2
+> > 
 
