@@ -4,35 +4,35 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C66FC433EB
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 08:54:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ABCF9C433E4
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 08:54:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EECAB20771
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 08:54:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 952B92078C
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 08:54:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726629AbgGPIyo (ORCPT
+        id S1728081AbgGPIy5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 04:54:44 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:7759 "EHLO huawei.com"
+        Thu, 16 Jul 2020 04:54:57 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:7760 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726013AbgGPIyn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 04:54:43 -0400
-Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 398F9A10BBD81C6EFCED;
-        Thu, 16 Jul 2020 16:54:42 +0800 (CST)
+        id S1726013AbgGPIy4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jul 2020 04:54:56 -0400
+Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id ACAD59071DE4AB4BA700;
+        Thu, 16 Jul 2020 16:54:54 +0800 (CST)
 Received: from localhost.localdomain.localdomain (10.175.113.25) by
- DGGEMS401-HUB.china.huawei.com (10.3.19.201) with Microsoft SMTP Server id
- 14.3.487.0; Thu, 16 Jul 2020 16:54:40 +0800
+ DGGEMS414-HUB.china.huawei.com (10.3.19.214) with Microsoft SMTP Server id
+ 14.3.487.0; Thu, 16 Jul 2020 16:54:53 +0800
 From:   Qinglang Miao <miaoqinglang@huawei.com>
 To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Tony Luck <tony.luck@intel.com>, Borislav Petkov <bp@alien8.de>
-CC:     <linux-edac@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH -next] RAS/CEC: Convert to DEFINE_SHOW_ATTRIBUTE
-Date:   Thu, 16 Jul 2020 16:58:34 +0800
-Message-ID: <20200716085834.11484-1-miaoqinglang@huawei.com>
+        Sebastian Reichel <sre@kernel.org>
+CC:     <linux-pm@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH -next] power: Convert to DEFINE_SHOW_ATTRIBUTE
+Date:   Thu, 16 Jul 2020 16:58:49 +0800
+Message-ID: <20200716085849.11571-1-miaoqinglang@huawei.com>
 X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7BIT
@@ -50,51 +50,32 @@ Use DEFINE_SHOW_ATTRIBUTE macro to simplify the code.
 
 Signed-off-by: Yongqiang Liu <liuyongqiang13@huawei.com>
 ---
- drivers/ras/cec.c | 17 +++--------------
- 1 file changed, 3 insertions(+), 14 deletions(-)
+ drivers/power/supply/da9030_battery.c | 12 +-----------
+ 1 file changed, 1 insertion(+), 11 deletions(-)
 
-diff --git a/drivers/ras/cec.c b/drivers/ras/cec.c
-index a992bb426..ed47b59e4 100644
---- a/drivers/ras/cec.c
-+++ b/drivers/ras/cec.c
-@@ -435,7 +435,7 @@ DEFINE_DEBUGFS_ATTRIBUTE(action_threshold_ops, u64_get, action_threshold_set, "%
- 
- static const char * const bins[] = { "00", "01", "10", "11" };
- 
--static int array_dump(struct seq_file *m, void *v)
-+static int array_show(struct seq_file *m, void *v)
- {
- 	struct ce_array *ca = &ce_arr;
- 	int i;
-@@ -467,18 +467,7 @@ static int array_dump(struct seq_file *m, void *v)
+diff --git a/drivers/power/supply/da9030_battery.c b/drivers/power/supply/da9030_battery.c
+index 292ecf875..0deba48d2 100644
+--- a/drivers/power/supply/da9030_battery.c
++++ b/drivers/power/supply/da9030_battery.c
+@@ -172,17 +172,7 @@ static int bat_debug_show(struct seq_file *s, void *data)
  	return 0;
  }
  
--static int array_open(struct inode *inode, struct file *filp)
+-static int debug_open(struct inode *inode, struct file *file)
 -{
--	return single_open(filp, array_dump, NULL);
+-	return single_open(file, bat_debug_show, inode->i_private);
 -}
 -
--static const struct file_operations array_ops = {
--	.owner	 = THIS_MODULE,
--	.open	 = array_open,
--	.read_iter	 = seq_read_iter,
--	.llseek	 = seq_lseek,
--	.release = single_release,
+-static const struct file_operations bat_debug_fops = {
+-	.open		= debug_open,
+-	.read_iter		= seq_read_iter,
+-	.llseek		= seq_lseek,
+-	.release	= single_release,
 -};
-+DEFINE_SHOW_ATTRIBUTE(array);
++DEFINE_SHOW_ATTRIBUTE(bat_debug);
  
- static int __init create_debugfs_nodes(void)
+ static struct dentry *da9030_bat_create_debugfs(struct da9030_charger *charger)
  {
-@@ -513,7 +502,7 @@ static int __init create_debugfs_nodes(void)
- 		goto err;
- 	}
- 
--	array = debugfs_create_file("array", S_IRUSR, d, NULL, &array_ops);
-+	array = debugfs_create_file("array", S_IRUSR, d, NULL, &array_fops);
- 	if (!array) {
- 		pr_warn("Error creating array debugfs node!\n");
- 		goto err;
 -- 
 2.17.1
 
