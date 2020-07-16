@@ -2,85 +2,110 @@ Return-Path: <SRS0=y5Sx=A3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E197AC433E7
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 21:18:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71737C433EC
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 21:18:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BD85B20809
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 21:18:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594934291;
-	bh=fl1M7KHJ6l6iSD5rSUZXrn1j+ZTdSGkBJT8qw0W0aV8=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=sUV4EdTdiJiJSUwSop6hBMSLOAegR5HLfB61BHSBVmJP7CXNRDlAyVVxm6q11+NwU
-	 dwt9TmU0fzU5TRC1pkUw4k+AWw3GIy79Q2798QPeDBjURBYhucRobqd0MrKsXBP0Yt
-	 lNLMHe8mPYDopvMuknUBT9I1igs6xLrFNrHAZTl8=
+	by mail.kernel.org (Postfix) with ESMTP id 4A40520809
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 21:18:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=deltatee.com header.i=@deltatee.com header.b="QKijUNa7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727815AbgGPVR4 (ORCPT
+        id S1727915AbgGPVSR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 17:17:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56798 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727771AbgGPVRx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 17:17:53 -0400
-Received: from embeddedor (unknown [201.162.240.161])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4451720760;
-        Thu, 16 Jul 2020 21:17:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594934273;
-        bh=fl1M7KHJ6l6iSD5rSUZXrn1j+ZTdSGkBJT8qw0W0aV8=;
-        h=Date:From:To:Cc:Subject:From;
-        b=QzHl1kwGgmnLUBfSLRD17xkzonCsUImNvS+Y6vY0WCWOfENLRZgMbl4EjNdoheJwF
-         /zgVdBHiRfOq9OHpLBfUou8VouyIvV8uIHuAv2NT6WBE9gQ574IH2MK8TkXcf2blHv
-         7L8OZIyW1cuQoTCj4I2k1AO5iJcdrEKAsnE/NTzg=
-Date:   Thu, 16 Jul 2020 16:23:17 -0500
-From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     Tony Lindgren <tony@atomide.com>,
-        Haojian Zhuang <haojian.zhuang@linaro.org>,
-        Linus Walleij <linus.walleij@linaro.org>
-Cc:     linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Subject: [PATCH][next] pinctrl: single: Use fallthrough pseudo-keyword
-Message-ID: <20200716212317.GA17754@embeddedor>
+        Thu, 16 Jul 2020 17:18:17 -0400
+Received: from ale.deltatee.com ([204.191.154.188]:47690 "EHLO
+        ale.deltatee.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725970AbgGPVRz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jul 2020 17:17:55 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=deltatee.com; s=20200525; h=Subject:Content-Transfer-Encoding:MIME-Version:
+        References:In-Reply-To:Message-Id:Date:Cc:To:From:Sender:Reply-To:
+        Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=9t8ChRbXN1OVDkyC3IRxGbWR7S5dFVtwk8MI6eaiLG0=; b=QKijUNa7ayJQsXhWspeldxe5jT
+        5k4StK+Q+vN35//Ibd6Rao+vfuTqGAfHynjs+Uds4OhJCTK61L1M+jIjGaV7P5mqXIoE5q2ftRtFd
+        SEZWbThMPlSxXLhoyK0/7CQnS48+sG2ehgmHcjiLjghE3jUGxDcnJJ3bpgtWKoMyAQY9F592XUfCq
+        AAiRx6eRoglsfYLjjuTdjAsOdSMfA2d/jf7VnhjIcczAw9nRcsDMpB0G+FVZf58l/BbSkC/1CbtLG
+        WLVYyDopHZ+izU1Axkk4oZEbRyJrSZmKKUNUhezzrAjCk7iz33X3qOJ8cCwMKsBgaCkPKPjDwgKIG
+        DCrmMsMA==;
+Received: from cgy1-donard.priv.deltatee.com ([172.16.1.31])
+        by ale.deltatee.com with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <gunthorp@deltatee.com>)
+        id 1jwAZQ-0005uI-As; Thu, 16 Jul 2020 14:33:33 -0600
+Received: from gunthorp by cgy1-donard.priv.deltatee.com with local (Exim 4.92)
+        (envelope-from <gunthorp@deltatee.com>)
+        id 1jwAZE-0004BT-Sj; Thu, 16 Jul 2020 14:33:20 -0600
+From:   Logan Gunthorpe <logang@deltatee.com>
+To:     linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org
+Cc:     Christoph Hellwig <hch@lst.de>, Sagi Grimberg <sagi@grimberg.me>,
+        Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@fb.com>,
+        Chaitanya Kulkarni <Chaitanya.Kulkarni@wdc.com>,
+        Max Gurtovoy <maxg@mellanox.com>,
+        Stephen Bates <sbates@raithlin.com>,
+        Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>,
+        Logan Gunthorpe <logang@deltatee.com>
+Date:   Thu, 16 Jul 2020 14:33:14 -0600
+Message-Id: <20200716203319.16022-5-logang@deltatee.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200716203319.16022-1-logang@deltatee.com>
+References: <20200716203319.16022-1-logang@deltatee.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 172.16.1.31
+X-SA-Exim-Rcpt-To: linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org, hch@lst.de, sagi@grimberg.me, kbusch@kernel.org, axboe@fb.com, maxg@mellanox.com, sbates@raithlin.com, Chaitanya.Kulkarni@wdc.com, chaitanya.kulkarni@wdc.com, logang@deltatee.com
+X-SA-Exim-Mail-From: gunthorp@deltatee.com
+Subject: [PATCH v15 4/9] nvmet-passthru: Introduce NVMet passthru Kconfig option
+X-SA-Exim-Version: 4.2.1 (built Wed, 08 May 2019 21:11:16 +0000)
+X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Replace the existing /* fall through */ comments and its variants with
-the new pseudo-keyword macro fallthrough[1].
+From: Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
 
-[1] https://www.kernel.org/doc/html/latest/process/deprecated.html?highlight=fallthrough#implicit-switch-case-fall-through
+This patch updates KConfig file for the NVMeOF target where we add new
+option so that user can selectively enable/disable passthru code.
 
-Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+Signed-off-by: Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
+[logang@deltatee.com: fixed some of the wording in the help message]
+Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
+Reviewed-by: Sagi Grimberg <sagi@grimberg.me>
 ---
- drivers/pinctrl/pinctrl-single.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/nvme/target/Kconfig | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
-diff --git a/drivers/pinctrl/pinctrl-single.c b/drivers/pinctrl/pinctrl-single.c
-index e6d1cf25782c..132b36ef5d83 100644
---- a/drivers/pinctrl/pinctrl-single.c
-+++ b/drivers/pinctrl/pinctrl-single.c
-@@ -560,7 +560,7 @@ static int pcs_pinconf_set(struct pinctrl_dev *pctldev,
- 			case PIN_CONFIG_BIAS_PULL_UP:
- 				if (arg)
- 					pcs_pinconf_clear_bias(pctldev, pin);
--				/* fall through */
-+				fallthrough;
- 			case PIN_CONFIG_INPUT_SCHMITT_ENABLE:
- 				data &= ~func->conf[i].mask;
- 				if (arg)
+diff --git a/drivers/nvme/target/Kconfig b/drivers/nvme/target/Kconfig
+index 4474952d64c6..8056955e652c 100644
+--- a/drivers/nvme/target/Kconfig
++++ b/drivers/nvme/target/Kconfig
+@@ -16,6 +16,18 @@ config NVME_TARGET
+ 	  To configure the NVMe target you probably want to use the nvmetcli
+ 	  tool from http://git.infradead.org/users/hch/nvmetcli.git.
+ 
++config NVME_TARGET_PASSTHRU
++	bool "NVMe Target Passthrough support"
++	depends on NVME_TARGET
++	depends on NVME_CORE=y || NVME_CORE=NVME_TARGET
++	help
++	  This enables target side NVMe passthru controller support for the
++	  NVMe Over Fabrics protocol. It allows for hosts to manage and
++	  directly access an actual NVMe controller residing on the target
++	  side, incuding executing Vendor Unique Commands.
++
++	  If unsure, say N.
++
+ config NVME_TARGET_LOOP
+ 	tristate "NVMe loopback device support"
+ 	depends on NVME_TARGET
 -- 
-2.27.0
+2.20.1
 
