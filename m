@@ -2,82 +2,154 @@ Return-Path: <SRS0=y5Sx=A3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 906FAC433E6
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 22:06:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 538D6C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 22:06:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 68568207E8
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 22:06:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594937176;
-	bh=moGL5n6Z8qNj347wJeSs4eMD/PHnMpW529lR3Y4F1uE=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=DbkM8w7rCamk7VFchqL6cgU8WgknLOzFlP7w0TMJyRBDtXV+ot2ZBz/wTELKqDuz/
-	 Gy03/kamAvEpIa+AehybdfslOhC2apeJfZ1Zu0NwVd0UCgLOnrm3WMWrPgvlElaJH+
-	 v59wCJXr1IYpWSLyHQBLP4V3qWQHLbINwN9lNUXc=
+	by mail.kernel.org (Postfix) with ESMTP id 2A830207CB
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 22:06:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726629AbgGPWGP (ORCPT
+        id S1726917AbgGPWGj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 18:06:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53240 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726007AbgGPWGO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 18:06:14 -0400
-Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B8762207CB;
-        Thu, 16 Jul 2020 22:06:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594937174;
-        bh=moGL5n6Z8qNj347wJeSs4eMD/PHnMpW529lR3Y4F1uE=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=OVmvdGLPhvlmBazeq6J3gJhP5oAoabUXsKw85EHnWtKNEGClJKUdixMpmWls4pxg5
-         4g+Ti1WoMQslI8u02m1hcqF8GDrV4GmqGRkx3LW8nXG7zIsEh4kpH9gWjsqzWH44oZ
-         WiM3JfBB7V7AJNwQ26pta5IffsKsDCLw3HJFbJ6w=
-Date:   Thu, 16 Jul 2020 15:06:13 -0700
-From:   Andrew Morton <akpm@linux-foundation.org>
-To:     kernel test robot <lkp@intel.com>
-Cc:     Lecopzer Chen <lecopzer.chen@mediatek.com>,
-        Mark-PK Tsai <Mark-PK.Tsai@mediatek.com>,
-        Linux Memory Management List <linux-mm@kvack.org>,
-        linux-kernel@vger.kernel.org, LKP <lkp@lists.01.org>
-Subject: Re: db57e98d87
- ("mm/sparse.c: fix ALIGN() without power of 2 in .."): BUG: kernel
- reboot-without-warning in early-boot stage, last printk: early console in
- setup code
-Message-Id: <20200716150613.409103a2d1e4c3f5f63652b8@linux-foundation.org>
-In-Reply-To: <20200716083159.GH3874@shao2-debian>
-References: <20200716083159.GH3874@shao2-debian>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Thu, 16 Jul 2020 18:06:39 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:63874 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726007AbgGPWGj (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jul 2020 18:06:39 -0400
+Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06GM3tGU136868;
+        Thu, 16 Jul 2020 18:06:31 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 32ax789gnp-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 16 Jul 2020 18:06:31 -0400
+Received: from m0098414.ppops.net (m0098414.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 06GM4Yb7140217;
+        Thu, 16 Jul 2020 18:06:31 -0400
+Received: from ppma05wdc.us.ibm.com (1b.90.2fa9.ip4.static.sl-reverse.com [169.47.144.27])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 32ax789gnf-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 16 Jul 2020 18:06:30 -0400
+Received: from pps.filterd (ppma05wdc.us.ibm.com [127.0.0.1])
+        by ppma05wdc.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 06GM59LO018012;
+        Thu, 16 Jul 2020 22:06:30 GMT
+Received: from b01cxnp23034.gho.pok.ibm.com (b01cxnp23034.gho.pok.ibm.com [9.57.198.29])
+        by ppma05wdc.us.ibm.com with ESMTP id 327529c2fg-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 16 Jul 2020 22:06:30 +0000
+Received: from b01ledav005.gho.pok.ibm.com (b01ledav005.gho.pok.ibm.com [9.57.199.110])
+        by b01cxnp23034.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 06GM6Tnu53215548
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 16 Jul 2020 22:06:29 GMT
+Received: from b01ledav005.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id C841CAE073;
+        Thu, 16 Jul 2020 22:06:29 +0000 (GMT)
+Received: from b01ledav005.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 05BBDAE079;
+        Thu, 16 Jul 2020 22:06:24 +0000 (GMT)
+Received: from morokweng.localdomain (unknown [9.163.8.110])
+        by b01ledav005.gho.pok.ibm.com (Postfix) with ESMTPS;
+        Thu, 16 Jul 2020 22:06:24 +0000 (GMT)
+References: <159466074408.24747.10036072269371204890.stgit@hbathini.in.ibm.com> <159466096898.24747.16701009925943468066.stgit@hbathini.in.ibm.com> <87y2nk8cjq.fsf@morokweng.localdomain> <bea19627-c6b7-5d59-e194-03038bb4d9f6@linux.ibm.com>
+User-agent: mu4e 1.2.0; emacs 26.3
+From:   Thiago Jung Bauermann <bauerman@linux.ibm.com>
+To:     Hari Bathini <hbathini@linux.ibm.com>
+Cc:     kernel test robot <lkp@intel.com>, Pingfan Liu <piliu@redhat.com>,
+        Nayna Jain <nayna@linux.ibm.com>,
+        Kexec-ml <kexec@lists.infradead.org>,
+        Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        lkml <linux-kernel@vger.kernel.org>,
+        linuxppc-dev <linuxppc-dev@ozlabs.org>,
+        Sourabh Jain <sourabhjain@linux.ibm.com>,
+        Petr Tesarik <ptesarik@suse.cz>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Dave Young <dyoung@redhat.com>,
+        Vivek Goyal <vgoyal@redhat.com>,
+        Eric Biederman <ebiederm@xmission.com>
+Subject: Re: [PATCH v3 09/12] ppc64/kexec_file: setup backup region for kdump kernel
+In-reply-to: <bea19627-c6b7-5d59-e194-03038bb4d9f6@linux.ibm.com>
+Date:   Thu, 16 Jul 2020 19:06:20 -0300
+Message-ID: <874kq7cdyb.fsf@morokweng.localdomain>
+MIME-Version: 1.0
+Content-Type: text/plain
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-07-16_11:2020-07-16,2020-07-16 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_spam_definite policy=outbound score=100 bulkscore=0
+ adultscore=0 spamscore=100 priorityscore=1501 mlxscore=100
+ mlxlogscore=-1000 phishscore=0 lowpriorityscore=0 clxscore=1015
+ malwarescore=0 suspectscore=0 impostorscore=0 classifier=spam adjust=0
+ reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2007160142
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 16 Jul 2020 16:32:00 +0800 kernel test robot <lkp@intel.com> wrote:
 
-> Greetings,
-> 
-> 0day kernel testing robot got the below dmesg and the first bad commit is
-> 
-> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-> 
-> commit db57e98d87908b8837352abe08515e42752270c1
-> Author:     Lecopzer Chen <lecopzer.chen@mediatek.com>
-> AuthorDate: Mon Sep 23 15:36:24 2019 -0700
-> Commit:     Linus Torvalds <torvalds@linux-foundation.org>
-> CommitDate: Tue Sep 24 15:54:09 2019 -0700
-> 
->     mm/sparse.c: fix ALIGN() without power of 2 in sparse_buffer_alloc()
+Hari Bathini <hbathini@linux.ibm.com> writes:
 
-Are we sure about this?  That patch is a year old - has something
-in the test setup changed to make it visible at this late stage?
+> On 16/07/20 7:08 am, Thiago Jung Bauermann wrote:
+>>
+>> Hari Bathini <hbathini@linux.ibm.com> writes:
+>>
+>>> @@ -968,7 +1040,7 @@ int setup_new_fdt_ppc64(const struct kimage *image, void *fdt,
+>>>
+>>>  	/*
+>>>  	 * Restrict memory usage for kdump kernel by setting up
+>>> -	 * usable memory ranges.
+>>> +	 * usable memory ranges and memory reserve map.
+>>>  	 */
+>>>  	if (image->type == KEXEC_TYPE_CRASH) {
+>>>  		ret = get_usable_memory_ranges(&umem);
+>>> @@ -980,6 +1052,24 @@ int setup_new_fdt_ppc64(const struct kimage *image, void *fdt,
+>>>  			pr_err("Error setting up usable-memory property for kdump kernel\n");
+>>>  			goto out;
+>>>  		}
+>>> +
+>>> +		ret = fdt_add_mem_rsv(fdt, BACKUP_SRC_START + BACKUP_SRC_SIZE,
+>>> +				      crashk_res.start - BACKUP_SRC_SIZE);
+>>
+>> I believe this answers my question from the other email about how the
+>> crashkernel is prevented from stomping in the crashed kernel's memory,
+>> right? I needed to think for a bit to understand what the above
+>> reservation was protecting. I think it's worth adding a comment.
+>
+> Right. The reason to add it in the first place is, prom presses the panic button if
+> it can't find low memory. Marking it reserved seems to keep it quiet though. so..
+>
+> Will add comment mentioning that..
 
+Ah, makes sense. Thanks for the explanation.
+
+>>> +void purgatory(void)
+>>> +{
+>>> +	void *dest, *src;
+>>> +
+>>> +	src = (void *)BACKUP_SRC_START;
+>>> +	if (backup_start) {
+>>> +		dest = (void *)backup_start;
+>>> +		__memcpy(dest, src, BACKUP_SRC_SIZE);
+>>> +	}
+>>> +}
+>>
+>> In general I'm in favor of using C code over assembly, but having to
+>> bring in that relocation support just for the above makes me wonder if
+>> it's worth it in this case.
+>
+> I am planning to build on purgatory later with "I'm in purgatory" print support
+> for pseries at least and also, sha256 digest check.
+
+Ok. In that case, my preference would be to convert both the powerpc and
+x86 purgatories to PIE since this greatly reduces the types of
+relocations that are emitted, but better ask Dave Young what he thinks
+before going down that route.
+
+--
+Thiago Jung Bauermann
+IBM Linux Technology Center
