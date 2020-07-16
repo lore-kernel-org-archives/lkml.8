@@ -2,100 +2,118 @@ Return-Path: <SRS0=y5Sx=A3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC5C5C433E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 14:35:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54AF0C433E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 14:36:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9692F207BC
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 14:35:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594910102;
-	bh=nxkcrc5P7Qd7poz1LmdDvcMFnguH4wq4okmKRFsmWhw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=hYqs/6v8Z15GIe9y5mD7SLfIdu6RNG5ib+EMl4xxAZ1OlXv5B+ispXkTzuTK4we9l
-	 5LMdtrN5oDriR0j54DH5/zQuLz5fWbdiSMQhKixf1FS5WKp9T0Vj/gp0bR5avGKGZy
-	 /vwOtuhfYb42CkA+uih03TmpA/EviQzeM/+SR53w=
+	by mail.kernel.org (Postfix) with ESMTP id 3F9892065D
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 14:36:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728807AbgGPOfB (ORCPT
+        id S1729004AbgGPOgB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 10:35:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54486 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726963AbgGPOfA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 10:35:00 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D4C7F206F4;
-        Thu, 16 Jul 2020 14:34:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594910100;
-        bh=nxkcrc5P7Qd7poz1LmdDvcMFnguH4wq4okmKRFsmWhw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=d5zWQW7KcwQQwGsZLtlihkD9diBPlVE3DBlaRFuftlKxZJ9FVattsI4I5Lc5ENbS6
-         68oniVnmgwkk+HemvqlyT3+a+Hh1TY0Gnd7IxVfpyVYoSt8jOuG0WBzyiv3oJVZgbP
-         AkJnG3L9x3uLfQ8tI5QQ0QFX+YzK4k1rEXAGhr6k=
-Date:   Thu, 16 Jul 2020 15:34:50 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Jerome Brunet <jbrunet@baylibre.com>
-Cc:     Jing Xiangfeng <jingxiangfeng@huawei.com>, lgirdwood@gmail.com,
-        perex@perex.cz, tiwai@suse.com, khilman@baylibre.com,
-        kuninori.morimoto.gx@renesas.com, alsa-devel@alsa-project.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] ASoC: meson: add the missed kfree() for
- axg_card_add_tdm_loopback
-Message-ID: <20200716143450.GB5105@sirena.org.uk>
-References: <20200716132558.33932-1-jingxiangfeng@huawei.com>
- <1jzh7zegfw.fsf@starbuckisacylon.baylibre.com>
+        Thu, 16 Jul 2020 10:36:01 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:36118 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726963AbgGPOf7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jul 2020 10:35:59 -0400
+Received: by mail-ot1-f68.google.com with SMTP id 72so4366454otc.3;
+        Thu, 16 Jul 2020 07:35:58 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Om5ovYOp4gfyp5+GPEwFq1WDhAkoasPOOhUu6A2+EGM=;
+        b=YGkwf9INfe8LFvaiNYT5SW4/YwcbzsGzj8AuZMXhCPcjP5dP9rpwWKu7HWL2aJMH90
+         +jmLGzMsVyo36e4eZcXLacZvj8MmQw8iW2RvMCCpi4x+JXwZbMfdeHW4yOQhIT7FEk3U
+         XtHNORbMLKA48Pu9h1qzUABWBR7w+J9x3w7LVDwuZC4NU9zuGGKZrCo5c/457RkUxoOS
+         buiTFL3oACpUgCQipsntkXLKo4fSVg4lgV4VUdeANWwDm4pJvaRmeCwT2H3NdFH9eIta
+         FBL42azScK+i9YJGG9h+jSb7KLlbOSNhRXz9p/y4EIKqxz3BCIjnw2SaEFXGsXDNtH9g
+         sEEA==
+X-Gm-Message-State: AOAM531gkwyB2jIZVVgzEmccSrxkI0prj3vpcRtAvZrhg7QBAof/AkMr
+        /MwIU04qThNdCmm2tp1IAyQxMfaJdekDzGlpBINC0tBN6WQ=
+X-Google-Smtp-Source: ABdhPJxtRx2txfS+cy94gEtgtG6BjqkgmfEqBFVpYhM4W9ZfKCiNCNqGTnSLQFDTleYE74Mj0krYjex9oCEdOIXEDXU=
+X-Received: by 2002:a05:6830:1451:: with SMTP id w17mr4750027otp.250.1594910158295;
+ Thu, 16 Jul 2020 07:35:58 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="ADZbWkCsHQ7r3kzd"
-Content-Disposition: inline
-In-Reply-To: <1jzh7zegfw.fsf@starbuckisacylon.baylibre.com>
-X-Cookie: This login session: $13.99
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <1594811350-14066-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <1594811350-14066-20-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <1594811350-14066-20-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Thu, 16 Jul 2020 16:35:46 +0200
+Message-ID: <CAMuHMdXLMwDNp=cAmFbv-+uwKLBL7na5yDdyoePuoGOi8L9yFQ@mail.gmail.com>
+Subject: Re: [PATCH 19/20] dt-bindings: can: rcar_canfd: Document r8a774e1 support
+To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Wolfgang Grandegger <wg@grandegger.com>,
+        Marc Kleine-Budde <mkl@pengutronix.de>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Mark Brown <broonie@kernel.org>,
+        Niklas <niklas.soderlund@ragnatech.se>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Amit Kucheria <amit.kucheria@verdurent.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
+        Linux I2C <linux-i2c@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, linux-can@vger.kernel.org,
+        netdev <netdev@vger.kernel.org>,
+        linux-spi <linux-spi@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Linux PM list <linux-pm@vger.kernel.org>,
+        Linux Watchdog Mailing List <linux-watchdog@vger.kernel.org>,
+        Prabhakar <prabhakar.csengg@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Prabhakar,
 
---ADZbWkCsHQ7r3kzd
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+On Wed, Jul 15, 2020 at 1:11 PM Lad Prabhakar
+<prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
+> Document the support for rcar_canfd on R8A774E1 SoC devices.
+>
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
 
-On Thu, Jul 16, 2020 at 03:29:39PM +0200, Jerome Brunet wrote:
-> On Thu 16 Jul 2020 at 15:25, Jing Xiangfeng <jingxiangfeng@huawei.com> wrote:
+Thanks for your patch!
 
-> > axg_card_add_tdm_loopback() misses to call kfree() in an error path. Add
-> > the missed function call to fix it.
-> >
-> > Fixes: c84836d7f650 ("ASoC: meson: axg-card: use modern dai_link style")
-> > Signed-off-by: Jing Xiangfeng <jingxiangfeng@huawei.com>
+> --- a/Documentation/devicetree/bindings/net/can/rcar_canfd.txt
+> +++ b/Documentation/devicetree/bindings/net/can/rcar_canfd.txt
+> @@ -7,6 +7,7 @@ Required properties:
+>    - "renesas,r8a774a1-canfd" for R8A774A1 (RZ/G2M) compatible controller.
+>    - "renesas,r8a774b1-canfd" for R8A774B1 (RZ/G2N) compatible controller.
+>    - "renesas,r8a774c0-canfd" for R8A774C0 (RZ/G2E) compatible controller.
+> +  - "renesas,r8a774e1-canfd" for R8A774E1 (RZ/G2H) compatible controller.
+>    - "renesas,r8a7795-canfd" for R8A7795 (R-Car H3) compatible controller.
+>    - "renesas,r8a7796-canfd" for R8A7796 (R-Car M3-W) compatible controller.
+>    - "renesas,r8a77965-canfd" for R8A77965 (R-Car M3-N) compatible controller.
 
-> Thanks for fixing this.
-> Maybe it would be better to use the devm_ variant for the name instead ?
+Please also add R8A774E1 to the list of SoCs that can use the CANFD clock.
 
-Yes, that should be more robust.
+With that fixed:
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
---ADZbWkCsHQ7r3kzd
-Content-Type: application/pgp-signature; name="signature.asc"
+Gr{oetje,eeting}s,
 
------BEGIN PGP SIGNATURE-----
+                        Geert
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl8QZYkACgkQJNaLcl1U
-h9B59Qf/cQ/Ssu6kfNi9QbWnYWdZOWPmbzLXNPPSbdpuW2McJvjhrFAscgfM5b/m
-+ShTyHn5oEztIfyoIXlaCPsfmNJRBjLotRdmo8xlZ3FyzgxAE810aNDKwR4uaOnv
-lSByiQZOnNa3EhV5P1naQaRf/MLw35gsHixOxQBO3kLkkokx5GpL1F1quQC33N9l
-cNu6tviX29PziUhmYNdjr6nhhSsHB4qC7+l6YwQmR3DzEPeVTiW8b1lWsmWL1YQq
-fhLlNWrqQSBTs01/EUEmvCHnHZZTZUhJRpIozH8eGjvhvg9YeY1nRj0ggxClpGHh
-Dzc0HtU/KTKfLk8zhuQLhLrKBKGvzg==
-=gap3
------END PGP SIGNATURE-----
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
---ADZbWkCsHQ7r3kzd--
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
