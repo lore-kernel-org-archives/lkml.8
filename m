@@ -2,152 +2,69 @@ Return-Path: <SRS0=y5Sx=A3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65CE3C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 15:12:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D8EAC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 15:14:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 37C422082F
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 15:12:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="mv9JS06g"
+	by mail.kernel.org (Postfix) with ESMTP id E4BF52082F
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 15:14:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728906AbgGPPMj (ORCPT
+        id S1728707AbgGPPOS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 11:12:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54412 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728725AbgGPPMi (ORCPT
+        Thu, 16 Jul 2020 11:14:18 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:46766 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728412AbgGPPOS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 11:12:38 -0400
-Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 673C6C08C5C0
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Jul 2020 08:12:38 -0700 (PDT)
-Received: by mail-pl1-x643.google.com with SMTP id d1so3999688plr.8
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Jul 2020 08:12:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=N9cLlw64hWKscX8FZb2xpNSIxOyx8OVcITnqRM7FpVI=;
-        b=mv9JS06gZ97E3G32ZQWL6GS0ElnkOcD6uZoaEwIKSYlYwnw+I789fgsnu9RIyKRAU+
-         UtjwIxEz8y/Rd1KzJvRZW5NPhGYYsAgc+9JcovTIRuRW4JSCU7Yy4LtIaNRwRtKYVMAa
-         O0HqOafeihrdM6BtpKQ9bf/CSzxCZGvW/VyGU=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=N9cLlw64hWKscX8FZb2xpNSIxOyx8OVcITnqRM7FpVI=;
-        b=hDnVqT3yHFP9hJ+wgySRDZdbtyRFfIOw5esT0qLDFKv3cZK0yOTsnMH6Ma55u62S6D
-         AdTIg2w3gC1NjP+mYmwZd4P0vErMFEhGNZdjlfm49PXUWJcvjY+DDtTV5Jta/tFIpOuQ
-         Jep0+w6KLEIM7hB16ak0sDZc1CF0VLkZ0U6/hBBt7dE8GNjVqGfxNmC5NE56h4P2ZLCP
-         pLadG9epEkLohNRNpCrFsjr61n/5fMIf5rr1fz/mcJjAcxM8sjm+Fk/F5Xhjjbh0UGuh
-         8n72bIGssY7Wpn7wcYpyjoyHWE7aH4vetqUNRAznfKKvB1kXYQwKVEGLplRd97y2C+Wk
-         NX/w==
-X-Gm-Message-State: AOAM531iaHa879j2g6/SXa+MnBgmbgFrIapMSQTzQaZnZ/rVXnrobbso
-        zYO4FJz/wqe9wjGIiXEVgsyGmw==
-X-Google-Smtp-Source: ABdhPJxZQy+rxF9/jXytbGfyHMD/u/Eum1INRvVxrE25iFO25PsexI0VEAJV5sGRq2U2nAyAa4wWdA==
-X-Received: by 2002:a17:90a:cc:: with SMTP id v12mr4994854pjd.96.1594912357822;
-        Thu, 16 Jul 2020 08:12:37 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id z6sm5060155pfn.173.2020.07.16.08.12.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 16 Jul 2020 08:12:36 -0700 (PDT)
-Date:   Thu, 16 Jul 2020 08:12:35 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Stefano Garzarella <sgarzare@redhat.com>
-Cc:     Pavel Begunkov <asml.silence@gmail.com>,
-        Miklos Szeredi <miklos@szeredi.hu>,
-        Matthew Wilcox <willy@infradead.org>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Jann Horn <jannh@google.com>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        strace-devel@lists.strace.io, io-uring@vger.kernel.org,
-        Linux API <linux-api@vger.kernel.org>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Michael Kerrisk <mtk.manpages@gmail.com>,
-        Stefan Hajnoczi <stefanha@redhat.com>
-Subject: Re: strace of io_uring events?
-Message-ID: <202007160751.ED56C55@keescook>
-References: <CAJfpegu3EwbBFTSJiPhm7eMyTK2MzijLUp1gcboOo3meMF_+Qg@mail.gmail.com>
- <D9FAB37B-D059-4137-A115-616237D78640@amacapital.net>
- <20200715171130.GG12769@casper.infradead.org>
- <7c09f6af-653f-db3f-2378-02dca2bc07f7@gmail.com>
- <CAJfpegt9=p4uo5U2GXqc-rwqOESzZCWAkGMRTY1r8H6fuXx96g@mail.gmail.com>
- <48cc7eea-5b28-a584-a66c-4eed3fac5e76@gmail.com>
- <202007151511.2AA7718@keescook>
- <20200716131404.bnzsaarooumrp3kx@steredhat>
+        Thu, 16 Jul 2020 11:14:18 -0400
+Received: from xps.home (unknown [IPv6:2a01:e35:2fb5:1510:95f7:ce7f:fb76:c54a])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: aferraris)
+        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id D3DAE2A0DFF;
+        Thu, 16 Jul 2020 16:14:16 +0100 (BST)
+From:   Arnaud Ferraris <arnaud.ferraris@collabora.com>
+To:     alsa-devel@alsa-project.org
+Cc:     Timur Tabi <timur@kernel.org>,
+        Nicolin Chen <nicoleotsuka@gmail.com>,
+        Xiubo Li <Xiubo.Lee@gmail.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        Shengjiu Wang <shengjiu.wang@gmail.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>, linux-kernel@vger.kernel.org,
+        kernel@collabora.com
+Subject: [PATCH v2 0/2] ASoC: fsl_asrc: improve clock selection and quality
+Date:   Thu, 16 Jul 2020 17:13:50 +0200
+Message-Id: <20200716151352.193451-1-arnaud.ferraris@collabora.com>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200716145201.186270-1-arnaud.ferraris@collabora.com>
+References: <20200716145201.186270-1-arnaud.ferraris@collabora.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200716131404.bnzsaarooumrp3kx@steredhat>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 16, 2020 at 03:14:04PM +0200, Stefano Garzarella wrote:
-> On Wed, Jul 15, 2020 at 04:07:00PM -0700, Kees Cook wrote:
-> [...]
-> 
-> > Speaking to Stefano's proposal[1]:
-> > 
-> > - There appear to be three classes of desired restrictions:
-> >   - opcodes for io_uring_register() (which can be enforced entirely with
-> >     seccomp right now).
-> >   - opcodes from SQEs (this _could_ be intercepted by seccomp, but is
-> >     not currently written)
-> >   - opcodes of the types of restrictions to restrict... for making sure
-> >     things can't be changed after being set? seccomp already enforces
-> >     that kind of "can only be made stricter"
-> 
-> In addition we want to limit the SQEs to use only the registered fd and buffers.
+This series fixes the automatic clock selection and enables internal
+ratio in order to improve audio quality.
 
-Hmm, good point. Yeah, since it's an "extra" mapping (ioring file number
-vs fd number) this doesn't really map well to seccomp. (And frankly,
-there's some difficulty here mapping many of the ioring-syscalls to
-seccomp because it's happening "deeper" than the syscall layer (i.e.
-some of the arguments have already been resolved into kernel object
-pointers, etc).
+The clock selection patches have been set aside for now, as the
+discussion is still ongoing regarding that matter.
 
-> Do you think it's better to have everything in seccomp instead of adding
-> the restrictions in io_uring (the patch isn't very big)?
+v1 -> v2:
+- compare clock indexes (and not the location in the clock table) to
+  make sure input and output clocks are different
 
-I'm still trying to understand how io_uring will be used, and it seems
-odd to me that it's effectively a seccomp bypass. (Though from what I
-can tell it is not an LSM bypass, which is good -- though I'm worried
-there might be some embedded assumptions in LSMs about creds vs current
-and LSMs may try to reason (or report) on actions with the kthread in
-mind, but afaict everything important is checked against creds.
+ Arnaud Ferraris(2):
+   ASoC: fsl_asrc: make sure the input and output clocks are different
+   ASoC: fsl_asrc: always use internal ratio
 
-> With seccomp, would it be possible to have different restrictions for two
-> instances of io_uring in the same process?
+ sound/soc/fsl/fsl_asrc.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-For me, this is the most compelling reason to have the restrictions NOT
-implemented via seccomp. Trying to make "which instance" choice in
-seccomp would be extremely clumsy.
 
-So at this point, I think it makes sense for the restriction series to
-carry on -- it is io_uring-specific and solves some problems that
-seccomp is not in good position to reason about.
-
-All this said, I'd still like a way to apply seccomp to io_uring
-because it's a rather giant syscall filter bypass mechanism, and gaining
-access (IIUC) is possible without actually calling any of the io_uring
-syscalls. Is that correct? A process would receive an fd (via SCM_RIGHTS,
-pidfd_getfd, or soon seccomp addfd), and then call mmap() on it to gain
-access to the SQ and CQ, and off it goes? (The only glitch I see is
-waking up the worker thread?)
-
-What appears to be the worst bit about adding seccomp to io_uring is the
-almost complete disassociation of process hierarchy from syscall action.
-Only a cred is used for io_uring, and seccomp filters are associated with
-task structs. I'm not sure if there is a way to solve this disconnect
-without a major internal refactoring of seccomp to attach to creds and
-then make every filter attachment create a new cred... *head explody*
-
--- 
-Kees Cook
