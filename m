@@ -2,108 +2,304 @@ Return-Path: <SRS0=y5Sx=A3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DA43C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 14:57:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC335C433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 14:59:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3A2DC207BC
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 14:57:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7928D207BC
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 14:59:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="J+wyW/U9"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="aPTdIjtb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728374AbgGPO5H (ORCPT
+        id S1728552AbgGPO7R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 10:57:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52010 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725867AbgGPO5G (ORCPT
+        Thu, 16 Jul 2020 10:59:17 -0400
+Received: from mail29.static.mailgun.info ([104.130.122.29]:46253 "EHLO
+        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728415AbgGPO7P (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 10:57:06 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9C44FC061755
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Jul 2020 07:57:05 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id z15so7367930wrl.8
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Jul 2020 07:57:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=Xpge14sV3XcdoTt3xDoqzbYEwttWmufNba1daoXoE1A=;
-        b=J+wyW/U9gdDLdITg4YfzCmv7D73MaBHyreqDJE7qRFLz1XeyXs17BjDJvLVDc4j28j
-         RW1kzm1wUOdyBKRyWaKa0q/qjRldIjM5O0JWLtW7eBP+Zw13Qzm6k1GtBZi90IQowXXe
-         7sYE7i9oxUBGAAMrfi/01ydsNRVnXoTX+oDQo+IubxrBI29BhJ4hav14KoNcHqC9ONHB
-         WHqskV9zMZ+XSPL3GFk2MPwm9g8ZoCQ7cOTmoqOizBMk+HYUDk70JJhBOdMGmP6Ft0XK
-         EVhjUOUjpItl8y36iLmL6kMObW4d4nePZ5ABrI98/BkUWUmXqCUEcVcQTC32QKKdJwDk
-         x3nA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=Xpge14sV3XcdoTt3xDoqzbYEwttWmufNba1daoXoE1A=;
-        b=ORuGTA7E/xHz9ATH4GOcBtff5PQ/uMHgP4ra0OajikQQNamRi5enGtolxTbGQAKKsA
-         RnArEOAMUlAROkZOLfWh0+2joKF3FKw2ABe8Fz5Kq7Nobki8G1bG8ALpANWJ/kabKDsJ
-         ppNad/7MYm+Snv0GZvpKuSwZ2vU1zcs9FRDnzr+ByxtA2vxqzsN4gpshRPbJH2Fh902u
-         nNWzHht9EYtOxivmR7XXPw0hLpKRA868Km8xQSsU4adIxnoBHty4YnuYzmYDqOw/5V+R
-         sJCq2f6sFKEO+PYfDnX4oCF7Ld0olFZ5Kx+paK/HinZilN7be2ZKadWhKV1lC9NGDJsO
-         GKGg==
-X-Gm-Message-State: AOAM531AJB4qytUE5MOQqZsieNcif/+yo/FAhsZKJdK4a35lpa9fLiH0
-        jjukSN1ddKyTbcr/8GWMIBt4ea9hpvw=
-X-Google-Smtp-Source: ABdhPJxOexkEuBxrIIT6NLtdXaI9fPey7YXsXj7BOki1czGm7Zg1I5iu5n15mJENb0upnshAAMWoHw==
-X-Received: by 2002:a5d:5587:: with SMTP id i7mr5419335wrv.314.1594911424394;
-        Thu, 16 Jul 2020 07:57:04 -0700 (PDT)
-Received: from dell ([2.31.163.61])
-        by smtp.gmail.com with ESMTPSA id v6sm9212435wrr.85.2020.07.16.07.57.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 16 Jul 2020 07:57:03 -0700 (PDT)
-Date:   Thu, 16 Jul 2020 15:57:01 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Tony Lindgren <tony@atomide.com>
-Cc:     linux-kernel@vger.kernel.org, Merlijn Wajer <merlijn@wizzup.org>,
-        Pavel Machek <pavel@ucw.cz>,
-        Sebastian Reichel <sebastian.reichel@collabora.com>
-Subject: Re: [PATCH] mfd: motorola-cpcap: Disable interrupt for suspend
-Message-ID: <20200716145701.GU3165313@dell>
-References: <20200706183934.26274-1-tony@atomide.com>
+        Thu, 16 Jul 2020 10:59:15 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1594911554; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=lviIp5N3o+U+RFbWg6NZAHu7oQNpiBl8ehCNV8kxfmk=;
+ b=aPTdIjtb1Oqxp7Cxtgw5njLDMaqhmEmLhNV2B7BFS/Qwm6v/ZyKPKJ/ixb+b4sA/f83JQAWh
+ aEca7a1vmsa4Zph65QRujVdzSKm3EU0upe2Gto5Fb+diGQJoRqJJP8HYksDpfIARRTiummaM
+ TknQbVgeJAuDOlqlOjTXaC1lmgM=
+X-Mailgun-Sending-Ip: 104.130.122.29
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n05.prod.us-east-1.postgun.com with SMTP id
+ 5f106b2c7c8ca473a8ce19a4 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Thu, 16 Jul 2020 14:58:52
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id D59A4C43395; Thu, 16 Jul 2020 14:58:51 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: sibis)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id E7FAFC433C6;
+        Thu, 16 Jul 2020 14:58:50 +0000 (UTC)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200706183934.26274-1-tony@atomide.com>
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Thu, 16 Jul 2020 20:28:50 +0530
+From:   Sibi Sankar <sibis@codeaurora.org>
+To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc:     bjorn.andersson@linaro.org, agross@kernel.org,
+        linux-arm-msm@vger.kernel.org, linux-remoteproc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, evgreen@chromium.org,
+        ohad@wizery.com, linux-arm-msm-owner@vger.kernel.org
+Subject: Re: [PATCH 2/3] remoteproc: qcom_q6v5_mss: Add MBA log extraction
+ support
+In-Reply-To: <20200716134316.GI3271@Mani-XPS-13-9360>
+References: <20200716123630.21892-1-sibis@codeaurora.org>
+ <20200716123630.21892-3-sibis@codeaurora.org>
+ <20200716134316.GI3271@Mani-XPS-13-9360>
+Message-ID: <4f91a75852104dbeafea3af0c8673505@codeaurora.org>
+X-Sender: sibis@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 06 Jul 2020, Tony Lindgren wrote:
+On 2020-07-16 19:13, Manivannan Sadhasivam wrote:
+> Hi Sibi,
+> 
+> On Thu, Jul 16, 2020 at 06:06:29PM +0530, Sibi Sankar wrote:
+>> On SC7180 the MBA firmware stores the bootup text logs in a 4K segment
+>> at the beginning of the MBA region. Add support to extract the logs
+>> which will be useful to debug mba boot/authentication issues.
+>> 
+>> Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
+>> ---
+>>  drivers/remoteproc/qcom_q6v5_mss.c | 41 
+>> ++++++++++++++++++++++++++----
+>>  1 file changed, 36 insertions(+), 5 deletions(-)
+>> 
+>> diff --git a/drivers/remoteproc/qcom_q6v5_mss.c 
+>> b/drivers/remoteproc/qcom_q6v5_mss.c
+>> index 95e21ed607cb9..4ddf084b2c6fc 100644
+>> --- a/drivers/remoteproc/qcom_q6v5_mss.c
+>> +++ b/drivers/remoteproc/qcom_q6v5_mss.c
+>> @@ -9,6 +9,7 @@
+>> 
+>>  #include <linux/clk.h>
+>>  #include <linux/delay.h>
+>> +#include <linux/devcoredump.h>
+>>  #include <linux/dma-mapping.h>
+>>  #include <linux/interrupt.h>
+>>  #include <linux/kernel.h>
+>> @@ -37,6 +38,8 @@
+>> 
+>>  #define MPSS_CRASH_REASON_SMEM		421
+>> 
+>> +#define MBA_LOG_SIZE			SZ_4K
+>> +
+>>  /* RMB Status Register Values */
+>>  #define RMB_PBL_SUCCESS			0x1
+>> 
+>> @@ -139,6 +142,7 @@ struct rproc_hexagon_res {
+>>  	int version;
+>>  	bool need_mem_protection;
+>>  	bool has_alt_reset;
+>> +	bool has_mba_logs;
+>>  	bool has_spare_reg;
+>>  };
+>> 
+>> @@ -200,6 +204,7 @@ struct q6v5 {
+>>  	struct qcom_sysmon *sysmon;
+>>  	bool need_mem_protection;
+>>  	bool has_alt_reset;
+>> +	bool has_mba_logs;
+>>  	bool has_spare_reg;
+>>  	int mpss_perm;
+>>  	int mba_perm;
+>> @@ -518,6 +523,19 @@ static int q6v5_rmb_mba_wait(struct q6v5 *qproc, 
+>> u32 status, int ms)
+>>  	return val;
+>>  }
+>> 
+>> +static void q6v5_dump_mba_logs(struct q6v5 *qproc)
+>> +{
+>> +	struct rproc *rproc = qproc->rproc;
+>> +	void *data;
+>> +
+>> +	data = vmalloc(MBA_LOG_SIZE);
+> 
+> Is there any specific reason to use vmalloc for the size of 4K?
 
-> Otherwise we get spammed with errors on resume after rtcwake:
-> 
-> cpcap-core spi0.0: Failed to read IRQ status: -108
-> 
-> Note that rtcwake is still capable of waking up the system with
-> this patch.
-> 
-> Cc: Merlijn Wajer <merlijn@wizzup.org>
-> Cc: Pavel Machek <pavel@ucw.cz>
-> Cc: Sebastian Reichel <sebastian.reichel@collabora.com>
-> Signed-off-by: Tony Lindgren <tony@atomide.com>
-> ---
-> 
-> This has always been broken so can be merged whenever.
-> 
-> ---
->  drivers/mfd/motorola-cpcap.c | 23 +++++++++++++++++++++++
->  1 file changed, 23 insertions(+)
+data is passed onto dev_coredumpv
+which takes ownership of the memory
+and would eventually do a vfree of the
+data.
 
-Applied, thanks.
+> 
+> Thanks,
+> Mani
+> 
+>> +	if (!data)
+>> +		return;
+>> +
+>> +	memcpy(data, qproc->mba_region, MBA_LOG_SIZE);
+>> +	dev_coredumpv(&rproc->dev, data, MBA_LOG_SIZE, GFP_KERNEL);
+>> +}
+>> +
+>>  static int q6v5proc_reset(struct q6v5 *qproc)
+>>  {
+>>  	u32 val;
+>> @@ -838,6 +856,7 @@ static int q6v5_mba_load(struct q6v5 *qproc)
+>>  {
+>>  	int ret;
+>>  	int xfermemop_ret;
+>> +	bool mba_load_err = false;
+>> 
+>>  	qcom_q6v5_prepare(&qproc->q6v5);
+>> 
+>> @@ -931,7 +950,7 @@ static int q6v5_mba_load(struct q6v5 *qproc)
+>>  	q6v5proc_halt_axi_port(qproc, qproc->halt_map, qproc->halt_q6);
+>>  	q6v5proc_halt_axi_port(qproc, qproc->halt_map, qproc->halt_modem);
+>>  	q6v5proc_halt_axi_port(qproc, qproc->halt_map, qproc->halt_nc);
+>> -
+>> +	mba_load_err = true;
+>>  reclaim_mba:
+>>  	xfermemop_ret = q6v5_xfer_mem_ownership(qproc, &qproc->mba_perm, 
+>> true,
+>>  						false, qproc->mba_phys,
+>> @@ -939,6 +958,8 @@ static int q6v5_mba_load(struct q6v5 *qproc)
+>>  	if (xfermemop_ret) {
+>>  		dev_err(qproc->dev,
+>>  			"Failed to reclaim mba buffer, system may become unstable\n");
+>> +	} else if (qproc->has_mba_logs & mba_load_err) {
+>> +		q6v5_dump_mba_logs(qproc);
+>>  	}
+>> 
+>>  disable_active_clks:
+>> @@ -968,7 +989,7 @@ static int q6v5_mba_load(struct q6v5 *qproc)
+>>  	return ret;
+>>  }
+>> 
+>> -static void q6v5_mba_reclaim(struct q6v5 *qproc)
+>> +static void q6v5_mba_reclaim(struct q6v5 *qproc, bool err_path)
+>>  {
+>>  	int ret;
+>>  	u32 val;
+>> @@ -1006,6 +1027,9 @@ static void q6v5_mba_reclaim(struct q6v5 *qproc)
+>>  				      qproc->mba_size);
+>>  	WARN_ON(ret);
+>> 
+>> +	if (qproc->has_mba_logs && err_path && !ret)
+>> +		q6v5_dump_mba_logs(qproc);
+>> +
+>>  	ret = qcom_q6v5_unprepare(&qproc->q6v5);
+>>  	if (ret) {
+>>  		q6v5_pds_disable(qproc, qproc->proxy_pds,
+>> @@ -1255,7 +1279,7 @@ static void qcom_q6v5_dump_segment(struct rproc 
+>> *rproc,
+>>  						false, true,
+>>  						qproc->mpss_phys,
+>>  						qproc->mpss_size);
+>> -			q6v5_mba_reclaim(qproc);
+>> +			q6v5_mba_reclaim(qproc, false);
+>>  		}
+>>  	}
+>>  }
+>> @@ -1297,7 +1321,7 @@ static int q6v5_start(struct rproc *rproc)
+>>  	return 0;
+>> 
+>>  reclaim_mpss:
+>> -	q6v5_mba_reclaim(qproc);
+>> +	q6v5_mba_reclaim(qproc, true);
+>> 
+>>  	return ret;
+>>  }
+>> @@ -1313,7 +1337,7 @@ static int q6v5_stop(struct rproc *rproc)
+>>  	if (ret == -ETIMEDOUT)
+>>  		dev_err(qproc->dev, "timed out on wait\n");
+>> 
+>> -	q6v5_mba_reclaim(qproc);
+>> +	q6v5_mba_reclaim(qproc, false);
+>> 
+>>  	return 0;
+>>  }
+>> @@ -1717,6 +1741,7 @@ static int q6v5_probe(struct platform_device 
+>> *pdev)
+>> 
+>>  	qproc->version = desc->version;
+>>  	qproc->need_mem_protection = desc->need_mem_protection;
+>> +	qproc->has_mba_logs = desc->has_mba_logs;
+>> 
+>>  	ret = qcom_q6v5_init(&qproc->q6v5, pdev, rproc, 
+>> MPSS_CRASH_REASON_SMEM,
+>>  			     qcom_msa_handover);
+>> @@ -1808,6 +1833,7 @@ static const struct rproc_hexagon_res sc7180_mss 
+>> = {
+>>  	},
+>>  	.need_mem_protection = true,
+>>  	.has_alt_reset = false,
+>> +	.has_mba_logs = true,
+>>  	.has_spare_reg = true,
+>>  	.version = MSS_SC7180,
+>>  };
+>> @@ -1843,6 +1869,7 @@ static const struct rproc_hexagon_res sdm845_mss 
+>> = {
+>>  	},
+>>  	.need_mem_protection = true,
+>>  	.has_alt_reset = true,
+>> +	.has_mba_logs = true,
+>>  	.has_spare_reg = false,
+>>  	.version = MSS_SDM845,
+>>  };
+>> @@ -1870,6 +1897,7 @@ static const struct rproc_hexagon_res 
+>> msm8998_mss = {
+>>  	},
+>>  	.need_mem_protection = true,
+>>  	.has_alt_reset = false,
+>> +	.has_mba_logs = false,
+>>  	.has_spare_reg = false,
+>>  	.version = MSS_MSM8998,
+>>  };
+>> @@ -1900,6 +1928,7 @@ static const struct rproc_hexagon_res 
+>> msm8996_mss = {
+>>  	},
+>>  	.need_mem_protection = true,
+>>  	.has_alt_reset = false,
+>> +	.has_mba_logs = false,
+>>  	.has_spare_reg = false,
+>>  	.version = MSS_MSM8996,
+>>  };
+>> @@ -1933,6 +1962,7 @@ static const struct rproc_hexagon_res 
+>> msm8916_mss = {
+>>  	},
+>>  	.need_mem_protection = false,
+>>  	.has_alt_reset = false,
+>> +	.has_mba_logs = false,
+>>  	.has_spare_reg = false,
+>>  	.version = MSS_MSM8916,
+>>  };
+>> @@ -1974,6 +2004,7 @@ static const struct rproc_hexagon_res 
+>> msm8974_mss = {
+>>  	},
+>>  	.need_mem_protection = false,
+>>  	.has_alt_reset = false,
+>> +	.has_mba_logs = false,
+>>  	.has_spare_reg = false,
+>>  	.version = MSS_MSM8974,
+>>  };
+>> --
+>> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora 
+>> Forum,
+>> a Linux Foundation Collaborative Project
+>> 
 
 -- 
-Lee Jones [李琼斯]
-Senior Technical Lead - Developer Services
-Linaro.org │ Open source software for Arm SoCs
-Follow Linaro: Facebook | Twitter | Blog
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project.
