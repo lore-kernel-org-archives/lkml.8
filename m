@@ -2,113 +2,105 @@ Return-Path: <SRS0=y5Sx=A3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E58DC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 13:49:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DE90C433E4
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 13:50:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 423D92082F
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 13:49:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D09E2065F
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 13:50:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="UPe+Ak5h"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728881AbgGPNtA (ORCPT
+        id S1728791AbgGPNuK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 09:49:00 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:7771 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728093AbgGPNs7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 09:48:59 -0400
-Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 444E759714EF947306CC;
-        Thu, 16 Jul 2020 21:48:57 +0800 (CST)
-Received: from [127.0.0.1] (10.174.179.238) by DGGEMS405-HUB.china.huawei.com
- (10.3.19.205) with Microsoft SMTP Server id 14.3.487.0; Thu, 16 Jul 2020
- 21:48:47 +0800
-Subject: [PATCH -next v2] media: tuners: reduce stack usage in
- mxl5005s_reconfigure
-From:   Bixuan Cui <cuibixuan@huawei.com>
-To:     <linux-next@vger.kernel.org>, <mchehab@kernel.org>
-CC:     <linux-kernel@vger.kernel.org>, <linux-media@vger.kernel.org>,
-        <john.wanghui@huawei.com>
-References: <20200716171742.45621-1-cuibixuan@huawei.com>
-Message-ID: <7b3e9680-9a39-45d3-44c2-85b374df4a19@huawei.com>
-Date:   Thu, 16 Jul 2020 21:48:47 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Thu, 16 Jul 2020 09:50:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41578 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728087AbgGPNuJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jul 2020 09:50:09 -0400
+Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6FB4CC08C5CE
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Jul 2020 06:50:09 -0700 (PDT)
+Received: by mail-lj1-x242.google.com with SMTP id e8so7276043ljb.0
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Jul 2020 06:50:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=W0iuDU+qCWBUM7ba2OgUNPdlmGMl1pYMR/idMsHed54=;
+        b=UPe+Ak5h0P6Z8onkrvDvi6QUVwIWIGpi7uVLXWjnR50zvyoG8zkGEuyKrRvZqzeaVs
+         7flptBJJLbpHGwORkLYAmufCmWvGfUkoNyHT5bGmX36i/a0HegWUvz96XnbuJRHWAfmR
+         vaKpbaNCPOFd9kZAqffwVWkCSOErYcQim25VAwe6+We+6xCAbwHI++HQ5iwpKnw3NA6Z
+         AMU1wu9f4MKmZW6eE79d+LPAU3N+Gs/b0koGCHXt4m65RerZFlF0HvBXdiSkWQUAeFAp
+         VoAuMgRT2f502rMCwgG6H9qyyTldwRfWJxb6dzlxVVget/xx4QR57S/61FyI8/bRXMjq
+         g+ug==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=W0iuDU+qCWBUM7ba2OgUNPdlmGMl1pYMR/idMsHed54=;
+        b=EY3hAxmMpjytmtVAjymJAHrkGyGbA2394yK7iO6HOTVrsQ9lVpbQD/H/vfVKuRV1AU
+         R8XZMSm+IXXaeTJPjMMBrxQkNEzm3fP2Dr1ceQx18WmB7hnbRp+X9PZpy4x+M2hqDJqA
+         ZUMqRdAepK+IJifi5qqMO9vWhqXhIYNuDAcDu3/OQ6r5UR/B0/hLici4xL9W6CclIbQq
+         TDc8bq+TWNfSdCsnGa3MdFuQztUB9NxSZxXJxBBDvZkc7/Y6MV8yb9ppMZ6yK4mUFGOY
+         Pcz+fyYHrW33aQvqbKpZhAJYlDlFGYKZW+Oenx8vOEP/RTckYXDnCbq15N7hAOvx+39f
+         isxg==
+X-Gm-Message-State: AOAM531YAOcRVfNzzaSJ/AQauMOx5aoyXIzvJKXR3FcuAEdDfobim5ED
+        +6QDk9y2BghQ9NcmAge1+NrftEpuUzf/X8qWOASiMQ==
+X-Google-Smtp-Source: ABdhPJyuZR3go+MjRH0QD2hTjIiPi2nGSy2AbPjYJo0SRP7oWmUGCCRWXTzrLI3Eps1+wMn3Fs9p2fh605lNHa8lJsM=
+X-Received: by 2002:a2e:7a1a:: with SMTP id v26mr2010346ljc.104.1594907407852;
+ Thu, 16 Jul 2020 06:50:07 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200716171742.45621-1-cuibixuan@huawei.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.174.179.238]
-X-CFilter-Loop: Reflected
+References: <1594718402-20813-1-git-send-email-hanks.chen@mediatek.com> <1594718402-20813-2-git-send-email-hanks.chen@mediatek.com>
+In-Reply-To: <1594718402-20813-2-git-send-email-hanks.chen@mediatek.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Thu, 16 Jul 2020 15:49:57 +0200
+Message-ID: <CACRpkdYOtp027AOMgw_spyRdO2XjGjr4BOoEVfOJN9Y2TtJ=Kw@mail.gmail.com>
+Subject: Re: [PATCH v8 1/7] pinctrl: mediatek: update pinmux definitions for mt6779
+To:     Hanks Chen <hanks.chen@mediatek.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Sean Wang <sean.wang@kernel.org>,
+        mtk01761 <wendell.lin@mediatek.com>,
+        Andy Teng <andy.teng@mediatek.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        wsd_upstream@mediatek.com, CC Hwang <cc.hwang@mediatek.com>,
+        Loda Chou <loda.chou@mediatek.com>,
+        Mars Cheng <mars.cheng@mediatek.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix the warning: [-Werror=-Wframe-larger-than=]
+On Tue, Jul 14, 2020 at 11:20 AM Hanks Chen <hanks.chen@mediatek.com> wrote:
 
-drivers/media/tuners/mxl5005s.c: In function 'mxl5005s_reconfigure':
-drivers/media/tuners/mxl5005s.c:3953:1:
-warning: the frame size of 1152 bytes is larger than 1024 bytes
+> Add devicetree bindings for Mediatek mt6779 SoC Pin Controller.
+>
+> Acked-by: Sean Wang <sean.wang@kernel.org>
+> Signed-off-by: Mars Cheng <mars.cheng@mediatek.com>
+> Signed-off-by: Andy Teng <andy.teng@mediatek.com>
+> Signed-off-by: Hanks Chen <hanks.chen@mediatek.com>
 
-Signed-off-by: Bixuan Cui <cuibixuan@huawei.com>
----
- drivers/media/tuners/mxl5005s.c | 20 +++++++++++++++++---
- 1 file changed, 17 insertions(+), 3 deletions(-)
+Sorry for responding to old patches :/
 
-diff --git a/drivers/media/tuners/mxl5005s.c b/drivers/media/tuners/mxl5005s.c
-index 1c07e2225fb3..f6e82a8e7d37 100644
---- a/drivers/media/tuners/mxl5005s.c
-+++ b/drivers/media/tuners/mxl5005s.c
-@@ -3926,15 +3926,26 @@ static int mxl5005s_reconfigure(struct dvb_frontend *fe, u32 mod_type,
- 	u32 bandwidth)
- {
- 	struct mxl5005s_state *state = fe->tuner_priv;
--
--	u8 AddrTable[MXL5005S_REG_WRITING_TABLE_LEN_MAX];
--	u8 ByteTable[MXL5005S_REG_WRITING_TABLE_LEN_MAX];
-+	u8 *AddrTable;
-+	u8 *ByteTable;
- 	int TableLen;
+This and the rest of the pinctrl patches are now applied
+to the pinctrl tree for v5.9.
 
- 	dprintk(1, "%s(type=%d, bw=%d)\n", __func__, mod_type, bandwidth);
+The DTS and clock patches need to be applied elsewhere.
 
- 	mxl5005s_reset(fe);
-
-+	AddrTable = kcalloc(MXL5005S_REG_WRITING_TABLE_LEN_MAX, sizeof(u8),
-+			    GFP_KERNEL);
-+	if (!AddrTable)
-+		return -ENOMEM;
-+
-+	ByteTable = kcalloc(MXL5005S_REG_WRITING_TABLE_LEN_MAX, sizeof(u8),
-+			    GFP_KERNEL);
-+	if (!ByteTable) {
-+		kfree(AddrTable);
-+		return -ENOMEM;
-+	}
-+
- 	/* Tuner initialization stage 0 */
- 	MXL_GetMasterControl(ByteTable, MC_SYNTH_RESET);
- 	AddrTable[0] = MASTER_CONTROL_ADDR;
-@@ -3949,6 +3960,9 @@ static int mxl5005s_reconfigure(struct dvb_frontend *fe, u32 mod_type,
-
- 	mxl5005s_writeregs(fe, AddrTable, ByteTable, TableLen);
-
-+	kfree(AddrTable);
-+	kfree(ByteTable);
-+
- 	return 0;
- }
-
---
-2.17.1
-
-
-.
-
-
-
+Yours,
+Linus Walleij
