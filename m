@@ -7,34 +7,34 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6C5AC433E4
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 08:58:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AB6BC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 08:58:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8A40020771
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 08:58:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0D55A20771
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 08:58:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726968AbgGPI6d (ORCPT
+        id S1727831AbgGPI6r (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 04:58:33 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:7761 "EHLO huawei.com"
+        Thu, 16 Jul 2020 04:58:47 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:7762 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726788AbgGPI6d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 04:58:33 -0400
-Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 077AA2FC830B9AA4065F;
-        Thu, 16 Jul 2020 16:58:31 +0800 (CST)
+        id S1725867AbgGPI6r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jul 2020 04:58:47 -0400
+Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id A2097B1935B7EFF40E69;
+        Thu, 16 Jul 2020 16:58:45 +0800 (CST)
 Received: from localhost.localdomain.localdomain (10.175.113.25) by
- DGGEMS412-HUB.china.huawei.com (10.3.19.212) with Microsoft SMTP Server id
- 14.3.487.0; Thu, 16 Jul 2020 16:58:26 +0800
+ DGGEMS401-HUB.china.huawei.com (10.3.19.201) with Microsoft SMTP Server id
+ 14.3.487.0; Thu, 16 Jul 2020 16:58:40 +0800
 From:   Qinglang Miao <miaoqinglang@huawei.com>
 To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Richard Weinberger <richard@nod.at>,
-        "Vignesh Raghavendra" <vigneshr@ti.com>
-CC:     <linux-mtd@lists.infradead.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH -next] mtd: mtdcore: Convert to DEFINE_SHOW_ATTRIBUTE
-Date:   Thu, 16 Jul 2020 17:02:20 +0800
-Message-ID: <20200716090220.12983-1-miaoqinglang@huawei.com>
+        Linus Walleij <linus.walleij@linaro.org>,
+        Lee Jones <lee.jones@linaro.org>
+CC:     <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: [PATCH -next] mfd: Convert to DEFINE_SHOW_ATTRIBUTE
+Date:   Thu, 16 Jul 2020 17:02:36 +0800
+Message-ID: <20200716090236.13057-1-miaoqinglang@huawei.com>
 X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7BIT
@@ -52,62 +52,114 @@ Use DEFINE_SHOW_ATTRIBUTE macro to simplify the code.
 
 Signed-off-by: Yongqiang Liu <liuyongqiang13@huawei.com>
 ---
- drivers/mtd/mtdcore.c | 28 ++++------------------------
- 1 file changed, 4 insertions(+), 24 deletions(-)
+ drivers/mfd/ab3100-core.c | 15 ++-------------
+ drivers/mfd/ab3100-otp.c  | 16 +++-------------
+ drivers/mfd/tps65010.c    | 14 ++------------
+ 3 files changed, 7 insertions(+), 38 deletions(-)
 
-diff --git a/drivers/mtd/mtdcore.c b/drivers/mtd/mtdcore.c
-index e10ff132b..a88fe9fc0 100644
---- a/drivers/mtd/mtdcore.c
-+++ b/drivers/mtd/mtdcore.c
-@@ -335,7 +335,7 @@ static const struct device_type mtd_devtype = {
- 	.release	= mtd_release,
- };
- 
--static int mtd_partid_show(struct seq_file *s, void *p)
-+static int mtd_partid_debug_show(struct seq_file *s, void *p)
+diff --git a/drivers/mfd/ab3100-core.c b/drivers/mfd/ab3100-core.c
+index 092c78b5e..4a347d059 100644
+--- a/drivers/mfd/ab3100-core.c
++++ b/drivers/mfd/ab3100-core.c
+@@ -451,7 +451,7 @@ static irqreturn_t ab3100_irq_handler(int irq, void *data)
+ /*
+  * Some debugfs entries only exposed if we're using debug
+  */
+-static int ab3100_registers_print(struct seq_file *s, void *p)
++static int ab3100_registers_show(struct seq_file *s, void *p)
  {
- 	struct mtd_info *mtd = s->private;
- 
-@@ -344,19 +344,9 @@ static int mtd_partid_show(struct seq_file *s, void *p)
+ 	struct ab3100 *ab3100 = s->private;
+ 	u8 value;
+@@ -466,18 +466,7 @@ static int ab3100_registers_print(struct seq_file *s, void *p)
  	return 0;
  }
  
--static int mtd_partid_debugfs_open(struct inode *inode, struct file *file)
+-static int ab3100_registers_open(struct inode *inode, struct file *file)
 -{
--	return single_open(file, mtd_partid_show, inode->i_private);
+-	return single_open(file, ab3100_registers_print, inode->i_private);
 -}
 -
--static const struct file_operations mtd_partid_debug_fops = {
--	.open           = mtd_partid_debugfs_open,
--	.read_iter           = seq_read_iter,
--	.llseek         = seq_lseek,
--	.release        = single_release,
+-static const struct file_operations ab3100_registers_fops = {
+-	.open = ab3100_registers_open,
+-	.read_iter = seq_read_iter,
+-	.llseek = seq_lseek,
+-	.release = single_release,
+-	.owner = THIS_MODULE,
 -};
-+DEFINE_SHOW_ATTRIBUTE(mtd_partid_debug);
++DEFINE_SHOW_ATTRIBUTE(ab3100_registers);
  
--static int mtd_partname_show(struct seq_file *s, void *p)
-+static int mtd_partname_debug_show(struct seq_file *s, void *p)
+ struct ab3100_get_set_reg_priv {
+ 	struct ab3100 *ab3100;
+diff --git a/drivers/mfd/ab3100-otp.c b/drivers/mfd/ab3100-otp.c
+index 3c1157e7a..e5d294805 100644
+--- a/drivers/mfd/ab3100-otp.c
++++ b/drivers/mfd/ab3100-otp.c
+@@ -96,7 +96,7 @@ static int __init ab3100_otp_read(struct ab3100_otp *otp)
+  * the contents of the OTP.
+  */
+ #ifdef CONFIG_DEBUG_FS
+-static int ab3100_show_otp(struct seq_file *s, void *v)
++static int ab3100_otp_show(struct seq_file *s, void *v)
  {
- 	struct mtd_info *mtd = s->private;
+ 	struct ab3100_otp *otp = s->private;
  
-@@ -365,17 +355,7 @@ static int mtd_partname_show(struct seq_file *s, void *p)
+@@ -110,23 +110,13 @@ static int ab3100_show_otp(struct seq_file *s, void *v)
  	return 0;
  }
  
--static int mtd_partname_debugfs_open(struct inode *inode, struct file *file)
+-static int ab3100_otp_open(struct inode *inode, struct file *file)
 -{
--	return single_open(file, mtd_partname_show, inode->i_private);
+-	return single_open(file, ab3100_show_otp, inode->i_private);
 -}
 -
--static const struct file_operations mtd_partname_debug_fops = {
--	.open           = mtd_partname_debugfs_open,
--	.read_iter           = seq_read_iter,
--	.llseek         = seq_lseek,
--	.release        = single_release,
+-static const struct file_operations ab3100_otp_operations = {
+-	.open		= ab3100_otp_open,
+-	.read_iter		= seq_read_iter,
+-	.llseek		= seq_lseek,
+-	.release	= single_release,
 -};
-+DEFINE_SHOW_ATTRIBUTE(mtd_partname_debug);
++DEFINE_SHOW_ATTRIBUTE(ab3100_otp);
  
- static struct dentry *dfs_dir_mtd;
+ static void __init ab3100_otp_init_debugfs(struct device *dev,
+ 					   struct ab3100_otp *otp)
+ {
+ 	otp->debugfs = debugfs_create_file("ab3100_otp", S_IFREG | S_IRUGO,
+-					   NULL, otp, &ab3100_otp_operations);
++					   NULL, otp, &ab3100_otp_fops);
+ }
+ 
+ static void __exit ab3100_otp_exit_debugfs(struct ab3100_otp *otp)
+diff --git a/drivers/mfd/tps65010.c b/drivers/mfd/tps65010.c
+index 31259867f..f6d6b6c18 100644
+--- a/drivers/mfd/tps65010.c
++++ b/drivers/mfd/tps65010.c
+@@ -179,7 +179,7 @@ static inline void show_chgconfig(int por, const char *label, u8 chgconfig) { }
+ 
+ #ifdef	CONFIG_DEBUG_FS
+ 
+-static int dbg_show(struct seq_file *s, void *_)
++static int debug_show(struct seq_file *s, void *_)
+ {
+ 	struct tps65010	*tps = s->private;
+ 	u8		value, v2;
+@@ -283,17 +283,7 @@ static int dbg_show(struct seq_file *s, void *_)
+ 	return 0;
+ }
+ 
+-static int dbg_tps_open(struct inode *inode, struct file *file)
+-{
+-	return single_open(file, dbg_show, inode->i_private);
+-}
+-
+-static const struct file_operations debug_fops = {
+-	.open		= dbg_tps_open,
+-	.read_iter		= seq_read_iter,
+-	.llseek		= seq_lseek,
+-	.release	= single_release,
+-};
++DEFINE_SHOW_ATTRIBUTE(debug);
+ 
+ #define	DEBUG_FOPS	&debug_fops
  
 -- 
 2.17.1
