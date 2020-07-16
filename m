@@ -2,156 +2,166 @@ Return-Path: <SRS0=y5Sx=A3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26914C433E6
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 20:19:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8FF2C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 20:21:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0C7E0207CB
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 20:19:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AF62B207E8
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 20:21:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="d1KqoUc9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729657AbgGPUTb (ORCPT
+        id S1725970AbgGPUV2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 16:19:31 -0400
-Received: from asavdk3.altibox.net ([109.247.116.14]:50612 "EHLO
-        asavdk3.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728788AbgGPUTb (ORCPT
+        Thu, 16 Jul 2020 16:21:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45700 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725844AbgGPUV1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 16:19:31 -0400
-Received: from ravnborg.org (unknown [188.228.123.71])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by asavdk3.altibox.net (Postfix) with ESMTPS id 1D3A520039;
-        Thu, 16 Jul 2020 22:19:28 +0200 (CEST)
-Date:   Thu, 16 Jul 2020 22:19:26 +0200
-From:   Sam Ravnborg <sam@ravnborg.org>
-To:     Suraj Upadhyay <usuraj35@gmail.com>
-Cc:     maarten.lankhorst@linux.intel.com, mripard@kernel.org,
-        tzimmermann@suse.de, airlied@linux.ie, daniel@ffwll.ch,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org
-Subject: Re: [PATCH 0/4] drm: core: Convert logging to drm_* functions.
-Message-ID: <20200716201926.GE2254583@ravnborg.org>
-References: <cover.1594136880.git.usuraj35@gmail.com>
- <20200710175643.GF17565@ravnborg.org>
- <20200711151126.GA12262@blackclown>
+        Thu, 16 Jul 2020 16:21:27 -0400
+Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 85607C061755
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Jul 2020 13:21:27 -0700 (PDT)
+Received: by mail-pj1-x1041.google.com with SMTP id ls15so5362143pjb.1
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Jul 2020 13:21:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Pz5u7Nl+iTJUonoiBLwcqOKTZmTebMlmblSIOFO6rAM=;
+        b=d1KqoUc9C65mdlIM1wphjX9P9IvQqnkH+VGwg/9vsqbDhMF3tDcIpZMzzqkhrqVqiP
+         uBxiOsyg8SCYYZ7sMGB0J94YxMnLxQWj9PiFOhub5rbkZikf76aLsDuutPUqOHMg5Wfg
+         /UTwEqcNRFWh5p+d8sfnnwVnT90s2PhcNYhw8=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Pz5u7Nl+iTJUonoiBLwcqOKTZmTebMlmblSIOFO6rAM=;
+        b=nTKyCU2pjWGccDgsxaAb/oGyNS7Hcge9D8SkAOQAP6RWTEUV+V2C3qDCmmB1tkrOeW
+         CcY+NgohFBhNIYb9p5shEAiryIdk6sahmHg6tHr61uaPgfYAf8iONBpIWT2NKBj0ZH3i
+         eQeELm886g5qlE1Gta4pTbAuvA35KDwAL9kh+QFWd1uGPmo4/AI9pEVVDhoHjcZMcFls
+         7SpGANah/y/xAvO5GDfyHglTQ/aLd2xRAAcCA38sFPHtLxE5dJHflBUVuURFYV9JIukn
+         kYQpD+aISJgPRueP3eJbnJUYOSYBafDCg0c1ZFUdHTmo81fQCcvuxyC+g2Fm2KSrZkTY
+         yW+Q==
+X-Gm-Message-State: AOAM532v1P3iktPX0mnoAV3zN6flTSG2kKCI1BNrxmgn99wQDIafvopc
+        1qbAnvuXEulwUn/HgeEBvXwv5g==
+X-Google-Smtp-Source: ABdhPJzawA3nZe2sQ2O21b+jEe2lje6nBGUfnkf12tO9O2zxF36z+tkqvDv1LnqypSnSRKd1+UUnNg==
+X-Received: by 2002:a17:902:5981:: with SMTP id p1mr4745234pli.141.1594930886819;
+        Thu, 16 Jul 2020 13:21:26 -0700 (PDT)
+Received: from tictac2.mtv.corp.google.com ([2620:15c:202:1:42b0:34ff:fe3d:58e6])
+        by smtp.gmail.com with ESMTPSA id m17sm5815606pfo.182.2020.07.16.13.21.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 16 Jul 2020 13:21:26 -0700 (PDT)
+From:   Douglas Anderson <dianders@chromium.org>
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        Sam Ravnborg <sam@ravnborg.org>
+Cc:     robdclark@chromium.org, steev@kali.org, bjorn.andersson@linaro.org,
+        linux-arm-msm@vger.kernel.org,
+        Douglas Anderson <dianders@chromium.org>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        David Airlie <airlied@linux.ie>,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] drm: panel: simple: Delay HPD checking on boe_nv133fhm_n61 for 15 ms
+Date:   Thu, 16 Jul 2020 13:21:22 -0700
+Message-Id: <20200716132120.1.I01e738cd469b61fc9b28b3ef1c6541a4f48b11bf@changeid>
+X-Mailer: git-send-email 2.28.0.rc0.105.gf9edc3c819-goog
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200711151126.GA12262@blackclown>
-X-CMAE-Score: 0
-X-CMAE-Analysis: v=2.3 cv=f+hm+t6M c=1 sm=1 tr=0
-        a=S6zTFyMACwkrwXSdXUNehg==:117 a=S6zTFyMACwkrwXSdXUNehg==:17
-        a=kj9zAlcOel0A:10 a=e5mUnYsNAAAA:8 a=M7-yi6CMk_IXB4dErxsA:9
-        a=CjuIK1q_8ugA:10 a=Vxmtnl_E_bksehYqCbjh:22
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Suraj.
+On boe_nv133fhm_n62 (and presumably on boe_nv133fhm_n61) a scope shows
+a small spike on the HPD line right when you power the panel on.  The
+picture looks something like this:
 
-On Sat, Jul 11, 2020 at 08:41:26PM +0530, Suraj Upadhyay wrote:
-> On Fri, Jul 10, 2020 at 07:56:43PM +0200, Sam Ravnborg wrote:
-> > Hi Suraj.
-> > 
-> > On Tue, Jul 07, 2020 at 10:04:14PM +0530, Suraj Upadhyay wrote:
-> > > 
-> > > This patchset converts logging to drm_* functions in drm core.
-> > > 
-> > > The following functions have been converted to their respective
-> > > DRM alternatives :
-> > > dev_info()      --> drm_info()
-> > > dev_err()       --> drm_err()
-> > > dev_warn()      --> drm_warn()
-> > > dev_err_once()  --> drm_err_once().
-> > 
-> > I would prefer that DRM_* logging in the same files are converted in the
-> > same patch. So we have one logging conversion patch for each file you
-> > touches and that we do not need to re-vist the files later to change
-> > another set of logging functions.
-> 
-> Agreed.
-> 
-> > If possible WARN_* should also be converted to drm_WARN_*
-> > If patch is too large, then split them up but again lets have all
-> > logging updated when we touch a file.
-> > 
-> > Care to take a look at this approach?
-> >
-> 
-> Hii,
-> 	The problem with WARN_* macros is that they are used without any
-> drm device context. For example [this use here](https://cgit.freedesktop.org/drm/drm-misc/tree/drivers/gpu/drm/drm_edid.c#n1667) in drm_edid.c,
-> doesn't have a drm device context and only has one argument (namely !raw_edid).
-> There are many more such use cases.
-> 
-> And also there were cases where dev_* logging functions didn't have any
-> drm_device context.
-> 
-> I would be very glad, if we came up with a possible solution to this
-> problem. I think we should develop drm_* logging APIs which could print
-> contextless logs (which would possibly be midlyering) or give every situation a context.
+         +--------------------------------------
+         |
+         |
+         |
+Power ---+
+                                           +---
+                                           |
+              ++                           |
+         +----+|                           |
+HPD -----+     +---------------------------+
 
-This was discussed in the past.
-For now the focus is migrating existing logging to the new drm_ based
-logging. Preferably using coccinelle.
-when we are more or less covered there we can discuss if we will add
-more logging functions.
+So right when power is applied there's a little bump in HPD and then
+there's small spike right before it goes low.  The total time of the
+little bump plus the spike was measured on one panel as being 8 ms
+long.  The total time for the HPD to go high on the same panel was
+51.2 ms, though the datasheet only promises it is < 200 ms.
 
-> 
-> > Also please consider if coccinelle can make this job easier.
-> > There is a lot of files...
-> 
-> I totally agree with you. I will remember this next time.
-> 
-> But here, in this patchset I have tried to convert all possible
-> cases of conversion, i.e. I have changed logging wherever there was a
-> drm_device context.
+When asked about this glitch, BOE indicated that it was expected and
+persisted until the TCON has been initialized.
 
-Please note this in the changelog when you resend.
-I delete your original patches so they are gone now from my mail-box.
-Yeah, could dig them up somewhere, but it is easier to let you resend
-them and then we can have an updated changelog too.
+If this was a real hotpluggable DP panel then this wouldn't matter a
+whole lot.  We'd debounce the HPD signal for a really long time and so
+the little blip wouldn't hurt.  However, this is not a hotpluggable DP
+panel and the the debouncing logic isn't needed and just shows down
+the time needed to get the display working.  This is why the code in
+panel_simple_prepare() doesn't do debouncing and just waits for HPD to
+go high once.  Unfortunately if we get unlucky and happen to poll the
+HPD line right at the spike we can try talking to the panel before
+it's ready.
 
-	Sam
+Let's handle this situation by putting in a 15 ms prepare delay and
+decreasing the "hpd absent delay" by 15 ms.  That means:
+* If you don't have HPD hooked up at all you've still got the
+  hardcoded 200 ms delay.
+* If you've got HPD hooked up you will always wait at least 15 ms
+  before checking HPD.  The only case where this could be bad is if
+  the panel is sharing a voltage rail with something else in the
+  system and was already turned on long before the panel came up.  In
+  such a case we'll be delaying 15 ms for no reason, but it's not a
+  huge delay and I don't see any other good solution to handle that
+  case.
 
-> 
-> Thanks.
-> 
-> > 	Sam
-> > 
-> > > 
-> > > Suraj Upadhyay (4):
-> > >   drm: mipi-dsi: Convert logging to drm_* functions.
-> > >   drm: mipi-dbi: Convert logging to drm_* functions.
-> > >   drm: edid: Convert logging to drm_* functions.
-> > >   drm: fb-helper: Convert logging to drm_* functions.
-> > > 
-> > >  drivers/gpu/drm/drm_edid.c      |  7 +++----
-> > >  drivers/gpu/drm/drm_fb_helper.c |  2 +-
-> > >  drivers/gpu/drm/drm_mipi_dbi.c  |  4 ++--
-> > >  drivers/gpu/drm/drm_mipi_dsi.c  | 15 +++++++--------
-> > >  4 files changed, 13 insertions(+), 15 deletions(-)
-> > > 
-> > > -- 
-> > > 2.17.1
-> > > 
-> > > 
-> > 
-> > 
-> > 
-> > > _______________________________________________
-> > > dri-devel mailing list
-> > > dri-devel@lists.freedesktop.org
-> > > https://lists.freedesktop.org/mailman/listinfo/dri-devel
-> > 
+Even though the delay was measured as 8 ms, 15 ms was chosen to give a
+bit of margin.
 
+Signed-off-by: Douglas Anderson <dianders@chromium.org>
+---
+I don't actually have a device in front of me that is exhibiting these
+problems.  I believe that it is only some devices and some of the
+time.  Still, this patch seems safe and seems likely to fix the issue
+given the scope shots.
 
+ drivers/gpu/drm/panel/panel-simple.c | 16 +++++++++++++++-
+ 1 file changed, 15 insertions(+), 1 deletion(-)
 
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+diff --git a/drivers/gpu/drm/panel/panel-simple.c b/drivers/gpu/drm/panel/panel-simple.c
+index 88493538a147..046a06b55800 100644
+--- a/drivers/gpu/drm/panel/panel-simple.c
++++ b/drivers/gpu/drm/panel/panel-simple.c
+@@ -1260,7 +1260,21 @@ static const struct panel_desc boe_nv133fhm_n61 = {
+ 		.height = 165,
+ 	},
+ 	.delay = {
+-		.hpd_absent_delay = 200,
++		/*
++		 * When power is first given to the panel there's a short
++		 * spike on the HPD line.  It was explained that this spike
++		 * was until the TCON data download was complete.  On
++		 * one system this was measured at 8 ms.  We'll put 15 ms
++		 * in the prepare delay just to be safe and take it away
++		 * from the hpd_absent_delay (which would otherwise be 200 ms)
++		 * to handle this.  That means:
++		 * - If HPD isn't hooked up you still have 200 ms delay.
++		 * - If HPD is hooked up we won't try to look at it for the
++		 *   first 15 ms.
++		 */
++		.prepare = 15,
++		.hpd_absent_delay = 185,
++
+ 		.unprepare = 500,
+ 	},
+ 	.bus_format = MEDIA_BUS_FMT_RGB888_1X24,
+-- 
+2.28.0.rc0.105.gf9edc3c819-goog
 
