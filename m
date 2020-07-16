@@ -7,69 +7,67 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F828C433FC
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 14:00:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02AE7C433E6
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 14:00:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 41F6B2083B
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 14:00:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D25A820849
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 14:00:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="dbPBBqXN"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="YFHjdhb3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729195AbgGPOAA (ORCPT
+        id S1729208AbgGPOAD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 10:00:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43102 "EHLO
+        Thu, 16 Jul 2020 10:00:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43148 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729079AbgGPN75 (ORCPT
+        with ESMTP id S1729196AbgGPOAB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 09:59:57 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 22441C061755
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Jul 2020 06:59:57 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id b6so7137565wrs.11
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Jul 2020 06:59:57 -0700 (PDT)
+        Thu, 16 Jul 2020 10:00:01 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A5ADFC061755
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Jul 2020 07:00:00 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id f7so7214236wrw.1
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Jul 2020 07:00:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=5dhqQ4NUqiUF2Bq7q61YfGoR1xp2l5qeEphpBIwviqw=;
-        b=dbPBBqXNQxXcdUjhThIupcj7hUT6HiWHQxF6DtZKhLxNXTxrJyHDZvy567mnJlko7K
-         VmE/hBekbLstojqruJZVxnf54PwhVekIh/XpObFkAdGyJwnGImKh/34abAImwKgm5Qov
-         ZfjW3T7836AVQjZzbwFVCqo+988ZUTbc87SV1+coaF05IaNm7YROzqhNIfSbv9IKmzRR
-         Z5QLdS18fe7zcOUEVJc7RvYfYvCEoL1gwXRNpBvC209ybypJLdV+mN9YvMQSPdk8Ah14
-         XTQCtff8XV3rpAXhCEF8VJKAezSkguRXjzpkXz7Do6lpcB37Q3aXv98Vt55GDPwaqB0R
-         QEzA==
+        bh=yhAlYdV5Ne68CM+OfBERNX54x9vjQJ2ipPF8jNzEsTE=;
+        b=YFHjdhb3nz8ipEzJ5Z806+yAFjm+JnCtifCj6oH7xDw7KtUOJ803J24ZjjOOOhC5SY
+         If9NQFbI1uNzn53+X4WA3nqiVRBvRaKaoXJM9NtJWkvQn6GgpyaJHFkcYmUdivz4Tnak
+         9LrnSDlGMHCPbNeUqzcR7y1eiZCJI+3+i3g5AesZsCYEfEPIAHZ9Sv80NNIflvXhbZFF
+         trvIALQsI4z7xNXWhb5jZsiTVhHjN8z6ugz7+X67NnBZ9XEH0+HKETaP+WHDLLkgd96L
+         fUqTlXxcQ0wjCzXjsdNA8mYUHYEPIJRbgB6GQfu3GsNkpy1pZcuZXu/pEzf7o+2i5du9
+         xBJQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=5dhqQ4NUqiUF2Bq7q61YfGoR1xp2l5qeEphpBIwviqw=;
-        b=sBr1ZRgH+QLkBvPsmRA07WOnun72GhGy7dQ08jmemX3apBkVNmbRxiGD8Uld4mIOoM
-         XFPVkQGKIoI7KdfIRPRdKBm1tYj/BTznlkmqxq7EkXVOyu0ysEz7EDCTSnPrtGGMvfdu
-         GufdpT721v0yP1s0HLNiyBhmMUPOfbSZzac808QQn7HRw3FnIjldXCLY/5+Pjd21TVfY
-         55/peKQNN2McykHAfvz4VKHHMMTv1lYBgGdhRfcikQUk5ZDCGCj4tBt0ogWgovcJTMK2
-         68YsYHh6QGxPhsU6dzZT47AQEChHbIJdnJkvEj2Fsvtqh+FAZ/pfjrSRpRDfjhBIvYRQ
-         g+9w==
-X-Gm-Message-State: AOAM533iiCC+SlmkMw0+RDVu4Gn1mE3ieZ+Y/aluyjpT6Sh/fRi46pz5
-        Q1rRKLFbSxNi/wtOph7zDsM6g9O870Y=
-X-Google-Smtp-Source: ABdhPJz7hGYComCkdeZkkyqBGf5Dge6AU5ApxQjr/rt5vC1UMsucySFQGpPQzmN4Uk9auol+JJ7QQQ==
-X-Received: by 2002:a5d:6990:: with SMTP id g16mr5122440wru.131.1594907995889;
-        Thu, 16 Jul 2020 06:59:55 -0700 (PDT)
+        bh=yhAlYdV5Ne68CM+OfBERNX54x9vjQJ2ipPF8jNzEsTE=;
+        b=e67I4vFR+9jj+r1SqT+p2zmgk5zer09Gi2CD2wIXKEqgAaHewghlbrq4olUa/FwFfZ
+         zLOWlYmyFrB/oTXxwj3IoxL0IlxYgAMPNeGyms9ZWWTEDAvt2Sk1yK7rl4dEuwJENvd4
+         0iHEwPpfEJxUAia/Pen0ifq56s+G/yczhb4hJsSP25i2aEF96sDr1QLH7FK581Z2iNR9
+         cOBxRtaGiVqoZUMyx/IXznIySZdjQeZmE65HMTr3fzpk9KMpUloTwh9VYR/bUWkB9531
+         VO2s+i28w9i316gKpbIbNyYjGSRHjXDbDrgmS6Uo5DIs1tL5OaNEENxyLTKNfPHMiQpC
+         pKrw==
+X-Gm-Message-State: AOAM533VubqWbytcvtz6uV/D2cca1sx/o7lKfZmzmLGM7B7uNpmuHMaZ
+        42MkKD7EemhN8tIGVrCKsN5Sqw==
+X-Google-Smtp-Source: ABdhPJwCAMel7xrEfrRY7L+G7+cweQnfelaWTowsT3p/jtlurNSyRj2+Bif0CrPV/qz9AQShAUeY8Q==
+X-Received: by 2002:a5d:6412:: with SMTP id z18mr5144810wru.310.1594907999384;
+        Thu, 16 Jul 2020 06:59:59 -0700 (PDT)
 Received: from localhost.localdomain ([2.31.163.61])
-        by smtp.gmail.com with ESMTPSA id x18sm9351001wrq.13.2020.07.16.06.59.54
+        by smtp.gmail.com with ESMTPSA id x18sm9351001wrq.13.2020.07.16.06.59.58
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 16 Jul 2020 06:59:55 -0700 (PDT)
+        Thu, 16 Jul 2020 06:59:58 -0700 (PDT)
 From:   Lee Jones <lee.jones@linaro.org>
 To:     jic23@kernel.org, knaack.h@gmx.de, lars@metafoo.de,
         pmeerw@pmeerw.net
 Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         linux-iio@vger.kernel.org, Lee Jones <lee.jones@linaro.org>,
-        Michael Hennerich <Michael.Hennerich@analog.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>
-Subject: [PATCH 19/30] iio: dac: ad5064: Fix a few kerneldoc misdemeanours
-Date:   Thu, 16 Jul 2020 14:59:17 +0100
-Message-Id: <20200716135928.1456727-20-lee.jones@linaro.org>
+        Michael Hennerich <Michael.Hennerich@analog.com>
+Subject: [PATCH 22/30] iio: dac: ad5755: Fix kerneldoc attribute formatting for 'lock'
+Date:   Thu, 16 Jul 2020 14:59:20 +0100
+Message-Id: <20200716135928.1456727-23-lee.jones@linaro.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200716135928.1456727-1-lee.jones@linaro.org>
 References: <20200716135928.1456727-1-lee.jones@linaro.org>
@@ -80,63 +78,31 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Misspelling, missing description and compiler attribute ordering.
+Kerneldoc expects attributes/parameters to be in '@*.: ' format.
 
 Fixes the following W=1 kernel build warning(s):
 
- drivers/iio/dac/ad5064.c:71: warning: bad line:                         internal vref.
- drivers/iio/dac/ad5064.c:83: warning: Function parameter or member 'channels' not described in 'ad5064_chip_info'
- drivers/iio/dac/ad5064.c:125: warning: Function parameter or member 'lock' not described in 'ad5064_state'
- drivers/iio/dac/ad5064.c:125: warning: Function parameter or member '____cacheline_aligned' not described in 'ad5064_state'
+ drivers/iio/dac/ad5755.c:105: warning: Function parameter or member 'lock' not described in 'ad5755_state'
 
 Cc: Michael Hennerich <Michael.Hennerich@analog.com>
-Cc: Liam Girdwood <lgirdwood@gmail.com>
-Cc: Mark Brown <broonie@kernel.org>
 Signed-off-by: Lee Jones <lee.jones@linaro.org>
 ---
- drivers/iio/dac/ad5064.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ drivers/iio/dac/ad5755.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/iio/dac/ad5064.c b/drivers/iio/dac/ad5064.c
-index 303f6d1a5f311..d7109f8f52efa 100644
---- a/drivers/iio/dac/ad5064.c
-+++ b/drivers/iio/dac/ad5064.c
-@@ -68,8 +68,8 @@ enum ad5064_regmap_type {
-  * struct ad5064_chip_info - chip specific information
-  * @shared_vref:	whether the vref supply is shared between channels
-  * @internal_vref:	internal reference voltage. 0 if the chip has no
--			internal vref.
-- * @channel:		channel specification
-+ *			internal vref.
-+ * @channels:		channel specification
-  * @num_channels:	number of channels
-  * @regmap_type:	register map layout variant
+diff --git a/drivers/iio/dac/ad5755.c b/drivers/iio/dac/ad5755.c
+index 7723bd313fc6e..bee4ed0ce91a8 100644
+--- a/drivers/iio/dac/ad5755.c
++++ b/drivers/iio/dac/ad5755.c
+@@ -82,7 +82,7 @@ struct ad5755_chip_info {
+  * @pwr_down:	bitmask which contains  hether a channel is powered down or not
+  * @ctrl:	software shadow of the channel ctrl registers
+  * @channels:	iio channel spec for the device
+- * @lock	lock to protect the data buffer during SPI ops
++ * @lock:	lock to protect the data buffer during SPI ops
+  * @data:	spi transfer buffers
   */
-@@ -98,6 +98,7 @@ typedef int (*ad5064_write_func)(struct ad5064_state *st, unsigned int cmd,
-  * @use_internal_vref:	set to true if the internal reference voltage should be
-  *			used.
-  * @write:		register write callback
-+ * @lock:		maintain consistency between cached and dev state
-  * @data:		i2c/spi transfer buffers
-  */
- 
-@@ -111,7 +112,6 @@ struct ad5064_state {
- 	bool				use_internal_vref;
- 
- 	ad5064_write_func		write;
--	/* Lock used to maintain consistency between cached and dev state */
- 	struct mutex lock;
- 
- 	/*
-@@ -121,7 +121,7 @@ struct ad5064_state {
- 	union {
- 		u8 i2c[3];
- 		__be32 spi;
--	} data ____cacheline_aligned;
-+	} ____cacheline_aligned data;
- };
- 
- enum ad5064_type {
+ struct ad5755_state {
 -- 
 2.25.1
 
