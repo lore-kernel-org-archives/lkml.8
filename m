@@ -2,152 +2,104 @@ Return-Path: <SRS0=y5Sx=A3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C094EC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 16:42:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EB1EC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 16:48:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A07EE2065E
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 16:42:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=massaru-org.20150623.gappssmtp.com header.i=@massaru-org.20150623.gappssmtp.com header.b="l4b5Hqho"
+	by mail.kernel.org (Postfix) with ESMTP id 3B7532065E
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 16:48:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728977AbgGPQm0 (ORCPT
+        id S1728885AbgGPQsK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 12:42:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40096 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728385AbgGPQmZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 12:42:25 -0400
-Received: from mail-qv1-xf42.google.com (mail-qv1-xf42.google.com [IPv6:2607:f8b0:4864:20::f42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EF744C061755
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Jul 2020 09:42:24 -0700 (PDT)
-Received: by mail-qv1-xf42.google.com with SMTP id m9so2998601qvx.5
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Jul 2020 09:42:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=massaru-org.20150623.gappssmtp.com; s=20150623;
-        h=message-id:subject:from:to:cc:date:in-reply-to:references
-         :user-agent:mime-version:content-transfer-encoding;
-        bh=LMlqxALUY61jlVk3BUiDy9VLg6DTugrK02O4xaMAXeE=;
-        b=l4b5Hqho974uh2PmbRJzJutQgFImeAJVlHlLkooGLhdZe1nS7mvf+x6gt/QOZw/qL9
-         A84pVZc5FD32JGLt4LlnzFB06rz+hmPXLaI8hDe2fLxz/921s2jVMy4thipSXuNctzI7
-         HkMqqpSinh/agWeAyLOt/K2QJIn1uTWJuHTPMTVpaO76a66+rxTTbLjEM8mQcObpOs2+
-         8BUxyfhfHcFtYnPUbTfLKKZrZtVMp7BOCDW5a6netEOHL7Wv1pCOt9WjfJdZ1HyHyp9F
-         K/0MQrVQdEzKi3vmuBUuhAa8yjbOADZqvUk0N5rSn5dQnSeMoHx9kweWpQy1527gH79c
-         KhnA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:user-agent:mime-version:content-transfer-encoding;
-        bh=LMlqxALUY61jlVk3BUiDy9VLg6DTugrK02O4xaMAXeE=;
-        b=WPllS2yGwyE2+CpeiOWnQqxPVTC6o3oBXv5W4Dh+BtAA51GRhuz8s7PT4JbdjwO7hM
-         MDDh2IAhvCFLE14k1NDP4+v8zjze+Ckd5Wc4BOuMu3duHRWXHgPIy6sRBiGQoDFuibno
-         a0Ug6aCcW7aDnhxTctpkhuw7/lsmV93NHEq0ScLIt33nfheyWAvy8jaamRLsnp6B1/+E
-         irlOn74b9LU4RHamIkn4jcj7tVjSWLwAjEBYoQam51BFZSZpMRSP4n9gti1s891ejTyt
-         OutzMzjrJKAIIBTmjMtTmQIUVxa/yyeArObDQEkpWh9xa0zfKGuSboDDk1YUM84hdv04
-         OKUQ==
-X-Gm-Message-State: AOAM531JowvKd9IbBCkFAIsHEsBnFvZB5pGYA4UJMA+OL/cUdiVltQjF
-        w8eOHgXuYGG7lhui5IMJt7rcJA==
-X-Google-Smtp-Source: ABdhPJw8zMN/1FPYzX107TEkRXoQDL7PDsO3bU5e/CmgTIDO5o48Z06Nsfr79DuiczClK4visvbI1A==
-X-Received: by 2002:a0c:dc07:: with SMTP id s7mr5275693qvk.122.1594917744190;
-        Thu, 16 Jul 2020 09:42:24 -0700 (PDT)
-Received: from bbking.lan ([2804:14c:4a5:36c::cd2])
-        by smtp.gmail.com with ESMTPSA id u68sm8060659qkd.59.2020.07.16.09.42.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 16 Jul 2020 09:42:23 -0700 (PDT)
-Message-ID: <b3703bfd299c4156e44e5887dcc47e7dcc88dae7.camel@massaru.org>
-Subject: Re: [RFC 3/3] lib: Convert test_user_copy to KUnit test
-From:   Vitor Massaru Iha <vitor@massaru.org>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     kunit-dev@googlegroups.com, linux-kselftest@vger.kernel.org,
-        linux-kernel@vger.kernel.org, brendanhiggins@google.com,
-        davidgow@google.com, skhan@linuxfoundation.org,
-        linux-kernel-mentees@lists.linuxfoundation.org
-Date:   Thu, 16 Jul 2020 13:42:20 -0300
-In-Reply-To: <202007151929.7A4E04E@keescook>
-References: <20200715031120.1002016-1-vitor@massaru.org>
-         <20200715031120.1002016-4-vitor@massaru.org>
-         <202007151929.7A4E04E@keescook>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.36.3 (3.36.3-1.fc32) 
+        Thu, 16 Jul 2020 12:48:10 -0400
+Received: from mga04.intel.com ([192.55.52.120]:50403 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728721AbgGPQsJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jul 2020 12:48:09 -0400
+IronPort-SDR: IMB8suGiAK+sW7RJXXNPvABRBhvK0MPw+rsJ5TBKXcwOMC4eEdbhyNbVYrXNkwjzYLuXOgUDrw
+ xS2wtxBNQlTA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9684"; a="146942444"
+X-IronPort-AV: E=Sophos;i="5.75,360,1589266800"; 
+   d="scan'208";a="146942444"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jul 2020 09:48:09 -0700
+IronPort-SDR: ZA7q2BJMG9dZklnBPNFeSbY2pb+Z2/ehqdKBomNyLVBvDQ88gZ+ViD81h0cABUL4xa+XPO7QO6
+ 1kvKZFaRlAlA==
+X-IronPort-AV: E=Sophos;i="5.75,360,1589266800"; 
+   d="scan'208";a="486672417"
+Received: from unknown (HELO [10.254.114.13]) ([10.254.114.13])
+  by fmsmga005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jul 2020 09:48:08 -0700
+Subject: Re: [PATCH] ASoC: Intel: bytcht_es8316: Add missed put_device()
+To:     Hans de Goede <hdegoede@redhat.com>,
+        Jing Xiangfeng <jingxiangfeng@huawei.com>,
+        cezary.rojewski@intel.com, liam.r.girdwood@linux.intel.com,
+        yang.jie@linux.intel.com, broonie@kernel.org, perex@perex.cz,
+        tiwai@suse.com, kuninori.morimoto.gx@renesas.com,
+        paul@crapouillou.net
+Cc:     alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org
+References: <20200714080918.148196-1-jingxiangfeng@huawei.com>
+ <25abce87-5572-a78a-f001-7776f07be4ac@redhat.com>
+ <48bdc22e-a0fc-0402-a003-1d0736107e8a@linux.intel.com>
+ <0405e05d-3f46-dba4-6558-7cf09fa3abe4@redhat.com>
+From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Message-ID: <9ace068c-5ec7-7e2b-0aa5-56cb59a55f7e@linux.intel.com>
+Date:   Thu, 16 Jul 2020 11:48:06 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <0405e05d-3f46-dba4-6558-7cf09fa3abe4@redhat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2020-07-15 at 19:34 -0700, Kees Cook wrote:
-> On Wed, Jul 15, 2020 at 12:11:20AM -0300, Vitor Massaru Iha wrote:
-> > This adds the conversion of the runtime tests of test_user_copy
-> > fuctions,
-> > from `lib/test_user_copy.c`to KUnit tests.
-> > 
-> > Signed-off-by: Vitor Massaru Iha <vitor@massaru.org>
-> > [...]
-> > @@ -16,6 +16,7 @@
-> >  #include <linux/slab.h>
-> >  #include <linux/uaccess.h>
-> >  #include <linux/vmalloc.h>
-> > +#include <kunit/test.h>
-> >  
-> >  /*
-> >   * Several 32-bit architectures support 64-bit {get,put}_user()
-> > calls.
-> > @@ -31,26 +32,16 @@
-> >  # define TEST_U64
-> >  #endif
-> >  
-> > -#define test(condition, msg, ...)					
-> > \
-> > -({									
-> > \
-> > -	int cond = (condition);						
-> > \
-> > -	if (cond)							\
-> > -		pr_warn("[%d] " msg "\n", __LINE__, ##__VA_ARGS__);	\
-> > -	cond;								
-> > \
-> > -})
-> > -
-> >  static bool is_zeroed(void *from, size_t size)
-> >  {
-> >  	return memchr_inv(from, 0x0, size) == NULL;
-> >  }
-> >  
-> > -static int test_check_nonzero_user(char *kmem, char __user *umem,
-> > size_t size)
-> > +static void test_check_nonzero_user(struct kunit *test, char
-> > *kmem, char __user *umem, size_t size)
-> >  {
-> > -	int ret = 0;
-> >  	size_t start, end, i, zero_start, zero_end;
-> >  
-> > -	if (test(size < 2 * PAGE_SIZE, "buffer too small"))
-> > -		return -EINVAL;
-> > +	KUNIT_EXPECT_FALSE_MSG(test, size < 2 * PAGE_SIZE, "buffer too
-> > small");
-> 
-> I think this could be a much smaller diff if you just replaced the
-> "test" macro:
-> 
-> #define test(condition, msg, ...)					
-> \
-> ({									
-> \
-> 	int cond = !!(condition);					\
-> 	KUNIT_EXPECT_FALSE_MSG(kunit_context, cond, msg,
-> ##__VA_ARGS__);\
-> 	cond;								
-> \
-> })
-> 
 
-Sure, I'll do it.
 
-Thanks.
+>>>> snd_byt_cht_es8316_mc_probe() misses to call put_device() in an error
+>>>> path. Add the missed function call to fix it.
+>>>>
+>>>> Fixes: ba49cf6f8e4a ("ASoC: Intel: bytcht_es8316: Add quirk for 
+>>>> inverted jack detect")
+>>>> Signed-off-by: Jing Xiangfeng <jingxiangfeng@huawei.com>
+>>>
+>>> Patch looks good to me:
+>>>
+>>> Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+>>
+>> Actually the existing code looks quite odd to me:
+>>
+>> if (cnt) {
+>>      ret = device_add_properties(codec_dev, props);
+>>      if (ret)
+>>          return ret;
+>> }
+>>
+>> devm_acpi_dev_add_driver_gpios(codec_dev, byt_cht_es8316_gpios);
+>> priv->speaker_en_gpio =
+>>      gpiod_get_index(codec_dev, "speaker-enable", 0,
+>>              /* see comment in byt_cht_es8316_resume */
+>>              GPIOD_OUT_LOW | GPIOD_FLAGS_BIT_NONEXCLUSIVE);
+>> put_device(codec_dev);
+>>
+>> if the first branch is not taken the put_device() will not be balanced.
+> 
+> The get_device() does not come from the device_add_properties, it comes
+> from the earlier:
+> 
+> codec_dev = bus_find_device_by_name(&i2c_bus_type, NULL, codec_name);
+> 
+> call.
+
+I probably needed more coffee when I wrote this, indeed this is fine...
+
+Acked-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
 
