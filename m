@@ -2,52 +2,146 @@ Return-Path: <SRS0=y5Sx=A3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E8B0C433E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 16:00:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5866C433E6
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 16:01:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2D17E2064B
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 16:00:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 82F882065D
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 16:01:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="PmM7BFqw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729208AbgGPQA0 (ORCPT
+        id S1729248AbgGPQBB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 12:00:26 -0400
-Received: from verein.lst.de ([213.95.11.211]:35238 "EHLO verein.lst.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728126AbgGPQAZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 12:00:25 -0400
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id 8A01E68BEB; Thu, 16 Jul 2020 18:00:22 +0200 (CEST)
-Date:   Thu, 16 Jul 2020 18:00:22 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     Guoqing Jiang <guoqing.jiang@cloud.ionos.com>
-Cc:     Christoph Hellwig <hch@lst.de>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>, Song Liu <song@kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>, linux-raid@vger.kernel.org,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        NeilBrown <neilb@suse.com>
-Subject: Re: decruft the early init / initrd / initramfs code v2
-Message-ID: <20200716160022.GA29393@lst.de>
-References: <20200714190427.4332-1-hch@lst.de> <CAHk-=wgxV9We+nVcJtQu2DHco+HSeja-WqVdA-KUcB=nyUYuoQ@mail.gmail.com> <20200715065140.GA22060@lst.de> <4b38a63b-af09-608c-c4fa-b9e484ebe6bc@cloud.ionos.com>
+        Thu, 16 Jul 2020 12:01:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33666 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728374AbgGPQBA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jul 2020 12:01:00 -0400
+Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2FE9FC08C5C0
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Jul 2020 09:01:00 -0700 (PDT)
+Received: by mail-ej1-x644.google.com with SMTP id ga4so7073863ejb.11
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Jul 2020 09:01:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=yV3LwwP/SEpzaIEmeMBzbOghkFrbv+sk/VN9onw9N4c=;
+        b=PmM7BFqw2PSR4FOOXVxXhA2f6W9m437kj4FNos9CDP3AJplZthVDkyvWlsqXdsVzAW
+         IM0jY8Aj2cjRUyQ5//pe2xP0Djmun92aIvQU+RkGKuprB7WpZ6t9y8XW97H8aPkZsSws
+         LauGKXBWtxn+z294PiF58zpqTAMdaJnRkNRZDJaoBHdyv0iIexU9jpq+lDfX70zSDlM/
+         uuwpQMBzj+gyc/2Gi9ptBI+nur9z9JdfUf8q8QbPcre4pqAcb3Yf2Q8Tt35VJ37cGQ76
+         IoN3YCs7xA0vUYw1/o3x6BLHfCW/Hf3I81JzZNOwPjM+60sb/ZQZu+tFvmc25pLG3/oe
+         slkQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=yV3LwwP/SEpzaIEmeMBzbOghkFrbv+sk/VN9onw9N4c=;
+        b=axkU+iv44V8HYXPHEWPmljwEUVVo26V1xjRlUkHyPTWkd8hcLMCRptYK1VE8XM4ikB
+         OzAvnHl3kiT60XnhurPew1nXqR/fL+jdWJ8JHyBpMEqFa5F/5JDVAxeFGB09uypbYCPB
+         GaCSWx/egO6yVl4dYNFTE8m2EpZYa6UGuc8LhSW9wnv6Nz0NVE6qH55OH0NW4B1kz7uA
+         c2SrGE5HhHFR8u9fWhcajwgGjBcWnUNvUFoG72cBu7/IRjdh//y1T5Jr4EMzcA8MbdD2
+         0nySe2Kgp2kVALey4GHRLDbTC4LXef/uVRIEOjOIPgTS5bHSi03qJrL/Xcc6bv67L4jl
+         eirA==
+X-Gm-Message-State: AOAM533VfpjOhyOzBPApH9tg1Zilc2pN+7nqEfc9TfZvvacvFy1sdJqp
+        gZgp+C6wi7qpvRafb+gsnypLO+fvvXhr/Gqnp8VIGw==
+X-Google-Smtp-Source: ABdhPJw6daMW61UwPNGt9t0xFJ7BOFzJkc2Eqyf8Rfj0dreUEGgSjFtNL4bh/7oZZRDtti8BDS586JUwVYpyjV4FRCo=
+X-Received: by 2002:a17:906:6d56:: with SMTP id a22mr4585391ejt.440.1594915258725;
+ Thu, 16 Jul 2020 09:00:58 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <4b38a63b-af09-608c-c4fa-b9e484ebe6bc@cloud.ionos.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+References: <159457116473.754248.7879464730875147365.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <159457128462.754248.10443613927921016089.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <7ecd1b82-06ab-be49-4b92-ac42caab146c@oracle.com>
+In-Reply-To: <7ecd1b82-06ab-be49-4b92-ac42caab146c@oracle.com>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Thu, 16 Jul 2020 09:00:47 -0700
+Message-ID: <CAPcyv4hFS7JS9s7cUY=2Ru2kUTRsesxwX1PGnnc_tudJjoDUGw@mail.gmail.com>
+Subject: Re: [PATCH v2 22/22] device-dax: Introduce 'mapping' devices
+To:     Joao Martins <joao.m.martins@oracle.com>
+Cc:     linux-nvdimm <linux-nvdimm@lists.01.org>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Linux MM <linux-mm@kvack.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux ACPI <linux-acpi@vger.kernel.org>,
+        Christoph Hellwig <hch@lst.de>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 16, 2020 at 05:57:12PM +0200, Guoqing Jiang wrote:
-> On 7/15/20 8:51 AM, Christoph Hellwig wrote:
->> On Tue, Jul 14, 2020 at 12:34:45PM -0700, Linus Torvalds wrote:
-> I just cloned the tree, seems there is compile issue that you need to 
-> resolve.
+On Thu, Jul 16, 2020 at 6:19 AM Joao Martins <joao.m.martins@oracle.com> wrote:
+>
+> On 7/12/20 5:28 PM, Dan Williams wrote:
+> > In support of interrogating the physical address layout of a device with
+> > dis-contiguous ranges, introduce a sysfs directory with 'start', 'end',
+> > and 'page_offset' attributes. The alternative is trying to parse
+> > /proc/iomem, and that file will not reflect the extent layout until the
+> > device is enabled.
+> >
+> > Cc: Vishal Verma <vishal.l.verma@intel.com>
+> > Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+> > ---
+> >  drivers/dax/bus.c         |  191 +++++++++++++++++++++++++++++++++++++++++++++
+> >  drivers/dax/dax-private.h |   14 +++
+> >  2 files changed, 203 insertions(+), 2 deletions(-)
+> >
+> > diff --git a/drivers/dax/bus.c b/drivers/dax/bus.c
+> > index f342e36c69a1..8b6c4ddc5f42 100644
+> > --- a/drivers/dax/bus.c
+> > +++ b/drivers/dax/bus.c
+> > @@ -579,6 +579,167 @@ struct dax_region *alloc_dax_region(struct device *parent, int region_id,
+> >  }
+> >  EXPORT_SYMBOL_GPL(alloc_dax_region);
+> >
+> > +static void dax_mapping_release(struct device *dev)
+> > +{
+> > +     struct dax_mapping *mapping = to_dax_mapping(dev);
+> > +     struct dev_dax *dev_dax = to_dev_dax(dev->parent);
+> > +
+> > +     ida_free(&dev_dax->ida, mapping->id);
+> > +     kfree(mapping);
+> > +}
+> > +
+> > +static void unregister_dax_mapping(void *data)
+> > +{
+> > +     struct device *dev = data;
+> > +     struct dax_mapping *mapping = to_dax_mapping(dev);
+> > +     struct dev_dax *dev_dax = to_dev_dax(dev->parent);
+> > +     struct dax_region *dax_region = dev_dax->region;
+> > +
+> > +     dev_dbg(dev, "%s\n", __func__);
+> > +
+> > +     device_lock_assert(dax_region->dev);
+> > +
+> > +     dev_dax->ranges[mapping->range_id].mapping = NULL;
+> > +     mapping->range_id = -1;
+> > +
+> > +     device_del(dev);
+> > +     put_device(dev);
+> > +}
+> > +
+> > +static struct dev_dax_range *get_dax_range(struct device *dev)
+> > +{
+> > +     struct dax_mapping *mapping = to_dax_mapping(dev);
+> > +     struct dev_dax *dev_dax = to_dev_dax(dev->parent);
+> > +     struct dax_region *dax_region = dev_dax->region;
+> > +
+> > +     device_lock(dax_region->dev);
+> > +     if (mapping->range_id < 1) {
+>             ^^^^^^^^^^^^^^^^^^^^^ it's 'mapping->range_id < 0'
+>
+> Otherwise 'mapping0' sysfs entries won't work.
+> Disabled ranges use id -1.
 
-Fixed and force pushed.
+Whoops, yes. Needs a unit test.
