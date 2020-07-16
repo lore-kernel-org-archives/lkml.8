@@ -2,119 +2,203 @@ Return-Path: <SRS0=y5Sx=A3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03F56C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 21:06:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0819AC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 21:07:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CE3F7207DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 21:06:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="kVzg0pWy"
+	by mail.kernel.org (Postfix) with ESMTP id C7ABD207E8
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 21:07:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594933678;
+	bh=YoUSoM3xGxkRWbb8SYHwwTUnz9+8wwbU0xwpr/carJw=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=uC8sN7+8vXBb+6r92wQZmhibWdUEmjlYloLkWeK0Apy1i3RH2Zmnkrm5emDInPf+7
+	 OM930TSizILoOXIYjFFqX9fQQuH085DkP1Xh/lP+IeedVyOM+2MBdubBa9pj8MayQQ
+	 wDQupkEG2BKUYnEDnZTWND3tL19kGiZ7TpICdSCg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726932AbgGPVGt (ORCPT
+        id S1726962AbgGPVH5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 17:06:49 -0400
-Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:7866 "EHLO
-        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725926AbgGPVGt (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 17:06:49 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5f10c0f50001>; Thu, 16 Jul 2020 14:04:53 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Thu, 16 Jul 2020 14:06:48 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Thu, 16 Jul 2020 14:06:48 -0700
-Received: from [10.2.163.115] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 16 Jul
- 2020 21:06:47 +0000
-Subject: Re: [RFC PATCH v3 16/18] gpu: host1x: mipi: Split
- tegra_mipi_calibrate and tegra_mipi_wait
-To:     Dmitry Osipenko <digetx@gmail.com>, <thierry.reding@gmail.com>,
-        <jonathanh@nvidia.com>, <frankc@nvidia.com>, <hverkuil@xs4all.nl>,
-        <sakari.ailus@iki.fi>, <robh+dt@kernel.org>,
-        <helen.koike@collabora.com>
-CC:     <sboyd@kernel.org>, <gregkh@linuxfoundation.org>,
-        <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-i2c@vger.kernel.org>
-References: <1594786855-26506-1-git-send-email-skomatineni@nvidia.com>
- <1594786855-26506-17-git-send-email-skomatineni@nvidia.com>
- <a06dec8f-7042-767b-545b-048685a7683d@gmail.com>
-From:   Sowjanya Komatineni <skomatineni@nvidia.com>
-Message-ID: <20d63eca-4b2b-584e-a391-a4fb64a16b40@nvidia.com>
-Date:   Thu, 16 Jul 2020 14:09:36 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Thu, 16 Jul 2020 17:07:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50682 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725926AbgGPVH4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jul 2020 17:07:56 -0400
+Received: from embeddedor (unknown [201.162.240.161])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7CF9E207DD;
+        Thu, 16 Jul 2020 21:07:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594933675;
+        bh=YoUSoM3xGxkRWbb8SYHwwTUnz9+8wwbU0xwpr/carJw=;
+        h=Date:From:To:Cc:Subject:From;
+        b=ovEcFwCV3dckQXi+gnA2oZ9MWLDRFoYNggAdSPid8aV+FhzCx7w49YKmIgpMm1gM2
+         fsjCPSjfnogqYJN9OkrGrJZWzGN6Z5peh7uCrTHG3uTz80hDovGJicnawXZtM5cRkq
+         rNmlft5b0TPTuKbLzzvjCOqFzPLN2yZUXq2lqy5Q=
+Date:   Thu, 16 Jul 2020 16:13:20 -0500
+From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To:     Bjorn Helgaas <bhelgaas@google.com>
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Subject: [PATCH][next] PCI: Use fallthrough pseudo-keyword
+Message-ID: <20200716211320.GA17054@embeddedor>
 MIME-Version: 1.0
-In-Reply-To: <a06dec8f-7042-767b-545b-048685a7683d@gmail.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: quoted-printable
-Content-Language: en-US
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1594933493; bh=AAPKxFt5fJIy4hDie/eGSzrLnjZIrg6aRoQ5thNyQYU=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
-         Content-Language;
-        b=kVzg0pWyX5OuICnQ5i0v2jjaCwYzNimLG+F4rqniMJ19yEuJgPgqyTGjlxd//NJd0
-         Pq5/w/MKPPOTtV6/Q8pBJQaTNqatoo/GoLCVsFogFnPAtTGdbPOXcfrZsMGb9iHP48
-         PvmwB0OJYOY/3C556SnrZQQjW3bdMvSatIkh85iB1PVMMugyd0AIaa7HrM9FaJruzA
-         HT8qpsjRSUHk6iRmlwb1hsRz5wkBka0+qQaqTkKsS8aZ3doKKUH2XvfXk9FlfMgvLK
-         bglAXpUQljIfxx5cJsJzEeBfk1AtDFvA/60wK59fTSinGwomhxdv6MN+2Sjl1RiDRC
-         P2st65XYUZJjg==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Replace the existing /* fall through */ comments and its variants with
+the new pseudo-keyword macro fallthrough[1]. Also, remove unnecessary
+fall-through markings when it is the case.
 
-On 7/16/20 1:38 PM, Dmitry Osipenko wrote:
-> 15.07.2020 07:20, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->> SW can trigger MIPI pads calibration any time after power on
->> but calibration results will be latched and applied to the pads
->> by MIPI CAL unit only when the link is in LP-11 state and then
->> status register will be updated.
->>
->> For CSI, trigger of pads calibration happen during CSI stream
->> enable where CSI receiver is kept ready prior to sensor or CSI
->> transmitter stream start.
->>
->> So, pads may not be in LP-11 at this time and waiting for the
->> calibration to be done immediate after calibration start will
->> result in timeout.
->>
->> This patch splits tegra_mipi_calibrate() and tegra_mipi_wait()
->> so triggering for calibration and waiting for it to complete can
->> happen at different stages.
->>
->> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
->> ---
-> ...
->>   int tegra_mipi_calibrate(struct tegra_mipi_device *device)
->>   {
->> @@ -370,12 +381,10 @@ int tegra_mipi_calibrate(struct tegra_mipi_device =
-*device)
->>   	value |=3D MIPI_CAL_CTRL_START;
->>   	tegra_mipi_writel(device->mipi, value, MIPI_CAL_CTRL);
->>  =20
->> -	err =3D tegra_mipi_wait(device->mipi);
-> Doesn't MIPI clock need to be enabled during of the calibration process?
-MIPI clock is already enabled in tegra_mipi_calibrate
->
->>   	mutex_unlock(&device->mipi->lock);
->>   	clk_disable(device->mipi->clk);
->>  =20
->> -	return err;
->> +	return 0;
->>   }
->>   EXPORT_SYMBOL(tegra_mipi_calibrate);
+[1] https://www.kernel.org/doc/html/latest/process/deprecated.html?highlight=fallthrough#implicit-switch-case-fall-through
+
+Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+---
+ drivers/pci/hotplug/ibmphp_res.c  | 2 +-
+ drivers/pci/hotplug/pciehp_ctrl.c | 4 ++--
+ drivers/pci/hotplug/shpchp_ctrl.c | 4 ++--
+ drivers/pci/pci.c                 | 4 ++--
+ drivers/pci/proc.c                | 2 +-
+ drivers/pci/quirks.c              | 4 ++--
+ drivers/pci/setup-bus.c           | 2 +-
+ 7 files changed, 11 insertions(+), 11 deletions(-)
+
+diff --git a/drivers/pci/hotplug/ibmphp_res.c b/drivers/pci/hotplug/ibmphp_res.c
+index 5c93aa14f0de..ae9acc77d14f 100644
+--- a/drivers/pci/hotplug/ibmphp_res.c
++++ b/drivers/pci/hotplug/ibmphp_res.c
+@@ -1941,7 +1941,7 @@ static int __init update_bridge_ranges(struct bus_node **bus)
+ 						break;
+ 					case PCI_HEADER_TYPE_BRIDGE:
+ 						function = 0x8;
+-						/* fall through */
++						fallthrough;
+ 					case PCI_HEADER_TYPE_MULTIBRIDGE:
+ 						/* We assume here that only 1 bus behind the bridge
+ 						   TO DO: add functionality for several:
+diff --git a/drivers/pci/hotplug/pciehp_ctrl.c b/drivers/pci/hotplug/pciehp_ctrl.c
+index 6503d15effbb..9f85815b4f53 100644
+--- a/drivers/pci/hotplug/pciehp_ctrl.c
++++ b/drivers/pci/hotplug/pciehp_ctrl.c
+@@ -236,7 +236,7 @@ void pciehp_handle_presence_or_link_change(struct controller *ctrl, u32 events)
+ 	switch (ctrl->state) {
+ 	case BLINKINGOFF_STATE:
+ 		cancel_delayed_work(&ctrl->button_work);
+-		/* fall through */
++		fallthrough;
+ 	case ON_STATE:
+ 		ctrl->state = POWEROFF_STATE;
+ 		mutex_unlock(&ctrl->state_lock);
+@@ -265,7 +265,7 @@ void pciehp_handle_presence_or_link_change(struct controller *ctrl, u32 events)
+ 	switch (ctrl->state) {
+ 	case BLINKINGON_STATE:
+ 		cancel_delayed_work(&ctrl->button_work);
+-		/* fall through */
++		fallthrough;
+ 	case OFF_STATE:
+ 		ctrl->state = POWERON_STATE;
+ 		mutex_unlock(&ctrl->state_lock);
+diff --git a/drivers/pci/hotplug/shpchp_ctrl.c b/drivers/pci/hotplug/shpchp_ctrl.c
+index afdc52d1cae7..65502e3f7b4f 100644
+--- a/drivers/pci/hotplug/shpchp_ctrl.c
++++ b/drivers/pci/hotplug/shpchp_ctrl.c
+@@ -642,7 +642,7 @@ int shpchp_sysfs_enable_slot(struct slot *p_slot)
+ 	switch (p_slot->state) {
+ 	case BLINKINGON_STATE:
+ 		cancel_delayed_work(&p_slot->work);
+-		/* fall through */
++		fallthrough;
+ 	case STATIC_STATE:
+ 		p_slot->state = POWERON_STATE;
+ 		mutex_unlock(&p_slot->lock);
+@@ -678,7 +678,7 @@ int shpchp_sysfs_disable_slot(struct slot *p_slot)
+ 	switch (p_slot->state) {
+ 	case BLINKINGOFF_STATE:
+ 		cancel_delayed_work(&p_slot->work);
+-		/* fall through */
++		fallthrough;
+ 	case STATIC_STATE:
+ 		p_slot->state = POWEROFF_STATE;
+ 		mutex_unlock(&p_slot->lock);
+diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+index 45c51aff9c03..b02c5e6f5b67 100644
+--- a/drivers/pci/pci.c
++++ b/drivers/pci/pci.c
+@@ -922,7 +922,7 @@ static int pci_raw_set_power_state(struct pci_dev *dev, pci_power_t state)
+ 		if ((pmcsr & PCI_PM_CTRL_STATE_MASK) == PCI_D3hot
+ 		 && !(pmcsr & PCI_PM_CTRL_NO_SOFT_RESET))
+ 			need_restore = true;
+-		/* Fall-through - force to D0 */
++		fallthrough;	/* force to D0 */
+ 	default:
+ 		pmcsr = 0;
+ 		break;
+@@ -2406,7 +2406,7 @@ static pci_power_t pci_target_state(struct pci_dev *dev, bool wakeup)
+ 		case PCI_D2:
+ 			if (pci_no_d1d2(dev))
+ 				break;
+-			/* else, fall through */
++			fallthrough;
+ 		default:
+ 			target_state = state;
+ 		}
+diff --git a/drivers/pci/proc.c b/drivers/pci/proc.c
+index bd2b691fa7a3..d35186b01d98 100644
+--- a/drivers/pci/proc.c
++++ b/drivers/pci/proc.c
+@@ -231,7 +231,7 @@ static long proc_bus_pci_ioctl(struct file *file, unsigned int cmd,
+ 		}
+ 		/* If arch decided it can't, fall through... */
+ #endif /* HAVE_PCI_MMAP */
+-		/* fall through */
++		fallthrough;
+ 	default:
+ 		ret = -EINVAL;
+ 		break;
+diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+index 9d7a43261613..0f18237e57a8 100644
+--- a/drivers/pci/quirks.c
++++ b/drivers/pci/quirks.c
+@@ -1730,7 +1730,7 @@ static void quirk_jmicron_ata(struct pci_dev *pdev)
+ 	case PCI_DEVICE_ID_JMICRON_JMB366:
+ 		/* Redirect IDE second PATA port to the right spot */
+ 		conf5 |= (1 << 24);
+-		/* Fall through */
++		fallthrough;
+ 	case PCI_DEVICE_ID_JMICRON_JMB361:
+ 	case PCI_DEVICE_ID_JMICRON_JMB363:
+ 	case PCI_DEVICE_ID_JMICRON_JMB369:
+@@ -2224,7 +2224,7 @@ static void quirk_netmos(struct pci_dev *dev)
+ 		if (dev->subsystem_vendor == PCI_VENDOR_ID_IBM &&
+ 				dev->subsystem_device == 0x0299)
+ 			return;
+-		/* else, fall through */
++		fallthrough;
+ 	case PCI_DEVICE_ID_NETMOS_9735:
+ 	case PCI_DEVICE_ID_NETMOS_9745:
+ 	case PCI_DEVICE_ID_NETMOS_9845:
+diff --git a/drivers/pci/setup-bus.c b/drivers/pci/setup-bus.c
+index 9b94b1f16d80..bd04a6a916d4 100644
+--- a/drivers/pci/setup-bus.c
++++ b/drivers/pci/setup-bus.c
+@@ -1252,7 +1252,7 @@ void __pci_bus_size_bridges(struct pci_bus *bus, struct list_head *realloc_head)
+ 			additional_mmio_size = pci_hotplug_mmio_size;
+ 			additional_mmio_pref_size = pci_hotplug_mmio_pref_size;
+ 		}
+-		/* Fall through */
++		fallthrough;
+ 	default:
+ 		pbus_size_io(bus, realloc_head ? 0 : additional_io_size,
+ 			     additional_io_size, realloc_head);
+-- 
+2.27.0
+
