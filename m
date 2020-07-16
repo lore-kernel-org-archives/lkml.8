@@ -2,208 +2,123 @@ Return-Path: <SRS0=y5Sx=A3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16318C433E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 08:23:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1A3CC433E4
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 08:24:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E0D0620775
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 08:23:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="FWOUjBRp"
+	by mail.kernel.org (Postfix) with ESMTP id 7F091206C1
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 08:24:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594887840;
+	bh=1viaTCE1Yeyo4SeDpSutX/IP3wyM7j34HmaFbKeR/1k=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=coLCiggpmKuQCBvkQW3HeKNZaQ/8uIcLiDI61ywsdmfWNAr5e3SOqwUtC406QDjO+
+	 Arow90px/PBeEeaZvYlrYOOOc5be3OpVQC5aE9gXexyldKx2O9HmnVsMpioFAeB7Bq
+	 8kKcaRDXsK9TcNNb2jtF/zZKOsm8QLTN3lsCMzWs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726898AbgGPIXC (ORCPT
+        id S1728112AbgGPIX6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 04:23:02 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:37516 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725867AbgGPIXA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 04:23:00 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 06G8Mw3O037713;
-        Thu, 16 Jul 2020 03:22:58 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1594887778;
-        bh=5VliJ1eRKODWhjxkf03Nw+kM4cdPS9d8ibF/Wms+xHg=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=FWOUjBRpFUGwDrw3CHdTqK2uwcSjvV5swSguE9Rgu4frdeANw4RF7COEnwmKk6Y//
-         XlhF+mzvTH5kDS8HYP7QeM6m45zwDFRqBkUjlIcFg8c9xzZtbgomVIMrGBoUyOhM2e
-         TEaQf9ko9kWilzXtfZfGq+F2FABfmwneEUOQS9VA=
-Received: from DFLE108.ent.ti.com (dfle108.ent.ti.com [10.64.6.29])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 06G8Mw8C043181;
-        Thu, 16 Jul 2020 03:22:58 -0500
-Received: from DFLE115.ent.ti.com (10.64.6.36) by DFLE108.ent.ti.com
- (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Thu, 16
- Jul 2020 03:22:58 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE115.ent.ti.com
- (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Thu, 16 Jul 2020 03:22:57 -0500
-Received: from lta0400828a.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 06G8MrSG049495;
-        Thu, 16 Jul 2020 03:22:56 -0500
-From:   Roger Quadros <rogerq@ti.com>
-To:     <kishon@ti.com>
-CC:     <robh+dt@kernel.org>, <nsekhar@ti.com>, <vigneshr@ti.com>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        Roger Quadros <rogerq@ti.com>
-Subject: [PATCH v4 1/3] dt-binding: phy: convert ti,omap-usb2 to YAML
-Date:   Thu, 16 Jul 2020 11:22:50 +0300
-Message-ID: <20200716082252.21266-2-rogerq@ti.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200716082252.21266-1-rogerq@ti.com>
-References: <20200716082252.21266-1-rogerq@ti.com>
+        Thu, 16 Jul 2020 04:23:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53504 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727795AbgGPIXp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jul 2020 04:23:45 -0400
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1C119206C1;
+        Thu, 16 Jul 2020 08:23:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594887824;
+        bh=1viaTCE1Yeyo4SeDpSutX/IP3wyM7j34HmaFbKeR/1k=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=TRSdrAucvUECnfBWG92h1ymXgU3nMCCdLbM3Qux6t5JU8+Oe89Dl97LSLcCG1DetO
+         YBaikSt0ed5gkIfGTd7ZwGKKu+tSYJzuEK5n13DFvkaz/8lAxonzCDVDCzqbqvGNmN
+         GyysmsBx+emLyw+aEa6wjz5gI+bQ7Pl1rLVCbdMU=
+Date:   Thu, 16 Jul 2020 09:23:40 +0100
+From:   Will Deacon <will@kernel.org>
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Anshuman Khandual <anshuman.khandual@arm.com>,
+        Barry Song <song.bao.hua@hisilicon.com>
+Subject: Re: linux-next: manual merge of the akpm-current tree with the arm64
+ tree
+Message-ID: <20200716082339.GA6745@willie-the-truck>
+References: <20200716180012.032723a9@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200716180012.032723a9@canb.auug.org.au>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Move ti,omap-usb2 to its own YAML schema.
+On Thu, Jul 16, 2020 at 06:00:12PM +1000, Stephen Rothwell wrote:
+> Today's linux-next merge of the akpm-current tree got a conflict in:
+> 
+>   arch/arm64/mm/init.c
+> 
+> between commit:
+> 
+>   abb7962adc80 ("arm64/hugetlb: Reserve CMA areas for gigantic pages on 16K and 64K configs")
+> 
+> from the arm64 tree and commit:
+> 
+>   10d44973d8ab ("mm/hugetlb: split hugetlb_cma in nodes with memory")
+> 
+> from the akpm-current tree.
 
-Signed-off-by: Roger Quadros <rogerq@ti.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
----
- .../devicetree/bindings/phy/ti,omap-usb2.yaml | 72 +++++++++++++++++++
- .../devicetree/bindings/phy/ti-phy.txt        | 37 ----------
- 2 files changed, 72 insertions(+), 37 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/phy/ti,omap-usb2.yaml
+[...]
 
-diff --git a/Documentation/devicetree/bindings/phy/ti,omap-usb2.yaml b/Documentation/devicetree/bindings/phy/ti,omap-usb2.yaml
-new file mode 100644
-index 000000000000..a05110351814
---- /dev/null
-+++ b/Documentation/devicetree/bindings/phy/ti,omap-usb2.yaml
-@@ -0,0 +1,72 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/phy/ti,omap-usb2.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: OMAP USB2 PHY
-+
-+maintainers:
-+ - Kishon Vijay Abraham I <kishon@ti.com>
-+ - Roger Quadros <rogerq@ti.com>
-+
-+properties:
-+  compatible:
-+    oneOf:
-+      - items:
-+        - enum:
-+          - ti,dra7x-usb2
-+          - ti,dra7x-usb2-phy2
-+          - ti,am654-usb2
-+        - enum:
-+          - ti,omap-usb2
-+      - items:
-+        - const: ti,omap-usb2
-+
-+  reg:
-+    maxItems: 1
-+
-+  "#phy-cells":
-+    const: 0
-+
-+  clocks:
-+    minItems: 1
-+    items:
-+      - description: wakeup clock
-+      - description: reference clock
-+
-+  clock-names:
-+    minItems: 1
-+    items:
-+      - const: wkupclk
-+      - const: refclk
-+
-+  syscon-phy-power:
-+    $ref: /schemas/types.yaml#definitions/phandle-array
-+    description:
-+      phandle/offset pair. Phandle to the system control module and
-+      register offset to power on/off the PHY.
-+
-+  ctrl-module:
-+    $ref: /schemas/types.yaml#definitions/phandle
-+    description:
-+      (deprecated) phandle of the control module used by PHY driver
-+      to power on the PHY. Use syscon-phy-power instead.
-+
-+required:
-+  - compatible
-+  - reg
-+  - "#phy-cells"
-+  - clocks
-+  - clock-names
-+
-+examples:
-+  - |
-+    usb0_phy: phy@4100000 {
-+      compatible = "ti,am654-usb2", "ti,omap-usb2";
-+      reg = <0x4100000 0x54>;
-+      syscon-phy-power = <&scm_conf 0x4000>;
-+      clocks = <&k3_clks 151 0>, <&k3_clks 151 1>;
-+      clock-names = "wkupclk", "refclk";
-+      #phy-cells = <0>;
-+    };
-diff --git a/Documentation/devicetree/bindings/phy/ti-phy.txt b/Documentation/devicetree/bindings/phy/ti-phy.txt
-index 8f93c3b694a7..60c9d0ac75e6 100644
---- a/Documentation/devicetree/bindings/phy/ti-phy.txt
-+++ b/Documentation/devicetree/bindings/phy/ti-phy.txt
-@@ -27,43 +27,6 @@ omap_control_usb: omap-control-usb@4a002300 {
-         reg-names = "otghs_control";
- };
- 
--OMAP USB2 PHY
--
--Required properties:
-- - compatible: Should be "ti,omap-usb2"
--	       Should be "ti,dra7x-usb2" for the 1st instance of USB2 PHY on
--	       DRA7x
--	       Should be "ti,dra7x-usb2-phy2" for the 2nd instance of USB2 PHY
--	       in DRA7x
--	       Should be "ti,am654-usb2" for the USB2 PHYs on AM654.
-- - reg : Address and length of the register set for the device.
-- - #phy-cells: determine the number of cells that should be given in the
--   phandle while referencing this phy.
-- - clocks: a list of phandles and clock-specifier pairs, one for each entry in
--   clock-names.
-- - clock-names: should include:
--   * "wkupclk" - wakeup clock.
--   * "refclk" - reference clock (optional).
--
--Deprecated properties:
-- - ctrl-module : phandle of the control module used by PHY driver to power on
--   the PHY.
--
--Recommended properies:
--- syscon-phy-power : phandle/offset pair. Phandle to the system control
--  module and the register offset to power on/off the PHY.
--
--This is usually a subnode of ocp2scp to which it is connected.
--
--usb2phy@4a0ad080 {
--	compatible = "ti,omap-usb2";
--	reg = <0x4a0ad080 0x58>;
--	ctrl-module = <&omap_control_usb>;
--	#phy-cells = <0>;
--	clocks = <&usb_phy_cm_clk32k>, <&usb_otg_ss_refclk960m>;
--	clock-names = "wkupclk", "refclk";
--};
--
- TI PIPE3 PHY
- 
- Required properties:
--- 
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+> diff --cc arch/arm64/mm/init.c
+> index f8c19c6c8e71,ee551d71c4dd..000000000000
+> --- a/arch/arm64/mm/init.c
+> +++ b/arch/arm64/mm/init.c
+> @@@ -421,22 -421,21 +421,21 @@@ void __init bootmem_init(void
+>   	arm64_numa_init();
+>   
+>   	/*
+> - 	 * must be done after arm64_numa_init() which calls numa_init() to
+> - 	 * initialize node_online_map that gets used in hugetlb_cma_reserve()
+> - 	 * while allocating required CMA size across online nodes.
+> + 	 * sparse_init() tries to allocate memory from memblock, so must be
+> + 	 * done after the fixed reservations
+>   	 */
+> - #if defined(CONFIG_HUGETLB_PAGE) && defined(CONFIG_CMA)
+> - 	arm64_hugetlb_cma_reserve();
+> - #endif
+> + 	sparse_init();
+> + 	zone_sizes_init(min, max);
+>   
+>   	/*
+> - 	 * Sparsemem tries to allocate bootmem in memory_present(), so must be
+> - 	 * done after the fixed reservations.
+> + 	 * must be done after zone_sizes_init() which calls free_area_init()
+> + 	 * that calls node_set_state() to initialize node_states[N_MEMORY]
+> + 	 * because hugetlb_cma_reserve() will scan over nodes with N_MEMORY
+> + 	 * state
+>   	 */
+> - 	memblocks_present();
+> - 
+> - 	sparse_init();
+> - 	zone_sizes_init(min, max);
+>  -#ifdef CONFIG_ARM64_4K_PAGES
+>  -	hugetlb_cma_reserve(PUD_SHIFT - PAGE_SHIFT);
+> ++#if defined(CONFIG_HUGETLB_PAGE) && defined(CONFIG_CMA)
+> ++	arm64_hugetlb_cma_reserve();
+> + #endif
 
+Thanks, looks good to me, although we might be in for a hairier conflict
+if the discussion at [1] ends up with a patch for merging.
+
+Will
+
+[1] https://lore.kernel.org/r/359ea1d0-b1fd-d09f-d28a-a44655834277@oracle.com
