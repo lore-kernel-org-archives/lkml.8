@@ -7,118 +7,115 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A84DC433E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 18:29:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49BD1C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 18:31:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 70B782074B
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 18:29:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 27C832074B
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 18:31:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729390AbgGPS3P (ORCPT
+        id S1729100AbgGPSb1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jul 2020 14:29:15 -0400
-Received: from mout.kundenserver.de ([212.227.17.13]:39147 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726986AbgGPS3M (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jul 2020 14:29:12 -0400
-Received: from mail-qk1-f177.google.com ([209.85.222.177]) by
- mrelayeu.kundenserver.de (mreue109 [212.227.15.145]) with ESMTPSA (Nemesis)
- id 1MdNTy-1kVCOk1UTA-00ZNbO; Thu, 16 Jul 2020 20:29:10 +0200
-Received: by mail-qk1-f177.google.com with SMTP id 145so6460753qke.9;
-        Thu, 16 Jul 2020 11:29:09 -0700 (PDT)
-X-Gm-Message-State: AOAM530nNoPjPKzPIluuQKhKCyfzeQyIfDQteLDJU935osUzUM7aJqg8
-        wb49PWHP2MTH2Gnqc/T7knIbFjpi42ISaL31aEo=
-X-Google-Smtp-Source: ABdhPJwpnVi3yTN8/eCBJobJvERBe9E39v4nmlAu46cNhC03D5mIwa1L0kP09TpwQqOYtQR2/q6zs01B21hw0nyk7DU=
-X-Received: by 2002:a37:9dd6:: with SMTP id g205mr5507389qke.352.1594924149045;
- Thu, 16 Jul 2020 11:29:09 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200619125801.9530-1-faiz_abbas@ti.com> <20200619125801.9530-8-faiz_abbas@ti.com>
- <3ed03440-7fbd-6abc-8a15-67e7217e2c3d@ti.com> <2e50333c-5387-236f-3fb2-6d8014b224e0@ti.com>
-In-Reply-To: <2e50333c-5387-236f-3fb2-6d8014b224e0@ti.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Thu, 16 Jul 2020 20:28:52 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a1JpCCCV-CVQj3+eMfWF+=4AuHPpv390Tyj2pKn63_ZVg@mail.gmail.com>
-Message-ID: <CAK8P3a1JpCCCV-CVQj3+eMfWF+=4AuHPpv390Tyj2pKn63_ZVg@mail.gmail.com>
-Subject: Re: [PATCH 7/7] arm64: defconfig: Enable AM654x SDHCI controller
-To:     Sekhar Nori <nsekhar@ti.com>
-List-Id: <soc.lore.kernel.org>
-Cc:     Faiz Abbas <faiz_abbas@ti.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        DTML <devicetree@vger.kernel.org>,
-        linux-mmc <linux-mmc@vger.kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Will Deacon <will@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        ARM-SoC Maintainers <soc@kernel.org>,
-        Tero Kristo <t-kristo@ti.com>, Nishanth Menon <nm@ti.com>
+        Thu, 16 Jul 2020 14:31:27 -0400
+Received: from mga07.intel.com ([134.134.136.100]:48421 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726986AbgGPSb1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jul 2020 14:31:27 -0400
+IronPort-SDR: X2qH1R9trpAYXz79ljqZHuyAmQ6G09RJh6CMikZ+t71g3UWqLd1FKLbWIo3HbfaZjFwbuCuTBs
+ 1c3+bxhTF+sw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9684"; a="214199627"
+X-IronPort-AV: E=Sophos;i="5.75,360,1589266800"; 
+   d="scan'208";a="214199627"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jul 2020 11:31:26 -0700
+IronPort-SDR: 2t0dmylMk3iWIbS6vD/SuFnigW7SF7YBbtcIIx3Mhigunsx4L5VmqjzHrquvxZ6wZWUsILMegO
+ TNWxlA3BD68Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,360,1589266800"; 
+   d="scan'208";a="308731140"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmsmga004.fm.intel.com with ESMTP; 16 Jul 2020 11:31:25 -0700
+Received: from debox1-desk1.jf.intel.com (debox1-desk1.jf.intel.com [10.7.201.137])
+        by linux.intel.com (Postfix) with ESMTP id B3A945804BB;
+        Thu, 16 Jul 2020 11:31:25 -0700 (PDT)
+Message-ID: <e051971b327d870476dad209ddf27055d001b9b4.camel@linux.intel.com>
+Subject: Re: [PATCH V3 1/3] PCI: Add defines for Designated Vendor-Specific
+ Capability
+From:   "David E. Box" <david.e.box@linux.intel.com>
+Reply-To: david.e.box@linux.intel.com
+To:     Alexander Duyck <alexander.h.duyck@linux.intel.com>,
+        Randy Dunlap <rdunlap@infradead.org>, lee.jones@linaro.org,
+        dvhart@infradead.org, andy@infradead.org, bhelgaas@google.com
+Cc:     linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        linux-pci@vger.kernel.org
+Date:   Thu, 16 Jul 2020 11:31:25 -0700
+In-Reply-To: <dc459a96-1434-16bf-80d2-06b0680f9fda@linux.intel.com>
+References: <20200508021844.6911-1-david.e.box@linux.intel.com>
+         <20200714062323.19990-2-david.e.box@linux.intel.com>
+         <3f490460-62f8-8b49-0735-ad29653bfbc0@infradead.org>
+         <dc459a96-1434-16bf-80d2-06b0680f9fda@linux.intel.com>
+Organization: David E. Box
 Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:zNjLXb5vHEpNpoSBwn+Afpdez3i7UM+Ignp814vB+CU/NGZRXjY
- CzKQ/HqpUJ529deZnSVTDd4R9mnkuUz3tafXxuatlxtrS88F+qnGckQls/gpJxAk7ObR8rs
- zfnpUDOW3v3aFNSMZOtGOXlyZnRp4ZsyjBWntlgMxgJJbD3Y0zsQbOBMdg83EtObs+2FGqU
- ATvFhR8HTJPO8GK/O2Gsw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:x15BDNpakwY=:84QQbrNNE386mCC6/k27Nu
- QZV1WSoV6OARpNoonBgXWLCDNGwidtV3cjeOcHyCNwZcr1p7VoICgSowLe3uBuX692hucIN5D
- W4Q+5YJwnJYoTniobGV6ZNNT5M0E41n2m4YrYmhnZ2pQsY4PwfROz4z8g7wYbGwyvLg3naTYK
- jTyxY8XhuyRUL/x0jGqOgoJBM2afDJqESmIxLVjR6uNid+S8ID5KRRa8cMTVCFbzYMZYwrT9d
- 8stKounBeofd/KsNAKqeD/Zi/qmckmBVJjM4Py1qTngvpewRThD36pO5K898e67cq21E+Ubmk
- 55IJ7jNpHi0fI1LfN44twQMlCh69Qqu0ubxpGFRNO9nogzrYDcA0WGFaY7Hr5LHcqfqzkORD0
- zEnn+D2W2uw3Wweg2UzdP3OtnSoQcLeH/iTyTtTPgVTJ10ifAXWINOpM/VSo2LtvAW0TTa3pM
- rtalfj2iHWQIDHJh5SG6sUJ1iHUg1m/Flcd7qNH4dp0NA82K5pIJjUSFAd98M4fhblaJdHi9o
- XW2+0ZCWkQZt71CCUlO/gAhtBH80dVW+qHLKlglJ8wT2jF1tivJbIFGFMqjd0YnVi7g4M3nix
- DoOiH4mFJW4aiLVE0EHSNQblhRN4lTh2JbZBoAwLiaWgxwoV61raBubNXdXSifJnZOhuiWFEx
- KpoSKZNpPSoqtf9Lp/JwxGMS6JxYXSILoKD0nXR0MIJG9P81DmvJP0Vlo8wl8BtygAmRSKoWb
- rjAkr7Z65KY8//SGFquv26BuReGc3w07U/3UE2bMrz44C7dqoBnVX2uOFXneOf8jb6GYsaiFY
- 9s8h79osEDsDfDbs+G1eeUFI+3N3MzsCJpZ6687JYMVi9PNXMNdwrf72L5rm7YhzIvAy0q1IY
- ieo0mxGswaUFcyz2sQqmg5B6e4JC8kUzVBLRFeu10KbxXKJm4A5PRFBWGDMhnznNidL7UxL2T
- qbV2349dDIsYgqznPbPOx5LsYVn0neJFn+MY23NUW6oSntByrWMvo
+User-Agent: Evolution 3.34.4 (3.34.4-1.fc31) 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 16, 2020 at 3:25 PM Sekhar Nori <nsekhar@ti.com> wrote:
->
-> On 7/16/20 5:49 PM, Faiz Abbas wrote:
-> > Hi,
-> >
-> > On 19/06/20 6:28 pm, Faiz Abbas wrote:
-> >> Enable CONFIG_SDHCI_AM654 to Support AM65x sdhci controller.
-> >>
-> >> Signed-off-by: Faiz Abbas <faiz_abbas@ti.com>
-> >> ---
-> >>  arch/arm64/configs/defconfig | 1 +
-> >>  1 file changed, 1 insertion(+)
-> >>
-> >> diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
-> >> index 883e8bace3ed..40dd13e0adc5 100644
-> >> --- a/arch/arm64/configs/defconfig
-> >> +++ b/arch/arm64/configs/defconfig
-> >> @@ -731,6 +731,7 @@ CONFIG_MMC_DW_ROCKCHIP=y
-> >>  CONFIG_MMC_SUNXI=y
-> >>  CONFIG_MMC_BCM2835=y
-> >>  CONFIG_MMC_SDHCI_XENON=y
-> >> +CONFIG_MMC_SDHCI_AM654=y
-> >>  CONFIG_MMC_OWL=y
-> >>  CONFIG_NEW_LEDS=y
-> >>  CONFIG_LEDS_CLASS=y
-> >>
-> >
-> > Gentle ping. Will, Catalin, can this patch be picked up?
->
-> From logs, Arnd has been picking up patches for this file. Looping in
-> Arnd and ARM-SoC team.
+On Thu, 2020-07-16 at 10:18 -0700, Alexander Duyck wrote:
+> 
+> On 7/15/2020 7:55 PM, Randy Dunlap wrote:
+> > On 7/13/20 11:23 PM, David E. Box wrote:
+> > > Add PCIe DVSEC extended capability ID and defines for the header
+> > > offsets.
+> > > Defined in PCIe r5.0, sec 7.9.6.
+> > > 
+> > > Signed-off-by: David E. Box <david.e.box@linux.intel.com>
+> > > Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+> > > ---
+> > >   include/uapi/linux/pci_regs.h | 5 +++++
+> > >   1 file changed, 5 insertions(+)
+> > > 
+> > > diff --git a/include/uapi/linux/pci_regs.h
+> > > b/include/uapi/linux/pci_regs.h
+> > > index f9701410d3b5..09daa9f07b6b 100644
+> > > --- a/include/uapi/linux/pci_regs.h
+> > > +++ b/include/uapi/linux/pci_regs.h
+> > > @@ -720,6 +720,7 @@
+> > > +#define PCI_EXT_CAP_ID_DVSEC	0x23	/* Designated Vendor-
+> > > Specific */
+> > > @@ -1062,6 +1063,10 @@
+> > > +/* Designated Vendor-Specific (DVSEC, PCI_EXT_CAP_ID_DVSEC) */
+> > > +#define PCI_DVSEC_HEADER1		0x4 /* Vendor-Specific
+> > > Header1 */
+> > > +#define PCI_DVSEC_HEADER2		0x8 /* Vendor-Specific
+> > > Header2 */
 
-I tend to ignore individual patches to the defconfig file unless
-they are sent to:soc@kernel.org. The best way to get them
-included is to have the platform maintainers pick up the
-changes and send them that way as a separate pull request
-at the same time as sending any DT updates.
+These comments I'll fix to say "Designated Vendor-Specific"
 
-The MAINTAINERS file lists Tero and Nishanth as maintainers
-for the platform. If they want, I can apply this one directly, but in
-the future, send it to them.
+> > 
+> > Just a little comment: It would make more sense to me to
+> > s/DVSEC/DVSPEC/g.
+> > 
+> > But then I don't have the PCIe documentation.
+> 
+> Arguably some of the confusion might be from the patch title. DVSEC
+> is 
+> acronym for Designated Vendor-Specific Extended Capability if I
+> recall 
+> correctly. It would probably be best to call that out since the
+> extended 
+> implies it lives in the config space accessible via the memory
+> mapped 
+> config.
 
-        Arnd
+I'll change the patch title as well, but agree DVSEC is better as it's
+consistent with the spec.
+
+Thanks
+
+David
+
