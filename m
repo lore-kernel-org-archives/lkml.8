@@ -2,133 +2,164 @@ Return-Path: <SRS0=y5Sx=A3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8D00C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 03:01:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34AC1C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 03:04:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B6B9A2076C
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 03:01:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="QNys3f76"
+	by mail.kernel.org (Postfix) with ESMTP id 0D80320787
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jul 2020 03:04:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594868641;
+	bh=v3Bqa4cOJJvz9YfwAqdgDudvEV9FyMcI2b5gw82oJMk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=ZzA4PpFAdHYdDVzh6eE3kAZKKacwkI8iTNAwGu8Wa4/jS4YZCF75bsQroOVHQZvYR
+	 +2QQIYrN3yYHwr5vuud8jWkb+b0a/4YACGG+NfZSwZVYTZJP2hhb/bSYnz7PIkJ6Zj
+	 c66uCGBT1uGp9lxrCjcIXAGjBqQOILcYmJz5oh/Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728123AbgGPDBb (ORCPT
+        id S1728041AbgGPDD7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jul 2020 23:01:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54288 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727075AbgGPDBb (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jul 2020 23:01:31 -0400
-Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 15059C08C5CE
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 20:01:31 -0700 (PDT)
-Received: by mail-pf1-x443.google.com with SMTP id a24so3006574pfc.10
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Jul 2020 20:01:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=GPQxbwTXWhN79V6vWRx99MB+RvD215vLIPI8oltDITs=;
-        b=QNys3f76fO3ArkQ+U5VKCzEsVFzThuhz6zGESkCJzCWv48Hn20rX6sbrqvMiXZmH0h
-         8emf3+hAUEec4VwlSjakOG0ZUQPpWEeV9RtlnZANPtzBQS6jsTwfcZfrgODHToJBAU+Z
-         QqZeqmpnSva1PaQhCQQpBA09o98pUGKIp+fZPLuk8pg3PaEktGanlA946ErEkY85CTqh
-         XtBI9FpHu75vBCj+mchEeC+5UUJKIu1ZxDJbfnJLXhnRvAhMtuvdM2RNyyKiAYkkNUG7
-         u1hBHZ+lNeypvSgt3AdCzOm6aj27OjOqfmedqtH96zkcJAzS+QhbYYy1UgU7zy8VpdVw
-         duAA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=GPQxbwTXWhN79V6vWRx99MB+RvD215vLIPI8oltDITs=;
-        b=Ll9QW/mfg2pl5uQj4GOiBEk+Y6bSnvWw5Ccys5tbKNStXS/JrrtGYlyYF0ZRXl3VUn
-         old7jTm0+HnQHCRKuYJppwXqjsCuCB62P8af0j1KJLiMROulQgFdNsg/u6ZP2zmq2g1t
-         gljZTpMtuAzQt+KcSNftpaWchKjjoQ7QOSBh4z+HAO+FTlDzW9p2aMh4p0dH6de6JG/E
-         5HRu7miM49LQj9BT/vAnzad2sDXd4VKJD19QIYrRbFtzSWygA/W+pw7dP0pLOO60yJpn
-         nWZezD1j9po4Qe5nB/xCZCv/Z6F3lXrRpLz1InjlnqPAHxqb+w9XegneI8jqE1nYNg5Z
-         qkEg==
-X-Gm-Message-State: AOAM5316t85ko+BRvbzNR1HPu99GcONeOgZ0skVy08Arz8DmKYnJy93G
-        X5TL851UmWIFFyntbxDEY5w7QDHpGw==
-X-Google-Smtp-Source: ABdhPJyzi/egeBx/Sr3rQArvWkCqTJA764GFCwXdcJsxZl69YGlOGD2d4Qqo/A7HCaa3I213BOGucg==
-X-Received: by 2002:a62:6305:: with SMTP id x5mr1903199pfb.81.1594868490574;
-        Wed, 15 Jul 2020 20:01:30 -0700 (PDT)
-Received: from Mani-XPS-13-9360 ([2409:4072:6d89:fed1:9157:c271:c363:4849])
-        by smtp.gmail.com with ESMTPSA id l16sm3224414pff.167.2020.07.15.20.01.27
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 15 Jul 2020 20:01:30 -0700 (PDT)
-Date:   Thu, 16 Jul 2020 08:31:24 +0530
-From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To:     Randy Dunlap <rdunlap@infradead.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Hemant Kumar <hemantk@codeaurora.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>
-Subject: Re: [PATCH] mhi: fix doubled words and struct image_info kernel-doc
-Message-ID: <20200716030124.GB3271@Mani-XPS-13-9360>
-References: <cab64692-31f6-5a2b-a540-aa434d35f9a9@infradead.org>
+        Wed, 15 Jul 2020 23:03:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39394 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727034AbgGPDD7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jul 2020 23:03:59 -0400
+Received: from sol.localdomain (c-107-3-166-239.hsd1.ca.comcast.net [107.3.166.239])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8A75D2076C;
+        Thu, 16 Jul 2020 03:03:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594868638;
+        bh=v3Bqa4cOJJvz9YfwAqdgDudvEV9FyMcI2b5gw82oJMk=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=MAls4WTWjsI5YbeQ94NmG1Ky2Dcn/OjsqhjAMI+0sxn0L0tOx7DwjQkLX+SPJF14B
+         CLn8vyq0lzGY3pr/8nApMvH3xFH2bk3Wwg3lkrmSvhto3HVxVHgy3MEPm2uq+RG3HL
+         AcNIGbr/Fg6EYDdnV6u+gUNyMHKM2USKEGXc4WuY=
+Date:   Wed, 15 Jul 2020 20:03:57 -0700
+From:   Eric Biggers <ebiggers@kernel.org>
+To:     Dave Chinner <david@fromorbit.com>
+Cc:     Marco Elver <elver@google.com>,
+        syzbot <syzbot+0f1e470df6a4316e0a11@syzkaller.appspotmail.com>,
+        akpm@linux-foundation.org, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, linux-fsdevel@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Will Deacon <will@kernel.org>
+Subject: Re: KCSAN: data-race in generic_file_buffered_read /
+ generic_file_buffered_read
+Message-ID: <20200716030357.GE1167@sol.localdomain>
+References: <0000000000004a4d6505aa7c688a@google.com>
+ <20200715152912.GA2209203@elver.google.com>
+ <20200715163256.GB1167@sol.localdomain>
+ <20200715234203.GK5369@dread.disaster.area>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <cab64692-31f6-5a2b-a540-aa434d35f9a9@infradead.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200715234203.GK5369@dread.disaster.area>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 15, 2020 at 06:29:32PM -0700, Randy Dunlap wrote:
-> From: Randy Dunlap <rdunlap@infradead.org>
+On Thu, Jul 16, 2020 at 09:42:03AM +1000, Dave Chinner wrote:
+> On Wed, Jul 15, 2020 at 09:32:56AM -0700, Eric Biggers wrote:
+> > [+Cc linux-fsdevel]
+> > 
+> > On Wed, Jul 15, 2020 at 05:29:12PM +0200, 'Marco Elver' via syzkaller-bugs wrote:
+> > > On Wed, Jul 15, 2020 at 08:16AM -0700, syzbot wrote:
+> > > > Hello,
+> > > > 
+> > > > syzbot found the following issue on:
+> > > > 
+> > > > HEAD commit:    e9919e11 Merge branch 'for-linus' of git://git.kernel.org/..
+> > > > git tree:       upstream
+> > > > console output: https://syzkaller.appspot.com/x/log.txt?x=1217a83b100000
+> > > > kernel config:  https://syzkaller.appspot.com/x/.config?x=570eb530a65cd98e
+> > > > dashboard link: https://syzkaller.appspot.com/bug?extid=0f1e470df6a4316e0a11
+> > > > compiler:       clang version 11.0.0 (https://github.com/llvm/llvm-project.git ca2dcbd030eadbf0aa9b660efe864ff08af6e18b)
+> > > > 
+> > > > Unfortunately, I don't have any reproducer for this issue yet.
+> > > > 
+> > > > IMPORTANT: if you fix the issue, please add the following tag to the commit:
+> > > > Reported-by: syzbot+0f1e470df6a4316e0a11@syzkaller.appspotmail.com
+> > > > 
+> > > > ==================================================================
+> > > > BUG: KCSAN: data-race in generic_file_buffered_read / generic_file_buffered_read
+> > > 
+> > > Our guess is that this is either misuse of an API from userspace, or a
+> > > bug. Can someone clarify?
+> > > 
+> > > Below are the snippets of code around these accesses.
+> > 
+> > Concurrent reads on the same file descriptor are allowed.  Not with sys_read(),
+> > as that implicitly uses the file position.  But it's allowed with sys_pread(),
+> > and also with sys_sendfile() which is the case syzbot is reporting here.
 > 
-> Drop doubled word "table" in kernel-doc.
-> Fix syntax for the kernel-doc notation for struct image_info.
-> Note that the bhi_vec field is private and not part of the kernel-doc.
+> Concurrent read()s are fine, they'll just read from the same offset.
 > 
-> Drop doubled word "device" in a comment.
-> 
-> Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
 
-Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Actually the VFS serializes concurrent read()'s on the same fd, at least for
+regular files.  Anyway, doesn't matter since we can consider pread() instead.
 
-Thanks,
-Mani
+> 
+> > 
+> > > 
+> > > > write to 0xffff8880968747b0 of 8 bytes by task 6336 on cpu 0:
+> > > >  generic_file_buffered_read+0x18be/0x19e0 mm/filemap.c:2246
+> > > 
+> > > 	...
+> > > 	would_block:
+> > > 		error = -EAGAIN;
+> > > 	out:
+> > > 		ra->prev_pos = prev_index;
+> > > 		ra->prev_pos <<= PAGE_SHIFT;
+> > > 2246)		ra->prev_pos |= prev_offset;
+> > > 
+> > > 		*ppos = ((loff_t)index << PAGE_SHIFT) + offset;
+> > > 		file_accessed(filp);
+> > > 		return written ? written : error;
+> > > 	}
+> > > 	EXPORT_SYMBOL_GPL(generic_file_buffered_read);
+> > > 	...
+> > 
+> > Well, it's a data race.  Each open file descriptor has just one readahead state
+> > (struct file_ra_state), and concurrent reads of the same file descriptor
+> > use/change that readahead state without any locking.
+> > 
+> > Presumably this has traditionally been considered okay, since readahead is
+> > "only" for performance and doesn't affect correctness.  And for performance
+> > reasons, we want to avoid locking during file reads.
+> > 
+> > So we may just need to annotate all access to file_ra_state with
+> > READ_ONCE() and WRITE_ONCE()...
+> 
+> Please, no. Can we stop making the code hard to read, more difficult
+> to maintain and preventing the compiler from optimising it by doing
+> stupid "turn off naive static checker warnings" stuff like this?
+> 
+> If the code is fine with races, then -leave it alone-. If it's not
+> fine with a data race, then please go and work out the correct
+> ordering and place well documented barriers and/or release/acquire
+> ordering semantics in the code so that we do not need to hide data
+> races behind a compiler optimisation defeating macro....
+> 
+> Yes, I know data_race() exists to tell the tooling that it should
+> ignore data races in the expression, but that makes just as much
+> mess of the code as READ_ONCE/WRITE_ONCE being spewed everywhere
+> indiscriminately because <some tool said we need to do that>.
+> 
 
-> Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> Cc: Hemant Kumar <hemantk@codeaurora.org>
-> Cc: linux-arm-msm@vger.kernel.org
-> ---
->  include/linux/mhi.h |   10 ++++++----
->  1 file changed, 6 insertions(+), 4 deletions(-)
-> 
-> --- linux-next-20200714.orig/include/linux/mhi.h
-> +++ linux-next-20200714/include/linux/mhi.h
-> @@ -85,13 +85,15 @@ enum mhi_ch_type {
->  };
->  
->  /**
-> - * struct image_info - Firmware and RDDM table table
-> - * @mhi_buf - Buffer for firmware and RDDM table
-> - * @entries - # of entries in table
-> + * struct image_info - Firmware and RDDM table
-> + * @mhi_buf: Buffer for firmware and RDDM table
-> + * @entries: # of entries in table
->   */
->  struct image_info {
->  	struct mhi_buf *mhi_buf;
-> +	/* private: from internal.h */
->  	struct bhi_vec_entry *bhi_vec;
-> +	/* public: */
->  	u32 entries;
->  };
->  
-> @@ -593,7 +595,7 @@ int mhi_async_power_up(struct mhi_contro
->  
->  /**
->   * mhi_sync_power_up - Start MHI power up sequence and wait till the device
-> - *                     device enters valid EE state
-> + *                     enters valid EE state
->   * @mhi_cntrl: MHI controller
->   */
->  int mhi_sync_power_up(struct mhi_controller *mhi_cntrl);
-> 
+Data races are undefined behavior, so it's never guaranteed "fine".  We can only
+attempt to conclude that it's fine "in practice" and is too difficult to fix,
+and therefore doesn't meet the bar to be fixed (for now).
+
+Of course, in most cases the preferred solution for data races is to introduce
+proper synchronization.  As I said, I'm not sure that's feasible here.  Memory
+barriers aren't the issue here; we'd need *locking*, which would mean concurrent
+readers would start contending for the lock.  Other suggestions appreciated...
+
+- Eric
